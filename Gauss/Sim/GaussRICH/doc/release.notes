@@ -6,7 +6,11 @@
 !-----------------------------------------------------------------------------
 
 !========================== GaussRICH v4r0 2003-06-16 ======================
-
+!2003-7-22 - Sajan Easo
+   Modified the rich1 upstream photon killing to cope with the
+   fact that at preuser tracking, the trackvertex is not available.
+   Also photons created at and after the exit wall of the rich1 are
+   killed. 
 ! 2003-07-16 - Sajan Easo
  - convertor for the MCRichHit structure at the output.
  - Optimizations for reducing cpu time in Rayliegh.
