@@ -12,9 +12,10 @@
                       SICB/RiSicbGeom v3r8 (moved from SICBOO+BOOLE+BRUNEL)
                       Phys/MCTools v1r2 (moved from BOOLE+BRUNEL+DAVINCI)
 
- - Modified packages: XmlTools v3r2,
-                      KernelSys v3r1, LHCbKernel v4r1
+ - Modified packages: KernelSys v3r1, LHCbKernel v4r1
                       EventSys v17r1, L0Event v14r1, Event v4r1
+                      DetSys v4r2, XmlTools v3r2,
+                      AssociatorsSys v1r9p1, TrAssociators v3r8p1
 
  - In LHCbKernel v4r1
    . New files to generate lcg dictionary when GOD cannot
