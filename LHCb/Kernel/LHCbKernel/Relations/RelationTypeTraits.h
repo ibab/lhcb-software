@@ -1,8 +1,11 @@
-// $Id: RelationTypeTraits.h,v 1.8 2002-05-10 12:29:42 ibelyaev Exp $
+// $Id: RelationTypeTraits.h,v 1.9 2002-09-04 15:39:15 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.8  2002/05/10 12:29:42  ibelyaev
+//  see $LHCBKERNELROOT/doc/release.notes 10 May 2002
+//
 // ============================================================================
 #ifndef RELATIONS_RELATIONTYPETRAITS_H
 #define RELATIONS_RELATIONTYPETRAITS_H 1
@@ -132,7 +135,10 @@ namespace Relations
     /** definition of the standard iterator types
      *  @attention the true  @p iterator type is indeed  @p const_iterator !
      */
-    typedef Entries::const_iterator iterator ;
+    typedef Entries::const_iterator   iterator        ;
+    typedef Entries::const_iterator   const_iterator  ;
+    typedef Entries::const_reference  reference       ;
+    typedef Entries::const_reference  const_reference ;
     
     /** @struct Range
      *
@@ -143,26 +149,36 @@ namespace Relations
      *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
      *  @date   27/01/2002
      */
-    struct Range : public std::pair<iterator,iterator>
+    struct Range : 
+      public std::pair<Entries::const_iterator,Entries::const_iterator>
     {
       /// short cut for own base class
-      typedef std::pair<iterator,iterator> Base;
+      typedef RangeBase Base;
+      typedef Entries::const_iterator   iterator        ;
+      typedef Entries::const_reference  reference       ;
+      typedef Entries::const_iterator   const_iterator  ;
+      typedef Entries::const_reference  const_reference ;
       /// default constructor
       Range()                                : Base()              {} ;
-      /// constructor      
+      y/// constructor
       Range( iterator begin , iterator end ) : Base( begin , end ) {} ;
+      /// the aliases for standard "first" and "second"
       /// begin-iterator (non-const version)
-      iterator& begin ()       { return Base::first                   ; }
+      iterator&       begin ()       { return Base::first                 ; }
       /// begin-iterator (    const version)
-      iterator  begin () const { return Base::first                   ; }
+      iterator        begin () const { return Base::first                 ; }
       /// end-iterator   (non-const version)
-      iterator& end   ()       { return Base::second                  ; }
+      iterator&       end   ()       { return Base::second                ; }
       /// end-iterator   (    const version)
-      iterator  end   () const { return Base::second                  ; }
+      iterator        end   () const { return Base::second                ; }
+      /// front element (applied only for 'valid' ranges 
+      const_reference front () const { return *(Base::first)              ; }
+      /// back  element (applied only for 'valid' ranges 
+      const_reference back  () const { return *(Base::second-1)           ; }
       /// number of relations 
-      size_t    size  () const { return Base::second -  Base::first   ; }
+      size_t          size  () const { return Base::second -  Base::first ; }
       /// empty?
-      bool      empty () const { return Base::second == Base::first   ; }
+      bool            empty () const { return Base::second == Base::first ; }
     };
     
     /** technical definitions, useful for  for implementation 

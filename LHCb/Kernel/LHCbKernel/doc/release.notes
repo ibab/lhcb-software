@@ -1,15 +1,24 @@
 Package LHCbKernel
 Package manager: M.Cattaneo
-Purpose: LHCb specific Kernel classes 
+Purpose: LHCb specific Kernel classes
+
+! 2002-09-04 - Ivan Belyaev
+ - introduce STL-like methods 'front()' and 'back()'
+   for all 'Ranges' from Relations-subpackage.
+ - intoruce "iterator","const_iterator","reference" and 
+   "const_reference" types for Range.
+   And now Range (pair of 2 iterator) semantically indistinguishable 
+   form ordinary container. (all iterators and types defined as they 
+   must be defined)
 
 !========================= LHCbKernel v2r1 2002-07-29 ===================
 ! 2002-07-25 - Ivan Belyaev
- - Relations/*.h fix bug in destructors. 
+ - Relations/*.h fix bug in destructors.
 
 !========================= LHCbKernel v2r0 2002-07-16 ===================
 ! 2002-07-16 - Florence Ranjard
  - requirements - use CLHEP 1.8.0.0
- 
+
 !========================= LHCbKernel v1r3 2002-07-18 ===================
 ! 2002-07-18 - Marco Cattaneo
  - Add Kernel/InstanceCounter.h: static class for instrumenting constructors
@@ -18,9 +27,9 @@ Purpose: LHCb specific Kernel classes
 ! 2002-07-12 - Philippe Charpentier
  - modification in Relations, file src/AssociatorBase.cpp
    the associator now tries and set the Property "OutputTable" or "Output"
-   of the building algorithm (in this order of priority) to the value of 
+   of the building algorithm (in this order of priority) to the value of
 	 its own "Location" property.
-   This allows to make sure that the algorithm produces the relations table 
+   This allows to make sure that the algorithm produces the relations table
 	 at the right place
 
 !========================= LHCbKernel v1r2 2002-07-09 ===================
@@ -33,16 +42,16 @@ Purpose: LHCb specific Kernel classes
 ! 2002-06-07 - Marco Cattaneo
  - Change version number to v1r2
  - Cleanup of OTChannelID.xml to use bitfield descriptions
- 
+
 !========================== LHCbKernel v1r1 2002-05-24 =================
 ! 2002-05-24 - Ivan Belyaev
- - src/RelationUtils.cpp  : 
+ - src/RelationUtils.cpp  :
    explicitely suppress ObjectVector&ObjectList bits for generated CLIDs
  - src/AssociatorBase.cpp :
-   remove misprints in Warning/Error counters  
- - Relations/Associator.h 
- - Relations/AssociatorWeighted.h 
-   suppress warning printout for inverse relation table 
+   remove misprints in Warning/Error counters
+ - Relations/Associator.h
+ - Relations/AssociatorWeighted.h
+   suppress warning printout for inverse relation table
 
 !========================== LHCbKernel v1r0 2002-05-15 =================
 !20020515 - Marco Cattaneo
@@ -54,40 +63,40 @@ Purpose: LHCb specific Kernel classes
         invRange[xxx]()   ->  range[xxx]To()
 !20020514 - Marco Cattaneo
   - requirements: remove link time dependency on Boost library
- 
-!20020513 - Vanya Belyaev 
-  - Relations/Associator.h 
+
+!20020513 - Vanya Belyaev
+  - Relations/Associator.h
   - Relations/AssociatorWeighed.h  fix bugs
-  
+
 ! 20020513 - Marco Cattaneo
   - requirements: use a * for BOOST dependency
 
 ! 13/05/2002- Philippe Charpentier
   - Relations/Associator.h and IAssociator.h
-    add method to retrieve THE related object in case there is at most one. 
+    add method to retrieve THE related object in case there is at most one.
 	  Otherwise it returns the first one or a null pointer if there is none.
   - Relations/AssociatorWeighted.h and IAssociatorWeighted
-    add method to retrieve THE related object in case there is at most one. 
+    add method to retrieve THE related object in case there is at most one.
 	  Otherwise it returns the first one or a null pointer if there is none.
 
 ! 12/05/2002 - Vanya Belyaev
-  - src/Test/LHCbKernelTest.cpp  removed 
+  - src/Test/LHCbKernelTest.cpp  removed
   - src/Test/RelationsTest.cpp   new test application for Relations subpackage
-  - Relations/AssociatoBase.h 
-    Relations/AssociatorBase.cpp  
+  - Relations/AssociatoBase.h
+    Relations/AssociatorBase.cpp
     improve the printout and introduce better error/warnins/exception
     handling and statistics (imported from base classes of LHCb Calo software)
-  - Relations/IAssociator.h 
-    1) add "const" and "virtual" qualifiers to all "range" methods 
-    2) declare all "range" methods as pure abstract 
-    3) move the actual implementation of "range" methods to Associator 
-  - Relations/IAssociatorWeighted.h 
-    1) add "const" and "virtual" qualifiers to all "range" methods 
-    2) declare all "range" methods as pure abstract 
-    3) move the actual implementation of "range" methods to AssociatorWeighted  
-  - Relations/Associator.h 
+  - Relations/IAssociator.h
+    1) add "const" and "virtual" qualifiers to all "range" methods
+    2) declare all "range" methods as pure abstract
+    3) move the actual implementation of "range" methods to Associator
+  - Relations/IAssociatorWeighted.h
+    1) add "const" and "virtual" qualifiers to all "range" methods
+    2) declare all "range" methods as pure abstract
+    3) move the actual implementation of "range" methods to AssociatorWeighted
+  - Relations/Associator.h
     add implementation of "range" methods from IAssociator
-  - Relations/AssociatorWeighted.h 
+  - Relations/AssociatorWeighted.h
     add implementation of "range" methods from IAssociatorWeighted
 
 ! 10/05/2002 - Philippe Charpentier
@@ -104,92 +113,92 @@ Purpose: LHCb specific Kernel classes
 	  Relations/IAssociatorWeighted.h     Added methods with cuts on weight:
                                          [inv]rangeWith{Low|High}Cut
 
-! 10/05/2002 - Vanya Belyaev  
+! 10/05/2002 - Vanya Belyaev
 
   - new files in Relations subdirectory:
     Relations/TypeSelect.h           compile-time selection of objects
-    Relations/TypeContainedObject.h  compile-time detection of public 
-                                     inheritance from class ContainedObject   
-    Relations/TypeDataObject.h       compile-time detection of public 
+    Relations/TypeContainedObject.h  compile-time detection of public
+                                     inheritance from class ContainedObject
+    Relations/TypeDataObject.h       compile-time detection of public
                                      inheritance from class DataObject
-    Relations/TypeStorable.h         compiler-time detection of public  
-                                     inheritance either from class DataObject 
-                                     or from class Contained Object   
-    Relations/TypePersistent.h       Compile-time evaluation of "persistent" 
-                                     representation of the class: 
+    Relations/TypeStorable.h         compiler-time detection of public
+                                     inheritance either from class DataObject
+                                     or from class Contained Object
+    Relations/TypePersistent.h       Compile-time evaluation of "persistent"
+                                     representation of the class:
                                      "SmartPtr<TYPE>" if it has sense,
                                      "TYPE" otherwise
     Relations/TypeId.h               Unique object type identification:
-                                     "TYPE::classID()" if it has sence and 
-                                     artificially hashed value otherwise  
-    Relations/TypeSerializers.h       
-    Relations/TypeIdAux.h 
+                                     "TYPE::classID()" if it has sence and
+                                     artificially hashed value otherwise
+    Relations/TypeSerializers.h
+    Relations/TypeIdAux.h
     Relations/TypeSelectAux.h
     Relations/ObjectTypeTraitsStripped.h
     Relations/TypeApplyAux.h
-  The first 6 files could be of more or less general interest, 
+  The first 6 files could be of more or less general interest,
   all other are "private" for Relations sub-package.
 
-  - modified files 
-    Relations/IRelation.h            improve the "quality" of comments 
+  - modified files
+    Relations/IRelation.h            improve the "quality" of comments
                                      to produce better DoxyGen documentation
-    Relations/IRelationWeighted.h    improve the "quality" of comments 
+    Relations/IRelationWeighted.h    improve the "quality" of comments
                                      to produce better DoxyGen documentation
     Relation/ObjectTypeTraits.h      drastical redesign:
                                      remove all #ifdef/#endif
                                      remove all FULL template specialization
-    Relations/Less.h                 add the template specialization of 
-                                     std::less structure for SmartRef objects 
-                                     (to suppress warnings) (on Linux) and 
+    Relations/Less.h                 add the template specialization of
+                                     std::less structure for SmartRef objects
+                                     (to suppress warnings) (on Linux) and
                                      templated comparison operator for SmartRef
-                                     objects to Win32 platform               
+                                     objects to Win32 platform
     Relations/RelationTypeTraits.h   add default(empty) constructor to Range
-    Relations/RelationWeightedTypeTraits.h - add default(empty) constructor to 
+    Relations/RelationWeightedTypeTraits.h - add default(empty) constructor to
                                      Range
-    TypeConversion.h                 update for usage of Boost 
-    TypeApply.h                      set the environment for SmartRefs 
+    TypeConversion.h                 update for usage of Boost
+    TypeApply.h                      set the environment for SmartRefs
     TypeSerializer.h                 specialization to please Win32
-  - remove file 
+  - remove file
     Relations/TypeApply_WIN32.h
-  - new files 
+  - new files
     doc/DoxyFile.cfg                Doxygen configuration file
-    doc/Doxyheader.html,Doxyfooter.html   header and footer for doxygen 
- -  new directory 
+    doc/Doxyheader.html,Doxyfooter.html   header and footer for doxygen
+ -  new directory
     src/Test
- -  new files in test directory 
-    src/Test/LHCbKernelTest.cpp     simple primitive test file to test 
-                                    some basic features of Relations 
-                                    sub-package 
+ -  new files in test directory
+    src/Test/LHCbKernelTest.cpp     simple primitive test file to test
+                                    some basic features of Relations
+                                    sub-package
 
 ! 20020507 Vanya Belyaev
  - Relations/Less.h
- - Relations/ObjectTypeTraits.h - remove warnings on Linux 
- 
+ - Relations/ObjectTypeTraits.h - remove warnings on Linux
+
 ! 20020507 Vanya Belyaev
 - src/CLHEPstreams.cpp
   1) modify the persistent representation of HepLorentzVector to
-     preserve the 4-length of the vectror to be subjected truncation 
+     preserve the 4-length of the vectror to be subjected truncation
      errors
-  2) modify the persistent representation of HepVector to write the 
-     vector length in teh format of "unsigned char".It implies the 
+  2) modify the persistent representation of HepVector to write the
+     vector length in teh format of "unsigned char".It implies the
      limitation of the mamximal vector length to be 256 elements
-  3) the same for HepSymMatrix, HepDiagMatrix and HepMatrix 
+  3) the same for HepSymMatrix, HepDiagMatrix and HepMatrix
 
 ! 20020503 Pere Mato
 - added dictionary for CLHEP classes in /dict
 
 ! 20020430 Vanya Belyaev
-  Kernel/CaloHash.h  bug fix for Win2K   
-  
+  Kernel/CaloHash.h  bug fix for Win2K
+
 ! 20020430 Marco Cattaneo
 - requirements: remove run time dependency on GaudiIntrospection
 
 ! 20020427 Vanya Belyaev
-  - add CaloHash.h file for usage in CaloMap.h and CaloHashMaps.h 
+  - add CaloHash.h file for usage in CaloMap.h and CaloHashMaps.h
 
 ! 20020426 Vanya Belyaev
   - Relations/TypeApply.h, Relations/ObjectTypeTraits.h
-    change the order of include files and forward declarations 
+    change the order of include files and forward declarations
 
 ! 20020426 Philippe Charpentier
   - Add typedefs and two methods for delegating the retrieval of relations to
@@ -199,28 +208,28 @@ Purpose: LHCb specific Kernel classes
   - "Relations" - reduce number of warnings for MicroSoft compiler
 
 ! 20020425 Vanya Belyaev
-  - fix one more problem for Relations at Win2K 
+  - fix one more problem for Relations at Win2K
 
 ! 20020424 Vanya Belyaev
-  - fix one more problem for Relations at Win2K 
+  - fix one more problem for Relations at Win2K
 
 ! 20020423 Vanya Belyaev
-  - resolve the clash between CLHEP/Units/SystemOfUnits.h definition of 
-    "static const HepDouble second = ... " and 
-    std::pair::second for RelationTypeTraits 
- 
+  - resolve the clash between CLHEP/Units/SystemOfUnits.h definition of
+    "static const HepDouble second = ... " and
+    std::pair::second for RelationTypeTraits
+
 
 ! 20020523 M. Needham
   - add uniqueLayer/uniqueWafer members to OTChannelID.h
 
 ! 20020422 Vanya Belyaev
-  new files: 
+  new files:
   Kernel/CaloPrint.h
-  src/CaloProint.cpp  
+  src/CaloProint.cpp
   Kernel/OSiterator.h
-  Kernel/CaloMap.h 
-  Kernel/CaloHashMap.h 
-  files are moved from Calo/CaloKernel package to eliminate the 
+  Kernel/CaloMap.h
+  Kernel/CaloHashMap.h
+  files are moved from Calo/CaloKernel package to eliminate the
   dependency of Event/CaloEvent package from Calo/CaloKernal package.
 
 
@@ -238,25 +247,25 @@ Purpose: LHCb specific Kernel classes
 ! 20020409 M. Needham
   - add uniqueLayer/uniqueWafer members to ITChannelID.h
 
-! 20020409 Vanya Belyaev Ivan.Belyaev@itep.ru 
-  - AssociatorBase.cpp: AssociatorBase::locateAlgorithm() 
-                        replace few clear and VALID lines with 
-                        smaller number of less clear and potentially 
-                        dangerouse lines to avoid misteriouse segmentation 
-                        faults. The solution is temporary. One need to 
-                        investigate it in detail later. 
+! 20020409 Vanya Belyaev Ivan.Belyaev@itep.ru
+  - AssociatorBase.cpp: AssociatorBase::locateAlgorithm()
+                        replace few clear and VALID lines with
+                        smaller number of less clear and potentially
+                        dangerouse lines to avoid misteriouse segmentation
+                        faults. The solution is temporary. One need to
+                        investigate it in detail later.
 
   add "virtual" qualifier for public inheritance from "Relation*" - bases
   to following following classes:
-  - Relation1D.h, 
+  - Relation1D.h,
   - Relation2D.h
   - RelationWeighted1D.h
   - RelationWeighted2D.h
 
-! 20020408 Vanya Belyaev Ivan.Belyaev@itep.ru 
+! 20020408 Vanya Belyaev Ivan.Belyaev@itep.ru
   - new version of "Relations"-subpackage
   - rename *RelationTool*          into *Associator*
-  - rename *RelationWeightedTool*  into *AssociatorWeighted* 
+  - rename *RelationWeightedTool*  into *AssociatorWeighted*
 
 ! 20020405 Stefan Roiser
   - operator-overloading for pairs added to SerializeStl.h
@@ -275,18 +284,18 @@ Purpose: LHCb specific Kernel classes
   - add SerializeStl.h for serialisation of std::vector and std::list
 
 ! 18/03/2002 - Ivan Belyaev
-  - add new directory Relations with implementation of relations 
+  - add new directory Relations with implementation of relations
 
 ! 18/03/2002 - Vanya Belyaev  Ivan.Belyaev@itep.ru
-  moved from CaloKernel package 
-  - CaloCellCode.h   the coding schema for CaloCellID 
-  - CaloCellID.h     the uniqie identifier of calorimeter cell 
-  - CaloHypotheses.h the list of avaialble calorimeter hyportheses 
-  - CaloHypoPrint.h  the printout of available calorimeter hypotheses 
+  moved from CaloKernel package
+  - CaloCellCode.h   the coding schema for CaloCellID
+  - CaloCellID.h     the uniqie identifier of calorimeter cell
+  - CaloHypotheses.h the list of avaialble calorimeter hyportheses
+  - CaloHypoPrint.h  the printout of available calorimeter hypotheses
                      in a "readable" format
 
 ! 20020318 (M.Cattaneo) - New package
 ! 20020318 (M.Frank)
-  - CLHEPStreams moved to this package (from Event/LHCbEvent), and 
+  - CLHEPStreams moved to this package (from Event/LHCbEvent), and
     modified to include serialization and printout for various CLHEP classes
 
