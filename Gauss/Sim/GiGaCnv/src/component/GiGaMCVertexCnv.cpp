@@ -1,8 +1,11 @@
-// $Id: GiGaMCVertexCnv.cpp,v 1.23 2003-07-11 17:42:59 witoldp Exp $ 
+// $Id: GiGaMCVertexCnv.cpp,v 1.24 2003-07-17 14:43:57 witoldp Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.23  2003/07/11 17:42:59  witoldp
+// added collision converter
+//
 // Revision 1.22  2003/03/05 15:19:20  ranjard
 // v11r2 - fixes for Win32
 //
@@ -269,15 +272,11 @@ StatusCode GiGaMCVertexCnv::updateObj
           {
             GiGaTrajectoryPoint* point = 
               dynamic_cast<GiGaTrajectoryPoint*> ( trajectory->GetPoint(0) );
-
-            m_onepointIDs[trajectory->trackID()] = point;
-            //            cout << "Found trajectory with one point " << trajectory->trackID() 
-            //                 << " mother trID " << trajectory->parentID() << endl;
             
-
+            m_onepointIDs[trajectory->trackID()] = point;
           }
         
-        for (GiGaTrajectory::const_iterator ittr=trajectory->begin(); 
+ for (GiGaTrajectory::const_iterator ittr=trajectory->begin(); 
              ittr!=trajectory->end();++ittr)
           { vertices->insert( Cnv( *ittr ) ); }
       } 
@@ -388,6 +387,7 @@ StatusCode GiGaMCVertexCnv::updateObjRefs
     
     for(ITT iTrajectory = tv->begin(); tv->end() != iTrajectory; ++iTrajectory )
       {
+
         const G4VTrajectory* vt = *iTrajectory ;
         if( 0 == vt  ) { return Error("G4VTrajectory* points to NULL" ) ; } 
         const GiGaTrajectory*  trajectory  = gigaTrajectory( vt ) ; 
@@ -441,58 +441,71 @@ StatusCode GiGaMCVertexCnv::updateObjRefs
                 
                 // mother is known ?            
                 if ( !vertex->mother() && 0 != mother )
-                  { 
+                  {
                     Ref moth( vertex , refID , mother->key() , mother ) ;
                     vertex->setMother( moth ) ; 
+
+//                     std::cout << "first point "
+//                               << vertex->position() << " mother with momentum " 
+//                               << moth->momentum() << std::endl;
                   }
               }	       
             // decay vertex  ?
             else if ( !vertex->mother()  ) 
-              {
+              {                
                 Ref moth( vertex , refID , particle->key() , particle );
                 vertex->setMother( moth ) ; 
+
+//                 std::cout << "not first point  " 
+//                      << vertex-> position() << " mother with momentum " 
+//                      << moth->momentum() << std::endl;
               }
-            // corrupted data! 
+            // check if the one already set is correct 
             else 
               { 
-                MsgStream log( msgSvc(),  name() ) ; 
-                log << MSG::INFO << "While looking at trajectory point "
-                    << (HepPoint3D)((*iPoint)->GetPosition()) << " from the following trajectory:"
-                    << endreq;
-                
-                for( ITG iP = trajectory->begin(); 
-                     trajectory->end() != iP; ++iP)
-                  log << MSG::INFO << (HepPoint3D)((*iP)->GetPosition())
-                      << endreq;
-                
-                log << MSG::INFO << "with momentum of mother of the vertex being " 
-                    << vertex->mother()->momentum() << endreq;
-
-                log << MSG::INFO << "and the complete collection of trajectories being"
-                    << endreq;
-
-                for(ITT iT = tv->begin(); tv->end() != iT; ++iT )
+                Ref moth( vertex , refID , particle->key() , particle );
+                Ref amother=vertex->mother();
+                if(moth!=amother)
                   {
-                    log << MSG::INFO << "trajectoryID " 
-                        << (*iT)->GetTrackID() << 
-                      "  pdgID " << (*iT)->GetPDGEncoding() 
-                        << " initial momentum " << 
-                      (HepPoint3D)((*iT)->GetInitialMomentum()) << endreq;
+                    MsgStream log( msgSvc(),  name() ) ; 
+                    log << MSG::INFO << "While looking at trajectory point "
+                        << (HepPoint3D)((*iPoint)->GetPosition()) << " from the following trajectory: "
+                        << trajectory->trackID() << endreq;
                     
-                    for( ITG iP = ((GiGaTrajectory*)(*iT))->begin() ; 
-                         ((GiGaTrajectory*)(*iT))->end() != iP ; ++iP )
-                      {
-                        log << MSG::INFO << (HepPoint3D)((*iP)->GetPosition())
-                            << endreq;
-                      }
-                  }
+                    for( ITG iP = trajectory->begin(); 
+                         trajectory->end() != iP; ++iP)
+                      log << MSG::INFO << (HepPoint3D)((*iP)->GetPosition())
+                          << endreq;
                 
-                return Error("'MotherParticle' is already set!"); 
+                    log << MSG::INFO << "with momentum of mother of the vertex being " 
+                        << vertex->mother()->momentum() << endreq;
+                    
+                    log << MSG::INFO << "and the complete collection of trajectories being"
+                        << endreq;
+                    
+                    for(ITT iT = tv->begin(); tv->end() != iT; ++iT )
+                      {
+                        log << MSG::INFO << "trajectoryID " 
+                            << (*iT)->GetTrackID() << " motherID " 
+                            << (*iT)->GetParentID() <<
+                          "  pdgID " << (*iT)->GetPDGEncoding() 
+                            << " initial momentum " << 
+                          (HepPoint3D)((*iT)->GetInitialMomentum())
+                            << endreq;
+                        
+                        for( ITG iP = ((GiGaTrajectory*)(*iT))->begin() ; 
+                             ((GiGaTrajectory*)(*iT))->end() != iP ; ++iP )
+                          {
+                            log << MSG::INFO << (HepPoint3D)((*iP)->GetPosition())
+                                << endreq;
+                          }
+                      }    
+                    return Error("'MotherParticle' is already set!"); 
+                  }
               }
-	    
           } // end loop over points 
       } // end loop over trajectories
-
+    
     // now loop through the trajectories which were attached to problematic 
     // particles (i.e. to trajectories with one point only)
     
