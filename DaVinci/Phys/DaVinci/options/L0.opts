@@ -8,3 +8,5 @@ ApplicationMgr.TopAlg  += { "L0CaloCandidatesFromRaw",
                             "DecisionUnit", 
                             "L0Check"};
 L0Check.HistogramFlag = false;
+
+

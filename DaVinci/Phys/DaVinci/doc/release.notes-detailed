@@ -1,0 +1,29 @@
+!-----------------------------------------------------------------------------
+! Package     : Phys/DaVinci
+! Responsible : P. Koppenburg
+! Purpose     : Analaysis program for LHCb
+!-----------------------------------------------------------------------------
+
+! 2004-07-19 - P. Koppenburg for Luisanna Tocco
+ - options/L0Muon.opts
+   . New options to re-run L0muon. 
+     WARNING: Incompatible with hbook! Pere is investigating.
+ - options/DVCheckTrigger.opts
+ - options/DVTRiggerFilter.opts
+   . Re-run L0muon by default
+ - options/DaVinci.opts
+   . DON'T re-run L0muon by default
+ - cmt/requirements
+   . Added L0MuonKernel, L0MuonTRigger and L0mConf packages from Boole
+   . Get Paramfiles to v3r8 fro L0Muon
+  
+! 2004-07-XX - P. Koppenburg
+ - DVStripping.opts
+   . New options for preselections-stripping
+ - DVTriggerFilter.opts
+   . New options for trigger-stripping
+  
+! 2004-07-19 - P. Koppenburg
+ - doc/release.notes-detailed
+   . The release notes in the same style as for the other packages.
+   

@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.140 2004-07-16 11:27:35 pkoppenb Exp $
+# $Id: requirements,v 1.141 2004-07-19 09:21:26 pkoppenb Exp $
 # Created    : 07/02/2002
 # Maintainer : P. Koppenburg
 #
@@ -50,7 +50,7 @@ use HbookCnv            v14r1
 #-- Database
 use XmlDDDB             v22r2   Det
 use FieldMap            v4r5
-use ParamFiles          v3r6    -no_auto_imports
+use ParamFiles          v3r8    -no_auto_imports
 
 #-- LHCb libraries 
 use LHCb        v15r13
@@ -63,6 +63,9 @@ use LHCb        v15r13
 use  L0DU               v6r7     L0
 use  L0Calo             v7r6     L0
 use  L0Checker          v2r1     L0
+use  L0MuonKernel 	v2r1p1   L0
+use  L0MuonTrigger 	v2r1     L0
+use  L0mConf 		v2r2p2   L0
 
 use  L1Decision         v2r0     Trg
 use  L1Reco             v4r0     Trg
@@ -105,7 +108,7 @@ use  DaVinciTools       v10r0    Phys
 use  DaVinciUser        v5r1     Phys
 use  FlavourTagging     v5r1     Phys
 use  Ks2PiPiSel         v1r4     Phys
-use  PhysSelections	v6r8     Phys
+use  PhysSelections	v6r8p1   Phys
 
 # Physics MC packages
 use  DaVinciChecks      v2r4     Phys

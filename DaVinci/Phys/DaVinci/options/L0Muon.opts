@@ -1,0 +1,35 @@
+//*************************************************************
+//   Options to re-run the Level 0 Muon trigger in DaVinci
+//=============================================================
+
+
+ApplicationMgr.DLLs  += { "L0MuonTrigger", "MuonTools","MuonDet" };
+ApplicationMgr.TopAlg  += { "L0mTriggerAlgorithm"};
+
+
+// true for DST, false for SIM data
+L0mTriggerAlgorithm.InputFromMuonCoords = true;
+
+// configuration files
+L0mTriggerAlgorithm.ConfigFile = {"/afs/cern.ch/lhcb/software/releases/PARAM/ParamFiles/_v3r8/data/l0mConf-v3r0dev7-Q1.xml",
+                                  "/afs/cern.ch/lhcb/software/releases/PARAM/ParamFiles/_v3r8/data/l0mConf-v3r0dev7-Q2.xml",
+                                  "/afs/cern.ch/lhcb/software/releases/PARAM/ParamFiles/_v3r8/data/l0mConf-v3r0dev7-Q3.xml",
+                                  "/afs/cern.ch/lhcb/software/releases/PARAM/ParamFiles/_v3r8/data/l0mConf-v3r0dev7-Q4.xml"};
+
+// Max integer to contain Pt
+L0mTriggerAlgorithm.PtMaxBins = 128;
+// Pt precision in MeV/c
+L0mgTriggerAlgorithm.PtPrecision = 40;
+
+//Size of the Fields of Interest in M3 pad units
+L0mTriggerAlgorithm.FoiXSize = {4,5,0,2,4};
+L0mTriggerAlgorithm.FoiYSize = {0,0,0,1,1};
+
+//D0, D1, D2 and pTkick defined in LHCb note 2002-042
+L0mTriggerAlgorithm.PtParameters = {545.,665.5,309.5,1.21,120.};
+L0mTriggerAlgorithm.InputFromMuonCoords = true;
+
+L0mTriggerAlgorithm.OutputLevel = 3;
+
+
+
