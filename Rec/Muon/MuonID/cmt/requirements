@@ -1,0 +1,21 @@
+package MuonID
+version v1r0
+
+branches src cmt doc options
+
+# add "use" statements
+use GaudiKernel        v12r*
+use MuonIdentification v1r*  Event
+use MuonTools          v2r*  Muon
+
+# build a MuonID library
+library MuonID ../src/*.cpp
+
+apply_pattern package_Clinkopts
+apply_pattern packageShr
+apply_pattern linker_path
+
+#===============================================================
+private
+include_dirs $(MUONIDROOT)
+apply_pattern package_Cshlibflags
