@@ -1,6 +1,20 @@
-! $Id: release.notes,v 1.63 2003-08-05 17:25:19 gcorti Exp $
+! $Id: release.notes,v 1.64 2003-12-04 13:40:23 graven Exp $
 ! Package     : DaVinciTools
 ! Responsible : Gloria Corti, Sandra Amato
+
+! 2003-12-04 - Gerhard Raven
+  - DaVinciTools/Particle2VertexAsct.h
+    . add associator of particles -> vertex. Usefull for associations
+      of particles and their production point, eg. B mesons to the
+      primary vertex.
+  - src/LifetimeSignificanceCriterion.{h,cpp}
+    . add filtercriterion on the significance of the reconstructed lifetime.
+      This criterion uses the above associator to determine which production
+      vertex to use.
+  - src/Particle2VertexWithIPS.{h,cpp}
+    . implementation of a particle->vertex associator, which uses either
+      the minimum impact parameter of a particle wrt. a vertex, or the
+      minimum impact parameter significance.
 
 !========================== DaVinciTools v8r2 2003-08-05 ==================
  - DaVinciTools/DVAlgorithm.h
