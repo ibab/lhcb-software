@@ -1,0 +1,14 @@
+! $Id: release.notes,v 1.1.1.1 2002-05-26 22:48:41 jvantilb Exp $
+! Package     : OTAssociators
+! Responsible : J. van Tilburg
+
+! 20020527 J. van Tilburg
+  This is a new package to associate the Outer Tracker classes with 
+  Monte Carlo information.
+  Two algorithms to build the relations:
+  - OTCluster2MCHitAlg
+  - OTCluster2MCParticleAlg
+  Two associator tools:
+  - OTAssociators/OTCluster2MCHitAsct.h
+  - OTAssociators/OTCluster2MCParticleAsct.h 
+! ====================================================================

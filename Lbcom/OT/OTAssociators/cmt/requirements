@@ -1,0 +1,33 @@
+package           OTAssociators
+version           v1r0
+        
+# =============== structure =================================================== 
+branches          OTAssociators src cmt doc options 
+
+include_dirs $(OTASSOCIATORSROOT)
+
+# =============== used packages ===============================================
+use OTEvent     v10r*  Event 
+
+# =============== own options =================================================
+set OTASSOCIATORSOPTS  ${OTASSOCIATORSROOT}/options
+
+# =============== component library ===========================================
+library           OTAssociators  ../src/*.cpp
+
+# =============== patterns ====================================================
+
+apply_pattern     package_Clinkopts 
+apply_pattern     package_Cstamps
+apply_pattern     packageShr 
+
+# =============== private stuff ===============================================
+private
+apply_pattern     package_Cshlibflags
+macro OTAssociatorslinkopts  " $(LHCbKernel_linkopts) "
+# =============================================================================
+# The end 
+# =============================================================================
+
+
+
