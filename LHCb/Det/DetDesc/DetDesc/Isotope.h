@@ -1,4 +1,4 @@
-/// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/DetDesc/Isotope.h,v 1.1.1.1 2000-11-23 13:44:42 ranjard Exp $
+/// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/DetDesc/Isotope.h,v 1.2 2001-01-22 10:55:35 mato Exp $
 #ifndef DETDESC_MATERIAL_ISOTOPE_H
 #define DETDESC_MATERIAL_ISOTOPE_H
 
@@ -6,7 +6,7 @@
 #include "DetDesc/Material.h"
 
 /// Forward and extern declarations
-extern const CLID& CLID_Isotope;
+static const CLID CLID_Isotope = 1201;
 
 //
 // Class: Isotope

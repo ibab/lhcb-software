@@ -34,8 +34,6 @@
 #include "DetDesc/Mixture.h"
 
 
-extern const    CLID&   CLID_Isotope;
-
 // Instantiation of a static factory class used by clients to create
 // instances of this service
 static CnvFactory<XmlIsotopeCnv> s_factoryIsotope;

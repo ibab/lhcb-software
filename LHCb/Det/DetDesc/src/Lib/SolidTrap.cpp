@@ -229,7 +229,7 @@ StreamBuffer& SolidTrap::serialize( StreamBuffer& s ) const
 	   << m_trap_dxAtMinusZPlusY  
 	   << m_trap_alphaAtMinusZ    
 	   << m_trap_dyAtPlusZ        
-	   >> m_trap_dxAtPlusZMinusY  
+	   << m_trap_dxAtPlusZMinusY  
 	   << m_trap_dxAtPlusZPlusY   
 	   << m_trap_alphaAtPlusZ  ; 
 }
@@ -267,10 +267,10 @@ const ISolid*           SolidTrap::cover         () const
       xmx1 = abs( point(i).x() ) > xmx1 ? abs( point(i).x() ) : xmx1 ; 
       ymx1 = abs( point(i).y() ) > ymx1 ? abs( point(i).y() ) : ymx1 ; 
     }  
-  for( VERTICES::size_type i = 4 ; i <  8 ; ++i )
+  for( VERTICES::size_type i1 = 4 ; i1 <  8 ; ++i1 )
     {
-      xmx2 = abs( point(i).x() ) > xmx2 ? abs( point(i).x() ) : xmx2 ; 
-      ymx2 = abs( point(i).y() ) > ymx2 ? abs( point(i).y() ) : ymx2 ; 
+      xmx2 = abs( point(i1).x() ) > xmx2 ? abs( point(i1).x() ) : xmx2 ; 
+      ymx2 = abs( point(i1).y() ) > ymx2 ? abs( point(i1).y() ) : ymx2 ; 
     }  
   
   ISolid* cov = new SolidTrd( "Cover for " + name  () , 

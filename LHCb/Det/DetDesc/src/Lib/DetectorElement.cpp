@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/Lib/DetectorElement.cpp,v 1.1 2001-01-22 09:55:41 ibelyaev Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/Lib/DetectorElement.cpp,v 1.2 2001-01-22 10:55:36 mato Exp $
 #include "GaudiKernel/Kernel.h"
 
 #include "GaudiKernel/IGeometryInfo.h"
@@ -8,7 +8,8 @@
 
 #include "GaudiKernel/TimePoint.h" 
 #include "GaudiKernel/TransientStore.h" 
-#include "GaudiKernel/ObjectFactory.h" 
+#include "GaudiKernel/ObjectFactory.h"
+#include "GaudiKernel/StreamBuffer.h"
 
 
 #include "DetDesc/DetectorElement.h"
@@ -16,7 +17,6 @@
 
 
 
-const CLID& CLID_DetectorElement = 1000;
 
 
 DetectorElement::DetectorElement( const std::string&   name        ,

@@ -7,6 +7,7 @@
 #include "GaudiKernel/Converter.h"
 
 #include "DetDesc/ISax8BitDocHandler.h"
+#include "DetDesc/Element.h"
 
 // Forward declarations
 class     ISvcLocator;
@@ -15,11 +16,7 @@ template <class TYPE> class CnvFactory;
 class IConverter;
 class XmlAddress;
 class DataObject;
-class Element;
 class Isotope;
-
-extern const    CLID&   CLID_Element;
-extern const    CLID&   CLID_Isotope;
 
 class   XmlElementCnv : public XmlGenericCnv, public ISax8BitDocHandler
 {

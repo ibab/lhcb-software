@@ -1,4 +1,4 @@
-///	$Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/XmlDetectorElementCnv.cpp,v 1.2 2001-01-22 09:55:40 ibelyaev Exp $
+///	$Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/XmlDetectorElementCnv.cpp,v 1.3 2001-01-22 10:55:35 mato Exp $
 
 /// Include files
 #include "DetDesc/XmlDetectorElementCnv.h"
@@ -31,10 +31,8 @@
 
 #include "DetDesc/GeometryInfo.h"
 
-extern const    CLID&   CLID_DetectorElement;
-
 /// RCS Id for identification of object version
-///static const char* rcsid = "$Id: XmlDetectorElementCnv.cpp,v 1.2 2001-01-22 09:55:40 ibelyaev Exp $";
+///static const char* rcsid = "$Id: XmlDetectorElementCnv.cpp,v 1.3 2001-01-22 10:55:35 mato Exp $";
 
 /// Instantiation of a static factory class used by clients to create
 /// instances of this service

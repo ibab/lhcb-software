@@ -3,6 +3,7 @@
 
 // generic experiment headers
 #include "DetDesc/XmlGenericCnv.h"
+#include "DetDesc/Isotope.h"
 
 #include "GaudiKernel/Converter.h"
 
@@ -12,9 +13,6 @@
 class     ISvcLocator;
 template <class TYPE> class CnvFactory;
 
-class Isotope;
-
-extern const    CLID&   CLID_Isotope;
 
 class   XmlIsotopeCnv : public XmlGenericCnv, public ISax8BitDocHandler
 {

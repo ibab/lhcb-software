@@ -34,8 +34,6 @@
 #include "DetDesc/Element.h"
 #include "DetDesc/Mixture.h"
 
-extern const    CLID&   CLID_Element;
-extern const    CLID&   CLID_Isotope;
 
 // Instantiation of a static factory class used by clients to create
 // instances of this service

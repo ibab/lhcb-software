@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/DetDesc/DetectorElement.h,v 1.1 2001-01-22 09:55:35 ibelyaev Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/DetDesc/DetectorElement.h,v 1.2 2001-01-22 10:55:34 mato Exp $
 #ifndef  GAUDIKERNEL_DETECTORELEMENT_H
 #define  GAUDIKERNEL_DETECTORELEMENT_H 
 
@@ -26,7 +26,7 @@ template <class T> class DataObjectFactory;
 
 
 // unique ID of the class
-extern const CLID& CLID_DetectorElement; 
+static const CLID CLID_DetectorElement = 1000;
 
 
 /** @class DetectorElement DetectorElement.h GaudiKernel/DetectorElement.h

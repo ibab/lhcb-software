@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/Lib/Element.cpp,v 1.1 2001-01-22 09:55:41 ibelyaev Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/Lib/Element.cpp,v 1.2 2001-01-22 10:55:36 mato Exp $
 #include "GaudiKernel/StatusCode.h"
 
 #include "DetDesc/Element.h"
@@ -7,9 +7,8 @@
 #include <math.h>
 
 /// RCS Id for identification of object version
-///static const char* rcsid = "$Id: Element.cpp,v 1.1 2001-01-22 09:55:41 ibelyaev Exp $";
+///static const char* rcsid = "$Id: Element.cpp,v 1.2 2001-01-22 10:55:36 mato Exp $";
 
-const CLID& CLID_Element = 1202;
 
 // Class Element 
 

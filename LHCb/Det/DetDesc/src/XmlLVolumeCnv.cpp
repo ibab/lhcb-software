@@ -1,4 +1,4 @@
-/// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/XmlLVolumeCnv.cpp,v 1.2 2001-01-22 09:55:41 ibelyaev Exp $
+/// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/XmlLVolumeCnv.cpp,v 1.3 2001-01-22 10:55:36 mato Exp $
 
 #include "DetDesc/XmlLVolumeCnv.h"
 #include "DetDesc/XmlCnvException.h"
@@ -38,12 +38,9 @@
 
 #include "DetDesc/Solids.h"
 
-/// Forward and extern declarations
-
-extern const    CLID&   CLID_Isotope;
 
 /// RCS Id for identification of object version
-///static const char* rcsid = "$Id: XmlLVolumeCnv.cpp,v 1.2 2001-01-22 09:55:41 ibelyaev Exp $";
+///static const char* rcsid = "$Id: XmlLVolumeCnv.cpp,v 1.3 2001-01-22 10:55:36 mato Exp $";
 
 // Instantiation of a static factory class used by clients to create
 // instances of this service

@@ -3,6 +3,7 @@
 
 // generic experiment headers
 #include "DetDesc/XmlGenericCnv.h"
+#include "DetDesc/Mixture.h"
 
 #include "GaudiKernel/Converter.h"
 
@@ -17,10 +18,6 @@ class XmlAddress;
 class DataObject;
 class Isotope;
 class Element;
-class Mixture;
-
-extern const    CLID&   CLID_Element;
-extern const    CLID&   CLID_Mixture;
 
 class   XmlMixtureCnv : public XmlGenericCnv,
 public ISax8BitDocHandler
