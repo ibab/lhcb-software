@@ -3,6 +3,10 @@ Package     : Phys/DaVinci
 Package Coordinator : Gloria Corti
 Purpose     : LHCb analysis program 
 
+ - Bug fixes:
+  . Modify comment in DaVinciNeutral.opts
+  . Modify reported default output location in PreLoadCombinedParticles.opts
+
 </PRE><H1><A NAME=v8r1>2003-06-03 DaVinci v8r1</A></H1><PRE>
  - New features:
   . Use LHCb v11r12 ( refer to its release.notes for details )

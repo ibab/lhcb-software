@@ -53,5 +53,5 @@ PreLoadParticles.PhysDesktop.ParticleMakerType = "CombinedParticleMaker";
 //    "/Event/Rec/ProtoP/Charged" 
 
 // Default value for output of PhysDesktop
-//  PreLoadParticles.PhysDesktop.OutputLocation = "/Event/Phys/Prod";
+//  PreLoadParticles.PhysDesktop.OutputLocation = "/Event/Phys/User";
 
