@@ -475,7 +475,7 @@ StatusCode CaloSCorrectionFinal::operator() ( CaloHypo* hypo ) const {
 		for (j=0;j<3;j++) {EDiffX[i][j]=0.0;EDiffY[i][j]=0.0;}
 	}
 
-	double x=0.,param_x=0.;
+	double x=0.,temp_x=0.,param_x=0.;
 	if (!borderx) {
 		param_x=m_Coeff_X[areaseed][2]
 			+m_Coeff_X[areaseed][3]*fabs(xseed)
@@ -483,9 +483,9 @@ StatusCode CaloSCorrectionFinal::operator() ( CaloHypo* hypo ) const {
 			+m_Coeff_X[areaseed][5]*log(energy)*log(energy);
 		const double Enum = (eright-eleft);
 		const double Edenom = (eright+m_Coeff_X[areaseed][1]*evert+eleft);
-		x=m_Coeff_X[areaseed][0]*Enum/Edenom;
-		x=param_x*asinh(2*x*sinh(1./param_x))/2.;
-		const double Difffactor = x*2.*m_Coeff_X[areaseed][0]*sinh(1./param_x);
+		temp_x=2*m_Coeff_X[areaseed][0]*Enum/Edenom*sinh(1./param_x);
+		x=param_x*asinh(temp_x)/2.;
+		const double Difffactor = param_x*m_Coeff_X[areaseed][0]*sinh(1./param_x)/sqrt(1.+temp_x*temp_x);
 		// in eright
 		EDiffX[2][0]=Difffactor*(Edenom-Enum)/(Edenom*Edenom);
 		EDiffX[2][1]=Difffactor*(Edenom-Enum)/(Edenom*Edenom);
@@ -503,9 +503,9 @@ StatusCode CaloSCorrectionFinal::operator() ( CaloHypo* hypo ) const {
 		param_x=m_Coeff_border_X[areaseed][0];
 		const double Enum = (eright-eleft);
 		const double Edenom = (eright+m_Coeff_X[areaseed][1]*evert+eleft);
-		x=Enum/Edenom;
-		x=param_x*asinh(2*x*sinh(1./param_x))/2.;
-		const double Difffactor = x*2.*sinh(1./param_x);
+		temp_x=Enum/Edenom;
+		x=param_x*asinh(temp_x)/2.;
+		const double Difffactor = param_x*sinh(1./param_x)/sqrt(1.+temp_x*temp_x);
 		// in eright
 		EDiffY[2][0]=Difffactor*(Edenom-Enum)/(Edenom*Edenom);
 		EDiffY[2][1]=Difffactor*(Edenom-Enum)/(Edenom*Edenom);
@@ -523,7 +523,7 @@ StatusCode CaloSCorrectionFinal::operator() ( CaloHypo* hypo ) const {
 	x*=sizeseed;
 	x+=xseed;
 
-	double y=0.,param_y=0.;
+	double y=0.,temp_y=0.,param_y=0.;
 	if (!bordery) {
 		param_y=m_Coeff_Y[areaseed][2]
 			+m_Coeff_Y[areaseed][3]*fabs(xseed)
@@ -531,9 +531,9 @@ StatusCode CaloSCorrectionFinal::operator() ( CaloHypo* hypo ) const {
 			+m_Coeff_Y[areaseed][5]*log(energy)*log(energy);
 		const double Enum = (etop-ebottom);
 		const double Edenom = (etop+m_Coeff_Y[areaseed][1]*ehori+ebottom);
-		y=m_Coeff_Y[areaseed][0]*Enum/Edenom;
-		y=param_y*asinh(2*y*sinh(1./param_y))/2.;
-		const double Difffactor = y*2.*m_Coeff_Y[areaseed][0]*sinh(1./param_y)*sizeseed;
+		temp_y=2*m_Coeff_Y[areaseed][0]*Enum/Edenom*sinh(1./param_y);
+		x=param_y*asinh(temp_y)/2.;
+		const double Difffactor = param_y*m_Coeff_Y[areaseed][0]*sinh(1./param_y)/sqrt(1.+temp_y*temp_y);
 		// in etop
 		EDiffY[0][2]=Difffactor*(Edenom-Enum)/(Edenom*Edenom);
 		EDiffY[1][2]=Difffactor*(Edenom-Enum)/(Edenom*Edenom);
@@ -551,9 +551,9 @@ StatusCode CaloSCorrectionFinal::operator() ( CaloHypo* hypo ) const {
 		param_y=m_Coeff_border_Y[areaseed][0];
 		const double Enum = (etop-ebottom);
 		const double Edenom = (etop+m_Coeff_Y[areaseed][1]*ehori+ebottom);
-		y=Enum/Edenom;
-		y=param_y*asinh(2*y*sinh(1./param_y))/2.;
-		const double Difffactor = y*2.*m_Coeff_Y[areaseed][0]*sinh(1./param_y)*sizeseed;
+		temp_y=Enum/Edenom;
+		x=param_y*asinh(temp_y)/2.;
+		const double Difffactor = param_y*sinh(1./param_y)/sqrt(1.+temp_y*temp_y);
 		// in etop
 		EDiffY[0][2]=Difffactor*(Edenom-Enum)/(Edenom*Edenom);
 		EDiffY[1][2]=Difffactor*(Edenom-Enum)/(Edenom*Edenom);
@@ -586,10 +586,11 @@ StatusCode CaloSCorrectionFinal::operator() ( CaloHypo* hypo ) const {
 		msg << MSG::VERBOSE << "X/Y/E updated..." << endreq;
 
 
+/*
 		for (i=0;i<3;i++) {
 			for (j=0;j<3;j++) {EDiffX[i][j]=1.0;EDiffY[i][j]=1.0;}
 		}
-
+*/
 		double SumEE =0.;
 		double SumEX =0.;
 		double SumEY =0.;
@@ -634,87 +635,32 @@ StatusCode CaloSCorrectionFinal::operator() ( CaloHypo* hypo ) const {
 		double CovYY = SumYY/energy/energy + y*y*SumEE/energy/energy - 2.*y*SumEY/energy/energy;
 
 		CaloPosition::Covariance& covariance = hypo->position()->covariance();
-		msg << MSG::VERBOSE << "covariance EE:" << covariance( CaloPosition::E , CaloPosition::E ) << endreq;
-		msg << MSG::VERBOSE << "COV        EE:" << CovEE << endreq;
-		msg << MSG::VERBOSE << "covariance EX:" << covariance( CaloPosition::E , CaloPosition::X ) << endreq;
-		msg << MSG::VERBOSE << "COV        EX:" << CovEX << endreq;
-		msg << MSG::VERBOSE << "covariance EY:" << covariance( CaloPosition::E , CaloPosition::Y ) << endreq;
-		msg << MSG::VERBOSE << "COV        EY:" << CovEY << endreq;
-		msg << MSG::VERBOSE << "covariance XX:" << covariance( CaloPosition::X , CaloPosition::X ) << endreq;
-		msg << MSG::VERBOSE << "COV        XX:" << CovXX << endreq;
-		msg << MSG::VERBOSE << "covariance XY:" << covariance( CaloPosition::X , CaloPosition::Y ) << endreq;
-		msg << MSG::VERBOSE << "COV        XY:" << CovXY << endreq;
-		msg << MSG::VERBOSE << "covariance YY:" << covariance( CaloPosition::Y , CaloPosition::Y ) << endreq;
-		msg << MSG::VERBOSE << "COV        YY:" << CovYY << endreq;
+
+		msg << MSG::VERBOSE << "covariance EE:" << CovEE
+			<< " was:" << covariance( CaloPosition::E , CaloPosition::E ) << endreq;
+		covariance( CaloPosition::E , CaloPosition::E ) = CovEE;
+		msg << MSG::VERBOSE << "covariance EX:" << CovEX
+			<< " was:" << covariance( CaloPosition::E , CaloPosition::X ) << endreq;
+		covariance( CaloPosition::E , CaloPosition::X ) = CovEX;
+		msg << MSG::VERBOSE << "covariance EY:" << CovEY
+			<< " was:" << covariance( CaloPosition::E , CaloPosition::Y ) << endreq;
+		covariance( CaloPosition::E , CaloPosition::Y ) = CovEY;
+		msg << MSG::VERBOSE << "covariance XX:" << CovXX
+			<< " was:" << covariance( CaloPosition::X , CaloPosition::X ) << endreq;
+		covariance( CaloPosition::X , CaloPosition::X ) = CovXX;
+		msg << MSG::VERBOSE << "covariance XY:" << CovXY
+			<< " was:" << covariance( CaloPosition::X , CaloPosition::Y ) << endreq;
+		covariance( CaloPosition::X , CaloPosition::Y ) = CovXY;
+		msg << MSG::VERBOSE << "covariance YY:" << CovYY
+			<< " was:" << covariance( CaloPosition::Y , CaloPosition::Y ) << endreq;
+		covariance( CaloPosition::Y , CaloPosition::Y ) = CovYY;
+
 		msg << MSG::VERBOSE << "covariance updated..." << endreq;
 	} else {
 	  msg << MSG::INFO << "something wrong detected, hypo position NOT updated..." << endreq;
 	}
 
-/*
-  // X/Y/E: pass data to CaloPosition
-  CaloPosition* position = new CaloPosition();
-  //CaloPosition* position  = hypo->position();
-  msg << MSG::VERBOSE << "CaloPosition created..." << endreq;
-  HepVector localposition(3);
-  localposition(CaloPosition::X)=x;
-  localposition(CaloPosition::Y)=y;
-  //localposition(CaloPosition::E)=energy;
-  position->setParameters(localposition);
-  msg << MSG::VERBOSE << "X/Y/E updated..." << endreq;
-*/
-//  HepSymMatrix localcovariance(3,1);
-//  position->setCovariance(localcovariance);
-  //HepSymMatrix localcovariance((hypo->position())->covariance());
-  /*
-  localcovariance(CaloPosition::E,CaloPosition::E)=
-    ((hypo->position())->covariance())(CaloPosition::E,CaloPosition::E);
-  localcovariance(CaloPosition::E,CaloPosition::X)=xprime
-    *((hypo->position())->covariance())(CaloPosition::E,CaloPosition::X);
-  localcovariance(CaloPosition::E,CaloPosition::Y)=yprime
-    *((hypo->position())->covariance())(CaloPosition::E,CaloPosition::Y);
-  localcovariance(CaloPosition::X,CaloPosition::X)=xprime*xprime
-    *((hypo->position())->covariance())(CaloPosition::X,CaloPosition::X);
-  localcovariance(CaloPosition::X,CaloPosition::Y)=xprime*yprime
-    *((hypo->position())->covariance())(CaloPosition::Y,CaloPosition::Y);
-  localcovariance(CaloPosition::Y,CaloPosition::Y)=yprime*yprime
-    *((hypo->position())->covariance())(CaloPosition::Y,CaloPosition::Y);
-    */
-  /*
-  //CaloPosition *old = hypo->position();
-  //HepSymMatrix oldcov = ((hypo->position())->covariance());
-  //HepSymMatrix cov = (hypo->position())->covariance();
-  CaloPosition* old = hypo->position();
-
-  //CaloPosition::Covariance oldcov(hypo->position()->covariance());
-  msg << MSG::VERBOSE
-         << ":" << position->covariance()
-         << ":" << old->covariance()
-         << endreq;
-  */
-
-/*
-  // I need to find correct math formulas...
-  double CovXX=1.;
-  double CovXY=1.;
-  double CovEX=1.;
-  double CovYY=1.;
-  double CovEY=1.;
-  double CovEE=1.;
-  // update cluster matrix
-  CaloPosition::Covariance& covariance = hypo->position()->covariance();
-  covariance( CaloPosition::X , CaloPosition::X ) = CovXX ;
-  covariance( CaloPosition::Y , CaloPosition::X ) = CovXY ;
-  covariance( CaloPosition::E , CaloPosition::X ) = CovEX ;
-  covariance( CaloPosition::Y , CaloPosition::Y ) = CovYY ;
-  covariance( CaloPosition::E , CaloPosition::Y ) = CovEY ;
-  covariance( CaloPosition::E , CaloPosition::E ) = CovEE ;
-
-*/
-
-  msg << MSG::VERBOSE << "Covariance updated..." << endreq;
-  //hypo->setPosition(position);
-  msg << MSG::VERBOSE << "CaloHypo updated..." << endreq;
+  msg << MSG::VERBOSE << "CaloHypo ok..." << endreq;
 
   return StatusCode::SUCCESS;
 }
