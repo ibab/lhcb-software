@@ -13,7 +13,7 @@ apply_pattern BooleVersion
 #-- CMT and GaudiPolicy
 use GaudiPolicy v5r14
 
-#-- External libraries (as defined in GAUDI_v14r1)
+#-- External libraries (as defined in GAUDI_v14r2)
 use ExternalLibs	v4r4
 use AIDA		v3r300		-no_auto_imports
 use BOOST		v2r1302p0	-no_auto_imports
@@ -28,20 +28,21 @@ use UUID		v1r32
 use SEAL		v1r133p1
 use POOL		v1r150p1
 
-#-- Gaudi libraries (from GAUDI_v14r1)
+#-- Gaudi libraries (from GAUDI_v14r2)
 use GaudiKernel		v15r1
-use GaudiSvc 		v11r2
-use GaudiAlg 		v6r5
+use GaudiSvc 		v11r3
+use GaudiAlg 		v7r0
+use GaudiTools		v8r0
 use GaudiAud 		v6r4
-use GaudiDb 		v9r1
+use GaudiDb 		v9r2
 use GaudiRootDb 	v9r4
-use GaudiPoolDb		v1r4
+use GaudiPoolDb		v1r5
 use GaudiObjDesc 	v6r2p1
 use HbookCnv 		v14r1
 
 #-- Databases
 use XmlDDDB	v22r0	Det
-use ParamFiles	v2r1	$(LHCb_release_area)/PARAM -no_auto_imports
+use ParamFiles	v3r2	$(LHCb_release_area)/PARAM -no_auto_imports
 use FieldMap	v4r3
 
 #-- LHCb libraries (from LHCB_v15r3)
@@ -66,8 +67,8 @@ use L0DU                v6r7	L0
 #use L1Reco		v2r1	Trg
 
 # Calorimeter
-use CaloMonitor         v1r6	Calo
-use CaloDigit           v1r5	Calo
+use CaloMonitor         v2r0	Calo
+use CaloDigit           v1r6	Calo
 
 # Velo
 use VeloAlgorithms      v3r0	Velo
