@@ -1,8 +1,11 @@
-// $Id: GiGaMCVertexCnv.cpp,v 1.25 2003-10-09 09:02:28 witoldp Exp $ 
+// $Id: GiGaMCVertexCnv.cpp,v 1.26 2003-10-31 12:40:06 witoldp Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.25  2003/10/09 09:02:28  witoldp
+// added conversion of vertex type
+//
 // Revision 1.24  2003/07/17 14:43:57  witoldp
 // mother particle set problem temporarly solved
 //
@@ -387,7 +390,7 @@ StatusCode GiGaMCVertexCnv::updateObjRefs
     GiGaKineRefTable& table = kineSvc()->table();
     TrajectoryVector* tv = trajectories->GetVector();
     ITV iVertex     = vertices     -> begin() ;
-    
+
     for(ITT iTrajectory = tv->begin(); tv->end() != iTrajectory; ++iTrajectory )
       {
 
@@ -407,7 +410,8 @@ StatusCode GiGaMCVertexCnv::updateObjRefs
         int parid=trajectory->parentID();
         GiGaKineRefTableEntry& entry = table( parid ) ;
         // mother MCParticle (could be NULL!)
-        MCParticle* mother  = entry.particle () ;
+        MCParticle* mother  = entry.particle () ;        
+
         // loop over trajectory points (vertices)  
         for( ITG iPoint = trajectory->begin() ; 
              trajectory->end() != iPoint ; ++iPoint )
@@ -418,14 +422,61 @@ StatusCode GiGaMCVertexCnv::updateObjRefs
             miscVertex.setPosition    ( (*iPoint) -> GetPosition () );
             miscVertex.setTimeOfFlight( (*iPoint) -> GetTime     () );
             // look for vertex, special treatment for "first" 
-            // vertex. should be quite fast 
+            // vertex. should be quite fast
+
+            
             iVertex = 
               std::lower_bound( trajectory -> begin () == iPoint ? 
                                 vertices   -> begin () :  iVertex     , 
                                 vertices   -> end   () ,  &miscVertex , Less  );
+            
             // no vertex is found? 
             if( vertices->end() == iVertex || !Equal( &miscVertex , *iVertex ) )
-              { return Error("appropriate MCVertex is not found !") ; }
+              {
+//                 MsgStream log( msgSvc(),  name() ) ; 
+//                 std::cout.precision(64);
+//                 std::cout << "While looking at trajectory point "
+//                     << (HepPoint3D)((*iPoint)->GetPosition()) << " from the following trajectory: "
+//                           << trajectory->trackID() << std::endl;
+                
+//                 for( ITG iP = trajectory->begin(); 
+//                      trajectory->end() != iP; ++iP)
+//                   std::cout << (HepPoint3D)((*iP)->GetPosition()) << " ToF " 
+//                             << (*iP)->GetTime()
+//                             << std::endl; 
+                
+//                 log << MSG::INFO << "with the complete list of vertices being"
+//                     << endreq;
+//                 for(ITV tempvit=vertices->begin (); vertices->end()!=tempvit; 
+//                     tempvit++) std::cout << (*tempvit)->position() 
+//                                          << " ToF " << (*tempvit)->timeOfFlight() 
+//                                          << std::endl;
+
+                
+//                 log << MSG::INFO << "and the complete collection of trajectories being"
+//                     << endreq;
+                
+//                 for(ITT iT = tv->begin(); tv->end() != iT; ++iT )
+//                   {
+//                     std::cout << "trajectoryID " 
+//                         << (*iT)->GetTrackID() << " motherID " 
+//                         << (*iT)->GetParentID() <<
+//                       "  pdgID " << (*iT)->GetPDGEncoding() 
+//                         << " initial momentum " << 
+//                       (HepPoint3D)((*iT)->GetInitialMomentum()) 
+//                               << " process " << ((GiGaTrajectory*)(*iT))->processName()
+//                         << std::endl;
+                    
+//                     for( ITG iP = ((GiGaTrajectory*)(*iT))->begin() ; 
+//                          ((GiGaTrajectory*)(*iT))->end() != iP ; ++iP )
+//                       {
+//                         std::cout << (HepPoint3D)((*iP)->GetPosition())
+//                                   << " ToF " << (*iP)->GetTime()
+//                                   << std::endl;
+//                       }
+//                   }
+                return Error("appropriate MCVertex is not found !"); 
+              }
             MCVertex* vertex = *iVertex ;
             if( 0 == vertex ) { return Error("MCVertex* points to NULL!") ; }
             // is it the first vertex for track?
@@ -464,16 +515,16 @@ StatusCode GiGaMCVertexCnv::updateObjRefs
                   {
                     // add daughter particle to the vertex 
                     Ref dau( vertex , refID , particle->key() , particle );
-                    vertex->addToProducts( dau) ;
-                  }
+                    vertex->addToProducts( dau ) ;    
                 
-                // mother is known ?            
-                if ( !vertex->mother() && 0 != mother )
-                  {
-                    Ref moth( vertex , refID , mother->key() , mother ) ;
-                    vertex->setMother( moth ) ;
+                    // mother is known ?            
+                    if ( !vertex->mother() && 0 != mother )
+                      {
+                        Ref moth( vertex , refID , mother->key() , mother ) ;
+                        vertex->setMother( moth ) ;
+                      }
                   }
-              }	       
+              }
             // decay vertex  ?
             else if ( !vertex->mother()  ) 
               {                
@@ -534,12 +585,12 @@ StatusCode GiGaMCVertexCnv::updateObjRefs
            m_onepointIDs.end()!=miter; ++miter)
       {
         // to look at later  <<<<<<<<<<<<<<<<<<<<<<<<<<<<<
-        // should I check if it has any daughters? 
+        // should I check if it has any daughters?
 
         int mytrid=(*miter).first;
-        
+
         // look for the corresponding MCParticle
-        MCParticle* mcpart  = table( mytrid ).particle();
+        MCParticle* mcpart  = table( mytrid ).particle();        
         
         // create a new end vertex and set (x,t)        
         SmartRef<MCVertex> endvtx= new MCVertex();
@@ -552,8 +603,9 @@ StatusCode GiGaMCVertexCnv::updateObjRefs
         vertices->insert( endvtx ); 
         
         // set mother of the new vertex
-        Ref moth( endvtx , refID , mcpart->key() , mcpart );
-        endvtx->setMother( moth ) ;             
+        //        Ref moth( endvtx , refID , mcpart->key() , mcpart );
+        //        endvtx->setMother( moth ) ;             
+        endvtx->setMother( mcpart ) ;             
         
         // look through the trajectories, find particles that should 
         // be outgoing from the new vertex and attach them
@@ -567,14 +619,13 @@ StatusCode GiGaMCVertexCnv::updateObjRefs
                 MCParticle* outpart=table((*itra)->
                                           GetTrackID() ).particle();
                 
-                Ref dau( endvtx , refID , outpart->key() , outpart );
-                
-                endvtx->addToProducts(dau);
-                
+                //                Ref dau( endvtx , refID , outpart->key() , outpart );                
+                //                endvtx->addToProducts(dau);                
+                endvtx->addToProducts(outpart);                
               }
           }
       }
-  } // end end of relations scope
+  }
   //
   return StatusCode::SUCCESS; 
 };

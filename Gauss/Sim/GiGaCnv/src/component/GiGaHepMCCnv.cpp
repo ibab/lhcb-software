@@ -1,8 +1,11 @@
-// $Id: GiGaHepMCCnv.cpp,v 1.11 2003-07-11 17:42:59 witoldp Exp $
+// $Id: GiGaHepMCCnv.cpp,v 1.12 2003-10-31 12:40:05 witoldp Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.11  2003/07/11 17:42:59  witoldp
+// added collision converter
+//
 // Revision 1.10  2003/03/05 15:19:19  ranjard
 // v11r2 - fixes for Win32
 //
@@ -45,6 +48,9 @@
 /// Geant4 includes
 #include "G4PrimaryParticle.hh"
 #include "G4PrimaryVertex.hh"
+#include "G4ChargedGeantino.hh"
+#include "G4Geantino.hh"
+
 /// Local
 #include "GiGaHepMCCnv.h" 
 
@@ -198,7 +204,8 @@ StatusCode GiGaHepMCCnv::updateRep
             {              
               // skip particles with status diffrent from 1 or from 888
 
-              if(((*pParticle)->status()==1)||((*pParticle)->status()==888))
+              if(((*pParticle)->status()==1)||
+                 ((*pParticle)->status()==888)||((*pParticle)->status()==889))
                 {
                   outpart.push_back(*pParticle);
                 }
@@ -208,7 +215,7 @@ StatusCode GiGaHepMCCnv::updateRep
       // sort the vector, so we always put them in the same order into G4
       std::sort(outpart.begin(), outpart.end(), comp_bar());
       
-      // here I am assuming that all the particles with status 1 and 888, i.e. 
+      // here I am assuming that all the particles with status 1, 888 and 889, i.e. 
       // all particles produced by Pythia are coming from the same physical vertex
       // if that was not the case, one would need to implement a more sophisticated 
       // machinery to assign particles to different vertices on a case by case basis      
@@ -218,7 +225,7 @@ StatusCode GiGaHepMCCnv::updateRep
         ((*(outpart.begin()))->production_vertex()->position().x(),
          (*(outpart.begin()))->production_vertex()->position().y(),
          (*(outpart.begin()))->production_vertex()->position().z(),
-         (*(outpart.begin()))->production_vertex()->position().t());
+         ((*(outpart.begin()))->production_vertex()->position().t())/c_light);
       
       for(std::vector<HepMC::GenParticle*>::iterator ioutpart=outpart.begin();
           outpart.end()!=ioutpart;ioutpart++)
@@ -247,16 +254,24 @@ G4PrimaryParticle* GiGaHepMCCnv::GenPartG4Part(HepMC::GenParticle* particle)
   if( 0 == particle ) { throw GiGaException( ErrMsg1 ) ; }
 
   std::vector<HepMC::GenParticle*> outp;
-
-  G4PrimaryParticle* Particle = 
+  
+  G4PrimaryParticle*  Particle = 
     new G4PrimaryParticle( particle->pdg_id() , 
                            particle->momentum().px()*GeV ,
                            particle->momentum().py()*GeV ,
-                           particle->momentum().pz()*GeV );
+                           particle->momentum().pz()*GeV );  
   
-  // if particle has daughters, carry on with the conversion
   if (particle->end_vertex()) 
     {
+      // assign decay time
+//       Particle -> 
+//         SetProperTime((particle->end_vertex()->position().t())/c_light);
+//       std::cout << "assigning time " 
+//                 << (particle->end_vertex()->position().t())/c_light
+//                 << " to " <<  particle->pdg_id() << std::endl;
+      
+                        
+      // if particle has daughters, carry on with the conversion
       for (HepMC::GenVertex::particles_out_const_iterator outPart = 
              (particle->end_vertex())->particles_out_const_begin();
            (particle->end_vertex())->particles_out_const_end() != outPart ; 

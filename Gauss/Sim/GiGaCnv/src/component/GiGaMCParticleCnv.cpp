@@ -1,8 +1,11 @@
-// $Id: GiGaMCParticleCnv.cpp,v 1.24 2003-07-14 15:26:36 witoldp Exp $ 
+// $Id: GiGaMCParticleCnv.cpp,v 1.25 2003-10-31 12:40:05 witoldp Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.24  2003/07/14 15:26:36  witoldp
+// some restructurisation to GiGaCollisionCnv
+//
 // Revision 1.23  2003/07/11 17:42:59  witoldp
 // added collision converter
 //
@@ -241,14 +244,7 @@ StatusCode GiGaMCParticleCnv::updateObj
           // insert the particle to container and fill the reference table 
           const int index = trajectory->trackID() ;
           particles -> insert( mcp );
-          table( index )  = GiGaKineRefTableEntry( mcp , index );
-//           cout << "Converted track " << trajectory->trackID()
-//                << " with " << trajectory->GetPointEntries()
-//                << " points, to " << mcp->particleID() << " with energy " 
-//                << mcp->momentum().e()
-//                << " motherID: " << trajectory->parentID() 
-//                << endl;
-          
+          table( index )  = GiGaKineRefTableEntry( mcp , index );          
         }
     }
   catch( const GaudiException& Excp )
@@ -308,10 +304,7 @@ StatusCode GiGaMCParticleCnv::updateObjRefs
   SmartDataPtr<MCVertices> vertices( evtSvc() , verticesPath );
   if( !vertices ) 
     { return Error("Could not locate Vertices in '" + verticesPath + "'" ); }
-  const long refID = object->linkMgr()->addLink( verticesPath ,  vertices );
-  
-  // get the references between MCParticles and Geant4 TrackIDs
-  GiGaKineRefTable& table = kineSvc()->table();
+  const long refID = object->linkMgr()->addLink( verticesPath ,  vertices ); 
   
   // clear all existing references 
   std::transform( particles->begin                     () , 
@@ -322,10 +315,9 @@ StatusCode GiGaMCParticleCnv::updateObjRefs
   typedef SmartRef<MCVertex>               Ref;
   typedef GiGaTrajectory::const_iterator   ITG;
   typedef TrajectoryVector::const_iterator ITC;
-  MCVertex miscVertex; /// misc 
-  GiGaCnvFunctors::MCVerticesLess  Less  ; 
-  GiGaCnvFunctors::MCVerticesEqual Equal ;
-  MCVertices::iterator iVertex     = vertices     -> begin();
+
+  MCVertex miscVertex; /// misc
+  MCVertices::iterator iVertex = vertices -> begin();
 
   // new version by WP
 

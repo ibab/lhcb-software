@@ -1,7 +1,12 @@
-! $Id: release.notes,v 1.59 2003-10-09 09:02:28 witoldp Exp $
+! $Id: release.notes,v 1.60 2003-10-31 12:40:05 witoldp Exp $
 ! =============================================================================
 Package         : GiGaCnv
 Package Manager : Vanya Belyaev Ivan.Belyaev@itep.ru
+
+!========================== GiGaCnv v13r5 ===========================
+! 2003-10-30 - Witek Pokorski
+ - GiGaHepMCCnv - fixed units of time coordinate, added preassigned
+                  decay time
 
 !========================== GiGaCnv v13r4 ===========================
 ! 2003-10-09 - Witek Pokorski
