@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.13 2004-03-16 18:48:36 pkoppenb Exp $
+# $Id: requirements,v 1.14 2004-03-25 16:44:43 pkoppenb Exp $
 # Created    : 19/05/2002
 # Maintainer : Gloria Corti
 #
@@ -6,7 +6,7 @@
 # http://cern.ch/lhcb-comp/Support/html/new_structure.pdf
 
 package           DaVinciMCTools
-version           v5r3
+version           v5r4
 
 # This template is an example for a standard Algorithm package
 #
@@ -23,6 +23,7 @@ include_dirs     $(DAVINCIMCTOOLSROOT)
 use  PhysEvent           v*  Event
 use  DaVinciAssociators  v*  Phys
 use  DaVinciTools        v*  Phys
+use  MCTools             v*  Phys
 
 # Extra language for translating yacc to c++
 # This is used to generate once the necessary files on Linux that are

@@ -1,17 +1,24 @@
-! $Id: release.notes,v 1.28 2004-03-16 18:48:36 pkoppenb Exp $
+! $Id: release.notes,v 1.29 2004-03-25 16:44:43 pkoppenb Exp $
 ! Package     : DaVinciMCTools
 ! Responsible : P. Koppenburg
+
+! 2004-03-25 - P. Koppenburg
+ - src/MCDecayFinder.*, mclexer.*, mcparser.*
+   . Moved to Phys/MCTools in LHCB so it can be used in Boole.
+   . Adapted MCParticleMaker.cpp and requirements to find new location.
 
 !========================== DaVinciMCTools v5r3 2003-03-16 =================
 ! 2004-03-16 - P. Koppenburg
  - src/MCDecayFinder.cpp
    . K0L is NOT the antiparticle of K0S!
+   
 !========================== DaVinciMCTools v5r2 2003-03-11 =================
 ! 2004-03-11 - P. Koppenburg
  - mclexer.* (Odie)
    . corrects eta_prime bug
  - MCPIDProtoPAlg.*
    . upstream -> downstream
+   
 !========================== DaVinciMCTools v5r1 2003-01-14 =================
 ! 2004-01-14 - Gloria CORTI
  - cmt/requirements

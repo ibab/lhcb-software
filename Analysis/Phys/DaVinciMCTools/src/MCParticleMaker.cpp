@@ -1,4 +1,4 @@
-// $Id: MCParticleMaker.cpp,v 1.3 2002-12-19 20:55:56 gcorti Exp $
+// $Id: MCParticleMaker.cpp,v 1.4 2004-03-25 16:44:43 pkoppenb Exp $
 // Include files 
 
 #include <memory>
@@ -16,7 +16,7 @@
 #include "GaudiKernel/GaudiException.h"
 #include "Event/Particle.h"
 
-#include "DaVinciMCTools/IMCDecayFinder.h"
+#include "MCTools/IMCDecayFinder.h"
 
 // from CLHEP
 #include "CLHEP/Geometry/Point3D.h"
