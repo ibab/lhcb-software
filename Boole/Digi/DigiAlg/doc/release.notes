@@ -4,6 +4,17 @@
 ! Purpose     : Holds generic digitization algorithms
 !-----------------------------------------------------------------------------
 
+!========================== DigiAlg v2r0 2003-10-06 =========================
+! 2003-09-29 - Marco Cattaneo
+ - New algorithm CreateL1Event to create the L1Event from the L1Buffer at the
+   start of the L1 trigger sequence. This algorithm should be included in any
+   L1 trigger timing measurement, as long as  L1Buffer is already in memory
+ - MergeEventAlg
+   . Implement "SpillOver" event type. Any number of spillover events can be
+     read in, in locations defined by SpillOverAlg.PathList job option
+ - options/SpillOver.opts
+   . Options for configuring SpillOver instance of MergeEventAlg
+
 !========================== DigiAlg v1r1 2003-07-16 =========================
 ! 2003-07-16 - Marco Cattaneo
  - Fix options to work with new MCRichHit (RichEvent v5r0)

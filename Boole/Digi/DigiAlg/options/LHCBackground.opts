@@ -13,7 +13,8 @@ LHCbkgAlg.ItemList = {
  "MC/IT#*",
  "MC/OT#*",
  "MC/Rich#1",
- "MC/Rich/HitsSICB#1",
+// Rich hits only available with SicbToOORawh v3 or greater
+// "MC/Rich/Hits#1",
  "MC/Spd#*",
  "MC/Prs#*",
  "MC/Ecal#1",
@@ -27,6 +28,10 @@ LHCbkgAlg.ItemList = {
 //LHCbkgAlg.MergeType = "LHCBackground";
 // Default
 //LHCbkgAlg.EventSelector = "LHCBkgSelector";
+// Default
+//LHCbkgAlg.PathList = "LHCBackground";
+
+LHCBkgSelector.PrintFreq = -1;
 
 //LHCBkgSelector.Input = {
 //  "DATAFILE='$DVDISK/testdata/OORawhProva.root' TYP='ROOT' OPT='READ'" //File written from 00000070_00000001_1.rawh.root'

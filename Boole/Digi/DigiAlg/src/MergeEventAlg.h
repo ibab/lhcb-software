@@ -13,14 +13,16 @@ class IDataProviderSvc;
 class IConversionSvc;
 class EventSelector;
 class DataStoreItem;
+class ILumiTool;
 
 /** @class MergeEvent MergeEvent.h
  *
  *  Merge events from different OO files and put them in different
- *  TES locations. Initialize a second EventSelector and 
- *  read LHC additional events from that second source.
- *  Based on SpillOverAlg.
- *  For the moment implement merging of flat event from LHC background
+ *  TES locations. Initializes an EventSelector per additional file 
+ *
+ *  Currently implements:
+ *     merging of flat event from LHC background
+ *     merging of luminosity weighted spillover
  *
  *  @author Gloria CORTI
  *  @date   2003-06-23  
@@ -50,6 +52,12 @@ private:
   /// Add item to list of data objects to load new path
   void addItem(Items& itms, const std::string& descriptor);
 
+  /// Read LHC background event and load it into transient Event Store
+  StatusCode readLHCBackground();
+
+  /// Read spillover event and load it into transient Event Store
+  StatusCode readSpillover();
+  
   /// Read additional event and load it into transient Event Store
   StatusCode readAndLoadEvent( std::string& subPath );
 
@@ -72,6 +80,8 @@ private:
   std::string               m_mergeType;
   /// Name of additional event selector
   std::string               m_mergeSelectorName;
+  /// Vector of subPaths to be populated
+  ItemNames                 m_subPaths;
 
   /// Vector of item names
   ItemNames                m_itemNames;
@@ -84,6 +94,7 @@ private:
   IEvtSelector*             m_mergeISelector;
   /// EventSelector iterator
   IEvtSelector::Iterator*   m_mergeIt;
- 
+  /// Luminosity tool
+  ILumiTool*                m_lumiTool;
 };
 #endif    // MERGEEVENTALG_H

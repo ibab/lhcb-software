@@ -1,0 +1,25 @@
+// Options to configure instance SpillOver of MergeEventAlg to read spillover
+// events and merge them with the main event
+
+SpilloverAlg.ItemList = {
+ "/Event/Gen#*",
+ "MC#1",
+ "MC/Particles#1",
+ "MC/Vertices#1",
+ "MC/IT#*",
+ "MC/OT#*",
+ "MC/Rich#1",
+ "MC/Rich/Hits#1",
+ "MC/Spd#*",
+ "MC/Prs#*",
+ "MC/Ecal#1",
+ "MC/Ecal/Hits#1",
+ "MC/Hcal#*",
+ "MC/Velo#*",
+ "MC/Muon#*"
+};
+
+SpilloverAlg.MergeType     = "Spillover";
+SpilloverAlg.PathList      = { "Prev", "Next", "NextNext" };
+SpilloverAlg.EventSelector = "SpilloverSelector";
+SpilloverSelector.PrintFreq = -1;

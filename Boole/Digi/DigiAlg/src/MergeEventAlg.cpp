@@ -1,4 +1,4 @@
-// $Id: MergeEventAlg.cpp,v 1.2 2003-06-30 13:03:20 cattanem Exp $
+// $Id: MergeEventAlg.cpp,v 1.3 2003-10-06 16:16:40 cattanem Exp $
 #define MERGEEVENTALG_CPP 
 // Include files 
 
@@ -24,6 +24,8 @@
 
 // local
 #include "MergeEventAlg.h"
+#include "DigiAlg/ILumiTool.h"
+
 //-----------------------------------------------------------------------------
 // Implementation file for class : MergeEventAlg.
 // This algorithm (based on SpillOverAlg) reads additional
@@ -49,12 +51,16 @@ MergeEventAlg::MergeEventAlg(const std::string& name,
   , m_mergeType( "LHCBackground" )
   , m_mergeSelectorName( "LHCBkgSelector" )
   , m_mergeSelector(0)
-  , m_mergeIt(0) 
+  , m_mergeIt(0)
+  , m_lumiTool(0)
 {
+  m_subPaths.push_back( "LHCBackground" );
+  
   // Declare the algorithm's properties
   declareProperty( "MergeType",     m_mergeType );
   declareProperty( "EventSelector", m_mergeSelectorName );
 	declareProperty( "ItemList",      m_itemNames );
+  declareProperty( "PathList",      m_subPaths );
 }
 
 //=============================================================================
@@ -69,16 +75,23 @@ StatusCode MergeEventAlg::initialize() {
 
   MsgStream msg(msgSvc(), name());
 
-  // Check that the merging type is of valid type
-  if( m_mergeType != "LHCBackground" ) {
-    msg << MSG::INFO << "Invalid merging type" << endreq;
+  // Check that the merging type is of supported type
+  if( "LHCBackground" != m_mergeType && "Spillover" != m_mergeType ) {
+    msg << MSG::INFO << "Unknown merging type" << endreq;
     return StatusCode::FAILURE;
   }
 
   // Print the fact that this background will be loaded
   msg << MSG::INFO 
-      << m_mergeType << " events will be added to the main event"
-      << endreq;
+      << m_mergeType << " events will be added to the main event in paths";
+  
+  ItemNames::const_iterator itSubPaths = m_subPaths.begin();
+  while( itSubPaths != m_subPaths.end() ) {
+    msg << " " << *itSubPaths;
+    itSubPaths++;
+  }
+  msg << endmsg;
+
   
   // Get the service manager interface of the service locator
   SmartIF<ISvcManager> svcMgr  ( IID_ISvcManager, serviceLocator());
@@ -108,6 +121,15 @@ StatusCode MergeEventAlg::initialize() {
   // Take the new item list from the properties.
   for(i = m_itemNames.begin(); i != m_itemNames.end(); i++)   {
     addItem( m_itemList, *i );
+  }
+
+  // Get the luminosity tool
+  if( "Spillover" == m_mergeType ) {
+    sc = toolSvc()->retrieveTool( "LumiTool", m_lumiTool );
+    if( sc.isFailure() ) {
+      msg << MSG::ERROR << "Unable to locate LumiTool" << endmsg;
+      return sc;
+    }
   }
 
   return StatusCode::SUCCESS;
@@ -155,17 +177,19 @@ void MergeEventAlg::addItem(Items& itms, const std::string& descriptor)   {
 StatusCode MergeEventAlg::execute() {
 
   StatusCode sc = StatusCode::FAILURE;
-  MsgStream  msg( msgSvc(), name() );
-  msg << MSG::DEBUG << "execute" << endmsg;
 
-  // Get requested LHC background events
-  std::string subPath = "LHCBackground";
-  sc = readAndLoadEvent( subPath );
-  if( !sc.isSuccess() ) {
-    msg << MSG::ERROR << "Error in loading LHCBackground" << endreq;
-    return sc;
+  if( "LHCBackground" == m_mergeType ) {
+    sc = readLHCBackground();
   }
-  return StatusCode::SUCCESS;
+  else if( "Spillover" == m_mergeType ) {
+    sc = readSpillover();
+  }
+  else {
+    MsgStream  msg( msgSvc(), name() );
+    msg << MSG::FATAL << "Unknown merge event type " << m_mergeType << endmsg;
+  }
+
+  return sc;
 }
 
 //=============================================================================
@@ -180,8 +204,58 @@ StatusCode MergeEventAlg::finalize() {
   m_mergeSelector->finalize();
   m_mergeSelector->release();
 
+  if( 0 != m_lumiTool ) { toolSvc()->releaseTool(m_lumiTool); m_lumiTool = 0; }
+
   return StatusCode::SUCCESS;
 } 
+
+//=============================================================================
+// Read an LHC background event
+//=============================================================================
+StatusCode MergeEventAlg::readLHCBackground( ) {
+
+  // Get requested LHC background events
+  std::string subPath = "LHCBackground";
+  StatusCode sc = readAndLoadEvent( subPath );
+  if( !sc.isSuccess() ) {
+    MsgStream  msg( msgSvc(), name() );
+    msg << MSG::ERROR << "Error in loading LHCBackground" << endmsg;
+  }
+  return sc;
+}
+
+//=============================================================================
+// Read an LHC spillover event
+//=============================================================================
+// N.B.: This implementation does not correctly handle pileup in spillover
+//=============================================================================
+StatusCode MergeEventAlg::readSpillover( ) {
+
+  MsgStream  msg( msgSvc(), name() );
+
+  ItemNames::const_iterator itSubPaths = m_subPaths.begin();
+  while( itSubPaths != m_subPaths.end() ) {
+    int numInt = 0;
+    StatusCode sc = m_lumiTool->numInteractions( numInt );
+    if( !sc.isSuccess() ) {
+      msg << MSG::ERROR << "Error getting the luminosity" << endmsg;
+      return sc;
+    }
+
+    if( 0 < numInt ) {
+      std::string subPath = *itSubPaths;
+      msg << MSG::DEBUG << "Loading " << subPath;
+      sc = readAndLoadEvent( subPath );
+      if( !sc.isSuccess() ) {
+        msg << MSG::ERROR << "Error in loading " << subPath << endmsg;
+        return sc;
+      }
+    }
+    itSubPaths++;
+  }
+
+  return StatusCode::SUCCESS;
+}
 
 //=============================================================================
 //  Read events via additional event selector and load in new path all
@@ -233,7 +307,7 @@ StatusCode MergeEventAlg::readAndLoadEvent( std::string& subPath ) {
      return StatusCode::FAILURE;
   }
   else {
-    msg << MSG::DEBUG << "Loading " << eventPath << " event Number "
+    msg << MSG::INFO << "Loading " << eventPath << " event "
         << evt->evtNum() << ",     Run " << evt->runNum() << endreq;
   }
   
