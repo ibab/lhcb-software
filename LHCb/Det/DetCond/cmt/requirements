@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.8 2001-12-16 15:59:26 andreav Exp $
+# $Id: requirements,v 1.9 2001-12-16 21:40:14 andreav Exp $
 package DetCond
 version v2r0
 
@@ -7,8 +7,10 @@ branches DetCond cmt src doc
 # GAUDI framework dependencies
 use GaudiSys v9*
 
-# ConditionsDB package
-use CONDDB v3r02*
+# ConditionsDB package (only on Linux)
+macro CONDDB_use "CONDDB v3r02*" \
+      WIN32 ""
+use $(CONDDB_use)
 
 # Detector Description
 # This is only needed because updateObj assumes a Condition (TEMPORARY?)
@@ -16,8 +18,10 @@ use DetDesc v9* Det
 
 include_dirs $(DETCONDROOT)
 
-# Build a component library
-library DetCond component/*.cpp
+# Build a component library (only on Linux)
+macro DetCond_sources "component/*.cpp" \
+      WIN32 ""
+library DetCond $(DetCond_sources)
 
 ignore_pattern package_stamps
 
