@@ -1,4 +1,4 @@
-// $Id: CheatedReco.cpp,v 1.1 2003-06-13 08:35:05 odie Exp $
+// $Id: CheatedReco.cpp,v 1.2 2003-06-16 12:53:03 odie Exp $
 // Include files 
 
 // from Gaudi
@@ -245,7 +245,7 @@ StatusCode CheatedReco::execute() {
     msg << MSG::DEBUG << "Number of particles after mc collect: "
         << products.size() << endreq;
     
-    std::vector<string>::const_iterator ski;
+    std::vector<std::string>::const_iterator ski;
     for(ski=m_sources[*ki].first.begin();ski!=m_sources[*ki].first.end();ski++){
       products.push_back(m_products[*ski]);
       msg << MSG::DEBUG << "endVertex address for key '" << *ski << "': "
