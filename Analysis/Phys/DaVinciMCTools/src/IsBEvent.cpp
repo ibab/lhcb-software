@@ -1,4 +1,4 @@
-// $Id: IsBEvent.cpp,v 1.1 2005-01-12 09:26:55 pkoppenb Exp $
+// $Id: IsBEvent.cpp,v 1.2 2005-01-12 09:32:16 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
@@ -133,18 +133,20 @@ bool IsBEvent::goodEvent(MCParticles* mcparts){
 //=============================================================================
 StatusCode IsBEvent::writeSelResult() {
   
-  if ( !exist<SelResults>(m_selResults)){
-    Warning("SelResults container not found!") ;
-    setFilterPassed(false);
-    return StatusCode::SUCCESS; // ?
+  SelResults* SelResCtr ;
+  if ( exist<SelResults>(m_selResults) ){
+    debug() << "SelResult exists already " << endreq ;
+    SelResCtr = get<SelResults>(m_selResults);
+  } else {
+    debug() << "Putting new SelResult container " << endreq ;
+    SelResCtr = new SelResults();
+    StatusCode scRO = put(SelResCtr,m_selResults);
+    if (scRO.isFailure()){
+      err() << "Cannot register Selection Result summary at location: "
+            << m_selResults << endreq;
+      return StatusCode::FAILURE;
+    }
   }
-
-  SelResults* SelResCtr = get<SelResults>(m_selResults);
-  if(!SelResCtr ) {
-    warning() << "SelResult container not found at " << m_selResults << endreq;
-    setFilterPassed(false);
-    return StatusCode::FAILURE;
-  } else debug() << "SelResult container found at " << m_selResults << endreq;
   
   // Create and fill selection result object
   SelResult* myResult = new SelResult();
