@@ -1,10 +1,10 @@
 Package :EvtGen 
 Package manager : Patrick Robbe and Witek Pokorski
 
+!===================== EvtGen v4r0 ======================================
 ! 2003-10-09 - Patrick Robbe
  - Fixes in EvtParticle for B0s mixing
 
-!===================== EvtGen v4r0 ======================================
 ! 2003-10-07 - Patrick Robbe
  - use pythia routine pycomp to find pythia particle number from PDG
    number instead of EvtPDL::getLundKC, in EvtPythia.cpp
