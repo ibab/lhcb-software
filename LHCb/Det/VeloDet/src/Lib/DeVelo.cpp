@@ -1,4 +1,4 @@
-// $Id: DeVelo.cpp,v 1.31 2003-01-27 10:32:00 ocallot Exp $
+// $Id: DeVelo.cpp,v 1.32 2003-03-20 09:00:24 ocallot Exp $
 //
 // ============================================================================
 #define  VELODET_DEVELO_CPP 1
@@ -920,7 +920,7 @@ void DeVelo::stripLimitsR ( int sensor, double strip,
   phiMax = m_phiMax[rZone];
 
   //== Right or Left sensor ?
-  if ( 1 == m_sensor[sensor]->type() ) {
+  if ( 0 == m_sensor[sensor]->type() ) {
     phiMin += pi;
     phiMax += pi;
   }

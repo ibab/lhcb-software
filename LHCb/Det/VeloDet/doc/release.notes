@@ -1,6 +1,10 @@
-! $Id: release.notes,v 1.41 2003-01-30 09:20:00 cattanem Exp $
+! $Id: release.notes,v 1.42 2003-03-20 09:00:24 ocallot Exp $
 package VeloDet
 package manager : Velo Group
+
+! 2003-03-20 - Olivier Callot
+ - fix a bug in stripLimitsR, used only for Panoramix, returning the limits
+   of a strip: Right and LEft were exchanged.
 
 !========================= VeloDet v8r4 2003-01-30 =========================
 ! 2003-01-27 - Olivier Callot
