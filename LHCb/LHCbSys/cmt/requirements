@@ -1,14 +1,14 @@
 package LHCbSys
-version v11r10
+version v11r11
 
 branches doc cmt
  
 #===============================================================
 # LHCb packages used by all applications
 #===============================================================
-use LHCb		v11r10
+use LHCb		v11r11
 
-use GaudiConf		v6r5
+use GaudiConf		v6r6
 
 use BookKeeping 	v1r1	Tools
 
@@ -18,17 +18,17 @@ use HepMC		v3r121p0  Sim
 use GenEvent     	v2r3      Event
 
 # Kernel packages
-use KernelSys   	v1r0    Kernel
+use KernelSys   	v1r1    Kernel
 use LHCbKernel  	v2r6    Kernel
 use CaloKernel  	v2r2    Calo
 use MuonKernel  	v2r2    Muon
 use TrKernel    	v11r2   Tr
-use RichKernel  	v2r2    Rich
+use RichKernel  	v3r0    Rich
 use VeloKernel  	v1r3    Velo
 
 # Detector description
-use DetSys		v1r4	Det
-use DetDesc        	v11r8	Det
+use DetSys		v1r5	Det
+use DetDesc        	v11r9	Det
 use VeloDet        	v8r4	Det
 use ITDet          	v1r3	Det
 use OTDet          	v3r3	Det
@@ -36,19 +36,19 @@ use CaloDet        	v6r4	Det
 use CaloDetXmlCnv	v2r2	Det
 use MuonDet        	v4r3	Det
 use Magnet         	v2r1	Det
-use MuonTools      	v3r3	Muon
-use RichDet		v4r0	Det
+use MuonTools      	v3r4	Muon
+use RichDet		v4r1	Det
 
 # Event data model
-use EventSys		v13r4	Event
+use EventSys		v13r5	Event
 use EventKernel  	v2r2    Event
 use Event        	v3r2    Event
 use VeloEvent    	v12r0   Event
 use ITEvent      	v12r0   Event
 use OTEvent      	v12r0   Event
 use TrEvent      	v12r0   Event
-use RichEvent    	v4r2    Event
-use CaloEvent    	v11r4   Event
+use RichEvent    	v4r3    Event
+use CaloEvent    	v11r5   Event
 use MuonEvent    	v2r2    Event
 use L0Event      	v13r1   Event
 use L1Event      	v11r6   Event
@@ -56,22 +56,23 @@ use PhysEvent    	v7r3    Event
 use DbCnv        	v7r0    Event
 
 # Associators
-use AssociatorsSys	v1r2	Associators
+use AssociatorsSys	v1r3	Associators
+use Associators		v2r0	Associators
 use ITAssociators      	v2r3    IT
 use OTAssociators      	v2r4    OT
 use VeloAssociators    	v1r4    Velo
-use CaloAssociators    	v3r2    Calo
+use CaloAssociators    	v3r3    Calo
 use MuonAssociators    	v1r0    Muon
 use TrAssociators      	v3r4    Tr
 use TrFitEvent         	v3r5    Tr
 
 # SICB Converters
-use SICBSys             v1r2    SICB
+use SICBSys             v1r3    SICB
 use SicbCnv      	v17r5   SICB
-use RiSicbGeom   	v3r0    SICB
+use RiSicbGeom   	v3r1    SICB
 use CaloSicbCnv  	v7r3    SICB
-use MuonSicbCnv  	v6r8    SICB
-use RiSicbCnv    	v5r4    SICB
+use MuonSicbCnv  	v7r0    SICB
+use RiSicbCnv    	v5r5    SICB
 use VSicbCnv     	v8r1    SICB
 use Futio        	v13r0   SICB
 use Finclude     	v14r0   SICB
@@ -79,7 +80,7 @@ use GDUMMY       	v2r0    SICB
 use Futil        	v12r0   SICB
 use detdes       	v21r0   SICB
 
-# LHCb  EXamples
+# LHCb  Examples
 use DetDescExample      v5r2    Ex
 use DumpEventExample    v6r2    Ex
 
