@@ -1,8 +1,11 @@
-// $Id: GiGaCnvBase.h,v 1.9 2002-12-07 14:36:25 ibelyaev Exp $ 
+// $Id: GiGaCnvBase.h,v 1.10 2002-12-07 21:13:48 ibelyaev Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.9  2002/12/07 14:36:25  ibelyaev
+//  see $GIGACNVROOT/doc/release.notes
+//
 // Revision 1.8  2002/05/07 12:24:50  ibelyaev
 //  see $GIGACNVROOT/doc/release.notes 7 May 2002
 //
@@ -201,7 +204,7 @@ protected:
     // return located valid data 
     Print( " The data from address '"     + location + 
            "' are retrieved from TS "     , 
-           MSG::DEBUG     ,     StatusCode::SICCESS  ) ;
+           MSG::DEBUG     ,     StatusCode::SUCCESS  ) ;
     Print( " [ The actual data type is '" + type     + 
            "' ] "                         ,
            MSG::VERBOSE   ,     StatusCode::SUCCESS  ) ;

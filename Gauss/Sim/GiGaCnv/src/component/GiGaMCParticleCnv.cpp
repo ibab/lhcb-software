@@ -1,17 +1,8 @@
-// $Id: GiGaMCParticleCnv.cpp,v 1.18 2002-12-07 14:36:27 ibelyaev Exp $ 
+// $Id: GiGaMCParticleCnv.cpp,v 1.19 2002-12-07 21:13:48 ibelyaev Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
-// Revision 1.17  2002/07/17 08:29:49  ranjard
-// v7r0 - adapted to Geant4 4.1
-//
-// Revision 1.16  2002/07/02 15:15:44  ibelyaev
-//  fix the bugs
-//
-// Revision 1.15  2002/05/20 13:36:16  ibelyaev
-//  add conversion of primary vertices
-//
 //  ===========================================================================
 #define GIGACNV_GIGAMCPARTICLECNV_CPP 1 
 // ============================================================================
@@ -226,9 +217,7 @@ StatusCode GiGaMCParticleCnv::updateObj
       for(TrajectoryVector::const_iterator iTr = tv->begin(); tv->end() != iTr;
           ++iTr ) 
         {
-          const GiGaTrajectory* trajectory = 
-            ( 0 == *iTr ) ? (const GiGaTrajectory*) 0 : 
-            dynamic_cast<const GiGaTrajectory*> (*iTr );
+          const GiGaTrajectory* trajectory = gigaTrajectory(*iTr );
           // convert the trajectory into particle and add it into container 
           MCParticle* mcp = Cnv( trajectory );
           // insert the particle to container and fill the reference table 
@@ -317,8 +306,7 @@ StatusCode GiGaMCParticleCnv::updateObjRefs
     {
       const G4VTrajectory* vt = *iTrajectory ;
       if( 0 == vt       ) { return Error("G4VTrajectory* points to NULL" ) ; } 
-      const GiGaTrajectory*  trajectory = 
-        dynamic_cast<const GiGaTrajectory*> ( vt ) ; 
+      const GiGaTrajectory*  trajectory = gigaTrajectory( vt ) ; 
       if( 0 == trajectory ) 
         { return Error("G4VTrajectory*(of type '" + 
                        GiGaUtil::ObjTypeName(vt)+ 

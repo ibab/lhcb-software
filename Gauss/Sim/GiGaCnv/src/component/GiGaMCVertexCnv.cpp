@@ -1,20 +1,8 @@
-// $Id: GiGaMCVertexCnv.cpp,v 1.18 2002-12-07 14:36:27 ibelyaev Exp $ 
+// $Id: GiGaMCVertexCnv.cpp,v 1.19 2002-12-07 21:13:49 ibelyaev Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
-// Revision 1.17  2002/07/17 08:29:49  ranjard
-// v7r0 - adapted to Geant4 4.1
-//
-// Revision 1.16  2002/07/02 15:15:44  ibelyaev
-//  fix the bugs
-//
-// Revision 1.15  2002/07/02 14:38:59  witoldp
-// comment lines that were creating infinite loop (primary vtx converstion)
-//
-// Revision 1.14  2002/05/20 13:36:16  ibelyaev
-//  add conversion of primary vertices
-//
 //  ===========================================================================
 #define GIGACNV_GIGAMCVERTEXCNV_CPP 1 
 // ============================================================================
@@ -248,13 +236,11 @@ StatusCode GiGaMCVertexCnv::updateObj
         //
         const G4VTrajectory* vt = *iTr ;
         if( 0 == vt ) { return Error("G4VTrajectory* points to NULL") ; } 
-        const GiGaTrajectory* trajectory = 
-          dynamic_cast<const GiGaTrajectory*> ( vt ) ; 
+        const GiGaTrajectory* trajectory = gigaTrajectory( vt ) ; 
         if( 0 == trajectory ) 
           { return Error("G4VTrajectory*(of type '"  + 
                          GiGaUtil::ObjTypeName( vt ) + 
                          "*') could not be cast to GiGaTrajectory*"  ) ; }
-        
         for (GiGaTrajectory::const_iterator ittr=trajectory->begin(); 
              ittr!=trajectory->end();++ittr)
           { vertices->insert( Cnv( *ittr ) ); }
@@ -367,8 +353,7 @@ StatusCode GiGaMCVertexCnv::updateObjRefs
       {
         const G4VTrajectory* vt = *iTrajectory ;
         if( 0 == vt  ) { return Error("G4VTrajectory* points to NULL" ) ; } 
-        const GiGaTrajectory*  trajectory  = 
-          dynamic_cast<const GiGaTrajectory*> ( vt ) ; 
+        const GiGaTrajectory*  trajectory  = gigaTrajectory( vt ) ; 
         if( 0 == trajectory  ) 
           { return Error("G4VTrajectory*(of type '" + 
                          GiGaUtil::ObjTypeName( vt ) + 
