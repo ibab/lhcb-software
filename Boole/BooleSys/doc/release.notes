@@ -3,10 +3,47 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
+</PRE><H1><A NAME=v8r2>2005-03-24 Boole v8r2</A></H1><PRE>
+This version uses Gaudi v16r2, LHCb v18r2, Lbcom v1r2 (also CLHEP 1.9, ROOT 4.0) 
+Requires input from Gauss v19r3 or greater. Cannot process DC04 Gauss output.
+Output data incompatible with DC04 versions, needs Brunel v26r2 or greater
+
+- Packages added: TrgTools v7r2
+
+- New features:
+  . New Boole.PreloadGeometry option to preload geometry tree at initialize
+    (default false) (LHCbAlgs v1r4, DetDesc v6r4)
+  . Add options for L0 trigger filtering (L0Filter.opts)
+  . Add options for writing the RawBuffer only (RawWriter.opts)
+  . Add options for RTTC production (v200412 geometry, output only on L0YES,
+    second output .raw stream: RawBuffer and L1Buffer only) (rttc.opts)
+
+- New tuning:
+  . L0 bandwidth division thresholds updated for DC04 data (L0DU v6r9)
+
+- Geometry changes (XmlDDDB v24r0)
+  . Update Rich2 centre tube description and add centre tube supports
+  . Change Velo sensor thickness to 300um
+  . Fix overlaps in Velo RF foil 
+  . Remove options for v200402 geometry
+  . Give detector element to Velo half stations (with VeloDet v9r4)
+
+- Persistency changes
+  . Add Link/ITDigits2MCHits, /Link/OTTimes2MCHits, /Link/VeloClusters2MCHits
+    and remove Relations/OTTimes2MCHits Relations/VeloClusters2MCHits. Keep
+    Relations/ITDigits2MCHits for now, due to inconsistency with corresponding
+    Linker table, under investigation
+  (DigiContent.opts,ITAssociators v2r11,OTAssociators v3r2,VeloAssociators v1r14)
+  . Backwards incompatible changes to internals of MCHit and MCParticle
+    (Event v4r7)
+
+- Bug fixes:
+  . Fix memory leak in XmlDDDB parser tool (XmlTools v3r4)
+
 </PRE><H1><A NAME=v8r1>2005-03-08 Boole v8r1</A></H1><PRE>
 This version uses Gaudi v16r2, LHCb v18r1 (also CLHEP 1.9, ROOT 4.0) 
-Requires input from Gauss v19r2 or greater. Cannot process DC04 Gauss output.
-Output data incompatible with DC04 versions, needs Brunel v26r1 or greater
+Requires input from Gauss v19r2. Cannot process DC04 Gauss output.
+Output data incompatible with DC04 versions, needs Brunel v26r1
 
 - Packages modified: RichReadout v1r12, RichDigiQC v1r2
 
