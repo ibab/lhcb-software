@@ -1,6 +1,10 @@
 Package Event/GenEvent
 package coordinator: W.Pokorski
 
+!================ GenEvent v2r4p1 2003-12-09 ==========================
+! 2003-12-09 - Marco Cattaneo
+ - Cleanup requirements and fix them for use with vc71
+
 !================= GenEvent v2r4 2003-10-09 ===========================
 ! 2003-10-09 - Witek Pokorski
  - requirements and GenEven_load - final (hopefully..) fix for loading the factories
