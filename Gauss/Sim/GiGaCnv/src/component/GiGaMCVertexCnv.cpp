@@ -1,8 +1,11 @@
-// $Id: GiGaMCVertexCnv.cpp,v 1.30 2004-03-21 12:42:04 ibelyaev Exp $ 
+// $Id: GiGaMCVertexCnv.cpp,v 1.31 2004-04-07 15:47:55 gcorti Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.30  2004/03/21 12:42:04  ibelyaev
+//  expand the list of 'known hadronic processes'
+//
 // Revision 1.29  2004/03/20 21:27:13  ibelyaev
 //  expand the list on 'known' hadronic processes
 //
@@ -138,6 +141,7 @@ GiGaMCVertexCnv::GiGaMCVertexCnv( ISvcLocator* Locator )
   m_hadronicProcesses.push_back ( "AntiSigmaPlusInelastic"        ) ; // I.B.
   m_hadronicProcesses.push_back ( "SigmaPlusInelastic"            ) ; // I.B.
   m_hadronicProcesses.push_back ( "XiMinusInelastic"              ) ; // I.B.
+  m_hadronicProcesses.push_back ( "XiZeroInelastic"               ) ; // G.C.  
   
   std::sort ( m_hadronicProcesses.begin () ,
               m_hadronicProcesses.end   () ) ;
@@ -492,7 +496,7 @@ StatusCode GiGaMCVertexCnv::updateObjRefs
                 const G4VProcess* creator = trajectory->creator() ;
                 if      ( 0 == creator ) {} 
                 else if ( fDecay    == creator->GetProcessType () )
-                { vertex -> setType ( MCVertex::Decay    ) ; }
+                { vertex -> setType ( MCVertex::Decay ) ; }
                 else if ( fHadronic == creator->GetProcessType () )
                 { vertex -> setType ( MCVertex::Hadronic ) ; }
                 else  
@@ -502,8 +506,14 @@ StatusCode GiGaMCVertexCnv::updateObjRefs
                   { vertex->setType ( MCVertex::Pair    ) ; }
                   else if ( "compt" == pname                      ) 
                   { vertex->setType ( MCVertex::Compton ) ; }
-                  else if ( "eBrem" == pname || "muBrem" == pname )    
+                  else if ( "eBrem" == pname || "muBrems" == pname )    
                   { vertex->setType ( MCVertex::Brem    ) ; }
+                  else if ( "annihil" == pname )
+                  { vertex->setType ( MCVertex::Annihil ) ; }
+                  else if ( "phot" == pname )
+                  { vertex->setType ( MCVertex::Photo ) ; }
+                  else if ( "RichHpdPhotoelectricProcess" == pname ) 
+                  { vertex->setType ( MCVertex::RICHPhoto ) ; }
                   else 
                   {
                     const bool found = std::binary_search 
@@ -519,7 +529,7 @@ StatusCode GiGaMCVertexCnv::updateObjRefs
                     Warning ( "GiGaMcVertexCnv: The process is known '" 
                               + pname + 
                               "', but vertex type is still 'Unknown'");
-                  } 
+                  }   
                 }
               }
               

@@ -1,8 +1,11 @@
-// $Id: GiGaMCParticleCnv.cpp,v 1.25 2003-10-31 12:40:05 witoldp Exp $ 
+// $Id: GiGaMCParticleCnv.cpp,v 1.26 2004-04-07 15:47:55 gcorti Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.25  2003/10/31 12:40:05  witoldp
+// fixed units in GiGaHepMCCnv
+//
 // Revision 1.24  2003/07/14 15:26:36  witoldp
 // some restructurisation to GiGaCollisionCnv
 //
@@ -52,6 +55,7 @@
 /// LHCbEvent
 #include "Event/MCParticle.h" 
 #include "Event/HepMCEvent.h"
+#include "Event/GenMCLink.h"
 /// Geant4 includes
 #include "G4TrajectoryContainer.hh"
 #include "G4ParticleDefinition.hh"
@@ -245,6 +249,32 @@ StatusCode GiGaMCParticleCnv::updateObj
           const int index = trajectory->trackID() ;
           particles -> insert( mcp );
           table( index )  = GiGaKineRefTableEntry( mcp , index );          
+          // if trajectory has signal info print
+          if( trajectory->isSignal() ) {
+            // Create link between signal particle in HepMC and MCParticle
+            GenMCLink* sigLink = new GenMCLink();
+            sigLink->setGenBarCode( trajectory->signalBarcode() );
+            sigLink->setHepMCEvent( trajectory->pHepMCEvent() );
+            sigLink->setSignal( mcp );
+            // Create container in TES where to put signal info if it does
+            // not already exist
+            SmartDataPtr<GenMCLinks> 
+              sigLinks(evtSvc(), GenMCLinkLocation::Default);
+            if( sigLinks ) {
+              sigLinks->insert(sigLink);
+            }
+            else {
+              GenMCLinks* sigLinkVect = new GenMCLinks();
+              StatusCode scLink = evtSvc()->
+                registerObject(GenMCLinkLocation::Default, sigLinkVect);
+              if( !scLink.isSuccess() ) {
+                delete sigLinkVect;
+                delete sigLink;
+                return Error(" Cannot register Link HepMC-MCParticle");
+              }
+              sigLinkVect->insert(sigLink);
+            }
+          }
         }
     }
   catch( const GaudiException& Excp )

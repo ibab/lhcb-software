@@ -1,8 +1,11 @@
-// $Id: GiGaHepMCCnv.cpp,v 1.16 2004-03-09 23:37:13 robbep Exp $
+// $Id: GiGaHepMCCnv.cpp,v 1.17 2004-04-07 15:47:55 gcorti Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.16  2004/03/09 23:37:13  robbep
+// Fix to accept also elastic scattering events.
+//
 // Revision 1.15  2004/03/09 08:34:16  robbep
 // Change particle types to be converted in G4PrimaryParticles
 //
@@ -285,7 +288,7 @@ StatusCode GiGaHepMCCnv::updateRep
       for(std::vector<HepMC::GenParticle*>::iterator ioutpart=outpart.begin();
           outpart.end()!=ioutpart;ioutpart++)
         {
-          G4PrimaryParticle* Particle=GenPartG4Part(*ioutpart);
+          G4PrimaryParticle* Particle=GenPartG4Part(*ioutpart, (*it) );
           
           OrigVertex->SetPrimary ( Particle );
         }
@@ -301,7 +304,8 @@ StatusCode GiGaHepMCCnv::updateRep
 // ============================================================================
 
 
-G4PrimaryParticle* GiGaHepMCCnv::GenPartG4Part(HepMC::GenParticle* particle)
+G4PrimaryParticle* GiGaHepMCCnv::GenPartG4Part(HepMC::GenParticle* particle,
+                                               HepMCEvent* theEvent )
 {
   static const std::string 
     ErrMsg1("GiGaCnv::GenPartG4Part: GenParticle* points to NULL!");
@@ -315,6 +319,16 @@ G4PrimaryParticle* GiGaHepMCCnv::GenPartG4Part(HepMC::GenParticle* particle)
                            particle->momentum().px()*GeV ,
                            particle->momentum().py()*GeV ,
                            particle->momentum().pz()*GeV );  
+  
+  // Check if it is the signal particle, with forced decay
+  if ( particle -> status() == 889 ) {
+    // create a new User information to contain this information
+    GiGaPrimaryParticleInformation * gInfo =
+      new GiGaPrimaryParticleInformation( true,
+                                          particle -> barcode( ) ,
+                                          theEvent ) ;
+    Particle -> SetUserInformation( gInfo ) ;
+  }
   
   if (particle->end_vertex()) 
     {
@@ -340,10 +354,21 @@ G4PrimaryParticle* GiGaHepMCCnv::GenPartG4Part(HepMC::GenParticle* particle)
               if ( (*dPart) -> pdg_id() == - particle -> pdg_id () ) 
                 {
                   // particle has oscillated
-                  GiGaPrimaryParticleInformation * gInfo =
-                    new GiGaPrimaryParticleInformation( true ) ;
-                  Particle -> SetUserInformation( gInfo ) ;
+                  // put this info in GiGaPrimaryParticleInformation
+                  if ( 0 == Particle -> GetUserInformation( ) ) {
+                    GiGaPrimaryParticleInformation * gInfo =
+                      new GiGaPrimaryParticleInformation( true ) ;
+                    Particle -> SetUserInformation( gInfo ) ;
+                  }
+                  else {
+                    // update the existing one
+                    GiGaPrimaryParticleInformation * theInfo =
+                      gigaPrimaryParticleInformation
+                         ( Particle -> GetUserInformation( ) ) ; 
+                    if ( theInfo ) theInfo -> setHasOscillated( true ) ;
+                  }
                 }
+                  
               // skip this daughter particle.
               // Since the particle has oscillated it has a end_vertex()
               // and end_vertex() for the daughter is not NULL !
@@ -366,7 +391,7 @@ G4PrimaryParticle* GiGaHepMCCnv::GenPartG4Part(HepMC::GenParticle* particle)
         for(std::vector<HepMC::GenParticle*>::iterator ioutpart=outp.begin();
             outp.end()!=ioutpart;ioutpart++)
           { 
-            Particle->SetDaughter(GenPartG4Part(*ioutpart));
+            Particle->SetDaughter(GenPartG4Part(*ioutpart, theEvent));
           }
     }
   

@@ -18,6 +18,7 @@
 #include "GiGa/GiGaException.h" 
 #include "GiGa/GiGaUtil.h"
 // LHCbEvent 
+#include "Event/GenCollision.h"
 #include "Event/MCParticle.h" 
 #include "Event/MCVertex.h" 
 #include "Event/HepMCEvent.h"
@@ -141,20 +142,28 @@ StatusCode GiGaCollisionCnv::updateObj
   collisions->clear(); 
   //
   SmartDataPtr<HepMCEvents> hevnts(evtSvc(),"/Event/Gen/HepMCEvents");  
+  SmartDataPtr<HardInfos>   hards(evtSvc(),HardInfoLocation::Default);
   
   if (!hevnts)
     {
       return Error("Cannot find HepMCEvents!");
     }
   else
+  {
+    
+    if (!hards) {
+      return Error("Cannot find HardInfos!");
+    }
+    else
     {
+      {
       for(HepMCEvents::iterator hiter=hevnts->begin();
           hevnts->end()!=hiter;hiter++)
         {
           HepMC::GenEvent* evt = (*hiter)->pGenEvt();
           
           // instanciate new collision
-          Collision* collision=new Collision;  
+          GenCollision* collision=new GenCollision;  
           
           collision->setProcessType(evt->signal_process_id());
           
@@ -191,8 +200,21 @@ StatusCode GiGaCollisionCnv::updateObj
               
           collision->setPrimVtxPosition(primvtx);
           collisions->insert(collision);
+
+          // now loop on the HardInfo to find corresponding HepMC event
+          {
+            for( HardInfos::iterator itHard = hards->begin();
+               hards->end() != itHard; ++itHard ) {
+              if( (*itHard)->event() == (*hiter) ) {
+                collision->setHardInfo(*itHard);
+              }
+            }
+          }
         }
+      }
     }
+  }
+  
   //
   return StatusCode::SUCCESS;
 };

@@ -1,9 +1,25 @@
-! $Id: release.notes,v 1.79 2004-03-24 08:38:16 ranjard Exp $ 
+! $Id: release.notes,v 1.80 2004-04-07 15:47:55 gcorti Exp $ 
 ! =============================================================================
 ! CVS tag $Name: not supported by cvs2svn $ 
 ! =============================================================================
 Package         : GiGaCnv
 Package Manager : Vanya Belyaev Ivan.Belyaev@itep.ru
+
+!======================= GiGaCnv v15r2 2004-04-07 ==========================
+! 2004-04-07 - Gloria CORTI
+ - GiGaCnv/GiGaPrimaryParticleInformation.h
+   src/GiGaHepMCCnv.{h,cpp}
+   . modification provided by Patrick ROBBE to trasfer signal info from
+     HepMC to G4 and keep it in G4
+ - src/component/GiGaMCParticleCnv.cpp
+   . create and fill new objects in transient store (GenMCLink) when signal
+     exist with pointers to signal MCParticle and corresponding HepMC info
+ - src/component/GiGaCollisionCnv.cpp
+   . now the converter create a new type of object GenCollision that is
+     an extention of Collision where a pointer to the HardInfo is kept
+     The container is still of type Collision
+ - src/component/GiGaMCVertexCnv.cpp
+   . add setting of some more vertex types  
 
 !======================= GiGaCnv v15r1 =====================================
 ! 2004-03-24 - Florence Ranjard
