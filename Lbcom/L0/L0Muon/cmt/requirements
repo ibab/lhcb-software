@@ -12,12 +12,15 @@ use LHCbEvent v11* Event
 library L0MuonLib ../src/Lib/*.cpp
 library L0Muon ../src/component/*.cpp
 
-# define component library link options
+# define link options
+apply_pattern package_Clinkopts
 apply_pattern package_Llinkopts
+
 apply_pattern packageShr  
-apply_pattern ld_library_path 
+apply_pattern linker_path
 
 private
 
-apply_pattern package_Cshlibflags  
+apply_pattern package_Cshlibflags
+apply_pattern package_Lshlibflags  
 macro_append L0MuonLib_shlibflags "$(GaudiKernel_linkopts)"
