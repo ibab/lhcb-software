@@ -1,19 +1,8 @@
+// $Id: GiGaTrackActionEmpty.cpp,v 1.10 2002-04-25 13:02:05 ibelyaev Exp $ 
 // ============================================================================
-/// CVS tag $Name: not supported by cvs2svn $ 
+// CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
-/// $Log: not supported by cvs2svn $
-/// Revision 1.8  2001/07/27 17:03:21  ibelyaev
-/// improved printout
-///
-/// Revision 1.7  2001/07/23 16:37:55  ibelyaev
-/// bug(misprint) fix
-///
-/// Revision 1.6  2001/07/23 15:44:48  ibelyaev
-/// bug(misprint) fix
-///
-/// Revision 1.5  2001/07/23 13:12:29  ibelyaev
-/// the package restructurisation(II)
-///
+// $Log: not supported by cvs2svn $
 // ============================================================================
 #include "CLHEP/Geometry/Point3D.h"
 ///
@@ -28,15 +17,17 @@
 /// local
 #include "GiGaTrackActionEmpty.h"
 
-/** Implementation of the class GiGaTrackActionEmpty
+/** @file
+ * 
+ * Implementation of the class GiGaTrackActionEmpty
  *  
  *  @author Vanya Belyaev
  */
 
 // ============================================================================
+// Factory
 // ============================================================================
-static const GiGaTrackActionFactory<GiGaTrackActionEmpty>         s_Factory;
-const       IGiGaTrackActionFactory&GiGaTrackActionEmptyFactory = s_Factory;
+IMPLEMENT_GiGaTrackAction( GiGaTrackActionEmpty );
 
 // ============================================================================
 // ============================================================================

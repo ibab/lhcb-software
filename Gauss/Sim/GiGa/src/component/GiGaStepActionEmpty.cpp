@@ -1,13 +1,8 @@
+// $Id: GiGaStepActionEmpty.cpp,v 1.8 2002-04-25 13:02:05 ibelyaev Exp $ 
 // ============================================================================
-/// CVS tag $Name: not supported by cvs2svn $ 
+// CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
-/// $Log: not supported by cvs2svn $
-/// Revision 1.6  2001/07/27 17:03:21  ibelyaev
-/// improved printout
-///
-/// Revision 1.5  2001/07/23 13:12:28  ibelyaev
-/// the package restructurisation(II)
-///
+// $Log: not supported by cvs2svn $
 // ============================================================================
 #include "CLHEP/Geometry/Point3D.h"
 ///
@@ -22,16 +17,17 @@
 /// local
 #include "GiGaStepActionEmpty.h"
 
-/** Implementation of class GiGaStepActionEmpty
+/** @file 
+ *  
+ *  Implementation of class GiGaStepActionEmpty
  *
  *  @author Vanya Belyaev
  */
 
-
 // ============================================================================
+// Factory
 // ============================================================================
-static const GiGaStepActionFactory<GiGaStepActionEmpty>         s_Factory;
-const       IGiGaStepActionFactory&GiGaStepActionEmptyFactory = s_Factory;
+IMPLEMENT_GiGaStepAction( GiGaStepActionEmpty ) ;
 
 // ============================================================================
 // ============================================================================
@@ -62,10 +58,15 @@ StatusCode GiGaStepActionEmpty::initialize ()
 // ============================================================================
 StatusCode GiGaStepActionEmpty::finalize   () 
 { 
-  ///
   Print("finalization");
-  ///
-  return GiGaStepActionBase::initialize() ; 
-} ;
+  return GiGaStepActionBase::finalize() ; 
+};
 
+// ============================================================================
+// ============================================================================
+void GiGaStepActionEmpty::UserSteppingAction ( const G4Step* ) 
+{ Print(" UserSteppingAction!"); }
+
+// ============================================================================
+// The END 
 // ============================================================================

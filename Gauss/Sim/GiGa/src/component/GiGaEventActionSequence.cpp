@@ -1,19 +1,8 @@
+// $Id: GiGaEventActionSequence.cpp,v 1.6 2002-04-25 13:02:04 ibelyaev Exp $
 // ============================================================================
-/// CVS tag $Name: not supported by cvs2svn $ 
+// CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
-/// $Log: not supported by cvs2svn $
-/// Revision 1.4  2001/08/12 15:42:51  ibelyaev
-/// improvements with Doxygen comments
-///
-/// Revision 1.3  2001/07/27 17:03:19  ibelyaev
-/// improved printout
-///
-/// Revision 1.2  2001/07/27 14:29:00  ibelyaev
-/// bug fix
-///
-/// Revision 1.1  2001/07/24 09:48:14  ibelyaev
-/// new component GiGaEventActionSequence
-/// 
+// $Log: not supported by cvs2svn $
 // ============================================================================
 /// STD & STL 
 #include<functional> 
@@ -27,9 +16,9 @@
 #include "GiGaEventActionSequence.h"
 
 // ============================================================================
-/** @class GiGaEventActionSequence
+/** @file
  *
- *  implementation 
+ *  implementation of GiGaEventActionSequence
  *
  *  @author Vanya  Belyaev
  *  @date 24/07/2001 
@@ -37,16 +26,15 @@
 // ============================================================================
 
 // ============================================================================
-/// factory business 
+// factory business 
 // ============================================================================
-static const GiGaEventActionFactory<GiGaEventActionSequence>         s_Factory;
-const       IGiGaEventActionFactory&GiGaEventActionSequenceFactory = s_Factory;
+IMPLEMENT_GiGaEventAction( GiGaEventActionSequence ) ;
 
 // ============================================================================
-  /** standard constructor
-   *  @param Name name of the event action object instance
-   *  @param Loc  pointer to Service Locator 
-   */
+/** standard constructor
+ *  @param Name name of the event action object instance
+ *  @param Loc  pointer to Service Locator 
+ */
 // ============================================================================
 GiGaEventActionSequence::GiGaEventActionSequence( const std::string& Name ,
                                                   ISvcLocator*       Loc  )
@@ -171,8 +159,6 @@ StatusCode GiGaEventActionSequence::finalize()
 // ============================================================================
 void GiGaEventActionSequence::BeginOfEventAction ( const G4Event* event )
 {
-  // base class 
-  GiGaEventActionBase::BeginOfEventAction ( event );
   /// stepping actions of all members  
   std::for_each ( m_actions.begin () , 
                   m_actions.end   () ,
@@ -188,8 +174,6 @@ void GiGaEventActionSequence::BeginOfEventAction ( const G4Event* event )
 // ============================================================================
 void GiGaEventActionSequence::EndOfEventAction ( const G4Event* event )
 {
-  // base class 
-  GiGaEventActionBase::EndOfEventAction ( event );
   /// stepping actions of all members  
   std::for_each ( m_actions.begin () , 
                   m_actions.end   () ,
@@ -197,6 +181,7 @@ void GiGaEventActionSequence::EndOfEventAction ( const G4Event* event )
                                               EndOfEventAction) , event ) );
   ///
 };
+
 // ============================================================================
 // The END 
 // ============================================================================

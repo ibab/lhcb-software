@@ -2,6 +2,9 @@
 /// CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 /// $Log: not supported by cvs2svn $
+/// Revision 1.8  2001/08/12 15:42:44  ibelyaev
+/// improvements with Doxygen comments
+///
 /// Revision 1.7  2001/07/23 13:11:43  ibelyaev
 /// the package restructurisation(II)
 /// 
@@ -26,8 +29,9 @@ class G4Step;
  *   @date    23/01/2001
  */
 
-class GiGaStepActionBase: virtual public IGiGaStepAction   ,
-                          public  GiGaBase
+class GiGaStepActionBase:
+  virtual public IGiGaStepAction   ,
+  public          GiGaBase
 {
   ///
 protected:
@@ -44,10 +48,6 @@ public:
   virtual StatusCode          finalize   () ; 
   /// Query Interface
   virtual StatusCode          queryInterface(const InterfaceID& , void** ) ;
-  ///
-public:
-  ///
-  virtual void UserSteppingAction ( const G4Step* );
   ///
 protected:
   ///

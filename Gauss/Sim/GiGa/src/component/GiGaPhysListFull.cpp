@@ -1,13 +1,8 @@
+// $Id: GiGaPhysListFull.cpp,v 1.8 2002-04-25 13:02:05 ibelyaev Exp $ 
 // ============================================================================
 /// CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 /// $Log: not supported by cvs2svn $
-/// Revision 1.6  2001/07/27 17:03:20  ibelyaev
-/// improved printout
-///
-/// Revision 1.5  2001/07/23 13:12:27  ibelyaev
-/// the package restructurisation(II)
-/// 
 // ============================================================================
 // GaudiKernel
 #include "GaudiKernel/PropertyMgr.h"
@@ -36,15 +31,17 @@
 // local
 #include "GiGaPhysListFull.h"
 
-/** Implementation of class GiGaPhysListFull
+/** @file 
+ *  
+ *  Implementation of class GiGaPhysListFull
  *
  *  @author Vanya Belyaev
  */
 
 // ============================================================================
+// Factory
 // ============================================================================
-static const GiGaPhysListFactory<GiGaPhysListFull>         s_Factory;
-const       IGiGaPhysListFactory&GiGaPhysListFullFactory = s_Factory;
+IMPLEMENT_GiGaPhysList( GiGaPhysListFull ) ;
 
 // ============================================================================
 // ============================================================================

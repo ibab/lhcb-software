@@ -1,22 +1,8 @@
+// $Id: GiGaStepActionSequence.cpp,v 1.7 2002-04-25 13:02:05 ibelyaev Exp $ 
 // ============================================================================
-/// CVS tag $Name: not supported by cvs2svn $ 
+// CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
-/// $Log: not supported by cvs2svn $
-/// Revision 1.5  2001/07/27 17:03:21  ibelyaev
-/// improved printout
-///
-/// Revision 1.4  2001/07/27 14:29:01  ibelyaev
-/// bug fix
-///
-/// Revision 1.3  2001/07/24 09:07:26  ibelyaev
-/// bug fix
-///
-/// Revision 1.2  2001/07/24 07:11:05  ibelyaev
-/// new methods for object deletion in GiGaUtil namespace
-///
-/// Revision 1.1  2001/07/23 20:53:46  ibelyaev
-/// reorganization of GiGaUtil namespace
-/// 
+// $Log: not supported by cvs2svn $
 // ============================================================================
 /// STD & STL 
 #include <functional>
@@ -30,9 +16,9 @@
 /// Local 
 #include "GiGaStepActionSequence.h"
 
-/** @class GiGaStepActionSequence
+/** @file
  * 
- * (Implementation) 
+ * Implementation of GiGaStepActionSequence
  *
  *  @author Vanya Belyaev
  *  @date 23/07/2001 
@@ -41,8 +27,7 @@
 // ============================================================================
 /// factories 
 // ============================================================================
-static const  GiGaStepActionFactory<GiGaStepActionSequence>         s_Factory;
-const        IGiGaStepActionFactory&GiGaStepActionSequenceFactory = s_Factory;
+IMPLEMENT_GiGaStepAction( GiGaStepActionSequence );
 
 // ============================================================================
 /** the standard constructor
@@ -186,6 +171,8 @@ void GiGaStepActionSequence::UserSteppingAction ( const G4Step* step )
   ///  
 };
 
+// ============================================================================
+// The END 
 // ============================================================================
 
 

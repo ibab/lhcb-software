@@ -1,13 +1,8 @@
+// $Id: GiGaPhysListGeantino.cpp,v 1.7 2002-04-25 13:02:05 ibelyaev Exp $ 
 // ============================================================================
 /// CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 /// $Log: not supported by cvs2svn $
-/// Revision 1.5  2001/07/27 17:03:20  ibelyaev
-/// improved printout
-///
-/// Revision 1.4  2001/07/23 13:12:27  ibelyaev
-/// the package restructurisation(II)
-/// 
 // ============================================================================
 // GiGa
 #include "GiGa/GiGaPhysListFactory.h"
@@ -16,15 +11,17 @@
 // local
 #include "GiGaPhysListGeantino.h"
 
-/** Implementation of class GiGaPjysListGeantino
+/** @file 
+ * 
+ *  Implementation of class GiGaPjysListGeantino
  *  
  *  @author Vanya Belyaev
  */
 
 // ============================================================================
+// Factory
 // ============================================================================
-static const GiGaPhysListFactory<GiGaPhysListGeantino>         s_Factory;
-const       IGiGaPhysListFactory&GiGaPhysListGeantinoFactory = s_Factory;
+IMPLEMENT_GiGaPhysList( GiGaPhysListGeantino ) ;
       
 // ============================================================================
 // ============================================================================
@@ -104,6 +101,8 @@ void GiGaPhysListGeantino::SetCuts()
   SetVerboseLevel(temp);  
 };
 
+// ============================================================================
+// The END 
 // ============================================================================
 
 

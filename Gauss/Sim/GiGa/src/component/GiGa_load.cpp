@@ -1,113 +1,59 @@
-// $Id: GiGa_load.cpp,v 1.10 2002-01-22 18:20:54 ibelyaev Exp $
+// $Id: GiGa_load.cpp,v 1.11 2002-04-25 13:02:05 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
-// Revision 1.9  2001/08/12 15:42:55  ibelyaev
-// improvements with Doxygen comments
-//
-// Revision 1.8  2001/07/27 17:56:07  ibelyaev
-// add new component GiGaSensDetPrint
-//
-// Revision 1.7  2001/07/27 14:29:02  ibelyaev
-// bug fix
-//
-// Revision 1.6  2001/07/26 16:09:23  ibelyaev
-// GiGaRunActions budiness
-//
-// Revision 1.5  2001/07/25 18:13:39  ibelyaev
-// add new component GiGaEventActionCommand
-//
-// Revision 1.4  2001/07/24 09:48:15  ibelyaev
-// new component GiGaEventActionSequence
-//
-// Revision 1.3  2001/07/15 20:54:37  ibelyaev
-// package restructurisation
-//
 // ============================================================================
 #define GIGA_GIGA_LOAD_CPP 1 
 // ============================================================================
-
-///
-#include "GaudiKernel/ISvcFactory.h"
-#define DLL_DECL_SERVICE(x)   extern const ISvcFactory& x##Factory; \
-                                               x##Factory.addRef();
-///
-#include "GaudiKernel/ICnvFactory.h"
-#define DLL_DECL_CONVERTER(x) extern const ICnvFactory& x##Factory; \
-                                               x##Factory.addRef();
-///
-#include "GaudiKernel/IAlgFactory.h"
-#define DLL_DECL_ALGORITHM(x) extern const IAlgFactory& x##Factory; \
-                                               x##Factory.addRef();
-///
-#include "GiGa/IGiGaPhysListFactory.h"
-#define DLL_DECL_PLFACTORY(x) extern const IGiGaPhysListFactory& x##Factory; \
-                                                        x##Factory.addRef();
-///
-#include "GiGa/IGiGaSensDetFactory.h"
-#define DLL_DECL_SDFACTORY(x) extern const IGiGaSensDetFactory& x##Factory; \
-                                                       x##Factory.addRef();
-///
-#include "GiGa/IGiGaMagFieldFactory.h"
-#define DLL_DECL_MFFACTORY(x) extern const IGiGaMagFieldFactory& x##Factory; \
-                                                        x##Factory.addRef();
-///
-#include "GiGa/IGiGaStackActionFactory.h"
-#define DLL_DECL_STACKFACTORY(x) extern const IGiGaStackActionFactory& \
-                                            x##Factory; x##Factory.addRef();
-///
-#include "GiGa/IGiGaTrackActionFactory.h"
-#define DLL_DECL_TRACKFACTORY(x) extern const IGiGaTrackActionFactory& \
-                                            x##Factory; x##Factory.addRef();
-///
-#include "GiGa/IGiGaStepActionFactory.h"
-#define DLL_DECL_STEPFACTORY(x)  extern const IGiGaStepActionFactory& \
-                                            x##Factory; x##Factory.addRef();
-// 
-#include "GiGa/IGiGaEventActionFactory.h"
-#define DLL_DECL_EVENTFACTORY(x) extern const IGiGaEventActionFactory& \
-                                            x##Factory; x##Factory.addRef();
-//
-#include "GiGa/IGiGaRunActionFactory.h"
-#define DLL_DECL_RUNFACTORY(x)   extern const IGiGaRunActionFactory& \
-                                            x##Factory; x##Factory.addRef();
-///
+// include 
+// GaudiKernel 
+#include "GaudiKernel/DeclareFactoryEntries.h" 
+// GiGa 
+#include "GiGa/GiGaMACROs.h"
+// ============================================================================
+/** @file GiGa_load.cpp
+ *  mandatry file for declaration of component library entries 
+ *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
+ *  @date xx/xx/xxxx
+ */
+// ============================================================================
+ 
 void GiGa_load() 
 { 
   /// GiGa Service itself
-  DLL_DECL_SERVICE      (    GiGaSvc                 ); 
+  DECLARE_SERVICE         (    GiGaSvc                 ); 
   /// Streams 
-  DLL_DECL_ALGORITHM    (    GiGaInputStream         );
-  DLL_DECL_ALGORITHM    (    GiGaOutputStream        );
-  DLL_DECL_ALGORITHM    (    GiGaFlushAlgorithm      );
-  /// Physics List
-  DLL_DECL_PLFACTORY    (    GiGaPhysListGeantino    );
-  DLL_DECL_PLFACTORY    (    GiGaPhysListEm          );
-  DLL_DECL_PLFACTORY    (    GiGaPhysListFull        );
+  DECLARE_ALGORITHM       (    GiGaInputStream         );
+  DECLARE_ALGORITHM       (    GiGaOutputStream        );
+  DECLARE_ALGORITHM       (    GiGaFlushAlgorithm      );
+  /// Physics List (GiGa)
+  DECLARE_GiGaPhysList    (    GiGaPhysListGeantino    );
+  DECLARE_GiGaPhysList    (    GiGaPhysListEm          );
+  DECLARE_GiGaPhysList    (    GiGaPhysListFull        );
   /// Sensitive Detector 
-  DLL_DECL_SDFACTORY    (    GiGaSensDetPrint        );
+  DECLARE_GiGaSensDet     (    GiGaSensDetPrint        );
   /// Magnetic Field  
-  DLL_DECL_MFFACTORY    (    GiGaMagFieldGlobal      );
-  DLL_DECL_MFFACTORY    (    GiGaMagFieldUniform     );
+  DECLARE_GiGaMagField    (    GiGaMagFieldGlobal      );
+  DECLARE_GiGaMagField    (    GiGaMagFieldUniform     );
   /// stacking action 
-  DLL_DECL_STACKFACTORY (    GiGaStackActionEmpty    );
+  DECLARE_GiGaStackAction (    GiGaStackActionEmpty    );
   /// tracking action 
-  DLL_DECL_TRACKFACTORY (    GiGaTrackActionEmpty    );
-  DLL_DECL_TRACKFACTORY (    GiGaTrackActionSimple   );
-  DLL_DECL_TRACKFACTORY (    GiGaTrackActionSequence );
+  DECLARE_GiGaTrackAction (    GiGaTrackActionEmpty    );
+  DECLARE_GiGaTrackAction (    GiGaTrackActionSimple   );
+  DECLARE_GiGaTrackAction (    GiGaTrackActionSequence );
   /// stepping  action 
-  DLL_DECL_STEPFACTORY  (    GiGaStepActionEmpty     );
-  DLL_DECL_STEPFACTORY  (    GiGaStepActionDraw      );
-  DLL_DECL_STEPFACTORY  (    GiGaStepActionSequence  );
+  DECLARE_GiGaStepAction  (    GiGaStepActionEmpty     );
+  DECLARE_GiGaStepAction  (    GiGaStepActionDraw      );
+  DECLARE_GiGaStepAction  (    GiGaStepActionSequence  );
   /// run action
-  DLL_DECL_RUNFACTORY   (    GiGaRunActionSequence   );
-  DLL_DECL_RUNFACTORY   (    GiGaRunActionCommand    );
+  DECLARE_GiGaRunAction   (    GiGaRunActionSequence   );
+  DECLARE_GiGaRunAction   (    GiGaRunActionCommand    );
   /// event action 
-  DLL_DECL_EVENTFACTORY (    GiGaEventActionEmpty    );
-  DLL_DECL_EVENTFACTORY (    GiGaEventActionDraw     );
-  DLL_DECL_EVENTFACTORY (    GiGaEventActionSequence );
-  DLL_DECL_EVENTFACTORY (    GiGaEventActionCommand  );
+  DECLARE_GiGaEventAction (    GiGaEventActionEmpty    );
+  DECLARE_GiGaEventAction (    GiGaEventActionDraw     );
+  DECLARE_GiGaEventAction (    GiGaEventActionSequence );
+  DECLARE_GiGaEventAction (    GiGaEventActionCommand  );
 };
 
 // ============================================================================

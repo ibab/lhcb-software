@@ -1,5 +1,8 @@
+// $Id: GiGaMagFieldFactory.h,v 1.8 2002-04-25 13:02:04 ibelyaev Exp $
 // ============================================================================
+// CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
+// $Log: not supported by cvs2svn $ 
 // ============================================================================
 #ifndef    GIGA_GIGAMagFieldFACTORY_H
 #define    GIGA_GIGAMagFieldFACTORY_H 1 
@@ -10,7 +13,7 @@
 #include "GaudiKernel/FactoryTable.h"
 #include "GaudiKernel/IInterface.h"
 #include "GaudiKernel/ISvcLocator.h"
-//
+// local 
 #include "GiGa/IGiGaMagFieldFactory.h" 
 //
 
@@ -18,22 +21,22 @@
  *
  *  implementationof factory to create "Magnetic Field" class
  *  
- *  @author Vanya Belyaev
+ *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
  */
 
 template <class ConcreteMagField>
 class GiGaMagFieldFactory: public IGiGaMagFieldFactory
 {
- public:
+public:
   ///
   /// Default constructor
   GiGaMagFieldFactory() 
-    {
-      // Get the class name using the RTTI.
-      m_MagFieldType     = System::typeinfoName( typeid( ConcreteMagField ) );
-      m_ident      = m_MagFieldType;
-      FactoryTable::instance()->addFactory( this );
-    };
+  {
+    // Get the class name using the RTTI.
+    m_MagFieldType     = System::typeinfoName( typeid( ConcreteMagField ) );
+    m_ident      = m_MagFieldType;
+    FactoryTable::instance()->addFactory( this );
+  };
   /// Default destructor
   virtual ~GiGaMagFieldFactory(){};
   /// from IInterface  
@@ -85,8 +88,18 @@ private:
   std::string m_ident;
   //
 };
-///
 
+/** @def IMPLEMENT_GiGaMagField
+ *  useful macro to implement the concrete factory
+ *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
+ *  @date 25 Apr 2002 
+ */
+#define IMPLEMENT_GiGaMagField( x ) \
+ static const     GiGaMagFieldFactory<##x##>         s_##x##Factory ; \
+ const           IGiGaMagFieldFactory&##x##Factory = s_##x##Factory ;
+
+// ============================================================================
+// The END 
 // ============================================================================
 #endif  // GIGA_GIGAMagFieldFACTORY_H
 // ============================================================================

@@ -2,6 +2,9 @@
 /// CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 /// $Log: not supported by cvs2svn $
+/// Revision 1.2  2001/08/12 15:42:43  ibelyaev
+/// improvements with Doxygen comments
+///
 /// Revision 1.1  2001/07/26 14:24:45  ibelyaev
 /// new base class for Run Action
 /// 
@@ -41,16 +44,6 @@ public:
    *  @return status code 
    */
   virtual StatusCode         finalize    ()        ;
-  
-  /** perform begin-of-run action
-   *  @param run  pointer to Geant4 Run object
-   */
-  virtual void BeginOfRunAction ( const G4Run* run );
-  
-  /** perform end-of-run action
-   *  @param run  pointer to Genat4 Run object
-   */
-  virtual void EndOfRunAction   ( const G4Run* run );
   
 protected :
   

@@ -2,6 +2,9 @@
 /// CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 /// $Log: not supported by cvs2svn $
+/// Revision 1.7  2001/08/12 15:42:44  ibelyaev
+/// improvements with Doxygen comments
+///
 /// Revision 1.6  2001/07/23 13:11:43  ibelyaev
 /// the package restructurisation(II)
 /// 
@@ -87,6 +90,15 @@ private:
   //
 };
 ///
+
+/** @def IMPLEMENT_GiGaSensDet
+ *  useful macro to implement the concrete factory
+ *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
+ *  @date 25 Apr 2002 
+ */
+#define IMPLEMENT_GiGaSensDet( x ) \
+ static const     GiGaSensDetFactory<##x##>         s_##x##Factory ; \
+ const           IGiGaSensDetFactory&##x##Factory = s_##x##Factory ;
 
 // ============================================================================
 #endif  ///< GIGA_GiGaSensDetFACTORY_H

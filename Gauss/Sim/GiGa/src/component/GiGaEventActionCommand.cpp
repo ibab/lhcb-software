@@ -1,22 +1,8 @@
+// $Id: GiGaEventActionCommand.cpp,v 1.7 2002-04-25 13:02:04 ibelyaev Exp $ 
 // ============================================================================
-/// CVS tag $Name: not supported by cvs2svn $ 
+// CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
-/// $Log: not supported by cvs2svn $
-/// Revision 1.5  2001/08/12 15:42:50  ibelyaev
-/// improvements with Doxygen comments
-///
-/// Revision 1.4  2001/07/27 17:03:19  ibelyaev
-/// improved printout
-///
-/// Revision 1.3  2001/07/27 14:29:00  ibelyaev
-/// bug fix
-///
-/// Revision 1.2  2001/07/26 16:09:21  ibelyaev
-/// GiGaRunActions budiness
-///
-/// Revision 1.1  2001/07/25 18:13:39  ibelyaev
-/// add new component GiGaEventActionCommand
-/// 
+// $Log: not supported by cvs2svn $
 // ============================================================================
 /// GaudiKernel
 #include "GaudiKernel/PropertyMgr.h"
@@ -28,18 +14,19 @@
 #include "GiGaEventActionCommand.h"
 
 // ============================================================================
-/** Implementation file for class : GiGaEventActionCommand
+/**  @file 
  *
- *   @author Vanya  Belyaev
+ *   Implementation file for class : GiGaEventActionCommand
+ *
+ *   @author Vanya  Belyaev Ivan.Belyaev@itep.ru
  *   @date 25/07/2001 
  */
 // ============================================================================
 
 // ============================================================================
-/// Factory business
+// Factory business
 // ============================================================================
-static const GiGaEventActionFactory<GiGaEventActionCommand>         s_Factory;
-const       IGiGaEventActionFactory&GiGaEventActionCommandFactory = s_Factory;
+IMPLEMENT_GiGaEventAction( GiGaEventActionCommand );
 
 // ============================================================================
 /** standard constructor
@@ -107,8 +94,6 @@ StatusCode GiGaEventActionCommand::finalize()
 // ============================================================================
 void GiGaEventActionCommand::BeginOfEventAction( const G4Event* event )
 {
-  // base class 
-  GiGaEventActionBase::BeginOfEventAction ( event );
   if( 0 == event ) 
     { Warning("BeginOfEventAction:: G4Event* points to NULL!") ; }
   /// get Geant4 UI manager 
@@ -134,8 +119,6 @@ void GiGaEventActionCommand::BeginOfEventAction( const G4Event* event )
 // ============================================================================
 void GiGaEventActionCommand::EndOfEventAction( const G4Event* event )
 {
-  // base class 
-  GiGaEventActionBase::EndOfEventAction ( event );
   if( 0 == event ) 
     { Warning("EndOfEventAction:: G4Event* points to NULL!") ; }
   /// get Geant4 UI manager 
@@ -154,5 +137,7 @@ void GiGaEventActionCommand::EndOfEventAction( const G4Event* event )
   ///
 };
 
+// ============================================================================
+// The END 
 // ============================================================================
 

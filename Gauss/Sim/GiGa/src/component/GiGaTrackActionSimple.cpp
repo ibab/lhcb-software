@@ -1,19 +1,8 @@
+// $Id: GiGaTrackActionSimple.cpp,v 1.9 2002-04-25 13:02:05 ibelyaev Exp $ 
 // ============================================================================
-/// CVS tag $Name: not supported by cvs2svn $
+// CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
-/// $Log: not supported by cvs2svn $
-/// Revision 1.7  2001/07/27 17:03:22  ibelyaev
-/// improved printout
-///
-/// Revision 1.6  2001/07/27 14:29:02  ibelyaev
-/// bug fix
-///
-/// Revision 1.5  2001/07/23 13:12:29  ibelyaev
-/// the package restructurisation(II)
-///
-/// Revision 1.4  2001/07/15 20:54:36  ibelyaev
-/// package restructurisation
-/// 
+// $Log: not supported by cvs2svn $
 // ============================================================================
 #define GIGA_GIGATRACKACKTIONSIMPLE_CPP 1 
 // ============================================================================
@@ -36,18 +25,18 @@
 #include "GiGaTrackActionSimple.h"
 ///
 
-/** Implementation of class GiGaTrackActionSimple
+/** @file 
+ *  
+ *  Implementation of class GiGaTrackActionSimple
  *
  *  @author Vanya Belyaev
  */
 
 // ============================================================================
-/// factories business 
+/// factory business 
 // ============================================================================
-static const GiGaTrackActionFactory<GiGaTrackActionSimple>          
-s_GiGaTrackActionSimpleFactory;
-const       IGiGaTrackActionFactory& GiGaTrackActionSimpleFactory = 
-s_GiGaTrackActionSimpleFactory;
+IMPLEMENT_GiGaTrackAction( GiGaTrackActionSimple );
+
 
 // ============================================================================
 /// constructor 

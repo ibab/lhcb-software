@@ -1,13 +1,8 @@
+// $Id: GiGaStackActionEmpty.cpp,v 1.7 2002-04-25 13:02:05 ibelyaev Exp $
 // ============================================================================
-/// CVS tag $Name: not supported by cvs2svn $ 
+// CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
-/// $Log: not supported by cvs2svn $
-/// Revision 1.5  2001/07/27 17:03:21  ibelyaev
-/// improved printout
-///
-/// Revision 1.4  2001/07/23 13:12:28  ibelyaev
-/// the package restructurisation(II)
-/// 
+// $Log: not supported by cvs2svn $
 // ============================================================================
 //
 #include "G4Step.hh"
@@ -18,15 +13,17 @@
 // local
 #include "GiGaStackActionEmpty.h"
 
-/** Implementation fo class GiGaStackActionEmpty
+/** @file 
+ * 
+ * Implementation fo class GiGaStackActionEmpty
  *  
  * @author Vanya Belyaev 
  */
 
 // ============================================================================
+// Factory
 // ============================================================================
-static const GiGaStackActionFactory<GiGaStackActionEmpty>         s_Factory;
-const       IGiGaStackActionFactory&GiGaStackActionEmptyFactory = s_Factory;
+IMPLEMENT_GiGaStackAction( GiGaStackActionEmpty ) ;
 
 // ============================================================================
 // ============================================================================
@@ -87,4 +84,6 @@ void GiGaStackActionEmpty::PrepareNewEvent  ()
 {  Print("PrepareNewEvent method is invoked" , 
          StatusCode::SUCCESS , MSG::DEBUG ) ; };
 
+// ============================================================================
+// The END 
 // ============================================================================

@@ -1,28 +1,25 @@
+// $Id: GiGaEventActionEmpty.cpp,v 1.7 2002-04-25 13:02:04 ibelyaev Exp $ 
 // ============================================================================
-/// CVS tag $Name: not supported by cvs2svn $ 
+// CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
-/// $Log: not supported by cvs2svn $
-/// Revision 1.5  2001/07/27 17:03:19  ibelyaev
-/// improved printout
-///
-/// Revision 1.4  2001/07/23 13:12:26  ibelyaev
-/// the package restructurisation(II)
-/// 
+// $Log: not supported by cvs2svn $
 // ============================================================================
 // GiGa 
 #include "GiGa/GiGaEventActionFactory.h"
 // local
 #include "GiGaEventActionEmpty.h"
 
-/** implementationof class GiGaEventActionEmpty
+/** @file 
+ *
+ * implementation of class GiGaEventActionEmpty
  * 
  *  @author Vanya Belyaev 
  */
 
 // ============================================================================
+// Factory
 // ============================================================================
-static const GiGaEventActionFactory<GiGaEventActionEmpty>         s_Factory;
-const       IGiGaEventActionFactory&GiGaEventActionEmptyFactory = s_Factory;
+IMPLEMENT_GiGaEventAction( GiGaEventActionEmpty );
 
 // ============================================================================
 // ============================================================================
@@ -53,10 +50,8 @@ StatusCode GiGaEventActionEmpty::initialize ()
 // ============================================================================
 StatusCode GiGaEventActionEmpty::finalize   () 
 { 
-  ///
   Print("finalization");
-  ///
-  return GiGaEventActionBase::initialize() ; 
+  return GiGaEventActionBase::finalize() ; 
 } ;
 
 // ============================================================================
@@ -69,4 +64,6 @@ void GiGaEventActionEmpty::BeginOfEventAction ( const G4Event* /* event */ )
 void GiGaEventActionEmpty::EndOfEventAction   ( const G4Event* /* event */ ) 
 { Print(" EndOfEventAction() method is invoked"); };
 
+// ============================================================================
+// The END 
 // ============================================================================

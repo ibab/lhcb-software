@@ -1,7 +1,11 @@
+// $Id: GiGaEventActionDraw.cpp,v 1.8 2002-04-25 13:02:04 ibelyaev Exp $
 // ============================================================================
 /// CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 /// $Log: not supported by cvs2svn $
+/// Revision 1.7  2002/04/09 17:16:50  ibelyaev
+///  printout polishing
+///
 /// Revision 1.6  2001/08/12 15:42:51  ibelyaev
 /// improvements with Doxygen comments
 ///
@@ -20,20 +24,23 @@
 // local
 #include "GiGaEventActionDraw.h"
 
-/** implementationof class GiGaEventActionDraw 
+/** @file 
+ *
+ *  implementation of class GiGaEventActionDraw 
  * 
- *  @author Vanya Belyaev
+ *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
  */
 
 // ============================================================================
+// factories
 // ============================================================================
-static const GiGaEventActionFactory<GiGaEventActionDraw>         s_Factory;
-const       IGiGaEventActionFactory&GiGaEventActionDrawFactory = s_Factory;
+IMPLEMENT_GiGaEventAction( GiGaEventActionDraw );
 
 // ============================================================================
 // ============================================================================
-GiGaEventActionDraw::GiGaEventActionDraw( const std::string& Name ,
-                                          ISvcLocator* Loc ) 
+GiGaEventActionDraw::GiGaEventActionDraw
+( const std::string& Name ,
+  ISvcLocator* Loc ) 
   : GiGaEventActionBase( Name , Loc ) 
 {};
 
@@ -50,7 +57,6 @@ StatusCode GiGaEventActionDraw::initialize ()
     { return Error("Could not initialize the base class ",sc); }
   ///
   Print("initialized successfully");
-  ///
   return StatusCode::SUCCESS;
 };
 
@@ -58,19 +64,14 @@ StatusCode GiGaEventActionDraw::initialize ()
 // ============================================================================
 StatusCode GiGaEventActionDraw::finalize   () 
 { 
-  ///
   Print("finalization");
-  ///
-  return GiGaEventActionBase::initialize() ; 
+  return GiGaEventActionBase::finalize () ; 
 } ;
 
 // ============================================================================
 // ============================================================================
 void GiGaEventActionDraw::EndOfEventAction( const G4Event* event ) 
 {
-  // base class 
-  GiGaEventActionBase::EndOfEventAction( event );
-  
   // locate visual manager 
   G4VVisManager* visMgr  = G4VVisManager::GetConcreteInstance();
   ///

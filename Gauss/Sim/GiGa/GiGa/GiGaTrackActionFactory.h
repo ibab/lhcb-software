@@ -1,10 +1,14 @@
+// $Id: GiGaTrackActionFactory.h,v 1.8 2002-04-25 13:02:04 ibelyaev Exp $
 // ============================================================================
-/// CVS tag $Name: not supported by cvs2svn $ 
+// CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
-/// $Log: not supported by cvs2svn $
-/// Revision 1.6  2001/07/23 13:11:43  ibelyaev
-/// the package restructurisation(II)
-/// 
+// $Log: not supported by cvs2svn $
+// Revision 1.7  2001/08/12 15:42:44  ibelyaev
+// improvements with Doxygen comments
+//
+// Revision 1.6  2001/07/23 13:11:43  ibelyaev
+// the package restructurisation(II)
+// 
 // ============================================================================
 #ifndef    GIGA_GiGaTrackActionFACTORY_H
 #define    GIGA_GiGaTrackActionFACTORY_H 1 
@@ -23,7 +27,7 @@
  *  
  *  implementation of factory to create "Tracking Action" factory class
  *  
- *  @author Vanya Belyaev
+ *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
  */
 
 template <class ConcreteTA>
@@ -80,14 +84,24 @@ public:
     return StatusCode::SUCCESS;
   }
   ///
- private:
+private:
   ///
   std::string m_sdType;
   std::string m_ident;
   //
 };
-///
 
+/** @def IMPLEMENT_GiGaTrackAction
+ *  useful macro to implement the concrete factory
+ *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
+ *  @date 25 Apr 2002 
+ */
+#define IMPLEMENT_GiGaTrackAction( x ) \
+ static const     GiGaTrackActionFactory<##x##>         s_##x##Factory ; \
+ const           IGiGaTrackActionFactory&##x##Factory = s_##x##Factory ;
+
+// ============================================================================
+// The End 
 // ============================================================================
 #endif  ///< GIGA_GiGaTrackActionFACTORY_H
 // ============================================================================

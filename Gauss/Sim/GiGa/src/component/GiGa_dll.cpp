@@ -1,50 +1,17 @@
-//====================================================================
-//  GaudiSvc_dll.cpp
-//--------------------------------------------------------------------
-//
-//  Package    : GaudiSvc
-//
-//  Description: Implementation of DllMain routine.
-//               The DLL initialisation must be done seperately for 
-//               each DLL. 
-//
-//  Author     : M.Frank
-//  Created    : 13/1/99
-//  Changes    : Pavel Binko, 15/02/2000
-//               Version copied from Gaudi, and addopted for GaudiSvc
-//
-//====================================================================
+// $Id: GiGa_dll.cpp,v 1.2 2002-04-25 13:02:05 ibelyaev Exp $
+// ============================================================================
+// CVS tag $Name: not supported by cvs2svn $
+// ============================================================================
+// $Log: not supported by cvs2svn $
+// ============================================================================
+// Include files
+#include "GaudiKernel/LoadFactoryEntries.h"
 
-// DllMain entry point
 
-#include "GaudiKernel/DllMain.icpp"
+LOAD_FACTORY_ENTRIES(GiGa);
 
-void GaudiDll::initialize ( void* hinstDLL ) { void* aux = 0 ; aux = hinstDLL ; };
 
-void GaudiDll::finalize   ( void* hinstDLL ) { void* aux = 0 ; aux = hinstDLL ; };
-
-extern void GiGa_load();
-
-#include "GaudiKernel/FactoryTable.h"
-
-///
-///
-///
-
-extern "C" FactoryTable::EntryList* getFactoryEntries() 
-{
-
-  static bool first = true;
-
-  if ( first ) { GiGa_load() ; first = false; }
-
-  return FactoryTable::instance()->getEntries();
-  ///
-};
-
-///
-///
-///
- 
-
+// ============================================================================
+// THe ENd 
+// ============================================================================
 

@@ -1,23 +1,16 @@
+// $Id: GiGaEventActionBase.cpp,v 1.8 2002-04-25 13:02:04 ibelyaev Exp $
 // ============================================================================
-/// CVS tag $Name: not supported by cvs2svn $ 
+// CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
-/// $Log: not supported by cvs2svn $
-/// Revision 1.6  2001/08/12 15:42:49  ibelyaev
-/// improvements with Doxygen comments
-///
-/// Revision 1.5  2001/07/27 17:03:18  ibelyaev
-/// improved printout
-///
-/// Revision 1.4  2001/07/23 13:12:11  ibelyaev
-/// the package restructurisation(II)
-/// 
+// $Log: not supported by cvs2svn $
 // ============================================================================
 // GiGa 
 #include "GiGa/GiGaEventActionBase.h"
 
-/** implementation fo class GiGaEventActionBase
+/** @file 
+ *  implementation fo class GiGaEventActionBase
  * 
- *  @author Vanya Belyaev 
+ *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
  */
 
 // ============================================================================
@@ -31,7 +24,6 @@ GiGaEventActionBase::GiGaEventActionBase( const std::string& nick ,
 /// virtual destructor
 // ============================================================================
 GiGaEventActionBase::~GiGaEventActionBase(){};
-
 
 // ============================================================================
 // ============================================================================
@@ -70,22 +62,6 @@ StatusCode GiGaEventActionBase::queryInterface( const InterfaceID& iid ,
   else { return GiGaBase::queryInterface( iid , ppI ) ; } /// RETURN!!!
   addRef();
   return StatusCode::SUCCESS;
-};
-
-// ============================================================================
-// ============================================================================
-void GiGaEventActionBase::BeginOfEventAction ( const G4Event* /* event */ ) 
-{
-  MsgStream log( msgSvc() , name() );
-  log << MSG::DEBUG << " 'BeginOfEventAction' is invoked!" << endreq ;
-};
-
-// ============================================================================
-// ============================================================================
-void GiGaEventActionBase::EndOfEventAction   ( const G4Event* /* event */ ) 
-{
-  MsgStream log( msgSvc() , name() );
-  log << MSG::DEBUG << " 'EndOfEventAction' is invoked!" << endreq ;
 };
 
 // ============================================================================

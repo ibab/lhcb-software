@@ -1,13 +1,17 @@
+// $Id: GiGaRunActionFactory.h,v 1.4 2002-04-25 13:02:04 ibelyaev Exp $ 
 // ============================================================================
-/// CVS tag $Name: not supported by cvs2svn $ 
+// CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
-/// $Log: not supported by cvs2svn $
-/// Revision 1.2  2001/07/27 14:28:58  ibelyaev
-/// bug fix
-///
-/// Revision 1.1  2001/07/26 16:09:20  ibelyaev
-/// GiGaRunActions budiness
-///
+// $Log: not supported by cvs2svn $
+// Revision 1.3  2001/08/12 15:42:43  ibelyaev
+// improvements with Doxygen comments
+//
+// Revision 1.2  2001/07/27 14:28:58  ibelyaev
+// bug fix
+//
+// Revision 1.1  2001/07/26 16:09:20  ibelyaev
+// GiGaRunActions budiness
+//
 // ============================================================================
 #ifndef    GIGA_GiGaRunActionFACTORY_H
 #define    GIGA_GiGaRunActionFACTORY_H 1 
@@ -25,7 +29,7 @@
  *
  *  implementation of factory to create "Run Action" factory class
  *  
- *  @author Vanya Belyaev
+ *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
  *  @date   17/03/2001 
  */
 
@@ -90,9 +94,21 @@ private:
   std::string m_ident;
   //
 };
-///
 
-#endif  // GIGA_GiGaEventActionFACTORY_H
+/** @def IMPLEMENT_GiGaRunAction
+ *  useful macro to implement the concrete factory
+ *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
+ *  @date 25 Apr 2002 
+ */
+#define IMPLEMENT_GiGaRunAction( x ) \
+ static const     GiGaRunActionFactory<##x##>         s_##x##Factory ; \
+ const           IGiGaRunActionFactory&##x##Factory = s_##x##Factory ;
+
+// ============================================================================
+// The END 
+// ============================================================================
+#endif  // GIGA_GiGaRunActionFACTORY_H
+// ============================================================================
 
 
 

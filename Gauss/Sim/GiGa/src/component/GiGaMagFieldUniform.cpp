@@ -1,20 +1,8 @@
-// $Id: GiGaMagFieldUniform.cpp,v 1.8 2002-04-09 17:16:50 ibelyaev Exp $ 
+// $Id: GiGaMagFieldUniform.cpp,v 1.9 2002-04-25 13:02:05 ibelyaev Exp $ 
 // ============================================================================
 /// CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 /// $Log: not supported by cvs2svn $
-/// Revision 1.7  2002/03/13 16:22:12  ibelyaev
-///  update for newer G4 magfield interface
-///
-/// Revision 1.6  2001/08/12 15:42:51  ibelyaev
-/// improvements with Doxygen comments
-///
-/// Revision 1.5  2001/07/27 17:03:20  ibelyaev
-/// improved printout
-///
-/// Revision 1.4  2001/07/23 13:12:27  ibelyaev
-/// the package restructurisation(II)
-/// 
 // ============================================================================
 /// GaudiKernel
 #include "GaudiKernel/IMagneticFieldSvc.h"
@@ -25,15 +13,17 @@
 /// local 
 #include "GiGaMagFieldUniform.h"
 
-/** implementation of class GiGaMagFieldUniform 
+/** @file 
+ *  
+ *  implementation of class GiGaMagFieldUniform 
  * 
- *  @author Vanya Belyaev 
+ *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
  */
 
 // ============================================================================
+// Factory
 // ============================================================================
-static const  GiGaMagFieldFactory<GiGaMagFieldUniform>         s_Factory ;
-const        IGiGaMagFieldFactory&GiGaMagFieldUniformFactory = s_Factory ; 
+IMPLEMENT_GiGaMagField( GiGaMagFieldUniform) ;
 
 // ============================================================================
 // ============================================================================
@@ -97,5 +87,7 @@ void GiGaMagFieldUniform::GetFieldValue
   ///
 };
 
+// ============================================================================
+// The END 
 // ============================================================================
 

@@ -2,6 +2,9 @@
 /// CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 /// $Log: not supported by cvs2svn $
+/// Revision 1.5  2001/08/12 15:42:43  ibelyaev
+/// improvements with Doxygen comments
+///
 /// Revision 1.4  2001/07/23 13:11:41  ibelyaev
 /// the package restructurisation(II)
 /// 
@@ -44,11 +47,6 @@ public:
   virtual StatusCode  finalize   () ; 
   /// Query Interface
   virtual StatusCode  queryInterface ( const InterfaceID& , void** ) ;
-  ///
-public:
-  ///
-  virtual void BeginOfEventAction ( const G4Event* );
-  virtual void EndOfEventAction   ( const G4Event* );
   ///
 protected: 
   ///

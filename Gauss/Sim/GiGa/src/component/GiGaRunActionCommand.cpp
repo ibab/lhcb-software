@@ -1,8 +1,11 @@
-// $Id: GiGaRunActionCommand.cpp,v 1.6 2002-04-09 17:16:50 ibelyaev Exp $
+// $Id: GiGaRunActionCommand.cpp,v 1.7 2002-04-25 13:02:05 ibelyaev Exp $
 // ============================================================================
 /// CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 /// $Log: not supported by cvs2svn $
+/// Revision 1.6  2002/04/09 17:16:50  ibelyaev
+///  printout polishing
+///
 // ============================================================================
 /// GaudiKernel
 #include "GaudiKernel/PropertyMgr.h"
@@ -26,8 +29,7 @@
 // ============================================================================
 /// Factory business
 // ============================================================================
-static const GiGaRunActionFactory<GiGaRunActionCommand>         s_Factory;
-const       IGiGaRunActionFactory&GiGaRunActionCommandFactory = s_Factory;
+IMPLEMENT_GiGaRunAction( GiGaRunActionCommand ) ;
 
 // ============================================================================
 /** standard constructor
@@ -95,8 +97,6 @@ StatusCode GiGaRunActionCommand::finalize()
 // ============================================================================
 void GiGaRunActionCommand::BeginOfRunAction( const G4Run* run )
 {
-  // base class 
-  GiGaRunActionBase::BeginOfRunAction( run );
   if( 0 == run ) 
     { Warning("BeginOfRunAction:: G4Run* points to NULL!") ; }
   /// get Geant4 UI manager 
@@ -122,8 +122,6 @@ void GiGaRunActionCommand::BeginOfRunAction( const G4Run* run )
 // ============================================================================
 void GiGaRunActionCommand::EndOfRunAction( const G4Run* run )
 {
-  // base class 
-  GiGaRunActionBase::EndOfRunAction( run );
   if( 0 == run ) 
     { Warning("EndOfRunAction:: G4Run* points to NULL!") ; }
   /// get Geant4 UI manager 

@@ -1,16 +1,8 @@
+// $Id: GiGaStepActionDraw.cpp,v 1.8 2002-04-25 13:02:05 ibelyaev Exp $ 
 // ============================================================================
 /// CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 /// $Log: not supported by cvs2svn $
-/// Revision 1.6  2001/07/27 17:03:21  ibelyaev
-/// improved printout
-///
-/// Revision 1.5  2001/07/23 13:12:28  ibelyaev
-/// the package restructurisation(II)
-///
-/// Revision 1.4  2001/07/15 20:54:34  ibelyaev
-/// package restructurisation
-/// 
 // ============================================================================
 #define GIGA_GIGASTEPACTIONDRAW_CPP 1 
 // ============================================================================
@@ -27,13 +19,13 @@
 // local
 #include "GiGaStepActionDraw.h"
 
-///
-static const GiGaStepActionFactory<GiGaStepActionDraw>          
-s_GiGaStepActionDrawFactory;
-const       IGiGaStepActionFactory& GiGaStepActionDrawFactory = 
-s_GiGaStepActionDrawFactory;
-///
+/** @file 
+ *  implementation of GiGaStepActionDraw 
+ *  @author Vanya Belyaev Ivan.Belyave@itep.ru
+ */
 
+/// factory
+IMPLEMENT_GiGaStepAction( GiGaStepActionDraw );
 
 // ============================================================================
 /** standard constructor 
@@ -114,6 +106,10 @@ void GiGaStepActionDraw::UserSteppingAction( const G4Step* step )
   ///
 };
 ///
+
+// ============================================================================
+// The END 
+// ============================================================================
 
 
 

@@ -1,7 +1,11 @@
+// $Id: GiGaSensDetPrint.cpp,v 1.3 2002-04-25 13:02:05 ibelyaev Exp $ 
 // ============================================================================
 /// CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 /// $Log: not supported by cvs2svn $
+/// Revision 1.2  2001/08/12 15:42:53  ibelyaev
+/// improvements with Doxygen comments
+///
 /// Revision 1.1  2001/07/27 17:56:05  ibelyaev
 /// add new component GiGaSensDetPrint
 /// 
@@ -22,7 +26,9 @@
 
 
 // ============================================================================
-/** Implementation of class GiGaSensDetPrint
+/** @file 
+ * 
+ *  Implementation of class GiGaSensDetPrint
  *  
  *  @author Vanya Belyaev
  *  @date   23/01/2001 
@@ -32,8 +38,7 @@
 // ============================================================================
 /// factory business 
 // ============================================================================
-static const GiGaSensDetFactory<GiGaSensDetPrint>         s_Factory;
-const       IGiGaSensDetFactory&GiGaSensDetPrintFactory = s_Factory;
+IMPLEMENT_GiGaSensDet( GiGaSensDetPrint );
 
 // ============================================================================
 /** standard consrtructor 
@@ -111,5 +116,7 @@ bool GiGaSensDetPrint::ProcessHits( G4Step* step ,
   return false;
 };
 
+// ============================================================================
+// The END 
 // ============================================================================
 

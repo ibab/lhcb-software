@@ -1,19 +1,8 @@
+// $Id: GiGaRunActionSequence.cpp,v 1.6 2002-04-25 13:02:05 ibelyaev Exp $ 
 // ============================================================================
-/// CVS tag $Name: not supported by cvs2svn $ 
+// CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
-/// $Log: not supported by cvs2svn $
-/// Revision 1.4  2001/08/12 15:42:53  ibelyaev
-/// improvements with Doxygen comments
-///
-/// Revision 1.3  2001/07/27 17:03:21  ibelyaev
-/// improved printout
-///
-/// Revision 1.2  2001/07/27 14:29:01  ibelyaev
-/// bug fix
-///
-/// Revision 1.1  2001/07/26 16:09:22  ibelyaev
-/// GiGaRunActions budiness
-/// 
+// $Log: not supported by cvs2svn $
 // ============================================================================
 /// STD & STL 
 #include <algorithm>
@@ -38,8 +27,7 @@
 // ============================================================================
 /// factory business 
 // ============================================================================
-static const GiGaRunActionFactory<GiGaRunActionSequence>         s_Factory;
-const       IGiGaRunActionFactory&GiGaRunActionSequenceFactory = s_Factory;
+IMPLEMENT_GiGaRunAction( GiGaRunActionSequence ) ;
 
 // ============================================================================
 /** standard constructor
@@ -172,8 +160,6 @@ StatusCode GiGaRunActionSequence::finalize()
 // ============================================================================
 void GiGaRunActionSequence::BeginOfRunAction ( const G4Run* run )
 {
-  // base class 
-  GiGaRunActionBase::BeginOfRunAction( run );  
   // run actions of all members  
   std::for_each ( m_actions.begin () , m_actions.end   () ,
                   std::bind2nd( std::mem_fun1(&IGiGaRunAction::
@@ -187,8 +173,6 @@ void GiGaRunActionSequence::BeginOfRunAction ( const G4Run* run )
 // ============================================================================
 void GiGaRunActionSequence::EndOfRunAction ( const G4Run* run )
 {
-  // base class 
-  GiGaRunActionBase::EndOfRunAction( run );
   // run actions of all members  
   std::for_each ( m_actions.begin () , m_actions.end   () ,
                   std::bind2nd( std::mem_fun1(&IGiGaRunAction::

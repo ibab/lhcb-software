@@ -1,13 +1,8 @@
+// $Id: GiGaPhysListEm.cpp,v 1.9 2002-04-25 13:02:05 ibelyaev Exp $ 
 // ============================================================================
 /// CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 /// $Log: not supported by cvs2svn $
-/// Revision 1.7  2001/07/27 17:03:20  ibelyaev
-/// improved printout
-///
-/// Revision 1.6  2001/07/23 13:12:27  ibelyaev
-/// the package restructurisation(II)
-/// 
 // ============================================================================
 // GaudiKernel
 #include "GaudiKernel/PropertyMgr.h"
@@ -27,15 +22,17 @@
 // local
 #include "GiGaPhysListEm.h"
 
-/** implementation of class GiGaPhysListEm
+/** @file 
+ * 
+ *  implementation of class GiGaPhysListEm
  *
- *  @author Vanya Belyaev
+ *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
  */
 
 // ============================================================================
+// Factory
 // ============================================================================
-static const GiGaPhysListFactory<GiGaPhysListEm>         s_Factory;
-const       IGiGaPhysListFactory&GiGaPhysListEmFactory = s_Factory;
+IMPLEMENT_GiGaPhysList( GiGaPhysListEm ) ;
 
 // ============================================================================
 // ============================================================================

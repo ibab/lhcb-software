@@ -1,16 +1,8 @@
+// $Id: GiGaTrackActionSequence.cpp,v 1.5 2002-04-25 13:02:05 ibelyaev Exp $ 
 // ============================================================================
 /// CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 /// $Log: not supported by cvs2svn $
-/// Revision 1.3  2001/07/27 17:03:21  ibelyaev
-/// improved printout
-///
-/// Revision 1.2  2001/07/27 14:29:01  ibelyaev
-/// bug fix
-///
-/// Revision 1.1  2001/07/24 09:08:14  ibelyaev
-/// new component GiGaTrackActionSequence
-/// 
 // ============================================================================
 /// STD & STL 
 #include <functional>
@@ -24,18 +16,19 @@
 #include "GiGaTrackActionSequence.h"
 
 // ============================================================================
-/** Implementation file for class : GiGaTrackActionSequence
+/** @file 
+ *  
+ *  Implementation file for class : GiGaTrackActionSequence
  *  @date 24/07/2001 
- *  @author Vanya  Belyaev
+ *  @author Vanya  Belyaev Ivan.Belyaev@itep.ru
  */
 // ============================================================================
 
 
 // ============================================================================
-/// factory business 
+/// Factory business 
 // ============================================================================
-static const GiGaTrackActionFactory<GiGaTrackActionSequence>         s_Factory;
-const       IGiGaTrackActionFactory&GiGaTrackActionSequenceFactory = s_Factory;
+IMPLEMENT_GiGaTrackAction( GiGaTrackActionSequence ) ;
 
 // ============================================================================
 /** standard constructor
@@ -198,4 +191,6 @@ void GiGaTrackActionSequence::PostUserTrackingAction  ( const G4Track* track )
                                              PostUserTrackingAction),track ) );
 };
 
+// ============================================================================
+// The END 
 // ============================================================================

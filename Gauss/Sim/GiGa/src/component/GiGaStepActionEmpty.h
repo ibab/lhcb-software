@@ -2,6 +2,9 @@
 /// CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 /// $Log: not supported by cvs2svn $
+/// Revision 1.5  2001/08/12 15:42:54  ibelyaev
+/// improvements with Doxygen comments
+///
 /// Revision 1.4  2001/07/23 13:12:28  ibelyaev
 /// the package restructurisation(II)
 ///
@@ -29,23 +32,27 @@ class GiGaStepActionEmpty: virtual public GiGaStepActionBase
   ///
   friend class GiGaStepActionFactory<GiGaStepActionEmpty>;
   ///
- protected:
+protected:
   ///
   GiGaStepActionEmpty( const std::string& , ISvcLocator* );
   virtual ~GiGaStepActionEmpty();
   ////
- public: 
+public:
+  
+  virtual void UserSteppingAction ( const G4Step* );
+  
+public: 
   ///
   virtual StatusCode initialize () ; 
   virtual StatusCode finalize   () ;
   /// 
- private:
+private:
   ///
   GiGaStepActionEmpty(); ///< no default constructor
   GiGaStepActionEmpty( const GiGaStepActionEmpty& ); ///< no copy  
   GiGaStepActionEmpty& operator=( const GiGaStepActionEmpty& ) ; ///< no = 
   ///
- private:
+private:
   ///
 };
 
