@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/L0/L0Muon/L0Muon/L0mTower.h,v 1.2 2001-07-09 19:39:55 atsareg Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/L0/L0Muon/L0Muon/L0mTower.h,v 1.3 2001-07-17 18:14:22 atsareg Exp $
 
 #ifndef L0MTOWER_H     
 #define L0MTOWER_H     1 
@@ -64,6 +64,8 @@ public:
     double phi() { return m_phi; }
     /// Nearest pad
     int nearest(int sta, int foiX, int yindex);
+    /// Get M1 extrapolation offset
+    int getExtra1() { return m_extra1; }
     /// Do the "limited" Y smearing of pads falling out of the PU
     void limitedY();
     
