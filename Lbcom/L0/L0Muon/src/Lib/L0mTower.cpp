@@ -1,4 +1,4 @@
-// $Id: L0mTower.cpp,v 1.11 2002-08-02 10:46:30 atsareg Exp $
+// $Id: L0mTower.cpp,v 1.12 2002-11-06 15:51:39 atsareg Exp $
 #include "GaudiKernel/MsgStream.h"
 
 #include <set>
@@ -28,6 +28,8 @@ L0mTower::L0mTower()  {
   m_found = false;
   m_limited = false;
   m_extra1 = 0;
+  m_ignoreM1 = false;
+  m_4stations = false;
 }
 
 L0mTower::L0mTower(MuonTileID pad)  {
@@ -47,6 +49,8 @@ L0mTower::L0mTower(MuonTileID pad)  {
   m_found = false;
   m_limited = false;
   m_extra1 = 0;
+  m_ignoreM1 = false;
+  m_4stations = false;
 }
 
 L0mTower::~L0mTower() {
@@ -285,11 +289,27 @@ double L0mTower::ptcalc() {
   double dx,dy,y,z,dz;
   
   if ( m_ignoreM1 ) {
-    scode = m_iTileXYZTool->calcTilePos(pad(1),x1,dx,y1,dy,z,dz); 
-    scode = m_iTileXYZTool->calcTilePos(pad(2),x2,dx,y,dy,z,dz); 
+    MuonTileID p1 = pad(1);
+    MuonTileID p2 = pad(2);
+    if ( m_4stations ) {
+      int ista = p1.station();
+      p1.setStation(ista-1);
+      ista = p2.station();
+      p2.setStation(ista-1);
+    }
+    cout << "Pads in ptcalc: " << p1 << " " << p2 << endl;
+    scode = m_iTileXYZTool->calcTilePos(p1,x1,dx,y1,dy,z,dz); 
+    scode = m_iTileXYZTool->calcTilePos(p2,x2,dx,y,dy,z,dz); 
     d2 = d2+d3;
     d3 = m_procUnit->m_ptParameters[4] ;
   } else {
+    if ( m_4stations ) {
+      //invalid options combination
+      m_pt = 0.;
+      m_theta = 0.;
+      m_phi = 0.;
+      return m_pt;
+    }
     scode = m_iTileXYZTool->calcTilePos(pad(0),x1,dx,y1,dy,z,dz); 
     scode = m_iTileXYZTool->calcTilePos(pad(1),x2,dx,y,dy,z,dz); 
   }    
