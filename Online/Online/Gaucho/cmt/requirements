@@ -1,12 +1,18 @@
 package Gaucho
-version v1
+version v1r1
 
 branches src cmt doc
 
 # add "use" statements
 use GaudiKernel v*
 use AIDA v*
-use DIM v*
+
+#FOR FUTURE USE:
+#use DIM v*
+# at the moment, DIM is not a cmt package yet
+# but it could be soon, so for the moment DIM usage is hardcoded
+# in the last two lines of this file 
+
 
 # build a component library
 library Gaucho -import=HTL ../src/*.cpp
@@ -21,8 +27,8 @@ private
 include_dirs $(GAUCHOROOT)
 apply_pattern package_Cshlibflags
 
-#macro+ Gaucho_cppflags "-I c:/vanphil/dim_new/dim"
-#macro+ Gaucho_shlibflags "c:/vanphil/dim_new/bin/dim.lib"
+#macro+ Gaucho_cppflags "-I c:/vanphil/dim/dim"
+#macro+ Gaucho_shlibflags "c:/vanphil/dim/bin/dim.lib"
 
-#macro+ Gaucho_cppflags "-I /afs/cern.ch/user/v/vanphil/dim/dim"
-#macro+ Gaucho_shlibflags "/afs/cern.ch/user/v/vanphil/dim/linux/libdim.a"
+macro+ Gaucho_cppflags "-I /afs/cern.ch/user/v/vanphil/dim/dim"
+macro+ Gaucho_shlibflags "/afs/cern.ch/user/v/vanphil/dim/linux/libdim.a"

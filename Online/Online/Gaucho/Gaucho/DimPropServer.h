@@ -1,8 +1,8 @@
-//$Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/Gaucho/Gaucho/DimPropServer.h,v 1.1.1.1 2003-06-05 09:34:45 vanphil Exp $
+//$Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/Gaucho/Gaucho/DimPropServer.h,v 1.2 2004-05-26 18:39:41 vanphil Exp $
 #ifndef GAUCHO_DIMPROPSERVER_H
 #define GAUCHO_DIMPROPSERVER_H 1
 
-#include "dim/dis.hxx"
+#include "/afs/cern.ch/user/v/vanphil/dim/dim/dis.hxx"
 
 /** @class DimPropServer DimPropServer.h Gaucho/DimPropServer.h
 

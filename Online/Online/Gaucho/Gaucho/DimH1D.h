@@ -3,7 +3,8 @@
 
 #include <string>
 #include <iostream>
-#include "dim/dis.hxx"
+#include "/afs/cern.ch/user/v/vanphil/dim/dim/dis.hxx"
+
 
 /** @class DimH1D Gaucho/DimH1D.h
 
@@ -15,13 +16,13 @@
 */
 
 //forward declaration
-class IHistogram1D;
+namespace AIDA {class IHistogram1D;}
 class DimCommand;
 class DimRpc;
 
 class DimH1D : public DimRpc {
 public: 
-  DimH1D(std::string h1dname, IHistogram1D* InfoVar);
+  DimH1D(std::string h1dname, AIDA::IHistogram1D* InfoVar);
   virtual ~DimH1D();
 private:
   void rpcHandler();
@@ -29,7 +30,7 @@ private:
   int m_nbins;
   float* m_data;
   float* m_pars;
-  IHistogram1D* m_h1d;
+  AIDA::IHistogram1D* m_h1d;
 };
 
 #endif // GAUCHO_DIMH1D_H

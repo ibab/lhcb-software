@@ -9,12 +9,12 @@
 static const InterfaceID IID_IMonitorSvc(741, 1 , 0);
 
 // forward declaration
-class IHistogram1D;
+namespace AIDA {class IHistogram1D;}
 
 /** @class IMonitorSvc IMonitorSvc.h Gaucho/IMonitorSvc.h
 
     Definition of the IMonitorSvc interface, which publishes Gaudi variables
-	to outside monitoring processes.
+    to outside monitoring processes.
 
     @author Philippe Vannerem
 */
@@ -36,9 +36,9 @@ class IMonitorSvc : virtual public IInterface {
   virtual void UndeclInfo(std::string InfoName, char* InfoVar) = 0;
   virtual void PublInfo(std::string InfoName, char* InfoValue) = 0;
 
-  virtual void DeclInfo(std::string InfoName, IHistogram1D* InfoVar) = 0;
-  virtual void UndeclInfo(std::string InfoName, IHistogram1D* InfoVar) = 0;
-  virtual void PublInfo(std::string InfoName, IHistogram1D* InfoValue) = 0;
+  virtual void DeclInfo(std::string InfoName, AIDA::IHistogram1D* InfoVar) = 0;
+  virtual void UndeclInfo(std::string InfoName, AIDA::IHistogram1D* InfoVar) = 0;
+  virtual void PublInfo(std::string InfoName, AIDA::IHistogram1D* InfoValue) = 0;
 
 };
 

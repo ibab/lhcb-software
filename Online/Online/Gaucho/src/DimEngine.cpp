@@ -1,4 +1,4 @@
-//$Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/Gaucho/src/DimEngine.cpp,v 1.2 2003-06-06 12:12:53 vanphil Exp $
+//$Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/Gaucho/src/DimEngine.cpp,v 1.3 2004-05-26 18:39:41 vanphil Exp $
 
 #include "GaudiKernel/StatusCode.h"
 #include "GaudiKernel/MsgStream.h"
@@ -66,7 +66,7 @@ void DimEngine::declSvc(std::string InfoName, char* InfoVar){
 		<< " -> " << (*(p.first)).second << endreq;
   }
 }
-void DimEngine::declSvc(std::string InfoName, IHistogram1D* InfoVar){
+void DimEngine::declSvc(std::string InfoName, AIDA::IHistogram1D* InfoVar){
   char* diminfoname=new char[100];
   strcpy(diminfoname,m_nodename);
   strcat(diminfoname,InfoName.c_str());

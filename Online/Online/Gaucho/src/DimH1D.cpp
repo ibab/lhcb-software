@@ -1,8 +1,10 @@
-//$Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/Gaucho/src/DimH1D.cpp,v 1.2 2003-06-06 12:12:53 vanphil Exp $
+//$Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/Gaucho/src/DimH1D.cpp,v 1.3 2004-05-26 18:39:42 vanphil Exp $
 
-#include "Gaucho/DimH1D.h"
 #include "AIDA/IAxis.h"
 #include "AIDA/IHistogram1D.h"
+#include "Gaucho/DimH1D.h"
+
+using namespace AIDA;
 
 //constructor
 DimH1D::DimH1D(std::string h1dname, IHistogram1D* InfoVar) 

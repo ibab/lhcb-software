@@ -4,21 +4,22 @@
 #include <string>
 #include <map>
 #include "GaudiKernel/Service.h"
-#include "IMonitorSvc.h"
-//#include "IMonitor.h"
+#include "Gaucho/IMonitorSvc.h"
 
 /** @class MonitorSvc MonitorSvc.h Gaucho/MonitorSvc.h
 
     This class implements the IMonitorSvc interface, and publishes Gaudi variables
-	to outside monitoring processes with Dim.
+    to outside monitoring processes with Dim.
     
-	An internal DimEngine is used for this purpose. A DimPropServer is started which
-	takes string commands in the format Algorithm.Property and returns the value of
-	the property.
+    An internal DimEngine is used for this purpose. A DimPropServer is started which
+    takes string commands in the format Algorithm.Property and returns the value of
+    the property.
 
 
     @author Philippe Vannerem
 */
+
+using AIDA::IHistogram1D;
 
 // Forward declarations
 class ISvcLocator;
@@ -58,24 +59,6 @@ private:
   char* m_nodename;
   DimPropServer* m_dimpropsvr;
   DimEngine* m_dimeng;
-/*
-  typedef std::map<std::string, int, std::less<std::string> > IntMap;
-  typedef IntMap::iterator IntMapIt;
-  IntMap m_intInfos;
-  IntMapIt m_intInfosIt;
-  typedef std::map<std::string, float, std::less<std::string> > FloatMap;
-  typedef FloatMap::iterator FloatMapIt;
-  FloatMap m_floatInfos;
-  FloatMapIt m_floatInfosIt;
-  typedef std::map<std::string, char*, std::less<std::string> > StringMap;
-  typedef StringMap::iterator StringMapIt;
-  StringMap m_stringInfos;
-  StringMapIt m_stringInfosIt;
-  typedef std::map<std::string, IHistogram1D*, std::less<std::string> > HistoMap;
-  typedef HistoMap::iterator HistoMapIt;
-  HistoMap m_histoInfos;
-  HistoMapIt m_histoInfosIt;
-*/
  };
 
 #endif  //GAUCHO_MONITORSVC_H

@@ -1,10 +1,10 @@
-//$Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/Gaucho/Gaucho/DimEngine.h,v 1.1.1.1 2003-06-05 09:34:45 vanphil Exp $
+//$Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/Gaucho/Gaucho/DimEngine.h,v 1.2 2004-05-26 18:39:41 vanphil Exp $
 #ifndef GAUCHO_DIMENGINE_H
 #define GAUCHO_DIMENGINE_H 1
 
 #include <string>
 #include <map>
-#include "dim/dis.hxx"
+#include "/afs/cern.ch/user/v/vanphil/dim/dim/dis.hxx"
 
 /** @class DimEngine DimEngine.h Gaucho/DimEngine.h
 
@@ -13,7 +13,7 @@
     @author Philippe Vannerem
 */
 
-class IHistogram1D;
+namespace AIDA {class IHistogram1D;}
 class DimH1D;
 class IMessageSvc;
 
@@ -24,7 +24,7 @@ public:
   void declSvc(std::string InfoName, int& InfoVar);
   void declSvc(std::string InfoName, float& InfoVar);
   void declSvc(std::string InfoName, char* InfoVar);
-  void declSvc(std::string InfoName, IHistogram1D* InfoVar);
+  void declSvc(std::string InfoName, AIDA::IHistogram1D* InfoVar);
   void undeclSvc(std::string InfoName);
 //! problem in undeclSvc if e.g. float and H1D with same name exist
 private:
