@@ -5,6 +5,16 @@ Package manager : Witek Pokorski
 
 <H1><A NAME="v15r4">2004-04-07 - Gauss v15r4</A></H1><PRE>
 this version is built on LHCb v15r6, Gaudi v14r4, Geant4 6.1.0
+- src/GaussMain.cpp - to destroy Geant4 explicitely
+
+!===================== GiGaCnv v15r3 2004-04-20 =============================
+! 2004-04-20 - Vanya BELYAEV
+- src/component/GiGaGeo.cpp
+    fix a finalize method 
+- src/component/GiGaMCVertexCnv.cpp
+    add warning counter for One-Point trajectories 
+- cmt/requirements 
+    increment the version to v15r3 
 
 !======================= GiGaCnv v15r2 2004-04-07 ==========================
 ! 2004-04-07 - Gloria CORTI
@@ -21,6 +31,31 @@ this version is built on LHCb v15r6, Gaudi v14r4, Geant4 6.1.0
      The container is still of type Collision
  - src/component/GiGaMCVertexCnv.cpp
    . add setting of some more vertex types  
+!======================= GiGa v17r0 =====================================
+! 2004-04-20 - Vanya BELYAEV
+ set of changes to solve a bad interference 
+ between Geant4,ToolsSvc and GiGa on releaseng/deletion/finalization of  tools/actions/objects
+
+- GiGa/GiGaPhysConstructorBase.h
+- GiGa/GiGaPhysListBase.h
+- GiGa/GiGaPhysicsConstructorBase.h
+- GiGa/GiGaSensDetBase.h
+- src/Lib/GiGaPhysConstructorBase.cpp
+- src/Lib/GiGaPhysListBase.cpp
+- src/Lib/GiGaSensDetBase.cpp
+    reimplement IInterface::release() method to 
+    avoid self-shooting of Gaudi tools - they 
+    are supposed to be killed by Geant4
+- GiGa/IGiGaRunManager.h
+- src/Lib/GiGaInterfaces.cpp
+  implement few new methods to allow the static ac cees to run managed
+  (needed to destroy Geant4 run manager at the end of the job)
+- src/component/GiGaRunManager.cpp
+- src/component/GiGaRunManager.h
+   make usage of new methods,and take care about self-destroy
+- src/component/GiGa.cpp 	 
+   change the status of actions
+- cmt/requirements  increase the version to v17r0 (interafce modification
 
 !====================== GiGa v16r3 2004-04-07 ==============================
 ! 2004-04-07 - Gloria CORTI
@@ -28,6 +63,32 @@ this version is built on LHCb v15r6, Gaudi v14r4, Geant4 6.1.0
    src/Lib/GiGaTrajectory.cpp
    . changes proviede by Patrick ROBBE to transfer signal information 
      including reference to HepMC event and particle
+
+!========================= GaussTools v10r3 ==================================
+! 2004-04-20 - Vanya BELYAEV 
+- src/Components/GaussTrackActionByEnergy.cpp
+- src/Components/GaussTrackActionByEnergyType.cpp
+- src/Components/GaussTrackActionByProcess.cpp
+- src/Components/GaussTrackActionByProcess.h
+- src/Components/GaussTrackActionByType.cpp
+- src/Components/GaussTrackActionFinal.cpp
+- src/Components/GaussTrackActionGeneral.cpp
+- src/Components/GaussTrackActionStart.cpp
+     avoid the interference between different actions
+     through Geant4:StoreTrajectory flag 
+- src/Components/GiGaPhysListModular.cpp
+     make a fix for consructors 
+- src/Components/GaussTrackActionByEnergyProcess.cpp
+- src/Components/GaussTrackActionByEnergyProcess.h
+     new action which applies "ByAction" for tracks over some energy 
+     threshold 
+- src/Components/GaussTools_load.cpp
+     add new action 
+- GaussTools/GaussTrackActionBase.h
+- src/Lib/GaussTrackActionBase.cpp
+    add counter of how often the tracking action "marks" the track/rajectory 
+- cmt/requirement 
+    increment version to v10r3
 
 !===================== GaussTools v10r2 ==================================
 ! 2004-04-07 - Gloria CORTI
@@ -50,6 +111,13 @@ this version is built on LHCb v15r6, Gaudi v14r4, Geant4 6.1.0
    contains one algorihtm that fill ntuple with basic quantities for
    MCParticles (MCTruthFullMonitor) and for HepMC (GeneratorFullMonitor by
    Patrick ROBBE)
+
+!======================= GeneratorModules v11r4 ======================
+! 2004-04-19 - Patrick Robbe
+ - EvtGenTool.cxx : install aliases for charm signal particles
+ - PythiaAlg.cxx : if signal particle is a charmed particle, decay
+   not only B*(*) but also D*(*)
+ - requirements : increase to v11r4
 
 !======================== GeneratorModules v11r3 ======================
 ! 2004-04-07 - Gloria CORTI

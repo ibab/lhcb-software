@@ -1,10 +1,10 @@
 package Gauss
-version v15r5
+version v15r4
 
 # =============================================================================
 # structure 
 # =============================================================================
-branches src doc options cmt job data
+branches src doc options cmt job
 
 #== Set the Gauss version environment variable, read by GaussInit ==
 pattern GaussVersion set GAUSSVERS <version>
@@ -12,37 +12,18 @@ apply_pattern GaussVersion
 
 #=========================================================================
 #get information from DBASE and PARAM 
-use XmlDDDB             v22r0   Det   -no_auto_imports
+use XmlDDDB             v22r1   Det   -no_auto_imports
 use FieldMap            v4r5          -no_auto_imports
 use DecFiles            v4r4    Gen   -no_auto_imports
 use ParamFiles          v3r4          -no_auto_imports
 
-#======================================================================
-# Main program and standard job options
-use GaudiConf           v7r*     
-
-# GAUDI framework
-use GaudiAlg            v7r*
-use GaudiAud            v6r*
-use GaudiSvc            v11r*
-
-# ROOT event persistency
-use GaudiRootDb         v9r*
-use GaudiPoolDb         v1r*
-
-# Histogram persistency 
-use HbookCnv            v14r*
-
-# Access to magnetic field service
-use Magnet              v2r*    Det
-
-#============================================================================
+#========================================================================
 # generator
-use GeneratorModules    v11r3    Gen
+use GeneratorModules    v11r4    Gen
 
 #GiGa staff...
-use GiGaCnv             v15r2   Sim
-use GaussTools          v10r2	Sim
+use GiGaCnv             v15r3   Sim
+use GaussTools          v10r3	Sim
 use GaussTracker        v3r1    Sim
 use GaussRICH           v4r7    Sim
 use GaussCalo           v7r0    Sim
@@ -54,6 +35,25 @@ use GaussAlgs		v1r0	Sim
 
 #Monitoring
 use GaussMonitor        v1r0    Sim
+
+#======================================================================
+# Main program and standard job options
+use GaudiConf           v*     
+
+# GAUDI framework
+use GaudiAlg            v*
+use GaudiAud            v*
+use GaudiSvc            v*
+
+# ROOT event persistency
+use GaudiRootDb         v*
+use GaudiPoolDb         v*
+
+# Histogram persistency 
+use HbookCnv            v*
+
+# Access to magnetic field service
+use Magnet              v*    Det
 
 # =============================================================================
 # Essential environment variables 
