@@ -1,8 +1,11 @@
-// $Id: MuonDet_load.cpp,v 1.2 2002-01-31 10:00:10 dhcroft Exp $ 
+// $Id: MuonDet_load.cpp,v 1.3 2004-02-03 11:40:27 asatta Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2002/01/31 10:00:10  dhcroft
+// Moved CLIDs to seperate files for Visual C linker
+//
 // ============================================================================
 //
 #define MUONDET_MUONDETLOAD_CPP 1 
@@ -44,19 +47,24 @@ _ImplementDataObjectFactory( DeMuonRegion ) ;
 #include "MuonDet/MuonReadoutCond.h"
 _ImplementDataObjectFactory( MuonReadoutCond ) ;
 
+#include "MuonDet/MuonL1Board.h"
+_ImplementDataObjectFactory( MuonL1Board ) ;
+
 void MuonDet_load() 
 {
   
   /// Converter factories 
   DLL_DECL_CONVERTER( XmlMuonRegionCnv );
   DLL_DECL_CONVERTER( XmlMuonReadoutCondCnv );
+  DLL_DECL_CONVERTER( XmlMuonCablingCnv );
+
   
   /// Object factories 
   DLL_DECL_OBJECTFACTORY( DeMuonChamber ) ; 
   DLL_DECL_OBJECTFACTORY( DeMuonGasGap ) ; 
   DLL_DECL_OBJECTFACTORY( DeMuonRegion ) ; 
   DLL_DECL_OBJECTFACTORY( MuonReadoutCond ) ; 
-
+  DLL_DECL_OBJECTFACTORY( MuonL1Board ) ; 
 };
 
 

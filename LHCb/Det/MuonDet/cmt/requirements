@@ -1,9 +1,9 @@
 # =========================================================================
-# $Id: requirements,v 1.18 2003-11-24 12:28:58 cattanem Exp $
+# $Id: requirements,v 1.19 2004-02-03 11:40:27 asatta Exp $
 # =========================================================================
 
 package MuonDet
-version  v4r4p1
+version  v5r0
 
 # =============== structure ===============================================
 branches         src cmt doc options MuonDet
@@ -13,7 +13,7 @@ include_dirs      $(MUONDETROOT)
 
 # =============== used packages ===========================================
 use DetDescCnv    v2r*  Det
-
+use MuonKernel    v2r* Muon
 # =============== own options ==========================================
 set MUONDETOPTS  ${MUONDETROOT}/options
 
@@ -37,6 +37,10 @@ apply_pattern package_Cshlibflags
 apply_pattern package_Lshlibflags   
 
 private
-macro_remove use_linkopts $(MuonDet_linkopts)
-macro MuonDetLib_shlibflags "$(use_linkopts) $(libraryshr_linkopts)"
-macro_append MuonDet_shlibflags $(MuonDet_linkopts)
+macro_append     MuonDetLib_shlibflags " $(DetDesc_linkopts) "
+macro_append     MuonDetLib_shlibflags  " $(GaudiKernel_linkopts) "
+macro_append     MuonDetLib_shlibflags  " $(CLHEP_linkopts) "
+
+# macro_remove use_linkopts $(MuonDet_linkopts)
+# macro MuonDetLib_shlibflags "$(use_linkopts) $(libraryshr_linkopts)"
+# macro_append MuonDet_shlibflags $(MuonDet_linkopts)

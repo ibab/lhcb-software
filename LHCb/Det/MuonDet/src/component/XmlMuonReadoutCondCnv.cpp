@@ -1,4 +1,4 @@
-// $Id: XmlMuonReadoutCondCnv.cpp,v 1.6 2003-06-19 09:57:27 cattanem Exp $
+// $Id: XmlMuonReadoutCondCnv.cpp,v 1.7 2004-02-03 11:40:28 asatta Exp $
 
 // Include files
 #include <vector>
@@ -98,6 +98,8 @@ const ICnvFactory& XmlMuonReadoutCondCnvFactory = muonreadoutcond_factory;
 XmlMuonReadoutCondCnv::XmlMuonReadoutCondCnv(ISvcLocator* svc) :
   XmlUserConditionCnv<MuonReadoutCond> (svc)
 {
+MsgStream log (msgSvc(), "XmlMuonReadoutCondCnv");
+ 
   ReadoutString = xercesc::XMLString::transcode("Readout");
   ReadoutTypeString = xercesc::XMLString::transcode("ReadoutType");
   EfficiencyString = xercesc::XMLString::transcode("Efficiency");
