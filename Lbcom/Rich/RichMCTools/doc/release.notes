@@ -4,6 +4,9 @@
 ! Purpose     : Provides basic tools for RICH MC information
 !-----------------------------------------------------------------------------
 
+! 2004-07-27 - Chris Jones
+ - Add flags to turn off individual radiators in RichTrackSegment maker too
+
 !========================== RichMCTools v2r0 2004-07-19 ======================
 ! 2004-07-15 - Chris Jones
  - Improvements to doxygen comments

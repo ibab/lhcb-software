@@ -5,8 +5,11 @@
  * Implementation file for class : RichTrSegMakerFromMCRichTracks
  *
  * CVS Log :-
- * $Id: RichTrSegMakerFromMCRichTracks.cpp,v 1.4 2004-07-26 17:56:09 jonrob Exp $
+ * $Id: RichTrSegMakerFromMCRichTracks.cpp,v 1.5 2004-07-27 16:54:57 jonesc Exp $
  * $Log: not supported by cvs2svn $
+ * Revision 1.4  2004/07/26 17:56:09  jonrob
+ * Various improvements to the doxygen comments
+ *
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 14/01/2002
@@ -27,9 +30,13 @@ RichTrSegMakerFromMCRichTracks::
 RichTrSegMakerFromMCRichTracks( const std::string& type,
                                 const std::string& name,
                                 const IInterface* parent)
-  : RichToolBase ( type, name, parent )
+  : RichToolBase ( type, name, parent ),
+    m_truth      ( 0 ),
+    m_usedRads   ( Rich::NRadiatorTypes, true )
 {
   declareInterface<IRichTrSegMaker>(this);
+
+  declareProperty( "UseRadiators", m_usedRads );
 }
 
 //=============================================================================
@@ -87,7 +94,12 @@ RichTrSegMakerFromMCRichTracks::constructSegments( const ContainedObject * obj,
   for ( Radiators::const_iterator radiator = m_radiators.begin();
         radiator != m_radiators.end();
         ++radiator ) {
+
+    // which radiator
     const Rich::RadiatorType rad = (*radiator)->radiatorID();
+
+    // is this radiator in use ?
+    if ( !m_usedRads[rad] ) continue;
 
     // See if there is an MCRichSegment for this radiator
     const MCRichSegment * segment = track->segmentInRad(rad);

@@ -4,8 +4,11 @@
  *  Header file for tool : RichTrSegMakerFromMCRichTracks
  *
  *  CVS Log :-
- *  $Id: RichTrSegMakerFromMCRichTracks.h,v 1.4 2004-07-26 17:56:09 jonrob Exp $
+ *  $Id: RichTrSegMakerFromMCRichTracks.h,v 1.5 2004-07-27 16:54:57 jonesc Exp $
  *  $Log: not supported by cvs2svn $
+ *  Revision 1.4  2004/07/26 17:56:09  jonrob
+ *  Various improvements to the doxygen comments
+ *
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   14/01/2002
@@ -109,6 +112,9 @@ private: // data
 
   /// Pointer to the RICH MC truth tool
   IRichMCTruthTool * m_truth;
+
+  /// Flags to turn on/off individual radiators
+  std::vector<bool> m_usedRads;
 
 };
 
