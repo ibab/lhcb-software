@@ -5,6 +5,10 @@
 ! Purpose       : G4 actions, and some miscealenous algs for Gauss
 !-----------------------------------------------------------------------------
 
+!======================== GaussTools v8r4 2003-08-15 =======================
+! 2003-08-15 - Witek Pokorski
+ - GaussStepAction - added killing of optical photons making too many steps
+ 
 !======================== GaussTools v8r3 2003-07-28 =======================
 ! 2003-07-28 - Witek Pokorski
  - WorldCuts - added new process killing particles going out of "LHCb world"

@@ -45,8 +45,10 @@ GaussStepAction::GaussStepAction
   : GiGaStepActionBase ( type , name , parent )
   // points where hits where generated to be stored
   , m_storeHitPoints ( false )
+  , m_maxoptsteps(100) 
 {
   declareProperty ("StoreHitPoints", m_storeHitPoints);  
+  declareProperty ("MaxOptPhotonSteps", m_maxoptsteps);
 };
 // ============================================================================
 
@@ -83,10 +85,17 @@ void GaussStepAction::UserSteppingAction ( const G4Step* step )
             fGeomBoundary &&
             partdef == G4OpticalPhoton::OpticalPhoton()    )
     { 
-      ginf->setAppendStep(true); 
+      if(track->GetCurrentStepNumber() > m_maxoptsteps)
+        {
+          // kill the photon which is making too many reflections
+          track->SetTrackStatus(fStopAndKill);
+        }
+      else
+        {
+          ginf->setAppendStep(true); 
+        }
       return;
     }
-  
 };
 // ============================================================================
 

@@ -52,6 +52,7 @@ private:
   GaussStepAction& operator=( const GaussStepAction& ) ; ///< no = 
 
   bool m_storeHitPoints;
+  int m_maxoptsteps;
 };
 // ============================================================================
 
