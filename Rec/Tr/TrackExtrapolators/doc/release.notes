@@ -1,0 +1,17 @@
+!-----------------------------------------------------------------------------
+! Package     : Tr/TrExtrapolators
+! Responsible : Eduardo Rodrigues
+! Purpose     : Package for tracking extrapolators
+!-----------------------------------------------------------------------------
+
+! 2005-02-09 - Eduardo Rodrigues
+ - creation of the package. It will contain the extrapolators now in the
+   package Tr/TrExtrapolator that use the present event model. These tools
+   will be "translated" into the new tracking event model and
+   will contain extra functionality
+ - contains for now:
+   - TrExtrapolator: base class inheriting from the pure virtual
+                     interface ITrExtrapolator and implementing
+                     most of the methods
+   - TrLinearExtrapolator: class inheriting from TrExtrapolator and
+                           implementing the remaining methods
