@@ -95,7 +95,7 @@ use MuonDAQ             v1r1    Muon
 # Rich
 use RichUtils		v3r9  	Rich
 use RichDetTools	v4r1	Rich
-use RichRecSys		v1r9	Rich
+use RichRecSys		v1r10	Rich
 use RichRecQC		v1r7	Rich
 use RichMCTools		v1r1	Rich
 

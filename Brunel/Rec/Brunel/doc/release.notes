@@ -3,7 +3,10 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
-</PRE><H1><A NAME=v23r8>2004-05-?? Brunel v23r8</A></H1><PRE>
+</PRE><H1><A NAME=v23r8>2004-05-05 Brunel v23r8</A></H1><PRE>
+
+- Bug fixes
+  . fix an uprotected pointer in Richdetailed monitoring (RichRecCommon v1r7)
 
 </PRE><H1><A NAME=v23r7>2004-04-29 Brunel v23r7</A></H1><PRE>
 Requires data produced by Boole v5r6 or later (for signal)
