@@ -15,7 +15,7 @@ RichGloPIDDigSel.MaxUsedPixels            = 8000;
 RichGloPIDTrSel.MaxUsedTracks             = 230;
 RichGloPIDTrSel.MinimumPhysicsMomentum    = 0.0*GeV;
 RichGloPIDTrSel.MinimumLikelihoodMomentum = 0.0*GeV;
-RichGloPIDTrSel.ResetTracksToPion         = false;   // true to ignore previous results
+RichGloPIDTrSel.ResetTracksToPion         = false; 
 
 // Global Algorithm parameters - phase 1
 RichGloPIDIt1.TrackMinDeltaLLThreshold    = -5;
@@ -50,6 +50,7 @@ ToolSvc.RichToolRegistry.Tools = {
   "RichPixelCreatorFromSICB/RichPixelCreator",
   "RichPhotonCreator/RichPhotonCreator",
   "RichSegmentCreator/RichSegmentCreator",
+  "RichStatusCreator/RichStatusCreator",
   "RichDetInterface/RichDetInterface",
   "RichGeomEffDetailed/RichGeomEff",
   //"RichGeomEffFixedValue/RichGeomEff",
