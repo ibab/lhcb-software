@@ -1,8 +1,7 @@
-! $Id: release.notes,v 1.69 2004-02-20 19:27:27 ibelyaev Exp $
-! =============================================================================
 Package         : GiGaCnv
 Package Manager : Vanya Belyaev Ivan.Belyaev@itep.ru
 
+!========================== GiGaCnv v15r0 ===============================
 ! 2004-02-20 - Ivan BELYAEV
  - GiGaCnv/IGiGa*.h 
      1) move IGiGaXXX::~IGiGaXXX() implementations to separate file 
