@@ -5,7 +5,7 @@ branches doc cmt
 
 # LHCb Event libraries
 
-use Event	v4r2	Event
+use Event	v4r3	Event
 use VeloEvent	v13r0p1	Event
 use ITEvent	v13r2	Event
 use OTEvent	v13r0	Event
