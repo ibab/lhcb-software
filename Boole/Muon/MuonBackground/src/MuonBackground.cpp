@@ -1,4 +1,4 @@
-// $Id: MuonBackground.cpp,v 1.4 2003-04-04 14:55:07 cattanem Exp $
+// $Id: MuonBackground.cpp,v 1.5 2003-04-08 09:29:42 cattanem Exp $
 // Include files 
 
 // from Gaudi
@@ -181,6 +181,9 @@ StatusCode MuonBackground::execute() {
   //  MuonGeometryStore::Parameters usefull( toolSvc(),detSvc(), msgSvc());
 
   for (int ispill=0;ispill<=m_readSpilloverEvents;ispill++){    
+    calculateNumberOfCollision(ispill);  
+    if(!collisions())return  StatusCode::SUCCESS;
+
     KeyedContainer<MCMuonHit>* hitsContainer[m_regionNumber*m_stationNumber];
     for(int station=0;station<m_stationNumber;station++){
       for(int region=0;region<m_regionNumber;region++){          
@@ -189,8 +192,6 @@ StatusCode MuonBackground::execute() {
       }
     }
      
-    calculateNumberOfCollision(ispill);  
-    if(!collisions())return  StatusCode::SUCCESS;
     m_resultPointer = new std::vector<std::vector<int> > (collisions()) ;
     calculateStartingNumberOfHits(ispill);    
         for(int coll=0;coll<collisions();coll++){      
@@ -278,6 +279,7 @@ StatusCode MuonBackground::finalize() {
     pointDelete=m_lintimevsradial[i];
     if(pointDelete)delete pointDelete;
     pointDelete=m_hitgap[i];    
+    if(pointDelete)delete pointDelete;
   }
   if( m_pMuonTileXYZ ) toolSvc()->releaseTool( m_pMuonTileXYZ );    
   return StatusCode::SUCCESS;
