@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/DetDesc/IXmlSvc.h,v 1.3 2001-05-17 16:33:59 sponce Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/DetDesc/IXmlSvc.h,v 1.4 2001-11-26 10:31:42 sponce Exp $
 
 #ifndef DETDESC_IXMLSVC_H
 #define DETDESC_IXMLSVC_H
@@ -54,7 +54,7 @@ public:
    * @return return double value
    */
   virtual double eval (const char* expr,
-                       bool check = true) const  = 0;
+                       bool check = true)  = 0;
 
   /** 
    * Evaluates a numerical expresion
@@ -64,7 +64,7 @@ public:
    * @return return double value
    */
   virtual double eval (const std::string& expr,
-                       bool check = true) const = 0;
+                       bool check = true) = 0;
 
   /**
    * Adds a parameter in the list of known parameters. The value can also be an

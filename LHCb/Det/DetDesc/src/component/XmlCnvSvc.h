@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/component/XmlCnvSvc.h,v 1.4 2001-11-20 15:22:24 sponce Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/component/XmlCnvSvc.h,v 1.5 2001-11-26 10:31:47 sponce Exp $
 
 #ifndef DETDESC_XMLCNVSVC_H
 #define DETDESC_XMLCNVSVC_H
@@ -105,7 +105,7 @@ public:
    * dimentioned magnitude (with units)
    * @return return double value
    */
-  virtual double eval( const char* expr, bool check = true ) const;
+  virtual double eval( const char* expr, bool check = true );
 
   /** 
    * Evaluates a numerical expresion
@@ -114,7 +114,7 @@ public:
    * dimentioned magnitude (with units)
    * @return return double value
    */
-  virtual double eval( const std::string& expr, bool check = true ) const;
+  virtual double eval( const std::string& expr, bool check = true );
 
   /**
    * Adds a parameter in the list of known parameters. The value can also be an

@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/component/XmlCnvSvc.cpp,v 1.7 2001-11-20 15:22:24 sponce Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/component/XmlCnvSvc.cpp,v 1.8 2001-11-26 10:31:47 sponce Exp $
 
 // Include Files
 #include <util/PlatformUtils.hpp>
@@ -178,7 +178,7 @@ void XmlCnvSvc::clearCache() {
 // -----------------------------------------------------------------------
 // Evaluate a numerical expresion
 // -----------------------------------------------------------------------
-double XmlCnvSvc::eval (const std::string& expr, bool check) const {
+double XmlCnvSvc::eval (const std::string& expr, bool check) {
   return eval (expr.c_str(), check);
 }
 
@@ -186,7 +186,7 @@ double XmlCnvSvc::eval (const std::string& expr, bool check) const {
 // -----------------------------------------------------------------------
 // Evaluate a numerical expresion
 // -----------------------------------------------------------------------
-double XmlCnvSvc::eval (const char* expr, bool check) const {
+double XmlCnvSvc::eval (const char* expr, bool check) {
   MsgStream log (msgSvc(), name());
 
   // Check if it is needed to be a dimention number
