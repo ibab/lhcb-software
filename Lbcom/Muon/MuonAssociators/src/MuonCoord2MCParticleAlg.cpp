@@ -1,4 +1,4 @@
-// $Id: MuonCoord2MCParticleAlg.cpp,v 1.1.1.1 2002-06-28 09:59:33 dhcroft Exp $
+// $Id: MuonCoord2MCParticleAlg.cpp,v 1.2 2002-06-28 13:46:32 dhcroft Exp $
 // Include files 
 
 #include "Event/MuonCoord.h"
@@ -55,6 +55,11 @@ StatusCode MuonCoord2MCParticleAlg::initialize() {
 
 
 StatusCode MuonCoord2MCParticleAlg::execute() {
+
+  // unregister table in store: just in case it already exists
+  // need to remake table after deleting MuonCoords in MuonDSTPrepare 
+  StatusCode sc = eventSvc()->unregisterObject(outputData());
+
   // create relation table
   Table * aTable = new Table();
 
@@ -79,7 +84,7 @@ StatusCode MuonCoord2MCParticleAlg::execute() {
   }
         
     // register table in store
-  StatusCode sc = eventSvc()->registerObject(outputData(), aTable);
+  sc = eventSvc()->registerObject(outputData(), aTable);
   if( sc.isFailure() ) {
     MsgStream log(msgSvc(), name());
     log << MSG::FATAL << "     *** Could not register " << outputData()
