@@ -2,6 +2,9 @@
 /// CVS tag $Name: not supported by cvs2svn $ 
 /// ===========================================================================
 /// $Log: not supported by cvs2svn $
+/// Revision 1.7  2001/07/27 14:28:59  ibelyaev
+/// bug fix
+///
 /// Revision 1.6  2001/07/25 17:18:09  ibelyaev
 /// move all conversions from GiGa to GiGaCnv
 ///
@@ -165,14 +168,9 @@ GiGaRunManager::GiGaRunManager( const std::string & Name   ,
   };
   ///
   {
-    StatusCode sc = svcLoc()->service( "GiGaGeomCnvSvc", m_geoSrc ); 
-
+    StatusCode sc = svcLoc()->service( "GiGaGeomCnvSvc", m_geoSrc );
     if( sc.isSuccess() && 0 != geoSrc() ) 
       { geoSrc()->addRef() ; }
-    std::cerr 
-      << " Like4 Svc located??" <<  sc.isSuccess()  << " 1 < 2 " << ( 1 < 2 ) 
-      << GiGaUtil::ObjTypeName( m_geoSrc ) 
-      << std::endl;    
   }
 
 
