@@ -5,7 +5,7 @@
 # http://cern.ch/lhcb-comp/Support/html/new_structure.pdf
 
 package           VeloAlgorithms
-version           v1r0
+version           v2r0
 
 # This template is an example for a standard Algorithm package
 #
@@ -19,7 +19,7 @@ include_dirs $(VELOALGORITHMSROOT)
 #    Put as many lines as needed, with all packages, without the '#'
 #============================================================================
 use  VeloEvent  v11r*   Event
-use  VeloDet    v6r*   	Det
+use  VeloDet    v7r*   	Det
 use  VeloKernel v1r*    Velo -no_auto_imports
 use  NAGC v5r*
 
