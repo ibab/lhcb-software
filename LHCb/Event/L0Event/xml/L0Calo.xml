@@ -13,7 +13,6 @@
       <import name="CLHEP/Units/SystemOfUnits"/>
       <import name="Kernel/CaloCellID"/>
       <import name="Event/L0Calo"/>
-      <import name="Event/MCParticle"/>
       <location name="Default" place="/Event/Trig/L0/Calo"/>
       <location name="Full" place="/Event/Trig/L0/FullCalo"/>
       <constructor argList="int type, CaloCellID ID, int etCode, double et, HepPoint3D cellCenter, double cellSize" desc="special constructor" initList="m_type(type), m_ID(ID), m_etCode(etCode), m_et(et), m_position(cellCenter), m_posTol(cellSize)">
@@ -42,9 +41,6 @@
 	<arg name="ms" type="MsgStream" />
 	<arg name="cand" type="L0CaloCandidate*" const="TRUE" />
       </method>
-      <assoc
-        weight = "double"
-        to     = "MCParticle" />
     </class>
     <class author="Olivier Callot" desc="Information for L0 Calo Trigger: CellID + 8-bit Et" id="6006" name="L0CaloAdc">
       <base name="KeyedObject&lt;int&gt;"/>

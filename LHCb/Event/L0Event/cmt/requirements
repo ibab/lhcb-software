@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.32 2003-12-18 15:31:56 cattanem Exp $
+# $Id: requirements,v 1.33 2004-01-06 10:48:08 cattanem Exp $
 package L0Event
 version v14r0
 
@@ -7,7 +7,6 @@ branches Event cmt doc xml src
 include_dirs $(L0EVENTROOT)
 
 use 	MuonKernel 	v2r* 	Muon
-use	Event		v4r*	Event
 
 #---- Produce Header-Files and from XML description
 private
