@@ -4,6 +4,10 @@
 ! Purpose     : Gauss system
 !-----------------------------------------------------------------------------
 
+!=========================== GaussSys v10r0 2003-05-02 ================
+! 2003-05-02 - Florence RANJARD
+ - update Gauss packages and keep geant4 5.0.ref02
+
 !============================ GaussSys v9r1 2003-03-04 =================
 ! 2003-03-04 - Florence RANJARD
   use GEANT4 v2r5020p0 (geant4 5.0.ref02), OPACSLIB v3p1 (OPACS compiled
