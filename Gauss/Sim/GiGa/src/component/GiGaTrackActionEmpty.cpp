@@ -2,6 +2,9 @@
 /// CVS tag $Name: not supported by cvs2svn $ 
 /// ===========================================================================
 /// $Log: not supported by cvs2svn $
+/// Revision 1.5  2001/07/23 13:12:29  ibelyaev
+/// the package restructurisation(II)
+///
 /// ===========================================================================
 #include "CLHEP/Geometry/Point3D.h"
 ///
@@ -23,7 +26,7 @@
 
 /// ===========================================================================
 /// ===========================================================================
-static const GiGaTrackActionFactory<GiGaTrackActionEmpty>         s_GiGaFactory;
+static const GiGaTrackActionFactory<GiGaTrackActionEmpty>         s_Factory;
 const       IGiGaTrackActionFactory&GiGaTrackActionEmptyFactory = s_Factory;
 
 /// ===========================================================================
