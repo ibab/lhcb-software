@@ -1,4 +1,4 @@
-#$Id: release.notes,v 1.20 2002-07-25 15:51:29 andreav Exp $
+#$Id: release.notes,v 1.21 2002-07-25 15:53:09 andreav Exp $
 Package Ex/DetCondExample
 Package manager : Andrea Valassi 
 
@@ -13,6 +13,7 @@ Upgrade to CondDBOracle v4r15 and Gaudi v10r4
   > no changes to CLHEP necessary anymore (RH7 libraries now available)
   > MsgStream modification is now released in GaudiKernel v12r3
   > lxplus7 has been setup (replaces tbed0087/88/89)
+- Added a showNLS script to debug the NLS settings for Oracle
 Requirements v4r0, private tag h20020725
 
 ==============================================================================
