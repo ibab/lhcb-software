@@ -4,8 +4,11 @@
  *  Header file for RICH reconstruction tool : RichPixelCreatorFromRichDigitsWithBg
  *
  *  CVS Log :-
- *  $Id: RichPixelCreatorFromRichDigitsWithBg.h,v 1.3 2004-10-30 19:27:02 jonrob Exp $
+ *  $Id: RichPixelCreatorFromRichDigitsWithBg.h,v 1.4 2004-11-20 12:34:16 jonrob Exp $
  *  $Log: not supported by cvs2svn $
+ *  Revision 1.3  2004/10/30 19:27:02  jonrob
+ *  Update method access types + comments
+ *
  *  Revision 1.2  2004/10/13 10:32:49  jonrob
  *  Bug fix
  *
@@ -125,7 +128,7 @@ private: // data
   mutable std::map< RichSmartID::KeyType, RichRecPixel* > m_pixelExists;
   mutable std::map< RichSmartID::KeyType, bool > m_pixelDone;
 
-  /// Stack of spare digits for use as track background
+  /// Stack of RichSmartIDS for a single MCParticle for use as track background
   typedef std::map<const MCParticle*, std::vector<RichSmartID> > BgTrackStack;
   mutable BgTrackStack m_digitsForTrackBg;
 
