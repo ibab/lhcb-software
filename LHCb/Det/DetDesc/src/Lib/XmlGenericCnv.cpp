@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/Lib/XmlGenericCnv.cpp,v 1.8 2002-01-22 14:26:22 sponce Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/Lib/XmlGenericCnv.cpp,v 1.9 2002-01-25 07:29:27 sponce Exp $
 
 // Include files
 #include "DetDesc/XmlGenericCnv.h"
@@ -132,11 +132,11 @@ StatusCode XmlGenericCnv::createObj (IOpaqueAddress* addr,
      if (mainNode.getNodeName().equals("DDDB")) {
        versionAttribute = dom2Std (mainNode.getAttribute ("version"));
        defaultMajorVersion = "3";
-       defaultMinorVersion = "4";
+       defaultMinorVersion = "3";
      } else {
        versionAttribute = dom2Std (mainNode.getAttribute ("DTD_Version"));
        defaultMajorVersion = "v5";
-       defaultMinorVersion = "1";
+       defaultMinorVersion = "0";
      }
      log << MSG::DEBUG
          << "Detector Description Markup Language Version "
