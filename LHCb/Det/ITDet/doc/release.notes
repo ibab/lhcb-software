@@ -1,0 +1,6 @@
+Package         : ITDet
+Package manager : M. Needham 
+ 
+! 2002/05/07 -  M.Needham
+  First release of new package containing geom classes related to xml files
+! ======================================================================

@@ -1,0 +1,41 @@
+package ITDet
+version v1r0
+
+branches cmt doc src options
+
+include_dirs $(ITDETROOT)
+
+use DetDesc v10r* Det
+use LHCbKernel v1r* Kernel
+
+#---- link library
+library ITDetLib ../src/Lib/*.cpp 
+
+#component
+library ITDet ../src/Component/*.cpp
+
+apply_pattern package_Lstamps
+apply_pattern package_Llinkopts
+apply_pattern packageShr
+apply_pattern linker_path
+
+private
+
+# flags to build a component and linker library
+apply_pattern package_Cshlibflags
+apply_pattern package_Lshlibflags
+
+private
+macro_remove use_linkopts $(ITDet_linkopts)
+macro ITDetLib_shlibflags "$(use_linkopts) $(libraryshr_linkopts)"
+macro_append ITDet_shlibflags $(ITDet_linkopts)
+
+
+
+
+
+
+
+
+
+
