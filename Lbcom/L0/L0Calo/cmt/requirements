@@ -1,5 +1,5 @@
 package		L0Calo
-version 	v7r3
+version 	v7r4
 
 # ================ structure =============================================
 branches	src cmt doc options
@@ -14,7 +14,6 @@ set L0CALOOPTS	$(L0CALOROOT)/options
 use L0Event     v14r*   Event
 use CaloEvent	v13r*	Event
 use CaloDet	v6r*	Det
-use AIDA        v* -no_auto_imports
 use LinkerEvent	v1r*	Event
 
 # ================ component library =====================================

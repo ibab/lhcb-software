@@ -1,6 +1,6 @@
 #ifndef   L0CALO_L0CALOALG_H
 #define   L0CALO_L0CALOALG_H  1
-// $Id: L0CaloAlg.h,v 1.10 2003-12-15 09:18:14 ocallot Exp $
+// $Id: L0CaloAlg.h,v 1.11 2004-03-25 08:54:33 cattanem Exp $
 
 // from STL 
 #include <cmath>
@@ -31,6 +31,7 @@ class L0Candidate {
 public:
   /** creator
    * @param det : The detector element pointer
+   * @param scale : et scale
    */
   L0Candidate( DeCalorimeter* det, double scale ) : m_ID() {
     m_det     = det ;
@@ -43,8 +44,7 @@ public:
   
   /** update the information on a candidate
    *  @param et Integer transverse energy
-   *  @param card Integer card number
-   *  @param ID ClaoCellID location of the candidate 
+   *  @param ID CaloCellID location of the candidate 
    */
   void        setCandidate( int et, CaloCellID ID ) ;
 

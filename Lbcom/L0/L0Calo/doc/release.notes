@@ -1,6 +1,7 @@
 Package		: L0/L0Calo
 Package Manager : Olivier Callot
 
+!========================= L0Calo v7r4 2004-03-25 =========================
 ! 2004-03-22 - Olivier Callot
  - Recreate L0CaloCandidates default container from the Full container in 
    L0CaloCandidatesFromRaw
