@@ -1,35 +1,24 @@
 package L0Muon
 
-version v1r1
+version v2
 
 branches src doc options
 
 include_dirs $(L0MUONROOT)
 
-use DetDesc    v6*  Det
-use LHCbEvent v10*  Event
+use DetDesc   v6*  Det
+use LHCbEvent v10* Event
+
 use CLHEP v*
 
-library L0Muon ../src/*.cpp
+library L0MuonLib ../src/Lib/*.cpp
+library L0Muon ../src/component/*.cpp
 
 # define component library link options
-apply_pattern package_Clinkopts
-apply_pattern packageShr   
-
+apply_pattern package_Llinkopts
+apply_pattern packageShr  
+apply_pattern ld_library_path 
 
 private
 
 apply_pattern package_Cshlibflags  
-
-
-
-
-
-
-
-
-
-
-
-
-
