@@ -28,11 +28,9 @@ ApplicationMgr.TopAlg += { "ProcessPhase/BrunelMoni" };
 // Detectors to be processed in each phase
 //--------------------------------------------------------------
 BrunelDigi.DetectorList  = { "SpillOver" };
-//BrunelDigi.DetectorList += { "VELO" , "IT", "OT" , "RICH" , "CALO" };
 BrunelDigi.DetectorList += { "VELO" , "IT", "OT" , "RICH" , "CALO", "MUON" };
 BrunelTrigger.DetectorList = { "TRIGGER" };
 BrunelReco.DetectorList  = {"VELO","OT","IT","Tr","RICH","CALO","MUON" };
-//BrunelReco.DetectorList  = {"VELO","OT","IT","Tr","RICH","CALO" };
 BrunelReco.DetectorList += { "SICBRICH" }; // Old SICB Rich processing
 BrunelReco.DetectorList += { "V0" };
 BrunelReco.DetectorList += { "Timing" };
