@@ -5,9 +5,13 @@
 ! Purpose     : LHCb OO kernel packages
 !-----------------------------------------------------------------------------
 
+!======================= LHCbSys v18r1 2005-03-02 =======================
+! 2005-03-02 - Marco Cattaneo
+ - Move to Gaudi v16r2
+
 !======================= LHCbSys v18r0 2005-02-11 =======================
 ! 2005-02-11 - Marco Cattaneo
- - Move to Gaudi v16r0
+ - Move to Gaudi v16r1
  - Packages removed:  GaudiObjDesc (go back to version picked up from Gaudi)
                       RichTools, RichMCTools (moved to Lbcom)
  - Packages added:    AsctToLinker (previously in Boole, Brunel)
