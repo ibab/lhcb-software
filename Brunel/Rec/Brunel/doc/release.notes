@@ -4,10 +4,10 @@ Package Coordinator: Marco Cattaneo
 
 Purpose: LHCb reconstruction program
 
-</PRE><H1><A NAME=v9r0>2002020 Brunel v9r0</A></H1><PRE>
+</PRE><H1><A NAME=v9r0>2002025 Brunel v9r0</A></H1><PRE>
    Upgraded to use Gaudi v9
    Added VELO digitisation, VELO tracking
-   Added Forward tracking (only for dbase < v242r1)
+   Added Forward tracking
    Added L0 pileup veto
    Added TT1 to IT reconstruction
    --> Use this version to reconstruct data produced with dbase v240 to v243r1
@@ -60,7 +60,7 @@ Purpose: LHCb reconstruction program
      use Det/VeloDet    v3r0
      use Velo/VeloDigit v1r0
      use Velo/VeloTrack v1r1
-     use Tr/FwTrack     v1r0
+     use Tr/FwTrack     v1r1
    
    Added C++ PileUp Veto code, uses Velo TDR geometry from XmlDDDB. 
      use L0/PuVeto      v1r0

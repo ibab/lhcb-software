@@ -1,5 +1,4 @@
 // Brunel options for standard tracking, LHCb-light setup 
-ITDigitize_digitCreator.tofVector = {7.1, 25.8, 28., 30.4};
 OTDigitize.startReadoutGate= { 5.,27.,29.5,32.};
 trFit_trackFitter_extrapolator1.matDBASE = 241;
 trFit_trackFitter_extrapolator1.energyLoss = 60.0;

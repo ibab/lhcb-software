@@ -52,7 +52,7 @@ use CaloKernel   v1r0   Calo
 
 # Detector description
 use DetDesc      v9r2   Det
-use XmlDDDB      v8r0   Det
+use XmlDDDB      v8r1   Det
 use CaloDet      v3r0   Det
 use VeloDet      v3r0   Det
 
@@ -97,7 +97,7 @@ use TrAlgorithms v7r1   Tr
 # Forward Tracking
 use VeloDigit    v1r0   Velo
 use VeloTrack    v1r1   Velo
-use FwTrack      v1r0   Tr
+use FwTrack      v1r1   Tr
 
 # SICBDST packages
 use Futil        v10r3  SICB
