@@ -1,4 +1,4 @@
-// $Id: TileRegister.h,v 1.1.1.1 2005-02-02 21:56:38 atsareg Exp $
+// $Id: TileRegister.h,v 1.2 2005-03-21 15:15:18 jucogan Exp $
 
 #ifndef PROCESSORKERNEL_TILEREGISTER_H
 #define PROCESSORKERNEL_TILEREGISTER_H     1
@@ -91,13 +91,14 @@ public:
   /// set the type of tiles (strips/pad)
   void setTag(std::vector<L0MTile> & tiles);
   
-  /// Cross the strips
-  void makePads();
+  /// Cross the strips, fill m_pads
+  void makePads(int flag=0);
   
-    
-  
-    
+  /// Print the tile register for debug
+  void print_bits(long unsigned int event, FILE *file);
 
+  void print_words(FILE *file, int nword_per_line=1);
+  
 private:
 
   std::vector<MuonTileID> m_ids ;  // MuonTileIDs mapping
