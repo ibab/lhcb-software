@@ -58,7 +58,6 @@ DecayChainNTuple::DecayChainNTuple( const std::string& name,
   declareProperty( "MCNtupleName", m_MCntupleName = "FILE1/MyMCSelection" );
 #endif
   declareProperty( "NtupleName", m_ntupleName = "FILE1/MySelection" );
-  // declareProperty( "UseTrgPV", m_useTrgPV );
 }
 //=============================================================================
 // Destructor

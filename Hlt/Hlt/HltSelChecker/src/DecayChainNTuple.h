@@ -12,6 +12,7 @@ class INTuple;
 class IParticlePropertySvc;
 class IGeomDispCalculator;
 // class ILifetimeFitter;
+class IPVLocator;
 
 #ifdef MCCheck
 class IMCDecayFinder;
@@ -68,8 +69,17 @@ class IMCDecayFinder;
  *           other selections always save the B
  *          -> the decay string should be written with care
  *
+ *  The primaries are retrieved with the PVLocator tool, default is offline
+ *  -> must set PVLocation property of PVLocator tool to change it
+ *  
  *  Note: use the run and event number as a key to plot reconstructed versus true decay variables
- * 
+ *
+ *  TODO: 
+ *  - retrieve RichPID particleDeltaLL for TrgTracks to study effect of Rich properly
+ *  - for gammas: re-valuate 4-vector at at secondary vertex for online and offline
+ *  - rewrite to have MC truth in the same Tree 
+ *  - avoid duplication of variables, must re-think whole algorithm ...
+ *
  *  @author Luis Fernandez
  *  @date   2004-08-01
  */
@@ -94,8 +104,9 @@ private:
 
   // Flag to book the NTuple only once
   bool m_bookedNTuple;
-  // If using TrgTracks
-  bool m_useTrgPV;
+
+  std::string m_PVContainer;
+  IPVLocator* m_PVLocator;
 
   long m_event, m_run;
 
