@@ -6,7 +6,6 @@ GiGa.StepSeq.Members  += { "RichG4StepAnalysis4/RichStepAgelExit" } ;
 GiGa.StepSeq.Members  += { "RichG4StepAnalysis5/RichStepMirrorRefl" } ;
 
 // now switch on creation of rich debug verbose output convertors.
-GetHits.RichOpticalPhotons = "/Event/MC/Rich/OpticalPhotons";
-GetHits.RichSegments       = "/Event/MC/Rich/Segments";
-GetHits.RichTracks         = "/Event/MC/Rich/Tracks";
-
+GiGaGetHitsAlg.RichOpticalPhotons = "/Event/MC/Rich/OpticalPhotons";
+GiGaGetHitsAlg.RichSegments       = "/Event/MC/Rich/Segments";
+GiGaGetHitsAlg.RichTracks         = "/Event/MC/Rich/Tracks";

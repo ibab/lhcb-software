@@ -9,14 +9,10 @@
 // RichMaxPhotonsPerCherenkovStepInRich1Gas,RichMaxPhotonsPerCherenkovStepInRich2Gas
 // are used. 
 //
-GiGa.ModularPL.GiGaPhysConstructorOp.RichApplyMaxNumCkvPhotPerStepPerRadiator
-=false;
-GiGa.ModularPL.GiGaPhysConstructorOp.RichMaxPhotonsPerCherenkovStepInRich1Agel
-=900;
-GiGa.ModularPL.GiGaPhysConstructorOp.RichMaxPhotonsPerCherenkovStepInRich1Gas
-=40;
-GiGa.ModularPL.GiGaPhysConstructorOp.RichMaxPhotonsPerCherenkovStepInRich2Gas
-=40;
+GiGa.ModularPL.GiGaPhysConstructorOp.RichApplyMaxNumCkvPhotPerStepPerRadiator=false;
+GiGa.ModularPL.GiGaPhysConstructorOp.RichMaxPhotonsPerCherenkovStepInRich1Agel=900;
+GiGa.ModularPL.GiGaPhysConstructorOp.RichMaxPhotonsPerCherenkovStepInRich1Gas=40;
+GiGa.ModularPL.GiGaPhysConstructorOp.RichMaxPhotonsPerCherenkovStepInRich2Gas=40;
 // to create  'extended output info' for detailed analysis, 
 // (a) uncomment the line in this file with RichVerbose.opts.
 // (b) comment the three lines in this file where   RichOpticalPhotons = "" 
@@ -30,12 +26,10 @@ GiGa.ModularPL.GiGaPhysConstructorOp.RichMaxPhotonsPerCherenkovStepInRich2Gas
 // The default is 5000. When the filter effect is switched off this can
 // be reduced to a smaller value to reduce the cpu time.
 //GiGa.ModularPL.GiGaPhysConstructorOp.RichMaxPhotonStepNumInRayleigh=1000;  
-#include "$GAUSSRICHROOT/options/RichVerbose.opts"
-//GetHits.RichOpticalPhotons = "";
-//GetHits.RichSegments       = "";
-//GetHits.RichTracks         = "";
-
-
+//#include "$GAUSSRICHROOT/options/RichVerbose.opts"
+GiGaGetHitsAlg.RichOpticalPhotons = "";
+GiGaGetHitsAlg.RichSegments       = "";
+GiGaGetHitsAlg.RichTracks         = "";
 
 GiGa.TrackSeq.Members      += { "RichG4TrackActionPhotOpt/RichG4PhotOpt" } ;
 GiGa.TrackSeq.Members      += { "Rich1G4TrackActionUpstrPhoton/Rich1UpstrPhotonTrack" } ;
