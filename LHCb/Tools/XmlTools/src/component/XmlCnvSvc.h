@@ -1,4 +1,4 @@
-// $Id: XmlCnvSvc.h,v 1.3 2003-04-25 08:53:57 sponce Exp $
+// $Id: XmlCnvSvc.h,v 1.4 2003-12-09 10:09:25 cattanem Exp $
 
 #ifndef DETDESCCNV_XMLCNVSVC_H
 #define DETDESCCNV_XMLCNVSVC_H
@@ -68,7 +68,7 @@ public:
    * @param refpAddress the new address created
    * @return a StatusCode giving the status of the address creation
    */
-  virtual StatusCode createAddress(unsigned char svc_type,
+  virtual StatusCode createAddress(long  svc_type,
                                    const CLID& clid,
                                    const std::string* par, 
                                    const unsigned long* /*ip*/,

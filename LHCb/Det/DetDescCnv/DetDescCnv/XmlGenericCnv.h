@@ -1,4 +1,4 @@
-// $Id: XmlGenericCnv.h,v 1.3 2003-04-25 08:53:08 sponce Exp $
+// $Id: XmlGenericCnv.h,v 1.4 2003-12-09 10:09:27 cattanem Exp $
 
 #ifndef DETDESCCNV_XMLGENERICCNV_H
 #define DETDESCCNV_XMLGENERICCNV_H
@@ -92,7 +92,15 @@ class XmlGenericCnv : public Converter {
    * Accessor to the StorageType value
    * @return the storage type for this object
    */
-  static const unsigned char& storageType() {
+  static long storageType() {
+    return XML_StorageType;
+  }
+
+  /**
+   * Accessor to the StorageType value
+   * @return the storage type for this object
+   */
+  virtual long repSvcType() const  {
     return XML_StorageType;
   }
 

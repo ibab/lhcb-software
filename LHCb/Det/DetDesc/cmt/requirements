@@ -1,7 +1,7 @@
-# $Id: requirements,v 1.56 2003-11-24 12:11:07 cattanem Exp $ 
+# $Id: requirements,v 1.57 2003-12-09 10:09:26 cattanem Exp $ 
 # =============================================================================
 package       DetDesc
-version       v13r0p1
+version       v14r0
 
 # =========== structure =======================================================
 branches      DetDesc doc cmt src
@@ -10,7 +10,7 @@ branches      DetDesc doc cmt src
 include_dirs  $(DETDESCROOT)
 
 # =========== dependencies ====================================================
-use           GaudiKernel       v13r*
+use           GaudiKernel       v14r*
 use           CLHEP             v*
 
 # =========== constituents =====================================================
@@ -20,4 +20,3 @@ library       DetDesc           component/*.cpp
 # =========== standard patterns (the order is essential!) ====================== 
 apply_pattern component_library library=DetDesc 
 apply_pattern linker_library    library=DetDescLib 
-apply_pattern library_stamps    library=DetDescLib 

@@ -4,6 +4,12 @@
 ! Purpose     : Interface to XML Xerces Parser plus some extra services
 !-----------------------------------------------------------------------------
 
+!================= XmlTools v3r0 2003-12-08 ==========================
+! 2003-12-08 - Marco Cattaneo
+ - Move to Gaudi v13
+   . in requirements: use GaudiKernel v14r*, CLHEP v2r1810*, XERCES v2r230*)
+   . in XmlCnvSvc.h, .cpp: change createAddress to take long svc_type 
+
 !================= XmlTools v2r0p1 2003-11-24 ========================
 ! 2003-11-24 - Guy Barrand
  - Use macro in XmlTools_dll.cpp to compile on Mac OS X

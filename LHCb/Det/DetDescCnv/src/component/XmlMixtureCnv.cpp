@@ -1,4 +1,4 @@
-// $Id: XmlMixtureCnv.cpp,v 1.4 2003-06-16 13:44:19 sponce Exp $
+// $Id: XmlMixtureCnv.cpp,v 1.5 2003-12-09 10:09:27 cattanem Exp $
 // Include files
 #include "GaudiKernel/CnvFactory.h"
 #include "GaudiKernel/IOpaqueAddress.h"
@@ -14,6 +14,7 @@
 #include "DetDesc/Isotope.h"
 #include "DetDesc/Element.h"
 #include "DetDesc/Mixture.h"
+#include "DetDesc/TabulatedProperty.h"
 #include "DetDescCnv/XmlCnvException.h"
 #include "XmlTools/IXmlSvc.h"
 

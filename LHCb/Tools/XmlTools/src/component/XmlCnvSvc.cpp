@@ -1,4 +1,4 @@
-// $Id: XmlCnvSvc.cpp,v 1.3 2003-04-25 08:53:57 sponce Exp $
+// $Id: XmlCnvSvc.cpp,v 1.4 2003-12-09 10:09:25 cattanem Exp $
 
 // Include Files
 #include <xercesc/util/PlatformUtils.hpp>
@@ -137,7 +137,7 @@ StatusCode XmlCnvSvc::queryInterface(const IID& riid, void** ppvInterface) {
 // par[1] is the name of the requested element in the XML data;
 // ipar[0] is 0 or 1 for files and strings respectively.
 // -----------------------------------------------------------------------
-StatusCode XmlCnvSvc::createAddress(unsigned char svc_type,
+StatusCode XmlCnvSvc::createAddress(long  svc_type,
                                     const CLID& clid,
                                     const std::string* par, 
                                     const unsigned long* ipar,

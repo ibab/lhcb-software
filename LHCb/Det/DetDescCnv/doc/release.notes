@@ -4,13 +4,20 @@
 ! Purpose     : standard converters for the LHCb Detector Description
 !-----------------------------------------------------------------------------
 
-!================ DetDescCnv v2r0p1 2003-11-24 =========================
+!================= DetDescCnv v2r2 2003-12-08 ==========================
+! 2003-12-08 - Marco Cattaneo
+ - Move to Gaudi v13
+   . in requirements: use DetDesc v14r*, XmlTools v3r*
+   . in XmlGenericCnv.h: change StorageType() to long, add repSvcType()
+   . In XmlDetectorElementCnv.cpp,XmlMixtureCnv.cpp: include TabulatedProperty.h 
+
+!================ DetDescCnv v2r1p1 2003-11-24 =========================
 ! 2003-11-24 - Marco Cattaneo
  - use XmlTools v2r* instead of v2r0
  - fix a compiler warning
  - use macro in DetDescCnv_dll.cpp to compile on Mac OS X
 
-!================= DetDescCnv v2r0 2003-10-06 ==========================
+!================= DetDescCnv v2r1 2003-10-06 ==========================
 ! 2003-10-06 - Marco Cattaneo
  - Use DetDesc v13r*
 
