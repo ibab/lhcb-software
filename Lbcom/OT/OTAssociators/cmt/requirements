@@ -7,6 +7,7 @@ branches          OTAssociators src cmt doc options
 include_dirs $(OTASSOCIATORSROOT)
 
 # =============== used packages ===============================================
+use GaudiAlg    v*
 use OTEvent     v14r*  Event
 use Relations	v1r*	Kernel
 

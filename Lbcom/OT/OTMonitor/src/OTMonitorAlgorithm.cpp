@@ -1,4 +1,4 @@
-// $Id: OTMonitorAlgorithm.cpp,v 1.2 2004-09-10 13:13:49 cattanem Exp $
+// $Id: OTMonitorAlgorithm.cpp,v 1.3 2004-11-10 13:03:42 jnardull Exp $
 
 // Gaudi
 #include "GaudiKernel/IDataProviderSvc.h"
@@ -21,7 +21,7 @@
 
 OTMonitorAlgorithm::OTMonitorAlgorithm(const std::string& name,
 			 ISvcLocator* pSvcLocator):
-  Algorithm(name, pSvcLocator)
+  GaudiAlgorithm(name, pSvcLocator)
 {
   /// OTMonitorAlgorithm constructor
   declareProperty("fullDetail", m_fullDetail = false);

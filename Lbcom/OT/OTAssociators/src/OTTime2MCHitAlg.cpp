@@ -1,4 +1,4 @@
-// $Id: OTTime2MCHitAlg.cpp,v 1.1 2004-09-03 12:08:10 jnardull Exp $
+// $Id: OTTime2MCHitAlg.cpp,v 1.2 2004-11-10 12:59:57 jnardull Exp $
 
 // local
 #include "OTTime2MCHitAlg.h"
@@ -18,7 +18,7 @@ const        IAlgFactory& OTTime2MCHitAlgFactory = s_factory ;
 
 OTTime2MCHitAlg::OTTime2MCHitAlg( const std::string& name,
                                         ISvcLocator* pSvcLocator)
-  : Algorithm (name,pSvcLocator) 
+  : GaudiAlgorithm (name,pSvcLocator) 
 {
   // constructor
   declareProperty( "OutputData", m_outputData  = OTTime2MCHitLocation );
@@ -35,11 +35,8 @@ StatusCode OTTime2MCHitAlg::initialize()
 {
   StatusCode sc = toolSvc()->retrieveTool(m_nameAsct, m_hAsct);
   if( sc.isFailure() || 0 == m_hAsct) {
-    MsgStream msg(msgSvc(), name());
-    msg << MSG::FATAL << "Unable to retrieve Associator tool" << endmsg;
-    return sc;
-  }
- 
+    return Error ("Unable to retrieve Associator tool",sc);
+  } 
   return StatusCode::SUCCESS;
 }
 
@@ -49,17 +46,14 @@ StatusCode OTTime2MCHitAlg::execute()
   // get OTTimes
   SmartDataPtr<OTTimes> timeCont(eventSvc(), OTTimeLocation::Default);
   if (0 == timeCont){ 
-    MsgStream msg(msgSvc(), name());
-    msg << MSG::WARNING << "Failed to find OTTimes" << endmsg;
-    return StatusCode::FAILURE;
+    return Error ("Failed to find OTTimes");
   }
   
   //Get the MCHits for the event, in case you don't want to make links to spill.
   SmartDataPtr<MCHits> mcHits(eventSvc(), MCHitLocation::OTHits);
   if( 0 == mcHits){
-    MsgStream msg(msgSvc(), name());
-    msg << MSG::ERROR << "Could not find MCHits in " 
-        << MCHitLocation::OTHits << endmsg;
+    msg() << "Could not find MCHits in " << MCHitLocation::OTHits 
+          << endreq;
     return StatusCode::FAILURE;
   }
   m_mcHits = mcHits;
@@ -68,8 +62,7 @@ StatusCode OTTime2MCHitAlg::execute()
   OTTime2MCHitAsct::Table* aTable = new OTTime2MCHitAsct::Table();
   StatusCode sc = eventSvc()->registerObject(outputData(), aTable);
   if( sc.isFailure() ) {
-    MsgStream msg(msgSvc(), name());
-    msg << MSG::FATAL << "Could not register " << outputData() << endmsg;
+    msg() << "Could not register " << outputData() << endreq;
     delete aTable;
     return StatusCode::FAILURE;
   }
@@ -106,9 +99,7 @@ OTTime2MCHitAlg::associateToTruth(const OTTime* aTime,
   // make link to truth to MCHit and retrieve table
   OTTime2MCDepositAsct::DirectType* aTable = m_hAsct->direct();
   if (0 == aTable){
-    MsgStream msg(msgSvc(), name());
-    msg << MSG::WARNING << "Failed to find table" << endmsg;
-    return StatusCode::FAILURE;
+    return Error ("Failed to find table");
   }
  
   OTTime2MCDepositAsct::MCDeposits range = aTable->relations(aTime);

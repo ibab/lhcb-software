@@ -5,6 +5,7 @@ branches cmt doc src options
 
 include_path none
 
+use GaudiAlg            v*
 use OTDet               v5r*    Det
 use OTAssociators       v3r*    OT
 use AIDA                v*      LCG_Interfaces -no_auto_imports

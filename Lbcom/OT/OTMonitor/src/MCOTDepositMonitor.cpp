@@ -1,7 +1,6 @@
-// $Id: MCOTDepositMonitor.cpp,v 1.2 2004-09-10 13:13:49 cattanem Exp $
+// $Id: MCOTDepositMonitor.cpp,v 1.3 2004-11-10 13:03:42 jnardull Exp $
 
 // Gaudi
-#include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/AlgFactory.h"
 #include "GaudiKernel/SmartDataPtr.h"
 #include "GaudiKernel/IDataProviderSvc.h"
@@ -51,10 +50,7 @@ StatusCode MCOTDepositMonitor::initialize()
   // Loading OT Geometry from XML
   SmartDataPtr<DeOTDetector> tracker( detSvc(), "/dd/Structure/LHCb/OT" );
   if ( !tracker ) {
-    MsgStream msg(msgSvc(), name());
-    msg << MSG::ERROR << "Unable to retrieve Tracker detector element"
-        << " from xml." << endreq;
-    return StatusCode::FAILURE;
+    return Error("Unable to retrieve OT detector element from xml");
   }
   m_numStations = tracker->numStations();
   m_firstOTStation = tracker->firstOTStation();  
@@ -74,8 +70,7 @@ StatusCode MCOTDepositMonitor::execute()
   // retrieve MCOTDeposits
   SmartDataPtr<MCOTDeposits> depCont(eventSvc(),MCOTDepositLocation::Default);
   if (!depCont){
-    MsgStream msg(msgSvc(), name());
-    msg << MSG::WARNING << "Failed to find OT deposits container" << endreq;
+    warning () << "Failed to find OT deposits container" << endreq;
     return StatusCode::FAILURE;
   }
 

@@ -1,4 +1,4 @@
-// $Id: OTTime2MCHitAlg.h,v 1.1 2004-09-03 12:08:10 jnardull Exp $
+// $Id: OTTime2MCHitAlg.h,v 1.2 2004-11-10 12:59:57 jnardull Exp $
 #ifndef OTASSOCIATORS_OTTIME2MCHITALG_H
 #define OTASSOCIATORS_OTTIME2MCHITALG_H 1
 
@@ -11,10 +11,9 @@
 
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
-#include "GaudiKernel/MsgStream.h" 
 #include "GaudiKernel/IDataProviderSvc.h"
 #include "GaudiKernel/SmartDataPtr.h"
-#include "GaudiKernel/Algorithm.h"
+#include "GaudiAlg/GaudiAlgorithm.h"
 #include "OTAssociators/OTTime2MCDepositAsct.h"
 
 class OTTime;
@@ -30,7 +29,7 @@ class MCHit;
  *  @date   15/06/2004
  */
 
-class OTTime2MCHitAlg : public Algorithm {
+class OTTime2MCHitAlg : public GaudiAlgorithm {
 
   friend class AlgFactory<OTTime2MCHitAlg>;
   

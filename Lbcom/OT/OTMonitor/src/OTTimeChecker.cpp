@@ -1,4 +1,4 @@
-// $Id: OTTimeChecker.cpp,v 1.2 2004-09-10 13:13:49 cattanem Exp $
+// $Id: OTTimeChecker.cpp,v 1.3 2004-11-10 13:03:42 jnardull Exp $
 
 // local
 #include "OTTimeChecker.h"
@@ -36,24 +36,17 @@ StatusCode OTTimeChecker::initialize()
 
   // intialize histos
   this->initHistograms();
-  MsgStream msg(msgSvc(), name());
-  msg << MSG::DEBUG << "Inti histo" << endreq;
 
   // associator time to hit tool   
   sc = toolSvc()->retrieveTool(m_nameHitAsct, m_hitAsct);
   if( sc.isFailure() || 0 == m_hitAsct) {
-    MsgStream msg(msgSvc(), name());
-    msg << MSG::FATAL << "    Unable to retrieve Associator tool" << endreq;
-    return sc;
+    return Error("Unable to retrieve Associator tool", sc);
   }
 
   // Loading OT Geometry from XML
   SmartDataPtr<DeOTDetector> tracker( detSvc(), "/dd/Structure/LHCb/OT" );
   if ( !tracker ) {
-    MsgStream msg(msgSvc(), name());
-    msg << MSG::ERROR << "Unable to retrieve Tracker detector element"
-        << " from xml." << endreq;
-    return StatusCode::FAILURE;
+    return Error("Unable to retrieve OT detector element from xml");
   }
   m_tracker = tracker;
 
@@ -63,30 +56,25 @@ StatusCode OTTimeChecker::initialize()
 
 StatusCode OTTimeChecker::execute()
 {
-  // execute
-  MsgStream msg(msgSvc(), name());
-
+  
   // retrieve times
   SmartDataPtr<OTTimes> timeCont(eventSvc(),OTTimeLocation::Default);
   if (0 == timeCont){ 
-    MsgStream msg(msgSvc(), name());
-    msg << MSG::WARNING << "Failed to find OTTimes" << endreq;
+    warning () << "Failed to find OTTimes container" << endreq;
     return StatusCode::FAILURE;
   }
 
   // retrieve hits
   SmartDataPtr<MCHits> mcHitCont(eventSvc(),MCHitLocation::OTHits);
   if (0 == mcHitCont){ 
-    MsgStream msg(msgSvc(), name());
-    msg << MSG::WARNING << "Failed to find mcHits" << endreq;
+    warning () << "Failed to find mcHits" << endreq;
     return StatusCode::FAILURE;
   }
 
   // retrieve table
   OTTime2MCHitAsct::DirectType* aTable = m_hitAsct->direct();
   if (0 == aTable){
-    MsgStream msg(msgSvc(), name());
-    msg << MSG::WARNING << "Failed to find table" << endreq;
+    warning () << "Failed to find table" << endreq;
     return StatusCode::FAILURE;
   }
 

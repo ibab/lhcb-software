@@ -1,7 +1,6 @@
-// $Id: OTTimeMonitor.cpp,v 1.2 2004-09-10 13:13:50 cattanem Exp $
+// $Id: OTTimeMonitor.cpp,v 1.3 2004-11-10 13:03:42 jnardull Exp $
 
 // Gaudi
-#include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/SmartDataPtr.h"
 #include "GaudiKernel/AlgFactory.h"
 
@@ -47,10 +46,7 @@ StatusCode OTTimeMonitor::initialize()
   // Loading OT Geometry from XML
   SmartDataPtr<DeOTDetector> tracker( detSvc(), "/dd/Structure/LHCb/OT" );
   if ( !tracker ) {
-    MsgStream msg(msgSvc(), name());
-    msg << MSG::ERROR << "Unable to retrieve Tracker detector element"
-        << " from xml." << endreq;
-    return StatusCode::FAILURE;
+    return Error ( "Unable to retrieve Tracker detector element from xml");
   }
   m_tracker = tracker;
   m_numStations = m_tracker->numStations();
@@ -84,10 +80,7 @@ StatusCode OTTimeMonitor::initialize()
   IProperty* appMgrP;
   StatusCode sc = service("ApplicationMgr", appMgrP );
   if ( !sc.isSuccess() )    {
-    MsgStream msg(msgSvc(), name());
-    msg << MSG::ERROR
-        << "Unable to retrieve IProperty interface of ApplicationMgr"
-        << endmsg;
+    return Error ("Unable to retrieve IProperty interface of ApplicationMgr");
     m_evtMax = 1;
   }
   else {
@@ -108,8 +101,7 @@ StatusCode OTTimeMonitor::execute()
   // retrieve OTTimes
   SmartDataPtr<OTTimes> times(eventSvc(), OTTimeLocation::Default);
   if (!times){
-    MsgStream msg(msgSvc(), name());
-    msg << MSG::WARNING << "Failed to find OTTimes container" << endreq;
+    warning () << "Failed to find OTTimes container" << endreq;
     return StatusCode::FAILURE;
   }
 

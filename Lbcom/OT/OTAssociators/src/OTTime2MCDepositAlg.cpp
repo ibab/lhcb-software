@@ -1,4 +1,4 @@
-// $Id: OTTime2MCDepositAlg.cpp,v 1.1 2004-09-03 12:08:10 jnardull Exp $
+// $Id: OTTime2MCDepositAlg.cpp,v 1.2 2004-11-10 12:59:57 jnardull Exp $
 
 // Event
 #include "Event/MCTruth.h"
@@ -21,7 +21,7 @@ const        IAlgFactory& OTTime2MCDepositAlgFactory = s_factory ;
 
 OTTime2MCDepositAlg::OTTime2MCDepositAlg( const std::string& name,
                                             ISvcLocator* pSvcLocator)
-  : Algorithm (name,pSvcLocator) 
+  : GaudiAlgorithm (name,pSvcLocator) 
 {
   // constructor
   declareProperty( "OutputData", m_outputData  = OTTime2MCDepositLocation );
@@ -43,35 +43,29 @@ StatusCode OTTime2MCDepositAlg::execute()
   StatusCode sc;
 
  // get OTTimes
-  SmartDataPtr<OTTimes> timeCont(eventSvc(),OTTimeLocation::Default);
+  SmartDataPtr<OTTimes> timeCont(eventSvc(), OTTimeLocation::Default);
   if (0 == timeCont){ 
-    MsgStream msg(msgSvc(), name());
-    msg << MSG::WARNING << "Failed to find OTTimes" << endmsg;
-    return StatusCode::FAILURE;
+    return Error ("Failed to find OTTimes");
   }
+
   // Retrieve MCOTTime
   SmartDataPtr<MCOTTimes>
     mcTime ( eventDataService(), MCOTTimeLocation::Default);
   if ( !mcTime ) {
-    MsgStream msg(msgSvc(), name());
-    msg << MSG::ERROR << "Unable to retrieve MCOTTime " 
-        << MCOTTimeLocation::Default << endreq;
+    msg () << "Could not find MCOTTime in " << MCOTTimeLocation::Default 
+           << endreq;
     return StatusCode::FAILURE;
   }
   sc  = setMCTruth(timeCont, mcTime);
   if ( !sc.isSuccess() )  {
-    MsgStream msg(msgSvc(), name());
-    msg << MSG::ERROR << " Failed to set the MC truth link " << endreq;
-    return sc;
+    return Error (" Failed to set the MC truth link ",sc);
   }
 
   // create an association table 
   OTTime2MCDepositAsct::Table* aTable = new OTTime2MCDepositAsct::Table();
   sc = eventSvc()->registerObject(outputData(), aTable);
   if( sc.isFailure() ) {
-    MsgStream msg(msgSvc(), name());
-    msg << MSG::FATAL << "     *** Could not register " << outputData()
-        << endmsg;
+    msg () << "Could not register " << outputData() << endreq;
     delete aTable;
     return StatusCode::FAILURE;
   } 
@@ -107,8 +101,7 @@ OTTime2MCDepositAlg::associateToTruth( const OTTime* aTime,
     // link to deposits
     SmartRefVector<MCOTDeposit> depCont = mcTime->deposits();
     if ( 0 == depCont.size()){
-      MsgStream msg(msgSvc(), name()); 
-      msg << MSG::DEBUG << " No deposits " << depCont.size() << endmsg;
+      msg () << " Deposits Size" << depCont.size() << endreq;
       return StatusCode::FAILURE;
     }
     

@@ -1,9 +1,8 @@
-// $Id: OTTimeChecker.h,v 1.1 2004-09-10 13:13:49 cattanem Exp $
+// $Id: OTTimeChecker.h,v 1.2 2004-11-10 13:03:42 jnardull Exp $
 #ifndef OTMONITOR_OTTIMECHECKER_H
 #define OTMONITOR_OTTIMECHECKER_H 1
 
 // Gaudi
-#include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/AlgFactory.h"
 #include "GaudiKernel/SmartDataPtr.h"
 #include "GaudiKernel/IDataProviderSvc.h"

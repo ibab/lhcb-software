@@ -1,8 +1,8 @@
-// $Id: OTMonitorAlgorithm.h,v 1.1 2004-09-10 13:13:49 cattanem Exp $
+// $Id: OTMonitorAlgorithm.h,v 1.2 2004-11-10 13:03:42 jnardull Exp $
 #ifndef OTMONITOR_OTMONITORALGORITHM_H_
 #define OTMONITOR_OTMONITORALGORITHM_H 1
 
-#include "GaudiKernel/Algorithm.h"
+#include "GaudiAlg/GaudiAlgorithm.h"
 
 /** @class OTMonitorAlgorithm OTMonitorAlgorithm.h \
  *         "OTMonitor/OTMonitorAlgorithm.h"
@@ -20,7 +20,7 @@
 class IHistogram1D;
 class IHistogram2D;
 
-class OTMonitorAlgorithm: public Algorithm {
+class OTMonitorAlgorithm: public GaudiAlgorithm {
 
 public:
 
