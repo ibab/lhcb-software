@@ -2,7 +2,7 @@
 # Maintainer : Chris Parkes
 #
 package           VeloAssociators
-version           v1r6
+version           v1r7
 
 # Structure, i.e. directories to process. 
 #============================================================================
@@ -12,23 +12,14 @@ include_dirs $(VELOASSOCIATORSROOT)
 
 # Used packages. Specify the version, * at the end specifies 'any revision'
 #============================================================================
-use  VeloEvent  v12r*   Event
+use  VeloEvent  v13r*   Event
 use  VeloDet    v8r*    Det
 
 # Component library building rule
 #============================================================================
-library          VeloAssociators    ../src/*.cpp
+library          VeloAssociators    ../src/*.cpp -import=VeloKernel
 
-# define component library link options
-#============================================================================
-apply_pattern    package_Clinkopts
-apply_pattern    package_Cstamps
-apply_pattern    packageShr
-
-#============================================================================
-private
-apply_pattern    package_Cshlibflags
-macro VeloAssociatorslinkopts  " $(LHCbKernel_linkopts) "
+apply_pattern component_library library=VeloAssociators
 
 
 

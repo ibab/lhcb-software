@@ -1,6 +1,10 @@
 ! Package     : VeloAssociator
 ! Responsible : Chris Parkes
 
+!===================== VeloAssociators v1r7 2003-12-16 =====================
+! 2003-12-16 - Marco Cattaneo
+ - Move to Gaudi v14 (use VeloEvent v13r* in requirements)
+
 !===================== VeloAssociators v1r6 2003-07-11 =====================
 ! 2003-07-10 - David Hutchcroft
  - Changed VeloCluster2MCParticleAlg to use (or make then use) the 
