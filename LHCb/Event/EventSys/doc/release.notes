@@ -1,6 +1,9 @@
 package EventSys
 package manager: Marco Cattaneo
 
+! 2003-02-03 - Marco Cattaneo
+ - Use L1Event v11r6
+
 !======================== EventSys v13r3 2003-01-22 ========================
 ! 2003-01-21 - Marco Cattaneo
  - Use L1Event v11r5

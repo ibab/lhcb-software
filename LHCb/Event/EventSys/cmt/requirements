@@ -1,5 +1,5 @@
 package EventSys
-version v13r3
+version v13r4
 
 branches doc cmt 
 
@@ -15,7 +15,7 @@ use RichEvent    v4r2    Event
 use CaloEvent    v11r4	 Event
 use MuonEvent    v2r2    Event
 use L0Event      v13r1   Event
-use L1Event      v11r5   Event
+use L1Event      v11r6   Event
 use PhysEvent    v7r3    Event
 use DbCnv        v7r0    Event
 
