@@ -1,11 +1,19 @@
-! $Id: release.notes,v 1.28 2004-03-05 09:57:40 cattanem Exp $
+! $Id: release.notes,v 1.29 2004-10-26 14:36:46 dhcroft Exp $
 package Event/VeloEvent
 package manager: C.Parkes
+
+
+! 2004-10-26 - David Hutchcroft
+ - Modifications for new VeloDet v9r0 code (start from Chris' code again)
 
 !======================= VeloEvent v13r1 2004-03-05 =======================
 ! 2004-02-03 - Mark Tobin
  - Modified VeloEvent.xml to cope with modified VeloChannelID.
  - Code is backwards compatible
+
+!====================== VeloEvent v13r0p1 2004-03-15 ======================
+! 2004-03-13 - Chris Parkes
+- Use VeloChannelID as keyedObject key for VeloCluster
 
 !======================= VeloEvent v13r0 2003-12-16 =======================
 ! 2003-12-16 - Marco Cattaneo

@@ -143,8 +143,16 @@ without applying any additional processing. It contains no simulation info."
 	   location="Raw/Velo/Clusters">
            <import name="Kernel/SerializeStl"/>
            <import name="Kernel/VeloChannelID"/>
-           <base name="KeyedObject&lt;int&gt;"/>
-           &KeyedObject;
+	   <template name="KeyedObjectDict" t1="VeloChannelID"/>
+           <base name="KeyedObject&lt;VeloChannelID&gt;"/>
+           &KeyedContainer;
+	   <constructor desc="Constructor with key" 
+                        initList="KeyedObject&lt;VeloChannelID&gt;(key),
+				  m_sensorID(0),
+				  m_stripSignals()">
+             <arg type="VeloChannelID" name="key" const="TRUE"/>
+             <code/>  
+           </constructor> 
            <attribute name="sensorID" type="VeloChannelID" desc="Sensor number stored as VeloChannelID"/>
            <attribute name="stripSignals" type="std::vector&lt;std::pair&lt;long,double&gt; &gt;" desc="strip numbers and their signals"/>
            
