@@ -40,7 +40,7 @@ use LongTrack           v1r11	Tr
 use TrFitter            v4r0	Tr
 use TrExtrapolator      v2r12	Tr
 use TrTools             v2r5p1	Tr
-use Seeding             v2r8	Tr 
+use Seeding             v2r9	Tr 
 use TrMatching          v2r10	Tr
 use TrCleanEx           v2r10	Tr
 use VeloTT              v1r10	Tr
