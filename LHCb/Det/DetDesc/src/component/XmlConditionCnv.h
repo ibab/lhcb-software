@@ -35,10 +35,12 @@ protected:
    * Implements the abstract method in XmlConditionCnv
    * @param childElement the specific child processed here
    * @param refpObject the object to be filled
+   * @param address the address for this object
    * @return status depending on the completion of the call
    */
   virtual StatusCode i_fillSpecificObj (DOM_Element childElement,
-                                        Condition* refpObject);
+                                        Condition* refpObject,
+                                        IOpaqueAddress* address);
 
 };
 

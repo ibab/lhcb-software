@@ -1,4 +1,4 @@
-//  $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/Lib/XmlBaseConditionCnv.cpp,v 1.3 2002-01-21 14:46:47 sponce Exp $
+//  $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/Lib/XmlBaseConditionCnv.cpp,v 1.4 2002-01-22 09:17:54 sponce Exp $
 
 // include files
 #include <string>
@@ -90,7 +90,7 @@ StatusCode XmlBaseConditionCnv::i_createObj (DOM_Element /*element*/,
 // -----------------------------------------------------------------------
 StatusCode XmlBaseConditionCnv::i_fillObj (DOM_Element childElement,
                                            DataObject* refpObject,
-					   IOpaqueAddress* /*address*/) {
+                                           IOpaqueAddress* /*address*/) {
   MsgStream log(msgSvc(), "XmlBaseConditionCnv" );
 
   // gets the object
@@ -110,7 +110,8 @@ StatusCode XmlBaseConditionCnv::i_fillObj (DOM_Element childElement,
         // gets the current child
         DOM_Node childNode = specificChildren.item(i);
         StatusCode sc = i_fillSpecificObj ((DOM_Element &) childNode,
-                                           dataObj);
+                                           dataObj,
+                                           address);
         if (sc.isFailure()) {
           std::string childNodeName =
             dom2Std (((DOM_Element &) childNode).getNodeName());

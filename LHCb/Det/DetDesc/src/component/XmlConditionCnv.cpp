@@ -28,7 +28,8 @@ XmlConditionCnv::XmlConditionCnv (ISvcLocator* svc) :
 // -----------------------------------------------------------------------
 StatusCode
 XmlConditionCnv::i_fillSpecificObj (DOM_Element /*childElement*/,
-                                    Condition* /*refpObject*/) {
+                                    Condition* /*refpObject*/,
+                                    IOpaqueAddress* /*address*/) {
   // default implementation : ignore child
   return StatusCode::SUCCESS;
 } // end i_fillObj
