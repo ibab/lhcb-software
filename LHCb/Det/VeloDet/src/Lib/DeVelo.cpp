@@ -1,4 +1,4 @@
-// $Id: DeVelo.cpp,v 1.16 2002-06-18 06:55:01 ocallot Exp $
+// $Id: DeVelo.cpp,v 1.17 2002-06-18 07:44:10 ocallot Exp $
 //
 // ============================================================================
 #define  VELODET_DEVELO_CPP 1
@@ -678,7 +678,7 @@ VeloChannelID DeVelo::neighbour ( const VeloChannelID& chan,
   
   if ( isRSensor( chan.sensor() ) ) {
     if ( 0 < numAway ) {
-      if ( (m_nbRInner > strip) && (m_nbRInner < newStrip) ) {
+      if ( (m_nbRInner > strip) && (m_nbRInner <= newStrip) ) {
         newStrip += (int)m_nbRInner;
       } else if ( ( 1024 > strip ) && (1024 <= newStrip ) ) {
         valid = false;
@@ -690,7 +690,7 @@ VeloChannelID DeVelo::neighbour ( const VeloChannelID& chan,
     } else {
       if ( 0 > newStrip ) {
         valid = false;
-      } else if ( (m_nbRInner < strip) && (m_nbRInner > newStrip) ) {
+      } else if ( (m_nbRInner < strip) && (m_nbRInner >= newStrip) ) {
         valid = false;
       } else if ( ( 1024 <= strip ) && (1024 > newStrip ) ) {
         valid = false;
