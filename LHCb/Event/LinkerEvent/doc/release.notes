@@ -4,6 +4,7 @@
 ! Purpose     : Implementation of the Linker package, to associate objects
 !-----------------------------------------------------------------------------
 
+!====================== LinkerEvent v1r7 2005-03-22 ==========================
 ! 2005-03-22 - Olivier Callot
  - Make non const the methods direct() and inverse() to LinkerTool
  - Add the 'bool empty()' method to LinkerRange.
