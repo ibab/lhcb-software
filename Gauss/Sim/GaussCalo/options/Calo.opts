@@ -1,8 +1,11 @@
-// $Id: Calo.opts,v 1.9 2003-07-15 16:30:13 witoldp Exp $ 
+// $Id: Calo.opts,v 1.10 2003-08-14 09:05:09 ranjard Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.9  2003/07/15 16:30:13  witoldp
+// added hbook.opts
+//
 // Revision 1.8  2003/07/09 17:01:44  ibelyaev
 //  Spd/Prs implemenattion by Grigory Rybkine
 //
@@ -23,7 +26,7 @@
 
 /// Input Histograms
 HistogramDataSvc.Input += 
-  { "GaussCalo DATAFILE='$LHCBHOME/sim/data/gausscalo.hbook' TYP='HBOOK'" };
+  { "GaussCalo DATAFILE='$PARAMFILESROOT/data/gausscalo.hbook' TYP='HBOOK'" };
 //  { "GaussCalo DATAFILE='./gausscalo.hbook' TYP='HBOOK'" };
 
 /// configuration of Spd  sensitive detector 
