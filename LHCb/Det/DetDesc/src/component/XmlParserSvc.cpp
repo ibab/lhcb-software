@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/component/XmlParserSvc.cpp,v 1.1 2001-05-18 16:48:47 sponce Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/component/XmlParserSvc.cpp,v 1.2 2001-06-14 13:27:04 sponce Exp $
 
 // Include Files
 #include "GaudiKernel/SvcFactory.h"
@@ -47,6 +47,8 @@ XmlParserSvc::XmlParserSvc (const std::string& name, ISvcLocator* svc) :
       m_parser->setValidationScheme(DOMParser::Val_Auto);
       // asks the parser to continue parsing after a fatal error
       m_parser->setExitOnFirstFatalError(false);
+      // asks the parser to ignore whitespaces when possible
+      m_parser->setIncludeIgnorableWhitespace (false);
     }
 }
 

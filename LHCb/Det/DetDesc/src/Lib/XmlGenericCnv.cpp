@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/Lib/XmlGenericCnv.cpp,v 1.1 2001-05-14 15:13:41 sponce Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/Lib/XmlGenericCnv.cpp,v 1.2 2001-06-14 13:27:03 sponce Exp $
 
 // Include files
 #include "DetDesc/XmlGenericCnv.h"
@@ -133,16 +133,15 @@ StatusCode XmlGenericCnv::createObj (IOpaqueAddress* pAddress,
        log << MSG::DEBUG
            << "Detector Description Markup Language Version "
            << versionAttribute << endreq;
-       if (versionAttribute != "3.1" ) {
+       if (versionAttribute != "3.2" ) {
          StatusCode sc;
          sc.setCode(WRONG_DTD_VERSION);
-         std::string msg = "DDDB DTD Version 3.1 required, ";
-         msg += "please update your DTD and XML data files\a";
+         std::string msg = "DDDB DTD Version 3.2 required, ";
+         msg += "please update your DTD and XML data files.";
          throw XmlCnvException(msg.c_str(), sc);
        }
      }
    }
-
    // deals with parameter definitions
    // get the parameters
    DOMString parameterTag ("parameter");
@@ -176,49 +175,64 @@ StatusCode XmlGenericCnv::createObj (IOpaqueAddress* pAddress,
          << endreq;
      return StatusCode::FAILURE;
    }
-  
-   // creates an object for the node found
-   StatusCode sc = i_createObj (element, refpObject);
-   if (sc.isFailure()) {
-     return sc;
-   }
 
-   // fills the object with its children
-   // gets the children
-   DOM_NodeList childList = element.getChildNodes();
-   // scans them
-   unsigned int i;
-   for (i = 0; i < childList.getLength(); i++) {
-     if (childList.item(i).getNodeType() == DOM_Node::ELEMENT_NODE) {
-       // gets the current child
-       DOM_Node childNode = childList.item(i);
-       DOM_Element childElement = (DOM_Element &) childNode;
-       // calls fill_obj on it
-       StatusCode sc2 = i_fillObj(childElement, refpObject);
-       if (sc2.isFailure()) {
-         log << MSG::ERROR << "enable to fill " << addr->objectName()
-             << " with its child "
-             << dom2Std (childElement.getNodeName())
-             << endreq;
-       }
-     } else if (childList.item(i).getNodeType() == DOM_Node::TEXT_NODE) {
-       // gets the current child
-       DOM_Node childNode = childList.item(i);
-       DOM_Text textNode = (DOM_Text &) childNode;
-       // calls fill_obj on it
-       StatusCode sc2 = i_fillObj(textNode, refpObject);
-       if (sc2.isFailure()) {
-         log << MSG::ERROR << "enable to fill " << addr->objectName()
-             << " with text node containing : \""
-             << dom2Std (textNode.getData())
-             << endreq;
-       }     
-     }
-   }
-   
-   // ends up the object construction
-   return i_processObj(refpObject);
+   // deal with the node found itself
+   return internalCreateObj (element, refpObject);
 } // end createObj
+
+
+// -----------------------------------------------------------------------
+// create the object from a DOM Element
+// -----------------------------------------------------------------------
+StatusCode XmlGenericCnv::internalCreateObj (DOM_Element element,
+                                             DataObject*& refpObject) {
+  // creates a msg stream for debug purposes
+  MsgStream log( msgSvc(), "XmlGenericCnv" );
+  
+  // creates an object for the node found
+  StatusCode sc = i_createObj (element, refpObject);
+  if (sc.isFailure()) {
+    return sc;
+  }
+
+  // fills the object with its children
+  // gets the children
+  DOM_NodeList childList = element.getChildNodes();
+  // scans them
+  unsigned int i;
+  for (i = 0; i < childList.getLength(); i++) {
+    if (childList.item(i).getNodeType() == DOM_Node::ELEMENT_NODE) {
+      // gets the current child
+      DOM_Node childNode = childList.item(i);
+      DOM_Element childElement = (DOM_Element &) childNode;
+      // calls fill_obj on it
+      StatusCode sc2 = i_fillObj(childElement, refpObject);
+      if (sc2.isFailure()) {
+        log << MSG::ERROR << "unable to fill "
+            << dom2Std (element.getNodeName())
+            << " with its child "
+            << dom2Std (childElement.getNodeName())
+            << endreq;
+      }
+    } else if (childList.item(i).getNodeType() == DOM_Node::TEXT_NODE) {
+      // gets the current child
+      DOM_Node childNode = childList.item(i);
+      DOM_Text textNode = (DOM_Text &) childNode;
+      // calls fill_obj on it
+      StatusCode sc2 = i_fillObj(textNode, refpObject);
+      if (sc2.isFailure()) {
+        log << MSG::ERROR << "unable to fill "
+            << dom2Std(element.getNodeName())
+            << " with text node containing : \""
+            << dom2Std (textNode.getData())
+            << endreq;
+      }     
+    }
+  }
+  
+  // ends up the object construction
+  return i_processObj(refpObject);
+} // end internalCreateObj
 
 
 // -----------------------------------------------------------------------
@@ -248,6 +262,15 @@ StatusCode XmlGenericCnv::updateRep (IOpaqueAddress* /*pAddress*/,
 }
 
 
+// -----------------------------------------------------------------------
+// Fill an object with a new child element
+// -----------------------------------------------------------------------
+StatusCode XmlGenericCnv::i_createObj (DOM_Element childElement,
+                                       DataObject*& refpObject) {
+  return StatusCode::FAILURE;
+}
+
+  
 // -----------------------------------------------------------------------
 // Fill an object with a new child element
 // -----------------------------------------------------------------------

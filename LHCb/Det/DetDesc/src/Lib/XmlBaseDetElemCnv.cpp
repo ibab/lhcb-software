@@ -1,4 +1,4 @@
-//  $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/Lib/XmlBaseDetElemCnv.cpp,v 1.3 2001-05-21 14:41:54 sponce Exp $
+//  $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/Lib/XmlBaseDetElemCnv.cpp,v 1.4 2001-06-14 13:27:03 sponce Exp $
 
 // include files
 #include <cstdlib>
@@ -162,14 +162,12 @@ StatusCode XmlBaseDetElemCnv::i_fillObj (DOM_Element childElement,
     log << MSG::DEBUG << "GI npath  : " << namePath    << endreq;
 
     // creates a geometryInfo child
-    const IGeometryInfo* gInfo = 0;
     if (logVolName.empty()) {
-      /// ghost
-      gInfo = dataObj->createGeometryInfo();
+      dataObj->createGeometryInfo();
     } else if (support.empty()) {
-      gInfo = dataObj->createGeometryInfo (logVolName);
+      dataObj->createGeometryInfo (logVolName);
     } else if (!namePath.empty()) {
-      gInfo = dataObj->createGeometryInfo (logVolName, support, namePath);
+      dataObj->createGeometryInfo (logVolName, support, namePath);
     } else if (!replicaPath.empty()) {
       ILVolume::ReplicaPath repPath;            
       // Replica path has the format "1/3/7/2"
@@ -199,8 +197,8 @@ StatusCode XmlBaseDetElemCnv::i_fillObj (DOM_Element childElement,
           }
         }
         rp++;
-      } while (*rp != 0); 
-      gInfo = dataObj->createGeometryInfo (logVolName,support,repPath);
+      } while (*rp != 0);
+      dataObj->createGeometryInfo (logVolName,support,repPath);
     } else {
       log << MSG::ERROR << "File " << m_objRcpt->dbName() << ": "
           << tagName

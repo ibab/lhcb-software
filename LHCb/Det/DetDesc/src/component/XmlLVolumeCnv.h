@@ -1,16 +1,18 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/component/XmlLVolumeCnv.h,v 1.4 2001-06-05 16:18:00 sponce Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/component/XmlLVolumeCnv.h,v 1.5 2001-06-14 13:27:04 sponce Exp $
 
 #ifndef DETDESC_XMLCNVSVC_XMLLVOLUMECNV_H
 #define DETDESC_XMLCNVSVC_XMLLVOLUMECNV_H
 
 // Include files
 #include <string>
+#include <deque>
 #include <vector>
 
 #include "CLHEP/Geometry/Transform3D.h"
 
 #include "DetDesc/XmlGenericCnv.h"
 #include "DetDesc/CLIDLVolume.h"
+#include "DetDesc/Solids.h"
 
 // Forward and extern declarations
 class ISolid;
@@ -34,35 +36,6 @@ class XmlLVolumeCnv : public XmlGenericCnv {
  public:
   
   /**
-   * This structure keeps temporary information for each phys. vol.
-   * we have processed
-   */
-  typedef struct _PVitem {
-    std::string m_pvName;
-    std::string m_lvName;
-    HepPoint3D  m_translation;
-    HepRotation m_rotation;
-  } PVitem;
-  
-  /**
-   * This structure keeps temporary information for each solid
-   * we have processed inside boolean solids
-   */
-  typedef struct _SolidItem {
-    ISolid*         m_solid;
-    HepPoint3D      m_translation;
-    HepRotation     m_rotation;
-  } SolidItem;
-
-  /// Parameterized physical volume type
-  typedef struct _ParamPV {
-    unsigned long m_number;
-    PVitem        m_initialPos;
-    HepVector3D   m_stepTranslation;
-    HepRotation   m_stepRotation;
-  } ParamPV;
-  
-  /**
    * accessor to the type of elements that this converter converts
    * @return the classID for this type
    */
@@ -82,237 +55,343 @@ class XmlLVolumeCnv : public XmlGenericCnv {
    */
   virtual ~XmlLVolumeCnv() {}
   
-  /** Creates the transient representation of an object from a DOM_Element.
+  /** This creates the transient representation of an object from the
+   * DOM_Element representing it, then fills it and process it.
    * Overrides the default method in XmlGenericCnv
    * @param element the DOM_Element to be used to builds the object
    * @param refpObject the object to be built
    * @return status depending on the completion of the call
    */
-  virtual StatusCode i_createObj (DOM_Element element,
-                                  DataObject*& refpObject);
+  virtual StatusCode internalCreateObj (DOM_Element element,
+                                        DataObject*& refpObject);
 
-  /** Fills the current object for its child element childElement.
-   * Overrides the default method in XmlGenericCnv
-   * @param element the child processed here
-   * @param refpObject the object to be filled
-   * @return status depending on the completion of the call
-   */
-  virtual StatusCode i_fillObj (DOM_Element childElement,
-                                DataObject* refpObject);
 
-  /** This processes the current object.
-   * Overrides the default method in XmlGenericCnv
-   * @param refpObject the object to be processed
-   * @return status depending on the completion of the call
-   */
-  virtual StatusCode i_processObj (DataObject* refpObject);
-
-  
  private:
 
   /**
-   * deals with the xml tag <physvol>
-   * @param childElement the DOM element representing the tag
+   * This encapsulates the parameters needed to build a PVolume
+   */
+  typedef struct _PVolumeItem {
+    /// the name of the physical volume
+    std::string physvolName;
+    /** a number to be added to the name if it is not 0
+     * this is to differentiate two volumes with the same name inside
+     * a parametrized physical volume
+     */
+    unsigned int tag;
+    /// the name of the logical volume
+    std::string logvolName;
+    /// the transformation to place the volume
+    HepTransform3D* transformation;
+  } PVolumeItem;
+
+  /**
+   * This type defines a vector of PVolumeItem*. This is used from the
+   * processing of parametrised volumes.
+   */
+  typedef std::deque<PVolumeItem*> PVolumes;
+
+  /**
+   * This is the encapsulation of a solid and a transformation to be
+   * applied ot it
+   */
+  typedef struct _placedSolid {
+    /// the solid
+    ISolid* solid;
+    /// the transformation
+    HepTransform3D* transformation;
+  } PlacedSolid;
+
+  /**
+   * this defines a vector of PlacedSolids
+   */
+  typedef std::deque<PlacedSolid> PlacedSolidList;
+
+  /**
+   * says whether the given tag is denoting a simple solid
+   * @param tag the tag to be tested
+   * @result true if this denotes a simple solid
+   */
+  bool isSimpleSolid (std::string tag);
+
+  /**
+   * says whether the given tag is denoting a boolean solid
+   * @param tag the tag to be tested
+   * @result true if this denotes a boolean solid
+   */
+  bool isBooleanSolid (std::string tag);
+
+  /**
+   * says whether the given tag is denoting a solid
+   * @param tag the tag to be tested
+   * @result true if this denotes a solid
+   */
+  bool isSolid (std::string tag);
+
+  /**
+   * says whether the given tag is denoting a transformation
+   * @param tag the tag to be tested
+   * @result true if this denotes a transformation
+   */
+  bool isTransformation (std::string tag);
+
+  /**
+   * says whether the given tag is denoting a parametrized physical volume
+   * @param tag the tag to be tested
+   * @result true if this denotes a parametrized physical volume
+   */
+  bool isParamphysvol (std::string tag);
+
+  /**
+   * builds a string locating the element. When possible, this strings
+   * gives the first named parent of element and the way to reach the
+   * element from there.
+   * @param element the element to locate
+   * @result a locating string
+   */
+  std::string locateElement (DOM_Element element);
+
+  /**
+   * deals with the xml tag <physvol>. Creates the corresponding C++ Object.
+   * Take care that memory is allocated in case the return value is not null
+   * and that the caller is responsible for deallocating it
+   * @param element the DOM element representing the tag
+   * @return the C++ Object
+   */
+  PVolumeItem* dealWithPhysvol (DOM_Element element);
+
+  /**
+   * deals with the xml tags <paramphysvol>, <paramphysvol2D>, <paramphysvol3D>.
+   * Instead of creating a C++ object corresponding to these parametrised
+   * volumes, this method expands them in a vector of simple physical volumes.
+   * The return value is a pointer on this vector or 0 if there is an
+   * error in the tag definition. Take care that memory is allocated for
+   * each physical volume inside the vector in case the return value is not
+   * empty and that the caller is responsible for deallocating it
+   * @param element the DOM element representing the tag
+   * @return a vector of physical volumes
+   */
+  PVolumes* dealWithParamphysvol (DOM_Element element);
+
+  /**
+   * deals with parametrized physical volumes of any dimension. The dimension
+   * is given by nD.
+   * Instead of creating a C++ object corresponding to these parametrised
+   * volumes, this method expands them in a vector of simple physical volumes.
+   * The return value is a pointer on this vector or 0 if there is an
+   * error in the tag definition. Take care that memory is allocated for
+   * each physical volume inside the vector in case the return value is not
+   * empty and that the caller is responsible for deallocating it
+   * @param element the DOM element representing the tag
+   * @return a vector of physical volumes
+   */
+  PVolumes* dealWithParamphysvol (DOM_Element element, unsigned int nD);
+
+  /**
+   * expands a given list of physical volumes. The expansion is done in 
+   * n dimensions (n being the size of numbers and transformations). For a
+   * given element, a n-dimensionnal array of elements is created whose
+   * dimensions are given by numbers. Each element of this array is placed
+   * using the translations given by transformations and is rotated using
+   * the rotations given by transformations. Note that the rotations are
+   * applied in a specific order : first dimension first then second one and
+   * so on.
+   * Note that a transformation may be null. It is supposed then to be the
+   * identity. Note that null is returned if numbers and transformations
+   * don't have the same size.
+   * Take care that the first argument pointer may be deallocate and that
+   * memory will be allocated for the return value. The deallocation of this
+   * one is the responsability of the caller.
+   * @param volumes the volumes to be expanded
+   * @param numbers the number of copy of each volume in each dimension
+   * @param transformations the transformations used to generate the volumes
+   * in each dimension
+   */
+  PVolumes* expandParamPhysVol (PVolumes* volumes,
+                                vector<int> numbers,
+                                vector<HepTransform3D*> transformations);
+
+  /**
+   * deals with the xml tag <surf>. Returns a string giving the address of
+   * the surface or 0 if the element does not correspond to the <surf>
+   * tag.
+   * @param element the DOM element representing the tag
+   * @return the address of the surface
+   */
+  std::string dealWithSurf (DOM_Element element);
+
+  /**
+   * deals with the xml tags <box>, <trd>, <trap>, <cons>, <tubs>, <sphere>,
+   * <union>, <subtraction> and <intersection>. Creates the corresponding
+   * C++ Object or 0 if the element does not correspond to one of these
+   * tags. Take care that memory is allocated in case the return value is
+   * not null and that the caller is responsible for deallocating it
+   * @param element the DOM element representing the tag
+   * @return the C++ object
+   */
+  ISolid* dealWithSolid (DOM_Element element);
+
+  /**
+   * deals with the xml tags <union>, <subtraction> and <intersection>.
+   * Creates the corresponding C++ Object or 0 if the element does not
+   * correspond to one of these tags. Take care that memory is allocated
+   * in case the return value is not null and that the caller is responsible
+   * for deallocating it
+   * @param element the DOM element representing the tag
+   * @return the C++ object
+   */
+  SolidBoolean* dealWithBoolean (DOM_Element element);
+
+  /**
+   * deals with the children of a boolean operation. Builds a PlacedSolidList
+   * out of them. Note that memory is allocated and that the caller is
+   * responsible for its deallocation.
+   * @param element the boolean solid node
+   * @return the list of children, as a PlacedSolidList*
+   */
+  PlacedSolidList* dealWithBooleanChildren (DOM_Element element);
+
+  /**
+   * deals with the xml tags <box>, <cons>, <sphere>, <tubs>, <trd> and <trap>.
+   * Creates the corresponding C++ Object or 0 if the element does not
+   * correspond to one of these tags. Take care that memory is allocated
+   * in case the return value is not null and that the caller is responsible
+   * for deallocating it
+   * @param element the DOM element representing the tag
+   * @return the C++ object
+   */
+  ISolid* dealWithSimpleSolid (DOM_Element element);
+
+  /**
+   * deals with the xml tag <box>. Creates the corresponding C++ Object.
+   * Take care that memory is allocated and that the caller is responsible
+   * for deallocating it
+   * @param element the DOM element representing the tag
+   * @return the C++ object
+   */
+  SolidBox* dealWithBox (DOM_Element element);
+
+  /**
+   * deals with the xml tag <trd>. Creates the corresponding C++ Object.
+   * Take care that memory is allocated and that the caller is responsible
+   * for deallocating it
+   * @param element the DOM element representing the tag
+   * @return the C++ object
+   */
+  SolidTrd* dealWithTrd (DOM_Element element);
+
+  /**
+   * deals with the xml tag <trap>. Creates the corresponding C++ Object.
+   * Take care that memory is allocated and that the caller is responsible
+   * for deallocating it
+   * @param element the DOM element representing the tag
+   * @return the C++ object
+   */
+  SolidTrap* dealWithTrap (DOM_Element element);
+
+  /**
+   * deals with the xml tag <cons>. Creates the corresponding C++ Object.
+   * Take care that memory is allocated and that the caller is responsible
+   * for deallocating it
+   * @param element the DOM element representing the tag
+   * @return the C++ object or 0 if an error occured
    * @return status depending on the completion of the call
    */
-  StatusCode dealWithPhysvol (DOM_Element childElement);
+  SolidCons* dealWithCons (DOM_Element element);
 
   /**
-   * deals with the xml tag <paramphysvol>
-   * @param childElement the DOM element representing the tag
-   * @return status depending on the completion of the call
+   * deals with the xml tag <tubs>. Creates the corresponding C++ Object.
+   * Take care that memory is allocated and that the caller is responsible
+   * for deallocating it
+   * @param element the DOM element representing the tag
+   * @return the C++ object
    */
-  StatusCode dealWithParamphysvol (DOM_Element childElement);
+  SolidTubs* dealWithTubs (DOM_Element element);
 
   /**
-   * deals with the xml tag <box>
-   * @param childElement the DOM element representing the tag
-   * @return status depending on the completion of the call
+   * deals with the xml tag <sphere>. Creates the corresponding C++ Object.
+   * Take care that memory is allocated and that the caller is responsible
+   * for deallocating it
+   * @param element the DOM element representing the tag
+   * @return the C++ object
    */
-  StatusCode dealWithBox (DOM_Element childElement);
+  SolidSphere* dealWithSphere (DOM_Element element);
 
   /**
-   * deals with the xml tag <trd>
-   * @param childElement the DOM element representing the tag
-   * @return status depending on the completion of the call
+   * deals with a transformation beginning at child number *index of the element
+   * element. After processing, the index value is changed and points to
+   * the next child of element.
+   * The return value is either HepTransform3D::Identity in case there is no
+   * transformation or the HepTransform3D corresponding to the DOM tree.
+   * This method allocates memory. The deallocation is the responsability
+   * of the caller. This method should never raise an exception.
+   * @param element the parent element of the transformation
+   * @param the index of the first element of the transformation in the parent
+   * @return the Hep transformation or 0 if an error occured
    */
-  StatusCode dealWithTrd (DOM_Element childElement);
+  HepTransform3D* dealWithTransformation (DOM_Element element,
+                                          unsigned int* index);
 
   /**
-   * deals with the xml tag <trap>
-   * @param childElement the DOM element representing the tag
-   * @return status depending on the completion of the call
+   * deals with the xml tag transformation. Creates the corresponding
+   * HepTranslate3D and allocates the corresponding memory. The deallocation
+   * is the responsability of the caller
+   * @param element the parent element of the transformation
+   * @return the Hep transformation or 0 if an error occured
    */
-  StatusCode dealWithTrap (DOM_Element childElement);
+  HepTransform3D* dealWithTransformation (DOM_Element element);
 
   /**
-   * deals with the xml tag <cons>
-   * @param childElement the DOM element representing the tag
-   * @return status depending on the completion of the call
+   * deals with the xml tag <posXYZ>. Creates the corresponding HepTranslate3D
+   * and allocates the corresponding memory. The deallocation is the
+   * responsability of the caller
+   * @param element the DOM element representing the tag
+   * @return the corresponding Hep transformation or 0 if an error occured
    */
-  StatusCode dealWithCons (DOM_Element childElement);
+  HepTranslate3D* dealWithPosXYZ (DOM_Element element);
 
   /**
-   * deals with the xml tag <tubs>
-   * @param childElement the DOM element representing the tag
-   * @return status depending on the completion of the call
+   * deals with the xml tag <posRPhiZ>. Creates the corresponding HepTranslate3D
+   * and allocates the corresponding memory. The deallocation is the
+   * responsability of the caller.
+   * An XmlCnvException will be launched if the tag attribute r has a negative
+   * value
+   * @param element the DOM element representing the tag
+   * @return the corresponding Hep transformation or 0 if an error occured
    */
-  StatusCode dealWithTubs (DOM_Element childElement);
+  HepTranslate3D* dealWithPosRPhiZ (DOM_Element element);
 
   /**
-   * deals with the xml tag <sphere>
-   * @param childElement the DOM element representing the tag
-   * @return status depending on the completion of the call
+   * deals with the xml tag <posRThPhi>. Creates the corresponding
+   * HepTranslate3D and allocates the corresponding memory. The deallocation
+   * is the responsability of the caller
+   * An XmlCnvException will be launched if the tag attribute r has a negative
+   * value
+   * @param element the DOM element representing the tag
+   * @return the corresponding Hep transformation or 0 if an error occured
    */
-  StatusCode dealWithSphere (DOM_Element childElement);
+  HepTranslate3D* dealWithPosRThPhi (DOM_Element element);
 
   /**
-   * deals with the xml tags <union>, <subtraction> and <intersection>
-   * @param childElement the DOM element representing the tag
-   * @return status depending on the completion of the call
+   * deals with the xml tag <rotXYZ>. Creates the corresponding HepRotation
+   * and allocates the corresponding memory. The deallocation is the
+   * responsability of the caller
+   * @param element the DOM element representing the tag
+   * @return the corresponding Hep transformation or 0 if an error occured
    */
-  StatusCode dealWithBoolean (DOM_Element childElement);
+  HepTransform3D* dealWithRotXYZ (DOM_Element element);
 
   /**
-   * deals with the xml tag <posXYZ>
-   * @param childElement the DOM element representing the tag
-   * @return status depending on the completion of the call
+   * deals with the xml tag <rotAxis>. Creates the corresponding HepRotation
+   * and allocates the corresponding memory. The deallocation is the
+   * responsability of the caller
+   * An XmlCnvException will be launched if the tag attribute theta has a
+   * value outside the range 0 - 180 * degree or if the tag attribute phi
+   * has a value outside the range 0 - 360 * degree
+   * @param element the DOM element representing the tag
+   * @return the corresponding Hep transformation or 0 if an error occured
    */
-  StatusCode dealWithPosXYZ (DOM_Element childElement);
-
-  /**
-   * deals with the xml tag <posRPhiZ>
-   * @param childElement the DOM element representing the tag
-   * @return status depending on the completion of the call
-   */
-  StatusCode dealWithPosRPhiZ (DOM_Element childElement);
-
-  /**
-   * deals with the xml tag <posRThPhi>
-   * @param childElement the DOM element representing the tag
-   * @return status depending on the completion of the call
-   */
-  StatusCode dealWithPosRThPhi (DOM_Element childElement);
-
-  /**
-   * deals with the xml tag <rotXYZ>
-   * @param childElement the DOM element representing the tag
-   * @return status depending on the completion of the call
-   */
-  StatusCode dealWithRotXYZ (DOM_Element childElement);
-
-  /**
-   * deals with the xml tag <rotAxis>
-   * @param childElement the DOM element representing the tag
-   * @return status depending on the completion of the call
-   */
-  StatusCode dealWithRotAxis (DOM_Element childElement);
-
-  /**
-   * deals with the xml tags <posXYZ>, <posRPhiZ>, <posRThPhi>, <rotXYZ>
-   * and <rotAxis>
-   * @param childElement the DOM element representing the tag
-   * @return status depending on the completion of the call
-   */
-  void dealWithPosRotChildren      (DOM_Element element);
-
-  /**
-   * deals with the xml tags <box>, <cons>, <sphere>, <tubs>, <trd>, <trap>
-   * @param childElement the DOM element representing the tag
-   * @return status depending on the completion of the call
-   */
-  void dealWithSimpleSolidChildren (DOM_Element element);
-
-  /**
-   * creates a 3D translation in cartesian view
-   * @param x translation along the x axis
-   * @param y translation along the y axis
-   * @param z translation along the z axis
-   */
-  HepPoint3D doTranslation (std::string x,
-                            std::string y,
-                            std::string z);
-
-  /**
-   * creates a 3D translation in cylindrical view
-   * @param r radial translation
-   * @param phi translation angle
-   * @param z translation along the z axis
-   */
-  HepPoint3D doRPhiZTranslation (std::string r,
-                                 std::string phi,
-                                 std::string z);
-
-  /**
-   * creates a 3D translation
-   * @param r radial translation
-   * @param theta translation angle along theta
-   * @param phi translation angle along phi
-   */
-  HepPoint3D doRThPhiTranslation (std::string r,
-                                  std::string theta,
-                                  std::string phi);
-
-  /**
-   * creates a 3D rotation
-   * @param rx rotation on the x axis
-   * @param ry rotation on the y axis
-   * @param rz rotation on the z axis
-   */
-  HepRotation doRotation (std::string rx,
-                          std::string ry,
-                          std::string rz);
-
-  /**
-   * creates a 3D rotation
-   */
-  HepRotation doAxisRotation (std::string axtheta,
-                              std::string axphi,
-                              std::string angle);
-  
-  /// Accessor to the transformation context
-  inline std::string& transContext() { return m_transContext; }
-
-  /// Accessor to the transformation context
-  inline void setTransContext (std::string& context) {
-    m_transContext = context;
-  }
-
-  /// Accessor to the transformation context
-  inline void setTransContext (const std::string& context) {
-    m_transContext = context;
-  }
-  
-  /// Accessor to the transformation context
-  inline void setTransContext (const char* context) {
-    m_transContext = context;
-  }
-
-  /// Accessor to the transformation context
-  inline void setTransContext (char* context) {
-    m_transContext = context;
-  }
-
-  /// Remember context for figuring out what transformation is being found
-  std::string m_transContext;
-
-  /// Vector of physical volumes found
-  std::vector<PVitem> m_pvstore;
-
-  /// Simple solid found
-  ISolid* m_solid;
-
-  /// Needed for boolean volumes to keep all daughter solids found
-  std::vector<SolidItem>   m_bstore;
-  std::string              m_bsName;
-  bool                     m_insideBoolean;
-
-  /// Needed for a parameterized volume
-  bool                     m_insideParameterized;
-  std::vector<ParamPV>     m_ppvstore;
-
-  /// connected surfaces
-  std::vector<std::string> m_surfaces; 
+  HepTransform3D* dealWithRotAxis (DOM_Element element);
 
 };
 

@@ -2,9 +2,21 @@ package DetDesc
 package manager : N.N 
 
 !===========================================================================
+! 20010614 - Sebastien Ponce
+ - New implementation of the whole geometry converters. Several
+ functionnalities had been added by the way : recursivity on boolean solids
+ and parametrised volumes, 2D and 3D parametrised volumes
+ - this new version was tested with the current detector descriptions
+ (mainly Rich1) and had the same result than the old one. However new
+ features have not been tested at this time
+ - Take care that this version uses v3r2 of the xml code, which is released
+ in XmlDDDB v7
+
+!===========================================================================
 ! 20010605 - Sebastien Ponce
  - Implementation of the general trapezoid (tag trap) in the xml converters.
- - The converter was tested but the general trapezoid themselves seems not to be tested since I had to correct a big bug in it.
+ - The converter was tested but the general trapezoid themselves seems not
+ to be tested since I had to correct a big bug in it.
 
 !===========================================================================
 ! 20010518 - Sebastien Ponce

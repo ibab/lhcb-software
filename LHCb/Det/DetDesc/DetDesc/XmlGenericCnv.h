@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/DetDesc/XmlGenericCnv.h,v 1.4 2001-05-14 15:13:37 sponce Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/DetDesc/XmlGenericCnv.h,v 1.5 2001-06-14 13:26:58 sponce Exp $
 
 #ifndef DETDESC_XMLGENERICCNV_H
 #define DETDESC_XMLGENERICCNV_H
@@ -114,17 +114,27 @@ protected:
   ~XmlGenericCnv() { }
   
   /** This creates the transient representation of an object from the
+   *  DOM_Element representing it, then fills it and process it.
+   *  This implementation actually only calls the i_* methods to do the job.
+   *  Most of the converters don't need to override it but only to
+   *  override/implement some of the i_* methods.
+   *  @param element the DOM_Element to be used to builds the object
+   *  @param refpObject the object to be built
+   */
+  virtual StatusCode internalCreateObj (DOM_Element element,
+                                        DataObject*& refpObject);
+  
+
+  /** This creates the transient representation of an object from the
    *  DOM_Element representing it. This actually does the "new" operation
    *  and deals with the attributes of the node. This should not deal with
    *  children of the node.
    *  @param element the DOM_Element to be used to builds the object
    *  @param refpObject the object to be built
-   *  @param SUCCESS or FAILURE depending on the completion of the
-   *  object creation
    *  @return status depending on the completion of the call
    */
   virtual StatusCode i_createObj (DOM_Element element,
-                                  DataObject*& refpObject) = 0;
+                                  DataObject*& refpObject);
 
   /** This fills the current object for its child element childElement.
    *  This will be called for each element child of the current object

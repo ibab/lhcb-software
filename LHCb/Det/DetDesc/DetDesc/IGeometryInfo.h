@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/DetDesc/IGeometryInfo.h,v 1.2 2001-03-15 12:43:38 ibelyaev Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/DetDesc/IGeometryInfo.h,v 1.3 2001-06-14 13:26:58 sponce Exp $
 #ifndef  DETDESC_IGEOMETRYINFO_H
 #define  DETDESC_IGEOMETRYINFO_H 1 
 
@@ -222,7 +222,7 @@ public:
   */
   virtual       const std::string&    lvolumeName() const = 0 ; 
 
-  /// return the C++ pointer to assocoated Logical Volume
+  /// return the C++ pointer to associated Logical Volume
   virtual       ILVolume*             lvolume    () const = 0 ; 
   
   /// return the information about the support 
