@@ -9,7 +9,7 @@
       <base name="KeyedObject&lt;int&gt;"/>
       <import name="stdio.h" std="TRUE"/>
       <import name="CLHEP/Units/SystemOfUnits"/>
-      <import name="CaloKernel/CaloCellID"/>
+      <import name="Kernel/CaloCellID"/>
       <import name="Event/L0Calo"/>
       <constructor argList="int type, CaloCellID ID, int etCode, double et, HepPoint3D cellCenter, double cellSize" desc="special constructor" initList="KeyedObject&lt;int&gt;(type),m_type(type), m_ID(ID), m_etCode(etCode), m_et(et), m_position(cellCenter), m_posTol(cellSize)">
         <code> </code>
@@ -58,7 +58,7 @@ return ms; </code>
     </class>
     <class author="Olivier Callot" desc="Information for L0 Calo Trigger: CellID + 8-bit Et" id="6006" name="L0CaloAdc">
       <base name="KeyedObject&lt;int&gt;"/>
-      <import name="CaloKernel/CaloCellID"/>
+      <import name="Kernel/CaloCellID"/>
       <location name="Ecal" place="/Event/Trig/L0/EcalRaw"/>
       <location name="Hcal" place="/Event/Trig/L0/HcalRaw"/>
       <attribute desc="Cell for which the information is given" name="cellID" setMeth="FALSE" type="CaloCellID"/>
@@ -72,7 +72,7 @@ return ms; </code>
       <location name="Prs" place="/Event/Trig/L0/PrsRaw"/>
       <location name="Spd" place="/Event/Trig/L0/SpdRaw"/>
       <base name="ContainedObject"/>
-      <import name="CaloKernel/CaloCellID"/>
+      <import name="Kernel/CaloCellID"/>
       <attribute desc="Fired cells" name="cellID" setMeth="FALSE" type="CaloCellID"/>
       <constructor argList="CaloCellID ID" desc="Usual constructor, specifies the CellID" initList="m_cellID( ID )">
         <code> </code>

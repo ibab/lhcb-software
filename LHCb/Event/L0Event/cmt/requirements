@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.12 2002-04-04 05:52:33 ocallot Exp $
+# $Id: requirements,v 1.13 2002-04-04 06:22:27 ocallot Exp $
 package L0Event
 version v11r0
 
@@ -17,6 +17,10 @@ use 	MuonKernel 	v1r* 	Muon
 document obj2doth L0EventObj2Doth ../xml/*.xml
 library L0Event ../src/*.cpp
 macro L0Event_shlibflag "$(use_linkopts) $(libraryshr_linkopts)"
+
+apply_pattern package_linkopts
+apply_pattern package_stamps
+apply_pattern linker_path
 
 # produce dictionary  ** Not Yet ***
 
