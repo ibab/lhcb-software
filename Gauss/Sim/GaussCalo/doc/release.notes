@@ -7,11 +7,12 @@
 !                  : G4 actions, etc for LHCb calorimeters
 !-----------------------------------------------------------------------------
 
-!=========================== GaussCalo v4r2 ===============================
+!=========================== GaussCalo v4r3 ==============================
 ! 2003-11-05 - Grigory Rybkine 
  - options/Sps.opts,Prs.opts   - modified IntegrationDelays values, 
                                  added time units to them 
 
+!=========================== GaussCalo v4r2 ===============================
 ! 2003-10-17 - Florence RANJARD
  - src/CaloSensDet.cpp, src/SprPrsSensDet.cpp - fix code for geant4.5.2.ref04
 
