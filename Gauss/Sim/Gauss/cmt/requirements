@@ -7,7 +7,7 @@ version v19r0
 branches src doc options cmt job
 
 #== Set the Gauss version environment variable, read by GaussInit ==
-set APPVERSION <version>
+set APPVERSION $(GAUSSVERS)
 
 #set behaviour of inelastic scattering
 set AlwaysKillLeadingHadron 1
@@ -24,7 +24,7 @@ use ParamFiles          v3r9          -no_auto_imports
 use GeneratorModules    v14r0   Gen
 
 #GiGa staff...
-use GiGaCnv             v15r8   Sim
+use GiGaCnv             v15r9   Sim
 
 use GaussTools          v10r7 	Sim
 use GaussTracker        v3r1    Sim
