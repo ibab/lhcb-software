@@ -1,4 +1,4 @@
-// $Id: RichMarkovRingFinderAlg.h,v 1.2 2004-06-01 12:14:01 jonesc Exp $
+// $Id: RichMarkovRingFinderAlg.h,v 1.3 2004-06-07 17:39:34 jonesc Exp $
 #ifndef RICHMARKOVRINGFINDER_RICHMARKOVRINGFINDERALG_H
 #define RICHMARKOVRINGFINDER_RICHMARKOVRINGFINDERALG_H 1
 
@@ -79,6 +79,11 @@ private: // methods
   /// Add initial circle suggestions to Markov Chain initialisation object
   template <class AnInitialisationObject>
   const StatusCode addCircleSuggestions( AnInitialisationObject & eio ) const;
+
+  /// Fill the ring points in the final reconstructed rings
+  void buildRingPoints( RichRecRing * ring,
+                        const double scale,
+                        const unsigned int nPoints = 100 ) const;
 
 protected:
 

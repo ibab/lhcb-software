@@ -1,4 +1,4 @@
-// $Id: RichMarkovRingFinderAlg.cpp,v 1.2 2004-06-01 12:14:01 jonesc Exp $
+// $Id: RichMarkovRingFinderAlg.cpp,v 1.3 2004-06-07 17:39:33 jonesc Exp $
 // Include files
 
 // local
@@ -235,11 +235,30 @@ const StatusCode RichMarkovRingFinderAlg<MyFinder>::processEvent() {
         newRing->addToRichRecPixels( (*hIt)->richPixel() );
       }
 
+      // build the ring points
+      buildRingPoints ( newRing, scale );
+
     }
 
   };
 
   return StatusCode::SUCCESS;
+}
+
+template <class MyFinder>
+void RichMarkovRingFinderAlg<MyFinder>::buildRingPoints( RichRecRing * ring,
+                                                         const double scale,
+                                                         const unsigned int nPoints ) const
+{
+  // NB : Much of this could be optimised and run in the initialisation
+  const double incr = M_2PI / static_cast<double>(nPoints);
+  double angle = 0;
+  for ( unsigned int iP = 0; iP < nPoints; ++iP, angle += incr ) {
+    const HepPoint3D pLocal ( ring->centrePointLocal().x() + (sin(angle)*ring->radius())/scale,
+                              ring->centrePointLocal().y() + (cos(angle)*ring->radius())/scale,
+                              0 );
+    ring->ringPoints().push_back( m_smartIDTool->globalPosition(pLocal,rich(),panel()) );
+  } 
 }
 
 template <class MyFinder>

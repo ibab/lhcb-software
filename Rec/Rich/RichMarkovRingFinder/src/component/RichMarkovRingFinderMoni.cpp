@@ -1,4 +1,4 @@
-// $Id: RichMarkovRingFinderMoni.cpp,v 1.2 2004-06-01 12:14:01 jonesc Exp $
+// $Id: RichMarkovRingFinderMoni.cpp,v 1.3 2004-06-07 17:39:34 jonesc Exp $
 // Include files
 
 // from Gaudi
@@ -55,8 +55,9 @@ StatusCode RichMarkovRingFinderMoni::initialize() {
   // Sets up various tools and services
   if ( !RichRecAlgBase::initialize() ) return StatusCode::FAILURE;
 
-  acquireTool( "RichRecMCTruthTool", m_richRecMCTruth );
-  acquireTool( "RichMCTrackInfoTool",    m_mcTrackInfo    );
+  acquireTool( "RichRecMCTruthTool",  m_richRecMCTruth );
+  acquireTool( "RichMCTruthTool",     m_richMCTruth    );
+  acquireTool( "RichMCTrackInfoTool", m_mcTrackInfo    );
 
   // Book histograms
   if ( !bookHistograms() ) return StatusCode::FAILURE;
@@ -137,7 +138,7 @@ StatusCode RichMarkovRingFinderMoni::execute()
       // CRJ : Add MC type info
       // Options are Rich::Electron, Rich::Muon, Rich::Pion, Rich::Kaon, Rich::Proton or Rich::Unknown
       // numerically 0               1           2           3           4               -1
-      const Rich::ParticleIDType mcType = m_richRecMCTruth->mcParticleType(mcpart);
+      const Rich::ParticleIDType mcType = m_richMCTruth->mcParticleType(mcpart);
       info() << "MC type: " << mcType << endreq;
 
       // loop over reco segments

@@ -1,4 +1,4 @@
-// $Id: RichMarkovRingFinderMoni.h,v 1.2 2004-06-01 12:14:02 jonesc Exp $
+// $Id: RichMarkovRingFinderMoni.h,v 1.3 2004-06-07 17:39:34 jonesc Exp $
 #ifndef COMPONENT_RICHMARKOVRINGFINDERMONI_H 
 #define COMPONENT_RICHMARKOVRINGFINDERMONI_H 1
 
@@ -16,6 +16,7 @@
 
 #include "RichMCTools/IRichMCTrackInfoTool.h"
 #include "RichRecBase/IRichRecMCTruthTool.h"
+#include "RichMCTools/IRichMCTruthTool.h"
 
 // base class
 #include "RichRecBase/RichRecAlgBase.h"
@@ -72,6 +73,7 @@ private: // methods
 private: // data
 
   IRichRecMCTruthTool* m_richRecMCTruth; ///< Pointer to RichRecMCTruthTool interface
+  IRichMCTruthTool* m_richMCTruth;
   IRichMCTrackInfoTool* m_mcTrackInfo;
 
   // job options
