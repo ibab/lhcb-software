@@ -25,7 +25,7 @@ use RichKernel  	v5r4	Rich
 use VeloKernel  	v1r5p1  Velo
 use L0mConf		v2r2p3	L0
 use L0MuonKernel	v3r0	L0
-use ProcessoKernel	v1r0	L0
+use ProcessorKernel	v1r0	L0
 
 # Detector description
 use DetSys		v6r4	Det
