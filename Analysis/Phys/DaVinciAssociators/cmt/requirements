@@ -1,0 +1,40 @@
+# $Id: requirements,v 1.1.1.1 2002-04-25 15:57:35 phicharp Exp $
+# Created    : 24/04/2002
+# Maintainer : Philippe Charpentier
+#
+# Documentation on the requirement file can be found at
+# http://cern.ch/lhcb-comp/Support/html/new_structure.pdf
+
+package           DaVinciAssociators
+version           v1r0
+
+# This template is an example for a standard Algorithm package
+#
+# Structure, i.e. directories to process. 
+#============================================================================
+branches          cmt doc src DaVinciAssociators
+
+# Exported header files
+#============================================================================
+include_dirs     $(DAVINCIASSOCIATORSROOT)
+
+# Used packages. Specify the version, * at the end specifies 'any revision'
+#    Put as many lines as needed, with all packages, without the '#'
+#============================================================================
+# use  Package      v1*    Hat
+use LHCbKernel     v1r0   Kernel
+use LHCbEvent      v12r3  Event
+use PhysEvent      v3r*   Event
+
+# Component library building rule
+#============================================================================
+library          DaVinciAssociators    ../src/*.cpp
+
+# define component library link options
+#============================================================================
+apply_pattern    package_Clinkopts
+apply_pattern    packageShr
+
+#============================================================================
+private
+apply_pattern    package_Cshlibflags

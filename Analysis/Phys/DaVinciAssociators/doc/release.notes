@@ -1,0 +1,10 @@
+! $Id: release.notes,v 1.1.1.1 2002-04-25 15:57:35 phicharp Exp $
+! Package     : DaVinciAssociators
+! Responsible : Philippe Charpentier
+
+! 25042002 - DaVinciAssociators v1r0 (Ph.Charpentier)
+
+  - Example on how to set up an associator from AxPartCandidate to MCParticle
+    (Part2MCPartAsct.h)
+	- Example of an algorithm to instantiate the above associator
+    An example on how to retrieve information can be found in Phys/DavinciTest
