@@ -86,14 +86,14 @@ RichSensDet::~RichSensDet(){};
 // ============================================================================
 
 bool RichSensDet::ProcessHits( G4Step* aStep , 
-                               G4TouchableHistory* /* history */ ) 
+                               G4TouchableHistory* ) 
 {
   if( 0 == aStep ) { return false ; } 
   
   double     CurEdep = aStep->GetTotalEnergyDeposit();
 
   // Create a hit only when there is
-  //non-zero energy deposit.  SE June 2003.
+  // non-zero energy deposit.  SE June 2003.
   
   // cout<<"Rich SensDet CurEdep "<< CurEdep<<endl;
   
@@ -113,6 +113,7 @@ bool RichSensDet::ProcessHits( G4Step* aStep ,
   /// 
   G4TouchableHistory* CurTT =  
     (G4TouchableHistory*)(prePosPoint->GetTouchable());
+
   G4VPhysicalVolume*  CurPV =   CurTT->GetVolume();
   G4LogicalVolume*    CurLV =   CurPV->GetLogicalVolume();
   // Now get the charged track (ie. photoelectron )  which created the 
@@ -143,8 +144,8 @@ bool RichSensDet::ProcessHits( G4Step* aStep ,
   log << MSG::DEBUG << " PE Origin X Y Z "<<CurPEOrigin.x()
       <<"   "<<CurPEOrigin.y()<<"   "<<CurPEOrigin.z()<<endreq;
 
-  G4double CurGlobalX=CurGlobalPos.x();
-  G4double CurGlobalY=CurGlobalPos.y();
+  //  G4double CurGlobalX=CurGlobalPos.x();
+  //  G4double CurGlobalY=CurGlobalPos.y();
   G4double CurGlobalZ=CurGlobalPos.z();
 
   int CurrentRichDetNumber =-1;
@@ -159,9 +160,13 @@ bool RichSensDet::ProcessHits( G4Step* aStep ,
     // hit coordinate in Rich2
     CurrentRichDetNumber= 1; 
   }
-  G4int CurrentHpdNumber= CurPV -> GetMother() -> GetMother() ->GetCopyNo() ;
-  G4int CurrentRichDetSector = CurPV -> GetMother() -> 
-    GetMother() ->GetMother()->GetCopyNo();
+
+  CurTT -> MoveUpHistory(2);
+  G4int CurrentHpdNumber= CurTT -> GetVolume() -> GetCopyNo() ;
+
+  CurTT -> MoveUpHistory(1);
+  G4int CurrentRichDetSector = CurTT -> GetVolume() -> GetCopyNo();
+
   if(CurrentRichDetSector < 0 || CurrentRichDetSector > 1 ) {
     log << MSG::ERROR <<"Inadmisible Rich Det Sector=  "<<CurrentRichDetSector
         <<"  Current RichDetNum =   "<<CurrentRichDetNumber<<endreq;
@@ -310,7 +315,7 @@ bool RichSensDet::ProcessHits( G4Step* aStep ,
 void RichSensDet::clear() {  };
 void RichSensDet::DrawAll() {  };
 void RichSensDet::PrintAll() {  };
-void RichSensDet::Initialize(G4HCofThisEvent* HCE ) { 
+void RichSensDet::Initialize(G4HCofThisEvent* ) { 
 
   MsgStream log( msgSvc() , name() );
 

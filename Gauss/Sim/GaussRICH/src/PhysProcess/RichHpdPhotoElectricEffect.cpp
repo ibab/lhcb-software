@@ -107,8 +107,12 @@ RichHpdPhotoElectricEffect::PostStepDoIt(const G4Track& aTrack,
   //Now use the QE for the current HPD to determine if a
   // photoelectron should be produced or not.
 
-  G4int currentHpdNumber= pPreStepPoint->GetPhysicalVolume() 
-    -> GetMother() -> GetMother() -> GetCopyNo();
+  G4TouchableHistory* CurTT =  
+    (G4TouchableHistory*)(pPreStepPoint->GetTouchable());
+
+  CurTT -> MoveUpHistory(2);
+  
+  G4int currentHpdNumber= CurTT -> GetVolume() -> GetCopyNo();
   G4int currentRichDetNumber=0;
   
   //Current Rich Det is found by checking the global Z coordinate
@@ -137,9 +141,9 @@ RichHpdPhotoElectricEffect::PostStepDoIt(const G4Track& aTrack,
   G4String currentRichDetPhysName;
   if( currentRichDetNumber == 0 ) {
     // for rich1
-    currentRichDetPhysName = pPreStepPoint->GetPhysicalVolume()
-      -> GetMother() -> GetMother() -> GetMother() -> GetMother() -> GetMother()
-      -> GetMother() -> GetName();
+    
+    CurTT -> MoveUpHistory(4);
+    currentRichDetPhysName = CurTT -> GetVolume() -> GetName();
     
     if(currentRichDetPhysName != m_Rich1PhysVolNameA &&
        currentRichDetPhysName != m_Rich1PhysVolNameB ){
@@ -150,8 +154,8 @@ RichHpdPhotoElectricEffect::PostStepDoIt(const G4Track& aTrack,
   }
   else if (currentRichDetNumber==1 ) 
     {
-      currentRichDetPhysName = pPreStepPoint->GetPhysicalVolume()
-        -> GetMother() -> GetMother() ->GetMother() ->GetMother() ->GetName();
+      CurTT -> MoveUpHistory(2);
+      currentRichDetPhysName = CurTT -> GetVolume() -> GetName();
       if(currentRichDetPhysName !=  m_Rich2PhysVolNameA &&
          currentRichDetPhysName != m_Rich2PhysVolNameB ){
         
