@@ -19,5 +19,5 @@ use PhysEvent	v8r0	Event
 use HltEvent	v5r0	Event
 use DAQEvent	v4r0	Event
 use GenEvent	v3r0	Event
-
+use EventAssoc	v1r0	Event
 
