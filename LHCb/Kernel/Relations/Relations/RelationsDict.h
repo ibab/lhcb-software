@@ -1,4 +1,4 @@
-// $Id: RelationsDict.h,v 1.1.1.1 2004-07-21 07:57:27 cattanem Exp $
+// $Id: RelationsDict.h,v 1.2 2004-11-22 09:05:00 cattanem Exp $
 //====================================================================
 //	RelationsDict.h
 //--------------------------------------------------------------------
@@ -568,7 +568,7 @@ void* GaudiDict::Relation2DDict<FROM,TO>::ctor( void* mem) {
 
 namespace GaudiDict {
 
-  /** @class RelationWeightedDict
+  /** @class Relation2WeightedDict
     *
     *   @author   M.Frank
     *   @version  1.0

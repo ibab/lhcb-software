@@ -1,8 +1,11 @@
-// $Id: IRelation.h,v 1.1.1.1 2004-07-21 07:57:25 cattanem Exp $
+// $Id: IRelation.h,v 1.2 2004-11-22 09:05:00 cattanem Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.1.1.1  2004/07/21 07:57:25  cattanem
+// first import of Kernel/Relations
+//
 // Revision 1.6  2004/01/14 15:13:02  ibelyaev
 //  few tricks to make POOL/ROOT happy
 //
@@ -107,7 +110,6 @@ public:
    *     // const unsigned nRel = r.second - r.first   ; // the same!
    *  @endcode 
    *
-   *  @param  object  the object
    *  @return pair of iterators for output relations
    */
   virtual Range      relations () const = 0 ;
