@@ -4,6 +4,8 @@
     <package name="RichRecBase">
         <import name="Kernel/CLHEPStreams"/>
         <import name="Kernel/SerializeStl"/>
+
+
         <class author="Chris Jones   (Christopher.Rob.Jones@cern.ch)" desc="Rich reconstruction working track object." id="12421" keyedContTypeDef="TRUE" location="Rec/Rich/RecoEvent/Tracks" name="RichRecTrack" stdVectorTypeDef="TRUE">
             <base name="KeyedObject&lt;int&gt;"/>
             &KeyedObject;
@@ -113,6 +115,8 @@
             </method>
             <attribute desc="Flag to say if all possible photon candidates have been mad for this segment" init="false" name="allPhotonsDone" type="bool"/>
         </class>
+
+
         <class author="Chris Jones   (Christopher.Rob.Jones@cern.ch)" desc="Rich reconstruction working pixel object" id="12422" keyedContTypeDef="TRUE" location="Rec/Rich/RecoEvent/Pixels" name="RichRecPixel" stdVectorTypeDef="TRUE">
             <base name="KeyedObject&lt;int&gt;"/>
             &KeyedObject;
@@ -159,6 +163,8 @@
                 <code>m_richRecPhotons.push_back(photon);</code>
             </method>
         </class>
+
+
         <class author="Chris Jones   (Christopher.Rob.Jones@cern.ch)" desc="Rich reconstruction object describing a continuous track segment in a single radiator" id="12423" keyedContTypeDef="TRUE" location="Rec/Rich/RecoEvent/Segments" name="RichRecSegment" stdVectorTypeDef="TRUE">
             <base name="KeyedObject&lt;int&gt;"/>
             &KeyedObject;
@@ -170,7 +176,7 @@
             <import name="Kernel/RichSmartID"/>
             <typedef access="PUBLIC" def="PDGeomEffs" desc="Data containers for each hypothesis" type="RichMap&lt;RichSmartID::KeyType,double&gt;"/>
             <typedef access="PUBLIC" def="PDGeomEffsVector" desc="Data containers for each hypothesis" type="std::vector&lt; PDGeomEffs &gt;"/>
-            <constructor desc="Constructor from a RichTrackSegment" initList="m_emittedPhotonSpectra(enBins,minEn,maxEn), m_detectablePhotonSpectra(enBins,minEn,maxEn), m_signalPhotonSpectra(enBins,minEn,maxEn), m_geomEfficiencyPerPD(Rich::NParticleTypes, PDGeomEffs() ), m_trackSegment(segment), m_hitDetectorRegions(0), m_richRecTrack(pTrk), m_allPhotonsDone(false)">
+            <constructor desc="Constructor from a RichTrackSegment" initList="m_emittedPhotonSpectra(enBins,minEn,maxEn), m_detectablePhotonSpectra(enBins,minEn,maxEn), m_signalPhotonSpectra(enBins,minEn,maxEn), m_geomEfficiencyPerPD(Rich::NParticleTypes, PDGeomEffs() ), m_trackSegment(segment), m_hitDetectorRegions(0), m_hypothesisRings(0), m_richRecTrack(pTrk), m_allPhotonsDone(false)">
                 <arg const="TRUE" name="segment" type="RichTrackSegment"/>
                 <arg const="FALSE" inout="BYVALUE" name="pTrk" type="RichRecTrack*"/>
                 <arg const="TRUE" inout="BYVALUE" name="enBins" type="unsigned int"/>
@@ -276,6 +282,7 @@
                 <bitfield desc="Photons observable in y&gt;0 region of detector" length="1" name="photonsInYPlus"/>
                 <bitfield desc="Photons observable in y&lt;0 region of detector" length="1" name="photonsInYMinus"/>
             </attribute>
+            <attribute array="FALSE" compression="TRUE" desc="Expected Rings for each mass hypothesis" init="NULL" name="hypothesisRings" type="RichHypoData&lt;RichRecRing*&gt;"/>
             <relation desc="Smart Reference to associated RichRecTrack" name="richRecTrackSmartRef" type="RichRecTrack"/>
             <relation desc="SmartRefVector of RichRecPixels for which this track has valid photon associations" multiplicity="N" name="richRecPixelsSmartRefs" type="RichRecPixel"/>
             <relation desc="SmartRef to associated RichRecPhotons" multiplicity="N" name="richRecPhotonsSmartRefs" type="RichRecPhoton"/>
@@ -294,6 +301,8 @@
             </method>
             <attribute desc="Flag to say if all possible photon candidates have been mad for this segment" init="false" name="allPhotonsDone" type="bool"/>
         </class>
+
+
         <class author="Chris Jones   (Christopher.Rob.Jones@cern.ch)" desc="Rich reconstruction photon candidate. The result of an association between a RichRecTrack and a RichRecPixel." id="12424" keyedContTypeDef="TRUE" location="Rec/Rich/RecoEvent/Photons" name="RichRecPhoton" stdVectorTypeDef="TRUE">
             <base name="KeyedObject&lt;RichRecPhotonKey&gt;"/>
             <import name="RichRecBase/RichRecPhotonKey"/>
@@ -337,6 +346,8 @@
             <attribute compression="FALSE" desc="Associated RichRecTrack" init="0" name="richRecTrack" serialize="FALSE" type="RichRecTrack*"/>
             <attribute compression="FALSE" desc="Associated RichRecPixel" init="0" name="richRecPixel" serialize="FALSE" type="RichRecPixel*"/>
         </class>
+
+
         <class author="Chris Jones   (Christopher.Rob.Jones@cern.ch)" desc="Status object for Rich Reconstruction" id="12425" location="Rec/Rich/RecoEvent/Status" name="RichRecStatus" templateList="FALSE" templateVector="FALSE">
             <base name="DataObject"/>
             &DataObject;
@@ -354,15 +365,21 @@
             <attribute desc="Boolean to indicate if the event was successfully processed" init="true" name="eventOK" type="bool"/>
             <attribute desc="Overall background estimates for each RICH" init="Rich::NRiches" name="detOverallBkg" type="std::vector&lt;double&gt;"/>
         </class>
+
+
         <class author="Chris Jones    Christopher.Rob.Jones@cern.ch" desc="A ring candidate. A collection of RichRecPixels associated to a single Cherenkov ring" id="12426" location="Rec/Rich/RecoEvent/Rings" name="RichRecRing">
             <base name="KeyedObject&lt;long&gt;"/>
             &KeyedObject;
             <import name="Kernel/RichDetectorType"/>
+            <import name="RichKernel/RichParticleIDType"/>
             <import name="Kernel/RichSide"/>
             <import ignore="TRUE" name="Rich"/>
             <import ignore="TRUE" name="DetectorType"/>
             <import ignore="TRUE" name="Side"/>
+            <import ignore="TRUE" name="ParticleIDType"/>
+            <location name="SegmentHypoRings" place="Rec/Rich/RecoEvent/HypoRings"/>
             <location name="Markov" place="Rec/Rich/Markov/Rings"/>
+
             <method const="FALSE" desc="Set the RICH detector identifier. NB: Using custom method until G.O.D. supports specific automatically generated return values." name="setRich" type="void">
                 <code>m_historyCode &amp;= ~richMask;
 m_historyCode |= (( static_cast&lt;unsigned&gt;(rich) &lt;&lt; richBits ) &amp; richMask );</code>
@@ -379,6 +396,7 @@ m_historyCode |= (( static_cast&lt;unsigned&gt;(panel) &lt;&lt; panelBits ) &amp
             <method const="TRUE" desc="Get the RICH detector identifier. NB: Using custom method until G.O.D. supports specific automatically generated return values." name="panel" type="Rich::Side">
                 <code>return static_cast&lt;Rich::Side&gt;((m_historyCode &amp; panelMask) &gt;&gt; panelBits);</code>
             </method>
+            <enum name='RingType' value='RayTracedPhotons,ReconstructedFromPixels' access='PUBLIC' desc='Describes how this ring was constructed'/>
             <attribute desc="Bit packed field containing RICH specific information" name="historyCode" type="bitfield">
                 <bitfield desc="The Rich detector. Either Rich::Rich1 or Rich::Rich2" getMeth="FALSE" length="1" name="rich" setMeth="FALSE"/>
                 <bitfield desc="The Rich panel. For Rich1(Rich2) either Rich::up(Rich::left) or Rich::down(Rich::right)" getMeth="FALSE" length="1" name="panel" setMeth="FALSE"/>
@@ -386,8 +404,12 @@ m_historyCode |= (( static_cast&lt;unsigned&gt;(panel) &lt;&lt; panelBits ) &amp
             <attribute desc="Reconstructed centre point in global coordinates on HPD panel" name="centrePointGlobal" type="HepPoint3D"/>
             <attribute desc="Reconstructed centre point in local coordinates on HPD panel" name="centrePointLocal" type="HepPoint3D"/>
             <attribute desc="The radius of the reconstructed ring, in radians" init="0" name="radius" type="double"/>
-            <relation desc="The RichRecPixels associated to this single ring" multiplicity="N" name="richRecPixels" type="RichRecPixel"/>
+            <relation desc="The RichRecPixels associated to this single ring (if available)" multiplicity="N" name="richRecPixels" type="RichRecPixel"/>
             <relation desc="Associated RichRecSegment (if available)" name="richRecSegment" type="RichRecSegment"/>
+            <attribute desc="Global coordinates asscoiated to this ring" name="ringPoints" type="std::vector&lt;HepPoint3D&gt;"/>
+            <attribute desc="Assumed mass hypothsis for this ring" init="Rich::Unknown" name="massHypo" type="Rich::ParticleIDType"/>
         </class>
+
+
     </package>
 </gdd>

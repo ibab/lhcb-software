@@ -1,4 +1,4 @@
-// $Id: IRichPixelCreator.h,v 1.3 2004-02-02 14:23:02 jonesc Exp $
+// $Id: IRichPixelCreator.h,v 1.4 2004-05-30 16:50:32 jonrob Exp $
 #ifndef RICHRECTOOLS_IRICHPIXELCREATOR_H
 #define RICHRECTOOLS_IRICHPIXELCREATOR_H 1
 
@@ -24,7 +24,7 @@ public:
   static const InterfaceID& interfaceID() {return IID_IRichPixelCreator;}
 
   /// Returns a RichRecPixel object pointer for given ContainedObject.
-  /// If if it not possible NULL is return.
+  /// If it not possible NULL is return.
   virtual RichRecPixel * newPixel( const ContainedObject * obj ) const = 0;
 
   /// Form all possible RichRecPixels from input Objects.
