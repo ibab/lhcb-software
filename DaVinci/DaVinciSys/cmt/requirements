@@ -1,5 +1,5 @@
 package DaVinciSys
-version v6r1
+version v6r0
 
 branches doc cmt
 
@@ -7,12 +7,15 @@ branches doc cmt
 # packages included in the DAVINCI tree
 #=======================================================
 
+# DaVinci application
+use DaVinci              v6r0	Phys
+
 #--- DaVinci packages
-use DaVinciTools         v6r0   Phys
-use DaVinciAssociators   v3r0   Phys
+use DaVinciTools         v6r0p1 Phys
+use DaVinciAssociators   v3r0p1 Phys
 use DaVinciMCTools       v3r0   Phys
 use DaVinciTest          v3r0   Phys
-use PhysSelections       v3r0   Phys
+use PhysSelections       v3r0p1 Phys
 use FlavourTagging       v3r0   Phys
 use DaVinciEff           v1r0   Phys
 use DaVinciUser          v3r0   Phys
