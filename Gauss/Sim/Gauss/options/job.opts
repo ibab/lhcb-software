@@ -44,7 +44,7 @@ EventDataSvc.ForceLeaves = 1;
 //--------------------------------------------------------------
 // Algorithms Private Options
 //--------------------------------------------------------------
-PythiaModule.PythiaCommand = {"pysubs msel 5","pysubs ckin 3 18.","pypars mstp 43 2", "pyinit pylistf 5" };
+PythiaModule.PythiaCommand = {"pysubs msel 5","pyinit pylistf 5" };
 
 
 //==============================================================
