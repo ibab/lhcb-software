@@ -1,18 +1,12 @@
-// $Id: CaloTools.opts,v 1.4 2002-06-18 18:06:27 ibelyaev Exp $ 
+// $Id: CaloTools.opts,v 1.5 2002-06-21 11:02:41 ibelyaev Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
-// Revision 1.3  2002/06/14 11:38:08  ibelyaev
-//  update and version change
-//
-// Revision 1.2  2002/06/13 12:32:38  ibelyaev
-//  version update
-//
 // ============================================================================
 
 /** @file 
- *  job-options file to run "public" calorimmeter tools 
+ *  job-options file to run "public" calorimeter tools 
  *  
  *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
  *  @date 2002-05-23 
@@ -21,29 +15,24 @@
 // load own DLL 
 ApplicationMgr.DLLs += { "CaloTools" };
 
-/// "extra" Spd digits for Gammas
-ToolSvc.SpdExtraG.Input         = "Raw/Spd/Digits"         ;
-ToolSvc.SpdExtraG.Detector      = "/dd/Structure/LHCb/Spd" ;
-ToolSvc.SpdExtraG.xTol          =  5. ;
-ToolSvc.SpdExtraG.yTol          =  5. ;
 
-/// "extra" Prs digits for Gammas
-ToolSvc.PrsExtraG.Input         = "Raw/Prs/Digits"         ;
-ToolSvc.PrsExtraG.Detector      = "/dd/Structure/LHCb/Prs" ;
-ToolSvc.PrsExtraG.xTol          =  5. ;
-ToolSvc.PrsExtraG.yTol          =  5. ;
+/// extra digits for Photon/Gamma
+#include "$CALOTOOLSOPTS/SpdExtraG.opts"
+#include "$CALOTOOLSOPTS/PrsExtraG.opts"
 
-/// "extra" Spd digits for Electrons
-ToolSvc.SpdExtraE.Input         = "Raw/Spd/Digits"         ;
-ToolSvc.SpdExtraE.Detector      = "/dd/Structure/LHCb/Spd" ;
-ToolSvc.SpdExtraE.xTol          = 10. ;
-ToolSvc.SpdExtraE.yTol          =  5. ;
-
-/// "extra" Prs digits for Electrons
-ToolSvc.PrsExtraE.Input         = "Raw/Prs/Digits"         ;
-ToolSvc.PrsExtraE.Detector      = "/dd/Structure/LHCb/Prs" ;
-ToolSvc.PrsExtraE.xTol          = 10. ;
-ToolSvc.PrsExtraE.yTol          =  5. ;
+/// "extra" digits for Electrons
+#include "$CALOTOOLSOPTS/SpdExtraE.opts"
+#include "$CALOTOOLSOPTS/PrsExtraE.opts"
 
 /// Second Order Moments Selector for Photon 
 #include "$CALOTOOLSOPTS/SOMPhoton.opts"
+
+/// Energy correction for Photons 
+#include "$CALOTOOLSOPTS/ECorrection.opts"
+
+/// S-shape correction 'Holleebeek' 
+#include "$CALOTOOLSOPTS/SShapeAsinh.opts"
+
+/// S-shape correction 'DoubleTanh'
+#include "$CALOTOOLSOPTS/SShape2Tanh.opts"
+

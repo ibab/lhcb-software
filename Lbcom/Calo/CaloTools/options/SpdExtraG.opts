@@ -1,0 +1,17 @@
+// $Id: SpdExtraG.opts,v 1.1 2002-06-21 11:02:45 ibelyaev Exp $ 
+// ============================================================================
+// CVS tag $name:$
+// ============================================================================
+// $Log: not supported by cvs2svn $
+// ============================================================================
+
+/** @file 
+ *  Configuration options for "Extra Spd Digits" tool for Photons 
+ *  @see CaloExtraDigits.opts 
+ *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
+ */ 
+
+ToolSvc.SpdExtraG.Input    = "Raw/Spd/Digits"         ;
+ToolSvc.SpdExtraG.Detector = "/dd/Structure/LHCb/Spd" ;
+ToolSvc.SpdExtraG.xTol     =  5. ;
+ToolSvc.SpdExtraG.yTol     =  5. ;

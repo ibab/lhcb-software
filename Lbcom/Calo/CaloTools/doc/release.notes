@@ -1,10 +1,16 @@
-! $Id: release.notes,v 1.19 2002-06-19 17:09:45 ibelyaev Exp $
+! $Id: release.notes,v 1.20 2002-06-21 11:02:40 ibelyaev Exp $
 ! =============================================================================
 ! CVS tag $Name: not supported by cvs2svn $ 
 ! =============================================================================
 ! Package     : CaloTools
 ! Responsible : Vanya Belyaev Ivan.Belyaev@itep.ru
 ! =============================================================================
+
+! 2002-06-21 - Ivan Belyaev
+ - src/CaloCorrection2TANH.cpp   The parametrization of the 
+                                 function is modified according 
+                                 to K.Beloous's study 
+ - oiptions/                     change in the option files 
 
 ! 2002-06-19 - Ivan Belyaev
  - src/CaloLCorrection.h,.cpp   rewrite a little bit to make it identical to 

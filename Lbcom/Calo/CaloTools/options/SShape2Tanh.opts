@@ -1,0 +1,65 @@
+// $Id:
+// ============================================================================
+// CVS tag $Name: not supported by cvs2svn $ 
+// ============================================================================
+// $Log: not supported by cvs2svn $
+// ============================================================================
+
+// ============================================================================
+/** @file 
+ *  Configuration of S-correction using 2TANH parametrisation
+ *
+ *  For ECAL
+ *  Area0 means outer part
+ *  Area1 --    middle part
+ *  Area2 --    inner part
+ *
+ *  Parameters for that correction was obtained for photons going from
+ *  interaction point.
+ *
+ *  That correction gives new coordinates at the reference plane
+ *  with Z = 12300.0 mm rather than at shower maximum. For that it is
+ *  assumed that the particle is neutral (photon) and it goes from interaction
+ *  point. So using that parameters would give some displasement for electrons
+ *  depending of it's charge and momentum.
+ *  
+ *  @see CaloCorr2TANH
+ *  @author Konstantin Beloous Konstantin.Beloous@cern.ch
+ *  @date   14 Jun 2002
+ */
+// ============================================================================
+
+ToolSvc.SShape2Tanh.AreaCorrections = 
+{ 
+  "CaloCorr2TANH/Calo2TANH0" ,
+  "CaloCorr2TANH/Calo2TANH1" ,
+  "CaloCorr2TANH/Calo2TANH2"
+};
+
+
+ToolSvc.SShape2Tanh.Detector = "/dd/Structure/LHCb/Ecal" ;
+
+ToolSvc.Calo2TANH0.XParameters =
+{ 0.67123, 19.04999, 43.125, 0.017255, 0.9715,  0.040037 };
+ToolSvc.Calo2TANH0.YParameters =
+{ 0.70742, 17.11327,  2.884, 0.231117, 0.9712, -0.020633 };
+ToolSvc.Calo2TANH0.CellSize    =   121.5;
+ToolSvc.Calo2TANH0.NewZ        = 12300.0;
+ToolSvc.Calo2TANH0.UpdateZ     =   true;
+
+ToolSvc.Calo2TANH1.XParameters =
+{ 0.69120,  8.71398,  3.606, 0.185628, 0.9706,  0.003734 };
+ToolSvc.Calo2TANH1.YParameters =
+{ 0.69120,  8.71398,  3.606, 0.185628, 0.9706,  0.003734 };
+ToolSvc.Calo2TANH1.CellSize    =    60.75;
+ToolSvc.Calo2TANH1.NewZ        = 12300.0;
+ToolSvc.Calo2TANH1.UpdateZ     =   true;
+
+ToolSvc.Calo2TANH2.XParameters =
+{ 0.69585, 6.20825, 12.986, 0.049985, 0.97070, 0.014918 };
+ToolSvc.Calo2TANH2.YParameters =
+{ 0.73606,  6.08350, 13.592, 0.040978, 0.9707, -0.001760 };
+ToolSvc.Calo2TANH2.CellSize    =    40.5;
+ToolSvc.Calo2TANH2.NewZ        = 12300.0;
+ToolSvc.Calo2TANH2.UpdateZ     =   true;
+

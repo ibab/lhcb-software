@@ -1,17 +1,11 @@
-// $Id: CaloLCorrection.h,v 1.3 2002-06-21 11:02:47 ibelyaev Exp $
+// $Id: CaloECorrection.h,v 1.1 2002-06-21 11:02:47 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
-// Revision 1.2  2002/06/19 17:09:46  ibelyaev
-//  small update in L-correction
-//
-// Revision 1.1  2002/06/14 17:46:05  ibelyaev
-//  new L-correction
-// 
 // ============================================================================
-#ifndef CALOEX_CALOLCorrection_H 
-#define CALOEX_CALOLCorrection_H 1
+#ifndef CALOEX_CALOECorrection_H 
+#define CALOEX_CALOECorrection_H 1
 // Include files
 // from STL
 #include <string>
@@ -19,8 +13,10 @@
 #include "CaloKernel/CaloTool.h"
 // from CaloInterfaces 
 #include "CaloInterfaces/ICaloHypoTool.h"
+// from CaloUtils 
+#include "CaloUtils/ClusterFunctors.h"
 
-/** @class CaloLCorrection CaloLCorrection.h
+/** @class CaloECorrection CaloECorrection.h
  *
  *  Logitudinal correction.
  *  The actual "code" is imported from Olivier Deschamps code 
@@ -29,12 +25,12 @@
  *  @date   02/05/2002
  */
 
-class CaloLCorrection: 
+class CaloECorrection: 
   public virtual ICaloHypoTool , 
   public              CaloTool  
 {
   /// friend factory for instantiation
-  friend class ToolFactory<CaloLCorrection>;
+  friend class ToolFactory<CaloECorrection>;
   
 public:
   
@@ -77,36 +73,33 @@ protected:
    *  @param name    name of the concrete instance 
    *  @param parent  pointer to parent object (algorithm, service or tool)
    */
-  CaloLCorrection
+  CaloECorrection
   ( const std::string& type   , 
     const std::string& name   ,
     const IInterface*  parent );
   
   /// destructor (virtual and protected)
-  virtual ~CaloLCorrection() ;
+  virtual ~CaloECorrection() ;
   
 private:
 
   ///  default  constructor   is   private
-  CaloLCorrection();
+  CaloECorrection();
   ///  copy     constructor   is   private
-  CaloLCorrection( const CaloLCorrection& );
+  CaloECorrection( const CaloECorrection& );
   ///  assignement operator   is   private
-  CaloLCorrection& operator=( const CaloLCorrection& );
+  CaloECorrection& operator=( const CaloECorrection& );
   
 private:
-  
-  // critical energy 
-  double  m_ec                                ;
-  // radiation length (mm/X0)
-  double  m_x0                                ;
-  // preshower depth in X0 
-  double  m_tprs                              ;
-  // shower barycenter wrt maximum 
-  double  m_tbar                              ;
+
+  // correction coefficients per area
+  std::vector<double>          m_const           ;
   // allowed hypos
-  typedef std::vector<int> Hypotheses         ;
-  Hypotheses               m_hypos            ;
+  typedef std::vector<int>     Hypotheses        ;
+  Hypotheses                   m_hypos           ;
+  
+  // evaluator fo "cluster area"
+  ClusterFunctors::ClusterArea m_area            ;
   
 };
 // ============================================================================
@@ -114,5 +107,5 @@ private:
 // ============================================================================
 // The END 
 // ============================================================================
-#endif // CALOLCorrection_H
+#endif // CALOECorrection_H
 // ============================================================================

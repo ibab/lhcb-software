@@ -1,8 +1,11 @@
-// $Id: CaloCorr2TANH.cpp,v 1.2 2002-04-30 20:37:56 ibelyaev Exp $
+// $Id: CaloCorr2TANH.cpp,v 1.3 2002-06-21 11:02:46 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2002/04/30 20:37:56  ibelyaev
+//  new option files and bettwer doxygen documentation
+//
 // Revision 1.1  2002/04/07 18:15:00  ibelyaev
 //  preliminary version ('omega'-release)
 //
@@ -36,9 +39,7 @@ const        IToolFactory&CaloCorr2TANHFactory = s_factory ;
 namespace DoubleTanh
 {
   
-  /** @fn doubleTanh 
-   *  s-correction function
-   *
+  /** S-correction function
    *
    *  @see CaloCorrection
    *  @see CaloCorrection::Function
@@ -65,11 +66,10 @@ namespace DoubleTanh
       ( parameters[0] * tanh ( parameters[1] * dx0 ) +
         parameters[2] * tanh ( parameters[3] * dx0 ) ) ;
     
-    return xc + seed * parameters[4] + parameters[5] ;
+    return ( xc + seed ) * parameters[4] + parameters[5] ;
   };
   
-  /** @fn doubleTanhPrime 
-   *  brief derivative of s-correction function
+  /** derivative of s-correction function
    *  
    *  @see CaloCorrection
    *  @see hollebeck
@@ -103,7 +103,7 @@ namespace DoubleTanh
       (  parameters[0] * parameters[1] / size * ch1 * ch1 +
          parameters[2] * parameters[3] / size * ch2 * ch2 ) ;
     //
-    return prime ;
+    return prime * parameters[4] ;
   };  
 };
 
