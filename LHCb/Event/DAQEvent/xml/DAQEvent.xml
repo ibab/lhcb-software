@@ -17,11 +17,9 @@
     <!-- next line needed until GOD knows not to look in LHCbEvent /-->
     <import name="Kernel/CLHEPStreams"/>
 
-    <!-- Event Header class -->
     &L1Buffer.xml;
     &HLTBuffer.xml;
 
-    <!-- DAQ Event class -->
     &L1Bank.xml;
     &HLTBank.xml;
 

@@ -3,6 +3,9 @@ Author: Jose' Helder Lopes
 Purpose: Define the L1Buffer,  L1Event, L1Bank, HLTBuffer, HLTEvent and 
          HLTBank classes.
 
+!=============== DAQEvent v1r1 2003-10-03 =============================
+! 2003-10-03 - Marco Cattaneo
+ - Add constructors HLTEvent( HLTBuffer& ) and L1Event( L1Buffer& )
 
 !=============== DAQEvent v1r0 22-09-2003 =============================
   - DAQTypes.h: Header file with typedef's for hlt_int (32 bits) and l1_int 

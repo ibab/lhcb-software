@@ -1,6 +1,7 @@
 <!-- ****************************************************************
      * HLTEvent                                                    *
      ****************************************************************-->
+     <import name="Event/HLTBuffer"/>
      <class 
       author="Helder Lopes"
       desc="HLT event"
@@ -23,6 +24,10 @@
          <arg name="eventMap" type="std::map &lt;int, std::vector&lt;HLTBank&gt; &gt;"/>
          <code>m_eventMap=eventMap ; </code>
        </constructor>
+       <constructor desc="Constructor from HLTBuffer">
+         <arg name="hltBuffer" type="HLTBuffer"/>
+       </constructor>
+
        <method
         desc="accessor method to the vector of HLT banks for a given class ID"
         name="banks"
