@@ -17,6 +17,8 @@
 #include "GaudiKernel/IDataDirectory.h"
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/RegistryEntry.h"
+#include "GaudiKernel/DataObject.h"
+#include "GaudiKernel/SmartDataPtr.h"
 
 #include "DetDesc/XmlCnvAttrList.h"
 #include "DetDesc/XmlAddress.h"
@@ -24,6 +26,7 @@
 #include "DetDesc/Isotope.h"
 #include "DetDesc/Element.h"
 #include "DetDesc/Mixture.h"
+#include "DetDesc/TabulatedProperty.h"
 #include "DetDesc/XmlCnvException.h"
 
 
@@ -145,15 +148,15 @@ void XmlIsotopeCnv::startElement( const char* const name,
   
   std::string tagName( name );
 
-  log << MSG::DEBUG << "<" << tagName << " ";
+  log << MSG::VERBOSE << "<" << tagName << " ";
   
   for( unsigned int i = 0; i < attributes.getLength(); i++ ) {
-    log << MSG::DEBUG << attributes.getName(i)  << "=" 
+    log << MSG::VERBOSE << attributes.getName(i)  << "=" 
       << attributes.getValue(i) << " "
       << attributes.getType(i) << " ";
   }
 
-  log << MSG::DEBUG << ">" << endreq;
+  log << MSG::VERBOSE << ">" << endreq;
   
   if( "isotope" == tagName ) {
     
@@ -166,8 +169,9 @@ void XmlIsotopeCnv::startElement( const char* const name,
       // We're converter for this concrete XML tag
       // We need to create our transient representation
       // according the required class ID
-      
+            
       m_dataObj = new Isotope( baseName );
+
 
       // Now we have to process more material attributes if any
 
@@ -208,15 +212,26 @@ void XmlIsotopeCnv::startElement( const char* const name,
       if( !tAtt.empty() ) {
         ((Material *)m_dataObj)->setAbsorptionLength( xmlSvc()->eval(tAtt) );
       }      
-    } else {
-      // This should never happen!
-      log << MSG::WARNING << "Got unexpected material tag: "
-          << attributes.getValue( "name" ) << endreq;
+    } 
+    else 
+      {
+	// This should never happen!
+	log << MSG::WARNING << "Got unexpected material tag: "
+	    << attributes.getValue( "name" ) << endreq;
+      }
+  } 
+  else if ( "tabprops" == tagName ) 
+    {
+      const std::string address = attributes.getValue( "address" );
+      long linkID = m_dataObj->addLink( address , 0 ) ;
+      SmartRef<TabulatedProperty> ref( m_dataObj, linkID );
+      ((Material*) m_dataObj)->tabulatedProperties().push_back(ref); 
     }
-  } else {
-    // Something goes wrong, does it?
-    log << MSG::WARNING << "This tag makes no sense to isotope: " << tagName << endreq;
-  }
+  else 
+    {
+      // Something goes wrong, does it?
+      log << MSG::WARNING << "This tag makes no sense to isotope: " << tagName << endreq;
+    }
 }
 
 void XmlIsotopeCnv::characters(

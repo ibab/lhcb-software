@@ -1,45 +1,40 @@
-#ifndef     __DETDESC_SOLID_SOLIDBOX_H__
-#define     __DETDESC_SOLID_SOLIDBOX_H__ 1 
-
+#ifndef     DETDESC_SOLIDBOX_H
+#define     DETDESC_SOLIDBOX_H 1 
+/// STD and STL 
 #include <cmath> 
 #include <iostream> 
-
+/// CLHEP 
+#include "CLHEP/Geometry/Point3D.h"
+#include "CLHEP/Geometry/Vector3D.h"
+#include "CLHEP/Units/SystemOfUnits.h"
+/// GAUDI Kernel 
 #include "GaudiKernel/ISolid.h" 
 #include "GaudiKernel/StreamBuffer.h" 
 
-
-#include "CLHEP/Geometry/Point3D.h"
-#include "CLHEP/Geometry/Vector3D.h"
-
-#include "CLHEP/Units/SystemOfUnits.h"
-
+class MsgStream;
 class ISolidFromStream;
 
-///
-///
-/// class SolidBox: a simple implementation of BOX 
-///
-/// Author: Vanya Belyaev 
-///
-///
+/** @class SolidBox SolidBox.h DetDesc/SolidBox.h
+
+    A simple implementation of BOX 
+    
+    @author Vanya Belyaev 
+*/
+
 
 class SolidBox: public ISolid
 {
   ///
   friend class ISolidFromStream;
   ///
- public:
+public:
   //
-  // constructor & destructor 
-  //
-  // constructor! NB - no "default values"! Units from CLHEP/Units/SystemOfUnits (mm) 
   SolidBox( const std::string& name        ,  // name of this box                     
 	    const double       XHalfLength ,  // half-size in x-direction of this box 
             const double       YHalfLength ,  // half-size in y-direction of this box 
             const double       ZHalfLength ); // half-size in z-direction of this box 
   //
-  virtual ~SolidBox(){};  
-  //
+  virtual ~SolidBox();  
   //
   // functions from ISolid:
   inline  const  std::string&      name      ()                    const { return m_box_name   ; };
@@ -49,7 +44,8 @@ class SolidBox: public ISolid
   inline  const  ISolid*           coverTop  ()                    const { return this         ; };
   
   virtual        std::ostream&     printOut  ( std::ostream&     ) const;
-
+  virtual        MsgStream&        printOut  ( MsgStream&        ) const;
+  
   /// reset to the initial state 
   inline  const  ISolid*           reset     ()                    const { return this         ; };
   
@@ -69,49 +65,36 @@ class SolidBox: public ISolid
                                                    const ISolid::Tick& tickMin , 
                                                    const ISolid::Tick& tickMax , 
 						   ISolid::Ticks     & ticks   ) const ;  // output container of "Ticks"
-
-  //
-  //
-  // function specific for SolidBox
-  //
-
   // return the full x-size of the box 
   inline         double  xsize      ()  const { return m_box_xHalfLength*2 ; };
   // return the full y-size of the box 
   inline         double  ysize      ()  const { return m_box_yHalfLength*2 ; };
   // return the full z-size of the box 
   inline         double  zsize      ()  const { return m_box_zHalfLength*2 ; };
-
   // return the half x-size of the box 
   inline         double  xHalfLength()  const { return m_box_xHalfLength   ; };
   // return the half y-size of the box 
   inline         double  yHalfLength()  const { return m_box_yHalfLength   ; };
   // return the half z-size of the box 
   inline         double  zHalfLength()  const { return m_box_zHalfLength   ; };
-
-  ///
   /// serialization for reading 
   StreamBuffer& serialize( StreamBuffer& s )       ; 
   /// serialization for writing 
   StreamBuffer& serialize( StreamBuffer& s ) const ; 
-
-  ///
   /// from IInspectable interface  
-  ///
   virtual bool acceptInspector( IInspector* pInspector )       ; 
   virtual bool acceptInspector( IInspector* pInspector ) const ; 
+  /// 
+protected:
   ///
- 
- protected:
+  SolidBox           (                 ); /// default constructor
   ///
-  SolidBox();
-  ///
- private:
+private:
   //
   SolidBox           ( const SolidBox & );  // no copy-constructor 
   SolidBox& operator=( const SolidBox & );  // no assignment 
   //
-  // members
+private:
   //
   std::string          m_box_name  ;
   double               m_box_xHalfLength ;
@@ -119,36 +102,12 @@ class SolidBox: public ISolid
   double               m_box_zHalfLength ;
   //
 };
+///
+#include "DetDesc/SolidBox.icpp"
+///
 
-//
-//
-//
 
-inline bool SolidBox::isInside( const HepPoint3D& point ) const
-{ 
-  if ( abs( point.x()) > xHalfLength() || 
-       abs( point.y()) > yHalfLength() ||
-       abs( point.z()) > zHalfLength() ) { return false; }
-  return true; 
-};
-
-//
-//
-//
-
-inline std::ostream& SolidBox::printOut  ( std::ostream&  os ) const
-{
-  return os << typeName() << " name="             << name()
-	    << " (xsize=" << xsize() / millimeter << "[mm],"  
-	    <<   "ysize=" << ysize() / millimeter << "[mm],"  
-	    <<   "zsize=" << zsize() / millimeter << "[mm])";  
-};
-
-//
-//
-//
-
-#endif //   __DETDESC_SOLID_SOLIDBOX_H__ 
+#endif //  DETDESC_SOLIDBOX_H
 
 
 

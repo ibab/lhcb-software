@@ -2,6 +2,94 @@ package DetDesc
 package manager : Vanya Belyaev
 
 ===========================================================================
+! 20010304 - Vanya Belyaev
+     New features:
+     (1) class Material now holds the container of tabulated properties 
+         ==> add tabulatedProperties() accessors (const and non const) 
+             to the Material class 
+     (2) class LVolume  now holds the container of assosiated surfaces
+         ==> add surfaces()           acessors (const and non-const) 
+             to class LVolume
+         NB! These acessors are not available from ILVolume interface! 
+     (3) new class Surface which described (optical) surfaces 
+         Probably it is quite useless in DetDesc, but it is important 
+         for G4 conversions
+     (4) TabulatedProperty class is modified according to 
+         desicions of "coffee-meeting" with P.M. and G.G. 
+     (5) class Material now has output operators to MsgStream and std::ostream
+     (6) a lot of polishing business with exception classes and Materials 
+     New and Modified files:
+        ===
+        DetDesc/DetectorElement.h              - update in exceptions 
+        DetDesc/DetectorElement.icpp
+        DetDesc/DetectorElementException.h     
+        DetDesc/Element.h                       
+        DetDesc/Element.icpp                   - new file  
+        DetDesc/Isotope.h
+        DetDesc/Isotope.icpp                   - new file 
+        DetDesc/Material.h
+        DetDesc/Material.icpp                  - new file 
+        DetDesc/Mixture.h
+        DetDesc/Mixture.icpp                   - new file 
+        DetDesc/LVolume.h
+        DetDesc/LVolume.icpp
+        DetDesc/LVolumeException.h
+        DetDesc/SolidBox.h
+        DetDesc/SolidBox.icpp                   - new file 
+        DetDesc/SolidException.h
+        DetDesc/XmlCnvException.h
+        DetDesc/XmlCnvException.icpp
+        DetDesc/CLIDTabulatedProperty.h         - new file 
+        DetDesc/TabulatedProperty.h             - new class
+        DetDesc/TabulatedProperty.icpp          - new file  
+        DetDesc/CLIDSurface.h                   - new file  
+        DetDesc/Surface.h                       - new class
+        DetDesc/Surface.icpp                    - new file 
+        DetDesc/MaterialException.h             - new class 
+        ===
+        src/component/DetDesc_load.cpp
+        src/component/XmlCatalogCnv.cpp
+        src/component/XmlCatalogCnv.h
+        src/component/XmlElementCnv.cpp
+        src/component/XmlIsotopeCnv.cpp
+        src/component/XmlLVolumeCnv.cpp
+        src/component/XmlLVolumeCnv.h
+        src/component/XmlMixtureCnv.cpp
+        src/component/XmlTabulatedPropertyCnv.cpp   - new file 
+        src/component/XmlTabulatedPropertyCnv.h     - new file 
+        ===
+        src/Lib/DetectorElement.cpp
+        src/Lib/Element.cpp
+        src/Lib/GeometryInfo.cpp
+        src/Lib/GeometryInfo.h
+        src/Lib/GeometryInfo.icpp
+        src/Lib/GeometryInfoInlines.h             - REMOVED! 
+        src/Lib/GeometryInfoMethods.h             - REMOVED!
+        src/Lib/GeometryInfoRelations.h           - REMOVED!
+        src/Lib/PVolumeInlines.h                  - REMOVED!
+        src/Lib/Isotope.cpp
+        src/Lib/LVolume.cpp
+        src/Lib/LVolumePVolumes.cpp
+        src/Lib/Mixture.cpp
+        src/Lib/PVolume.cpp 
+        src/Lib/PVolume.h
+        src/Lib/SolidBox.cpp
+        src/Lib/PVolume.icpp                     - new file 
+        src/Lib/Material.cpp                     - new file 
+        src/Lib/Surface.cpp                      - new file 
+        src/Lib/TabulatedProperty.cpp            - new file 
+        src/Lib/SolidException.cpp               - new file 
+        src/Lib/PVolumeException.cpp             - new file 
+        src/Lib/MaterialException.cpp            - new file 
+        src/Lib/LVolumeException.cpp             - new file 
+        src/Lib/DetectorElementException.cpp     - new file 
+        src/Lib/GeometryInfoException.cpp        - new file 
+
+===========================================================================
+! 20010226 - Vanya Belyaev
+   new class TabulatedProperty, used  to hold some specific properties 
+          of materials and surfaces (and might be more?) 
+===========================================================================
 ! 20010215 - Gonzalo Gracia Abril & Vanya Belyaev
   Corrections for proper treatment of rotations
   Mod. files in src/Lib   PVolume.cpp, SolidChild.cpp

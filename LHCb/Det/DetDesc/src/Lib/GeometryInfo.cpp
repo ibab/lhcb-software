@@ -1,13 +1,13 @@
+/// STD and STL 
 #include <iostream>
 #include <string>
 #include <functional>
 #include <algorithm> 
 #include <numeric> 
-
-
+/// CLHEP 
 #include "CLHEP/Geometry/Point3D.h"
 #include "CLHEP/Geometry/Transform3D.h"
-
+/// GaudiKernel
 #include "GaudiKernel/IInspector.h"
 #include "GaudiKernel/ISvcLocator.h"
 #include "GaudiKernel/Kernel.h"
@@ -17,21 +17,14 @@
 #include "GaudiKernel/StreamBuffer.h" 
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/Bootstrap.h"
-
-
+/// DetDesc 
 #include "DetDesc/IPVolume_predicates.h"
-
-
 /// local 
 #include "GeometryInfo.h" 
 #include "GeometryInfoException.h" 
 
-//
-// constructors
-// 
 
-//
-// create "ghost"
+// create "ghost" ////////////////////////////////////////////////////////////////////////////////////////////
 GeometryInfo::GeometryInfo( IDetectorElement*            de      ) 
   : m_gi_has_logical      (     false   )
   , m_gi_lvolumeName      (      ""     )
@@ -50,16 +43,16 @@ GeometryInfo::GeometryInfo( IDetectorElement*            de      )
   , m_gi_dataSvc          (   0         )
   , m_gi_messSvc          (   0         )
 {
-  if( 0 == de  ) { throw GeometryInfoException("Constructor: IDetectorElement* points to NULL!", 0 ) ; }
+  if( 0 == de  ) { throw GeometryInfoException("Constructor: IDetectorElement* points to NULL!") ; }
   ISvcLocator* svc = Gaudi::svcLocator(); 
-  if( 0 == svc ) { throw GeometryInfoException("Constructor: ISvsLoctaor*      points to NULL!", 0 ) ; }
+  if( 0 == svc ) { throw GeometryInfoException("Constructor: ISvsLoctaor*      points to NULL!") ; }
   svc->addRef();
   //
   {
     const std::string tmp("DetectorDataSvc");
     StatusCode sc = svc->service( tmp , m_gi_dataSvc ) ; 
     if( sc.isFailure() ) { throw GeometryInfoException("Constructor: could not locate "+tmp, 0 , sc ) ; }
-    if( 0 == dataSvc() ) { throw GeometryInfoException("Constructor: could not locate "+tmp, 0      ) ; }
+    if( 0 == dataSvc() ) { throw GeometryInfoException("Constructor: could not locate "+tmp         ) ; }
     dataSvc()->addRef();
   }
   ///
@@ -67,12 +60,12 @@ GeometryInfo::GeometryInfo( IDetectorElement*            de      )
     const std::string tmp("MessageSvc");
     StatusCode sc = svc->service( tmp , m_gi_messSvc ) ; 
     if( sc.isFailure() ) { throw GeometryInfoException("Constructor: could not locate "+tmp, 0 , sc ) ; }
-    if( 0 == msgSvc () ) { throw GeometryInfoException("Constructor: could not locate "+tmp, 0      ) ; }
+    if( 0 == msgSvc () ) { throw GeometryInfoException("Constructor: could not locate "+tmp         ) ; }
     msgSvc()->addRef();
   }
   ///
 };
-// create orphan
+// create orphan ///////////////////////////////////////////////////////////////////////////////////////////
 GeometryInfo::GeometryInfo( IDetectorElement*            de          ,
 			    const std::string&           LogVol      ) 
   : m_gi_has_logical      (    true     )
@@ -94,16 +87,16 @@ GeometryInfo::GeometryInfo( IDetectorElement*            de          ,
   , m_gi_dataSvc          (      0      )
   , m_gi_messSvc          (      0      )
 {
-  if( 0 == de  ) { throw GeometryInfoException("Constructor: IDetectorElement* points to NULL!", 0 ) ; }
+  if( 0 == de  ) { throw GeometryInfoException("Constructor: IDetectorElement* points to NULL!"    ) ; }
   ISvcLocator* svc = Gaudi::svcLocator(); 
-  if( 0 == svc ) { throw GeometryInfoException("Constructor: ISvsLoctaor*      points to NULL!", 0 ) ; }
+  if( 0 == svc ) { throw GeometryInfoException("Constructor: ISvsLoctaor*      points to NULL!"    ) ; }
   svc->addRef();
   //
   {
     const std::string tmp("DetectorDataSvc");
     StatusCode sc = svc->service( tmp , m_gi_dataSvc ) ; 
     if( sc.isFailure() ) { throw GeometryInfoException("Constructor: could not locate "+tmp, 0 , sc ) ; }
-    if( 0 == dataSvc() ) { throw GeometryInfoException("Constructor: could not locate "+tmp, 0      ) ; }
+    if( 0 == dataSvc() ) { throw GeometryInfoException("Constructor: could not locate "+tmp         ) ; }
     dataSvc()->addRef();
   }
   ///
@@ -111,12 +104,12 @@ GeometryInfo::GeometryInfo( IDetectorElement*            de          ,
     const std::string tmp("MessageSvc");
     StatusCode sc = svc->service( tmp , m_gi_messSvc ) ; 
     if( sc.isFailure() ) { throw GeometryInfoException("Constructor: could not locate "+tmp, 0 , sc ) ; }
-    if( 0 == msgSvc () ) { throw GeometryInfoException("Constructor: could not locate "+tmp, 0      ) ; }
+    if( 0 == msgSvc () ) { throw GeometryInfoException("Constructor: could not locate "+tmp         ) ; }
     msgSvc()->addRef();
   }
   ///
 };
-/// create regular  with numeric replica path 
+/// create regular  with numeric replica path /////////////////////////////////////////////////////////////
 GeometryInfo::GeometryInfo( IDetectorElement*            de          ,
 			    const std::string&           LogVol      , 
 			    const std::string&           Support     ,
@@ -140,16 +133,16 @@ GeometryInfo::GeometryInfo( IDetectorElement*            de          ,
   , m_gi_dataSvc          (      0      )
   , m_gi_messSvc          (      0      )
 {
-  if( 0 == de  ) { throw GeometryInfoException("Constructor: IDetectorElement* points to NULL!", 0 ) ; }
+  if( 0 == de  ) { throw GeometryInfoException("Constructor: IDetectorElement* points to NULL!"    ) ; }
   ISvcLocator* svc = Gaudi::svcLocator(); 
-  if( 0 == svc ) { throw GeometryInfoException("Constructor: ISvsLoctaor*      points to NULL!", 0 ) ; }
+  if( 0 == svc ) { throw GeometryInfoException("Constructor: ISvsLoctaor*      points to NULL!"    ) ; }
   svc->addRef();
   //
   {
     const std::string tmp("DetectorDataSvc");
     StatusCode sc = svc->service( tmp , m_gi_dataSvc ) ; 
     if( sc.isFailure() ) { throw GeometryInfoException("Constructor: could not locate "+tmp, 0 , sc ) ; }
-    if( 0 == dataSvc() ) { throw GeometryInfoException("Constructor: could not locate "+tmp, 0      ) ; }
+    if( 0 == dataSvc() ) { throw GeometryInfoException("Constructor: could not locate "+tmp         ) ; }
     dataSvc()->addRef();
   }
   ///
@@ -157,12 +150,12 @@ GeometryInfo::GeometryInfo( IDetectorElement*            de          ,
     const std::string tmp("MessageSvc");
     StatusCode sc = svc->service( tmp , m_gi_messSvc ) ; 
     if( sc.isFailure() ) { throw GeometryInfoException("Constructor: could not locate "+tmp, 0 , sc ) ; }
-    if( 0 == msgSvc () ) { throw GeometryInfoException("Constructor: could not locate "+tmp, 0      ) ; }
+    if( 0 == msgSvc () ) { throw GeometryInfoException("Constructor: could not locate "+tmp         ) ; }
     msgSvc()->addRef();
   }
   ///
 };  
-/// create regular  with name path 
+/// create regular  with name path ///////////////////////////////////////////////////////////////////////
 GeometryInfo::GeometryInfo( IDetectorElement*            de              ,
 			    const std::string&           LogVol          , 
 			    const std::string&           Support         ,
@@ -186,16 +179,16 @@ GeometryInfo::GeometryInfo( IDetectorElement*            de              ,
   , m_gi_dataSvc          (      0          )
   , m_gi_messSvc          (      0          )
 {
-  if( 0 == de  ) { throw GeometryInfoException("Constructor: IDetectorElement* points to NULL!", 0 ) ; }
+  if( 0 == de  ) { throw GeometryInfoException("Constructor: IDetectorElement* points to NULL!"    ) ; }
   ISvcLocator* svc = Gaudi::svcLocator(); 
-  if( 0 == svc ) { throw GeometryInfoException("Constructor: ISvsLoctaor*      points to NULL!", 0 ) ; }
+  if( 0 == svc ) { throw GeometryInfoException("Constructor: ISvsLoctaor*      points to NULL!"    ) ; }
   svc->addRef();
   //
   {
     const std::string tmp("DetectorDataSvc");
     StatusCode sc = svc->service( tmp , m_gi_dataSvc ) ; 
     if( sc.isFailure() ) { throw GeometryInfoException("Constructor: could not locate "+tmp, 0 , sc ) ; }
-    if( 0 == dataSvc() ) { throw GeometryInfoException("Constructor: could not locate "+tmp, 0      ) ; }
+    if( 0 == dataSvc() ) { throw GeometryInfoException("Constructor: could not locate "+tmp         ) ; }
     dataSvc()->addRef();
   }
   ///
@@ -203,12 +196,12 @@ GeometryInfo::GeometryInfo( IDetectorElement*            de              ,
     const std::string tmp("MessageSvc");
     StatusCode sc = svc->service( tmp , m_gi_messSvc ) ; 
     if( sc.isFailure() ) { throw GeometryInfoException("Constructor: could not locate "+tmp, 0 , sc ) ; }
-    if( 0 == msgSvc () ) { throw GeometryInfoException("Constructor: could not locate "+tmp, 0      ) ; }
+    if( 0 == msgSvc () ) { throw GeometryInfoException("Constructor: could not locate "+tmp         ) ; }
     msgSvc()->addRef();
   }
   ///
 };
-//
+//////////////////////////////////////////////////////////////////////////////////////////////////////////
 StreamBuffer& GeometryInfo::serialize( StreamBuffer& sb ) 
 {
   ///
@@ -216,9 +209,9 @@ StreamBuffer& GeometryInfo::serialize( StreamBuffer& sb )
   ///
   unsigned long tmp1, tmp2 ; 
   ///
-  sb >> tmp1 ;   m_gi_has_logical = (bool) tmp1 ; 
+  sb >> tmp1 ;   m_gi_has_logical = tmp1 ? true : false ;
   sb >> m_gi_lvolumeName ; 
-  sb >> tmp2 ;   m_gi_has_support = (bool) tmp2;
+  sb >> tmp2 ;   m_gi_has_support = tmp2 ? true : false ;
   if( m_gi_has_support ) 
     { 
       sb >> m_gi_supportName     ;
@@ -233,7 +226,7 @@ StreamBuffer& GeometryInfo::serialize( StreamBuffer& sb )
   ///
   return sb;
 };
-///
+////////////////////////////////////////////////////////////////////////////////////////////////////////////
 StreamBuffer& GeometryInfo::serialize( StreamBuffer& sb ) const 
 {
   ///
@@ -251,7 +244,7 @@ StreamBuffer& GeometryInfo::serialize( StreamBuffer& sb ) const
     }
   return sb;
 };
-/// IInspectable 
+/// IInspectable ///////////////////////////////////////////////////////////////////////////////////////////
 bool GeometryInfo::acceptInspector( IInspector* pInspector ) 
 {
   ///
@@ -263,7 +256,7 @@ bool GeometryInfo::acceptInspector( IInspector* pInspector )
   return gi->acceptInspector( pInspector );
   ///
 };
-///
+//////////////////////////////////////////////////////////////////////////////////////////////////////
 bool GeometryInfo::acceptInspector( IInspector* pInspector ) const  
 {
   ///
@@ -279,7 +272,7 @@ bool GeometryInfo::acceptInspector( IInspector* pInspector ) const
   return true; 
   ///
 };
-///
+//////////////////////////////////////////////////////////////////////////////////////////////////////
 GeometryInfo::~GeometryInfo()
 {
   //
@@ -287,7 +280,7 @@ GeometryInfo::~GeometryInfo()
   // Assert( sc.isSuccess() , " GeometryInfo::Error in destructor " );
   //
 };
-// 
+////////////////////////////////////////////////////////////////////////////////////////////////////// 
 StatusCode  GeometryInfo::reset( const int Level )
 {
   //
@@ -297,8 +290,6 @@ StatusCode  GeometryInfo::reset( const int Level )
   if( 0 != m_gi_matrixInv ){ delete m_gi_matrixInv; m_gi_matrixInv = 0; }  
   //
   m_gi_support = 0;
-  
-  //
   //  if( Level < 0 ) { m_gi_iDetectorElement = 0; };
   if( Level < 0 ) { ; };
   //
@@ -308,7 +299,7 @@ StatusCode  GeometryInfo::reset( const int Level )
   //
   return StatusCode::SUCCESS;
 };
-//
+////////////////////////////////////////////////////////////////////////////////////////////////////
 std::ostream& GeometryInfo::printOut( std::ostream& os ) const
 {
   os << "GeometryInfo::name=" <<  detElem()->name() << ";" ; 
@@ -326,9 +317,9 @@ std::ostream& GeometryInfo::printOut( std::ostream& os ) const
 	}
     }
   //
-  return os;
+  return os << std::endl;
 };
-//
+//////////////////////////////////////////////////////////////////////////////////////////////////////
 MsgStream& GeometryInfo::printOut( MsgStream& os ) const
 {
   os << "GeometryInfo::name=" << detElem()->name() << ";" ; 
@@ -347,9 +338,9 @@ MsgStream& GeometryInfo::printOut( MsgStream& os ) const
 	}
     }
   //
-  return os;
+  return os << endreq ;
 };
-//
+//////////////////////////////////////////////////////////////////////////////////////////////////////
 ILVolume* GeometryInfo::findLogical() const 
 {
   ILVolume* lv = 0;
@@ -369,7 +360,7 @@ ILVolume* GeometryInfo::findLogical() const
   ///  
   return lv;  
 };
-//
+///////////////////////////////////////////////////////////////////////////////////////////////////
 IGeometryInfo* GeometryInfo::geoByName( const std::string& name ) const 
 {
   IGeometryInfo* gi = 0;
@@ -387,7 +378,7 @@ IGeometryInfo* GeometryInfo::geoByName( const std::string& name ) const
   ///
   return gi; 
 };
-//
+//////////////////////////////////////////////////////////////////////////////////////////////////
 StatusCode GeometryInfo::loadChildren() const 
 {
   ///
@@ -424,7 +415,7 @@ StatusCode GeometryInfo::loadChildren() const
   //
   return StatusCode::SUCCESS;
 };
-//
+///////////////////////////////////////////////////////////////////////////////////////////////
 HepTransform3D* GeometryInfo::calculateMatrix() const 
 {
   //
@@ -468,6 +459,7 @@ HepTransform3D* GeometryInfo::calculateMatrix() const
   return pM;
   //
 };
-///
-///
+////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
 

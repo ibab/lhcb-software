@@ -1,13 +1,8 @@
-///	$Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/component/XmlCatalogCnv.cpp,v 1.1 2001-02-05 12:45:52 ranjard Exp $
-
-/// Include files
-
+/// STD and STL 
 #include <stdlib.h>
 #include <iostream>
 #include <string>
 #include <vector>
-
-
 // gaudi kernel 
 #include "GaudiKernel/CnvFactory.h"
 #include "GaudiKernel/GenericAddress.h"
@@ -21,7 +16,6 @@
 #include "GaudiKernel/Converter.h"
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/RegistryEntry.h"
-
 // detdesc 
 #include "DetDesc/XmlAddress.h"
 #include "DetDesc/XmlCnvAttrList.h"
@@ -29,8 +23,6 @@
 #include "DetDesc/CLIDElement.h"
 #include "DetDesc/CLIDMixture.h"
 #include "DetDesc/XmlCnvException.h"
-
-
 // local 
 #include "XmlCatalogCnv.h"
 
@@ -204,11 +196,12 @@ void XmlCatalogCnv::startElement( const char* const name,
       }
     }
   }
-  else if( tagName == "catalogref" || tagName == "detelemref" ||
-           tagName == "logvolref" )
+  else if( tagName == "catalogref" || tagName == "detelemref"     ||
+           tagName == "logvolref"  || tagName == "tabpropertyref" ||
+           tagName == "surfaceref"                                  )
   {
     // We have to decode class ID of the referred object
-    const CLID& clsID = (unsigned long)atol( attributes.getValue( "classID" ).c_str() );
+    const CLID clsID = (CLID) atol( attributes.getValue( "classID" ).c_str() );
     checkConverterExistence(clsID);
     // Let's decode URI of the object location
     // We must split the URI into XML file name, container name and object name
@@ -234,12 +227,13 @@ void XmlCatalogCnv::startElement( const char* const name,
     // Create new XML address for the daughter
     xmlAddr = new XmlAddress( clsID, location, searchedDir->fullpath());
   }
-  else if( tagName == "detelem" || tagName == "logvol" )
+  else if( tagName == "detelem" || tagName == "logvol"      || 
+           tagName == "surface" || tagName == "tabproperty" )
   {
     
     // Checking the other incoming guys according to our DTD!
     // We have to decode class ID of the referred object
-    const CLID& clsID = (unsigned long)atol( attributes.getValue( "classID" ).c_str() );
+    const CLID clsID = (CLID) atol( attributes.getValue( "classID" ).c_str() );
     checkConverterExistence(clsID);
     // OK, we get object ID
     entryName = "/"+attributes.getValue( "name" );
@@ -259,7 +253,7 @@ void XmlCatalogCnv::startElement( const char* const name,
     else if( tagName == "material" ) {
       classIDFound = CLID_Mixture;
     }
-    const CLID& clsID = classIDFound;
+    const CLID clsID = classIDFound;
     checkConverterExistence(clsID);
     // OK, we get object ID
     entryName = "/"+attributes.getValue( "name" );
@@ -328,8 +322,9 @@ void XmlCatalogCnv::endElement( const char* const name ) {
       m_nestedDir                = dynamic_cast<RegistryEntry*>(parentDir);
     }
   }
-  else if( tagName == "detelem" || tagName == "logvol" || tagName == "material" ||
-           tagName == "isotope" || tagName == "element" )  {
+  else if( tagName == "detelem" || tagName == "logvol"  || tagName == "material" ||
+           tagName == "isotope" || tagName == "element" || tagName == "surface"  || 
+           tagName == "tabproperty" )  {
     m_ignore = false;
   }
 }

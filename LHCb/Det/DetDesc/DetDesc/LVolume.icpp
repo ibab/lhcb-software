@@ -1,10 +1,22 @@
-#ifndef    __DETDESC_LVOLUME_ICPP__ 
-#define    __DETDESC_LVOLUME_ICPP__  1 
-
-
+#ifndef    DETDESC_LVOLUME_ICPP 
+#define    DETDESC_LVOLUME_ICPP  1 
+/// STL 
 #include <string>
+/// DetDesc 
+#include "DetDesc/LVolume.h"
+#include "DetDesc/Surface.h"
+#include "DetDesc/LVolumeException.h" 
 
 ///  implementation of inline methods from LVolume class 
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////
+inline MsgStream& operator<<( MsgStream& os , const LVolume&  lv ) 
+{ return lv.printOut( os ); };
+///////////////////////////////////////////////////////////////////////////////////////////////////////
+inline MsgStream& operator<<( MsgStream& os , const LVolume* plv ) 
+{ return ( ( 0 == plv ) ? ( os << "LVolume* points to NULL" ) : ( os << *plv) ) ; };
+///////////////////////////////////////////////////////////////////////////////////////////////////////
+
 ///  from IValidity Interface:
 inline bool LVolume::isValid ()                 { return validSince() <           validTill() ;};
 inline bool LVolume::isValid ( const ITime& t ) { return validSince() < t &&  t < validTill() ;};
@@ -124,7 +136,7 @@ inline std::ostream& LVolume::printOut( std::ostream& os ) const
   ///
   return os; 
 };
-/// reset to the initial state
+/// reset to the initial state ////////////////////////////////////////////////////////////
 inline const ILVolume* LVolume::reset () const 
 {
   /// reset solid
@@ -140,20 +152,33 @@ inline const ILVolume* LVolume::reset () const
   /// 
   return this;
 };
-///
+//////////////////////////////////////////////////////////////////////////////////////////////////////
 inline ILVolume::PVolumes::const_iterator LVolume::pvBegin() const { return m_lv_pvolumes.begin(); };
+//////////////////////////////////////////////////////////////////////////////////////////////////////
 inline ILVolume::PVolumes::iterator       LVolume::pvBegin()       { return m_lv_pvolumes.begin(); };
+//////////////////////////////////////////////////////////////////////////////////////////////////////
 inline ILVolume::PVolumes::const_iterator LVolume::pvEnd  () const { return m_lv_pvolumes.end  (); };  
+///////////////////////////////////////////////////////////////////////////////////////////////////////
 inline ILVolume::PVolumes::iterator       LVolume::pvEnd  ()       { return m_lv_pvolumes.end  (); };  
-/// assertion 
+/// assertion //////////////////////////////////////////////////////////////////////////////////////////
 inline void LVolume::Assert( bool assertion , const std::string& name , const StatusCode& sc ) const
-{ if( !assertion ) throw LVolume::LVolumeException( name, this , sc ); };
-/// assertion 
+{ if( !assertion ) throw LVolumeException( name, this , sc ); };
+/// assertion ///////////////////////////////////////////////////////////////////////////////////////////
 inline void LVolume::Assert( bool assertion , const std::string& name , const GaudiException& Exception , const StatusCode& sc ) const
-{ if( !assertion ) throw LVolume::LVolumeException( name, Exception , this , sc ); };
-///
+{ if( !assertion ) throw LVolumeException( name, Exception , this , sc ); };
+///////////////////////////////////////////////////////////////////////////////////////////
+inline const LVolume::Surfaces& LVolume::surfaces() const { return m_surfaces; } 
+///////////////////////////////////////////////////////////////////////////////////////////
+inline       LVolume::Surfaces& LVolume::surfaces()       { return m_surfaces; } 
+///////////////////////////////////////////////////////////////////////////////////////////
 
 #endif  // __DETDESC_LVOLUME_ICPP__ 
+
+
+
+
+
+
 
 
 

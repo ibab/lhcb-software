@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/DetDesc/Isotope.h,v 1.4 2001-01-25 15:36:43 ibelyaev Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/DetDesc/Isotope.h,v 1.5 2001-03-04 14:56:04 ibelyaev Exp $
 #ifndef DETDESC_ISOTOPE_H
 #define DETDESC_ISOTOPE_H
 
@@ -20,16 +20,19 @@ class Isotope : public Material
   
 public:
   
-  // Constructors
-  Isotope( std::string name );
-  Isotope( char* name );
-  Isotope( std::string name, double a, double z, double n );
-  Isotope( char* name, double a, double z, double n );
-  Isotope( std::string name, double a, double z, double n, double density );
-  Isotope( char* name, double a, double z, double n, double density );
-  
+  /// Constructors
+  Isotope( const std::string name    = ""              , 
+           const double      a       = 0               , 
+           const double      z       = 0               , 
+           const double      n       = 0               , 
+           const double      density = 0               ,
+	   const double      rl      = 0               ,  
+	   const double      al      = 0               ,
+	   const double      temp    = STP_Temperature , 
+	   const double      press   = STP_Pressure    , 
+	   const eState      s       = stateUndefined  );
   // Destructor
-  ~Isotope();
+  virtual ~Isotope();
   
   //	Atomic mass [g/mole]
   const double A() const;
@@ -42,10 +45,14 @@ public:
   //	Number of nucleons
   const double N() const;
   void setN( double value );
+   
+  inline const CLID& clID    () const { return Isotope::classID(); } 
+  static const CLID& classID ()       { return CLID_Isotope; } 
   
-  const CLID& clID() const;
-  static const CLID& classID();
-  
+  /// serialization for read and write 
+  virtual StreamBuffer& serialize( StreamBuffer& s )       ; 
+  virtual StreamBuffer& serialize( StreamBuffer& s ) const ; 
+
 protected:
   
   //	Atomic mass [g/mole]
@@ -58,38 +65,8 @@ protected:
   double m_N;
   
 };
-
-// Get and Set Operations for Class Attributes
-inline const CLID& Isotope::clID() const {
-  return classID();
-} 
-
-inline const CLID& Isotope::classID() {
-  return CLID_Isotope;
-} 
-
-inline const double Isotope::A() const {
-  return m_A;
-}
-
-inline void Isotope::setA( double value ) {
-  m_A = value;
-}
-
-inline const double Isotope::Z() const {
-  return m_Z;
-}
-
-inline void Isotope::setZ( double value ) {
-  m_Z = value;
-}
-
-inline const double Isotope::N() const {
-  return m_N;
-}
-
-inline void Isotope::setN( double value ) {
-  m_N = value;
-}
+///
+#include "DetDesc/Isotope.icpp"
+///
 
 #endif // DETDESC_ISOTOPE_H

@@ -1,157 +1,93 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/Lib/Element.cpp,v 1.2 2001-01-22 10:55:36 mato Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/Lib/Element.cpp,v 1.3 2001-03-04 14:56:07 ibelyaev Exp $
 #include "GaudiKernel/StatusCode.h"
-
+/// STL 
+#include <math.h>
+/// DetDesc 
+#include "DetDesc/MaterialException.h"
 #include "DetDesc/Element.h"
 #include "DetDesc/Isotope.h"
-
-#include <math.h>
-
-/// RCS Id for identification of object version
-///static const char* rcsid = "$Id: Element.cpp,v 1.2 2001-01-22 10:55:36 mato Exp $";
+///
 
 
-// Class Element 
-
-Element::Element( std::string name )
-: Material( name ), m_Aeff(0.0), m_Zeff(0), m_Neff(0), m_nOfIsotopes(0)
+///////////////////////////////////////////////////////////////////////////////////////
+Element::Element( const std::string& name    , 
+                  const std::string& symb    ,
+		  const double       a       , 
+		  const double       z       , 
+		  const double       n       , 
+		  const double       density ,	            
+		  const double       rl      , 
+		  const double       al      ,
+		  const double       temp    ,
+		  const double       press   ,
+		  const eState       s       )
+  : Material( name , density , rl , al , temp, press , s )
+  , m_Aeff ( a )
+  , m_Zeff ( z )
+  , m_Neff ( n )
+  , m_isotopes()
+  , m_coulomb ()
+  , m_tsai    ()
+  , m_symb ( symb )
 {
-    m_isotopes.clear();
-    m_fractions.clear();
-}
-
-Element::Element( char* name )
-: Material( name ), m_Aeff(0.0), m_Zeff(0), m_Neff(0), m_nOfIsotopes(0)
+  if( 0 < Z() ) { ComputeCoulombFactor  (); } 
+  if( 0 < Z() ) { ComputeLradTsaiFactor (); }
+};
+/////////////////////////////////////////////////////////////////////////////////////////
+Element::~Element() { m_isotopes.clear();  }
+////////////////////////////////////////////////////////////////////////////////////////
+void  Element::addIsotope ( const SmartRef<Isotope>& iPtr , const double Fract, const bool comp = false )
+{ addIsotope( Entry( Fract, iPtr ) , comp ); }
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+void  Element::addIsotope ( const Entry&             iPtr                     , const bool comp = false )
+{ 
+  m_isotopes.push_back( iPtr ) ; 
+  if( comp ) { compute(); } 
+}; 
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+void  Element::removeIsotope ( const SmartRef<Isotope>& iPtr , const bool comp = false )
 {
-    m_isotopes.clear();
-    m_fractions.clear();
-}
-
-Element::Element( std::string name, double a, double z )
-: Material( name ), m_Aeff( a ), m_Zeff( z ), m_Neff( 0.0 )
+  for( Isotopes::iterator it = m_isotopes.begin() ; m_isotopes.end() != it ; ++it )
+    { if( it->second == iPtr ) { m_isotopes.erase(it); break; }  } 
+  if( comp ) { compute(); } 
+};
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+const SmartRef<Isotope>&  Element::isotope( const unsigned int i ) const 
 {
-  m_isotopes.clear();
-  m_fractions.clear();
-  ComputeCoulombFactor();
-  ComputeLradTsaiFactor();
-}
-
-Element::Element( char* name, double a, double z )
-: Material( name ), m_Aeff( a ), m_Zeff( z ), m_Neff( 0.0 )
+  if( i >= isotopes().size() )
+    { throw MaterialException("Element::isotope(indx), wrong index!", this );}
+  return isotopes()[i].second;  
+};
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+      SmartRef<Isotope>&  Element::isotope( const unsigned int i )       
 {
-  m_isotopes.clear();
-  m_fractions.clear();
-  ComputeCoulombFactor();
-  ComputeLradTsaiFactor();
-}
-
-Element::Element( std::string name, double a, double z, double n )
-: Material( name ), m_Aeff( a ), m_Zeff( z ), m_Neff( n )
+  if( i >= isotopes().size() )
+    { throw MaterialException("Element::isotope(indx), wrong index! ", this );}
+  return isotopes()[i].second;  
+};
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+const double               Element::isotopeFraction( const unsigned int i ) const 
 {
-  m_isotopes.clear();
-  m_fractions.clear();
-  ComputeCoulombFactor();
-  ComputeLradTsaiFactor();
-}
-
-Element::Element( char* name, double a, double z, double n )
-: Material( name ), m_Aeff( a ), m_Zeff( z ), m_Neff( n )
-{
-  m_isotopes.clear();
-  m_fractions.clear();
-  ComputeCoulombFactor();
-  ComputeLradTsaiFactor();
-}
-
-Element::Element( std::string name, double a, double z, double n, double density )
-: Material( name ), m_Aeff( a ), m_Zeff( z ), m_Neff( n )
-{
-  m_isotopes.clear();
-  m_fractions.clear();
-  setDensity( density );
-  ComputeCoulombFactor();
-  ComputeLradTsaiFactor();
-}
-
-Element::Element( char* name, double a, double z, double n, double density )
-: Material( name ), m_Aeff( a ), m_Zeff( z ), m_Neff( n )
-{
-  m_isotopes.clear();
-  m_fractions.clear();
-  setDensity( density );
-  ComputeCoulombFactor();
-  ComputeLradTsaiFactor();
-}
-
-// This is used for creation of an empty element which will
-// be filled by isotopes
-Element::Element( std::string name, int nOfI )
-: Material( name ), m_Aeff(0.0), m_Zeff(0), m_Neff(0), m_nOfIsotopes( nOfI )
-{
-    m_isotopes.clear();
-    m_fractions.clear();
-}
-
-// This is used for creation of an empty element which will
-// be filled by isotopes
-Element::Element( char* name, int nOfI )
-: Material( name ), m_Aeff(0.0), m_Zeff(0), m_Neff(0), m_nOfIsotopes( nOfI )
-{
-  m_isotopes.clear();
-  m_fractions.clear();
-}
-
-Element::~Element()
-{}
-
-void Element::addIsotope( Isotope* iPtr, double fract, bool comp )
-{
-  m_isotopes.push_back( iPtr );
-  m_fractions.push_back( fract );
-  
-  if( true == comp )
-  {
-    compute();
-  }
-}
-
-void Element::removeIsotope( Isotope* iPtr, bool comp )
-{
-  std::vector<Isotope*>::iterator it;
-  std::vector<double>::iterator ifr;
-  
-  for( it =  m_isotopes.begin(), ifr = m_fractions.begin();
-  it != m_isotopes.end();
-  it++, ifr++ )
-  {
-    if( *it == iPtr )
-    {
-      m_isotopes.erase( it );
-      m_fractions.erase( ifr );
-    }
-  }
-  
-  if( true == comp )
-  {
-    compute();
-  }
-}
-
+  if( i >= isotopes().size() )
+    { throw MaterialException("Element::isotope(indx), wrong index! " , this );}
+  return isotopes()[i].first;  
+};
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void Element::compute()
 {
   // Effective Z is taken from the first isotope, anyway they should be the
   // same for all the isotopes in the element
-  setZ( m_isotopes[0]->Z() );
   
+  setZ( isotope(0)->Z() );
+
   double sum = 0.0; double nEff = 0.0; double aEff = 0.0;
   
-  int iMax = nOfIsotopes();
-  
-  for( int i = 0; i < iMax; i++ )
-  {
-    aEff +=  m_fractions[i] * m_isotopes[i]->A();
-    nEff +=  m_fractions[i] * m_isotopes[i]->N();
-    sum  +=  m_fractions[i];
-  }
+  for( Isotopes::const_iterator it = m_isotopes.begin() ; m_isotopes.end() != it ; ++it )
+    {
+      aEff += (it->first) * ( it->second->A() ) ;
+      nEff += (it->first) * ( it->second->N() ) ;
+      sum  += (it->first) ;
+    } 
   
   aEff /= sum;
   nEff /= sum;
@@ -162,20 +98,18 @@ void Element::compute()
   ComputeCoulombFactor();
   ComputeLradTsaiFactor();
 }
-
-#include <iostream>
-
+////////////////////////////////////////////////////////////////////////////////////////
 void Element::ComputeCoulombFactor()
 {
   // Compute Coulomb correction factor (Phys Rev. D50 3-1 (1994) page 1254)
   const double k1 = 0.0083 , k2 = 0.20206 ,k3 = 0.0020 , k4 = 0.0369 ;
-
-  double az2 = (fine_structure_const * m_Zeff ) * ( fine_structure_const * m_Zeff );
+  
+  double az2 = (fine_structure_const * Z() ) * ( fine_structure_const * Z() );
   double az4 = az2 * az2;
-
+  
   m_coulomb = (k1*az4 + k2 + 1./(1.+az2))*az2 - (k3*az4 + k4)*az4;
 }
-
+////////////////////////////////////////////////////////////////////////////////////////
 void Element::ComputeLradTsaiFactor()
 {
   // Compute Tsai's Expression for the Radiation Length
@@ -184,18 +118,94 @@ void Element::ComputeLradTsaiFactor()
   const double Lrad_light[]  = {5.31  , 4.79  , 4.74 ,  4.71} ;
   const double Lprad_light[] = {6.144 , 5.621 , 5.805 , 5.924} ;
   
-  const double logZ3 = log(m_Zeff)/3.;
+  const double logZ3 = log( Z() )/3.;
 
   double Lrad, Lprad;
   int iz = (int)(m_Zeff+0.5) - 1 ;
   if (iz <= 3)
-  {
-    Lrad = Lrad_light[iz] ;  Lprad = Lprad_light[iz];
-  }
+    {
+      Lrad = Lrad_light[iz] ;  Lprad = Lprad_light[iz];
+    }
   else
-  {
-    Lrad = log(184.15) - logZ3 ; Lprad = log(1194.) - 2*logZ3 ;
-  }
-
+    {
+      Lrad = log(184.15) - logZ3 ; Lprad = log(1194.) - 2*logZ3 ;
+    }
+  
   m_tsai = 4*alpha_rcl2*m_Zeff*(m_Zeff*(Lrad-m_coulomb) + Lprad); 
 }
+/////////////////////////////////////////////////////////////////
+StreamBuffer&     Element::serialize ( StreamBuffer& s ) const 
+{
+  Material::serialize( s );
+  s << symbol() 
+    << A() 
+    << Z() 
+    << N() 
+    << coulombFactor () 
+    << tsaiFactor    () 
+    << isotopes().size();
+  for( Isotopes::const_iterator it = isotopes().begin() ; isotopes().end() != it ; ++it )
+    { s << it->first << it->second(this) ; }
+  return s ;
+};
+/////////////////////////////////////////////////////////////////////////////////////////////////
+StreamBuffer&     Element::serialize ( StreamBuffer& s )       
+{
+  Material::serialize( s );
+  s >> m_symb 
+    >> m_Aeff 
+    >> m_Zeff
+    >> m_Neff 
+    >> m_coulomb 
+    >> m_tsai  ;
+  Isotopes::size_type size;
+  s >> size ;
+  m_isotopes.clear();
+  m_isotopes = Isotopes(size);
+  for( Isotopes::iterator it = m_isotopes.begin() ; m_isotopes.end() != it ; ++it )
+    { s >> it->first >> it->second(this) ; }
+  compute();
+  return s ;
+};
+/////////////////////////////////////////////////////////////////////////////////////////////////
+MsgStream&        Element::fillStream ( MsgStream&   s ) const 
+{
+  Material::fillStream( s ) ;
+  s << " \t Symbol='"     << symbol() << "'\t" 
+    << " CoulombFactor="  << std::setw(8) << coulombFactor() 
+    << " TsaiFactor="     << std::setw(8) << tsaiFactor   ()
+    << " #isotopes="      << std::setw(2) << isotopes().size() 
+    << endreq;
+  for( Isotopes::const_iterator it = isotopes().begin() ; isotopes().end() != it ; ++it )
+    { 
+      s << " \t\tisotope#"      << std::setw(2) << it - isotopes().begin() 
+        << " fraction="  << std::setw(8) << it->first 
+        << endreq 
+        << "\t"           << it->second; 
+    }
+  return s;
+};    
+/////////////////////////////////////////////////////////////////////////////////////////////////
+std::ostream&     Element::fillStream ( std::ostream& s ) const 
+{
+  Material::fillStream( s ) ;
+  s << " \t Symbol='"     << symbol()     << "'\t" 
+    << " CoulombFactor="  << std::setw(8) << coulombFactor() 
+    << " TsaiFactor="     << std::setw(8) << tsaiFactor   ()
+    << " #isotopes="      << std::setw(2) << isotopes().size() 
+    << std::endl;
+  for( Isotopes::const_iterator it = isotopes().begin() ; isotopes().end() != it ; ++it )
+    { 
+      s << " \t\tisotope#"      << std::setw(2) << it - isotopes().begin() 
+        << " fraction="  << std::setw(8) << it->first 
+        << std::endl 
+        << "\t"           << it->second; 
+    }
+  return s;
+};    
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+
+
+

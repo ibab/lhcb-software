@@ -1,13 +1,10 @@
-///	$Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/component/XmlCatalogCnv.h,v 1.1 2001-02-05 12:45:53 ranjard Exp $
-#ifndef DETDESC_XMLCNVSVC_XMLCATALOGCNV_H
-#define DETDESC_XMLCNVSVC_XMLCATALOGCNV_H
-
+#ifndef DETDESC_XMLCATALOGCNV_H
+#define DETDESC_XMLCATALOGCNV_H
 /// Include files
 #include "GaudiKernel/ClassID.h"
-
+///
 #include "DetDesc/XmlGenericCnv.h"
 #include "DetDesc/ISax8BitDocHandler.h"
-
 /// Forward and external declarations
 class RegistryEntry;
 template <class TYPE> class CnvFactory;

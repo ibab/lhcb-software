@@ -1,13 +1,8 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/DetDesc/DetectorElement.h,v 1.6 2001-02-11 11:30:46 ibelyaev Exp $
-#ifndef  GAUDIKERNEL_DETECTORELEMENT_H
-#define  GAUDIKERNEL_DETECTORELEMENT_H 
-
-// Include files
+#ifndef  DETDESC_DETECTORELEMENT_H
+#define  DETDESC_DETECTORELEMENT_H 1
+// STD and STL 
 #include <algorithm>
-
-#include "GaudiKernel/Kernel.h"
-#include "GaudiKernel/StatusCode.h"
-
+/// GaudiKernel
 #include "GaudiKernel/IDataProviderSvc.h"
 #include "GaudiKernel/IDataDirectory.h"
 #include "GaudiKernel/ILVolume.h"
@@ -16,21 +11,17 @@
 #include "GaudiKernel/IValidity.h"
 #include "GaudiKernel/ITime.h"
 #include "GaudiKernel/ISvcLocator.h"
-
+// GaudiKernel
 #include "GaudiKernel/DataObject.h"
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/SmartDataPtr.h"
-
-// Forward declarations
-
+/// DetDesc 
+#include "DetDesc/CLIDDetectorElement.h"
+///
 class IDataProviderSvc;
 class IMessageSvc;
 template <class T> class DataObjectFactory;
-
-
-
-// unique ID of the class
-#include "DetDesc/CLIDDetectorElement.h"
+///
 
 
 /** @class DetectorElement DetectorElement.h GaudiKernel/DetectorElement.h
@@ -41,6 +32,7 @@ template <class T> class DataObjectFactory;
     @author Ivan Belyaev
 */
 
+///
 class DetectorElement: public DataObject,
                        public IDetectorElement,
 		       public IValidity 
@@ -214,7 +206,6 @@ class DetectorElement: public DataObject,
   // technicalities 
   inline IDataProviderSvc*  dataSvc () const { return m_de_dataSvc ; } 
   ////
-  class DetectorElementException; // exception
   inline void Assert( bool assertion , const std::string& name = "DetectorElement Unknown Exception" ) const; 
   ///
  private:   
@@ -239,159 +230,9 @@ class DetectorElement: public DataObject,
   ISvcLocator*           m_de_svcLoc        ;
   //
 };
-//  output operators to MsgStream
-inline MsgStream&    operator<<( MsgStream&    os ,  const DetectorElement& de ) { return de.printOut(os); };
-inline MsgStream&    operator<<( MsgStream&    os ,  const DetectorElement* de )
-{ return ( (0 == de) ? (os << "DetectorElement* points to NULL") : ( os << *de ) ) ; };
 ///
-#include "DetDesc/DetectorElementException.h"
-///
-inline const IGeometryInfo* DetectorElement::geometry   () const { return  m_de_iGeometry    ; };
-inline       IGeometryInfo* DetectorElement::geometry   ()       { return  m_de_iGeometry    ; };
-inline const IAlignment*    DetectorElement::alignment  () const { return  m_de_iAlignment   ; };
-inline       IAlignment*    DetectorElement::alignment  ()       { return  m_de_iAlignment   ; };
-inline const ICalibration*  DetectorElement::calibration() const { return  m_de_iCalibration ; };
-inline       ICalibration*  DetectorElement::calibration()       { return  m_de_iCalibration ; };
-inline const IReadOut*      DetectorElement::readOut    () const { return  m_de_iReadOut     ; };
-inline       IReadOut*      DetectorElement::readOut    ()       { return  m_de_iReadOut     ; };
-inline const ISlowControl*  DetectorElement::slowControl() const { return  m_de_iSlowControl ; };
-inline       ISlowControl*  DetectorElement::slowControl()       { return  m_de_iSlowControl ; };
-inline const IFastControl*  DetectorElement::fastControl() const { return  m_de_iFastControl ; };
-inline       IFastControl*  DetectorElement::fastControl()       { return  m_de_iFastControl ; };
-
-// "pseudo-casting" 
-inline DetectorElement::operator const IGeometryInfo*()    const { return  m_de_iGeometry    ; };
-inline DetectorElement::operator       IGeometryInfo*()          { return  m_de_iGeometry    ; };
-inline DetectorElement::operator const IAlignment*   ()    const { return  m_de_iAlignment   ; };
-inline DetectorElement::operator       IAlignment*   ()          { return  m_de_iAlignment   ; };
-inline DetectorElement::operator const ICalibration* ()    const { return  m_de_iCalibration ; };
-inline DetectorElement::operator       ICalibration* ()          { return  m_de_iCalibration ; };
-inline DetectorElement::operator const IReadOut*     ()    const { return  m_de_iReadOut     ; };
-inline DetectorElement::operator       IReadOut*     ()          { return  m_de_iReadOut     ; };
-inline DetectorElement::operator const ISlowControl* ()    const { return  m_de_iSlowControl ; };
-inline DetectorElement::operator       ISlowControl* ()          { return  m_de_iSlowControl ; };
-inline DetectorElement::operator const IFastControl* ()    const { return  m_de_iFastControl ; };
-inline DetectorElement::operator       IFastControl* ()          { return  m_de_iFastControl ; };
-// 
-inline DetectorElement::operator const IGeometryInfo&()    const 
-{
-  Assert( 0 != m_de_iGeometry , "DetectorElement::geometry is not available!" );
-  return *m_de_iGeometry    ; 
-};
-//
-inline DetectorElement::operator       IGeometryInfo&()          
-{ 
-  Assert( 0 != m_de_iGeometry , "DetectorElement::geometry is not available!" );
-  return *m_de_iGeometry    ; 
-};
-//
-inline DetectorElement::operator const IAlignment&   ()    const 
-{ 
-  Assert( 0 != m_de_iAlignment , "DetectorElement::alignment is not available!" );
-  return *m_de_iAlignment   ; 
-};
-//
-inline DetectorElement::operator       IAlignment&   ()          
-{ 
-  Assert( 0 != m_de_iAlignment , "DetectorElement::alignment is not available!" );
-  return *m_de_iAlignment   ; 
-};
-//
-inline DetectorElement::operator const ICalibration& ()    const 
-{ 
-  Assert( 0 != m_de_iCalibration , "DetectorElement::calibration is not available!" );
-  return *m_de_iCalibration ; 
-};
-//
-inline DetectorElement::operator       ICalibration& ()          
-{ 
-  Assert( 0 != m_de_iCalibration , "DetectorElement::calibration is not available!" );
-  return *m_de_iCalibration ; 
-};
-//
-inline DetectorElement::operator const IReadOut&     ()    const 
-{ 
-  Assert( 0 != m_de_iReadOut , "DetectorElement::readout is not available!" );
-  return *m_de_iReadOut     ; 
-};
-//
-inline DetectorElement::operator       IReadOut&     ()          
-{ 
-  Assert( 0 != m_de_iReadOut , "DetectorElement::readout is not available!" );
-  return *m_de_iReadOut     ; 
-};
-//
-inline DetectorElement::operator const ISlowControl& ()    const 
-{ 
-  Assert( 0 != m_de_iSlowControl , "DetectorElement::slowcontrol is not available!" );
-  return *m_de_iSlowControl ; 
-};
-//
-inline DetectorElement::operator       ISlowControl& ()          
-{ 
-  Assert( 0 != m_de_iSlowControl , "DetectorElement::slowcontrol is not available!" );
-  return *m_de_iSlowControl ; 
-};
-//
-inline DetectorElement::operator const IFastControl& ()    const 
-{ 
-  Assert( 0 != m_de_iFastControl , "DetectorElement::fastcontrol is not available!" );
-  return *m_de_iFastControl ; 
-};
-//
-inline DetectorElement::operator       IFastControl& ()          
-{ 
-  Assert( 0 != m_de_iFastControl , "DetectorElement::fastcontrol is not available!" );
-  return *m_de_iFastControl ; 
-};
-//  from IValidity Interface:
-inline bool DetectorElement::isValid ()                 { return validSince() < validTill() ;};
-inline bool DetectorElement::isValid ( const ITime& t ) { return validSince() < t &&  t < validTill() ;};
-/// assertion 
-inline void DetectorElement::Assert( bool assertion , const std::string& assertionName ) const
-{ if( !assertion ) { throw DetectorElement::DetectorElementException( assertionName , this ) ; } };
-/// (reference to) container of pointers to child detector elements 
-inline       IDetectorElement::IDEContainer&  DetectorElement::childIDetectorElements()
-{
-  /// already loaded? 
-  if( m_de_childrensLoaded ) { return m_de_childrens; } 
-  /// load them! 
-  const IDataDirectory*  dir = this->directory(); 
-  Assert( 0 != dir , "const IDataDirectory** point to NULL!" );
-  for( IDataDirectory::ConstDirIterator it = dir->begin(); dir->end() != it ; ++it ) 
-    {
-      Assert( 0 != *it , "ConstDirIterator points to NULL!" );
-      SmartDataPtr<IDetectorElement> de( dataSvc() , (*it)->fullpath() );
-      IDetectorElement* ide = de ;
-      Assert( 0 != ide , "Could not load child object="+(*it)->fullpath() );
-      m_de_childrens.push_back( ide  );
-    }
-  ///
-  m_de_childrensLoaded = true; 
-  ///
-  return m_de_childrens;
-};
-/// (reference to) container of pointers to child detector elements 
-inline const IDetectorElement::IDEContainer&  DetectorElement::childIDetectorElements() const 
-{
-  /// already loaded? 
-  if( m_de_childrensLoaded ) { return m_de_childrens; } 
-  /// load them! 
-  const IDataDirectory*  dir = this->directory(); 
-  Assert( 0 != dir , "const IDataDirectory** point to NULL!" );
-  for( IDataDirectory::ConstDirIterator it = dir->begin(); dir->end() != it ; ++it ) 
-    {
-      Assert( 0 != *it , "ConstDirIterator points to NULL!" );
-      SmartDataPtr<IDetectorElement> de( dataSvc() , (*it)->fullpath() );
-      IDetectorElement* ide = de ;
-      Assert( 0 != ide , "Could not load child object="+(*it)->fullpath() );
-      m_de_childrens.push_back( ide  );
-    }
-  ///
-  m_de_childrensLoaded = true; 
-  ///
-  return m_de_childrens;
-};
+#include "DetDesc/DetectorElement.icpp"
 ///
 
-#endif    //  GAUDIKERNEL_DETECTORELEMENT_H 
+#endif    //    DETDESC_DETECTORELEMENT_H 
+

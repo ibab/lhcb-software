@@ -73,23 +73,23 @@ LVolume::LVolume( )                    // private!!!
   ///
   {
     m_lv_svcLoc = Gaudi::svcLocator(); 
-    if( 0 == svcLoc()) { throw LVolume::LVolumeException(" LVolume()(protected): ISvcLocator* points to NULL!"); } 
+    if( 0 == svcLoc()) { throw LVolumeException(" LVolume()(protected): ISvcLocator* points to NULL!"); } 
     svcLoc()->addRef();
   }
   ///
   {
     const std::string tmp("DetectorDataSvc");
     StatusCode sc = svcLoc()->service( tmp , m_lv_dataSvc );
-    if( sc.isFailure() ) { throw  LVolume::LVolumeException( " LVolume()(protected): could not locate IDataProviderSvc="+tmp , 0 , sc ); } 
-    if( 0 == dataSvc() ) { throw  LVolume::LVolumeException( " LVolume()(protected): IDataProviderSvc* points to NULL"                ); } 
+    if( sc.isFailure() ) { throw LVolumeException( " LVolume()(protected): could not locate IDataProviderSvc="+tmp , 0 , sc ); } 
+    if( 0 == dataSvc() ) { throw LVolumeException( " LVolume()(protected): IDataProviderSvc* points to NULL"                ); } 
     dataSvc()->addRef();
   }
   ///
   {
     const std::string tmp("MessageSvc");
     StatusCode sc = svcLoc()->service( tmp , m_lv_msgSvc ); 
-    if( sc.isFailure() ) { throw LVolume::LVolumeException(" LVolume()(protected): could not locate IMessageSvc="+tmp , 0 , sc ); }
-    if( 0 == msgSvc()  ) { throw LVolume::LVolumeException(" LVolume()(protected): IMessageSvc* points to NULL"                ); } 
+    if( sc.isFailure() ) { throw LVolumeException(" LVolume()(protected): could not locate IMessageSvc="+tmp , 0 , sc ); }
+    if( 0 == msgSvc()  ) { throw LVolumeException(" LVolume()(protected): IMessageSvc* points to NULL"                ); } 
     msgSvc()->addRef();
   }
   ///
@@ -115,7 +115,7 @@ LVolume::LVolume( const std::string& name        ,
   , m_lv_msgSvc       (    0     ) 
   , m_lv_svcLoc       (    0     )
 {
-  if( 0 == Solid ) { throw LVolume::LVolumeException("LVolume::LVolume(1), ISolid* points to NULL ") ; }
+  if( 0 == Solid ) { throw LVolumeException("LVolume::LVolume(1), ISolid* points to NULL ") ; }
   ///
   {
     m_lv_validSince = new TimePoint( validSince ) ;
@@ -124,23 +124,23 @@ LVolume::LVolume( const std::string& name        ,
   ///
   {
     m_lv_svcLoc = Gaudi::svcLocator(); 
-    if( 0 == svcLoc()) { throw LVolume::LVolumeException(" LVolume()(1): ISvcLocator* points to NULL!"); } 
+    if( 0 == svcLoc()) { throw LVolumeException(" LVolume()(1): ISvcLocator* points to NULL!"); } 
     svcLoc()->addRef();
   }
   ///
   {
     const std::string tmp("DetectorDataSvc");
     StatusCode sc = svcLoc()->service( tmp , m_lv_dataSvc );
-    if( sc.isFailure() ) { throw  LVolume::LVolumeException( " LVolume()(1): could not locate IDataProviderSvc="+tmp , 0 , sc ); } 
-    if( 0 == dataSvc() ) { throw  LVolume::LVolumeException( " LVolume()(1): IDataProviderSvc* points to NULL"       ); } 
+    if( sc.isFailure() ) { throw LVolumeException( " LVolume()(1): could not locate IDataProviderSvc="+tmp , 0 , sc ); } 
+    if( 0 == dataSvc() ) { throw LVolumeException( " LVolume()(1): IDataProviderSvc* points to NULL"       ); } 
     dataSvc()->addRef();
   }
   ///
   {
     const std::string tmp("MessageSvc");
     StatusCode sc = svcLoc()->service( tmp , m_lv_msgSvc ); 
-    if( sc.isFailure() ) { throw LVolume::LVolumeException(" LVolume()(1): could not locate IMessageSvc="+tmp , 0 , sc ); }
-    if( 0 == msgSvc()  ) { throw LVolume::LVolumeException(" LVolume()(1): IMessageSvc* points to NULL"       ); } 
+    if( sc.isFailure() ) { throw LVolumeException(" LVolume()(1): could not locate IMessageSvc="+tmp , 0 , sc ); }
+    if( 0 == msgSvc()  ) { throw LVolumeException(" LVolume()(1): IMessageSvc* points to NULL"       ); } 
     msgSvc()->addRef();
   }
   ///
@@ -164,7 +164,7 @@ LVolume::LVolume( const std::string& name        ,
   , m_lv_msgSvc       (    0     ) 
   , m_lv_svcLoc       (    0     )
 {
-  if( 0 == Solid ) { throw LVolume::LVolumeException("LVolume::LVolume(2), ISolid* points to NULL ") ; }
+  if( 0 == Solid ) { throw LVolumeException("LVolume::LVolume(2), ISolid* points to NULL ") ; }
   ///
   {
     m_lv_validSince = new TimePoint( time_absolutepast    ) ;
@@ -173,23 +173,23 @@ LVolume::LVolume( const std::string& name        ,
   ///
   {
     m_lv_svcLoc = Gaudi::svcLocator(); 
-    if( 0 == svcLoc()) { throw LVolume::LVolumeException(" LVolume()(2): ISvcLocator* points to NULL!"); } 
+    if( 0 == svcLoc()) { throw LVolumeException(" LVolume()(2): ISvcLocator* points to NULL!"); } 
     svcLoc()->addRef();
   }
   ///
   {
     const std::string tmp("DetectorDataSvc");
     StatusCode sc = svcLoc()->service( tmp , m_lv_dataSvc );
-    if( sc.isFailure() ) { throw  LVolume::LVolumeException( " LVolume()(2): could not locate IDataProviderSvc="+tmp , 0 , sc  ); } 
-    if( 0 == dataSvc() ) { throw  LVolume::LVolumeException( " LVolume()(2): IDataProviderSvc* points to NULL"                 ); } 
+    if( sc.isFailure() ) { throw LVolumeException( " LVolume()(2): could not locate IDataProviderSvc="+tmp , 0 , sc  ); } 
+    if( 0 == dataSvc() ) { throw LVolumeException( " LVolume()(2): IDataProviderSvc* points to NULL"                 ); } 
     dataSvc()->addRef();
   }
   ///
   {
     const std::string tmp("MessageSvc");
     StatusCode sc = svcLoc()->service( tmp , m_lv_msgSvc ); 
-    if( sc.isFailure() ) { throw LVolume::LVolumeException(" LVolume()(2): could not locate IMessageSvc="+tmp , 0 , sc ); }
-    if( 0 == msgSvc()  ) { throw LVolume::LVolumeException(" LVolume()(2): IMessageSvc* points to NULL"                ); } 
+    if( sc.isFailure() ) { throw LVolumeException(" LVolume()(2): could not locate IMessageSvc="+tmp , 0 , sc ); }
+    if( 0 == msgSvc()  ) { throw LVolumeException(" LVolume()(2): IMessageSvc* points to NULL"                ); } 
     msgSvc()->addRef();
   }
   ///

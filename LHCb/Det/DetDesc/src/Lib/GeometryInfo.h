@@ -1,35 +1,37 @@
-/// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/Lib/GeometryInfo.h,v 1.2 2001-02-11 11:30:48 ibelyaev Exp $
-#ifndef     __DETDESC_GEOMETRYINFO_GEOMETRYINFO_H__
-#define     __DETDESC_GEOMETRYINFO_GEOMETRYINFO_H__
-
-
+#ifndef     DETDESC_GEOMETRYINFO_H
+#define     DETDESC_GEOMETRYINFO_H
+/// STD and STL 
 #include <iostream>
 #include <string>
 #include <functional>
 #include <algorithm> 
-
-// interfaces from Gaudi 
+/// CLHEP 
+#include "CLHEP/Geometry/Point3D.h"
+#include "CLHEP/Geometry/Transform3D.h"
+// GaudiKernel
 #include "GaudiKernel/IDataDirectory.h"
 #include "GaudiKernel/IMessageSvc.h"
 #include "GaudiKernel/IDataProviderSvc.h"
-
-
-// interfaces from DetDesc 
 #include "GaudiKernel/ILVolume.h"
 #include "GaudiKernel/IPVolume.h"
 #include "GaudiKernel/IGeometryInfo.h" 
 #include "GaudiKernel/IDetectorElement.h" 
-
-// concrete classes 
+// GaudiKernel
 #include "GaudiKernel/StatusCode.h"
 #include "GaudiKernel/DataObject.h"
-
-#include "CLHEP/Geometry/Point3D.h"
-#include "CLHEP/Geometry/Transform3D.h"
-
+///
 class MsgStream             ;
 class GaudiException        ;
 class DetectorElement       ;
+///
+
+
+/** @class GeometryInfo GeometryInfo.h DetDesc/GeometryInfo.h
+
+    The trivial implementationof IGeomtryInfo interface 
+    
+    @author Vanya Belyaev 
+*/
 
 
 class GeometryInfo:   public IGeometryInfo
@@ -176,14 +178,7 @@ public:
   virtual StreamBuffer& serialize( StreamBuffer& ) const ; 
 
  private:
-
-  //
-  // All specific functions are PRIVATE!  
-  //
-  // technicalities 
-  //
-
-  // 
+  ///
   inline bool              isInsideDaughter ( const HepPoint3D& globalPoint ) const ;   
   inline bool              childLoaded      () const { return m_gi_childLoaded ; }                               
   inline StatusCode        reset            ( const int Level );                           
@@ -254,19 +249,9 @@ public:
   IMessageSvc*                         m_gi_messSvc        ; 
   //  
 };
-
-//
-//  "private" inline functions (technicalities) 
-//
-#include "GeometryInfoInlines.h"
-#include "GeometryInfoMethods.h"
-#include "GeometryInfoRelations.h"
+///
 #include "GeometryInfo.icpp" 
-
-//
-//
-//
-
+///
 #endif   // __DETDESC_GEOMETRYINFO_GEOMETRYINFO_H__
 
 

@@ -1,20 +1,25 @@
-#ifndef         __DETDESC_GEOMETRYINFO_GEOMETRYINFO_ICC__
-#define         __DETDESC_GEOMETRYINFO_GEOMETRYINFO_ICC__
-
-//
-//
-//
-
+#ifndef         DETDESC_GEOMETRYINFO_ICCP
+#define         DETDESC_GEOMETRYINFO_ICCP 1 
+/// GaudiKernel
+#include "GaudiKernel/MsgStream.h"
+/// local 
 #include "GeometryInfo.h" 
 #include "GeometryInfoException.h"
 
-/// assertion 
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////
+inline MsgStream& operator<<( MsgStream& os , const GeometryInfo& gi ) { return gi.printOut(os); };
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////
+inline MsgStream& operator<<( MsgStream& os , const GeometryInfo* gi ) 
+{ return  ( (0 == gi) ?  (os << "GeometryInfo* points to NULL"<<endreq) : gi->printOut(os) ); };
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+/// assertion //////////////////////////////////////////////////////////////////////////////////////////////// 
 inline void GeometryInfo::Assert( bool assertion ,  const std::string& name ) const
 { if( !assertion ) { throw GeometryInfoException( name , this ); } };
-/// assertion 
+/// assertion ///////////////////////////////////////////////////////////////////////////////////////////////
 inline void GeometryInfo::Assert( bool assertion ,  const std::string& name , const GaudiException& ge ) const
 { if( !assertion ) { throw GeometryInfoException( name , ge , this ); } };
-// 
+///////////////////////////////////////////////////////////////////////////////////////////////////////////// 
 inline bool GeometryInfo::isInsideDaughter( const HepPoint3D& GlobalPoint ) const 
 {
   if( !childLoaded() || loadChildren().isFailure() ) { return false; } // could not load the daughters
@@ -22,11 +27,419 @@ inline bool GeometryInfo::isInsideDaughter( const HepPoint3D& GlobalPoint ) cons
     std::find_if( childBegin() , childEnd  () , IGeometryInfo_isInside( GlobalPoint ) ) ;  
   return ( ( childEnd() == it ) ? false : true );
 };
-//
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////
+inline bool GeometryInfo::hasLVolume () const { return m_gi_has_logical; };
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////
+inline bool GeometryInfo::hasSupport () const { return m_gi_has_support; } 
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////
+inline const HepTransform3D& GeometryInfo::matrix()  const 
+{
+  ///
+  if( 0 != m_gi_matrix ) { return *m_gi_matrix             ; }   // matrix exists
+  ///
+  try                    { m_gi_matrix = calculateMatrix() ; }   // calculate matrix
+  catch ( const GaudiException&  GE )   
+    { Assert( false , "GeometryInfo::matrix() : exception caught" , GE    ) ; } 
+  catch (...)   
+    { Assert( false , "GeometryInfo::matrix() : unknown exception caught" ) ; } 
+  ///
+  if( 0 == m_gi_matrix ) { m_gi_matrix = new HepTransform3D() ; } 
+  Assert( 0 != m_gi_matrix , "GeometryInfo::matrix() : unable to calculate matrix!" );
+  return *m_gi_matrix;
+};
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////
+inline const HepTransform3D& GeometryInfo::matrixInv() const 
+{
+  if( 0 != m_gi_matrixInv )   { return *m_gi_matrixInv             ; }      // matrix is calculated
+  m_gi_matrixInv = new HepTransform3D( matrix().inverse() );                // calculate matrix 
+  if( 0 == m_gi_matrixInv )   { m_gi_matrixInv = new HepTransform3D; }      // default value 
+  return *m_gi_matrixInv;
+};
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+inline HepPoint3D GeometryInfo::toLocal ( const HepPoint3D& GlobalPoint ) const { return ( matrix   () * GlobalPoint ); };
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+inline HepPoint3D GeometryInfo::toGlobal( const HepPoint3D& localPoint  ) const { return ( matrixInv() * localPoint  ); };
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+inline bool GeometryInfo::isInside ( const HepPoint3D& globalPoint )  const
+{
+  if( hasLVolume() && 0 != lvolume() ) { return lvolume()->isInside( toLocal( globalPoint ) ); }
+  return  isInsideDaughter( globalPoint ) ;
+};       
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+inline const std::string&  GeometryInfo::lvolumeName() const { return m_gi_lvolumeName; };
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+inline ILVolume* GeometryInfo::lvolume    () const  
+{
+  if( !hasLVolume() )     { return  0              ; }     
+  if( 0 != m_gi_lvolume ) { return  m_gi_lvolume          ; } 
+  try                     { m_gi_lvolume  = findLogical() ; }
+  catch ( const GaudiException& Exception ) 
+    { Assert( false , "GeometryInfo::lvolume() : exception caught" , Exception ) ; } 
+  catch (...)           
+    { Assert( false , "GeometryInfo::lvolume() : unknown exception caught" ) ; } 
+  ///
+  Assert( 0 != m_gi_lvolume , "GeometryInfo::lvolume() : unable to load ILVolume!" );
+  /// !! gi_has_volume = false                                      // NB!!!!! ATTENTION!!!!
+  return m_gi_lvolume; 
+}; 
+// look for daughter to which the given point belongs to ///////////////////////////////////////////////////////////////////// 
+inline std::string GeometryInfo::belongsToPath( const HepPoint3D& globalPoint )
+{
+  if( !isInside( globalPoint )                     ) { return std::string(""); } 
+  if( !childLoaded() && loadChildren().isFailure() ) { return std::string(""); }  
+  //
+  IGeometryInfo::IGIChildrens::iterator it  =                                  // look through children
+    std::find_if( childBegin() , childEnd  () , IGeometryInfo_isInside(globalPoint) ) ;
+  //
+  return ( childEnd() == it ) ? std::string("") : *(m_gi_childrensNames.begin()+(it-childBegin())); 
+};
+// look for daughter to which the given point belongs to ///////////////////////////////////////////////////////////////////// 
+inline IGeometryInfo* GeometryInfo::belongsTo ( const HepPoint3D& globalPoint )
+{
+  if( !isInside( globalPoint )                     ) { return 0; } 
+  if( !childLoaded() && loadChildren().isFailure() ) { return 0; }   
+  //
+  IGeometryInfo::IGIChildrens::iterator it  = 
+    std::find_if( childBegin() , childEnd  () , IGeometryInfo_isInside(globalPoint) ) ;
+  //
+  return ( childEnd() == it ? 0 : *it );   
+};
+// be careful! use first "isInside" method! ///////////////////////////////////////////////////// 
+inline std::string    GeometryInfo::belongsToPath( const HepPoint3D& globalPoint , 
+                                                   const int         level       )
+{
+  if( 0 == level ){  return detElem()->name() ; } 
+  IGeometryInfo* gi =  belongsTo( globalPoint );
+  return ( 0 == gi ) ? detElem()->name()     : gi->belongsToPath( globalPoint , level - 1 ) ; 
+  //
+};
+// be careful! use first "isInside" method! ////////////////////////////////////////////////////
+inline IGeometryInfo* GeometryInfo::belongsTo    ( const HepPoint3D& globalPoint , 
+                                                   const int         level       )
+{
+  if( level == 0 ) { return this;  }                // do not look throug  daughters!
+  IGeometryInfo* gi = belongsTo( globalPoint );
+  return  ( ( 0 == gi ) ? this : gi->belongsTo( globalPoint , level - 1 ) ); 
+};
+///////////////////////////////////////////////////////////////////////////////////////////////
 
 
 
-#endif   //     __DETDESC_GEOMETRYINFO_GEOMETRYINFO_ICC__
+//////////////////////////////////////////////////////////////////////////////////////////////
+inline StatusCode GeometryInfo::fullGeoInfoForPoint( const HepPoint3D&        point      , 
+                                                     const int                level      , 
+                                                     IGeometryInfo*&          start      , 
+                                                     ILVolume::PVolumePath&   volumePath )
+{
+  // reset output values 
+  start = 0         ; 
+  if( !volumePath.empty() )            { volumePath.clear();          }
+  if( !isInside( point )  )            { return StatusCode::FAILURE ; }       // RETURN
+  //
+  IGeometryInfo* gi = belongsTo( point , -1 );
+  if( 0 == gi || 0 == gi->lvolume() )  { return StatusCode::FAILURE ; }       // RETURN 
+  start = gi;
+  //
+  return gi->lvolume()->belongsTo( gi->toLocal( point )  , level , volumePath ); 
+};
+//////////////////////////////////////////////////////////////////////////////////////////////
+inline StatusCode GeometryInfo::fullGeoInfoForPoint( const HepPoint3D&        point      , 
+                                                     const int                level      , 
+                                                     std::string&             start      , 
+                                                     ILVolume::PVolumePath&   volumePath )
+{
+  // reset output values 
+  start = std::string("");
+  if( !volumePath.empty() ) { volumePath.clear()       ; } 
+  if( !isInside( point ) ) { return StatusCode::FAILURE; }  
+  //
+  IGeometryInfo* gi = belongsTo    ( point , -1 );
+  if( 0 == gi || 0 == gi->lvolume() ) { return StatusCode::FAILURE ; }
+  start             = belongsToPath( point , -1 );
+  //
+  return gi->lvolume()->belongsTo( gi->toLocal( point ) , level , volumePath ); 
+  //
+};
+//////////////////////////////////////////////////////////////////////////////////////////////
+inline StatusCode GeometryInfo::fullGeoInfoForPoint( const HepPoint3D&        point      , 
+                                                     const int                level      , 
+                                                     IGeometryInfo*&          start      , 
+                                                     ILVolume::ReplicaPath&   replicaPath )
+{
+  // reset output values 
+  start = 0         ; 
+  if( !replicaPath.empty() )            { replicaPath.clear();         }
+  if( !isInside( point )   )            { return StatusCode::FAILURE ; }       // RETURN
+  //
+  IGeometryInfo* gi = belongsTo( point , -1 );
+  if( 0 == gi || 0 == gi->lvolume() )   { return StatusCode::FAILURE ; }       // RETURN 
+  start = gi; 
+  //
+  return gi->lvolume()->belongsTo( gi->toLocal( point )  , level , replicaPath ); 
+};
+//////////////////////////////////////////////////////////////////////////////////////////////
+inline StatusCode GeometryInfo::fullGeoInfoForPoint( const HepPoint3D&        point      , 
+                                                     const int                level      , 
+                                                     std::string&             start      , 
+                                                     ILVolume::ReplicaPath&   replicaPath )
+{
+  // reset output values 
+  start = std::string("");
+  if( !replicaPath.empty() ) { replicaPath.clear()       ; }
+  if( !isInside( point )   ) { return StatusCode::FAILURE; }  
+  //
+  IGeometryInfo* gi = belongsTo    ( point , -1 );
+  if( 0 == gi || 0 == gi->lvolume() ) { return StatusCode::FAILURE ; }
+  start             = belongsToPath( point , -1 );
+  //
+  return gi->lvolume()->belongsTo( gi->toLocal( point ) , level , replicaPath ); 
+};
+//////////////////////////////////////////////////////////////////////////////////////////////
+inline ILVolume* GeometryInfo::lvolume    ( IGeometryInfo*               start       , 
+                                            const ILVolume::ReplicaPath& replicaPath )
+{
+  if( 0 == start || 0 == start->lvolume() ){ return 0; }  // starting point for address is invalid! 
+  //
+  ILVolume* lv = start->lvolume(); 
+  ILVolume::PVolumePath volumePath;
+  if( lv->traverse( replicaPath.begin()  ,
+                    replicaPath.end  ()  , 
+                    volumePath           ).isFailure() ) { return 0; } 
+  //
+  if( volumePath.empty() ) { return lv; } 
+  //
+  IPVolume* pv = *(volumePath.rbegin()); // get "the last" element 
+  //
+  return ( 0 == pv ? 0 : pv->lvolume() );  
+};
+//////////////////////////////////////////////////////////////////////////////////////////////
+inline std::string GeometryInfo::lvolumePath( IGeometryInfo*               start       , 
+                                              const ILVolume::ReplicaPath& replicaPath )
+{
+  // starting point for address is invalid! 
+  if( 0 == start || 0 == start->lvolume() ){ return std::string("") ; } 
+  //
+  ILVolume* lv = start->lvolume(); 
+  ILVolume::PVolumePath volumePath;
+  if( lv->traverse( replicaPath.begin()  ,
+                    replicaPath.end  ()  , 
+                    volumePath           ).isFailure() ) { return 0; } 
+  //
+  if( volumePath.empty() ) { return start->lvolumeName(); } 
+  //
+  IPVolume* pv = *(volumePath.rbegin()); // get "the last" element 
+  //
+  return ( 0 == pv ? std::string("") : pv->lvolumeName() );  
+};
+//////////////////////////////////////////////////////////////////////////////////////////////
+inline StatusCode GeometryInfo::location   ( std::string&                 start , 
+                                             ILVolume::ReplicaPath&       replicaPath ) const
+{
+  start = m_gi_supportName;
+  replicaPath.clear();
+  replicaPath.insert( replicaPath.end() , supportPath().begin() , supportPath().end() ); 
+  //
+  return StatusCode::SUCCESS;
+};
+//////////////////////////////////////////////////////////////////////////////////////////////
+inline std::string GeometryInfo::lvolumePath( const std::string&           start       , 
+                                              const ILVolume::ReplicaPath& replicaPath )
+{
+  if( std::string("") == start ) { return std::string(""); }
+  //
+  IGeometryInfo* gi = geoByName( start );
+  //
+  return 0 == gi ? std::string("") : lvolumePath( gi , replicaPath );
+};
+//////////////////////////////////////////////////////////////////////////////////////////////
+inline ILVolume* GeometryInfo::lvolume    ( const std::string&           start       , 
+                                            const ILVolume::ReplicaPath& replicaPath )
+{
+  if( std::string("") == start ) { return 0; }
+  //
+  IGeometryInfo* gi = geoByName( start ); 
+  //
+  return 0 == gi ? 0 : lvolume( gi , replicaPath );
+};
+//////////////////////////////////////////////////////////////////////////////////////////////
+inline StatusCode GeometryInfo::location   ( IGeometryInfo*&              start , 
+                                             ILVolume::ReplicaPath&       replicaPath ) const
+{
+  replicaPath.clear();
+  replicaPath.insert( replicaPath.end() , supportPath().begin() , supportPath().end() ); 
+  //
+  //
+  if( !hasSupport() )  { start = 0; return StatusCode::SUCCESS; }  
+  //
+  //
+  if( 0 == m_gi_support )
+    {
+      IGeometryInfo* gi = 0;
+      if( std::string("") != m_gi_supportName ) { gi = geoByName( m_gi_supportName ); }
+      if( 0 !=  gi ) { m_gi_support = gi ; }
+    }
+  //
+  start = m_gi_support; 
+  if( 0 == start ) { replicaPath.clear(); } 
+  //
+  return  ( ( 0 != start ) ? StatusCode::SUCCESS : StatusCode::FAILURE );  
+};
+// retrive the replica path (misterious "rpath") ///////////////////////////////////////////////////  
+inline       ILVolume::ReplicaPath& GeometryInfo::supportPath() const      
+{
+  //
+  if( !m_gi_has_support         )  { return m_gi_supportPath ; }  
+  // if replica path is known already 
+  if( !m_gi_supportPath.empty() )  { return m_gi_supportPath; } 
+  // try to extract the replica path from its name (parse the name path) 
+  ///
+  if( 0 == m_gi_support ) { m_gi_support = geoByName( m_gi_supportName ) ; } 
+  ///
+  ILVolume* lv = m_gi_support->lvolume(); 
+  std::string aux( m_gi_supportNamePath ); 
+  while( 0 != aux.size() && 0 != lv ) 
+    {
+      // find separator 
+      std::string::size_type pos     = aux.find_first_of('/');  
+      std::string            physVol ("") ; 
+      if( std::string::npos == pos )  
+        { physVol  = aux                   ; aux=""                       ; }
+      else 
+        { physVol = aux.substr( 0 , pos )  ; aux = aux.substr( pos + 1  ) ; } 
+      if( 0 != physVol.size() ) 
+        {
+          // get physical volume by name
+          IPVolume* pv = (*lv)[ physVol ]; 
+          // find this name in the sequence 
+          ILVolume::PVolumes::const_iterator it = std::find( lv->pvBegin() , lv->pvEnd() , pv ) ; 
+          Assert( lv->pvEnd() != it , "GeometryInfo:: fatal error during retrieve of Replica Path" );
+          // extract index and put it into replica path   
+          m_gi_supportPath.push_back( it - lv->pvBegin() ); 
+        }
+    } 
+  //
+  return m_gi_supportPath; 
+  //
+};
+//////////////////////////////////////////////////////////////////////////////////////////////
+inline const IGeometryInfo*  GeometryInfo::reset() const 
+{
+  /// reset logical volume 
+  m_gi_lvolume = 0; 
+
+  /// reset matrices 
+  if( 0 != m_gi_matrix          ) { delete m_gi_matrix    ; m_gi_matrix    = 0 ; } 
+  if( 0 != m_gi_matrixInv       ) { delete m_gi_matrixInv ; m_gi_matrixInv = 0 ; } 
+
+  /// reset support 
+  m_gi_support      = 0      ; 
+  
+  /// reset parent 
+  m_gi_parentLoaded = false  ;  
+  m_gi_parent       = 0      ;  
+  
+  // reset childs
+  // due to stupid NT-compiler we must to write the following ugly stuff instead of nice statement: 
+  // std::for_each( childBegin() , childEnd() , std::mem_fun(&IGeometryInfo::reset) );
+  if( m_gi_childLoaded ) 
+    { 
+      for( IGeometryInfo::IGIChildrens::const_iterator iter = childBegin() ; iter != childEnd() ; ++iter ) 
+        { if( 0 != (*iter) ) { (*iter)->reset();} } 
+      
+      m_gi_childrens.clear()      ; 
+      m_gi_childrensNames.clear() ; 
+      m_gi_childLoaded  = false   ;
+    }
+  ///
+  ///  
+  return this;
+};
+//////////////////////////////////////////////////////////////////////////////////////////////
+
+
+
+// pointer to the parent IGeometryInfo ////////////////////////////////////////////////////////
+inline        IGeometryInfo* GeometryInfo::parentIGeometryInfo()       
+{
+  if( m_gi_parentLoaded ) { return m_gi_parent; } 
+  Assert( 0 != m_gi_iDetectorElement , "GeometryInfo:: IDetectorElement is not available!" );  
+  IDetectorElement* ide = m_gi_iDetectorElement->parentIDetectorElement(); 
+  Assert( 0 != ide                   , "GeometryInfo:: parent           is not available!" );  
+  if( 0 != ide ) { m_gi_parent = ide->geometry() ; } 
+  Assert( 0 != m_gi_parent           , "GeometryInfo:: parent geometry  is not available!" );  
+  m_gi_parentLoaded = true; 
+  return m_gi_parent;
+}; 
+// pointer to the parent IGeometryInfo (const version) ///////////////////////////////////////
+inline  const IGeometryInfo* GeometryInfo::parentIGeometryInfo() const 
+{
+  if( m_gi_parentLoaded ) { return m_gi_parent; } 
+  Assert( 0 != m_gi_iDetectorElement , "GeometryInfo:: IDetectorElement is not available!" );  
+  IDetectorElement* ide = m_gi_iDetectorElement->parentIDetectorElement(); 
+  Assert( 0 != ide                   , "GeometryInfo:: parent           is not available!" );  
+  const IGeometryInfo* igi = ide->geometry(); 
+  Assert( 0 != igi                   , "GeometryInfo:: parent geometry  is not available!" );  
+  return igi;          
+};
+// (reference to) container of children IGeometryInfo /////////////////////////////////////// 
+inline       IGeometryInfo::IGIChildrens& GeometryInfo::childIGeometryInfos()     
+{
+  if( !m_gi_childLoaded ) { loadChildren(); } 
+  return m_gi_childrens; 
+};
+// (reference to) container of children IGeometryInfo /////////////////////////////////////// 
+inline const IGeometryInfo::IGIChildrens& GeometryInfo::childIGeometryInfos() const      
+{
+  if( !m_gi_childLoaded ) { loadChildren(); } 
+  return m_gi_childrens; 
+};
+// begin iterator /////////////////////////////////////////////////////////////////////////////// 
+inline IGeometryInfo::IGIChildrens::iterator  GeometryInfo::childBegin() 
+{
+  if( !m_gi_childLoaded ) {  try{ loadChildren(); } catch(...){ return m_gi_childrens.end(); }  }
+  return m_gi_childrens.begin(); 
+}; 
+// begin iterator (const version) ///////////////////////////////////////////////////////////////
+inline IGeometryInfo::IGIChildrens::const_iterator  GeometryInfo::childBegin() const 
+{
+  if( !m_gi_childLoaded ) {  try{ loadChildren(); } catch(...){ return m_gi_childrens.end(); }  }
+  return m_gi_childrens.begin(); 
+}; 
+// end  iterator ////////////////////////////////////////////////////////////////////////////////
+inline IGeometryInfo::IGIChildrens::iterator  GeometryInfo::childEnd()  
+{
+  if( !m_gi_childLoaded ) {  try{ loadChildren(); } catch(...){ return m_gi_childrens.end(); }  }
+  return m_gi_childrens.end(); 
+};
+// end  iterator (const version) ////////////////////////////////////////////////////////////////
+inline IGeometryInfo::IGIChildrens::const_iterator  GeometryInfo::childEnd()  const 
+{
+  if( !m_gi_childLoaded ) {  try{ loadChildren(); } catch(...){ return m_gi_childrens.end(); }  }
+  return m_gi_childrens.end(); 
+};
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+
+
+
+#endif   //  DETDESC_GEOMETRYINFO_ICCP
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/component/XmlElementCnv.cpp,v 1.1 2001-02-05 12:45:53 ranjard Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/component/XmlElementCnv.cpp,v 1.2 2001-03-04 14:56:10 ibelyaev Exp $
 
 // STD & STL Headers
 #include <cstdlib>
@@ -166,7 +166,7 @@ void XmlElementCnv::startElement( const char* const name,
       // according the required class ID
       Element* el = new Element( baseName );
       m_dataObj = el;
-
+      
       // Now we have to process more material attributes if any      
       std::string tAtt = attributes.getValue( "temperature" );
       if( !tAtt.empty() )                                                  {
@@ -192,7 +192,18 @@ void XmlElementCnv::startElement( const char* const name,
       if( !tAtt.empty() )                                                  {
         el->setAbsorptionLength( xmlSvc()->eval(tAtt) );
       }
+      tAtt = attributes.getValue( "symbol" );
+      if( !tAtt.empty() )                                                  {
+        el->setSymbol( tAtt );
+      } 
     }
+    else if ( "tabprops" == tagName ) 
+      {
+	const std::string address = attributes.getValue( "address" );
+	long linkID = m_dataObj->addLink( address , 0 ) ;
+	SmartRef<TabulatedProperty> ref( m_dataObj, linkID );
+	((Material*) m_dataObj)->tabulatedProperties().push_back(ref); 
+      }
     else                                                                   {
       // This should not happen!
       log << MSG::WARNING << "Ignoring material tag: "

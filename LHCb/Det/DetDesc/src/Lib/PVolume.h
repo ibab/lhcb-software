@@ -25,6 +25,7 @@ class HepTransform3D;
 class HepPoint3D; 
 
 class GaudiException;
+class PVolumeException;
 
 
 ///
@@ -43,19 +44,15 @@ class PVolume: public IPVolume
   PVolume           ( const     std::string&     PhysVol_name                     ,
 		      const     std::string&     LogVol_name                      ,
                       const     HepPoint3D&      Position                         , // position in Mother Reference Frame!
-                      const     HepRotation&     Rotation       = HepRotation()   , // rotation with respect to Mother Reference Frame
-                      IDataProviderSvc*          dataService    = 0               , 
-                      IMessageSvc*               msgSvc         = 0               );
- ///
+                      const     HepRotation&     Rotation       = HepRotation()   ); // rotation with respect to Mother Reference Frame
+  ///
   PVolume           ( const     std::string&     PhysVol_name                     ,
 		      const     std::string&     LogVol_name                      ,
-                      const     HepTransform3D&  Transform                        , // position in Mother Reference Frame!
-                      IDataProviderSvc*          dataService    = 0               , 
-                      IMessageSvc*               msgSvc         = 0               );
- ///
+                      const     HepTransform3D&  Transform                        ); // position in Mother Reference Frame!
+  ///
   virtual ~PVolume();
   ///  
- public:
+public:
   //     the name of the physical volume
   inline const std::string&     name       () const ; 
   // index is to be used for "replica" and "parametrized" implementation
@@ -112,8 +109,6 @@ class PVolume: public IPVolume
   inline IDataProviderSvc*  dataSvc       () const ; 
   // return message service 
   inline IMessageSvc*       msgSvc        () const ;  
-  // Exception
-  class PVolumeException;
   // Assertion 
   inline void Assert( bool               assertion , 
 		      const std::string& name      ) const;
@@ -135,18 +130,11 @@ class PVolume: public IPVolume
   mutable ILVolume*   m_pv_lvolume;     
   // "very private" 
   IDataProviderSvc*   m_pv_dataSvc; 
-  IMessageSvc*        m_pv_messageSvc; 
 };
 ///
-inline MsgStream& operator<<( MsgStream&  os ,  const PVolume& pv ) { return pv.printOut( os ) ; };
-///
-inline MsgStream& operator<<( MsgStream&  os ,  const PVolume* ppv )
-{  return ( ( 0 == ppv ) ? (os << "PVolume* points to NULL") : ( os << *ppv ) ); }
 
 /// local 
-#include "PVolumeException.h"
-/// local 
-#include "PVolumeInlines.h" 
+#include "PVolume.icpp" 
 ///
 
 #endif  //  __DETDESC_VOLUMES_PVOLUME_H__

@@ -1,52 +1,74 @@
-/// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/DetDesc/Material.icpp,v 1.1.1.1 2000-11-23 13:44:44 ranjard Exp $
+#ifndef     DETDESC_MATERIAL_ICPP 
+#define     DETDESC_MATERIAL_ICPP  1 
+/// GaudiKernel
+#include "GaudiKernel/StreamBuffer.h"
+#include "GaudiKernel/MsgStream.h"       
+/// DetDesc
+#include "DetDesc/Material.h"
 
-// Class Material
+////////////////////////////////////////////////////////////////////////////////////////////////
+inline std::ostream& operator<<( std::ostream& os , const Material& mat )        
+{ return mat.fillStream( os ); }
+/////////////////////////////////////////////////////////////////////////////////////////////////
+inline MsgStream&    operator<<( MsgStream&    os , const Material& mat )          
+{ return mat.fillStream( os ); }
+/////////////////////////////////////////////////////////////////////////////////////////////////
+inline std::ostream& operator<<( std::ostream& os , const Material* mat )          
+{ return mat ? (os<<*mat) : (os<<" Material* points to NULL!") ; }
+/////////////////////////////////////////////////////////////////////////////////////////////////
+inline MsgStream&    operator<<( MsgStream&    os , const Material* mat )           
+{ return mat ? (os<<*mat) : (os<<" Material* points to NULL!") ; }
+/////////////////////////////////////////////////////////////////////////////////////////////////
 
-inline Material::Material( std::string name)
-: DataObject( "Material" ),
-  m_name( name ),
-  m_density(0.0),
-  m_radiationLength(0.0),
-  m_absorptionLength(0.0),
-  m_temperature(STP_Temperature),
-  m_pressure(STP_Pressure),
-  m_state(stateUndefined) {
-  }
+/////////////////////////////////////////////////////////////////////////////////////////////////
+inline bool Material::operator==( const Material* right ) const { return right == this ; }
+/////////////////////////////////////////////////////////////////////////////////////////////////
+inline bool Material::operator!=( const Material* right ) const { return right != this ; }
+/////////////////////////////////////////////////////////////////////////////////////////////////
+inline const std::string& Material::name      () const 
+{ return m_name.empty() ? DataObject::fullpath() : m_name ;  }
+/////////////////////////////////////////////////////////////////////////////////////////////////
+inline void               Material::setName( const std::string& value ) { m_name = value; }
+/////////////////////////////////////////////////////////////////////////////////////////////////
+inline const double       Material::density   () const { return m_density; }
+/////////////////////////////////////////////////////////////////////////////////////////////////
+inline void               Material::setDensity( const double value ) {m_density = value; }
+/////////////////////////////////////////////////////////////////////////////////////////////////
+inline const double       Material::temperature() const { return m_temperature; }
+/////////////////////////////////////////////////////////////////////////////////////////////////
+inline void               Material::setTemperature( const double value ) { m_temperature = value; }
+/////////////////////////////////////////////////////////////////////////////////////////////////
+inline const double       Material::pressure() const { return m_pressure; }
+/////////////////////////////////////////////////////////////////////////////////////////////////
+inline void               Material::setPressure( const double value ) { m_pressure = value; }
+/////////////////////////////////////////////////////////////////////////////////////////////////
+inline const eState       Material::state() const { return m_state; }
+/////////////////////////////////////////////////////////////////////////////////////////////////
+inline void               Material::setState( eState value ) {  m_state = value; }
+/////////////////////////////////////////////////////////////////////////////////////////////////
+inline const double       Material::radiationLength() const { return m_radiationLength; }
+/////////////////////////////////////////////////////////////////////////////////////////////////
+inline void               Material::setRadiationLength( const double value ) {m_radiationLength = value; }
+/////////////////////////////////////////////////////////////////////////////////////////////////
+inline const double       Material::absorptionLength() const { return m_absorptionLength; }
+/////////////////////////////////////////////////////////////////////////////////////////////////
+inline void               Material::setAbsorptionLength( const double value ) { m_absorptionLength = value; }
+/////////////////////////////////////////////////////////////////////////////////////////////////
+inline       Material::Tables& Material::tabulatedProperties()       { return m_props; } 
+/////////////////////////////////////////////////////////////////////////////////////////////////
+inline const Material::Tables& Material::tabulatedProperties() const { return m_props; } 
+/////////////////////////////////////////////////////////////////////////////////////////////////
 
-inline Material::Material( std::string name, double dens, double rl, double al,
-                    double temp, double press, eState s )
-: DataObject( "Material" ),
-  m_name( name ),
-  m_density(dens),
-  m_radiationLength(rl),
-  m_absorptionLength(al),
-  m_temperature(temp),
-  m_pressure(press),
-  m_state(s) {
-  }
-
-inline Material::Material( char* name, double dens, double rl, double al,
-                    double temp, double press, eState s )
-: DataObject( "Material" ),
-  m_name( std::string(name) ),
-  m_density(dens),
-  m_radiationLength(rl),
-  m_absorptionLength(al),
-  m_temperature(temp),
-  m_pressure(press),
-  m_state(s) {
-  }
+#endif  //  DETDESC_MATERIAL_ICPP 
 
 
-inline Material::~Material() {
-}
 
-inline bool Material::operator==(const Material* right) const {
-    // Only pointers are compared!!!!!!
-    return( ( this == right) ? true : false );
-}
 
-inline bool Material::operator!=(const Material* right) const {
-    // Only pointers are compared!!!!!!
-    return( ( this != right) ? true : false );
-}
+
+
+
+
+
+
+
+

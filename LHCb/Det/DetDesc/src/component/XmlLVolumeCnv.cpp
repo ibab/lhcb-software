@@ -1,4 +1,4 @@
-/// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/component/XmlLVolumeCnv.cpp,v 1.2 2001-02-11 11:30:51 ibelyaev Exp $
+/// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/component/XmlLVolumeCnv.cpp,v 1.3 2001-03-04 14:56:10 ibelyaev Exp $
 
 /// Include files
 #include <cstdlib>
@@ -27,6 +27,7 @@
 #include "DetDesc/Mixture.h"
 #include "DetDesc/LVolume.h"
 #include "DetDesc/Solids.h"
+#include "DetDesc/Surface.h"
 #include "DetDesc/XmlCnvException.h"
 
 ///local
@@ -34,7 +35,7 @@
 
 
 /// RCS Id for identification of object version
-///static const char* rcsid = "$Id: XmlLVolumeCnv.cpp,v 1.2 2001-02-11 11:30:51 ibelyaev Exp $";
+///static const char* rcsid = "$Id: XmlLVolumeCnv.cpp,v 1.3 2001-03-04 14:56:10 ibelyaev Exp $";
 
 // Instantiation of a static factory class used by clients to create
 // instances of this service
@@ -67,6 +68,8 @@ StatusCode XmlLVolumeCnv::createObj( IOpaqueAddress* pAddress,
   m_insideBoolean       = false;
   m_insideParameterized = false;
   m_materialName        = "";
+  m_magFieldName        = "";
+  m_sensDetName         = "";
   m_volName             = "";
   m_solid               = 0;
   m_bsName              = "";
@@ -133,12 +136,18 @@ StatusCode XmlLVolumeCnv::updateRep(
 
 // Constructor
 XmlLVolumeCnv::XmlLVolumeCnv( ISvcLocator* svc )
-  : XmlGenericCnv( svc, CLID_LVolume ),
-    m_tagRead(false), m_insideBoolean(false), m_insideParameterized(false)   {
+  : XmlGenericCnv( svc, CLID_LVolume )
+  , m_tagRead(false)
+  , m_insideBoolean(false)
+  , m_insideParameterized(false)
+  , m_surfaces()  
+{
   // Register myself as the recevier of ASCII XML SAX events
   set8BitDocHandler( *this );
   m_transContext = "";
   m_materialName = "";
+  m_sensDetName = "";
+  m_magFieldName = "";
   m_volName = "";
   m_solid = 0;
   m_bsName = "";
@@ -167,10 +176,10 @@ void XmlLVolumeCnv::startElement( const char* const name,
   /// Transformation type attribute value
   std::string tType;
   
-  log << MSG::DEBUG << "<" << tagName << " ";
+  log << MSG::VERBOSE << "<" << tagName << " ";
   
   for( unsigned int i = 0; i < attributes.getLength(); i++ )               {
-    log << MSG::DEBUG
+    log << MSG::VERBOSE
         << attributes.getName(i)  << "=" 
         << attributes.getValue(i) << " "
         << attributes.getType(i)  << " ";
@@ -193,15 +202,28 @@ void XmlLVolumeCnv::startElement( const char* const name,
       // according the required class ID
       
       m_tagRead = true;
-
+      
       // We have to decode class ID of the referred object
-      const CLID& clsID = (unsigned long)atol( attributes.getValue( "classID" ).c_str() );
+      const CLID clsID = (CLID) atol( attributes.getValue( "classID" ).c_str() );
       
       // Remember material name
-      m_materialName  = "/dd/Materials/";
-      m_materialName += attributes.getValue( "material" );
+      m_materialName  = attributes.getValue( "material" );
+      if( m_materialName.empty() || m_materialName[0] != '/' )
+	{ m_materialName.insert(0,"/dd/Materials/"); }
       
       m_volName = baseName;
+      m_surfaces.clear() ;
+      
+      /// sensitive detector information 
+      {
+	std::string tmp = attributes.getValue("sensdet");
+        m_sensDetName = tmp; 
+      }
+      /// magnetic field information 
+      {
+	std::string tmp = attributes.getValue("magfield");
+        m_magFieldName = tmp; 
+      }
       
       // Create the corresponding transient version of the logical volume
       if( CLID_LVolume == clsID )                                    {
@@ -217,7 +239,7 @@ void XmlLVolumeCnv::startElement( const char* const name,
     }
     else                                                                   {
       // This should never happen!
-      log << MSG::WARNING                  << "Got unexpected material tag: "
+      log << MSG::WARNING                  << "Got unexpected tag: "
           << attributes.getValue( "name" ) << endreq;
     }
   }
@@ -241,9 +263,10 @@ void XmlLVolumeCnv::startElement( const char* const name,
       pv.m_lvName  = attributes.getValue( "logvol" );
       m_pvstore.push_back( pv );
     }
-
     setTransContext( tagName );
   }
+  else if( "surf" == tagName )                                     
+    { m_surfaces.push_back( attributes.getValue("address") ); }
   else if( "paramphysvol" == tagName )                                     {
     // Remember the number of copies
     ///
@@ -743,9 +766,13 @@ void XmlLVolumeCnv::endElement( const char* const name )                   {
 
   if( true == m_tagRead && "logvol" == tagName )                           {
     m_tagRead = false;
-    LVolume* vol = new LVolume( m_volName, m_solid, m_materialName );
-    
-    //  Add all of the physical volumes
+    LVolume* vol = new LVolume(  m_volName      , 
+                                 m_solid        , 
+                                 m_materialName ,
+                                 m_sensDetName  ,
+                                 m_magFieldName );
+     
+    ///  Add all of the physical volumes
     std::vector<PVitem>::iterator pvit;
     for( pvit = m_pvstore.begin(); pvit != m_pvstore.end(); pvit++ )        {
         vol->createPVolume( (*pvit).m_pvName,
@@ -754,7 +781,7 @@ void XmlLVolumeCnv::endElement( const char* const name )                   {
                             (*pvit).m_rotation );
     }
 
-    // Add all of the parametric physical volumes
+    /// Add all of the parametric physical volumes
     std::vector<ParamPV>::iterator ppvit;
     for( ppvit = m_ppvstore.begin(); ppvit != m_ppvstore.end(); ppvit++ )  {
       vol->createMultiPVolume( (*ppvit).m_initialPos.m_pvName,
@@ -764,9 +791,22 @@ void XmlLVolumeCnv::endElement( const char* const name )                   {
                                (*ppvit).m_initialPos.m_rotation,
                                (*ppvit).m_stepTranslation,
                                (*ppvit).m_stepRotation
-                             );
+			       );
     }
-
+    /// add all surfaces 
+    {
+      for( std::vector<std::string>::const_iterator it = m_surfaces.begin() ; m_surfaces.end() != it ; ++it )
+	{
+	  const std::string address = *it;
+	  long linkID = vol->addLink( address , 0 ) ;
+	  SmartRef<Surface> ref( m_dataObj, linkID );
+	  std::cout << (Surface*) ref << std::endl;
+	  vol->surfaces().push_back(ref); 
+	}
+      m_surfaces.clear(); 
+    }
+    ///
+    
     m_dataObj = vol;
 
     m_pvstore.clear();

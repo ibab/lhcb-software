@@ -1,12 +1,11 @@
-/// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/DetDesc/Element.h,v 1.4 2001-01-25 15:36:43 ibelyaev Exp $
+/// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/DetDesc/Element.h,v 1.5 2001-03-04 14:56:04 ibelyaev Exp $
 #ifndef DETDESC_ELEMENT_H
-#define DETDESC_ELEMENT_H
-
-/// Include files
+#define DETDESC_ELEMENT_H 1 
+/// STL
 #include <vector>
+/// DetDesc 
 #include "DetDesc/Material.h"
 #include "DetDesc/CLIDElement.h"
-
 
 /// Forward declarations
 class Isotope;
@@ -18,173 +17,121 @@ class Isotope;
     The composition is done only by fraction of the mass.
 
     @author Radovan Chytracek
+    @author Vanya Belyaev 
 */
-class Element : public Material
+class Element : virtual public Material
 {
-  
 public:
-  
-  // Constructors
-  Element( std::string name );
-  Element( char* name );
-  
-  Element( std::string name, double a, double z );
-  Element( char* name, double a, double z );
-  
-  Element( std::string name, double a, double z, double n );
-  Element( char* name, double a, double z, double n );
-  
-  Element( std::string name, double a, double z, double n, double density );
-  Element( char* name, double a, double z, double n, double density );
-  
-  Element( std::string name, int nOfIsotops );
-  Element( char* name, int nOfIsotops );
-  
+  ///
+  typedef  std::pair<double,SmartRef<Isotope> >  Entry    ;
+  typedef  std::vector<Entry>                    Isotopes ;  
+  ///
+public:
+  ///
+  Element( const std::string&  name     = ""   , 
+           const std::string&  symb     = "??" ,
+           const double        a        =  0   , 
+           const double        z        =  0   , 
+           const double        n        =  0   , 
+           const double        density  =  0   ,
+	   const double        rl       =  0   , 
+	   const double        al       =  0   ,  
+	   const double        temp     =  STP_Temperature,
+	   const double        press    =  STP_Pressure,
+	   const eState        s        =  stateUndefined );
   // Destructor
-  ~Element();
-  
+  virtual ~Element();
+  ///
+  virtual inline const CLID& clID    () const { return Element::classID() ; };
+  static         const CLID& classID ()       { return CLID_Element       ; }; 
+  ///
+  /// return symbol of element 
+  inline const std::string &      symbol  () const { return m_symb ; }
+  inline void                  setSymbol (const std::string& S ) { m_symb = S; } 
   /// Number of isotopes in the material
-  const int nOfIsotopes() const;
-  
+  inline const int                nOfIsotopes() const;
   /// Return an isotope by index
-  const Isotope* isotope( unsigned int i ) const;
-  Isotope*       isotope( unsigned int i );
-
+  inline const SmartRef<Isotope>& isotope        ( unsigned int i ) const;
+  inline       SmartRef<Isotope>& isotope        ( unsigned int i )      ;
+  /// return vector of isotopes
+  inline const Isotopes&          isotopes       () const ;
+  inline       Isotopes&          isotopes       ()       ;
   /// Return a fraction of an isotope by index
-  double isotopeFraction( unsigned int i ) const;
-    
+  inline const double             isotopeFraction( unsigned int i ) const;
+  
   /** Add an isotope into this material
       After addition of the last isotope user can call this method
       with "comp" argument set to"true" and compute() method will
       do its job automatically, otherwise the user must call compute()
       method explicitly
   */
-  void addIsotope( Isotope* iPtr, double fract, bool comp = false );
+  inline void addIsotope ( const SmartRef<Isotope>& iPtr , const double Fract, const bool comp = false );
+  inline void addIsotope ( const Entry&             iPtr                     , const bool comp = false );
   
   /** Remove an isotope from the vector of isotopes
       compute() method invocation is done as described above
   */
-  void removeIsotope( Isotope* iPtr, bool comp = false );
-  
-  /// Compute quantities after addition of all isotopes
-  void compute();
-  
-  double coulombFactor();
-
-  double tsaiFactor();
-
-  const CLID& clID() const;
-  static const CLID& classID();
+  inline void removeIsotope ( const SmartRef<Isotope>& iPtr , const bool comp = false );
 
   ///	Atomic mass [g/mole]
-  const double A() const;
-  void setA ( double value );
-  
+  virtual inline const double    A() const                ;
+  inline void                 setA( const double value ) ;
   ///	Atomic number
-  const double Z() const;
-  void setZ( double value );
-  
+  virtual inline const double    Z() const;
+  inline void                 setZ( const double value );
   ///	Number of nucleons
-  const double N() const;
-  void setN( double value );
+  virtual inline const double    N() const;
+  inline void                 setN( const double value );
+  ///  Coulomb factor 
+  inline const double  coulombFactor() const ;
+  ///  Tsai    factor 
+  inline const double  tsaiFactor   () const ;
+  ///
 
+  /// Compute quantities after addition of all isotopes
+  void    compute();
   /// Compute Coulomb factor
-  void ComputeCoulombFactor();
-
+  void    ComputeCoulombFactor  ();
   /// Comput Tsai factor
-  void ComputeLradTsaiFactor();
+  void    ComputeLradTsaiFactor ();
 
-private:
-
+  /// serialization for read and write 
+  virtual StreamBuffer& serialize( StreamBuffer& s )       ; 
+  virtual StreamBuffer& serialize( StreamBuffer& s ) const ; 
+  
+  /// Fill the output stream (ASCII)
+  virtual std::ostream& fillStream ( std::ostream& s ) const ;
+  /// Fill the output stream (ASCII)
+  virtual MsgStream&    fillStream ( MsgStream&    s ) const ;
+  ///
+private:  
   /// Effective atomic mass
-  double                m_Aeff;
-
+  double                  m_Aeff;
   /// Effective atomic number
-  double                m_Zeff;
-
+  double                  m_Zeff;
   /// Effective number of nucleons
-  double                m_Neff;
-  
-  /// Number of isotopes in the material
-  int                   m_nOfIsotopes;
-  
+  double                  m_Neff;
   /// Vector of isotopes this material is composed of
-  std::vector<Isotope*> m_isotopes;
-  
-  /** Vector of fractions corresponding to IsotopeVector items 
-      defining the abundance of the given isotope in the material
-  */
-  std::vector<double>   m_fractions;
-
+  Isotopes                m_isotopes;  
   /// Coulomb factor
-  double                m_coulomb;
-
+  double                  m_coulomb;
   /// Tsai's factor
-  double                m_tsai;
-  
+  double                  m_tsai;
+  /// symbol
+  std::string             m_symb;
 };
-
-
-// Class Element 
-// Get and Set Operations for Class Attributes
-inline const CLID& Element::clID() const {
-  return classID();
-} 
-
-inline const CLID& Element::classID() {
-  return CLID_Element;
-} 
-
-inline const int Element::nOfIsotopes() const {
-  return m_isotopes.size();
-}
-
-// Return an isotope by index
-inline const Isotope* Element::isotope( unsigned int i ) const {
-  return( ( 0 != m_isotopes.size() ) ? m_isotopes[i] : (Isotope*)0 );
-}
-
-inline Isotope* Element::isotope( unsigned int i ) {
-  return( ( 0 != m_isotopes.size() ) ? m_isotopes[i] : (Isotope*)0 );
-}
-
-// Return a fraction mass of an isotope by index
-inline double Element::isotopeFraction( unsigned int i ) const {
-  return( ( 0 != m_fractions.size() ) ? m_fractions[i] : 0.0 );
-}
-
-inline double Element::coulombFactor()
-{
-  return m_coulomb;
-}
-
-inline double Element::tsaiFactor()
-{
-  return m_tsai;
-}
-
-inline const double Element::A() const {
-  return m_Aeff;
-}
-
-inline void Element::setA( double value ) {
-  m_Aeff = value;
-}
-
-inline const double Element::Z() const {
-  return m_Zeff;
-}
-
-inline void Element::setZ( double value ) {
-  m_Zeff = value;
-}
-
-inline const double Element::N() const {
-  return m_Neff;
-}
-
-inline void Element::setN( double value ) {
-  m_Neff = value;
-}
+///
+#include "DetDesc/Element.icpp"
+///
 
 #endif // DETDESC_MATERIAL_ELEMENT_H
+
+
+
+
+
+
+
+
+
+

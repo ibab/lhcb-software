@@ -1,0 +1,31 @@
+#ifndef      DETDESC_SOLIDBOX_ICPP 
+#define      DETDESC_SOLIDBOX_ICPP 1 
+/// GaudiKernel
+#include "GaudiKernel/MsgStream.h"
+/// DetDesc 
+#include "DetDesc/SolidBox.h"
+/// 
+
+
+///////////////////////////////////////////////////////////////////////////
+inline MsgStream&    operator<<( MsgStream&    os , const SolidBox& box )          
+{ return  box.printOut( os ); }
+///////////////////////////////////////////////////////////////////////////
+inline MsgStream&    operator<<( MsgStream&    os , const SolidBox* box )           
+{ return box  ? (os<<*box) : (os<<" SolidBox* points to NULL!"<<endreq) ; }
+///////////////////////////////////////////////////////////////////////////
+
+
+///////////////////////////////////////////////////////////////////////////
+inline bool SolidBox::isInside( const HepPoint3D& point ) const
+{ 
+  if ( abs( point.x() ) > xHalfLength() || 
+       abs( point.y() ) > yHalfLength() ||
+       abs( point.z() ) > zHalfLength() ) { return false; }
+  return true; 
+};
+
+//////////////////////////////////////////////////////////////////////////
+
+
+#endif  //   DETDESC_SOLIDBOX_ICPP 

@@ -1,10 +1,9 @@
-/// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/DetDesc/Mixture.h,v 1.4 2001-01-25 15:36:44 ibelyaev Exp $
+/// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/DetDesc/Mixture.h,v 1.5 2001-03-04 14:56:05 ibelyaev Exp $
 #ifndef DETDESC_MIXTURE_H
 #define DETDESC_MIXTURE_H
-
 /// Include files
 #include <vector>
-
+/// detDesc
 #include "DetDesc/Material.h"
 #include "DetDesc/Element.h"
 #include "DetDesc/CLIDMixture.h"
@@ -20,167 +19,121 @@
 
     @author Radovan Chytracek
 */
-class Mixture : public Material
+class Mixture : public  Material  
 {
-  
+  ///  
 public:
-  
-  /// Constructor fort a simple material
-  Mixture( std::string name, double dens, double rl, double al,
-    double temp, double press, eState s
-    );
-  
+  ///
+  typedef std::pair<double,SmartRef<Element> >  Entry    ;
+  typedef std::vector<Entry>                    Elements ;
+  typedef std::vector<int>                      Atoms    ;
+  ///
   /// Constructors for simple materials
-  Mixture( std::string name, double a, double z, double density,
-    double rl, double al,
-    double temp  = STP_Temperature,
-    double press = STP_Pressure,
-    eState s     = stateUndefined
-    );
-  Mixture( char* name, double a, double z, double density,
-    double rl, double al,
-    double temp  = STP_Temperature,
-    double press = STP_Pressure,
-    eState s     = stateUndefined
-    );
-  
-  /** Constructors for materials filled later by addition of elements
-      and/or other mixtures
-  */
-  Mixture( std::string name, double density, int nOfItms );
-  Mixture( char*        name, double density, int nOfItms );
+  Mixture( const std::string&  name    = ""               , 
+	   const double        a       = 0                , 
+           const double        z       = 0                , 
+           const double        density = 0                ,
+           const double        rl      = 0                , 
+           const double        al      = 0                ,
+           const double        temp    = STP_Temperature  ,
+           const double        press   = STP_Pressure     ,
+           const eState        s       = stateUndefined   );
   
   /// Destructor
-  ~Mixture();
+  virtual ~Mixture();
   
   /// Number of components in the material mixture
-  const int nOfItems() const;
+  inline const int nOfItems() const;
   
   /** Add an element into the mixture by specifying:
       a) the fraction of the mass ( material mixture )
       b) the number of the atoms  ( material compund )
   */
-  void Mixture::addElement( Element* e, int nOfAtoms, bool comp = false);
-  void Mixture::addElement( Element* e, double fraction, bool comp = false);
+  void Mixture::addElement( const SmartRef<Element>& e  , const int    nOfAtoms , const bool comp = false );
+  void Mixture::addElement( const SmartRef<Element>& e  , const double fraction , const bool comp = false );
   
   /** Add another mixture into this mixture by specifying its fraction
       of the mass
   */
-  void Mixture::addMixture( Mixture* mx, double fraction, bool comp = false);
+  void Mixture::addMixture( const SmartRef<Mixture>& mx , const double fraction , const bool comp = false);
   
   /// Return i-th element's pointer
-  const Element* element( int i ) const;
-  Element*       element( int i );
+  const SmartRef<Element>&  element ( const unsigned int i ) const ;  
+        SmartRef<Element>&  element ( const unsigned int i )       ;  
+
+  /// return all elements 
+  inline const Elements&           elements() const ;
+  inline       Elements&           elements()       ;
+  
+  /// compute all quantities 
+  StatusCode compute();
   
   /// Return fraction of mass of the i-th element
-  double   elementFraction( int i );
+  const double   elementFraction( const unsigned int i ) const ;
   
-  /// Return i-th element's number of atoms per element's volume
-  double   elementnOfAtoms( int i );
-  
-  /// Compute effective A,Z and fractions for compounds
-  void computeByAtoms();
-  
-  /// Compute effective A,Z and number of atoms per volume for each element
-  void computeByFraction();
-  
-  /// Obligatory implementation of IMaterial interface
+  /// Obligatory implementation of Material interface
   
   ///	Atomic mass [g/mole]
-  const double A() const;
-  void setA ( double value );
-  
+  virtual inline const double    A() const;
+  virtual inline void         setA( const double value );
   ///	Atomic number
-  const double Z() const;
-  void setZ( double value );
-  
+  virtual inline const double    Z() const;
+  virtual inline void         setZ( const double value );  
   ///	Number of nucleons
-  const double N() const;
-  void setN( double value );
-  
-  const CLID& clID() const;
-  static const CLID& classID();
-  
+  virtual inline const double    N() const;
+  virtual inline void         setN( const double value );
+  ///
+  virtual inline const CLID& clID    () const { return Mixture::classID(); }
+  static         const CLID& classID ()       { return CLID_Mixture      ; } 
+  ///
+  /// serialization for read and write 
+  virtual StreamBuffer& serialize( StreamBuffer& s )       ; 
+  virtual StreamBuffer& serialize( StreamBuffer& s ) const ;   
+  /// Fill the output stream (ASCII)
+  virtual std::ostream& fillStream ( std::ostream& s ) const ;
+  /// Fill the output stream (ASCII)
+  virtual MsgStream&    fillStream ( MsgStream&    s ) const ;
+  ///
+protected:
+  ///
+  StatusCode addMyself();
+  /// Compute effective A,Z and fractions for compounds
+  StatusCode computeByAtoms();  
+  /// Compute effective A,Z and number of atoms per volume for each element
+  StatusCode computeByFraction () ;
+  ///  
 private:
   
-  /// Number of components in the material mixture
-  int                    m_nOfItems;
-  
   /// Vector of elements
-  std::vector<Element*>  m_elements;
-  
-  /// Corresponding fractions of mass for each element
-  std::vector<double>    m_fractions;
+  Elements       m_elements ;
   
   /// Corresponding number of atoms for each element
-  std::vector<double>    m_atoms;
-  
-  /// Effective atomic mass
-  double                 m_aEff;
-  
-  /// Effective atomic number
-  double                 m_zEff;
-  
+  Atoms          m_atoms    ;
+
+  /// own element (if needed)
+  Element*       m_own      ;  
+
+  ///
+  double         m_A ;
+  double         m_Z ;
+  double         m_N ;
+  ///
 };
 
-// Class Mixture 
-// Get and Set Operations for Class Attributes (inline)
-inline const CLID& Mixture::clID() const {
-  return classID();
-} 
-
-inline const CLID& Mixture::classID() {
-  return CLID_Mixture;
-} 
-  
-inline const int Mixture::nOfItems() const {
-  return m_elements.size();
-}
-
-// Obligatory implementation of Material interface
-
-/// Effective A is returned
-inline const double Mixture::A() const {
-  return m_aEff;
-}
-
-/// Effective A is computed, can't be set explicitly
-inline void Mixture::setA( double /*value*/ ){ }
-
-/// Effective Z is returned
-inline const double Mixture::Z() const { 
-  return m_zEff; 
-}
-
-/// Effective Z is computed, can't be set explicitly
-inline void Mixture::setZ( double /*value*/ ){ }
-
-/// Does it make sense to return the number of nucleons for a mixture ???
-inline const double Mixture::N() const { 
-  return 0.0; 
-}
-
-/// Does it make sense to set the number of nucleons for a mixture ???
-inline void Mixture::setN( double /*value*/ ){ }
-
-/// Return i-th element's pointer
-inline const Element* Mixture::element( int i ) const {
-  return( (0 != m_elements.size()) ? m_elements[i] : (Element *)0);
-}
-
-inline Element*       Mixture::element( int i ) {
-  return( (0 != m_elements.size()) ? m_elements[i] : (Element *)0);
-}
-
-/// Return fraction of mass of the i-th element
-inline double Mixture::elementFraction( int i ) {
-  return( (0 != m_fractions.size()) ? m_fractions[i] : 0.0 );
-}
-
-/// Return i-th element's number of atoms per element's volume
-inline double Mixture::elementnOfAtoms( int i ) {
-  return( (0 != m_atoms.size()) ? m_atoms[i] : 0 );
-}
-  
+///
+#include "DetDesc/Mixture.icpp"
+///
+   
 #endif // DETDESC_MIXTURE_H
   
+
+
+
+
+
+
+
+
+
+
+

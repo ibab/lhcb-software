@@ -1,0 +1,21 @@
+#ifndef      DETDESC_ISOTOPE_ICPP
+#define      DETDESC_ISOTOPE_ICPP
+// detdesc 
+#include "DetDesc/Isotope.h"
+
+
+
+///////////////////////////////////////////////////////////////////////////
+inline const double Isotope::A() const { return m_A; }
+inline void         Isotope::setA( double value ) { m_A = value; }
+///////////////////////////////////////////////////////////////////////////
+inline const double Isotope::Z() const { return m_Z; }
+inline void         Isotope::setZ( double value ) { m_Z = value; }
+///////////////////////////////////////////////////////////////////////////
+inline const double Isotope::N() const { return m_N; }
+inline void         Isotope::setN( double value ) { m_N = value; }
+///////////////////////////////////////////////////////////////////////////
+
+
+
+#endif  //   DETDESC_ISOTOPE_ICPP

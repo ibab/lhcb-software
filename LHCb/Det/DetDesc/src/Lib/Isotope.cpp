@@ -1,60 +1,35 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/Lib/Isotope.cpp,v 1.2 2001-01-22 10:55:36 mato Exp $
+/// DetDesc 
 #include "DetDesc/Isotope.h"
+///
 
-/// RCS Id for identification of object version
-///static const char* rcsid = "$Id: Isotope.cpp,v 1.2 2001-01-22 10:55:36 mato Exp $";
-
-// Constructors
-Isotope::Isotope( std::string name )
-: Material( name ),
-  m_A(0.0),
-  m_Z(0),
-  m_N(0)
+////////////////////////////////////////////////////////////////////////////////////
+Isotope::Isotope( const std::string name    , 
+		  const double      a       , 
+		  const double      z       , 
+		  const double      n       , 
+		  const double      density ,
+		  const double      rl      ,  
+		  const double      al      ,
+		  const double      temp    , 
+		  const double      press   , 
+		  const eState      s       )
+  : Material( name , density , rl , al , temp , press , s )
+  , m_A( a ) 
+  , m_Z( z ) 
+  , m_N( n )
+{};
+////////////////////////////////////////////////////////////////////////////////////
+Isotope::~Isotope(){};
+////////////////////////////////////////////////////////////////////////////////////
+StreamBuffer& Isotope::serialize( StreamBuffer& os )
 {
-}
-
-Isotope::Isotope( char* name )
-: Material( std::string(name) ),
-  m_A(0.0),
-  m_Z(0),
-  m_N(0)
+  Material::serialize( os );
+  return os >> m_A >> m_Z >> m_N ;   
+};
+////////////////////////////////////////////////////////////////////////////////////
+StreamBuffer& Isotope::serialize( StreamBuffer& os ) const  
 {
-}
-
-Isotope::Isotope( std::string name, double a, double z, double n)
-: Material( name ),
-  m_A(a),
-  m_Z(z),
-  m_N(n)
-{
-}
-
-Isotope::Isotope( char* name, double a, double z, double n)
-: Material( std::string(name) ),
-  m_A(a),
-  m_Z(z),
-  m_N(n)
-{
-}
-
-Isotope::Isotope( std::string name, double a, double z, double n, double density )
-: Material( name, density, 0.0, 0.0 ),
-  m_A(a),
-  m_Z(z),
-  m_N(n)
-{
-}
-
-Isotope::Isotope( char* name, double a, double z, double n, double density )
-: Material( std::string(name), density, 0.0, 0.0 ),
-  m_A(a),
-  m_Z(z),
-  m_N(n)
-{
-}
-
-// Destructor
-Isotope::~Isotope()
-{
-}
-
+  Material::serialize( os );
+  return os << m_A << m_Z << m_N ;   
+};
+////////////////////////////////////////////////////////////////////////////////////

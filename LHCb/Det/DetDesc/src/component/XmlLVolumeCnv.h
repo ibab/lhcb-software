@@ -1,4 +1,4 @@
-/// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/component/XmlLVolumeCnv.h,v 1.1 2001-02-05 12:45:54 ranjard Exp $
+/// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/component/XmlLVolumeCnv.h,v 1.2 2001-03-04 14:56:11 ibelyaev Exp $
 #ifndef DETDESC_XMLCNVSVC_XMLLVOLUMECNV_H
 #define DETDESC_XMLCNVSVC_XMLLVOLUMECNV_H
 
@@ -154,59 +154,71 @@ private:
 
   // Get & Manipulate transformation context
   inline std::string& transContext()
-  {
-    return m_transContext;
-  }
+  { return m_transContext; }
 
   inline void setTransContext( std::string& context )
-  {
-    m_transContext = context;
-  }
+  { m_transContext = context; }
 
   inline void setTransContext( const std::string& context )
-  {
-    m_transContext = context;
-  }
+  { m_transContext = context; }
   
   inline void setTransContext( const char* context )
-  {
-    m_transContext = context;
-  }
+  { m_transContext = context; }
 
   inline void setTransContext( char* context )
-  {
-    m_transContext = context;
-  }
+  { m_transContext = context; }
 
   /// Indicator whether we're inside the interesting tag or not
-  bool                   m_tagRead;
+  bool                     m_tagRead;
 
   /// Remember context for figuring out what transformation is being found
-  std::string            m_transContext;
+  std::string              m_transContext;
 
   /// Information needed inside callbacks
   /// Name of the converted volume
-  std::string            m_volName;
+  std::string              m_volName;
 
   /// Material name
-  std::string            m_materialName;
+  std::string              m_materialName;
+
+  /// sensitive detector information 
+  std::string              m_sensDetName;
+
+  /// magnetic field information 
+  std::string              m_magFieldName;
 
   /// Vector of physical volumes found
-  std::vector<PVitem>    m_pvstore;
+  std::vector<PVitem>      m_pvstore;
 
   /// Simple solid found
-  ISolid*                m_solid;
+  ISolid*                  m_solid;
 
   /// Needed for boolean volumes to keep all daughter solids found
-  std::vector<SolidItem> m_bstore;
-  std::string            m_bsName;
-  bool                   m_insideBoolean;
+  std::vector<SolidItem>   m_bstore;
+  std::string              m_bsName;
+  bool                     m_insideBoolean;
 
   /// Needed for a parameterized volume
-  bool                   m_insideParameterized;
-  std::vector<ParamPV>   m_ppvstore;
+  bool                     m_insideParameterized;
+  std::vector<ParamPV>     m_ppvstore;
+
+  /// connected surfaces
+  std::vector<std::string> m_surfaces; 
+  ///
 };
 
 
 #endif // DETDESC_XMLCNVSVC_XMLLVOLUMECNV_H
+
+
+
+
+
+
+
+
+
+
+
+
 

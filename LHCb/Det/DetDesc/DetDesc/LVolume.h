@@ -1,24 +1,12 @@
 #ifndef     __DETDESC_VOLUMES_LVOLUME_H_
 #define     __DETDESC_VOLUMES_LVOLUME_H_
-
-
+/// STD and STL 
 #include <iostream>
 #include <string>
 #include <vector>
 #include <functional>
 #include <algorithm> 
-
-template <class TYPE> class DataObjectFactory; 
-
-class HepPoint3D; 
-class HepVector3D; 
-class HepRotation;
-class HepTransform3D;
-
-class ISvcLocator;
-class IDataProviderSvc;
-class GaudiException; 
-
+/// GaudiKernel 
 #include "GaudiKernel/StatusCode.h"
 #include "GaudiKernel/DataObject.h"
 #include "GaudiKernel/ILVolume.h"
@@ -27,16 +15,30 @@ class GaudiException;
 #include "GaudiKernel/ISolid.h" 
 #include "GaudiKernel/ITime.h" 
 #include "GaudiKernel/MsgStream.h" 
-
+#include "GaudiKernel/SmartRefVector.h" 
+///
 #include "DetDesc/IPVolume_predicates.h" 
 #include "DetDesc/CLIDLVolume.h"
+///
+template <class TYPE> class DataObjectFactory; 
+///
+class HepPoint3D; 
+class HepVector3D; 
+class HepRotation;
+class HepTransform3D;
+///
+class ISvcLocator;
+class IDataProviderSvc;
+class GaudiException; 
+class Surface;
 
 
-///
-///  class LVolume: a simple implementition of ILVolume interface 
-///
-/// Author: Vanya Belyaev 
-///
+/** @class LVolume LVolume.h DetDesc/LVolume.h
+    
+    A simple implementation of ILVolume interface 
+ 
+    @author  Vanya Belyaev
+*/
 
 
 class LVolume: public DataObject ,
@@ -46,13 +48,16 @@ class LVolume: public DataObject ,
   ///
   friend class DataObjectFactory<LVolume>;
   ///
- private:
+private:
   ///
   /// default constructor is private!!!!!
   LVolume();       
   ///
- public: 
-  
+public: 
+  ///
+  typedef SmartRefVector<Surface>    Surfaces;
+  ///
+public:
   /// constructor, pointer to ISolid* must be valid!, overvise constructor throws LVolumeException!  
   LVolume( const std::string& name             , 
 	   ISolid*            Solid            ,
@@ -61,19 +66,16 @@ class LVolume: public DataObject ,
            const ITime&       validTill        , 
            const std::string& sensitivity = "" ,
            const std::string& magnetic    = "" );
-  
   /// constructor, pointer to ISolid* must be valid!, overvise constructor throws LVolumeException!  
   LVolume( const std::string& name             , 
 	   ISolid*            Solid            ,
            const std::string& material         ,
            const std::string& sensitivity = "" ,
            const std::string& magnetic    = "" );
-  
   /// destructor 
   virtual ~LVolume();
-  
- public:
-
+  ///
+public:
   /// from DataObject base class
   inline const CLID& clID   () const { return classID(); } 
   static const CLID& classID()       { return CLID_LVolume; };
@@ -173,11 +175,14 @@ class LVolume: public DataObject ,
   void                 setValidityTill  ( const ITime& )  ;   
   StatusCode           updateValidity   ()                ;   // not yet
   
-
   ///  from IInspectable interface 
   virtual bool acceptInspector( IInspector* pInspector )       ; 
   ///
   virtual bool acceptInspector( IInspector* pInspector ) const ; 
+
+  /// accessors to surfaces - quite useless methods, they are not in ILVolume interface
+  virtual inline const Surfaces& surfaces() const ; 
+  virtual inline       Surfaces& surfaces()       ; 
 
   /// specific for this implementation 
   IPVolume* createPVolume( const std::string&    PVname         , 
@@ -238,8 +243,6 @@ class LVolume: public DataObject ,
  private:
   // find C++ pointer to material by it's name 
   Material*                          findMaterial() const ;
-  /// exceptions:
-  class LVolumeException;                                                                  
   /// assertion
   inline void Assert( bool               assertion                       , 
 		      const std::string& name                            ,
@@ -286,17 +289,19 @@ class LVolume: public DataObject ,
   IMessageSvc*                 m_lv_msgSvc       ;  //     message service used for printing 
   ISvcLocator*                 m_lv_svcLoc       ;  //     service locator
   //
-
+  Surfaces                     m_surfaces        ;  //     list of attached surfaces (quite useless)
+  ///
 };
 ///
-inline MsgStream& operator<<( MsgStream& os , const LVolume&  lv ) { return lv.printOut( os ); };
-inline MsgStream& operator<<( MsgStream& os , const LVolume* plv ) { return ( ( 0 == plv ) ? ( os << "LVolume* points to NULL") : ( os << *plv) ) ; };
-///
-#include "DetDesc/LVolumeException.h" 
 #include "DetDesc/LVolume.icpp" 
 ///
 
 #endif  //  __DETDESC_VOLUMES_LVOLUME_H_
+
+
+
+
+
 
 
 
