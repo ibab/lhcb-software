@@ -142,7 +142,7 @@ void EvtVub::init(){
 
   static EvtHepRandomEngine myEngine;
 
-  _pFermi = new RandGeneral(myEngine,pf,aSize,0);
+  _pFermi = new CLHEP::RandGeneral(myEngine,pf,aSize,0);
   _dGamma = new EvtVubdGamma(_alphas);
   
   // check that there are 3 daughters

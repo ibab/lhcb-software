@@ -32,7 +32,9 @@
 
 class EvtParticle;
 class EvtRandomEngine;
-class HepLorentzVector;
+namespace CLHEP {
+  class HepLorentzVector; 
+};
 class EvtVector4R;
 class EvtStdHep;
 class EvtSpinDensity;
@@ -54,8 +56,9 @@ public:
   void generateDecay(EvtParticle *p);
 
   //These two methods are obsolete
-  void generateEvent(int stdhepid, HepLorentzVector P, HepLorentzVector D);
-  void generateEvent(EvtParticle *p,HepLorentzVector D);
+  void generateEvent(int stdhepid, CLHEP::HepLorentzVector P, 
+                     CLHEP::HepLorentzVector D);
+  void generateEvent(EvtParticle *p,CLHEP::HepLorentzVector D);
 
   
 private:

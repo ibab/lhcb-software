@@ -27,7 +27,11 @@
 
 class EvtParticle;
 class EvtVubdGamma;
-class RandGeneral;
+
+namespace CLHEP {
+  class RandGeneral;
+} ;
+
 
 class EvtVub:public  EvtDecayIncoherent  {
 
@@ -58,7 +62,7 @@ private:
   double * _weights;
 
   EvtVubdGamma *_dGamma; // calculates the decay rate
-  RandGeneral *_pFermi; // calculates the Fermi Motion
+  CLHEP::RandGeneral *_pFermi; // calculates the Fermi Motion
   
 };
 
