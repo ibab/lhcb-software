@@ -5,15 +5,18 @@
 ! Purpose     : Package describing contents of Lbcom project.
 !-----------------------------------------------------------------------------
 
-!========================== LbCom v1r2 2005-03-11 ============================
-! 2005-03-11 - Marco Cattaneo
+!========================== Lbcom v1r2 2005-03-15 ============================
+! 2005-03-15 - Marco Cattaneo
  - Move to LHCb v18r2
- - Packages modified:
+ - Packages modified: L0DU v6r9
 
  - In LbcomSys
-   . Improvements Doxygen welcome page
+   . Improvements to doxygen welcome page
 
-!========================== LbCom v1r1 2005-03-08 ============================
+ - In L0DU v6r9
+   . Bandwidth division thresholds retuned for DC04 data
+
+!========================== Lbcom v1r1 2005-03-08 ============================
 ! 2005-03-08 - Marco Cattaneo
  - Move to Gaudi v16r2, LHCb v18r1
  - Packages modified: CaloReco v2r7p1, RichTools v1r5, RichMCTools v2r5,
@@ -35,7 +38,7 @@
  - In L0Calo v8r1, L0DU v6r8
    . Adapt to new L1Buffer bank types from DAQEvent v5r0 (backward incompatible)
 
-!========================== LbCom v1r0 2005-02-16 ============================
+!========================== Lbcom v1r0 2005-02-16 ============================
 ! 2005-02-08 - Marco Cattaneo
  - First version. This project contains component libraries that are shared by
    several LHCb applications. It should not contain any exported header
