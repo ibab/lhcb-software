@@ -48,7 +48,7 @@ use LHCb	v15r4
 
 # Tools
 use LHCbTools		v1r0	Kernel
-use AsctToLinker        v1r0    Rec
+use AsctToLinker        v1r1    Rec
 
 # Brunel utilities
 use BrunelAlgs          v3r4	Rec
@@ -60,6 +60,7 @@ use CaloPIDs		v2r0	Calo
 
 # Velo
 use VeloAlgorithms      v2r9p1	Velo
+use VeloDAQ		v1r0	Velo
 
 # Inner Tracker
 use ITAlgorithms        v14r1	IT

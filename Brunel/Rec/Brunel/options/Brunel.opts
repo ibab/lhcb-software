@@ -65,7 +65,7 @@ ApplicationMgr.ExtSvc += { "ParticlePropertySvc" };
 ApplicationMgr.DLLs += { "CaloReco"      , 
                          "CaloPIDs"     ,
                          "CaloEvent"     };
-BrunelRecoCALOSeq.Members += { "CaloDigitsFromRaw" };
+BrunelRecoCALOSeq.Members  = { "CaloDigitsFromRaw" };
 BrunelRecoCALOSeq.Members += { "CaloReCreateMCLinks" };
 #include "$CALORECOOPTS/Brunel.opts"
 #include "$CALORECOOPTS/Reco.opts"
@@ -74,7 +74,7 @@ BrunelRecoCALOSeq.Members += { "CaloReCreateMCLinks" };
 
 // Inner tracker reconstruction (clustering)
 ApplicationMgr.DLLs   += { "ITAlgorithms", "STDAQ" };
-BrunelRecoITSeq.Members +={ "RawBufferToSTDigitAlg"};
+BrunelRecoITSeq.Members  ={ "RawBufferToSTDigitAlg"};
 BrunelRecoITSeq.Members +={"ITClusterCreator","ITSummaryCreator"};
 #include "$ITALGORITHMSROOT/options/itRec.opts"
 ITClusterCreator.clusterSignal2Noise = {3.2,3.2,3.2,3.2,3.2};
@@ -86,8 +86,9 @@ BrunelRecoOTSeq.Members  = { "OTRetrieveBuffer" };
 BrunelRecoOTSeq.Members += { "OTClusterCreator" };
 
 // Velo Tracking
-ApplicationMgr.DLLs += { "VeloTrack" };
-BrunelRecoVELOSeq.Members  = { "VeloTrackAlg" };
+ApplicationMgr.DLLs += { "VeloDAQ", "VeloTrack" };
+BrunelRecoVELOSeq.Members  = { "DecodeVeloRawBuffer" };
+BrunelRecoVELOSeq.Members += { "VeloTrackAlg" };
 VeloTrackAlg.AbortNumTrack = 300;
 
 // Forward tracking
