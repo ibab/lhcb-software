@@ -4,8 +4,11 @@
  *  Header file for tool : RichSmartIDTool
  *
  *  CVS Log :-
- *  $Id: RichSmartIDTool.h,v 1.7 2005-01-07 13:24:31 jonrob Exp $
+ *  $Id: RichSmartIDTool.h,v 1.8 2005-01-13 13:19:22 jonrob Exp $
  *  $Log: not supported by cvs2svn $
+ *  Revision 1.7  2005/01/07 13:24:31  jonrob
+ *  Changes to interface methods
+ *
  *  Revision 1.6  2004/10/27 14:41:03  jonrob
  *  Various updates
  *
@@ -32,6 +35,7 @@
 
 // from RichKernel
 #include "RichKernel/BoostArray.h"
+#include "RichKernel/RichSmartIDSorter.h"
 
 // RichDet
 #include "RichDet/DeRichHPDPanel.h"
@@ -64,8 +68,11 @@ public: // Methods for Gaudi Framework
 
 public: // methods (and doxygen comments) inherited from interface
 
-  // Converts a RichSmartID channel indentification into a position in
-  virtual HepPoint3D globalPosition ( const RichSmartID& smartid ) const;
+  // Converts a RichSmartID channel identification into a position in global LHCb coordinates. 
+  virtual HepPoint3D globalPosition ( const RichSmartID smartid ) const;
+
+  // Converts an HPD RichSmartID identification into a position in global LHCb coordinates. 
+  virtual HepPoint3D hpdPosition ( const RichSmartID hpdid ) const;
 
   // Computes the global position coordinate for a given position in local
   virtual HepPoint3D globalPosition ( const HepPoint3D& localPoint, 
@@ -94,5 +101,9 @@ private:
   typedef boost::array<double, 2> offsetPerRich;
   boost::array<offsetPerRich, 2> m_localOffset;
 
+  /// List of active RichSmartIDs
+  mutable RichSmartID::Collection m_readoutChannels;
+
 };
+
 #endif // RICHDETTOOLS_RICHSMARTIDTOOL_H

@@ -5,8 +5,11 @@
  * Implementation file for class : RichSmartIDTool
  *
  * CVS Log :-
- * $Id: RichSmartIDTool.cpp,v 1.7 2005-01-07 13:24:31 jonrob Exp $
+ * $Id: RichSmartIDTool.cpp,v 1.8 2005-01-13 13:19:22 jonrob Exp $
  * $Log: not supported by cvs2svn $
+ * Revision 1.7  2005/01/07 13:24:31  jonrob
+ * Changes to interface methods
+ *
  * Revision 1.6  2004/10/27 14:41:03  jonrob
  * Various updates
  *
@@ -69,6 +72,9 @@ StatusCode RichSmartIDTool::initialize()
     }
   }
 
+  // Initialise channel list
+  m_readoutChannels.clear();
+
   return StatusCode::SUCCESS;
 }
 
@@ -79,15 +85,42 @@ StatusCode RichSmartIDTool::finalize  ()
 }
 
 //=============================================================================
-// Returns the position of a SmartID in global coordinates
-HepPoint3D RichSmartIDTool::globalPosition ( const RichSmartID& inSmartID ) const
+// Returns the position of a RichSmartID in global coordinates
+//=============================================================================
+HepPoint3D RichSmartIDTool::globalPosition ( const RichSmartID smartID ) const
 {
-  return (m_photoDetPanels[inSmartID.rich()][inSmartID.panel()]->detectionPoint(inSmartID));
+  return m_photoDetPanels[smartID.rich()][smartID.panel()]->detectionPoint(smartID);
 }
 
+//=============================================================================
+// Returns the global position of a local corrdinate, in the given RICH panel
+//=============================================================================
+HepPoint3D RichSmartIDTool::globalPosition ( const HepPoint3D& localPoint,
+                                             const Rich::DetectorType rich,
+                                             const Rich::Side side ) const
+{
+  return m_photoDetPanels[rich][side]->globalPosition(localPoint,side) ;
+}
+
+//=============================================================================
+// Returns the HPD position (center of the silicon wafer)
+//=============================================================================
+HepPoint3D RichSmartIDTool::hpdPosition ( const RichSmartID hpdid ) const
+{
+  // Create temporary RichSmartIDs for two corners of the HPD wafer
+  RichSmartID id1(hpdid), id0(hpdid);
+  id0.setPixelRow(0);
+  id0.setPixelCol(0);
+  id1.setPixelRow(31);
+  id1.setPixelCol(31);
+
+  // return average position
+  return ( globalPosition(id0) + globalPosition(id1) ) / 2;
+}
 
 //=============================================================================
 // Returns the SmartID for a given global position
+//=============================================================================
 StatusCode RichSmartIDTool::smartID ( const HepPoint3D& globalPoint,
                                       RichSmartID& smartid) const
 {
@@ -174,58 +207,61 @@ HepPoint3D RichSmartIDTool::globalToPDPanel ( const HepPoint3D& globalPoint ) co
 
 //=============================================================================
 // Returns a list with all valid smartIDs
+//=============================================================================
 const RichSmartID::Collection & RichSmartIDTool::readoutChannelList( ) const
 {
 
-  // Static vector -> filled only once
-  static RichSmartID::Collection readoutChannels;
+  // Only do if list is empty
+  if ( m_readoutChannels.empty() ) {
 
-  if ( readoutChannels.empty() ) {
-
+    // Form the raw list
     unsigned int marker(0), i(0);
+    m_photoDetPanels[Rich::Rich1][Rich::top]->readoutChannelList(m_readoutChannels);
+    for ( i = 0; i < m_readoutChannels.size(); ++i ) {
+      m_readoutChannels[i].setRich(Rich::Rich1);
+      m_readoutChannels[i].setPanel(Rich::top);
+    }
+    marker = m_readoutChannels.size();
+    m_photoDetPanels[Rich::Rich1][Rich::bottom]->readoutChannelList(m_readoutChannels);
+    for ( i = marker; i < m_readoutChannels.size(); ++i ) {
+      m_readoutChannels[i].setRich(Rich::Rich1);
+      m_readoutChannels[i].setPanel(Rich::bottom);
+    }
+    marker = m_readoutChannels.size();
+    const unsigned int nRich1 = m_readoutChannels.size();
+    m_photoDetPanels[Rich::Rich2][Rich::left]->readoutChannelList(m_readoutChannels);
+    for ( i = marker; i < m_readoutChannels.size(); ++i ) {
+      m_readoutChannels[i].setRich(Rich::Rich2);
+      m_readoutChannels[i].setPanel(Rich::left);
+    }
+    marker = m_readoutChannels.size();
+    m_photoDetPanels[Rich::Rich2][Rich::right]->readoutChannelList(m_readoutChannels);
+    for ( i = marker; i < m_readoutChannels.size(); ++i ) {
+      m_readoutChannels[i].setRich(Rich::Rich2);
+      m_readoutChannels[i].setPanel(Rich::right);
+    }
+    const unsigned int nRich2 = m_readoutChannels.size() - nRich1;
 
-    m_photoDetPanels[Rich::Rich1][Rich::top]->readoutChannelList(readoutChannels);
-    for ( i = 0; i < readoutChannels.size(); ++i ) {
-      readoutChannels[i].setRich(Rich::Rich1);
-      readoutChannels[i].setPanel(Rich::top);
-      //++marker;
-    }
-    marker = readoutChannels.size();
-    m_photoDetPanels[Rich::Rich1][Rich::bottom]->readoutChannelList(readoutChannels);
-    for (i = marker; i < readoutChannels.size(); ++i ) {
-      readoutChannels[i].setRich(Rich::Rich1);
-      readoutChannels[i].setPanel(Rich::bottom);
-      //++marker;
-    }
-    marker = readoutChannels.size();
-    const unsigned int nRich1 = readoutChannels.size();
-    m_photoDetPanels[Rich::Rich2][Rich::left]->readoutChannelList(readoutChannels);
-    for (i = marker; i < readoutChannels.size(); ++i ) {
-      readoutChannels[i].setRich(Rich::Rich2);
-      readoutChannels[i].setPanel(Rich::left);
-      //++marker;
-    }
-    marker = readoutChannels.size();
-    m_photoDetPanels[Rich::Rich2][Rich::right]->readoutChannelList(readoutChannels);
-    for (i = marker; i < readoutChannels.size(); ++i ) {
-      readoutChannels[i].setRich(Rich::Rich2);
-      readoutChannels[i].setPanel(Rich::right);
-      //++marker;
-    }
-    const unsigned int nRich2 = readoutChannels.size() - nRich1;
+    // Sort the list
+    RichSmartIDSorter sorter;
+    sorter.sortByRegion(m_readoutChannels);
 
-    info() << "Created active HPD channel list : # channels RICH(1/2) = " 
+    info() << "Created active HPD channel list : # channels RICH(1/2) = "
            << nRich1 << " / " << nRich2 << endreq;
+    if ( msgLevel(MSG::VERBOSE) ) 
+    {
+      for ( RichSmartID::Collection::const_iterator iID = m_readoutChannels.begin();
+            iID != m_readoutChannels.end(); ++iID ) 
+      {
+        const HepPoint3D gPos = globalPosition(*iID);
+        verbose() << " RichSmartID " << *iID << endreq
+                  << "     -> global Position : " << gPos << endreq
+                  << "     -> local Position  : " << globalToPDPanel(gPos) << endreq;
+      }
+    }
 
-  }
+  } // end fill smartID vector
 
-  return readoutChannels;
+  return m_readoutChannels;
 }
 
-HepPoint3D RichSmartIDTool::globalPosition ( const HepPoint3D& localPoint,
-                                             const Rich::DetectorType rich,
-                                             const Rich::Side side ) const
-{
-  return (m_photoDetPanels[rich][side]->globalPosition(localPoint,
-                                                       side));
-}
