@@ -4,6 +4,10 @@
 ! Purpose     : Holds algorithm and option for reconstruction used by PhysSel's selection
 !-----------------------------------------------------------------------------
 
+! 2004-04-16 - Richard Beneyton
+ - update ProducePairPhotons for combinedparticlemaker (check id)
+
+
 !==================== PhysSel v1r0 2003-12-11 =============================
 ! 2003-11-07 - Richard Beneyton
  - First version of the package, with ProducePairPhotons alg.
