@@ -1,6 +1,11 @@
-# $Id: release.notes,v 1.7 2001-11-29 10:55:45 andreav Exp $
+# $Id: release.notes,v 1.8 2001-11-30 09:30:38 andreav Exp $
 Package Det/DetCond
 Package manager : Andrea Valassi 
+
+!20011130 - Andrea Valassi
+- Modified version of DetDataSvc in GaudiSvc committed to CVS 
+-> Contains main features of ConditionDataSvc and ConditionsDBDataSvc
+-> Remove ConditionDataSvc and ConditionsDBDataSvc from this package
 
 !20011129 - Andrea Valassi
 - Remove the IConditionsDBDataSvc special interface
