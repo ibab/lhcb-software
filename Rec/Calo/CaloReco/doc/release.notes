@@ -4,6 +4,7 @@
 ! Purpose     : Main Package for Calorimeter Reconstruction Software 
 !-----------------------------------------------------------------------------
 
+!======================= CaloRec v1r0 2002-11-14 ============================
 ! 2002-10-31 - Ivan Belyaev
  - New package 
  - All algorithms from CaloAlgs,CaloRec,CaloTools,CaloTrackTools 
