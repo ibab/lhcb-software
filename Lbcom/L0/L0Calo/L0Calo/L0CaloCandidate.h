@@ -1,15 +1,22 @@
 #ifndef L0CALO_L0CALOCANDIDATE_H
 #define L0CALO_L0CALOCANDIDATE_H 1
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/L0/L0Calo/L0Calo/L0CaloCandidate.h,v 1.4 2001-05-10 14:44:32 ocallot Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/L0/L0Calo/L0Calo/L0CaloCandidate.h,v 1.5 2001-06-12 14:28:01 ocallot Exp $
 
 // Include files
 #include <iostream>
+#include <stdio.h> 
+
+/// CLHEP 
+#include "CLHEP/Units/SystemOfUnits.h"
+#include "CLHEP/Geometry/Point3D.h"
+
+/// Gaudi
 #include "GaudiKernel/Kernel.h"
 #include "GaudiKernel/ContainedObject.h"
 #include "GaudiKernel/ObjectVector.h"
 #include "GaudiKernel/SmartRefVector.h"
-#include "CLHEP/Geometry/Point3D.h"
 
+/// Calo/CaloGen
 #include "CaloGen/CaloCellID.h"
 
 /** @namespace L0
@@ -28,8 +35,7 @@ namespace L0 {
   };
 };
 
-
-const CLID& CLID_L0CaloCandidate  = 6001 ;
+#include "L0Calo/CLIDL0CaloCandidate.h"
 
 /** @class L0CaloCandidate L0CaloCandidate.h L0Calo/L0CaloCandidate.h
  *

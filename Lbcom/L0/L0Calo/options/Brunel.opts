@@ -1,3 +1,5 @@
 ApplicationMgr.DLLs  		+= {"L0Calo" };
 
 BrunelTriggerTRIGGERSeq.Members += { "L0CaloAlg/L0Calo" };
+
+BrunelMoniTRIGGERSeq.Members    += { "L0CaloMonit" };

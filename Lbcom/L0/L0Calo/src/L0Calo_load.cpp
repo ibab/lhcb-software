@@ -38,6 +38,7 @@ void L0Calo_load()
   ///
   
   DLL_DECL_ALGORITHM( L0CaloAlg     );
+  DLL_DECL_ALGORITHM( L0CaloMonit   );
   
 }
 
