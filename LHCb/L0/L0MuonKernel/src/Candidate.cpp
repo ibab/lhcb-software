@@ -1,4 +1,4 @@
-// $Id: Candidate.cpp,v 1.3 2005-04-04 07:58:43 atsareg Exp $
+// $Id: Candidate.cpp,v 1.4 2005-04-05 21:33:06 atsareg Exp $
 
 #include <cmath>
 #include <vector>
@@ -50,7 +50,7 @@ int L0Muon::Candidate::status() const
 
 void L0Muon::Candidate::setPt(double pt) {
 
-  unsigned int roundedPt = int((fabs(pt)+20.)/40.);
+  int roundedPt = int((fabs(pt)+20.)/40.);
   if ( roundedPt > (( 1<< 7 ) - 1) ) {
     roundedPt = (1 << 7) - 1 ;
   }  
