@@ -2,6 +2,12 @@ Package:          GiGa
 Package manager : Vanya Belyaev 
 
 !==============================================================
+! 20010214  GiGa Gonzalo Gracia Abril & Vanya Belyaev
+Corrections for proper treatment of Solids and volumens rotations.
+Modified Files:
+   GiGaDetectorElementCnv.cpp GiGaGeomCnvSvc.cpp GiGaLVolumeCnv.cpp
+
+!==============================================================
 ! 20010205  GiGa v4 (Vanya Belyaev)
    GiGaGeomCnvSvc.cpp - bug fix in the conversion of Boolean Solids 
 
