@@ -4,6 +4,13 @@
 ! Purpose     : Event model for HLT tracks
 !-----------------------------------------------------------------------------
 
+!======================== HltEvent v4r0 2003-09-xx ========================
+! 2003-09-08 - Olivier Callot
+ - New object HltVertex to store the PV found with HLT tracks. They have a list
+   of HltTrack*.
+ - New member 'chiSquared' on the track, to store the fit's quality. This is
+   the ChiSquared per degree of freedom.
+
 !======================== HltEvent v3r0 2003-06-17 ========================
 ! 2003-06-16 - Sebastien Ponce
  - use more recent GaudiObjDesc

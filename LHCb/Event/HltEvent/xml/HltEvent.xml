@@ -156,7 +156,73 @@ m_OTCluster.reserve( 20 );
         name      = "slopeYAfter"
         desc      = "Y Tangent on the track after the Magnet" />
       
+      <attribute
+        type      = "double"
+        name      = "chiSquared"
+        desc      = "Normalized Chi Squared of the track fit." />
+      
      
     </class>
+
+    <class 
+      author         = "Olivier Callot" 
+      desc           = "Hlt Primary Vertex " 
+      id             = "7502" 
+      name           = "HltVertex" 
+      templateList   = "FALSE" 
+      templateVector = "TRUE" 
+      location       = "Rec/Hlt/PrimVertices" >
+      <base name="KeyedObject&lt;int&gt;"/>
+
+      <import name='CLHEP/Geometry/Point3D'/>
+      <import name='CLHEP/Matrix/SymMatrix'/>
+
+      <attribute
+        type      = "HepPoint3D"
+        name      = "position"
+        desc      = "Position of the vertex" />
+
+      <attribute
+        type      = "HepSymMatrix"
+        name      = "covariance"
+        desc      = "Covariance of the vertex fit" />
+
+      <relation
+	type      = "HltTrack"
+	name      = "tracks"
+	desc      = "Tracks this vertex was made from" 
+        multiplicity = "N" />
+
+      <method 
+	type      = "double"
+	name      = "errX2" 
+	desc      = "Error on the X position, squared">
+	<code> return m_covariance.fast(1,1); </code>
+      </method>
+
+      <method 
+	type      = "double"
+	name      = "errY2" 
+	desc      = "Error on the Y position, squared">
+	<code> return m_covariance.fast(2,2); </code>
+      </method>
+
+      <method 
+	type      = "double"
+	name      = "errZ2" 
+	desc      = "Error on the Z position, squared">
+	<code> return m_covariance.fast(3,3); </code>
+      </method>
+
+      <method 
+	type      = "unsigned int"
+	name      = "nbTracks" 
+	desc      = "Number of track sused in this vertex ">
+	<code> return m_tracks.size(); </code>
+      </method>
+
+    </class>
+
+
   </package>
 </gdd>
