@@ -1,8 +1,34 @@
 Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 
-Purupose: LHCb reconstruction program
+Purpose: LHCb reconstruction program
 
+! 20010904 Brunel v7 (MC)
+  This version is to be used for data produced with SICBMC v248/dbase v241
+  ("LHCb-Light")
+
+  It consists of the same code as v6, but uses a different geometry.
+
+  In options/
+   LHCbLight.opts - new file to set up LHCb-Light tracker geometry
+   Brunel.opts    - include LHCbLight.opts
+
+  In cmt/requirements
+  ===================
+  use dbase v241 SICB
+    standard.stream - use new pipe and velo
+      
+    vsrp.cdf and vpil.cdf - Thickness of the RF shield and 
+                            silicon detectors changed (J. Palacio)
+    field042.cdf - introduce field in Velo (G. Corti)
+    magnet.cdf   - remove rich 1 shielding plate (M. Needham)
+    rich.cdf     - remove aerogel, reduce radiation thickness of mirror 
+                   and supports (J. Libby)
+    witr.cdf, wotr.cdf, wsta.cdf - 
+                   reduce number of tracking stations to 4 (M. Needham)
+    pipe8.22.cdf - Be first section (G. Corti)
+
+! =================================================================
 ! 20010904 Brunel v6 (MC)
   This version is to be used for data produced with SICBMC v247/dbase v240
   ("LHCB-classic", tracker cross-geometry)

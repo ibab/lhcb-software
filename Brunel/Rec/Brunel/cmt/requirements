@@ -35,7 +35,7 @@ use CaloGen      v2     Calo
 use DetDesc      v7     Det
 use XmlDDDB      v6r1   Det
 use CaloDet      v2r1   Det
-use dbase        v240   SICB
+use dbase        v241   SICB
 
 # Event Model
 use LHCbEvent    v11    Event
