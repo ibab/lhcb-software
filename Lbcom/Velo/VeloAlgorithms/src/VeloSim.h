@@ -1,4 +1,4 @@
-#// $Id: VeloSim.h,v 1.5 2002-06-30 14:43:11 parkesb Exp $
+#// $Id: VeloSim.h,v 1.6 2002-07-09 20:30:15 parkesb Exp $
 #ifndef VELOSIM_H
 #define VELOSIM_H 1
 
@@ -56,6 +56,7 @@ private:
                       int Npoints,
                       std::vector<double>& Spoints);
   void diffusion(MCVeloHit* hit, int Npoints, std::vector<double>& Spoints);
+  void testSim(MCVeloHit* hit, bool SpillOver);
   void fillFE(MCVeloFE* myFE, MCVeloHit* hit, double charge);
   void fillFE(MCVeloFE* myFE, double charge);
   StatusCode coupling();
@@ -107,6 +108,7 @@ private:
   bool m_CMSim;
   bool m_spillOver;
   bool m_pileUp;
+  bool m_testSim;
 
   std::string m_simMode; // velo or pileup
 

@@ -1,4 +1,4 @@
-// $Id: VeloSim.cpp,v 1.12 2002-07-09 11:07:42 parkesb Exp $
+// $Id: VeloSim.cpp,v 1.13 2002-07-09 20:30:15 parkesb Exp $
 // Include files
 // STL
 #include <string>
@@ -84,6 +84,7 @@ VeloSim::VeloSim( const std::string& name,
   , m_CMSim                ( true )
   , m_spillOver            ( true )
   , m_pileUp               ( false )
+  , m_testSim              ( false )
 {
   declareProperty( "InputContainer"      ,m_inputContainer  );
   declareProperty( "SpillOverInputData"  ,m_spillOverInputContainer  );
@@ -99,6 +100,7 @@ VeloSim::VeloSim( const std::string& name,
   declareProperty( "CMSim"               ,m_CMSim );
   declareProperty( "SpillOver"           ,m_spillOver );
   declareProperty( "PileUp"              ,m_pileUp );
+  declareProperty( "TestSimulation"      ,m_testSim );
 
   Rndm::Numbers m_gaussDist;
   Rndm::Numbers m_uniformDist;
@@ -300,22 +302,25 @@ StatusCode VeloSim::chargeSim(bool spillOver) {
   //loop over input hits
   for ( MCVeloHits::const_iterator hitIt = hits->begin() ;
         hits->end() != hitIt ; hitIt++ ) {
+      MCVeloHit* hit = (*hitIt);
 
+    if (m_testSim) { testSim(hit,spillOver);}
+    else{
     // calculate a set of points in the silicon
     //with which the simulation will work
-    MCVeloHit* hit = (*hitIt);
-    int NPoints = simPoints(hit);
-    log << MSG::VERBOSE << "Simulating " << NPoints 
+      int NPoints = simPoints(hit);
+      log << MSG::VERBOSE << "Simulating " << NPoints 
         << " points in Si for this hit" << endreq;
 
-    if (NPoints>0){
+      if (NPoints>0){
       // calculate charge to assign to each point
       // taking account of delta ray inhomogeneities
-      std::vector<double> sPoints(NPoints);
-      chargePerPoint(*hitIt,NPoints,sPoints,spillOver);
+        std::vector<double> sPoints(NPoints);
+        chargePerPoint(*hitIt,NPoints,sPoints,spillOver);
 
       // diffuse charge from points to strips
-      diffusion(*hitIt,NPoints,sPoints);
+        diffusion(*hitIt,NPoints,sPoints);
+      }
     }
   }
 
@@ -323,6 +328,30 @@ StatusCode VeloSim::chargeSim(bool spillOver) {
       << m_FEs->size() << endreq;
 
   return StatusCode::SUCCESS;
+}
+
+//=========================================================================
+// test simulation - allocate all charge to entry/exit point strip
+//=========================================================================
+void VeloSim::testSim(MCVeloHit* hit,bool spillOver){
+  // test routine - simplest possible simulation.
+  double EntryFraction;
+  double pitch;
+  bool EntryValid;
+  VeloChannelID entryChan;
+  if (m_uniformDist()>0.5){
+    entryChan=m_velo->channelID(hit->entry(),EntryFraction,
+	                                    pitch,EntryValid);
+  }
+  else{
+    entryChan=m_velo->channelID(hit->exit(),EntryFraction,
+                                            pitch,EntryValid);
+  }
+  double charge=(hit->energy()/eV)/VeloSimParams::eVPerElectron;
+  if (spillOver) charge*=VeloSimParams::spillOverChargeFraction;
+
+  MCVeloFE* myFE = findOrInsertFE(entryChan);
+  fillFE(myFE,hit,charge);
 }
 
 
@@ -493,10 +522,10 @@ void VeloSim::diffusion(MCVeloHit* hit,int Npoints,
     // loop over neighbours per point
     int iNg;
     for  (iNg=-neighbs; iNg<=+neighbs; iNg++){ 
-      //double diffuseDist1=((iNg-0.5)-fraction)*pitch/micron;
-      //double diffuseDist2=((iNg+0.5)-fraction)*pitch/micron;
-      double diffuseDist1=((iNg)-fraction)*pitch/micron;
-      double diffuseDist2=((iNg+1.)-fraction)*pitch/micron;
+      double diffuseDist1=((iNg-0.5)-fraction)*pitch/micron;
+      double diffuseDist2=((iNg+0.5)-fraction)*pitch/micron;
+      //      double diffuseDist1=((iNg)-fraction)*pitch/micron;
+      //      double diffuseDist2=((iNg+1.)-fraction)*pitch/micron;
       double diffuseSigma=m_baseDiffuseSigma*sqrt(thickness*ZDiffuse);
       //  log << MSG::DEBUG << "diffuseDist1 " << diffuseDist1 
       // <<   " diffuseDist2 " << diffuseDist2 << " diffuseSigma " 
