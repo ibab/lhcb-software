@@ -1,4 +1,4 @@
-//$Id: ConditionsDBCnvSvc.cpp,v 1.4 2001-11-26 19:09:10 andreav Exp $
+//$Id: ConditionsDBCnvSvc.cpp,v 1.5 2001-11-26 20:16:35 andreav Exp $
 #include <string>
 #include <stdio.h>
 #include <unistd.h>
@@ -168,24 +168,26 @@ StatusCode ConditionsDBCnvSvc::createObj ( IOpaqueAddress* pAddress,
   MsgStream log(msgSvc(), "ConditionsDBCnvSvc" );
   log << MSG::DEBUG << "Method createObj starting" << endreq;
 
-  /// First, decode the opaque address 
-  std::string   folderName;
-  std::string   tagName;
-  TimePoint     evtTime;
-  CLID          classID;
-  unsigned char type;
-  StatusCode status = i_decodeAddress 
-    ( pAddress, folderName, tagName, evtTime, classID, type );
-  if( !(status.isSuccess()) ) {
-    log << MSG::ERROR << "Error decoding the IOpaqueAddress" << endreq;
+  /// Dynamic cast the IOpaqueAddress to a ConditionsDBAddress
+  /// The ConditionsDBAddress specifies the requested folder, time, tag
+  ConditionsDBAddress* 
+    pCaddress = dynamic_cast< ConditionsDBAddress* >( pAddress );
+  if ( 0 == pCaddress ) {
+    log << MSG::ERROR << "Address is not a ConditionsDBAddress" << endreq;
+    log << MSG::ERROR << "type=" << (int)pAddress->svcType() 
+	<< " classID=" << pAddress->clID() << endreq;
     return StatusCode::FAILURE;
   }
 
-  /// Second, create a new condition DataObject for the given folder, time, tag
+  /// Next, create a new condition DataObject for the given folder, time, tag
   //  Notice that the ConditionsDBCnvSvc has no converters of its own:
   //  object creation is delegated to another CnvSvc via a temporary address
-  status = createConditionData 
-    (refpObject, folderName, tagName, evtTime, classID, type);
+  StatusCode status = createConditionData ( refpObject, 
+					    pCaddress->folderName(), 
+					    pCaddress->tagName(), 
+					    pCaddress->time(), 
+					    pCaddress->clID(), 
+					    pCaddress->stringType() );
   if ( !status.isSuccess() ) {
     log << MSG::ERROR << "Could not create condition DataObject" << endreq;
     return StatusCode::FAILURE;
@@ -220,20 +222,18 @@ StatusCode ConditionsDBCnvSvc::updateObj ( IOpaqueAddress* pAddress,
   MsgStream log(msgSvc(), "ConditionsDBCnvSvc" );
   log << MSG::DEBUG << "Method updateObj starting" << endreq;
 
-  /// First, decode the opaque address 
-  std::string   folderName;
-  std::string   tagName;
-  TimePoint     evtTime;
-  CLID          classID;
-  unsigned char type;
-  StatusCode status = i_decodeAddress 
-    ( pAddress, folderName, tagName, evtTime, classID, type );
-  if( !(status.isSuccess()) ) {
-    log << MSG::ERROR << "Error decoding the IOpaqueAddress" << endreq;
+  /// Dynamic cast the IOpaqueAddress to a ConditionsDBAddress
+  /// The ConditionsDBAddress specifies the requested folder, time, tag
+  ConditionsDBAddress* 
+    pCaddress = dynamic_cast< ConditionsDBAddress* >( pAddress );
+  if ( 0 == pCaddress ) {
+    log << MSG::ERROR << "Address is not a ConditionsDBAddress" << endreq;
+    log << MSG::ERROR << "type=" << (int)pAddress->svcType() 
+	<< " classID=" << pAddress->clID() << endreq;
     return StatusCode::FAILURE;
   }
 
-  // Second, update the object according to the specifications of the address
+  // Next, update the object according to the specifications of the address
   if( 0 == pObject ) {
     log << MSG::ERROR << "There is no object to update" << endreq;
     return StatusCode::FAILURE;
@@ -247,8 +247,12 @@ StatusCode ConditionsDBCnvSvc::updateObj ( IOpaqueAddress* pAddress,
   log << MSG::DEBUG << "Old condition DataObject was valid since "
       << pValidity->validSince().absoluteTime() << " till "
       << pValidity->validTill().absoluteTime()  << endreq;
-  status = updateConditionData 
-    (pObject, folderName, tagName, evtTime, classID, type);
+  StatusCode status = updateConditionData( pObject, 
+					   pCaddress->folderName(), 
+					   pCaddress->tagName(), 
+					   pCaddress->time(), 
+					   pCaddress->clID(), 
+					   pCaddress->stringType() );
   if ( !status.isSuccess() ) {
     log << MSG::ERROR << "Could not update condition DataObject" << endreq;
     return StatusCode::FAILURE;
@@ -282,53 +286,6 @@ StatusCode ConditionsDBCnvSvc::updateObjRefs ( IOpaqueAddress* /*pAddress*/,
 
 }
   
-//----------------------------------------------------------------------------
-
-/// Decode an IOpaqueAddress as a ConditionsDBAddress.
-StatusCode 
-ConditionsDBCnvSvc::i_decodeAddress ( IOpaqueAddress*   pAddress, 
-				      std::string&      folderName,
-				      std::string&      tagName, 
-				      ITime&            evtTime,
-				      CLID&             classID,
-				      unsigned char&    type) {
-  
-  MsgStream log(msgSvc(), "ConditionsDBCnvSvc" );
-  log << MSG::DEBUG << "Decoding a ConditionsDBAddress" << endreq;
-  
-  // Is the address non null?
-  if( 0 == pAddress ) {
-    log << MSG::ERROR << "Empty address" << endreq;
-    return StatusCode::FAILURE;
-  }
-
-  // Is the address a IConditionsDBAddress?
-  IConditionsDBAddress* addr;
-  addr = dynamic_cast< IConditionsDBAddress* >( pAddress );
-  if ( 0 == addr ) {
-    log << MSG::ERROR << "Address is not a IConditionsDBAddress" << endreq;
-    log << MSG::ERROR << "type=" << (int)pAddress->svcType() 
-	<< " classID=" << pAddress->clID() << endreq;
-    return StatusCode::FAILURE;
-  }
-
-  // Decode the ConditionsDBAddress
-  folderName = addr->folderName();
-  tagName    = addr->tagName();
-  evtTime    = addr->time();
-  classID    = pAddress->clID();    
-  type       = addr->stringType();    
-
-  log << MSG::DEBUG << "ConditionsDBAddress successfully decoded" << endreq;
-  log << MSG::DEBUG
-      << "folder="  << folderName << endreq;
-  log << MSG::DEBUG << "tag=" << tagName
-      << " time=" << evtTime.absoluteTime()
-      << " clID=" << classID << " stringType=" << (int)type << endreq;
-  return StatusCode::SUCCESS;
-
-}
-
 //----------------------------------------------------------------------------
 
 /// Create a condition DataObject by folder name, tag and time.

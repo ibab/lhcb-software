@@ -1,4 +1,4 @@
-//$Id: ConditionsDBCnvSvc.h,v 1.4 2001-11-26 19:08:17 andreav Exp $
+//$Id: ConditionsDBCnvSvc.h,v 1.5 2001-11-26 20:16:21 andreav Exp $
 #ifndef DETCOND_CONDITIONSDBCNVSVC_H
 #define DETCOND_CONDITIONSDBCNVSVC_H 1
 
@@ -123,18 +123,6 @@ class ConditionsDBCnvSvc : public ConversionSvc,
   /// Handle to the ConditionsDBGate
   IConditionsDBGate* conditionsDBGate();
 
- private:
-  
-  // Private internal methods
-
-  /// Decode an IOpaqueAddress as a ConditionsDBAddress
-  StatusCode i_decodeAddress       ( IOpaqueAddress*      pAddress, 
-				     std::string&         folderName,
-				     std::string&         tagName, 
-				     ITime&               evtTime,
-				     CLID&                classID,
-				     unsigned char&       type);
-  
  private:
 
   /// Handle to the low-level ConditionsDB gate

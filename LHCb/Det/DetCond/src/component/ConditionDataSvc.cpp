@@ -1,4 +1,4 @@
-//$Id: ConditionDataSvc.cpp,v 1.3 2001-11-26 19:06:49 andreav Exp $
+//$Id: ConditionDataSvc.cpp,v 1.4 2001-11-26 20:16:50 andreav Exp $
 #include <string>
 
 #include "ConditionDataSvc.h"
@@ -93,7 +93,7 @@ void ConditionDataSvc::setEventTime ( const ITime& time ) {
   m_eventTime = new TimePoint( time );   
   MsgStream log( msgSvc(), "ConditionDataSvc" );
   log << MSG::DEBUG 
-      << "Event Time set to " << m_eventTime->absoluteTime() << endreq;
+      << "Event Time set to " << eventTime().absoluteTime() << endreq;
 }
 
 //----------------------------------------------------------------------------

@@ -1,4 +1,4 @@
-//$Id: ConditionsDBDataSvc.cpp,v 1.3 2001-11-26 19:05:19 andreav Exp $
+//$Id: ConditionsDBDataSvc.cpp,v 1.4 2001-11-26 20:16:02 andreav Exp $
 #include <string>
 
 #include "ConditionsDBDataSvc.h"
@@ -266,7 +266,8 @@ ConditionsDBDataSvc::retrieveValidCondition  ( DataObject*&         refpObject,
   IOpaqueAddress* theAddress = new ConditionsDBAddress
     ( folderName, m_tagName, eventTime(), classID, type, entry );
   log << MSG::DEBUG << "Address of CondDB type=" << (int)theAddress->svcType() 
-      << " classID=" << classID << " stringType=" << (int)type << endreq;
+      << " classID=" << classID << " stringType=" << (int)type 
+      << " @time=" << eventTime().absoluteTime() << endreq;
   entry->setAddress(theAddress);
   theAddress->addRef();
 
