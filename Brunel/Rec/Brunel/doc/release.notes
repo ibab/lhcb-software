@@ -3,14 +3,16 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
-</PRE><H1><A NAME=v23r6>2004-04-19 Brunel v23r6</A></H1><PRE>
+</PRE><H1><A NAME=v23r6>2004-04-21 Brunel v23r6</A></H1><PRE>
 
 - Functionality changes
-  . Temporarily disabled Rich monitoring, because it accesses Spillover hits,
-    no longer available on Boole output
+  . Disabled RichRecoQC, because it accesses Spillover hits, no longer available
+    on Boole output (RichRecQC v1r7)
 
 - New tuning
   . Update parameterisation for Photon ID (CaloPIDs v2r2)
+  . New Rich track state handling and tuning
+    (RichRecSys v1r9, RichUtils v3r9, RichDetTools v4r1) 
 
 - Persistency changes
   . Removed Velo,IT,OT clusters and Muon coordinates from DST. If needed they 

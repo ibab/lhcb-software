@@ -1,3 +1,2 @@
 // Default monitoring options for production jobs
-//BrunelMoni.DetectorList  = { "IT", "OT", "Tr", "RICH" };
-BrunelMoni.DetectorList  = { "IT", "OT", "Tr" };
+BrunelMoni.DetectorList  = { "IT", "OT", "Tr", "RICH" };
