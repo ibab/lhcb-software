@@ -1,6 +1,7 @@
 // $Id : $
 
 // Include files
+#include "GaudiKernel/Kernel.h"
 #include "PhysEvent/PhysSel.h"
 
 //-------------------------------------------------------------------
@@ -23,7 +24,7 @@ PhysSel::~PhysSel() {
 void PhysSel::removePhysSelDecays() { 
 
   // Delete the PhysSelDecays and clear the map
-  SelTable::iterator it;
+  std::map<std::string,PhysSelDecay*>::iterator it;
   for( it=m_table.begin(); it!=m_table.end(); it++ ) {
     delete (*it).second;
   }
@@ -36,7 +37,8 @@ void PhysSel::removePhysSelDecays() {
 // Either the Algorithm or the Converter need to create the
 // PhysSelDecay object but afterward it belong to the PhysSel class
 //=======================================================================
-void PhysSel::addPhysSelDecay( std::string decayName, PhysSelDecay* value ) {
+void PhysSel::addPhysSelDecay( std::string& decayName, PhysSelDecay*& value ) {
+  typedef std::map<std::string,PhysSelDecay*> SelTable ;  
   m_table.insert( SelTable::value_type( decayName, value ) );
 }
 
@@ -44,9 +46,9 @@ void PhysSel::addPhysSelDecay( std::string decayName, PhysSelDecay* value ) {
 // Remove single PhysSelDecay entry from vector
 //   This function also delete the object "value" points to
 //=======================================================================
-void PhysSel::removePhysSelDecay( std::string decayName) {
+void PhysSel::removePhysSelDecay( std::string& decayName ) {
  
-  SelTable::iterator isel = m_table.find( decayName );
+  std::map<std::string,PhysSelDecay*>::iterator isel = m_table.find(decayName);
   if( isel != m_table.end() ) { 
     m_table.erase(isel);
     delete (*isel).second;
@@ -57,10 +59,10 @@ void PhysSel::removePhysSelDecay( std::string decayName) {
 //=======================================================================
 // Retrieve all results of selection routine for specified decay channel
 //=======================================================================
-void PhysSel::results( std::string name, bool& mc, bool& tkr, bool& pqual, 
-                           bool& sel, bool& agr, bool& tag ) {
+void PhysSel::results( std::string& name, bool& mc, bool& tkr, bool& pqual, 
+                       bool& sel, bool& agr, bool& tag ) {
 
-  PhysSelDecay* pSelDecay = 0;
+  const PhysSelDecay* pSelDecay = 0;
   retrievePhysSelDecay( name, pSelDecay );
   if( 0 != pSelDecay ) {
     pSelDecay->results( mc, tkr, pqual, sel, agr, tag );
@@ -81,10 +83,10 @@ void PhysSel::results( std::string name, bool& mc, bool& tkr, bool& pqual,
 //=======================================================================
 // Return if the specified decay channel is present in MC tree
 //=======================================================================
-bool PhysSel::decayIsInMCTree( std::string name ) {
+bool PhysSel::decayIsInMCTree( std::string& name ) {
 
   bool mc = false;
-  PhysSelDecay* pSelDecay = 0;
+  const PhysSelDecay* pSelDecay = 0;
   retrievePhysSelDecay( name, pSelDecay );
   if( 0 != pSelDecay ) {
     mc = pSelDecay->decayIsInMCTree();
@@ -97,10 +99,10 @@ bool PhysSel::decayIsInMCTree( std::string name ) {
 // Return if the specified decay channel has all MC end particles 
 // reconstructed
 //=======================================================================
-bool PhysSel::decayHasTrkRecon( std::string name ) {
+bool PhysSel::decayHasTrkRecon( std::string& name ) {
 
   bool tkr = false;
-  PhysSelDecay* pSelDecay = 0;
+  const PhysSelDecay* pSelDecay = 0;
   retrievePhysSelDecay( name, pSelDecay );
   if( 0 != pSelDecay ) {
     tkr = pSelDecay->decayHasTrkRecon();
@@ -113,10 +115,10 @@ bool PhysSel::decayHasTrkRecon( std::string name ) {
 // Return if the specified decay channel has all MC end particles 
 // reconstructed and of physics quality
 //=======================================================================
-bool PhysSel::decayHasTrkPQual( std::string name ) {
+bool PhysSel::decayHasTrkPQual( std::string& name ) {
   
   bool pqual = false;
-  PhysSelDecay* pSelDecay = 0;
+  const PhysSelDecay* pSelDecay = 0;
   retrievePhysSelDecay( name, pSelDecay );
   if( 0 != pSelDecay ) {
     pqual = pSelDecay->decayHasTrkPQual();
@@ -129,10 +131,10 @@ bool PhysSel::decayHasTrkPQual( std::string name ) {
 // Return if the event contain a combination satisfying the selection
 // criteria for the specified decay channel
 //=======================================================================
-bool PhysSel::decayIsSelected( std::string name ) {
+bool PhysSel::decayIsSelected( std::string& name ) {
   
   bool sel = false;
-  PhysSelDecay* pSelDecay = 0;
+  const PhysSelDecay* pSelDecay = 0;
   retrievePhysSelDecay( name, pSelDecay );
   if( 0 != pSelDecay ) {
     sel = pSelDecay->decayIsSelected();
@@ -145,10 +147,10 @@ bool PhysSel::decayIsSelected( std::string name ) {
 // Return if a combination satisfying the selection
 // criteria for the specified decay channel is the "MC true" 
 //=======================================================================
-bool PhysSel::decaySelectedIsMC( std::string name ) {
+bool PhysSel::decaySelectedIsMC( std::string& name ) {
   
   bool agr = false;
-  PhysSelDecay* pSelDecay = 0;
+  const PhysSelDecay* pSelDecay = 0;
   retrievePhysSelDecay( name, pSelDecay );
   if( 0 != pSelDecay ) {
     agr = pSelDecay->decaySelectedIsMC();
@@ -161,10 +163,10 @@ bool PhysSel::decaySelectedIsMC( std::string name ) {
 // Return if a combination satifying the selection criteria for
 // the specified decay channel would also have a flavour tag
 //=======================================================================
-bool PhysSel::decayIsFlavourTagged( std::string name ) {
+bool PhysSel::decayIsFlavourTagged( std::string& name ) {
   
   bool ftag = false;
-  PhysSelDecay* pSelDecay = 0;
+  const PhysSelDecay* pSelDecay = 0;
   retrievePhysSelDecay( name, pSelDecay );
   if( 0 != pSelDecay ) {
     ftag = pSelDecay->decayIsFlavourTagged();
@@ -177,10 +179,11 @@ bool PhysSel::decayIsFlavourTagged( std::string name ) {
 //=======================================================================
 // Retrieve PhysSelDecay, specifying the stringID
 //=======================================================================
-void PhysSel::retrievePhysSelDecay( std::string name, PhysSelDecay*& value) {
+void PhysSel::retrievePhysSelDecay( std::string& name, 
+                                    const PhysSelDecay*& value) {
 
   // value = m_table[decayName];
-  SelTable::iterator isel = m_table.find( name );
+  std::map<std::string,PhysSelDecay*>::iterator isel = m_table.find( name );
   if( isel != m_table.end() ) { 
     value = (*isel).second;
   }
@@ -195,10 +198,70 @@ void PhysSel::retrievePhysSelDecay( std::string name, PhysSelDecay*& value) {
 //======================================================================
 void PhysSel::whichPhysSelDecays( std::vector<std::string>& nameList) {
 
-  nameList.clear();  
-  for( SelTable::iterator isel=m_table.begin(); isel!=m_table.end(); isel++ ) {
+  nameList.clear();
+  for( std::map<std::string,PhysSelDecay*>::iterator isel=m_table.begin();
+       isel!=m_table.end(); isel++ ) {
     std::string tmpName = (*isel).first;
     nameList.push_back(tmpName);
   }
   
+}
+
+//======================================================================
+// Serialize object for writing
+//======================================================================
+StreamBuffer& PhysSel::serialize( StreamBuffer& s ) const {
+  DataObject::serialize(s);
+  s << m_table.size();
+  std::map<std::string,PhysSelDecay*>::const_iterator iter;
+  for( iter = m_table.begin(); iter != m_table.end(); iter++ ) {
+    s << (*iter).first
+      << *((*iter).second);
+  }
+  return s;
+}
+
+//======================================================================
+// Serialize object for reading
+//======================================================================
+StreamBuffer& PhysSel::serialize( StreamBuffer& s ) {
+  DataObject::serialize(s);
+  
+  std::map<std::string,PhysSelDecay*>::size_type siz;
+  s >> siz;
+
+  for( long i = 0; i < (long)siz; i++ ) {
+    std::string selCode;
+    PhysSelDecay* pSelDecay = new PhysSelDecay;
+    s >> selCode, pSelDecay;
+    m_table[selCode] = pSelDecay;
+  }
+
+  return s;
+}
+
+//======================================================================
+// Fill the ASCII output stream
+//======================================================================
+std::ostream& PhysSel::fillStream( std::ostream& s ) const {
+  s << "class PhysSel :\n";
+  
+  std::map<std::string,PhysSelDecay*>::size_type siz = m_table.size();
+  if( 0 != siz ) {
+    s << "\nSize of the PhysSel results table :"
+      << LHCbEventField( LHCbEvent::field4 )
+      << siz;
+    long count = 0;
+    std::map<std::string,PhysSelDecay*>::const_iterator iter;
+    for( iter = m_table.begin(), count = 0;
+              iter!=m_table.end();
+                    iter++, count++ ) {
+      s << "\nIndex "
+        << LHCbEventField( LHCbEvent::field4 )
+        << count
+        << " of decay code " << (*iter).first
+        << " bitset result " << (*iter).second;
+    }    
+  }
+  return s;
 }

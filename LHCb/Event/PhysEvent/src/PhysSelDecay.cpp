@@ -14,7 +14,7 @@
 //===================================================================
 void PhysSelDecay::results( bool& lMCFlag, bool& lTKRFlag,  
                           bool& lPQUALFlag, bool& lSELFlag, 
-                          bool& lAGRFlag, bool& lTAGFlag ) {
+                          bool& lAGRFlag, bool& lTAGFlag ) const {
   lMCFlag = decayIsInMCTree();
   lTKRFlag = decayHasTrkRecon();
   lPQUALFlag = decayHasTrkPQual();
@@ -50,5 +50,4 @@ void PhysSelDecay::setResults ( bool lMCFlag, bool lTKRFlag,
   }
   return;
 }
-
 
