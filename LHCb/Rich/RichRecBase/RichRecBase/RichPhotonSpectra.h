@@ -1,9 +1,9 @@
-// $Id: RichPhotonSpectra.h,v 1.1 2003-08-06 09:55:31 jonrob Exp $
+// $Id: RichPhotonSpectra.h,v 1.2 2003-08-06 12:22:19 jonrob Exp $
 #ifndef RICHRECBASE_RICHPHOTONSPECTRA_H
 #define RICHRECBASE_RICHPHOTONSPECTRA_H 1
 
+// stl container
 #include <vector>
-#include "boost/array.hpp"
 
 // from Gaudi
 #include "GaudiKernel/StreamBuffer.h"
