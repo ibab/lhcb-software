@@ -4,8 +4,11 @@
  *  Header file for tool : RichMCTruthTool
  *
  *  CVS Log :-
- *  $Id: RichMCTruthTool.h,v 1.11 2004-11-03 12:15:11 jonrob Exp $
+ *  $Id: RichMCTruthTool.h,v 1.12 2004-11-25 17:45:39 jonrob Exp $
  *  $Log: not supported by cvs2svn $
+ *  Revision 1.11  2004/11/03 12:15:11  jonrob
+ *  Add method to locate the MCRichDigit associated to a given RichSmartID
+ *
  *  Revision 1.10  2004/10/13 09:23:36  jonrob
  *  New MCTruth methods
  *
@@ -138,23 +141,26 @@ private: // definitions
 
   /// typedef of the Linker object for MCParticles to MCRichTracks
   typedef LinkedTo<MCRichTrack,MCParticle> MCPartToRichTracks;
-  /// Returns the linker object for MCParticles to MCRichTracks
-  MCPartToRichTracks * mcTrackLinks() const;
 
   /// typedef of the Linker object for MCRichHits to MCRichOpticalPhotons
   typedef LinkedTo<MCRichOpticalPhoton,MCRichHit> MCRichHitToPhoton;
-  /// Returns the linker object for MCRichHits to MCRichOpticalPhotons
-  MCRichHitToPhoton * mcPhotonLinks() const;
 
   /// typedef of the Linker object for TrgTracks to MCParticles
   typedef LinkedTo<MCParticle,TrgTrack> TrgTrackToMCP;
-  ///  Returns the linker object for TrgTracks to MCParticles
-  TrgTrackToMCP * trgTrackToMCPLinks() const;
 
 private: // private methods
 
+  /// Returns the linker object for MCParticles to MCRichTracks
+  MCPartToRichTracks * mcTrackLinks() const;
+
+  /// Returns the linker object for MCRichHits to MCRichOpticalPhotons
+  MCRichHitToPhoton * mcPhotonLinks() const;
+
+  ///  Returns the linker object for TrgTracks to MCParticles
+  TrgTrackToMCP * trgTrackToMCPLinks() const;
+
   /// clean up current linker objects
-  void  cleanUpLinkers();
+  void cleanUpLinkers();
 
   /** Loads the MCRichDigits into the TES
    *
@@ -203,6 +209,10 @@ inline RichMCTruthTool::MCRichHitToPhoton * RichMCTruthTool::mcPhotonLinks() con
     m_mcPhotonLinks =
       new MCRichHitToPhoton( evtSvc(), msgSvc(),
                              MCRichOpticalPhotonLocation::LinksFromMCRichHits );
+    if ( m_mcPhotonLinks->notFound() ) {
+      Warning( "Linker for MCRichHits to MCRichOpticalPhotons not found for '" +
+               MCRichOpticalPhotonLocation::LinksFromMCRichHits + "'" );
+    }
   }
   return m_mcPhotonLinks;
 }
@@ -213,6 +223,10 @@ inline RichMCTruthTool::MCPartToRichTracks * RichMCTruthTool::mcTrackLinks() con
     m_mcTrackLinks =
       new MCPartToRichTracks( evtSvc(), msgSvc(),
                               MCRichTrackLocation::LinksFromMCParticles );
+    if ( m_mcTrackLinks->notFound() ) {
+      Warning( "Linker for MCParticles to MCRichTracks not found for '" +
+               MCRichTrackLocation::LinksFromMCParticles + "'" );
+    }
   }
   return m_mcTrackLinks;
 }
@@ -222,6 +236,10 @@ inline RichMCTruthTool::TrgTrackToMCP * RichMCTruthTool::trgTrackToMCPLinks() co
   if ( !m_trgTrToMCPLinks ) {
     m_trgTrToMCPLinks =
       new TrgTrackToMCP( evtSvc(), msgSvc(), TrgTrackLocation::Long );
+    if ( m_trgTrToMCPLinks->notFound() ) {
+      Warning( "Linker for TrgTracks to MCParticles not found for " +
+               TrgTrackLocation::Long + "'" );
+    }
   }
   return m_trgTrToMCPLinks;
 }
