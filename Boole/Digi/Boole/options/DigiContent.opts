@@ -57,6 +57,7 @@ DigiWriter.ItemList =
 , "/Event/Raw/Velo/Clusters#1"
 , "/Event/Raw/IT/Digits#1"
 , "/Event/Raw/OT/Digits#1"   // to be removed when relations problem fixed
+, "/Event/Raw/Muon/Digits#1" // to be removed when MuonDAQ problem fixed
 , "/Event/Rec#1"
 , "/Event/Rec/Relations#1"
 , "/Event/Rec/Relations/ITDigits2MCHits#1"

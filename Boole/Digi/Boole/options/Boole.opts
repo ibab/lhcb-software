@@ -156,4 +156,3 @@ RelationsOTSeq.Members   += { "OTDigit2MCHitAlg" };
 RelationsL0Seq.Members += { "L0CaloToMCParticleAsct" };
 RelationsL0Seq.Members += { "L0CaloToMCParticleAsct/L0CaloFullTruth"};
 L0CaloFullTruth.InputContainer = "Trig/L0/FullCalo";
-//L0CaloFullTruth.OutputTable    = "Rec/Relations/L0CaloFullCandidates";
