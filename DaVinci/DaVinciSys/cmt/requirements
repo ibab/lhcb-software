@@ -55,7 +55,7 @@ use  B2XGamma        v1r0    PhysSel
 # use  Bd2D0Kstar      v3r0    PhysSel
 
 #============================================================================
-# Not yet compliant packages
+# 
 #============================================================================
 use  B2DD            v1r7    PhysSel
 use  B2HH            v1r5    PhysSel
@@ -106,7 +106,7 @@ use  L0DU                v6r7	L0
 
 #--- TriggerFilter
 use  Utilities           v1r2   Tools
-use  TriggerFilter       v4r4   Tools
+use  TriggerFilter       v4r5   Tools
 
 #--- DecayPreselections
 use  DecayPresel         v4r5   Tools

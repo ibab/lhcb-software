@@ -4,6 +4,7 @@
 ! Purpose     : Explicit list of all DaVinci packages
 !-----------------------------------------------------------------------------
 
+!====================  DaVinciSys v11r4 2004-03-31 ============================
 ! 2004-03-29 -P. Koppenburg
 > version v11r5
 > use  DaVinci            v11r5   Phys   
@@ -26,6 +27,7 @@
 > # use  Bs2JpsiEta      v2r1p1  PhysSel
 > use  LoKi              v2r2  Tools
 > use  DecayPresel         v4r5   Tools
+> use  TriggerFilter       v4r5   Tools
     
 !====================  DaVinciSys v11r4 2004-03-23 ============================
 ! 2004-03-24 -P. Koppenburg
