@@ -1,4 +1,4 @@
-// $Id: DaDiCppHeader.cpp,v 1.43 2002-02-13 20:44:40 mato Exp $
+// $Id: DaDiCppHeader.cpp,v 1.44 2002-02-14 09:04:07 mato Exp $
 
 #include "GaudiKernel/Kernel.h"
 
@@ -771,7 +771,7 @@ void printMembers(std::ofstream& xmlOut,
                 gddAttType = gddAttribute->type().transcode(),
                 gddAttDesc = gddAttribute->desc().transcode(),
                 gddAttInit = gddAttribute->init().transcode();
-    bool gddAttIsStatic = gddAttribute->static_();
+//    bool gddAttIsStatic = gddAttribute->static_();
 
     if (gddAttAccess == accessor)
     {

@@ -1,4 +1,4 @@
-// $Id: DaDiFrontEnd.cpp,v 1.26 2002-02-13 20:44:40 mato Exp $
+// $Id: DaDiFrontEnd.cpp,v 1.27 2002-02-14 09:00:35 mato Exp $
 
 #include "GaudiKernel/Kernel.h"
 
@@ -1071,9 +1071,17 @@ void parseNamespace(DOM_Node node,
     getNamedItem(DOMString::transcode("name")).
     getNodeValue());
 
-  gddNamespace->setAuthor(node.getAttributes().
-    getNamedItem(DOMString::transcode("author")).
-    getNodeValue());
+  if (!node.getAttributes().
+    getNamedItem(DOMString::transcode("author")).isNull())
+  {
+    gddNamespace->setAuthor(node.getAttributes().
+      getNamedItem(DOMString::transcode("author")).
+      getNodeValue());
+  }
+  else
+  {
+    gddNamespace->setAuthor("");
+  }
   
   gddNamespace->setDesc(node.getAttributes().
     getNamedItem(DOMString::transcode("desc")).

@@ -37,7 +37,7 @@
 <!ELEMENT namespace ((desc?, typedef?, enum?, class?, import?, attribute?)*)>
 <!ATTLIST namespace
 	name CDATA #REQUIRED
-	author CDATA #REQUIRED
+	author CDATA #IMPLIED
 	desc CDATA #REQUIRED
 >
 <!ELEMENT base EMPTY>

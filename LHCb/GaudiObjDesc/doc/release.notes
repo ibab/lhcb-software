@@ -2,6 +2,13 @@ Package: GaudiObjDesc
 Desccription: This package contains a set of tools used to generate code from the XML description of the data object classes.
 Package manager : Stefan Roiser
 
+! 20020214 - v3r1 - Stefan Roiser
+ - added <typedef> and <desc> as sub-elements of <namespace>
+ - added 'author'-attribute to <namespace>
+ - bugfix: Defs of <typedef>s recognized as types which do not have to be included
+ - bugfix: classes created through xml-file will be added to 'class-database' ad Event/'ClassName'
+ - handling of pointers as simple types
+
 ! 20020130 - Stefan Roiser
  - added function to locate the place in the TDS
  - added possibility to make pure virtual functions
