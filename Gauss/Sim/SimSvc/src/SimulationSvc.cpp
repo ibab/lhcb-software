@@ -4,9 +4,10 @@
 #include "GaudiKernel/SvcFactory.h"
 #include "GaudiKernel/MsgStream.h"
 
-#include <dom/DOM_Element.hpp>
+#include <xercesc/dom/DOMElement.hpp>
+#include <xercesc/dom/DOMNodeList.hpp>
 
-#include "DetDesc/IXmlSvc.h"
+#include "XmlTools/IXmlSvc.h"
 #include <DetDesc/ILVolume.h>
 
 #include "SimulationSvc.h"
@@ -23,12 +24,12 @@ const ISvcFactory& SimulationSvcFactory = xmlparsersvc_factory;
 // -----------------------------------------------------------------------
 // build a standard string from a DOMString
 // -----------------------------------------------------------------------
-const std::string dom2Std (DOMString domString) {
-  char *cString = domString.transcode();
+const std::string dom2Std (const XMLCh* domString) {
+  char *cString = xercesc::XMLString::transcode(domString);
   std::string stdString;
   if (cString) {
     stdString = cString;
-    delete [] (cString);
+    xercesc::XMLString::release(&cString);
   }
   return stdString;
 }
@@ -109,25 +110,34 @@ void SimulationSvc::reload () {
       << m_simDbLocation << "\" ..." <<endreq;
 
   // parses the file containing the simatt definitions
-  DOM_Document document = xmlSvc->parse (m_simDbLocation.c_str());
-  if (document.isNull()) {
+  xercesc::DOMDocument* document = xmlSvc->parse (m_simDbLocation.c_str());
+  if (0 == document) {
     log << MSG::ERROR << "Unable to parse file " << m_simDbLocation
         << ". The simulation attributes will not be loaded." << endreq;
     return;
   }
 
   // go through the tree of elements and fill in the attribute sets
-  DOM_NodeList domAttrList = document.getElementsByTagName("SimAtt");
+  const XMLCh* SimStr = xercesc::XMLString::transcode("SimAtt");
+  xercesc::DOMNodeList* domAttrList = document->getElementsByTagName(SimStr);
   unsigned int i;
-  for (i = 0; i < domAttrList.getLength(); i++) {
-    DOM_Node attrNode = domAttrList.item(i);
-    DOM_Element attr = (DOM_Element&) attrNode;
-    std::string name = dom2Std (attr.getAttribute ("name"));
-    std::string mASAttribute = dom2Std (attr.getAttribute ("maxAllowedStep"));
-    std::string mTRAttribute = dom2Std (attr.getAttribute ("maxTrackLength"));
-    std::string mTAttribute = dom2Std (attr.getAttribute ("maxTime"));
-    std::string mEkAttribute = dom2Std (attr.getAttribute ("minEkine"));
-    std::string mRAttribute = dom2Std (attr.getAttribute ("minRange"));
+  const XMLCh* nameStr = xercesc::XMLString::transcode("name");
+  const XMLCh* mASStr  = xercesc::XMLString::transcode("maxAllowedStep");
+  const XMLCh* mTRStr  = xercesc::XMLString::transcode("maxTrackLength");
+  const XMLCh* mTStr   = xercesc::XMLString::transcode("maxTime");
+  const XMLCh* mEkStr  = xercesc::XMLString::transcode("minEkine");
+  const XMLCh* mRStr   = xercesc::XMLString::transcode("minRange");
+    
+  for (i = 0; i < domAttrList->getLength(); i++) {
+    xercesc::DOMNode* attrNode = domAttrList->item(i);
+    xercesc::DOMElement* attr = (xercesc::DOMElement *) attrNode;
+
+    std::string name = dom2Std (attr->getAttribute (nameStr));
+    std::string mASAttribute = dom2Std (attr->getAttribute (mASStr));
+    std::string mTRAttribute = dom2Std (attr->getAttribute (mTRStr));
+    std::string mTAttribute = dom2Std (attr->getAttribute (mTStr));
+    std::string mEkAttribute = dom2Std (attr->getAttribute (mEkStr));
+    std::string mRAttribute = dom2Std (attr->getAttribute (mRStr));
 
     // computes the values
     double maxAllowedStep = -1.0;
@@ -156,38 +166,58 @@ void SimulationSvc::reload () {
       new SimAttribute
       (maxAllowedStep, maxTrackLength, maxTime, minEkine, minRange);
   }
+  xercesc::XMLString::release(&(XMLCh*) mASStr);
+  xercesc::XMLString::release(&(XMLCh*) mTRStr);
+  xercesc::XMLString::release(&(XMLCh*) mTStr);
+  xercesc::XMLString::release(&(XMLCh*) mEkStr);
+  xercesc::XMLString::release(&(XMLCh*) mRStr);   
+  xercesc::XMLString::release(&(XMLCh*) SimStr);
+  
 
   // go through the tree of elements and fill in the logvol2Sim map
-  DOM_NodeList domLogvolsList = document.getElementsByTagName("LogVols");
-  if (domLogvolsList.getLength() > 0) {
-    DOM_Node logvolsNode = domLogvolsList.item(0);
-    DOM_Element logvolsElement = (DOM_Element&) logvolsNode;
+  const XMLCh* LVStr = xercesc::XMLString::transcode("LogVols");
+  const XMLCh* ItemStr = xercesc::XMLString::transcode("Item");
+  
+  xercesc::DOMNodeList* domLogvolsList = document->getElementsByTagName(LVStr);
+  if (domLogvolsList->getLength() > 0) {
+    xercesc::DOMNode* logvolsNode = domLogvolsList->item(0);
+    xercesc::DOMElement* logvolsElement = (xercesc::DOMElement *) logvolsNode;
 
-    DOM_NodeList domLogvolList = logvolsElement.getElementsByTagName("Item");
+    xercesc::DOMNodeList* domLogvolList = logvolsElement->getElementsByTagName(ItemStr);
     unsigned int i;
-    for (i = 0; i < domLogvolList.getLength(); i++) {
-      DOM_Node logvolNode = domLogvolList.item(i);
-      DOM_Element logvol = (DOM_Element&) logvolNode;
-      std::string name = dom2Std (logvol.getAttribute ("name"));
+    const XMLCh* partStr = xercesc::XMLString::transcode("particle");
+    const XMLCh* attrStr = xercesc::XMLString::transcode("attr");
+    const XMLCh* CutStr  = xercesc::XMLString::transcode("Cut");
+    
+    for (i = 0; i < domLogvolList->getLength(); i++) {
+      xercesc::DOMNode* logvolNode = domLogvolList->item(i);
+      xercesc::DOMElement* logvol = (xercesc::DOMElement *) logvolNode;
+
+      std::string name = dom2Std (logvol->getAttribute (nameStr));
 
       PartAttr* partattr = new PartAttr();
       m_logvol2Sim[name]=partattr;
 
-      DOM_NodeList domLogvolNode = logvol.getElementsByTagName("Cut");
+      xercesc::DOMNodeList* domLogvolNode = logvol->getElementsByTagName(CutStr);
       unsigned int j;
-      for (j = 0; j < domLogvolNode.getLength(); j++) {
-        DOM_Node cutNode = domLogvolNode.item(j);
-        DOM_Element cut = (DOM_Element&) cutNode;
-        
-        int particle = (int) xmlSvc->eval
-          (dom2Std (cut.getAttribute ("particle")), false);
-        std::string attr = dom2Std (cut.getAttribute ("attr"));
+      for (j = 0; j < domLogvolNode->getLength(); j++) {
+        xercesc::DOMNode* cutNode = domLogvolNode->item(j);
+        xercesc::DOMElement* cut = (xercesc::DOMElement *) cutNode;
+        std::string dompart = dom2Std (cut->getAttribute(partStr));
+        int particle = (int) xmlSvc->eval(dompart, false);
+        std::string attr = dom2Std (cut->getAttribute (attrStr));
         // register the association
         partattr->operator[](particle) = m_attributeSet[attr];
       }
     }
+    xercesc::XMLString::release(&(XMLCh*) partStr);
+    xercesc::XMLString::release(&(XMLCh*) attrStr);
+    xercesc::XMLString::release(&(XMLCh*) CutStr);
   }
-
+   
+    xercesc::XMLString::release(&(XMLCh*) LVStr);
+    xercesc::XMLString::release(&(XMLCh*) ItemStr);
+       
   ///////////////////////////////////////////////////////////
   // the part below deals with the production cuts per region
 
@@ -195,19 +225,29 @@ void SimulationSvc::reload () {
   map<std::string, Prcuts> regcut;
 
   // go through the tree of elements and fill in the ProductionCut sets
-  DOM_NodeList domPrCutList = document.getElementsByTagName("ProductionCut");
+  const XMLCh* ProdCutStr = xercesc::XMLString::transcode("ProductionCut");
+  
+  xercesc::DOMNodeList* domPrCutList = document->getElementsByTagName(ProdCutStr);
+  const XMLCh* GaStr = xercesc::XMLString::transcode("gammaCut");
+  const XMLCh* ElStr = xercesc::XMLString::transcode("electronCut");
+  const XMLCh* PoStr = xercesc::XMLString::transcode("positronCut");
+  const XMLCh* PrStr = xercesc::XMLString::transcode("ProtonCut");
+  const XMLCh* APStr = xercesc::XMLString::transcode("antiProtonCut");
+  const XMLCh* NeStr = xercesc::XMLString::transcode("neutronCut");
+  const XMLCh* ANStr = xercesc::XMLString::transcode("antiNeutronCut");
+  
   unsigned int ii;
-  for (ii = 0; ii < domPrCutList.getLength(); ii++) {
-    DOM_Node prcutNode = domPrCutList.item(ii);
-    DOM_Element prcut = (DOM_Element&) prcutNode;
-    std::string name = dom2Std (prcut.getAttribute ("name"));
-    std::string atrgammacut = dom2Std (prcut.getAttribute ("gammaCut"));
-    std::string atrelectroncut = dom2Std (prcut.getAttribute ("electronCut"));
-    std::string atrpositroncut = dom2Std (prcut.getAttribute ("positronCut"));
-    std::string atrprotoncut = dom2Std (prcut.getAttribute ("protonCut"));
-    std::string atraprotoncut = dom2Std (prcut.getAttribute ("antiProtonCut"));
-    std::string atrneutroncut = dom2Std (prcut.getAttribute ("neutronCut"));
-    std::string atraneutroncut = dom2Std (prcut.getAttribute ("antiNeutronCut"));
+  for (ii = 0; ii < domPrCutList->getLength(); ii++) {
+    xercesc::DOMNode* prcutNode = domPrCutList->item(ii);
+    xercesc::DOMElement* prcut = (xercesc::DOMElement *) prcutNode;
+    std::string name = dom2Std (prcut->getAttribute (nameStr));
+    std::string atrgammacut = dom2Std (prcut->getAttribute (GaStr));
+    std::string atrelectroncut = dom2Std (prcut->getAttribute (ElStr));
+    std::string atrpositroncut = dom2Std (prcut->getAttribute (PoStr));
+    std::string atrprotoncut = dom2Std (prcut->getAttribute (PrStr));
+    std::string atraprotoncut = dom2Std (prcut->getAttribute (APStr));
+    std::string atrneutroncut = dom2Std (prcut->getAttribute (NeStr));
+    std::string atraneutroncut = dom2Std (prcut->getAttribute (ANStr));
 
     Prcuts tempcuts;
 
@@ -246,31 +286,43 @@ void SimulationSvc::reload () {
     // fill in the temporary map 
     regcut[name] = tempcuts;
   }
-
+  xercesc::XMLString::release(&(XMLCh*) GaStr);
+  xercesc::XMLString::release(&(XMLCh*) ElStr); 
+  xercesc::XMLString::release(&(XMLCh*) PoStr);
+  xercesc::XMLString::release(&(XMLCh*) PrStr); 
+  xercesc::XMLString::release(&(XMLCh*) APStr);
+  xercesc::XMLString::release(&(XMLCh*) NeStr);
+  xercesc::XMLString::release(&(XMLCh*) ANStr);
+  xercesc::XMLString::release(&(XMLCh*) ProdCutStr);
+  
   // go through the tree of elements 
-  DOM_NodeList domRegionsList = document.getElementsByTagName("Regions");
-  if (domRegionsList.getLength() > 0) {
-    DOM_Node regionsNode = domRegionsList.item(0);
-    DOM_Element regionsElement = (DOM_Element&) regionsNode;
-
-    DOM_NodeList domRegionList = regionsElement.getElementsByTagName("Region");
+  const XMLCh* RegStr = xercesc::XMLString::transcode("Regions");
+  const XMLCh* VolStr = xercesc::XMLString::transcode("Volume");
+  const XMLCh* ProdStr = xercesc::XMLString::transcode("prodcut");
+ 
+  xercesc::DOMNodeList* domRegionsList = document->getElementsByTagName(RegStr);
+  if (domRegionsList->getLength() > 0) {
+    xercesc::DOMNode* regionsNode = domRegionsList->item(0);
+    xercesc::DOMElement* regionsElement = (xercesc::DOMElement*) regionsNode;
+    xercesc::DOMNodeList* domRegionList = regionsElement->getElementsByTagName(RegStr);
+    
     unsigned int i;
-    for (i = 0; i < domRegionList.getLength(); i++) {
-      DOM_Node regionNode = domRegionList.item(i);
-      DOM_Element region = (DOM_Element&) regionNode;
-      std::string regname = dom2Std (region.getAttribute ("name"));
-      std::string prcut = dom2Std (region.getAttribute ("prodcut"));
+    for (i = 0; i < domRegionList->getLength(); i++) {
+      xercesc::DOMNode* regionNode = domRegionList->item(i);
+      xercesc::DOMElement* region = (xercesc::DOMElement*) regionNode;
+      std::string regname = dom2Std (region->getAttribute (nameStr));
+      std::string prcut = dom2Std (region->getAttribute (ProdStr));
       
-      DOM_NodeList domRegionNode = region.getElementsByTagName("Volume");
+      xercesc::DOMNodeList* domRegionNode = region->getElementsByTagName(VolStr);
       unsigned int j;
       std::vector<std::string> volvect;
       
-      for (j = 0; j < domRegionNode.getLength(); j++) 
+      for (j = 0; j < domRegionNode->getLength(); j++) 
         {
-        DOM_Node volNode = domRegionNode.item(j);
-        DOM_Element vol = (DOM_Element&) volNode;
+        xercesc::DOMNode* volNode = domRegionNode->item(j);
+        xercesc::DOMElement* vol = (xercesc::DOMElement*) volNode;
 
-        std::string volname = dom2Std (vol.getAttribute ("name"));
+        std::string volname = dom2Std (vol->getAttribute (nameStr));
         volvect.push_back(volname);        
         }
       
@@ -286,7 +338,12 @@ void SimulationSvc::reload () {
       m_regionsDefs.push_back(rcut);
     }
   }
+  xercesc::XMLString::release(&(XMLCh*) nameStr); 
+  xercesc::XMLString::release(&(XMLCh*) RegStr);
+  xercesc::XMLString::release(&(XMLCh*) VolStr);
+  xercesc::XMLString::release(&(XMLCh*) ProdStr);
 }
+ 
 
 // -----------------------------------------------------------------------
 //  hasSimAttribute (ILVolume*)

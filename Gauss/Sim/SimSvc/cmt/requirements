@@ -1,15 +1,18 @@
 package SimSvc
-version v3r0
+version v3r1
 
 branches SimSvc doc cmt src
 
 include_dirs $(SIMSVCROOT)
 
-use DetDesc     v* Det
+use DetDescCnv     v* Det
 
 # build a component library
 library SimSvc     *.cpp
 
 apply_pattern component_library library=SimSvc
 
+macro_remove cppflags "-ansi"
+macro_remove cppflags "-Wall "
+macro_remove cppflags "-W "
 
