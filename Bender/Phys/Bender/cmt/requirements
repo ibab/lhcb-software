@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.1.1.1 2004-01-22 22:29:45 ibelyaev Exp $ 
+# $Id: requirements,v 1.2 2004-02-10 12:35:03 ibelyaev Exp $ 
 # =============================================================================
 # CVS tag $Name: not supported by cvs2svn $     
 # =============================================================================
@@ -24,6 +24,17 @@ path_prepend      PYTHONPATH "$(BENDERROOT)/python"
 path_remove       PATH       "/Bender/" WIN32 "\Bender\"                
 path_prepend      PATH       "$(BENDERROOT)/$(BINDIR)"
 
+
+macro PYSEAL "/afs/cern.ch/sw/lcg/app/releases/SEAL/$(SEAL_native_version)"
+path_append       PYTHONPATH $(PYSEAL)/src/Scripting/PyROOT/src
+macro PYPI   "/afs/cern.ch/sw/lcg/app/releases/PI/$(PI_native_version)"
+path_append       PYTHONPATH $(PYPI)/src/AnalysisServices/PyAIDAProxy"
+
+# =============== application macro ===========================================
+path_remove       LD_PRELOAD  GaudiKernel
+path_append       LD_PRELOAD  "" \
+	          Linux $(GAUDIKERNELROOT)/$(CMTCONFIG)/libGaudiKernel.so
+
 # =============== application macro ===========================================
 macro             Bender_linkopts    "${application_linkopts}"
 
@@ -38,4 +49,7 @@ apply_pattern     application_path
 # The END
 # ============================================================================
 # $Log: not supported by cvs2svn $
+# Revision 1.1.1.1  2004/01/22 22:29:45  ibelyaev
+# New location of 'old' package
+#
 # =============================================================================

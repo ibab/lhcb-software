@@ -50,28 +50,23 @@ def _OpsCut ( cut , ops ) :
     cut.   __or__  = ops.   __or__
     cut.  __ror__  = ops.  __ror__
     
-def _calls_with_check_( self , value = None  ) :
-    if not value : return self.__CALL__()
-    else         : return self.__CALL__( value ) 
-    
 def _CallsFun ( fun , calls ) :
     " define call operators "
-    fun. __CALL__ =  calls. __fcall__
-    fun. __call__ = _calls_with_check_
+    fun. __call__ =  calls. __fcall__
     
 def _CallsCut ( cut , calls ) :
     " define call operators "
-    cut. __CALL__ =  calls. __ccall__ 
-    cut. __call__ = _calls_with_check_
+    cut. __call__ =  calls. __ccall__ 
     
 # import operators 
-_OpsP    = gaudi.gbl.Bender.Operators    ( 'const Particle*'   )
-_OpsV    = gaudi.gbl.Bender.Operators    ( 'const Vertex*'     )
-_OpsMCP  = gaudi.gbl.Bender.Operators    ( 'const MCParticle*' )
-_OpsMCV  = gaudi.gbl.Bender.Operators    ( 'const MCVertex*'   )
-_OpsPID  = gaudi.gbl.Bender.OperatorsPID
-_CallsP  = gaudi.gbl.Bender.Calls        ( 'const Particle*'   )
-_CallsV  = gaudi.gbl.Bender.Calls        ( 'const Vertex*'     )
+_OpsP     = gaudi.gbl.Bender.Operators    ( 'const Particle*'   )
+_OpsV     = gaudi.gbl.Bender.Operators    ( 'const Vertex*'     )
+_OpsMCP   = gaudi.gbl.Bender.Operators    ( 'const MCParticle*' )
+_OpsMCV   = gaudi.gbl.Bender.Operators    ( 'const MCVertex*'   )
+_OpsPID   = gaudi.gbl.Bender.OperatorsPID
+_CallsP   = gaudi.gbl.Bender.Calls        ( 'const Particle*'   )
+_CallsV   = gaudi.gbl.Bender.Calls        ( 'const Vertex*'     )
+_CallsMCP = gaudi.gbl.Bender.CallsMC      ( 'const MCParticle*' )
 
 def _OpsFunP   ( fun ) :
     _OpsFun    ( fun ,   _OpsP   )
@@ -81,7 +76,10 @@ def _OpsFunV   ( fun ) :
     _OpsFun    ( fun ,   _OpsV    )
     _CallsFun  ( fun ,   _CallsV  )
     
-def _OpsFunMCP ( fun ) : _OpsFun ( fun , _OpsMCP )
+def _OpsFunMCP ( fun ) :
+    _OpsFun    ( fun , _OpsMCP   )
+    _CallsFun  ( fun , _CallsMCP )
+    
 def _OpsFunMCV ( fun ) : _OpsFun ( fun , _OpsMCV )
 
 def _OpsCutP   ( cut ) :

@@ -238,14 +238,26 @@ VTRACKS = helper.loadFunV ( gbl.LoKi.Vertices.VertexTracks  ) ()
 
 # functions
 CHILD   = helper.loadFunP ( gbl.LoKi.Particles.ChildFunction ) 
-MCTRUTH = helper.loadFunP ( gbl.LoKi.Particles.MCTruth       ) 
+MCTRUTH = helper.loadCutP ( gbl.LoKi.Particles.MCTruth       ) 
+
+# mc functions
+MCP    = helper.loadFunMCP ( gbl.LoKi.MCParticles.Momentum           ) ()
+MCE    = helper.loadFunMCP ( gbl.LoKi.MCParticles.Energy             ) ()
+MCPT   = helper.loadFunMCP ( gbl.LoKi.MCParticles.TransverseMomentum ) ()
+MCPX   = helper.loadFunMCP ( gbl.LoKi.MCParticles.MomentumX          ) ()
+MCPY   = helper.loadFunMCP ( gbl.LoKi.MCParticles.MomentumY          ) ()
+MCPZ   = helper.loadFunMCP ( gbl.LoKi.MCParticles.MomentumZ          ) ()
+MCID   = helper.loadFunMCP ( gbl.LoKi.MCParticles.Identifier         ) ()
+MC3Q   = helper.loadFunMCP ( gbl.LoKi.MCParticles.ThreeCharge        ) ()
+MCCTAU = helper.loadFunMCP ( gbl.LoKi.MCParticles.ProperLifeTime     ) ()
+
 
 # "intermediate" objects 
 BenderLoop    = gbl.Bender.Loop
 BenderTuple   = gbl.Bender.BenderTuple
 BenderMCMatch = gbl.Bender.MCMatch
 BenderAlgo    = gbl.Bender.BenderAlgoWrap
-#BenderAlgo    = gbl.Bender.BenderAlgo
+
 
 class Tuple(BenderTuple):
     """
@@ -567,12 +579,18 @@ class Algo(BenderAlgo):
          fit     = args.get ( 'fit' , FitVertex  )
          return Loop( BenderAlgo.loop( self , formula , pid , fit ) ) 
      
-     def ntuple         ( self , **args ) :
+     def nTuple         ( self , **args ) :
          " Retrive/Book the Tuple oobject "
          if not args.has_key( 'title' ) :
              raise TypeError, "Tuple 'title' is not specified"
          return Tuple( BenderAlgo.ntuple( self , args.get('title') ) )
      
+     def ntuple         ( self , **args ) :
+         " Retrive/Book the Tuple oobject "
+         if not args.has_key( 'title' ) :
+             raise TypeError, "Tuple 'title' is not specified"
+         return Tuple( BenderAlgo.ntuple( self , args.get('title') ) )
+          
      def evtCol         ( self , **args ) :
          " Retrive/Book the Event Tag Collection  object "
          if not args.has_key( 'title' ) :
