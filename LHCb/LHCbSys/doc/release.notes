@@ -4,9 +4,9 @@
 ! Purpose     : LHCb OO kernel packages
 !-----------------------------------------------------------------------------
 
-!======================== LHCbSys v14r0 2003-10-08 ========================
+!======================== LHCbSys v13r1 2003-10-08 ========================
 ! 2003-10-08 - Marco Cattaneo
- - New packages:      DAQEvent v1r1
+ - New packages:       DAQEvent v1r1
  - Modified packages: 
        GaudiConf v7r1, DetDescExample v6r2, DumpEventExample v7r1
        KernelSys v1r5, RichKernel v3r2

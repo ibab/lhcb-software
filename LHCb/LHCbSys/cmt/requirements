@@ -1,12 +1,12 @@
 package LHCbSys
-version v14r0
+version v13r1
 
 branches doc cmt
  
 #===============================================================
 # LHCb packages used by all applications
 #===============================================================
-use LHCb		v14r0
+use LHCb		v13r1
 
 use GaudiConf		v7r1
 
