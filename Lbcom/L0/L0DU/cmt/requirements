@@ -1,11 +1,9 @@
 package		L0DU
-version 	v6r7
+version 	v6r7p1
 
 # ================ structure =============================================
 branches	src cmt doc options
-
-# ================ own includes ==========================================
-include_dirs	$(L0DUROOT)
+include_path none
 
 # ================ options ===============================================
 set L0DUOPTS	$(L0DUROOT)/options

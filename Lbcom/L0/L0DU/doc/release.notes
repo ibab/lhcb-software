@@ -1,6 +1,10 @@
-$Id: release.notes,v 1.30 2004-01-26 15:05:56 odescham Exp $
+$Id: release.notes,v 1.31 2004-07-29 07:54:51 cattanem Exp $
 Package		: L0/L0DU
 Package Manager : Pascal Perret
+
+!========================= L0DU v6r7p1 2004-07-29 =========================
+! 2004-07-29 - Marco Cattaneo
+ - Fix typo in L0DU bank type name
 
 !========================== L0DU v6r7 2004-01-26 ==========================
 ! 2004-01-26 - Olivier Deschamps

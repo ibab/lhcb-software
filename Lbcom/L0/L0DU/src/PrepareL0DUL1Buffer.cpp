@@ -1,4 +1,4 @@
-// $Id: PrepareL0DUL1Buffer.cpp,v 1.1 2004-01-26 14:28:45 odescham Exp $
+// $Id: PrepareL0DUL1Buffer.cpp,v 1.2 2004-07-29 07:54:51 cattanem Exp $
 // Include files 
 
 // from Gaudi
@@ -223,7 +223,7 @@ StatusCode PrepareL0DUL1Buffer::execute() {
   std::vector<l1_int> data;
   
   int sourceID =0;
-  int bankType = L1Buffer::LODU;
+  int bankType = L1Buffer::L0DU;
 
   data.push_back( L0DUHeaderWord );
   data.push_back( Peak1Word      );
