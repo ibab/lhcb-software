@@ -4,6 +4,7 @@
 ! Purpose     : The Rich Global PID algorithm
 !-----------------------------------------------------------------------------
 
+!======================= RichGlobalPID v1r6 2004-04-21 =======================
 ! 2004-04-18 - Chris Jones
  - New track and pixel selection algorithms
 
