@@ -1,4 +1,4 @@
-// $Id: DaDiCppDict.cpp,v 1.12 2001-11-06 10:09:58 mato Exp $
+// $Id: DaDiCppDict.cpp,v 1.13 2001-11-07 14:49:34 mato Exp $
 
 #include "GaudiKernel/Kernel.h"
 
@@ -356,7 +356,7 @@ void DDBEdict::printCppDictionary(DaDiPackage* gddPackage,
 // CVS-tag and 'donotedit'-message
 //
 
-  metaOut << "// $ID: $" << std::endl << std::endl << std::endl
+  metaOut << std::endl << std::endl
     << "//   **************************************************************************" << std::endl
     << "//   *                                                                        *" << std::endl
     << "//   *                      ! ! ! A T T E N T I O N ! ! !                     *" << std::endl
@@ -451,6 +451,17 @@ void DDBEdict::printCppDictionary(DaDiPackage* gddPackage,
   metaOut << "    MetaClass* metaC = new MetaClass(\"" 
     << gddClass->className().transcode() << "\", \"" 
     << gddClass->classDesc().transcode() << "\", 0);" << std::endl << std::endl;
+
+//
+// Creation of Superclasses
+//
+  for (i=0; i<gddClass->sizeDaDiBaseClass(); ++i)
+  {
+    metaOut << "    metaC->addSuperClass(\"" 
+      << gddClass->popDaDiBaseClass()->name().transcode() << "\");" 
+      << std::endl;
+  }
+  metaOut << std::endl;
 
 //
 // Creation of fields for attributes and relations

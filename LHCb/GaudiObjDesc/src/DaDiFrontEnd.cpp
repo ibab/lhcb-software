@@ -1,4 +1,4 @@
-// $Id: DaDiFrontEnd.cpp,v 1.9 2001-11-05 19:51:58 mato Exp $
+// $Id: DaDiFrontEnd.cpp,v 1.10 2001-11-07 14:49:34 mato Exp $
 
 #include "GaudiKernel/Kernel.h"
 
@@ -527,6 +527,7 @@ void DDFE::parseClass(DOM_Node node,
                 {
                   gddMethArgument->setConst_("TRUE");
                 }
+
                 else
                 {
                 std::cerr << argV0 << ": Don't know how to handle modifier: " 
