@@ -48,9 +48,11 @@ SimulationSvc::~SimulationSvc()
        it!= m_attributeSet.end();it++)  delete (*it).second;
   m_attributeSet.clear();
 
-  for (Dictionnary::iterator itt=m_logvol2Sim.begin();
+  for (Dict::iterator itt=m_logvol2Sim.begin();
        itt!= m_logvol2Sim.end();itt++)  delete (*itt).second;
   m_logvol2Sim.clear();
+
+  m_regionsDefs.clear();
 }
 
 // -----------------------------------------------------------------------
@@ -82,6 +84,7 @@ StatusCode SimulationSvc::initialize() {
 void SimulationSvc::clear () {
   m_attributeSet.clear();
   m_logvol2Sim.clear();
+  m_regionsDefs.clear();
 }
 
 // -----------------------------------------------------------------------
@@ -105,7 +108,7 @@ void SimulationSvc::reload () {
   log << MSG::INFO << "Loading simulation attributes file \""
       << m_simDbLocation << "\" ..." <<endreq;
 
-  // parses the file containing the color definitions
+  // parses the file containing the simatt definitions
   DOM_Document document = xmlSvc->parse (m_simDbLocation.c_str());
   if (document.isNull()) {
     log << MSG::ERROR << "Unable to parse file " << m_simDbLocation
@@ -167,8 +170,8 @@ void SimulationSvc::reload () {
       DOM_Element logvol = (DOM_Element&) logvolNode;
       std::string name = dom2Std (logvol.getAttribute ("name"));
 
-      PartAttr* particles = new PartAttr();
-      m_logvol2Sim[name]=particles;
+      PartAttr* partattr = new PartAttr();
+      m_logvol2Sim[name]=partattr;
 
       DOM_NodeList domLogvolNode = logvol.getElementsByTagName("Cut");
       unsigned int j;
@@ -180,8 +183,107 @@ void SimulationSvc::reload () {
           (dom2Std (cut.getAttribute ("particle")), false);
         std::string attr = dom2Std (cut.getAttribute ("attr"));
         // register the association
-        particles->operator[](particle) = m_attributeSet[attr];
+        partattr->operator[](particle) = m_attributeSet[attr];
       }
+    }
+  }
+
+  ///////////////////////////////////////////////////////////
+  // the part below deals with the production cuts per region
+
+  //create a temporary map to store ProductionCut definitions
+  map<std::string, Prcuts> regcut;
+
+  // go through the tree of elements and fill in the ProductionCut sets
+  DOM_NodeList domPrCutList = document.getElementsByTagName("ProductionCut");
+  unsigned int ii;
+  for (ii = 0; ii < domPrCutList.getLength(); ii++) {
+    DOM_Node prcutNode = domPrCutList.item(ii);
+    DOM_Element prcut = (DOM_Element&) prcutNode;
+    std::string name = dom2Std (prcut.getAttribute ("name"));
+    std::string atrgammacut = dom2Std (prcut.getAttribute ("gammaCut"));
+    std::string atrelectroncut = dom2Std (prcut.getAttribute ("electronCut"));
+    std::string atrpositroncut = dom2Std (prcut.getAttribute ("positronCut"));
+    std::string atrprotoncut = dom2Std (prcut.getAttribute ("protonCut"));
+    std::string atraprotoncut = dom2Std (prcut.getAttribute ("antiProtonCut"));
+    std::string atrneutroncut = dom2Std (prcut.getAttribute ("neutronCut"));
+    std::string atraneutroncut = dom2Std (prcut.getAttribute ("antiNeutronCut"));
+
+    Prcuts tempcuts;
+
+    // set default values
+    tempcuts.gammacut = -1.0;
+    tempcuts.electroncut = -1.0;
+    tempcuts.positroncut = -1.0;
+    tempcuts.protoncut = -1.0;
+    tempcuts.aprotoncut = -1.0;
+    tempcuts.neutroncut = -1.0;
+    tempcuts.aneutroncut = -1.0;
+    // get values (if any)
+
+    if (!atrgammacut.empty()) {
+      tempcuts.gammacut = xmlSvc->eval(atrgammacut, false);
+    }
+    if (!atrelectroncut.empty()) {
+      tempcuts.electroncut = xmlSvc->eval(atrelectroncut, true);
+    }
+    if (!atrpositroncut.empty()) {
+      tempcuts.positroncut = xmlSvc->eval(atrpositroncut, true);
+    }
+    if (!atrprotoncut.empty()) {
+      tempcuts.protoncut = xmlSvc->eval(atrprotoncut, true);
+      }
+    if (!atraprotoncut.empty()) {
+      tempcuts.aprotoncut = xmlSvc->eval(atraprotoncut, true);
+    }
+    if (!atrneutroncut.empty()) {
+      tempcuts.neutroncut = xmlSvc->eval(atrneutroncut, true);
+      }
+    if (!atraneutroncut.empty()) {
+      tempcuts.aneutroncut = xmlSvc->eval(atraneutroncut, true);
+    }
+    
+    // fill in the temporary map 
+    regcut[name] = tempcuts;
+  }
+
+  // go through the tree of elements 
+  DOM_NodeList domRegionsList = document.getElementsByTagName("Regions");
+  if (domRegionsList.getLength() > 0) {
+    DOM_Node regionsNode = domRegionsList.item(0);
+    DOM_Element regionsElement = (DOM_Element&) regionsNode;
+
+    DOM_NodeList domRegionList = regionsElement.getElementsByTagName("Region");
+    unsigned int i;
+    for (i = 0; i < domRegionList.getLength(); i++) {
+      DOM_Node regionNode = domRegionList.item(i);
+      DOM_Element region = (DOM_Element&) regionNode;
+      std::string regname = dom2Std (region.getAttribute ("name"));
+      std::string prcut = dom2Std (region.getAttribute ("prodcut"));
+      
+      DOM_NodeList domRegionNode = region.getElementsByTagName("Volume");
+      unsigned int j;
+      std::vector<std::string> volvect;
+      
+      for (j = 0; j < domRegionNode.getLength(); j++) 
+        {
+        DOM_Node volNode = domRegionNode.item(j);
+        DOM_Element vol = (DOM_Element&) volNode;
+
+        std::string volname = dom2Std (vol.getAttribute ("name"));
+        volvect.push_back(volname);        
+        }
+      
+      RegionCuts rcut(regname,
+                      volvect,
+                      regcut[prcut].gammacut,
+                      regcut[prcut].electroncut,
+                      regcut[prcut].positroncut,
+                      regcut[prcut].protoncut,
+                      regcut[prcut].aprotoncut,
+                      regcut[prcut].neutroncut,
+                      regcut[prcut].aneutroncut);
+      m_regionsDefs.push_back(rcut);
     }
   }
 }
@@ -193,7 +295,7 @@ const bool SimulationSvc::hasSimAttribute (const ILVolume* vol) const {
   if (0 != vol) {
     // try first to find an attribute associated directly to the logical volume
     std::string bnn = vol->name();
-    Dictionnary::const_iterator it = m_logvol2Sim.find (bnn);
+    Dict::const_iterator it = m_logvol2Sim.find (bnn);
     if (it != m_logvol2Sim.end()) {
       return true;
     }    
@@ -207,7 +309,7 @@ const bool SimulationSvc::hasSimAttribute (const ILVolume* vol) const {
 const bool SimulationSvc::hasSimAttribute (const std::string volname) const {
 
   // try first to find an attribute associated directly to the logical volume
-  Dictionnary::const_iterator it = m_logvol2Sim.find (volname);
+  Dict::const_iterator it = m_logvol2Sim.find (volname);
   if (it != m_logvol2Sim.end()) {
     return true;
   }    
@@ -224,7 +326,7 @@ SimulationSvc::simAttribute (const ILVolume* vol) const {
   if (0 != vol) {
     // try first to find an attribute associated directly to the logical volume
     std::string bnn = vol->name();
-    Dictionnary::const_iterator it = m_logvol2Sim.find (bnn);
+    Dict::const_iterator it = m_logvol2Sim.find (bnn);
     if (it != m_logvol2Sim.end()) 
       {
         part=it->second;
@@ -247,7 +349,7 @@ SimulationSvc::simAttribute (std::string volname) const {
   PartAttr* part;
   
   // try first to find an attribute associated directly to the logical volume
-  Dictionnary::const_iterator it = m_logvol2Sim.find (volname);
+  Dict::const_iterator it = m_logvol2Sim.find (volname);
   if (it != m_logvol2Sim.end()) 
     {
       part=it->second;
@@ -260,6 +362,16 @@ SimulationSvc::simAttribute (std::string volname) const {
     }
   return part;
 }
+
+//------------------------------------------------------------------------
+// regionsDefs()
+//------------------------------------------------------------------------
+
+const std::vector<RegionCuts>* SimulationSvc::regionsDefs () const
+{
+  return &m_regionsDefs;
+}
+
 
 // -----------------------------------------------------------------------
 // Query interface

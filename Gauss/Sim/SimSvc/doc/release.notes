@@ -5,6 +5,11 @@
 !               volumes
 !-----------------------------------------------------------------------------
 
+!========================== SimSvc v3r0 ============================
+
+! 2003-04-04 - Witek Pokorski
+ - major change, added handling of cuts per region
+
 ! 2003-06-02 - Witek Pokorski
  - typedef Particles changed to a more suitable name
 

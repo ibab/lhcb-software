@@ -7,6 +7,7 @@
 #include "GaudiKernel/IInterface.h"
 
 #include "SimSvc/SimAttribute.h"
+#include "SimSvc/RegionCuts.h"
 #include <map>
 
 // Forward and external declarations
@@ -68,6 +69,13 @@ public:
    * @param vol the logical volume
    */
   virtual const bool hasSimAttribute (const std::string volname) const = 0;
+
+  /**
+   * This method returns the pointer to the vector of region definitions.
+   * @param 
+   * @return std::vector<RegionCuts>
+   */
+  virtual const std::vector<RegionCuts>* regionsDefs () const = 0;
 
   /**
    * this method erases the current set of attributes and loads a new set

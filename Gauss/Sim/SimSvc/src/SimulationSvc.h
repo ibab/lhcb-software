@@ -94,6 +94,13 @@ public:
   virtual const bool hasSimAttribute (const std::string volname) const;
 
   /**
+   * This method returns the pointer to the vector of region definitions.
+   * @param 
+   * @return std::vector<RegionCuts>
+   */
+  virtual const std::vector<RegionCuts>* regionsDefs () const;
+
+  /**
    * this method erases the current set of attributes and loads a new set
    */
   virtual void reload ();
@@ -115,14 +122,29 @@ private:
    * This defines a dictionnary
    */
 
-  typedef std::map<std::string, PartAttr*> Dictionnary;
+  typedef std::map<std::string, PartAttr*> Dict;
 
   /// a map of attributes to be used
   AttributeSet m_attributeSet;
 
   /// a dictionnary linking logical volumes and SimAttributes
-  Dictionnary m_logvol2Sim;
+  Dict m_logvol2Sim;
 
+  /// vector of regions definitions
+  std::vector<RegionCuts> m_regionsDefs;
+
+  /// definition of a struct used for temporary purposes
+  struct Prcuts
+  {
+    double gammacut;
+    double electroncut;
+    double positroncut;
+    double protoncut;
+    double aprotoncut;
+    double neutroncut;
+    double aneutroncut;
+  };
+    
   /// The location of the Xml file containing all definitions
   std::string m_simDbLocation;
 
