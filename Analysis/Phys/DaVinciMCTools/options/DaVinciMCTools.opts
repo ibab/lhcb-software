@@ -11,8 +11,13 @@
 //ToolSvc.DebugTool.Arrow = "+-->";
 
 // Examples for MCDecayFinder
-ToolSvc.MCDecayFinder.Decay = "[<Xb>]cc";
+//ToolSvc.MCDecayFinder.Decay = "{ [B0]nos -> K+ pi-, [B0]os -> K- pi+ }";
+//ToolSvc.MCDecayFinder.Decay = "[<Xb>]cc";
+//ToolSvc.MCDecayFinder.Decay = "[<Xb>]cc -> {K+ pi-, K- pi+}";
+//ToolSvc.MCDecayFinder.Decay = "[<Xb>]cc -> {pi+,pi-} ...";
+//ToolSvc.MCDecayFinder.Decay = "B0 -> K+ pi-";
 //ToolSvc.MCDecayFinder.Decay = "B0 -> (J/psi(1S) -> mu+ mu- {gamma,}) (KS0 -> pi- pi+)";
+//ToolSvc.MCDecayFinder.Decay = "J/psi(1S) -> mu+ mu- {gamma,}";
 //ToolSvc.MCDecayFinder.Decay = "rho(770)0 -> pi+ [pi+]cc";
 //ToolSvc.MCDecayFinder.Decay = "B0";
 //ToolSvc.MCDecayFinder.Decay = "(B0)";
