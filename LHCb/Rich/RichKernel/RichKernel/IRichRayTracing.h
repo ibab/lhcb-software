@@ -1,4 +1,4 @@
-// $Id: IRichRayTracing.h,v 1.9 2004-07-15 17:10:51 jonrob Exp $
+// $Id: IRichRayTracing.h,v 1.10 2004-07-15 17:16:27 jonrob Exp $
 #ifndef RICHKERNEL_IRICHRAYTRACING_H
 #define RICHKERNEL_IRICHRAYTRACING_H 1
 
@@ -56,7 +56,7 @@ public:
    *  @retval StatusCode::FAILURE Ray tracing fell outside acceptance, as defined by mode
    */
   virtual StatusCode 
-  traceToDetector ( Rich::DetectorType rich,
+  traceToDetector ( const Rich::DetectorType rich,
                     const HepPoint3D& startPoint,
                     const HepVector3D& startDir,
                     RichGeomPhoton& photon,
@@ -78,7 +78,7 @@ public:
    *  @retval StatusCode::FAILURE Ray tracing fell outside acceptance, as defined by mode
    */
   virtual StatusCode 
-  traceToDetectorWithoutEff ( Rich::DetectorType rich,         
+  traceToDetectorWithoutEff ( const Rich::DetectorType rich,         
                               const HepPoint3D& startPoint,     
                               const HepVector3D& startDir,            
                               HepPoint3D& hitPosition,                 
@@ -99,7 +99,7 @@ public:
    *  @retval StatusCode::FAILURE Ray tracing fell outside acceptance
    */
   virtual StatusCode 
-  intersectPDPanel ( Rich::DetectorType rich,
+  intersectPDPanel ( const Rich::DetectorType rich,
                      const HepPoint3D& point,
                      const HepVector3D& dir,  
                      RichGeomPhoton& photon ) const = 0;
