@@ -1,3 +1,4 @@
+! CVS tag $Name: not supported by cvs2svn $
 Package LHCbKernel
 Package manager: M.Cattaneo
 Purpose: LHCb specific Kernel classes 
@@ -10,7 +11,19 @@ Purpose: LHCb specific Kernel classes
     Relations/AssociatorBase.cpp  
     improve the printout and introduce better error/warnins/exception
     handling and statistics (imported from base classes of LHCb Calo software)
- 
+  - Relations/IAssociator.h 
+    1) add "const" and "virtual" qualifiers to all "range" methods 
+    2) declare all "range" methods as pure abstract 
+    3) move the actual implementation of "range" methods to Associator 
+  - Relations/IAssociatorWeighted.h 
+    1) add "const" and "virtual" qualifiers to all "range" methods 
+    2) declare all "range" methods as pure abstract 
+    3) move the actual implementation of "range" methods to AssociatorWeighted  
+  - Relations/Associator.h 
+    add implementation of "range" methods from IAssociator
+  - Relations/AssociatorWeighted.h 
+    add implementation of "range" methods from IAssociatorWeighted
+
 !=============================================================================
 ! 10/05/2002 - Philippe Charpentier
   - modified interface to Associators:

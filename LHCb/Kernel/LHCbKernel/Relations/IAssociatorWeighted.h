@@ -1,23 +1,10 @@
-// $Id: IAssociatorWeighted.h,v 1.5 2002-05-10 14:49:40 phicharp Exp $
+// $Id: IAssociatorWeighted.h,v 1.6 2002-05-12 09:58:02 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
-// Revision 1.4  2002/04/29 09:09:56  phicharp
-// =Make retrieve methods safer (2 new methods)
-//
-// Revision 1.3  2002/04/26 13:21:42  phicharp
-// Add typedefs and methods to IAssociator(s)
-//
-// Revision 1.2  2002/04/25 08:44:03  ibelyaev
-//  bug fix for Win2K
-//
-// Revision 1.1  2002/04/08 14:26:01  ibelyaev
-//  new version of 'Relations'-subpackage
-//
-// Revision 1.1  2002/04/03 15:35:17  ibelyaev
-// essential update and redesing of all 'Relations' stuff
-//
+// Revision 1.5  2002/05/10 14:49:40  phicharp
+// Add retrieve methods to IAssociatorxx
 // ============================================================================
 #ifndef RELATIONS_IAssociatorWeighted_H 
 #define RELATIONS_IAssociatorWeighted_H 1
@@ -54,6 +41,12 @@ public:
   typedef IRelationWeighted<FROM,TO,WEIGHT>     DirectType    ;
   /// shortcut for "inverse" relations
   typedef IRelationWeighted<TO,FROM,WEIGHT>     InverseType   ;
+  /// definition of "From"   type ("FROM"   and "From"   could be different)
+  typedef DirectType::From        From          ;
+  /// definition of "To"     type ("TO"     and "To"     could be different)
+  typedef DirectType::To          To            ;
+  /// definition of "Weight" type ("WEIGHT" and "Weight" could be different)
+  typedef DirectType::Weight      Weight        ;
   
   /// another set of shortcuts may be easier to remember (PhC)
   typedef OwnType                             IAsct;
@@ -99,6 +92,154 @@ public:
    *  @return pointer to builder algorithm
    */
   virtual IAlgorithm*         algorithm () const = 0 ;
+
+  /** Method to retrieve a range associated to a given FROM element
+   *
+   *  @param from        object one want to retrieve associated range
+   *  @param range       A range of associated objects. 
+   *                     It is empty if no table was found
+   *  @return Failure it no table was found
+   *
+   */
+  virtual StatusCode range
+  ( const From&      from  , 
+    ToRange&         range ) const = 0 ;
+  
+  /** Method to retrieve a range associated to a given TO element
+   *
+   *  @param to object one want to retrieve associated range
+   *  @param range A range of associated objects. 
+   *                        It is empty if no table was found
+   *  @return Failure it no table was found
+   */
+  virtual StatusCode invRange
+  ( const To&        to    , 
+    FromRange&       range ) const = 0 ;
+  
+  /** Method to retrieve a range associated to a given FROM element
+   *
+   *  @param  from object one want to retrieve associated range
+   *  @return A range of associated objects. It is empty if no table was found
+   */
+  virtual ToRange    range
+  ( const From&      from  ) const = 0 ;
+  
+  /** Method to retrieve a range associated to a given TO element
+   *
+   *  @param to object one want to retrieve associated range
+   *  @return A range of associated objects. It is empty if no table was found
+   */
+  virtual FromRange  invRange
+  ( const To&        to    ) const = 0 ;
+  
+  // Methods with thresholds....
+  
+  /** Method to retrieve a range associated to a given FROM element which 
+   *  have a weight larger than a given threshold
+   *
+   *  @param from      object one want to retrieve associated range
+   *  @param threshold Threshold on which to cut
+   *  @param range     A range of associated objects. 
+   *                   It is empty if no table was found
+   *  @return Failure it no table was found
+   */
+  virtual StatusCode rangeWithLowCut
+  ( const From&      from      , 
+    const Weight&    threshold ,
+    ToRange&         range     ) const = 0 ;
+  
+  /** Method to retrieve a range associated to a given TO element which
+   *  have a weight larger than a given threshold
+   *
+   *  @param to        object one want to retrieve associated range
+   *  @param threshold Weight threshold
+   *  @param range     A range of associated objects. 
+   *                   It is empty if no table was found
+   *  @return Failure it no table was found
+   */
+  virtual StatusCode invRangeWithLowCut
+  ( const To&        to        , 
+    const Weight&    threshold , 
+    FromRange&       range     ) const = 0 ;
+  
+  /** Method to retrieve a range associated to a given FROM element which 
+   *  have a weight smaller than a given threshold
+   *
+   *  @param from   object one want to retrieve associated range
+   *  @param range  A range of associated objects. 
+   *                It is empty if no table was found
+   *  @param threshold Threshold on which to cut
+   *  @return Failure it no table was found
+   */
+  virtual StatusCode rangeWithHighCut
+  ( const From&      from      , 
+    const Weight&    threshold ,
+    ToRange&         range     ) const = 0 ;
+  
+  /** Method to retrieve a range associated to a given TO element which
+   *  have a weight smaller than a given threshold
+   *
+   *  @param to       object one want to retrieve associated range
+   *  @param threshold   Weight threshold
+   *  @param range       A range of associated objects. 
+   *                     It is empty if no table was found
+   *  @return Failure it no table was found
+   */
+  virtual StatusCode invRangeWithHighCut
+  ( const To&        to        , 
+    const Weight&    threshold , 
+    FromRange&       range     ) const = 0 ;
+
+  // Methods with cuts and no StatusCode
+  
+  /** Method to retrieve a range associated to a given FROM element which 
+   *  have a weight larger than a given threshold
+   *
+   *  @param from     object one want to retrieve associated range
+   *  @param threshold Threshold on which to cut
+   *  @return  A range of associated objects. It is empty if no table was found
+   */
+  virtual ToRange    rangeWithLowCut 
+  ( const From&      from      , 
+    const Weight&    threshold ) const = 0 ;
+
+  /** Method to retrieve a range associated to a given TO element which
+   *  have a weight larger than a given threshold
+   *
+   *  @param to        object one want to retrieve associated range
+   *  @param threshold Weight threshold
+   *  @return A range of associated objects. It is empty if no table was found
+   */
+  virtual FromRange  invRangeWithLowCut
+  ( const To&        to        , 
+    const Weight&    threshold ) const = 0 ;
+  
+  /** Method to retrieve a range associated to a given FROM element which 
+   *  have a weight smaller than a given threshold
+   *
+   *  @param from    object one want to retrieve associated range
+   *  @param threshold Threshold on which to cut
+   *  @return  A range of associated objects. It is empty if no table was found
+   */
+  virtual ToRange    rangeWithHighCut
+  ( const From&      from      , 
+    const Weight&    threshold ) const = 0 ;
+
+  /** Method to retrieve a range associated to a given TO element which
+   *  have a weight smaller than a given threshold
+   *
+   *  @param to        object one want to retrieve associated range
+   *  @param threshold Weight threshold
+   *  @return A range of associated objects. It is empty if no table was found
+   */
+  virtual FromRange  invRangeWithHighCut
+  ( const To&        to        , 
+    const Weight&    threshold ) const = 0 ;
+  
+  /* Method to test if the table does exist or not
+   * @return true if direct relation table is available 
+   */
+  virtual bool tableExists() const = 0 ;
   
   /** interface identification (static)
    *  @attention the unique interface identifier is constructed "on-fly"
@@ -117,257 +258,6 @@ public:
                               DirectType::TypeTraits::     version , 0 );
     return s_iid ;
   };
-
-  /** Method to retrieve a range associated to a given FROM element
-   *
-   *  @param from        Pointer to a FROM object one want to retrieve 
-   associated range
-   *  @param range       A range of associated objects. 
-   It is empty if no table was found
-   *  @return StatusCode Failure it no table was found
-   *
-   */
-  StatusCode range( const FROM& from, ToRange& range)
-  {
-    Table* table = direct();
-    if( 0 == table ) {
-      range = ToRange() ;
-      return StatusCode::FAILURE;
-    }
-    range = table->relations( from );
-    return StatusCode::SUCCESS;
-  }
-
-  /** Method to retrieve a range associated to a given TO element
-   *
-   *  @param to Pointer to a TO object one want to retrieve associated range
-      @param range A range of associated objects. 
-      It is empty if no table was found
-   *  @return StatusCode Failure it no table was found
-   *
-   */
-  StatusCode invRange( const TO& to, FromRange& range)
-  {
-    InvTable* table = inverse();
-    if( 0 == table ) {
-      range = FromRange(0.0) ;
-      return StatusCode::FAILURE;
-    }
-    range = table->relations( to );
-    return StatusCode::SUCCESS;
-  }
-  
-  /** Method to retrieve a range associated to a given FROM element
-   *
-   *  @param from Pointer to a FROM object one want to retrieve 
-   associated range
-   *  @return ToRange& A range of associated objects. 
-   It is empty if no table was found
-   *
-   */
-  ToRange range( const FROM& from )
-  {
-    Table* table = direct();
-    if( 0 == table ) {
-      return ToRange() ;
-    }
-    return table->relations( from );
-  }
-
-  /** Method to retrieve a range associated to a given TO element
-   *
-   *  @param to Pointer to a TO object one want to retrieve associated range
-   *  @return FromRange& A range of associated objects. 
-   It is empty if no table was found
-   *
-   */
-  FromRange invRange( const TO& to )
-  {
-    InvTable* table = inverse();
-    if( 0 == table ) {
-      return FromRange() ;
-    }
-    return table->relations( to );
-  }
-
-  // Methods with thresholds....
-
-  /** Method to retrieve a range associated to a given FROM element which 
-   *  have a weight larger than a given threshold
-   *
-   *  @param from     Pointer to a FROM object one want to retrieve 
-   associated range
-   *  @param range  A range of associated objects. 
-   It is empty if no table was found
-   *  @param threshold Threshold on which to cut
-   *  @return StatusCode Failure it no table was found
-   *
-   */
-  StatusCode rangeWithLowCut( const FROM& from, const WEIGHT& threshold,
-                              ToRange& range )
-  {
-    Table* table = direct();
-    if( 0 == table ) {
-      range = ToRange() ;
-      return StatusCode::FAILURE;
-    }
-    range = table->relations( from, threshold, true );
-    return StatusCode::SUCCESS;
-  }
-
-  /** Method to retrieve a range associated to a given TO element which
-   *  have a weight larger than a given threshold
-   *
-   *  @param to          Pointer to a TO object one want to retrieve 
-   associated range
-   *  @param threshold   Weight threshold
-   *  @param range       A range of associated objects. 
-   It is empty if no table was found
-   *  @return StatusCode Failure it no table was found
-   *
-   */
-  StatusCode invRangeWithLowCut( const TO& to, const WEIGHT& threshold, 
-                      FromRange& range )
-  {
-    InvTable* table = inverse();
-    if( 0 == table ) {
-      range = FromRange() ;
-      return StatusCode::FAILURE;
-    }
-    range = table->relations( to, threshold, true );
-    return StatusCode::SUCCESS;
-  }
-  
-  /** Method to retrieve a range associated to a given FROM element which 
-   *  have a weight smaller than a given threshold
-   *
-   *  @param from     Pointer to a FROM object one want to retrieve 
-   associated range
-   *  @param range  A range of associated objects. 
-   It is empty if no table was found
-   *  @param threshold Threshold on which to cut
-   *  @return StatusCode Failure it no table was found
-   *
-   */
-  StatusCode rangeWithHighCut( const FROM& from, const WEIGHT& threshold,
-                              ToRange& range )
-  {
-    Table* table = direct();
-    if( 0 == table ) {
-      range = ToRange() ;
-      return StatusCode::FAILURE;
-    }
-    range = table->relations( from, threshold, false );
-    return StatusCode::SUCCESS;
-  }
-
-  /** Method to retrieve a range associated to a given TO element which
-   *  have a weight smaller than a given threshold
-   *
-   *  @param to          Pointer to a TO object one want to retrieve 
-   associated range
-   *  @param threshold   Weight threshold
-   *  @param range       A range of associated objects. 
-   It is empty if no table was found
-   *  @return StatusCode Failure it no table was found
-   *
-   */
-  StatusCode invRangeWithHighCut( const TO& to, const WEIGHT& threshold, 
-                      FromRange& range )
-  {
-    InvTable* table = inverse();
-    if( 0 == table ) {
-      range = FromRange() ;
-      return StatusCode::FAILURE;
-    }
-    range = table->relations( to, threshold, false );
-    return StatusCode::SUCCESS;
-  }
-
-  // Methods with cuts and no StatusCode
-  
-  /** Method to retrieve a range associated to a given FROM element which 
-   *  have a weight larger than a given threshold
-   *
-   *  @param from     Pointer to a FROM object one want to retrieve 
-   associated range
-   *  @param threshold Threshold on which to cut
-   *  @return  A range of associated objects. 
-   It is empty if no table was found
-   *
-   */
-  ToRange rangeWithLowCut( const FROM& from, const WEIGHT& threshold )
-  {
-    Table* table = direct();
-    if( 0 == table ) {
-      return ToRange() ;
-    }
-    return table->relations( from, threshold, true );
-  }
-
-  /** Method to retrieve a range associated to a given TO element which
-   *  have a weight larger than a given threshold
-   *
-   *  @param to          Pointer to a TO object one want to retrieve 
-   associated range
-   *  @param threshold   Weight threshold
-   *  @return       A range of associated objects. 
-   It is empty if no table was found
-   *
-   */
-  FromRange invRangeWithLowCut( const TO& to, const WEIGHT& threshold) 
-  {
-    InvTable* table = inverse();
-    if( 0 == table ) {
-      return FromRange() ;
-    }
-    return table->relations( to, threshold, true );
-  }
-  
-  /** Method to retrieve a range associated to a given FROM element which 
-   *  have a weight smaller than a given threshold
-   *
-   *  @param from     Pointer to a FROM object one want to retrieve 
-   associated range
-   *  @param threshold Threshold on which to cut
-   *  @return  A range of associated objects. 
-   It is empty if no table was found
-   *
-   */
-  ToRange rangeWithHighCut( const FROM& from, const WEIGHT& threshold)
-  {
-    Table* table = direct();
-    if( 0 == table ) {
-      return ToRange() ;
-    }
-    return table->relations( from, threshold, false );
-  }
-
-  /** Method to retrieve a range associated to a given TO element which
-   *  have a weight smaller than a given threshold
-   *
-   *  @param to          Pointer to a TO object one want to retrieve 
-   associated range
-   *  @param threshold   Weight threshold
-   *  @return       A range of associated objects. 
-   It is empty if no table was found
-   *
-   */
-  FromRange invRangeWithHighCut( const TO& to, const WEIGHT& threshold )
-  {
-    InvTable* table = inverse();
-    if( 0 == table ) {
-      return FromRange() ;
-    }
-    return table->relations( to, threshold, false );
-  }  
-
-  /* Method to test if the table does exist or not
-   */
-  bool tableExists()
-  {
-    return 0 == direct() ? false : true;
-  }
   
 protected:
 

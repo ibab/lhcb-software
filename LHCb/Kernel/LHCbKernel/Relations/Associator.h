@@ -1,14 +1,8 @@
-// $Id: Associator.h,v 1.3 2002-04-25 08:44:02 ibelyaev Exp $
+// $Id: Associator.h,v 1.4 2002-05-12 09:58:01 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
-// Revision 1.2  2002/04/08 21:03:08  ibelyaev
-//  bug fix in constructors (non-initialized pointers)
-//
-// Revision 1.1  2002/04/08 14:26:00  ibelyaev
-//  new version of 'Relations'-subpackage
-//
 // ============================================================================
 #ifndef RELATIONS_ASSOCIATOR_H 
 #define RELATIONS_ASSOCIATOR_H 1
@@ -135,6 +129,90 @@ public:
     // release reference tables 
     if( 0 != m_direct  ) { m_direct  -> release() ; m_direct  = 0 ; }
     if( 0 != m_inverse ) { m_inverse -> release() ; m_inverse = 0 ; }
+  };
+  
+  /** Method to retrieve a range associated to a given FROM element
+   *  @see IAssociator 
+   *  @param from  'FROM' object one want to retrieve associated 
+   *              range
+   *  @param range range of associated objects. 
+   *  It is empty if no table was found
+   *  @return StatusCode Failure it no table was found
+   */
+  virtual StatusCode range 
+  ( const From&      from  , 
+    ToRange&         range ) const 
+  {
+    const Table* table = direct();
+    if( 0 == table ) {
+      range = ToRange() ;
+      return StatusCode::FAILURE;
+    }
+    range = table->relations( from );
+    return StatusCode::SUCCESS;
+  };
+  
+  /** Method to retrieve a range associated to a given TO element
+   *  @see IAssociator 
+   *
+   *  @param to     'TO' object one want to retrieve associated range
+   *  @param range  range of associated objects. 
+   *  It is empty if no table was found
+   *  @return StatusCode Failure it no table was found
+   */
+  virtual StatusCode invRange
+  ( const To&        to    , 
+    FromRange&       range ) const 
+  {
+    const InvTable* table = inverse();
+    if( 0 == table ) {
+      range = InvTable::Range() ;
+      return StatusCode::FAILURE;
+    }
+    range = table->relations( to );
+    return StatusCode::SUCCESS;
+  };
+  
+  /** Method to retrieve a range associated to a given FROM element
+   *
+   *  @param from  'FROM' object one want to retrieve associated range
+   *  @return range A range of associated objects. 
+   *  It is empty if no table was found
+   *  
+   */
+  virtual ToRange    range
+  ( const From&      from  ) const 
+  {
+    const Table* table = direct();
+    if (0 == table) {
+      return ToRange();
+    }
+    return table->relations( from );
+  };
+  
+  /** Method to retrieve a range associated to a given TO element
+   *  @see IAssociator   
+   *  @param  to     'TO' object one want to retrieve associated range
+   *  @return range  range of associated objects. 
+   *  It is empty if no table was found
+   */
+  virtual FromRange  invRange
+  ( const To&        to    ) const 
+  {
+    const InvTable* table = inverse();
+    if( 0 == table ) {
+      return FromRange() ;
+    }
+    return table->relations( to );
+  };
+  
+  /* Method to test if the table does exist or not
+   * @see IAssociator 
+   * @return true if the associator contains valid relation table 
+   */
+  virtual bool tableExists() const 
+  {
+    return 0 == direct() ? false : true ;
   };
   
 protected:
