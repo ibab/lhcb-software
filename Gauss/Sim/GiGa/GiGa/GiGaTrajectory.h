@@ -1,8 +1,11 @@
-// $Id: GiGaTrajectory.h,v 1.15 2002-12-16 16:23:15 ibelyaev Exp $ 
+// $Id: GiGaTrajectory.h,v 1.16 2003-03-11 08:54:11 ibelyaev Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.15  2002/12/16 16:23:15  ibelyaev
+//  update for newer version of Geant4 (release 5.0)
+//
 // Revision 1.14  2002/12/07 21:36:29  ibelyaev
 //  trivial fix
 //
@@ -61,10 +64,10 @@ public:
   virtual ~GiGaTrajectory();
 
   ///  overloaded new operator 
-  inline void* operator new    ( size_t ) ;
+  void* operator new    ( size_t ) ;
   
   ///  overloaded delete operator 
-  inline void  operator delete ( void*  ) ;
+  void  operator delete ( void*  ) ;
   
   /** clone (virtual constructor) method 
    *  @return clone of current trajectory
