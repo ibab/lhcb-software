@@ -4,8 +4,9 @@
 ! Purpose     : Contains the merging algorithms for final RICH PID results
 !-----------------------------------------------------------------------------
 
+!======================= RichPIDMerge v1r2 2003-11-27 =======================
 ! 2003-11-25 - Chris Jones
- - minior improvements
+ - minor improvements
 
 !======================= RichPIDMerge v1r1 2003-11-05 =======================
 ! 2003-11-05 - Marco Cattaneo
