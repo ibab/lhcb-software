@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.20 2005-03-21 10:55:45 pkoppenb Exp $
+# $Id: requirements,v 1.21 2005-04-04 11:24:12 lfernan Exp $
 # Created    : 19/05/2002
 # Maintainer : P. Koppenburg
 #
@@ -21,6 +21,7 @@ include_dirs     $(DAVINCIMCTOOLSROOT)
 # Used packages. 
 #============================================================================
 use  PhysEvent           v*  Event
+use  GenEvent            v*  Event
 use  DaVinciAssociators  v*  Phys
 use  DaVinciTools        v*  Phys
 use  MCTools             v*  Phys

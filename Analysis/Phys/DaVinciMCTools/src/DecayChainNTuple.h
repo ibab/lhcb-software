@@ -72,6 +72,12 @@ class IMCDecayFinder;
  * 
  *  Gammas are not re-evaluated at the vertex : 
  *  -> vertex fitting moves gammas to a reference vertex but by changing the TES particles
+ *
+ *  Warning : in the MCParticle format only the px, py and pz are correct
+ *  -> to retrieve the true generated mass for composites, need to go HepMC
+ *  -> the true masses stored are those of HepMC when running on signal
+ * 
+ *  Warning : if you require trigger information, tagging, online calo, etc ..., make sure you run the necessary code
  * 
  *  FIXME: 
  *  - association of online gammas requires offline CaloClusters for now
@@ -97,7 +103,10 @@ private:
   // Properties
   std::string m_Decay; // Decay for which the ntuple will be created 
   std::string m_ntupleName; // Name of the TDirectory
+  bool m_requireTrigger;
+  bool m_requireTagging;
   bool m_useRichOnlinePID;
+  bool m_useOnlineCalo; // Protection for MC -> Part online association
   std::string m_richOnlinePIDLocation;
   std::string m_geomToolName; // Name of Geometrical Tool
 
@@ -124,8 +133,6 @@ private:
   IDecayFinder* m_pDKFinder;
   // Reference to GeomDispCalculator
   IGeomDispCalculator* m_IPTool;
-  // Ref. to Event Data Service
-  IDataProviderSvc* m_EDS;
   // Reference to LifetimeFitter
   // ILifetimeFitter *m_pLifetimeFitter;
 
@@ -154,7 +161,8 @@ private:
 
 #ifdef MCCheck
   bool isSignal(MCParticle*, std::vector<MCParticle*>& );
-
+  bool updateMCMomentum(MCParticle*);
+  
   // Write the true part of the decay
   StatusCode WriteMCNTuple(std::vector<MCParticle*>&);
 #endif
@@ -180,6 +188,17 @@ private:
   NTuple::Item<long> m_L1Elec;
   NTuple::Item<long> m_L1Phot;
   NTuple::Item<long> m_HLTDecision;
+  // The tags
+  NTuple::Item<long> m_nTags;
+  NTuple::Array<long> m_TagDecision;
+  NTuple::Array<long> m_TagCat;
+  // All taggers information
+  NTuple::Item<long> m_nTaggers;
+  // Matrices indexed by nTags and nTaggers
+  NTuple::Matrix<long> m_IDTagger;
+  NTuple::Matrix<float> m_pTagger;
+  NTuple::Matrix<float> m_ptTagger;
+  NTuple::Matrix<float> m_sIPSTagger;
 
 #ifdef MCCheck
   NTuple::Item<long> m_nMCPV;
@@ -345,6 +364,10 @@ private:
     // Look if the corresponding final state is reconstructed (only meaningful for final tracks)
     NTuple::Array<float> m_isReco;
     
+    // Warning : in the MCParticle format only the px, py and pz are correct
+    // -> to retrieve the true generated mass for composites, need to go HepMC
+    // -> the masses stored are those of HepMC
+
     // Momentum, mass, ...
     NTuple::Array<float> m_mcp;
     NTuple::Array<float> m_mcpt;
@@ -366,7 +389,7 @@ private:
     NTuple::Array<float> m_mcIP;
     
     // True lifetime (relevant for composite particles) in picoseconds
-    // NTuple::Array<float> m_mctau;
+    NTuple::Array<float> m_mctau;
 
 #endif
 

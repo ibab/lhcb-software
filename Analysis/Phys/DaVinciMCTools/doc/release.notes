@@ -1,7 +1,15 @@
-! $Id: release.notes,v 1.50 2005-03-22 17:43:33 pkoppenb Exp $
+! $Id: release.notes,v 1.51 2005-04-04 11:24:12 lfernan Exp $
 ! Package     : DaVinciMCTools
 ! Responsible : P. Koppenburg
 !=============================================================================
+
+! 2005-04-04 - Luis Fernandez
+ - src/DecayChainNTuple.{h,pp}
+   . Added properties for trigger and tagging
+   . MC masses are those of HepMC (in MCParticle only px, py, pz are correct)
+
+ - cmt/requirements
+   . Added use of GenEvent to retrieve the GenMCLink in DecayChainNTuple
 
 !========================== DaVinciMCTools v5r9 2005-03-22 ===================
 ! 2005-03-21 - Luis Fernandez

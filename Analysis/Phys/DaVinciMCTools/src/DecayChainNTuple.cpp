@@ -12,11 +12,13 @@
 // #include "Kernel/ILifetimeFitter.h"
 #include "Kernel/IPVLocator.h"
 #include "Event/TrgDecision.h"
+#include "Event/FlavourTag.h"
 
 #ifdef MCCheck
 #include "MCTools/IMCDecayFinder.h"
-#include "GaudiKernel/SmartDataPtr.h"
+#include "GaudiKernel/SmartDataPtr.h" // needed for MCTrackInfo
 #include "MCTools/MCTrackInfo.h"
+#include "Event/GenMCLink.h"
 #endif
 #include "Event/TrgVertex.h"
 #include "Event/TrgCaloCluster.h"
@@ -51,7 +53,6 @@ DecayChainNTuple::DecayChainNTuple( const std::string& name,
     , m_pDKFinder(0)
     , m_IPTool(0)
   //, m_pLifetimeFitter(0)
-    , m_EDS(0)
 #ifdef MCCheck
     , m_pMCDKFinder(0)
     , m_pAsctLinks(0)
@@ -68,7 +69,10 @@ DecayChainNTuple::DecayChainNTuple( const std::string& name,
   declareProperty("FillMCDecay", m_FillMCDecay = false);
 #endif
   declareProperty("NtupleName", m_ntupleName = "FILE1/MySelection" );
+  declareProperty("RequireTrigger", m_requireTrigger = false);
+  declareProperty("RequireTagging", m_requireTagging = false);
   declareProperty("UseRichOnlinePID", m_useRichOnlinePID = false); // For online tracks with Rich
+  declareProperty("UseOnlineCalo", m_useOnlineCalo = false); // Protection for MC -> Part online association 
   declareProperty("RichOnlinePIDLocation", m_richOnlinePIDLocation = "Rec/Rich/TrgPIDs" );
   declareProperty("GeomTool", m_geomToolName = "GeomDispCalculator"); // For online use TrgDispCalculator
 }
@@ -127,13 +131,6 @@ StatusCode DecayChainNTuple::initialize() {
   m_PVContainer = m_PVLocator->getPVLocation() ;
   info() << "Getting PV from " << m_PVContainer << endreq ;
 
-  // Retrieve the data service
-  sc = service("EventDataSvc", m_EDS, true);
-  if( sc.isFailure() ) {
-    err() << "Unable to locate Event Data Service"<< endreq;
-    return sc;
-  }
-
 #ifdef MCCheck
   // Retrieve the MCDecayFinder
   m_pMCDKFinder = tool<IMCDecayFinder>("MCDecayFinder",this);
@@ -174,7 +171,7 @@ StatusCode DecayChainNTuple::execute() {
 
   //---------------------------------------------
   // Retrieve informations about event
-  SmartDataPtr<EventHeader> evt(eventSvc(), EventHeaderLocation::Default );
+  EventHeader* evt = get<EventHeader>(EventHeaderLocation::Default);
 
   if(evt){
     debug() << "Retrieved EVENT: " << evt->evtNum()
@@ -184,7 +181,7 @@ StatusCode DecayChainNTuple::execute() {
     m_run = evt->runNum();
     
   } else{
-    err() << "Not able to retrieve event" << endreq;
+    fatal() << "Not able to retrieve event" << endreq;
     return StatusCode::FAILURE;
   }
   //---------------------------------------------
@@ -244,10 +241,10 @@ StatusCode DecayChainNTuple::execute() {
 #ifdef MCCheck
   //---------------------------------------------
   // Get the MCparticles
-  SmartDataPtr<MCParticles> kmcparts(m_EDS, MCParticleLocation::Default );
+  MCParticles* kmcparts = get<MCParticles>(MCParticleLocation::Default);
   if( !kmcparts ){
     fatal() << "Unable to find MC particles at '" << MCParticleLocation::Default << "'" << endreq;
-    return false;
+    return StatusCode::FAILURE;
   }
   //---------------------------------------------
 
@@ -256,13 +253,14 @@ StatusCode DecayChainNTuple::execute() {
   std::vector<MCParticle*> MCHead;
   const MCParticle* imc = NULL;
 
-  while (m_pMCDKFinder->findDecay(kmcparts, imc)){
+  while (m_pMCDKFinder->findDecay(*kmcparts, imc)){
     MCParticle* jmc = const_cast<MCParticle*>(imc);
     MCHead.push_back(jmc);
     }
   debug() << "Found " << MCHead.size() << " true decay: " << m_pMCDKFinder->decay() << endreq;
-  
+
   //---------------------------------------------
+
 #endif
 
   //=============================================================================
@@ -500,7 +498,7 @@ DecayChainNTuple::HandleNTuple::HandleNTuple(NTuplePtr& nt, unsigned int& number
   // Look if the corresponding final state is reconstructed (only meaningful for final tracks)
   sc = nt->addIndexedItem("isReco_lab"+label,m_mcn,m_isReco);
   // True lifetime (relevant for composite particles) in picoseconds
-  // sc = nt->addIndexedItem("mctau_lab"+label,m_mcn,m_mctau);
+  sc = nt->addIndexedItem("mctau_lab"+label,m_mcn,m_mctau);
 
 #endif
 
@@ -520,7 +518,7 @@ void DecayChainNTuple::HandleNTuple::FillNTuple(Particle& part, VertexVector& pv
 {
   // std::cout << "ID = " << part.particleID().pid() << std::endl;
 
-  // not to be outside of range ...
+  // not to be out of range ...
   if (m_n>9999) return;
 
   m_ID[m_n]= part.particleID().pid();
@@ -912,12 +910,12 @@ StatusCode DecayChainNTuple::BookNTuple(std::vector<Particle*>& mothervec) {
         // NTuple global variables
         sc = nt->addItem("Event", m_eventNumber);
         sc = nt->addItem("Run", m_runNumber);
-        sc = nt->addItem("nRecoPV", m_nRecoPV, 0, 20);
+        sc = nt->addItem("nRecoPV", m_nRecoPV, 0, 40);
         sc = nt->addIndexedItem("RecoPVx", m_nRecoPV, m_RecoPVx);
         sc = nt->addIndexedItem("RecoPVy", m_nRecoPV, m_RecoPVy);
         sc = nt->addIndexedItem("RecoPVz", m_nRecoPV, m_RecoPVz);
 #ifdef MCCheck
-        sc = nt->addItem("nMCPV", m_nMCPV, 0, 20); // 20 MC collisions large enough
+        sc = nt->addItem("nMCPV", m_nMCPV, 0, 40); // 40 MC collisions large enough
         sc = nt->addIndexedItem("MCPVx", m_nMCPV, m_MCPVx);
         sc = nt->addIndexedItem("MCPVy", m_nMCPV, m_MCPVy);
         sc = nt->addIndexedItem("MCPVz", m_nMCPV, m_MCPVz);
@@ -931,6 +929,16 @@ StatusCode DecayChainNTuple::BookNTuple(std::vector<Particle*>& mothervec) {
         sc = nt->addItem("L1Elec", m_L1Elec);
         sc = nt->addItem("L1Phot", m_L1Phot);
         sc = nt->addItem("HLTDecision", m_HLTDecision);
+        // The tags
+        sc = nt->addItem("nTags", m_nTags, 0, 10000);
+        sc = nt->addIndexedItem("TagDecision", m_nTags, m_TagDecision);
+        sc = nt->addIndexedItem("TagCat", m_nTags, m_TagCat);
+        // All taggers information
+        sc = nt->addItem("nTaggers", m_nTaggers, 0, 10); // maximum of 10 taggers for a given tag
+        sc = nt->addIndexedItem("IDTagger", m_nTags, 10, m_IDTagger);
+        sc = nt->addIndexedItem("pTagger", m_nTags, 10, m_pTagger);
+        sc = nt->addIndexedItem("ptTagger", m_nTags, 10, m_ptTagger);
+        sc = nt->addIndexedItem("sIPSTagger", m_nTags, 10, m_sIPSTagger);
 
         // Part of the keys and labels
         int forthekeymother = 0;
@@ -1027,6 +1035,10 @@ StatusCode DecayChainNTuple::WriteNTuple(std::vector<Particle*>& mothervec) {
   m_nRecoPV = 0;
   Vertices::iterator ivert;
   for( ivert = PVs.begin(); ivert != PVs.end(); ivert++){
+
+    // not to be out of range ...
+    if(m_nRecoPV > 39) break;
+
     debug() << "Primary vertex coordinates = ( "
             << (*ivert)->position().x()
             << " , " << (*ivert)->position().y()
@@ -1044,9 +1056,10 @@ StatusCode DecayChainNTuple::WriteNTuple(std::vector<Particle*>& mothervec) {
 #ifdef MCCheck
   //---------------------------------------------
   // An event is made up of several collisions
-  SmartDataPtr<Collisions> collisions (eventSvc(), CollisionLocation::Default);
-  if(!collisions ){
-    warning() << "No MC collisions retrieved" << endreq;
+  Collisions* collisions = get<Collisions>(CollisionLocation::Default);
+  if(!collisions){
+    fatal() << "No MC collisions retrieved" << endreq;
+    return StatusCode::FAILURE;
   }
   int nMCPV = collisions->size();
   debug() << "Number of MC primaries " << nMCPV << endreq;
@@ -1057,6 +1070,10 @@ StatusCode DecayChainNTuple::WriteNTuple(std::vector<Particle*>& mothervec) {
   for(Collisions::const_iterator icollision = collisions->begin();
       icollision != collisions->end();
       icollision++){
+
+    // not to be out of range ...
+    if(m_nMCPV > 39) break;
+
     debug() << "MC Primary Vertex coordinates [mm] =  "
             << (*icollision)->primVtxPosition().x()
             << " , " << (*icollision)->primVtxPosition().y()
@@ -1072,17 +1089,17 @@ StatusCode DecayChainNTuple::WriteNTuple(std::vector<Particle*>& mothervec) {
 
   //---------------------------------------------
   // Get the MCparticles
-  SmartDataPtr<MCParticles> kmcparts(m_EDS, MCParticleLocation::Default );
-  if( !kmcparts ){
+  MCParticles* kmcparts = get<MCParticles>(MCParticleLocation::Default);
+  if(!kmcparts){
     fatal() << "Unable to find MC particles at '" << MCParticleLocation::Default << "'" << endreq;
-    return false;
+    return StatusCode::FAILURE;
   }
   //---------------------------------------------
 
   //---------------------------------------------
   std::vector<MCParticle*> MCHead;
   const MCParticle* imc = NULL;
-  while (m_pMCDKFinder->findDecay(kmcparts, imc)){
+  while (m_pMCDKFinder->findDecay(*kmcparts, imc)){
     MCParticle* jmc = const_cast<MCParticle*>(imc);
     MCHead.push_back(jmc);
   }
@@ -1092,7 +1109,10 @@ StatusCode DecayChainNTuple::WriteNTuple(std::vector<Particle*>& mothervec) {
   //---------------------------------------------  
   RichPIDs* globalPIDs = NULL;
   if (m_useRichOnlinePID){
+
+    debug() << "You requested the online Rich, make sure you run it" << endreq;
     globalPIDs = get<RichPIDs>( m_richOnlinePIDLocation );
+
     if(globalPIDs){
       debug() << "Found " << globalPIDs->size() << " RichPIDs at " << m_richOnlinePIDLocation << endreq;
     }
@@ -1101,17 +1121,7 @@ StatusCode DecayChainNTuple::WriteNTuple(std::vector<Particle*>& mothervec) {
 
   //---------------------------------------------  
   // Trigger information
-  SmartDataPtr<TrgDecision> trg(eventSvc(), m_pathTrg);
-  if( 0 == trg ) {
-    err() << "Unable to find Trigger at " << m_pathTrg << endreq;
-    return StatusCode::FAILURE;
-  }
   bool L0Decision = false;
-  if (trg){
-    L0Decision = trg->L0();
-    debug() << "L0 decision: " << L0Decision << endreq;
-  }
-
   // L1 Trigger informations
   bool L1Decision = false;
   bool L1Gen      = false;
@@ -1120,44 +1130,130 @@ StatusCode DecayChainNTuple::WriteNTuple(std::vector<Particle*>& mothervec) {
   bool L1JPsi     = false;
   bool L1Elec     = false;
   bool L1Phot     = false;
-  
-  L1Score* score = get<L1Score>( L1ScoreLocation::Default );
-  if(score != NULL){
-
-    L1Decision = score->decision();
-    L1Gen      = score->decisionGen();
-    L1SiMu     = score->decisionMu();
-    L1DiMu     = score->decisionDiMu();
-    L1JPsi     = score->decisionDiMuJPsi();
-    L1Elec     = score->decisionElec();
-    L1Phot     = score->decisionPhot();
-    
-    debug() << "L1 trigger summary: "        << endreq;
-    debug() << " Generic:     " << L1Gen      << endreq;
-    debug() << " Single Muon: " << L1SiMu     << endreq;
-    debug() << " Dimuon:      " << L1DiMu     << endreq;
-    debug() << " JPsi:        " << L1JPsi     << endreq;
-    debug() << " Electron:    " << L1Elec     << endreq;
-    debug() << " Photon:      " << L1Phot     << endreq;
-    debug() << "----------------------------" << endreq;
-    debug() << "Total:       " << L1Decision << endreq;
-  }
 
   bool HLTDecision = false;
-  if (trg){
-    HLTDecision = trg->HLT();
-    debug() << "HLT decision: " << HLTDecision << endreq;
-  }
 
+  if(m_requireTrigger){
+
+    debug() << "You requested the trigger, make sure you run it" << endreq;
+    TrgDecision* trg = get<TrgDecision>(m_pathTrg);
+    
+    if (trg){
+      L0Decision = trg->L0();
+      debug() << "L0 decision: " << L0Decision << endreq;
+      L1Decision = trg->L1();
+      debug() << "L1 decision: " << L1Decision << endreq;
+      HLTDecision = trg->HLT();
+      debug() << "HLT decision: " << HLTDecision << endreq;
+    }
+    
+    // L1 full detail
+    L1Score* score = get<L1Score>( L1ScoreLocation::Default );
+    if(score != NULL){
+      
+      L1Decision = score->decision();
+      L1Gen      = score->decisionGen();
+      L1SiMu     = score->decisionMu();
+      L1DiMu     = score->decisionDiMu();
+      L1JPsi     = score->decisionDiMuJPsi();
+      L1Elec     = score->decisionElec();
+      L1Phot     = score->decisionPhot();
+      
+      debug() << "L1 trigger summary: "        << endreq;
+      debug() << " Generic:     " << L1Gen      << endreq;
+      debug() << " Single Muon: " << L1SiMu     << endreq;
+      debug() << " Dimuon:      " << L1DiMu     << endreq;
+      debug() << " JPsi:        " << L1JPsi     << endreq;
+      debug() << " Electron:    " << L1Elec     << endreq;
+      debug() << " Photon:      " << L1Phot     << endreq;
+      debug() << "----------------------------" << endreq;
+      debug() << "Total:       " << L1Decision << endreq;
+    }
+  }
+  
+  //---------------------------------------------  
+
+  //---------------------------------------------  
+  if(m_requireTagging){
+
+    // Reset index
+    m_nTags = 0;
+
+    debug() << "You requested the tagging, make sure you run it" << endreq;  
+
+    // The tagging only looks at the first selected b-candidate ?
+    FlavourTags* tags = get<FlavourTags>("/Event/Phys/BTagging/Tags");
+
+    FlavourTags::const_iterator itags;
+    for(itags = tags->begin(); itags != tags->end(); ++itags){
+
+      // not to be out of range ...
+      if(m_nTags > 9999) break;
+    
+      // b = -1, bbar = 1, none = 0
+      debug() << "Tag decision = " << (*itags)->decision()
+              << " and category = " << (*itags)->category()
+              << endreq;
+
+      // Fill variables for tags
+      m_TagDecision[m_nTags] = (*itags)->decision();
+      m_TagCat[m_nTags] = (*itags)->category();
+
+      // Particle for which this tag has been made
+      if((*itags)->taggedB()) debug() << "taggedPart pt = "<< (*itags)->taggedB()->pt() << endreq;
+
+      //  The particles used to make the decision : how can I know what taggers belong to which tag ?
+      Particles* theTaggers = get<Particles>( "/Event/Phys/BTagging/Taggers");
+    
+      debug() << " Number of taggers found = " << theTaggers->size() << endreq;
+    
+      // Reset index
+      m_nTaggers = 0;
+      Particles::const_iterator iTaggers;
+      for(iTaggers = theTaggers->begin(); iTaggers != theTaggers->end(); iTaggers++){
+
+        // not to be out of range ...
+        if(m_nTaggers > 9) break;
+      
+        // Smallest IPS to all primaries, not necessarily the best mother vertex
+        double normIPSMin = -1.;
+
+        Vertices::iterator iPV;
+        for(iPV = PVs.begin(); iPV != PVs.end(); iPV++){
+          double ip, ipe;
+          double normIPS;
+          m_IPTool->calcImpactPar(*(*iTaggers),**iPV,ip,ipe);
+          normIPS = ip/ipe;
+          verbose() << "normIPSMin = " << normIPSMin << " normIPS = " << normIPS << endreq;
+          if(normIPSMin<0||normIPS<normIPSMin) normIPSMin=normIPS;
+        }
+
+        debug() << "  -> tagger ID: " << (*iTaggers)->particleID().pid() 
+                << " , p = " << (*iTaggers)->p() 
+                << " pt = " << (*iTaggers)->pt()
+                << " sIPS = " << normIPSMin
+                << endreq;
+
+        // Fill variables for taggers
+        m_IDTagger[m_nTags][m_nTaggers] = (*iTaggers)->particleID().pid();
+        m_pTagger[m_nTags][m_nTaggers] = (*iTaggers)->p();
+        m_ptTagger[m_nTags][m_nTaggers] = (*iTaggers)->pt();
+        m_sIPSTagger[m_nTags][m_nTaggers] = normIPSMin;
+
+        // Increment index
+        m_nTaggers++;
+      } // iTaggers
+      // Increment index
+      m_nTags++;
+    } // itags
+  } // m_requireTagging
   //---------------------------------------------  
 
   //---------------------------------------------  
   // Fill NTuple global variables
   m_eventNumber = m_event;
   m_runNumber = m_run;
-  // m_nRecoPV = long(nRecoPV);
 #ifdef MCCheck
-  // m_nMCPV = long(nMCPV);
 #endif
   m_L0Decision = long(L0Decision);
   m_L1Decision = long(L1Decision);
@@ -1253,7 +1349,7 @@ StatusCode DecayChainNTuple::WriteNTuple(std::vector<Particle*>& mothervec) {
       // Special case of online gammas (neutrals with origin)
 
       if((*ichild)->origin() && m_gammaID == (*ichild)->particleID().pid()){ // neutrals with origin
-        
+
         // Check that the gamma is made from a TrgCaloParticle
         const TrgCaloParticle* myTrgCaloPart = dynamic_cast<const TrgCaloParticle*>((*ichild)->origin());
 
@@ -1443,6 +1539,65 @@ bool DecayChainNTuple::isSignal(MCParticle* MC, std::vector<MCParticle*>& MCHead
 }
 #endif
 
+#ifdef MCCheck
+//=============================================================================
+//  updateMCMomentum: use HepMC values
+//=============================================================================
+bool DecayChainNTuple::updateMCMomentum(MCParticle* theMC){
+
+  verbose() << "Entering updateMCMomentum" << endreq;
+
+  bool updated = false;
+
+  // HepMC in GeV
+  // MCParticle in MeV, only px, py, pz are correct
+
+  HepMC::GenParticle* theHepMC = 0;
+
+  HepMCEvents* hepMCptr = get<HepMCEvents>(HepMCEventLocation::Default);
+  HepMCEvents::iterator it ;
+
+  for (it = hepMCptr -> begin(); it != hepMCptr->end(); ++it){
+
+    HepMC::GenEvent * pEvt = (*it)->pGenEvt();
+    HepMC::GenEvent::particle_const_iterator itp;
+    
+    for (itp = pEvt->particles_begin(); itp != pEvt->particles_end(); ++itp){
+
+      if(theMC->particleID().pid() != (*itp)->pdg_id()) continue;
+      // Use px to compare, with some precision
+      if(fabs((theMC->momentum().px() / GeV) - ((*itp)->momentum().px())) > 1.0e-09) continue;
+
+      verbose() << "MCParticle mass GeV : " << theMC->momentum().m() / GeV
+                << " , momentum GeV = " << theMC->momentum() / GeV
+                << endreq;
+      verbose() << "HepMC mass GeV : " << (*itp)->momentum().m()
+                << " , momentum GeV = " << (*itp)->momentum()
+                << endreq;
+
+      theHepMC = (*itp);
+
+      // Use MeV : from "fixed" HepMC units to standard one
+      HepLorentzVector HepMCMomentum = theHepMC->momentum() * GeV; 
+
+      // Update values, in MeV!
+      theMC->setMomentum(HepMCMomentum);
+
+      verbose() << "After update MCParticle mass MeV : " << theMC->momentum().m()
+                << " , momentum MeV = " << theMC->momentum()
+                << endreq;
+      
+      updated = true;
+      break ;
+    }
+  }
+  
+  return updated;
+  
+  verbose() << "Leaving updateMCMomentum" << endreq;
+}
+#endif
+
 
 #ifdef MCCheck
 //=============================================================================
@@ -1493,7 +1648,16 @@ StatusCode DecayChainNTuple::WriteMCNTuple(std::vector<MCParticle*>& MCHead) {
             << " , y = " << MCPVPosition.y()
             << " , z = " << MCPVPosition.z()
             << endreq;
- 
+
+    //---------------------------------------------
+    // Get the generated momentum from HepMC, since in MCParticle the mass-energy is wrong
+    bool updatedMCPmother = updateMCMomentum(*imcmother);
+    if(updatedMCPmother){
+      verbose() << "Updated mother MC momentum" << endreq;
+    }
+    else verbose() << "mother MC momentum not updated" << endreq;
+    //---------------------------------------------
+
     // Get all the decay members (should be flagged)
     std::vector<MCParticle*> MCChildren;
     std::vector<MCParticle*>::iterator imcchild;
@@ -1545,24 +1709,35 @@ StatusCode DecayChainNTuple::WriteMCNTuple(std::vector<MCParticle*>& MCHead) {
               << " , ParticleName " << pp->particle() << endreq;
 
       //---------------------------------------------
+      // Get the generated momentum from HepMC, since in MCParticle the mass-energy is wrong
+      bool updatedMCPchild = updateMCMomentum(*imcchild);
+      if(updatedMCPchild){
+        verbose() << "Updated child MC momentum" << endreq;
+      }
+      else verbose() << "child MC momentum not updated" << endreq;
+      //---------------------------------------------
+
+      //---------------------------------------------
       // Look if the corresponding final state is reconstructed (only meaningful for final tracks)
       Particle* reco = 0;
       isReco = false;
-   
-      debug() << "Looking for link association for MC particle with ID: "
-              << (*imcchild)->particleID().pid() << " " << (*imcchild)->momentum() << endreq;
+      
+      debug() << "Looking for link association for MC particle with ID: " << (*imcchild)->particleID().pid() 
+              << " mass = " << (*imcchild)->momentum().m()
+              << " " << (*imcchild)->momentum() << endreq;
 
       // Corresponding particle
       reco = m_pAsctLinks->associatedTo(*imcchild);
       if(reco) isReco = true;
-      
+
       // beg FIXME : for now the association of online gammas requires offline clusters
       // If not reco and gamma check clusters for online
-      if(!reco && (*imcchild)->particleID().pid() == m_gammaID){
+      if(m_useOnlineCalo == true && !reco && (*imcchild)->particleID().pid() == m_gammaID){
 
+        debug() << "You requested the online Calo, make sure you run it" << endreq;
         // Get the clusters
         TrgCaloClusters* myTrgCaloClusters  = get<TrgCaloClusters>(m_TrgCaloClustersPath);
-        
+
         // If not running with online : ignore
         if(!myTrgCaloClusters->empty()){
           
@@ -1638,7 +1813,7 @@ void DecayChainNTuple::HandleNTuple::FillMCNTuple(MCParticle& mcpart, HepPoint3D
 {
   // std::cout << "MCID = " << mcpart.particleID().pid() << std::endl;
 
-  // not to be outside of range ...
+  // not to be out of range ...
   if (m_mcn>9999) return;
 
   m_mcID[m_mcn]= mcpart.particleID().pid();
@@ -1683,8 +1858,8 @@ void DecayChainNTuple::HandleNTuple::FillMCNTuple(MCParticle& mcpart, HepPoint3D
 
   // True lifetime (relevant for composite particles) in picoseconds
   // ctau = m * L dot p / p2
-  // m_mctau[m_mcn] = (1/(picosecond*c_light)) * (mcpart.momentum().m())* (mcpart.momentum().vect())*
-  //  ((*ivert)->position() - mcpart.originVertex()->position())/ mcpart.momentum().vect().mag2();
+  m_mctau[m_mcn] = (1/(picosecond*c_light)) * (mcpart.momentum().m())* (mcpart.momentum().vect())*
+    ((*ivert)->position() - mcpart.originVertex()->position())/ mcpart.momentum().vect().mag2();
 
   m_mcn++;
 
