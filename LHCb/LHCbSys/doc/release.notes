@@ -5,6 +5,15 @@
 ! Purpose     : LHCb OO kernel packages
 !-----------------------------------------------------------------------------
 
+!====================== LHCbSys v15r11 2004-05-27 =======================
+! 2004-05-27 - Marco Cattaneo
+ - Modified packages: CaloUtils v4r7
+
+ - In CaloUtils v4r7:
+   . CallMatrix.h: Fix bug in evaluation of overlap for 2 rectangular areas 
+     N.B. For DC04 data, this fix should only be used in DaVinci, it should
+          not be applied to Brunel v23r*
+
 !====================== LHCbSys v15r10 2004-05-17 =======================
 ! 2004-05-17 - Marco Cattaneo
  - Modified packages: EventSys v17r10, LinkerEvent v1r3, TrgEvent v2r3,

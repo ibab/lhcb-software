@@ -1,12 +1,12 @@
 package LHCbSys
-version v15r10
+version v15r11
 
 branches doc cmt
 
 #===============================================================
 # LHCb packages used by all applications
 #===============================================================
-use LHCb		v15r10
+use LHCb		v15r11
 
 use GaudiConf		v7r8
 
@@ -71,7 +71,7 @@ use MuonAssociators    	v1r3	Muon
 # Other stuff
 use MCTools		v1r5	Phys
 use CaloInterfaces	v4r0	Calo
-use CaloUtils		v4r6	Calo
+use CaloUtils		v4r7	Calo
 
 # LHCb  Examples
 use DetDescExample      v6r2	Ex
