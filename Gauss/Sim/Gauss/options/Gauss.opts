@@ -1,4 +1,4 @@
-// $Id: Gauss.opts,v 1.9 2002-05-22 14:04:40 witoldp Exp $ 
+// $Id: Gauss.opts,v 1.10 2002-05-24 10:04:15 witoldp Exp $ 
 
 AuditorSvc.Auditors = { "ChronoAuditor" };
 
@@ -21,7 +21,7 @@ EventDataSvc.ForceLeaves = true ;
 ApplicationMgr.ExtSvc +=  
 { "MagneticFieldSvc"  };  
 
-ParticlePropertySvc.ParticlePropertiesFile = "../options/particle.cdf" ;
+ParticlePropertySvc.ParticlePropertiesFile = "../data/particle.cdf" ;
 
 // 3 steps
 ApplicationMgr.TopAlg          =  
