@@ -1,4 +1,4 @@
-// $Id: OTReadOutWindow.cpp,v 1.1 2004-09-10 13:14:59 cattanem Exp $
+// $Id: OTReadOutWindow.cpp,v 1.2 2004-11-10 13:02:08 jnardull Exp $
 
 // Gaudi files
 #include "GaudiKernel/ToolFactory.h"
@@ -24,7 +24,7 @@ const IToolFactory& OTReadOutWindowFactory = s_factory;
 OTReadOutWindow::OTReadOutWindow(const std::string& type, 
                                  const std::string& name, 
                                  const IInterface* parent) : 
-  AlgTool( type, name, parent )
+  GaudiTool( type, name, parent )
 {
   m_startReadOutGate.push_back(28.*ns);
   m_startReadOutGate.push_back(30.*ns);

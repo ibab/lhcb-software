@@ -1,4 +1,4 @@
-// $Id: OTTimeCreator.h,v 1.1 2004-09-10 13:14:59 cattanem Exp $
+// $Id: OTTimeCreator.h,v 1.2 2004-11-10 13:02:08 jnardull Exp $
 #ifndef OTDAQ_OTTIMECREATOR_H 
 #define OTDAQ_OTTIMECREATOR_H 1
 
@@ -9,9 +9,8 @@
 #include <map>
 
 // from Gaudi
-#include "GaudiKernel/Algorithm.h"
+#include "GaudiAlg/GaudiAlgorithm.h"
 #include "GaudiKernel/AlgFactory.h"
-#include "GaudiKernel/MsgStream.h" 
 
 // Event
 #include "Kernel/OTChannelID.h"
@@ -38,7 +37,7 @@
  *  @date   2004-06-06
  */
 
-class OTTimeCreator : public Algorithm {
+class OTTimeCreator : public GaudiAlgorithm {
 public: 
 
   /// Standard constructor

@@ -1,4 +1,4 @@
-// $Id: OTFillBufferFromOTTime.h,v 1.1 2004-09-10 13:14:58 cattanem Exp $
+// $Id: OTFillBufferFromOTTime.h,v 1.2 2004-11-10 13:02:08 jnardull Exp $
 #ifndef OTDAQ_OTFILLBUFFERFROMOTTIME_H 
 #define OTDAQ_OTFILLBUFFERFROMOTTIME_H 1
 
@@ -16,9 +16,8 @@
 #include "Event/DataWord.h"
 
 // from Gaudi
-#include "GaudiKernel/Algorithm.h"
+#include "GaudiAlg/GaudiAlgorithm.h"
 #include "GaudiKernel/AlgFactory.h"
-#include "GaudiKernel/MsgStream.h" 
 
 // Event
 #include "Kernel/OTChannelID.h"
@@ -28,14 +27,15 @@
 #include "Event/RawEvent.h"
 #include "Event/DAQTypes.h"
 
-/** @class OTFillBufferFromOTTime OTFillBufferFromOTTime.h OTDAQ/OTFillBufferFromOTTime.h
+/** @class OTFillBufferFromOTTime OTFillBufferFromOTTime.h 
+ * OTDAQ/OTFillBufferFromOTTime.h
  *  
  *
  *  @author Jacopo Nardulli
  *  @date   2004-08-31
  */
 
-class OTFillBufferFromOTTime : public Algorithm 
+class OTFillBufferFromOTTime : public GaudiAlgorithm 
 {
   
 

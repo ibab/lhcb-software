@@ -1,9 +1,8 @@
-// $Id: OTFillBufferFromOTTime.cpp,v 1.3 2004-10-28 14:34:24 cattanem Exp $
+// $Id: OTFillBufferFromOTTime.cpp,v 1.4 2004-11-10 13:02:08 jnardull Exp $
 // Include files
 
 // local
 #include "OTFillBufferFromOTTime.h"
-#include "Event/OTBankVersion.h"
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : OTFillBufferFromOTTime
@@ -21,7 +20,7 @@ const        IAlgFactory& OTFillBufferFromOTTimeFactory = s_factory ;
 //=============================================================================
 OTFillBufferFromOTTime::OTFillBufferFromOTTime( const std::string& name,
                                     ISvcLocator* pSvcLocator)
-  : Algorithm ( name , pSvcLocator )
+  : GaudiAlgorithm ( name , pSvcLocator )
 {
   this->declareProperty( "NumberOfBanks", numberOfBanks );
   this->declareProperty( "RawBufferLocation",   
@@ -41,16 +40,14 @@ OTFillBufferFromOTTime::~OTFillBufferFromOTTime(){};
 // Initialisation. Check parameters
 //=============================================================================
 StatusCode OTFillBufferFromOTTime::initialize() {
-  MsgStream  msg( msgSvc(), name() );
-  msg << MSG::DEBUG << "==> Initialise" << endreq;
 
-  msg << MSG::DEBUG
-      << "Loading OT geometry from XML " << endreq;
+  StatusCode sc = GaudiAlgorithm::initialize();
+  if (sc.isFailure()){
+    return Error("Failed to initialize", sc);
+  }
   SmartDataPtr<DeOTDetector> Otracker( detSvc(), m_otTrackerPath);
-  if( !Otracker){
-    msg << MSG::ERROR << "Unable to retrieve OT detector element from XML" 
-        << endreq;
-    return StatusCode::FAILURE;
+  if ( !Otracker ) {
+    return Error ( "Unable to retrieve Tracker detector element from xml");
   }
   m_otTracker = Otracker;
 
@@ -72,16 +69,10 @@ StatusCode OTFillBufferFromOTTime::initialize() {
 //=============================================================================
 StatusCode OTFillBufferFromOTTime::execute() 
 {
-  MsgStream  msg( msgSvc(), name() );
-  msg << MSG::DEBUG << "==> Execute" << endreq;
-
   // Retrieve the RawBuffer
   SmartDataPtr<RawBuffer> rawBuffer( eventSvc(), m_RawBuffLoc );
   if ( !rawBuffer ) {
-    MsgStream  msg( msgSvc(), name() );
-    msg << MSG::ERROR
-        << "Unable to retrieve Raw buffer " <<  m_RawBuffLoc << endreq;
-    return StatusCode::FAILURE;
+    return Error("Unable to retrieve Raw buffer ");
   }
   m_rawBuffer = rawBuffer;
 
@@ -89,9 +80,7 @@ StatusCode OTFillBufferFromOTTime::execute()
   SmartDataPtr<OTTimes>
     Time ( eventDataService(), OTTimeLocation::Default);
   if ( !Time ) {
-    msg << MSG::ERROR
-        << "Unable to retrieve OTTime " << m_OTTimeLoc << endreq;
-    return StatusCode::FAILURE;
+    return Error("Unable to retrieve OTTime ");
   }
   m_Time = Time;
 
@@ -124,7 +113,7 @@ StatusCode OTFillBufferFromOTTime::execute()
 
     int bankID = (*iBank).first;
     dataBank& bBank = (*aBank);
-    m_rawBuffer->addBank( bankID , RawBuffer::OT, bBank, OTBankVersion::v1 );  
+    m_rawBuffer->addBank( bankID , RawBuffer::OT, bBank );  
     aBank->erase( aBank->begin(),aBank->end() );
   }
   
@@ -141,8 +130,6 @@ StatusCode OTFillBufferFromOTTime::execute()
 //=============================================================================
 StatusCode OTFillBufferFromOTTime::finalize() 
 {      
-  MsgStream msg(msgSvc(), name());
-  msg << MSG::DEBUG << "==> Finalize" << endreq;
   delete(dataContainer);
   delete(goldatacontainer);
   delete(finalBuf);

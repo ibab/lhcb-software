@@ -1,9 +1,9 @@
-// $Id: OTReadOutWindow.h,v 1.1 2004-09-10 13:14:59 cattanem Exp $
+// $Id: OTReadOutWindow.h,v 1.2 2004-11-10 13:02:08 jnardull Exp $
 #ifndef OTDAQ_OTREADOUTWINDOW_H
 #define OTDAQ_OTREADOUTWINDOW_H 1
 
 // Gaudi
-#include "GaudiKernel/AlgTool.h"
+#include "GaudiAlg/GaudiTool.h"
 
 // OTDAQ
 #include "OTDAQ/IOTReadOutWindow.h"
@@ -16,7 +16,7 @@
  *  @date   11/11/2002
  */
 
-class OTReadOutWindow : public AlgTool, virtual public IOTReadOutWindow {
+class OTReadOutWindow : public GaudiTool, virtual public IOTReadOutWindow {
 
 public:
 
