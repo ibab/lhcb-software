@@ -2,13 +2,16 @@ Package LHCbKernel
 Package manager: M.Cattaneo
 Purpose: LHCb specific Kernel classes
 
+!====================== LHCbKernel v5r7 2005-02-09 ========================
+! 2005-02-09 - Marco Cattaneo
+ - Fixes to RichSmartID (backwards incompatible) for GaudiObjDesc v7r3
+
 ! 2005-02-04 - Jose Hernando, Eduardo Rodrigues
  - LHCbID class extended:
    - backward incompatible changes to names of several methods
    - first implementation to use spare bits where needed
      (e.g. to store the ambiguity in OT)
 
-!====================== LHCbKernel v5r7 2005-01-20 ========================
 ! 2005-01-20 - Marco Cattaneo
  - Changes for Gaudi v16 and CLHEP 1.9
    . Remove CLHEPStreams.h, .cpp as Gaudi MsgStream can now handle any class

@@ -3,28 +3,11 @@
 <gdd>
 
 <!-- **************************************************************************
-  * $Id: RichSmartID.xml,v 1.14 2005-01-17 10:20:47 jonrob Exp $
+  * $Id: RichSmartID.xml,v 1.15 2005-02-09 09:08:37 cattanem Exp $
   *****************************************************************************
   * XML-description of RichSmartID class                                      *
   * author: Chris Jones   Christopher.Rob.Jones@cern.ch                       *
   * date:   2004-06-23                                                        *
-  *****************************************************************************
-  * $Log: not supported by cvs2svn $
-  * Revision 1.12  2005/01/07 12:29:18  jonrob
-  * Update RichSmartID (backwards compatible)
-  *
-  * Revision 1.11  2004/11/29 13:59:49  cattanem
-  * fix missing dictionaries
-  *
-  * Revision 1.10  2004/11/03 09:28:13  jonrob
-  * Update RIchSmartID
-  *
-  * Revision 1.9  2004/10/30 19:06:32  jonrob
-  * Add vector typedef
-  *
-  * Revision 1.8  2004/07/29 08:58:05  jonesc
-  * Add CVS Log history information to RichSmartID.xml
-  *
   ************************************************************************* -->
 
   <package name='LHCbKernel'>
@@ -329,7 +312,7 @@
             desc  = "Returns true if the RichSmartID contains valid HPD data"  
             type  = "bool">
             <code>
-               return ( richIsSet() &amp;&amp; panelIsSet() &amp;&amp; PDRowIsSet() &amp;&amp; PDColIsSet() );
+               return ( richIsSet() &amp;&amp; panelIsSet() &amp;&amp; pdRowIsSet() &amp;&amp; pdColIsSet() );
             </code>
         </method>
 
@@ -349,7 +332,7 @@
             desc  = "Returns true if at least one data field has been set"  
             type  = "bool">
             <code>
-               return ( richIsSet() || panelIsSet() || PDRowIsSet() || PDColIsSet() ||
+               return ( richIsSet() || panelIsSet() || pdRowIsSet() || pdColIsSet() ||
                         pixelRowIsSet() || pixelColIsSet() || subPixelIsSet() );
             </code>
         </method>
