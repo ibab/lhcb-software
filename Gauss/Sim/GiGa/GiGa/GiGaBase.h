@@ -6,8 +6,8 @@
 #include "GaudiKernel/ISerialize.h"
 #include "GaudiKernel/IIncidentListener.h"
 
+#include "GaudiKernel/PropertyMgr.h"
 
-///
 ///
 class ISvcLocator           ;
 class IGiGaSvc              ;
@@ -18,8 +18,6 @@ class IDataProviderSvc      ;
 class IParticlePropertySvc  ;
 class IChronoStatSvc        ;
 class IMagneticFieldSvc     ;
-///
-class PropertyMgr           ;
 ///
 
 /** @class GiGaBase GiGaBase.h GiGa/GiGaBase.h
@@ -49,8 +47,8 @@ class  GiGaBase: virtual public IProperty         ,
   ///
  public:
   
-  inline const std::string&     name     () const { return m_name     ; };
-
+  virtual const std::string&     name     () const { return m_name     ; };
+  
   /**
      Implementation(partial)  of IInterface  interface 
   */
@@ -60,6 +58,11 @@ class  GiGaBase: virtual public IProperty         ,
   virtual unsigned long     release ()       { return 0 < m_count ? --m_count : 0 ; };
   ///
   virtual StatusCode queryInterface(const InterfaceID& , void** );
+  ///
+
+  virtual StatusCode initialize() ;
+
+  virtual StatusCode finalize  () ;
   ///
   
   /**
@@ -108,35 +111,22 @@ class  GiGaBase: virtual public IProperty         ,
   inline IDataProviderSvc*      detSvc    () const { return m_detSvc    ; }; 
   inline IIncidentSvc*          incSvc    () const { return m_incSvc    ; }; 
   inline IParticlePropertySvc*  ppSvc     () const { return m_ppSvc     ; }; 
-  inline IMagneticFieldSvc*     mfSvc     () const { return m_mfSvc     ; }; 
+  inline IMagneticFieldSvc*     mfSvc     () const { return m_mfSvc     ; };
+  /// 
+  inline  PropertyMgr*           propMgr   () const { return m_propMgr   ; };  
   ///
  protected: 
   ///
-  StatusCode initialize() ;
-  StatusCode finalize  () ;
-  ///
- protected:
-  ///
-
+  
   /**
      Methods for declaring properties to the property manager
   */
-  /// Method for declaring properties to the property manager
-  StatusCode declareProperty( const std::string& name, int                      & reference );
-  /// Method for declaring properties to the property manager
-  StatusCode declareProperty( const std::string& name, float                    & reference );
-  /// Method for declaring properties to the property manager
-  StatusCode declareProperty( const std::string& name, bool                     & reference );
-  /// Method for declaring properties to the property manager
-  StatusCode declareProperty( const std::string& name, std::string              & reference );
-  /// Method for declaring properties to the property manager
-  StatusCode declareProperty( const std::string& name, std::vector<int>         & reference );
-  /// Method for declaring properties to the property manager
-  StatusCode declareProperty( const std::string& name, std::vector<float>       & reference );
-  /// Method for declaring properties to the property manager
-  StatusCode declareProperty( const std::string& name, std::vector<bool>        & reference );
-  /// Method for declaring properties to the property manager
-  StatusCode declareProperty( const std::string& name, std::vector<std::string> & reference );
+  template <class TYPE>
+    StatusCode declareProperty( const std::string& name , TYPE& reference )
+    {
+      if( 0 != propMgr() ) { propMgr()->declareProperty( name , reference ); } 
+      return 0 != propMgr() ? StatusCode::SUCCESS : StatusCode::FAILURE ; 
+    }
   ///
   StatusCode setProperties  () ; 
   ///

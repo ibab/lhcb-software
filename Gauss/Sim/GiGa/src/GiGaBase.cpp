@@ -206,54 +206,6 @@ StatusCode GiGaBase::finalize()
   return StatusCode::SUCCESS;
   ///
 };
-/// Method for declaring properties to the property manager
-StatusCode GiGaBase::declareProperty( const std::string& name, int                      & reference)
-{ 
-  if( 0 != m_propMgr ) { m_propMgr->declareProperty( name , reference ) ; }  
-  return 0 == m_propMgr ? StatusCode::FAILURE : StatusCode::SUCCESS; 
-};
-/// Method for declaring properties to the property manager
-StatusCode GiGaBase::declareProperty( const std::string& name, float                    & reference)
-{ 
-  if( 0 != m_propMgr ) { m_propMgr->declareProperty( name , reference ) ; }  
-  return 0 == m_propMgr ? StatusCode::FAILURE : StatusCode::SUCCESS; 
-};
-/// Method for declaring properties to the property manager
-StatusCode GiGaBase::declareProperty( const std::string& name, bool                     & reference)
-{ 
-  if( 0 != m_propMgr ) { m_propMgr->declareProperty( name , reference ) ; }  
-  return 0 == m_propMgr ? StatusCode::FAILURE : StatusCode::SUCCESS; 
-};
-/// Method for declaring properties to the property manager
-StatusCode GiGaBase::declareProperty( const std::string& name, std::string              & reference)
-{ 
-  if( 0 != m_propMgr ) { m_propMgr->declareProperty( name , reference ) ; }  
-  return 0 == m_propMgr ? StatusCode::FAILURE : StatusCode::SUCCESS; 
-};
-/// Method for declaring properties to the property manager
-StatusCode GiGaBase::declareProperty( const std::string& name, std::vector<int>         & reference)
-{ 
-  if( 0 != m_propMgr ) { m_propMgr->declareProperty( name , reference ) ; }  
-  return 0 == m_propMgr ? StatusCode::FAILURE : StatusCode::SUCCESS; 
-};
-/// Method for declaring properties to the property manager
-StatusCode GiGaBase::declareProperty( const std::string& name, std::vector<float>       & reference)
-{ 
-  if( 0 != m_propMgr ) { m_propMgr->declareProperty( name , reference ) ; }  
-  return 0 == m_propMgr ? StatusCode::FAILURE : StatusCode::SUCCESS; 
-};
-/// Method for declaring properties to the property manager
-StatusCode GiGaBase::declareProperty( const std::string& name, std::vector<bool>        & reference)
-{ 
-  if( 0 != m_propMgr ) { m_propMgr->declareProperty( name , reference ) ; }  
-  return 0 == m_propMgr ? StatusCode::FAILURE : StatusCode::SUCCESS; 
-};
-/// Method for declaring properties to the property manager
-StatusCode GiGaBase::declareProperty( const std::string& name, std::vector<std::string> & reference)
-{ 
-  if( 0 != m_propMgr ) { m_propMgr->declareProperty( name , reference ) ; }  
-  return 0 == m_propMgr ? StatusCode::FAILURE : StatusCode::SUCCESS; 
-};
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 StatusCode GiGaBase::setProperties() 
 {
@@ -346,10 +298,10 @@ StatusCode GiGaBase::queryInterface(const InterfaceID& riid , void** ppI )
 {
   if ( 0 == ppI ) { return StatusCode::FAILURE; }
   *ppI = 0 ;
-  if      ( IID_IProperty         == riid ) { *ppI = static_cast<IProperty*>  (this) ; } 
-  else if ( IID_ISerialize        == riid ) { *ppI = static_cast<ISerialize*> (this) ; } 
-  else if ( IID_IInterface        == riid ) { *ppI = static_cast<IInterface*> (this) ; } 
-  else if ( IID_IIncidentListener == riid ) { *ppI = static_cast<IInterface*> (this) ; } 
+  if      ( IProperty::         interfaceID() == riid ) { *ppI = static_cast<IProperty*>  ( this ) ; } 
+  else if ( ISerialize::        interfaceID() == riid ) { *ppI = static_cast<ISerialize*> ( this ) ; } 
+  else if ( IID_IInterface                    == riid ) { *ppI = static_cast<IInterface*> ( this ) ; } 
+  else if ( IIncidentListener:: interfaceID() == riid ) { *ppI = static_cast<IInterface*> ( this ) ; } 
   else                                      { return StatusCode::FAILURE             ; }
   addRef();
   return StatusCode::SUCCESS;

@@ -19,7 +19,7 @@
 
 
 class GiGaPhysList: virtual public IGiGaPhysList   , 
-	      public          GiGaBase
+		    public          GiGaBase
 {
   ///
  public:
@@ -46,7 +46,8 @@ class GiGaPhysList: virtual public IGiGaPhysList   ,
   ///
  private:
   ///
-  float   m_DefaultCutValue  ; //default cut value
+  double    m_DefaultCutValue  ; //default cut value
+  int       m_misc ; 
   ///
 };
 ///

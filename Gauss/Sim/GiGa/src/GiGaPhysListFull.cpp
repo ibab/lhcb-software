@@ -59,6 +59,7 @@ void GiGaPhysListFull::ConstructParticle()
   ConstructAllBaryons();
   ConstructAllIons();
   ConstructAllShortLiveds();
+
 };
 ////////////////////////////////////////////////////////////////////////////////
 void GiGaPhysListFull::ConstructProcess()
@@ -68,12 +69,15 @@ void GiGaPhysListFull::ConstructProcess()
   ConstructEM();
   ConstructHad();
   ConstructGeneral();
-};
+}
+;
 ////////////////////////////////////////////////////////////////////////////////
 void GiGaPhysListFull::SetCuts()
 {
   //  " G4VUserPhysicsList::SetCutsWithDefault" method sets 
   //   the default cut value for all particle types 
+
+  SetVerboseLevel( 2 ) ;
   SetCutsWithDefault();   
 }
 ///////////////////////////////////////////////////////////////////////////////
@@ -109,9 +113,14 @@ void GiGaPhysListFull::ConstructEM()
     if (particleName == "gamma") {
       // gamma
       // Construct processes for gamma
+
+      std::cout << " add process for gamam1 " << std::endl; 
       pmanager->AddDiscreteProcess(new G4GammaConversion());
+      pmanager->DumpInfo();
       pmanager->AddDiscreteProcess(new G4ComptonScattering());      
+      pmanager->DumpInfo();
       pmanager->AddDiscreteProcess(new G4PhotoElectricEffect());
+      pmanager->DumpInfo();
       
     } else if (particleName == "e-") {
       //electron

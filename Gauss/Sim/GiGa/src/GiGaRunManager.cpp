@@ -237,16 +237,22 @@ StatusCode GiGaRunManager::processTheEvent()
 StatusCode GiGaRunManager::prepareTheEvent( G4PrimaryVertex * vertex )
 {
   ///
+  std::cout << "I am here 1 " << std::endl; 
   set_evt_Is_Prepared ( false ); 
   const std::string Tag( name() + ".prepareTheEvent()" );
   const std::string method( " initializeRun() " ) ;
   ///
   MsgStream log    ( msgSvc    () , Tag ) ;
   ///
+  std::cout << "I am here 2 " << std::endl; 
+
   ___GIGA_TRY___ 
     { if( !run_Is_Initialized() ) { initializeRun() ; } }
   ___GIGA_CATCH_AND_THROW___(Tag,method)          ;   /// ATTENTION !!!
-  ///
+  //
+
+  std::cout << "I am here 3 " << std::endl; 
+
   if( !run_Is_Initialized() ) { return StatusCode::FAILURE ; }  /// RETURN !!!   
   /// "clear" the previous event  
   if( evt_Is_Processed() )
@@ -260,23 +266,32 @@ StatusCode GiGaRunManager::prepareTheEvent( G4PrimaryVertex * vertex )
       set_evt_Is_Processed( false );
     }
   ///
+  std::cout << "I am here 4 " << std::endl; 
+
   if     ( 0 != G4RunManager::GetCurrentEvent() )
     {  log << MSG::VERBOSE << " Current G4Event is kept  " << endreq;  }
   else if( 0 != G4RunManager::userPrimaryGeneratorAction ) 
     {  
       G4RunManager::currentEvent = G4RunManager::GenerateEvent(0) ; 
       log << MSG::DEBUG   << " New G4Event is GENERATED " << endreq;    
+  std::cout << "I am here 4.1 " << std::endl; 
     }
   else 
     {  
       G4RunManager::currentEvent = new G4Event; 
       log << MSG::DEBUG   << " New G4Event (empty) is created " << endreq;    
+  std::cout << "I am here 4.2 " << std::endl; 
     }
   ///
+  std::cout << "I am here 5 " << std::endl; 
+
   if( 0 == G4RunManager::currentEvent ) { return StatusCode::FAILURE; }  /// RETURN !!!  
   ///
+  std::cout << "I am here 6 " << std::endl; 
   if( 0 !=  vertex ) { G4RunManager::currentEvent->AddPrimaryVertex( vertex ); } 
   ///
+  std::cout << "I am here 7 " << std::endl; 
+
   set_evt_Is_Prepared ( true   ); 
   ///
   log << MSG::VERBOSE << " Geant4 Event preparation is successfull " << endreq; 

@@ -345,7 +345,8 @@ G4VPhysicalVolume* GiGaGeomCnvSvc::G4WorldPV()
 	if( 0 == trnspMgr  ) { Error("G4WorldPV:: could not locate G4TranspostationManager* object ") ; return 0 ; }         
 	G4FieldManager*          fieldMgr = trnspMgr->GetFieldManager();                           /// ATTENTION !!!
 	if( 0 == fieldMgr  ) { Error("G4WorldPV:: could not locate G4FieldManager* object "         ) ; return 0 ; }         
-	fieldMgr->SetDetectorField( mf );                                                           /// ATTENTION !!! 
+	fieldMgr->SetDetectorField  ( mf );                                                        /// ATTENTION !!! 
+        fieldMgr->CreateChordFinder ( mf );                                                        /// ATTENTION !!!    
       }
       ///
       Print("G4WorlPV:: World Magnetic Field is set to be = "+ System::typeinfoName( typeid( *mf ) )+"/"+mf->name() );

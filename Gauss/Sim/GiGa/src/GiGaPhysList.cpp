@@ -4,10 +4,12 @@
 
 ///////////////////////////////////////////////////////////////////////////////////////
 GiGaPhysList::GiGaPhysList( const std::string& nick , ISvcLocator* loc) 
-  : GiGaBase          ( nick , loc       )
-  , m_DefaultCutValue ( (float) 1.0 * mm )
-{
-  declareProperty( "DefaultCutValue" , m_DefaultCutValue );
+  : GiGaBase          ( nick , loc  )
+  , m_DefaultCutValue ( 5.0 * mm    )
+  , m_misc ( 0 ) 
+{ 
+  declareProperty( "cut" , m_DefaultCutValue ); 
+  declareProperty( "misc" , m_misc ); 
 };
 ///////////////////////////////////////////////////////////////////////////////////////
 GiGaPhysList::~GiGaPhysList(){};
@@ -24,9 +26,15 @@ StatusCode GiGaPhysList::queryInterface( const InterfaceID& id , void** ppI)
 ///////////////////////////////////////////////////////////////////////////////////////
 StatusCode GiGaPhysList::initialize ()  
 {
-  /// initialize base class 
+  /// initialize base class
+
+  std::cout << " 1misc = " << m_misc << std::endl; 
+ 
   StatusCode sc = GiGaBase::initialize (); 
   if( sc.isFailure() ){ return Error("Could not initialize GiGaBase class!", sc); }
+
+  std::cout << " 2misc = " << m_misc << std::endl; 
+
   MsgStream log( msgSvc() , name() ); 
   if( defCut() != GetDefaultCutValue() )
     {

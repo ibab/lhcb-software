@@ -117,16 +117,18 @@ StatusCode GiGaSvc::initialize()
     if( sc.isFailure() ) { return Error("Unable to create GiGaRunManager ", sc ); }
   } 
   /// try to locate Physics List Object and make it known for GiGa 
-  {
-    IGiGaPhysList* PL   = 0 ;
-    StatusCode sc = physList ( m_GiGaPhysList , PL );
-    if( sc.isFailure() ) { return Error(" Unable to instantiate Physics List Object "+m_GiGaPhysList, sc );} 
-    if( 0 == PL        ) { return Error(" Unable to instantiate Physics List Object "+m_GiGaPhysList     );} 
-    ///
-    *this << PL ;  /// 
-    ///
-    Print("Used Phisics List Object is "+System::typeinfoName( typeid( *PL ) ) + "/"+PL->name() );
-  }
+  if( !m_GiGaPhysList.empty() )
+    {
+      IGiGaPhysList* PL   = 0 ;
+      StatusCode sc = physList ( m_GiGaPhysList , PL );
+      if( sc.isFailure() ) { return Error(" Unable to instantiate Physics List Object "+m_GiGaPhysList, sc );} 
+      if( 0 == PL        ) { return Error(" Unable to instantiate Physics List Object "+m_GiGaPhysList     );} 
+      ///
+      *this << PL ;  /// 
+      ///
+      Print("Used Phisics List Object is "+System::typeinfoName( typeid( *PL ) ) + "/"+PL->name() );
+    }
+  else { Warning("Physics List Object is not required to be loaded. Dangerous! Check the configuration!") ; } 
   ///
   return StatusCode::SUCCESS ; 
 };

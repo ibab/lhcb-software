@@ -113,6 +113,11 @@ StatusCode GiGaMCVertexCnv::updateRep( DataObject*     Object  , IOpaqueAddress*
       ///
       { MsgStream log( msgSvc(),  name() ) ; log << MSG::VERBOSE << "UpdateRep::Add Vertex to GiGa" << endreq; }
       ///
+
+      std::cout << " result of conversion " << std::endl; 
+
+      Vertex->Print();
+
       if( 0 != gigaSvc() ) { *gigaSvc() << Vertex ; ++nVertex ; } 
       else                 { return Error("CreateRep::IGiGaSvc* points to NULL!") ; }
       /// 
