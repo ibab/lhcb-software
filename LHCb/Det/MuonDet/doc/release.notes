@@ -1,8 +1,9 @@
-! $Id: release.notes,v 1.21 2002-10-03 15:42:08 cattanem Exp $
+! $Id: release.notes,v 1.22 2002-10-11 13:12:38 cattanem Exp $
 !
 ! Package     : MuonDet
 ! Responsible : David Hutchcroft
 
+!========================= MuonDet v4r0 2002-10-11 =========================
 ! 2002-10-03 - Marco Cattaneo
  - requirements: changed version to v4r0. Has to be used with XmlDDDB v13r0 
    or greater due to structural changes in the Xml description.
