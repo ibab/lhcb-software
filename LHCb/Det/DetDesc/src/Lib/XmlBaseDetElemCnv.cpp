@@ -1,4 +1,4 @@
-//  $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/Lib/XmlBaseDetElemCnv.cpp,v 1.5 2001-06-20 07:48:42 sponce Exp $
+//  $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/Lib/XmlBaseDetElemCnv.cpp,v 1.6 2001-06-22 12:44:15 sponce Exp $
 
 // include files
 #include <cstdlib>
@@ -276,7 +276,6 @@ StatusCode XmlBaseDetElemCnv::i_fillObj (DOM_Element childElement,
       const char *textValue = value.c_str();
       std::string val;
       std::istrstream cstr (textValue, value.length());
-      //delete (textValue);
       while (cstr >> val) {
         vect.push_back (val);
       }

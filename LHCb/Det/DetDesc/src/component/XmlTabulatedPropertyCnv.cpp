@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/component/XmlTabulatedPropertyCnv.cpp,v 1.5 2001-05-17 16:34:05 sponce Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/component/XmlTabulatedPropertyCnv.cpp,v 1.6 2001-06-22 12:44:18 sponce Exp $
 
 // Include files
 #include "GaudiKernel/CnvFactory.h"
@@ -145,7 +145,6 @@ StatusCode XmlTabulatedPropertyCnv::i_fillObj (DOM_Text childText,
     dataObj->table().push_back (TabulatedProperty::Entry (vx, vy));
     x.erase();
     y.erase();
-    delete [] textValue;
   }
   if (!x.empty() || !y.empty()) {
     throw XmlCnvException
