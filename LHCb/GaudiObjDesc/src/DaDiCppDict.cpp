@@ -1,4 +1,4 @@
-// $Id: DaDiCppDict.cpp,v 1.11 2001-11-01 14:26:23 mato Exp $
+// $Id: DaDiCppDict.cpp,v 1.12 2001-11-06 10:09:58 mato Exp $
 
 #include "GaudiKernel/Kernel.h"
 
@@ -480,6 +480,16 @@ void DDBEdict::printCppDictionary(DaDiPackage* gddPackage,
   for(i=0; i<gddClass->sizeDaDiRelation(); ++i)
   {
     DaDiRelation* gddRelation = gddClass->popDaDiRelation();
+    std::string relType;
+
+    if (gddRelation->ratio().equals("1"))
+    {
+      relType = "SmartRef<";
+    }
+    else // if (gddRelation->ratio().equals("*"))
+    {
+      relType = "SmartRefVector<";
+    }
 
 /*  metaOut << "    metaC->addField(\""
       << gddRelation->name().transcode() << "\", \"" 
@@ -491,8 +501,8 @@ void DDBEdict::printCppDictionary(DaDiPackage* gddPackage,
 */
 
     metaOut << "    new MetaField(\""
-      << gddRelation->name().transcode() << "\", \"" 
-      << gddRelation->type().transcode() << "\", \"" 
+      << gddRelation->name().transcode() << "\", \""
+      << relType << gddRelation->type().transcode() << ">\", \"" 
       << gddRelation->desc().transcode() << "\", &(("
       << gddClass->className().transcode() << "*)0)->m_"
       << gddRelation->name().transcode() << ", metaC);" 

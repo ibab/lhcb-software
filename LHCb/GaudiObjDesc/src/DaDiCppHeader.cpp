@@ -1,4 +1,4 @@
-// $Id: DaDiCppHeader.cpp,v 1.12 2001-11-06 09:56:44 mato Exp $
+// $Id: DaDiCppHeader.cpp,v 1.13 2001-11-06 10:09:58 mato Exp $
 
 #include "GaudiKernel/Kernel.h"
 
@@ -1081,7 +1081,7 @@ void DDBEcpp::printCppHeader(DaDiPackage* gddPackage,
     {
       if (!attFloat)
       {
-        xmlOut << "  double ";
+        xmlOut << "  float ";
         attFloat = true;
       }
       else
