@@ -1,8 +1,10 @@
-# $Id: requirements,v 1.15 2002-03-05 09:14:20 ranjard Exp $ 
+# $Id: requirements,v 1.16 2002-03-13 15:37:57 ibelyaev Exp $ 
+# =============================================================================
+# CVS tag $Name: not supported by cvs2svn $ 
 # =============================================================================
 
 package  GiGaCnv 
-version  v4r0
+version  v4r1
 
 branches cmt src doc GiGaCnv 
 

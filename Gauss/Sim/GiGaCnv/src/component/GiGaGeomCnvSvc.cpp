@@ -1,8 +1,11 @@
-// $Id: GiGaGeomCnvSvc.cpp,v 1.7 2002-01-22 18:24:43 ibelyaev Exp $ 
+// $Id: GiGaGeomCnvSvc.cpp,v 1.8 2002-03-13 15:37:57 ibelyaev Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.7  2002/01/22 18:24:43  ibelyaev
+//  Vanya: update for newer versions of Geant4 and Gaudi
+//
 // Revision 1.6  2001/08/12 17:24:52  ibelyaev
 // improvements with Doxygen comments
 //
@@ -455,7 +458,7 @@ G4VPhysicalVolume* GiGaGeomCnvSvc::world ()
   { MsgStream log(msgSvc(),name()); 
   log << MSG::INFO << " Create the WORLD volume!" << endreq; } 
   /// create it!
-  G4Material* MAT = g4Material ( m_worldMaterial );   
+  G4Material* MAT = material ( m_worldMaterial );   
   if( 0 == MAT )
     { Error("world():: could not locate/convert material=" + 
             m_worldMaterial) ; return 0 ; }
@@ -476,7 +479,7 @@ G4VPhysicalVolume* GiGaGeomCnvSvc::world ()
     {
       ///
       IGiGaMagField* mf = 0;
-      StatusCode sc = magField( m_worldMagField , mf );  
+      StatusCode sc = magnetic( m_worldMagField , mf );  
       if( sc.isFailure() ) 
         { Error("world():: could not construct Global Magnetic Field=" + 
                 m_worldMagField, sc ) ; return 0 ; }  

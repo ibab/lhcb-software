@@ -1,8 +1,11 @@
-# $Id: requirements,v 1.23 2002-01-22 18:20:53 ibelyaev Exp $ 
+# $Id: requirements,v 1.24 2002-03-13 15:36:24 ibelyaev Exp $ 
 # =============================================================================
 # CVS tag $Name: not supported by cvs2svn $ 
 # =============================================================================
 # $Log: not supported by cvs2svn $
+# Revision 1.23  2002/01/22 18:20:53  ibelyaev
+#  Vanya: update for newer versions of Gaudi and Geant4
+#
 # Revision 1.22  2001/10/08 14:08:12  ranjard
 # v6r1 - some correction to please new compiler
 #
@@ -18,7 +21,7 @@
 # =============================================================================
 
 package  GiGa
-version  v7r0 
+version  v7r1
 
 branches         cmt src doc GiGa
 

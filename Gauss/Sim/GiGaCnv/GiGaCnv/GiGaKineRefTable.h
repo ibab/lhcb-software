@@ -1,4 +1,4 @@
-// $Id: GiGaKineRefTable.h,v 1.3 2002-03-12 15:14:08 ibelyaev Exp $ 
+// $Id: GiGaKineRefTable.h,v 1.4 2002-03-13 15:37:57 ibelyaev Exp $ 
 // ============================================================================
 /// CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
@@ -74,7 +74,7 @@ public:
   { 
 #ifdef WIN32
     Table::value_type* value = m_table.find( index );
-    if( 0 != value ) { return value->second;}
+    if( 0 != qvalue ) { return value->second;}
     /// insert the element 
     m_table.insert( index , Entry() );
     value = m_table.find( index );
@@ -108,14 +108,7 @@ public:
   
   /** resize the container
    */
-  inline void reserve ( const unsigned long size ) 
-  {
-#ifdef WIN32 
-    m_table.reserve ( size ) ;
-#else 
-    m_table.resize  ( size ) ;
-#endif 
-  };
+  inline void reserve ( const unsigned long size ) { resize( size ); };
   
 private:
 

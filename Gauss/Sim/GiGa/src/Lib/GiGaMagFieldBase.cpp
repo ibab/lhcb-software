@@ -2,6 +2,9 @@
 /// CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 /// $Log: not supported by cvs2svn $
+/// Revision 1.6  2001/08/12 15:42:49  ibelyaev
+/// improvements with Doxygen comments
+///
 /// Revision 1.5  2001/07/27 17:03:18  ibelyaev
 /// improved printout
 ///
@@ -14,6 +17,7 @@
 /// Gaudi Kernel 
 #include "GaudiKernel/IMagneticFieldSvc.h" 
 #include "GaudiKernel/ISvcLocator.h" 
+#include "GaudiKernel/PropertyMgr.h"
 /// GiGa  
 #include "GiGa/GiGaMagFieldBase.h"
 
@@ -30,9 +34,9 @@
 GiGaMagFieldBase::GiGaMagFieldBase( const std::string& nick , 
                                     ISvcLocator*       loc ) 
   : GiGaBase( nick , loc ) 
-  , m_nameMFSvc ("" )
+  , m_nameMFSvc ( "MagneticFieldSvc" )
   , m_mfSvc     ( 0 )
-{};
+{ declareProperty( "MagneticFieldService" , m_nameMFSvc ); };
 
 // ============================================================================
 /// virtual destructor 
