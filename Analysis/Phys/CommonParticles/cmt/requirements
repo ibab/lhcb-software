@@ -6,7 +6,7 @@
 # http://cern.ch/lhcb-comp/Support/html/new_structure.pdf
 #============================================================================
 package           CommonParticles
-version           v1r5p1
+version           v1r5p2
 
 #============================================================================
 # Structure, i.e. directories to process. 
@@ -17,13 +17,13 @@ branches          cmt doc options src
 # Used packages. 
 #============================================================================
 use DaVinciTools   v*   Phys
-use AIDA           v*
+
 use RecoTools      v*   Rec
 
 #============================================================================
 # Component library building rule
 #============================================================================
-library          CommonParticles ../src/*.cpp
+library          CommonParticles ../src/*.cpp -import=AIDA
 
 #============================================================================
 # define component library link options
