@@ -1,6 +1,6 @@
-# $Id: requirements,v 1.37 2005-01-12 09:28:06 ocallot Exp $
+# $Id: requirements,v 1.38 2005-04-05 08:45:26 cattanem Exp $
 package L0Event
-version v14r2
+version v14r3
 
 branches Event cmt doc xml src
 
