@@ -1,0 +1,36 @@
+#============================================================================
+# Created    : 2003-11-07
+# Maintainer : Richard Beneyton
+#
+# Documentation on the requirement file can be found at
+# http://cern.ch/lhcb-comp/Support/html/new_structure.pdf
+#============================================================================
+package           CommonParticles
+version           v1r0
+
+#============================================================================
+# Structure, i.e. directories to process. 
+#============================================================================
+branches          cmt doc options src
+
+#============================================================================
+# Used packages. 
+#============================================================================
+use DaVinciTools   v*   Phys
+use AIDA           v*
+use RecoTools      v*   Rec
+
+#============================================================================
+# Component library building rule
+#============================================================================
+library          CommonParticles ../src/*.cpp
+
+#============================================================================
+# define component library link options
+#============================================================================
+apply_pattern    package_Clinkopts
+apply_pattern    packageShr
+
+#============================================================================
+private
+apply_pattern    package_Cshlibflags

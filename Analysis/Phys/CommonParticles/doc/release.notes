@@ -1,0 +1,11 @@
+!-----------------------------------------------------------------------------
+! Package     : Phys/PhysSel
+! Responsible : Richard Beneyton
+! Purpose     : Holds algorithm and option for reconstruction used by PhysSel's selection
+!-----------------------------------------------------------------------------
+
+!==================== PhysSel v1r0 2003-12-11 =============================
+! 2003-11-07 - Richard Beneyton
+ - First version of the package, with ProducePairPhotons alg.
+ - Note that the package requires Rec/RecoTools v1r1
+
