@@ -1,6 +1,11 @@
 Package :EvtGen 
 Package manager : Patrick Robbe and Witek Pokorski
 
+!================= EvtGen v5r6 ====================================
+! 2004-08-02 - Gloria CORTI
+ - requirements, adapt to LCG interfaces packages
+
+!================= EvtGen v5r5 ====================================
 ! 2004-07-29 - Patrick Robbe
  - add photos subdirectory to contain PHOTOS fixes.
  - photos/phoene.F: temporary fix to deal with Bs0 -> phi e+ e- decays
