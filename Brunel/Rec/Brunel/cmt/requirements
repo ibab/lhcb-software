@@ -96,7 +96,7 @@ use VeloAlgorithms	v2r4	Velo
 use VeloAssociators	v1r3	Velo
 
 # Inner Tracker
-use ITAlgorithms	v12r4  	IT
+use ITAlgorithms	v12r5  	IT
 use ITAssociators	v2r1	IT
 use ITCheckers		v1r1	IT
 

@@ -4,17 +4,25 @@ Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
 </PRE><H1><A NAME=v15r4>2002-12-04 Brunel v15r4</A></H1><PRE>
+  >>> This is the last version built against Gaudi v10 <<<
+  Next version (for Xmas pre-production) will use Gaudi v11 and CMT projects
+
  - New tuning:
    . Fine tuning of VTT tracking (VeloTT v1r4)
    . Add material to central OT modules (XmlDDDB v14r3, v252r0 geometry)
    . New velo clustering for L1. Includes common mode noise simulation and
      correction (L1VeloTrack v3r4)
    . Changes to Calorimeter corrections (CaloReco v1r1)
-   . Many changes to OO-Rich (Rich/* packages)
+   . Many fixes to OO-Rich (Rich/* packages)
+   . New parameterisation and tuning of ST charge sharing (ITAlgorithms v12r5) 
 
  - New features:
    . Add support for dbase v252r0 (Brunelv252r0.opts)
-   . Remove support for dbase v251r*
+   . New tools for PID with HCAL (CaloReco v1r1) 
+   . Add OO-Rich LocalPID algorithm (RichRecAlgs v1r2)
+
+ - DST changes:
+   . OO-Rich switched off for default production
 
  - Bug fixes:
    . Fix edge problem in Velo detector element (VeloDet v8r1)

@@ -31,7 +31,7 @@ BrunelDigi.DetectorList  = { "SpillOver" };
 BrunelDigi.DetectorList += { "VELO" , "IT", "OT" , "RICH" , "CALO", "MUON" };
 BrunelTrigger.DetectorList = { "TRIGGER" };
 BrunelReco.DetectorList  = {"VELO","OT","IT","L1","Tr","RICH","CALO","MUON" };
-BrunelReco.DetectorList += { "OORICH" };
+//BrunelReco.DetectorList += { "OORICH" };
 BrunelReco.DetectorList += { "Timing" };
 //--------------------------------------------------------------
 // Subdetector algorithms

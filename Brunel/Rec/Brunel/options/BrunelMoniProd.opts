@@ -1,6 +1,6 @@
 // Default monitoring options for production jobs
 BrunelMoni.DetectorList  = { "Tr","TRIGGER", "RICH" };
-BrunelMoni.DetectorList += { "OORICH" };
+//BrunelMoni.DetectorList += { "OORICH" };
 
 // Produce only the summary table
 L1TrackMonitor.Histograms = false;
