@@ -34,7 +34,7 @@ std::vector<L0MTile>  L0Muon::tileListFromMap(const MuonTileID & pu, int type, s
 
   // Build the list of L0MTile
   // Fix the size of the list
-  int size;
+  int size = L0BUFFER_SIZE;
   if (type == 0){
     size = L0BUFFER_SIZE;
   } else if (type == 1) {
