@@ -1,4 +1,4 @@
-// $Id: DeVeloPhiType.cpp,v 1.5 2004-02-17 21:37:13 mtobin Exp $
+// $Id: DeVeloPhiType.cpp,v 1.6 2004-02-24 18:27:09 mtobin Exp $
 //==============================================================================
 #define VELODET_DEVELOPHITYPE_CPP 1
 //==============================================================================
@@ -197,7 +197,7 @@ StatusCode DeVeloPhiType::pointToChannel(const HepPoint3D& point,
 {
   MsgStream msg(msgSvc(), "DeVeloPhiType");
   HepPoint3D localPoint(0,0,0);
-  StatusCode sc = DeVeloSensor::globalToLocal(point,localPoint);
+  StatusCode sc = this->globalToLocal(point,localPoint);
   if(!sc.isSuccess()) return sc;
   double radius=localPoint.perp();
 
@@ -215,7 +215,7 @@ StatusCode DeVeloPhiType::pointToChannel(const HepPoint3D& point,
   unsigned int closestStrip;
   double strip=0;
   phi -= phiOffset(radius);
-  if(m_innerRadius > radius) {
+  if(m_middleRadius > radius) {
     strip = phi / m_innerPitch;
   } else {
     strip = phi / m_outerPitch;
@@ -268,9 +268,11 @@ StatusCode DeVeloPhiType::neighbour(const VeloChannelID& start,
 //==============================================================================
 StatusCode DeVeloPhiType::isInside(const HepPoint3D& point)
 {
+  MsgStream msg(msgSvc(), "DeVeloPhiType");
   // check boundaries....  
   double radius=point.perp();
   if(m_innerRadius > radius || m_outerRadius < radius) {
+    msg << MSG::VERBOSE << "Outside active radii " << radius << endreq;
     return StatusCode::FAILURE;
   }
   bool isInner=true;
@@ -279,10 +281,18 @@ StatusCode DeVeloPhiType::isInside(const HepPoint3D& point)
   }
   // Is it inside angular coverage
   double xCross=m_middleRadius*cos(phiOfStrip(0,0.,m_middleRadius));
-  if(xCross > point.x()) return StatusCode::FAILURE;
+  if(xCross > point.x()) {
+    msg << MSG::VERBOSE << "Inner " << isInner 
+        << " Outside angular coverage: x, xmax " << point.x()
+        << "," << xCross << endreq;
+    return StatusCode::FAILURE;
+  }
 
-  // Gap in radius...
+  // Dead region
   if(m_middleRadius+m_rGap > radius && m_middleRadius-m_rGap < radius){
+    msg << MSG::VERBOSE << "Inner " << isInner 
+        << " Inside dead region from bias line: " << radius 
+        << endreq;
     return StatusCode::FAILURE;
   }
   // Corner cut-offs
@@ -290,7 +300,11 @@ StatusCode DeVeloPhiType::isInside(const HepPoint3D& point)
   double x=point.x();
   double y=point.y();
   bool isCutOff=this->isCutOff(x,y);
-  if(isCutOff) return StatusCode::FAILURE;
+  if(isCutOff) {
+    msg << MSG::VERBOSE << "Inner " << isInner << " Inside corner cut-off " 
+        << x << "," << y << endreq;
+    return StatusCode::FAILURE;
+  }
   // Work out if x/y is outside first/last strip in zone..
   unsigned int endStrip;
   if(isInner){
@@ -320,18 +334,34 @@ StatusCode DeVeloPhiType::isInside(const HepPoint3D& point)
   }
   double yAtX=gradient*x+intercept;
   if(0 < y && isInner) {
-    if(0 < gradient && yAtX < y) return StatusCode::FAILURE;
+    if(0 < gradient && yAtX < y) {
+      msg << MSG::VERBOSE << "end strip " << endStrip << " +ve gradient"
+          << " yAtX " << yAtX << " y " << y << " inner " << isInner << endreq;
+      return StatusCode::FAILURE;
+    }
   } else if(0 < y && !isInner) {
-    if(0 > gradient && yAtX > y) return StatusCode::FAILURE;
+    if(0 > gradient && yAtX > y) {
+      msg << MSG::VERBOSE << "end strip " << endStrip << " -ve gradient"
+          << " yAtX " << yAtX << " y " << y << " inner " << isInner << endreq;
+      return StatusCode::FAILURE;
+    }
   } else if(0 > y && isInner) {
-    if(0 < gradient && yAtX < y) return StatusCode::FAILURE;
+    if(0 < gradient && yAtX < y) {
+      msg << MSG::VERBOSE << "end strip " << endStrip << " +ve gradient"
+          << " yAtX " << yAtX << " y " << y << " inner " << isInner << endreq;
+      return StatusCode::FAILURE;
+    }    
   } else if(0 > y && !isInner) {
-    if(0 > gradient && yAtX > y) return StatusCode::FAILURE;
+    if(0 > gradient && yAtX > y) {
+      msg << MSG::VERBOSE << "end strip " << endStrip << " -ve gradient"
+          << " yAtX " << yAtX << " y " << y << " inner " << isInner << endreq;
+      return StatusCode::FAILURE;
+    }
   }
   return StatusCode::SUCCESS;
 }
 //==============================================================================
-/// Is the point in the corner cut-off?
+/// Is the local point in the corner cut-off?
 //==============================================================================
 bool DeVeloPhiType::isCutOff(double x, double y)
 {
