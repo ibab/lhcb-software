@@ -1,6 +1,10 @@
 ! Package     : VeloAssociator
 ! Responsible : Chris Parkes
 
+!==================== VeloAssociators v1r13 2004-11-29 =====================
+! 2004-11-29 - Marco Cattaneo
+ - Change dependency to VeloDet v9r*
+
 !==================== VeloAssociators v1r12 2004-11-22 =====================
 ! 2004-11-22 - Marco Cattaneo
  - Change dependency to new version of Relations, v2r*
