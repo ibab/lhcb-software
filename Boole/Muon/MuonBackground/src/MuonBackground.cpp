@@ -1,4 +1,4 @@
-// $Id: MuonBackground.cpp,v 1.1.1.1 2003-04-04 09:10:14 asatta Exp $
+// $Id: MuonBackground.cpp,v 1.2 2003-04-04 12:12:23 cattanem Exp $
 // Include files 
 
 // from Gaudi
@@ -356,11 +356,10 @@ StatusCode MuonBackground::initializeGeometry() {
       if(insert)gapContainer->push_back(localZGap);    
       chamberNumber++;      
     }
-    msg<<MSG::INFO<<" number of gap stored "<<gapContainer->size()<<endreq;
-    for(int i=0;i<(int)gapContainer->size();i++){
-      msg<<MSG::INFO<<" gap position "<<(*gapContainer)[i]<<endreq;
-      
-    }
+    // msg<<MSG::INFO<<" number of gap stored "<<gapContainer->size()<<endreq;
+    // for(int i=0;i<(int)gapContainer->size();i++){
+    //   msg<<MSG::INFO<<" gap position "<<(*gapContainer)[i]<<endreq;
+    // }
     
   }
   
@@ -378,15 +377,15 @@ StatusCode MuonBackground::initializeParametrization()
   int gap;  
   std::string name;  
   if(numName!=numCode)return StatusCode::FAILURE;
-  std::string scema="InFile/112100";
-  SmartDataPtr<IHistogram1D> histoin(histoSvc(),scema);
-  if(histoin){
-    msg<<MSG::INFO<<"found the histo "<<"alessia"<<scema<<endreq;
-  }
-  else{
-    msg<<MSG::INFO<<"not found the histo "<<"alessia"<<endreq;
-    
-  }
+//  std::string scema="InFile/112100";
+//  SmartDataPtr<IHistogram1D> histoin(histoSvc(),scema);
+//  if(histoin){
+//    msg<<MSG::INFO<<"found the histo "<<"alessia"<<scema<<endreq;
+//  }
+//  else{
+//    msg<<MSG::INFO<<"not found the histo "<<"alessia"<<endreq;
+//  }
+
   //int nbinx,nbiny;
   //  float xlow,xup,ylow,tup;
   // the first station is without background!!!!!
