@@ -1,4 +1,4 @@
-// $Id: DaVinciTools_load.cpp,v 1.40 2004-08-25 13:25:53 pkoppenb Exp $
+// $Id: DaVinciTools_load.cpp,v 1.41 2004-10-27 13:49:59 pkoppenb Exp $
 // Include files 
 
 #include "GaudiKernel/DeclareFactoryEntries.h"
@@ -18,9 +18,11 @@ DECLARE_FACTORY_ENTRIES( DaVinciTools ) {
   DECLARE_TOOL( CheckOverlap );
   DECLARE_TOOL( DecayFinder );
   DECLARE_TOOL( DecodeSimpleDecayString );
+  DECLARE_TOOL( PVLocator ) ;
 
   // Algorithms
   DECLARE_ALGORITHM( PreDV );
+  DECLARE_ALGORITHM( ResetPVLocation ) ;
   
 }
 

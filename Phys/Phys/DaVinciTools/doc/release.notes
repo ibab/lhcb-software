@@ -1,7 +1,25 @@
-! $Id: release.notes,v 1.134 2004-09-16 12:54:50 pkoppenb Exp $
+! $Id: release.notes,v 1.135 2004-10-27 13:49:59 pkoppenb Exp $
 ! Package     : DaVinciTools
 ! Responsible : P. Koppenburg
 
+! 2004-10-27 - P. Koppenburg
+  - src/PVLocator.{cpp,h}
+    . New Tool that stores location of primary vertex. This tool is
+      used by all filtercriteria that use the PV. It allows to switch
+      between offline and HLT PV.
+  - src/ResetPVLocation.{cpp,h}
+    . Algorithm that sets the PVLocator tool. 
+      Options:
+          PVLocation ( = VertexLocation::Primary by default ) : PV location
+	  ResetToOffline ( = false ) : Restore default
+      Example:
+    
+          HLTSelections.Members += { "ResetPVLocation/SetHLTPV" };
+          SetHLTPV.PVLocation = "/Event/Phys/Trg/Vertices" ;
+          < do rest of HLT >
+	  HLTSelections.Members += { "ResetPVLocation/SetOfflinePV" };
+          SetOfflinePV.ResetToOffline = true ;
+	   
 !========================== DaVinciTools v11r1 2004-09-16 ===================
 ! 2004-09-02 - P. Koppenburg
   - src/DecayFinder.*
