@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.21 2004-04-19 23:06:06 jonesc Exp $
+# $Id: requirements,v 1.22 2004-04-21 07:58:52 cattanem Exp $
 # Created    : 11/03/2002
 # Maintainer : Christopher Rob Jones   Christopher.Rob.Jones@cern.ch
 
@@ -7,6 +7,7 @@ version v2r9
 
 # ================ structure ================================================
 branches src cmt doc
+include_path none
 
 # ================ environment ==============================================
 set RICHRECTOOLSOPTS $(RICHRECTOOLSROOT)/options
