@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Ex/DetDescExample/src/SimpleAlgorithm.cpp,v 1.2 2001-03-16 16:35:34 cattaneb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Ex/DetDescExample/src/SimpleAlgorithm.cpp,v 1.3 2001-03-19 17:55:01 cattaneb Exp $
 #define DDEXAMPLE_SIMPLEALGORITHM_CPP
 
 /// Include files
@@ -135,7 +135,9 @@ StatusCode SimpleAlgorithm::initialize()                                   {
   SmartDataPtr<IDetectorElement> vertex( cave, "Vertex" );
   if( !vertex )                                                            {
     log << MSG::ERROR << "Can't retrieve /dd/Structure/LHCb/Vertex" << endreq;
-    return StatusCode::FAILURE;
+    //    return StatusCode::FAILURE;
+    // Vertex is obsolete, must upgrade to use Velo
+    return StatusCode::SUCCESS;
   }
   
   ILVolume* ivol = vertex->geometry()->lvolume();

@@ -1,49 +1,18 @@
-//==============================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Ex/DetDescExample/options/job.opts,v 1.1.1.1 2001-03-13 15:11:14 cattaneb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Ex/DetDescExample/options/job.opts,v 1.2 2001-03-19 17:55:01 cattaneb Exp $
 
-#include "$STDOPTS/Common.opts"
+// Do not use standard options, as we do not need event input
+
+// Define the other standard DLLs and services
+ApplicationMgr.DLLs   = { "GaudiAud" };
+AuditorSvc.Auditors   = { "ChronoAuditor" };
+
+// Set up the detector description service
+#include "$STDOPTS/DetDesc.opts"
 
 //--------------------------------------------------------------
 // Private Application Configuration options
 //--------------------------------------------------------------
 ApplicationMgr.TopAlg =  { "SimpleAlgorithm/Simple" };
-ApplicationMgr.ExtSvc += { "XmlCnvSvc" };
-ApplicationMgr.DLLs   += { "DetDesc" };
-
-//--------------------------------------------------------------
-// Location of detector description XML database is an URL
-// so don't use "\" in it (use only "/").
-// The recommended way is to use one of the following forms:
-//
-// Use of the locally checkout version in mycmt area
-// e.g.:
-//         > cd mycmt
-//         > cvs checkout XmlDDDB -r v5
-//--------------------------------------------------------------
-
-ApplicationMgr.DetDbLocation  = "$DDDB/dddb.xml";
-ApplicationMgr.DetDbRootName  = "dd";
-ApplicationMgr.DetStorageType = 7;
-
 
 // Set output level threshold (2=DEBUG, 3=INFO, 4=WARNING, 5=ERROR, 6=FATAL )
 MessageSvc.OutputLevel = 3;
-
-//--------------------------------------------------------------
-// Event related parameters
-//--------------------------------------------------------------
-// Number of events to be processed (default is to end of input file(s))
-ApplicationMgr.EvtMax = 1;
-
-//--------------------------------------------------------------
-// No input file
-//--------------------------------------------------------------
-ApplicationMgr.EvtSel = "NONE";
-
-// Detector Persistency service setup: 
-DetectorPersistencySvc.CnvServices = { "XmlCnvSvc" };
-
-// Trigger generic detector element conversion
-// Useful in the case of visualization or in a case the required user
-// defined detector element converters are somehow not available
-XmlCnvSvc.AllowGenericConversion = true;
