@@ -1,8 +1,11 @@
-// $Id: GiGaBase.cpp,v 1.17 2003-07-07 16:48:09 ranjard Exp $
+// $Id: GiGaBase.cpp,v 1.18 2003-07-14 15:45:33 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.17  2003/07/07 16:48:09  ranjard
+// v14r2 - fix for gcc 3.2
+//
 // Revision 1.16  2003/05/30 14:26:59  ibelyaev
 //  minor update in GiGaBase printout
 //
@@ -18,6 +21,7 @@
 /// includes 
 ///  STL
 #include <string>
+#include <map>
 ///  GaudiKernel
 #include "GaudiKernel/ISvcLocator.h" 
 #include "GaudiKernel/IProperty.h"
@@ -45,11 +49,43 @@
 
 namespace GiGaBaseLocal
 {
+
+  /** @FinalizeCounter
+   */
+  class FinalizeCounter 
+  {
+    typedef std::map<std::string,int>  Map;    
+  public:
+    void initialized ( const std::string& obj ) { ++m_map[obj] ; } ;
+    void finalized   ( const std::string& obj ) { --m_map[obj] ; } ;
+    // destructor
+    ~FinalizeCounter() 
+    {
+      for( Map::iterator imap = m_map.begin() ; 
+           m_map.end() != imap ; ++imap )
+        {
+          if( 0 == imap->second ) { continue ; }
+          
+          std::cout 
+            << "GiGaBase     WARNING (Non)Finalized object Type/Name ='" 
+            << imap->first  << "'  (#" 
+            << imap->second << ")"      <<std::endl; 
+        };
+      m_map.clear() ;
+    };
+  private:
+    Map m_map ;
+  };  
+  /** @var s_fCounter
+   *  static finalize counter 
+   */
+  static FinalizeCounter                    s_fCounter ;
+  
 #ifdef GIGA_DEBUG
   /** @var s_Counter
    *  static instance counter 
    */
-  static GiGaUtil::InstanceCounter<GiGaBase> s_Counter ;
+  static GiGaUtil::InstanceCounter<GiGaBase> s_Counter  ;
 #endif   
 };
 
@@ -227,6 +263,8 @@ StatusCode GiGaBase::initialize()
     }
   else { Warning("GiGaSetUp Service is not requested to be located"); }
   ///
+  GiGaBaseLocal::s_fCounter.initialized ( type() + "/" + name() );
+  ///
   return Print("GiGaBase initialized successfully" , 
                StatusCode::SUCCESS                 , MSG::VERBOSE ) ;
 };
@@ -289,6 +327,9 @@ StatusCode GiGaBase::finalize()
   if( 0 != detSvc    () ) { detSvc    () -> release() ; m_detSvc    = 0 ; } 
   if( 0 != evtSvc    () ) { evtSvc    () -> release() ; m_evtSvc    = 0 ; } 
   if( 0 != chronoSvc () ) { chronoSvc () -> release() ; m_chronoSvc = 0 ; } 
+  
+  //
+  GiGaBaseLocal::s_fCounter.finalized ( type() + "/" + name() ) ;
   // finalize the base class 
   return AlgTool::finalize() ;
   ///

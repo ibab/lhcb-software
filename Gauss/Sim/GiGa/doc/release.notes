@@ -1,7 +1,14 @@
-! $Id: release.notes,v 1.78 2003-07-07 16:48:09 ranjard Exp $
+! $Id: release.notes,v 1.79 2003-07-14 15:45:28 ibelyaev Exp $
 ! =============================================================================
 Package:          GiGa
 Package manager : Vanya Belyaev
+
+! 2003-07-14 - Vanya BELYAEV
+ - src/Lib/GiGaBase.cpp 
+   add the counter to search for unfinalized tools 
+  (unfortunately now it happens offen :-(( )
+ - cmt/requirements 
+   set the version to v14r2p1 
 
 !============================ GiGa v14r2 2003-07-07 ========================
 ! 2003-07-07 - Florence RANJARD

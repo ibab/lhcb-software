@@ -1,8 +1,11 @@
-// $Id: GiGaBase.h,v 1.19 2003-05-30 14:26:55 ibelyaev Exp $
+// $Id: GiGaBase.h,v 1.20 2003-07-14 15:45:13 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.19  2003/05/30 14:26:55  ibelyaev
+//  minor update in GiGaBase printout
+//
 // Revision 1.18  2003/04/06 18:49:45  ibelyaev
 //  see $GIGAROOT/doc/release.notes
 //
@@ -420,6 +423,7 @@ private:
   /// counter of exceptions
   mutable Counter       m_exceptions ;
   ///
+private:
 };
 // ============================================================================
 
