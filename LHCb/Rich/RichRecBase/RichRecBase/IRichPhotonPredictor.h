@@ -1,4 +1,4 @@
-// $Id: IRichPhotonPredictor.h,v 1.4 2004-06-10 14:14:48 jonesc Exp $
+// $Id: IRichPhotonPredictor.h,v 1.5 2004-07-09 17:40:04 jonrob Exp $
 #ifndef RICHRECTOOLS_IRICHPHOTONPREDICTOR_H
 #define RICHRECTOOLS_IRICHPHOTONPREDICTOR_H 1
 
@@ -8,9 +8,10 @@ class RichRecSegment;
 
 /** @class IRichPhotonPredictor IRichPhotonPredictor.h
  *
- *  Interface for a simple tool to perform a fast determination of whether
+ *  Interface for a simple tool to perform a relatively fast determination of whether
  *  a valid RichRecPhoton candidate can be produced using a given RichRecSegment
- *  and RichRecPixel
+ *  and RichRecPixel. The means by which this is determined depends on the particular 
+ *  instance of the tool used.
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
