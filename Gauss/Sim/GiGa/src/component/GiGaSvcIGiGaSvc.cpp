@@ -1,10 +1,10 @@
-
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Sim/GiGa/src/component/GiGaSvcIGiGaSvc.cpp,v 1.2 2001-04-23 19:24:24 ibelyaev Exp $ 
+///
 #include <string>
 #include <list>
 #include <vector> 
 #include <algorithm> 
-
-
+///
 #include    "GaudiKernel/ISvcLocator.h"
 #include    "GaudiKernel/IMessageSvc.h"
 #include    "GaudiKernel/IChronoStatSvc.h"
@@ -12,11 +12,12 @@
 #include    "GaudiKernel/SvcFactory.h"
 #include    "GaudiKernel/MsgStream.h"
 #include    "GaudiKernel/ParticleProperty.h"
+///
 #include    "GiGa/GiGaException.h"
-#include    "GiGa/GiGaRunManager.h" 
 
 // local 
 #include    "GiGaSvc.h"
+#include    "GiGaRunManager.h" 
 
 ///////////////////////////////////////////////////////////////////////////////////
 IGiGaSvc&   GiGaSvc::operator <<         ( G4PrimaryVertex * vertex   )

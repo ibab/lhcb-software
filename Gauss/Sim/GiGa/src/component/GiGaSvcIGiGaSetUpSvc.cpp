@@ -9,7 +9,9 @@
 
 
 #include "GiGa/GiGaException.h"
-#include "GiGa/GiGaRunManager.h"
+
+//local 
+#include "GiGaRunManager.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////////

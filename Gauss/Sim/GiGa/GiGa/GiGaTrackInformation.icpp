@@ -3,7 +3,6 @@
 
 /// Geant4 
 #include "globals.hh"
-#include "G4Allocator.hh"
 /// GiGa 
 #include "GiGa/GiGaTrackInformation.h"
 

@@ -1,9 +1,9 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Sim/GiGa/src/Lib/GiGaVisManager.cpp,v 1.1 2001-04-23 08:52:04 ibelyaev Exp $ 
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Sim/GiGa/src/component/GiGaVisManager.cpp,v 1.1 2001-04-23 19:24:25 ibelyaev Exp $ 
 
 #ifdef G4VIS_USE
 
 /// local 
-#include "GiGa/GiGaVisManager.h"
+#include "GiGaVisManager.h"
 ///
 /// Supported drivers...
 #ifdef G4VIS_USE_DAWN

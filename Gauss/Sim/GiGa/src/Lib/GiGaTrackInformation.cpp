@@ -1,6 +1,8 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Sim/GiGa/src/Lib/GiGaTrackInformation.cpp,v 1.4 2001-04-23 11:53:34 ibelyaev Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Sim/GiGa/src/Lib/GiGaTrackInformation.cpp,v 1.5 2001-04-23 19:24:23 ibelyaev Exp $
 #define GIGA_GIGATRACKINFORMATION_CPP 1
 
+// G4 
+#include "G4Allocator.hh"
 // GiGa 
 #include "GiGa/GiGaTrackInformation.h"
 

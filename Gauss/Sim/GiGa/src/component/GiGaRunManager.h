@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Sim/GiGa/GiGa/GiGaRunManager.h,v 1.4 2001-04-23 11:05:06 ibelyaev Exp $ 
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Sim/GiGa/src/component/GiGaRunManager.h,v 1.1 2001-04-23 19:24:24 ibelyaev Exp $ 
 #ifndef     GIGA_GIGARUNMANAGER_H
 #define     GIGA_GIGARUNMANAGER_H  1
 

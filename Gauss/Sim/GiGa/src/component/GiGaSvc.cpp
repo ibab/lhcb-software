@@ -32,17 +32,17 @@
 //
 #include    "GiGa/GiGaException.h"
 //
-#include    "GiGa/GiGaRunManager.h" 
 #include    "GiGa/SplitTypeAndName.h"
 //
 
 /// visualization stuff I hope that it is temporary!
 #ifdef G4VIS_USE
-#include    "GiGa/GiGaVisManager.h" 
+#include    "GiGaVisManager.h" 
 #endif // G4VIS_USE
 
 // local 
 #include    "GiGaSvc.h"
+#include    "GiGaRunManager.h" 
 
 
 ///////////////////////////////////////////////////////////////////////////////////
