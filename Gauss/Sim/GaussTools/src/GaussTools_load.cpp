@@ -1,8 +1,11 @@
-// $Id: GaussTools_load.cpp,v 1.2 2002-09-26 18:10:50 ibelyaev Exp $
+// $Id: GaussTools_load.cpp,v 1.3 2002-11-28 08:53:52 witoldp Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2002/09/26 18:10:50  ibelyaev
+//  repackageing: add all concrete implementations from GiGa
+//
 // ============================================================================
 #define GAUSSTOOLS_GAUSSTOOLS_LOAD_CPP 1 
 // ============================================================================
@@ -43,7 +46,14 @@ void GaussTools_load()
   DECLARE_GiGaFactory     (    GiGaPhysListGeantino    );
   DECLARE_GiGaFactory     (    GiGaPhysListEm          );
   DECLARE_GiGaFactory     (    GiGaPhysListFull        );
-  
+  DECLARE_GiGaFactory     (    EMPhysics               );
+  DECLARE_GiGaFactory     (    EM_GNPhysics            );
+  DECLARE_GiGaFactory     (    IonPhysics              );
+  DECLARE_GiGaFactory     (    MuonPhysics             );
+  DECLARE_GiGaFactory     (    HadronPhysicsLHEP       );
+  DECLARE_GiGaFactory     (    HadronPhysicsLHEP_GN    );
+  DECLARE_GiGaFactory     (    HadronPhysicsQGSP       );
+ 
   /// Sensitive Detector 
   DECLARE_GiGaFactory     (    GiGaSensDetPrint        );
   DECLARE_GiGaFactory     (    GiGaSensDetBudget       );
