@@ -1,8 +1,11 @@
-// $Id: CaloTool.h,v 1.5 2002-04-04 20:27:19 ibelyaev Exp $
+// $Id: CaloTool.h,v 1.6 2002-04-05 17:05:44 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.5  2002/04/04 20:27:19  ibelyaev
+//  minor improvement in 'get()' and 'put()' methods
+//
 // Revision 1.4  2002/04/02 10:33:43  ibelyaev
 //  minor modifications in CaloAlgorithm/CaloTool
 //
@@ -143,6 +146,10 @@ protected:
             "Could not retrieve Tool'" + type + "'/'" + name + "'", sc ) ;
     Assert( 0 != tool      , 
             "Could not retrieve Tool'" + type + "'/'" + name + "'"     ) ;
+    // debug printout 
+    Print( " The Tool of type '" + tool->type() + 
+           "'/'"                 + tool->name() + 
+           "' is retrieved from IToolSvc " , sc , MSG::DEBUG ) ;
     ///
     return tool ;
   };
@@ -170,6 +177,11 @@ protected:
             "Could not retrieve Tool'" + type + "'" , sc ) ;
     Assert( 0 != tool      , 
             "Could not retrieve Tool'" + type + "'"     ) ;
+    ///
+    // debug printout 
+    Print( " The Tool of type '" + tool->type() + 
+           "'/'"                 + tool->name() + 
+           "' is retrieved from IToolSvc " , sc , MSG::DEBUG ) ;
     ///
     return tool ;
   };

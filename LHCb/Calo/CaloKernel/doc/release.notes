@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.10 2002-04-04 12:54:38 ibelyaev Exp $
+! $Id: release.notes,v 1.11 2002-04-05 17:05:44 ibelyaev Exp $
 ! =============================================================================
 ! CVS tag $Name: not supported by cvs2svn $
 ! =============================================================================
@@ -8,6 +8,11 @@
 ! The package contains the general Calo Kernel classes and utilities, 
 ! which are essentially independent from Detector and Event models 
 ! =============================================================================
+
+!=============================================================================
+! 05/04/2002 - Ivan Belyaev
+! - add some printout to CaloTool::tool() and CaloAlgorthm::tool() methods 
+!=============================================================================
 
 !=============================================================================
 ! 04/04/2002 - Ivan Belyaev

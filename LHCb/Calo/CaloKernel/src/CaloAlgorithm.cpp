@@ -1,8 +1,11 @@
-// $Id: CaloAlgorithm.cpp,v 1.8 2002-04-04 20:27:19 ibelyaev Exp $ 
+// $Id: CaloAlgorithm.cpp,v 1.9 2002-04-05 17:05:44 ibelyaev Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.8  2002/04/04 20:27:19  ibelyaev
+//  minor improvement in 'get()' and 'put()' methods
+//
 // Revision 1.7  2002/04/04 15:25:24  ibelyaev
 //  improve a little bit layout of CaloAlgorithm class
 //
@@ -70,8 +73,9 @@
  *  @param pSvcLocator    poinetr to Service Locator 
  */
 // ============================================================================
-CaloAlgorithm::CaloAlgorithm( const std::string&  name       ,
-                              ISvcLocator*        pSvcLocator)
+CaloAlgorithm::CaloAlgorithm
+( const std::string&  name       ,
+  ISvcLocator*        pSvcLocator)
   : Algorithm ( name , pSvcLocator )
   /// input/output/detector data
   , m_inputData  ( "" ) ///< no default value
@@ -98,9 +102,9 @@ CaloAlgorithm::~CaloAlgorithm() {};
  *  @return       status code 
  */
 // ============================================================================
-StatusCode 
-CaloAlgorithm::Error     ( const std::string& msg , 
-                           const StatusCode & st  ) const 
+StatusCode CaloAlgorithm::Error     
+( const std::string& msg , 
+  const StatusCode & st  ) const 
 {
   Stat stat( chronoSvc() , name()+":Error" ); 
   return Print( msg , st , MSG::ERROR ); 
@@ -113,9 +117,9 @@ CaloAlgorithm::Error     ( const std::string& msg ,
  *  @return       status code 
  */
 // ============================================================================
-StatusCode 
-CaloAlgorithm::Warning   ( const std::string& msg , 
-                           const StatusCode & st  ) const 
+StatusCode CaloAlgorithm::Warning   
+( const std::string& msg , 
+  const StatusCode & st  ) const 
 {
   Stat stat( chronoSvc() , name()+":Warning" ); 
   return Print( msg , st , MSG::WARNING ); 
@@ -129,10 +133,10 @@ CaloAlgorithm::Warning   ( const std::string& msg ,
  *   @return       status code 
  */
 // ============================================================================
-StatusCode 
-CaloAlgorithm::Print     ( const std::string& msg , 
-                           const StatusCode & st  ,
-                           const MSG::Level & lvl ) const 
+StatusCode CaloAlgorithm::Print    
+( const std::string& msg , 
+  const StatusCode & st  ,
+  const MSG::Level & lvl ) const 
 {
   MsgStream log( msgSvc() , name() ); 
   log << lvl 
@@ -154,10 +158,11 @@ CaloAlgorithm::Print     ( const std::string& msg ,
  *  @return       status code (fictive) 
  */
 // ============================================================================
-StatusCode CaloAlgorithm::Exception ( const std::string    & msg ,
-                                      const GaudiException & exc ,
-                                      const MSG::Level     & lvl ,
-                                      const StatusCode     & sc  ) const   
+StatusCode CaloAlgorithm::Exception 
+( const std::string    & msg ,
+  const GaudiException & exc ,
+  const MSG::Level     & lvl ,
+  const StatusCode     & sc  ) const   
 { 
   Error( msg , lvl );
   throw CaloException( name() + ":: " + msg , exc, sc );
@@ -173,10 +178,11 @@ StatusCode CaloAlgorithm::Exception ( const std::string    & msg ,
  *  @return       status code (fictive) 
  */
 // ============================================================================
-StatusCode CaloAlgorithm::Exception ( const std::string    & msg ,  
-                                      const std::exception & exc , 
-                                      const MSG::Level     & lvl ,
-                                      const StatusCode     & sc  ) const   
+StatusCode CaloAlgorithm::Exception 
+( const std::string    & msg ,  
+  const std::exception & exc , 
+  const MSG::Level     & lvl ,
+  const StatusCode     & sc  ) const   
 { 
   Error( msg , lvl );
   throw CaloException( name() + ":: " + msg+"("+exc.what()+")", sc );
@@ -191,9 +197,10 @@ StatusCode CaloAlgorithm::Exception ( const std::string    & msg ,
  *  @return       status code (fictive) 
  */
 // ============================================================================
-StatusCode CaloAlgorithm::Exception ( const std::string    & msg ,  
-                                      const MSG::Level     & lvl ,
-                                      const StatusCode     & sc  ) const 
+StatusCode CaloAlgorithm::Exception
+( const std::string    & msg ,  
+  const MSG::Level     & lvl ,
+  const StatusCode     & sc  ) const 
 { 
   Error( msg , lvl );
   throw CaloException( name() + ":: " + msg , sc );

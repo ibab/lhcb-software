@@ -1,8 +1,11 @@
-// $Id: CaloTool.cpp,v 1.5 2002-04-04 20:27:20 ibelyaev Exp $
+// $Id: CaloTool.cpp,v 1.6 2002-04-05 17:05:44 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.5  2002/04/04 20:27:20  ibelyaev
+//  minor improvement in 'get()' and 'put()' methods
+//
 // Revision 1.4  2002/04/01 12:50:24  ibelyaev
 //  add templated accesssors to tools and improve exceptions
 //
@@ -89,6 +92,7 @@ CaloTool::CaloTool( const std::string& type   ,
 StatusCode    CaloTool::initialize ()
 {
   ///
+  MsgStream log( msgSvc() , name() );
   { /// set own properties 
     StatusCode sc = setProperties() ;
     if( sc.isFailure() ) 
@@ -128,6 +132,9 @@ StatusCode    CaloTool::initialize ()
     if( !detName().empty() && 0 == detSvc() )
       { return Error("Detector name is '"+detName()+"' ,but detSvc()==0!"); }
   }
+  ///
+  log << MSG::DEBUG 
+      << " Has initialized with 'Detector' = '" << detName() << "'" << endreq ;
   ///
   return StatusCode::SUCCESS;
 };

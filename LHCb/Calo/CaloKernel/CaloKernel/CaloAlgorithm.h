@@ -1,8 +1,11 @@
-// $Id: CaloAlgorithm.h,v 1.7 2002-04-04 20:27:19 ibelyaev Exp $ 
+// $Id: CaloAlgorithm.h,v 1.8 2002-04-05 17:05:43 ibelyaev Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.7  2002/04/04 20:27:19  ibelyaev
+//  minor improvement in 'get()' and 'put()' methods
+//
 // Revision 1.6  2002/04/04 15:25:23  ibelyaev
 //  improve a little bit layout of CaloAlgorithm class
 //
@@ -183,6 +186,10 @@ protected:
             "Could not retrieve Tool'" + type + "'/'" + name + "'", sc ) ;
     Assert( 0 != tool      , 
             "Could not retrieve Tool'" + type + "'/'" + name + "'"     ) ;
+    // debug printout 
+    Print( " The Tool of type '" + tool->type() + 
+           "'/'"                 + tool->name() + 
+           "' is retrieved from IToolSvc " , sc , MSG::DEBUG ) ;
     ///
     return tool ;
   };
@@ -212,10 +219,14 @@ protected:
             "Could not retrieve Tool'" + type + "'" , sc ) ;
     Assert( 0 != tool      , 
             "Could not retrieve Tool'" + type + "'"     ) ;
+    // debug printout 
+    Print( " The Tool of type '" + tool->type() + 
+           "'/'"                 + tool->name() + 
+           "' is retrieved from IToolSvc " , sc , MSG::DEBUG ) ;
     ///
     return tool ;
   };
-
+  
 protected: ///< "technical" methods 
   
   /** Print the error  message, return status code
