@@ -4,8 +4,11 @@
  *  Implementation file for RICH reconstruction monitoring algorithm : RichPIDQC
  *
  *  CVS Log :-
- *  $Id: RichPIDQC.cpp,v 1.26 2004-10-13 09:39:01 jonrob Exp $
+ *  $Id: RichPIDQC.cpp,v 1.27 2004-10-21 09:11:19 jonrob Exp $
  *  $Log: not supported by cvs2svn $
+ *  Revision 1.26  2004/10/13 09:39:01  jonrob
+ *  Update for new RichPID object
+ *
  *  Revision 1.25  2004/08/20 16:08:30  jonrob
  *  Add tally for each type of PID result to final results table
  *
@@ -51,12 +54,12 @@ RichPIDQC::RichPIDQC( const std::string& name,
   declareProperty( "MaximumTrackMultiplicity", m_maxMultCut = 999999 );
   declareProperty( "HistoBins",     m_bins = 50 );
   declareProperty( "FinalPrintout", m_finalPrintOut = true );
-  declareProperty( "ExtraHistos",   m_extraHistos = true );
+  declareProperty( "ExtraHistos",   m_extraHistos = false );
 
-  declareProperty( "TightNSigmaCutPion", m_tightNsigCutPion = 0 );
-  declareProperty( "LooseNSigmaCutPion", m_looseNsigCutPion = -99999999 );
-  declareProperty( "TightNSigmaCutKaon", m_tightNsigCutKaon = 0 );
-  declareProperty( "LooseNSigmaCutKaon", m_looseNsigCutKaon = -99999999 );
+  declareProperty( "TightNSigmaCutPion", m_tightNsigCutPion = 0. );
+  declareProperty( "LooseNSigmaCutPion", m_looseNsigCutPion = -99999999. );
+  declareProperty( "TightNSigmaCutKaon", m_tightNsigCutKaon = 0. );
+  declareProperty( "LooseNSigmaCutKaon", m_looseNsigCutKaon = -99999999. );
 
 }
 

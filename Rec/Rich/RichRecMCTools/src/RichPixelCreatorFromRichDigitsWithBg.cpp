@@ -4,8 +4,11 @@
  *  Implementation file for RICH reconstruction tool : RichPixelCreatorFromRichDigitsWithBg
  *
  *  CVS Log :-
- *  $Id: RichPixelCreatorFromRichDigitsWithBg.cpp,v 1.2 2004-10-13 10:32:49 jonrob Exp $
+ *  $Id: RichPixelCreatorFromRichDigitsWithBg.cpp,v 1.3 2004-10-21 09:10:48 jonrob Exp $
  *  $Log: not supported by cvs2svn $
+ *  Revision 1.2  2004/10/13 10:32:49  jonrob
+ *  Bug fix
+ *
  *  Revision 1.1  2004/10/13 09:37:27  jonrob
  *  Add new pixel creator tool.
  *  Add ability to make pixels for particular radiators.
@@ -230,19 +233,19 @@ StatusCode RichPixelCreatorFromRichDigitsWithBg::newPixels() const
 
   // Do the same thing for the bg track digits
   size_t noBgTracksAdded(0);
-  if ( m_noBgTracksToAdd <= m_digitsForTrackBg.size() > 0 ) {
+  if ( m_noBgTracksToAdd <= m_digitsForTrackBg.size() ) {
     while ( noBgTracksAdded < m_noBgTracksToAdd ) {
 
       std::vector<RichSmartID> & bgdigits = m_digitsForTrackBg.begin()->second;
 
-      // Add the new digits: do I have to catch a double-add exception?
+      // Add the new digits
       for ( std::vector<RichSmartID>::const_iterator digit = bgdigits.begin();
             digit != bgdigits.end(); ++digit ) {
         newPixel( *digit );
       }
       ++noBgTracksAdded;
 
-      // Remove this particle's digits here, just to be safe
+      // Remove this particle's digits here
       m_digitsForTrackBg.erase(m_digitsForTrackBg.begin());
     }
   }
