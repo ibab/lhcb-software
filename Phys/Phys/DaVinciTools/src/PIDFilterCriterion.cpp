@@ -1,4 +1,4 @@
-// $Id: PIDFilterCriterion.cpp,v 1.2 2002-05-15 23:27:35 gcorti Exp $
+// $Id: PIDFilterCriterion.cpp,v 1.3 2002-05-20 23:16:03 gcorti Exp $
 // Include files 
 
 // from Gaudi
@@ -107,7 +107,7 @@ StatusCode PIDFilterCriterion::initialize() {
 
   // Check CL vector is empty or not the same size as particles type
   if ( m_confLevels.size() == 0 ) {
-    log << MSG::ERROR << " CL list is empty: you must set the size" 
+    log << MSG::ERROR << " CL list is empty: you must set it for all particles" 
         << endreq;
     return StatusCode::FAILURE;
   }
@@ -120,7 +120,7 @@ StatusCode PIDFilterCriterion::initialize() {
     return StatusCode::FAILURE;   
   }
 
-  // if CL vector is empty, fill it with zero
+  // if CL vector is empty, fill it with zero ?? would this be better ??
   //if ( m_confLevels.size() == 0 ) {
   //  for ( unsigned int i = 0; i < m_partCodes.size(); i++ ) {
   //    m_confLevels.push_back(0.0);
