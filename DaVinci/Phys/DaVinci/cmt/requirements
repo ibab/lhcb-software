@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.103 2004-05-05 16:20:54 pkoppenb Exp $
+# $Id: requirements,v 1.104 2004-05-05 16:37:31 pkoppenb Exp $
 # Created    : 07/02/2002
 # Maintainer : P. Koppenburg
 #
@@ -6,7 +6,7 @@
 # Allows reading of OO-DST data
 #============================================================================
 package           DaVinci
-version           v11r7
+version           v11r7pk
 
 # Structure, i.e. directories to process. 
 #============================================================================
