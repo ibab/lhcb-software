@@ -1,4 +1,4 @@
-// $Id: PIDFilterCriterion.h,v 1.2 2002-05-15 23:26:59 gcorti Exp $
+// $Id: PIDFilterCriterion.h,v 1.3 2004-08-12 12:33:53 pkoppenb Exp $
 #ifndef PIDFILTERCRITERION_H 
 #define PIDFILTERCRITERION_H 1
 
@@ -7,7 +7,7 @@
 #include <string>
 
 // from Gaudi
-#include "GaudiKernel/AlgTool.h"
+#include "GaudiTools/GaudiTool.h"
 
 // from DaVinciTools
 #include "DaVinciTools/IFilterCriterion.h"
@@ -20,7 +20,7 @@ class IParticlePropertySvc;
  *  @author Paul colrain
  *  @date   14/03/2002
  */
-class PIDFilterCriterion : public AlgTool,
+class PIDFilterCriterion : public GaudiTool,
                            virtual public IFilterCriterion {
 
 public:

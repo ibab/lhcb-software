@@ -28,14 +28,14 @@ class IDataProviderSvc;
  *  @date   27/07/2004
  */
 class Momentum2FlightAngleFilterCriterion : public GaudiTool, 
-                           virtual public IFilterCriterion {
+                                            virtual public IFilterCriterion {
 
 public:
 
   /// Standard constructor
   Momentum2FlightAngleFilterCriterion( const std::string& type, 
-                      const std::string& name,
-                      const IInterface* parent);
+                                       const std::string& name,
+                                       const IInterface* parent);
   
   /// Destructor
   virtual ~Momentum2FlightAngleFilterCriterion( ){ }; 
@@ -55,7 +55,9 @@ private:
 
   bool       m_CutBestPV; ///< Cuts w.r.t Best PV (true). False w.r.t all PVs
   double     m_mincos; ///< Min .cosine between momentum and flight distance
-   
+  bool       m_Trg ;         ///< Use L1 PV even for offline particles
+  std::string m_PVContainer;
+  
   IDataProviderSvc* m_EDS;
   IGeomDispCalculator* m_ipTool;
 

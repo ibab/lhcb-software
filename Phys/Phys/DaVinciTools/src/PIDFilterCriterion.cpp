@@ -1,12 +1,11 @@
-// $Id: PIDFilterCriterion.cpp,v 1.3 2002-05-20 23:16:03 gcorti Exp $
+// $Id: PIDFilterCriterion.cpp,v 1.4 2004-08-12 12:33:53 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h"
-#include "GaudiKernel/MsgStream.h" 
-#include "GaudiKernel/GaudiException.h"
 #include "GaudiKernel/IParticlePropertySvc.h"
 #include "GaudiKernel/ParticleProperty.h"
+#include "GaudiKernel/GaudiException.h"
 
 // local
 #include "PIDFilterCriterion.h"
@@ -28,7 +27,7 @@ const        IToolFactory& PIDFilterCriterionFactory = s_factory ;
 PIDFilterCriterion::PIDFilterCriterion( const std::string& type,
                                         const std::string& name,
                                         const IInterface* parent )
-  : AlgTool ( type, name , parent ) {
+  : GaudiTool ( type, name , parent ) {
 
   // declare additional interface
   declareInterface<IFilterCriterion>(this);
@@ -58,22 +57,18 @@ PIDFilterCriterion::PIDFilterCriterion( const std::string& type,
 //=============================================================================
 StatusCode PIDFilterCriterion::initialize() {
 
-  MsgStream          log( msgSvc(), name() );
+  StatusCode sc = GaudiTool::initialize() ;
+  if ( !sc) return sc ;
 
   if ( m_partNames.size() == 0 && m_partCodes.size() == 0 ) {
-    log << MSG::ERROR << ">>>   PIDFilterCriterion::initialize() "
-        << endreq;
-    log << MSG::ERROR << ">>>   Properties have not been set "
-        << endreq;
+    err() << ">>>   PIDFilterCriterion::initialize() " << endreq;
+    err() << ">>>   Properties have not been set " << endreq;
     return StatusCode::FAILURE;
   }
 
   if ( m_partNames.size() != 0 && m_partCodes.size() != 0 ) {
-    log << MSG::ERROR << ">>>   PIDFilterCriterion::initialize() "
-        << endreq;
-    log << MSG::ERROR << ">>>   Attempt made to set Particle Identity "
-        << "both by name and code! "
-        << endreq;
+    err() << ">>>   PIDFilterCriterion::initialize() " << endreq;
+    err() << ">>>   Attempt made to set Particle Identity both by name and code! " << endreq;
     return StatusCode::FAILURE;
   }
 
@@ -83,7 +78,7 @@ StatusCode PIDFilterCriterion::initialize() {
     for ( in = m_partNames.begin(); in != m_partNames.end(); in++ ) {    
       ParticleProperty* partProp = m_ppSvc->find( *in );
       if ( partProp == 0 ) {
-        log << MSG::ERROR << "Cannot retrieve properties for particle \""
+        err() << "Cannot retrieve properties for particle \""
             << *in << "\" " << endreq;
          return StatusCode::FAILURE;
       }
@@ -97,7 +92,7 @@ StatusCode PIDFilterCriterion::initialize() {
     for ( ic = m_partCodes.begin(); ic != m_partCodes.end(); ic++ ) {    
       ParticleProperty* partProp = m_ppSvc->findByStdHepID( *ic );
       if ( partProp == 0 ) {
-        log << MSG::ERROR << "Cannot retrieve properties for particle code "
+        err() << "Cannot retrieve properties for particle code "
             << *ic << endreq;
          return StatusCode::FAILURE;
       }
@@ -107,48 +102,39 @@ StatusCode PIDFilterCriterion::initialize() {
 
   // Check CL vector is empty or not the same size as particles type
   if ( m_confLevels.size() == 0 ) {
-    log << MSG::ERROR << " CL list is empty: you must set it for all particles" 
-        << endreq;
-    return StatusCode::FAILURE;
-  }
-
-  if ( m_confLevels.size() > 0 && m_partNames.size() != m_confLevels.size() ) {
-    log << MSG::ERROR << ">>>   PIDFilterCriterion::initialize() "
-        << endreq;
-    log << MSG::ERROR << ">>>   Wrong number of Confidence Levels provided "
-        << endreq;
+    //    err() << " CL list is empty: you must set it for all particles" << endreq;
+    //   return StatusCode::FAILURE;
+    warning() << " CL list is empty: Will be set to 0 for all particles!" << endreq;
+    for ( unsigned int i = 0; i < m_partCodes.size(); i++ ) {
+      m_confLevels.push_back(0.0);
+    }
+  } else if ( m_partNames.size() != m_confLevels.size() ) {
+    err() << ">>>   PIDFilterCriterion::initialize() " << endreq;
+    err() << ">>>   Wrong number of Confidence Levels provided " << endreq;
     return StatusCode::FAILURE;   
   }
 
-  // if CL vector is empty, fill it with zero ?? would this be better ??
-  //if ( m_confLevels.size() == 0 ) {
-  //  for ( unsigned int i = 0; i < m_partCodes.size(); i++ ) {
-  //    m_confLevels.push_back(0.0);
-  //  }
-  //}    
-
-
-  log << MSG::DEBUG << ">>>   PIDFilterCriterion::initialize() " 
+  debug() << ">>>   PIDFilterCriterion::initialize() " 
       << endreq;
-  log << MSG::DEBUG << ">>>   Cuts are " << endreq;
-  log << MSG::DEBUG << ">>>   Particle names    ";
+  debug() << ">>>   Cuts are " << endreq;
+  debug() << ">>>   Particle names    ";
   for (std::vector< std::string >::iterator in = m_partNames.begin(); 
                                             in != m_partNames.end(); in++ ) {
-    log << MSG::DEBUG << *in << "  ";    
+    debug() << *in << "  ";    
   }
-  log << MSG::DEBUG << endreq;
-  log << MSG::DEBUG << ">>>   Particle codes    ";
+  debug() << endreq;
+  debug() << ">>>   Particle codes    ";
   for (std::vector< int >::iterator ic = m_partCodes.begin();
                                     ic != m_partCodes.end(); ic++ ) {
-    log << MSG::DEBUG << *ic << "  ";    
+    debug() << *ic << "  ";    
   }
-  log << MSG::DEBUG << endreq;
-  log << MSG::DEBUG << ">>>   Confidence levels    ";
+  debug() << endreq;
+  debug() << ">>>   Confidence levels    ";
   for (std::vector< double >::iterator icl = m_confLevels.begin();
                                        icl != m_confLevels.end(); icl++ ) {
-    log << MSG::DEBUG << *icl << "  ";    
+    debug() << *icl << "  ";    
   }
-  log << MSG::DEBUG << endreq;
+  debug() << endreq;
 
   return StatusCode::SUCCESS;
 }
@@ -164,7 +150,8 @@ bool PIDFilterCriterion::isSatisfied( const Particle* const & part ) {
     if ( part->particleID().pid() == m_partCodes[i] &&
          part->confLevel() >= m_confLevels[i] ) passed = true;
   }
-
+  verbose() << "Particle has PID " << part->particleID().pid() 
+            << " with CL " << part->confLevel() << ". Passed = " << passed << endreq;    
   return passed;
   
 }
@@ -174,14 +161,7 @@ bool PIDFilterCriterion::isSatisfied( const Particle* const & part ) {
 //=============================================================================
 bool PIDFilterCriterion::operator()( const Particle* const & part ) {
 
-  bool passed = true;  
-
-  for ( unsigned int i = 0; i < m_partCodes.size(); i++ ) {
-    if ( part->particleID().pid() == m_partCodes[i] &&
-         part->confLevel() >= m_confLevels[i] ) passed = true;
-  }
-
-  return passed;
+  return this->isSatisfied( part );
 
 }
 

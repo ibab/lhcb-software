@@ -6,6 +6,7 @@
 // local
 #include "Momentum2FlightAngleFilterCriterion.h"
 #include "DaVinciTools/IGeomDispCalculator.h"
+#include "Event/TrgVertex.h"
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : Momentum2FlightAngleFilterCriterion
@@ -20,12 +21,15 @@ const IToolFactory& Momentum2FlightAngleFilterCriterionFactory=s_factory;
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
-Momentum2FlightAngleFilterCriterion
-::Momentum2FlightAngleFilterCriterion(
-                                             const std::string& type,
-                                             const std::string& name,
-                                             const IInterface* parent)
-  : GaudiTool ( type, name , parent ) {
+Momentum2FlightAngleFilterCriterion::
+Momentum2FlightAngleFilterCriterion(const std::string& type,
+                                    const std::string& name,
+                                    const IInterface* parent)
+  : GaudiTool ( type, name , parent ),    
+    m_PVContainer(VertexLocation::Primary),
+    m_EDS(0),
+    m_ipTool(0) 
+{
 
   // declare additional interface
   declareInterface<IFilterCriterion>(this);
@@ -35,6 +39,8 @@ Momentum2FlightAngleFilterCriterion
   //================================================================
   declareProperty( "CutBestPV", m_CutBestPV = true);
   declareProperty( "CosAngle", m_mincos = -2.);
+  //================================================================
+  declareProperty( "UseTrgPV",     m_Trg = false );      // even for Phys tracks
   //================================================================
 
 }
@@ -68,15 +74,28 @@ StatusCode Momentum2FlightAngleFilterCriterion::initialize() {
             << m_mincos << endreq;
   }
 
+  //================================================================    
+  if ( m_Trg ){
+    m_PVContainer = TrgVertexLocation::Velo3D ;
+    info() << "Will be using Trg PV from " << m_PVContainer << " for ALL particles " << endreq ;    
+  } else {  
+    m_PVContainer = VertexLocation::Primary ;
+    info() << "Will be using offline PV from " << m_PVContainer << " for ALL particles " << endreq ;    
+  } 
   return StatusCode::SUCCESS;
 }
 //=============================================================================
 // Test if filter is satisfied
 //=============================================================================
-bool Momentum2FlightAngleFilterCriterion
-::isSatisfied( const Particle* const & part ){
+bool Momentum2FlightAngleFilterCriterion::isSatisfied( const Particle* const & part ){
 
-  SmartDataPtr<Vertices> PV(m_EDS,VertexLocation::Primary);
+  verbose() << "Getting  SmartDataPtr<Vertices> PV from " << m_PVContainer << endreq ;  
+  SmartDataPtr<Vertices> PV(m_EDS, m_PVContainer );
+
+  if ( !PV ) {
+    err() << "Could not find primary vertex location " <<  m_PVContainer << endreq;
+    return false ;
+  }
 
   verbose() << ">>>> Looping on " << PV->size() << " PVs" << endreq;
   VertexVector::const_iterator iv;
@@ -91,8 +110,7 @@ bool Momentum2FlightAngleFilterCriterion
     return (false);
   }
   
-  verbose() << "Found decay vertex z [mm] = " 
-          << secv->position().z()<< endreq;
+  verbose() << "Found decay vertex z [mm] = " << secv->position().z()<< endreq;
 
   double normIPSMin = -1.;
   
@@ -105,8 +123,7 @@ bool Momentum2FlightAngleFilterCriterion
 
     npv++;
     verbose() << "Primary vertex number = " << npv << endreq;
-    verbose() << "Primary vertex z [mm] = " 
-              << pv->position().z()<< endreq;
+    verbose() << "Primary vertex z [mm] = " << pv->position().z()<< endreq;
 
     //================================================================
     // Find the PV w.r.t. which the composite has the smallest IPS
@@ -136,7 +153,7 @@ bool Momentum2FlightAngleFilterCriterion
       
       double cosangle = p.dot(dist)/p.mag()/dist.mag();
       debug() << "Cosine of the angle between momentum and flight distance = " 
-             << cosangle << endreq;
+              << cosangle << endreq;
       
       if(m_mincos>-2. && cosangle<m_mincos){
         happy = false;
@@ -161,7 +178,7 @@ bool Momentum2FlightAngleFilterCriterion
 
     double cosangle = p.dot(dist)/p.mag()/dist.mag();
     debug() << "Cosine of the angle between momentum and flight distance = " 
-        << cosangle << endreq;
+            << cosangle << endreq;
 
     if(m_mincos>-2. && cosangle<m_mincos){
       happy = false;

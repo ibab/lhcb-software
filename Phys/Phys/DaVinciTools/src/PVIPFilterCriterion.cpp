@@ -1,4 +1,4 @@
-// $Id: PVIPFilterCriterion.cpp,v 1.3 2004-07-09 13:23:51 pkoppenb Exp $
+// $Id: PVIPFilterCriterion.cpp,v 1.4 2004-08-12 12:33:53 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
@@ -10,6 +10,7 @@
 // local
 #include "PVIPFilterCriterion.h"
 #include "DaVinciTools/IGeomDispCalculator.h"
+#include "Event/TrgVertex.h"
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : PVIPFilterCriterion
@@ -27,16 +28,23 @@ const        IToolFactory& PVIPFilterCriterionFactory = s_factory ;
 PVIPFilterCriterion::PVIPFilterCriterion( const std::string& type,
                                         const std::string& name,
                                         const IInterface* parent )
-  : GaudiTool ( type, name , parent ) {
-
+  : GaudiTool ( type, name , parent )
+  , m_PVContainer(VertexLocation::Primary)
+  , m_EDS(0)
+  , m_ipTool(0)
+{
+  
   // declare additional interface
   declareInterface<IFilterCriterion>(this);
-
+  
   // declare properties
-  declareProperty( "MinIP", m_minIP = 0. );  
-  declareProperty( "MaxIP", m_maxIP = -1. );  
-  declareProperty( "MinIPsignif", m_minIPsignif = 0. );  
-  declareProperty( "MaxIPsignif", m_maxIPsignif = -1. );  
+  declareProperty( "MinIP",        m_minIP = 0. );  
+  declareProperty( "MaxIP",        m_maxIP = -1. );  
+  declareProperty( "MinIPsignif",  m_minIPsignif = 0. );  
+  declareProperty( "MaxIPsignif",  m_maxIPsignif = -1. );  
+  declareProperty( "UseTrgPV",     m_Trg = false );      // even for Phys tracks
+  declareProperty( "UseOfflinePV", m_offline = false );  // even for Trg tracks
+  
 }
 
 //=============================================================================
@@ -65,7 +73,17 @@ StatusCode PVIPFilterCriterion::initialize() {
   if (m_maxIP>0.) debug() << ">>>   Maximum IP: " << m_minIP 
                       << " mm" << endreq;    
   if (m_maxIPsignif>0.) debug() << ">>>   Maximum IP: " 
-                            << m_minIPsignif << " sigma" << endreq;    
+                            << m_minIPsignif << " sigma" << endreq; 
+  if ( m_Trg ){
+    m_PVContainer = TrgVertexLocation::Velo3D ;
+    info() << "Will be using Trg PV from " << m_PVContainer << " for ALL particles " << endreq ;    
+  } else if ( m_offline ) {  
+    m_PVContainer = VertexLocation::Primary ;
+    info() << "Will be using offline PV from " << m_PVContainer << " for ALL particles " << endreq ;    
+  } else {
+    info() << "Will determine PV location to use based on particle origin" << endreq ;
+  } 
+  
   return StatusCode::SUCCESS;
 }
 //=============================================================================
@@ -73,16 +91,34 @@ StatusCode PVIPFilterCriterion::initialize() {
 //=============================================================================
 bool PVIPFilterCriterion::isSatisfied( const Particle* const & part ) {
 
-  SmartDataPtr<Vertices> PV(m_EDS,VertexLocation::Primary);
+  if ( !m_Trg && !m_offline ) {   
+    verbose() << "Determine type of track" << endreq ;
+    const TrgTrack* TrgT = dynamic_cast<const TrgTrack*>( part->origin() );
+    if ( !TrgT ) {
+      verbose() << "This is not a Trg Track" << endreq ;
+      m_PVContainer = VertexLocation::Primary ;
+    } else {
+      verbose() << "This is a Trg Track" << endreq ;
+      m_PVContainer = TrgVertexLocation::Velo3D ;
+    }
+  }
+  verbose() << "Getting  SmartDataPtr<Vertices> PV from " << m_PVContainer << endreq ;  
+  SmartDataPtr<Vertices> PV(m_EDS, m_PVContainer );
 
+  if ( !PV ) {
+    err() << "Could not find primary vertex location " <<  m_PVContainer << endreq;
+    return false ;
+  }
+  
   verbose() << ">>>> Looping on " << PV->size() << " PVs" << endreq;
+  //  return true ;
   VertexVector::const_iterator iv;
   bool min_happy = true;
   // set to false if needed, true if not
   bool max_happy = (!(( m_maxIP > 0. ) || ( m_maxIPsignif > 0. )));
   for (iv=PV->begin();iv!=PV->end();++iv) {
     Vertex* v = *iv;
-    if( v->type()!=Vertex::Primary) continue;
+    if ( v->type()!=Vertex::Primary) continue;
     double ip = -1 ,ipe = -1.;
     StatusCode sc = m_ipTool->calcImpactPar(*part, *v, ip, ipe);
     if (!sc.isSuccess()) continue;
@@ -112,7 +148,7 @@ bool PVIPFilterCriterion::isSatisfied( const Particle* const & part ) {
   
   verbose() << "Happy for min: " << min_happy << " and for max: " 
             << max_happy << endreq ;
-  return ( min_happy && max_happy );
+            return ( min_happy && max_happy ); 
 }
 
 //=============================================================================

@@ -70,7 +70,9 @@ private:
   double     m_maxFSPV; ///< Max unsigned Flight Significance w.r.t Best PV
   double     m_maxSignedFPV; ///< Max signed Flight distance w.r.t Best PV
   double     m_maxSignedFSPV; ///< Max signed Flight Significance w.r.t Best PV
+  bool       m_Trg ;         ///< Use L1 PV even for offline particles
 
+  std::string m_PVContainer;
   IDataProviderSvc* m_EDS;
   IGeomDispCalculator* m_vtxDisTool;
   IGeomDispCalculator* m_ipTool;

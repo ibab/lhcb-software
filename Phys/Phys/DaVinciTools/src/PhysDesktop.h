@@ -1,4 +1,4 @@
-// $Id: PhysDesktop.h,v 1.3 2004-03-11 13:02:14 pkoppenb Exp $
+// $Id: PhysDesktop.h,v 1.4 2004-08-12 12:33:53 pkoppenb Exp $
 #ifndef PHYSDESKTOP_H 
 #define PHYSDESKTOP_H 1
 
@@ -7,11 +7,10 @@
 #include <string>
 
 // from Gaudi
-#include "GaudiKernel/AlgTool.h"
+#include "GaudiTools/GaudiTool.h"
 #include "GaudiKernel/IIncidentListener.h"
 // from DaVinci
 #include "DaVinciTools/IPhysDesktop.h"
-//#include "DaVinciTools/DVAlgorithm.h"
 
 // Forward declarations
 class IDataProviderSvc;
@@ -23,7 +22,7 @@ class IParticleMaker;
  *  @date   18/02/2002
  *
  */
-class PhysDesktop : public AlgTool,
+class PhysDesktop : public GaudiTool,
                     virtual public IPhysDesktop,
                     virtual public IIncidentListener {
   

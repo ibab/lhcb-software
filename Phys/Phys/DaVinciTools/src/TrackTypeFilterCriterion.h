@@ -1,4 +1,4 @@
-// $Id: TrackTypeFilterCriterion.h,v 1.1 2004-07-08 10:14:26 pkoppenb Exp $
+// $Id: TrackTypeFilterCriterion.h,v 1.2 2004-08-12 12:33:53 pkoppenb Exp $
 #ifndef TRACKTYPEFILTERCRITERION_H 
 #define TRACKTYPEFILTERCRITERION_H 1
 
@@ -14,7 +14,9 @@
  * that allow only Long, Downstream, Upstream tracks to pass the filter
  * Veto* options allow to veto certain track types keeping the others.
  * The IgnoreNonTracks allows to ignore neutral and composite particles
- * when this option is not set all such particles are filtered out
+ * when this option is not set all such particles are filtered out.
+ * When the input particle has been made with a trigger track, it is assumed
+ * to be a long track.
  *
  *  @author Patrick KOPPENBURG
  *  @date   2004-07-07

@@ -1,8 +1,8 @@
-! $Id: release.notes,v 1.124 2004-08-12 12:33:52 pkoppenb Exp $
+! $Id: release.notes,v 1.125 2004-08-12 12:34:17 pkoppenb Exp $
 ! Package     : DaVinciTools
 ! Responsible : P. Koppenburg
 
-! 2004-08-12 - P. KOppenburg
+! 2004-08-12 - P. Koppenburg
   Many modifications to allow DaVinciTools to work with particles made
   from TrgTracks for HLT:
   - cmt/requirements

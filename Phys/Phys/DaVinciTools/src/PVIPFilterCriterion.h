@@ -1,4 +1,4 @@
-// $Id: PVIPFilterCriterion.h,v 1.3 2004-07-09 13:23:51 pkoppenb Exp $
+// $Id: PVIPFilterCriterion.h,v 1.4 2004-08-12 12:33:53 pkoppenb Exp $
 #ifndef PVIPFILTERCRITERION_H 
 #define PVIPFILTERCRITERION_H 1
 
@@ -49,13 +49,15 @@ public:
 
 private:
   
-  double     m_minIP; ///< Minimum IP
-  double     m_maxIP; ///< Maximum IP
-  double     m_minIPsignif ; ///< Minimum IP significance
-  double     m_maxIPsignif ; ///< Maximum IP significance
+  double      m_minIP;        ///< Minimum IP
+  double      m_maxIP;        ///< Maximum IP
+  double      m_minIPsignif ; ///< Minimum IP significance
+  double      m_maxIPsignif ; ///< Maximum IP significance
+  bool        m_Trg ;         ///< Use L1 PV even for offline particles
+  bool        m_offline ;     ///< Use Offline PV even for Trg particles
+  std::string m_PVContainer;
   IDataProviderSvc* m_EDS;
   IGeomDispCalculator* m_ipTool;
-
 
 };
 

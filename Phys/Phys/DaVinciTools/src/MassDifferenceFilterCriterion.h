@@ -1,4 +1,4 @@
-// $Id: MassDifferenceFilterCriterion.h,v 1.1 2002-11-14 12:35:35 graven Exp $
+// $Id: MassDifferenceFilterCriterion.h,v 1.2 2004-08-12 12:33:52 pkoppenb Exp $
 #ifndef MASSDIFFERENCEFILTERCRITERION_H 
 #define MASSDIFFERENCEFILTERCRITERION_H 1
 
@@ -7,7 +7,7 @@
 #include <string>
 
 // from Gaudi
-#include "GaudiKernel/AlgTool.h"
+#include "GaudiTools/GaudiTool.h"
 
 // from DaVinciTools
 #include "DaVinciTools/IFilterCriterion.h"
@@ -21,7 +21,7 @@ class IParticlePropertySvc;
  *  @author Gerhard Raven
  *  @date   24/06/2002
  */
-class MassDifferenceFilterCriterion : public AlgTool, 
+class MassDifferenceFilterCriterion : public GaudiTool, 
                            virtual public IFilterCriterion {
 public:
 

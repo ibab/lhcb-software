@@ -6,6 +6,7 @@
 // local
 #include "FlightDistanceFilterCriterion.h"
 #include "DaVinciTools/IGeomDispCalculator.h"
+#include "Event/TrgVertex.h"
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : FlightDistanceFilterCriterion
@@ -24,7 +25,12 @@ FlightDistanceFilterCriterion::FlightDistanceFilterCriterion(
                                                       const std::string& type,
                                                       const std::string& name,
                                                       const IInterface* parent )
-  : GaudiTool ( type, name , parent ) {
+  : GaudiTool ( type, name , parent ),
+    m_PVContainer(VertexLocation::Primary),
+    m_EDS(0),
+    m_vtxDisTool(0),
+    m_ipTool(0) 
+ {
 
   // declare additional interface
   declareInterface<IFilterCriterion>(this);
@@ -54,6 +60,7 @@ FlightDistanceFilterCriterion::FlightDistanceFilterCriterion(
   // Max signed Flight Significance
   declareProperty( "MaxSignedFSPV", m_maxSignedFSPV = -100000. );
   //================================================================
+  declareProperty( "UseTrgPV",     m_Trg = false );
 
 }
 
@@ -127,6 +134,13 @@ StatusCode FlightDistanceFilterCriterion::initialize() {
     }
   }
   //================================================================    
+  if ( m_Trg ){
+    m_PVContainer = TrgVertexLocation::Velo3D ;
+    info() << "Will be using Trg PV from " << m_PVContainer << " for ALL particles " << endreq ;    
+  } else {  
+    m_PVContainer = VertexLocation::Primary ;
+    info() << "Will be using offline PV from " << m_PVContainer << " for ALL particles " << endreq ;    
+  } 
   
   return StatusCode::SUCCESS;
 }
@@ -135,7 +149,13 @@ StatusCode FlightDistanceFilterCriterion::initialize() {
 //=============================================================================
 bool FlightDistanceFilterCriterion::isSatisfied( const Particle* const & part ){
 
-  SmartDataPtr<Vertices> PV(m_EDS,VertexLocation::Primary);
+  verbose() << "Getting  SmartDataPtr<Vertices> PV from " << m_PVContainer << endreq ;  
+  SmartDataPtr<Vertices> PV(m_EDS, m_PVContainer );
+
+  if ( !PV ) {
+    err() << "Could not find primary vertex location " <<  m_PVContainer << endreq;
+    return false ;
+  }
 
   verbose() << ">>>> Looping on " << PV->size() << " PVs" << endreq;
   VertexVector::const_iterator iv;

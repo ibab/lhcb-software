@@ -1,4 +1,4 @@
-// $Id: TrackTypeFilterCriterion.cpp,v 1.1 2004-07-08 10:14:26 pkoppenb Exp $
+// $Id: TrackTypeFilterCriterion.cpp,v 1.2 2004-08-12 12:33:53 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
@@ -7,6 +7,7 @@
 // local
 #include "TrackTypeFilterCriterion.h"
 #include "Event/ProtoParticle.h"
+#include "Event/TrgTrack.h"
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : TrackTypeFilterCriterion
@@ -51,6 +52,10 @@ TrackTypeFilterCriterion::~TrackTypeFilterCriterion() {};
 //=============================================================================
 StatusCode TrackTypeFilterCriterion::initialize() {
 
+  StatusCode sc = GaudiTool::initialize() ;
+  if (!sc) return sc;
+  debug() << ">>>   TrackTypeFilterCriterion::initialize() " << endreq;
+  
   if ( m_reqLong ) debug() << "<<< Requiring Long tracks" << endreq ;
   if ( m_vetoLong ) debug() << "<<< Vetoing Long tracks" << endreq ;
   if ( m_reqDownstream ) debug() << "<<< Requiring Downstream tracks" 
@@ -98,45 +103,58 @@ bool TrackTypeFilterCriterion::isSatisfied( const Particle* const & part ) {
   const ProtoParticle* proto = 
     dynamic_cast<const ProtoParticle*>(part->origin());
   // no protoparticle
-  if ( ! proto ) { // composite particle
-    verbose() << "This particle " << part->particleID().pid() 
-              << " has to protoparticle" << endreq;
-    if ( m_ignoreNonTracks ) return true;
+  if ( ! proto ) { // composite particle or Trigger track
+    verbose() << "This particle " << part->particleID().pid() << " has no protoparticle" << endreq;
+    
+    const TrgTrack* TrgT = dynamic_cast<const TrgTrack*>(part->origin());
+    if ( TrgT ) { // Trigger track !
+      verbose() << "This particle was made with a trigger track" << endreq;
+      // assume all trigger tracks are long tracks. This might change some day!
+      if ( m_vetoLong      ) return false ;
+      if ( m_reqLong       ) return true ;
+      if ( m_reqDownstream ) return false ;
+      if ( m_reqUpstream   ) return false ;
+      if ( m_reqVeloTrack  ) return false ;
+      if ( m_reqBackward   ) return false ;
+      if ( m_reqTtrack     ) return false ;
+      else return true ;
+    } else if ( m_ignoreNonTracks ) return true;
     else return false ;
-  }
 
-  // get Track
-  const TrStoredTrack* track = proto->track();
-  if ( !track ){ // neutral particle
-    verbose() << "This particle " << part->particleID().pid() 
-              << " has to track" << endreq;
-    if ( m_ignoreNonTracks ) return true;
-    else return false ;    
-  }
-  debug() << "This particle " << part->particleID().pid() 
-          << " has track types L:" << track->isLong() 
-          << " D: " << track->isDownstream()
-          << " U: " << track->isUpstream()
-          << " V: " << track->isVelotrack() 
-          << " B: " << track->isBackward()
-          << " T: " << track->isTtrack() << endreq ;
+  } else { // it is from a protoparticle
+    // get Track
+    const TrStoredTrack* track = proto->track();
+    if ( !track ){ // neutral particle
+      verbose() << "This particle " << part->particleID().pid() 
+                << " has no track" << endreq;
+      if ( m_ignoreNonTracks ) return true;
+      else return false ;    
+    }
+    debug() << "This particle " << part->particleID().pid() 
+            << " has track types L:" << track->isLong() 
+            << " D: " << track->isDownstream()
+            << " U: " << track->isUpstream()
+            << " V: " << track->isVelotrack() 
+            << " B: " << track->isBackward()
+            << " T: " << track->isTtrack() << endreq ;
   
-  if ((  m_reqLong       ) && ( !track->isLong()       )) return false ;
-  if (( m_vetoLong       ) && (  track->isLong()       )) return false ;
-  if ((  m_reqDownstream ) && ( !track->isDownstream() )) return false ;
-  if (( m_vetoDownstream ) && (  track->isDownstream() )) return false ;
-  if ((  m_reqUpstream   ) && ( !track->isUpstream()   )) return false ;
-  if (( m_vetoUpstream   ) && (  track->isUpstream()   )) return false ;
-  if ((  m_reqVeloTrack  ) && ( !track->isVelotrack()  )) return false ;
-  if (( m_vetoVeloTrack  ) && (  track->isVelotrack()  )) return false ;
-  if ((  m_reqBackward   ) && ( !track->isBackward()   )) return false ;
-  if (( m_vetoBackward   ) && (  track->isBackward()   )) return false ;
-  if ((  m_reqTtrack     ) && ( !track->isTtrack()     )) return false ;
-  if (( m_vetoTtrack     ) && (  track->isTtrack()     )) return false ;
+    if ((  m_reqLong       ) && ( !track->isLong()       )) return false ;
+    if (( m_vetoLong       ) && (  track->isLong()       )) return false ;
+    if ((  m_reqDownstream ) && ( !track->isDownstream() )) return false ;
+    if (( m_vetoDownstream ) && (  track->isDownstream() )) return false ;
+    if ((  m_reqUpstream   ) && ( !track->isUpstream()   )) return false ;
+    if (( m_vetoUpstream   ) && (  track->isUpstream()   )) return false ;
+    if ((  m_reqVeloTrack  ) && ( !track->isVelotrack()  )) return false ;
+    if (( m_vetoVeloTrack  ) && (  track->isVelotrack()  )) return false ;
+    if ((  m_reqBackward   ) && ( !track->isBackward()   )) return false ;
+    if (( m_vetoBackward   ) && (  track->isBackward()   )) return false ;
+    if ((  m_reqTtrack     ) && ( !track->isTtrack()     )) return false ;
+    if (( m_vetoTtrack     ) && (  track->isTtrack()     )) return false ;
 
-  verbose() << "This particle " << part->particleID().pid() <<" is accepted" 
-          << endreq;
-
+    verbose() << "This particle " << part->particleID().pid() <<" is accepted" 
+              << endreq;
+  }
+  
   return true ;
 }
 //=============================================================================

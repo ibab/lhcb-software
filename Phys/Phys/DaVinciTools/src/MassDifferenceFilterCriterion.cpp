@@ -1,4 +1,4 @@
-// $Id: MassDifferenceFilterCriterion.cpp,v 1.3 2004-01-14 19:00:06 gcorti Exp $
+// $Id: MassDifferenceFilterCriterion.cpp,v 1.4 2004-08-12 12:33:52 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
@@ -30,7 +30,11 @@ const        IToolFactory& MassDifferenceFilterCriterionFactory = s_factory ;
 MassDifferenceFilterCriterion::MassDifferenceFilterCriterion( const std::string& type,
                                         const std::string& name,
                                         const IInterface* parent )
-  : AlgTool ( type, name , parent ) {
+  : GaudiTool ( type, name , parent ),
+    m_massOffset(0),
+    m_parID(0),
+    m_dauID(0)
+ {
 
   // declare additional interface
   declareInterface<IFilterCriterion>(this);
@@ -46,40 +50,39 @@ MassDifferenceFilterCriterion::MassDifferenceFilterCriterion( const std::string&
 //=============================================================================
 StatusCode MassDifferenceFilterCriterion::initialize() {
 
-  MsgStream          log( msgSvc(), name() );
+  StatusCode sc = GaudiTool::initialize() ;
+  if (!sc) return sc ;
+
   IParticlePropertySvc* ppSvc = 0; 
-  StatusCode sc = service("ParticlePropertySvc", ppSvc);
+  sc = service("ParticlePropertySvc", ppSvc);
   if( sc.isFailure() ) {
-    log << MSG::FATAL << "    Unable to locate Particle Property Service" 
-        << endmsg;
+    fatal() << "    Unable to locate Particle Property Service" << endmsg;
     return sc;
   }
 
   ParticleProperty* mother = ppSvc->find( m_motherName );
   if (mother==0) {
-    log << MSG::FATAL << "    Unable to locate Particle Property for "  << m_motherName
-        << endmsg;
+    fatal() << "    Unable to locate Particle Property for "  << m_motherName << endmsg;
     return StatusCode::FAILURE;
   }
   m_parID = abs(mother->jetsetID());
 
   ParticleProperty* daughter = ppSvc->find( m_daughterName );
   if (daughter==0) {
-    log << MSG::FATAL << "    Unable to locate Particle Property for "  << m_daughterName
-        << endmsg;
+    fatal() << "    Unable to locate Particle Property for "  << m_daughterName << endmsg;
     return StatusCode::FAILURE;
   }
   m_dauID = abs(daughter->jetsetID());
 
   m_massOffset = mother->mass()-daughter->mass();
 
-  log << MSG::DEBUG << ">>>   MassDifferenceFilterCriterion::initialize() " 
+  debug() << ">>>   MassDifferenceFilterCriterion::initialize() " 
       << endmsg;
-  log << MSG::DEBUG << ">>>   Cuts are " << endmsg;
-  log << MSG::DEBUG << ">>>   MotherName       " << m_motherName << endmsg;    
-  log << MSG::DEBUG << ">>>   DaughterName     " << m_daughterName << endmsg;    
-  log << MSG::DEBUG << ">>>   MassWindow       " << m_massWindow << endmsg;    
-  log << MSG::DEBUG << ">>>   (computed) MassOffset " << m_massOffset << endmsg;    
+  debug() << ">>>   Cuts are " << endmsg;
+  debug() << ">>>   MotherName       " << m_motherName << endmsg;    
+  debug() << ">>>   DaughterName     " << m_daughterName << endmsg;    
+  debug() << ">>>   MassWindow       " << m_massWindow << endmsg;    
+  debug() << ">>>   (computed) MassOffset " << m_massOffset << endmsg;    
   return StatusCode::SUCCESS;
 }
 
@@ -100,11 +103,12 @@ bool MassDifferenceFilterCriterion::isSatisfied( const Particle* const & part ) 
      if (pid==m_dauID)  p.push_back(const_cast<Particle*>(i->target()));
    }
    if (p.size()!=1) {
-      MsgStream          log( msgSvc(), name() );
-      log << MSG::ERROR << " # of " << m_daughterName << " daughters = " << p.size() << endmsg;
+      err() << " # of " << m_daughterName << " daughters = " << p.size() << endmsg;
       return false;
    }
    
    double massDifference = part->mass()-p[0]->mass();
+   verbose() << "Mass of mother " << part->mass() << " - dauhter " << p[0]->mass() 
+             << " = " << massDifference << endreq ;
    return fabs(massDifference-m_massOffset) < m_massWindow;
 }
