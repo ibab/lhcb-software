@@ -1,8 +1,11 @@
-// $Id: ICaloClusterTool.h,v 1.1.1.2 2001-11-02 16:53:13 ibelyaev Exp $
+// $Id: ICaloClusterTool.h,v 1.2 2001-11-25 16:52:08 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.1.1.2  2001/11/02 16:53:13  ibelyaev
+// New Package: the first release
+//
 // ============================================================================ 
 #ifndef CALOINTERFACES_ICALOCLUSTERTOOL_H 
 #define CALOINTERFACES_ICALOCLUSTERTOOL_H 1
@@ -11,8 +14,8 @@
 #include <functional>
 // GaudiKernel
 #include "GaudiKernel/IAlgTool.h"
-// CaloGen 
-#include "CaloGen/CaloHypotheses.h"
+// CaloKernel 
+#include "CaloKernel/CaloHypotheses.h"
 // CaloInterfaces
 #include "CaloInterfaces/IIDICaloClusterTool.h"
 
@@ -77,8 +80,8 @@ public:
    *  @return status code 
    */  
   virtual StatusCode process    
-    ( CaloCluster* cluster                   , 
-      const CaloHypotheses::Hypothesis& hypo ) const = 0;
+    ( CaloCluster*                      cluster , 
+      const CaloHypotheses::Hypothesis& hypo    ) const = 0;
   
   /** destructor, virtual
    */
