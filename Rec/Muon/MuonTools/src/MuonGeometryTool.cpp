@@ -1,4 +1,4 @@
-// $Id: MuonGeometryTool.cpp,v 1.5 2003-01-07 15:03:05 cattanem Exp $
+// $Id: MuonGeometryTool.cpp,v 1.6 2003-06-16 13:46:46 sponce Exp $
 // Include files
 #include <cmath>
 
@@ -299,8 +299,12 @@ StatusCode MuonGeometryTool::fillLocals(){
     int region;
     for(region = 0 ; region < m_NRegion ; region++){
 
-      double minX,maxX,minY,maxY; // take abs values here
-      double minZ, maxZ; // "normal" averageing
+      double minX = 0.0; // take abs values here
+      double maxX = 0.0; // take abs values here
+      double minY = 0.0; // take abs values here
+      double maxY = 0.0; // take abs values here
+      double minZ = 0.0; // "normal" averageing
+      double maxZ = 0.0; // "normal" averageing
 
       int twelfth;
       for(twelfth = 0; twelfth < 12 ; twelfth++){

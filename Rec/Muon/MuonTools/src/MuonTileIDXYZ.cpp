@@ -1,4 +1,4 @@
-// $Id: MuonTileIDXYZ.cpp,v 1.19 2003-04-12 15:28:10 asatta Exp $
+// $Id: MuonTileIDXYZ.cpp,v 1.20 2003-06-16 13:46:46 sponce Exp $
 // Include files 
 #include <cstdio>
 #include <cmath>
@@ -695,7 +695,12 @@ StatusCode MuonTileIDXYZ::fillStationExtent(){
   int station;
   for(station = 0 ; station < m_NStation ; station++){
 
-    double xMax,xMin,yMax,yMin,zMax,zMin;
+    double xMax = 0.0;
+    double xMin = 0.0;
+    double yMax = 0.0;
+    double yMin = 0.0;
+    double zMax = 0.0;
+    double zMin = 0.0;
 
     int region;
     for( region = 0 ; region < m_NRegion ; region++ ){
@@ -799,7 +804,12 @@ StatusCode MuonTileIDXYZ::fillTwelfthsExtent(){
       int twelfth;
       for(twelfth = 0 ; twelfth < 12 ; twelfth++){
           
-        double xMax,xMin,yMax,yMin,zMax,zMin;
+        double xMax = 0.0;
+        double xMin = 0.0;
+        double yMax = 0.0;
+        double yMin = 0.0;
+        double zMax = 0.0;
+        double zMin = 0.0;
         double x,y,z;
         double dx,dy,dz;
         
@@ -962,9 +972,10 @@ int MuonTileIDXYZ::getChamberNumber(const MuonTileID& tile){
   // size_x = 2*xGrid  (xGrid count across only a twelfth of a region)
   // same for y
 
-  unsigned int chamberNumber; // counts from 1 as per TDS
+  unsigned int chamberNumber = 0; // counts from 1 as per TDS
   // position of chamber number in arrays 
-  unsigned int xIndex,yIndex; 
+  unsigned int xIndex = 0;
+  unsigned int yIndex = 0; 
   
   if ( 0 == tile.quarter() ){
     xIndex = (2*tile.layout().xGrid()) + tile.nX();
@@ -1196,7 +1207,12 @@ StatusCode MuonTileIDXYZ::getXYZLogical(const MuonTileID& tile,
     }
     
     // loop over the tiles and get max/min x,y,z of the combinations
-    double xmin, xmax, ymin, ymax, zmin, zmax;
+    double xmin = 0.0;
+    double xmax = 0.0;
+    double ymin = 0.0;
+    double ymax = 0.0;
+    double zmin = 0.0;
+    double zmax = 0.0;
     double padDx,chamDy,chamDz;   
     std::vector<MuonTileID>::const_iterator iTile;
     for(iTile = tempTiles.begin() ; iTile != tempTiles.end() ; iTile++){
@@ -1298,9 +1314,10 @@ StatusCode MuonTileIDXYZ::locateGasGapFromXYZ( const int& station,
           (fabs(z-chamZ) < 0.1 + chamDz) ) {
         // at last... have the correct chamber, now to make a tile from it
 
-        int xTile,yTile;
+        int xTile = 0;
+        int yTile = 0;
         // need to do the reflections to quarter 1 again....
-        int quarter;
+        int quarter = 0;
         
         if( 0 == twelfth || 1 == twelfth || 2 == twelfth){ // Q=0
           quarter = 0;
