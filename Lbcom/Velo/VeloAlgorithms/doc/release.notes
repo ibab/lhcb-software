@@ -1,5 +1,18 @@
 ! Package     : VeloAlgorithms
 ! Responsible : Chris Parkes
+!===================== VeloAlgorithms v3r0 2004-02-20 =====================
+! 2004-02-03 - Chris Parkes
+- adapt VeloSim to cope with dead regions on sensor described in new Detector
+Element.
+- protect VeloMonitor against crashes caused by this effect.
+
+! 2004-02-24 - Mark Tobin
+ - Added extra histgrams to look at particle entry point in x-y plane for each
+ sensor type.
+ - Add histograms to plot r/phi positions of MCVeloFEs and Clusters for
+ different zones.
+ - Extra histograms added to test VeloDet. 
+ - Add option to turn on/off 2D histograms in basic monitor
 
 !===================== VeloAlgorithms v3r0 2004-02-13 =====================
 ! 2004-02-03 - Mark Tobin
