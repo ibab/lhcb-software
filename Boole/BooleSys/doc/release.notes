@@ -4,6 +4,13 @@
 ! Purpose     : List of packages in Boole project
 !-----------------------------------------------------------------------------
 
+!======================== BooleSys v7r1 2004-11-22 =======================
+! 2004-11-19 - Marco Cattaneo
+ - Packages removed:  CaloMonitor (obsolete)
+ - Packages added:    CaloMoniDigi (monitoring algorithms for Digi files)
+ - Packages modified: L0MuonKernel v2r2, L0MuonTrigger v2r3,
+                      RichDigiQC v1r8, RichReadout v1r10, ITAlgorithms v14r4
+
 !======================== BooleSys v7r0 2004-10-26 =======================
 ! 2004-10-26 - Marco Cattaneo
  - Packages removed:  OTDAQ (moved to LHCbSys), OTAlgorithms (obsolete)
