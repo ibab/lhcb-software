@@ -1,8 +1,11 @@
-// $Id: CaloTools_load.cpp,v 1.10 2002-06-14 17:46:05 ibelyaev Exp $
+// $Id: CaloTools_load.cpp,v 1.11 2002-06-21 11:29:33 beneyton Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.10  2002/06/14 17:46:05  ibelyaev
+//  new L-correction
+//
 // ============================================================================
 #include "GaudiKernel/DeclareFactoryEntries.h"
 
@@ -38,6 +41,17 @@ DECLARE_FACTORY_ENTRIES(CaloTools) {
 
   DECLARE_TOOL( CaloClusterSOMSelector       ) ;
   
+  DECLARE_TOOL( CaloLCorrectionSimple        ) ;
+
+  DECLARE_TOOL( CaloSCorrectionSequence      ) ;
+  DECLARE_TOOL( CaloSCorrectionCellCenter    ) ;
+  DECLARE_TOOL( CaloSCorrectionBarycentre    ) ;
+  DECLARE_TOOL( CaloSCorrectionArcSinh       ) ;
+  DECLARE_TOOL( CaloSCorrectionLinear        ) ;
+  DECLARE_TOOL( CaloSCorrectionDoubleTanh    ) ;
+  DECLARE_TOOL( CaloSCorrectionComplex       ) ;
+
+
 };
 // ============================================================================
 
