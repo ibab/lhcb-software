@@ -1,4 +1,4 @@
-// $Id: DecayFinder.cpp,v 1.7 2002-11-06 08:34:22 odie Exp $
+// $Id: DecayFinder.cpp,v 1.8 2003-03-07 11:05:52 odie Exp $
 // Include files 
 #include <list>
 #include <functional>
@@ -10,6 +10,8 @@
 #include "GaudiKernel/GaudiException.h"
 #include "GaudiKernel/IParticlePropertySvc.h"
 #include "GaudiKernel/ParticleProperty.h"
+#include "GaudiKernel/SmartDataPtr.h"
+#include "GaudiKernel/IDataProviderSvc.h"
 #include "CLHEP/Units/SystemOfUnits.h"
 #include "Event/Particle.h"
 
@@ -34,7 +36,7 @@ DecayFinder::DecayFinder( const std::string& type,
                           const std::string& name,
                           const IInterface* parent )
   : AlgTool ( type, name , parent ),
-    m_ppSvc(0), m_source("B0 -> pi+ pi-"), m_decay(0)
+    m_ppSvc(0), m_source("B0 -> pi+ pi-"), m_decay(0), m_members(0)
 {
   if( serviceLocator() ) {
     StatusCode sc = StatusCode::FAILURE;
@@ -42,7 +44,7 @@ DecayFinder::DecayFinder( const std::string& type,
   }
   if( !m_ppSvc ) {
     throw GaudiException( "ParticlePropertySvc not found",
-                          "MCDecayFinderException",
+                          "DecayFinderException",
                           StatusCode::FAILURE );
   }
 
@@ -60,38 +62,23 @@ DecayFinder::~DecayFinder( )
 {
   if( m_decay )
     delete m_decay;
+  if( m_members )
+    delete m_members;
 }
 
 //=============================================================================
-
-StatusCode DecayFinder::setDecay( std::string decay )
-{
-  MsgStream log( msgSvc(), name() );
-
-  Descriptor *old_decay = m_decay;
-
-  log << MSG::DEBUG << "Setting decay to " << decay << endreq;
-  if( compile(decay) )
-  {
-    log << MSG::DEBUG << "The compilation of the decay was successfull"
-        << endreq;
-    delete old_decay;
-    return StatusCode::SUCCESS;
-  }
-
-  // Restore previous decay if compilation failed.
-  if( m_decay && (m_decay != old_decay) )
-    delete m_decay;
-  m_decay = old_decay;
-
-  log << MSG::DEBUG << "Could not compile the decay description" << endreq;
-  return StatusCode::FAILURE;
-}
 
 StatusCode DecayFinder::initialize()
 {
   MsgStream log( msgSvc(), name() );
   log << MSG::DEBUG << "==> Initializing" << endreq;
+
+  StatusCode sc = service("EventDataSvc", m_EDS, true);   
+  if( sc.isFailure() ) {
+    log << MSG::FATAL << " Unable to locate Event Data Service" << endreq;
+    return sc;
+  }
+
   if( m_source.length() == 0 )
   {
     log << MSG::WARNING << "No decay specified!" << endreq;
@@ -105,6 +92,71 @@ StatusCode DecayFinder::initialize()
   }
   log << MSG::DEBUG << "Could not compile the decay description" << endreq;
   return StatusCode::FAILURE;
+}
+
+StatusCode DecayFinder::setDecay( std::string decay )
+{
+  MsgStream log( msgSvc(), name() );
+
+  Descriptor *old_decay = m_decay;
+  std::vector<ParticleMatcher *> *old_members = m_members;
+  // Be sure we don't get a old piece if the feature is not used.
+  m_decay = NULL;
+  m_members = NULL;
+
+  log << MSG::DEBUG << "Setting decay to " << decay << endreq;
+  if( compile(decay) ) {
+    log << MSG::DEBUG << "The compilation of the decay was successfull"
+        << endreq;
+    m_source = decay;
+    if( old_decay )
+      delete old_decay;
+    if( old_members ) {
+      std::vector<ParticleMatcher *>::iterator pm_i;
+      for( pm_i = old_members->begin(); pm_i != old_members->end(); pm_i++ )
+        delete *pm_i;
+      old_members->clear();
+      delete old_members;
+    }
+    return StatusCode::SUCCESS;
+  }
+
+  // Restore previous decay if compilation failed.
+  if( m_decay && (m_decay != old_decay) )
+    delete m_decay;
+  m_decay = old_decay;
+  if( m_members && (m_members != old_members) ) {
+    std::vector<ParticleMatcher *>::iterator pm_i;
+    for( pm_i = m_members->begin(); pm_i != m_members->end(); pm_i++ )
+      delete *pm_i;
+    m_members->clear();
+    delete m_members;
+  }
+  m_members = old_members;
+  log << MSG::DEBUG << "Could not compile the decay description" << endreq;
+
+  return StatusCode::FAILURE;
+}
+
+std::string DecayFinder::revert( void )
+{
+  std::string result = "";
+  if( m_decay == NULL )
+    return result;
+  bool alt = m_decay->getAlternate() != NULL;
+  if( alt )
+    result += "{ ";
+  Descriptor *a = m_decay;
+  while( a ) {
+    result += a->describe();
+    if( a->getAlternate() ) {
+      result += ", ";
+    }
+    a = a->getAlternate();
+  }
+  if( alt )
+    result += " }";
+  return result;
 }
 
 #include "reclexer.icpp"
@@ -122,12 +174,14 @@ bool DecayFinder::compile( std::string &source )
   catch( DescriptorError e )
   {
     log << MSG::ERROR << "Invalid decay description '"
-        << m_source << "'" << endreq;
+        << source << "'" << endreq;
     log << MSG::ERROR << e.cause() << endreq;
     yy_delete_buffer(bs);
     return false;
   }
   yy_delete_buffer(bs);
+  log << MSG::DEBUG << "Result of the compilation:\n"
+      << revert() << endreq;
   return true;
 }
 
@@ -187,6 +241,70 @@ bool DecayFinder::findDecay( const Particles &event,
   }
 }
 
+bool DecayFinder::hasDecay( void )
+{
+  MsgStream log( msgSvc(), name() );
+  SmartDataPtr<Particles> parts(m_EDS, ParticleLocation::Production );
+  if( !parts )
+  {
+    log << MSG::FATAL << "Enable to find Particles at '"
+        << ParticleLocation::Production << "'" << endreq;
+    return false;
+  }
+  return hasDecay( *parts );
+}
+
+bool DecayFinder::findDecay( const Particle *&previous_result )
+{
+  MsgStream log( msgSvc(), name() );
+  SmartDataPtr<Particles> parts(m_EDS, ParticleLocation::Production );
+  if( !parts )
+  {
+    log << MSG::FATAL << "Enable to find Particles at '"
+        << ParticleLocation::Production << "'" << endreq;
+    return false;
+  }
+  return findDecay( *parts, previous_result );
+}
+
+void DecayFinder::descendants( const Particle *head,
+                               std::vector<Particle *>&result,
+                               bool leaf = false )
+{
+  bool term = true;
+  const Vertex *vtx = head->endVertex();
+  if( vtx ) {
+    SmartRefVector<Particle>::const_iterator pi;
+    for( pi = vtx->products().begin(); pi != vtx->products().end(); pi++ ) {
+      term = false;
+      descendants( *pi, result, leaf );
+    }
+  }
+ 
+  if( !leaf || term )
+    result.push_back(const_cast<Particle *>(head));
+}
+
+void DecayFinder::decayMembers( const Particle *head,
+                                std::vector<Particle *>&members )
+{
+  if( m_members ) {
+    std::vector<Particle *> flat;
+    descendants( head, flat, false );
+    std::vector<Particle *>::const_iterator pi;
+    for( pi = flat.begin(); pi != flat.end(); pi++ ) {
+      std::vector<ParticleMatcher *>::const_iterator mi;
+      for( mi = m_members->begin(); mi != m_members->end(); mi++ )
+        if( (*mi)->test(*pi) ) {
+          members.push_back(*pi);
+          break;
+        }
+    }
+  }
+
+  m_decay->test(head, &members);
+}
+
 DecayFinder::Descriptor::Descriptor( IParticlePropertySvc *ppSvc,
                                      double rThre)
   : mother(0), daughters(0), skipResonnance(false),
@@ -200,8 +318,9 @@ DecayFinder::Descriptor::Descriptor( Descriptor &copy )
   if( copy.mother )
     mother = new ParticleMatcher(*copy.mother);
   std::vector<Descriptor *>::iterator d;
-  for( d=copy.daughters.begin(); d!=copy.daughters.end(); d++ )
+  for( d=copy.daughters.begin(); d!=copy.daughters.end(); d++ ) {
     daughters.push_back(new Descriptor(**d));
+  }
   skipResonnance = copy.skipResonnance;
   elipsis  = copy.elipsis;
   m_resThreshold = copy.m_resThreshold;
@@ -226,46 +345,83 @@ DecayFinder::Descriptor::~Descriptor()
     delete alternate;
 }
 
-
-bool DecayFinder::Descriptor::test( const Particle *part )
+std::string DecayFinder::Descriptor::describe( void )
 {
+  std::string result = "";
+  if( !daughters.empty() )
+    result += '(';
+  if( mother )
+    result += mother->describe();
+  else
+    result += "pp";
+  if( !daughters.empty() ) {
+    if( skipResonnance )
+      result += " => ";
+    else
+      result += " -> ";
+    std::vector<Descriptor *>::const_iterator di;
+    for( di=daughters.begin(); di!=daughters.end(); di++ ) {
+      result += (*di)->describe();
+      if( *di != daughters.back() )
+        result += ' ';
+    }
+  }
+  if( elipsis )
+    result += " ...";
+  if( !daughters.empty() )
+    result += ')';
+  return result;
+}
+  
+bool DecayFinder::Descriptor::test( const Particle *part,
+                                    std::vector<Particle*> *collect=NULL )
+{
+  std::vector<Particle*> local_collect(0);
+  std::vector<Particle*> *local = NULL;
+  if( collect )
+    local = &local_collect;
   bool result = false;
-  if( mother && mother->test(part) )
+  if( mother && mother->test(part,local) )
   {
     if( daughters.empty() )
-      return true; // Nothing to test for the daughters.
-
-    std::list<const Particle *> parts;
-    const Vertex *vtx = part->endVertex();
-    if( vtx )
-    {
-      SmartRefVector<Particle>::const_iterator idau;
-      for ( idau = vtx->products().begin();
-            idau != vtx->products().end(); idau++ )
-      {
-        parts.push_back(*idau);
+      result = true; // Nothing to test for the daughters.
+    else {
+      std::list<const Particle *> parts;
+      const Vertex *vtx = part->endVertex();
+      if( vtx ) {
+        SmartRefVector<Particle>::const_iterator idau;
+        for ( idau = vtx->products().begin();
+              idau != vtx->products().end(); idau++ ) {
+          parts.push_back(*idau);
+        }
       }
-    }
-    if( skipResonnance )
-      filterResonnances( parts );
+      if( skipResonnance )
+        filterResonnances( parts );
 
-    result = testDaughters(parts);
+      result = testDaughters(parts,local);
+    }
   }
-  if( result )
+  if( result ) {
+    if( collect )
+      collect->insert( collect->end(),
+                       local_collect.begin(), local_collect.end() );
     return true;
+  }
   if( alternate )
-    return alternate->test(part);
+    return alternate->test(part,collect);
   return false;
 }
 
-bool DecayFinder::Descriptor::testDaughters( std::list<const Particle*> &parts )
+bool
+DecayFinder::Descriptor::testDaughters( std::list<const Particle*> &parts,
+                                        std::vector<Particle*> *collect=NULL )
 {
   std::vector<Descriptor *>::iterator di;
   for( di = daughters.begin();
        (di != daughters.end()) && !parts.empty(); di++ )
   {
     std::list<const Particle *>::iterator p = parts.begin();
-    while( p != parts.end() && ((*di)->test(*p) == false) )
+    while( p != parts.end() && ((*di)->test(*p,collect) == false) )
       p++;
     if( p == parts.end() )
       return false;   // None of the parts has matched the test
@@ -347,22 +503,24 @@ void DecayFinder::Descriptor::filterResonnances( std::list<const Particle*>
 
 void DecayFinder::Descriptor::conjugate( void )
 {
-  mother->conjugateID();
+  if( mother )
+    mother->conjugateID();
   std::vector<Descriptor *>::iterator d;
   for( d = daughters.begin(); d != daughters.end(); d++ )
     (*d)->conjugate();
 }
 
 DecayFinder::ParticleMatcher::ParticleMatcher( IParticlePropertySvc *ppSvc )
-  : type(notest), qmark(false), conjugate(false), oscillate(false),
-    noscillate(false), inverse(false), stable(false), m_ppSvc(ppSvc)
+  : type(notest), lift(false), empty_f(false), qmark(false), conjugate(false),
+    oscillate(false), noscillate(false), inverse(false), stable(false),
+    m_ppSvc(ppSvc)
 {}
 
 DecayFinder::ParticleMatcher::ParticleMatcher( ParticleMatcher &copy )
-  : type(notest), qmark(false), conjugate(false), oscillate(false),
-    noscillate(false), inverse(false), stable(false), m_ppSvc(0)
 {
   type = copy.type;
+  lift = copy.lift;
+  empty_f = copy.empty_f;
   qmark = copy.qmark;
   conjugate = copy.conjugate;
   oscillate = copy.oscillate;
@@ -393,8 +551,9 @@ DecayFinder::ParticleMatcher::ParticleMatcher( ParticleMatcher &copy )
 
 DecayFinder::ParticleMatcher::ParticleMatcher( std::string *name,
                                                IParticlePropertySvc *ppSvc )
-  : type(id), qmark(false), conjugate(false), oscillate(false),
-    noscillate(false), inverse(false), stable(false), m_ppSvc(ppSvc)
+  : type(id), lift(false), empty_f(false), qmark(false), conjugate(false),
+    oscillate(false), noscillate(false), inverse(false), stable(false),
+    m_ppSvc(ppSvc)
 {
   ParticleProperty *pp = m_ppSvc->find(*name);
   if( pp )
@@ -405,8 +564,9 @@ DecayFinder::ParticleMatcher::ParticleMatcher( std::string *name,
 
 DecayFinder::ParticleMatcher::ParticleMatcher( Quarks q1, Quarks q2, Quarks q3,
                                                IParticlePropertySvc *ppSvc )
-  : type(quark), qmark(false), conjugate(false), oscillate(false),
-    noscillate(false), inverse(false), stable(false), m_ppSvc(ppSvc)
+  : type(quark), lift(false), empty_f(false), qmark(false), conjugate(false),
+    oscillate(false), noscillate(false), inverse(false), stable(false),
+    m_ppSvc(ppSvc)
 {
   parms.quarks.q1 = q1;
   parms.quarks.q2 = q2;
@@ -415,12 +575,90 @@ DecayFinder::ParticleMatcher::ParticleMatcher( Quarks q1, Quarks q2, Quarks q3,
 
 DecayFinder::ParticleMatcher::ParticleMatcher( Quantums q,Relations r,double d,
                                                IParticlePropertySvc *ppSvc )
-  : type(quantum), qmark(false), conjugate(false), oscillate(false),
-    noscillate(false), inverse(false), stable(false), m_ppSvc(ppSvc)
+  : type(quantum), lift(false), empty_f(false), qmark(false), conjugate(false),
+    oscillate(false), noscillate(false), inverse(false), stable(false),
+    m_ppSvc(ppSvc)
 {
   parms.relation.q = q;
   parms.relation.r = r;
   parms.relation.d = d;
+}
+
+std::string DecayFinder::ParticleMatcher::describe( void )
+{
+  std::string result = "";
+  if( stable )     result += '(';
+  if( lift )       result += '^';
+  if( qmark )      result += '?';
+  if( conjugate )  result += '[';
+  if( oscillate )  result += '[';
+  if( noscillate ) result += '[';
+  if( inverse )    result += '!';
+  switch( type ) {
+  case notest:
+    result += "## MUST NOT COMPILE ##";
+    break;
+  case id:
+    result += m_ppSvc->findByStdHepID(parms.stdHepID)->particle();
+    break;
+  case quark:
+    result += "<X";
+    switch( parms.quarks.q1 ) {
+    case up:          result +='u';  break;
+    case down:        result +='d';  break;
+    case charm:       result +='c';  break;
+    case strange:     result +='s';  break;
+    case top:         result +='t';  break;
+    case bottom:      result +='b';  break;
+    case antiup:      result +="u~"; break;
+    case antidown:    result +="d~"; break;
+    case anticharm:   result +="c~"; break;
+    case antistrange: result +="s~"; break;
+    case antitop:     result +="t~"; break;
+    case antibottom:  result +="b~"; break;
+    case empty:                      break;
+    }
+    switch( parms.quarks.q2 ) {
+    case up:          result +='u';  break;
+    case down:        result +='d';  break;
+    case charm:       result +='c';  break;
+    case strange:     result +='s';  break;
+    case top:         result +='t';  break;
+    case bottom:      result +='b';  break;
+    case antiup:      result +="u~"; break;
+    case antidown:    result +="d~"; break;
+    case anticharm:   result +="c~"; break;
+    case antistrange: result +="s~"; break;
+    case antitop:     result +="t~"; break;
+    case antibottom:  result +="b~"; break;
+    case empty:                      break;
+    }
+    switch( parms.quarks.q3 ) {
+    case up:          result +='u';  break;
+    case down:        result +='d';  break;
+    case charm:       result +='c';  break;
+    case strange:     result +='s';  break;
+    case top:         result +='t';  break;
+    case bottom:      result +='b';  break;
+    case antiup:      result +="u~"; break;
+    case antidown:    result +="d~"; break;
+    case anticharm:   result +="c~"; break;
+    case antistrange: result +="s~"; break;
+    case antitop:     result +="t~"; break;
+    case antibottom:  result +="b~"; break;
+    case empty:                      break;
+    }
+    result += '>';
+    break;
+  case quantum:
+    result += "## NOT IMPLEMENTED ##";
+    break;
+  }
+  if( noscillate ) result += "]nos";
+  if( oscillate )  result += "]os";
+  if( conjugate )  result += "]cc";
+  if( stable )     result += ')';
+  return result;
 }
 
 static inline int DIGIT( int n, int id )
@@ -517,37 +755,32 @@ static int thirdQuark( int id )
   return q*(id>0 ? 1 : -1);
 }
 
-bool DecayFinder::ParticleMatcher::test( const Particle *part )
+bool
+DecayFinder::ParticleMatcher::test( const Particle *part,
+                                    std::vector<Particle*> *collect=NULL )
 {
-  switch( type )
-  {
+  bool result = false;
+  switch( type ) {
   case notest:
-    return true;
+    result = true;
+    break;
   case id:
-    {
-      bool result = false;
-      result = (parms.stdHepID == part->particleID().pid());
-      if( conjugate )
-      {
-        int cc_id = conjugatedID( parms.stdHepID );
-        result = result || (cc_id == part->particleID().pid());
-      }
-      if( oscillate )
-        result = false; // Not available on reconstructed particles.
-      if( noscillate )
-        result = false; // Not available on reconstructed particles.
-      if( inverse )
-        result = !result;
-      if( stable )
-      {
-        int n = 0;
-        const Vertex *vtx = part->endVertex();
-        if( vtx )
-          n = vtx->products().size();
-        result = result && (n == 0);
-      }
-      return result;
+    result = (parms.stdHepID == part->particleID().pid());
+    if( conjugate ) {
+      int cc_id = conjugatedID( parms.stdHepID );
+      result = result || (cc_id == part->particleID().pid());
     }
+    if( oscillate )  result = false; //Not available on reconstructed particles.
+    if( noscillate ) result = false; //Not available on reconstructed particles.
+    if( inverse )    result = !result;
+    if( stable ) {
+      int n = 0;
+      const Vertex *vtx = part->endVertex();
+      if( vtx )
+        n = vtx->products().size();
+      result = result && (n == 0);
+    }
+    break;
   case quark:
     {
       static Quarks Q[] = { empty, down, up, strange, charm, bottom, top };
@@ -572,63 +805,65 @@ bool DecayFinder::ParticleMatcher::test( const Particle *part )
       // q1, q2, q3
       if( (pq1 == q1 || pq1 == empty) && (pq2 == q2 || pq2 == empty) &&
           (pq3 == q3 || pq3 == empty) )
-        return true;
+        result = true;
       // q1, q3, q2
-      if( (pq1 == q1 || pq1 == empty) && (pq2 == q3 || pq2 == empty) &&
-          (pq3 == q2 || pq3 == empty) )
-        return true;
+      else if( (pq1 == q1 || pq1 == empty) && (pq2 == q3 || pq2 == empty) &&
+               (pq3 == q2 || pq3 == empty) )
+        result = true;
       // q2, q1, q3
-      if( (pq1 == q2 || pq1 == empty) && (pq2 == q1 || pq2 == empty) &&
-          (pq3 == q3 || pq3 == empty) )
-        return true;
+      else if( (pq1 == q2 || pq1 == empty) && (pq2 == q1 || pq2 == empty) &&
+               (pq3 == q3 || pq3 == empty) )
+        result = true;
       // q2, q3, q1
-      if( (pq1 == q2 || pq1 == empty) && (pq2 == q3 || pq2 == empty) &&
-          (pq3 == q1 || pq3 == empty) )
-        return true;
+      else if( (pq1 == q2 || pq1 == empty) && (pq2 == q3 || pq2 == empty) &&
+               (pq3 == q1 || pq3 == empty) )
+        result = true;
       // q3, q1, q2
-      if( (pq1 == q3 || pq1 == empty) && (pq2 == q1 || pq2 == empty) &&
-          (pq3 == q2 || pq3 == empty) )
-        return true;
+      else if( (pq1 == q3 || pq1 == empty) && (pq2 == q1 || pq2 == empty) &&
+               (pq3 == q2 || pq3 == empty) )
+        result = true;
       // q3, q2, q1
-      if( (pq1 == q3 || pq1 == empty) && (pq2 == q2 || pq2 == empty) &&
-          (pq3 == q1 || pq3 == empty) )
-        return true;
+      else if( (pq1 == q3 || pq1 == empty) && (pq2 == q2 || pq2 == empty) &&
+               (pq3 == q1 || pq3 == empty) )
+        result = true;
 
       // Should we check for the charge conjugated particle ?
       if( !conjugate )
-        return false;
+        break; // No. Ok. Everything done.
+
       // cq1, cq2, cq3
       if( (pq1 == cq1 || pq1 == empty) && (pq2 == cq2 || pq2 == empty) &&
           (pq3 == cq3 || pq3 == empty) )
-        return true;
+        result = true;
       // cq1, cq3, cq2
-      if( (pq1 == cq1 || pq1 == empty) && (pq2 == cq3 || pq2 == empty) &&
+      else if( (pq1 == cq1 || pq1 == empty) && (pq2 == cq3 || pq2 == empty) &&
           (pq3 == cq2 || pq3 == empty) )
-        return true;
+        result = true;
       // cq2, cq1, cq3
-      if( (pq1 == cq2 || pq1 == empty) && (pq2 == cq1 || pq2 == empty) &&
+      else if( (pq1 == cq2 || pq1 == empty) && (pq2 == cq1 || pq2 == empty) &&
           (pq3 == cq3 || pq3 == empty) )
-        return true;
+        result = true;
       // cq2, cq3, cq1
-      if( (pq1 == cq2 || pq1 == empty) && (pq2 == cq3 || pq2 == empty) &&
+      else if( (pq1 == cq2 || pq1 == empty) && (pq2 == cq3 || pq2 == empty) &&
           (pq3 == cq1 || pq3 == empty) )
-        return true;
+        result = true;
       // cq3, cq1, cq2
-      if( (pq1 == cq3 || pq1 == empty) && (pq2 == cq1 || pq2 == empty) &&
+      else if( (pq1 == cq3 || pq1 == empty) && (pq2 == cq1 || pq2 == empty) &&
           (pq3 == cq2 || pq3 == empty) )
-        return true;
+        result = true;
       // cq3, cq2, cq1
-      if( (pq1 == cq3 || pq1 == empty) && (pq2 == cq2 || pq2 == empty) &&
+      else if( (pq1 == cq3 || pq1 == empty) && (pq2 == cq2 || pq2 == empty) &&
           (pq3 == cq1 || pq3 == empty) )
-        return true;
-      return false;
+        result = true;
     }
+    break;
   case quantum:
     // ******* NOT IMPLEMENTED YES *******
     return false;
   }
-  // Should never come here
-  return false;
+  if( result && lift && collect )
+    collect->push_back( const_cast<Particle*>(part) );
+  return result;
 }
 
 void DecayFinder::ParticleMatcher::conjugateID( void )
@@ -667,6 +902,12 @@ int DecayFinder::ParticleMatcher::conjugatedID( int id )
   case -100443: // psi(2S)
   case -9000111:// a_0(980)0
     cc_id *= -1;
+    break;
+  case -310:    // KS0~ <-> KL0
+    cc_id = 130;
+    break;
+  case -130:    // KL0~ <-> KS0
+    cc_id = 310;
     break;
   default:
     break;

@@ -1,4 +1,4 @@
-// $Id: DecayFinder.h,v 1.6 2002-11-06 08:34:22 odie Exp $
+// $Id: DecayFinder.h,v 1.7 2003-03-07 11:05:52 odie Exp $
 #ifndef TOOLS_DECAYFINDER_H 
 #define TOOLS_DECAYFINDER_H 1
 
@@ -16,6 +16,7 @@
 #include "DaVinciTools/IDecayFinder.h"
 
 class IParticlePropertySvc;
+class IDataProviderSvc;
 struct yy_buffer_state;
 
 /** @class DecayFinder DecayFinder.h
@@ -35,6 +36,7 @@ struct yy_buffer_state;
  *    RECONSTRUCTED DATA],
  *  - a 'wildcard', any particle with some quarks inside is expressed as "<Xq>"
  *    with up to tree quarks in place of "q". Quarks are u,d,c,s,t,b,u~,d~,...
+ *    A simple '?' is also a wildcard matching any single particle,
  *  a 'decay' is one of:
  *  - an optional "(" and a 'particle' and the matching ")" if needed,
  *  - a "(", a 'particle', one of "->" or "=>", a blank separated list of decay,
@@ -46,7 +48,7 @@ struct yy_buffer_state;
  *  Note: If you want to find a stable particle you must explicily request that
  *        it decay to nothing but the arrow has to be dropped. So this looks
  *        like "B0 -> D_s- (K+)", here the D_s- can decay to whatever but
- *        the K+ must not decay. NB: Right now secondary iteraction are seen
+ *        the K+ must not decay. NB: Right now secondary interaction are seen
  *        as decay!
  *  Note: "->" means "decay to" and
  *        "=>" means "decay to .... with some resonnances in the middle".
@@ -58,6 +60,28 @@ struct yy_buffer_state;
  *        appended. Only the boolean information for that kind of find can be
  *        used, the returned particle is set (Particle *)1 in case of match
  *        NULL otherwise.
+ *  Note: alternate decays can be specified by puting them in a comma seperated
+ *        list surrounded by braces (e.g. "B0 -> pi+ pi- , B0 -> K+ pi-").
+ *  Note: the charge conjugate operator can also be applied to a set of decay
+ *        (e.g. "[B0 -> K+ pi-]cc" == "B0 -> K+ pi- , B0~ -> K- pi+" (Please
+ *        note the B0 turned into a B0~)).
+ *  Note: alternate set of daughters can also be specified by putting the sets
+ *        in a comma seperated list surrounded by braces (e.g.
+ *        "B0 -> {pi+ pi-, K+ pi-, K- pi+, K+ K-}"). If one of the alternate
+ *        set has only one daughter, DO NOT put it first in the list has it
+ *        will not be able to parse the decay correctly (it will fail indeed).
+ *  Note: you can also use the charge conjugate operator on the daughters set.
+ *  Note: you can even mix the []cc and the {}.
+ *
+ * Extracting particles from the decay:
+ * - It is possible to extract all particle in the decay tree which match a
+ *   given id by preceeding the description with the list of particle you want
+ *   to be extracted (cc, os, nos operator applies here too) terminated by a
+ *   collon (e.g. "pi+ : B0 -> pi+ pi-").
+ * - Precise particle inside the decay tree can also be flagged for extraction
+ *   by preceeding them with a '^' (like "B0 -> (^J/psi(1S) -> mu+ mu-) KS0").
+ * You can then retrieve these particles with the MCDecayFinder::members
+ * method.
  *
  *  @author Olivier Dormond
  *  @date   23/04/2002
@@ -79,10 +103,12 @@ public:
   std::string decay( void ) { return m_source; }
   StatusCode setDecay( std::string decay );
 
+  std::string revert( void );
+
   /// Does the described decay exists in the event?
   bool hasDecay( const ParticleVector &event );
-
   bool hasDecay( const Particles &event );
+  bool hasDecay( void );
 
   /** Try to find the (next) match of the decay in the event.
    *
@@ -95,9 +121,30 @@ public:
    */
   bool findDecay( const ParticleVector &event,
                   const Particle *&previous_result );
-
   bool findDecay( const Particles &event,
                   const Particle *&previous_result );
+  bool findDecay( const Particle*&previous_result );
+
+  /** Return the tree pointed at by head as a flat list.
+   *
+   *  @param head, the particle at the top of the decay tree.
+   *  @param result, the list to fill with the particle in the 'head' tree.
+   *         The list is not cleared before use.
+   *  @param leaf, a bool indicating whether to include all particles or only
+   *         the one at the ends of the branches. (Default: all)
+   */
+  void descendants( const Particle *head, std::vector<Particle *>&result,
+                    bool leaf=false );
+
+  /** Get a list of all the requested members that are present in a decay.
+   *
+   *  @param head, the head of a decay tree in which to find the members.
+   *  @param members, the resulting list.
+   *  The members are requested from the decay descriptor either as a list of
+   *  particles seperated from the decay by a ':' and/or by putting a '^' before
+   *  any particle in the decay.
+   */
+  void decayMembers( const Particle *head, std::vector<Particle*>&members );
 
   /// Enumaration types used internally.
   enum Quarks { empty, up, down, charm, strange, top, bottom, antiup,
@@ -120,7 +167,11 @@ private:
                      IParticlePropertySvc *ppSvc );
     ParticleMatcher( Quantums quantum, Relations relation, double value,
                      IParticlePropertySvc *ppSvc );
-    bool test( const Particle *part );
+    bool test( const Particle *part, std::vector<Particle*> *collect=NULL );
+    void setLift( void ) { lift = true; }
+    bool getLift( void ) { return lift; }
+    void setEmpty( void ) { empty_f = true; }
+    bool getEmpty( void ) { return empty_f; }
     void setQmark( void ) { qmark = true; }
     bool getQmark( void ) { return qmark; }
     void setConjugate( void ) { conjugate = true; }
@@ -136,6 +187,7 @@ private:
     bool getExact( void ) { return !qmark && !inverse
                               && !conjugate && (type==id); }
     void conjugateID( void );
+    std::string describe( void );
   private:
     int conjugatedID( int id );
     enum Type { notest, id, quark, quantum } type;
@@ -144,6 +196,8 @@ private:
       int stdHepID;
       struct { Quantums q; Relations r; double d; } relation;
     } parms;
+    bool lift;
+    bool empty_f;
     bool qmark;
     bool conjugate;
     bool oscillate;
@@ -165,34 +219,31 @@ private:
     ~Descriptor();
 
     template<class iter> bool test( const iter first, const iter last,
-               const Particle *&previous_result )
-    {
+               const Particle *&previous_result ) {
       iter start;
       if( previous_result &&
-          ((start=std::find(first,last,previous_result)) == last) )
-      {
+          ((start=std::find(first,last,previous_result)) == last) ) {
         previous_result = NULL;
         return false; // Bad previous_result
       }
       if( previous_result )
         start++;
       
-      if( mother == NULL ) // No mother == pp collision
-      {
+      if( mother == NULL ) { // No mother == pp collision
         std::list<const Particle*> prims;
         ParticleVector::const_iterator i;
-        for( i=(previous_result ? start : first); i != last; i++ )
-        {
+        for( i=(previous_result ? start : first); i != last; i++ ) {
           // Particle have no origin, let's say it comes from the pp collision.
           prims.push_back(*i);
         }
         if( skipResonnance )
           filterResonnances( prims );
-        if( testDaughters(prims) )
-        {
+        if( testDaughters(prims) ) {
           previous_result = (const Particle *)1;
           return true;
         }
+        if( getAlternate() )
+          getAlternate()->test(first,last,previous_result);
         return false;
       }
       
@@ -201,13 +252,13 @@ private:
       while( (part_i != last) && (test(*part_i) == false) )
         part_i++;
       
-      if( part_i != last )
-      {
+      if( part_i != last ) {
         previous_result = *part_i;
         return true;
       }
       return false;
     }
+    bool test(const Particle *mother, std::vector<Particle*> *collect=NULL);
 
     void setAlternate( Descriptor *a ) { alternate = a; }
     Descriptor *getAlternate( void ) { return alternate; }
@@ -221,9 +272,10 @@ private:
     bool getElipsis( void ) { return elipsis; }
     void setResonnance( void ) { skipResonnance = true; }
     void conjugate( void );
+    std::string describe( void );
   private:
-    bool test( const Particle *mother );
-    bool testDaughters( std::list<const Particle*> &parts );
+    bool testDaughters( std::list<const Particle*> &parts,
+                        std::vector<Particle*> *collect=NULL );
     void addNonResonnantDaughters( std::list<const Particle*> &parts,
                                    const Particle *part );
     void filterResonnances( std::list<const Particle*> &parts );
@@ -248,8 +300,10 @@ private:
   };
 
   IParticlePropertySvc *m_ppSvc;
+  IDataProviderSvc *m_EDS;
   std::string m_source;
   Descriptor *m_decay;
+  std::vector<ParticleMatcher *> *m_members;
   double m_resThreshold;
 
   bool compile( std::string &decay );
@@ -261,27 +315,31 @@ private:
 
   int ylex( void );
 
-  static short int ylhs[];
-  static short int ylen[];
-  static short int ydefred[];
-  static short int ydgoto[];
-  static short int ysindex[];
-  static short int yrindex[];
-  static short int ygindex[];
-  static short int ytable[];
-  static short int ycheck[];
+  int yygrowstack( void );
+
+  static const short int ylhs[];
+  static const short int ylen[];
+  static const short int ydefred[];
+  static const short int ydgoto[];
+  static const short int ysindex[];
+  static const short int yrindex[];
+  static const short int ygindex[];
+  static const short int ytable[];
+  static const short int ycheck[];
   static int ydebug;
   static int ynerrs;
   static int yerrflag;
   static int ychar;
+  static int ystacksize;
   static short int *yssp;
   static YYSTYPE *yvsp;
   static YYSTYPE yval;
-  static short int yss[500];
-  static YYSTYPE yvs[500];
+  static short int *yss;
+  static short int *ysslim;
+  static YYSTYPE *yvs;
 #ifdef YYDEBUG
-  static char *yname[];
-  static char *yrule[];
+  static const char * const yname[];
+  static const char * const yrule[];
 #endif
 public:
   static YYSTYPE ylval;

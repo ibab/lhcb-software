@@ -19,18 +19,18 @@ PARTICLE	{P_NAME}{Q_STATE}{P_MASS}{P_CHARGE}
 
 <PARTICLE_WC>{
    X		return METAX;
-   u		return UP_QUARK;
-   d		return DOWN_QUARK;
-   c		return CHARM_QUARK;
-   s		return STRANGE_QUARK;
-   t		return TOP_QUARK;
-   b		return BOTTOM_QUARK;
-   u~		return ANTI_UP_QUARK;
-   d~		return ANTI_DOWN_QUARK;
-   c~		return ANTI_CHARM_QUARK;
-   s~		return ANTI_STRANGE_QUARK;
-   t~		return ANTI_TOP_QUARK;
-   b~		return ANTI_BOTTOM_QUARK;
+   u		return U_Q;
+   d		return D_Q;
+   c		return C_Q;
+   s		return S_Q;
+   t		return T_Q;
+   b		return B_Q;
+   u~		return AU_Q;
+   d~		return AD_Q;
+   c~		return AC_Q;
+   s~		return AS_Q;
+   t~		return AT_Q;
+   b~		return AB_Q;
    Q		return CHARGE;
    B		return BARYON;
    l		return LEPTON;
@@ -67,10 +67,12 @@ PARTICLE	{P_NAME}{Q_STATE}{P_MASS}{P_CHARGE}
 "]nos"		return NOSCIL;
 "]cc"		return CCONJ;
 ","		return COMMA;
-"!"		return EXCLAM;
+"!"		return BANG;
 "..."		return ELIPSIS;
 "pp"		return PP;
 "?"		return QMARK;
+"^"             return CARET;
+":"             return COLON;
 {PARTICLE}	{ yylval.text = new std::string(yytext,yyleng); return NAME; }
 [[:blank:]\n]	/* eat the blanks! */
 .		throw YYCLASSDescriptorError(std::string("Unexpected char '")+(yytext[0])+"'");
