@@ -1,9 +1,12 @@
-// $Id: GeomDispCalculator.cpp,v 1.1 2002-03-27 20:34:59 gcorti Exp $
+// $Id: GeomDispCalculator.cpp,v 1.2 2002-05-15 23:29:36 gcorti Exp $
 
 // Include files
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h"
 #include "GaudiKernel/MsgStream.h"
+#include "GaudiKernel/IToolSvc.h"
+#include "GaudiKernel/GaudiException.h"
+#include "DaVinciTools/IParticleTransporter.h"
 
 // from Event
 #include "Event/Particle.h"
@@ -39,35 +42,65 @@ const IToolFactory& GeomDispCalculatorFactory = s_factory;
 //==================================================================
 GeomDispCalculator::GeomDispCalculator(const std::string& type, 
                     const std::string& name, const IInterface* parent) 
-    : AlgTool( type, name, parent ) {
+    : AlgTool( type, name, parent),
+      m_pTransporter(0) {
 
   declareInterface<IGeomDispCalculator>(this);
+}
+//==================================================================
+// Initialize
+//==================================================================
+StatusCode GeomDispCalculator::initialize() {
+  MsgStream log( msgSvc(), name() );
+  
+  StatusCode sc = StatusCode::FAILURE;
+  sc = toolSvc()->retrieveTool("CombinedTransporter", 
+                                           m_pTransporter, this);
+  if(sc.isFailure()) {
+    log << MSG::FATAL << "    Unable to retrieve ParticleTransporter  tool" ;
+    return sc;
+  }
+  
+  return StatusCode::SUCCESS;
+  
 }
 
 //==================================================================
 // Calculate the impact parameter of a particle with respect to
 // a given vertex
 //==================================================================
-void GeomDispCalculator::calcImpactPar( const Particle& particle,
+StatusCode GeomDispCalculator::calcImpactPar( const Particle& particle,
                          const Vertex& vertex, double& ip, double& ipErr,
                          Hep3Vector& ipVector, HepSymMatrix& errMatrix ) { 
   MsgStream log(msgSvc(), name());
-  log << MSG::INFO << "Impact Parameter Calculation Tool 1" << endreq;
- 
-  // get the displacemente vector between a point on the track and 
-  // the vertex:
-  Hep3Vector point = particle.pointOnTrack();
+
+
+  // Get the displacemente vector between a point on the track and 
+  // the vertex. Use the transporter tool to move the first
+  // measured point closer to the vertex position.
   Hep3Vector vtx = vertex.position();
+
+  Particle transParticle;
+  StatusCode sctrans = m_pTransporter->transport(particle,
+                                                 vtx.z(),
+                                                 transParticle);
+    if ( !sctrans.isSuccess() ) {
+      log << MSG::DEBUG << "Transporter failed" << endreq;
+      return sctrans;
+    }
+
+  Hep3Vector point = transParticle.pointOnTrack();
   Hep3Vector displacement = point - vtx;
 
   //find the momentum unitary vector:
-  Hep3Vector p(particle.momentum().v()); 
+  Hep3Vector p(transParticle.momentum().v()); 
   double pmag = p.mag();
   Hep3Vector pUnit(p/pmag);
 
   //now calculate the impact parameter:
   ipVector = displacement.cross(pUnit);
   ip = ipVector.mag();
+  if (ip == 0) return StatusCode::FAILURE;
 
   //Calculate the error on the impact parameter
   Hep3Vector ipUnit = ipVector/ip;
@@ -75,11 +108,15 @@ void GeomDispCalculator::calcImpactPar( const Particle& particle,
   Hep3Vector derivVtx = - pUnit.cross(ipUnit);
   Hep3Vector derivP = (ipVector.cross(displacement) - 
                       ip*ip*pUnit) / pmag; 
-  HepSymMatrix pointErr = particle.pointOnTrackErr();
-  HepSymMatrix momErr = particle.momentumErr().sub(1,3);
+  HepSymMatrix pointErr = transParticle.pointOnTrackErr();
+  HepSymMatrix momErr = transParticle.momentumErr().sub(1,3);
+  HepMatrix errMatrix1 = dsum(pointErr,momErr);
+  HepMatrix posMomCorr = transParticle.posMomCorr();
+  errMatrix1.sub(4,1,posMomCorr);
+  errMatrix1.sub(1,4,posMomCorr.T());
   HepSymMatrix vtxErr = vertex.positionErr();
-  HepSymMatrix errMatrix1 = dsum(pointErr,momErr);
-  errMatrix = dsum(errMatrix1,vtxErr);
+  HepMatrix errMatrixTotal = dsum(errMatrix1,vtxErr);
+  errMatrix.assign(errMatrixTotal);
 
   HepVector u(3);
   u(1) = derivPoint.x();
@@ -95,20 +132,26 @@ void GeomDispCalculator::calcImpactPar( const Particle& particle,
   u2(3) = derivVtx.z();
   HepVector deriv1 = dsum(u,u1);
   HepVector derivTotal = dsum(deriv1,u2);
-  ipErr = sqrt(dot(derivTotal,errMatrix*derivTotal));
+  ipErr = sqrt(fabs(dot(derivTotal,errMatrix*derivTotal)));
+
+// Turn ipVector 90 degrees to get the right vector to return
+  ipVector = pUnit.cross(ipVector);
+
+  return StatusCode::SUCCESS;
 
 }
 //==================================================================
 // Calculate the impact parameter of a particle with respect to
 // a given vertex
 //==================================================================
-void GeomDispCalculator::calcImpactPar( const Particle& particle,
+StatusCode GeomDispCalculator::calcImpactPar( const Particle& particle,
                          const Vertex& vertex, double& ip, double& ipErr ) {
 
      Hep3Vector ipVector;
      HepSymMatrix errMatrix;
      calcImpactPar( particle, vertex, ip, ipErr, ipVector, errMatrix );  
 
+  return StatusCode::SUCCESS;
 }
 
 
@@ -116,26 +159,37 @@ void GeomDispCalculator::calcImpactPar( const Particle& particle,
 // Calculate the impact parameter of a particle with respect to
 // a given HepPoint3D point
 //==================================================================
-void GeomDispCalculator::calcImpactPar( const Particle& particle,
+StatusCode GeomDispCalculator::calcImpactPar( const Particle& particle,
                              HepPoint3D& point, double& ip, double& ipErr,
                              Hep3Vector& ipVector, HepSymMatrix& errMatrix ) {
 
   MsgStream log(msgSvc(), name());
-  log << MSG::INFO << "Impact Parameter Calculation Tool 2" << endreq;
- 
-  // get the displacemente vector between a point on the track and
-  // the HepPoint3D point:
-  Hep3Vector particlePoint = particle.pointOnTrack();
+
+
+  // Get the displacemente vector between a point on the track and
+  // the HepPoint3D point. Use the transporter tool to move the first
+  // measured point closer to the HepPoint3D point.
+  Particle transParticle;
+  StatusCode sctrans = m_pTransporter->transport(particle,
+                                                 point.z(),
+                                                 transParticle);
+    if ( !sctrans.isSuccess() ) {
+      log << MSG::DEBUG << "Transporter failed" << endreq;
+      return sctrans;
+    }
+
+  Hep3Vector particlePoint = transParticle.pointOnTrack();
   Hep3Vector displacement = particlePoint - point;
 
   //find the momentum unitary vector:
-  Hep3Vector p(particle.momentum().v());
+  Hep3Vector p(transParticle.momentum().v());
   double pmag = p.mag();
   Hep3Vector pUnit(p/pmag);
 
   //now calculate the impact parameter:
   ipVector = displacement.cross(pUnit);
   ip = ipVector.mag();
+  if (ip == 0) return StatusCode::FAILURE;
 
   //Calculate the error on the impact parameter
   Hep3Vector ipUnit = ipVector/ip;
@@ -143,13 +197,17 @@ void GeomDispCalculator::calcImpactPar( const Particle& particle,
   Hep3Vector derivVtx = - pUnit.cross(ipUnit);
   Hep3Vector derivP = (ipVector.cross(displacement) -
                       ip*ip*pUnit) / pmag;
-  HepSymMatrix pointErr = particle.pointOnTrackErr();
-  HepSymMatrix momErr = particle.momentumErr().sub(1,3);
+  HepSymMatrix pointErr = transParticle.pointOnTrackErr();
+  HepSymMatrix momErr = transParticle.momentumErr().sub(1,3);
+  HepMatrix posMomCorr = transParticle.posMomCorr();
+  HepMatrix errMatrix1 = dsum(pointErr,momErr);
+  errMatrix1.sub(1,4,posMomCorr);
+  errMatrix1.sub(1,4,posMomCorr.T());
   // the point has zero error
   HepSymMatrix vtxErr(3,0);  
   //
-  HepSymMatrix errMatrix1 = dsum(pointErr,momErr);
-  errMatrix = dsum(errMatrix1,vtxErr);
+  HepMatrix errMatrixTotal = dsum(errMatrix1,vtxErr);
+  errMatrix.assign(errMatrixTotal);
 
   HepVector u(3);
   u(1) = derivPoint.x();
@@ -165,39 +223,45 @@ void GeomDispCalculator::calcImpactPar( const Particle& particle,
   u2(3) = derivVtx.z();
   HepVector deriv1 = dsum(u,u1);
   HepVector derivTotal = dsum(deriv1,u2);
-  ipErr = sqrt(dot(derivTotal,errMatrix*derivTotal));
+  ipErr = sqrt(fabs(dot(derivTotal,errMatrix*derivTotal)));
 
+// Turn ipVector 90 degrees to get the right vector to return
+  ipVector = pUnit.cross(ipVector);
+
+  return StatusCode::SUCCESS;
 }
 //==================================================================
 // Calculate the impact parameter of a particle with respect to
 // a given HepPoint3D point
 //==================================================================
-void GeomDispCalculator::calcImpactPar( const Particle& particle,
-                             HepPoint3D& point, double& ip, double& ipErr ) {
+StatusCode GeomDispCalculator::calcImpactPar( const Particle& particle,
+                       HepPoint3D& point, double& ip, double& ipErr ) {
 
      Hep3Vector ipVector;
      HepSymMatrix errMatrix;
      calcImpactPar( particle, point, ip, ipErr, ipVector, errMatrix );
 
+  return StatusCode::SUCCESS;
 }
 
 //==================================================================
 // Calculate the distance of closest approach between two
 // particles outside the magnetic field
 //==================================================================
-void GeomDispCalculator::calcCloseAppr( const Particle& particle1,
+StatusCode GeomDispCalculator::calcCloseAppr( const Particle& particle1,
                              const Particle& particle2, double& dist, 
                              double& distErr ) {
 
   MsgStream log(msgSvc(), name());
-  log << MSG::INFO << "Distance of Closest Approach Calculation Tool" 
-                   << endreq;
  
   // Get the direction perpendicular to both particle tracks:
   Hep3Vector mom1(particle1.momentum().v()); 
   Hep3Vector mom2(particle2.momentum().v()); 
   Hep3Vector perpDirection = mom1.cross(mom2);
-  Hep3Vector perpUnit = perpDirection/perpDirection.mag();                           
+
+  if (perpDirection == 0) return StatusCode::FAILURE;
+
+  Hep3Vector perpUnit = perpDirection/perpDirection.mag();       
  
   // Get the displacement vector between the two particles
   Hep3Vector disp = particle1.pointOnTrack() - particle2.pointOnTrack();
@@ -211,9 +275,18 @@ void GeomDispCalculator::calcCloseAppr( const Particle& particle1,
   HepSymMatrix point2Err = particle2.pointOnTrackErr(); 
   HepSymMatrix mom1Err = particle1.momentumErr().sub(1,3);
   HepSymMatrix mom2Err = particle2.momentumErr().sub(1,3);
-  HepSymMatrix errMatrix1 = dsum(point1Err,mom1Err);
-  HepSymMatrix errMatrix2 = dsum(point2Err,mom2Err);
-  HepSymMatrix errMatrix = dsum(errMatrix1,errMatrix2);
+  HepMatrix posMomCorr1 = particle1.posMomCorr();
+  HepMatrix posMomCorr2 = particle2.posMomCorr();
+  HepMatrix errMatrix1 = dsum(point1Err,mom1Err);
+  errMatrix1.sub(4,1,posMomCorr1);
+  errMatrix1.sub(1,4,posMomCorr1.T());
+  HepMatrix errMatrix2 = dsum(point2Err,mom2Err);
+  errMatrix2.sub(4,1,posMomCorr2);
+  errMatrix2.sub(1,4,posMomCorr2.T());
+  HepMatrix errMatrixTotal = dsum(errMatrix1,errMatrix2);
+  HepSymMatrix errMatrix(12,0);
+  errMatrix.assign(errMatrixTotal);
+
   Hep3Vector derivP1 = (((disp.dot(perpUnit)*perpUnit) - disp) /
                      perpDirection.mag()).cross(mom2);
   Hep3Vector derivP2 = -(((disp.dot(perpUnit)*perpUnit) - disp) /
@@ -233,20 +306,20 @@ void GeomDispCalculator::calcCloseAppr( const Particle& particle1,
   HepVector deriv1 = dsum(u,u1);
   HepVector deriv2 = dsum(-u,u2);
   HepVector derivTotal = dsum(deriv1,deriv2);
-  distErr = sqrt(dot(derivTotal,errMatrix*derivTotal));
+  distErr = sqrt(fabs(dot(derivTotal,errMatrix*derivTotal)));
 
+  return StatusCode::SUCCESS;
 }
 
 //==================================================================
 // Calculate the distance between two vertices
 //==================================================================
 
-void GeomDispCalculator::calcVertexDis( const Vertex& vertex1,
+StatusCode GeomDispCalculator::calcVertexDis( const Vertex& vertex1,
                              const Vertex& vertex2, double& dist, 
                              double& distErr ) {
 
   MsgStream log(msgSvc(), name());
-  log << MSG::INFO << "Distance between Vertices Calculation Tool" << endreq;
  
   //Calculate the distance between two vectors:
   Hep3Vector diff = vertex1.position() - vertex2.position();
@@ -263,6 +336,7 @@ void GeomDispCalculator::calcVertexDis( const Vertex& vertex1,
   u(3) = unitario.z();
   HepVector derivDist = dsum(u,-u);
 
-  distErr = sqrt(dot(derivDist,errMatrix*derivDist));
+  distErr = sqrt(fabs(dot(derivDist,errMatrix*derivDist)));
   
+  return StatusCode::SUCCESS;
 }
