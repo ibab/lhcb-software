@@ -89,7 +89,7 @@ Purpose: LHCb reconstruction program
    - use MuonRec        v1r0 Muon
    - use MuonID         v1r0 Muon
    - use CaloInterfaces v2r1 Calo
-   - use CaloUtils      v2r1 Calo
+   - use CaloUtils      v2r2 Calo
    - use CaloTools      v2r0 Calo
    - use CaloAlgs       v5r1 Calo
    - use L0Calo         v5r0 L0

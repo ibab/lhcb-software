@@ -89,7 +89,7 @@ use L0DU         v5r0   L0
 
 # Calorimeter
 use CaloInterfaces v2r1 Calo
-use CaloUtils      v2r1 Calo
+use CaloUtils      v2r2 Calo
 use CaloTools      v2r0 Calo
 use CaloAlgs       v5r1 Calo
 
