@@ -1,4 +1,4 @@
-// $Id: DaVinciTestAlgorithm.cpp,v 1.2 2001-07-16 15:21:49 gcorti Exp $
+// $Id: DaVinciTestAlgorithm.cpp,v 1.3 2001-10-08 11:51:26 gcorti Exp $
 #define DAVINCITESTALGORITHM_CPP 
 
 // Include files
@@ -7,19 +7,21 @@
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/AlgFactory.h"
 #include "GaudiKernel/SmartDataPtr.h"
+#include "GaudiKernel/IDataProviderSvc.h"
+#include "GaudiKernel/IParticlePropertySvc.h"
+#include "GaudiKernel/ParticleProperty.h"
+#include "GaudiKernel/IToolSvc.h"
+#include "GaudiTools/IAssociator.h"
+
+//                 data to be accessed
 #include "LHCbEvent/Event.h"
 #include "LHCbEvent/AxPartCandidate.h"
 #include "LHCbEvent/MCParticle.h"
 #include "LHCbEvent/RefTable.h"
-#include "GaudiKernel/IToolSvc.h"
-#include "GaudiTools/IAssociator.h"
-#include "GaudiKernel/IDataProviderSvc.h"
-#include "GaudiKernel/IParticlePropertySvc.h"
-#include "GaudiKernel/ParticleProperty.h"
-
 #include "CLHEP/Units/PhysicalConstants.h"
 #include "PhysEvent/VtxCandidate.h"
 #include "PhysEvent/PhysSel.h"
+#include "L0DU/L0DUReport.h"
 
 #include "DaVinciTestAlgorithm.h"
 //-----------------------------------------------------------------------------
@@ -50,6 +52,7 @@ DaVinciTestAlgorithm::DaVinciTestAlgorithm(const std::string& name,
   m_nPhysSelTAG(0),
   m_pNameSearch("B0"),
   m_pIDSearch(0),
+  m_nL0Trigger(0),
   m_pAsct(0),
   m_ppSvc(0) {
  
@@ -297,7 +300,17 @@ StatusCode DaVinciTestAlgorithm::execute() {
       m_nPhysSelTAG++;
     }
   }
+
+  // Example of how to access L0 Decision Unit info
+  SmartDataPtr<L0DUReport> L0Report( eventSvc(), "/Event/FE/L0/L0Decis" );
   
+  if ( 0 != L0Report ) {
+    if ( (*L0Report).decision() ) {
+      log << MSG::DEBUG << "The event passed the L0 Decision Unit" << endreq;
+      m_nL0Trigger++;
+    }
+  }
+
   // End of execution for each event
   return sc;
 }
@@ -326,6 +339,8 @@ StatusCode DaVinciTestAlgorithm::finalize() {
   log << MSG::INFO << "    Number of events with PhysSeL FTAG  = "
       << m_nPhysSelTAG << endreq;
   
+  log << MSG::INFO << "    Number of events passing L0 trigger = "
+      << m_nL0Trigger << endreq;
 
   // End of finalization step
   return StatusCode::SUCCESS;

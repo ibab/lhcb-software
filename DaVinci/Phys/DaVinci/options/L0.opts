@@ -1,0 +1,24 @@
+//***********************************************************
+//   Options to run the Level 0 trigger in DaVinci
+//***********************************************************
+
+// L0Calo, needs Sicb converter, CaloEvent and CaloDet
+
+ApplicationMgr.DLLs   += { "CaloDet" };
+ApplicationMgr.DLLs   += { "CaloEvent" };
+ApplicationMgr.DLLs   += { "CaloSicbCnv" };
+ApplicationMgr.DLLs   += { "L0Calo" };
+ApplicationMgr.TopAlg += { "L0CaloAlg/L0Calo" };
+
+// L0Muon, needs Sicb converter
+
+ApplicationMgr.DLLs   += { "MuonSicbCnv" };
+#include "$L0MUONROOT/options/Brunel.opts"
+ApplicationMgr.TopAlg += { "L0mTrigger/L0Muon" };
+
+// Decison Unit, needs Sicb converter
+
+ApplicationMgr.DLLs   += { "L0SicbCnv" };
+ApplicationMgr.DLLs   += { "L0DU" };
+ApplicationMgr.TopAlg += { "DecisionUnit" };
+

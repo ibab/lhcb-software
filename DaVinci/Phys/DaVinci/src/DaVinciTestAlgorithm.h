@@ -1,4 +1,4 @@
-// $Id: DaVinciTestAlgorithm.h,v 1.1.1.1 2001-07-09 09:30:15 gcorti Exp $
+// $Id: DaVinciTestAlgorithm.h,v 1.2 2001-10-08 11:51:30 gcorti Exp $
 #ifndef DAVINCITESTALGORITHM_H
 #define DAVINCITESTALGORITHM_H 1
 
@@ -42,6 +42,8 @@ private:
  
   std::string m_pNameSearch;  ///< MCParticle name to search for
   long        m_pIDSearch;    ///< MCParticle ID to search for
+
+  int         m_nL0Trigger;   ///< Counter for L0 triggered events  
 
   IAssociator* m_pAsct;           ///< Pointer to associator used  
   IParticlePropertySvc* m_ppSvc;  ///< Pointer to particle property service

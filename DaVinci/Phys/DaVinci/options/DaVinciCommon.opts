@@ -15,4 +15,22 @@ ApplicationMgr.DLLs += { "GaudiAlg", "GaudiTools" };
 
 ApplicationMgr.HistogramPersistency = "NONE";
 
+//--------------------------------------------------------------
+// Detector description 
+// (see details for varius options in $STDOPTS/DetDesc.opts and
+//  in Gaudi User Guide)
+//--------------------------------------------------------------
+
+ApplicationMgr.ExtSvc += { "XmlCnvSvc" };
+ApplicationMgr.DLLs   += { "DetDesc" };
+
+DetectorDataSvc.UsePersistency = true;
+DetectorDataSvc.DetDbLocation  = "$DDDB/dddb.xml";
+DetectorDataSvc.DetDbRootName  = "dd";
+DetectorDataSvc.DetStorageType = 7;
+
+DetectorPersistencySvc.CnvServices = { "XmlCnvSvc" };
+
+XmlCnvSvc.AllowGenericConversion = true;
+
 //**************************************************************

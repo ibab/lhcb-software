@@ -45,6 +45,8 @@ ApplicationMgr.TopAlg = { "DaVinciInitialisation" };
 // or private code.
 // >>>>>>>>>>>> To be customized for a specific job <<<<<<<<<<<<
 //--------------------------------------------------------------
+#include "$DAVINCIROOT/options/L0.opts"
+
 //ApplicationMgr.TopAlg += { "AxPrimVertexAlgorithm" };
 ApplicationMgr.TopAlg += { "PhysSelectAlgorithm" };
 ApplicationMgr.TopAlg += { "DaVinciTestAlgorithm" }; 
@@ -95,11 +97,8 @@ ApplicationMgr.EvtMax = 500;
 //---------------------------------------------------------------
 // Examples of input data
 //---------------------------------------------------------------
-// B->pi+pi-, Brunel v4
-EventSelector.Input = {"JOBID='59573'"};
-//
-// B->pi+pi-, SICBDST v235
-//EventSelector.Input = {"FILE='$SITEROOT/lhcb/data/mc/sicb_bpipi_v233_100ev.dst1'"};
+// B->pi+pi-, Brunel v5r1
+EventSelector.Input = {"JOBID='66040'"};
 // B->J/Psi(mu+mu-) Ks(pi+pi-), SICBDST v235r1
 //EventSelector.Input = {"JOBID='45904'"};
 //EventSelector.Input = {"FILE='/castor/cern.ch/lhcb/mc/D223226'"};
