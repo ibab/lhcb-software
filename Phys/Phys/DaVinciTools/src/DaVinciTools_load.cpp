@@ -1,4 +1,4 @@
-// $Id: DaVinciTools_load.cpp,v 1.37 2004-07-29 14:32:16 pkoppenb Exp $
+// $Id: DaVinciTools_load.cpp,v 1.38 2004-07-29 16:21:11 pkoppenb Exp $
 // Include files 
 
 
@@ -83,8 +83,6 @@ DECLARE_FACTORY_ENTRIES( DaVinciTools ) {
   DECLARE_DATAOBJECT( Particle2VertexTable );
 
   // Algorithms
-  DECLARE_ALGORITHM( ChangeDecayChain );
-  DECLARE_ALGORITHM( ChangePID );
   DECLARE_ALGORITHM( FilterByBestParticles );
   DECLARE_ALGORITHM( Particle2VertexWithIPS );
   DECLARE_ALGORITHM( PreLoadParticles );

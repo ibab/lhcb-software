@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.120 2004-07-29 16:21:11 pkoppenb Exp $
+! $Id: release.notes,v 1.121 2004-07-29 16:22:15 pkoppenb Exp $
 ! Package     : DaVinciTools
 ! Responsible : P. Koppenburg
 
@@ -10,20 +10,15 @@
 ! 2004-07-29 - P. Koppenburg for Luis Fernandez
  - src/DecayFinder.*
    . New method decaySubTrees as for the MCDecayFinder
- - src/ChangeDecayChain.*
-   . Takes a composite particle and it's daughters and clones them to
-     particles with different ID's. For HLT experts.
-        ChangeDecayChain.PhysDesktop.InputLocations = {"Phys/MyRhos"};
-        ChangeDecayChain.Decay = "rho(770)0 -> ^pi+ ^pi-";
-        ChangeDecayChain.Particles = {"rho(770)0", "pi+", "pi-"};
-        ChangeDecayChain.Replacements = {"phi(1020)", "K+", "K-"};
  - src/Momentum2FlightAngleFilterCriterion.cpp
    . Returns a yes/no depending on the cosine of the angle between the particle 
      momentum and the flight distance w.r.t either
      -> all PVs
      -> Best PV (default), chosen as the one for which the IPS of the composite
         particle is the smallest
-    
+ - src/ChangeDecayChain.*
+   . added temprarily
+   
 ! 2004-07-29 - P. Koppenburg
  - cmt/requirements
    . Boost link options for v11r12. Remove them for v12r0.
