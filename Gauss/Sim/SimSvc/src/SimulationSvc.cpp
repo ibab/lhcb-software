@@ -164,6 +164,21 @@ void SimulationSvc::reload () {
 }
 
 // -----------------------------------------------------------------------
+//  hasSimAttribute
+// -----------------------------------------------------------------------
+const bool SimulationSvc::hasSimAttribute (const ILVolume* vol) const {
+  if (0 != vol) {
+    // try first to find an attribute associated directly to the logical volume
+    std::string bnn = vol->name();
+    Dictionnary::const_iterator it = m_logvol2Sim.find (bnn);
+    if (it != m_logvol2Sim.end()) {
+      return true;
+    }    
+  }
+  return false;
+}
+
+// -----------------------------------------------------------------------
 //  simAttribute
 // -----------------------------------------------------------------------
 const SimAttribute

@@ -34,12 +34,19 @@ class ISimulationSvc : virtual public IInterface {
 
   /**
    * This method returns the simulation attribute associated to a given
-   * logical volume or 0 if there is no attribute associated to it.
+   * logical volume.
    * @param vol the logical volume
    * @return the simulation attribute that should be used to simulate
    * this logical volume
    */
   virtual const SimAttribute simAttribute (const ILVolume* vol) const = 0;
+
+  /**
+   * This method tells whether a simulation attribute is associated to a given
+   * logical volume or not
+   * @param vol the logical volume
+   */
+  virtual const bool hasSimAttribute (const ILVolume* vol) const = 0;
 
   /**
    * this method erases the current set of attributes and loads a new set

@@ -5,5 +5,8 @@
 !               volumes
 !-----------------------------------------------------------------------------
 
+! 2003-01-29 - Sebastien Ponce
+ - Added method hasSimAttribute to the interface
+
 ! 2003-01-24 - Sebastien Ponce
  - package creation
