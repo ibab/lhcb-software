@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/L0/L0Muon/src/Lib/L0mCrate.cpp,v 1.3 2001-06-11 06:45:11 atsareg Exp $
+// $Id: L0mCrate.cpp,v 1.4 2001-07-09 19:09:51 atsareg Exp $
 
 #include <vector>
 #include <algorithm>
@@ -8,11 +8,33 @@
 #include "L0Muon/L0MuonCandidate.h"
 #include "L0Muon/L0mCrate.h"
 #include "L0Muon/L0mProcUnit.h"
+#include "L0Muon/L0mTriggerProcD.h"
 
-L0mCrate::L0mCrate(int quarter) : m_quarter(quarter)  {
+L0mCrate::L0mCrate(int quarter, const L0mTriggerProcD& ltp) : 
+      m_quarter(quarter), m_processor(ltp)  {
+
+  std::vector<MuonTile> vmt = MuonLayout(2,2).tiles(quarter);
+  
+  //========================================
+  // Build all the units for this crate
+  //========================================
+  std::vector<MuonTile>::const_iterator iv;
+  for(iv = vmt.begin(); iv != vmt.end(); iv++ ) {
+    m_units.push_back(new L0mProcUnit(m_processor.m_ptParameters,
+                        	      m_processor.m_foiXSize,
+				      m_processor.m_foiYSize, 
+				      m_processor.m_extraM1, 
+				      m_processor.m_precision, 
+				      m_processor.m_bits, *iv) );
+  }
 }
 
 L0mCrate::~L0mCrate() {
+  std::vector<L0mProcUnit*>::iterator ip;
+  for ( ip = m_units.begin(); ip != m_units.end(); ip++) {
+    delete *ip;
+  }
+  m_units.clear();
 }	
 
 L0Muon::StatusCode L0mCrate::execute(MsgStream& log) {
@@ -21,38 +43,46 @@ L0Muon::StatusCode L0mCrate::execute(MsgStream& log) {
 
   // Execute all the Processing Units
 
-  std::vector<L0mProcUnit>::iterator it;    
+  std::vector<L0mProcUnit*>::iterator it;    
   std::vector<L0MuonCandidate*> lmc_pu;
   std::vector<L0MuonCandidate*>::iterator ilmc;
 
   L0Muon::StatusCode lsc;
   m_status = L0Muon::OK;
 
-  for (it=m_units.begin();it!=m_units.end();it++) {
-    lsc = (*it).execute(log);
-    if(lsc == L0Muon::OK) {
-      lmc_pu = (*it).candidates();
-      if (lmc_pu.size()>0) {
-	  m_candidates.insert(m_candidates.end(),lmc_pu.begin(),lmc_pu.end());
+  log << MSG::DEBUG << "Executing Crate " << quarter() 
+                    << ". Total active units: " << m_nActive << endreq;
+		    
+  if( m_nActive>0 ) {		    
+    for (it=m_units.begin();it!=m_units.end();it++) {
+
+      // (*it)->printParameters(log);
+
+      lsc = (*it)->execute(log);
+      if(lsc == L0Muon::OK) {
+	lmc_pu = (*it)->candidates();
+	if (lmc_pu.size()>0) {
+	    m_candidates.insert(m_candidates.end(),lmc_pu.begin(),lmc_pu.end());
+	}
+	m_status = L0Muon::OK;
+      // Error condition is detected: erase candidates and set status  
+      } else if (lsc == L0Muon::PU_OVERFLOW || lsc == L0Muon::PU_ERROR ) {
+	clear();
+	for (ilmc = m_candidates.begin(); ilmc != m_candidates.end(); ilmc++) {
+          delete *ilmc;
+	}
+	m_candidates.clear();
+	m_status = lsc;
+	// Prepare two empty candidates with error status for transmission to DU
+	m_candidates.push_back(new L0MuonCandidate(lsc));
+	m_candidates.push_back(new L0MuonCandidate(lsc));
+	// Nothing more to do because of the error
+	break;
+      } else if (lsc == L0Muon::PU_EMPTY ) {
+	m_status = L0Muon::OK;
       }
-      m_status = L0Muon::OK;
-    // Error condition is detected: erase candidates and set status  
-    } else if (lsc == L0Muon::PU_OVERFLOW || lsc == L0Muon::PU_ERROR ) {
-      clear();
-      for (ilmc = m_candidates.begin(); ilmc != m_candidates.end(); ilmc++) {
-        delete *ilmc;
-      }
-      m_candidates.clear();
-      m_status = lsc;
-      // Prepare two empty candidates with error status for transmission to DU
-      m_candidates.push_back(new L0MuonCandidate(lsc));
-      m_candidates.push_back(new L0MuonCandidate(lsc));
-      // Nothing more to do because of the error
-      break;
-    } else if (lsc == L0Muon::PU_EMPTY ) {
-      m_status = L0Muon::OK;
     }
-  }
+  }  
   // cout << "Crate: PU execution done" << m_status << endl;
   // Sort candidates if the status is OK
   if(m_status == L0Muon::OK) {
@@ -82,38 +112,42 @@ L0Muon::StatusCode L0mCrate::execute(MsgStream& log) {
 
 void L0mCrate::clear() {
 
-  std::vector<L0mProcUnit>::iterator it;
+  std::vector<L0mProcUnit*>::iterator it;
   for (it=m_units.begin();it!=m_units.end(); it++) {
-      (*it).clear();
+      (*it)->clear();
   }
-  m_units.clear();
+  m_nActive = 0;
 }
 
-void L0mCrate::buildUnits(const std::vector<double>& ptpara,
-                          const std::vector<int>& foiX,
-                          const std::vector<int>& foiY,
-			  double precision,
-			  int bits,
-			  ObjectVector<L0mTower>* towers ) {
+#include <typeinfo>
+
+void L0mCrate::buildUnits(ObjectVector<L0mTower>* towers ) {
 
   ObjectVector<L0mTower>::iterator it;
-  std::vector<L0mProcUnit>::iterator ipu;
+  std::vector<L0mProcUnit*>::iterator ipu;
   MuonLayout pu_layout(2,2);
   MuonTile mtile;
-  L0mProcUnit pu;
-
+  L0mProcUnit* pu;
+  
   for(it=towers->begin(); it!=towers->end(); it++) {
+  
     L0mPad* lmp = (*it)->padM3();
     if(lmp->quarter() == m_quarter) {
       mtile = pu_layout.contains(*lmp);
-      pu = L0mProcUnit(ptpara, foiX, foiY, precision, bits, mtile);
-      ipu = std::find(m_units.begin(),m_units.end(),pu);
-      if(ipu == m_units.end()) {
-        m_units.push_back(pu);
-	ipu = m_units.end();
-	ipu--;
+      pu = 0;
+      for(ipu = m_units.begin(); ipu != m_units.end(); ipu++) {
+        if( MuonTile(**ipu) == mtile ) {
+	  pu = *ipu;
+	  break;
+	}
       }
-      (*ipu).addTower(*it);      
+      if(!pu) {
+        // cout << "!!!!!!!! Crate: failed to find PU " << endl;
+	return;
+      }	     
+      pu->addTower(*it);  
+      (*it)->setProcUnit(pu);   
+      if ( pu->towers() == 1 ) m_nActive++;      
     }
   }  
 }
