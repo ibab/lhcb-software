@@ -1,11 +1,11 @@
 Package         : GiGaCnv
 Package Manager : Vanya Belyaev Ivan.Belyaev@itep.ru
 
+!========================== GiGaCnv v15r0 ===============================
 ! 2004-03-10 - Patrick Robbe
  - src/component/GiGaHepMCCnv.cpp : fix to accept also elastic scattering
     events.
 
-!========================== GiGaCnv v15r0 ===============================
 ! 2004-03-09 - Patrick Robbe
  - src/component/GiGaHepMCCnv.cpp : change the choice of particles to
      be converted in G4PrimaryParticles in order to be able to convert
