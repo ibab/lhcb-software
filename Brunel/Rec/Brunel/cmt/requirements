@@ -8,16 +8,16 @@ pattern BrunelVersion path APPVERSION <version>
 apply_pattern BrunelVersion
 
 #-- CMT and GaudiPolicy
-use GaudiPolicy v5r18
+use GaudiPolicy v5r19
 
 #-- External libraries now taken from LCG, version defined by GaudiEnv
 
-#-- Gaudi libraries (from GAUDI_v15r1)
-use GaudiKernel		v16r1
-use GaudiSvc 		v12r2p1
+#-- Gaudi libraries (from GAUDI_v15r2)
+use GaudiKernel		v16r2
+use GaudiSvc 		v12r3
 use GaudiAlg 		v8r0
 use GaudiGSL		v6r1
-use GaudiPoolDb		v1r8p1
+use GaudiPoolDb		v1r9
 use GaudiObjDesc 	v6r3
 use RootHistCnv         v9r3
 

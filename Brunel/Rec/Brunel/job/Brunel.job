@@ -65,8 +65,6 @@ if ($?Brunel_release_area) then
 else
   source $LHCb_release_area/BrunelEnv/$Bversion/cmt/setup.csh
 endif
-# First setup without tag is to force CMT v1r16* to set xxROOT variables...
-source $MYJOBROOT/cmt/setup.csh
 source $MYJOBROOT/cmt/setup.csh -tag=$MODE
 
 # Go to working directory
