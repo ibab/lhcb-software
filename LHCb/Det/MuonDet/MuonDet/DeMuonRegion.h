@@ -1,4 +1,4 @@
-// $Id: DeMuonRegion.h,v 1.1.1.1 2002-01-21 17:13:46 dhcroft Exp $
+// $Id: DeMuonRegion.h,v 1.2 2002-01-31 10:00:09 dhcroft Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
@@ -11,10 +11,7 @@
 
 // Include files
 #include "DetDesc/DetectorElement.h"
-
-
-// External declarations
-extern const CLID& CLID_DEMuonRegion;
+#include "MuonDet/CLID_DeMuonRegion.h"
 
 /** @class DeMuonGasGap DeMuonGasGap.h MuonDet/DeMuonGasGap.h
  *  
@@ -40,12 +37,14 @@ public:
   ~DeMuonRegion();
 
   /// Class ID of DeMuonRegion
-  const CLID& clID() const {
+  inline virtual const CLID& clID() const {
     return classID();
   }
 
   /// Retrieve reference to class identifier
-  static const CLID& classID();
+  inline static const CLID& classID(){
+    return CLID_DEMuonRegion;
+  }
 
   /// Set the number of chambers in the region
   void setchamberNum( int numberChambers ){

@@ -1,4 +1,4 @@
-// $Id: XmlMuonReadoutCondCnv.cpp,v 1.1.1.1 2002-01-21 17:13:47 dhcroft Exp $
+// $Id: XmlMuonReadoutCondCnv.cpp,v 1.2 2002-01-31 10:00:10 dhcroft Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
@@ -44,7 +44,8 @@ protected:
    * @return status depending on the completion of the call
    */
   virtual StatusCode i_fillSpecificObj (DOM_Element childElement,
-                                        MuonReadoutCond* dataObj);
+                                        MuonReadoutCond* dataObj,
+                                        IOpaqueAddress* address);
 
 private:
 
@@ -72,7 +73,8 @@ XmlMuonReadoutCondCnv::XmlMuonReadoutCondCnv(ISvcLocator* svc) :
 // Fill an object with a new specific child element
 // ------------------------------------------------------------------------
 StatusCode XmlMuonReadoutCondCnv::i_fillSpecificObj (DOM_Element childElement,
-                                                     MuonReadoutCond* dataObj){
+                                                     MuonReadoutCond* dataObj,
+                                                 IOpaqueAddress* /*address*/){
   MsgStream log (msgSvc(), "XmlMuonReadoutCondCnv");
 
   // gets the element's name

@@ -1,4 +1,4 @@
-// $Id: DeMuonGasGap.h,v 1.1.1.1 2002-01-21 17:13:46 dhcroft Exp $
+// $Id: DeMuonGasGap.h,v 1.2 2002-01-31 10:00:09 dhcroft Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
@@ -14,14 +14,11 @@
 #include <string>
 
 #include "DetDesc/DetectorElement.h"
+#include "MuonDet/CLID_DeMuonGasGap.h"
 
 /// Gaudi interfaces
 #include "GaudiKernel/IService.h"
 #include "GaudiKernel/SmartDataPtr.h"
-
-// External declarations
-extern const CLID& CLID_DEMuonGasGap;
-
 
 /** @class DeMuonGasGap DeMuonGasGap.h MuonDet/DeMuonGasGap.h
  *  
@@ -42,12 +39,14 @@ public:
   /// Destructor
   ~DeMuonGasGap();
 
-  const CLID& clID() const {
+  inline virtual const CLID& clID() const {
     return classID();
   }
 
   /// Retrieve reference to class identifier
-  static const CLID& classID();
+  inline static const CLID& classID(){
+    return CLID_DEMuonGasGap;
+  }
 
 private:
 };

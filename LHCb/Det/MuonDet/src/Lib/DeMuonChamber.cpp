@@ -1,4 +1,4 @@
-// $Id: DeMuonChamber.cpp,v 1.1.1.1 2002-01-21 17:13:46 dhcroft Exp $
+// $Id: DeMuonChamber.cpp,v 1.2 2002-01-31 10:00:09 dhcroft Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
@@ -19,9 +19,6 @@
  */
 
 
-/// Class ID of chambers 
-const CLID& CLID_DEMuonChamber = 11006;  
-
 /// Standard Constructors
 DeMuonChamber::DeMuonChamber()
   : m_padx( 0.0 ), m_pady( 0.0 ), m_NumberGasGaps(0)
@@ -39,9 +36,4 @@ DeMuonChamber::~DeMuonChamber()
 {
 }
 
-/// Retrieve Pointer to class defininition structure
-const CLID& DeMuonChamber::classID()
-{
-  return CLID_DEMuonChamber;
-}
 

@@ -1,4 +1,4 @@
-// $Id: DeMuonGasGap.cpp,v 1.1.1.1 2002-01-21 17:13:46 dhcroft Exp $
+// $Id: DeMuonGasGap.cpp,v 1.2 2002-01-31 10:00:09 dhcroft Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
@@ -18,7 +18,6 @@
  *
  */
 
-const CLID& CLID_DEMuonGasGap = 11007;  
 
 /// Standard Constructor
 DeMuonGasGap::DeMuonGasGap()
@@ -30,9 +29,4 @@ DeMuonGasGap::~DeMuonGasGap()
 {
 }
 
-/// Retrieve Pointer to class defininition structure
-const CLID& DeMuonGasGap::classID()
-{
-  return CLID_DEMuonGasGap;
-}
 

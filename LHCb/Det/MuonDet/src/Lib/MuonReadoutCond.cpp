@@ -1,4 +1,4 @@
-// $Id: MuonReadoutCond.cpp,v 1.1.1.1 2002-01-21 17:13:46 dhcroft Exp $
+// $Id: MuonReadoutCond.cpp,v 1.2 2002-01-31 10:00:10 dhcroft Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
@@ -19,9 +19,6 @@
  * @author David Hutchcroft, David.Hutchcroft@cern.ch
  *
  */
-
-
-const CLID& CLID_MuonReadoutCond = 11019;  // User defined
 
 // Standard Constructors
 MuonReadoutCond::MuonReadoutCond():

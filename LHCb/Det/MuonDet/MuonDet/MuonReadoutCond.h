@@ -1,4 +1,4 @@
-// $Id: MuonReadoutCond.h,v 1.1.1.1 2002-01-21 17:13:46 dhcroft Exp $
+// $Id: MuonReadoutCond.h,v 1.2 2002-01-31 10:00:09 dhcroft Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
@@ -13,10 +13,7 @@
 #include "GaudiKernel/DataObject.h"
 #include "DetDesc/Condition.h"
 
-
-// External declarations
-extern const CLID& CLID_MuonReadoutCond;
-
+#include "MuonDet/CLID_MuonReadoutCond.h"
 
 /** @class MuonReadoutCond MuonReadoutCond.h MuonDet/MuonReadoutCond.h
  *  
@@ -29,6 +26,7 @@ extern const CLID& CLID_MuonReadoutCond;
  *  @author David Hutchcroft
  *  @date   21/01/2002
  */
+
 class MuonReadoutCond: public Condition
 {
 public:
@@ -57,10 +55,14 @@ public:
   // Re-implemented from DataObject
 
   /// Class ID of this instance
-  inline virtual const CLID& clID() const { return classID(); } 
+  inline virtual const CLID& clID() const { 
+    return classID(); 
+  } 
 
   /// Class ID of this class
-  inline static  const CLID& classID() { return CLID_MuonReadoutCond; };
+  inline static  const CLID& classID() { 
+    return CLID_MuonReadoutCond; 
+  }
 
 public:
 
