@@ -1,4 +1,4 @@
-// $Id: DeVelo.cpp,v 1.33 2004-01-29 01:02:18 mtobin Exp $
+// $Id: DeVelo.cpp,v 1.34 2004-02-03 16:55:56 mtobin Exp $
 //
 // ============================================================================
 #define  VELODET_DEVELO_CPP 1
@@ -138,6 +138,10 @@ StatusCode DeVelo::initialize() {
   for(unsigned int iSensor=0; iSensor < m_vpSensor.size() ; ++iSensor){
     //m_sensorZ.push_back(m_vpSensor[iSensor]->z());
     unsigned int sensor = m_vpSensor[iSensor]->sensorNumber();
+    msg << MSG::INFO << "Index " << iSensor << " Sensor number " << sensor
+        << " is type " << m_vpSensor[iSensor]->type() 
+        << " at z = " << m_vpSensor[iSensor]->z()
+        << endreq;
     // Find phi sensors associated to R in each station (group of 4 sensors)
     int station=(iSensor-4)/4;
     unsigned int firstInStation=0;
@@ -308,10 +312,10 @@ StatusCode DeVelo::channelDistance(const VeloChannelID &startChannel,
 StatusCode DeVelo::sensorAssociated( unsigned int sensor, 
                                std::vector<unsigned int> &assocSensor ) 
 {
-  if(isPileUpSensor(sensor) || isPhiSensor(sensor)){
-    return StatusCode::FAILURE;
-  } else {
+  if(isRSensor(sensor)){
     assocSensor = m_vpSensor[sensorIndex(sensor)]->associatedSensors();
+  } else {
+    return StatusCode::FAILURE;
   }
   return StatusCode::SUCCESS;
 }
@@ -347,13 +351,8 @@ StatusCode DeVelo::rOfStrip( VeloChannelID channel,
   unsigned int sensor=channel.sensor();
   unsigned int index=sensorIndex(sensor);
   unsigned int strip=channel.strip();
-  if(this->isRSensor(sensor)){
-    DeVeloRType * rPtr = dynamic_cast<DeVeloRType*>(m_vpSensor[index]);
+  if(DeVeloRType* rPtr = dynamic_cast<DeVeloRType*>(m_vpSensor[index])){
     radius = rPtr->rOfStrip(strip);
-  }else if(this->isPileUpSensor(sensor)){
-    DeVeloPileUpType* puPtr = 
-      dynamic_cast<DeVeloPileUpType*>(m_vpSensor[index]);
-    radius = puPtr->rOfStrip(strip);
   }else{
     return StatusCode::FAILURE;
   }
@@ -364,15 +363,9 @@ StatusCode DeVelo::rOfStrip( VeloChannelID channel, double fraction,
 			     double &radius) {
   // check whether sensor is R type using m_vpSensor[sensor]->type()
   //  write method bool DeVelo::isR(unsigned int sensor), isPhi etc.
-  unsigned int sensor=channel.sensor();
   unsigned int index=sensorIndex(channel.sensor());
-  if(this->isRSensor(sensor)){
-    DeVeloRType * rPtr = dynamic_cast<DeVeloRType*>(m_vpSensor[index]);
+  if(DeVeloRType* rPtr = dynamic_cast<DeVeloRType*>(m_vpSensor[index])){
     radius = rPtr->rOfStrip(channel.strip(),fraction);
-  }else if(this->isPileUpSensor(sensor)){
-    DeVeloPileUpType* puPtr = 
-      dynamic_cast<DeVeloPileUpType*>(m_vpSensor[index]);
-    radius = puPtr->rOfStrip(channel.strip(),fraction);
   }else{
     return StatusCode::FAILURE;
   }
@@ -382,12 +375,22 @@ StatusCode DeVelo::rOfStrip( VeloChannelID channel, double fraction,
 // returns the R pitch at the given channelID
 StatusCode DeVelo::rPitch( VeloChannelID channel,
 			   double &rPitch ) {
+  unsigned int index=sensorIndex(channel.sensor());
+  if(DeVeloRType* rPtr = dynamic_cast<DeVeloRType*>(m_vpSensor[index])){
+    rPitch = rPtr->rPitch(channel.strip());
+    return StatusCode::SUCCESS;
+  }else{
+    return StatusCode::FAILURE;
+  }
+}
+
+// returns the R pitch at the given channelID
+StatusCode DeVelo::rPitch( VeloChannelID channel, double fraction,
+			   double &rPitch ) {
   unsigned int sensor=channel.sensor();
   unsigned int index=sensorIndex(sensor);
-  if(this->isRSensor(sensor)){
-    DeVeloRType * rPtr = 
-      dynamic_cast<DeVeloRType*>(m_vpSensor[index]);
-    rPitch = rPtr->rPitch(channel.strip());
+  if(DeVeloRType* rPtr = dynamic_cast<DeVeloRType*>(m_vpSensor[index])){
+    rPitch = rPtr->rPitch(channel.strip(),fraction);
     return StatusCode::SUCCESS;
   }else{
     return StatusCode::FAILURE;
@@ -407,11 +410,8 @@ StatusCode DeVelo::phiOfStrip( VeloChannelID channel,
                                double &phiOfStrip ) {
   unsigned int sensor=channel.sensor();
   unsigned int index=sensorIndex(sensor);
-  DeVeloPhiType * phiPtr = 
-    dynamic_cast<DeVeloPhiType*>(m_vpSensor[index]);
-  if(phiPtr){
-    double strip=fraction+static_cast<double>(channel.strip());
-    phiOfStrip = phiPtr->phiOfStrip(strip,radius);
+  if(DeVeloPhiType* phiPtr = dynamic_cast<DeVeloPhiType*>(m_vpSensor[index])){
+    phiOfStrip = phiPtr->phiOfStrip(channel.strip(),fraction,radius);
     return StatusCode::SUCCESS;
   }else{
     return StatusCode::FAILURE;
@@ -609,8 +609,8 @@ StatusCode DeVelo::stripLimitsR( unsigned int sensor, unsigned int strip,
     }
     return sc;
   }else if(this->isPileUpSensor(sensor)){
-    DeVeloPileUpType * puPtr = 
-      dynamic_cast<DeVeloPileUpType*>(m_vpSensor[sensorIndex(sensor)]);
+    //DeVeloPileUpType * puPtr = 
+    //dynamic_cast<DeVeloPileUpType*>(m_vpSensor[sensorIndex(sensor)]);
   } else {
       MsgStream msg( msgSvc(), "DeVelo" );
       msg << MSG::ERROR 

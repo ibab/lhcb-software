@@ -1,4 +1,4 @@
-// $Id: DeVeloPhiType.cpp,v 1.1 2004-01-29 01:02:18 mtobin Exp $
+// $Id: DeVeloPhiType.cpp,v 1.2 2004-02-03 16:55:56 mtobin Exp $
 //==============================================================================
 #define VELODET_DEVELOPHITYPE_CPP 1
 //==============================================================================
@@ -114,15 +114,15 @@ void DeVeloPhiType::calcStripLines()
   double x1,y1,x2,y2;
   for(unsigned int strip=0; strip<m_numberOfStrips; strip++){
     if(m_nbInner > strip) {
-      x1 = m_innerRadius * cos(phiOfStrip(strip,m_innerRadius));
-      y1 = m_innerRadius * sin(phiOfStrip(strip,m_innerRadius));
-      x2 = m_middleRadius * cos(phiOfStrip(strip,m_middleRadius-m_rGap/2));
-      y2 = m_middleRadius * sin(phiOfStrip(strip,m_middleRadius-m_rGap/2));
+      x1 = m_innerRadius * cos(phiOfStrip(strip,0.,m_innerRadius));
+      y1 = m_innerRadius * sin(phiOfStrip(strip,0.,m_innerRadius));
+      x2 = m_middleRadius * cos(phiOfStrip(strip,0.,m_middleRadius-m_rGap/2));
+      y2 = m_middleRadius * sin(phiOfStrip(strip,0.,m_middleRadius-m_rGap/2));
     } else {
-      x1 = m_middleRadius * cos(phiOfStrip(strip,m_middleRadius+m_rGap/2));
-      y1 = m_middleRadius * sin(phiOfStrip(strip,m_middleRadius+m_rGap/2));
-      x2 = m_outerRadius * cos(phiOfStrip(strip,m_outerRadius));
-      y2 = m_outerRadius * sin(phiOfStrip(strip,m_outerRadius));
+      x1 = m_middleRadius * cos(phiOfStrip(strip,0.,m_middleRadius+m_rGap/2));
+      y1 = m_middleRadius * sin(phiOfStrip(strip,0.,m_middleRadius+m_rGap/2));
+      x2 = m_outerRadius * cos(phiOfStrip(strip,0.,m_outerRadius));
+      y2 = m_outerRadius * sin(phiOfStrip(strip,0.,m_outerRadius));
     }
     double gradient;
     gradient = (y2 - y1) /  (x2 - x1);
@@ -265,7 +265,7 @@ StatusCode DeVeloPhiType::isInside(const HepPoint3D& point)
     isInner=false;
   }
   // Is it inside angular coverage
-  double xCross=m_middleRadius*cos(phiOfStrip(0,m_middleRadius));
+  double xCross=m_middleRadius*cos(phiOfStrip(0,0.,m_middleRadius));
   if(xCross > point.x()) return StatusCode::FAILURE;
 
   // Gap in radius...
@@ -487,15 +487,16 @@ double DeVeloPhiType::rMax(const unsigned int zone)
 //==============================================================================
 /// The phi position of a strip at a given radius
 //==============================================================================
-double DeVeloPhiType::phiOfStrip(double strip,
+double DeVeloPhiType::phiOfStrip(unsigned int strip, double fraction,
                                  const double radius)
 {
   double phiOfStrip;
+  double effectiveStrip=fraction+static_cast<double>(strip);
   if (m_nbInner > strip) {
-    phiOfStrip = (strip*m_innerPitch) + phiOffset(radius);
+    phiOfStrip = (effectiveStrip*m_innerPitch) + phiOffset(radius);
   } else {
-    strip -= m_nbInner;
-    phiOfStrip = (strip*m_outerPitch) + phiOffset(radius);
+    effectiveStrip -= m_nbInner;
+    phiOfStrip = (effectiveStrip*m_outerPitch) + phiOffset(radius);
   }
   return phiOfStrip;
 }

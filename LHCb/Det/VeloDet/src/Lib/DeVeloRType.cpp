@@ -1,4 +1,4 @@
-// $Id: DeVeloRType.cpp,v 1.1 2004-01-29 01:02:18 mtobin Exp $
+// $Id: DeVeloRType.cpp,v 1.2 2004-02-03 16:55:57 mtobin Exp $
 //==============================================================================
 #define VELODET_DEVELORTYPE_CPP 1
 //==============================================================================
@@ -111,8 +111,11 @@ StatusCode DeVeloRType::pointToChannel(const HepPoint3D& point,
   // set VeloChannelID....
   channel.setSensor(sensor);
   channel.setStrip(closestStrip);
-  channel.setType(VeloChannelID::RType);
-
+  if(m_isR) {
+    channel.setType(VeloChannelID::RType);
+  } else if(m_isPileUp) {
+    channel.setType(VeloChannelID::PileUpType);
+  }
   // calculate pitch....
   pitch = rPitch(channel.strip());
   return StatusCode::SUCCESS;
@@ -446,6 +449,14 @@ double DeVeloRType::rOfStrip(unsigned int strip, double fraction)
 double DeVeloRType::rPitch(unsigned int strip)
 {
   return m_rPitch[strip];
+  
+}
+//==============================================================================
+/// Return the local pitch of the sensor for a given channel...
+//==============================================================================
+double DeVeloRType::rPitch(unsigned int strip, double fraction)
+{
+  return exp(fraction)*m_rPitch[strip];
   
 }
 //==============================================================================
