@@ -1,4 +1,4 @@
-// $Id: OTTimeCreator.h,v 1.2 2004-11-10 13:02:08 jnardull Exp $
+// $Id: OTTimeCreator.h,v 1.3 2004-12-10 08:10:25 jnardull Exp $
 #ifndef OTDAQ_OTTIMECREATOR_H 
 #define OTDAQ_OTTIMECREATOR_H 1
 
@@ -46,13 +46,13 @@ public:
   virtual ~OTTimeCreator( ); ///< Destructor
   virtual StatusCode initialize();    ///< Algorithm initialization
   virtual StatusCode execute   ();    ///< Algorithm execution
-  virtual StatusCode finalize  ();    ///< Algorithm finalization
  
 protected:
 
 private:
   
    enum DataMasks {dataMask = 0x80000000};
+
 
   // From Raw to OTTime
   StatusCode raw2OTTime(int station, int layer, int quarter, int module, 

@@ -1,4 +1,4 @@
-// $Id: OTTimeCreator.cpp,v 1.5 2004-11-19 16:41:44 cattanem Exp $
+// $Id: OTTimeCreator.cpp,v 1.6 2004-12-10 08:10:25 jnardull Exp $
 // Include files
 
 // local
@@ -26,8 +26,6 @@ OTTimeCreator::OTTimeCreator( const std::string& name,
                                     ISvcLocator* pSvcLocator)
   : GaudiAlgorithm ( name , pSvcLocator )
 {
-  this->declareProperty( "RawEventLocation",
-                         m_RawEventLoc = RawEventLocation::Default );
   this->declareProperty( "OutputLocation",
                          m_timeLocation = OTTimeLocation::Default );
   declareProperty("ToFCorrection", m_tofCorrection = true);
@@ -48,25 +46,17 @@ OTTimeCreator::~OTTimeCreator() {};
 StatusCode OTTimeCreator::initialize() {
 
   StatusCode sc = GaudiAlgorithm::initialize();
-  if (sc.isFailure()){
-    return Error("Failed to initialize", sc);
-  }
-
+  if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
+  
   // Loading OT Geometry from XML
-  SmartDataPtr<DeOTDetector> tracker( detSvc(), "/dd/Structure/LHCb/OT" );
-  if ( !tracker ) {
-    return Error ( "Unable to retrieve Tracker detector element from xml");
-  }
+  DeOTDetector* tracker = getDet<DeOTDetector>(DeOTDetectorLocation::Default );
   m_tracker = tracker;
-
+  
   // Read out window tool
   IOTReadOutWindow* aReadOutWindow = 0;
-  StatusCode SC = toolSvc()->retrieveTool("OTReadOutWindow",aReadOutWindow);
-  if( !SC.isSuccess() ) {
-    return Error (" Unable to create OTReadOutWindow tool");
-  }
+  aReadOutWindow = tool<IOTReadOutWindow>("OTReadOutWindow");
   m_startReadOutGate  = aReadOutWindow->startReadOutGate();
-  toolSvc()->releaseTool( aReadOutWindow );
+  release( aReadOutWindow );
 
   return StatusCode::SUCCESS;
 };
@@ -78,29 +68,27 @@ StatusCode OTTimeCreator::execute() {
 
   // Retrieve the RawEvent:
   RawEvent* event;
-
-  SmartDataPtr<RawEvent> rawEvent( eventSvc(), m_RawEventLoc );
-  if( ! rawEvent ){
-    warning () << "Unable to retrieve Raw Event at: " 
-               <<  m_RawEventLoc << endreq;
-    msg () << "Access RawBuffer for decoding" << endreq;
-    SmartDataPtr<RawBuffer> rawBuffer (eventSvc(), RawBufferLocation::Default );
-    if ( 0 == rawBuffer ) {
-      return Error ("Unable to find RawBuffer. Abort.");
-    }
-    event = new RawEvent(rawBuffer);
-    eventSvc()->registerObject( RawEventLocation::Default, event );    
+  
+  if( exist<RawEvent>(  RawEventLocation::Default )) {
+    event = get<RawEvent>( RawEventLocation::Default );
   } else {
-    event = rawEvent;
-  }  
+    debug() << "Raw Event does not exist at " 
+            << RawEventLocation::Default << endmsg;
+    debug() << "Accessing RawBuffer for decoding" << endmsg;
+    RawBuffer* rawBuffer = get<RawBuffer>( RawBufferLocation::Default );
+    event = new RawEvent(*rawBuffer);
+    StatusCode sc = put( event, RawEventLocation::Default );
+    if( sc.isFailure() ) 
+      return Error( "Unable to register RawEvent to TES", sc );
+  } 
 
-  //Get the buffers associated with OT
-  const std::vector<RawBank>& OTBanks = rawEvent->banks( RawBuffer::OT );
-
+  // Get the buffers associated with OT
+  const std::vector<RawBank>& OTBanks = event->banks( RawBuffer::OT );
+  
   // make OTTime container 
   OTTimes* outputTimes = new OTTimes();
   // register output buffer to TES
-  eventSvc()->registerObject( m_timeLocation, outputTimes );
+  put(outputTimes, m_timeLocation);
 
   // Loop over vector of banks (The Buffer)
   std::vector<RawBank>::const_iterator ibank;
@@ -167,13 +155,6 @@ StatusCode OTTimeCreator::execute() {
   
   return StatusCode::SUCCESS;
 };
-
-//=============================================================================
-//  Finalize
-//=============================================================================
-StatusCode OTTimeCreator::finalize() {
-  return StatusCode::SUCCESS;
-}
 
 //=============================================================================
 StatusCode OTTimeCreator::raw2OTTime(int station, int layer, int quarter,

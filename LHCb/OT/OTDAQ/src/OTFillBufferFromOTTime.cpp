@@ -1,4 +1,4 @@
-// $Id: OTFillBufferFromOTTime.cpp,v 1.5 2004-11-19 16:41:44 cattanem Exp $
+// $Id: OTFillBufferFromOTTime.cpp,v 1.6 2004-12-10 08:10:25 jnardull Exp $
 // Include files
 
 // local
@@ -43,13 +43,10 @@ OTFillBufferFromOTTime::~OTFillBufferFromOTTime(){};
 StatusCode OTFillBufferFromOTTime::initialize() {
 
   StatusCode sc = GaudiAlgorithm::initialize();
-  if (sc.isFailure()){
-    return Error("Failed to initialize", sc);
-  }
-  SmartDataPtr<DeOTDetector> Otracker( detSvc(), m_otTrackerPath);
-  if ( !Otracker ) {
-    return Error ( "Unable to retrieve Tracker detector element from xml");
-  }
+  if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
+  
+  // Loading OT Geometry from XML
+  DeOTDetector* Otracker = getDet<DeOTDetector>( DeOTDetectorLocation::Default);
   m_otTracker = Otracker;
 
   //Fixed Numbers of Banks and of Gols
@@ -71,18 +68,11 @@ StatusCode OTFillBufferFromOTTime::initialize() {
 StatusCode OTFillBufferFromOTTime::execute() 
 {
   // Retrieve the RawBuffer
-  SmartDataPtr<RawBuffer> rawBuffer( eventSvc(), m_RawBuffLoc );
-  if ( !rawBuffer ) {
-    return Error("Unable to retrieve Raw buffer ");
-  }
+  RawBuffer* rawBuffer = get<RawBuffer>( RawBufferLocation::Default );
   m_rawBuffer = rawBuffer;
 
   // Retrieve OTTime
-  SmartDataPtr<OTTimes>
-    Time ( eventDataService(), OTTimeLocation::Default);
-  if ( !Time ) {
-    return Error("Unable to retrieve OTTime ");
-  }
+  OTTimes* Time = get<OTTimes>( OTTimeLocation::Default );  
   m_Time = Time;
 
   // Sorting Times into Banks
@@ -134,7 +124,7 @@ StatusCode OTFillBufferFromOTTime::finalize()
   delete(dataContainer);
   delete(goldatacontainer);
   delete(finalBuf);
-  return StatusCode::SUCCESS;
+  return GaudiAlgorithm::finalize();  // must be called after all other actions 
 }
 //-----------------------------------------------------------------------------
 StatusCode OTFillBufferFromOTTime::sortTimesIntoBanks()

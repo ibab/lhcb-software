@@ -1,6 +1,9 @@
 Package         : OTDAQ
 Package manager : J. Nardulli
 
+! 2004-12-06 - Jacopo Nardulli
+- Complete move to new base classes
+
 ! 2004-11-09 - Jacopo Nardulli
  - Move to the New Gaudi Base Classes  
 
