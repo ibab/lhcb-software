@@ -3,7 +3,7 @@ Package Coordinator: Marco Cattaneo
 
 Purupose: LHCb reconstruction program
 
-! 20010726 Brunel v5 (MC)
+! 20010821 Brunel v5 (MC)
 
    In src/BrunelSicb/
    -----------------
@@ -12,9 +12,8 @@ Purupose: LHCb reconstruction program
  
    In options/
    -----------
-   BrunelMessage.opts - set global output level to WARNING or above
-                       (N.B. this means that event number is not printed out 
-                        by Gaudi, but still is by SICB)
+   BrunelMessage.opts - set global output level to WARNING or above, over-ride
+                        it for ChronoStatSvc to print final statistics
                       - set output level of some tracking algorithms to ERROR,
                         to suppress excessive printing in production
    Brunel.opts - Set ErrorMax of tracking algorithms to 1000, to prevent
@@ -22,11 +21,68 @@ Purupose: LHCb reconstruction program
 
    In cmt/requirements
    -------------------
+   >>> Bug fixes and physics changes <<<
+
+   use trivert v5r3
+    vth1.F - Fix problem due to 90 degree roration on VELO. (Hans Dijkstra)
+
+   use XmlDDDB v6
+    - put correct calibration Hcal parameters (calculated by O.Iouchtchenko)
+    - Change the HCAL ActiveToTotal parameter form 55 to 40
+    - Fix the 'ActiveToTotal' parameter for Ecal, after calibration with 
+      SICBMC v241 data plus Signal and Digit processors
+
    use L0Muon v3r1
+    - Fixed bug in the CreateTower procedure for the cases of crossing the 
+      boundary between regions; 
+    - All the numbering for quarters/regions/indices starts from 0. 
+  
+   use CaloAlgs v3 (was v2)
+    - Several bug fixes and reorganisation of histograms (see release notes)
 
+   use SicbCnv  v13
+    SicbMCEventCnv - set m_pileUp to number of PASS banks 
+  
+   use CaloSicbCnv  v4
+    - Fix bug in SicbCaloDigitCnv, SummedDeposit were not linked to the digits
+    
 
-! 20010720 Brunel v5 (Flr)
-   use Gaudi v8 and LHCb v8 not completely debugged
+   >>> Remaining changes are for upgrade to Gaudi v8, LHCb v8
+   >>> Should not affect physics functionality
+   >>> See corresponding release notes for details
+
+   use GaudiPolicy  v5     (was v4)
+   use GaudiSys     v8     (was v7r2)
+   use HbookCnv     v10r1  (was v9)
+   use CERNLIB      v2001  (was v2000)
+   use BrunelKernel v2     (was v1)
+   use DetDesc      v7     (was v6)
+   use XmlDDDB      v6     (was v5)
+   use CaloDet      v2r1   (was v1)
+   use LHCbEvent    v11    (was v10)
+   use L0Event      v3     (was v2)
+   use ITEvent      v5     (was v4)
+   use OTEvent      v5     (was v4)
+   use TrEvent      v5     (was v4r1)
+   use CaloEvent    v6     (was v5)
+   use VeloEvent    v5     (was v4)
+   use L0Calo       v2     (was v1)
+   use L0Muon       v3r1   (was v2)
+   use L0DU         v2     (was v1)
+   use CaloGen      v2     (was v1)
+   use CaloAlgs     v3     (was v2)
+   use TrKernel     v5     (was v4)
+   use ITAlgorithms v5     (was v4)
+   use OTAlgorithms v5     (was v4)
+   use TrAlgorithms v5     (was v4r1)
+   use SicbCnv      v13    (was v12)
+   use CaloSicbCnv  v4     (was v3)
+   use L0SicbCnv    v3     (was v2)
+   use MuonSicbCnv  v3     (was v2)
+   use TrSicbCnv    v2     (was v1)
+   use VSicbCnv     v5     (was v4)
+   use GDUMMY       v1r5   (was v1r4)
+
 ! =================================================================
 ! 20010629 Brunel v4 (MC)
    Add C++ L0 trigger simulation

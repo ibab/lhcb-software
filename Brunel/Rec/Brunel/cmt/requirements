@@ -19,7 +19,7 @@ use GaudiConf    v5
 
 # Gaudi Framework 
 use GaudiSys     v8
-use HbookCnv     v10
+use HbookCnv     v10r1
 
 # Additional external libraries
 use XML          v3r1
@@ -31,7 +31,7 @@ use BrunelKernel v2     Rec
 # Detector description
 use DetDesc      v7     Det
 use XmlDDDB      v6     Det
-use CaloDet      v2     Det
+use CaloDet      v2r1   Det
 
 # Event Model
 use LHCbEvent    v11    Event
@@ -91,7 +91,7 @@ use trimuon      v5     SICB
 use trit0v       v5     SICB
 use triskel      v4     SICB
 use trit1tr      v3r3   SICB
-use trivert      v5r2   SICB
+use trivert      v5r3   SICB
 use trielec      v5r1   SICB
 #
 #===== build Brunel =========================

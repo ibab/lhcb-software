@@ -14,6 +14,11 @@ EventSelector.PrintFreq = 1;
 // Global output level: only print by default WARNINGs and above
 MessageSvc.OutputLevel = 4;
 
+// Print Chrono statistics at end of job
+ChronoStatSvc.OutputLevel = 3;
+ChronoStatSvc.ChronoPrintLevel = 4;
+ChronoStatSvc.StatPrintLevel = 4;
+
 // Suppress excessive warnings from some algorithms
 TrEventTracksFitter.OutputLevel = 5;
 TrMonitor.OutputLevel = 5;
