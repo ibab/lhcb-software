@@ -4,6 +4,11 @@
 ! Purpose     : Holds final reconstruction code
 !-----------------------------------------------------------------------------
 
+! 2002-11-20 - Ivan Belyaev
+ - src/NeutralPPsFromCPsAlg.h,cpp  - new algorithm for creation of 
+                                     neutral protoparticles from CaloParticles.
+ - src/GlobalReco_load.cpp         - add new algorithm 
+
 !====================== GlobalReco v2r1 2002-11-13 ===========================
 ! 2002-11-13 - Gloria Corti
  - Increase version number to v2r1
