@@ -1,6 +1,11 @@
 Package:          GiGa
 Package manager : Vanya Belyaev 
 
+===========================================================================
+! 20010215 - Gonzalo Gracia Abril & Vanya Belyaev
+   Some changes required to compile on NT
+  Modified files: GiGaDetectorElementCnv.cpp, GiGaGeomCnvSvc.cpp, GiGaSensDet.cpp
+
 !==============================================================
 ! 20010214  GiGa Gonzalo Gracia Abril & Vanya Belyaev
 Corrections for proper treatment of Solids and volumens rotations.
