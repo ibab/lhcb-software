@@ -46,7 +46,7 @@ use ParamFiles	v3r4	-no_auto_imports
 use FieldMap	v4r5
 
 #-- LHCb libraries (from LHCB_v15r6)
-use LHCb	v15r5
+use LHCb	v15r6
 
 #-- BooleSys v5r5 packages
 
