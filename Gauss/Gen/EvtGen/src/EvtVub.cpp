@@ -207,7 +207,7 @@ void EvtVub::decay( EvtParticle *p ){
       
       x = EvtRandom::Flat();
       z = EvtRandom::Flat(0,2);
-      p2 = pow(10,log10(p2epsilon) - log10(p2epsilon)*EvtRandom::Flat());
+      p2 = pow(10.,log10(p2epsilon) - log10(p2epsilon)*EvtRandom::Flat());
       
       qplus = mB-_mb-kplus;
       El = x*(mB-qplus)/2;

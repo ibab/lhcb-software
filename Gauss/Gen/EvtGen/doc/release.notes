@@ -4,6 +4,8 @@ Package manager : Patrick Robbe and Witek Pokorski
 ! 2004-07-09 - Patrick Robbe
  - EvtLambdaP_BarGamma.cpp : use sqrt(2.) instead of sqrt(2) for windows
    compilation.
+ - EvtVub.cpp : use pow(10., ...) instead of pow(10, ...) for Windows
+   compilation.
 
 !================= EvtGen v5r4 ====================================
 ! 2004-06-08 - Patrick Robbe
