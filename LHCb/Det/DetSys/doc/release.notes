@@ -4,9 +4,9 @@
 ! Purpose     : collect Det packages
 !-----------------------------------------------------------------------------
 
-!========================= DetSys v5r7 2004-06-29 =========================
-! 2004-06-29 - Marco Cattaneo
- - Use STDet v1r2, RichDet v7r2, OTDet v5r3, Magnet v2r7
+!========================= DetSys v5r7 2004-07-09 =========================
+! 2004-07-09 - Marco Cattaneo
+ - Use DetDesc v14r1p1, STDet v1r2, RichDet v7r2, OTDet v5r3, Magnet v2r7
 
 !======================== DetSys v5r6p2 2004-06-11 ========================
 ! 2004-06-11 - Marco Cattaneo
