@@ -1,4 +1,4 @@
-// $Id: TrackLinearExtrapolator.cpp,v 1.1 2005-03-10 14:41:03 hernando Exp $
+// $Id: TrackLinearExtrapolator.cpp,v 1.2 2005-03-16 14:10:05 hernando Exp $
 // Include files
 
 // from Gaudi
@@ -7,7 +7,7 @@
 // from TrEvent
 #include "Event/Track.h"
 #include "Event/State.h"
-#include "Event/TrGeneral.h"
+#include "Event/TrackParameters.h"
 
 // local
 #include "TrackLinearExtrapolator.h"
@@ -53,7 +53,7 @@ StatusCode TrackLinearExtrapolator::propagate( State& state,
 
   // check current z-position
   double dz = zNew - state.z();
-  if ( fabs(dz) > TrGeneral::hiTolerance ) {
+  if ( fabs(dz) > TrackParameters::hiTolerance ) {
     m_F[0][2] = dz; // tx*dz
     m_F[1][3] = dz; // ty*dz
     // extrapolate
@@ -89,7 +89,7 @@ StatusCode TrackLinearExtrapolator::propagate( State& state,
 
   double den = nVec.dot( slpVec );
 
-  if ( den < TrGeneral::looseTolerance ) return StatusCode::FAILURE;
+  if ( den < TrackParameters::looseTolerance ) return StatusCode::FAILURE;
 
   slpVec *= ( state.z() );
   posVec -= slpVec;

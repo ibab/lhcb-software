@@ -1,8 +1,12 @@
 !-----------------------------------------------------------------------------
 ! Package     : Tr/TrExtrapolators
-! Responsible : Eduardo Rodrigues
+! Responsible : Eduardo Rodrigues, Jose A. Hernando
 ! Purpose     : Package for tracking extrapolators
 !-----------------------------------------------------------------------------
+
+! 2005-03-15 - Jose A. Hernando
+	- Incorporating the Parabolic,FastParabolic,Herab,FirstClever 
+	TrackExtrapolators
 
 ! 2005-03-10 - Jose A. Hernando
 	- rename of the classes. 

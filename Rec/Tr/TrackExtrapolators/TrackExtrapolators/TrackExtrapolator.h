@@ -1,17 +1,15 @@
-// $Id: TrackExtrapolator.h,v 1.2 2005-03-11 10:09:22 hernando Exp $
-#ifndef TRACKEXTRAPOLATORS_TREXTRAPOLATOR_H 
-#define TRACKEXTRAPOLATORS_TREXTRAPOLATOR_H 1
+// $Id: TrackExtrapolator.h,v 1.3 2005-03-16 14:10:04 hernando Exp $
+#ifndef TRACKEXTRAPOLATORS_TRACKEXTRAPOLATOR_H 
+#define TRACKEXTRAPOLATORS_TRACKEXTRAPOLATOR_H 1
 
 // Include files
 // from Gaudi
 #include "GaudiAlg/GaudiTool.h"
-
 #include "Tools/ITrackExtrapolator.h"
+#include "Event/Track.h"
 
-class Track;
-class State;
 
-/** @class TrackExtrapolator TrackExtrapolator.h TrackExtrapolator/TrackExtrapolator.h
+/** @class TrackExtrapolator TrackExtrapolator/TrackExtrapolator.h
  *  
  *  A TrackExtrapolator is a base class implementing methods
  *  from the ITrackExtrapolator interface.
@@ -20,7 +18,7 @@ class State;
  *  @date   2004-12-17
  */
 class TrackExtrapolator : public GaudiTool,
-                       virtual public ITrackExtrapolator {
+                          virtual public ITrackExtrapolator {
 public: 
   /// Propagate a track to a given z-position
   virtual StatusCode propagate( const Track& track,
@@ -43,7 +41,6 @@ public:
               << " state " << state.position() << " at " << z << endreq;
     return StatusCode::FAILURE;
   }
-  
 
   /// Propagate a state to the intersection point with a given plane
   virtual StatusCode propagate( State& state,
@@ -51,7 +48,8 @@ public:
                                 ParticleID pid = ParticleID(211) ) 
   {
     warning() << " can not propagate " << pid.pid() 
-              << "state " << state.position() << " at " << plane.normal() << endreq;
+              << "state " << state.position() << " at " << plane.normal() 
+              << endreq;
     return StatusCode::FAILURE;
   }
   
@@ -218,4 +216,4 @@ protected:
 private:
 
 };
-#endif // TRACKEXTRAPOLATORS_TREXTRAPOLATOR_H
+#endif // TRACKEXTRAPOLATORS_TRACKEXTRAPOLATOR_H

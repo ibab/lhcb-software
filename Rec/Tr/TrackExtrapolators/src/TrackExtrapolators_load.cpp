@@ -1,4 +1,4 @@
-// $Id: TrackExtrapolators_load.cpp,v 1.1 2005-03-10 14:41:03 hernando Exp $
+// $Id: TrackExtrapolators_load.cpp,v 1.2 2005-03-16 14:10:05 hernando Exp $
 // Include files 
 
 
@@ -15,5 +15,9 @@
 DECLARE_FACTORY_ENTRIES(TrackExtrapolators) {
 
   DECLARE_TOOL( TrackLinearExtrapolator );
+  DECLARE_TOOL( TrackParabolicExtrapolator );
+  DECLARE_TOOL( TrackFastParabolicExtrapolator );
+  DECLARE_TOOL( TrackHerabExtrapolator );
+  DECLARE_TOOL( TrackFirstCleverExtrapolator );
                                                  
 }

@@ -1,6 +1,6 @@
 #============================================================================
 # Created    : 2005-02-09
-# Maintainer : Eduardo Rodrigues
+# Maintainer : Eduardo Rodrigues, Jose A. Hernando
 #
 # Documentation on the requirement file can be found at
 # http://cern.ch/lhcb-comp/Support/html/new_structure.pdf
@@ -18,19 +18,26 @@ branches          cmt doc src TrackExtrapolators
 include_dirs    $(TRACKEXTRAPOLATORSROOT)
 
 include_path      none
+
 #============================================================================
 # Used packages. Specify the version, * at the end specifies 'any revision'
 #    Put as many lines as needed, with all packages, without the '#'
 #============================================================================
-use   GaudiAlg       v8r2
-use   LHCbInterfaces v1r1   Kernel
-use   TrackEvent     v1r1   Event
+
+use	LHCbInterfaces	v1r1   Kernel
+use 	TrackEvent	v1r1   Event
+use	GaudiAlg	v8r2
+use	GSL	v*	LCG_Interfaces 
+use     DetDesc         v*     Det
 
 #============================================================================
 # Component library building rule
 #============================================================================
 library          TrackExtrapolators    ../src/*.cpp 
+
 #============================================================================
 # define component library link options
 #============================================================================
 apply_pattern    component_library library=TrackExtrapolators
+
+
