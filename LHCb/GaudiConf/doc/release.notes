@@ -1,6 +1,11 @@
 package GaudiConf
 package manager: F.Ranjard
 
+!========================== GaudiConf v6r6 2003-03-20 ======================
+! 2003-03-20 - Gloria Corti
+ - Add DstContent.opts with list of mandatory and optional items in
+   OODST
+
 !========================== GaudiConf v6r5 2002-12-02 ======================
 ! 2002-11-29 - Ivan Belyaev
  - options/units.opts  add few more convenient units (mm,cm)
