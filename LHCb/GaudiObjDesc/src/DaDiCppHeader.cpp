@@ -1,4 +1,4 @@
-// $Id: DaDiCppHeader.cpp,v 1.41 2002-02-12 08:22:26 mato Exp $
+// $Id: DaDiCppHeader.cpp,v 1.42 2002-02-13 12:23:42 mato Exp $
 
 #include "GaudiKernel/Kernel.h"
 
@@ -2063,6 +2063,8 @@ void printCppHeader(DaDiPackage* gddPackage,
     DaDiNamespace* gddNamespace = gddPackage->popDaDiNamespace();
     std::string gddNamespName = gddNamespace->name().transcode();
 
+    dbExportClass[gddNamespName] = "Event/" + gddNamespName;
+
     
     char* fileName = new char[256];
     strcpy(fileName, envOut);
@@ -2249,9 +2251,11 @@ void printCppHeader(DaDiPackage* gddPackage,
     std::string gddClassName = gddClass->className().transcode();
 
 
-    dbExportClass[std::string(gddClass->className().transcode())] =
+/*    dbExportClass[std::string(gddClass->className().transcode())] =
       std::string(gddPackage->packageName().transcode()) + "/" 
-      + std::string(gddClass->className().transcode());
+      + std::string(gddClass->className().transcode()); */
+
+    dbExportClass[gddClassName] = "Event/" + gddClassName;
 
     // ------------------------------------------------------------------------
     // Here starts the writing of the .h-file
