@@ -8,10 +8,13 @@ Purpose: LHCb reconstruction program
    . Add 1% inefficiency in IT, due to dead strips (ITAlgorithms v12r2)
    . Small changes to Velo noise processing (VeloAlgorithms v2r3)
    . Allow association of OTCluster to many MCParticles (OTAssociators v2r2)
+   . Improved VeloClusterOnTrack errors (TrFitEvent v3r1)
 
  - New features:
    . Prepare for dbase v249r* support (MuonID v3r3)
-   . Add support for getting OT digitization parameters from Xml (XmlDDDB v13r1)
+   . Prepare for VeloTT tracks (EventSys v12r6, TrEvent v11r3, TrFitEvent v3r1) 
+   . Get OT digitization parameters from Xml
+     (XmlDDDB v13r1, OTDet v3r0, OTAlgorithms v12r0, TrFitEvent v3r1)
    . Possibility to add Xtalk and Random noise to IT. Switched off by default
      (ITAlgorithms v12r2)
 
@@ -21,6 +24,8 @@ Purpose: LHCb reconstruction program
 
  - Packaging changes:
    . IT monitoring moved to a new package (ITCheckers v1r0, BrunelMoni.opts)
+   . TrTrack moved out of TrEvent package into TrFitEvent package
+     (EventSys v12r6, TrEvent v11r3, TrFitEvent v3r1)
 
 </PRE><H1><A NAME=v14r0>2002-10-14 Brunel v14r0</A></H1><PRE>
  - New tuning:

@@ -50,12 +50,12 @@ use CaloDet       v5r1  Det
 use CaloDetXmlCnv v2r0  Det
 use ITDet         v1r1  Det
 use MuonDet       v4r0  Det
-use OTDet         v2r2  Det
+use OTDet         v3r0  Det
 use VeloDet       v7r1  Det
 use Magnet        v1r1  Det
 
 # Event Model
-use EventSys     v12r5  Event
+use EventSys     v12r6  Event
 
 # SicB event data persistency
 use SicbCnv      v17r2  SICB
@@ -101,12 +101,12 @@ use ITAssociators	v2r1	IT
 use ITCheckers		v1r0	IT
 
 # Outer Tracker
-use OTAlgorithms  	v11r1  	OT
+use OTAlgorithms  	v12r0  	OT
 use OTAssociators  	v2r2  	OT
 
 # Tracking
 use TrKernel            v11r0   Tr
-use TrFitEvent          v3r0    Tr
+use TrFitEvent          v3r1    Tr
 use VeloTrack           v4r1    Velo
 use TrAssociators       v3r1    Tr
 use FwTrack             v4r2    Tr
