@@ -1,29 +1,54 @@
-// $Id: Digitisation.opts,v 1.4 2002-11-08 17:34:27 witoldp Exp $
+// $Id: Digitisation.opts,v 1.5 2002-12-13 17:24:08 witoldp Exp $ 
  
-//ApplicationMgr.DLLs   += { "OTDet", "OTAlgorithms" };
+ApplicationMgr.DLLs   += { "OTDet", "OTAlgorithms" };
 
-//Digitisation.Members += { "MCOTDepositCreator" ,
-//                          "MCOTDigitCreator",
-//                          "OTDigitCreator" };
+Digitisation.Members += { "MCOTDepositCreator" ,
+                          "MCOTDigitCreator",
+                          "OTDigitCreator" };
 
-//MCOTDepositCreator.OutputLevel = 1;
+MCOTDepositCreator.OutputLevel = 1;
 
 
 // Not really digitization, but just to check... 
-//Digitisation.Members += { "OTClusterCreator"};
+Digitisation.Members += { "OTClusterCreator"};
 
 // Monitoring
-//HistogramPersistencySvc.OutputFile = "ot_gauss.hbook";  // Monitoring histos
-//#include "$STDOPTS/Hbook.opts"
-//ApplicationMgr.DLLs += { "OTAssociators" };
-//Digitisation.Members += { "MCOTDepositMonitor",
-//                          "OTDigitMonitor",
-//                          "OTClusterMonitor",
-//                          "OTClusterChecker"
-//};
+HistogramPersistencySvc.OutputFile = "moni.hbook";  // Monitoring histos
+#include "$STDOPTS/Hbook.opts"
+ApplicationMgr.DLLs += { "OTAssociators" };
+Digitisation.Members += { "MCOTDepositMonitor",
+                          "OTDigitMonitor",
+                          "OTClusterMonitor",
+                          "OTClusterChecker"
+};
 
 
-//MCOTDigitCreator.OutputLevel = 1;
-//OTDigitCreator.OutputLevel = 1;
-//OTClusterCreator.OutputLevel = 1;
+MCOTDigitCreator.OutputLevel = 1;
+OTDigitCreator.OutputLevel = 1;
+OTClusterCreator.OutputLevel = 1;
 
+// Velo 
+
+ApplicationMgr.DLLs += { "VeloDet","VeloAlgorithms" } ;
+Digitisation.Members += {"VeloSim"};
+
+// JP Palacios Options file for VeloSim algorithm
+VeloSim.NoiseSim = true;
+VeloSim.coupling = true;
+VeloSim.SpillOver = false;
+VeloSim.InhomogeneousCharge = true;
+VeloSim.TestSimulation =  false;
+VeloSim.PileUp= true;
+VeloSim.OutputLevel=2;
+
+// JP Palacios Options file for VeloMonitor algorithm
+ApplicationMgr.DLLs += { "VeloAssociators" };
+Digitisation.Members += { "VeloMonitor"};
+
+VeloMonitor.TestMCVeloHit       = true;
+VeloMonitor.TestMCVeloFE        = true;
+VeloMonitor.TestVeloFullDigit = false;
+VeloMonitor.TestVeloCluster   = false;
+VeloMonitor.Resolution          = false;
+VeloMonitor.Printout            = 5;
+VeloMonitor.OutputLevel = 2;

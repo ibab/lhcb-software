@@ -1,4 +1,4 @@
-// $Id: Gauss.opts,v 1.18 2002-12-07 14:47:29 ibelyaev Exp $ 
+// $Id: Gauss.opts,v 1.19 2002-12-13 17:24:08 witoldp Exp $ 
 
 #units "$STDOPTS/units.opts"
 
@@ -14,16 +14,8 @@ ApplicationMgr.DLLs += { "GaudiAlg"} ;
 
 ApplicationMgr.HistogramPersistency = "NONE";
 
-#include "$STDOPTS/DetDesc.opts"
-
 // allow automatic creation of subdirectories in Event Transient Store 
 EventDataSvc.ForceLeaves = true ;
-
-// declare external services needed MAGNETIC FIELD 
-ApplicationMgr.ExtSvc +=  
-{ "MagneticFieldSvc"  };  
-MagneticFieldSvc.FieldMapFile = 
-"/afs/cern.ch/lhcb/software/NEW/SICB/dbase/v248r2/cdf/field044.cdf";
 
 ParticlePropertySvc.ParticlePropertiesFile = "$GAUSSROOT/data/particle.cdf" ;
 DetectorDataSvc.DetDbLocation = "$XMLDDDBROOT/DDDB/v249r0.xml";
@@ -38,7 +30,7 @@ ApplicationMgr.TopAlg          =
 // read job options for various steps
 #include "$GAUSSOPTS/Generator.opts"
 #include "$GAUSSOPTS/Simulation.opts"
-#include "$GAUSSOPTS/Digitisation.opts"
+//#include "$GAUSSOPTS/Digitisation.opts"
 
 // write an output file
 //#include "$GAUSSOPTS/GaussRootIO.opts"

@@ -4,7 +4,7 @@ version v7r0
 # =============================================================================
 # structure 
 # =============================================================================
-branches doc options cmt job data job
+branches doc options cmt job data
 
 # Main program and standard job options
 use GaudiConf           v6r5     
@@ -33,7 +33,7 @@ use GaussCalo           v1r0    Sim
 use CaloDetXmlCnv       v2r2    Det 
 
 #optional visualisation and UI
-#use GiGaVisU           v1r0    Sim
+use GiGaVisUI           v1r0    Sim
 
 #optional GaussImports
 #use GaussImports       v4r0    Sim

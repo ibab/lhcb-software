@@ -1,4 +1,6 @@
-// $Id: Gaussvis.opts,v 1.2 2002-11-13 16:50:17 witoldp Exp $ 
+// $Id: Gaussvis.opts,v 1.3 2002-12-13 17:24:08 witoldp Exp $ 
+
+#units "$STDOPTS/units.opts"
 
 AuditorSvc.Auditors = { "ChronoAuditor" };
 
@@ -12,16 +14,8 @@ ApplicationMgr.DLLs += { "GaudiAlg"} ;
 
 ApplicationMgr.HistogramPersistency = "NONE";
 
-#include "$STDOPTS/DetDesc.opts"
-
 // allow automatic creation of subdirectories in Event Transient Store 
 EventDataSvc.ForceLeaves = true ;
-
-// declare external services needed MAGNETIC FIELD 
-ApplicationMgr.ExtSvc +=  
-{ "MagneticFieldSvc"  };  
-MagneticFieldSvc.FieldMapFile = 
-"/afs/cern.ch/lhcb/software/NEW/SICB/dbase/v248r2/cdf/field044.cdf";
 
 ParticlePropertySvc.ParticlePropertiesFile = "$GAUSSROOT/data/particle.cdf" ;
 
@@ -36,7 +30,7 @@ ApplicationMgr.TopAlg          =
 #include "$GAUSSOPTS/Generator.opts"
 #include "$GAUSSOPTS/Simulation.opts"
 #include "$GAUSSOPTS/Visualisation.opts"
-#include "$GAUSSOPTS/Digitisation.opts"
+//#include "$GAUSSOPTS/Digitisation.opts"
 
 // write an output file
 //#include "$GAUSSOPTS/GaussRootIO.opts"
@@ -51,7 +45,7 @@ GiGaSvc.EmptyStack.OutputLevel = 2 ;
 GiGaGeomCnvSvc.OutputLevel = 3;
 
 ApplicationMgr.EvtSel     = "NONE" ;
-ApplicationMgr.EvtMax     = 3;
+ApplicationMgr.EvtMax     = 1;
 
 
 

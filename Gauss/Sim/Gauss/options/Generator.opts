@@ -1,4 +1,4 @@
-// $Id: Generator.opts,v 1.14 2002-12-13 17:02:56 ibelyaev Exp $ 
+// $Id: Generator.opts,v 1.15 2002-12-13 17:24:08 witoldp Exp $ 
 
 ApplicationMgr.DLLs += { "GeneratorModules" } ;
 
@@ -6,8 +6,9 @@ ApplicationMgr.DLLs += { "GeneratorModules" } ;
 
 //Generator.Members +={"SingleParticleGun"};
 Generator.Members += {"PythiaAlg"};
-//Generator.Members += {"SetDecayAlg","EvtDecayAlg"};
-//Generator.Members +={"DumpMC"};
+//Generator.Members +={"SetDecayAlg","EvtDecayAlg"};
+Generator.Members +={"DumpMC"};
+
 /// to add one more generator into the chain of generators uncomment the lines below 
 //ApplicationMgr.DLLs += { "EvGen" };
 //Generator.Members   += { "MCParticleGun" };
@@ -25,11 +26,6 @@ SingleParticleGun.ModeEta =   1 ;
 SingleParticleGun.ModePhi =   1 ;
 SingleParticleGun.PdgCode =  211 ;
 
-PythiaAlg.MDCYFile="$GAUSSROOT/data/particle.cdf";
+PythiaAlg.MDCYFile="$GAUSSROOT/data/PythiaStablePart.cdf";
 //PythiaAlg.FixedMode=0;
 //PythiaAlg.MeanInt=1.5;
-
-PythiaAlg.PythiaCommand = { "pypars mstp 82 3", "pypars parp 82 3.47", 
-                            "pypars parp 89 14000", "pypars parp 90 0.174",
-                            "pypars mstp 2 2", "pypars mstp 33 3",
-                            "pypars mstp 52 2", "pypars mstp 51 4032" } ;
