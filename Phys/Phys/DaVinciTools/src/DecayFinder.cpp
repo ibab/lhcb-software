@@ -1,4 +1,4 @@
-// $Id: DecayFinder.cpp,v 1.11 2004-07-29 14:32:16 pkoppenb Exp $
+// $Id: DecayFinder.cpp,v 1.12 2004-09-07 07:04:46 pkoppenb Exp $
 // Include files 
 #include <list>
 #include <functional>
@@ -6,13 +6,9 @@
 
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h"
-#include "GaudiKernel/MsgStream.h" 
 #include "GaudiKernel/GaudiException.h"
 #include "GaudiKernel/IParticlePropertySvc.h"
 #include "GaudiKernel/ParticleProperty.h"
-#include "GaudiKernel/SmartDataPtr.h"
-#include "GaudiKernel/IDataProviderSvc.h"
-#include "CLHEP/Units/SystemOfUnits.h"
 #include "Event/Particle.h"
 
 // local
@@ -35,7 +31,7 @@ const        IToolFactory& DecayFinderFactory = s_factory ;
 DecayFinder::DecayFinder( const std::string& type,
                           const std::string& name,
                           const IInterface* parent )
-  : AlgTool ( type, name , parent ),
+  : GaudiTool ( type, name , parent ),
     m_ppSvc(0), m_source("B0 -> pi+ pi-"), m_decay(0), m_members(0)
 {
   if( serviceLocator() ) {
@@ -60,43 +56,42 @@ DecayFinder::DecayFinder( const std::string& type,
 
 DecayFinder::~DecayFinder( )
 {
-  if( m_decay )
-    delete m_decay;
-  if( m_members )
-    delete m_members;
+  if( m_decay ) delete m_decay;
+  if( m_members ) delete m_members;
 }
 
 //=============================================================================
 
 StatusCode DecayFinder::initialize()
 {
-  MsgStream log( msgSvc(), name() );
-  log << MSG::DEBUG << "==> Initializing" << endreq;
+  StatusCode sc = GaudiTool::initialize();
+  if (!sc) return sc ;
+  
+  debug() << "==> Initializing" << endreq;
 
-  StatusCode sc = service("EventDataSvc", m_EDS, true);   
+  sc = service("EventDataSvc", m_EDS, true);   
   if( sc.isFailure() ) {
-    log << MSG::FATAL << " Unable to locate Event Data Service" << endreq;
+    fatal() << " Unable to locate Event Data Service" << endreq;
     return sc;
   }
 
   if( m_source.length() == 0 )
   {
-    log << MSG::WARNING << "No decay specified!" << endreq;
+    warning() << "No decay specified!" << endreq;
     return StatusCode::SUCCESS;
   }
   if( compile(m_source) )
   {
-    log << MSG::DEBUG << "The compilation of the decay was successfull"
-        << endreq;
+    debug() << "The compilation of the decay was successfull"
+            << endreq;
     return StatusCode::SUCCESS;
   }
-  log << MSG::DEBUG << "Could not compile the decay description" << endreq;
+  debug() << "Could not compile the decay description" << endreq;
   return StatusCode::FAILURE;
 }
 
 StatusCode DecayFinder::setDecay( std::string decay )
 {
-  MsgStream log( msgSvc(), name() );
 
   Descriptor *old_decay = m_decay;
   std::vector<ParticleMatcher *> *old_members = m_members;
@@ -104,10 +99,10 @@ StatusCode DecayFinder::setDecay( std::string decay )
   m_decay = NULL;
   m_members = NULL;
 
-  log << MSG::DEBUG << "Setting decay to " << decay << endreq;
+  debug() << "Setting decay to " << decay << endreq;
   if( compile(decay) ) {
-    log << MSG::DEBUG << "The compilation of the decay was successfull"
-        << endreq;
+    debug() << "The compilation of the decay was successfull"
+            << endreq;
     m_source = decay;
     if( old_decay )
       delete old_decay;
@@ -133,7 +128,7 @@ StatusCode DecayFinder::setDecay( std::string decay )
     delete m_members;
   }
   m_members = old_members;
-  log << MSG::DEBUG << "Could not compile the decay description" << endreq;
+  debug() << "Could not compile the decay description" << endreq;
 
   return StatusCode::FAILURE;
 }
@@ -164,7 +159,6 @@ std::string DecayFinder::revert( void )
 
 bool DecayFinder::compile( std::string &source )
 {
-  MsgStream log(msgSvc(), name());
   yy_buffer_state *bs = yy_scan_string( source.c_str() );
   try
   {
@@ -173,28 +167,26 @@ bool DecayFinder::compile( std::string &source )
   }
   catch( DescriptorError e )
   {
-    log << MSG::ERROR << "Invalid decay description '"
-        << source << "'" << endreq;
-    log << MSG::ERROR << e.cause() << endreq;
+    err() << "Invalid decay description '"
+          << source << "'" << endreq;
+    err() << e.cause() << endreq;
     yy_delete_buffer(bs);
     return false;
   }
   yy_delete_buffer(bs);
-  log << MSG::DEBUG << "Result of the compilation:\n"
-      << revert() << endreq;
+  debug() << "Result of the compilation:\n" << revert() << endreq;
   return true;
 }
 
 bool DecayFinder::hasDecay( const ParticleVector &event )
 {
-  MsgStream log( msgSvc(), name() );
-  log << MSG::DEBUG << "About to test the event" << endreq;
+  verbose() << "About to test the event" << endreq;
   const Particle *drop_me = NULL;
   if( m_decay )
     return m_decay->test( event.begin(), event.end(), drop_me );
   else
   {
-    log << MSG::WARNING << "Trying to find an unspecified decay!" << endreq;
+    warning() << "Trying to find an unspecified decay!" << endreq;
     return false;
   }
 }
@@ -202,27 +194,25 @@ bool DecayFinder::hasDecay( const ParticleVector &event )
 bool DecayFinder::findDecay( const ParticleVector &event,
                              const Particle *&previous_result )
 {
-  MsgStream log( msgSvc(), name() );
-  log << MSG::DEBUG << "About to test the event" << endreq;
+  verbose() << "About to test the event" << endreq;
   if( m_decay )
     return m_decay->test( event.begin(), event.end(), previous_result );
   else
   {
-    log << MSG::WARNING << "Trying to find an unspecified decay!" << endreq;
+    warning() << "Trying to find an unspecified decay!" << endreq;
     return false;
   }
 }
 
 bool DecayFinder::hasDecay( const Particles &event )
 {
-  MsgStream log( msgSvc(), name() );
-  log << MSG::DEBUG << "About to test the event" << endreq;
+  verbose() << "About to test the event" << endreq;
   const Particle *drop_me = NULL;
   if( m_decay )
     return m_decay->test( event.begin(), event.end(), drop_me );
   else
   {
-    log << MSG::WARNING << "Trying to find an unspecified decay!" << endreq;
+    warning() << "Trying to find an unspecified decay!" << endreq;
     return false;
   }
 }
@@ -230,25 +220,23 @@ bool DecayFinder::hasDecay( const Particles &event )
 bool DecayFinder::findDecay( const Particles &event,
                              const Particle *&previous_result )
 {
-  MsgStream log( msgSvc(), name() );
-  log << MSG::DEBUG << "About to test the event" << endreq;
+  verbose() << "About to test the event" << endreq;
   if( m_decay )
     return m_decay->test( event.begin(), event.end(), previous_result );
   else
   {
-    log << MSG::WARNING << "Trying to find an unspecified decay!" << endreq;
+    warning() << "Trying to find an unspecified decay!" << endreq;
     return false;
   }
 }
 
 bool DecayFinder::hasDecay( void )
 {
-  MsgStream log( msgSvc(), name() );
   SmartDataPtr<Particles> parts(m_EDS, ParticleLocation::Production );
   if( !parts )
   {
-    log << MSG::FATAL << "Enable to find Particles at '"
-        << ParticleLocation::Production << "'" << endreq;
+    fatal() << "Enable to find Particles at '"
+            << ParticleLocation::Production << "'" << endreq;
     return false;
   }
   return hasDecay( *parts );
@@ -256,12 +244,11 @@ bool DecayFinder::hasDecay( void )
 
 bool DecayFinder::findDecay( const Particle *&previous_result )
 {
-  MsgStream log( msgSvc(), name() );
   SmartDataPtr<Particles> parts(m_EDS, ParticleLocation::Production );
   if( !parts )
   {
-    log << MSG::FATAL << "Enable to find Particles at '"
-        << ParticleLocation::Production << "'" << endreq;
+    fatal() << "Enable to find Particles at '"
+            << ParticleLocation::Production << "'" << endreq;
     return false;
   }
   return findDecay( *parts, previous_result );
@@ -306,10 +293,10 @@ void DecayFinder::decayMembers( const Particle *head,
 }
 
 void DecayFinder::decaySubTrees(
-                      const Particle *head,
-                      std::vector<std::pair<const Particle*,
-                                            std::vector<Particle*> >
-                                 > & subtrees )
+                                const Particle *head,
+                                std::vector<std::pair<const Particle*,
+                                std::vector<Particle*> >
+                                > & subtrees )
 {
   m_decay->test(head, NULL, &subtrees);
 }
@@ -384,9 +371,9 @@ std::string DecayFinder::Descriptor::describe( void )
   
 bool DecayFinder::Descriptor::test( const Particle *part,
                                     std::vector<Particle*> *collect,
-                            std::vector<std::pair<const Particle*,
-                                                  std::vector<Particle*> >
-                                       > *subtrees )
+                                    std::vector<std::pair<const Particle*,
+                                    std::vector<Particle*> >
+                                    > *subtrees )
 {
   std::vector<Particle*> local_collect(0);
   std::vector<Particle*> *local = NULL;
@@ -413,7 +400,7 @@ bool DecayFinder::Descriptor::test( const Particle *part,
       if( subtrees ) {
         std::vector<std::pair<const Particle*,
           std::vector<Particle*> > > local_subtrees;
-          result = testDaughters(parts,local,&local_subtrees);
+        result = testDaughters(parts,local,&local_subtrees);
         if( result )
           subtrees->insert(subtrees->end(),
                            local_subtrees.begin(),
@@ -440,9 +427,9 @@ bool DecayFinder::Descriptor::test( const Particle *part,
 bool
 DecayFinder::Descriptor::testDaughters( std::list<const Particle*> &parts,
                                         std::vector<Particle*> *collect,
-                            std::vector<std::pair<const Particle*,
-                                                  std::vector<Particle*> >
-                                       > *subtrees)
+                                        std::vector<std::pair<const Particle*,
+                                        std::vector<Particle*> >
+                                        > *subtrees)
 {
   std::vector<Descriptor *>::iterator di;
   for( di = daughters.begin();
@@ -487,8 +474,8 @@ void DecayFinder::Descriptor::addDaughter( Descriptor *daughter )
 }
 
 void DecayFinder::Descriptor::addNonResonnantDaughters(
-                                           std::list<const Particle*> &parts,
-                                           const Particle *part )
+                                                       std::list<const Particle*> &parts,
+                                                       const Particle *part )
 {
   const Vertex *vtx = part->endVertex();
   if( vtx )
@@ -813,7 +800,7 @@ DecayFinder::ParticleMatcher::test( const Particle *part,
     {
       static Quarks Q[] = { empty, down, up, strange, charm, bottom, top };
       static Quarks AQ[] = { empty, antidown, antiup, antistrange,
-                              anticharm, antibottom, antitop };
+                             anticharm, antibottom, antitop };
       int q = firstQuark(part->particleID().pid());
       Quarks q1 = (q<0 ? AQ[-q] : Q[q]);
       Quarks cq1 = (q<0 ? Q[-q] : AQ[q]); // cc hypothesis
@@ -865,23 +852,23 @@ DecayFinder::ParticleMatcher::test( const Particle *part,
         result = true;
       // cq1, cq3, cq2
       else if( (pq1 == cq1 || pq1 == empty) && (pq2 == cq3 || pq2 == empty) &&
-          (pq3 == cq2 || pq3 == empty) )
+               (pq3 == cq2 || pq3 == empty) )
         result = true;
       // cq2, cq1, cq3
       else if( (pq1 == cq2 || pq1 == empty) && (pq2 == cq1 || pq2 == empty) &&
-          (pq3 == cq3 || pq3 == empty) )
+               (pq3 == cq3 || pq3 == empty) )
         result = true;
       // cq2, cq3, cq1
       else if( (pq1 == cq2 || pq1 == empty) && (pq2 == cq3 || pq2 == empty) &&
-          (pq3 == cq1 || pq3 == empty) )
+               (pq3 == cq1 || pq3 == empty) )
         result = true;
       // cq3, cq1, cq2
       else if( (pq1 == cq3 || pq1 == empty) && (pq2 == cq1 || pq2 == empty) &&
-          (pq3 == cq2 || pq3 == empty) )
+               (pq3 == cq2 || pq3 == empty) )
         result = true;
       // cq3, cq2, cq1
       else if( (pq1 == cq3 || pq1 == empty) && (pq2 == cq2 || pq2 == empty) &&
-          (pq3 == cq1 || pq3 == empty) )
+               (pq3 == cq1 || pq3 == empty) )
         result = true;
     }
     break;

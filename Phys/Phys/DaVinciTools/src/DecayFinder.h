@@ -1,4 +1,4 @@
-// $Id: DecayFinder.h,v 1.8 2004-07-29 14:32:16 pkoppenb Exp $
+// $Id: DecayFinder.h,v 1.9 2004-09-07 07:04:46 pkoppenb Exp $
 #ifndef TOOLS_DECAYFINDER_H 
 #define TOOLS_DECAYFINDER_H 1
 
@@ -12,7 +12,7 @@
 // from STL
 #include <string>
 
-#include "GaudiKernel/AlgTool.h"
+#include "GaudiAlg/GaudiTool.h"
 #include "DaVinciTools/IDecayFinder.h"
 
 class IParticlePropertySvc;
@@ -86,7 +86,7 @@ struct yy_buffer_state;
  *  @author Olivier Dormond
  *  @date   23/04/2002
  */
-class DecayFinder : public AlgTool, virtual public IDecayFinder
+class DecayFinder : public GaudiTool, virtual public IDecayFinder
 {
 public:
   /// Standard Constructor
@@ -149,8 +149,8 @@ public:
   /// Get a vector of pairs <mother, products> for all sub-trees.
   void decaySubTrees( const Particle *head,
                       std::vector<std::pair<const Particle*,
-                                            std::vector<Particle*> >
-                                 > & subtrees );
+                      std::vector<Particle*> >
+                      > & subtrees );
 
   /// Enumaration types used internally.
   enum Quarks { empty, up, down, charm, strange, top, bottom, antiup,
@@ -225,7 +225,7 @@ private:
     ~Descriptor();
 
     template<class iter> bool test( const iter first, const iter last,
-               const Particle *&previous_result ) {
+                                    const Particle *&previous_result ) {
       iter start;
       if( previous_result &&
           ((start=std::find(first,last,previous_result)) == last) ) {
@@ -266,7 +266,7 @@ private:
     }
     bool test(const Particle *mother, std::vector<Particle*> *collect=NULL,
               std::vector<std::pair<const Particle*,std::vector<Particle*> >
-                         > *subTree=NULL);
+              > *subTree=NULL);
 
     void setAlternate( Descriptor *a ) { alternate = a; }
     Descriptor *getAlternate( void ) { return alternate; }
@@ -284,8 +284,8 @@ private:
   private:
     bool testDaughters( std::list<const Particle*> &parts,
                         std::vector<Particle*> *collect=NULL,
-              std::vector<std::pair<const Particle*,std::vector<Particle*> >
-                         > *subTree=NULL );
+                        std::vector<std::pair<const Particle*,std::vector<Particle*> >
+                        > *subTree=NULL );
     void addNonResonnantDaughters( std::list<const Particle*> &parts,
                                    const Particle *part );
     void filterResonnances( std::list<const Particle*> &parts );

@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.51 2004-09-02 14:57:18 ranjard Exp $
+# $Id: requirements,v 1.52 2004-09-07 07:04:46 pkoppenb Exp $
 # Created    : 05/02/2002
 # Maintainer : P. Koppenburg
 #
@@ -6,19 +6,15 @@
 # http://cern.ch/lhcb-comp/Support/html/new_structure.pdf
 
 package           DaVinciTools
-version           v11r0
+version           v11r1
 
 # Structure, i.e. directories to process. 
 #============================================================================
 branches          cmt doc src
 
-# Exported header files
-#============================================================================
-include_dirs     $(DAVINCITOOLSROOT)
-
 # Used packages. 
 #============================================================================
-use  Boost               v* LCG_Interfaces
+use  Boost                 v* LCG_Interfaces
 use  DaVinciKernel         v* Phys
 use  ParticleMaker         v* Phys
 use  DaVinciTransporter    v* Phys
