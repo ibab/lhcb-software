@@ -8,7 +8,7 @@ DstWriter.OptItemList =
 , "/Event/PrevPrev/Header#1"
 , "/Event/Next#1"
 , "/Event/Next/Header#1"
-, "/Event/Gen/HardProcesses#1"
+, "/Event/MC/Signal#1"
 }; 
 DstWriter.ItemList = 
 {
@@ -18,10 +18,10 @@ DstWriter.ItemList =
 , "/Event/Gen/Header#1"
 , "/Event/Gen/Collisions#1"
 , "/Event/Gen/HepMCEvents#1"
+, "/Event/Gen/HardProcesses#1"
 , "/Event/MC#1"
 , "/Event/MC/Particles#1"
 , "/Event/MC/Vertices#1"
-, "/Event/MC/Signal#1"
 , "/Event/MC/MCTrackInfo#1"
 , "/Event/Trig#1"
 , "/Event/Trig/AlgUsedTimes#1"

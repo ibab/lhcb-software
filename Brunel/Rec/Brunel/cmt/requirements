@@ -1,5 +1,5 @@
 package Brunel
-version v23r6
+version v23r7
 
 branches doc cmt job options
 
@@ -40,12 +40,12 @@ use RootHistCnv         v9r1
 #-- Database
 use XmlDDDB		v22r1	Det
 use FieldMap		v4r5
-use ParamFiles          v3r5    -no_auto_imports
+use ParamFiles          v3r6    -no_auto_imports
 
-#-- LHCb libraries (from LHCB_v15r7)
-use LHCb	v15r7
+#-- LHCb libraries (from LHCB_v15r8)
+use LHCb	v15r8
 
-#-- BrunelSys v23r6 packages
+#-- BrunelSys v23r7 packages
 
 # Tools
 use LHCbTools		v1r1	Kernel
@@ -57,7 +57,7 @@ use BrunelAlgs          v3r4p1	Rec
 # Calorimeter
 use CaloMonitor         v2r2  	Calo
 use CaloReco            v2r1p1	Calo
-use CaloPIDs		v2r2	Calo
+use CaloPIDs		v2r3	Calo
 
 # Velo
 use VeloDAQ		v1r0	Velo

@@ -1,5 +1,5 @@
 package BrunelSys
-version v23r6
+version v23r7
 
 branches cmt doc
  
@@ -8,7 +8,7 @@ branches cmt doc
 #=======================================================
 
 # Brunel application
-use Brunel              v23r6	Rec
+use Brunel              v23r7	Rec
 
 # Brunel utilities
 use BrunelAlgs          v3r4p1	Rec
@@ -18,7 +18,7 @@ use AsctToLinker        v1r1    Rec
 # Calorimeter
 use CaloMonitor         v2r2 	Calo
 use CaloReco            v2r1p1	Calo
-use CaloPIDs		v2r2	Calo
+use CaloPIDs		v2r3	Calo
 
 # Velo
 use VeloDAQ		v1r0	Velo

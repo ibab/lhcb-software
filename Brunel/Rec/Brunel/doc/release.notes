@@ -3,6 +3,13 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
+</PRE><H1><A NAME=v23r7>2004-04-28 Brunel v23r7</A></H1><PRE>
+Requires data produced by Boole v5r6 or later (for signal)
+Requires data produced by Boole v5r7 or later (for B inclusive and minimum bias)
+
+- Bug fixes
+  . Make MC/Signal optional and Gen/HardProcesses mandatory on Dst definition
+
 </PRE><H1><A NAME=v23r6>2004-04-23 Brunel v23r6</A></H1><PRE>
 Requires data produced by Boole v5r6 or later
 
@@ -18,7 +25,7 @@ Requires data produced by Boole v5r6 or later
   . Remove multiple scattering fudge factor from extrapolation errors
     (TrExtrapolator v2r11)
   . Retune KShort tracking for higher efficiency (TrKShort v1r4)
-  . Update parametraization of Velo errors, scale factor is now 0.8
+  . Update parameterization of Velo errors, scale factor is now 0.8
     (TrFitEvent v4r5)
 
 - Persistency changes
