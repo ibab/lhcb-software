@@ -1,6 +1,12 @@
-# =============================================================================
+#============================================================================
+# Created    : 2002-12-12
+# Maintainer : Gloria CORTI
+#
+# Documentation on the requirement file can be found at
+# http://cern.ch/lhcb-comp/Support/html/new_structure.pdf
+#============================================================================
 package GaussTracker
-version v3r2
+version v3r3
 
 # =============== package structure ===========================================
 branches          cmt src doc

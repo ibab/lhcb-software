@@ -1,10 +1,11 @@
 !-----------------------------------------------------------------------------
 ! Package          : Sim/GaussTracker
-! Responsible	   : Witold Pokorski
+! Responsible	     : Gloria Corti
 ! Purpose          : collection of sensitive detectors, G4 actions, etc for
 !                    tracker like detectors (Velo, OT, IT, Muon)
 !-----------------------------------------------------------------------------
 
+!=========================== GaussTracker v3r3 ================================
 ! 2005-02-21 - Gloria Corti
  - src/GiGaSensDetMuon.cpp
    . modify Error message to have less redandat prinout at end of job
