@@ -12,6 +12,7 @@
       desc="Holds PDG+LHCb extention particle code. Based on HepPDT class"
       name="ParticleID"
      >
+       <import name="iostream" std="TRUE"/>
        &StlVector;
        <enum
         desc="PID digits (base 10) are: n nr nl nq1 ne2 nq3 nj"

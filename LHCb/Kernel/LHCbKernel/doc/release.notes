@@ -2,6 +2,11 @@ Package LHCbKernel
 Package manager: M.Cattaneo
 Purpose: LHCb specific Kernel classes
 
+!====================== LHCbKernel v5r5 2004-12-08 ========================
+! 2004-12-08 - Marco Cattaneo
+ - Use GaudiObjDesc v7r*, to pick up new Python based version
+ - Remove obsolete StreamBuffer stuff from CLHEPStreams.h, .cpp
+
 ! 2004-12-07 - Vanya BELYAEV
  - xml/CaloCellID.xml
     remove std::setw from MsgStream version of CaloCellID::fillStream 
@@ -11,6 +16,9 @@ Purpose: LHCb specific Kernel classes
 ! 2004-11-29 - Marco Cattaneo
  - Add std:pair<double,double> to lcgStl.h, lcg_selection.xml
  - Make .xml files independent of each other
+
+! 2004-10-26 - David Hutchcroft
+ - Modifed VeloChannelID.xml for new VeloDet v9r0 (backwards incompatible)
 
 !====================== LHCbKernel v5r4 2004-11-19 ========================
 ! 2004-11-03 - Chris Jones

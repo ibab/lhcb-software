@@ -4,6 +4,7 @@
 <gdd>
   <package name='LHCbKernel'>
     <class name='ITChannelID' author='Matthew Needham' desc='ITChannelID is a class that describes a single channel of LHCb Inner tracker.'>
+      <import name="iostream" std="TRUE"/>
       &StlVector;
       <desc> *  Now, only the station, layer, wafer and strip number can be retrieved.
  *  All numbers start from 1.</desc>

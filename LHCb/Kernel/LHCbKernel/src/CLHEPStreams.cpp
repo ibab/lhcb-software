@@ -1,4 +1,4 @@
-// $Id: CLHEPStreams.cpp,v 1.2 2002-05-07 14:49:40 ibelyaev Exp $
+// $Id: CLHEPStreams.cpp,v 1.3 2004-12-10 15:06:39 cattanem Exp $
 // Include files
 
 // CLHEP
@@ -16,56 +16,13 @@
 #include "CLHEP/Matrix/Matrix.h"
 #include "CLHEP/Matrix/SymMatrix.h"
 #include "CLHEP/Matrix/DiagMatrix.h"
-// GaudiKernel
-#include "GaudiKernel/StreamBuffer.h"
-#include "GaudiKernel/MsgStream.h"
+
 // Local
 #include "Kernel/CLHEPStreams.h"
 
 static const int NUMBERS_PER_LINE = 6;
+
 //------------------------------------------------------------------------------
-
-/** Input operator for class HepPoint3D to Gaudi StreamBuffer object
- *  @see StreamBuffer
- *  <A HREF="http://wwwinfo.cern.ch/asd/lhc++/clhep/manual/RefGuide/Geometry/HepPoint3D.html">class HepPoint3D</A>
- *  @author Markus Frank Markus.Frank@cern.ch
- *
- *  @param s     Gaudi stream
- *  @param value Reference to HepPoint3D structure
- *  @return reference to Gaudi stream
- */
-StreamBuffer& operator>> ( StreamBuffer& s, HepPoint3D& value )     {
-  float   x, y, z;
-  s >> x >> y >> z;
-  value.setX(x);
-  value.setY(y);
-  value.setZ(z);
-  return s;
-}
-
-/** Output operator for class HepPoint3D to Gaudi StreamBuffer object
- *  @see StreamBuffer
- *  <A HREF="http://wwwinfo.cern.ch/asd/lhc++/clhep/manual/RefGuide/Geometry/HepPoint3D.html">class HepPoint3D</A>
- *  @author Markus Frank Markus.Frank@cern.ch
- *
- *  @param s     Gaudi stream
- *  @param value const reference to HepPoint3D structure
- *  @return reference to Gaudi stream
- */
-StreamBuffer& operator<< ( StreamBuffer& s, const HepPoint3D& value)   {
-  return s  << float(value.x()) << float(value.y()) << float(value.z());
-}
-
-
-/** HepPoint3D printout method to Gaudi MsgStream object
- *  @see MsgStream
- *  <A HREF="http://wwwinfo.cern.ch/asd/lhc++/clhep/manual/RefGuide/Geometry/HepPoint3D.html">class HepPoint3D</A>
- *  @author Markus Frank Markus.Frank@cern.ch
- *
- *  @param s     Gaudi message stream
- *  @param value Reference to HepPoint3D structure
- *  @return reference to Gaudi message stream
- */
 MsgStream& printHepPoint3D(MsgStream& s, const HepPoint3D& value )         {
   s << "X=";   s.width(12);  s << value.x();
   s << " Y=";  s.width(12);  s << value.y();
@@ -74,47 +31,6 @@ MsgStream& printHepPoint3D(MsgStream& s, const HepPoint3D& value )         {
 }
 
 //------------------------------------------------------------------------------
-
-/** Input operator for class HepVector3D to Gaudi StreamBuffer object
- *  @see StreamBuffer
- *  <A HREF="http://wwwinfo.cern.ch/asd/lhc++/clhep/manual/RefGuide/Geometry/HepVector3D.html">class HepVector3D</A>
- *  @author Markus Frank Markus.Frank@cern.ch
- *
- *  @param s     Gaudi stream
- *  @param value Reference to HepVector3D structure
- *  @return reference to Gaudi stream
- */
-StreamBuffer& operator>> ( StreamBuffer& s, HepVector3D& value )     {
-  float   x, y, z;
-  s  >> x >> y >> z;
-  value.setX(x);
-  value.setY(y);
-  value.setZ(z);
-  return s;
-}
-
-/** Output operator for class HepVector3D to Gaudi StreamBuffer object
- *  @see StreamBuffer
- *  <A HREF="http://wwwinfo.cern.ch/asd/lhc++/clhep/manual/RefGuide/Geometry/HepVector3D.html">class HepVector3D</A>
- *  @author Markus Frank Markus.Frank@cern.ch
- *
- *  @param s     Gaudi stream
- *  @param value const reference to HepVector3D structure
- *  @return reference to Gaudi stream
- */
-StreamBuffer& operator<< ( StreamBuffer& s, const HepVector3D& value)   {
-  return s  << float(value.x()) << float(value.y()) << float(value.z());
-}
-
-/** HepVector3D printout method to Gaudi MsgStream object
- *  @see MsgStream
- *  <A HREF="http://wwwinfo.cern.ch/asd/lhc++/clhep/manual/RefGuide/Geometry/HepVector3D.html">class HepVector3D</A>
- *  @author Markus Frank Markus.Frank@cern.ch
- *
- *  @param s     Gaudi message stream
- *  @param value Reference to HepVector3D structure
- *  @return reference to Gaudi message stream
- */
 MsgStream& printHepVector3D(MsgStream& s, const HepVector3D& value )    {
   s << "X=";   s.width(12);  s << value.x();
   s << " Y=";  s.width(12);  s << value.y();
@@ -123,64 +39,6 @@ MsgStream& printHepVector3D(MsgStream& s, const HepVector3D& value )    {
 }
 
 //------------------------------------------------------------------------------
-
-/** Input operator for class HepLorentzVector to Gaudi StreamBuffer object
- *  @see StreamBuffer
- *  <A HREF="http://wwwinfo.cern.ch/asd/lhc++/clhep/manual/RefGuide/Vector/HepLorentzVector.html">class HepLorentzVector</A>
- *  @author Markus Frank Markus.Frank@cern.ch
- *
- *  @param s     Gaudi stream
- *  @param value Reference to HepLorentzVector structure
- *  @return reference to Gaudi stream
- */
-StreamBuffer& operator>> ( StreamBuffer& s, HepLorentzVector& value )   {
-  float px, py, pz, m2 ;
-  char  esign;
-  // get spatial components, 4-length squared and sing of time-like component
-  s  >> px >> py >> pz >> m2 >> esign ;
-  value.setPx ( px ) ;
-  value.setPy ( py ) ;
-  value.setPz ( pz ) ;
-  // calculate the time-like component 
-  value.setE  ( sqrt ( double ( m2 )           + 
-                       value.px() * value.px() + 
-                       value.py() * value.py() +
-                       value.pz() * value.pz() ) );
-  // correct the sign of time-like component 
-  if( esign ) { value.setE( -1 * value.e() ); }
-  return s;
-};
-
-/** Output operator for class HepLorentzVector to Gaudi StreamBuffer object
- *  @see StreamBuffer
- *  <A HREF="http://wwwinfo.cern.ch/asd/lhc++/clhep/manual/RefGuide/Vector/HepLorentzVector.html">class HepLorentzVector</A>
- *  @author Markus Frank Markus.Frank@cern.ch
- *
- *  @param s     Gaudi stream
- *  @param value const reference to HepLorentzVector structure
- *  @return reference to Gaudi stream
- */
-StreamBuffer& operator<< ( StreamBuffer& s, const HepLorentzVector& value) {
-  /** serialize spatial components, 
-   *  4-length squared and the  
-   *  sign of time-like component
-   */
-  return s  << float( value.px() ) 
-            << float( value.py() )
-            << float( value.pz() )
-            << float( value.m2() )  
-            << ( ( 0 > value.e () ) ? char( true ) : char( false ) ) ;
-};
-
-/** HepLorentzVector printout method to Gaudi MsgStream object
- *  @see MsgStream
- *  <A HREF="http://wwwinfo.cern.ch/asd/lhc++/clhep/manual/RefGuide/Vector/HepLorentzVector.html">class HepLorentzVector</A>
- *  @author Markus Frank Markus.Frank@cern.ch
- *
- *  @param s     Gaudi message stream
- *  @param value Reference to HepLorentzVector structure
- *  @return reference to Gaudi message stream
- */
 MsgStream& printHepLorentzVector(MsgStream& s, const HepLorentzVector& value )   {
   s << "px=";   s.width(12);  s << value.px();
   s << " py=";  s.width(12);  s << value.py();
@@ -190,60 +48,6 @@ MsgStream& printHepLorentzVector(MsgStream& s, const HepLorentzVector& value )  
 }
 
 //------------------------------------------------------------------------------
-
-/** Input operator for class HepVector to Gaudi StreamBuffer object
- *  @see StreamBuffer
- *  <A HREF="http://wwwinfo.cern.ch/asd/lhc++/clhep/manual/RefGuide/Matrix/HepVector.html">class HepVector</A>
- *  @author Markus Frank Markus.Frank@cern.ch
- *
- *  @param s     Gaudi stream
- *  @param value Reference to HepVector structure
- *  @return reference to Gaudi stream
- */
-StreamBuffer& operator>> ( StreamBuffer& s, HepVector & value )     {
-  // 256 elements is a maximum!
-  unsigned char nrow;
-  float _val;
-  s >> nrow;
-  if ( nrow != value.num_row() )  {
-    HepVector v(nrow);
-    value = v;
-  }
-  for ( int i = 1; i <= nrow; ++i)  {
-    s >> _val;
-    value(i) = _val;
-  }
-  return s;  
-}
-
-/** Output operator for class HepVector to Gaudi StreamBuffer object
- *  @see StreamBuffer
- *  <A HREF="http://wwwinfo.cern.ch/asd/lhc++/clhep/manual/RefGuide/Matrix/HepVector.html">class HepVector</A>
- *  @author Markus Frank Markus.Frank@cern.ch
- *
- *  @param s     Gaudi stream
- *  @param value const reference to HepVector structure
- *  @return reference to Gaudi stream
- */
-StreamBuffer& operator<< ( StreamBuffer& s, const HepVector& value)    {
-  // 256 elements is a maximum!
-  unsigned char  nrow = value.num_row();
-  s << nrow;
-  for ( int i = 1; i <= nrow; ++i)  {
-    s << float( value(i) );
-  }
-  return s;  
-}
-
-/** HepVector printout method to Gaudi MsgStream object
- *  @see MsgStream
- *  <A HREF="http://wwwinfo.cern.ch/asd/lhc++/clhep/manual/RefGuide/Matrix/HepVector.html">class HepVector</A>
- *  @author Markus Frank Markus.Frank@cern.ch
- *
- *  @param s     Gaudi message stream
- *  @param value Reference to HepVector structure
- *  @return reference to Gaudi message stream
- */
 MsgStream& printHepVector(MsgStream& s, const HepVector& value)   {
   int cnt = 0, nrow = value.num_row();
   for( int i=1; i<=nrow; i++, cnt=0 ) {
@@ -256,64 +60,6 @@ MsgStream& printHepVector(MsgStream& s, const HepVector& value)   {
 }
 
 //------------------------------------------------------------------------------
-
-/** Input operator for class HepSymMatrix to Gaudi StreamBuffer object
- *  @see StreamBuffer
- *  <A HREF="http://wwwinfo.cern.ch/asd/lhc++/clhep/manual/RefGuide/Matrix/HepSymMatrix.html">class HepSymMatrix</A>
- *  @author Markus Frank Markus.Frank@cern.ch
- *
- *  @param s     Gaudi stream
- *  @param value Reference to HepSymMatrix structure
- *  @return reference to Gaudi stream
- */
-StreamBuffer& operator>> ( StreamBuffer& s, HepSymMatrix & value )  {
-  // 256 elements is a maximum!
-  unsigned char  nrow;
-  float _val;
-  s >> nrow;
-  if ( nrow != value.num_row() )  {
-    HepSymMatrix m(nrow);
-    value = m;
-  }
-  for( int i=1; i<=nrow; i++ ) {
-    for( int j=1; j<=i; j++ ) {
-      s >> _val;
-      value(i,j) = _val;
-    }
-  }
-  return s;
-}
-
-/** Output operator for class HepSymMatrix to Gaudi StreamBuffer object
- *  @see StreamBuffer
- *  <A HREF="http://wwwinfo.cern.ch/asd/lhc++/clhep/manual/RefGuide/Matrix/HepSymMatrix.html">class HepSymMatrix</A>
- *  @author Markus Frank Markus.Frank@cern.ch
- *
- *  @param s     Gaudi stream
- *  @param value const reference to HepSymMatrix structure
- *  @return reference to Gaudi stream
- */
-StreamBuffer& operator<< ( StreamBuffer& s, const HepSymMatrix& value) {
-  // 256 elements is a maximum!
-  unsigned char  nrow = value.num_row();
-  s << nrow;
-  for( int i=1; i<=nrow; i++ ) {
-    for( int j=1; j<=i; j++ ) {
-      s << float(value(i,j));
-    }
-  }
-  return s;
-}
-
-/** HepSymMatrix printout method to Gaudi MsgStream object
- *  @see MsgStream
- *  <A HREF="http://wwwinfo.cern.ch/asd/lhc++/clhep/manual/RefGuide/Geometry/HepSymMatrix.html">class HepSymMatrix</A>
- *  @author Markus Frank Markus.Frank@cern.ch
- *
- *  @param s     Gaudi message stream
- *  @param value Reference to HepSymMatrix structure
- *  @return reference to Gaudi message stream
- */
 MsgStream& printHepSymMatrix(MsgStream& s, const HepSymMatrix & value)   {
   int cnt = 0, ncol = value.num_col();
   for( int i=1; i<=ncol; i++ ) {
@@ -330,60 +76,6 @@ MsgStream& printHepSymMatrix(MsgStream& s, const HepSymMatrix & value)   {
 }
 
 //------------------------------------------------------------------------------
-
-/** Input operator for class HepDiagMatrix to Gaudi StreamBuffer object
- *  @see StreamBuffer
- *  <A HREF="http://wwwinfo.cern.ch/asd/lhc++/clhep/manual/RefGuide/Matrix/HepDiagMatrix.html">class HepDiagMatrix</A>
- *  @author Markus Frank Markus.Frank@cern.ch
- *
- *  @param s     Gaudi stream
- *  @param value Reference to HepDiagMatrix structure
- *  @return reference to Gaudi stream
- */
-StreamBuffer& operator>> ( StreamBuffer& s, HepDiagMatrix & value )  {
-  // 256 elements is a maximum!
-  unsigned char nrow;
-  float _val;
-  s >> nrow;
-  if ( nrow != value.num_row() )  {
-    HepDiagMatrix m(nrow);
-    value = m;
-  }
-  for( int i=1; i<=nrow; i++ ) {
-    s >> _val;
-    value(i,i) = _val;
-  }
-  return s;
-}
-
-/** Output operator for class HepDiagMatrix to Gaudi StreamBuffer object
- *  @see StreamBuffer
- *  <A HREF="http://wwwinfo.cern.ch/asd/lhc++/clhep/manual/RefGuide/Matrix/HepDiagMatrix.html">class HepDiagMatrix</A>
- *  @author Markus Frank Markus.Frank@cern.ch
- *
- *  @param s     Gaudi stream
- *  @param value const reference to HepDiagMatrix structure
- *  @return reference to Gaudi stream
- */
-StreamBuffer& operator<< ( StreamBuffer& s, const HepDiagMatrix& value) {
-  // 256 elements is a maximum!
-  unsigned char   nrow = value.num_row();
-  s << nrow;
-  for( int i=1; i<=nrow; i++ ) {
-    s << float(value(i,i));
-  }
-  return s;
-}
-
-/** HepDiagMatrix printout method to Gaudi MsgStream object
- *  @see MsgStream
- *  <A HREF="http://wwwinfo.cern.ch/asd/lhc++/clhep/manual/RefGuide/Geometry/HepDiagMatrix.html">class HepDiagMatrix</A>
- *  @author Markus Frank Markus.Frank@cern.ch
- *
- *  @param s     Gaudi message stream
- *  @param value Reference to HepDiagMatrix structure
- *  @return reference to Gaudi message stream
- */
 MsgStream& printHepDiagMatrix(MsgStream& s, const HepDiagMatrix& value)   {
   int   ncol = value.num_col();
   int   cnt = 0;
@@ -397,66 +89,6 @@ MsgStream& printHepDiagMatrix(MsgStream& s, const HepDiagMatrix& value)   {
 }
 
 //------------------------------------------------------------------------------
-
-/** Input operator for class HepMatrix to Gaudi StreamBuffer object
- *  @see StreamBuffer
- *  <A HREF="http://wwwinfo.cern.ch/asd/lhc++/clhep/manual/RefGuide/Matrix/HepMatrix.html">class HepMatrix</A>
- *  @author Markus Frank Markus.Frank@cern.ch
- *
- *  @param s     Gaudi stream
- *  @param value Reference to HepMatrix structure
- *  @return reference to Gaudi stream
- */
-StreamBuffer& operator>> ( StreamBuffer& s, HepMatrix & value )   {
-  // 256 elements is a maximum!
-  unsigned char nrow, ncol;
-  float _val;
-  s >> nrow >> ncol;
-  if ( nrow != value.num_row() ||
-       ncol != value.num_col() )  {
-    HepMatrix m(nrow,ncol);
-    value = m;
-  }
-  for( int i=1; i<=nrow; i++ ) {
-    for( int j=1; j<=ncol; j++ ) {
-      s >> _val;
-      value(i,j) = _val;
-    }
-  }
-  return s;
-}
-
-/** Output operator for class HepMatrix to Gaudi StreamBuffer object
- *  @see StreamBuffer
- *  <A HREF="http://wwwinfo.cern.ch/asd/lhc++/clhep/manual/RefGuide/Matrix/HepMatrix.html">class HepMatrix</A>
- *  @author Markus Frank Markus.Frank@cern.ch
- *
- *  @param s     Gaudi stream
- *  @param value const reference to HepMatrix structure
- *  @return reference to Gaudi stream
- */
-StreamBuffer& operator<< ( StreamBuffer& s, const HepMatrix& value) {
-  // 256 elements is a maximum!
-  unsigned char   nrow = value.num_row();
-  unsigned char   ncol = value.num_col();
-  s << nrow << ncol;
-  for( int i=1; i<=nrow; i++ ) {
-    for( int j=1; j<=ncol; j++ ) {
-      s << float(value(i,j));
-    }
-  }
-  return s;
-}
-
-/** HepMatrix printout method to Gaudi MsgStream object
- *  @see MsgStream
- *  <A HREF="http://wwwinfo.cern.ch/asd/lhc++/clhep/manual/RefGuide/Geometry/HepMatrix.html">class HepMatrix</A>
- *  @author Markus Frank Markus.Frank@cern.ch
- *
- *  @param s     Gaudi message stream
- *  @param value Reference to HepMatrix structure
- *  @return reference to Gaudi message stream
- */
 MsgStream& printHepMatrix(MsgStream& s, const HepMatrix& value)    {
   int nrow = value.num_row();
   int ncol = value.num_col();
@@ -475,87 +107,14 @@ MsgStream& printHepMatrix(MsgStream& s, const HepMatrix& value)    {
 }
 
 //------------------------------------------------------------------------------
-
-/** output operator for class HepRotation to Gaudi StreamBuffer object
- *  @see StreamBuffer
- *  <a href="http://wwwinfo.cern.ch/asd/lhc++/clhep/manual/RefGuide/Vector/include/HepRotation.html>class Rotation</a>
- *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
- *  @param sb Gaudi stream
- *  @param aa const reference to HepRotation structure
- *  @return reference to Gaudi stream
- */
-StreamBuffer& operator<<( StreamBuffer& sb , const HepRotation& aa )  { 
-  return sb << aa.axisAngle() ;
-}
-
-/** input operator for class HepRotation from Gaudi StreamBuffer object
- *  @see StreamBuffer
- *  <a href="http://wwwinfo.cern.ch/asd/lhc++/clhep/manual/RefGuide/Vector/include/HepRotation.html>class Rotation</a>
- *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
- *  @param sb Gaudi stream
- *  @param aa reference to HepRotation structure
- *  @return reference to Gaudi stream
- */
-StreamBuffer& operator>>( StreamBuffer& sb ,       HepRotation& aa )  {
-  HepAxisAngle aux;
-  sb >> aux ; aa.set( aux );
-  return sb ; 
-}
-
-/** HepRotation printout method to Gaudi MsgStream object
- *  @see MsgStream
- *  <A HREF="http://wwwinfo.cern.ch/asd/lhc++/clhep/manual/RefGuide/Vector/HepRotation.html">class HepRotation</A>
- *  @author Markus Frank Markus.Frank@cern.ch
- *
- *  @param ms    Gaudi message stream
- *  @param aa    Reference to HepRotation structure
- *  @return reference to Gaudi message stream
- */
 MsgStream& printHepRotation(MsgStream& ms, const HepRotation & aa)  {
   if( aa.isIdentity() ) { ms << "Identity rotation"; }
   else                  { ms << "Rotation: " << aa.axisAngle() ; }
-  ///
+
   return ms ;
 }
 
 //------------------------------------------------------------------------------
-
-/** output operator for class HepAxisAngle to Gaudi StreamBuffer object
- *  @see StreamBuffer
- *  <a href="http://wwwinfo.cern.ch/asd/lhc++/clhep/manual/RefGuide/Vector/include/AxisAngle_h.html>class HepAxisAngle</a>
- *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
- *  @param sb Gaudi stream
- *  @param aa const reference to HepAxisAngle structure
- *  @return reference to Gaudi stream
- */
-StreamBuffer& operator<<( StreamBuffer& sb , const HepAxisAngle& aa ) {
-  return sb << HepVector3D( aa.axis() ) << (float) aa.delta() ;
-}
-
-/** input operator for class HepAxisAngle from Gaudi StreamBuffer object
- *  @see StreamBuffer
- *  <a href="http://wwwinfo.cern.ch/asd/lhc++/clhep/manual/RefGuide/Vector/include/AxisAngle_h.html>class HepAxisAngle</a>
- *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
- *  @param sb Gaudi stream
- *  @param aa reference to HepAxisAngle structure
- *  @return reference to Gaudi stream
- */
-StreamBuffer& operator>>( StreamBuffer& sb ,       HepAxisAngle& aa )  {
-  // de-serialize the axis
-  HepVector3D axis  ; sb >> axis  ; aa.setAxis  ( axis  );
-  // de-serialize the angle 
-  float       delta ; sb >> delta ; aa.setDelta ( delta );
-  return sb ;
-}
-
-/** printout operator for class HepAxisAngle to Gaudi Message stream
- *  @see StreamBuffer
- *  <a href="http://wwwinfo.cern.ch/asd/lhc++/clhep/manual/RefGuide/Vector/include/AxisAngle_h.html>class HepAxisAngle</a>
- *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
- *  @param ms Gaudi Message Stream
- *  @param aa reference to HepAxisAngle structure
- *  @return reference to Gaudi Message Stream
- */
 MsgStream& printHepAxisAngle( MsgStream&    ms , const HepAxisAngle& aa ) {
   const HepVector3D axis( aa.axis() );
   if( 0 != aa.delta() )     {
@@ -567,50 +126,10 @@ MsgStream& printHepAxisAngle( MsgStream&    ms , const HepAxisAngle& aa ) {
   else     { 
     ms << "identity rotation" ; 
   }
-  ///
   return ms;
 }
 
 //------------------------------------------------------------------------------
-
-/** output operator for class HepTransform3D to Gaudi StreamBuffer object
- *  @see StreamBuffer
- *  <a href="http://wwwinfo.cern.ch/asd/lhc++/clhep/manual/RefGuide/Geometry/include/HepTransform3D.html>class HepTransform3D</a>
- *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
- *  @param sb Gaudi stream
- *  @param aa const reference to HepRotation structure
- *  @return reference to Gaudi stream
- */
-StreamBuffer& operator<<( StreamBuffer& sb , const HepTransform3D& aa ) {
-  return sb << aa.getRotation() << HepVector3D( aa.getTranslation() );
-}
-
-/** input operator for class HepTransform3D from Gaudi StreamBuffer object
- *  @see StreamBuffer
- *  <a href="http://wwwinfo.cern.ch/asd/lhc++/clhep/manual/RefGuide/Geometry/include/HepTransform3D.html>class HepTransform3D</a>
- *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
- *  @param sb Gaudi stream
- *  @param aa reference to HepRotation structure
- *  @return reference to Gaudi stream
- */
-StreamBuffer& operator>>( StreamBuffer& sb ,       HepTransform3D& aa )  {
-  HepRotation rotation    ;
-  sb >> rotation    ;
-  HepVector3D translation ;
-  sb >> translation ;
-  const HepTransform3D aux( rotation , translation );
-  aa = aux ;
-  return sb ;
-}
-
-/** printout operator for class HepTransform3D to Gaudi Message stream
- *  @see StreamBuffer
- *  <a href="http://wwwinfo.cern.ch/asd/lhc++/clhep/manual/RefGuide/Geometry/include/HepTransform3D.html>class HepTransform3D</a>
- *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
- *  @param ms Gaudi Message Stream
- *  @param aa reference to HepAxisAngle structure
- *  @return reference to Gaudi Message Stream
- */
 MsgStream& printHepTransform3D( MsgStream&    ms , const HepTransform3D& aa )
 {
   const HepRotation rotation    ( aa.getRotation    () );
@@ -630,6 +149,5 @@ MsgStream& printHepTransform3D( MsgStream&    ms , const HepTransform3D& aa )
        << translation.y() << "," 
        << translation.z() << ") " ;    
   }
-  ///
   return ms ;
 }

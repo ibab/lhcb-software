@@ -1,10 +1,10 @@
-# $Id: requirements,v 1.64 2004-11-29 13:59:49 cattanem Exp $
+# $Id: requirements,v 1.65 2004-12-10 15:06:39 cattanem Exp $
 # =============================================================================
 package LHCbKernel
 author  M.Frank    CERN/LHCb
 manager M.Cattaneo CERN/LHCb
 
-version v5r4
+version v5r5
 
 include_dirs $(LHCBKERNELROOT)
 
@@ -13,12 +13,12 @@ use CLHEP        v*    LCG_Interfaces
 
 # Produce Header-Files from XML description, overriding default destination
 #============================================================================
-macro LHCbKernelObj2Doth_GODflags " -o ../Kernel/ " \
-      WIN32                       " -o ..\Kernel\ "
+macro LHCbKernelObj2Doth_GODflags " -s ../Kernel/ " \
+      WIN32                       " -s ..\Kernel\ "
 document obj2doth LHCbKernelObj2Doth ../xml/*.xml
 
-macro LHCbKernelObj2Dict_GODflags " -l Kernel/ " \
-      WIN32                       " -l Kernel\ "
+#macro LHCbKernelObj2Dict_GODflags " -l Kernel/ " \
+#      WIN32                       " -l Kernel\ "
 document obj2dict LHCbKernelObj2Dict ../xml/*.xml
 
 # Produce lcg dictionary for stl containers used in LHCb
@@ -39,4 +39,4 @@ apply_pattern component_library library=LHCbKernelDict
 apply_pattern linker_library    library=LHCbKernel
 
 private
-use GaudiObjDesc v6r*
+use GaudiObjDesc v7r*
