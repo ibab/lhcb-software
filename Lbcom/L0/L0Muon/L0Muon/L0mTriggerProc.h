@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/L0/L0Muon/L0Muon/L0mTriggerProc.h,v 1.1 2001-06-07 16:46:17 atsareg Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/L0/L0Muon/L0Muon/L0mTriggerProc.h,v 1.2 2001-07-09 19:34:28 atsareg Exp $
 
 #ifndef L0MUON_L0MTRIGGERPROC_H
 #define L0MUON_L0MTRIGGERPROC_H 1
@@ -10,6 +10,7 @@
 
 // Private include files
 #include "L0Muon/L0mTower.h"
+#include "L0Muon/L0mProcUnit.h"
 
 /** @class L0mTrigger L0mTrigger.h L0mTrigger.h 
 
@@ -36,15 +37,19 @@ protected:
   /// Create a tower starting from a pad in M3
   L0mTower* createTower(L0mPad* pad, ObjectVector<L0mPad>* pads); 
 
-  std::vector<int> m_foiXSize;  
-  std::vector<int> m_foiYSize;  
-  std::vector<double> m_ptParameters;  
-  std::string m_outputCandidates;
+  std::vector<int> m_foiXSize;         // values of FoI's in X
+  std::vector<int> m_foiYSize;         // values of FoI's in Y
+  std::vector<double> m_ptParameters;  // Pt calculation parameters
+  std::vector<int> m_extraM1;          // parameters for extrapolation to M1
+  std::string m_outputCandidates; // candidates location in the transient store
   std::string m_inputPads;
   std::string m_mode;
+  bool m_limitedY;                // flag to use limitedY mode
   
   ObjectVector<L0mTower>* m_towers;
   std::vector<MuonLayout> m_layout;
+  
+  L0mProcUnit m_procUnit;
 
 };
 

@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/L0/L0Muon/src/component/L0mTriggerProc.cpp,v 1.2 2001-06-11 20:16:52 atsareg Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/L0/L0Muon/src/component/L0mTriggerProc.cpp,v 1.3 2001-07-09 19:34:26 atsareg Exp $
 
 /// Include files
 /// Gaudi interfaces
@@ -39,12 +39,14 @@ L0mTriggerProc::L0mTriggerProc(const std::string& name, ISvcLocator* pSvcLocator
    declareProperty("FoiXSize", m_foiXSize);
    declareProperty("FoiYSize", m_foiYSize);
    declareProperty("PtParameters", m_ptParameters);
+   declareProperty("M1Extrapolation", m_extraM1);
    m_outputCandidates = "/Event/MC/L0MuonCandidates";
    declareProperty("outputCandidates", m_outputCandidates);
    m_inputPads = "/Event/MC/L0mPads";
    declareProperty("outputCandidates", m_inputPads);
    m_mode = "Standard";
    declareProperty("Mode", m_mode);
+   declareProperty("LimitedY", m_limitedY = true );
 }
 
 
@@ -59,6 +61,15 @@ StatusCode L0mTriggerProc::initialize()   {
     m_layout.push_back(MuonLayout(48,8));
     m_layout.push_back(MuonLayout(12,8));
     m_layout.push_back(MuonLayout(12,8));
+    
+    // Build an abstract Processing Unit just to hold algorithm parameters
+    m_procUnit = L0mProcUnit(m_ptParameters,
+                             m_foiXSize,
+			     m_foiYSize,
+			     m_extraM1,
+			     10.,10.,
+			     MuonTile());
+			     
     
     log << MSG::INFO << "Initialized in " << m_mode << " mode" << endreq;
     
@@ -111,6 +122,7 @@ StatusCode L0mTriggerProc::execute() {
   for(ip=pads->begin(); ip != pads->end(); ip++ ) {
     if((*ip)->station() == 2) {
       lt = createTower(*ip, pads);
+      lt->setProcUnit(&m_procUnit);
       m_towers->push_back(lt);
     }       
   }
@@ -144,9 +156,7 @@ StatusCode L0mTriggerProc::execute() {
  
   for ( it=m_towers->begin(); it != m_towers->end(); it++ ) {
     if ((*it)->isFull()) {
-      lcd = (*it)->createCandidate(m_ptParameters,
-	                           m_foiXSize,
-				   m_foiYSize);
+      lcd = (*it)->createCandidate();
       if(lcd) {
 
 	//  Track found ! 
@@ -185,7 +195,7 @@ StatusCode L0mTriggerProc::finalize()  {
 L0mTower* L0mTriggerProc::createTower(L0mPad* pad, ObjectVector<L0mPad>* pads) {
 
   MsgStream log(msgSvc(), name());
-        
+          
   int st = pad->station();
   if ( st != 2 ) {
       log << MSG::DEBUG << "!!! Wrong station in createTower " 
@@ -195,6 +205,7 @@ L0mTower* L0mTriggerProc::createTower(L0mPad* pad, ObjectVector<L0mPad>* pads) {
   
   int nx = pad->nX();
   int ny = pad->nY();
+  
   L0mTower* lt = new L0mTower(pad); 
   
   std::vector<std::vector<MuonTile> > vtiles(5);
@@ -233,6 +244,8 @@ L0mTower* L0mTriggerProc::createTower(L0mPad* pad, ObjectVector<L0mPad>* pads) {
       }
     }
   }
+    
+  if(m_limitedY) lt->limitedY();  
   return lt;
 }    
 
