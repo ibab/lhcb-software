@@ -26,7 +26,7 @@
                       DetDesc v14r1p1, STDet v1r2, RichDet v7r2, OTDet v5r3, 
                       Magnet v2r1, AssociatorsSys v1r14, ITAssociators v2r9, 
                       Associators v2r2p1, IOExample v1r2, MCTools v1r7, 
-                      GaudiConf v8r0
+                      GaudiConf v8r0, DetDescExample v6r2p1
 
  - In GaudiConf v8r0:
    . Remove RootDb.opts, which is obsolete with Gaudi v15

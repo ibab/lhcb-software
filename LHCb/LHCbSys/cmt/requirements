@@ -79,5 +79,5 @@ use RichDAQ		v1r5	Rich
 
 # LHCb  Examples
 use DetDescChecks	v2r1	Det
-use DetDescExample      v6r2	Ex
+use DetDescExample      v6r2p1	Ex
 use IOExample    	v1r2	Ex
