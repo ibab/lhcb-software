@@ -5,10 +5,20 @@
 ! Purpose     : LHCb OO kernel packages
 !-----------------------------------------------------------------------------
 
-!======================= LHCbSys v17r3 2005-01-14 =======================
-! 2005-01-14 - Marco Cattaneo
+!======================= LHCbSys v17r3 2005-01-17 =======================
+! 2005-01-17 - Marco Cattaneo
  - New packages:      DAQSys v1r0, CaloDAQ v1r0
- - Modified packages: EventSys v19r3, CaloEvent v13r8, L0Event v14r2
+ - Modified packages: KernelSys v4r6, LHCbKernel v5r6, RichKernel v5r2,
+     EventSys v19r3, CaloEvent v13r8, L0Event v14r2, TrgEvent v5r3,
+     RichDAQ v2r0, RichTools v1r3, RichMCTools v2r4
+
+ - In LHCbKernel v5r6:
+   . Improved RichSmartID constructors and messaging (backward compatible)
+
+ - In RichKernel v5r2:
+   . Add base classes for monitoring tools and algorithms
+   . Add interfaces for new DAQ tools
+   . Change interface to RichSmartID tool
 
  - In DAQSys v1r0:
    . Hat package for all xxDAQ packages
@@ -19,12 +29,29 @@
    . More compact coding of Prs/Ecal/Hcal energies (-1.5 kByte/evt). Decoding
      compatible both with this new format and the old one
 
+ - In RichDAQ v2r0:
+   . Complete rewrite (see release notes) 
+   . Add new versions of data format
+     + Version 0 : Old version used for DC04
+     + Version 1 : Same HPD bank structure as version 0, but new headers and 
+                   L1 board grouping
+     + Version 2 : Same as version 1 but using new zero-suppressed HPD format
+
  - In CaloEvent v13r8:
    . RawBuffer encoding, decoding (and data on demand options) moved to CaloDAQ
 
  - In L0Event v14r2:
    . Re-implement L0PrsSpdHit and L0CaloADC
    . L0PrsSpdHit is now a KeyedObject (transient object)
+
+ - In TrgEvent v5r3:
+   . Add muon hits as track hit
+
+ - In RichTools v1r3:
+   . Updates to RichSmartID Tool
+
+ - In RichMCTools v2r4:
+   . Add algorithm BuildMCRichDigitLinks (previously in RichDAQ)
  
 !====================== LHCbSys v17r2p1 2005-01-13 ======================
 ! 2005-01-13 - Marco Cattaneo

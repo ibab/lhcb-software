@@ -16,13 +16,13 @@ use GaudiObjDesc	v7r0
 use HepMC	v4r121p0	Sim
 
 # Kernel packages
-use KernelSys   	v4r5	Kernel
-use LHCbKernel  	v5r5	Kernel
+use KernelSys   	v4r6	Kernel
+use LHCbKernel  	v5r6	Kernel
 use Relations		v2r1	Kernel
 use CaloKernel  	v3r2	Calo
 use MuonKernel  	v2r6	Muon
 use TrKernel    	v11r4	Tr
-use RichKernel  	v5r1	Rich
+use RichKernel  	v5r2	Rich
 use VeloKernel  	v1r5    Velo
 
 # Detector description
@@ -56,7 +56,7 @@ use DAQEvent		v4r5	Event
 use GenEvent    	v3r3	Event
 use EventAssoc          v1r4    Event
 use LinkerEvent         v1r5    Event
-use TrgEvent            v5r2    Event
+use TrgEvent            v5r3    Event
 
 # Associators
 use AssociatorsSys	v2r2	Associators
@@ -74,7 +74,7 @@ use MuonDAQ		v1r2	Muon
 use STDAQ		v1r4	IT
 use OTDAQ		v3r2	OT
 use VeloDAQ		v2r2	Velo
-use RichDAQ		v1r6	Rich
+use RichDAQ		v2r0	Rich
 use CaloDAQ		v1r0	Calo
 
 # Other stuff
@@ -83,8 +83,8 @@ use LHCbAlgs		v1r3	Kernel
 use MCTools		v1r10	Phys
 use CaloInterfaces	v4r2	Calo
 use CaloUtils		v4r8	Calo
-use RichTools		v1r2	Rich
-use RichMCTools		v2r3	Rich
+use RichTools		v1r3	Rich
+use RichMCTools		v2r4	Rich
 
 # LHCb  Examples
 use DetDescChecks	v2r1	Det
