@@ -11,7 +11,7 @@ use Gauss		v11r1	Sim
 
 # GEANT4 libraries
 use GEANT4	        v5r2    Sim
-use G4VisUI             v1r3    Sim
+use G4VisUI             v1r4    Sim
 
 # Generator stuff ...
 use EvtGen              v3r2    Gen

@@ -6,7 +6,7 @@
 
 !=========================== GaussSys v11r1 2003-07-01 ===============
 ! 2003-07-01 - Florence RANJARD
- - use GEANT4 v5r2, Gauss v11r1
+ - use GEANT4 v5r2, Gauss v11r1, G4VisUI v1r4 (remove OPACS)
 
 !========================== GaussSys v11r0 2003-06-19 =================
 ! 2003-06-19 - Florence RANJARD
