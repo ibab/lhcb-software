@@ -36,7 +36,7 @@ use GaudiTools		v8r1
 use GaudiAud 		v6r4
 use GaudiDb 		v9r2
 use GaudiRootDb 	v9r4
-use GaudiPoolDb		v1r5
+use GaudiPoolDb		v1r6
 use GaudiObjDesc 	v6r2p1
 use HbookCnv 		v14r1
 
