@@ -1,4 +1,4 @@
-// $Id: DeVeloPhiType.cpp,v 1.6 2004-02-24 18:27:09 mtobin Exp $
+// $Id: DeVeloPhiType.cpp,v 1.7 2004-02-27 16:56:11 mtobin Exp $
 //==============================================================================
 #define VELODET_DEVELOPHITYPE_CPP 1
 //==============================================================================
@@ -73,10 +73,6 @@ StatusCode DeVeloPhiType::initialize()
   m_innerRadius = this->innerRadius();
   m_outerRadius = this->outerRadius();
   m_middleRadius = this->userParameterAsDouble("PhiBoundRadius"); // PhiBound
-  // Set the stereo angle
-  m_isDownstream=false;
-  if(this->userParameterAsString("Type") == "PhiDL" || 
-     this->userParameterAsString("Type") == "PhiDR") m_isDownstream=true;
   // Point where strips of inner/outer regions cross
   m_phiOrigin = this->userParameterAsDouble("PhiOrigin");
   m_phiOrigin -= halfpi;
