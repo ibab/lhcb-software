@@ -111,20 +111,12 @@
   fun:hstati_
 }
 
-
 # DetDesc (v12r0) - may be fixed?
 {
   DetDesc/addParam
   Value8
   fun:*
   fun:*
-  fun:*
-  fun:addParam__8ParamSetGt12basic_string*
-}
-
-{
-  DetDesc/addParam2
-  Value8
   fun:*
   fun:addParam__8ParamSetGt12basic_string*
 }
@@ -141,22 +133,6 @@
   Cond
   fun:execute__16TrToRichTrackAlg
 }
-
-# L1Decision problems
-#{
-#  L1Decision/v2r1/VeloTrackTool
-#  Cond
-#  fun:select2D__15L1VeloTrackTool*
-#  fun:execute__6Level1
-#}
-
-#{
-#  L1Decision/v2r1/L1VeloTT
-#  Value8
-#  fun:f_matchTT__9L1Velo2TT*
-#  fun:matchTT__9L1Velo2TT*
-#  fun:execute__6Level1
-#}
 
 # Random numbers usage (CLHEP 1.8.0.0)
 {
