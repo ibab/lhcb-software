@@ -7,13 +7,11 @@
 //ToolSvc.RichToolRegistry.Tools += { "RichTrgLocalPIDTool/RichTrgLocalPIDTool" };
 //BrunelRecoRICHSeq.Members += { "RichTrgLocalPIDMakerAlg/MakeRichTrgLocalPIDs" };
 //ToolSvc.RichTrgLocalPIDTool.kpcuts = 0;
-//MakeRichTrgLocalPIDs.OutputPIDLocation = "Rec/Rich/TrgLocalPIDs";
+//MakeRichTrgLocalPIDs.OutputPIDLocation = "Rec/Rich/PIDs";
 
 // Fast Global PID
 //===========================================================================
-//BrunelRecoRICHSeq.Members              += { "RichTrgGlobalPIDAlgOLD/RichTrgGlobalPID" };
-BrunelRecoRICHSeq.Members              += { "RichTrgGlobalPIDAlg/RichTrgGlobalPID" };
-RichTrgGlobalLLMinAlg.BuildRichPIDs     = true;
-RichTrgGlobalLLMinAlg.TrackSelection    = { "trigger" };
-RichTrgGlobalLLMinAlg.TrackMomentumCuts = { "trigger/0/99999999" };
-//RichTrgGlobalLLMinAlg.OutputPIDLocation = "Rec/Rich/TrgGlobalPIDs";
+//BrunelRecoRICHSeq.Members        += { "RichTrgGlobalPIDAlgOLD/RichTrgGlobalPID" };
+BrunelRecoRICHSeq.Members         += { "RichTrgGlobalPIDAlg/RichTrgGlobalPID" };
+RichTrgGlobalPID.TrackSelection    = { "unique","seed","match","forward","follow","KsTrack","veloTT" };
+RichTrgGlobalPID.OutputPIDLocation = "Rec/Rich/PIDs";
