@@ -1,17 +1,12 @@
-# $Id: requirements,v 1.16 2002-03-13 15:37:57 ibelyaev Exp $ 
-# =============================================================================
-# CVS tag $Name: not supported by cvs2svn $ 
-# =============================================================================
-
 package  GiGaCnv 
-version  v4r1
+version  v4r2
 
 branches cmt src doc GiGaCnv 
 
 include_dirs     $(GIGACNVROOT)
 
-use HepMC         v1r2  Sim
-use GeneratorObjects v1r0 Gen
+use HepMC         v1r2*  Sim
+use GenEvent      v1r0   Event
 
 use GiGa          v7r*  Sim 
 use LHCbEvent     v12r*	Event
