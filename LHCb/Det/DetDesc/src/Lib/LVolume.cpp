@@ -1,4 +1,4 @@
-// $Id: LVolume.cpp,v 1.28 2005-01-25 14:09:19 cattanem Exp $ 
+// $Id: LVolume.cpp,v 1.29 2005-03-18 15:37:09 cattanem Exp $ 
 
 /// STD & STL includes 
 #include <stdio.h> 
@@ -25,7 +25,6 @@
 #include "DetDesc/Material.h"
 #include "DetDesc/Solid.h"
 #include "DetDesc/Surface.h"
-#include "DetDesc/ClhepToStream.h"
 #include "DetDesc/DetDesc.h"
 
 // ===========================================================================

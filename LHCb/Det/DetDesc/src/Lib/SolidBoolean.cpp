@@ -1,4 +1,4 @@
-// $Id: SolidBoolean.cpp,v 1.12 2005-01-25 14:09:19 cattanem Exp $
+// $Id: SolidBoolean.cpp,v 1.13 2005-03-18 15:37:09 cattanem Exp $
 // ===========================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ===========================================================================
@@ -15,7 +15,6 @@
 #include   "DetDesc/SolidBoolean.h" 
 #include   "DetDesc/SolidChild.h" 
 #include   "DetDesc/SolidException.h"
-#include   "DetDesc/ClhepToStream.h"
 #include   "DetDesc/SolidTicks.h" 
 #include   "DetDesc/Solid.h" 
 
