@@ -5,6 +5,10 @@
 !               low energy components, flatspillover
 !-----------------------------------------------------------------------------
 
+!======================= MuonBackground v1r3 2003-10-01 =======================
+! 2003-10-01 - Alessia Satta
+ - Remove use of MuonUtils and introduce MuonGetInfoTool
+ - introdice the parametrization obtained with GCALOR/SICBMC v262r0 (tof bug fix)
 !======================= MuonBackground v1r2 2003-06-12 =======================
 ! 2003-06-12 - Alessia Satta
  - Modification to code to allow the use to simulate flat spillover.

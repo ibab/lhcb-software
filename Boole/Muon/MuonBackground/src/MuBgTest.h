@@ -1,4 +1,4 @@
-// $Id: MuBgTest.h,v 1.1.1.1 2003-04-04 09:10:14 asatta Exp $
+// $Id: MuBgTest.h,v 1.2 2003-10-01 14:20:34 asatta Exp $
 #ifndef MUBGTEST_H 
 #define MUBGTEST_H 1
 
@@ -11,6 +11,7 @@
 #include "AIDA/IHistogram1D.h"
 #include "AIDA/IHistogram2D.h"
 #include "AIDA/IHistogram3D.h"
+#include "MuonTools/IMuonGetInfoTool.h"
 #include <cmath> 
 
 /** @class MuBgTest MuBgTest.h
@@ -45,7 +46,8 @@ private:
   static std::string numreg[4];
   static std::string numsta[5];
   static std::string TESPathOfHitsContainer[4];
- 
+  IMuonGetInfoTool* m_pGetInfo ;
+
   IHistogram1D * m_pointer1Dradial[80];
   IHistogram2D * m_pointer2Dphivsradial[80];
   IHistogram2D * m_pointer2Dphilocvsradial[80];

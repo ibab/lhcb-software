@@ -1,4 +1,4 @@
-// $Id: MuonBackground.cpp,v 1.11 2003-06-12 16:15:18 asatta Exp $
+// $Id: MuonBackground.cpp,v 1.12 2003-10-01 14:20:34 asatta Exp $
 // Include files 
 
 // from Gaudi
@@ -24,7 +24,7 @@
 #include "MuonDet/MuonReadoutCond.h"
 #include "MuonDet/MuonBasicGeometry.h"
 #include "Event/MCMuonHit.h"
-#include "MuonUtils/MuonGeometryStore.h" 
+//#include "MuonUtils/MuonGeometryStore.h" 
 // local
 #include "MuonBackground.h"
 
@@ -105,11 +105,15 @@ StatusCode MuonBackground::initialize() {
     msg<<MSG::DEBUG<<" station "<<i<<" "<<numsta[i]<<endreq;
     i++;    
   }
-  m_partition=basegeometry.getPartitions();
-  initializeGeometry();
  
   StatusCode sc=toolSvc()->retrieveTool("MuonTileIDXYZ",m_pMuonTileXYZ); 
   if(sc.isFailure())return StatusCode::FAILURE;
+  sc=toolSvc()->retrieveTool("MuonGetInfoTool",m_pGetInfo);
+  if(sc.isFailure())return StatusCode::FAILURE;
+  m_partition=basegeometry.getPartitions();
+  initializeGeometry();
+ 
+ 
   m_correlation.resize(m_maxDimension);
   m_radial.resize(m_maxDimension);
   m_phiglobvsradial.resize(m_maxDimension);
@@ -135,27 +139,27 @@ StatusCode MuonBackground::initialize() {
   msg << MSG::DEBUG <<" type "<< m_type<<endreq;
   if(m_type==LowEnergy){    
 
-    //     for (int y=0;y<5;y++){
-    //   for (int kk=0;kk<4;kk++){
-    //     int hh;
-    //     hh=y*4+kk;
-    //     char label[10]; 
-    //     if(hh<9)sprintf(label,"%1i",hh+1);
+         for (int y=0;y<5;y++){
+       for (int kk=0;kk<4;kk++){
+         int hh;
+         hh=y*4+kk;
+         char label[10]; 
+         if(hh<9)sprintf(label,"%1i",hh+1);
 
-    //    if(hh>=9)sprintf(label,"%2i",hh+1);
+        if(hh>=9)sprintf(label,"%2i",hh+1);
  
         //msg<<MSG::INFO<<label<<endreq; 
-    //    std::string ap="STAT/";
+        std::string ap="STAT/";
 
-    //    std::string label2=ap+label;
+        std::string label2=ap+label;
 
-    //    m_pointer1D[hh]=
-    //      histoSvc()->book( label, "HT multiplicity", 50, 0., 50. );
-    //    m_pointer2D[hh]=
-    //      histoSvc()->book( label2, "ADD bk vs HT multiplicity",
-    //                        50, 0., 50., 50 ,0., 50. );
-    //   }
-    // }
+        m_pointer1D[hh]=
+          histoSvc()->book( label, "HT multiplicity", 50, 0., 50. );
+        m_pointer2D[hh]=
+          histoSvc()->book( label2, "ADD bk vs HT multiplicity",
+                           50, 0., 50., 50 ,0., 50. );
+       }
+     }
 
     IAlgManager* algmgr;
     sc = service( "ApplicationMgr", algmgr );
@@ -207,6 +211,12 @@ StatusCode MuonBackground::execute() {
   for (int ispill=0;ispill<=m_readSpilloverEvents;ispill++){    
     calculateNumberOfCollision(ispill);  
     if(!collisions())return  StatusCode::SUCCESS;
+    //	 if(collisions()>1)return  StatusCode::SUCCESS;
+    
+
+    msg << MSG::DEBUG << "==> collsion " << collisions()<<endreq;
+
+ 
     KeyedContainer<MCMuonHit>* hitsContainer[DIMENSIONMAX]; // fix for VC6
     {for(int station=0;station<m_stationNumber;station++){
       for(int region=0;region<m_regionNumber;region++){          
@@ -226,6 +236,9 @@ StatusCode MuonBackground::execute() {
           for (int multi=0;multi<m_gaps;multi++){
             int index=station*m_gaps+multi;
             int startingHits=((*m_resultPointer)[coll])[index];
+            msg<<MSG::DEBUG<<"station safe start end hits "
+                <<startingHits<<endreq;
+            
             // extract number of hits to be added
             int hitToAdd=0;
             float floatHit=0;          
@@ -235,6 +248,7 @@ StatusCode MuonBackground::execute() {
             } else{          
               int yy=(int)(m_correlation[index])->
                          giveRND(startingHits+0.5);
+              
               floatHit=(m_safetyFactor[station]*
                         (yy));
               hitToAdd=howManyHit( floatHit);
@@ -250,10 +264,12 @@ StatusCode MuonBackground::execute() {
             for(int hitID=0;hitID< hitToAdd;hitID++){            
             createHit(hitsContainer, station,multi,ispill);            
             }
-            // m_pointer1D[index]->fill(startingHits+0.00001,1.0);
-            //m_pointer2D[index]->
-            //fill(startingHits+0.00001,hitToAdd+0.00001,1.0);
-          }          
+             m_pointer1D[index]->fill(startingHits+0.00001,1.0);
+            m_pointer2D[index]->
+              fill(startingHits+0.00001,hitToAdd+0.00001,1.0);
+            
+          }
+          
         }        
       }      
     }else if(m_type==FlatSpillover){
@@ -276,11 +292,6 @@ StatusCode MuonBackground::execute() {
         }        
       }
     }
-    
-                                                                                
-    
-    
-    
     msg<<MSG::DEBUG<<" starting saveing the ocntainer "<<endreq;
     
       
@@ -346,18 +357,19 @@ StatusCode MuonBackground::initializeGeometry() {
   
 
   
-  MuonGeometryStore::Parameters usefull( toolSvc(),detSvc(), msgSvc());
+  //  MuonGeometryStore::Parameters usefull( toolSvc(),detSvc(), msgSvc());
   
-  {for(int i=0;i<20;i++){     
+  {for(int i=0;i<20;i++){       
+    msg<<MSG::DEBUG<<" partition "<<i<<" chamber "<<m_pGetInfo<<endreq;    
     msg<<MSG::DEBUG<<" partition "<<i<<" chamber "<<
-      usefull.getChamberPerRegion(i)<<endreq;  
+      m_pGetInfo->getChamberPerRegion(i)<<endreq;  
   }
   } // Fix for VC6 scoping bug
   int gap=0;
   
   {for(int i=0;i< (int)m_partition;i++){
-    gap=(gap>=(int)usefull.getGapPerRegion((unsigned int)i))?
-      gap:usefull.getGapPerRegion(i);
+    gap=(gap>=(int)m_pGetInfo->getGapPerRegion((unsigned int)i))?
+      gap:m_pGetInfo->getGapPerRegion(i);
     
   }
   } // Fix for VC6 scoping bug
@@ -381,17 +393,19 @@ StatusCode MuonBackground::initializeGeometry() {
   
   
   {for(int i=0;i< m_partition;i++){
-    m_numberOfGaps.push_back(usefull.getGapPerRegion(i));    
+    m_numberOfGaps.push_back(m_pGetInfo->getGapPerRegion(i));    
     station=i/m_regionNumber;
-    chamberInPartition=(int)usefull.getChamberPerRegion(i);   
-    zgaphwidth= (usefull.getStopGapZ(0,i)-usefull.getStartGapZ(0,i))/2;    
+    chamberInPartition=(int)m_pGetInfo->getChamberPerRegion(i);   
+    zgaphwidth= (m_pGetInfo->getStopGapZ(0,i)-
+                 m_pGetInfo->getStartGapZ(0,i))/2;    
     gapContainer=getVectorOfGapPosition(station);
     msg<<MSG::DEBUG<<" gap "<<i<<" "<<zgaphwidth<<endreq;
     for(int localChamberNumber=0;localChamberNumber<chamberInPartition;
         localChamberNumber++){
       //msg<<MSG::INFO<<" imbecille chamber "<<localChamberNumber<<endreq;
       
-      localZGap=usefull.getStartPositionFirstGapZ(chamberNumber)+zgaphwidth/2;
+      localZGap=m_pGetInfo->getStartPositionFirstGapZ(chamberNumber)+
+        zgaphwidth/2;
       insert=true;      
       //  msg<<MSG::INFO<<"insert "<<insert<<endreq;
       // msg<<MSG::INFO<<gapContainer->begin()<<endreq;
@@ -574,7 +588,7 @@ StatusCode MuonBackground::calculateStartingNumberOfHits(int ispill) {
   //create an dimension appropriate vector
   std::vector<ParticleInfo*> particleInfo(numberOfParticles);
   //loop un hits  
-  MuonGeometryStore::Parameters usefull( toolSvc(),detSvc(), msgSvc());
+  //  MuonGeometryStore::Parameters usefull( toolSvc(),detSvc(), msgSvc());
   
   int chamberOffset=0;
   
@@ -638,7 +652,7 @@ StatusCode MuonBackground::calculateStartingNumberOfHits(int ispill) {
           }       
       }      
     }    
-    chamberOffset=chamberOffset+usefull.getChamberPerRegion(iterRegion);    
+    chamberOffset=chamberOffset+m_pGetInfo->getChamberPerRegion(iterRegion);   
   }
   
    int partCollision;
@@ -787,7 +801,7 @@ StatusCode MuonBackground::createHit(KeyedContainer<MCMuonHit>**
                                                   int multi,int ispill)
 {
   MsgStream msg(msgSvc(), name());
-  MuonGeometryStore::Parameters usefull( toolSvc(),detSvc(), msgSvc());
+  //  MuonGeometryStore::Parameters usefull( toolSvc(),detSvc(), msgSvc());
   
   int maxTryPhi=10;
   int maxTryR=10;
@@ -862,13 +876,14 @@ StatusCode MuonBackground::createHit(KeyedContainer<MCMuonHit>**
     //define the chamber index in the total reference...
     int partition=station*m_regionNumber+regionIndex-1;    
     int chamberGlobal=
-      usefull.getGlobalChamberNumber(chamberIndex,partition)-1;    
+      m_pGetInfo->getGlobalChamberNumber(chamberIndex,partition)-1;    
 
     //extract the hit gaps
     int allgap=(int)(m_hitgap[index])->giveRND();
     int max=8;    
     std::vector<int> gapHitTmp;
-    msg<<MSG::DEBUG<<" gap extracted "<<allgap<<endreq;
+    msg<<MSG::DEBUG<<" gap extracted "<<allgap<<" multiplicity "<<multi<<
+      endreq;
     
     for(int i=0;i<m_gaps;i++){      
       int gap=allgap/max;      
@@ -884,7 +899,7 @@ StatusCode MuonBackground::createHit(KeyedContainer<MCMuonHit>**
     std::vector<int>::reverse_iterator it;
     for(it=gapHitTmp.rbegin();it<gapHitTmp.rend();it++){      
       gapHit.push_back((*it)); 
-      msg<<MSG::DEBUG<<gapHit.back()<<endreq;;
+      msg<<MSG::DEBUG<<" gap back"<<gapHit.back()<<endreq;;
       
     }
     
@@ -917,18 +932,23 @@ StatusCode MuonBackground::createHit(KeyedContainer<MCMuonHit>**
       }
         
       //define the z of the average gaps position
-      float averageZ=usefull.getStartPositionFirstGapZ(chamberGlobal)+
-        (usefull.getStartGapZ(firstGap,partition)+
-         usefull.getStopGapZ(lastGap,partition))/2.0;
+      float averageZ=m_pGetInfo->getStartPositionFirstGapZ(chamberGlobal)+
+        (m_pGetInfo->getStartGapZ(firstGap,partition)+
+         m_pGetInfo->getStopGapZ(lastGap,partition))/2.0;
       for(int igap=0;igap<=multi;igap++){
+       
+        
         int gapNumber=gapHit[igap];
+        
+        
         float zStartGap,zStopGap;
-        zStartGap=usefull.getStartPositionFirstGapZ(chamberGlobal)+
-          usefull.getStartGapZ(gapNumber,partition);
-        zStopGap=usefull.getStartPositionFirstGapZ(chamberGlobal)+
-          usefull.getStopGapZ(gapNumber,partition);
+        zStartGap=m_pGetInfo->getStartPositionFirstGapZ(chamberGlobal)+
+          m_pGetInfo->getStartGapZ(gapNumber,partition);
+        zStopGap=m_pGetInfo->getStartPositionFirstGapZ(chamberGlobal)+
+          m_pGetInfo->getStopGapZ(gapNumber,partition);
         float xentry,yentry,zentry;
         float xexit,yexit,zexit;
+        
         zentry=zStartGap;
         zexit=zStopGap;
         xentry=xpos+xSlope*(zentry-averageZ);
@@ -938,6 +958,7 @@ StatusCode MuonBackground::createHit(KeyedContainer<MCMuonHit>**
         float x=(xentry+xexit)/2.0;
         float y=(yentry+yexit)/2.0;
         float z=(zentry+zexit)/2.0;
+        
         
         DeMuonGasGap* pGasGap;
         MuonTileID tile; 
@@ -952,22 +973,28 @@ StatusCode MuonBackground::createHit(KeyedContainer<MCMuonHit>**
             allHitsInsideCha=false;
             
           }          
+          
+          
         } else{
           allHitsInsideCha=false;
           msg<<MSG::DEBUG<<"rejected "<<x<<" "<<y<<" "<<z<<" "<<multi<<endreq;
           msg<<MSG::DEBUG<<"rejected "<<xpos<<" "<<ypos<<" "<<
             zpos<<" "<<averageZ<<endreq;
-          msg<<MSG::DEBUG<<usefull.getStartPositionFirstGapZ(chamberGlobal)+2.5
+          msg<<MSG::DEBUG<<" chamber "<<chamberGlobal<< " gap position "<<
+            m_pGetInfo->getStartPositionFirstGapZ(chamberGlobal)+2.5
              <<" "<<chamberGlobal<<
             endreq;
           
         }
         
       }
+      
       if(allHitsInsideCha)hitsToAdd=true;
       
     }
+
     
+
     if(hitsToAdd){
       float scale=log(10.0);      
       float time= exp(scale*(m_logtimevsradial[index])->giveRND(r));
@@ -979,17 +1006,17 @@ StatusCode MuonBackground::createHit(KeyedContainer<MCMuonHit>**
       }else {
         timeBest=time;
       }
-      float averageZ=usefull.getStartPositionFirstGapZ(chamberGlobal)+
-        (usefull.getStartGapZ(firstGap,partition)+
-         usefull.getStopGapZ(lastGap,partition))/2.0;
+      float averageZ=m_pGetInfo->getStartPositionFirstGapZ(chamberGlobal)+
+        (m_pGetInfo->getStartGapZ(firstGap,partition)+
+         m_pGetInfo->getStopGapZ(lastGap,partition))/2.0;
       for(int igap=0;igap<=multi;igap++){
         bool correct=true;        
         int gapNumber=gapHit[igap];
         float zStartGap,zStopGap;
-        zStartGap=usefull.getStartPositionFirstGapZ(chamberGlobal)+
-          usefull.getStartGapZ(gapNumber,partition);
-        zStopGap=usefull.getStartPositionFirstGapZ(chamberGlobal)+
-          usefull.getStopGapZ(gapNumber,partition);
+        zStartGap=m_pGetInfo->getStartPositionFirstGapZ(chamberGlobal)+
+          m_pGetInfo->getStartGapZ(gapNumber,partition);
+        zStopGap=m_pGetInfo->getStartPositionFirstGapZ(chamberGlobal)+
+          m_pGetInfo->getStopGapZ(gapNumber,partition);
         float xentry,yentry,zentry;
         float xexit,yexit,zexit;
         zentry=zStartGap;
@@ -1032,7 +1059,7 @@ StatusCode MuonBackground::createHit(KeyedContainer<MCMuonHit>**
           if(sc.isSuccess()){           
             int chamberTest1=(unsigned int)pGasGap->chamberNumber();
             int regionTest1=(unsigned int)pGasGap->regionNumber();
-            //            int gapTest1=(unsigned int)pGasGap->gasGapNumber();   
+            //            int gapTest1=(unsigned int)pGasGap->gasGapNumber();  
             
             if(chamberTest!=chamberTest1){
               correct=false;
@@ -1070,19 +1097,19 @@ StatusCode MuonBackground::createHit(KeyedContainer<MCMuonHit>**
             //delete pHit; 
           }              
         
-        
+         
 
 
         
         
         
           if(!correct){
-            float xlow=usefull.getStartChamberPositionX(chamberGlobal);
-            float ylow=usefull.getStartChamberPositionY(chamberGlobal);
-            float Xlenght=usefull.getPhChannelNX(0,partition)*
-              usefull.getPhChannelSizeX(0,partition);
-            float Ylenght=usefull.getPhChannelNY(0,partition)*
-              usefull.getPhChannelSizeY(0,partition);
+            float xlow=m_pGetInfo->getStartChamberPositionX(chamberGlobal);
+            float ylow=m_pGetInfo->getStartChamberPositionY(chamberGlobal);
+            float Xlenght=m_pGetInfo->getPhChannelNX(0,partition)*
+              m_pGetInfo->getPhChannelSizeX(0,partition);
+            float Ylenght=m_pGetInfo->getPhChannelNY(0,partition)*
+              m_pGetInfo->getPhChannelSizeY(0,partition);
             float xup=xlow+ Xlenght;
             float yup=ylow+ Ylenght;
             float zlow=zentry;
@@ -1302,6 +1329,7 @@ int  MuonBackground::howManyHit( float floatHit)
   float partHit=0;
   intHit=(int)floatHit;
   partHit=floatHit-intHit;
+   
   if((*m_flatDistribution)()<partHit){
     return intHit+1;
   }

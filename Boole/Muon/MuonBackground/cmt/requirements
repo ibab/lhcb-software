@@ -1,5 +1,5 @@
 package MuonBackground 
-version v1r2
+version v1r3
 
 # ================ structure ===========================================
 branches src cmt options doc
@@ -9,7 +9,7 @@ include_dirs      $(MUONBACKGROUNDROOT)
 
 # ================ used packages ========================================= 
 use AIDA        v*	 -no_auto_imports
-use MuonUtils	v1r*	Muon
+use MuonTools	v3r*	Muon
 use MuonEvent	v2r*	Event
 
 # build a component library

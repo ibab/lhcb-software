@@ -1,4 +1,4 @@
-// $Id: MuBgTest.cpp,v 1.2 2003-04-16 08:33:55 cattanem Exp $
+// $Id: MuBgTest.cpp,v 1.3 2003-10-01 14:20:34 asatta Exp $
 // Include files 
 
 // from Gaudi
@@ -6,7 +6,7 @@
 #include "GaudiKernel/MsgStream.h" 
 #include "MuonDet/MuonBasicGeometry.h"
 #include "Event/MCMuonHit.h"
-#include "MuonUtils/MuonGeometryStore.h" 
+//#include "MuonUtils/MuonGeometryStore.h" 
 // local
 #include "MuBgTest.h"
 

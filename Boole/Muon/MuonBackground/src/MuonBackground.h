@@ -1,4 +1,4 @@
-// $Id: MuonBackground.h,v 1.2 2003-06-12 16:15:18 asatta Exp $
+// $Id: MuonBackground.h,v 1.3 2003-10-01 14:20:34 asatta Exp $
 #ifndef MUONBACKGROUND_H 
 #define MUONBACKGROUND_H 1
 
@@ -38,6 +38,7 @@
 #include "AIDA/IHistogramFactory.h"      
 #include "MuBgDistribution.h"
 #include "MuonTools/IMuonTileXYZTool.h"   
+#include "MuonTools/IMuonGetInfoTool.h"
 #include "MuonKernel/MuonTile.h"
 
 
@@ -143,8 +144,8 @@ private:
   std::vector<MuBgDistribution*> m_hitgap;
   float m_luminosityFactor; 
   IMuonTileXYZTool* m_pMuonTileXYZ ;
- 
-  //only to test the histos
+  IMuonGetInfoTool* m_pGetInfo ;
+  //only to test the histos  
   IHistogram1D * m_pointer1D[20];
   IHistogram2D * m_pointer2D[20];
   Rndm::Numbers* m_flatDistribution;
