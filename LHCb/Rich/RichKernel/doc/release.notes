@@ -1,7 +1,10 @@
-! $Id: release.notes,v 1.28 2003-11-03 08:36:39 cattanem Exp $
+! $Id: release.notes,v 1.29 2003-11-23 13:55:19 jonrob Exp $
 ! Package     : Rich/RichKernel
 ! Responsible : Chris Jones
 ! Purpose     : General purpose RICH classes
+
+! 2003-11-23 - Chris Jones
+ - Remove RichSmartID files. Now in Kernel/LHCbKernel
 
 !======================= RichKernel v4r0 2003-11-03 =======================
 ! 2003-11-03 - Marco Cattaneo
