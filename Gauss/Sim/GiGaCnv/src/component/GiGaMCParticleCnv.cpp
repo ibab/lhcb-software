@@ -1,8 +1,11 @@
-// $Id: GiGaMCParticleCnv.cpp,v 1.20 2003-01-23 10:06:30 witoldp Exp $ 
+// $Id: GiGaMCParticleCnv.cpp,v 1.21 2003-02-21 09:34:18 witoldp Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.20  2003/01/23 10:06:30  witoldp
+// added handling of shortlived particles
+//
 // Revision 1.19  2002/12/07 21:13:48  ibelyaev
 //  bug fix and small CPU performace optimization
 //
@@ -228,12 +231,12 @@ StatusCode GiGaMCParticleCnv::updateObj
           const int index = trajectory->trackID() ;
           particles -> insert( mcp );
           table( index )  = GiGaKineRefTableEntry( mcp , index );
-          cout << "Converted track " << trajectory->trackID()
-               << " with " << trajectory->GetPointEntries()
-               << " points, to " << mcp->particleID() << " with energy " 
-               << mcp->momentum().e()
-               << " motherID: " << trajectory->parentID() 
-               << endl;
+//           cout << "Converted track " << trajectory->trackID()
+//                << " with " << trajectory->GetPointEntries()
+//                << " points, to " << mcp->particleID() << " with energy " 
+//                << mcp->momentum().e()
+//                << " motherID: " << trajectory->parentID() 
+//                << endl;
           
         }
     }
