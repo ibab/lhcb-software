@@ -21,9 +21,7 @@ Requires data produced by Gauss v14r3 or greater
   - Use new version of ParticlePropertySvc
     (GaudiSvc v11r4, ParamFiles v3r4)
   - Remove fix for Rich energy deposit, now fixed since Gauss v14r3
-    (RichReadout v1r6)  
-  - Associator tools now inherit from GaudiTool. New printout for tools that
-    are not finalised (GaudiTools v8r1, LHCbKernel v4r4)
+    (RichReadout v1r7)
 
 >>> Temporarily disable TrgVeloTT in L1WithTrg.opts to allow porting to 
     new ST L1Buffer
@@ -38,11 +36,17 @@ Requires data produced by Gauss v14r3 or greater
     (only if POOL output, due to GaudiDb bug)
   - Fix Spillover with POOL (GaudiPoolDb v1r5)
 
+- Bug fixes
+  - Fix long finalization time (RichReadout v1r7)
+
 - New packaging
   - Valgrind error suppression file for Gaudi and external package errors moved
     to $STDOPTS/Gaudi.supp (GaudiConf v7r6, valgrind.job)
   - Removed VeloRound, round() function now implemented in Kernel/LHCbMath.h
     (LHCbKernel v4r3, VeloKernel v1r4, VelDet v8r8p1, VeloAlgorithms v2r9p1)
+  - Use new Gaudi base classes. New printout for tools not finalised
+    (GaudiAlg v7r1, GaudiTools v8r1, LHCbKernel v4r4, RichUtils v3r8, 
+     RichDetTools v4r0, RichReadout v1r7, RichDigiQC v1r5)
 
 </PRE><H1><A NAME=v5r2>2004-02-10 Boole v5r2</A></H1><PRE>
 

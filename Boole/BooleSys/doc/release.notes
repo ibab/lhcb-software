@@ -10,7 +10,9 @@
 
  - Packages modified: OTDAQ v1r1, VeloAlgorithms v2r9p1, CaloDigit v1r6,
                       CaloMonitor v2r0, ITAlgorithms v14r1, ITCheckers v2r1,
-                      TrgTools v2r2, RichReadout v1r6, CaloMonitor v2r1
+                      TrgTools v2r2, RichReadout v1r7, CaloMonitor v2r1,
+                      RichUtils v3r8, RichDAQ v1r3, RichDetTools v4r0,
+                      RichDigiQC v1r5
 
 !======================== BooleSys v5r2 2004-02-05 ========================
 ! 2004-02-05 - Marco Cattaneo
