@@ -4,6 +4,7 @@
 ! Purpose     : Provide tools and algorithm for tagging Bs
 !-----------------------------------------------------------------------------
 
+!==================== FlavourTagging v4r4 2003-04-28 =====================
 ! 2003-04-28 - Gloria Corti
  - cmt/requiremets 
    . use DaVinciTools v8r* and DaVinciMCTools v5r* 
