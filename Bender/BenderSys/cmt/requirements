@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.30 2004-10-06 18:41:25 ibelyaev Exp $ 
+# $Id: requirements,v 1.31 2004-10-06 18:44:01 ibelyaev Exp $ 
 # =============================================================================
 # CVS tag $Name: not supported by cvs2svn $
 # =============================================================================
@@ -10,7 +10,7 @@ version       v4r1
 author        Vanya BELYAEV
 
 # =========== Bender Application itself =======================================
-use           Bender         v4r0   Phys 
+use           Bender         v4r1   Phys 
 use           BenderGCC      v1r0   Tools 
 # =========== Bender Libraries ================================================
 use           BenderLibs     v4r1   Tools 
@@ -41,6 +41,9 @@ use           LoKiHybrid     v1r0p1 Tools
 
 # =============================================================================
 # $Log: not supported by cvs2svn $
+# Revision 1.30  2004/10/06 18:41:25  ibelyaev
+# *** empty log message ***
+#
 # Revision 1.29  2004/10/06 17:26:24  ibelyaev
 #  v4r1
 #

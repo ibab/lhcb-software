@@ -1,21 +1,10 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: benderparticlecuts.py,v 1.4 2004-08-26 19:34:36 ibelyaev Exp $ 
+# $Id: benderparticlecuts.py,v 1.5 2004-10-06 18:43:27 ibelyaev Exp $ 
 # =============================================================================
 # CVS tag $NAme:$ 
 # =============================================================================
 # $Log: not supported by cvs2svn $
-# Revision 1.3  2004/08/08 13:41:11  ibelyaev
-#  v3r7: update for LoKi v3r2
-#
-# Revision 1.2  2004/08/06 12:07:08  ibelyaev
-#  minor improvements
-#
-# Revision 1.1  2004/07/11 15:47:06  ibelyaev
-#  regular incrment
-#
-# =============================================================================
-
 
 # =============================================================================
 # @file
@@ -259,3 +248,5 @@ PPHASMUON  = PIDBITS ( 202 )
 PPHASCALO  = PIDBITS ( 203 )
 
 MCTRUTH    = helper.loadCutP ( gbl.LoKi.Particles.MCTruth       ) 
+
+HASTRGTR   = helper.loadCutP ( gbl.LoKi.TrgTracks.HasTrgTrack   ) 
