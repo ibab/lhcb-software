@@ -16,7 +16,6 @@ set RICHRECQCOPTS $(RICHRECQCROOT)/options
 #============================================================================
 use AIDA                v*    -no_auto_imports
 use RichRecBase         v1r*  Rich
-use RichEvent           v4r*  Event
 
 # Component library building rule
 #============================================================================
