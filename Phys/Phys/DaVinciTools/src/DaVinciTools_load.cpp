@@ -1,4 +1,4 @@
-// $Id: DaVinciTools_load.cpp,v 1.8 2002-09-11 16:47:09 gcorti Exp $
+// $Id: DaVinciTools_load.cpp,v 1.9 2002-10-13 21:24:30 gcorti Exp $
 // Include files 
 
 
@@ -31,5 +31,7 @@ DECLARE_FACTORY_ENTRIES( DaVinciTools ) {
   DECLARE_TOOL( ParabolicTransporter );
   DECLARE_TOOL( DecayFinder );
   //DECLARE_TOOL( DecayTreeTool );
+
+  DECLARE_ALGORITHM( PreLoadParticles );
   
 }

@@ -1,6 +1,9 @@
-! $Id: release.notes,v 1.24 2002-09-18 08:58:51 odie Exp $
+! $Id: release.notes,v 1.25 2002-10-13 21:25:45 gcorti Exp $
 ! Package     : DaVinciTools
 ! Responsible : Gloria Corti, Sandra Amato
+
+! 2002-10-13 - Gloria Corti
+ - PreLoadParticles algorithms for testing.
 
 ! 2002-09-18 - Olivier Dormond
  - Fix a missing test which made the DecayFinder useless.
