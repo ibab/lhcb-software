@@ -1,4 +1,4 @@
-// $Id: CaloProduceRaw.h,v 1.1 2003-04-04 05:16:33 ocallot Exp $
+// $Id: CaloProduceRaw.h,v 1.2 2003-06-23 11:43:04 ocallot Exp $
 #ifndef CALOPRODUCERAW_H 
 #define CALOPRODUCERAW_H 1
 
@@ -53,7 +53,7 @@ protected:
     int area = ID.area();
     int row  = ID.row();
     int col  = ID.col();
-    int bNum;
+    int bNum = 0;
 
     if ( 1 >= det ) { 
       bNum = 1 + area;

@@ -1,4 +1,4 @@
-// $Id: CaloSignalAlg.h,v 1.1.1.1 2002-11-04 10:29:51 ocallot Exp $
+// $Id: CaloSignalAlg.h,v 1.2 2003-06-23 11:43:04 ocallot Exp $
 #ifndef   CALODIGIT_CALOSIGNALALG_H
 #define   CALODIGIT_CALOSIGNALALG_H 1
 // ============================================================================
@@ -29,7 +29,7 @@ class CaloSignalAlg :
   public CaloAlgorithm 
 {
   /// frined factory for instantiatio
-  friend AlgFactory<CaloSignalAlg>;
+  friend class AlgFactory<CaloSignalAlg>;
   
 public:
   

@@ -1,4 +1,4 @@
-// $Id: CaloZSupAlg.h,v 1.1.1.1 2002-11-04 10:29:51 ocallot Exp $ 
+// $Id: CaloZSupAlg.h,v 1.2 2003-06-23 11:43:04 ocallot Exp $ 
 #ifndef   CALODIGIT_CALOZSUPALG_H
 #define   CALODIGIT_CALOZSUPALG_H 1
 // ============================================================================
@@ -22,7 +22,7 @@
  */
 
 class CaloZSupAlg : public CaloAlgorithm { 
-  friend AlgFactory<CaloZSupAlg>;
+  friend class AlgFactory<CaloZSupAlg>;
 public:
   
   // ** Constructor of this form must be provided

@@ -1,4 +1,4 @@
-// $Id: CaloProduceRaw.cpp,v 1.2 2003-04-17 07:55:21 ocallot Exp $
+// $Id: CaloProduceRaw.cpp,v 1.3 2003-06-23 11:43:04 ocallot Exp $
 // Include files 
  // CLHEP
 #include "CLHEP/Units/SystemOfUnits.h"
@@ -176,10 +176,11 @@ void CaloProduceRaw::buildEnergyBuffer ( std::string location ) {
   int cellIndex   ;
   int nextIndex   = -1;
   int headIndex   = -1;
-  int clusLength  ;
+  int clusLength  = 0;
   int cellContent ;
   int det;
-  int bufIndx, prevIndx = -1;
+  int bufIndx = -1;
+  int prevIndx = -1;
       
   CaloDigits::const_iterator dig;
   for ( dig = digits->begin() ; digits->end() != dig ; ++dig ) {

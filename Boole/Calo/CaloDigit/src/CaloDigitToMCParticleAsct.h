@@ -1,4 +1,4 @@
-// $Id: CaloDigitToMCParticleAsct.h,v 1.1 2003-03-20 08:22:16 ocallot Exp $
+// $Id: CaloDigitToMCParticleAsct.h,v 1.2 2003-06-23 11:43:04 ocallot Exp $
 #ifndef CALODIGITTOMCPARTICLEASCT_H 
 #define CALODIGITTOMCPARTICLEASCT_H 1
 
@@ -21,7 +21,7 @@
  *  @date   2003-02-20
  */
 class CaloDigitToMCParticleAsct : public Algorithm {  
-  friend AlgFactory<CaloDigitToMCParticleAsct>; 
+  friend class AlgFactory<CaloDigitToMCParticleAsct>; 
 public:
   /// Standard constructor
   CaloDigitToMCParticleAsct( const std::string& name, 

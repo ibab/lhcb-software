@@ -1,4 +1,4 @@
-// $Id: CaloDigitAlg.h,v 1.2 2003-03-20 08:22:15 ocallot Exp $ 
+// $Id: CaloDigitAlg.h,v 1.3 2003-06-23 11:43:04 ocallot Exp $ 
 #ifndef   CALODIGIT_CALODIGITALG_H
 #define   CALODIGIT_CALODIGITALG_H 1
 // ============================================================================
@@ -22,7 +22,7 @@
  */
 
 class CaloDigitAlg : public CaloAlgorithm {  
-  friend AlgFactory<CaloDigitAlg>;
+  friend class AlgFactory<CaloDigitAlg>;
 public:
   
   // ** Constructor of this form must be provided
