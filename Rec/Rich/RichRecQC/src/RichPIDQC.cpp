@@ -4,8 +4,10 @@
  *  Implementation file for RICH reconstruction monitoring algorithm : RichPIDQC
  *
  *  CVS Log :-
- *  $Id: RichPIDQC.cpp,v 1.23 2004-07-27 13:56:30 jonrob Exp $
+ *  $Id: RichPIDQC.cpp,v 1.24 2004-08-19 14:14:09 jonrob Exp $
  *  $Log: not supported by cvs2svn $
+ *  Revision 1.23  2004/07/27 13:56:30  jonrob
+ *  Add doxygen file documentation and CVS information
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   2002-06-13
@@ -26,12 +28,10 @@ const        IAlgFactory& RichPIDQCFactory = s_factory ;
 // Standard constructor, initializes variables
 RichPIDQC::RichPIDQC( const std::string& name,
                       ISvcLocator* pSvcLocator )
-  : RichAlgBase ( name, pSvcLocator ) {
+  : RichAlgBase ( name, pSvcLocator )
+{
 
   // Declare job options
-  declareProperty( "TrackAsctName", m_tkMCTruthName = "TrackToMCP" );
-  declareProperty( "TrackAsctType", m_tkMCTruthType =
-                   "AssociatorWeighted<TrStoredTrack,MCParticle,double>" );
   declareProperty( "InputPIDs",   m_pidTDS = RichPIDLocation::Default );
   declareProperty( "InputTracks", m_trackTDS = TrStoredTrackLocation::Default );
   declareProperty( "MCHistoPath", m_mcHstPth = "RICH/PIDQC/MC/" );
@@ -45,6 +45,11 @@ RichPIDQC::RichPIDQC( const std::string& name,
   declareProperty( "HistoBins",     m_bins = 50 );
   declareProperty( "FinalPrintout", m_finalPrintOut = true );
   declareProperty( "ExtraHistos",   m_extraHistos = false );
+
+  declareProperty( "TightNSigmaCutPion", m_tightNsigCutPion = 0 );
+  declareProperty( "LooseNSigmaCutPion", m_looseNsigCutPion = -99999999 );
+  declareProperty( "TightNSigmaCutKaon", m_tightNsigCutKaon = 0 );
+  declareProperty( "LooseNSigmaCutKaon", m_looseNsigCutKaon = -99999999 );
 
 }
 
@@ -65,36 +70,15 @@ StatusCode RichPIDQC::initialize()
     return StatusCode::FAILURE;
   }
 
-  // If MC information is to be used
-  if ( m_truth ) {
-
-    // Retrieve tracking association tool
-    m_trackToMCP = tool<TrackFitAsct>( m_tkMCTruthType, m_tkMCTruthName );
-
-    // Retrieve particle property service
-    IParticlePropertySvc * ppSvc = svc<IParticlePropertySvc>( "ParticlePropertySvc", true );
-
-    // Setup the PDG code mappings
-    m_localID[ 0 ] = Rich::Unknown;
-    m_localID[ abs(ppSvc->find("e+")->jetsetID()) ]  = Rich::Electron;
-    m_localID[ abs(ppSvc->find("mu+")->jetsetID()) ] = Rich::Muon;
-    m_localID[ abs(ppSvc->find("pi+")->jetsetID()) ] = Rich::Pion;
-    m_localID[ abs(ppSvc->find("K+")->jetsetID()) ]  = Rich::Kaon;
-    m_localID[ abs(ppSvc->find("p+")->jetsetID()) ]  = Rich::Proton;
-
-    // release service
-    release( ppSvc );
-
-  }
+  // Retrieve MC tool, if needed
+  if ( m_truth ) acquireTool( "RichMCTruthTool", m_mcTruth );
 
   // Book histograms
   if ( !bookHistograms() ) return StatusCode::FAILURE;
   if ( m_truth && !bookMCHistograms() ) return StatusCode::FAILURE;
 
   // Initialise summary information
-  for ( int i = 0; i<6; ++i ) {
-    for ( int j = 0; j<6; ++j ) { m_sumTab[i][j] = 0; }
-  }
+  for ( int i = 0; i<6; ++i ) { for ( int j = 0; j<6; ++j ) { m_sumTab[i][j] = 0; } }
   m_nEvents[0] = 0;
   m_nEvents[1] = 0;
   m_nTracks[0] = 0;
@@ -107,6 +91,7 @@ StatusCode RichPIDQC::initialize()
   // Configure track selector
   if ( !m_trSelector.configureTrackTypes() ) return StatusCode::FAILURE;
 
+  // debug printout of configuration
   debug() << " Track types selected   = " << m_trSelector.selectedTrackTypes()
           << endreq;
 
@@ -249,14 +234,37 @@ StatusCode RichPIDQC::execute()
 
       // Get best PID
       Rich::ParticleIDType pid = iPID->bestParticleID();
-      if ( !iPID->isAboveThreshold(pid) ) { pid = Rich::BelowThreshold; }
-      debug() << "PID " << iPID->key() << " ("
-              << iPID->pidType() << "), Track " << trTrack->key()
-              << " (" << tkType << ") " << tkPtot << " GeV/c,"
-              << " Rads " << iPID->usedAerogel() << " " << iPID->usedC4F10() << " " << iPID->usedCF4()
-              << " Dlls " << iPID->particleLLValues() << "PID '" << pid << "'";
 
-      // Fill histos for deltaLLS and probabilities
+      // Apply loose nsigma cut.
+      if      ( iPID->nSigmaSeparation(pid,Rich::Kaon) < m_looseNsigCutKaon ) { pid = Rich::Kaon; }
+      else if ( iPID->nSigmaSeparation(pid,Rich::Pion) < m_looseNsigCutPion ) { pid = Rich::Pion; }
+
+      // apply tight cut
+      if      ( Rich::Pion == pid &&
+                iPID->nSigmaSeparation(Rich::Pion,Rich::Kaon) < m_tightNsigCutPion ) { pid = Rich::BelowThreshold; }
+      else if ( Rich::Kaon == pid &&
+                iPID->nSigmaSeparation(Rich::Kaon,Rich::Pion) < m_tightNsigCutKaon ) { pid = Rich::BelowThreshold; }
+
+      // Check for threshold
+      if ( !iPID->isAboveThreshold(pid) ) { pid = Rich::BelowThreshold; }
+
+      // some debug printout
+      if ( msgLevel(MSG::DEBUG) ) {
+        debug() << "RichPID " << iPID->key() << " ("
+                << iPID->pidType() << "), Track " << trTrack->key()
+                << " (" << tkType << ") " << tkPtot << " GeV/c,"
+                << " Rads " << iPID->usedAerogel() << " " << iPID->usedC4F10() << " " << iPID->usedCF4()
+                << endreq
+                << "  Dlls      = " << iPID->particleLLValues() << endreq
+                << "  Prob(r/n) = ";
+        for ( int ipid = 0; ipid < Rich::NParticleTypes; ++ipid ) {
+          const Rich::ParticleIDType pid = static_cast<Rich::ParticleIDType>(ipid);
+          debug() << iPID->particleRawProb(pid) << "/" << iPID->particleNormProb(pid) << " ";
+        }
+        debug() << endreq << "  RecoPID   = " << pid;
+      }
+
+      // Fill histos for deltaLLs and probabilities
       m_ids->fill( pid+1 );
 
       // Extra histograms
@@ -271,13 +279,13 @@ StatusCode RichPIDQC::execute()
       // MC Truth
       if ( m_truth && (0 != trTrack) ) {
 
-        const MCParticle* mcPart = m_trackToMCP->associatedFrom( trTrack );
-        Rich::ParticleIDType mcpid = Rich::Unknown;
-        if ( mcPart ) {
-          mcpid = m_localID[abs(mcPart->particleID().pid())];
-          if ( !iPID->isAboveThreshold( mcpid ) ) mcpid = Rich::BelowThreshold;
-        }
-        debug() << ", MCID '" << mcpid << "'" << endreq;
+        // Get true track type from MC
+        Rich::ParticleIDType mcpid = m_mcTruth->mcParticleType(trTrack);
+        if ( mcpid != Rich::Unknown &&
+             !iPID->isAboveThreshold(mcpid) ) mcpid = Rich::BelowThreshold;
+        if ( msgLevel(MSG::DEBUG) ) debug() << ", MCID = " << mcpid << endreq;
+
+        // Count track types
         if ( Rich::Unknown != mcpid ) ++m_trackCount[1][tkType];
 
         // Fill performance tables
@@ -286,9 +294,7 @@ StatusCode RichPIDQC::execute()
 
         // Momentum spectra
         if ( mcpid != Rich::Unknown &&
-             pid   != Rich::Unknown ) {
-          (m_ptotSpec[mcpid][pid])->fill(tkPtot);
-        }
+             pid   != Rich::Unknown ) { (m_ptotSpec[mcpid][pid])->fill(tkPtot); }
 
         // Extra histograms
         if ( m_extraHistos ) {

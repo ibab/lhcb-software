@@ -4,8 +4,11 @@
  *  Header file for RICH reconstruction monitoring algorithm : RichPIDQC
  *
  *  CVS Log :-
- *  $Id: RichPIDQC.h,v 1.10 2004-07-27 13:56:30 jonrob Exp $
+ *  $Id: RichPIDQC.h,v 1.11 2004-08-19 14:14:09 jonrob Exp $
  *  $Log: not supported by cvs2svn $
+ *  Revision 1.10  2004/07/27 13:56:30  jonrob
+ *  Add doxygen file documentation and CVS information
+ *
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   2002-06-13
@@ -36,6 +39,9 @@
 
 // temporary histogramming numbers
 #include "RichRecBase/RichDetParams.h"
+
+// interfaces
+#include "RichKernel/IRichMCTruthTool.h"
 
 // Histogramming
 #include "AIDA/IHistogram1D.h"
@@ -101,8 +107,6 @@ private: // data
   TrStoredTracks * m_tracks;
 
   // job options
-  std::string m_tkMCTruthName;   ///< Track MC truth relation name
-  std::string m_tkMCTruthType;   ///< Track MC truth relation type
   std::string m_mcHstPth;        ///< Output MC truth histogram path
   std::string m_hstPth;          ///< Output histogram path
   std::string m_pidTDS;          ///< Location of target RichPIDs in TDS
@@ -116,11 +120,15 @@ private: // data
   int m_bins;                    ///< Number of bins
   bool m_finalPrintOut;          ///< Perform final prinout of PID tables
   bool m_extraHistos;            ///< Fill full set of histograms
-  RichTrackSelector m_trSelector;  ///< Track selector
-  TrackFitAsct* m_trackToMCP;      ///< Track MCTruth
 
-  // Local PID mapping
-  std::map<int,Rich::ParticleIDType> m_localID;
+  float m_tightNsigCutPion;
+  float m_looseNsigCutPion;
+  float m_tightNsigCutKaon;
+  float m_looseNsigCutKaon;
+
+  RichTrackSelector m_trSelector;  ///< Track selector
+
+  IRichMCTruthTool * m_mcTruth;    ///< MC Truth tool
 
   // Summary information
   double m_sumTab[6][6];
