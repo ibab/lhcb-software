@@ -1,5 +1,5 @@
 package Gauss
-version v15r7
+version v15r8
 
 # =============================================================================
 # structure 
@@ -14,7 +14,7 @@ apply_pattern GaussVersion
 #get information from DBASE and PARAM 
 use XmlDDDB             v22r2   Det   -no_auto_imports
 use FieldMap            v4r5          -no_auto_imports
-use DecFiles            v5r2    Gen   -no_auto_imports
+use DecFiles            v5r3    Gen   -no_auto_imports
 use ParamFiles          v3r7          -no_auto_imports
 
 #========================================================================
