@@ -4,6 +4,13 @@
 ! Purpose     : List of packages in Boole project
 !-----------------------------------------------------------------------------
 
+!======================== BooleSys v5r1 2004-01-27 ========================
+! 2004-01-27 - Marco Cattaneo
+ - Packages modified: ITAlgorithms v13r2
+
+ - Packages removed:  MCTools, CaloInterfaces, CaloUtils, RiSicbGeom
+                      (all now in LHCB project)
+
 !======================== BooleSys v5r0 2004-01-16 ========================
 ! 2004-01-16 - Marco Cattaneo
  - Packages added: MCTools v1r2, TrgTools v2r0, TrgChecker v2r0, TrgVelo v2r0,
