@@ -135,8 +135,8 @@ BrunelRecoTrSeq.Members += { "TrFit2StoredTrackCnv/StoreBest" };
 TrTrackCloneKiller.flagMode = true;
 
 // Rich
-ApplicationMgr.DLLs += { "RichDetTools", "RichRecTools", "RichRecCommon",
-                         "RichUtils", "RichGlobalPID", "RichLocalPID", 
+ApplicationMgr.DLLs += { "RichTools", "RichRecTools", "RichRecCommon",
+                         "RichGlobalPID", "RichLocalPID", 
                          "RichRingRefit", "RichPIDMerge", "RichDAQ" };
 #include "$RICHDAQROOT/options/Brunel_DecodeRawEvent.opts"
 #include "$RICHRECSYSOPTS/BrunelReco.opts"
