@@ -1,14 +1,17 @@
-/// ===========================================================================
+// ============================================================================
 /// CVS tag $Name: not supported by cvs2svn $ 
-/// ===========================================================================
+// ============================================================================
 /// $Log: not supported by cvs2svn $
+/// Revision 1.3  2001/07/27 17:03:21  ibelyaev
+/// improved printout
+///
 /// Revision 1.2  2001/07/27 14:29:01  ibelyaev
 /// bug fix
 ///
 /// Revision 1.1  2001/07/24 09:08:14  ibelyaev
 /// new component GiGaTrackActionSequence
 /// 
-/// ===========================================================================
+// ============================================================================
 /// STD & STL 
 #include <functional>
 #include <algorithm>
@@ -20,26 +23,26 @@
 /// local 
 #include "GiGaTrackActionSequence.h"
 
-/// ===========================================================================
+// ============================================================================
 /** Implementation file for class : GiGaTrackActionSequence
  *  @date 24/07/2001 
  *  @author Vanya  Belyaev
  */
-/// ===========================================================================
+// ============================================================================
 
 
-/// ===========================================================================
+// ============================================================================
 /// factory business 
-/// ===========================================================================
+// ============================================================================
 static const GiGaTrackActionFactory<GiGaTrackActionSequence>         s_Factory;
 const       IGiGaTrackActionFactory&GiGaTrackActionSequenceFactory = s_Factory;
 
-/// ===========================================================================
+// ============================================================================
 /** standard constructor
  *  @param Name name of this concrete instance 
  *  @param Loc  pointer to Service Locator 
  */
-/// ===========================================================================
+// ============================================================================
 GiGaTrackActionSequence::GiGaTrackActionSequence( const std::string& Name ,
                                                   ISvcLocator*       Loc  )
   : GiGaTrackActionBase( Name , Loc ) 
@@ -50,9 +53,9 @@ GiGaTrackActionSequence::GiGaTrackActionSequence( const std::string& Name ,
   declareProperty( "Members" , m_members );
 };
 
-/// ===========================================================================
+// ============================================================================
 /// destructor 
-/// ===========================================================================
+// ============================================================================
 GiGaTrackActionSequence::~GiGaTrackActionSequence()
 {
   /// delete all actions
@@ -63,11 +66,11 @@ GiGaTrackActionSequence::~GiGaTrackActionSequence()
   ///
 };
 
-/// ===========================================================================
+// ============================================================================
 /** reset all members(actions)
  *  @return status code 
  */
-/// ===========================================================================
+// ============================================================================
 StatusCode GiGaTrackActionSequence::actionsReset() 
 {
   /// finalize all actions 
@@ -85,11 +88,11 @@ StatusCode GiGaTrackActionSequence::actionsReset()
   return StatusCode::SUCCESS;
 };
 
-/// ===========================================================================
+// ============================================================================
 /** initialise the action object 
  *  @return status code
  */ 
-/// ===========================================================================
+// ============================================================================
 StatusCode GiGaTrackActionSequence::initialize () 
 {
   StatusCode sc = GiGaTrackActionBase::initialize();
@@ -139,11 +142,11 @@ StatusCode GiGaTrackActionSequence::initialize ()
   return StatusCode::SUCCESS;
 };
 
-/// ===========================================================================
+// ============================================================================
 /** finalize the action object 
  *  @return status code
  */ 
-/// ===========================================================================
+// ============================================================================
 StatusCode GiGaTrackActionSequence::finalize   () 
 {
   ///
@@ -156,11 +159,11 @@ StatusCode GiGaTrackActionSequence::finalize   ()
   return GiGaTrackActionBase::finalize() ;
 };
 
-/// ===========================================================================
+// ============================================================================
 /** perform the pre-action
  *  @param track pointer to Geant4 track object 
  */ 
-/// ===========================================================================
+// ============================================================================
 void GiGaTrackActionSequence::PreUserTrackingAction  ( const G4Track* track )
 {
   /// set the tracking manager for all members 
@@ -181,11 +184,11 @@ void GiGaTrackActionSequence::PreUserTrackingAction  ( const G4Track* track )
                                              PreUserTrackingAction),track ) ) ;
 };
 
-/// ===========================================================================
+// ============================================================================
 /** perform the post-action
  *  @param track pointer to Geant4 track object 
  */ 
-/// ===========================================================================
+// ============================================================================
 void GiGaTrackActionSequence::PostUserTrackingAction  ( const G4Track* track )
 {
   /// tracking actions of all members  
@@ -195,4 +198,4 @@ void GiGaTrackActionSequence::PostUserTrackingAction  ( const G4Track* track )
                                              PostUserTrackingAction),track ) );
 };
 
-/// ===========================================================================
+// ============================================================================

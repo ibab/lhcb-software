@@ -1,7 +1,10 @@
-/// ===========================================================================
+// ============================================================================
 /// CVS tag $Name: not supported by cvs2svn $ 
-/// ===========================================================================
+// ============================================================================
 /// $Log: not supported by cvs2svn $
+/// Revision 1.4  2001/07/27 14:29:00  ibelyaev
+/// bug fix
+///
 /// Revision 1.3  2001/07/26 16:09:21  ibelyaev
 /// GiGaRunActions budiness
 ///
@@ -11,7 +14,7 @@
 /// Revision 1.1  2001/07/23 20:53:46  ibelyaev
 /// reorganization of GiGaUtil namespace
 /// 
-/// ===========================================================================
+// ============================================================================
 /// STD & STL 
 #include <algorithm> 
 /// GaudiKernel
@@ -37,16 +40,16 @@
 #include "GiGa/IGiGaMagFieldFactory.h"
 #include "GiGa/GiGaUtil.h"
 
-/// ===========================================================================
+// ============================================================================
 /** Implementation file for functions from  GiGaUtil namespace 
  * 
  *  @author Vanya  Belyaev
  *  @date 23/07/2001 
  */
 //-----------------------------------------------------------------------------
-/// ===========================================================================
+// ============================================================================
 
-/// ===========================================================================
+// ============================================================================
 /** split a "Type/Name" string into "Type" and "Name"
  *  
  *  rules:
@@ -65,7 +68,7 @@
  *  @param Name  returned "Name" 
  *  @return status code
  */  
-/// ===========================================================================
+// ============================================================================
 StatusCode GiGaUtil::SplitTypeAndName ( const std::string& TypeAndName ,
                                         std::string      & Type        , 
                                         std::string      & Name        )
@@ -104,7 +107,7 @@ StatusCode GiGaUtil::SplitTypeAndName ( const std::string& TypeAndName ,
 };
 
 
-/// ==========================================================================
+// ===========================================================================
 /** @class Creator 
  *  
  *  Helper class to make the instantiation of 
@@ -113,12 +116,12 @@ StatusCode GiGaUtil::SplitTypeAndName ( const std::string& TypeAndName ,
  *  @author Vanya Belyaev
  *  @date 23/07/2001
  */
-/// ==========================================================================
+// ===========================================================================
 /** constructor 
  *  @param  ObjMgr   pointer to Object Manager 
  *  @param  SvcLoc   pointer to Service Locator 
  */
-/// ==========================================================================
+// ===========================================================================
 GiGaUtil::Creator::Creator( IObjManager* ObjMgr ,
                             ISvcLocator* SvcLoc )
   : m_objMgr ( ObjMgr ) 
@@ -128,11 +131,11 @@ GiGaUtil::Creator::Creator( IObjManager* ObjMgr ,
   if( 0 != svcLoc() ) { svcLoc()->addRef() ; }
 };
 
-/// ===========================================================================
+// ============================================================================
 /** copy constructor 
  *  @param right object to be copied 
  */
-/// ===========================================================================
+// ============================================================================
 GiGaUtil::Creator::Creator( const GiGaUtil::Creator& right )
   : m_objMgr ( right.objMgr() )
   , m_svcLoc ( right.svcLoc() ) 
@@ -141,18 +144,18 @@ GiGaUtil::Creator::Creator( const GiGaUtil::Creator& right )
   if( 0 != svcLoc() ) { svcLoc()->addRef() ; }
 };
 
-/// ===========================================================================
+// ============================================================================
 /// destructor 
-/// ===========================================================================
+// ============================================================================
 GiGaUtil::Creator::~Creator()
 { 
   if( 0 != objMgr() ) { objMgr()->release() ; m_objMgr = 0 ; }
   if( 0 != svcLoc() ) { svcLoc()->release() ; m_svcLoc = 0 ; }
 };
 
-/// ===========================================================================
+// ============================================================================
 /// destructor 
-/// ===========================================================================
+// ============================================================================
 StatusCode GiGaUtil::Creator::isOK() const 
 {  
   /// check for Object Manager 
@@ -165,12 +168,12 @@ StatusCode GiGaUtil::Creator::isOK() const
   return StatusCode::SUCCESS;
 };
 
-/// ===========================================================================
+// ============================================================================
 /** locate the abstract factory for object type
  *  @param type  type of the object
  *  @return pointer to abstract factory 
  */
-/// ===========================================================================
+// ============================================================================
 const IFactory*  GiGaUtil::Creator::Factory( const std::string& type ) const
 {
   if( isOK().isFailure() ) { return 0; }                 ///< RETURN
@@ -181,7 +184,7 @@ const IFactory*  GiGaUtil::Creator::Factory( const std::string& type ) const
   return objMgr()->objFactory      ( type );
 };
 
-/// ==========================================================================
+// ===========================================================================
 /** @class PhysListCreator 
  *  
  *  Helper class to make the instantiation of 
@@ -190,13 +193,13 @@ const IFactory*  GiGaUtil::Creator::Factory( const std::string& type ) const
  *  @author Vanya Belyaev
  *  @date 23/07/2001
  */
-/// ===========================================================================
+// ============================================================================
 /** instantiate IGiGaPhysList object of given type and name 
  *  @param type  type of the IGiGaPhysList object
  *  @param name  name of the IGiGaPhysList object 
  *  @return pointer to new IGiGaPhysList object 
  */
-/// ===========================================================================
+// ============================================================================
 IGiGaPhysList* 
 GiGaUtil::PhysListCreator::operator() ( const std::string& type ,
                                         const std::string& name ) const
@@ -212,7 +215,7 @@ GiGaUtil::PhysListCreator::operator() ( const std::string& type ,
   return plFactory->instantiate( name , svcLoc() ) ;
 };
 
-/// ==========================================================================
+// ===========================================================================
 /** @class RunActionCreator 
  *  
  *  Helper class to make the instantiation of 
@@ -221,13 +224,13 @@ GiGaUtil::PhysListCreator::operator() ( const std::string& type ,
  *  @author Vanya Belyaev
  *  @date 23/07/2001
  */
-/// ===========================================================================
+// ============================================================================
 /** instantiate IGiGaRunAction object of given type and name 
  *  @param type  type of the IGiGaRunAction object
  *  @param name  name of the IGiGaRunAction object 
  *  @return pointer to new IGiGaRunAction object 
  */
-/// ===========================================================================
+// ============================================================================
 IGiGaRunAction* 
 GiGaUtil::RunActionCreator::operator() ( const std::string& type ,
                                          const std::string& name ) const
@@ -243,7 +246,7 @@ GiGaUtil::RunActionCreator::operator() ( const std::string& type ,
   return raFactory->instantiate( name , svcLoc() ) ;
   ///
 };
-/// ==========================================================================
+// ===========================================================================
 /** @class EventActionCreator 
  *  
  *  Helper class to make the instantiation of 
@@ -252,13 +255,13 @@ GiGaUtil::RunActionCreator::operator() ( const std::string& type ,
  *  @author Vanya Belyaev
  *  @date 23/07/2001
  */
-/// ===========================================================================
+// ============================================================================
 /** instantiate IGiGaEventAction object of given type and name 
  *  @param type  type of the IGiGaEventAction object
  *  @param name  name of the IGiGaEventAction object 
  *  @return pointer to new IGiGaEventAction object 
  */
-/// ===========================================================================
+// ============================================================================
 IGiGaEventAction* 
 GiGaUtil::EventActionCreator::operator() ( const std::string& type ,
                                            const std::string& name ) const
@@ -275,7 +278,7 @@ GiGaUtil::EventActionCreator::operator() ( const std::string& type ,
   ///
 };
 
-/// ==========================================================================
+// ===========================================================================
 /** @class StepActionCreator 
  *  
  *  Helper class to make the instantiation of 
@@ -284,13 +287,13 @@ GiGaUtil::EventActionCreator::operator() ( const std::string& type ,
  *  @author Vanya Belyaev
  *  @date 23/07/2001
  */
-/// ===========================================================================
+// ============================================================================
 /** instantiate IGiGaStepAction object of given type and name 
  *  @param type  type of the IGiGaStepAction object
  *  @param name  name of the IGiGaStepAction object 
  *  @return pointer to new IGiGaStepAction object 
  */
-/// ===========================================================================
+// ============================================================================
 IGiGaStepAction* 
 GiGaUtil::StepActionCreator::operator() ( const std::string& type ,
                                           const std::string& name ) const
@@ -307,7 +310,7 @@ GiGaUtil::StepActionCreator::operator() ( const std::string& type ,
   ///
 };
 
-/// ==========================================================================
+// ===========================================================================
 /** @class StackActionCreator 
  *  
  *  Helper class to make the instantiation of 
@@ -316,13 +319,13 @@ GiGaUtil::StepActionCreator::operator() ( const std::string& type ,
  *  @author Vanya Belyaev
  *  @date 23/07/2001
  */
-/// ===========================================================================
+// ============================================================================
 /** instantiate IGiGaStackAction object of given type and name 
  *  @param type  type of the IGiGaStackAction object
  *  @param name  name of the IGiGaStackAction object 
  *  @return pointer to new IGiGaStackAction object 
  */
-/// ===========================================================================
+// ============================================================================
 IGiGaStackAction* 
 GiGaUtil::StackActionCreator::operator() ( const std::string& type ,
                                            const std::string& name ) const
@@ -339,7 +342,7 @@ GiGaUtil::StackActionCreator::operator() ( const std::string& type ,
   ///
 };
 
-/// ==========================================================================
+// ===========================================================================
 /** @class TrackActionCreator 
  *  
  *  Helper class to make the instantiation of 
@@ -348,13 +351,13 @@ GiGaUtil::StackActionCreator::operator() ( const std::string& type ,
  *  @author Vanya Belyaev
  *  @date 23/07/2001
  */
-/// ===========================================================================
+// ============================================================================
 /** instantiate IGiGaTrackAction object of given type and name 
  *  @param type  type of the IGiGaTrackAction object
  *  @param name  name of the IGiGaTrackAction object 
  *  @return pointer to new IGiGaTrackAction object 
  */
-/// ===========================================================================
+// ============================================================================
 IGiGaTrackAction* 
 GiGaUtil::TrackActionCreator::operator() ( const std::string& type ,
                                            const std::string& name ) const
@@ -371,7 +374,7 @@ GiGaUtil::TrackActionCreator::operator() ( const std::string& type ,
   ///
 };
 
-/// ==========================================================================
+// ===========================================================================
 /** @class SensDetCreator 
  *  
  *  Helper class to make the instantiation of 
@@ -380,13 +383,13 @@ GiGaUtil::TrackActionCreator::operator() ( const std::string& type ,
  *  @author Vanya Belyaev
  *  @date 23/07/2001
  */
-/// ===========================================================================
+// ============================================================================
 /** instantiate IGiGaSensDet object of given type and name 
  *  @param type  type of the IGiGaSensDet object
  *  @param name  name of the IGiGaSensDet object 
  *  @return pointer to new IGiGaSensDet object 
  */
-/// ===========================================================================
+// ============================================================================
 IGiGaSensDet* 
 GiGaUtil::SensDetCreator::operator() ( const std::string& type ,
                                        const std::string& name ) const
@@ -403,7 +406,7 @@ GiGaUtil::SensDetCreator::operator() ( const std::string& type ,
   ///
 };
 
-/// ==========================================================================
+// ===========================================================================
 /** @class MagFieldCreator 
  *  
  *  Helper class to make the instantiation of 
@@ -412,13 +415,13 @@ GiGaUtil::SensDetCreator::operator() ( const std::string& type ,
  *  @author Vanya Belyaev
  *  @date 23/07/2001
  */
-/// ===========================================================================
+// ============================================================================
 /** instantiate IGiGaMagField object of given type and name 
  *  @param type  type of the IGiGaMagField object
  *  @param name  name of the IGiGaMagField object 
  *  @return pointer to new IGiGaMagField object 
  */
-/// ===========================================================================
+// ============================================================================
 IGiGaMagField* 
 GiGaUtil::MagFieldCreator::operator() ( const std::string& type ,
                                         const std::string& name ) const
@@ -435,6 +438,6 @@ GiGaUtil::MagFieldCreator::operator() ( const std::string& type ,
   ///
 };
 
-/// ===========================================================================
+// ============================================================================
 
 

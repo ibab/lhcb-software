@@ -1,16 +1,19 @@
-/// ===========================================================================
+// ============================================================================
 /// CVS tag $Name: not supported by cvs2svn $ 
-/// ===========================================================================
+// ============================================================================
 /// $Log: not supported by cvs2svn $
+/// Revision 1.6  2001/08/01 09:42:24  ibelyaev
+/// redesign and reimplementation of GiGaRunManager class
+///
 /// Revision 1.5  2001/07/23 13:12:29  ibelyaev
 /// the package restructurisation(II)
 ///
 /// Revision 1.4  2001/07/15 20:54:36  ibelyaev
 /// package restructurisation
 /// 
-/// ===========================================================================
+// ============================================================================
 #define GIGA_GIGASVCIGIGASETUPSVC_CPP 1 
-/// ===========================================================================
+// ============================================================================
 /// include files 
 /// STD & ATL 
 #include <string>
@@ -28,16 +31,16 @@
 #include "GiGaSvc.h"
 
 
-/// ===========================================================================
+// ============================================================================
 /**  Implementation of class GiGaSvc  
  *   all methods from abstract interface IGiGaSetUpSvc 
  *
  *   @author: Vanya Belyaev 
  *   @date xx/xx/xxxx
  */
-/// ===========================================================================
+// ============================================================================
 
-/// ===========================================================================
+// ============================================================================
 #define ___GIGA_MACRO_TRICK1___ \
         { const std::string _name( System::typeinfoName( typeid( obj ) ) ) ; \
         ___GIGA_TRY___ { \
@@ -51,7 +54,7 @@
         "::declare()" ); \
         return *this; };
 
-/// ===========================================================================
+// ============================================================================
 #define ___GIGA_MACRO_TRICK2___ \
         { StatusCode sc( StatusCode::FAILURE ); \
           ___GIGA_TRY___ { \
@@ -60,7 +63,7 @@
           chronoSvc(),sc); \
           return StatusCode::SUCCESS ; }
 
-/// ===========================================================================
+// ============================================================================
 /** set detector constructon module 
  *               implementation of IGiGaSetUpSvc abstract interface 
  *
@@ -69,7 +72,7 @@
  *  @param  obj      pointer to detector construction module  
  *  @return self-reference ot IGiGaSetUpSvc interface 
  */
-/// ===========================================================================
+// ============================================================================
 IGiGaSetUpSvc& GiGaSvc::operator << ( G4VUserDetectorConstruction   * obj )
 {
   try
@@ -91,7 +94,7 @@ IGiGaSetUpSvc& GiGaSvc::operator << ( G4VUserDetectorConstruction   * obj )
   return *this;
 };
 
-/// ===========================================================================
+// ============================================================================
 /** set new world wolume 
  *               implementation of IGiGaSetUpSvc abstract interface 
  *
@@ -100,7 +103,7 @@ IGiGaSetUpSvc& GiGaSvc::operator << ( G4VUserDetectorConstruction   * obj )
  *  @param  obj    pointer to  new world volume   
  *  @return self-reference ot IGiGaSetUpSvc interface 
  */
-/// ===========================================================================
+// ============================================================================
 IGiGaSetUpSvc& GiGaSvc::operator << ( G4VPhysicalVolume             * obj )
 { 
   try
@@ -122,7 +125,7 @@ IGiGaSetUpSvc& GiGaSvc::operator << ( G4VPhysicalVolume             * obj )
   return *this;
 }; 
 
-/// ===========================================================================
+// ============================================================================
 /** set new generator 
  *               implementation of IGiGaSetUpSvc abstract interface 
  *
@@ -131,7 +134,7 @@ IGiGaSetUpSvc& GiGaSvc::operator << ( G4VPhysicalVolume             * obj )
  *  @param  obj        pointer to new generator   
  *  @return self-reference ot IGiGaSetUpSvc interface 
  */
-/// ===========================================================================
+// ============================================================================
 IGiGaSetUpSvc& GiGaSvc::operator << ( G4VUserPrimaryGeneratorAction * obj )
 { 
   try
@@ -153,7 +156,7 @@ IGiGaSetUpSvc& GiGaSvc::operator << ( G4VUserPrimaryGeneratorAction * obj )
   return *this;
 }; 
 
-/// ===========================================================================
+// ============================================================================
 /** set new physics list 
  *               implementation of IGiGaSetUpSvc abstract interface 
  *
@@ -162,7 +165,7 @@ IGiGaSetUpSvc& GiGaSvc::operator << ( G4VUserPrimaryGeneratorAction * obj )
  *  @param  obj      pointer to physics list    
  *  @return self-reference ot IGiGaSetUpSvc interface 
  */
-/// ===========================================================================
+// ============================================================================
 IGiGaSetUpSvc& GiGaSvc::operator << ( G4VUserPhysicsList            * obj )
 {
   try
@@ -184,7 +187,7 @@ IGiGaSetUpSvc& GiGaSvc::operator << ( G4VUserPhysicsList            * obj )
   return *this;
 }; 
 
-/// ===========================================================================
+// ============================================================================
 /** set new run action 
  *               implementation of IGiGaSetUpSvc abstract interface 
  *
@@ -193,7 +196,7 @@ IGiGaSetUpSvc& GiGaSvc::operator << ( G4VUserPhysicsList            * obj )
  *  @param  obj     pointer to new run action     
  *  @return self-reference ot IGiGaSetUpSvc interface 
  */
-/// ===========================================================================
+// ============================================================================
 IGiGaSetUpSvc& GiGaSvc::operator << ( G4UserRunAction               * obj )
 {
   try
@@ -215,7 +218,7 @@ IGiGaSetUpSvc& GiGaSvc::operator << ( G4UserRunAction               * obj )
   return *this;
 }; 
 
-/// ===========================================================================
+// ============================================================================
 /** set new event action 
  *               implementation of IGiGaSetUpSvc abstract interface 
  *
@@ -224,7 +227,7 @@ IGiGaSetUpSvc& GiGaSvc::operator << ( G4UserRunAction               * obj )
  *  @param  obj     pointer to new event action     
  *  @return self-reference ot IGiGaSetUpSvc interface 
  */
-/// ===========================================================================
+// ============================================================================
 IGiGaSetUpSvc& GiGaSvc::operator << ( G4UserEventAction             * obj )
 {
   try
@@ -246,7 +249,7 @@ IGiGaSetUpSvc& GiGaSvc::operator << ( G4UserEventAction             * obj )
   return *this;
 }; 
 
-/// ===========================================================================
+// ============================================================================
 /** set new stacking action 
  *               implementation of IGiGaSetUpSvc abstract interface 
  *
@@ -255,7 +258,7 @@ IGiGaSetUpSvc& GiGaSvc::operator << ( G4UserEventAction             * obj )
  *  @param  obj     pointer to new stacking action     
  *  @return self-reference ot IGiGaSetUpSvc interface 
  */
-/// ===========================================================================
+// ============================================================================
 IGiGaSetUpSvc& GiGaSvc::operator << ( G4UserStackingAction          * obj ) 
 {
   try
@@ -278,7 +281,7 @@ IGiGaSetUpSvc& GiGaSvc::operator << ( G4UserStackingAction          * obj )
 };
 
     
-/// ===========================================================================
+// ============================================================================
 /** set new tracking  action 
  *               implementation of IGiGaSetUpSvc abstract interface 
  *
@@ -287,7 +290,7 @@ IGiGaSetUpSvc& GiGaSvc::operator << ( G4UserStackingAction          * obj )
  *  @param  obj     pointer to new tracking action     
  *  @return self-reference ot IGiGaSetUpSvc interface 
  */
-/// ===========================================================================
+// ============================================================================
 IGiGaSetUpSvc& GiGaSvc::operator << ( G4UserTrackingAction          * obj ) 
 {
   try
@@ -309,7 +312,7 @@ IGiGaSetUpSvc& GiGaSvc::operator << ( G4UserTrackingAction          * obj )
   return *this;
 };
 
-/// ===========================================================================
+// ============================================================================
 /** set new stepping  action 
  *               implementation of IGiGaSetUpSvc abstract interface 
  *
@@ -318,7 +321,7 @@ IGiGaSetUpSvc& GiGaSvc::operator << ( G4UserTrackingAction          * obj )
  *  @param  obj     pointer to new stepping action     
  *  @return self-reference ot IGiGaSetUpSvc interface 
  */
-/// ===========================================================================
+// ============================================================================
 IGiGaSetUpSvc& GiGaSvc::operator << ( G4UserSteppingAction          * obj ) 
 { 
   try
@@ -340,14 +343,14 @@ IGiGaSetUpSvc& GiGaSvc::operator << ( G4UserSteppingAction          * obj )
   return *this;
 };
 
-/// ===========================================================================
+// ============================================================================
 /** set detector constructon module 
  *               implementation of IGiGaSetUpSvc abstract interface 
  *
  *  @param  obj      pointer to detector construction module  
  *  @return self-reference ot IGiGaSetUpSvc interface 
  */
-/// ===========================================================================
+// ============================================================================
 StatusCode GiGaSvc::setConstruction ( G4VUserDetectorConstruction   * obj )
 {
   try { *this << obj ; }
@@ -361,14 +364,14 @@ StatusCode GiGaSvc::setConstruction ( G4VUserDetectorConstruction   * obj )
   return StatusCode::SUCCESS;
 };
 
-/// ===========================================================================
+// ============================================================================
 /** set new world wolume 
  *               implementation of IGiGaSetUpSvc abstract interface 
  *
  *  @param  obj    pointer to  new world volume   
  *  @return status code  
  */
-/// ===========================================================================
+// ============================================================================
 StatusCode GiGaSvc::setDetector     ( G4VPhysicalVolume             * obj )
 {
   try { *this << obj ; }
@@ -382,14 +385,14 @@ StatusCode GiGaSvc::setDetector     ( G4VPhysicalVolume             * obj )
   return StatusCode::SUCCESS;
 };
 
-/// ===========================================================================
+// ============================================================================
 /** set new generator 
  *               implementation of IGiGaSetUpSvc abstract interface 
  *
  *  @param  obj        pointer to new generator   
  *  @return status code  
  */
-/// ===========================================================================
+// ============================================================================
 StatusCode GiGaSvc::setGenerator    ( G4VUserPrimaryGeneratorAction * obj )
 {
   try { *this << obj ; }
@@ -403,14 +406,14 @@ StatusCode GiGaSvc::setGenerator    ( G4VUserPrimaryGeneratorAction * obj )
   return StatusCode::SUCCESS;
 };
 
-/// ===========================================================================
+// ============================================================================
 /** set new physics list 
  *               implementation of IGiGaSetUpSvc abstract interface 
  *
  *  @param  obj      pointer to physics list    
  *  @return status code  
  */
-/// ===========================================================================
+// ============================================================================
 StatusCode GiGaSvc::setPhysics      ( G4VUserPhysicsList            * obj )
 {
   try { *this << obj ; }
@@ -424,14 +427,14 @@ StatusCode GiGaSvc::setPhysics      ( G4VUserPhysicsList            * obj )
   return StatusCode::SUCCESS;
 };
 
-/// ===========================================================================
+// ============================================================================
 /** set new run action 
  *               implementation of IGiGaSetUpSvc abstract interface 
  *
  *  @param  obj     pointer to new run action     
  *  @return status code  
  */
-/// ===========================================================================
+// ============================================================================
 StatusCode GiGaSvc::setRunAction    ( G4UserRunAction               * obj )
 {
   try { *this << obj ; }
@@ -445,14 +448,14 @@ StatusCode GiGaSvc::setRunAction    ( G4UserRunAction               * obj )
   return StatusCode::SUCCESS;
 };
 
-/// ===========================================================================
+// ============================================================================
 /** set new event action 
  *               implementation of IGiGaSetUpSvc abstract interface 
  *
  *  @param  obj     pointer to new event action     
  *  @return status code  
  */
-/// ===========================================================================
+// ============================================================================
 StatusCode GiGaSvc::setEvtAction    ( G4UserEventAction             * obj )
 {
   try { *this << obj ; }
@@ -466,14 +469,14 @@ StatusCode GiGaSvc::setEvtAction    ( G4UserEventAction             * obj )
   return StatusCode::SUCCESS;
 };
 
-/// ===========================================================================
+// ============================================================================
 /** set new stacking action 
  *               implementation of IGiGaSetUpSvc abstract interface 
  *
  *  @param  obj     pointer to new stacking action     
  *  @return status code  
  */
-/// ===========================================================================
+// ============================================================================
 StatusCode GiGaSvc::setStacking     ( G4UserStackingAction          * obj )
 {
   try { *this << obj ; }
@@ -487,14 +490,14 @@ StatusCode GiGaSvc::setStacking     ( G4UserStackingAction          * obj )
   return StatusCode::SUCCESS;
 };
 
-/// ===========================================================================
+// ============================================================================
 /** set new tracking  action 
  *               implementation of IGiGaSetUpSvc abstract interface 
  *
  *  @param  obj     pointer to new tracking action     
  *  @return status code  
  */
-/// ===========================================================================
+// ============================================================================
 StatusCode GiGaSvc::setTracking     ( G4UserTrackingAction          * obj )
 {
   try { *this << obj ; }
@@ -508,14 +511,14 @@ StatusCode GiGaSvc::setTracking     ( G4UserTrackingAction          * obj )
   return StatusCode::SUCCESS;
 };
 
-/// ===========================================================================
+// ============================================================================
 /** set new stepping  action 
  *               implementation of IGiGaSetUpSvc abstract interface 
  *
  *  @param  obj     pointer to new stepping action     
  *  @return status code  
  */
-/// ===========================================================================
+// ============================================================================
 StatusCode GiGaSvc::setStepping     ( G4UserSteppingAction          * obj )
 {
   try { *this << obj ; }
@@ -529,5 +532,5 @@ StatusCode GiGaSvc::setStepping     ( G4UserSteppingAction          * obj )
   return StatusCode::SUCCESS;
 };
 
-/// ===========================================================================
+// ============================================================================
 

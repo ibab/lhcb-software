@@ -1,13 +1,16 @@
-/// ===============================`============================================
+// ================================`============================================
 /// CVS tag $Name: not supported by cvs2svn $ 
-/// ===============================`============================================
+// ================================`============================================
 /// $Log: not supported by cvs2svn $
+/// Revision 1.5  2001/07/23 13:12:29  ibelyaev
+/// the package restructurisation(II)
+///
 /// Revision 1.4  2001/07/15 20:54:36  ibelyaev
 /// package restructurisation
 ///
-/// ===========================================================================
+// ============================================================================
 #define GIGA_GIGASVCIGIGASVC_CPP 1 
-/// ===========================================================================
+// ============================================================================
 /// includes
 /// STD & STL 
 #include <string>
@@ -28,16 +31,16 @@
 /// local 
 #include    "GiGaSvc.h"
 
-/// ===========================================================================
+// ============================================================================
 /**  Implementation of class GiGaSvc  
  *   all methods from abstract interface IGiGaSvc 
  *
  *   @author: Vanya Belyaev 
  *   @date xx/xx/xxxx
  */
-/// ===========================================================================
+// ============================================================================
 
-/// ===========================================================================
+// ============================================================================
 /** add  primary vertex into GiGa/G4 
  *                  implementation of IGiGaSvc abstract interface 
  *
@@ -46,7 +49,7 @@
  *  @param  vertex pointer to primary vertex 
  *  @return  self-reference ot IGiGaSvc interface 
  */
-/// ===========================================================================
+// ============================================================================
 IGiGaSvc&   GiGaSvc::operator <<         ( G4PrimaryVertex * vertex   )
 {
   ///
@@ -57,7 +60,7 @@ IGiGaSvc&   GiGaSvc::operator <<         ( G4PrimaryVertex * vertex   )
   ///
 }; 
 
-/// ===========================================================================
+// ============================================================================
 /** get the whole event  object from GiGa/G4 
  *                  implementation of IGiGaSvc abstract interface 
  *
@@ -66,7 +69,7 @@ IGiGaSvc&   GiGaSvc::operator <<         ( G4PrimaryVertex * vertex   )
  *  @param   event pointer to whole event  
  *  @return  self-reference ot IGiGaSvc interface 
  */
-/// ===========================================================================
+// ============================================================================
 IGiGaSvc& GiGaSvc::operator >> ( const G4Event*         & event        )    
 {
   ///
@@ -75,7 +78,7 @@ IGiGaSvc& GiGaSvc::operator >> ( const G4Event*         & event        )
   return *this;
 }; 
 
-/// ===========================================================================
+// ============================================================================
 /** get the all hit collections from GiGa/G4 
  *                  implementation of IGiGaSvc abstract interface 
  *
@@ -84,7 +87,7 @@ IGiGaSvc& GiGaSvc::operator >> ( const G4Event*         & event        )
  *  @param   collections  pointer to all hit collections  
  *  @return  self-reference ot IGiGaSvc interface 
  */
-/// ===========================================================================
+// ============================================================================
 IGiGaSvc& GiGaSvc::operator >> ( G4HCofThisEvent*       & collections  )
 {
   ///
@@ -96,7 +99,7 @@ IGiGaSvc& GiGaSvc::operator >> ( G4HCofThisEvent*       & collections  )
   return *this;   
 };
 
-/// ===========================================================================
+// ============================================================================
 /** get the concrete hit collection from GiGa/G4 
  *                  implementation of IGiGaSvc abstract interface 
  *
@@ -105,7 +108,7 @@ IGiGaSvc& GiGaSvc::operator >> ( G4HCofThisEvent*       & collections  )
  *  @param   collection  reference to collection pair   
  *  @return  self-reference ot IGiGaSvc interface 
  */
-/// ===========================================================================
+// ============================================================================
 IGiGaSvc& GiGaSvc::operator >> ( CollectionPair         & collection   )
 {
   G4HCofThisEvent* collections = 0 ; 
@@ -116,7 +119,7 @@ IGiGaSvc& GiGaSvc::operator >> ( CollectionPair         & collection   )
   return *this ;  
 }; 
 
-/// ===========================================================================
+// ============================================================================
 /** get all trajectories(trajectory container) from GiGa/G4 
  *                  implementation of IGiGaSvc abstract interface 
  *
@@ -125,7 +128,7 @@ IGiGaSvc& GiGaSvc::operator >> ( CollectionPair         & collection   )
  *  @param   trajectories  pointer to trajectory conatiner   
  *  @return  self-reference ot IGiGaSvc interface 
  */
-/// ===========================================================================
+// ============================================================================
 IGiGaSvc& GiGaSvc::operator >> ( G4TrajectoryContainer* & trajectories )
 {
   ///
@@ -137,14 +140,14 @@ IGiGaSvc& GiGaSvc::operator >> ( G4TrajectoryContainer* & trajectories )
   return *this ; 
 };
 
-/// ===========================================================================
+// ============================================================================
 /** add  primary vertex into GiGa/G4  
  *                  implementation of IGiGaSvc abstract interface 
  *
  *  @param  vertex pointer to primary vertex 
  *  @return status code  
  */
-/// ===========================================================================
+// ============================================================================
 StatusCode  GiGaSvc::addPrimaryKinematics( G4PrimaryVertex  * vertex   ) 
 {
   ///
@@ -157,14 +160,14 @@ StatusCode  GiGaSvc::addPrimaryKinematics( G4PrimaryVertex  * vertex   )
   return StatusCode::SUCCESS;  
 };
 
-/// ===========================================================================
+// ============================================================================
 /** get the whole event  object from GiGa/G4 
  *                  implementation of IGiGaSvc abstract interface 
  *
  *  @param  event pointer to whole event 
  *  @return status code  
  */
-/// ===========================================================================
+// ============================================================================
 StatusCode GiGaSvc::retrieveEvent  ( const G4Event*          & event )
 { 
   ///
@@ -177,14 +180,14 @@ StatusCode GiGaSvc::retrieveEvent  ( const G4Event*          & event )
   return StatusCode::SUCCESS ;  
 };
 
-/// ===========================================================================
+// ============================================================================
 /** get the all hit collections from GiGa/G4 
  *                  implementation of IGiGaSvc abstract interface 
  * 
  *  @param   collections  pointer to all hit collections  
  *  @return  status code  
  */
-/// ===========================================================================
+// ============================================================================
 StatusCode GiGaSvc::retrieveHitCollections  ( G4HCofThisEvent* & collections  )
 {
   ///
@@ -197,14 +200,14 @@ StatusCode GiGaSvc::retrieveHitCollections  ( G4HCofThisEvent* & collections  )
   return StatusCode::SUCCESS; 
 };
 
-/// ===========================================================================
+// ============================================================================
 /** get the concrete hit collection from GiGa/G4 
  *                  implementation of IGiGaSvc abstract interface 
  *
  *  @param   collection  reference to collection pair   
  *  @return  status code 
  */
-/// ===========================================================================
+// ============================================================================
 StatusCode GiGaSvc::retrieveHitCollection  ( CollectionPair & collection   )
 {
   ///
@@ -217,7 +220,7 @@ StatusCode GiGaSvc::retrieveHitCollection  ( CollectionPair & collection   )
   return StatusCode::SUCCESS; 
 };
 
-/// ===========================================================================
+// ============================================================================
 /** get all trajectories(trajectory container) from GiGa/G4 
  *                  implementation of IGiGaSvc abstract interface 
  *
@@ -226,7 +229,7 @@ StatusCode GiGaSvc::retrieveHitCollection  ( CollectionPair & collection   )
  *  @param   trajectories  pointer to trajectory conatiner   
  *  @return  self-reference ot IGiGaSvc interface 
  */
-/// ===========================================================================
+// ============================================================================
 StatusCode GiGaSvc::retrieveTrajectories( G4TrajectoryContainer*& trajectories)
 {
   ///
@@ -239,7 +242,7 @@ StatusCode GiGaSvc::retrieveTrajectories( G4TrajectoryContainer*& trajectories)
   return StatusCode::SUCCESS; 
 };
 
-/// ===========================================================================
+// ============================================================================
 
 
 

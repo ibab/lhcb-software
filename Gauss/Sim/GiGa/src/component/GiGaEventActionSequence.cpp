@@ -1,14 +1,17 @@
-/// ===========================================================================
+// ============================================================================
 /// CVS tag $Name: not supported by cvs2svn $ 
-/// ===========================================================================
+// ============================================================================
 /// $Log: not supported by cvs2svn $
+/// Revision 1.3  2001/07/27 17:03:19  ibelyaev
+/// improved printout
+///
 /// Revision 1.2  2001/07/27 14:29:00  ibelyaev
 /// bug fix
 ///
 /// Revision 1.1  2001/07/24 09:48:14  ibelyaev
 /// new component GiGaEventActionSequence
 /// 
-/// ===========================================================================
+// ============================================================================
 /// STD & STL 
 #include<functional> 
 #include<algorithm>
@@ -20,7 +23,7 @@
 /// local 
 #include "GiGaEventActionSequence.h"
 
-/// ===========================================================================
+// ============================================================================
 /** @class GiGaEventActionSequence
  *
  *  implementation 
@@ -28,20 +31,20 @@
  *  @author Vanya  Belyaev
  *  @date 24/07/2001 
  */
-/// ===========================================================================
+// ============================================================================
 
-/// ===========================================================================
+// ============================================================================
 /// factory business 
-/// ===========================================================================
+// ============================================================================
 static const GiGaEventActionFactory<GiGaEventActionSequence>         s_Factory;
 const       IGiGaEventActionFactory&GiGaEventActionSequenceFactory = s_Factory;
 
-/// ===========================================================================
+// ============================================================================
   /** standard constructor
    *  @param Name name of the event action object instance
    *  @param Loc  pointer to Service Locator 
    */
-/// ===========================================================================
+// ============================================================================
 GiGaEventActionSequence::GiGaEventActionSequence( const std::string& Name ,
                                                   ISvcLocator*       Loc  )
   : GiGaEventActionBase ( Name , Loc ) 
@@ -51,9 +54,9 @@ GiGaEventActionSequence::GiGaEventActionSequence( const std::string& Name ,
   declareProperty( "Members" , m_members );  
 };
 
-/// ===========================================================================
+// ============================================================================
 /// destructor 
-/// ===========================================================================
+// ============================================================================
 GiGaEventActionSequence::~GiGaEventActionSequence()
 {
   /// delete all actions 
@@ -64,11 +67,11 @@ GiGaEventActionSequence::~GiGaEventActionSequence()
   ///
 };
 
-/// ===========================================================================
+// ============================================================================
 /** finalise, delete and clear actions container 
  *  @return status code 
  */
-/// ===========================================================================
+// ============================================================================
 StatusCode GiGaEventActionSequence::actionsReset() 
 {
   /// finalize all members 
@@ -86,11 +89,11 @@ StatusCode GiGaEventActionSequence::actionsReset()
   return StatusCode::SUCCESS ;
 };
 
-/// ===========================================================================
+// ============================================================================
 /** initialize the object
  *  @return status code 
  */
-/// ===========================================================================
+// ============================================================================
 StatusCode GiGaEventActionSequence::initialize() 
 {
   /// initialize the base class 
@@ -141,11 +144,11 @@ StatusCode GiGaEventActionSequence::initialize()
   return StatusCode::SUCCESS;
 };
 
-/// ===========================================================================
+// ============================================================================
 /** finalize the object
  *  @return status code 
  */
-/// ===========================================================================
+// ============================================================================
 StatusCode GiGaEventActionSequence::finalize() 
 {
   ///
@@ -158,11 +161,11 @@ StatusCode GiGaEventActionSequence::finalize()
   return GiGaEventActionBase::finalize();
 };
 
-/// ===========================================================================
+// ============================================================================
 /** perform begin-of-event action
  *  @param event pointer to Geant4 event 
  */
-/// ===========================================================================
+// ============================================================================
 void GiGaEventActionSequence::BeginOfEventAction ( const G4Event* event )
 {
   /// stepping actions of all members  
@@ -173,11 +176,11 @@ void GiGaEventActionSequence::BeginOfEventAction ( const G4Event* event )
   ///
 };
 
-/// ===========================================================================
+// ============================================================================
 /** perform end-of-event action
  *  @param event pointer to Geant4 event 
  */
-/// ===========================================================================
+// ============================================================================
 void GiGaEventActionSequence::EndOfEventAction ( const G4Event* event )
 {
   /// stepping actions of all members  
@@ -189,4 +192,4 @@ void GiGaEventActionSequence::EndOfEventAction ( const G4Event* event )
 };
 
 
-/// ===========================================================================
+// ============================================================================

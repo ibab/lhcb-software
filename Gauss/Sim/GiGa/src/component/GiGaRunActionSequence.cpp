@@ -1,14 +1,17 @@
-/// ===========================================================================
+// ============================================================================
 /// CVS tag $Name: not supported by cvs2svn $ 
-/// ===========================================================================
+// ============================================================================
 /// $Log: not supported by cvs2svn $
+/// Revision 1.3  2001/07/27 17:03:21  ibelyaev
+/// improved printout
+///
 /// Revision 1.2  2001/07/27 14:29:01  ibelyaev
 /// bug fix
 ///
 /// Revision 1.1  2001/07/26 16:09:22  ibelyaev
 /// GiGaRunActions budiness
 /// 
-/// ===========================================================================
+// ============================================================================
 /// STD & STL 
 #include <algorithm>
 /// GaudiKernel
@@ -19,26 +22,26 @@
 /// local 
 #include "GiGaRunActionSequence.h"
 
-/// ===========================================================================
+// ============================================================================
 /** Implementation file for class : GiGaRunActionSequence
  * 
  * @author Vanya  Belyaev
  * @date 26/07/2001 
  */
-/// ===========================================================================
+// ============================================================================
 
-/// ===========================================================================
+// ============================================================================
 /// factory business 
-/// ===========================================================================
+// ============================================================================
 static const GiGaRunActionFactory<GiGaRunActionSequence>         s_Factory;
 const       IGiGaRunActionFactory&GiGaRunActionSequenceFactory = s_Factory;
 
-/// ===========================================================================
+// ============================================================================
 /** standard constructor
  *  @param Name name of this concrete instance of Run Action Object 
  *  @param Loc  pointer to Service Locator 
  */
-/// ===========================================================================
+// ============================================================================
 GiGaRunActionSequence::GiGaRunActionSequence( const std::string Name ,
                                               ISvcLocator*      Loc  )
   : GiGaRunActionBase( Name , Loc )
@@ -48,9 +51,9 @@ GiGaRunActionSequence::GiGaRunActionSequence( const std::string Name ,
   declareProperty( "Members" , m_members );
 };
 
-/// ===========================================================================
+// ============================================================================
 /// destructor 
-/// ===========================================================================
+// ============================================================================
 GiGaRunActionSequence::~GiGaRunActionSequence()
 {
   /// finalize (if it is not yet done)
@@ -63,11 +66,11 @@ GiGaRunActionSequence::~GiGaRunActionSequence()
   ///
 };
 
-/// ===========================================================================
+// ============================================================================
 /** finalise, delete and clear actions container 
  *  @return status code 
  */
-/// ===========================================================================
+// ============================================================================
 StatusCode GiGaRunActionSequence::actionsReset() 
 {
   /// finalize all members 
@@ -85,11 +88,11 @@ StatusCode GiGaRunActionSequence::actionsReset()
   return StatusCode::SUCCESS ;
 };
 
-/// ===========================================================================
+// ============================================================================
 /** initialization method 
  *  @return status code 
  */ 
-/// ===========================================================================
+// ============================================================================
 StatusCode GiGaRunActionSequence::initialize  ()
 {
   /// initialize the base class 
@@ -140,11 +143,11 @@ StatusCode GiGaRunActionSequence::initialize  ()
   return StatusCode::SUCCESS; 
 };
 
-/// ===========================================================================
+// ============================================================================
 /** finalization method 
  *  @return status code 
  */
-/// ===========================================================================
+// ============================================================================
 StatusCode GiGaRunActionSequence::finalize()
 {
   ///
@@ -157,11 +160,11 @@ StatusCode GiGaRunActionSequence::finalize()
   return GiGaRunActionBase::finalize();
 }
 
-/// ===========================================================================
+// ============================================================================
 /** perform begin-of-run action
  *  @param run  pointer to Geant4 Run object
  */
-/// ===========================================================================
+// ============================================================================
 void GiGaRunActionSequence::BeginOfRunAction ( const G4Run* run )
 {
   /// run actions of all members  
@@ -170,11 +173,11 @@ void GiGaRunActionSequence::BeginOfRunAction ( const G4Run* run )
                                               BeginOfRunAction) , run ) );
 };
 
-/// ===========================================================================
+// ============================================================================
 /** perform end-of-run action
  *  @param run  pointer to Geant4 Run object
  */
-/// ===========================================================================
+// ============================================================================
 void GiGaRunActionSequence::EndOfRunAction ( const G4Run* run )
 {
   /// run actions of all members  
@@ -183,6 +186,6 @@ void GiGaRunActionSequence::EndOfRunAction ( const G4Run* run )
                                               EndOfRunAction) , run ) );
 };
 
-/// ===========================================================================
+// ============================================================================
 
 

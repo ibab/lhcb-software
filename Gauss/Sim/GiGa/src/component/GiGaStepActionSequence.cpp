@@ -1,7 +1,10 @@
-/// ===========================================================================
+// ============================================================================
 /// CVS tag $Name: not supported by cvs2svn $ 
-/// ===========================================================================
+// ============================================================================
 /// $Log: not supported by cvs2svn $
+/// Revision 1.5  2001/07/27 17:03:21  ibelyaev
+/// improved printout
+///
 /// Revision 1.4  2001/07/27 14:29:01  ibelyaev
 /// bug fix
 ///
@@ -14,7 +17,7 @@
 /// Revision 1.1  2001/07/23 20:53:46  ibelyaev
 /// reorganization of GiGaUtil namespace
 /// 
-/// ===========================================================================
+// ============================================================================
 /// STD & STL 
 #include <functional>
 #include <algorithm>
@@ -35,18 +38,18 @@
  *  @date 23/07/2001 
  */
 
-/// ===========================================================================
+// ============================================================================
 /// factories 
-/// ===========================================================================
+// ============================================================================
 static const  GiGaStepActionFactory<GiGaStepActionSequence>         s_Factory;
 const        IGiGaStepActionFactory&GiGaStepActionSequenceFactory = s_Factory;
 
-/// ===========================================================================
+// ============================================================================
 /** the standard constructor
  *  @param  Name name of the instance
  *  @param  Loc  pointer to service locator object 
  */
-/// ===========================================================================
+// ============================================================================
 GiGaStepActionSequence::GiGaStepActionSequence( const std::string& Name ,
                                                 ISvcLocator*       Loc  )
   : GiGaStepActionBase( Name , Loc )
@@ -56,11 +59,11 @@ GiGaStepActionSequence::GiGaStepActionSequence( const std::string& Name ,
   declareProperty("Members" , m_members );
 };
 
-/// ===========================================================================
+// ============================================================================
 /** finalise, delete and clear actions container 
  *  @return status code 
  */
-/// ===========================================================================
+// ============================================================================
 StatusCode GiGaStepActionSequence::actionsReset() 
 {
   /// finalize all members 
@@ -79,9 +82,9 @@ StatusCode GiGaStepActionSequence::actionsReset()
   return StatusCode::SUCCESS ;
 };
 
-/// ===========================================================================
+// ============================================================================
 /// destructor 
-/// ===========================================================================
+// ============================================================================
 GiGaStepActionSequence::~GiGaStepActionSequence()
 {
   /// delete all actions 
@@ -96,11 +99,11 @@ GiGaStepActionSequence::~GiGaStepActionSequence()
 }
 
 
-/// ===========================================================================
+// ============================================================================
 /** initialize the object
  *  @return status code 
  */
-/// ===========================================================================
+// ============================================================================
 StatusCode GiGaStepActionSequence::initialize() 
 {
   /// initialize the base class 
@@ -151,11 +154,11 @@ StatusCode GiGaStepActionSequence::initialize()
   return StatusCode::SUCCESS;
 };
 
-/// ===========================================================================
+// ============================================================================
 /** finalize the object
  *  @return status code 
  */
-/// ===========================================================================
+// ============================================================================
 StatusCode GiGaStepActionSequence::finalize() 
 {
   ///
@@ -168,11 +171,11 @@ StatusCode GiGaStepActionSequence::finalize()
   return GiGaStepActionBase::finalize();
 };
 
-/// ===========================================================================
+// ============================================================================
 /** perform the stepping action
  *  @param pointer to current Geant4 step 
  */
-/// ===========================================================================
+// ============================================================================
 void GiGaStepActionSequence::UserSteppingAction ( const G4Step* step )
 {
   /// stepping actions of all members  
@@ -183,6 +186,6 @@ void GiGaStepActionSequence::UserSteppingAction ( const G4Step* step )
   ///  
 };
 
-/// ===========================================================================
+// ============================================================================
 
 

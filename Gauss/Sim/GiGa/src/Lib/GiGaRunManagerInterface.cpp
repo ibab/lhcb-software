@@ -1,8 +1,11 @@
-/// ===========================================================================
+// ============================================================================
 /// CVS tag $Name: not supported by cvs2svn $ 
-/// ===========================================================================
-/// $Log: not supported by cvs2svn $ 
-/// ===========================================================================
+// ============================================================================
+/// $Log: not supported by cvs2svn $
+/// Revision 1.1  2001/08/01 09:42:24  ibelyaev
+/// redesign and reimplementation of GiGaRunManager class
+/// 
+// ============================================================================
 /// GiGa 
 #include "GiGa/GiGaUtil.h"
 #include "GiGa/GiGaRunManager.h"
@@ -19,25 +22,25 @@
 #include "G4UserTrackingAction.hh"
 #include "G4UIsession.hh"
 
-/// ===========================================================================
+// ============================================================================
 /** Implementation of public interface for class  GiGaRunManager
  *
  * @date   31/07/2001 
  * @author Vanya Belyaev
  */
 
-/// ===========================================================================
+// ============================================================================
 /** identification 
  *  @return name of concrete inteface instance 
  */
-/// ===========================================================================
+// ============================================================================
 const std::string& GiGaRunManager::name () const { return GiGaBase::name(); }
 
-/// ===========================================================================
+// ============================================================================
 /** initialize the run manager 
  *  @return status code
  */ 
-/// ===========================================================================
+// ============================================================================
 StatusCode GiGaRunManager::initialize () 
 {
   /// initialise the base class GiGaBase
@@ -49,11 +52,11 @@ StatusCode GiGaRunManager::initialize ()
   ///
 };
 
-/// ===========================================================================
+// ============================================================================
 /** finalize the run manager 
  *  @return status code
  */ 
-/// ===========================================================================
+// ============================================================================
 StatusCode GiGaRunManager::finalize   () 
 {
   Print("finalization");
@@ -64,12 +67,12 @@ StatusCode GiGaRunManager::finalize   ()
   return GiGaBase::finalize();
 };
 
-/// ===========================================================================
+// ============================================================================
 /** declare the Geant4 Primary Generator Action 
  *  @param obj pointer  to Geant4 Primary Generator Action 
  *  @return  status code 
  */
-/// ===========================================================================
+// ============================================================================
 StatusCode GiGaRunManager::declare( G4VUserPrimaryGeneratorAction  * obj )  
 { 
   ///
@@ -98,12 +101,12 @@ StatusCode GiGaRunManager::declare( G4VUserPrimaryGeneratorAction  * obj )
   return StatusCode::SUCCESS ; 
 };
 
-/// ===========================================================================
+// ============================================================================
 /** declare the Geant4 Detector Construction Action
  *  @param obj pointer  to Geant4 Detector Construction Action  
  *  @return  status code 
  */
-/// ===========================================================================
+// ============================================================================
 StatusCode GiGaRunManager::declare( G4VUserDetectorConstruction    * obj ) 
 {
   /// geometry tree exists, could not use Detector Construction 
@@ -134,12 +137,12 @@ StatusCode GiGaRunManager::declare( G4VUserDetectorConstruction    * obj )
   return StatusCode::SUCCESS ; 
 };
 
-/// ===========================================================================
+// ============================================================================
 /** declare the top level ("world") physical volume 
  *  @param obj pointer  to top level ("world") physical volume  
  *  @return  status code 
  */
-/// ===========================================================================
+// ============================================================================
 StatusCode GiGaRunManager::declare( G4VPhysicalVolume              * obj ) 
 {
   ///
@@ -161,12 +164,12 @@ StatusCode GiGaRunManager::declare( G4VPhysicalVolume              * obj )
   return StatusCode::SUCCESS ; 
 };
 
-/// ===========================================================================
+// ============================================================================
 /** declare the Geant4 Physics List 
  *  @param obj pointer  to Geant4 Physics List  
  *  @return  status code 
  */
-/// ===========================================================================
+// ============================================================================
 StatusCode GiGaRunManager::declare( G4VUserPhysicsList             * obj )
 {
   ///
@@ -195,12 +198,12 @@ StatusCode GiGaRunManager::declare( G4VUserPhysicsList             * obj )
   return StatusCode::SUCCESS ; 
 };
 
-/// ===========================================================================
+// ============================================================================
 /** declare the GiGa Geometry source 
  *  @param obj pointer  to GiGaGeometry source  
  *  @return  status code 
  */
-/// ===========================================================================
+// ============================================================================
 StatusCode GiGaRunManager::declare( IGiGaGeoSrc                    * obj )
 {
   ///
@@ -227,12 +230,12 @@ StatusCode GiGaRunManager::declare( IGiGaGeoSrc                    * obj )
   return StatusCode::SUCCESS ; 
 };
 
-/// ===========================================================================
+// ============================================================================
 /** declare the Geant4 Run Action 
  *  @param obj pointer  to Geant4 Run action  
  *  @return  status code 
  */
-/// ===========================================================================
+// ============================================================================
 StatusCode GiGaRunManager::declare( G4UserRunAction                * obj )
 {
   ///
@@ -250,12 +253,12 @@ StatusCode GiGaRunManager::declare( G4UserRunAction                * obj )
   return StatusCode::SUCCESS ; 
 };
 
-/// ===========================================================================
+// ============================================================================
 /** declare the Geant4 Event Action 
  *  @param obj pointer  to Geant4 Event  
  *  @return  status code 
  */
-/// ===========================================================================
+// ============================================================================
 StatusCode GiGaRunManager::declare( G4UserEventAction              * obj )
 {
   ///
@@ -274,12 +277,12 @@ StatusCode GiGaRunManager::declare( G4UserEventAction              * obj )
   return StatusCode::SUCCESS ; 
 };
 
-/// ===========================================================================
+// ============================================================================
 /** declare the Geant4 Stacking Action 
  *  @param obj pointer  to Geant4 Stacking Action 
  *  @return  status code 
  */
-/// ===========================================================================
+// ============================================================================
 StatusCode GiGaRunManager::declare( G4UserStackingAction           * obj )
 {
   ///
@@ -298,12 +301,12 @@ StatusCode GiGaRunManager::declare( G4UserStackingAction           * obj )
   return StatusCode::SUCCESS ; 
 };
 
-/// ===========================================================================
+// ============================================================================
 /** declare the Geant4 Stepping  Action 
  *  @param obj pointer  to Geant4 Stepping Action 
  *  @return  status code 
  */
-/// ===========================================================================
+// ============================================================================
 StatusCode GiGaRunManager::declare( G4UserSteppingAction           * obj )
 {
   ///
@@ -322,12 +325,12 @@ StatusCode GiGaRunManager::declare( G4UserSteppingAction           * obj )
   return StatusCode::SUCCESS ; 
 };
 
-/// ===========================================================================
+// ============================================================================
 /** declare the Geant4 Tracking Action 
  *  @param obj pointer  to Geant4 Tracking Action 
  *  @return  status code 
  */
-/// ===========================================================================
+// ============================================================================
 StatusCode GiGaRunManager::declare( G4UserTrackingAction           * obj )
 {
   ///
@@ -346,12 +349,12 @@ StatusCode GiGaRunManager::declare( G4UserTrackingAction           * obj )
   return StatusCode::SUCCESS ; 
 };
 
-/// ===========================================================================
+// ============================================================================
 /** declare the Geant4 User Interface session 
  *  @param obj pointer  to Geant4 User Interface session  
  *  @return  status code 
  */
-/// ===========================================================================
+// ============================================================================
 StatusCode GiGaRunManager::declare( G4UIsession                    * obj     ) 
 {
   if(  0 != m_g4UIsession ) 
@@ -372,4 +375,4 @@ StatusCode GiGaRunManager::declare( G4UIsession                    * obj     )
 
 
 
-/// ===========================================================================
+// ============================================================================

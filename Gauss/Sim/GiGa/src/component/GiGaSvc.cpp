@@ -1,7 +1,10 @@
-/// ===========================================================================
+// ============================================================================
 /// CVS tag $Name: not supported by cvs2svn $ 
-/// ===========================================================================
+// ============================================================================
 /// $Log: not supported by cvs2svn $
+/// Revision 1.9  2001/08/01 09:42:24  ibelyaev
+/// redesign and reimplementation of GiGaRunManager class
+///
 /// Revision 1.8  2001/07/27 14:29:01  ibelyaev
 /// bug fix
 ///
@@ -14,9 +17,9 @@
 /// Revision 1.5  2001/07/15 20:54:35  ibelyaev
 /// package restructurisation
 /// 
-/// ===========================================================================
+// ============================================================================
 #define GIGA_GIGASVC_CPP 1 
-/// ===========================================================================
+// ============================================================================
 /// STD & STL 
 #include <string>
 #include <list>
@@ -50,12 +53,12 @@
 // local 
 #include    "GiGaSvc.h"
 
-/// ===========================================================================
+// ============================================================================
 /**  implementation of general non-inline methods from class GiGaSvc
  *   @author Vanya Belyaev
  *   @date xx/xx/xxxx
  */
-/// ===========================================================================
+// ============================================================================
 
 
 /// factory 
@@ -63,12 +66,12 @@ static const  SvcFactory<GiGaSvc>                   s_Factory ;
 extern const ISvcFactory&          GiGaSvcFactory = s_Factory ;
 
 
-/// ===========================================================================
+// ============================================================================
 /** standard constructor 
     @param name instrance name 
     @param svc  pointer to service locator 
 */
-/// ===========================================================================
+// ============================================================================
 GiGaSvc::GiGaSvc( const std::string& name, ISvcLocator* svcloc )
   : Service( name , svcloc )
   ///
@@ -119,9 +122,9 @@ GiGaSvc::GiGaSvc( const std::string& name, ISvcLocator* svcloc )
   ///
 };
 
-/// ===========================================================================
+// ============================================================================
 /// destructor
-/// ===========================================================================
+// ============================================================================
 GiGaSvc::~GiGaSvc() 
 { 
   if( 0 != runMgr()  ) 
@@ -133,13 +136,13 @@ GiGaSvc::~GiGaSvc()
   if( 0 != visMgr() ) { delete m_visMgr ; m_visMgr = 0 ; }
 };
 
-/// ===========================================================================
+// ============================================================================
 /** query interface 
  *  @param   id   InterfaceID 
  *  @param   ppI  placeholder for returned interface
  *  @return status code
  */
-/// ===========================================================================
+// ============================================================================
 StatusCode GiGaSvc::queryInterface( const IID& id , void** ppI  ) 
 {
   if       ( 0 == ppI  )               
@@ -156,11 +159,11 @@ StatusCode GiGaSvc::queryInterface( const IID& id , void** ppI  )
   return StatusCode::SUCCESS;
 };
 
-/// ===========================================================================
+// ============================================================================
 /** service initialization 
  *  @return status code 
  */
-/// ===========================================================================
+// ============================================================================
 StatusCode GiGaSvc::initialize()
 {
   /// initialize the base class 
@@ -400,11 +403,11 @@ StatusCode GiGaSvc::initialize()
   return StatusCode::SUCCESS ; 
 };
 
-/// ===========================================================================
+// ============================================================================
 /** service finalization  
  *  @return status code 
  */
-/// ===========================================================================
+// ============================================================================
 StatusCode GiGaSvc::finalize()
 {  
   Print("finalization");
@@ -437,11 +440,11 @@ StatusCode GiGaSvc::finalize()
   return Service::finalize();
 };
 
-/// ===========================================================================
+// ============================================================================
 /** create GiGa Run Manager 
  *  @return status code 
  */
-/// ===========================================================================
+// ============================================================================
 StatusCode GiGaSvc::createGiGaRunManager() 
 {
   ///
@@ -455,12 +458,12 @@ StatusCode GiGaSvc::createGiGaRunManager()
   ///
 };
 
-/// ===========================================================================
+// ============================================================================
 /** prepare the event 
  *  @param  vertex pointer to primary vertex 
  *  @return status code 
  */
-/// ===========================================================================
+// ============================================================================
 StatusCode GiGaSvc::prepareTheEvent( G4PrimaryVertex * vertex ) 
 {
   try
@@ -482,12 +485,12 @@ StatusCode GiGaSvc::prepareTheEvent( G4PrimaryVertex * vertex )
   ///
 };
 
-/// ===========================================================================
+// ============================================================================
 /** retrieve the event 
  *  @param  event pointer to event 
  *  @return status code 
  */
-/// ===========================================================================
+// ============================================================================
 StatusCode GiGaSvc::retrieveTheEvent( const G4Event*& event) 
 {
   try
@@ -509,13 +512,13 @@ StatusCode GiGaSvc::retrieveTheEvent( const G4Event*& event)
   ///
 };
 
-/// ===========================================================================
+// ============================================================================
 /** instantiate new physics list object using abstract factory technique 
  *  @param TypeName    "Type/Name" of physics list object 
  *  @param PL           reference to new phisics list object 
  *  @return status code 
  */
-/// ===========================================================================
+// ============================================================================
 StatusCode GiGaSvc::physList( const std::string& TypeName , 
                               IGiGaPhysList*&    PL       )
 {
@@ -544,13 +547,13 @@ StatusCode GiGaSvc::physList( const std::string& TypeName ,
   ///
 };
 
-/// ===========================================================================
+// ============================================================================
 /** instantiate new stacking action object using abstract factory technique 
  *  @param TypeName    "Type/Name" of stacking action object 
  *  @param SA           reference to new stacking action object 
  *  @return status code 
  */
-/// ===========================================================================
+// ============================================================================
 StatusCode GiGaSvc::stackAction( const std::string& TypeName , 
                                  IGiGaStackAction*& SA       )
 {
@@ -579,13 +582,13 @@ StatusCode GiGaSvc::stackAction( const std::string& TypeName ,
   ///
 };
 
-/// ===========================================================================
+// ============================================================================
 /** instantiate new tracking action object using abstract factory technique 
  *  @param TypeName    "Type/Name" of tracking action object 
  *  @param TA           reference to new tracking action object 
  *  @return status code 
  */
-/// ===========================================================================
+// ============================================================================
 StatusCode GiGaSvc::trackAction( const std::string& TypeName , 
                                  IGiGaTrackAction*& TA       )
 {
@@ -614,13 +617,13 @@ StatusCode GiGaSvc::trackAction( const std::string& TypeName ,
   ///
 };
 
-/// ===========================================================================
+// ============================================================================
 /** instantiate new stepping action object using abstract factory technique 
  *  @param TypeName    "Type/Name" of stepping action object 
  *  @param SA           reference to new stepping action object 
  *  @return status code 
  */
-/// ===========================================================================
+// ============================================================================
 StatusCode GiGaSvc::stepAction( const std::string& TypeName , 
                                 IGiGaStepAction*&  SA       )
 {
@@ -649,13 +652,13 @@ StatusCode GiGaSvc::stepAction( const std::string& TypeName ,
   ///
 };
 
-/// ===========================================================================
+// ============================================================================
 /** instantiate new event action object using abstract factory technique 
  *  @param TypeName    "Type/Name" of event  action object 
  *  @param EA           reference to new event action object 
  *  @return status code 
  */
-/// ===========================================================================
+// ============================================================================
 StatusCode GiGaSvc::eventAction( const std::string& TypeName , 
                                  IGiGaEventAction*& EA       )
 {
@@ -684,13 +687,13 @@ StatusCode GiGaSvc::eventAction( const std::string& TypeName ,
   ///
 };
 
-/// ===========================================================================
+// ============================================================================
 /** instantiate new run action object using abstract factory technique 
  *  @param TypeName    "Type/Name" of run  action object 
  *  @param RA           reference to new run action object 
  *  @return status code 
  */
-/// ===========================================================================
+// ============================================================================
 StatusCode GiGaSvc::runAction( const std::string& TypeName , 
                                IGiGaRunAction*& RA       )
 {
@@ -719,7 +722,7 @@ StatusCode GiGaSvc::runAction( const std::string& TypeName ,
   ///
 };
 
-/// ===========================================================================
+// ============================================================================
 
 
 

@@ -1,7 +1,10 @@
-/// ===========================================================================
+// ============================================================================
 /// CVS tag $Name: not supported by cvs2svn $
-/// ===========================================================================
+// ============================================================================
 /// $Log: not supported by cvs2svn $
+/// Revision 1.6  2001/08/01 09:42:24  ibelyaev
+/// redesign and reimplementation of GiGaRunManager class
+///
 /// Revision 1.5  2001/07/27 14:29:01  ibelyaev
 /// bug fix
 ///
@@ -11,10 +14,10 @@
 /// Revision 1.3  2001/07/15 20:54:35  ibelyaev
 /// package restructurisation
 ///
-/// ===========================================================================
+// ============================================================================
 #ifndef       GIGA_GIGASVC_H
 #define       GIGA_GIGASVC_H   1 
-/// ===========================================================================
+// ============================================================================
 
 /// STD & STL 
 #include <string>
@@ -566,32 +569,32 @@ private:
   ///
 };
 
-/// ===========================================================================
-/// ===========================================================================
+// ============================================================================
+// ============================================================================
 inline void GiGaSvc::Assert( bool               assertion , 
                              const std::string& msg       , 
                              const StatusCode&  sc        ) 
 { if( !assertion ) { throw GiGaException( name() + msg , sc ) ; } };
 
-/// ===========================================================================
+// ============================================================================
 /** assertion 
  *  @param assertion   assertion condition
  *  @param msg         assertion message 
  *  @param sc          assertion status code 
  */
-/// ===========================================================================
+// ============================================================================
 inline void GiGaSvc::Assert( bool               assertion , 
                              const char*        msg       , 
                              const StatusCode&  sc        ) 
 { if( !assertion ) { throw GiGaException( name() + msg , sc ) ; } };
 
-/// ===========================================================================
+// ============================================================================
 /** error printout 
  *  @param msg         error message 
  *  @param sc          error status code
  *  @return status code 
  */
-/// ===========================================================================
+// ============================================================================
 inline StatusCode GiGaSvc::Error( const std::string& Message , 
                                   const StatusCode & Status )
 { 
@@ -599,13 +602,13 @@ inline StatusCode GiGaSvc::Error( const std::string& Message ,
   return  Print( Message , MSG::ERROR  , Status  ) ; 
 };  
 
-/// ===========================================================================
+// ============================================================================
 /** warning printout 
  *  @param msg         warning message 
  *  @param sc          warning status code
  *  @return status code 
  */
-/// ===========================================================================
+// ============================================================================
 inline StatusCode GiGaSvc::Warning( const std::string& Message , 
                                     const StatusCode & Status )
 { 
@@ -613,14 +616,14 @@ inline StatusCode GiGaSvc::Warning( const std::string& Message ,
   return  Print( Message , MSG::WARNING , Status ) ; 
 };  
 
-/// ===========================================================================
+// ============================================================================
 /** printout 
  *  @param msg            message 
  *  @param lvl            printout level 
  *  @param sc             status code
  *  @return status code 
  */
-/// ===========================================================================
+// ============================================================================
 inline StatusCode GiGaSvc::Print( const std::string& Message , 
                                   const MSG::Level & level   , 
                                   const StatusCode & Status )
@@ -630,7 +633,7 @@ inline StatusCode GiGaSvc::Print( const std::string& Message ,
   return  Status; 
 };  
 
-/// ===========================================================================
+// ============================================================================
 /** exception
  *  @param Message        exception message 
  *  @param Excp           reference to "previous" exception
@@ -638,7 +641,7 @@ inline StatusCode GiGaSvc::Print( const std::string& Message ,
  *  @param Status         exception status code
  *  @return status code 
  */
-/// ===========================================================================
+// ============================================================================
 inline StatusCode GiGaSvc::Exception( const std::string    & Message , 
                                       const GaudiException & Excp    ,
                                       const MSG::Level     & level   , 
@@ -650,7 +653,7 @@ inline StatusCode GiGaSvc::Exception( const std::string    & Message ,
   return  Status;
 };  
 
-/// ===========================================================================
+// ============================================================================
 /** exception
  *  @param Message        exception message 
  *  @param Excp           reference to "previous" exception
@@ -658,7 +661,7 @@ inline StatusCode GiGaSvc::Exception( const std::string    & Message ,
  *  @param Status         exception status code
  *  @return status code 
  */
-/// ===========================================================================
+// ============================================================================
 inline StatusCode GiGaSvc::Exception( const std::string    & Message , 
                                       const std::exception & Excp    ,
                                       const MSG::Level     & level   , 
@@ -670,14 +673,14 @@ inline StatusCode GiGaSvc::Exception( const std::string    & Message ,
   return  Status;
 };  
 
-/// ===========================================================================
+// ============================================================================
 /** exception
  *  @param Message        exception message 
  *  @param level          exception printout level 
  *  @param Status         exception status code
  *  @return status code 
  */
-/// ===========================================================================
+// ============================================================================
 inline StatusCode GiGaSvc::Exception( const std::string    & Message , 
                                       const MSG::Level     & level   , 
                                       const StatusCode     & Status )
@@ -689,12 +692,12 @@ inline StatusCode GiGaSvc::Exception( const std::string    & Message ,
 };  
 
  
-/// ===========================================================================
+// ============================================================================
 
 
-/// ===========================================================================
+// ============================================================================
 #endif  ///<  GIGA_GIGASVC_H
-/// ===========================================================================
+// ============================================================================
 
 
 
