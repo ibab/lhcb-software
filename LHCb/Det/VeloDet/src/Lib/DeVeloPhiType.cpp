@@ -1,4 +1,4 @@
-// $Id: DeVeloPhiType.cpp,v 1.8 2004-02-28 21:43:43 mtobin Exp $
+// $Id: DeVeloPhiType.cpp,v 1.9 2004-03-02 12:45:41 cattanem Exp $
 //==============================================================================
 #define VELODET_DEVELOPHITYPE_CPP 1
 //==============================================================================
@@ -14,9 +14,11 @@
 #include "GaudiKernel/IJobOptionsSvc.h"
 #include "GaudiKernel/MsgStream.h"
 
+// From LHCb
+#include "Kernel/LHCbMath.h"
+
 // From Velo
 #include "VeloDet/DeVeloPhiType.h"
-#include "VeloKernel/VeloRound.h"
 
 /** @file DeVeloPhiType.cpp
  *
@@ -217,7 +219,7 @@ StatusCode DeVeloPhiType::pointToChannel(const HepPoint3D& point,
     strip = phi / m_outerPitch;
     strip += m_nbInner;
   }
-  closestStrip = VeloRound::round(strip);
+  closestStrip = LHCbMath::round(strip);
   fraction = strip - closestStrip;
 
   pitch = phiPitch(radius);

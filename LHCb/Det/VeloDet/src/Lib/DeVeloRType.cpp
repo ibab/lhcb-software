@@ -1,4 +1,4 @@
-// $Id: DeVeloRType.cpp,v 1.8 2004-03-01 14:33:43 mtobin Exp $
+// $Id: DeVeloRType.cpp,v 1.9 2004-03-02 12:45:41 cattanem Exp $
 //==============================================================================
 #define VELODET_DEVELORTYPE_CPP 1
 //==============================================================================
@@ -13,9 +13,11 @@
 #include "GaudiKernel/IJobOptionsSvc.h"
 #include "GaudiKernel/MsgStream.h"
 
+// From LHCb
+#include "Kernel/LHCbMath.h"
+
 // From Velo
 #include "VeloDet/DeVeloRType.h"
-#include "VeloKernel/VeloRound.h"
 
 /** @file DeVeloRType.cpp
  *
@@ -108,7 +110,7 @@ StatusCode DeVeloRType::pointToChannel(const HepPoint3D& point,
   logarithm = (m_pitchSlope*(radius - m_innerR)+m_innerPitch) / 
     m_innerPitch;
   strip = log(logarithm)/m_pitchSlope;
-  closestStrip = VeloRound::round(strip);
+  closestStrip = LHCbMath::round(strip);
   fraction = strip - closestStrip; 
  
   // Which zone is the strip in?
