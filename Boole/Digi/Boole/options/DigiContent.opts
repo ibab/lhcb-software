@@ -6,7 +6,7 @@ DigiWriter.OptItemList =
 , "/Event/PrevPrev#*"
 , "/Event/Next#*"
 , "/Event/LHCBackground#*"
-, "/Event/Gen/HepMCEvents#1"
+  //, "/Event/Gen/HepMCEvents#1"
 }; 
 DigiWriter.ItemList = 
 {

@@ -3,7 +3,7 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
-</PRE><H1><A NAME=v5r4>2004-03-30 Boole v5r4</A></H1><PRE>
+</PRE><H1><A NAME=v5r4>2004-04-01 Boole v5r4</A></H1><PRE>
 
 Requires XmlDDDB v22r0 or greater
 Requires data produced by Gauss v14r3 or greater
@@ -23,8 +23,9 @@ Requires data produced by Gauss v14r3 or greater
   . Add PuVeto raw hit output to RawBuffer (PuVeto v5r6)
   . New version of RawBuffer for OT: new bank structure, multiple hit
     capability, new straw numbering (OTDAQ v2r0)
-  . HepMC now made persistent also for POOL data (GenEvent v3r1). Only for data
-    produced with Gauss v15r4 or greater.
+  . HepMC can now be made persistent also for POOL data (GenEvent v3r1)
+    Disabled from Digi content as it requires data produced with Gauss v15r4
+    or greater, not yet released.
 
 - Bug fixes
   . Fix large memory leak (Savannah bug 2821) (L0mConf v2r2)
