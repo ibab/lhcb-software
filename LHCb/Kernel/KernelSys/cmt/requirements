@@ -1,10 +1,10 @@
 package KernelSys
-version v4r4
+version v4r5
 
 branches doc cmt
 
-use LHCbKernel  v5r4	Kernel
-use Relations   v2r0    Kernel
+use LHCbKernel  v5r5	Kernel
+use Relations   v2r1    Kernel
 use CaloKernel  v3r2	Calo
 use MuonKernel  v2r6	Muon
 use TrKernel    v11r4	Tr
