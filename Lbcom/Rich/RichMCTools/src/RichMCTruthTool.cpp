@@ -5,7 +5,7 @@
  * Implementation file for class : RichMCTruthTool
  *
  * CVS Log :-
- * $Id: RichMCTruthTool.cpp,v 1.15 2005-02-23 12:37:18 jonrob Exp $
+ * $Id: RichMCTruthTool.cpp,v 1.16 2005-02-24 14:42:23 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 14/01/2002
@@ -137,9 +137,7 @@ const MCParticle *
 RichMCTruthTool::mcParticle( const TrStoredTrack * track ) const
 {
   if ( track ) {
-    const MCParticle * mcP = trackAsct()->associatedFrom(track);
-    if ( !mcP ) Warning( "::mcParticle : Failed to load MCParticle for TrStoredTrack" );
-    return mcP;
+    return trackAsct()->associatedFrom(track);
   } else {
     Warning ( "::mcParticle : NULL TrStoredTrack pointer" );
     return NULL;
@@ -150,9 +148,7 @@ const MCParticle *
 RichMCTruthTool::mcParticle( const TrgTrack * track ) const
 {
   if ( track ) {
-    const MCParticle * mcP = trgTrackToMCPLinks()->first(track);
-    if ( !mcP ) Warning( "::mcParticle : Failed to locate MCParticle from TrgTrack" );
-    return mcP;
+    return trgTrackToMCPLinks()->first(track);
   } else {
     Warning ( "::mcParticle : NULL TrgTrack pointer" );
     return NULL;
@@ -170,7 +166,7 @@ const MCRichDigit * RichMCTruthTool::mcRichDigit( const RichDigit * digit ) cons
   if ( !mcDigit && mcRichDigits() ) mcDigit = mcRichDigits()->object(digit->key());
 
   // if still failed, issue a warning
-  if ( !mcDigit ) Warning("Failed to find MCRichDigit for RichDigit");
+  if ( !mcDigit ) Warning( "Failed to find MCRichDigit for RichDigit" );
 
   return mcDigit;
 }
