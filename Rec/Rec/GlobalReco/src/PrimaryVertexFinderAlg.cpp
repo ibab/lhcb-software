@@ -1,4 +1,4 @@
-// $Id: PrimaryVertexFinderAlg.cpp,v 1.1 2002-07-11 16:24:20 gcorti Exp $
+// $Id: PrimaryVertexFinderAlg.cpp,v 1.2 2002-07-18 17:58:23 gcorti Exp $
 // Include files
 ///--------------------------------------------------------- 
 /// std c++ libs
@@ -155,7 +155,7 @@ StatusCode PrimaryVertexFinderAlg::execute() {
   Vertices* createdVertices = new Vertices();
   
   if( 0 == outDir ) { // touch the output directory
-    log << MSG::ERROR << "OutputDirectory = "
+    log << MSG::DEBUG << "OutputDirectory = "
         << m_outputContainer << " does not exist " << endreq;
     log << MSG::DEBUG << "Trying to register it..." << endreq;
     
