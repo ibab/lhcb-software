@@ -1,4 +1,4 @@
-// $Id: RichGlobalPIDAlg.cpp,v 1.9 2003-08-06 10:02:10 jonrob Exp $
+// $Id: RichGlobalPIDAlg.cpp,v 1.10 2003-08-07 09:35:28 jonrob Exp $
 // Include files
 
 // local
@@ -425,14 +425,15 @@ double RichGlobalPIDAlg::deltaLogLikelihood( RichRecTrack * track,
     RichRecPixel::Photons & photons = (*iPixel)->richRecPhotons();
     for ( RichRecPixel::Photons::iterator iPhoton = photons.begin();
           iPhoton != photons.end(); ++iPhoton ) {
+      RichRecPhoton * photon = *iPhoton;
       
-      if ( !(*iPhoton)->richRecTrack()->inUse() ) continue;
+      if ( !photon->richRecTrack()->inUse() ) continue;
 
       double tmpOldSig = 
-        (*iPhoton)->expPixelSignalPhots( (*iPhoton)->richRecTrack()->currentHypothesis() );
+        photon->expPixelSignalPhots( photon->richRecTrack()->currentHypothesis() );
       oldSig += tmpOldSig;
-      newSig += ( (*iPhoton)->richRecTrack() != track ? tmpOldSig :
-                  m_photonSig->predictedPixelSignal( *iPhoton, newHypo ) );
+      newSig += ( photon->richRecTrack() != track ? tmpOldSig :
+                  m_photonSig->predictedPixelSignal( photon, newHypo ) );
 
     } // end photon loop
 
