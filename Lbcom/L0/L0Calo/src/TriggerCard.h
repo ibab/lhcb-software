@@ -1,8 +1,9 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/L0/L0Calo/src/TriggerCard.h,v 1.2 2001-03-20 17:28:44 ocallot Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/L0/L0Calo/src/TriggerCard.h,v 1.3 2001-04-19 08:56:05 ocallot Exp $
 
 #include <vector>
 
 #include "CaloDet/CaloCardParams.h"
+#include "CaloDet/DeCalorimeter.h"
 
 /** @class TriggerCard TriggerCard.h
  * 
@@ -18,7 +19,10 @@ class TriggerCard {
 
 public:
 
-  TriggerCard( int num ) { m_number = num;};
+  TriggerCard( int num, DeCalorimeter* det ) { 
+    m_number  = num;
+    m_detElem = det;
+  };
 
   ~TriggerCard() {};
 
@@ -32,29 +36,10 @@ public:
   void addEt( int col, int row, int digit ) ;
 
 /// Store the trigger bits of Prs.
-  void setPrs( int col, int row ) {
-    if (nRowCaloCard > row) {
-      if (nColCaloCard > col) { prs[col]  [row]   += 8; }
-      if (           0 < col) { prs[col-1][row]   += 4; }
-    }
-    if (0 < row) {
-      if (nColCaloCard > col) { prs[col]  [row-1] += 2; }
-      if (           0 < col) { prs[col-1][row-1] += 1; }
-    }
-  };
+  void setPrs( int col, int row ) ;
   
 /// Store the trigger bits of Spd.
-  void setSpd( int col, int row ) {
-    if (nRowCaloCard > row) {
-      if (nColCaloCard > col) { spd[col]  [row]   += 8; }
-      if (           0 < col) { spd[col-1][row]   += 4; }
-    }
-    if (0 < row) {
-      if (nColCaloCard > col) { spd[col]  [row-1] += 2; }
-      if (           0 < col) { spd[col-1][row-1] += 1; }
-    }
-  };
-  
+  void setSpd( int col, int row ) ;
   
   bool empty() const { return m_empty ; };  ///< return if the card is empty
   
@@ -63,6 +48,11 @@ public:
   int etMax()  const { return m_etMax ; };  ///< Et of the 2x2 candidate
   int colMax() const { return m_colMax; };  ///< column of the candidate
   int rowMax() const { return m_rowMax; };  ///< row of the candidate
+  
+/// returns the cel ID at the maximum Et.
+  CaloCellID cellIdMax() const { 
+    return m_detElem->cardCellID( m_number, m_rowMax, m_colMax ); 
+  };
   
   int prsMask() const { return prs[m_colMax][m_rowMax]; }; ///< Prs mask
   int spdMask() const { return spd[m_colMax][m_rowMax]; }; ///< Spd mask 
@@ -99,6 +89,7 @@ public:
   
 private:
   int  m_number;
+  DeCalorimeter* m_detElem;
   int  et  [nColCaloCard+1] [nRowCaloCard+1] ;
   int  prs [nColCaloCard] [nRowCaloCard] ;
   int  spd [nColCaloCard] [nRowCaloCard] ;

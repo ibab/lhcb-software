@@ -1,6 +1,11 @@
 Package		: L0/L0Calo
 Package Manager : Olivier Callot
 
+! 2001/04/19 - Olivier Callot
+  Added the HCAL candidates in the output container, with a new type
+  Fixed Windows NT incompatibilities, mainly loop indices are defined outside 
+        the loop
+
 ! 2001/03/20 - Olivier Callot
   Change the code to have Doxygen compatible comments
   Add a typedef for L0CaloCandidateVector

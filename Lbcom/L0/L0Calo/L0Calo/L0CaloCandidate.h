@@ -1,6 +1,6 @@
 #ifndef L0CALO_L0CALOCANDIDATE_H
 #define L0CALO_L0CALOCANDIDATE_H 1
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/L0/L0Calo/L0Calo/L0CaloCandidate.h,v 1.2 2001-03-20 17:28:43 ocallot Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/L0/L0Calo/L0Calo/L0CaloCandidate.h,v 1.3 2001-04-19 08:56:04 ocallot Exp $
 
 // Include files
 #include <iostream>
@@ -24,7 +24,9 @@ namespace L0 {
     Hadron2,
     SumEt,
     Pi0Local,
-    Pi0Global  };
+    Pi0Global,
+    HcalCluster
+  };
 };
 
 
@@ -74,13 +76,14 @@ public:
 
 /// Returns the type of candidate as a string, for printing
   std::string typeName()        const  { 
-    if ( L0::Electron  == m_type ) { return "electron"; }
-    if ( L0::Photon    == m_type ) { return "photon  "; }
-    if ( L0::Hadron    == m_type ) { return "hadron  "; }
-    if ( L0::Hadron2   == m_type ) { return "hadron_2"; }
-    if ( L0::Pi0Local  == m_type ) { return "Pi0 loc "; }
-    if ( L0::Pi0Global == m_type ) { return "Pi0 glob"; }
-    if ( L0::SumEt     == m_type ) { return "Sum Et  "; }
+    if ( L0::Electron    == m_type ) { return "electron"; }
+    if ( L0::Photon      == m_type ) { return "photon  "; }
+    if ( L0::Hadron      == m_type ) { return "hadron  "; }
+    if ( L0::Hadron2     == m_type ) { return "hadron_2"; }
+    if ( L0::Pi0Local    == m_type ) { return "Pi0 loc "; }
+    if ( L0::Pi0Global   == m_type ) { return "Pi0 glob"; }
+    if ( L0::SumEt       == m_type ) { return "Sum Et  "; }
+    if ( L0::HcalCluster == m_type ) { return "HcalClus"; }
     return "unknown";
   }
 
@@ -115,7 +118,7 @@ inline StreamBuffer& L0CaloCandidate::serialize(StreamBuffer& s) {
 				>> m_et 
 				>> x 
 				>> y 
-				>> x 
+				>> z
 				>> m_posTol;
   m_position.setX( x );
   m_position.setY( y );

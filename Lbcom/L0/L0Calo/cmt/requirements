@@ -5,10 +5,10 @@ version 	v1
 branches	L0Calo src cmt doc options
 
 # ================ own includes ==========================================
-include_dirs	${L0CALOROOT}
+include_dirs	$(L0CALOROOT)
 
 # ================ options ===============================================
-set L0CALOOPTS	${L0CALOROOT}/options
+set L0CALOOPTS	$(L0CALOROOT)/options
 
 # ================ used packages =========================================
 use CaloEvent	v4*	Event

@@ -1,6 +1,6 @@
 #ifndef   L0CALO_L0CALOALG_H
 #define   L0CALO_L0CALOALG_H  1
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/L0/L0Calo/src/L0CaloAlg.h,v 1.2 2001-03-20 17:28:44 ocallot Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/L0/L0Calo/src/L0CaloAlg.h,v 1.3 2001-04-19 08:56:05 ocallot Exp $
 
 // from STL 
 #include <cmath>
@@ -103,27 +103,27 @@ public:
   /** creator
    * @param det : The detector element pointer
    */
-  L0Candidate( DeCalorimeter* det ) : m_ID() {
-    m_det = det ;
-    m_et  = 0   ;
+  L0Candidate( DeCalorimeter* det, double scale ) : m_ID() {
+    m_det     = det ;
+    m_et      = 0   ;
+    m_etScale = scale ;
   };
 
   ~L0Candidate()                           { };
   
-  /** store a candidate
+  /** update the information on a candidate
    *  @param et Integer transverse energy
    *  @param card Integer card number
    *  @param ID ClaoCellID location of the candidate 
    */
-  void       setCandidate( int et, int card, CaloCellID ID ) { 
-    m_ID     = ID;
-    m_card   = card;
-    if ( 255 >= et ) { m_et = et; } else { m_et = 255; }
-    m_center = m_det->cellCenter( ID ); 
-    m_tol    = m_det->cellSize( ID ) * .5;
-    m_center.setX( m_center.x() + m_tol );
-    m_center.setY( m_center.y() + m_tol );
-  };
+  void        setCandidate( int et, int card, CaloCellID ID ) ;
+
+  /** Save the candidate in the output container as L0CaloCandidate
+   *  @param type : Type of candidate, from L0::L0Type
+   *  @param L0Calo : Vector of candidates, to which the current object
+   *                  is added after being properly formatted.
+   */
+  void        saveCandidate( int type, L0CaloCandidateVector* L0Calo ) ;
   
   int         et( )        const { return m_et     ; };
   HepPoint3D  center( )    const { return m_center ; };
@@ -134,6 +134,7 @@ public:
  private:
   int            m_et     ;
   int            m_card   ;
+  double         m_etScale;
   CaloCellID     m_ID     ;
   DeCalorimeter* m_det    ;
   HepPoint3D     m_center ;

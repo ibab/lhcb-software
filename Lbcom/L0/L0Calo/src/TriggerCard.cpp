@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/L0/L0Calo/src/TriggerCard.cpp,v 1.2 2001-03-20 17:28:44 ocallot Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/L0/L0Calo/src/TriggerCard.cpp,v 1.3 2001-04-19 08:56:05 ocallot Exp $
 
 #include "TriggerCard.h"
 
@@ -6,13 +6,15 @@
  */
 
 void TriggerCard::reset( ) {
-  for ( int i = 0; nColCaloCard >= i; ++i ){
-    for ( int j = 0; nRowCaloCard >= j; ++j ) {
+  int i;
+  int j;
+  for ( i = 0; nColCaloCard >= i; ++i ){
+    for ( j = 0; nRowCaloCard >= j; ++j ) {
       et[i][j] = 0;
     }
   }
-  for ( int i = 0; nColCaloCard > i; ++i ){
-    for ( int j = 0; nRowCaloCard > j; ++j ){
+  for ( i = 0; nColCaloCard > i; ++i ){
+    for ( j = 0; nRowCaloCard > j; ++j ){
       prs[i][j] = 0;
       spd[i][j] = 0;
     }
@@ -41,8 +43,10 @@ void TriggerCard::addEt( int col, int row, int digit ) {
 // Update the maximum...
 
   m_etMax = 0;
-  for ( int i = 0; nColCaloCard > i; ++i ){
-    for ( int j = 0; nRowCaloCard > j; ++j ) {
+  int i;
+  for ( i = 0; nColCaloCard > i; ++i ){
+    int j;
+    for ( j = 0; nRowCaloCard > j; ++j ) {
       int cellEt = et[i][j] + et[i+1][j] + et[i][j+1] + et[i+1][j+1];
       if ( 255 < cellEt ) { cellEt= 255; };
       if ( cellEt > m_etMax ) {
@@ -51,6 +55,28 @@ void TriggerCard::addEt( int col, int row, int digit ) {
 	m_rowMax = j;
       }
     }
+  }
+};
+
+void TriggerCard::setPrs( int col, int row ) {
+  if (nRowCaloCard > row) {
+    if (nColCaloCard > col) { prs[col]  [row]   += 8; }
+    if (           0 < col) { prs[col-1][row]   += 4; }
+  }
+  if (0 < row) {
+    if (nColCaloCard > col) { prs[col]  [row-1] += 2; }
+    if (           0 < col) { prs[col-1][row-1] += 1; }
+  }
+};
+
+void TriggerCard::setSpd( int col, int row ) {
+  if (nRowCaloCard > row) {
+    if (nColCaloCard > col) { spd[col]  [row]   += 8; }
+    if (           0 < col) { spd[col-1][row]   += 4; }
+  }
+  if (0 < row) {
+      if (nColCaloCard > col) { spd[col]  [row-1] += 2; }
+      if (           0 < col) { spd[col-1][row-1] += 1; }
   }
 };
 

@@ -1,8 +1,9 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/L0/L0Calo/src/L0CaloAlg.cpp,v 1.2 2001-03-20 17:28:44 ocallot Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/L0/L0Calo/src/L0CaloAlg.cpp,v 1.3 2001-04-19 08:56:04 ocallot Exp $
 
 /// STL 
 #include <string> 
 #include <algorithm> 
+#include <stdio.h> 
 
 /// CLHEP 
 #include "CLHEP/Units/SystemOfUnits.h"
@@ -126,10 +127,12 @@ StatusCode L0CaloAlg::initialize() {
   m_ecal = (DeCalorimeter*) detEcal;
   m_ecal->buildCells(); 
   m_ecal->buildCards();
-  for  ( int eCard = 0; m_ecal->nCards() > eCard; ++eCard ) {
-    ecalFe.push_back( TriggerCard( eCard ) );
+  int eCard;
+  int hCard;
+  for  ( eCard = 0; m_ecal->nCards() > eCard; ++eCard ) {
+    ecalFe.push_back( TriggerCard( eCard, m_ecal ) );
   }
-  log << MSG::DEBUG << m_ecal << endreq;
+  log << MSG::VERBOSE << m_ecal << endreq;
 
 // Retrieve the HCAL detector element, build cards
 
@@ -143,10 +146,10 @@ StatusCode L0CaloAlg::initialize() {
   m_hcal = (DeCalorimeter*) detHcal;
   m_hcal->buildCells(); 
   m_hcal->buildCards(); 
-  for  ( int hCard = 0; m_hcal->nCards() > hCard; ++hCard ) {
-    hcalFe.push_back( TriggerCard( hCard ) );
+  for  ( hCard = 0; m_hcal->nCards() > hCard; ++hCard ) {
+    hcalFe.push_back( TriggerCard( hCard, m_hcal ) );
   }
-  log << MSG::DEBUG << m_hcal << endreq;
+  log << MSG::VERBOSE << m_hcal << endreq;
 
 // Link the ECAL cards to the HCAL cards for the trigger.
 // Method: An ECAL card is connected to a single HCAL card.
@@ -161,7 +164,7 @@ StatusCode L0CaloAlg::initialize() {
   double zRatio = m_hcal->cellSize( m_hcal->firstCellID( 0 ) ) / 
                   m_ecal->cellSize( m_ecal->firstCellID( 0 ) ) / 2. ;
   
-  for ( int eCard=0 ;  m_ecal->nCards() > eCard; ++eCard ) {
+  for ( eCard=0 ;  m_ecal->nCards() > eCard; ++eCard ) {
     CaloCellID ecalID  = m_ecal->firstCellID( eCard );
     HepPoint3D center  = m_ecal->cellCenter( ecalID ) * zRatio;
     CaloCellID hcalID  = m_hcal->Cell( center );
@@ -194,7 +197,7 @@ StatusCode L0CaloAlg::initialize() {
 
 // Debug the cards
 
-  for ( int eCard=0 ;  m_ecal->nCards() > eCard; ++eCard ) {
+  for ( eCard=0 ;  m_ecal->nCards() > eCard; ++eCard ) {
     log << MSG::VERBOSE << "Ecal card " ;
     log.width(3); log 	<< eCard      << " Area, Row, Col" ;
     log.width(2); log 	<< m_ecal->cardArea(eCard)         ;
@@ -211,7 +214,7 @@ StatusCode L0CaloAlg::initialize() {
     log.width(2); log   << ecalFe[eCard].hcalOffsetRow() << " col " ;
     log.width(2); log   << ecalFe[eCard].hcalOffsetCol() << endreq;
   }
-  for ( int hCard=0 ;  m_hcal->nCards() > hCard; ++hCard ) {
+  for ( hCard=0 ;  m_hcal->nCards() > hCard; ++hCard ) {
     log << MSG::VERBOSE << "Hcal card " ;
     log.width(3); log 	<< hCard      << " Area, Row, Col" ;
     log.width(2); log 	<< m_hcal->cardArea(hCard)         ;
@@ -223,7 +226,7 @@ StatusCode L0CaloAlg::initialize() {
     log.width(4); log 	<< m_hcal->downCardNumber(hCard)   << " to " 
 			<< hcalFe[hCard].numberOfEcalCards() 
 			<< " Ecal cards : "; 
-    for ( int eCard = 0; hcalFe[hCard].numberOfEcalCards() > eCard; ++eCard ) {
+    for ( eCard = 0; hcalFe[hCard].numberOfEcalCards() > eCard; ++eCard ) {
       log.width(4); log << hcalFe[hCard].ecalCardNumber( eCard ) ;
     }
     log << endreq;
@@ -303,18 +306,17 @@ StatusCode L0CaloAlg::execute() {
   
 // Loop on ECAL cards. Get the candidates, select the highest
 
-  L0Candidate electron  ( m_ecal );
-  L0Candidate photon    ( m_ecal );
-  L0Candidate pi0Local  ( m_ecal );
-  L0Candidate pi0Global ( m_ecal );
+  L0Candidate electron  ( m_ecal, m_etScale );
+  L0Candidate photon    ( m_ecal, m_etScale );
+  L0Candidate pi0Local  ( m_ecal, m_etScale );
+  L0Candidate pi0Global ( m_ecal, m_etScale );
 
-  for( int eCard = 0; m_ecal->nCards() > eCard; ++eCard ) {
+  int eCard;
+  for( eCard = 0; m_ecal->nCards() > eCard; ++eCard ) {
     if ( !ecalFe[eCard].empty() ) {
       int etMax   = ecalFe[eCard].etMax()  ;
       int etTot   = ecalFe[eCard].etTot()  ;
-      int row     = ecalFe[eCard].rowMax() ;
-      int col     = ecalFe[eCard].colMax() ;
-      CaloCellID ID =  m_ecal->cardCellID( eCard, row, col);
+      CaloCellID ID = ecalFe[eCard].cellIdMax() ;
       std::string particle = "";
 
 // Validate ECAL by Prs/Spd, and select the highest electron and photon
@@ -369,6 +371,8 @@ StatusCode L0CaloAlg::execute() {
 	  }
 	} else { 
 	  int etMaxPrev = ecalFe[pCard].etMax() ;
+	  int row       = ecalFe[eCard].rowMax() ;
+	  int col       = ecalFe[eCard].colMax() ;
 	  int rowPrev   = ecalFe[pCard].rowMax() - nRowCaloCard ;
 	  int colPrev   = ecalFe[pCard].colMax() ;
 	  bool phot     = (0 <  ecalFe[eCard].prsMask() ) && 
@@ -422,9 +426,9 @@ StatusCode L0CaloAlg::execute() {
       if ( !particle.empty() ) {
 	log << MSG::VERBOSE << "ECAL Card " ;
 	log.width(4); log << ecalFe[eCard].number() << " EtMax ";
-	log.width(4); log << etMax << " at col,row" ;
-	log.width(3); log << col ;
-	log.width(3); log << row << " 4 cells: ";
+	log.width(4); log << etMax << " at row, col" ;
+	log.width(3); log << ecalFe[eCard].rowMax() ;
+	log.width(3); log << ecalFe[eCard].colMax() << " 4 cells: ";
 	log.width(4); log << ecalFe[eCard].et1();
 	log.width(4); log << ecalFe[eCard].et2();
 	log.width(4); log << ecalFe[eCard].et3();
@@ -445,18 +449,20 @@ StatusCode L0CaloAlg::execute() {
 
 // Now add the highest ECAL energy in matching cards
 
-  L0Candidate hadron( m_hcal );
-  L0Candidate hadron2( m_hcal );
+  L0Candidate hadron ( m_hcal, m_etScale );
+  L0Candidate hadron2( m_hcal, m_etScale );
   int sumEt = 0;
   int cardMax = -1;
 
-  for ( int hCard = 0; hCard < m_hcal->nCards(); ++hCard ) {
+  int hCard;
+  for ( hCard = 0; hCard < m_hcal->nCards(); ++hCard ) {
     if ( !hcalFe[hCard].empty() ) {
       int maxEcalEt = 0;
       int hCol = hcalFe[hCard].colMax();
       int hRow = hcalFe[hCard].rowMax();
-      for ( int eLink=0; eLink < hcalFe[hCard].numberOfEcalCards() ; ++eLink) {
-	int eCard = hcalFe[hCard].ecalCardNumber( eLink );
+      int eLink;
+      for ( eLink=0; eLink < hcalFe[hCard].numberOfEcalCards() ; ++eLink) {
+	eCard = hcalFe[hCard].ecalCardNumber( eLink );
 	if ( ecalFe[eCard].match_included( hCol, hRow ) ) {
 	  if ( ecalFe[eCard].etMax() > maxEcalEt ) { 
 	    maxEcalEt = ecalFe[eCard].etMax(); 
@@ -467,20 +473,7 @@ StatusCode L0CaloAlg::execute() {
       sumEt  += etMax ;
       if(  hadron.et() < etMax ) {
 	cardMax = hCard;
-	hadron.setCandidate( etMax, hCard, 
-			     m_hcal->cardCellID( hCard, hRow, hCol ) );
-
-	log << MSG::VERBOSE << "HCAL Card " ;
-	log.width(4); log << hCard << " EtMax ";
-	log.width(4); log << etMax << " at col,row " ;
-	log.width(3); log << hCol ;
-	log.width(3); log << hRow << " 4 cells: ";
-	log.width(4); log << hcalFe[hCard].et1();
-	log.width(4); log << hcalFe[hCard].et2();
-	log.width(4); log << hcalFe[hCard].et3();
-	log.width(4); log << hcalFe[hCard].et4() << "  EtTot ";
-	log.width(4); log << hcalFe[hCard].etTot() << " Ecal " ;
-	log.width(4); log << maxEcalEt << endreq;
+	hadron.setCandidate( etMax, hCard, hcalFe[hCard].cellIdMax() );
       }
     } // card not empty
   } // hCard
@@ -490,47 +483,28 @@ StatusCode L0CaloAlg::execute() {
     int maxCol  = m_hcal->cardFirstColumn(cardMax) + hcalFe[cardMax].colMax();
     int maxRow  = m_hcal->cardFirstRow(cardMax) + hcalFe[cardMax].rowMax();
 
-    log << MSG::VERBOSE << "HCAL2 Card : Max card is " ;
-    log.width(4); log << cardMax << " EtMax ";
-    log.width(4); log << hadron.et() << " at area, col, row " ;
-    log.width(3); log << maxArea ;
-    log.width(3); log << maxCol ;
-    log.width(3); log << maxRow << endreq;
-
-    for ( int hCard = 0; hCard < m_hcal->nCards(); ++hCard ) {
+    for ( hCard = 0; hCard < m_hcal->nCards(); ++hCard ) {
       if ( !hcalFe[hCard].empty() && 
 	   hCard != cardMax          ) {
 	int hCol = m_hcal->cardFirstColumn(hCard) + hcalFe[hCard].colMax();
 	int hRow = m_hcal->cardFirstRow(hCard) + hcalFe[hCard].rowMax();
+// ** Ghost cleaning
 	if ( (maxArea != m_hcal->cardArea(hCard))   ||
 	     (1 < hCol-maxCol) || (1 < maxCol-hCol) ||
-	     (1 < hRow-maxRow) || (1 < maxRow-hRow)   ) {  // ** Ghost cleaning
+	     (1 < hRow-maxRow) || (1 < maxRow-hRow)   ) {  
+
 	  int etMax = hcalFe[hCard].etMax();
 	  if( hadron2.et() < etMax ) { 
-
-	    log << MSG::VERBOSE << "HCAL2 Card " ;
-	    log.width(4); log << hCard << " EtMax ";
-	    log.width(4); log << etMax << " at area, col, row " ;
-	    log.width(4); log << m_hcal->cardArea(hCard) ;
-	    log.width(3); log << hCol ;
-	    log.width(3); log << hRow << " 4 cells: ";
-	    log.width(4); log << hcalFe[hCard].et1();
-	    log.width(4); log << hcalFe[hCard].et2();
-	    log.width(4); log << hcalFe[hCard].et3();
-	    log.width(4); log << hcalFe[hCard].et4() << " EtTot ";
-	    log.width(4); log << hcalFe[hCard].etTot() << endreq;
-
-	    int hCol = hcalFe[hCard].colMax();
-	    int hRow = hcalFe[hCard].rowMax();
-	    hadron2.setCandidate( etMax, hCard, 
-				  m_hcal->cardCellID( hCard, hRow, hCol ) );
+	    hadron2.setCandidate( etMax, hCard, hcalFe[hCard].cellIdMax() );
 	  }
 	} // not a ghost
       } // card not empty
     } // loop hCard
   } // 0 < cardMax
 
-// Prepare the output container
+//=============================================================================
+// Prepare the output container, register it and then fill it.
+//=============================================================================
 
   L0CaloCandidateVector* L0Calo = new(std::nothrow) L0CaloCandidateVector();
   if( 0 == L0Calo ) { 
@@ -545,7 +519,7 @@ StatusCode L0CaloAlg::execute() {
   { 
     SmartDataPtr<DataObject> outDir( eventDataService() , 
 				     m_nameOfOutputDirectory ); 
-    if( 0 == outDir )                             // touch the output directory
+    if( 0 == outDir )                         // touch the output directory
       { log << MSG::ERROR << " OutputDirectory="
 	    << m_nameOfOutputDirectory << "\tdoes not exist" << endreq ; } 
   } 
@@ -561,41 +535,12 @@ StatusCode L0CaloAlg::execute() {
 
 // Store the various candidates
 
-  if ( 0 < electron.et() ) {
-    L0CaloCandidate* elec = new L0CaloCandidate ( L0::Electron, electron.ID(),
-						  electron.et(),
-						  electron.et() * m_etScale,
-						  electron.center(), 
-						  electron.tolerance()  );
-    L0Calo->push_back( elec );
-  }
-
-  if ( 0 < photon.et() ) {
-    L0CaloCandidate* phot = new L0CaloCandidate ( L0::Photon, photon.ID(), 
-						  photon.et(),
-						  photon.et() * m_etScale, 
-						  photon.center(), 
-						  photon.tolerance() );
-    L0Calo->push_back( phot );
-  }
-
-  if ( 0 < hadron.et() ) {
-    L0CaloCandidate* hadr = new L0CaloCandidate ( L0::Hadron, hadron.ID(), 
-						  hadron.et(),
-						  hadron.et() * m_etScale, 
-						  hadron.center(), 
-						  hadron.tolerance() );
-    L0Calo->push_back( hadr );
-  }
-
-  if ( 0 < hadron2.et() ) {
-    L0CaloCandidate* had2 = new L0CaloCandidate ( L0::Hadron2, hadron2.ID(), 
-						  hadron2.et(),
-						  hadron2.et() * m_etScale, 
-						  hadron2.center(), 
-						  hadron2.tolerance() );
-    L0Calo->push_back( had2 );
-  }
+  electron.saveCandidate(  L0::Electron,  L0Calo );
+  photon.saveCandidate(    L0::Photon,    L0Calo );
+  hadron.saveCandidate(    L0::Hadron,    L0Calo );
+  hadron2.saveCandidate(   L0::Hadron2,   L0Calo );
+  pi0Local.saveCandidate(  L0::Pi0Local,  L0Calo );
+  pi0Global.saveCandidate( L0::Pi0Global, L0Calo );
 
   if ( 0 < sumEt ) {
     HepPoint3D dummy( 0., 0., 0.);
@@ -607,25 +552,18 @@ StatusCode L0CaloAlg::execute() {
     L0Calo->push_back( hsum );
   }
 
-  if ( 0 < pi0Local.et() ) {
-    L0CaloCandidate* pi0L = new L0CaloCandidate ( L0::Pi0Local, pi0Local.ID(), 
-						  pi0Local.et(),
-						  pi0Local.et() * m_etScale, 
-						  pi0Local.center(), 
-						  pi0Local.tolerance() );
-    L0Calo->push_back( pi0L );
+// Add the HCAL card candidates to the container, for Super-L1 use
+
+  for ( hCard = 0; hCard < m_hcal->nCards(); ++hCard ) {
+    if ( !hcalFe[hCard].empty() ) {
+      L0Candidate hclus( m_hcal, m_etScale );
+      int hRow = hcalFe[hCard].rowMax();
+      hclus.setCandidate( hcalFe[hCard].etMax() , hCard, 
+			  hcalFe[hCard].cellIdMax() );
+      hclus.saveCandidate(  L0::HcalCluster, L0Calo );
+    }
   }
-    
-  if ( 0 < pi0Global.et() ) {
-    L0CaloCandidate* pi0G = new L0CaloCandidate ( L0::Pi0Global, 
-						  pi0Global.ID(),
-						  pi0Global.et(),
-						  pi0Global.et() * m_etScale, 
-						  pi0Global.center(), 
-						  pi0Global.tolerance() );
-    L0Calo->push_back( pi0G );
-  }
-    
+ 
 // Debug now the L0 candidates
 
   log << MSG::DEBUG << "L0CaloCandidate Summary: " << endreq;
@@ -634,14 +572,17 @@ StatusCode L0CaloAlg::execute() {
     L0CaloCandidate* cand = (*item);
     log << MSG::DEBUG << "Type " << cand->type() << " " 
 	<< cand->typeName() << " Et(GeV)";
-    log.width(3); log << cand->etCode() ;
-    log.width(6); log << cand->et()/GeV ;
+    char line[132];
+    sprintf( line, "%4d %6.2f ",  cand->etCode(),  cand->et()/GeV );
+    log << line;
     if ( L0::SumEt != cand->type() ) {
       log << " ID " << cand->ID() << " x,y,z(cm)";
-      log.width(7); log << cand->position().x()/centimeter;
-      log.width(7); log << cand->position().y()/centimeter;
-      log.width(7); log << cand->position().z()/centimeter << " Error(cm) ";
-      log.width(3); log << cand->posTol()/centimeter;
+      sprintf( line, "%7.1f %7.1f %7.1f Error(cm) %5.2f",
+	       cand->position().x()/centimeter,
+	       cand->position().y()/centimeter,
+	       cand->position().z()/centimeter,
+	       cand->posTol()/centimeter         );
+      log << line;
     }
     log << endreq;
   }
@@ -835,3 +776,29 @@ void L0CaloAlg::addSpdData( MsgStream log ) {
     }
   }
 }
+
+//=============================================================================
+// Functions of the auxilliary class L0Candidate
+//=============================================================================
+
+void  L0Candidate::setCandidate( int et, int card, CaloCellID ID ) { 
+  m_ID     = ID;
+  m_card   = card;
+  if ( 255 >= et ) { m_et = et; } else { m_et = 255; }
+  m_center = m_det->cellCenter( ID ); 
+  m_tol    = m_det->cellSize( ID ) * .5;
+  m_center.setX( m_center.x() + m_tol );
+  m_center.setY( m_center.y() + m_tol );
+};
+
+void  L0Candidate::saveCandidate( int type, L0CaloCandidateVector* L0Calo ) {
+  if ( 0 < m_et ) {
+    L0CaloCandidate* temp = new L0CaloCandidate ( type,
+						  m_ID,
+						  m_et,
+						  m_et * m_etScale,
+						  m_center,
+						  m_tol );
+    L0Calo->push_back( temp );
+  }
+};
