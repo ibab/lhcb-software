@@ -3,17 +3,20 @@ Package     : Phys/DaVinci
 Package Coordinator : Gloria Corti
 Purpose     : LHCb analysis program 
 
+ - FlavourTagging v4r6
+ - PhysSelSys v5r6 (B2DD v1r3, Bs2JpsiEta v1r1, Bs2PhiEtac v1r3)
+
 </PRE><H1><A NAME=v8r3p1>2003-07-03 DaVinci v8r3p1</A></H1><PRE>
  - New features:
    . Modified preselection
-     .. Bd->D0Kstar
-        Bd,s->hh
+     .. Bd -> D0bar K*
+        Bd,s -> hh
      .. use PhysSel v5r5
  - Bug fixes:
    . Fix problems for preselection production with too small rejection
      factor
-     .. Bd2KPiPiPi
-        Bs2DsH
+     .. Bd -> K pi pi pi
+        Bs -> Ds K/pi
      .. use PhysSel v5r5
 
 </PRE><H1><A NAME=v8r3>2003-06-27 DaVinci v8r3</A></H1><PRE>
