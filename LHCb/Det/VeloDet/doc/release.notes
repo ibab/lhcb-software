@@ -1,12 +1,14 @@
-! $Id: release.notes,v 1.12 2002-04-05 11:36:55 ocallot Exp $
+! $Id: release.notes,v 1.13 2002-04-22 08:10:38 cattanem Exp $
 package VeloDet
 package manager : Velo Group
 
-!=============================================================================
-! 05/04/2002 - Olivier Callot ** v4r0 **
+! >>>>>>>>>>>>>>>>>>>> VeloDet v4r0 <<<<<<<<<<<<<<<<<<<<<<<<<<<<
+! 20020419 (M.Cattaneo)
+  Use DetDesc v10* (for Gaudi v10)
+
+! 05/04/2002 - Olivier Callot
   - Fixed the type of wafers in PuVeto, they were always of teh same type !
 
-!=============================================================================
 ! 28/03/2002 - Olivier Callot
   - New methods for Phi: 
     originToPhiDistance : Return the (signed) distance form orgigin to a strip.
