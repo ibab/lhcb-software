@@ -76,40 +76,40 @@ bool GiGaSensDetMuon::ProcessHits( G4Step* step ,
           int trid = step->GetTrack()->GetTrackID();
           
           // temp  
-          G4TouchableHistory* TT =  
-            (G4TouchableHistory*)(step->GetPreStepPoint()->GetTouchable());
-          G4VPhysicalVolume*  PV =   TT->GetVolume();
-          G4LogicalVolume*    LV =   PV->GetLogicalVolume();
+//           G4TouchableHistory* TT =  
+//             (G4TouchableHistory*)(step->GetPreStepPoint()->GetTouchable());
+//           G4VPhysicalVolume*  PV =   TT->GetVolume();
+//           G4LogicalVolume*    LV =   PV->GetLogicalVolume();
           
-          G4TouchableHistory* postTT =  
-            (G4TouchableHistory*)(step->GetPostStepPoint()->GetTouchable());
-          G4VPhysicalVolume*  postPV =   postTT->GetVolume();
-          G4LogicalVolume*    postLV =   postPV->GetLogicalVolume();
+//           G4TouchableHistory* postTT =  
+//             (G4TouchableHistory*)(step->GetPostStepPoint()->GetTouchable());
+//           G4VPhysicalVolume*  postPV =   postTT->GetVolume();
+//           G4LogicalVolume*    postLV =   postPV->GetLogicalVolume();
           
-          MsgStream log( msgSvc() , name() );
+//           MsgStream log( msgSvc() , name() );
           
-          log << MSG::DEBUG << "Processing MuonHit:" << " edep="  
-              << edep << endreq;
+//           log << MSG::DEBUG << "Processing MuonHit:" << " edep="  
+//               << edep << endreq;
 
-          std::string pvname=PV->GetName();
-          G4TouchableHistory* MotherTT = TT;
-          MotherTT ->MoveUpHistory(1);
+//           std::string pvname=PV->GetName();
+//           G4TouchableHistory* MotherTT = TT;
+//           MotherTT ->MoveUpHistory(1);
 
-          std::string stname=MotherTT -> GetVolume()->GetName();
+//           std::string stname=MotherTT -> GetVolume()->GetName();
           
-          log << MSG::DEBUG << "Mother: " << stname <<  endreq;      
+//           log << MSG::DEBUG << "Mother: " << stname <<  endreq;      
           
-          log << MSG::DEBUG 
-              << " PrePos=("  << prepos.x() << "," << prepos.y() << "," << prepos.z() 
-              << ")" 
-              << " PrePV="    << pvname  
-              << " PreLV="    << LV->GetName() << endreq;
+//           log << MSG::DEBUG 
+//               << " PrePos=("  << prepos.x() << "," << prepos.y() << "," << prepos.z() 
+//               << ")" 
+//               << " PrePV="    << pvname  
+//               << " PreLV="    << LV->GetName() << endreq;
           
-          log << MSG::DEBUG 
-              << " PostPos=("
-              << postpos.x() << "," << postpos.y() << "," << postpos.z() << ")" 
-              << " PostPV="    << postPV->GetName()  
-              << " PostLV="    << postLV->GetName() << endreq;
+//           log << MSG::DEBUG 
+//               << " PostPos=("
+//               << postpos.x() << "," << postpos.y() << "," << postpos.z() << ")" 
+//               << " PostPV="    << postPV->GetName()  
+//               << " PostLV="    << postLV->GetName() << endreq;
           // end of temp
   
           ///
@@ -123,13 +123,11 @@ bool GiGaSensDetMuon::ProcessHits( G4Step* step ,
           newHit->SetGapID(0);
           ///
           G4VUserTrackInformation* ui = track->GetUserInformation(); 
-          GaussTrackInformation*    gi = 
-            ( 0 == ui )  ? 0 : dynamic_cast<GaussTrackInformation*> ( ui );
+          GaussTrackInformation*    gi = (GaussTrackInformation*)  ui;
           gi->setCreatedHit(true);
           gi->setToBeStored(true);
           gi->addHit(newHit);
           
-          //  newHit->Print();
           muonCol->insert( newHit );
         }
     }
