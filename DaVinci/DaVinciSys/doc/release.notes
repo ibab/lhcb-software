@@ -4,6 +4,21 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+!====================  DaVinciSys v11r1 2004-02-10 ============================
+! 2004-02-10 - Gloria CORTI
+ - new version of packages used respect to v11r0
+   . L0DU                v6r7
+   . Bd2D0Kstar          v2r4
+   . LoKi                v1r10
+   . PhysSelSys          v6r2
+   . DaVinci             v11r1
+   . TriggerFilter       v4r1
+   . DecayPresel         v4r1
+ - remove packages from project because now in LHCb v15r1
+   . CaloInterfaces      v3r1   Calo
+   . CaloUtils           v4r6   Calo
+   . MCTools             v1r2   Phys
+  
 !====================  DaVinciSys v11r0 2004-02-06 ============================
 ! 2004-02-06 - Gloria CORTI
  - new version of packages used respect to v10r0

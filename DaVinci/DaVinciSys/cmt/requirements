@@ -1,5 +1,5 @@
 package DaVinciSys
-version v11r0
+version v11r1
 
 branches doc cmt
 
@@ -8,11 +8,10 @@ branches doc cmt
 #=======================================================
 
 # DaVinci application
-use  DaVinci             v11r0  Phys
+use  DaVinci             v11r1  Phys
 
 #--- DaVinci packages
 #    General Use
-use  MCTools             v1r2   Phys
 use  DaVinciTools        v8r4   Phys
 use  DaVinciAssociators  v4r3   Phys
 use  DaVinciMCTools      v5r1   Phys
@@ -30,7 +29,7 @@ use  PrimVtx             v2r1   Rec
 use  RecoTools           v1r1   Rec
 
 #    Specific Selections
-use  PhysSelSys          v6r1   PhysSel
+use  PhysSelSys          v6r2   PhysSel
 use  B2DD                v1r7   PhysSel
 use  B2HH                v1r5   PhysSel
 use  Bd2DstarPi          v1r5   PhysSel
@@ -48,7 +47,7 @@ use  Bu2KsPi             v1r3p1 PhysSel
 #    not buildable on Win32: NEED TO CHECK
 use  B2DstarX2D02hh      v1r0   PhysSel
 use  Bc2JpsiPi           v1r0   PhysSel
-use  Bd2D0Kstar          v2r3   PhysSel
+use  Bd2D0Kstar          v2r4   PhysSel
 use  Bd2KstarGamma       v1r3   PhysSel
 use  Bd2OmegaGamma       v1r0   PhysSel
 use  Bd2PhiKs            v3r2   PhysSel
@@ -57,12 +56,10 @@ use  Bs2PhiGamma         v1r2   PhysSel
 use  Bs2PhiPhi           v1r2   PhysSel
 
 #--- Trigger
-use  L0DU                v6r6	L0
+use  L0DU                v6r7	L0
 use  L1Decision          v2r4   L1
 
 #--- ProtoParticles 
-use  CaloInterfaces      v3r1   Calo
-use  CaloUtils           v4r6   Calo
 use  CaloReco	         v1r8   Calo
 
 #--- Particle ID
@@ -74,10 +71,10 @@ use  TrExtrapolator      v2r10  Tr
 
 #--- TriggerFilter
 use  Utilities           v1r2   Tools
-use  TriggerFilter       v4r0   Tools
+use  TriggerFilter       v4r1   Tools
 
 #--- DecayPreselections
-use  DecayPresel         v4r0   Tools
+use  DecayPresel         v4r1   Tools
 
 #--- Tools
-use  LoKi                v1r9   Tools
+use  LoKi                v1r10  Tools
