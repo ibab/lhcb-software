@@ -44,13 +44,17 @@ IMPLEMENT_GiGaFactory( RichG4EventAction );
  *  @param parent  pointer to parent object
  */
 // =========================================================================
-RichG4EventAction::RichG4EventAction
-( const std::string& type   ,
-  const std::string& name   ,
-  const IInterface*  parent )
-  : GiGaEventActionBase( type , name , parent ) ,
+RichG4EventAction::RichG4EventAction( const std::string& type   ,
+                                      const std::string& name   ,
+                                      const IInterface*  parent )
+  : GiGaEventActionBase( type , name , parent ),
     m_RichG4HistoFillSet1(0),
+    m_RichG4HistoFillSet2(0),
+    m_RichG4HistoFillSet3(0),
+    m_RichG4HistoFillSet4(0),
     m_RichG4HistoFillTimer(0),
+    m_RichG4EventHitCounter(0),
+    m_RichG4HitRecon(0),
     m_RichEventActionVerboseLevel(0),
     m_RichEventActionHistoFillActivateSet1(false),
     m_RichEventActionHistoFillActivateSet2(false),
@@ -91,7 +95,7 @@ RichG4EventAction::RichG4EventAction
   m_RichHitCName= new RichG4HitCollName();
   m_NumRichColl=m_RichHitCName->RichHCSize();
   m_RichG4CollectionID.reserve(m_NumRichColl);
-  for (int ic=0; ic<m_NumRichColl; ic++) {
+  for (int ic=0; ic<m_NumRichColl; ++ic) {
     m_RichG4CollectionID.push_back(-1);
   }
   //  if(m_RichEventActionHistoFillActivateSet1) {
@@ -129,21 +133,15 @@ RichG4EventAction::RichG4EventAction
 /// Desctructor
 // ============================================================================
 RichG4EventAction::~RichG4EventAction( ){
-  delete  m_RichG4HistoFillSet1;
 
-  delete  m_RichG4HistoFillSet2;
-
-  delete  m_RichG4HistoFillSet3;
-
-  if( m_RichG4HistoFillSet4 != 0 ) {
-
-    delete  m_RichG4HistoFillSet4;
+  delPointer( m_RichG4HistoFillSet1 );
+  delPointer( m_RichG4HistoFillSet2 );
+  delPointer( m_RichG4HistoFillSet3 );
+  if ( m_RichG4HistoFillSet4 != 0 ) {
+    delPointer( m_RichG4HistoFillSet4 );
   }
-
-  delete m_RichG4HistoFillTimer;
-
-  delete   m_RichG4EventHitCounter;
-
+  delPointer( m_RichG4HistoFillTimer );
+  delPointer( m_RichG4EventHitCounter );
 
 };
 // ============================================================================
@@ -151,7 +149,7 @@ RichG4EventAction::~RichG4EventAction( ){
 // ============================================================================
 /// G4
 // ============================================================================
-void RichG4EventAction::BeginOfEventAction ( const G4Event* aEvt /* event */ )
+void RichG4EventAction::BeginOfEventAction ( const G4Event* /* aEvt */ )
 {
   if(m_RichEventActionHistoFillActivateTimer) {
     m_RichG4HistoFillTimer->RichG4BeginEventTimer();
@@ -159,7 +157,7 @@ void RichG4EventAction::BeginOfEventAction ( const G4Event* aEvt /* event */ )
 
   G4SDManager * SDman = G4SDManager::GetSDMpointer();
   G4String colNam;
-  for (int icol=0; icol<m_NumRichColl; icol++) {
+  for (int icol=0; icol<m_NumRichColl; ++icol ) {
     if(m_RichG4CollectionID[icol]<0){
       colNam=  m_RichHitCName->RichHCName(icol);
       m_RichG4CollectionID[icol] = SDman->GetCollectionID(colNam);
@@ -289,7 +287,7 @@ void RichG4EventAction::EndOfEventAction( const G4Event* anEvent  /* event */ )
 
   G4HCofThisEvent * HCE;
   G4int nHitTotRich1=0;
-  for (int ihcol=0; ihcol<m_NumRichColl; ihcol++) {
+  for (int ihcol=0; ihcol<m_NumRichColl; ++ihcol ) {
     if(m_RichG4CollectionID[ihcol] >=0 ) {
       HCE = anEvent->GetHCofThisEvent();
       RichG4HitsCollection* RHC=NULL;
@@ -321,7 +319,7 @@ void RichG4EventAction::EndOfEventAction( const G4Event* anEvent  /* event */ )
 
   if(   DrawRichHits ||   PrintRichHits ) {
 
-    for (int ihcold=0; ihcold<m_NumRichColl; ihcold++) {
+    for (int ihcold=0; ihcold<m_NumRichColl; ++ihcold ) {
       G4cout<<"Now drawing Rich hits for collection  "<<ihcold <<G4endl;
       if(m_RichG4CollectionID[ihcold] >=0 ) {
         HCE = anEvent->GetHCofThisEvent();
@@ -331,7 +329,7 @@ void RichG4EventAction::EndOfEventAction( const G4Event* anEvent  /* event */ )
         }
         if(RHCD){
           G4int nHitHC = RHCD->entries();
-          for (G4int ih=0; ih<nHitHC; ih++ ) {
+          for (G4int ih=0; ih<nHitHC; ++ih ) {
             RichG4Hit* aHit = (*RHCD)[ih];
             //Now to draw the hits
             if( DrawRichHits) {
@@ -397,7 +395,7 @@ void RichG4EventAction::PrintRichG4HitCounters()
         << "    "<<  NumHitAgelRich1
         <<"   TotalNumRich2Hits =  "<<NumTotHitRich2 << G4endl;
 
-  for(int ihgas=0; ihgas < (int) NumHitSatGasRich1.size() ; ihgas++ ) {
+  for(int ihgas=0; ihgas < (int) NumHitSatGasRich1.size() ; ++ihgas ) {
     if(  NumHitSatGasRich1[ihgas]> 0 )
     {
 
@@ -407,7 +405,7 @@ void RichG4EventAction::PrintRichG4HitCounters()
     }
 
   }
-  for(int ihagel=0; ihagel< (int) NumHitSatAgelRich1.size() ;ihagel++) {
+  for(int ihagel=0; ihagel< (int) NumHitSatAgelRich1.size() ; ++ihagel ) {
     if( NumHitSatAgelRich1[ihagel] > 0    ){
       G4cout<<"Rich1 Hits: tklistNum SaturatedPerTrackFromAgel  "
             <<ihagel <<"   "<< NumHitSatAgelRich1[ihagel]
@@ -418,7 +416,7 @@ void RichG4EventAction::PrintRichG4HitCounters()
 
   }
 
-  for(int ihgas2=0; ihgas2 < (int) NumHitSatGasRich2.size() ; ihgas2++ ) {
+  for(int ihgas2=0; ihgas2 < (int) NumHitSatGasRich2.size() ; ++ihgas2 ) {
     if(  NumHitSatGasRich2[ihgas2]> 0 )
     {
 

@@ -118,12 +118,18 @@ public:
   
   
 private:
-  ///
+ 
   RichG4EventAction() ; ///< no default constructor
   RichG4EventAction( const RichG4EventAction& ) ; ///< no copy  
   RichG4EventAction& operator=( const RichG4EventAction& ) ; ///< no = 
-  ///
+
+  template <typename TOOL> inline
+  void delPointer( TOOL *& tool ) {
+    if ( 0 != tool ) { delete tool; tool = 0; }
+  }
+  
 private:
+ 
   std::vector<int> m_RichG4CollectionID;
   int m_NumRichColl;
   RichG4HitCollName* m_RichHitCName;
@@ -133,8 +139,7 @@ private:
   RichG4HistoFillSet4* m_RichG4HistoFillSet4;
   RichG4HistoFillTimer* m_RichG4HistoFillTimer;
   RichG4EventHitCount* m_RichG4EventHitCounter;
-  RichG4HitRecon* m_RichG4HitRecon;
-  
+  RichG4HitRecon* m_RichG4HitRecon;  
   
   int m_RichEventActionVerboseLevel;
   bool m_RichEventActionHistoFillActivateSet1;
@@ -147,10 +152,7 @@ private:
 
   bool m_RichG4HitReconUseSatHit;
   bool m_RichG4HitReconUseMidRadiator;
-  
-   
-  
-  ///
+ 
 };
 // ============================================================================
 

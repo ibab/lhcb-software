@@ -2,11 +2,14 @@
 #ifndef       Rich1G4TrackActionUpstrPhoton_h
 #define       Rich1G4TrackActionUpstrPhoton_h 1
 // ============================================================================
+
 // STL
 #include <string>
 #include <vector>
+
 // GiGa
 #include "GiGa/GiGaTrackActionBase.h"
+
 // forward declarations
 template <class TYPE> class GiGaFactory;
 class G4Track;
@@ -24,10 +27,9 @@ public:
   ///
 protected:
 
-  Rich1G4TrackActionUpstrPhoton
-  ( const std::string& type   ,
-    const std::string& name   ,
-    const IInterface*  parent ) ;
+  Rich1G4TrackActionUpstrPhoton ( const std::string& type   ,
+                                  const std::string& name   ,
+                                  const IInterface*  parent ) ;
 
   /// destructor (virtual and protected)
   virtual ~Rich1G4TrackActionUpstrPhoton();
@@ -50,10 +52,8 @@ public:
 private:
 
   Rich1G4TrackActionUpstrPhoton() ; ///< no default constructor
-  Rich1G4TrackActionUpstrPhoton
-  ( const Rich1G4TrackActionUpstrPhoton& ) ; ///< no copy
-  Rich1G4TrackActionUpstrPhoton&
-  operator=( const Rich1G4TrackActionUpstrPhoton& ) ;
+  Rich1G4TrackActionUpstrPhoton ( const Rich1G4TrackActionUpstrPhoton& ) ; ///< no copy
+  Rich1G4TrackActionUpstrPhoton& operator=( const Rich1G4TrackActionUpstrPhoton& ) ;  ///< no copy
 
 
 };

@@ -111,7 +111,7 @@ public:
   { m_CurRichNum = IRichNum ; }
 
   inline G4int GetCurRichDetNum() const
-  {return m_CurRichNum; }
+  { return m_CurRichNum; }
 
   inline void SetCurHpdNum ( const G4int ihp )
   { m_CurHpdNum = ihp; } ;

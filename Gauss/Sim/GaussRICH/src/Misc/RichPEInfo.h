@@ -1,112 +1,109 @@
 #ifndef      RICHPEINFO_h 
-#define      RICHPEINFO_h 1 
+#define      RICHPEINFO_h 1
 
 #include "globals.hh"
 #include "G4ThreeVector.hh"
 
 class RichPEInfo {
 
- public:
+public:
+
   RichPEInfo ();
+
   virtual ~RichPEInfo ();
-  G4int PhotOriginRadiatorNumber() {return m_PhotOriginRadiatorNumber; }
-  void setPhotOriginRadiatorNumber(G4int aRnum)
-    { m_PhotOriginRadiatorNumber= aRnum ; }
 
-  G4int MotherOfPhotonPDGcode() {return m_MotherOfPhotonPDGcode ; }
-  void setMotherOfPhotonPDGcode(G4int cPDGcode) 
-                               {m_MotherOfPhotonPDGcode=cPDGcode;}
+  G4int PhotOriginRadiatorNumber() const {return m_PhotOriginRadiatorNumber; }
+  void setPhotOriginRadiatorNumber(const G4int aRnum)
+  { m_PhotOriginRadiatorNumber= aRnum ; }
 
-  G4ThreeVector PhotonEmisPoint() {return m_PhotonEmisPoint ; }
-  void setPhotonEmisPoint(G4ThreeVector  anEmisspt) 
-    { m_PhotonEmisPoint = anEmisspt ; }
+  G4int MotherOfPhotonPDGcode() const {return m_MotherOfPhotonPDGcode ; }
+  void setMotherOfPhotonPDGcode(const G4int cPDGcode)
+  {m_MotherOfPhotonPDGcode=cPDGcode;}
 
+  G4ThreeVector PhotonEmisPoint() const {return m_PhotonEmisPoint ; }
+  void setPhotonEmisPoint(const G4ThreeVector & anEmisspt)
+  { m_PhotonEmisPoint = anEmisspt ; }
 
-  G4int MotherOfPhotonId() {return m_MotherOfPhotonId; }
-  void setMotherOfPhotonId(G4int mId) {m_MotherOfPhotonId=mId; }
+  G4int MotherOfPhotonId() const {return m_MotherOfPhotonId; }
+  void setMotherOfPhotonId(const G4int mId) {m_MotherOfPhotonId=mId; }
 
-  G4double PhotonEnergyAtCkvProd() {return m_PhotonEnergyAtCkvProd; }
-  void setPhotonEnergyAtCkvProd( G4double aPhEnergy) 
-                  {m_PhotonEnergyAtCkvProd=aPhEnergy; }
-  G4double CherenkovThetaAtProd() {return m_CherenkovThetaAtProd; }
-  void setCherenkovThetaAtProd(G4double aCkvTheta) 
-                 {m_CherenkovThetaAtProd=aCkvTheta;}
+  G4double PhotonEnergyAtCkvProd() const {return m_PhotonEnergyAtCkvProd; }
+  void setPhotonEnergyAtCkvProd( const G4double aPhEnergy)
+  {m_PhotonEnergyAtCkvProd=aPhEnergy; }
 
-  G4double CherenkovPhiAtProd() {return m_CherenkovPhiAtProd; }
-  void setCherenkovPhiAtProd(G4double aCkvPhi)
-                 { m_CherenkovPhiAtProd= aCkvPhi; }
+  G4double CherenkovThetaAtProd() const {return m_CherenkovThetaAtProd; }
+  void setCherenkovThetaAtProd(const G4double aCkvTheta)
+  {m_CherenkovThetaAtProd=aCkvTheta;}
 
-  G4double MotherofPhotonMomAtProd() {return m_MotherofPhotonMomAtProd; }
-  void setMotherofPhotonMomAtProd(G4double aChMom)
-                 {  m_MotherofPhotonMomAtProd=aChMom; }
+  G4double CherenkovPhiAtProd() const {return m_CherenkovPhiAtProd; }
+  void setCherenkovPhiAtProd(const G4double aCkvPhi)
+  { m_CherenkovPhiAtProd= aCkvPhi; }
 
-  G4ThreeVector MotherofPhotonMomVectAtProd() 
-                {return m_MotherofPhotonMomVectAtProd; }
-  void setMotherofPhotonMomVectAtProd( G4ThreeVector  aChMomVect )
-                { m_MotherofPhotonMomVectAtProd=aChMomVect;}
-  G4double MotherofPhotonPDGMass()
+  G4double MotherofPhotonMomAtProd() const {return m_MotherofPhotonMomAtProd; }
+  void setMotherofPhotonMomAtProd(const G4double aChMom)
+  {  m_MotherofPhotonMomAtProd=aChMom; }
+
+  const G4ThreeVector & MotherofPhotonMomVectAtProd() const
+  {return m_MotherofPhotonMomVectAtProd; }
+  void setMotherofPhotonMomVectAtProd( const G4ThreeVector & aChMomVect )
+  { m_MotherofPhotonMomVectAtProd=aChMomVect;}
+
+  G4double MotherofPhotonPDGMass() const
   {
     return m_MotherofPhotonPDGMass;
   }
-  void setMotherofPhotonPDGMass(G4double aMotherPDGMass )
+  void setMotherofPhotonPDGMass(const G4double aMotherPDGMass )
   {
     m_MotherofPhotonPDGMass = aMotherPDGMass;
   }
 
-  G4ThreeVector MotherofPhotonCkvPreStep() 
+  const G4ThreeVector & MotherofPhotonCkvPreStep() const
   {
     return m_MotherofPhotonCkvPreStep;
-    
   }
-  void setMotherofPhotonCkvPreStep( G4ThreeVector  aMotherofPhotonCkvPreStep )
+  void setMotherofPhotonCkvPreStep( const G4ThreeVector & aMotherofPhotonCkvPreStep )
   {
     m_MotherofPhotonCkvPreStep= aMotherofPhotonCkvPreStep;
-    
   }
-  
 
-   G4ThreeVector MotherofPhotonCkvPostStep() 
+  const G4ThreeVector & MotherofPhotonCkvPostStep() const
   {
     return m_MotherofPhotonCkvPostStep;
-    
   }
-  void setMotherofPhotonCkvPostStep(G4ThreeVector  aMotherofPhotonCkvPostStep )
+  void setMotherofPhotonCkvPostStep(const G4ThreeVector & aMotherofPhotonCkvPostStep )
   {
     m_MotherofPhotonCkvPostStep= aMotherofPhotonCkvPostStep;
-    
   }
-  
-  G4int PhotonRayleighScatteringFlag() 
+
+  G4int PhotonRayleighScatteringFlag() const
   {
     return m_PhotonRayleighScatteringFlag;
   }
-  void setPhotonRayleighScatteringFlag( G4int aPhotonRayleighScatteringFlag) 
+  void setPhotonRayleighScatteringFlag( const G4int aPhotonRayleighScatteringFlag)
   {
     m_PhotonRayleighScatteringFlag= aPhotonRayleighScatteringFlag;
-    
   }
-  G4ThreeVector PhotonAerogelExitPos() 
+
+  const G4ThreeVector & PhotonAerogelExitPos() const
   {
     return   m_PhotonAerogelExitPos;
   }
 
-  void setPhotonAerogelExitPos(G4ThreeVector  aPhotonAerogelExitPos ) 
+  void setPhotonAerogelExitPos(const G4ThreeVector &  aPhotonAerogelExitPos )
   {
     m_PhotonAerogelExitPos = aPhotonAerogelExitPos;
-    
   }
-  G4bool VerbosePeTagFlag()  {return m_VerbosePeTagFlag;}
-  void setVerbosePeTagFlag(G4bool aPeVFlag) {m_VerbosePeTagFlag= aPeVFlag;}
-  
-  G4int OptPhotonId() 
-  {    return m_OptPhotonId;}
-  void setOptPhotonId( G4int aIdValue){m_OptPhotonId=aIdValue;}
-  
-    
-  
- private:
 
-  G4int m_PhotOriginRadiatorNumber;   
+  G4bool VerbosePeTagFlag()  const {return m_VerbosePeTagFlag;}
+  void setVerbosePeTagFlag(const G4bool aPeVFlag) {m_VerbosePeTagFlag= aPeVFlag;}
+
+  G4int OptPhotonId() const
+  {    return m_OptPhotonId; }
+  void setOptPhotonId( const G4int aIdValue){m_OptPhotonId=aIdValue;}
+
+private:
+
+  G4int m_PhotOriginRadiatorNumber;
   G4int m_MotherOfPhotonPDGcode;
   G4ThreeVector m_PhotonEmisPoint;
   G4int m_MotherOfPhotonId;
@@ -120,9 +117,9 @@ class RichPEInfo {
   G4ThreeVector m_MotherofPhotonCkvPostStep;
   G4int m_PhotonRayleighScatteringFlag;
   G4ThreeVector m_PhotonAerogelExitPos;
-  G4bool m_VerbosePeTagFlag; 
+  G4bool m_VerbosePeTagFlag;
   G4int m_OptPhotonId;
-  
+
 };
 
 #endif
