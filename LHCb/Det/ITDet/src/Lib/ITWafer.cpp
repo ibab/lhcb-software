@@ -1,3 +1,4 @@
+// $Id: ITWafer.cpp,v 1.4 2002-09-12 08:41:48 cattanem Exp $
 #include<math.h>
 
 #include "ITDet/ITWafer.h"
@@ -5,9 +6,9 @@
 
 /// Standard constructor. Parameter iFixedEdge determines what edge 
 /// is not clipped if the number of strips is not integer
-ITWafer::ITWafer(double pitch, int firstStrip, 
-                 unsigned int iStation, unsigned int iLayer, unsigned int iWafer,
-		 double ul, double ur, double vd, double vu, double dz): 
+ITWafer::ITWafer(double pitch, int firstStrip, unsigned int iStation,
+                 unsigned int iLayer, unsigned int iWafer,
+                 double ul, double ur, double vd, double vu, double dz): 
   m_Pitch(pitch),
   m_FirstStrip(firstStrip),
   m_station(iStation),
@@ -20,15 +21,6 @@ ITWafer::ITWafer(double pitch, int firstStrip,
   m_DZ(dz)
 {
   m_NumStrips = (int)((m_UR - m_UL)/m_Pitch);
-
-  cout << "num strips " <<   m_NumStrips <<
-    " " << m_UR <<
-    " " << m_UL <<endl;
-
-  int temp =  (int)floor((m_UR - m_UL)/m_Pitch);
-
-  cout << "temp  " << temp <<  " " << m_UL + m_Pitch*m_NumStrips <<endl;
-
 }
 
 /// Get number of strip at the point (u,v)
