@@ -4,6 +4,9 @@
 ! Purpose     : collection of sensitive detectors, G4 actions, etc
 !-----------------------------------------------------------------------------
 
+! 2002-12-04 - Ivan Belyaev   
+ - GaussTools/GaussHitBase.h               add 2 accessors in "Gaudi-Style"
+    
 ! 2002-12-03 - Ivan Belyaev
  - src/Components/GiGaStream.h
  - src/Components/GiGaStream.cpp

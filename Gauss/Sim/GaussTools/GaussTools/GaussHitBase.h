@@ -1,4 +1,4 @@
-// $Id: GaussHitBase.h,v 1.1 2002-10-29 17:34:57 witoldp Exp $
+// $Id: GaussHitBase.h,v 1.2 2002-12-04 14:42:55 ibelyaev Exp $
 #ifndef GAUSSTOOLS_GAUSSHITBASE_H 
 #define GAUSSTOOLS_GAUSSHITBASE_H 1
 
@@ -22,7 +22,12 @@ public:
 
   inline void SetTrackID(G4int tid);
   inline G4int GetTrackID();
-
+  
+  /// Accessor in "Gaudi-style"  
+  inline G4int trackID    () const           { return m_trackID      ; }
+  /// Accessor in "Gaudi-style"  
+  inline void  setTrackID ( const G4int id ) {        m_trackID = id ; }
+  
 private:
   G4int m_trackID;
 };
