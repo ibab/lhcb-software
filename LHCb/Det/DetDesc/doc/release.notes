@@ -1,9 +1,12 @@
 ! =============================================================================
-! $Id: release.notes,v 1.119 2002-11-05 08:06:07 sponce Exp $ 
+! $Id: release.notes,v 1.120 2002-11-19 09:31:39 sponce Exp $ 
 ! =============================================================================
 ! package DetDesc
 ! package manager : N.N 
 ! =============================================================================
+
+! 2002-11-19 - Sebastien Ponce
+ - fix in LogVolBase for missing initialization. Valgrind was complaining.
 
 ! 2002-11-04 - Sebastien Ponce
  - modified the level of the message telling that no specialized converter was

@@ -1,8 +1,11 @@
-// $Id: LogVolBase.cpp,v 1.5 2002-04-24 10:52:42 ibelyaev Exp $
+// $Id: LogVolBase.cpp,v 1.6 2002-11-19 09:31:39 sponce Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.5  2002/04/24 10:52:42  ibelyaev
+//  fix problems with TransportSvc ('LHCb Geane')
+//
 // Revision 1.4  2002/01/21 14:46:46  sponce
 // Remove all warnings + some bug fixes
 //
@@ -66,12 +69,13 @@ unsigned long LogVolBase::s_volumeCounter = 0 ;
 LogVolBase::LogVolBase( const std::string& /*name*/    , 
                         const std::string& sensitivity ,
                         const std::string& magnetic    )
-  : DataObject (             )
-  , m_pvolumes (             )
-  , m_surfaces (             ) 
-  , m_sdName   ( sensitivity ) 
-  , m_mfName   ( magnetic    )
-  , m_validity ( 0           )
+  : DataObject   (             )
+  , m_pvolumes   (             )
+  , m_surfaces   (             ) 
+  , m_sdName     ( sensitivity ) 
+  , m_mfName     ( magnetic    )
+  , m_validity   ( 0           )
+  , m_refCounter ( 0           )
 {
   /// create validity object 
   m_validity = new SimpleValidity();
@@ -100,6 +104,7 @@ LogVolBase::LogVolBase( const std::string& /*name*/    ,
   , m_sdName   ( sensitivity ) 
   , m_mfName   ( magnetic    )
   , m_validity ( 0           )
+  , m_refCounter ( 0           )
 {
   /// create validity object 
   m_validity = new SimpleValidity( validSince , validTill );
@@ -126,6 +131,7 @@ LogVolBase::LogVolBase( const std::string& /*name*/    ,
   , m_sdName   ( sensitivity ) 
   , m_mfName   ( magnetic    )
   , m_validity ( 0           )
+  , m_refCounter ( 0           )
 {
   /// create validity object
   /// huh! ugly lines??? I think so .. 
