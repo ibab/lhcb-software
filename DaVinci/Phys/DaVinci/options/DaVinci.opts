@@ -39,7 +39,7 @@ MemoryAuditor.Enable = false;
 // DaVinci Algorithms to be always executed at the beginning
 //--------------------------------------------------------------
 ApplicationMgr.TopAlg = { "ChargedProtoPAlg" };
-//ApplicationMgr.TopAlg += { "AxPrimVertexAlgorithm" };
+ApplicationMgr.TopAlg += { "PrimaryVertexFinderAlg" };
 
 //--------------------------------------------------------------
 // Other additional algorithms to be executed, from public 
@@ -97,14 +97,15 @@ ChargedProtoPAlg.OutputLevel            = 2;
 //---------------------------------------------------------------
 // Number of events to process, skip and printing frequency
 //---------------------------------------------------------------
-ApplicationMgr.EvtMax = 20;
+ApplicationMgr.EvtMax = 5;
 EventSelector.FirstEvent = 1;
 EventSelector.PrintFreq = 1;
    
 //---------------------------------------------------------------
 // Input data
 //---------------------------------------------------------------
-EventSelector.Input = {"DATAFILE='$LHCBDEV/Rec/Brunel/v11r1/job/dst_v248r2.root' TYP='ROOT' OPT='READ'" };
+//EventSelector.Input = {"DATAFILE='$LHCBDEV/Rec/Brunel/v11r1/job/dst_v248r2.root' TYP='ROOT' OPT='READ'" };
+EventSelector.Input = {"DATAFILE='$LHCBHOME/group/rich/vol4/jonrob/dst_v248r2_new.root' TYP='ROOT' OPT='READ'" };
 
 //################################################################
 
