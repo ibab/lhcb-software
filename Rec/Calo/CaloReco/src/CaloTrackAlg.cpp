@@ -1,8 +1,11 @@
-// $Id: CaloTrackAlg.cpp,v 1.1 2004-10-26 20:35:58 ibelyaev Exp $
+// $Id: CaloTrackAlg.cpp,v 1.2 2004-10-26 20:51:09 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.1  2004/10/26 20:35:58  ibelyaev
+//  improve properties of all Track-related algorithms
+//
 // ============================================================================
 // Include files
 // ============================================================================
@@ -106,35 +109,52 @@ StatusCode CaloTrackAlg::initialize()
 {
   StatusCode sc = CaloAlgorithm::initialize() ;
   if ( sc.isFailure() ) { return sc ; }
+
+  {
+    std::string msg =  "" ;
+    if ( m_uniqueOnly    ) { msg += "'clone' "  ; }
+    if ( !m_error        ) { msg += "'error' "  ; }
+    if ( !msg.empty()    ) 
+    {
+      msg =  "Rejected Track types      : " + msg ;
+      info() << msg << endreq ;
+      Warning ( msg , StatusCode::SUCCESS , 0 ) ;
+    }
+  }
   
-  std::string msg =  "Rejected Track categories : " ;
-  if ( !m_isLong       ) { msg += "'isLong' "       ; }
-  if ( !m_isUpstream   ) { msg += "'isUpstream' "   ; }
-  if ( !m_isDownstream ) { msg += "'isDownstream' " ; }
-  if ( !m_isVelotrack  ) { msg += "'isVelotrack' "  ; }
-  if ( !m_isBackward   ) { msg += "'isBackward' "   ; }
-  if ( !m_isTtrack     ) { msg += "'isTtrack' "     ; }
-  info() << msg << endreq ;
+  { 
+    std::string msg =  "" ;
+    if ( !m_isLong        ) { msg += "'isLong' "       ; }
+    if ( !m_isUpstream    ) { msg += "'isUpstream' "   ; }
+    if ( !m_isDownstream  ) { msg += "'isDownstream' " ; }
+    if ( !m_isVelotrack   ) { msg += "'isVelotrack' "  ; }
+    if ( !m_isBackward    ) { msg += "'isBackward' "   ; }
+    if ( !m_isTtrack      ) { msg += "'isTtrack' "     ; }
+    if ( !msg.empty()     ) 
+    {
+      msg = "Rejected Track categories : " + msg ;
+      info() << msg << endreq ;
+      Warning ( msg , StatusCode::SUCCESS , 0 ) ;
+    }
+  }
   
-  Warning ( msg , StatusCode::SUCCESS , 0 ) ;
-  
-  msg             =  "Rejected Track algorithms : " ;
-  if ( !m_velo         ) { msg += "'velo' "         ; }
-  if ( !m_seed         ) { msg += "'seed' "         ; }
-  if ( !m_match        ) { msg += "'match' "        ; }
-  if ( !m_forward      ) { msg += "'forward' "      ; }
-  if ( !m_follow       ) { msg += "'follow' "       ; }
-  if ( !m_veloTT       ) { msg += "'veloTT' "       ; }
-  if ( !m_veloBack     ) { msg += "'veloBack' "     ; }
-  if ( !m_ksTrack      ) { msg += "'ksTrack' "      ; }
-  info() << msg << endreq ;
-  Warning ( msg , StatusCode::SUCCESS , 0 ) ;
-  
-  msg             =  "Rejected Track types      : " ;
-  if ( m_uniqueOnly ) { msg += "'clone' "           ; }
-  if ( !m_error     ) { msg += "'error' "           ; }
-  info() << msg << endreq ;
-  Warning ( msg , StatusCode::SUCCESS , 0 ) ;
+  {
+    std::string msg =  "" ;
+    if ( !m_velo         ) { msg += "'velo' "         ; }
+    if ( !m_seed         ) { msg += "'seed' "         ; }
+    if ( !m_match        ) { msg += "'match' "        ; }
+    if ( !m_forward      ) { msg += "'forward' "      ; }
+    if ( !m_follow       ) { msg += "'follow' "       ; }
+    if ( !m_veloTT       ) { msg += "'veloTT' "       ; }
+    if ( !m_veloBack     ) { msg += "'veloBack' "     ; }
+    if ( !m_ksTrack      ) { msg += "'ksTrack' "      ; }
+    if ( !msg.empty()    ) 
+    {
+      msg = "Rejected Track algorithms : " + msg ;
+      info() << msg << endreq ;
+      Warning ( msg , StatusCode::SUCCESS , 0 ) ;
+    }
+  }
   
   return StatusCode::SUCCESS ;  
 };
