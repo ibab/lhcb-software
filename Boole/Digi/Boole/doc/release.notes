@@ -12,6 +12,7 @@ Purpose: LHCb Digitization program
 - New features
    - Populate RawBuffer with calorimeter digits (CaloDigit v1r4)
    - Populate RawBuffer with rich digits (RichDAQ v1r0)
+   - Handle LHC background in Calo digitization (CaloDigit v1r4)
    - Improved default OT monitoring, with possibility of switching on 
      detailed histograms (OTAlgorithms v13r3)
    - Moved Spillover and LHC background to new "Init" phase, "Data" sequence
