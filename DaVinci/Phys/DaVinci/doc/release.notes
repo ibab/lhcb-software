@@ -1,8 +1,12 @@
-! $Id: release.notes,v 1.12 2002-05-23 23:30:41 gcorti Exp $
+! $Id: release.notes,v 1.13 2002-06-05 09:03:03 gcorti Exp $
+<PRE>
 ! Package     : DaVinci 
 ! Responsible : Gloria Corti
+! Purpose     : LHCb analysis program 
 
+<H1><A NAME=v4r0> 
 ! >>>>>>>>>>>>>>>>>>>>>>>>>> DaVinci v4r0 <<<<<<<<<<<<<<<<<<<<<<
+</A></H1>
 
 ! 2002-05-24 - Gloria Corti
  - Introduce FlavourTagging and DaVinciUser new packages and change
@@ -34,6 +38,8 @@
       Phys/DaVinciTools v3r0 
     uses Gaudi v9 + GaudiSvc v7r3 (changes for tools)
     + GaudiObjDesc v3r3 (for PhysEvent automatic generation)
+
+! =======================================================================
 
 ! 28022002 - DaVinci v3r0 (GCorti)
   - Begin to adapt to changes in PhysEvent: new structure and new Vertex
@@ -84,4 +90,4 @@
   and access tools/algorithms/data availabel in a DaVinci application
   
 ! ========================================================================
- 
+</PRE> 
