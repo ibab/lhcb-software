@@ -1,9 +1,9 @@
-# $Id: requirements,v 1.7 2003-06-16 13:36:27 sponce Exp $ 
+# $Id: requirements,v 1.8 2003-06-16 15:19:56 cattanem Exp $ 
 # =============================================================================
 # The package with XML-converters gfor Caloriometer Detector Model 
 # =============================================================================
 package   CaloDetXmlCnv
-version   v2r2
+version   v2r3
 
 # =============== structure ===================================================	
 branches         src cmt doc options 
