@@ -132,7 +132,6 @@ ApplicationMgr.TopAlg += { "PrimVtxFinder" };
 MessageSvc.OutputLevel                  = 3;
 ToolSvc.OutputLevel                     = 3;
 XmlParserSvc.OutputLevel                = 4;
-PrimaryVertexFinderAlg.OutputLevel      = 4;
 
 //---------------------------------------------------------------
 // Number of events to process, skip and printing frequency
