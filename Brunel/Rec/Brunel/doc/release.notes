@@ -3,22 +3,31 @@ Package Coordinator: Marco Cattaneo
 
 Purupose: LHCb reconstruction program
 
-! 20010327 Brunel v2 (MC)
+! 20010507 Brunel v2 (MC)
   This version has been restructured as two packages. Rec/Brunel contains the
   statically linked code needed to run SICBDST routines. C++ components of the
   reconstruction framework have been moved to the package Rec/BrunelKernel
 
-  This version can use the C++ Calorimeter digitisation
+  There are two subdirectories in /src:
+    BrunelSicb   contains interface code to SICB (statically linked)
+    ObsoleteSicb contains interface code to SICB that is no longer used
+                 because SICB algorithms have been replaced by equivalent 
+                 C++ algorithms.
+  Files have been rename to avoid multiple . in filenames (to please nmake)
 
-  Other changes, relative to Brunel v1r6 are: 
+  Job option structure has been simplified relative to Brunel v1r6
 
-  requirements      - use SicbCnv v11, SICBDST v251, GaudiSys v7, GaudiConf v4
-  Brunel/*.h, *.cpp - files renamed to remove multiple . in filenames (to please nmake)
-  options/*.txt     - file extension changed to .opts to conform to new convention
-                    - simplify file structure by using ApplicationMgr.DLLs = {"NONE"}; 
-                    - option for static execution
-                    - Add new CALO digitisation
-================================================================================
+  requirements use explicitly the SICB packages, no longer SICBDST
+
+  #### Physics changes with respect to SICBDST v252 ####
+  - Uses C++ tracking 
+    Intermediate tracking banks (e.g. WIDG, WODG) are not produced
+
+  - Uses C++ Calorimeter digitisation
+  
+  - Does not run old L1 track trigger (T1TRACK from trit1tr package)
+    TTR1 bank is not produced.
+===============================================================================
 ! 20001219 Brunel v1r6 (MC)
   requirements     - use SicbCnv v10 (spillover), SICBDST v235r3
   Brunel.Phase.cpp - fix bug in a log message (reported by O.Callot)

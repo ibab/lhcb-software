@@ -13,28 +13,28 @@ ApplicationMgr.TopAlg += { "BrunelInitialisation/BrunelInit",
                            "BrunelPhase/BrunelTrigger",
                            "BrunelPhase/BrunelReco",
                            "BrunelPhase/BrunelFinalFit",
+                           "BrunelPhase/BrunelMoni",
                            "BrunelFinalisation/BrunelFinish" };
 
 //--------------------------------------------------------------
 // Detectors to be processed in each phase
 //--------------------------------------------------------------
-BrunelDigi.DetectorList = { "VELO" , "TRAC" , "RICH" , "CALO", "MUON" };
+BrunelDigi.DetectorList = { "VELO" , "IT", "OT" , "RICH" , "CALO", "MUON" };
 BrunelTrigger.DetectorList = { "TRIGGER" };
-BrunelReco.DetectorList = { "TRAC" , "RICH" , "CALO" };
+BrunelReco.DetectorList = { "OT", "IT", "Tr" , "RICH" , "CALO" };
 BrunelFinalFit.DetectorList = { "TRAC" };
 
 //--------------------------------------------------------------
 // Sequences
 //--------------------------------------------------------------
 BrunelDigiVELOSeq.Members = { "BrunelDigiVELO" };
-BrunelDigiTRACSeq.Members = { "BrunelDigiTRAC" };
 BrunelDigiRICHSeq.Members = { "BrunelDigiRICH" };
-BrunelDigiCALOSeq.Members = { "BrunelDigiECAL", "BrunelDigiHCAL" };
+//BrunelDigiCALOSeq.Members = { "BrunelDigiECAL", "BrunelDigiHCAL" };
 BrunelDigiMUONSeq.Members = { "BrunelDigiMUON" };
 
 BrunelTriggerTRIGGERSeq.Members = { "BrunelTriggerTRIGGER" };
 
-BrunelRecoTRACSeq.Members = { "BrunelRecoTRAC" };
+//BrunelRecoTRACSeq.Members = { "BrunelRecoTRAC" };
 BrunelRecoRICHSeq.Members = { "BrunelRecoRICH" };
 BrunelRecoCALOSeq.Members = { "BrunelRecoECAL", "BrunelRecoHCAL" };
 
@@ -54,3 +54,4 @@ MessageSvc.OutputLevel     = 3;
 // Set up some monitoring
 //--------------------------------------------------------------
 AuditorSvc.Auditors = { "NameAuditor", "ChronoAuditor", "MemoryAuditor" };
+

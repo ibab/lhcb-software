@@ -1,8 +1,8 @@
 LIST
 DEBU  1 1000 1
-C IOPA
+IOPA
 C SAVX is event output file 
-C   'SAVX' 'XO' '$LHCBHOME/scratch/Brunel/brunel.dst!'
+  'SAVX' 'XO' '$LHCBHOME/scratch/Brunel/v3/brunel.dst!'
 C CHCK are standard monitoring histograms
 C    'CHCK' 'HO' '$LHCBHOME/scratch/Brunel/CHCK_brunel.hbook!'
 C T1VE are L1 trigger  monitoring histograms

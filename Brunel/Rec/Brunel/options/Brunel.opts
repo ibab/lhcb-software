@@ -12,41 +12,52 @@
 // Define input file for spillover events (SICBMC v241 minimum bias)
 // SpillOverSelector.JobInput = "FILE SICBMC_v241_mbias_1.rawh";
 
-// >>>>>>>>>>>>>>>> PILEUP <<<<<<<<<<<<<<<<<
-// Uncomment next line if you want Brunel to merge pileup events.
-// #include "$BRUNELOPTS/BrunelPileUp.opts"
-// Use LUMISIGNAL pileup mode if main event is signal, otherwise LUMIMINBIAS
-// PileUpAlg.PileUpMode = "LUMISIGNAL";
-// PileUpAlg.PileUpMode = "LUMIMINBIAS";
-// Define input file for pileup events (SICBMC v241 minimum bias)
-// PileUpSelector.JobInput = "FILE SICBMC_v241_mbias_2.rawh";
+// >>> PILEUP now done at generator level, no longer supported in Brunel <<<
 
+// Common options - defines Brunel phases and detectors to be processed
 #include "$BRUNELOPTS/BrunelCommon.opts"
 
-// >>>>>>>>>>>>>> CALORIMETERS <<<<<<<<<<<<<
-// Uncomment next line to suppress Fortran digitisation
-BrunelDigiCALOSeq.Members = { };
-// Uncomment next two lines to enable C++ digitisation
+// C++ sub-detector reconstruction algorithms
+
+// Calorimeter digitisation, and back conversion of digits to SICB bank
 #include "$CALOALGSROOT/options/Brunel.opts"
 #include "$CALOSICBCNVROOT/options/CaloSicbCnv.opts"
-// Uncomment next line to convert C++ digits back to SICB bank
 BrunelDigiCALOSeq.Members += { "CaloDigitToSicbConverter" };
 
+// Tracking
+ApplicationMgr.ExtSvc += { "MagneticFieldSvc" };
+#include "$OTALGORITHMSROOT/options/Brunel.opts"
+#include "$ITALGORITHMSROOT/options/Brunel.opts"
+#include "$TRALGORITHMSROOT/options/Brunel.opts"
+#include "$TRSICBCNVROOT/options/Brunel.opts"
+
 //--------------------------------------------------------------
-// Define the main event input data: SICBMC v241 (new CALO RAWH format)
+// Define the main event input data: SICBMC v243 (new CALO, TRAC RAWH format)
 //--------------------------------------------------------------
-EventSelector.Input = {"JOBID='45206'"};
-ApplicationMgr.EvtMax = 10;
+//EventSelector.Input = {"JOBID='44814'"};
+//EventSelector.Input = {"FILE='/castor/cern.ch/lhcb/mc/L221553'"};
+EventSelector.Input = {"FILE='/shift/shd18/data29/z5/stage/L221553.282724'"};
+ApplicationMgr.EvtMax = 100;
 //EventSelector.FirstEvent = 6;
 
 //--------------------------------------------------------------
 // Over-ride global output level for some algorithms
 // (2=DEBUG, 3=INFO, 4=WARNING, 5=ERROR, 6=FATAL )
 //--------------------------------------------------------------
-MessageSvc.OutputLevel = 3;
-// BrunelInit.OutputLevel     = 2;
-// BrunelDigiVELO.OutputLevel = 2;
-// BrunelRecoVELO.OutputLevel = 2;
+// Next two are needed due to a bug in GaudiKernel v9: 
+// Tools have output level set to zero if parent algorithm uses default 
+ToolSvc.OutputLevel = 3;
+OTDigitize.OutputLevel = 3;
+
+// Remove excessive printout (to be fixed at source!)
+//TrTrueTracksCreator.OutputLevel = 4;
+//TrTracksCreator.OutputLevel = 4;
+//TrEventTracksFitter_trackFitter_extrapolator1_shortFieldExtrapolator.OutputLevel = 4;
+//TrMonitor_xtrp1_longFieldExtrapolator.OutputLevel = 4;
+//TrMonitor_xtrp1_freeFieldExtrapolator.OutputLevel = 4;
+//TrMonitor_xtrp1_shortFieldExtrapolator.OutputLevel = 4;
+//TrMonitor_xtrp1.OutputLevel = 4;
+MessageSvc.Format = "% F%80W%S%7W%R%T %0W%M";
 
 //--------------------------------------------------------------
 // Enable/Disable some monitoring by setting lines below to true/false
@@ -56,10 +67,9 @@ ChronoAuditor.Enable = true;
 MemoryAuditor.Enable = false;
 
 //--------------------------------------------------------------
-// Output some histograms
+// Next line switches on monitoring histos. Must use HbookCnv in requirements
 //--------------------------------------------------------------
-// #include "$STDOPTS/Hbook.opts"
-// HistogramPersistencySvc.OutputFile  = "histo.hbook";
+#include "$BRUNELOPTS/BrunelMoni.opts"
 
 // Uncomment next line if you want to run Brunel in static mode.
 // #include "$BRUNELOPTS/BrunelStatic.opts"

@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Rec/Brunel/src/BrunelSicb/BrunelRecoTRAC.cpp,v 1.1.1.1 2001-03-14 16:06:47 cattaneb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Rec/Brunel/src/ObsoleteSicb/BrunelRecoTRAC.cpp,v 1.1 2001-05-17 13:40:21 cattaneb Exp $
 
 
 // Include files

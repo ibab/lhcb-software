@@ -1,16 +1,16 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Rec/Brunel/src/BrunelSicb/BrunelDigiTRAC.cpp,v 1.1.1.1 2001-03-14 16:06:46 cattaneb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Rec/Brunel/src/ObsoleteSicb/BrunelDigiHCAL.cpp,v 1.1 2001-05-17 13:40:21 cattaneb Exp $
 
 
 // Include files
-#include "BrunelDigiTRAC.h"
+#include "BrunelDigiHCAL.h"
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/AlgFactory.h"
 
 //------------------------------------------------------------------------------
 //
-// Implementation of class :  BrunelDigiTRAC
+// Implementation of class :  BrunelDigiHCAL
 //
-// Calls SICB digitisation routine WDDIGI.
+// Calls SICB digitisation routine HCDIGI.
 // Currently calls dummy initialisation and finalisation routines DUMINIT, DUMANAL 
 //
 // Author:      Marco Cattaneo
@@ -19,21 +19,21 @@
 
 
 // IMPORTANT: global declarations for factory.
-static const AlgFactory<BrunelDigiTRAC>  s_factory;
-const IAlgFactory& BrunelDigiTRACFactory = s_factory;
+static const AlgFactory<BrunelDigiHCAL>  s_factory;
+const IAlgFactory& BrunelDigiHCALFactory = s_factory;
 
 
 extern "C" {
 #ifdef WIN32
   void __stdcall DUMINIT( void );
-  void __stdcall WDDIGI( void );
+  void __stdcall HCDIGI( void );
   void __stdcall DUMLAST( void );
 #else
   void duminit_( void );
-  void wddigi_( void );
+  void hcdigi_( void );
   void dumlast_( void );
 #define DUMINIT duminit_
-#define WDDIGI  wddigi_
+#define HCDIGI  hcdigi_
 #define DUMLAST dumlast_
 #endif
 }
@@ -46,7 +46,7 @@ extern "C" {
 // ---------------------------------------------------------------------------
 //
 
-BrunelDigiTRAC::BrunelDigiTRAC( const std::string& name, 
+BrunelDigiHCAL::BrunelDigiHCAL( const std::string& name, 
                                     ISvcLocator* pSvcLocator )
   : Algorithm( name, pSvcLocator )
 {
@@ -59,7 +59,7 @@ BrunelDigiTRAC::BrunelDigiTRAC( const std::string& name,
 // ---------------------------------------------------------------------------
 //
 
-BrunelDigiTRAC::~BrunelDigiTRAC()
+BrunelDigiHCAL::~BrunelDigiHCAL()
 { 
 }
 
@@ -70,9 +70,9 @@ BrunelDigiTRAC::~BrunelDigiTRAC()
 // ---------------------------------------------------------------------------
 //
 
-IAlgorithm* BrunelDigiTRAC::create( const std::string& name, ISvcLocator* loc )
+IAlgorithm* BrunelDigiHCAL::create( const std::string& name, ISvcLocator* loc )
 {
-  IAlgorithm *alg = new BrunelDigiTRAC( name, loc );
+  IAlgorithm *alg = new BrunelDigiHCAL( name, loc );
   return alg;
 }
 
@@ -85,8 +85,8 @@ IAlgorithm* BrunelDigiTRAC::create( const std::string& name, ISvcLocator* loc )
 // ---------------------------------------------------------------------------
 //
 
-StatusCode BrunelDigiTRAC::initialize() 
-{
+StatusCode BrunelDigiHCAL::initialize() 
+{ 
   DUMINIT();
 
   MsgStream log( messageService(), name() );
@@ -104,9 +104,9 @@ StatusCode BrunelDigiTRAC::initialize()
 // ---------------------------------------------------------------------------
 //
 
-StatusCode BrunelDigiTRAC::execute()
+StatusCode BrunelDigiHCAL::execute()
 {
-  WDDIGI();
+  HCDIGI();
   MsgStream log( messageService(), name() );
   log << MSG::DEBUG << "Event analysis completed" << endreq;
   return StatusCode::SUCCESS;
@@ -120,7 +120,7 @@ StatusCode BrunelDigiTRAC::execute()
 // ---------------------------------------------------------------------------
 //
 
-StatusCode BrunelDigiTRAC::finalize()
+StatusCode BrunelDigiHCAL::finalize()
 {
   DUMLAST();
   MsgStream log( messageService(), name() );

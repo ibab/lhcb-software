@@ -1,6 +1,6 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Rec/Brunel/src/BrunelSicb/BrunelDigiECAL.h,v 1.1.1.1 2001-03-14 16:06:46 cattaneb Exp $
-#ifndef BRUNEL_DIGI_ECAL_H
-#define BRUNEL_DIGI_ECAL_H
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Rec/Brunel/src/ObsoleteSicb/BrunelDigiTRAC.h,v 1.1 2001-05-17 13:40:21 cattaneb Exp $
+#ifndef BRUNEL_DIGI_TRAC_H
+#define BRUNEL_DIGI_TRAC_H
 
 
 // Include Files
@@ -9,24 +9,24 @@
 
 //------------------------------------------------------------------------------
 // 
-// ClassName:   DigitiseECAL  
+// ClassName:   BrunelDigiTRAC  
 //
-// Description: Steering for ECAL digitisation in Brunel
+// Description: Steering for Tracker digitisation in Brunel.
 //
 // Author:      Marco Cattaneo
 //
 //------------------------------------------------------------------------------
 
 
-class BrunelDigiECAL : public Algorithm    {
+class BrunelDigiTRAC : public Algorithm    {
 
 public:
 
   // Constructor.
-  BrunelDigiECAL( const std::string& name, ISvcLocator *svcloc );
+  BrunelDigiTRAC( const std::string& name, ISvcLocator *svcloc );
 
   // Destructor.
-  virtual ~BrunelDigiECAL();
+  virtual ~BrunelDigiTRAC();
 
   // Initialise the algorithm
   virtual StatusCode initialize();
@@ -42,4 +42,4 @@ public:
 
 };
 
-#endif // BRUNEL_DIGI_ECAL_H
+#endif // BRUNEL_DIGI_TRAC_H

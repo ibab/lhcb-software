@@ -1,6 +1,6 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Rec/Brunel/src/BrunelSicb/BrunelDigiHCAL.h,v 1.1.1.1 2001-03-14 16:06:46 cattaneb Exp $
-#ifndef BRUNEL_DIGI_HCAL_H
-#define BRUNEL_DIGI_HCAL_H
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Rec/Brunel/src/ObsoleteSicb/BrunelRecoTRAC.h,v 1.1 2001-05-17 13:40:21 cattaneb Exp $
+#ifndef BRUNEL_RECO_TRAC_H
+#define BRUNEL_RECO_TRAC_H
 
 
 // Include Files
@@ -9,24 +9,24 @@
 
 //------------------------------------------------------------------------------
 // 
-// ClassName:   DigitiseHCAL  
+// ClassName:   ReconstructTRAC  
 //
-// Description: Steering for HCAL digitisation in Brunel
+// Description: Steering for TRAC Reconstruction in Brunel
 //
 // Author:      Marco Cattaneo
 //
 //------------------------------------------------------------------------------
 
 
-class BrunelDigiHCAL : public Algorithm    {
+class BrunelRecoTRAC : public Algorithm    {
 
 public:
 
   // Constructor.
-  BrunelDigiHCAL( const std::string& name, ISvcLocator *svcloc );
+  BrunelRecoTRAC( const std::string& name, ISvcLocator *svcloc );
 
   // Destructor.
-  virtual ~BrunelDigiHCAL();
+  virtual ~BrunelRecoTRAC();
 
   // Initialise the algorithm
   virtual StatusCode initialize();
@@ -42,4 +42,4 @@ public:
 
 };
 
-#endif // BRUNEL_DIGI_HCAL_H
+#endif // BRUNEL_RECO_TRAC_H

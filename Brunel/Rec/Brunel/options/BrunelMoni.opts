@@ -1,0 +1,19 @@
+// Options to switch on monitoring in Brunel
+//==========================================
+#include "$STDOPTS/Hbook.opts"
+HistogramPersistencySvc.OutputFile = "$WORKDIR/Histos.hbook";
+//ApplicationMgr.ExtSvc += { "NTupleSvc" };
+NTupleSvc.Output={"FILE1 DATAFILE='$WORKDIR/Tuples.hbook' TYP='HBOOK' OPT='NEW'"};
+
+// Detectors to monitor
+BrunelMoni.DetectorList = { "IT", "OT", "Tr" };
+
+// Monitoring algorithms
+BrunelMoniOTSeq.Members = { "OTDigitChecker" };
+BrunelMoniTrSeq.Members = { "TrMonitor" };
+//>> ITDigiMOnitor no good for production (produces N-tuple)
+// BrunelMoniITSeq.Members = { "ITDigiMonitor" };
+
+// Suppress excessive error messages
+OTDigitChecker.OutputLevel = 4;
+TrMonitor.OutputLevel = 4;
