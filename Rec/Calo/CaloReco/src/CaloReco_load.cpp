@@ -1,8 +1,11 @@
-// $Id: CaloReco_load.cpp,v 1.7 2003-04-11 09:33:42 ibelyaev Exp $
+// $Id: CaloReco_load.cpp,v 1.8 2004-03-19 16:03:20 cattanem Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.7  2003/04/11 09:33:42  ibelyaev
+//  add new E-,S- and L-corrections from Olivier Deschamps
+//
 // Revision 1.6  2003/03/13 18:47:50  ibelyaev
 //  see ../doc/release.notes file
 //
@@ -118,6 +121,9 @@ DECLARE_FACTORY_ENTRIES(CaloReco)
   DECLARE_TOOL        ( CaloNewECorrection                  ) ;
   DECLARE_TOOL        ( CaloNewSCorrection                  ) ;
   DECLARE_TOOL        ( CaloNewLCorrection                  ) ;
+  DECLARE_TOOL        ( Calo04ECorrection                   ) ;
+  DECLARE_TOOL        ( Calo04SCorrection                   ) ;
+  DECLARE_TOOL        ( Calo04LCorrection                   ) ;
 
 };
 
