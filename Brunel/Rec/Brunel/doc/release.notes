@@ -3,8 +3,17 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
+</PRE><H1><A NAME=v24r1>2004-07-26 Brunel v24r1</A></H1><PRE>
+This version uses Gaudi v15r1, needs CMT v1r16. It can process DC04 data
+
+- Bug fixes
+  . Fix EventSelector.FirstEvent, in v24r0 was skipping twice the requested 
+    events (GaudiSvc v12r2)
+  . Fix density of Rich2 mirror support (was 1*g/cm3, should be 0.24*g/cm3)
+    (XmlDDDB v22r3)
+
 </PRE><H1><A NAME=v24r0>2004-07-23 Brunel v24r0</A></H1><PRE>
-This version uses Gaudi v15, needs CMT v1r16. It can process DC04 data
+This version uses Gaudi v15r0, needs CMT v1r16. It can process DC04 data
 
 - New or modified functionality
   . GaudiAuditors no longer used for algorithm timing, uses GaudiSequencer

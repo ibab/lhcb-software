@@ -1,5 +1,5 @@
 package Brunel
-version v24r0
+version v24r1
 
 branches doc cmt job options
 
@@ -12,9 +12,9 @@ use GaudiPolicy v5r17
 
 #-- External libraries now taken from LCG, version defined by GaudiEnv
 
-#-- Gaudi libraries (from GAUDI_v15r0)
+#-- Gaudi libraries (from GAUDI_v15r1)
 use GaudiKernel		v16r1
-use GaudiSvc 		v12r1
+use GaudiSvc 		v12r2
 use GaudiAlg 		v8r0
 use GaudiGSL		v6r1
 use GaudiPoolDb		v1r8
@@ -22,14 +22,14 @@ use GaudiObjDesc 	v6r3
 use RootHistCnv         v9r2
 
 #-- Database
-use XmlDDDB		v22r2	Det
+use XmlDDDB		v22r3	Det
 use FieldMap		v4r5
 use ParamFiles          v3r8    -no_auto_imports
 
-#-- LHCb libraries (from LHCB_v16r0)
-use LHCb	v16r0
+#-- LHCb libraries (from LHCB_v16r1)
+use LHCb	v16r1
 
-#-- BrunelSys v24r0 packages
+#-- BrunelSys v24r1 packages
 
 # Tools
 use AsctToLinker        v1r2    Rec
