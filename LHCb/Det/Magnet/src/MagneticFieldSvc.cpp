@@ -1,4 +1,4 @@
-// $Id: MagneticFieldSvc.cpp,v 1.2 2002-05-21 17:08:28 cattanem Exp $
+// $Id: MagneticFieldSvc.cpp,v 1.3 2002-05-21 17:10:17 cattanem Exp $
 
 // Include files
 #include "GaudiKernel/AlgFactory.h"
@@ -194,9 +194,9 @@ StatusCode MagneticFieldSvc::parseFile() {
 	    if ( token != NULL ) continue;
       
       // Keep cdf magnetic field values (gauss)
-      float fx = atof( sFx.c_str() );
-      float fy = atof( sFy.c_str() );
-      float fz = atof( sFz.c_str() );
+      double fx = atof( sFx.c_str() );
+      double fy = atof( sFy.c_str() );
+      double fz = atof( sFz.c_str() );
       
       // Add the magnetic field components of each point to 
       // sequentialy in a vector 
