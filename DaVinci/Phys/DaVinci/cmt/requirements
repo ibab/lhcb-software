@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.127 2004-06-28 06:42:16 pkoppenb Exp $
+# $Id: requirements,v 1.128 2004-07-01 07:20:01 pkoppenb Exp $
 # Created    : 07/02/2002
 # Maintainer : P. Koppenburg
 #
@@ -6,7 +6,7 @@
 # Allows reading of OO-DST data
 #============================================================================
 package           DaVinci
-version           v11r9
+version           v11r10
 
 # Structure, i.e. directories to process. 
 #============================================================================
@@ -96,7 +96,7 @@ use  TrExtrapolator     v2r12    Tr
 use  RecoTools          v1r1     Rec
 use  Utilities          v1r5     Tools
 
-use  LoKi               v2r6     Tools  
+use  LoKi               v2r7     Tools  
 use  DaVinciAssociators v5r0     Phys
 
 # Physics packages
@@ -108,7 +108,7 @@ use  Ks2PiPiSel         v1r4     Phys
 use  PhysSelections	v6r7     Phys
 
 # Physics MC packages
-use  DaVinciChecks      v2r3p2   Phys
+use  DaVinciChecks      v2r4     Phys
 use  DaVinciAssociators v5r0     Phys
 use  DaVinciEff         v3r0     Phys
 use  DaVinciMCTools     v5r4     Phys
