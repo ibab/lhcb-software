@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.97 2004-04-22 16:45:05 pkoppenb Exp $
+# $Id: requirements,v 1.98 2004-04-22 16:52:23 pkoppenb Exp $
 # Created    : 07/02/2002
 # Maintainer : P. Koppenburg
 #
@@ -67,7 +67,9 @@ use  ParamFiles		v3r5	 $(LHCb_release_area)/PARAM -no_auto_imports
 #--- LHCb libraries (from LHCB_v15r7)
 use  LHCb               v15r7
 
-#--- DaVinciSys v11r6 packages 
+#=======================================================
+# DaVinciSys v11r6
+#=======================================================
 
 #    Enable neutral ProtoParticles production and CaloPIDs
 use  CaloPIDs           v2r2     Calo 
