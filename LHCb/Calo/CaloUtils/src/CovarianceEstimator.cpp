@@ -1,8 +1,11 @@
-// $Id: CovarianceEstimator.cpp,v 1.9 2002-06-13 12:33:53 ibelyaev Exp $ 
+// $Id: CovarianceEstimator.cpp,v 1.10 2002-10-03 10:25:48 cattanem Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.9  2002/06/13 12:33:53  ibelyaev
+//  bug fixes
+//
 // Revision 1.8  2002/05/29 07:42:43  ibelyaev
 //  fix the most stupid bug in my life
 //
@@ -138,7 +141,7 @@ StatusCode CovarianceEstimator::operator()( CaloCluster* cluster ) const
       const double x_i  =   pos.x() ;
       const double y_i  =   pos.y() ;
       // intrinsic resolution 
-      double s2 = abs( energy )  * a2GeV() ; 
+      double s2 = fabs( energy )  * a2GeV() ; 
       //  gain fluctuation
       if( 0 != s2gain () ) { s2 += energy * energy * s2gain() ; }  
       //  noise (both coherent and incoherent) 
