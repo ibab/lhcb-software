@@ -3,6 +3,18 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
+</PRE><H1><A NAME=v16r4>2002-12-05 Brunel v16r4</A></H1><PRE>
+ Functionally identical to v15r4, but using Gaudi v11 and DetDesc v11
+   >> Introduces CMT projects
+   >> Introduces support for RedHat 7.3
+   >> Fixes many memory leaks
+
+ - New features:
+   . Re-enable OO-Rich by default
+
+ - Bug fixes:
+   . Do not abort job if no track are found for K0 search (KsReco)
+
 </PRE><H1><A NAME=v15r4>2002-12-04 Brunel v15r4</A></H1><PRE>
   >>> This is the last version built against Gaudi v10 <<<
   Next version (for Xmas pre-production) will use Gaudi v11 and CMT projects
