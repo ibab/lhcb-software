@@ -6,6 +6,9 @@
 !-----------------------------------------------------------------------------
 
 !========================= GaussRICH v4r8 =================================
+! 2004-08-30 - Sajan Easo
+ - src/RichAnalysis/RichG4CkvRecon.cpp - modification to make WIN32 compatible.
+
 ! 2004-08-02 - Gloria CORTI
  - requirements, adapt to LCG interfaces
 
