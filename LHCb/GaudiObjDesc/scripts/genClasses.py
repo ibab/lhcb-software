@@ -283,7 +283,7 @@ class genClasses(genSrcUtils.genSrcUtils):
     return s
 #--------------------------------------------------------------------------------
   def genGetSetBitfieldMethod(self, bf, what, attAtt, scopeName):
-    desc = {'get':'Retrieve', 'set':'Upate', 'check':'Check'}
+    desc = {'get':'Retrieve', 'set':'Update', 'check':'Check'}
     s = ''
     if not scopeName : s += '  /// %s %s\n  ' % (desc[what], bf['desc'])
     else :
@@ -317,7 +317,9 @@ class genClasses(genSrcUtils.genSrcUtils):
       if bf['length'].isdigit() : bits = bf['name']
       else : bits = bf['length'].split(',')[0]
       if not what        :
-        s += '\n{\n  return (%s)((m_%s & %sMask) >> %sBits);\n}\n\n' % (ret[:-1],attAtt['name'],bf['name'],bits)
+        retF = '0 != '
+        if (ret[:-1]) != 'bool' : retF = '(%s)'%ret[:-1]
+        s += '\n{\n  return %s((m_%s & %sMask) >> %sBits);\n}\n\n' % (retF, attAtt['name'],bf['name'],bits)
       elif what == 'set' :
         s += '\n{\n  unsigned int val = (unsigned int)value;\n' 
         s += '  m_%s &= ~%sMask;\n' % (attAtt['name'], bf['name']) 

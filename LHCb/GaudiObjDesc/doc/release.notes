@@ -3,6 +3,11 @@ Desccription: This package contains a set of tools used to generate code from th
 Package manager : Stefan Roiser
  
 ===============================GaudiObjDesc v7r0============================
+!20041213 - Stefan
+- changes necessary for windows compilation 
+  . passing refs to pointers in dictionary stubfunctions needs a cast to the ref
+  . changed getters for bitfields to remove a warning of vc71
+
 !20041208 - Stefan
 - changes to fragments: no source setup needed to pick up the correct python version (set by LCG_Interfaces/Python)
 
