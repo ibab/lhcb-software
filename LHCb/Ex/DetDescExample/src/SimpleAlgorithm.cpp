@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Ex/DetDescExample/src/SimpleAlgorithm.cpp,v 1.5 2001-05-14 15:16:23 sponce Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Ex/DetDescExample/src/SimpleAlgorithm.cpp,v 1.6 2001-06-22 10:18:04 sponce Exp $
 #define DDEXAMPLE_SIMPLEALGORITHM_CPP
 
 /// Include files
@@ -24,8 +24,6 @@
 /// Private classes to the example
 #include "SimpleAlgorithm.h"
 #include "DeMuonStation.h"
-#include "DeVertexDetector.h"
-#include "DeCalorimeter.h"
 #include "DetDataAgent.h"
 
 #include "CLHEP/Geometry/Transform3D.h"
@@ -99,23 +97,25 @@ StatusCode SimpleAlgorithm::initialize() {
   dumpPVs( msgSvc(), stvol, cave->name() );
 
   //---------------------------------------------------------------------------
-  SmartDataPtr<DeCalorimeter> ecal( detSvc(), "/dd/Structure/LHCb/Ecal" );
+  // This is an example of usage of userParameter tag
+  SmartDataPtr<IDetectorElement> ecal( detSvc(), "/dd/Structure/LHCb/Ecal" );
   if( !ecal )                                                            {
     log << MSG::ERROR << "Can't retrieve /dd/Structure/LHCb/Ecal" << endreq;
     return StatusCode::FAILURE;
   }
-
-  log << MSG::INFO << "ECAL class ID is " << ecal->clID() << endreq;
-  log << MSG::INFO << "ECAL cell size is " << ecal->size() << " mm\n" << endreq;
-
-  dumpPVs( msgSvc(), ecal->geometry()->lvolume(), ecal->fullpath() );
+  
+  std::vector<std::string> parameterList = ecal->userParameters();
+  for (std::vector<std::string>::iterator it = parameterList.begin();
+       it != parameterList.end();
+       it++) {
+    log << MSG::INFO << "ECAL " << *it << " = "
+        << ecal->userParameterValue(*it)
+        << endreq;
+  }
+  
+  dumpPVs( msgSvc(), ecal->geometry()->lvolume(), ecal->name() );
   
   //---------------------------------------------------------------------------
-  // SmartDataPtr<DeCalorimeter> ecalouter (detSvc(),
-  //                                    "/dd/Structure/LHCb/Ecal/EcalOuter");
-  // Version with generic detector element is preferred in the case one wasnts
-  // to use the generic conversion feature, otherwise the SmartDataPtr will
-  // crash.
   SmartDataPtr<IDetectorElement> ecalouter
     (detSvc(), "/dd/Structure/LHCb/Ecal/EcalOuter");
   if (!ecalouter) {
@@ -189,7 +189,8 @@ StatusCode SimpleAlgorithm::initialize() {
     return StatusCode::FAILURE;
   }
   
-  /// Loop over all the muon stations found in the detector model
+  // Loop over all the muon stations found in the detector model
+  // This is an example of how to use specific converters
   for (DataObject::DirIterator d =  stations->dirBegin();
        d != stations->dirEnd();
        d++) {
