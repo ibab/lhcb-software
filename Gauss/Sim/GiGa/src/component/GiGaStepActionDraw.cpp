@@ -1,8 +1,11 @@
-// $Id: GiGaStepActionDraw.cpp,v 1.9 2002-05-07 12:21:36 ibelyaev Exp $ 
+// $Id: GiGaStepActionDraw.cpp,v 1.10 2002-05-16 16:14:48 witoldp Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.9  2002/05/07 12:21:36  ibelyaev
+//  see $GIGAROOT/doc/release.notes  7 May 2002
+//
 // ============================================================================
 #define GIGA_GIGASTEPACTIONDRAW_CPP 1 
 // ============================================================================
@@ -71,14 +74,14 @@ void GiGaStepActionDraw::UserSteppingAction( const G4Step* step )
       G4double charge = step->GetTrack()->GetDefinition()->GetPDGCharge();
       ///
       G4Colour colour = 
-	( charge < 0.0 ) ? G4Colour( 1. , 0. , 0. ) : 
-	( charge > 0.0 ) ? G4Colour( 0. , 0. , 1. ) : G4Colour( 0. , 1. , 0. ) ;
+	( charge > 0.0 ) ? G4Colour( 1. , 0. , 0. ) : 
+	( charge < 0.0 ) ? G4Colour( 0. , 0. , 1. ) : G4Colour( 0. , 1. , 0. ) ;
       ///
       G4Polyline polyline;
       G4VisAttributes attribs( colour );
       polyline.SetVisAttributes( attribs );
       polyline.push_back( step->GetPreStepPoint  ()->GetPosition () );
-      polyline.push_back( step->GetPostStepPoint ()->GetPosition () );
+      polyline.push_back( step->GetPostStepPoint ()->GetPosition () );      
       /// 
       visMgr -> Draw( polyline ); 
       ///
