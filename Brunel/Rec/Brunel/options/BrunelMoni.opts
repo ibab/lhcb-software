@@ -21,6 +21,7 @@ BrunelMoni.DetectorList = { "IT","OT","Tr","RICH","CALO","TRIGGER" };
 BrunelMoniTRIGGERSeq.Members += { "L0Monitor" };
 BrunelMoniTRIGGERSeq.Members += { "L1TrackMonitor" };
 BrunelMoniTRIGGERSeq.Members += { "Level1Check" };
+#include "$L1VELOTRACKROOT/options/L1Track3dToMCP.opts"
 
 // IT digitisation and clustering
 #include "$ITCHECKERSROOT/options/Brunel.opts"
