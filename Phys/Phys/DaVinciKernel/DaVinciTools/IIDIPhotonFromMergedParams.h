@@ -1,8 +1,11 @@
-// $Id: IIDIPhotonFromMergedParams.h,v 1.1.1.1 2004-08-24 06:59:45 pkoppenb Exp $
+// $Id: IIDIPhotonFromMergedParams.h,v 1.2 2004-10-27 14:09:58 pkoppenb Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.1.1.1  2004/08/24 06:59:45  pkoppenb
+// DaVinci Kerel and Interfaces extracted from DaVinciTools
+//
 // Revision 1.5  2004/07/28 14:15:23  pkoppenb
 // untag
 //
