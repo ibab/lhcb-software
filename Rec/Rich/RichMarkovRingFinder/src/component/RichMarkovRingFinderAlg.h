@@ -1,4 +1,4 @@
-// $Id: RichMarkovRingFinderAlg.h,v 1.11 2004-10-22 19:15:28 abuckley Exp $
+// $Id: RichMarkovRingFinderAlg.h,v 1.12 2004-11-10 17:51:12 abuckley Exp $
 #ifndef RICHMARKOVRINGFINDER_RICHMARKOVRINGFINDERALG_H
 #define RICHMARKOVRINGFINDER_RICHMARKOVRINGFINDERALG_H 1
 
@@ -29,11 +29,11 @@
 #include "RichKernel/IRichSmartIDTool.h"
 
 // Ring finder stuff
+#include "finder/Hit.h"
 #include "finder/Rich1Configuration.h"
 #include "finder/Rich2Configuration.h"
 #include "finder/RichMarkovRingFinder.h"
 #include "stringToNumber/stringToNumber.h"
-
 
 ///////////////////////////////////////////////////////////////////////////
 /// @class  RichMarkovRingFinderAlg
@@ -131,6 +131,14 @@ private: // data
 
   /// Probability of being a background hit, above which the hit is discarded
   double m_HitIsBgProbabilityLowCut;
+
+  /// Do we assign pixels to only "belong" to the ring which has the best probability 
+  /// of having produced it or are we a little more flexible?
+  bool m_OnlyMatchPixelToBestRing;
+
+  /// The fraction of the hit->ring "best-match" probability which must be
+  /// reached if multiple hit->ring associations are allowed (\sa m_OnlyMatchPixelToBestRing)
+  double m_FractionOfBestProbReqdForHitCircleAssoc;
 
 };
 

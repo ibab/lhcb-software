@@ -1,4 +1,4 @@
-// $Id: RichPixelStrippingAlg.cpp,v 1.5 2004-10-08 19:00:40 abuckley Exp $
+// $Id: RichPixelStrippingAlg.cpp,v 1.6 2004-11-10 17:51:12 abuckley Exp $
 
 // local
 #include "RichPixelStrippingAlg.h"
@@ -11,8 +11,9 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-static const  AlgFactory<RichPixelStrippingAlg>          s_factory ;
-const        IAlgFactory& RichPixelStrippingAlgFactory = s_factory ;
+static const  AlgFactory<RichPixelStrippingAlg>          s_factory;
+const        IAlgFactory& RichPixelStrippingAlgFactory = s_factory;
+
 
 //=============================================================================
 // Standard constructor, initializes variables
@@ -21,16 +22,16 @@ RichPixelStrippingAlg::RichPixelStrippingAlg( const std::string& name,
                                               ISvcLocator* pSvcLocator)
   : RichRecAlgBase ( name , pSvcLocator )
 {
-
   declareProperty( "StripUntrackedMCMCPixs",  m_StripUntrackedMCMCPixs = false );
-
   declareProperty( "SaveCopyOfPreStrippedPixels", m_savePreStrippedPixels = true );
-
 }
+
+
 //=============================================================================
 // Destructor
 //=============================================================================
-RichPixelStrippingAlg::~RichPixelStrippingAlg() {};
+RichPixelStrippingAlg::~RichPixelStrippingAlg() {}
+
 
 //=============================================================================
 // Initialisation. Check parameters
@@ -42,7 +43,8 @@ StatusCode RichPixelStrippingAlg::initialize()
   if ( sc.isFailure() ) { return sc; }
 
   return StatusCode::SUCCESS;
-};
+}
+
 
 //=============================================================================
 // Main execution
@@ -76,7 +78,7 @@ StatusCode RichPixelStrippingAlg::execute()
     }
 
     // Create and initialise decision map for stripping out Markov-unassociated pixels
-    std::map<RichRecPixel*,bool> decisionMap; // true means "keep", false means "strip"
+    std::map<RichRecPixel*, bool> decisionMap; // true means "keep", false means "strip"
     for ( RichRecPixels::const_iterator iPix = richPixels()->begin(); iPix != richPixels()->end(); ++iPix ) {
       // Set true by default if in RICH1, otherwise false (no R1 stripping yet)
       decisionMap[*iPix] = ( Rich::Rich1 == (*iPix)->smartID().rich() );
@@ -90,8 +92,9 @@ StatusCode RichPixelStrippingAlg::execute()
       SmartRefVector<RichRecPixel> & pixels = (*iRing)->richRecPixels();
       for ( SmartRefVector<RichRecPixel>::iterator iPix = pixels.begin(); iPix != pixels.end(); ++iPix ) {
         if ( !m_StripUntrackedMCMCPixs || // if we're only stripping non-MCMC pixs
-             (*iRing)->richRecSegment() ) // if the Markov ring corresponds to a non-null track segment...
-          decisionMap[*iPix] = true;
+             (*iRing)->richRecSegment() ) { // or if the Markov ring corresponds to a non-null track segment...
+          decisionMap[*iPix] = true; // then keep this pixel
+        }
       }
     }
 

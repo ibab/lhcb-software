@@ -9,9 +9,10 @@
 
 #include "Data.fwd"
 
-namespace RichMarkov {
-  class Hit;
-};
+//namespace RichMarkov {
+// class Hit;
+//};
+#include "Hit.h"
 #include "CircleParams.fwd"
 #include "RichParams.fwd"
 #include "Inferrer.fwd"
@@ -31,6 +32,7 @@ namespace RichMarkov {
     typedef CircleParams<Mode, mode> CircleParamsT;
     typedef RichParams<Mode, mode> RichParamsT;
     typedef Inferrer<Mode, mode> InferrerT;
+    typedef Hit HitT;
 
     const Mode & getmode() const { return mode; }
 

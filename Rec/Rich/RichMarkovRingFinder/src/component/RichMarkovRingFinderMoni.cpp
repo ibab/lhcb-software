@@ -1,4 +1,4 @@
-// $Id: RichMarkovRingFinderMoni.cpp,v 1.14 2004-11-01 18:05:27 abuckley Exp $
+// $Id: RichMarkovRingFinderMoni.cpp,v 1.15 2004-11-10 17:51:12 abuckley Exp $
 // Include files
 
 // from Gaudi
@@ -87,20 +87,28 @@ RichMarkovRingFinderMoni::finalize()
   map<Rich::DetectorType, float> fractionAgreed;
 
   // Agreement in Rich1
-  fractionAgreed[Rich::Rich1] = m_numMcVsRecMatchAgreements[Rich::Rich1][true] /
-    (m_numMcVsRecMatchAgreements[Rich::Rich1][true] + m_numMcVsRecMatchAgreements[Rich::Rich1][false]);
-  always() << "Number of MC-rec matching agree/disagreements in RICH1 = "
-           << m_numMcVsRecMatchAgreements[Rich::Rich1][true]   << " / "
-           << m_numMcVsRecMatchAgreements[Rich::Rich1][false]  << " ("
-           << 100 * fractionAgreed[Rich::Rich1] << "% agreed)" << endreq;
+  const double total1( m_numMcVsRecMatchAgreements[Rich::Rich1][true] + m_numMcVsRecMatchAgreements[Rich::Rich1][false] );
+  if (total1 != 0) {
+    fractionAgreed[Rich::Rich1] = m_numMcVsRecMatchAgreements[Rich::Rich1][true] / total1;
+    always() << "Number of MC-rec matching agree/disagreements in RICH1 = "
+             << m_numMcVsRecMatchAgreements[Rich::Rich1][true]   << " / "
+             << m_numMcVsRecMatchAgreements[Rich::Rich1][false]  << " ("
+             << 100 * fractionAgreed[Rich::Rich1] << "% agreed)" << endreq;
+  } else {
+    always() << "Problem with Rich1 rec/MC agreement count" << endreq;
+  }
 
   // Agreement in Rich2
-  fractionAgreed[Rich::Rich2] = m_numMcVsRecMatchAgreements[Rich::Rich2][true] /
-    (m_numMcVsRecMatchAgreements[Rich::Rich2][true] + m_numMcVsRecMatchAgreements[Rich::Rich2][false]);
-  always() << "Number of MC-rec matching agree/disagreements in RICH2 = "
-           << m_numMcVsRecMatchAgreements[Rich::Rich2][true]   << " / "
-           << m_numMcVsRecMatchAgreements[Rich::Rich2][false]  << " ("
-           << 100 * fractionAgreed[Rich::Rich1] << "% agreed)" << endreq;
+  const double total2( m_numMcVsRecMatchAgreements[Rich::Rich2][true] + m_numMcVsRecMatchAgreements[Rich::Rich2][false] );
+  if (total2 != 0) {
+    fractionAgreed[Rich::Rich2] = m_numMcVsRecMatchAgreements[Rich::Rich2][true] / total2;
+    always() << "Number of MC-rec matching agree/disagreements in RICH2 = "
+             << m_numMcVsRecMatchAgreements[Rich::Rich2][true]   << " / "
+             << m_numMcVsRecMatchAgreements[Rich::Rich2][false]  << " ("
+             << 100 * fractionAgreed[Rich::Rich2] << "% agreed)" << endreq;
+  } else {
+    always() << "Problem with Rich2 rec/MC agreement count" << endreq;
+  }
 
   return sc;
 }
@@ -308,13 +316,22 @@ RichMarkovRingFinderMoni::execute()
                    << ") and pixel-matched (" << mcpart 
                    << ") MCParticles disagree for Markov ring " << *iRing << endreq;
           } 
-          m_numMcVsRecMatchAgreements[whichRich][mcpart!=segMCPart]++;
+          ++(m_numMcVsRecMatchAgreements[whichRich][mcpart!=segMCPart]);
+          debug() << "Incremented MC vs rec agreement: " 
+                  << Rich::text(whichRich) <<  "::" 
+                  << boolalpha << (mcpart!=segMCPart) << " => "
+                  << m_numMcVsRecMatchAgreements[whichRich][mcpart!=segMCPart] << " entries"
+                  << endreq;
         }
 
 
 
-        // *** Histogram ring purity (number of true photons for that ring's MCParticle) 
-        // *** and efficiency (fraction of successfully matched rings)
+        // Ring and event purity and efficiency
+        const double ringPurity(bestMatchFraction);
+        // *** ringEfficiency = number of pixels from MCPi (MC) in ringj / total number of pixels from MCPi (MC)
+
+        // *** eventMarkovPurity = number of true Markov rings / total number of Markov rings
+        // *** eventMarkovEfficiency = size of Markov MCParticle set / size of "reconstructible" MCParticle set
 
 
 
