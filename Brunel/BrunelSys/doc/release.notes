@@ -7,8 +7,8 @@ Purpose: LHCb reconstruction program
 This version uses Gaudi v15r3, LHCb v17r3.
 Requires data produced by Boole v7r2 or later. It *cannot* process DC04 data
 
-- Packages modified: RichRecSys v1r14, RichRecTools v2r13, 
-                     TrgVelo v7r0p1, TrgTools v7r0p1
+- Packages modified: RichRecSys v1r14, RichRecTools v2r13, ITCheckers v2r4,
+            TrgVelo v7r0p1, TrgTools v7r0p1, TrCheck v2r7p1, TrKShort v1r5
 
 - New functionality:
   . Support for new RawBuffer bank formats of Calo and Rich. Correct decoding is
@@ -16,7 +16,11 @@ Requires data produced by Boole v7r2 or later. It *cannot* process DC04 data
 
 - New tuning:
   . Do not apply slope-dependent multiple scattering error in TrgVelo space
-    tracking. Fixes Match track efficiency (TrgVelo v7r0p1)
+    tracking. Fixes Match track efficiency (TrgVelo)
+
+- Packaging changes:
+  . Backwards compatible modifications for CLHEP 1.9 (TrCheck, TrKShort)
+  . Remove MCHitMonitor, now in MCTools (ITCheckers)
 
 </PRE><H1><A NAME=v25r2p1>2005-01-13 Brunel v25r2p1</A></H1><PRE>
 Documentation moved to BrunelSys package (from Rec/Brunel):

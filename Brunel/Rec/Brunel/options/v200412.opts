@@ -40,9 +40,8 @@ PoolDbCacheSvc.Catalog = {
 // Event input
 //---------------------------------------------------------------------------
 EventSelector.Input = {
-  // "DATAFILE='PFN:castor:/castor/cern.ch/user/c/cattanem/Boole/v7r2/BooleTest.digi' TYP='POOL_ROOT' OPT='READ'"
-}; // Boole data is not yet available with this geometry.
-
+  "DATAFILE='PFN:castor:/castor/cern.ch/user/c/cattanem/Boole/v7r3/BooleTest200412.digi' TYP='POOL_ROOT' OPT='READ'"
+};  // Test data (5 events type 11144100) produced by Gloria with Gauss v18r3.
 //---------------------------------------------------------------------------
 // Event output
 //---------------------------------------------------------------------------
