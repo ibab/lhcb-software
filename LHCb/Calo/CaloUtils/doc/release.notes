@@ -1,7 +1,10 @@
-! $Id: release.notes,v 1.15 2002-06-14 09:49:03 ibelyaev Exp $
+! $Id: release.notes,v 1.16 2002-06-15 10:43:51 ibelyaev Exp $
 ! Package     : CaloUtils
 ! Responsible : Vanya Belyaev Ivan.Belyaev@itep.ru
 ! =============================================================================
+
+! 2002-06-15 - Vanya Belyaev
+ - version update for new CaloDet version 
 
 ! 2002-06-14 - v3r2 Vanya Belyaev
  - src/SpreadEstimator.cpp       bug fix 
