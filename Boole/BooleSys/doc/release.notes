@@ -4,10 +4,11 @@
 ! Purpose     : List of packages in Boole project
 !-----------------------------------------------------------------------------
 
-!======================== BooleSys v5r6 2004-04-20 ========================
-! 2004-04-20 - Marco Cattaneo
+!======================== BooleSys v5r6 2004-04-21 ========================
+! 2004-04-21 - Marco Cattaneo
  - Packages modified: CaloMonitor v2r2, RichUtils v3r9, RichDAQ v1r4, 
-                      RichDetTools v4r1, RichReadout v1r8, RichDigiQC v1r6
+                      RichDetTools v4r1, RichReadout v1r8, RichDigiQC v1r6,
+                      MuonAlgs v5r5
 
 !======================== BooleSys v5r5 2004-04-14 ========================
 ! 2004-04-14 - Marco Cattaneo
