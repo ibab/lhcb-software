@@ -1,62 +1,62 @@
 package Brunel
-version v18r1
+version v19r0
 
 branches doc cmt job options
 
 #-- CMT and GaudiPolicy
-use GaudiPolicy v5r9
+use GaudiPolicy v5r11p2
 
-#-- External libraries (as defined in GAUDI_v11r5)
+#-- External libraries (as defined in GAUDI_v12r0)
 use ExternalLibs	v4r0p1
-use AIDA		v3r22p0
+use AIDA		v3r22p2
 use CLHEP		v2r1800p0
 use HTL			v2r1321p0
 use NAGC		v2r50p0		
-use XERCES		v2r160p1
+use XERCES		v2r220p0
 use CERNLIB 		v2r2002p0
-use ROOT 		v2r30309p1
+use ROOT 		v2r30504p0
 
-#-- Gaudi libraries (from GAUDI_v11r5)
-use GaudiKernel		v13r2
-use GaudiSvc 		v10r1p3
-use GaudiAlg 		v6r3p1
+#-- Gaudi libraries (from GAUDI_v12r0)
+use GaudiKernel		v13r4
+use GaudiSvc 		v10r2
+use GaudiAlg 		v6r4
 use GaudiTools 		v6r1
-use GaudiAud 		v6r1
-use GaudiNagC 		v7r2
-use GaudiDb 		v8r3p3
-use GaudiRootDb 	v9r1p3
-use GaudiIntrospection 	v4r4p1
-use GaudiObjDesc 	v4r5p1
-use HbookCnv 		v13r2p1
+use GaudiAud 		v6r2
+use GaudiNagC 		v7r3
+use GaudiDb 		v8r4
+use GaudiRootDb 	v9r2
+use GaudiIntrospection 	v4r6
+use GaudiObjDesc 	v5r0
+use HbookCnv 		v13r3
 
 #-- Database
-use XmlDDDB	v15r5	Det
+use XmlDDDB		v16r0	Det
 
-#-- LHCb libraries (from LHCB_v11r12)
-use LHCb	v11r12
+#-- LHCb libraries (from LHCB_v12r0)
+use LHCb	v12r0
 
-#-> SICB basic libraries (from LHCB_v11r12)
-use SICBSys	v1r3	SICB
+#-> SICB basic libraries (from LHCB_v12r0)
+use SICBSys	v1r4	SICB
 
-#-- BrunelSys v18r1 packages
-
-# Brunel utilities
-use BrunelSicb          v4r1    Rec
-use BrunelAlgs          v2r0	Rec
-use KsReco              v1r4    Rec
+#-- BrunelSys v19r0 packages
 
 # Phys utilities
 use MCTools		v1r1	Phys
 
+# Brunel utilities
+use BrunelSicb          v4r1    Rec
+use BrunelAlgs          v2r0	Rec
+use KsReco              v1r5    Rec
+
 # L0 trigger
 use L0Calo              v7r0    L0
 use L0Muon              v6r5    L0
-use PuVeto              v5r3    L0
-use L0DU                v6r4    L0
+use PuVeto              v5r4    L0
+use L0DU                v6r5    L0
 
 # L1 trigger
-use L1VeloTrack         v5r0	L1
-use L1Decision		v1r7	L1
+use L1VeloTrack         v5r1	L1
+use L1Decision		v2r1	L1
 
 # Calorimeter
 use CaloInterfaces      v2r4  	Calo
@@ -74,36 +74,36 @@ use ITAlgorithms        v12r9p1	IT
 use ITCheckers          v1r3  	IT
 
 # Outer Tracker
-use OTAlgorithms        v12r4 	OT
+use OTAlgorithms        v13r0 	OT
 
 # Tracking
 use VeloTrack           v5r0  	Velo
-use TrCheck             v1r3  	Tr
-use LongTrack           v1r6  	Tr
+use TrCheck             v1r4  	Tr
+use LongTrack           v1r7  	Tr
 use TrFitter            v3r5  	Tr
-use TrExtrapolator      v2r5  	Tr
+use TrExtrapolator      v2r6  	Tr
 use TrTools             v2r4  	Tr
-use Seeding             v2r4  	Tr 
+use Seeding             v2r5  	Tr 
 use TrMatching          v2r6  	Tr
 use TrCleanEx           v2r6  	Tr
-use TrIntraPR           v2r4  	Tr
+use TrIntraPR           v2r5  	Tr
 use UpstreamPR          v2r7  	Tr
 use VeloTT              v1r5  	Tr
 
 # Muon
-use MuonAlgs            v4r0    Muon
-use MuonBackground	v1r1	Muon
+use MuonAlgs            v4r1    Muon
+use MuonBackground	v1r2	Muon
 use MuonUtils		v1r0	Muon
 use MuonRec             v2r3    Muon
-use MuonID              v3r5    Muon
+use MuonID              v3r6    Muon
 
 # Rich
 use RichMonitor         v3r0  	Rich
 use RichRecAlgs		v2r0p1	Rich
 use RichRecTools	v2r0  	Rich
-use RichRecBase		v1r0  	Rich
-use RichUtils		v3r0  	Rich
-use RichDetTools	v2r0  	Rich
+use RichRecBase		v1r1  	Rich
+use RichUtils		v3r1  	Rich
+use RichDetTools	v2r1  	Rich
 
 # SICBDST packages
 use recevt              v3r5  	SICB
@@ -122,8 +122,8 @@ macro_append Brunel_linkopts " "\
                 Linuxdbx     " -g -Wl,--start-group "
 
 #== Set the Brunel version = v*10000 + r*100 + p  ==
-macro_append fflags " -DBrunelVersion=180100 " \
-           VisualC  " /DBrunelVersion=180100 "
+macro_append fflags " -DBrunelVersion=190000 " \
+           VisualC  " /DBrunelVersion=190000 "
 
 apply_pattern application_path
 

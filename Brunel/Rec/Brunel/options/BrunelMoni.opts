@@ -21,7 +21,7 @@ BrunelMoni.DetectorList = { "VELO","IT","OT","Tr","RICH","CALO","TRIGGER" };
 ApplicationMgr.DLLs += { "Associators" };
 BrunelMoniTRIGGERSeq.Members += { "L0Monitor" };
 BrunelMoniTRIGGERSeq.Members += { "L1TrackMonitor" };
-BrunelMoniTRIGGERSeq.Members += { "Level1Check" };
+//BrunelMoniTRIGGERSeq.Members += { "Level1Check" };
 #include "$L1VELOTRACKROOT/options/L1Track3dToMCP.opts"
 
 // Velo

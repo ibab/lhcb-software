@@ -7,6 +7,7 @@
 // !! Do not modify position or order of included files !!
 //==============================================================
 #include "$STDOPTIONS"
+ApplicationMgr.DLLs += { "XmlTools", "DetDescCnv" };
 
 ApplicationMgr.DLLs += { "BrunelAlgs", "GaudiAlg" };
 EventDataSvc.ForceLeaves = true;
@@ -27,9 +28,11 @@ ApplicationMgr.TopAlg += { "ProcessPhase/BrunelMoni" };
 // Detectors to be processed in each phase
 //--------------------------------------------------------------
 BrunelDigi.DetectorList  = { "SpillOver" };
+//BrunelDigi.DetectorList += { "VELO" , "IT", "OT" , "RICH" , "CALO" };
 BrunelDigi.DetectorList += { "VELO" , "IT", "OT" , "RICH" , "CALO", "MUON" };
 BrunelTrigger.DetectorList = { "TRIGGER" };
-BrunelReco.DetectorList  = {"VELO","OT","IT","L1","Tr","RICH","CALO","MUON" };
+BrunelReco.DetectorList  = {"VELO","OT","IT","Tr","RICH","CALO","MUON" };
+//BrunelReco.DetectorList  = {"VELO","OT","IT","Tr","RICH","CALO" };
 BrunelReco.DetectorList += { "SICBRICH" }; // Old SICB Rich processing
 BrunelReco.DetectorList += { "V0" };
 BrunelReco.DetectorList += { "Timing" };
@@ -66,10 +69,10 @@ ApplicationMgr.DLLs += { "VSicbCnv" };
 
 // L1 trigger
 ApplicationMgr.DLLs += { "L1VeloTrack" };
-BrunelTriggerTRIGGERSeq.Members += { "L1VeloTrackAlg" };
 BrunelTriggerTRIGGERSeq.Members += { "ITDigitToL1", "OTDigitToL1" };
 ApplicationMgr.DLLs += { "L1Decision" };
-BrunelRecoL1Seq.Members += { "Level1" };
+BrunelTriggerTRIGGERSeq.Members += { "Level1" };
+Level1.minimizeL1ExeTime = false;
 
 // Trigger truth relation tables (used by monitoring and for DST)
 BrunelTriggerTRIGGERSeq.Members += { "L0CaloToMCParticleAsct" };
@@ -99,9 +102,12 @@ BrunelDigiRICHSeq.Members += { "BrunelDigiRICH", "RichMCDigitToDigitAlg" };
 
 // Muon digitisation
 ApplicationMgr.DLLs += { "MuonAlgs", "MuonBackground" };
-#include "$MUONBACKGROUNDROOT/options/Brunel.opts"
-BrunelDigiMUONSeq.Members += { "MuonBackground" };
+BrunelDigiMUONSeq.Members += { "MuonBackground/MuonLowEnergy" };
+#include "$MUONBACKGROUNDROOT/options/MuonLowEnergy.opts"
+BrunelDigiMUONSeq.Members += { "MuonBackground/MuonFlatSpillover" };
+#include "$MUONBACKGROUNDROOT/options/MuonFlatSpillover.opts"
 BrunelDigiMUONSeq.Members += { "MuonDigitization" };
+#include "$MUONALGSROOT/options/MuonDigitization.opts"
 
 // Inner tracker digitisation and reconstruction (clustering)
 #include "$ITALGORITHMSROOT/options/Brunel.opts"

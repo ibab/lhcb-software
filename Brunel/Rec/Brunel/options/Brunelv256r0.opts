@@ -1,0 +1,2 @@
+#include "$BRUNELOPTS/Brunelv254r1.opts"
+DetectorDataSvc.DetDbLocation = "$XMLDDDBROOT/DDDB/v256r0.xml";

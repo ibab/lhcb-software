@@ -1,5 +1,5 @@
 package BrunelSys
-version v18r1
+version v19r0
 
 branches cmt doc
  
@@ -8,22 +8,22 @@ branches cmt doc
 #=======================================================
 
 # Brunel application
-use Brunel              v18r1   Rec
+use Brunel              v19r0   Rec
 
 # Brunel utilities
 use BrunelSicb          v4r1    Rec
 use BrunelAlgs          v2r0    Rec
-use KsReco              v1r4	Rec
+use KsReco              v1r5	Rec
 
 # L0 trigger
 use L0Calo              v7r0    L0
 use L0Muon              v6r5    L0
-use PuVeto              v5r3    L0
-use L0DU                v6r4    L0
+use PuVeto              v5r4    L0
+use L0DU                v6r5    L0
 
 # L1 trigger
-use L1VeloTrack         v5r0    L1
-use L1Decision		v1r7	L1
+use L1VeloTrack         v5r1    L1
+use L1Decision		v2r1	L1
 
 # Calorimeter
 use CaloInterfaces      v2r4  	Calo
@@ -41,36 +41,36 @@ use ITAlgorithms        v12r9p1	IT
 use ITCheckers          v1r3  	IT
 
 # Outer Tracker
-use OTAlgorithms        v12r4 	OT
+use OTAlgorithms        v13r0 	OT
 
 # Tracking
 use VeloTrack           v5r0  	Velo
-use TrCheck             v1r3  	Tr
-use LongTrack           v1r6  	Tr
+use TrCheck             v1r4  	Tr
+use LongTrack           v1r7  	Tr
 use TrFitter            v3r5  	Tr
-use TrExtrapolator      v2r5  	Tr
+use TrExtrapolator      v2r6  	Tr
 use TrTools             v2r4  	Tr
-use Seeding             v2r4  	Tr 
+use Seeding             v2r5  	Tr 
 use TrMatching          v2r6  	Tr
 use TrCleanEx           v2r6  	Tr
-use TrIntraPR           v2r4  	Tr
+use TrIntraPR           v2r5  	Tr
 use UpstreamPR          v2r7  	Tr
 use VeloTT              v1r5  	Tr
 
 # Muon
 use MuonUtils		v1r0	Muon
-use MuonAlgs            v4r0    Muon
+use MuonAlgs            v4r1    Muon
 use MuonRec             v2r3    Muon
-use MuonID              v3r5    Muon
-use MuonBackground	v1r1	Muon
+use MuonID              v3r6    Muon
+use MuonBackground	v1r2	Muon
 
 # Rich
-use RichRecBase		v1r0	Rich
+use RichRecBase		v1r1	Rich
 use RichMonitor         v3r0  	Rich
 use RichRecAlgs		v2r0p1 	Rich
 use RichRecTools	v2r0  	Rich
-use RichUtils		v3r0  	Rich
-use RichDetTools	v2r0  	Rich
+use RichUtils		v3r1  	Rich
+use RichDetTools	v2r1  	Rich
 
 # Phys
 use MCTools		v1r1	Phys
