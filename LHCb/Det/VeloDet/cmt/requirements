@@ -1,8 +1,8 @@
-# $Id: requirements,v 1.24 2003-10-06 10:15:24 cattanem Exp $
+# $Id: requirements,v 1.25 2003-12-09 10:14:34 cattanem Exp $
 # =========================================================================
 
 package  VeloDet 
-version  v8r6
+version  v8r7
 
 # =============== structure ===============================================	
 branches         src cmt doc VeloDet 
@@ -13,10 +13,7 @@ include_dirs      $(VELODETROOT)
 # =============== used packages ===========================================
 use DetDescCnv   v2r*   Det 
 use VeloKernel   v1r*   Velo
-use LHCbKernel	v2r*	Kernel
-
-# =============== own options ==========================================
-set VELODETOPTS  ${VELODETROOT}/options
+use LHCbKernel	v3r*	Kernel
 
 # =============== link library (base classes) =============================
 library          VeloDetLib        Lib/*.cpp 
@@ -25,16 +22,6 @@ library          VeloDetLib        Lib/*.cpp
 library          VeloDet           component/*.cpp
 
 #================ patterns ================================================
-
-apply_pattern    package_Lstamps
-apply_pattern    package_Llinkopts 
-apply_pattern    linker_path
-
-#================ private stuff ===========================================
-private
-apply_pattern    package_Cshlibflags
-apply_pattern    package_Lshlibflags
-macro_append     VeloDetLib_shlibflags " $(DetDesc_linkopts) "
-macro_append     VeloDetLib_shlibflags  " $(GaudiKernel_linkopts) "
-macro_append     VeloDetLib_shlibflags  " $(CLHEP_linkopts) "
+apply_pattern component_library library=VeloDet
+apply_pattern linker_library    library=VeloDetLib
 
