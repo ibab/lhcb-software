@@ -1,0 +1,3 @@
+
+// Fill RawBuffer with RICH info
+DigiRICHSeq.Members += { "MCRichDigitsToRawBufferAlg/RichFillRawBuffer" };

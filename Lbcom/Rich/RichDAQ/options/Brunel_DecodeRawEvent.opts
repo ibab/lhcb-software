@@ -1,0 +1,3 @@
+
+// Build RichDigits from HltEvent
+BrunelRecoRICHSeq.Members += { "RawBufferToRichDigitsAlg/RichDecodeRawEvent" };
