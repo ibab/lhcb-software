@@ -1,5 +1,8 @@
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.9  2001/07/02 17:17:59  ibelyaev
+// improvements in readability of DeCalorimeter.h
+//
 // Revision 1.8  2001/06/30 10:29:03  ibelyaev
 // modification in printout methods
 //
@@ -11,6 +14,7 @@
 // ============================================================================
 // from STL
 #include <cmath> 
+#include <algorithm>
 // from CLHEP 
 #include "CLHEP/Units/SystemOfUnits.h"
 // from Gaudi 
@@ -81,42 +85,48 @@ StatusCode DeCalorimeter::initialize()
   Parameters pars( userParameters() );
   ///
   { /// coding bits 
-    Iterator it = std::find( pars.begin() , pars.end () , "CodingBit" );
+	  Iterator it = 
+		  std::find( pars.begin() , pars.end () , std::string("CodingBit") );
     if( pars.end() != it ) {
       setCoding( userParameterAsInt(*it) ) ;
       pars.erase( it );
     }
   }
   { /// Et in Center 
-    Iterator it = std::find( pars.begin() , pars.end () , "EtInCenter" );
+    Iterator it = 
+		std::find( pars.begin() , pars.end () , std::string("EtInCenter") );
     if( pars.end() != it ) {
       setEtInCenter( userParameterAsDouble(*it) ) ;
       pars.erase( it );
     }
   }
   { /// Et in slope  
-    Iterator it = std::find( pars.begin() , pars.end () , "EtSlope" );
+    Iterator it = 
+		std::find( pars.begin() , pars.end () , std::string("EtSlope") );
     if( pars.end() != it ) {
       setEtSlope( userParameterAsDouble(*it) ) ;
       pars.erase( it );
     }
   }
   { /// AdcMax
-    Iterator it = std::find( pars.begin() , pars.end () , "AdcMax" );
+    Iterator it = 
+		std::find( pars.begin() , pars.end () , std::string("AdcMax") );
     if( pars.end() != it ) {
       setAdcMax( userParameterAsInt(*it) ) ;
       pars.erase( it );
     }
   }
   { /// Total/Active ratio
-    Iterator it =  std::find( pars.begin() , pars.end () , "ActiveToTotal" );
+    Iterator it =  
+		std::find( pars.begin() , pars.end () , std::string("ActiveToTotal") );
     if( pars.end() != it ) {
       setActiveToTotal( userParameterAsDouble(*it) ) ;
       pars.erase( it );
     }
   }
   { /// Z shower max position 
-    Iterator it = std::find( pars.begin() , pars.end () , "ZShowerMax" );
+    Iterator it = 
+		std::find( pars.begin() , pars.end () , std::string("ZShowerMax") );
     if( pars.end() != it ) {
       setZShowerMax( userParameterAsDouble(*it) ) ;
       pars.erase( it );

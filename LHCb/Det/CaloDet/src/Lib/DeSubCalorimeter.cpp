@@ -1,4 +1,7 @@
 // $Log: not supported by cvs2svn $
+// Revision 1.5  2001/06/30 10:29:03  ibelyaev
+// modification in printout methods
+//
 // Revision 1.4  2001/06/29 10:26:18  ibelyaev
 // update to use new features of DetDesc v7 package
 // 
@@ -47,7 +50,8 @@ StatusCode DeSubCalorimeter::initialize()
   Parameters pars( userParameters() );
   ///
   { /// cell size 
-    Iterator it = std::find( pars.begin() , pars.end () , "CellSize" );
+    Iterator it = 
+		std::find( pars.begin() , pars.end () , std::string("CellSize") );
     if( pars.end() != it ) 
       {
         setSize( userParameterAsDouble(*it) ) ;

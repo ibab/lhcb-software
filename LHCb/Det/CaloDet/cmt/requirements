@@ -1,5 +1,8 @@
 # =========================================================================	
 # $Log: not supported by cvs2svn $
+# Revision 1.10  2001/06/29 10:26:18  ibelyaev
+# update to use new features of DetDesc v7 package
+#
 # =========================================================================	
 
 package  CaloDet 
@@ -20,18 +23,21 @@ set CALODETOPTS  ${CALODETROOT}/options
 
 # =============== link library (base classes) =============================
 library          CaloDetLib        Lib/*.cpp 
-apply_pattern    package_Lstamps
-apply_pattern    package_Llinkopts 
-apply_pattern    linker_path
 
 # =============== component library =======================================
 library          CaloDet           component/*.cpp
+
+#================ patterns ================================================
+
+apply_pattern    package_Lstamps
+apply_pattern    package_Llinkopts 
+apply_pattern    linker_path
 
 #================ private stuff ===========================================
 private
 apply_pattern    package_Cshlibflags
 apply_pattern    package_Lshlibflags
-macro_append     CalloDetLib_shlibflags " $(DetDesc_linkopts) "
+macro_append     CaloDetLib_shlibflags " $(DetDesc_linkopts) "
 macro_append     CaloDetLib_shlibflags  " $(GaudiKernel_linkopts) "
 macro_append     CaloDetLib_shlibflags  " $(CLHEP_linkopts) "
 
