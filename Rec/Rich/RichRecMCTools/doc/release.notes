@@ -1,0 +1,8 @@
+!------------------------------------------------------------------------------
+! Package     : Rich/RichRecTools
+! Responsible : Chris Jones   Christopher.Rob.Jones@cern.ch
+! Purpose     : Monte Carlo Utility tools for RICH reconstruction algorithms
+!------------------------------------------------------------------------------
+
+! 2003-08-06 - Chris Jones
+ - First version, split off MC components from RichRecTools
