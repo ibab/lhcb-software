@@ -8,8 +8,7 @@ DigiWriter.OptItemList =
 , "/Event/PrevPrev/Header#1"
 , "/Event/Next#1"
 , "/Event/Next/Header#1"
-  //, "/Event/Gen/HepMCEvents#1" needs Gauss v15r4
-  //, "/Event/Gen/HardProcesses#1" needs Gauss v15r4
+, "/Event/Gen/HardProcesses#1"
 }; 
 DigiWriter.ItemList = 
 {
@@ -21,10 +20,12 @@ DigiWriter.ItemList =
 , "/Event/Gen#1"
 , "/Event/Gen/Header#1"
 , "/Event/Gen/Collisions#1"
+, "/Event/Gen/HepMCEvents#1"
 , "/Event/MC#1"
-, "/Event/MC/Particles#1"  // To be Filtered in Gauss
-, "/Event/MC/Vertices#1"   // To be Filtered in Gauss
-  //, "/Event/MC/Signal#1" needs Gauss v15r4
+, "/Event/MC/Particles#1"
+, "/Event/MC/Vertices#1"
+, "/Event/MC/Signal#1"
+, "/Event/MC/MCTrackInfo#1"
 , "/Event/MC/Velo#1"
 , "/Event/MC/Velo/Hits#1"
 , "/Event/MC/Velo/PuHits#1"
@@ -53,10 +54,7 @@ DigiWriter.ItemList =
 , "/Event/Trig/L0/Muon#1"
 , "/Event/Trig/L0/PuVeto#1"
 , "/Event/Trig/L0/Decision#1" 
-  //, "/Event/Trig/L1#1"
-  //, "/Event/Trig/L1/Summary#1"  - to be replaced by new L1 trigger
-  //, "/Event/Trig/L1/Decision#1" - to be replaced by new L1 trigger
-  // Keep the directory nodes of all Digits, even if stored as  RawBuffer
+  // Keep directory nodes, to avoid loading them when recreating digits 
 , "/Event/Raw#2"
 , "/Event/Rec#1"
 , "/Event/Rec/Relations#1"
@@ -74,6 +72,11 @@ DigiWriter.ItemList =
 , "/Event/Link/Trig/L0#1"
 , "/Event/Link/Trig/L0/Calo#1"
 , "/Event/Link/Trig/L0/FullCalo#1"
+, "/Event/Link/Raw#1"
+, "/Event/Link/Raw/Velo#1"
+, "/Event/Link/Raw/Velo/Clusters#1"
+, "/Event/Link/Raw/IT#1"
+, "/Event/Link/Raw/IT/Digits#1"
+, "/Event/Link/Raw/OT#1"
+, "/Event/Link/Raw/OT/Digits#1"
 };
-// Additional objects from new L1 simulation
-#include "$BOOLEOPTS/L1Output.opts"

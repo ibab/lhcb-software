@@ -3,15 +3,20 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
-</PRE><H1><A NAME=v5r6>2004-04-16 Boole v5r6</A></H1><PRE>
+</PRE><H1><A NAME=v5r6>2004-04-21 Boole v5r6</A></H1><PRE>
+Requires data produced with Gauss v15r4 or later
 
 - New tuning
   . Faster erase() implementation for KeyedContainers. Speeds up VeloSim by a
     factor 3 (GaudiKernel v15r3)
+  . Change Muon digitization time gate to 25. (from 20.) (MuonAlgs v5r5)
 
 - Persistency changes
+  . Add Gen/HardProcesses, Gen/HepMCEvents, MC/Signal (produced by Gauss v15r4)
   . Remove Spillover hits from output file
   . Use POOL_1_6_3
+  . Move objects described in L1Output.opts file into DigiContent.opts, 
+    and remove L1Output.opts
 
 - Bug fixes
   . Do not use spillover hits for Muoncoord2MCParticle association

@@ -87,7 +87,7 @@ use OTAlgorithms        v13r4	OT
 use OTDAQ               v2r0    OT
 
 # Muon
-use MuonAlgs            v5r4	Muon
+use MuonAlgs            v5r5	Muon
 use MuonBackground	v1r6	Muon
 use MuonDAQ             v1r1    Muon
 
