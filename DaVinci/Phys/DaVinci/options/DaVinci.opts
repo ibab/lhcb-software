@@ -35,8 +35,8 @@
 //#include "$DAVINCIROOT/options/DaVinciRecoTDR.opts"
 
 //--- Neutral ProtoParticles (gammas and pi0) 
-// NOTE:: Not enough information in new GaudiRootDB files at the moment to 
-//        produce neutral protoparticles -> only works with POOL input
+// Note that this has also to be executed if you need
+// Bremsstrahlung photons (AddBrem option)
 #include "$DAVINCIROOT/options/DaVinciNeutrals.opts"
 // for TDR data (else you crash):
 // #include "$DAVINCIROOT/options/DaVinciNeutralsTDR.opts"

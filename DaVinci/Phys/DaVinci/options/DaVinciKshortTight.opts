@@ -14,4 +14,4 @@
 // Make all type of Ks with loose cuts
 #include "$KS2PIPISELROOT/options/bestKs2PiPi.opts"
 // Monitor
-#include "$KS2PIPISELROOT/options/KsCheckMC.opts"
+#include "$KS2PIPISELROOT/options/bestKsCheckMC.opts"

@@ -47,6 +47,7 @@ EventSelector.Input   = {
 //-- End of Data cards 
 
 // overwrite a few things
-EventSelector.PrintFreq  = 1;
+EventSelector.PrintFreq  = 100;
 MessageSvc.Format = "% F%80W%S%7W%R%T %0W%M";
-ApplicationMgr.EvtMax    = 5000;
+ApplicationMgr.EvtMax    = 2000;
+

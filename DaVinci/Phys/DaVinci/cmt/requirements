@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.112 2004-05-18 11:51:34 pkoppenb Exp $
+# $Id: requirements,v 1.113 2004-05-19 15:16:36 pkoppenb Exp $
 # Created    : 07/02/2002
 # Maintainer : P. Koppenburg
 #
@@ -53,7 +53,7 @@ use FieldMap            v4r5
 use ParamFiles          v3r6    -no_auto_imports
 
 #-- LHCb libraries 
-use LHCb        v15r10
+use LHCb        v15r9
 
 #=======================================================
 # DaVinciSys v11r8
@@ -65,7 +65,7 @@ use  L0Calo             v7r5     L0
 
 use  L1Decision         v1r1p1   Trg
 use  L1Reco             v3r1     Trg
-use  TrgChecker         v3r1     Trg
+# use  TrgChecker         v3r1     Trg
 use  TrgForward         v1r2     Trg
 use  TrgMonitor         v1r0     Trg
 use  TrgPrimVertex      v1r1     Trg
