@@ -1,11 +1,18 @@
-! $Id: release.notes,v 1.21 2002-07-24 18:57:39 gcorti Exp $
+! $Id: release.notes,v 1.22 2002-07-26 20:06:27 gcorti Exp $
 <PRE>
 ! Package     : DaVinci 
 ! Responsible : Gloria Corti
 ! Purpose     : LHCb analysis program 
 
+! 2002-07-26 - Gloria Corti
+ - Use EventSys v12r1(PhysEvent v6r1) and use in release VeloKernel v1r1,
+   XmlDDDB v12r3, OTDet v2r1, L1VeloTrack v2r1 
+ - Include options for GlobalReco
+ - Fix problem in DaVinci.job to have histograms in directory where the
+   job was launched.
+
 ! 2002-07-24 - Gloria Corti
- - Use VeloAssociators v1r1, L0Calo v6r1 and L1VeloTrack v2r0 L1
+ - Use VeloAssociators v1r1, L0Calo v6r1 and L1VeloTrack v2r0
 
 ! 2002-07-23 - Gloria Corti
  - Use VeloDet v7r0 and PhysSelections v2r0
