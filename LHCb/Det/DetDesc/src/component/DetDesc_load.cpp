@@ -53,6 +53,7 @@ void DetDesc_load() {
   // Declare services 
   DLL_DECL_SERVICE( XmlCnvSvc    );
   DLL_DECL_SERVICE( TransportSvc );
+  DLL_DECL_SERVICE( XmlParserSvc );
   
   // Now declare all available converters
 

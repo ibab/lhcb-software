@@ -3,6 +3,10 @@ package manager : N.N
 
 !===========================================================================
 ! 20010518 - Sebastien Ponce
+ - made everything work under windows
+
+!===========================================================================
+! 20010518 - Sebastien Ponce
  - made a true service of XmlParserSvc - use it as a service in XmlCnvSvc
  - as a consequence, moved it in the component library
 
