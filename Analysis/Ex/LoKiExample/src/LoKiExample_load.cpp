@@ -1,8 +1,11 @@
-// $Id: LoKiExample_load.cpp,v 1.5 2004-08-17 15:43:36 ibelyaev Exp $
+// $Id: LoKiExample_load.cpp,v 1.6 2004-08-21 14:32:39 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.5  2004/08/17 15:43:36  ibelyaev
+//  v3r3
+//
 // ============================================================================
 // Include files
 #include "GaudiKernel/DeclareFactoryEntries.h"
@@ -41,8 +44,6 @@ DECLARE_FACTORY_ENTRIES( LoKiExample )
   DECLARE_ALGORITHM( LoKi_MCEvent         ) ;
   DECLARE_ALGORITHM( LoKi_MCMuon          ) ;
   DECLARE_ALGORITHM( LoKi_MCDecays        ) ;
-
-  DECLARE_ALGORITHM( LoKi_DecayChain      ) ;
 
   DECLARE_ALGORITHM( LoKi_VeloClusterMC   ) ;
   

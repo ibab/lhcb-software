@@ -18,6 +18,21 @@
 #BSUB -q 8nm
 #
 ###############################################################################
+"""
+==============================================================================
+Simple script to submit/run jobs through LSF
+==============================================================================
+   The script sets a proper environment ( 'LoKiExample' )
+   and run a command, constructed from arguments 
+==============================================================================
+Usage:
+
+# run inetractively: 
+    >                 LoKiExJob.py -o My.opts -n 1000 
+# submit the job through LSF
+    > bsub -J LoKiJob LoKiExJob.py -o My.opts -n 1000
+    
+"""
 
 import sys , os
 
@@ -122,14 +137,14 @@ def setEnvironment() :
     import cmt
 
     # set the project environment 
-    print cmt.project( 'DaVinci'  , 'v11r12'   , os.environ['LHCBDEV'] )
+    print cmt.project( 'DaVinci'  , 'v11r13' )
         
     # show CMT paths 
     for p in cmt.showpath() : print  ' CMT path: ' + `p`
         
     # configure the job     
     cmt.use( package = 'Ex/LoKiExample' )
-    cmt.use( package = 'Phys/DaVinci'   , version = 'v11r12' )
+    cmt.use( package = 'Phys/DaVinci'   , version = 'v11r13' )
 
     # show all used packages a
     for p in cmt.showuses() : print `p`
@@ -155,14 +170,15 @@ def  inBatch() :
 # copy useful files into initial directory
 # =============================================================================
 def  copyResults( pattern = '*.*' ) :
-    if not inBatch() : return
     import glob,os
     # remove core*
     cores = glob.glob('core*')
     for core in cores : os.path.remove( core )
     # try to remove the executable
     try :   os.remove( jobexe )
-    except: pass 
+    except: pass
+    # nothing to be copied for non-batch mode 
+    if not inBatch() : return 
     # copy all files 
     files = glob.glob( pattern )
     ret   = open('RETURN','w')

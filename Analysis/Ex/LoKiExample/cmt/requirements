@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.13 2004-08-17 15:43:35 ibelyaev Exp $ 
+# $Id: requirements,v 1.14 2004-08-21 14:32:39 ibelyaev Exp $ 
 # =============================================================================
 # CVS tag $Name: not supported by cvs2svn $ 
 # =============================================================================
@@ -7,41 +7,28 @@ package         LoKiExample
 version         v3r3
 
 # ============= structure =====================================================
-branches        cmt doc src options 
+branches        cmt doc src jobs options 
 
 # ============= environment ===================================================
 set LOKIEXAMPLEDOC    $(LOKIEXAMPLEROOT)/doc 
 set LOKIEXAMPLEOPTS   $(LOKIEXAMPLEROOT)/options
+set LOKIEXAMPLEJOBS   $(LOKIEXAMPLEROOT)/options
 
 # ============= dependencies  =================================================
-use LoKi  v* Tools
+use             LoKi   v* Tools
+use             PYTHON v*        -no_auto_imports 
 
 # ============= constituents ==================================================
-library LoKiExample         *.cpp 
+library         LoKiExample  *.cpp 
 
 # ============= patterns ======================================================
 apply_pattern component_library library=LoKiExample 
 
-set   DAVINCIEXE           "${DAVINCIROOT}/${BINDIR}/DaVinci.exe"    
-set   LOKIEXHISTOS         "${LOKIEXAMPLEOPTS}/DV_LoKi_Histos.opts"
-set   LOKIEXTUPLE          "${LOKIEXAMPLEOPTS}/DV_LoKi_Tuple.opts" 
-set   LOKIEXBS2PHIPHI      "${LOKIEXAMPLEOPTS}/DV_LoKi_Bs2PhiPhi.opts" 
-set   LOKIEXBS2PHIGAMMA    "${LOKIEXAMPLEOPTS}/DV_LoKi_Bs2PhiGamma.opts" 
-set   LOKIEXBD2KSTARGAMMA  "${LOKIEXAMPLEOPTS}/DV_LoKi_Bd2KStarGamma.opts" 
-set   LOKIEXEVTTAGS        "${LOKIEXAMPLEOPTS}/DV_LoKi_EventTagTuple.opts" 
-                
-alias Histos_exe           "     ${DAVINCIEXE} ${LOKIEXHISTOS}        " \
-      WIN32                " run ${DAVINCIEXE} ${LOKIEXHISTOS}        " 
-alias Tuple_exe            "     ${DAVINCIEXE} ${LOKIEXTUPLE}         " \
-      WIN32                " run ${DAVINCIEXE} ${LOKIEXTUPLE}         " 
-alias Bs2PhiPhi_exe        "     ${DAVINCIEXE} ${LOKIEXBS2PHIPHI}     " \
-      WIN32                " run ${DAVINCIEXE} ${LOKIEXBS2PHIPHI}     " 
-alias Bs2PhiGamma_exe      "     ${DAVINCIEXE} ${LOKIEXBS2PHIGAMMA}   " \
-      WIN32                " run ${DAVINCIEXE} ${LOKIEXBS2PHIGAMMA}   " 
-alias Bd2KStarGamma_exe    "     ${DAVINCIEXE} ${LOKIEXBD2KSTARGAMMA} " \
-      WIN32                " run ${DAVINCIEXE} ${LOKIEXBD2KSTARGAMMA} " 
-alias EvtTag_exe           "     ${DAVINCIEXE} ${LOKIEXEVTTAGS}       " \
-      WIN32                " run ${DAVINCIEXE} ${LOKIEXEVTTAGS}       " 
+# ============= paths =========================================================
+path_remove PYTHONPATH  "LoKiExample" 
+path_append PYTHONPATH  ${LOKIEXAMPLEJOBS}
+path_remove PATH        "LoKiExample" 
+path_append PATH        ${LOKIEXAMPLEJOBS}
 
 # =============================================================================
 # $Log: not supported by cvs2svn $
