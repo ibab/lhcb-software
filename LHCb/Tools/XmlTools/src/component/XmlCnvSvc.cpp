@@ -1,4 +1,4 @@
-// $Id: XmlCnvSvc.cpp,v 1.4 2003-12-09 10:09:25 cattanem Exp $
+// $Id: XmlCnvSvc.cpp,v 1.5 2004-07-21 08:01:50 cattanem Exp $
 
 // Include Files
 #include <xercesc/util/PlatformUtils.hpp>
@@ -118,7 +118,8 @@ StatusCode XmlCnvSvc::finalize() {
 // -----------------------------------------------------------------------
 // Query interface
 // -----------------------------------------------------------------------
-StatusCode XmlCnvSvc::queryInterface(const IID& riid, void** ppvInterface) {
+StatusCode XmlCnvSvc::queryInterface( const InterfaceID& riid, 
+                                      void** ppvInterface     ) {
   if (IID_IXmlSvc.versionMatch(riid))  {
     *ppvInterface = (IXmlSvc*)this;
   } else {

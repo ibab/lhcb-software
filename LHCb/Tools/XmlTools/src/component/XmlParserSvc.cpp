@@ -1,4 +1,4 @@
-// $Id: XmlParserSvc.cpp,v 1.4 2004-01-30 13:22:06 cattanem Exp $
+// $Id: XmlParserSvc.cpp,v 1.5 2004-07-21 08:01:50 cattanem Exp $
 
 // Include Files
 #include <limits.h>
@@ -225,7 +225,8 @@ void XmlParserSvc::resetErrors () {}
 // -----------------------------------------------------------------------
 // Query interface
 // -----------------------------------------------------------------------
-StatusCode XmlParserSvc::queryInterface(const IID& riid, void** ppvInterface) {
+StatusCode XmlParserSvc::queryInterface( const InterfaceID& riid,
+                                         void** ppvInterface     ) {
   if (IID_IXmlParserSvc.versionMatch(riid))  {
     *ppvInterface = (IXmlParserSvc*)this;
   } else {

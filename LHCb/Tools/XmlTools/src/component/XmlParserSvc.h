@@ -1,4 +1,4 @@
-// $Id: XmlParserSvc.h,v 1.3 2003-04-25 08:53:57 sponce Exp $
+// $Id: XmlParserSvc.h,v 1.4 2004-07-21 08:01:50 cattanem Exp $
 #ifndef DETDESCCNV_XMLPARSERSVC_H
 #define DETDESCCNV_XMLPARSERSVC_H
 
@@ -50,7 +50,8 @@ public:
    * @param ppvInterface Pointer to Location for interface pointer
    * @return status depending on the completion of the call
    */
-  virtual StatusCode queryInterface (const IID& riid, void** ppvInterface);
+  virtual StatusCode queryInterface ( const InterfaceID& riid,
+                                      void** ppvInterface );
 
   ///////////////////////////////////////////////////
   // implementation of the IXmlParserSvc interface //

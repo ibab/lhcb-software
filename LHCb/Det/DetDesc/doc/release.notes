@@ -1,11 +1,16 @@
 ! =============================================================================
-! $Id: release.notes,v 1.163 2004-07-09 14:37:07 cattanem Exp $ 
+! $Id: release.notes,v 1.164 2004-07-21 08:01:54 cattanem Exp $ 
 ! =============================================================================
 ! package DetDesc
 ! package manager : N.N 
 ! =============================================================================
 
-!======================= DetDesc v14r1p1 2003-07-09 =======================
+!======================== DetDesc v14r3 2004-07-19 ========================
+! 2004-07-19 - Marco Cattaneo
+ - Changes for Gaudi v15:
+   . Use explicitly CLHEP in requirements
+   . Use InterfaceID instead of IID in TransportSvc::queryInterface
+
 ! 2004-07-09 - Marco Cattaneo
  - Fix a wrong ifndef in SolidIntersection.h and SolidSubtraction.h
  - Fix many doxygen warnings

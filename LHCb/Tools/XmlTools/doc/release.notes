@@ -4,6 +4,17 @@
 ! Purpose     : Interface to XML Xerces Parser plus some extra services
 !-----------------------------------------------------------------------------
 
+!================= XmlTools v3r3 2004-07-19 ==========================
+! 2004-07-19 - Marco Cattaneo
+ - Move to Gaudi v15:
+   . In requirements, pick up XercesC from LCG_Interfaces
+   . In requirements, add explicit use of CLHEP (no longer from GaudiKernel)
+   . In XmlCnvSvc, XmlParserSvc: use InterfaceID instead of IID
+
+!================= XmlTools v3r2 2004-01-30 ==========================
+! 2004-01-30 - Marco Cattaneo
+ - Fix a valgrind warning
+
 !================= XmlTools v3r1 2003-12-15 ==========================
 ! 2003-12-15 - Marco Cattaneo
  - In requirements, use GaudiKernel v*

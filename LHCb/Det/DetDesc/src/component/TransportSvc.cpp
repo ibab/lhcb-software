@@ -1,8 +1,11 @@
-// $Id: TransportSvc.cpp,v 1.10 2002-07-11 07:15:05 ibelyaev Exp $
+// $Id: TransportSvc.cpp,v 1.11 2004-07-21 08:01:54 cattanem Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.10  2002/07/11 07:15:05  ibelyaev
+//  fix the problems with virtual calls inside constructors
+//
 // ============================================================================
 /// from CLHEP 
 #include "CLHEP/Geometry/Point3D.h"
@@ -96,7 +99,7 @@ TransportSvc::~TransportSvc(){};
 /// Implementation of IInterface::queryInterface()
 // ============================================================================
 StatusCode    TransportSvc::queryInterface
-( const IID& riid, void** ppvInterface)
+( const InterfaceID& riid, void** ppvInterface)
 {
   ///
   if ( IID_ITransportSvc == riid ) 

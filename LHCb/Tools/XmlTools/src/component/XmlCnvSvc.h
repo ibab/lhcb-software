@@ -1,4 +1,4 @@
-// $Id: XmlCnvSvc.h,v 1.4 2003-12-09 10:09:25 cattanem Exp $
+// $Id: XmlCnvSvc.h,v 1.5 2004-07-21 08:01:50 cattanem Exp $
 
 #ifndef DETDESCCNV_XMLCNVSVC_H
 #define DETDESCCNV_XMLCNVSVC_H
@@ -56,7 +56,8 @@ public:
    * @param ppvInterface Pointer to Location for interface pointer
    * @return status depending on the completion of the call
    */
-  virtual StatusCode queryInterface (const IID& riid, void** ppvInterface);
+  virtual StatusCode queryInterface ( const InterfaceID& riid, 
+                                      void** ppvInterface );
 
   /**
    * Create an XML address using explicit arguments to identify a single object

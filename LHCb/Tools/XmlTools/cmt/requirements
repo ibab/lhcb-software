@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.6 2004-01-26 15:27:17 cattanem Exp $ 
+# $Id: requirements,v 1.7 2004-07-21 08:01:50 cattanem Exp $ 
 # =============================================================================
 package       XmlTools
 version       v3r2
@@ -11,7 +11,8 @@ include_dirs  $(XMLTOOLSROOT)
 
 # =========== dependencies ====================================================
 use           GaudiKernel       v*
-use           XERCES            v2r230*
+use           XercesC           v*	LCG_Interfaces 
+use           CLHEP             v*	LCG_Interfaces 
 
 # =========== constituents =====================================================
 library       XmlTools           component/*.cpp

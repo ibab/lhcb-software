@@ -1,8 +1,11 @@
-// $Id: TransportSvc.h,v 1.3 2002-07-11 07:15:05 ibelyaev Exp $ 
+// $Id: TransportSvc.h,v 1.4 2004-07-21 08:01:54 cattanem Exp $ 
 // ============================================================================
 // CVS atg $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.3  2002/07/11 07:15:05  ibelyaev
+//  fix the problems with virtual calls inside constructors
+//
 // Revision 1.2  2002/06/21 13:43:44  ocallot
 // Fix findLocalGI for the transport service.
 //
@@ -59,9 +62,10 @@ class TransportSvc: public         Service        ,
   ///     Finalise the service.
   virtual StatusCode finalize      ();
   ///     Query the interfaces.
-  virtual StatusCode queryInterface( const IID& riid, void** ppvInterface );
+  virtual StatusCode queryInterface( const InterfaceID& riid, 
+                                     void** ppvInterface );
   ///     Service type.
-  virtual const IID& type          () const { return IID_ITransportSvc ; } ; 
+  virtual const InterfaceID& type  () const { return IID_ITransportSvc ; } ; 
   ///  
   /** Estimate the distance between 2 points in 
    *  units of radiation length units 

@@ -1,7 +1,7 @@
-# $Id: requirements,v 1.59 2004-07-09 14:19:42 cattanem Exp $ 
+# $Id: requirements,v 1.60 2004-07-21 08:01:54 cattanem Exp $ 
 # =============================================================================
 package       DetDesc
-version       v14r1p1
+version       v14r2
 
 # =========== structure =======================================================
 branches      DetDesc doc cmt src
@@ -11,6 +11,7 @@ include_dirs  $(DETDESCROOT)
 
 # =========== dependencies ====================================================
 use           GaudiKernel       v*
+use           CLHEP             v*	LCG_Interfaces
 
 # =========== constituents =====================================================
 library       DetDescLib        Lib/*.cpp
