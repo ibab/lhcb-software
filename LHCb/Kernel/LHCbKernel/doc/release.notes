@@ -2,6 +2,17 @@ Package LHCbKernel
 Package manager: M.Cattaneo
 Purpose: LHCb specific Kernel classes
 
+! 2004-01-14 - Vanya BELYAEV
+ - Relations subpackage 
+   few tricks to make the Relations "POOL'able"
+   1) all relations now inherit from 
+      IRelationBase interface; this interface has virtual method 
+      "rebuild", whch need to be called in POOL converter after 
+      "reading" of the relatuon table from POOL/ROOT
+   2) All generated classID for rlation classes now
+      have activated bit #31 (see lines #99 in src/RelationUtils.cpp file)
+      (and deactivated  bits "ObjectVector/ObjectList")
+
 !====================== LHCbKernel v4r0 2003-12-15 ========================
 ! 2003-12-15 - Marco Cattaneo
  - Move to GAUDI_v14r0 

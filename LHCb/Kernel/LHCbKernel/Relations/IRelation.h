@@ -1,8 +1,11 @@
-// $Id: IRelation.h,v 1.5 2003-01-17 14:07:01 sponce Exp $
+// $Id: IRelation.h,v 1.6 2004-01-14 15:13:02 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.5  2003/01/17 14:07:01  sponce
+// support for gcc 3.2
+//
 // Revision 1.4  2002/05/10 12:29:42  ibelyaev
 //  see $LHCBKERNELROOT/doc/release.notes 10 May 2002
 //
@@ -11,12 +14,10 @@
 #define RELATIONS_IRELATION_H 1
 // Include files
 #include "Relations/PragmaWarnings.h"
-// GaudiKernel
-#include "GaudiKernel/IInterface.h"
-#include "GaudiKernel/StatusCode.h"
 /// local
 #include "Relations/RelationTypeTraits.h"
 #include "Relations/RelationUtils.h"
+#include "Relations/IRelationBase.h"
 
 /** @class IRelation IRelation.h Relations/IRelation.h
  *
@@ -28,7 +29,7 @@
 
 template<class FROM, class TO>
 class IRelation :
-  public virtual IInterface
+  public virtual IRelationBase
 {
 public:
   
@@ -182,13 +183,6 @@ public:
    */
   virtual StatusCode   removeTo
   ( const To&          object )  = 0 ;
-  
-  /** remove ALL relations from ALL to ALL objects
-   *
-   *  @param  object the object
-   *  @return status code
-   */
-  virtual StatusCode   clear ()  = 0 ;
   
   /** interface identification (static)
    *

@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.45 2004-01-05 14:29:25 cattanem Exp $
+# $Id: requirements,v 1.46 2004-01-14 15:13:03 ibelyaev Exp $
 # =============================================================================
 package LHCbKernel
 author  M.Frank    CERN/LHCb
@@ -38,7 +38,7 @@ apply_pattern linker_library    library=LHCbKernel
 
 # Test applications (currently not available in CVS!)
 #============================================================================
-private
+#private
 #application   RelationTest1  -check     Test/RelationTest1.cpp 
 #application   RelationTest2  -check     Test/RelationTest2.cpp 
 #application   RelationTest3  -check     Test/RelationTest3.cpp 
@@ -50,6 +50,6 @@ private
 #macro_prepend RelationTest4linkopts   " $(LHCbKernel_linkopts) $(use_linkopts) "
 #macro_prepend RelationTest5linkopts   " $(LHCbKernel_linkopts) $(use_linkopts) "
 
-apply_pattern application_path
-path_remove   PATH                  "LHCbKernel"
-path_append   PATH                  ${LHCBKERNELROOT}/${BINDIR}
+#apply_pattern application_path
+#path_remove   PATH                  "LHCbKernel"
+#path_append   PATH                  ${LHCBKERNELROOT}/${BINDIR}

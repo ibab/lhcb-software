@@ -1,8 +1,11 @@
-// $Id: Relation2D.h,v 1.13 2003-12-18 15:32:58 cattanem Exp $
+// $Id: Relation2D.h,v 1.14 2004-01-14 15:13:03 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.13  2003/12/18 15:32:58  cattanem
+// For LHCB v15r0
+//
 // Revision 1.12  2003/11/23 12:42:59  ibelyaev
 //  update to remove multiple and virtual inheritance
 //
@@ -226,6 +229,10 @@ public:  // major functional methods (fast, 100% inline)
   inline  StatusCode i_clear() 
   { return m_base.i_clear() ; };
   
+  /// rebuild ALL relations form ALL  object to ALL objects(fast,100% inline)
+  inline  StatusCode i_rebuild() 
+  { return m_base.i_rebuild() ; };
+  
 public: // abstract methods from interface 
   
   /** retrive all relations from the given object object
@@ -307,10 +314,16 @@ public: // abstract methods from interface
   
   /** remove ALL relations from ALL to ALL objects
    *
-   *  @param  object the object
    *  @return status code
    */
   virtual StatusCode   clear () { return i_clear() ; }
+  
+  /** rebuild ALL relations from ALL  object to ALL objects 
+   *
+   *  @see IRelationBase 
+   *  @return status code
+   */
+  virtual  StatusCode rebuild() { return i_rebuild () ; };
 
 public:  // abstract methods from interface
   

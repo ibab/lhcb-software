@@ -1,8 +1,11 @@
-// $Id: RelationWeighted.h,v 1.7 2003-11-23 12:42:59 ibelyaev Exp $
+// $Id: RelationWeighted.h,v 1.8 2004-01-14 15:13:03 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.7  2003/11/23 12:42:59  ibelyaev
+//  update to remove multiple and virtual inheritance
+//
 // ============================================================================
 #ifndef RELATIONS_RelationWeighted_H 
 #define RELATIONS_RelationWeighted_H 1
@@ -210,6 +213,27 @@ namespace Relations
       if( sc.isFailure() || 0 == m_inverse ) { return sc ; }
       return           m_inverse->i_clear () ; 
     };
+
+    /// rebuild ALL relations from ALL object to ALL objects (fast,100% inline)
+    inline  StatusCode i_rebuild ()
+    { 
+      typedef typename IBase::TypeTraits::Entry _Entry   ;
+      typedef typename std::vector<_Entry>      _Entries ;
+      // 1) get all relations
+      Range r = i_relations();
+      // 2) copy them into temporarry storage 
+      _Entries entries( r.begin() , r.end() );
+      // 3) clear all existing rleations 
+      StatusCode sc =  i_clear()       ; if( sc.isFailure() ) { return sc ; }
+      // 4) reserve space for new relations 
+      sc = reserve( entries.size() )   ; if( sc.isFailure() ) { return sc ; }
+      // 5) build new relations 
+      for( typename _Entries::const_iterator it = entries.begin() ; 
+           entries.end() != it && sc.isSuccess() ; ++it ) 
+      { sc = i_relate( it->from() , it->to() , it->weight() )  ;}
+      return sc ;
+    };
+ 
     
   public:  // abstract methods from interface
     
@@ -344,7 +368,12 @@ namespace Relations
      *  @return status code 
      */
     virtual  StatusCode clear () { return i_clear () ; }
-    
+
+    /** rebuild ALL relations from ALL  object to ALL objects 
+     *  @return status code
+     */
+    virtual  StatusCode rebuild() { return i_rebuild() ;}
+      
   public:
     
     /** query the interface 

@@ -1,8 +1,11 @@
-// $Id: Relation2Weighted.h,v 1.5 2003-11-23 12:42:59 ibelyaev Exp $
+// $Id: Relation2Weighted.h,v 1.6 2004-01-14 15:13:03 ibelyaev Exp $
 // =============================================================================
 // CV Stag $Name: not supported by cvs2svn $
 // =============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.5  2003/11/23 12:42:59  ibelyaev
+//  update to remove multiple and virtual inheritance
+//
 // =============================================================================
 #ifndef RELATIONS_Relation2Weighted_H 
 #define RELATIONS_Relation2Weighted_H 1
@@ -171,6 +174,10 @@ namespace Relations
     
     /// remove ALL relations from ALL objects to ALL objects (fast,100% inline)
     inline  StatusCode i_clear () { return m_direct.i_clear() ; }
+
+    /// rebuild ALL relations form ALL  object to ALL objects(fast,100% inline)
+    inline  StatusCode i_rebuild() 
+    { return m_direct.i_rebuild() ; };
     
   public:  // abstract methods from interface
     
@@ -305,6 +312,13 @@ namespace Relations
      *  @return status code 
      */
     virtual  StatusCode clear () { return i_clear () ; }
+    
+    /** rebuild ALL relations from ALL  object to ALL objects 
+     *
+     *  @see IRelationBase 
+     *  @return status code
+     */
+    virtual  StatusCode rebuild() { return i_rebuild () ; };
 
   public:
     

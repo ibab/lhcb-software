@@ -1,4 +1,4 @@
-// $Id: RelationWeighted1D.h,v 1.13 2003-12-18 15:32:58 cattanem Exp $
+// $Id: RelationWeighted1D.h,v 1.14 2004-01-14 15:13:03 ibelyaev Exp $
 // ============================================================================
 #ifndef RELATIONS_RelationWeighted1D_H 
 #define RELATIONS_RelationWeighted1D_H 1
@@ -256,6 +256,10 @@ public:  // major functional methods (fast, 100% inline)
   /// remove ALL relations from ALL objects to ALL objects (fast,100% inline)
   inline   StatusCode i_clear () { return m_base.i_clear ( ) ; }
   
+  /// rebuild ALL relations form ALL  object to ALL objects(fast,100% inline)
+  inline  StatusCode i_rebuild() 
+  { return m_base.i_rebuild() ; };
+  
 public:  // abstract methods from interface
   
   /** retrive all relations from the object
@@ -389,6 +393,13 @@ public:  // abstract methods from interface
    *  @return status code 
    */
   virtual  StatusCode clear () { return i_clear () ; }
+  
+  /** rebuild ALL relations from ALL  object to ALL objects 
+   *
+   *  @see IRelationBase 
+   *  @return status code
+   */
+  virtual  StatusCode rebuild() { return i_rebuild () ; };
 
 public:
   
