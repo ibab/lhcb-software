@@ -8,7 +8,7 @@ branches doc cmt
 #===============================================================
 use LHCb		v11r11
 
-use GaudiConf		v6r6
+use GaudiConf		v6r7
 
 use BookKeeping 	v1r1	Tools
 
@@ -81,6 +81,7 @@ use Futil        	v12r0   SICB
 use detdes       	v21r0   SICB
 
 # LHCb  Examples
+use SicbToOORawh	v1r0	SICB
 use DetDescExample      v5r2    Ex
 use DumpEventExample    v6r2    Ex
 
