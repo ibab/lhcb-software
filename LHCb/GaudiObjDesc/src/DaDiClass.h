@@ -1,13 +1,8 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/GaudiObjDesc/src/DaDiClass.h,v 1.16 2002-02-13 20:44:39 mato Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/GaudiObjDesc/src/DaDiClass.h,v 1.17 2002-02-27 13:25:34 mato Exp $
 #ifndef DADICLASS_H 
 #define DADICLASS_H 1
 
 // Include files
-#include <list>
-#include <string>
-
-#include "dom/DOMString.hpp"
-
 #include "DaDiRelation.h"
 #include "DaDiMethod.h"
 #include "DaDiAttribute.h"
@@ -17,6 +12,11 @@
 #include "DaDiEnum.h"
 #include "DaDiLocation.h"
 #include "DaDiTypeDef.h"
+
+#include "dom/DOMString.hpp"
+
+#include <list>
+#include <string>
 
 /** @class DaDiClass DaDiClass.h
  *  

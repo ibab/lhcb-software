@@ -1,6 +1,17 @@
-// $Id: DaDiCppHeader.cpp,v 1.45 2002-02-22 16:52:21 mato Exp $
+// $Id: DaDiCppHeader.cpp,v 1.46 2002-02-27 13:25:34 mato Exp $
 
-#include "GaudiKernel/Kernel.h"
+//#include "GaudiKernel/Kernel.h"
+
+#include "DaDiTools.h"
+#include "DaDiCppHeader.h"
+#include "DaDiPackage.h"
+
+#include "parsers/DOMParser.hpp"
+#include "dom/DOM_DOMException.hpp"
+#include "dom/DOM_NodeList.hpp"
+#include "dom/DOM_Element.hpp"
+#include "dom/DOM_NamedNodeMap.hpp"
+#include "dom/DOMString.hpp"
 
 #include <vector>
 #include <ctime>
@@ -11,17 +22,6 @@
 #include <map>
 #include <algorithm>
 
-#include "parsers/DOMParser.hpp"
-#include "dom/DOM_DOMException.hpp"
-#include <dom/DOM_NodeList.hpp>
-#include <dom/DOM_Element.hpp>
-#include <dom/DOM_NamedNodeMap.hpp>
-#include <dom/DOMString.hpp>
-
-#include "DaDiCppHeader.h"
-#include "DaDiPackage.h"
-#include "DaDiTools.h"
-
 //-----------------------------------------------------------------------------
 // Implementation file for class : DaDiCppHeader
 //
@@ -29,9 +29,12 @@
 //----------------------------------------------------------------------------
 
 std::vector<std::string> ContainedObjectClasses, KeyedObjectClasses;
+extern std::string xmlVersion;
 
 
+//-----------------------------------------------------------------------------
 std::string printPlural(const std::string& singular)
+//-----------------------------------------------------------------------------
 {
   std::map<std::string,std::string> exceptions;
   std::map<std::string,std::string>::iterator iter;
@@ -297,7 +300,7 @@ void printSetGetAttDecl(std::ofstream& xmlOut,
     if(gddAttGetMeth == accessor)
     {
       xmlOut << "  /// Retrieve " << gddAttDesc << std::endl << "  ";
-      if (!DaDiTools::isSimple(gddAttType))
+      if (!DaDiTools::isFundamental(gddAttType) || DaDiTools::isPointer(gddAttType))
       {
         xmlOut << "const ";
       }
@@ -306,8 +309,22 @@ void printSetGetAttDecl(std::ofstream& xmlOut,
       {
         xmlOut << "&";
       }
-      xmlOut << " " << gddAttName << "() const; "  << std::endl 
+      xmlOut << " " << DaDiTools::retGetName(gddAttName) << "() const; "  
+          << std::endl 
         << std::endl;
+
+      if (!DaDiTools::isFundamental(gddAttType))
+      {
+        xmlOut << "  /// Retrieve " << gddAttDesc << " (non-const)" << std::endl
+          << "  " << gddAttType;
+        if (!DaDiTools::isPointer(gddAttType))
+        {
+          xmlOut << "&";
+        }
+        xmlOut << " " << DaDiTools::retGetName(gddAttName) 
+            << "();" << std::endl
+          << std::endl;
+      }
     }
       
     if(gddAttSetMeth == accessor)
@@ -350,7 +367,7 @@ void printSetGetAttImpl(std::ofstream& xmlOut,
     if(gddAttGetMeth == accessor)
     {
       xmlOut << "inline ";
-      if (!DaDiTools::isSimple(gddAttType))
+      if (!DaDiTools::isFundamental(gddAttType) || DaDiTools::isPointer(gddAttType))
       {
         xmlOut << "const ";
       }      
@@ -359,11 +376,27 @@ void printSetGetAttImpl(std::ofstream& xmlOut,
       {
         xmlOut << "&";
       }
-      xmlOut << " " << gddClassName << "::"  << gddAttName << "() const " << std::endl 
+      xmlOut << " " << gddClassName << "::"  
+          << DaDiTools::retGetName(gddAttName) << "() const " << std::endl 
         << "{" << std::endl 
         << "  return m_" << gddAttName << ";" << std::endl 
         << "}" << std::endl 
         << std::endl ;
+
+      if (!DaDiTools::isFundamental(gddAttType) || DaDiTools::isPointer(gddAttType))
+      {
+        xmlOut << "inline " << gddAttType;
+        if (!DaDiTools::isPointer(gddAttType))
+        {
+          xmlOut << "&";
+        }
+        xmlOut << " " << gddClassName << "::" << DaDiTools::retGetName(gddAttName) << "()" 
+            << std::endl
+          << "{" << std::endl
+          << "  return m_" << gddAttName << ";" << std::endl
+          << "}" << std::endl
+          << std::endl;
+      }
     }
       
     if(gddAttSetMeth == accessor)
@@ -430,28 +463,37 @@ void printSetGetRelDecl(std::ofstream& xmlOut,
 
     if (gddRelGetMeth == accessor)
     {
-      xmlOut << "  /// Retrieve " << gddRelDesc << std::endl;
       if( gddRelRatio == "1")
       {
-        xmlOut << "  const " << gddRelType << "* " << gddRelName << "() const;" << std::endl
-          << "  " << gddRelType << "* " << gddRelName << "();" << std::endl 
+        xmlOut << "  /// Retrieve " << gddRelDesc << " (const)" << std::endl
+          << "  const " << gddRelType << "* " << DaDiTools::retGetName(gddRelName) 
+            << "() const;" << std::endl
+          << std::endl
+          << "  /// Retrieve " << gddRelDesc << " (non-const)" << std::endl
+          << "  " << gddRelType << "* " << DaDiTools::retGetName(gddRelName) 
+            << "();" << std::endl 
           << std::endl;
       } 
       else 
       {
-        xmlOut << "  const " << get_ret << gddRelType << ">& " << gddRelName 
-            << "() const;" << std::endl 
+        xmlOut << "  /// Retrieve " << gddRelDesc << " (const)" << std::endl
+          << "  const " << get_ret << gddRelType << ">& " 
+            << DaDiTools::retGetName(gddRelName) << "() const;" << std::endl 
+          << std::endl
+          << "  /// Retrieve " << gddRelDesc << " (non-const)" << std::endl
+          << "  " << get_ret << gddRelType << ">& " 
+            << DaDiTools::retGetName(gddRelName) << "();" << std::endl 
           << std::endl;
       }
     }
     if (gddRelSetMeth == accessor)
     {
       xmlOut << "  /// Update " << gddRelDesc << std::endl;
-      if (gddRelRatio == "1") 
+      /*if (gddRelRatio == "1") 
       {
         xmlOut << "  void " << "set" << DaDiTools::firstUp(gddRelName) << "(const " 
           << gddRelType << "* value); " << std::endl;
-      }
+      }*/
       xmlOut  << "  void " << "set" << DaDiTools::firstUp(gddRelName) << "(const " 
           << set_arg << gddRelType << ">& value);" << std::endl 
         << std::endl;
@@ -461,16 +503,16 @@ void printSetGetRelDecl(std::ofstream& xmlOut,
       if (gddRelAddMeth == accessor)
       {
         xmlOut << "  /// Add " << gddRelDesc << std::endl
-          << "  void " << "addTo" << DaDiTools::firstUp(gddRelName) << "(" << gddRelType 
-          << "* value);" << std::endl 
+          /*<< "  void " << "addTo" << DaDiTools::firstUp(gddRelName) << "(" << gddRelType 
+            << "* value);" << std::endl */ 
           << "  void " << "addTo" << DaDiTools::firstUp(gddRelName) << "(const " << add_arg 
           << gddRelType << ">& value); " << std::endl << std::endl;
       }
       if (gddRelRemMeth == accessor)
       {
         xmlOut << "  /// Remove " << gddRelDesc << std::endl
-          << "  void " << "removeFrom" << DaDiTools::firstUp(gddRelName) << "("
-            << gddRelType << "* value);" << std::endl
+          /*<< "  void " << "removeFrom" << DaDiTools::firstUp(gddRelName) << "("
+            << gddRelType << "* value);" << std::endl */
           << "  void " << "removeFrom" << DaDiTools::firstUp(gddRelName)
             << "(const SmartRef<" << gddRelType << ">& value); " << std::endl 
           << std::endl;
@@ -532,20 +574,30 @@ void printSetGetRelImpl(std::ofstream& xmlOut,
       if (gddRelRatio == "1")
       {
         xmlOut << "inline const " << gddRelType << "* " 
-            << gddClassName << "::"<< gddRelName << "() const" << std::endl 
+            << gddClassName << "::"<< DaDiTools::retGetName(gddRelName) 
+            << "() const" << std::endl 
           << "{" << std::endl 
           << "   return m_" << gddRelName << ";" << std::endl 
           << "}" << std::endl 
           << std::endl;
         xmlOut << "inline " << gddRelType << "* "
-            << gddClassName << "::" << gddRelName << "() " << std::endl 
+            << gddClassName << "::" << DaDiTools::retGetName(gddRelName) 
+            << "() " << std::endl 
           << "{" << std::endl 
           << "   return m_" << gddRelName << ";" << std::endl 
           << "}" << std::endl 
           << std::endl;
       } else {
         xmlOut << "inline const " << get_ret << gddRelType << ">& "
-            << gddClassName << "::" << gddRelName << "() const" << std::endl 
+            << gddClassName << "::" << DaDiTools::retGetName(gddRelName) 
+            << "() const" << std::endl 
+          << "{" << std::endl 
+          << "   return m_" << gddRelName << ";" << std::endl 
+          << "}" << std::endl 
+          << std::endl
+          << "inline " << get_ret << gddRelType << ">& "
+            << gddClassName << "::" << DaDiTools::retGetName(gddRelName) 
+            << "()" << std::endl 
           << "{" << std::endl 
           << "   return m_" << gddRelName << ";" << std::endl 
           << "}" << std::endl 
@@ -554,7 +606,7 @@ void printSetGetRelImpl(std::ofstream& xmlOut,
     }
     if (gddRelSetMeth == accessor)
     { 
-      if (gddRelRatio == "1") 
+      /*if (gddRelRatio == "1") 
       { 
         xmlOut << "inline void " << gddClassName << "::" << "set" 
             << DaDiTools::firstUp(gddRelName) << "(const " << gddRelType << "* value)" << std::endl 
@@ -562,7 +614,7 @@ void printSetGetRelImpl(std::ofstream& xmlOut,
           << "   m_" << gddRelName << " = value;" << std::endl 
           << "}" << std::endl 
           << std::endl;
-      }
+      }*/
       xmlOut  << "inline void " << gddClassName << "::" << "set" 
           << DaDiTools::firstUp(gddRelName) << "(const " << set_arg << gddRelType 
           << ">& value)" << std::endl 
@@ -575,11 +627,14 @@ void printSetGetRelImpl(std::ofstream& xmlOut,
     {
       if (gddRelAddMeth == accessor)
       {
-        xmlOut << "inline void " << gddClassName << "::" 
-          << "addTo" << DaDiTools::firstUp(gddRelName) 
-          << "(" << gddRelType << "* value)" << std::endl << "{" << std::endl 
-          << "   m_"  << gddRelName << ".push_back(value);"
-          << std::endl << "}" << std::endl << std::endl 
+        xmlOut 
+          /*<< "inline void " << gddClassName << "::" << "addTo" 
+          << DaDiTools::firstUp(gddRelName) << "(" << gddRelType 
+            << "* value)" << std::endl 
+          << "{" << std::endl 
+          << "   m_"  << gddRelName << ".push_back(value);" << std::endl 
+          << "}" << std::endl 
+          << std::endl*/ 
           << "inline void " << gddClassName << "::" 
           << "addTo" << DaDiTools::firstUp(gddRelName) 
           << "(const " << add_arg << gddRelType << ">& value)" << std::endl 
@@ -589,7 +644,8 @@ void printSetGetRelImpl(std::ofstream& xmlOut,
 
       if (gddRelRemMeth == accessor)
       {
-        xmlOut << "inline void " << gddClassName << "::"
+        xmlOut 
+          /*<< "inline void " << gddClassName << "::"
             << "removeFrom" << DaDiTools::firstUp(gddRelName)
             << "(" << gddRelType << "* value)"  << std::endl 
           << "{" << std::endl 
@@ -603,8 +659,8 @@ void printSetGetRelImpl(std::ofstream& xmlOut,
           << "    }" << std::endl 
           << "  }" << std::endl 
           << "}" << std::endl 
-          << std::endl 
-          << "inline void " << gddClassName << "::" 
+          << std::endl */ 
+          /*<< "inline void " << gddClassName << "::" 
             << "removeFrom" << DaDiTools::firstUp(gddRelName) 
             << "(const SmartRef<" << gddRelType << ">& value)" << std::endl 
           << "{" << std::endl 
@@ -616,8 +672,21 @@ void printSetGetRelImpl(std::ofstream& xmlOut,
           << "    m_" << gddRelName << ".erase(iter);" << std::endl 
           << "  }" << std::endl 
           << "}" << std::endl 
+          << std::endl;*/
+        
+          << "inline void " << gddClassName << "::" 
+            << "removeFrom" << DaDiTools::firstUp(gddRelName) 
+            << "(const SmartRef<" << gddRelType << ">& value)" << std::endl 
+          << "{" << std::endl 
+          << "  SmartRefVector<" << gddRelType << ">::iterator iter =" << std::endl
+		      << "    std::remove(m_" << gddRelName << ".begin(), m_" 
+            << gddRelName << ".end(), value);" << std::endl 
+          << "  m_" << gddRelName << ".erase(iter, m_" << gddRelName 
+            << ".end());" << std::endl
+          << "}" << std::endl 
           << std::endl;        
       }
+
       if (gddRelClrMeth == accessor)
       {
         xmlOut << "inline void " << gddClassName << "::"
@@ -1086,8 +1155,8 @@ void printClass(std::ofstream& xmlOut,
           initValue = "0.0";
         }
 
-        if (initValue != "")
-        {
+//        if (initValue != "")
+//        {
           if (firstLine)
           {
             xmlOut << std::endl 
@@ -1100,7 +1169,7 @@ void printClass(std::ofstream& xmlOut,
               << "    ";
           }
           xmlOut << "m_" << gddAttName << "(" << initValue << ")";
-        }
+//        }
       }
     }
     xmlOut << " {}" << std::endl 
@@ -2073,6 +2142,10 @@ void printCppHeader(DaDiPackage* gddPackage,
     {
       noImports.push_back(gddNamespace->popNoImports());
     }
+    for (i=0; i<gddPackage->sizeNoImports(); ++i)
+    {
+      noImports.push_back(gddNamespace->popNoImports());
+    }
     
     char* fileName = new char[256];
     strcpy(fileName, envOut);
@@ -2271,6 +2344,10 @@ void printCppHeader(DaDiPackage* gddPackage,
     noImports.clear();
 
     for (i=0; i<gddClass->sizeNoImports(); ++i)
+    {
+      noImports.push_back(gddClass->popNoImports());
+    }
+    for (i=0; i<gddPackage->sizeNoImports(); ++i)
     {
       noImports.push_back(gddClass->popNoImports());
     }

@@ -9,6 +9,7 @@
 	name CDATA #REQUIRED
 	std (TRUE | FALSE) "FALSE"
 	soft (TRUE | FALSE) "FALSE"
+      ignore (TRUE | FALSE) "FALSE"
 >
 <!ELEMENT package ((import*, class*, namespace*)*)>
 <!ATTLIST package

@@ -1,13 +1,14 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/GaudiObjDesc/src/DaDiFrontEnd.h,v 1.4 2002-01-31 09:15:43 mato Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/GaudiObjDesc/src/DaDiFrontEnd.h,v 1.5 2002-02-27 13:25:35 mato Exp $
 #ifndef DADI_FRONTEND_H 
 #define DADI_FRONTEND_H 1
 
-#include <iostream>
-#include <dom/DOM_Node.hpp>
-#include <list>
-
 #include "DaDiTools.h"
 #include "DaDiPackage.h"
+
+#include "dom/DOM_Node.hpp"
+
+#include <iostream>
+#include <list>
 
 /** @class DDFE DaDiFrontEnd.h
  *  

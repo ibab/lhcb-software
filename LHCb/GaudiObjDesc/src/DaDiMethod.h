@@ -1,14 +1,14 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/GaudiObjDesc/src/DaDiMethod.h,v 1.5 2002-01-30 20:29:05 mato Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/GaudiObjDesc/src/DaDiMethod.h,v 1.6 2002-02-27 13:25:35 mato Exp $
 #ifndef DADIMETHOD_H 
 #define DADIMETHOD_H 1
 
 // Include files
-#include <list>
+#include "DaDiMethReturn.h"
+#include "DaDiMethArgument.h"
 
 #include "dom/DOMString.hpp"
 
-#include "DaDiMethReturn.h"
-#include "DaDiMethArgument.h"
+#include <list>
 
 /** @class DaDiMethod DaDiMethod.h
  *  

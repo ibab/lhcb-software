@@ -1,10 +1,10 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/GaudiObjDesc/src/DaDiCppDict.h,v 1.1.1.1 2001-10-03 16:39:17 mato Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/GaudiObjDesc/src/DaDiCppDict.h,v 1.2 2002-02-27 13:25:34 mato Exp $
 #ifndef DADICPPDICT_H 
 #define DADICPPDICT_H 1
 
 // Include files
-#include "DaDiFrontEnd.h"
 #include "DaDiTools.h"
+#include "DaDiFrontEnd.h"
 #include "DaDiPackage.h"
 
 /** @class DaDiCppHeader DaDiCppHeader.h

@@ -3,12 +3,12 @@
 #define DADICONSTRUCTOR_H 1
 
 // Include files
-#include <list>
+#include "DaDiMethReturn.h"
+#include "DaDiMethArgument.h"
 
 #include "dom/DOMString.hpp"
 
-#include "DaDiMethReturn.h"
-#include "DaDiMethArgument.h"
+#include <list>
 
 /** @class DaDiMethod DaDiMethod.h
  *  

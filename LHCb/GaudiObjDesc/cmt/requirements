@@ -3,8 +3,7 @@ version v3r2
 
 branches doc cmt src
 
-use GaudiKernel v11r*
-use XERCES v15r*
+use XERCES v16r*
 use GaudiIntrospection v3r* 
 
 # Macro defintion used by both fragments below

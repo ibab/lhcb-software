@@ -1,15 +1,15 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/GaudiObjDesc/src/DaDiNamespace.h,v 1.4 2002-02-13 20:44:40 mato Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/GaudiObjDesc/src/DaDiNamespace.h,v 1.5 2002-02-27 13:25:35 mato Exp $
 #ifndef DADINAMESPACE_H 
 #define DADINAMESPACE_H 1
 
 // Include files
-#include <list>
-#include <string>
+#include "DaDiClass.h"
+#include "DaDiEnum.h"
 
 #include "dom/DOMString.hpp"
 
-#include "DaDiClass.h"
-#include "DaDiEnum.h"
+#include <list>
+#include <string>
 
 /** @class DaDiNamespace DaDiNamespace.h
  *  

@@ -2,6 +2,15 @@ Package: GaudiObjDesc
 Desccription: This package contains a set of tools used to generate code from the XML description of the data object classes.
 Package manager : Stefan Roiser
 
+! 20020227 - Stefan Roiser
+ - GaudiObjDesc independent from GaudiKernel
+ - added tag 'ignore' to <import>-element for non-inclusion of types
+ - new naming-conventions for getters with abbreviations
+ - non-const getter for non-simple attributes, 1-M relations and pointers
+ - empty initialization of members in standard-constructor when initialization-value is given
+ - only one setter for 1-1-relations with SmartRef<Type> as argument 
+ - only one addTo- and removeFrom-function for 1-M-relations with SmartRef<Type> as argument
+
 ================v3r1=====================================
 ! 20020214 - Stefan Roiser
  - added <typedef> and <desc> as sub-elements of <namespace>

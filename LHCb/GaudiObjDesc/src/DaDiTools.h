@@ -1,18 +1,28 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/GaudiObjDesc/src/DaDiTools.h,v 1.6 2002-02-22 16:52:22 mato Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/GaudiObjDesc/src/DaDiTools.h,v 1.7 2002-02-27 13:25:35 mato Exp $
 #ifndef DADITOOLS_H 
 #define DADITOOLS_H 1
 
+// Some pragmas to avoid warnings in VisualC
+#ifdef WIN32
+  // Disable warning C4786: identifier was truncated to '255' characters in the debug information
+  #pragma warning ( disable : 4786 )
+  // Disable warning C4291: no matching operator delete found; memory will not be freed if initialization throws an exception
+  #pragma warning ( disable : 4291 )
+  // Disable warning C4250: inheritance via dominance
+  #pragma warning ( disable : 4250 )
+#endif
+
 // Include files
-#include "GaudiKernel/Kernel.h"
+//#include "GaudiKernel/Kernel.h"
 
 #include <iostream>
 #include <string>
 #include <vector>
 
-#include <sax/SAXParseException.hpp>
-#include <sax/ErrorHandler.hpp>
-#include <dom/DOMString.hpp>
-#include <util/XercesDefs.hpp>
+#include "sax/SAXParseException.hpp"
+#include "sax/ErrorHandler.hpp"
+#include "dom/DOMString.hpp"
+#include "util/XercesDefs.hpp"
 
 
 /** @class DaDiTools DaDiTools.h
@@ -45,6 +55,7 @@ public:
   static bool isStdContainer(std::string value);
   static std::string containerType(std::string value);
   static std::string firstUp(const std::string& s);
+  static std::string retGetName(const std::string& s);
 
   static void pushAddImport(std::string value);
   static const std::vector<std::string>& addImport();

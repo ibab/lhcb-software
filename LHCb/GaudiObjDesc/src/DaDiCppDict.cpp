@@ -1,6 +1,16 @@
-// $Id: DaDiCppDict.cpp,v 1.15 2002-02-22 16:52:21 mato Exp $
+// $Id: DaDiCppDict.cpp,v 1.16 2002-02-27 13:25:34 mato Exp $
 
-#include "GaudiKernel/Kernel.h"
+//#include "GaudiKernel/Kernel.h"
+#include "DaDiTools.h"
+#include "DaDiCppDict.h"
+#include "DaDiPackage.h"
+
+#include "parsers/DOMParser.hpp"
+#include "dom/DOM_DOMException.hpp"
+#include "dom/DOM_NodeList.hpp"
+#include "dom/DOM_Element.hpp"
+#include "dom/DOM_NamedNodeMap.hpp"
+#include "dom/DOMString.hpp"
 
 #include <ctime>
 #include <iostream>
@@ -9,17 +19,6 @@
 #include <string>
 #include <map>
 #include <vector>
-
-#include "parsers/DOMParser.hpp"
-#include "dom/DOM_DOMException.hpp"
-#include <dom/DOM_NodeList.hpp>
-#include <dom/DOM_Element.hpp>
-#include <dom/DOM_NamedNodeMap.hpp>
-#include <dom/DOMString.hpp>
-
-#include "DaDiCppDict.h"
-#include "DaDiPackage.h"
-#include "DaDiTools.h"
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : DaDiCppHeader

@@ -1,14 +1,14 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/GaudiObjDesc/src/DaDiPackage.h,v 1.6 2002-01-28 18:49:18 mato Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/GaudiObjDesc/src/DaDiPackage.h,v 1.7 2002-02-27 13:25:35 mato Exp $
 #ifndef DADIPACKAGE_H 
 #define DADIPACKAGE_H 1
 
 // Include files
-#include <list>
+#include "DaDiNamespace.h"
+#include "DaDiClass.h"
 
 #include "dom/DOMString.hpp"
 
-#include "DaDiNamespace.h"
-#include "DaDiClass.h"
+#include <list>
 
 /** @class DaDiPackage DaDiPackage.h
  *  
@@ -41,6 +41,10 @@ public:
   int sizeImportList();
   void remDblImportList();
   
+	std::string popNoImports();
+	void pushNoImports(std::string value);
+	int sizeNoImports();
+
   DaDiClass* popDaDiClass();
   void pushDaDiClass(DaDiClass* value);
   int sizeDaDiClass();
@@ -56,7 +60,8 @@ private:
   DOMString                 m_packageName;
   std::list<std::string>    m_impSoftList,
                             m_impStdList,
-                            m_importList;
+                            m_importList,
+                            m_noImports;
   std::list<DaDiClass*>     m_daDiClass;
   std::list<DaDiNamespace*> m_daDiNamespace;
 
@@ -200,6 +205,24 @@ inline void DaDiPackage::remDblImportList()
 {
 	m_importList.sort();
 	m_importList.unique();
+}
+
+inline std::string DaDiPackage::popNoImports()
+{
+	std::string pt = m_noImports.front();
+	m_noImports.push_back(pt);
+	m_noImports.pop_front();
+	return pt;
+}
+
+inline void DaDiPackage::pushNoImports(std::string value)
+{
+  m_noImports.push_back(value);
+}
+
+inline int DaDiPackage::sizeNoImports()
+{
+	return m_noImports.size();
 }
 
 inline DaDiClass* DaDiPackage::popDaDiClass()

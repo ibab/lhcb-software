@@ -1,13 +1,14 @@
-// $Id: DaDiTools.cpp,v 1.9 2002-02-22 16:52:22 mato Exp $
+// $Id: DaDiTools.cpp,v 1.10 2002-02-27 13:25:35 mato Exp $
 
 
 // Include files
+#include "DaDiTools.h"
+
+#include "dom/DOMString.hpp"
+
 #include <iostream>
 #include <fstream>
 #include <string>
-#include <dom/DOMString.hpp>
-
-#include "DaDiTools.h"
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : DadiTools
@@ -186,6 +187,35 @@ std::string DaDiTools::firstUp(const std::string& s)
   r = toupper(s[0]);
   r += s.substr(1,std::string::npos);
   return r;
+}
+
+//-----------------------------------------------------------------------------
+std::string DaDiTools::retGetName(const std::string& s)
+//-----------------------------------------------------------------------------
+{
+  int strLen = s.length(), i=0;
+  std::string retStr;
+
+  if (islower(s[0]))
+  { 
+    return s;
+  }
+  else
+  {
+    for (i=1; i<strLen; ++i)
+    {
+      if (isupper(s[i]))
+      {
+        retStr += tolower(s[i-1]);
+      }
+      else
+      {
+        retStr += s[i-1];
+      }
+    }
+    retStr += tolower(s[strLen-1]);
+  }
+  return retStr;
 }
 
 //-----------------------------------------------------------------------------

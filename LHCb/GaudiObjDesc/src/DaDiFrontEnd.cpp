@@ -1,25 +1,24 @@
-// $Id: DaDiFrontEnd.cpp,v 1.29 2002-02-22 16:52:22 mato Exp $
+// $Id: DaDiFrontEnd.cpp,v 1.30 2002-02-27 13:25:35 mato Exp $
 
-#include "GaudiKernel/Kernel.h"
+//#include "GaudiKernel/Kernel.h"
+#include "DaDiTools.h"
+#include "DaDiFrontEnd.h"
+#include "DaDiPackage.h"
+
+#include "util/PlatformUtils.hpp"
+#include "util/XMLUniDefs.hpp"
+#include "parsers/DOMParser.hpp"
+#include "dom/DOM_NodeList.hpp"
+#include "dom/DOM_Element.hpp"
+#include "dom/DOM_DOMException.hpp"
+#include "dom/DOM_NamedNodeMap.hpp"
+#include "dom/DOMString.hpp"
 
 #include <iostream>
 #include <string>
 #include <list>
 #include <ctime>
 #include <vector>
-
-#include <util/PlatformUtils.hpp>
-#include <util/XMLUniDefs.hpp>
-#include <parsers/DOMParser.hpp>
-#include <dom/DOM_NodeList.hpp>
-#include <dom/DOM_Element.hpp>
-#include <dom/DOM_DOMException.hpp>
-#include <dom/DOM_NamedNodeMap.hpp>
-#include <dom/DOMString.hpp>
-
-#include "DaDiTools.h"
-#include "DaDiFrontEnd.h"
-#include "DaDiPackage.h"
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : Dadi
@@ -30,6 +29,7 @@
 extern std::string argV0;
 
 DaDiClass* gddClass;
+std::string xmlVersion;
 
 
 //-----------------------------------------------------------------------------
@@ -108,7 +108,7 @@ template<class T> void parseImport(DOM_Node node,
                                    T* element)
 //-----------------------------------------------------------------------------
 {  
-  std::string import_name, import_soft, import_std;
+  std::string import_name, import_soft, import_std, import_ignore;
   
   import_name = node.getAttributes().
     getNamedItem(DOMString::transcode("name")).getNodeValue().transcode();
@@ -116,25 +116,34 @@ template<class T> void parseImport(DOM_Node node,
     getNamedItem(DOMString::transcode("soft")).getNodeValue().transcode();
   import_std = node.getAttributes().
     getNamedItem(DOMString::transcode("std")).getNodeValue().transcode();
+  import_ignore = node.getAttributes().
+    getNamedItem(DOMString::transcode("ignore")).getNodeValue().transcode();
 
-  if (import_soft == "TRUE")
+  if (import_ignore == "TRUE")
   {
-    element->pushImpSoftList(import_name);
-  }
-  else if (import_std == "TRUE")
-  {
-    element->pushImpStdList(import_name);
+    element->pushNoImports(import_name);
   }
   else
   {
-    if (import_name.find("/") == std::string::npos)
+    if (import_soft == "TRUE")
     {
-      element->pushImportList(import_name);
+      element->pushImpSoftList(import_name);
+    }
+    else if (import_std == "TRUE")
+    {
+      element->pushImpStdList(import_name);
     }
     else
     {
-      DaDiTools::pushAddImport(import_name);
-      element->pushImportList(import_name.substr(import_name.find_last_of("/")+1, std::string::npos));
+      if (import_name.find("/") == std::string::npos)
+      {
+        element->pushImportList(import_name);
+      }
+      else
+      {
+        DaDiTools::pushAddImport(import_name);
+        element->pushImportList(import_name.substr(import_name.find_last_of("/")+1, std::string::npos));
+      }
     }
   }
 }
@@ -1313,11 +1322,18 @@ DaDiPackage* DDFE::DaDiFrontEnd(char* filename)
     DOM_Node top = doc.getFirstChild();
 
     while (!top.getNodeName().equals("gdd"))
-        {
+    {
       top = top.getNextSibling();
-        }
+    }
+    
+    DOM_Node gdd_node = top.getNextSibling();
+
+    xmlVersion = gdd_node.getAttributes().
+      getNamedItem(DOMString::transcode("version")).
+      getNodeValue().transcode();
       
-    DOM_Node gdd_node = top.getNextSibling().getFirstChild();
+    gdd_node = gdd_node.getFirstChild();
+
     while (!gdd_node.isNull())
     {
       if (gdd_node.getNodeName().equals("import"))
@@ -1337,6 +1353,7 @@ DaDiPackage* DDFE::DaDiFrontEnd(char* filename)
       }
       gdd_node = gdd_node.getNextSibling();
     }
+    std::cout << xmlVersion << std::endl;
   }
   return gddPackage;
 }
