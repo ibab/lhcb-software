@@ -4,8 +4,11 @@
  *  Header file for detector description class : DeRich2HPDPanel
  *
  *  CVS Log :-
- *  $Id: DeRich2HPDPanel.h,v 1.13 2004-10-20 16:16:36 jonrob Exp $
+ *  $Id: DeRich2HPDPanel.h,v 1.14 2004-10-20 17:02:44 jonrob Exp $
  *  $Log: not supported by cvs2svn $
+ *  Revision 1.13  2004/10/20 16:16:36  jonrob
+ *  More minor updates to functions (adding const etc.)
+ *
  *  Revision 1.12  2004/10/18 09:21:49  jonrob
  *  Minor updates to functions (adding const etc.)
  *
@@ -107,7 +110,7 @@ public:
    * @return Global point.
    */
   virtual HepPoint3D globalPosition( const HepPoint3D& localPoint,
-                                     const Rich::Side side);
+                                     const Rich::Side side) const;
 
 protected:
 

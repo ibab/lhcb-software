@@ -4,8 +4,11 @@
  *  Header file for detector description class : DeRichHPDPanel
  *
  *  CVS Log :-
- *  $Id: DeRichHPDPanel.h,v 1.18 2004-10-20 16:16:36 jonrob Exp $
+ *  $Id: DeRichHPDPanel.h,v 1.19 2004-10-20 17:02:44 jonrob Exp $
  *  $Log: not supported by cvs2svn $
+ *  Revision 1.18  2004/10/20 16:16:36  jonrob
+ *  More minor updates to functions (adding const etc.)
+ *
  *  Revision 1.17  2004/10/18 09:21:49  jonrob
  *  Minor updates to functions (adding const etc.)
  *
@@ -117,7 +120,7 @@ public:
    * @retval StatusCode::FAILURE Point outside silicon pixel sensor
    */
   virtual StatusCode smartID( const HepPoint3D& globalPoint,
-                              RichSmartID& id );
+                              RichSmartID& id ) const;
 
   /**
    * Converts a RichSmartID to a point in global coordinates. The point is
@@ -126,7 +129,7 @@ public:
    * @return Status of conversion
    */
   virtual StatusCode detectionPoint( const RichSmartID& smartID,
-                                     HepPoint3D& windowHitGlobal );
+                                     HepPoint3D& windowHitGlobal ) const;
   /**
    * Returns the intersection point with an HPD window given a vector
    * and a point. With the "circle" option a quick check is performed
@@ -147,7 +150,7 @@ public:
                                     const HepPoint3D& pGlobal,
                                     HepPoint3D& windowPointGlobal, // return
                                     RichSmartID& smartID,          // return
-                                    const RichTraceMode mode );
+                                    const RichTraceMode mode ) const;
 
   /**
    * Returns the intersection point with the detector plane given a vector
@@ -160,7 +163,7 @@ public:
   virtual bool detPlanePoint( const HepPoint3D& pGlobal,
                               const HepVector3D& vGlobal,
                               HepPoint3D& hitPosition,
-                              const RichTraceMode mode );
+                              const RichTraceMode mode ) const;
 
   /**
    * Converts a global position to the coordinate system of the
@@ -169,7 +172,7 @@ public:
    *
    * @return Local (panel) point
    */
-  virtual HepPoint3D globalToPDPanel( const HepPoint3D& globalPoint );
+  virtual HepPoint3D globalToPDPanel( const HepPoint3D& globalPoint ) const;
 
 
   /**
@@ -179,7 +182,7 @@ public:
    * @return Global point.
    */
   virtual HepPoint3D globalPosition( const HepPoint3D& localPoint,
-                                     const Rich::Side side) = 0;
+                                     const Rich::Side side) const = 0;
 
 
   /**

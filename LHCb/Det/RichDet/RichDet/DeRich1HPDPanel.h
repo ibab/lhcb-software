@@ -4,8 +4,11 @@
  *  Header file for detector description class : DeRich1HPDPanel
  *
  *  CVS Log :-
- *  $Id: DeRich1HPDPanel.h,v 1.14 2004-10-20 16:16:36 jonrob Exp $
+ *  $Id: DeRich1HPDPanel.h,v 1.15 2004-10-20 17:02:44 jonrob Exp $
  *  $Log: not supported by cvs2svn $
+ *  Revision 1.14  2004/10/20 16:16:36  jonrob
+ *  More minor updates to functions (adding const etc.)
+ *
  *  Revision 1.13  2004/10/18 09:21:49  jonrob
  *  Minor updates to functions (adding const etc.)
  *
@@ -112,7 +115,7 @@ public:
    * @return Global point.
    */
   virtual HepPoint3D globalPosition( const HepPoint3D& localPoint,
-                                     Rich::Side side);
+                                     const Rich::Side side) const;
 
 protected:
 
@@ -127,7 +130,7 @@ protected:
   /**
    * Returns the HPD row in the panel, given the HPD number
    */
-  inline unsigned int PDRow(const unsigned int PD) const 
+  inline virtual unsigned int PDRow(const unsigned int PD) const 
   {
     return PD/m_HPDColumns;
   }
@@ -135,7 +138,7 @@ protected:
   /**
    * Returns the HPD column in the panel, given the HPD number
    */
-  inline unsigned int PDCol(const unsigned int PD) const
+  inline virtual unsigned int PDCol(const unsigned int PD) const
   {
     return PD%m_HPDColumns;
   }

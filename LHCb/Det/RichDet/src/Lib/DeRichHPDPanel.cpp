@@ -4,8 +4,11 @@
  *  Implementation file for detector description class : DeRichHPDPanel
  *
  *  CVS Log :-
- *  $Id: DeRichHPDPanel.cpp,v 1.17 2004-07-27 08:55:23 jonrob Exp $
+ *  $Id: DeRichHPDPanel.cpp,v 1.18 2004-10-20 17:02:44 jonrob Exp $
  *  $Log: not supported by cvs2svn $
+ *  Revision 1.17  2004/07/27 08:55:23  jonrob
+ *  Add doxygen file documentation and CVS information
+ *
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2004-06-18
@@ -187,8 +190,8 @@ StatusCode DeRichHPDPanel::initialize() {
 // convert a point on the silicon sensor to smartID
 //=========================================================================
 StatusCode DeRichHPDPanel::smartID (const HepPoint3D& globalPoint,
-                                    RichSmartID& id) {
-
+                                    RichSmartID& id) const
+{
 
   HepPoint3D inPanel = geometry()->toLocal(globalPoint);
 
@@ -248,7 +251,7 @@ StatusCode DeRichHPDPanel::smartID (const HepPoint3D& globalPoint,
 //  convert a smartID to a point on the inside of the HPD window
 //=========================================================================
 StatusCode DeRichHPDPanel::detectionPoint (const RichSmartID& smartID,
-                                           HepPoint3D& windowHitGlobal)
+                                           HepPoint3D& windowHitGlobal) const
 {
 
   const unsigned int HPDNumber=HPDRowColToNum(smartID.PDRow(),smartID.PDCol());
@@ -281,8 +284,8 @@ StatusCode DeRichHPDPanel::detectionPoint (const RichSmartID& smartID,
 //=========================================================================
 //  convert a point from the global to the panel coodinate system
 //=========================================================================
-HepPoint3D DeRichHPDPanel::globalToPDPanel( const HepPoint3D& globalPoint ) {
-
+HepPoint3D DeRichHPDPanel::globalToPDPanel( const HepPoint3D& globalPoint ) const 
+{
   const HepPoint3D localPoint( geometry()->toLocal( globalPoint ) );
   return HepPoint3D(localPoint.x(), localPoint.y(),
                     localPoint.z() - m_detPlaneZ );
@@ -296,7 +299,8 @@ StatusCode DeRichHPDPanel::PDWindowPoint( const HepVector3D& vGlobal,
                                           const HepPoint3D& pGlobal,
                                           HepPoint3D& windowPointGlobal,
                                           RichSmartID& smartID,
-                                          RichTraceMode mode) {
+                                          const RichTraceMode mode) const 
+{
 
   // transform point and vector to the HPDPanel coordsystem.
   HepPoint3D pLocal = geometry()->toLocal(pGlobal);
@@ -436,7 +440,7 @@ StatusCode DeRichHPDPanel::readoutChannelList(std::vector<RichSmartID>&
         else
           ycorn = ypix - 0.5*m_pixelSize ;
 
-        double radcorn = sqrt(xcorn*xcorn + ycorn*ycorn) ;
+        const double radcorn = sqrt(xcorn*xcorn + ycorn*ycorn) ;
         if(radcorn <= (activeRadius) ) {
           RichSmartID id(0,0,PDRow(PD),PDCol(PD),pixRow,pixCol);
           readoutChannels.push_back(id);
@@ -457,29 +461,28 @@ StatusCode DeRichHPDPanel::readoutChannelList(std::vector<RichSmartID>&
 bool DeRichHPDPanel::detPlanePoint( const HepPoint3D& pGlobal,
                                     const HepVector3D& vGlobal,
                                     HepPoint3D& hitPosition,
-                                    RichTraceMode mode) {
+                                    const RichTraceMode mode) const 
+{
 
   // transform point and vector to the MaPMT Panel coordsystem.
-  HepPoint3D pLocal( geometry()->toLocal(pGlobal) );
+  const HepPoint3D pLocal( geometry()->toLocal(pGlobal) );
   HepVector3D vLocal( vGlobal );
   vLocal.transform( m_vectorTransf );
 
-  double scalar1 = vLocal*m_localPlaneNormal;
+  const double scalar1 = vLocal*m_localPlaneNormal;
   if ( scalar1 == 0.0 ) return false;
 
-  double distance = -(m_localPlane.d() + pLocal*m_localPlaneNormal) / scalar1;
+  const double distance = -(m_localPlane.d() + pLocal*m_localPlaneNormal) / scalar1;
   HepPoint3D hitInPanel( pLocal + distance*vLocal );
-
-  hitPosition = geometry()->toGlobal( hitInPanel );
 
   if ( mode.detPlaneBound() == RichTraceMode::tight) {
     if ( fabs(hitInPanel.x()) >= m_detPlaneHorizEdge ||
          fabs(hitInPanel.y()) >= m_detPlaneVertEdge ) {
       return false;
     }
-
   }
-  return true;
 
+  hitPosition = geometry()->toGlobal( hitInPanel );
+  return true;
 }
 

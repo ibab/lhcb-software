@@ -4,8 +4,11 @@
  *  Implementation file for detector description class : DeRich2HPDPanel
  *
  *  CVS Log :-
- *  $Id: DeRich2HPDPanel.cpp,v 1.15 2004-10-20 16:16:36 jonrob Exp $
+ *  $Id: DeRich2HPDPanel.cpp,v 1.16 2004-10-20 17:02:44 jonrob Exp $
  *  $Log: not supported by cvs2svn $
+ *  Revision 1.15  2004/10/20 16:16:36  jonrob
+ *  More minor updates to functions (adding const etc.)
+ *
  *  Revision 1.14  2004/10/18 09:21:49  jonrob
  *  Minor updates to functions (adding const etc.)
  *
@@ -137,11 +140,9 @@ bool DeRich2HPDPanel::findHPDRowCol(const HepPoint3D& inPanel,
 //  convert a point from the panel to the global coodinate system
 //=========================================================================
 HepPoint3D DeRich2HPDPanel::globalPosition( const HepPoint3D& localPoint,
-                                            const Rich::Side side) {
-
-  int sign(1);
-  if (side == Rich::left) sign = -1;
-
+                                            const Rich::Side side) const 
+{
+  const int sign = ( side == Rich::left ? -1 : 1 );
   return (geometry()->
           toGlobal(HepPoint3D(localPoint.x()+sign*m_detPlaneHorizEdge,
                               localPoint.y(),

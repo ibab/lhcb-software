@@ -4,8 +4,11 @@
  *  Header file for detector description class : DeRich1CdfHPDPanel
  *
  *  CVS Log :-
- *  $Id: DeRich1CdfHPDPanel.h,v 1.14 2004-10-20 16:16:36 jonrob Exp $
+ *  $Id: DeRich1CdfHPDPanel.h,v 1.15 2004-10-20 17:02:44 jonrob Exp $
  *  $Log: not supported by cvs2svn $
+ *  Revision 1.14  2004/10/20 16:16:36  jonrob
+ *  More minor updates to functions (adding const etc.)
+ *
  *  Revision 1.13  2004/10/18 09:21:48  jonrob
  *  Minor updates to functions (adding const etc.)
  *
@@ -83,7 +86,6 @@ public:
    */
   virtual StatusCode initialize();
 
-
   /**
    * Retrieves the detection plane of the HPD panel. The plane is defined
    * at the top of the HPDs (a plane resting on the HPDs "touching" the
@@ -100,7 +102,7 @@ public:
    * each detector appear side-by-side using the globalToPanel method.
    * @return The offset for the globalToPanel method
    */
-  virtual const double localOffset() const 
+  inline virtual const double localOffset() const 
   {
     return m_detPlaneVertEdge;
   }
@@ -112,7 +114,7 @@ public:
    * @return Global point.
    */
   virtual HepPoint3D globalPosition( const HepPoint3D& localPoint,
-                                     Rich::Side side);
+                                     const Rich::Side side) const;
 
 protected:
 
@@ -136,7 +138,7 @@ protected:
   /**
    * Returns the HPD column in the panel, given the HPD number
    */
-  inline unsigned int PDCol(unsigned int PD) const 
+  inline unsigned int PDCol(const unsigned int PD) const 
   {
     const unsigned int HPDsLeft = PD%m_HPDsIn2Cols;
     return ( HPDsLeft >= m_HPDsInBigCol ? 2*(PD/m_HPDsIn2Cols)+1 : 2*(PD/m_HPDsIn2Cols) );
