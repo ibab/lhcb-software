@@ -72,5 +72,4 @@ use TrFitEvent         	v4r0	Tr
 
 # LHCb  Examples
 use DetDescExample      v6r2	Ex
-use DumpEventExample    v7r0    Ex
-
+use DumpEventExample    v7r1	Ex
