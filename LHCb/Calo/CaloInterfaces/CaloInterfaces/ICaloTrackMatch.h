@@ -1,8 +1,11 @@
-// $Id: ICaloTrackMatch.h,v 1.2 2001-11-09 14:30:04 ibelyaev Exp $
+// $Id: ICaloTrackMatch.h,v 1.3 2001-11-29 17:11:17 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $  
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2001/11/09 14:30:04  ibelyaev
+//  update in ICaloTrackMatch interface
+//
 // Revision 1.1.1.2  2001/11/02 16:53:13  ibelyaev
 // New Package: the first release
 //
@@ -10,6 +13,9 @@
 #ifndef CALOINTERFACES_ICALOTRACKMATCH_H 
 #define CALOINTERFACES_ICALOTRACKMATCH_H 1
 // Include files
+// STD & STL 
+#include <functional>
+#include <utility>
 // GaudiKernel 
 #include "GaudiKernel/IAlgTool.h"
 // local 
@@ -41,9 +47,18 @@ class TrTrack      ; ///< from TrKernel  package
  *  @date   30/10/2001
  */
 
-class ICaloTrackMatch: virtual public IAlgTool
+class ICaloTrackMatch: 
+  public  virtual IAlgTool ,
+  public  std::binary_function<const CaloPosition*,
+                               const TrTrack*,
+                               std::pair<StatusCode,double> >
 {
-public:
+ public:
+  
+  /** useful typedef for result
+   *  - it is just a pair of status  and chi2 of the matching  
+   */
+  typedef std::pair<StatusCode,double>    MatchingPair;
   
   /** interface identification
    *  @return unique interface identifier 
@@ -67,10 +82,20 @@ public:
    *  @param chi2     returned value of chi2 of the matching
    *  @return status code for matching procedure 
    */
-  virtual StatusCode match ( const CaloPosition* caloObj  , 
-                             const TrTrack*      trObj    ,
-                             double&             chi2     ) = 0 ;
-
+  virtual StatusCode match 
+    ( const CaloPosition*   caloObj  , 
+      const TrTrack*        trObj    ,
+      double&               chi2     ) = 0 ;
+  
+  /** The main matching method (Stl interface) 
+   *  @param caloObj  pointer to "calorimeter" object (position)
+   *  @param trObj    pointer to tracking object (track)
+   *  @return pair of status code/chi2  for matching procedure 
+   */
+  virtual MatchingPair    operator() 
+    ( const CaloPosition*   caloObj  , 
+      const TrTrack*        trObj    ) = 0 ;
+  
   /** destructor
    */
   virtual ~ICaloTrackMatch(){}; 
