@@ -98,6 +98,9 @@ class SolidBoolean: public ISolid
   virtual bool acceptInspector( IInspector* ) const ; 
   ///
 
+  inline SolidChildrens::const_iterator  childBegin () const { return m_sb_childrens.begin(); }; 
+  inline SolidChildrens::const_iterator  childEnd   () const { return m_sb_childrens.end  (); }; 
+
  protected:
   
   // add child to daughter container 
@@ -110,9 +113,7 @@ class SolidBoolean: public ISolid
                                                       const HepRotation&    rotation );
 
   // iterators 
-  inline SolidChildrens::const_iterator  childBegin () const { return m_sb_childrens.begin(); }; 
   inline SolidChildrens::iterator        childBegin ()       { return m_sb_childrens.begin(); }; 
-  inline SolidChildrens::const_iterator  childEnd   () const { return m_sb_childrens.end  (); }; 
   inline SolidChildrens::iterator        childEnd   ()       { return m_sb_childrens.end  (); }; 
 
   ///
