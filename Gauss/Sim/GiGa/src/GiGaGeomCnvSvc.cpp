@@ -1,9 +1,7 @@
-///
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Sim/GiGa/src/GiGaGeomCnvSvc.cpp,v 1.10 2001-03-15 19:29:26 ibelyaev Exp $
 #include <string>
 #include <algorithm>
-
-///
-/// from Gaudi 
+// from Gaudi 
 #include "GaudiKernel/AddrFactory.h" 
 #include "GaudiKernel/SvcFactory.h" 
 #include "GaudiKernel/MsgStream.h"
@@ -12,19 +10,16 @@
 #include "GaudiKernel/IObjManager.h"
 #include "GaudiKernel/SmartDataPtr.h"
 #include "GaudiKernel/DataObject.h"
-
 // from DetDesc 
 #include "DetDesc/DetectorElement.h"
 #include "DetDesc/Solids.h"
-
-
 // Include G4 Stuff
 #include "G4VPhysicalVolume.hh"
 #include "G4LogicalVolume.hh"
 #include "G4LogicalVolumeStore.hh"
 #include "G4PVPlacement.hh"
 #include "G4Material.hh"
-
+//
 #include "G4Box.hh"
 #include "G4Cons.hh"
 #include "G4Sphere.hh"
@@ -34,39 +29,31 @@
 #include "G4IntersectionSolid.hh"
 #include "G4SubtractionSolid.hh"
 #include "G4UnionSolid.hh"
-
+//
 #include "G4VisAttributes.hh"
 #include "G4FieldManager.hh"
 #include "G4TransportationManager.hh"
-
-/// from GiGa 
+// from GiGa 
 #include "GiGa/IGiGaSensDet.h"
 #include "GiGa/IGiGaSensDetFactory.h"
 #include "GiGa/IGiGaMagField.h"
 #include "GiGa/IGiGaMagFieldFactory.h"
-
-
 // local 
 #include "GiGaGeomCnvSvc.h" 
 #include "SplitTypeAndName.h"
 
 
-///
-///
-/// Implementation of GiGaGeomCnvSvc 
-///
-///
-/// Author: Vanya Belyaev
-/// Date  : 7 Aug 2000
-///
+/**  Implementation of GiGaGeomCnvSvc 
+     @author Vanya Belyaev
+     @date   7 Aug 2000
+*/
 
-
+/// factory 
 extern const IAddrFactory& GiGaGeomAddressFactory ; 
 
-
+/// factory 
 static const  SvcFactory<GiGaGeomCnvSvc>                         s_GiGaGeomCnvSvcFactory ; 
 const        ISvcFactory&                GiGaGeomCnvSvcFactory = s_GiGaGeomCnvSvcFactory ; 
-
 
 /// constructor
 GiGaGeomCnvSvc::GiGaGeomCnvSvc( const std::string&   ServiceName          , 
@@ -75,9 +62,9 @@ GiGaGeomCnvSvc::GiGaGeomCnvSvc( const std::string&   ServiceName          ,
                                                      ServiceLocator       , 
                                                      GiGaGeom_StorageType )
   , m_worldPV       ( 0                   ) 
-  , m_worldMaterial ( "/dd/Materials/Air" )
   , m_worldNamePV   ( "Universe"          )
   , m_worldNameLV   ( "World"             )
+  , m_worldMaterial ( "/dd/Materials/Air" )
   , m_worldX        ( 50. * m             )
   , m_worldY        ( 50. * m             )
   , m_worldZ        ( 50. * m             )
@@ -138,7 +125,7 @@ G4LogicalVolume* GiGaGeomCnvSvc::g4LVolume( const std::string& Name )
   /// first look through G4LogicalVolumeStore
   {
     G4LogicalVolumeStore& store = *G4LogicalVolumeStore::GetInstance();
-    for( int indx = 0 ; indx < store.entries() ; ++indx )
+    for( unsigned int indx = 0 ; indx < store.entries() ; ++indx )
       { if( Name == store[indx]->GetName() ) { return store[indx] ; }  }   /// RETURN !!!
   }
   /// locate the object in the transient store and convert it! 
@@ -154,7 +141,7 @@ G4LogicalVolume* GiGaGeomCnvSvc::g4LVolume( const std::string& Name )
   /// again look through G4LogicalVolumeStore
   {
     G4LogicalVolumeStore& store = *G4LogicalVolumeStore::GetInstance();
-    for( int indx = 0 ; indx < store.entries() ; ++indx )
+    for( unsigned int indx = 0 ; indx < store.entries() ; ++indx )
       { if( Name == store[indx]->GetName() ) { return store[indx] ; }  }   /// RETURN !!!
   }
   ///

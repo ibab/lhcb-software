@@ -141,8 +141,10 @@ StatusCode GiGaMCVertexCnv::updateObj( IOpaqueAddress*  Address , DataObject*   
         IT iU = std::find_if( iL , end , std::bind1st( Less , *it ) ) ;
         if( end != iU ) { std::rotate( iL, iU , end ); end -= (iU-iL) ; }
       }
-    object->erase( end , object->end() ) ; ///  unsorted remove garbage
+    object->erase( end , object->end() ) ; ///  remove unsorted garbage
   }
+  ///
+  std::cerr << " end of create MCVertex "  << std::endl ; 
   ///
   return StatusCode::SUCCESS;
 };
@@ -179,37 +181,65 @@ StatusCode GiGaMCVertexCnv::updateObjRefs( IOpaqueAddress*  Address , DataObject
         mcv->setMotherMCParticle( 0 ); 
       }
   }
-  ///
-  ObjectVector<MCVertex>::iterator iv = object->begin();
-  MCVertex mV;
-  GiGaCnvFunctors::MCVerticesLess  Less  ;
-  GiGaCnvFunctors::MCVerticesEqual Equal ;
-  for( unsigned int it = 0 ; it < tc->entries() ; ++it )
-    {
-      G4VTrajectory* tr = (*tc)[it];
-      if( 0 == tr  ) { return Error("G4VTrajectory* points to NULL" ) ; } 
-      GiGaTrajectory*  gt = dynamic_cast<GiGaTrajectory*> ( tr ) ; 
-      if( 0 == gt  ) { return Error("G4VTrajectory*(of type '"+ObjTypeName(tr)+"*') could not be cast to GiGaTrajectory*"  ) ; }
-      MCParticle* mcp = (*particles)[it];
-      if( 0 == mcp ) { return Error("MCParticle* points to NULL!"   ) ; } 
-      for( GiGaTrajectory::const_iterator ip = gt->begin() ; gt->end() != ip ; ++ip )
-        {
-          if( 0 == *ip  ) { return Error("GiGaTrajectoryPoint* points to null!" ) ; }  
-          /// auxillary vertex                
-          mV.setPosition    ( (*ip)->GetPosition() );
-          mV.setTimeOfFlight( (*ip)->GetTime    () );
-          /// look for vertex, special treatment for "first" vertex. should be fast 
-          if( gt->begin() != ip ) { iv = std::find_if ( iv , object->end() , std::bind2nd( Equal , &mV ) ) ; } 
-          else                    { iv = std::lower_bound( object->begin() , object->end() , &mV , Less  ) ; }
-          if ( object->end() == iv || !Equal(&mV,*iv) ) 
-            { return Error("appropriate MCVertex is not found!") ; }   
-          else if ( gt->begin  () == ip        )  /// first vertex of the trajectory
-            {  (*iv)->addDaughterMCParticle( SmartRef<MCParticle> ( *iv  ,  refID , it , mcp ) ) ; }
-          else if ( !(*iv)->motherMCParticle() )  /// "decay" vertices 
-            { (*iv)->setMotherMCParticle   ( SmartRef<MCParticle> ( *iv  ,  refID , it , mcp ) ) ; }
-          else { return Error("MotherMCParticle is already set!") ; }
-        }
-    } 
+  /// fill temporary container for pointers to mother particles
+  typedef std::pair<int,int> Pair; 
+  typedef std::map<int,int>  Map ; 
+  Map mothers; 
+  {
+    for( unsigned int i = 0 ; i < tc->entries() ; ++i )
+      { 
+	G4VTrajectory* tr = (*tc)[i];
+	if( 0 == tr  ) { return Error("G4VTrajectory* points to NULL" ) ; } 
+	GiGaTrajectory*  gt = dynamic_cast<GiGaTrajectory*> ( tr ) ; 
+	if( 0 == gt  ) { return Error("G4VTrajectory*(of type '"+ObjTypeName(tr)+"*') could not be cast to GiGaTrajectory*"  ) ; }
+        /// insert to the map 
+        std::pair<Map::iterator,bool> it = 
+	  mothers.insert( Pair( gt->trackID() , i+1 ) ) ; /// put "fortran index"
+        if( !it.second && 0 != gt->trackID() ) { return Error("MCParticle is alrerady defined for this trackID!") ; }
+      }
+  }
+  /// fill relations
+  {
+    typedef SmartRef<MCParticle> Ref;
+    ObjectVector<MCVertex>::iterator iv = object->begin();
+    MCVertex mV;
+    GiGaCnvFunctors::MCVerticesLess  Less  ;
+    GiGaCnvFunctors::MCVerticesEqual Equal ;
+    for( unsigned int it = 0 ; it < tc->entries() ; ++it )
+      {
+	G4VTrajectory* tr = (*tc)[it];
+	if( 0 == tr  ) { return Error("G4VTrajectory* points to NULL" ) ; } 
+	GiGaTrajectory*  gt = dynamic_cast<GiGaTrajectory*> ( tr ) ; 
+	if( 0 == gt  ) { return Error("G4VTrajectory*(of type '"+ObjTypeName(tr)+"*') could not be cast to GiGaTrajectory*"  ) ; }
+	MCParticle* mcp  = (*particles)[it]                ; /// own    MCParticle 
+        const int   im   = mothers[ gt->parentID() ] -1    ; /// index of mother 
+        MCParticle* moth =  im < 0 ? 0 : (*particles)[im]  ; /// mother MCParticle
+	if( 0 == mcp ) { return Error("MCParticle* points to NULL!"   ) ; } 
+	for( GiGaTrajectory::const_iterator ip = gt->begin() ; gt->end() != ip ; ++ip )
+	  {
+	    if( 0 == *ip  ) { return Error("GiGaTrajectoryPoint* points to null!" ) ; }  
+	    /// auxillary vertex                
+	    mV.setPosition    ( (*ip)->GetPosition() );
+	    mV.setTimeOfFlight( (*ip)->GetTime    () );
+	    /// look for vertex, special treatment for "first" vertex. should be fast 
+	    iv = std::lower_bound( gt->begin() == ip ? object->begin() : iv , object->end() , &mV , Less  ) ;   
+	    ///
+	    if ( object->end() == iv || !Equal(&mV,*iv) ) 
+	      { return Error("appropriate MCVertex is not found!") ; }
+            else if ( gt->begin() == ip ) // first vertex of the track
+	      { 
+		(*iv)->addDaughterMCParticle   ( Ref( *iv  ,  refID , it , mcp  ) ) ; 
+		if ( !(*iv)->motherMCParticle() &&  0 != moth && 0 <= im )  /// mother is known            
+		  { (*iv)->setMotherMCParticle ( Ref( *iv  ,  refID , im , moth ) ) ; }	
+	      }	       
+            else if ( !(*iv)->motherMCParticle()  )  /// decay vertex 
+	      { (*iv)->setMotherMCParticle     ( Ref( *iv  ,  refID , it , mcp ) ) ; }
+	    else 
+	      { return Error("MotherMCParticle is already set!") ; }
+	    ///
+	  } /// end loop over points 
+      } /// end loop over trajectories/particles  
+  } /// end end of relations scope 
   ///
   return StatusCode::SUCCESS; 
 }; 

@@ -1,11 +1,11 @@
 /// GaudiKernel
-#include "GaudiKernel/ILVolume.h"
-#include "GaudiKernel/IPVolume.h"
 #include "GaudiKernel/IAddressCreator.h"
 #include "GaudiKernel/IDataSelector.h"
 #include "GaudiKernel/CnvFactory.h"
 #include "GaudiKernel/DataObject.h"
 /// DetDesc
+#include "DetDesc/ILVolume.h"
+#include "DetDesc/IPVolume.h"
 #include "DetDesc/CLIDLVolume.h"
 #include "DetDesc/LVolume.h"
 /// Geant4
@@ -50,7 +50,7 @@ StatusCode GiGaLVolumeCnv::createRep( DataObject*     Object  , IOpaqueAddress*&
   {
     G4LogicalVolume* LV = 0; 
     G4LogicalVolumeStore& store = *G4LogicalVolumeStore::GetInstance();
-    for( int indx = 0 ; indx < store.entries() ; ++indx )
+    for( unsigned int indx = 0 ; indx < store.entries() ; ++indx )
       { if( lv->name() == store[indx]->GetName() ) { return StatusCode::SUCCESS ; } }    /// RETURN !!!
   }
   /// create IOpaqueAddress
@@ -81,7 +81,7 @@ StatusCode GiGaLVolumeCnv::updateRep( DataObject*     Object  , IOpaqueAddress* 
   /// look at the G4 static store 
   {
     G4LogicalVolumeStore& store = *G4LogicalVolumeStore::GetInstance();
-    for( int indx = 0 ; indx < store.entries() ; ++indx )
+    for( unsigned int indx = 0 ; indx < store.entries() ; ++indx )
       { if( lv->name() == store[indx]->GetName() ) { return StatusCode::SUCCESS ; } }    /// RETURN !!!
   }
   ///
@@ -114,7 +114,7 @@ StatusCode GiGaLVolumeCnv::updateRep( DataObject*     Object  , IOpaqueAddress* 
   /// look again at the G4 static store
   {
     G4LogicalVolumeStore& store = *G4LogicalVolumeStore::GetInstance();
-    for( int indx = 0 ; indx < store.entries() ; ++indx )
+    for( unsigned int indx = 0 ; indx < store.entries() ; ++indx )
       { if( lv->name() == store[indx]->GetName() ) { return StatusCode::SUCCESS ; } }    /// RETURN !!!
   }
   ///

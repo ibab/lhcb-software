@@ -5,31 +5,31 @@
 ///
 
 /// Should all tracks to be stored?
-inline const bool      GiGaTrackActionSimple::storeAll             () const 
+inline bool      GiGaTrackActionSimple::storeAll             () const 
 { return m_storeAll ; }  
 /// Should primaries be stored ? 
-inline const bool      GiGaTrackActionSimple::storePrimaries       () const 
+inline bool      GiGaTrackActionSimple::storePrimaries       () const 
 { return m_storePrimaries ; }  
 /// Should tracks with kinetic energy over some threshold be stored ?  
-inline const bool      GiGaTrackActionSimple::storeByOwnEnergy     () const  
+inline bool      GiGaTrackActionSimple::storeByOwnEnergy     () const  
 { return m_storeByOwnEnergy ; }  
 /// should tracks of some predefined types be stored ?
-inline const bool      GiGaTrackActionSimple::storeByOwnType       () const  
+inline bool      GiGaTrackActionSimple::storeByOwnType       () const  
 { return m_storeByOwnType ; }  
 /// Should tracks which produce at least one child with kinetic energy over some threshold be stored ?  
-inline const bool      GiGaTrackActionSimple::storeByChildEnergy   () const  
+inline bool      GiGaTrackActionSimple::storeByChildEnergy   () const  
 { return m_storeByChildEnergy ; }  
 /// Should tracks which produce at least one child of some predefined types be stored ?
-inline const bool      GiGaTrackActionSimple::storeByChildType     () const  
+inline bool      GiGaTrackActionSimple::storeByChildType     () const  
 /// Should track which marked explicitely be stored ? 
 { return m_storeByChildType ; }  
-inline const bool      GiGaTrackActionSimple::storeMarkedTracks    () const  
+inline bool      GiGaTrackActionSimple::storeMarkedTracks    () const  
 { return m_storeMarkedTracks ; }  
 /// Threshold for own   kinetic energy 
-inline const double    GiGaTrackActionSimple::ownEnergyThreshold   () const  
+inline double    GiGaTrackActionSimple::ownEnergyThreshold   () const  
 { return m_ownEnergyThreshold; }  
 /// Threshold for child kinetic energy 
-inline const double    GiGaTrackActionSimple::childEnergyThreshold () const  
+inline double    GiGaTrackActionSimple::childEnergyThreshold () const  
 { return m_childEnergyThreshold; }  
 /// Own   particle types to be stored 
 inline const GiGaTrackActionSimple::PartDefs& GiGaTrackActionSimple::ownStoredTypes   () const  

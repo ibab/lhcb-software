@@ -78,7 +78,7 @@ inline int GiGaTrajectory::GetPointEntries() const
 { return size(); } 
 ////////////////////////////////////////////////////////////////////////////////////
 inline G4VTrajectoryPoint* GiGaTrajectory::GetPoint       ( int indx ) const  
-{ return indx < size() ? *(begin()+indx) : 0 ; }
+{ return ( unsigned int ) indx < size() ? *(begin()+indx) : 0 ; }
 ////////////////////////////////////////////////////////////////////////////////////
 inline void* GiGaTrajectory::operator new(size_t)
 { return (void*) s_GiGaTrajectoryAllocator.MallocSingle(); };

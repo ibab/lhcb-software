@@ -202,15 +202,6 @@ StatusCode GiGaRunManager::processTheEvent()
   if( G4RunManager::verboseLevel > 0    ) { (G4RunManager::timer)->Start() ; } 
   /// apply commands to UI manager 
   ///
-  {
-  std::cout << " before put some commands to start of event " << std::endl; 
-  for( Strings::const_iterator it = startOfEvtUIcommands().begin() ; 
-       startOfEvtUIcommands().end() != it ; ++it ) 
-    { 
-      std::cout << " command to be executed : " << *it << " " << g4UImanager() << std::endl; 
-    } 
-  std::cout << " after put some commands to start of event " << std::endl; 
-  }
   g4UImanager() << startOfEvtUIcommands();
   if( G4RunManager::GetCurrentEvent()->GetNumberOfPrimaryVertex() == 0 )
     { log << MSG::WARNING << " Empty event to be processed " << endreq; } 
@@ -218,7 +209,7 @@ StatusCode GiGaRunManager::processTheEvent()
     { 
       G4RunManager::eventManager->ProcessOneEvent( G4RunManager::currentEvent); 
       log << MSG::DEBUG << " internal process one event " << endreq; 
-      /// G4RunManager::currentEvent->Draw();
+      G4RunManager::currentEvent->Draw();
       /// G4RunManager::AnalyzeEvent( G4RunManager::currentEvent );
     } 
   /// apply commands to UI manager 

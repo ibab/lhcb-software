@@ -77,7 +77,7 @@ public:
   virtual const Property&               getProperty   ( const std::string& name ) const ; 
   /// Get the property by std::string
   virtual StatusCode                    getProperty   ( const std::string&      , 
-                                                        const std::string&      ) const ;
+                                                              std::string&      ) const ;
   /// Get list of properties
   virtual const std::vector<Property*>& getProperties ( )                         const ;
   ///  handle the incident 

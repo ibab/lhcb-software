@@ -1,13 +1,14 @@
-/// from STL
+// from STL
 #include <vector>
-/// GaudiKernel 
-#include "GaudiKernel/IDetectorElement.h"
+// GaudiKernel 
 #include "GaudiKernel/DataObject.h"
 #include "GaudiKernel/SmartDataPtr.h"
 #include "GaudiKernel/PropertyMgr.h"
 #include "GaudiKernel/System.h"
 #include "GaudiKernel/StreamBuffer.h"
-/// GiGa
+// DetDesc 
+#include "DetDesc/IDetectorElement.h"
+// GiGa
 #include "GiGa/GiGaSensDetBase.h" 
 
 
@@ -18,10 +19,10 @@ GiGaSensDetBase::GiGaSensDetBase( const std::string& nick , ISvcLocator* svc )
   , GiGaBase            ( nick     ,   svc     ) 
   /// initilization flag 
   , m_init              ( false                )
-  /// name of (Gaudi) Detector Element to which the SD is attached 
-  , m_detName           ( "/dd/Structure/LHCb" )
   /// Active Flag 
   , m_active            ( true                 ) 
+  /// name of (Gaudi) Detector Element to which the SD is attached 
+  , m_detName           ( "/dd/Structure/LHCb" )
   /// Detector Element 
   , m_det               ( 0                    ) 
 { 

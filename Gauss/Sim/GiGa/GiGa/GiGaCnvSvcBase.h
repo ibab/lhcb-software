@@ -83,7 +83,7 @@ protected:
   /// incident service                          
   virtual IIncidentSvc*           incSvc    () { return m_incSvc      ; } 
   ///
-  StatusCode    setNameOfDataProviderSvc( const std::string& Name ) { m_dpName = Name ; } 
+  StatusCode    setNameOfDataProviderSvc( const std::string& Name ) { m_dpName = Name ; return StatusCode::SUCCESS ; } 
   ///
   StatusCode Error     ( const std::string & msg                       ,  
                          const StatusCode  & sc  = StatusCode::FAILURE );

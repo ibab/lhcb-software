@@ -1,8 +1,9 @@
-/// STL 
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Sim/GiGa/src/GiGaCnvSvcBase.cpp,v 1.4 2001-03-15 19:29:25 ibelyaev Exp $
+// STL 
 #include <string> 
 #include <vector> 
 #include <map> 
-/// Gaudi
+// Gaudi
 #include "GaudiKernel/ISvcLocator.h" 
 #include "GaudiKernel/IIncidentListener.h" 
 #include "GaudiKernel/IDataProviderSvc.h"
@@ -53,11 +54,11 @@ GiGaCnvSvcBase::GiGaCnvSvcBase( const std::string&   ServiceName       ,
   , m_ppName      ( "ParticlePropertySvc" )  
   , m_ppSvc       (     0                 ) 
   ///
-  , m_chronoName  ( "ChronoStatSvc"       )  
-  , m_chronoSvc   (     0                 ) 
-  ///
   , m_mfName      ( "MagneticFieldSvc"    )  
   , m_mfSvc       (     0                 ) 
+  ///
+  , m_chronoName  ( "ChronoStatSvc"       )  
+  , m_chronoSvc   (     0                 ) 
   ///
   , m_omName      ( "ApplicationMgr"      )  
   , m_objMgr      (     0                 ) 

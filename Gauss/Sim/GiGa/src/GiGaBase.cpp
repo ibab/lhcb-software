@@ -286,7 +286,7 @@ const Property&               GiGaBase::getProperty  ( const std::string & N ) c
 { return m_propMgr->getProperty( N ) ; };
 /////////////////////////////////////////////////////////////////////////////////////
 StatusCode                    GiGaBase::getProperty  ( const std::string & n ,
-                                                       const std::string & v ) const 
+                                                             std::string & v ) const 
 { return m_propMgr->getProperty( n , v ) ; } ;
 /////////////////////////////////////////////////////////////////////////////////////
 const std::vector<Property*>& GiGaBase::getProperties()                        const 

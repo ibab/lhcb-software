@@ -2,6 +2,9 @@ Package:          GiGa
 Package manager : N.N. 
 
 !===========================================================================
+! 20010315 - Vanya Belyaev
+    several changes to please NT compiler 
+!===========================================================================
 ! 20010310 - Vanya Belyaev
     new features:
     GiGaTrajectory - not all steps are appended now to the trajectory

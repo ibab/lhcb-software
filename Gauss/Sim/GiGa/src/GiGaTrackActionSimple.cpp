@@ -88,7 +88,7 @@ StatusCode GiGaTrackActionSimple::initialize ()
       m_ownStoredTypes.clear();
       G4ParticleTable* table = G4ParticleTable::GetParticleTable();
       if( 0 == table ) { return Error("G4ParticleTable* points to NULL!" ) ; } 
-      for( TypeNames::const_iterator it = m_ownStoredTypesNames.begin() ; m_ownStoredTypesNames.begin() != it ; ++it )
+      for( TypeNames::const_iterator it = m_ownStoredTypesNames.begin() ; m_ownStoredTypesNames.end() != it ; ++it )
 	{
 	  const G4ParticleDefinition* pd = table->FindParticle( *it ) ; 
 	  if( 0 == pd ) { return Error("could not find G4ParticleDefinition for particle name='"+*it+"'!"); }
@@ -97,7 +97,7 @@ StatusCode GiGaTrackActionSimple::initialize ()
       ///
       if( ownStoredTypes().empty() ) 
 	{ 
-	  Warning("OwnTypesContainer is empty! Deactivate the 'StoreByOwnType' option!"); 
+	  Error("OwnTypesContainer is empty! Deactivate the 'StoreByOwnType' option!"); 
           m_storeByOwnType = false ;                                           /// NB !!!
 	} 
     }
@@ -107,7 +107,7 @@ StatusCode GiGaTrackActionSimple::initialize ()
       m_childStoredTypes.clear();
       G4ParticleTable* table = G4ParticleTable::GetParticleTable();
       if( 0 == table ) { return Error("G4ParticleTable* points to NULL!" ) ; } 
-      for( TypeNames::const_iterator it = m_childStoredTypesNames.begin() ; m_childStoredTypesNames.begin() != it ; ++it )
+      for( TypeNames::const_iterator it = m_childStoredTypesNames.begin() ; m_childStoredTypesNames.end() != it ; ++it )
 	{
 	  const G4ParticleDefinition* pd = table->FindParticle( *it ) ; 
 	  if( 0 == pd ) { return Error("could not find G4ParticleDefinition for particle name='"+*it+"'!"); }
@@ -116,7 +116,7 @@ StatusCode GiGaTrackActionSimple::initialize ()
       ///
       if( childStoredTypes().empty() ) 
 	{ 
-	  Warning("OwnTypesContainer is empty! Deactivate the 'StoreByChildType' option!"); 
+	  Error("ChildTypesContainer is empty! Deactivate the 'StoreByChildType' option!"); 
 	  m_storeByChildType = false ;                                           /// NB !!!
 	} 
     }
@@ -132,9 +132,13 @@ void GiGaTrackActionSimple::PreUserTrackingAction  ( const G4Track* track )
   if( 0 == track || 0 == trackMgr() || 0 != trackMgr()->GimmeTrajectory()  ) { return ; } 
   ///
   { 
-    /// attach GiGaTrackInformation to the track, if the no such information exists 
-    if( 0 == track->GetUserInformation() )
-      { trackMgr()->SetUserTrackInformation( new GiGaTrackInformation() ); }
+    /// attach GiGaTrackInformation to the track 
+    GiGaTrackInformation* ti = new GiGaTrackInformation(); 
+    ///
+    if( storeByOwnEnergy() 
+	&& ( track->GetKineticEnergy() > ownEnergyThreshold() ) ) {  ti->setToBeStored( true ); } 
+    ///
+    trackMgr()->SetUserTrackInformation( ti ); 
   }
   ///
   trackMgr()->SetStoreTrajectory( true ) ;  
@@ -168,11 +172,12 @@ void GiGaTrackActionSimple::PostUserTrackingAction ( const G4Track* track )
   if ( storeAll () )                                        
     { trackMgr()->SetStoreTrajectory( true ) ;     return ; } /// RETURN !!!  
   ///
+
   /// (4) store  primary particles ? 
   if ( storePrimaries() &&  0 == track->GetParentID() )     
     { trackMgr()->SetStoreTrajectory( true ) ;     return ; } /// RETURN !!!  
   ///
-  /// (5) store particles with kinetic energy over the threshold value 
+  /// (5) store particles with kinetic energy over the threshold value. See also PreAction
   if( storeByOwnEnergy() 
       && ( track->GetKineticEnergy() > 
 	   ownEnergyThreshold()      ) ) 
@@ -236,16 +241,16 @@ void GiGaTrackActionSimple::PostUserTrackingAction ( const G4Track* track )
   /// if track is not to be stored stored, propagate it's parent (stored) to 
   if( 0 != trackMgr()->GimmeSecondaries() ) 
     {
+      if( 0 == track->GetParentID() ) 
+	{ Error("Dangerouse:Primary Particle is not requested to be stored") ; } 
       G4TrackVector* childrens = trackMgr()->GimmeSecondaries() ;
       for( unsigned int index = 0 ; index < childrens->entries() ; ++index )
 	{
 	  G4Track* tr = (*childrens)[index] ;
           if( 0 == tr ) { continue ; } 
 	  ///
-	  if( tr->GetParentID() != track->GetTrackID() ) 
+	  if     ( tr->GetParentID() != track->GetTrackID() ) 
 	    { Error("Could not reconstruct properly the parent!") ; } 
-	  else if( track->GetParentID() ) 
-	    { Error("Dangerouse:Primary Particle is not requested to be stored") ; } 
 	  ///
 	  tr->SetParentID( track->GetParentID()  );
 	  ///

@@ -55,23 +55,23 @@ protected:
   { return G4UserTrackingAction::fpTrackingManager; } 
   ///
   /// Should all tracks to be stored?
-  inline const bool      storeAll             () const ; 
+  inline bool      storeAll             () const ; 
   /// Should primaries be stored ? 
-  inline const bool      storePrimaries       () const ; 
+  inline bool      storePrimaries       () const ; 
   /// Should tracks with kinetic energy over some threshold be stored ?  
-  inline const bool      storeByOwnEnergy     () const ; 
+  inline bool      storeByOwnEnergy     () const ; 
   /// should tracks of some predefined types be stored ?
-  inline const bool      storeByOwnType       () const ; 
+  inline bool      storeByOwnType       () const ; 
   /// Should tracks which produce at least one child with kinetic energy over some threshold be stored ?  
-  inline const bool      storeByChildEnergy   () const ; 
+  inline bool      storeByChildEnergy   () const ; 
   /// Should tracks which produce at least one child of some predefined types be stored ?
-  inline const bool      storeByChildType     () const ; 
+  inline bool      storeByChildType     () const ; 
   /// Should track which marked explicitely be stored ? 
-  inline const bool      storeMarkedTracks    () const ; 
+  inline bool      storeMarkedTracks    () const ; 
   /// Threshold for own   kinetic energy 
-  inline const double    ownEnergyThreshold   () const ; 
+  inline double    ownEnergyThreshold   () const ; 
   /// Threshold for child kinetic energy 
-  inline const double    childEnergyThreshold () const ; 
+  inline double    childEnergyThreshold () const ; 
   /// Own   particle types to be stored 
   inline const PartDefs& ownStoredTypes       () const ; 
   /// Child particle types to be stored 

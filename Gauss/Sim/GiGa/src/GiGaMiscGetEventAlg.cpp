@@ -10,6 +10,7 @@
 #include "GaudiKernel/IDataDirectory.h"
 #include "GaudiKernel/SmartDataPtr.h"
 #include "GaudiKernel/DataObject.h"
+#include "GaudiKernel/Stat.h"
 /// from LHCbEvent 
 #include "LHCbEvent/MCParticle.h"
 #include "LHCbEvent/MCVertex.h"
@@ -53,15 +54,20 @@ StatusCode GiGaMiscGetEventAlg::execute()
     if( obj ) 
       { 
         std::cout <<  *obj << std::endl;  
+	Stat stat( chronoSvc() , "#particles" , obj->size() ) ;
       } 
     else 
       { std::cout << " particles == 0 " << std::endl ; } 
+
   }
   ///
   {
     SmartDataPtr<MCVertexVector> obj( eventSvc() , "/Event/G4/MCVertices" ) ;
     if( obj ) 
-      { std::cout <<  *obj  << std::endl ; } 
+      { 
+	std::cout <<  *obj  << std::endl ; 
+	Stat stat( chronoSvc() , "#vertices" , obj->size() ) ;
+      } 
     else 
       { std::cout << " vertices == 0 " << std::endl ; } 
   }

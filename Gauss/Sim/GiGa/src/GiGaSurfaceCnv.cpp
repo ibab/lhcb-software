@@ -1,13 +1,15 @@
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Sim/GiGa/src/GiGaSurfaceCnv.cpp,v 1.2 2001-03-15 19:29:27 ibelyaev Exp $ 
+// GaudiKernel
 #include "GaudiKernel/CnvFactory.h" 
 #include "GaudiKernel/IAddressCreator.h" 
 #include "GaudiKernel/IOpaqueAddress.h" 
 #include "GaudiKernel/IGiGaSetUpSvc.h" 
 #include "GaudiKernel/MsgStream.h"
-/// DetDesc 
+// DetDesc 
 #include "DetDesc/Surface.h"
-/// GiGa 
+// GiGa 
 #include "GiGa/GiGaException.h" 
-/// Geant4
+// Geant4
 #include  "G4LogicalVolume.hh"
 #include  "G4LogicalVolumeStore.hh"
 #include  "G4VPhysicalVolume.hh"
@@ -16,7 +18,7 @@
 #include  "G4LogicalSurface.hh"
 #include  "G4LogicalSkinSurface.hh"
 #include  "G4LogicalBorderSurface.hh"
-/// local 
+// local 
 #include "AddTabulatedProperties.h"
 #include "GiGaSurfaceCnv.h" 
 
@@ -129,7 +131,7 @@ StatusCode GiGaSurfaceCnv::createSkinSurface( const Surface    *  surface ,
   G4LogicalVolume* lv = 0; 
   {
     G4LogicalVolumeStore& store = *G4LogicalVolumeStore::GetInstance();
-    for( int indx = 0 ; indx < store.entries() ; ++indx )
+    for( unsigned int indx = 0 ; indx < store.entries() ; ++indx )
       { if( surface->firstVol() == store[indx]->GetName() ) { lv = store[indx] ; break ; }  }    
   }
   if( 0 == lv ) { return Error("Could Not locate G4LogicalVolume by name '"+surface->firstVol()+"'" ); }
@@ -154,7 +156,7 @@ StatusCode GiGaSurfaceCnv::createBorderSurface( const Surface    *  surface ,
   G4VPhysicalVolume* pv2 = 0; 
   {
     G4PhysicalVolumeStore& store = *G4PhysicalVolumeStore::GetInstance();
-    for( int indx = 0 ; indx < store.entries() ; ++indx )
+    for( unsigned int indx = 0 ; indx < store.entries() ; ++indx )
       { 
         if     ( surface->firstVol ()  == store[indx]->GetName() ) { pv1 = store[indx] ; }
         else if( surface->secondVol()  == store[indx]->GetName() ) { pv2 = store[indx] ; }

@@ -2,15 +2,15 @@
 #include <string>
 #include <vector>
 /// Gaudi 
-#include "GaudiKernel/IDetectorElement.h"
-#include "GaudiKernel/IGeometryInfo.h"
-#include "GaudiKernel/ILVolume.h"
 #include "GaudiKernel/CnvFactory.h" 
 #include "GaudiKernel/DataObject.h" 
 #include "GaudiKernel/SmartDataPtr.h" 
 #include "GaudiKernel/IDataSelector.h" 
 #include "GaudiKernel/IAddressCreator.h" 
 /// DetDesc 
+#include "DetDesc/IDetectorElement.h"
+#include "DetDesc/IGeometryInfo.h"
+#include "DetDesc/ILVolume.h"
 #include "DetDesc/CLIDDetectorElement.h" 
 /// Geant4
 #include "G4LogicalVolume.hh"
@@ -117,7 +117,7 @@ StatusCode GiGaDetectorElementCnv::updateRep( DataObject*     Object  , IOpaqueA
       {
         G4VPhysicalVolume* pv = 0; 
         G4PhysicalVolumeStore& store = *G4PhysicalVolumeStore::GetInstance();
-        for( int indx = 0 ; indx < store.entries() ; ++indx )
+        for( unsigned int indx = 0 ; indx < store.entries() ; ++indx )
           { if( path == store[indx]->GetName() ) { pv = store[indx] ; break; } }
         /// it was converted EXPLICITELY or IMPLICITELY !!!
         if( 0 != pv ) 
@@ -140,11 +140,12 @@ StatusCode GiGaDetectorElementCnv::updateRep( DataObject*     Object  , IOpaqueA
   /// create the placement of Detector Element
   G4VPhysicalVolume*   pv = 
     new G4PVPlacement( gi->matrix().inverse() , LV , de->name() , PV->GetLogicalVolume() , false , 0 ) ;
+  pv = pv ; /// just to please the compiler 
   /// look again in the store 
   {
     G4VPhysicalVolume* PV = 0; 
     G4PhysicalVolumeStore& store = *G4PhysicalVolumeStore::GetInstance();
-    for( int indx = 0 ; indx < store.entries() ; ++indx )
+    for( unsigned int indx = 0 ; indx < store.entries() ; ++indx )
       { if( de->name() == store[indx]->GetName() ) { PV = store[indx] ; break; } }
     if( 0 != PV ) { return StatusCode::SUCCESS; }                             /// RETURN !!!
   } 

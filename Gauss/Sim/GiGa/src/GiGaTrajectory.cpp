@@ -17,10 +17,6 @@
 void GiGaTrajectory::DrawTrajectory  ( G4int i_mode ) const 
 {
   ///
-
-  std::cout << " draw trajectory method is invoked! " << std::endl ;
-
-
   G4VVisManager* pVVisManager = G4VVisManager::GetConcreteInstance();
   G4ThreeVector pos;
   ///
@@ -71,8 +67,8 @@ void GiGaTrajectory::AppendStep      ( const G4Step*  step )
   /// if  it is the last step, the step must be appended 
   else if ( fAlive != step->GetTrack()->GetTrackStatus() )  { append = true ; }
   /// if  there are some secondaries, the step must be appended  
-  else if ( 0 != stepMgr()->GetSecondary()            && 
-	    0 != stepMgr()->GetSecondary()->entries   () )  { append = true ; }
+  // else if ( 0 != stepMgr()->GetSecondary()            && 
+  //	    0 != stepMgr()->GetSecondary()->entries   () )  { append = true ; }
   /// for optical photons also the reflection/refraction step must be appended  
   else if ( step->GetPostStepPoint()->GetStepStatus() == 
 	    fGeomBoundary &&

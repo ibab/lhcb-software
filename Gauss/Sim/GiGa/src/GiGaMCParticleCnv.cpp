@@ -182,10 +182,8 @@ StatusCode GiGaMCParticleCnv::updateObjRefs( IOpaqueAddress*  Address , DataObje
           mV.setPosition    ( (*ip)->GetPosition() );
           mV.setTimeOfFlight( (*ip)->GetTime    () );
           /// look for vertex 
-          if( gt->begin() != ip ) 
-            { iv = std::find_if   ( iv , vertices->end() , std::bind2nd( Equal , &mV ) ) ; } 
-          else                    
-            { iv = std::lower_bound( vertices->begin() , vertices->end() , &mV , Less  ) ; }
+	  iv = std::lower_bound( gt->begin() == ip ? vertices->begin() : iv , vertices->end() , &mV , Less  ) ; 
+	  ///
           if      ( vertices->end() == iv || !Equal( &mV , *iv ) ) 
             {  return Error(" appropriate MCVertex is not found!") ; }   
           else if ( gt->begin  () != ip )           ///  it is not first vertex of the trajectory
