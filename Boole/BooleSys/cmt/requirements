@@ -1,5 +1,5 @@
 package BooleSys
-version v4r0
+version v5r0
 
 branches cmt doc
  
@@ -8,46 +8,46 @@ branches cmt doc
 #=======================================================
 
 # Boole application
-use Boole		v4r0	Digi
-use DigiAlg		v2r2	Digi
+use Boole		v5r0	Digi
+use DigiAlg		v2r3	Digi
 use LHCbTools		v1r0	Kernel
 
 # L0 trigger
-use L0Calo              v7r1	L0
-use L0Muon              v6r6	L0
-use PuVeto              v5r4    L0
-use L0DU                v6r5    L0
+use L0Calo              v7r2	L0
+use L0Muon              v6r7	L0
+use PuVeto              v5r5	L0
+use L0DU                v6r6	L0
 
 # L1 trigger
-use L1VeloTrack         v5r5	L1
-use L1Decision		v2r3	L1
+use L1VeloTrack         v5r6	L1
+use L1Decision		v2r4	L1
 
 # Calorimeter
-use CaloInterfaces      v3r0  	Calo
-use CaloUtils           v4r5	Calo
-use CaloMonitor         v1r5  	Calo
-use CaloDigit           v1r4p1	Calo
+use CaloInterfaces      v3r1	Calo
+use CaloUtils           v4r6	Calo
+use CaloMonitor         v1r6  	Calo
+use CaloDigit           v1r5	Calo
 
 # Velo
-use VeloAlgorithms      v2r8  	Velo
+use VeloAlgorithms      v2r9	Velo
 
 # Inner Tracker
-use ITAlgorithms        v13r0p1	IT
+use ITAlgorithms        v13r1	IT
 use ITCheckers          v1r4	IT
 
 # Outer Tracker
 use OTAlgorithms        v13r4	OT
 
 # Muon
-use MuonAlgs            v5r0	Muon
-use MuonBackground	v1r4p1	Muon
+use MuonAlgs            v5r1	Muon
+use MuonBackground	v1r5	Muon
 
 # Rich
-use RichDigiQC		v1r3	Rich
+use RichDigiQC		v1r4	Rich
 use RichUtils		v3r6	Rich
-use RichDetTools	v3r4	Rich
-use RichReadout		v1r3	Rich
-use RichDAQ		v1r0p1	Rich
+use RichDetTools	v3r5	Rich
+use RichReadout		v1r4	Rich
+use RichDAQ		v1r1	Rich
 
 # SICB packages - included to avoid dependency on SICBOO project
-use RiSicbGeom		v3r7	SICB
+use RiSicbGeom		v3r8	SICB

@@ -4,6 +4,15 @@
 ! Purpose     : List of packages in Boole project
 !-----------------------------------------------------------------------------
 
+!======================== BooleSys v5r0 2004-01-08 ========================
+! 2004-01-06 - Marco Cattaneo
+ - Packages modified: RiSicbGeom v3r8, DigiAlg v2r3, L0Calo v7r2, L0Muon v6r7,
+                      PuVeto v5r5, L0DU v6r6, L1VeloTrack v5r6, L1Decision v2r4,
+                      ITAlgorithms v13r1, CaloInterfaces v3r1, CaloUtils v4r6,
+                      CaloMonitor v1r6, CaloDigit v1r5, VeloAlgorithms v2r9,
+                      MuonAlgs v5r1, MuonBackground v1r5, RichDigiQC v1r4,
+                      RichDAQ v1r1, RichDetTools v3r5, RichReadout v1r4
+
 !======================== BooleSys v4r0 2003-12-12 ========================
 ! 2003-12-09 - Marco Cattaneo
  - Packages modified: RiSicbGeom v3r7, CaloInterfaces v3r0, CaloMonitor v1r5, 

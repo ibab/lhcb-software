@@ -3,20 +3,16 @@
 # Maintainer : Marco CATTANEO
 #============================================================================
 package         DigiAlg
-version         v2r2
+version         v2r3
 
 branches        cmt doc src options
 include_dirs    "$(DIGIALGROOT)"
 
 use AIDA        v*	-no_auto_imports
 use Event       v*      Event
-use DAQEvent    v3r*    Event
+use DAQEvent    v4r*	Event
 use LHCbTools   v1r*    Kernel
 
 library         DigiAlg    ../src/*.cpp  -import=AIDA
-apply_pattern   package_Clinkopts
-apply_pattern   packageShr
 
-#============================================================================
-private
-apply_pattern   package_Cshlibflags
+apply_pattern component_library library=DigiAlg
