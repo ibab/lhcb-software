@@ -4,6 +4,11 @@
 ! Purpose     : Muon digitisation algorithms
 !-----------------------------------------------------------------------------
 
+!======================== MuonAlgs v5r0 2003-10-06 ========================
+! 2003-09-30 - Marco Cattaneo
+ - Adapt MuonDigitization to look for number of spillover events from new
+   SpilloverAlg (non-SICB version) released in DigiAlg v2r0
+
 !======================== MuonAlgs v4r1 2003-06-23 ========================
 ! 2003-06-23 -Alessia Satta
  - Modified to be compatible with gcc3.2

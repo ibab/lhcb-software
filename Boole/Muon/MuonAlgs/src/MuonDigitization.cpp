@@ -51,7 +51,7 @@ StatusCode MuonDigitization::initialize()
 {  
   MsgStream log(msgSvc(), name()); 
   
-  // Get the number of spillover events from the SpillOverAlg
+  // Get the number of spillover events from the SpilloverAlg
   IAlgManager* algmgr;
   StatusCode sc = service( "ApplicationMgr", algmgr );
   if( !sc.isSuccess() ) {
@@ -59,19 +59,17 @@ StatusCode MuonDigitization::initialize()
     return sc;
   }
   IAlgorithm*  spillAlg;
-  sc = algmgr->getAlgorithm( "SpillOverAlg", spillAlg );
+  sc = algmgr->getAlgorithm( "SpilloverAlg", spillAlg );
   if( !sc.isSuccess() ) {
-    log << MSG::WARNING << "SpillOverAlg not found" << endmsg;
+    log << MSG::WARNING << "SpilloverAlg not found" << endmsg;
     m_numberOfSpilloverEvents = 0;
   }
   else {
     IProperty* spillProp;
     spillAlg->queryInterface( IID_IProperty, (void**)&spillProp );
-    IntegerProperty numPrev = 0;
-    IntegerProperty numNext = 0;
-    numPrev.assign( spillProp->getProperty("SpillOverPrev") );
-    numNext.assign( spillProp->getProperty("SpillOverNext") );
-    m_numberOfSpilloverEvents = numPrev + numNext;
+    StringArrayProperty evtPaths;
+    evtPaths.assign( spillProp->getProperty("PathList") );
+    m_numberOfSpilloverEvents = evtPaths.value().size();
     // Release the interfaces no longer needed
     spillAlg->release();
   }

@@ -1,5 +1,5 @@
 package MuonAlgs 
-version v4r1
+version v5r0
 
 # ================ structure ===========================================
 branches src cmt MuonAlgs options doc
