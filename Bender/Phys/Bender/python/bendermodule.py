@@ -1,41 +1,38 @@
-#!/usr/bin/env python
 # =============================================================================
-# $Id: bendermodule.py,v 1.13 2004-08-27 11:42:22 ibelyaev Exp $ 
+# $Id: bendermodule.py,v 1.14 2004-11-08 17:06:52 ibelyaev Exp $ 
 # =============================================================================
 # CVS tag $NAme:$ 
 # =============================================================================
 # $Log: not supported by cvs2svn $
-# Revision 1.12  2004/08/26 19:34:36  ibelyaev
-#  remove explict PyLCGDict
-#
-# Revision 1.11  2004/08/06 12:07:07  ibelyaev
-#  minor improvements
-#
 # =============================================================================
+"""
+This is a major Python Module for Bender application
+Author: Vanya BELYAEV Ivan.Belyaev@itep.ru
+"""
 
 # =============================================================================
 # @file
 #
-# defintion of all LoKi/Bender functions/cuts 
+# The major Python module for Bender application 
 #
 # @date   2004-07-11
 # @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 # =============================================================================
 
-import gaudimodule as gaudi
+import gaudimodule
 
-gaudi.loaddict( 'EventDict'     )
-gaudi.loaddict( 'PhysEventDict' )
-gaudi.loaddict( 'TrEventDict'   )
-gaudi.loaddict( 'RichEventDict' )
-gaudi.loaddict( 'MuonEventDict' )
-gaudi.loaddict( 'CaloEventDict' )
-gaudi.loaddict( 'VeloEventDict' )
-gaudi.loaddict( 'ITEventDict'   )
-gaudi.loaddict( 'OTEventDict'   )
-gaudi.loaddict( 'L0EventDict'   )
-#g.loaddict( 'L1EventDict'   )
-gaudi.loaddict( 'BenderDict'    )
+gaudimodule.loaddict( 'EventDict'     )
+gaudimodule.loaddict( 'PhysEventDict' )
+gaudimodule.loaddict( 'TrEventDict'   )
+gaudimodule.loaddict( 'RichEventDict' )
+gaudimodule.loaddict( 'MuonEventDict' )
+gaudimodule.loaddict( 'CaloEventDict' )
+gaudimodule.loaddict( 'VeloEventDict' )
+gaudimodule.loaddict( 'ITEventDict'   )
+gaudimodule.loaddict( 'OTEventDict'   )
+gaudimodule.loaddict( 'L0EventDict'   )
+gaudimodule.loaddict( 'TrgEventDict'  )
+gaudimodule.loaddict( 'BenderDict'    )
 
 from   bendertypes   import *
 from   benderaux     import *
@@ -45,10 +42,19 @@ from   bendertuple   import *
 from   bendermatch   import *
 from   benderalgo    import *
 
-import benderstr
 
-AppMgr = gaudi.AppMgr 
-g      = AppMgr()
+AppMgr = gaudimodule.AppMgr 
+
+gaudi  = AppMgr()
+
+appMgr = gaudi     #
+g      = gaudi     # for 'backward compatibility'
+theApp = gaudi     # ATLAS style 
+
+
+import benderstr
+import benderconfig
+
 
 # =============================================================================
 # The END 

@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: HandsOn3.py,v 1.2 2004-10-27 14:20:43 ibelyaev Exp $
+# $Id: HandsOn3.py,v 1.3 2004-11-08 17:02:45 ibelyaev Exp $
 # =============================================================================
 # CVS tag $Name: not supported by cvs2svn $ 
 # =============================================================================
@@ -17,9 +17,6 @@
 # import everything from BENDER
 from bendermodule import *
 
-# get the CONFIGURATION utilities
-import benderconfig as bender
-
 # =============================================================================
 # The algorthmm itself 
 # =============================================================================
@@ -32,14 +29,9 @@ class MCKaons( Algo ) :
         # get all kaons from the tree :
         kaons  = mc.find( decay = ' [B_s0 -> J/psi(1S) ( phi(1020) -> ^K+ ^K- ) ]cc' )
         
-        print ' foud Kaons: ' , kaons.size()    
-
         tup = self.nTuple( title = 'My N-Tuple' )
-
-        for K in kaons :
-            
+        for K in kaons :            
             print ' Kaon: ', nameFromPID( K.particleID() ) , K.momentum().perp() / GeV
-            
             self.plot ( title = ' PT of Kaons from psi '   ,
                         value = MCPT( K ) / GeV            ,
                         high  = 5                          ) 
@@ -62,7 +54,7 @@ class MCKaons( Algo ) :
 # =============================================================================
 def configure() :
     
-    bender.config ( files = ['$BENDERTUTOROPTS/BenderTutor.opts' ] )
+    gaudi.config ( files = ['$BENDERTUTOROPTS/BenderTutor.opts' ] )
     
     # modify/update the configuration:
     
@@ -70,22 +62,22 @@ def configure() :
     alg = MCKaons( 'MCKaons' )
     
     # 2) replace the list of top level algorithm by only *THIS* algorithm
-    g.TopAlg = [ 'MCKaons' ]
+    gaudi.setAlgorithms( [alg ])
     
     # configure the histograms:
-    hsvc = g.service('HistogramPersistencySvc')
+    hsvc = gaudi.service('HistogramPersistencySvc')
     hsvc.OutputFile = 'mckaonhistos.hbook'
-    g.HistogramPersistency = 'HBOOK' 
+    gaudi.HistogramPersistency = 'HBOOK' 
     
     # configure the N-Tuples:
-    ntsvc = g.service('NTupleSvc')
+    ntsvc = gaudi.service('NTupleSvc')
     ntsvc.Output = [ "MC DATAFILE='mckaontuples.hbook' TYP='HBOOK' OPT='NEW'" ]
     
-    myAlg = g.algorithm('MCKaons')
+    myAlg = gaudi.algorithm('MCKaons')
     myAlg.NTupleLUN = 'MC'
 
     # redefine input files 
-    evtsel = g.evtSel()
+    evtsel = gaudi.evtSel()
     evtsel.open( [ 'LFN:/lhcb/production/DC04/v1/DST/00000543_00000017_5.dst',
                    'LFN:/lhcb/production/DC04/v1/DST/00000543_00000018_5.dst',
                    'LFN:/lhcb/production/DC04/v1/DST/00000543_00000016_5.dst',
@@ -109,10 +101,10 @@ if __name__ == '__main__' :
     configure()
 
     # event loop 
-    g.run(500)
+    gaudi.run(50)
 
     # for the interactive mode it is better to comment the last line
-    g.exit()
+    gaudi.exit()
 # =============================================================================
 
 # =============================================================================

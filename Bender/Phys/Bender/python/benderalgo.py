@@ -1,18 +1,15 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: benderalgo.py,v 1.5 2004-10-13 17:51:04 ibelyaev Exp $ 
+# $Id: benderalgo.py,v 1.6 2004-11-08 17:06:52 ibelyaev Exp $ 
 # =============================================================================
 # CVS tag $NAme:$ 
 # =============================================================================
 # $Log: not supported by cvs2svn $
-# Revision 1.4  2004/08/26 19:34:36  ibelyaev
-#  remove explict PyLCGDict
-#
-# Revision 1.3  2004/08/06 12:07:06  ibelyaev
-#  minor improvements
-#
 # =============================================================================
-
+"""
+The definition and implemenation of basic Bender' algorithm:
+It is the heart of Bender
+"""
 
 # =============================================================================
 # @file
@@ -24,7 +21,7 @@
 # =============================================================================
 
 # import global namespace 
-import gaudimodule  as gaudi
+import gaudimodule
 
 from   bendertypes  import *
 from   benderunits  import *
@@ -35,55 +32,62 @@ from   bendertuple  import Tuple
 from   bendermatch  import MCMatch
 
 # load minimal set of obejcts 
-gaudi.loaddict('BenderDict')
+gaudimodule.loaddict('BenderDict')
 
-# global namespace 
-gbl = gaudi.gbl
-
-# load the 'intermediate' obejct 
-BenderAlgo = gbl.Bender.BenderAlgoWrap 
+# load the 'intermediate' object 
+BenderAlgo = gaudimodule.gbl.Bender.BenderAlgoWrap 
 
 # extend the intermeadiate object
 class Algo(BenderAlgo):
     """
     The basic algorithm class for easy physics analysis. The core of Bender and LoKi.
+    
     The underlying C++ classes are:
+    
     - Bender::BenderAlgoWrap (Tools/BenderLibs)   $BENDERLIBSROOT/Bender/Algo.h
     - Bender::BenderAlgo     (Tools/BenderLibs)   $BENDERLIBSROOT/Bender/Algo.h
     - LoKi::Algo             (Tools/LoKi)         $LOKIROOT/LoKi/Algo.h
+    - GaudiTupleAlg          (GaudiAlg)           $GAUDIALGROOT/GaudiAlg/GaudiAlgorithm.h
+    - GaudiHistoAlg          (GaudiAlg)           $GAUDIALGROOT/GaudiAlg/GaudiAlgorithm.h
     - GaudiAlgorithm         (GaudiAlg)           $GAUDIALGROOT/GaudiAlg/GaudiAlgorithm.h
+    - Algorithm              (GaudiKernel)        $GAUDIKERELROOT/GaudiKernel/Algorithm.h
+    
     The basic functionality is provided by LoKi::Algo class and described in detail in
-    'LoKi User Guide', always available at $LOKIDOC/doc directory  
+    'LoKi User Guide', always available at $LOKIDOC/doc directory
+    
     """
     def __init__ ( self , name ) :
         """
-        Constructor from unique algorithm instance name
+        Constructor from the unique algorithm instance name
         """
         BenderAlgo.__init__( self , self , name )
-        appMgr = gaudi.AppMgr()
+        appMgr = gaudimodule.AppMgr()
         algMgr = appMgr._algmgr
-        ia = self.asAlgorithm()
+        ia     = self.asAlgorithm()
         sc     = algMgr.addAlgorithm( ia )
         if sc.isFailure() :
-            raise RuntimeError, 'Unable to add Algorithm "'+name+'"'         
+            raise RuntimeError, 'Unable to add Algorithm "' + name + '"'         
         
     def initialize ( self ) :
         """
         The standard initialization includes 2 steps
+        
         - read own properties
+        
         - initialize the base class LoKi::Algo
+        
         """
         status = BenderAlgo.setProperties( self )
-        if not status.isSuccess () :
+        if status.isFailure () :
             raise RuntimeError , 'Can not set properties  for ' + self.name()
         # initialize the base class 
-        sc = BenderAlgo.initialize_( self )
-        if not sc.isSuccess () :
+        status = BenderAlgo.initialize_( self )
+        if status.isFailure () :
             raise RuntimeError , 'Can not initialize base for ' + self.name()
-        self._evtSvc_   = gaudi.iDataSvc      ( BenderAlgo.evtSvc   ( self ) )
-        self._detSvc_   = gaudi.iDataSvc      ( BenderAlgo.detSvc   ( self ) )
-        self._histoSvc_ = gaudi.iHistogramSvc ( BenderAlgo.histoSvc ( self ) )
-        return sc
+        self._evtSvc_   = gaudimodule.iDataSvc      ( BenderAlgo.evtSvc   ( self ) )
+        self._detSvc_   = gaudimodule.iDataSvc      ( BenderAlgo.detSvc   ( self ) )
+        self._histoSvc_ = gaudimodule.iHistogramSvc ( BenderAlgo.histoSvc ( self ) )
+        return status
     
     def analyse  ( self ) :
         """
@@ -107,8 +111,11 @@ class Algo(BenderAlgo):
         """
         Fill/book the histogram. The procedure is described in detail in
         'LoKi User Guide', always available in $LOKIDOC/doc directory
+        
         Usage :
+        
         self.plot( value = pt / GeV , ID = 1 , title = 'My Title' , high = 10 )
+        
         -  'value'  is the value to be put into the histogram
         -  'ID'     is integer histogram identifier  ('semi-optional')
         -  'title'  is historam title                ('semi-optional')
@@ -116,8 +123,11 @@ class Algo(BenderAlgo):
         -  'high'   is high histogeram edge        (optional,default is 100 )
         -  'bins'   is number of bins in histogram (optional,default is 100 )
         -  'weight' is weight for the given fill   (optional,default is 1.0 )
+        
         Either 'ID' or 'title' *MUST* be supplied!
-        Return value:  AIDA::IHistogram1D object 
+        
+        Return value:  AIDA::IHistogram1D object
+        
         """
         if not args.has_key ( 'value' ) :                    # mandatory argument 
             raise TypeError, " 'value' for the histogram is not specified "
@@ -138,14 +148,20 @@ class Algo(BenderAlgo):
     def select       ( self , **args   ) :
         """
         Select the particles according to the selection cuts
+        
         Usage :
+        
         kaons = self.select( tag = 'K-'    , cuts = ID == 'K-' )
         fast  = self.select( tag = 'fastK- , cuts = P > 5 * GeV , source = kaons )
+        
         where :
+        
         -  'tag'    is the tag to be assigned to selected particles (optional,default is 'ALL' )
         -  'cuts'   is the selection function                       (optional,default is PALL  )
         -  'source' is the preselectd collection of particles       (optional)
+        
         Return value:  the range of selected particle, associated with the tag
+        
         """
         tag    = args.get ( 'tag'    , 'All'  )    # tag to be assigned
         cuts   = args.get ( 'cuts'   ,  PALL  )
@@ -157,14 +173,20 @@ class Algo(BenderAlgo):
     def vselect      ( self , **args   ) :
         """
         Select the vertices according to the selection cuts
+        
         Usage :
+        
         prims = self.vselect( tag = 'AllPrimaries' , cuts = VTYPE == 1 )
         goods = self.vselect( tag = 'GoodPVs' , cuts = VTRACKS > 6 , source = prims )
+        
         where :
+        
         -  'tag'    is the tag to be assigned to selected vertices (optional,default is 'ALL' )
         -  'cuts'   is the selection function                      (optional,default is VALL  )
         -  'source' is the preselected collection of vertices      (optional)
+        
         Return value:  the range of selected vertices, associated with the tag
+        
         """
         tag    = args.get ( 'tag'    , 'All'  )    # tag to be assigned 
         cuts   = args.get ( 'cuts'   ,  VALL  )
@@ -176,14 +198,20 @@ class Algo(BenderAlgo):
     def mcselect       ( self , **args   ) :
         """
         Select the MC particles according to the selection cuts
+        
         Usage :
+        
         kaons = self.mcselect( tag = 'K-'    , cuts = MCID == 'K-' )
         fast  = self.mcselect( tag = 'fastK- , cuts = MCP > 5 * GeV , source = kaons )
+        
         where :
+        
         -  'tag'    is the tag to be assigned to selected MC particles (optional,default is 'MCAll' )
         -  'cuts'   is the selection function                       (optional,default is MCPALL  )
         -  'source' is the preselectd collection of particles       (optional)
+        
         Return value:  the range of selected particle, associated with the tag
+        
         """
         tag    = args.get ( 'tag'    , 'MCAll'  )    # tag to be assigned
         cuts   = args.get ( 'cuts'   ,  MCPALL  )
@@ -195,14 +223,20 @@ class Algo(BenderAlgo):
     def mcvselect      ( self , **args   ) :
         """
         Select the MC vertices according to the selection cuts
+        
         Usage :
+        
         prims = self.mcvselect( tag = 'MCV' , cuts = MCVZ < 1 * cm  )
         goods = self.mcvselect( tag = 'MCV1' , cuts = MCVZ > 6 * cm , source = prims )
+        
         where :
+        
         -  'tag'    is the tag to be assigned to selected vertices (optional,default is 'MCVAll' )
         -  'cuts'   is the selection function                      (optional,default is MCVALL  )
         -  'source' is the preselected collection of vertices      (optional)
+        
         Return value:  the range of selected vertices, associated with the tag
+        
         """
         tag    = args.get ( 'tag'    , 'MCVAll'  )    # tag to be assigned 
         cuts   = args.get ( 'cuts'   ,  MCVALL  )
@@ -213,14 +247,21 @@ class Algo(BenderAlgo):
 
     def loop         ( self , **args ) :
         """
+        
         Create the looping object from formula,pid and fit strategy
+        
         Usage :
+        
         D0 = self.loop ( formula = 'K- pi+' , pid = 'D0' , fit = FitVertex )
+        
         where :
+        
         -  'formula' is the selection formula 
         -  'pid'     is the effective particle ID to be assigned to the coombination
         -  'fit'     is the applied fit policy           (optional, default is FitVertex)
-        Return value: the loop object 
+        
+        Return value: the loop object
+        
         """
         if not args.has_key ( 'formula') :                   # mandatory argument 
             raise TypeError, " Selection 'formula'    is not specified   "
@@ -262,80 +303,120 @@ class Algo(BenderAlgo):
     def detSvc         ( self ) : return self._detSvc_
     def histoSvc       ( self ) : return self._histoSvc_
     
-    def get            ( self , **args ) :
+    def get            ( self , address = None , **args ) :
         """
         Helper function to locate objects in Gaudi Event Transient Store
+        
         Usage :
         # 1 
-        mcps = self.get( address = 'MC/Particles' )
+        mcps = self.get (            'MC/Particles' )
         # 2 
-        mcps = self.get( address = 'MC/Particles' , vector = TRUE )
+        mcps = self.get ( address  = 'MC/Particles' )
         # 3 
-        mcps = self.get( address = 'MC/Particles' , list   = TRUE )
+        mcps = self.get ( location = 'MC/Particles' )
+        # 4 
+        mcps = self.get ( address  = 'MC/Particles' , vector = TRUE )
+        # 5 
+        mcps = self.get ( address  = 'MC/Particles' , list   = TRUE )
+        # 6 
+        mcps = self.get ( location = 'MC/Particles' , vector = TRUE )
+        # 7 
+        mcps = self.get ( location = 'MC/Particles' , list   = TRUE )
+        
         where :
-        -\t 'address' \t is the objects's addres in Gaudi Event Transient Store
+        
+        -\t 'address'  \t is the objects's addres in Gaudi Event Transient Store
+        -\t 'location' \t is the alias for 'address'
         -\t 'vector'  \t is an indicator to convert the container into std::vector form
         \t\t\t\t This operation could be expensive!
         -\t 'list'    \t is an indicator to convert the container into list        form
         \t\t\t\t This operation could be expensive!
-        Return value: the locate dobject in gaudi Trnasient Store
+        
+        Return value: the located dobject in Gaudi Transient Store
         """
-        if   args.has_key( 'address'  ) :
-            obj = self._evtSvc_[args.get('address' ) ]
-        else :
-            raise TypeError, " 'address' is not specified "    
-        if args.has_key( 'vector' ) and hasattr( obj , 'containedObjects') :
-            return obj.containedObjects()
-        if args.has_key( 'list'   ) and hasattr( obj , 'containedObjects') :
-            obj = obj.containedObjects()
+        if not address : address = args.get ( 'address'  , None )
+        if not address : address = args.get ( 'location' , None )
+        if not address : raise TypeError, " 'address/location' is not specified "
+        obj = self._evtSvc_[ address ]
+        if not hasattr( obj , 'containedObjects' ) : return obj        # RETURN 
+        if   args.has_key( 'vector' ) :  return obj.containedObjects() # RETURN
+        elif args.has_key( 'list'   ) :
+            obj = obj.containedObjects()                               # RETURN 
             lst = []
             for o in obj : lst += [ o ]
-            return lst
-        return obj
+            return lst                                                 # RETURN
+        return obj                                                     # RETURN 
     
-    def getDet         ( self , **args ) :
-        " helper function to locate objects in Gaudi Detector Transient Store "
-        if not args.has_key( "address" ) :
-            raise TypeError, "'address' is not specified "
-        return self._detSvc_[ args.get('address') ]
+    def getDet         ( self , address = None , **args ) :
+        """
+        Helper function to locate objects in Gaudi Detector Transient Store
+        """
+        if not address : address = args.get( 'detector' , None )
+        if not address : address = args.get( 'address'  , None )
+        if not address : address = args.get( 'location' , None )
+        if not address : raise TypeError, " 'address/location' is not specified "
+        return self._detSvc_[ address ]                                # RETURN 
     
     def point          ( self , **args ) :
-        " Helper function for geometry calculation "
+        """
+        Helper function for geometry calculation
+        (needed for contruction of some  important geometry-related funtions/cuts)
+        """
         if args.has_key ( "vertex" ) :
             return BenderAlgo.point( self , args.get ( 'vertex' ) )
         if args.has_key ( "point"  ) :
             return BenderAlgo.point( self , args.get ( 'point' ) )
         return BenderAlgo.geo( self )
+
     def geo            ( self , **args ) :
         if   args : return self.point ( args )
         else      : return self.point (      ) 
         
     def Error          ( self , **args ) :
         """
-        Error printout and statistics
+        Error: printout and statistics
+
+        Usage:
+
+        if a < 0 : self.Error( message = 'something wrong here!' ,prints = 5 )
+        
         """
         message = args.get ( 'message' , 'Unspecified Error' )
         code    = args.get ( 'code'    ,  FAILURE            )
         prints  = args.get ( 'prints'  , 10                  ) 
-        return BenderAlgo.Error( self  , msg , code , prints )
+        return BenderAlgo.Error( self  , msg , code , prints )      #RETURN 
     
     def Warning        ( self , **args ) :
         """
-        Warning printout and statistics
+        Warnings: printout and statistics
+
+        Usage:
+
+        if a < 0 : self.Warning( message = 'something wrong here!' ,prints = 5 )
+        
         """
         message = args.get ( 'message' , 'Unspecified Error' )
         code    = args.get ( 'code'    , FAILURE             )
         prints  = args.get ( 'prints'  , 10                  ) 
-        return BenderAlgo.Warning( self , message , code , prints )
+        return BenderAlgo.Warning( self , message , code , prints )  # RETURN 
     
     def Print        ( self , **args ) :
         """
-        Print the message with the given vernosity level 
+        Print the message with the given verbosity level 
+
+        Usage:
+
+        if a < 0 : self.Print( message = ' some information ' , level = MSG.ALWAYS  )
+        
         """
         message = args.get ( 'message' , ' <* EMPTY MESSAGE *> ' )
         code    = args.get ( 'code'    , SUCCESS                 )
         level   = args.get ( 'level'   , MSG.ALWAYS              )
         if level >= MSG.NUM_LEVEL : level = MSG.ALWAYS
-        if level <  MSG.NIL       : level = MSG.ALWAYS  
-        return BenderAlgo.Print( self  , message , code , level  )
-    
+        if level <= MSG.NIL       : level = MSG.VERBOSE  
+        return BenderAlgo.Print( self  , message , code , level  )     # RETURN 
+
+
+# =============================================================================
+# The END 
+# =============================================================================

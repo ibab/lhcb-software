@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: MCmuons.py,v 1.2 2004-10-27 14:20:44 ibelyaev Exp $
+# $Id: MCmuons.py,v 1.3 2004-11-08 17:02:46 ibelyaev Exp $
 # =============================================================================
 # CVS tag $Name: not supported by cvs2svn $ 
 # =============================================================================
@@ -16,9 +16,6 @@
 
 # import everything from BENDER
 from bendermodule import *
-
-# get the CONFIGURATION utilities
-import benderconfig as bender
 
 # =============================================================================
 # define the primitive algorithm 
@@ -55,7 +52,7 @@ class MCMuons(Algo):
 # =============================================================================
 def configure() :
     
-    bender.config ( files = ['$BENDERTUTOROPTS/BenderTutor.opts' ] )
+    gaudi.config ( files = ['$BENDERTUTOROPTS/BenderTutor.opts' ] )
     
     # modify/update the configuration:
     
@@ -63,7 +60,7 @@ def configure() :
     alg = MCMuons( 'McMu' )
     
     # 2) replace the list of top level algorithm by only *THIS* algorithm
-    g.TopAlg = [ 'McMu' ]
+    gaudi.setAlgorithms( [ alg ] ) 
 
     return SUCCESS
 # =============================================================================
@@ -77,12 +74,14 @@ if __name__ == '__main__' :
     configure()
 
     # event loop 
-    g.run(50)
+    gaudi.run(50)
 
     # for the interactive mode it is better to comment the last line
-    g.exit()
+    gaudi.exit()
 # =============================================================================
 
+# =============================================================================
+# $Log: not supported by cvs2svn $ 
 # =============================================================================
 # The END 
 # =============================================================================

@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: HandsOn1.py,v 1.2 2004-10-27 14:20:43 ibelyaev Exp $
+# $Id: HandsOn1.py,v 1.3 2004-11-08 17:02:45 ibelyaev Exp $
 # =============================================================================
 # CVS tag $Name: not supported by cvs2svn $ 
 # =============================================================================
@@ -17,9 +17,6 @@
 
 # import everything from BENDER
 from bendermodule import *
-
-# get the CONFIGURATION utilities
-import benderconfig as bender
 
 # =============================================================================
 # define the primitive algorithm 
@@ -45,7 +42,7 @@ class GetData(Algo):
 # =============================================================================
 def configure() :
     
-    bender.config ( files = ['$BENDERTUTOROPTS/BenderTutor.opts' ] )
+    gaudi.config ( files = ['$BENDERTUTOROPTS/BenderTutor.opts' ] )
     
     # modify/update the configuration:
     
@@ -53,7 +50,7 @@ def configure() :
     alg = GetData( 'GetData' )
     
     # 2) replace the list of top level algorithm by only *THIS* algorithm
-    g.TopAlg = [ 'GetData' ]
+    gaudi.setAlgorithms( [alg] ) 
 
     return SUCCESS
 
@@ -66,21 +63,15 @@ if __name__ == '__main__' :
     configure()
 
     # event loop 
-    g.run(50)
+    gaudi.run(50)
 
     # for the interactive mode it is better to comment the last line
-    g.exit()
+    gaudi.exit()
 # =============================================================================
     
 
 # =============================================================================
 # $Log: not supported by cvs2svn $
-# Revision 1.1  2004/10/27 14:13:47  ibelyaev
-# *** empty log message ***
-#
-# Revision 1.1.1.1  2004/10/13 17:45:21  ibelyaev
-# New package: Star-Up Tutorial for Bender
-# 
 # =============================================================================
 # The END
 # =============================================================================

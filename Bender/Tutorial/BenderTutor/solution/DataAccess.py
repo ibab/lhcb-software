@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: DataAccess.py,v 1.2 2004-10-27 14:20:43 ibelyaev Exp $
+# $Id: DataAccess.py,v 1.3 2004-11-08 17:02:45 ibelyaev Exp $
 # =============================================================================
 # CVS tag $Name: not supported by cvs2svn $ 
 # =============================================================================
@@ -17,9 +17,6 @@
 # import everything from BENDER
 from bendermodule import *
 
-# get the CONFIGURATION utilities
-import benderconfig as bender
-
 # =============================================================================
 # @class GetData
 # define the primitive algorithm 
@@ -28,11 +25,11 @@ class GetData(Algo):
     def analyse( self ) :
 
         # get and print the event number 
-        hdr = self.get( address = 'Header' )
-        print ' Event# ', hdr.evtNum()
+        hdr  = self.get( 'Header' )
+        print ' Event/Run #%d/%d ' %( hdr.evtNum() , hdr.runNum() )
         
         # get all MC particles as 'native' KeyedContainer
-        mcps1 = self.get( address = 'MC/Particles' )
+        mcps1 = self.get( 'MC/Particles' )
         print ' The type of "mcps1" is ' , type(mcps1)
 
         # get all MC particles as std::vector ( useful for explicit loops)
@@ -45,32 +42,44 @@ class GetData(Algo):
                           list    = TRUE           )
         print ' The type of "mcps3" is ' , type(mcps3)
 
+        # get all MC collisisons 
+        colls = self.get( 'Gen/Collisions' , list = TRUE )
+        for c in colls :
+            print 'Collision' , `c`
+            
         # for the first 5 particles print PID information
-        num = 0 
-        for mcp in mcps2 :
-            num += 1 
-            if num > 5 : continue 
-            print ' MCParticle name is ', nameFromPID( mcp.particleID() ) 
-
+        for i in range( 0 , min( 5 , len(mcps3) ) ) :
+            print ' MCParticle name is ', nameFromPID( mcps3[i].particleID() ) 
         
         return SUCCESS
 # =============================================================================
 
 # =============================================================================
-# The configuration fo the job
+# The configuration of the job
 # =============================================================================
 def configure() :
     
-    bender.config ( files = ['$BENDERTUTOROPTS/BenderTutor.opts' ] )
+    gaudi.config ( files = ['$BENDERTUTOROPTS/BenderTutor.opts' ] )
     
     # modify/update the configuration:
     
     # 1) create the algorithm
     alg = GetData( 'GetData' )
     
-    # 2) replace the list of top level algorithm by only *THIS* algorithm
-    g.TopAlg = [ 'GetData' ]
+    # (2) replace the list of top level algorithm by
+    #     new list, which contains only *THIS* algorithm
+    gaudi.setAlgorithms( [ alg ] )
+    
+    # define input data files :
+    #    1) get the Event Selector from Gaudi
+    #    2) configure Event Selector 
+    evtSel = gaudi.evtSel()
+    evtSel.open( [ 'LFN:/lhcb/production/DC04/v1/DST/00000543_00000017_5.dst' , 
+                   'LFN:/lhcb/production/DC04/v1/DST/00000543_00000018_5.dst' ,
+                   'LFN:/lhcb/production/DC04/v1/DST/00000543_00000016_5.dst' ,
+                   'LFN:/lhcb/production/DC04/v1/DST/00000543_00000020_5.dst' ] )
 
+    
     return SUCCESS 
 # =============================================================================
     
@@ -83,19 +92,15 @@ if __name__ == '__main__' :
     configure()
     
     # event loop 
-    g.run(50)
+    gaudi.run(5)
     
     # for the interactive mode it is better to comment the last line
-    g.exit()
-    
+    gaudi.exit()
+# =============================================================================
+
+
 # =============================================================================
 # $Log: not supported by cvs2svn $
-# Revision 1.1  2004/10/27 14:13:47  ibelyaev
-# *** empty log message ***
-#
-# Revision 1.1.1.1  2004/10/13 17:45:21  ibelyaev
-# New package: Star-Up Tutorial for Bender
-# 
 # =============================================================================
 # The END
 # =============================================================================

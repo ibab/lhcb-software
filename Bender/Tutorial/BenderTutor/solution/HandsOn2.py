@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: HandsOn2.py,v 1.2 2004-10-27 14:20:43 ibelyaev Exp $
+# $Id: HandsOn2.py,v 1.3 2004-11-08 17:02:45 ibelyaev Exp $
 # =============================================================================
 # CVS tag $Name: not supported by cvs2svn $ 
 # =============================================================================
@@ -16,9 +16,6 @@
 
 # import everything from BENDER
 from bendermodule import *
-
-# get the CONFIGURATION utilities
-import benderconfig as bender
 
 # =============================================================================
 # define the primitive algorithm 
@@ -42,7 +39,7 @@ class HandsOn2(Algo):
 # =============================================================================
 def configure() :
     
-    bender.config ( files = ['$BENDERTUTOROPTS/BenderTutor.opts' ] )
+    gaudi.config ( files = ['$BENDERTUTOROPTS/BenderTutor.opts' ] )
     
     # modify/update the configuration:
     
@@ -50,8 +47,8 @@ def configure() :
     alg = HandsOn2( 'HandsOn2' )
     
     # 2) replace the list of top level algorithm by only *THIS* algorithm
-    g.TopAlg = [ 'HandsOn2' ]
-
+    gaudi.setAlgorithms( [alg] )
+    
     return SUCCESS
 # =============================================================================
 
@@ -59,17 +56,19 @@ def configure() :
 # The control flow 
 # =============================================================================
 if __name__ == '__main__' :
-
+    
     # job configuration
     configure()
 
     # event loop 
-    g.run(100)
+    gaudi.run(100)
 
     # for the interactive mode it is better to comment the last line
-    g.exit()
+    gaudi.exit()
 # =============================================================================
 
+# =============================================================================
+# $Log: not supported by cvs2svn $ 
 # =============================================================================
 # The END 
 # =============================================================================

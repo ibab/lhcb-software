@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: MCTrees.py,v 1.2 2004-10-27 14:20:44 ibelyaev Exp $
+# $Id: MCTrees.py,v 1.3 2004-11-08 17:02:46 ibelyaev Exp $
 # =============================================================================
 # CVS tag $Name: not supported by cvs2svn $ 
 # =============================================================================
@@ -16,9 +16,6 @@
 
 # import everything from BENDER
 from bendermodule import *
-
-# get the CONFIGURATION utilities
-import benderconfig as bender
 
 # =============================================================================
 # The algorthmm itself 
@@ -65,31 +62,30 @@ class MCTrees( Algo ) :
 # =============================================================================
 def configure() :
     
-    bender.config ( files = ['$BENDERTUTOROPTS/BenderTutor.opts' ] )
-    
-    # modify/update the configuration:
-    
+    gaudi.config ( files = ['$BENDERTUTOROPTS/BenderTutor.opts' ,
+                            '$STDOPTS/Hbook.opts'] )
+
     # 1) create the algorithm
     alg = MCTrees( 'McTree' )
-    
+
     # 2) replace the list of top level algorithm by only *THIS* algorithm
-    g.TopAlg = [ 'McTree' ]
+    gaudi.setAlgorithms ( [ alg ] ) 
     
     # configure the histograms:
-    g.HistogramPersistency = 'HBOOK' 
-    hsvc = g.service('HistogramPersistencySvc')
+    hsvc = gaudi.service('HistogramPersistencySvc')
+    gaudi.HistogramPersistency = 'HBOOK' 
     hsvc.OutputFile = 'mctreeshistos.hbook'
-    
-    
+
     # configure the N-Tuples:
-    ntsvc = g.service('NTupleSvc')
-    ntsvc.Output = [ "MC DATAFILE='mctreestuples.hbook' TYP='HBOOK' OPT='NEW'" ]
-    
-    myAlg = g.algorithm('McTree')
+    ntsvc = gaudi.service('NTupleSvc')
+    ntsvc.Output = [ "MC DATAFILE='x.hbook' TYPE='HBOOK' opt='NEW'" ]
+
+    # configure my own algorithm
+    myAlg = gaudi.algorithm('McTree')
     myAlg.NTupleLUN = 'MC'
-    
+
     # redefine input files 
-    evtsel = g.evtSel()
+    evtsel = gaudi.evtSel()
     evtsel.open( [ 'LFN:/lhcb/production/DC04/v1/DST/00000543_00000017_5.dst',
                    'LFN:/lhcb/production/DC04/v1/DST/00000543_00000018_5.dst',
                    'LFN:/lhcb/production/DC04/v1/DST/00000543_00000016_5.dst',
@@ -101,6 +97,7 @@ def configure() :
                    'LFN:/lhcb/production/DC04/v1/DST/00000543_00000001_5.dst',
                    'LFN:/lhcb/production/DC04/v1/DST/00000543_00000002_5.dst' ] )
     
+
     return SUCCESS
 # =============================================================================
 
@@ -113,12 +110,14 @@ if __name__ == '__main__' :
     configure()
 
     # event loop 
-    g.run(50)
+    gaudi.run(50)
 
     # for the interactive mode it is better to comment the last line
-    g.exit()
+    gaudi.exit()
 # =============================================================================
 
+# =============================================================================
+# $Log: not supported by cvs2svn $ 
 # =============================================================================
 # The END 
 # =============================================================================

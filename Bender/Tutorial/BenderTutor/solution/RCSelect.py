@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: RCSelect.py,v 1.2 2004-10-27 14:20:44 ibelyaev Exp $
+# $Id: RCSelect.py,v 1.3 2004-11-08 17:02:47 ibelyaev Exp $
 # =============================================================================
 # CVS tag $Name: not supported by cvs2svn $ 
 # =============================================================================
@@ -18,10 +18,10 @@
 # import everything from BENDER
 from bendermodule import *
 
-# get the CONFIGURATION utilities
-import benderconfig as bender
 
-
+# =============================================================================
+# @class RCselect
+# =============================================================================
 class RCSelect(Algo):
     def analyse( self ) :
         
@@ -96,12 +96,12 @@ class RCSelect(Algo):
 # =============================================================================
 def configure() :
     
-    bender.config ( files = ['$BENDERTUTOROPTS/BenderTutor.opts' ] )
+    gaudi.config ( files = ['$BENDERTUTOROPTS/BenderTutor.opts' ] )
     
     # modify/update the configuration:
     
     # Preload all charged particles 
-    g.TopAlg +=  [ 'LoKiPreLoad/Charged' ]
+    gaudi.addAlgorithm( 'LoKiPreLoad/Charged' )
     
     import benderPreLoad as preload
     
@@ -114,27 +114,27 @@ def configure() :
     # 1) create the algorithm
     alg = RCSelect( 'RCSelect' )
     
-    # 2) replace the list of top level algorithm by only *THIS* algorithm
-    g.TopAlg += [ 'RCSelect' ]
+    # 2) add the algorithm to the list of top-level algorithms 
+    gaudi.addAlgorithm( alg ) 
     
     # 3) configure algorithm
-    desktop = g.property('RCSelect.PhysDesktop')
+    desktop = gaudi.property('RCSelect.PhysDesktop')
     desktop.InputLocations = [ "/Event/Phys/Charged" ]
     
     # configure the histograms:
-    g.HistogramPersistency = 'HBOOK' 
-    hsvc = g.service('HistogramPersistencySvc')
+    gaudi.HistogramPersistency = 'HBOOK' 
+    hsvc = gaudi.service('HistogramPersistencySvc')
     hsvc.OutputFile = 'rcselect.hbook'
     
     # configure the N-Tuples:
-    ntsvc = g.service('NTupleSvc')
+    ntsvc = gaudi.service('NTupleSvc')
     ntsvc.Output = [ "RC DATAFILE='rctuples.hbook' TYP='HBOOK' OPT='NEW'" ]
     
-    myAlg = g.algorithm('RC')
+    myAlg = gaudi.algorithm('RC')
     myAlg.NTupleLUN = 'RC'
 
     # redefine input files 
-    evtsel = g.evtSel()
+    evtsel = gaudi.evtSel()
     evtsel.open( [ 'LFN:/lhcb/production/DC04/v1/DST/00000543_00000017_5.dst',
                    'LFN:/lhcb/production/DC04/v1/DST/00000543_00000018_5.dst',
                    'LFN:/lhcb/production/DC04/v1/DST/00000543_00000016_5.dst',
@@ -158,10 +158,10 @@ if __name__ == '__main__' :
     configure()
 
     # event loop 
-    g.run(500)
+    gaudi.run(50)
 
     # for the interactive mode it is better to comment the last line
-    g.exit()
+    gaudi.exit()
 # =============================================================================
 
 # =============================================================================

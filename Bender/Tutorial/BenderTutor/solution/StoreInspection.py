@@ -1,16 +1,14 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: HelloWorld.py,v 1.3 2004-11-08 17:02:46 ibelyaev Exp $
+# $Id: StoreInspection.py,v 1.1 2004-11-08 17:02:47 ibelyaev Exp $
 # =============================================================================
 # CVS tag $Name: not supported by cvs2svn $ 
 # =============================================================================
-"""
-Standard 'Hello, world!' example. No way to avoid it!
-"""
+
 # =============================================================================
 # @file
 #
-# "Solution"-file for 'Hello,World!' example (Bender Tutorial)
+# "Solution"-file for 'StoreInspection' example (Bender Tutorial)
 #
 # @author Vanya BELYAEV  belyaev@lapp.in2p3.fr
 # @date   2004-10-12
@@ -20,26 +18,35 @@ Standard 'Hello, world!' example. No way to avoid it!
 from bendermodule import *
 
 # =============================================================================
-# @class HelloWorld
-# simple Python/Bender class for classical 'Hello,World!' example
+# @class GetData
+# define the primitive algorithm 
 # =============================================================================
-class HelloWorld(Algo):
+class GetData(Algo):
     def analyse( self ) :
-        print 'Hello, world!'
+
+        evtSvc = self.evtSvc()
+
+        data = evtSvc['/Event/MC']
+
+        
+        print ' perform data inspection INSIDE the algorithm scope ' 
+        evtSvc.dir('Rec')
+        
+        
         return SUCCESS
 # =============================================================================
 
 # =============================================================================
-# The configuration of the job
+# The configuration fo the job
 # =============================================================================
 def configure() :
-
-    gaudi.config( files = ['$BENDERTUTOROPTS/BenderTutor.opts' ] )
-
+    
+    gaudi.config ( files = ['$BENDERTUTOROPTS/BenderTutor.opts' ] )
+    
     # modify/update the configuration:
     
-    # (1) create the algorithm
-    alg = HelloWorld( 'Hello' )
+    # 1) create the algorithm
+    alg = GetData( 'GetData' )
     
     # (2) replace the list of top level algorithm by
     #     new list, which contains only *THIS* algorithm
@@ -57,31 +64,32 @@ def configure() :
     
     return SUCCESS 
 # =============================================================================
-
+    
 # =============================================================================
 # Job steering 
 # =============================================================================
 if __name__ == '__main__' :
-
+    
     # job configuration
     configure()
-
+    
     # event loop 
-    gaudi.run(10)
-    print ' 10 events have been processed '
     gaudi.run(5)
-    print '  5 events have been processed '
-    gaudi.run(1)
-    print '  1  event has  been processed '
-        
+
+    # inspect the data outside the algorithm
+    print ' perform data inspection OUTSIDE the algorithm scope ' 
+    evtSvc  = gaudi.evtSvc()
+    data    = evtSvc['Rec'] 
+    evtSvc.dir( data )
+    data = evtSvc['Phys/GetData/Particles']
+    evtSvc.ls(data)
+    
     # for the interactive mode it is better to comment the last line
     gaudi.exit()
 # =============================================================================
-
+    
 # =============================================================================
 # $Log: not supported by cvs2svn $
 # =============================================================================
 # The END
 # =============================================================================
-
-

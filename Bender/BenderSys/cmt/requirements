@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.34 2004-10-21 13:35:56 ibelyaev Exp $ 
+# $Id: requirements,v 1.35 2004-11-08 17:09:37 ibelyaev Exp $ 
 # =============================================================================
 # CVS tag $Name: not supported by cvs2svn $
 # =============================================================================
@@ -6,11 +6,11 @@
 #                 LHCb Physics Analysis with Python  
 # =============================================================================
 package       BenderSys
-version       v4r1
+version       v4r2
 author        Vanya BELYAEV
 
 # =========== Bender Application itself =======================================
-use           Bender         v4r1   Phys 
+use           Bender         v4r2   Phys 
 use           BenderGCC      v1r0   Tools 
 # =========== Bender Libraries ================================================
 use           BenderLibs     v4r1   Tools 
@@ -21,7 +21,7 @@ use           BenderDict     v4r1   Tools
 # =========== Bender & LoKi documentation =====================================
 use           BenderDoc      v4r0   Doc 
 use           LoKiDoc        v3r5p1 Doc 
-use           BenderTutor    v1r0   Tutorial
+use           BenderTutor    v4r2   Tutorial
 # =========== Test suit for Bender ============================================
 use           BenderTest     v4r0   Tests 
 use           LoKiTest       v3r3   Tests 
@@ -29,21 +29,16 @@ use           LoKiTest       v3r3   Tests
 use           BenderExample  v4r0   Ex  
 use           LoKiExample    v3r3p2 Ex 
 # =========== Test suit for Bender ============================================
-use           BenderVis      v4r0   Vis 
+use           BenderVis      v4r2   Vis 
 # =========== empty 'user' package ============================================
 use           BenderUser     v4r0   Phys
 use           LoKiUser       v1r0   Phys   
-# =========== needed for visualization ========================================
-# use         HIPPODRAW      v1r133 
 # =========== temporary : to make easier Hlt studies ==========================
 use           LoKiHybrid     v1r0p1 Tools 
 # =============================================================================
 
 # =============================================================================
 # $Log: not supported by cvs2svn $
-# Revision 1.33  2004/10/13 18:06:18  ibelyaev
-#  v4r1
-#
 # =============================================================================
 # The END 
 # =============================================================================

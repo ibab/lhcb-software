@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: HandsOn4.py,v 1.2 2004-10-27 14:20:44 ibelyaev Exp $
+# $Id: HandsOn4.py,v 1.3 2004-11-08 17:02:46 ibelyaev Exp $
 # =============================================================================
 # CVS tag $Name: not supported by cvs2svn $ 
 # =============================================================================
@@ -17,9 +17,6 @@
 
 # import everything from BENDER
 from bendermodule import *
-
-# get the CONFIGURATION utilities
-import benderconfig as bender
 
 # =============================================================================
 # the algorithm itself 
@@ -88,12 +85,12 @@ class RCKaons(Algo):
 # =============================================================================
 def configure() :
     
-    bender.config ( files = ['$BENDERTUTOROPTS/BenderTutor.opts' ] )
+    gaudi.config ( files = ['$BENDERTUTOROPTS/BenderTutor.opts' ] )
     
     # modify/update the configuration:
     
     # Preload all charged particles 
-    g.TopAlg +=  [ 'LoKiPreLoad/Charged' ]
+    gaudi.addAlgorithm( 'LoKiPreLoad/Charged' )
     
     import benderPreLoad as preload
     preload.Charged( Name  = 'Charged' ,
@@ -103,26 +100,26 @@ def configure() :
     alg = RCKaons( 'RCKaons' )
     
     # 2) replace the list of top level algorithm by only *THIS* algorithm
-    g.TopAlg += [ 'RCKaons' ]
+    gaudi.addAlgorithm( alg )
     
     # 3) configure algorithm
-    desktop = g.property('RCKaons.PhysDesktop')
+    desktop = gaudi.property('RCKaons.PhysDesktop')
     desktop.InputLocations = [ "/Event/Phys/Charged" ]
     
     # configure the histograms:
-    g.HistogramPersistency = 'HBOOK' 
-    hsvc = g.service('HistogramPersistencySvc')
+    gaudi.HistogramPersistency = 'HBOOK' 
+    hsvc = gaudi.service('HistogramPersistencySvc')
     hsvc.OutputFile = 'rckaonhistos.hbook'
     
     # configure the N-Tuples:
-    ntsvc = g.service('NTupleSvc')
+    ntsvc = gaudi.service('NTupleSvc')
     ntsvc.Output = [ "RC DATAFILE='rckaontuples.hbook' TYP='HBOOK' OPT='NEW'" ]
     
-    myAlg = g.algorithm('RCKaons')
+    myAlg = gaudi.algorithm('RCKaons')
     myAlg.NTupleLUN = 'RC'
 
     # redefine input files 
-    evtsel = g.evtSel()
+    evtsel = gaudi.evtSel()
     evtsel.open( [ 'LFN:/lhcb/production/DC04/v1/DST/00000543_00000017_5.dst',
                    'LFN:/lhcb/production/DC04/v1/DST/00000543_00000018_5.dst',
                    'LFN:/lhcb/production/DC04/v1/DST/00000543_00000016_5.dst',
@@ -146,10 +143,10 @@ if __name__ == '__main__' :
     configure()
     
     # event loop 
-    g.run(100)
+    gaudi.run(100)
 
     # for the interactive mode it is better to comment the last line
-    g.exit()
+    gaudi.exit()
 # =============================================================================
 
 # =============================================================================

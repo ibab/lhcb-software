@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: HandsOn2.5.py,v 1.2 2004-10-27 14:20:43 ibelyaev Exp $
+# $Id: HandsOn2.5.py,v 1.3 2004-11-08 17:02:45 ibelyaev Exp $
 # =============================================================================
 # CVS tag $Name: not supported by cvs2svn $ 
 # =============================================================================
@@ -17,9 +17,6 @@
 # import everything from BENDER
 from bendermodule import *
 
-# get the CONFIGURATION utilities
-import benderconfig as bender
-
 # =============================================================================
 # configure the job
 # =============================================================================
@@ -30,7 +27,7 @@ def configure() :
     HandsOn2.configure()
     
     # redefine input files 
-    evtsel = g.evtSel()
+    evtsel = gaudi.evtSel()
     evtsel.open( stream = [ 'LFN:/lhcb/production/DC04/v1/DST/00000543_00000017_5.dst', 
                             'LFN:/lhcb/production/DC04/v1/DST/00000543_00000018_5.dst',
                             'LFN:/lhcb/production/DC04/v1/DST/00000543_00000016_5.dst',
@@ -54,12 +51,14 @@ if __name__ == '__main__' :
     configure()
 
     # event loop 
-    g.run(100)
+    gaudi.run(100)
 
     # for the interactive mode it is better to comment the last line
-    g.exit()
+    gaudi.exit()
 # =============================================================================
 
+# =============================================================================
+# $Log: not supported by cvs2svn $ 
 # =============================================================================
 # The END 
 # =============================================================================

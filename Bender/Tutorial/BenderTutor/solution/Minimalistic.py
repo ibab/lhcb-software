@@ -1,15 +1,17 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: Minimalistic.py,v 1.2 2004-10-27 14:20:44 ibelyaev Exp $
+# $Id: Minimalistic.py,v 1.3 2004-11-08 17:02:46 ibelyaev Exp $
 # =============================================================================
 # CVS tag $Name: not supported by cvs2svn $ 
 # =============================================================================
-
+"""
+This is the simplest  Bender module to run the analysis job
+using '*'.opts configuration
+"""
 # =============================================================================
 # @file
 #
-# "Solution"-file for 'Minimalistic' example (Bender Tutorial)
-#
+
 # @author Vanya BELYAEV  belyaev@lapp.in2p3.fr
 # @date   2004-10-12
 # =============================================================================
@@ -17,21 +19,27 @@
 # get EVERYTHING from Bender
 from bendermodule import *
 
-# get the CONFIGURATION utilities
-import benderconfig as bender
-
-
 # =============================================================================
 # The configuration of the job 
 # =============================================================================
 def configure() :
     """
-    The  basic configruation method
+    The  basic configuration method
     """
-    bender.config( files = ['$BENDERTUTOROPTS/BenderTutor.opts' ] )
+    # get the major configuration from '*'.opts file 
+    gaudi.config( files = ['$BENDERTUTOROPTS/BenderTutor.opts' ] )
+    
+    # define input data files :
+    #    1) get the Event Selector from Gaudi
+    #    2) configure Event Selector 
+    evtSel = gaudi.evtSel()
+    evtSel.open( [ 'LFN:/lhcb/production/DC04/v1/DST/00000543_00000017_5.dst' , 
+                   'LFN:/lhcb/production/DC04/v1/DST/00000543_00000018_5.dst' ,
+                   'LFN:/lhcb/production/DC04/v1/DST/00000543_00000016_5.dst' ,
+                   'LFN:/lhcb/production/DC04/v1/DST/00000543_00000020_5.dst' ] )
+
     return SUCCESS 
 # =============================================================================
-
 
 
 # =============================================================================
@@ -43,21 +51,14 @@ if __name__ == '__main__' :
     configure()
 
     # event loop 
-    g.run(10)
+    g.run(100)
 
-    # for the interactive mode it is better to comment the last line
+    # terminate  Gaudi application  
     g.exit()
 # =============================================================================
 
-
 # =============================================================================
 # $Log: not supported by cvs2svn $
-# Revision 1.1  2004/10/27 14:13:48  ibelyaev
-# *** empty log message ***
-#
-# Revision 1.1.1.1  2004/10/13 17:45:21  ibelyaev
-# New package: Star-Up Tutorial for Bender
-# 
 # =============================================================================
 # The END
 # =============================================================================
