@@ -5,6 +5,19 @@
 ! Purpose     : LHCb OO kernel packages
 !-----------------------------------------------------------------------------
 
+!======================= LHCbSys v18r2 2005-03-11 =======================
+! 2005-03-11 - Marco Cattaneo
+ - Packages modified: KernelSys v4r9, Relations v2r4, 
+                      EventSys v20r2, PhysEvent v8r9
+
+ - In Relations v2r4
+   . Optimisation of constructors
+   . Remove a (false) Warning message when options are correctly chosen
+
+ - In PhysEvent v8r9
+   . Add Kernel directory for interfaces closely related to PhysEvent
+   . Add Kernel/IParticleTransporter.h, moved here from DaVinciKernel 
+
 !======================= LHCbSys v18r1 2005-03-08 =======================
 ! 2005-03-08 - Marco Cattaneo
  - Move to Gaudi v16r2
