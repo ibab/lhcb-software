@@ -12,4 +12,4 @@ HltProcessing.measureTime = true;
 
 // If not the monitoring of L1 and HLT can not be set together.
 // HltTrgTrack2MCParticle.prefix = "Hlt/";
-HltTrgChecker.prefix          = "Hlt/";
+// HltTrgChecker.prefix          = "Hlt/";

@@ -2,7 +2,8 @@
 // Stripping job options from the $STRIPPINGROOT 
 // directory
 #include "$STRIPPINGROOT/options/DVComb.opts" 
-ApplicationMgr.EvtMax    = -1;
+#include "$DAVINCIROOT/options/DaVinciTestData.opts"
+
+ApplicationMgr.EvtMax    = 40000 ;
 EventSelector.PrintFreq  = 1;
 
-#include "$DAVINCIROOT/options/DaVinciTestData.opts"
