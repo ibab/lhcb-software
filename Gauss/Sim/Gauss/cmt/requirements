@@ -40,7 +40,7 @@ use XmlDDDB       v11r*   Det
 # Essential environment variables 
 # =============================================================================
 set  GAUSSOPTS "${GAUSSROOT}/options"
-set  GAUSSDATA "${GAUSSOPTS}"
+set  GAUSSDATA "${GAUSSROOT}/data"
 
 # =============== visualization  ==============================================
 set  G4DAWNFILE_DEST_DIR       "../job/"
