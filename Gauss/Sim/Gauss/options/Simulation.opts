@@ -1,10 +1,10 @@
-// $Id: Simulation.opts,v 1.13 2002-07-03 08:23:32 ranjard Exp $ 
+// $Id: Simulation.opts,v 1.14 2002-07-17 11:35:21 ranjard Exp $ 
 // ============================================================================
 
 ApplicationMgr.DLLs += 
 { "GiGa"         , 
   "GiGaCnv"      , 
-  "GaussImports" ,
+  //  "GaussImports" ,
   "Magnet"        } ;
 
 ApplicationMgr.ExtSvc += 
@@ -39,7 +39,10 @@ Kine.StreamItems              +=
 };
 
 
-// configuration of geometry "Geo" data stream 
+// configuration of geometry "Geo" data stream
+
+DetectorDataSvc.DetDbLocation = "$XMLDDDBROOT/DDDB/v247r0.xml";
+ 
 Geo.ExecuteOnce          = true ;  
 Geo.ConversionSvcName    = "GiGaGeomCnvSvc"  ; 
 Geo.DataProviderSvcName  = "DetectorDataSvc" ; 
@@ -52,6 +55,7 @@ Geo.StreamItems         += { "/dd/Structure/LHCb/Pipe"   } ;
 Geo.StreamItems         += { "/dd/Structure/LHCb/Magnet" } ; 
 Geo.StreamItems         += { "/dd/Structure/LHCb/Tracker"   } ; 
 Geo.StreamItems         += { "/dd/Structure/LHCb/Velo"  } ; 
+Geo.StreamItems         += { "/dd/Structure/LHCb/Tracker"  } ; 
 
 // Physics List  to be used and its configuration  
 GiGaSvc.PhysicsList            = "GiGaPhysListEm/EmPhysList" ; 

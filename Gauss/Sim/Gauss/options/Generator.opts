@@ -1,15 +1,12 @@
-// $Id: Generator.opts,v 1.7 2002-07-05 13:35:16 witoldp Exp $ 
+// $Id: Generator.opts,v 1.8 2002-07-17 11:35:21 ranjard Exp $ 
 
 ApplicationMgr.DLLs += { "GeneratorModules" } ;
 
 // Event Generator Phase 
 
-Generator.Members += 
-{"SingleParticleGun"};
-Generator.Members +=
-{"SetDecayAlg","EvtDecayAlg"};
-Generator.Members +=
-{"DumpMC"};
+Generator.Members +={"SingleParticleGun"};
+Generator.Members +={"SetDecayAlg","EvtDecayAlg"};
+Generator.Members +={"DumpMC"};
 /// to add one more generator into the chain of generators uncomment the lines below 
 //ApplicationMgr.DLLs += { "EvGen" };
 //Generator.Members   += { "MCParticleGun" };

@@ -1,5 +1,5 @@
 package Gauss
-version v3r1
+version v4r0
 
 # =============================================================================
 # structure 
@@ -10,36 +10,41 @@ branches doc options cmt job data
 
 # =============================================================================
 # dependencies 
+use ExternalLibs        v4r*
+use GEANT4              v2r4100p*	Sim
+use HepMC               v3r121p*	Sim
 # =============================================================================
-# generator
-use GeneratorModules v2r* Gen
 
 # Main program and standard job options
-use GaudiConf     v6*     
+use GaudiConf           v6*     
 
 # GAUDI framework
-use GaudiSys      v10r3
+use GaudiAlg            v6r*
+use GaudiAud            v6r*
+use GaudiSvc            v9r*
 
 # ROOT event persistency
-use GaudiRootDb   v8r*
-use DbCnv         v7r* Event 
+use GaudiRootDb         v8r*
+use DbCnv               v7r*    Event 
 
 # Histogram persistency
-use HbookCnv      v12r*
+use HbookCnv            v13r*
 
 # Access to magnetic field service
-use dbase         v247r0 SICB
-use Magnet        v1r*  Det
+use Magnet              v2r*    Det
 
 #GiGa staff...
-use GiGaCnv       v6r*  Sim
-use GaussImports  v1r*  Sim 
+use GiGaCnv             v7r*    Sim
+#use GaussImports        v2r*    Sim 
+
+# generator
+use GeneratorModules    v3r*    Gen
 
 # optional generator: 
-#use EvGen         v3r*  Sim 
+#use EvGen               v4r*    Sim 
 
 #geometry source 
-use XmlDDDB       v12r1   Det 
+use XmlDDDB             v12r1   Det 
 
 # =============================================================================
 # Essential environment variables 

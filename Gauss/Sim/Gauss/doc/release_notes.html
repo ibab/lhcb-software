@@ -1,11 +1,133 @@
-! $Id: release.notes,v 1.9 2002-07-15 10:11:04 witoldp Exp $ 
-! =============================================================================
+<PRE>
 Package : Gauss
 Package manager : Witek Pokorski
+</PRE>
 
-!========================== Gauss v3r1 ====================================
+<H1><A NAME="v4r0">20020716 - Gauss v4r0</A></H1><PRE>
 
-! 2002-07015 - Witek Pokorski
+! 2002-07-15 - Florence Ranjard
+  requirements - use geant4.4.1, CLHEP 1.8.0.0
+
+!=================== GaudiSvc v9r0 ============================
+            built on v8r2b branch 
+! 2002-07-16 - Florence Ranjard
+ - requirements - use CLHEP 1.8. 0.0
+
+!==================== HbookCnv v13r0 ============================
+! 2002-07-16 - Florence Ranjard
+  - requirements - use CERNLIB v2r2002p* and AIDA v3r22p*
+
+! 2002-06-04 - Charles Leggett
+  - write/read CWNTuples with multiple blocks.
+
+    writing to block "LEPTON":
+        nt->addItem ("LEPTON/NELE", m_nele, 0, 100);
+        nt->addItem ("LEPTON/PXELE", m_pxele, m_nele);
+      if no block name is given, variables will be put in a block
+      called AUTO_BLK
+        nt->addItem ("Event", m_event);
+
+    reading:
+      use same format as for writing
+        nt->item("LEPTON/NELE", m_nele);
+        nt->item("LEPTON/PXELE", m_pxele);
+        nt->item("Event",m_event);
+
+    Block names must be at most 8 characters.
+
+! 2002-05-15 - Paolo Calafiura
+  - changes to dinamically resize pawc. //Charles
+
+!========================= LHCbKernel v2r0 2002-07-16 ===================
+! 2002-07-16 - Florence Ranjard
+ - requirements - use CLHEP 1.8.0.0
+
+!============================ Event v3r0 2002-07-15 =========================
+! 2002-07-15 - Florence Ranjard
+ - requirements - use LHCbKernel v2r0 to use CLHEP 1.8.0.0
+
+!===================== DetDesc v11r0 2002-07-16 ==============================
+! 2002-07-16 - Florence Ranjard
+ - requirements - use CLHEP 1.8.0.0
+
+! 2002-07-13 - Olivier Callot
+ - Change the LAssembly cover creation message from INFO to DEBUG.
+
+! 2002-07-11 - Sebastien Ponce
+ - implementation of reinitialize method for XmlCnvSvc
+
+!======================= Magnet v2r0 2002-07-16 =============================
+! 2002-07-16 - Florence Ranjard
+ - requirements - use CLHEP 1.8.0.0
+ - MagneticFieldSvc.cpp - read field044.cdf by default
+
+!============================ GenEvent v2r0 ==================================
+! 2002-07-15 - Florence Ranjard
+  requirements - use HepMC v3r121p*
+
+! 20020709 - Witek Pokorski
+  xml description created, included directory changed to Event (from GenEvent)
+
+!=================== EvtGen v2r0 ============================================
+! 2002-07-15 - Florence Ranjard
+  requirements - use CLHEP 1.8.0.0
+ 
+!======================== GeneratorModules v3r0 ===========================
+! 2002-07-15 - Florence Ranjard
+  requirements - use CLHEP 1.8.0.0
+
+! 2002-07-15 - Witek Pokorski
+  GenModule renamed to GenBaseAlg
+
+! 2002-07-09 - Witek Pokorski
+  Moved to the new Event/GenEvent v2r0
+  Several files rename: PythiaModule to PythiaAlg, SetStatusAlg to 
+  SetDecayAlg, EvtDecay to EvtDecayAlg 
+
+!========================= GiGaCnv v7r0 =================================
+! 2002-07-15 - F.Ranjard
+  requirements - use DetDesc v11r*, Event v3r* to use LHCbKernel v2r*
+  GiGaMCParticleCnv.cpp, GiGaMCVertexCnv.cpp - adapted to geant4 4.1
+
+! 2002-07-09 - Ivan Belyaev
+  Move namespace GiGaVolumeUtils into public area of the package 
+ - GiGaCnv/GiGaVolumeUtils.h                - add  
+ - src/Lib/GiGaVolumeUtils.cpp              - add  
+ - src/component/GiGaVolumeUtils.h          - remove 
+ - src/component/GiGaVolumeUtils.cpp        - remove 
+ - src/component/GiGaDetectorElementCnv.cpp - modified 
+ - src/component/GiGaGeomCnvSvc.cpp         - modified 
+ - src/component/GiGaLAssemblyCnv.cpp       - modified 
+ - src/component/GiGaLVolumeCnv.cpp         - modified 
+ - src/component/GiGaSurfaceCnv.cpp         - modified 
+
+! ========================== GiGa v9r0 ===================================
+! 2002-07-03 - Florence Ranjard
+  requirements - use GEANT4 v2r4100p*  (ExternalLibs v4r*)
+
+!================= HepMC v3r121p0 =====================================
+! 20020701 - Florence Ranjard
+  requirements - use CLHEP v2r1800p0
+
+!====================== GaussImports v2r0 ==================================
+! 2002-07-17 - Florence Ranjard
+ - requirements - use GiGa v9r0 to use Geant4 4.1
+                  (not tested)
+
+!======================== EvGen v4r0 ========================================
+! 2002-07-17 - Florence Ranjard
+ - requirements - use Event v3r* to use new event model and CLHEP 1.8.0.0
+                  (not tested)
+                  
+!========================== GEANT4 v2r4100p0 ==========================
+! 2002-07-15 - Florence Ranjard
+  requirements - use geant4.4.1 and CLHEP 1.8.0.0
+
+!=====================================================================
+</PRE>
+<H1><A NAME="v3r1">20020715 - Gauss v3r1</A></H1><PRE>
+
+! 2002-07-15 - Witek Pokorski
   Generator.opts - several algorithms renamed:
                    PythiaModule to PythiaAlg
                    EvtDecay to EvtDecayAlg
@@ -14,14 +136,18 @@ Package manager : Witek Pokorski
 ! 2002-07-03 - Witek Pokorski
   requirements - use Event v2r*, GiGaCnv v6r*
 
-! ========================= Gauss v3r0 ====================================
+!=====================================================================
+</PRE>
+<H1><A NAME="v3r0">20020523 - Gauss v3r0</A></H1><PRE>
 
 ! 2002-05-23 - Witek Pokorski
  - requirements - remove use of SicbCnv
                   add use of Magnet
  - options      - modify Simulation.opts and Gauss.opts accordingly
 
-! ========================== Gauss v2r2 =====================================
+!=====================================================================
+</PRE>
+<H1><A NAME="v2r2">20020510 - Gauss v2r2</A></H1><PRE>
 
 ! 20020510 - Flr
   release.notes - new format
@@ -154,7 +280,9 @@ Package manager : Witek Pokorski
 ! 20020405 - GenEvent v1r0 - Witek Pokorski
     - New Package 
 
-! ========================= Gauss v1r0 ===================================
+!=====================================================================
+</PRE>
+<H1><A NAME="v1r0">20020304 - Gauss v1r0</A></H1><PRE>
 
 ! 20020304 - Witek Pokorski
   - addaptation for GiGaCnv v4r0 (to use HepMC to G4 converter)

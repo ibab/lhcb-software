@@ -1,4 +1,4 @@
-// $Id: Gauss.opts,v 1.12 2002-07-03 08:08:56 ranjard Exp $ 
+// $Id: Gauss.opts,v 1.13 2002-07-17 11:35:21 ranjard Exp $ 
 
 AuditorSvc.Auditors = { "ChronoAuditor" };
 
@@ -20,8 +20,13 @@ EventDataSvc.ForceLeaves = true ;
 // declare external services needed MAGNETIC FIELD (optional)
 ApplicationMgr.ExtSvc +=  
 { "MagneticFieldSvc"  };  
+MagneticFieldSvc.FieldMapFile = 
+//"/afs/cern.ch/lhcb/software/NEW/SICB/dbase/v247r0/cdf/field043.cdf";
+"/afs/cern.ch/lhcb/software/NEW/SICB/dbase/v248r2/cdf/field044.cdf";
 
-ParticlePropertySvc.ParticlePropertiesFile = "../data/particle.cdf" ;
+ParticlePropertySvc.ParticlePropertiesFile = 
+//"../data/particle.cdf" ;
+"/afs/cern.ch/lhcb/software/NEW/SICB/dbase/v248r2/cdf/particle.cdf";
 
 // 3 steps
 ApplicationMgr.TopAlg          =  
