@@ -1,8 +1,6 @@
-# $Id: requirements,v 1.1.1.1 2002-11-13 20:46:39 ibelyaev Exp $
+# $Id: requirements,v 1.2 2002-11-14 15:11:52 cattanem Exp $
 # =============================================================================
 # CVS tag $Name: not supported by cvs2svn $
-# =============================================================================
-# $Log: not supported by cvs2svn $
 # =============================================================================
 package            CaloReco
 version            v1r0
@@ -13,9 +11,6 @@ branches           cmt doc src options
 # ================ dependencies ===============================================
 use CaloInterfaces v2r*   Calo 
 use CaloUtils      v4r*   Calo 
-# temporary!!
-use CaloDigit      v1r*   Calo 
-
 
 # ================ environment ================================================
 set CALORECOOPTS   $(CALORECOROOT)/options
@@ -25,7 +20,3 @@ library            CaloReco    *.cpp
 
 # ================ standard patterns ==========================================
 apply_pattern      component_library library=CaloReco
-
-# =============================================================================
-# The END
-# =============================================================================
