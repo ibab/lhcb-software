@@ -1,25 +1,7 @@
-//***********************************************************
-//   Options to run the Level 0 trigger in DaVinci
-//***********************************************************
-
-// L0Calo
-ApplicationMgr.DLLs   += { "CaloSicbCnv2" };
-#include "$L0CALOROOT/options/DaVinci.opts"
-
-// L0Muon, needs Sicb converter
-ApplicationMgr.DLLs   += { "MuonSicbCnv" };
-#include "$L0MUONROOT/options/Brunel.opts"
-ApplicationMgr.TopAlg += { "L0mTrigger/L0Muon" };
-
-//PileUp veto
-ApplicationMgr.DLLs    += { "VSicbCnv" };
-ApplicationMgr.DLLs    += { "VeloDet", "VeloDigit" };
-ApplicationMgr.DLLs    += { "PuVeto" };
-ApplicationMgr.TopAlg  += { "PuVetoDigitAlg" };
-ApplicationMgr.TopAlg  += { "PuVetoAlg" };
-PuVetoDigitAlg.ErrorMax = 10;
-PuVetoAlg.ErrorMax      = 10;
+//*************************************************************
+//   Options to re-run the Level 0 trigger decision in DaVinci
+//*************************************************************
 
 // Decison Unit, needs Sicb converter
 ApplicationMgr.DLLs    += { "L0DU" };
-ApplicationMgr.TopAlg  += { "DecisionUnit" };
+ApplicationMgr.TopAlg  += { "DecisionUnit", "L0Monitor" };

@@ -30,9 +30,6 @@ ApplicationMgr.DLLs += { "CaloEvent", "CaloAssociators", "CaloRec" };
 ApplicationMgr.DLLs += { "TrAssociators", "L0Calo", "L1VeloTrack" };
 ApplicationMgr.DLLs += { "DaVinciAssociators" };
 
-// Trigger
-ApplicationMgr.DLLs += { "L0DU" };
-
 // Physics packages and necessary dependent packages
 ApplicationMgr.DLLs += { "GlobalReco", "CaloTools" };
 ApplicationMgr.DLLs += { "DaVinciTools" };
@@ -43,8 +40,6 @@ ApplicationMgr.DLLs += { "DaVinciMCTools", "DaVinciEff" };
 ApplicationMgr.DLLs += { "DaVinciTest" };
 ApplicationMgr.DLLs += { "DaVinciUser" };
 
-// Reprocessing
-
 // Options for ProtoParticles creation
 #include "$GLOBALRECOROOT/options/GlobalReco.opts"
 #include "$DAVINCIMCTOOLSROOT/options/MCPIDProtoPAlg.opts"
@@ -54,4 +49,10 @@ ApplicationMgr.DLLs += { "DaVinciUser" };
 
 // No Histogram persistency chosen at this point
 ApplicationMgr.HistogramPersistency = "NONE";
+
+// Set up some profiling
+AuditorSvc.Auditors  = { "NameAuditor", "ChronoAuditor", "MemoryAuditor" };
+NameAuditor.Enable   = false;
+ChronoAuditor.Enable = true;
+MemoryAuditor.Enable = false;
 //**************************************************************

@@ -29,19 +29,14 @@ NTupleSvc.Output={"FILE1 DATAFILE='Ntuples.hbook' TYP='HBOOK' OPT='NEW'"};
 //NTupleSvc.Output={"FILE1 DATAFILE='Ntuples.rt' TYP='ROOT' OPT='NEW'"};
 
 //--------------------------------------------------------------
-// Set up some profiling. Enable/Disable setting lines below to true/false
+// DaVinci Algorithms
 //--------------------------------------------------------------
-AuditorSvc.Auditors  = { "NameAuditor", "ChronoAuditor", "MemoryAuditor" };
-NameAuditor.Enable   = false;
-ChronoAuditor.Enable = true;
-MemoryAuditor.Enable = false;
-
-//--------------------------------------------------------------
-// DaVinci Algorithms to be always executed at the beginning
-//--------------------------------------------------------------
+#include "$DAVINCIROOT/options/L0.opts"
 //ApplicationMgr.TopAlg = { "ChargedProtoPAlg" };
 ApplicationMgr.TopAlg = { "MCPIDProtoPAlg" };
+//ApplicationMgr.TopAlg += { "NeutralPPCreator/NeutralProtoPAlg" };
 ApplicationMgr.TopAlg += { "PrimaryVertexFinderAlg" };
+ApplicationMgr.TopAlg += { "PrimVertAnalysis" };
 
 //--------------------------------------------------------------
 // Other additional algorithms to be executed, from public 
@@ -52,12 +47,12 @@ ApplicationMgr.TopAlg += { "PrimaryVertexFinderAlg" };
 // EACH COMPLETE SELECTION HAS TO BE EXECUTED BY ITSELF
 //
 // Bd->J/Psi(mu+mu-)Ks(pi+pi-)
-ApplicationMgr.TopAlg += { "SelectJpsi2mumu"  };
-ApplicationMgr.TopAlg += { "SelectKs2pipi" };
-ApplicationMgr.TopAlg += { "SelectBd2JpsiKs" };
-#include "$PHYSSELECTIONSROOT/options/SelectJpsi2mumuForBd2JpsiKs.opts"
-#include "$PHYSSELECTIONSROOT/options/SelectKs2pipiForBd2JpsiKs.opts"
-#include "$PHYSSELECTIONSROOT/options/SelectBd2Jpsi2mumu_Ks2pipi.opts"
+//ApplicationMgr.TopAlg += { "SelectJpsi2mumu"  };
+//ApplicationMgr.TopAlg += { "SelectKs2pipi" };
+//ApplicationMgr.TopAlg += { "SelectBd2JpsiKs" };
+//#include "$PHYSSELECTIONSROOT/options/SelectJpsi2mumuForBd2JpsiKs.opts"
+//#include "$PHYSSELECTIONSROOT/options/SelectKs2pipiForBd2JpsiKs.opts"
+//#include "$PHYSSELECTIONSROOT/options/SelectBd2Jpsi2mumu_Ks2pipi.opts"
 
 // Bs->Ds(KKpi)K
 //ApplicationMgr.TopAlg += { "SelectDs2KKpi" };
@@ -154,16 +149,6 @@ EventSelector.PrintFreq = 1;
 //---------------------------------------------------------------
 //EventSelector.Input = {"DATAFILE='$LHCBHOME/group/background/vol3/bruneltmp/B2JPsi/b2jpsi_dst_v248r2.root' TYP='ROOT' OPT='READ'" };
 //---------------------------------------------------------------
-//-- GAUDI data cards generated on 15-JUL-2002
-//-- For Event Type = 411300 / Data type = ALL 
-//--     DST Program = Brunel v11r0
-//--     Database version = v248r2
-//--     
-//-- 1 dataset(s) found - NbEvents = 500
-//-- 
-EventSelector.Input   = {
-  "DATAFILE='rfio:/castor/cern.ch/lhcb/mc/D278590' TYP='ROOT' OPT='READ'"
-};
 //-- End of Data cards 
 //################################################################
 
