@@ -1,4 +1,4 @@
-// $Id: CompositeParticle2MCLinks.cpp,v 1.8 2004-06-11 15:26:16 phicharp Exp $
+// $Id: CompositeParticle2MCLinks.cpp,v 1.9 2004-06-17 11:20:58 phicharp Exp $
 // Include files 
 
 // from Gaudi
@@ -43,7 +43,9 @@ CompositeParticle2MCLinks::CompositeParticle2MCLinks( const std::string& name,
   declareProperty( "AllowExtraMCPhotons", m_allowExtraMCPhotons = false );
   declareProperty( "inclusiveMode", m_inclusiveMode = false );
   declareProperty( "skipResonances", m_skipResonances = false );
-  declareProperty( "maxResonanceLifeTime", m_maxResonanceLifeTime = 1.e-18*s );
+  declareProperty( "maxResonanceLifeTime", 
+                   m_maxResonanceLifeTime = 1.e-18*s );
+  declareProperty( "AssociationMethod", m_asctMethod = "Links");
 
 }
 
@@ -63,8 +65,18 @@ StatusCode CompositeParticle2MCLinks::initialize() {
   StatusCode sc = GaudiAlgorithm::initialize();
   if( !sc.isSuccess() ) return sc;
 
-  m_p2MCLink = new Object2MCLink( this, Particle2MCMethod::Links, 
-                                    m_inputData ) ;
+  m_asctMethod = "/" + m_asctMethod;
+  int method = Particle2MCMethod::Links;
+  for( int i=Particle2MCMethod::No; Particle2MCMethod::Max != i; i++) {
+    if( Particle2MCMethod::extension[i] == m_asctMethod ) {
+      method = i;
+      break;
+    }
+  }
+  msg << MSG::INFO << "Composite association uses "
+      << Particle2MCMethod::extension[method] << " as input" << endreq;
+  
+  m_p2MCLink = new Object2MCLink( this, method, m_inputData ) ;
   m_ppSvc  = svc<IParticlePropertySvc>("ParticlePropertySvc");
   return StatusCode::SUCCESS;
 };
@@ -181,7 +193,7 @@ CompositeParticle2MCLinks::associate1(const Particle *p,
       ifMsg(MSG::VERBOSE) <<  
         " no daughter, check underlying particle associator" ;
 #endif
-      s = isAssociatedFrom(p, m); 
+      s = m_p2MCLink->checkAssociation(p, m); 
     } else {
       std::vector<const Particle*> dau;
       addDaughters ( p , dau );
@@ -274,19 +286,6 @@ bool CompositeParticle2MCLinks::addMCDaughters( const MCParticle* m,
       else daughters.push_back( *k );
     }
     return true;
-  }
-  return false;
-}
-
-
-bool CompositeParticle2MCLinks::isAssociatedFrom( const Particle* p, 
-                                                  const MCParticle* m) const
-{
-  MsgStream  msg( msgSvc(), name() );
-  const MCParticle* mp = m_p2MCLink->first(p);
-  while( NULL != mp ) {
-    if( mp == m ) return true;
-    mp = m_p2MCLink->next();
   }
   return false;
 }

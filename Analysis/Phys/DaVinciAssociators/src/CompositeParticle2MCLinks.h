@@ -1,4 +1,4 @@
-// $Id: CompositeParticle2MCLinks.h,v 1.8 2004-06-11 15:26:16 phicharp Exp $
+// $Id: CompositeParticle2MCLinks.h,v 1.9 2004-06-17 11:21:06 phicharp Exp $
 #ifndef CompositeParticle2MCLinks_H 
 #define CompositeParticle2MCLinks_H 1
 
@@ -44,11 +44,11 @@ private:
   Particle2MCAsct::Table*   m_table;
   Particle2MCLink::Linker*  m_linkerTable;
   int m_nrel;
+  std::string         m_asctMethod;
 
   bool associate1(const Particle *p, const MCParticle* m) ;
   // This can be removed when the Relations package is updated...
   MCParticle* myAssociatedFrom(const Particle* p) const;
-  bool isAssociatedFrom( const Particle* p, const MCParticle* m) const;
   bool addDaughters( const Particle* m,
                      std::vector<const Particle*>& daughters) const;
   bool addMCDaughters( const MCParticle* m,
