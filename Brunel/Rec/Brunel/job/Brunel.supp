@@ -1,6 +1,6 @@
 ##----------------------------------------------------------------------##
 
-# Errors to suppress by default with Brunel v13r2
+# Errors to suppress by default with Brunel v16r4
 
 # Format of this file is:
 # {
@@ -28,7 +28,356 @@
   fun:__pthread_mutex_unlock
 }
 
-# Following CLHEP error reported to Tcherniaev, fixed in CVS head
+# glibc/Gaudi problems (gcc 2.95.2 on rh7.3, Gaudi v11r4) 
+{
+  strlen/ld-2.2.5.so
+  Cond
+  fun:strlen
+  obj:/lib/i686/libc-2.2.5.so
+}
+
+{
+  strchr/ld-2.2.5.so
+  Cond
+  fun:strchr
+  obj:/lib/i686/libc-2.2.5.so
+}
+
+{
+  _dl_relocate_object_internal/ld-2.2.5.so
+  Cond
+  fun:_dl_relocate_object_internal
+  obj:/lib/i686/libc-2.2.5.so
+}
+
+# glibc/rfio problems (gcc 2.95.2 on rh7.3, libshift.so.1.5.1.3) 
+{
+  strcmp/libc-2.2.5.so
+  Value4
+  fun:strcmp
+  obj:/lib/i686/libc-2.2.5.so
+}
+
+{
+  strcmp/libc-2.2.5.so
+  Value4
+  fun:strlen
+  obj:/lib/i686/libc-2.2.5.so
+}
+
+
+# rfio problems (libshift.so.1.5.1.3)
+{
+  rfio1
+  Cond
+  fun:getanswer_r
+  obj:/lib/libnss_dns-2.2.5.so
+}
+
+{
+  rfio2
+  Value4
+  obj:/lib/i686/libc-2.2.5.so
+  obj:/lib/i686/libc-2.2.5.so
+  fun:rfio_open_ext
+}
+
+{
+  rfio3
+  Param
+  obj:/lib/i686/libc-2.2.5.so
+  fun:netwrite_timeout
+}
+  
+
+# Gaudi problems (Gaudi v11r4)
+{
+  GaudiKernel/v13r2/Timing.cpp
+  Cond
+  obj:/lib/i686/libc-2.2.5.so
+  fun:userTime__6SystemQ26System8TimeTypeQ26System8InfoTypel
+}
+
+{
+  GaudiKernel/v13r2/SimplePropertyRef
+  Value8
+  fun:*
+  fun:*
+  fun:valueElementFromStream__t17SimplePropertyRef2Zt6vector2ZdZt9allocator1ZdZt12NullVerifier1Zt6vector2ZdZt9allocator1ZdR7istream
+}
+
+{
+  GaudiKernel/v13r2/SimpleProperty
+  Value8
+  fun:set__t17SimplePropertyRef2ZdZt12NullVerifier1ZdRCd
+}
+
+
+# DetDesc v11r7 problem (bug in valgrind?)
+{
+  DetDesc/DetectorElement
+  Value8
+  fun:*
+  fun:*
+  fun:*
+  fun:addUserParameter__15DetectorElementGt12basic_string*
+}
+
+
+# Random number SmartIF  release problems
+{
+  SmartIF/SicbLumiTool
+  Addr4
+  fun:*
+  fun:*
+  fun:*
+  fun:getInteractions__12SicbLumiToolRi
+}
+
+{
+  SmartIF/release_RndmGen
+  Addr4
+  fun:release__7RndmGen
+}
+
+{
+  SmartIF/ITDigitCreator
+  Addr4
+  fun:*
+  fun:*
+  fun:*
+  fun:_._14ITDigitCreator
+}
+
+{
+  SmartIF/ITCrossTalk
+  Addr4
+  fun:*
+  fun:*
+  fun:*
+  fun:_._11ITCrossTalk
+}
+
+{
+  SmartIF/ITEffcalculator
+  Addr4
+  fun:*
+  fun:*
+  fun:*
+  fun:_._15ITEffCalculator
+}
+
+{
+  SmartIF/ITNoiseTailTool
+  Addr4
+  fun:*
+  fun:*
+  fun:*
+  fun:_._15ITNoiseTailTool
+}
+
+{
+  SmartIF/ITNoiseTool
+  Addr4
+  fun:*
+  fun:*
+  fun:*
+  fun:_._11ITNoiseTool
+}
+
+{
+  SmartIF/ITDepositedCharge
+  Addr4
+  fun:*
+  fun:*
+  fun:*
+  fun:_._17ITDepositedCharge
+}
+
+{
+  SmartIF/OTSmearer
+  Addr4
+  fun:*
+  fun:*
+  fun:*
+  fun:_._9OTSmearer
+}
+
+{
+  SmartIF/OTEffCalculator
+  Addr4
+  fun:*
+  fun:*
+  fun:*
+  fun:_._15OTEffCalculator
+}
+
+
+# Calo problems (Brunel v16r4)
+{
+  Calo/CellParam1
+  Value8
+  fun:*
+  fun:*
+  fun:__13DeCalorimeteriRCt12basic_string3ZcZt18string_char_traits1ZcZt24__default_alloc_template2b1i0
+}
+
+#{
+#  Calo/CellParam2
+#  Value8
+#  fun:*
+#  fun:*
+#  fun:*
+#  fun:*
+#  fun:buildCells__13DeCalorimeter
+#}
+
+#{
+#  Calo/CellParam3
+#  Value8
+#  fun:*
+#  fun:*
+#  fun:*
+#  fun:*
+#  fun:*
+#  fun:buildCells__13DeCalorimeter
+#}
+
+# Property initialisation problems (Brunel v16r4)
+{
+  SICB/RiSicbCnv/v5r3
+  Cond
+  fun:initialize__16TrToRichTrackAlg
+}
+
+{
+  SICB/RiSicbCnv/v5r3B
+  Cond
+  fun:execute__16TrToRichTrackAlg
+}
+
+# Rich problems (Brunel v16r4) - checked by CJ, reason not obvious
+{
+  RichUtils/v2r1/PhotonSpectrum
+  Value8
+  fun:__18RichPhotonSpectrumddPCd
+  fun:initialize__16RichDetInterface
+}
+
+{
+  RichUtils/v2r1/PhotonSpectrum
+  Value8
+  fun:*
+  fun:*
+  fun:__18RichPhotonSpectrumddPCd
+  fun:initialize__16RichDetInterface
+}
+
+# Random numbers usage
+{
+  RanluxEngine/TimingAlg-VeloSim
+  Value8
+  fun:flat__12RanluxEngine
+  fun:shoot__9RandGaussP15HepRandomEngine
+  fun:shoot__9RandGaussP15HepRandomEnginedd
+  fun:shoot__CQ27HepRndmt9Generator1ZQ24Rndm5Gauss
+}
+
+{
+  RanluxEngine/VeloSim
+  Value8
+  fun:flat__12RanluxEngine
+  fun:shoot__8RandFlatP15HepRandomEnginedd
+  fun:shoot__CQ27HepRndmt9Generator1ZQ24Rndm4Flat
+  fun:shoot__Q24Rndm7Numbers
+}
+
+{
+  RanluxEngine/VeloSim-CaloDigitAlg
+  Value8
+  fun:flat__12RanluxEngine
+  fun:shoot__11RandPoissonP15HepRandomEngined
+  fun:shoot__CQ27HepRndmt9Generator1ZQ24Rndm7Poisson
+  fun:shoot__Q24Rndm7Numbers
+}
+
+{
+  RanluxEngine/CaloDigitAlg
+  Value8
+  fun:flat__12RanluxEngine
+  fun:shoot__11RandPoissonP15HepRandomEngined
+  fun:shoot__CQ27HepRndmt9Generator1ZQ24Rndm7Poisson
+  fun:shoot__Q24Rndm7Numbers
+}
+
+{
+  RanluxEngine/MuonAlgs
+  Value8
+  fun:flat__12RanluxEngine
+  fun:shoot__11RandGeneralP15HepRandomEngine
+  fun:*
+  fun:shoot__Q24Rndm7Numbers
+}
+
+{ RanluxEngine/MCITDepositCreator
+  Value8
+  fun:flat__12RanluxEngine
+  fun:shoot__8RandFlatP15HepRandomEnginedd
+  fun:shoot__CQ27HepRndmt9Generator1ZQ24Rndm6Landau
+  fun:charge__C17ITDepositedChargeRd
+}
+
+{ RanluxEngine/ITEffCalculator-ITNoiseTailTool-ITDigitCreator-OTEffCalculator
+  Value8
+  fun:flat__12RanluxEngine
+  fun:shoot__8RandFlatP15HepRandomEnginedd
+  fun:shoot__CQ27HepRndmt9Generator1ZQ24Rndm4Flat
+}
+  
+
+# Fortran common block errors
+{
+  Rich/ridthpdpos.F
+  Value8
+  fun:ridthpdpos_sq__
+}
+
+{
+  Rich/ridtpix_sq__
+  Value8
+  fun:ridtpix_sq__
+}
+
+{
+  Rich/rirchitpix_sq.F
+  Value8
+  fun:rirchitpix_sq__
+}
+
+{
+  Seed/newseed.F
+  Value8
+  fun:new_fit_parab__
+}
+
+{
+  Seed/newseed.F2
+  Value8
+  fun:new_fit_line__
+}
+
+# Muon bugs - call stack to deep to suppress...
+#{
+#  MuonAlgs/v3r1
+#  Value8
+#  fun:*
+#  fun:*
+#  fun:*
+#  fun:*
+#  fun:addElectronicNoise__16MuonDigitizationRt20MuonDigitizationData1Z19MuonPhysicalChannel
+#}
+
+# CLHEP 1.8.0.0 errors (reported, fixed in CVS head?)
 {
   HepTool::Evaluator/__builtin_vec_new
   Free 
@@ -36,7 +385,7 @@
   fun:evaluate__Q27HepTool9EvaluatorPCc
 }
 
-# Xerces errors
+# Xerces 1.6.0 errors
 {
   libxerces/__builtin_vec_new
   Free
@@ -44,29 +393,79 @@
   obj:*libxerces*.so
 }
 
-# GaudiDb errors
 {
-  DbObject
-  Free
-  fun:__builtin_delete
-  fun:delete
-  fun:~DbObject
+  Xerces/DOMString
+  Cond
+  fun:transcode__C9DOMString
 }
+
+{
+  Xerces/getWideCharLength
+  Cond
+  fun:getWideCharLength__FPCUs
+}
+
+
+# GaudiDb errors
+#{
+#  DbObject
+#  Free
+#  fun:__builtin_delete
+#  fun:delete
+#  fun:~DbObject
+#}
 
 # SicbRefTracker error fixed in SicbCnv v17r2, requires recompilations of:
 # RiSicbCnv, VSicbCnv, CaloSicbCnv, MuonSicbCnv
-{
-  SicbCnv/SicbRefTracker
-  Free
-  fun:track__14SicbRefTrackerRCt6vector2Z10SicbRefHopZt9allocator1Z10SicbRefHopRt6vector2ZQ211SicbTracker4StubZt9allocator1ZQ211SicbTracker4StubT2
-}
+#{
+#  SicbCnv/SicbRefTracker
+#  Free
+#  fun:track__14SicbRefTrackerRCt6vector2Z10SicbRefHopZt9allocator1Z10SicbRefHopRt6vector2ZQ211SicbTracker4StubZt9allocator1ZQ211SicbTracker4StubT2
+#}
 
 # Mismatched delete in DbObject.cpp line 80. - reported to Markus
+#{
+#  DbObject/delete
+#  Free
+#  fun:__builtin_delete
+#  fun:__dl__8DbObjectPv
+#  fun:_._8DbObject
+#  fun:release__8DbObject
+#}
+
+
+# Root 3.03.09 errors
 {
-  DbObject/delete
+  Root/Realloc
   Free
-  fun:__builtin_delete
-  fun:__dl__8DbObjectPv
-  fun:_._8DbObject
-  fun:release__8DbObject
+  fun:__builtin_vec_delete
+  obj:/afs/cern.ch/sw/root/v3.03.09/rh72_gcc2953/root/lib/libCore.so
+}
+
+{
+  Root/longest_match
+  Cond
+  fun:R__longest_match
+  obj:/afs/cern.ch/sw/root/v3.03.09/rh72_gcc2953/root/lib/libCore.so
+}
+
+{
+  Root/deflate
+  Value4
+  fun:R__Deflate
+  obj:/afs/cern.ch/sw/root/v3.03.09/rh72_gcc2953/root/lib/libCore.so
+}
+
+{
+  Root/ct_tally
+  Value4
+  fun:R__ct_tally
+  obj:/afs/cern.ch/sw/root/v3.03.09/rh72_gcc2953/root/lib/libCore.so
+}
+
+{
+  Root/compress_block
+  Value4
+  fun:R__compress_block
+  obj:/afs/cern.ch/sw/root/v3.03.09/rh72_gcc2953/root/lib/libCore.so
 }
