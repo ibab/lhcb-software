@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.6 2004-04-19 23:01:23 jonesc Exp $
+# $Id: requirements,v 1.7 2004-04-21 06:58:58 cattanem Exp $
 # Created    : 15/09/2003
 # Maintainer : Christopher Rob Jones
 #
@@ -8,6 +8,7 @@ version v1r4
 
 # ================ structure ================================================
 branches src cmt doc
+include_path none
 
 # ================ dependencies =============================================
 use RichRecBase        v1r*   Rich
