@@ -120,9 +120,7 @@ bool GiGaSensDetMuon::ProcessHits( G4Step* step ,
           // Check if chamber number is allowed for this collection 
           // (i.e. region)
           
-
-
-          if( ChamNumber > m_chamLimit ) {
+          if( ChamNumber <= 0 || ChamNumber > m_chamLimit ) {
             MsgStream msg( msgSvc() , name() );
             std::string colname = TT->GetVolume()->GetName();
             Error( "Chamber out of limits in "+colname);

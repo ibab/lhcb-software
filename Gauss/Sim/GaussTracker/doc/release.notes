@@ -6,6 +6,9 @@
 !-----------------------------------------------------------------------------
 
 !=========================== GaussTracker v3r2 ================================
+! 2005-02-07 - Florence Ranjard
+ - src/GiGaSensDetMuon.cpp : rejetc hits which are in "Universe"
+
 ! 2005-01-27 - Gloria Corti
  - cmt/requirements
    . increase version number
