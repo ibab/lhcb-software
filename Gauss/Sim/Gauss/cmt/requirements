@@ -1,5 +1,5 @@
 package Gauss
-version v17r0
+version v18r0
 
 # =============================================================================
 # structure 
@@ -77,7 +77,8 @@ application Gauss GaussMain.cpp
 
 # ========================= set macros ========================================
 apply_pattern application_path 
-macro Gauss_linkopts  "$(application_linkopts) -Wl,-Map,Linux.map"
+macro Gauss_linkopts  "$(application_linkopts)"
+macro_append " -Wl,-Map,Linux.map " WIN32 ""
 
 # =============== just make executable "visible" ==============================
 path_remove    PATH  "/Gauss/"
