@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.23 2003-10-06 09:18:56 cattanem Exp $
+# $Id: requirements,v 1.24 2003-10-06 10:15:24 cattanem Exp $
 # =========================================================================
 
 package  VeloDet 
@@ -13,6 +13,7 @@ include_dirs      $(VELODETROOT)
 # =============== used packages ===========================================
 use DetDescCnv   v2r*   Det 
 use VeloKernel   v1r*   Velo
+use LHCbKernel	v2r*	Kernel
 
 # =============== own options ==========================================
 set VELODETOPTS  ${VELODETROOT}/options
