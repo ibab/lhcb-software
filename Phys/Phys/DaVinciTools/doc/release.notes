@@ -1,7 +1,13 @@
-! $Id: release.notes,v 1.111 2004-07-19 08:48:00 pkoppenb Exp $
+! $Id: release.notes,v 1.112 2004-07-19 12:44:08 pkoppenb Exp $
 ! Package     : DaVinciTools
 ! Responsible : P. Koppenburg
 
+! 2004-07-19 - P. Koppenburg for Yuehong Xie
+ - src/NsctVeloTransporter.cpp
+ - src/ParabolicTransporter.cpp
+ - src/TrTransporter.cpp
+   . Redefinition of error on z position for transport of composite particles.
+   
 ! 2004-07-19 - P. Koppenburg for Luis Fernandez
   - src/FlightDistanceFilterCriterion.{h.cpp}
     Shorter options. see below.

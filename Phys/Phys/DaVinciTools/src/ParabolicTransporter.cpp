@@ -1,4 +1,4 @@
-// $Id: ParabolicTransporter.cpp,v 1.7 2004-05-14 09:43:31 pkoppenb Exp $
+// $Id: ParabolicTransporter.cpp,v 1.8 2004-07-19 12:44:08 pkoppenb Exp $
 // Include files 
 
 // Utility Classes
@@ -224,6 +224,20 @@ StatusCode ParabolicTransporter::magfTransport(Particle *& workParticle,
   HepMatrix oldPosSlopesCorr(3, 3, 0);
   oldPosSlopesCorr = workParticle->posSlopesCorr();
   HepMatrix newPosSlopesCorr = oldPosSlopesCorr;
+
+  // transform to the same z with err_z=0
+  HepMatrix JA(3,3);
+  JA(1,1)=1;
+  JA(1,2)=0;
+  JA(1,3)=-workParticle->slopeX();
+  JA(2,1)=0;
+  JA(2,2)=1;
+  JA(2,3)=-workParticle->slopeY();
+  JA(3,1)=0;
+  JA(3,2)=0;
+  JA(3,3)=0;
+  oldPOTErr=oldPOTErr.similarity(JA);
+  oldPosSlopesCorr=oldPosSlopesCorr*JA.T();
 
   // check current z-position
   double zold = oldPOT.z();

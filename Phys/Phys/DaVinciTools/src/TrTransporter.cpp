@@ -1,4 +1,4 @@
-// $Id: TrTransporter.cpp,v 1.6 2004-05-26 14:01:17 pkoppenb Exp $
+// $Id: TrTransporter.cpp,v 1.7 2004-07-19 12:44:08 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
@@ -231,6 +231,20 @@ StatusCode TrTransporter::trTransport(Particle *workParticle,
     oldPosSlopesCorr = workParticle->posSlopesCorr();
     HepMatrix newPosSlopesCorr = oldPosSlopesCorr;
     
+    //transform to the same z with err_z=0
+    HepMatrix JA(3,3);
+    JA(1,1)=1;
+    JA(1,2)=0;
+    JA(1,3)=-workParticle->slopeX();
+    JA(2,1)=0;
+    JA(2,2)=1;
+    JA(2,3)=-workParticle->slopeY();
+    JA(3,1)=0;
+    JA(3,2)=0;
+    JA(3,3)=0;
+    oldPOTErr=oldPOTErr.similarity(JA);
+    oldPosSlopesCorr=oldPosSlopesCorr*JA.T();
+
     // check current z-position
     double zold = oldPOT.z();
     double dz = znew - zold;
