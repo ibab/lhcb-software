@@ -4,17 +4,31 @@ Package manager : Witek Pokorski
 </PRE>
 
 !========================================================================
-<H1><A NAME="v14r0">2004-01-014- Gauss v14r0</A></H1><PRE>
+<H1><A NAME="v14r0">2004-01-22 - Gauss v14r0</A></H1><PRE>
  use GEANT4_v60r0, LHCb v15r0, Gaudi v14r0
- new versions of EvtGen (from BaBar) and GeneratorModules to use Pythia masses.
- Other  particle properties are taken from the particle property service or
- from  evt.pdl
- new DECAY.DEC (coming with new EvtGen)
- changes in job options to use PoolIO instead of RootIO.
+ new versions of EvtGen and GeneratorModules to use Pythia masses. Other
+ particle properties are taken from the particle property service or from 
+ evt.pdl
+
+!======================== EvtGen v5r0 ===============================
+! 2004-01-12 - Patrick Robbe
+ - synchronization with BaBar version alpha-00-11-07 (december 2003
+   release)
+
+! 2004-01-08 - Patrick Robbe
+ - EvtPythia : do not update quark, higgs and special particle properties
+   and keep the Pythia default values.
+ - requirements : increase to v4r4
+
+!===================== GeneratorModules v10r4 ======================
+! 2004-01-16 - Patrick Robbe
+ - EvtDecayAlg : order HepMC iterators with respect to the bar code
+   before using it, in order to ensure reproducibility
+ - requirements : increase version number to v10r4
 
 !========================= GaussCalo v6r0 =================================
 ! 2004-01-09 - Florence RANJARD
- - src/CaloSensPlaneHit.h - fix for new LHCb v15r0: ParticleID.h has been moved
+ - src/CaloSensPlaneHit.h - fix for new LHCb v15r0: PartivleID.h has been moved
    from Event/Event to Kernel/LHCbKernel
 
 !========================================================================
