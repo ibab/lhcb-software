@@ -599,9 +599,9 @@ double L0Muon::Tower::ptcalc(MsgStream * log) {
   m_theta = v.theta();
   m_phi = v.phi();
   
-  *log << MSG::INFO <<"Momentum" <<  " " <<  m_pt << endreq;
-  *log << MSG::INFO << "Theta" << " " << m_theta << endreq;
-  *log << MSG::INFO << " Phi" << " " << m_phi << endreq;
+  *log << MSG::DEBUG <<"Momentum" <<  " " <<  m_pt << endreq;
+  *log << MSG::DEBUG << "Theta" << " " << m_theta << endreq;
+  *log << MSG::DEBUG << " Phi" << " " << m_phi << endreq;
 
   return m_pt;
 

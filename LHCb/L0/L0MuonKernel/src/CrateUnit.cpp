@@ -217,7 +217,7 @@ void L0Muon::CrateUnit::sortCandidates(MsgStream * log)
      std::vector<int> tmp =(*ioff).second;
      *log << MSG::DEBUG << "Pt of the candidate = " << (*ioff).first->pt() 
           << endreq;      
-     *log << MSG::INFO << "Offsets = " << tmp[0] << endreq;
+     *log << MSG::DEBUG << "Offsets = " << tmp[0] << endreq;
      
    }
        
@@ -344,8 +344,8 @@ void L0Muon::CrateUnit::sortCandidates(MsgStream * log)
        //*log << MSG::DEBUG << "Status of the candidate = " << (*ilmc)->status()
        //  << endreq;
 
-     *log << MSG::INFO << "Pt of the candidate = " << (*ilmc)->pt() 
-          << endreq;   
+     //*log << MSG::INFO << "Pt of the candidate = " << (*ilmc)->pt() 
+     //   << endreq;   
      //*log << MSG::INFO << "Theta of the candidate = " << (*ilmc)->theta() 
      //   << endreq;  
      //*log << MSG::INFO	<< "Phi of the candidate = " << (*ilmc)->phi() 
@@ -377,7 +377,7 @@ void L0Muon::CrateUnit::sortOffsets(MsgStream * log)
         std::vector<int> tmp =(*ioff).second;
        *log << MSG::DEBUG << "Pt of the candidate = " << (*ioff).first->pt() 
            << endreq;      
-       *log << MSG::INFO << "Offsets = " << tmp[0] << endreq;
+       *log << MSG::DEBUG << "Offsets = " << tmp[0] << endreq;
        
      }
      
