@@ -1,4 +1,4 @@
-#// $Id: VeloSim.h,v 1.4 2002-06-24 11:31:04 cattanem Exp $
+#// $Id: VeloSim.h,v 1.5 2002-06-30 14:43:11 parkesb Exp $
 #ifndef VELOSIM_H
 #define VELOSIM_H 1
 
@@ -44,6 +44,7 @@ protected:
 private:
 
   StatusCode getInputData();
+  StatusCode simulation();
   StatusCode chargeSim(bool spillOver);
   long simPoints(MCVeloHit* hit);
   void chargePerPoint(MCVeloHit* hit,
@@ -69,22 +70,33 @@ private:
   double noiseValue(double stripCapacitance);
   double noiseValueTail(double stripCapacitance);
   StatusCode CMSim();
+  StatusCode finalProcess();
   StatusCode storeOutputData();
   MCVeloFE* findOrInsertFE(VeloChannelID& stripKey);
 
   // data members
-  std::string m_inputContainer;       ///< Name of input container
-
-  /// Name of spill Over event input container
-  std::string m_spillOverInputContainer;  
+  std::string m_inputContainer;       ///< Name of input container  
+  std::string m_spillOverInputContainer; ///< Name of spill Over event input container
+  std::string m_pileUpInputContainer;  ///< Name of pileUp input container
+  std::string m_pileUpSpillOverInputContainer;  ///< Name of spill Over event input container
 
   std::string m_outputContainer;      ///< Name of output container
+  std::string m_pileUpOutputContainer;      ///< Name of output container
 
   DeVelo* m_velo; ///< Detector Element
-  MCVeloHits* m_hits; // vector of input hits
-  MCVeloHits* m_spillOverHits; // vector of input hits from spill over event
-  MCVeloFEs* m_fes; // vector of FE output  signals
-  MCVeloFEs* m_fes_coupling; // vector of coupled FE output signals
+  MCVeloHits* m_hits; ///< vector of input hits
+  MCVeloHits* m_spillOverHits; ///< vector of input hits from spill over event
+  MCVeloFEs* m_FEs; ///< vector of FE output  signals
+  MCVeloFEs* m_FEs_coupling; ///< vector of coupled FE output signals
+ 
+  MCVeloHits* m_veloHits; // vector of input hits
+  MCVeloHits* m_pileUpHits; // vector of input hits from pileUp
+  MCVeloHits* m_veloSpillOverHits; // vector of input hits
+  MCVeloHits* m_pileUpSpillOverHits; // vector of input hits from pileUp
+  MCVeloFEs* m_veloFEs; ///< vector of FE output  signals
+  MCVeloFEs* m_pileUpFEs; ///< vector of FE output  signals
+
+
   double m_baseDiffuseSigma; // diffusion sigma in microns/sqrt(thickness)
   // control simulation sections
   bool m_chargeSim;
@@ -94,6 +106,9 @@ private:
   bool m_pedestalSim;
   bool m_CMSim;
   bool m_spillOver;
+  bool m_pileUp;
+
+  std::string m_simMode; // velo or pileup
 
   //gaussian random numbers
   Rndm::Numbers m_gaussDist;
