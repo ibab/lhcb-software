@@ -11,9 +11,9 @@
 // For data produced with Brunel v13r1 or v14r2
 //#include "$DAVINCIROOT/options/DaVinciv248r4.opts"
 // For data produced with Brunel v16r4
-#include "$DAVINCIROOT/options/DaVinciv253r0.opts"
+// #include "$DAVINCIROOT/options/DaVinciv253r0.opts"
 // For data produced with Brunel v17r4
-//#include "$DAVINCIROOT/options/DaVinciv254r1.opts"
+#include "$DAVINCIROOT/options/DaVinciv254r1.opts"
 
 //--------------------------------------------------------------
 // Histogram persistency 

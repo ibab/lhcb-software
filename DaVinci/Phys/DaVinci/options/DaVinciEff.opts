@@ -68,7 +68,7 @@ ApplicationMgr.TopAlg += { "PrimVtxFinder" };
 // ApplicationMgr.TopAlg += { "PhysSelEff/EffJpsi2mumu" };
 // #include "$PHYSSELECTIONSROOT/options/SelectJpsi2mumuForBs2Jpsiphi.opts"
 // #include "$DAVINCIEFFROOT/options/EffJpsi2mumu.opts"
-// #include "$LHCBHOME/project/web/cards/611300.opts"  Brunel v16r4
+// #include "$LHCBHOME/project/web/cards/611300.opts"  // Brunel v16r4
 
 // Bs -> J/Psi(mu+mu-) phi(KK)
 //-------------------------------------------------------------

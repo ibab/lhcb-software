@@ -3,7 +3,7 @@ Package     : Phys/DaVinci
 Package Coordinator : Gloria Corti
 Purpose     : LHCb analysis program 
 
-</PRE><H1><A NAME=v7r3>2003-02-10 DaVinci v7r3</A></H1><PRE>
+</PRE><H1><A NAME=v7r3>2003-02-13 DaVinci v7r3</A></H1><PRE>
 
  - New features:
    . Add support for data produced with dbase v254r1 (XmlDDDB v15r2,
@@ -25,6 +25,17 @@ Purpose     : LHCb analysis program
    . Removal of use of packages no longer necessary for L1Decision (L0Muon,
      L1VeloTracks)
    . Removal of use of package no longer necessary for L0DU (L0Calo)
+   . New tool PhotonParticleMaker in addition to NeutralParticleMaker to 
+     make photon particles. (DaVinciTools v7r3)
+   . New tool PhotonParameters to calculate gamma parameters at the origin
+     (DaVinciTools v7r3)
+   . New version of Efficiency algorithm with stricter definition of 
+     particle to check in decay tree for reconstrutibility/reconstructed.
+     NOTE that it does not work correctly with optional intermediate
+     resonances. (DaVinciEff v2r2)
+   . Improved printout of efficiency algorithm results. (DaVinciEff v2r2)
+   . New options for efficieny of Bs->J/Psi(ee)phi(KK). (DaVinciEff v2r2)
+     
 
  - New tuning:
    . L0 thresholds adjusted (L0DU v6r4) 
@@ -32,7 +43,7 @@ Purpose     : LHCb analysis program
    . L1 minimum bias parameterization (L1Decision v1r7)
    . Tuning for new TT strip pitch and magnetic field, plus minor improvements
      (L1Decision v1r7)
-   . Use most recent version of package CaloReco where changes are in code
+   . Protection against CaloSingleGammaTool introduc
      used by Brunel (CaloReco v1r3)
 
  - Tuning, features and Bug fixes of LHCb common packages done in Brunel
