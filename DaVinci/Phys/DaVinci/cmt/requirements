@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.57 2003-03-21 16:56:57 gcorti Exp $
+# $Id: requirements,v 1.58 2003-04-30 19:09:16 gcorti Exp $
 # Created    : 07/02/2002
 # Maintainer : Gloria Corti
 #
@@ -6,7 +6,7 @@
 # Allows reading of OO-DST data
 #============================================================================
 package           DaVinci
-version           v7r4
+version           v8r0
 
 # Structure, i.e. directories to process. 
 #============================================================================
@@ -14,10 +14,10 @@ branches          cmt doc src job options
 
 # Used packages. 
 #============================================================================
-#--- Minimal Gaudi libraries (from GAUDI_v11r4)
+#--- Minimal Gaudi libraries (from GAUDI_v11r5)
 use  GaudiSys           v11r0
 
-#--- Additional Gaudi libraries (from GAUDI_v11r4)
+#--- Additional Gaudi libraries (from GAUDI_v11r5)
 use  GaudiNagC      	v*
 use  GaudiRootDb        v*
 
@@ -25,17 +25,13 @@ use  GaudiRootDb        v*
 use  HbookCnv           v*
 use  RootHistCnv    	v*
 
-#--- LHCb libraries (from LHCB_v11r10)
-use  LHCb               v11r10	
-#    New GaudiConf with OODST content
-use  GaudiConf          v6r6
-#    Enable reading of trigger candidate relation tables
-use  Associators        v2r0	 Associators
+#--- LHCb libraries (from LHCB_v11r11)
+use  LHCb               v11r11	
 
 #--- Geometry description (from DBASE)
-use  XmlDDDB		v15r2	 Det
+use  XmlDDDB		v15r3	 Det
 
-#--- DaVinciSys v7r3 packages 
+#--- DaVinciSys v8r0 packages 
 
 #    Enable Trigger reprocessing
 use  L0DU          	v6r4	 L0
@@ -44,11 +40,11 @@ use  L1Decision         v1r7     L1
 #    Enable neutral ProtoParticles production and CaloPIDs
 use  CaloInterfaces     v2r4     Calo
 use  CaloUtils 	        v4r4     Calo
-use  CaloReco           v1r4     Calo
+use  CaloReco           v1r5     Calo
 use  CaloPIDs           v1r0     Calo 
 
 #    Final Reconstruction
-use  GlobalReco         v3r0     Rec
+use  GlobalReco         v3r1     Rec
 use  KsReco		v1r4p1	 Rec
 use  PrimVtx            v2r0     Rec
 
@@ -56,17 +52,21 @@ use  PrimVtx            v2r0     Rec
 use  TrExtrapolator     v2r5     Tr
 
 #    Monte Carlo tools
-use  MCTools            v1r0     Phys
+use  MCTools            v1r1     Phys
 
 #    Physics packages
-use  DaVinciTools       v7r3     Phys
-use  DaVinciAssociators v3r1     Phys
-use  DaVinciMCTools     v4r1     Phys
-use  DaVinciTest        v4r0     Phys
-use  PhysSelSys		v5r0     PhysSel
-use  FlavourTagging     v4r2     Phys
-use  DaVinciEff         v2r3     Phys
-use  DaVinciUser        v4r0     Phys
+use  DaVinciTools       v8r0     Phys
+use  DaVinciAssociators v4r0     Phys
+use  DaVinciMCTools     v5r0     Phys
+use  DaVinciTest        v4r1     Phys
+use  PhysSelections	v5r0     Phys
+use  FlavourTagging     v4r4     Phys
+use  DaVinciEff         v2r4     Phys
+use  DaVinciUser        v4r1     Phys
+use  PhysSelSys		v5r1     PhysSel
+
+# Generic utilities
+use  Utilities          v1r0     Tools
 
 # Build DaVinci Application with standard executable
 # Note that user code is located in a component library (see details
@@ -82,5 +82,5 @@ macro DaVinci_linkopts    "${application_linkopts}"
 
 # set the DaVinci version = v * 100000 + r * 100 + p
 #============================================================================
-macro_append cppflags " -DDaVinciVersion=700400 " \
-             VisualC  " /DDaVinciVersion=700400 "
+macro_append cppflags " -DDaVinciVersion=800000 " \
+             VisualC  " /DDaVinciVersion=800000 "

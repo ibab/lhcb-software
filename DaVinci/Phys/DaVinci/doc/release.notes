@@ -25,6 +25,9 @@ Purpose     : LHCb analysis program
      with assigned particle ID for HLT studies using ProtoParticles,
      hence offline tracks (PreLoadNoPIDParticles.opts). 
      Put example of use to uncomment in DaVinci.opts (DaVinciTools v8r0)
+   . For writing copy of OODST with contents as for signal introduce
+     DstContent.opts (L1Cluster not present)
+
 
 </PRE><H1><A NAME=v7r3>2003-03-21 DaVinci v7r4</A></H1><PRE>
  - New version:
