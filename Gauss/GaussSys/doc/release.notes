@@ -4,6 +4,11 @@
 ! Purpose     : Gauss system
 !-----------------------------------------------------------------------------
 
+!========================== GaussSys v12r2 2003-08=19 ===============
+! 2003-08-19 - Florence RANJARD
+ - use GenEvent v2r4 as a temporary solution, should be part of LHCb
+ - several fixes to v12r1 following 1st test production.
+
 !========================== GaussSys v12r1 2003-08-13 =================
 ! 2003-08-14 - Florence Ranjard
  - remove use of Gen/DecFiles which has been moved to DBASE.

@@ -1,14 +1,16 @@
 package GaussSys
-version v12r1
+version v12r2
 
 branches cmt doc
+
+use GenEvent            v2r4    Event
 
 #==================================================================
 # Gauss packages
 #==================================================================
 
 # Gauss application
-use Gauss		v12r1	Sim
+use Gauss		v12r2	Sim
 
 # GEANT4 libraries
 use GEANT4	        v5r2p1  Sim
@@ -16,10 +18,10 @@ use G4VisUI             v1r4    Sim
 
 # Generator stuff ...
 use EvtGen              v3r4    Gen
-use GeneratorModules    v8r1    Gen
+use GeneratorModules    v8r2    Gen
 
 # GiGa stuff...
-use GiGa        	v14r2p1	Sim        
+use GiGa        	v14r3	Sim        
 use GiGaCnv     	v13r0   Sim
 use GiGaVisUI		v2r1	Sim
 
@@ -27,8 +29,8 @@ use VisSvc              v3r0    Vis
 use SimSvc              v3r2    Sim
 
 # Gauss stuff...
-use GaussTools		v8r3	Sim
-use GaussRICH		v4r1	Sim
+use GaussTools		v8r4	Sim
+use GaussRICH		v4r2	Sim
 use GaussTracker	v2r6	Sim
 use GaussCalo		v4r0	Sim
 use GaussPhysics	v2r3	Sim
