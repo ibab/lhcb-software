@@ -1,8 +1,21 @@
-! $Id: release.notes,v 1.25 2002-08-16 07:37:32 graven Exp $
+! $Id: release.notes,v 1.26 2002-09-09 13:22:53 gcorti Exp $
 ! Package     : PhysEvent 
 ! Responsible : Gloria Corti
 
-!========================= PhysEvent v?r? 2002-08-16 ========================
+! 2002-09-08 - Gloria Corti
+ - Fix in Particle to extend correlation error between position and momentum
+   to include energy elements
+ - Increase major version number in requirements file (Particle not 
+	 backward compatible)
+
+! 2002-09-02 - Gloria Corti
+ - Check Vertex not null in copy constructor of Particle before cloning it
+   (D.Hutchcroft)
+
+! 2002-08-25 - Gloria Corti
+ - Introduce new location in ProtoParticleLocation::Upstream for Ks
+   upstream tracks (D.Hutchcroft)
+
 ! 2002-08-16 - Gerhard Raven
  - Bug fix in Vertex::serialize on read-back. When reading back reduced
    DST containing vertices, the vertices where (re)created but not initialized.
