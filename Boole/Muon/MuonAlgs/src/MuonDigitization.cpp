@@ -115,7 +115,7 @@ StatusCode MuonDigitization::initialize()
     count=count*2;    
   }
   
-  m_timeBin=m_gate/(count-1);  
+  m_timeBin=m_BXTime/(count);  
   return StatusCode::SUCCESS;
 
 }
@@ -267,9 +267,9 @@ MuonDigitization::addChamberNoise(){
 
 	MsgStream log(msgSvc(), name()); 
   int container=1;
-	for (int ispill=1;ispill<m_numberOfEventsNeed+1;ispill++){
+	for (int ispill=1;ispill<m_numberOfEvents+1;ispill++){
 	  int chamberTillNow=0;
-		double shiftOfTOF=-m_BXTime*ispill;
+		//double shiftOfTOF=-m_BXTime*ispill;
     for(int k=0;k<m_stationNumber;k++){ 
 	    for(int s=0;s<m_regionNumber;s++){
         KeyedContainer<MCMuonHit>* hitsContainer = new 
@@ -326,7 +326,8 @@ MuonDigitization::addChamberNoise(){
                                      getStopGapZ(gap,partitionNumber)));
             double tofOfLight=(sqrt(x*x+ y*y+(middlePosZ)*
                                     (middlePosZ)))/300.0;
-            pHit->setTimeOfFlight(time+shiftOfTOF+tofOfLight); 
+            //            pHit->setTimeOfFlight(time+shiftOfTOF+tofOfLight); 
+            pHit->setTimeOfFlight(time+tofOfLight);
             pHit->setVolumeID(chamber+1,gap+1);
             hitsContainer->insert(pHit);
             if(m_verboseDebug){	
@@ -366,7 +367,15 @@ MuonDigitization::createInput(
     int station=iterRegion/m_regionNumber+1;
     int region=iterRegion%m_regionNumber+1;	 
     int readoutNumber=m_pGetInfo->getReadoutNumber(iterRegion);		 
-    for (int ispill=0; ispill<m_numberOfEventsNeed+1;ispill++){
+    for (int ispill=0; ispill<=m_numberOfEvents;ispill++){
+     long spillTime=0;
+      
+      if(ispill==0){
+        
+      }else {
+        spillTime=(long)(-(ispill-1)*m_BXTime);
+      }
+
       for(int container=0; container<m_container;container++){				
         std::string path="/Event"+spill[ispill]+"/MC/Muon/"+
           numsta[station-1]+"/R"+numreg[region-1]+"/"+
@@ -610,7 +619,8 @@ MuonDigitization::createInput(
                                           +(middlePosZ)*(middlePosZ)))/300.0;
 																				
                   inputPointer->getHitTraceBack()
-                    ->setHitArrivalTime((*iter)->timeOfFlight()-tofOfLight);
+                    ->setHitArrivalTime((*iter)->timeOfFlight()
+                                     +spillTime-tofOfLight);
                   inputPointer->getHitTraceBack()
                     ->setCordinate(distanceFromBoundary);
                   if(ispill>0){
@@ -1240,9 +1250,9 @@ addElectronicNoise(MuonDigitizationData
   
 	MsgStream log(msgSvc(), name()); 
 	MuonPhysicalChannel* pFound;
-  for(int ispill=1;ispill<m_numberOfEventsNeed;ispill++){
+  for(int ispill=1;ispill<=m_numberOfEvents;ispill++){
     int chamberTillNow=0;
-    double shiftOfTOF=-m_BXTime*ispill;
+    double shiftOfTOF=-m_BXTime*(ispill-1);
     for(int i=0;i<m_stationNumber;i++){
       for(int k=0;k<m_regionNumber;k++){
         int partitionNumber=i*m_regionNumber+k;
@@ -1270,7 +1280,6 @@ addElectronicNoise(MuonDigitizationData
                 if(chX==phChInX)chX=phChInX-1;
                 if(chY==phChInY)chY=phChInY-1;
                double time=m_flatDist()*m_BXTime+shiftOfTOF ;
-                //											 +tofOfLight;
                 MuonPhChID ID;
                 ID.setStation(i);
                 ID.setRegion(k);
