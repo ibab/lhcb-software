@@ -1,20 +1,16 @@
 
+//-----------------------------------------------------------------------------
 /** @file RichDAQDefinitions.h
  *
  *  Header file for RICH DAQ general definitions
  *
  *  CVS Log :-
- *  $Id: RichDAQDefinitions.h,v 1.2 2005-01-13 12:16:53 jonrob Exp $
- *  $Log: not supported by cvs2svn $
- *  Revision 1.1  2005/01/07 13:16:23  jonrob
- *  Add to CVS
- *
- *  Revision 1.7  2004/07/27 13:46:06  jonrob
- *  Add doxygen file documentation and CVS information
+ *  $Id: RichDAQDefinitions.h,v 1.3 2005-03-21 14:12:23 jonrob Exp $
  *
  *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
  *  @date   2003-11-06
  */
+//-----------------------------------------------------------------------------
 
 #ifndef RICHKERNEL_RICHDAQDEFINITIONS_H
 #define RICHKERNEL_RICHDAQDEFINITIONS_H 1
