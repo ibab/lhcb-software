@@ -2,6 +2,10 @@
 ! Package     : DaVinciKernel
 ! Responsible : P. Koppenburg
 
+! 2005-01-06 - P. Koppenburg
+ - Kernel/IPVLocator.h
+   . Moved form DaVinciTools/ to Kernel/
+   
 ! 2005-01-05 - P. Koppenburg
  - Kernel/
    . New directory Kernel/ from now on all interfaces go in there.
