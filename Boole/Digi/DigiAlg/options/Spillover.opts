@@ -21,6 +21,6 @@ SpilloverAlg.ItemList = {
 };
 
 SpilloverAlg.MergeType     = "Spillover";
-SpilloverAlg.PathList      = { "Prev", "Next", "NextNext" };
+SpilloverAlg.PathList      = { "Prev", "PrevPrev", "Next" };
 SpilloverAlg.EventSelector = "SpilloverSelector";
 SpilloverSelector.PrintFreq = -1;

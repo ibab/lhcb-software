@@ -4,6 +4,10 @@
 ! Purpose     : Holds generic digitization algorithms
 !-----------------------------------------------------------------------------
 
+!========================= DigiAlg v2r0p1 2003-10-15 ========================
+! 2003-10-15 - Marco Cattaneo
+ - Fix Spillover.opts to produce PrevPrev rather than NextNext event
+
 !========================== DigiAlg v2r0 2003-10-06 =========================
 ! 2003-10-06 - Marco Cattaneo
  - New algorithm CreateL1Event to create the L1Event from the L1Buffer at the
