@@ -33,7 +33,7 @@
         type="long"
         const="TRUE"
        >
-         <code> return m_data[0] - 3; </code>
+         <code> return m_data[0] - 2; </code>
        </method>
        <method
         desc="Return bankType of this bank "
@@ -41,7 +41,7 @@
         type="int"
         const="TRUE"
         >
-        <code> return int(m_data[2]&amp;0xFF); </code>
+        <code> return int(m_data[1]&amp;0xFF); </code>
        </method>     
        <method
         desc="Return version of this bank "
@@ -49,7 +49,7 @@
         type="int"
         const="TRUE"
         >
-        <code> return int((m_data[2]&amp;0xFF00)&gt;&gt;8); </code>
+        <code> return int((m_data[1]&amp;0xFF00)&gt;&gt;8); </code>
        </method>     
        <method
         desc="Return SourceID of this bank "
@@ -57,7 +57,7 @@
         type="int"
         const="TRUE"
         >
-        <code> return int(m_data[2]&gt;&gt;16); </code>
+        <code> return int(m_data[1]&gt;&gt;16); </code>
        </method>     
        <method
         desc="Return pointer to begining of data body of the bank"
@@ -65,7 +65,7 @@
         type="raw_int *"
         const="TRUE"
         >
-        <code> return (m_data+3); </code>
+        <code> return (m_data+2); </code>
        </method>     
      </class>
   </package>

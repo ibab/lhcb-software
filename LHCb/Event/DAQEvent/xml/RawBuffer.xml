@@ -16,7 +16,7 @@
        <enum
         desc="Define the bank types for Raw buffer"
         name="BankType"
-        value="L0Calo=0, L0DU, PrsE, EcalE, HcalE, PrsTrig, EcalTrig, HcalTrig, Velo, Rich, TT, IT, OT, Muon, L0PU, Header=101"
+        value="L0Calo=0, L0DU, PrsE, EcalE, HcalE, PrsTrig, EcalTrig, HcalTrig, Velo, Rich, TT, IT, OT, Muon, L0PU, DAQ, ODIN"
         access="PUBLIC"
        />
        <base name="DataObject"/>
@@ -64,13 +64,13 @@
         desc="Magic pattern to check integrity of data buffer"
         name="magic"
         type="raw_int"
-	init="12345"
+	init="0xCBCB"
         dictalias="int"
         setMeth="FALSE"
        />
        <constructor
         desc="Constructor: Allocate inital amount of memory"
-	initList="m_initialSize(100),m_currentSize(0),m_magic(12345)"
+	initList="m_initialSize(100),m_currentSize(0),m_magic(0xCBCB)"
 	>
          <code> m_buffer = new raw_int[m_initialSize];
 	        m_allocatedSize = m_initialSize;
@@ -78,7 +78,7 @@
        </constructor>
        <constructor argList="long siz, raw_int* buff"
         desc="Constructor: Initialize with predefined storage"
-	initList="m_initialSize(siz),m_allocatedSize(siz),m_currentSize(siz),m_buffer(buff),m_magic(12345)"
+	initList="m_initialSize(siz),m_allocatedSize(siz),m_currentSize(siz),m_buffer(buff),m_magic(0xCBCB)"
        >
        </constructor>
        <destructor
@@ -112,12 +112,15 @@
       throw GaudiException( "version value exceeds maximum (255).",
                             "RawBufferException", StatusCode::FAILURE ); 
   }
-  long bankSize = 3 + dataSize ;
+  long bankSize = 2 + dataSize;
+  if( raw_int(bankSize)&gt;0xFFFF ) { // Maximum value for 16 bit field
+      throw GaudiException( "Bank size exceeds maximum (65535).",
+                            "RawBufferException", StatusCode::FAILURE ); 
+  }
   long evtSize=m_currentSize+bankSize;
   if(evtSize &gt; m_allocatedSize ) reallocate( evtSize );
   long size=m_currentSize;
-  m_buffer[size++]=raw_int(bankSize);
-  m_buffer[size++]=m_magic;
+  m_buffer[size++]= (raw_int(bankSize)&lt;&lt;16) + m_magic;
   m_buffer[size++]= (raw_int(sourceID)&lt;&lt;16) +
                     (raw_int(version)&lt;&lt;8)   + raw_int(bankType);
 
@@ -156,12 +159,15 @@
       throw GaudiException( "version value exceeds maximum (255).",
                             "RawBufferException", StatusCode::FAILURE ); 
   }
-  long bankSize = 3 + data.size() ;
+  long bankSize = 2 + data.size() ;
+  if( raw_int(bankSize)&gt;0xFFFF ) { // Maximum value for 16 bit field
+      throw GaudiException( "Bank size exceeds maximum (65535).",
+                            "RawBufferException", StatusCode::FAILURE ); 
+  }
   long evtSize=m_currentSize+bankSize;
   if(evtSize &gt; m_allocatedSize ) reallocate( evtSize );
   long size=m_currentSize;
-  m_buffer[size++]=raw_int(bankSize);
-  m_buffer[size++]=m_magic;
+  m_buffer[size++]= (raw_int(bankSize)&lt;&lt;16) + m_magic;
   m_buffer[size++]= (raw_int(sourceID)&lt;&lt;16) +
                     (raw_int(version)&lt;&lt;8)   + raw_int(bankType);
 

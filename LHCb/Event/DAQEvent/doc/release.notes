@@ -3,6 +3,16 @@ Author: Jose' Helder Lopes
 Purpose: Define the L1Buffer,  L1Event, L1Bank, RawBuffer, RawEvent and 
          RawBank classes.
 
+!================ DAQEvent v5r0 2005-03-07 ============================
+! 2005-03-07 - Marco Cattaneo
+ - Backwards incompatible changes to RawBank header, to reflect EDMS 565851
+ - Add L0 and DAQ bank types, and L0SourceID, DAQSourceID enums to L1Buffer.
+   The specific L0Calo, L0DU L0Muon bank types have been removed, use the 
+   source ID to distinguish between different L0 (and DAQ) sources
+ - Add DAQ and ODIN bank types to RawBuffer, remove Header bank type
+ - Modify CreateRawBuffer and EventHeaderFromRaw to use DAQ bank type for
+   event and run number
+
 !================ DAQEvent v4r6 2005-02-24 ============================
 ! 2005-02-24 - Daniela Lunesu
  - Add L0Muon bank type

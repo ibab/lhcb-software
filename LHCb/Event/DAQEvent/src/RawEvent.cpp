@@ -1,4 +1,4 @@
-// $Id: RawEvent.cpp,v 1.2 2004-10-26 13:10:15 cattanem Exp $
+// $Id: RawEvent.cpp,v 1.3 2005-03-07 13:07:40 cattanem Exp $
 // Include files 
 
 // from Gaudi
@@ -24,14 +24,14 @@ RawEvent::RawEvent( RawBuffer& rawBuffer ) {
   raw_int magic = rawBuffer.magic();
   long i=0;
   while( i < rawSize ){
-    long bankSize = buffer[i];
+    short bankSize = (buffer[i]>>16)&0xFFFF;
     // Check integrity
-    if ( buffer[i+1] != magic ){
+    if ( (buffer[i]&0xFFFF) != magic ){
       throw GaudiException( "Bad magic number", "RawBufferException",
                             StatusCode::FAILURE );
     }
     // Determine bank type
-    int bankType  = buffer[i+2]&0xFF;
+    int bankType  = buffer[i+1]&0xFF;
 
     // Add this bank address to Event Map
     (m_eventMap[bankType]).push_back(RawBank(buffer+i));

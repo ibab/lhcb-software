@@ -1,4 +1,4 @@
-// $Id: CreateRawBuffer.cpp,v 1.2 2004-10-26 13:10:15 cattanem Exp $
+// $Id: CreateRawBuffer.cpp,v 1.3 2005-03-07 13:07:40 cattanem Exp $
 // Include files 
 
 // from Gaudi
@@ -47,17 +47,15 @@ StatusCode CreateRawBuffer::execute() {
 
   put( rawBuffer, RawBufferLocation::Default );
 
-  // Add the event header to the RawBuffer (will this be done by the DAQ?)
-  // Suppose this information is manipulated by class ID 101 and has Source
-  //(detector?) info 1;
+  // Add a DAQ bank, with zero missing sources. Assume SourceID is 1
   raw_int head[4];
-  head[0] = raw_int(evt->runNum());
   head[1] = raw_int(evt->evtNum());
-  head[2] = 0;  // reserved for event time
-  head[3] = 0;  // reserved for event time
+  head[0] = raw_int(evt->runNum());
+  head[2] = 0;  // Queuing time in SFC
+  head[3] = 0;  // Number of missing sources
 
   // Add this block to RawBuffer:
-  rawBuffer->addBank( 1, RawBuffer::Header, head, 2, 0 );
+  rawBuffer->addBank( 1, RawBuffer::DAQ, head, 4, 0 );
 
   return StatusCode::SUCCESS;
 };

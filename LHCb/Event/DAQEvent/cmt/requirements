@@ -3,7 +3,7 @@
 # Maintainer : Helder Lopes
 #============================================================================
 package           DAQEvent
-version           v4r6
+version           v5r0
 
 # Structure, i.e. directories to process. 
 #============================================================================
@@ -16,7 +16,7 @@ include_dirs $(DAQEVENTROOT)
 # Used packages.
 #============================================================================
 use GaudiAlg    v*
-use Event       v4r*    Event
+use Event       v* Event
 
 # Produce Header-Files & dictionary from XML description
 #============================================================================
