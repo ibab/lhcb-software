@@ -6,7 +6,9 @@ Purpose: LHCb Digitization program
 </PRE><H1><A NAME=v4r0>2003-12-12 Boole v4r0</A></H1><PRE>
 
  Built against GAUDI_v13r0, LHCB_v14r0.
-
+ 
+- New features 
+  - multiple PV reconstruction (max 3) for L1 (L1Decision v2r3)
 
 </PRE><H1><A NAME=v3r2>2003-12-04 Boole v3r2</A></H1><PRE>
 ** Input data must be produced with:                                       **
