@@ -1,5 +1,5 @@
 package DetSys
-version v2r0
+version v2r1
 
 branches cmt doc
 
@@ -14,4 +14,4 @@ use CaloDetXmlCnv  	v2r3	Det
 use MuonDet        	v4r4	Det
 use Magnet        	v2r1	Det
 use MuonTools	   	v3r6	Muon
-use RichDet	   	v4r2	Det
+use RichDet	   	v5r0	Det
