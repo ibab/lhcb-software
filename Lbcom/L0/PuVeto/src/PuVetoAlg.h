@@ -1,4 +1,4 @@
-// $Id: PuVetoAlg.h,v 1.5 2002-07-13 17:03:17 ocallot Exp $
+// $Id: PuVetoAlg.h,v 1.6 2002-11-21 13:50:36 mzupan Exp $
 #ifndef PUVETOALG_H 
 #define PUVETOALG_H 1
 
@@ -56,16 +56,16 @@ protected:
   long    zBin( double z ) {
     int bin = -1;
     if ( m_lowBound[0] < z ) {
-      for ( unsigned int j=0 ; m_step.size() > j ; j++ ) {
+      for ( unsigned int j=0 ; m_histoBins > j ; j++ ) {
         if ( m_lowBound[j+1] > z ) {
-          bin = m_nBin[j] + (int)( ( z-m_lowBound[j]) / m_step[j] );
+          bin = j; 
           break;
         }
       }
     }
     return bin;
   }
-
+  
   /// returns the integral of the histogram
   double fullIntegral( ) {
     double sum = 0;
@@ -91,6 +91,12 @@ private:
   double         m_highPosition;
   double         m_secondPosition;
 
+  long           m_binningScenario;
+  long           m_histoBins;
+  double         m_bin2Constant;
+  double         m_bin2Slope;
+  double         m_maskingWindow;
+  
   DeVelo*        m_velo;
 
   std::vector< VetoInput > m_input;
@@ -103,5 +109,6 @@ private:
   int                 m_totBin;
   std::vector<double> m_hist;
   std::vector<double> m_binCenter;
+
 };
 #endif // PUVETOALG_H

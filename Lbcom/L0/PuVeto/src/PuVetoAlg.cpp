@@ -1,6 +1,6 @@
-// $Id: PuVetoAlg.cpp,v 1.7 2002-07-13 17:03:17 ocallot Exp $
+// $Id: PuVetoAlg.cpp,v 1.8 2002-11-21 13:50:36 mzupan Exp $
 // Include files 
-
+#include <math.h>
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h"
 #include "GaudiKernel/MsgStream.h" 
@@ -46,6 +46,11 @@ PuVetoAlg::PuVetoAlg( const std::string& name,
   declareProperty( "HighThreshold"      , m_highThreshold   );
   declareProperty( "HighPosition"       , m_highPosition    );
   declareProperty( "SecondPosition"     , m_secondPosition  );
+  declareProperty( "BinningScenario"    , m_binningScenario = 1);
+  declareProperty( "HistoBins"       , m_histoBins = 128);
+  declareProperty( "Binning2Constant"       , m_bin2Constant = 6.9577);
+  declareProperty( "Binning2Slope"       , m_bin2Slope = -0.00763);
+  declareProperty( "MaskingWindow"       , m_maskingWindow = 3.75);
 }
 
 //=============================================================================
@@ -58,68 +63,111 @@ PuVetoAlg::~PuVetoAlg() {};
 //=============================================================================
 StatusCode PuVetoAlg::initialize() {
 
-  MsgStream log(msgSvc(), name());
-  log << MSG::DEBUG << "==> Initialise" << endreq;
+  MsgStream logmsg(msgSvc(), name());
+  logmsg << MSG::DEBUG << "==> Initialise" << endreq;
 
   SmartDataPtr<DeVelo> velo( detSvc(), "/dd/Structure/LHCb/Velo" );
   if ( 0 == velo ) {
-    log << MSG::ERROR << "Unable to retrieve Velo detector element." << endreq;
+    logmsg << MSG::ERROR << "Unable to retrieve Velo detector element." 
+           << endreq;
     return StatusCode::FAILURE;
   }
   m_velo = velo;
 
-  m_lowBound.push_back( -150. * mm );
-  m_lowBound.push_back( -100. * mm );
-  m_lowBound.push_back(  -50. * mm );
-  m_lowBound.push_back(   40. * mm );
-  m_lowBound.push_back(  150. * mm );
+  int binctr;
+  double lowb;
+  double step;
+  m_totBin = m_histoBins;
+  switch (m_binningScenario) {
+  case 0 : // "no binning" - equal bins
+    step = 300.0/m_histoBins;
+    lowb = -150.0;
+    for (binctr = 0;binctr <= m_histoBins;binctr++) {
+      m_lowBound.push_back(lowb * mm);
+      m_step.push_back(step);
+      lowb += step;
+    }
+    break;
+  case 1:  // Nikolai's standard binning (default)
+  default:
+    m_totBin = 128;
+    step = 1;
+    lowb=-150.0;
+    for (binctr = 0;binctr < 50;binctr++) { // bins 0-49 1mm wide
+      m_lowBound.push_back(lowb * mm);
+      m_step.push_back(step);
+      lowb += step;
+    }
+    step = 2;
+    for (binctr = 50; binctr < 75;binctr++) { //bins 50-74 2mm wide
+      m_lowBound.push_back(lowb * mm);
+      m_step.push_back(step);
+      lowb += step;
+    }
+    step = 3;
+    for (binctr = 75; binctr < 105;binctr++) { //bins 75-104 3mm wide
+      m_lowBound.push_back(lowb * mm);
+      m_step.push_back(step);
+      lowb += step;
+    }
+    step = 5;
+    for (binctr = 105; binctr < 128;binctr++) { //bins 105-127 5mm wide
+      m_lowBound.push_back(lowb * mm);
+      m_step.push_back(step);
+      lowb += step;
+    }
+    break;
+  case 2: //exponential binning
+    double a = m_bin2Constant;
+    double b = m_bin2Slope;
+    double c = exp(a)*(exp(b*150.0)-exp(b*-150.0))/b;
+    lowb = -150.0;
+    c /= (double) m_histoBins;
 
-  m_step.push_back( 1. * mm );
-  m_step.push_back( 2. * mm );
-  m_step.push_back( 3. * mm );
-  m_step.push_back( 5. * mm );
+    while (lowb < 150.0) {
+      m_lowBound.push_back(lowb * mm);
+      step = log(c*b/exp(a+b*lowb)+1)/b;
+      m_step.push_back(step);
+      lowb += step;
+    }
+    break;
+  }
 
-  m_nBin.push_back( 0 );
-  m_nBin.push_back( zBin( m_lowBound[1]-0.001)+1 );
-  m_nBin.push_back( zBin( m_lowBound[2]-0.001)+1 );
-  m_nBin.push_back( zBin( m_lowBound[3]-0.001)+1 );
-  m_nBin.push_back( zBin( m_lowBound[4]-0.001)+1 );
-
-  m_totBin = m_nBin[ m_nBin.size()-1 ];
+  std::vector<double>::const_iterator itrb;
+  std::vector<double>::const_iterator itrs = m_step.begin();
+  for (itrb = m_lowBound.begin();itrb != m_lowBound.end();itrb++,itrs++) {
+    m_binCenter.push_back ((*itrb) + 0.5 * (*itrs));
+    m_hist.push_back(0);
+  }
 
   for ( int ks=0 ; m_velo->nbPuSensor() > ks ; ks++ ) {
     VetoInput a( m_velo->zSensor(ks+100) );
     m_input.push_back( a );
   }
 
-  double binCenter;
-  
-  for ( unsigned int k=0 ; m_step.size() > k ; k++ ) {
-    binCenter = m_lowBound[k] + .5 * m_step[k];
-    log << MSG::DEBUG 
-        << " zone " << k 
-        << " low " << m_lowBound[k]
-        << " high " << m_lowBound[k+1]
-        << " step " << m_step[k] 
-        << " nBin " << m_nBin[k] 
-        << " binCenter(beg) " << binCenter
-        << endreq;
-    while ( binCenter < m_lowBound[k+1] ) {
-      m_hist.push_back( 0 );
-      m_binCenter.push_back( binCenter );
-      binCenter += m_step[k];
-    }
-  }
-  return StatusCode::SUCCESS;
-};
 
+  logmsg << MSG::DEBUG << "Strip threshold: " << m_threshold << endreq;
+  logmsg << MSG::DEBUG << "Binning scenario: " << m_binningScenario << endreq;
+  logmsg << MSG::DEBUG << "Peak low threshold: " << m_lowThreshold << endreq;
+  logmsg << MSG::DEBUG << "Peak high threshold: " << m_highThreshold << endreq;
+  logmsg << MSG::DEBUG << "Peak high thr. position: " << m_highPosition
+         << endreq;
+  logmsg << MSG::DEBUG << "Peak position cut: " << m_secondPosition << endreq;
+  
+  
+  return StatusCode::SUCCESS;
+}
+
+  
 //=============================================================================
 // Main execution
 //=============================================================================
 StatusCode PuVetoAlg::execute() {
 
-  MsgStream  log( msgSvc(), name() );
-  log << MSG::DEBUG << "==> Execute" << endreq;
+  MsgStream  logmsg( msgSvc(), name() );
+  logmsg << MSG::DEBUG << "==> Execute" << endreq;
+
+
 
   int ks;
   for ( ks=0 ; m_velo->nbPuSensor() > ks ; ks++ ) {
@@ -129,7 +177,7 @@ StatusCode PuVetoAlg::execute() {
 
   SmartDataPtr< MCVeloFEs > fes ( eventSvc() , m_inputContainer );
   if( 0 == fes ) {
-    log << MSG::ERROR << "Unable to retrieve input data container="
+    logmsg << MSG::ERROR << "Unable to retrieve input data container="
         << m_inputContainer << endreq;
     return StatusCode::FAILURE;
   }
@@ -144,7 +192,7 @@ StatusCode PuVetoAlg::execute() {
     if ( m_threshold < (*itFe)->charge() ) {
       unsigned int sensor = (*itFe)->sensor();
       if ( 100 > sensor || 103 < sensor ) {
-        log << MSG::INFO << "Unexpected sensor " << sensor 
+        logmsg << MSG::INFO << "Unexpected sensor " << sensor 
             << " in " << m_inputContainer << endreq;
         continue;
       }
@@ -153,20 +201,20 @@ StatusCode PuVetoAlg::execute() {
       std::vector<int>* strips = m_input[sensor].strips();
       bool toAdd = true;
 
-      log << MSG::VERBOSE << "PU Sensor " << sensor << " strip " << fired;
+      logmsg << MSG::VERBOSE << "PU Sensor " << sensor << " strip " << fired;
       
       for ( std::vector<int>::const_iterator itS = strips->begin();
             strips->end() != itS; itS++) {
         if ( (*itS) == fired ) {
           toAdd = false;
-          log << " exists.";
+          logmsg << " exists.";
         }
       }
       if ( toAdd ) {
         strips->push_back( fired );
-        log << " added.";
+        logmsg << " added.";
       }
-      log << endreq;
+      logmsg << endreq;
     }
   }
 
@@ -180,7 +228,7 @@ StatusCode PuVetoAlg::execute() {
   
   pos1 = peakValue( height1, sum1, width);
   
-  log << MSG::DEBUG << " Peak1 : Max " << height1 << " at z= " << pos1 
+  logmsg << MSG::DEBUG << " Peak1 : Max " << height1 << " at z= " << pos1 
       << " integral " << sum1 << endreq;
 
   // If a peak was found, mask the contributing hits, fill again and find the
@@ -188,9 +236,9 @@ StatusCode PuVetoAlg::execute() {
   // result.
 
   if ( 0 < height1 ) {
-    double zTol = 3.75 * width;
+    double zTol = m_maskingWindow * width;
   
-    log << MSG::DEBUG << " Mask around z = " << pos1 
+    logmsg << MSG::DEBUG << " Mask around z = " << pos1 
       << " window " << zTol << endreq;
     
 
@@ -200,7 +248,7 @@ StatusCode PuVetoAlg::execute() {
 
   pos2 = peakValue( height2, sum2, width );
       
-  log << MSG::DEBUG << " 2nd Max " << height2 << " at z= " << pos2
+  logmsg << MSG::DEBUG << " 2nd Max " << height2 << " at z= " << pos2
       << " integral " << sum2 << endreq;
   integral = fullIntegral();
   
@@ -214,6 +262,7 @@ StatusCode PuVetoAlg::execute() {
   } else {
     decision = 1;    // Multiple interaction
   }
+
 
   L0PuVeto* pileUp = new L0PuVeto();
   pileUp->setDecision( decision );
@@ -230,7 +279,7 @@ StatusCode PuVetoAlg::execute() {
   }
   pileUp->setSTot( totMult );
 
-  log << MSG::DEBUG << "== Decision " << decision 
+  logmsg << MSG::DEBUG << "== Decision " << decision 
       << " Peak1 z,h,s " << pos1 << " " << height1 << " " << sum1
       << " Peak2 z,h,s " << pos2 << " " << height2 << " " << sum2
       << " Off peaks " << integral << " TotMult " << totMult
@@ -239,7 +288,7 @@ StatusCode PuVetoAlg::execute() {
   StatusCode sc = eventSvc()->registerObject( m_outputContainer, pileUp );
   if ( sc.isFailure() ) {
     delete pileUp;
-    log << MSG::ERROR
+    logmsg << MSG::ERROR
         << "Unable to register output to " << m_outputContainer
         << endreq;
     return StatusCode::FAILURE;
@@ -257,8 +306,8 @@ StatusCode PuVetoAlg::execute() {
 //=============================================================================
 StatusCode PuVetoAlg::finalize() {
 
-  MsgStream log(msgSvc(), name());
-  log << MSG::DEBUG << "==> Finalize" << endreq;
+  MsgStream logmsg(msgSvc(), name());
+  logmsg << MSG::DEBUG << "==> Finalize" << endreq;
 
   return StatusCode::SUCCESS;
 }
@@ -268,7 +317,7 @@ StatusCode PuVetoAlg::finalize() {
 //  Fill the histogram
 //=========================================================================
 void PuVetoAlg::fillHisto ( ) {
-  MsgStream  log( msgSvc(), name() );
+  MsgStream  logmsg( msgSvc(), name() );
   // clear histo
   for ( unsigned int j=0 ; m_hist.size() > j ; j++ ) {
     m_hist[j] = 0;
@@ -295,7 +344,7 @@ void PuVetoAlg::fillHisto ( ) {
     std::vector<int>* digsA = sensA->strips();
     std::vector<int>* digsB = sensB->strips() ;
 
-    log << MSG::VERBOSE << "Loop on Sensor " << i1 
+    logmsg << MSG::VERBOSE << "Loop on Sensor " << i1 
         << " z = " << zA << " " << zB
         << " Mult " << digsA->size() << " and " << digsB->size() << endreq;
     for ( dA = digsA->begin() ;  digsA->end() != dA ; dA++ ) {
@@ -318,7 +367,7 @@ void PuVetoAlg::fillHisto ( ) {
           if ( 0 <= bin ) { 
             m_hist[bin]++;
 
-            log << MSG::VERBOSE << "  A: " << rA << " B: " << rB 
+            logmsg << MSG::VERBOSE << "  A: " << rA << " B: " << rB 
                 << " z " << z << " bin " << bin << endreq;
           }
         }
@@ -332,7 +381,7 @@ void PuVetoAlg::fillHisto ( ) {
 //=========================================================================
 void PuVetoAlg::maskHits ( double zVertex,
                            double zTol   ) {
-  MsgStream  log( msgSvc(), name() );
+  MsgStream  logmsg( msgSvc(), name() );
   double stripA, stripB;
   double zA, zB, z;
   double rA, rB;
@@ -377,7 +426,7 @@ void PuVetoAlg::maskHits ( double zVertex,
           z = ( zB*rA - zA*rB) / ( rA - rB );
           if ( zTol > fabs( zVertex-z ) ) {
 
-            log << MSG::VERBOSE << "  A: " << rA << " B: " << rB 
+            logmsg << MSG::VERBOSE << "  A: " << rA << " B: " << rB 
                 << " z " << z << " MASK " << endreq;
 
             if ( 10000 > (*dA) ) {
@@ -401,11 +450,22 @@ double PuVetoAlg::peakValue ( double& height, double& sum, double& width) {
   height = 0.;
   sum    = 0.;
   width  = 0.;
+  double sumt = 0.;
   int bin = -1;
-  for ( int jj=0 ; m_totBin > jj ; jj++ ) {
+
+  for ( int jj=0 ; jj < m_totBin ; jj++ ) {
     if ( height < m_hist[jj] ) {
       height = m_hist[jj];
       bin    = jj;
+      sumt = height;
+      if (jj>0) sumt += m_hist[jj-1];
+      if (jj<m_totBin-1) sumt += m_hist[jj+1];
+    }
+    if ((height != 0.) && (height == m_hist[jj])) {
+      sum = height;
+      if (jj>0) sum += m_hist[jj-1];
+      if (jj<m_totBin-1) sum += m_hist[jj+1];
+      if (sum > sumt) bin = jj;
     }
   }
 

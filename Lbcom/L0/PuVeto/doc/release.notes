@@ -1,7 +1,21 @@
-! $Id: release.notes,v 1.11 2002-11-12 09:13:25 cattanem Exp $
+! $Id: release.notes,v 1.12 2002-11-21 13:50:35 mzupan Exp $
 ! Package     : L0/PuVeto
 ! Responsible : Olivier Callot
 
+!========================= PuVeto v5r0 2002-11-21 =======================
+2002-11-21 - Marko Zupan
+ - Modified the peakValue method to improve peak finding.
+ - Added job option MaskingWindow controlling the width of the masking window.
+ - Added job options BinningScenario and HistoBins to provide choice of
+   binning of the pile-up histogram:
+ - HistoBins sets the number of bins for scenarios 0 and 2
+ - BinningScenario = 0 - Constant binning 
+   BinningScenario = 1 (default) - Standard binning previously used
+   Binning Scenario = 2 exponential binning (exp(a+bx))
+    - parameter a controlled by option Binning2Constant
+    - parameter b controlled by option Binning2Slope
+    - both options have an optimal default value 
+   
 !========================= PuVeto v4r1 2002-11-12 =======================
 ! 2002-11-12 - Marco Cattaneo
  - Use VeloDet v8r*
