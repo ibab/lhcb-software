@@ -1,4 +1,4 @@
-// $Id: ParticleTaggerCriterion.cpp,v 1.1.1.1 2002-05-23 23:25:51 gcorti Exp $
+// $Id: ParticleTaggerCriterion.cpp,v 1.2 2003-06-16 07:08:32 odie Exp $
 // Include files 
 
 // from Gaudi
@@ -9,6 +9,8 @@
 #include "GaudiKernel/SmartDataPtr.h"
 
 #include "CLHEP/Units/SystemOfUnits.h"
+
+#include "Event/ProtoParticle.h"
 
 // local
 #include "ParticleTaggerCriterion.h"
@@ -44,6 +46,7 @@ ParticleTaggerCriterion::ParticleTaggerCriterion( const std::string &type,
   declareProperty("MaxMomentum", m_PMax = -1);
   declareProperty("MinVeloZ", m_ZMin = -2*meter);
   declareProperty("MaxVeloZ", m_ZMax = 1*meter);
+  declareProperty("DoTrackTypeCut", m_trackCut = false);
 }
 
 StatusCode ParticleTaggerCriterion::initialize()
@@ -73,8 +76,16 @@ StatusCode ParticleTaggerCriterion::initialize()
 bool ParticleTaggerCriterion::isSatisfied( const Particle * const &cpart )
 {
   Particle *part = const_cast<Particle *>(cpart);
+  ProtoParticle *proto = NULL;
+  if( part->origin() )
+    proto = dynamic_cast<ProtoParticle *>(part->origin());
+  bool good_track = true;
+  if( m_trackCut && proto->track() )
+    good_track = proto->track()->unique() ||
+                 (!proto->track()->veloTT() &&
+                  !proto->track()->velo()   &&
+                  !proto->track()->seed() );
   return( (part->particleID().abspid() == m_PartCode) &&
-  //return( (abs(part->particleID().id()) == m_PartCode) &&
           ((m_CLMin < 0) || (part->confLevel() > m_CLMin)) &&
           ((m_CLMax < 0) || (part->confLevel() < m_CLMax)) &&
           ((m_PtMin < 0) || (part->pt() > m_PtMin)) &&
@@ -82,7 +93,8 @@ bool ParticleTaggerCriterion::isSatisfied( const Particle * const &cpart )
           ((m_PMin  < 0) || (part->p() > m_PMin)) &&
           ((m_PMax  < 0) || (part->p() < m_PMax)) &&
           (m_ZMin < part->pointOnTrack().z()) &&
-          (part->pointOnTrack().z() < m_ZMax) );
+          (part->pointOnTrack().z() < m_ZMax) &&
+          good_track );
 }
 
 bool ParticleTaggerCriterion::operator()( const Particle * const &cpart )

@@ -1,4 +1,4 @@
-// $Id: ParticleTaggerCriterion.h,v 1.1.1.1 2002-05-23 23:25:50 gcorti Exp $
+// $Id: ParticleTaggerCriterion.h,v 1.2 2003-06-16 07:08:32 odie Exp $
 #ifndef PARTICLETAGGERCRITERION_H 
 #define PARTICLETAGGERCRITERION_H 1
 
@@ -47,5 +47,6 @@ private:
   double m_PMax;              //< Maximal momentum
   double m_ZMin;              //< Minimal Z position of first point on track
   double m_ZMax;              //< Maximal Z position of first point on track
+  bool m_trackCut;            //< Apply a cut on the track type
 };
 #endif // PARTICLETAGGERCRITERION_H
