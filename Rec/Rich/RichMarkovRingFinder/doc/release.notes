@@ -7,6 +7,7 @@
 
 ! 2004-06-29 - Andrew Buckley
  - src/component/*
+   . Implemented geometric limits for RICH1 (priors still incorrect for RICH1)
    . Moved Markov-ring to track segment matching into the *Alg from the *Moni code.
    . Added a hit stripping algorithm which removes pixels from the TES if they don't
      match a Markov ring associated to a track. Track association radius and ring-pixel
