@@ -76,4 +76,8 @@ SignalTracksPlots.PhysDesktop.InputLocations = { "Phys/SelectBd2D02KPiKstar"
 					    ,"Phys/SelectBs2PhiPhi" } ;
 SignalTracksPlots.Variables = { "Pt", "P" } ;
 
+HLTPlots.Members += { "SimplePlots/HLTDstarPlots" };
+HLTDstarPlots.PhysDesktop.InputLocations = { "Phys/HLTSharedD02HH", "Phys/HLTFilterDstar" } ;
+HLTDstarPlots.Variables = { "M", "Chi2", "Pt" } ;
+
 
