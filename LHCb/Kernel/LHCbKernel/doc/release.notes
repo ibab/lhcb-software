@@ -2,6 +2,12 @@ Package LHCbKernel
 Package manager: M.Cattaneo
 Purpose: LHCb specific Kernel classes
 
+! 2004-02-03 - Mark Tobin
+ - Modified bit structure of VeloChannelID.  Added type(), but kept same
+   constructor for backward compatibility.  
+   Sadly this backward compatibility applies only to the constructor as 
+   a new numbering scheme has been introduced.
+
 !====================== LHCbKernel v4r2 2004-02-02 ========================
 ! 2004-01-29 - Chris Jones
  - Minor changes to RichSmartID (backwards compatible). 
