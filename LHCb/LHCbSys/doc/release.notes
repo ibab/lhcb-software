@@ -5,6 +5,30 @@
 ! Purpose     : LHCb OO kernel packages
 !-----------------------------------------------------------------------------
 
+!======================= LHCbSys v16r2 2004-09-06 =======================
+! 2004-09-06 - Marco Cattaneo
+ - Modified packages: KernelSys v4r2, LHCbKernel v5r2,
+                   EventSys v18r2, CaloEvent v13r5,
+                   AssociatorsSys v1r15, Associators v2r3, CaloAssociators v4r3,
+                   LHCbAlgs v1r1, CaloInterfaces v4r2
+
+ - In LHCbKernel v5r2:
+   . Fix typo in InstanceCounter.h, affecting LoKi
+
+ - In LHCbAlgs v1r1:
+   . LbAppInit - Protect against undefined APPVERSION environment variable
+   . LbAppInit - Pring memory usage at each event, if debug() OutputLevel
+
+ - In CaloEvent v13r5:
+   . Changes to allow RawBuffer decoding using data-on-demand service
+   . Remove dependency on Relations package
+ 
+ - In CaloAssociators v4r3, Associators v2r3:
+   . All Relations factories moved to Associators package
+
+ - In CaloInterfaces v4r2:
+   . Modifications to prepare for HLT developments
+ 
 !======================= LHCbSys v16r1 2004-07-29 =======================
 This version is built against Gaudi v15r1
 
