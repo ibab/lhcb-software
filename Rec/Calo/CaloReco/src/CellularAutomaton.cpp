@@ -1,8 +1,11 @@
-// $Id: CellularAutomaton.cpp,v 1.1.1.1 2002-11-13 20:46:40 ibelyaev Exp $
+// $Id: CellularAutomaton.cpp,v 1.2 2004-01-13 08:47:25 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.1.1.1  2002/11/13 20:46:40  ibelyaev
+// new package 
+//
 // ============================================================================ 
 #define CALOCA_CELLULARAUTOMATON_CPP 1 
 // ============================================================================
@@ -154,6 +157,9 @@ StatusCode CellularAutomaton::execute()
    *  register it into the event data store
    */ 
   CaloClusters* output = new CaloClusters();
+  // update the version number (needed for seriazalition)
+  output -> setVersion( 2 ) ;
+
   StatusCode sc = put( output , outputData() );
   if( sc.isFailure() ) { return sc ; }
   
@@ -258,6 +264,9 @@ StatusCode CellularAutomaton::execute()
     cluster->entries().
       push_back( CaloClusterEntry( (*hits) ( (*itTagSeed)->cellID() ) , 
                                    seed ) );
+    // set seed for cluster! (I.B.)
+    cluster->setSeed( (*itTagSeed)->cellID() );
+    
     itTagClustered2 = 
       std::partition ( itTagClustered1,
                        itTagLastClustered,

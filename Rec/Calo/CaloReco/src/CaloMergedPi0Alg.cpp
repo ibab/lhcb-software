@@ -1,4 +1,4 @@
-// $Id: CaloMergedPi0Alg.cpp,v 1.6 2003-12-11 16:33:40 cattanem Exp $
+// $Id: CaloMergedPi0Alg.cpp,v 1.7 2004-01-13 08:47:25 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
@@ -392,6 +392,8 @@ StatusCode CaloMergedPi0Alg::execute()
 
   // create the container of split clusters 
   CaloClusters* clusts = new CaloClusters();
+  // update the version for new clusters (needed for serialization)
+  clusts -> setVersion( 2 ) ;
   {  
     StatusCode status = put( clusts , m_nameOfSplitClusters);
     if( status.isFailure() ) { return status ; }
@@ -874,6 +876,9 @@ StatusCode CaloMergedPi0Alg::execute()
                     CaloDigitStatus::UseForPosition | 
                     CaloDigitStatus::UseForCovariance  ;
                   if(1 == ir && 1==ic){
+                    // set SEED for the cluster (I.B.)
+                    cl1->setSeed( d->cellID() ) ;
+                    //
                     s1   =  
                       CaloDigitStatus::SeedCell       | 
                       CaloDigitStatus::LocalMaximum   | 
@@ -898,6 +903,9 @@ StatusCode CaloMergedPi0Alg::execute()
                     CaloDigitStatus::UseForPosition | 
                     CaloDigitStatus::UseForCovariance  ;
                   if(1 == ir && 1==ic){
+                    // set SEED for the cluster  (I.B.)
+                    cl2->setSeed( d->cellID() ) ;
+                    //
                     s2   =  
                       CaloDigitStatus::SeedCell       | 
                       CaloDigitStatus::UseForEnergy   | 
