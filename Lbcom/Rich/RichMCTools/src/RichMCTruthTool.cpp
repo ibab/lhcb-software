@@ -1,12 +1,15 @@
-// 
+
 //-----------------------------------------------------------------------------
 /** @file RichMCTruthTool.cpp
  *
  * Implementation file for class : RichMCTruthTool
  *
  * CVS Log :-
- * $Id: RichMCTruthTool.cpp,v 1.7 2004-08-19 14:00:29 jonrob Exp $
+ * $Id: RichMCTruthTool.cpp,v 1.8 2004-08-20 14:49:24 jonrob Exp $
  * $Log: not supported by cvs2svn $
+ * Revision 1.7  2004/08/19 14:00:29  jonrob
+ *  Add new method to RichMCTruthTool
+ *
  * Revision 1.6  2004/07/26 17:56:09  jonrob
  * Various improvements to the doxygen comments
  *
@@ -120,7 +123,10 @@ RichMCTruthTool::mcParticle( const TrStoredTrack * track ) const
   if ( track ) {
     const MCParticle* mcPart = m_trackToMCP->associatedFrom(track);
     return mcPart;
-  } else { return NULL; }
+  } else { 
+    Warning ( "NULL TrStoredTrack in RichMCTruthTool::mcParticle" );
+    return NULL; 
+  }
 }
 
 const MCRichDigit * RichMCTruthTool::mcRichDigit( const RichDigit * digit ) const
