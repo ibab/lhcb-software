@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/GaudiObjDesc/src/DaDiClass.h,v 1.21 2002-03-14 14:16:51 mato Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/GaudiObjDesc/src/DaDiClass.h,v 1.22 2002-03-19 13:53:18 mato Exp $
 #ifndef DADICLASS_H 
 #define DADICLASS_H 1
 
@@ -62,6 +62,12 @@ public:
 	void setClassTemplateList(bool value);
 
 	bool innerClass();
+
+	bool serializers();
+	void setSerializers(bool value);
+
+	bool stdVectorTypeDef();
+	void setStdVectorTypeDef(bool value);
 
 	std::string popImpSoftList();
   std::list<std::string> impSoftList();
@@ -139,7 +145,9 @@ private:
                               m_location;
   bool                        m_classTemplateVector,
                               m_classTemplateList,
-                              m_innerClass;
+                              m_innerClass,
+                              m_serializers,
+                              m_stdVectorTypeDef;
 	std::list<std::string>      m_impSoftList,
                               m_impStdList,
                               m_importList,
@@ -249,6 +257,26 @@ inline void DaDiClass::setClassTemplateList(bool value)
 inline bool DaDiClass::innerClass()
 {
 	return m_innerClass;
+}
+
+inline bool DaDiClass::serializers()
+{
+	return m_serializers;
+}
+
+inline void DaDiClass::setSerializers(bool value)
+{
+	m_serializers = value;
+}
+
+inline bool DaDiClass::stdVectorTypeDef()
+{
+	return m_stdVectorTypeDef;
+}
+
+inline void DaDiClass::setStdVectorTypeDef(bool value)
+{
+	m_stdVectorTypeDef = value;
 }
 
 inline std::string DaDiClass::popImpSoftList()

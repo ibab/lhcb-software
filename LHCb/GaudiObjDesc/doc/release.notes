@@ -2,6 +2,11 @@ Package: GaudiObjDesc
 Desccription: This package contains a set of tools used to generate code from the XML description of the data object classes.
 Package manager : Stefan Roiser
 
+! 20020319 - Stefan Roiser
+ - introduced new <class>-attribute 'stdVectorTypeDef' for typedef of a std::vector of class-pointer
+ - introduced new <class>-attribute 'serializers' to enable/disable writing of serialize-functions
+ - bugfix typedefs and enums used in function-implementations outside class now prefixed with 'ClassName::'
+
 ! 20020318 - Stefan Roiser
  - applying naming rules for getters with abbreviations also to _dict.cpp-files
 

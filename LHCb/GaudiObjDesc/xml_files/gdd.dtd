@@ -24,8 +24,10 @@
 	filename CDATA #IMPLIED
 	id CDATA #IMPLIED
 	location CDATA #IMPLIED
+        stdVectorTypeDef (TRUE | FALSE) "FALSE"
 	templateVector (TRUE | FALSE) "TRUE"
 	templateList (TRUE | FALSE) "TRUE"
+        serializers (TRUE | FALSE) "TRUE"
 >
 <!ELEMENT desc (#PCDATA)>
 <!ATTLIST desc
