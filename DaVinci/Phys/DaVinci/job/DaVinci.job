@@ -46,7 +46,7 @@ endif
 set current = $PWD
 #
 # set location of DaVinci executable
-setenv MYJOBROOT $HOME/newmycmt/Phys/DaVinci/v6r1
+setenv MYJOBROOT $HOME/newmycmt/Phys/DaVinci/v6r2
 
 # == set the program environment
 source $MYJOBROOT/cmt/setup.csh -tag=$MODE
