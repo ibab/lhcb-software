@@ -1,8 +1,11 @@
-// $Id: OscillationFlag.cpp,v 1.1 2004-02-20 19:35:30 ibelyaev Exp $
+// $Id: OscillationFlag.cpp,v 1.2 2004-04-07 15:15:31 gcorti Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.1  2004/02/20 19:35:30  ibelyaev
+//  major update
+//
 // ============================================================================
 // Include files
 // ============================================================================
@@ -57,6 +60,11 @@ StatusCode OscillationFlag( const G4Track*   track ,
   
   // update the trajectory
   traj->setHasOscillated( uI->hasOscillated() ) ;
+  if ( uI -> isSignal() ) {
+    traj->setIsSignal( uI -> isSignal() ) ;
+    traj->setSignalBarcode( uI -> signalBarcode() ) ;
+    traj->setHepMCEvent( uI -> pHepMCEvent() ) ;
+  }  
   
   return StatusCode::SUCCESS ;
 };

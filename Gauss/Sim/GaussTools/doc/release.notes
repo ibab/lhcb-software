@@ -4,6 +4,12 @@
 ! Purpose       : G4 actions and some miscellaneous algs for Gauss
 !-----------------------------------------------------------------------------
 
+!===================== GaussTools v10r2 ==================================
+! 2004-04-07 - Gloria CORTI
+ - src/Lib/OscillationFlag.cpp
+   src/Components/GaussPostTrackAction.cpp
+   . Changes by Patrick ROBBE to pass signal information from G4 to Event model
+
 ! 2004-04-05 - Gloria CORTI
  - src/Components/GaussTrackActionByEnergy.{h,cpp}
    src/Components/GaussTrackActionByEnergyType.{h,cpp}

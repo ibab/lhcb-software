@@ -287,6 +287,14 @@ void GaussPostTrackAction::PostUserTrackingAction ( const G4Track* track )
                    (GaussTrajectory*)(trackMgr()->GimmeTrajectory());
                  traj->setHasOscillated( true ); 
                }        
+             if ( uInf -> isSignal() )
+               {
+                 GaussTrajectory* traj=
+                   (GaussTrajectory*)(trackMgr()->GimmeTrajectory());
+                 traj->setIsSignal( true ) ;
+                 traj->setSignalBarcode( uInf -> signalBarcode() ) ;
+                 traj->setHepMCEvent( uInf -> pHepMCEvent() ) ;
+               }
            }  
          }
        }       
@@ -349,6 +357,14 @@ void GaussPostTrackAction::PostUserTrackingAction ( const G4Track* track )
                       (GaussTrajectory*)(trackMgr()->GimmeTrajectory());
                     traj->setHasOscillated( true ); 
                   }        
+                if ( uInf -> isSignal() )
+                  {
+                    GaussTrajectory* traj=
+                      (GaussTrajectory*)(trackMgr()->GimmeTrajectory());
+                    traj->setIsSignal( true ) ;
+                    traj->setSignalBarcode( uInf -> signalBarcode() ) ;
+                    traj->setHepMCEvent( uInf -> pHepMCEvent() ) ;
+                  }
               }  
             }
           }  
@@ -382,6 +398,14 @@ void GaussPostTrackAction::PostUserTrackingAction ( const G4Track* track )
                   (GaussTrajectory*)(trackMgr()->GimmeTrajectory());
                 traj->setHasOscillated( true ); 
               }        
+            if ( uInf -> isSignal() )
+              {
+                GaussTrajectory* traj=
+                  (GaussTrajectory*)(trackMgr()->GimmeTrajectory());
+                traj->setIsSignal( true ) ;
+                traj->setSignalBarcode( uInf -> signalBarcode() ) ;
+                traj->setHepMCEvent( uInf -> pHepMCEvent() ) ;
+              }
           }  
         }
       }  
@@ -413,6 +437,14 @@ void GaussPostTrackAction::PostUserTrackingAction ( const G4Track* track )
                   (GaussTrajectory*)(trackMgr()->GimmeTrajectory());
                 traj->setHasOscillated( true ); 
               }        
+            if ( uInf -> isSignal() )
+              {
+                GaussTrajectory* traj=
+                  (GaussTrajectory*)(trackMgr()->GimmeTrajectory());
+                traj->setIsSignal( true ) ;
+                traj->setSignalBarcode( uInf -> signalBarcode() ) ;
+                traj->setHepMCEvent( uInf -> pHepMCEvent() ) ;
+              }
           }  
         }
       }  
@@ -446,6 +478,14 @@ void GaussPostTrackAction::PostUserTrackingAction ( const G4Track* track )
                   (GaussTrajectory*)(trackMgr()->GimmeTrajectory());
                 traj->setHasOscillated( true ); 
               }        
+            if ( uInf -> isSignal() )
+              {
+                GaussTrajectory* traj=
+                  (GaussTrajectory*)(trackMgr()->GimmeTrajectory());
+                traj->setIsSignal( true ) ;
+                traj->setSignalBarcode( uInf -> signalBarcode() ) ;
+                traj->setHepMCEvent( uInf -> pHepMCEvent() ) ;
+              }
           }  
         }
       }  
@@ -488,6 +528,14 @@ void GaussPostTrackAction::PostUserTrackingAction ( const G4Track* track )
                   (GaussTrajectory*)(trackMgr()->GimmeTrajectory());
                 traj->setHasOscillated( true ); 
               }        
+            if ( uInf -> isSignal() )
+              {
+                GaussTrajectory* traj=
+                  (GaussTrajectory*)(trackMgr()->GimmeTrajectory());
+                traj->setIsSignal( true ) ;
+                traj->setSignalBarcode( uInf -> signalBarcode() ) ;
+                traj->setHepMCEvent( uInf -> pHepMCEvent() ) ;
+              }
           }  
         }
       }  
@@ -521,6 +569,14 @@ void GaussPostTrackAction::PostUserTrackingAction ( const G4Track* track )
                           (GaussTrajectory*)(trackMgr()->GimmeTrajectory());
                         traj->setHasOscillated( true ); 
                       }        
+                    if ( uInf -> isSignal() )
+                      {
+                        GaussTrajectory* traj=
+                          (GaussTrajectory*)(trackMgr()->GimmeTrajectory());
+                        traj->setIsSignal( true ) ;
+                        traj->setSignalBarcode( uInf -> signalBarcode() ) ;
+                        traj->setHepMCEvent( uInf -> pHepMCEvent() ) ;
+                      }
                   }  
                 }
               }  
@@ -564,6 +620,14 @@ void GaussPostTrackAction::PostUserTrackingAction ( const G4Track* track )
                           (GaussTrajectory*)(trackMgr()->GimmeTrajectory());
                         traj->setHasOscillated( true ); 
                       }        
+                    if ( uInf -> isSignal() )
+                      {
+                        GaussTrajectory* traj=
+                          (GaussTrajectory*)(trackMgr()->GimmeTrajectory());
+                        traj->setIsSignal( true ) ;
+                        traj->setSignalBarcode( uInf -> signalBarcode() ) ;
+                        traj->setHepMCEvent( uInf -> pHepMCEvent() ) ;
+                      }
                   }  
                 }
               }  
@@ -602,6 +666,14 @@ void GaussPostTrackAction::PostUserTrackingAction ( const G4Track* track )
                       (GaussTrajectory*)(trackMgr()->GimmeTrajectory());
                     traj->setHasOscillated( true ); 
                   }        
+                if ( uInf -> isSignal() )
+                  {
+                    GaussTrajectory* traj=
+                      (GaussTrajectory*)(trackMgr()->GimmeTrajectory());
+                    traj->setIsSignal( true ) ;
+                    traj->setSignalBarcode( uInf -> signalBarcode() ) ;
+                    traj->setHepMCEvent( uInf -> pHepMCEvent() ) ;
+                  }
               }  
             }
           }  
@@ -640,6 +712,14 @@ void GaussPostTrackAction::PostUserTrackingAction ( const G4Track* track )
                       (GaussTrajectory*)(trackMgr()->GimmeTrajectory());
                     traj->setHasOscillated( true ); 
                   }        
+                if ( uInf -> isSignal() )
+                  {
+                    GaussTrajectory* traj=
+                      (GaussTrajectory*)(trackMgr()->GimmeTrajectory());
+                    traj->setIsSignal( true ) ;
+                    traj->setSignalBarcode( uInf -> signalBarcode() ) ;
+                    traj->setHepMCEvent( uInf -> pHepMCEvent() ) ;
+                  }
               }  
             }
           }  
