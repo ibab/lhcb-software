@@ -10,10 +10,11 @@ include_dirs $(RICHREADOUTROOT)
 set RICHREADOUTOPTS $(RICHREADOUTROOT)/options
 
 # ================ dependencies ==============================================
-use AIDA            v*   -no_auto_imports
-use RichEvent       v5r*   Event
-use RiSicbGeom	  v3r*	SICB
-use RichDetTools    v3r*	Rich
+use AIDA                v*                                 -no_auto_imports
+use ParamFiles          v*      $(LHCb_release_area)/PARAM -no_auto_imports
+use RichEvent           v5r*    Event
+use RiSicbGeom	        v3r*	SICB
+use RichDetTools        v3r*	Rich
 
 # ================ component library =========================================
 library RichReadout ../src/*.cpp  -import=AIDA

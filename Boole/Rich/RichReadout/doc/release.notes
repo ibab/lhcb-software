@@ -4,6 +4,10 @@
 ! Purpose     : Rich Digitisation
 !-----------------------------------------------------------------------------
 
+!========================= RichReadout v1r0 2003-10-06 =======================
+! 2003-10-01 - Marco Cattaneo
+ - Moved sicb_incident_track.data to ParamFiles package
+
 ! 2003-06-19 - Chris Jones
  - First version in CVS
  - Supports HPD digitisation for SICB and Gauss data

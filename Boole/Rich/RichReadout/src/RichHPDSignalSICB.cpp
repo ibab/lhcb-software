@@ -403,7 +403,8 @@ bool RichHPDSignalSICB::InitParameters() {
   m_NPhotons.insert( photonmap2::value_type(18,  0));
 
   std::ifstream input;
-  std::string dataFile = (std::string)getenv("RICHREADOUTOPTS") + "/sicb_incident_track.data";
+  std::string dataFile = (std::string)getenv("PARAMFILESROOT") + 
+                                       "/data/RichHPD_sicb_incident_track.data";
   input.open(dataFile.c_str());
 
   if ( !input ) {
