@@ -1,4 +1,4 @@
-// $Id: LagrangeDirectionFitter.h,v 1.1.1.1 2004-08-24 06:28:54 pkoppenb Exp $
+// $
 #ifndef LAGRANGEDIRECTIONFITTER_H
 #define LAGRANGEDIRECTIONFITTER_H 1
 
@@ -49,6 +49,10 @@ public:
 
   StatusCode  fitWithDirection(Particle& particle,Vertex& vertex, 
                             Particle& fitParticle,Vertex& fitVtx);
+
+  StatusCode  fitWithDirection(Particle& particle,Vertex& vertex,
+                               Particle& fitParticle,Vertex& fitBV, 
+                               Vertex& fitPV);
 
 };
 

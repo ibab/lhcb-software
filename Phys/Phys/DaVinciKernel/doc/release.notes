@@ -2,6 +2,13 @@
 ! Package     : DaVinciKernel
 ! Responsible : P. Koppenburg
 
+! 2004-11-04 - Yuehong Xie
+ - DaVinciTools/IDirectionFitter.h
+  . Add method fitWithDirection that returns the fitted primary vertex, 
+    which is necessary for computing propertime.
+ - DaVinciTools/IKFFitTool.h
+  . Add interface for new kinematic fit tool KFFitTool
+
 ! 2004-09-27 - P. Koppenburg
  - DaVinciTools/IPVLocator.h
    . Interface to PVLocator (in DaVinciTools)

@@ -1,4 +1,4 @@
-// $Id: IDirectionFitter.h,v 1.1.1.1 2004-08-24 06:59:45 pkoppenb Exp $
+// $
 #ifndef DAVINCITOOLS_IDIRECTIONFITTER_H 
 #define DAVINCITOOLS_IDIRECTIONFITTER_H 1
 
@@ -26,5 +26,8 @@ class IDirectionFitter : virtual public IAlgTool {
   /// Method that performs the Direction fit
   virtual StatusCode fitWithDirection( Particle& ,Vertex& , 
                                 Particle& ,Vertex& ) = 0;
+  virtual StatusCode fitWithDirection( Particle& ,Vertex& ,
+                                Particle& ,Vertex&, Vertex& ) = 0;
+
 };
 #endif // DAVINCITOOLS_IDIRECTIONFITTER_H

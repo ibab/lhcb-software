@@ -2,6 +2,20 @@
 ! Package     : VertexFit
 ! Responsible : P. Koppenburg
 
+! 2004-11-04 - Yuehong Xie
+ - New tool KFFitTool.cpp/.h basically does
+  . recomputation of track covariance matrix to fix a bug in Particle class
+  . vertex fitting with Kalman Filter method
+  . mass constraint of narrow width resonant particles 
+  . adding photon or photon pair to a vertex and giving correct covariance matrix 
+  . At the moment Kshort is not reprocessed. 
+ - LagrangeDirectionFitter.cpp/.h
+  . Add new method fitWithDirection which returns the modified primary vertex
+  . Now Direction fitter and LifetimeFitter give very similar result
+ - LifetimeFitter.cpp
+  . Always check if matrix inversion is successful or not
+
+
 !========================== VertexFit v1r1 2004-09-16 ===================
 ! 2004-08-25 - P. Koppenburg
  - cmt/requirements

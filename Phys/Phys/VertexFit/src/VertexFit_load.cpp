@@ -11,6 +11,7 @@ DECLARE_FACTORY_ENTRIES( VertexFit ) {
   DECLARE_TOOL( LagrangeGeomVertexFitter );
   DECLARE_TOOL( LagrangeMassVertexFitter );
   DECLARE_TOOL( UnconstVertexFitter );  
+  DECLARE_TOOL( KFFitTool );
 
   // Associated tools
   DECLARE_TOOL( GeomDispCalculator );
