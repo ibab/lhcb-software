@@ -4,6 +4,14 @@
 ! Purpose     : LHCb OO kernel packages
 !-----------------------------------------------------------------------------
 
+!====================== LHCbSys v11r4 =================================
+! 2002-12-03 - Florence Ranjard
+ - requirements - based on Brunel v15r3 + DetDesc v11r6 and Gaudi v11r3
+
+!====================== LHCbSys v11r3 =================================
+! 2002-11-26 - Florence Ranjard
+ - requirements - based on Brunel v15r3 and Gaudi v11r2
+
 !====================== LHCbSys v11r2 =================================
 ! 2002-11-14 - Florence Ranjard
  - requirements - include all packages to facilitate the installation
