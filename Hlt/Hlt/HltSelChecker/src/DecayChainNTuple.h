@@ -4,7 +4,7 @@
 // Include files
 // from Gaudi
 #include "GaudiKernel/Algorithm.h"
-#include "DaVinciTools/DVAlgorithm.h"
+#include "Kernel/DVAlgorithm.h"
 
 #include "Event/RichPID.h"
 

@@ -5,26 +5,79 @@
 !-----------------------------------------------------------------------------
 
 
+! 2005-01-06 - P. Koppenburg
+  # Complete rewriting of the options using the new MakeResonances and 
+  # FilterDesktop algorithms. Wherever it is possible a single algorithm
+  # is used instead of two or even three, in order to avoid unnecessary 
+  # access to the TES.
+  - src/*.*
+     . DaVinciTools/ becomes Kernel/
+  - src/SimplePlots.*
+     . Moved to DaVinciTools.
+  - New options/AllTDRselections.opts
+    . Contains all options to run TDR selections
+  - Removed options/CorrBd2D02KPiKstar.opts    
+  - New options/CorrBd2D0Kstar.opts
+  - Removed options/NTBd2D02KPiKstar.opts
+  - New options/NTBd2D0Kstar.opts
+  - Removed options/TrueBd2D02KPiKstar.opts
+  - New options/TrueBd2D0Kstar.opts
+  - options/DVHLTNTuplesCheck.opts
+  - options/HLTExSelectionsNTuples.opts
+  - options/NTBd2DstarPi.opts
+    . All D02Kpi become D0
+  - options/CorrB2HH.opts
+  - options/CorrB2MuMu.opts
+  - options/CorrBd2DstarPi.opts
+  - options/CorrBd2JpsiKs.opts
+  - options/CorrBd2MuMuKstar.opts
+  - options/CorrBs2DsH.opts
+  - options/CorrBs2JpsiPhi.opts
+  - options/CorrBs2PhiGamma.opts
+  - options/CorrBs2PhiPhi.opts
+  - New options/CorrDiMuons.opts
+  - options/CorrDstar.opts
+  - options/CorrHLTsels.opts
+  - options/DVHLTCorr.opts
+    . Removed obsolete algorithms due to merging
+  - New options/MeasureTimes.opts
+    . Suggested by Chris
+  - options/Plots.opts
+    . Removed obsolete locations due to merging
+  - options/TrueB2HH.opts
+  - options/TrueB2MuMu.opts
+  - options/TrueBd2DstarPi.opts
+  - options/TrueBd2JpsiKs.opts
+  - options/TrueBd2MuMuKstar.opts
+  - options/TrueBs2DsH.opts
+  - options/TrueBs2JpsiPhi.opts
+  - options/TrueBs2PhiGamma.opts
+  - options/TrueBs2PhiPhi.opts
+  - options/TrueDstar.opts
+  - options/Truth.opts
+  - options/TruthInput.opts
+    . Rewritten using MakeResonances and FilterDesktop
+   
 !========================== HltSelChecker v1r2 2005-01-06 ===========================
 ! 2004-12-11 - Luis Fernandez
- - src/DecayChainNTuple{h,cpp}
-   . Add global Rich PIDs
+  - src/DecayChainNTuple{h,cpp}
+    . Add global Rich PIDs
 
 ! 2004-12-10 - Luis Fernandez
- - src/DecayChainNTuple{h,cpp}
-   . The primaries are retrieved with the PVLocator tool, default is offline
- - options/DVHLTCheck.opts
-   . Removed
- - options/NT*.opts
-   . New: Options to produce Trees with all kind of information and MC truth association
-   . The input locations for the Particle2MCLinks depends on the HLT strategy (with/without PID)
-     since HLT algorithms break the links: depends on ChangeDecayChain or ChangePIDByMass
- - options/DVHLTNTuplesCheck.opts
-   . New: calls all the NT*.opts for offline selection and HLT selection with trigger filters
+  - src/DecayChainNTuple{h,cpp}
+    . The primaries are retrieved with the PVLocator tool, default is offline
+  - options/DVHLTCheck.opts
+    . Removed
+  - options/NT*.opts
+    . New: Options to produce Trees with all kind of information and MC truth association
+    . The input locations for the Particle2MCLinks depends on the HLT strategy (with/without PID)
+      since HLT algorithms break the links: depends on ChangeDecayChain or ChangePIDByMass
+  - options/DVHLTNTuplesCheck.opts
+    . New: calls all the NT*.opts for offline selection and HLT selection with trigger filters
 
 ! 2004-12-06 - Luis Fernandez
- - options/OfflineTracks.opts
-   . Add include of option file to allow the PhotonParticleMaker to produce neutrals
+  - options/OfflineTracks.opts
+    . Add include of option file to allow the PhotonParticleMaker to produce neutrals
 
 ! 2004-11-25 - P. Koppenburg
   - options/DV*.opts

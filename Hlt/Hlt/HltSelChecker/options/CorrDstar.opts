@@ -1,18 +1,18 @@
 
 // correlation of HLT and truth
-ApplicationMgr.TopAlg += { "SelResultCorrelations/CorrDstar" };
+HLTCorrelations.Members += { "SelResultCorrelations/CorrDstar" };
 CorrDstar.Algorithms = { "AllDstar2DpiTracks"
+                        , "WrongSignD0"
                         ,"HLTSharedD02HH"
-                        ,"HLTDstar2D02HH"
 			,"HLTFilterDstar" } ;
 
 // check for TDR and MC truth
-ApplicationMgr.TopAlg += { "Sequencer/ShowFoundDstar" };
-ShowFoundDstar.Members += { "CheckSelResult/DstarAndTruth",  "PrintTree/PrintFoundDstar"};
+HLTCorrelations.Members += { "GaudiSequencer/ShowFoundDstar" };
+ShowFoundDstar.Members += { "CheckSelResult/DstarIsFound",  "PrintTree/PrintFoundDstar"};
 
-DstarAndTruth.ANDmode = true ;
-DstarAndTruth.Algorithms = { "HLTFilterDstar" , "AllDstar2DpTracks" } ;
-DstarAndTruth.AvoidSelResult = false ;
+DstarIsFound.ANDmode = true ;
+DstarIsFound.Algorithms = { "HLTFilterDstar" } ; // , "AllDstar2DpiTracks" } ;
+DstarIsFound.AvoidSelResult = false ;
 
 PrintFoundDstar.DebugTool.Informations = "Name E M P Px Py Pz Pt phi Vz" ;
 PrintFoundDstar.PhysDesktop.InputLocations = { "Phys/HLTFilterDstar" } ;

@@ -1,20 +1,10 @@
-TrueSignals.Members += {"RefineSelection/SelectBd2MuMuKstar"};
+TrueSignals.Members += {"FilterDesktop/SelectBd2MuMuKstar"};
 SelectBd2MuMuKstar.PhysDesktop.InputLocations = { "Phys/HLTPions", "Phys/HLTKaons", "Phys/HLTMuons" } ;
-SelectBd2MuMuKstar.ParticleNames =  { "pi-", "pi+", "K+", "K-", "mu+", "mu-"  } ;                           // select pi-, pi+
-SelectBd2MuMuKstar.FilterNames = { "TrueMC", "TrueMC", "TrueMC", "TrueMC", "TrueMC", "TrueMC" };                         // filter by TrueMC
-SelectBd2MuMuKstar.TrueMC.CriteriaNames =  { "TrueMCFilterCriterion/Bd2MuMuKstar" } ;   // 
-SelectBd2MuMuKstar.TrueMC.Bd2MuMuKstar.MCDecayFinder.Decay =  "{[[B0]nos -> ^mu+ ^mu- (K*(892)0 -> ^K+ ^pi-) {,gamma} {,gamma}]cc, [[B0]os -> ^mu- ^mu+ (K*(892)~0 -> ^K- ^pi+) {,gamma} {,gamma}]cc}" ;
-SelectBd2MuMuKstar.TrueMC.Bd2MuMuKstar.Particle2MCLinksAsct.Location = "Phys/Relations/Particle2MCLinks" ;
+SelectBd2MuMuKstar.Filter.Selections =  { "pi+ : TrueMCFilterCriterion","K+ : TrueMCFilterCriterion",  "mu+ : TrueMCFilterCriterion" } ;                           // select pi-, pi+
+SelectBd2MuMuKstar.Filter.TrueMCFilterCriterion.MCDecayFinder.Decay =  "{[[B0]nos -> ^mu+ ^mu- (K*(892)0 -> ^K+ ^pi-) {,gamma} {,gamma}]cc, [[B0]os -> ^mu- ^mu+ (K*(892)~0 -> ^K- ^pi+) {,gamma} {,gamma}]cc}" ;
+SelectBd2MuMuKstar.Filter.TrueMCFilterCriterion.Particle2MCLinksAsct.Location = "Phys/Relations/Particle2MCLinks" ;
 
 // check that all 2 tracks are there
-TrueSignals.Members += {"CombineParticles/AllBd2MuMuKstarTracks"};
+TrueSignals.Members += {"MakeResonances/AllBd2MuMuKstarTracks"};
 AllBd2MuMuKstarTracks.PhysDesktop.InputLocations = {"Phys/SelectBd2MuMuKstar"};
 AllBd2MuMuKstarTracks.DecayDescriptor = "[B0 -> mu+ mu- K+ pi-]cc" ;
-AllBd2MuMuKstarTracks.Selections = {   "B0 : BooleanFilterCriterion", 
-                                    "B~0 : BooleanFilterCriterion", 
-                                    "pi+ : BooleanFilterCriterion", 
-                                    "pi- : BooleanFilterCriterion", 
-                                    "mu+ : BooleanFilterCriterion", 
-                                    "mu- : BooleanFilterCriterion", 
-                                    "K+ : BooleanFilterCriterion", 
-                                    "K- : BooleanFilterCriterion"} ;

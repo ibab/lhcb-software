@@ -1,15 +1,10 @@
-TrueSignals.Members += {"RefineSelection/SelectB2MuMu"};
+TrueSignals.Members += {"FilterDesktop/SelectB2MuMu"};
 SelectB2MuMu.PhysDesktop.InputLocations = { "Phys/HLTMuons" } ;
-SelectB2MuMu.ParticleNames =  { "mu-", "mu+"  } ;                           // select pi-, pi+
-SelectB2MuMu.FilterNames = { "TrueMC", "TrueMC" };                         // filter by TrueMC
-SelectB2MuMu.TrueMC.CriteriaNames =  { "TrueMCFilterCriterion/B2MuMu" } ;   // 
-SelectB2MuMu.TrueMC.B2MuMu.MCDecayFinder.Decay =  "[B_s0 -> ^mu- ^mu+]cc" ;
-SelectB2MuMu.TrueMC.B2MuMu.Particle2MCLinksAsct.Location = "Phys/Relations/Particle2MCLinks" ;
+SelectB2MuMu.Filter.Selections =  {  "mu+ : TrueMCFilterCriterion" } ;                           // select pi-, pi+
+SelectB2MuMu.Filter.TrueMCFilterCriterion.MCDecayFinder.Decay =  "[B_s0 -> ^mu- ^mu+]cc" ;
+SelectB2MuMu.Filter.TrueMCFilterCriterion.Particle2MCLinksAsct.Location = "Phys/Relations/Particle2MCLinks" ;
 
 // check that all 2 tracks are there
-TrueSignals.Members += {"CombineParticles/AllB2MuMuTracks"};
+TrueSignals.Members += {"MakeResonances/AllB2MuMuTracks"};
 AllB2MuMuTracks.PhysDesktop.InputLocations = {"Phys/SelectB2MuMu"};
 AllB2MuMuTracks.DecayDescriptor = "B0 -> mu+ mu-" ;
-AllB2MuMuTracks.Selections = {   "B0 : BooleanFilterCriterion", 
-                               "mu+ : BooleanFilterCriterion", 
-                               "mu- : BooleanFilterCriterion"} ;

@@ -4,29 +4,14 @@ ApplicationMgr.DLLs += {"HltSelChecker"};
 //------------------------------------------------------------------------------
 // The offline selections
 //------------------------------------------------------------------------------
-#include "$DAVINCIROOT/options/DaVinciReco.opts"
-#include "$DAVINCIROOT/options/DaVinciNeutrals.opts"
-// Define PV
-HLTSelections.Members += { "ResetPVLocation/SetOfflinePV" };
-SetOfflinePV.ResetToOffline = true ;
-
-ApplicationMgr.TopAlg += { "PreLoadParticles/Combined" } ;
-/*
-#include "$BD2DSTARPIROOT/options/DoTDRselBd2DstarPi.opts"
-#include "$B2HHROOT/options/DoTDRselB2HH.opts" 
-#include "$BS2PHIPHIROOT/options/DoTDRselBs2PhiPhi.opts"
-#include "$BD2D0KSTARROOT/options/DoTDRselBd2D02KpiKstar.opts"
-#include "$BS2DSHROOT/options/DoTDRselBs2DsH.opts" // exclusive with two above
-#include "$BS2MUMUROOT/options/DoTDRselBs2MuMu.opts"
-#include "$B2XGAMMAROOT/options/DoTDRselBs2PhiGamma.opts"
-#include "$BS2JPSIPHIROOT/options/DoTDRselBs2Jpsi2MuMu_Phi2KK.opts"
-#include "$BD2MUMUKSTARROOT/options/DoTDRselBd2MuMuKstar.opts"
-#include "$BD2JPSIKSROOT/options/DoTDRselBd2Jpsi2MuMu_Ks2PiPi.opts"
-#include "$HLTSELCHECKERROOT/options/PrintTDR.opts"
-*/
+//#include "$HLTSELCHECKERROOT/options/AllTDRSelections.opts"
+//------------------------------------------------------------------------------
 // correlations
+//------------------------------------------------------------------------------
+ApplicationMgr.TopAlg += { "GaudiSequencer/HLTCorrelations" };
+HLTCorrelations.IgnoreFilterPassed = true ;
 #include "$HLTSELCHECKERROOT/options/CorrB2HH.opts"
-#include "$HLTSELCHECKERROOT/options/CorrBd2D02KPiKstar.opts"
+#include "$HLTSELCHECKERROOT/options/CorrBd2D0Kstar.opts"
 #include "$HLTSELCHECKERROOT/options/CorrBd2DstarPi.opts"
 #include "$HLTSELCHECKERROOT/options/CorrBs2DsH.opts"
 #include "$HLTSELCHECKERROOT/options/CorrBs2PhiPhi.opts"
@@ -36,6 +21,7 @@ ApplicationMgr.TopAlg += { "PreLoadParticles/Combined" } ;
 #include "$HLTSELCHECKERROOT/options/CorrBs2JpsiPhi.opts"
 #include "$HLTSELCHECKERROOT/options/CorrBd2JpsiKs.opts"
 #include "$HLTSELCHECKERROOT/options/CorrDstar.opts"
+#include "$HLTSELCHECKERROOT/options/CorrDiMuons.opts"
 #include "$HLTSELCHECKERROOT/options/CorrHLTsels.opts"
 // plots
 #include "$HLTSELCHECKERROOT/options/Plots.opts"
@@ -51,25 +37,11 @@ ApplicationMgr.TopAlg += { "PreLoadParticles/Combined" } ;
 // Warning: Files are added up to EventSelector
 // in these options
 // Hence: re-initalize event selector
-// EventSelector.Input   = {};
-//#include "$HLTSELECTIONSROOT/options/L0L1TDR-Bd2JpsiKs.opts"
+//EventSelector.Input   = {};
+//#include "$HLTSELECTIONSROOT/options/L0L1TDR-Bd2DstarPi.opts"
 
-/*EventSelector.Input   = {
-"DATAFILE='PFN:castor:/castor/cern.ch/lhcb/DC04/00000530_00000021_5.dst' TYP='POOL_ROOTTREE' OPT='READ'",
-"DATAFILE='PFN:castor:/castor/cern.ch/lhcb/DC04/00000530_00000022_5.dst' TYP='POOL_ROOTTREE' OPT='READ'",
-"DATAFILE='PFN:castor:/castor/cern.ch/lhcb/DC04/00000530_00000023_5.dst' TYP='POOL_ROOTTREE' OPT='READ'",
-"DATAFILE='PFN:castor:/castor/cern.ch/lhcb/DC04/00000530_00000024_5.dst' TYP='POOL_ROOTTREE' OPT='READ'",
-"DATAFILE='PFN:castor:/castor/cern.ch/lhcb/DC04/00000530_00000025_5.dst' TYP='POOL_ROOTTREE' OPT='READ'",
-"DATAFILE='PFN:castor:/castor/cern.ch/lhcb/DC04/00000530_00000026_5.dst' TYP='POOL_ROOTTREE' OPT='READ'",
-"DATAFILE='PFN:castor:/castor/cern.ch/lhcb/DC04/00000530_00000027_5.dst' TYP='POOL_ROOTTREE' OPT='READ'",
-"DATAFILE='PFN:castor:/castor/cern.ch/lhcb/DC04/00000530_00000028_5.dst' TYP='POOL_ROOTTREE' OPT='READ'",
-"DATAFILE='PFN:castor:/castor/cern.ch/lhcb/DC04/00000530_00000029_5.dst' TYP='POOL_ROOTTREE' OPT='READ'",
-};*/
-
-
-ApplicationMgr.EvtMax    = 1000 ;
-//EventSelector.FirstEvent = 91 ;
-MessageSvc.Format = "% F%60W%S%7W%R%T %0W%M";
+ApplicationMgr.EvtMax    = 5000 ;
+MessageSvc.Format = "% F%50W%S%7W%R%T %0W%M";
 ChronoStatSvc.ChronoPrintLevel = 4 ; // forces printout even with 4
 
 ApplicationMgr.HistogramPersistency = "HBOOK";
@@ -84,14 +56,22 @@ ToolSvc.SequencerTimerTool.OutputLevel = 3 ;// for timing statistics
 
 EventSelector.PrintFreq  = 1;
 
-PrintTrueB.OutputLevel = 4;
+PrintTrueB.OutputLevel = 3;
 PrintTrueD.OutputLevel = 4;
 PrintBTracks.OutputLevel = 3;
 PrintDstarTracks.OutputLevel = 4;
 PrintFoundDstar.OutputLevel = 4;
 PrintTDR.OutputLevel = 3;
 
-HLTFilterBd2D02KPiKstar.OutputLevel = 4 ;
-
 #include "$HLTSELCHECKERROOT/options/MeasureTimes.opts"
 
+DaVinci.OutputLevel = 2 ;
+
+/*
+HLTFilterDs2KKPi.OutputLevel = 2;
+HLTFilterBs2DsH.OutputLevel = 1;
+HLTPions.OutputLevel = 2;
+HLTKaons.OutputLevel = 2;
+HLTPreselPions.OutputLevel = 2;
+HLTPreselKaons.OutputLevel = 2;
+*/

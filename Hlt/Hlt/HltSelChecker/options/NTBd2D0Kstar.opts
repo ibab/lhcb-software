@@ -1,0 +1,74 @@
+//==============================================================================
+// Checking B0 -> (D~0 -> K+ pi-) (K*(892)0 -> K+ pi-) and cc
+//==============================================================================
+// Author: Luis Fernandez, 10/12/2004
+
+// The offline selection
+#include "$BD2D0KSTARROOT/options/DoTDRselBd2D0Kstar.opts"
+
+ApplicationMgr.TopAlg += {"GaudiSequencer/CheckHLTBd2D0Kstar"};
+
+CheckHLTBd2D0Kstar.IgnoreFilterPassed = false ; // Act as Sequencer
+CheckHLTBd2D0Kstar.MeasureTime = false;
+
+CheckHLTBd2D0Kstar.Members ={ "TrgL0Filter", "PrintHeader/PassedL0",
+                                  "TrgL1Filter", "PrintHeader/PassedL1",
+                                  "CheckSelResult/MergeOffBd2D0Kstar",
+                                  "DecayChainNTuple/OffBd2D0KstarTree",
+                                  "CheckSelResult/MergeHLTBd2D0Kstar",
+                                  "DecayChainNTuple/HLTBd2D0KstarTree"};
+ 
+PassedL0.OutputLevel = 3;
+PassedL1.OutputLevel = 3;
+ 
+MergeOffBd2D0Kstar.Algorithms = {"TDRselBd2D0Kstar"};
+MergeHLTBd2D0Kstar.Algorithms = {"HLTFilterBd2D0Kstar"};
+
+MergeOffBd2D0Kstar.OutputLevel = 4;
+MergeHLTBd2D0Kstar.OutputLevel = 4;
+
+//------------------------------------------------------------------------------
+// Write Tree for Off selection
+OffBd2D0KstarTree.PhysDesktop.InputLocations = {"Phys/TDRselBd2D0Kstar"};
+
+OffBd2D0KstarTree.LinkAsct.Location      = "Phys/Relations/Particle2MCLinksOffBd2D0Kstar";
+OffBd2D0KstarTree.LinkAsct.AlgorithmType = "Particle2MCLinks";
+OffBd2D0KstarTree.LinkAsct.AlgorithmName = "Particle2MCLinksOffBd2D0Kstar";
+OffBd2D0KstarTree.LinkAsct.OutputLevel = 3;
+
+Particle2MCLinksOffBd2D0Kstar.InputData  = { "Phys/TDRselD0/Particles", "Phys/TDRselKstar2KpiForBd2D0/Particles"};
+Particle2MCLinksOffBd2D0Kstar.OutputLevel = 3;
+
+OffBd2D0KstarTree.Decay = "{B0 -> (^D~0 -> ^K+ ^pi-) (^K*(892)0 -> ^K+ ^pi-), B~0 -> (^D0 -> ^K- ^pi+) (^K*(892)~0 -> ^K- ^pi+)}";
+OffBd2D0KstarTree.MCDecay = "{B0 -> (^D~0 -> ^K+ ^pi-) (^K*(892)0 -> ^K+ ^pi-), B0 -> (^D0 -> ^K- ^pi+) (^K*(892)~0 -> ^K- ^pi+), B~0 -> (^D0 -> ^K- ^pi+) (^K*(892)~0 -> ^K- ^pi+), B~0 -> (^D~0 -> ^K+ ^pi-) (^K*(892)0 -> ^K+ ^pi-)}";
+OffBd2D0KstarTree.NtupleName = "FILE1/OffBd2D0Kstar";
+OffBd2D0KstarTree.MCNtupleName = "FILE1/MCOffBd2D0Kstar";
+OffBd2D0KstarTree.PVLocator.PVLocation = "/Event/Phys/PrimaryVertices";
+OffBd2D0KstarTree.UseRichPID = false;
+OffBd2D0KstarTree.OutputLevel = 3;
+//------------------------------------------------------------------------------
+
+//------------------------------------------------------------------------------
+// Write Tree for HLT selection
+HLTBd2D0KstarTree.PhysDesktop.InputLocations = {"Phys/HLTFilterBd2D0Kstar"};
+
+HLTBd2D0KstarTree.LinkAsct.Location      = "Phys/Relations/Particle2MCLinksHLTBd2D0Kstar";
+HLTBd2D0KstarTree.LinkAsct.AlgorithmType = "Particle2MCLinks";
+HLTBd2D0KstarTree.LinkAsct.AlgorithmName = "Particle2MCLinksHLTBd2D0Kstar";
+HLTBd2D0KstarTree.LinkAsct.OutputLevel = 3;
+
+// The location depends on the way of forming the particles: ChangeDecayChain or ChangePIDByMass!!!
+// For ChangePIDByMass
+Particle2MCLinksHLTBd2D0Kstar.InputData  = {"Phys/HLTPions/Particles", "Phys/HLTKaons/Particles", "Phys/HLTPreselPions/Particles", "Phys/HLTPreselKaons/Particles"};
+// For ChangeDecayChain
+// Particle2MCLinksHLTBd2D0Kstar.InputData  = {"Phys/HLTPions/Particles", "Phys/HLTKaons/Particles", "Phys/HLTSeedingKPiDaughters/Particles"};
+Particle2MCLinksHLTBd2D0Kstar.OutputLevel = 3;
+
+HLTBd2D0KstarTree.Decay = "{B0 -> (^D~0 -> ^K+ ^pi-) (^K*(892)0 -> ^K+ ^pi-), B~0 -> (^D0 -> ^K- ^pi+) (^K*(892)~0 -> ^K- ^pi+)}";
+HLTBd2D0KstarTree.MCDecay = "{B0 -> (^D~0 -> ^K+ ^pi-) (^K*(892)0 -> ^K+ ^pi-), B0 -> (^D0 -> ^K- ^pi+) (^K*(892)~0 -> ^K- ^pi+), B~0 -> (^D0 -> ^K- ^pi+) (^K*(892)~0 -> ^K- ^pi+), B~0 -> (^D~0 -> ^K+ ^pi-) (^K*(892)0 -> ^K+ ^pi-)}";
+HLTBd2D0KstarTree.NtupleName = "FILE1/HLTBd2D0Kstar";
+HLTBd2D0KstarTree.MCNtupleName = "FILE1/MCHLTBd2D0Kstar";
+HLTBd2D0KstarTree.PVLocator.PVLocation = "/Event/Phys/Trg/Vertices";
+HLTBd2D0KstarTree.UseRichPID = true;
+HLTBd2D0KstarTree.OutputLevel = 3;
+//------------------------------------------------------------------------------

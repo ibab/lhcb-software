@@ -35,7 +35,7 @@ ToolSvc.OutputLevel    = 4;
 //==============================================================================
 // Checking B0 -> (D~0 -> K+ pi-) (K*(892)0 -> K+ pi-) and cc
 //==============================================================================
-#include "$HLTSELCHECKERROOT/options/NTBd2D02KPiKstar.opts"
+#include "$HLTSELCHECKERROOT/options/NTBd2D0Kstar.opts"
 
 //==============================================================================
 // Checking B0 -> (D*(2010)- -> (D~0 -> K+ pi-)  pi-) pi+ and cc

@@ -1,25 +1,23 @@
 // check for TDR and MC truth
-ApplicationMgr.TopAlg += { "CheckSelResult/Bs2PhiGammaAndTDR" };
+HLTCorrelations.Members += { "CheckSelResult/Bs2PhiGammaAndTDR" };
 Bs2PhiGammaAndTDR.ANDmode = true ;
-Bs2PhiGammaAndTDR.Algorithms = { "TDRselBs2PhiGamma" , "AllBs2PhiGammaTracks" } ;
+Bs2PhiGammaAndTDR.Algorithms = { "TDRselBs2PhiGamma" } ; // , "AllBs2PhiGammaTracks" } ;
 Bs2PhiGammaAndTDR.AvoidSelResult = false ;
 
 // correlation of HLT and TDR
-ApplicationMgr.TopAlg += { "SelResultCorrelations/CorrBs2PhiGamma" };
+HLTCorrelations.Members += { "SelResultCorrelations/CorrBs2PhiGamma" };
 CorrBs2PhiGamma.Algorithms = { "AllBs2PhiGammaTracks", 
-                               "HLTPhiForBs2PhiGamma",
-                               "HLTBs2PhiGamma", 
                                "HLTFilterBs2PhiGamma", 
                                "TDRselBs2PhiGamma",
                                "Bs2PhiGammaAndTDR" } ;
 
 // check for TDR and MC truth
-ApplicationMgr.TopAlg += { "Sequencer/ShowFoundBs2PhiGamma" };
-ShowFoundBs2PhiGamma.Members += { "CheckSelResult/Bs2PhiGammaAndTruth",  "PrintTree/PrintFoundBs2PhiGamma"};
+HLTCorrelations.Members += { "GaudiSequencer/ShowFoundBs2PhiGamma" };
+ShowFoundBs2PhiGamma.Members += { "CheckSelResult/Bs2PhiGammaIsFound",  "PrintTree/PrintFoundBs2PhiGamma"};
 
-Bs2PhiGammaAndTruth.ANDmode = true ;
-Bs2PhiGammaAndTruth.Algorithms = { "HLTFilterBs2PhiGamma" , "AllBs2PhiGammaTracks" } ;
-Bs2PhiGammaAndTruth.AvoidSelResult = false ;
+Bs2PhiGammaIsFound.ANDmode = true ;
+Bs2PhiGammaIsFound.Algorithms = { "HLTFilterBs2PhiGamma" } ; // , "AllBs2PhiGammaTracks" } ;
+Bs2PhiGammaIsFound.AvoidSelResult = false ;
 
 PrintFoundBs2PhiGamma.DebugTool.Informations = "Name E M P Px Py Pz Pt phi Vz" ;
 PrintFoundBs2PhiGamma.PhysDesktop.InputLocations = { "Phys/HLTFilterBs2PhiGamma" } ;

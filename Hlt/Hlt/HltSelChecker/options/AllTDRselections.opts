@@ -1,0 +1,23 @@
+//------------------------------------------------------------------------------
+// The offline selections
+//------------------------------------------------------------------------------
+// Re-Define PV
+ApplicationMgr.TopAlg += { "ResetPVLocation/SetOfflinePV" };
+SetOfflinePV.ResetToOffline = true ;
+//------------------------------------------------------------------------------
+#include "$DAVINCIROOT/options/DaVinciReco.opts"
+#include "$DAVINCIROOT/options/DaVinciNeutrals.opts"
+//------------------------------------------------------------------------------
+ApplicationMgr.TopAlg += { "PreLoadParticles/Combined" } ;
+#include "$BD2DSTARPIROOT/options/DoTDRselBd2DstarPi.opts"
+#include "$B2HHROOT/options/DoTDRselB2HH.opts" 
+#include "$BS2PHIPHIROOT/options/DoTDRselBs2PhiPhi.opts"
+#include "$BD2D0KSTARROOT/options/DoTDRselBd2D0Kstar.opts"
+#include "$BS2DSHROOT/options/DoTDRselBs2DsH.opts" // exclusive with two above
+#include "$BS2MUMUROOT/options/DoTDRselBs2MuMu.opts"
+#include "$B2XGAMMAROOT/options/DoTDRselBs2PhiGamma.opts"
+#include "$BS2JPSIPHIROOT/options/DoTDRselBs2Jpsi2MuMu_Phi2KK.opts"
+#include "$BD2MUMUKSTARROOT/options/DoTDRselBd2MuMuKstar.opts"
+#include "$BD2JPSIKSROOT/options/DoTDRselBd2Jpsi2MuMu_Ks2PiPi.opts"
+#include "$HLTSELCHECKERROOT/options/PrintTDR.opts"
+

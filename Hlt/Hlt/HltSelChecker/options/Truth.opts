@@ -17,7 +17,7 @@ PrintTrueD.Depth = 2;
 
 #include "$HLTSELCHECKERROOT/options/TrueB2HH.opts"
 #include "$HLTSELCHECKERROOT/options/TrueBs2PhiPhi.opts"
-#include "$HLTSELCHECKERROOT/options/TrueBd2D02KPiKstar.opts"
+#include "$HLTSELCHECKERROOT/options/TrueBd2D0Kstar.opts"
 #include "$HLTSELCHECKERROOT/options/TrueBd2DstarPi.opts"
 #include "$HLTSELCHECKERROOT/options/TrueBs2DsH.opts"
 #include "$HLTSELCHECKERROOT/options/TrueBs2PhiGamma.opts"
@@ -36,7 +36,7 @@ PrintTracks.OutputLevel = 4; // don't do this
 
 TrueSignals.Members += {"PrintTree/PrintBTracks"};
 PrintBTracks.DebugTool.Informations = "Name E M P Px Py Pz Pt phi Vz" ;
-PrintBTracks.PhysDesktop.InputLocations = { "Phys/AllBd2D02KPiKstarTracks"
+PrintBTracks.PhysDesktop.InputLocations = { "Phys/AllBd2D0KstarTracks"
                                            , "Phys/AllBd2DstarPiTracks"
                                             ,"Phys/AllBs2DsHTracks"
                                             ,"Phys/AllBs2PhiPhiTracks"

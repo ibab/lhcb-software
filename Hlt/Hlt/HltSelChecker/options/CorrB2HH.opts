@@ -1,13 +1,14 @@
 // check for TDR and MC truth
-ApplicationMgr.TopAlg += { "CheckSelResult/B2HHAndTDR" };
+HLTCorrelations.Members += { "CheckSelResult/B2HHAndTDR" };
 B2HHAndTDR.ANDmode = true ;
-B2HHAndTDR.Algorithms = { "TDRselB2HH" , "AllB2HHTracks" } ;
+B2HHAndTDR.Algorithms = { "TDRselB2HH" } ; // , "AllB2HHTracks" } ;
 B2HHAndTDR.AvoidSelResult = false ;
 
 // correlation of HLT and TDR
-ApplicationMgr.TopAlg += { "SelResultCorrelations/CorrB2HH" };
+HLTCorrelations.Members += { "SelResultCorrelations/CorrB2HH" };
 CorrB2HH.Algorithms = { "AllB2HHTracks", 
 			"HLTFilterB2HH", 
+                        "HLTFilterB2MuMu", 
 			"TDRselBd2PiPi",
 			"TDRselBd2KPi",
 			"TDRselBs2PiK",
@@ -16,12 +17,12 @@ CorrB2HH.Algorithms = { "AllB2HHTracks",
 			"B2HHAndTDR" } ;
 
 // check for TDR and MC truth
-ApplicationMgr.TopAlg += { "Sequencer/ShowFoundB2HH" };
-ShowFoundB2HH.Members += { "CheckSelResult/B2HHAndTruth",  "PrintTree/PrintFoundB2HH"};
+HLTCorrelations.Members += { "GaudiSequencer/ShowFoundB2HH" };
+ShowFoundB2HH.Members += { "CheckSelResult/B2HHIsFound",  "PrintTree/PrintFoundB2HH"};
 
-B2HHAndTruth.ANDmode = true ;
-B2HHAndTruth.Algorithms = { "HLTFilterB2HH" , "AllB2HHTracks" } ;
-B2HHAndTruth.AvoidSelResult = false ;
+B2HHIsFound.ANDmode = false ;
+B2HHIsFound.Algorithms = { "HLTFilterB2HH" } ; // , "AllB2HHTracks" } ;
+B2HHIsFound.AvoidSelResult = false ;
 
 PrintFoundB2HH.DebugTool.Informations = "Name E M P Px Py Pz Pt phi Vz" ;
 PrintFoundB2HH.PhysDesktop.InputLocations = { "Phys/HLTFilterB2HH" } ;

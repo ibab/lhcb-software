@@ -3,7 +3,7 @@
 //==============================================================================
 HLTPreselPions.PhysDesktop.InputLocations = { "Phys/SelectB2HH"
                                               ,"Phys/SelectBs2PhiPhi"
-                                              ,"Phys/SelectBd2D02KPiKstar"
+                                              ,"Phys/SelectBd2D0Kstar"
                                               ,"Phys/SelectBd2DstarPi"
                                               ,"Phys/SelectBs2DsH"
                                               ,"Phys/SelectBs2PhiGamma" 
@@ -15,7 +15,7 @@ HLTPreselPions.PhysDesktop.InputLocations = { "Phys/SelectB2HH"
 					      } ;
 HLTPreselKaons.PhysDesktop.InputLocations = {"Phys/SelectB2HH"
                                               ,"Phys/SelectBs2PhiPhi"
-                                              ,"Phys/SelectBd2D02KPiKstar"
+                                              ,"Phys/SelectBd2D0Kstar"
                                               ,"Phys/SelectBd2DstarPi"
                                               ,"Phys/SelectBs2DsH"
                                               ,"Phys/SelectBs2PhiGamma" 

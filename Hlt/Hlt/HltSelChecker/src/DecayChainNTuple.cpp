@@ -2,12 +2,12 @@
 #include "GaudiKernel/AlgFactory.h"
 #include "GaudiKernel/NTuple.h"
 #include "GaudiKernel/INTupleSvc.h"
-#include "DaVinciTools/IDecayFinder.h"
-#include "DaVinciTools/IGeomDispCalculator.h"
+#include "Kernel/IDecayFinder.h"
+#include "Kernel/IGeomDispCalculator.h"
 #include "Event/EventHeader.h"
 #include "Event/ProtoParticle.h"
-// #include "DaVinciTools/ILifetimeFitter.h"
-#include "DaVinciTools/IPVLocator.h"
+// #include "Kernel/ILifetimeFitter.h"
+#include "Kernel/IPVLocator.h"
 
 #ifdef MCCheck
 #include "MCTools/IMCDecayFinder.h"

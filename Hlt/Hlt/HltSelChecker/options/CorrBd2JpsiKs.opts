@@ -1,24 +1,24 @@
 // check for TDR and MC truth
-ApplicationMgr.TopAlg += { "CheckSelResult/Bd2JpsiKsAndTDR" };
+HLTCorrelations.Members += { "CheckSelResult/Bd2JpsiKsAndTDR" };
 Bd2JpsiKsAndTDR.ANDmode = true ;
-Bd2JpsiKsAndTDR.Algorithms = { "TDRselBs2Jpsi2MuMu_Phi2KK" , "AllBd2JpsiKsTracks" } ;
+Bd2JpsiKsAndTDR.Algorithms = { "TDRselBs2Jpsi2MuMu_Phi2KK" } ; // , "AllBd2JpsiKsTracks" } ;
 Bd2JpsiKsAndTDR.AvoidSelResult = false ;
 
 // correlation of HLT and TDR
-ApplicationMgr.TopAlg += { "SelResultCorrelations/CorrBd2JpsiKs" };
+HLTCorrelations.Members += { "SelResultCorrelations/CorrBd2JpsiKs" };
 CorrBd2JpsiKs.Algorithms = { "AllBd2JpsiKsTracks", 
-                        "HLTAllJpsis", 
-                        "HLTHighIPJpsi", 
+                        "HLTDimuons", 
+                        "HLTHotJpsis", 
                         "TDRselBd2Jpsi2MuMu_Ks2PiPi",
                         "Bd2JpsiKsAndTDR" } ;
 
 // check for TDR and MC truth
-ApplicationMgr.TopAlg += { "Sequencer/ShowFoundBd2JpsiKs" };
-ShowFoundBd2JpsiKs.Members += { "CheckSelResult/Bd2JpsiKsAndTruth",  "PrintTree/PrintFoundBd2JpsiKs"};
+HLTCorrelations.Members += { "GaudiSequencer/ShowFoundBd2JpsiKs" };
+ShowFoundBd2JpsiKs.Members += { "CheckSelResult/Bd2JpsiKsIsFound",  "PrintTree/PrintFoundBd2JpsiKs"};
 
-Bd2JpsiKsAndTruth.ANDmode = true ;
-Bd2JpsiKsAndTruth.Algorithms = { "HLTFilterBd2JpsiKs" , "AllBd2JpsiKsTracks" } ;
-Bd2JpsiKsAndTruth.AvoidSelResult = false ;
+Bd2JpsiKsIsFound.ANDmode = true ;
+Bd2JpsiKsIsFound.Algorithms = { "HLTFilterBd2JpsiKs" } ; // , "AllBd2JpsiKsTracks" } ;
+Bd2JpsiKsIsFound.AvoidSelResult = false ;
 
 PrintFoundBd2JpsiKs.DebugTool.Informations = "Name E M P Px Py Pz Pt phi Vz" ;
 PrintFoundBd2JpsiKs.PhysDesktop.InputLocations = { "Phys/HLTFilterBd2JpsiKs" } ;

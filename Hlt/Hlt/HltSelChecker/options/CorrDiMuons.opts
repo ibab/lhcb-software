@@ -1,0 +1,12 @@
+// correlation of HLT and TDR
+HLTCorrelations.Members += { "SelResultCorrelations/CorrDimuons" };
+CorrDimuons.Algorithms = { "HLTMuons" 
+                          , "HLTSingleMuons"
+                          , "HLTDimuons"
+                          , "HLTUnbiasedJpsis"
+                          , "HLTHotJpsis"
+                          , "HLTFilterBs2JpsiPhi"
+                          , "HLTFilterBd2MuMuKstar"
+                          , "HLTFilterBs2MuMu"
+			   } ;
+

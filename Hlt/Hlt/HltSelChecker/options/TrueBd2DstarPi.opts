@@ -1,21 +1,10 @@
-TrueSignals.Members += {"RefineSelection/SelectBd2DstarPi"};
+TrueSignals.Members += {"FilterDesktop/SelectBd2DstarPi"};
 SelectBd2DstarPi.PhysDesktop.InputLocations = { "Phys/HLTPions", "Phys/HLTKaons" } ;
-SelectBd2DstarPi.ParticleNames =  { "pi-", "pi+", "K+", "K-"  } ;                           // select pi-, pi+
-SelectBd2DstarPi.FilterNames = { "TrueMC", "TrueMC", "TrueMC", "TrueMC" };                         // filter by TrueMC
-SelectBd2DstarPi.TrueMC.CriteriaNames =  { "TrueMCFilterCriterion/Bd2DstarPi" } ;   // 
-SelectBd2DstarPi.TrueMC.Bd2DstarPi.VetoSignal = false; // default value is false, thus false keeps only signal
-SelectBd2DstarPi.TrueMC.Bd2DstarPi.MCDecayFinder.Decay =  "{[[B0]nos -> ^pi+ (D*(2010)- -> ^pi- (D~0 -> ^K+ ^pi-))]cc, [[B0]os -> ^pi- (D*(2010)+ -> ^pi+ (D0 -> ^K- ^pi+))]cc}" ;
-
-SelectBd2DstarPi.TrueMC.Bd2DstarPi.Particle2MCLinksAsct.Location = "Phys/Relations/Particle2MCLinks" ;
-
+SelectBd2DstarPi.Filter.Selections =  { "pi+ : TrueMCFilterCriterion","K+ : TrueMCFilterCriterion" } ;                           // select pi-, pi+
+SelectBd2DstarPi.Filter.TrueMCFilterCriterion.MCDecayFinder.Decay =  "{[[B0]nos -> ^pi+ (D*(2010)- -> ^pi- (D~0 -> ^K+ ^pi-))]cc, [[B0]os -> ^pi- (D*(2010)+ -> ^pi+ (D0 -> ^K- ^pi+))]cc}" ;
+SelectBd2DstarPi.Filter.TrueMCFilterCriterion.Bd2DstarPi.Particle2MCLinksAsct.Location = "Phys/Relations/Particle2MCLinks" ;
 
 // check that all 4 tracks are there
-TrueSignals.Members += {"CombineParticles/AllBd2DstarPiTracks"};
+TrueSignals.Members += {"MakeResonances/AllBd2DstarPiTracks"};
 AllBd2DstarPiTracks.PhysDesktop.InputLocations = {"Phys/SelectBd2DstarPi"};
 AllBd2DstarPiTracks.DecayDescriptor = "[B0 -> K+ pi+ pi- pi-]cc" ;
-AllBd2DstarPiTracks.Selections = {  "B0 : BooleanFilterCriterion", 
-                                    "B~0 : BooleanFilterCriterion", 
-                                    "pi+ : BooleanFilterCriterion", 
-                                    "pi- : BooleanFilterCriterion", 
-                                    "K+ : BooleanFilterCriterion", 
-                                    "K- : BooleanFilterCriterion"} ;

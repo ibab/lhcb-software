@@ -1,0 +1,27 @@
+Hlt.MeasureTime = true;
+HLTProcessing.MeasureTime = true;
+TrgRICH4HLTSeq.MeasureTime = true;
+BrunelRecoRICHSeq.MeasureTime = true;
+
+//Also, if you wish to get the RichPID tables (useful to see if things are 
+//working...) then you can add
+
+// RICH PID Tables
+BrunelMoniRICHSeq.MeasureTime = true;
+ToolSvc.TrackToMCP.Location = "Rec/Relations/Tr2MCP";
+#include "$RICHRECQCOPTS/RecQC_Brunel.opts" // offline
+#include "$RICHRECQCOPTS/RecQC_Trigger.opts" // online
+RiPIDMonAll2To100.ExtraHistos = true; // to get DLL plots
+RiPIDMonTrig2To100.ExtraHistos = true; // to get DLL plots
+
+//together with
+
+RiPIDMonAll2To100.OutputLevel  = 3;
+RiPIDMonAll2To10.OutputLevel  = 3;
+RiPIDMonAll10To70.OutputLevel  = 3;
+RiPIDMonAll70To100.OutputLevel  = 3;
+RiPIDMonTrig2To100.OutputLevel  = 3;
+RiPIDMonTrig2To10.OutputLevel  = 3;
+RiPIDMonTrig10To70.OutputLevel  = 3;
+RiPIDMonTrig70To100.OutputLevel  = 3;
+
