@@ -3,6 +3,15 @@ Package     : Phys/DaVinci
 Package Coordinator : Patrick Koppenburg
 Purpose     : LHCb analysis program 
 
+</PRE><H1><A NAME=v11r10>2004-07-05 DaVinci v11r10 - DC'04 tests version</A></H1><PRE>
+ Essentially a ug fix version of v11r9
+
+ - based on LHCB v15r13
+ 
+ - LoKi v2r7
+ 
+ - Some other minor modifications
+  
 </PRE><H1><A NAME=v11r9>2004-06-28 DaVinci v11r9 - DC'04 tests version</A></H1><PRE>
  This version is ready for DC'04
 
