@@ -1,4 +1,4 @@
-// $Id: PhysDesktop.h,v 1.6 2004-12-16 14:38:14 pkoppenb Exp $
+// $Id: PhysDesktop.h,v 1.7 2005-01-03 13:09:47 pkoppenb Exp $
 #ifndef PHYSDESKTOP_H 
 #define PHYSDESKTOP_H 1
 
@@ -15,6 +15,7 @@
 // Forward declarations
 class IDataProviderSvc;
 class IParticleMaker;
+class IPVLocator;
 
 /** @class PhysDesktop PhysDesktop.h DaVinciTools/PhysDesktop.h
  *  A Desktop upon which the user keeps his particles and vertices
@@ -135,6 +136,6 @@ private:
 
   bool m_locationWarned ;
   
-    
+  IPVLocator* m_PVLocator ;   ///< locate PV
 };
 #endif // PHYSDESKTOP_H

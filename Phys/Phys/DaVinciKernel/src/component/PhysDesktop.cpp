@@ -1,4 +1,4 @@
-// $Id: PhysDesktop.cpp,v 1.8 2004-12-16 14:38:14 pkoppenb Exp $
+// $Id: PhysDesktop.cpp,v 1.9 2005-01-03 13:09:47 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
@@ -15,6 +15,7 @@
 // local
 #include "PhysDesktop.h"
 #include "DaVinciTools/IParticleMaker.h"
+#include "DaVinciTools/IPVLocator.h"
 
 /**----------------------------------------------------------------------------
  * Implementation file for class : PhysDesktop base class 
@@ -22,6 +23,7 @@
  * 18/02/2002 : Sandra Amato
  * 04/03/2004 : Hugo Ruiz : automatized outputLocation = algorithm name
  * 11/08/2004 : Patrick Koppenburg : Make it a GaudiTool
+ * 17/12/2004 : Patrick Koppenburg : Add PVLocator tool
  *-----------------------------------------------------------------------------
  */
 
@@ -35,10 +37,11 @@ const        IToolFactory& PhysDesktopFactory = s_factory ;
 PhysDesktop::PhysDesktop( const std::string& type,
                           const std::string& name,
                           const IInterface* parent )
-  : GaudiTool ( type, name , parent ),
-    m_EDS(0),
-    m_pMaker(0),
-    m_locationWarned(false){
+  : GaudiTool ( type, name , parent )
+    , m_EDS(0)
+    , m_pMaker(0)
+    , m_locationWarned(false)
+    , m_PVLocator(0){
   
   // Declaring implemented interfaces
   declareInterface<IPhysDesktop>(this);
@@ -51,8 +54,7 @@ PhysDesktop::PhysDesktop( const std::string& type,
   declareProperty( "ParticleMakerType",m_pMakerType="" );
   
   //                    input & output locations
-  declareProperty( "InputPrimaryVertices", 
-                   m_primVtxLocn = VertexLocation::Primary );
+  declareProperty( "InputPrimaryVertices", m_primVtxLocn = "" );
   m_inputLocn.clear();
   declareProperty( "InputLocations", m_inputLocn );
 
@@ -136,6 +138,13 @@ StatusCode PhysDesktop::initialize() {
     info() << endreq;
   }
   
+  // PVLocator tool
+  m_PVLocator = tool<IPVLocator>("PVLocator");
+  if( !m_PVLocator ){
+    err() << " Unable to retrieve PV Locator tool" << endreq;
+    return StatusCode::FAILURE;
+  }
+
   return StatusCode::SUCCESS;
   
 }
@@ -687,11 +696,23 @@ StatusCode PhysDesktop::getParticles(){
 //=============================================================================
 StatusCode PhysDesktop::getPrimaryVertices(){
   
-  Vertices* verts = get<Vertices>( m_primVtxLocn );
+  std::string primVtxLocn ;
+  if ( m_primVtxLocn == "" ) primVtxLocn = m_PVLocator->getPVLocation() ;
+  else primVtxLocn = m_primVtxLocn ;
+
+  debug() << "Getting PV from " << primVtxLocn << endreq;
+
+  if ( !exist<Vertices>( primVtxLocn )){
+    fatal() << "Primary vertex location `" << primVtxLocn << "' does not exist" << endreq;
+    if ( m_primVtxLocn == "" ) fatal() << "This location is obtained from PVLocator tool" << endreq;
+    return StatusCode::FAILURE;
+  }
+       
+  Vertices* verts = get<Vertices>( primVtxLocn );
   if( ! verts ) {
-    debug() << " Unable to retrieve vertices from " << m_primVtxLocn << endreq;
+    debug() << " Unable to retrieve vertices from " << primVtxLocn << endreq;
   } else if( verts->empty() ) {
-    debug() << " No vertices retrieved from  " << m_primVtxLocn << endreq;
+    debug() << " No vertices retrieved from  " << primVtxLocn << endreq;
   } else { 
     debug() << "    Number of primary vertices  = " << verts->size() << endreq;
     
@@ -709,7 +730,7 @@ StatusCode PhysDesktop::getPrimaryVertices(){
       m_verts.push_back(*ivert);
     }
   }
-  debug() << "Number of Vertices from " << m_primVtxLocn
+  debug() << "Number of Vertices from " << primVtxLocn
           << " are " << m_verts.size() << endreq;
   return StatusCode::SUCCESS;
 }
