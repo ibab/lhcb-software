@@ -4,6 +4,29 @@
 ! Purpose     : Analysis program for LHCb
 !-----------------------------------------------------------------------------
 
+! 2004-11-01 - P. Koppenburg with Olivier Callot
+  - options/L1Decision.opts
+    . Replaced by $TRGSYSROOT/options/L1.opts
+  - options/Hlt.opts
+    . Replaced by $TRGSYSROOT/options/Hlt.opts
+       *or* $HLTGENERICROOT/options/HltGeneric.opts
+  - options/HltChecking.opts
+  - options/L1Checking.opts
+    . Replaced by $TRGSYSROOT/options/TrgChecking.opts
+  - options/DVTriggerFilter.opts
+  - options/DaVinci.opts
+  - options/DVCheckTrigger.opts
+    . Adapt accordingly
+  - doc/release.notes-detailed
+    . renamed to 
+  - doc/release.notes-davinci
+    . new
+
+! 2004-10-29 - P. Koppenburg for Olivier Callot
+ - cmt/requirements
+   . All L1 trigger packages now come from TrgSys, that overrides some LHCb 
+     stuff (Event/TrgEvent)
+
 !========================== DaVinci v12r3 2004-10-27 ===================
 ! 2004-10-26 - P. Koppenburg 
   - options/DVTriggerFilter.opts

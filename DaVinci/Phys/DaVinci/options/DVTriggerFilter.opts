@@ -15,24 +15,18 @@
 #include "$DAVINCIROOT/options/DaVinciCommon.opts"
 #pragma print on
 
-//#include "$DAVINCIROOT/options/DaVinciElectrons.opts"
-//#include "$DAVINCIROOT/options/DaVinciReco.opts"
-//#include "$DAVINCIROOT/options/DaVinciNeutrals.opts"
-
 //--------------------------------------------------------------
-// Re-run L0 and L1 Trigger with DC04 tuning - FOR EXPERTS! 
+// Re-run L0 and L1 Trigger with DC04 tuning 
 #include "$DAVINCIROOT/options/L0.opts"  
 //#include "$DAVINCIROOT/options/L0Checking.opts"  
-#include "$DAVINCIROOT/options/L1Decision.opts"
-//#include "$DAVINCIROOT/options/L1Checking.opts"  
-//#include "$DAVINCIROOT/options/Hlt.opts"
-//#include "$DAVINCIROOT/options/HltChecking.opts"
+#include "$TRGSYSROOT/options/L1.opts"
+//#include "$TRGSYSROOT/options/Hlt.opts"
+//#include "$HLTGENERICROOT/options/HltGeneric.opts"
+// Checking of L1 and HLT:
+//#include "$TRGSYSROOT/options/TrgChecking.opts"  
 
 ApplicationMgr.TopAlg += { "GaudiSequencer/L0L1Seq" };
-L0L1Seq.Members = { "TriggerFilter/L0Filter", "PrintHeader/PassedL0" , "TriggerFilter/L1Filter", "PrintHeader/PassedL1" };
-L0Filter.RequireL0 = true ;
-L1Filter.RequireL1 = true ;
-PassedL0.OutputLevel = 2 ;
+L0L1Seq.Members = { "TrgL1Filter", "PrintHeader/PassedL1" };
 PassedL1.OutputLevel = 2 ;
 
 #include "$DAVINCIROOT/options/DstContent.opts"
