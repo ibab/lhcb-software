@@ -8,10 +8,12 @@
 !======================= LHCbSys v17r3 2005-01-20 =======================
 ! 2005-01-20 - Marco Cattaneo
  - New packages:      DAQSys v1r0, CaloDAQ v1r0
- - Modified packages: KernelSys v4r6, LHCbKernel v5r6, RichKernel v5r2,
+ - Modified packages: CaloInterfaces v4r3,
+     KernelSys v4r6, LHCbKernel v5r6, RichKernel v5r2, VeloKernel v1r5p1,
      EventSys v19r3, CaloEvent v13r8, L0Event v14r2, TrgEvent v5r3,
-     AssociatorsSys v2r2p1, Associators v2r4p1, DetDescChecks v2r2,
-     RichDAQ v2r0, RichTools v1r3, RichMCTools v2r4
+     DetSys v6r1, DetDesc v14r3, Magnet v2r8, DetDescChecks v2r2, 
+     AssociatorsSys v2r2p1, Associators v2r4p1,
+     RichDAQ v2r0, RichTools v1r3, RichMCTools v2r4, MCTools v1r11
 
  - In LHCbKernel v5r6:
    . Improved RichSmartID constructors and messaging (backward compatible)
@@ -54,6 +56,13 @@
  - In RichMCTools v2r4:
    . Add algorithm BuildMCRichDigitLinks (previously in RichDAQ)
  
+ - In DetDesc v14r3, Magnet v2r8, MCTools v1r11, VeloKernel v1r5p1,
+      RichKernel v5r2, CaloInterfaces v4r3
+   . Backwards compatible changes for CLHEP 1.9
+
+ - In MCTools v1r11:
+   . Add MCHitMonitor algorithm
+
 !====================== LHCbSys v17r2p1 2005-01-13 ======================
 ! 2005-01-13 - Marco Cattaneo
  - Add configuration files for doxygen documentation
