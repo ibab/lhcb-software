@@ -1,4 +1,4 @@
-// $Id: DeVeloRType.cpp,v 1.6 2004-02-28 21:43:43 mtobin Exp $
+// $Id: DeVeloRType.cpp,v 1.7 2004-02-29 19:46:16 mtobin Exp $
 //==============================================================================
 #define VELODET_DEVELORTYPE_CPP 1
 //==============================================================================
@@ -117,7 +117,7 @@ StatusCode DeVeloRType::pointToChannel(const HepPoint3D& point,
   
   // minimum strip in zone
   closestStrip += firstStrip(zone);
-
+  
   unsigned int sensor=this->sensorNumber();
   // set VeloChannelID....
   channel.setSensor(sensor);
@@ -348,8 +348,14 @@ void DeVeloRType::calcStripLimits()
         }
       }
       //      m_stripLimits.push_back(std::pair<double,double>(phiMin,phiMax));
-      m_stripLimits.push_back(std::pair<double,double>(phiMin,phiMax));
+      m_stripLimits.push_back(std::pair<double,double>(-phiMax,-phiMin));
     }
+  }
+  for(unsigned int i=0; i < m_phiMin.size(); i++){
+    m_phiMin[i] = -m_phiMin[i];
+    m_phiMax[i] = -m_phiMax[i];
+    msg << MSG::DEBUG << "Zone limits; zone " << i << " min " << m_phiMin[i]
+        << " max " << m_phiMax[i] << endmsg;
   }
   msg << MSG::DEBUG << "Radius of first strip is " << m_rStrips[0] 
       << " last strip " << m_rStrips[m_rStrips.size()-1] << endmsg;

@@ -1,4 +1,4 @@
-// $Id: DeVeloRType.h,v 1.4 2004-02-28 21:43:37 mtobin Exp $
+// $Id: DeVeloRType.h,v 1.5 2004-02-29 19:46:08 mtobin Exp $
 #ifndef VELODET_DEVELORTYPE_H 
 #define VELODET_DEVELORTYPE_H 1
 
@@ -101,12 +101,15 @@ public:
   /// Zone for a given local phi
   inline unsigned int zoneOfPhi(double phi){
     unsigned int zone=0;
-    if(m_phiMin[0] >= fabs(phi) && m_phiMax[0] < fabs(phi)) {
+    if(m_phiMax[0] > phi){
       zone = 0;
-    } else if(m_phiMin[1] >= fabs(phi) && m_phiMax[1] < fabs(phi)) {
+    } else if(m_phiMin[1] <= phi && m_phiMax[1] > phi){
       zone = 1;
+    } else if(m_phiMin[2] <= phi && m_phiMax[2] > phi) {
+      zone = 2;
+    } else if(m_phiMin[3] <= phi) {
+      zone = 3;
     }
-    if(0 > phi) zone += 2;
     return zone;
   }
   
@@ -147,7 +150,7 @@ public:
     } else {
       phiMin = this->phiMinZone(zone);
     }
-    return phiMin;
+    return -phiMin;
   }
   
   /// The maximum phi for a zone
@@ -163,7 +166,7 @@ public:
     } else {
       phiMax = this->phiMaxZone(zone);
     }
-    return phiMax;
+    return -phiMax;
   }
    
   /// The minimum phi of a strip

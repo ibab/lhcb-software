@@ -1,9 +1,17 @@
-! $Id: release.notes,v 1.59 2004-02-27 17:02:34 mtobin Exp $
+! $Id: release.notes,v 1.60 2004-02-29 19:46:13 mtobin Exp $
 package VeloDet
 package manager : Velo Group
 
 !========================= VeloDet v9r0 2004-02-13 =========================
    >> Requires XmlDDDB v22r0 or greater <<
+
+! 2004-02-29 - Mark Tobin
+ - Restored angular limits of zones for R sensors to match those of previous
+ versions.
+
+! 2004-02-28 - Mark Tobin
+ - Tidy up of code. Repeated data members removed from Phi/R classes
+ and kept protected in Sensor class.
 
 ! 2004-02-27 - Mark Tobin
  - Bug fix in DeVeloSensor.  m_isDownstream was never initialised.
