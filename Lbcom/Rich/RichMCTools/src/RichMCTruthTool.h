@@ -1,4 +1,4 @@
-// $Id: RichMCTruthTool.h,v 1.6 2004-06-18 09:42:22 jonesc Exp $
+// $Id: RichMCTruthTool.h,v 1.7 2004-07-15 15:37:23 jonrob Exp $
 #ifndef RICHMCTOOLS_RICHMCTRUTHTOOL_H
 #define RICHMCTOOLS_RICHMCTRUTHTOOL_H 1
 
@@ -52,45 +52,50 @@ class RichMCTruthTool : public RichToolBase,
                         virtual public IRichMCTruthTool,
                         virtual public IIncidentListener {
 
-public:
+public: // Methods for Gaudi Framework
 
   /// Standard constructor
   RichMCTruthTool( const std::string& type,
                    const std::string& name,
                    const IInterface* parent );
 
-  /// Initialize method
+  // Initialization of the tool after creation
   StatusCode initialize();
 
-  /// Finalize method
+  // Finalization of the tool before deletion
   StatusCode finalize();
 
-  /// Implement the handle method for the Incident service.
-  /// This is used to inform the tool of software incidents.
+  /** Implement the handle method for the Incident service.
+   *  This is used to inform the tool of software incidents.
+   *
+   *  @param incident The incident identifier
+   */
   void handle( const Incident& incident );
 
-  /// Find best MCParticle association for a given TrStoredTrack
+public: // methods (and doxygen comments) inherited from interface
+
+  // Find best MCParticle association for a given TrStoredTrack
   const MCParticle * mcParticle( const TrStoredTrack * track ) const;
 
-  /// Truth particle type for given MCParticle
+  // Determines the particle mass hpyothesis for a given MCParticle
   Rich::ParticleIDType mcParticleType( const MCParticle * mcPart ) const;
 
-  /// Find parent MCRichDigit association for a given RichDigit
+  // Finds the MCRichDigit association for a given RichDigit
   const MCRichDigit * mcRichDigit( const RichDigit * digit ) const;
 
-  /// Returns the MCRichTrack associated to a given TrStoredTrack
+  // Finds the MCRichTrack associated to a given TrStoredTrack
   const MCRichTrack * mcRichTrack( const TrStoredTrack * track ) const;
 
-  /// Returns the MCRichTrack associated to a given MCParticle
+  // Finds the MCRichTrack associated to a given MCParticle
   const MCRichTrack * mcRichTrack( const MCParticle * mcPart ) const;
 
-  /// Returns the MCRichOptical photon associated to a given MCRichHit
+  // Finds the MCRichOpticalPhoton associated to a given MCRichHit
   const MCRichOpticalPhoton * mcOpticalPhoton( const MCRichHit * mcHit ) const;
 
-  /// Is this MCRichDigit background ?
-  bool isBackground( const MCRichDigit * digit ) const;
+  // Checks if the given MCRichDigit is the result of a background
+  bool isBackground ( const MCRichDigit * digit ) const;
 
-  /// Is this MCRichHit background ?
+  // Checks if the given MCRichHit is the result of a background
   bool isBackground( const MCRichHit * hit ) const;
 
 private: // private methods
@@ -98,13 +103,18 @@ private: // private methods
   /// clean up current linker objects
   void  cleanUpLinkers();
 
-  /// returns a pointer to the current MCRichDigits
+  /** Loads the MCRichDigits into the TES
+   *
+   * @return Pointer to the MCRichDigits
+   */
   const MCRichDigits * mcRichDigits() const;
 
+  /// typedef of the Linker object for MCParticles to MCRichTracks
   typedef LinkedTo<MCRichTrack,MCParticle> MCPartToRichTracks;
   /// Returns the linker object for MCParticles to MCRichTracks
   MCPartToRichTracks * mcTrackLinks() const;
 
+  /// typedef of the Linker object for MCRichHits to MCRichOpticalPhotons
   typedef LinkedTo<MCRichOpticalPhoton,MCRichHit> MCRichHitToPhoton;
   /// Returns the linker object for MCRichHits to MCRichOpticalPhotons
   MCRichHitToPhoton * mcPhotonLinks() const;

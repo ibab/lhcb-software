@@ -1,4 +1,4 @@
-// $Id: RichMCTrackInfoTool.h,v 1.4 2004-07-02 14:14:31 jonrob Exp $
+// $Id: RichMCTrackInfoTool.h,v 1.5 2004-07-15 15:37:23 jonrob Exp $
 #ifndef RICHMCTOOLS_RICHMCTRACKINFOTOOL_H
 #define RICHMCTOOLS_RICHMCTRACKINFOTOOL_H 1
 
@@ -28,7 +28,8 @@
 
 /** @class RichMCTrackInfoTool RichMCTrackInfoTool.h
  *
- *  Tool providing MC information for RICH tracking objects
+ *  Tool providing tracking extrapolation information from
+ *  RICH Monte Carlo data objects
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -37,29 +38,33 @@
 class RichMCTrackInfoTool : public RichToolBase,
                             virtual public IRichMCTrackInfoTool {
 
-public:
+public: // Methods for Gaudi Framework
 
   /// Standard constructor
   RichMCTrackInfoTool( const std::string& type,
                        const std::string& name,
                        const IInterface* parent );
 
-  /// Initialize method
+
+  // Initialization of the tool after creation
   StatusCode initialize();
 
-  /// Finalize method
+  // Finalization of the tool before deletion
   StatusCode finalize();
 
-  /// Computes the intersect points with the HPD panel in LHCb global coordinates
-  const bool panelIntersectGlobal( const MCRichSegment * segment,
+public: // methods (and doxygen comments) inherited from interface
+
+  // Takes the direction information from a MCRichSegment and ray traces it through the
+  // appropriate RICH optical system and computes the intersect points with the HPD
+  // panel in LHCb global coordinates
+  const bool panelIntersectGlobal ( const MCRichSegment * segment,
+                                    HepPoint3D & hitPoint ) const;
+
+  // Takes the direction information from a MCRichSegment and ray traces it through the
+  // appropriate RICH optical system and computes the intersect points with the HPD
+  // panel in local HPD panel coordinates
+  const bool panelIntersectLocal ( const MCRichSegment * segment, 
                                    HepPoint3D & hitPoint ) const;
-
-  /// Computes the intersect points with the HPD panel in HPD panel local coordinates
-  const bool panelIntersectLocal( const MCRichSegment * segment,
-                                  HepPoint3D & hitPoint ) const;
-
-private: // private methods
-
 
 private: // private data
 
