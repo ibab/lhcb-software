@@ -1,4 +1,4 @@
-// $Id: DeVelo.h,v 1.21 2004-02-28 21:42:49 mtobin Exp $
+// $Id: DeVelo.h,v 1.22 2004-10-26 14:58:31 dhcroft Exp $
 #ifndef       VELODET_DEVELO_H
 #define       VELODET_DEVELO_H 1
 // ============================================================================
@@ -45,17 +45,17 @@ public:
 
   /// return the number of PileUp sensors
   inline unsigned int numberPileUpSensors()  const{
-    return m_indexPileUp.size();
+    return m_nPileUpSensors;
   }
 
   /// return the number of R type sensors
   inline unsigned int numberRSensors()  const{
-    return m_indexRType.size();
+    return m_nRSensors;
   }
 
   /// return the number of Phi type sensors
   inline unsigned int numberPhiSensors()  const{
-    return m_indexPhiType.size();
+    return m_nPhiSensors;
   }
 
   /// return the sensor type
@@ -84,21 +84,6 @@ public:
     return m_vpSensor[sensorIndex(sensor)]->isDownstream();
   }
 
-  /// index PileUp type sensors, indexed in increasing Z
-  std::vector<unsigned int> indexOfPileUpSensors() const{
-    return m_indexPileUp;
-  }
-
-  /// index of R type sensors, indexed in increasing Z
-  std::vector<unsigned int> indexOfRSensors() const{
-    return m_indexRType;
-  }
-
-  /// index of phi type sensors, indexed in increasing Z
-  std::vector<unsigned int> indexOfPhiSensors() const{
-    return m_indexPhiType;
-  }
-
   /// return the sensor number for a point (global frame)
   unsigned int sensorNumber( const HepPoint3D& point );
   
@@ -107,32 +92,39 @@ public:
     return m_vpSensor[index]->sensorNumber();
   };
   
-  /// return the index of the sensor
+  /// return the index of the sensor (assumes sensors are stored 
   unsigned int sensorIndex(unsigned int sensor);
 
   /// Return the number of Pile Up sensors
-  int nbPuSensor()  const { return m_nPileUpType; };
+  unsigned int nbPuSensor()  const { 
+    return m_nPileUpSensors; 
+  }
 
   /// Return the number of Velo sensors (no pile-up)
-  unsigned int nbSensor()  const { return m_nRType+m_nPhiType; };
+  unsigned int nbSensor()  const { 
+    return m_nRSensors+m_nPhiSensors; 
+  }
 
-  /// Return pointer to DeVeloRType for a given sensor
-  inline DeVeloRType* pRSensor(VeloChannelID channel) {
-   unsigned int index=sensorIndex(channel.sensor());
-   return dynamic_cast<DeVeloRType*>(m_vpSensor[index]);
-  }
-  
-  /// Return pointer to Phi sensor
-  inline DeVeloPhiType* pPhiSensor(VeloChannelID channel) {
-   unsigned int index=sensorIndex(channel.sensor());
-   return dynamic_cast<DeVeloPhiType*>(m_vpSensor[index]);
-  }
-  
-  /// Returns a vector of pointers to the R/Phi sensors
-  inline std::vector<DeVeloSensor*> vpSensors() const {
+  /// Return vector of pointers to all sensors sorted by increasing z
+  inline std::vector<DeVeloSensor*> vpSensors() {
     return m_vpSensor;
   }
-
+  
+  /// Return vector of pointers to the R sensors sorted by increasing z
+  inline std::vector<DeVeloRType*> vpRSensors() {
+    return m_vpRSensor;
+  }
+  
+  /// Return vector of pointers to the Phi sensors sorted by increasing z
+  inline std::vector<DeVeloPhiType*> vpPhiSensors() {
+    return m_vpPhiSensor;
+  }
+  
+  /// Return vector of pointers to the Pile Up sensors sorted by increasing z
+  inline std::vector<DeVeloRType*> vpPileUpSensors() {
+    return m_vpPUSensor;
+  }
+  
   /** Gives the VeloChannelID and offset (in fraction of a pitch width) 
       associated to a 3D position. with pitch width in mm
       Sign convention is offset is +- 0.5 
@@ -261,6 +253,10 @@ public:
   StatusCode phiPitch( VeloChannelID channel, 
                        double &phiPitch) ;
 
+  // returns tilt in radians (how is this defined?)
+  StatusCode phiTilt( VeloChannelID channel, 
+                       double &phiTilt) ;
+
   /// Return the distance to the origin for a phi strip
   StatusCode distToOrigin(VeloChannelID channel, double &distance) ;
 
@@ -353,6 +349,9 @@ public:
                              double&  rPitch,
                              double&  phiPitch ) ;
 
+  ///  Return true if the two zones are matching for R sensors. 
+  ///  Also returns true for neighbouring phi zones
+  bool matchingZones(unsigned int zone1, unsigned int zone2);
 
   ///=========================================================================
   /// REPLICATE OLD DeVelo Code with added rotations asumning perfect geometry
@@ -384,31 +383,27 @@ protected:
 
 private:
 
-  // Local storage for geometry computation
+  /// pointers to all sensors sorted by increasing z
+  std::vector<DeVeloSensor*> m_vpSensor;
 
-  /// pointers to R/Phi Sensors
-  std::vector<DeVeloSensor *> m_vpSensor;
-
-  /// index to the pileup type sensors
-  std::vector<unsigned int> m_indexPileUp;
-
-  /// index to the R type sensors
-  std::vector<unsigned int> m_indexRType;
-
+  /// vector of pointers to the R sensors (excluding Pile Up) 
+  /// sorted by increasing z
+  std::vector<DeVeloRType*> m_vpRSensor;
+  
+  /// vector of pointers to the Phi sensors sorted by increasing z
+  std::vector<DeVeloPhiType*> m_vpPhiSensor;
+  
+  /// vector of pointers to the Pile Up sensors sorted by increasing z
+  std::vector<DeVeloRType*> m_vpPUSensor;
+  
   /// Number of R sensors
-  unsigned int m_nRType;
-
-  /// index to the Phi type sensors
-  std::vector<unsigned int> m_indexPhiType;
+  unsigned int m_nRSensors;
 
   /// Number of Phi sensors
-  unsigned int m_nPhiType;
-
-  /// index to the Phi type sensors
-  std::vector<unsigned int> m_indexPileUpType;
+  unsigned int m_nPhiSensors;
 
   /// Number of Pile Up sensors
-  unsigned int m_nPileUpType;
+  unsigned int m_nPileUpSensors;
 
   /// Z of stations 
   std::vector<double> m_sensorZ; 
@@ -416,6 +411,11 @@ private:
   /// Sensors associated to each sensor
   std::vector< std::vector< unsigned int > > m_AssocSensors;
     
+  /// Indices of R, Phi and Pile Up sensors in list of all sensors sorted by z
+  std::vector<unsigned int> m_RIndex;
+  std::vector<unsigned int> m_PhiIndex;
+  std::vector<unsigned int> m_PUIndex;
+
   /// Custom operator for sorting sensors in terms of z position
   struct less_Z {
     bool operator()(DeVeloSensor * const &x, DeVeloSensor * const &y) {

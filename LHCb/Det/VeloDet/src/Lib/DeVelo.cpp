@@ -1,4 +1,4 @@
-// $Id: DeVelo.cpp,v 1.42 2004-02-28 21:43:43 mtobin Exp $
+// $Id: DeVelo.cpp,v 1.43 2004-10-26 14:58:31 dhcroft Exp $
 //
 // ============================================================================
 #define  VELODET_DEVELO_CPP 1
@@ -72,6 +72,9 @@ StatusCode DeVelo::initialize() {
     msg << MSG::ERROR << "Failure to initialize DetectorElement" << endreq;
     return sc ; 
   }
+  unsigned int nextR=this->userParameterAsInt("FirstR");
+  unsigned int nextPhi=this->userParameterAsInt("FirstPhi");
+  unsigned int nextPileUp=this->userParameterAsInt("FirstPileUp");
 
   // get all of the pointers to the child detector elements
   // Children of DeVelo (this) are the sensors
@@ -93,11 +96,13 @@ StatusCode DeVelo::initialize() {
 
   std::vector<IDetectorElement*>::iterator iDESensor;
   int detElemCount=0;
-  unsigned int RLeft=0;
-  unsigned int PhiLeft=1;
-  unsigned int RRight=50;
-  unsigned int PhiRight=51;
-  unsigned int PileUp=100;
+  m_sensorZ.clear();
+  m_vpSensor.clear();
+  m_vpRSensor.clear();
+  m_vpPhiSensor.clear();
+  m_vpPUSensor.clear();
+  m_nRSensors=m_nPhiSensors=m_nPileUpSensors=0;
+  
   for(iDESensor = veloSensors.begin() ; iDESensor != veloSensors.end() ; 
       ++iDESensor){
     //    IDetectorElement myDetElem=*iDESensor;
@@ -107,31 +112,54 @@ StatusCode DeVelo::initialize() {
           << "Could not cast children of DeVelo to DeVeloSensors" << endreq;
       return StatusCode::FAILURE;
     }
+    // Build vectors of pointers to sensors.
+    // Sensors are pre-sorted in XML such that they increase with z position
     m_vpSensor.push_back(pSensor);
     unsigned int index=m_vpSensor.size()-1;
-    if(m_vpSensor[index]->isR() && m_vpSensor[index]->isRight()){
-      m_vpSensor[index]->sensorNumber(RRight);
-      RRight += 2;
-    } else if(m_vpSensor[index]->isR() && !m_vpSensor[index]->isRight()){
-      m_vpSensor[index]->sensorNumber(RLeft);
-      RLeft += 2;
-    } else if(m_vpSensor[index]->isPhi() && m_vpSensor[index]->isRight()) {
-      m_vpSensor[index]->sensorNumber(PhiRight);
-      PhiRight += 2;
-    } else if(m_vpSensor[index]->isPhi() && !m_vpSensor[index]->isRight()) {
-      m_vpSensor[index]->sensorNumber(PhiLeft);
-      PhiLeft += 2;
-    } else if(m_vpSensor[index]->isPileUp()){
-      m_vpSensor[index]->sensorNumber(PileUp);
-      PileUp += 2;
+    msg << MSG::DEBUG << "type " << pSensor->type() << " R " << pSensor->isR() 
+        << " PHI " << pSensor->isPhi()
+        << " PU " << pSensor->isPileUp() << endmsg;
+    if(pSensor->isR()){
+      m_vpSensor[index]->sensorNumber(nextR);
+      m_vpRSensor.push_back(dynamic_cast<DeVeloRType*>(pSensor));
+      m_nRSensors++;
+      m_RIndex.push_back(index);
+      nextR++;
+    } else if(pSensor->isPhi()){
+      m_vpSensor[index]->sensorNumber(nextPhi);
+      m_vpPhiSensor.push_back(dynamic_cast<DeVeloPhiType*>(pSensor));
+      m_nPhiSensors++;
+      m_PhiIndex.push_back(index);
+      nextPhi++;
+    } else if(pSensor->isPileUp()){
+      m_vpSensor[index]->sensorNumber(nextPileUp);
+      m_vpPUSensor.push_back(dynamic_cast<DeVeloRType*>(pSensor));
+      m_nPileUpSensors++;
+      m_PUIndex.push_back(index);
+      nextPileUp++;
+    } else {
+      msg << MSG::ERROR << "Sensor type is unknown\n";
     }
+    msg << MSG::DEBUG << "Sensor number " << m_vpSensor[index]->sensorNumber()
+        << " pSensor " << pSensor->sensorNumber() << endreq;
     msg << MSG::DEBUG << " Sensor number " << m_vpSensor[index]->sensorNumber()
         << " is type " << m_vpSensor[index]->type() 
         << " at z = " << m_vpSensor[index]->z()
         << endreq;
     detElemCount++;
   }
-
+  // Check indices are correct
+  if(msg.level() == MSG::VERBOSE) {
+    for(unsigned int i=0; m_RIndex.size()>i; i++){
+      msg << MSG::VERBOSE << "Index of R sensors " << i << " " 
+          <<  m_RIndex[i];
+      msg << " sensor number " << m_vpSensor[m_RIndex[i]]->sensorNumber()
+          << endmsg;
+    }
+    
+  }
+  
+  
   // Build a list of phi sensors associated to R
   // Dog leg shape requires both phi of the station
   // need to sort sensors into accending order in z
@@ -139,7 +167,7 @@ StatusCode DeVelo::initialize() {
   std::sort(m_vpSensor.begin(), m_vpSensor.end(), less_Z());
 
   for(unsigned int iSensor=0; iSensor < m_vpSensor.size() ; ++iSensor){
-    //m_sensorZ.push_back(m_vpSensor[iSensor]->z());
+    m_sensorZ.push_back(m_vpSensor[iSensor]->z());
     unsigned int sensor = m_vpSensor[iSensor]->sensorNumber();
     msg << MSG::DEBUG << "Index " << iSensor << " Sensor number " << sensor
         << " is type " << m_vpSensor[iSensor]->type() 
@@ -158,44 +186,19 @@ StatusCode DeVelo::initialize() {
       }
     }
   }
-  // Sort the sensors into increasing sensor number
-  std::sort(m_vpSensor.begin(), m_vpSensor.end(), less_sensor());
-
-  m_sensorZ.clear();
-  for(unsigned int iSensor=0; iSensor < m_vpSensor.size() ; iSensor++){
-    m_sensorZ.push_back(m_vpSensor[iSensor]->z());
-    unsigned int sensor=m_vpSensor[iSensor]->sensorNumber();
-    // work out what sensor type we have here
-    if(this->isRSensor(sensor)){
-      m_indexRType.push_back(sensor);
-    }
-    if(this->isPhiSensor(sensor)){
-      m_indexPhiType.push_back(sensor);
-    }
-    if(this->isPileUpSensor(sensor)){
-      m_indexPileUpType.push_back(sensor);
-    }
-    msg << MSG::DEBUG << "Index " << iSensor << " Sensor number " << sensor
-        << " is type " << m_vpSensor[iSensor]->type() 
-        << " at z = " << m_vpSensor[iSensor]->z()
-        << endreq;
-  }
-  m_nRType = m_indexRType.size();
-  m_nPhiType = m_indexPhiType.size();
-  m_nPileUpType = m_indexPileUpType.size();
   
-  msg << MSG::DEBUG 
-      << " There are " << m_nRType << " R type, " 
-      << m_nPhiType << " Phi type and "
-      << m_nPileUpType << " pileup type sensors " << endreq;
-
-  if(m_nRType < 2 || m_nPhiType < 2 || m_nPileUpType < 2){
+  if(m_nRSensors < 2 || m_nPhiSensors < 2 || m_nPileUpSensors < 2){
     msg << MSG::ERROR 
         << " This code requies at least two of each type of sensor"
         << endreq;
     return StatusCode::FAILURE;
-  }                                                         
-
+  } else {
+    msg << MSG::DEBUG 
+        << " There are " << m_nRSensors << " R type, " 
+        << m_nPhiSensors << " Phi type and "
+        << m_nPileUpSensors << " pileup type sensors " << endreq;
+  }
+  
   return StatusCode::SUCCESS;
 }
 
@@ -209,17 +212,16 @@ unsigned int DeVelo::sensorNumber(const HepPoint3D& point){
   }
   return 0;
 }
-// Return the index of the sensor in the list of sensors
+
+// Return the index of a sensor in the vector of pointers to the sensors 
+// which increase with sensor number
 unsigned int DeVelo::sensorIndex(unsigned int sensor)
 {
-  if(50 > sensor) {
-    return sensor;
-  } else if(50 <= sensor && 100 > sensor) {
-    return sensor-8;
-  } else {
-    return ((sensor%100)/2)+84;
-  }
+  if(64 > sensor) return m_RIndex[sensor];
+  else if(128 > sensor) return m_PhiIndex[sensor-64];
+  else return m_PUIndex[sensor-128];
 }
+
 // Gives the VeloChannelID and offset (in fraction of a pitch width) 
 // associated to a 3D position. with pitch width in mm
 // Sign convention is offset is +- 0.5 
@@ -497,6 +499,22 @@ StatusCode DeVelo::phiPitch(VeloChannelID channel,
   }
 }
 
+
+// returns the Phi tilt (in radians) for a given strip
+// how is this defined ?
+StatusCode DeVelo::phiTilt(VeloChannelID channel,
+			     double &phiTilt ) {
+  unsigned int index=sensorIndex(channel.sensor());  
+  DeVeloPhiType * phiPtr = 
+    dynamic_cast<DeVeloPhiType*>(m_vpSensor[index]);
+  if(phiPtr){
+    phiTilt = phiPtr->phiTilt(channel.strip());
+    return StatusCode::SUCCESS;
+  }else{
+    return StatusCode::FAILURE;
+  }
+}
+
 StatusCode DeVelo::distToOrigin( VeloChannelID channel,
                              double &distance)  
 {
@@ -658,6 +676,15 @@ StatusCode DeVelo::makeSpacePoint( VeloChannelID rChan,
   point.set( 0., 0., 0. );
   rPitch   = 0.;
   phiPitch = 0.;
+
+  MsgStream msg( msgSvc(), "DeVelo" );
+  msg << MSG::VERBOSE << ">>>>>>>> Inputs; sensors, R " << rChan.sensor()
+      << " strip " << (rChan.strip()+rFrac)
+      << " Phi " << phiChan.sensor()
+      << " strip " << (phiChan.strip()+phiFrac)
+      << " at z = " << zSensor(rChan.sensor())
+      << endmsg;
+
   // check that the sensor types are valid
   if(VeloChannelID::RType != rChan.type()) return StatusCode::FAILURE;
   if(VeloChannelID::PhiType != phiChan.type()) return StatusCode::FAILURE;
@@ -735,6 +762,17 @@ StatusCode DeVelo::makeSpacePoint( VeloChannelID rChan,
   if(!sc) return sc;
   return StatusCode::SUCCESS;
 }
+//==============================================================================
+//  Return true if the two zones are matching for R sensors. 
+//  Also returns true for neighbouring phi zones
+//==============================================================================
+bool DeVelo::matchingZones (unsigned int zone1, unsigned int zone2) {
+  if(0 == zone1) return (2 > zone2);
+  else if(1 == zone1) return (3 > zone2);
+  else if(2 == zone1) return (0 < zone2);
+  else if(3 == zone1) return (1 < zone2);
+  return false;
+}
 //=========================================================================
 // REPLICATE OLD DEVELO CODE FOR TRIGGER....
 //=========================================================================
@@ -748,15 +786,21 @@ void DeVelo::trgPhiMatchingStrips( int sensor, double radius,
   stripMax = -1.;
   pitch    = 0.;
   offset   = 0.;
+
+  MsgStream msg( msgSvc(), "DeVelo" );
+  msg << MSG::VERBOSE << ">>>>>>>> Inputs; sensors, phi " << sensor 
+      << " R " << rSensor 
+      << " at z = " << zSensor(rSensor)+zSensor(sensor)/2
+      << " zone " << zone 
+      << " radius " << radius
+      << " angularTol " << angularTol << endmsg;
+
   StatusCode sc;
   if(isRSensor(sensor)) return;    // R sensor
   if(rMin(sensor) > radius ) return;
   if(rMax(sensor) < radius ) return;
-  //msg << MSG::VERBOSE << "Phi Sensor " << sensor << " is type "
-  //    << (m_vpSensor[sensorIndex(sensor)]->type()) << " R Sensor " << rSensor
-  //    << " isType " << (m_vpSensor[sensorIndex(rSensor)]->type()) << endreq;
   bool isInner=false;
-  if(rMin(sensor,0) < radius && rMax(sensor,0) > radius){
+  if(rMax(sensor,0) > radius){
     isInner = true;
   }
   sc = phiStereo(VeloChannelID(sensor,0),radius,offset);
@@ -783,19 +827,16 @@ void DeVelo::trgPhiMatchingStrips( int sensor, double radius,
     sc = this->phiMin(rSensor,static_cast<unsigned int>(zone),phiMin);
     sc = this->phiMax(rSensor,static_cast<unsigned int>(zone),phiMax);
   }
-  //  msg << MSG::VERBOSE << "Zone is " << zone << " phi min " << phiMin/degree 
-  //    << " max " << phiMax/degree << " offset " << offset/degree << endreq;
   phiMin += -deltaPhi - offset;
   phiMax += deltaPhi - offset;
   
   // For unusual pairing, rotate Phi ranges to match the R zone...
   // But only in the appropriate zones...
-  //  if ( ( phiType + rType )%2 != 0 ) {
   if(xSide(sensor) != xSide(rSensor)){
-    if ( 0 == zone || 2 == zone ) {
+    if ( 0 == zone ) {
       phiMin += pi;
       phiMax += pi;
-    } else if ( 4 == zone || 5 == zone ) {
+    } else if ( 3 == zone ) {
       phiMin -= pi;
       phiMax -= pi;
     } else {
@@ -842,6 +883,9 @@ void DeVelo::trgPhiMatchingStrips( int sensor, double radius,
     }
   }
   if ( isRight(sensor) ) offset += pi;
+  msg << MSG::VERBOSE << "Outputs; strip Min " << stripMin 
+      << " max " << stripMax << " pitch " << pitch 
+      << " offset " << offset/degree << endmsg;
 }
 // returns the phi of the strip at the specified radius for this sensor.
 StatusCode DeVelo::trgPhiOfStrip( VeloChannelID channel,

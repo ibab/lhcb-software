@@ -1,4 +1,4 @@
-// $Id: DeVeloPhiType.h,v 1.6 2004-02-28 21:43:37 mtobin Exp $
+// $Id: DeVeloPhiType.h,v 1.7 2004-10-26 14:58:31 dhcroft Exp $
 #ifndef VELODET_DEVELOPHITYPE_H 
 #define VELODET_DEVELOPHITYPE_H 1
 
@@ -153,6 +153,15 @@ public:
     return this->localPhiToGlobal(angleOfStrip(strip,fraction));
   }
   
+  inline double phiTilt(unsigned int strip){
+   if (m_nbInner > strip) {
+      return m_innerTilt;
+    } else {
+      return m_outerTilt;
+    } 
+  }
+    
+
   /// Returns the offset in phi for a given radius
   inline double phiOffset(double radius){
     if(m_middleRadius > radius){
@@ -188,7 +197,7 @@ public:
     } else {
       distance = m_outerDistToOrigin;
     }
-    if(!m_isDownstream) return -distance;
+    //    if(!m_isDownstream) return -distance;
     return distance;
   }
 

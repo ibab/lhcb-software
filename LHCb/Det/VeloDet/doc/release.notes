@@ -1,9 +1,20 @@
-! $Id: release.notes,v 1.61 2004-03-02 13:09:52 cattanem Exp $
+! $Id: release.notes,v 1.62 2004-10-26 14:58:31 dhcroft Exp $
 package VeloDet
 package manager : Velo Group
 
+! 2004-10-26 - David Hutchcroft
+ - Final changes to work with Boole
+
 !========================= VeloDet v9r0 2004-03-02 =========================
    >> Requires XmlDDDB v22r0 or greater <<
+
+! 2004-03-25 - Mark Tobin
+ - Fixed my own stupid bug in trgPhiMatchingStrips.  The outer zone for phi 
+ sensors was always used instead of the innner zone.
+
+! 2004-03-24 - Mark Tobin
+ - Removed references to old designs from matchingZones.
+   (R sensor is divided into 4 zones, numbered from 0 to 3.)
 
 ! 2004-03-02 - Marco Cattaneo
  - Use LHCbMath::round instead of VeloRound, and remove VeloKernel dependency

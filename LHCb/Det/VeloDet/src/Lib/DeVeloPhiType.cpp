@@ -1,4 +1,4 @@
-// $Id: DeVeloPhiType.cpp,v 1.9 2004-03-02 12:45:41 cattanem Exp $
+// $Id: DeVeloPhiType.cpp,v 1.10 2004-10-26 14:58:31 dhcroft Exp $
 //==============================================================================
 #define VELODET_DEVELOPHITYPE_CPP 1
 //==============================================================================
@@ -443,6 +443,7 @@ StatusCode DeVeloPhiType::residual(const HepPoint3D& point,
   double yNear = m_stripLines[strip].first*xNear + m_stripLines[strip].second;
   
   residual = sqrt(pow(xNear-x,2)+pow(yNear-y,2));
+  if(yNear > y) residual *= -1;
   double radius = localPoint.perp();
   double sigma = m_resolution.first*phiPitch(radius) - m_resolution.second;
   chi2 = pow(residual/sigma,2);
