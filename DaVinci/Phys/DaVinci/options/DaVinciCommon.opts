@@ -62,10 +62,10 @@ ApplicationMgr.DLLs += { "TrExtrapolator" };
 ApplicationMgr.DLLs += { "MCTools" };
 ApplicationMgr.DLLs += { "DaVinciMCTools" };
 ApplicationMgr.DLLs += { "DaVinciEff" };
-ApplicationMgr.DLLs += { "DaVinciTest" };
-ApplicationMgr.DLLs += { "DaVinciUser" };
+//ApplicationMgr.DLLs += { "DaVinciTest" };
+//ApplicationMgr.DLLs += { "DaVinciUser" };
 //    ... generic algorithms for selection of decays
-ApplicationMgr.DLLs += { "PhysSelections" };
+// ApplicationMgr.DLLs += { "PhysSelections", "LoKi" };
 ApplicationMgr.DLLs += { "Ks2PiPiSel" };
 //    ... flavour tagging
 ApplicationMgr.DLLs += { "FlavourTagging" };
@@ -73,7 +73,6 @@ ApplicationMgr.DLLs += { "RecoTools" };
 
 // Generic Utility package
 ApplicationMgr.DLLs += { "Utilities" };
-
 
 // Profiling
 #pragma print on
