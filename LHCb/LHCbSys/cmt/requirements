@@ -1,12 +1,12 @@
 package LHCbSys
-version v13r1
+version v13r2
 
 branches doc cmt
  
 #===============================================================
 # LHCb packages used by all applications
 #===============================================================
-use LHCb		v13r1
+use LHCb		v13r2
 
 use GaudiConf		v7r1
 
@@ -18,12 +18,12 @@ use HepMC		v3r121p1  Sim
 use GenEvent     	v2r4	Event
 
 # Kernel packages
-use KernelSys   	v1r5	Kernel
+use KernelSys   	v1r6	Kernel
 use LHCbKernel  	v2r8    Kernel
-use CaloKernel  	v2r3    Calo
+use CaloKernel  	v2r3p1	Calo
 use MuonKernel  	v2r3    Muon
 use TrKernel    	v11r2p1 Tr
-use RichKernel  	v3r2	Rich
+use RichKernel  	v3r3	Rich
 use VeloKernel  	v1r3    Velo
 
 # Detector description
