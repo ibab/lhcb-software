@@ -12,7 +12,7 @@
 //---------------------------------------------------------------------------
 // Database specific options
 //---------------------------------------------------------------------------
-DetectorDataSvc.DetDbLocation = "$XMLDDDBROOT/DDDB/v252r0.xml";
+DetectorDataSvc.DetDbLocation = "$XMLDDDBROOT/DDDB/v254r1.xml";
 MagneticFieldSvc.FieldMapFile = "$LHCBDBASE/cdf/field043.cdf";
 #include "$LONGTRACKROOT/options/BrunelField043.opts"
 #pragma print on

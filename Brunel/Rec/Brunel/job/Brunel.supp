@@ -1,6 +1,6 @@
 ##----------------------------------------------------------------------##
 
-# Errors to suppress by default with Brunel v16r4
+# Errors to suppress by default with Brunel v17r2
 
 # Format of this file is:
 # {
@@ -329,7 +329,7 @@
   fun:new_fit_line__
 }
 
-# Muon bugs - call stack to deep to suppress...
+# Muon bugs - call stack to deep to suppress... - fixed by v3r3?
 #{
 #  MuonAlgs/v3r1
 #  Value8

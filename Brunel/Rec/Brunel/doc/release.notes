@@ -6,15 +6,25 @@ Purpose: LHCb reconstruction program
 </PRE><H1><A NAME=v17r2>2003-01-?? Brunel v17r2</A></H1><PRE>
  - New tuning:
    . Raise IT clustering S/N cut to 3.2 sigma (from 3.0) (Brunel.opts)
+   . Tuning for new TT strip pitch and magnetic field, plus minor improvements
+     (L1Decision v1r6)
+   . Improved agreement between Xml and CDF geometry for OO-Rich
+     (XmlDDDB v15r0, RichDet v4r0, RichDetTools v1r3)
 
  - New features:
    . Add support for dbase v254r1
-    (Brunelv254r1.opts, to be used also for dbase v254r0 and v253r1 test data)
+    (XmlDDDB v15r0, Brunelv254r1.opts - to be used also for dbase v254r0 and 
+     v253r1 test data)
 
  - DST changes:
    . TrStateL of Velo and Veloback tracks is now given at Z of first measured
      point (actually first used phi sensor) instead of Z=0 previously
      (VeloTrack v4r5, TrCleanEx v2r6)
+
+ - Bug fixes:
+   . Fix valgrind problems (CaloReco v1r2p1, MuonAlgs v3r3)
+   . Introduce fix to inner tracker materials that was mistakenly left out in
+     XmlDDDB v14r1 (XmlDDDB v15r0)
 
 </PRE><H1><A NAME=v17r1>2003-01-17 Brunel v17r1</A></H1><PRE>
  - New tuning:
