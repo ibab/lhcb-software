@@ -1,4 +1,4 @@
-// $Id: RichRecToolBase.h,v 1.12 2004-06-18 09:44:09 jonesc Exp $
+// $Id: RichRecToolBase.h,v 1.13 2004-06-29 19:35:41 jonesc Exp $
 #ifndef RICHRECALGS_RICHRECTOOLBASE_H
 #define RICHRECALGS_RICHRECTOOLBASE_H 1
 
@@ -40,6 +40,70 @@ public:
   virtual StatusCode finalize();
 
 protected:   // Protected methods
+
+  // Read/write access to data
+
+  /// Returns RichRecTracks pointer
+  inline RichRecTracks * richTracks()
+  {
+    return trackCreator()->richTracks();
+  }
+
+  /// Returns RichRecPixels pointer
+  inline RichRecPixels * richPixels()
+  {
+    return pixelCreator()->richPixels();
+  }
+
+  /// Returns RichRecSegments pointer
+  inline RichRecSegments * richSegments()
+  {
+    return segmentCreator()->richSegments();
+  }
+
+  /// Returns RichRecPhotons pointer
+  inline RichRecPhotons * richPhotons()
+  {
+    return photonCreator()->richPhotons();
+  }
+
+  /// Returns RichRecStatus pointer
+  inline RichRecStatus * richStatus()
+  {
+    return statusCreator()->richStatus();
+  }
+
+  // read only access to data
+
+  /// Returns RichRecTracks pointer
+  inline const RichRecTracks * richTracks() const
+  {
+    return trackCreator()->richTracks();
+  }
+
+  /// Returns RichRecPixels pointer
+  inline const RichRecPixels * richPixels() const
+  {
+    return pixelCreator()->richPixels();
+  }
+
+  /// Returns RichRecSegments pointer
+  inline const RichRecSegments * richSegments() const
+  {
+    return segmentCreator()->richSegments();
+  }
+
+  /// Returns RichRecPhotons pointer
+  inline const RichRecPhotons * richPhotons() const
+  {
+    return photonCreator()->richPhotons();
+  }
+
+  /// Returns RichRecStatus pointer
+  inline const RichRecStatus * richStatus() const
+  {
+    return statusCreator()->richStatus();
+  }
 
   // Pointers to data object creator tools
 

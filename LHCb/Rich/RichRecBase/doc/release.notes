@@ -4,7 +4,13 @@
 ! Purpose     : Base package for RICH Reconstruction Packages
 !-----------------------------------------------------------------------------
 
+! 2004-06-23 - Chris Jones
+ - Update RichTrackID and RichTrackSelector to no longer require knowledge of 
+   the bit structure in the TrStoredTrack "history" code. 
+   Add track charge and momentum selection criteria to RichTrackSelector.
+
 !====================== RichRecBase v1r12 2004-06-18 =======================
+
 ! 2004-06-17 - Chris Jones
  - Remove RichMap.h and RichHash.h. These where used to fix a problem with
    maps using VC6 on windows, but which is now fixed with VC7.

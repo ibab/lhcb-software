@@ -1,9 +1,9 @@
-// $Id: RichRecPhotonKey.h,v 1.3 2004-04-17 09:28:04 jonesc Exp $
+// $Id: RichRecPhotonKey.h,v 1.4 2004-06-29 19:35:41 jonesc Exp $
 #ifndef RichRecEvent_RichRecPhotonKey_H
 #define RichRecEvent_RichRecPhotonKey_H 1
 
 // Gaudi
-#include "GaudiKernel/GaudiException.h"
+//#include "GaudiKernel/GaudiException.h"
 
 // LHCb
 #include "Kernel/CLHEPStreams.h"
@@ -29,10 +29,13 @@ public:
                     const long segmentKey ) 
     : m_key ( pixelKey%65536 | segmentKey<<16 ) 
   {
+    // Uncomment for debugging
+    /*
     if ( pixelKey != pixelNumber() || segmentKey != segmentNumber() ) {
       throw GaudiException( "pixel/segment number error", 
                             "RichRecPhotonKey", StatusCode::FAILURE );
     }
+    */
   }
 
   /// Destructor

@@ -1,4 +1,4 @@
-// $Id: RichTrackID.h,v 1.6 2004-04-17 09:28:05 jonesc Exp $
+// $Id: RichTrackID.h,v 1.7 2004-06-29 19:35:42 jonesc Exp $
 #ifndef RICHRECBASE_RICHTRACKID_H
 #define RICHRECBASE_RICHTRACKID_H 1
 
@@ -30,7 +30,7 @@ namespace Rich {
   namespace Track {
 
     /// Number of Track types
-    static const int NTrTypes = 7;
+    static const unsigned int NTrTypes = 7;
 
     enum Type {
       Unknown  = -2,
@@ -89,24 +89,21 @@ public:
 
   /// Standard constructor
   RichTrackID()
-    : m_tkType     ( Rich::Track::Unknown ),
-      m_parentType ( Rich::TrackParent::Unknown ),
-      m_history    ( 0    ),
-      m_unique     ( true ) { }
+    : m_tkType     ( Rich::Track::Unknown             ),
+      m_parentType ( Rich::TrackParent::Unknown       ),
+      m_unique     ( true                             ) { }
 
   /// Constructor from a TrStoredTrack
   explicit RichTrackID( const TrStoredTrack * track )
     : m_tkType     ( Rich::Track::type(track)         ),
       m_parentType ( Rich::TrackParent::TrStoredTrack ),
-      m_history    ( track ? track->history() : 0     ),
       m_unique     ( 0 != track->unique()             ) { }
 
   /// Constructor from an MCParticle
   explicit RichTrackID( const MCParticle * mcPart )
-    : m_tkType     ( Rich::Track::Unknown ),
+    : m_tkType     ( Rich::Track::Unknown             ),
       m_parentType ( Rich::TrackParent::MCParticle    ),
-      m_history    ( 0    ),
-      m_unique     ( true ) { }
+      m_unique     ( true                             ) { }
 
   ~RichTrackID( ) {} ///< Destructor
 
@@ -121,12 +118,6 @@ public:
 
   /// Set the parent type
   void setParentType( const Rich::TrackParent::Type type ) { m_parentType = type; }
-
-  /// Retrieve origin of the track
-  unsigned long history() const { return m_history; }
-
-  /// Set the origin of the track
-  void setHistory( const unsigned long hist ) { m_history = hist; }
 
   /// Is this track unique ?
   bool unique() const { return m_unique; }
@@ -148,9 +139,6 @@ private: // data
   /// The parent type
   Rich::TrackParent::Type m_parentType;
 
-  /// Copy of history code from TrStoredTrack
-  unsigned long m_history;
-
   /// Unique ?
   bool m_unique;
 
@@ -160,7 +148,6 @@ inline void RichTrackID::initialiseFor( const TrStoredTrack * track )
 {
   setParentType ( Rich::TrackParent::TrStoredTrack );
   setTrackType  ( Rich::Track::type(track)         );
-  setHistory    ( track ? track->history() : 0     );
   setUnique     ( 0 != track->unique()             );
 }
 
@@ -171,25 +158,27 @@ inline void RichTrackID::initialiseFor( const MCParticle * )
 
 /// Implement textual ostream << method for Rich::Track::Type enumeration
 inline std::ostream& operator << ( std::ostream& s,
-                                   const Rich::Track::Type type ) {
+                                   const Rich::Track::Type type ) 
+{
   s << Rich::text( type );
   return s;
 }
 
 /// Implement textual ostream << method for Rich::TrackParent::Type enumeration
 inline std::ostream& operator << ( std::ostream& s,
-                                   const Rich::TrackParent::Type track ) {
+                                   const Rich::TrackParent::Type track ) 
+{
   s << Rich::text( track );
   return s;
 }
 
 /// Implement textual ostream << method for RichTrackID
 inline std::ostream& operator << ( std::ostream& s,
-                                   const RichTrackID& id ) {
+                                   const RichTrackID& id ) 
+{
   s << "{ " << std::endl
     << " track type:\t" << id.trackType() << std::endl
     << " parent type:\t" << id.parentType() << std::endl
-    << " history code:\t" << id.history() << std::endl
     << " unique:\t" << id.unique() <<  std::endl
     << " } " << std::endl;
   return s;
@@ -197,35 +186,37 @@ inline std::ostream& operator << ( std::ostream& s,
 
 /// Implement textual MsgStream << method for Rich::Track::Type enumeration
 inline MsgStream& operator << ( MsgStream& s,
-                                const Rich::Track::Type type ) {
+                                const Rich::Track::Type type ) 
+{
   s << Rich::text( type );
   return s;
 }
 
 /// Implement textual MsgStream << method for Rich::TrackParent::Typ enumeration
 inline MsgStream& operator << ( MsgStream& s,
-                                const Rich::TrackParent::Type track ) {
+                                const Rich::TrackParent::Type track ) 
+{
   s << Rich::text( track );
   return s;
 }
 
 /// Implement StreamBuffer >> method for RichTrackID
 inline StreamBuffer& operator >> ( StreamBuffer& s,
-                                   RichTrackID& id ) {
+                                   RichTrackID& id ) 
+{
   int iTemp;
   s >> iTemp; id.setTrackType( static_cast<Rich::Track::Type>(iTemp) );
   s >> iTemp; id.setParentType( static_cast<Rich::TrackParent::Type>(iTemp) );
-  unsigned long history; s >> history; id.setHistory( history );
   s >> iTemp; id.setUnique( 0 != iTemp );
   return s;
 }
 
 /// Implement StreamBuffer << method for RichTrackID
 inline StreamBuffer& operator << ( StreamBuffer& s,
-                                   const RichTrackID& id ) {
+                                   const RichTrackID& id ) 
+{
   s << static_cast<int>(id.trackType())
     << static_cast<int>(id.parentType())
-    << id.history()
     << static_cast<int>(id.unique());
   return s;
 }
