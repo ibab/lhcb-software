@@ -219,6 +219,10 @@ StatusCode GiGaMCRichHitCnv::updateObj ( IOpaqueAddress*  address ,
           // Make new persistent hit object
           MCRichHit * mchit = new MCRichHit();
 
+          // add to container
+          hits->insert( mchit, globalKey );
+          ++globalKey;
+
           // Set data
           mchit->setEntry( g4hit->GetGlobalPos() );
           mchit->setEnergy( g4hit->GetEdep()/10 ); // Fix for energy bug
@@ -244,18 +248,15 @@ StatusCode GiGaMCRichHitCnv::updateObj ( IOpaqueAddress*  address ,
 
           // get MCParticle information
           const int traid = g4hit->GetTrackID();
-          if ( table[traid].particle() ) {
-            mchit->setMCParticle( table[traid].particle() );
+          const MCParticle * mcPart = table[traid].particle();
+          if ( mcPart ) {
+            mchit->setMCParticle( mcPart );
           } else {
             msg << MSG::INFO
-                << "No pointer to MCParticle for "
-                <<" MCRichHit associated to trackID: "
-                <<iii<<"  "<<ihit<< "   "<< traid << endreq;
+                << "MCRichHit " << mchit->key() 
+                << " has no parent MCParticle !, RichG4HitCollection " << iii 
+                << " TrackID " << traid << endreq;
           }
-
-          // add to container
-          hits->insert( mchit, globalKey );
-          ++globalKey;
 
         }
       }
