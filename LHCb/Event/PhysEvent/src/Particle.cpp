@@ -1,4 +1,4 @@
-// $Id: Particle.cpp,v 1.6 2002-07-24 16:20:22 gcorti Exp $
+// $Id: Particle.cpp,v 1.7 2002-07-24 21:01:58 gcorti Exp $
 // Include files 
 
 // STD and STL
@@ -48,6 +48,7 @@ Particle& Particle::operator=(const Particle& orig) {
   
   // protect against self assignement
   if( this != &orig ) {
+    m_particleID = orig.particleID();
     m_confLevel = orig.confLevel();  
     m_momentum = orig.momentum();
     m_pointOnTrack = orig.pointOnTrack();
