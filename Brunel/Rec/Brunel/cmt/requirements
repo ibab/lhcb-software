@@ -39,7 +39,8 @@ use RootHistCnv         v9r1
 
 #-- Database
 use XmlDDDB		v22r0	Det
-use ParamFiles          v3r4    $(LHCb_release_area)/PARAM -no_auto_imports
+use FieldMap		v4r3	
+use ParamFiles          v3r4    -no_auto_imports
 
 #-- LHCb libraries (from LHCB_v15r4)
 use LHCb	v15r4
