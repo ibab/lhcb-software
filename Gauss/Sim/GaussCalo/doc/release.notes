@@ -10,6 +10,8 @@
 ! 2003-06-17 - Patrick Robbe
   - CaloSensDet      : change LocalNonUniformity correction function for
                        ECal
+  - options/Calo.opts : add declarations of Prs and Spd by Witold Pokorski
+                        and Grigori Rybkine
 
 ! 2003-06-05 - Patrick Robbe
   - options/Calo.opts : remove zero magnetic field declarations (zero
