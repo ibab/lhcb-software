@@ -1,8 +1,11 @@
-// $Id: CaloTrackMatchBase.h,v 1.7 2004-10-26 17:51:42 ibelyaev Exp $
+// $Id: CaloTrackMatchBase.h,v 1.8 2004-12-13 16:32:37 cattanem Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.7  2004/10/26 17:51:42  ibelyaev
+//  add 'photon' matching for Trg Tracks
+//
 // Revision 1.6  2004/10/25 12:10:13  ibelyaev
 //  add new tool
 //
@@ -141,9 +144,9 @@ public:
 protected: 
   
   /** Find TrState on specified Z.
-   *  @param Object with Track data
-   *  @param Z    of the TrState
-   *  @param Zext z for extrapolation 
+   *  @param trObj Object with Track data
+   *  @param Z     Z of the TrState
+   *  @param zExtr Z for extrapolation 
    *  @return standard status code
    */
   StatusCode findState
@@ -152,9 +155,9 @@ protected:
     const double         zExtr ) const ;
 
   /** Find TrState on specified Z.
-   *  @param Object with Track data
-   *  @param Z    of the TrState
-   *  @param Zext z for extrapolation 
+   *  @param trObj Object with Track data
+   *  @param Z     Z of the TrState
+   *  @param zExtr Z for extrapolation 
    *  param  covX allowed X-precision  (sigma**2)
    *  param  covY allowed Y-precision  (sigma**2)
    *  @return standard status code
@@ -255,8 +258,8 @@ protected:
    * where dpi = pi - mean. \n
    * Ci(-1) is the inverted covariance. \n
    * In case of failure throws a CaloException.
-   * @param struct with first vector and its covariance
-   * @param struct with second vector and its covariance
+   * @param mt1 struct with first vector and its covariance
+   * @param mt2 struct with second vector and its covariance
    * @return result chi2
    */
   inline double chi2
@@ -293,8 +296,8 @@ protected:
    * where dpi = pi - mean. \n
    * Ci(-1) is the inverted covariance. \n
    * In case of failure throws a CaloException.
-   * @param struct with first vector and its covariance
-   * @param struct with second vector and its covariance
+   * @param mt1 struct with first vector and its covariance
+   * @param mt2 struct with second vector and its covariance
    * @return result chi2
    */
   inline double chi2 
@@ -330,8 +333,8 @@ protected:
    * where dpi = pi - mean. \n
    * Ci(-1) is the inverted covariance. \n
    * In case of failure throws a CaloException.
-   * @param struct with first vector and its covariance
-   * @param struct with second vector and its covariance
+   * @param mt1 struct with first vector and its covariance
+   * @param mt2 struct with second vector and its covariance
    * @return result chi2
    */
   inline double chi2 
@@ -366,8 +369,8 @@ protected:
    * where dpi = pi - mean. \n
    * Ci(-1) is the inverted covariance. \n
    * In case of failure throws a CaloException.
-   * @param struct with first vector and its covariance
-   * @param struct with second vector and its covariance
+   * @param mt1 struct with first vector and its covariance
+   * @param mt2 struct with second vector and its covariance
    * @return result chi2
    */
   inline double chi2 

@@ -1,8 +1,11 @@
-// $Id: Calo04SCorrection.cpp,v 1.3 2004-07-21 12:10:27 ibelyaev Exp $
+// $Id: Calo04SCorrection.cpp,v 1.4 2004-12-13 16:32:37 cattanem Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.3  2004/07/21 12:10:27  ibelyaev
+//  minor modifications to improve the electron corrections
+//
 // ============================================================================
 // Include files
 // from Gaudi
@@ -26,7 +29,7 @@
 
 
 // ============================================================================
-/** @var Calo04SCorrection
+/*
  *  Declaration of the Tool Factory, needed for instantiation
  */
 // ============================================================================

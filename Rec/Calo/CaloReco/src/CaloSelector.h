@@ -1,4 +1,4 @@
-// $Id: CaloSelector.h,v 1.3 2004-02-17 12:08:09 ibelyaev Exp $
+// $Id: CaloSelector.h,v 1.4 2004-12-13 16:32:37 cattanem Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
@@ -74,7 +74,7 @@ protected:
   /** Standard constructor
    *  @param    type   tool type (?)
    *  @param    name   tool name 
-   *  @param    paretn tool parent 
+   *  @param    parent tool parent 
    */
   CaloSelector
   ( const std::string&  type   ,  

@@ -1,8 +1,11 @@
-// $Id: ClusterisationFunctors.h,v 1.2 2003-06-23 13:11:54 ibelyaev Exp $ 
+// $Id: ClusterisationFunctors.h,v 1.3 2004-12-13 16:32:37 cattanem Exp $ 
 // ===========================================================================
 // CVS tag $Name:4
 // ===========================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2003/06/23 13:11:54  ibelyaev
+//  fix for gcc3.2
+//
 // Revision 1.1.1.1  2002/11/13 20:46:40  ibelyaev
 // new package 
 //
@@ -148,8 +151,8 @@ namespace ClusterisationFunctors
     ~SeedFinder(){};
     
     /** the only one and essential method 
-     *  @param pointer to calodigit object 
-     *  @return cluster, if diigt is a SEED,   0 - otherwise
+     *  @param  digit    pointer to calodigit object 
+     *  @return cluster, if digit is a SEED,   0 - otherwise
      */
     inline CaloCluster*  operator() ( const CaloDigit* digit ) const
     {
