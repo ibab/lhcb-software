@@ -1,8 +1,11 @@
-// $Id: SolidBoolean.cpp,v 1.10 2002-07-03 08:15:37 ocallot Exp $
+// $Id: SolidBoolean.cpp,v 1.11 2003-05-16 13:59:13 ibelyaev Exp $
 // ===========================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ===========================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.10  2002/07/03 08:15:37  ocallot
+// Add a cover to the LAssembly
+//
 // Revision 1.9  2002/05/26 10:47:14  ibelyaev
 //  remove checks/tests and update requiements
 //
@@ -73,8 +76,6 @@ SolidBoolean::SolidBoolean( const std::string& name  )
 // ============================================================================
 SolidBoolean::~SolidBoolean()
 {
-  /// reset the solid;
-  reset() ;
   /// delete all daughters 
   for( SolidBoolean::SolidChildrens::iterator it = childBegin();
        childEnd() != it ; ++it ) 

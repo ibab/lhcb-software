@@ -1,8 +1,11 @@
-// $Id: SolidUnion.cpp,v 1.7 2002-05-11 18:25:48 ibelyaev Exp $ 
+// $Id: SolidUnion.cpp,v 1.8 2003-05-16 13:59:14 ibelyaev Exp $ 
 // ===========================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ===========================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.7  2002/05/11 18:25:48  ibelyaev
+//  see $DETDESCROOT/doc/release.notes 11 May 2002
+//
 // ===========================================================================
 /** STD & STL  */
 #include <iostream> 
@@ -58,7 +61,7 @@ SolidUnion::SolidUnion( const std::string& Name )
 // ============================================================================
 SolidUnion::~SolidUnion()
 { 
-  reset(); if( 0 != m_coverTop ) { delete m_coverTop ; }
+  if( 0 != m_coverTop ) { delete m_coverTop ; }
 };
 // ============================================================================
 

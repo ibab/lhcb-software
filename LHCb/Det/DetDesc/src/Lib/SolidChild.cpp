@@ -1,8 +1,11 @@
-// $Id: SolidChild.cpp,v 1.10 2002-05-11 18:25:47 ibelyaev Exp $ 
+// $Id: SolidChild.cpp,v 1.11 2003-05-16 13:59:13 ibelyaev Exp $ 
 // ===========================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ===========================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.10  2002/05/11 18:25:47  ibelyaev
+//  see $DETDESCROOT/doc/release.notes 11 May 2002
+//
 // ===========================================================================
 /// CLHEP
 #include "CLHEP/Geometry/Transform3D.h" 
@@ -160,7 +163,6 @@ SolidChild::SolidChild
 // ============================================================================
 SolidChild::~SolidChild()
 { 
-  reset(); 
   if( 0 != m_sc_solid  ){ delete m_sc_solid ; m_sc_solid  = 0; } 
   if( 0 != m_sc_matrix ){ delete m_sc_matrix; m_sc_matrix = 0; } 
 };

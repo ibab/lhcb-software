@@ -1,4 +1,4 @@
-// $Id: SolidBase.cpp,v 1.9 2002-11-21 15:40:04 sponce Exp $
+// $Id: SolidBase.cpp,v 1.10 2003-05-16 13:59:13 ibelyaev Exp $
 
 // CLHEP
 #include "CLHEP/Units/SystemOfUnits.h"
@@ -45,7 +45,8 @@ SolidBase::SolidBase( const std::string& Name )
 // ============================================================================
 SolidBase::~SolidBase() 
 { 
-  reset() ; 
+  if( 0 != m_cover && this != m_cover ) { delete m_cover ; }
+  m_cover = 0 ;
   // release message service
   m_services->release();
 };

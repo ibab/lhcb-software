@@ -1,4 +1,4 @@
-// $Id: SolidPolycone.cpp,v 1.6 2003-04-04 15:54:08 ibelyaev Exp $
+// $Id: SolidPolycone.cpp,v 1.7 2003-05-16 13:59:14 ibelyaev Exp $
 // ============================================================================
 #include "DetDesc/SolidPolycone.h"
 // CLHEP
@@ -70,7 +70,7 @@ SolidPolycone::SolidPolycone( const std::string&             Name          ,
 // ============================================================================
 /// destructor 
 // ============================================================================
-SolidPolycone::~SolidPolycone() { reset(); };
+SolidPolycone::~SolidPolycone() {};
 
 // ============================================================================
 /** set parameters for bounding solids (box, sphere and cylinder)

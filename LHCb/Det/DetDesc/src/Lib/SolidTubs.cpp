@@ -1,8 +1,11 @@
-// $Id: SolidTubs.cpp,v 1.10 2003-04-04 15:54:08 ibelyaev Exp $ 
+// $Id: SolidTubs.cpp,v 1.11 2003-05-16 13:59:14 ibelyaev Exp $ 
 // ============================================================================
 // CVStag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.10  2003/04/04 15:54:08  ibelyaev
+//  remove bugs from 'setBP' method
+//
 // Revision 1.9  2003/04/03 10:56:37  ibelyaev
 //  fix the problems with  evaluation of xmin/xmax/ymin/ymax
 //
@@ -204,7 +207,7 @@ SolidTubs::SolidTubs( const std::string& name )
 // ============================================================================
 /// destructor 
 // ============================================================================
-SolidTubs::~SolidTubs() { reset(); };
+SolidTubs::~SolidTubs() {};
 
 // ============================================================================
 /** - check for the given 3D-point. 

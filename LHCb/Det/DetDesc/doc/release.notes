@@ -1,9 +1,12 @@
 ! =============================================================================
-! $Id: release.notes,v 1.141 2003-04-25 08:52:24 sponce Exp $ 
+! $Id: release.notes,v 1.142 2003-05-16 13:59:12 ibelyaev Exp $ 
 ! =============================================================================
 ! package DetDesc
 ! package manager : N.N 
 ! =============================================================================
+
+! 2003-05-14 - Vanya BELYAEV 
+ - src/Lib/Solid*.cpp  - remove call for virtual method reset() from destructors
 
 ! 2003-04-25 - Sebastien Ponce
  - fixes after valgrind tests

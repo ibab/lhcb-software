@@ -1,8 +1,11 @@
-// $Id: SolidCons.cpp,v 1.12 2003-04-04 15:54:07 ibelyaev Exp $ 
+// $Id: SolidCons.cpp,v 1.13 2003-05-16 13:59:14 ibelyaev Exp $ 
 // ===========================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ===========================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.12  2003/04/04 15:54:07  ibelyaev
+//  remove bugs from 'setBP' method
+//
 // Revision 1.11  2003/04/03 10:56:36  ibelyaev
 //  fix the problems with  evaluation of xmin/xmax/ymin/ymax
 //
@@ -109,7 +112,7 @@ SolidCons::SolidCons( const std::string & name  ,
 // ============================================================================
 /// destructor 
 // ============================================================================
-SolidCons::~SolidCons() { reset(); };
+SolidCons::~SolidCons() {};
 
 // ============================================================================
 /** set parameters for bounding solids (box, sphere and cylinder)
