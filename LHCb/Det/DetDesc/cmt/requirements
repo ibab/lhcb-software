@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.53 2003-04-23 10:06:48 sponce Exp $ 
+# $Id: requirements,v 1.54 2003-04-23 14:07:45 sponce Exp $ 
 # =============================================================================
 package       DetDesc
 version       v12r0
@@ -12,7 +12,6 @@ include_dirs  $(DETDESCROOT)
 # =========== dependencies ====================================================
 use           GaudiKernel       v13r*
 use           CLHEP             v*
-use           XERCES            v*
 
 # =========== constituents =====================================================
 library       DetDescLib        Lib/*.cpp

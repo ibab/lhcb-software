@@ -1,15 +1,4 @@
-// $Id: DetDesc_load.cpp,v 1.12 2003-01-17 14:03:40 sponce Exp $
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $
-// ============================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.11  2002/05/26 10:47:14  ibelyaev
-//  remove checks/tests and update requiements
-//
-// Revision 1.10  2002/05/04 13:13:25  ibelyaev
-//  see $DETDESCROOT/doc/release.notes ( 4 May 2002 )
-//
-// ============================================================================
+// $Id: DetDesc_load.cpp,v 1.13 2003-04-23 14:07:45 sponce Exp $
 // Include files
 #include "GaudiKernel/ObjectFactory.h"
 #include "GaudiKernel/DeclareFactoryEntries.h"
@@ -60,20 +49,7 @@ IMPLEMENT_OBJECT( TabulatedProperty ) ;
 DECLARE_FACTORY_ENTRIES(DetDesc) {
   
   // services  
-  DECLARE_SERVICE(   XmlCnvSvc               ) ;
   DECLARE_SERVICE(   TransportSvc            ) ;
-  DECLARE_SERVICE(   XmlParserSvc            ) ;
-  
-  // converters  
-  DECLARE_CONVERTER( XmlCatalogCnv           ) ;
-  DECLARE_CONVERTER( XmlConditionCnv         ) ;
-  DECLARE_CONVERTER( XmlDetectorElementCnv   ) ;
-  DECLARE_CONVERTER( XmlLVolumeCnv           ) ;
-  DECLARE_CONVERTER( XmlIsotopeCnv           ) ;
-  DECLARE_CONVERTER( XmlElementCnv           ) ;
-  DECLARE_CONVERTER( XmlMixtureCnv           ) ;
-  DECLARE_CONVERTER( XmlTabulatedPropertyCnv ) ;
-  DECLARE_CONVERTER( XmlSurfaceCnv           ) ;
   
   // data objects 
   DECLARE_OBJECT(    LVolume                 ) ;

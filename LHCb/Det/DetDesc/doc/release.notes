@@ -1,9 +1,15 @@
 ! =============================================================================
-! $Id: release.notes,v 1.139 2003-04-23 10:06:48 sponce Exp $ 
+! $Id: release.notes,v 1.140 2003-04-23 14:07:45 sponce Exp $ 
 ! =============================================================================
 ! package DetDesc
 ! package manager : N.N 
 ! =============================================================================
+
+! 2003-04-23 - Sebastien Ponce
+ - yet a new restructuration : DetDesc was split into three parts : Det/DetDesc
+   itself containing the geometry description, Det/DetDescCnv containing the
+   DetDesc converters and Tools/XmlTools containing the XmlParserSvc and the
+   XmlCnvSvc. No change in functionnality.
 
 ! 2003-04-23 - Sebastien Ponce
  - restructuration of the DetectorElement and condition objects in order to

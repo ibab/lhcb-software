@@ -1,21 +1,4 @@
-// $Id: LVolume.h,v 1.17 2001-11-20 15:22:20 sponce Exp $ 
-// ===========================================================================
-// CVS tag $Name: not supported by cvs2svn $ 
-// ===========================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.16  2001/11/18 15:32:44  ibelyaev
-//  update for Logical Assemblies
-//
-// Revision 1.15  2001/08/24 12:06:13  ibelyaev
-//  changes to take into account Assembly Volumes
-//
-// Revision 1.14  2001/08/13 09:51:35  ibelyaev
-// bug fix in 'reset' method
-//
-// Revision 1.13  2001/08/09 16:47:57  ibelyaev
-// update in interfaces and redesign of solids
-// 
-// ===========================================================================
+// $Id: LVolume.h,v 1.18 2003-04-23 14:07:44 sponce Exp $ 
 #ifndef     DETDESC_VOLUMES_LVOLUME_H
 #define     DETDESC_VOLUMES_LVOLUME_H
 
