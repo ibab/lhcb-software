@@ -1,4 +1,4 @@
-// $Id: ChargedProtoPAlg.cpp,v 1.13 2003-06-02 11:14:26 gcorti Exp $
+// $Id: ChargedProtoPAlg.cpp,v 1.14 2003-06-18 12:25:05 gcorti Exp $
 // Include files 
 #include <memory>
 
@@ -472,6 +472,7 @@ StatusCode ChargedProtoPAlg::execute() {
     chprotos->insert(proto);
 
   }
+  delete combDLL;
   
   if( 0 == countProto[TrackProto] ) {
     m_errorCount["8. No Tracks for physics"] += 1;

@@ -4,6 +4,11 @@
 ! Purpose     : Holds final reconstruction code
 !-----------------------------------------------------------------------------
 
+!===================== GlobalReco v4r0p1 2003-06-18 =========================
+! 2003-06-17 - Gloria CORTI
+ - src/ChargedProtoPAlg.cpp
+   . fix memory leak by deleting helper object in execute
+
 !===================== GlobalReco v4r0 2003-06-03 ===========================
 ! 2003-06-02 - Gloria CORTI
  - src/ChargedProtoPAlg.cpp
