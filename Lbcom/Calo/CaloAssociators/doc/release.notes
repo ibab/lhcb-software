@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.6 2002-06-15 11:03:43 ibelyaev Exp $
+! $Id: release.notes,v 1.7 2002-06-16 10:48:02 ibelyaev Exp $
 ! =============================================================================
 ! CVS tag $Name: not supported by cvs2svn $
 ! =============================================================================
@@ -6,6 +6,9 @@
 ! =============================================================================
 ! Responsible : Ivan Belyaev
 ! =============================================================================
+
+! 2002-06-16 - Ivan Belyaev
+ - update the options file to make "complex" MC links algoritm default 
 
 ! 2002-06-15 - Ivan Belyaev
  - version update (to use CaloDet v5r* )

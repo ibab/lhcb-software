@@ -1,8 +1,11 @@
-// $Id: CCs2MCPs.opts,v 1.3 2002-06-14 18:01:27 ibelyaev Exp $ 
+// $Id: CCs2MCPs.opts,v 1.4 2002-06-16 10:48:02 ibelyaev Exp $ 
 // ============================================================================
 // CVS tag $Nam:$
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.3  2002/06/14 18:01:27  ibelyaev
+//  update the options
+//
 // Revision 1.2  2002/06/13 12:28:47  ibelyaev
 //  new options and new algorithm
 //
@@ -20,13 +23,13 @@
  *  <ul>
  *  <li> 
  *  <tt> ToolSvc.CCs2MCPs.AlgorithmType = "CaloClustersMCTruthAlg" </tt>
- *  Association of @p CaloCluster with ALL Monte Carlo particles which 
+ *  Association of @p CaloCluster with ALL Monte Carlo Particles which 
  *  either have contribution to the cluster more than some threshodl value 
  *  or their daughter particle has similar contribution
  *  </li> 
  *  <li> 
  *  <tt> ToolSvc.CCs2MCPs.AlgorithmType = "CaloClustersMCTruth2Alg" </tt> 
- *  Association of @p CaloCluster with ALL Monte Carlo particles which 
+ *  Association of @p CaloCluster with ALL Monte Carlo Particles which 
  *  have the largest contribution to the cluster 
  *  </li>
  *  </ul>
@@ -37,7 +40,7 @@
 // ============================================================================
 
 ToolSvc.CCs2MCPs.Location      = "Rec/Relations/CaloClusters2MCParticles" ;
-ToolSvc.CCs2MCPs.AlgorithmType = "CaloClustersMCTruth2Alg"                ;
+ToolSvc.CCs2MCPs.AlgorithmType = "CaloClustersMCTruthAlg"                 ;
 ToolSvc.CCs2MCPs.AlgorithmName = "CCs2MCPs"                               ; 
 
 CCs2MCPs.Input                 = "Rec/Calo/EcalCelAutoClusters"           ; 
