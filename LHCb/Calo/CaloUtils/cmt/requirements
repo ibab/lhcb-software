@@ -1,23 +1,14 @@
-# $Id: requirements,v 1.15 2002-11-13 20:43:36 ibelyaev Exp $
+# $Id: requirements,v 1.16 2002-12-01 14:21:21 ibelyaev Exp $
 # =============================================================================
 # CVS tag $Name: not supported by cvs2svn $
 # =============================================================================
 # $Log: not supported by cvs2svn $
-# Revision 1.14  2002/10/03 10:25:48  cattanem
-# fix buggy usage of abs()
-#
-# Revision 1.13  2002/07/18 13:30:04  ibelyaev
-#  use newer CaloEvent package
-#
-# Revision 1.12  2002/06/15 10:43:51  ibelyaev
-#  version update
-#
 # =============================================================================
 # Created    : 02/11/2001
 # Maintainer : Vanya Belyaev Ivan.Belyaev@itep.ru
 # =============================================================================
 package             CaloUtils
-version             v4r3
+version             v4r4
 
 # ================= structure =================================================
 branches            cmt doc src CaloUtils
