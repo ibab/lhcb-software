@@ -1,10 +1,10 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/DetDesc/XmlUserDetElemCnv.h,v 1.1 2001-05-14 15:13:37 sponce Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/DetDesc/XmlUserDetElemCnv.h,v 1.2 2001-05-17 13:26:48 sponce Exp $
 
 #ifndef DDEXAMPLE_XMLUSERDETELEMCNV_H
 #define DDEXAMPLE_XMLUSERDETELEMCNV_H 1
 
 // Include files
-#include "DetDesc/XmlDetectorElementCnv.h"
+#include "DetDesc/XmlBaseDetElemCnv.h"
 #include "GaudiKernel/MsgStream.h"
 
 // These two includes are not needed here but are needed inside children
@@ -20,12 +20,12 @@
  * Every actual specific convertor for DetectorElement should inherit from this
  * one. It basically provides the i_createObj, classID methods plus a
  * constructor and a destructor. The only thing to do in order to implement
- * an actual specific converter is thus to implement the second i_fillSpecificObj
- * method.
+ * an actual specific converter is thus to implement the second
+ * i_fillSpecificObj method.
  *
  * @author Sebastien Ponce
  */
-template <class DeType> class XmlUserDetElemCnv : public XmlDetectorElementCnv {
+template <class DeType> class XmlUserDetElemCnv : public XmlBaseDetElemCnv {
   
   /// The type of this object
   typedef XmlUserDetElemCnv<DeType> MyType;
@@ -65,7 +65,7 @@ template <class DeType> class XmlUserDetElemCnv : public XmlDetectorElementCnv {
                                   DataObject*& refpObject);  
 
   /** This fills the current object for specific child.
-   * This is a very general method reimplemented from XmlDetectorElementCnv.
+   * This is a very general method reimplemented from XmlBaseDetElemCnv.
    * It basically calls the other i_fillSpecificObj after casting the
    * current object to its real type.
    * @param childElement the specific child processed here
@@ -93,7 +93,7 @@ template <class DeType> class XmlUserDetElemCnv : public XmlDetectorElementCnv {
 // ------------------------------------------------------------------------
 template <class DeType>
 XmlUserDetElemCnv<DeType>::XmlUserDetElemCnv (ISvcLocator* svc)
-  : XmlDetectorElementCnv (svc, DeType::classID()) {
+  : XmlBaseDetElemCnv (svc, DeType::classID()) {
 } // end constructor
 
 

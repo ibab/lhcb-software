@@ -1,7 +1,7 @@
-///  $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/DetDesc/XmlDetectorElementCnv.h,v 1.3 2001-05-14 15:13:37 sponce Exp $
+///  $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/DetDesc/XmlBaseDetElemCnv.h,v 1.1 2001-05-17 13:26:48 sponce Exp $
 
-#ifndef DETDESC_XMLCNVSVC_XMLDECNV_H
-#define DETDESC_XMLCNVSVC_XMLDECNV_H
+#ifndef DETDESC_XMLDETELEMCNV_H
+#define DETDESC_XMLDETELEMCNV_H
 
 /// Include files
 #include "DetDesc/XmlGenericCnv.h"
@@ -11,11 +11,11 @@
 
 /// Forward and external declarations
 class     ISvcLocator;
-class     XmlDetectorElementCnv;
+class     XmlBaseDetElemCnv;
 template <class TYPE> class CnvFactory;
 
 
-/** @class XmlDetectorElementCnv XmlDetectorElementCnv.h DetDesc/XmlDetectorElementCnv.h
+/** @class XmlBaseDetElemCnv XmlBaseDetElemCnv.h DetDesc/XmlBaseDetElemCnv.h
  *
  * Generic XML converter for DetectorElements. It provides support for basic
  * DetectorElements and should be the ancester of every specific DetectorElement
@@ -25,11 +25,8 @@ template <class TYPE> class CnvFactory;
  * @author Radovan Chytracek
  * @author Pere Mato
  */
-class XmlDetectorElementCnv : public XmlGenericCnv {
+class XmlBaseDetElemCnv : public XmlGenericCnv {
 
-  /// Friend needed for instantiation
-  friend class CnvFactory<XmlDetectorElementCnv>;
-  
 public:
   
   /**
@@ -50,19 +47,19 @@ protected:
    * Constructor for this converter
    * @param svcs a ISvcLocator interface to find services
    */
-  XmlDetectorElementCnv(ISvcLocator* svcs);
+  XmlBaseDetElemCnv(ISvcLocator* svcs);
 
   /**
    * Constructor for this converter
    * @param svcs a ISvcLocator interface to find services
    * @param clsID the type of object the converter is able to convert
    */
-  XmlDetectorElementCnv(ISvcLocator* svc, const CLID& clsID );
+  XmlBaseDetElemCnv(ISvcLocator* svc, const CLID& clsID );
 
   /**
    * Default destructor
    */
-  virtual ~XmlDetectorElementCnv() {}
+  virtual ~XmlBaseDetElemCnv() {}
 
   /** Creates the transient representation of an object from a DOM_Element.
    * Overrides the default method in XmlGenericCnv
@@ -92,7 +89,7 @@ protected:
    * @return status depending on the completion of the call
    */
   virtual StatusCode i_fillSpecificObj (DOM_Element childElement,
-                                        DetectorElement* refpObject);
+                                        DetectorElement* refpObject) = 0;
 
   /**
    * This method checks that a converter exists for a given clID
@@ -109,5 +106,5 @@ protected:
   
 };
 
-#endif // DETDESC_XMLDECNV_H
+#endif // DETDESC_XMLDETELEMCNV_H
 

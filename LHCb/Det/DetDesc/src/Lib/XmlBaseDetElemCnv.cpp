@@ -1,4 +1,4 @@
-//  $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/Lib/XmlDetectorElementCnv.cpp,v 1.1 2001-05-14 15:13:41 sponce Exp $
+//  $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/Lib/XmlBaseDetElemCnv.cpp,v 1.1 2001-05-17 13:26:52 sponce Exp $
 
 // include files
 #include <cstdlib>
@@ -6,7 +6,7 @@
 #include <string>
 #include <vector>
 
-#include "GaudiKernel/CnvFactory.h"
+//#include "GaudiKernel/CnvFactory.h"
 #include "GaudiKernel/GenericAddress.h"
 #include "GaudiKernel/GenericLink.h"
 #include "GaudiKernel/ICnvManager.h"
@@ -21,22 +21,14 @@
 #include "DetDesc/XmlCnvSvc.h"
 #include "DetDesc/XmlCnvAttrList.h"
 #include "DetDesc/XmlCnvException.h"
-#include "DetDesc/XmlDetectorElementCnv.h"
-
-
-// -----------------------------------------------------------------------
-// Instantiation of a static factory class used by clients to create
-// instances of this service
-// -----------------------------------------------------------------------
-static CnvFactory<XmlDetectorElementCnv> s_factory;
-const ICnvFactory& XmlDetectorElementCnvFactory = s_factory;
+#include "DetDesc/XmlBaseDetElemCnv.h"
 
 
 // -----------------------------------------------------------------------
 // Constructor
 // ------------------------------------------------------------------------
-XmlDetectorElementCnv::XmlDetectorElementCnv (ISvcLocator* svc) :
-  XmlGenericCnv (svc, XmlDetectorElementCnv::classID()) {
+XmlBaseDetElemCnv::XmlBaseDetElemCnv (ISvcLocator* svc) :
+  XmlGenericCnv (svc, XmlBaseDetElemCnv::classID()) {
   m_doGenericCnv = false;
 }
 
@@ -44,7 +36,7 @@ XmlDetectorElementCnv::XmlDetectorElementCnv (ISvcLocator* svc) :
 // -----------------------------------------------------------------------
 // Constructor
 // ------------------------------------------------------------------------
-XmlDetectorElementCnv::XmlDetectorElementCnv (ISvcLocator* svc,
+XmlBaseDetElemCnv::XmlBaseDetElemCnv (ISvcLocator* svc,
                                               const CLID& clsID ) :
   XmlGenericCnv (svc, clsID) {
   m_doGenericCnv = false;
@@ -54,7 +46,7 @@ XmlDetectorElementCnv::XmlDetectorElementCnv (ISvcLocator* svc,
 // -----------------------------------------------------------------------
 // Initialize the converter
 // -----------------------------------------------------------------------
-StatusCode XmlDetectorElementCnv::initialize() {
+StatusCode XmlBaseDetElemCnv::initialize() {
   StatusCode sc = XmlGenericCnv::initialize();
   if (sc.isSuccess()) {
     MsgStream log (msgSvc(), "XmlDetElemCnv");
@@ -77,7 +69,7 @@ StatusCode XmlDetectorElementCnv::initialize() {
 // -----------------------------------------------------------------------
 // Create an object corresponding to a DOM element
 // -----------------------------------------------------------------------
-StatusCode XmlDetectorElementCnv::i_createObj (DOM_Element element,
+StatusCode XmlBaseDetElemCnv::i_createObj (DOM_Element element,
                                                DataObject*& refpObject) {
   MsgStream log(msgSvc(), "XmlDetElemCnv" );
   
@@ -94,7 +86,7 @@ StatusCode XmlDetectorElementCnv::i_createObj (DOM_Element element,
 // -----------------------------------------------------------------------
 // Fill an object with a new child element
 // -----------------------------------------------------------------------
-StatusCode XmlDetectorElementCnv::i_fillObj (DOM_Element childElement,
+StatusCode XmlBaseDetElemCnv::i_fillObj (DOM_Element childElement,
                                              DataObject* refpObject) {
   MsgStream log(msgSvc(), "XmlDetElemCnv" );
 
@@ -255,21 +247,9 @@ StatusCode XmlDetectorElementCnv::i_fillObj (DOM_Element childElement,
 
 
 // -----------------------------------------------------------------------
-// Fill an object with a new specific child
-// -----------------------------------------------------------------------
-StatusCode
-XmlDetectorElementCnv::i_fillSpecificObj (DOM_Element childElement,
-                                          DetectorElement* refpObject) {
-  // default implementation : ignore child
-  return StatusCode::SUCCESS;
-} // end i_fillObj
-
-
-
-// -----------------------------------------------------------------------
 // Check the existence of a converter
 // -----------------------------------------------------------------------
-bool XmlDetectorElementCnv::checkConverterExistence (const CLID& clsID) {
+bool XmlBaseDetElemCnv::checkConverterExistence (const CLID& clsID) {
   MsgStream log(msgSvc(), "XmlDetElemCnv" );
   // Checking the other incoming guys according to our DTD!
   bool cnvExists;
@@ -304,7 +284,7 @@ bool XmlDetectorElementCnv::checkConverterExistence (const CLID& clsID) {
 // -----------------------------------------------------------------------
 // Accessor to the classID
 // -----------------------------------------------------------------------
-const CLID& XmlDetectorElementCnv::classID() {
+const CLID& XmlBaseDetElemCnv::classID() {
   return CLID_DetectorElement;
 }
 

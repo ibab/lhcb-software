@@ -3,6 +3,12 @@ package manager : N.N
 
 !===========================================================================
 ! 20010510 - Sebastien Ponce
+ - Created XmlBaseDetElem in order to distinguish between the base class of
+ all detector elements converters and the converter for basic detector elements.
+ - As a consequence, moved back XmlDetectorElementCnv to the component library.
+
+!===========================================================================
+! 20010510 - Sebastien Ponce
  - This is a complete reimplementation of the xml converters. The underlying
  technology is now DOM while it was SAX. THIS HAS INFLUENCE ON THE USER
  CODE that will need to be updated. THIS IS NON BACKWARD COMPATIBLE.
