@@ -1,6 +1,11 @@
-! $Id: release.notes,v 1.10 2002-07-25 14:25:34 cattanem Exp $
+! $Id: release.notes,v 1.11 2002-08-05 13:00:24 dhcroft Exp $
 ! Package     : MuonID
 ! Responsible : David Hutchcroft
+
+! 2002-08-05 - David Hutchcroft
+ - Changes to read the XML via MuonTools to get number of chambers and 
+   size of pads.
+ - Changes to options files to read the number of stations to check in p bins  
 
 !========================= MuonID v2r0 2002-07-25 =========================
 ! 2002-07-19 - Marco Cattaneo

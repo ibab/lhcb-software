@@ -1,4 +1,4 @@
-// $Id: MuonIDFOI.cpp,v 1.3 2002-07-05 08:58:13 dhcroft Exp $
+// $Id: MuonIDFOI.cpp,v 1.4 2002-08-05 13:00:24 dhcroft Exp $
 // Include files
 #include <cstdio>
 
@@ -49,8 +49,12 @@ MuonIDFOI::MuonIDFOI( const std::string& name,
   declareProperty("IDLocation",
                   m_MuonIDsPath = MuonIDLocation::Default);
 
-  // ID routine properties
+  // Pre-selection momentum
+  declareProperty( "PreSelMomentum", m_PreSelMomentum );
+
+  // Different depths of stations considered in different momentum ranges
   declareProperty( "MomentumCuts", m_MomentumCuts );
+  declareProperty( "MomentumDepth", m_MomentumDepth );
 
   // function that defines the field of interest size
   // formula is p(1) + p(2)*momentum + p(3)*exp(-p(4)*momentum)
@@ -83,57 +87,100 @@ StatusCode MuonIDFOI::initialize() {
 
   // get geometry tool
   StatusCode sc =
-    toolSvc()->retrieveTool("MuonTileIDXYZ", m_iTileTool, this );
+    toolSvc()->retrieveTool("MuonTileIDXYZ", m_iTileTool);
   if( sc.isFailure() ) {
     log << MSG::FATAL << "    Unable to create MuonTileIDToXYZ tool" << endreq;
     return sc;
   }
 
-  sc = toolSvc()->retrieveTool("MuonGeometryTool", m_iGeomTool, this );
+  sc = toolSvc()->retrieveTool("MuonGeometryTool", m_iGeomTool);
   if( sc.isFailure() ) {
     log << MSG::FATAL << "    Unable to create MuonGeometry tool" << endreq;
     return sc;
   }
 
+  sc = m_iGeomTool->nStation(m_NStation);
+  if(!sc){
+    return sc;
+  }
+  sc = m_iGeomTool->nRegion(m_NRegion);
+  if(!sc){
+    return sc;
+  }
+
+  // set the size of the local vectors
+  m_padSizeX.resize(m_NStation * m_NRegion);
+  m_padSizeY.resize(m_NStation * m_NRegion);
+  m_regionInnerX.resize(m_NStation * m_NRegion);
+  m_regionOuterX.resize(m_NStation * m_NRegion);
+  m_regionInnerY.resize(m_NStation * m_NRegion);
+  m_regionOuterY.resize(m_NStation * m_NRegion);
+
+  m_stationZ.resize(m_NStation);
+
+  m_xMatchStation = -1;
   // fill local arrays of pad sizes and region sizes
   int station,region;
-  for(station = 0 ; station < 5 ; station++ ){
-    for(region = 0 ; region < 4 ; region++ ){
-      m_iGeomTool->getPadSize(station,region,
-                              m_padSizeX[station][region],
-                              m_padSizeY[station][region]);
+  for(station = 0 ; station < m_NStation ; station++ ){
+    for(region = 0 ; region < m_NRegion ; region++ ){
+      sc = m_iGeomTool->getPadSize(station,region,
+                                   m_padSizeX[station * m_NRegion + region],
+                                   m_padSizeY[station * m_NRegion + region]);
+      if(!sc){
+        return sc;
+      }
 
       double dz; // do not bother to store
-      m_iGeomTool->getRegionBox(station,region,
-                                m_regionOuterX[station][region],
-                                m_regionInnerX[station][region],
-                                m_regionOuterY[station][region],
-                                m_regionInnerY[station][region],
-                                m_stationZ[station],dz);
+      sc = m_iGeomTool->getRegionBox(station,region,
+                                     m_regionOuterX[station*m_NRegion+region],
+                                     m_regionInnerX[station*m_NRegion+region],
+                                     m_regionOuterY[station*m_NRegion+region],
+                                     m_regionInnerY[station*m_NRegion+region],
+                                     m_stationZ[station],dz);
+      if(!sc){
+        return sc;
+      }
+      // need first station after 10m 
+      if(10000. < m_stationZ[station] && -1 == m_xMatchStation ){
+        m_xMatchStation = station;
+      }
     }
   }
 
-  if( m_MomentumCuts.size() != 3 || 
-      m_xfoiParam1.size() != 20 || m_xfoiParam2.size() != 20 ||
-      m_xfoiParam3.size() != 20 || m_xfoiParam4.size() != 20 ||
-      m_yfoiParam1.size() != 20 || m_yfoiParam2.size() != 20 ||
-      m_yfoiParam3.size() != 20 || m_yfoiParam4.size() != 20 ){
-    log << MSG::ERROR << "OPTIONS initialising MuonIDFOI are missing" 
+  if( m_MomentumCuts.empty() || 
+      m_xfoiParam1.size() != (unsigned)m_NStation*m_NRegion || 
+      m_xfoiParam2.size() != (unsigned)m_NStation*m_NRegion ||
+      m_xfoiParam3.size() != (unsigned)m_NStation*m_NRegion || 
+      m_xfoiParam4.size() != (unsigned)m_NStation*m_NRegion ||
+      m_yfoiParam1.size() != (unsigned)m_NStation*m_NRegion || 
+      m_yfoiParam2.size() != (unsigned)m_NStation*m_NRegion ||
+      m_yfoiParam3.size() != (unsigned)m_NStation*m_NRegion || 
+      m_yfoiParam4.size() != (unsigned)m_NStation*m_NRegion ){
+    log << MSG::ERROR << "OPTIONS initialising MuonIDFOI are missing"
+        << " or wrong size for " << m_NStation << " stations and " 
+        << m_NRegion << " regions"
+        << endreq;
+    return StatusCode::FAILURE;
+  }
+  
+  if( m_MomentumCuts.size() != m_MomentumDepth.size() ){
+    log << MSG::ERROR 
+        << "OPTIONS are wrong:"
+        << " size of MomentumCuts and MomentumDepth vector do not match" 
         << endreq;
     return StatusCode::FAILURE;
   }
 
-  log << MSG::DEBUG << " Momenyum bins are (MeV/c)" ;
+  log << MSG::DEBUG << " Momentum bins are (MeV/c) " << m_PreSelMomentum;
   std::vector<double>::const_iterator iMom;
   for(iMom = m_MomentumCuts.begin() ; iMom != m_MomentumCuts.end() ; iMom++){
     log << " " << *iMom ;
   }
   log << endreq;
-
-
+  
   log << MSG::DEBUG << " FOI at 10 GeV/c is ";
-  for(station = 0; station < 5; station++){
-    for(region = 0; region < 4; region++){
+  for(station = 0; station < m_NStation; station++){
+    for(region = 0; region < m_NStation; region++){
       log << "M" << station+1 << "R" << region+1;
       log << " x=" << this->foiX(station,region,10000.0);
       log << " y=" << this->foiY(station,region,10000.0);
@@ -141,8 +188,6 @@ StatusCode MuonIDFOI::initialize() {
     }
   }
   log << endreq;
-
-  clearCoordVectors(); // should not do anything really
 
   return StatusCode::SUCCESS;
 };
@@ -177,7 +222,6 @@ StatusCode MuonIDFOI::execute() {
     if((*iTrack)->unique()  && 
        ((*iTrack)->forward() || (*iTrack)->match() || (*iTrack)->upstream())){
 
-      resetTrackLocals();
       // do the track extrapolations
       StatusCode sc = trackExtrapolate(*iTrack);
       
@@ -224,8 +268,10 @@ StatusCode MuonIDFOI::finalize() {
 // fill vectors of x,y,z positions for the MuonCoords
 StatusCode MuonIDFOI::fillCoordVectors(){
 
+  clearCoordVectors(); // sets up Coord vectors of vectors
+
   int station;
-  for(station = 0 ; station < 5 ; station++){
+  for(station = 0 ; station < m_NStation ; station++){
     // get the MuonCoords for each station in turn
     std::string stationPattern = MuonCoordLocation::MuonCoords;
     char stationPath[100];
@@ -252,7 +298,8 @@ StatusCode MuonIDFOI::fillCoordVectors(){
         return sc;
       }
       
-      m_coordPos[station][region].push_back(coordExtent_(x,dx,y,dy,*iCoord));
+      m_coordPos[station*m_NRegion+region].
+        push_back(coordExtent_(x,dx,y,dy,*iCoord));
     }
   }
 
@@ -261,14 +308,8 @@ StatusCode MuonIDFOI::fillCoordVectors(){
 
 // Clear the coord vector
 void MuonIDFOI::clearCoordVectors(){
-  int station;
-  for(station = 0 ; station < 5 ; station++){
-    int region;
-    for(region = 0 ; region < 4 ; region++){
-      
-      m_coordPos[station][region].clear();
-    }
-  }
+  m_coordPos.clear();
+  m_coordPos.resize(m_NStation * m_NRegion);
 }
 
 // Do the identification
@@ -296,31 +337,44 @@ StatusCode MuonIDFOI::doID(MuonID *pMuid){
   }
 
   // apply ID: depends on the track momentum
+  // changed here to allow variable numbers of stations: only 4 or 5 for now
   pMuid->setIsMuon(0);
-  if ( m_Momentum < m_MomentumCuts[1] ) {
-    // test M1, M2 and M3
-    if ( m_occupancy[0] > 0 && m_occupancy[1] > 0 && m_occupancy[2] >0 ) {
-      // Have a muon
-      pMuid->setIsMuon(1);
-    }
-  } else if ( m_Momentum < m_MomentumCuts[2] ) {
-    if (  m_occupancy[0] > 0 && m_occupancy[1] > 0 && m_occupancy[2] >0  &&
-          m_occupancy[3] > 0) {
-      // Have a muon
-      pMuid->setIsMuon(1);
-    }
-  } else {
-    if ( m_occupancy[0] > 0 && m_occupancy[1] > 0 && m_occupancy[2] >0  &&
-         m_occupancy[3] > 0 && m_occupancy[4] > 0) {
-      pMuid->setIsMuon(1);
+
+  // find the momentum bin we are in
+  int momentumBin = 0;
+  while( (unsigned) momentumBin < m_MomentumCuts.size() && 
+         m_Momentum > m_MomentumCuts[momentumBin] ){
+    momentumBin++;
+  }
+  int lastStation;
+  if( (unsigned)momentumBin == m_MomentumCuts.size()){
+    lastStation = m_NStation;
+  }else{
+    lastStation = m_MomentumDepth[momentumBin];
+    if(lastStation > m_NStation){
+      log << MSG::ERROR << "Error in the MomentumDepth property" 
+          << endreq;
+      return StatusCode::FAILURE;
     }
   }
+
+  // check all stations up to lastStation have a hit
+  bool isMuon=true;
+  int station;
+  for( station = 0 ; station < lastStation ; station++ ) {
+    if ( m_occupancy[station] == 0 ){
+      isMuon = false;
+    }
+  }
+  pMuid->setIsMuon(isMuon);
 
   // if found a muon make a probability from the DxDz matching
   if(pMuid->IsMuon()){
     // find slope difference between track and Coords in M2-M3
-    double coordSlopeX = ((m_CoordX[2] - m_CoordX[1])/
-                          (m_stationZ[2] - m_stationZ[1]));
+    double coordSlopeX = ((m_CoordX[m_xMatchStation] - 
+                           m_CoordX[m_xMatchStation+1])/
+                          (m_stationZ[m_xMatchStation] - 
+                           m_stationZ[m_xMatchStation+1]));
     double dSlopeX = fabs( m_trackSlopeX - coordSlopeX );
 
     // formular to make this a probability is 
@@ -341,10 +395,11 @@ StatusCode MuonIDFOI::doID(MuonID *pMuid){
 
   log << MSG::DEBUG << "ID Prob = " << pMuid->MuProb() 
       << " p = " << m_Momentum << "  "
-      << " coord in FOI ("
-      << m_occupancy[0] << ","  << m_occupancy[1] << "," 
-      << m_occupancy[2] << ","  << m_occupancy[3] << "," 
-      << m_occupancy[4] << ")" << endreq;
+      << " coord in FOI (";
+  for(station = 0; station < m_NStation ; station++ ){
+    log << m_occupancy[station] << "," ;
+  }
+  log << ")" << endreq;
  
   return StatusCode::SUCCESS;
 }
@@ -361,10 +416,13 @@ StatusCode MuonIDFOI::preSelection(MuonID * pMuid, bool &passed){
   }else{
     pMuid->setPreSelMomentum(1);
   }
-  if(  ! (fabs(m_trackX[0]) <  m_regionOuterX[0][3] && 
-          fabs(m_trackY[0]) <  m_regionOuterY[0][3] )  ||  //M1 acceptance
-       ! (fabs(m_trackX[4]) <  m_regionOuterX[4][3] &&
-          fabs(m_trackY[4]) <  m_regionOuterY[4][3] ) //M5 acceptance
+  // in first and last station acceptance
+  if(  ! (fabs(m_trackX[0]) <  m_regionOuterX[m_NRegion-1] && 
+          fabs(m_trackY[0]) <  m_regionOuterY[m_NRegion-1] )  ||  
+       ! (fabs(m_trackX[m_NStation-1]) < 
+          m_regionOuterX[(m_NStation-1)*m_NRegion + m_NRegion-1] &&
+          fabs(m_trackY[m_NStation-1]) <  
+          m_regionOuterY[(m_NStation-1)*m_NRegion + m_NRegion-1] ) 
        ) {
     // outside M1 - M5 region
     pMuid->setInAcceptance(0);
@@ -380,17 +438,17 @@ StatusCode MuonIDFOI::preSelection(MuonID * pMuid, bool &passed){
 StatusCode MuonIDFOI::setCoords(MuonID *pMuid){
 
   int station;
-  for(station = 0 ; station < 5 ; station++){
+  for(station = 0 ; station < m_NStation ; station++){
     int region;
-    for(region = 0 ; region < 4 ; region++){
+    for(region = 0 ; region < m_NRegion ; region++){
 
-      if( 0 < m_coordPos[station][region].size()){
+      if( !m_coordPos[station*m_NRegion + region].empty() ){
         double foiXDim = foiX( station, region, m_Momentum);
         double foiYDim = foiY( station, region, m_Momentum);      
         
         std::vector<coordExtent_>::const_iterator itPos;
-        for(itPos = m_coordPos[station][region].begin();
-            itPos != m_coordPos[station][region].end();
+        for(itPos = m_coordPos[station*m_NRegion + region].begin();
+            itPos != m_coordPos[station*m_NRegion + region].end();
             itPos++){
 
           double x = itPos->m_x;
@@ -428,33 +486,15 @@ StatusCode MuonIDFOI::setCoords(MuonID *pMuid){
 
 StatusCode MuonIDFOI::trackExtrapolate(TrStoredTrack *pTrack){
 
+  resetTrackLocals();
+
   // get state closest to M1
-  //  TrStateP *stateP =
-  //  dynamic_cast<TrStateP*>(pTrack->closestState(m_stationZ[0]));
-  // above is "correct" version, need to put back when available
-  const TrStateP *stateP;
-  double minDZ = -1.;
-  SmartRefVector<TrState>::const_iterator iState;
-  for(iState = pTrack->states().begin() ; 
-      iState != pTrack->states().end() ; 
-      iState++){
-    const TrState *state = *iState;
-    if(!state){
-      MsgStream log(msgSvc(), name());
-      log << MSG::ERROR << " Failed to get state from track " << endreq;
-      return StatusCode::FAILURE;
-    }
-    const TrStateP *currentStateP = dynamic_cast<const TrStateP*>(state);
-    if(!currentStateP){
-      MsgStream log(msgSvc(), name());
-      log << MSG::ERROR << " Failed to get stateP from track " << endreq;
-      return StatusCode::FAILURE;
-    }
-    double DZ = fabs(currentStateP->z() - m_stationZ[0]);
-    if(0 > minDZ || DZ < minDZ){
-      minDZ = DZ;
-      stateP = currentStateP;
-    }
+  const TrStateP *stateP =
+    dynamic_cast<const TrStateP*>(pTrack->closestState(m_stationZ[0]));
+  if(!stateP){
+    MsgStream log(msgSvc(), name());
+    log << MSG::ERROR << " Failed to get stateP from track " << endreq;
+    return StatusCode::FAILURE;
   }
 
   // get the momentum (MeV/c)
@@ -465,12 +505,12 @@ StatusCode MuonIDFOI::trackExtrapolate(TrStoredTrack *pTrack){
 
   // Project the state into the muon stations
   int station;
-  for(station = 0; station < 5 ; station++){
+  for(station = 0; station < m_NStation ; station++){
     // x(z') = x(z) + (dx/dz * (z' - z))
-    m_trackX[station] = stateP->x() + ( stateP->tx() *
-                                        (m_stationZ[station] - stateP->z()) );
-    m_trackY[station] = stateP->y() + ( stateP->ty() *
-                                        (m_stationZ[station] - stateP->z()) );
+    m_trackX.push_back(stateP->x() + ( stateP->tx() *
+                                       (m_stationZ[station] - stateP->z()) ));
+    m_trackY.push_back(stateP->y() + ( stateP->ty() *
+                                       (m_stationZ[station] - stateP->z()) ));
   }
 
   return StatusCode::SUCCESS;
@@ -478,30 +518,29 @@ StatusCode MuonIDFOI::trackExtrapolate(TrStoredTrack *pTrack){
 
 // return the FOI in x in a station and region for momentum (in MeV/c)
 double MuonIDFOI::foiX(const int &station, const int &region, const double &p){
-  return ( m_xfoiParam1[ station * 4 + region ] +
-           m_xfoiParam2[ station * 4 + region ]*p/1000. +
-           m_xfoiParam3[ station * 4 + region ]*
-      exp(-m_xfoiParam4[ station * 4 + region ]*p/1000. ) )
-    *m_padSizeX[station][region];
+  return ( m_xfoiParam1[ station * m_NRegion + region ] +
+           m_xfoiParam2[ station * m_NRegion + region ]*p/1000. +
+           m_xfoiParam3[ station * m_NRegion + region ]*
+      exp(-m_xfoiParam4[ station * m_NRegion + region ]*p/1000. ) )
+    *m_padSizeX[station * m_NRegion + region];
 }
 
 // return the FOI in y in a station and region for momentum (in MeV/c)
 double MuonIDFOI::foiY(const int &station, const int &region, const double &p){
-  return ( m_yfoiParam1[ station * 4 + region ] +
-           m_yfoiParam2[ station * 4 + region ]*p/1000. +
-           m_yfoiParam3[ station * 4 + region ]*
-      exp(-m_yfoiParam4[ station * 4 + region ]*p/1000. ) )
-    *m_padSizeY[station][region];
+  return ( m_yfoiParam1[ station * m_NRegion + region ] +
+           m_yfoiParam2[ station * m_NRegion  + region ]*p/1000. +
+           m_yfoiParam3[ station * m_NRegion + region ]*
+      exp(-m_yfoiParam4[ station * m_NRegion + region ]*p/1000. ) )
+    *m_padSizeY[station * m_NRegion + region];
 }
 
 void MuonIDFOI::resetTrackLocals(){
   m_Momentum = -1.;
   m_trackSlopeX = 0.;
-  int station;
-  for(station=0 ; station < 5 ; station++){
-    m_trackX[station] = 0.;
-    m_trackY[station] = 0.;
-    m_occupancy[station] = 0;
-    m_CoordX[station] = 0.;
-  }
+  m_trackX.clear();
+  m_trackY.clear();
+  m_occupancy.clear();
+  m_CoordX.clear();  
+  m_occupancy.resize(m_NStation,0);
+  m_CoordX.resize(m_NStation,0.);
 }
