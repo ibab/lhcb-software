@@ -1,7 +1,14 @@
-! $Id: release.notes,v 1.61 2005-01-18 08:25:05 pkoppenb Exp $
+! $Id: release.notes,v 1.62 2005-02-02 09:49:13 pkoppenb Exp $
+!===================================================================================
 ! Package     : DaVinciAssociators
 ! Responsible : Philippe Charpentier
+!===================================================================================
 
+! 2005-02-01 - P. Koppenburg
+ - src/Particle2MCLinks.cpp
+   . < myLink = LinkedTo<MCParticle>( evtSvc(), msgSvc(), TrgTrackLocation::Long );
+     > myLink = LinkedTo<MCParticle>( evtSvc(), msgSvc(), TrgTrackLocation::Particle );
+     Allows to use VTT TrgTracks also for association.
 !========================== DaVinciAssociators v5r2p2 2005-01-18 ===================
 ! 2005-01-12 - P. Koppenburg
  - actually remove the obsolete files!
