@@ -1,8 +1,11 @@
-// $Id: ICaloClusterSelector.h,v 1.1 2002-04-02 11:08:12 ibelyaev Exp $
+// $Id: ICaloClusterSelector.h,v 1.2 2002-04-26 13:26:18 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
-// $Log: not supported by cvs2svn $ 
+// $Log: not supported by cvs2svn $
+// Revision 1.1  2002/04/02 11:08:12  ibelyaev
+//  new interfaces
+// 
 // ============================================================================
 #ifndef CALOINTERFACES_ICALOCLUSTERSELECTOR_H 
 #define CALOINTERFACES_ICALOCLUSTERSELECTOR_H 1
@@ -15,9 +18,6 @@
 #include "CaloInterfaces/IIDICaloClusterSelector.h"
 // forward declaration
 class     CaloCluster     ;    // from CaloEvent/Event
-namespace CaloHypotheses { 
-  class Hypothesis ; 
-};    // From LHCbKernel
 
 /** @class ICaloClusterSelector ICaloClusterSelector.h
  *  

@@ -1,9 +1,14 @@
-! $Id: release.notes,v 1.5 2002-04-22 08:17:15 cattanem Exp $
+! $Id: release.notes,v 1.6 2002-04-26 13:26:18 ibelyaev Exp $
 ! =============================================================================
 ! CVS tag $Name: not supported by cvs2svn $ 
 ! =============================================================================
 ! Package     : CaloInterfaces  
 ! Responsible : Vanya Belyaev Ivan.Belyaev@itep.ru
+! =============================================================================
+
+! =============================================================================
+! 26/04/2002 Vanya Belyaev  
+! - ICaloLikelihood.h remove forward declaration of CaloHypotheses::Hypothesis 
 ! =============================================================================
 
 ! >>>>>>>>>>>>>>>>>>>>>>>> CaloInterfaces v2r0 <<<<<<<<<<<<<<<<<<<<<<<
