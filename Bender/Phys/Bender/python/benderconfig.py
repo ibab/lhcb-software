@@ -139,7 +139,6 @@ def _histofile_( self , name , persistency = None ) :
     hsvc.OutputFile = name 
     if not persistency : pass
     else : _g.HistogramPersistency = persistency
-    print ' qqq 4 ' 
     return gaudimodule.SUCCESS
 
 gaudimodule.AppMgr.histoSvc             = gaudimodule.AppMgr.histSvc
@@ -151,8 +150,19 @@ gaudimodule.AppMgr.nTupleSvc            = gaudimodule.AppMgr.ntupleSvc
 gaudimodule.AppMgr.nTupSvc              = gaudimodule.AppMgr.ntupleSvc  
 gaudimodule.AppMgr.ntupSvc              = gaudimodule.AppMgr.ntupleSvc  
 
+# for 'backward compatibility'
+def config( **args ) :
+    """
+    The method is provided for the backward
+    compatibility with Bender vesions < v4r2
+    """
+    appMgr = gaudimodule.AppMgr()
+    return appMgr.config( **args )
 # =============================================================================
-# $Log: not supported by cvs2svn $ 
+
+
+# =============================================================================
+# $Log: not supported by cvs2svn $
 # =============================================================================
 # The END 
 # =============================================================================
