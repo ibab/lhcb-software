@@ -125,6 +125,7 @@ MCITDepositCreator.spillTimes  = { 0., -25., -50. };
 DigiITSeq.Members += { "STL1ClustersToL1BufferAlg/createTTL1Buffer" };
 DigiITSeq.Members += { "ITClusterCreator/dcSim" };
 DigiITSeq.Members += { "STMCDigitsLinker/stLinker" };
+stLinker.clustersLocation = "/Event/Raw/IT/dcDigits";
 DigiITSeq.Members += { "STDAQInitialization" };
 DigiITSeq.Members += { "STClustersToRawBufferAlg/createTTRawBuffer" };
 DigiITSeq.Members += { "STClustersToRawBufferAlg/createITRawBuffer" };
