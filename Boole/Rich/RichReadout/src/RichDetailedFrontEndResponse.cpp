@@ -74,8 +74,9 @@ StatusCode RichDetailedFrontEndResponse::execute()
             << " MCRichSummedDeposits at " << m_mcRichSummedDepositsLocation << endreq;
   }
 
-  // Process the hits
+  // Clear time sample cache
   tscache.clear();
+  tscache.reserve( m_summedDeposits->size() );
 
   // Run analog sim
   const StatusCode sc = Analog();
@@ -108,7 +109,11 @@ StatusCode RichDetailedFrontEndResponse::Analog()
     {
 
       // Create time sample for this summed deposit
-      RichTimeSample ts(readOut->FrameSize(),readOut->BaseLine());
+      //RichTimeSample ts(readOut->FrameSize(),readOut->BaseLine());
+      tscache.push_back( TimeData( *iSumDep, 
+                                   RichTimeSample( readOut->FrameSize(),
+                                                   readOut->BaseLine() ) ) );
+      RichTimeSample & ts = tscache.back().second;
 
       // Retrieve vector of SmartRefs to contributing deposits (non-const)
       SmartRefVector<MCRichDeposit>& deposits = (*iSumDep)->deposits();
@@ -133,7 +138,7 @@ StatusCode RichDetailedFrontEndResponse::Analog()
           // Shift time ( Rich2 value correlated to -40 in RichSignal algorithm.... )
           const double shiftTime = ( Rich::Rich1 == (*iDep)->parentHit()->rich() ? 18 : 7 );
 
-          // locked into peakTime - hardwired hack
+          // origin time
           double binTime = shiftTime - binZero; 
 
           // dead region
@@ -153,7 +158,7 @@ StatusCode RichDetailedFrontEndResponse::Analog()
 
       } // MCRichDeposit loop
 
-      tscache.insert( samplecache_t::value_type( *iSumDep, ts ) );
+      //tscache.insert( samplecache_t::value_type( *iSumDep, ts ) );
 
     } // if shape
 

@@ -62,7 +62,9 @@ public:
   virtual StatusCode finalize();
   virtual StatusCode execute();
 
-  typedef RichMap< MCRichSummedDeposit*, RichTimeSample > samplecache_t;
+  //typedef RichMap< MCRichSummedDeposit*, RichTimeSample > samplecache_t;
+  typedef std::pair< MCRichSummedDeposit*, RichTimeSample > TimeData;
+  typedef std::vector< TimeData > samplecache_t;
 
 private: // methods
 

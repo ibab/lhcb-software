@@ -11,13 +11,13 @@ class RichTimeSample {
 
 public:
 
-  RichTimeSample( const int isize, 
-                  const double value )
+  RichTimeSample( const int isize    = 25, 
+                  const double value = 50 )
     : TimeFrame ( isize, value ) { }
 
-  ~RichTimeSample(){};
+  ~RichTimeSample(){}
 
-  inline void insert(const unsigned int i, const double value)
+  inline void insert( const unsigned int i, const double value )
   {
     TimeFrame[i] = value;
   }
