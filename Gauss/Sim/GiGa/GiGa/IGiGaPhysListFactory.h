@@ -1,17 +1,16 @@
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Sim/GiGa/GiGa/IGiGaPhysListFactory.h,v 1.2 2001-03-18 16:04:27 ibelyaev Exp $ 
 #ifndef    GIGA_IGiGaPhysListFACTORY_H
 #define    GIGA_IGiGaPhysListFACTORY_H 1 
-
-
+// STL 
 #include <string>
-
+// GaudiKernel
 #include "GaudiKernel/IFactory.h"
-
+// GiGa 
 #include "GiGa/IIDIGiGaPhysListFactory.h"
-
-
+//
 class ISvcLocator;
 class IGiGaPhysList;
-
+// 
 
 /** @class IGiGaPhysListFactory     IGiGaPhysListFactory.h GiGa/IGiGaPhysListFactory.h
 

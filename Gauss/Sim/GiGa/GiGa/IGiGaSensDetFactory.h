@@ -1,16 +1,14 @@
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Sim/GiGa/GiGa/IGiGaSensDetFactory.h,v 1.2 2001-03-18 16:04:28 ibelyaev Exp $ 
 #ifndef     GIGA_IGiGaSensDetFACTORY_H
 #define     GIGA_IGiGaSensDetFACTORY_H 1
-
-
 // 
 #include "GaudiKernel/IFactory.h"
-
+//
 #include "GiGa/IIDIGiGaSensDetFactory.h"
-
-
+//
 class ISvcLocator;
 class IGiGaSensDet;
-
+//
 
 /** @class IGiGaSensDetFactory IGiGaSensDetFactory.h GiGa/IGiGaSensDetFactory.h
     

@@ -1,5 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Sim/GiGa/src/GiGaStepActionDraw.cpp,v 1.1 2001-03-18 14:56:15 ibelyaev Exp $ 
-//
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Sim/GiGa/src/GiGaStepActionDraw.cpp,v 1.2 2001-03-18 16:04:28 ibelyaev Exp $ 
 #include "G4Step.hh"
 //
 #include "G4VVisManager.hh"
@@ -42,11 +41,12 @@ void GiGaStepActionDraw::UserSteppingAction( const G4Step* step )
       G4double charge = step->GetTrack()->GetDefinition()->GetPDGCharge();
       ///
       G4Colour colour = 
-	charge < 0.0 ? G4Colour( 1, 0 , 0 ) : 
-	charge > 0.0 ? G4Colour( 0, 0 , 1 ) : G4Colour( 0 , 1 , 0 ) ;
+	( charge < 0.0 ) ? G4Colour( 1. , 0. , 0. ) : 
+	( charge > 0.0 ) ? G4Colour( 0. , 0. , 1. ) : G4Colour( 0. , 1. , 0. ) ;
       ///
       G4Polyline polyline;
-      polyline.SetVisAttributes( G4VisAttributes( colour ) );
+      G4VisAttributes attribs( colour );
+      polyline.SetVisAttributes( attribs );
       polyline.append( step->GetPreStepPoint  ()->GetPosition () );
       polyline.append( step->GetPostStepPoint ()->GetPosition () );
       /// 
@@ -56,5 +56,8 @@ void GiGaStepActionDraw::UserSteppingAction( const G4Step* step )
   ///
 };
 /////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+
 
 

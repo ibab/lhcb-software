@@ -1,16 +1,16 @@
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Sim/GiGa/GiGa/IGiGaMagFieldFactory.h,v 1.2 2001-03-18 16:04:27 ibelyaev Exp $ 
 #ifndef    GIGA_IGIGAMagFieldFACTORY_H
 #define    GIGA_IGIGAMagFieldFACTORY_H 1 
-
-
+//
 #include <string>
-
+// 
 #include "GaudiKernel/IFactory.h"
-
+//
 #include "GiGa/IIDIGiGaMagFieldFactory.h"
-
-
+//
 class ISvcLocator;
 class IGiGaMagField;
+// 
 
 
 /** @class IGiGaMagFieldFactory     IGiGaMagFieldFactory.h GiGa/IGiGaMagFieldFactory.h

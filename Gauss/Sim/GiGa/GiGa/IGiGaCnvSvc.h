@@ -1,16 +1,17 @@
-#ifndef           __GIGA_CONVERSION_IGIGACNVSVC_H__ 
-#define           __GIGA_CONVERSION_IGIGACNVSVC_H__  1 
-
-
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Sim/GiGa/GiGa/IGiGaCnvSvc.h,v 1.7 2001-03-18 16:04:27 ibelyaev Exp $ 
+#ifndef           GIGA_IGIGACNVSVC_H 
+#define           GIGA_IGIGACNVSVC_H  1 
+// STL 
 #include <vector> 
+// GaudiKernel
 #include "GaudiKernel/IConversionSvc.h" 
-
-
+//
+#include "GiGa/IIDIGiGaCnvSvc.h"
+//
 class IGiGaSvc;
 class IGiGaSetUpSvc;
 class IParticlePropertySvc;
-
-#include "GiGa/IIDIGiGaCnvSvc.h"
+//
 
 /** @class IGiGaCnvSvc     IGiGaCnvSvc.h GiGa/IGiGaCnvSvc.h
 

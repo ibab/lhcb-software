@@ -246,26 +246,26 @@ StatusCode GiGaBase::setProperties()
   return StatusCode::SUCCESS;
 };
 /// Print message and return status code //////////////////////////////////////////////////////
-StatusCode GiGaBase::Error( const std::string& Message , const StatusCode & Status ) const 
+StatusCode GiGaBase::Error( const std::string& Message , 
+			    const StatusCode & Status ) const 
 {
   Stat stat( chronoSvc() , name()+":Error" ); 
-  MsgStream log( msgSvc() , name() ); 
-  log << MSG::ERROR << System::typeinfoName( typeid( *this ) ) << " " << Message << endreq ; 
-  return  Status;
+  return Print( Message , Status , MSG::ERROR ); 
 };  
 /// Print message and return status code ///////////////////////////////////////////////////
-StatusCode GiGaBase::Warning( const std::string& Message , const StatusCode & Status ) const 
+StatusCode GiGaBase::Warning( const std::string& Message , 
+			      const StatusCode & Status ) const 
 {
   Stat stat( chronoSvc() , name()+":Warning" ); 
-  MsgStream log( msgSvc() , name() ); 
-  log << MSG::WARNING << System::typeinfoName( typeid( *this ) ) << " " << Message << endreq ; 
-  return  Status;
+  return  Print( Message , Status , MSG::WARNING );
 };  
 /// Print message and return status code ///////////////////////////////////////////////////
-StatusCode GiGaBase::Print( const std::string& Message , const StatusCode & Status ) const 
+StatusCode GiGaBase::Print( const std::string& Message , 
+			    const StatusCode & Status  , 
+			    const MSG::Level & level   ) const 
 {
   MsgStream log( msgSvc() , name() ); 
-  log << MSG::INFO << System::typeinfoName( typeid( *this ) ) << " " <<Message << endreq ; 
+  log << level << System::typeinfoName( typeid( *this ) ) << " " <<Message << endreq ; 
   return  Status;
 };  
 /////////////////////////////////////////////////////////////////////////////////////

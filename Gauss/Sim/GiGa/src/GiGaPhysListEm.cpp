@@ -1,3 +1,5 @@
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Sim/GiGa/src/GiGaPhysListEm.cpp,v 1.6 2001-03-18 16:04:28 ibelyaev Exp $
+
 // GaudiKernel
 #include "GaudiKernel/PropertyMgr.h"
 // GiGa
@@ -17,19 +19,16 @@
 #include "GiGaPhysListEm.h"
 
 
-/// factory
-static const GiGaPhysListFactory<GiGaPhysListEm>             s_GiGaPhysListEmFactory;
-const       IGiGaPhysListFactory&    GiGaPhysListEmFactory = s_GiGaPhysListEmFactory;
-      
-
-/// constructor 
+/// factory ///////////////////////////////////////////////////////////////////////
+static const GiGaPhysListFactory<GiGaPhysListEm>          s_GiGaPhysListEmFactory;
+const       IGiGaPhysListFactory& GiGaPhysListEmFactory = s_GiGaPhysListEmFactory;
+/// constructor ///////////////////////////////////////////////////////////////////
 GiGaPhysListEm::GiGaPhysListEm( const std::string& nick , ISvcLocator* loc ) 
   : GiGaPhysListBase( nick , loc )
 {};
-/// destructor 
-GiGaPhysListEm::~GiGaPhysListEm()
-{};
-//////////////////////////////////////////////////////////////////
+/// destructor ////////////////////////////////////////////////////////////////////
+GiGaPhysListEm::~GiGaPhysListEm(){};
+///////////////////////////////////////////////////////////////////////////////////
 void GiGaPhysListEm::ConstructParticle()
 {
   // In this method, static member functions should be called

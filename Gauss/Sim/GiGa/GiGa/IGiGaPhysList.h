@@ -1,15 +1,13 @@
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Sim/GiGa/GiGa/IGiGaPhysList.h,v 1.2 2001-03-18 16:04:27 ibelyaev Exp $ 
 #ifndef        GIGA_IGiGaPhysList_H
 #define        GIGA_IGiGaPhysList_H 1 
-
-
-
+// GaudiKernel
 #include "GaudiKernel/IInterface.h"
-
-
+// Geant4 
 #include "G4VUserPhysicsList.hh"
-
+// GiGa 
 #include "GiGa/IIDIGiGaPhysList.h"
-
+// 
 
 /** @class IGiGaPhysList            IGiGaPhysList.h GiGa/IGiGaPhysList.h
 

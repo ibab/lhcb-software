@@ -1,15 +1,16 @@
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Sim/GiGa/GiGa/GiGaMagFieldFactory.h,v 1.3 2001-03-18 16:04:27 ibelyaev Exp $ 
 #ifndef    GIGA_GIGAMagFieldFACTORY_H
 #define    GIGA_GIGAMagFieldFACTORY_H 1 
-
-
+//
 #include "GaudiKernel/Bootstrap.h"
 #include "GaudiKernel/System.h"
 #include "GaudiKernel/FactoryTable.h"
 #include "GaudiKernel/IInterface.h"
 #include "GaudiKernel/ISvcLocator.h"
-
-///
+//
 #include "GiGa/IGiGaMagFieldFactory.h" 
+//
+
 
 /** @class GiGaMagFieldFactory     GiGaMagFieldFactory.h GiGa/GiGaMagFieldFactory.h
     
@@ -17,7 +18,6 @@
     
     @author Vanya Belyaev
 */
-
 
 template <class ConcreteMagField>
 class GiGaMagFieldFactory: public IGiGaMagFieldFactory

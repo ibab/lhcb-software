@@ -1,18 +1,15 @@
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Sim/GiGa/GiGa/IGiGaMagField.h,v 1.3 2001-03-18 16:04:27 ibelyaev Exp $ 
 #ifndef     GIGA_IGIGAMagField_H
 #define     GIGA_IGIGAMagField_H 1 
-
-///
+//
 #include <string>
-
-///
+//
 #include "GaudiKernel/IInterface.h"
-
-/// from G4 
+// from G4 
 #include "G4MagneticField.hh"
-
-///
+//
 #include "GiGa/IIDIGiGaMagField.h" 
-
+// 
 
 /** @class IGiGaMagField     IGiGaMagField.h GiGa/IGiGaMagField.h
 

@@ -1,22 +1,15 @@
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Sim/GiGa/GiGa/IGiGaSensDet.h,v 1.2 2001-03-18 16:04:27 ibelyaev Exp $ 
 #ifndef    GIGA_IGiGaSensDet_H
 #define    GIGA_IGiGaSensDet_H 1 
-
-/// from STL
+// from STL
 #include <string> 
-
-/// base classes from GaudiKernel  
+// base classes from GaudiKernel  
 #include "GaudiKernel/IInterface.h"
-
-/// base class from Geant4 
+// base class from Geant4 
 #include "G4VSensitiveDetector.hh" 
-
-
-/// unique IID 
+// unique IID 
 #include "GiGa/IIDIGiGaSensDet.h"
-
-///
-///
-///
+// 
 
 /** @class IGiGaSensDet IGiGaSensDet.h GiGa/IGiGaSensDet.h
 

@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Sim/GiGa/src/GiGaStackActionEmpty.cpp,v 1.3 2001-03-18 14:56:15 ibelyaev Exp $ 
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Sim/GiGa/src/GiGaStackActionEmpty.cpp,v 1.4 2001-03-18 16:04:28 ibelyaev Exp $ 
 
 //
 #include "G4Step.hh"
@@ -30,11 +30,14 @@ StatusCode GiGaStackActionEmpty::finalize   () { return GiGaStackActionBase::ini
 /////////////////////////////////////////////////////////////////////////////////////////////////
 G4ClassificationOfNewTrack GiGaStackActionEmpty::ClassifyNewTrack ( const G4Track* /* track */ )
 { 
-  Print("ClassifyNewTrack method in invoked") ;
+  Print("ClassifyNewTrack method in invoked", StatusCode::SUCCESS , MSG::DEBUG ) ;
   return fUrgent; 
 };
 ////////////////////////////////////////////////////////////////////////////////////////////////
-void GiGaStackActionEmpty::NewStage         (){ Print("New Stage method in invoked"       ) ; }; 
+void GiGaStackActionEmpty::NewStage         ()
+{ Print("New Stage method in invoked"       , StatusCode::SUCCESS , MSG::DEBUG ) ; }; 
 ////////////////////////////////////////////////////////////////////////////////////////////////
-void GiGaStackActionEmpty::PrepareNewEvent  (){ Print("PrepareNewEvent method is invoked" ) ; };
+void GiGaStackActionEmpty::PrepareNewEvent  ()
+{ Print("PrepareNewEvent method is invoked" , StatusCode::SUCCESS , MSG::DEBUG ) ; };
 ////////////////////////////////////////////////////////////////////////////////////////////////
+

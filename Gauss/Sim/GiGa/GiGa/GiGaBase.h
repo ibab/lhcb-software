@@ -112,11 +112,15 @@ protected:
   ///
 protected:
   ///  Print the error    message and return status code 
-  StatusCode Error     ( const std::string& Message , const StatusCode & Status  = StatusCode::FAILURE ) const ;  
+  StatusCode Error     ( const std::string& Message , 
+			 const StatusCode & Status  = StatusCode::FAILURE ) const ;  
   ///  Print the warning  message and return status code 
-  StatusCode Warning   ( const std::string& Message , const StatusCode & Status  = StatusCode::FAILURE ) const ;  
+  StatusCode Warning   ( const std::string& Message , 
+			 const StatusCode & Status  = StatusCode::FAILURE ) const ;  
   ///  Print the warning  message and return status code 
-  StatusCode Print     ( const std::string& Message , const StatusCode & Status  = StatusCode::FAILURE ) const ;  
+  StatusCode Print     ( const std::string& Message , 
+			 const StatusCode & Status  = StatusCode::FAILURE ,
+                         const MSG::Level & level   = MSG::INFO           ) const ;  
   ///
   StatusCode Exception ( const std::string    & msg                        ,  
                          const GaudiException & exc                        , 

@@ -1,16 +1,15 @@
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Sim/GiGa/GiGa/GiGaSensDetFactory.h,v 1.3 2001-03-18 16:04:27 ibelyaev Exp $ 
 #ifndef    GIGA_GiGaSensDetFACTORY_H
 #define    GIGA_GiGaSensDetFACTORY_H 1 
-
-
+//
 #include "GaudiKernel/Bootstrap.h"
 #include "GaudiKernel/System.h"
 #include "GaudiKernel/FactoryTable.h"
 #include "GaudiKernel/IInterface.h"
 #include "GaudiKernel/ISvcLocator.h"
-
-///
+//
 #include "GiGa/IGiGaSensDetFactory.h" 
-
+//
 
 
 /** @class GiGaSensDetFactory     GiGaSensDetFactory.h GiGa/GiGaSensDetFactory.h

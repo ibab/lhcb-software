@@ -1,28 +1,29 @@
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Sim/GiGa/GiGa/GiGaCnvBase.h,v 1.4 2001-03-18 16:04:27 ibelyaev Exp $ 
 #ifndef           GIGA_GIGACNVBASE_H 
 #define           GIGA_GIGACNVBASE_H  1 
-/// STL 
+// STL 
 #include <string> 
 #include <vector> 
 #include <exception> 
-/// Gaudi base type  
+// Gaudi base type  
 #include "GaudiKernel/Converter.h" 
 #include "GaudiKernel/MsgStream.h" 
-/// GiGa 
+// GiGa 
 #include "GiGa/IGiGaCnvSvc.h"
 #include "GiGa/IGiGaKineCnvSvc.h"
-///
+//
 class IDataProviderSvc     ;
 class IMessageSvc          ; 
 class IChronoStatSvc       ; 
 class IParticlePropertySvc ; 
 class IGiGaSvc             ;   
 class IGiGaSetUpSvc        ;
-///
+//
 class GaudiException       ; 
-///
+//
 class IGiGaGeomCnvSvc      ;
 class IGiGaHitsCnvSvc      ; 
-///
+//
 
 /** @class IGiGaStackAction IGiGaStackAction.h GiGa/IGiGaStackAction.h
 
