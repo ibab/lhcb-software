@@ -1,8 +1,13 @@
-! $Id: release.notes,v 1.20 2003-02-04 16:03:00 cattanem Exp $
+! $Id: release.notes,v 1.21 2003-02-11 11:48:44 ibelyaev Exp $
 ! Package     : Calo/CaloReco
 ! Responsible : Ivan Belyaev
 ! Purpose     : Main Package for Calorimeter Reconstruction Software 
 !-----------------------------------------------------------------------------
+
+! 2003-02-11 - Ivan BELYAEV
+ - src/CaloSingleGammaTool.cpp    - add protection against MergedPi0s, which have no 
+                                    CaloPoistion* field and reduce the debug printout 
+ - cmt/requirements               - increase the version number 
 
 !======================== CaloReco v1r3 2003-02-04 ========================
 

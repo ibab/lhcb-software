@@ -209,12 +209,23 @@ double CaloSingleGammaTool::likelyhood(const CaloHypo* hypo )  const
     //
     
     const CaloPosition *pos = hypo->position() ;
+    
+    // fix by V.B.  Many thanks to G.Corti . 
+    if( 0 == pos ) 
+      {
+        Warning(" likelyhood(): CaloPosition* points to NULL");
+        return lhood ;
+      }
+    
     const  HepPoint3D position (pos->x(),pos->y(),pos->z());
-    logbk<<MSG::DEBUG<<"cluster position: "
-	 <<pos->x()<<" "
-	 <<pos->y()<<" "
-	 <<pos->z()<<endreq;
-    logbk<<"m_Ecalz:"<<m_z<<endreq;
+
+    /**
+       logbk<<MSG::DEBUG<<"cluster position: "
+       <<pos->x()<<" "
+       <<pos->y()<<" "
+       <<pos->z()<<endreq;
+       logbk<<"m_Ecalz:"<<m_z<<endreq;
+    */
     
     double eSpd=0.;
     double ePrs=0.;
@@ -226,13 +237,14 @@ double CaloSingleGammaTool::likelyhood(const CaloHypo* hypo )  const
       
       newPoint  =  ( position - m_vertex );
       newPoint *=  ( m_zSpd + m_shiftSpd - m_vertex.z() ) /
-	( position.z() - m_vertex.z() );
+        ( position.z() - m_vertex.z() );
       newPoint +=  m_vertex ;
-      logbk<<MSG::DEBUG<<"Spd point: "
-           <<newPoint.x()<<" "
-           <<newPoint.y()<<" "
-           <<newPoint.z()<<endreq;
-      
+      /**
+         logbk<<MSG::DEBUG<<"Spd point: "
+         <<newPoint.x()<<" "
+         <<newPoint.y()<<" "
+         <<newPoint.z()<<endreq;
+      */
       const CaloCellID cellSpd = m_detSpd->Cell( newPoint );
       logbk<<MSG::DEBUG<<cellSpd<<endreq;
       
@@ -240,11 +252,12 @@ double CaloSingleGammaTool::likelyhood(const CaloHypo* hypo )  const
       newPoint *=  ( m_zPrs - m_vertex.z() ) /
 	( position.z() - m_vertex.z() );
       newPoint +=  m_vertex ;
-      logbk<<MSG::DEBUG<<"Prs point: "
-           <<newPoint.x()<<" "
-           <<newPoint.y()<<" "
-           <<newPoint.z()<<endreq;
-      
+      /**
+         logbk<<MSG::DEBUG<<"Prs point: "
+         <<newPoint.x()<<" "
+         <<newPoint.y()<<" "
+         <<newPoint.z()<<endreq;
+      */
       const CaloCellID cellPrs = m_detPrs->Cell( newPoint );
       logbk<<MSG::DEBUG<<cellPrs<<endreq;  
       
@@ -256,7 +269,7 @@ double CaloSingleGammaTool::likelyhood(const CaloHypo* hypo )  const
 	       digit != hypo->digits().end() ; digit++ ) {
 	    if ( (*digit)->cellID() == cellSpd ) {
 	      eSpd=(*digit)->e();
-	      logbk<<MSG::DEBUG<<"SPD digit energy:"<<eSpd<<endreq;
+        //   logbk<<MSG::DEBUG<<"SPD digit energy:"<<eSpd<<endreq;
 	    }
 	  }
 	}
@@ -268,7 +281,7 @@ double CaloSingleGammaTool::likelyhood(const CaloHypo* hypo )  const
 	       digit != hypo->digits().end() ; digit++ ) {
 	    if ( (*digit)->cellID() == cellPrs ) {
 	      ePrs=(*digit)->e();
-	      logbk<<MSG::DEBUG<<"Prs digit energy:"<<ePrs<<endreq;
+        //  logbk<<MSG::DEBUG<<"Prs digit energy:"<<ePrs<<endreq;
 	    }
 	  }
 	}
@@ -282,32 +295,40 @@ double CaloSingleGammaTool::likelyhood(const CaloHypo* hypo )  const
 	newPoint.setX(pos->x());
 	newPoint.setY(pos->y());
 	newPoint.setZ( m_zSpd + m_shiftSpd );
-	logbk<<MSG::DEBUG<<"Spd point: "
-	     <<newPoint.x()<<" "
-	     <<newPoint.y()<<" "
-	     <<newPoint.z()<<endreq;
-	
+
+  /**
+     logbk<<MSG::DEBUG<<"Spd point: "
+     <<newPoint.x()<<" "
+     <<newPoint.y()<<" "
+     <<newPoint.z()<<endreq;
+  */
+
 	const CaloCellID cellSpd = m_detSpd->Cell( newPoint );
 	logbk<<MSG::DEBUG<<cellSpd<<endreq;
 	
 	newPoint.setX(pos->x());
 	newPoint.setY(pos->y());
 	newPoint.setZ(m_zPrs);
-	logbk<<MSG::DEBUG<<"Prs point: "
-	     <<newPoint.x()<<" "
-	     <<newPoint.y()<<" "
-	     <<newPoint.z()<<endreq;
-	
+
+  /** 
+      logbk<<MSG::DEBUG<<"Prs point: "
+      <<newPoint.x()<<" "
+      <<newPoint.y()<<" "
+      <<newPoint.z()<<endreq;
+  */
+
 	const CaloCellID cellPrs = m_detPrs->Cell( newPoint );
-	logbk<<MSG::DEBUG<<cellPrs<<endreq;  
+
+  //	logbk<<MSG::DEBUG<<cellPrs<<endreq;  
+
 	if( CaloCellID() != cellSpd )  // valid cell! 
 	  {          
 	    for (SmartRefVector<CaloDigit>::const_iterator 
 		   digit=hypo->digits().begin() ;
 		 digit != hypo->digits().end() ; digit++ ) {
 	      if ( (*digit)->cellID() == cellSpd ) {
-		eSpd=(*digit)->e();
-		logbk<<MSG::DEBUG<<"SPD digit energy:"<<eSpd<<endreq;
+          eSpd=(*digit)->e();
+          //		logbk<<MSG::DEBUG<<"SPD digit energy:"<<eSpd<<endreq;
 	      }
 	    }
 	  }
@@ -319,25 +340,29 @@ double CaloSingleGammaTool::likelyhood(const CaloHypo* hypo )  const
 		 digit != hypo->digits().end() ; digit++ ) {
 	      if ( (*digit)->cellID() == cellPrs ) {
 		ePrs=(*digit)->e();
-		logbk<<MSG::DEBUG<<"Prs digit energy:"<<ePrs<<endreq;
+		// logbk<<MSG::DEBUG<<"Prs digit energy:"<<ePrs<<endreq;
 	      }
 	    }
 	  }
       }
     
-    logbk<<MSG::DEBUG<<"cluster E="<<cluster->e()
-	 <<" E[SPD]="<<eSpd
-	 <<" E[Prs]="<<ePrs
-	 <<endreq;
-    
+    /**
+       logbk<<MSG::DEBUG<<"cluster E="<<cluster->e()
+       <<" E[SPD]="<<eSpd
+       <<" E[Prs]="<<ePrs
+       <<endreq;
+    */
+
     if (eSpd<1.) lhood=ePrs ;
     if (eSpd>1.) lhood=-ePrs; 
 
   }
 
-  logbk<<MSG::DEBUG<<"PhotonId Likelyhood="
-       <<lhood<<endreq;
-  
+  /**
+     logbk<<MSG::DEBUG<<"PhotonId Likelyhood="
+     <<lhood<<endreq;
+  */
+
   return lhood;
   
 };
