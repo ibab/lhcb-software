@@ -4,7 +4,13 @@
 ! Purpose     : Implementation of the Linker package, to associate objects
 !-----------------------------------------------------------------------------
 
+!====================== LinkerEvent v1r6 2005-01-27 ==========================
 ! 2005-01-27 - Olivier Callot
+ - Add LinkerTool object. This is NOT a Gaudi Tool, but it has the
+   same usage as described in Vanya's note LHCb 2004-022, except the
+   declaration of the type, and the retrieval of the tool. The normal user just
+   need to include "Linker/LinkerTool.h"
+
  - Load the containers of SOURCE / TARGET only when needed in LinkedFrom,
    LinkedTo and AllLinks. This allows to use the relation between the SOURCE 
    key and the TARGET without loading the SOURCE container, useful for L1/HLT
