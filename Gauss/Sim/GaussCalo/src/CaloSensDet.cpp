@@ -1,8 +1,11 @@
-// $Id: CaloSensDet.cpp,v 1.15 2004-01-14 13:38:10 ranjard Exp $ 
+// $Id: CaloSensDet.cpp,v 1.16 2004-02-22 13:13:42 ibelyaev Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.15  2004/01/14 13:38:10  ranjard
+// v6r0 - fix to be used with Gaudi v14r0
+//
 // Revision 1.14  2003/10/17 13:59:34  ranjard
 // v4r2 - fix for geant4.5.2.ref04
 //
@@ -171,8 +174,7 @@ StatusCode CaloSensDet::initialize   ()
   collectionName.clear  () ;
   collectionName.insert ( m_collectionName );
   ///
-  if( 0 == detSvc() ) { return Error("detSvc() points to NULL!")       ; }
-  m_calo = get( detSvc() , m_caloName , m_calo );
+  m_calo = getDet<DeCalorimeter>(  m_caloName );
   if( 0 == m_calo   ) { return StatusCode::FAILURE                     ; }
   m_caloID   = CaloCellCode::CaloNumFromName( caloName()             ) ;
   if( 0 >  caloID() ) { return Error("Invalid detector name/number!" ) ; }  
@@ -324,7 +326,7 @@ void CaloSensDet::Initialize( G4HCofThisEvent* HCE )
  *  @param HCE pointer to hit collection of current event 
  */
 // ============================================================================
-void CaloSensDet::EndOfEvent( G4HCofThisEvent* HCE ) 
+void CaloSensDet::EndOfEvent( G4HCofThisEvent* /* HCE */ ) 
 {
   /// clear the map 
   m_hitmap.clear();
@@ -456,7 +458,7 @@ bool CaloSensDet::ProcessHits( G4Step* step                      ,
       //      m_table( path ) = cellID ;
       //    }
       //  if( CaloCellID() == cellID ) 
-      //    { Error ("Invalid cell is found") ;       return false ; }  // RETURN 
+      //    { Error ("Invalid cell is found") ;  return false ; }  // RETURN 
   
   // get the existing hit 
   CaloHit*&    hit = m_hitmap( cellID );                        // ATTENTION 

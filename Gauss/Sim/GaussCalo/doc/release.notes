@@ -9,7 +9,16 @@
 
 ! 2004-02-20 - Ivan BELYAEV
  - options/PGUN* remoe all obsolete files 
-
+ - src/CaloSensDet.cpp
+        fix compilation warnings 
+ - src/HcalSensDet.cpp
+        fix compilation warnings 
+ - src/GaussSensPlaneDet.cpp
+        fix compilation warnings 
+ - src/GaussSensPlaneHitCnv.cpp
+        fix compilation warnings 
+ - cmt/requirement 
+        increment the MAJOR version  -> v7r0 
 
 !========================= GaussCalo v6r0 =================================
 ! 2004-01-09 - Florence RANJARD

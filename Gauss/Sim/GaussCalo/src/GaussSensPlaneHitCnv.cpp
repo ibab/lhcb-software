@@ -1,8 +1,11 @@
-// $Id: GaussSensPlaneHitCnv.cpp,v 1.3 2004-01-14 13:38:10 ranjard Exp $
+// $Id: GaussSensPlaneHitCnv.cpp,v 1.4 2004-02-22 13:13:42 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.3  2004/01/14 13:38:10  ranjard
+// v6r0 - fix to be used with Gaudi v14r0
+//
 // Revision 1.2  2003/07/08 19:40:58  ibelyaev
 //  Sensitive Plane Detector + improved printout
 //
@@ -222,16 +225,16 @@ StatusCode GaussSensPlaneHitCnv::updateObj
       const HepLorentzVector& momentum = hit -> momentum () ;
       
       // get the MC particle of the hit 
-      const MCParticle* mcp = table( hit->trackID() ).particle() ;
+      const MCParticle* mcp = table( trackID ).particle() ;
       if( 0 == mcp ) { Warning( "MCParticle* points to NULL!" ) ; }
       
       // create new MC hit
       MCCaloSensPlaneHit* mchit = new MCCaloSensPlaneHit() ;                 
       // fill it 
-      mchit -> setParticle ( mcp                 ) ;
-      mchit -> setPosition ( hit -> position  () ) ;
-      mchit -> setMomentum ( hit -> momentum  () ) ;
-      mchit -> setType     ( hit -> pid().pid () ) ;
+      mchit -> setParticle ( mcp        ) ;
+      mchit -> setPosition ( position   ) ;
+      mchit -> setMomentum ( momentum   ) ;
+      mchit -> setType     ( pid.pid () ) ;
       // add hit to the container 
       hits->insert( mchit );
     } 

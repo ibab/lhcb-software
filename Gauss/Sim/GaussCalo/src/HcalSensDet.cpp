@@ -1,8 +1,11 @@
-// $Id: HcalSensDet.cpp,v 1.4 2004-01-14 13:38:10 ranjard Exp $ 
+// $Id: HcalSensDet.cpp,v 1.5 2004-02-22 13:13:42 ibelyaev Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.4  2004/01/14 13:38:10  ranjard
+// v6r0 - fix to be used with Gaudi v14r0
+//
 // Revision 1.3  2003/07/07 16:27:46  ibelyaev
 //  substitupe G4Material with G4MaterialCutsCouple
 //
@@ -106,7 +109,7 @@ HcalSensDet::HcalSensDet
 // ============================================================================
 StatusCode    HcalSensDet::fillHitInfo 
 ( CaloSubHit*                    hit           ,
-  const HepPoint3D&              prePoint      ,
+  const HepPoint3D&           /* prePoint */   ,
   const double                   time          , 
   const double                   deposit       ,
   const G4Track*                 track         , 

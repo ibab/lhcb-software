@@ -1,8 +1,11 @@
-// $Id: GaussSensPlaneDet.cpp,v 1.3 2004-01-14 13:38:10 ranjard Exp $ 
+// $Id: GaussSensPlaneDet.cpp,v 1.4 2004-02-22 13:13:42 ibelyaev Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.3  2004/01/14 13:38:10  ranjard
+// v6r0 - fix to be used with Gaudi v14r0
+//
 // Revision 1.2  2003/10/10 17:22:19  witoldp
 // changed message output level
 //
@@ -203,7 +206,7 @@ void GaussSensPlaneDet::Initialize( G4HCofThisEvent* HCE )
  *  @param HCE pointer to hit collection of current event 
  */
 // ============================================================================
-void GaussSensPlaneDet::EndOfEvent( G4HCofThisEvent* HCE ) 
+void GaussSensPlaneDet::EndOfEvent( G4HCofThisEvent* /* HCE */ ) 
 {
   if( !m_stat ) { return ; }                               // RETURN
     /// increase the counter of processed events
