@@ -1,5 +1,5 @@
 package           MuonAssociators
-version           v1r2
+version           v1r3
         
 # =============== structure =================================================== 
 branches          MuonAssociators src cmt doc 
