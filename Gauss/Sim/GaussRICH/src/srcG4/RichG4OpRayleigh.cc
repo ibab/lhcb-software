@@ -21,7 +21,7 @@
 // ********************************************************************
 //
 //
-// $Id: RichG4OpRayleigh.cc,v 1.5 2004-06-03 12:44:44 seaso Exp $
+// $Id: RichG4OpRayleigh.cc,v 1.6 2004-06-29 16:17:24 seaso Exp $
 // GEANT4 tag $Name: not supported by cvs2svn $
 //
 //
@@ -158,12 +158,19 @@ RichG4OpRayleigh::PostStepDoIt(const G4Track& aTrack, const G4Step& aStep)
   //          if((CurStepLen < 1.0 *mm)  ||( CurStepNum > 2000 ) ) {
 
   //            if( ( totEn > (4.0/eV)) || ( CurStepNum > 5000 )  ) {
-  if(CurStepNum > 5000   ) {
+  // The hardcoded limit below changed to a value from the options file. 
+  // the default for this value is still 5000.
+  // SE 29-6-04. 
+  // G4cout<<" Cur max step num in Rayleigh =  " 
+  //      << fRichMaxStepNumLimitInRayleigh<<G4endl;
+  
+  //  if(CurStepNum > 5000   ) {
+  if(CurStepNum >  fRichMaxStepNumLimitInRayleigh   ) {
 
     if(CosTheta < 0.0 ) {
 
-      G4cout<<" Optical Photon killed in Rayleigh after 5000 steps"
-            <<G4endl;
+      //      G4cout<<" Optical Photon killed in Rayleigh after    " 
+      //      <<CurStepNum <<"   steps" <<G4endl;
       aParticleChange.SetStatusChange(fStopAndKill);
       return G4VDiscreteProcess::PostStepDoIt(aTrack, aStep);
     }

@@ -21,7 +21,7 @@
 // ********************************************************************
 //
 //
-// $Id: RichG4OpRayleigh.hh,v 1.3 2004-06-03 12:44:44 seaso Exp $
+// $Id: RichG4OpRayleigh.hh,v 1.4 2004-06-29 16:17:24 seaso Exp $
 // GEANT4 tag $Name: not supported by cvs2svn $
 //
 // 
@@ -124,6 +124,11 @@ public: // With description
              {fRichVerboseInfoTag = aBVal;}
   
      //  The above are for verbose information tagging for Output. 
+
+        G4int GetRichMaxStepNumLimitInRayleigh() 
+       {    return fRichMaxStepNumLimitInRayleigh;}
+       void SetRichMaxStepNumLimitInRayleigh(G4int aStepNumLimit) 
+       {fRichMaxStepNumLimitInRayleigh = aStepNumLimit;}
     
 private:
 
@@ -141,6 +146,7 @@ private:
         ///////////////////////
 
        G4bool fRichVerboseInfoTag;
+        G4int fRichMaxStepNumLimitInRayleigh;
 
    
 protected:

@@ -24,11 +24,16 @@ GiGa.ModularPL.GiGaPhysConstructorOp.RichMaxPhotonsPerCherenkovStepInRich2Gas
 // (c) to write these extended info to output tape, in   GaussTape.opts
 //     uncomment the lines /Event/MC/Rich/OpticalPhotons#1, /Event/MC/Rich/Tracks#1
 //     /Event/MC/Rich/Segments#1
-// 
-// #include "$GAUSSRICHROOT/options/RichVerbose.opts"
-GetHits.RichOpticalPhotons = "";
-GetHits.RichSegments       = "";
-GetHits.RichTracks         = "";
+//
+// The following line is to limit max number of steps of a photon so that 
+// it does not make infinite loops by Rayleigh scattering in Aerogel.
+// The default is 5000. When the filter effect is switched off this can
+// be reduced to a smaller value to reduce the cpu time.
+//GiGa.ModularPL.GiGaPhysConstructorOp.RichMaxPhotonStepNumInRayleigh=1000;  
+#include "$GAUSSRICHROOT/options/RichVerbose.opts"
+//GetHits.RichOpticalPhotons = "";
+//GetHits.RichSegments       = "";
+//GetHits.RichTracks         = "";
 
 
 

@@ -50,7 +50,8 @@ GiGaPhysConstructorOp::GiGaPhysConstructorOp
     m_MaxPhotonsPerRichCherenkovStepInRich1Gas(40),
     m_MaxPhotonsPerRichCherenkovStepInRich2Gas(40),
     m_RichRadiatorMaterialName(std::vector<G4String> (3)),
-    m_RichRadiatorMaterialIndex(std::vector<G4int> (3))
+    m_RichRadiatorMaterialIndex(std::vector<G4int> (3)),
+    m_MaxAllowedPhotStepNumInRayleigh(5000)
 {
   // in the above 3 is for the three radiators.
 
@@ -66,6 +67,9 @@ GiGaPhysConstructorOp::GiGaPhysConstructorOp
                   m_MaxPhotonsPerRichCherenkovStepInRich1Gas);
   declareProperty("RichMaxPhotonsPerCherenkovStepInRich2Gas",
                   m_MaxPhotonsPerRichCherenkovStepInRich2Gas);
+  
+  declareProperty("RichMaxPhotonStepNumInRayleigh",
+                  m_MaxAllowedPhotStepNumInRayleigh);
   
 };
 // ============================================================================
@@ -260,7 +264,9 @@ void GiGaPhysConstructorOp::ConstructOp() {
   theBoundaryProcess->SetModel(themodel);
   theRayleighScatteringProcess->
    SetRichVerboseRayleighInfoTag( (G4bool) m_RichActivateVerboseProcessInfoTag);
-
+  theRayleighScatteringProcess->
+   SetRichMaxStepNumLimitInRayleigh((G4int) m_MaxAllowedPhotStepNumInRayleigh);
+  
 
   theParticleIterator->reset();
 

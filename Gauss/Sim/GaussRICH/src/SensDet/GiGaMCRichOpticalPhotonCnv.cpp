@@ -247,9 +247,9 @@ StatusCode GiGaMCRichOpticalPhotonCnv::updateObj ( IOpaqueAddress*  address ,
 
           // Rich detector information
           if ( g4hit->GetCurRichDetNum() < 0 ) {
-            mcPhoton->setRichInfoValid( false );
+            //            mcPhoton->setRichInfoValid( false );
           } else {
-            mcPhoton->setRichInfoValid( true );
+            //   mcPhoton->setRichInfoValid( true );
             mcPhoton->setRich(static_cast<Rich::DetectorType>(g4hit->GetCurRichDetNum()));
           }
 
@@ -258,9 +258,9 @@ StatusCode GiGaMCRichOpticalPhotonCnv::updateObj ( IOpaqueAddress*  address ,
 
           // Radiator information
           if ( g4hit->GetRadiatorNumber() < 0 ) {
-            mcPhoton->setRadiatorInfoValid( false );
+            //       mcPhoton->setRadiatorInfoValid( false );
           } else {
-            mcPhoton->setRadiatorInfoValid( true );
+            //   mcPhoton->setRadiatorInfoValid( true );
             mcPhoton->setRadiator(static_cast<Rich::RadiatorType>(g4hit->GetRadiatorNumber()));
           }
 
@@ -272,8 +272,10 @@ StatusCode GiGaMCRichOpticalPhotonCnv::updateObj ( IOpaqueAddress*  address ,
 
           // Overall background flag
           mcPhoton->setBackgroundHit( mcPhoton->chargedTrack() ||
-                                      mcPhoton->scatteredPhoton() ||
-                                      !mcPhoton->richInfoValid() );
+                                      mcPhoton->scatteredPhoton());
+          
+                                      //   ||
+//                                      !mcPhoton->richInfoValid() );
 
           // SmartRef to associated MCRichHit
           mcPhoton->setMcRichHit( mcHits->object(globalKey) );

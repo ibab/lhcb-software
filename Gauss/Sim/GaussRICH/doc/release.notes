@@ -4,7 +4,11 @@
 ! Responsible	     : Witold Pokorski
 ! Purpose          : collection of sensitive detectors, G4 actions, etc for RICH
 !-----------------------------------------------------------------------------
-
+! 2004-06-29 - Sajan Easo
+ - Add another option parameter in Rich.opts for the max number
+   of steps for optical photon to be used Rayleigh scattering.
+ - Fixed some compliation problems with convertor until the 
+    the Rich event package is updated.
 ! 2004-06-24 - Chris Jones
  - Update GiGa converters for MCRichHits and MCRichOpticalPhotons to 
    include more history information

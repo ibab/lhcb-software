@@ -74,6 +74,10 @@ public:
   {m_RichRadiatorMaterialIndex=aRichRadiatorMaterialIndex;}    
   std::vector<G4int> FindRichRadiatorMaterialIndices
   ( std::vector<G4String> aRadiatorMaterialNames);
+  int MaxAllowedPhotStepNumInRayleigh() 
+  {    return m_MaxAllowedPhotStepNumInRayleigh;}
+  void setMaxAllowedPhotStepNumInRayleigh(int aMaxRayleighLimit)
+  { m_MaxAllowedPhotStepNumInRayleigh=aMaxRayleighLimit;}
   
     
 private:
@@ -89,6 +93,7 @@ private:
   int m_MaxPhotonsPerRichCherenkovStepInRich2Gas;
   std::vector<G4String> m_RichRadiatorMaterialName;
   std::vector<G4int> m_RichRadiatorMaterialIndex;
+  int m_MaxAllowedPhotStepNumInRayleigh;
   
 };
 // ============================================================================
