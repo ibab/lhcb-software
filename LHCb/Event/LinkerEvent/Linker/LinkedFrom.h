@@ -1,4 +1,4 @@
-// $Id: LinkedFrom.h,v 1.6 2004-11-24 15:52:52 ocallot Exp $
+// $Id: LinkedFrom.h,v 1.7 2005-01-27 10:53:59 ocallot Exp $
 #ifndef LINKER_LINKEDFROM_H 
 #define LINKER_LINKEDFROM_H 1
 
@@ -25,8 +25,9 @@ public:
 
   /// Standard constructor
   LinkedFrom(  IDataProviderSvc* eventSvc,
-                   IMessageSvc* msgSvc,
-                   std::string containerName ) {
+               IMessageSvc* msgSvc,
+               std::string containerName ) {
+    m_eventSvc = eventSvc;
     std::string name = "Link/" + containerName;
     if ( "/Event/" == containerName.substr(0,7) ) {
       name = "Link/" + containerName.substr(7);
@@ -38,8 +39,6 @@ public:
         msg << MSG::ERROR << "*** Link container Link/" << name
             << " not found." << endreq;
       }
-    } else {
-      links->resolveLinks( eventSvc );
     }
     m_links = links;
     m_curReference.setNextIndex( -1 );
@@ -116,6 +115,11 @@ protected:
     if ( NULL == m_links ) return NULL;
     int myLinkID = m_curReference.srcLinkID();
     LinkManager::Link* link = m_links->linkMgr()->link( myLinkID );
+    if ( 0 == link->object() ) {
+      SmartDataPtr<DataObject> tmp( m_eventSvc, link->path() );
+      link->setObject( tmp );
+      if ( 0 == tmp ) return NULL;
+    }
     SOURCECONTAINER* parent = dynamic_cast< SOURCECONTAINER* >(link->object() );
     if ( 0 != parent ) {
       return parent->object( key );
@@ -124,6 +128,7 @@ protected:
   }  
 
 private:
+  IDataProviderSvc*                  m_eventSvc;
   LinksByKey*                        m_links;
   LinkReference                      m_curReference;
   std::vector<std::pair<int,int> >::const_iterator m_srcIterator;

@@ -1,4 +1,4 @@
-// $Id: LinksByKey.cpp,v 1.4 2004-05-18 11:44:18 ocallot Exp $
+// $Id: LinksByKey.cpp,v 1.5 2005-01-27 10:53:59 ocallot Exp $
 // Include files 
 
 #include "GaudiKernel/IRegistry.h"
@@ -38,8 +38,7 @@ void LinksByKey::addReference ( int srcKey, int srcLinkID,
   //== Create the LinkReference, and push it in the vector
 
   LinkReference temp( srcLinkID, destLinkID, destKey, -1, weight);
-  m_linkReference.push_back( temp );
-  unsigned int refNum = m_linkReference.size() - 1;
+  unsigned int refNum = m_linkReference.size();
 
   //== Now get the map entry for this key, if any.
 
@@ -52,6 +51,7 @@ void LinksByKey::addReference ( int srcKey, int srcLinkID,
        --iL;
      }
      m_keyIndex[indx] = std::pair<int,int>( srcKey, refNum );
+     m_linkReference.push_back( temp );
      
      //== Test of proper ordering
      
@@ -72,6 +72,22 @@ void LinksByKey::addReference ( int srcKey, int srcLinkID,
   }
 
   int prevIndex = m_keyIndex[indx].second;
+  //== Test if the same entry exists : update weight
+  while ( 0 <= prevIndex ) {
+    if ( srcLinkID  == m_linkReference[prevIndex].srcLinkID() &&
+         destLinkID == m_linkReference[prevIndex].linkID()    &&
+         destKey    == m_linkReference[prevIndex].objectKey()    ) {
+      m_linkReference[prevIndex].setWeight( weight );
+      return;
+    }
+    prevIndex = m_linkReference[prevIndex].nextIndex();
+  }
+
+  // Store new linkReference
+  m_linkReference.push_back( temp );
+
+  // Put the new entry at the proper positionin the chain...
+  prevIndex = m_keyIndex[indx].second;
   if ( m_increasing ) {
     if ( weight < m_linkReference[prevIndex].weight() ) {
       m_linkReference[refNum].setNextIndex( prevIndex );
@@ -87,6 +103,7 @@ void LinksByKey::addReference ( int srcKey, int srcLinkID,
         prevIndex = nextIndex;
         nextIndex = m_linkReference[prevIndex].nextIndex();
       }
+      m_linkReference.push_back( temp );
       m_linkReference[prevIndex].setNextIndex( refNum );
     } 
   } else {
@@ -107,35 +124,34 @@ void LinksByKey::addReference ( int srcKey, int srcLinkID,
       m_linkReference[prevIndex].setNextIndex( refNum );
     } 
   }
-  
 }
 //=========================================================================
 //  Returns the first reference for the given key
 //=========================================================================
 bool LinksByKey::firstReference ( int key, 
                                   const DataObject* container, 
-                                  LinkReference& reference ) {
+                                  LinkReference& reference ) const {
   int linkID = -1;           // Case with only a key
   if ( NULL != container ) {
     LinkManager::Link* link = linkMgr()->link( container );
-    if ( 0 == link ) {
-      return false;
-    }
+    if ( 0 == link ) return false;
     linkID = link->ID();
   }
   
   int index;
   if ( findIndex( key, index ) ) {
     reference = m_linkReference[ m_keyIndex[index].second ];
-    while ( linkID != reference.srcLinkID() ) {
-      if ( 0 > reference.nextIndex() ) {
-        return false;
+    if ( 0 <= linkID ) {
+      while ( linkID != reference.srcLinkID() ) {
+        if ( 0 > reference.nextIndex() )  return false;
+        reference = m_linkReference[reference.nextIndex()]; 
       }
-      reference = m_linkReference[reference.nextIndex()]; 
+    } else {
+      reference.setSrcLinkID( -1 );
     }
     return true;
   }
- return false;
+  return false;
 }
 
 
@@ -143,16 +159,20 @@ bool LinksByKey::firstReference ( int key,
 //  Returns the next reference from the specified reference. 
 //  returns false if no more
 //=========================================================================
-bool LinksByKey::nextReference ( LinkReference& reference ) {
+bool LinksByKey::nextReference ( LinkReference& reference ) const {
   if ( 0 > reference.nextIndex() ) return false;
   
   int linkID = reference.srcLinkID();
   reference = m_linkReference[reference.nextIndex()];
-  while ( linkID != reference.srcLinkID() ) {
-    if ( 0 > reference.nextIndex() ) {
-      return false;
+  if ( 0 <= linkID ) {
+    while ( linkID != reference.srcLinkID() ) {
+      if ( 0 > reference.nextIndex() ) {
+        return false;
+      }
+      reference = m_linkReference[reference.nextIndex()];
     }
-    reference = m_linkReference[reference.nextIndex()]; 
+  } else {
+    reference.setSrcLinkID( -1 );
   }
   return true;
 }
@@ -161,7 +181,7 @@ bool LinksByKey::nextReference ( LinkReference& reference ) {
 // Returns the first key for which the specified reference exists 
 //=========================================================================
 int LinksByKey::firstSource ( LinkReference& reference,
-    std::vector<std::pair<int,int> >::const_iterator& iter ) {
+                              std::vector<std::pair<int,int> >::const_iterator& iter ) const {
   iter = m_keyIndex.begin();
   reference.setNextIndex( -1 );  // Indicate to restart at this iter's content
   return nextSource( reference, iter );
@@ -171,8 +191,8 @@ int LinksByKey::firstSource ( LinkReference& reference,
 // Returns the next key for which the specified reference exists 
 //=========================================================================
 int LinksByKey::nextSource ( LinkReference& reference, 
-    std::vector<std::pair<int,int> >::const_iterator& iter ) {
-  LinkReference* temp;
+                             std::vector<std::pair<int,int> >::const_iterator& iter ) const {
+  const LinkReference* temp;
   int refNum = reference.nextIndex();  // next entry
   while ( iter != m_keyIndex.end() ) {
     if ( 0 > refNum ) refNum = (*iter).second;  // first of this iter
@@ -195,9 +215,9 @@ int LinksByKey::nextSource ( LinkReference& reference,
 }
 
 //=========================================================================
-//  
+//  Returns the ID in the link table of the given object
 //=========================================================================
-int LinksByKey::linkID ( const DataObject* obj ) {
+int LinksByKey::linkID ( const DataObject* obj ) const {
   int id;
   LinkManager::Link* link = linkMgr()->link( obj );
   if ( 0 == link ) {
@@ -211,7 +231,7 @@ int LinksByKey::linkID ( const DataObject* obj ) {
 //=========================================================================
 //  Find the index of a given key in m_keyIndex. False if not found.
 //=========================================================================
-bool LinksByKey::findIndex ( int key, int& index) {
+bool LinksByKey::findIndex ( int key, int& index) const {
 
   // binary search
   int iF = 0;

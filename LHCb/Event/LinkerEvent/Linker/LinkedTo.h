@@ -1,4 +1,4 @@
-// $Id: LinkedTo.h,v 1.4 2004-11-24 15:52:52 ocallot Exp $
+// $Id: LinkedTo.h,v 1.5 2005-01-27 10:53:59 ocallot Exp $
 #ifndef LINKER_LINKEDTO_H 
 #define LINKER_LINKEDTO_H 1
 
@@ -29,6 +29,7 @@ public:
   LinkedTo( IDataProviderSvc* eventSvc,
             IMessageSvc* msgSvc,
             std::string containerName ) {
+    m_eventSvc = eventSvc;
     std::string name = "Link/" + containerName;
     if ( "/Event/" == containerName.substr(0,7) ) {
       name = "Link/" + containerName.substr(7);
@@ -40,8 +41,6 @@ public:
         msg << MSG::ERROR << "*** Link container " << name
             << " not found." << endreq;
       }
-    } else {
-      links->resolveLinks( eventSvc );
     }
     m_links = links;
     m_curReference.setNextIndex( -1 );
@@ -126,6 +125,11 @@ protected:
     if ( NULL == m_links ) return NULL;
     int myLinkID = m_curReference.linkID();
     LinkManager::Link* link = m_links->linkMgr()->link( myLinkID );
+    if ( 0 == link->object() ) {
+      SmartDataPtr<DataObject> tmp( m_eventSvc, link->path() );
+      link->setObject( tmp );
+      if ( 0 == tmp ) return NULL;
+    }
     TARGETCONTAINER* parent = dynamic_cast< TARGETCONTAINER* >(link->object() );
     if ( 0 != parent ) {
       TARGET* myObj = parent->object( m_curReference.objectKey() );
@@ -135,8 +139,9 @@ protected:
   }  
 
 private:
-  LinksByKey*      m_links;
-  LinkReference    m_curReference;
-  LRange           m_vect;          
+  IDataProviderSvc* m_eventSvc;
+  LinksByKey*       m_links;
+  LinkReference     m_curReference;
+  LRange            m_vect;          
 };
 #endif // LINKER_LINKEDTO_H

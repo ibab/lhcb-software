@@ -4,6 +4,25 @@
 ! Purpose     : Implementation of the Linker package, to associate objects
 !-----------------------------------------------------------------------------
 
+! 2005-01-27 - Olivier Callot
+ - Load the containers of SOURCE / TARGET only when needed in LinkedFrom,
+   LinkedTo and AllLinks. This allows to use the relation between the SOURCE 
+   key and the TARGET without loading the SOURCE container, useful for L1/HLT
+   where the Velo/IT Cluster and OTTime are not available.
+
+! 2005-01-26 - Olivier Callot
+ - Protect against several entries from the same pair SOURCE-TARGET. The weight
+   of the last entered relation is kept.
+
+! 2005-01-24 - Olivier Callot
+ - When requesting the relation to an int, all possible SOURCE with that key
+   are matching the request, and there respective target is returned. This
+   means that e.g. the relations ITDigit -> MCParticle allow also to get the
+   relation ITChannelID -> MCParticle. 
+
+! 2005-01-21 - Olivier Callot
+ - Make 'const' most methods
+
 !====================== LinkerEvent v1r5 2004-11-25 ==========================
 ! 2004-11-24 - Olivier Callot
  - Define types 'LRange' and 'LRangeIt' for the std::vector<TARGET*> and 
