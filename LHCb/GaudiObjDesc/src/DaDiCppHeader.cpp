@@ -1,4 +1,4 @@
-// $Id: DaDiCppHeader.cpp,v 1.32 2002-01-30 20:29:04 mato Exp $
+// $Id: DaDiCppHeader.cpp,v 1.33 2002-01-30 20:48:45 mato Exp $
 
 #include "GaudiKernel/Kernel.h"
 
@@ -1061,7 +1061,7 @@ void printClass(std::ofstream& xmlOut,
     xmlOut << "  /// Retrieve pointer to class definition structure" 
       << std::endl << "  virtual const CLID& clID() const; " << std::endl;
 
-    xmlOut << "static const CLID& classID(); " << std::endl << std::endl;
+    xmlOut << "  static const CLID& classID(); " << std::endl << std::endl;
   }
 
 
