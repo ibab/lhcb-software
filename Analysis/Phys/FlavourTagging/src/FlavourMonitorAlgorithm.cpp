@@ -1,4 +1,4 @@
-// $Id: FlavourMonitorAlgorithm.cpp,v 1.4 2002-09-10 07:44:34 odie Exp $
+// $Id: FlavourMonitorAlgorithm.cpp,v 1.5 2002-10-19 09:30:59 odie Exp $
 // Include files 
 #include <algorithm>
 
@@ -250,7 +250,7 @@ StatusCode FlavourMonitorAlgorithm::finalize()
                          / (m_n_good[i][f]+m_n_wrong[i][f]+m_n_untagged[i][f]));
       double sw   = sqrt(w*(1-w)/(m_n_good[i][f]+m_n_wrong[i][f]));
       double seff = sqrt(eff/(m_n_good[i][f]+m_n_wrong[i][f]+m_n_untagged[i][f])
-                         *(4-eff*(1*3/eff)));
+                         *(4-eff*(1+3/eff)));
       log << "    B reconstructed at " << (1-f/(m_fractions+2.))*100 << "% : "
           << m_n_fractions[i][f] << endl;
       log << "----------------------------------------------------------\n";
