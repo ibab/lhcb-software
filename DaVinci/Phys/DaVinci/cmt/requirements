@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.176 2004-09-22 12:18:07 ranjard Exp $
+# $Id: requirements,v 1.177 2004-10-04 09:26:25 pkoppenb Exp $
 # Created    : 07/02/2002
 # Maintainer : P. Koppenburg
 #
@@ -6,7 +6,7 @@
 # Allows reading of OO-DST data
 #============================================================================
 package           DaVinci
-version           v12r1
+version           v12r2
 
 # Structure, i.e. directories to process. 
 #============================================================================
@@ -40,11 +40,11 @@ use ParamFiles          v3r8    -no_auto_imports
 use LHCb                v16r2
 
 #=======================================================
-# DaVinciSys v12r1
+# DaVinciSys v12r2
 #=======================================================
 
 # Trigger packages
-use  L0DU               	v6r7p1   L0
+use  L0DU               	v6r7p2   L0
 use  L0Calo             	v7r6     L0
 use  L0Checker          	v2r2     L0
 use  L0MuonKernel 		v2r1p1   L0
@@ -98,7 +98,7 @@ use  VertexFit			v1r1     Phys
 # Physics MC packages
 use  DaVinciAssociators 	v5r2     Phys
 use  DaVinciEff         	v3r1     Phys
-use  DaVinciMCTools     	v5r5     Phys
+use  DaVinciMCTools     	v5r6     Phys
 use  DaVinciTest        	v5r2     Phys
 
 # Stripping
