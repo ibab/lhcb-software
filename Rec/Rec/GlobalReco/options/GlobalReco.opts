@@ -5,9 +5,7 @@
 #include "$GLOBALRECOROOT/options/ChargedProtoPAlg.opts"
 #include "$GLOBALRECOROOT/options/NeutralProtoPAlg.opts"
 
-// Tools for neutral and charge options
-//#include "$CALORECOPTS/PhotonMatch.opts"
-//#include "$CALORECOPTS/ElectronMatch.opts"
-//#include "$CALORECOPTS/BremMatch.opts"
-
+// Tools for neutral and charge options require the following
+// options that are set in DaVinciCommon
+// #include "$CALORECO/options/Reco.opts"
 
