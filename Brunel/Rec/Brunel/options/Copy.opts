@@ -1,0 +1,40 @@
+//-------------------------------------------------------------------------
+// Job options to copy one or more input files onto an output file
+// Can be used to:
+//  - merge several input files into one output file
+//  - create an extended or reduced DST
+//-------------------------------------------------------------------------
+ApplicationMgr.ExtSvc = { "EventSelector" };
+ApplicationMgr.HistogramPersistency = "NONE";
+ApplicationMgr.OutStream = {"DstWriter"};
+
+EventDataSvc.RootCLID = 1;
+EventDataSvc.ForceLeaves = 1;
+
+EventSelector.PrintFreq = 1;
+
+// Job options to set up the POOL persistency for the output file
+#include "$GAUDIPOOLDBROOT/options/GaudiPoolDbRoot.opts"
+
+// DLLs that contain the necessary dictionaries and factories
+ApplicationMgr.DLLs += { "CaloEvent" };
+#include "$EVENTSYSROOT/options/PoolDicts.opts"
+#include "$ASSOCIATORSSYSROOT/options/DLLs.opts"
+
+// Output content definition (i.e. objects to be copied)
+// Modify this file to produce a reduced (or extended...) DST
+#include "$BRUNELROOT/options/DstContent.opts"
+
+// Provide the input catalog describing the input files
+PoolDbCacheSvc.InputCatalog = "xmlcatalog_http://cattanem.home.cern.ch/cattanem/POOL/MyCatalog.xml";
+
+// Provide one or more input files. All objects defined in DstContent.opts must
+// exist on the input files, or be accessible from it via file references 
+EventSelector.Input = { 
+  "DATAFILE='rfio:/castor/cern.ch/user/c/cattanem/Brunel/v23r4/Pool411300.dst' TYP='POOL_ROOTTREE' OPT='READ'" 
+, "DATAFILE='rfio:/castor/cern.ch/user/c/cattanem/Brunel/v23r3/Pool411300.dst' TYP='POOL_ROOTTREE' OPT='READ'" 
+};
+
+// Define the output file
+DstWriter.Output = "DATAFILE='PFN:DstCopy.dst' TYP='POOL_ROOTTREE' OPT='REC'";
+

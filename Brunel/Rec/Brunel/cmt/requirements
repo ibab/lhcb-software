@@ -12,17 +12,17 @@ use GaudiPolicy v5r14
 
 #-- External libraries (as defined in GAUDI_v14r3)
 use ExternalLibs	v4r4
-use AIDA		v3r300
-use CLHEP		v2r1810p0
-use GSL			v2r14p0
-use XERCES		v2r230p0
-use CERNLIB 		v2r2002p0
-use ROOT 		v2r31002p0
-use PI			v1r112
-use PCRE		v1r44
-use UUID		v1r32
-use SEAL		v1r133p1
-use POOL		v1r150p1
+use AIDA		v3r300		-no_auto_imports
+use CLHEP		v2r1810p0	-no_auto_imports
+use GSL 		v2r14p0		-no_auto_imports
+use XERCES		v2r230p0	-no_auto_imports
+use CERNLIB 		v2r2002p0	-no_auto_imports
+use ROOT 		v2r31002p0      -no_auto_imports
+use PI  		v1r112		-no_auto_imports
+use PCRE		v1r44		-no_auto_imports
+use UUID		v1r32		-no_auto_imports
+use SEAL		v1r133p1	-no_auto_imports
+use POOL		v1r150p1	-no_auto_imports
 
 #-- Gaudi libraries (from GAUDI_v14r3)
 use GaudiKernel		v15r2
@@ -58,7 +58,7 @@ use BrunelAlgs          v3r4p1	Rec
 
 # Calorimeter
 use CaloMonitor         v2r1  	Calo
-use CaloReco            v2r1	Calo
+use CaloReco            v2r1p1	Calo
 use CaloPIDs		v2r1	Calo
 
 # Velo

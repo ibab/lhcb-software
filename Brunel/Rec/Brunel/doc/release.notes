@@ -3,17 +3,23 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
-</PRE><H1><A NAME=v23r4>2004-03-26 Brunel v23r4</A></H1><PRE>
+</PRE><H1><A NAME=v23r4>2004-03-29 Brunel v23r4</A></H1><PRE>
 
- Requires data produced by Boole v5r3 or later
+ Requires data produced by Boole v5r4 or later
  Tuned for XmlDDDB v22r0
 
 - New features
   . Field045 map is available. To use it, add the option
     MagneticFieldSvc.FieldMapFile = "$FIELDMAPROOT/cdf/field045.cdf";
+  . Added example job options (Copy.opts) for copying one or more files. Can be
+    used to merge several DSTs, or to produce reduced (or extended...) DSTs
 
 - New tuning
   . Update signal to noise cuts to be consistent with Boole (ITAlgorithms v14r2)
+
+- Bug fixes:
+  . Avoid multiple includes of job options files (CaloReco v2r1p1)
+  . Avoid linking with unnecessary libraries (requirements)
 
 - Packaging changes:
   . Remove unnecessary dependency on VeloAlgorithms
