@@ -1,36 +1,30 @@
-#define __CALODET_DECALORIMETER_CPP__ 1 
-
-///
-/// form STL
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/CaloDet/src/Lib/DeCalorimeter.cpp,v 1.6 2001-03-23 18:25:17 ibelyaev Exp $ 
+#define  CALODET_DECALORIMETER_CPP 1 
+//
+// from STL
 #include <cmath> 
-
-///
-/// from CLHEP 
+//
+// from CLHEP 
 #include "CLHEP/Units/SystemOfUnits.h"
-
-
-///
-/// from Gaudi 
+//
+// from Gaudi 
 #include "GaudiKernel/SmartDataPtr.h"
-#include "GaudiKernel/IGeometryInfo.h"
-#include "GaudiKernel/ILVolume.h"
 #include "GaudiKernel/TransientStore.h"
-
-/// CaloGen 
-
+// DetDesc
+#include "DetDesc/IGeometryInfo.h"
+#include "DetDesc/ILVolume.h"
+// CaloGen 
 #include "CaloGen/OutputStreamIterator.h"
-
-///
-/// from Det/CaloDet
-
+//
+// from Det/CaloDet
 #include "CaloDet/DeCalorimeter.h"
 #include "CaloDet/DeSubCalorimeter.h"
 
-//----------------------------------------------------------------------------
-//
-// Implementation of class :  DeCalorimeter
-//
-//----------------------------------------------------------------------------
+
+/** 
+    Implementation of class :  DeCalorimeter   
+    @author Olivier Callot 
+*/
 
 
 // **  Standard Constructors
