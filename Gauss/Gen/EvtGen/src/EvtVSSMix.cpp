@@ -18,20 +18,24 @@
 //
 //------------------------------------------------------------------------
 // 
+#ifdef WIN32 
+  #pragma warning( disable : 4786 ) 
+  // Disable anoying warning about symbol size 
+#endif 
 #include <stdlib.h>
-#include "EvtGen/EvtParticle.hh"
-#include "EvtGen/EvtGenKine.hh"
-#include "EvtGen/EvtPDL.hh"
-#include "EvtGen/EvtReport.hh"
-#include "EvtGen/EvtVector4C.hh"
-#include "EvtGen/EvtVSSMix.hh"
-#include "EvtGen/EvtId.hh"
-#include "EvtGen/EvtString.hh"
-#include "EvtGen/EvtConst.hh"
+#include "EvtGenBase/EvtParticle.hh"
+#include "EvtGenBase/EvtGenKine.hh"
+#include "EvtGenBase/EvtPDL.hh"
+#include "EvtGenBase/EvtReport.hh"
+#include "EvtGenBase/EvtVector4C.hh"
+#include "EvtGenModels/EvtVSSMix.hh"
+#include "EvtGenBase/EvtId.hh"
+#include <string>
+#include "EvtGenBase/EvtConst.hh"
 
 EvtVSSMix::~EvtVSSMix() {}
 
-void EvtVSSMix::getName(EvtString& model_name){
+void EvtVSSMix::getName(std::string& model_name){
 
   model_name="VSS_MIX";     
 
@@ -87,7 +91,7 @@ void EvtVSSMix::decay( EvtParticle *p ){
 
   dm=getArg(0)/EvtConst::c;
 
-  double mix_amp = 0.0;
+  double mix_amp(0.);
 
   EvtId d1,d2;
 

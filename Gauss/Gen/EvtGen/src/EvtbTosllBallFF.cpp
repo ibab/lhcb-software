@@ -18,8 +18,13 @@
 //
 //------------------------------------------------------------------------
 
-#include "EvtGen/EvtPDL.hh"
-#include "EvtGen/EvtbTosllBallFF.hh"
+#ifdef WIN32 
+  #pragma warning( disable : 4786 ) 
+  // Disable anoying warning about symbol size 
+#endif 
+#include "EvtGenBase/EvtPatches.hh"
+#include "EvtGenBase/EvtPDL.hh"
+#include "EvtGenModels/EvtbTosllBallFF.hh"
 #include <math.h>
 
 EvtbTosllBallFF::EvtbTosllBallFF(){}
@@ -31,8 +36,8 @@ void EvtbTosllBallFF::getScalarFF(EvtId parent, EvtId daught,
 
   int model = 1;
   
-  double m=EvtPDL::getNominalMass(parent);
-  double md=EvtPDL::getNominalMass(daught);
+  double m=EvtPDL::getMeanMass(parent);
+  double md=EvtPDL::getMeanMass(daught);
   
   double shat=t/(m*m);
   double shat2=shat*shat;
@@ -63,13 +68,13 @@ void EvtbTosllBallFF::getScalarFF(EvtId parent, EvtId daught,
 
 void EvtbTosllBallFF::getVectorFF(EvtId parent, EvtId daught,
                                   double t, double /*mass*/, 
-                                  double& a1,double& a2,double& a0, double& v,
-                                  double& t1, double& t2, double& t3 ){
+				  double& a1,double& a2,double& a0, double& v,
+				  double& t1, double& t2, double& t3 ){
 
   int model = 1;
   
-  double m=EvtPDL::getNominalMass(parent);
-  double md=EvtPDL::getNominalMass(daught);
+  double m=EvtPDL::getMeanMass(parent);
+  double md=EvtPDL::getMeanMass(daught);
   
   double shat=t/(m*m);
   double shat2=shat*shat;

@@ -18,17 +18,21 @@
 //
 //------------------------------------------------------------------------
 // 
+#ifdef WIN32 
+  #pragma warning( disable : 4786 ) 
+  // Disable anoying warning about symbol size 
+#endif 
 #include <stdlib.h>
 #include <math.h>
 #include <iostream>
 #include <assert.h>
-#include "EvtGen/EvtdFunction.hh"
-#include "EvtGen/EvtdFunctionSingle.hh"
+#include "EvtGenBase/EvtdFunction.hh"
+#include "EvtGenBase/EvtdFunctionSingle.hh"
 
 
 double EvtdFunction::d(int j,int m1,int m2, double theta){
 
-  //cout << "j,m1,m2:"<<j<<","<<m1<<","<<m2<<std::endl;
+  //report(INFO,"EvtGen") << "j,m1,m2:"<<j<<","<<m1<<","<<m2<<std::endl;
 
   double c=cos(theta);
   double c2=cos(0.5*theta);
@@ -38,7 +42,7 @@ double EvtdFunction::d(int j,int m1,int m2, double theta){
   int m1p=m1;
   int m2p=m2;
 
-  //cout << "here10"<<std::endl;
+  //report(INFO,"EvtGen") << "here10"<<std::endl;
 
   int signp=1;
   //make |m2p|>|m1p|
@@ -49,7 +53,7 @@ double EvtdFunction::d(int j,int m1,int m2, double theta){
     if ((m1p-m2p)%4!=0) signp=-signp;
   } 
 
-  //cout << "here11"<<std::endl;
+  //report(INFO,"EvtGen") << "here11"<<std::endl;
 
   //make m2p non-negative
   if (m2p<0) {
@@ -58,19 +62,19 @@ double EvtdFunction::d(int j,int m1,int m2, double theta){
     if ((m1p-m2p)%4!=0) signp=-signp;
   }
 
-  //cout << "here1"<<std::endl;
+  //report(INFO,"EvtGen") << "here1"<<std::endl;
 
   EvtdFunctionSingle df;
 
-  //cout << "here2"<<std::endl;
+  //report(INFO,"EvtGen") << "here2"<<std::endl;
 
   df.init(j,m1p,m2p);
 
-  //cout << "here3"<<std::endl;
+  //report(INFO,"EvtGen") << "here3"<<std::endl;
   
 
   double dtmp=df.d(j,m1p,m2p,theta)*signp;
-  //cout << "new:"<<dtmp<<std::endl;
+  //report(INFO,"EvtGen") << "new:"<<dtmp<<std::endl;
 
 
   int sign=1;
@@ -243,7 +247,7 @@ double EvtdFunction::d(int j,int m1,int m2, double theta){
 
   if (sign==-1) d=-d;
 
-  //cout << "old:"<<d<<std::endl<<std::endl;
+  //report(INFO,"EvtGen") << "old:"<<d<<std::endl<<std::endl;
 
   assert(fabs(dtmp-d)<0.0001);
 

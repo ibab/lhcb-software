@@ -19,11 +19,15 @@
 //
 //------------------------------------------------------------------------
 // 
+#ifdef WIN32 
+  #pragma warning( disable : 4786 ) 
+  // Disable anoying warning about symbol size 
+#endif 
 #include <stdlib.h>
 #include <math.h>
 #include <iostream>
 #include <assert.h>
-#include "EvtGen/EvtdFunctionSingle.hh"
+#include "EvtGenBase/EvtdFunctionSingle.hh"
 
 EvtdFunctionSingle::EvtdFunctionSingle(){
   _j=0;
@@ -71,7 +75,7 @@ void EvtdFunctionSingle::init(int j,int m1,int m2){
     //fkw			fact((_j+_m1)/2)*fact((_j-_m1)/2))/
     //fkw  (fact((_j+_m2-k)/2)*fact(k/2)*fact((_j-_m1-k)/2)*fact((k-_m2+_m1)/2));
 
-    //cout << "k, coef:"<<k/2<<" "<<_coef[(k-_kmin)/2]<<endl;
+    //report(INFO,"EvtGen") << "k, coef:"<<k/2<<" "<<_coef[(k-_kmin)/2]<<std::endl;
   }
 
 }
@@ -79,7 +83,7 @@ void EvtdFunctionSingle::init(int j,int m1,int m2){
 
 double EvtdFunctionSingle::d(int j,int m1,int m2, double theta){
 
-  //cout << "j,m1,m2:"<<j<<","<<m1<<","<<m2<<" theta:"<<theta<<endl;
+  //report(INFO,"EvtGen") << "j,m1,m2:"<<j<<","<<m1<<","<<m2<<" theta:"<<theta<<std::endl;
 
   assert(j==_j);
   assert(m1==_m1);

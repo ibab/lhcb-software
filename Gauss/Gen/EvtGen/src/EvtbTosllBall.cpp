@@ -18,22 +18,26 @@
 //
 //------------------------------------------------------------------------
 // 
+#ifdef WIN32 
+  #pragma warning( disable : 4786 ) 
+  // Disable anoying warning about symbol size 
+#endif 
 #include <stdlib.h>
-#include "EvtGen/EvtParticle.hh"
-#include "EvtGen/EvtGenKine.hh"
-#include "EvtGen/EvtPDL.hh"
-#include "EvtGen/EvtReport.hh"
-#include "EvtGen/EvtbTosllBall.hh"
-#include "EvtGen/EvtbTosllBallFF.hh"
-#include "EvtGen/EvtbTosllAmp.hh"
-#include "EvtGen/EvtbTosllScalarAmp.hh"
-#include "EvtGen/EvtbTosllVectorAmp.hh"
+#include "EvtGenBase/EvtParticle.hh"
+#include "EvtGenBase/EvtGenKine.hh"
+#include "EvtGenBase/EvtPDL.hh"
+#include "EvtGenBase/EvtReport.hh"
+#include "EvtGenModels/EvtbTosllBall.hh"
+#include "EvtGenModels/EvtbTosllBallFF.hh"
+#include "EvtGenModels/EvtbTosllAmp.hh"
+#include "EvtGenModels/EvtbTosllScalarAmp.hh"
+#include "EvtGenModels/EvtbTosllVectorAmp.hh"
 
-#include "EvtGen/EvtString.hh"
+#include <string>
 
 EvtbTosllBall::~EvtbTosllBall() {}
 
-void EvtbTosllBall::getName(EvtString& model_name){
+void EvtbTosllBall::getName(std::string& model_name){
 
   model_name="BTOSLLBALL";     
 }
@@ -47,34 +51,10 @@ EvtDecayBase* EvtbTosllBall::clone(){
 
 void EvtbTosllBall::decay( EvtParticle *p ){
 
-  p->makeDaughters(getNDaug(),getDaugs());
-
-  EvtParticle* k=p->getDaug(0);
-  EvtParticle* leptonp=p->getDaug(1);
-  EvtParticle* leptonn=p->getDaug(2);
-  
-  EvtVector4R p4[3];
-
-  double mass[3];
-   
-  double m_b = p->mass();
- 
-  findMasses( p, getNDaug(), getDaugs(), mass );
-
- 
-  EvtVector4R p4temp[3];
-  setWeight(EvtGenKine::PhaseSpacePole( m_b, mass[1],mass[2],mass[0],
-					_poleSize, p4temp ));
-  p4[0]=p4temp[2];
-  p4[1]=p4temp[0];
-  p4[2]=p4temp[1];
-  
-  k->init( getDaug(0), p4[0] );
-  leptonp->init( getDaug(1), p4[1]);
-  leptonn->init( getDaug(2), p4[2]);
+  setWeight(p->initializePhaseSpace(getNDaug(),getDaugs(),_poleSize,1,2));
 
   _calcamp->CalcAmp(p,_amp2,_ballffmodel);
-
+  
 }
 
 
@@ -113,7 +93,7 @@ void EvtbTosllBall::init(){
 	mesontype == EvtSpinType::SCALAR)) {
     report(ERROR,"EvtGen") << "EvtbTosllBall generator expected "
                            << " a SCALAR or VECTOR 1st daughter, found:"<<
-                           EvtPDL::name(getDaug(0))<<std::endl;
+                           EvtPDL::name(getDaug(0)).c_str()<<std::endl;
     report(ERROR,"EvtGen") << "Will terminate execution!"<<std::endl;
     ::abort();
   }
@@ -123,10 +103,10 @@ void EvtbTosllBall::init(){
 
   _ballffmodel = new EvtbTosllBallFF();
   if (mesontype == EvtSpinType::SCALAR){
-    _calcamp = new EvtbTosllScalarAmp; 
+    _calcamp = new EvtbTosllScalarAmp(-0313,4.344,-4.669); 
   }
   if (mesontype == EvtSpinType::VECTOR){
-    _calcamp = new EvtbTosllVectorAmp; 
+    _calcamp = new EvtbTosllVectorAmp(-0313,4.344,-4.669); 
   }
 
 }

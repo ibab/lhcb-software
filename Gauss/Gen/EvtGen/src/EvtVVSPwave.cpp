@@ -20,19 +20,23 @@
 //
 //------------------------------------------------------------------------
 // 
+#ifdef WIN32 
+  #pragma warning( disable : 4786 ) 
+  // Disable anoying warning about symbol size 
+#endif 
 #include <stdlib.h>
-#include "EvtGen/EvtParticle.hh"
-#include "EvtGen/EvtGenKine.hh"
-#include "EvtGen/EvtPDL.hh"
-#include "EvtGen/EvtVector4C.hh"
-#include "EvtGen/EvtTensor4C.hh"
-#include "EvtGen/EvtReport.hh"
-#include "EvtGen/EvtVVSPwave.hh"
-#include "EvtGen/EvtString.hh"
+#include "EvtGenBase/EvtParticle.hh"
+#include "EvtGenBase/EvtGenKine.hh"
+#include "EvtGenBase/EvtPDL.hh"
+#include "EvtGenBase/EvtVector4C.hh"
+#include "EvtGenBase/EvtTensor4C.hh"
+#include "EvtGenBase/EvtReport.hh"
+#include "EvtGenModels/EvtVVSPwave.hh"
+#include <string>
 
 EvtVVSPwave::~EvtVVSPwave() {}
 
-void EvtVVSPwave::getName(EvtString& model_name){
+void EvtVVSPwave::getName(std::string& model_name){
 
   model_name="VVS_PWAVE";     
 
@@ -66,6 +70,8 @@ void EvtVVSPwave::initProbMax() {
 
 void EvtVVSPwave::decay( EvtParticle *p){
 
+  p->initializePhaseSpace(getNDaug(),getDaugs());
+
   EvtComplex as(getArg(0)*cos(getArg(1)),getArg(0)*sin(getArg(1)));
   EvtComplex ap(getArg(2)*cos(getArg(3)),getArg(2)*sin(getArg(3)));
   EvtComplex ad(getArg(4)*cos(getArg(5)),getArg(4)*sin(getArg(5)));
@@ -77,38 +83,16 @@ void EvtVVSPwave::decay( EvtParticle *p){
   }
     
   EvtParticle *v,*s;
-  
-  p->makeDaughters(getNDaug(),getDaugs());
   v=p->getDaug(0);
   s=p->getDaug(1);
 
-
-
-  double m_parent,mass[2];
-  int n_daug;
   EvtVector4R p4[2];
 
-// Prepare for phase space routine.  M_b should be
-// already set somewhere above.
-
-  m_parent = p->mass();
-  n_daug = 2;
-
-  EvtDecayBase::findMasses(p,n_daug,getDaugs(),mass);
-
-//  Need phase space random numbers
-  EvtGenKine::PhaseSpace( n_daug, mass, p4, m_parent );
-
-//  Put phase space results into the daughters.
-  
-  v->init( getDaug(0), p4[0] );
-  s->init( getDaug(1), p4[1] );
-  
   EvtTensor4C d,g;
   
   g.setdiag(1.0,-1.0,-1.0,-1.0);
 
-  d=ad*((1.0/(p4[0].d3mag()*p4[0].d3mag()))*directProd(p4[0],p4[0])+(1/3.0)*g)+
+  d=ad*((1.0/(v->getP4().d3mag()*v->getP4().d3mag()))*directProd(v->getP4(),v->getP4())+(1/3.0)*g)+
     as*g;
 
   EvtVector4C ep0,ep1,ep2;  

@@ -10,7 +10,7 @@
 //  ---------- = 12 Gamma   | (1+x-z)(z-x-p ) -- W  + (1-z+p ) -- W 
 //         _ 2           0  \                  2  1             2  2
 //  dx dz dp                                   2
-//                                _   _  _2  mb                 2    \
+//                                _   _  _2  mb                 2    \    .
 //                             + [x(z-x)-p ] -- (W + 2mb W  + mb W ) |
 //                                            4   3       4       5 /
 //
@@ -34,18 +34,19 @@
 //-----------------------
 // This Class's Header --
 //-----------------------
-#include "EvtGen/EvtVubdGamma.hh"
+#ifdef WIN32 
+  #pragma warning( disable : 4786 ) 
+  // Disable anoying warning about symbol size 
+#endif
+#include "CLHEP/config/CLHEP.h"
+#include "EvtGenModels/EvtVubdGamma.hh"
 
 //---------------
 // C Headers --
 //---------------
 #include <math.h>
-
 #ifdef WIN32
-#define M_PI 3.14159265358979323846
-extern "C" {
-  double __stdcall DDILOG(const double *);
-}
+extern "C" double __stdcall DDILOG(const double *);
 #else
 extern "C" {
   double ddilog_(const double *);
@@ -106,6 +107,8 @@ double EvtVubdGamma::getdGdxdzdp(const double &x, const double &z, const double 
   if ( x < 0 || x > 1 || z < xb || z > (1+xb) ) 
     return 0;
   
+  double mx = (0>z-1?0:z-1);
+
   double p2min = (0>z-1.?0:z-1.);
   double p2max = (1.-x)*(z-1.+x);
 
@@ -147,9 +150,12 @@ double EvtVubdGamma::delta(const double &x, const double &xmin, const double &xm
   return 0.0; 
 }
 
-double EvtVubdGamma::getW1delta(const double &/*x*/, const double &z)
+double EvtVubdGamma::getW1delta(const double &x, const double &z)
 {
   double mz = 1.-z;
+  double p2min = (0>z-1.?0:z-1.);
+  double p2max = (1.-x)*(z-1.+x);
+
   double lz;
   if (z == 1) lz = -1.;
   else        lz = log(z)/(1.-z);

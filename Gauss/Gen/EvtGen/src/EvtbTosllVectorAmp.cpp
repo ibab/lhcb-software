@@ -19,18 +19,23 @@
 //
 //------------------------------------------------------------------------
 //
-#include "EvtGen/EvtParticle.hh"
-#include "EvtGen/EvtGenKine.hh"
-#include "EvtGen/EvtPDL.hh"
-#include "EvtGen/EvtReport.hh"
-#include "EvtGen/EvtVector4C.hh"
-#include "EvtGen/EvtTensor4C.hh"
-#include "EvtGen/EvtDiracSpinor.hh"
-#include "EvtGen/EvtbTosllVectorAmp.hh"
-#include "EvtGen/EvtId.hh"
-#include "EvtGen/EvtIdSet.hh"
-#include "EvtGen/EvtAmp.hh"
-#include "EvtGen/EvtbTosllFF.hh"
+#ifdef WIN32 
+  #pragma warning( disable : 4786 ) 
+  // Disable anoying warning about symbol size 
+#endif 
+#include "EvtGenBase/EvtPatches.hh"
+#include "EvtGenBase/EvtParticle.hh"
+#include "EvtGenBase/EvtGenKine.hh"
+#include "EvtGenBase/EvtPDL.hh"
+#include "EvtGenBase/EvtReport.hh"
+#include "EvtGenBase/EvtVector4C.hh"
+#include "EvtGenBase/EvtTensor4C.hh"
+#include "EvtGenBase/EvtDiracSpinor.hh"
+#include "EvtGenModels/EvtbTosllVectorAmp.hh"
+#include "EvtGenBase/EvtId.hh"
+#include "EvtGenBase/EvtIdSet.hh"
+#include "EvtGenBase/EvtAmp.hh"
+#include "EvtGenModels/EvtbTosllFF.hh"
 
 void EvtbTosllVectorAmp::CalcAmp( EvtParticle *parent,
 				  EvtAmp& amp,
@@ -75,33 +80,33 @@ void EvtbTosllVectorAmp::CalcAmp( EvtParticle *parent,
   EvtVector4R phat=pbhat+pkstarhat;
 
       //values of the Wilson coefficients are given on p. 5
-  double c9=4.344;
-  double c7=-0.313;
-  double c10=-4.669;
+  //double c9=4.344;
+  //double c7=-0.313;
+  //double c10=-4.669;
   double mhatb=4.4/(parentmass); 
   double mhatkstar=mesonmass/(parentmass);
   double shat=q2/(parentmass*parentmass);
 
 
-  double a=c9*v*2/(1+mhatkstar)+4*mhatb*c7*t1/shat;
-  double b=(1+mhatkstar)*(c9*a1+2*mhatb*(1-mhatkstar)*c7*t2/shat);
-  double c=((1-mhatkstar)*c9*a2+
-	    2*mhatb*c7*(t3+(1-mhatkstar*mhatkstar)*t2/shat))/
+  double a=_c9*v*2/(1+mhatkstar)+4*mhatb*_c7*t1/shat;
+  double b=(1+mhatkstar)*(_c9*a1+2*mhatb*(1-mhatkstar)*_c7*t2/shat);
+  double c=((1-mhatkstar)*_c9*a2+
+	    2*mhatb*_c7*(t3+(1-mhatkstar*mhatkstar)*t2/shat))/
     (1-mhatkstar*mhatkstar);
-  double d=(c9*((1+mhatkstar)*a1-(1-mhatkstar)*a2-2*mhatkstar*a0)
-	    -2*mhatb*c7*t3)/shat;
-  double e=2*c10*v/(1+mhatkstar);
-  double f=(1+mhatkstar)*c10*a1;
-  double g=c10*a2/(1+mhatkstar);
-  double h=c10*((1+mhatkstar)*a1-(1-mhatkstar)*a2-2*mhatkstar*a0)/shat;
+  double d=(_c9*((1+mhatkstar)*a1-(1-mhatkstar)*a2-2*mhatkstar*a0)
+	    -2*mhatb*_c7*t3)/shat;
+  double e=2*_c10*v/(1+mhatkstar);
+  double f=(1+mhatkstar)*_c10*a1;
+  double g=_c10*a2/(1+mhatkstar);
+  double h=_c10*((1+mhatkstar)*a1-(1-mhatkstar)*a2-2*mhatkstar*a0)/shat;
   
   EvtTensor4C T1,T2;
   
   static EvtIdSet bmesons("B-","anti-B0");
   static EvtIdSet bbarmesons("B+","B0");
   
-  EvtParticle* lepPlus;
-  EvtParticle* lepMinus;
+  EvtParticle* lepPlus=0;
+  EvtParticle* lepMinus=0;
   
   int charge1 = EvtPDL::chg3(parent->getDaug(1)->getId());
   int charge2 = EvtPDL::chg3(parent->getDaug(2)->getId());

@@ -19,19 +19,23 @@
 //
 //------------------------------------------------------------------------
 // 
+#ifdef WIN32 
+  #pragma warning( disable : 4786 ) 
+  // Disable anoying warning about symbol size 
+#endif 
 #include <stdlib.h>
-#include "EvtGen/EvtParticle.hh"
-#include "EvtGen/EvtGenKine.hh"
-#include "EvtGen/EvtPDL.hh"
-#include "EvtGen/EvtVector4C.hh"
-#include "EvtGen/EvtTensor4C.hh"
-#include "EvtGen/EvtReport.hh"
-#include "EvtGen/EvtVVpipi.hh"
-#include "EvtGen/EvtString.hh"
+#include "EvtGenBase/EvtParticle.hh"
+#include "EvtGenBase/EvtGenKine.hh"
+#include "EvtGenBase/EvtPDL.hh"
+#include "EvtGenBase/EvtVector4C.hh"
+#include "EvtGenBase/EvtTensor4C.hh"
+#include "EvtGenBase/EvtReport.hh"
+#include "EvtGenModels/EvtVVpipi.hh"
+#include <string>
 
 EvtVVpipi::~EvtVVpipi() {}
 
-void EvtVVpipi::getName(EvtString& model_name){
+void EvtVVpipi::getName(std::string& model_name){
 
   model_name="VVPIPI";     
 
@@ -79,35 +83,17 @@ void EvtVVpipi::initProbMax() {
 
 void EvtVVpipi::decay( EvtParticle *p){
 
+  p->initializePhaseSpace(getNDaug(),getDaugs());
+
   EvtParticle *v,*s1,*s2;
   
-  p->makeDaughters(getNDaug(),getDaugs());
   v=p->getDaug(0);
   s1=p->getDaug(1);
   s2=p->getDaug(2);
 
-
-
-  double m_parent,mass[3];
-  int n_daug;
   EvtVector4R p4[3];
 
-// Prepare for phase space routine.  M_b should be
-// already set somewhere above.
-
-  m_parent = p->mass();
-  n_daug = 3;
-
-  EvtDecayBase::findMasses(p,n_daug,getDaugs(),mass);
-
-//  Need phase space random numbers
-  EvtGenKine::PhaseSpace( n_daug, mass, p4, m_parent );
-
 //  Put phase space results into the daughters.
-  
-  v->init( getDaug(0), p4[0] );
-  s1->init( getDaug(1), p4[1] );
-  s2->init( getDaug(2), p4[2] );
   
   EvtVector4C ep0,ep1,ep2;  
   
@@ -115,7 +101,7 @@ void EvtVVpipi::decay( EvtParticle *p){
   ep1=p->eps(1);
   ep2=p->eps(2);
 
-  double fac=(p4[1]+p4[2]).mass2()-4*p4[1].mass()*p4[2].mass();
+  double fac=(s1->getP4()+s2->getP4()).mass2()-4*s1->mass()*s2->mass();
 
   vertex(0,0,fac*(ep0*v->epsParent(0).conj()));
   vertex(0,1,fac*(ep0*v->epsParent(1).conj()));

@@ -18,11 +18,15 @@
 //
 //------------------------------------------------------------------------
 // 
+#ifdef WIN32 
+  #pragma warning( disable : 4786 ) 
+  // Disable anoying warning about symbol size 
+#endif 
 #include <iostream>
 #include <math.h>
 #include <assert.h>
-#include "EvtGen/EvtVector4R.hh"
-#include "EvtGen/EvtVector3R.hh"
+#include "EvtGenBase/EvtVector4R.hh"
+#include "EvtGenBase/EvtVector3R.hh"
 
 
 
@@ -54,7 +58,7 @@ EvtVector4R rotateEuler(const EvtVector4R& rs,
 }
 
 EvtVector4R boostTo(const EvtVector4R& rs,
-		    const EvtVector4R p4){
+		    const EvtVector4R& p4){
 
   EvtVector4R tmp(rs);
   tmp.applyBoostTo(p4);
@@ -63,7 +67,7 @@ EvtVector4R boostTo(const EvtVector4R& rs,
 }
 
 EvtVector4R boostTo(const EvtVector4R& rs,
-		    const EvtVector3R boost){
+		    const EvtVector3R& boost){
 
   EvtVector4R tmp(rs);
   tmp.applyBoostTo(boost);

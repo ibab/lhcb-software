@@ -1,3 +1,7 @@
+//-----------------------------------------------------------------------------
+// 06/05/2002 : Witold Pokorski
+//-----------------------------------------------------------------------------
+
 // plugs Gaudi RndmNumberSvc into B->3Pi model
 
 //=============================================================================
@@ -5,8 +9,6 @@
 #include "GaudiKernel/RndmGenerators.h"
 #include "GaudiKernel/IRndmGenSvc.h"
 #include "GaudiKernel/IRndmGen.h"
-
-#include <iostream>
 
 extern Rndm::Numbers randgaudi;
 
@@ -16,7 +18,7 @@ extern "C"  double __stdcall CRANF( )
 
 #else
 
-extern "C" double cranf_( ) 
+extern "C" double cranf_( )
 
 #endif
 

@@ -20,19 +20,24 @@
 //
 //------------------------------------------------------------------------
 //
+#ifdef WIN32 
+  #pragma warning( disable : 4786 ) 
+  // Disable anoying warning about symbol size 
+#endif 
 #include <stdlib.h>
 #include <iostream>
-#include "EvtGen/EvtString.hh"
-#include "EvtGen/EvtParticle.hh"
-#include "EvtGen/EvtPDL.hh"
-#include "EvtGen/EvtGenKine.hh"
-#include "EvtGen/EvtVll.hh"
-#include "EvtGen/EvtDiracSpinor.hh"
-#include "EvtGen/EvtReport.hh"
+#include <string>
+#include "EvtGenBase/EvtParticle.hh"
+#include "EvtGenBase/EvtPDL.hh"
+#include "EvtGenBase/EvtGenKine.hh"
+#include "EvtGenModels/EvtVll.hh"
+#include "EvtGenBase/EvtDiracSpinor.hh"
+#include "EvtGenBase/EvtReport.hh"
+#include "EvtGenBase/EvtVector4C.hh"
 
 EvtVll::~EvtVll() {}
 
-void EvtVll::getName(EvtString& model_name){
+void EvtVll::getName(std::string& model_name){
 
   model_name="VLL";     
 
@@ -60,26 +65,7 @@ void EvtVll::init(){
 
 void EvtVll::initProbMax(){
 
-  static EvtId PHI=EvtPDL::getId("phi");
-  static EvtId PSI=EvtPDL::getId("J/psi");
-  static EvtId PSI2S=EvtPDL::getId("psi(2S)");
-  static EvtId UPS1=EvtPDL::getId("Upsilon");
-  static EvtId UPS2=EvtPDL::getId("Upsilon(2S)");
-  static EvtId UPS3=EvtPDL::getId("Upsilon(3S)");
-  static EvtId PSI4040=EvtPDL::getId("psi(4040)");
-  static EvtId PSI4160=EvtPDL::getId("psi(4160)");
-  static EvtId PSI4415=EvtPDL::getId("psi(4415)");
-
-
-  if (getParentId()==PHI) setProbMax(2.2);
-  if (getParentId()==PSI) setProbMax(20.0);
-  if (getParentId()==PSI2S) setProbMax(30.0);
-  if (getParentId()==UPS1) setProbMax(170.0);
-  if (getParentId()==UPS2) setProbMax(180.0);
-  if (getParentId()==UPS3) setProbMax(250.0);
-  if (getParentId()==PSI4040) setProbMax(50.0);
-  if (getParentId()==PSI4160) setProbMax(50.0);
-  if (getParentId()==PSI4415) setProbMax(60.0);
+  setProbMax(1.0);
 
 }
 
@@ -101,21 +87,27 @@ void EvtVll::decay(EvtParticle *p){
   EvtVector4C eps1=p->eps(1);
   EvtVector4C eps2=p->eps(2);
 
+  double M2=p->mass();
+  M2*=M2;
+  double m2=l1->mass();
+  m2*=m2;
 
-  vertex(0,0,0,eps0*l11);
-  vertex(0,0,1,eps0*l12);
-  vertex(0,1,0,eps0*l21);
-  vertex(0,1,1,eps0*l22);
+  double norm=1.0/sqrt(2*M2+4*m2-4*m2*m2/M2);
+
+  vertex(0,0,0,norm*(eps0*l11));
+  vertex(0,0,1,norm*(eps0*l12));
+  vertex(0,1,0,norm*(eps0*l21));
+  vertex(0,1,1,norm*(eps0*l22));
   
-  vertex(1,0,0,eps1*l11);
-  vertex(1,0,1,eps1*l12);
-  vertex(1,1,0,eps1*l21);
-  vertex(1,1,1,eps1*l22);
+  vertex(1,0,0,norm*(eps1*l11));
+  vertex(1,0,1,norm*(eps1*l12));
+  vertex(1,1,0,norm*(eps1*l21));
+  vertex(1,1,1,norm*(eps1*l22));
   
-  vertex(2,0,0,eps2*l11);
-  vertex(2,0,1,eps2*l12);
-  vertex(2,1,0,eps2*l21);
-  vertex(2,1,1,eps2*l22);
+  vertex(2,0,0,norm*(eps2*l11));
+  vertex(2,0,1,norm*(eps2*l12));
+  vertex(2,1,0,norm*(eps2*l21));
+  vertex(2,1,1,norm*(eps2*l22));
   
   return;
 

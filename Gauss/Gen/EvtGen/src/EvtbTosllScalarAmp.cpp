@@ -19,18 +19,23 @@
 //
 //------------------------------------------------------------------------
 //
-#include "EvtGen/EvtParticle.hh"
-#include "EvtGen/EvtGenKine.hh"
-#include "EvtGen/EvtPDL.hh"
-#include "EvtGen/EvtReport.hh"
-#include "EvtGen/EvtVector4C.hh"
-#include "EvtGen/EvtTensor4C.hh"
-#include "EvtGen/EvtDiracSpinor.hh"
-#include "EvtGen/EvtbTosllScalarAmp.hh"
-#include "EvtGen/EvtId.hh"
-#include "EvtGen/EvtIdSet.hh"
-#include "EvtGen/EvtAmp.hh"
-#include "EvtGen/EvtbTosllFF.hh"
+#ifdef WIN32 
+  #pragma warning( disable : 4786 ) 
+  // Disable anoying warning about symbol size 
+#endif 
+#include "EvtGenBase/EvtPatches.hh"
+#include "EvtGenBase/EvtParticle.hh"
+#include "EvtGenBase/EvtGenKine.hh"
+#include "EvtGenBase/EvtPDL.hh"
+#include "EvtGenBase/EvtReport.hh"
+#include "EvtGenBase/EvtVector4C.hh"
+#include "EvtGenBase/EvtTensor4C.hh"
+#include "EvtGenBase/EvtDiracSpinor.hh"
+#include "EvtGenModels/EvtbTosllScalarAmp.hh"
+#include "EvtGenBase/EvtId.hh"
+#include "EvtGenBase/EvtIdSet.hh"
+#include "EvtGenBase/EvtAmp.hh"
+#include "EvtGenModels/EvtbTosllFF.hh"
 
 void EvtbTosllScalarAmp::CalcAmp( EvtParticle *parent,
 				  EvtAmp& amp,
@@ -56,6 +61,7 @@ void EvtbTosllScalarAmp::CalcAmp( EvtParticle *parent,
 
   EvtVector4R p4b;
   p4b.set(parent->mass(),0.0,0.0,0.0);
+  EvtVector4R p4meson = parent->getDaug(0)->getP4();
  
   EvtVector4C l11,l12;
   EvtVector4C l21,l22;
@@ -70,9 +76,9 @@ void EvtbTosllScalarAmp::CalcAmp( EvtParticle *parent,
   EvtVector4R phat=p4b/parentmass;
   EvtVector4R qhat=q/parentmass;
 
-  double c9=4.344;
-  double c7=-0.313;
-  double c10=-4.669;
+  //double c9=4.344;
+  //double c7=-0.313;
+  //double c10=-4.669;
   //double mbhat=1;
   double mbhat=4.4/(parentmass);      
   //double mkhat = 0.15;
@@ -81,11 +87,11 @@ void EvtbTosllScalarAmp::CalcAmp( EvtParticle *parent,
 
   double fm=(f0-fp)*(1-mkhat*mkhat)/shat;
 
-  double aprime=c9*fp+2.0*mbhat*c7*ft/(1+mkhat);
-  double bprime=c9*fm-2*mbhat*c7*ft*(1-mkhat)/shat;
+  double aprime=_c9*fp+2.0*mbhat*_c7*ft/(1+mkhat);
+  double bprime=_c9*fm-2*mbhat*_c7*ft*(1-mkhat)/shat;
 
-  double cprime=c10*fp;
-  double dprime=c10*fm;
+  double cprime=_c10*fp;
+  double dprime=_c10*fm;
 
   static EvtIdSet leptons("e-","mu-","tau-");
   static EvtIdSet antileptons("e+","mu+","tau+");

@@ -5,7 +5,7 @@
 //      for the BaBar and CLEO collaborations.  If you use all or part
 //      of it, please give an appropriate acknowledgement.
 //
-// Copyright Information: See EvtGen/COPYRIGHT
+// Copyright Information:
 //      Copyright (C) 1998      Caltech, UCSB
 //
 // Module: EvtVub.cc
@@ -18,19 +18,23 @@
 //
 //------------------------------------------------------------------------
 //
+#ifdef WIN32 
+  #pragma warning( disable : 4786 ) 
+  // Disable anoying warning about symbol size 
+#endif 
 #include <stdlib.h>
-#include "EvtGen/EvtParticle.hh"
-#include "EvtGen/EvtGenKine.hh"
-#include "EvtGen/EvtPDL.hh"
-#include "EvtGen/EvtReport.hh"
-#include "EvtGen/EvtVub.hh"
-#include "EvtGen/EvtString.hh"
-#include "EvtGen/EvtVector4R.hh"
-#include "EvtGen/EvtHepRandomEngine.hh"
-#include "EvtGen/EvtPFermi.hh"
-#include "EvtGen/EvtVubdGamma.hh"
+#include "EvtGenBase/EvtParticle.hh"
+#include "EvtGenBase/EvtGenKine.hh"
+#include "EvtGenBase/EvtPDL.hh"
+#include "EvtGenBase/EvtReport.hh"
+#include "EvtGenModels/EvtVub.hh"
+#include <string>
+#include "EvtGenBase/EvtVector4R.hh"
+#include "EvtGenModels/EvtHepRandomEngine.hh"
+#include "EvtGenModels/EvtPFermi.hh"
+#include "EvtGenModels/EvtVubdGamma.hh"
 #include "CLHEP/Random/RandGeneral.h"
-#include "EvtGen/EvtRandom.hh"
+#include "EvtGenBase/EvtRandom.hh"
 
 EvtVub::~EvtVub() {
   delete _dGamma;
@@ -39,7 +43,7 @@ EvtVub::~EvtVub() {
   delete [] _weights;
 }
 
-void EvtVub::getName(EvtString& model_name){
+void EvtVub::getName(std::string& model_name){
 
   model_name="VUB";     
 
@@ -59,7 +63,8 @@ void EvtVub::init(){
   if (getNArg()<6) {
 
     report(ERROR,"EvtGen") << "EvtVub generator expected "
-                           << " at least 6 arguments (mb,a,alpha_s,Nbins,m1,w1,...) but found: "
+                           << " at least 6 arguments "
+                           << "(mb,a,alpha_s,Nbins,m1,w1,...) but found: "
 			   <<getNArg()<<std::endl;
     report(ERROR,"EvtGen") << "Will terminate execution!"<<std::endl;
     ::abort();
@@ -139,14 +144,13 @@ void EvtVub::init(){
     pf[i] = pFermi.getFPFermi(kplus);
   }
 
-    static EvtHepRandomEngine myEngine;
-//  static EvtHepRandomEngine *myEngine;
+  static EvtHepRandomEngine myEngine;
 
   _pFermi = new RandGeneral(myEngine,pf,aSize,0);
   _dGamma = new EvtVubdGamma(_alphas);
   
+  // check that there are 3 daughters
   checkNDaug(3);
-
 }
 
 void EvtVub::initProbMax(){
@@ -159,76 +163,87 @@ void EvtVub::decay( EvtParticle *p ){
 
   int j;
   // B+ -> u-bar specflav l+ nu
-
+  
   EvtParticle *xuhad, *lepton, *neutrino;
   EvtVector4R p4;
-
-  p->initializePhaseSpace(getNDaug(),getDaugs());
-
-  xuhad=p->getDaug(0);
-  lepton=p->getDaug(1);
-  neutrino=p->getDaug(2);
-
-  double mB = p->mass();
-  double ml = lepton->mass();
-
-  const double xlow = -_mb;
-  const double xhigh = mB-_mb;
+  // R. Faccini 21/02/03
+  // move the reweighting up , before also shooting the fermi distribution
+  double x,z,p2,sh(0.),mB,ml,xlow,xhigh,qplus,El,Eh(0.),kplus;
   const double p2epsilon=1e-10;
-
-  double sh = 0;
-
-  // Fermi motion does not need to be computed inside the
-  // tryit loop as m_b in Gamma0 does not need to be replaced by (m_b+kplus).
-  // The difference however should be of the Order (lambda/m_b)^2 which is
-  // beyond the considered orders in the paper anyway ...
-
-  // for alpha_S = 0 and a mass cut on X_u not all values of kplus are 
-  // possible. The maximum value is mB/2-_mb + sqrt(mB^2/4-_masses[0]^2)
-  double kplus = 2*xhigh;
-  
-  while( kplus >= xhigh || kplus <= xlow 
-	 || (_alphas == 0 && kplus >= mB/2-_mb 
-	     + sqrt(mB*mB/4-_masses[0]*_masses[0]))) {
-    kplus = _pFermi->shoot();
-    kplus = xlow + kplus*(xhigh-xlow);
-  }
-  double x;
-  int tryit = 1;
-  double z;
-  double p2;
-  double qplus,El,Eh = 0.0;
-
-  while (tryit) {
-
-    x = EvtRandom::Flat();
-    z = EvtRandom::Flat(0,2);
-    p2 = pow(10,log10(p2epsilon) - log10(p2epsilon)*EvtRandom::Flat());
-
-    qplus = mB-_mb-kplus;
-    El = x*(mB-qplus)/2;
-    if ( El > ml && El < mB/2) {
-
-      Eh = z*(mB-qplus)/2+qplus;
-      if ( Eh > 0 && Eh < mB ) {
-
-	sh = p2*pow(mB-qplus,2)+2*qplus*(Eh-qplus)+qplus*qplus;
-	if ( sh > _masses[0]*_masses[0]
-	     && mB*mB + sh - 2*mB*Eh > ml*ml) {
-
-	  double xran = EvtRandom::Flat();
-	  double y = _dGamma->getdGdxdzdp(x,z,p2)/_dGMax*p2;
-	  j=0;
-	  double m = sqrt(sh);
-	  while ( j < _nbins && m > _masses[j] ) j++; 
-	  double w = _weights[j-1];
-	  y *= w;
-	  if ( y > 1 ) report(WARNING,"EvtGen")<<"EvtVub decay probability > 1 found: " << y << std::endl;
-	  if ( y >= xran ) tryit = 0;
+  bool rew(true);
+  while(rew){
+    
+    p->initializePhaseSpace(getNDaug(),getDaugs());
+    
+    xuhad=p->getDaug(0);
+    lepton=p->getDaug(1);
+    neutrino=p->getDaug(2);
+    
+    mB = p->mass();
+    ml = lepton->mass();
+    
+    xlow = -_mb;
+    xhigh = mB-_mb;    
+    
+    
+    // Fermi motion does not need to be computed inside the
+    // tryit loop as m_b in Gamma0 does not need to be replaced by (m_b+kplus).
+    // The difference however should be of the Order (lambda/m_b)^2 which is
+    // beyond the considered orders in the paper anyway ...
+    
+    // for alpha_S = 0 and a mass cut on X_u not all values of kplus are 
+    // possible. The maximum value is mB/2-_mb + sqrt(mB^2/4-_masses[0]^2)
+    kplus = 2*xhigh;
+    
+    while( kplus >= xhigh || kplus <= xlow 
+	   || (_alphas == 0 && kplus >= mB/2-_mb 
+	       + sqrt(mB*mB/4-_masses[0]*_masses[0]))) {
+      kplus = _pFermi->shoot();
+      kplus = xlow + kplus*(xhigh-xlow);
+    }
+    int tryit = 1;
+    
+    while (tryit) {
+      
+      x = EvtRandom::Flat();
+      z = EvtRandom::Flat(0,2);
+      p2 = pow(10,log10(p2epsilon) - log10(p2epsilon)*EvtRandom::Flat());
+      
+      qplus = mB-_mb-kplus;
+      El = x*(mB-qplus)/2;
+      if ( El > ml && El < mB/2) {
+	
+	Eh = z*(mB-qplus)/2+qplus;
+	if ( Eh > 0 && Eh < mB ) {
+	  
+	  sh = p2*pow(mB-qplus,2)+2*qplus*(Eh-qplus)+qplus*qplus;
+	  if ( sh > _masses[0]*_masses[0]
+	       && mB*mB + sh - 2*mB*Eh > ml*ml) {
+	    
+	    double xran = EvtRandom::Flat();
+	    
+	    double y = _dGamma->getdGdxdzdp(x,z,p2)/_dGMax*p2;
+	    
+	    if ( y > 1 ) report(WARNING,"EvtGen")
+        <<"EvtVub decay probability > 1 found: " << y << std::endl;
+	    if ( y >= xran ) tryit = 0;
+	  }
 	}
       }
     }
+    // reweight the Mx distribution
+    if(_nbins>0){
+      double xran1 = EvtRandom::Flat();
+      double m = sqrt(sh);j=0;
+      while ( j < _nbins && m > _masses[j] ) j++; 
+      double w = _weights[j-1]; 
+      if ( w >= xran1 ) rew = false;
+    } else {
+      rew = false;
+    }
+    
   }
+
   // o.k. we have the three kineamtic variables 
   // now calculate a flat cos Theta_H [-1,1] distribution of the 
   // hadron flight direction w.r.t the B flight direction 
@@ -249,7 +264,6 @@ void EvtVub::decay( EvtParticle *p ){
   sttmp = sqrt(1-ctH*ctH);
   ptmp = sqrt(Eh*Eh-sh);
   double pHB[4] = {Eh,ptmp*sttmp*cos(phH),ptmp*sttmp*sin(phH),ptmp*ctH};
-
   p4.set(pHB[0],pHB[1],pHB[2],pHB[3]);
   xuhad->init( getDaug(0), p4);
 
@@ -317,6 +331,8 @@ void EvtVub::decay( EvtParticle *p ){
 
   double apLW = ptmp;
   // calculate the neutrino 4 vector in the W restframe
+
+  double pNW[4] = {sqrt(mW2)-pLW[0],-pLW[1],-pLW[2],-pLW[3]};
     
   // boost them back in the B Meson restframe
   

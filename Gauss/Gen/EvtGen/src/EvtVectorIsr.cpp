@@ -15,23 +15,28 @@
 //
 // Modification history:
 //
+//    Joe Izen        Dec  16, 2002         Fix cos_theta distribution - prevents boom at cos_theta=+/-1 
 //    RYD/Adriano     June 16, 1998         Module created
 //
 //------------------------------------------------------------------------
 //
+#ifdef WIN32 
+  #pragma warning( disable : 4786 ) 
+  // Disable anoying warning about symbol size 
+#endif 
 #include <stdlib.h>
-#include "EvtGen/EvtParticle.hh"
-#include "EvtGen/EvtRandom.hh"
-#include "EvtGen/EvtPDL.hh"
-#include "EvtGen/EvtVectorIsr.hh"
-#include "EvtGen/EvtReport.hh"
-#include "EvtGen/EvtConst.hh"
-#include "EvtGen/EvtString.hh"
-#include "EvtGen/EvtVector4C.hh"
+#include "EvtGenBase/EvtParticle.hh"
+#include "EvtGenBase/EvtRandom.hh"
+#include "EvtGenBase/EvtPDL.hh"
+#include "EvtGenModels/EvtVectorIsr.hh"
+#include "EvtGenBase/EvtReport.hh"
+#include "EvtGenBase/EvtConst.hh"
+#include <string>
+#include "EvtGenBase/EvtVector4C.hh"
 
 EvtVectorIsr::~EvtVectorIsr() {}
 
-void EvtVectorIsr::getName(EvtString& model_name){
+void EvtVectorIsr::getName(std::string& model_name){
 
   model_name="VECTORISR";     
 
@@ -58,6 +63,7 @@ void EvtVectorIsr::init(){
   csfrmn=getArg(0);
   csbkmn=getArg(1);
 
+
 }
 
 void EvtVectorIsr::initProbMax(){
@@ -71,52 +77,53 @@ void EvtVectorIsr::decay( EvtParticle *p ){
   EvtParticle *phi;
   EvtParticle *gamma;
 
+  //the elctron mass
+  double electMass=EvtPDL::getMeanMass(EvtPDL::getId("e-"));
+
 
   //get pointers to the daughters set
-  p->makeDaughters(getNDaug(),getDaugs());
+  //get masses/initial phase space - will overwrite the
+  //p4s below to get the kinematic distributions correct
+  p->initializePhaseSpace(getNDaug(),getDaugs());
   phi=p->getDaug(0);
   gamma=p->getDaug(1);
 
-  double mass[2];
-  findMasses(p,getNDaug(),getDaugs(),mass);
-
   double wcm=p->mass();
+  double beta=2.*electMass/wcm; //electMass/Ebeam = betagamma
+  beta=sqrt(1. - beta*beta);   //sqrt (1 - (m/ebeam)**2)
 
   //gamma momentum in the parents restframe
-  double pg=(wcm*wcm-mass[0]*mass[0])/(2*wcm);
+  double pg=(wcm*wcm-phi->mass()*phi->mass())/(2*wcm);
 
-  int kcs;
-  double csmn;
+//    //generate kinematics according to Bonneau-Martin article
+//    //Nucl. Phys. B27 (1971) 381-397
 
-  //warning this does not do quite the right thing since I
-  //have ignored the weight for how ofthen to generate forward
-  //vs. backward going photons's
-  if (EvtRandom::Flat(0.0,1.0)>0.5) {
-    kcs=1;
-    csmn=csfrmn;
-  }
-  else{
-    kcs=-1;
-    csmn=csbkmn;
-  }
+//    double y=pow((1+csmn)/(1-csmn),EvtRandom::Flat(0.0,1.0));
+//    double cs=kcs*(y-1)/(y+1);
 
-  //generate kinematics according to Bonneau-Martin article
-  //Nucl. Phys. B27 (1971) 381-397
-  double y=pow((1+csmn)/(1-csmn),EvtRandom::Flat(0.0,1.0));
-  double cs=kcs*(y-1)/(y+1);
+  // For backward compatibility with .dec files before SP5, the backward cos limit for
+  //the ISR photon is actually given as *minus* the actual limit. Sorry, this wouldn't be
+  //my choice.  -Joe
+
+  double ymax=log((1.+beta*csfrmn)/(1.-beta*csfrmn));
+  double ymin=log((1.-beta*csbkmn)/(1.+beta*csbkmn));
+
+  // photon theta distributed as  2*beta/(1-beta**2*cos(theta)**2)
+  double y=(ymax-ymin)*EvtRandom::Flat(0.0,1.0) + ymin;
+  double cs=exp(y);
+  cs=(cs - 1.)/(cs + 1.)/beta;
   double sn=sqrt(1-cs*cs);
 
   double fi=EvtRandom::Flat(EvtConst::twoPi);
 
   //four-vector for the phi
-  EvtVector4R p4phi(sqrt(mass[0]*mass[0]+pg*pg),pg*sn*cos(fi),
+  EvtVector4R p4phi(sqrt(phi->mass()*phi->mass()+pg*pg),pg*sn*cos(fi),
 		 pg*sn*sin(fi),pg*cs);
 
   EvtVector4R p4gamma(pg,-p4phi.get(1),-p4phi.get(2),-p4phi.get(3));
 
   //save momenta for particles
   phi->init( getDaug(0),p4phi);
-
   gamma->init( getDaug(1),p4gamma);
 
   //try setting the spin density matrix of the phi

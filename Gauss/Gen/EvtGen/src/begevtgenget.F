@@ -12,7 +12,7 @@
 *
 * 
       implicit none
-#include "EvtGen/stdhep.inc"
+#include "EvtGenModels/stdhep.inc"
 
         integer entry,eventnum,numparticle,istat,partnum
         integer mother,daugfirst,dauglast

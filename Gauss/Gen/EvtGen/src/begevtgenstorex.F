@@ -29,13 +29,16 @@ C------------------------------------------------------------------------
 *
 * 
       implicit none
-      INTEGER NMXHEP
-      PARAMETER (NMXHEP=4000) !!! KRAL - NEW SIZE
-      INTEGER IDHEP,ISTHEP,JDAHEP,JMOHEP,NEVHEP,NHEP
-      real PHEP,VHEP !!! Kral - double precision for STDHEP v3.0
-      COMMON/XHEPEVT/NEVHEP,NHEP,ISTHEP(NMXHEP),IDHEP(NMXHEP),
-     &JMOHEP(2,NMXHEP),JDAHEP(2,NMXHEP),PHEP(5,NMXHEP),VHEP(4,NMXHEP)
-      SAVE /XHEPEVT/
+C      INTEGER NMXHEP
+C      PARAMETER (NMXHEP=4000) !!! KRAL - NEW SIZE
+C      INTEGER IDHEP,ISTHEP,JDAHEP,JMOHEP,NEVHEP,NHEP
+C      real PHEP,VHEP !!! Kral - double precision for STDHEP v3.0
+C      COMMON/XHEPEVT/NEVHEP,NHEP,ISTHEP(NMXHEP),IDHEP(NMXHEP),
+C     &JMOHEP(2,NMXHEP),JDAHEP(2,NMXHEP),PHEP(5,NMXHEP),VHEP(4,NMXHEP)
+C      SAVE /XHEPEVT/
+
+#include "EvtGenModels/stdhep.inc"
+
         integer entry,eventnum,numparticle,istat,partnum
         integer mother,daugfirst,dauglast
 

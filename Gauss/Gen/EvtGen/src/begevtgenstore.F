@@ -30,7 +30,7 @@ C------------------------------------------------------------------------
 *
 * 
       implicit none
-#include "EvtGen/stdhep.inc"
+#include "EvtGenModels/stdhep.inc"
 
         integer nument,eventnum,numparticle,istat,partnum
         integer motherfirst,motherlast,daugfirst,dauglast

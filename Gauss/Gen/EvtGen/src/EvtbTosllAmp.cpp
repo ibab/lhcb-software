@@ -18,19 +18,24 @@
 //    DJL       April 17,1998       Module created
 //
 //------------------------------------------------------------------------
-//
-#include "EvtGen/EvtParticle.hh"
-#include "EvtGen/EvtGenKine.hh"
-#include "EvtGen/EvtPDL.hh"
-#include "EvtGen/EvtReport.hh"
-#include "EvtGen/EvtVector4C.hh"
-#include "EvtGen/EvtTensor4C.hh"
-#include "EvtGen/EvtDiracSpinor.hh"
-#include "EvtGen/EvtbTosllAmp.hh"
-#include "EvtGen/EvtId.hh"
-#include "EvtGen/EvtAmp.hh"
-#include "EvtGen/EvtScalarParticle.hh"
-#include "EvtGen/EvtVectorParticle.hh"
+// 
+#ifdef WIN32 
+  #pragma warning( disable : 4786 ) 
+  // Disable anoying warning about symbol size 
+#endif 
+#include "EvtGenBase/EvtPatches.hh"
+#include "EvtGenBase/EvtParticle.hh"
+#include "EvtGenBase/EvtGenKine.hh"
+#include "EvtGenBase/EvtPDL.hh"
+#include "EvtGenBase/EvtReport.hh"
+#include "EvtGenBase/EvtVector4C.hh"
+#include "EvtGenBase/EvtTensor4C.hh"
+#include "EvtGenBase/EvtDiracSpinor.hh"
+#include "EvtGenModels/EvtbTosllAmp.hh"
+#include "EvtGenBase/EvtId.hh"
+#include "EvtGenBase/EvtAmp.hh"
+#include "EvtGenBase/EvtScalarParticle.hh"
+#include "EvtGenBase/EvtVectorParticle.hh"
 
 double EvtbTosllAmp::CalcMaxProb( EvtId parent, EvtId meson, 
 				  EvtId lepton1, EvtId lepton2,
@@ -109,14 +114,15 @@ double EvtbTosllAmp::CalcMaxProb( EvtId parent, EvtId meson,
 
   for (massiter=0;massiter<3;massiter++){
 
-    mass[0] = EvtPDL::getNominalMass(meson);
-    mass[1] = EvtPDL::getNominalMass(lepton1);
-    mass[2] = EvtPDL::getNominalMass(lepton2);
+    mass[0] = EvtPDL::getMeanMass(meson);
+    mass[1] = EvtPDL::getMeanMass(lepton1);
+    mass[2] = EvtPDL::getMeanMass(lepton2);
     if ( massiter==1 ) {
       mass[0] = EvtPDL::getMinMass(meson);
     }
     if ( massiter==2 ) {
       mass[0] = EvtPDL::getMaxMass(meson);
+      if ( (mass[0]+mass[1]+mass[2])>m) mass[0]=m-mass[1]-mass[2]-0.00001; 
     }
 
     q2max = (m-mass[0])*(m-mass[0]);
@@ -170,11 +176,11 @@ double EvtbTosllAmp::CalcMaxProb( EvtId parent, EvtId meson,
 
 	//Do a little magic to get the probability!!
 
-	//cout <<"amp:"<<amp.getSpinDensity()<<endl;
+	//report(INFO,"EvtGen") <<"amp:"<<amp.getSpinDensity()<<std::endl;
 
 	prob = rho.NormalizedProb(amp.getSpinDensity());
 
-	//cout << "prob:"<<q2<<" "<<costl<<" "<<prob<<endl;
+	//report(INFO,"EvtGen") << "prob:"<<q2<<" "<<costl<<" "<<prob<<std::endl;
 
 	probctl[j]=prob;
       }
@@ -202,7 +208,7 @@ double EvtbTosllAmp::CalcMaxProb( EvtId parent, EvtId meson,
       //report(DEBUG,"EvtGen") << "prob,probctl:"<<prob<<" "
       //			    << probctl[0]<<" "
       //			    << probctl[1]<<" "
-      //			    << probctl[2]<<endl;
+      //			    << probctl[2]<<std::endl;
 
       if (i==0) {
 	maxpole=prob;
@@ -213,7 +219,7 @@ double EvtbTosllAmp::CalcMaxProb( EvtId parent, EvtId meson,
 	maxfoundprob = prob; 
       }
 
-      //cout << "q2,maxfoundprob:"<<q2<<" "<<maxfoundprob<<endl;
+      //report(INFO,"EvtGen") << "q2,maxfoundprob:"<<q2<<" "<<maxfoundprob<<std::endl;
 
     }
     if ( EvtPDL::getWidth(meson) <= 0.0 ) {
@@ -229,8 +235,8 @@ double EvtbTosllAmp::CalcMaxProb( EvtId parent, EvtId meson,
 
   //poleSize=0.002;
 
-  //cout <<"maxfoundprob,maxpole,poleSize:"<<maxfoundprob<<" "
-  //     <<maxpole<<" "<<poleSize<<endl;
+  //report(INFO,"EvtGen") <<"maxfoundprob,maxpole,poleSize:"<<maxfoundprob<<" "
+  //     <<maxpole<<" "<<poleSize<<std::endl;
 
   maxfoundprob *=1.1;
 
