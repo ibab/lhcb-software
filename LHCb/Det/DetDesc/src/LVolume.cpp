@@ -7,7 +7,7 @@
 
 #include "GaudiKernel/StatusCode.h"
 #include "GaudiKernel/DataObject.h"
-#include "GaudiKernel/Time.h" 
+#include "GaudiKernel/TimePoint.h" 
 
 #include "GaudiKernel/SmartDataPtr.h" 
 #include "GaudiKernel/TransientStore.h" 
@@ -64,9 +64,9 @@ LVolume::LVolume( )                    // private!!!
   ///
   ///  Assert( 0 != Solid , " LVolume consructor, pointer to ISolid is NULL " );
   ///
-  m_lv_validSince = new Time::Time( Time::time_absolutepast   ) ;
+  m_lv_validSince = new TimePoint( time_absolutepast );
   ///
-  m_lv_validTill  = new Time::Time( Time::time_absolutefuture ) ;
+  m_lv_validTill  = new TimePoint( time_absolutefuture ) ;
   ///
 }; 
 
@@ -96,9 +96,9 @@ LVolume::LVolume( const std::string& name        ,
 {
   Assert( 0 != Solid , "LVolume::LVolume(...), ISolid* points to NULL " );
   //
-  m_lv_validSince = new Time::Time( validSince ) ;
+  m_lv_validSince = new TimePoint( validSince ) ;
   //
-  m_lv_validTill  = new Time::Time( validTill  ) ;
+  m_lv_validTill  = new TimePoint( validTill  ) ;
   //
 }; 
 
@@ -126,9 +126,9 @@ LVolume::LVolume( const std::string& name        ,
   ///
   Assert( 0 != Solid , "LVolume::LVolume(...), ISolid* points to NULL!" );
   ///
-  m_lv_validSince = new Time::Time( Time::time_absolutepast   ) ;
+  m_lv_validSince = new TimePoint( time_absolutepast   ) ;
   ///
-  m_lv_validTill  = new Time::Time( Time::time_absolutefuture ) ;
+  m_lv_validTill  = new TimePoint( time_absolutefuture ) ;
   ///
 }; 
 

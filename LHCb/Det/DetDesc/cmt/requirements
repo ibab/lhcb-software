@@ -5,7 +5,7 @@ branches DetDesc doc cmt src
 
 include_dirs $(DETDESCROOT)
 
-use GaudiKernel v8
+use GaudiKernel v8r1
 use CLHEP v*
 use XML v*
 
