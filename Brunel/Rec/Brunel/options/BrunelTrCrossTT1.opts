@@ -8,4 +8,4 @@ trCreat.lastStation = 4;
 OTDigitChecker.numStations = 4;
 OTDigitChecker.firstOTStation = 1;
 ToolSvc.ITGeometryTool.newCDF    = false;  // old CDF format until dbase v242
-ToolSvc.ITGeometryTool.newLayout = false;  // old TT1 layout until dbase v242r1
+ToolSvc.ITGeometryTool.newLayout = false;  // old TT1 layout until dbase v242

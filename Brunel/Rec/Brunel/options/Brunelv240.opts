@@ -15,7 +15,7 @@ EventSelector.Input = {"JOBID='81091'"}; // Signal, evtype 412100
 // Database specific options
 //--------------------------------------------------------------
 ToolSvc.ITGeometryTool.newCDF    = false;  // old CDF format until dbase v242
-ToolSvc.ITGeometryTool.newLayout = false;  // old TT1 layout until dbase v242r1
+ToolSvc.ITGeometryTool.newLayout = false;  // old TT1 layout until dbase v242
 
 //--------------------------------------------------------------
 // Add here your specific options. These over-ride previously defined options
