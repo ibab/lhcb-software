@@ -3,6 +3,11 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
+</PRE><H1><A NAME=v21r0p1>2003-11-10 Brunel v21r0p1</A></H1><PRE>
+
+- Bug fix
+   . Use correct serialization to read in HltBuffer and L1Buffer (DAQEvent v2r1)
+
 </PRE><H1><A NAME=v21r0>2003-11-05 Brunel v21r0</A></H1><PRE>
  Version built against LHCB v13r3. Requires oodigi produced by Boole v3r0 or
  later (due to backward incompatible change in Rich data and DAQEvent)

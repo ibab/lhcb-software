@@ -1,5 +1,5 @@
 package BrunelSys
-version v21r0
+version v21r0p1
 
 branches cmt doc
  
@@ -8,10 +8,10 @@ branches cmt doc
 #=======================================================
 
 # Brunel application
-use Brunel              v21r0	Rec
+use Brunel              v21r0p1	Rec
 
 # Brunel utilities
-use BrunelAlgs          v3r1	Rec
+use BrunelAlgs          v3r1p1	Rec
 use MCTools		v1r1p1	Phys
 
 # Calorimeter

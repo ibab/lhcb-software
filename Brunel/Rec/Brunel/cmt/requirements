@@ -1,5 +1,5 @@
 package Brunel
-version v21r0
+version v21r0p1
 
 branches doc cmt job options
 
@@ -37,7 +37,7 @@ use XmlDDDB		v19r0	Det
 use ParamFiles          v2r1    $(LHCb_release_area)/PARAM -no_auto_imports
 
 #-- LHCb libraries (from LHCB_v13r3)
-use LHCb	v13r3
+use LHCb	v13r3p1
 
 #-- BrunelSys v21r0 packages
 
@@ -45,7 +45,7 @@ use LHCb	v13r3
 use MCTools		v1r1p1	Phys
 
 # Brunel utilities
-use BrunelAlgs          v3r1	Rec
+use BrunelAlgs          v3r1p1	Rec
 
 # Calorimeter
 use CaloInterfaces      v2r4  	Calo

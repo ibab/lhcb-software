@@ -4,6 +4,10 @@
 ! Purpose     : List of packages in Brunel project
 !-----------------------------------------------------------------------------
 
+!====================== BrunelSys v21r0p1 2003-11-10 ======================
+! 2003-11-10 - Marco Cattaneo
+ - Packages modified: BrunelAlgs v3r1p1, Brunel v21r0p1
+
 !======================= BrunelSys v21r0 2003-11-05 =======================
 ! 2003-11-05 - Marco Cattaneo
  - Modified requirements for Brunel v21r0. Uses LHCB v13r3
