@@ -1,7 +1,7 @@
 package  GiGa 
 
 version v4
-set GIGAOPTIONS "${GIGAROOT}/options/GiGaOptions.txt"
+set GIGAOPTIONS "$(GIGAROOT)/options/GiGaOptions.txt"
 
 branches cmt src doc GiGa 
 
@@ -25,7 +25,7 @@ use GEANT4        v3r0*	Sim
 #document tex   GiGaGuide         ../doc/GiGa.tex
 #document tex   GiGaEvolution     ../doc/GiGaEvolution.tex
 
-include_dirs                     ${GIGAROOT}
+include_dirs                     $(GIGAROOT)
 
 # component library
 library        GiGa  ../src/*.cpp 	        
