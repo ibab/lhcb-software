@@ -9,9 +9,6 @@ Requires XmlDDDB v22r0 or greater
 Requires data produced by Gauss v14r3 or greater
 
 - New features
-  - Linked against Gaudi_v14r3, makes available new base classes for monitoring
-    algorithms and tools 
-    (GaudiAlg v7r1, GaudiTools v8r0, CaloMonitor v2r0, CaloDigit v1r6)
   - New ST code to fill L1Buffer and RawBuffer (and remove old PrepareTTL1Buffer)
     (STDAQ v1r0, ITAlgorithms v14r1, ITCheckers v2r1, ITAssociators v2r8)
   - New and repackaged Velo code to fill L1Buffer and RawBuffer
@@ -25,6 +22,7 @@ Requires data produced by Gauss v14r3 or greater
     (GaudiSvc v11r4, ParamFiles v3r4)
   - Remove fix for Rich energy deposit, now fixed since Gauss v14r3
     (RichReadout v1r7)
+  - New HPD layout in Rich2 (backwards incompatible) (XmlDDDB v22r0)
 
 - Persistency changes
   - Default output file is now POOL
@@ -45,8 +43,9 @@ Requires data produced by Gauss v14r3 or greater
   - Removed VeloRound, round() function now implemented in Kernel/LHCbMath.h
     (LHCbKernel v4r3, VeloKernel v1r4, VelDet v8r8p1, VeloAlgorithms v2r9p1)
   - Use new Gaudi base classes. New printout for tools not finalised
-    (GaudiAlg v7r1, GaudiTools v8r1, LHCbKernel v4r4, RichUtils v3r8, 
-     RichDetTools v4r0, RichReadout v1r7, RichDigiQC v1r5)
+    (GaudiAlg v7r1, GaudiTools v8r1, LHCbKernel v4r4, CaloMonitor v2r0, 
+     CaloDigit v1r6, RichUtils v3r8, RichDetTools v4r0, RichReadout v1r7,
+     RichDigiQC v1r5)
 
 </PRE><H1><A NAME=v5r2>2004-02-10 Boole v5r2</A></H1><PRE>
 
