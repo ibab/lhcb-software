@@ -1,0 +1,8 @@
+!-----------------------------------------------------------------------------
+! Package     : Rich/RichDAQ
+! Responsible : Chris Jones   Christoper.Rob.Jones@cern.ch
+! Purpose     : Package simulating the RICH DAQ system and data format
+!-----------------------------------------------------------------------------
+
+! 2003-11-08 - Chris Jones
+ - First version in CVS

@@ -1,0 +1,39 @@
+#============================================================================
+# Created    : 2003-11-06
+# Maintainer : Chris Jones
+#
+# Documentation on the requirement file can be found at
+# http://cern.ch/lhcb-comp/Support/html/new_structure.pdf
+#============================================================================
+package           RichDAQ
+version           v1r0
+
+#============================================================================
+# This template is an example for a standard Algorithm package
+#
+# Structure, i.e. directories to process. 
+#============================================================================
+branches          cmt doc src RichDAQ
+
+#============================================================================
+# Used packages. Specify the version, * at the end specifies 'any revision'
+#    Put as many lines as needed, with all packages, without the '#'
+#============================================================================
+use   RichUtils      v3r*    Rich
+use   RichEvent      v6r*    Event
+use   DAQEvent       v2r*    Event
+
+#============================================================================
+# Component library building rule
+#============================================================================
+library          RichDAQ    ../src/*.cpp
+
+#============================================================================
+# define component library link options
+#============================================================================
+apply_pattern    package_Clinkopts
+apply_pattern    packageShr
+
+#============================================================================
+private
+apply_pattern    package_Cshlibflags
