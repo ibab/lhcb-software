@@ -4,8 +4,10 @@
 ! Purpose     : LHCb OO kernel packages
 !-----------------------------------------------------------------------------
 
-!======================= LHCbSys v15r7 2004-04-20 =======================
-! 2004-04-20 - Marco Cattaneo
+!======================= LHCbSys v15r7 2004-04-21 =======================
+! 2004-04-21 - Marco Cattaneo
+  Built against Gaudi v14r5
+
  - Modified packages: GaudiConf v7r7, EventSys v17r7, RichEvent v7r3,
      DetSys v5r5, RichDet v7r1, AssociatorsSys v1r13,
      OTAssociators v2r8, MuonAssociators v1r3, VeloAssociators v1r10
