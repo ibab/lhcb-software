@@ -40,12 +40,11 @@ StatusCode DVAlgorithm::loadTools() {
     }
     return StatusCode::SUCCESS;
   }
-
   msg << MSG::INFO << ">>> Retrieving tools" << endreq;
   
   msg << MSG::DEBUG << ">>> Retreiving PhysDesktop" << endreq;
-  m_pDesktop = tool<IPhysDesktop>( "PhysDesktop" );
-  if( !m_pDesktop ) {
+  StatusCode sc = toolSvc()->retrieveTool("PhysDesktop", m_pDesktop, this);
+  if( sc.isFailure() ) {
     msg << MSG::ERROR << ">>> DVAlgorithm[PhysDesktop] not found" 
         << endreq;
     return StatusCode::FAILURE;
@@ -53,8 +52,8 @@ StatusCode DVAlgorithm::loadTools() {
 
   msg << MSG::DEBUG << ">>> Retreiving " << m_typeLagFit 
       << " as IMassVertexFitter" << endreq;
-  m_pLagFit = tool<IMassVertexFitter>( m_typeLagFit );
-  if( !m_pLagFit ) {
+  sc = toolSvc()->retrieveTool(m_typeLagFit, m_pLagFit, this);
+  if( sc.isFailure() ) {
     msg << MSG::ERROR << ">>> DVAlgorithm[" << m_typeLagFit 
         << "] not found" << endreq;
     return StatusCode::FAILURE;
@@ -62,46 +61,45 @@ StatusCode DVAlgorithm::loadTools() {
      
   msg << MSG::DEBUG << ">>> Retreiving " << m_typeVertexFit 
       << " as IVertexFitter" << endreq;
-  m_pVertexFit = tool<IVertexFitter>( m_typeVertexFit );
-  if(  !m_pVertexFit ) {
+  sc = toolSvc()->retrieveTool(m_typeVertexFit, m_pVertexFit, this);
+  if( sc.isFailure() ) {
     msg << MSG::ERROR << ">>> DVAlgorithm[" << m_typeVertexFit 
         << "] not found" << endreq;
     return StatusCode::FAILURE;
   }
   
   msg << MSG::DEBUG << ">>> Retreiving GeomDispCalculator" << endreq;
-  m_pGeomDispCalc = tool<IGeomDispCalculator>( "GeomDispCalculator" );
-  
-  if( !m_pGeomDispCalc ) {
+  sc = toolSvc()->retrieveTool("GeomDispCalculator", m_pGeomDispCalc, this);
+  if( sc.isFailure() ) {
     msg << MSG::ERROR << ">>> DVAlgorithm[GeomDispCalculator] not found" 
         << endreq;
     return StatusCode::FAILURE;
   }
   
   msg << MSG::DEBUG << ">>> Retreiving ParticleStuffer" << endreq;
-  m_pStuffer = tool<IParticleStuffer>("ParticleStuffer");
-  if( !m_pStuffer ) {
+  sc = toolSvc()->retrieveTool("ParticleStuffer", m_pStuffer, this);
+  if( sc.isFailure() ) {
     msg << MSG::ERROR << ">>> DVAlgorithm[ParticleStuffer] not found" 
         << endreq;
     return StatusCode::FAILURE;
 
   }
-   
   msg << MSG::DEBUG << ">>> Retreiving one ParticleFilter" << endreq;
-  m_pFilter = tool<IParticleFilter>("ParticleFilter");
-  if( !m_pFilter ) {
+  sc = toolSvc()->retrieveTool("ParticleFilter", m_pFilter, this);
+  if( sc.isFailure() ) {
     msg << MSG::ERROR << ">>> DVAlgorithm[ParticleFilter] not found" 
         << endreq;
     return StatusCode::FAILURE;
   }
 
   msg << MSG::DEBUG << ">>> Retrieving ParticlePropertySvc" << endreq;
-  StatusCode sc = service("ParticlePropertySvc", m_ppSvc, true);
+  sc = service("ParticlePropertySvc", m_ppSvc, true);
   if( sc.isFailure() ) {
     msg << MSG::FATAL << "    Unable to locate Particle Property Service" 
         << endreq;
     return StatusCode::FAILURE;
   }  
+
   
   m_toolsLoaded = true;
 
@@ -111,8 +109,7 @@ StatusCode DVAlgorithm::loadTools() {
 //=============================================================================
 StatusCode DVAlgorithm::releaseTools() {
 
-  MsgStream  msg( msgSvc(), name() );
-  msg << MSG::INFO << ">>> Releasing tools" << endreq;
+  info() << ">>> Releasing tools" << endreq;
   if( m_pDesktop      ) toolSvc()->releaseTool( m_pDesktop );
   if( m_pLagFit       ) toolSvc()->releaseTool( m_pLagFit );
   if( m_pVertexFit    ) toolSvc()->releaseTool( m_pVertexFit );
@@ -125,9 +122,8 @@ StatusCode DVAlgorithm::releaseTools() {
 //=============================================================================
 IPhysDesktop* DVAlgorithm::desktop() const {
   if(!m_toolsLoaded) {
-    MsgStream  msg( msgSvc(), name() );
-    msg << MSG::FATAL << 
-      "Attempted to use desktop without having loaded tools" << endreq;
+    fatal() << "Attempted to use desktop without having loaded tools" 
+            << endreq;
  }
   return m_pDesktop;
 }  
@@ -176,20 +172,16 @@ StatusCode DVAlgorithm::setFilterPassed  (  bool    state  ) {
 //=============================================================================
 StatusCode DVAlgorithm::sysExecute () {
 
-  MsgStream          msg( msgSvc(), name() );
-
   StatusCode scGI = desktop()->getEventInput();
   if (scGI.isFailure()) {
-    msg << MSG::ERROR << "Not able to fill PhysDesktop" << endreq;
+    err() << "Not able to fill PhysDesktop" << endreq;
     return StatusCode::FAILURE;
   }
 
   StatusCode sc = this->Algorithm::sysExecute();
 
-
   if (!m_setFilterCalled) {
-    MsgStream msg( msgSvc(), name() );
-    msg << MSG::WARNING << "SetFilterPassed not called for this event!"
+    warning() << "SetFilterPassed not called for this event!"
         << endreq;
   }
   
@@ -201,7 +193,7 @@ StatusCode DVAlgorithm::sysExecute () {
     // Check if SelResult contained has been registered by PreDV
     SmartDataPtr<SelResults> existingSelRess ( eventSvc(), location);
     if(!existingSelRess ) {
-      msg << MSG::FATAL<< "SelResult container does not exist. "  <<
+      fatal() << "SelResult container does not exist. "  <<
         "PreDV algorithm should be run before any DVAlgorithm!"  
           << endreq;
       return StatusCode::FAILURE;
@@ -211,19 +203,19 @@ StatusCode DVAlgorithm::sysExecute () {
     SelResult* myResult = new SelResult();
     myResult->setFound(filterPassed());
     myResult->setLocation( ("/Event/Phys/"+name()));
-    msg << MSG::VERBOSE << "Selresult location set to " << 
-      "/Event/Phys/"+name() << endreq;
+    verbose() << "Selresult location set to " << "/Event/Phys/"+name() 
+              << endreq;
     myResult->setDecay(m_decayDescriptor);
     
     if (filterPassed()) m_countFilterPassed++;
     m_countFilterWrite++;
-    msg << MSG::DEBUG << "wrote " << filterPassed() << " -> " << 
+    debug() << "wrote " << filterPassed() << " -> " << 
       m_countFilterWrite << " & " << m_countFilterPassed << endreq ;
 
     existingSelRess->insert(myResult);
-    msg << MSG::DEBUG << "Number of objects in existingSelRes: "
+    debug() << "Number of objects in existingSelRes: "
         << existingSelRess->size() << endreq;
-  } else msg << MSG::DEBUG << "Avoiding selresult" << endreq ;
+  } else debug() << "Avoiding selresult" << endreq ;
   
   
   // Reset for next event
@@ -236,33 +228,33 @@ StatusCode DVAlgorithm::sysExecute () {
 //=============================================================================
 StatusCode DVAlgorithm::sysInitialize () {
   
-  MsgStream          msg( msgSvc(), name() );
-  
   if( isInitialized()) return StatusCode::SUCCESS;
  
-  if (m_avoidSelResult) msg << MSG::WARNING << 
-                          "Avoiding SelResult" << endreq ;
-
+  if (m_avoidSelResult) {
+    MsgStream msg( msgSvc(), name() ); // warning() not yet initialized
+    msg << MSG::WARNING << "Avoiding SelResult" << endreq ;
+  }
+  
   // Load tools
   StatusCode scLT = loadTools();
   if(scLT.isFailure()) {
+    MsgStream msg( msgSvc(), name() ); // err() not yet initialized
     msg << MSG::ERROR << "Unable to load tools" << endreq;
     return scLT;
   }
   
-  StatusCode sc;
   // initialize Algorithm base class first -> calls initialize()
-  sc = this->Algorithm::sysInitialize();
+  StatusCode sc = this->Algorithm::sysInitialize();
   if (!sc ) return sc;
   // initialize GaudiAlgorithm base class then
   sc = this->GaudiAlgorithm::initialize();  
   if (!sc ) return sc;
 
   if (m_decayDescriptor == "not specified"){
-    msg << MSG::WARNING << "Decay Descriptor string not specified" << endreq;
+    warning() << "Decay Descriptor string not specified" << endreq;
   }
   else{
-    msg << MSG::INFO << "Decay Descriptor: " << m_decayDescriptor << endreq;
+    info() << "Decay Descriptor: " << m_decayDescriptor << endreq;
   }
   debug() << "End of DVAlgorithm::sysInitialize with " << sc << endreq;
 
@@ -273,19 +265,18 @@ StatusCode DVAlgorithm::sysFinalize () {
   
   if ((m_printSelResult) && (!m_avoidSelResult)){
     
-    MsgStream msg( msgSvc(), name() );
     if (m_countFilterWrite < m_countFilterPassed ){
-      msg << MSG::WARNING << "Executed " << m_countFilterWrite << 
+      warning() << "Executed " << m_countFilterWrite << 
         " times and flagged as passed " << m_countFilterPassed <<
         " times" << endreq;      
     } else if (m_countFilterWrite <= 0 ){      
-      msg << MSG::WARNING << "Executed " << m_countFilterWrite << " times" 
+      warning() << "Executed " << m_countFilterWrite << " times" 
           << endreq;
     } else if (m_countFilterPassed <= 0 ){
-      msg << MSG::ALWAYS << "No events selected in " << 
+      always() << "No events selected in " << 
         m_countFilterWrite << " calls." << endreq;
     } else if (m_countFilterPassed == m_countFilterWrite ){
-      msg << MSG::ALWAYS << "All events selected in " << 
+      always() << "All events selected in " << 
         m_countFilterWrite << " calls." << endreq;
     } else {
       double eta = (double)m_countFilterPassed/(double)m_countFilterWrite ;
@@ -293,7 +284,7 @@ StatusCode DVAlgorithm::sysFinalize () {
       double r = (double)1./eta ;
       double re = r*(delta/eta) ;
       
-      msg << MSG::ALWAYS << "Passed " << m_countFilterPassed << 
+      always() << "Passed " << m_countFilterPassed << 
         " times in " << m_countFilterWrite << " calls -> (" <<
         100.0*eta << "+/-" << 100.0*delta <<  ")%, rejection= " << 
         r << "+/-" << re << endreq;
@@ -314,13 +305,12 @@ StatusCode DVAlgorithm::sysFinalize () {
 }
  
 //=============================================================================
-void DVAlgorithm::imposeOutputLocation 
-(std::string outputLocationString){
-  MsgStream          msg( msgSvc(), name() );
-  if( !desktop() ) {
-    msg << MSG::FATAL << "Desktop has not been created yet" << endreq;
+void DVAlgorithm::imposeOutputLocation(std::string outputLocationString)
+{
+  if ( !m_pDesktop ) {
+    fatal() << "Desktop has not been created yet" << endreq;
   }
-  desktop()->imposeOutputLocation(outputLocationString);  
+  m_pDesktop->imposeOutputLocation(outputLocationString);  
   return;
   
 }
