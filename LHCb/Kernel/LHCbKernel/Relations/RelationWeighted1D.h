@@ -1,8 +1,11 @@
-// $Id: RelationWeighted1D.h,v 1.4 2002-04-24 21:16:40 ibelyaev Exp $
+// $Id: RelationWeighted1D.h,v 1.5 2002-04-25 08:44:04 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.4  2002/04/24 21:16:40  ibelyaev
+//  fix one more problem for Win2K
+//
 // Revision 1.3  2002/04/09 07:58:54  ibelyaev
 // *** empty log message ***
 //
@@ -13,6 +16,7 @@
 #ifndef RELATIONS_RELATIONWeighted1D_H 
 #define RELATIONS_RELATIONWeighted1D_H 1
 // Include files
+#include "Relations/PragmaWarnings.h"
 // STD & STL 
 #include <algorithm>
 // from Gaudi

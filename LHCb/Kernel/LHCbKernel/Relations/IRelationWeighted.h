@@ -1,12 +1,17 @@
-// $Id: IRelationWeighted.h,v 1.2 2002-04-03 15:35:17 ibelyaev Exp $
+// $Id: IRelationWeighted.h,v 1.3 2002-04-25 08:44:03 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2002/04/03 15:35:17  ibelyaev
+// essential update and redesing of all 'Relations' stuff
+//
 // ============================================================================
 #ifndef RELATIONS_IRELATIONWeighted_H
 #define RELATIONS_IRELATIONWeighted_H 1
 // Include files
+#include "Relations/PragmaWarnings.h"
+// GaudiKernel
 #include "GaudiKernel/IInterface.h"
 #include "GaudiKernel/StatusCode.h"
 // Relation

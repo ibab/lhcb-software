@@ -1,8 +1,11 @@
-// $Id: IAssociator.h,v 1.1 2002-04-08 14:26:01 ibelyaev Exp $
+// $Id: IAssociator.h,v 1.2 2002-04-25 08:44:03 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.1  2002/04/08 14:26:01  ibelyaev
+//  new version of 'Relations'-subpackage
+//
 // Revision 1.1  2002/04/03 15:35:17  ibelyaev
 // essential update and redesing of all 'Relations' stuff
 //
@@ -10,6 +13,7 @@
 #ifndef RELATIONS_IAssociator_H 
 #define RELATIONS_IAssociator_H 1
 // Include files
+#include "Relations/PragmaWarnings.h"
 // GaudiKernel
 #include "GaudiKernel/IAlgTool.h"
 // Relations 

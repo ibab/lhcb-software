@@ -1,8 +1,11 @@
-// $Id: TypeApply_WIN32.h,v 1.2 2002-04-25 07:05:22 ibelyaev Exp $
+// $Id: TypeApply_WIN32.h,v 1.3 2002-04-25 08:44:05 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2002/04/25 07:05:22  ibelyaev
+//  bug fix on Win2K
+//
 // Revision 1.1  2002/04/24 21:16:41  ibelyaev
 //  fix one more problem for Win2K
 //
@@ -13,6 +16,7 @@
 #ifndef RELATIONS_TypeAppLY_WIN32_H 
 #define RELATIONS_TypeAppLY_WIN32_H 1
 // Include files
+#include "Relations/PragmaWarnings.h"
 
 /** @file TypeApply_WIN32.h
  *
