@@ -1,6 +1,10 @@
-! $Id: release.notes,v 1.20 2002-07-09 18:26:04 cattanem Exp $
+! $Id: release.notes,v 1.21 2002-09-24 18:25:14 parkesb Exp $
 package Event/VeloEvent
 package manager: C.Parkes
+
+! 2002-07-24 - Chris Parkes
+ - modified VeloEvent.xml to work with updated associator/VeloSim, 
+  solving ambiguity for multiple hits contributing to FEs.
 
 !========================= VeloEvent v11r0 2002-07-09 =========================
 ! 2002-07-04 - Pere Mato
