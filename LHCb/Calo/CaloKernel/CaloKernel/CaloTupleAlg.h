@@ -1,77 +1,80 @@
-// $Id: CaloAlgorithm.h,v 1.19 2004-02-17 11:55:54 ibelyaev Exp $ 
+// $Id: CaloTupleAlg.h,v 1.1 2004-02-17 11:55:55 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
-// $Log: not supported by cvs2svn $
+// $Log: not supported by cvs2svn $ 
 // ============================================================================
-#ifndef CALOKERNEL_CALOALGORITHM_H 
-#define CALOKERNEL_CALOALGORITHM_H 1
+#ifndef CALOKERNEL_CALOHISTOALG_H 
+#define CALOKERNEL_CALOHISTOALG_H 1
 // ============================================================================
 // Include files
 // ============================================================================
-// from Gaudi
+// GaudiAlg 
 // ============================================================================
-#include "GaudiAlg/GaudiAlgorithm.h"
+#include "GaudiAlg/GaudiTupleAlg.h"
 // ============================================================================
 
-template<class TYPE>
-class         AlgFactory     ;
 
-/** @class  CaloAlgorithm CaloAlgorithm.h CaloKernel/CaloAlgorithm.h
- *   
- *  The useful base class for calo algorithm.
- *  small externsion of ordinary algorithm base class
- *  Extensions:
- *  useful protected print methods, exceptions and assertions
+/** @class CaloTupleAlg CaloTupleAlg.h CaloKernel/CaloTupleAlg.h
  *
- *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
- *  @date   30/06/2001
+ *  Small extention of class GaudiTupleAlg:
+ *
+ *   - defines 'standard' calorimeter properties 
+ *   - set reasonable default values for some properties 
+ *
+ *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+ *  @date   2004-02-16
  */
-
-class CaloAlgorithm : public GaudiAlgorithm 
+class CaloTupleAlg : public GaudiTupleAlg 
 {
 public:
   
   /// the actual type for container of 'addresses' 
   typedef std::vector<std::string> Inputs ;
   
-public:
+public:  
   
   /** standard initialization method
-   *  @see  Algorithm
-   *  @see IAlgorithm 
+   *  @see  GaudiTupleAlg
+   *  @see  GaudiAlgorithm
+   *  @see       Algorithm
+   *  @see      IAlgorithm 
    *  @return status code 
    */
   virtual StatusCode initialize(); 
   
-  /** standard execution method
-   *  @see  Algorithm
-   *  @see IAlgorithm 
-   *  @return status code 
-   */
-  virtual StatusCode execute   (); 
-  
   /** standard finalization method
-   *  @see  Algorithm
-   *  @see IAlgorithm 
+   *  @see  GaudiTupleAlg
+   *  @see  GaudiAlgorithm
+   *  @see       Algorithm
+   *  @see      IAlgorithm 
    *  @return status code 
    */
-  virtual StatusCode finalize  (); 
+  virtual StatusCode finalize  ();
   
 protected:
   
-  /** Standard constructor (protected)
-   *  @see  GaidiAlgorithm
+  /** Standard constructor
+   *  @see GaudiTupleAlg 
+   *  @see  GaudiAlgorithm
    *  @see       Algorithm
    *  @param name           name of the algorithm
-   *  @param pSvcLocator    poinetr to Service Locator 
+   *  @param pSvcLocator    pointer to Service Locator 
    */
-  CaloAlgorithm
-  ( const std::string& name        , 
-    ISvcLocator*       pSvcLocator );
+  CaloTupleAlg ( const std::string& name         , 
+                 ISvcLocator*       pSvcLocator ) ;
   
-  /// destructor, virtual and protected 
-  virtual ~CaloAlgorithm();
+  /// destructor 
+  virtual ~CaloTupleAlg( ); 
+  
+private:
+  
+  // default constructor  is disabled 
+  CaloTupleAlg();
+  // copy    constructor  is disabled 
+  CaloTupleAlg           ( const  CaloTupleAlg& ) ;  
+  // assigenment operator is disabled 
+  CaloTupleAlg& operator=( const  CaloTupleAlg& ) ;
   
 protected: ///< "technical" methods
   
@@ -114,16 +117,6 @@ protected: ///< "technical" methods
   
 private:
   
-  /// no default constructor 
-  CaloAlgorithm ();
-  /// no copy constructor 
-  CaloAlgorithm            ( const CaloAlgorithm& );
-  /// no assignment oprtator  
-  CaloAlgorithm& operator= ( const CaloAlgorithm& );
-  
-private:
-  
-  // address/location/name in Transient Store of input  data container 
   std::string      m_inputData  ;
   // vector of addresses in the case of 'few' inputs 
   Inputs           m_inputs     ;
@@ -131,12 +124,11 @@ private:
   std::string      m_outputData ;
   // address/location/name in Transient Store of detector data  
   std::string      m_detData    ;
-  
+
 };
 
 // ============================================================================
 // The END 
 // ============================================================================
-#endif // CALOALGORITHM_H 
+#endif // CALOKERNEL_CALOHISTOALG_H
 // ============================================================================
-

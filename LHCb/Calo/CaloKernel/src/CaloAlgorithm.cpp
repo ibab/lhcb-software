@@ -1,14 +1,8 @@
-// $Id: CaloAlgorithm.cpp,v 1.17 2003-01-17 14:15:18 sponce Exp $ 
+// $Id: CaloAlgorithm.cpp,v 1.18 2004-02-17 11:55:55 ibelyaev Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
-// Revision 1.16  2002/11/13 20:36:51  ibelyaev
-//  regular update, modifications of CaloAlgorithm and CaloTool
-//
-// Revision 1.15  2002/05/02 13:24:56  ibelyaev
-//  improve printout
-//
 // ============================================================================
 #define  CALOKERNEL_CALOALGORITHM_CPP 1 
 // ============================================================================
@@ -55,19 +49,18 @@
 CaloAlgorithm::CaloAlgorithm
 ( const std::string&  name       ,
   ISvcLocator*        pSvcLocator)
-  : Algorithm ( name , pSvcLocator )
+  : GaudiAlgorithm ( name , pSvcLocator )
   /// input/output/detector data
   , m_inputData  ( "" ) ///< no default value
+  , m_inputs     (    ) ///< no default value
   , m_outputData ( "" ) ///< no default value
   , m_detData    ( "" ) ///< no default value
-  , m_errors     () 
-  , m_warnings   () 
-  , m_exceptions () 
 {
   ///
-  declareProperty  ("Input"        , m_inputData  );
-  declareProperty  ("Output"       , m_outputData );
-  declareProperty  ("Detector"     , m_detData    );
+  declareProperty  ( "Input"        , m_inputData  ) ;
+  declareProperty  ( "Inputs"       , m_inputs     ) ;
+  declareProperty  ( "Output"       , m_outputData ) ;
+  declareProperty  ( "Detector"     , m_detData    ) ;
   ///
 };
 
@@ -78,229 +71,12 @@ CaloAlgorithm::CaloAlgorithm
 CaloAlgorithm::~CaloAlgorithm() {};
 
 // ============================================================================
-/** Print the error  message and return status code
- *  @param msg    error message 
- *  @param st     status code 
- *  @param mx     maximal number of prints 
- *  @return       status code 
- */
-// ============================================================================
-StatusCode CaloAlgorithm::Error     
-( const std::string& msg , 
-  const StatusCode & st  , 
-  const size_t       mx  ) const 
-{
-  // increase global error counter 
-  Stat stat( chronoSvc() , name()+":Error" ); 
-  // increase local counter of errors  
-  return ( ++m_errors[ msg] < mx ) ? Print( msg , st , MSG::ERROR ) : st ;
-};
-// ============================================================================
-
-// ============================================================================
-/** Print the warning  message and return status code 
- *  @param msg    warning message 
- *  @param st     status code 
- *  @param mx     maximal number of prints 
- *  @return       status code 
- */
-// ============================================================================
-StatusCode CaloAlgorithm::Warning   
-( const std::string& msg , 
-  const StatusCode & st  ,
-  const size_t       mx  ) const 
-{ 
-  // increase global warning counter 
-  Stat stat( chronoSvc() , name()+":Warning" ); 
-  // increase local counter of warnings  
-  return ( ++m_warnings[ msg] < mx ) ? Print( msg , st , MSG::WARNING ) : st ;
-};
-// ============================================================================
-
-// ============================================================================
-/**  Print the message and return status code 
- *   @param msg    warning message 
- *   @param st     status code 
- *   @param lvl    print level 
- *   @return       status code 
- */
-// ============================================================================
-StatusCode CaloAlgorithm::Print    
-( const std::string& msg , 
-  const StatusCode & st  ,
-  const MSG::Level & lvl ) const 
-{
-  MsgStream log( msgSvc() , name() ); 
-  log << lvl 
-      << System::typeinfoName( typeid( *this ) ) 
-      << " "   << msg ;
-  ///
-  if( st.isFailure() ) { log << " \tStatusCode=" << st ;}
-  ///
-  log << endreq ; 
-  return  st;
-};
-// ============================================================================
-
-// ============================================================================
-/** Create and (re)-throw the exception  
- *  @param msg    exception message 
- *  @param exc    (previous) exception of type GaudiException
- *  @param lvl    print level 
- *  @param sc     status code  
- *  @return       status code (fictive) 
- */
-// ============================================================================
-StatusCode CaloAlgorithm::Exception 
-( const std::string    & msg ,
-  const GaudiException & exc ,
-  const MSG::Level     & lvl ,
-  const StatusCode     & sc  ) const   
-{ 
-  // increase local counter of exceptions  
-  m_exceptions[ msg ] += 1 ;
-  // increase global exceptions counter 
-  Stat stat( chronoSvc() , name()+":Exception" ); 
-  Print( "Exception (re)throw: " + msg , sc , lvl ); 
-  throw   CaloException( name() + ":: " + msg , exc, sc );
-  return  sc ;
-};
-// ============================================================================
-
-// ============================================================================
-/** Create and (re)-throw the exception  
- *  @param msg    exception message 
- *  @param exc    (previous) exception of type GaudiException
- *  @param lvl    print level 
- *  @param sc     status code  
- *  @return       status code (fictive) 
- */
-// ============================================================================
-StatusCode CaloAlgorithm::Exception 
-( const std::string    & msg ,  
-  const std::exception & exc , 
-  const MSG::Level     & lvl ,
-  const StatusCode     & sc  ) const   
-{ 
-  // increase local counter of exceptions  
-  m_exceptions[ msg ] += 1 ;
-  // increase global exceptions counter 
-  Stat stat( chronoSvc() , name()+":Exception" ); 
-  Print( "Exception (re)throw: " + msg , sc , lvl  ); 
-  throw CaloException( name() + ":: " + msg+"("+exc.what()+")", sc );
-  return  sc ;
-};
-// ============================================================================
-
-// ============================================================================
-/** Create and throw the exception  
- *  @param msg    exception message 
- *  @param lvl    print level 
- *  @param sc     status code  
- *  @return       status code (fictive) 
- */
-// ============================================================================
-StatusCode CaloAlgorithm::Exception
-( const std::string    & msg ,  
-  const MSG::Level     & lvl ,
-  const StatusCode     & sc  ) const 
-{ 
-  // increase local counter of exceptions  
-  m_exceptions[ msg ] += 1 ;
-  // increase global exceptions counter 
-  Stat stat( chronoSvc() , name()+":Exception" ); 
-  Print( "Exception  throw: " + msg , sc , lvl  ); 
-  throw CaloException( name() + ":: " + msg , sc );
-  return  sc ;
-};
-// ============================================================================
-
-// ============================================================================
-/** @brief put results into Gaudi Event Transient Store 
- * 
- * 'Output' results: 
- *  register the output object in Gaudi Event Transient Store 
- *  @param object object to be registered 
- *  @param address address in Gaudi Event Transient Store 
- *           ("/Event" could be omitted )
- *  @exception CaloException for invalid event data service 
- *  @exception CaloException for invalid object 
- *  @exception CaloException for error result from event data service 
- *  @return status code 
- */
-// ============================================================================
-StatusCode CaloAlgorithm::put
-( DataObject*        object  , 
-  const std::string& address ) const 
-{
-  // check arguments 
-  Assert( 0 != eventSvc()  , " put(): Invalid 'eventSvc()'!"   );
-  Assert( 0 != object      , " put(): Invalid 'Object'!"       );
-  Assert( !address.empty() , " put(): Invalid 'address' = '' " );
-  // register the object!
-  const std::string Address = 
-    '/' == address[0] ? address : "/Event/" + address ;
-  const std::string Type    = 
-    System::typeinfoName( typeid( *object ) );
-  StatusCode sc = 
-    eventSvc()-> registerObject( Address , object );
-  // check the result!
-  Assert( sc.isSuccess() , 
-          " put(): could not register '"
-          + Type    + "' at address '"
-          + Address + "'"  , sc );
-  // print and return
-  return Print( " The object of type '" + Type +
-                "' is registered in TS at address '" 
-                + Address + "'" , sc , MSG::DEBUG );
-};
-// ============================================================================
-
-// ============================================================================
 /** standard initialization method
  *  @return status code 
  */
 // ============================================================================
 StatusCode CaloAlgorithm::initialize() 
-{
-  MsgStream log(msgSvc(), name());
-  log << MSG::DEBUG 
-      << " ==> Initialize the base class CaloAlgorithm" << endreq;
-  ///
-  { /// print ALL properties 
-    typedef std::vector<Property*> Properties;
-    const Properties& properties = getProperties() ;
-    log << MSG::DEBUG 
-        << " List of ALL properties of "
-        << System::typeinfoName( typeid( *this ) ) << "/" 
-        << name ()           << "   #properties = " 
-        << properties.size() << endreq ;
-#if defined (__GNUC__) && ( __GNUC__ <= 2)
-    const int   buffer_size  = 256 ;
-    char buffer[buffer_size]       ;
-#endif
-    for( Properties::const_reverse_iterator property 
-           = properties.rbegin() ;
-         properties.rend() != property ; ++property )  
-      {
-#if defined (__GNUC__) && ( __GNUC__ <= 2)
-        std::fill( buffer , buffer + buffer_size , 0 );
-        std::ostrstream ost ( buffer , buffer_size );
-#else
-        std::ostringstream ost;
-#endif
-        (*property)->nameAndValueAsStream( ost );
-#if defined (__GNUC__) && ( __GNUC__ <= 2)
-        ost.freeze();
-#endif
-        log << MSG::DEBUG
-            << "Property ['Name': Value] = " 
-            << ost.str() << endreq ;
-      }
-  }
-  //
-  return StatusCode::SUCCESS;
-};
+{ return GaudiAlgorithm::initialize() ; };
 // ============================================================================
 
 // ============================================================================
@@ -309,54 +85,7 @@ StatusCode CaloAlgorithm::initialize()
  */
 // ============================================================================
 StatusCode CaloAlgorithm::finalize() 
-{
-  MsgStream log(msgSvc(), name());
-  log << MSG::DEBUG 
-      << " ==> Finalize the base class CaloAlgorithm " << endreq;
-  // format printout 
-  if( 0 != m_errors      .size () || 
-      0 != m_warnings    .size () ||
-      0 != m_exceptions  .size ()  ) 
-    {      
-      MsgStream log( msgSvc() , name() );
-      // format printout 
-      CaloPrint print;
-      log << MSG::ALWAYS 
-          << " Exceptions/Errors/Warnings statistics:  " 
-          << m_exceptions .size () << "/"
-          << m_errors     .size () << "/"
-          << m_warnings   .size () << endreq ; 
-      // print exceptions counter 
-      for( Counter::const_iterator excp = m_exceptions.begin() ;
-           excp  != m_exceptions.end() ; ++excp  )
-        {
-          log << MSG::ALWAYS 
-              << " #EXCEPTIONS= " << print( excp ->second ) 
-              << " Message='"     <<        excp ->first    << "'" << endreq ; 
-        }  
-      // print errors counter 
-      for( Counter::const_iterator error = m_errors.begin() ;
-           error != m_errors.end() ; ++error )
-        {
-          log << MSG::ALWAYS 
-              << " #ERRORS    = " << print( error->second ) 
-              << " Message='"     <<        error->first    << "'" << endreq ; 
-        }  
-      // print warnings
-      for( Counter::const_iterator warning = m_warnings.begin() ;
-           warning != m_warnings.end() ; ++warning )
-        {
-          log << MSG::ALWAYS 
-              << " #WARNINGS  = " << print( warning->second ) 
-              << " Message='"     <<        warning->first  << "'" << endreq ; 
-        }  
-    }
-  m_errors      .clear();
-  m_warnings    .clear();
-  m_exceptions  .clear();
-  // finalize the base class 
-  return StatusCode::SUCCESS;
-};
+{ return GaudiAlgorithm::finalize(); };
 // ============================================================================
 
 // ============================================================================
@@ -365,7 +94,7 @@ StatusCode CaloAlgorithm::finalize()
  */
 // ============================================================================
 StatusCode CaloAlgorithm::execute() 
-{ return Error("==> One should NEVER see this message!"); };
+{ return Error ( "==> One should NEVER see this message!" ) ; } ;
 // ============================================================================
 
 // ============================================================================

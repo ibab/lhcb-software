@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.30 2003-12-18 15:33:34 cattanem Exp $
+! $Id: release.notes,v 1.31 2004-02-17 11:55:55 ibelyaev Exp $
 ! =============================================================================
 ! Package     : CaloKernel
 ! Responsible : Vanya Belyaev Ivan.Belyaev@itep.ru
@@ -7,6 +7,25 @@
 ! which are essentially independent from Detector and Event models
 ! =============================================================================
 
+! 2004-02-15 - Vanya BELYAEV
+
+ - GaloKernel/CaloAlgorithm.h    
+        1) use new base GaudiAlg/GaudiAlgorithm
+
+ - GaloKernel/CaloTool.h    
+        1) use new base GaudiTools/GaudiTool
+
+ - src/CaloAlgorihtm.cpp                       update for new CaloAlgorithm
+ - src/CaloTool.cpp update accordingly         update for new CaloTool 
+
+- CaloKernel/CaloHistoAlg.h 
+- CaloKernel/CaloTupleAlg.h 
+		
+ - cmt/requirements 
+        1) add  'use GaudiAlg   v7*' 
+        2) add  'use GaudiTools v8r*'
+        3) increment the *MAJOR* version to v3r0  
+                                     
 !======================= CaloKernel v2r5 2003-12-16 =======================
 ! 2003-12-16 - Marco Cattaneo
  - Move to Gaudi v14 (use LHCbKernel v4r* in requirements)
