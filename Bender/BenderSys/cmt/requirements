@@ -1,25 +1,26 @@
-# $Id: requirements,v 1.4 2004-01-22 22:52:11 ibelyaev Exp $ 
+# $Id: requirements,v 1.5 2004-02-10 12:43:39 ibelyaev Exp $ 
 # =============================================================================
 # CVS tag $Name: not supported by cvs2svn $
 # =============================================================================
 # The management of the content of BENDER project:
-#     Interactive PHCb Physics Analysis with Python  
+#     Interactive LHCb Physics Analysis with Python  
 # =============================================================================
 package       BenderSys
 version       v2r0
 author        Vanya BELYAEV
 
-
-# =========== Bender Application ==============================================
+# =========== Bender Application itself =======================================
 use           Bender         v2r0 Phys 
 # =========== Bender Libraries ================================================
 use           BenderLibs     v2r0 Tools 
-# =========== BenderDictionaries ==============================================
+# =========== dictionaries for LoKi/Bender classes ============================
 use           BenderDict     v2r0 Tools 
-# =========== usage of Bender "in practice" ===================================
+# =========== examples of usage of Bender "in practice" =======================
 use           BenderExample  v2r0 Ex  
 # =========== Test suit for Bender ============================================
 use           BenderTest     v2r0 Tests  
+# =========== put your first Bender-based algorithms here =====================
+use           BenderUser     v2r0 Phys  
 # =============================================================================
 
 # =============================================================================
