@@ -20,6 +20,7 @@ Output data incompatible with DC04 versions, needs Brunel v26r0 or greater
 - Bug fixes:
   . Changes to avoid duplicate entries in linker tables (AsctToLinker v1r4)
   . Digitize also last four Velo sensors (VeloAlgorithms v3r3, VeloDAQ v2r3)
+  . Use correct velo sensor numbering (XmlDDDB v23r2)
 
 - Packaging changes:
   . Removed dependency on HbookCnv, replaced by RootHistCnv
