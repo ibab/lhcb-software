@@ -2,11 +2,11 @@
 //--------------------------------------------------------------
 
 //--------------------------------------------------------------
-// Choice of persistency technology. Default is Hbook, move comments for ROOT
+// Choice of persistency technology. Default is ROOT, move comments for Hbook
 // Hbook persistency (use HBookCnv v* in requirements).
-#include "$STDOPTS/Hbook.opts"
+//#include "$STDOPTS/Hbook.opts"
 // ROOT persistency (use RootHistCnv v* in requirements).
-//#include "$STDOPTS/RootHist.opts"
+#include "$STDOPTS/RootHist.opts"
 
 //--------------------------------------------------------------
 // Detectors to monitor
@@ -30,6 +30,7 @@ BrunelMoniITSeq.Members += { "ITEffMonitor" };
 ApplicationMgr.DLLs += { "OTAssociators" };
 BrunelMoniOTSeq.Members += { "OTClusterMonitor" };
 BrunelMoniOTSeq.Members += { "OTClusterChecker" };
+//OTClusterChecker.fullDetail = true;
 
 // Tracking
 #include "$TRASSOCIATORSROOT/options/Brunel.opts"

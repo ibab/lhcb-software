@@ -21,10 +21,32 @@ DetectorDataSvc.DetDbLocation = "$XMLDDDBROOT/DDDB/lhcb-200311.xml";
 //---------------------------------------------------------------------------
 // Finally, define input and output files, first event, number of events
 //---------------------------------------------------------------------------
+HistogramPersistencySvc.OutputFile = "412400.root";  // Monitoring histos
+ApplicationMgr.EvtMax = 100;
+
+// Uncomment next three options for POOL i/o
+// #include "$GAUDIPOOLDBROOT/options/GaudiPoolDbRoot.opts"
+// #include "$EVENTSYSROOT/options/PoolDicts.opts"
+// PoolDbCacheSvc.CatalogConnect = "xmlcatalog_file:test_catalog.xml";
+
+// GaudiDb input
 EventSelector.Input = {
   "DATAFILE='rfio:/castor/cern.ch/user/c/cattanem/Boole/v5r0/412400.oodigi' TYP='ROOT' opt='READ'" }; // evtype 412400
 
+// Example for POOL input. This file must exist in test_catalog.xml.
+// This file does not contain VeloClusters2MCParticles, only works if you switch
+// off Tr+Rich monitoring and DST output
+//  "DATAFILE='rfio:/castor/cern.ch/user/c/cattanem/Boole/v5r0/Pool412400.digi' TYP='POOL_ROOT' OPT='READ'" }; // evtype 412400
+
+// GaudiDb output
 DstWriter.Output = "DATAFILE='412400.dst' TYP='ROOT' OPT='NEW'";
-HistogramPersistencySvc.OutputFile = "412400.hbook";  // Monitoring histos
-ApplicationMgr.EvtMax = 100;
+
+// Example for POOL output.
+// In current version, following items must be removed from DST definition:
+  //, "/Event/Rec/Calo/PhotonMatch#1"
+  //, "/Event/Rec/Calo/ElectronMatch#1"
+  //, "/Event/Rec/Calo/BremMatch#1"
+  //, "/Event/Rec/Relations/VeloClusters2MCParticles#1"
+  //, "/Event/Rec/Relations/EcalClusters2MCParticles#1"
+//DstWriter.Output = "DATAFILE='PFN:PoolIn412400.dst' TYP='POOL_ROOTTREE' OPT='REC'";
 //////////////////////////////////////////////////////////////////////////////

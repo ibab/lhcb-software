@@ -6,6 +6,10 @@ Purpose: LHCb reconstruction program
 </PRE><H1><A NAME=v23r0>2004-01-12 Brunel v23r0</A></H1><PRE>
 - Built against GAUDI v14r0
 
+- New functionality
+  . Possibility to read POOL digi file and/or save POOL dst file. Only for
+    tests by experts. See examples in v200311.opts
+
 - New tuning
   . New Ecal and Hcal calibration for "ActiveToTotal" parameter (XmlDDDB v20r1)
 
