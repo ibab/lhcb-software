@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.32 2004-02-26 09:59:32 cattanem Exp $
+! $Id: release.notes,v 1.33 2004-07-21 08:07:50 cattanem Exp $
 ! =============================================================================
 ! Package     : CaloKernel
 ! Responsible : Vanya Belyaev Ivan.Belyaev@itep.ru
@@ -6,6 +6,11 @@
 ! The package contains the general Calo Kernel classes and utilities,
 ! which are essentially independent from Detector and Event models
 ! =============================================================================
+
+!======================= CaloKernel v3r1 2004-07-19 =======================
+! 2004-07-19 - Marco Cattaneo
+ - Move to GaudiKernel v5r*
+ - Remove dependency on GaudiTools (GaudiTool class moved to GaudiAlg)
 
 !======================= CaloKernel v3r0 2004-02-26 =======================
 ! 2004-02-15 - Vanya BELYAEV
