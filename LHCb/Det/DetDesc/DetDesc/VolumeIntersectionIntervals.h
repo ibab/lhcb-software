@@ -1,8 +1,11 @@
-// $Id: VolumeIntersectionIntervals.h,v 1.10 2002-06-22 15:58:35 ocallot Exp $ 
+// $Id: VolumeIntersectionIntervals.h,v 1.11 2002-07-03 12:19:32 ocallot Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.10  2002/06/22 15:58:35  ocallot
+// All prints via MsgStream, TransportSvc as control string
+//
 // Revision 1.9  2002/06/03 09:56:07  ocallot
 // fixes in the TransportService
 //
@@ -207,7 +210,7 @@ namespace  VolumeIntersectionIntervals
               << intervalLoc.first << " "
               << intervalLoc.second << " master "
               << intervalTop.first << " " 
-              << intervalTop.second << std::endl;
+              << intervalTop.second << endreq;
           return StatusCode(15) ;
         }
         // ? RETURN !!!
@@ -256,7 +259,7 @@ namespace  VolumeIntersectionIntervals
               << intervalLocal.first << " "
               << intervalLocal.second << " master "
               << leftTick << " " 
-              << mostRightTick << std::endl;
+              << mostRightTick << endreq;
           return StatusCode(17) ; 
         }         // RETURN !!!
         leftTick     = intervalLocal.second;

@@ -1,8 +1,11 @@
-// $Id: LVolume.cpp,v 1.24 2002-06-22 15:58:36 ocallot Exp $ 
+// $Id: LVolume.cpp,v 1.25 2002-07-03 12:19:32 ocallot Exp $ 
 // ===========================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ===========================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.24  2002/06/22 15:58:36  ocallot
+// All prints via MsgStream, TransportSvc as control string
+//
 // Revision 1.23  2002/06/21 13:43:43  ocallot
 // Fix findLocalGI for the transport service.
 //
@@ -680,13 +683,15 @@ unsigned int LVolume::intersectLine
       // check the result!!!
       if( sc.isFailure() )
         {
+          int level=100;
+          PVolumePath volpath;
+
           MsgStream log( DetDesc::msgSvc() , "TransportSvc" );
           log << MSG::ERROR
               << "===== Failure to merge " << name()
               << " type " << m_solid->typeName()
-              << " x " << Point.x()
-              << " y " << Point.y()
-              << " z " << Point.z()
+              << " xyz=(" << Point.x() << "," << Point.y() 
+              << "," << Point.z() << ")"
               << endreq ;
           
           for ( ILVolume::Intersections::const_iterator itI = own.begin();
@@ -694,15 +699,15 @@ unsigned int LVolume::intersectLine
             double s = (*itI).first.first;
             double t = (*itI).first.second;
             log << MSG::INFO
-                << "Own : s " << s
-                << " x " << Point.x() + s * Vector.x()
-                << " y " << Point.y() + s * Vector.y()
-                << " z " << Point.z() + s * Vector.z()
-                << " to t " << t
-                << " x " << Point.x() + t * Vector.x()
-                << " y " << Point.y() + t * Vector.y()
-                << " z " << Point.z() + t * Vector.z()
-                << " radl " << (*itI).second->radiationLength()
+                << "Own : s=" << s
+                << " xyz=(" << Point.x() + s * Vector.x()
+                << "," << Point.y() + s * Vector.y()
+                << "," << Point.z() + s * Vector.z()
+                << ") to t=" << t
+                << " xyz=(" << Point.x() + t * Vector.x()
+                << "," << Point.y() + t * Vector.y()
+                << "," << Point.z() + t * Vector.z()
+                << ") radl " << (*itI).second->radiationLength()
                 << " name " << (*itI).second->name()
                 << endreq ;
           }
@@ -711,17 +716,30 @@ unsigned int LVolume::intersectLine
             double s = (*itJ).first.first;
             double t = (*itJ).first.second;
             log << MSG::INFO 
-                << "Child : s " << s
-                << " x " << Point.x() + s * Vector.x()
-                << " y " << Point.y() + s * Vector.y()
-                << " z " << Point.z() + s * Vector.z()
-                << " to t " << t
-                << " x " << Point.x() + t * Vector.x()
-                << " y " << Point.y() + t * Vector.y()
-                << " z " << Point.z() + t * Vector.z()
-                << " radl " << (*itJ).second->radiationLength()
+                << "Child : s=" << s
+                << " xyz=(" << Point.x() + s * Vector.x()
+                << "," << Point.y() + s * Vector.y()
+                << "," << Point.z() + s * Vector.z()
+                << ") to t=" << t
+                << " xyz=(" << Point.x() + t * Vector.x()
+                << "," << Point.y() + t * Vector.y()
+                << "," << Point.z() + t * Vector.z()
+                << ") radl " << (*itJ).second->radiationLength()
                 << " name " << (*itJ).second->name()
                 << endreq;
+            volpath.clear();
+            
+            double temx= Point.x() + (s+t)*Vector.x()/2;
+            double temy= Point.y() + (s+t)*Vector.y()/2;
+            double temz= Point.z() + (s+t)*Vector.z()/2;
+
+            belongsTo(HepPoint3D(temx,temy,temz),level,volpath);
+
+            for(ILVolume::PVolumePath::iterator it=volpath.begin();
+                it!=volpath.end();it++) {
+              log << MSG::INFO << *it << endreq;
+            }  
+            log << endreq;
           }
           
           intersections.clear();          
@@ -842,7 +860,7 @@ unsigned int LVolume::intersectLine
             double s = (*itI).first.first;
             double t = (*itI).first.second;
             sprintf( line, 
- "s%9.6f x%8.2f y%8.2f z%9.2f  t%9.6f x%8.2f y%8.2f z%9.2f Radl %9.1f",
+ "s=%8.6f (%8.2f,%8.2f,%9.2f) to t=%8.6f (%8.2f,%8.2f,%9.2f) Radl %9.1f",
                      s,
                      Point.x() + s * Vector.x(),
                      Point.y() + s * Vector.y(),
@@ -859,7 +877,7 @@ unsigned int LVolume::intersectLine
             double s = (*itJ).first.first;
             double t = (*itJ).first.second;
             sprintf( line, 
- "s%9.6f x%8.2f y%8.2f z%9.2f  t%9.6f x%8.2f y%8.2f z%9.2f Radl %9.1f",
+ "s=%8.6f (%8.2f,%8.2f,%9.2f) to t=%8.6f (%8.2f,%8.2f,%9.2f) Radl %9.1f",
                      s,
                      Point.x() + s * Vector.x(),
                      Point.y() + s * Vector.y(),
@@ -899,7 +917,7 @@ unsigned int LVolume::intersectLine
                 sprintf( line, "s%9.6f t%9.6f Radl %9.1f", s, t,
                          (*itJ).second->radiationLength() );
                 log << "Child : " << line << " pv " << pv->name()
-                    << "\t material " << (*itJ).second->name() 
+                    << "\t " << (*itJ).second->name() 
                     << endreq;
               }
             }
@@ -913,8 +931,6 @@ unsigned int LVolume::intersectLine
                      std::back_inserter( intersections ) ) ;
           
           return intersections.size();                          // RETURN!!!
-          // commented out as temporary solution.
-          // Assert( false , "LVolumeIntersectLine FATAL! " + name() , sc ); 
         }
     }
   //  
