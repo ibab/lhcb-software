@@ -1,8 +1,11 @@
-// $Id: RelationWeighted1D.h,v 1.6 2002-04-25 14:10:19 ibelyaev Exp $
+// $Id: RelationWeighted1D.h,v 1.7 2002-04-25 15:30:18 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.6  2002/04/25 14:10:19  ibelyaev
+//  one more fix for Win2K
+//
 // ============================================================================
 #ifndef RELATIONS_RelationWeighted1D_H 
 #define RELATIONS_RelationWeighted1D_H 1
@@ -98,9 +101,12 @@ public:
    */
   virtual StreamBuffer& serialize ( StreamBuffer& s ) const 
   {
-    typedef typename FromTypeTraits::Apply        ApplyF ;
-    typedef typename WeightTypeTraits::Apply      ApplyW ;
-    typedef typename ToTypeTraits::Apply          ApplyT ;
+    typedef typename FromTypeTraits::Apply        ApplyF     ;
+    typedef typename WeightTypeTraits::Apply      ApplyW     ;
+    typedef typename ToTypeTraits::Apply          ApplyT     ;
+    typedef typename FromTypeTraits::Serializer   SerializeF ;
+    typedef typename WeightTypeTraits::Serializer SerializeW ;
+    typedef typename ToTypeTraits::Serializer     SerializeT ;
     // serialize the base class
     DataObject::serialize( s );
     // get all relations 
@@ -111,9 +117,12 @@ public:
     // serialise all relations
     for( iterator entry = range.begin() ; range.end() != entry ; ++entry ) 
       {    
-        s << ApplyF::apply ( (*entry).first.first  , this ) 
-          << ApplyW::apply ( (*entry).first.second , this )
-          << ApplyT::apply ( (*entry).second       , this ) ;
+        SerializeF::serialize 
+          ( s , ApplyF::apply ( (*entry).first.first   , this ) );
+        SerializeW::serialize 
+          ( s , ApplyW::apply ( (*entry).first.second  , this ) );
+        SerializeT::serialize 
+          ( s , ApplyT::apply ( (*entry).second        , this ) );
       };
     ///
     return s ;
@@ -126,9 +135,12 @@ public:
    */
   virtual StreamBuffer& serialize ( StreamBuffer& s )       
   {
-    typedef typename FromTypeTraits::Apply        ApplyF ;
-    typedef typename WeightTypeTraits::Apply      ApplyW ;
-    typedef typename ToTypeTraits::Apply          ApplyT ;
+    typedef typename FromTypeTraits::Apply        ApplyF     ;
+    typedef typename WeightTypeTraits::Apply      ApplyW     ;
+    typedef typename ToTypeTraits::Apply          ApplyT     ;
+    typedef typename FromTypeTraits::Serializer   SerializeF ;
+    typedef typename WeightTypeTraits::Serializer SerializeW ;
+    typedef typename ToTypeTraits::Serializer     SerializeT ;
     // clear all existing relations 
     clear();
     // serialize the base class
@@ -139,9 +151,9 @@ public:
     while( _size-- > 0 )
       {
         //
-        s >> ApplyF::apply ( from   , this )  
-          >> ApplyW::apply ( weight , this )   
-          >> ApplyT::apply ( to     , this )  ;
+        SerializeF::serialize ( s , ApplyF::apply ( from   , this ) ) ;
+        SerializeW::serialize ( s , ApplyW::apply ( weight , this ) ) ;
+        SerializeT::serialize ( s , ApplyT::apply ( to     , this ) ) ;
         //
         relate( from , to , weight ) ;
       }

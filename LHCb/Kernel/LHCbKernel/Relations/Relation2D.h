@@ -1,8 +1,11 @@
-// $Id: Relation2D.h,v 1.6 2002-04-25 14:10:16 ibelyaev Exp $
+// $Id: Relation2D.h,v 1.7 2002-04-25 15:30:18 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.6  2002/04/25 14:10:16  ibelyaev
+//  one more fix for Win2K
+//
 // ============================================================================
 #ifndef RELATIONS_Relation2D_H 
 #define RELATIONS_Relation2D_H 1
@@ -99,8 +102,10 @@ public:
    */
   virtual StreamBuffer& serialize ( StreamBuffer& s ) const 
   {
-    typedef typename FromTypeTraits::Apply      ApplyF ;
-    typedef typename ToTypeTraits::Apply        ApplyT ;
+    typedef typename FromTypeTraits::Apply      ApplyF     ;
+    typedef typename ToTypeTraits::Apply        ApplyT     ;
+    typedef typename FromTypeTraits::Serializer SerializeF ;
+    typedef typename ToTypeTraits::Serializer   SerializeT ;
     // serialize the base class
     DataObject::serialize( s );
     // get all relations 
@@ -112,8 +117,10 @@ public:
     for( iterator entry = range.begin() ;
          range.end() != entry ; ++entry ) 
       {
-        s << ApplyF::apply ( (*entry).first  , this ) 
-          << ApplyT::apply ( (*entry).second , this )  ;
+        SerializeF::serialize 
+          ( s , ApplyF::apply ( (*entry).first   , this ) );
+        SerializeT::serialize 
+          ( s , ApplyT::apply ( (*entry).second  , this ) );
       };
     ///
     return s ;
@@ -126,8 +133,10 @@ public:
    */
   virtual StreamBuffer& serialize ( StreamBuffer& s )       
   {
-    typedef typename FromTypeTraits::Apply      ApplyF ;
-    typedef typename ToTypeTraits::Apply        ApplyT ;
+    typedef typename FromTypeTraits::Apply      ApplyF     ;
+    typedef typename ToTypeTraits::Apply        ApplyT     ;
+    typedef typename FromTypeTraits::Serializer SerializeF ;
+    typedef typename ToTypeTraits::Serializer   SerializeT ;
     // clear all existing relations 
     clear();
     // serialize the base class
@@ -138,8 +147,8 @@ public:
     while( _size-- > 0 )
       {
         //
-        s >> ApplyF::apply ( from   , this ) 
-          >> ApplyT::apply ( to     , this );
+        SerializeF::serialize ( s , ApplyF::apply ( from   , this ) ) ;
+        SerializeT::serialize ( s , ApplyT::apply ( to     , this ) ) ;
         //
         relate( from , to ) ;
       }
