@@ -5,7 +5,7 @@
  *  Implementation file for tool : RichPhotonCreator
  *
  *  CVS Log :-
- *  $Id: RichPhotonCreator.cpp,v 1.22 2005-03-02 14:52:08 jonrob Exp $
+ *  $Id: RichPhotonCreator.cpp,v 1.23 2005-04-06 20:23:17 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -33,7 +33,8 @@ RichPhotonCreator::RichPhotonCreator( const std::string& type,
     m_bookKeep        ( false ),
     m_photCount       ( Rich::NRadiatorTypes, 0 ),
     m_photCountLast   ( Rich::NRadiatorTypes, 0 ),
-    m_Nevts           ( 0                       )
+    m_Nevts           ( 0                       ),
+    m_hasBeenCalled   ( false                   )
 {
 
   declareInterface<IRichPhotonCreator>(this);
@@ -75,7 +76,7 @@ StatusCode RichPhotonCreator::initialize()
 
   // Setup incident services
   incSvc()->addListener( this, IncidentType::BeginEvent );
-  if (msgLevel(MSG::DEBUG)) incSvc()->addListener( this, IncidentType::EndEvent );
+  incSvc()->addListener( this, IncidentType::EndEvent   );
 
   return sc;
 }
@@ -87,11 +88,11 @@ StatusCode RichPhotonCreator::finalize()
   RichStatDivFunctor occ("%10.2f +-%8.2f");
 
   // Print out final stats
-  info() << "------------------------------------------------------------------------------" << endreq
-         << "Created " << occ(m_photCount[Rich::Aerogel],m_Nevts) << "  Aerogel photons / event" << endreq
-         << "Created " << occ(m_photCount[Rich::C4F10],m_Nevts)   << "  C4F10   photons / event" << endreq
-         << "Created " << occ(m_photCount[Rich::CF4],m_Nevts)     << "  CF4     photons / event" << endreq
-         << "------------------------------------------------------------------------------" << endreq;
+  info() << "-------------------------------------------------------------------------------" << endreq
+         << " Created on average " << occ(m_photCount[Rich::Aerogel],m_Nevts) << "  Aerogel photons/event" << endreq
+         << " Created on average " << occ(m_photCount[Rich::C4F10],m_Nevts)   << "  C4F10   photons/event" << endreq
+         << " Created on average " << occ(m_photCount[Rich::CF4],m_Nevts)     << "  CF4     photons/event" << endreq
+         << "-------------------------------------------------------------------------------" << endreq;
 
   // Execute base class method
   return RichRecToolBase::finalize();
@@ -101,14 +102,21 @@ StatusCode RichPhotonCreator::finalize()
 void RichPhotonCreator::handle ( const Incident& incident )
 {
   // Update prior to start of event. Used to re-initialise data containers
-  if ( IncidentType::BeginEvent == incident.type() ) { InitNewEvent(); }
-  // Debug printout at the end of each event
-  else if ( msgLevel(MSG::DEBUG) && IncidentType::EndEvent == incident.type() )
+  if ( IncidentType::BeginEvent == incident.type() ) 
+  { 
+    InitEvent(); 
+  }
+  // end of event
+  else if ( IncidentType::EndEvent == incident.type() )
   {
-    debug() << "Created " << richPhotons()->size() << " RichRecPhotons : Aerogel=" 
-            << m_photCount[Rich::Aerogel]-m_photCountLast[Rich::Aerogel]
-            << " C4F10=" << m_photCount[Rich::C4F10]-m_photCountLast[Rich::C4F10]
-            << " CF4=" << m_photCount[Rich::CF4]-m_photCountLast[Rich::CF4] << endreq;
+    FinishEvent();
+    if ( msgLevel(MSG::DEBUG) )
+    {
+      debug() << "Created " << richPhotons()->size() << " RichRecPhotons : Aerogel=" 
+              << m_photCount[Rich::Aerogel]-m_photCountLast[Rich::Aerogel]
+              << " C4F10=" << m_photCount[Rich::C4F10]-m_photCountLast[Rich::C4F10]
+              << " CF4=" << m_photCount[Rich::CF4]-m_photCountLast[Rich::CF4] << endreq;
+    }
   }
 }
 
@@ -143,7 +151,8 @@ RichRecPhoton * RichPhotonCreator::buildPhoton( RichRecSegment * segment,
   RichGeomPhoton geomPhoton;
   if ( m_photonReco->reconstructPhoton( segment->trackSegment(),
                                         pixel->globalPosition(),
-                                        geomPhoton ) != 0 ) {
+                                        geomPhoton ) != 0 ) 
+  {
 
     const Rich::RadiatorType rad = segment->trackSegment().radiator();
     if ( ( geomPhoton.CherenkovTheta() > 0. ||
@@ -167,13 +176,15 @@ RichRecPhoton * RichPhotonCreator::buildPhoton( RichRecSegment * segment,
              > m_minPhotonProb[rad] ) { keepPhoton = true; break; }
       }
 
-      if ( keepPhoton ) {
-
-        if ( msgLevel(MSG::VERBOSE) ) {
+      if ( keepPhoton ) 
+      {
+        
+        if ( msgLevel(MSG::VERBOSE) ) 
+        {
           verbose() << "Reconstructed a photon candidate for segment " << segment->key()
                     << " and pixel " << pixel->key() << endreq;
         }
-
+        
         richPhotons()->insert( newPhoton, key );
 
         // count
@@ -188,14 +199,17 @@ RichRecPhoton * RichPhotonCreator::buildPhoton( RichRecSegment * segment,
         RichRecTrack::Pixels & tkPixs = segment->richRecTrack()->richRecPixels();
         bool notThere = true;
         for ( RichRecTrack::Pixels::iterator pix = tkPixs.begin();
-              pix != tkPixs.end(); ++pix ) {
+              pix != tkPixs.end(); ++pix ) 
+        {
           if ( (RichRecPixel*)(*pix) == pixel ) { notThere = false; break; }
         }
-        if ( notThere ) {
+        if ( notThere ) 
+        {
           segment->richRecTrack()->addToRichRecPixels( pixel );
         }
-
-      } else {
+        
+      } else 
+      {
         delete newPhoton;
         newPhoton = NULL;
       }
@@ -214,6 +228,9 @@ RichRecPhoton * RichPhotonCreator::buildPhoton( RichRecSegment * segment,
 
 void RichPhotonCreator::reconstructPhotons() const
 {
+
+  // flag this tool as having been called
+  m_hasBeenCalled = true;
 
   const bool noPhots = richPhotons()->empty();
 
@@ -364,10 +381,13 @@ RichRecPhotons * RichPhotonCreator::richPhotons() const
       m_photons = tdsPhotons;
 
       // Remake local photon reference map
-      for ( RichRecPhotons::const_iterator iPhoton = tdsPhotons->begin();
-            iPhoton != tdsPhotons->end();
-            ++iPhoton ) {
-        if ( m_bookKeep ) m_photonDone[ (*iPhoton)->key() ] = true;
+      if ( m_bookKeep ) 
+      {
+        for ( RichRecPhotons::const_iterator iPhoton = tdsPhotons->begin();
+              iPhoton != tdsPhotons->end();
+              ++iPhoton ) {
+          m_photonDone[ (*iPhoton)->key() ] = true;
+        }
       }
 
     }

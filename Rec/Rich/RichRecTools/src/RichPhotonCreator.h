@@ -5,7 +5,7 @@
  *  Header file for tool : RichPhotonCreator
  *
  *  CVS Log :-
- *  $Id: RichPhotonCreator.h,v 1.18 2005-03-02 14:52:25 jonrob Exp $
+ *  $Id: RichPhotonCreator.h,v 1.19 2005-04-06 20:23:17 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -101,7 +101,10 @@ private: // private methods
                                const RichRecPhotonKey key ) const;
 
   /// Initialise for a new event
-  void InitNewEvent();
+  void InitEvent();
+
+  /// Finalise for each event
+  void FinishEvent();
 
 private: // private data
 
@@ -138,15 +141,23 @@ private: // private data
   /// Number of events processed tally
   unsigned int m_Nevts;
 
+  /// Flag to indicate if the tool has been used in a given event
+  mutable bool m_hasBeenCalled;
+
 };
 
-inline void RichPhotonCreator::InitNewEvent()
+inline void RichPhotonCreator::InitEvent()
 {
-  // Initialise navigation data
   if ( m_bookKeep ) m_photonDone.clear();
   m_photons = 0;
   m_photCountLast = m_photCount;
   ++m_Nevts;
+  m_hasBeenCalled = false;
+}
+
+inline void RichPhotonCreator::FinishEvent()
+{
+  if ( m_hasBeenCalled ) ++m_Nevts;
 }
 
 #endif // RICHRECTOOLS_RICHPHOTONCREATOR_H

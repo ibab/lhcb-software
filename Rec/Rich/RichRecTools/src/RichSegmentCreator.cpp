@@ -5,7 +5,7 @@
  *  Implementation file for tool : RichSegmentCreator
  *
  *  CVS Log :-
- *  $Id: RichSegmentCreator.cpp,v 1.15 2005-03-02 14:54:06 jonrob Exp $
+ *  $Id: RichSegmentCreator.cpp,v 1.16 2005-04-06 20:23:17 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -30,7 +30,8 @@ RichSegmentCreator::RichSegmentCreator ( const std::string& type,
     m_binsEn        ( Rich::NRadiatorTypes, 5 ),
     m_segCount      ( Rich::NRadiatorTypes, 0 ),
     m_segCountLast  ( Rich::NRadiatorTypes, 0 ),
-    m_Nevts         ( 0                       )
+    m_Nevts         ( 0                       ),
+    m_hasBeenCalled ( false                   )
 {
 
   declareInterface<IRichSegmentCreator>(this);
@@ -43,7 +44,7 @@ RichSegmentCreator::RichSegmentCreator ( const std::string& type,
 
 }
 
-StatusCode RichSegmentCreator::initialize() 
+StatusCode RichSegmentCreator::initialize()
 {
   // Sets up various tools and services
   const StatusCode sc = RichRecToolBase::initialize();
@@ -67,18 +68,21 @@ StatusCode RichSegmentCreator::initialize()
   return sc;
 }
 
-StatusCode RichSegmentCreator::finalize() 
+StatusCode RichSegmentCreator::finalize()
 {
 
-  // statistical tool
-  RichStatDivFunctor occ("%7.2f +-%6.2f");
+  if ( msgLevel(MSG::DEBUG) )
+  {
+    // statistical tool
+    RichStatDivFunctor occ("%7.2f +-%6.2f");
 
-  // Print out final stats
-  info() << "------------------------------------------------------------------------------" << endreq
-         << "Created " << occ(m_segCount[Rich::Aerogel],m_Nevts) << "  Aerogel segments / event" << endreq
-         << "Created " << occ(m_segCount[Rich::C4F10],m_Nevts)   << "  C4F10   segments / event" << endreq
-         << "Created " << occ(m_segCount[Rich::CF4],m_Nevts)     << "  CF4     segments / event" << endreq
-         << "------------------------------------------------------------------------------" << endreq;
+    // Print out final stats
+    debug() << "-------------------------------------------------------------------------------" << endreq
+            << " Created on average " << occ(m_segCount[Rich::Aerogel],m_Nevts) << "  Aerogel segments/event" << endreq
+            << " Created on average " << occ(m_segCount[Rich::C4F10],m_Nevts)   << "  C4F10   segments/event" << endreq
+            << " Created on average " << occ(m_segCount[Rich::CF4],m_Nevts)     << "  CF4     segments/event" << endreq
+            << "-------------------------------------------------------------------------------" << endreq;
+  }
 
   // Execute base class method
   return RichRecToolBase::finalize();
@@ -88,15 +92,22 @@ StatusCode RichSegmentCreator::finalize()
 void RichSegmentCreator::handle ( const Incident& incident )
 {
   // Update prior to start of event. Used to re-initialise data containers
-  if ( IncidentType::BeginEvent == incident.type() ) { InitNewEvent(); }
-  // Debug printout at the end of each event
-  else if ( msgLevel(MSG::DEBUG) && IncidentType::EndEvent == incident.type() ) 
+  if ( IncidentType::BeginEvent == incident.type() ) 
+  { 
+    InitEvent(); 
+  }
+  // end of event
+  else if ( IncidentType::EndEvent == incident.type() )
   {
-    debug() << "Saved " << richSegments()->size() 
-            << " RichRecSegments : Aerogel=" 
-            << m_segCount[Rich::Aerogel]-m_segCountLast[Rich::Aerogel]
-            << " C4F10=" << m_segCount[Rich::C4F10]-m_segCountLast[Rich::C4F10]
-            << " CF4=" << m_segCount[Rich::CF4]-m_segCountLast[Rich::CF4] << endreq;
+    FinishEvent();
+    if ( msgLevel(MSG::DEBUG) )
+    {
+      debug() << "Saved " << richSegments()->size()
+              << " RichRecSegments : Aerogel="
+              << m_segCount[Rich::Aerogel]-m_segCountLast[Rich::Aerogel]
+              << " C4F10=" << m_segCount[Rich::C4F10]-m_segCountLast[Rich::C4F10]
+              << " CF4=" << m_segCount[Rich::CF4]-m_segCountLast[Rich::CF4] << endreq;
+    }
   }
 }
 
@@ -114,8 +125,16 @@ RichRecSegment * RichSegmentCreator::newSegment( const RichTrackSegment& segment
 // Forms a new RichRecSegment object
 void RichSegmentCreator::saveSegment ( RichRecSegment * segment ) const
 {
-  // count
-  ++m_segCount[segment->trackSegment().radiator()];
+
+  // debug counting
+  if ( msgLevel(MSG::DEBUG) ) 
+  {
+    // Count segments
+    ++m_segCount[segment->trackSegment().radiator()];
+    // flag the tool as having been used this event
+    m_hasBeenCalled = true;
+  }
+
   // save segment
   richSegments()->insert( segment );
 }

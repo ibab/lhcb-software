@@ -5,7 +5,7 @@
  *  Implementation file for tool : RichTrackCreatorFromTrStoredTracks
  *
  *  CVS Log :-
- *  $Id: RichTrackCreatorFromTrStoredTracks.cpp,v 1.24 2005-02-24 15:34:18 jonrob Exp $
+ *  $Id: RichTrackCreatorFromTrStoredTracks.cpp,v 1.25 2005-04-06 20:23:17 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -40,7 +40,8 @@ RichTrackCreatorFromTrStoredTracks( const std::string& type,
     m_allDone              ( false ),
     m_buildHypoRings       ( false ),
     m_bookKeep             ( false ),
-    m_Nevts                ( 0     )
+    m_Nevts                ( 0     ),
+    m_hasBeenCalled        ( false )
 {
 
   // declare interface for this tool
@@ -87,7 +88,7 @@ StatusCode RichTrackCreatorFromTrStoredTracks::initialize()
 
   // Setup incident services
   incSvc()->addListener( this, IncidentType::BeginEvent );
-  if (msgLevel(MSG::DEBUG)) incSvc()->addListener( this, IncidentType::EndEvent );
+  incSvc()->addListener( this, IncidentType::EndEvent );
 
   return sc;
 }
@@ -96,22 +97,32 @@ StatusCode RichTrackCreatorFromTrStoredTracks::finalize()
 {
 
   // Statistical tools
-  RichPoissonEffFunctor eff("%5.2f +-%5.2f");
+  RichPoissonEffFunctor eff("%6.2f +-%5.2f");
   RichStatDivFunctor occ("%8.2f +-%5.2f");
 
-  // Print out track stats
-  info() << "------------------------------------------------------------------------------" << endreq
-         << "Track type selection statistics :-" << endreq;
+  // Print out final track stats
+  info() << "-------------------------------------------------------------------------------" << endreq
+         << " Track Selection Summary : " << m_Nevts << " events :-" << endreq;
   for ( TrackTypeCount::iterator i = m_nTracksAll.begin();
-        i != m_nTracksAll.end(); ++i ) 
+        i != m_nTracksAll.end(); ++i )
   {
-    std::string name = Rich::text((*i).first);
-    name.resize(9,' ');
-    info() << " " << name << " tracks : " << occ((*i).second.second,m_Nevts) 
-           << " tracks/event : RICH Eff. " << eff((*i).second.second,(*i).second.first) 
+    std::string name =
+      ( (*i).first.second ? "Unique " : "NonUnique " ) + Rich::text( (*i).first.first );
+    name.resize(17,' ');
+    info() << "  " << name << " :" << occ((*i).second.selectedTracks,m_Nevts)
+           << " tracks/event : RICH eff " << eff((*i).second.selectedTracks,(*i).second.triedTracks)
            << " % " << endreq;
+    if ( (*i).second.aeroSegs>0 )
+      info() << "                    :"
+             << occ((*i).second.aeroSegs,m_Nevts)  << " Aerogel  segments/event" << endreq;
+    if ( (*i).second.c4f10Segs>0 )
+      info() << "                    :"
+             << occ((*i).second.c4f10Segs,m_Nevts) << " C4F10    segments/event" << endreq;
+    if ( (*i).second.cf4Segs>0 )
+      info() << "                    :"
+             << occ((*i).second.cf4Segs,m_Nevts)   << " CF4      segments/event" << endreq;
   }
-  info() << "------------------------------------------------------------------------------" << endreq;
+  info() << "-------------------------------------------------------------------------------" << endreq;
 
   // Execute base class method
   return RichRecToolBase::finalize();
@@ -121,39 +132,29 @@ StatusCode RichTrackCreatorFromTrStoredTracks::finalize()
 void RichTrackCreatorFromTrStoredTracks::handle ( const Incident & incident )
 {
   // Update prior to start of event. Used to re-initialise data containers
-  if      ( IncidentType::BeginEvent == incident.type() ) { InitNewEvent(); }
-  // Debug printout at the end of each event
-  else if ( msgLevel(MSG::DEBUG) && IncidentType::EndEvent == incident.type() )
+  if      ( IncidentType::BeginEvent == incident.type() ) 
+  { 
+    InitEvent(); 
+  }
+  // End of event
+  else if ( IncidentType::EndEvent == incident.type() )
   {
-    // Print out of unique track count
+    FinishEvent();
+    if ( msgLevel(MSG::DEBUG) )
     {
+      // Print out of track count for this event
       unsigned int nTotTried(0), nTotSel(0);
-      for ( TrackTypeCount::iterator i = m_nTracksUnique.begin();
-            i != m_nTracksUnique.end(); ++i ) {
-        nTotTried += (*i).second.first;
-        nTotSel   += (*i).second.second;
+      for ( TrackTypeCount::iterator i = m_nTracksEv.begin(); i != m_nTracksEv.end(); ++i )
+      {
+        nTotTried += (*i).second.triedTracks;
+        nTotSel   += (*i).second.selectedTracks;
       }
-      debug() << "Selected " << nTotSel << "/" << nTotTried << " Unique TrStoredTracks :";
-      for (  TrackTypeCount::iterator iTk = m_nTracksUnique.begin();
-             iTk != m_nTracksUnique.end(); ++iTk ) {
-        debug() << " " << (*iTk).first << "=(" << (*iTk).second.second
-                << "/" << (*iTk).second.first << ")";
-      }
-      debug() << endreq;
-    }
-    // Print out of non-unique track count
-    {
-      unsigned int nTotTried(0), nTotSel(0);
-      for ( TrackTypeCount::iterator i = m_nTracksNonUnique.begin();
-            i != m_nTracksNonUnique.end(); ++i ) {
-        nTotTried += (*i).second.first;
-        nTotSel   += (*i).second.second;
-      }
-      debug() << "Selected " << nTotSel << "/" << nTotTried << " Non-unique TrStoredTracks :";
-      for (  TrackTypeCount::iterator iTk = m_nTracksNonUnique.begin();
-             iTk != m_nTracksNonUnique.end(); ++iTk ) {
-        debug() << " " << (*iTk).first << "=(" << (*iTk).second.second
-                << "/" << (*iTk).second.first << ")";
+      debug() << "Selected " << nTotSel << "/" << nTotTried << " TrStoredTracks :";
+      for ( TrackTypeCount::iterator i = m_nTracksEv.begin(); i != m_nTracksEv.end(); ++i )
+      {
+        const std::string name =
+          ( (*i).first.second ? "Unique:" : "NonUnique:" ) + Rich::text( (*i).first.first );
+        debug() << " " << name << "=(" << (*i).second.selectedTracks << "/" << (*i).second.triedTracks << ")";
       }
       debug() << endreq;
     }
@@ -200,6 +201,9 @@ RichRecTrack *
 RichTrackCreatorFromTrStoredTracks::newTrack ( const ContainedObject * obj ) const
 {
 
+  // flag the tool as having been used this event
+  m_hasBeenCalled = true;
+
   // Is this a TrStoredTrack ?
   const TrStoredTrack * trTrack = dynamic_cast<const TrStoredTrack*>(obj);
   if ( !trTrack ) {
@@ -223,22 +227,20 @@ RichTrackCreatorFromTrStoredTracks::newTrack ( const ContainedObject * obj ) con
   // Track selection
   if ( !m_trSelector.trackSelected(trTrack) ) return NULL;
 
-  // count tried tracks
-  ++m_nTracksAll[trType].first;
-  if ( msgLevel(MSG::DEBUG) ) {
-    if ( trTrack->unique() ) {
-      ++(m_nTracksUnique[trType].first);
-    } else {
-      ++(m_nTracksNonUnique[trType].first);
-    }
-  }
+  // Get reference to track stats object
+  const std::pair<Rich::Track::Type,bool> tkFlag(trType,trTrack->unique());
+  TrackCount & tkCount = m_nTracksAll[tkFlag];
 
   // See if this RichRecTrack already exists
-  if ( m_bookKeep && m_trackDone[trTrack->key()] ) 
+  if ( m_bookKeep && m_trackDone[trTrack->key()] )
   {
     return richTracks()->object(trTrack->key());
-  } 
+  }
   else {
+
+    // count tried tracks
+    ++tkCount.triedTracks;
+    if (msgLevel(MSG::DEBUG)) ++(m_nTracksEv[tkFlag]).triedTracks;
 
     RichRecTrack * newTrack = NULL;
 
@@ -315,6 +317,11 @@ RichTrackCreatorFromTrStoredTracks::newTrack ( const ContainedObject * obj ) con
               // make RichRecRings for the mass hypotheses if requested
               if ( m_buildHypoRings ) m_massHypoRings->newMassHypoRings( newSegment );
 
+              // Count radiator segments ( order by abundance )
+              if      ( Rich::C4F10   == (*iSeg).radiator() ) { ++tkCount.c4f10Segs; }
+              else if ( Rich::CF4     == (*iSeg).radiator() ) { ++tkCount.cf4Segs;   }
+              else if ( Rich::Aerogel == (*iSeg).radiator() ) { ++tkCount.aeroSegs;  }
+
             } else {
               if ( msgLevel(MSG::VERBOSE) )
                 verbose() << " TrackSegment in " << (*iSeg).radiator() << " rejected" << endreq;
@@ -346,14 +353,8 @@ RichTrackCreatorFromTrStoredTracks::newTrack ( const ContainedObject * obj ) con
           newTrack->setParentTrack( trTrack );
 
           // Count selected tracks
-          ++m_nTracksAll[trType].second;
-          if ( msgLevel(MSG::DEBUG) ) {
-            if ( trTrack->unique() ) {
-              ++(m_nTracksUnique[trType].second);
-            } else {
-              ++(m_nTracksNonUnique[trType].second);
-            }
-          }
+          ++tkCount.selectedTracks;
+          if (msgLevel(MSG::DEBUG)) ++(m_nTracksEv[tkFlag]).selectedTracks;
 
         } else {
           delete newTrack;

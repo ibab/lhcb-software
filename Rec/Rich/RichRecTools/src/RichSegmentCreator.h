@@ -5,7 +5,7 @@
  *  Header file for tool : RichSegmentCreator
  *
  *  CVS Log :-
- *  $Id: RichSegmentCreator.h,v 1.14 2005-02-24 16:31:10 jonrob Exp $
+ *  $Id: RichSegmentCreator.h,v 1.15 2005-04-06 20:23:17 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -86,8 +86,11 @@ public: // methods (and doxygen comments) inherited from public interface
 
 private: // methods
 
-  /// Initialise for a new event
-  void InitNewEvent();
+  /// Initialise for each event
+  void InitEvent();
+
+  /// Finalise for each event
+  void FinishEvent();
 
 private:  // Private data
 
@@ -113,13 +116,27 @@ private:  // Private data
   /// Number of events processed tally
   unsigned int m_Nevts;
 
+  /// Flag to indicate if the tool has been used in a given event
+  mutable bool m_hasBeenCalled;
+
 };
 
-inline void RichSegmentCreator::InitNewEvent()
+inline void RichSegmentCreator::InitEvent()
 {
   m_segments = 0;
-  m_segCountLast = m_segCount;
-  ++m_Nevts;
+  if (msgLevel(MSG::DEBUG)) 
+  { 
+    m_segCountLast = m_segCount;
+    m_hasBeenCalled = false;
+  }
+}
+
+inline void RichSegmentCreator::FinishEvent()
+{
+  if (msgLevel(MSG::DEBUG)) 
+  {
+    if ( m_hasBeenCalled ) ++m_Nevts;
+  }
 }
 
 #endif // RICHRECTOOLS_RICHRECSEGMENTTOOL_H

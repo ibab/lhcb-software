@@ -5,7 +5,7 @@
  *  Header file for tool : RichTrackCreatorFromTrStoredTracks
  *
  *  CVS Log :-
- *  $Id: RichTrackCreatorFromTrStoredTracks.h,v 1.21 2005-02-24 15:34:18 jonrob Exp $
+ *  $Id: RichTrackCreatorFromTrStoredTracks.h,v 1.22 2005-04-06 20:23:17 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -46,6 +46,7 @@
 // CLHEP
 #include "CLHEP/Units/PhysicalConstants.h"
 
+//-------------------------------------------------------------------------------------
 /** @class RichTrackCreatorFromTrStoredTracks RichTrackCreatorFromTrStoredTracks.h
  *
  *  Tool for the creation and book-keeping of RichRecTrack objects.
@@ -54,6 +55,7 @@
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
  */
+//-------------------------------------------------------------------------------------
 
 class RichTrackCreatorFromTrStoredTracks : public RichRecToolBase,
                                            virtual public IRichTrackCreator,
@@ -101,7 +103,10 @@ private: // methods
   const TrStoredTracks * trStoredTracks() const;
 
   /// Initialise for a new event
-  void InitNewEvent();
+  void InitEvent();
+
+  /// Finalise for each event
+  void FinishEvent();
 
 private: // data
 
@@ -148,10 +153,19 @@ private: // data
   RichTrackSelector m_trSelector;
 
   // Track counts
-  typedef RichMap< Rich::Track::Type, std::pair< unsigned int, unsigned int > > TrackTypeCount;
-  mutable TrackTypeCount m_nTracksUnique;
-  mutable TrackTypeCount m_nTracksNonUnique;
-  mutable TrackTypeCount m_nTracksAll;
+
+  /// Helper class for track statistics
+  class TrackCount {
+  public:
+    TrackCount() : triedTracks(0), selectedTracks(0), aeroSegs(0), c4f10Segs(0), cf4Segs(0) {}
+    unsigned int triedTracks, selectedTracks, aeroSegs, c4f10Segs, cf4Segs;
+  };
+
+  /// Defintion of track count object
+  typedef RichMap< std::pair<Rich::Track::Type,bool>, TrackCount > TrackTypeCount;
+
+  mutable TrackTypeCount m_nTracksAll; /// Overall count averaged over all events
+  mutable TrackTypeCount m_nTracksEv;  /// Count for current event only
 
   /// Flag to turn on or off the book keeping features to save cpu time.
   bool m_bookKeep;
@@ -162,20 +176,27 @@ private: // data
   /// Number of events processed tally
   unsigned int m_Nevts;
 
+  /// Flag to indicate if the tool has been used in a given event
+  mutable bool m_hasBeenCalled;
+
 };
 
-inline void RichTrackCreatorFromTrStoredTracks::InitNewEvent()
+inline void RichTrackCreatorFromTrStoredTracks::InitEvent()
 {
+  m_hasBeenCalled = false;
   if ( m_bookKeep ) m_trackDone.clear();
   m_allDone  = false;
   m_trTracks = 0;
   m_tracks   = 0;
-  ++m_Nevts;
   if ( msgLevel(MSG::DEBUG) ) 
   {
-    m_nTracksUnique.clear();
-    m_nTracksNonUnique.clear();
+    m_nTracksEv.clear();
   }
+}
+
+inline void RichTrackCreatorFromTrStoredTracks::FinishEvent()
+{
+  if ( m_hasBeenCalled ) ++m_Nevts;
 }
 
 #endif // RICHRECTOOLS_RichTrackCreatorFromTrStoredTracks_H
