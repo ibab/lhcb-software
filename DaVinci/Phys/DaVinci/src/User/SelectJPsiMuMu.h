@@ -1,4 +1,4 @@
-// $Id: SelectJPsiMuMu.h,v 1.1 2002-03-27 20:53:48 gcorti Exp $
+// $Id: SelectJPsiMuMu.h,v 1.2 2002-03-28 18:56:51 gcorti Exp $
 #ifndef SELECTJPSIMUMU_H 
 #define SELECTJPSIMUMU_H 1
 
@@ -10,9 +10,6 @@
 #include "GaudiKernel/Algorithm.h"
 
 // Forward declarations
-class IAssociator;
-class IPhysSelTool;
-class IParticlePropertySvc;
 class IHistogram1D;
 class IPhysDesktop;
 class IMassVertexFitter;
@@ -41,15 +38,8 @@ public:
  
 
 private:
-  std::string m_pNameSearch;  ///< MCParticle name to search for
-  long        m_pIDSearch;    ///< MCParticle ID to search for
-
-  std::vector<std::string>  m_daugName; ///< Name of daughters to be found
-  std::vector<long>         m_daugID;   ///< GeantID of daughters to be found  
 
   int         m_nEvents;     ///< N events processed
-
-  
 
   double		m_JPsiMassWin;   ///< Mass window for the two Mu Combination
   double		m_JPsiZWin;     ///< Z vertex window for the two Mu Combination
@@ -67,12 +57,6 @@ private:
   
   int		m_JPsiCount;
 
-  
-  IAssociator*     m_pAsct;    ///< Reference to associator used  
-  IPhysSelTool*    m_pSelTool;  ///< Reference to tool for Phys Selection 
-                                ///< details
-  IParticlePropertySvc* m_ppSvc;   ///< Reference to particle property service
-  	
   IPhysDesktop* m_pDesktop;        ///< Reference to desktop tool
   IMassVertexFitter* m_pLagFit; ///< Reference to Mass Constrained Vertex Fitter
   IVertexFitter* m_pVertexFit;    ///< Reference to unconstrained

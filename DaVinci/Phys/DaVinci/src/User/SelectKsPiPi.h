@@ -1,4 +1,4 @@
-// $Id: SelectKsPiPi.h,v 1.1 2002-03-27 20:53:37 gcorti Exp $
+// $Id: SelectKsPiPi.h,v 1.2 2002-03-28 18:57:15 gcorti Exp $
 #ifndef SELECTKSPIPI_H 
 #define SELECTKSPIPI_H 1
 
@@ -10,11 +10,7 @@
 #include "GaudiKernel/Algorithm.h"
 
 // Forward declarations
-class IAssociator;
-class IPhysSelTool;
-class IParticlePropertySvc;
 class IHistogram1D;
-class IAddFourMom;
 class IPhysDesktop;
 class IMassVertexFitter;
 class IVertexFitter;
@@ -42,16 +38,8 @@ public:
  
 
 private:
-  std::string m_pNameSearch;  ///< MCParticle name to search for
-  long        m_pIDSearch;    ///< MCParticle ID to search for
-
-  std::vector<std::string>  m_daugName; ///< Name of daughters to be found
-  std::vector<long>         m_daugID;   ///< GeantID of daughters to be found  
 
   int         m_nEvents;     ///< N events processed
-
-  
-
 
   double		m_ksmasswinloo;         // Mass window for the two Mu Combination
   double		m_kszwin;         // Z vertex window for the two Mu Combination
@@ -75,10 +63,6 @@ private:
   long        m_ksID;
   
   
-  IAssociator*     m_pAsct;    ///< Reference to associator used  
-  IPhysSelTool*    m_pSelTool;  ///< Reference to tool for Phys Selection 
-                                ///< details
-  IParticlePropertySvc* m_ppSvc;   ///< Reference to particle property service
   	
   IPhysDesktop* m_pDesktop;        ///< Reference to desktop tool
   IMassVertexFitter* m_pLagFit; ///< Reference to Mass Constrained Vertex Fitter

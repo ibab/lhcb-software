@@ -1,4 +1,4 @@
-// $Id: SelectB0JPsiKs.cpp,v 1.1 2002-03-27 20:54:06 gcorti Exp $
+// $Id: SelectB0JPsiKs.cpp,v 1.2 2002-03-28 18:56:10 gcorti Exp $
 // Include files 
 
 // from STL
@@ -18,19 +18,10 @@
 
 // from Event 
 #include "LHCbEvent/Event.h"
-#include "LHCbEvent/AxPartCandidate.h"
-#include "LHCbEvent/MCParticle.h"
-#include "LHCbEvent/RefTable.h"
 #include "Event/Vertex.h"
 #include "Event/Particle.h"
-#include "Event/PhysSel.h"
-#include "Event/L0DUReport.h"
 
 // from DaVinci
-#include "DaVinciSicb/IPhysSelTool.h"
-#include "DaVinciSicb/SelComb.h"
-#include "DaVinciSicb/FlavourTag.h"
-
 // Tools
 #include "DaVinciTools/IPhysDesktop.h"
 #include "DaVinciTools/IMassVertexFitter.h"
@@ -65,22 +56,15 @@ const        IAlgFactory& SelectB0JPsiKsFactory = s_factory ;
 SelectB0JPsiKs::SelectB0JPsiKs( const std::string& name,
                                 ISvcLocator* pSvcLocator)
   : Algorithm ( name , pSvcLocator ),
-    m_pIDSearch(0),
-    m_daugID(0),
     m_nEvents(0),
     m_B0Count(0),
-    m_pAsct(0),
-    m_pSelTool(0),
-    m_ppSvc(0),
     m_pDesktop(0),
     m_pLagFit(0),
     m_pVertexFit(0),
     m_pGeomDispCalc(0),
     m_pFilter(0),
     m_pStuffer(0) {
-  m_daugName.clear();
-  declareProperty( "SearchParticle", m_pNameSearch = "B0" );
-  declareProperty( "DecayProducts", m_daugName );
+
   declareProperty( "HistogramFlag", m_produceHistogram = false );
   declareProperty( "B0MassWindowLoose", m_b0masswinloo = 0.2 * GeV);
   declareProperty( "B0ZWindow", m_b0zwin = 50.0 * cm);
@@ -107,19 +91,8 @@ StatusCode SelectB0JPsiKs::initialize() {
   // Retrieve the tools used by this algorithm
   // Note that the ToolSvc is now available via the toolSvc() method
   // you can hardcode the type of a tool or set  in the job options  
-  StatusCode sc = toolSvc()->retrieveTool("AxPart2MCParticleAsct", m_pAsct);
-
-  if( sc.isFailure() ) {
-    log << MSG::FATAL << "    Unable to retrieve Associator tool" << endreq;
-    return sc;
-  }
-
-  sc = toolSvc()->retrieveTool("PhysSelTool", m_pSelTool);
+  StatusCode sc = StatusCode::SUCCESS;
   
-  if( sc.isFailure() ) {
-    log << MSG::FATAL << "    Unable to retrieve PhysSel helper tool" <<endreq;
-    return sc;
-  }
   sc = toolSvc()->retrieveTool("UnconstVertexFitter", m_pVertexFit);
   if( sc.isFailure() ) {
     log << MSG::FATAL << "    Unable to retrieve Vertex  tool" << endreq;
@@ -163,38 +136,25 @@ StatusCode SelectB0JPsiKs::initialize() {
   // Access the ParticlePropertySvc to retrieve pID for wanted particles
   log << MSG::INFO << "    Looking for Particle Property Service." << endreq;
 
-  sc = service("ParticlePropertySvc", m_ppSvc);
+  IParticlePropertySvc* ppSvc = 0; 
+  sc = service("ParticlePropertySvc", ppSvc);
   if( sc.isFailure() ) {
     log << MSG::FATAL << "    Unable to locate Particle Property Service" 
         << endreq;
     return sc;
   }
   
-  // Retrieve Geant3 code for particle to search for: this is what is
-  // stored in MCParticle
-  ParticleProperty* partProp = m_ppSvc->find( m_pNameSearch );
-  m_pIDSearch = partProp->geantID();
-    
-  std::vector<std::string>::const_iterator idau;
-  for ( idau = m_daugName.begin(); idau != m_daugName.end(); idau++ ) {
-    partProp = m_ppSvc->find( *idau );
-    if ( 0 == partProp )   {
-      log << MSG::ERROR << "Cannot retrieve properties for particle \"" 
-          << *idau << "\" " << endreq;
-      return StatusCode::FAILURE;
-    }
-    m_daugID.push_back( partProp->geantID() );
-  }
-  
+  // Retrieve PDG (=jetsetID) code for particle to search for
+  ParticleProperty* partProp;
 
-  partProp = m_ppSvc->find( "J/psi(1S)" );
+  partProp = ppSvc->find( "J/psi(1S)" );
   m_JPsiID = partProp->jetsetID();
 
-  partProp = m_ppSvc->find( "KS0" );
+  partProp = ppSvc->find( "KS0" );
   m_KsID = (*partProp).jetsetID();
 
 
-  partProp = m_ppSvc->find( "B0" );
+  partProp = ppSvc->find( "B0" );
   m_B0Mass = (*partProp).mass();
   m_B0ID = (*partProp).jetsetID();
 
@@ -285,10 +245,10 @@ StatusCode SelectB0JPsiKs::execute() {
   
   log << MSG::DEBUG << "    Vertex Vector size " << verts.size()<< endreq;   
   
-  log << MSG::DEBUG << "    Particle Vector size " <<parts.size()<< endreq;  
+  log << MSG::DEBUG << "    Particle Vector size " << parts.size()<< endreq;  
 
 
-  // Start of Paul's ParticleFilter code (and debug)
+  // Start of ParticleFilter code (and debug)
   ParticleVector vJPsiKs, vJPsi, vKs;
   StatusCode scFilter = m_pFilter->filter( parts, vJPsiKs );
 
@@ -334,12 +294,7 @@ StatusCode SelectB0JPsiKs::execute() {
   log << MSG::DEBUG << ">>> Number of Ks found " << vKs.size() 
       << endreq;
   log << MSG::DEBUG << ">>> " << endreq;    
-  // End of Paul's ParticleFilter code (and debug)
-
-
-
-  
-
+  // End of ParticleFilter code
 
   // All JPsi/Ks combinations
   int b0CountPerEvent = 0;  
@@ -364,8 +319,6 @@ StatusCode SelectB0JPsiKs::execute() {
       
       double ip=0.;
       double ipErr=0;
-      double dist=0.;
-      double distErr=0;
       Vertex* JPsiVertex  = (*iJPsi)->endVertex();
       m_pGeomDispCalc->calcImpactPar(*(*iKs), (*JPsiVertex),ip,ipErr);
       
@@ -383,9 +336,7 @@ StatusCode SelectB0JPsiKs::execute() {
         
         double mass = JPsiKsComb.m();
         
-        //Remember SI is MeV/mm/nsec. I want to have histogram in GeV/cm to
-        //compare  with SICbDST
-        
+        // Remember SI is MeV/mm/nsec. I want to have histogram in GeV/cm
         
         // Check that  their invariant mass is close to the Bd mass      
 
@@ -525,14 +476,15 @@ StatusCode SelectB0JPsiKs::execute() {
   log << MSG::INFO << "  Number of JPsi/Ks combinations  = " 
       << b0CountPerEvent << endreq;
 
-  log << MSG::INFO << "  Number of particles in desktop = " << parts.size() 
+  log << MSG::DEBUG << "  Number of particles in desktop = " << parts.size() 
       << endreq;
 
-  log << MSG::INFO << "  Number of vertices in desktop = " << verts.size()
+  log << MSG::DEBUG << "  Number of vertices in desktop = " << verts.size()
       << endreq;
       
-  // Gloria Now save desktop to TES in specified location in jobOptions
-  // Notice that this delete particles from desktop at the moment
+  // Now save desktop to TES in specified location in jobOptions
+  // Notice that this at the moment save only particle not already in TES
+  // and delete particles from desktop
   scDesktop = m_pDesktop->saveDesktop();
   if (scDesktop) {
     log << MSG::INFO << " PhysDeskTop Saved to TES"<<endreq;

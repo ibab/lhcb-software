@@ -1,4 +1,4 @@
-// $Id: SelectKsPiPi.cpp,v 1.1 2002-03-27 20:53:40 gcorti Exp $
+// $Id: SelectKsPiPi.cpp,v 1.2 2002-03-28 18:57:19 gcorti Exp $
 // Include files 
 
 // from STL
@@ -20,20 +20,10 @@
 
 // from Event 
 #include "LHCbEvent/Event.h"
-#include "LHCbEvent/AxPartCandidate.h"
-#include "LHCbEvent/MCParticle.h"
-#include "LHCbEvent/RefTable.h"
 #include "Event/Vertex.h"
 #include "Event/Particle.h"
-#include "Event/PhysSel.h"
-#include "Event/L0DUReport.h"
 
 // from DaVinci
-
-#include "DaVinciSicb/IPhysSelTool.h"
-#include "DaVinciSicb/SelComb.h"
-#include "DaVinciSicb/FlavourTag.h"
-
 // Tools
 #include "DaVinciTools/IPhysDesktop.h"
 #include "DaVinciTools/IMassVertexFitter.h"
@@ -67,22 +57,15 @@ const        IAlgFactory& SelectKsPiPiFactory = s_factory ;
 SelectKsPiPi::SelectKsPiPi( const std::string& name,
                                 ISvcLocator* pSvcLocator)
   : Algorithm ( name , pSvcLocator),
-    m_pIDSearch(0),
-    m_daugID(0),
     m_nEvents(0),
     m_KsCount(0),
-    m_pAsct(0),
-    m_pSelTool(0),
-    m_ppSvc(0),
     m_pDesktop(0),
     m_pLagFit(0),
     m_pVertexFit(0),  
     m_pGeomDispCalc(0),
     m_pFilter(0),
     m_pStuffer(0)    {    
-  m_daugName.clear();
-  declareProperty( "SearchParticle", m_pNameSearch = "KS0" );
-  declareProperty( "DecayProducts", m_daugName );
+
   declareProperty( "HistogramFlag", m_produceHistogram = false );
   declareProperty( "KsMassWindowLoose", m_ksmasswinloo = 0.2 * GeV);
   declareProperty( "KsZWindow", m_kszwin = 50.0 * cm);
@@ -114,19 +97,8 @@ StatusCode SelectKsPiPi::initialize() {
   // Note that the ToolSvc is now available via the toolSvc() method
   //  you can hardcode the type of a tool or set  in the job options  
   
-  StatusCode sc = toolSvc()->retrieveTool("AxPart2MCParticleAsct", m_pAsct);
+  StatusCode sc = StatusCode::SUCCESS;
 
-  if( sc.isFailure() ) {
-    log << MSG::FATAL << "    Unable to retrieve Associator tool" << endreq;
-    return sc;
-  }
-
-  sc = toolSvc()->retrieveTool("PhysSelTool", m_pSelTool);
-
-  if( sc.isFailure() ) {
-    log << MSG::FATAL << "    Unable to retrieve PhysSel helper tool" <<endreq;
-    return sc;
-  }
   sc = toolSvc()->retrieveTool("UnconstVertexFitter", m_pVertexFit);
   if( sc.isFailure() ) {
     log << MSG::FATAL << "    Unable to retrieve Vertex  tool" << endreq;
@@ -140,14 +112,14 @@ StatusCode SelectKsPiPi::initialize() {
     return sc;
   }
   
- sc = toolSvc()->retrieveTool("LagrangeMassVertexFitter", m_pLagFit);
+  sc = toolSvc()->retrieveTool("LagrangeMassVertexFitter", m_pLagFit);
   if( sc.isFailure() ) {
     log << MSG::FATAL << "Unable to retrieve LagrangeMassVertexFitter tool"
         << endreq;
     return sc;
   }
 
- sc = toolSvc()->retrieveTool("GeomDispCalculator", m_pGeomDispCalc);
+  sc = toolSvc()->retrieveTool("GeomDispCalculator", m_pGeomDispCalc);
   if( sc.isFailure() ) {
     log << MSG::FATAL << "    Unable to retrieve Geometry tool" << endreq;
     return sc;
@@ -168,7 +140,8 @@ StatusCode SelectKsPiPi::initialize() {
   // Access the ParticlePropertySvc to retrieve pID for wanted particles
   log << MSG::INFO << "    Looking for Particle Property Service." << endreq;
 
-  sc = service("ParticlePropertySvc", m_ppSvc);
+  IParticlePropertySvc* ppSvc = 0; 
+  sc = service("ParticlePropertySvc", ppSvc);
   if( sc.isFailure() ) {
     log << MSG::FATAL << "    Unable to locate Particle Property Service" 
         << endreq;
@@ -177,29 +150,16 @@ StatusCode SelectKsPiPi::initialize() {
   
   // Retrieve Geant3 code for particle to search for: this is what is
   // stored in MCParticle
-  ParticleProperty* partProp = m_ppSvc->find( m_pNameSearch );
-  m_pIDSearch = partProp->geantID();
-    
-  std::vector<std::string>::const_iterator idau;
-  for ( idau = m_daugName.begin(); idau != m_daugName.end(); idau++ ) {
-    partProp = m_ppSvc->find( *idau );
-    if ( 0 == partProp )   {
-      log << MSG::ERROR << "Cannot retrieve properties for particle \"" 
-          << *idau << "\" " << endreq;
-      return StatusCode::FAILURE;
-    }
-    m_daugID.push_back( partProp->geantID() );
-  }
-  
+  ParticleProperty* partProp;
 
-  partProp = m_ppSvc->find( "pi+" );
+  partProp = ppSvc->find( "pi+" );
   m_PiPlusID = partProp->jetsetID();
 
-  partProp = m_ppSvc->find( "pi-" );
+  partProp = ppSvc->find( "pi-" );
   m_PiMinusID = (*partProp).jetsetID();
 
 
-  partProp = m_ppSvc->find( "KS0" );
+  partProp = ppSvc->find( "KS0" );
   m_KsMass = (*partProp).mass();
   m_ksID = (*partProp).jetsetID();
   
