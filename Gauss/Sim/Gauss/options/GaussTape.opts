@@ -1,4 +1,4 @@
-// $Id: GaussTape.opts,v 1.5 2002-05-24 10:09:58 witoldp Exp $ 
+// $Id: GaussTape.opts,v 1.6 2002-08-29 16:06:14 witoldp Exp $ 
 
 /// create and add the output stream 
 ApplicationMgr.OutStream +=  { "GaussTape" };
@@ -11,19 +11,26 @@ GaussTape.ItemList =
   // Generator information
   ,"/Event/Gen#1"
   ,"/Event/Gen/HepMCEvents#1"
-// optional serialization of EvGen output
+// serialization of EvGen output - if needed, uncomment
 //  ,"/Event/Gen/Vertices"
 //  ,"/Event/Gen/Particles"
+};
+
+GaussTape.OptItemList =
+{
   // MC Truth  
-  ,"/Event/MC#1"                     
+  "/Event/MC#1"                     
   ,"/Event/MC/Particles#1"         
   ,"/Event/MC/Vertices#1"          
   // MCHits
-//  ,"/Event/MC/OT#1"
-//  ,"/Event/MC/OT/Hits#1"
-
+  ,"/Event/MC/OT#1"
+  ,"/Event/MC/OT/Hits#1"
+  ,"/Event/MC/IT#1"
+  ,"/Event/MC/IT/Hits#1"
+  ,"/Event/MC/Velo#1"
+  ,"/Event/MC/Velo/Hits#1"
+  ,"/Event/MC/Velo/PuVeto#1"
 };
 GaussTape.PreLoad     = false ; // ATTENTION ! it MUST be FALSE for GiGa! 
 GaussTape.OutputLevel = 1;
-
 
