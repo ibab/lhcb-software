@@ -4,6 +4,10 @@
 ! Purpose     : Muon digitisation algorithms
 !-----------------------------------------------------------------------------
 
+!======================== MuonAlgs v5r5 2004-04-21 ========================
+! 2004-04-21 - Alessia Satta
+ - Change digitization Time Gate to 25. (from 20.)
+
 !======================== MuonAlgs v5r4 2004-04-14 ========================
 ! 2004-04-14 - Marco Cattaneo
  - Change some floats to double, to fix data truncation warnings on Windows
