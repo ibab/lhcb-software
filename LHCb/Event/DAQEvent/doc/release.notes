@@ -3,6 +3,10 @@ Author: Jose' Helder Lopes
 Purpose: Define the L1Buffer,  L1Event, L1Bank, RawBuffer, RawEvent and 
          RawBank classes.
 
+!============== DAQEvent v4r4p1 2004-07-20 ============================
+! 2004-07-29 - Marco Cattaneo
+ - Fix a typo in L1Buffer banktype enum, L0DU was called LODU
+
 !=============== DAQEvent v4r4 2004-07-20 =============================
 ! 2004-07-20 - Marco Cattaneo
  - Fix requirements for Gaudi v15
