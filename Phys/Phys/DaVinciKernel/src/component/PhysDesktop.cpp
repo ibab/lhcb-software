@@ -1,4 +1,4 @@
-// $Id: PhysDesktop.cpp,v 1.5 2004-09-08 14:25:55 pkoppenb Exp $
+// $Id: PhysDesktop.cpp,v 1.6 2004-09-08 16:59:27 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
@@ -372,10 +372,6 @@ StatusCode PhysDesktop::saveDesktop( ParticleVector& pToSave,
   
   std::string location = m_outputLocn+"/Particles";
   
-  debug() << "Saving " << particlesToSave->size()
-          << " new particles in " << location << " from " << pToSave.size() 
-          << " total particles in desktop " << endreq;
-  
   StatusCode sc = eventSvc()->registerObject(location,particlesToSave);
   
   for( ParticleVector::const_iterator icand = pToSave.begin();
@@ -388,7 +384,10 @@ StatusCode PhysDesktop::saveDesktop( ParticleVector& pToSave,
                 << (*icand)->mass() << endreq ;
     }
   }
-  
+  debug() << "Saved " << particlesToSave->size()
+          << " new particles in " << location << " from " << pToSave.size() 
+          << " total particles in desktop " << endreq;
+ 
   if ( sc.isFailure() ) {
     delete particlesToSave;
     err() << "    Unable to register" << location << endreq;
