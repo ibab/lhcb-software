@@ -2,7 +2,7 @@
 <!DOCTYPE gdd SYSTEM "gdd.dtd">
 <gdd>
   <package name="L0Event">
-    <namespace desc="L0 namespace" name="L0">
+    <namespace desc="L0 namespace" name="L0Calo">
       <enum desc="L0Type describes the type of candidate" name="L0Type" value="Electron=1, Photon, Hadron, Hadron2, SumEt, Pi0Local, Pi0Global"/>
     </namespace>
     <class author="Olivier Callot" desc="This class represents the input from the calorimeter to the L0 trigger" id="6001" location="/Event/Trig/L0/Calo" name="L0CaloCandidate">
@@ -10,20 +10,20 @@
       <import name="stdio.h" std="TRUE"/>
       <import name="CLHEP/Units/SystemOfUnits"/>
       <import name="CaloKernel/CaloCellID"/>
-      <import name="Event/L0"/>
+      <import name="Event/L0Calo"/>
       <constructor argList="int type, CaloCellID ID, int etCode, double et, HepPoint3D cellCenter, double cellSize" desc="special constructor" initList="KeyedObject&lt;int&gt;(type),m_type(type), m_ID(ID), m_etCode(etCode), m_et(et), m_position(cellCenter), m_posTol(cellSize)">
         <code> </code>
       </constructor>
       <method const="TRUE" desc="Returns the type of candidate as a string, for printing" name="typeName" type="std::string">
 	<code>
 switch (m_type) {
-  case L0::Electron:  return &quot;electron&quot;;
-  case L0::Photon:    return &quot;photon  &quot;;
-  case L0::Hadron:    return &quot;hadron  &quot;;
-  case L0::Hadron2:   return &quot;hadron_2&quot;;
-  case L0::Pi0Local:  return &quot;Pi0 loc &quot;;
-  case L0::Pi0Global: return &quot;Pi0 glob&quot;;
-  case L0::SumEt:     return &quot;Sum Et  &quot;;
+  case L0Calo::Electron:  return &quot;electron&quot;;
+  case L0Calo::Photon:    return &quot;photon  &quot;;
+  case L0Calo::Hadron:    return &quot;hadron  &quot;;
+  case L0Calo::Hadron2:   return &quot;hadron_2&quot;;
+  case L0Calo::Pi0Local:  return &quot;Pi0 loc &quot;;
+  case L0Calo::Pi0Global: return &quot;Pi0 glob&quot;;
+  case L0Calo::SumEt:     return &quot;Sum Et  &quot;;
   default:            return &quot;unknown &quot;;
 }
 	</code>
@@ -44,7 +44,7 @@ ms &lt;&lt; &quot;L0Calo &quot;  &lt;&lt;  typeName() &lt;&lt;  &quot; Et(GeV) &
 char line[80];
 sprintf( line, &quot;%4d %6.2f &quot;, m_etCode, m_et/GeV );
 ms &lt;&lt; line;
-if ( L0::SumEt != m_type ) {
+if ( L0Calo::SumEt != m_type ) {
   ms &lt;&lt; &quot; ID &quot; &lt;&lt; m_ID &lt;&lt; &quot; x,y,z(cm)&quot;;
   sprintf( line, &quot;%7.1f %7.1f %7.1f Error(cm) %5.2f&quot;,
     m_position.x()/centimeter,
@@ -67,6 +67,7 @@ return ms; </code>
         <code> </code>
       </constructor>
     </class>
+
     <class author="Olivier Callot" desc=" Fired cells in Prs or Spd." id="6007" name="L0PrsSpdHit" templateList="FALSE" templateVector="TRUE">
       <location name="Prs" place="/Event/Trig/L0/PrsRaw"/>
       <location name="Spd" place="/Event/Trig/L0/SpdRaw"/>
@@ -77,55 +78,6 @@ return ms; </code>
         <code> </code>
       </constructor>
     </class>
-    <class author="Nicole Brun" desc="L0 Decision" id="6004" location="/Event/Trig/L0/Decision" name="L0DUReport" templateList="FALSE" templateVector="FALSE">
-      <base name="DataObject"/>
-      <attribute desc="L0 decision mask" name="typeL0Trig" type="int"/>
-      <constructor argList="int typeL0Trig" desc="Normal constructor, with the decision" initList="m_typeL0Trig( typeL0Trig)">
-        <code> </code>
-      </constructor>
-      <method const="TRUE" desc="Returns the decision as boolean" inline="TRUE" name="decision" type="bool">
-	<code>return ( 0 != m_typeL0Trig);</code>
-      </method>
-      <method desc="Returns true if this trigger bit is set" name="isTrig" type="bool">
-	<arg const="TRUE" name="trig" type="int"/>
-	<code>return ( 0 != ( ( 1 &lt;&lt; trig) &amp; m_typeL0Trig) ); </code>
-      </method>
-      <method desc="Returns the type of decision as a string, for printing" name="typeL0TrigName" type="std::string">
-	<code>
-std::string mess = &quot;&quot;;
- if ( isTrig( L0Trig::Electron) ) { mess += &quot;Electron &quot;; }
- if ( isTrig( L0Trig::Photon) ) { mess += &quot;Photon &quot;; }
- if ( isTrig( L0Trig::Hadron ) ) { mess += &quot;Hadron &quot;; }
- if ( isTrig( L0Trig::Pi0Local ) ) { mess += &quot;Pi0Local &quot;; }
- if ( isTrig( L0Trig::Pi0Global ) ) { mess += &quot;Pi0Glogal &quot;; }
- if ( isTrig( L0Trig::Mu1 ) ) { mess += &quot;Mu1 &quot;; }
- if ( isTrig( L0Trig::SumMu ) ) { mess += &quot;SumMu &quot;; }
- if ( isTrig( L0Trig::Electron_down ) ) {mess += &quot;Electron_down &quot;; }
- if ( isTrig( L0Trig::Photon_down ) ) { mess += &quot;Photon_down &quot;;} 
- if ( isTrig( L0Trig::Hadron_down ) ) { mess += &quot;Hadron_down &quot;; }
- if ( isTrig( L0Trig::Pi0Local_down ) ) { mess += &quot;Pi0Local_down &quot;; }
- if ( isTrig( L0Trig::Pi0Global_down ) ) { mess += &quot;Pi0Global_down &quot;; }
- if ( isTrig( L0Trig::Mu1_down ) ) { mess += &quot;Mu1_down &quot;; }
- if ( isTrig( L0Trig::SumMu_down ) ) { mess += &quot;SumMu_down &quot;; }
- if ( &quot;&quot; == mess ) { mess = &quot;(no trigger)&quot;; }
- return ( &quot;L0DUReport = &quot; + mess );</code>
-      </method>
-      <import name="Event/L0Trig"/>
-    </class>
-    <namespace desc="Describes the L0 trigger bits" name="L0Trig">
-      <enum desc="Trigger bits" name="Trig" value="Decis=0, Electron, Electron_down,Photon, Photon_down, Pi0Local, Pi0Local_down, Pi0Global, Pi0Global_down, Hadron,Hadron_down, Mu1, Mu1_down, SumMu, SumMu_down"/>
-      <enum desc="Number of bits" name="MaxTrig" value="numberTrig = 32"/>
-    </namespace>
-    <class author="Olivier Callot" desc="Result of the PileUp Veto" location="/Event/Trig/L0/PuVeto" id="6008" name="L0PuVeto" templateList="FALSE" templateVector="FALSE">
-      <base name="DataObject"/>
-      <attribute desc="Pile-Up decision" name="decision" type="int"/>
-      <attribute desc="Height of the first peak" name="heightPeak1" type="double"/>
-      <attribute desc="Integral of the first peak" name="sumPeak1" type="double"/>
-      <attribute desc="Position of the first peak" name="zPosPeak1" type="double"/>
-      <attribute desc="Height of the second peakaValue" name="heightPeak2" type="double"/>
-      <attribute desc="Integral of the second peak" name="sumPeak2" type="double"/>
-      <attribute desc="Z position of the second peak" name="zPosPeak2" type="double"/>
-      <attribute desc="Total number of coincidences within the histogram range" name="sTot" type="double"/>
-    </class>
+
   </package>
 </gdd>

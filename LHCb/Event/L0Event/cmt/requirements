@@ -1,24 +1,26 @@
-# $Id: requirements,v 1.11 2002-02-05 16:53:27 cattanem Exp $
+# $Id: requirements,v 1.12 2002-04-04 05:52:33 ocallot Exp $
 package L0Event
-version v10r0
+version v11r0
 
-branches Event cmt doc xml
+branches Event cmt doc xml src
 
 include_dirs $(L0EVENTROOT)
 
 use 	GaudiObjDesc	v3r*
+use 	LHCbKernel	v1r*
 use     EventKernel     v1r*    Event
 use 	LHCbEvent 	v12r* 	Event
+use 	MuonKernel 	v1r* 	Muon
 
 # Make header from XML
 
 document obj2doth L0EventObj2Doth ../xml/*.xml
+library L0Event ../src/*.cpp
+macro L0Event_shlibflag "$(use_linkopts) $(libraryshr_linkopts)"
 
-document obj2dict L0EventObj2Dict -group=dict ../xml/L0Event.xml
-library L0EventDict -group=dict ../dict/*.cpp
-macro L0EventDict_shlibflag "$(use_linkopts) $(libraryshr_linkopts)"
+# produce dictionary  ** Not Yet ***
 
+# document obj2dict L0EventObj2Dict ../xml/*.xml
+# library L0EventDict ../dict/*.cpp
+# macro L0EventDict_shlibflag "$(use_linkopts) $(libraryshr_linkopts)"
 
-
-
- 

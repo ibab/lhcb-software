@@ -1,0 +1,46 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE gdd SYSTEM 'gdd.dtd'>
+<gdd>
+  <import name="MuonKernel/MuonTileID"/>
+  <import name="Kernel/SerializeStl"/>
+  <package name='L0Muon' >
+
+    <namespace desc="L0Muon specific namespace" name="L0Muon" author='A. Tsaregorodtsev'>
+      <enum desc="L0Muon candidate status codes" name="StatusCode" 
+            value="OK=1, EMPTY, ERROR, CRATE_EMPTY, CRATE_ERROR, PU_EMPTY, PU_ERROR, PU_OVERFLOW"/>
+    </namespace>
+
+    <class name='L0MuonCandidate' id='6002' author='A. Tsaregorodtsev' desc='L0Muon trigger candidate'>
+      <desc> *  representing the output of the L0Muon trigger processor.</desc>
+      <base name='KeyedObject&lt;long&gt;'/>
+      <constructor argList="int status" desc="Constructor with just a status info"/>
+      <constructor argList="double pt, double theta, double phi, 
+                            std::vector&lt;MuonTileID&gt; pads, 
+			    int status" 
+			    desc="Constructor with full information"/>
+      
+      <method const="TRUE" type="double" name="pt" desc="Accessor to the encoded Pt"/>
+      <method const="TRUE" type="MuonTileID" name="padM1" desc="Accessor to the pad in M1"/>
+      <method const="TRUE" type="MuonTileID" name="pad" argList="int station" 
+                    desc="Accessor to the pad in a given station"/>
+      <method const="TRUE" type="int" name="status" desc="Accessor to the encoded status"/>		    
+      <method const="TRUE" type="bool" name="operator&lt;" argList="const L0MuonCandidate lmc" 
+                    desc="Comparison operator for sorting candidates in Pt"/>
+      
+      <method type="void" name="setStatus" argList="int status" 
+              desc="Setting the candidate status bits" access="PRIVATE"/>
+      <method type="void" name="setPt" argList="double pt" 
+              desc="Setting the candidate Pt bits" access="PRIVATE"/>
+      <method type="void" name="setPadM1" argList="MuonTileID pad" 
+              desc="Setting the candidate M1 pad bits" access="PRIVATE"/>
+      <method type="void" name="setBit" argList="int value, int shift, int mask" 
+              desc="Setting the candidate bitcode bits" access="PRIVATE"/>	      	      
+      
+      <attribute name="bitcode" type="unsigned long" desc="Encoded candidate information"/>
+      <attribute name="theta" type="double" desc="Theta at IP of the candidate" setMeth="FALSE"/>
+      <attribute name="phi" type="double" desc="Phi at IP of the candidate" setMeth="FALSE"/>
+      <attribute name="pads" type="std::vector&lt;MuonTileID&gt;" desc="Pads used in the candidate"  
+                 setMeth="FALSE" getMeth="FALSE"/>      
+    </class>  
+  </package>
+</gdd>

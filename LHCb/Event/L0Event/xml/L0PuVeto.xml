@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE gdd SYSTEM "gdd.dtd">
+<gdd>
+  <package name="L0Event">
+    <class 
+      author="Olivier Callot" 
+      desc="Result of the PileUp Veto" 
+      location="/Event/Trig/L0/PuVeto" 
+      id="6008" 
+      name="L0PuVeto" 
+      templateList="FALSE" 
+      templateVector="FALSE">
+      <base name="DataObject"/>
+      <attribute 
+	desc="Pile-Up decision" 
+	name="decision" 
+	type="int"/>
+      <attribute 
+	desc="Height of the first peak" 
+	name="heightPeak1" 
+	type="double"/>
+      <attribute 
+	desc="Integral of the first peak" 
+	name="sumPeak1" 
+	type="double"/>
+      <attribute 
+	desc="Position of the first peak" 
+	name="zPosPeak1" 
+	type="double"/>
+      <attribute 
+	desc="Height of the second peakaValue" 
+	name="heightPeak2" 
+	type="double"/>
+      <attribute 
+	desc="Integral of the second peak" 
+	name="sumPeak2" 
+	type="double"/>
+      <attribute 
+	desc="Z position of the second peak" 
+	name="zPosPeak2" 
+	type="double"/>
+      <attribute 
+	desc="Total number of coincidences within the histogram range" 
+	name="sTot" 
+	type="double"/>
+    </class>
+  </package>
+</gdd>
