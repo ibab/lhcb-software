@@ -1,4 +1,4 @@
-// $Id: ChargedProtoPAlg.h,v 1.3 2002-07-18 17:58:07 gcorti Exp $
+// $Id: ChargedProtoPAlg.h,v 1.4 2002-07-26 19:27:33 gcorti Exp $
 #ifndef CHARGEDPROTOPALG_H 
 #define CHARGEDPROTOPALG_H 1
 
@@ -8,6 +8,11 @@
 
 // from Gaudi
 #include "GaudiKernel/Algorithm.h"
+// LHCbKernel
+#include "Relations/IAssociatorWeighted.h"
+// from Event
+#include "Event/CaloHypo.h"
+#include "Event/TrStoredTrack.h"
 
 
 /** @class ChargedProtoPAlg ChargedProtoPAlg.h
@@ -38,24 +43,38 @@ protected:
   
 private:
 
-  std::string m_tracksPath;     ///< Location in TES of input tracks
-  std::string m_richPath;       ///< Location in TES of input Rich pids
-  std::string m_muonPath;       ///< Location in TES of input Muon pids
-  std::string m_electronPath;   ///< Location in TES of input Electron pids
-  std::string m_trkmatchPath;   ///< Location in TES of calo&track match
-  std::string m_caloematchPath; ///< Location in TES of cluster energy match
-  std::string m_bremmatchPath;  ///< Location in TES of bremsstrahlung match
-
+  std::string m_tracksPath;        ///< Location in TES of input tracks
+  std::string m_richPath;          ///< Location in TES of input Rich pids
+  std::string m_muonPath;          ///< Location in TES of input Muon pids
+  std::string m_electronPath;      ///< Location in TES of input Electron pids
+  std::string m_photonMatchName;   ///< Location in TES of calo&track match
+  std::string m_electronMatchName; ///< Location in TES of cluster energy match
+  std::string m_bremMatchName;     ///< Location in TES of bremsstrahlung match
 
   std::string m_protoPath;    ///< Location in TES of output ProtoParticles
   
   double m_lastChiSqMax;      ///< Maximum Chi2 of track fit to make a ProtoP
+  bool   m_upstream;          ///< Use or not unique upstream tracks
  
   int m_idElectron;           ///< PDG id of e+/-
   int m_idMuon;               ///< PDG id of mu+/mu-
   int m_idPion;               ///< PDG id of pi+/pi-
   int m_idKaon;               ///< PDG id of K+/K-
   int m_idProton;             ///< PDG id of p/p~ 
+
+  typedef IAssociatorWeighted<CaloCluster,TrStoredTrack,float> PhotonMatch;
+  typedef IAssociatorWeighted<CaloHypo,TrStoredTrack,float>    ElectronMatch;
+  typedef IAssociatorWeighted<CaloHypo,TrStoredTrack,float>    BremMatch;
+  typedef const PhotonMatch::InverseType    PhotonTable;
+  typedef const ElectronMatch::InverseType  ElectronTable;
+  typedef const BremMatch::InverseType      BremTable;
+  typedef const PhotonTable::Range   PhotonRange;
+  typedef const ElectronTable::Range ElectronRange;
+  typedef const BremTable::Range     BremRange;
+
+  PhotonMatch*   m_photonMatch;     ///< Name of photon Match
+  ElectronMatch* m_electronMatch;   ///< Name of electron Match
+  BremMatch*     m_bremMatch;       ///< Name of brem Match
 
 };
 #endif // CHARGEDPROTOPALG_H

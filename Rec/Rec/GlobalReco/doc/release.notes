@@ -4,6 +4,15 @@
 ! Purpose     : Holds final reconstruction code
 !-----------------------------------------------------------------------------
 
+! 2002-07-26 - Gloria Corti
+ - dd detectorID information for electrons when making ProtoParticles 
+   in ChargedProtoPAlg, this implies introducing options files
+ - put as options to use upstream tracks or not in making ProtoParticles
+   (by default not taken) in ChargedProtoPAlg
+ - fix bug for assuming TrState() at z=0 and in iteration loop, use also
+   velo unique tracks to make Primary Vertices (K.Ciba)
+
+
 ! 2002-07-25 - Ivan Belyaev
  - src/NeutralPPCreator.cpp  remove artificial numerical temporary constants.
 

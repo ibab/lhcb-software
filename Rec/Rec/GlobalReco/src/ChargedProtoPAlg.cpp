@@ -1,4 +1,4 @@
-// $Id: ChargedProtoPAlg.cpp,v 1.4 2002-07-25 19:41:14 gcorti Exp $
+// $Id: ChargedProtoPAlg.cpp,v 1.5 2002-07-26 19:27:35 gcorti Exp $
 // Include files 
 #include <memory>
 
@@ -36,20 +36,13 @@ ChargedProtoPAlg::ChargedProtoPAlg( const std::string& name,
                                     ISvcLocator* pSvcLocator)
   : Algorithm ( name , pSvcLocator )
   , m_electronPath( "Rec/Calo/Electrons" )
-  , m_trkmatchPath( "AssociatorWeighted<CaloCluster,TrStoredTrack,float>"
-                    + std::string("/PhotonMatch") )
-  , m_caloematchPath( "AssociatorWeighted<CaloHypo,TrStoredTrack,float>"
-                      + std::string("/ElectronMatch") )
-  , m_bremmatchPath( "AssociatorWeighted<CaloHypo,TrStoredTrack,float>"
-                     + std::string("/BremMatch") ) 
+  , m_photonMatchName( "PhotonMatch" )
+  , m_electronMatchName( "ElectronMatch" )
+  , m_bremMatchName( "BremMatch" )
   , m_lastChiSqMax( 100 )
-  //, m_upstreamTracks( false )
-  //, m_zFirstPoint( 3000.0*mm )
+  , m_upstream( false )
 {
   
-  //, m_trkmatch(0)
-  //, m_spdPrs    ( 0 ) {
-
   // Inputs
   declareProperty("TrStoredTracksInput", 
                   m_tracksPath = TrStoredTrackLocation::Default );
@@ -57,10 +50,10 @@ ChargedProtoPAlg::ChargedProtoPAlg( const std::string& name,
                   m_richPath = RichPIDLocation::Default );
   declareProperty("MuonPIDsInput",
                   m_muonPath = MuonIDLocation::Default );
-  declareProperty("ElectronsInput", m_electronPath );
-  declareProperty("TrackMatching", m_trkmatchPath );
-  declareProperty("CaloEMatching", m_caloematchPath );
-  declareProperty("BremMatching", m_bremmatchPath );
+  declareProperty("ElectronsInput",   m_electronPath );
+  declareProperty("PhotonMatching",    m_photonMatchName );
+  declareProperty("ElectronMatching", m_electronMatchName );
+  declareProperty("BremMatching",     m_bremMatchName );
   
   // Outputs
   declareProperty("OutputData",
@@ -68,8 +61,7 @@ ChargedProtoPAlg::ChargedProtoPAlg( const std::string& name,
 
   // Selections
   declareProperty("MaxChiSquare", m_lastChiSqMax );
-  //declareProperty("UpstreamsTracks", m_upstream );
-  //declareProperty("ZFirstState", m_zFirstPoint );
+  declareProperty("UpstreamsTracks", m_upstream );
 
 }
 
@@ -110,6 +102,27 @@ StatusCode ChargedProtoPAlg::initialize() {
 
   partProp = ppSvc->find( "p+" );
   m_idProton = partProp->jetsetID();
+
+  // Associators for CaloTables
+  std::string matchType="AssociatorWeighted<CaloCluster,TrStoredTrack,float>";
+  sc = toolSvc()->retrieveTool( matchType, m_photonMatchName, m_photonMatch );
+  if( !sc.isSuccess() ) {
+    log << MSG::ERROR << "Unable to retrieve " << matchType << endreq;
+    return sc;
+  }
+  matchType = "AssociatorWeighted<CaloHypo,TrStoredTrack,float>";
+  sc = toolSvc()->retrieveTool( matchType, m_electronMatchName,
+                                m_electronMatch );
+  if( !sc.isSuccess() ) {
+    log << MSG::ERROR << "Unable to retrieve " << matchType << endreq;
+    return sc;
+  }
+  matchType = "AssociatorWeighted<CaloHypo,TrStoredTrack,float>";
+  sc = toolSvc()->retrieveTool( matchType, m_bremMatchName, m_bremMatch );
+  if( !sc.isSuccess() ) {
+    log << MSG::ERROR << "Unable to retrieve " << matchType << endreq;
+    return sc;
+  }
 
   return StatusCode::SUCCESS;
 };
@@ -160,7 +173,7 @@ StatusCode ChargedProtoPAlg::execute() {
     muonData = true;
   }
 
-  // Load Electron results
+  // Load Electron results and tables
   bool caloData = false;
   SmartDataPtr<CaloHypos> electrons ( eventSvc(), m_electronPath );
   if( !electrons || 0 == electrons->size() ) {
@@ -169,9 +182,27 @@ StatusCode ChargedProtoPAlg::execute() {
   }
   else {
     log << MSG::DEBUG << "Successfully located " << electrons->size()
-        << " CaloHypp at " << m_electronPath << endreq;
+        << " CaloHypo at " << m_electronPath << endreq;
     caloData = true;
   }
+
+  /// Check the tables for electronID
+  const PhotonTable* phtable = m_photonMatch->inverse();
+  if( 0 == phtable ) { 
+    log << MSG::DEBUG << "Table from PhotonMatch points to NULL";
+    caloData = false;
+  }
+  const ElectronTable* etable = m_electronMatch->inverse();
+  if( 0 == etable ) { 
+    log << MSG::DEBUG << "Table from PhotonMatch points to NULL";
+    caloData = false;
+  }
+  const BremTable* brtable = m_bremMatch->inverse();
+  if( 0 == brtable ) { 
+    log << MSG::DEBUG << "Table from PhotonMatch points to NULL";
+    caloData = false;
+  }
+
 
   // Prepare output container
   ProtoParticles* chprotos = new ProtoParticles();
@@ -197,6 +228,7 @@ StatusCode ChargedProtoPAlg::execute() {
   int countTrackProto = 0;
   int countRichProto = 0;
   int countMuonProto = 0;
+  int countElectronProto = 0;
   TrStoredTracks::const_iterator iTrack;
   for( iTrack = tracks->begin(); tracks->end() != iTrack; ++iTrack ) {
     // Quality of tracks: for debugging only
@@ -217,22 +249,17 @@ StatusCode ChargedProtoPAlg::execute() {
     // Track satisfy criteria to make a ProtoParticle ?
     if( !keepTrack( (*iTrack) ) ) continue;
     
-    countTrackProto++;
     //std::auto_ptr<ProtoParticle> proto( new ProtoParticle() ); 
     ProtoParticle* proto = new ProtoParticle();
     proto->setTrack( *iTrack );
     double tkcharge = proto->charge();
-    /*double tkcharge = (*iTrack)->charge();
     if( 0 == tkcharge ) {
-      const TrStateP* tkstate = proto->trStateP();
-      if( tkstate ) {
-        log << MSG::DEBUG << "tkstate q/p =" << tkstate->qDivP() << endreq;
-        tkcharge = tkstate->qDivP() > 0.0 ? 1.0 : -1.0;
-      }
-      }*/
-    log << MSG::DEBUG << "track charge = " << tkcharge << endreq;
-    if( 0 == tkcharge ) continue;
-    //proto->setCharge( tkcharge );
+      log << MSG::DEBUG << "track charge = " << tkcharge << endreq;
+      delete proto;
+      continue;
+    }
+
+    countTrackProto++;
 
     ProtoParticle::PIDDetVector iddetvec;
     ProtoParticle::PIDInfoVector idinfovec;
@@ -253,35 +280,66 @@ StatusCode ChargedProtoPAlg::execute() {
       for( iMuon = muonpids->begin(); muonpids->end() != iMuon; ++iMuon ) {
         const TrStoredTrack* track = (*iMuon)->idTrack();
         if( track == (*iTrack) ) {
-          countMuonProto++;
           proto->setMuonPID( *iMuon );
+          // When MuonDet is capable of identifying it add its result
           if( (*iMuon)->InAcceptance() && (*iMuon)->PreSelMomentum() ) {
+            countMuonProto++;
             ProtoParticle::PIDDetPair iddet;
             iddet.first = ProtoParticle::MuonMuon;
             iddet.second = (*iMuon)->MuProb();
-            ProtoParticle::PIDDetVector& iddetvec = proto->pIDDetectors();
-            iddetvec.push_back(iddet);
+            proto->pIDDetectors().push_back(iddet);
             proto->setMuonBit(1);
-          }          
-          // the muon pid for track has been added so exit from loop
+          }
+          // The muon pid for track has been added so exit from loop
           break;
         }
       } // break here
     }
     
-    // Add CaloElectrons to this ProtoParticle
-    /*
-    if( caloData ) {
-      CaloHypos::const_iterator iElec;
-      int counte = 0;
-      for( iElec = electrons->begin(); electrons->end() != iElec; ++iElec ) {
-        SmartRefVector<CaloCluster>& eclusters = (*iElec)-> clusters();
-        log << MSG::DEBUG << "Number of clusters for electron " 
-            << ++counte << " = " << eclusters.size() << endreq;
-      }
-    } 
-    */
+    // Add CaloElectrons to this ProtoParticle   
+    if( caloData ) {  
+      log << MSG::DEBUG << "Processing CaloInfo" << endreq;
+      // Add the Electron hypothesis when available (no cuts at the moment)
+      ElectronRange erange = etable->relations( *iTrack );
+      if( !erange.empty() ) {
+        countElectronProto++;
+        CaloHypo* hypo = erange.begin()->to();
+        proto->addToCalo( hypo );
 
+        double chi2 = erange.begin()->weight();
+        ProtoParticle::PIDDetPair iddet;
+        iddet.first = ProtoParticle::CaloEMatch;
+        iddet.second = chi2;
+        proto->pIDDetectors().push_back(iddet);
+        proto->setCaloeBit(1);
+       
+        // Add the CaloCluster chi2 (only lowest)
+        PhotonRange phrange = phtable->relations( *iTrack );
+        if( !phrange.empty() ) {
+          chi2 = phrange.begin()->weight();
+          iddet.first = ProtoParticle::CaloTrMatch;
+          iddet.second = chi2;
+          proto->pIDDetectors().push_back(iddet);
+        }
+        
+        // Add Brem hypothesis and chi2 (only lowest)
+        BremRange brrange = brtable->relations( *iTrack );
+        if( !brrange.empty() ) {
+          hypo = brrange.begin()->to();
+          proto -> addToCalo( hypo );
+          chi2 = brrange.begin()->weight();
+          iddet.first = ProtoParticle::BremMatch;
+          iddet.second = chi2;
+          proto->pIDDetectors().push_back(iddet);
+        }
+      }
+    }
+    // Check is at least one particleID is beeing added otherwise set NoPID
+    if( (0 == proto->richBit()) && (0 == proto->muonBit()) &&
+        (0 == proto->caloeBit()) ) {
+      proto->setNoneBit(1);
+    }
+    
     //chprotos->insert(proto.release());
     chprotos->insert(proto);
     
@@ -311,6 +369,8 @@ StatusCode ChargedProtoPAlg::execute() {
       << " ProtoParticle with RichPID " << endreq;
   log << MSG::DEBUG << "Made " << countMuonProto 
       << " ProtoParticle with MuonID " << endreq;
+  log << MSG::DEBUG << "Made " << countElectronProto 
+      << " ProtoParticle with ElectronHypo " << endreq;
   log << MSG::DEBUG << "Number of ProtoParticles in TES is " 
       << chprotos->size() << endreq;
 
@@ -328,9 +388,10 @@ StatusCode ChargedProtoPAlg::execute() {
       log << MSG::VERBOSE << "id = " << (*id).first << " , prob = " 
           << (*id).second  << endreq;
     }
-    for( ProtoParticle::PIDDetVector::iterator idd = (*ip)->pIDDetectors().begin(); 
+    for( ProtoParticle::PIDDetVector::iterator 
+           idd = (*ip)->pIDDetectors().begin(); 
          (*ip)->pIDDetectors().end()!=idd; ++idd ) {
-       log << MSG::VERBOSE << "det = " << (*idd).first << " , value = " 
+      log << MSG::VERBOSE << "det = " << (*idd).first << " , value = " 
           << (*idd).second  << endreq;
     }
   }
@@ -357,8 +418,10 @@ bool ChargedProtoPAlg::keepTrack( const TrStoredTrack* track ) {
   if( 0 != track ) {
     if( 0 == track->errorFlag() ) {
       if( track->lastChiSq() <= m_lastChiSqMax ) {
-        if( track->unique() && 
-            (track->forward() || track->match() || track->upstream()) ) {
+        if( track->unique() && (track->forward() || track->match()) ) {
+          keep = true;
+        }
+        if( m_upstream && (track->unique() && track->upstream()) ) {
           keep = true;
         }
       }

@@ -1,0 +1,20 @@
+//##############################################################
+// ChargedProtoPAlg options
+
+#pragma print off
+// Input data
+//ChargedProtoPAlg.TrStoredTracksInput = "Rec/Tr/Best";
+//ChargedProtoPAlg.RichPIDsInput = "Rec/Rich/PIDs";
+//ChargedProtoPAlg.MuonPIDsInput = "Rec/Muon/MuonID";
+//ChargedProtoPAlg.ElectronsInput ="Rec/Calo/Electrons";
+//ChargedProtoPAlg.PhotonMatching = "PhotonMatch"; 
+//ChargedProtoPAlg.ElectronMatching = "ElectronMatch";
+//ChargedProtoPAlg.BremMatching = "BremMatch";  
+
+// Output data
+//ChargedProtoPAlg.OutputData = "Rec/ProtoP/Charged";
+#pragma print on
+
+// Track Selections
+ChargedProtoPAlg.MaxChiSquare = 1000;       // default = 100
+ChargedProtoPAlg.UpstreamsTracks = false;   // default = false

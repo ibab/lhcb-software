@@ -1,0 +1,11 @@
+// =================================================================
+// Global Reco options
+//
+
+#include "$GLOBALRECOROOT/options/ChargedProtoPAlg.opts"
+
+// Tools for neutral and charge options
+#include "$CALORECOPTS/PhotonMatch.opts"
+#include "$CALORECOPTS/ElectronMatch.opts"
+#include "$CALORECOPTS/BremMatch.opts"
+

@@ -22,6 +22,7 @@ use  PhysEvent       v6r*  Event
 use  CaloKernel      v2r*  Calo
 use  CaloUtils       v4r*  Calo
 use  CaloInterfaces  v2r*  Calo
+use  VeloDet         v7r*  Det
 
 #============================================================================
 # Component library building rule
