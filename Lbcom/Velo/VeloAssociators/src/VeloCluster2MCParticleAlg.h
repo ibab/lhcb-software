@@ -2,11 +2,12 @@
 #define VELOCLUSTER2MCParticleALG_H 1
 
 #include <string>
-#include <map>
 
-#include "GaudiKernel/Algorithm.h"
-#include "VeloAssociators/VeloCluster2MCParticleAsct.h"
+#include "GaudiAlg/GaudiAlgorithm.h"
 #include "VeloAssociators/VeloCluster2MCHitAsct.h"
+
+#include "Event/VeloCluster.h"
+
 
 /** @class VeloCluster2MCParticleAlg VeloCluster2MCParticleAlg.h
  *  
@@ -14,7 +15,7 @@
  *  @author Chris Parkes
  *  @date   21/05/2002
  */
-class VeloCluster2MCParticleAlg : public Algorithm {
+class VeloCluster2MCParticleAlg : public GaudiAlgorithm {
 
   friend class AlgFactory<VeloCluster2MCParticleAlg>;
   
@@ -32,19 +33,22 @@ public:
   /// execute
   virtual StatusCode execute();    
 
-  /// finalize
-  virtual StatusCode finalize();    
-
   /// path to put table
   std::string outputData() const;
+
+  /// Associate from VeloClusters2MCHits Linker table
+  StatusCode associateFromLinker();
+  
+  /// Associate from VeloClusters2MCHits Relations table
+  StatusCode associateFromRelations();
  
 protected:
 
 private:
 
   VeloCluster2MCHitAsct::IAsct *m_pV2MCHit;
-
   std::string m_outputData;
+  VeloClusters* m_clusters; ///< Pointer to VeloClusters container
 
 };
 
@@ -54,10 +58,3 @@ inline std::string VeloCluster2MCParticleAlg::outputData() const {
 
 
 #endif // VELOCLUSTER2MCParticleALG_H
-
-
-
-
-
-
-

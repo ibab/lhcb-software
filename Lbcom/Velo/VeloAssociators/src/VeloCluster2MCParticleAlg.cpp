@@ -1,12 +1,9 @@
 // Include files 
-
-#include "Event/VeloCluster.h"
 #include "Event/MCParticle.h"
+#include "Linker/LinkerTool.h"
 
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h"
-#include "GaudiKernel/MsgStream.h" 
-#include "GaudiKernel/SmartDataPtr.h"
 
 // local
 #include "VeloAssociators/VeloCluster2MCParticleAsct.h"
@@ -25,11 +22,12 @@ const        IAlgFactory& VeloCluster2MCParticleAlgFactory = s_factory ;
 
 VeloCluster2MCParticleAlg::VeloCluster2MCParticleAlg( const std::string& name,
                                         ISvcLocator* pSvcLocator)
-  : Algorithm (name,pSvcLocator) 
+  : GaudiAlgorithm (name,pSvcLocator) 
 {
   // constructor
   declareProperty( "OutputData", 
                    m_outputData = VeloCluster2MCParticleAsctLocation );
+  m_clusters = 0;
 }
 
 VeloCluster2MCParticleAlg::~VeloCluster2MCParticleAlg() {
@@ -38,15 +36,10 @@ VeloCluster2MCParticleAlg::~VeloCluster2MCParticleAlg() {
 
 StatusCode VeloCluster2MCParticleAlg::initialize() {
 
-  MsgStream log(msgSvc(), name());
-  log << MSG::DEBUG << "==> Initialise" << endreq;
+  StatusCode sc = GaudiAlgorithm::initialize(); // must be executed first
+  if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
 
-  StatusCode sc = toolSvc()->retrieveTool("VeloCluster2MCHitAsct", m_pV2MCHit);
-  if ( sc.isFailure() || (0 == m_pV2MCHit) ) {
-    log << MSG::ERROR << "Could not retrieve VeloCluster2MCHitAsct tool"
-        << endmsg;
-    return sc;
-  }
+  m_pV2MCHit = tool<VeloCluster2MCHitAsct::IAsct>("VeloCluster2MCHitAsct");
  
   return StatusCode::SUCCESS;
 };
@@ -54,51 +47,52 @@ StatusCode VeloCluster2MCParticleAlg::initialize() {
 
 StatusCode VeloCluster2MCParticleAlg::execute() {
 
-  MsgStream log(msgSvc(), name());
-  log << MSG::DEBUG << "--- execute---" << endreq;
-
   // get VeloClusters
-  SmartDataPtr<VeloClusters> clusterCont(eventSvc(),
-                                         VeloClusterLocation::Default);
-  if (0 == clusterCont){
-    log << MSG::WARNING << "Failed to find VeloClusters" << endreq;
-    return StatusCode::FAILURE;
+  m_clusters = get<VeloClusters>( VeloClusterLocation::Default );
+
+  StatusCode sc = associateFromLinker();
+  if( sc.isFailure() ) {
+    sc = associateFromRelations();
+  }
+  
+  return sc;
+  
+}
+
+StatusCode VeloCluster2MCParticleAlg::associateFromLinker() {
+
+  typedef LinkerTool<VeloCluster,MCVeloHit> VCl2MCHit;
+  typedef VCl2MCHit::DirectType Table;
+  typedef Table::Range Range;
+  typedef Table::iterator iterator;
+
+  if( 0 == m_clusters ) return Error( "VeloClusters not available" );
+
+  // Retrieve the VeloClusters2MCHits table
+  VCl2MCHit associator( evtSvc(), "VeloClusters2MCHits" );
+  const Table* table = associator.direct();
+  if (0==table){
+    return Error( "Could not retrieve VeloClusters2MCHits Linker table" );
   }
 
-  // create an association table 
+  // create the output (Relations!) table 
   VeloCluster2MCParticleAsct::Table* aTable = 
     new VeloCluster2MCParticleAsct::Table(); 
-  // loop and link VeloClusters to MC truth
-  VeloClusters::const_iterator iterClus;
-  for(iterClus = clusterCont->begin(); 
-      iterClus != clusterCont->end(); iterClus++){
 
-    typedef AssociatorWeighted<VeloCluster,MCVeloHit,double> VCl2MCHit;
-    typedef VCl2MCHit::DirectType Table;
-    typedef Table::Range Range;
-    typedef Table::iterator iterator;
-    
-    const Table* table = m_pV2MCHit->direct();
-    if (0==table){
-      log << MSG::ERROR << "Could not retrieve VeloCluster2MCHit table"
-          << endmsg;
-      delete aTable;
-      return StatusCode::FAILURE;
-    }
-    
+  // Loop and link VeloClusters to MC truth
+  VeloClusters::const_iterator iterClus;
+  for(iterClus = m_clusters->begin(); iterClus != m_clusters->end(); iterClus++){
+
     Range range1 = table->relations(*iterClus);
     iterator relation;
     for (relation=range1.begin(); relation !=range1.end(); relation++){
       // loop over relations
-      MCVeloHit * hit = relation->to ();
-      MCParticle * aParticle = hit->mcParticle();
+      const MCVeloHit* hit = relation->to ();
+      const MCParticle* aParticle = hit->mcParticle();
       double charge = relation->weight();
-      log << MSG::DEBUG 
-          << "Relation output - particle charge " 
-          << charge << endreq;
+      debug() << "Relation output - particle charge " << charge << endmsg;
       if(0==aParticle){
-        log << MSG::WARNING
-            << "MCHit did not have an MCParticle parent" << endreq;
+        warning() << "MCHit did not have an MCParticle parent" << endmsg;
       }else{
         aTable->relate(*iterClus,aParticle,charge);
       }
@@ -106,32 +100,52 @@ StatusCode VeloCluster2MCParticleAlg::execute() {
   } // loop iterClus
   
   // register table in store
-  StatusCode sc = eventSvc()->registerObject(outputData(), aTable);
-  if( sc.isFailure() ) {
-    MsgStream log(msgSvc(), name());
-    log << MSG::ERROR << "     *** Could not register " << outputData()
-        << endreq;
-    delete aTable;
-    return sc;
-  }
+  put( aTable, outputData() );
  
   return StatusCode::SUCCESS;
 }
 
-StatusCode VeloCluster2MCParticleAlg::finalize() {
+StatusCode VeloCluster2MCParticleAlg::associateFromRelations() {
 
-  MsgStream log(msgSvc(), name());
-  log << MSG::DEBUG << "==> Finalize" << endreq;
+  if( 0 == m_clusters ) return Error( "VeloClusters not available" );
 
-  if( 0 == m_pV2MCHit ) {
-    toolSvc()->releaseTool( m_pV2MCHit );
-    m_pV2MCHit = 0;
+  typedef AssociatorWeighted<VeloCluster,MCVeloHit,double> VCl2MCHit;
+  typedef VCl2MCHit::DirectType Table;
+  typedef Table::Range Range;
+  typedef Table::iterator iterator;
+
+  // Retrieve the VeloClusters2MCHits table
+  const Table* table = m_pV2MCHit->direct();
+  if (0==table){
+    return Error( "Could not retrieve VeloCluster2MCHit table" );
   }
+
+  // create an association table 
+  VeloCluster2MCParticleAsct::Table* aTable = 
+    new VeloCluster2MCParticleAsct::Table(); 
+
+  // loop and link VeloClusters to MC truth
+  VeloClusters::const_iterator iterClus;
+  for(iterClus = m_clusters->begin(); iterClus != m_clusters->end(); iterClus++){
+
+    Range range1 = table->relations(*iterClus);
+    iterator relation;
+    for (relation=range1.begin(); relation !=range1.end(); relation++){
+      // loop over relations
+      MCVeloHit * hit = relation->to ();
+      MCParticle * aParticle = hit->mcParticle();
+      double charge = relation->weight();
+      debug() << "Relation output - particle charge " << charge << endmsg;
+      if(0==aParticle){
+        warning() << "MCHit did not have an MCParticle parent" << endmsg;
+      }else{
+        aTable->relate(*iterClus,aParticle,charge);
+      }
+    }
+  } // loop iterClus
   
+  // register table in store
+  put( aTable, outputData() );
+ 
   return StatusCode::SUCCESS;
 }
-
-
-
-
-

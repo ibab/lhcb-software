@@ -1,6 +1,15 @@
 ! Package     : VeloAssociator
 ! Responsible : Chris Parkes
 
+!==================== VeloAssociators v1r14 2005-03-22 =====================
+! 2005-03-22 - Marco Cattaneo
+ - Add VeloCluster2MCHitLinker algorithm to create "Linker" association 
+   table, and add it to DataOnDemandSvc in VeloAssociators.opts
+ - Adapt VeloCluster2MCParticleAlg to look for VeloClusters2MCHits Linker 
+   table first, Relations table if Linker table is not found. 
+ - VeloCluster2MCParticleAlg converted to GaudiAlgorithm
+ - Remove unneccessary dependencies on VeloDet and VeloKernel
+
 !==================== VeloAssociators v1r13 2004-11-29 =====================
 ! 2004-11-29 - Marco Cattaneo
  - Change dependency to VeloDet v9r*
