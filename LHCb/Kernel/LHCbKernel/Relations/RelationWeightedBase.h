@@ -1,8 +1,11 @@
-// $Id: RelationWeightedBase.h,v 1.3 2002-04-25 08:44:04 ibelyaev Exp $
+// $Id: RelationWeightedBase.h,v 1.4 2002-04-26 09:42:39 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.3  2002/04/25 08:44:04  ibelyaev
+//  bug fix for Win2K
+//
 // Revision 1.2  2002/04/03 15:35:18  ibelyaev
 // essential update and redesing of all 'Relations' stuff
 //
@@ -406,24 +409,55 @@ namespace Relations
       m_entries.clear() ;
       return StatusCode::SUCCESS ;
     };
-
     
     /** standard/default constructor
      *  @param reserve size of preallocated reserved space
      */
-    RelationWeightedBase( const size_t reserve = 0 )
-      : m_entries() 
+    RelationWeightedBase
+    ( const size_t reserve = 0 )
+      : m_entries () 
+      , m_less    () 
+      , m_less1   () 
+      , m_less2   () 
+      , m_equal   () 
+      , m_comp1   () 
+      , m_comp2   () 
     { if( reserve ) { Relations::reserve( m_entries , reserve ) ; } };
     
     /// destructor (virtual)
     virtual ~RelationWeightedBase() { i_clear(); }
     
-    /** constructor from inverse relation table
-     *  @attention it is the way to invert existing relations!
-     *  @param inv relations to be inverted
+    /** copy constructor 
+     *  @param copy object to be copied 
      */
-    RelationWeightedBase( const InvType& inv )
-      : m_entries()
+    RelationWeightedBase
+    ( const OwnType& copy )
+      : m_entries ( copy.m_entries ) 
+      , m_less    () 
+      , m_less1   () 
+      , m_less2   () 
+      , m_equal   () 
+      , m_comp1   () 
+      , m_comp2   () 
+    {};
+    
+    /** constructor from inverse relation table
+     *  @attention it is indeed the most effective way to 
+     *              get the inverse relations!
+     *  @param inv relations to be inverted
+     *  @param flag artificial agument to make the difference 
+     *         for stupid MicroSoft compiler
+     */
+    RelationWeightedBase
+    ( const InvType&    inv    ,
+      const int      /* flag*/ )
+      : m_entries ()
+      , m_less    () 
+      , m_less1   () 
+      , m_less2   () 
+      , m_equal   () 
+      , m_comp1   () 
+      , m_comp2   () 
     {
       // reserve the container size to avoid the relocations
       m_entries.reserve( inv.i_entries().size() );
@@ -432,19 +466,23 @@ namespace Relations
         { i_relate( it->to() , it->from() , it->weight() ) ;  }
     };
     
-    /** assignement operator
-     *  @param copy object to be copied
-     */
-    OwnType& operator=( const OwnType& copy )
-    {
-      if( &copy == this ) { return *this ; }
-      m_entries = copy.m_entries;
-      return *this;
-    };
-    
   private:
     
-    mutable Entries m_entries ;
+    // the actual storage of relations 
+    mutable Entries m_entries ; ///< teh actual storage of relations
+    
+    // comparison criteria for full ordering
+    Less            m_less  ; ///< comparison criteria for full ordering
+    // comparison criteria ( "less" by "From" value) 
+    Less1           m_less1 ; ///< comparison criteria ( "less" by "From") 
+    // comparison criteria ( "less" by "Weight" ) 
+    Less2           m_less2 ; ///< comparison criteria ( "less" by "Weight") 
+    // equality criteria   ( "equal" by "To" value)
+    Equal           m_equal ; ///< equality criteria   ( "equal" by "To") 
+    // comparison/ordering criteria using "Weight" and "To" fields
+    Comp1           m_comp1 ;
+    //  comparison/ordering criteria using "Weight" and "To" fields
+    Comp1           m_comp2 ;
     
   };
   

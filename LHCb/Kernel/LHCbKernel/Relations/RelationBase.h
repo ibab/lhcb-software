@@ -1,8 +1,11 @@
-// $Id: RelationBase.h,v 1.4 2002-04-26 09:22:24 ibelyaev Exp $
+// $Id: RelationBase.h,v 1.5 2002-04-26 09:42:38 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.4  2002/04/26 09:22:24  ibelyaev
+//  reduce number of warnings for Microsoft  compiler
+//
 // Revision 1.3  2002/04/25 08:44:04  ibelyaev
 //  bug fix for Win2K
 //
@@ -239,8 +242,11 @@ namespace Relations
     inline  StatusCode i_clear() 
     { m_entries.clear() ; return StatusCode::SUCCESS ; }
     
-    /// standard/default constructor 
-    RelationBase( const size_type reserve = 0 ) 
+    /** standard/default constructor
+     *  @param reserve size of preallocated reserved space
+     */ 
+    RelationBase
+    ( const size_type reserve = 0 ) 
       : m_entries () 
       , m_less    ()
       , m_less1   ()
@@ -253,7 +259,8 @@ namespace Relations
     /** copy constructor
      *  @param copy object to be copied  
      */
-    RelationBase( const OwnType& copy ) 
+    RelationBase
+    ( const OwnType& copy ) 
       : m_entries ( copy.m_entries ) 
       , m_less    ()
       , m_less1   ()
@@ -267,7 +274,9 @@ namespace Relations
      *  @param flag artificial agument to make the difference 
      *         for stupid MicroSoft compiler
      */
-    RelationBase(  const InvType& inv , int /* flag */ ) 
+    RelationBase
+    (  const InvType&    inv     , 
+       const int      /* flag */ ) 
       : m_entries ()
       , m_less    ()
       , m_less1   ()
