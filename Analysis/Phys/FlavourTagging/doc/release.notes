@@ -4,6 +4,18 @@
 ! Purpose     : Provide tools and algorithm for tagging Bs
 !-----------------------------------------------------------------------------
 
+! 2003-07-04 - Olivier Dormond
+ - src/FlavourTaggingAlgorithm.h, FlavourTaggingAlgorithm.cpp
+   . Added a preselection cut to remove all particles compatible with a pileup
+     vtx.
+ - src/SingleParticleTaggingTool.h, SingleParticleTaggingTool.cpp
+   . Added an option to sum the charge of the particles passing the cuts
+     instead of just using the one with the highest pt.
+ - option/CombinedFlavourTagging.opts
+   . Activate the previous addition for the kaon same-side tag.
+ - doc/release.note
+   . This changelog.
+
 ! 2003-07-03 - Olivier Dormond
  - Tabification cleanup.
  - src/CategoryTaggingTool.cpp

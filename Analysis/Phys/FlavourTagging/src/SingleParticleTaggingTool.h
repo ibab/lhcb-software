@@ -1,4 +1,4 @@
-// $Id: SingleParticleTaggingTool.h,v 1.5 2002-11-20 08:24:47 odie Exp $
+// $Id: SingleParticleTaggingTool.h,v 1.6 2003-07-04 12:14:54 odie Exp $
 #ifndef SINGLEPARTICLETAGGINGTOOL_H 
 #define SINGLEPARTICLETAGGINGTOOL_H 1
 
@@ -70,6 +70,7 @@ private:
   bool m_AllVertices;   //< Loop on all prim vertices instead of the given one.
   double m_ISMin;       //< Minimal impact parameter significance
   double m_ISMax;       //< Maximal impact parameter significance
+  double m_SumCharges;  //< Sum the charges of all particles passing the cuts.
 
   IParticleFilter *m_Filter;
   IGeomDispCalculator *m_GeomDisp;

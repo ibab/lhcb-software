@@ -1,4 +1,4 @@
-// $Id: SingleParticleTaggingTool.cpp,v 1.9 2003-06-16 07:09:53 odie Exp $
+// $Id: SingleParticleTaggingTool.cpp,v 1.10 2003-07-04 12:14:54 odie Exp $
 #include <algorithm>
 #include <iomanip>
 
@@ -55,6 +55,7 @@ SingleParticleTaggingTool::SingleParticleTaggingTool( const std::string &type,
   declareProperty( "MaxImpactSignificance", m_ISMax = -1 );
   declareProperty( "Monitored", m_Monitor = false );
   declareProperty( "MonitorLocation", m_MonitorLocation = "auto" );
+  declareProperty( "SumCharges", m_SumCharges = false );
 }
 
 StatusCode SingleParticleTaggingTool::initialize()
@@ -251,6 +252,7 @@ void SingleParticleTaggingTool::tagFromList( const Particle &theB,
   ParticleVector::const_iterator c;
   double max_pt = -1.0;
   int i = 0;
+  double charge = 0.0;
   for( c = candidates.begin(); c != candidates.end(); c++ )
   {
     // First do the missing cut on the impact parameter.
@@ -268,6 +270,8 @@ void SingleParticleTaggingTool::tagFromList( const Particle &theB,
         break;
       }
     }
+    if( !bad )
+      charge += (*c)->charge();
     if( !bad && ((*c)->pt() > max_pt) )
     {
       theTag.setTagger(*c);
@@ -279,13 +283,22 @@ void SingleParticleTaggingTool::tagFromList( const Particle &theB,
   // Note: e- coming directly from a b means the tag should be a bbar.
   //       We are tagging the compagnion of the b quark this tagger comes from.
   int sign = m_InverseCharge ? -1 : 1;
-  if( max_pt > 0 )
-    if( theTag.tagger()->charge()*sign > 0) 
+  if( m_SumCharges ) {
+    if( charge*sign > 0 )
       theTag.setDecision( FlavourTag::bbar );
-    else
+    else if( charge*sign < 0 )
       theTag.setDecision( FlavourTag::b );
-  else
-    theTag.setDecision( FlavourTag::none );
+    else
+      theTag.setDecision( FlavourTag::none );
+  } else {
+    if( max_pt > 0 )
+      if( theTag.tagger()->charge()*sign > 0) 
+        theTag.setDecision( FlavourTag::bbar );
+      else
+        theTag.setDecision( FlavourTag::b );
+    else
+      theTag.setDecision( FlavourTag::none );
+  }
   theTag.setTaggedB( &theB );
   theTag.setType( FlavourTag::singleParticle );
   if( m_Monitor )

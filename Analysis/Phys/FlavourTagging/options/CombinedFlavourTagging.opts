@@ -65,6 +65,7 @@ CombTagging.CategoryTaggingTool.ElectronTagger.ParticleFilter.ParticleTaggerCrit
 //CombTagging.CategoryTaggingTool.KaonOSTagger.PrimaryVertices = "";
 //CombTagging.CategoryTaggingTool.KaonOSTagger.InverseCharge = true;
 CombTagging.CategoryTaggingTool.KaonOSTagger.AllVertices = true;
+CombTagging.CategoryTaggingTool.KaonOSTagger.SumCharges = true;
 CombTagging.CategoryTaggingTool.KaonOSTagger.MinImpactSignificance = 3.7;
 CombTagging.CategoryTaggingTool.KaonOSTagger.MaxImpactSignificance = -1;
 CombTagging.CategoryTaggingTool.KaonOSTagger.FilterName = "ParticleFilter";
@@ -86,7 +87,7 @@ CombTagging.CategoryTaggingTool.KaonOSTagger.ParticleFilter.ParticleTaggerCriter
 //CombTagging.CategoryTaggingTool.KaonSSTagger.GeomDispCalculator = "GeomDispCalculator";
 //CombTagging.CategoryTaggingTool.KaonSSTagger.PrimaryVertices = "";
 //CombTagging.CategoryTaggingTool.KaonSSTagger.InverseCharge = true;
-CombTagging.CategoryTaggingTool.KaonSSTagger.AllVertices = true;
+CombTagging.CategoryTaggingTool.KaonSSTagger.AllVertices = false;
 CombTagging.CategoryTaggingTool.KaonSSTagger.MinImpactSignificance = -1;
 CombTagging.CategoryTaggingTool.KaonSSTagger.MaxImpactSignificance = 2.5;
 CombTagging.CategoryTaggingTool.KaonSSTagger.MaxPhi = 1.1;

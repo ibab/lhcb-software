@@ -1,4 +1,4 @@
-// $Id: FlavourTaggingAlgorithm.cpp,v 1.13 2003-06-30 12:04:02 odie Exp $
+// $Id: FlavourTaggingAlgorithm.cpp,v 1.14 2003-07-04 12:14:54 odie Exp $
 // Include files 
 
 // from Gaudi
@@ -41,6 +41,7 @@ FlavourTaggingAlgorithm::FlavourTaggingAlgorithm( const std::string& name,
   declareProperty("PrimaryVerticesLocation",
                   m_primVertices_location = VertexLocation::Primary );
   declareProperty("TaggingTool", m_taggingTool_name = "CategoryTaggingTool");
+  declareProperty("MinPileUpSIP", m_minPileUpSIP = 3.7 );
 }
 
 //=============================================================================
@@ -148,7 +149,7 @@ StatusCode FlavourTaggingAlgorithm::execute() {
 
   m_n_events++;
 
-  const ParticleVector& parts = desktop()->particles();
+  const ParticleVector& evt_parts = desktop()->particles();
 
   FlavourTags *tags = new FlavourTags;
 
@@ -172,6 +173,23 @@ StatusCode FlavourTaggingAlgorithm::execute() {
         sipmin = fabs(ip/iperr);
         thePrimVtx = *vi;
       }
+    }
+    std::vector<Vertex *> PileUpVtxs;
+    for( vi = primvtxs->begin(); vi != primvtxs->end(); vi++ )
+      if( (*vi) != thePrimVtx )
+        PileUpVtxs.push_back(*vi);
+    ParticleVector parts;
+    ParticleVector::const_iterator pi;
+    for( pi = evt_parts.begin(); pi != evt_parts.end(); pi++ ) {
+      bool good = true;
+      for( vi = PileUpVtxs.begin(); vi != PileUpVtxs.end(); vi++ ) {
+        double ip, iperr;
+        StatusCode sc=geomDispCalculator()->calcImpactPar(**pi,**vi,ip,iperr);
+        if( sc.isSuccess() && fabs(ip/iperr) < m_minPileUpSIP )
+          good = false;
+      }
+      if( good )
+        parts.push_back(*pi);
     }
     log << MSG::DEBUG << "About to tag a " << (*hi)->particleID().pid()
         << endreq;
