@@ -1,4 +1,4 @@
-// $Id: PreDV.h,v 1.1 2004-03-11 13:02:14 pkoppenb Exp $
+// $Id: PreDV.h,v 1.2 2004-11-12 13:15:16 pkoppenb Exp $
 #ifndef PREDV_H 
 #define PREDV_H 1
 
@@ -7,7 +7,7 @@
 #include <string>
 
 // from Gaudi
-#include "GaudiKernel/Algorithm.h"
+#include "GaudiAlg/GaudiAlgorithm.h"
 
 /** @class PreDV PreDV.h
  *  Algorithm to be run before any DVAlgorithm(s)
@@ -16,7 +16,7 @@
  *  @author Hugo Ruiz Perez
  *  @date   2004-03-02
  */
-class PreDV : public Algorithm {
+class PreDV : public GaudiAlgorithm {
 public: 
   /// Standard constructor
   PreDV( const std::string& name, ISvcLocator* pSvcLocator );

@@ -1,7 +1,12 @@
-! $Id: release.notes,v 1.135 2004-10-27 13:49:59 pkoppenb Exp $
+! $Id: release.notes,v 1.136 2004-11-12 13:15:16 pkoppenb Exp $
 ! Package     : DaVinciTools
 ! Responsible : P. Koppenburg
 
+! 2004-11-11 - P. Koppenburg
+  - PreDV.{h,cpp}
+    . Make it a GaudiAlgorithm.
+    . Remove it! As it is not necessary anymore.
+    
 ! 2004-10-27 - P. Koppenburg
   - src/PVLocator.{cpp,h}
     . New Tool that stores location of primary vertex. This tool is
