@@ -1,4 +1,4 @@
-// $Id: DeOTDetector.cpp,v 1.12 2004-06-24 12:49:11 jnardull Exp $
+// $Id: DeOTDetector.cpp,v 1.13 2004-11-02 07:12:43 cattanem Exp $
 
 // CLHEP
 #include "CLHEP/Geometry/Point3D.h"
@@ -110,6 +110,43 @@ StatusCode DeOTDetector::initialize()
   msg << MSG::DEBUG << "initialize DetectorElement succeeded!!!" << endreq;
   return sc;
 }
+
+
+StatusCode DeOTDetector::getAngles() const
+
+{
+  StatusCode sc = StatusCode::SUCCESS; 
+  const IGeometryInfo* geometry = this->geometry();
+  if ( 0 == geometry ) {  
+    MsgStream msg(msgSvc(), name());
+    msg << "Unable to find Geometry." << endmsg;
+  }
+
+  const HepTransform3D& matrix = geometry->matrix();
+  HepScale3D                scale     ;
+  HepRotate3D               rotate    ;
+  HepTranslate3D            translate ;
+  matrix.getDecomposition (scale, rotate, translate ) ;
+
+  const HepRotation    rotation = rotate.getRotation   () ;
+
+  //const HepEulerAngles euler    = rotation.eulerAngles () ;  
+  //const double phi   = euler.phi   () ;
+  //const double theta = euler.theta () ;
+  //const double psi   = euler.psi   () ;
+  
+  const double phi   = matrix.getRotation().phi   () ;
+  const double psi   = matrix.getRotation().psi   () ;
+  const double theta   = matrix.getRotation().theta   () ;
+
+  // Debug
+  std :: cout << "Euler Angles are  Phi : " << phi 
+                << " Theta : "  << theta 
+                <<  " Psi : " << psi;
+  
+  return sc;
+}
+
 
 
 StatusCode DeOTDetector::calculateHits(const HepPoint3D& entryPoint,

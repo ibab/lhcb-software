@@ -1,4 +1,4 @@
-// $Id: DeOTDetector.h,v 1.14 2004-06-24 09:48:33 jnardull Exp $
+// $Id: DeOTDetector.h,v 1.15 2004-11-02 07:12:42 cattanem Exp $
 #ifndef OTDET_DEOTDETECTOR_H
 #define OTDET_DEOTDETECTOR_H 1
 
@@ -48,6 +48,9 @@ public:
   
   /// initialization method 
   virtual StatusCode initialize();
+
+  /// get the transformation matrix - Angles related to beam tilt angle
+  StatusCode getAngles() const;
 
   /// Find the channels and the distances from the MCHits
   StatusCode calculateHits(const HepPoint3D& entryPoint, 

@@ -1,6 +1,11 @@
-! $Id: release.notes,v 1.30 2004-07-21 08:03:17 cattanem Exp $
+! $Id: release.notes,v 1.31 2004-11-02 07:12:43 cattanem Exp $
 ! Package     : OTDet
-! Responsible : J. van Tilburg
+! Responsible : J. van Tilburg & Jacopo Nardulli
+
+!========================== OTDet v5r4 2004-11-01 ==========================
+! 2004-10-21 - Jacopo Nardulli
+ - Beam Tilt implementation:
+   Add to DeOTDetector a function to return the angles. 
 
 !========================== OTDet v5r3 2004-07-19 ==========================
 ! 2004-07-19 - Marco Cattaneo
