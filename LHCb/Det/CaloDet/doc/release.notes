@@ -1,7 +1,8 @@
 Package         : CaloDet 
 Package manager : Vanya Belyaev 
 
-
+! 2001/02/27  - Marco Cattaneo 
+   requirements - replace curly {} with round ()
 ! =====================================================================
 ! 2001/02/07  - Vanya Belyaev 
    

@@ -5,7 +5,7 @@ version  v1
 branches         src cmt doc CaloDet
 
 # =============== own includes ============================================
-include_dirs      ${CALODETROOT}
+include_dirs      $(CALODETROOT)
 
 # =============== used packages ===========================================
 use DetDesc      v6*  Det 
