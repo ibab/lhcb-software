@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.235 2005-02-09 13:37:34 pkoppenb Exp $
+# $Id: requirements,v 1.236 2005-02-10 14:06:16 pkoppenb Exp $
 # Created    : 07/02/2002
 # Maintainer : P. Koppenburg
 #
@@ -93,7 +93,7 @@ use  DaVinciKernel      	v3r1     Phys
 use  DaVinciTools       	v11r4    Phys
 use  FlavourTagging     	v5r4     Phys
 use  Ks2PiPiSel         	v1r4p1   Phys
-use  ParticleMaker      	v1r2     Phys
+use  ParticleMaker      	v1r3     Phys
 use  PhysSelections		v6r11    Phys
 use  DaVinciTransporter 	v2r0     Phys
 use  VertexFit			v1r4     Phys
