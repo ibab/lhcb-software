@@ -41,7 +41,7 @@ use SICBSys	v1r4	SICB
 #-- BrunelSys v19r0 packages
 
 # Phys utilities
-use MCTools		v1r1	Phys
+use MCTools		v1r1p1	Phys
 
 # Brunel utilities
 use BrunelSicb          v4r1    Rec

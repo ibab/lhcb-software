@@ -73,7 +73,7 @@ use RichUtils		v3r1  	Rich
 use RichDetTools	v2r1  	Rich
 
 # Phys
-use MCTools		v1r1	Phys
+use MCTools		v1r1p1	Phys
 
 # SICBDST packages
 use recevt              v3r5  	SICB
