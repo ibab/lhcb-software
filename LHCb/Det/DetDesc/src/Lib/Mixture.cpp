@@ -1,9 +1,15 @@
+// $Id: Mixture.cpp,v 1.7 2002-01-18 18:23:09 ibelyaev Exp $ 
+// ============================================================================
+// CVS tag $Name: not supported by cvs2svn $
+// ============================================================================
+// $Log: not supported by cvs2svn $ 
+// ============================================================================
 /// DetDesc 
 #include "DetDesc/MaterialException.h"
 #include "DetDesc/Mixture.h"
 ///
 
-//////////////////////////////////////////////////////////////////////////////////////////
+//
 Mixture::Mixture( const std::string&  name    , 
                   const double        a       , 
                   const double        z       , 
@@ -21,39 +27,41 @@ Mixture::Mixture( const std::string&  name    ,
   , m_Z       ( z )
   , m_N       ( 0 )
 {};
-//////////////////////////////////////////////////////////////////////////////////////////
+//
 Mixture::~Mixture() {}
-//////////////////////////////////////////////////////////////////////////////////////////////////////
+//
 const SmartRef<Element>& Mixture::element( const unsigned int i ) const 
 {
   if( i >= m_elements.size() ) 
     { throw MaterialException("Mixture::element:: wrong index! ", this ); } 
   return m_elements[i].second ; 
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////
+//
       SmartRef<Element>& Mixture::element( const unsigned int i )        
 {
   if( i >= m_elements.size() ) 
     { throw MaterialException("Mixture::element:: wrong index! ", this ); } 
   return m_elements[i].second ; 
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////
+//
 const double Mixture::elementFraction( const unsigned int i ) const        
 {
   if( i >= m_elements.size() ) 
     { throw MaterialException("Mixture::element:: wrong index! ", this ); } 
   return m_elements[i].first ; 
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////
-void Mixture::addElement( const SmartRef<Element>& e, const int nOfAtoms , const bool comp )  
+//
+void Mixture::addElement( const SmartRef<Element>& e, 
+                          const int nOfAtoms , 
+                          const bool comp )  
 {
   ///
   if( m_own )
-    { throw MaterialException("Mixture::addElement, could not add element to 'simple'-mixture",this);}
+    { throw MaterialException( "Mixture::could not add element!",this);}
   if( !e    ) 
-    { throw MaterialException("Mixture::addElement, could not add (Element*)=0! ",this) ; }
+    { throw MaterialException("Mixture::could not add element",this) ; }
   if( m_elements.size() != m_atoms.size() )
-    { throw MaterialException("Mixture::addElement:: mismatch in container sizes! ",this);}
+    { throw MaterialException("Mixture::mismatch container sizes! ",this);}
   ///
   m_elements.push_back( Entry( 0 , e ) );
   m_atoms.push_back   ( nOfAtoms       ) ; 
@@ -61,31 +69,36 @@ void Mixture::addElement( const SmartRef<Element>& e, const int nOfAtoms , const
   if( true == comp )  { computeByAtoms(); }
   ///
 };
-//////////////////////////////////////////////////////////////////////////////////////////
-void Mixture::addElement( const SmartRef<Element>& e, const double fraction, const bool comp )  
+///
+void Mixture::addElement( const SmartRef<Element>& e, 
+                          const double fraction     , 
+                          const bool comp )  
 { 
   if( m_own            )
-    { throw MaterialException("Mixture::addElement, could not add element to 'simple'-mixture ",this);}
+    { throw MaterialException("Mixture::could not add element!",this);}
   if( !e               ) 
-    { throw MaterialException("Mixture::addElement: non valid pointer!"+name());}
+    { throw MaterialException("Mixture::non valid pointer!"+name());}
   if( !m_atoms.empty() )
-    { throw MaterialException("Mixture::addElement: could not add Factions to Atoms! ",this); }
+    { throw MaterialException("Mixture:could not add element!",this); }
   ///
   Elements::iterator it  = m_elements.begin() ; 
   while( m_elements.end() != it ) 
-    { if( e->name() == it->second->name() ) { it->first += fraction ; break ; } ; ++it ; } 
+    { if( e->name() == it->second->name() ) 
+      { it->first += fraction ; break ; } ; ++it ; } 
   ///
   if( m_elements.end() == it )
     { m_elements.push_back( Entry( fraction , e ) ); }  
   ///  
   if( true == comp ) { compute() ; }
 };
-//////////////////////////////////////////////////////////////////////////////////////////
-void Mixture::addMixture( const SmartRef<Mixture>& mx, const double fraction, const bool comp)  
+///
+void Mixture::addMixture( const SmartRef<Mixture>& mx, 
+                          const double fraction, const bool comp)  
 {
-  if( !mx ) { throw MaterialException("Mixture::addMixture:: non valid pointer!");}
+  if( !mx ) { throw MaterialException("Mixture::non valid pointer!");}
   ///
-  for( Elements::const_iterator it = mx->elements().begin() ; mx->elements().end() != it ; ++it )
+  for( Elements::const_iterator it = mx->elements().begin() ; 
+       mx->elements().end() != it ; ++it )
     { 
       addElement( it->second , fraction*(it->first) ); 
     }   
@@ -93,23 +106,26 @@ void Mixture::addMixture( const SmartRef<Mixture>& mx, const double fraction, co
   if( true == comp ) { compute() ; }
   ///
 };
-//////////////////////////////////////////////////////////////////////////////////////////
+///
 StatusCode Mixture::compute()
 {
-  if      ( m_atoms.empty()                      ) { return computeByFraction() ; }
-  else if ( m_atoms.size () == m_elements.size() ) { return computeByAtoms   () ; } 
+  if      ( m_atoms.empty()                      ) 
+    { return computeByFraction() ; }
+  else if ( m_atoms.size () == m_elements.size() ) 
+    { return computeByAtoms   () ; } 
   else 
     { throw MaterialException("Mixture::compute: could not compute "+name() );}
   return StatusCode::FAILURE ; 
 };
-//////////////////////////////////////////////////////////////////////////////////////////
+///
 StatusCode Mixture::computeByAtoms()  
 {
   ///
   if( m_elements.empty() ) { addMyself() ;}
   ///
   if( m_elements.size() != m_atoms.size() )
-    { throw MaterialException("Mixture::computeByAtoms:: mismatch in container sizes!",this);}
+    { throw MaterialException(std::string("Mixture::computeByAtoms::") 
+                              + "mismatch in container sizes!",this);}
   ///
   /// Compute molecular weight
   double Amol     = 0.0;
@@ -118,30 +134,35 @@ StatusCode Mixture::computeByAtoms()
   ///
   /// Compute proprotion by weight for each element
   for( unsigned int i2 = 0; i2 < m_elements.size() ;  ++i2  )      
-    { m_elements[i2].first = ( m_atoms[i2] * m_elements[i2].second->A() ) / Amol; }
+    { m_elements[i2].first = 
+        ( m_atoms[i2] * m_elements[i2].second->A() ) / Amol; }
   ///
   m_atoms.clear();
   ///
   return computeByFraction();
   ///
 }
-//////////////////////////////////////////////////////////////////////////////////////////
+///
 StatusCode Mixture::computeByFraction()  
 {
   ///
   if( !m_atoms.empty() )
-    { throw MaterialException("Mixture::computeByFraciton! Atoms nust be empty!",this);}
+    { throw MaterialException(std::string("Mixture::computeByFraciton!") 
+                              + "Atoms nust be empty!",this);}
   //
   if( m_elements.empty() ) { addMyself() ; m_atoms.clear() ; }
   ///
   /// recompute fractions
   double frsum = 0.0  ;
-  for( Elements::iterator it1 = m_elements.begin() ; m_elements.end() != it1 ; ++it1 )
+  for( Elements::iterator it1 = m_elements.begin() ; 
+       m_elements.end() != it1 ; ++it1 )
     { frsum += it1->first ; } 
   if( frsum < 0 ) 
-    { throw MaterialException("Mixture::computeByFractions:: not positive fraction sum!",this);}
+    { throw MaterialException(std::string("Mixture::computeByFractions::") 
+                              + "not positive fraction sum!",this);}
   /// rescale  fractions
-  for( Elements::iterator it2 = m_elements.begin() ; m_elements.end() != it2 ; ++it2 )
+  for( Elements::iterator it2 = m_elements.begin() ; 
+       m_elements.end() != it2 ; ++it2 )
     {  it2->first /= frsum ; } 
   ///
   m_A = 0 ;
@@ -151,7 +172,8 @@ StatusCode Mixture::computeByFraction()
   double radlen = 0 ; 
   double lambda = 0 ;
   ///
-  for( Elements::iterator it3 = m_elements.begin() ; m_elements.end() != it3 ; ++it3 )
+  for( Elements::iterator it3 = m_elements.begin() ; 
+       m_elements.end() != it3 ; ++it3 )
     { 
       double   frac = it3->first  ;
       Element* elem = it3->second ;
@@ -179,20 +201,21 @@ StatusCode Mixture::computeByFraction()
     lambda    <= 0 ? StatusCode::FAILURE : StatusCode::SUCCESS ;
   ///
 };
-//////////////////////////////////////////////////////////////////////////////////////////
+///
 StreamBuffer&    Mixture::serialize ( StreamBuffer& s ) const 
 {
   Material::serialize( s );
   s << A() << Z() << N() ;
   s << ( ( 0 == m_own ) ? m_elements.size() : m_elements.size() - 1 ) ; 
-  for( Elements::const_iterator i1 = m_elements.begin() ; m_elements.end() != i1 ; ++i1 )
+  for( Elements::const_iterator i1 = m_elements.begin() ; 
+       m_elements.end() != i1 ; ++i1 )
     { if( m_own != i1->second ) { s << i1->first << i1->second(this) ; } }
   s << m_atoms.size() ;  
   for( Atoms::const_iterator i2 = m_atoms.begin() ; m_atoms.end() != i2 ; ++i2 )
     { s << *i2 ; }
   return s ;
 };
-/////////////////////////////////////////////////////////////////////////////////////////////////
+///
 StreamBuffer&     Mixture::serialize ( StreamBuffer& s )       
 {
   Material::serialize( s );
@@ -201,7 +224,8 @@ StreamBuffer&     Mixture::serialize ( StreamBuffer& s )
   s >> size1 ; 
   m_elements.clear();
   m_elements = Elements( size1 );
-  for( Elements::iterator i1 = m_elements.begin() ; m_elements.end() != i1 ; ++i1 )
+  for( Elements::iterator i1 = m_elements.begin() ; 
+       m_elements.end() != i1 ; ++i1 )
     { s >> i1->first >> i1->second(this) ; }
   m_own = 0 ;
   ///
@@ -216,7 +240,7 @@ StreamBuffer&     Mixture::serialize ( StreamBuffer& s )
   ///
   return s ;
 };
-/////////////////////////////////////////////////////////////////////////////////////////////////
+///
 MsgStream&        Mixture::fillStream ( MsgStream&   s ) const 
 {
   Material::fillStream( s ) ;
@@ -224,7 +248,8 @@ MsgStream&        Mixture::fillStream ( MsgStream&   s ) const
     {
       s << "\t #MassComponents=" << std::setw(2)  << m_elements.size() 
         << endreq ;
-      for( Elements::const_iterator it  = m_elements.begin() ; m_elements.end() != it ; ++it )
+      for( Elements::const_iterator it  = m_elements.begin() ; 
+           m_elements.end() != it ; ++it )
         { 
           s << "\t\tcomponent#"     << std::setw(2) << it - m_elements.begin() 
             << " massfraction="     << std::setw(9) << it->first 
@@ -237,16 +262,17 @@ MsgStream&        Mixture::fillStream ( MsgStream&   s ) const
     {
       s << "\t #AtomComponents=" << std::setw(2)  << m_atoms.size() 
         << endreq ;
-      for( Atoms::const_iterator it  = m_atoms.begin() ; m_atoms.end() != it ; ++it )
+      for( Atoms::const_iterator it  = m_atoms.begin() ; 
+           m_atoms.end() != it ; ++it )
         { 
           s << "\t\tcomponent#"  << std::setw(2) << it - m_atoms.begin() 
-            << " atom="          << std::setw(2) << it 
+            << " atom="          << std::setw(2) << *it  
             << endreq ; 
         }
     }
   return s;
 };    
-/////////////////////////////////////////////////////////////////////////////////////////////////
+///
 std::ostream&     Mixture::fillStream ( std::ostream& s ) const 
 {
   Material::fillStream( s ) ;
@@ -254,7 +280,8 @@ std::ostream&     Mixture::fillStream ( std::ostream& s ) const
     {
       s << "\t #MassComponents=" << std::setw(2)  << m_elements.size()
         << std::endl ;
-      for( Elements::const_iterator it  = m_elements.begin() ; m_elements.end() != it ; ++it )
+      for( Elements::const_iterator it  = m_elements.begin() ; 
+           m_elements.end() != it ; ++it )
         { 
           s << " \t\tcomponent#"    << std::setw(2) << it - m_elements.begin() 
             << " massfraction="     << std::setw(9) << it->first 
@@ -267,24 +294,29 @@ std::ostream&     Mixture::fillStream ( std::ostream& s ) const
     {
       s << "\t #AtomComponents=" << std::setw(2)  << m_atoms.size() 
         << std::endl;
-      for( Atoms::const_iterator it  = m_atoms.begin() ; m_atoms.end() != it ; ++it )
+      for( Atoms::const_iterator it  = m_atoms.begin() ; 
+           m_atoms.end() != it ; ++it )
         { 
           s << " \t\tcomponent#"    << std::setw(2) << it - m_atoms.begin() 
-            << " atom="             << std::setw(2) << it 
+            << " atom="             << std::setw(2) << *it  
             << std::endl ; 
         }
     }
   return s;
 };    
-/////////////////////////////////////////////////////////////////////////////////////////////////
+///
 StatusCode Mixture::addMyself() 
 {
   if( 0 != m_own         ) 
-    { throw MaterialException("Mixture::addMyself: could not add myself twice! ",this); }
+    { throw MaterialException(std::string("Mixture::addMyself: ") 
+                              + "could not add myself twice! ",this); }
   if( !m_elements.empty() )
-    { throw MaterialException("Mixture::addMyself: could not add myself to existing elements! ",this); }
+    { throw MaterialException(std::string("Mixture::addMyself: ") 
+                              + "could not add myself to " 
+                              + "existing elements! ",this); }
   if( !m_atoms.empty() )
-    { throw MaterialException("Mixture::addMyself: could not add myself to existing atoms! ",this); }
+    { throw MaterialException(std::string("Mixture::addMyself: could ") 
+                              +  "not add myself to existing atoms! ",this); }
   ///
   m_own = new Element( name             () ,
                        "XX"                , 
@@ -305,10 +337,11 @@ StatusCode Mixture::addMyself()
   ///
   return StatusCode::SUCCESS;
 };
-/////////////////////////////////////////////////////////////////////////////////////////////////
+///
 
-
-
+// ============================================================================
+// End 
+// ============================================================================
 
 
 

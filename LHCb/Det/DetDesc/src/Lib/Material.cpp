@@ -1,18 +1,23 @@
+// $Id: Material.cpp,v 1.4 2002-01-18 18:23:09 ibelyaev Exp $ 
+// ============================================================================
+// CVS tag $Name: not supported by cvs2svn $
+// ============================================================================
+// $Log: not supported by cvs2svn $
+// ============================================================================
 /// GaudiKernel
 #include "GaudiKernel/System.h"
 /// DetDecs 
 #include "DetDesc/Material.h"
 #include "DetDesc/TabulatedProperty.h"
 
-
-/////////////////////////////////////////////////////////////////////////////////////////////////
-Material::Material( const std::string& name   , 
-                    const double       dens   , 
-                    const double       rl     , 
-                    const double       al     ,
-                    const double       temp   , 
-                    const double       press  , 
-                    const eState       s      )
+//////////////////////
+Material::Material( const std::string& /* name */  , 
+                    const double       dens        , 
+                    const double       rl          , 
+                    const double       al          ,
+                    const double       temp        , 
+                    const double       press       , 
+                    const eState       s           )
   : DataObject          ( )
   , m_name              ( ""         )
   , m_density           ( dens       )
@@ -23,9 +28,9 @@ Material::Material( const std::string& name   ,
   , m_state             ( s          ) 
   , m_props             (            )
 {};
-/////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////
 Material::~Material() { m_props.clear() ;}
-/////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////
 StreamBuffer&     Material::serialize( StreamBuffer& s ) const 
 {
   DataObject::serialize( s ) ;
@@ -38,7 +43,7 @@ StreamBuffer&     Material::serialize( StreamBuffer& s ) const
            <<( unsigned int ) m_state            
            << m_props (this );
 };
-/////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////
 StreamBuffer&     Material::serialize( StreamBuffer& s )       
 {
   DataObject::serialize( s ) ;
@@ -53,22 +58,24 @@ StreamBuffer&     Material::serialize( StreamBuffer& s )
   m_state = (eState) i ;
   return s >>  m_props (this );
 };
-/////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////
 MsgStream&        Material::fillStream ( MsgStream&   s ) const 
 {
   ///
   s << " Material/"        << System::typeinfoName( typeid( *this ) )  
     << " \tname='"         << name() << "'"
     << endreq              << "\t" 
-    << " Atomic[g/mole] =" << std::setw(12)   << A()                /(g/mole)               
+    << " Atomic[g/mole] =" 
+    << std::setw(12)   << A()                /(g/mole)               
     << " Z            ="   << std::setw(12)   << Z() 
     << " #Nucleons  ="     << std::setw(12)   << (int) N()  
     << endreq              << "\t" 
-    << " Density[g/cm3] =" << std::setw(12)   << m_density          /(g/cm3)            
+    << " Density[g/cm3] ="
+    << std::setw(12)   << m_density          /(g/cm3)            
     << " X0 [cm]      ="   << std::setw(12)   << m_radiationLength  /cm      
     << " Lambda[cm] ="     << std::setw(12)   << m_absorptionLength /cm        
     << endreq              << "\t" 
-    << " Temperature=[K]=" << std::setw(12)   << m_temperature      /kelvin     
+    << " Temperature [K]=" << std::setw(12)   << m_temperature      /kelvin     
     << " Pressure[atm]="   << std::setw(12)   << m_pressure         /atmosphere
     << " State="    ;   
   ///
@@ -79,26 +86,30 @@ MsgStream&        Material::fillStream ( MsgStream&   s ) const
   ///
   s <<  " #properties="       << std::setw(2)   << m_props.size() 
     << endreq ;
-  for( SmartRefVector<TabulatedProperty>::const_iterator it = m_props.begin() ; m_props.end() != it ; ++it )
-    { s << "\t property#" << std::setw(2) << it-m_props.begin() << "   " << *it; }
+  for( SmartRefVector<TabulatedProperty>::const_iterator it = 
+         m_props.begin() ; m_props.end() != it ; ++it )
+    { s << "\t property#" << std::setw(2) 
+        << it-m_props.begin() << "   " << *it; }
   return s;
 };    
-/////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////
 std::ostream&     Material::fillStream ( std::ostream& s ) const 
 {
   ///
   s << " Material/"        << System::typeinfoName( typeid( *this ) )  
     << " \tname='"         << name() << "'"
     << std::endl           << "\t" 
-    << " Atomic[g/mole] =" << std::setw(12)   << A()                /(g/mole)               
+    << " Atomic[g/mole] =" 
+    << std::setw(12)   << A()                /(g/mole)               
     << " Z            ="   << std::setw(12)   << Z() 
     << " #Nucleons  ="     << std::setw(12)   << (int) N()  
     << std::endl           << "\t" 
-    << " Density[g/cm3] =" << std::setw(12)   << m_density          /(g/cm3)            
+    << " Density[g/cm3] =" 
+    << std::setw(12)   << m_density          /(g/cm3)            
     << " X0 [cm]      ="   << std::setw(12)   << m_radiationLength  /cm      
     << " Lambda[cm] ="     << std::setw(12)   << m_absorptionLength /cm        
     << std::endl           << "\t" 
-    << " Temperature=[K]=" << std::setw(12)   << m_temperature      /kelvin     
+    << " Temperature [K]=" << std::setw(12)   << m_temperature      /kelvin     
     << " Pressure[atm]="   << std::setw(12)   << m_pressure         /atmosphere
     << " State="    ;   
   ///
@@ -109,12 +120,17 @@ std::ostream&     Material::fillStream ( std::ostream& s ) const
   ///
   s << " #properties="    << std::setw(2)   << m_props.size() 
     << std::endl;
-  for( SmartRefVector<TabulatedProperty>::const_iterator it = m_props.begin() ; m_props.end() != it ; ++it )
-    { s << "\t property#" << std::setw(2) << it-m_props.begin() << "   " << *it; }
+  for( SmartRefVector<TabulatedProperty>::const_iterator it = 
+         m_props.begin() ; m_props.end() != it ; ++it )
+    { s << "\t property#" << std::setw(2) 
+        << it-m_props.begin() << "   " << *it; }
   return s;
 };    
-/////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////
 
+// ============================================================================
+// End 
+// ============================================================================
 
 
 

@@ -1,4 +1,9 @@
-/// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/DetDesc/Mixture.h,v 1.7 2001-03-13 11:58:07 mato Exp $
+// $Id: Mixture.h,v 1.8 2002-01-18 18:23:08 ibelyaev Exp $ 
+// ============================================================================ 
+// CVS tag $Name: not supported by cvs2svn $
+// ============================================================================ 
+// $Log: not supported by cvs2svn $
+// ============================================================================ 
 #ifndef DETDESC_MIXTURE_H
 #define DETDESC_MIXTURE_H
 /// detDesc
@@ -10,15 +15,15 @@
 
 
 /** @class Mixture Mixture.h DetDesc/Mixture.h
-
-    The Mixture class can be composed of Elements and other Mixtures.
-    Mixture of elements can be compoased either by fraction of the mass
-    or by number of atoms of the each component.
-    Mixture of mixtures and elements is composed only by fraction of the
-    mass.
-
-    @author Radovan Chytracek
-*/
+ *
+ *  The Mixture class can be composed of Elements and other Mixtures.
+ *  Mixture of elements can be compoased either by fraction of the mass
+ *  or by number of atoms of the each component.
+ *  Mixture of mixtures and elements is composed only by fraction of the
+ *  mass.
+ *
+ *  @author Radovan Chytracek
+ */
 class Mixture : public  Material  
 {
   ///  
@@ -46,16 +51,22 @@ public:
   inline const int nOfItems() const;
   
   /** Add an element into the mixture by specifying:
-      a) the fraction of the mass ( material mixture )
-      b) the number of the atoms  ( material compund )
-  */
-  void Mixture::addElement( const SmartRef<Element>& e  , const int    nOfAtoms , const bool comp = false );
-  void Mixture::addElement( const SmartRef<Element>& e  , const double fraction , const bool comp = false );
+   *   a) the fraction of the mass ( material mixture )
+   *  b) the number of the atoms  ( material compund )
+   */
+  void Mixture::addElement( const SmartRef<Element>& e  , 
+                            const int    nOfAtoms , 
+                            const bool comp = false );
+  void Mixture::addElement( const SmartRef<Element>& e  , 
+                            const double fraction , 
+                            const bool comp = false );
   
   /** Add another mixture into this mixture by specifying its fraction
       of the mass
   */
-  void Mixture::addMixture( const SmartRef<Mixture>& mx , const double fraction , const bool comp = false);
+  void Mixture::addMixture( const SmartRef<Mixture>& mx , 
+                            const double fraction , 
+                            const bool comp = false);
   
   /// Return i-th element's pointer
   const SmartRef<Element>&  element ( const unsigned int i ) const ;  
@@ -124,6 +135,9 @@ private:
 #include "DetDesc/Mixture.icpp"
 ///
    
+// ============================================================================ 
+// End 
+// ============================================================================ 
 #endif // DETDESC_MIXTURE_H
   
 

@@ -1,4 +1,9 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/component/XmlLVolumeCnv.cpp,v 1.21 2001-12-11 10:02:29 sponce Exp $
+// $Id: XmlLVolumeCnv.cpp,v 1.22 2002-01-18 18:23:10 ibelyaev Exp $ 
+// ============================================================================
+// CVS tag $Name: not supported by cvs2svn $
+// ============================================================================
+// $Log: not supported by cvs2svn $ 
+// ============================================================================
 
 // Include files
 #include "GaudiKernel/CnvFactory.h"
@@ -209,9 +214,10 @@ std::string XmlLVolumeCnv::createPvName (PVolumeItem* pv) {
 // -----------------------------------------------------------------------
 // Create an object corresponding to a DOM element
 // -----------------------------------------------------------------------
-StatusCode XmlLVolumeCnv::internalCreateObj (DOM_Element element,
-                                             DataObject*& refpObject,
-                                             IOpaqueAddress* address) {
+StatusCode XmlLVolumeCnv::internalCreateObj (DOM_Element        element    ,
+                                             DataObject*&       refpObject ,
+                                             IOpaqueAddress* /* address */ ) 
+{
   // gets the attributes
   std::string materialName = dom2Std (element.getAttribute ("material"));
   std::string magFieldName = dom2Std (element.getAttribute ("magfield"));
@@ -1797,3 +1803,6 @@ HepTransform3D* XmlLVolumeCnv::dealWithRotAxis (DOM_Element element) {
   return result;
 } // end dealWithRotAxis
 
+// ============================================================================
+// End 
+// ============================================================================

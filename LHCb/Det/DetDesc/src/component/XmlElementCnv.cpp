@@ -1,5 +1,9 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/component/XmlElementCnv.cpp,v 1.9 2001-12-11 10:02:29 sponce Exp $
-
+// $Id: XmlElementCnv.cpp,v 1.10 2002-01-18 18:23:10 ibelyaev Exp $ 
+// ============================================================================ 
+// CVS tag $Name: not supported by cvs2svn $
+// ============================================================================ 
+// $Log: not supported by cvs2svn $ 
+// ============================================================================ 
 // Include Files
 #include "GaudiKernel/CnvFactory.h"
 #include "GaudiKernel/DataObject.h"
@@ -34,7 +38,6 @@
 static CnvFactory<XmlElementCnv> s_factoryMixture;
 const ICnvFactory& XmlElementCnvFactory = s_factoryMixture;
 
-
 // -----------------------------------------------------------------------
 // Material state string to state enumeration map
 // -----------------------------------------------------------------------
@@ -66,11 +69,11 @@ XmlElementCnv::XmlElementCnv (ISvcLocator* svc) :
 // -----------------------------------------------------------------------
 StatusCode XmlElementCnv::i_createObj (DOM_Element element,
                                        DataObject*& refpObject) {
+
   // creates an object for the node found
   std::string elementName = dom2Std (element.getAttribute ("name"));
   Element* dataObj = new Element(elementName);
   refpObject = dataObj;
-  
   // Now we have to process more material attributes if any      
   std::string temperatureAttribute =
     dom2Std (element.getAttribute ("temperature"));
@@ -115,14 +118,17 @@ StatusCode XmlElementCnv::i_createObj (DOM_Element element,
 // -----------------------------------------------------------------------
 // Fill an object with a new child element
 // -----------------------------------------------------------------------
-StatusCode XmlElementCnv::i_fillObj (DOM_Element childElement,
-                                     DataObject* refpObject) {
+StatusCode XmlElementCnv::i_fillObj (DOM_Element        childElement ,
+                                     DataObject*        refpObject   , 
+                                     IOpaqueAddress* /* address  */  ) 
+{
   MsgStream log(msgSvc(), "XmlElementCnv" );
   
   // gets the object
   Element* dataObj = dynamic_cast<Element*> (refpObject);
   // gets the element's name
   std::string tagName = dom2Std (childElement.getNodeName());
+  
   // dispatches, based on the name
   if ("tabprops" == tagName) {
     log << MSG::VERBOSE << "looking at tabprops" << endreq;
@@ -133,6 +139,7 @@ StatusCode XmlElementCnv::i_fillObj (DOM_Element childElement,
     SmartRef<TabulatedProperty> ref(dataObj, linkID);
     dataObj->tabulatedProperties().push_back(ref); 
   } else if ("atom" == tagName) {
+    
     log << MSG::VERBOSE << "looking at an atom" << endreq;
     // Now we have to process atom attributes
     std::string aAttribute = dom2Std (childElement.getAttribute ("A"));
@@ -143,7 +150,9 @@ StatusCode XmlElementCnv::i_fillObj (DOM_Element childElement,
     if (!zeffAttribute.empty()) {
       dataObj->setZ (xmlSvc()->eval(zeffAttribute, false));
     }
+    
   } else if ("isotoperef" == tagName) {
+
     log << MSG::VERBOSE << "looking at an isotoperef" << endreq;
     // Unlike XmlCatalogCnv we don't create XmlAdress hooks for children
     // we try to load the referred elements and mixtures instead
@@ -205,10 +214,13 @@ StatusCode XmlElementCnv::i_fillObj (DOM_Element childElement,
 // -----------------------------------------------------------------------
 // Process an object
 // -----------------------------------------------------------------------
-StatusCode XmlElementCnv::i_processObj (DataObject* refpObject) {
+StatusCode XmlElementCnv::i_processObj (DataObject*        refpObject ,
+                                        IOpaqueAddress* /* address */ ) 
+{
   // gets the object
   Element* dataObj = dynamic_cast<Element*> (refpObject);
   // computes some values for this object
+  
   if (0 != dataObj->nOfIsotopes()) {
     dataObj->compute();
   } else {
@@ -221,4 +233,8 @@ StatusCode XmlElementCnv::i_processObj (DataObject* refpObject) {
   // returns
   return StatusCode::SUCCESS;
 } // end i_processObj
+
+// ============================================================================
+// End 
+// ============================================================================
 

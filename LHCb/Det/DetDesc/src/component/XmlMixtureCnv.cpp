@@ -1,5 +1,9 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/component/XmlMixtureCnv.cpp,v 1.12 2001-12-11 10:02:29 sponce Exp $
-
+// $Id: XmlMixtureCnv.cpp,v 1.13 2002-01-18 18:23:11 ibelyaev Exp $
+// ============================================================================ 
+// CVS tag $Name: not supported by cvs2svn $ 
+// ============================================================================ 
+// $Log: not supported by cvs2svn $ 
+// ============================================================================
 // Include files
 #include "GaudiKernel/CnvFactory.h"
 #include "GaudiKernel/IOpaqueAddress.h"
@@ -128,7 +132,7 @@ StatusCode XmlMixtureCnv::i_fillObj (DOM_Element childElement,
   Mixture* dataObj = dynamic_cast<Mixture*> (refpObject);
   // gets the element's name
   std::string tagName = dom2Std (childElement.getNodeName());
-
+  
   // dispatches, based on the name
   if ("tabprops" == tagName) {
     log << MSG::VERBOSE << "looking at tabprops" << endreq;
@@ -155,9 +159,6 @@ StatusCode XmlMixtureCnv::i_fillObj (DOM_Element childElement,
       // get rid of the ".." to get the absolute path
       entryName = compactPath(entryName);
     }
-    
-    log << MSG::VERBOSE << "Converter for " << address->par()[1]
-        << " is gonna retrieve " << entryName << endreq;
 
     DataObject *itemObj = 0;
     stcod = dataProvider()->retrieveObject (entryName, itemObj);
@@ -253,11 +254,12 @@ StatusCode XmlMixtureCnv::i_processObj (DataObject* refpObject,
   Mixture* dataObj = dynamic_cast<Mixture*> (refpObject);
   // Material is (hopefully) converted so
   // in case of mixture we have to compute some stuff    
+
   if (CLID_Mixture == address->clID()) {
     dataObj->compute() ; 
     m_mixMode = MM_undefined;
   }
-
+  
   // returns
   return StatusCode::SUCCESS;
 } // end i_processObj

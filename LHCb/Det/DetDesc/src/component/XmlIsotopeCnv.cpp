@@ -1,5 +1,9 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/component/XmlIsotopeCnv.cpp,v 1.8 2001-11-20 15:22:24 sponce Exp $
-
+// $Id: XmlIsotopeCnv.cpp,v 1.9 2002-01-18 18:23:10 ibelyaev Exp $
+// ============================================================================
+// CVS tag $Name: not supported by cvs2svn $
+// ============================================================================
+// $Log: not supported by cvs2svn $
+// ============================================================================
 // include files
 #include "GaudiKernel/CnvFactory.h"
 #include "GaudiKernel/GenericAddress.h"
@@ -121,10 +125,12 @@ StatusCode XmlIsotopeCnv::i_createObj (DOM_Element element,
 // -----------------------------------------------------------------------
 // Fill an object with a new child element
 // -----------------------------------------------------------------------
-StatusCode XmlIsotopeCnv::i_fillObj (DOM_Element childElement,
-                                     DataObject* refpObject) {
+StatusCode XmlIsotopeCnv::i_fillObj (DOM_Element        childElement   ,
+                                     DataObject*        refpObject     ,
+                                     IOpaqueAddress* /* address     */ ) 
+{
   MsgStream log(msgSvc(), "XmlElementCnv" );
-
+  
   // gets the object
   Isotope* dataObj = dynamic_cast<Isotope*> (refpObject);
   // gets the element's name
@@ -147,3 +153,6 @@ StatusCode XmlIsotopeCnv::i_fillObj (DOM_Element childElement,
   return StatusCode::SUCCESS;
 } // end i_fillObj
 
+// ============================================================================
+// End 
+// ============================================================================

@@ -1,5 +1,9 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/component/XmlIsotopeCnv.h,v 1.2 2001-05-14 15:13:42 sponce Exp $
-
+// $Id: XmlIsotopeCnv.h,v 1.3 2002-01-18 18:23:10 ibelyaev Exp $
+// ============================================================================
+// CVS tag $Name: not supported by cvs2svn $ 
+// ============================================================================
+// $Log: not supported by cvs2svn $ 
+// ============================================================================
 #ifndef DETDESC_XMLCNVSVC_XMLISOTOPECNV_H
 #define DETDESC_XMLCNVSVC_XMLISOTOPECNV_H
 
@@ -52,20 +56,26 @@ protected:
    * @param refpObject the object to be built
    * @return status depending on the completion of the call
    */
-  virtual StatusCode i_createObj (DOM_Element element,
-                                  DataObject*& refpObject);
-
+  virtual StatusCode i_createObj 
+  ( DOM_Element  element    ,
+    DataObject*& refpObject );
+  
   /** Fills the current object for its child element childElement.
    * Overrides the default method in XmlGenericCnv
    * @param element the child processed here
    * @param refpObject the object to be filled
    * @return status depending on the completion of the call
    */
-  virtual StatusCode i_fillObj (DOM_Element childElement,
-                                DataObject* refpObject);
-
+    virtual StatusCode i_fillObj 
+  ( DOM_Element     childElement ,
+    DataObject*     refpObject   ,
+    IOpaqueAddress* address      );
+  
 };
 
-
+// ============================================================================
+// End 
+// ============================================================================
 #endif // DETDESC_XMLCNVSVC_XMLISOTOPECNV_H
+// ============================================================================
 
