@@ -48,7 +48,11 @@ StatusCode MuonDigitization::initialize()
      <<m_numberOfSpilloverEvents<<endreq;
  m_numberOfEvents=m_numberOfSpilloverEvents+1;
  StatusCode sc=toolSvc()->retrieveTool("MuonTileIDXYZ",m_pMuonTileXYZ);
- MuonDigitizationParameters::Parameters usefull ( toolSvc(), detSvc(), msgSvc()) ;
+ if( !sc.isSuccess() ) {
+   log << MSG::ERROR << "Failed to retrieve MuonTileIDXYZ tool" << endmsg;
+   return sc;
+ }
+ MuonDigitizationParameters::Parameters usefull( toolSvc(), detSvc(), msgSvc());
  log<<MSG::DEBUG<<usefull.getChamberPerRegion(0);
  m_flatDist.initialize( randSvc(), Rndm::Flat(0.0,1.0));	 
  detectorResponse.initialize( randSvc(), detSvc(), msgSvc());
@@ -603,7 +607,6 @@ StatusCode MuonDigitization::applyPhysicalEffects(MuonDigitizationData<MuonPhysi
 		  std::vector<MuonPhysicalChannel*>  XTalkPhysicalChannel;
 			std::vector<MuonPhysicalChannel*>::iterator iterOnSTD;
 		  MuonPhysicalChannels::iterator iter ;
-		  MuonPhysicalChannels::iterator iterTest ;
 			std::vector<MuonPhysicalChannel*> channelsDueToXTalk;	   
 			std::vector<MuonPhysicalChannel*>::iterator iterXTalk;
 			MuonPhysicalChannel* pFound;
@@ -830,14 +833,14 @@ StatusCode MuonDigitization::
 		    for(int k=0;k<4;k++){
 				   int partitionNumber=i*4+k;
 			     int chamberInRegion=usefull.getChamberPerRegion(partitionNumber);
-					 int gapFE=usefull.getGapPerFE(partitionNumber);
+           //					 int gapFE=usefull.getGapPerFE(partitionNumber);
 					 for(int chamber=0;chamber<chamberInRegion;chamber++){		
 	            for(int frontEnd=0;frontEnd<(int)(usefull.getGapPerRegion(partitionNumber)/
 					                           usefull.getGapPerFE(partitionNumber));frontEnd++){
-					       double startPosZ=usefull.getStartPositionFirstGapZ(chamber+ chamberTillNow);
-							   double middlePosZ=startPosZ+(usefull.getStopGapZ((frontEnd+1)*gapFE-1 ,partitionNumber)-
-								                   usefull.getStartGapZ(frontEnd*gapFE ,partitionNumber))/2
-																	 +usefull.getStartGapZ(frontEnd*gapFE ,partitionNumber);																		 
+                //					       double startPosZ=usefull.getStartPositionFirstGapZ(chamber+ chamberTillNow);
+                 //							   double middlePosZ=startPosZ+(usefull.getStopGapZ((frontEnd+1)*gapFE-1 ,partitionNumber)-
+                 //								                   usefull.getStartGapZ(frontEnd*gapFE ,partitionNumber))/2
+                 //																	 +usefull.getStartGapZ(frontEnd*gapFE ,partitionNumber);																		 
 	               for(int readout=0;readout<=usefull.getReadoutNumber(partitionNumber);readout++){
  				            int phChInX=usefull.getPhChannelNX( readout, partitionNumber);
 				            int phChInY=usefull.getPhChannelNY( readout, partitionNumber);		 
@@ -849,11 +852,11 @@ StatusCode MuonDigitization::
 				               int chY=(int)(m_flatDist()*phChInY);
 					             if(chX==phChInX)chX=phChInX-1;
 					             if(chY==phChInY)chY=phChInY-1;
-											 float x= (chX+0.5)* usefull.getPhChannelSizeX(readout,partitionNumber) +
-						                    usefull. getStartChamberPositionX(chamber+chamberTillNow);
-                       float y= (chY+0.5)* usefull.getPhChannelSizeY(readout,partitionNumber) +
-						                    usefull. getStartChamberPositionY(chamber+chamberTillNow);
-											 double tofOfLight=(sqrt(x*x+ y*y+(middlePosZ)*(middlePosZ)))/333.3;
+                       //											 float x= (chX+0.5)* usefull.getPhChannelSizeX(readout,partitionNumber) +
+                       //						                    usefull. getStartChamberPositionX(chamber+chamberTillNow);
+                       //                       float y= (chY+0.5)* usefull.getPhChannelSizeY(readout,partitionNumber) +
+                       //						                    usefull. getStartChamberPositionY(chamber+chamberTillNow);
+                       //											 double tofOfLight=(sqrt(x*x+ y*y+(middlePosZ)*(middlePosZ)))/333.3;
  					             double time=m_flatDist()*m_BXTime+shiftOfTOF ;
 //											 +tofOfLight;
 											 MuonPhChID ID;

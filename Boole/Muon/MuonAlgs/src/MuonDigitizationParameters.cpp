@@ -96,7 +96,7 @@ static std::string geoBase="/dd/Structure/LHCb/Muon/";
 		float chamberZHalfLength;
     float chamberXlength;
     float chamberYlength;
-    float chamberZlength;				
+    //    float chamberZlength;				
     for(itChamber=detRegionPointer->childBegin();itChamber<detRegionPointer->childEnd(); itChamber++){
       SmartDataPtr<DeMuonChamber> deChamber(detSvc,(*itChamber)->name());
       IDetectorElement::IDEContainer::iterator itGap=(deChamber)->childBegin();

@@ -89,7 +89,7 @@
  	      for(int i=-numberOfXTalkHits/2; i<=numberOfXTalkHits/2;i++){  	
 					if(i!=0){					   
 						newChannel=indexOfChannel+i;					  				
-						if(newChannel>=0&&newChannel<(unsigned int)maxChannel){
+						if(newChannel>=0&&newChannel<maxChannel){
 						  MuonPhysicalChannel* newPhCh = new MuonPhysicalChannel(FETile); 
 						  createXTalkChannel(iter,(unsigned int)newChannel,axis,newPhCh);
    	          hitDueToXTalk.push_back(newPhCh); 	
@@ -100,7 +100,7 @@
 			else{
 /// odd
         newChannel=indexOfChannel +direction; 
-				if(newChannel>=0&&newChannel<(unsigned int)maxChannel){
+				if(newChannel>=0&&newChannel<maxChannel){
 					MuonPhysicalChannel* newPhCh = new MuonPhysicalChannel(FETile); 
 					createXTalkChannel(iter,(unsigned int)newChannel,axis,newPhCh);
    	      hitDueToXTalk.push_back(newPhCh); 	
@@ -108,7 +108,7 @@
  	      for(int i=-(numberOfXTalkHits-1)/2; i<=(numberOfXTalkHits-1)/2;i++){  	
 					if(i!=0){					   
 						newChannel=indexOfChannel+i;					  				
-						if(newChannel>=0&&newChannel<(unsigned int)maxChannel){
+						if(newChannel>=0&&newChannel<maxChannel){
 						  MuonPhysicalChannel* newPhCh = new MuonPhysicalChannel(FETile); 
 						  createXTalkChannel(iter,(unsigned int)newChannel,axis,newPhCh);
    	          hitDueToXTalk.push_back(newPhCh); 	
