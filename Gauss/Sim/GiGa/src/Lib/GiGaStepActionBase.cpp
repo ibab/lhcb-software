@@ -61,7 +61,13 @@ StatusCode GiGaStepActionBase::queryInterface( const InterfaceID& iid ,
 
 // ============================================================================
 // ============================================================================
-void GiGaStepActionBase::UserSteppingAction ( const G4Step* /* step */ ) {};
+void GiGaStepActionBase::UserSteppingAction ( const G4Step* /* step */ ) 
+{
+  MsgStream log( msgSvc() , name() );
+  log << MSG::DEBUG << " 'UserSteppingAction' is invoked! " << endreq ;
+};
 
+// ============================================================================
+// The End 
 // ============================================================================
 

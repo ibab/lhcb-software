@@ -2,6 +2,9 @@
 /// CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 /// $Log: not supported by cvs2svn $
+/// Revision 1.6  2001/08/12 15:42:51  ibelyaev
+/// improvements with Doxygen comments
+///
 /// Revision 1.5  2001/07/27 17:03:19  ibelyaev
 /// improved printout
 ///
@@ -65,13 +68,18 @@ StatusCode GiGaEventActionDraw::finalize   ()
 // ============================================================================
 void GiGaEventActionDraw::EndOfEventAction( const G4Event* event ) 
 {
-  /// locate visual manager 
+  // base class 
+  GiGaEventActionBase::EndOfEventAction( event );
+  
+  // locate visual manager 
   G4VVisManager* visMgr  = G4VVisManager::GetConcreteInstance();
   ///
   if      ( 0 == visMgr    ) { Error("Could not locate G4VVisManager* !" ) ; }
   else if ( 0 == event     ) { Error("G4Event* points to NULL!"          ) ; } 
-  else { event->Draw(); }
+  else    { event->Draw(); }
   ///
 };
 
+// ============================================================================
+// The End 
 // ============================================================================

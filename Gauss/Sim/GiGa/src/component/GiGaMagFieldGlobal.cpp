@@ -1,8 +1,11 @@
-// $Id: GiGaMagFieldGlobal.cpp,v 1.8 2002-03-13 16:22:12 ibelyaev Exp $ 
+// $Id: GiGaMagFieldGlobal.cpp,v 1.9 2002-04-09 17:16:50 ibelyaev Exp $ 
 // ============================================================================
 /// CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 /// $Log: not supported by cvs2svn $
+/// Revision 1.8  2002/03/13 16:22:12  ibelyaev
+///  update for newer G4 magfield interface
+///
 /// Revision 1.7  2002/03/13 15:36:25  ibelyaev
 ///  update for newer G4 patch
 ///
@@ -83,13 +86,15 @@ StatusCode GiGaMagFieldGlobal::finalize  ()
 
 // ============================================================================
 // ============================================================================
-void GiGaMagFieldGlobal::GetFieldValue ( const double Point[4], 
-                                         double *B  ) const 
+void GiGaMagFieldGlobal::GetFieldValue 
+( const double Point[4], 
+  double *B  ) const 
 {
   ///
   if( 0 == Point ) { Error("GetFieldValue: Point = 0 !"); return ; }
   ///
   const HepPoint3D point( Point[0] , Point[1] , Point[2] );
+  
   StatusCode sc = mfSvc()->fieldVector( point , m_field );
   if( sc.isFailure() ) 
     { 
@@ -114,6 +119,8 @@ void GiGaMagFieldGlobal::GetFieldValue ( const double Point[4],
   ///
 };
 
+// ============================================================================
+// The END 
 // ============================================================================
 
 

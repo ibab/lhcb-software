@@ -1,8 +1,11 @@
-// $Id: GiGaBase.cpp,v 1.9 2002-01-22 18:20:53 ibelyaev Exp $
+// $Id: GiGaBase.cpp,v 1.10 2002-04-09 17:16:49 ibelyaev Exp $
 // ============================================================================
 /// CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 /// $Log: not supported by cvs2svn $
+/// Revision 1.9  2002/01/22 18:20:53  ibelyaev
+///  Vanya: update for newer versions of Gaudi and Geant4
+///
 /// Revision 1.8  2001/08/12 15:42:48  ibelyaev
 /// improvements with Doxygen comments
 ///
@@ -42,6 +45,7 @@
 #include "GaudiKernel/IJobOptionsSvc.h"
 ///  GaudiKernel
 #include "GaudiKernel/PropertyMgr.h"
+#include "GaudiKernel/Property.h"
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/StreamBuffer.h"
 #include "GaudiKernel/Stat.h"
@@ -137,13 +141,13 @@ StatusCode GiGaBase::queryInterface(const InterfaceID& riid , void** ppI )
   if ( 0 == ppI ) { return StatusCode::FAILURE; }
   *ppI = 0 ;
   if      ( IProperty::         interfaceID() == riid ) 
-    { *ppI = static_cast<IProperty*>  ( this ) ; } 
+    { *ppI = static_cast<IProperty*>         ( this ) ; } 
   else if ( ISerialize::        interfaceID() == riid )
-    { *ppI = static_cast<ISerialize*> ( this ) ; } 
+    { *ppI = static_cast<ISerialize*>        ( this ) ; } 
   else if ( IInterface::        interfaceID() == riid ) 
-    { *ppI = static_cast<IInterface*> ( this ) ; } 
+    { *ppI = static_cast<IInterface*>        ( this ) ; } 
   else if ( IIncidentListener:: interfaceID() == riid ) 
-    { *ppI = static_cast<IInterface*> ( this ) ; } 
+    { *ppI = static_cast<IIncidentListener*> ( this ) ; } 
   else                                                  
     { return StatusCode::FAILURE               ; }
   addRef();
@@ -280,6 +284,31 @@ StatusCode GiGaBase::initialize()
   else { Print("IObjManager is not required to be located"); }
   ///
   m_init = true ;
+  ///
+  { /// print ALL properties 
+    typedef std::vector<Property*> Properties;
+    const Properties& properties = getProperties() ;
+    MsgStream log( msgSvc() , name () );
+    log << MSG::DEBUG 
+        << " List of ALL properties of "
+        << System::typeinfoName( typeid( *this ) ) << "/" 
+        << name ()           << "   #properties = " 
+        << properties.size() << endreq ;
+    const int   buffer_size  = 256 ;
+    char buffer[buffer_size]       ;
+    for( Properties::const_reverse_iterator property 
+           = properties.rbegin() ;
+         properties.rend() != property ; ++property )  
+      {
+        std::fill( buffer , buffer + buffer_size , 0 );
+        std::ostrstream ost ( buffer , buffer_size );
+        (*property)->nameAndValueAsStream( ost );
+        ost.freeze();
+        log << MSG::DEBUG
+            << "Property ['Name': Value] = " 
+            << ost.str() << endreq ;
+      }
+  } 
   ///
   Print("GiGaBase initialized successfully" , 
         StatusCode::SUCCESS , MSG::VERBOSE ) ;

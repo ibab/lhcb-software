@@ -1,20 +1,8 @@
+// $Id: GiGaRunActionCommand.cpp,v 1.6 2002-04-09 17:16:50 ibelyaev Exp $
 // ============================================================================
 /// CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 /// $Log: not supported by cvs2svn $
-/// Revision 1.4  2001/07/27 17:25:20  ibelyaev
-/// bug fix
-///
-/// Revision 1.3  2001/07/27 17:03:20  ibelyaev
-/// improved printout
-///
-/// Revision 1.2  2001/07/27 14:29:01  ibelyaev
-/// bug fix
-///
-/// Revision 1.1  2001/07/26 16:09:22  ibelyaev
-/// GiGaRunActions budiness
-///
-/// 
 // ============================================================================
 /// GaudiKernel
 #include "GaudiKernel/PropertyMgr.h"
@@ -26,7 +14,9 @@
 #include "GiGaRunActionCommand.h"
 
 // ============================================================================
-/** Implementation file for class : GiGaRunActionCommand
+/** @file 
+ *
+ *   Implementation file for class : GiGaRunActionCommand
  *
  *   @author Vanya  Belyaev
  *   @date 25/07/2001 
@@ -105,6 +95,8 @@ StatusCode GiGaRunActionCommand::finalize()
 // ============================================================================
 void GiGaRunActionCommand::BeginOfRunAction( const G4Run* run )
 {
+  // base class 
+  GiGaRunActionBase::BeginOfRunAction( run );
   if( 0 == run ) 
     { Warning("BeginOfRunAction:: G4Run* points to NULL!") ; }
   /// get Geant4 UI manager 
@@ -130,6 +122,8 @@ void GiGaRunActionCommand::BeginOfRunAction( const G4Run* run )
 // ============================================================================
 void GiGaRunActionCommand::EndOfRunAction( const G4Run* run )
 {
+  // base class 
+  GiGaRunActionBase::EndOfRunAction( run );
   if( 0 == run ) 
     { Warning("EndOfRunAction:: G4Run* points to NULL!") ; }
   /// get Geant4 UI manager 
@@ -148,5 +142,7 @@ void GiGaRunActionCommand::EndOfRunAction( const G4Run* run )
   ///
 };
 
+// ============================================================================
+// The End
 // ============================================================================
 

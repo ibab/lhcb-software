@@ -1,8 +1,11 @@
-// $Id: GiGaMagFieldUniform.cpp,v 1.7 2002-03-13 16:22:12 ibelyaev Exp $ 
+// $Id: GiGaMagFieldUniform.cpp,v 1.8 2002-04-09 17:16:50 ibelyaev Exp $ 
 // ============================================================================
 /// CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 /// $Log: not supported by cvs2svn $
+/// Revision 1.7  2002/03/13 16:22:12  ibelyaev
+///  update for newer G4 magfield interface
+///
 /// Revision 1.6  2001/08/12 15:42:51  ibelyaev
 /// improvements with Doxygen comments
 ///
@@ -63,7 +66,6 @@ StatusCode GiGaMagFieldUniform::initialize()
     { return Error("Could not initialize the base class",sc);}
   ///
   Print("initialized succesfully") ;
-  ///
   return StatusCode::SUCCESS;  
 };
 
@@ -83,12 +85,14 @@ StatusCode GiGaMagFieldUniform::finalize  ()
 
 // ============================================================================
 // ============================================================================
-void GiGaMagFieldUniform::GetFieldValue ( const double [4], 
-                                          double *B  ) const 
+void GiGaMagFieldUniform::GetFieldValue 
+( const double [4]    , 
+  double*          B  ) const 
 {
   ///
   *(B+0) = (double) m_Bx ;
   *(B+1) = (double) m_By ;
+  *(B+2) = (double) m_Bz ;
   *(B+2) = (double) m_Bz ;
   ///
 };

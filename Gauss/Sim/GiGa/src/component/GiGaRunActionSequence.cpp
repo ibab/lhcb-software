@@ -2,6 +2,9 @@
 /// CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 /// $Log: not supported by cvs2svn $
+/// Revision 1.4  2001/08/12 15:42:53  ibelyaev
+/// improvements with Doxygen comments
+///
 /// Revision 1.3  2001/07/27 17:03:21  ibelyaev
 /// improved printout
 ///
@@ -23,7 +26,9 @@
 #include "GiGaRunActionSequence.h"
 
 // ============================================================================
-/** Implementation file for class : GiGaRunActionSequence
+/** @file
+ *
+ * Implementation file for class : GiGaRunActionSequence
  * 
  * @author Vanya  Belyaev
  * @date 26/07/2001 
@@ -167,7 +172,9 @@ StatusCode GiGaRunActionSequence::finalize()
 // ============================================================================
 void GiGaRunActionSequence::BeginOfRunAction ( const G4Run* run )
 {
-  /// run actions of all members  
+  // base class 
+  GiGaRunActionBase::BeginOfRunAction( run );  
+  // run actions of all members  
   std::for_each ( m_actions.begin () , m_actions.end   () ,
                   std::bind2nd( std::mem_fun1(&IGiGaRunAction::
                                               BeginOfRunAction) , run ) );
@@ -180,12 +187,16 @@ void GiGaRunActionSequence::BeginOfRunAction ( const G4Run* run )
 // ============================================================================
 void GiGaRunActionSequence::EndOfRunAction ( const G4Run* run )
 {
-  /// run actions of all members  
+  // base class 
+  GiGaRunActionBase::EndOfRunAction( run );
+  // run actions of all members  
   std::for_each ( m_actions.begin () , m_actions.end   () ,
                   std::bind2nd( std::mem_fun1(&IGiGaRunAction::
                                               EndOfRunAction) , run ) );
 };
 
+// ============================================================================
+// The END 
 // ============================================================================
 
 

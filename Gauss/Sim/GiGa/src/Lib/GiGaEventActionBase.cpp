@@ -2,6 +2,9 @@
 /// CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 /// $Log: not supported by cvs2svn $
+/// Revision 1.6  2001/08/12 15:42:49  ibelyaev
+/// improvements with Doxygen comments
+///
 /// Revision 1.5  2001/07/27 17:03:18  ibelyaev
 /// improved printout
 ///
@@ -71,13 +74,22 @@ StatusCode GiGaEventActionBase::queryInterface( const InterfaceID& iid ,
 
 // ============================================================================
 // ============================================================================
-void GiGaEventActionBase::BeginOfEventAction ( const G4Event* /* event */ ) {};
+void GiGaEventActionBase::BeginOfEventAction ( const G4Event* /* event */ ) 
+{
+  MsgStream log( msgSvc() , name() );
+  log << MSG::DEBUG << " 'BeginOfEventAction' is invoked!" << endreq ;
+};
 
 // ============================================================================
 // ============================================================================
-void GiGaEventActionBase::EndOfEventAction   ( const G4Event* /* event */ ) {};
+void GiGaEventActionBase::EndOfEventAction   ( const G4Event* /* event */ ) 
+{
+  MsgStream log( msgSvc() , name() );
+  log << MSG::DEBUG << " 'EndOfEventAction' is invoked!" << endreq ;
+};
 
-
+// ============================================================================
+// The End 
 // ============================================================================
 
 

@@ -2,6 +2,9 @@
 /// CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 /// $Log: not supported by cvs2svn $
+/// Revision 1.5  2001/08/12 15:42:50  ibelyaev
+/// improvements with Doxygen comments
+///
 /// Revision 1.4  2001/07/27 17:03:19  ibelyaev
 /// improved printout
 ///
@@ -104,6 +107,8 @@ StatusCode GiGaEventActionCommand::finalize()
 // ============================================================================
 void GiGaEventActionCommand::BeginOfEventAction( const G4Event* event )
 {
+  // base class 
+  GiGaEventActionBase::BeginOfEventAction ( event );
   if( 0 == event ) 
     { Warning("BeginOfEventAction:: G4Event* points to NULL!") ; }
   /// get Geant4 UI manager 
@@ -129,6 +134,8 @@ void GiGaEventActionCommand::BeginOfEventAction( const G4Event* event )
 // ============================================================================
 void GiGaEventActionCommand::EndOfEventAction( const G4Event* event )
 {
+  // base class 
+  GiGaEventActionBase::EndOfEventAction ( event );
   if( 0 == event ) 
     { Warning("EndOfEventAction:: G4Event* points to NULL!") ; }
   /// get Geant4 UI manager 

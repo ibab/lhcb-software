@@ -1,8 +1,11 @@
-// $Id: GiGaMagFieldGlobal.h,v 1.7 2002-03-13 16:22:12 ibelyaev Exp $ 
+// $Id: GiGaMagFieldGlobal.h,v 1.8 2002-04-09 17:16:50 ibelyaev Exp $ 
 // ============================================================================
 /// CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 /// $Log: not supported by cvs2svn $
+/// Revision 1.7  2002/03/13 16:22:12  ibelyaev
+///  update for newer G4 magfield interface
+///
 /// Revision 1.6  2001/08/12 15:42:51  ibelyaev
 /// improvements with Doxygen comments
 ///
@@ -77,8 +80,8 @@ private:
 };
 ///
 
-
-
+// ============================================================================
+// The END 
 // ============================================================================
 #endif  ///< GIGA_GIGAMagFieldGLOBAL_H
 // ============================================================================
