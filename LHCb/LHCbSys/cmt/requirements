@@ -1,5 +1,5 @@
 package LHCbSys
-version v11r1
+version v11r2
 
 branches doc cmt
  
@@ -17,13 +17,52 @@ use HepMC		v3r121p0	Sim
 
 # Kernel packages
 use KernelSys   	v1r0    Kernel
+use LHCbKernel  v2r5p1    Kernel
+use CaloKernel  v2r1p1    Calo
+use MuonKernel  v2r1p1    Muon
+use TrKernel    v11r1p1   Tr
+use RichKernel  v1r3p1    Rich
+use VeloKernel  v1r2p1    Velo
 
 # Detector description
 use DetSys		v1r0	Det
+use DetDesc        v11r2        Det
+#use DetDescChecks  v1r0        Det
+#use DetDescTests   v1r0        Det
+use VeloDet        v8r0p1       Det     
+use ITDet          v1r1p2       Det     
+use OTDet          v3r0p1       Det
+use CaloDet        v6r0         Det
+use CaloDetXmlCnv  v2r0p1       Det
+use MuonDet        v4r1p1       Det
+use Magnet         v2r0p1       Det
+use MuonTools      v3r1p1       Muon
+use RichDet        v3r0p1       Det
 
 # Event data model
 use EventSys		v13r0	Event
+use EventKernel  v2r1p1  Event
+use Event        v3r1    Event
+use VeloEvent    v12r0   Event
+use ITEvent      v12r0   Event
+use OTEvent      v12r0   Event
+use TrEvent      v12r0   Event
+use RichEvent    v3r2p1  Event
+use CaloEvent    v11r2p1 Event
+use MuonEvent    v2r1p1  Event
+use L0Event      v13r0   Event
+use L1Event      v11r1p1 Event
+use PhysEvent    v7r0p1  Event
+use DbCnv        v7r0    Event
+use GenEvent     v2r3    Event
 
 # Associators
 use AssociatorsSys	v1r0	Associators
+use  ITAssociators      v2r1p1    IT
+use  OTAssociators      v2r2p1    OT
+use  VeloAssociators    v1r3p1    Velo
+use  CaloAssociators    v3r0p1    Calo
+use  MuonAssociators    v1r0      Muon
+use  TrAssociators      v3r2      Tr
+use  TrFitEvent         v3r3p1    Tr
 
