@@ -177,9 +177,12 @@ bool RichSensDet::ProcessHits( G4Step* aStep ,
 
   G4int CurOptPhotID= aTrack->GetParentID();   
 
+  G4double CurGlobalTime =  aTrack-> GetGlobalTime();
+  
 
 
-  G4int CurOptPhotMotherChTrackID;
+
+  G4int CurOptPhotMotherChTrackID=-1;
   G4int CurOptPhotMotherChTrackPDG;
   G4int CurRadiatorNumber=-1;
   G4ThreeVector CurEmissPt;
@@ -259,8 +262,12 @@ bool RichSensDet::ProcessHits( G4Step* aStep ,
   newHit -> SetChTrackMomVect(CurChTrackMomVect);
   newHit -> SetPETrackID(CurPETrackID);
   newHit -> SetPETrackPDG(CurPETrackPDG);
+  newHit -> SetRichHitGlobalTime(CurGlobalTime);
 
-
+  // now for the trackID from the Gausshit base class.
+  newHit ->setTrackID(CurOptPhotMotherChTrackID);
+  
+  
 
   int CurrentRichCollectionSet=-1;
   if(  CurrentRichDetNumber == 0 ) {

@@ -36,7 +36,8 @@ RichG4Hit::RichG4Hit(const RichG4Hit &right):GaussHitBase(right)
   m_PhiCkvAtProd=right.m_PhiCkvAtProd;
   m_ChTrackTotMom=right.m_ChTrackTotMom;
   m_ChTrackMomVect=right.m_ChTrackMomVect;
-
+  m_RichHitGlobalTime = right.m_RichHitGlobalTime;
+  
 }
 
 const RichG4Hit& RichG4Hit::operator=(const RichG4Hit &right)
@@ -63,6 +64,7 @@ const RichG4Hit& RichG4Hit::operator=(const RichG4Hit &right)
   m_PhiCkvAtProd=right.m_PhiCkvAtProd;
   m_ChTrackTotMom=right.m_ChTrackTotMom;
   m_ChTrackMomVect=right.m_ChTrackMomVect;
+  m_RichHitGlobalTime = right.m_RichHitGlobalTime;
 
   return *this;
 }
@@ -145,6 +147,8 @@ void RichG4Hit::Print()
         << m_ChTrackID<<"     "<< m_OptPhotID<<"   "
         << m_PETrackID<<G4endl;
   
+  G4cout<<"RichHit Global Time = " 
+        <<m_RichHitGlobalTime<<G4endl;
 
   }
 // This is a forward declaration of an instantiated G4Allocator<Type> object.

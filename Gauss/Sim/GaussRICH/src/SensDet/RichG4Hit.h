@@ -52,7 +52,8 @@ class RichG4Hit : public  GaussHitBase
       G4double m_PhiCkvAtProd;      // Cherenkov Angle Phi (rad) at Ckv production.
       G4double m_ChTrackTotMom;   //Total momentum (MeV) of the mother of Photon at Ckv Production.
       G4ThreeVector m_ChTrackMomVect; // Three Momentum of the mother of Photon at Ckv Production.
-      
+      G4double m_RichHitGlobalTime;    //Global time for RichHit.
+  
   public:
   inline void SetEdep(G4double de)      
   { m_edep = de; };
@@ -153,7 +154,16 @@ class RichG4Hit : public  GaussHitBase
   inline void SetChTrackMomVect( G4ThreeVector aChTrackMomVect )
     {m_ChTrackMomVect=aChTrackMomVect; }
   inline G4ThreeVector ChTrackMomVect() {return m_ChTrackMomVect; }
+
+  inline void SetRichHitGlobalTime(G4double aRichHitGlobalTime )
+  {  m_RichHitGlobalTime= aRichHitGlobalTime;}
   
+  inline G4double RichHitGlobalTime() 
+  {
+    return  m_RichHitGlobalTime ;
+  }
+  
+    
 
 };
 

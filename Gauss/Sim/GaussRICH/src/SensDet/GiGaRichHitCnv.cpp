@@ -69,7 +69,11 @@ GiGaRichHitCnv::GiGaRichHitCnv( ISvcLocator* Locator )
 
 // ======================================================================
 
-GiGaRichHitCnv::~GiGaRichHitCnv(){}; 
+GiGaRichHitCnv::~GiGaRichHitCnv(){
+  
+  delete m_RichG4HitCollectionName;
+  
+}; 
 
 // ======================================================================
 
@@ -155,8 +159,11 @@ StatusCode GiGaRichHitCnv::updateObj
   ///
   if( 0 ==   address   ) { return Error(" IOpaqueAddress* points to NULL");}
   if( 0 ==   object    ) { return Error(" DataObject* points to NULL"    );}
+
   MCRichPhotodetectorHits* hits = 
                 dynamic_cast<MCRichPhotodetectorHits*> ( object ); 
+
+  
   if( 0 ==   hits ) { return Error(" DataObject*(of type '"      + 
                                         GiGaUtil::ObjTypeName(object) + 
                                         "*') is not 'MCRichPhotodetectorHits*'! "   );}  
@@ -236,15 +243,19 @@ StatusCode GiGaRichHitCnv::updateObj
                 {
                   HepPoint3D pentry=(*myCollection)[ihit]->GetGlobalPos();
                   double edep=(*myCollection)[ihit]->GetEdep();
-                  //             double toffl=(*myCollection)[ihit]->GetTimeOfFlight();
+                  double toffl=(*myCollection)[ihit]-> RichHitGlobalTime();
 
                   MCRichPhotodetectorHit* mchit =new MCRichPhotodetectorHit();
                   mchit->setEntry(pentry);
                   mchit->setEnergy(edep);
-                  //             mchit->setTimeOfFlight(toffl);             
+                  mchit->setTimeOfFlight(toffl);             
              
 
                  int traid=(*myCollection)[ihit]->GetTrackID();
+
+                 //                 cout << " trackid " << traid << endl;
+                 
+
                   if(table[traid].particle())              
                    {
                      mchit->setMCParticle(table[traid].particle());
