@@ -1,6 +1,14 @@
-! $Id: release.notes,v 1.15 2002-12-20 12:39:49 mzupan Exp $
+! $Id: release.notes,v 1.16 2003-01-23 16:01:22 mzupan Exp $
 ! Package     : L0/PuVeto
 ! Responsible : Olivier Callot
+
+!========================= PuVeto v6r0 2003-01-22 =======================
+! 2003-01-22 - Eduardo Rodrigues
+  - a new algorithm was introduced (DVPuVetoAlg) that is to be run only
+    in DaVinci to override the decision of the Pile-up veto based on
+    the height of the second peak (the other parameters relevant in taking
+    the decision can also be changed).
+    This is mostly useful for L0 trigger studies and tunings.
 
 !========================= PuVeto v5r3 2002-12-20 =======================
 ! 2002-12-20 - Marko Zupan
