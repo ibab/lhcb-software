@@ -21,7 +21,6 @@ ApplicationMgr.DLLs  += { "GaudiAud", "GaudiAlg" };
 #include "$STDOPTS/DetDesc.opts"
 ApplicationMgr.ExtSvc += { "MagneticFieldSvc" };
 ApplicationMgr.DLLs   += { "Magnet" };
-// ApplicationMgr.DLLs   += { "VeloDet", "ITDet", "OTDet", "MuonDet" };
 ApplicationMgr.DLLs   += { "VeloDet", "OTDet", "STDet", "MuonDet" };
 ApplicationMgr.DLLs   += { "CaloDet", "CaloDetXmlCnv" };
 

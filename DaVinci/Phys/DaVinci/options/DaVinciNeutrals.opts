@@ -6,8 +6,8 @@
  *  @date   2004-06-03
  */
 // TEMPORARY PATCH
-ApplicationMgr.TopAlg += { "CaloCreateDir" };
-#include "$CALOEVENTROOT/options/CaloEvent.opts"
+//ApplicationMgr.TopAlg += { "CaloCreateDir" };
+//#include "$CALOEVENTROOT/options/CaloEvent.opts"
 
 // Re-create CaloDigits from raw event
 ApplicationMgr.TopAlg += { "CaloDigitsFromRaw" };

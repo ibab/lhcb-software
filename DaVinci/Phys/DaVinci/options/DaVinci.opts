@@ -16,6 +16,13 @@
 #pragma print on
 
 //--------------------------------------------------------------
+// Re-run L0 and L1 Trigger with DC04 tuning 
+#include "$DAVINCIROOT/options/L0.opts"
+#include "$DAVINCIROOT/options/L1Decision.opts"
+// Run Hlt triggers - not yet there
+//#include "$DAVINCIROOT/options/Hlt.opts"
+
+//--------------------------------------------------------------
 // DaVinci Global Reconstruction Algorithms
 // VERY IMPORTANT:
 //   ChargedProtoPAlg and PrimVtxFinder are executed in
@@ -37,11 +44,11 @@
 //--- For merged and resolved pi0 the corresponding selection algorithm
 //    need to be executed. 
 //    Note that DaVinciNeutrals MUST be executed
-// ApplicationMgr.DLLs   += { "Bd2PiPiPi0" };
+// ApplicationMgr.DLLs   += { "CommonParticles" };
 // ApplicationMgr.TopAlg += { "ResolvedPi0Alg" };
-// #include "$BD2PIPIPI0ROOT/options/ResolvedPi0Alg.opts"
+// #include "$COMMONPARTICLESROOT/options/ResolvedPi0Alg.opts"
 // ApplicationMgr.TopAlg += { "MergedPi0Alg" };
-// #include "$BD2PIPIPI0ROOT/options/MergedPi0Alg.opts"
+// #include "$COMMONPARTICLESROOT/options/MergedPi0Alg.opts"
 
 //--- Ks->pi+pi- with all type of tracks loose selection + monitoring
 //#include "$DAVINCIROOT/options/DaVinciKshortLoose.opts"
@@ -64,8 +71,8 @@
 //   Options for algorithms and tools can be added here to overwrite
 //   any of the default options
 // NOTE:
-//   The various selections algorithms have each a DVDecayName.opts
-//   file in their package that can be given as full options of the
+//   The various selections algorithms have each DV*.opts
+//   file(s) in their package that can be given as full options of the
 //   DaVinci executable INSTEAD of DaVinci.opts
 //   ex.: DaVinci.exe $B2HHROOT/options/DVBd2PiPi.opts
 //        DaVinci.exe $BS2DSHROOT/options/DVBs2KKKPi_Pi.opts
@@ -107,10 +114,10 @@ MessageSvc.Format = "% F%40W%S%7W%R%T %0W%M";
 ApplicationMgr.EvtMax    = 500;
 EventSelector.FirstEvent = 1;
 EventSelector.PrintFreq  = 1;
-   
 //---------------------------------------------------------------
 // Sample input file 
 #include "$DAVINCIROOT/options/DaVinciTestData.opts"
+//#include "$DAVINCIROOT/options/DaVinciTDRData.opts"
 
 //***************************************************************
 // Interactive prompt. 

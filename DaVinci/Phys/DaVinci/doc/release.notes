@@ -3,6 +3,20 @@ Package     : Phys/DaVinci
 Package Coordinator : Patrick Koppenburg
 Purpose     : LHCb analysis program 
 
+</PRE><H1><A NAME=v11r6>2004-04-05 DaVinci v11r6 - Development Version</A></H1><PRE>
+ This version is mostly for developement and the main focus is for new data.
+ TDR data can be read but not all features are supported beside decay channel
+ selections. See details for DaVinci v11r0 and v10r0.
+
+ - The Trigger is back!
+ 
+ - Many updated Selections. See PhysSelSys
+ 
+ - Some shuffling around of algorithms.
+
+ - PhysSelections removed from DaVinciCommon.opts
+ 
+
 </PRE><H1><A NAME=v11r5>2004-04-05 DaVinci v11r5 - Development Version</A></H1><PRE>
  This version is mostly for developement and the main focus is for new data.
  TDR data can be read but not all features are supported beside decay channel

@@ -1,0 +1,15 @@
+/** @file 
+ * 
+ *  Options for data file(s) for tests. 
+ *  
+ *  @author P. Koppenburg
+ *  @date   2004-04-23
+ */
+
+
+//-- TDR data - BB bar
+#pragma print off
+#include "$LHCBHOME/project/web/cards/370000.opts"
+#pragma print on
+
+// have a look at that directory for more data

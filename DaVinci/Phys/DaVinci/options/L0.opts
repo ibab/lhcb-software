@@ -1,6 +1,9 @@
 //*************************************************************
 //   Options to re-run the Level 0 trigger decision in DaVinci
 //=============================================================
-// just make nothing
-// ApplicationMgr.DLLs    += { "L0DU" };
-// ApplicationMgr.TopAlg  += { "DecisionUnit", "L0Monitor" };
+// Reimplemented by O.Callot for DC04
+
+ApplicationMgr.DLLs    += { "L0DU", "L0Calo" };
+ApplicationMgr.TopAlg  += { "L0CaloCandidatesFromRaw",
+                            "DecisionUnit", 
+                            "L0Monitor" };
