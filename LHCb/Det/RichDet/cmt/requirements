@@ -1,11 +1,11 @@
 package RichDet
-version v7r1
+version v7r2
 
 branches src RichDet doc cmt
 
 include_dirs $(RICHDETROOT)
 
-use RichKernel  v4r*   Rich
+use RichKernel  v5r*   Rich
 use DetDescCnv  v2*    Det
 
 library  RichDetLib  Lib/*.cpp 
@@ -13,4 +13,3 @@ library  RichDet     component/*.cpp
 
 apply_pattern component_library library=RichDet
 apply_pattern linker_library    library=RichDetLib
-
