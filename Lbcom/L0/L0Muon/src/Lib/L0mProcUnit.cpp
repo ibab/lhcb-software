@@ -1,4 +1,4 @@
-// $Id: L0mProcUnit.cpp,v 1.11 2003-01-23 16:40:32 atsareg Exp $
+// $Id: L0mProcUnit.cpp,v 1.12 2003-01-31 13:13:52 atsareg Exp $
 
 #ifdef WIN32
 // Disable warning C4786 identifier truncated to 255 characters in debug info.
@@ -145,7 +145,7 @@ void L0mProcUnit::addTower(L0mTower* lt) {
 void L0mProcUnit::cleanAdjacentSeeds() { 
  
   int nsize = m_towers.size();
-  if(nsize<3) return;
+  if(nsize<2) return;
   
   // cout << "========= Removing seed clusters " << endl;  
   bool remove = false;
