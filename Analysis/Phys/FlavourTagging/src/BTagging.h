@@ -1,4 +1,4 @@
-// $Id: BTagging.h,v 1.9 2005-02-02 07:10:27 pkoppenb Exp $
+// $Id: BTagging.h,v 1.10 2005-03-01 09:57:05 musy Exp $
 #ifndef USER_BTAGGING_H 
 #define USER_BTAGGING_H 1
 
@@ -20,8 +20,6 @@
 #include "FlavourTagging/ISecondaryVertexTool.h"
 #include "FlavourTagging/INNetTool.h"
 
-#define MAXSIZETAGS 100
-
 /** @class BTagging BTagging.h 
  *  
  *  @author Marco Musy
@@ -29,17 +27,6 @@
  */
 
 class BTagging : public DVAlgorithm {
-
-  bool isinTree( Particle*, ParticleVector& );
-  void printInfo( Particle* );
-  void PileUpIP( Particle*, double&, double& ) ;
-  std::vector<Particle*> toStdVector( SmartRefVector<Particle>& );
-  ParticleVector FindDaughters( Particle* );
-  double min(double, double);
-  double max(double, double);
-  double pol2(double, double, double );
-  double pol3(double, double, double, double );
-  double pol4(double, double, double, double, double );
 
 public: 
   /// Standard constructor
@@ -50,8 +37,15 @@ public:
   virtual StatusCode finalize  ();    ///< Algorithm finalization
 
 private:
-
-  VertexVector PileUpVtx;
+  bool isinTree( Particle*, ParticleVector& );
+  StatusCode calcIP( Particle*, Vertex*, double&, double& );
+  StatusCode calcIP( Particle*, const VertexVector, double&, double& ) ;
+  std::vector<Particle*> toStdVector( SmartRefVector<Particle>& );
+  ParticleVector FindDaughters( Particle* );
+  long trackType( Particle* );
+  double pol2(double, double, double );
+  double pol3(double, double, double, double );
+  double pol4(double, double, double, double, double );
 
   std::string m_veloChargeName, m_TagLocation;
   std::string m_SVtype, m_CombinationTechnique;
@@ -60,29 +54,29 @@ private:
   INNetTool* m_nnet;
 
   //properties ----------------
-  double m_AXPt_cut_muon;
-  double m_AXP_cut_muon;
+  double m_Pt_cut_muon;
+  double m_P_cut_muon;
 
-  double m_AXPt_cut_ele;
-  double m_AXP_cut_ele;
+  double m_Pt_cut_ele;
+  double m_P_cut_ele;
   long   m_VeloChMin;
   long   m_VeloChMax;
   double m_EoverP;
 
-  double m_AXPt_cut_kaon;
-  double m_AXP_cut_kaon ;
+  double m_Pt_cut_kaon;
+  double m_P_cut_kaon ;
   double m_IP_cut_kaon ;
   double m_IPPU_cut_kaon;
 
-  double m_AXPt_cut_kaonS;
-  double m_AXP_cut_kaonS;
+  double m_Pt_cut_kaonS;
+  double m_P_cut_kaonS;
   double m_IP_cut_kaonS;
   double m_phicut_kaonS;
   double m_etacut_kaonS;
   double m_dQcut_kaonS;
 
-  double m_AXPt_cut_pionS;
-  double m_AXP_cut_pionS;
+  double m_Pt_cut_pionS;
+  double m_P_cut_pionS;
   double m_IP_cut_pionS;
   double m_dQcut_pionS;
   double m_dQ2cut_pionS;
@@ -90,7 +84,10 @@ private:
   double m_ProbMin;
   double m_VchOmega;
 
-  bool m_RequireL0, m_RequireL1, m_RequireHLT, m_RequireTamp;
+  bool m_RequireL0, m_RequireL1, m_RequireHLT;
+  bool  m_RequireTrigger, m_RequireTamp;
+
 };
+
 //===========================================================================//
 #endif // USER_BTAGGING_H

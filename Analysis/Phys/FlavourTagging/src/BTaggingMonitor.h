@@ -1,4 +1,4 @@
-// $Id: BTaggingMonitor.h,v 1.5 2005-02-02 07:10:27 pkoppenb Exp $
+// $Id: BTaggingMonitor.h,v 1.6 2005-03-01 09:57:05 musy Exp $
 #ifndef BTAGGINGMONITOR_H 
 #define BTAGGINGMONITOR_H 1
 
@@ -15,7 +15,6 @@
 #include "DaVinciMCTools/IDebugTool.h"
 #include "Event/GenMCLink.h"
 #include "Event/TrgDecision.h"
-#include "Event/SelResult.h"
 
 // from DaVinci
 #include "Kernel/DVAlgorithm.h"

@@ -38,5 +38,3 @@ CheatedSelection.Cheating.Location = "Phys/Relations/Cheating";
 CheatedSelection.Cheating.AlgorithmName = "myAsctAlgCheat";
 myAsctAlgCheat.InputData = {"/Event/Phys/Combined/Particles"};
 myAsctAlgCheat.OutputLevel = 4;
-
-//################################################################

@@ -74,7 +74,7 @@ StatusCode CheatedSelection::execute() {
 
   ////////////////////////////////////////////////////
   const ParticleVector& Parts = desktop()->particles();
-  const VertexVector&   Verts = desktop()->vertices();
+  const VertexVector&   Verts = desktop()->primaryVertices();
   debug()<< "Parts=" << Parts.size() << "  NVerts=" << Verts.size()<< endreq;
 
   //----------------------------------------------------------------------
@@ -124,9 +124,8 @@ StatusCode CheatedSelection::execute() {
     err() << "Unable to save selected B particle in desktop" << endreq;
     return StatusCode::SUCCESS;
   }
-  double massB = candB.momentum().m()/GeV;
   debug() << "Reconstructed "<< candB.particleID().pid()
-	  << " with m="      << massB
+	  << " with m="      << candB.momentum().m()/GeV
 	  << " p="           << candB.p()/GeV 
 	  << " pt="          << candB.pt()/GeV <<endreq;
 
@@ -137,11 +136,6 @@ StatusCode CheatedSelection::execute() {
     warning() << "Unable to save Tree to TES" << endreq;
     return StatusCode::SUCCESS;
   }
-  debug() << "Event Saved to TES." <<endreq;
-
-  info() << "Selected " << evt->runNum()
-	 << std::setw(4)<< evt->evtNum()
-	 << "  " << massB <<endreq;
 
   setFilterPassed( true );
   return StatusCode::SUCCESS;

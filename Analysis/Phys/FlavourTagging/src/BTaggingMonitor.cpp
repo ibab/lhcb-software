@@ -1,4 +1,4 @@
-// $Id: BTaggingMonitor.cpp,v 1.4 2005-02-02 07:10:27 pkoppenb Exp $
+// $Id: BTaggingMonitor.cpp,v 1.5 2005-03-01 09:57:05 musy Exp $
 // local
 #include "BTaggingMonitor.h"
 
@@ -49,14 +49,9 @@ StatusCode BTaggingMonitor::initialize() {
 // Main execution
 //=============================================================================
 StatusCode BTaggingMonitor::execute() {
-
-  if( !filterPassed() ) {
-    debug() << "Event was not selected. "<< endreq;
-    setFilterPassed( false );
-    return StatusCode::SUCCESS;
-  }
-  setFilterPassed( true );
  
+  setFilterPassed( false );
+
   // Retrieve informations about event
   EventHeader* evt = get<EventHeader> (EventHeaderLocation::Default);
   if ( !evt ) {
@@ -127,6 +122,7 @@ StatusCode BTaggingMonitor::execute() {
     else if(tagdecision == -truetag) nwt[ix]++;
   }
 
+  setFilterPassed( true );
   return StatusCode::SUCCESS;
 };
 

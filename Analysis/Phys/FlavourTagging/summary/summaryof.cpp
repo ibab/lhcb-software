@@ -55,14 +55,14 @@ int main(int argc, char **argv) {
       in >> tag;
       in >> categ;
       in >> fm; in >> fe; in >> fk; in >> fS; in >> fV;
-    } else continue;
-
-    in >> flagstring;
-    if(flagstring == "MON") { //reads in from BTaggingMonitor
+      continue; //read next
+    } 
+    else if(flagstring == "MON") { //reads in from BTaggingMonitor
       in >> tag;
       in >> categ;
       in >> truetag;
-    } 
+    } else continue;
+
  
     //---------------------------------- optional cuts
     //if( mass < 5.0 ) continue; 

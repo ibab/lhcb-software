@@ -1,4 +1,4 @@
-// $Id: CheatedSelection.h,v 1.7 2005-02-02 07:10:27 pkoppenb Exp $
+// $Id: CheatedSelection.h,v 1.8 2005-03-01 09:57:05 musy Exp $
 #ifndef USER_CheatedSelection_H 
 #define USER_CheatedSelection_H 1
 
