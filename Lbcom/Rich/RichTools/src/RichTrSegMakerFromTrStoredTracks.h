@@ -4,8 +4,11 @@
  *  Header file for tool : RichTrSegMakerFromTrStoredTracks
  *
  *  CVS Log :-
- *  $Id: RichTrSegMakerFromTrStoredTracks.h,v 1.5 2004-10-13 09:54:04 jonrob Exp $
+ *  $Id: RichTrSegMakerFromTrStoredTracks.h,v 1.6 2004-12-13 17:28:31 jonrob Exp $
  *  $Log: not supported by cvs2svn $
+ *  Revision 1.5  2004/10/13 09:54:04  jonrob
+ *  various minor changes
+ *
  *  Revision 1.4  2004/07/27 17:01:02  jonesc
  *  Add option to turn off individual radiators in RichTrackSegment maker tool
  *
@@ -57,7 +60,7 @@
 #include "CLHEP/Random/RandFlat.h"
 #include "CLHEP/Units/PhysicalConstants.h"
 
-/** @class RichTrSegMakerFromTrStoredTracks RichTrSegMakerFromTrStoredTracks.h RichDetTools/RichTrSegMakerFromTrStoredTracks.h
+/** @class RichTrSegMakerFromTrStoredTracks RichTrSegMakerFromTrStoredTracks.h
  *
  *  Tool to create RichTrackSegments from TrStoredTracks. Use the tracking extrapolation tools
  *  to access the state information at the entrance and exit points to the radiators, which is
