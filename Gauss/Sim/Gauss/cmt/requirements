@@ -36,14 +36,8 @@ use CaloDetXmlCnv       v2r2    Det
 #optional visualisation and UI
 #use GiGaVisUI           v2r0    Sim
 
-#optional GaussImports
-#use GaussImports       v4r0    Sim
-
 # generator
 use GeneratorModules    v7r0    Gen
-
-# optional generator: 
-#use EvGen              v4r0    Sim 
 
 #geometry source 
 use XmlDDDB             v16r1   Det 
