@@ -1,8 +1,11 @@
-// $Id: DumpG4Step.cpp,v 1.2 2004-02-22 13:38:19 ibelyaev Exp $
+// $Id: DumpG4Step.cpp,v 1.3 2004-02-22 16:51:09 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2004/02/22 13:38:19  ibelyaev
+//  relocate DumpG4*.h files
+//
 // Revision 1.1  2004/02/20 18:13:35  ibelyaev
 //  major update in GiGaBase and GiGaTrajectory
 // 
@@ -36,20 +39,36 @@ namespace GiGaUtil
    * 
    *  simple function to dump G4Step
    *
-   *  @param stream output stream 
-   *  @param track pointer to G4Step
-   *  @return outptut stream 
+   *  @param  step pointer to G4Step
+   *  @param  stream output stream 
+   *  @return output stream 
    *
    *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
    *  @date   2004-02-20
    */
-  std::ostream&  DumpG4Step  ( std::ostream& stream , 
-                               const G4Step* step   ) 
+  std::ostream&  DumpG4Step
+  ( const G4Step* step   ,
+    std::ostream& stream ) { return DumpG4Step ( stream , step ) ; }
+
+  /** @fn DumpG4Step 
+   * 
+   *  simple function to dump G4Step
+   *
+   *  @param  stream output stream 
+   *  @param  step pointer to G4Step
+   *  @return output stream 
+   *
+   *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+   *  @date   2004-02-20
+   */
+  std::ostream&  DumpG4Step  
+  ( std::ostream& stream , 
+    const G4Step* step   ) 
   {
     static const std::string s_name  = " GiGaUtil::DumpG4Step  " ;
     static const std::string s_stars = std::string ( 50 , '*' ) ;
     //
-    stream << s_name << (void*) step << s_stars << std::endl ;
+    stream << s_name << (void*) step << " " << s_stars << std::endl ;
     
     if ( 0 == step  ) 
     { return stream << s_name << " G4Step*  points to NULL" << std::endl ; }

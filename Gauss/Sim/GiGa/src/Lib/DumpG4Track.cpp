@@ -1,8 +1,11 @@
-// $Id: DumpG4Track.cpp,v 1.2 2004-02-22 13:38:19 ibelyaev Exp $
+// $Id: DumpG4Track.cpp,v 1.3 2004-02-22 16:51:09 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2004/02/22 13:38:19  ibelyaev
+//  relocate DumpG4*.h files
+//
 // Revision 1.1  2004/02/20 18:13:35  ibelyaev
 //  major update in GiGaBase and GiGaTrajectory
 // 
@@ -21,6 +24,8 @@
 #include "G4LogicalVolume.hh"
 #include "G4Material.hh"     
 // ============================================================================
+// GiGa 
+// ============================================================================
 #include "GiGa/DumpG4Track.h"
 // ============================================================================
 
@@ -33,22 +38,39 @@
 
 namespace GiGaUtil
 {
-  /**  simple function to dump G4Track
+  /** @fn DumpG4Track
+   * 
+   *  simple function to dump G4Track
    *
-   *  @param stream output stream 
-   *  @param track pointer to G4Track
-   *  @return outptut stream 
+   *  @param  track  pointer to G4Track
+   *  @param  stream output stream 
+   *  @return output stream 
    *
    *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
    *  @date   2004-02-20
    */
-  std::ostream&  DumpG4Track ( std::ostream& stream , 
-                               const G4Track* track ) 
+  std::ostream& DumpG4Track 
+  ( const G4Track* track  , 
+    std::ostream&  stream ) { return DumpG4Track( stream , track ) ; }
+  
+  /**  simple function to dump G4Track
+   *
+   *  @param  stream output stream 
+   *  @param  track  pointer to G4Track
+   *  @return output stream 
+   *
+   *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+   *  @date   2004-02-20
+   */
+  std::ostream&  DumpG4Track 
+  ( std::ostream& stream , 
+    const G4Track* track ) 
   {
     static const std::string s_name  = " GiGaUtil::DumpG4Track " ;
     static const std::string s_stars = std::string ( 50 , '*' ) ;
     //
-    stream << s_name << (void*) track << s_stars << std::endl ;
+    stream << s_name << (void*) track << " " << s_stars << std::endl ;
+
     if ( 0 == track ) 
     { return stream << s_name << " G4Track* points to NULL" << std::endl ; }
     

@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.94 2004-02-20 18:58:20 ibelyaev Exp $
+! $Id: release.notes,v 1.95 2004-02-22 16:51:09 ibelyaev Exp $
 ! =============================================================================
 Package:          GiGa
 Package manager : Vanya Belyaev
@@ -21,11 +21,13 @@ Package manager : Vanya Belyaev
      5) redesign the AppendStep mehtod: 
  - GiGa/GiGaBase.h src/Lib/GiGaBase.cpp
      make usage of GaudiTool base 
-- src/Lib/DumpG4Track.h, src/Lib/DumpG4Track.cpp 
+ - GiGaDumpG4Track.h, src/Lib/DumpG4Track.cpp 
      new function for extensive G4Track dump
-- src/Lib/DumpG4Stack.h, src/Lib/DumpG4Stack.cpp 
-     new function for extensive G4Track dump
-- cmt/requirements 
+ - GiGa/DumpG4Step.h, src/Lib/DumpG4Step.cpp 
+     new function for extensive G4Step dump
+ - GiGa/DumpG4Event.h, src/Lib/DumpG4Event.cpp 
+     new function for extensive G4Event dump
+ - cmt/requirements 
      1) add "use GaudiTools v*"
      2) increase teh version to GiGa v16r0   
 
