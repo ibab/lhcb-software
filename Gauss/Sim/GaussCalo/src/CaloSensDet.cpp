@@ -1,8 +1,11 @@
-// $Id: CaloSensDet.cpp,v 1.10 2003-07-08 19:40:57 ibelyaev Exp $ 
+// $Id: CaloSensDet.cpp,v 1.11 2003-07-08 19:54:48 ibelyaev Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.10  2003/07/08 19:40:57  ibelyaev
+//  Sensitive Plane Detector + improved printout
+//
 // ============================================================================
 /// SRD & STD 
 #include <algorithm>
@@ -205,7 +208,7 @@ StatusCode CaloSensDet::finalize    ()
                  (long) m_hitsMin                                       ,
                  (long) m_hitsMax                                       ) ;
       log << 
-        format ( " <#SubHits>/Min/Max=(%3d+-%3d)/%d/%4d "               , 
+        format ( " <#SubHits>/Min/Max=(%4d+-%4d)/%d/%4d "               , 
                  (long) m_shits                                         , 
                  (long) sqrt ( fabs( m_shits2 - m_shits * m_shits ) )   ,
                  (long) m_shitsMin                                      ,
@@ -364,7 +367,7 @@ void CaloSensDet::EndOfEvent( G4HCofThisEvent* HCE )
   MsgStream log ( msgSvc() , name() ) ;
   log << MSG::DEBUG <<
     format 
-    ( " #CaloHits=%4d #CaloSubHits=%4d #TimeSlots=%4d Energy=%.3g GeV",
+    ( " #CaloHits=%4d #CaloSubHits=%4d #TimeSlots=%4d Energy[GeV]=%.3g ",
       nhits , nshits , nthits , energy/GeV ) << endreq ;
 };
 // ============================================================================
