@@ -5,8 +5,15 @@
 ! Purpose     : LHCb OO kernel packages
 !-----------------------------------------------------------------------------
 
+!======================= LHCbSys v16r1 2004-07-26 =======================
+This version is built against Gaudi v15r1
+
+! 2004-07-26 - Marco Cattaneo
+ - Modified packages: KernelSys v4r0p1, LHCbKernel v5r0p1,
+                      EventSys v18r0p1, CaloEvent v13r3
+
 !======================= LHCbSys v16r0 2004-07-19 =======================
-This version is built against Gaudi v15
+This version is built against Gaudi v15r0
 
 ! 2004-07-19 - Marco Cattaneo
  - New packages: LHCbInterfaces v1r0 (for public interfaces of tools etc.)

@@ -1,5 +1,5 @@
 package LHCbSys
-version v16r0
+version v16r1
 
 branches doc cmt
 
@@ -7,7 +7,7 @@ branches doc cmt
 # LHCb packages used by all applications
 #===============================================================
 
-use LHCb		v16r0
+use LHCb		v16r1
 
 use GaudiConf		v8r0
 
@@ -15,8 +15,8 @@ use GaudiConf		v8r0
 use HepMC	v4r121p0	Sim
 
 # Kernel packages
-use KernelSys   	v4r0	Kernel
-use LHCbKernel  	v5r0	Kernel
+use KernelSys   	v4r0p1	Kernel
+use LHCbKernel  	v5r0p1	Kernel
 use CaloKernel  	v3r1	Calo
 use MuonKernel  	v2r6	Muon
 use TrKernel    	v11r4	Tr
@@ -39,14 +39,14 @@ use RichDet		v8r0	Det
 use STDet          	v1r2	Det
 
 # Event data model
-use EventSys		v18r0	Event
+use EventSys		v18r0p1	Event
 use Event        	v4r5	Event
 use VeloEvent    	v13r0p1	Event
 use ITEvent      	v13r2	Event
 use OTEvent      	v13r0	Event
 use TrEvent      	v13r1	Event
 use RichEvent    	v7r4	Event
-use CaloEvent    	v13r2p1	Event
+use CaloEvent    	v13r3	Event
 use MuonEvent    	v3r1	Event
 use L0Event      	v14r1p1	Event
 use PhysEvent    	v8r4	Event
