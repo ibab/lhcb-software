@@ -1,4 +1,4 @@
-// $Id: DaDiCppDict.cpp,v 1.4 2001-10-09 17:35:53 mato Exp $
+// $Id: DaDiCppDict.cpp,v 1.5 2001-10-10 17:11:39 mato Exp $
 
 #include "GaudiKernel/Kernel.h"
 
@@ -365,7 +365,8 @@ void DDBEdict::printCppDictionary(DaDiPackage* gddPackage, char* envXmlDB, char*
         }
     metaOut << "#include \"" << impName << ".h\"" << std::endl;
 
-  metaOut << "#undef private" << std::endl << std::endl << "#include \"GaudiIntrospection/Introspection.h\"" 
+  metaOut << "#undef private" << std::endl << std::endl 
+    << "#include \"GaudiIntrospection/Introspection.h\"" 
     << std::endl << std::endl << std::endl;
 
 //
@@ -400,21 +401,37 @@ void DDBEdict::printCppDictionary(DaDiPackage* gddPackage, char* envXmlDB, char*
   for(i=0; i<gddClass->sizeDaDiAttribute(); ++i)
   {
     DaDiAttribute* gddAttribute = gddClass->popDaDiAttribute();
-    metaOut << "    metaC->addField(\""
+ 
+/*    metaOut << "    metaC->addField(\""
       << gddAttribute->name().transcode() << "\", \"" << gddAttribute->type().transcode()
       << "\", \"" << gddAttribute->desc().transcode() << "\", &(("
       << gddClass->className().transcode() << "*)0)->m_" << gddAttribute->name().transcode()
       << ");" << std::endl << std::endl;
+*/
+  
+    metaOut << "    new MetaField(\""
+      << gddAttribute->name().transcode() << "\", \"" << gddAttribute->type().transcode()
+      << "\", \"" << gddAttribute->desc().transcode() << "\", &(("
+      << gddClass->className().transcode() << "*)0)->m_" << gddAttribute->name().transcode()
+      << ", metaC);" << std::endl << std::endl;
   }
 
   for(i=0; i<gddClass->sizeDaDiRelation(); ++i)
   {
     DaDiRelation* gddRelation = gddClass->popDaDiRelation();
-    metaOut << "    metaC->addField(\""
+
+/*  metaOut << "    metaC->addField(\""
       << gddRelation->name().transcode() << "\", \"" << gddRelation->type().transcode()
       << "\", \"" << gddRelation->desc().transcode() << "\", &(("
       << gddClass->className().transcode() << "*)0)->m_" << gddRelation->name().transcode()
       << ");" << std::endl << std::endl;
+*/
+
+    metaOut << "    new MetaField(\""
+      << gddRelation->name().transcode() << "\", \"" << gddRelation->type().transcode()
+      << "\", \"" << gddRelation->desc().transcode() << "\", &(("
+      << gddClass->className().transcode() << "*)0)->m_" << gddRelation->name().transcode()
+      << ", metaC);" << std::endl << std::endl;
   }
 
 
