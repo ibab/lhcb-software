@@ -3,6 +3,10 @@ Package manager : N.N.
 
 !===========================================================================
 ! 20010322 - Vanya Belyaev
+    src/GiGaSensDetBase.cpp 
+      remove compilation warning on NT 
+!===========================================================================
+! 20010322 - Vanya Belyaev
        remove claches with allocated InterfaceID
       GiGa/IIDIGIGaMagField.h 
       GiGa/IIDIGIGaMagFieldFactory.h 

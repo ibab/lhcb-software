@@ -113,7 +113,7 @@ StreamBuffer& GiGaSensDetBase::serialize( StreamBuffer& S )
   int    tmp     ; 
   S >> m_detName >> tmp ; 
   ///
-  m_active = (bool) tmp ;   
+  m_active = tmp ? true : false ;   
   ///
   return S;       
 };  
@@ -124,6 +124,10 @@ StreamBuffer& GiGaSensDetBase::serialize( StreamBuffer& S ) const
   return S << m_detName << (int) m_active ;
 }; 
 //////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+
+
 
 
 
