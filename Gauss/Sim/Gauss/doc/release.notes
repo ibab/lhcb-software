@@ -5,6 +5,9 @@
 !-----------------------------------------------------------------------------
 
 !========================== Gauss v19r0 ==================================
+! 2005-01-26 - Florence Ranjard
+ - use Geant4Files v52r0 , remove it from Geant4/G4config
+
 ! 2005-01-25 - Florence RANJARD
  - release_notes.html and doxygen documentation are within GaussSys
 

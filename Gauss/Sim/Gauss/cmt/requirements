@@ -18,6 +18,7 @@ use XmlDDDB             v23r1   Det   -no_auto_imports
 use FieldMap            v4r5          -no_auto_imports
 use DecFiles            v6r4    Gen   -no_auto_imports
 use ParamFiles          v3r9          -no_auto_imports
+use Geant4Files		v52r0	      -no_auto_imports
 
 #========================================================================
 #generator
