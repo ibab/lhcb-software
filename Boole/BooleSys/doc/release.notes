@@ -12,7 +12,7 @@
  - Packages modified: ITAlgorithms v14r0, ITCheckers v2r0, 
                       TrgTools v2r1, TrgVeloTT v2r0, RichUtils v3r7,
                       RichDetTools v3r6, RichDAQ v1r2, RichReadout v1r5,
-                      MuonAlgs v5r1, L0Calo v7r3
+                      MuonAlgs v5r1, L0Calo v7r3, L1Reco v2r1
 
  - Packages removed:  L1VeloTrack, L1Decision
 

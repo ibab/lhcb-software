@@ -23,7 +23,7 @@ use TrgTools            v2r1    Trg
 use TrgChecker          v2r0    Trg
 use TrgVelo             v2r0    Trg
 use TrgVeloTT           v2r0    Trg
-use L1Reco              v2r0    Trg
+use L1Reco              v2r1    Trg
 
 # Calorimeter
 use CaloMonitor         v1r6  	Calo
