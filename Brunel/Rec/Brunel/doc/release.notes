@@ -3,7 +3,7 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
-</PRE><H1><A NAME=v23r4>2004-03-25 Brunel v23r4</A></H1><PRE>
+</PRE><H1><A NAME=v23r4>2004-03-26 Brunel v23r4</A></H1><PRE>
 
  Requires data produced by Boole v5r3 or later
  Tuned for XmlDDDB v22r0
@@ -11,6 +11,9 @@ Purpose: LHCb reconstruction program
 - New features
   . Field045 map is available. To use it, add the option
     MagneticFieldSvc.FieldMapFile = "$FIELDMAPROOT/cdf/field045.cdf";
+
+- New tuning
+  . Update signal to noise cuts to be consistent with Boole (ITAlgorithms v14r2)
 
 - Packaging changes:
   . Remove unnecessary dependency on VeloAlgorithms
