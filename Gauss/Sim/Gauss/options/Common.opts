@@ -17,7 +17,6 @@ ApplicationMgr.DLLs += { "GaudiAlg"} ;
 ApplicationMgr.DLLs += { "GaussTools"} ;
 ApplicationMgr.DLLs += { "GaussAlgs"  } ;
 ApplicationMgr.DLLs += { "GeneratorModules" } ;
-
 RndmGenSvc.Engine.SetSingleton = true;
 
 ApplicationMgr.HistogramPersistency = "NONE";
@@ -32,7 +31,7 @@ MessageSvc.setWarning += { "XmlGenericCnv" };
 ApplicationMgr.EvtSel  = "NONE" ;
 
 ApplicationMgr.TopAlg  = 
-{ "GaussInitialisation/GaussInit", "Sequencer/Generator"};
+{ "GaussInitialisation/GaussInit" };
 
 #include "$GAUSSOPTS/PythiaSettings.opts"
 

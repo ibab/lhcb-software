@@ -1,11 +1,12 @@
-// $Id: Gauss.opts,v 1.47 2004-04-22 09:21:03 ranjard Exp $ 
+// $Id: Gauss.opts,v 1.48 2004-04-22 12:19:10 ranjard Exp $ 
 
 #include "$GAUSSOPTS/Common.opts"
 
 // =============== specific to this job =====================================
+
+// to run event generator
+ApplicationMgr.TopAlg += { "Sequencer/Generator"};
 #include "$GAUSSOPTS/Generator.opts"
-// to simulate <evttype>
-#include "$DECFILESROOT/options/61.opts"
 
 // to run Detector simulation, remove it if GenStandAlone
 ApplicationMgr.TopAlg += { "Sequencer/Simulation"};
@@ -27,4 +28,5 @@ GaussInit.FirstEventNumber = 1;
 GaussInit.RunNumber = 1;
 MessageSvc.OutputLevel    = 3;
  
-#include "$DECFILESROOT/options/20013_016.8GeV.opts"
+// to simulate <evttype>
+#include "$DECFILESROOT/options/61.opts"
