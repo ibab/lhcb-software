@@ -1,4 +1,4 @@
-// $Id: VertexChargeTaggingTool.cpp,v 1.2 2003-06-16 12:30:38 odie Exp $
+// $Id: VertexChargeTaggingTool.cpp,v 1.3 2003-06-20 09:11:11 odie Exp $
 #include <algorithm>
 #include <iomanip>
 
@@ -62,11 +62,11 @@ VertexChargeTaggingTool::VertexChargeTaggingTool( const std::string &type,
   declareProperty( "MinSeedPrimDistanceCut", m_minSeedPrimDist = 1.0*mm );
   declareProperty( "MinKshortMassWindowCut", m_minKS0Mass = 0.49*GeV );
   declareProperty( "MaxKshortMassWindowCut", m_maxKS0Mass = 0.505*GeV );
-  declareProperty( "MinSeedLikelyhoodCut", m_minSeedLikelyhood = 0.2 );
+  declareProperty( "MinSeedLikelyhoodCut", m_minSeedLikelyhood = 0.32 );
   declareProperty( "MaxIPErrorCut", m_maxIPErr = 1.5 );
   declareProperty( "MinSignificantIPCut", m_minSIP = 1.8 );
   declareProperty( "MaxSignificantIPCut", m_maxSIP = 100.0 );
-  declareProperty( "MinLikelyhoodCut", m_minLikelyhood = 2.0 );
+  declareProperty( "MinLikelyhoodCut", m_minLikelyhood = 0.2 );
   declareProperty( "MaxChi2NDoFCut", m_maxChi2NDoF = 5.0 );
   declareProperty( "MinPrimDistCut", m_minPrimDist = 1.0*mm );
   declareProperty( "MaxAdditionalSignificantIPCut", m_maxAddSIP = 3.0 );
@@ -303,6 +303,9 @@ void VertexChargeTaggingTool::tagFromList( const Particle &theB,
     if( sc.isFailure() ) continue;
     if( error1 > m_maxSeedIPErr ) continue;
     if((impact1/error1<m_minSeedSIP) || (impact1/error1>m_maxSeedSIP)) continue;
+    if( std::find(KshortsProds.begin(), KshortsProds.end(), *c1)
+        != KshortsProds.end() )
+      continue; // This is a pion from a Kshort
 
     for( c2 = c1+1; c2 != candidates.end(); c2++ ) {
       ProtoParticle *proto = dynamic_cast<ProtoParticle *>((*c2)->origin());
@@ -312,6 +315,9 @@ void VertexChargeTaggingTool::tagFromList( const Particle &theB,
       if( sc.isFailure() ) continue;
       if( error2 > m_maxSeedIPErr ) continue;
       if((impact2/error2<m_minSeedSIP) || (impact2/error2>m_maxSeedSIP)) continue;
+      if( std::find(KshortsProds.begin(), KshortsProds.end(), *c2)
+          != KshortsProds.end() )
+        continue; // This is a pion from a Kshort
 
       Vertex vtx;
       sc = m_vtxFitter->fitVertex(**c1, **c2, vtx);
@@ -326,6 +332,10 @@ void VertexChargeTaggingTool::tagFromList( const Particle &theB,
           (((*c1)->momentum() + (*c2)->momentum()).m() < m_maxKS0Mass ) ) {
         KshortsProds.push_back(*c1);
         KshortsProds.push_back(*c2);
+        c1 = candidates.begin();
+        c2 = c1+1;
+        seed1 = seed2 = NULL;
+        maxlikelyhood = 0.0;
         continue;
       }
       double probip1 = ipprob(impact1/error1);
@@ -347,12 +357,15 @@ void VertexChargeTaggingTool::tagFromList( const Particle &theB,
   theTag.setDecision( FlavourTag::none );
   theTag.setTaggedB( &theB );
   theTag.setType( FlavourTag::vertexCharge );
-
+  
   if( maxlikelyhood < m_minSeedLikelyhood )
     return;
 
   log << MSG::DEBUG << "Found a seed" << endreq;
-    
+
+  log << MSG::DEBUG << "Seed 1: P: " << seed1->p() << " Pt: " << seed1->pt() << " ID: " << seed1->particleID().pid() << endreq;
+  log << MSG::DEBUG << "Seed 2: P: " << seed2->p() << " Pt: " << seed2->pt() << " ID: " << seed2->particleID().pid() << endreq;
+  
   ParticleVector vtxProds;
   vtxProds.clear();
   vtxProds.push_back(seed1);
@@ -383,8 +396,15 @@ void VertexChargeTaggingTool::tagFromList( const Particle &theB,
     vtxProds.push_back(*c);
     Vertex vtx;
     sc = m_vtxFitter->fitVertex(vtxProds, vtx);
-    if( sc.isFailure() || (vtx.chi2()/vtx.nDoF() > m_maxChi2NDoF) ||
-        (vtx.position().z() - thePrimVtx.position().z() < m_minPrimDist) ) {
+    if( sc.isFailure() ) {
+      vtxProds.pop_back();
+      continue;
+    }
+    if( (vtx.chi2()/vtx.nDoF() > m_maxChi2NDoF) ) {
+      vtxProds.pop_back();
+      continue;
+    }
+    if( (vtx.position().z() - thePrimVtx.position().z() < m_minPrimDist) ) {
       vtxProds.pop_back();
       continue;
     }
