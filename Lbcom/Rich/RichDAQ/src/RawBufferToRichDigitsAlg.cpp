@@ -4,8 +4,11 @@
  *  Implementation file for RICH DAQ algorithm : RawBufferToRichDigitsAlg
  *
  *  CVS Log :-
- *  $Id: RawBufferToRichDigitsAlg.cpp,v 1.7 2004-07-27 13:46:06 jonrob Exp $
+ *  $Id: RawBufferToRichDigitsAlg.cpp,v 1.8 2004-10-13 09:16:27 jonrob Exp $
  *  $Log: not supported by cvs2svn $
+ *  Revision 1.7  2004/07/27 13:46:06  jonrob
+ *  Add doxygen file documentation and CVS information
+ *
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   2003-11-09
@@ -41,19 +44,21 @@ RawBufferToRichDigitsAlg::RawBufferToRichDigitsAlg( const std::string& name,
 RawBufferToRichDigitsAlg::~RawBufferToRichDigitsAlg() {};
 
 // Initialisation.
-StatusCode RawBufferToRichDigitsAlg::initialize() {
-
+StatusCode RawBufferToRichDigitsAlg::initialize() 
+{
   // intialise base
-  StatusCode sc = RichAlgBase::initialize();
+  const StatusCode sc = RichAlgBase::initialize();
   if ( sc.isFailure() ) { return sc; }
+
+  // Add customisation here
 
   return StatusCode::SUCCESS;
 };
 
 
 // Main execution
-StatusCode RawBufferToRichDigitsAlg::execute() {
-
+StatusCode RawBufferToRichDigitsAlg::execute() 
+{
   debug() << "Execute" << endreq;
 
   // Retrieve the RawEvent:
@@ -102,18 +107,16 @@ unsigned int
 RawBufferToRichDigitsAlg::decodeZeroSuppressedBank( const RawBank & bank ) const {
 
   // Get the link identifier
-  RichDAQLinkNumber linkN( bank.bankSourceID() );
-
-  // Create a RichSmartID for the PD
-  RichSmartID pdID(linkN.rich(),linkN.panel(),linkN.pdRow(),linkN.pdCol(),0,0);
+  const RichDAQLinkNumber linkN( bank.bankSourceID() );
 
   // Get the bank header
-  RichDAQHeaderPD bankHeader( bank.data()[0] );
+  const RichDAQHeaderPD bankHeader( bank.data()[0] );
 
   // How many digits do we expect to make
-  RichDAQ::ShortType digitCount = bankHeader.hitCount();
+  const RichDAQ::ShortType digitCount = bankHeader.hitCount();
 
   if ( msgLevel(MSG::VERBOSE) ) {
+    const RichSmartID pdID(linkN.rich(),linkN.panel(),linkN.pdRow(),linkN.pdCol(),0,0);
     verbose()  << "Decoding " << digitCount << " zero suppressed hits for PD "
                << pdID << endreq
                << " Header : " << bankHeader << endreq;
@@ -124,35 +127,32 @@ RawBufferToRichDigitsAlg::decodeZeroSuppressedBank( const RawBank & bank ) const
   for ( int iEntry = 1; iEntry < bank.dataSize(); ++iEntry ) {
 
     // Get triplet data
-    RichZSHitTriplet triplet( bank.data()[iEntry] );
+    const RichZSHitTriplet triplet( bank.data()[iEntry] );
     if ( msgLevel(MSG::VERBOSE) ) verbose() << " Decoding triplet " << triplet << endreq;
 
     // Make first digit from triplet
     if ( nDigitsMade >= digitCount ) break;
-    RichSmartID newID0( pdID.rich(), pdID.panel(),
-                        pdID.PDRow(), pdID.PDCol(),
-                        triplet.row0(), triplet.col0() );
+    m_digits->insert( new RichDigit(),
+                      RichSmartID( linkN.rich(), linkN.panel(),
+                                   linkN.pdRow(), linkN.pdCol(),
+                                   triplet.row0(), triplet.col0() ) );
     ++nDigitsMade;
-    RichDigit * newDigit0 = new RichDigit();
-    m_digits->insert( newDigit0, newID0 );
 
     // Make second digit from triplet
     if ( nDigitsMade >= digitCount ) break;
-    RichSmartID newID1( pdID.rich(), pdID.panel(),
-                        pdID.PDRow(), pdID.PDCol(),
-                        triplet.row1(), triplet.col1() );
+    m_digits->insert( new RichDigit(),
+                      RichSmartID( linkN.rich(), linkN.panel(),
+                                   linkN.pdRow(), linkN.pdCol(),
+                                   triplet.row1(), triplet.col1() ) );
     ++nDigitsMade;
-    RichDigit * newDigit1 = new RichDigit();
-    m_digits->insert( newDigit1, newID1 );
 
     // Make third digit from triplet
     if ( nDigitsMade >= digitCount ) break;
-    RichSmartID newID2( pdID.rich(), pdID.panel(),
-                        pdID.PDRow(), pdID.PDCol(),
-                        triplet.row2(), triplet.col2() );
+    m_digits->insert( new RichDigit(),
+                      RichSmartID( linkN.rich(), linkN.panel(),
+                                   linkN.pdRow(), linkN.pdCol(),
+                                   triplet.row2(), triplet.col2() ) );
     ++nDigitsMade;
-    RichDigit * newDigit2 = new RichDigit();
-    m_digits->insert( newDigit2, newID2 );
 
   }
 
@@ -163,25 +163,23 @@ unsigned int
 RawBufferToRichDigitsAlg::decodeNonZeroSuppressedBank( const RawBank & bank ) const {
 
   // Get the link identifier
-  RichDAQLinkNumber linkN( bank.bankSourceID() );
-
-  // Create a RichSmartID for the PD
-  RichSmartID pdID(linkN.rich(),linkN.panel(),linkN.pdRow(),linkN.pdCol(),0,0);
+  const RichDAQLinkNumber linkN( bank.bankSourceID() );
 
   // Get the bank header
-  RichDAQHeaderPD bankHeader( bank.data()[0] );
+  const RichDAQHeaderPD bankHeader( bank.data()[0] );
 
   // How many digits do we expect to make
-  RichDAQ::ShortType digitCount = bankHeader.hitCount();
+  const RichDAQ::ShortType digitCount = bankHeader.hitCount();
 
   if ( msgLevel(MSG::VERBOSE) ) {
+    const RichSmartID pdID(linkN.rich(),linkN.panel(),linkN.pdRow(),linkN.pdCol(),0,0);
     verbose() << "Decoding " << digitCount << " non-zero suppressed hits for PD "
               << pdID << endreq
               << " Header : " << bankHeader << endreq;
   }
 
   // Create a block of non-zero suppressed data from RawBank
-  RichNonZeroSuppData nonZSdata( bank );
+  const RichNonZeroSuppData nonZSdata( bank );
 
   // Get new SmartIDs
   RichDAQ::SmartIDs IDs;
@@ -192,8 +190,7 @@ RawBufferToRichDigitsAlg::decodeNonZeroSuppressedBank( const RawBank & bank ) co
   for ( RichDAQ::SmartIDs::const_iterator iID = IDs.begin();
         iID != IDs.end(); ++iID ) {
     if ( msgLevel(MSG::VERBOSE) ) verbose() << "  Hit " << *iID << endreq;
-    RichDigit * newDigit = new RichDigit();
-    m_digits->insert( newDigit, *iID );
+    m_digits->insert( new RichDigit(), *iID );
   }
 
   return digitCount;
@@ -202,8 +199,6 @@ RawBufferToRichDigitsAlg::decodeNonZeroSuppressedBank( const RawBank & bank ) co
 //  Finalize
 StatusCode RawBufferToRichDigitsAlg::finalize()
 {
-  debug() << "Finalise" << endreq;
-
   // finalise base
   return RichAlgBase::finalize();
 }

@@ -4,8 +4,11 @@
  *  Implementation file for RICH DAQ algorithm : MCRichDigitsToRawBufferAlg
  *
  *  CVS Log :-
- *  $Id: MCRichDigitsToRawBufferAlg.cpp,v 1.5 2004-07-27 13:46:06 jonrob Exp $
+ *  $Id: MCRichDigitsToRawBufferAlg.cpp,v 1.6 2004-10-13 09:16:27 jonrob Exp $
  *  $Log: not supported by cvs2svn $
+ *  Revision 1.5  2004/07/27 13:46:06  jonrob
+ *  Add doxygen file documentation and CVS information
+ *
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   2003-11-09
@@ -45,15 +48,8 @@ MCRichDigitsToRawBufferAlg::~MCRichDigitsToRawBufferAlg() {};
 StatusCode MCRichDigitsToRawBufferAlg::initialize() {
 
   // intialise base
-  StatusCode sc = RichAlgBase::initialize();
+  const StatusCode sc = RichAlgBase::initialize();
   if ( sc.isFailure() ) { return sc; }
-
-  // Debug messages
-  debug() << "Initialise :-" << endreq
-          << " MCRichDigit location                = " << m_digitsLoc << endreq
-          << " RawBuffer location                  = " << m_rawBuffLoc << endreq
-          << " Max hits for zero-suppressed data   = " << m_zeroSuppresCut
-          << endreq;
 
   return StatusCode::SUCCESS;
 };
@@ -94,7 +90,7 @@ StatusCode MCRichDigitsToRawBufferAlg::execute() {
     }
 
     // Add this bank to the Raw buffer
-    RichDAQHeaderPD header ( dataBank[0] );
+    const RichDAQHeaderPD header ( dataBank[0] );
     rawBuffer->addBank( header.linkNumber(), RawBuffer::Rich, dataBank );
 
   } // end photon detector loop
@@ -108,12 +104,13 @@ StatusCode MCRichDigitsToRawBufferAlg::execute() {
 void
 MCRichDigitsToRawBufferAlg::fillZeroSuppressed( RichSmartID pdID,
                                                 RichDAQ::RAWBank & dataBank,
-                                                const MCRichDigitVector & pdHits ) const {
+                                                const MCRichDigitVector & pdHits ) const
+{
 
   // Make a new header word for this PD and add to data bank
-  RichDAQLinkNumber linkNumber( pdID.rich(), pdID.panel(),
-                                pdID.PDRow(), pdID.PDCol() );
-  RichDAQHeaderPD pdHeader( true, linkNumber, pdHits.size() );
+  const RichDAQLinkNumber linkNumber( pdID.rich(), pdID.panel(),
+                                      pdID.PDRow(), pdID.PDCol() );
+  const RichDAQHeaderPD pdHeader( true, linkNumber, pdHits.size() );
   dataBank.push_back( pdHeader );
 
   // Some printout
@@ -152,12 +149,12 @@ MCRichDigitsToRawBufferAlg::fillZeroSuppressed( RichSmartID pdID,
 void
 MCRichDigitsToRawBufferAlg::fillNonZeroSuppressed( RichSmartID pdID,
                                                    RichDAQ::RAWBank & dataBank,
-                                                   const MCRichDigitVector & pdHits ) const {
-
+                                                   const MCRichDigitVector & pdHits ) const 
+{
   // Make a new header word for this PD and add to data bank
-  RichDAQLinkNumber linkNumber( pdID.rich(), pdID.panel(),
-                                pdID.PDRow(), pdID.PDCol() );
-  RichDAQHeaderPD pdHeader( false, linkNumber, pdHits.size() );
+  const RichDAQLinkNumber linkNumber( pdID.rich(), pdID.panel(),
+                                      pdID.PDRow(), pdID.PDCol() );
+  const RichDAQHeaderPD pdHeader( false, linkNumber, pdHits.size() );
   dataBank.push_back( pdHeader );
 
   if ( msgLevel(MSG::VERBOSE) ) {
@@ -171,7 +168,7 @@ MCRichDigitsToRawBufferAlg::fillNonZeroSuppressed( RichSmartID pdID,
   }
 
   // Create the non zero suppressed data block and update RAWBank
-  RichNonZeroSuppData nonZSdata( pdHits );
+  const RichNonZeroSuppData nonZSdata( pdHits );
   nonZSdata.fillRAW( dataBank );
 
   // Printout of data array
@@ -180,10 +177,8 @@ MCRichDigitsToRawBufferAlg::fillNonZeroSuppressed( RichSmartID pdID,
 }
 
 //  Finalize
-StatusCode MCRichDigitsToRawBufferAlg::finalize() {
-
-  debug() << "Finalise" << endreq;
-
+StatusCode MCRichDigitsToRawBufferAlg::finalize()
+{
   // finalise base
   return RichAlgBase::finalize();
 }

@@ -4,11 +4,13 @@
  *  Header file for RICH DAQ utility class : RichDAQHeaderPD
  *
  *  CVS Log :-
- *  $Id: RichDAQHeaderPD.h,v 1.8 2004-08-17 13:14:36 jonrob Exp $
+ *  $Id: RichDAQHeaderPD.h,v 1.9 2004-10-13 09:16:27 jonrob Exp $
  *  $Log: not supported by cvs2svn $
+ *  Revision 1.8  2004/08/17 17:54:22  jonrob
+ *  Update doxygen comments
+ *
  *  Revision 1.7  2004/07/27 13:46:06  jonrob
  *  Add doxygen file documentation and CVS information
- *
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   2003-11-06
