@@ -1,4 +1,4 @@
-//$Id: ConditionsDBGate.cpp,v 1.7 2002-03-01 16:45:07 andreav Exp $
+//$Id: ConditionsDBGate.cpp,v 1.8 2002-03-01 17:01:08 andreav Exp $
 #include <string>
 
 #ifdef __CondDBObjy__
@@ -121,7 +121,6 @@ StatusCode ConditionsDBGate::initialize()
     std::string condDBInfo;
     status = i_buildCondDBInfo( condDBInfo );
     if ( !status.isSuccess() ) return status;
-    log << MSG::INFO << "CondDB Oracle path is " << condDBInfo << endreq;
     m_condDBmgr->init( condDBInfo );
     log << MSG::VERBOSE << "Database successfully initialized" << endreq;
 
@@ -439,6 +438,13 @@ ConditionsDBGate::i_buildCondDBInfo( std::string& condDBInfo )
 	<< "Property condDBName not set in jobOptions" << endreq; 
     return StatusCode::FAILURE;
   }
+
+  // Create the full dummy path to the boot file
+  condDBInfo  = "user="     + m_condDBUser; // Oracle user
+  condDBInfo += ",passwd=********";         // Oracle password
+  condDBInfo += ",db="      + m_condDBHost; // Oracle DB (look in tnsnames.ora)
+  condDBInfo += ",cond_db=" + m_condDBName; // User-defined CondDB name
+  log << MSG::INFO << "CondDB Oracle path is " << condDBInfo << endreq;
 
   // Create the full path to the boot file
   condDBInfo  = "user="     + m_condDBUser; // Oracle user
