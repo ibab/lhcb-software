@@ -10,3 +10,5 @@ use MuonKernel  v2r6	Muon
 use TrKernel    v11r4	Tr
 use RichKernel  v5r2	Rich
 use VeloKernel	v1r5p1	Velo	-no_auto_imports
+use L0mConf      v2r2p3 L0
+use L0MuonKernel v2r3   L0

@@ -4,8 +4,9 @@
 ! Purpose     : collect Kernel packages
 !-----------------------------------------------------------------------------
 
-!======================== KernelSys v4r7 2005-01-27 ========================
-! 2005-01-27 - Marco Cattaneo
+!======================== KernelSys v4r7 2005-02-02 ========================
+! 2005-02-02 - Marco Cattaneo
+ - Add L0mConf v2r2p3, L0MuonKernel v2r3 (from Boole, DaVinci)
  - Use LHCbKernel v5r7, Relations v2r2
 
 !======================== KernelSys v4r6 2004-01-25 ========================
