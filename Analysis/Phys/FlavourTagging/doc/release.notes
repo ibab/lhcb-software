@@ -1,10 +1,11 @@
-! $Id: release.notes,v 1.55 2005-02-02 07:10:27 pkoppenb Exp $
+! $Id: release.notes,v 1.56 2005-02-15 07:35:36 pkoppenb Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/FlavourTagging
 ! Responsible : Marco Musy
 ! Purpose     : Provide tools and algorithm for tagging B
 !-----------------------------------------------------------------------------
 
+!========================== FlavourTagging v5r4 2005-02-15 ===================
 ! 2005-02-02 - P. Koppenburg for Marco Musy
   - src/BTagging.{h,cpp}
     . Allow the use without L0 L1 and Tampering.
