@@ -1,4 +1,4 @@
-// $Id: RichMarkovRingFinderMoni.h,v 1.7 2004-08-20 09:59:24 abuckley Exp $
+// $Id: RichMarkovRingFinderMoni.h,v 1.8 2004-09-23 16:52:53 abuckley Exp $
 #ifndef COMPONENT_RICHMARKOVRINGFINDERMONI_H 
 #define COMPONENT_RICHMARKOVRINGFINDERMONI_H 1
 
@@ -59,6 +59,22 @@ public:
   virtual StatusCode execute   ();    ///< Algorithm execution
   virtual StatusCode finalize  ();    ///< Algorithm finalization
 
+private: // inner class (a possibly redundant functor)
+
+  /// Functor for counting the total number of elements represented
+  /// by a "census" map of the form map<T, size_t>
+  template <class T>
+  class CountMap {
+  private: 
+    size_t _sum;
+  public:
+    CountMap() : _sum(0) {}
+    void operator() (std::pair<T, size_t> elem) { _sum += elem.second; }
+    operator size_t() { return _sum; }
+  };
+
+  enum MCOriginLocation {InVelo, InRich1, InTT, InMagnet, InT123, InRich2, Other};
+
 private: // methods
   StatusCode bookHistograms();
 
@@ -68,9 +84,13 @@ private: // data
   IRichMCTruthTool* m_richMCTruth;
   IRichMCTrackInfoTool* m_mcTrackInfo;
 
-  // job options
+  // Job options
   string m_mcHistPth; ///< Output MC truth histogram path
   string m_histPth;   ///< Output histogram path
+
+  /// Fraction of MCParticles associated to Markov RichRecRing pixels which must 
+  /// be exceeded for a track to be considered matched to a Markov ring
+  double m_RingMatchFractionCutoff;
 
   // Histograms
   map<string, IHistogram1D*> m_RingTrackMCType;

@@ -1,4 +1,4 @@
-// $Id: RichMarkovRingFinderAlg.cpp,v 1.9 2004-08-24 11:43:04 abuckley Exp $
+// $Id: RichMarkovRingFinderAlg.cpp,v 1.10 2004-09-23 16:52:53 abuckley Exp $
 // Include files
 
 // local
@@ -108,6 +108,7 @@ StatusCode RichMarkovRingFinderAlg<MyFinder>::initialize()
   return StatusCode::SUCCESS;
 };
 
+
 //=============================================================================
 // Main execution
 //=============================================================================
@@ -116,7 +117,7 @@ StatusCode RichMarkovRingFinderAlg<MyFinder>::execute() {
 
   debug() << "Execute" << endreq;
 
-  // Set rich event status to OK for start of Markov processing
+  // Set Rich event status to OK for start of Markov processing
   richStatus()->setEventOK(true);
 
   // First, check if track processing was aborted.
@@ -199,13 +200,15 @@ const StatusCode RichMarkovRingFinderAlg<MyFinder>::processEvent() {
   for ( typename MyFinder::RichParamsT::Circs::const_iterator iCircle = bestRPSoFar.getCircles().begin();
         iCircle != bestRPSoFar.getCircles().end(); ++iCircle ) {
 
-    typedef std::vector<const Hit*> HitsOnCircle;
+    typedef vector<const Hit*> HitsOnCircle;
     HitsOnCircle hitsOnCircle;
 
     for ( typename MyFinder::DataT::Hits::const_iterator hIt = eio.data().hits.begin();
           hIt != eio.data().hits.end(); ++hIt ) {
       const double prob = inf.probabilityHitWasMadeByGivenCircle(hIt, iCircle);
-      // *** arbitrary cut on prob that hit is associated to a ring
+      // Semi-arbitrary cut on prob that hit is associated to a ring: needs
+      // Markov-assigned probability to be greater than this for the hit to
+      // be associated with that RichRecRing
       if ( prob > m_CutoffHitOnCircleProbability ) hitsOnCircle.push_back(&(*hIt));
     }
 

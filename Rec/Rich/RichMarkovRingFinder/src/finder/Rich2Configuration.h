@@ -20,7 +20,7 @@ namespace RichMarkov {
 
     inline const double saturatedCircleTheta()       const { return Constants::saturatedCircleThetaRich2; }
     inline const double characteristicCircleRadius() const { return Constants::characteristicCircleRadiusRich2; }
-    inline const double viewRangeParameter()         const { return Constants::viewRangeParameterRich2; }
+    //inline const double viewRangeParameter()         const { return Constants::viewRangeParameterRich2; }
     inline const double realXYScaleFactor()          const { return Constants::realXYDataInputScaleFactorRich2; }
     inline double realXYDataInputScaleFactor()       const { return realXYScaleFactor(); }
     inline const double saturatedCircleRadiusInXYExternalData() const { return Constants::saturatedCircleRadiusInXYExternalDataRich2; }

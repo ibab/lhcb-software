@@ -1,4 +1,4 @@
-// $Id: RichPixelStrippingAlg.cpp,v 1.3 2004-07-12 14:52:31 jonrob Exp $
+// $Id: RichPixelStrippingAlg.cpp,v 1.4 2004-09-23 16:52:53 abuckley Exp $
 
 // local
 #include "RichPixelStrippingAlg.h"
@@ -73,7 +73,7 @@ StatusCode RichPixelStrippingAlg::execute()
       // Set "Markov-seen pixels" to be selected by stripping
       SmartRefVector<RichRecPixel> & pixels = (*iRing)->richRecPixels();
       for ( SmartRefVector<RichRecPixel>::iterator iPix = pixels.begin(); iPix != pixels.end(); ++iPix ) {
-        if ( (*iRing)->richRecSegment() )
+        if ( (*iRing)->richRecSegment() ) // if the Markov ring corresponds to a non-null track segment...
           decisionMap[*iPix] = true;
       }
     }
