@@ -1,4 +1,4 @@
-/// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/component/XmlGenericCnv.cpp,v 1.2 2001-03-13 18:05:18 sponce Exp $
+/// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/component/XmlGenericCnv.cpp,v 1.3 2001-03-14 09:24:36 sponce Exp $
 
 /// Include files
 #include "DetDesc/XmlGenericCnv.h"
@@ -447,7 +447,6 @@ void XmlGenericCnv::warning( const SAXParseException& exception ){
   delete [] aSysId;
   delete [] aMsg;
 
-  throw;
 }
 
 // -----------------------------------------------------------------------
@@ -469,7 +468,6 @@ void XmlGenericCnv::error( const SAXParseException& exception ){
   delete [] aSysId;
   delete [] aMsg;
 
-  throw;
 }
 
 // -----------------------------------------------------------------------
@@ -495,7 +493,6 @@ void XmlGenericCnv::fatalError( const SAXParseException& exception ){
   delete [] aSysId;
   delete [] aMsg;
 
-  throw;
 }
 
 // -----------------------------------------------------------------------
@@ -530,6 +527,7 @@ StatusCode XmlGenericCnv::initParser() {
     m_xmlParser->setDocumentHandler( this );
     m_xmlParser->setErrorHandler( this );
 		m_xmlParser->setValidationScheme(SAXParser::Val_Auto);
+		m_xmlParser->setExitOnFirstFatalError(false);
     return StatusCode::SUCCESS;
   }
   return StatusCode::FAILURE;

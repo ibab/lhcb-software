@@ -2,6 +2,10 @@ package DetDesc
 package manager : N.N 
 
 ===========================================================================
+! 20010314 - Sebastien Ponce
+ - Avoid non fatal error during parsing to stop the parsing
+
+===========================================================================
 ! 20010313 - Pere Mato
  - Added files ISolid.h, IPVolume.h, ILVolume.h, IDetectorElement.h, IGeometryInfo.h
    ITransportSvc.h from the GaudiKernel package.
