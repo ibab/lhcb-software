@@ -1,19 +1,12 @@
-// $Id: DeMuonGasGap.cpp,v 1.3 2002-02-21 16:38:44 dhcroft Exp $
+// $Id: DeMuonGasGap.cpp,v 1.4 2003-11-24 14:54:39 cattanem Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
-// ============================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.2  2002/01/31 10:00:09  dhcroft
-// Moved CLIDs to seperate files for Visual C linker
-//
-// ============================================================================
-#define MUONDET_DEMUONCHAMBER_CPP 1
 // ============================================================================
 
 // Include files
 #include "MuonDet/DeMuonGasGap.h"
 
-/** @file DeMuonChamber.cpp
+/** @file DeMuonGasGap.cpp
  * 
  * Implementation of class : DeMuonChamber
  *
@@ -42,4 +35,3 @@ DeMuonGasGap::DeMuonGasGap(int nStation, int nRegion,
 DeMuonGasGap::~DeMuonGasGap()
 {
 }
-

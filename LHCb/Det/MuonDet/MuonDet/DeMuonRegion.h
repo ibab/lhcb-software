@@ -1,18 +1,6 @@
-// $Id: DeMuonRegion.h,v 1.5 2002-04-08 14:54:55 dhcroft Exp $
+// $Id: DeMuonRegion.h,v 1.6 2003-11-24 14:54:39 cattanem Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
-// ============================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.4  2002/04/03 16:14:59  dhcroft
-// Added const qualifiers to DeMuonRegion accessor methods
-//
-// Revision 1.3  2002/03/20 16:43:28  dhcroft
-// Added the size of the Front end channels to the XML and the mapping from FE to logical channels
-//
-// Revision 1.2  2002/01/31 10:00:09  dhcroft
-// Moved CLIDs to seperate files for Visual C linker
-//
-//
 // ============================================================================
 #ifndef MUONDET_DEMUONREGION_H
 #define MUONDET_DEMUONREGION_H 1
@@ -23,9 +11,9 @@
 #include "MuonDet/CLID_DeMuonRegion.h"
 #include "MuonDet/MuonParameters.h"
 
-/** @class DeMuonGasGap DeMuonGasGap.h MuonDet/DeMuonGasGap.h
+/** @class DeMuonRegion DeMuonRegion.h MuonDet/DeMuonRegion.h
  *  
- *  Detector element class for a single gas gap in the muon system
+ *  Detector element class for a region in the muon system
  *
  *  The Xml converted for this object also makes all of the chamber objects
  *  at the same time. 
