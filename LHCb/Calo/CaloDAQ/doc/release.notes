@@ -4,6 +4,10 @@
 ! Purpose     : Convert Calo Digit and Trigger information to RawBuffer banks.
 !-----------------------------------------------------------------------------
 
+!========================= CaloDAQ v1r0p2 2005-03-07 =========================
+! 2005-03-07 - Marco Cattaneo
+ - Fix requirements to use DAQEvent v*
+
 !========================= CaloDAQ v1r0p1 2005-01-31 =========================
 ! 2005-01-31 - Marco Cattaneo
  - Add a missing include for Windows (no longer included via CLHEP...)

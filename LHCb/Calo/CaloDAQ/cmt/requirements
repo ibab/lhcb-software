@@ -6,7 +6,7 @@
 # http://cern.ch/lhcb-comp/Support/html/new_structure.pdf
 #============================================================================
 package           CaloDAQ
-version           v1r0p1
+version           v1r0p2
 
 #============================================================================
 # This template is an example for a standard Algorithm package
@@ -19,7 +19,7 @@ include_dirs      $(CALODAQROOT)
 # Used packages. Specify the version, * at the end specifies 'any revision'
 #    Put as many lines as needed, with all packages, without the '#'
 #============================================================================
-use	DAQEvent	v4r*	Event
+use	DAQEvent	v*	Event
 use	CaloEvent	v13r*	Event
 use     CaloDet         v6r*    Det
 use	L0Event		v14r*	Event
