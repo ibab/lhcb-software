@@ -4,6 +4,9 @@
 ! Purpose     : Utility tools for RICH reconstruction algorithms
 !------------------------------------------------------------------------------
 
+! 2003-11-02 - Chris Jones
+ - Move refractive index tools to RichDetTools
+
 !====================== RichRecTools v2r2 2003-10-17 ======================
 ! 2003-08-06 - Chris Jones
  - Continued re-organisation of tools

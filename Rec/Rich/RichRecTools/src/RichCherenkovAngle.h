@@ -1,4 +1,4 @@
-// $Id: RichCherenkovAngle.h,v 1.1 2003-08-06 11:08:12 jonrob Exp $
+// $Id: RichCherenkovAngle.h,v 1.2 2003-11-02 21:51:23 jonrob Exp $
 #ifndef RICHRECTOOLS_RICHCHERENKOVANGLE_H
 #define RICHRECTOOLS_RICHCHERENKOVANGLE_H 1
 
@@ -11,7 +11,7 @@
 // interfaces
 #include "RichRecBase/IRichCherenkovAngle.h"
 #include "RichRecBase/IRichExpectedTrackSignal.h"
-#include "RichRecBase/IRichRefractiveIndex.h"
+#include "RichDetTools/IRichRefractiveIndex.h"
 #include "RichRecBase/IRichParticleProperties.h"
 
 /** @class RichCherenkovAngle RichCherenkovAngle.h

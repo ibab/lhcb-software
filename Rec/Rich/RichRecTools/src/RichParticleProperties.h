@@ -1,4 +1,4 @@
-// $Id: RichParticleProperties.h,v 1.2 2003-08-12 13:35:43 jonrob Exp $
+// $Id: RichParticleProperties.h,v 1.3 2003-11-02 21:51:23 jonrob Exp $
 #ifndef RICHRECTOOLS_RICHPARTICLEPROPERTIES_H
 #define RICHRECTOOLS_RICHPARTICLEPROPERTIES_H 1
 
@@ -22,7 +22,7 @@
 
 // interfaces
 #include "RichRecBase/IRichParticleProperties.h"
-#include "RichRecBase/IRichRefractiveIndex.h"
+#include "RichDetTools/IRichRefractiveIndex.h"
 
 /** @class RichParticleProperties RichParticleProperties.h
  *

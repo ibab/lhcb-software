@@ -1,4 +1,4 @@
-// $Id: RichRecTools_load.cpp,v 1.9 2003-10-13 16:32:34 jonrob Exp $
+// $Id: RichRecTools_load.cpp,v 1.10 2003-11-02 21:51:23 jonrob Exp $
 
 #include "GaudiKernel/DeclareFactoryEntries.h"
 
@@ -27,10 +27,6 @@ DECLARE_FACTORY_ENTRIES( RichRecTools ) {
   DECLARE_TOOL( RichTabulatedMaPMTSignalDetectionEff );
   DECLARE_TOOL( RichSignalDetectionEffSICB );
 
-  // refractive index tools
-  DECLARE_TOOL( RichTabulatedRefractiveIndex );
-  DECLARE_TOOL( RichRefractiveIndexSICB );
-
   // Physical properties
   DECLARE_TOOL( RichSellmeirFunc );
   DECLARE_TOOL( RichSellmeirFuncSICB );   // temporary
@@ -42,8 +38,5 @@ DECLARE_FACTORY_ENTRIES( RichRecTools ) {
   DECLARE_TOOL( RichCherenkovAngle );
   DECLARE_TOOL( RichBinnedCherenkovResolution );
   DECLARE_TOOL( RichInterpCherenkovResolution );
-
-  // The tool registry
-  DECLARE_TOOL( RichToolRegistry );
 
 };
