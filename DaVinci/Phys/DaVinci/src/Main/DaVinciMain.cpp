@@ -1,4 +1,4 @@
-// $Id: DaVinciMain.cpp,v 1.2 2002-02-11 10:49:08 gcorti Exp $
+// $Id: DaVinciMain.cpp,v 1.3 2002-07-18 19:28:55 gcorti Exp $
 //------------------------------------------------------------------------------
 //
 //  Package    : DaVinci
@@ -31,6 +31,7 @@ int main ( int argc, char** argv ) {
 #include "DaVinciTools/DaVinciHeader.icpp"
 
   // Check existence of LHCBDBASE environment variable
+  /*
   std::string dbase = "";
   int posDbVers = 0;
   
@@ -52,6 +53,7 @@ int main ( int argc, char** argv ) {
               << std::endl;
     return 1;
   }
+  */
 
   // Get the job options file name. Precedence is:
   //  1. argument
