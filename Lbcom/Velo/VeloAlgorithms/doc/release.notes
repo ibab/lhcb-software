@@ -1,7 +1,7 @@
 ! Package     : VeloAlgorithms
 ! Responsible : Chris Parkes
-!===================== VeloAlgorithms v3r0 2004-02-20 =====================
-! 2004-02-03 - Chris Parkes
+!===================== VeloAlgorithms v3r0 2004-02-26 =====================
+! 2004-02-24 - Chris Parkes
 - adapt VeloSim to cope with dead regions on sensor described in new Detector
 Element.
 - protect VeloMonitor against crashes caused by this effect.
@@ -14,7 +14,6 @@ Element.
  - Extra histograms added to test VeloDet. 
  - Add option to turn on/off 2D histograms in basic monitor
 
-!===================== VeloAlgorithms v3r0 2004-02-13 =====================
 ! 2004-02-03 - Mark Tobin
  - Modified VeloSim and VeloClusterMaker to be compatible with the new
    VeloDet.  Added histograms and extra routine to monitor detector element.
