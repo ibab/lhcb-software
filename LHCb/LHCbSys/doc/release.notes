@@ -7,8 +7,9 @@
 
 !====================== LHCbSys v15r10 2004-05-17 =======================
 ! 2004-05-17 - Marco Cattaneo
- - Modified packages: EventSys v17r10, LinkerEvent v1r3, TrgEvent v2r3
- 
+ - Modified packages: EventSys v17r10, LinkerEvent v1r3, TrgEvent v2r3,
+                      DumpEventExample v7r3
+
  - In EventSys v17r9p1:
    . Load SealSTLDict last, to bypass a problem with unresolved dictionaries
 
@@ -17,6 +18,9 @@
 
  - In TrgEvent v2r3:
    . New bit 'hasMissedVeloStations' to flag possible conversion or V0 product
+
+ - In DumpEventExample v7r3:
+   . Fix job options to read ParticleTable.txt instead of particle.cdf
 
 !======================= LHCbSys v15r9 2004-05-05 =======================
 ! 2004-05-05 - Marco Cattaneo

@@ -75,5 +75,5 @@ use CaloUtils		v4r6	Calo
 
 # LHCb  Examples
 use DetDescExample      v6r2	Ex
-use DumpEventExample    v7r2	Ex
+use DumpEventExample    v7r3	Ex
 use IOExample    	v1r1	Ex
