@@ -1,4 +1,4 @@
-// $Id: Simulation.opts,v 1.15 2002-07-19 10:30:14 witoldp Exp $ 
+// $Id: Simulation.opts,v 1.16 2002-07-19 10:37:01 witoldp Exp $ 
 // ============================================================================
 
 ApplicationMgr.DLLs += 
@@ -47,15 +47,13 @@ Geo.ExecuteOnce          = true ;
 Geo.ConversionSvcName    = "GiGaGeomCnvSvc"  ; 
 Geo.DataProviderSvcName  = "DetectorDataSvc" ; 
 
-DetectorDataSvc.DetDbLocation = "$XMLDDDBROOT/DDDB/v247r0.xml";
-
-//Geo.StreamItems         += { "/dd/Structure/LHCb/Pipe"   } ; 
-//Geo.StreamItems         += { "/dd/Structure/LHCb/Rich1"   } ; 
+Geo.StreamItems         += { "/dd/Structure/LHCb/Pipe"   } ; 
+Geo.StreamItems         += { "/dd/Structure/LHCb/Rich1"   } ; 
 Geo.StreamItems         += { "/dd/Structure/LHCb/Rich2"   } ; 
-//Geo.StreamItems         += { "/dd/Structure/LHCb/Magnet" } ; 
-//Geo.StreamItems         += { "/dd/Structure/LHCb/Tracker"   } ; 
-//Geo.StreamItems         += { "/dd/Structure/LHCb/Velo"  } ; 
-Geo.StreamItems         += { "/dd/Structure/LHCb/Tracker"  } ; 
+Geo.StreamItems         += { "/dd/Structure/LHCb/Magnet" } ; 
+Geo.StreamItems         += { "/dd/Structure/LHCb/Tracker"   } ; 
+Geo.StreamItems         += { "/dd/Structure/LHCb/Velo"  } ; 
+
 
 // Physics List  to be used and its configuration  
 GiGaSvc.PhysicsList            = "GiGaPhysListEm/EmPhysList" ; 
