@@ -15,6 +15,9 @@ Requires data produced by Gauss v14r3 or greater
     with current Gauss generated data
   . Additional histograms for Velo detailed monitoring 
     (VeloAlgorithms v2r9p2, VeloDet v8r8p2)
+  . Added example job options (Copy.opts) for copying one or more files. Can be
+    used to merge several files, or to produce files with reduced (or extended..)
+    DIGI content (N.B. requires GaudiSvc v11r5, not yet released)
 
 - Persistency changes
   . Add PuVeto raw hit output to RawBuffer (PuVeto v5r6)
@@ -25,6 +28,7 @@ Requires data produced by Gauss v14r3 or greater
   . Use public instead of private tool (L0MuonTrigger v1r1)
   . Add protection for dead regions on Velo sensor (VeloAlgorithms v2r9p2)
   . Minor fix to test on path length in MCITDepositCreator (ITAlgorithms v14r2)
+  . Avoid linking with unnecessary libraries (requirements)
 
 </PRE><H1><A NAME=v5r3>2004-03-18 Boole v5r3</A></H1><PRE>
 
