@@ -1,43 +1,5 @@
-// $Id: DetDesc_dll.cpp,v 1.2 2003-04-25 08:52:24 sponce Exp $
-//====================================================================
-//  Detdesc_dll.cpp
-//--------------------------------------------------------------------
-//
-//  Package    : DetDesc
-//
-//  Description: Implementation of DllMain routine.
-//               The DLL initialisation must be done seperately for 
-//               each DLL. 
-//
-//  Author     : M.Frank
-//  Created    : 13/1/99
-//  Changes    : 
-//
-//====================================================================
+// $Id: DetDesc_dll.cpp,v 1.3 2003-11-24 12:11:08 cattanem Exp $
 
-// DllMain entry point
-#include "GaudiKernel/DllMain.icpp"
+#include "GaudiKernel/LoadFactoryEntries.h"
 
-void GaudiDll::initialize(
-                           void* //hinstDLL
-                         )
-{
-}
-
-void GaudiDll::finalize(
-                         void* //hinstDLL
-                       )
-{
-}
-
-extern void DetDesc_load();
-#include "GaudiKernel/FactoryTable.h"
-extern "C" FactoryTable::EntryList* getFactoryEntries() {
-  static bool first = true;
-  if ( first ) {
-    DetDesc_load();
-    first = false;
-  }
-  return FactoryTable::instance()->getEntries();
-} 
-
+LOAD_FACTORY_ENTRIES(DetDesc)

@@ -1,9 +1,16 @@
 ! =============================================================================
-! $Id: release.notes,v 1.156 2003-10-09 13:43:31 cattanem Exp $ 
+! $Id: release.notes,v 1.157 2003-11-24 12:11:07 cattanem Exp $ 
 ! =============================================================================
 ! package DetDesc
 ! package manager : N.N 
 ! =============================================================================
+
+!======================= DetDesc v13r0p1 2003-11-24 =======================
+! 2003-11-24 - Guy Barrand
+ - Use macro in DetDesc_dll.cpp, to compile on Mac OS X
+
+! 2003-10-22 - Antonis Papanestis
+ - Fix bug in ParamSet.cpp to allow creation of UserParameterVectors
 
 !======================== DetDesc v13r0 2003-10-09 ========================
 ! 2003-10-09 - Marco Cattaneo
