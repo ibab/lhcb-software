@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: Phi.py,v 1.2 2004-01-22 22:35:43 ibelyaev Exp $
+# $Id: Phi.py,v 1.3 2004-01-24 23:38:52 ibelyaev Exp $
 # =============================================================================
 # CVS tag $Name: not supported by cvs2svn $
 # =============================================================================
@@ -46,7 +46,7 @@ class Phi(Algo):
         
 
 # =============================================================================
-# Generic job configuration 
+# Generic job configuration & input data 
 # =============================================================================
 
 bender.config( files   = [ '$DAVINCIROOT/options/DaVinci.opts' ] ,
@@ -57,6 +57,9 @@ bender.config( files   = [ '$DAVINCIROOT/options/DaVinci.opts' ] ,
                            'BremPIDe.OutputLevel      =   5  ' ,
                            'PrsPIDe.OutputLevel       =   5  ' ,
                            'EventSelector.PrintFreq   =  10  ' ] )
+
+# input data 
+g.readOptions('/afs/cern.ch/lhcb/project/web/cards/615300.opts')
 
 g.HistogramPersistency = "HBOOK" ;
 
@@ -97,8 +100,6 @@ desktop.OutputLocation  =   "/Event/Phys/Phi"
 hsvc = g.property( 'HistogramPersistencySvc' )
 hsvc.OutputFile = 'phi.hbook'
 
-# input data 
-g.readOptions('/afs/cern.ch/lhcb/project/web/cards/615300.opts')
 
 # =============================================================================
 # job execution 
@@ -107,7 +108,7 @@ g.readOptions('/afs/cern.ch/lhcb/project/web/cards/615300.opts')
 g.initialize()
 
 ## g.run(100)  ## crash !!
-g._evtpro.executeRun(100)
+g._evtpro.executeRun(500)
 
 g.exit()
 
@@ -115,7 +116,4 @@ g.exit()
 # The END 
 # =============================================================================
 # $Log: not supported by cvs2svn $
-# Revision 1.1  2003/12/07 16:14:30  ibelyaev
-#  update for Bender application and project
-# 
 # =============================================================================
