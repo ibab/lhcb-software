@@ -21,7 +21,7 @@
 // ********************************************************************
 //
 //
-// $Id: RichPhotoElectron.cpp,v 1.2 2003-07-31 08:42:16 witoldp Exp $
+// $Id: RichPhotoElectron.cpp,v 1.3 2003-08-05 11:50:18 witoldp Exp $
 // GEANT4 tag $Name: not supported by cvs2svn $
 // 
 // 
@@ -39,8 +39,8 @@
 // ----------------------------------------------------------------------
 // RichPhotoelectron created by SE 10-3-2003.
 //
-#include "g4std/fstream"
-#include "g4std/iomanip"
+//#include "g4std/fstream"
+//#include "g4std/iomanip"
     
 #include "G4Electron.hh"
 #include "RichPhotoElectron.h"

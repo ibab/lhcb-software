@@ -13,7 +13,7 @@
 #include "G4Material.hh"
 #include "G4Decay.hh"
 #include "G4ios.hh"
-#include "g4std/iomanip"                
+//#include "g4std/iomanip"                
 // local
 #include "GiGaPhysConstructorOp.h"
 #include "RichPhotoElectron.h"

@@ -354,7 +354,9 @@ RichG4OpBoundaryProcess::GetFacetNormal(const G4ThreeVector& Momentum,
 	   G4double sigma_alpha = 0.0;
 	   if (OpticalSurface) sigma_alpha = OpticalSurface->GetSigmaAlpha();
 
-	   G4double f_max = G4std::min(1.0,4.*sigma_alpha);
+     //	   G4double f_max = G4std::min(1.0,4.*sigma_alpha);
+     // wp
+	   G4double f_max = std::min(1.0,4.*sigma_alpha);
 
 	   do {
 	      do {
