@@ -1,4 +1,4 @@
-// $Id: ChangePID.cpp,v 1.1 2004-07-09 13:23:51 pkoppenb Exp $
+// $Id: ChangePID.cpp,v 1.2 2004-07-09 13:50:10 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
@@ -125,21 +125,37 @@ StatusCode ChangePID::execute() {
             << " with momentum " << old->momentum() << " m=" 
             << old->mass() << endreq ;
 
+        // Make the clone
         Particle* clone = old->clone();
+
+        Particle* porigin = 
+          dynamic_cast<Particle*>(old->origin());  // origin particle
+        Particle* psaved = old ;                   // saved origin
+        // wend while the origin is a particle
+        while ( porigin ) {
+          msg << MSG::VERBOSE << "Origin is a particle, getting up one level" 
+              << endreq;
+          psaved = porigin ;
+          porigin = dynamic_cast<Particle*>(porigin->origin());
+        }
+        // psaved is now the last origin particle
+        // now check for a protoparticle
         const ProtoParticle* pp = 
-          dynamic_cast<const ProtoParticle*>(old->origin());
+          dynamic_cast<const ProtoParticle*>(psaved->origin());
         if ( pp ){                        // There is a protoparticle
-          HepLorentzVector quadri = old->momentum();
+          HepLorentzVector quadri = psaved->momentum();
           double newmass = (*newprop)->mass() ;
           double oldP =  quadri.rho() ;
           quadri.setE( sqrt ( oldP*oldP + newmass*newmass ));
           clone->setParticleID( (*newprop)->pythiaID()  );
           clone->setMass( newmass );
           clone->setMomentum( quadri );
-          msg << MSG::VERBOSE << "Cloned the particle by hand" << endreq ;
+          msg << MSG::VERBOSE 
+              << "Cloned the particle by hand from a protoparticle " 
+              << endreq ;
           // particleStuffer()->fillParticle( *pp, *clone, newid ); 
         } else {                         // There is no protoparticle
-          const Vertex* vx = old->endVertex() ;
+          const Vertex* vx = psaved->endVertex() ;
           if ( vx ) {                    // There is a decay vertex
             particleStuffer()->fillParticle( *vx , *clone, newid );   
             msg << MSG::VERBOSE << "Using the particle Stuffer"  << endreq ;
