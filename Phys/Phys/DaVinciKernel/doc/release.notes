@@ -2,6 +2,16 @@
 ! Package     : DaVinciKernel
 ! Responsible : P. Koppenburg
 
+! 2004-11-11 - P. Koppenbyrg
+ - DaVinciTools/DVAlgorithm.h
+ - src/DVAlgorithm.cpp 
+   . loadTools becomes private
+   . m_toolsLoaded removed
+   . New private method fillSelResult takes care of filling SelResult object
+     and creates the container if needed. PreDV is not necessary anymore.
+   . Adapted to get<> put<>...
+   . Tools are now loaded after GaudiTupleAlg::initialize()
+
 ! 2004-11-04 - Yuehong Xie
  - DaVinciTools/IDirectionFitter.h
   . Add method fitWithDirection that returns the fitted primary vertex, 

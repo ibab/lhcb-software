@@ -16,7 +16,6 @@ DVAlgorithm::DVAlgorithm( const std::string& name, ISvcLocator* pSvcLocator )
   , m_pFilter(0)
   , m_ppSvc(0)
   , m_setFilterCalled(false)
-  , m_toolsLoaded(false)
   , m_countFilterWrite(0)
   , m_countFilterPassed(0)
 {  
@@ -29,138 +28,156 @@ DVAlgorithm::DVAlgorithm( const std::string& name, ISvcLocator* pSvcLocator )
 
 };
 //=============================================================================
+// Initialize the thing
+//=============================================================================
+StatusCode DVAlgorithm::sysInitialize () {
+  
+  if( isInitialized()) return StatusCode::SUCCESS;
+ 
+  if (m_avoidSelResult) {
+    MsgStream msg( msgSvc(), name() ); // warning() not yet initialized
+    msg << MSG::WARNING << "Avoiding SelResult" << endreq ;
+  }
+  
+  // initialize Algorithm base class first -> calls initialize()
+  StatusCode sc = this->Algorithm::sysInitialize();
+  if (!sc ) return sc;
+  // initialize GaudiTupleAlg base class then
+  sc = this->GaudiTupleAlg::initialize();  
+  if (!sc ) return sc;
+
+  // Load tools
+  StatusCode scLT = loadTools();
+  if(scLT.isFailure()) {
+    MsgStream msg( msgSvc(), name() ); // err() not yet initialized
+    msg << MSG::ERROR << "Unable to load tools" << endreq;
+    return scLT;
+  }
+  
+  if (m_decayDescriptor == "not specified"){
+    warning() << "Decay Descriptor string not specified" << endreq;
+  }
+  else{
+    info() << "Decay Descriptor: " << m_decayDescriptor << endreq;
+  }
+  debug() << "End of DVAlgorithm::sysInitialize with " << sc << endreq;
+
+  return sc;
+}
+//=============================================================================
 // Load standard tools
 //=============================================================================
 StatusCode DVAlgorithm::loadTools() {
 
-  MsgStream  msg( msgSvc(), name() );
-
-  if (m_toolsLoaded) {
-    if (!m_loadToolsWarned){
-      msg << MSG::WARNING << "Attempted to load tools twice -  " <<
-        "loadTools() should be removed from execute()." 
-          << endreq;
-      m_loadToolsWarned = true;
-    }
-    return StatusCode::SUCCESS;
-  }
+  MsgStream msg( msgSvc(), name() ); // err() not yet initialized
   msg << MSG::INFO << ">>> Retrieving tools" << endreq;
-  
-  msg << MSG::DEBUG << ">>> Retreiving PhysDesktop" << endreq;
-  StatusCode sc = toolSvc()->retrieveTool("PhysDesktop", m_pDesktop, this);
-  if( sc.isFailure() ) {
-    msg << MSG::ERROR << ">>> DVAlgorithm[PhysDesktop] not found" 
-        << endreq;
+
+  debug() << ">>> Retreiving PhysDesktop" << endreq;
+  m_pDesktop = tool<IPhysDesktop>("PhysDesktop",this);  
+  if( !m_pDesktop ) {
+    msg << MSG::ERROR << ">>> DVAlgorithm[PhysDesktop] not found" << endreq;
     return StatusCode::FAILURE;
   }
 
-  msg << MSG::DEBUG << ">>> Retreiving " << m_typeLagFit 
+  debug() << ">>> Retreiving " << m_typeLagFit 
       << " as IMassVertexFitter" << endreq;
-  sc = toolSvc()->retrieveTool(m_typeLagFit, m_pLagFit, this);
-  if( sc.isFailure() ) {
+  m_pLagFit = tool<IMassVertexFitter>(m_typeLagFit, this);
+  if ( !m_pLagFit ) {
     msg << MSG::ERROR << ">>> DVAlgorithm[" << m_typeLagFit 
         << "] not found" << endreq;
     return StatusCode::FAILURE;
   }
      
-  msg << MSG::DEBUG << ">>> Retreiving " << m_typeVertexFit 
+  debug() << ">>> Retreiving " << m_typeVertexFit 
       << " as IVertexFitter" << endreq;
-  sc = toolSvc()->retrieveTool(m_typeVertexFit, m_pVertexFit, this);
-  if( sc.isFailure() ) {
+  m_pVertexFit = tool<IVertexFitter>(m_typeVertexFit, this);
+  if ( !m_pVertexFit ) {
     msg << MSG::ERROR << ">>> DVAlgorithm[" << m_typeVertexFit 
         << "] not found" << endreq;
     return StatusCode::FAILURE;
   }
   
-  msg << MSG::DEBUG << ">>> Retreiving GeomDispCalculator" << endreq;
-  sc = toolSvc()->retrieveTool("GeomDispCalculator", m_pGeomDispCalc, this);
-  if( sc.isFailure() ) {
+  debug() << ">>> Retreiving GeomDispCalculator" << endreq;
+  m_pGeomDispCalc = tool<IGeomDispCalculator>("GeomDispCalculator", this);
+  if ( !m_pGeomDispCalc ) {
     msg << MSG::ERROR << ">>> DVAlgorithm[GeomDispCalculator] not found" 
         << endreq;
     return StatusCode::FAILURE;
   }
   
-  msg << MSG::DEBUG << ">>> Retreiving ParticleStuffer" << endreq;
-  sc = toolSvc()->retrieveTool("ParticleStuffer", m_pStuffer, this);
-  if( sc.isFailure() ) {
+  debug() << ">>> Retreiving ParticleStuffer" << endreq;
+  m_pStuffer = tool<IParticleStuffer>("ParticleStuffer", this);
+  if ( !m_pStuffer  ) {
     msg << MSG::ERROR << ">>> DVAlgorithm[ParticleStuffer] not found" 
         << endreq;
     return StatusCode::FAILURE;
 
   }
-  msg << MSG::DEBUG << ">>> Retreiving one ParticleFilter" << endreq;
-  sc = toolSvc()->retrieveTool("ParticleFilter", m_pFilter, this);
-  if( sc.isFailure() ) {
+  debug() << ">>> Retreiving one ParticleFilter" << endreq;
+  m_pFilter = tool<IParticleFilter>("ParticleFilter", this);
+  if ( !m_pFilter ) {
     msg << MSG::ERROR << ">>> DVAlgorithm[ParticleFilter] not found" 
         << endreq;
     return StatusCode::FAILURE;
   }
 
-  msg << MSG::DEBUG << ">>> Retrieving ParticlePropertySvc" << endreq;
-  sc = service("ParticlePropertySvc", m_ppSvc, true);
-  if( sc.isFailure() ) {
-    msg << MSG::FATAL << "    Unable to locate Particle Property Service" 
+  debug() << ">>> Retrieving ParticlePropertySvc" << endreq;
+  m_ppSvc = svc<IParticlePropertySvc>("ParticlePropertySvc", true);
+  if( !m_ppSvc ) {
+    msg << MSG::ERROR << "    Unable to locate Particle Property Service" 
         << endreq;
     return StatusCode::FAILURE;
   }  
-
   
-  m_toolsLoaded = true;
-
   return StatusCode::SUCCESS;
 }
 
 //=============================================================================
-StatusCode DVAlgorithm::releaseTools() {
+// Execute
+//=============================================================================
+StatusCode DVAlgorithm::sysExecute () {
 
-  info() << ">>> Releasing tools" << endreq;
-  if( m_pDesktop      ) toolSvc()->releaseTool( m_pDesktop );
-  if( m_pLagFit       ) toolSvc()->releaseTool( m_pLagFit );
-  if( m_pVertexFit    ) toolSvc()->releaseTool( m_pVertexFit );
-  if( m_pGeomDispCalc ) toolSvc()->releaseTool( m_pGeomDispCalc );
-  if( m_pStuffer      ) toolSvc()->releaseTool( m_pStuffer );
-  if( m_pFilter       ) toolSvc()->releaseTool( m_pFilter );
-  return StatusCode::SUCCESS;
+  StatusCode scGI = desktop()->getEventInput();
+  if (scGI.isFailure()) {
+    err() << "Not able to fill PhysDesktop" << endreq;
+    return StatusCode::FAILURE;
+  }
+
+  StatusCode sc = this->Algorithm::sysExecute();
+
+  if (!m_setFilterCalled) {
+    warning() << "SetFilterPassed not called for this event!" << endreq;
+  }
+
+  if (!m_avoidSelResult) sc = fillSelResult () ;
+  else debug() << "Avoiding selresult" << endreq ;
+  
+  // Reset for next event
+  m_setFilterCalled = false;
+
+  return sc;
+
 }
+//=============================================================================
+IPhysDesktop* DVAlgorithm::desktop() const {return m_pDesktop;}  
 
 //=============================================================================
-IPhysDesktop* DVAlgorithm::desktop() const {
-  if(!m_toolsLoaded) {
-    fatal() << "Attempted to use desktop without having loaded tools" 
-            << endreq;
- }
-  return m_pDesktop;
-}  
+IMassVertexFitter* DVAlgorithm::massVertexFitter() const {return m_pLagFit;}  
 
 //=============================================================================
-IMassVertexFitter* DVAlgorithm::massVertexFitter() const {   
-  return m_pLagFit;
-}  
+IVertexFitter* DVAlgorithm::vertexFitter() const {return m_pVertexFit;}  
 
 //=============================================================================
-IVertexFitter* DVAlgorithm::vertexFitter() const {
-  return m_pVertexFit;
-}  
+IGeomDispCalculator* DVAlgorithm::geomDispCalculator() const {return m_pGeomDispCalc;}  
 
 //=============================================================================
-IGeomDispCalculator* DVAlgorithm::geomDispCalculator() const {  
-  return m_pGeomDispCalc;
-}  
-
-//=============================================================================
-IParticleStuffer* DVAlgorithm::particleStuffer() const {
-  return m_pStuffer;
-} 
+IParticleStuffer* DVAlgorithm::particleStuffer() const {return m_pStuffer;} 
  
 //=============================================================================
-IParticleFilter* DVAlgorithm::particleFilter() const {
-  return m_pFilter;
-}
+IParticleFilter* DVAlgorithm::particleFilter() const {return m_pFilter;}
 
 //=============================================================================
-IParticlePropertySvc* DVAlgorithm::ppSvc() const {
-  return m_ppSvc;
-}
+IParticlePropertySvc* DVAlgorithm::ppSvc() const {return m_ppSvc;}
 
 //=============================================================================
 StatusCode DVAlgorithm::setFilterPassed  (  bool    state  ) {
@@ -174,95 +191,47 @@ StatusCode DVAlgorithm::setFilterPassed  (  bool    state  ) {
 }
 
 //=============================================================================
-StatusCode DVAlgorithm::sysExecute () {
+StatusCode DVAlgorithm::fillSelResult () {
 
-  StatusCode scGI = desktop()->getEventInput();
-  if (scGI.isFailure()) {
-    err() << "Not able to fill PhysDesktop" << endreq;
-    return StatusCode::FAILURE;
-  }
+  std::string location = SelResultLocation::Default;
+  debug() << "SelResult to be saved to " << location << endreq ;
 
-  StatusCode sc = this->Algorithm::sysExecute();
-
-  if (!m_setFilterCalled) {
-    warning() << "SetFilterPassed not called for this event!"
-        << endreq;
-  }
-
-  if (!m_avoidSelResult){
-    
-    std::string location = SelResultLocation::Default;
-    
-    // Check if SelResult contained has been registered by PreDV
-    SmartDataPtr<SelResults> existingSelRess ( eventSvc(), location);
-    if(!existingSelRess ) {
-      fatal() << "SelResult container does not exist. "  <<
-        "PreDV algorithm should be run before any DVAlgorithm!"  
-          << endreq;
+  SelResults* resultsToSave ;
+  // Check if SelResult contained has been registered by another algorithm
+  if ( exist<SelResults>(location) ){
+    debug() << "SelResult exists already " << endreq ;
+    resultsToSave = get<SelResults>(location);
+  } else {
+    debug() << "Putting new SelResult container " << endreq ;
+    resultsToSave = new SelResults();
+    StatusCode scRO = put(resultsToSave,location);
+    if (scRO.isFailure()){
+      err() << "Cannot register Selection Result summary at location: " 
+            << location << endreq;
       return StatusCode::FAILURE;
     }
-    
-    // Create and fill selection result object
-    SelResult* myResult = new SelResult();
-    myResult->setFound(filterPassed());
-    myResult->setLocation( ("/Event/Phys/"+name()));
-    verbose() << "Selresult location set to " << "/Event/Phys/"+name() 
-              << endreq;
-    myResult->setDecay(m_decayDescriptor);
-    
-    if (filterPassed()) m_countFilterPassed++;
-    m_countFilterWrite++;
-    debug() << "wrote " << filterPassed() << " -> " << 
-      m_countFilterWrite << " & " << m_countFilterPassed << endreq ;
+  }
 
-    existingSelRess->insert(myResult);
-    debug() << "Number of objects in existingSelRes: "
-        << existingSelRess->size() << endreq;
-  } else debug() << "Avoiding selresult" << endreq ;
-  
-  
-  // Reset for next event
-  m_setFilterCalled = false;
+  // Create and fill selection result object
+  SelResult* myResult = new SelResult();
+  myResult->setFound(filterPassed());
+  myResult->setLocation( ("/Event/Phys/"+name()));
+  verbose() << "SelResult location set to " << "/Event/Phys/"+name() 
+            << endreq;
+  myResult->setDecay(m_decayDescriptor);
+    
+  if (filterPassed()) m_countFilterPassed++;
+  m_countFilterWrite++;
+  debug() << "wrote " << filterPassed() << " -> " << 
+    m_countFilterWrite << " & " << m_countFilterPassed << endreq ;
 
-  return sc;
+  resultsToSave->insert(myResult);
+  debug() << "Number of objects in existingSelRes: "
+          << resultsToSave->size() << endreq;
+  return StatusCode::SUCCESS ;
 
 }
 
-//=============================================================================
-StatusCode DVAlgorithm::sysInitialize () {
-  
-  if( isInitialized()) return StatusCode::SUCCESS;
- 
-  if (m_avoidSelResult) {
-    MsgStream msg( msgSvc(), name() ); // warning() not yet initialized
-    msg << MSG::WARNING << "Avoiding SelResult" << endreq ;
-  }
-  
-  // Load tools
-  StatusCode scLT = loadTools();
-  if(scLT.isFailure()) {
-    MsgStream msg( msgSvc(), name() ); // err() not yet initialized
-    msg << MSG::ERROR << "Unable to load tools" << endreq;
-    return scLT;
-  }
-  
-  // initialize Algorithm base class first -> calls initialize()
-  StatusCode sc = this->Algorithm::sysInitialize();
-  if (!sc ) return sc;
-  // initialize GaudiTupleAlg base class then
-  sc = this->GaudiTupleAlg::initialize();  
-  if (!sc ) return sc;
-
-  if (m_decayDescriptor == "not specified"){
-    warning() << "Decay Descriptor string not specified" << endreq;
-  }
-  else{
-    info() << "Decay Descriptor: " << m_decayDescriptor << endreq;
-  }
-  debug() << "End of DVAlgorithm::sysInitialize with " << sc << endreq;
-
-  return sc;
-}
 //=============================================================================
 StatusCode DVAlgorithm::sysFinalize () {
   
@@ -293,12 +262,9 @@ StatusCode DVAlgorithm::sysFinalize () {
         r << "+/-" << re << endreq;
     }
   }
-  // release tools
-  StatusCode sc = releaseTools();
-  if (!sc) return sc;
   
   // finalize Algorithm base class -> calls finalize() 
-  sc = Algorithm::sysFinalize();
+  StatusCode sc = Algorithm::sysFinalize();
   if (!sc) return sc;
   
   // finalize GaudiTupleAlg base class

@@ -3,11 +3,8 @@
 
 // from Gaudi
 #include "GaudiAlg/GaudiTupleAlg.h"
-#include "GaudiKernel/MsgStream.h" 
-//#include "GaudiKernel/IToolSvc.h"
 #include "GaudiKernel/IParticlePropertySvc.h"
 #include "GaudiKernel/ParticleProperty.h"
-//#include "GaudiKernel/SmartDataPtr.h"
 
 // from EventSys
 #include "Event/Particle.h"
@@ -31,6 +28,7 @@
  *  04/03/2004: Hugo Ruiz: automatically produce SelResult object
  *  use always algorithm name as output location in TES
  *  16/07/2004: P. Koppenburg: Make it a GaudiTupleAlg
+ *  11/11/2004: P. Koppenburg: Adapt to next get<> and put<>. Merge with PreDV.
  */
 class DVAlgorithm : public GaudiTupleAlg {
 public:
@@ -39,13 +37,6 @@ public:
   DVAlgorithm( const std::string& name, ISvcLocator* pSvcLocator );
 
   virtual ~DVAlgorithm( ){ }; ///< Destructor
-
-  /// Method to load all tools. 
-  /// The base class provides an instance of all type of tools
-  StatusCode loadTools();       // to become private
-
-  /// Method to release all tools
-  StatusCode releaseTools();    // to become private
   
   /// Accessor for PhysDesktop Tool
   IPhysDesktop* desktop() const; 
@@ -97,6 +88,13 @@ protected:
 
 private:
 
+  /// Method to load all tools. 
+  /// The base class provides an instance of all type of tools
+  StatusCode loadTools() ;
+
+  /// Method to create SelResult container
+  StatusCode fillSelResult() ;
+
   /// Concrete type Name of MassConstrained vertex to use (Property)
   std::string m_typeVertexFit;
   /// Concrete type of VertexFitter to use (Property)
@@ -125,8 +123,6 @@ private:
   mutable IParticlePropertySvc* m_ppSvc;
   /// Has setFilterPassed() already been called in current event?
   bool m_setFilterCalled;
-  /// Have Tools been already loaded?
-  bool m_toolsLoaded;
   /// Count number of times selection filter is used 
   /// (= number of times alg is called)
   int m_countFilterWrite ;
