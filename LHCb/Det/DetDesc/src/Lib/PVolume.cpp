@@ -1,61 +1,50 @@
-/// ===========================================================================
-/// CVS tag $Name: not supported by cvs2svn $ 
-/// ===========================================================================
-/// $Log: not supported by cvs2svn $
-/// Revision 1.9  2001/08/10 16:41:29  ibelyaev
-/// modifitcations in IDetectorElement and related classes
-///
-/// Revision 1.8  2001/08/09 16:48:01  ibelyaev
-/// update in interfaces and redesign of solids
-/// 
-/// ===========================================================================
-///@{ 
-/** STD & STL includes */  
+// $Id: PVolume.cpp,v 1.11 2001-11-18 15:32:45 ibelyaev Exp $ 
+// ===========================================================================
+// CVS tag $Name: not supported by cvs2svn $ 
+// ===========================================================================
+// $Log: not supported by cvs2svn $
+// Revision 1.10  2001/08/25 16:57:43  ibelyaev
+// PVolume: bug fix for uninitialized pointer
+//
+// Revision 1.9  2001/08/10 16:41:29  ibelyaev
+// modifitcations in IDetectorElement and related classes
+//
+// Revision 1.8  2001/08/09 16:48:01  ibelyaev
+// update in interfaces and redesign of solids
+// 
+// ===========================================================================
+/// STD & STL includes 
 #include <cassert>
 #include <iostream>
 #include <string> 
 #include <vector>
-///@}
-///@{ 
-/** CLHEP includes */
+/// CLHEP includes 
 #include "CLHEP/Geometry/Point3D.h"
 #include "CLHEP/Geometry/Transform3D.h"
-///@}
-///@{ 
-/** GaudiKernel includes */
+/// GaudiKernel includes 
 #include "GaudiKernel/IInspector.h"
 #include "GaudiKernel/ISvcLocator.h"
 #include "GaudiKernel/IDataProviderSvc.h"
 #include "GaudiKernel/MsgStream.h" 
 #include "GaudiKernel/SmartDataPtr.h" 
 #include "GaudiKernel/StreamBuffer.h"
-///@}
 /// DetDesc 
 #include "DetDesc/DetDesc.h"
-///@{ 
-/** local includes */ 
+/// local includes 
 #include "PVolume.h"
 #include "PVolumeException.h"
-///@}
 
 // ============================================================================
 /** @file PVolume.cpp 
  *  
- * implementation of class PVolume 
+ *  implementation of class PVolume 
  * 
- * @author Vanya Belyaev Ivan.Belyaev@itep.ru
- * @date xx/xx/xxxx
+ *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
+ *  @date xx/xx/xxxx
  */
 // ============================================================================
 
-unsigned long PVolume::s_count = 0;
-
-// ============================================================================
-/** @defgroup Create1 
- *  Constructors and destructor for class PVolume 
- *  @{ 
- */
-// ============================================================================
+unsigned long PVolume::s_volumeCounter = 0;
 
 // ============================================================================
 /** constructor    
@@ -65,20 +54,21 @@ unsigned long PVolume::s_count = 0;
  *  @param Rotation  rotation of physical volume with respect to mother 
  */
 // ============================================================================
-PVolume::PVolume ( const std::string& PhysVol_name  ,
-                   const std::string& LogVol_name   ,
-                   const HepPoint3D&  Position      ,
-                   const HepRotation& Rotation      )
-  : m_pv_name      ( PhysVol_name   ) 
-  , m_pv_lvname    ( LogVol_name    ) 
-  , m_pv_matrix    (                )
-  , m_pv_imatrix   ( 0              )
-  , m_pv_lvolume   ( 0              )
+PVolume::PVolume 
+( const std::string& PhysVol_name  ,
+  const std::string& LogVol_name   ,
+  const HepPoint3D&  Position      ,
+  const HepRotation& Rotation      )
+  : m_name      ( PhysVol_name   ) 
+  , m_lvname    ( LogVol_name    ) 
+  , m_matrix    (                )
+  , m_imatrix   ( 0              )
+  , m_lvolume   ( 0              )
 {
   // NB!!! transformaion is given by Translation and then Rotation!!!
-  m_pv_matrix = HepRotate3D(Rotation)*HepTranslate3D(Position) ;
+  m_matrix = HepRotate3D(Rotation)*HepTranslate3D(Position) ;
   ///
-  addRef();
+  ++s_volumeCounter ;
 };
 
 // ============================================================================
@@ -88,33 +78,32 @@ PVolume::PVolume ( const std::string& PhysVol_name  ,
  *  @param Transform transformation matrix 
  */
 // ============================================================================
-PVolume::PVolume ( const std::string&    PhysVol_name ,
-                   const std::string&    LogVol_name  ,
-                   const HepTransform3D& Transform    )
-  : m_pv_name      ( PhysVol_name   ) 
-  , m_pv_lvname    ( LogVol_name    ) 
-  , m_pv_matrix    ( Transform      )
-  , m_pv_imatrix   ( 0              )
-  , m_pv_lvolume   ( 0              )
-{ addRef(); };
+PVolume::PVolume 
+( const std::string&    PhysVol_name ,
+  const std::string&    LogVol_name  ,
+  const HepTransform3D& Transform    )
+  : m_name      ( PhysVol_name   ) 
+  , m_lvname    ( LogVol_name    ) 
+  , m_matrix    ( Transform      )
+  , m_imatrix   ( 0              )
+  , m_lvolume   ( 0              )
+{ 
+  ++s_volumeCounter ;
+};
 
 // ============================================================================
 // destructor 
 // ============================================================================
-PVolume::~PVolume() { reset(); release() ; };
-
-// ============================================================================
-///@}  end of group Create1 
-// ============================================================================
+PVolume::~PVolume() { reset(); --s_volumeCounter ; };
 
 // ============================================================================
 /** find logical volume by name 
  *  @return pointet to logical volume 
  */
 // ============================================================================
-ILVolume*         PVolume::findLogical() const 
+ILVolume* PVolume::findLogical() const 
 {
-  m_pv_lvolume = 0 ;
+  m_lvolume = 0 ;
   ILVolume* lv = 0 ;
   try
     { 
@@ -137,9 +126,9 @@ ILVolume*         PVolume::findLogical() const
           " PVolume::findLogical, unable to locate LV=" + 
           lvolumeName() );
   ///
-  m_pv_lvolume = lv ;
+  m_lvolume = lv ;
   ///
-  return m_pv_lvolume;
+  return m_lvolume;
 };
 
 // ============================================================================
@@ -149,23 +138,8 @@ ILVolume*         PVolume::findLogical() const
 // ============================================================================
 HepTransform3D* PVolume::findMatrix() const 
 {
-  if( 0 != m_pv_imatrix ) { delete m_pv_imatrix ; m_pv_imatrix = 0 ; }
-  return m_pv_imatrix = new HepTransform3D( matrix().inverse() ) ;
-};
-
-
-// ============================================================================
-// ============================================================================
-bool PVolume::acceptInspector( IInspector* pInspector ) 
-{
-  return 0 == pInspector ? false : true ;
-};
-
-// ============================================================================
-// ============================================================================
-bool PVolume::acceptInspector( IInspector* pInspector ) const 
-{
-  return 0 == pInspector ? false : true ;
+  if( 0 != m_imatrix ) { delete m_imatrix ; m_imatrix = 0 ; }
+  return m_imatrix = new HepTransform3D( matrix().inverse() ) ;
 };
 
 // ============================================================================
@@ -174,15 +148,6 @@ bool PVolume::acceptInspector( IInspector* pInspector ) const
  */
 // ============================================================================
 IDataProviderSvc* PVolume::dataSvc() { return DetDesc::detSvc(); }
-
-// ============================================================================
-/** @defgroup IInterface1 
- *  implementations of vurtual functions from class IInterface 
- *  @see IInterface
- *  @see ILVolume 
- *  @{ 
- */
-// ===========================================================================
 
 // ============================================================================
 /** query the interface
@@ -215,25 +180,14 @@ PVolume::queryInterface( const InterfaceID& ID , void** ppI )
  *  @return reference counter 
  */
 // ============================================================================
-unsigned long PVolume::addRef  () { return ++s_count; }
+unsigned long PVolume::addRef  () { return 1; }
 
 // ============================================================================
 /** release the interface 
  *  @return reference counter 
  */
 // ============================================================================
-unsigned long PVolume::release () { return ( 0 < s_count ) ? --s_count : 0 ; }
-
-// ============================================================================
-/** @} end of group IInterface1 */
-// ============================================================================
-
-// ============================================================================
-/** @defgroup PrintOut1 
- *  implementation of printout methods from class PVolume 
- *  @{ 
- */
-// ============================================================================
+unsigned long PVolume::release () { return 1;}
 
 // ============================================================================
 /** printout to STD/STL stream 
@@ -244,10 +198,10 @@ unsigned long PVolume::release () { return ( 0 < s_count ) ? --s_count : 0 ; }
 std::ostream& PVolume::printOut( std::ostream& os ) const
 {
   return 
-  os << " class PVolume (" << s_count       << ")"
-     << " [" 
-     << " name='"          << name()        << "'" 
-     << " logvol='"        << lvolumeName() << "'" << "]";
+    os << " class PVolume (" << s_volumeCounter << ")"
+       << " [" 
+       << " name='"          << name()          << "'" 
+       << " logvol='"        << lvolumeName()   << "'" << "]";
 };
 
 // ============================================================================
@@ -259,22 +213,11 @@ std::ostream& PVolume::printOut( std::ostream& os ) const
 MsgStream& PVolume::printOut( MsgStream& os ) const
 {
   return 
-    os << " class PVolume (" << s_count       << ")"
+    os << " class PVolume (" << s_volumeCounter << ")"
        << " [" 
-       << " name='"          << name()        << "'" 
-       << " logvol='"        << lvolumeName() << "'" << "]";
+       << " name='"          << name()          << "'" 
+       << " logvol='"        << lvolumeName()   << "'" << "]";
 };
-// ===========================================================================
-///@} 
-// ============================================================================
-
-
-// ============================================================================
-/** @defgroup Serialize1 
- *  implementation of serialize methods from class PVolume 
- *  @{ 
- */
-// ============================================================================
 
 // ===========================================================================
 /** serialization for reading 
@@ -290,8 +233,8 @@ MsgStream& PVolume::printOut( MsgStream& os ) const
 StreamBuffer& PVolume::serialize(StreamBuffer& s )
 {
   reset();
-  s >> m_pv_name  
-    >> m_pv_lvname ;
+  s >> m_name  
+    >> m_lvname ;
   double     angle ;
   Hep3Vector axis  ; 
   s >> angle 
@@ -303,7 +246,8 @@ StreamBuffer& PVolume::serialize(StreamBuffer& s )
   s >> pos[0] 
     >> pos[1] 
     >> pos[2] ;
-  m_pv_matrix = HepTransform3D( rot , pos ) ;
+  m_matrix = HepTransform3D( rot , pos ) ;
+  if( 0 != m_imatrix ) { delete m_imatrix ; m_imatrix = 0 ; }
   return s;
 };
 
@@ -320,8 +264,8 @@ StreamBuffer& PVolume::serialize(StreamBuffer& s )
 // ===========================================================================
 StreamBuffer& PVolume::serialize(StreamBuffer& s )  const
 {
-  s << m_pv_name  
-    << m_pv_lvname ;
+  s << m_name  
+    << m_lvname ;
   HepRotation rot = matrix().getRotation    () ;
   double angle   = 0 ;
   Hep3Vector axis;
@@ -337,17 +281,6 @@ StreamBuffer& PVolume::serialize(StreamBuffer& s )  const
   ///
   return s;
 };
-// ===========================================================================
-///@} 
-// ============================================================================
-
-
-// ============================================================================
-/** @defgroup Assertions1 
- *  assertion methods for class PVolume 
- *  @{ 
- */ 
-// ============================================================================
 
 // ============================================================================
 /** Assertion 
@@ -378,8 +311,10 @@ void PVolume::Assert( bool                  assertion ,
   if( !assertion ) 
     { throw PVolumeException( name, Exception , this ); } 
 };
+
+
 // ============================================================================
-///@} end of group Assertions1 
+// The End 
 // ============================================================================
 
 

@@ -1,7 +1,11 @@
+// $Id: LVolume.h,v 1.16 2001-11-18 15:32:44 ibelyaev Exp $ 
 // ===========================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ===========================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.15  2001/08/24 12:06:13  ibelyaev
+//  changes to take into account Assembly Volumes
+//
 // Revision 1.14  2001/08/13 09:51:35  ibelyaev
 // bug fix in 'reset' method
 //
@@ -11,80 +15,54 @@
 // ===========================================================================
 #ifndef     DETDESC_VOLUMES_LVOLUME_H
 #define     DETDESC_VOLUMES_LVOLUME_H
-///@{
-/** STD and STL includes */
-#include <iostream>
-#include <string>
-#include <vector>
-#include <functional>
-#include <algorithm> 
-///@} 
-///@{ 
-/** GaudiKernel includes */  
-#include "GaudiKernel/DataObject.h"
-#include "GaudiKernel/IValidity.h"
-#include "GaudiKernel/SmartRefVector.h" 
-///@} 
-///@{
-/** DetDesc  includes */
-#include "DetDesc/IPVolume.h"
-#include "DetDesc/ISolid.h" 
-#include "DetDesc/ILVolume.h"
-#include "DetDesc/IPVolume_predicates.h" 
-#include "DetDesc/LVolumeException.h" 
+/// DetDesc  includes 
+#include "DetDesc/LogVolBase.h"
 #include "DetDesc/CLIDLVolume.h"
-///@} 
-///@{ 
-/** forward declarations */
+/// forward declarations 
 template <class TYPE> 
 class DataObjectFactory;
-class HepPoint3D; 
-class HepVector3D; 
-class HepRotation;
-class HepTransform3D;
-class ISvcLocator;
-class IDataProviderSvc;
-class GaudiException; 
-class Surface;
-class ITime;
-///@} 
 
 /** @class LVolume LVolume.h DetDesc/LVolume.h
  *
  *  A simple implementation of ILVolume interface
  * 
- *  @attention Never try to inherit from this class!!!
- *             For performance reasons almost all virtual methods 
- *             are declared as "non-virtual" and inline! 
- *
- *  @author  Vanya Belyaev
+ *  @author  Vanya Belyaev Ivan.Belyaev@itep.ru
  */
 
-
-class LVolume: public DataObject ,
-               public ILVolume   , 
-               public IValidity
+class LVolume: public LogVolBase
 {
   /// friend factory for instantiation 
   friend class DataObjectFactory<LVolume>;
 
 public:
   
-  /** @defgroup Constructors 
-   *  public constructors/destructors  for class LVolume 
-   *  @{ 
-   */
-  
   /** constructor, pointer to ISolid* must be valid!, 
-   *  overvise constructor throws LVolumeException!  
-   *  @exception LVolumeException wrong paramaters value
-   *  @param name name of logical volume 
-   *  @param Solid pointer to ISolid object 
-   *  @param material name of the material 
-   *  @param validSince  begin of validity range 
-   *  @param validTill  end of validity range 
+   *  overvise constructor throws LogVolumeException!  
+   *  @exception LogVolumeException for wrong paramaters set
+   *  @param name         name of logical volume 
+   *  @param Solid        pointer to ISolid object 
+   *  @param material     name of the material 
+   *  @param validity     validity object
    *  @param sensitivity  name of sensitive detector object (for simulation)
-   *  @param magnetic  nam eof magnetic field object (for simulation)
+   *  @param magnetic     name of magnetic field object (for simulation)
+   */
+  LVolume( const std::string& name             , 
+           ISolid*            Solid            ,
+           const std::string& material         ,
+           const IValidity&   validity         , 
+           const std::string& sensitivity = "" ,
+           const std::string& magnetic    = "" );
+
+  /** constructor, pointer to ISolid* must be valid!, 
+   *  overvise constructor throws LogVolumeException!  
+   *  @exception LVolumeException for wrong parameters set
+   *  @param name         name of  logical volume 
+   *  @param Solid        pointer to ISolid object 
+   *  @param material     name of the material 
+   *  @param validSince   begin of validity range 
+   *  @param validTill    end of validity range 
+   *  @param sensitivity  name of sensitive detector object (for simulation)
+   *  @param magnetic     name of magnetic field object (for simulation)
    */
   LVolume( const std::string& name             , 
            ISolid*            Solid            ,
@@ -95,13 +73,13 @@ public:
            const std::string& magnetic    = "" );
   
   /** constructor, pointer to ISolid* must be valid!, 
-   *  overvise constructor throws LVolumeException!  
-   *  @exception LVolumeException wrong paramaters value
-   *  @param name name of logical volume 
-   *  @param Solid pointer to ISolid object 
-   *  @param material name of the material 
+   *  overvise constructor throws LogVolumeException!  
+   *  @exception LVolumeException for wrong parameters set
+   *  @param name         name of logical volume 
+   *  @param Solid        pointer to ISolid object 
+   *  @param material     name of the material 
    *  @param sensitivity  name of sensitive detector object (for simulation)
-   *  @param magnetic  nam eof magnetic field object (for simulation)
+   *  @param magnetic     name of magnetic field object (for simulation)
    */
   LVolume( const std::string& name             , 
            ISolid*            Solid            ,
@@ -111,31 +89,18 @@ public:
 
   /// destructor 
   virtual ~LVolume();
-  /** @} end of group Constructors */ 
   
 public:
   
-  
-  /** @defgroup DataObject 
-   *  implementation of DataObject methods 
-   *  @{ 
-   */ 
-  virtual const CLID& clID   () const ;
-  static  const CLID& classID()       ;
-  /** @} end of group Data Object */
-  
-  /** @defgroup ILVolume 
-   *  Implementation of ILVolume interface 
-   *  @see ILVolume 
-   * @{
+  /** object/class  identification (virtual)
+   *  @return uniqie class identifier 
    */
+  virtual const CLID& clID    () const ;
   
-  /**  retrieve  the name(identification)  of Logical Volume  
-   *  @see ILVolume 
-   *  @return    the name(identification)  of Logical Volume  
+  /** object/class  identification (static)
+   *  @return uniqie class identifier 
    */
-  inline const std::string&  name () const 
-  { return DataObject::fullpath();}
+  static  const CLID& classID ()       ;
   
   /** is this volume "Assembly" of other volumes?
    *  @see ILVolume 
@@ -145,180 +110,42 @@ public:
    *  and pointer to material should be both nulls
    *  @return true if volume is Assembly
    */ 
-  inline  bool    isAssembly() const
-  { return 0 == m_lv_solid ; }; 
+  inline virtual bool            
+  isAssembly () const { return false   ; } 
   
-  /**  return the solid, associated with the Logical Volume  
+  /** the solid, associated with the Logical Volume  
    *  @see ILVolume 
    *  @return the solid, associated with the Logical Volume  
    */
-  inline const ISolid*       solid        () const 
-  { return m_lv_solid ; }
+  inline virtual const ISolid*   
+  solid      () const { return m_solid ; }
   
-  /**  return the material, associated with the Logical Volume  
+  /** the material, associated with the Logical Volume  
    *  For Assembly Volumes material pointes to NULL!
    *  @see ILVolume 
    *  @exception LVolumeException no material
    *  @return the material, associated with the Logical Volume  
    */
-  inline  const Material*     material     () const 
-  { 
-    return m_lv_material =
-      0 != m_lv_material    ? m_lv_material : 
-      LVolume::isAssembly() ?  0            : findMaterial() ;
-  };
+  inline virtual const Material* 
+  material   () const 
+  { return 0 != m_material ? m_material : findMaterial() ; };
   
-  /**  return the material(by name), associated with the Logical Volume  
+  /** the material(by name), associated with the Logical Volume  
    *  @see ILVolume 
    *  @return the material(by name), associated with the Logical Volume  
    */
-  inline  const std::string&  materialName () const 
-  { return m_lv_materialName; }
+  inline virtual const std::string&  
+  materialName () const { return m_materialName; }
   
-  /**  return vector of physical volumes 
-   *  @see ILVolume 
-   *  @return vector of physical volumes 
-   */
-  inline        PVolumes& pvolumes ()       
-  { return m_lv_pvolumes ; } 
-  
-  /**  return vector of physical volumes (const version)
-   *  @see ILVolume 
-   *  @return vector of physical volumes 
-   */
-  inline const PVolumes& pvolumes () const 
-  { return m_lv_pvolumes ; }
-  
-  /**  return number of Physical(positioned) Volumes 
-   *  @see ILVolume 
-   *  @return number of Physical(positioned) Volumes
-   */
-  inline ILVolume::ReplicaType noPVolumes () const
-  { return m_lv_pvolumes.size() ; }
-  
-  /** get daughter (Physical Volume) by index
-   *  @see ILVolume 
-   *  @param  index    physical volume index 
-   *  @return pointer to daughter (Physical Volume) 
-   */
-  inline  IPVolume* operator[]( const ILVolume::ReplicaType& index ) const
-  {
-    return m_lv_pvolumes.size() > index ? 
-      *(m_lv_pvolumes.begin()+index) : 0 ;
-  };
-  
-  /** get daughter (Physical Volume) by name 
-   *  @see ILVolume 
-   *  @param  name    physical volume name 
-   *  @return pointer to daughter (Physical Volume) 
-   */
-  inline  IPVolume* operator[]( const std::string&           name  ) const
-  { 
-    ILVolume::PVolumes::const_iterator pvi = 
-      std::find_if( m_lv_pvolumes.begin  () , 
-                    m_lv_pvolumes.end    () , 
-                    IPVolume_byName( name ) ) ;
-    return m_lv_pvolumes.end() != pvi ? *pvi : 0 ;
-  };
-
-  /** get daughter (Physical Volume) by index
-   *  @see ILVolume 
-   *  @param  index    physical volume index 
-   *  @return pointer to daughter (Physical Volume) 
-   */
-  inline IPVolume* pvolume   ( const ILVolume::ReplicaType& index ) const
-  {
-    return m_lv_pvolumes.size() > index ? 
-      *(m_lv_pvolumes.begin()+index) : 0 ;
-  };
-  
-  /** get daughter (Physical Volume) by name 
-   *  @see ILVolume 
-   *  @param  name    physical volume name 
-   *  @return pointer to daughter (Physical Volume) 
-   */
-  inline IPVolume* pvolume   ( const std::string&           name  ) const  
-  { 
-    ILVolume::PVolumes::const_iterator pvi = 
-      std::find_if( m_lv_pvolumes.begin  () , 
-                    m_lv_pvolumes.end    () , 
-                    IPVolume_byName( name ) ) ;
-    return m_lv_pvolumes.end() != pvi ? *pvi : 0 ;
-  };
-  
-  /**  retrieve begin iterator  for manipulation with daughters
-   *  @see ILVolume 
-   *   @return begin iterator  for manipulation with daughters
-   */
-  inline  ILVolume::PVolumes::iterator       pvBegin     ()
-  { return m_lv_pvolumes.begin () ;}
-  
-  
-  /**  retrieve begin iterator  for manipulation with daughters
-   *  @see ILVolume 
-   *   (const version)
-   *   @return begin iterator  for manipulation with daughters
-   */
-  inline ILVolume::PVolumes::const_iterator pvBegin     () const
-  { return m_lv_pvolumes.begin () ;}
-  
-  /**  retrieve end iterator  for manipulation with daughters
-   *  @see ILVolume 
-   *   @return end iterator  for manipulation with daughters
-   */
-  inline ILVolume::PVolumes::iterator       pvEnd       ()
-  { return m_lv_pvolumes.end ()  ;}
-  
-  /**  retrieve end iterator  for manipulation with daughters
-   *   (const version)
-   *  @see ILVolume 
-   *   @return end iterator  for manipulation with daughters
-   */
-  inline ILVolume::PVolumes::const_iterator pvEnd       () const 
-  { return m_lv_pvolumes.end () ;}
-  
-  /** traverse the sequence of paths  \n 
-   *  transform the sequence of replicas to sequence of  physical volumes 
-   *  @see ILVolume 
-   *  @param replicaPath replica-Path 
-   *  @param volumePath  vector of physical volumes 
-   *  @return status code 
-   */
-  virtual StatusCode 
-  traverse ( ILVolume::ReplicaPath::const_iterator pathBegin,
-             ILVolume::ReplicaPath::const_iterator pathEnd  ,
-             ILVolume::PVolumePath&                pVolumePath );
-  
-  /** traverse the sequence of paths  \n 
-   *  transform the sequence of replicas to sequence of  physical volumes 
-   *  @see ILVolume 
-   *  @param replicaPath replica-Path 
-   *  @param volumePath  vector of physical volumes 
-   *  @return status code 
-   */
-  inline  StatusCode 
-  traverse ( const ILVolume::ReplicaPath&  path,
-             ILVolume::PVolumePath&        pVolumePath )
-  { return traverse( path.begin() , path.end() , pVolumePath ); }
-  
-  /** check for the given 3D-point. 
-   *  Point coordinated are in the local reference 
-   *  frame of the solid.   
-   *
-   *  For Assembly Volumes "inside" means 
-   *  inside of at least one daughter volume 
-   * 
+  /** check for the given 3D-point. Point coordinates are in the 
+   *  local reference frame of the logical volume 
    *  @see ILVolume 
    *  @param LocalPoint point (in local reference system of the solid)
    *  @return true if the point is inside the solid
    */
-  inline bool isInside ( const HepPoint3D& LocalPoint ) const
-  { 
-    return 
-      isAssembly()                       ? 
-      isInsideDaughter    ( LocalPoint ) :
-      m_lv_solid->isInside( LocalPoint ) ;
-  };
+  inline virtual bool isInside 
+  ( const HepPoint3D& LocalPoint ) const
+  { return m_solid->isInside( LocalPoint ) ; };
   
   /** calculate the daughter path containing the Point in Local frame , 
    *  can be VERY slow for complex geometry, 
@@ -329,10 +156,10 @@ public:
    *  @param  volumePath  vector of physical volumes
    *  @return status code 
    */
-  virtual StatusCode
-  belongsTo( const HepPoint3D&        LocalPoint ,
-             const int                Level      , 
-             ILVolume::PVolumePath&   pVolumePath );
+  virtual StatusCode belongsTo
+  ( const HepPoint3D&        LocalPoint  ,
+    const int                Level       , 
+    ILVolume::PVolumePath&   pVolumePath ) const ;
   
   /** calculate the daughter path containing the Point in Local frame , 
    *  can be VERY slow for complex geometry, 
@@ -343,10 +170,10 @@ public:
    *  @param  volumePath  vector of physical volumes
    *  @return status code 
    */
-  virtual StatusCode 
-  belongsTo( const HepPoint3D&        LocalPoint ,
-             const int                Level      , 
-             ILVolume::ReplicaPath&   replicaPath );
+  virtual StatusCode belongsTo
+  ( const HepPoint3D&        LocalPoint  ,
+    const int                Level       , 
+    ILVolume::ReplicaPath&   replicaPath ) const  ;
   
   /** intersection of the logical volume with with the line \n
    *  The line is parametrized in the local reference system 
@@ -361,18 +188,18 @@ public:
    *   solid is not defined or material is not accessible.
    *
    *  @see ILVolume 
-   *  @exception LVolumeException solid or/and matherial problems 
+   *  @exception LogVolumeException solid or/and matherial problems 
    *  @param Point initial point at the line
    *  @param Vector direction vector of the line
    *  @param intersections output container 
    *  @param threshold threshold value 
    *  @return number of intersections  
    */
-  virtual unsigned int 
-  intersectLine( const HepPoint3D        & Point         , 
-                 const HepVector3D       & Vector        , 
-                 ILVolume::Intersections & intersections , 
-                 const double              threshold     );
+  virtual unsigned int intersectLine
+  ( const HepPoint3D        & Point         , 
+    const HepVector3D       & Vector        , 
+    ILVolume::Intersections & intersections , 
+    const double              threshold     ) const ;
   
   /** intersection of the logical volume with with the line \n
    *  Theine is parametrized in the local reference system 
@@ -387,7 +214,7 @@ public:
    *   solid is not defined or material is not accessible.
    *
    *  @see ILVolume 
-   *  @exception LVolumeException solid or/and matherial problems 
+   *  @exception LogVolumeException solid or/and matherial problems 
    *  @param Point initial point at the line
    *  @param Vector direction vector of the line
    *  @param intersections output container
@@ -396,85 +223,45 @@ public:
    *  @param threshold threshold value 
    *  @return number of intersections  
    */
-  virtual unsigned int 
-  intersectLine( const HepPoint3D         & Point        , 
-                 const HepVector3D        & Vector       , 
-                 ILVolume::Intersections & intersections , 
-                 const ISolid::Tick        tickMin       , 
-                 const ISolid::Tick        tickMax       , 
-                 const double              Threshold     );
+  virtual unsigned int intersectLine
+  ( const HepPoint3D         & Point         , 
+    const HepVector3D        & Vector        , 
+    ILVolume::Intersections  & intersections , 
+    const ISolid::Tick         tickMin       , 
+    const ISolid::Tick         tickMax       , 
+    const double               Threshold     ) const ;
   
-  
-  /**         name of sensitive "detector" - needed for simulation 
-   *  @see ILVolume 
-   *  @return name of sensitive "detector"
-   */
-  inline const std::string& sdName () const 
-  { return m_lv_sdName; } ;
-  
-  /** magnetic properties  (if needed for simulation)  
-   *  @see ILVolume 
-   *  @return name of magnetic field  object
-   */
-  inline const std::string& mfName () const 
-  { return m_lv_mfName; } ;
-  
-  /** accessors to surfaces 
-   *  @see ILVolume 
-   *  @return vector of surfaces 
-   */  
-  inline        Surfaces& surfaces()       
-  { return m_lv_surfaces ; }
-  
-  /** accessors to surfaces  (const version) 
-   *  @see ILVolume 
-   *  @return vector of surfaces 
-   */  
-  inline  const Surfaces& surfaces() const  
-  { return m_lv_surfaces ; }
-
   /** printout to STD/STL stream
    *  @see ILVolume 
    *  @param os STD/STL stream
    *  @return reference to the stream
    */
-  virtual std::ostream& printOut( std::ostream & os = std::cout) const ;
+  virtual std::ostream& printOut 
+  ( std::ostream & os = std::cout ) const ;
   
   /** printout to Gaudi MsgStream stream
    *  @see ILVolume 
    *  @param os Gaudi MsgStream  stream
    *  @return reference to the stream
    */
-  virtual MsgStream&    printOut( MsgStream    & os ) const;
+  virtual MsgStream&    printOut
+  ( MsgStream    & os             ) const;
 
-  /** reset to initila state, 
+  /** reset to initial state, 
    *  clear chaches, etc...
    *  @see ILVolume 
    *  @return self reference
    */
   inline  ILVolume* reset () 
   {
-    /// reset solid 
-    if( 0 != m_lv_solid ) { m_lv_solid->reset() ; }
-    /// reset material 
-    m_lv_material = 0 ;
-    /// reset all physical volumes 
-    std::for_each( m_lv_pvolumes.begin ()         , 
-                   m_lv_pvolumes.end   ()         ,
-                   std::mem_fun(&IPVolume::reset) ) ;
-    /// return self-reference
-    return this;
+    /// reset the solid 
+    if( 0 != m_solid ) { m_solid->reset() ; }
+    /// reset the material 
+    m_material = 0 ;
+    /// reset the base 
+    return LogVolBase::reset() ;
   };
-  /**@} end of group ILVolume */ 
   
-  /** @defgroup Serialize 
-   *  serialize methods from DataObject and ISerialize inetrface
-   *  @see DataObject
-   *  @see ILVolume 
-   *  @see ISerialize 
-   *  @{ 
-   */ 
-
   /** serialization for reading 
    *  - implementation of DataObject method
    *  - implementation of ISerialize interface
@@ -484,7 +271,8 @@ public:
    *  @param s reference to stream buffer 
    *  @return reference to stream buffer 
    */ 
-  virtual StreamBuffer& serialize(StreamBuffer& s );
+  virtual StreamBuffer& serialize 
+  ( StreamBuffer& s );
 
   /** serialization for writing 
    *  - implementation of DataObject method
@@ -495,169 +283,15 @@ public:
    *  @param s reference to stream buffer 
    *  @return reference to stream buffer 
    */ 
-  virtual StreamBuffer& serialize(StreamBuffer& s )  const;
-  /** @} end of group Serialize */ 
+  virtual StreamBuffer& serialize
+  ( StreamBuffer& s )  const;
 
-
-  /** @defgroup IValidity
-   *  Implementation of IValidity interface
-   *  @see IValidity 
-   *  @{ 
-   */
-  virtual bool         isValid          ()                ;   
-  virtual bool         isValid          ( const ITime& )  ;     
-  virtual const ITime& validSince       ()                ;    
-  virtual const ITime& validTill        ()                ;   
-  virtual void         setValidity      ( const ITime& , 
-                                          const ITime& )  ;  
-  virtual void         setValiditySince ( const ITime& )  ;  
-  virtual void         setValidityTill  ( const ITime& )  ;   
-  virtual StatusCode   updateValidity   ()                ; 
-  /** @} end of group IValidity */  
-  
-  /** @defgroup IInspectable  
-   * implementation of IInspectable interface 
-   * @see IInspectable 
-   * @see ILVolume 
-   * @{ 
-   */
-  virtual bool acceptInspector( IInspector* pInspector )       ;
-  virtual bool acceptInspector( IInspector* pInspector ) const ;
-  /** @} end of group IInspectable */
-  
-  /** @defgroup IInterface 
-   *  implementations of vurtual functions from class IInterface 
-   *  @see IInterface
-   *  @see ILVolume 
-   *  @{ 
-   */
-  
-  /** query the interface
-   *  @param ID unique interface identifier 
-   *  @param ppI placeholder for returned interface
-   *  @return status code 
-   */
-  virtual StatusCode 
-  queryInterface( const InterfaceID& ID , void** ppI ) ;
-  /** add the reference
-   *  @return reference counter 
-   */
-  virtual unsigned long addRef  ();
-
-  /** release the interface 
-   *  @return reference counter 
-   */
-  virtual unsigned long release ();  
-  /** @} end of group IInterface */
-
-  /** @defgroup Create 
-   *  create daughter physical volume 
-   *  @{ 
-   */
-  IPVolume* createPVolume( const std::string&    PVname                    , 
-                           const std::string&    LVnameForPV               ,
-                           const HepPoint3D&     position = HepPoint3D  () ,  
-                           const HepRotation&    rotation = HepRotation () ); 
-  IPVolume* createPVolume( const std::string&    PVname                    , 
-                           const std::string&    LVnameForPV               ,
-                           const HepTransform3D& Transform                 );
-  /** @} end of group Create */
-  
-  /** @defgroup Multy 
-   * create a parametric group of physical volumes 
-   * @{
-   */  
-
-  /** create one-parametric group of physical volumes 
-   *  @param PVname_base base name for the group 
-   *  @param LVnameForPV name of logical lvolume 
-   *  @param nStep number of copies
-   *  @param initialPosition positionof the first clone  
-   *  @param initialRotation rotation of the first clone
-   *  @param stepTranslation relative position of next clone 
-   *  @param stepRotation relative rotation of next clone 
-   *  @return pointer to physical volume 
-   */
-  IPVolume* createMultiPVolume( const std::string&   PVname_base     , 
-                                const std::string&   LVnameForPV     , 
-                                const unsigned long  nStep           , 
-                                const HepPoint3D&    initialPosition ,
-                                const HepRotation&   initialRotation ,     
-                                const HepVector3D&   stepTranslation ,
-                                const HepRotation&   stepRotation    );
-  
-  /** create two-parametric group of physical volumes 
-   *  @param PVname_base base name for the group 
-   *  @param LVnameForPV name of logical lvolume 
-   *  @param initialPosition positionof the first clone  
-   *  @param initialRotation rotation of the first clone
-   *  @param nStep1 number of copies for first parameter 
-   *  @param stepTranslation1 relative position of next clone 
-   *  @param stepRotation1 relative rotation of next clone 
-   *  @param nStep2 number of copies for first parameter 
-   *  @param stepTranslation2 relative position of next clone 
-   *  @param stepRotation2 relative rotation of next clone 
-   *  @return pointer to physical volume 
-   */ 
-  IPVolume* createMultiPVolume( const std::string&   PVname_base      , 
-                                const std::string&   LVnameForPV      , 
-                                const HepPoint3D&    initialPosition  ,
-                                const HepRotation&   initialRotation  ,     
-                                const unsigned long  nStep1           , 
-                                const HepVector3D&   stepTranslation1 ,
-                                const HepRotation&   stepRotation1    ,
-                                const unsigned long  nStep2           , 
-                                const HepVector3D&   stepTranslation2 ,
-                                const HepRotation&   stepRotation2    );
-
-  /** create three-parametric group of physical volumes 
-   *  @param PVname_base base name for the group 
-   *  @param LVnameForPV name of logical lvolume 
-   *  @param initialPosition positionof the first clone  
-   *  @param initialRotation rotation of the first clone
-   *  @param nStep1 number of copies for first parameter 
-   *  @param stepTranslation1 relative position of next clone 
-   *  @param stepRotation1 relative rotation of next clone 
-   *  @param nStep2 number of copies for first parameter 
-   *  @param stepTranslation2 relative position of next clone 
-   *  @param stepRotation2 relative rotation of next clone 
-   *  @param nStep3 number of copies for first parameter 
-   *  @param stepTranslation3 relative position of next clone 
-   *  @param stepRotation3 relative rotation of next clone 
-   *  @return pointer to physical volume 
-   */ 
-  IPVolume* createMultiPVolume( const std::string&   PVname_base      , 
-                                const std::string&   LVnameForPV      , 
-                                const HepPoint3D&    initialPosition  ,
-                                const HepRotation&   initialRotation  ,     
-                                const unsigned long  nStep1           , 
-                                const HepVector3D&   stepTranslation1 ,
-                                const HepRotation&   stepRotation1    ,
-                                const unsigned long  nStep2           , 
-                                const HepVector3D&   stepTranslation2 ,
-                                const HepRotation&   stepRotation2    ,
-                                const unsigned long  nStep3           , 
-                                const HepVector3D&   stepTranslation3 ,
-                                const HepRotation&   stepRotation3    );
-  /** @} end of group Multy */
-  
-  /** set solid for logical volume
-   *  @param solid pointer to ISolid object
-   *  @return pointer to ISolid object 
-   */
-  const ISolid* setSolid( ISolid* solid );
-  
 protected:
   
-  /** constructor
+  /** default constructor
    *  @param Name name of logical volume 
    */
   LVolume( const std::string& Name = "");       
-
-  /** create an empty PVolume 
-   *  return reference to new PVolume 
-   */
-  IPVolume* createPVolume();
   
 private: 
   
@@ -668,45 +302,14 @@ private:
   
 private:
   
-  /// find C++ pointer to material by it's name 
-  Material* findMaterial() const ;
-  
-  /** @defgroup Assertions 
-   *  inline  assertion methods
-   *  @{ 
+  /** find C++ pointer to material by it's name 
+   *  @exception LogVolumeException if the material is not found 
+   *  @return the C++ pointer to material 
    */
-  /** Assertion
-   *  @param assertion condition 
-   *  @param name      exception message
-   *  @param sc        status code 
-   */
-  inline void 
-  Assert( bool               assertion                       , 
-          const std::string& name                            ,
-          const StatusCode&  sc        = StatusCode::FAILURE ) const
-  { 
-    if( !assertion ) { throw LVolumeException( name, this , sc ); }
-  };
-  
-  /** Assertion
-   *  @param assertion condition 
-   *  @param name      exception message
-   *  @param Exception previous exception 
-   *  @param sc        status code 
-   */
-  inline void 
-  Assert( bool                  assertion , 
-          const std::string&    name      ,
-          const GaudiException& Exception , 
-          const StatusCode&     sc        = StatusCode::FAILURE ) const  
-  { 
-    if( !assertion ) 
-      { throw LVolumeException( name, Exception , this , sc ); }
-  };
-  /** @} end of group Assertions */ 
+  const Material* findMaterial() const ;
   
   /** Auxillary method  to calculate own intersections
-   *  @exception LVolumeException wrong parameters or geometry error
+   *  @exception LogVolumeException for wrong parameters or geometry error
    *  @param Point initial point at the line
    *  @param Vector direction vector of the line
    *  @param intersections output container
@@ -715,13 +318,13 @@ private:
    *  @param threshold threshold value 
    *  @return number of intersections  
    */
-  unsigned int  
-  intersectBody( const HepPoint3D&         Point         , 
-                 const HepVector3D&        Vector        , 
-                 ILVolume::Intersections & intersections , 
-                 ISolid::Tick            & tickMin       , 
-                 ISolid::Tick            & tickMax       , 
-                 const double              Threshold     );  
+  unsigned int intersectBody
+  ( const HepPoint3D        & Point         , 
+    const HepVector3D       & Vector        , 
+    ILVolume::Intersections & intersections , 
+    ISolid::Tick            & tickMin       , 
+    ISolid::Tick            & tickMax       , 
+    const double              Threshold     ) const ;  
   
   /** Auxillary method  to calculate own intersections
    *  @exception LVolumeException wrong parameters or geometry error
@@ -731,103 +334,27 @@ private:
    *  @param threshold threshold value 
    *  @return number of intersections  
    */
-  unsigned int  
-  intersectBody( const HepPoint3D&        Point         , 
-                 const HepVector3D&       Vector        , 
-                 ILVolume::Intersections& intersections , 
-                 const double             Threshold     );
-  
-  /** Auxillary method  to calculate intersections with daughters
-   *  @exception LVolumeException wrong parameters or geometry error
-   *  @param Point initial point at the line
-   *  @param Vector direction vector of the line
-   *  @param intersections output container
-   *  @param tickMin minimum value of possible Tick
-   *  @param tickMax maximum value of possible Tick
-   *  @param threshold threshold value 
-   *  @return number of intersections  
-   */
-  unsigned int  
-  intersectDaughters( const HepPoint3D&        Point              , 
-                      const HepVector3D&       Vector             , 
-                      ILVolume::Intersections& childIntersections , 
-                      const ISolid::Tick     & tickMin            , 
-                      const ISolid::Tick     & tickMax            , 
-                      const double             Threshold          );  
-
-  /** Auxillary method  to calculate intersection with daughters
-   *  @exception LVolumeException wrong parameters or geometry error
-   *  @param Point initial point at the line
-   *  @param Vector direction vector of the line
-   *  @param intersections output container
-   *  @param threshold threshold value 
-   *  @return number of intersections  
-   */
-  unsigned int  
-  intersectDaughters( const HepPoint3D&        Point              , 
-                      const HepVector3D&       Vector             , 
-                      ILVolume::Intersections& childIntersections , 
-                      const double             Threshold          );
-
-  /** check for the given 3D-point insiode daughter volume
-   *
-   *  Point coordinated are in the local reference 
-   *  frame of the solid.   
-   *
-   *  For Assembly Volumes "inside" means 
-   *  inside of at least one daughter volume 
-   * 
-   *  @param LocalPoint point (in local reference system of the solid)
-   *  @return true if the point is inside the solid
-   */
-  inline bool isInsideDaughter( const HepPoint3D& LocalPoint ) const
-  { 
-    return  
-      m_lv_pvolumes.end() != 
-      std::find_if( m_lv_pvolumes.begin () , 
-                    m_lv_pvolumes.end   () , 
-                    IPVolume_isInside( LocalPoint ) ) ;
-  };
-  
-protected:
-  
-  /** static accessor to 
-   *  data service used for retriving of the material 
-   *  @return pointer to data service 
-   */
-  static IDataProviderSvc* dataSvc()  ;
+  unsigned int intersectBody
+  ( const HepPoint3D&        Point         , 
+    const HepVector3D&       Vector        , 
+    ILVolume::Intersections& intersections , 
+    const double             Threshold     ) const ;
   
 private:
   
   /// solid 
-  ISolid*            m_lv_solid        ; 
-  // physical volumes 
-  PVolumes           m_lv_pvolumes     ; 
-  /// surfaces 
-  Surfaces           m_lv_surfaces     ; 
-  ///@{ 
-  /** material */
-  std::string        m_lv_materialName ; 
-  mutable  Material* m_lv_material     ; 
-  ///@}
-  /// name of sensitive detector object 
-  std::string        m_lv_sdName       ;
-  /// name of magnetic field source 
-  std::string        m_lv_mfName       ;
+  ISolid*                   m_solid        ; 
+  /// material 
+  std::string               m_materialName ; 
+  mutable const Material*   m_material     ; 
   
-  ///@{ 
-  /**  IValidity */ 
-  ITime* m_lv_validSince   ;
-  ITime* m_lv_validTill    ; 
-  ///@}
-
-  /// reference counter 
-  static unsigned long  s_count ;
 };
 
-/// ===========================================================================
+// ============================================================================
+// The End 
+// ============================================================================
 #endif  ///< DETDESC_LVOLUME_H
-/// ===========================================================================
+// ============================================================================
 
 
 

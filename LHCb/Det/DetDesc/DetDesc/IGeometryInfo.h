@@ -1,32 +1,30 @@
-/// ===========================================================================
-/// CVS tag $Name: not supported by cvs2svn $
-/// ===========================================================================
-/// $Log: not supported by cvs2svn $
-/// ===========================================================================
+// $Id: IGeometryInfo.h,v 1.5 2001-11-18 15:32:43 ibelyaev Exp $ 
+// ===========================================================================
+// CVS tag $Name: not supported by cvs2svn $
+// ===========================================================================
+// $Log: not supported by cvs2svn $
+// Revision 1.4  2001/08/10 14:59:01  ibelyaev
+// modifications in IGeometryInfo and related classes
+//
+// ===========================================================================
 #ifndef  DETDESC_IGEOMETRYINFO_H
 #define  DETDESC_IGEOMETRYINFO_H 1
-///@{
 /** STD & STL includes */
 #include <iostream>
 #include <string>
 #include <vector>
 #include <functional>
-///@}
 /// CLHEP includes 
 #include "CLHEP/Geometry/Point3D.h"
-///@{
 /** GaudiKernel includes */
 #include "GaudiKernel/IInterface.h"
 #include "GaudiKernel/ISerialize.h"
 #include "GaudiKernel/IInspectable.h"
-///@} 
 /// DetDesc include 
 #include "DetDesc/ILVolume.h"
-///@{
 /** forward declarations */
 class HepTransform3D;
 class StatusCode;
-///@}
 
 /** the unique interface identifier 
  * ( unique interface identifier , major & minor versions)
@@ -181,8 +179,9 @@ public:
    * @param globalPoint the point in global Reference System
    * @return the name of daughter to which point belongs to.
    */
-  virtual std::string belongsToPath( const HepPoint3D& globalPoint ) = 0;
-
+  virtual std::string belongsToPath
+  ( const HepPoint3D& globalPoint ) = 0;
+  
   /** To which daughter the given global point belongs to? @n
    *  "Find daughter by point" family @n
    *  If we are clever enough to define *isInside(...)* method
@@ -200,8 +199,9 @@ public:
    * @param globalPoint the point in global Reference System
    * @return pointer to daughter geometry info element
    */
-  virtual IGeometryInfo* belongsTo ( const HepPoint3D& globalPoint ) = 0;
-
+  virtual IGeometryInfo* belongsTo 
+  ( const HepPoint3D& globalPoint ) = 0;
+  
   /** To which daughter the given global point belongs to? @n
    *  "Find daughter by point" family @n
    *  If we are clever enough to define *isInside(...)* method
@@ -227,9 +227,9 @@ public:
    * @param level       depth
    * @return the name of daughter to which point belongs to.
    */
-  virtual std::string belongsToPath( const HepPoint3D& globalPoint ,
-                                     const int         level ) = 0;
-
+  virtual std::string belongsToPath
+  ( const HepPoint3D& globalPoint , const int         level ) = 0;
+  
   /** To which daughter the given global point belongs to? @n
    *  "Find daughter by point" family @n
    *  If we are clever enough to define *isInside(...)* method
@@ -254,8 +254,8 @@ public:
    * @param level       depth
    * @return pointer to daughter geometry info element
    */
-  virtual IGeometryInfo* belongsTo ( const HepPoint3D& globalPoint ,
-                                     const int         level ) = 0;
+  virtual IGeometryInfo* belongsTo 
+  ( const HepPoint3D& globalPoint , const int         level ) = 0;
   ///@} end of group BelongsTo
 
   /** @defgroup FullGeomtryInfo
@@ -285,12 +285,12 @@ public:
    *        Point and has the connection with Actual Geometry Tree.
    * @param volumePath retuned information
    */
-  virtual StatusCode
-  fullGeoInfoForPoint( const HepPoint3D&        point       ,
-                       const int                level       ,
-                       IGeometryInfo*&          start       ,
-                       ILVolume::PVolumePath&   volumePath  ) = 0;
-
+  virtual StatusCode fullGeoInfoForPoint
+  ( const HepPoint3D&        point       ,
+    const int                level       ,
+    IGeometryInfo*&          start       ,
+    ILVolume::PVolumePath&   volumePath  ) = 0;
+  
   /** find full geometry information for given point
    * @param point input 3D point
    * @param level number of levels to nagigate down the hierarchy
@@ -299,12 +299,12 @@ public:
    *        Point and has the connection with Actual Geometry Tree.
    * @param replicaPath retuned information
    */
-  virtual StatusCode
-  fullGeoInfoForPoint( const HepPoint3D&        point       ,
-                       const int                level       ,
-                       IGeometryInfo*&          start       ,
-                       ILVolume::ReplicaPath&   replicaPath ) = 0;
-
+  virtual StatusCode fullGeoInfoForPoint
+  ( const HepPoint3D&        point       ,
+    const int                level       ,
+    IGeometryInfo*&          start       ,
+    ILVolume::ReplicaPath&   replicaPath ) = 0;
+  
   /** find full geometry information for given point
    * @param point input 3D point
    * @param level number of levels to nagigate down the hierarchy
@@ -313,12 +313,12 @@ public:
    *        Point and has the connection with Actual Geometry Tree.
    * @param volumePath retuned information
    */
-  virtual StatusCode
-  fullGeoInfoForPoint( const HepPoint3D&        point       ,
-                       const int                level       ,
-                       std::string&             start       ,
-                       ILVolume::PVolumePath&   volumePath  ) = 0;
-
+  virtual StatusCode fullGeoInfoForPoint
+  ( const HepPoint3D&        point       ,
+    const int                level       ,
+    std::string&             start       ,
+    ILVolume::PVolumePath&   volumePath  ) = 0;
+  
   /** find full geometry information for given point
    * @param point input 3D point
    * @param level number of levels to nagigate down the hierarchy
@@ -327,13 +327,12 @@ public:
    *        Point and has the connection with Actual Geometry Tree.
    * @param replicaPath retuned information
    */
-  virtual StatusCode
-  fullGeoInfoForPoint( const HepPoint3D&        point       ,
-                       const int                level       ,
-                       std::string&             start       ,
-                       ILVolume::ReplicaPath&   replicaPath ) = 0;
+  virtual StatusCode fullGeoInfoForPoint
+  ( const HepPoint3D&        point       ,
+    const int                level       ,
+    std::string&             start       ,
+    ILVolume::ReplicaPath&   replicaPath ) = 0;
   ///@} end of group FullGeometryInfo
-
 
   /** How to answer the question -
    *  What is the distance in radiation lengths between 2 points? @n
@@ -368,26 +367,26 @@ public:
   /** associated Logical Volume
    *  @return the pointer to associated Logical Volume
    */
-  virtual ILVolume* lvolume () const = 0 ;
-
+  virtual const ILVolume* lvolume () const = 0 ;
+  
   /**  the information about the support
    *  @param start  "start" geometry info
    *  @param replicaPath replica path
    *  @return status code
    */
-  virtual StatusCode
-  location( IGeometryInfo*&        start ,
-            ILVolume::ReplicaPath& replicaPath ) const = 0;
-
+  virtual StatusCode location
+  ( IGeometryInfo*&        start ,
+    ILVolume::ReplicaPath& replicaPath ) const = 0;
+  
   /**  the information about the support
    *  @param start  "start" geometry info
    *  @param replicaPath replica path
    *  @return status code
    */
-  virtual StatusCode
-  location( std::string&           start ,
-            ILVolume::ReplicaPath& replicaPath ) const = 0;
-
+  virtual StatusCode location
+  ( std::string&           start ,
+    ILVolume::ReplicaPath& replicaPath ) const = 0;
+  
   /** @defgroup LogVol
    *
    *  get Logical Volume by its full address - "start" point in
@@ -402,39 +401,39 @@ public:
    *  @param replicaPath replicaPath
    *  @return the name of Logical Volume
    */
-  virtual std::string
-  lvolumePath( const std::string&           start       ,
-               const ILVolume::ReplicaPath& replicaPath ) = 0;
-
+  virtual std::string lvolumePath
+  ( const std::string&           start       ,
+    const ILVolume::ReplicaPath& replicaPath ) = 0;
+  
   /** the Logical Volume, addressed by  start and Replica Path
    *  @param start start
    *  @param replicaPath replicaPath
    *  @return pointer to Logical Volume
    */
-  virtual ILVolume*
-  lvolume ( const std::string&           start       ,
-            const ILVolume::ReplicaPath& replicaPath ) = 0;
-
+  virtual const ILVolume* lvolume 
+  ( const std::string&           start       ,
+    const ILVolume::ReplicaPath& replicaPath ) = 0;
+  
   /** the name of Logical Volume, addressed by  start and Replica Path
    *  @param start start
    *  @param replicaPath replicaPath
    *  @return the name of Logical Volume
    */
-  virtual std::string
-  lvolumePath( IGeometryInfo*               start       ,
-               const ILVolume::ReplicaPath& replicaPath ) = 0;
-
+  virtual std::string lvolumePath
+  ( IGeometryInfo*               start       ,
+    const ILVolume::ReplicaPath& replicaPath ) = 0;
+  
   /** the Logical Volume, addressed by  start and Replica Path
    *  @param start start
    *  @param replicaPath replicaPath
    *  @return pointer to Logical Volume
    */
-  virtual ILVolume*
-  lvolume ( IGeometryInfo*               start       ,
-            const ILVolume::ReplicaPath& replicaPath ) = 0;
-
+  virtual const ILVolume* lvolume 
+  ( IGeometryInfo*               start       ,
+    const ILVolume::ReplicaPath& replicaPath ) = 0;
+  
   ///@} end of group LogVol
-
+  
   /** @defgroup Navigation
    *
    * functions for simplifications of navigation functions

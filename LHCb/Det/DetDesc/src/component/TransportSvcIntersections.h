@@ -112,13 +112,14 @@ unsigned long TransportSvc::intersections( const HepPoint3D&        point       
     ///
     /// delegate the calculation to the logical volume 
     ///
-    ILVolume* lv = giLocal->lvolume();   
-    lv->intersectLine( giLocal->matrix() * point , 
-                       giLocal->matrix() * vect  , 
-                       intersept                 , 
-                       tickMin                   , 
-                       tickMax                   , 
-                       threshold                 ); 
+    const ILVolume* lv = giLocal->lvolume();   
+    lv->intersectLine
+      ( giLocal->matrix() * point , 
+        giLocal->matrix() * vect  , 
+        intersept                 , 
+        tickMin                   , 
+        tickMax                   , 
+        threshold                 ); 
     
     ///
     /// make local copy of all parameters:

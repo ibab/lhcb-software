@@ -1,8 +1,12 @@
-/// ===========================================================================
-/// CVS tag $Name: not supported by cvs2svn $
-/// ===========================================================================
-/// $Log: not supported by cvs2svn $ 
-/// ===========================================================================
+// $Id: GeometryInfo.cpp,v 1.7 2001-11-18 15:32:44 ibelyaev Exp $ 
+// ===========================================================================
+// CVS tag $Name: not supported by cvs2svn $
+// ===========================================================================
+// $Log: not supported by cvs2svn $
+// Revision 1.6  2001/08/10 14:59:02  ibelyaev
+// modifications in IGeometryInfo and related classes
+// 
+// ===========================================================================
 // CLHEP 
 #include "CLHEP/Geometry/Point3D.h"
 #include "CLHEP/Geometry/Transform3D.h"
@@ -381,7 +385,7 @@ HepTransform3D* GeometryInfo::calculateMatrix() const
     { m_gi_matrix = new HepTransform3D(); return m_gi_matrix; }
   //
   // 
-  ILVolume* lv = gi->lvolume();
+  const ILVolume* lv = gi->lvolume();
   ILVolume::PVolumePath volumePath;
   StatusCode st = 
     lv->traverse( supportPath().begin() , 

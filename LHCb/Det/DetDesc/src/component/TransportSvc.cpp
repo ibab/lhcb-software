@@ -1,4 +1,9 @@
-
+// $Id: TransportSvc.cpp,v 1.5 2001-11-18 15:32:45 ibelyaev Exp $
+// ============================================================================
+// CVS tag $Name: not supported by cvs2svn $ 
+// ============================================================================
+// $Log: not supported by cvs2svn $ 
+// ============================================================================
 /// from Gaudi 
 #include "GaudiKernel/Kernel.h" 
 #include "GaudiKernel/SvcFactory.h" 

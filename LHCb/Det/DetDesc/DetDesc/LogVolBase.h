@@ -1,0 +1,539 @@
+// $Id: LogVolBase.h,v 1.1 2001-11-18 15:32:44 ibelyaev Exp $ 
+// ===========================================================================
+// CVS tag $Name: not supported by cvs2svn $ 
+// ===========================================================================
+// $Log: not supported by cvs2svn $
+// ===========================================================================
+#ifndef     DETDESC_LOGVOLBASE_H
+#define     DETDESC_LOGVOLBASE_H
+/// STD and STL includes
+#include <iostream>
+#include <string>
+#include <vector>
+#include <functional>
+#include <algorithm> 
+/// GaudiKernel includes 
+#include "GaudiKernel/DataObject.h"
+#include "GaudiKernel/IValidity.h"
+#include "GaudiKernel/SmartRefVector.h" 
+/// DetDesc  includes
+#include "DetDesc/IPVolume.h"
+#include "DetDesc/ILVolume.h"
+#include "DetDesc/IPVolume_predicates.h" 
+#include "DetDesc/LogVolumeException.h"
+#include "DetDesc/Surface.h"
+/// forward declarations 
+class HepPoint3D; 
+class HepVector3D; 
+class HepRotation;
+class HepTransform3D;
+class IDataProviderSvc;
+
+/** @class LogVolBase LogVolBase.h DetDesc/LogVolBase.h 
+ *
+ *  The common base class for ILVolume implementations:
+ *    - LVolume 
+ *    - LAssembly 
+ * 
+ *  @author  Vanya Belyaev Ivan.Belyaev 
+ *  @date    17/11/2001
+ */
+
+class LogVolBase: 
+  public virtual ILVolume   , 
+  public virtual IValidity  ,
+  public         DataObject 
+{
+  
+protected:
+  
+  /** constructor
+   *  @exception LVolumeException wrong paramaters value
+   *  @param name name of logical volume 
+   *  @param sensitivity  name of sensitive detector object (for simulation)
+   *  @param magnetic  nam eof magnetic field object (for simulation)
+   */
+  LogVolBase( const std::string& name        = "" , 
+              const std::string& sensitivity = "" ,
+              const std::string& magnetic    = "" );
+  
+  /** constructor 
+   *  @exception LVolumeException wrong parameter value
+   *  @param name         name of logical volume 
+   *  @param validity     validity object 
+   *  @param sensitivity  name of sensitive detector object (for simulation)
+   *  @param magnetic     nam eof magnetic field object (for simulation)
+   */
+  LogVolBase( const std::string& name             ,
+              const IValidity  & validity         ,
+              const std::string& sensitivity = "" ,
+              const std::string& magnetic    = "" );
+
+  /** constructor
+   *  @exception LVolumeException wrong paramaters value
+   *  @param name name of logical volume 
+   *  @param validSince  begin of validity range 
+   *  @param validTill  end of validity range 
+   *  @param sensitivity  name of sensitive detector object (for simulation)
+   *  @param magnetic  nam eof magnetic field object (for simulation)
+   */
+  LogVolBase( const std::string& name             , 
+              const ITime&       validSince       , 
+              const ITime&       validTill        , 
+              const std::string& sensitivity = "" ,
+              const std::string& magnetic    = "" );
+  
+  
+  /// destructor 
+  virtual ~LogVolBase();
+  
+public:
+  
+  /** retrieve  the name(identification)  of Logical Volume  
+   *  @see ILVolume 
+   *  @return    the name(identification)  of Logical Volume  
+   */
+  inline virtual const std::string&  name () const 
+  { return DataObject::fullpath();}
+  
+  /** vector of physical volumes 
+   *  @see ILVolume 
+   *  @return vector of physical volumes 
+   */
+  inline virtual        PVolumes& pvolumes ()      { return m_pvolumes ; } 
+  
+  /** vector of physical volumes (const version)
+   *  @see ILVolume 
+   *  @return vector of physical volumes 
+   */
+  inline virtual const PVolumes& pvolumes () const { return m_pvolumes ; }
+  
+  /** number of Physical(positioned) Volumes 
+   *  @see ILVolume 
+   *  @return number of Physical(positioned) Volumes
+   */
+  inline virtual ILVolume::ReplicaType noPVolumes () const
+  { return m_pvolumes.size() ; }
+  
+  /** daughter (Physical Volume) by index
+   *  @see ILVolume 
+   *  @param  index    physical volume index 
+   *  @return pointer to daughter (Physical Volume) 
+   */
+  inline virtual const IPVolume* operator[]
+  ( const ILVolume::ReplicaType& index ) const
+  {
+    return m_pvolumes.size() > index ? 
+      *(m_pvolumes.begin()+index) : 0 ;
+  };
+  
+  /** daughter (Physical Volume) by name 
+   *  @see ILVolume 
+   *  @param  name    physical volume name 
+   *  @return pointer to daughter (Physical Volume) 
+   */
+  inline virtual const IPVolume* operator[]
+  ( const std::string&           name  ) const
+  { 
+    ILVolume::PVolumes::const_iterator pvi = 
+      std::find_if( m_pvolumes.begin  () , 
+                    m_pvolumes.end    () , 
+                    IPVolume_byName( name ) ) ;
+    return m_pvolumes.end() != pvi ? *pvi : 0 ;
+  };
+  
+  /** get daughter (Physical Volume) by index
+   *  @param  index    physical volume index 
+   *  @return pointer to daughter (Physical Volume) 
+   */
+  virtual const IPVolume* pvolume   
+  ( const ILVolume::ReplicaType& index ) const
+  {
+    return m_pvolumes.size() > index ? 
+      *(m_pvolumes.begin()+index) : 0 ;
+  };
+  
+  /** get daughter (Physical Volume) by name 
+   *  @param  name    physical volume name 
+   *  @return pointer to daughter (Physical Volume) 
+   */
+  virtual const IPVolume* pvolume   
+  ( const std::string&           name  ) const 
+  { 
+    ILVolume::PVolumes::const_iterator pvi = 
+      std::find_if( m_pvolumes.begin  () , 
+                    m_pvolumes.end    () , 
+                    IPVolume_byName( name ) ) ;
+    return m_pvolumes.end() != pvi ? *pvi : 0 ;
+  };
+  
+  /** begin iterator  for manipulation with daughters
+   *  @see ILVolume 
+   *  @return begin iterator  for manipulation with daughters
+   */
+  inline virtual ILVolume::PVolumes::iterator       pvBegin     ()
+  { return m_pvolumes.begin () ;}
+  
+  /** begin iterator  for manipulation with daughters (const version)
+   *  @see ILVolume 
+   *  @return begin iterator  for manipulation with daughters
+   */
+  inline virtual ILVolume::PVolumes::const_iterator pvBegin     () const
+  { return m_pvolumes.begin () ;}
+  
+  /** retrieve end iterator for manipulation with daughters
+   *  @see ILVolume 
+   *  @return end iterator  for manipulation with daughters
+   */
+  inline virtual ILVolume::PVolumes::iterator       pvEnd       ()
+  { return m_pvolumes.end ()  ;}
+  
+  /** retrieve end iterator for manipulation with daughters (const version)
+   *  @see ILVolume 
+   *  @return end iterator  for manipulation with daughters
+   */
+  inline virtual ILVolume::PVolumes::const_iterator pvEnd       () const 
+  { return m_pvolumes.end () ;}
+  
+  /** traverse the sequence of paths  \n 
+   *  transform the sequence of replicas to sequence of  physical volumes 
+   *  @see ILVolume 
+   *  @param replicaPath replica-Path 
+   *  @param volumePath  vector of physical volumes 
+   *  @return status code 
+   */
+  virtual StatusCode 
+  traverse ( ILVolume::ReplicaPath::const_iterator pathBegin,
+             ILVolume::ReplicaPath::const_iterator pathEnd  ,
+             ILVolume::PVolumePath&                pVolumePath ) const ;
+
+  /** traverse the sequence of paths  \n 
+   *  transform the sequence of replicas to sequence of  physical volumes 
+   *  @see ILVolume 
+   *  @param replicaPath replica-Path 
+   *  @param volumePath  vector of physical volumes 
+   *  @return status code 
+   */
+  inline virtual StatusCode traverse 
+  ( const ILVolume::ReplicaPath&  path,
+    ILVolume::PVolumePath&        pVolumePath ) const
+  { return traverse( path.begin() , path.end() , pVolumePath ); }
+  
+  /** calculate the daughter path containing the Point in Local frame , 
+   *  can be VERY slow for complex geometry, 
+   *  therefore use the appropriate Level for usage 
+   *  @see ILVolume 
+   *  @param  localPoint point in local reference system of logical volume 
+   *  @param  level depth level
+   *  @param  volumePath  vector of physical volumes
+   *  @return status code 
+   */
+  virtual StatusCode belongsTo
+  ( const HepPoint3D&        LocalPoint  ,
+    const int                Level       , 
+    ILVolume::PVolumePath&   pVolumePath ) const ;
+  
+  /** calculate the daughter path containing the Point in Local frame , 
+   *  can be VERY slow for complex geometry, 
+   *  therefore use the appropriate Level for usage 
+   *  @see ILVolume 
+   *  @param  localPoint point in local reference system of logical volume 
+   *  @param  level depth level
+   *  @param  volumePath  vector of physical volumes
+   *  @return status code 
+   */
+  virtual StatusCode belongsTo
+  ( const HepPoint3D&        LocalPoint ,
+    const int                Level      , 
+    ILVolume::ReplicaPath&   replicaPath ) const ;
+  
+  /** name of sensitive "detector" - needed for simulation 
+   *  @see ILVolume 
+   *  @return name of sensitive "detector"
+   */
+  inline virtual const std::string& sdName () const { return m_sdName; } ;
+  
+  /** magnetic properties  (if needed for simulation)  
+   *  @see ILVolume 
+   *  @return name of magnetic field  object
+   */
+  inline virtual const std::string& mfName () const { return m_mfName; } ;
+  
+  /** accessors to surfaces 
+   *  @see ILVolume 
+   *  @return vector of surfaces 
+   */  
+  inline virtual        Surfaces& surfaces()       { return m_surfaces ; }
+  
+  /** accessors to surfaces  (const version) 
+   *  @see ILVolume 
+   *  @return vector of surfaces 
+   */  
+  inline virtual  const Surfaces& surfaces() const { return m_surfaces ; }
+  
+  /** printout to STD/STL stream
+   *  @see ILVolume 
+   *  @param os STD/STL stream
+   *  @return reference to the stream
+   */
+  virtual std::ostream& printOut( std::ostream & os = std::cout ) const ;
+  
+  /** printout to Gaudi MsgStream stream
+   *  @see ILVolume 
+   *  @param os Gaudi MsgStream  stream
+   *  @return reference to the stream
+   */
+  virtual MsgStream&    printOut( MsgStream    & os             ) const;
+  
+  /** reset to initial state, clear chaches, etc...
+   *  @see ILVolume 
+   *  @return self reference
+   */
+  inline virtual ILVolume* reset () 
+  {
+    /// reset all physical volumes 
+    std::for_each( m_pvolumes.begin ()         , 
+                   m_pvolumes.end   ()         ,
+                   std::mem_fun(&IPVolume::reset) ) ;
+    /// return self-reference
+    return this;
+  };
+  
+  /** serialization for reading 
+   *  - implementation of DataObject method
+   *  - implementation of ISerialize interface
+   *  @see DataObject
+   *  @see ILVolume 
+   *  @see ISerialize 
+   *  @param s reference to stream buffer 
+   *  @return reference to stream buffer 
+   */ 
+  virtual StreamBuffer& serialize( StreamBuffer& s );
+  
+  /** serialization for writing 
+   *  - implementation of DataObject method
+   *  - implementation of ISerialize interface
+   *  @see DataObject
+   *  @see ILVolume 
+   *  @see ISerialize 
+   *  @param s reference to stream buffer 
+   *  @return reference to stream buffer 
+   */ 
+  virtual StreamBuffer& serialize( StreamBuffer& s )  const;
+  
+  /** query the interface
+   *  @see IInterface 
+   *  @param ID unique interface identifier 
+   *  @param ppI placeholder for returned interface
+   *  @return status code 
+   */
+  virtual StatusCode 
+  queryInterface( const InterfaceID& ID , void** ppI ) ;
+
+  /** add the reference
+   *  @see IInterface 
+   *  @return reference counter 
+   */
+  virtual unsigned long addRef  ();
+
+  /** release the interface 
+   *  @see IInterface 
+   *  @return reference counter 
+   */
+  virtual unsigned long release ();
+
+  /** create daughter physical volume 
+   *  @param PVname name of daughter volume 
+   *  @param LVnameForPV name of logical volume for the physical volume 
+   *  @param position position of logical volume 
+   *  @param rotation rotation of logical volume 
+   *  @return pointer to created physical volume  
+   */
+  IPVolume* createPVolume
+  ( const std::string&    PVname                    , 
+    const std::string&    LVnameForPV               ,
+    const HepPoint3D&     position = HepPoint3D  () ,  
+    const HepRotation&    rotation = HepRotation () ); 
+  
+  /** create daughter physical volume 
+   *  @param PVname      name of daughter volume 
+   *  @param LVnameForPV name of logical volume for the physical volume 
+   *  @param Transform   tranformation
+   *  @return pointer to created physical volume  
+   */
+  IPVolume* createPVolume
+  ( const std::string&    PVname                    , 
+    const std::string&    LVnameForPV               ,
+    const HepTransform3D& Transform                 );
+  
+  
+  /** IValidity interface implementation
+   */
+  virtual bool         isValid          ()
+  { return m_validity->isValid()         ; }
+  
+  virtual bool         isValid          
+  ( const ITime& time )  
+  { return m_validity->isValid( time )   ; }
+  
+  virtual const ITime& validSince       ()
+  { return m_validity->validSince()      ; }
+  
+  virtual const ITime& validTill        ()
+  { return m_validity->validTill ()      ; }
+  
+  virtual void         setValidity      
+  ( const ITime& t1 , const ITime& t2 )  
+  { m_validity->setValidity( t1 , t2 )   ; }
+  
+  virtual void         setValiditySince 
+  ( const ITime& time )  
+  { m_validity->setValiditySince( time ) ; }
+  
+  virtual void         setValidityTill  
+  ( const ITime& time )  
+  { m_validity->setValidityTill ( time ) ; }
+  
+  virtual StatusCode   updateValidity   ()
+  { return m_validity->updateValidity()  ; }
+  
+protected: 
+  
+  /** create EMPTY daughter physical volume 
+   *  @return pointer to created physical volume  
+   */
+  IPVolume* createPVolume();
+  
+  /** Assertion
+   *  @param assertion condition 
+   *  @param name      exception message
+   *  @param sc        status code 
+   */
+  inline void Assert
+  ( bool               assertion                       , 
+    const std::string& name                            ,
+    const StatusCode&  sc        = StatusCode::FAILURE ) const
+  { if( !assertion ) { throw LogVolumeException( name, this , sc ); } };
+  
+  /** Assertion
+   *  @param assertion condition 
+   *  @param name      exception message
+   *  @param Exception previous exception 
+   *  @param sc        status code 
+   */
+  inline void Assert
+  ( bool                  assertion , 
+    const std::string&    name      ,
+    const GaudiException& Exception , 
+    const StatusCode&     sc        = StatusCode::FAILURE ) const  
+  { 
+    if( !assertion ) 
+      { throw LogVolumeException( name, Exception , this , sc ); }
+  };
+  
+  /** Auxillary method  to calculate intersections with daughters
+   *  @exception LVolumeException wrong parameters or geometry error
+   *  @param Point initial point at the line
+   *  @param Vector direction vector of the line
+   *  @param intersections output container
+   *  @param tickMin minimum value of possible Tick
+   *  @param tickMax maximum value of possible Tick
+   *  @param threshold threshold value 
+   *  @return number of intersections  
+   */
+  unsigned int intersectDaughters
+  ( const HepPoint3D&        Point              , 
+    const HepVector3D&       Vector             , 
+    ILVolume::Intersections& childIntersections , 
+    const ISolid::Tick     & tickMin            , 
+    const ISolid::Tick     & tickMax            , 
+    const double             Threshold          ) const ;  
+  
+  /** Auxillary method  to calculate intersection with daughters
+   *  @exception LVolumeException wrong parameters or geometry error
+   *  @param Point initial point at the line
+   *  @param Vector direction vector of the line
+   *  @param intersections output container
+   *  @param threshold threshold value 
+   *  @return number of intersections  
+   */
+  unsigned int  intersectDaughters
+  ( const HepPoint3D&        Point              , 
+    const HepVector3D&       Vector             , 
+    ILVolume::Intersections& childIntersections , 
+    const double             Threshold          ) const ;
+  
+  /** check for the given 3D-point inside daughter volume
+   *  Point coordinates are in the local reference 
+   *  frame of the solid.   
+   *  @param LocalPoint point (in local reference system of the solid)
+   *  @return true if the point is inside the daughter volume
+   */
+  inline bool isInsideDaughter
+  ( const HepPoint3D& LocalPoint ) const
+  { 
+    return  
+      m_pvolumes.end() != insideDaughter( LocalPoint );
+  };
+  
+  /** check for the given 3D-point inside daughter volume
+   *  Point coordinates are in the local reference 
+   *  frame of the solid.   
+   *  @param LocalPoint point (in local reference system of the solid)
+   *  @return iterator to the daughter volume 
+   */
+  inline ILVolume::PVolumes::const_iterator insideDaughter
+  ( const HepPoint3D& LocalPoint ) const
+  { 
+    return  
+      std::find_if( m_pvolumes.begin () , 
+                    m_pvolumes.end   () , 
+                    IPVolume_isInside( LocalPoint ) ) ;
+  };
+
+protected:
+  
+  /** static accessor to 
+   *  data service used for retriving of the material 
+   *  @return pointer to data service 
+   */
+  static IDataProviderSvc* dataSvc()  ;
+
+private: 
+  
+  /// copy constructor is private! 
+  LogVolBase            ( const LogVolBase& lvb );
+  /// assignment operator is private! 
+  LogVolBase& operator= ( const LogVolBase& lvb );
+  
+private:
+  
+  /// list of daughter physical volumes 
+  PVolumes              m_pvolumes      ; 
+  /// list attached surfaces 
+  Surfaces              m_surfaces      ; 
+  /// name of sensitive detector object 
+  std::string           m_sdName        ;
+  /// name of magnetic field source 
+  std::string           m_mfName        ;
+  /// validity 
+  IValidity*            m_validity      ;
+  /// reference counter 
+  unsigned long         m_refCounter    ;
+  /// static  volume counter 
+  static  unsigned long s_volumeCounter ;
+};
+
+// ============================================================================
+// The End 
+// ============================================================================
+#endif  ///< DETDESC_LVOLUME_H
+// ============================================================================
+
+
+
+
+
+
+
+

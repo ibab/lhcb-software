@@ -1,7 +1,11 @@
+// $Id: IPVolume_predicates.h,v 1.5 2001-11-18 15:32:44 ibelyaev Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
-// $Log: not supported by cvs2svn $ 
+// $Log: not supported by cvs2svn $
+// Revision 1.4  2001/08/24 12:06:13  ibelyaev
+//  changes to take into account Assembly Volumes
+// 
 // ============================================================================
 #ifndef     DETDESC_IPVOLUME_PREDICATES_H
 #define     DETDESC_IPVOLUME_PREDICATES_H
@@ -30,7 +34,8 @@
  *  IPVolume_isInside(Point) );
  *  @author Vanya Belyaev Ivan.Belyaev@itep.ru 
  */
-class IPVolume_isInside: public std::unary_function<const IPVolume*,bool>
+class IPVolume_isInside: 
+  public std::unary_function<const IPVolume*,bool>
 {
 public:
   /** explict constructor
@@ -59,7 +64,8 @@ public:
  *  IPVolume_byName(name) );
  *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
  */
-class IPVolume_byName: std::unary_function<IPVolume*,bool>
+class IPVolume_byName: 
+  std::unary_function<const IPVolume*,bool>
 {
  public:
   /** explicit constructor 
@@ -72,7 +78,7 @@ class IPVolume_byName: std::unary_function<IPVolume*,bool>
    *  @return true if name matches the given name 
    */
   inline bool operator() (  const IPVolume*  pv )  const 
-  { return ( ( 0 == pv ) ? false : (pv->name() == m_name) ) ; }
+  { return ( ( 0 == pv ) ? false : ( pv->name() == m_name) ) ; }
 private:
   /// name 
   std::string m_name;  
@@ -90,8 +96,8 @@ class IPVolume_accumulateMatrix:
 {
 public: 
   //
-  inline HepTransform3D& operator() ( HepTransform3D&  mtrx , 
-                                      const  IPVolume* pv   ) 
+  inline HepTransform3D& operator() 
+    ( HepTransform3D&  mtrx , const  IPVolume* pv   ) 
   { mtrx = pv->matrix()*mtrx; return mtrx; }
   //
 }; 
@@ -105,7 +111,7 @@ public:
  * @author Vanya Belyaev Ivan.Belyaev@itep.ru 
  */
 class IPVolume_fromReplica:  
-  public std::unary_function<ILVolume::ReplicaType,IPVolume*>
+  public std::unary_function<ILVolume::ReplicaType,const IPVolume*>
 {
 public: 
   /** constructor 
@@ -118,18 +124,19 @@ public:
    *  @param replica replica number 
    *  @return pointer to physical volume 
    */
-  inline IPVolume* operator() ( const ILVolume::ReplicaType& replica ) const  
+  inline const IPVolume* operator() 
+    ( const ILVolume::ReplicaType& replica ) const  
   {
-    if( 0 == m_lv ) {          return 0 ; }  
-    IPVolume* pv = (*m_lv)[replica]; 
-    if( 0 == pv ) { m_lv = 0 ; return 0 ; } 
+    if( 0 == m_lv ) {            return 0 ; }  
+    const IPVolume* pv = (*m_lv)[replica]; 
+    if( 0 == pv   ) { m_lv = 0 ; return 0 ; } 
     m_lv = pv->lvolume(); 
     return pv; 
   }
 private:
-
+  
   mutable const ILVolume* m_lv;
-
+  
 }; 
 
 // ============================================================================

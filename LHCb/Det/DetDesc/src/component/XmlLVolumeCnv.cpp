@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/component/XmlLVolumeCnv.cpp,v 1.17 2001-11-05 16:36:25 sponce Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/component/XmlLVolumeCnv.cpp,v 1.18 2001-11-18 15:32:45 ibelyaev Exp $
 
 // Include files
 #include "GaudiKernel/CnvFactory.h"
@@ -265,7 +265,8 @@ StatusCode XmlLVolumeCnv::internalCreateObj (DOM_Element element,
     }
     // stores the solid inside the logical volume
     if (0 != solid) {
-      dataObj->setSolid(solid);
+      /// Atention!!! commented by I.B!!
+      /// dataObj->setSolid(solid);
     }
   }
   

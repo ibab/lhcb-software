@@ -1,41 +1,36 @@
-/// ===========================================================================
-/// CVS tag $Name: not supported by cvs2svn $ 
-/// ===========================================================================
-/// $Log: not supported by cvs2svn $
-/// Revision 1.3  2001/08/09 16:47:57  ibelyaev
-/// update in interfaces and redesign of solids
-/// 
-/// ===========================================================================
+// $Id: IPVolume.h,v 1.5 2001-11-18 15:32:43 ibelyaev Exp $ 
+// ===========================================================================
+// CVS tag $Name: not supported by cvs2svn $ 
+// ===========================================================================
+// $Log: not supported by cvs2svn $
+// Revision 1.4  2001/08/13 09:51:35  ibelyaev
+// bug fix in 'reset' method
+//
+// Revision 1.3  2001/08/09 16:47:57  ibelyaev
+// update in interfaces and redesign of solids
+// 
+// ===========================================================================
 #ifndef  DETDESC_IPVOLUME_H 
 #define  DETDESC_IPVOLUME_H 1 
-///@{
-/**  STD & STL includes */ 
+/// STD & STL includes 
 #include <iostream>
 #include <string> 
-///}
-///@{
-/** GaudiKernel includes */
+/// GaudiKernel includes 
 #include "GaudiKernel/IInterface.h"
-#include "GaudiKernel/IInspectable.h"
 #include "GaudiKernel/ISerialize.h"
-///@}
-///@}
-/** DetDesc includes */ 
+/// DetDesc includes
 #include "DetDesc/ILVolume.h"
 #include "DetDesc/ISolid.h"
-///@}
-///@{
-/** forward declarations */
+/// forward declarations 
 class ILVolume;
 class HepPoint3D;
 class HepVector3D;
 class HepTransform3D;
-///@} 
 
 /** Declaration of the interface ID 
  * ( unique interface identifier , major & minor versions)
  */
-static const InterfaceID IID_IPVolume( 154 , 2 , 0 );
+static const InterfaceID IID_IPVolume( 154 , 4 , 0 );
 
 /** @interface IPVolume IPVolume.h "DetDesc/IPVolume.h"
  *
@@ -49,8 +44,7 @@ static const InterfaceID IID_IPVolume( 154 , 2 , 0 );
  */      
 
 class IPVolume : virtual public IInterface   , 
-                 virtual public ISerialize   ,
-                 virtual public IInspectable 
+                 virtual public ISerialize   
 {
 public:
   
@@ -75,7 +69,7 @@ public:
   /**  retrieve  the C++ pointer to Logical Volume 
    *  @return pointer to Logical Volume 
    */
-  virtual       ILVolume*        lvolume    () const = 0; 
+  virtual const ILVolume*        lvolume    () const = 0; 
   
   /** get the tranformation matrix   
    *  @return reference to transformation matrix 
@@ -91,99 +85,171 @@ public:
    *  @param PointInMother point in Mother Reference System 
    *  @return point in local reference system 
    */ 
-  virtual HepPoint3D toLocal ( const HepPoint3D& PointInMother ) const = 0;
+  virtual HepPoint3D toLocal 
+  ( const HepPoint3D& PointInMother  ) const = 0;
   
   /** transform point in Local Reference System to the Mother Reference System
    *  @param PointInLocal point in Local Referency System
    *  @return point in mother reference system 
    */
-  virtual HepPoint3D toMother ( const HepPoint3D& PointInLocal  ) const = 0;
+  virtual HepPoint3D toMother 
+  ( const HepPoint3D& PointInLocal   ) const = 0;
   
   /** check for 3D-point
    *  @param PointInMother pointin Mother Referency System 
    *  @return true if point is inside physical volume 
    */
-  virtual bool isInside   ( const HepPoint3D& PointInMother ) const = 0;
+  virtual bool isInside   
+  ( const HepPoint3D& PointInMother  ) const = 0;
   
-  /** printout to STD/STL stream 
-   *  @param os reference to STD/STL stream 
-   *  @return reference to STD/STL stream 
+  /** Intersection of the physical volume with with line.
+   *  The line is parametrized in the local reference system of the mother
+   *  logical volume ("Mother Reference System")  
+   *  with initial Point and direction Vector: 
+   *   - @f$ \vec{x}(t) = \vec{p} + t \times \vec{v} @f$ @n 
+   *  
+   * Method returns the number of intersection points("ticks") and 
+   * the container of pairs - ticks and pointer to the corresponding 
+   * material. @n 
+   * The simplification is determined by value of threshold
+   * (in units of radiation length) 
+   *  
+   *  @see ILVolume
+   *  @see ISolid 
+   *
+   *  @exception PVolumeException wrong environment 
+   *  @param Point initial point at the line
+   *  @param Vector direction vector of the line
+   *  @param intersections output container 
+   *  @param threshold threshold value 
    */
-  virtual std::ostream& printOut( std::ostream& os = std::cout ) const = 0;
-
-  /** printout to Gaudi stream 
-   *  @param os reference to Gaudi stream 
-   *  @return reference to Gaudi stream 
+  virtual unsigned int intersectLine
+  ( const HepPoint3D        & Point         ,
+    const HepVector3D       & Vector        , 
+    ILVolume::Intersections & intersections ,
+    const double              threshold     ) const = 0 ;
+  
+  /** Intersection of the physical volume with with line.
+   *  The line is parametrized in the local reference system of the mother
+   *  logical volume ("Mother Reference System")  
+   *  with initial Point and direction Vector: 
+   *   - @f$ \vec{x}(t) = \vec{p} + t \times \vec{v} @f$ @n 
+   *  
+   * Method returns the number of intersection points("ticks") and 
+   * the container of pairs - ticks and pointer to the corresponding 
+   * material. @n 
+   * The simplification is determined by value of threshold
+   * (in units of radiation length) 
+   *  
+   *  @see ILVolume
+   *  @see ISolid 
+   *
+   *  @exception PVolumeException wrong environment 
+   *  @param Point initial point at the line
+   *  @param Vector direction vector of the line
+   *  @param intersections output container 
+   *  @param threshold threshold value 
    */
-  virtual MsgStream&    printOut( MsgStream&    os             ) const = 0;
+  virtual unsigned int intersectLine
+  ( const HepPoint3D        & Point         ,
+    const HepVector3D       & Vector        ,       
+    ILVolume::Intersections & intersections ,      
+    const ISolid::Tick        tickMin       ,
+    const ISolid::Tick        tickMax       ,
+    const double              Threshold     ) const = 0 ;
+  
+  /** printout to STD/STL stream
+   *  @param os STD/STL stream
+   *  @return reference to the stream
+   */
+  virtual std::ostream& printOut
+  ( std::ostream & os = std::cout ) const = 0;
+  
+  /** printout to Gaudi MsgStream stream
+   *  @param os Gaudi MsgStream  stream
+   *  @return reference to the stream
+   */
+  virtual MsgStream&    printOut
+  ( MsgStream    & os             ) const = 0;
   
   /** reset to the initial state 
    *  @return self-reference
    */
   virtual IPVolume* reset () = 0; 
   
-  /** Intersection of the physical volume with with line.
-   *  The line is parametrized in the local reference system of the mother
-   *  logical volume ("Mother Reference System")  
-   *  with initial Point and direction Vector: 
-   *   - @f$ \vec{x}(t) = \vec{p} + t \times \vec{v} @f$ @n 
-   *  
-   * Method returns the number of intersection points("ticks") and 
-   * the container of pairs - ticks and pointer to the corresponding 
-   * material. @n 
-   * The simplification is determined by value of threshold
-   * (in units of radiation length) 
-   *  
-   *  @see ILVolume
-   *  @see ISolid 
-   *
-   *  @exception PVolumeException wrong environment 
-   *  @param Point initial point at the line
-   *  @param Vector direction vector of the line
-   *  @param intersections output container 
-   *  @param threshold threshold value 
-   */
-  virtual unsigned int 
-  intersectLine( const HepPoint3D        & Point         ,
-                 const HepVector3D       & Vector        , 
-                 ILVolume::Intersections & intersections ,
-                 const double              threshold     ) = 0 ;
-  
-  /** Intersection of the physical volume with with line.
-   *  The line is parametrized in the local reference system of the mother
-   *  logical volume ("Mother Reference System")  
-   *  with initial Point and direction Vector: 
-   *   - @f$ \vec{x}(t) = \vec{p} + t \times \vec{v} @f$ @n 
-   *  
-   * Method returns the number of intersection points("ticks") and 
-   * the container of pairs - ticks and pointer to the corresponding 
-   * material. @n 
-   * The simplification is determined by value of threshold
-   * (in units of radiation length) 
-   *  
-   *  @see ILVolume
-   *  @see ISolid 
-   *
-   *  @exception PVolumeException wrong environment 
-   *  @param Point initial point at the line
-   *  @param Vector direction vector of the line
-   *  @param intersections output container 
-   *  @param threshold threshold value 
-   */
-  virtual unsigned int 
-  intersectLine( const HepPoint3D        & Point ,
-                 const HepVector3D       & Vector        ,       
-                 ILVolume::Intersections & intersections ,      
-                 const ISolid::Tick        tickMin       ,
-                 const ISolid::Tick        tickMax       ,
-                 const double              Threshold     ) = 0 ;
-  
   /// virtual destructor
   virtual  ~IPVolume(){};  
-
+  
 };
 
+// ============================================================================
+/** output operator to STD/STL stream
+ *  @param  os      reference to output   stream
+ *  @param  pv      reference to IPVolume object
+ *  @return reference to the stream
+ */
+// ============================================================================
+inline std::ostream& operator<<
+( std::ostream& os , const IPVolume& pv ) 
+{ return pv.printOut( os ); };
 
-/// ===========================================================================
+// ============================================================================
+/** output operator to STD/STL stream
+ *  @param  os      reference to output   stream
+ *  @param  pv      pointer   to IPVolume object
+ *  @return reference to the stream
+ */
+// ============================================================================
+inline std::ostream& operator<<
+( std::ostream& os , const IPVolume*  pv )
+{ return ((0==pv)?( os<<" IPVolume* points to NULL "):(os<<(*pv)));};
+
+// ============================================================================
+/** output operator to Gaudi MsgStream stream
+ *  @param  os      reference to output   stream
+ *  @param  pv      reference to IPVolume object
+ *  @return reference to the stream
+ */
+// ============================================================================
+inline MsgStream& operator<<
+( MsgStream& os , const IPVolume& pv ) 
+{ return pv.printOut( os ); };
+
+// ============================================================================
+/** output operator to Gaudi MsgStream stream
+ *  @param  os      reference to output   stream
+ *  @param  pv      pointer   to IPVolume object
+ *  @return reference to the stream
+ */
+// ============================================================================
+inline MsgStream& operator<<
+( MsgStream& os , const IPVolume*  pv )
+{ return ((0==pv)?( os<<" IPVolume* points to NULL "):(os<<(*pv)));};
+
+// ============================================================================
+/** output operator to Streambuffer 
+ *  @param  os      reference to output   stream
+ *  @param  Pv      reference to IPVolume object
+ *  @return reference to the stream
+ */
+// ============================================================================
+inline StreamBuffer& operator<< 
+( StreamBuffer& s , const IPVolume& pv ) 
+{ return pv.serialize( s ) ; }
+
+// ============================================================================
+/** input  operator from StreamBuffer          
+ *  @param  os      reference to output   stream
+ *  @param  pv      reference to IPVolume object
+ *  @return reference to the stream
+ */
+// ============================================================================
+inline StreamBuffer& operator>>
+( StreamBuffer& s ,       IPVolume& pv ) 
+{ return pv.serialize( s ) ; }
+
+// ============================================================================
+// The End 
+// ============================================================================
 #endif   ///<   DETDESC_IPVOLUME_H 
-/// ===========================================================================
+// ============================================================================

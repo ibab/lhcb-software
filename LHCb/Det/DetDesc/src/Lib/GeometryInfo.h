@@ -1,40 +1,34 @@
-/// ===========================================================================
-/// CVS tag $Name: not supported by cvs2svn $ 
-/// ===========================================================================
-/// $Log: not supported by cvs2svn $ 
-/// ===========================================================================
+// $Id: GeometryInfo.h,v 1.8 2001-11-18 15:32:44 ibelyaev Exp $ 
+// ===========================================================================
+// CVS tag $Name: not supported by cvs2svn $ 
+// ===========================================================================
+// $Log: not supported by cvs2svn $
+// Revision 1.7  2001/08/10 14:59:02  ibelyaev
+// modifications in IGeometryInfo and related classes
+// 
+// ===========================================================================
 #ifndef     DETDESC_GEOMETRYINFO_H
 #define     DETDESC_GEOMETRYINFO_H 1 
-///@{
 /** STD and STL includes */ 
 #include <iostream>
 #include <string>
 #include <functional>
 #include <algorithm> 
-///@}
-///@{
 /** CLHEP includes */ 
 #include "CLHEP/Geometry/Point3D.h"
 #include "CLHEP/Geometry/Transform3D.h"
-///@}
-///@{
 /* GaudiKernel includes */
 #include "GaudiKernel/IMessageSvc.h"
 #include "GaudiKernel/StatusCode.h"
 #include "GaudiKernel/DataObject.h"
-///@}
-///@{
 /** DetDesc includes */ 
 #include "DetDesc/ILVolume.h"
 #include "DetDesc/IPVolume.h"
 #include "DetDesc/IGeometryInfo.h" 
 #include "DetDesc/IDetectorElement.h" 
-///@}
-///@{
 /** forward declarations */
 class GaudiException   ;
 class IDataProviderSvc ;
-///@} 
 
 // ============================================================================
 /** @class GeometryInfo GeometryInfo.h DetDesc/GeometryInfo.h
@@ -119,7 +113,8 @@ public:
    *  @{ 
    */
   /// Is this "geometry object" assosiated with Logical Volume?
-  inline bool hasLVolume   () const ;   //                             
+  inline bool hasLVolume   () const ;   //     
+                        
   /// Is this "geometry object" supported?
   inline bool hasSupport   () const ;   //                             
   /** transformation matrix from global reference 
@@ -133,110 +128,144 @@ public:
   /** tranform the point from the global reference systemn 
    * to the local  reference system
    */  
-  inline HepPoint3D toLocal  ( const HepPoint3D& globalPoint ) const ;       
+  inline HepPoint3D toLocal  
+  ( const HepPoint3D& globalPoint ) const ;       
+  
   /** tranform the point from the local  reference system 
    *  to the global reference system
    */  
-  inline HepPoint3D toGlobal ( const HepPoint3D& localPoint  ) const ;       
+  inline HepPoint3D toGlobal 
+  ( const HepPoint3D& localPoint  ) const ;       
+
   /** is the given point in the global reference system 
    * inside this detector element?
    */
-  inline bool isInside     ( const HepPoint3D& globalPoint ) const ;      
+  inline bool isInside     
+  ( const HepPoint3D& globalPoint ) const ;      
+
   /**  return the name of the daughter element to which 
    *  the given point belongs to 
    */
-  inline std::string belongsToPath( const HepPoint3D& globalPoint );      
+  inline std::string belongsToPath
+  ( const HepPoint3D& globalPoint );      
+  
   /** return the C++ pointer to the daughter element to 
    *  which the given point belongs to
    */    
-  inline IGeometryInfo* belongsTo ( const HepPoint3D& globalPoint );     
+  inline IGeometryInfo* belongsTo 
+  ( const HepPoint3D& globalPoint );    
+  
   /** return the name of the daughter element to which 
    *  the given point belongs to (taking into account the level)
    */
-  inline std::string belongsToPath( const HepPoint3D& globalPoint ,       
-                                    const int         level       );       
+  inline std::string belongsToPath
+  ( const HepPoint3D& globalPoint ,       
+    const int         level       );       
+
   /** return the C++ pointer to the daughter element to 
    *  which the given point belongs to  (taking into account the level)   
    */
-  inline IGeometryInfo* belongsTo ( const HepPoint3D& globalPoint ,        
-                                    const int         level       );      
+  inline IGeometryInfo* belongsTo 
+  ( const HepPoint3D& globalPoint ,        
+    const int         level       );      
+
   /** return the full geometry info for a given point in the 
    * global reference system 
    */
-  inline StatusCode 
-  fullGeoInfoForPoint( const HepPoint3D&        point      , 
-                       const int                level      , 
-                       IGeometryInfo*&          start      , 
-                       ILVolume::PVolumePath&   volumePath );       
+  inline StatusCode fullGeoInfoForPoint
+  ( const HepPoint3D&        point      , 
+    const int                level      , 
+    IGeometryInfo*&          start      , 
+    ILVolume::PVolumePath&   volumePath );       
+
   /**  return the full geometry info for a given point in the
    *   global reference system 
    */
-  inline StatusCode 
-  fullGeoInfoForPoint( const HepPoint3D&        point      , 
-                       const int                level      , 
-                       IGeometryInfo*&          start      , 
-                       ILVolume::ReplicaPath&   volumePath );      
+  inline StatusCode fullGeoInfoForPoint
+  ( const HepPoint3D&        point      , 
+    const int                level      , 
+    IGeometryInfo*&          start      , 
+    ILVolume::ReplicaPath&   volumePath );      
+
   /** return the full geometry info for a given point in the 
    *  global reference system 
    */
-  inline StatusCode 
-  fullGeoInfoForPoint( const HepPoint3D&        point      , 
-                       const int                level      , 
-                       std::string&             start      , 
-                       ILVolume::PVolumePath&   volumePath );       
+  inline StatusCode fullGeoInfoForPoint
+  ( const HepPoint3D&        point      , 
+    const int                level      , 
+    std::string&             start      , 
+    ILVolume::PVolumePath&   volumePath );       
+
   /** return the full geometry info for a given point in the
    *  global reference system 
    */
-  inline StatusCode 
-  fullGeoInfoForPoint( const HepPoint3D&        point      , 
-                       const int                level      , 
-                       std::string&             start      , 
-                       ILVolume::ReplicaPath&   volumePath );     
+  inline StatusCode fullGeoInfoForPoint
+  ( const HepPoint3D&        point      , 
+    const int                level      , 
+    std::string&             start      , 
+    ILVolume::ReplicaPath&   volumePath );     
+
   /// return the name of the assosiated logical volume 
   inline const std::string&      lvolumeName() const ;
+
   /// return the C++ pointer4 to the assosiated logical volume 
-  inline       ILVolume*         lvolume    () const ;
+  inline const ILVolume*         lvolume    () const ;
+  
   /// return the location (address) of this geometry object  
-  inline StatusCode 
-  location   ( IGeometryInfo*&              start , 
-               ILVolume::ReplicaPath&       replicaPath ) const ;   
+  inline StatusCode location   
+  ( IGeometryInfo*&              start , 
+    ILVolume::ReplicaPath&       replicaPath ) const ;   
+
   /// return the location (address) of this geometry object  
-  inline StatusCode
-  location   ( std::string&                 start , 
-               ILVolume::ReplicaPath&       replicaPath ) const ;   
+  inline StatusCode location   
+  ( std::string&                 start , 
+    ILVolume::ReplicaPath&       replicaPath ) const ;  
+ 
   /// return the name of the logical volume with a given address 
-  inline std::string
-  lvolumePath( const std::string&           start       , 
-               const ILVolume::ReplicaPath& replicaPath );   
+  inline std::string lvolumePath
+  ( const std::string&           start       , 
+    const ILVolume::ReplicaPath& replicaPath );   
+
   /// return the C++ pointer to  the logical volume with a given address 
-  inline ILVolume*        
-  lvolume    ( const std::string&           start       , 
-               const ILVolume::ReplicaPath& replicaPath );    
+  inline const ILVolume* lvolume    
+  ( const std::string&           start       , 
+    const ILVolume::ReplicaPath& replicaPath );    
+  
   /// return the name of the logical volume with a given address 
-  inline std::string
-  lvolumePath( IGeometryInfo*               start       , 
-               const ILVolume::ReplicaPath& replicaPath );   
+  inline std::string lvolumePath
+  ( IGeometryInfo*               start       , 
+    const ILVolume::ReplicaPath& replicaPath );   
+
   /// return the C++ pointer to  the logical volume with a given address 
-  inline ILVolume*
-  lvolume ( IGeometryInfo*               start       , 
-            const ILVolume::ReplicaPath& replicaPath );
+  inline const ILVolume* lvolume 
+  ( IGeometryInfo*               start       , 
+    const ILVolume::ReplicaPath& replicaPath );
+
   /// pointer to the parent IGeometryInfo 
   inline IGeometryInfo* parentIGeometryInfo()       ;
+
   /// pointer to the parent IGeometryInfo (const version)
   inline const IGeometryInfo* parentIGeometryInfo() const ;
+
   /// (reference to) container of children IGeometryInfo 
   inline IGeometryInfo::IGIChildrens& childIGeometryInfos()       ;
+
   /// (reference to) container of children IGeometryInfo 
   inline const IGeometryInfo::IGIChildrens& childIGeometryInfos() const ; 
+
   /// iterators for manipulation of daughter elements 
-  /// begin iterator 
+  /// begin iterator
   inline IGeometryInfo::IGIChildrens::iterator        childBegin()       ; 
+
   /// begin iterator (const version)
   inline IGeometryInfo::IGIChildrens::const_iterator  childBegin() const ; 
+
   /// end  iterator 
   inline IGeometryInfo::IGIChildrens::iterator        childEnd  ()       ; 
+
   /// end  iterator (const version)
   inline IGeometryInfo::IGIChildrens::const_iterator  childEnd  () const ; 
+
   /// IInspectable interface
   bool acceptInspector( IInspector* )       ; 
   bool acceptInspector( IInspector* ) const ; 
@@ -264,23 +293,36 @@ public:
   
  private:
   ///
-  inline bool isInsideDaughter ( const HepPoint3D& globalPoint ) const ;   
+  inline bool isInsideDaughter 
+  ( const HepPoint3D& globalPoint ) const ;   
+
   inline bool childLoaded      () const { return m_gi_childLoaded ; }     
+
   inline StatusCode        reset            ( const int Level );         
+
   inline IGeometryInfo* geoByName ( const std::string& name ) const ;    
+
   inline ILVolume*         findLogical      () const ;          
+
   inline HepTransform3D*   calculateMatrix  () const ;       
+
   /// could throw GeometryInfoException
   inline StatusCode loadChildren     () const ; 
+
   /// retrive the replica path (mistrerious "rpath")
   inline        ILVolume::ReplicaPath& supportPath     () const ; 
+
   /// Assertion 
-  inline void Assert ( bool assertion          , 
-                       const std::string& name ) const; 
+  inline void Assert 
+  ( bool assertion          , 
+    const std::string& name ) const; 
+  
   /// Assertion 
-  inline void Assert ( bool assertion           , 
-                       const std::string& name  , 
-                       const GaudiException& ge ) const; 
+  inline void Assert 
+  ( bool assertion           , 
+    const std::string& name  , 
+    const GaudiException& ge ) const;
+ 
   inline IDetectorElement* detElem          () const 
   { return m_gi_iDetectorElement ; }
   

@@ -1,11 +1,17 @@
 ! =============================================================================
 ! CVS tag $Name: not supported by cvs2svn $ 
 ! =============================================================================
-! $Id: release.notes,v 1.54 2001-11-05 16:36:24 sponce Exp $ 
+! $Id: release.notes,v 1.55 2001-11-18 15:32:44 ibelyaev Exp $ 
 ! =============================================================================
 package DetDesc
 package manager : N.N 
 
+! =============================================================================
+! 20011118 - Vanya Belyaev
+  1) new notion of Logical Assembly (class LAssembly) 
+  2) new base class LogVolBase 
+  3) small update of ILVolume and IPVoluem interfaces 
+  (more methods are "const" now)
 ! =============================================================================
 ! 20011105 - Sebastien Ponce
   XmlLVolumeCnv : add new test for dealing with precision problems in the

@@ -2,6 +2,9 @@
 /// CVS tag $Name: not supported by cvs2svn $ 
 /// ===========================================================================
 /// $Log: not supported by cvs2svn $
+/// Revision 1.6  2001/10/25 14:04:05  ibelyaev
+/// New shape: SolidPolycone is added
+///
 /// Revision 1.5  2001/08/09 16:48:04  ibelyaev
 /// update in interfaces and redesign of solids
 /// 
@@ -39,6 +42,9 @@
 
 #include "DetDesc/LVolume.h"
 _ImplementDataObjectFactory( LVolume           ) ;  
+
+#include "DetDesc/LAssembly.h"
+_ImplementDataObjectFactory( LAssembly         ) ;  
 
 #include "DetDesc/DetectorElement.h"
 _ImplementDataObjectFactory( DetectorElement   ) ; 
@@ -84,6 +90,7 @@ void DetDesc_load()
   ///@{
   /** DataObject Factories */
   DLL_DECL_OBJECTFACTORY( LVolume           );
+  DLL_DECL_OBJECTFACTORY( LAssembly         );
   DLL_DECL_OBJECTFACTORY( DetectorElement   );
   DLL_DECL_OBJECTFACTORY( Isotope           );
   DLL_DECL_OBJECTFACTORY( Element           );

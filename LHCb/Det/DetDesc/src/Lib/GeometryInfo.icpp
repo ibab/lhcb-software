@@ -1,8 +1,12 @@
-/// ===========================================================================
-/// CVS tag $Name: not supported by cvs2svn $
-/// ===========================================================================
-/// $Log: not supported by cvs2svn $ 
-/// ===========================================================================
+// $Id: GeometryInfo.icpp,v 1.4 2001-11-18 15:32:44 ibelyaev Exp $ 
+// ===========================================================================
+// CVS tag $Name: not supported by cvs2svn $
+// ===========================================================================
+// $Log: not supported by cvs2svn $
+// Revision 1.3  2001/08/10 14:59:03  ibelyaev
+// modifications in IGeometryInfo and related classes
+// 
+// ===========================================================================
 #ifndef         DETDESC_GEOMETRYINFO_ICCP
 #define         DETDESC_GEOMETRYINFO_ICCP 1 
 /// GaudiKernel
@@ -19,19 +23,20 @@
  */
 // ============================================================================
 
+/// assertion 
+inline void GeometryInfo::Assert
+( bool assertion , const std::string& name ) const
+{ if( !assertion ) { throw GeometryInfoException( name , this ); } };
 
 /// assertion 
-inline void GeometryInfo::Assert( bool assertion ,  
-                                  const std::string& name ) const
-{ if( !assertion ) { throw GeometryInfoException( name , this ); } };
-/// assertion 
-inline void GeometryInfo::Assert( bool assertion ,  
-                                  const std::string& name , 
-                                  const GaudiException& ge ) const
+inline void GeometryInfo::Assert
+( bool assertion ,  
+  const std::string& name , 
+  const GaudiException& ge ) const
 { if( !assertion ) { throw GeometryInfoException( name , ge , this ); } };
 ///
-inline bool 
-GeometryInfo::isInsideDaughter( const HepPoint3D& GlobalPoint ) const 
+inline bool GeometryInfo::isInsideDaughter
+( const HepPoint3D& GlobalPoint ) const 
 {
   if( !childLoaded() || loadChildren().isFailure() ) 
     { return false; } // could not load the daughters
@@ -70,13 +75,16 @@ inline const HepTransform3D& GeometryInfo::matrixInv() const
   return *m_gi_matrixInv;
 };
 //
-inline HepPoint3D GeometryInfo::toLocal ( const HepPoint3D& GlobalPoint ) const 
+inline HepPoint3D GeometryInfo::toLocal 
+( const HepPoint3D& GlobalPoint ) const 
 { return ( matrix   () * GlobalPoint ); };
 //
-inline HepPoint3D GeometryInfo::toGlobal( const HepPoint3D& localPoint  ) const 
+inline HepPoint3D GeometryInfo::toGlobal
+( const HepPoint3D& localPoint  ) const 
 { return ( matrixInv() * localPoint  ); };
 //
-inline bool GeometryInfo::isInside ( const HepPoint3D& globalPoint )  const
+inline bool GeometryInfo::isInside 
+( const HepPoint3D& globalPoint )  const
 {
   if( hasLVolume() && 0 != lvolume() ) 
     { return lvolume()->isInside( toLocal( globalPoint ) ); }
@@ -86,7 +94,7 @@ inline bool GeometryInfo::isInside ( const HepPoint3D& globalPoint )  const
 inline const std::string&  GeometryInfo::lvolumeName() const 
 { return m_gi_lvolumeName; };
 //
-inline ILVolume* GeometryInfo::lvolume    () const  
+inline const ILVolume* GeometryInfo::lvolume    () const  
 {
   if( !hasLVolume() )     { return  0              ; }     
   if( 0 != m_gi_lvolume ) { return  m_gi_lvolume          ; } 
@@ -104,7 +112,8 @@ inline ILVolume* GeometryInfo::lvolume    () const
   return m_gi_lvolume; 
 }; 
 // look for daughter to which the given point belongs to 
-inline std::string GeometryInfo::belongsToPath( const HepPoint3D& globalPoint )
+inline std::string GeometryInfo::belongsToPath
+( const HepPoint3D& globalPoint )
 {
   if( !isInside( globalPoint )                     )
     { return std::string(""); } 
@@ -120,7 +129,8 @@ inline std::string GeometryInfo::belongsToPath( const HepPoint3D& globalPoint )
     *(m_gi_childrensNames.begin()+(it-childBegin())); 
 };
 // look for daughter to which the given point belongs to 
-inline IGeometryInfo* GeometryInfo::belongsTo ( const HepPoint3D& globalPoint )
+inline IGeometryInfo* GeometryInfo::belongsTo 
+( const HepPoint3D& globalPoint )
 {
   if( !isInside( globalPoint )                     ) { return 0; } 
   if( !childLoaded() && loadChildren().isFailure() ) { return 0; }   
@@ -132,9 +142,9 @@ inline IGeometryInfo* GeometryInfo::belongsTo ( const HepPoint3D& globalPoint )
   return ( childEnd() == it ? 0 : *it );   
 };
 // be careful! use first "isInside" method!
-inline std::string
-GeometryInfo::belongsToPath( const HepPoint3D& globalPoint , 
-                             const int         level       )
+inline std::string GeometryInfo::belongsToPath
+( const HepPoint3D& globalPoint , 
+  const int         level       )
 {
   if( 0 == level ){  return detElem()->name() ; } 
   IGeometryInfo* gi =  belongsTo( globalPoint );
@@ -144,20 +154,20 @@ GeometryInfo::belongsToPath( const HepPoint3D& globalPoint ,
   //
 };
 // be careful! use first "isInside" method! 
-inline IGeometryInfo* 
-GeometryInfo::belongsTo    ( const HepPoint3D& globalPoint , 
-                             const int         level       )
+inline IGeometryInfo* GeometryInfo::belongsTo    
+( const HepPoint3D& globalPoint , 
+  const int         level       )
 {
   if( level == 0 ) { return this;  } // do not look throug  daughters!
   IGeometryInfo* gi = belongsTo( globalPoint );
   return  ( ( 0 == gi ) ? this : gi->belongsTo( globalPoint , level - 1 ) ); 
 };
 //
-inline StatusCode 
-GeometryInfo::fullGeoInfoForPoint( const HepPoint3D&        point      , 
-                                   const int                level      , 
-                                   IGeometryInfo*&          start      , 
-                                   ILVolume::PVolumePath&   volumePath )
+inline StatusCode GeometryInfo::fullGeoInfoForPoint
+( const HepPoint3D&        point      , 
+  const int                level      , 
+  IGeometryInfo*&          start      , 
+  ILVolume::PVolumePath&   volumePath )
 {
   // reset output values 
   start = 0         ; 
@@ -173,11 +183,11 @@ GeometryInfo::fullGeoInfoForPoint( const HepPoint3D&        point      ,
                               level , volumePath ); 
 };
 //
-inline StatusCode 
-GeometryInfo::fullGeoInfoForPoint( const HepPoint3D&        point      , 
-                                   const int                level      , 
-                                   std::string&             start      , 
-                                   ILVolume::PVolumePath&   volumePath )
+inline StatusCode GeometryInfo::fullGeoInfoForPoint
+( const HepPoint3D&        point      , 
+  const int                level      , 
+  std::string&             start      , 
+  ILVolume::PVolumePath&   volumePath )
 {
   // reset output values 
   start = std::string("");
@@ -194,11 +204,11 @@ GeometryInfo::fullGeoInfoForPoint( const HepPoint3D&        point      ,
   //
 };
 //
-inline StatusCode 
-GeometryInfo::fullGeoInfoForPoint( const HepPoint3D&        point      , 
-                                   const int                level      , 
-                                   IGeometryInfo*&          start      , 
-                                   ILVolume::ReplicaPath&   replicaPath )
+inline StatusCode GeometryInfo::fullGeoInfoForPoint
+( const HepPoint3D&        point      , 
+  const int                level      , 
+  IGeometryInfo*&          start      , 
+  ILVolume::ReplicaPath&   replicaPath )
 {
   // reset output values 
   start = 0         ; 
@@ -214,11 +224,11 @@ GeometryInfo::fullGeoInfoForPoint( const HepPoint3D&        point      ,
                               level , replicaPath ); 
 };
 //
-inline StatusCode 
-GeometryInfo::fullGeoInfoForPoint( const HepPoint3D&        point      , 
-                                   const int                level      , 
-                                   std::string&             start      , 
-                                   ILVolume::ReplicaPath&   replicaPath )
+inline StatusCode GeometryInfo::fullGeoInfoForPoint
+( const HepPoint3D&        point      , 
+  const int                level      , 
+  std::string&             start      , 
+  ILVolume::ReplicaPath&   replicaPath )
 {
   // reset output values 
   start = std::string("");
@@ -234,13 +244,13 @@ GeometryInfo::fullGeoInfoForPoint( const HepPoint3D&        point      ,
                               level , replicaPath ); 
 };
 //
-inline ILVolume* 
-GeometryInfo::lvolume    ( IGeometryInfo*               start       , 
-                           const ILVolume::ReplicaPath& replicaPath )
+inline const ILVolume* GeometryInfo::lvolume    
+( IGeometryInfo*               start       , 
+  const ILVolume::ReplicaPath& replicaPath )
 {
   if( 0 == start || 0 == start->lvolume() ){ return 0; } 
   //
-  ILVolume* lv = start->lvolume(); 
+  const ILVolume* lv = start->lvolume(); 
   ILVolume::PVolumePath volumePath;
   if( lv->traverse( replicaPath.begin()  ,
                     replicaPath.end  ()  , 
@@ -248,19 +258,19 @@ GeometryInfo::lvolume    ( IGeometryInfo*               start       ,
   //
   if( volumePath.empty() ) { return lv; } 
   //
-  IPVolume* pv = *(volumePath.rbegin()); // get "the last" element 
+  const IPVolume* pv = *(volumePath.rbegin()); // get "the last" element 
   //
   return ( 0 == pv ? 0 : pv->lvolume() );  
 };
 //
-inline std::string 
-GeometryInfo::lvolumePath( IGeometryInfo*               start       , 
-                           const ILVolume::ReplicaPath& replicaPath )
+inline std::string GeometryInfo::lvolumePath
+( IGeometryInfo*               start       , 
+  const ILVolume::ReplicaPath& replicaPath )
 {
   // starting point for address is invalid! 
   if( 0 == start || 0 == start->lvolume() ){ return std::string("") ; } 
   //
-  ILVolume* lv = start->lvolume(); 
+  const ILVolume* lv = start->lvolume(); 
   ILVolume::PVolumePath volumePath;
   if( lv->traverse( replicaPath.begin()  ,
                     replicaPath.end  ()  , 
@@ -268,14 +278,14 @@ GeometryInfo::lvolumePath( IGeometryInfo*               start       ,
   //
   if( volumePath.empty() ) { return start->lvolumeName(); } 
   //
-  IPVolume* pv = *(volumePath.rbegin()); // get "the last" element 
+  const IPVolume* pv = *(volumePath.rbegin()); // get "the last" element 
   //
   return ( 0 == pv ? std::string("") : pv->lvolumeName() );  
 };
 //
-inline StatusCode 
-GeometryInfo::location   ( std::string&                 start , 
-                           ILVolume::ReplicaPath&       replicaPath ) const
+inline StatusCode GeometryInfo::location  
+( std::string&                 start , 
+  ILVolume::ReplicaPath&       replicaPath ) const
 {
   start = m_gi_supportName;
   replicaPath.clear();
@@ -285,9 +295,9 @@ GeometryInfo::location   ( std::string&                 start ,
   return StatusCode::SUCCESS;
 };
 //
-inline std::string 
-GeometryInfo::lvolumePath( const std::string&           start       , 
-                           const ILVolume::ReplicaPath& replicaPath )
+inline std::string GeometryInfo::lvolumePath
+( const std::string&           start       , 
+  const ILVolume::ReplicaPath& replicaPath )
 {
   if( std::string("") == start ) { return std::string(""); }
   //
@@ -296,9 +306,9 @@ GeometryInfo::lvolumePath( const std::string&           start       ,
   return 0 == gi ? std::string("") : lvolumePath( gi , replicaPath );
 };
 //
-inline ILVolume* 
-GeometryInfo::lvolume    ( const std::string&           start       , 
-                           const ILVolume::ReplicaPath& replicaPath )
+inline const ILVolume* GeometryInfo::lvolume    
+( const std::string&           start       , 
+  const ILVolume::ReplicaPath& replicaPath )
 {
   if( std::string("") == start ) { return 0; }
   //
@@ -307,9 +317,9 @@ GeometryInfo::lvolume    ( const std::string&           start       ,
   return 0 == gi ? 0 : lvolume( gi , replicaPath );
 };
 //
-inline StatusCode 
-GeometryInfo::location   ( IGeometryInfo*&              start , 
-                           ILVolume::ReplicaPath&       replicaPath ) const
+inline StatusCode GeometryInfo::location   
+( IGeometryInfo*&              start , 
+  ILVolume::ReplicaPath&       replicaPath ) const
 {
   replicaPath.clear();
   replicaPath.insert( replicaPath.end() , 
@@ -341,7 +351,7 @@ inline       ILVolume::ReplicaPath& GeometryInfo::supportPath() const
   ///
   if( 0 == m_gi_support ) { m_gi_support = geoByName( m_gi_supportName ) ; } 
   ///
-  ILVolume* lv = m_gi_support->lvolume(); 
+  const ILVolume* lv = m_gi_support->lvolume(); 
   std::string aux( m_gi_supportNamePath ); 
   while( 0 != aux.size() && 0 != lv ) 
     {
@@ -355,7 +365,7 @@ inline       ILVolume::ReplicaPath& GeometryInfo::supportPath() const
       if( 0 != physVol.size() ) 
         {
           // get physical volume by name
-          IPVolume* pv = (*lv)[ physVol ]; 
+          const IPVolume* pv = (*lv)[ physVol ]; 
           // find this name in the sequence 
           ILVolume::PVolumes::const_iterator it =
             std::find( lv->pvBegin() , lv->pvEnd() , pv ) ; 
@@ -473,10 +483,6 @@ GeometryInfo::childEnd()  const
   return m_gi_childrens.end(); 
 };
 ///
-
-
-
-
 
 #endif   //  DETDESC_GEOMETRYINFO_ICCP
 

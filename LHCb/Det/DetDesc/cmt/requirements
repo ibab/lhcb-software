@@ -1,7 +1,13 @@
+# $Id: requirements,v 1.21 2001-11-18 15:32:44 ibelyaev Exp $ 
 # =============================================================================
 # CVS tag $Name: not supported by cvs2svn $ 
 # =============================================================================
 # $Log: not supported by cvs2svn $
+# Revision 1.20  2001/11/05 16:36:17  sponce
+# XmlLVolumeCnv : add new test for dealing with precision problems 
+# in the  HepVis package.
+# requirements : switch to the XERCES package, forget about the XML one
+#
 # Revision 1.19  2001/10/18 15:58:55  sponce
 #  avoid displaying of warning messages coming from xerces
 #
@@ -13,7 +19,7 @@
 # 
 # =============================================================================
 package DetDesc
-version v8r1
+version v9
 
 branches DetDesc doc cmt src
 
