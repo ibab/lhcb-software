@@ -1,11 +1,17 @@
+# =============================================================================
+# CVS tag $Name: not supported by cvs2svn $
+# =============================================================================
+# $Log: not supported by cvs2svn $ 
+# =============================================================================
+
 package  GiGaCnv 
-version v1
+version v2
 
 branches cmt src doc GiGaCnv 
 
 include_dirs     $(GIGACNVROOT)
 
-use GiGa          v5*   Sim 
+use GiGa          v6*   Sim 
 use LHCbEvent     v11*	Event
 use DetDesc       v7*	Det
 

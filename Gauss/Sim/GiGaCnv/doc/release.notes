@@ -1,17 +1,27 @@
 ! =============================================================================
 ! CVS tag $Name: not supported by cvs2svn $
 ! =============================================================================
-! $Id: release.notes,v 1.5 2001-07-17 15:14:05 ranjard Exp $
+! $Id: release.notes,v 1.6 2001-07-24 11:13:54 ibelyaev Exp $
 ! =============================================================================
-!
-
 Package         : GiGaCnv
 Package Manager : Vanya Belyaev
+! =============================================================================
+
+!==============================================================================
+! 20010724  Vanya Belyaev 
+    restructurisation and teh update due to changes in GiGa 
+
+!==============================================================================
+! 20010717 v2  Vanya Belyaev 
+    use newer version of GiGa 
+    move several interfaces 
+    make more the weaker dependencies between the packages 
 
 !==============================================================================
 ! 20010717 Flr
   requirements - add component library linkopts
 
+!==============================================================================
 ! 20010715  Vanya Belyaev package restructurization 
 
 !============================================================================== 

@@ -1,64 +1,94 @@
 /// ===========================================================================
-/// $Log: not supported by cvs2svn $ 
+/// CVS tag $Name: not supported by cvs2svn $ 
 /// ===========================================================================
-#ifndef      GIGA_GIGAKINECNVSVC_H 
-#define      GIGA_GIGAKINECNVSVC_H  1 
+/// $Log: not supported by cvs2svn $
+/// Revision 1.2  2001/07/15 20:45:11  ibelyaev
+/// the package restructurisation
+/// 
+/// ===========================================================================
+#ifndef      GIGACNV_GIGAKINECNVSVC_H 
+#define      GIGACNV_GIGAKINECNVSVC_H  1 
 /// ===========================================================================
 /// from STL 
 #include <string> 
-/// from GiGa 
-#include "GiGa/GiGaCnvSvcBase.h" 
-#include "GiGa/IGiGaKineCnvSvc.h" 
-/// from GiGaCnv  
+/// from GiGaCnv 
+#include "GiGaCnv/IGiGaKineCnvSvc.h" 
+#include "GiGaCnv/GiGaCnvSvcBase.h" 
+#include "GiGaCnv/GiGaKineRefTable.h" 
 ///
 template <class SERVICE> 
 class SvcFactory; 
 ///
 class    IGiGaSvc; 
 class    IParticlePropertySvc; 
-class    IDataSelector; 
+class    IDataSelector;
 
-/** @class GiGaGeomCnvSvc GiGaGeomCnvSvc.h GiGa/GiGaGeomCnvSvc.h
-    
-    conversion service  for converting of Gaudi 
-    MCParticle/MCVertex structure into Geant4 primary event record  
-    and vice versa 
-    
-    @author  Vanya Belyaev
-    @date    07/08/2000
-*/
+/** @class GiGaKineCnvSvc GiGaKineCnvSvc.h 
+ *    
+ *  conversion service  for converting of Gaudi 
+ *  MCParticle/MCVertex structure into 
+ *  Geant4 Primary Event conversion of  
+ *  Geant4 Trajectories into Gaudi MCVertex/MCParticle structure 
+ *  
+ *  @author  Vanya Belyaev
+ *  @date    07/08/2000
+ */
 
-
-class GiGaKineCnvSvc:  public          GiGaCnvSvcBase ,
-                       virtual public IGiGaKineCnvSvc 
+class GiGaKineCnvSvc: public          GiGaCnvSvcBase ,
+                      virtual public IGiGaKineCnvSvc  
 {
   ///
   friend class SvcFactory<GiGaKineCnvSvc>;
   ///
 protected: 
-  /// constructor
-  GiGaKineCnvSvc( const std::string& , ISvcLocator* );
+
+  /** standard constructor
+   *  @param name  name of the service 
+   *  @param loc   pointer to service locator 
+   */
+  GiGaKineCnvSvc( const std::string& name , 
+                  ISvcLocator* loc );
   /// virtual destructor
-  virtual ~GiGaKineCnvSvc(){};
+  virtual ~GiGaKineCnvSvc();
   /// 
 public: 
-  ///
+  
+  /** initialization 
+   *  @return status code 
+   */
   virtual StatusCode            initialize() ;
-  virtual StatusCode            finalize  () ; 
-  ///
-  virtual IParticlePropertySvc* ppSvc     () 
-  { return GiGaCnvSvcBase::ppSvc(); } 
-  ///
-};        
-///
 
+  /** finalization 
+   *  @return status code 
+   */
+  virtual StatusCode            finalize  () ;
+  
+  /** retrieve the relation table between Geant4 track/trajectory 
+   *  identifiers and the converted MCParticle objects 
+   *  @return the reference to relation table  
+   */
+  virtual GiGaKineRefTable&     table()        { return m_table;} ;
+  
+  /** access to particle properties service 
+   *  @return pointer to particle properties service 
+   */
+  virtual IParticlePropertySvc* ppSvc () const { return m_ppSvc; }
 
-#endif  //   __GIGA_KINECONVERSIONSERVICE_GIGAKINECNVSVC_H__ 
+  
+private:
+  
+  /// name of particle property service
+  std::string            m_ppSvcName ;
+  /// pointer to particle property service 
+  IParticlePropertySvc*  m_ppSvc     ;
+  /// reference table 
+  GiGaKineRefTable       m_table     ;
 
+};
 
-
-
-
+/// ===========================================================================
+#endif  ///<  GIGACNV_GIGAKINECNVSVC_H
+/// ===========================================================================
 
 
 

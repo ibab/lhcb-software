@@ -1,7 +1,12 @@
 /// ===========================================================================
-/// $Log: not supported by cvs2svn $ 
+/// CVS tag $Name: not supported by cvs2svn $ 
 /// ===========================================================================
-#define GIGACNV_GIGACNVSVCBASE_CPP 
+/// $Log: not supported by cvs2svn $
+/// Revision 1.2  2001/07/15 20:45:09  ibelyaev
+/// the package restructurisation
+/// 
+// ===========================================================================
+#define GIGACNV_GIGACNVSVCBASE_CPP 1  
 /// ===========================================================================
 // STL & STL 
 #include <string> 
@@ -11,8 +16,6 @@
 #include "GaudiKernel/ISvcLocator.h" 
 #include "GaudiKernel/IIncidentListener.h" 
 #include "GaudiKernel/IDataProviderSvc.h"
-#include "GaudiKernel/IParticlePropertySvc.h"
-#include "GaudiKernel/IMagneticFieldSvc.h"
 #include "GaudiKernel/IObjManager.h"
 #include "GaudiKernel/IChronoStatSvc.h"
 #include "GaudiKernel/IIncidentSvc.h"
@@ -33,7 +36,13 @@
 /// GiGaCnv
 #include "GiGaCnv/GiGaCnvSvcBase.h"
 
-///
+/// ===========================================================================
+/** standard constructor
+ *  @param ServiceName     service name 
+ *  @param ServiceLocator  pointer to Service Locator 
+ *  @param StorageType     storage type identifier
+ */
+/// ===========================================================================
 GiGaCnvSvcBase::GiGaCnvSvcBase( const std::string&   ServiceName       , 
                                 ISvcLocator*         ServiceLocator    ,
                                 const unsigned int   StorageType       )
@@ -54,12 +63,6 @@ GiGaCnvSvcBase::GiGaCnvSvcBase( const std::string&   ServiceName       ,
   , m_setupName   ( "GiGaSvc"             ) 
   , m_setupSvc    (     0                 ) 
   ///
-  , m_ppName      ( "ParticlePropertySvc" )  
-  , m_ppSvc       (     0                 ) 
-  ///
-  , m_mfName      ( "MagneticFieldSvc"    )  
-  , m_mfSvc       (     0                 ) 
-  ///
   , m_chronoName  ( "ChronoStatSvc"       )  
   , m_chronoSvc   (     0                 ) 
   ///
@@ -74,17 +77,21 @@ GiGaCnvSvcBase::GiGaCnvSvcBase( const std::string&   ServiceName       ,
   declareProperty   ( "DetectorDataProviderService"     , m_detName     );
   declareProperty   ( "GiGaService"                     , m_gigaName    ); 
   declareProperty   ( "GiGaSetUpService"                , m_setupName   ); 
-  declareProperty   ( "ParticlePropertyService"         , m_ppName      );
-  declareProperty   ( "MagneticFieldService"            , m_mfName      );
   declareProperty   ( "ChronoStatService"               , m_chronoName  );
   declareProperty   ( "ObjectManager"                   , m_omName      );
   declareProperty   ( "IncidentService"                 , m_inName      );
 };
 
-
+/// ===========================================================================
+/// virtual destructor 
+/// ===========================================================================
 GiGaCnvSvcBase::~GiGaCnvSvcBase(){};
 
-
+/// ===========================================================================
+/** service initialization 
+ *  @return status code 
+ */
+/// ===========================================================================
 StatusCode GiGaCnvSvcBase::initialize()
 {
   ///
@@ -168,36 +175,6 @@ StatusCode GiGaCnvSvcBase::initialize()
     } 
   else { Warning(" Detector Data Service is not requested to be located!") ;} 
   ///
-  if( !m_ppName.empty() ) 
-    {
-      StatusCode status = 
-        serviceLocator()->service( m_ppName , m_ppSvc  ) ; 
-      if( status.isFailure() ) 
-        { return Error("Initialize::Could not locate IParticlePropertySvc=" + 
-                       m_ppName, status );}      
-      if( 0 == ppSvc()       ) 
-        { return Error("Initialize::Could not locate IParticlePropertySvc=" + 
-                       m_ppName         );}
-      ppSvc()->addRef(); 
-      Print( " Located Particle Properties  Service="+m_ppName, MSG::VERBOSE ); 
-    } 
-  else { Warning(" Particle Property Svc is not requested to be located!") ;} 
-  ///
-  if( !m_mfName.empty() ) 
-    {
-      StatusCode status = 
-        serviceLocator()->service( m_mfName , m_mfSvc ) ; 
-      if( status.isFailure() )
-        { return Error("Initialize::Could not locate IMagneticFieldSvc=" + 
-                       m_mfName, status );}      
-      if( 0 == mfSvc()       ) 
-        { return Error("Initialize::Could not locate IMagneticFieldSvc=" + 
-                       m_mfName         );}
-      mfSvc()->addRef(); 
-      Print( " Located Magnetic Field Service="+m_mfName, MSG::VERBOSE ); 
-    } 
-  else { Warning(" Magnetic Field Service is not requested to be located!") ;} 
-  ///
   if( !m_chronoName.empty() ) 
     {
       StatusCode status = 
@@ -260,6 +237,12 @@ StatusCode GiGaCnvSvcBase::initialize()
   ///
 };
 
+
+/// ===========================================================================
+/** service initialization 
+ *  @return status code 
+ */
+/// ===========================================================================
 StatusCode GiGaCnvSvcBase::finalize()
 {
   ///
@@ -268,19 +251,21 @@ StatusCode GiGaCnvSvcBase::finalize()
   if ( 0 != detSvc    () ) { detSvc    ()->release() ; m_detSvc    = 0 ; } 
   if ( 0 != gigaSvc   () ) { gigaSvc   ()->release() ; m_gigaSvc   = 0 ; } 
   if ( 0 != setupSvc  () ) { setupSvc  ()->release() ; m_setupSvc  = 0 ; } 
-  if ( 0 != ppSvc     () ) { ppSvc     ()->release() ; m_ppSvc     = 0 ; } 
-  if ( 0 != mfSvc     () ) { mfSvc     ()->release() ; m_mfSvc     = 0 ; } 
   if ( 0 != chronoSvc () ) { chronoSvc ()->release() ; m_chronoSvc = 0 ; } 
   if ( 0 != objMgr    () ) { objMgr    ()->release() ; m_objMgr    = 0 ; } 
   ///
   m_leaves.clear();
   ///
-  StatusCode st = ConversionSvc::finalize(); 
-  ///
-  return st; 
-  ///
+  return ConversionSvc::finalize() ;
 };
 
+/// ===========================================================================
+/** Retrieve the interface
+ *  @param IID   unique interface identifier 
+ *  @param ppI   placeholder for returned interface 
+ *  @return status code 
+ */
+/// ===========================================================================
 StatusCode GiGaCnvSvcBase::queryInterface( const IID& iid , void** ppI )
 { 
   if( 0 == ppI                ) { return StatusCode::FAILURE ;}
@@ -295,12 +280,23 @@ StatusCode GiGaCnvSvcBase::queryInterface( const IID& iid , void** ppI )
   return StatusCode::SUCCESS;  
 };
 
+/// ===========================================================================
+/** declare the object 
+ *  @param Leaf object description 
+ *  @return status code 
+ */
+/// ===========================================================================
 StatusCode GiGaCnvSvcBase::declareObject( const IGiGaCnvSvc::Leaf& leaf )
 {
   m_leaves.push_back( leaf );
   return StatusCode::SUCCESS ;
 };
 
+/// ===========================================================================
+/** handle the incident
+ *  @param reference to incident 
+ */
+/// ===========================================================================
 void       GiGaCnvSvcBase::handle         ( const Incident& inc )
 {
   ///
@@ -357,6 +353,13 @@ void       GiGaCnvSvcBase::handle         ( const Incident& inc )
   ///  
 };
 
+/// ===========================================================================
+/** print error message and return status code
+ *  @param msg error message 
+ *  @param sc  status code
+ *  @return statsu code 
+ */
+/// ===========================================================================
 StatusCode GiGaCnvSvcBase::Error( const std::string& Message , 
                                   const StatusCode & Status )
 {  
@@ -364,6 +367,13 @@ StatusCode GiGaCnvSvcBase::Error( const std::string& Message ,
   return  Print( Message , MSG::ERROR  , Status  ) ; 
 };  
 
+/// ===========================================================================
+/** print warning message and return status code
+ *  @param msg warning message 
+ *  @param sc  status code
+ *  @return statsu code 
+   */
+/// ===========================================================================
 StatusCode GiGaCnvSvcBase::Warning( const std::string& Message , 
                                     const StatusCode & Status )
 {
@@ -371,13 +381,29 @@ StatusCode GiGaCnvSvcBase::Warning( const std::string& Message ,
   return  Print( Message , MSG::WARNING , Status ) ; 
 };
 
+/// ===========================================================================
+/** print the  message and return status code
+ *  @param msg error message 
+ *  @param lvl print level 
+ *  @param sc  status code
+ *  @return statsu code 
+ */
+/// ===========================================================================
 StatusCode GiGaCnvSvcBase::Print( const std::string& Message , 
                                   const MSG::Level & level   , 
                                   const StatusCode & Status )
 { MsgStream log( msgSvc() , name() ); 
- log << level << Message << endreq ; return  Status; };  
+ log << level << Message << endreq ; return  Status; };
 
 
+/// ===========================================================================
+/** re-throw the exception 
+ *  @param msg  message 
+ *  @param exc  previous exception 
+ *  @param lvl  print level 
+ *  @param sc   status code 
+ */
+/// ===========================================================================
 StatusCode GiGaCnvSvcBase::Exception( const std::string    & Message , 
                                       const GaudiException & Excp    ,
                                       const MSG::Level     & level   , 
@@ -387,9 +413,16 @@ StatusCode GiGaCnvSvcBase::Exception( const std::string    & Message ,
   MsgStream log( msgSvc() , name() + ":"+Excp.tag() ); 
   log << level << Message << ":" << Excp << endreq ; 
   return  Status;
-};  
+};
 
-
+/// ===========================================================================
+/** re-throw the exception 
+ *  @param msg  message 
+ *  @param exc  previous exception 
+ *  @param lvl  print level 
+ *  @param sc   status code 
+ */
+/// ===========================================================================
 StatusCode GiGaCnvSvcBase::Exception( const std::string    & Message , 
                                       const std::exception & Excp    ,
                                       const MSG::Level     & level   , 
@@ -402,6 +435,13 @@ StatusCode GiGaCnvSvcBase::Exception( const std::string    & Message ,
   return  Status;
 };
 
+/// ===========================================================================
+/** throw the exception 
+ *  @param msg  message 
+ *  @param lvl  print level 
+ *  @param sc   status code 
+ */
+/// ===========================================================================
 StatusCode GiGaCnvSvcBase::Exception( const std::string    & Message , 
                                       const MSG::Level     & level   , 
                                       const StatusCode     & Status )
@@ -411,10 +451,9 @@ StatusCode GiGaCnvSvcBase::Exception( const std::string    & Message ,
   log << level << "Exception:" 
       << Message << ": UNKNOWN exception"  << endreq ; 
   return  Status;
-};  
+};
 
-
-
+/// ===========================================================================
 
 
 

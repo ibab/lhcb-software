@@ -1,5 +1,10 @@
 /// ===========================================================================
-/// $Log: not supported by cvs2svn $ 
+/// CVS tag $Name: not supported by cvs2svn $ 
+/// ===========================================================================
+/// $Log: not supported by cvs2svn $
+/// Revision 1.2  2001/07/15 20:45:11  ibelyaev
+/// the package restructurisation
+/// 
 /// ===========================================================================
 #ifndef     GIGA_GIGALVOLUMECNV_H
 #define     GIGA_GIGALVOLUMECNV_H 1 
@@ -10,12 +15,12 @@
 template <class T> 
 class CnvFactory;
 
-/** @class GiGaLVolumeCnv     GiGaLVolumeCnv.h GiGa/GiGaLVolumeCnv.h
-
-    converter of LVolumes into Geant4 G4LogicalVolume 
-
-    @author Vanya Belyaev
-*/
+/** @class GiGaLVolumeCnv GiGaLVolumeCnv.h
+ *
+ *  converter of LVolumes into Geant4 G4LogicalVolume 
+ *
+ *  @author Vanya Belyaev
+ */
 
 
 class GiGaLVolumeCnv: public GiGaCnvBase
@@ -24,16 +29,28 @@ class GiGaLVolumeCnv: public GiGaCnvBase
   friend class CnvFactory<GiGaLVolumeCnv>;
   ///
 protected:
-  ///
+
+  /** standard constructor 
+   *  @param Locator pointer to service locator 
+   */
   GiGaLVolumeCnv( ISvcLocator* Locator );
   /// Standard (virtual) destructor 
   virtual ~GiGaLVolumeCnv();
   ///
 public:
-  /// create representation
+
+  /** create the representation]
+   *  @param Object pointer to object 
+   *  @param Address address 
+   *  @return status code 
+   */
   virtual StatusCode createRep( DataObject*     Object  , 
                                 IOpaqueAddress*& Address ) ;
-  /// Update representation 
+  /** Update representation 
+   *  @param Object pointer to object 
+   *  @param Address address 
+   *  @return status code 
+   */
   virtual StatusCode updateRep( DataObject*     Object  , 
                                 IOpaqueAddress*  Address ) ; 
   /// class ID for converted objects

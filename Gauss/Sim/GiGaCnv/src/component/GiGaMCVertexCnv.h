@@ -1,5 +1,10 @@
 /// ===========================================================================
-/// $Log: not supported by cvs2svn $ 
+/// CVS tag $Name: not supported by cvs2svn $
+/// ===========================================================================
+/// $Log: not supported by cvs2svn $
+/// Revision 1.2  2001/07/15 20:45:12  ibelyaev
+/// the package restructurisation
+/// 
 /// ===========================================================================
 #ifndef GIGACNV_GIGAMCVERTEXCNV_H
 #define GIGACNV_GIGAMCVERTEXCNV_H 1 
@@ -17,65 +22,105 @@ class   G4PrimaryParticle;
 class   G4ParticleDefinition; 
 
 
-/** @class GiGaMCVertexCnv GiGaMCVertexCnv.h GiGa/GiGaMCVertexCnv.h
-    
-    Converter of Geant4 trajectories into Gaudi MCVertices 
-    and Gaudi MCVertices into Geant4 G4PrimaryVertices 
-    
-    @author  Vanya Belyaev
-    @date    22/02/2001
-*/
-
+/** @class GiGaMCVertexCnv GiGaMCVertexCnv.h
+ *    
+ *  Converter of Geant4 trajectories into Gaudi MCVertices 
+ *  and Gaudi MCVertices into Geant4 G4PrimaryVertices 
+ *  
+ *  @author  Vanya Belyaev
+ *  @date    22/02/2001
+ */
 
 class GiGaMCVertexCnv: public GiGaCnvBase
 {
   ///
   friend class CnvFactory<GiGaMCVertexCnv>; 
   /// 
-protected: 
-  /// Standard Constructor
-  GiGaMCVertexCnv( ISvcLocator* );
+protected:
+  
+  /** standard constructor
+   *  @param Loc pointer to service locator 
+   */ 
+  GiGaMCVertexCnv( ISvcLocator* Loc );
+
   /// Standard (virtual) destructor 
   virtual ~GiGaMCVertexCnv();
   ///
 public:
-  /// create Object 
-  virtual StatusCode createObj     ( IOpaqueAddress* /* Address */ , 
-                                     DataObject*&     /* Object  */ ) ;
-  /// update Object 
-  virtual StatusCode updateObj     ( IOpaqueAddress* /* Address */ , 
-                                     DataObject*      /* Object  */ ) ; 
-  /// fill the references 
-  virtual StatusCode fillObjRefs   ( IOpaqueAddress* /* Address */ , 
-                                     DataObject*      /* Object  */ ) ;
-  /// update the references 
-  virtual StatusCode updateObjRefs ( IOpaqueAddress* /* Address */ , 
-                                     DataObject*      /* Object  */ ) ;
-  /// Create representation 
-  virtual StatusCode createRep     ( DataObject*     /* Object  */ , 
-                                     IOpaqueAddress*& /* Address */ ) ;
-  /// Update representation 
-  virtual StatusCode updateRep     ( DataObject*     /* Object  */ , 
-                                     IOpaqueAddress*  /* Address */ ) ; 
-  /// Class ID for created object == class ID for this specific converter
+
+  /** create the Object
+   *  @param  Address address of the object 
+   *  @param  Object  reference to created object 
+   *  @return status code
+   */ 
+  virtual StatusCode createObj     ( IOpaqueAddress*     Address    , 
+                                     DataObject*&        Object     ) ;
+
+  /** update the Object
+   *  @param  Address address of the object 
+   *  @param  Object  reference to updated object 
+   *  @return status code
+   */ 
+  virtual StatusCode updateObj     ( IOpaqueAddress*     Address    , 
+                                     DataObject*         Object     ) ; 
+
+  /** fill the object references 
+   *  @param  Address address of the object 
+   *  @param  Object  reference to the object 
+   *  @return status code
+   */ 
+  virtual StatusCode fillObjRefs   ( IOpaqueAddress*     Address    , 
+                                     DataObject*         Object     ) ;
+
+  /** update the object references 
+   *  @param  Address address of the object 
+   *  @param  Object  reference to the object 
+   *  @return status code
+   */ 
+  virtual StatusCode updateObjRefs ( IOpaqueAddress*     Address    , 
+                                     DataObject*         Object     ) ;
+
+  /** create the representation of the object 
+   *  @param  Object  reference to the object 
+   *  @param  Address address of the object 
+   *  @return status code
+   */ 
+  virtual StatusCode createRep     ( DataObject*         Object     , 
+                                     IOpaqueAddress*&    Address    ) ;
+
+  /** update the representation of the object 
+   *  @param  Object  reference to the object 
+   *  @param  Address address of the object 
+   *  @return status code
+   */ 
+  virtual StatusCode updateRep     ( DataObject*         Object     , 
+                                     IOpaqueAddress*     Address    ) ; 
+  
+  /** class ID for created object = class ID for this specific converter
+   *  @return class id of created objects
+   */
   static const CLID&          classID();
-  /// storage Type 
+
+  /** storage type 
+   *  @return storage type 
+   */
   static const unsigned char storageType() ; 
+
+  /** initialize the converter
+   *  @return status code 
+   */
+  virtual StatusCode initialize();
+  
+  /** finalize  the converter
+   *  @return status code 
+   */
+  virtual StatusCode finalize ();
   ///
 private:
   ///
-  GiGaMCVertexCnv () ; /// no default constructor 
-  GiGaMCVertexCnv ( const GiGaMCVertexCnv& ); /// no copy
-  GiGaMCVertexCnv& operator=( const GiGaMCVertexCnv& ); /// no assignment  
-  ///
-protected: 
-  /// miscellaneous functions which performs the conversion itself
-  G4PrimaryVertex*      
-  VertexFromMCVertex     ( const MCVertex*   vertex   ) ; 
-  G4PrimaryParticle*    
-  ParticleFromMCParticle ( const MCParticle* particle ) ;
-  G4ParticleDefinition* 
-  ParticleDefinition     ( const MCParticle* particle ) ; 
+  GiGaMCVertexCnv () ; ///< no default constructor 
+  GiGaMCVertexCnv ( const GiGaMCVertexCnv& ); ///< no copy
+  GiGaMCVertexCnv& operator=( const GiGaMCVertexCnv& ); ///< no assignment  
   ///
 };
 

@@ -1,5 +1,10 @@
 /// ===========================================================================
-/// $Log: not supported by cvs2svn $ 
+/// CVS tag $Name: not supported by cvs2svn $ 
+/// ===========================================================================
+/// $Log: not supported by cvs2svn $
+/// Revision 1.2  2001/07/15 20:45:10  ibelyaev
+/// the package restructurisation
+/// 
 /// ===========================================================================
 #ifndef  GIGACNV_GIGAGEOMCNVSVC_H 
 #define  GIGACNV_GIGAGEOMCNVSVC_H 1 
@@ -9,7 +14,7 @@
 #include <vector> 
 /// GiGa 
 #include "GiGaCnv/GiGaCnvSvcBase.h" 
-#include "GiGa/IGiGaGeomCnvSvc.h" 
+#include "GiGaCnv/IGiGaGeomCnvSvc.h" 
 ///
 class G4VPhysicalVolume; 
 class G4VSolid;
@@ -25,18 +30,17 @@ class IGiGaMagField;
 class IGiGaMagFieldFactory;
 ///
 template <class SERVICE> 
-class SvcFactory; 
+class SvcFactory;
 
-
-/** @class GiGaGeomCnvSvc GiGaGeomCnvSvc.h GiGa/GiGaGeomCnvSvc.h
-    
-    Convertersion service for convertiong Gaugi detector 
-     and geometry description 
-    into Geant4 geometry and detectro description 
-    
-    @author  Vanya Belyaev
-    @date    07/08/2000
-*/
+/** @class GiGaGeomCnvSvc GiGaGeomCnvSvc.h
+ *  
+ *  Convertersion service for convertiong Gaugi detector 
+ *  and geometry description into Geant4 geometry and 
+ *  detector description 
+ *  
+ *  @author  Vanya Belyaev
+ *  @date    07/08/2000
+ */
 
 class GiGaGeomCnvSvc:  virtual public  IGiGaGeomCnvSvc , 
                        public   GiGaCnvSvcBase    
@@ -46,18 +50,21 @@ class GiGaGeomCnvSvc:  virtual public  IGiGaGeomCnvSvc ,
   ///  
 public:
   ///
-  typedef  std::vector<IGiGaSensDet*>                     SDobjects; 
-  typedef  std::vector<const IGiGaSensDetFactory*>        SDfactories; 
+  typedef  std::vector<IGiGaSensDet*>                SDobjects; 
   typedef  std::vector<IGiGaMagField*>               MFobjects; 
-  typedef  std::vector<const IGiGaMagFieldFactory*>  MFfactories; 
   ///
- protected: 
-  /// constructor
-  GiGaGeomCnvSvc( const std::string& , ISvcLocator* );
+ protected:
+  
+  /** constructor 
+   *  @param name  name of the service 
+   *  @param loc   pointer to service locator 
+   */
+  GiGaGeomCnvSvc( const std::string& name , 
+                  ISvcLocator* loc );
   /// virtual destructor
   virtual ~GiGaGeomCnvSvc(){};
- 
- public: 
+  
+public: 
 
   /// from ISConversionSvc:
   virtual StatusCode initialize    ()                              ;
@@ -68,56 +75,58 @@ public:
   ///
   virtual StatusCode queryInterface( const InterfaceID& , void** ) ;
   ///
-
-  /**
-     Get Physical Volume World (top Logical volume in the G4 structure)
-  */
+  
+  /** Retrieve the pointer to top-level "world" volume,
+   *  needed for Geant4 - root for the whole Geant4 geometry tree 
+   *  @return pointer to constructed(converted) geometry tree 
+   */  
   virtual G4VPhysicalVolume*  G4WorldPV() ;
-  ///
   
-  /** 
-      Retrieve pointer for G4 materials from G4MaterialTable, 
-      (could trigger the conversion of the (DetDesc) Material )
-  */
+  /** Retrieve the pointer for G4 materials from G4MaterialTable, 
+   *  (could trigger the conversion of the (DetDesc) Material)
+   *  @param  Name    name/address/location of Material object 
+   *  @return pointer to converted G4Material object 
+   */
   virtual G4Material*         g4Material ( const std::string& ) ;
-  ///
   
-  /** 
-      Retrive pointer to G4LogicalVolume  from G4LogicalvolumeStore,
-      ( could trigger the conversion of the (DetDesc) LVolume)    
-  */
+  /** Retrive the pointer to G4LogicalVolume  from G4LogicalvolumeStore,
+   * (could trigger the conversion of the (DetDesc) LVolume)    
+   *  @param  Name    name/address/location of LVolume object 
+   *  @return pointer to converted G4LogicalVolume object 
+   */
   virtual G4LogicalVolume*    g4LVolume  ( const std::string& )  ; 
-  ///
   
-  /** 
-      Return  pointer to G4Vsolid, corresponding to (DetDesc) Solid,
-      ( could trigger the conversion of the (DetDesc) LVolume)    
-  */
+  /** convert (DetDesc) Solid object into (Geant4) G4VSolid object 
+   *  @param  Solid pointer to Solid object 
+   *  @return pointer to converter G4VSolid object 
+   */
   virtual G4VSolid*           g4Solid    ( const ISolid*      ) ; 
-  ///
   
-  /** 
-      retrieve pointer to Sensitive Detector Object 
-  */
+  /** Instantiate the Sensitive Detector Object 
+   *  @param Name  Type/Name of the Sensitive Detector Object
+   *  @param Det   reference to Densitive Detector Object 
+   *  @return  status code 
+   */
   virtual StatusCode sensDet   ( const std::string& , IGiGaSensDet*& ) ;
-
-  /** 
-      retrieve pointer to Magnetic Field Object 
-  */
+  
+  /** Instantiate the Magnetic Field Object 
+   *  @param Name  Type/Name of the Magnetic Field Object
+   *  @param Mag   reference to Magnetic Field Object 
+   *  @return  status code 
+   */
   virtual StatusCode magField  ( const std::string& , IGiGaMagField*& ) ;
-
    
- protected:
+protected:
   ///
-  G4VSolid*     g4BoolSolid( const SolidBoolean * );
+  G4VSolid* g4BoolSolid( const SolidBoolean * );
   ///
- private:
+private:
   ///
   GiGaGeomCnvSvc()                                  ;
   GiGaGeomCnvSvc           ( const GiGaGeomCnvSvc& );
   GiGaGeomCnvSvc& operator=( const GiGaGeomCnvSvc& );
   ///
- private:
+private:
   ///
   G4VPhysicalVolume*               m_worldPV       ;
   ///
@@ -132,10 +141,8 @@ public:
   std::string  m_worldMagField ; ///< global magnetic field 
   ////
   SDobjects    m_SDs  ; ///< created sensitive detectors 
-  SDfactories  m_SDFs ; ///< factories for created sensitive detectors 
   ///
   MFobjects    m_MFs  ; ///< created magnetic field objects 
-  MFfactories  m_MFFs ; ///< factories for created magnetic field objects 
   ///
 };        
 

@@ -1,5 +1,10 @@
 /// ===========================================================================
-/// $Log: not supported by cvs2svn $ 
+/// CVS tag $Name: not supported by cvs2svn $
+/// ===========================================================================
+/// $Log: not supported by cvs2svn $
+/// Revision 1.3  2001/07/15 20:45:11  ibelyaev
+/// the package restructurisation
+/// 
 /// ===========================================================================
 #define GIGACNV_GIGALVOLUMECNV_CPP 1 
 /// ===========================================================================
@@ -19,29 +24,50 @@
 #include "G4PVPlacement.hh"
 /// GiGa & GiGaCnv 
 #include "GiGa/IGiGaCnvSvc.h"
-#include "GiGa/IGiGaGeomCnvSvc.h"
+#include "GiGaCnv/IGiGaGeomCnvSvc.h"
 /// local
 #include "GiGaLVolumeCnv.h" 
 
 
 static const  CnvFactory<GiGaLVolumeCnv> s_GiGaLVolumeCnvFactory ;
 const        ICnvFactory&  GiGaLVolumeCnvFactory = s_GiGaLVolumeCnvFactory ;
-/// constructor 
+
+/// ===========================================================================
+  /** standard constructor 
+   *  @param Locator pointer to service locator 
+   */
+/// ===========================================================================
 GiGaLVolumeCnv::GiGaLVolumeCnv( ISvcLocator* Locator ) 
   : GiGaCnvBase( storageType() , classID() , Locator ) 
 {
   setNameOfGiGaConversionService( "GiGaGeomCnvSvc" ); 
   setConverterName              ( "GiGaLVCnv"      ); 
 }; 
+
+/// ===========================================================================
 /// destructor 
+/// ===========================================================================
 GiGaLVolumeCnv::~GiGaLVolumeCnv(){}; 
+
+/// ===========================================================================
 /// Class ID
+/// ===========================================================================
 const CLID&         GiGaLVolumeCnv::classID     () 
 { return CLID_LVolume         ; }
+
+/// ===========================================================================
 /// StorageType 
+/// ===========================================================================
 const unsigned char GiGaLVolumeCnv::storageType () 
 { return GiGaGeom_StorageType ; } 
-///
+
+/// ===========================================================================
+/** create the representation]
+ *  @param Object pointer to object 
+ *  @param Address address 
+ *  @return status code 
+ */
+/// ===========================================================================
 StatusCode GiGaLVolumeCnv::createRep( DataObject*     Object  , 
                                       IOpaqueAddress*& Address ) 
 {
@@ -86,7 +112,14 @@ StatusCode GiGaLVolumeCnv::createRep( DataObject*     Object  ,
   return updateRep( Object , Address ) ; 
   /// 
 }; 
-///
+
+/// ===========================================================================
+/** update the representation]
+ *  @param Object pointer to object 
+ *  @param Address address 
+ *  @return status code 
+ */
+/// ===========================================================================
 StatusCode GiGaLVolumeCnv::updateRep( DataObject*     Object  , 
                                       IOpaqueAddress* /* Address */ ) 
 {
@@ -164,8 +197,7 @@ StatusCode GiGaLVolumeCnv::updateRep( DataObject*     Object  ,
   ///
 };
 
-
-
+/// ===========================================================================
 
 
 

@@ -1,6 +1,11 @@
 /// ===========================================================================
-/// $Log: not supported by cvs2svn $ 
+/// CVS tag $Name: not supported by cvs2svn $ 
 /// ===========================================================================
+/// $Log: not supported by cvs2svn $
+/// Revision 1.3  2001/07/15 20:45:09  ibelyaev
+/// the package restructurisation
+/// 
+//  ===========================================================================
 #define GIGACNV_GIGADETECTORELEMENTCNV_CPP
 /// ===========================================================================
 /// STL
@@ -24,10 +29,10 @@
 #include "G4PhysicalVolumeStore.hh"
 /// GiGa & GiGaCnv 
 #include "GiGa/IGiGaCnvSvc.h"
-#include "GiGa/IGiGaGeomCnvSvc.h"
+#include "GiGa/IGiGaGeoCnvSvc.h"
+#include "GiGaCnv/IGiGaGeomCnvSvc.h"
 /// local 
 #include "GiGaDetectorElementCnv.h"
-
 
 /// factory 
 static const CnvFactory<GiGaDetectorElementCnv> 
@@ -35,23 +40,42 @@ s_GiGaDetectorElementCnvFactory ;
 const       ICnvFactory&GiGaDetectorElementCnvFactory = 
 s_GiGaDetectorElementCnvFactory ;
 
-///
-/// constructor 
+/// ===========================================================================
+/** standard constructor 
+ *  @param svc pointer to Service Locator 
+ */
+/// ===========================================================================
 GiGaDetectorElementCnv::GiGaDetectorElementCnv( ISvcLocator* Locator ) 
   : GiGaCnvBase( storageType() , classID() , Locator ) 
 {
   setNameOfGiGaConversionService( "GiGaGeomCnvSvc" ); 
   setConverterName              ( "GiGaDECnv"      ); 
 }; 
+
+/// ===========================================================================
 /// destructor 
+/// ===========================================================================
 GiGaDetectorElementCnv::~GiGaDetectorElementCnv(){}; 
+
+/// ===========================================================================
 /// Class ID
+/// ===========================================================================
 const CLID&         GiGaDetectorElementCnv::classID     () 
 { return CLID_DetectorElement ; }
+
+/// ===========================================================================
 /// StorageType 
+/// ===========================================================================
 const unsigned char GiGaDetectorElementCnv::storageType () 
 { return GiGaGeom_StorageType ; } 
-///
+
+/// ===========================================================================
+/** create the representation
+ *  @param Object  pointer to data object 
+ *  @param Address address 
+ *  @return status code 
+ */
+/// ===========================================================================
 StatusCode GiGaDetectorElementCnv::createRep( DataObject*     Object  , 
                                               IOpaqueAddress*& Address ) 
 {
@@ -118,8 +142,15 @@ StatusCode GiGaDetectorElementCnv::createRep( DataObject*     Object  ,
   ///
   return updateRep( Object , Address ) ; 
   /// 
-}; 
-///
+};
+
+/// ===========================================================================
+/** update the  representation
+ *  @param Object  pointer to data object 
+ *  @param Address address 
+ *  @return status code 
+ */
+/// ===========================================================================
 StatusCode GiGaDetectorElementCnv::updateRep( DataObject*     Object  , 
                                               IOpaqueAddress* /* Address */ ) 
 {
@@ -197,9 +228,8 @@ StatusCode GiGaDetectorElementCnv::updateRep( DataObject*     Object  ,
   return Error("updateRep:: could not convert GetectorElement="+de->name()) ;
   ///
 };
-  
 
-
+/// ===========================================================================
 
 
 

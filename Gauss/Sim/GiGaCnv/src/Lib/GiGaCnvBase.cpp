@@ -1,8 +1,13 @@
 /// ===========================================================================
-/// $Log: not supported by cvs2svn $ 
+/// CVS tag $Name: not supported by cvs2svn $ 
 /// ===========================================================================
+/// $Log: not supported by cvs2svn $
+/// Revision 1.2  2001/07/15 20:45:08  ibelyaev
+/// the package restructurisation
+///
+//=============================================================================
 #define GIGACNV_GIGACNVBASE_CPP 1 
-/// ===========================================================================
+///============================================================================
 /// STL 
 #include <string> 
 #include <vector> 
@@ -19,10 +24,10 @@
 #include "GiGa/IGiGaSetUpSvc.h"
 #include "GiGa/IGiGaCnvSvc.h" 
 #include "GiGa/GiGaException.h"
-#include "GiGa/IGiGaGeomCnvSvc.h" 
-#include "GiGa/IGiGaKineCnvSvc.h" 
-#include "GiGa/IGiGaHitsCnvSvc.h" 
 // GiGaCnv 
+#include "GiGaCnv/IGiGaGeomCnvSvc.h" 
+#include "GiGaCnv/IGiGaKineCnvSvc.h" 
+#include "GiGaCnv/IGiGaHitsCnvSvc.h" 
 #include "GiGaCnv/GiGaCnvBase.h"
 
 
@@ -55,6 +60,13 @@ GiGaCnvBase::GiGaCnvBase( const unsigned char  StorageType ,
 GiGaCnvBase::~GiGaCnvBase(){};
 
 /// ===========================================================================
+/** (re)-throw exception and print error message 
+ *  @param msg  error message 
+ *  @param exc  previous exception 
+ *  @param lvl  print level
+ *  @param sc   status code
+ *  @return statsu code 
+ */
 /// ===========================================================================
 StatusCode GiGaCnvBase::Exception( const std::string    & Message , 
                                    const GaudiException & Excp    ,
@@ -69,6 +81,13 @@ StatusCode GiGaCnvBase::Exception( const std::string    & Message ,
 };  
 
 /// ===========================================================================
+/** (re)-throw exception and print error message 
+ *  @param msg  error message 
+ *  @param exc  previous exception 
+ *  @param lvl  print level
+ *  @param sc   status code
+ *  @return statsu code 
+ */
 /// ===========================================================================
 StatusCode GiGaCnvBase::Exception( const std::string    & Message , 
                                    const std::exception & Excp    ,
@@ -83,6 +102,12 @@ StatusCode GiGaCnvBase::Exception( const std::string    & Message ,
 };  
 
 /// ===========================================================================
+/** throw exception and print error message 
+ *  @param msg  error message 
+ *  @param lvl  print level
+ *  @param sc   status code
+ *  @return statsu code 
+ */
 /// ===========================================================================
 StatusCode GiGaCnvBase::Exception( const std::string    & Message , 
                                    const MSG::Level     & level   , 
@@ -95,16 +120,25 @@ StatusCode GiGaCnvBase::Exception( const std::string    & Message ,
 };  
 
 /// ===========================================================================
+/** print and return the error
+ *  @param Message message to be printed 
+ *  @param status  status code to be returned 
+ *  @return status code 
+ */
 /// ===========================================================================
 StatusCode GiGaCnvBase::Error( const std::string& Message , 
                                const StatusCode& status )
 {
   Stat stat( chronoSvc() , name() + ":Error" );
-  MsgStream log( msgSvc() , name() ); log << MSG::ERROR << Message << endreq; 
+  MsgStream log( msgSvc() , name() ); 
+  log << MSG::ERROR << Message << endreq; 
   return status; 
 };
 
 /// ===========================================================================
+/** initialization
+ *  @return status code 
+ */
 /// ===========================================================================
 StatusCode GiGaCnvBase::initialize () 
 {
@@ -181,6 +215,9 @@ StatusCode GiGaCnvBase::initialize ()
 };
 
 /// ===========================================================================
+/** finalization 
+ *  @return status code 
+ */
 /// ===========================================================================
 StatusCode GiGaCnvBase::finalize () 
 {
@@ -199,6 +236,13 @@ StatusCode GiGaCnvBase::finalize ()
 };
 
 /// ===========================================================================
+/** declare the object to conversion service 
+ *  @param Path path/address in Transoent Store 
+ *  @param Clid object class identifier 
+ *  @param Addr1 major GiGa address 
+ *  @param Addr2 minor GiGa address 
+ *  @return statsu code 
+ */
 /// ===========================================================================
 StatusCode GiGaCnvBase::declareObject( const std::string & Path  ,
                                        const CLID        & Clid  ,

@@ -1,6 +1,11 @@
 /// ===========================================================================
-/// $Log: not supported by cvs2svn $ 
+/// CVS tag $Name: not supported by cvs2svn $ 
 /// ===========================================================================
+/// $Log: not supported by cvs2svn $
+/// Revision 1.3  2001/07/15 20:45:10  ibelyaev
+/// the package restructurisation
+/// 
+// ===========================================================================
 #define GIGAGEOMCNVSVC_CPP 1 
 /// ===========================================================================
 #include <string>
@@ -42,7 +47,7 @@
 #include "GiGa/IGiGaSensDetFactory.h"
 #include "GiGa/IGiGaMagField.h"
 #include "GiGa/IGiGaMagFieldFactory.h"
-#include "GiGa/SplitTypeAndName.h"
+#include "GiGa/GiGaUtil.h"
 // local 
 #include "GiGaGeomCnvSvc.h" 
 
@@ -76,9 +81,7 @@ GiGaGeomCnvSvc::GiGaGeomCnvSvc( const std::string&   ServiceName          ,
   , m_worldMagField ( ""                  )
   ///
   , m_SDs           ()
-  , m_SDFs          ()
   , m_MFs           ()
-  , m_MFFs          ()
   ///
 {
   ///
@@ -287,7 +290,7 @@ G4VSolid*  GiGaGeomCnvSvc::g4BoolSolid( const SolidBoolean* Sd )
       if      ( 0 != sSub    ) 
         { g4total = 
             new G4SubtractionSolid  ( Sd->first()->name()+"-"+child->name() , 
-                                      g4total , g4child , 
+                                      g4total , g4child ,
                                       child->matrix().inverse() ) ; }
       else if ( 0 != sInt    )
         { g4total = 
@@ -460,7 +463,7 @@ StatusCode GiGaGeomCnvSvc::sensDet( const std::string& TypeNick ,
   SD = 0 ; /// reset the output value 
   ///
   std::string Type,Nick;
-  StatusCode sc = SplitTypeAndName( TypeNick , Type, Nick ); 
+  StatusCode sc = GiGaUtil::SplitTypeAndName( TypeNick , Type, Nick ); 
   if( sc.isFailure() ) 
     { return Error("Could not interprete name of SensDet="+TypeNick, sc ) ; }
   /// look at the local storage:
@@ -468,36 +471,23 @@ StatusCode GiGaGeomCnvSvc::sensDet( const std::string& TypeNick ,
        m_SDs.end() != it ; ++it ) 
     {
       if( 0 != *it && (*it)->name() == Nick && 
-          System::typeinfoName( typeid( *it ) ) == Type ) 
+          GiGaUtil::ObjTypeName( *it )  == Type ) 
         { (*it)->addRef() ; SD = *it ; return StatusCode::SUCCESS ; }  
     } 
-  /// look at local storage of factories: 
-  const IGiGaSensDetFactory* SDfac = 0 ; 
-  for( SDfactories::const_iterator fit = m_SDFs.begin() ; 
-       m_SDFs.end() != fit ; ++fit )
-    { if( 0 != *fit  && (*fit)->ident() == Type ) { SDfac = *fit ; break ; } }
-  /// 
-  if( 0 == SDfac )   
-    {
-      if( 0 == objMgr()                       ) 
-        { return Error("IObjectManager*    points to NULL!"  ); }
-      if( !objMgr()->existsObjFactory( Type ) ) 
-        { return Error("Could not locate  factory for "+Type ); }
-      const IFactory* fac = objMgr()->objFactory( Type ); 
-      if( 0 == fac                            ) 
-        { return Error("Could not locate  factory for "+Type ); }
-      SDfac = dynamic_cast<const IGiGaSensDetFactory*> (fac) ; 
-      if( 0 == SDfac                          )
-        { return Error("Could not cast the actory for "+Type ); }
-      m_SDFs.push_back( SDfac );
-    }
-  /// 
-  SD = SDfac->instantiate( Nick , serviceLocator() );
+  /// create the creator 
+  GiGaUtil::SensDetCreator creator( objMgr() , serviceLocator() );
+  /// create the object
+  SD = creator( Type , Nick ) ;
+  if( 0 == SD ) 
+    { Error("Could Not Create  the SD Object Type/Nick=" + 
+            Type + "/" + Nick ); }
   ///
   StatusCode st = SD->initialize(); 
   if( st.isFailure() ) 
     { Error("Could Not Initialize the SD Object " + 
             TypeNick, st ); delete SD ; SD = 0 ; } 
+  ///
+  m_SDs.push_back( SD );
   ///
   return StatusCode::SUCCESS;
   ///
@@ -510,7 +500,7 @@ StatusCode GiGaGeomCnvSvc::magField( const std::string& TypeNick ,
   MF = 0 ; /// reset the output value 
   ///
   std::string Type,Nick;
-  StatusCode sc = SplitTypeAndName( TypeNick , Type, Nick ); 
+  StatusCode sc = GiGaUtil::SplitTypeAndName( TypeNick , Type, Nick ); 
   if( sc.isFailure() ) 
     { return Error("Could not interprete name of MagField=" + 
                    TypeNick, sc ) ; }
@@ -519,37 +509,24 @@ StatusCode GiGaGeomCnvSvc::magField( const std::string& TypeNick ,
        m_MFs.end() != it ; ++it ) 
     {
       if( 0 != *it && (*it)->name() == Nick && 
-          System::typeinfoName( typeid( *it ) ) == Type ) 
+          GiGaUtil::ObjTypeName( *it ) == Type ) 
         { (*it)->addRef() ; MF = *it ; return StatusCode::SUCCESS ; }  
     } 
-  /// look at local storage of factories: 
-  const IGiGaMagFieldFactory* MFfac = 0 ; 
-  for( MFfactories::const_iterator fit = m_MFFs.begin() ; 
-       m_MFFs.end() != fit ; ++fit )
-    { if( 0 != *fit  && (*fit)->ident() == Type ) { MFfac = *fit ; break ; } }
-  /// 
-  if( 0 == MFfac )   
-    {
-      if( 0 == objMgr()                       ) 
-        { return Error("IObjectManager*    points to NULL!"  ); }
-      if( !objMgr()->existsObjFactory( Type ) ) 
-        { return Error("Could not locate  factory for "+Type ); }
-      const IFactory* fac = objMgr()->objFactory( Type ); 
-      if( 0 == fac                            ) 
-        { return Error("Could not locate  factory for "+Type ); }
-      MFfac = dynamic_cast<const IGiGaMagFieldFactory*> (fac) ; 
-      if( 0 == MFfac                          ) 
-        { return Error("Could not cast the actory for "+Type ); }
-      m_MFFs.push_back( MFfac );
-    }
-  /// 
-  MF = MFfac->instantiate( Nick , serviceLocator() );
+  /// create the creator 
+  GiGaUtil::MagFieldCreator creator( objMgr() , serviceLocator() );
+  /// create the object
+  MF = creator( Type , Nick ) ;
+  if( 0 == MF ) 
+    { return Error("Could not create the MagField Object Type/Nick=" + 
+                   Type + "/" + Nick ); }  
   ///
   StatusCode st = MF->initialize(); 
   if( st.isFailure() ) 
     { delete MF ; MF = 0 ; 
     return Error("Could not Initialize the MagField Object=" + 
                  TypeNick, st ); } 
+  ///
+  m_MFs.push_back( MF );
   ///
   return StatusCode::SUCCESS;
   ///

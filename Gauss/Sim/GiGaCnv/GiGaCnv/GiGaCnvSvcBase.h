@@ -1,5 +1,11 @@
+/// ===========================================================================
+/// CVS tag $Name: not supported by cvs2svn $
+/// ===========================================================================
+/// $Log: not supported by cvs2svn $ 
+/// ===========================================================================
 #ifndef      GIGA_GIGACNVSVCBASE_H 
 #define      GIGA_GIGACNVSVCBASE_H  1 
+/// ===========================================================================
 ///  STL 
 #include <string> 
 #include <vector> 
@@ -19,19 +25,19 @@ class IChronoStatSvc       ;
 class IIncidentSvc         ; 
 class IGiGaSvc             ;
 class IGiGaSetUpSvc        ;
+class ISvcLocator          ;
 ///
 class GaudiException       ;
-///
 
-/**  
-     @class GiGaCnvSvc GiGaCnvSvc.h GiGa/GiGaCnvSvc.h
-     
-     Base conversion service  for converting of Gaudi 
-     structures into Geant4 structures and vice versa  
-     
-     @author Vanya Belyaev 
-     @date    07/08/2000 
-*/
+
+/** @class GiGaCnvSvc GiGaCnvSvc.h GiGaCnv/GiGaCnvSvc.h
+ *
+ *   Base conversion service  for converting of Gaudi 
+ *   structures into Geant4 structures and vice versa  
+ *   
+ *   @author Vanya Belyaev 
+ *   @date    07/08/2000 
+ */
 
 class GiGaCnvSvcBase: virtual public  IGiGaCnvSvc       ,
                       virtual public  IIncidentListener ,       
@@ -56,34 +62,33 @@ public:
   ///
   virtual StatusCode queryInterface ( const IID& , void**  );
   ///
-  virtual StatusCode              declareObject ( const IGiGaCnvSvc::Leaf& Leaf );
+  virtual StatusCode declareObject ( const IGiGaCnvSvc::Leaf& Leaf );
   ///
   virtual void       handle         ( const Incident& );
   ///
 protected:
   ///
   /// "main" data provider         (mandatory) 
-  virtual IDataProviderSvc*       dpSvc     () { return m_dpSvc       ; }  
+  inline IDataProviderSvc*       dpSvc     () { return m_dpSvc       ; }  
   ///  event data provider         (optional) 
-  virtual IDataProviderSvc*       evtSvc    () { return m_evtSvc      ; }  
+  inline IDataProviderSvc*       evtSvc    () { return m_evtSvc      ; }  
   /// detector data provider       (optional)
-  virtual IDataProviderSvc*       detSvc    () { return m_detSvc      ; }  
+  inline  IDataProviderSvc*       detSvc    () { return m_detSvc      ; }  
   /// GiGa service                 (mandatory)
-  virtual IGiGaSvc*               gigaSvc   () { return m_gigaSvc     ; }  
+  inline IGiGaSvc*               gigaSvc   () { return m_gigaSvc     ; }  
   /// GiGaSetUp service            (mandatory)
-  virtual IGiGaSetUpSvc*          setupSvc  () { return m_setupSvc    ; } 
-  /// Magnetic field service       (optional)
-  virtual IMagneticFieldSvc*      mfSvc     () { return m_mfSvc       ; } 
-  /// particle properties service  (optional)
-  virtual IParticlePropertySvc*   ppSvc     () { return m_ppSvc       ; } 
+  inline  IGiGaSetUpSvc*          setupSvc  () { return m_setupSvc    ; } 
   /// chrono  service              (optional)
-  virtual IChronoStatSvc*         chronoSvc () { return m_chronoSvc   ; } 
+  inline  IChronoStatSvc*         chronoSvc () { return m_chronoSvc   ; } 
   /// object manager               (optiona)
-  virtual IObjManager*            objMgr    () { return m_objMgr      ; } 
+  inline  IObjManager*            objMgr    () { return m_objMgr      ; } 
   /// incident service                          
-  virtual IIncidentSvc*           incSvc    () { return m_incSvc      ; } 
+  inline  IIncidentSvc*           incSvc    () { return m_incSvc      ; } 
+  /// service locator                           
+  inline  ISvcLocator*            svcLoc    () { return serviceLocator() ; } 
   ///
-  StatusCode    setNameOfDataProviderSvc( const std::string& Name ) { m_dpName = Name ; return StatusCode::SUCCESS ; } 
+  StatusCode    setNameOfDataProviderSvc( const std::string& Name ) 
+  { m_dpName = Name ; return StatusCode::SUCCESS ; } 
   ///
   StatusCode Error     ( const std::string & msg                       ,  
                          const StatusCode  & sc  = StatusCode::FAILURE );
@@ -106,9 +111,9 @@ protected:
   ///
 private: 
   ///
-  GiGaCnvSvcBase()                                   ; // no default constructor  
-  GiGaCnvSvcBase           ( const GiGaCnvSvcBase& ) ; // no copy
-  GiGaCnvSvcBase& operator=( const GiGaCnvSvcBase& ) ; // no assignment 
+  GiGaCnvSvcBase(); ///< no default constructor  
+  GiGaCnvSvcBase           ( const GiGaCnvSvcBase& ) ; //< no copy
+  GiGaCnvSvcBase& operator=( const GiGaCnvSvcBase& ) ; //< no assignment 
   ///
 protected:
   ///
@@ -131,12 +136,6 @@ private:
   std::string                          m_setupName  ; 
   IGiGaSetUpSvc*                       m_setupSvc   ; 
   ///
-  std::string                          m_ppName     ; 
-  IParticlePropertySvc*                m_ppSvc      ;
-  /// 
-  std::string                          m_mfName     ; 
-  IMagneticFieldSvc*                   m_mfSvc      ;
-  ///
   std::string                          m_chronoName ; 
   IChronoStatSvc*                      m_chronoSvc  ;
   ///
@@ -149,7 +148,9 @@ private:
 };        
 ///
  
-#endif  //   GIGA_GIGACNVSVCBASE_H 
+/// ===========================================================================
+#endif  ///<   GIGACNV_GIGACNVSVCBASE_H 
+/// ===========================================================================
 
 
 
