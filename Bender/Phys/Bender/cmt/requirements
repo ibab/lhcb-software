@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.23 2005-02-02 19:15:10 ibelyaev Exp $ 
+# $Id: requirements,v 1.24 2005-02-05 12:58:32 ibelyaev Exp $ 
 # =============================================================================
 # CVS tag $Name: not supported by cvs2svn $     
 # =============================================================================
@@ -19,6 +19,7 @@ use               DaVinci     v*  Phys
 
 use               BenderGCC   v*  Tools 
 use               BenderDict  v*  Tools 
+use               BenderRels  v*  Tools 
 use               BenderDet   v*  Det  
 use               LoKiHybrid  v*  Tools 
 
@@ -44,6 +45,9 @@ apply_pattern     application_path
 
 # ============================================================================
 # $Log: not supported by cvs2svn $
+# Revision 1.23  2005/02/02 19:15:10  ibelyaev
+#  add new functions
+#
 # =============================================================================
 # The END
 # ============================================================================

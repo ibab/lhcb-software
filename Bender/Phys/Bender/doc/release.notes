@@ -1,6 +1,6 @@
 <PRE>
 ! -----------------------------------------------------------------------------
-! $Id: release.notes,v 1.8 2005-02-02 19:15:10 ibelyaev Exp $ 
+! $Id: release.notes,v 1.9 2005-02-05 12:58:32 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
 ! CVS tag $Name: not supported by cvs2svn $
 ! -----------------------------------------------------------------------------
@@ -9,6 +9,17 @@
 ! Purpose     : The package is a result of "pythonization procedure" 
 !                of the LoKi package 
 ! -----------------------------------------------------------------------------
+
+! 2005-02-05 - Vanya BELYAEV
+ - add new package Tools/BenderResl to make available 
+   all C++ relation tables in Python/Bender 
+   see the example in Ex/BenderExample/v4r6/python/CaloCLusterMCTruth.py 
+   For a moment an explicit import of this package si required: 
+   
+   import benderrels
+
+   After some consolidation period, it will be imported in an automated way
+
 
 ! 2005-02-02 - Vanya BELYAEV 
  - python/benderaux.py 

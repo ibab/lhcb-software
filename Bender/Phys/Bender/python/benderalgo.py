@@ -1,12 +1,15 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: benderalgo.py,v 1.9 2005-01-24 17:44:39 ibelyaev Exp $ 
+# $Id: benderalgo.py,v 1.10 2005-02-05 12:58:32 ibelyaev Exp $ 
 # =============================================================================
-# CVS version $Revision: 1.9 $ 
+# CVS version $Revision: 1.10 $ 
 # =============================================================================
 # CVS tag     $Name: not supported by cvs2svn $ 
 # =============================================================================
 # $Log: not supported by cvs2svn $
+# Revision 1.9  2005/01/24 17:44:39  ibelyaev
+#  v4r5
+#
 # =============================================================================
 """
 The definition and implemenation of basic Bender' algorithm:
@@ -311,7 +314,7 @@ class Algo(BenderAlgo):
         " Retrive/Create MC Truth matching object "
         name = args.get('name','<empty>')
         return MCMatch( BenderAlgo.mctruth( self , name ) )
-
+    
     def evtSvc         ( self ) : return self._evtSvc_
     def detSvc         ( self ) : return self._detSvc_
     def histoSvc       ( self ) : return self._histoSvc_
@@ -351,6 +354,10 @@ class Algo(BenderAlgo):
         if not address : address = args.get ( 'location' , None )
         if not address : raise TypeError, " 'address/location' is not specified "
         obj = self._evtSvc_[ address ]
+        #
+        # relation table? create the proxy and use it! 
+        if hasattr( obj , '_rel_table_' ) : return obj._rel_table_()   # RETURN
+        #
         if not hasattr( obj , 'containedObjects' ) : return obj        # RETURN 
         if   args.has_key( 'vector' ) :  return obj.containedObjects() # RETURN
         elif args.has_key( 'list'   ) :
@@ -428,6 +435,7 @@ class Algo(BenderAlgo):
         if level >= MSG.NUM_LEVELS : level = MSG.ALWAYS
         if level <= MSG.NIL        : level = MSG.VERBOSE  
         return BenderAlgo.Print( self  , message , code , level  )     # RETURN 
+
 
 
 # =============================================================================
