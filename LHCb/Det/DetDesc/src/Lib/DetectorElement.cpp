@@ -1,8 +1,11 @@
-// $Id: DetectorElement.cpp,v 1.16 2002-05-11 18:25:47 ibelyaev Exp $ 
+// $Id: DetectorElement.cpp,v 1.17 2002-11-19 14:11:31 sponce Exp $ 
 // ===========================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ===========================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.16  2002/05/11 18:25:47  ibelyaev
+//  see $DETDESCROOT/doc/release.notes 11 May 2002
+//
 // ===========================================================================
 #include "GaudiKernel/Kernel.h"
 #include "GaudiKernel/ISvcLocator.h"
@@ -35,8 +38,6 @@
  */
 // ============================================================================
 
-unsigned long DetectorElement::s_count = 0 ;
-
 DetectorElement::DetectorElement( const std::string&   /*name*/    ,
                                   const ITime&         validSince  ,   
                                   const ITime&         validTill   )
@@ -57,8 +58,6 @@ DetectorElement::DetectorElement( const std::string&   /*name*/    ,
   ///
   m_de_validSince = new(std::nothrow) TimePoint( validSince ) ;
   m_de_validTill  = new(std::nothrow) TimePoint( validTill  ) ; 
-  ///
-  addRef();
 };
 ///
 DetectorElement::DetectorElement( const std::string&   /* name */ )
@@ -79,18 +78,21 @@ DetectorElement::DetectorElement( const std::string&   /* name */ )
   ///
   m_de_validSince = new(std::nothrow) TimePoint( time_absolutepast   ) ;
   m_de_validTill  = new(std::nothrow) TimePoint( time_absolutefuture ) ; 
-  ///
-  addRef();
 };
 ////
 DetectorElement::~DetectorElement()
 {
   reset();
-  ///
-  if ( 0 != m_de_iGeometry     ) 
+  // release geometry
+  if ( 0 != m_de_iGeometry ) 
     { delete m_de_iGeometry     ;  m_de_iGeometry     = 0 ; } 
-  ///release
-  release();  
+  // release validity
+  if ( 0 != m_de_validSince ) {
+    delete m_de_validSince; m_de_validSince = 0;
+  }
+  if ( 0 != m_de_validTill ) {
+    delete m_de_validTill; m_de_validTill = 0;
+  }  
 };
 ///
 IDataProviderSvc*  DetectorElement::dataSvc () { return DetDesc::detSvc() ; }
@@ -134,9 +136,8 @@ DetectorElement::queryInterface( const InterfaceID& ID , void** ppI )
   return StatusCode::SUCCESS;
 };
 ///
-unsigned long DetectorElement::addRef  () { return ++s_count ; }
-unsigned long DetectorElement::release ()
-{ return 0 < s_count ? --s_count : 0 ; }
+unsigned long DetectorElement::addRef  () { return DataObject::addRef(); }
+unsigned long DetectorElement::release () { return DataObject::release(); }
 
 ///
 // bool DetectorElement::acceptInspector( IInspector* pInspector ) 

@@ -1,8 +1,11 @@
-// $Id: LogVolBase.cpp,v 1.6 2002-11-19 09:31:39 sponce Exp $
+// $Id: LogVolBase.cpp,v 1.7 2002-11-19 14:11:31 sponce Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.6  2002/11/19 09:31:39  sponce
+// fix in LogVolBase for missing initialization. Valgrind was complaining.
+//
 // Revision 1.5  2002/04/24 10:52:42  ibelyaev
 //  fix problems with TransportSvc ('LHCb Geane')
 //
@@ -75,7 +78,6 @@ LogVolBase::LogVolBase( const std::string& /*name*/    ,
   , m_sdName     ( sensitivity ) 
   , m_mfName     ( magnetic    )
   , m_validity   ( 0           )
-  , m_refCounter ( 0           )
 {
   /// create validity object 
   m_validity = new SimpleValidity();
@@ -104,7 +106,6 @@ LogVolBase::LogVolBase( const std::string& /*name*/    ,
   , m_sdName   ( sensitivity ) 
   , m_mfName   ( magnetic    )
   , m_validity ( 0           )
-  , m_refCounter ( 0           )
 {
   /// create validity object 
   m_validity = new SimpleValidity( validSince , validTill );
@@ -131,7 +132,6 @@ LogVolBase::LogVolBase( const std::string& /*name*/    ,
   , m_sdName   ( sensitivity ) 
   , m_mfName   ( magnetic    )
   , m_validity ( 0           )
-  , m_refCounter ( 0           )
 {
   /// create validity object
   /// huh! ugly lines??? I think so .. 
@@ -151,7 +151,15 @@ LogVolBase::~LogVolBase()
   reset();
   /// decrease  volume counter 
   --s_volumeCounter ;
+  // release validity
   if( 0 != m_validity ) { delete m_validity ; m_validity = 0 ; }
+  // release physical volumes
+  for (PVolumes::const_iterator i = m_pvolumes.begin();
+       i != m_pvolumes.end();
+       i++) {
+    delete *i;
+  }
+  m_pvolumes.clear();
 };
 
 // ============================================================================
@@ -167,15 +175,15 @@ IDataProviderSvc* LogVolBase::dataSvc() { return DetDesc::detSvc(); }
  *  @return reference counter 
  */
 // ============================================================================
-unsigned long LogVolBase::addRef  () { return ++m_refCounter ; }
+unsigned long LogVolBase::addRef  () { return DataObject::addRef(); }
 
 // ============================================================================
 /** release the interface 
  *  @return reference counter 
  */
 // ============================================================================
-unsigned long LogVolBase::release () 
-{ return 0 < --m_refCounter  ? m_refCounter : 0 ; };
+unsigned long LogVolBase::release () { return DataObject::release(); }
+  
 
 // ============================================================================
 /** query the interface

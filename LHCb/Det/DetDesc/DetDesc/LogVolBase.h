@@ -1,8 +1,11 @@
-// $Id: LogVolBase.h,v 1.4 2001-12-03 15:18:29 mato Exp $ 
+// $Id: LogVolBase.h,v 1.5 2002-11-19 14:11:31 sponce Exp $ 
 // ===========================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ===========================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.4  2001/12/03 15:18:29  mato
+// Small changes to compile without warnings in Windows
+//
 // Revision 1.3  2001/11/20 15:22:20  sponce
 // Lots of changes here :
 //    - make use of the new version of GaudiKernel and GaudiSvc. One consequence
@@ -518,8 +521,6 @@ private:
   std::string           m_mfName        ;
   /// validity 
   IValidity*            m_validity      ;
-  /// reference counter 
-  unsigned long         m_refCounter    ;
   /// static  volume counter 
   static  unsigned long s_volumeCounter ;
 };
