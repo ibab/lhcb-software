@@ -57,7 +57,7 @@ use DetDesc      v10r2  Det
 use XmlDDDB      v12r0  Det
 use CaloDet       v4r0  Det
 use CaloDetXmlCnv v1r0  Det
-use MuonDet       v3r0  Det
+use MuonDet       v3r1  Det
 use OTDet         v1r0  Det
 use VeloDet       v5r0  Det
 use Magnet        v1r1  Det
