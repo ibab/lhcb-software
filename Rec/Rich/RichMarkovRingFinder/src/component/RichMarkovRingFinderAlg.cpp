@@ -1,9 +1,10 @@
-// $Id: RichMarkovRingFinderAlg.cpp,v 1.15 2004-12-01 17:04:24 abuckley Exp $
+// $Id: RichMarkovRingFinderAlg.cpp,v 1.16 2004-12-13 18:24:54 abuckley Exp $
 // Include files
 
 // local
 #include "RichMarkovRingFinderAlg.h"
 #include "finder/Inferrer.h"
+#include "finder/RichPriors.h"
 
 using namespace RichMarkov;
 using namespace std;
@@ -247,7 +248,9 @@ const StatusCode RichMarkovRingFinderAlg<MyFinder>::processEvent() {
   const MyInferrer inf(myData, bestRPSoFar);
 
   typedef typename MyFinder::RichParamsT::Circs MarkovCircles;
+  //  typedef typename MarkovCircles MarkovCircleSubset;
   typedef typename MyFinder::CircleParamsT MarkovCircle;
+  typedef vector<const MarkovCircle *> MarkovCirclePtrs;
   typedef typename MyFinder::DataT::Hits MarkovHits;
   typedef typename MyFinder::HitT MarkovHit;
   typedef map<const MarkovHit*, map<const MarkovCircle*, double> > HitToCircleProbs;
@@ -291,7 +294,7 @@ const StatusCode RichMarkovRingFinderAlg<MyFinder>::processEvent() {
   typedef map<RichRecSegment*, vector<RichRecRing*> > SegsToRings;
   SegsToRings segsToRings;
   //  vector<const MarkovCircle*> trackMatchedCircles;
-  MarkovCircles trackMatchedCircles;
+  MarkovCirclePtrs trackMatchedCircles;
 
   for ( typename MarkovCircles::const_iterator iCircle = bestRPSoFar.getCircles().begin(); iCircle != bestRPSoFar.getCircles().end(); ++iCircle ) {
     typedef vector<const Hit*> HitsOnCircle;
@@ -411,9 +414,9 @@ const StatusCode RichMarkovRingFinderAlg<MyFinder>::processEvent() {
         }
       }
 
+      // Add this circle to the Markov circle tracked-subset
       if ( newRing->richRecSegment() ) {
-        // trackMatchedCircles.push_back(&*iCircle);
-        trackMatchedCircles.push_back(*iCircle);
+        trackMatchedCircles.push_back(&*iCircle);
       }
 
     } // if circle has hits
@@ -428,15 +431,42 @@ const StatusCode RichMarkovRingFinderAlg<MyFinder>::processEvent() {
     richStatus()->detOverallBkg()[Rich::Rich2] = 0;
     for ( typename MarkovHits::iterator hit = eio.data().hits.begin(); hit != eio.data().hits.end(); ++hit ) {
       double trackedSignalProb(0);
-      //for ( typename vector<const MarkovCircle*>::const_iterator circle = trackMatchedCircles.begin(); circle != trackMatchedCircles.end(); ++circle ) {
-      for ( typename MarkovCircles::const_iterator circle = trackMatchedCircles.begin(); circle != trackMatchedCircles.end(); ++circle ) {
-        const double probForThisRing( inf.probabilityHitWasMadeByGivenCircle(hit, circle) );
-        trackedSignalProb += probForThisRing;
+      for ( typename MarkovCirclePtrs::const_iterator matchedcircle = trackMatchedCircles.begin(); matchedcircle != trackMatchedCircles.end(); ++matchedcircle ) {
+        // Horribly inefficient but templating has knackered storing the iterators *sigh*
+        for ( typename MarkovCircles::const_iterator circle = bestRPSoFar.getCircles().begin(); circle != bestRPSoFar.getCircles().end(); ++circle ) {
+          if (*matchedcircle == &*circle) { //< compare pointers
+            const double probForThisRing( inf.probabilityHitWasMadeByGivenCircle(hit, circle) );
+            trackedSignalProb += probForThisRing;
+            continue;
+          }
+        }
       }
       hit->richPixel()->setCurrentBackground( 1 - trackedSignalProb );
       richStatus()->detOverallBkg()[hit->richPixel()->detector()] += (1 - trackedSignalProb);
     }
   }
+
+  // Turn the "background probabilities" into the "background contributions" used by the std
+  // background estimator and likelihood contribution:
+  DeRich1* Rich1DE( getDet<DeRich1>( DeRichLocation::Rich1 ) );
+  DeRich2* Rich2DE( getDet<DeRich2>( DeRichLocation::Rich2 ) );
+  const double rich2Radius( Rich2DE->sphMirrorRadius() );
+//const double xPixSize      ( Rich2DE->userParameterAsDouble("RichHpdPixelXsize") ); // 0.5*mm
+//const double yPixSize      ( Rich2DE->userParameterAsDouble("RichHpdPixelYsize") ); // 0.5*mm
+//const double demagScale    ( Rich2DE->userParameterAsDouble("HPDDemagScaleFactor");
+  const double xPixSize      ( Rich1DE->userParameterAsDouble("RichHpdPixelXsize") ); // 0.5*mm
+  const double yPixSize      ( Rich1DE->userParameterAsDouble("RichHpdPixelYsize") ); // 0.5*mm
+  const double demagScale    ( 4.8 );
+  const double pixelArea     ( demagScale*xPixSize * demagScale*yPixSize );
+  const double saturatedCkAngle ( 0.032 ); // for RICH2, in rad : Chris will add a method to the Ck angle tool for this
+  const double bgprobToBgcontribScaleFactor( 4.0 * pixelArea / ( rich2Radius * rich2Radius * saturatedCkAngle ) );
+  for ( typename MarkovHits::iterator hit = eio.data().hits.begin(); hit != eio.data().hits.end(); ++hit ) {
+    const double bgContrib( hit->richPixel()->currentBackground() * bgprobToBgcontribScaleFactor );
+    hit->richPixel()->setCurrentBackground( bgContrib );
+    debug() << "Weighted pixel " << hit->richPixel()->key() << " with background contribution = " << bgContrib << endreq;
+  }
+  richStatus()->detOverallBkg()[Rich::Rich2] *= bgprobToBgcontribScaleFactor;
+  debug() << "Overall bg contribution in Rich2 = " << richStatus()->detOverallBkg()[Rich::Rich2] << endreq;
 
 
   // Painfully complicated printout of what track-matched Markov rings are attached to a given matched segment
@@ -461,8 +491,8 @@ void RichMarkovRingFinderAlg<MyFinder>::buildRingPoints( RichRecRing * ring,
                                                          const unsigned int nPoints ) const
 {
   // NB : Much of this could be optimised and run in the initialisation
-  const double incr = M_2PI / static_cast<double>(nPoints);
-  double angle = 0;
+  const double incr( M_2PI / static_cast<double>(nPoints) );
+  double angle(0);
   for ( unsigned int iP = 0; iP < nPoints; ++iP, angle += incr ) {
     double distortedX(ring->centrePointLocal().x() + (sin(angle)*ring->radius())/scale);
     double distortedY(ring->centrePointLocal().y() + (cos(angle)*ring->radius())/scale);

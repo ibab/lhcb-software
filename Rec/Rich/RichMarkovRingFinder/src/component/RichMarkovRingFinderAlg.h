@@ -1,4 +1,4 @@
-// $Id: RichMarkovRingFinderAlg.h,v 1.14 2004-12-01 17:04:24 abuckley Exp $
+// $Id: RichMarkovRingFinderAlg.h,v 1.15 2004-12-13 18:24:54 abuckley Exp $
 #ifndef RICHMARKOVRINGFINDER_RICHMARKOVRINGFINDERALG_H
 #define RICHMARKOVRINGFINDER_RICHMARKOVRINGFINDERALG_H 1
 
@@ -15,6 +15,8 @@
 // Rich base
 #include "RichRecBase/RichRecAlgBase.h"
 #include "RichRecBase/RichRecProcCode.h"
+#include "RichDet/DeRich1.h"
+#include "RichDet/DeRich2.h"
 
 // Event model
 #include "Event/ProcStatus.h"
