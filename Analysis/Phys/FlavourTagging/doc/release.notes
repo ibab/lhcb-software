@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.57 2005-03-01 11:07:59 musy Exp $
+! $Id: release.notes,v 1.58 2005-03-02 12:57:29 musy Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/FlavourTagging
 ! Responsible : Marco Musy
@@ -11,6 +11,7 @@
     . Default is now without L0 L1 and Tampering; without Tampering, results
       may change (worsen) slightly depending upon the decay channel.
     . Code structure has been revised.
+    . Bug on same-side pion tagger fixed.
 
 ! 2005-02-02 - P. Koppenburg for Marco Musy
   - src/BTagging.{h,cpp}
