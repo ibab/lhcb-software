@@ -1,4 +1,4 @@
-// $Id: DeRich1CdfHPDPanel.h,v 1.10 2004-02-16 14:11:52 papanest Exp $
+// $Id: DeRich1CdfHPDPanel.h,v 1.11 2004-07-22 10:49:55 papanest Exp $
 #ifndef RICHDET_DERICH1CDFHPDPANEL_H
 #define RICHDET_DERICH1CDFHPDPANEL_H 1
 
@@ -11,7 +11,7 @@ extern const CLID& CLID_DeRich1CdfHPDPanel;
 /** @class DeRich1CdfHPDPanel DeRich1CdfHPDPanel.h
  *
  * This is the definition of the Rich1 HPDPanel detector class.
- * This HPD panel grows in columns, with the first and last (and some middle) 
+ * This HPD panel grows in columns, with the first and last (and some middle)
  * columns having an extra HPD.  The numbering scheme look like this:
  *
  *
@@ -23,9 +23,10 @@ extern const CLID& CLID_DeRich1CdfHPDPanel;
  *   4
  * 0   7        numbers 0,4,7... belong to the same row. The top row has some
  *              gaps.
- * Note that even columns (starting at 0) have an extra HPD, and that goes for 
+ * Note that even columns (starting at 0) have an extra HPD, and that goes for
  * the 1st and last columns.
- * 
+ * (please look at the actual .h file to see the correct layout of HPDs)
+ *
  * @author Antonis Papanestis
  */
 
@@ -57,46 +58,52 @@ public:
   static const CLID& classID();
 
   /**
-   * This is where most of the geometry is read
-   * @return StatusCode
+   * This is where most of the geometry is read and variables initialised
+   * @return Status of initialisation
+   * @retval StatusCode::FAILURE Initialisation failed, program should
+   * terminate
    */
   virtual StatusCode initialize();
-  
+
 
   /**
-   * Returns the detection plane of the HPD panel, defined at the top of the 
-   * HPDs (a plane resting on the HPDs touching the window).
-   * @return HepPlane3D
+   * Retrieves the detection plane of the HPD panel. The plane is defined
+   * at the top of the HPDs (a plane resting on the HPDs "touching" the
+   * INSIDE surface of the window).
+   * @return The detection plane
    */
-  inline virtual const HepPlane3D & detectionPlane() const { 
-    return m_detectionPlane; 
+  inline virtual const HepPlane3D & detectionPlane() const {
+    return m_detectionPlane;
   }
 
   /**
-   * Returns the offset for the globalToPanel method.
-   * @return The offset in y so that the two panels
-   * appear side-by-side using the globalToPanel method.
+   * Returns the offset (y in Rich1) so that the two panels of
+   * each detector appear side-by-side using the globalToPanel method.
+   * @return The offset for the globalToPanel method
    */
   virtual const double localOffset() const {
     return m_detPlaneVertEdge;
   }
-  
+
   /**
-   * Returns the global position given a local position and panel number
+   * Returns the global position given a local position and panel number.
+   * Assumes a shifted panel
+   *
+   * @return Global point.
    */
   virtual HepPoint3D globalPosition( const HepPoint3D& localPoint,
                                      Rich::Side side);
 
 protected:
-  
-  /**  
+
+  /**
    * Returns the number of HPDs in the panel
    */
   inline virtual unsigned int PDMax() {
     return static_cast<int>(0.5*m_HPDColumns)*m_HPDsIn2Cols + m_HPDsInBigCol;
   }
-  
-  /**  
+
+  /**
    * Returns the HPD row in the panel, given the HPD number
    */
   inline unsigned int PDRow(unsigned int PD) {
@@ -107,8 +114,8 @@ protected:
       return HPDsLeft;
     }
   }
-  
-  /**  
+
+  /**
    * Returns the HPD column in the panel, given the HPD number
    */
   inline unsigned int PDCol(unsigned int PD) {
@@ -118,26 +125,26 @@ protected:
     } else {
       return 2*(PD/m_HPDsIn2Cols);
     }
-    
-    
+
+
   }
-  
-  /**  
-   * Returns the HPD at the next row/column depending on panel configurartion 
+
+  /**
+   * Returns the HPD at the next row/column depending on panel configurartion
    */
   inline virtual unsigned int HPDForNS() {
     return static_cast<int>(ceil(m_HPDRows/2.0));
   }
 
-  /**  
+  /**
    * Returns an HPD number that can be used as the second point for the
    * detection plane.
    */
   inline virtual unsigned int HPDForB() {
     return static_cast<int>(ceil(m_HPDRows/2.0)) -1;
   }
-  
-  /**  
+
+  /**
    * Returns an HPD number that can be used as the third point for the
    * detection plane.
    */
@@ -145,47 +152,45 @@ protected:
     return static_cast<int>(0.5*m_HPDColumns)*m_HPDRows;
   }
 
-  /**  
+  /**
    * Converts an HPD row and column to a number corresponding
-   * to the position of this physical volume in the physical volumes vector 
+   * to the position of this physical volume in the physical volumes vector
    */
-  inline virtual unsigned int HPDRowColToNum(unsigned int HPDRow, 
+  inline virtual unsigned int HPDRowColToNum(unsigned int HPDRow,
                                              unsigned int HPDCol ) {
     unsigned int HPDNumber;
     unsigned int HPDColDiv2 = HPDCol/2;
     if (0 == HPDCol%2) {
-       HPDNumber = HPDColDiv2 * m_HPDsIn2Cols + HPDRow;
+      HPDNumber = HPDColDiv2 * m_HPDsIn2Cols + HPDRow;
     } else {
-       HPDNumber = HPDColDiv2 * m_HPDsIn2Cols + HPDRow + m_HPDsInBigCol;
+      HPDNumber = HPDColDiv2 * m_HPDsIn2Cols + HPDRow + m_HPDsInBigCol;
     }
     return HPDNumber;
   }
 
-  /**  
+  /**
    * Finds the HPD row and column that corresponds to the x,y coordinates
-   * of a point in the panel.
-   * @returns true if the HPD is found, false if the point is outside the
-   * coverage of the HPDs. The row and column are retuned in the smartID.
+   * of a point in the panel. The row and column are retuned in the smartID.
+   *
+   * @returns Status
+   * @retval true   HPD is found
+   * @retval false  The point is outside the coverage of the HPDs.
    */
   virtual bool findHPDRowCol(const HepPoint3D& inPanel, RichSmartID& id);
 
 private:
 
-
-  /// the Horizontal Edge of the HPD grid (beggining of numbers). 
+  /// The horizontal Edge of the HPD grid coverage
   double m_panelHorizEdge;
+  /// Absolute value of the horizontal Edge of the HPD grid coverage
   double m_fabs_panelHorizEdge;
-  double m_panelHorizEdgeEven;
-  double m_panelHorizEdgeOdd;
 
-  /// the Vertical Edge of the HPD grid. Even columns are
-  /// different from odd columns in Rich1Cdf
+  /// The vertical edge of the HPD grid for even columns
   double m_panelVerticalEdgeEven;
+  /// The vertical edge of the HPD grid for odd columns
   double m_panelVerticalEdgeOdd;
-
-  /// these are the inner-most points to ensure that a point 
-  /// is within HPD covered area 
-  double m_panelVerticalEdge;  
+  /// The smaller (absolute value) of even and odd columns, to ensure coverage
+  double m_panelVerticalEdge;
 
 };
 

@@ -5,6 +5,9 @@
 !-----------------------------------------------------------------------------
 
 !========================= RichDet v8r0 2004-07-01 =========================
+! 2004-07-22 - Antonis Papanestis
+ - Added documentation
+
 ! 2004-07-01 - Antonis Papanestis
  - added RichMirrorSegPosition for row/column info on mirrors provided 
    by the DeRich class

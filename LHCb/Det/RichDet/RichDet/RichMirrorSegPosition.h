@@ -1,25 +1,25 @@
-// $Id: RichMirrorSegPosition.h,v 1.2 2004-07-09 17:36:30 jonrob Exp $
-#ifndef RICHDET_RICHMIRRORSEGPOSITION_H 
+// $Id: RichMirrorSegPosition.h,v 1.3 2004-07-22 10:49:55 papanest Exp $
+#ifndef RICHDET_RICHMIRRORSEGPOSITION_H
 #define RICHDET_RICHMIRRORSEGPOSITION_H 1
 
 // Include files
 #include "GaudiKernel/MsgStream.h"
 
-/** @class RichMirrorSegPosition RichMirrorSegPosition.h RichDet/RichMirrorSegPosition.h
- *  
+/** @namespace RichMirrorSegPositionNames
  *
- *  @author Antonis Papanestis
- *  @date   2004-06-30
+ * Namespace for bit-packing parameters used by the utility class
+ * RichMirrorSegPosition
+ *
+ * @author Antonis Papanestis a.papanestis@rl.ac.uk
+ * @date   2004-06-30
  */
-
-// Namespace for definitions related to RichMirrorSegPosition
 namespace RichMirrorSegPositionNames
 {
   // Type for dataword
   typedef unsigned int ShortType;
-  
-  static const ShortType BitsRow    = 3; ///< number of bits for this flag
-  static const ShortType BitsColumn = 3; ///< number of bits for this flag
+
+  static const ShortType BitsRow    = 3; ///< number of bits for the row
+  static const ShortType BitsColumn = 3; ///< number of bits for the column
 
   // Shifts
   static const ShortType ShiftRow    = 0;
@@ -30,68 +30,84 @@ namespace RichMirrorSegPositionNames
   static const ShortType MaskColumn = ((1 << BitsColumn)-1) << ShiftColumn;
 }
 
+/** @class RichMirrorSegPosition RichMirrorSegPosition.h RichDet/RichMirrorSegPosition.h
+ *
+ *  Helper class to pack together row/column information for the mirror
+ *   segment position.
+ *  @author Antonis Papanestis a.papanestis@rl.ac.uk
+ *  @date   2004-06-30
+ */
 class RichMirrorSegPosition {
 
-public: 
+public:
 
   /// Standard constructor
   RichMirrorSegPosition( ): m_data(0) {}
-  
+
   ~RichMirrorSegPosition( ) {} ///< Destructor
 
-  /// Retrieve the full value
-  inline RichMirrorSegPositionNames::ShortType data() const 
-  { 
-    return m_data; 
-  }
-
-  /// Update the internal data
-  inline void setData( const RichMirrorSegPositionNames::ShortType data ) 
-  { 
-    m_data = data; 
-  }
-
-  /// Set the flag for top position
-  inline void setRow( const int row ) 
+  /** Access to the full bit-packed data word
+   *
+   *  @return the bit-packed data word
+   */
+  inline RichMirrorSegPositionNames::ShortType data() const
   {
-    set( row, 
-         RichMirrorSegPositionNames::ShiftRow, 
+    return m_data;
+  }
+
+  /** Set the full bit-packed data word
+   */
+  inline void setData( const RichMirrorSegPositionNames::ShortType data )
+  {
+    m_data = data;
+  }
+
+  /** Set the row number
+   */
+  inline void setRow( const int row )
+  {
+    set( row,
+         RichMirrorSegPositionNames::ShiftRow,
          RichMirrorSegPositionNames::MaskRow );
   }
-  
-  /// Retrieve the flag for top position
-  inline int row() const 
+
+  /** Retrieve the row number
+   */
+  inline int row() const
   {
-    return ( (data() & RichMirrorSegPositionNames::MaskRow) 
+    return ( (data() & RichMirrorSegPositionNames::MaskRow)
              >> RichMirrorSegPositionNames::ShiftRow  );
   }
 
-  /// Set the flag for column position
-  inline void setColumn( const int column ) 
+  /** Set the column number
+   */
+  inline void setColumn( const int column )
   {
-    set( column, 
-         RichMirrorSegPositionNames::ShiftColumn, 
+    set( column,
+         RichMirrorSegPositionNames::ShiftColumn,
          RichMirrorSegPositionNames::MaskColumn );
   }
 
-  /// Retrieve the flag for column position
-  inline int column() const 
+  /** Retrieve the column number
+   */
+  inline int column() const
   {
-    return ( (data() & RichMirrorSegPositionNames::MaskColumn) 
+    return ( (data() & RichMirrorSegPositionNames::MaskColumn)
              >> RichMirrorSegPositionNames::ShiftColumn  );
   }
 
 private: // methods
-  
+
   inline void set( const RichMirrorSegPositionNames::ShortType value,
                    const RichMirrorSegPositionNames::ShortType shift,
-                   const RichMirrorSegPositionNames::ShortType mask ) 
+                   const RichMirrorSegPositionNames::ShortType mask )
   {
     setData( ((value << shift) & mask) | (data() & ~mask) );
   }
 
 private: // data
 
+  /// The bit-pack data word
   RichMirrorSegPositionNames::ShortType m_data;
 
 };
@@ -103,7 +119,7 @@ inline MsgStream& operator << ( MsgStream& os,
   os << "Mirror Segment row:" << pos.row()
      << " column:" << pos.column();
   return os;
-    
+
 }
 
 #endif // RICHDET_RICHMIRRORSEGPOSITION_H

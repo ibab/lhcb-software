@@ -1,4 +1,4 @@
-// $Id: DeRichHPDPanel.h,v 1.13 2004-07-01 11:02:51 papanest Exp $
+// $Id: DeRichHPDPanel.h,v 1.14 2004-07-22 10:49:55 papanest Exp $
 
 #ifndef RICHDET_DERICHHPDPANEL_H
 #define RICHDET_DERICHHPDPANEL_H 1
@@ -24,20 +24,31 @@
 #include "RichDet/DeRich1.h"
 #include "RichDet/DeRich2.h"
 
-/** @class DeRichHPDPanel DeRichHPDPanel.h
+/** @namespace DeRichHPDPanelLocation
  *
- * This is the definition of the Rich HPDPanel detector class
+ *  Namespace for the location of HPD panels in xml
  *
- * @author Antonis Papanestis
+ *  @author Antonis Papanestis a.papanestis@rl.ac.uk
+ *  @date   2004-06-18
  */
-
 namespace DeRichHPDPanelLocation {
+  /// Location of Rich1 top panel
   static const std::string& Rich1Panel0 = "/dd/Structure/LHCb/Rich1/PDPanel0";
+  /// Location of Rich1 bottom panel
   static const std::string& Rich1Panel1 = "/dd/Structure/LHCb/Rich1/PDPanel1";
+  /// Location of Rich2 left panel
   static const std::string& Rich2Panel0 = "/dd/Structure/LHCb/Rich2/PDPanel0";
+  /// Location of Rich2 right panel
   static const std::string& Rich2Panel1 = "/dd/Structure/LHCb/Rich2/PDPanel1";
 }
 
+/** @class DeRichHPDPanel DeRichHPDPanel.h
+ *
+ * DeRichHPDPanel provides geometry info for the panels, converts RichSmartIDs
+ * to space points and finds intersections with the HPDs
+ *
+ * @author Antonis Papanestis a.papanestis@rl.ac.uk
+ */
 class DeRichHPDPanel: public DetectorElement {
 
 public:
@@ -53,62 +64,78 @@ public:
   virtual ~DeRichHPDPanel();
 
   /**
-   * This is where most of the geometry is read
-   * @return StatusCode
+   * This is where most of the geometry is read and variables initialised
+   * @return Status of initialisation
+   * @retval StatusCode::FAILURE Initialisation failed, program should
+   * terminate
    */
   virtual StatusCode initialize();
 
 
   /**
-   * Returns the detection plane of the PD panel.
-   * @return The detection plane defined at the top of the
-   * photo detectors (a plane resting on the PDs "touching" the 
+   * Retrieves the detection plane of the HPD panel. The plane is defined
+   * at the top of the HPDs (a plane resting on the HPDs "touching" the
    * INSIDE surface of the window).
+   * @return The detection plane
    */
   virtual const HepPlane3D & detectionPlane() const = 0;
 
   /**
-   * Returns the offset for the globalToPanel method.
-   * @return The offset (y in Rich1, x in Rich2) so that the two panels of
+   * Returns the offset (y in Rich1, x in Rich2) so that the two panels of
    * each detector appear side-by-side using the globalToPanel method.
+   * @return The offset for the globalToPanel method
    */
   virtual const double localOffset() const = 0;
 
 
   /**
    * Converts a HepPoint3D in global coordinates to a RichSmartID.
-   * @return StatusCode The point is assumed to be on the actual 
-   * detection volume (silicon pixel sensor for the HPD).
+   * The point is assumed to be on the actual detection volume
+   * (silicon pixel sensor).
+   *
+   * @return Status of conversion
+   * @retval StatusCode::FAILURE Point outside silicon pixel sensor
    */
   virtual StatusCode smartID( const HepPoint3D& globalPoint,
                               RichSmartID& id );
 
   /**
-   * Converts a RichSmartID to a point in global coordinates.
-   * @return StatusCode  The point is given on the inside
-   * of the HPD window, on the photocathode.
+   * Converts a RichSmartID to a point in global coordinates. The point is
+   * given on the inside of the HPD window, on the photocathode.
+   *
+   * @return Status of conversion
    */
   virtual StatusCode detectionPoint( const RichSmartID& smartID,
-                                     HepPoint3D& windowHitGlobal ); 
+                                     HepPoint3D& windowHitGlobal );
   /**
-   * Returns the intersection point with an PD window given a vector
-   * and a point.
-   * @return StatusCode With the "circle" option a quick check is performed
+   * Returns the intersection point with an HPD window given a vector
+   * and a point. With the "circle" option a quick check is performed
    * to test if there would be an intersection with a flat circle instead
    * of the HPD window.
+   *
+   * @param vGlobal  A vector in global coordinates used for direction
+   * @param pGlobal  A point in global coordinates
+   * @param windowPointGlobal The returned intersection point
+   * @param smartID  The returned smartID with hit HPD info
+   * @param mode     The ray tracing mode configuration
+   *
+   * @return Status of intersection
+   * @retval StatusCode::FAILURE Intersection failed, as defined by mode
    */
 
-  virtual StatusCode PDWindowPoint( const HepVector3D& vGlobal, 
-                                    const HepPoint3D& pGlobal, 
+  virtual StatusCode PDWindowPoint( const HepVector3D& vGlobal,
+                                    const HepPoint3D& pGlobal,
                                     HepPoint3D& windowPointGlobal, // return
-                                    RichSmartID& smartID,
+                                    RichSmartID& smartID,          // return
                                     RichTraceMode mode );
 
   /**
    * Returns the intersection point with the detector plane given a vector
    * and a point. If mode is tight, returns true only if point is within
    * the detector coverage.
-   * @return bool
+   *
+   * @return Intersection status
+   * @retval false Intersection fell outside acceptance, as defined by mode
    */
   virtual bool detPlanePoint( const HepPoint3D& pGlobal,
                               const HepVector3D& vGlobal,
@@ -117,26 +144,29 @@ public:
 
   /**
    * Converts a global position to the coordinate system of the
-   * photodetector panel
+   * photodetector panel. The local coordinate system is shifted to allow
+   * placing panels side by side
+   *
+   * @return Local (panel) point
    */
   virtual HepPoint3D globalToPDPanel( const HepPoint3D& globalPoint );
-  
-    //  {
-    //    return ( geometry()->toLocal( globalPoint ) );
-    //  }
-  
+
 
   /**
-   * Returns the global position given a local position and panel number
+   * Returns the global position given a local position and panel number.
+   * Assumes a shifted panel as previous method
+   *
+   * @return Global point.
    */
   virtual HepPoint3D globalPosition( const HepPoint3D& localPoint,
                                      Rich::Side side) = 0;
-  
+
 
   /**
    * Returns a list with all the available readout channels, in form of
    * RichSmartIDs.
-   * @return 
+   *
+   * @return Status
    */
   virtual StatusCode readoutChannelList(std::vector<RichSmartID>&
                                         readoutChannels);
@@ -144,124 +174,122 @@ public:
 
 protected:
 
-  /**  
+  /**
    * Returns the number of HPDs in the panel
    */
   virtual unsigned int PDMax() = 0;
 
-  /**  
+  /**
    * Returns the HPD row in the panel, given the HPD number
    */
   virtual unsigned int PDRow(unsigned int PD) = 0;
 
-  /**  
+  /**
    * Returns the HPD column in the panel, given the HPD number
    */
   virtual unsigned int PDCol(unsigned int PD) = 0;
 
-  /**  
-   * Returns the HPD at the next row/column depending on panel configurartion 
+  /**
+   * Returns the HPD at the next row/column depending on panel configurartion
    */
   virtual unsigned int HPDForNS() = 0;
 
-  /**  
+  /**
    * Returns an HPD number that can be used as the second point for the
    * detection plane.
    */
   virtual unsigned int HPDForB() = 0;
 
-  /**  
+  /**
    * Returns an HPD number that can be used as the third point for the
    * detection plane.
    */
   virtual unsigned int HPDForC() = 0;
 
-  /**  
+  /**
    * Converts an HPD row and column to a number corresponding
-   * to the position of this physical volume in the physical volumes vector 
+   * to the position of this physical volume in the physical volumes vector
    */
-  virtual unsigned int HPDRowColToNum(unsigned int HPDRow, 
+  virtual unsigned int HPDRowColToNum(unsigned int HPDRow,
                                       unsigned int HPDCol ) = 0;
 
-  /**  
+  /**
    * Finds the HPD row and column that corresponds to the x,y coordinates
-   * of a point in the panel.
-   * @returns true if the HPD is found, false if the point is outside the
-   * coverage of the HPDs. The row and column are retuned in the smartID.
+   * of a point in the panel. The row and column are retuned in the smartID.
+   *
+   * @returns Status
+   * @retval true   HPD is found
+   * @retval false  The point is outside the coverage of the HPDs.
    */
   virtual bool findHPDRowCol(const HepPoint3D& inPanel, RichSmartID& id) = 0;
 
+  // data
 
-  /// the name of this HPD panel
-  std::string m_name;
+  std::string m_name;              ///< The name of this HPD panel
+  unsigned int m_HPDRows;     ///< Number of HPD rows in the panel
+  unsigned int m_HPDColumns;  ///< Number of HPD columns in the panel
 
-  /// number of HPD rows and columns
-  unsigned int m_HPDRows;
-  unsigned int m_HPDColumns;
-  
-  /// these two are used in the cdf type panel
+  /// for cdf type panels: number of HPDs in a big column
   unsigned int m_HPDsInBigCol;
+  /// for cdf type panels: number of HPDs in two adjacent columns
   unsigned int m_HPDsIn2Cols;
 
-  /// number of pixel rows and columns
-  unsigned int m_pixelRows;
-  unsigned int m_pixelColumns;
+  unsigned int m_pixelRows;        /// Number of pixel rows
+  unsigned int m_pixelColumns;     /// Number of pixel columns
 
-  /// the active HPD window radius (photocathode coverage)
+  /// The active HPD window radius (photocathode coverage)
   double m_activeRadius;
-  double m_activeRadiusSq; // Squared
+  /// The active HPD window radius Squared
+  double m_activeRadiusSq;
 
-  /// the radius of the sphere of the HPD window
+  /// The radius of the sphere of the HPD window
   double m_winR;
-  /// radius squared
+  /// Radius squared
   double m_winRsq;
-  
+
+  /// The z position of the detection plane in an HPD panel
   double m_detPlaneZ;
-  ///< the z difference between the planes defined at the top and bottom of HPD window
-  double m_detPlaneZdiff; 
+  /// the z difference between the planes defined at the top and bottom of HPD window
+  double m_detPlaneZdiff;
 
-  double m_pixelSize;
-  double m_subPixelSize;
-  double m_siliconHalfLengthX;
-  double m_siliconHalfLengthY;
+  double m_pixelSize;      ///< The pixel size on the silicon sensor
+  double m_subPixelSize;   ///< The size of the subpixel (Alice mode)
+  double m_siliconHalfLengthX;     ///< Half size (x) of silicon sensor
+  double m_siliconHalfLengthY;     ///< Half size (y) of silicon sensor
 
-  /// distance between HPD rows
-  double m_rowPitch;
-  /// distance between HPD columns
-  double m_columnPitch;
+  double m_rowPitch;               ///< distance between HPD rows
+  double m_columnPitch;            ///< distance between HPD columns
 
-  /// the demagnification factor of the HPD.  Element [0] is the linear
+  /// The demagnification factor of the HPD.  Element [0] is the linear
   /// term, and element[1] the non-linear term for small corrections.
   double m_deMagFactor[2];
 
   /// The following points are used to get the row and column pitch
+  /// Centre of HPD 0
   HepPoint3D m_HPD0Centre;
-  HepPoint3D m_HPD1Centre;
-  HepPoint3D m_HPDNSCentre;  ///next set: either next row or next column
-  
+  HepPoint3D m_HPD1Centre;   ///< Centre of HPD 1
+  HepPoint3D m_HPDNSCentre;  ///< Centre of HPD next set: either next row or next column
+
   /// the top of the HPD window in silicon coordinates
-  HepPoint3D m_HPDTop;  
+  HepPoint3D m_HPDTop;
 
-  const ISolid* m_HPDPanelSolid;
+  const ISolid* m_HPDPanelSolid;   ///< The solid (box) that contains the HPDs
 
-  std::vector<HepPoint3D> m_HPDCentres;
+  std::vector<HepPoint3D> m_HPDCentres; ///< The centres of all HPDs
 
-  // from PDPanel
-  /// detection plane in global coordinates
-  HepPlane3D m_detectionPlane;
+  HepPlane3D m_detectionPlane;    ///< detection plane in global coordinates
+  HepPlane3D m_localPlane;        ///< detection plane in PDPanel coordinates
+  HepVector3D m_localPlaneNormal; ///< The normal vector of det plane in local coordinates
 
-  /// detection plane in PDPanel coordinates
-  HepPlane3D m_localPlane;
-  HepVector3D m_localPlaneNormal;
-
-  /// local plane for HPD row/column purposes
+  /// Plane2 is defined ging through all HPDs at the edge of photocathode coverage on
+  /// HPD window. It is used for HPD row/column purposes
   HepPlane3D m_localPlane2;
-  HepVector3D m_localPlaneNormal2;
+  HepVector3D m_localPlaneNormal2;  ///< Normal vector of plane2
 
-  double m_detPlaneHorizEdge;
-  double m_detPlaneVertEdge;
+  double m_detPlaneHorizEdge;     ///< Horizontal (x) edge of HPD coverage in the panel
+  double m_detPlaneVertEdge;      ///< Vertical (y) edge of HPD coverage in the panel
 
-  HepTransform3D m_vectorTransf;
+  HepTransform3D m_vectorTransf;  ///< Transform from global to panel coordinates
 
 };
 

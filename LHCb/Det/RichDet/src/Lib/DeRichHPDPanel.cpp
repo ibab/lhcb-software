@@ -1,4 +1,4 @@
-// $Id: DeRichHPDPanel.cpp,v 1.15 2004-07-01 11:02:52 papanest Exp $
+// $Id: DeRichHPDPanel.cpp,v 1.16 2004-07-22 10:49:56 papanest Exp $
 #define DERICHHPDPANEL_CPP
 
 // Include files
@@ -73,7 +73,7 @@ StatusCode DeRichHPDPanel::initialize() {
   log << MSG::DEBUG << "DeMagFactor(0):" << m_deMagFactor[0]
       << " DeMagFactor(1):" << m_deMagFactor[1] << endreq;
 
-  HepPoint3D zero(0.0, 0.0, 0.0);
+  const HepPoint3D zero(0.0, 0.0, 0.0);
 
   // get the first HPD and follow down to the silicon block
   const IPVolume* pvHPDMaster0 = geometry()->lvolume()->pvolume(0);
@@ -187,7 +187,7 @@ StatusCode DeRichHPDPanel::smartID (const HepPoint3D& globalPoint,
   // find the HPD row/col of this point
   if ( !findHPDRowCol(inPanel, id) ) return StatusCode::FAILURE;
 
-  unsigned int HPDNumber = HPDRowColToNum(id.PDRow(), id.PDCol());
+  const unsigned int HPDNumber = HPDRowColToNum(id.PDRow(), id.PDCol());
 
   const IPVolume* pvHPDMaster = geometry()->lvolume()->pvolume(HPDNumber);
   const IPVolume* pvHPDSMaster = pvHPDMaster->lvolume()->pvolume(0);
@@ -201,12 +201,12 @@ StatusCode DeRichHPDPanel::smartID (const HepPoint3D& globalPoint,
   double inSiliconY = inSilicon.y();
 
   if ( fabs(inSiliconX) > m_siliconHalfLengthX ) {
-    int signX = ( inSiliconX > 0.0 ? 1 : -1 );
+    const int signX = ( inSiliconX > 0.0 ? 1 : -1 );
     inSiliconX -= signX*0.001*mm;
   } 
 
   if (fabs(inSiliconY) > m_siliconHalfLengthY ) {
-    int signY = ( inSiliconY > 0.0 ? 1 : -1 );
+    const int signY = ( inSiliconY > 0.0 ? 1 : -1 );
     inSiliconY -= signY*0.001*mm;
   } 
 
@@ -218,15 +218,15 @@ StatusCode DeRichHPDPanel::smartID (const HepPoint3D& globalPoint,
     return StatusCode::FAILURE;
   }
 
-  unsigned int pixelColumn = static_cast<unsigned int>
+  const unsigned int pixelColumn = static_cast<unsigned int>
     ((m_siliconHalfLengthX + inSiliconX) / m_pixelSize);
-  unsigned int pixelRow    = static_cast<unsigned int>
+  const unsigned int pixelRow    = static_cast<unsigned int>
     ((m_siliconHalfLengthY + inSiliconY) / m_pixelSize);
 
   id.setPixelRow(pixelRow);
   id.setPixelCol(pixelColumn);
 
-  unsigned int subPixel = static_cast<unsigned int>
+  const unsigned int subPixel = static_cast<unsigned int>
     ((m_siliconHalfLengthX+inSiliconX-pixelColumn*m_pixelSize) /
      m_subPixelSize);
   id.setSubPixel( subPixel );
@@ -243,7 +243,7 @@ StatusCode DeRichHPDPanel::detectionPoint (const RichSmartID& smartID,
                                            HepPoint3D& windowHitGlobal)
 {
 
-  unsigned int HPDNumber = HPDRowColToNum( smartID.PDRow(), smartID.PDCol());
+  const unsigned int HPDNumber=HPDRowColToNum(smartID.PDRow(),smartID.PDCol());
 
   // find the correct HPD and silicon block inside it
   const IPVolume* pvHPDMaster = geometry()->lvolume()->pvolume(HPDNumber);
@@ -251,14 +251,14 @@ StatusCode DeRichHPDPanel::detectionPoint (const RichSmartID& smartID,
   const IPVolume* pvWindow = pvHPDSMaster->lvolume()->pvolume(2);
 
   // convert pixel number to silicon coordinates
-  double inSiliconX = smartID.pixelCol() * m_pixelSize + m_pixelSize/2.0 -
+  const double inSiliconX = smartID.pixelCol() * m_pixelSize+m_pixelSize/2.0 -
     m_siliconHalfLengthX;
-  double inSiliconY = smartID.pixelRow() * m_pixelSize + m_pixelSize/2.0 -
+  const double inSiliconY = smartID.pixelRow() * m_pixelSize+m_pixelSize/2.0 -
     m_siliconHalfLengthY;
 
-  double inWindowX = -inSiliconX / m_deMagFactor[0];
-  double inWindowY = -inSiliconY / m_deMagFactor[0];
-  double inWindowZ = sqrt(m_winRsq-inWindowX*inWindowX-inWindowY*inWindowY);
+  const double inWindowX = -inSiliconX / m_deMagFactor[0];
+  const double inWindowY = -inSiliconY / m_deMagFactor[0];
+  const double inWindowZ = sqrt(m_winRsq-inWindowX*inWindowX-inWindowY*inWindowY);
   HepPoint3D windowHit(inWindowX, inWindowY, inWindowZ);
 
   windowHitGlobal =
@@ -275,7 +275,7 @@ StatusCode DeRichHPDPanel::detectionPoint (const RichSmartID& smartID,
 //=========================================================================
 HepPoint3D DeRichHPDPanel::globalToPDPanel( const HepPoint3D& globalPoint ) {
 
-  HepPoint3D localPoint( geometry()->toLocal( globalPoint ) );
+  const HepPoint3D localPoint( geometry()->toLocal( globalPoint ) );
   return HepPoint3D(localPoint.x(), localPoint.y(), 
                     localPoint.z() - m_detPlaneZ );
 }
@@ -312,8 +312,8 @@ StatusCode DeRichHPDPanel::PDWindowPoint( const HepVector3D& vGlobal,
       HPDColumn = id.PDCol();
       HPDNumber = HPDRowColToNum(HPDRow, HPDColumn);
 
-      double x = panelIntersection.x() - m_HPDCentres[HPDNumber].x();
-      double y = panelIntersection.y() - m_HPDCentres[HPDNumber].y();
+      const double x = panelIntersection.x() - m_HPDCentres[HPDNumber].x();
+      const double y = panelIntersection.y() - m_HPDCentres[HPDNumber].y();
       if ( ( x*x + y*y ) > m_activeRadiusSq ) return StatusCode::FAILURE;
       
       windowPointGlobal = geometry()->toGlobal( panelIntersection );
@@ -339,7 +339,6 @@ StatusCode DeRichHPDPanel::PDWindowPoint( const HepVector3D& vGlobal,
   unsigned int noTicks;
 
   bool HPDFound(false);
-  //  bool found2(false);
 
   // Overwise slow
   if ( findHPDRowCol(panelIntersection, id) ) {
@@ -387,7 +386,7 @@ StatusCode DeRichHPDPanel::PDWindowPoint( const HepVector3D& vGlobal,
   HepPoint3D windowPointInHPD = pvHPDSMaster->
     toMother(pvWindow->toMother(windowPoint));
   // check the active radius.
-  double hitRadius2 = ( windowPointInHPD.x()*windowPointInHPD.x() +
+  const double hitRadius2 = ( windowPointInHPD.x()*windowPointInHPD.x() +
                         windowPointInHPD.y()*windowPointInHPD.y() );
   if ( hitRadius2 > m_activeRadiusSq ) return StatusCode::FAILURE;
 

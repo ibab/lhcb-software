@@ -1,8 +1,7 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/RichDet/RichDet/DeRichFlatMirror.h,v 1.2 2004-07-01 11:02:51 papanest Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/RichDet/RichDet/DeRichFlatMirror.h,v 1.3 2004-07-22 10:49:55 papanest Exp $
 
 #ifndef DERICHFLATMIRROR_H
 #define DERICHFLATMIRROR_H 1
-
 
 // Include files
 #include "CLHEP/Geometry/Point3D.h"
@@ -16,12 +15,11 @@
 // External declarations
 extern const CLID& CLID_DeRichFlatMirror;
 
-
 /** @class DeRichFlatMirror DeRichFlatMirror.h
  *
- * This is the definition of the Rich Flat Mirror detector class
+ * Detector element for flat mirrors providing geometry info
  *
- * @author Antonis Papanestis
+ * @author Antonis Papanestis a.papanestis@rl.ac.uk
  */
 class DeRichFlatMirror: public DetectorElement {
 
@@ -51,62 +49,68 @@ public:
   static const CLID& classID();
 
   /**
-   * This is where most of the geometry is read
-   * @return StatusCode
+   * This is where most of the geometry is read and variables initialised
+   * @return Status of initialisation
+   * @retval StatusCode::FAILURE Initialisation failed, program should
+   * terminate
    */
   virtual StatusCode initialize();
 
   /**
-   * Retrieves the normal vector of this mirror
-   * @return the normal vector of this mirror as a HepVector3D
+   * Retrieves the normal vector of this flat mirror
+   * @return The normal vector of this mirror as a HepNormal3D
    */
   inline HepNormal3D normalVector(){
     return m_normalVector;
   }
-  
+
   /**
    * Retrieves the centre of this flat mirror
-   * @return the centre of this flat mirror as a HepPoint3D
+   * @return The centre of this flat mirror on the reflective surface
    */
   inline HepPoint3D mirrorCentre(){
     return m_mirrorCentre;
   }
-  
+
   /**
    * Retrieves the plane of this flat mirror
-   * @return the plane of this flat mirror as a HepPlane3D
+   * @return The plane of this flat mirror as a HepPlane3D
    */
   inline HepPlane3D mirrorPlane(){
     return m_mirrorPlane;
   }
-  
+
   /**
-   * Retrieves the number of this flat mirror
-   * @return the number of this flat mirror (0-39)
+   * Retrieves the number of this mirror (segment)
+   * @return the number of this mirror
    */
   inline int mirrorNumber(){
     return m_mirrorNumber;
   }
-  
+
   /**
    * Checks if the direction intersects with the mirror
-   * @return StatusCode
+   * @return Status of intersection
+   * @retval StatusCode::FAILURE No intersection
    */
   StatusCode intersects(const HepPoint3D& globalP, const HepVector3D& globalV);
 
 private:
 
-  HepVector3D m_normalVector;
-  HepPoint3D  m_mirrorCentre;
-  HepPlane3D  m_mirrorPlane;
+  const ISolid* m_solid;       ///< The mirror solid
 
+  HepVector3D m_normalVector;  ///< The normal vector of the flat mirror
+  HepPoint3D  m_mirrorCentre;  ///< The mirror centre on the reflective surface
+  HepPlane3D  m_mirrorPlane;   ///< The flat mirror plane
+
+  /// Alignment constant for x alignment.  Not used presently
   double m_alignmentConstantX;
+  /// Alignment constant for y alignment.  Not used presently
   double m_alignmentConstantY;
 
-  int m_mirrorNumber;
-  
-  const ISolid* m_solid;
-  
+  int m_mirrorNumber;           ///< mirror (segment) number
+
+
 };
 
 #endif    // DERICHFLATMIRROR_H

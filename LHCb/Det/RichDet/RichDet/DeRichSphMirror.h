@@ -1,7 +1,6 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/RichDet/RichDet/DeRichSphMirror.h,v 1.4 2003-11-21 17:23:25 papanest Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/RichDet/RichDet/DeRichSphMirror.h,v 1.5 2004-07-22 10:49:55 papanest Exp $
 #ifndef DERICHSPHMIRROR_H
 #define DERICHSPHMIRROR_H 1
-
 
 // Include files
 #include "CLHEP/Geometry/Point3D.h"
@@ -9,16 +8,14 @@
 #include "DetDesc/DetectorElement.h"
 #include "DetDesc/ISolid.h"
 
-
 // External declarations
 extern const CLID& CLID_DeRichSphMirror;
 
-
 /** @class DeRichSphMirror DeRichSphMirror.h
  *
- * This is the definition of the Rich Spherical Mirror detector class
+ * Detector element for spherical mirrors providing geometry info
  *
- * @author Antonis Papanestis
+ * @author Antonis Papanestis a.papanestis@rl.ac.uk
  */
 class DeRichSphMirror: public DetectorElement {
 
@@ -48,30 +45,32 @@ public:
   static const CLID& classID();
 
   /**
-   * This is where most of the geometry is read
-   * @return StatusCode
+   * This is where most of the geometry is read and variables initialised
+   * @return Status of initialisation
+   * @retval StatusCode::FAILURE Initialisation failed, program should
+   * terminate
    */
   virtual StatusCode initialize();
 
   /**
    * Retrieves the centre of curvarute of this mirror
-   * @return the centre of curvature of this mirror as a HepPoint3D
+   * @return The centre of curvature of this mirror as a HepPoint3D
    */
   inline HepPoint3D centreOfCurvature(){
     return m_centreOfCurvature;
   }
-  
+
   /**
-   * Retrieves the centre of the sphere used to create this sperical mirror. 
-   * @return the sphere centre as HepPoint3D
+   * Retrieves the centre this mirror on the reflective surface.
+   * @return The mirror centre as HepPoint3D
    */
   inline HepPoint3D mirrorCentre(){
     return m_mirrorCentre;
   }
-  
+
   /**
-   * Retrieves the number of this spherical mirror
-   * @return the number of this spherical mirror (0-55)
+   * Retrieves the segment number of this spherical mirror
+   * @return The number of this mirror
    */
   inline int mirrorNumber(){
     return m_mirrorNumber;
@@ -79,7 +78,7 @@ public:
 
   /**
    * Retrieves the radius of this spherical mirror
-   * @return the radius of this spherical mirror
+   * @return The radius of this spherical mirror
    */
   inline double radius(){
     return m_radius;
@@ -87,33 +86,35 @@ public:
 
   /**
    * Checks if the direction intersects with the mirror
-   * @return StatusCode
+   * @return Status of intersection
+   * @retval StatusCode::FAILURE No intersection
    */
   StatusCode intersects(const HepPoint3D& globalP, const HepVector3D& globalV);
 
   /**
    * Checks if the direction intersects with the mirror and returns the
    * intersction point
-   * @return StatusCode
+   * @return Intersection point
    */
-  StatusCode intersects(const HepPoint3D& globalP, 
+  StatusCode intersects(const HepPoint3D& globalP,
                         const HepVector3D& globalV,
                         HepPoint3D& intersectionPoint);
 
 private:
 
-  const ISolid* m_solid;
+  const ISolid* m_solid;             ///< The mirror solid
 
-  HepPoint3D m_centreOfCurvature;
-  HepPoint3D m_mirrorCentre;
+  HepPoint3D m_centreOfCurvature;    ///< The centre of curvature
+  HepPoint3D m_mirrorCentre;         ///< The mirror centre
 
+  /// Alignment constant for x alignment.  Not used presently
   double m_alignmentConstantX;
+  /// Alignment constant for y alignment.  Not used presently
   double m_alignmentConstantY;
 
-  double m_radius;
+  double m_radius;                  ///< Spherical mirror radius
 
-  int m_mirrorNumber;
-
+  int m_mirrorNumber;               ///< mirror (segment) number
 };
 
 #endif    // DERICHSPHMIRROR_H
