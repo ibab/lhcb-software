@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.30 2002-07-10 16:58:31 gcorti Exp $
+# $Id: requirements,v 1.31 2002-07-10 17:33:11 gcorti Exp $
 # Created    : 07/02/2002
 # Maintainer : Gloria Corti
 #
@@ -68,7 +68,7 @@ use VeloDet        v6r0    Det
 use Magnet         v1r1    Det
 
 #--- Event Model ( via EventSys the whole Event Model is available )
-use EventSys       v11r0  Event
+use EventSys       v11r1  Event
 
 #--- Associators
 use  ITAssociators      v2r*    IT
