@@ -1,82 +1,55 @@
-// $Id: Simulation.opts,v 1.55 2004-08-02 14:18:35 gcorti Exp $ 
+// $Id: Simulation.opts,v 1.56 2004-11-22 10:26:01 gcorti Exp $ 
 
-////////////////////////////////////////////////////////////////////
-// configuration of services
+/** @file 
+ * 
+ *  File containing all the steps in the simulation phase of
+ *  a Gauss job. The general Dlls and services are defined here.
+ *
+ *  @author G.Corti
+ *  @date 2004-11-18
+ */
 
+// DLLs necessary for any simulation phase
 ApplicationMgr.DLLs  += { "SimSvc" };
+ApplicationMgr.DLLs  += { "GiGa", "GiGaCnv" };
 
-// declare external services needed MAGNETIC FIELD 
-ApplicationMgr.ExtSvc +=  { "MagneticFieldSvc"  };  
-MagneticFieldSvc.FieldMapFile = "$FIELDMAP";
-
-///////////////////////////////////////////////////////////////////
-
-
-ApplicationMgr.DLLs += 
-{ "GiGa"         , 
-  "GiGaCnv"      , 
-  "GaussTracker" ,
-  "GaussRICH"    ,
-  "GaussCalo"    ,
-  "GaussPhysics" ,   
-  "Magnet"       ,
-  "CaloEvent"    ,  
-  "CaloDetXmlCnv"} ;
-
-ApplicationMgr.ExtSvc += 
-{ "GiGa" , 
-  "GiGaKine" ,          
-  "GiGaGeo"  ,   
-  "GiGaHits" } ;
-
-EventPersistencySvc.CnvServices += 
-{ "GiGaKine" ,  
-  "GiGaHits" } ;
-
-Simulation.Members += 
-{ "GiGaDataStoreAlgorithm/GiGaStore" ,   // data store configuration
-  "GiGaInputStream/Geo"              ,   // load the geometry 
-  "GiGaInputStream/Kine"                 // load the kinematics 
-//, "GiGaFlushAlgorithm/GiGaFlush"         // flush the event 
-//, "PrintEventAlg"                        // get MCParticles/MCVertices
-, "GiGaGetHitsAlg/GetHits"               // get MCHits
+// Services necessary for any simulation phase
+ApplicationMgr.ExtSvc += { 
+  "GiGa"
 };
+EventPersistencySvc.CnvServices += { "GiGaKine" , "GiGaHits" };
 
-// configuration of GiGa Data Store 
-GiGaStore.ConversionServices   = 
-{ "GiGaKine" , 
-  "GiGaHits" };
+// Data store configuration: request GiGaKine and GiGaHits (IGiGaCnvSvc) at
+// initialization and register leaves in store for each event,
+// Keep default configuration for 
+// GiGaStore.ConversionServices   =  { "GiGaKine" , "GiGaHits" };
+Simulation.Members += { "GiGaDataStoreAlgorithm/GiGaStore" };
 
-// configuration of kinematics event "Kine" data stream 
-Kine.ConversionSvcName         = "GiGaKine" ; 
-Kine.DataProviderSvcName       = "EventDataSvc"   ; 
-Kine.StreamItems              += 
-{  "/Event/Gen/HepMCEvents" };
+// Define the geometrical setup to simulate, including the magnetic field
+// simulation
+Simulation.Members += { "GiGaInputStream/Geo" };
+#include "$GAUSSOPTS/SimGeometry.opts"
 
-// configuration of geometry "Geo" data stream
-Geo.ExecuteOnce          = true ;   
-Geo.ConversionSvcName    = "GiGaGeo"  ; 
-Geo.DataProviderSvcName  = "DetectorDataSvc" ; 
+// Load the initial kinematics
+// In initialize retrieve the GiGaKine service
+// It is executed for each event
+Simulation.Members += { "GiGaInputStream/Kine" };
+// configuration of kinematics event "Kine" data stream = default
+Kine.ConversionSvcName    = "GiGaKine" ; 
+Kine.DataProviderSvcName  = "EventDataSvc"   ; 
+// Where in the TES the INITIAL kinematic is located
+Kine.StreamItems         += {"/Event/Gen/HepMCEvents"};
 
-Geo.StreamItems         += {"/dd/Structure/LHCb/Pipe"}; 
-Geo.StreamItems         += {"/dd/Structure/LHCb/Magnet"}; 
-Geo.StreamItems         += {"/dd/Structure/LHCb/Velo"}; 
-Geo.StreamItems         += {"/dd/Structure/LHCb/Velo2Rich1"};
-Geo.StreamItems         += {"/dd/Structure/LHCb/Rich1"}; 
-Geo.StreamItems         += {"/dd/Geometry/Rich1/Rich1Surfaces"};
-Geo.StreamItems         += {"/dd/Geometry/Rich1/RichHPDSurfaces"};
-Geo.StreamItems         += {"/dd/Structure/LHCb/OT"}; 
-Geo.StreamItems         += {"/dd/Structure/LHCb/IT"};
-Geo.StreamItems         += {"/dd/Structure/LHCb/Rich2"}; 
-Geo.StreamItems         += {"/dd/Geometry/Rich2/Rich2Surfaces"};
-Geo.StreamItems         += {"/dd/Structure/LHCb/Spd"};  
-Geo.StreamItems         += {"/dd/Structure/LHCb/Converter"};
-Geo.StreamItems         += {"/dd/Structure/LHCb/Prs"};
-Geo.StreamItems         += {"/dd/Structure/LHCb/Ecal"};
-Geo.StreamItems         += {"/dd/Structure/LHCb/Hcal"};
-Geo.StreamItems         += {"/dd/Structure/LHCb/Muon"};
+// Perform the Geant4 simulation
+Simulation.Members += { "GiGaFlushAlgorithm" };
+// Populate the MCParticles/MCVertices in the TES
+Simulation.Members += { "GiGaGetEventAlg" };
+// Populate sensitive hits in the TES
+Simulation.Members += { "GiGaGetHitsAlg" };
 
-// physics list  and the production cuts  
+// Simulation configuration: Geant4 control
+// Physics list and the production cuts  
+ApplicationMgr.DLLs += { "GaussPhysics" }; 
 GiGa.PhysicsList              = "GiGaPhysListModular/ModularPL";
 GiGa.ModularPL.CutForElectron = 10000.0 * m;
 GiGa.ModularPL.CutForPositron = 5.0 * mm; 
@@ -98,8 +71,7 @@ GiGa.ModularPL.PhysicsConstructors +=
 GiGa.ModularPL.PhysicsConstructors += 
   { "GiGaPhysConstructorHpd"                        } ;
 
-
-// mandatory run action  
+// Mandatory run action  
 GiGa.RunAction                 =   "GiGaRunActionSequence/RunSeq"      ;
 GiGa.RunSeq.Members           += { "TrCutsRunAction/TrCuts"};
 GiGa.RunSeq.Members           += { "GiGaRunActionCommand/RunCommand" } ;
@@ -107,10 +79,11 @@ GiGa.RunSeq.RunCommand.BeginOfRunCommands     =
 { "/tracking/verbose 0",
   "/tracking/storeTrajectory  1"} ;
 
-// mandatory event action  
+// Mandatory event action  
 GiGa.EventAction           =   "GiGaEventActionSequence/EventSeq"      ;
 
-// mandatory tracking action (1/2)
+// Mandatory tracking action (1/2)
+// Must be in two steps, when a trajectory is created
 GiGa.TrackingAction         =   "GiGaTrackActionSequence/TrackSeq"    ;
 GiGa.TrackSeq.Members      += { "GaussPreTrackAction/PreTrack" }; 
 
@@ -128,6 +101,7 @@ GiGa.ModularPL.GiGaPhysConstructorOp.RichMaxNumPhotPerCherenkovStep=40;
 //////////////////////////////////////////////////////////////////////
 
 // mandatory tracking action (2/2)
+// ... and when a trajectory ends
 GiGa.TrackSeq.Members      += { "GaussPostTrackAction/PostTrack" } ;
 GiGa.TrackSeq.PostTrack.StoreAll  = false; 
 GiGa.TrackSeq.PostTrack.StorePrimaries = true;
@@ -142,24 +116,12 @@ GiGa.TrackSeq.PostTrack.OwnEnergyThreshold = 100 * MeV;
 GiGa.TrackSeq.PostTrack.StoreByChildProcess  = true; 
 GiGa.TrackSeq.PostTrack.StoredChildProcesses = {"RichG4Cerenkov"}; 
 
-
 // mandatory stepping action   
 GiGa.SteppingAction               =   "GiGaStepActionSequence/StepSeq"  ;
 GiGa.StepSeq.Members             += { "GaussStepAction/GaussStep" } ;
 
-// "Global Field Manager" 
-GiGaGeo.FieldManager           = "GiGaFieldMgr/FieldMgr";
-GiGaGeo.FieldMgr.Stepper       = "ClassicalRK4"; 
-GiGaGeo.FieldMgr.Global        = true;
-GiGaGeo.FieldMgr.MagneticField = "GiGaMagFieldGlobal/LHCbField";
-GiGaGeo.LHCbField.MagneticFieldService = "MagneticFieldSvc";
-
 // setting simulation attributes
 GiGa.GiGaMgr.RunTools += { "GiGaSetSimAttributes" };
 
-// sensdet paths (to be moved away at some stage...)
-GiGaGeo.ITSDet.DetectorPath    = "/Tracker/IT";
-GiGaGeo.VeloSDet.DetectorPath  = "/Velo";
-GiGaGeo.OTSDet.DetectorPath    = "/Tracker/OT";
 
 

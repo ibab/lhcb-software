@@ -1,4 +1,4 @@
-// $Id: Gauss.opts,v 1.53 2004-08-02 14:18:34 gcorti Exp $ 
+// $Id: Gauss.opts,v 1.54 2004-11-22 10:26:01 gcorti Exp $ 
 
 // =========== necessary setup and steps for any Gauss executable =========== 
 #include "$GAUSSOPTS/Common.opts"
@@ -22,16 +22,20 @@ ApplicationMgr.TopAlg += { "Sequencer/Simulation"};
 /// to write a file: create and add the output stream
 ApplicationMgr.OutStream +=  { "GaussTape" };
 // specify the file (only the POOL format is supported)
-GaussTape.Output = "DATAFILE='PFN:GaussPool_300000.sim' TYP='POOL_ROOTTREE' OPT='REC'";
+GaussTape.Output = "DATAFILE='PFN:Gauss_30000000.sim' TYP='POOL_ROOTTREE' OPT='REC'";
 PoolDbCacheSvc.Catalog = { "xmlcatalog_file:NewCatalog.xml" };
 
 // Set the number of events to generate
-ApplicationMgr.EvtMax     = 10;
+ApplicationMgr.EvtMax     = 2;
 // Set Event & Run number 
 Gauss.FirstEventNumber    = 1;
 Gauss.RunNumber           = 1;
 // Overall output level
 MessageSvc.OutputLevel    = 3;
+// Specific algorithms output level
+GiGaFlushAlgorithm.OutputLevel = 2;
+// Lenght of message to have longer Algorihtm/Tool identifier in printout
+//MessageSvc.Format = "% F%40W%S%7W%R%T %0W%M";
  
 // to simulate <evttype> put a line similar to the following
 // List of events type available on the web:

@@ -3,6 +3,18 @@ Package : Gauss
 Package manager : Witek Pokorski
 </PRE>
 
+! 2004-05-05 - Gloria CORTI
+ - Modify options Simulation.opts to have processing of event by Geant4,
+   triggering of MCParticles/MCVertices and of various MCHits from algorithms
+   in Simulation.Members.
+   Encapsulate control of geometrical setup and sensitive detectors in 
+   SimGeometry.opts
+ - Set G4 environment variables to control killing of incoming particles in
+   inelastic scattering
+ - Use latest available XmlDDDB (v22r4) and DecFiles (v6r3)
+ - Introduce some comments in PythiaSettings.opts
+
+!==========================================================================
 <H1><A NAME="v18r1">2004-10-29 - Gauss v18r1</A></H1><PRE>
 the version is identical to v18r0 but linked with 
 LHCb v16r3 and geant4 6.2.p02

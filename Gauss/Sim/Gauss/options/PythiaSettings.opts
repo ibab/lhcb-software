@@ -1,35 +1,37 @@
 
 //that is the LHCb Pythia setting, should not be changed by the user
-PythiaAlg.BasePythiaCommand = { "pysubs msel 0" ,
-                                 "pysubs msub 11 1" ,
-                                 "pysubs msub 12 1" ,
-                                 "pysubs msub 13 1" ,
-                                 "pysubs msub 28 1" ,
-                                 "pysubs msub 53 1" ,
-                                 "pysubs msub 68 1" ,
-                                 "pysubs msub 91 1" ,
-                                 "pysubs msub 92 1" ,
-                                 "pysubs msub 93 1" ,
-                                 "pysubs msub 94 1" ,
-                                 "pysubs msub 95 1" ,
-                                 "pysubs msub 86 1" ,
-                                 "pysubs msub 87 1" ,
-                                 "pysubs msub 88 1" ,
-                                 "pysubs msub 89 1" ,
-                                 "pysubs msub 106 1" ,
-                                 "pysubs msub 107 1" ,
-                                 "pysubs msub 108 1" ,
-                                 "pypars mstp 2 2" ,
-                                 "pypars mstp 33 3" ,
-                                 "pypars mstp 128 2" ,
-                                 "pypars mstp 82 3" ,
-                                 "pypars mstp 52 2" ,
-                                 "pypars mstp 51 4032" ,
-                                 "pypars parp 82 3.47" ,
-                                 "pypars parp 89 14000" ,
-                                 "pypars parp 90 0.174" ,
-                                 "pydat1 parj 13 0.750" ,
-                                 "pydat1 parj 14 0.162" ,
-                                 "pydat1 parj 15 0.018" ,
-                                 "pydat1 parj 16 0.054" ,
-                                 "pydat1 parj 17 0.090" } ;
+PythiaAlg.BasePythiaCommand = { 
+  "pysubs msel 0" ,     // Custom processes, switch them on 1-by-1
+  "pysubs msub 11 1" ,  // f + f' -> f + f' (QCD)
+  "pysubs msub 12 1" ,  // f + fbar -> f' + fbar'
+  "pysubs msub 13 1" ,  // f + fbar -> g + g
+  "pysubs msub 28 1" ,  // f + g -> f + g 
+  "pysubs msub 53 1" ,  // g + g -> f + fbar
+  "pysubs msub 68 1" ,  // g + g -> g + g
+  "pysubs msub 91 1" ,  // Elastic scattering
+  "pysubs msub 92 1" ,  // Single diffractive (AB -> XB)
+  "pysubs msub 93 1" ,  // Single diffractive (AB -> AX)
+  "pysubs msub 94 1" ,  // Double diffractive
+  "pysubs msub 95 1" ,  // Low-pT scattering
+  "pysubs msub 86 1" ,  // g + g -> J/Psi + g
+  "pysubs msub 87 1" ,  // g + g -> chi_0c + g
+  "pysubs msub 88 1" ,  // g + g -> chi_1c + g
+  "pysubs msub 89 1" ,  // g + g -> chi_2c + g
+  "pysubs msub 106 1" , // g + g -> J/Psi + gamma
+  "pysubs msub 107 1" , // g + gamma -> J/Psi + g
+  "pysubs msub 108 1" , // gamma + gamma -> J/Psi + gamma
+  "pypars mstp 2 2" ,   // 
+  "pypars mstp 33 3" ,
+  "pypars mstp 128 2" ,
+  "pypars mstp 82 3" ,
+  "pypars mstp 52 2" ,
+  "pypars mstp 51 4032" ,
+  "pypars parp 82 3.47" ,
+  "pypars parp 89 14000" ,
+  "pypars parp 90 0.174" ,
+  "pydat1 parj 13 0.750" ,
+  "pydat1 parj 14 0.162" ,
+  "pydat1 parj 15 0.018" ,
+  "pydat1 parj 16 0.054" ,
+  "pydat1 parj 17 0.090" 
+} ;
