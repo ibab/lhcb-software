@@ -1,4 +1,4 @@
-// $Id: RichPIDQC.cpp,v 1.4 2003-07-01 18:54:35 jonrob Exp $
+// $Id: RichPIDQC.cpp,v 1.5 2003-07-01 19:06:34 jonrob Exp $
 // Include files
 
 // local
@@ -481,13 +481,17 @@ StatusCode RichPIDQC::finalize() {
     }
 
     // compute event and track PID success rates
-    double eventPIDRate = ( m_nEvents[0]>0 ? 100.*m_nEvents[1]/m_nEvents[0] : 100 );
-    double trackPIDRate = ( m_nTracks[0]>0 ? 100.*m_nTracks[1]/m_nTracks[0] : 100 );
+    double evPIDRate[2];
+    double trPIDRate[2];
+    evPIDRate[0] = ( m_nEvents[0]>0 ? 100.*m_nEvents[1]/m_nEvents[0] : 100 );
+    evPIDRate[1] = ( m_nEvents[0]>0 ? sqrt(evPIDRate[0]*(100.-evPIDRate[0])/m_nEvents[0]) : 100 );
+    trPIDRate[0] = ( m_nTracks[0]>0 ? 100.*m_nTracks[1]/m_nTracks[0] : 100 );
+    trPIDRate[1] = ( m_nTracks[0]>0 ? sqrt(trPIDRate[0]*(100.-trPIDRate[0])/m_nTracks[0]) : 100 );
 
-    msg << "Tracks   : " << m_pMinCut << "-" << m_pMaxCut << " GeV/c : " 
+    msg << "Tracks     | " << m_pMinCut << "-" << m_pMaxCut << " GeV/c : " 
         << m_trNames << endreq
-        << "PID rate : events " << eventPIDRate
-        << "%,  tracks " << trackPIDRate << "%" << endreq
+        << "PID rate   | events " << evPIDRate[0] << "+-" << evPIDRate[1]
+        << "%,  tracks " << trPIDRate[0] << "+-" << trPIDRate[1] << "%" << endreq
         << "-----------+-----------------------------------------------+-----------"
         << endreq
         << "  %total   | Electron Muon   Pion   Kaon  Proton   X  (MC) |  %Purity"
@@ -511,9 +515,9 @@ StatusCode RichPIDQC::finalize() {
                                      eff[0],eff[1],eff[2],eff[3],eff[4],eff[5] )
         << "     |" << endreq
         << "-----------+-----------------------------------------------+-----------" << endreq;
-    msg << format( "  %ID      |    Ka: %6.2f+-%6.2f    Pi: %6.2f+-%6.2f     |",
+    msg << format( "  %ID      |    Ka: %6.2f+-%6.2f    Pi: %6.2f+-%6.2f ",
                    kaonIDEff[0], kaonIDEff[1], piIDEff[0], piIDEff[1] ) << endreq;
-    msg << format( "  %MisID   |    Ka: %6.2f+-%6.2f    Pi: %6.2f+-%6.2f     |",
+    msg << format( "  %MisID   |    Ka: %6.2f+-%6.2f    Pi: %6.2f+-%6.2f ",
                    kaonMisIDEff[0], kaonMisIDEff[1], piMisIDEff[0], piMisIDEff[1] ) << endreq;
     msg << "-----------+-----------------------------------------------+-----------"
         << endreq;
