@@ -53,7 +53,7 @@ use RichKernel   v1r0   Rich
 use TrKernel     v10r0  Tr
 
 # Detector description
-use DetDesc      v10r0  Det
+use DetDesc      v10r1  Det
 use XmlDDDB      v11r0  Det
 use CaloDet       v4r0  Det
 use CaloDetXmlCnv v1r0  Det
@@ -68,7 +68,7 @@ use EventSys     v10r0  Event
 
 # SicB event data persistency
 use SicbCnv      v16r1  SICB
-use ITSicbGeom   v1r0   SICB
+use ITSicbGeom   v1r1   SICB
 use OTSicbGeom   v1r0   SICB
 use RiSicbGeom   v1r0   SICB
 use CaloSicbCnv  v6r0   SICB
