@@ -1,8 +1,11 @@
-// $Id: SolidCons.cpp,v 1.9 2002-05-13 18:29:54 ibelyaev Exp $ 
+// $Id: SolidCons.cpp,v 1.10 2002-05-14 09:00:15 ibelyaev Exp $ 
 // ===========================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ===========================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.9  2002/05/13 18:29:54  ibelyaev
+//  see $DETDESCROOT/doc/release.notes 13 May 2002
+//
 // Revision 1.8  2002/05/11 18:25:47  ibelyaev
 //  see $DETDESCROOT/doc/release.notes 11 May 2002
 //
@@ -409,7 +412,7 @@ SolidCons::intersectionTicks
   if( vect.mag2() <= 0 )  { return 0 ;}  ///< RETURN!!!
   
   // cross bounding cylinder ?
-  //if( !crossBCylinder( point , vect ) ) { return 0 ; }
+  if( !crossBCylinder( point , vect ) ) { return 0 ; }
 
   ticks.clear();
   
@@ -557,27 +560,9 @@ SolidCons::intersectionTicks
   const Tick       & tickMax ,
   Ticks            & ticks   ) const  
 {
-  const HepPoint3D p1 ( Point + tickMin * Vector );
-  const HepPoint3D p2 ( Point + tickMax * Vector );
   
-  if( p1.z() < -zHalfLength() && p2.z() < -zHalfLength() ) { return  0; }
-  if( p1.z() >  zHalfLength() && p2.z() >  zHalfLength() ) { return  0; }
-  
-  const double rmax =  
-    outerRadiusAtMinusZ ()  < outerRadiusAtPlusZ  () ? 
-    outerRadiusAtPlusZ  ()  : outerRadiusAtMinusZ () ;
-  
-  if( p1.x() < -rmax  && p2.x() < -rmax ) { return  0; }
-  if( p1.y() < -rmax  && p2.y() < -rmax ) { return  0; }
-  if( p1.x() >  rmax  && p2.x() >  rmax ) { return  0; }
-  if( p1.y() >  rmax  && p2.y() >  rmax ) { return  0; }
-  
-  const double dist = rmax * rmax ; 
-  const double vv = Vector.x() * Vector.x() + Vector.y() * Vector.y() ;
-  const double pp =  Point.x() *  Point.x() +  Point.y() *  Point.y() ;
-  if( 0 == vv && pp     > dist ) { return 0 ; }
-  const double pv =  Point.x() * Vector.x() +  Point.y() * Vector.y() ;
-  if( pp - pv * pv / vv > dist ) { return 0 ; }
+  if( !crossBCylinder( Point , Vector                )  ) { return 0 ; }
+  if( isOutBBox( Point , Vector , tickMin , tickMax  )  ) { return 0 ; }
   
   return SolidBase::intersectionTicks ( Point   , 
                                         Vector  ,
