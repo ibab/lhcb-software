@@ -1,21 +1,18 @@
-// $Id: DV_LoKi_Bd2KStarGamma.opts,v 1.2 2004-01-21 10:01:54 ibelyaev Exp $
+// $Id: DV_LoKi_Bd2KStarGamma.opts,v 1.3 2004-03-11 21:41:04 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
-// Revision 1.1.1.1  2003/07/24 16:43:50  ibelyaev
-//  new package with LoKi examples 
-//
-// Revision 1.1  2003/05/12 13:21:32  ibelyaev
-//  add the options files for all examples
-// 
 // ============================================================================
 // include files 
+// ============================================================================
+#pragma   print off 
 #include "$DAVINCIROOT/options/DaVinciCommon.opts"
-#include "$DAVINCIROOT/options/DaVinciv254r1.opts"
+#include "$DAVINCIROOT/options/DaVinciDDDB.opts"
 #include "$DAVINCIROOT/options/DaVinciReco.opts"
-// Histograms
+#include "$STDOPTS/RootHist.opts"
 #include "$STDOPTS/Hbook.opts"
+#pragma   print on 
 // ============================================================================
 
 // ============================================================================
@@ -32,7 +29,9 @@
 ApplicationMgr.DLLs   += { "LoKiExample" , "LoKi" } ;
 
 // top level algorithms 
-ApplicationMgr.TopAlg +=  {
+ApplicationMgr.TopAlg =  {
+  "PrimVtxFinder"             , // create primary vertices 
+  "ChargedProtoPAlg"          , // create charged protoparticles 
   "NeutralPPsFromCPsAlg"      , // create neutral protoparticles 
   "LoKiPreLoad/Neutrals"      , // create and put into TES neutral particles  
   "LoKiPreLoad/Charged"       , // create and put into TES charged particles
@@ -40,23 +39,19 @@ ApplicationMgr.TopAlg +=  {
 };
 
 // configuration of algorithm 'Charged' 
-Charged.PhysDesktop.ParticleMakerType =  "ChargedParticleMaker";
-Charged.PhysDesktop.ChargedParticleMaker.ParticleNames = 
-  { "pi+" , "pi-" , "K+" , "K-" , "p+" , "p~-" , "e+" , "e-" , "mu+" , "mu-" };
-Charged.PhysDesktop.ChargedParticleMaker.ConfLevelCuts = 
-  { 0.01  , 0.01  , 0.01 , 0.01 , 0.01 , 0.01  , 0.01 , 0.01 , 0.01  , 0.01  };
-Charged.PhysDesktop.OutputLocation      = "/Event/Phys/Charged";
+Charged.PhysDesktop.ParticleMakerType =  "CombinedParticleMaker";
+
 
 // configuration of algorithm 'Neutrals' 
 Neutrals.PhysDesktop.ParticleMakerType   =  "PhotonParticleMaker";
-Neutrals.PhysDesktop.OutputLocation      = "/Event/Phys/Neutrals";
 Neutrals.PhysDesktop.PhotonParticleMaker.UseAllPhotons = true ;
 
-// configuration of algorithm 'PhiGamma' 
-KStarGamma.PhysDesktop.InputLocations       = {"/Event/Phys/Charged" ,
-                                             "/Event/Phys/Charged" } ;
-KStarGamma.PhysDesktop.OutputLocation       = "/Event/Phys/Bd2KStarGamma" ;
-KStarGamma.TupleLUN                         = "TUPLES"  ; // logical file unit 
+// configuration of algorithm 'KStarGamma' 
+KStarGamma.PhysDesktop.InputLocations        = {"/Event/Phys/Charged" ,
+                                               "/Event/Phys/Charged" } ;
+KStarGamma.OutputLocation  = "/Event/Phys/Bd2KStarGamma" ;
+KStarGamma.NTupleLUN       = "TUPLES"  ; // logical file unit 
+KstarGamma.DecayDescriptor = " [B0 -> ( K*(892)0 -> K+ pi- ) gamma]cc " ;
 
 // N-Tuples
 ApplicationMgr.ExtSvc += { "NTupleSvc" } ;
@@ -66,17 +61,20 @@ NTupleSvc.Output      +=
 // The number of events to process 
 ApplicationMgr.EvtMax  = 1000 ;
 
-// input data set:  Bs -> phi gamma  
-#include "$LHCBHOME/project/web/cards/412500.opts"
-
 // control for printout 
 MessageSvc.OutputLevel       =  3 ;  // "WARNING" printout level
-EventSelector.PrintFreq      = 10 ;  // make a print only each 10th event 
+EventSelector.PrintFreq      = 50 ;  // make a print only each 50th event 
 // suppress some messages 
 ChargedProtoPAlg.OutputLevel     = 4 ; 
 PrimVtxFinder.OutputLevel        = 4 ; 
 RootEvtCnvSvc.OutputLevel        = 4 ;
 NeutralPPsFromCPsAlg.OutputLevel = 4 ;
+
+// input data set:  Bs -> phi gamma  
+#pragma   print off 
+#include "$LHCBHOME/project/web/cards/412500.opts"
+#pragma   print on
+
 // ============================================================================
 // The END 
 // ============================================================================

@@ -1,19 +1,18 @@
-// $Id: DV_LoKi_Tuple.opts,v 1.2 2004-01-21 10:01:55 ibelyaev Exp $
+// $Id: DV_LoKi_Tuple.opts,v 1.3 2004-03-11 21:41:04 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
-// Revision 1.1.1.1  2003/07/24 16:43:50  ibelyaev
-//  new package with LoKi examples 
-//
-// Revision 1.1  2003/05/12 13:21:33  ibelyaev
-//  add the options files for all examples
-// 
 // ============================================================================
 // include files 
+// ============================================================================
+#pragma   print off 
 #include "$DAVINCIROOT/options/DaVinciCommon.opts"
-#include "$DAVINCIROOT/options/DaVinciv254r1.opts"
+#include "$DAVINCIROOT/options/DaVinciDDDB.opts"
+#include "$DAVINCIROOT/options/DaVinciReco.opts"
+#include "$STDOPTS/RootHist.opts"
 #include "$STDOPTS/Hbook.opts"
+#pragma   print on 
 // ============================================================================
 
 // ============================================================================
@@ -31,38 +30,47 @@ ApplicationMgr.DLLs   += { "LoKiExample" , "LoKi" } ;
 // top level algorithms 
 ApplicationMgr.TopAlg  =  {
   "ChargedProtoPAlg"     ,   // create the charged protoparticles 
+  "PrimVtxFinder"        ,   // create primary vertices 
   "LoKiPreLoad/Charged"  ,   // create and put into TES charged particles
   "LoKi_Tuple/Tuple"         // execute the algorithm itsels  
 };
 
 // configuration of algorithm 'Charged' 
-Charged.PhysDesktop.ParticleMakerType =  "ChargedParticleMaker";
-Charged.PhysDesktop.ChargedParticleMaker.ParticleNames = 
-  { "pi+" , "pi-" , "K+" , "K-" , "p+" , "p~-" , "e+" , "e-" , "mu+" , "mu-" };
-Charged.PhysDesktop.ChargedParticleMaker.ConfLevelCuts = 
-  { 0.01  , 0.01  , 0.01 , 0.01 , 0.01 , 0.01  , 0.01 , 0.01 , 0.01  , 0.01  };
-Charged.PhysDesktop.OutputLocation      = "/Event/Phys/Charged";
+Charged.PhysDesktop.ParticleMakerType =  "CombinedParticleMaker";
+Charged.PhysDesktop.CombinedParticleMaker.ExclusiveSelection = false ; 
+Charged.PhysDesktop.CombinedParticleMaker.Particles     = 
+  { "kaon" , "muon" };
+Charged.PhysDesktop.CombinedParticleMaker.KaonSelection = 
+  { "det='RICH' k-pi='-10.0' k-p='-10.0'" };
+Charged.PhysDesktop.CombinedParticleMaker.MuonSelection = 
+  { "det='MUON' mu-pi='0.0' " };
 
 // configuration of algorithm 'Tuple' 
 Tuple.PhysDesktop.InputLocations       = { "/Event/Phys/Charged" };
-Tuple.TupleLUN                         = "TUPLES"  ; // logical file unit 
+Tuple.NTupleLUN                        = "TUPLES"  ; // logical file unit 
 
 // N-Tuples
 ApplicationMgr.ExtSvc += { "NTupleSvc" } ;
 NTupleSvc.Output      += 
   {"TUPLES DATAFILE='Tuples.hbook' TYP='HBOOK' OPT='NEW'" } ;
+//  {"TUPLES DATAFILE='Tuples.root' TYP='ROOT' OPT='NEW'" } ;
+
+HistogramPersistencySvc.OutputFile = "DVHistos.root";
 
 // The number of events to process 
 ApplicationMgr.EvtMax  = 1000 ;
 
-// input data set:  Bs -> phi phi 
-#include "$LHCBHOME/project/web/cards/615300.opts"
 
 // control for printout 
 MessageSvc.OutputLevel       =  3 ;  // "WARNING" printout level
 EventSelector.PrintFreq      = 10 ;  // make a print only each 10th event 
 ChargedProtoPAlg.OutputLevel =  4 ;
 RootEvtCnvSvc.OutputLevel    =  4 ;
+
+// input data set:  Bs -> phi phi 
+#pragma   print off  
+#include "$LHCBHOME/project/web/cards/615300.opts"
+#pragma   print on 
 
 // ============================================================================
 // The END 

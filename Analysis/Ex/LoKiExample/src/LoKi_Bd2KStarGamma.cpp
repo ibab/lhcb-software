@@ -1,20 +1,8 @@
-// $Id: LoKi_Bd2KStarGamma.cpp,v 1.3 2004-03-03 14:17:29 ibelyaev Exp $
+// $Id: LoKi_Bd2KStarGamma.cpp,v 1.4 2004-03-11 21:41:04 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
-// Revision 1.2  2003/11/30 16:37:52  ibelyaev
-//  update for Tools/LoKi v1r8
-//
-// Revision 1.1.1.1  2003/07/24 16:43:49  ibelyaev
-//  new package with LoKi examples 
-//
-// Revision 1.2  2003/03/27 15:47:38  ibelyaev
-//  update the algorithm
-//
-// Revision 1.1  2003/03/26 19:26:52  ibelyaev
-//  new 'realistic' algorithm
-// 
 // ============================================================================
 // Include files
 #include "LoKi/LoKi.h"
@@ -47,10 +35,11 @@ LOKI_ALGORITHM( LoKi_Bd2KStarGamma )
   using namespace LoKi       ;
   using namespace LoKi::Cuts ;
   using namespace LoKi::Fits ;
+  using namespace Tuples     ;
   
   const StatusCode ok    ( StatusCode::SUCCESS ) ;
   const StatusCode error ( StatusCode::FAILURE ) ;
-//-----------------------------------------------------------------------------
+  
   // The general information: event header, event address  
   
   const EventHeader* hdr = get<EventHeader> ( EventHeaderLocation::Default ) ;
@@ -63,13 +52,12 @@ LOKI_ALGORITHM( LoKi_Bd2KStarGamma )
   IOpaqueAddress* address  = registry->address () ;
   if( 0 == address  ) { return StatusCode::FAILURE ; }
 
-//---------------------------------------------------------------    
   //  All Primary Vertices   
   VRange primaries =  vselect( "Primaries", VTYPE == Vertex::Primary ) ;
   
   if( primaries.empty() ) 
     { return LOKI_ERROR( "No primary vertices are found" , ok ); }
-//---------------------------------------------------------------  
+  
   //   PRESELECTION CUTS  
   
   Cut gamma_cut      =  ID == 22 && PT > 1.5 * GeV ;
@@ -82,7 +70,7 @@ LOKI_ALGORITHM( LoKi_Bd2KStarGamma )
   
   Cut mass_b_cut =  4.0 * GeV < M  && M < 6.0 * GeV ;
   double  ptB_gam_cut = 1.6*GeV ;
-//---------------------------------------------------------------   
+
   Range gamma  = select( "gamma", gamma_cut ) ;
   if ( gamma.empty () ) { return StatusCode::SUCCESS  ; }      // RETURN  
   
@@ -91,7 +79,7 @@ LOKI_ALGORITHM( LoKi_Bd2KStarGamma )
    
   Range pions  = select( "pi", pion_cut ) ;
   if ( pions.empty () ) {  return StatusCode::SUCCESS ; }      // RETURN 
- //---------------------------------------------------------------   
+
   // save K*0, perform the vertex fit  
   for ( Loop Kst = loop( "K pi" , 313 ) ; Kst ; ++Kst )  
     {
@@ -105,7 +93,6 @@ LOKI_ALGORITHM( LoKi_Bd2KStarGamma )
   // get all saved K*0s 
   Range kstar = selected( "K*0" ) ;
   if( kstar.empty() ) { return StatusCode::SUCCESS ; }        // RETURN
-//---------------------------------------------------------------    
   
   // the counter for combinations 
   size_t  combinations = 0 ;
@@ -139,7 +126,6 @@ LOKI_ALGORITHM( LoKi_Bd2KStarGamma )
       // const Vertex* primary  = select_min( primaries , VIP( B0 , geo() ) ) ;
       
       if ( 0 ==  primary )                   { continue ; }  // CONTINUE 
-//---------------------------------------------------------------         
       //  FUNCTIONS DEFINITION
       
       Fun ip      =   IP     ( point ( primary ) ) ; // impact parameter
@@ -147,20 +133,20 @@ LOKI_ALGORITHM( LoKi_Bd2KStarGamma )
       Fun dz      =   VDSIGN ( point ( primary ) ) ; // delta Z evaluator 
       Fun tof     =   VDTIME ( point ( primary ) ) ; // c*tau evaluator
       Fun dang    =   DIRA   ( point ( primary ) ) ; // the angle
-//---------------------------------------------------------------  
+
       // kaon & pions do not point to primary vertex   
       if( ipchi2 ( K )  < 4 ) { continue ; } // !!! PRESELECTION CUT !!! 
       if( ipchi2 ( pi ) < 4 ) { continue ; } // !!! PRESELECTION CUT !!! 
-//---------------------------------------------------------------  
+
       // re-evaluate the photon parameters at B-decay ( K*0 ) vertex
       photonTool () -> process( B0->particle ( 2 ) , B0 -> vertex() ) ;
       
       // refit the B vertex 
       B0 -> fit( FitVertex ) ;
-//---------------------------------------------------------------        
+
       Cut cuts = dz > 0 && dang > 0.995 && tof/0.482 < 6  ;   // 
       if( !cuts( B0 ) ) { continue ; }                        // CONTINUE 
-//---------------------------------------------------------------        
+
       const HepLorentzVector& p_B0    = B0->p(0);
       const HepLorentzVector& p_Kst   = B0->p(1);
       const HepLorentzVector& p_gamma = B0->p(2);
@@ -176,9 +162,9 @@ LOKI_ALGORITHM( LoKi_Bd2KStarGamma )
       p_B0_tmp.boost(-p_Kst.boostVector()); 
       p_K_tmp.boost(-p_Kst.boostVector()); 
       double helicity = cos( p_B0_tmp.vect().angle(p_K_tmp.vect()) );
-//---------------------------------------------------------------             
-  
-      tuple -> column ( "" , hdr ) ; // the event header 
+      
+      // tuple << Column ( "" , hdr ) ;
+      
       // the index of the combinations 
       tuple -> column ( "comb" ,    (long) combinations++    ) ; 
       // number of selected primary vertices 
@@ -222,50 +208,10 @@ LOKI_ALGORITHM( LoKi_Bd2KStarGamma )
       // save B0 as a particle 
       B0->save( "B0" ) ;
     }
-//---------------------------------------------------------------             
+
   // get the all saved B0s
   Range B0s = selected( "B0" ) ;
   if( B0s.empty() ) { return StatusCode::SUCCESS ; }                // RETURN 
-  
-  // Event Tag collection
-  Tuple tags = evtCol ( "Tags" ) ;
-  // Tuple tags = ntuple ( "Tags" ) ;
-  
-  // put event /run into tags 
-  tags -> column ( "" , hdr ) ;
-  
-  // put the address 
-  tags -> column ( "Address" , address );
-  
-  // primary vertices
-  tags -> column ( "nprims"  , (long) primaries.size () ) ;
-  
-  // photons, array pf photon P/PT  
-  tags -> farray ( "ptgamma"     , PT          ,
-                   "egamma"      , E           ,
-                   gamma.begin() , gamma.end() , 
-                   "ngamma"      , 20          ) ;
-  
-  // kstars, array of mass  
-  tags -> farray ( "mkstar"      , M           , 
-                   kstar.begin() , kstar.end() , 
-                   "nkstar"      , 500         ) ;
-  
-  tags -> farray ( "mass"        , M           , 
-                   "p"           , P           , 
-                   "M1"          , MASS(1)     , 
-                   B0s.begin ()  , B0s.end ()  , 
-                   "nB0"         , 100         ) ;
-
-  Fun pt1 = CHILD( PT , 1 ) ;
-  
-  tags -> farray ( "PT"          , PT          , 
-                   "pt1"         , pt1         ,   
-                   "pt2"         , CHILD( PT , 2 ) ,   
-                   B0s.begin ()  , B0s.end ()  , 
-                   "nB0"         , 100         ) ;
-  
-  tags -> write   ()       ;
   
   setFilterPassed ( true ) ;
   
