@@ -1,6 +1,24 @@
-! $Id: release.notes,v 1.27 2002-10-20 18:27:35 gcorti Exp $
+! $Id: release.notes,v 1.28 2002-10-21 17:59:28 gcorti Exp $
 ! Package     : DaVinciTools
 ! Responsible : Gloria Corti, Sandra Amato
+
+! 2002-10-21 - Gloria Corti
+ - New tool CheckOverlap that verify is a set of particle are common at
+   the level of the ProtoParticles (J.H.Lopes)
+ - NeutralParticleMaker modified to set error matrices for poin, momentum
+   and correlation. Introduce ConfLevel = 0.0 for all neutral clusters,
+   ConfLevel = 0.5 for coverted gammas, ConfLevel = 1.0 for non coverted
+   gammas (F.Machefert)
+ - Use CaloUtils v4r* and CaloInterfaces v2r* for changes in 
+	 NeutralParticleMaker 
+ - Change PhysDesktop to load all vertices in InputLocations and not
+   only those related to particles. This allows to have vertices as
+   head of trees and to load them back. (J.H.Lopes).
+ - Introduce option "AllCompatible" in ChargedParticleMaker.cpp where
+   all type of Particles are made starting from a ProtoParticle when
+   the particleID Confidence Level is above specified value (i.e. if
+   both pi and K id are above the threshold for a ProtoParticle both
+   Particles are made. (J.H.Lopes)
 
 ! 2002-10-20 - Gloria Corti
  - Fix bug in FilterParticle where filterNegative was not passing any particle
@@ -29,7 +47,7 @@
    account different dimension in error correlation matrix in Particle
  - Changes in PhysDesktop to fix bug noted by Sandra of copying initial
    particle when daughters of a new particle.
- - Use PhysE and increase version number
+ - Use PhysEvent v7r0 and increase version number
 
 ! 2002-09-04 - Gloria Corti
  - Some clean up of message levels in MuonParticleMaker, and set CL default
