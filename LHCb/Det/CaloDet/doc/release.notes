@@ -1,7 +1,11 @@
-! $Id: release.notes,v 1.35 2003-06-17 09:16:08 cattanem Exp $ 
+! $Id: release.notes,v 1.36 2003-10-06 09:08:12 cattanem Exp $ 
 ! =============================================================================
 Package         : CaloDet   
 Package manager : Vanya Belyaev Ivan.Belyaev@itep.ru
+
+!========================= CaloDet v6r6 2003-10-06 =========================
+! 2003-10-06 - Marco Cattaneo
+ - Use DetDesc v13r*
 
 !========================= CaloDet v6r5 2003-06-17 =========================
 ! 2003-06-16 - Sebastien Ponce
