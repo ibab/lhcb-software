@@ -3,11 +3,11 @@ Author: Jose' Helder Lopes
 Purpose: Define the L1Buffer,  L1Event, L1Bank, HLTBuffer, HLTEvent and 
          HLTBank classes.
 
+!=============== DAQEvent v4r0 2004-01-13 =============================
 ! 2004-01-12 - Olivier Callot
  - Fix a bug when reading L1Buffer and RawBuffer: The size should be set as
-	m_allocatedSize and not m_currentSize
+   m_allocatedSize and not m_currentSize
 
-!=============== DAQEvent v4r0 2003-12-15 =============================
 ! 2003-12-15 - Marco Cattaneo
  - Fixes for POOL persistency (Gaudi v14)
  - Undo CaloMap hack, not needed for vc71
