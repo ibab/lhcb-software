@@ -1,5 +1,5 @@
 package Boole
-version v5r8
+version v5r9
 
 branches doc cmt job options
 
@@ -45,8 +45,8 @@ use XmlDDDB	v22r2	Det
 use ParamFiles	v3r6	-no_auto_imports
 use FieldMap	v4r5
 
-#-- LHCb libraries (from LHCB_v15r8)
-use LHCb	v15r8
+#-- LHCb libraries (from LHCB_v15r9)
+use LHCb	v15r9
 
 #-- BooleSys v5r8 packages
 
