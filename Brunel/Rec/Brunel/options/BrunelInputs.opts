@@ -10,7 +10,7 @@
 //--------------------------------------------------------------
 // Define the main event data: SICBMC = v247
 //--------------------------------------------------------------
-EventSelector.Input = {"JOBID='65356'"};
+EventSelector.Input = {"JOBID='66334'"};
 ApplicationMgr.EvtMax = 10;
 //EventSelector.FirstEvent = 6;
 //--------------------------------------------------------------
