@@ -1,32 +1,8 @@
-// $Id: CaloTool.cpp,v 1.9 2002-04-27 16:25:50 ibelyaev Exp $
+// $Id: CaloTool.cpp,v 1.10 2002-04-30 18:18:35 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
-// Revision 1.8  2002/04/27 14:38:20  ibelyaev
-//  add more functionality to 'finalize' method
-//
-// Revision 1.7  2002/04/07 15:32:00  ibelyaev
-//  improve printout and bug fix
-//
-// Revision 1.6  2002/04/05 17:05:44  ibelyaev
-//  improve teh MSG::DEBUG printout for CaloTool/CaloAlgorithm classes
-//
-// Revision 1.5  2002/04/04 20:27:20  ibelyaev
-//  minor improvement in 'get()' and 'put()' methods
-//
-// Revision 1.4  2002/04/01 12:50:24  ibelyaev
-//  add templated accesssors to tools and improve exceptions
-//
-// Revision 1.3  2002/03/18 18:16:22  ibelyaev
-//  small update for LHCbKernel package
-//
-// Revision 1.2  2001/12/09 14:12:57  ibelyaev
-//  update for newer version of Gaudi
-//
-// Revision 1.1.1.1  2001/11/25 14:07:38  ibelyaev
-// New Package: substitution of the  previous CaloGen package
-//
 // ============================================================================
 // Include files
 // GaudiKernel
@@ -106,8 +82,13 @@ CaloTool::CaloTool
 StatusCode    CaloTool::initialize ()
 {
   ///
-  MsgStream log( msgSvc() , name() );
-  { /// set own properties 
+  { // initialize the base class 
+    StatusCode sc = AlgTool::initialize() ;
+    if( sc.isFailure() ) 
+      { return Error("Could not initialize base class AlgTool",sc);}    
+  }
+  //
+  { // set own properties 
     StatusCode sc = setProperties() ;
     if( sc.isFailure() ) 
       { return Error("Could not set own properties ",sc);} 
@@ -124,7 +105,6 @@ StatusCode    CaloTool::initialize ()
   ///
   { // reset Tool  service 
     if( 0 != toolSvc()   ) { toolSvc()->release() ; m_toolSvc = 0 ; }
-    ///
     StatusCode sc = 
       svcLoc()->service("ToolSvc"       , m_toolSvc   , true );
     if( sc.isFailure() )
@@ -148,6 +128,7 @@ StatusCode    CaloTool::initialize ()
   }
   ///
   { // print ALL properties 
+    MsgStream log( msgSvc() , name() );
     typedef std::vector<Property*> Properties;
     const Properties& properties = getProperties() ;
     log << MSG::DEBUG 
@@ -170,10 +151,7 @@ StatusCode    CaloTool::initialize ()
             << ost.str() << endreq ;
       }
   } 
-  ///
-  log << MSG::DEBUG 
-      << " Has initialized with 'Detector' = '" << detName() << "'" << endreq ;
-  ///
+  //
   return StatusCode::SUCCESS;
 };
 
@@ -191,34 +169,36 @@ StatusCode    CaloTool::finalize   ()
   ///
   if( 0 != det        () ) { m_det = 0 ; }
   ///
-  MsgStream log( msgSvc() , name() );
-  // format printout 
-  CaloPrint print;
-  log << MSG::INFO << " finalize(): Errors/Warnings statistics  " << endreq ; 
-  // print error counter 
-  if(  0 == m_errors.size () )
-    { log << MSG::INFO << " #ERRORS " << print( 0 ) << endreq ; }
-  for( Counter::const_iterator error = m_errors.begin() ;
-       error != m_errors.end() ; ++error )
-    {
-      log << MSG::INFO 
-          << " #ERRORS  = " << print( error->second ) 
-          << " Message='"   <<        error->first    << "'" << endreq ; 
-    }  
-  m_errors.clear();
-  // print warning counter 
-  if(  0 == m_errors.size () )
-    { log << MSG::INFO << " #WARNINGS= " << print( 0 ) << endreq ; }
-  for( Counter::const_iterator warning = m_warnings.begin() ;
-       warning != m_warnings.end() ; ++warning )
-    {
-      log << MSG::INFO 
-          << " #WARNINGS= " << print( warning->second ) 
-          << " Message='"   <<        warning->first  << "'" << endreq ; 
-    }  
-  m_warnings.clear();
-  ///
-  return StatusCode::SUCCESS;
+  if( 0 != m_errors.size() || 0 != m_warnings.size() ) 
+    {      
+      MsgStream log( msgSvc() , name() );
+      // format printout 
+      CaloPrint print;
+      log << MSG::ALWAYS 
+          << " Errors/Warnings statistics:  " 
+          << m_errors   .size () << "/"
+          << m_warnings .size () << endreq ; 
+      // print errors counter 
+      for( Counter::const_iterator error = m_errors.begin() ;
+           error != m_errors.end() ; ++error )
+        {
+          log << MSG::ALWAYS 
+              << " #ERRORS   = " << print( error->second ) 
+              << " Message='"    <<        error->first    << "'" << endreq ; 
+        }  
+      // print warnings
+      for( Counter::const_iterator warning = m_warnings.begin() ;
+           warning != m_warnings.end() ; ++warning )
+        {
+          log << MSG::ALWAYS 
+              << " #WARNINGS = " << print( warning->second ) 
+              << " Message='"    <<        warning->first  << "'" << endreq ; 
+        }  
+    }
+  m_errors    .clear();
+  m_warnings  .clear();
+  // finalize the base class 
+  return AlgTool::finalize() ;
 };
 
 // ============================================================================
