@@ -1,8 +1,11 @@
-// $Id: ClusterFunctors.h,v 1.3 2002-04-02 10:59:30 ibelyaev Exp $ 
+// $Id: ClusterFunctors.h,v 1.4 2002-04-02 14:49:29 ibelyaev Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.3  2002/04/02 10:59:30  ibelyaev
+//  update for new event model
+//
 // Revision 1.2  2001/12/02 14:59:49  ibelyaev
 //  add new functor for z-position of cluster
 //
@@ -626,7 +629,7 @@ namespace ClusterFunctors
   
   template< class EVALUATOR>
   inline StatusCode tagTheSubCluster
-  ( const CaloCluster*             cluster   , 
+  ( CaloCluster*                   cluster   , 
     const EVALUATOR&               evaluator , 
     const bool                     modify    ,
     const CaloDigitStatus::Status& tag       )
@@ -638,7 +641,7 @@ namespace ClusterFunctors
     // find seed digit
     CaloCluster::Entries::iterator seedEntry = 
       ClusterFunctors::locateDigit( entries.begin ()          , 
-                                  entried.end   ()          , 
+                                    entries.end   ()          , 
                                     CaloDigitStatus::SeedCell );
     // check the seed
     if( entries.end() == seedEntry ) { return StatusCode( 226 ) ; }
@@ -698,7 +701,7 @@ namespace ClusterFunctors
   
   template< class EVALUATOR>
   inline StatusCode untagTheSubCluster
-  ( const CaloCluster*             cluster   , 
+  ( CaloCluster*                   cluster   , 
     const EVALUATOR&               evaluator , 
     const CaloDigitStatus::Status& tag       )
   {
@@ -709,7 +712,7 @@ namespace ClusterFunctors
     // find seed digit
     CaloCluster::Entries::iterator seedEntry = 
       ClusterFunctors::locateDigit( entries.begin ()          , 
-                                  entried.end   ()          , 
+                                    entries.end   ()          , 
                                     CaloDigitStatus::SeedCell );
     // check the seed
     if( entries.end() == seedEntry ) { return StatusCode( 226 ) ; }
