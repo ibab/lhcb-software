@@ -1,4 +1,4 @@
-// $Id: RichDAQHeaderPD.h,v 1.5 2004-02-02 14:27:39 jonesc Exp $
+// $Id: RichDAQHeaderPD.h,v 1.6 2004-06-29 19:32:03 jonrob Exp $
 #ifndef RICHDAQ_RICHDAQHEADERPD_H
 #define RICHDAQ_RICHDAQHEADERPD_H 1
 
@@ -107,13 +107,9 @@ public: // methods
   /// Set the link number info
   inline bool setLinkNumber( const RichDAQ::ShortType linkNum )
   {
-    if ( !dataInRange(linkNum,RichDAQHeaderPDCode::MaxLinkNum) ) {
-      std::cout << "RichDAQHeaderPD ERROR : Link number "
-                << linkNum << " out of range" << std::endl;
-      return false;
-    }
-    return set( linkNum, RichDAQHeaderPDCode::ShiftLinkNum, 
-                RichDAQHeaderPDCode::MaskLinkNum );
+    return ( dataInRange(linkNum,RichDAQHeaderPDCode::MaxLinkNum) ?
+             set( linkNum, RichDAQHeaderPDCode::ShiftLinkNum, 
+                  RichDAQHeaderPDCode::MaskLinkNum ) : false );
   }
 
   /// Retrieve the link number
@@ -126,13 +122,9 @@ public: // methods
   /// Set the hit count info
   inline bool setHitCount( const RichDAQ::ShortType hitCount )
   {
-    if ( !dataInRange(hitCount,RichDAQHeaderPDCode::MaxHitCount) ) {
-      std::cout << "RichDAQHeaderPD ERROR : Hit count "
-                << hitCount << " out of range" << std::endl;
-      return false;
-    }
-    return set( hitCount, RichDAQHeaderPDCode::ShiftHitCount, 
-                RichDAQHeaderPDCode::MaskHitCount );
+    return ( dataInRange(hitCount,RichDAQHeaderPDCode::MaxHitCount) ?
+             set( hitCount, RichDAQHeaderPDCode::ShiftHitCount, 
+                  RichDAQHeaderPDCode::MaskHitCount ) : false );
   }
 
   /// Retrieve the hit count number

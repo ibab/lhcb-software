@@ -1,4 +1,4 @@
-// $Id: RichDAQLinkNumber.h,v 1.5 2004-02-02 14:27:39 jonesc Exp $
+// $Id: RichDAQLinkNumber.h,v 1.6 2004-06-29 19:32:03 jonrob Exp $
 #ifndef RICHDAQ_RICHDAQLINKNUMBER_H
 #define RICHDAQ_RICHDAQLINKNUMBER_H 1
 
@@ -92,13 +92,9 @@ public:
   /// Set the Rich number
   inline bool setRich( const RichDAQ::ShortType rich )
   {
-    if ( !dataInRange(rich,RichDAQLinkNumberCode::MaxRich) ) {
-      std::cout << "RichDAQLinkNumber ERROR : RICH number "
-                << rich << " out of range" << std::endl;
-      return false;
-    }
-    return set( rich, RichDAQLinkNumberCode::ShiftRich, 
-                RichDAQLinkNumberCode::MaskRich );
+    return ( dataInRange(rich,RichDAQLinkNumberCode::MaxRich) ?
+             set( rich, RichDAQLinkNumberCode::ShiftRich, 
+                  RichDAQLinkNumberCode::MaskRich ) : false );
   }
 
   /// Return the panel number
@@ -111,13 +107,9 @@ public:
   /// Set the panel number
   inline bool setPanel( const RichDAQ::ShortType panel )
   {
-    if ( !dataInRange(panel,RichDAQLinkNumberCode::MaxPanel) ) {
-      std::cout << "RichDAQLinkNumber ERROR : Panel number "
-                << panel << " out of range" << std::endl;
-      return false;
-    }
-    return set( panel, RichDAQLinkNumberCode::ShiftPanel, 
-                RichDAQLinkNumberCode::MaskPanel );
+    return ( dataInRange(panel,RichDAQLinkNumberCode::MaxPanel) ?
+             set( panel, RichDAQLinkNumberCode::ShiftPanel, 
+                  RichDAQLinkNumberCode::MaskPanel ) : false );
   }
 
   /// Return the photon detector row number
@@ -130,13 +122,9 @@ public:
   /// Set the photon detector row number
   inline bool setPDRow( const RichDAQ::ShortType row )
   {
-    if ( !dataInRange(row,RichDAQLinkNumberCode::MaxPDRow) ) {
-      std::cout << "RichDAQLinkNumber ERROR : PD row number "
-                << row << " out of range" << std::endl;
-      return false;
-    }
-    return set( row, RichDAQLinkNumberCode::ShiftPDRow, 
-                RichDAQLinkNumberCode::MaskPDRow );
+    return ( dataInRange(row,RichDAQLinkNumberCode::MaxPDRow) ?
+             set( row, RichDAQLinkNumberCode::ShiftPDRow, 
+                  RichDAQLinkNumberCode::MaskPDRow ) : false );
   }
 
   /// Return the photon detector column number
@@ -149,13 +137,9 @@ public:
   /// Set the photon detector column number
   inline bool setPDCol( const RichDAQ::ShortType col )
   {
-    if ( !dataInRange(col,RichDAQLinkNumberCode::MaxPDCol) ) {
-      std::cout << "RichDAQLinkNumber ERROR : PD column number "
-                << col << " out of range" << std::endl;
-      return false;
-    }
-    return set( col, RichDAQLinkNumberCode::ShiftPDCol, 
-                RichDAQLinkNumberCode::MaskPDCol );
+    return ( dataInRange(col,RichDAQLinkNumberCode::MaxPDCol) ?
+             set( col, RichDAQLinkNumberCode::ShiftPDCol, 
+                  RichDAQLinkNumberCode::MaskPDCol ) : false );
   }
 
 private: // methods

@@ -1,4 +1,4 @@
-// $Id: RichZSHitTriplet.h,v 1.4 2004-02-02 14:27:40 jonesc Exp $
+// $Id: RichZSHitTriplet.h,v 1.5 2004-06-29 19:32:03 jonrob Exp $
 #ifndef RICHDAQ_RICHZSHITTRIPLET_H
 #define RICHDAQ_RICHZSHITTRIPLET_H 1
 
@@ -93,73 +93,49 @@ public: // methods
   /// Set the first hit row number
   inline bool setRow0( const RichDAQ::ShortType row )
   {
-    if ( !dataInRange(row,RichZSHitTripletCode::MaxRowCol) ) {
-      std::cout << "RichZSHitTriplet ERROR : Row0 number "
-                << row << " out of range" << std::endl;
-      return false;
-    }
-    return set( row, RichZSHitTripletCode::ShiftRow0, 
-                RichZSHitTripletCode::MaskRow0 );
+    return ( dataInRange(row,RichZSHitTripletCode::MaxRowCol) ?
+             set( row, RichZSHitTripletCode::ShiftRow0, 
+                  RichZSHitTripletCode::MaskRow0 ) : false );
   }
 
   /// Set the first hit column number
   inline bool setCol0( const RichDAQ::ShortType col )
   {
-    if ( !dataInRange(col,RichZSHitTripletCode::MaxRowCol) ) {
-      std::cout << "RichZSHitTriplet ERROR : Col0 number "
-                << col << " out of range" << std::endl;
-      return false;
-    }
-    return set( col, RichZSHitTripletCode::ShiftCol0, 
-                RichZSHitTripletCode::MaskCol0 );
+    return ( dataInRange(col,RichZSHitTripletCode::MaxRowCol) ?
+             set( col, RichZSHitTripletCode::ShiftCol0, 
+                  RichZSHitTripletCode::MaskCol0 ) : false );
   }
 
   /// Set the second hit row number
   inline bool setRow1( const RichDAQ::ShortType row )
   {
-    if ( !dataInRange(row,RichZSHitTripletCode::MaxRowCol) ) {
-      std::cout << "RichZSHitTriplet ERROR : Row1 number "
-                << row << " out of range" << std::endl;
-      return false;
-    }
-    return set( row, RichZSHitTripletCode::ShiftRow1, 
-                RichZSHitTripletCode::MaskRow1 );
+    return ( dataInRange(row,RichZSHitTripletCode::MaxRowCol) ?
+             set( row, RichZSHitTripletCode::ShiftRow1, 
+                  RichZSHitTripletCode::MaskRow1 ) : false );
   }
 
   /// Set the second hit column number
   inline bool setCol1( const RichDAQ::ShortType col )
   {
-    if ( !dataInRange(col,RichZSHitTripletCode::MaxRowCol) ) {
-      std::cout << "RichZSHitTriplet ERROR : Col1 number "
-                << col << " out of range" << std::endl;
-      return false;
-    }
-    return set( col, RichZSHitTripletCode::ShiftCol1, 
-                RichZSHitTripletCode::MaskCol1 );
+    return ( dataInRange(col,RichZSHitTripletCode::MaxRowCol) ?
+             set( col, RichZSHitTripletCode::ShiftCol1, 
+                  RichZSHitTripletCode::MaskCol1 ) : false );
   }
 
   /// Set the third hit row number
   inline bool setRow2( const RichDAQ::ShortType row )
   {
-    if ( !dataInRange(row,RichZSHitTripletCode::MaxRowCol) ) {
-      std::cout << "RichZSHitTriplet ERROR : Row2 number "
-                << row << " out of range" << std::endl;
-      return false;
-    }
-    return set( row, RichZSHitTripletCode::ShiftRow2, 
-                RichZSHitTripletCode::MaskRow2 );
+    return ( dataInRange(row,RichZSHitTripletCode::MaxRowCol) ?
+             set( row, RichZSHitTripletCode::ShiftRow2, 
+                  RichZSHitTripletCode::MaskRow2 ) : false );
   }
 
   /// Set the third hit column number
   inline bool setCol2( const RichDAQ::ShortType col )
   {
-    if ( !dataInRange(col,RichZSHitTripletCode::MaxRowCol) ) {
-      std::cout << "RichZSHitTriplet ERROR : Col2 number "
-                << col << " out of range" << std::endl;
-      return false;
-    }
-    return set( col, RichZSHitTripletCode::ShiftCol2, 
-                RichZSHitTripletCode::MaskCol2 );
+    return ( dataInRange(col,RichZSHitTripletCode::MaxRowCol) ?
+             set( col, RichZSHitTripletCode::ShiftCol2, 
+                  RichZSHitTripletCode::MaskCol2 ) : false );
   }
 
   /// Retrieve the first hit row number
