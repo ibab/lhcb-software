@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.84 2004-02-06 22:18:59 gcorti Exp $
+# $Id: requirements,v 1.85 2004-02-10 09:18:32 gcorti Exp $
 # Created    : 07/02/2002
 # Maintainer : Gloria Corti
 #
@@ -6,7 +6,7 @@
 # Allows reading of OO-DST data
 #============================================================================
 package           DaVinci
-version           v11r0
+version           v11r1
 
 # Structure, i.e. directories to process. 
 #============================================================================
@@ -23,33 +23,33 @@ apply_pattern DaVinciVersion
 #--- CMT and GaudiPolicy
 use  GaudiPolicy 	v5r14
  
-#--- External libraries (as defined in GAUDI_v14r0)
+#--- External libraries (as defined in GAUDI_v14r1)
 use  ExternalLibs	v4r4
 use  AIDA		v3r300		-no_auto_imports
 use  BOOST		v2r1302p0	-no_auto_imports
 use  CLHEP		v2r1810p0
+use  GSL		v2r14p0
 use  XERCES		v2r230p0
 use  CERNLIB 		v2r2002p0
 use  ROOT 		v2r31002p0
-use  GSL		v2r14p0
 use  PI			v1r112
 use  PCRE		v1r44
 use  UUID		v1r32
-use  SEAL		v1r133p0
-use  POOL		v1r150p0
+use  SEAL		v1r133p1
+use  POOL		v1r150p1
+use  PYTHON		v3r222p2
 
-
-#--- Gaudi libraries (from GAUDI_v14r0)
-use  GaudiKernel	v15r0
-use  GaudiSvc 		v11r1
+#--- Gaudi libraries (from GAUDI_v14r1)
+use  GaudiKernel	v15r1
+use  GaudiSvc 		v11r2
 use  GaudiAlg 		v6r5
 use  GaudiAud 		v6r4
 use  GaudiDb 		v9r1
 use  GaudiRootDb 	v9r4
-use  GaudiPoolDb	v1r2
+use  GaudiPoolDb	v1r4
 use  GaudiObjDesc       v6r2p1
 use  GaudiGSL           v5r0
-use  GaudiPython        v6r0
+use  GaudiPython        v6r1
 
 #--- Histogram persistency
 use  HbookCnv           v14r1
@@ -60,14 +60,12 @@ use  XmlDDDB		v20r1	 Det
 use  ParamFiles		v2r1	 $(LHCb_release_area)/PARAM -no_auto_imports
 use  FieldMap           v4r3
 
-#--- LHCb libraries (from LHCB_v15r0)
-use  LHCb               v15r0	
+#--- LHCb libraries (from LHCB_v15r1)
+use  LHCb               v15r1	
 
 #--- DaVinciSys v11r0 packages 
 
 #    Enable neutral ProtoParticles production and CaloPIDs
-use  CaloInterfaces     v3r1     Calo
-use  CaloUtils 	        v4r6     Calo
 use  CaloReco           v1r8     Calo
 use  CaloPIDs           v1r2     Calo 
 
@@ -81,11 +79,9 @@ use  PrimVtx            v2r1     Rec
 #    Utility tools
 use  TrExtrapolator     v2r10    Tr
 
-#    Monte Carlo tools
-use  MCTools            v1r2     Phys
-
 #    Reconstruction tools 
 use  RecoTools          v1r1     Rec
+use  Utilities          v1r2     Tools
 
 #    Physics packages
 use  DaVinciTools       v8r4     Phys
@@ -98,10 +94,7 @@ use  PhysSelections	v6r1     Phys
 use  FlavourTagging     v4r7     Phys
 use  DaVinciEff         v2r8p1   Phys
 use  DaVinciUser        v4r2     Phys
-use  PhysSelSys		v6r1     PhysSel
-
-#    Generic utilities
-use  Utilities          v1r2     Tools
+use  PhysSelSys		v6r2     PhysSel
 
 # Build DaVinci Application with standard executable
 # Note that user code is located in a component library (see details

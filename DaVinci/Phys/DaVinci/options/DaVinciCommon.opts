@@ -28,8 +28,8 @@ ApplicationMgr.DLLs   += { "CaloDet", "CaloDetXmlCnv" };
 ParticlePropertySvc.ParticlePropertiesFile = "$PARAMFILESROOT/data/particle.cdf";
 
 // Pool Persistency
-//#include "$GAUDIPOOLDBROOT/options/GaudiPoolDbRoot.opts"
-//#include "$EVENTSYSROOT/options/PoolDicts.opts"
+#include "$GAUDIPOOLDBROOT/options/GaudiPoolDbRoot.opts"
+#include "$EVENTSYSROOT/options/PoolDicts.opts"
 
 // GaudiDb Persistency
 #include "$STDOPTS/RootDb.opts"

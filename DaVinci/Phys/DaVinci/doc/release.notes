@@ -3,6 +3,27 @@ Package     : Phys/DaVinci
 Package Coordinator : Gloria Corti
 Purpose     : LHCb analysis program 
 
+ This version is mostly for developement and the main focus is for new data.
+ TDR data can be read but not all features are supported beside decay channel
+ selections. See details for DaVinci v11r0 and v10r0.
+
+ - Version based on Gaudi v14r1 and LHCb v15r1, refer to release notes of
+   LHCb for details regarding those packages.
+
+ - Necessary options for reading POOL files are always on in DaVinciCommon.opts
+   To read a Pool file it is enough to define its type in 
+   EventSelector.Input. An example is provided in DaVinciTestData.opts that
+   reads a Brunel v23r1 file written with Pool.
+
+ - Remove explicit use of CaloInterfaces and CaloUtils packages, also 
+   removed from project, since they are now part of LHCb v15r1.
+   The same applies to MCTools. 
+
+ - Use new version of PhysSelSys v6r2 that includes new version of LoKi v1r10
+   with changes for Python and 
+
+
+
 </PRE><H1><A NAME=v10r1>2004-02-06 DaVinci v11r0 - Development Version</A></H1><PRE>
 
  This version is mostly for developement and the main focus is for new data.
@@ -13,7 +34,7 @@ Purpose     : LHCb analysis program
 
  - Integrate reading POOL files. For the moment the default is GaudiDb 
    files. Pool files can be switched on uncommenting specific lines in
-   DaVinciCommon.opts to load the necessart dll and services.
+   DaVinciCommon.opts to load the necessary dll and services.
    The GaudiDb persistency is set up via new $STDOPTS/RootDb.opts
 
  - To read a Pool file it is also necessary to specify the file type 
