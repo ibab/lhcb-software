@@ -1,6 +1,11 @@
-! $Id: release.notes,v 1.83 2004-04-29 08:41:29 pkoppenb Exp $
+! $Id: release.notes,v 1.84 2004-05-03 14:56:03 pkoppenb Exp $
 ! Package     : DaVinciTools
 ! Responsible : P. Koppenburg, Sandra Amato
+
+! 2004-05-03 - P. Koppenburg for Gerhard Raven
+ - */V0MakerAlg.*
+ - src/ElectronParticleMaker_bbincl.*
+   . Obsolete -> removed 
 
 !========================== DaVinciTools v9r3p1 2004-04-29 ==================
 ! 2004-04-29 - P. Koppenburg for Gerhard Raven
