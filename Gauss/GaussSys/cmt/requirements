@@ -1,5 +1,5 @@
 package GaussSys
-version v13r0
+version v14r0
 
 branches cmt doc
 
@@ -8,11 +8,11 @@ branches cmt doc
 #==================================================================
 
 # Gauss application
-use Gauss		v13r0	Sim
+use Gauss		v14r0	Sim
 
 # Generator stuff ...
-use EvtGen              v4r3    Gen
-use GeneratorModules    v10r2   Gen
+use EvtGen              v5r0    Gen
+use GeneratorModules    v10r3   Gen
 
 # GiGa stuff...
 use GiGa        	v15r0	Sim        
@@ -26,7 +26,7 @@ use SimSvc              v4r0    Sim
 use GaussTools		v9r0	Sim
 use GaussRICH		v4r5	Sim
 use GaussTracker	v3r1	Sim
-use GaussCalo		v5r0	Sim
+use GaussCalo		v6r0	Sim
 use GaussPhysics	v2r6	Sim
 
 
