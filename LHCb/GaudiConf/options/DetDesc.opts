@@ -11,7 +11,7 @@ ApplicationMgr.DLLs   += { "DetDesc" };
 DetectorDataSvc.UsePersistency = true;
 DetectorDataSvc.DetDbLocation  = "$DDDB/dddb.xml";
 DetectorDataSvc.DetDbRootName  = "dd";
-DetectorDataSvc.DetStorageType = 10;
+DetectorDataSvc.DetStorageType = 7;
 
 // Detector Persistency service setup: 
 DetectorPersistencySvc.CnvServices = { "XmlCnvSvc" };
@@ -23,7 +23,7 @@ XmlCnvSvc.AllowGenericConversion = true;
 
 // Sets the maximum number of files to be put in the cache
 // of the XmlCnvSvc
-XmlParserSvc.MaxDocNbInCache = 7;
+XmlParserSvc.MaxDocNbInCache = 10;
 
 // Changes the behavior of the cache of the XmlCnvService
 // A 0 value makes it FIFO while a bigger values tends
