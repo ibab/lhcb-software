@@ -1,4 +1,4 @@
-// $Id: RichPixelCreatorFromCheatedRichDigits.h,v 1.5 2004-06-18 09:59:41 jonesc Exp $
+// $Id: RichPixelCreatorFromCheatedRichDigits.h,v 1.6 2004-06-29 19:45:37 jonesc Exp $
 #ifndef RICHRECTOOLS_RICHPIXELCREATORFROMCHEATEDRICHDIGITS_H
 #define RICHRECTOOLS_RICHPIXELCREATORFROMCHEATEDRICHDIGITS_H 1
 
@@ -95,8 +95,8 @@ private: // data
   mutable bool m_allDone;
 
   /// Pointer to pixel map
-  mutable std::map< RichSmartID::KeyType, RichRecPixel* > m_pixelExists;
-  mutable std::map< RichSmartID::KeyType, bool > m_pixelDone;
+  mutable std::map< unsigned, RichRecPixel* > m_pixelExists;
+  mutable std::map< unsigned, bool > m_pixelDone;
 
 };
 

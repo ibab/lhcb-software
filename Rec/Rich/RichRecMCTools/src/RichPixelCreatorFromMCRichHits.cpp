@@ -1,4 +1,4 @@
-// $Id: RichPixelCreatorFromMCRichHits.cpp,v 1.7 2004-06-10 14:40:50 jonesc Exp $
+// $Id: RichPixelCreatorFromMCRichHits.cpp,v 1.8 2004-06-29 19:45:38 jonesc Exp $
 
 // local
 #include "RichPixelCreatorFromMCRichHits.h"
@@ -89,7 +89,7 @@ RichPixelCreatorFromMCRichHits::newPixel( const ContainedObject * obj ) const {
 
     RichSmartID id(0);
     StatusCode sc = m_smartIDTool->smartID( hit->entry(), id );
-    if ( sc.isSuccess() && id.isValid() ) {
+    if ( sc.isSuccess() && id.pixelDataAreValid() ) {
 
       // Find associated MCRichOpticalPhoton
       const MCRichOpticalPhoton * mcPhot = m_mcTool->mcOpticalPhoton(hit);
@@ -113,6 +113,8 @@ RichPixelCreatorFromMCRichHits::newPixel( const ContainedObject * obj ) const {
 
       }
 
+    } else {
+      Warning("RichSmartID does not contain valid pixel data !");
     }
 
     // Add to reference map

@@ -1,4 +1,4 @@
-// $Id: RichPixelCreatorFromSignalRichDigits.cpp,v 1.1 2004-06-10 14:40:51 jonesc Exp $
+// $Id: RichPixelCreatorFromSignalRichDigits.cpp,v 1.2 2004-06-29 19:45:38 jonesc Exp $
 
 // local
 #include "RichPixelCreatorFromSignalRichDigits.h"
@@ -51,6 +51,7 @@ StatusCode RichPixelCreatorFromSignalRichDigits::initialize()
   // Setup incident services
   IIncidentSvc * incSvc = svc<IIncidentSvc>( "IncidentSvc", true );
   incSvc->addListener( this, IncidentType::BeginEvent );
+  if (msgLevel(MSG::DEBUG)) incSvc->addListener( this, IncidentType::EndEvent );
 
   // Make sure we are ready for a new event
   InitNewEvent();
@@ -67,7 +68,13 @@ StatusCode RichPixelCreatorFromSignalRichDigits::finalize()
 // Method that handles various Gaudi "software events"
 void RichPixelCreatorFromSignalRichDigits::handle ( const Incident& incident )
 {
-  if ( IncidentType::BeginEvent == incident.type() ) InitNewEvent();
+  // Update prior to start of event. Used to re-initialise data containers
+  if ( IncidentType::BeginEvent == incident.type() ) { InitNewEvent(); }
+  // Debug printout at the end of each event
+  else if ( msgLevel(MSG::DEBUG) && IncidentType::EndEvent == incident.type() )
+  {
+    debug() << "Created " << richPixels()->size() << " RichRecPixels" << endreq;
+  }
 }
 
 // Forms a new RichRecPixel object from a RichDigit

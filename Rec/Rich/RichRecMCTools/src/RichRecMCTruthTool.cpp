@@ -1,4 +1,4 @@
-// $Id: RichRecMCTruthTool.cpp,v 1.6 2004-06-18 09:59:42 jonesc Exp $
+// $Id: RichRecMCTruthTool.cpp,v 1.7 2004-06-29 19:45:38 jonesc Exp $
 
 // local
 #include "RichRecMCTruthTool.h"
@@ -27,7 +27,7 @@ RichRecMCTruthTool::RichRecMCTruthTool( const std::string& type,
 StatusCode RichRecMCTruthTool::initialize()
 {
   // Sets up various tools and services
-  StatusCode sc = RichRecToolBase::initialize();
+  const StatusCode sc = RichRecToolBase::initialize();
   if ( sc.isFailure() ) return sc;
 
   // Acquire instances of tools
@@ -147,16 +147,13 @@ const MCParticle *
 RichRecMCTruthTool::trueCherenkovRadiation( const RichRecPixel * pixel,
                                             const Rich::RadiatorType rad ) const
 {
-
   // Loop over all MCRichHits for this pixel
   const SmartRefVector<MCRichHit> & hits = mcRichHits( pixel );
   for ( SmartRefVector<MCRichHit>::const_iterator iHit = hits.begin();
         iHit != hits.end(); ++iHit ) {
-    if ( !(*iHit) ) continue; // protect against bad hits
-    if ( rad == (*iHit)->radiator() &&
-         !(*iHit)->scatteredPhoton() &&
-         //!(*iHit)->chargedTrack() &&
-         !(*iHit)->backgroundHit() ) return (*iHit)->mcParticle();
+    if ( *iHit && 
+         rad == (*iHit)->radiator() && 
+         !m_truth->isBackground(*iHit) ) return (*iHit)->mcParticle();
   }
 
   return NULL;
@@ -232,7 +229,6 @@ bool RichRecMCTruthTool::isBackground( const RichRecPixel * pixel ) const
 const MCRichHit *
 RichRecMCTruthTool::trueCherenkovHit( const RichRecPhoton * photon ) const
 {
-
   // Track MCParticle
   const MCParticle * trackMCP = mcParticle( photon->richRecSegment() );
   if ( trackMCP ) {
@@ -273,8 +269,8 @@ RichRecMCTruthTool::trueOpticalPhoton( const RichRecSegment * segment,
     const SmartRefVector<MCRichHit> & hits = mcRichHits(pixel);
     for ( SmartRefVector<MCRichHit>::const_iterator iHit = hits.begin();
           iHit != hits.end(); ++iHit ) {
-      if ( !(*iHit) ) continue; // protect against bad hits
-      if ( (*iHit)->mcParticle() == mcPart ) { return m_truth->mcOpticalPhoton(*iHit); }
+      if ( *iHit && 
+           (*iHit)->mcParticle() == mcPart ) return m_truth->mcOpticalPhoton(*iHit);
     }
 
   }

@@ -1,4 +1,4 @@
-// $Id: RichPixelCreatorFromCheatedRichDigits.cpp,v 1.7 2004-06-10 14:40:50 jonesc Exp $
+// $Id: RichPixelCreatorFromCheatedRichDigits.cpp,v 1.8 2004-06-29 19:45:37 jonesc Exp $
 
 // local
 #include "RichPixelCreatorFromCheatedRichDigits.h"
@@ -49,6 +49,7 @@ StatusCode RichPixelCreatorFromCheatedRichDigits::initialize()
   // Setup incident services
   IIncidentSvc * incSvc = svc<IIncidentSvc>( "IncidentSvc", true );
   incSvc->addListener( this, IncidentType::BeginEvent );
+  if (msgLevel(MSG::DEBUG)) incSvc->addListener( this, IncidentType::EndEvent );
 
   // Make sure we are ready for a new event
   InitNewEvent();
@@ -65,7 +66,13 @@ StatusCode RichPixelCreatorFromCheatedRichDigits::finalize()
 // Method that handles various Gaudi "software events"
 void RichPixelCreatorFromCheatedRichDigits::handle ( const Incident& incident )
 {
-  if ( IncidentType::BeginEvent == incident.type() ) InitNewEvent();
+  // Update prior to start of event. Used to re-initialise data containers
+  if ( IncidentType::BeginEvent == incident.type() ) { InitNewEvent(); }
+  // Debug printout at the end of each event
+  else if ( msgLevel(MSG::DEBUG) && IncidentType::EndEvent == incident.type() )
+  {
+    debug() << "Created " << richPixels()->size() << " RichRecPixels" << endreq;
+  }
 }
 
 // Forms a new RichRecPixel object from a RichDigit
@@ -102,7 +109,7 @@ RichPixelCreatorFromCheatedRichDigits::newPixelFromHit( const RichDigit * digit,
 {
 
   // key for this MCRichHit
-  const RichSmartID hitKey = hit->key();
+  const unsigned hitKey = hit->key();
 
   // See if this RichRecPixel already exists
   if ( m_pixelDone[hitKey] ) {
@@ -111,7 +118,7 @@ RichPixelCreatorFromCheatedRichDigits::newPixelFromHit( const RichDigit * digit,
 
     RichRecPixel * newPixel = NULL;
 
-    if ( digit->key().isValid() ) {
+    if ( digit->key().pixelDataAreValid() ) {
 
       // Find associated MCRichOpticalPhoton
       const MCRichOpticalPhoton * mcPhot = m_mcTool->mcOpticalPhoton(hit);
@@ -137,7 +144,7 @@ RichPixelCreatorFromCheatedRichDigits::newPixelFromHit( const RichDigit * digit,
       }
 
     } else {
-      Warning("Invalid RichDigit SmartID !");
+      Warning("RichSmartID does not contain valid pixel data !");
     }
 
     // Add to reference map
@@ -197,8 +204,8 @@ RichRecPixels * RichPixelCreatorFromCheatedRichDigits::richPixels() const
       for ( RichRecPixels::const_iterator iPixel = tdsPixels->begin();
             iPixel != tdsPixels->end();
             ++iPixel ) {
-        m_pixelExists[(*iPixel)->smartID()] = *iPixel;
-        m_pixelDone[(*iPixel)->smartID()] = true;
+        m_pixelExists[(*iPixel)->key()] = *iPixel;
+        m_pixelDone[(*iPixel)->key()]   = true;
       }
 
     }
