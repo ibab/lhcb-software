@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.194 2004-10-25 15:42:22 pkoppenb Exp $
+# $Id: requirements,v 1.195 2004-10-27 15:16:49 pkoppenb Exp $
 # Created    : 07/02/2002
 # Maintainer : P. Koppenburg
 #
@@ -36,17 +36,12 @@ use XmlDDDB             v22r3   Det
 use FieldMap            v4r5
 use ParamFiles          v3r8    -no_auto_imports
 
-# WARNING: SPECIAL!
-use  CaloEvent           	v13r6     Event
-
 #-- LHCb libraries 
-use LHCb                v16r2
+use LHCb                v16r3
 
 #=======================================================
 # DaVinciSys v12r3
 #=======================================================
-#- temporary
-use  CaloUtils                 v4r7p1    Calo
 
 # Trigger packages
 use  L0DU               	v6r7p2   L0
@@ -69,7 +64,6 @@ use  TrgVeloTT          	v5r0     Trg
 
 # Enable neutral ProtoParticles production and CaloPIDs
 use  CaloPIDs           	v2r4     Calo 
-# use  CaloReco           	v2r5     Calo
 use  CaloReco           	v2r6     Calo
 # Muon PID
 use  MuonID             	v3r7p1   Muon

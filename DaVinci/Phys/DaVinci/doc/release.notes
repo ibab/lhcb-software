@@ -3,7 +3,255 @@ Package     : Phys/DaVinci
 Package Coordinator : Patrick Koppenburg
 Purpose     : LHCb analysis program 
 
-</PRE><H1><A NAME=v12r1>2004-09-16 DaVinci v12r2 - version for DC04 stripping</A></H1><PRE>
+</PRE><H1><A NAME=v12r3>2004-09-16 DaVinci v12r3 - version for DC04 stripping</A></H1><PRE>
+
+ Release for stripping production
+ 
+ - Built on Gaudi v15r3 and LHCb v16r3
+
+ - Contains bug fixed DaVinciFilter and GaudiSvc
+ 
+ - Updated Stripping Tools
+
+ - Updates in Calorimeter Software
+ 
+################################################################################
+#                               DAVINCI v12r3                                  #
+################################################################################
+##################################### CALO #####################################
+!========================== CaloReco v2r6 2004-10-27 ===================
+! 2004-10-27 - Vanya BELYAEV
+ - src/CaloTrackAlg.h, src/CaloTrackAlg.cpp
+    the algorithm is modified to take advantage from 
+    new class TrTrackUse from Calo/CaloUtils package 
+ - src/CaloMergedPi0Alg.h, src/CaloMergedPi0Alg.cpp
+
+    new property "EtCut" is added to skip the processing of 
+    clusters with small transverse energy.
+    The default value of this oproperty is -100*GeV
+   (which implies "NO CUT", and "BACKWARD-COMPATIBILITY" 
+    in the sense of absolute reproducibility of results). 
+    The idea comes from Olivier Deschamps and Cristina Carloganu.
+
+    Another new property "MaxIterations" is added to reduce the 
+    number of iterations 
+    The default value (16) is "BACKWARD-COMPATIBLE"
+    The idea comes from Olivier Deschamps and Cristina Carloganu.
+
+    In addition few "tiny" modification are applied:
+      - remove "count" loop 
+      - location of spddigits and prs digits are moved from internal loop
+        to a top level 
+
+    The usage of EtCut=1.5*GeV and MaxIteration=6 togather with 
+    these 'technical' optimizations  
+    speeds up the execution of the algorithm approxmately 20 times.
+
+
+ The package *REQUIRES* : 
+  - Calo/CaloUtils with versions >= v4r8 
+  - Calo/CaloEvent with version  >= v13r6  
+
+
+! 2004-10-26 - Vanya BELYAEV
+ - src/CaloCluster2TrackAlg.h, src/CaloCluster2TrackAlg.cpp
+ - src/CaloHypo2TrackAlg.h, src/CaloHypo2TrackAlg.cpp
+     update in properties for better dealing with track types 
+   it is done with the helper algorithm base CaloTrackAlg,
+   which allow to select/reject a certain track categories 
+   according to 
+      - general criteria (unique?error?),
+      - track categories ( is'*'?)
+      - algorithms ('*'?)
+- options/BremMatch.opts
+- options/Brem2Match.opts
+   update the configuratin files for new property names 
+
+! 2004-10-26 - Vanya BELYAEV
+ - introduce FAST "photon" matching of trigger track (TrgTrach) with 
+   Calotrimeter clusters. For a moment follow "off-line" phylosophy:
+   perfroam all-to-all mathcing and save result as a relation table 
+   in TES. The supporting algorithm CaloCluster2TrgTrackAlg does this job.
+   The execution is 5-6 times faster than the execution of 
+   "standard" photon matching. The efficiency need to be testes 
+   and studied.
+   In real environment one coudl gain addiitonal factor of 2
+   (since if one uses this "o nly" fo select neutral clusters - "photons")
+   one does not need all-to-all matching (and one does not need to 
+   register the table in TES!),  one just che the existence of 
+   tracks with chi2<cut, which should be "fast" procedure.  
+
+
+! 2004-10-24 - Vanya BELYAEV
+ - src/CaloTrackMatchBrem2.h
+   src/CaloTrackMatchBrem2.cpp
+   src/CaloReco_load.cpp
+     add new 'tool' for (hopefully) improved 'bremstrahlung' matching.
+     the tool need to be tested with *LARGE* statistics 
+ - options/Brem2Match.opts 
+     new file for 'Brem2Match' algorithm configuration 
+ - options/BremMatch.opts
+     add 'include' for new file Brem2Match.opts  
+
+! 2004-10-24 - Vanya BELYAEV
+ -  src/CaloTrackMathcPhotonAlg.cpp
+    src/CaloTrackMathcPhotonAlg.h
+    src/CaloReco_load.cpp
+       remove obsolete algorithm
+ -  src/CaloTrack*.cpp 
+       improve a little bit the error-reporting printout
+
+! 2004-10-22 - Vanya BELYAEV
+ - src/CaloTrackMatchBase.h
+   src/CaloTrackMatchBase.cpp
+
+   1) modify the internal match structure MatchStruct1 
+      to invert the matrix in the constructor 
+   2) modify the internal chi2 method to be more efficient 
+      (eliminate the intermediate matrices) 
+   3) introduce local matrix storage
+   4) itoriducet mtrxOp methods for fast evaluation of matrix products 
+
+       in overall (142) gives >10% impromevent in CPU performance 
+
+   5) introduce new internal structure MatchStruct2 
+   6) introduce set of new "chi2" methods dealing with MatchStruct2 
+  
+        (5) and (6) are the steps toward HLT matching 
+
+ - src/CellularAutomaton.cpp
+   change the Error-Code for 'uclusterized cells' warning message 
+   from FAILURE to SUCCESS to redice a bit the potential confusion 
+ 
+! 2004-10-22 - Vanya BELYAEV
+
+   (requires the recent modifications in Event/CaloEvent  >= 13r6 ) 
+
+ - src/CellularAutomaton.h
+   src/CellularAutomaton.cpp
+   
+     The algorithm gas got 2 new properties 
+   "Sort"     (boolean, default = true ) - the flag which indicates wether 
+                                           the sorting of clusters should 
+                                           be performed
+   "SprtByET" (boolean, default = false) - the flag which indicates 
+                                           which sorting criteria (energy 
+                                           versus transverse energy) is used 
+                                           for sorting
+
+   The default settings corresponds to "backward-compatibility"
+
+  - src/CaloDeleteObject.h, src/CaloDeteleObject.cpp  
+    remove the obsolete algorithm
+      one should use TESFilter algorithm from  Kernel/LHCbAlgs package
+
+  - src/CaloCheckObjects.h, src/CaloCheckObjects.cpp  
+    remove obsolete algorithm
+      one should use TESCheck algorithm from  Kernel/LHCbAlgs package 
+  - src/CaloReco_load.cpp
+    remove the factory instantiations for removed obsolete algorithms 
+
+  - cmt/requirements 
+   version increment to v2r6 
+!========================== CaloUtils v4r8 2004-10-27 ===================
+! 2004-10-27 - Vanya BELYAEV
+ - CaloUtils/TrTrackUse.h ,
+   src/TrTrackUse.cpp
+
+      new helper class to simplify the selection/rejection of 
+      TrStoredTrack fro e.g. mathcing, monitoring, PID, etc...
+      It defins a "standard" set of properties for "Component"
+      classes ("Algorithm", "Service", "AlgTool") and few methods 
+      for seelction.rejection of tracks, inspection, etc... 
+
+      The clients : CaloReco, CaloMoniDst. CaloPIDs 
+
+ - cmt/requirements
+    increment the version to v4r8 
+###################################### L0 ######################################
+##################################### PHYS #####################################
+! 2004-10-26 - P. Koppenburg 
+  - options/DVTriggerFilter.opts
+  - options/DaVinciElectrons.opts
+  - options/DaVinciNeutrals.opts
+    . Replace all Sequencers by GaudiSequencers
+! 2004-10-26 - P. Koppenburg for Vanya Belyaev
+  - options/DaVinciElectrons.opts
+    . One need to substitute "CaloDeleteObjectsAlg" -> "TESFilter"   
+      (the algorithm from LHCbAlgs package therefore one need to load DLL "LHCbAlgs" )
+      and to ajust the property name for this algorithm:
+       "ElectronDelete.Addresses" -> "ElectronDelete.DroppedContainers"
+! 2004-10-19 - P. Koppenburg
+  - options/HltChecking.opts
+    . Move HltTrgTrackToContainer back to Hlt.opts as it is needed to 
+      find the PV.
+! 2004-10-15 - P. Koppenburg for O. Callot
+  - options/Hlt.opts
+  - options/HltChecking.opts
+    . Add TrgMuonID to HLT sequence
+    . Move HltTrgTrackToContainer to checking sequence as it is not needed
+      by the particle maker anymore.
+! 2004-10-14 - P. Koppenburg
+  - options/DaVinci.opts
+    . Do not clain that GaudiPython does not work with Pool data. 
+      This is wrong for quite some time now.    
+!========================== DaVinciFilter v1r2 2004-10-27 ===================
+! 2004-10-21 - P. Koppenburg
+ - src/MassFilterCriterion.h
+   . Correct description   
+! 2004-10-18 - P. Koppenburg
+ - src/ParticleFilter.cpp
+   . Bug fixed: When one particle was rejected, all following were rejected too...
+     Bug found by Olivier Deschamps
+!========================== DaVinciKernel v2r0 2004-10-27 ===================
+! 2004-09-21 - P. Koppenburg
+ - DaVinciTools/DVAlgorithm.h
+ - src/DVAlgorithm.cpp
+   . Let DVAlgorithm inherit from GaudiTupleAlg (which inherits from 
+     GaudiHistoAlg). This change (as well as the one below) is fully
+     backward compatible with the old inheritence from GaudiAlgorithm,
+     but allows more features. It just requires to recompile all DaVinci.
+! 2004-09-18 - P. Koppenburg
+ - DaVinciTools/DVAlgorithm.h
+ - src/DVAlgorithm.cpp
+   . Let DVAlgorithm inherit from GaudiHistoAlg.    
+#################################### PHYSSEL ###################################
+!========================== Muon v1r2 2004-10-27 ===================
+! 2004-10-20 - P. Koppenburg
+  - options/PreselMuon.opts
+    . Typo fix.
+!========================== PhysSelSys v7r11 2004-10-27 ===================
+Updated packages (see DaVinci release notes for details):
+use  Muon                      v1r2     PhysSel
+#####################################  REC  ####################################
+##################################### TOOLS ####################################
+!========================== LoKiHlt v1r1p1 2004-10-27 ===================
+! 2004-10-20 - Vanya BELYAEV
+  - src/Components/NProngs.cpp 
+    fix the compilation problem for Windows 
+  - cmt/requirements 
+    version increment to v1r1p1
+!========================== Stripping v1r5p1 2004-10-27 ===================
+! 2004-10-26 - P. Koppenburg
+  - python/strip.py
+    . Use GaudiSequencer and not Sequencer when no sequencer defined
+! 2004-10-21 - P. Koppenburg
+  - options/DVMerge.opts
+    . Make ETC after vetoing   
+! 2004-10-19 - P. Koppenburg
+ - options/DVMergeETC.opts
+   . Merges several ETC files into one
+! 2004-10-14 - P. Koppenburg
+ - cmt/requirements
+   . Make option file only on linux, not Windows.
+!========================== Utilities v1r11p1 2004-10-27 ===================
+! 2004-10-06 - P. Koppenburg
+  - src/CheckSelResult.cpp
+  - src/PrintHeader.cpp
+    . Change looks of printout
+###################################### TR ######################################
+###################################### TRG #####################################
+</PRE><H1><A NAME=v12r2>2004-09-16 DaVinci v12r2 - version for DC04 stripping</A></H1><PRE>
 
  Release for stripping production
  
