@@ -2,6 +2,18 @@ Package: GaudiObjDesc
 Desccription: This package contains a set of tools used to generate code from the XML description of the data object classes.
 Package manager : Stefan Roiser
 
+===============================GaudiObjDesc v8r0============================
+
+!20050206 - Stefan
+- lowering getter names of bitfields (as for all other getters) 
+  (e.g. HTL()->htl(), PDRow()->pdRow())
+
+!20050203 - Stefan
+- fix for dictalias when generating info for dictionary fields
+- generation of bitfield accessor methods fixed
+- added support for transient attribute of <attribute> element
+- fix to not self include the header file after the class definition
+
 ===============================GaudiObjDesc v7r2============================
 
 !20050127 - Stefan

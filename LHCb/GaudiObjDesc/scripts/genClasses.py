@@ -295,7 +295,7 @@ class genClasses(genSrcUtils.genSrcUtils):
     metName = bf['name']
     bfType = 'bool'
     if bf.has_key('type')    : bfType = bf['type']
-    elif bf['length'] != '1' : bfType = attAtt['type']      
+    elif bf['length'] != '1' : bfType = attAtt['type']
     ret = 'void '
     param = ''
     constF = ''
@@ -303,6 +303,9 @@ class genClasses(genSrcUtils.genSrcUtils):
       metName = bf['name'][0].upper() + bf['name'][1:]
       param = self.tools.genParamFromStrg(bfType) + ' value'
     if what == 'get':
+# fixme, lowering getter names for bitfields was not done in old GOD
+# should be done now to be consistent
+      metName = self.tools.lowerGetterName(metName)
       what = ''
       ret = self.tools.genReturnFromStrg(bfType,self.generatedTypes,scopeName) + ' '
       constF = ' const'
@@ -311,16 +314,13 @@ class genClasses(genSrcUtils.genSrcUtils):
       metName = bf['name'][0].upper() + bf['name'][1:]
       param = self.tools.genParamFromStrg(bfType) + ' value'
       constF = ' const'
-# fixme, lowering getter names for bitfields was not done in old GOD
-# should be done now to be consistent
-#   metName = self.tools.lowerGetterName(bfAtt['name'])
     s += ret + scopeName + what + metName + '(' + param + ')' + constF
     if not scopeName : s += ';\n\n'
     else:
       if bf['length'].isdigit() : bits = bf['name']
       else : bits = bf['length'].split(',')[0]
       if not what        :
-        retF = '0 != '
+        retF = '0 != '                            
         if (ret[:-1]) != 'bool' : retF = '(%s)'%ret[:-1]
         s += '\n{\n  return %s((m_%s & %sMask) >> %sBits);\n}\n\n' % (retF, attAtt['name'],bf['name'],bits)
       elif what == 'set' :
@@ -560,7 +560,7 @@ class genClasses(genSrcUtils.genSrcUtils):
 
       classDict['includes']                     = self.genIncludes()
       classDict['forwardDecls']                 = self.genForwardDecls()
-      classDict['forwardIncludes']              = self.genForwardIncludes()
+      classDict['forwardIncludes']              = self.genForwardIncludes(classname)
 
       g = gparser.gparser()
       g.parse(self.godRoot+'templates/header.tpl',classDict)

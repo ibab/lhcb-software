@@ -68,7 +68,7 @@ class genNamespaces(genSrcUtils.genSrcUtils):
 
       namespaceDict['includes']        = self.genIncludes()
       namespaceDict['forwardDecls']    = self.genForwardDecls()
-      namespaceDict['forwardIncludes'] = self.genForwardIncludes()
+      namespaceDict['forwardIncludes'] = self.genForwardIncludes(namespacename)
 
       g = gparser.gparser()
       g.parse(self.godRoot+'templates/namespace.tpl',namespaceDict)

@@ -12,7 +12,7 @@ class genClassDicts(importUtils.importUtils):
     self.generatedEnums = []
     self.rem = '//' + '-'*78 + '\n'
     self.mNum = 0
-    self.cNum = 0
+    self.cNum = 1
     self.clName = ''
 #--------------------------------------------------------------------------------
   def reset(self, godClass):
@@ -22,7 +22,7 @@ class genClassDicts(importUtils.importUtils):
     self.generatedEnums = []
     self.include = []
     self.mNum = 0
-    self.cNum = 0
+    self.cNum = 1
     self.clName = ''
 #--------------------------------------------------------------------------------
   def generateEnums(self,godClass):
@@ -65,7 +65,7 @@ class genClassDicts(importUtils.importUtils):
           self.cNum += 1
       if not self.hasDefaultConstructor :                                                                       # there is no default constructor defined
         s += self.rem
-        s += 'static void* %s_constructor_%d(void* mem)\n' % ( classname, self.cNum )
+        s += 'static void* %s_constructor_0(void* mem)\n' % ( classname )
         s += self.rem
         s += '{\n  return new(mem) %s();\n}\n\n' % classname
     return s
@@ -195,7 +195,7 @@ class genClassDicts(importUtils.importUtils):
     if len(params) :
       for p in params :
         if i : s += '\n' + indent
-        if p in self.generatedEnums : p = 'int'
+        #if p in self.generatedEnums : p = 'int'
         p = self.checkTypedefEnums(p, cl)
         if p[:9] == 'SmartRef<' : s += '(%s*)' % p[p.find('<')+1:p.find('>')]
         elif self.tools.isReferenceT(p) : s += '*(%s*)' % p[:-1]
@@ -222,16 +222,17 @@ class genClassDicts(importUtils.importUtils):
       for bf in att['bitfield']:
         bfAtt = bf['attrs']
         bfType = 'bool'
-        if bfAtt.has_key('type') : bfType = bfAtt['type']
+        if bfAtt.has_key('type')    : bfType = bfAtt['type']
+        elif bfAtt['length'] != '1' : bfType = att['attrs']['type']
         if bfAtt['setMeth'] == 'TRUE':
           metName = 'set' + self.tools.firstUp(bfAtt['name'])
-          s += self.genStubFunction('void',cl,metName,bfType)
+          s += self.genStubFunction('void',cl,metName,[bfType])
         if bfAtt['getMeth'] == 'TRUE':
-          s += self.genStubFunction(bool,cl,bfAtt['name'],'')
+          if bfType in self.generatedEnums : bfType = 'int'
+          s += self.genStubFunction(bfType,cl,bfAtt['name'],'')
         if bfAtt['checkMeth'] == 'TRUE':
           metName = 'check' + self.tools.firstUp(bfAtt['name'])
-          s += self.genStubFunction(bool,cl,metName,bfType)
-      self.mNum += 1
+          s += self.genStubFunction('bool',cl,metName,[bfType])
     return s
 #--------------------------------------------------------------------------------
   def genGetSetMethodStubs(self,godClass):
@@ -241,7 +242,7 @@ class genClassDicts(importUtils.importUtils):
       for att in godClass['attribute']:
         attAtt = att['attrs']
         attType = attAtt['type']
-        if attAtt['type'] == 'bitfield':
+        if att.has_key('bitfield'):
           s += self.genGetSetBitfieldMethodStubs(att,godClass['attrs']['name'])
           attType = 'unsigned int'
         if attAtt['getMeth'] == 'TRUE' :
@@ -335,6 +336,7 @@ class genClassDicts(importUtils.importUtils):
           if ((not const['attrs'].has_key('argList')) and (not const.has_key('arg'))): self.hasDefaultConstructor = 1
           parList = ''
           if len(par) :
+            par = [p.split('=')[0].strip() for p in par]
             for p in par :
               for e in self.generatedEnums :
                 if p.find(e) != -1 : p = p.replace(e,'int')
@@ -345,7 +347,7 @@ class genClassDicts(importUtils.importUtils):
           s += self.genMethod(clName, constAtt['desc'], clName, parList, '%s_constructor_%d'%(clName,self.cNum), mod) 
           self.cNum += 1
       if not self.hasDefaultConstructor :
-        s += self.genMethod(clName,'default constructor', clName, '', '%s_constructor_%d' % ( clName, self.cNum ), 'PUBLIC')
+        s += self.genMethod(clName,'default constructor', clName, '', '%s_constructor_0' % ( clName ), 'PUBLIC')
     return s
 #--------------------------------------------------------------------------------
   def genDestructor(self,godClass):
@@ -387,6 +389,7 @@ class genClassDicts(importUtils.importUtils):
     s += '%s %s' % (indent, self.tools.cppEscape(fp))
     if mod : s += ',%s %s' % (indent, mod)
     s += ');\n\n'
+    self.mNum += 1
     return s
 #--------------------------------------------------------------------------------
   def genMethods(self,godClass):
@@ -425,10 +428,9 @@ class genClassDicts(importUtils.importUtils):
                             parList,
                             '%s_%s_%d%s'%(godClass['attrs']['name'],metAtt['name'],self.mNum,constF),
                             ' | '.join(mod))
-        self.mNum += 1
     return s
 #--------------------------------------------------------------------------------
-  def genGetSetBitfieldMethods(self, att, godClassName) :
+  def genGetSetBitfieldMethods(self, att, clName) :
     s = ''
     if att.has_key('bitfield'):
       for bf in att['bitfield']:
@@ -438,13 +440,12 @@ class genClassDicts(importUtils.importUtils):
         if bfType in self.generatedEnums : bfType = 'int'
         if bfAtt['setMeth'] == 'TRUE':
           metName = 'set'+self.tools.firstUp(bfAtt['name'])
-          s += self.genMethod(metName,'set '+bfAtt['desc'],'void',self.demangle(bfType,clName),bf_%s_%s_%d%(godClassName,bfAtt['name'],self.mNum),'PUBLIC')
+          s += self.genMethod(metName,'set '+bfAtt['desc'],'void',self.demangle(bfType,clName),'%s_%s_%d'%(clName,metName,self.mNum),'PUBLIC')
         if bfAtt['getMeth'] == 'TRUE':
-          s += self.genMethod(bfAtt['name'],'get '+bfAtt['desc'],bfType,'',bf_%s_%s_%d%(godClassName,bfAtt['name'],self.mNum),'PUBLIC')
+          s += self.genMethod(bfAtt['name'],'get '+bfAtt['desc'],bfType,'','%s_%s_%d'%(clName,bfAtt['name'],self.mNum),'PUBLIC')
         if bfAtt['checkMeth'] == 'TRUE':
-          metName = 'check'+self.tools.firtUp(bfAtt['name'])
-          s += self.genMethod(metName,'check '+bfAtt['desc'],'bool',self.demangle(bfType,self.clName),bf_%s_%s_%d%(godClassName,bfAtt['name'],self.mNum),'PUBLIC')
-      self.mNum += 1
+          metName = 'check'+self.tools.firstUp(bfAtt['name'])
+          s += self.genMethod(metName,'check '+bfAtt['desc'],'bool',self.demangle(bfType,self.clName),'%s_%s_%d'%(clName,metName,self.mNum),'PUBLIC')
     return s
 #--------------------------------------------------------------------------------
   def genGetSetMethods(self,godClass):
@@ -455,20 +456,18 @@ class genClassDicts(importUtils.importUtils):
         attAtt = att['attrs']
         attType = attAtt['type']
         if attType in self.generatedEnums : attType = 'int'
-        if attType == 'bitfield' :
-          s += genGetSetBitfieldMethods(att)
+        if att.has_key('bitfield') :
+          s += self.genGetSetBitfieldMethods(att, clName)
           attType = 'unsigned int'
         if attAtt['getMeth'] == 'TRUE' :
           ret = self.tools.genReturnFromStrg(attType,[],'')
           if not ( self.tools.isReferenceT(ret) or self.tools.isPointerT(ret) or self.tools.isFundamentalT(ret) ) : ret += "&"
           s += self.genMethod(attAtt['name'], attAtt['desc'], ret, '', '%s_%s_%d'%(clName,attAtt['name'],self.mNum), 'PUBLIC')
-          self.mNum += 1
         if attAtt['setMeth'] == 'TRUE' :
           metName = 'set'+self.tools.firstUp(attAtt['name'])
           param = self.tools.genParamFromStrg(attType)
           if not ( self.tools.isReferenceT(param) or self.tools.isPointerT(param) or self.tools.isFundamentalT(param) ) : param += "&"
           s += self.genMethod(metName, attAtt['desc'], '', self.demangle(param,self.clName), '%s_%s_%d'%(clName,metName,self.mNum), 'PUBLIC')
-          self.mNum += 1
     if godClass.has_key('relation'):
       for rel in godClass['relation']:
         relAtt = rel['attrs']
@@ -480,29 +479,24 @@ class genClassDicts(importUtils.importUtils):
           if mult : ret = self.tools.genReturnFromStrg('SmartRefVector<%s>&'%relAtt['type'],[],'')
           else    : ret = self.tools.genReturnFromStrg('%s*'%relAtt['type'],[],'')
           s += self.genMethod(relAtt['name'], relAtt['desc'], ret, '', '%s_%s_%d'%(clName,relAtt['name'],self.mNum),'PUBLIC')
-          self.mNum += 1
         if relAtt['setMeth'] == 'TRUE' :
           metName = 'set'+metNameUp
           par = ''
           if mult : par = self.tools.genParamFromStrg('SmartRefVector<%s>'%relAtt['type'])
           else    : par = self.tools.genParamFromStrg('%s*'%relAtt['type'])
           s += self.genMethod(metName, relAtt['desc'], '', self.demangle(par,self.clName), '%s_%s_%d'%(clName,metName,self.mNum),'PUBLIC')
-          self.mNum += 1
         if mult:
           if relAtt['addMeth'] == 'TRUE' :
             metName = 'addTo'+metNameUp
             par = self.tools.genParamFromStrg('%s*'%relAtt['type'])
             s += self.genMethod(metName,relAtt['desc'],'',self.demangle(par,self.clName),'%s_%s_%d'%(clName,metName,self.mNum),'PUBLIC')
-            self.mNum += 1
           if relAtt['remMeth'] == 'TRUE' :
             metName = 'removeFrom'+metNameUp
             par = self.tools.genParamFromStrg('%s*'%relAtt['type'])
             s += self.genMethod(metName,relAtt['desc'],'',self.demangle(par,self.clName),'%s_%s_%d'%(clName,metName,self.mNum),'PUBLIC')
-            self.mNum += 1
           if relAtt['clrMeth'] == 'TRUE' :
             metName = 'clear'+metNameUp
             s += self.genMethod(metName,relAtt['desc'],'','','%s_%s_%d'%(clName,metName,self.mNum),'PUBLIC')
-            self.mNum += 1
     return s
 #--------------------------------------------------------------------------------
   def demangle(self, name, clname):
@@ -529,13 +523,16 @@ class genClassDicts(importUtils.importUtils):
         attAtt = att['attrs']
         attType = attAtt['type'].replace('std::string','std::basic_string<char> ')
         if attType[-1] == ' ' : attType = attType[:-1]
-        if attAtt.has_key('dictalias') : attType = attAtt['dictalias']
         if attType in self.generatedEnums : attType = 'int'
+        if attAtt.has_key('dictalias') : attType = '"%s"' % attAtt['dictalias']
+        else                           : attType = '(%s).c_str()' % self.demangle(attType,self.clName)
+        mod = attAtt['access']
+        if attAtt['transient'] == 'TRUE' : mod += ' | TRANSIENT'
         s += '  metaC.addField("%s",' % attAtt['name']
-        s += '%s (%s).c_str(),' % (indent, self.demangle(attType,self.clName))
+        s += '%s %s,' % (indent, attType)
         s += '%s "%s",' % (indent, attAtt['desc'])
         s += '%s OffsetOf(%s, m_%s),' % (indent, clName, attAtt['name'])
-        s += '%s %s);\n\n' % (indent, attAtt['access'])
+        s += '%s %s);\n\n' % (indent, mod)
     if godClass.has_key('relation'):
       for rel in godClass['relation']:
         relAtt = rel['attrs']
@@ -589,7 +586,7 @@ class genClassDicts(importUtils.importUtils):
       classDict['methodStubs']       = self.genMethodStubs(godClass)
       classDict['getSetMethodStubs'] = self.genGetSetMethodStubs(godClass)
       classDict['constructors']      = self.genConstructors(godClass)
-      self.cNum = 0
+      self.cNum = 1
       classDict['constructorStubs']  = self.genConstructorStubs(godClass)
       classDict['destructor']        = self.genDestructor(godClass)
       classDict['destructorStub']    = self.genDestructorStub(classname)

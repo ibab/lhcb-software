@@ -8,7 +8,7 @@ class godII:
   def __init__(self,args):
     self.fullCommand = (' ').join(args)
     self.tools = tools.tools()
-    self.version = 'v7r0'
+    self.version = 'v8r0'
     self.xmlSources = []
     self.xmlDBFile = ''
     self.xmlDBFileExtra = []

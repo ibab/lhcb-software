@@ -132,8 +132,8 @@ class importUtils:
       if decl not in self.include : s += 'class %s;\n' % decl.split('/')[-1]
     return s
 #--------------------------------------------------------------------------------
-  def genForwardIncludes(self):
+  def genForwardIncludes(self, clName):
     s = ''
     for imp in self.forwardIncl :
-      if imp not in self.include : s += '#include "%s.h"\n' % imp
+      if imp not in self.include and imp.split('/')[-1] != clName: s += '#include "%s.h"\n' % imp
     return s

@@ -1,6 +1,6 @@
 package GaudiObjDesc
 
-version v7r2
+version v8r0
 
 macro xmlsrc "xml"
 
