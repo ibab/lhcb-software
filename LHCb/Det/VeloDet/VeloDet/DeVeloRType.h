@@ -1,4 +1,4 @@
-// $Id: DeVeloRType.h,v 1.5 2004-02-29 19:46:08 mtobin Exp $
+// $Id: DeVeloRType.h,v 1.6 2004-03-01 14:33:40 mtobin Exp $
 #ifndef VELODET_DEVELORTYPE_H 
 #define VELODET_DEVELORTYPE_H 1
 
@@ -144,13 +144,13 @@ public:
   inline double phiMinZone(unsigned int zone, double radius){
     double phiMin;
     if(0 == zone){
-      phiMin = acos(m_overlapInX/radius);
+      phiMin = -acos(m_overlapInX/radius);
     } else if(2 == zone){
-      phiMin = asin(-m_phiGap/radius);
+      phiMin = asin(m_phiGap/radius);
     } else {
       phiMin = this->phiMinZone(zone);
     }
-    return -phiMin;
+    return phiMin;
   }
   
   /// The maximum phi for a zone
@@ -160,13 +160,13 @@ public:
   inline double phiMaxZone(unsigned int zone, double radius){
     double phiMax;
     if(1 == zone){
-      phiMax = asin(m_phiGap/radius);
+      phiMax = asin(-m_phiGap/radius);
     } else if(3 == zone){
-      phiMax = -acos(m_overlapInX/radius);
+      phiMax = acos(m_overlapInX/radius);
     } else {
       phiMax = this->phiMaxZone(zone);
     }
-    return -phiMax;
+    return phiMax;
   }
    
   /// The minimum phi of a strip

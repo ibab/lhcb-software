@@ -1,4 +1,4 @@
-// $Id: DeVeloRType.cpp,v 1.7 2004-02-29 19:46:16 mtobin Exp $
+// $Id: DeVeloRType.cpp,v 1.8 2004-03-01 14:33:43 mtobin Exp $
 //==============================================================================
 #define VELODET_DEVELORTYPE_CPP 1
 //==============================================================================
@@ -310,20 +310,14 @@ void DeVeloRType::calcStripLimits()
       double phiMax=0;
       double phiLimit=0;
       double x=0,y=0;
+      phiMin=phiMinZone(zone,radius);
+      phiMax=phiMaxZone(zone,radius);
       if(0 == zone){
-        phiLimit=phiMin = acos(m_overlapInX/radius);
-        phiMax = phiMaxZone(zone);
+        phiLimit = phiMin;
         x = radius*cos(phiMin);
         y = radius*sin(phiMin);
-      } else if(1 == zone){
-        phiMin = phiMinZone(zone);
-        phiMax = asin(m_phiGap/radius);
-      } else if(2 == zone){
-        phiMin = asin(-m_phiGap/radius);
-        phiMax = phiMaxZone(zone);
       } else if(3 == zone){
-        phiMin = phiMinZone(zone);
-        phiLimit=phiMax = -acos(m_overlapInX/radius);
+        phiLimit = phiMax;
         x = radius*cos(phiMax);
         y = radius*sin(phiMax);
       }
@@ -336,9 +330,9 @@ void DeVeloRType::calcStripLimits()
           double x1 = (-b + sqrt(b*b - (4*a*c))) / (2*a);
           double x2 = (-b - sqrt(b*b - (4*a*c))) / (2*a);
           if(m_cornerX1 <= x1 && m_cornerX2 >= x1) {
-            phiLimit = acos(x1/radius);
+            phiLimit = -acos(x1/radius);
           } else if(m_cornerX1 <= x2 && m_cornerX2 >= x2) {
-            phiLimit = acos(x2/radius);
+            phiLimit = -acos(x2/radius);
           }
           if(zone == 0){
             phiMin = phiLimit;
@@ -347,15 +341,13 @@ void DeVeloRType::calcStripLimits()
           }
         }
       }
-      //      m_stripLimits.push_back(std::pair<double,double>(phiMin,phiMax));
-      m_stripLimits.push_back(std::pair<double,double>(-phiMax,-phiMin));
+      m_stripLimits.push_back(std::pair<double,double>(phiMin,phiMax));
     }
   }
   for(unsigned int i=0; i < m_phiMin.size(); i++){
-    m_phiMin[i] = -m_phiMin[i];
-    m_phiMax[i] = -m_phiMax[i];
     msg << MSG::DEBUG << "Zone limits; zone " << i << " min " << m_phiMin[i]
-        << " max " << m_phiMax[i] << endmsg;
+        << " max " << m_phiMax[i] << " phiMin " << phiMinZone(i,m_innerRadius) 
+        << " max " << phiMaxZone(i,m_innerRadius) << endmsg;
   }
   msg << MSG::DEBUG << "Radius of first strip is " << m_rStrips[0] 
       << " last strip " << m_rStrips[m_rStrips.size()-1] << endmsg;
@@ -394,16 +386,16 @@ void DeVeloRType::phiZoneLimits()
   phi = acos(m_overlapInX/m_outerRadius);
 
   m_phiMin.clear();
-  m_phiMin.push_back(phi);
-  m_phiMin.push_back(m_quarterAngle);
-  m_phiMin.push_back(0);
+  m_phiMin.push_back(-phi);
   m_phiMin.push_back(-m_quarterAngle);
+  m_phiMin.push_back(0);
+  m_phiMin.push_back(m_quarterAngle);
   
   m_phiMax.clear();
-  m_phiMax.push_back(m_quarterAngle);
-  m_phiMax.push_back(0);
   m_phiMax.push_back(-m_quarterAngle);
-  m_phiMax.push_back(-phi);
+  m_phiMax.push_back(0);
+  m_phiMax.push_back(m_quarterAngle);
+  m_phiMax.push_back(phi);
 
 }
 //==============================================================================
