@@ -1,4 +1,4 @@
-// $Id: TrueMCFilterCriterion.cpp,v 1.2 2004-09-26 17:07:58 lfernan Exp $
+// $Id: TrueMCFilterCriterion.cpp,v 1.3 2005-01-14 13:38:19 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
@@ -93,9 +93,9 @@ bool TrueMCFilterCriterion::isSatisfied( const Particle* const & part ) {
   }
   if (findMCParticle(MC)) {
     debug() << "This is a signal particle" << endreq ;
-    info() << "Particle      " << part->particleID().pid() << " " << part->momentum() 
+    debug() << "Particle      " << part->particleID().pid() << " " << part->momentum() 
            << endreq ;    
-    info() << "Associated to " << MC->particleID().pid() << " " << MC->momentum() << endreq ;
+    debug() << "Associated to " << MC->particleID().pid() << " " << MC->momentum() << endreq ;
     
     return (!m_filterOut) ; // false if one wants to kill all, true else
   }
