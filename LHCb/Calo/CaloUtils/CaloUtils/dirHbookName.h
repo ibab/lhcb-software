@@ -1,32 +1,20 @@
-// $Id: histoHbookName.h,v 1.3 2002-04-05 09:32:18 ibelyaev Exp $ 
+// $Id: dirHbookName.h,v 1.1 2002-04-05 09:32:17 ibelyaev Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
-// Revision 1.2  2002/04/04 13:58:05  ibelyaev
-//  add 'dirHbookName(...)' function
-//
-// Revision 1.1.1.1  2001/11/02 14:39:53  ibelyaev
-// New package: The first commit into CVS
-//
-// Revision 1.2  2001/07/12 21:54:23  ibelyaev
-// adaptation for Win2K
-//
-// Revision 1.1  2001/07/06 11:18:16  ibelyaev
-// update to use histoHbookName function
-//
 // ============================================================================
-#ifndef CALOUTILS_HISTOHBOOKNAME_H 
-#define CALOUTILS_HISTOHBOOKNAME_H 1
+#ifndef CALOUTILS_DIRHBOOKNAME_H 
+#define CALOUTILS_DIRHBOOKNAME_H 1
 /// ===========================================================================
 // Include files
 #include <cstdlib>
 #include <string>
 #include <algorithm> 
 // CaloUtils 
-#include "CaloUtils/dirHbookName.h"
+#include "CaloUtils/histoHbookName.h"
 
-/** @file histoHbookName.h
+/** @file dirHbookName.h
  *  
  *  file with definition of 2 functions for handling Hbook 
  *  names for histograms and directories 
@@ -38,16 +26,13 @@
  *  @date 04/04/2002
  */
 
-/** @fn histoHbookName
+/** @fn dirHbookName
  *  
  *  simple function to convert any valid Gaudi address(name in Transient Store)
- *  to address, which is simultaneously valid for Hbook histogram
+ *  to address, which is simultaneously valid for Hbook directory
  *
  *    examples:  
- *   "verylongname/116"  -->  "verylong/name/116"
- *   "verylongname"      -->  "verylong/name/1"
- *   "somename/here/"    -->  "somename/here/1"
- *   "directory/object"  -->  "director/y/object/1"
+ *   "verylongname"  -->  "verylong/name"
  *
  *  @param   old    old address 
  *  @param   maxLen maximum allowed length of directory name (8 for Hbook) 
@@ -56,7 +41,7 @@
  *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
  *  @date   06/07/2001
  */
-inline std::string histoHbookName 
+inline std::string dirHbookName 
 ( const std::string& addr       , 
   const int          maxLen = 8 )
 {
@@ -64,18 +49,6 @@ inline std::string histoHbookName
   if( addr.empty() ) { return std::string(); }
   //
   std::string old( addr );
-  { // make valid histogram ID (integer)  
-    std::string::size_type pos 
-      = old.find_last_of( '/' );
-    if      ( std::string::npos == pos ) { old += "/1" ; }
-    else if ( old.size() - 1    == pos ) { old += '1'  ; }
-    else
-      {
-        const int id = 
-			atoi( std::string( old , pos + 1 , std::string::npos ).c_str() );
-        if( 0 == id ) { old+="/1"; }
-      }
-  }
   // remove long names
   if( 0 < maxLen &&  maxLen < (int) old.size() ) 
     { 
@@ -89,12 +62,12 @@ inline std::string histoHbookName
           p1 = old.begin() ; 
         }
     }
-  //
+  ///
   return old;
 };
 
 // ============================================================================
 // The End 
 // ============================================================================
-#endif ///< CALOUTILS_HISTOHBOOKNAME_H
+#endif ///< CALOUTILS_DIRHBOOKNAME_H
 // ============================================================================

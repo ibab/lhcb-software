@@ -1,14 +1,21 @@
-! $Id: release.notes,v 1.9 2002-04-04 13:58:05 ibelyaev Exp $
+! $Id: release.notes,v 1.10 2002-04-05 09:32:18 ibelyaev Exp $
 ! Package     : CaloUtils
 ! Responsible : Vanya Belyaev Ivan.Belyaev@itep.ru
 
 !=============================================================================
+! 05/04/2002 - Vanya Belyaev 
+! - split histoHbookName.h file into histoHbookName.h and dirHbookName.h
+!=============================================================================
+
+!=============================================================================
 ! 04/04/2002 - Vanya Belyaev 
   - add "dirHbookName()" function to histoHbookName.h file 
+!=============================================================================
 
 !=============================================================================
 ! 02/04/2002 - Olivier Callot
   - Fix reference to CaloEvent/CaloDigit.h in CaloUtils/CaloData.h
+!=============================================================================
 
 ! =============================================================================
 ! 02/04/2002 - v2r0 Vanya Belyaev
