@@ -5,14 +5,16 @@
  * Header file for utility class : RichTrackID
  *
  * CVS Log :-
- * $Id: RichTrackID.h,v 1.10 2004-10-27 14:34:16 jonrob Exp $
+ * $Id: RichTrackID.h,v 1.11 2005-01-13 14:20:24 jonrob Exp $
  * $Log: not supported by cvs2svn $
+ * Revision 1.10  2004/10/27 14:34:16  jonrob
+ * Various updates
+ *
  * Revision 1.9  2004/10/13 09:29:43  jonrob
  * Improvements to RichTrackID and RichTrackSelector
  *
  * Revision 1.8  2004/07/26 18:00:58  jonrob
  * Various improvements to the doxygen comments
- *
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date   08/07/2004

@@ -5,14 +5,16 @@
  *  Implementation file for class : RichTrackID
  *
  *  CVS Log :-
- *  $Id: RichTrackID.cpp,v 1.7 2004-10-27 14:34:16 jonrob Exp $
+ *  $Id: RichTrackID.cpp,v 1.8 2005-01-13 14:20:24 jonrob Exp $
  *  $Log: not supported by cvs2svn $
+ *  Revision 1.7  2004/10/27 14:34:16  jonrob
+ *  Various updates
+ *
  *  Revision 1.6  2004/10/13 09:29:43  jonrob
  *  Improvements to RichTrackID and RichTrackSelector
  *
  *  Revision 1.5  2004/07/26 18:00:58  jonrob
  *  Various improvements to the doxygen comments
- *
  *
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   2003-09-23
@@ -22,9 +24,7 @@
 // local
 #include "RichRecBase/RichTrackID.h"
 
-// Include files
-#include <string>
-#include <iostream>
+// STD
 #include <sstream>
 
 // from Gaudi
@@ -63,17 +63,17 @@ std::string Rich::text( const Rich::Track::Type track )
 
 Rich::Track::Type Rich::Track::type( const std::string & name )
 {
-  if ( "trigger"  == name ) { return Rich::Track::Trigger;  }
-  if ( "forward"  == name ) { return Rich::Track::Forward;  }
-  if ( "match"    == name ) { return Rich::Track::Match;    } 
-  if ( "KsTrack"  == name ) { return Rich::Track::KsTrack;  }
-  if ( "veloTT"   == name ) { return Rich::Track::VeloTT;   }
-  if ( "seed"     == name ) { return Rich::Track::Seed;     }
-  if ( "follow"   == name ) { return Rich::Track::Follow;   }
-  if ( "velo"     == name ) { return Rich::Track::Velo;     }
-  if ( "unknown"  == name ) { return Rich::Track::Unknown;  }
-  if ( "unusable" == name ) { return Rich::Track::Unusable; }
-  else {   
+  if      ( "trigger"  == name )   { return Rich::Track::Trigger;  }
+  else if ( "forward"  == name )   { return Rich::Track::Forward;  }
+  else if ( "match"    == name )   { return Rich::Track::Match;    } 
+  else if ( "KsTrack"  == name )   { return Rich::Track::KsTrack;  }
+  else if ( "veloTT"   == name )   { return Rich::Track::VeloTT;   }
+  else if ( "seed"     == name )   { return Rich::Track::Seed;     }
+  else if ( "follow"   == name )   { return Rich::Track::Follow;   }
+  else if ( "velo"     == name )   { return Rich::Track::Velo;     }
+  else if ( "unknown"  == name )   { return Rich::Track::Unknown;  }
+  else if ( "unusable" == name )   { return Rich::Track::Unusable; }
+  else {   // Should not get here ...
     throw GaudiException( "Unknown track string name '"+name+"'",
                           "*RichTrackID*", StatusCode::FAILURE );
     return Rich::Track::Unknown; 
