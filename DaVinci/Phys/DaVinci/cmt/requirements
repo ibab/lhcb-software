@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.217 2004-12-14 12:39:21 pkoppenb Exp $
+# $Id: requirements,v 1.218 2004-12-14 18:47:42 pkoppenb Exp $
 # Created    : 07/02/2002
 # Maintainer : P. Koppenburg
 #
@@ -91,7 +91,7 @@ use  Ks2PiPiSel         	v1r4p1   Phys
 use  ParticleMaker      	v1r2     Phys
 use  PhysSelections		v6r11    Phys
 use  DaVinciTransporter 	v1r2     Phys
-use  VertexFit			v1r2     Phys
+use  VertexFit			v1r3     Phys
 use  Tampering                  v1r0     Phys
 
 # Physics MC packages
