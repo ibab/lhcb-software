@@ -1,0 +1,27 @@
+// $Id: GaussHitBase.icpp,v 1.1 2002-10-29 17:34:57 witoldp Exp $
+#ifndef GAUSSTOOLS_GAUSSHITBASE_ICCP 
+#define GAUSSTOOLS_GAUSSHITBASE_ICCP 1
+
+// ============================================================================
+/// constructor 
+// ============================================================================
+inline GaussHitBase::GaussHitBase()
+  : m_trackID(0)
+{}; 
+
+// ============================================================================
+/// destructor 
+// ============================================================================
+inline GaussHitBase::~GaussHitBase() {};
+
+// ============================================================================
+/// access to track ID
+// ============================================================================
+
+inline void GaussHitBase::SetTrackID(G4int tid)
+  { m_trackID = tid; }
+
+inline G4int GaussHitBase::GetTrackID()
+  { return m_trackID; }
+
+#endif // GAUSSTOOLS_GAUSSHITBASE_ICCP
