@@ -1,7 +1,13 @@
-! $Id: release.notes,v 1.30 2003-11-24 15:21:42 cattanem Exp $
+! $Id: release.notes,v 1.31 2003-12-09 10:14:35 cattanem Exp $
 ! Package     : Rich/RichKernel
 ! Responsible : Chris Jones
 ! Purpose     : General purpose RICH classes
+
+!======================= RichKernel v4r2 2003-12-08 =======================
+! 2003-12-08 - Marco Cattaneo
+ - Move to Gaudi v13 (use LHCbKernel v3r* in requirements)
+ - Remove RichKernel/MessageSvcStl.h (now in GaudiKernel/MsgStream.h)
+ - Remove RichKernel/SerializeStl.h (methods moved to LHCbKernel/SerializeStl.h)
 
 !======================= RichKernel v4r1 2003-11-24 =======================
 ! 2003-11-23 - Chris Jones

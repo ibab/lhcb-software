@@ -4,6 +4,10 @@
 ! Purpose     : interface to the xml description
 !-----------------------------------------------------------------------------
 
+!========================= RichDet v6r4 2003-12-08 =========================
+! 2003-12-08 - Marco Cattaneo
+ - Adapt requirements to pick up Gaudi v13
+
 !========================= RichDet v6r3 2003-12-03 =========================
 ! 2003-12-03 - Antonis Papanestis
  - Restructured the DeRichRadiator class, making it a base class and adding
