@@ -1,16 +1,17 @@
 package DaVinciSys
-version v12r2
+version v12r3
 
 branches doc cmt
 
 #=======================================================
 # Don't forget DaVinci itself
 #=======================================================
-use  DaVinci                 	v12r2    Phys   
+use  DaVinci                 	v12r3    Phys   
 
 #=======================================================
 # packages included in the DAVINCI tree
 #=======================================================
+# Trigger packages
 # Trigger packages
 use  L0DU               	v6r7p2   L0
 use  L0Calo             	v7r6     L0
@@ -49,11 +50,11 @@ use  LoKi               	v3r5     Tools
 use  LoKiHlt             	v1r1     Tools  
 
 # Reconstruction tools 
-use  Utilities          	v1r11    Tools
+use  Utilities          	v1r11p1  Tools
 
 # Physics packages
 use  CommonParticles    	v1r5p3   Phys
-use  DaVinciFilter      	v1r1     Phys
+use  DaVinciFilter      	v1r2     Phys
 use  DaVinciKernel      	v1r1     Phys
 use  DaVinciTools       	v11r1    Phys
 use  DaVinciUser        	v5r1p2   Phys
@@ -71,7 +72,7 @@ use  DaVinciMCTools     	v5r6     Phys
 use  DaVinciTest        	v5r2     Phys
 
 # Stripping
-use  Stripping          	v1r5     Tools
+use  Stripping          	v1r5p1   Tools
 
 # Physics selections
 use  PhysSelSys			v7r10    PhysSel
@@ -102,4 +103,4 @@ use  Bu2LLK             	v1r1p1   PhysSel
 use  D02MuMu            	v2r0     PhysSel 
 use  Gamma2ee           	v1r3     PhysSel
 use  Jpsi               	v1r1p1   PhysSel
-use  Muon               	v1r1     PhysSel
+use  Muon               	v1r2     PhysSel
