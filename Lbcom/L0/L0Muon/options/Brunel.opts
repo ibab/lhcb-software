@@ -1,0 +1,31 @@
+ApplicationMgr.DLLs             += {"L0Muon" };  
+
+BrunelTriggerTRIGGERSeq.Members += { "L0mTrigger/L0Muon" };  
+
+L0mPadBuilder.XMLdata = false;
+L0mPadBuilder.ZStations  = {1210.5,  1520.0,   1640.0,  1760.0, 1880.0 };  	    
+L0mPadBuilder.BasicCellX = {   1.0,  0.62551, 0.67490, 2.89712, 3.09465};
+L0mPadBuilder.BasicCellY = {   2.5,  3.12757, 3.37449, 3.62140, 3.86831};
+L0mPadBuilder.Regions1 = {24,	      8, 
+	                  48,        16, 
+	                  96,        32,
+                         192,        64};
+L0mPadBuilder.Regions2 = {48,	      8, 
+	                  96,        16, 
+	                 192,        32,
+                         384,        64};
+L0mPadBuilder.Regions3 = {48,	      8, 
+	                  96,        16, 
+	                 192,        32,
+                         384,        64};
+L0mPadBuilder.Regions4 = {12,	      8, 
+	                  24,        16, 
+	                  48,        32,
+                          96,        64};
+L0mPadBuilder.Regions5 = {12,	      8, 
+	                  24,        16, 
+	                  48,        32,
+                          96,        64};			  			 			 			 
+
+L0mTriggerProc.FoiXSize = {4,4,0,2,2};
+L0mTriggerProc.FoiYSize = {0,0,0,0,0};
