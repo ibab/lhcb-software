@@ -1,9 +1,13 @@
-$Id: release.notes,v 1.9 2002-04-15 11:35:32 ocallot Exp $
+$Id: release.notes,v 1.10 2002-04-17 07:59:02 ocallot Exp $
 Package		: L0/L0DU
 Package Manager : Pascal Perret
 
 !=============================================================================
-! 15/04/2002 - Olivier Callot ** v5r0 **
+! 17/04/2002 - Olivier Callot  ** v5r0 **
+  - FIx the scale of the Muon threshold ! was *1000, no longer needed !
+
+!=============================================================================
+! 15/04/2002 - Olivier Callot
   - Adapt to SpdMult, change a bit the printing to have one candidate per line
   - Use the new L0MuonCandidate default location.
 

@@ -1,4 +1,4 @@
-// $Id: DecisionUnit.cpp,v 1.8 2002-04-15 11:35:32 ocallot Exp $
+// $Id: DecisionUnit.cpp,v 1.9 2002-04-17 07:59:02 ocallot Exp $
 //#define L0DU_DECISIONUNIT_CPP
 
 #include <math.h>
@@ -417,8 +417,8 @@ StatusCode DecisionUnit::execute() {
     }
     
     if ( 0 != m_Muon1 ) {
-      setTrig( L0Trig::Mu1, fabs( m_Muon1->pt() ) * GeV, m_eMu1Cut1 ); 
-      setTrig_down( L0Trig::Mu1_down, fabs( m_Muon1->pt() ) * GeV,
+      setTrig( L0Trig::Mu1, fabs( m_Muon1->pt() ) , m_eMu1Cut1 ); 
+      setTrig_down( L0Trig::Mu1_down, fabs( m_Muon1->pt() ),
                                       m_eMu1Cut2, m_scalMu1 );
     }
 
