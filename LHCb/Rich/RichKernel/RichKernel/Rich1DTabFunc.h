@@ -4,8 +4,11 @@
  *  Header file for utility class : Rich1DTabFunc
  *
  *  CVS Log :-
- *  $Id: Rich1DTabFunc.h,v 1.6 2004-11-03 13:27:49 jonrob Exp $ 
+ *  $Id: Rich1DTabFunc.h,v 1.7 2005-01-13 12:16:26 jonrob Exp $ 
  *  $Log: not supported by cvs2svn $
+ *  Revision 1.6  2004/11/03 13:27:49  jonrob
+ *  Update doxygen comments
+ *
  *  Revision 1.5  2004/07/26 17:53:17  jonrob
  *  Various improvements to the doxygen comments
  *  
@@ -24,6 +27,9 @@
 // GSL interpolation
 #include "gsl/gsl_errno.h"
 #include "gsl/gsl_spline.h"
+
+// RichKernel
+#include "RichKernel/RichMap.h"
 
 /** @class Rich1DTabFunc Rich1DTabFunc.h RichKernel/Rich1DTabFunc.h
  *
@@ -70,12 +76,12 @@ public:
                                 const std::vector<double> & y, 
                                 const gsl_interp_type * interType = gsl_interp_linear );
 
-  /** Constructor from std::map of x,y values
+  /** Constructor from map of x,y values
    *
    *  @param data     map contain x(key) and y(data) values
    *  @param interType GSL Interpolator type
    */
-  Rich1DTabFunc::Rich1DTabFunc( const std::map<double,double> & data, 
+  Rich1DTabFunc::Rich1DTabFunc( const RichMap<double,double> & data, 
                                 const gsl_interp_type * interType = gsl_interp_linear );
 
   /// Destructor
@@ -184,7 +190,7 @@ public:
 protected: // data
 
   /// the data points
-  std::map<double,double> m_data;
+  RichMap < double, double > m_data;
 
   /// Status flag
   bool m_OK;
