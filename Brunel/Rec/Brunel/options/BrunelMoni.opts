@@ -41,6 +41,9 @@ BrunelMoniOTSeq.Members += { "OTClusterChecker" };
 //BrunelMoniTrSeq.Members   = { "TrMonitor" };
 #pragma print off
 
+// Framework monitoring
+EventSelector_0.doHistos = true;
+
 //--------------------------------------------------------------
 // Set up some profiling. Enable/Disable setting lines below to true/false
 //--------------------------------------------------------------

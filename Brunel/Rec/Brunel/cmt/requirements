@@ -60,7 +60,7 @@ use CaloDetXmlCnv v1r0  Det
 use MuonDet       v3r0  Det
 use OTDet         v1r0  Det
 use VeloDet       v5r0  Det
-use Magnet        v1r0  Det
+use Magnet        v1r1  Det
 
 use MuonTools    v2r0   Muon
 

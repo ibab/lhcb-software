@@ -4,8 +4,9 @@ Package Coordinator: Marco Cattaneo
 
 Purpose: LHCb reconstruction program
 
-</PRE><H1><A NAME=v10r0>2002-05-27 Brunel v10r0</A></H1><PRE>
-   >>>>>> Beware - rapidly changing functionality on head revision <<<<<<<
+</PRE><H1><A NAME=v10r0>2002-06-04 Brunel v10r0</A></H1><PRE>
+Pre-release of Brunel using new event model, in preparation for summer 2002
+production
 
    >>>>>> Supported geometries:
      - LHCb-Light detector with split TT1:
