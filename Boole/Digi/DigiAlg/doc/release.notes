@@ -4,12 +4,13 @@
 ! Purpose     : Holds generic digitization algorithms
 !-----------------------------------------------------------------------------
 
-!========================== DigiAlg v2r1 2003-11-03 =========================
-! 2003-11-03 - Marco Cattaneo
+!========================== DigiAlg v2r1 2003-11-04 =========================
+! 2003-11-04 - Marco Cattaneo
  - BooleInit:    adapt to new naming in DAQEvent v2r0
+                 use new TimingTool to print timing normalization
  - LumiTool:     get "BunchCrossRate" and "TotalCrossSection" from job options 
                  instead of beam.cdf
- - requirements: Use DAQEvent v2r0, remove ParamFiles dependency
+ - requirements: Use DAQEvent v2r*, LHCbTools v1r*, remove ParamFiles dependency
 
 !========================= DigiAlg v2r0p1 2003-10-15 ========================
 ! 2003-10-15 - Marco Cattaneo

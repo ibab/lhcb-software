@@ -1,4 +1,4 @@
-// $Id: BooleInit.cpp,v 1.3 2003-11-03 16:54:27 cattanem Exp $
+// $Id: BooleInit.cpp,v 1.4 2003-11-04 14:15:58 cattanem Exp $
 
 // Include files
 #include "BooleInit.h"
@@ -14,6 +14,7 @@
 #include "Event/EventHeader.h"
 #include "Event/L1Buffer.h"
 #include "Event/HltBuffer.h"
+#include "Tools/ITimingTool.h"
 #include <vector>
 
 //----------------------------------------------------------------------------
@@ -46,6 +47,8 @@ BooleInit::~BooleInit() { }
 StatusCode BooleInit::initialize() { 
 //-----------------------------------------------------------------------------
 
+  StatusCode sc = StatusCode::SUCCESS;
+  
   std::string version = (std::string)getenv("BOOLEVERS");
   MsgStream msg( msgSvc(), name() );
   msg << MSG::INFO
@@ -67,7 +70,7 @@ StatusCode BooleInit::initialize() {
   // Book the monitoring histograms
   if( m_doHistos ) {
     IProperty* appMgrP;
-    StatusCode sc = service("ApplicationMgr", appMgrP );
+    sc = service("ApplicationMgr", appMgrP );
     if ( !sc.isSuccess() )    {
       msg << MSG::ERROR
           << "Unable to retrieve IProperty interface of ApplicationMgr"
@@ -85,6 +88,25 @@ StatusCode BooleInit::initialize() {
                                       numBins, 0.5, numBins+0.5 );
   }
 
+  // Print the timing normalisation
+  ITimingTool* timingTool;
+  sc = toolSvc()->retrieveTool( "TimingTool", timingTool );
+  if( sc.isFailure() ) {
+    msg << MSG::WARNING << "Unable to retrieve timing Tool" << endmsg;
+  }
+  else {
+    double timeNorm = timingTool->normalize() / 1.e+09;
+    msg << MSG::INFO
+      << "===================================================================="
+      << endmsg;
+    msg << MSG::INFO << "CPU time normalisation = "
+        << timeNorm  << " (c.f. 1GHz PIII, gcc 3.2 -o2)" << endmsg;
+    msg << MSG::INFO
+      << "===================================================================="
+      << endmsg;
+    toolSvc()->releaseTool( timingTool );
+  }
+  
   return StatusCode::SUCCESS;
 }
 
