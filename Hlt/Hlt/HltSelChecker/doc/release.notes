@@ -4,6 +4,10 @@
 ! Purpose     : High-Level Trigger Exclusive Selections - Checking 
 !-----------------------------------------------------------------------------
 
+! 2005-02-03 - P. Koppenburg
+  - options/NoCuts.opts
+    . Option file that overrides *all* selection cuts (except VTT screening)
+      To be run only in conjuction with OnlyTruth.opts file.
 ! 2005-02-02 - P. Koppenburg
   - options/AllTDRselections.opts
     . Apply TIGHT mass cuts for TDR selections.
