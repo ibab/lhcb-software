@@ -1,4 +1,4 @@
-// $Id: lcgStl.h,v 1.1 2004-01-27 07:21:38 cattanem Exp $
+// $Id: lcgStl.h,v 1.2 2004-01-28 17:31:49 cattanem Exp $
 #ifndef KERNEL_LCGSTL_H 
 #define KERNEL_LCGSTL_H 1
 
@@ -19,5 +19,6 @@ namespace {
   std::pair<ITChannelID,int>       c;
   std::pair<OTChannelID,int>       d;
   std::map<int,int>                e;
+  std::vector<std::pair<long,double> > f;
 }
 #endif // KERNEL_LCGSTL_H

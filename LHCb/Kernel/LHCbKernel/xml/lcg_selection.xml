@@ -1,6 +1,8 @@
 <lcgdict>
   <class name="std::map<int,int>"/>
   <class name="std::vector<std::pair<int,int> >"/>
+  <class name="std::vector<std::pair<long int,double> >"/>
+  <class name="std::pair<long int,double>"/>
   <class name="std::pair<int,int>"/>
   <class name="std::pair<VeloChannelID,int>"/>
   <class name="std::pair<ITChannelID,int>"/>
