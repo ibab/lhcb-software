@@ -1,4 +1,5 @@
-# $Id: Dstar.py,v 1.4 2004-02-10 12:37:34 ibelyaev Exp $
+#!/usr/bin/env python
+# $Id: Dstar.py,v 1.5 2004-02-10 13:24:05 ibelyaev Exp $
 # =============================================================================
 # CVS tag $Name: not supported by cvs2svn $ 
 # =============================================================================
@@ -70,6 +71,8 @@ class Dstar(Algo):
             # daughter particles of D0 
             k1 = child( Dpi , 1 , 1 )
             p1 = child( Dpi , 1 , 2 )
+            #if not k1 : continue
+            #if not p1 : continue 
             #
             tup2.column ( name = "mass"  , value = M     ( Dpi    ) / GeV  )
             tup2.column ( name = "mD0"   , value = M     ( Dpi(1) ) / GeV  )
@@ -168,6 +171,9 @@ g.exit()
 # The END 
 # =============================================================================
 # $Log: not supported by cvs2svn $
+# Revision 1.4  2004/02/10 12:37:34  ibelyaev
+#  update
+#
 # Revision 1.3  2004/01/24 23:38:51  ibelyaev
 #  update and fixes
 #
