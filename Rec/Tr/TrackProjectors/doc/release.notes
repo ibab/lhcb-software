@@ -1,0 +1,14 @@
+!-----------------------------------------------------------------------------
+! Package     : Tr/TrackProjectors
+! Responsible : Jose Hernando, Eduardo Rodrigues
+! Purpose     : Package for tracking projectors
+!-----------------------------------------------------------------------------
+
+! 2005-03-31 - Eduardo Rodrigues
+ - implementation of TrackProjector.cpp
+
+! 2005-03-10 - Jose Hernando, Eduardo Rodrigues
+ - creation of the package. It will contain the tracking projectors
+ - contains for now:
+   - TrackProjector: base class inheriting from the pure virtual
+                     interface ITrackProjector
