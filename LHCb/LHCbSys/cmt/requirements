@@ -55,6 +55,8 @@ use HltEvent		v5r0	Event
 use DAQEvent		v4r0	Event
 use GenEvent    	v3r0	Event
 use EventAssoc          v1r0    Event
+use LinkerEvent         v1r0    Event
+use TrgEvent            v2r0    Event
 
 # Associators
 use AssociatorsSys	v1r9	Associators

@@ -4,12 +4,14 @@
 ! Purpose     : LHCb OO kernel packages
 !-----------------------------------------------------------------------------
 
-!======================= LHCbSys v15r0 2004-01-05 =======================
-! 2004-01-05 - Marco Cattaneo
+!======================= LHCbSys v15r0 2004-01-16 =======================
+! 2004-01-16 - Marco Cattaneo
 
  - New packages:      Ex/IOExample v1r0 - to demonstrate reading and writing
                                           data with POOL
                       Event/EventAssoc v1r0 - to generate relations dictionaries
+                      Event/LinkerEvent v1r0 - new type of association table
+                      Event/TrgEvent v2r0 - New L1+Hlt event model
 
  - Modified packages: XmlTools v3r1, GaudiConf v7r5, DumpEventExample v7r2,
                       KernelSys v3r0, LHCbKernel v4r0, TrKernel v1r3,
@@ -36,10 +38,16 @@
    . Xml parsed by GaudiObjDesc v6r*, to produce POOL dictionaries
 
  - In EventSys v17r0
+   . Added LinkerEvent v1r0 (new package to build links between keyed objects)
+   . Added TrgEvent v2r0 (track classes for L1+Hlt applications)
    . Added GenEvent v3r0 (previously not included)
    . Added options/PoolDicts.opts to load all dictionary DLLs
    . Moved ParticleID from Event to LHCbKernel
    . Moved ProcStatus from TrEvent to Event
+   . Moved MCTruth from EventKernel to Event
+
+ - In Event v4r0
+   . Added MCProperty to store int (bit flags) associated to a MCParticle
 
  - In CaloEvent v13r0
    . Added "seed" attribute to CaloCluster. Old data can still be read,
