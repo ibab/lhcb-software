@@ -10,6 +10,8 @@ Purpose: LHCb reconstruction program
    . Associate decaying tracks (TrAssociators v3r1)
    . Select unique tracks for Rich reconstruction (RiSicbCnv v4r4) - should
      reduce effect of cut on 300 tracks
+   . Tune spillover parameters for IT (ITAlgorithms v12r1)
+   . Allow for dead region between IT wafers (ITDet v1r1)
 
  - New features:
    . Support for valgrind memory checking tool (job/Brunel.supp, valgrind.job)
@@ -37,6 +39,7 @@ Purpose: LHCb reconstruction program
    . Use fabs instead of abs for doubles. Should fix overlapping volumes and 
      other problems on Windows (DetDesc v10r4, RiSicbGeom v2r3, RiSicbCnv v4r4,
      CaloDet v5r1, CaloUtils v4r2, CaloTools v4r4)
+   . Fixes to digitisation of IT stereo layers (ITDet v1r1, ITAlgorithms v12r1)
 
  - Geometry changes (XmlDDDB v12r5):
    . Fix overlap between Velo and Rich1

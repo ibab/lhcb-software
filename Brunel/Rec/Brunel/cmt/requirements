@@ -96,7 +96,7 @@ use VeloAlgorithms	v2r1	Velo
 use VeloAssociators	v1r1	Velo
 
 # Inner Tracker
-use ITAlgorithms	v12r0  	IT
+use ITAlgorithms	v12r1  	IT
 use ITAssociators	v2r0	IT
 
 # Outer Tracker
@@ -134,7 +134,7 @@ use RichMonitor         v1r2    Rich
 use Futil        v11r0  SICB
 use detdes       v17r0  SICB
 use recevt       v3r4   SICB
-use recrich      v7r1   SICB
+use recrich      v7r2   SICB
 
 #
 #===== build Brunel =========================
