@@ -69,7 +69,7 @@ StatusCode GiGaDetectorElementCnv::createRep( DataObject*     Object  , IOpaqueA
 	  /// retrieve objects from the store
           DataObject* obj = 0 ; 
           SmartDataPtr<DataObject> so( detSvc() , (*ic)->name() ); 
-          obj = so ; 
+          obj = (DataObject*)(so.operator->()) ; 
           if( 0 == obj ) { return Error("createRep:: DataObject is not availablel for "+(*ic)->name() ) ;}
           dS.push_back( obj ); 
 	} 

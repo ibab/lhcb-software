@@ -116,7 +116,7 @@ G4Material*    GiGaGeomCnvSvc::g4Material( const std::string& Name )
   /// retrieve material by name and convert it to G4 representation  
   {
     SmartDataPtr<DataObject>  so( detSvc() , Name ); 
-    DataObject* Obj = so;  
+    DataObject* Obj = so.operator->();  
     if( 0 == Obj       ) { Error("Failed to locate DataObject with name:"+Name) ; return 0 ;  } 
     IDataSelector dS; dS.push_back( Obj ) ; 
     StatusCode sc = createReps( &dS );
@@ -144,7 +144,7 @@ G4LogicalVolume* GiGaGeomCnvSvc::g4LVolume( const std::string& Name )
   /// locate the object in the transient store and convert it! 
   {
     SmartDataPtr<DataObject>  so( detSvc() , Name ); 
-    DataObject* Obj = so;  
+    DataObject* Obj = so.operator->();  
     if( 0 == Obj       ) { Error("Failed to locate DataObject with name:"+Name) ;  return 0 ; } 
     ///
     IDataSelector dS; dS.push_back( Obj ) ; 

@@ -72,8 +72,8 @@ StatusCode GiGaSensDet::initialize()
 	G4VSensitiveDetector::SensitiveDetectorName.remove(0,pos+1)    ; /// ATTENTION !!!
 	G4VSensitiveDetector::thePathName           = tmp              ; /// ATTENTION !!! 
 	G4VSensitiveDetector::thePathName.remove(pos+1,tmp.length()-1) ; /// ATTENTION !!! 
-	if( '/' != G4VSensitiveDetector::thePathName[0] ) 
-	  { G4VSensitiveDetector::thePathName.insert(0,'/'); }           /// ATTENTION !!! 
+	if( '/' != G4VSensitiveDetector::thePathName[(unsigned int)(0)] ) 
+  { G4VSensitiveDetector::thePathName.insert(0,'/'); }            /// ATTENTION !!! 
       } 
     ///
     G4VSensitiveDetector::fullPathName =                                  /// ATTENTION !!!
