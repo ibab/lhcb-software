@@ -1,8 +1,11 @@
-// $Id: CaloVector.h,v 1.2 2002-03-18 18:16:21 ibelyaev Exp $ 
+// $Id: CaloVector.h,v 1.3 2003-01-17 14:15:18 sponce Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2002/03/18 18:16:21  ibelyaev
+//  small update for LHCbKernel package
+//
 // Revision 1.1.1.1  2001/11/25 14:07:38  ibelyaev
 // New Package: substitution of the  previous CaloGen package
 //
@@ -93,7 +96,7 @@ public:
   /// sequential access to content container (const version!)
   inline const_reverse_iterator rend  () const { return Vector::rend   (); }
   /// size of content container 
-  inline Vector::size_type      size  () const { return Vector::size   (); }
+  inline typename Vector::size_type size  () const { return Vector::size   (); }
   /// clear the container 
   inline void                   clear ()      
   { Vector::clear() ;  m_index.clear(); }  

@@ -1,8 +1,11 @@
-// $Id: CaloTool.cpp,v 1.13 2002-12-01 14:17:38 ibelyaev Exp $
+// $Id: CaloTool.cpp,v 1.14 2003-01-17 14:15:19 sponce Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.13  2002/12/01 14:17:38  ibelyaev
+//  minor changes
+//
 // ============================================================================
 // Include files
 // GaudiKernel
@@ -164,16 +167,24 @@ StatusCode    CaloTool::initialize ()
         << type ()           << "/" 
         << name ()           << "   #properties = " 
         << properties.size() << endreq ;
+#if defined (__GNUC__) && ( __GNUC__ <= 2)
     const int   buffer_size  = 256 ;
     char buffer[buffer_size]       ;
+#endif
     for( Properties::const_reverse_iterator property 
            = properties.rbegin() ;
          properties.rend() != property ; ++property )  
       {
+#if defined (__GNUC__) && ( __GNUC__ <= 2)
         std::fill( buffer , buffer + buffer_size , 0 );
         std::ostrstream ost ( buffer , buffer_size );
+#else
+        std::ostringstream ost;
+#endif
         (*property)->nameAndValueAsStream( ost );
+#if defined (__GNUC__) && ( __GNUC__ <= 2)
         ost.freeze();
+#endif
         log << MSG::DEBUG
             << "Property ['Name': Value] = " 
             << ost.str() << endreq ;

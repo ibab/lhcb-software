@@ -1,6 +1,9 @@
-// $Id: CaloException.h,v 1.1.1.1 2001-11-25 14:07:38 ibelyaev Exp $
+// $Id: CaloException.h,v 1.2 2003-01-17 14:15:18 sponce Exp $
 // ===========================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.1.1.1  2001/11/25 14:07:38  ibelyaev
+// New Package: substitution of the  previous CaloGen package
+//
 // Revision 1.4  2001/07/02 17:49:10  ibelyaev
 // update in CaloException and CaloVector
 //
@@ -48,7 +51,7 @@ public:
   
   /** destructor
    */
-  virtual ~CaloException(){};
+  virtual ~CaloException() throw() {};
   
   /** clone (virtual constructor)
    */

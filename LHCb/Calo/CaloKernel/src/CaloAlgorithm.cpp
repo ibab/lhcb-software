@@ -1,8 +1,11 @@
-// $Id: CaloAlgorithm.cpp,v 1.16 2002-11-13 20:36:51 ibelyaev Exp $ 
+// $Id: CaloAlgorithm.cpp,v 1.17 2003-01-17 14:15:18 sponce Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.16  2002/11/13 20:36:51  ibelyaev
+//  regular update, modifications of CaloAlgorithm and CaloTool
+//
 // Revision 1.15  2002/05/02 13:24:56  ibelyaev
 //  improve printout
 //
@@ -272,16 +275,24 @@ StatusCode CaloAlgorithm::initialize()
         << System::typeinfoName( typeid( *this ) ) << "/" 
         << name ()           << "   #properties = " 
         << properties.size() << endreq ;
+#if defined (__GNUC__) && ( __GNUC__ <= 2)
     const int   buffer_size  = 256 ;
     char buffer[buffer_size]       ;
+#endif
     for( Properties::const_reverse_iterator property 
            = properties.rbegin() ;
          properties.rend() != property ; ++property )  
       {
+#if defined (__GNUC__) && ( __GNUC__ <= 2)
         std::fill( buffer , buffer + buffer_size , 0 );
         std::ostrstream ost ( buffer , buffer_size );
+#else
+        std::ostringstream ost;
+#endif
         (*property)->nameAndValueAsStream( ost );
+#if defined (__GNUC__) && ( __GNUC__ <= 2)
         ost.freeze();
+#endif
         log << MSG::DEBUG
             << "Property ['Name': Value] = " 
             << ost.str() << endreq ;
