@@ -48,14 +48,6 @@ use GeneratorModules    v4r2    Gen
 #geometry source 
 use XmlDDDB             v14r4   Det 
 
-#Trackers
-use OTAlgorithms        v12r2   OT
-use OTAssociators       v2r3    OT
-use VeloAlgorithms      v2r5    Velo
-use VeloAssociators     v1r4    Velo
-use ITAlgorithms        v12r6   IT
-use ITCheckers          v1r2    IT
-
 #use GaussChecks          v1r0 Sim
 
 # =============================================================================
