@@ -2,6 +2,10 @@ Package LHCbKernel
 Package manager: M.Cattaneo
 Purpose: LHCb specific Kernel classes
 
+! 2004-01-29 - Chris Jones
+ - Minor changes to RichSmartID (backwards compatible). 
+   Imported RichDetectorType.h and RichDetectorType.h from Rich/RichKernel
+
 !====================== LHCbKernel v4r1 2004-01-27 ========================
 ! 2004-01-27 - Marco Cattaneo, Stefan Roiser, Pere Mato
  - Modify requirements and add new files Kernel/lcgStl.h, xml/lcg_selection.xml,

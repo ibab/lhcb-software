@@ -1,5 +1,10 @@
-       <class author="Chris Jones   Christopher.Rob.Jones@cern.ch" desc="Identifier for RICH detector objects" name="RichSmartID" stdVectorTypeDef="FALSE">
-            &StlVector;
+        <class author="Chris Jones   Christopher.Rob.Jones@cern.ch" desc="Identifier for RICH detector objects" name="RichSmartID" stdVectorTypeDef="FALSE">
+            <import name="Kernel/RichDetectorType"/>
+            <import name="Kernel/RichSide"/>
+            <import ignore="TRUE" name="Rich"/>
+            <import ignore="TRUE" name="DetectorType"/>
+            <import ignore="TRUE" name="Side"/>
+            <template name="VectorDict" t1="THIS"/>
             <typedef access="PUBLIC" def="KeyType" desc="Type for internal key" type="unsigned long"/>
             <constructor desc="Copy constructor" initList="m_key( id.key() )">
                 <arg const="TRUE" inout="INOUT" name="id" type="RichSmartID"/>
@@ -122,7 +127,7 @@ return true;</code>
             <method const="TRUE" desc="Decoding function to strip all but the RICH information and return a RICH RichSmartID" name="richID" type="RichSmartID">
                 <code>return ( key() &amp; (richMask+richIsSetMask) );</code>
             </method>
-            <method desc="aValue" name="printAllFields" type="std::ostream&amp;">
+            <method desc="Prints all data fields" name="printAllFields" type="std::ostream&amp;">
                 <arg name="stream" type="std::ostream"/>
                 <code>stream &lt;&lt; &quot;data &quot; &lt;&lt; rich() &lt;&lt; &quot; &quot; &lt;&lt; panel() &lt;&lt; &quot; &quot; &lt;&lt; PDRow() &lt;&lt; &quot; &quot; &lt;&lt; PDCol() 
            &lt;&lt; &quot; &quot; &lt;&lt; pixelRow() &lt;&lt; &quot; &quot; &lt;&lt; pixelCol() &lt;&lt; &quot; &quot; &lt;&lt; subPixel()
@@ -131,7 +136,7 @@ return true;</code>
            &lt;&lt; &quot; &quot; &lt;&lt; subPixelIsSet();
 return stream;</code>
             </method>
-            <method const="TRUE" desc="aValue" name="dataBitsOnly" type="RichSmartID::KeyType">
+            <method const="TRUE" desc="Prints only the data fields" name="dataBitsOnly" type="RichSmartID::KeyType">
                 <code>return (key() &amp; (richMask+panelMask+PDRowMask+PDColMask+
                     pixelRowMask+pixelColMask+subPixelMask) );</code>
             </method>
@@ -147,9 +152,15 @@ return stream;</code>
                 <arg const="TRUE" name="shift" type="int"/>
                 <code>return ( value &lt; (1 &lt;&lt; shift) );</code>
             </method>
+            <method const="TRUE" desc="Get the RICH detector identifier. NB: Using custom method until G.O.D. supports specific automatically generated return values." name="rich" type="Rich::DetectorType">
+                <code>return static_cast&lt;Rich::DetectorType&gt;((m_key &amp; richMask) &gt;&gt; richBits);</code>
+            </method>
+            <method const="TRUE" desc="Get the RICH panel identifier. NB: Using custom method until G.O.D. supports specific automatically generated return values." name="panel" type="Rich::Side">
+                <code>return static_cast&lt;Rich::Side&gt;((m_key &amp; panelMask) &gt;&gt; panelBits);</code>
+            </method>
             <attribute desc="The internal data" name="key" type="bitfield">
-                <bitfield desc="The RICH Detector" length="1" name="rich" setMeth="FALSE"/>
-                <bitfield desc="The RICH panel" length="1" name="panel" setMeth="FALSE"/>
+                <bitfield desc="The RICH Detector" length="1" name="rich" getMeth="FALSE" setMeth="FALSE"/>
+                <bitfield desc="The RICH panel" length="1" name="panel" getMeth="FALSE" setMeth="FALSE"/>
                 <bitfield desc="The photon detector row number" length="5" name="PDRow" setMeth="FALSE"/>
                 <bitfield desc="The photon detector column number" length="5" name="PDCol" setMeth="FALSE"/>
                 <bitfield desc="The pixel column number" length="5" name="pixelRow" setMeth="FALSE"/>
@@ -164,4 +175,4 @@ return stream;</code>
                 <bitfield desc="Sub-pixel field is set" length="1" name="subPixelIsSet" setMeth="FALSE"/>
             </attribute>
         </class>
- 
+
