@@ -1,6 +1,6 @@
 ##----------------------------------------------------------------------##
 
-# Error suppression file for GAUDI_v15r0, gcc 3.2.3, valgrind 2.0.0
+# Valgrind error suppression file for GAUDI_v15r1, gcc 3.2.3, valgrind 2.0.0
 
 # Format of this file is:
 # {
@@ -15,7 +15,7 @@
 #     (optionally: caller3 name) - according to doc. But valgrind dies...
 # }
 
-# Problem with gcc 3.2.3
+# Problem with gcc 3.2.3, seen with Gaudi v15r0 - v15r1
 {
   gcc/16bytes
   Memcheck:Leak
@@ -118,7 +118,7 @@
   fun:G__memfunc_setup
 }
 
-# Root 3.10.02 with POOL_1_6_3 - POOL_1_7_0-gamma
+# Root 3.10.02 with POOL_1_6_3 - POOL_1_7_0
 {
   Root/POOL
   Memcheck:Leak
@@ -127,7 +127,16 @@
   fun:_ZN10TStringRef6GetRepEii
 }
 
-# SEAL_1_3_4 - 1_4_0
+# Root 3.10.02 with POOL_1_6_3 - POOL_1_7_0
+{
+  POOL_1_6_3/RootTreeContainer
+  Memcheck:Leak
+  fun:R__huft_build
+  fun:R__Inflate_fixed
+  fun:R__Inflate_block
+}
+
+# SEAL_1_3_4 - SEAL_1_4_0 - Will not fix (see comments to bug report)
 {
   SEAL bug 3050
   Memcheck:Leak
@@ -136,7 +145,7 @@
   fun:_ZNSt24__default_alloc_templateILb1ELi0EE14_S_chunk_allocEjRi
 }
 
-# POOL_1_7_0-gamma
+# POOL_1_7_0
 {
   POOL bug 4215
   Memcheck:Free
@@ -145,6 +154,7 @@
   fun:_ZN4CINT4TypeD0Ev
 }
 
+# POOL_1_7_0
 {
   POOL bug 4206
   Memcheck:Leak
@@ -152,13 +162,3 @@
   fun:_Znaj
   fun:_ZN11xercesc_2_318IconvLCPTranscoder9transcodeEPKt
 }
-
-# POOL_1_6_3 - POOL_1_7_0-gamma
-{
-  POOL bug 3171
-  Memcheck:Leak
-  fun:__builtin_new
-  fun:_Znwj
-  fun:_ZN11xercesc_2_317MemoryManagerImpl8allocateEj
-}
-
