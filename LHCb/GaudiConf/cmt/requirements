@@ -8,5 +8,6 @@ ignore_pattern package_stamps
 set STDOPTIONS ${GAUDICONFROOT}/options/Common.opts
 set STDOPTS    ${GAUDICONFROOT}/options
 
-macro_append ROOT_native_version "" \
-             rh73_gcc323    "_0411"
+macro_append ROOT_native_version    "" \
+             rh73_gcc323       "_0411" \
+             slc3_ia32_gcc323  "_0411"
