@@ -1,6 +1,13 @@
-! $Id: release.notes,v 1.7 2002-07-26 12:53:52 odie Exp $
+! $Id: release.notes,v 1.8 2002-07-26 19:45:24 gcorti Exp $
 ! Package     : DaVinciMCTools
 ! Responsible : Gloria Corti
+
+! 2002-07-26 - Gloria Corti
+ - Bug fix for muonpid filling in MCPIDProtoPAlg
+ - add detectorID information for electrons when making ProtoParticles 
+   in MCPIDProtoPAlg, this implies introducing options files
+ - put as options to use upstream tracks or not in making ProtoParticles
+   (by default not taken) in MCPIDProtoPAlg
 
 | 2002-07-26 - Olivier Dormond
  - Added alternative decay at top level, i.e. you can write 

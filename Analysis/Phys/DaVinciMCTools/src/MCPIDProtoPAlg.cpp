@@ -1,4 +1,4 @@
-// $Id: MCPIDProtoPAlg.cpp,v 1.2 2002-07-25 21:05:39 gcorti Exp $
+// $Id: MCPIDProtoPAlg.cpp,v 1.3 2002-07-26 19:44:57 gcorti Exp $
 // Include files 
 #include <memory>
 
@@ -36,17 +36,13 @@ MCPIDProtoPAlg::MCPIDProtoPAlg( const std::string& name,
                                     ISvcLocator* pSvcLocator)
   : Algorithm ( name , pSvcLocator )
   , m_electronPath( "Rec/Calo/Electrons" )
-  , m_trkmatchPath( "AssociatorWeighted<CaloCluster,TrStoredTrack,float>"
-                    + std::string("/PhotonMatch") )
-  , m_caloematchPath( "AssociatorWeighted<CaloHypo,TrStoredTrack,float>"
-                      + std::string("/ElectronMatch") )
-  , m_bremmatchPath( "AssociatorWeighted<CaloHypo,TrStoredTrack,float>"
-                     + std::string("/BremMatch") ) 
+  , m_photonMatchName( "PhotonMatch" )
+  , m_electronMatchName( "ElectronMatch" )
+  , m_bremMatchName( "BremMatch" )
+  , m_lastChiSqMax( 100 )
+  , m_upstream( false )
   , m_trackAsctName( "Track2MCParticleAsct" )
 {
-  
-  //, m_trkmatch(0)
-  //, m_spdPrs    ( 0 ) {
 
   // Inputs
   declareProperty("TrStoredTracksInput", 
@@ -56,15 +52,18 @@ MCPIDProtoPAlg::MCPIDProtoPAlg( const std::string& name,
   declareProperty("MuonPIDsInput",
                   m_muonPath = MuonIDLocation::Default );
   declareProperty("ElectronsInput", m_electronPath );
-  declareProperty("TrackMatching", m_trkmatchPath );
-  declareProperty("CaloEMatching", m_caloematchPath );
-  declareProperty("BremMatching", m_bremmatchPath );
+  declareProperty("PhotonMatching",    m_photonMatchName );
+  declareProperty("ElectronMatching", m_electronMatchName );
+  declareProperty("BremMatching",     m_bremMatchName );
   
+  // Outputs
   declareProperty("OutputData",
                   m_protoPath = ProtoParticleLocation::Charged );
-  declareProperty("MaxChiSquare", m_lastChiSqMax = 1000 );
 
-  declareProperty( "TrackAsct", m_trackAsctName );
+  // Selections
+  declareProperty("MaxChiSquare", m_lastChiSqMax = 1000 );
+  declareProperty("UpstreamsTracks", m_upstream );
+  declareProperty("TrackAsct", m_trackAsctName );
   
 }
 
@@ -111,7 +110,28 @@ StatusCode MCPIDProtoPAlg::initialize() {
        "AssociatorWeighted<TrStoredTrack,MCParticle,double>", 
        m_trackAsctName, m_track2MCParticleAsct);
   if( !sc.isSuccess() ) {
-    log << MSG::DEBUG << "Tracks associator not found" << endreq;
+    log << MSG::ERROR << "Tracks associator not found" << endreq;
+    return sc;
+  }
+
+  // Associators for CaloTables
+  std::string matchType="AssociatorWeighted<CaloCluster,TrStoredTrack,float>";
+  sc = toolSvc()->retrieveTool( matchType, m_photonMatchName, m_photonMatch );
+  if( !sc.isSuccess() ) {
+    log << MSG::ERROR << "Unable to retrieve " << matchType << endreq;
+    return sc;
+  }
+  matchType = "AssociatorWeighted<CaloHypo,TrStoredTrack,float>";
+  sc = toolSvc()->retrieveTool( matchType, m_electronMatchName,
+                                m_electronMatch );
+  if( !sc.isSuccess() ) {
+    log << MSG::ERROR << "Unable to retrieve " << matchType << endreq;
+    return sc;
+  }
+  matchType = "AssociatorWeighted<CaloHypo,TrStoredTrack,float>";
+  sc = toolSvc()->retrieveTool( matchType, m_bremMatchName, m_bremMatch );
+  if( !sc.isSuccess() ) {
+    log << MSG::ERROR << "Unable to retrieve " << matchType << endreq;
     return sc;
   }
 
@@ -177,6 +197,23 @@ StatusCode MCPIDProtoPAlg::execute() {
     caloData = true;
   }
 
+  /// Check the tables for electronID
+  const PhotonTable* phtable = m_photonMatch->inverse();
+  if( 0 == phtable ) { 
+    log << MSG::DEBUG << "Table from PhotonMatch points to NULL";
+    caloData = false;
+  }
+  const ElectronTable* etable = m_electronMatch->inverse();
+  if( 0 == etable ) { 
+    log << MSG::DEBUG << "Table from PhotonMatch points to NULL";
+    caloData = false;
+  }
+  const BremTable* brtable = m_bremMatch->inverse();
+  if( 0 == brtable ) { 
+    log << MSG::DEBUG << "Table from PhotonMatch points to NULL";
+    caloData = false;
+  }
+
   // Prepare output container
   ProtoParticles* chprotos = new ProtoParticles();
   StatusCode sc = eventSvc()->registerObject( m_protoPath, chprotos );
@@ -199,7 +236,7 @@ StatusCode MCPIDProtoPAlg::execute() {
   int countTrackProto = 0;
   int countRichProto = 0;
   int countMuonProto = 0;
-  int countElecronProto = 0;
+  int countElectronProto = 0;
   int countAssociated = 0;
   TrStoredTracks::const_iterator iTrack;
   for( iTrack = tracks->begin(); tracks->end() != iTrack; ++iTrack ) {
@@ -212,7 +249,6 @@ StatusCode MCPIDProtoPAlg::execute() {
     }
     if( !keepTrack( (*iTrack) ) ) continue;
     
-    countTrackProto++;
     ProtoParticle* proto = new ProtoParticle();
     proto->setTrack( *iTrack );
     double tkcharge = 0.0;
@@ -232,9 +268,14 @@ StatusCode MCPIDProtoPAlg::execute() {
         log << MSG::DEBUG << "tkstate q/p =" << tkstate->qDivP() << endreq;
       }
     }
-    log << MSG::DEBUG << "charge = " << tkcharge << endreq;
-    if( 0 == tkcharge ) continue;
+    if( 0 == tkcharge ) {
+      log << MSG::DEBUG << "track charge = " << tkcharge << endreq;
+      delete proto;
+      continue;
+    }
     
+    countTrackProto++;
+
     // Set combined particle ID as from MC truth when available
     ProtoParticle::PIDInfoVector idinfovec;
     ProtoParticle::PIDInfoPair idinfo;
@@ -242,7 +283,6 @@ StatusCode MCPIDProtoPAlg::execute() {
     idinfo.second = 1.0;
     idinfovec.push_back(idinfo);
     proto->setPIDInfo(idinfovec);
-    
 
     ProtoParticle::PIDDetVector iddetvec;
     proto->setPIDDetectors(iddetvec);
@@ -267,28 +307,58 @@ StatusCode MCPIDProtoPAlg::execute() {
             ProtoParticle::PIDDetPair iddet;
             iddet.first = ProtoParticle::MuonMuon;
             iddet.second = (*iMuon)->MuProb();
-            ProtoParticle::PIDDetVector& iddetvec = proto->pIDDetectors();
-            iddetvec.push_back(iddet);
+            proto->pIDDetectors().push_back(iddet);
             proto->setMuonBit(1);
           }          
-          // the muon pid for track has been added so exit from loop
+          // The muon pid for track has been added so exit from loop
           break;
         }
       } // break here
     }
     
-    // Add CaloElectrons to this ProtoParticle
-    /*
-    if( caloData ) {
-      CaloHypos::const_iterator iElec;
-      int counte = 0;
-      for( iElec = electrons->begin(); electrons->end() != iElec; ++iElec ) {
-        SmartRefVector<CaloCluster>& eclusters = (*iElec)-> clusters();
-        log << MSG::DEBUG << "Number of clusters for electron " 
-            << ++counte << " = " << eclusters.size() << endreq;
+    // Add CaloElectrons to this ProtoParticle   
+    if( caloData ) {  
+      log << MSG::DEBUG << "Processing CaloInfo" << endreq;
+      // Add the Electron hypothesis when available (no cuts at the moment)
+      ElectronRange erange = etable->relations( *iTrack );
+      if( !erange.empty() ) {
+        countElectronProto++;
+        CaloHypo* hypo = erange.begin()->to();
+        proto->addToCalo( hypo );
+
+        double chi2 = erange.begin()->weight();
+        ProtoParticle::PIDDetPair iddet;
+        iddet.first = ProtoParticle::CaloEMatch;
+        iddet.second = chi2;
+        proto->pIDDetectors().push_back(iddet);
+        proto->setCaloeBit(1);
+       
+        // Add the CaloCluster chi2 (only lowest)
+        PhotonRange phrange = phtable->relations( *iTrack );
+        if( !phrange.empty() ) {
+          chi2 = phrange.begin()->weight();
+          iddet.first = ProtoParticle::CaloTrMatch;
+          iddet.second = chi2;
+          proto->pIDDetectors().push_back(iddet);
+        }
+        
+        // Add Brem hypothesis and chi2 (only lowest)
+        BremRange brrange = brtable->relations( *iTrack );
+        if( !brrange.empty() ) {
+          hypo = brrange.begin()->to();
+          proto -> addToCalo( hypo );
+          chi2 = brrange.begin()->weight();
+          iddet.first = ProtoParticle::BremMatch;
+          iddet.second = chi2;
+          proto->pIDDetectors().push_back(iddet);
+        }
       }
-    } 
-    */
+    }
+    // Check is at least one particleID is beeing added otherwise set NoPID
+    if( (0 == proto->richBit()) && (0 == proto->muonBit()) &&
+        (0 == proto->caloeBit()) ) {
+      proto->setNoneBit(1);
+    }
 
     //chprotos->insert(proto.release());
     chprotos->insert(proto);
@@ -323,7 +393,7 @@ StatusCode MCPIDProtoPAlg::execute() {
     for( ProtoParticle::PIDDetVector::iterator 
            idd = (*ip)->pIDDetectors().begin(); 
          (*ip)->pIDDetectors().end()!=idd; ++idd ) {
-      log << MSG::VERBOSE << "idd = " << (*idd).first << " , value = " 
+      log << MSG::VERBOSE << "det = " << (*idd).first << " , value = " 
           << (*idd).second  << endreq;
     }
   }
@@ -350,8 +420,10 @@ bool MCPIDProtoPAlg::keepTrack( const TrStoredTrack* track ) {
   if( 0 != track ) {
     if( 0 == track->errorFlag() ) {
       if( track->lastChiSq() <= m_lastChiSqMax ) {
-        if( track->unique() && 
-            (track->forward() || track->match() || track->upstream()) ) {
+        if( track->unique() && (track->forward() || track->match()) ) {
+          keep = true;
+        }
+        if( m_upstream && (track->unique() && track->upstream()) ) {
           keep = true;
         }
       }

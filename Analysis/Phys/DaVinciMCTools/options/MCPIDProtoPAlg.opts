@@ -1,5 +1,5 @@
 //##############################################################
-// Default options
+// MCPIDProtoPAlg options
 
 #pragma print off
 // Input data
@@ -7,16 +7,17 @@
 //MCPIDProtoPAlg.RichPIDsInput = "Rec/Rich/PIDs";
 //MCPIDProtoPAlg.MuonPIDsInput = "Rec/Muon/MuonID";
 //MCPIDProtoPAlg.ElectronsInput ="Rec/Calo/Electrons";
-//MCPIDProtoPAlg.TrackMatching =  
-//MCPIDProtoPAlg.CaloEMatching = 
-//MCPIDProtoPAlg.BremMatching =  
+//MCPIDProtoPAlg.PhotonMatching = "PhotonMatch"; 
+//MCPIDProtoPAlg.ElectronMatching = "ElectronMatch";
+//MCPIDProtoPAlg.BremMatching = "BremMatch";  
 
 // Output data
 //MCPIDProtoPAlg.OutputData = "Rec/ProtoP/Charged";
-
-// Track quality
-//MCPIDProtoPAlg.MaxChiSquare = 1000;
 #pragma print on
+
+// Track Selections
+MCPIDProtoPAlg.MaxChiSquare = 1000;      // default = 1000 
+MCPIDProtoPAlg.UpstreamsTracks = false;  // default = false
 
 // Track associator 
 MCPIDProtoPAlg.TrackAsct = "Track2MCAsct";
