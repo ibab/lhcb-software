@@ -22,7 +22,7 @@ use L0MuonTrigger       v1r1    L0
 
 # L1 trigger
 use TrgTools            v3r0    Trg
-use TrgChecker          v3r0    Trg
+use TrgChecker          v3r0p1	Trg
 use TrgVelo             v3r0    Trg
 use TrgVeloTT           v3r0    Trg
 use L1Reco              v3r0    Trg

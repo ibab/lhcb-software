@@ -8,7 +8,8 @@
 ! 2004-03-26 - Marco Cattaneo
  - Packages modified: L0mConf v2r2, L0MuonKernel v1r1, L0MuonTrigger v1r1,
                       L0Calo v7r4, PuVeto v5r6, VeloAlgorithms v2r9p2,
-                      ITAlgorithms v14r2, ITCheckers v2r2, STDAQ v1r1
+                      ITAlgorithms v14r2, ITCheckers v2r2, STDAQ v1r1,
+                      TrgChecker v3r0p1
 
 !======================== BooleSys v5r3 2004-03-19 ========================
 ! 2004-03-19 - Marco Cattaneo
