@@ -1,4 +1,4 @@
-// $Id: SingleParticleTaggingMonitor.cpp,v 1.1 2002-11-20 08:24:46 odie Exp $
+// $Id: SingleParticleTaggingMonitor.cpp,v 1.2 2003-01-06 14:44:00 gcorti Exp $
 // Include files 
 #include <algorithm>
 
@@ -510,7 +510,7 @@ StatusCode SingleParticleTaggingMonitor::execute() {
         if( (*tag_i)->tagger()->origin() == (*t_i)->origin() )
           expected_tagger_protop = true;        
       }
-      if( !expected_tagger and !expected_tagger_protop )
+      if( !expected_tagger && !expected_tagger_protop )
       {
         msg << MSG::DEBUG << "The right tagger was missed!" << endreq;
         m_n_wrong_tagger++;

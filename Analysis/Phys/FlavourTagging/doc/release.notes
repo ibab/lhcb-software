@@ -4,7 +4,7 @@
 ! Purpose     : Provide tools and algorithm for tagging Bs
 !-----------------------------------------------------------------------------
 
-! =================== FlavourTagging v4r1 2002-12-20 ======================
+! =================== FlavourTagging v4r1 2003-01-06 ======================
 ! 2002-12-20 - Gloria Corti
  - Remove explicit dependecy of EventKernel in requirements
 
