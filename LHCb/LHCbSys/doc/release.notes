@@ -5,8 +5,8 @@
 ! Purpose     : LHCb OO kernel packages
 !-----------------------------------------------------------------------------
 
-!======================= LHCbSys v16r0 2004-06-29 =======================
-! 2004-06-29 - Marco Cattaneo
+!======================= LHCbSys v16r0 2004-07-01 =======================
+! 2004-07-01 - Marco Cattaneo
  - New packages: LHCbTools v1r1 (moved here from applications projects)
                  LHCbAlgs v1r0 (for general purpose algorithms)
                  RichTools v1r0 (previously RichDetTools, 
@@ -28,6 +28,9 @@
 
  - In LHCbKernel v4r7:
    . Remove ProcessPhase (moved to LHCbAlgs)
+   . Added "Invalid" to the RichDetectorType, RichRadiatorType and 
+     RichSide enumerations.
+   . Reorganisation of RichSmartID.xml to improve human-readability
 
  - In LHCbAlgs v1r0:
    . Use GaudiSequencer as base class of ProcessPhase
@@ -48,11 +51,9 @@
       RichMCTools v2r0, RichDAQ v1r5
    . Repackaging to remove RichUtils package
 
- - In RichKernel v5r0
-   . Remove default initialization value for RichHypoData, to fix Windows problem
-
  - In RichEvent v7r4
-   . Fix bugs in MCRichSegment::bestMomentum and MCRichSegment::bestPoint
+   . Re-organise the xml files to improved human readability
+   . Removed exception throwing from RichGeomPhoton set methods
 
  - In DAQEvent v4r4
    . Changed to a component library. Added algorithms to create empty L1Buffer,
@@ -71,6 +72,17 @@
  - In DetDescChecks v2r1
    . Package to check integrity and material distribution of XmlDDDB. See 
      release notes for details
+
+!====================== LHCbSys v15r13 2004-06-30 =======================
+! 2004-06-30 - Marco Cattaneo
+ - Modified packages: KernelSys v3r6p1, RichKernel v4r6,
+                      EventSys v17r12, RichEvent v7r3p1
+
+ - In RichKernel v4r6
+   . Remove default initialization value for RichHypoData, to fix Windows problem
+
+ - In RichEvent v7r3p1
+   . Fix bugs in MCRichSegment::bestMomentum and MCRichSegment::bestPoint
 
 !====================== LHCbSys v15r12 2004-06-28 =======================
 Built against Gaudi v14r6
