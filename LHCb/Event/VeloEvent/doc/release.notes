@@ -1,6 +1,10 @@
-! $Id: release.notes,v 1.21 2002-09-24 18:25:14 parkesb Exp $
+! $Id: release.notes,v 1.22 2002-10-01 14:02:09 ranjard Exp $
 package Event/VeloEvent
 package manager: C.Parkes
+
+!======================== VeloEvent v12r0 2002-09-25 =========================
+! 2002-09-26 - Florence Ranjard
+ - requirements - use Event v3r*
 
 ! 2002-07-24 - Chris Parkes
  - modified VeloEvent.xml to work with updated associator/VeloSim, 
