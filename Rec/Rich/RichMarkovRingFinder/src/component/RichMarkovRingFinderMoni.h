@@ -1,4 +1,4 @@
-// $Id: RichMarkovRingFinderMoni.h,v 1.13 2004-11-12 19:11:50 abuckley Exp $
+// $Id: RichMarkovRingFinderMoni.h,v 1.14 2005-03-23 15:29:54 abuckley Exp $
 #ifndef COMPONENT_RICHMARKOVRINGFINDERMONI_H 
 #define COMPONENT_RICHMARKOVRINGFINDERMONI_H 1
 
@@ -9,6 +9,7 @@
 #include "Event/MCRichOpticalPhoton.h"
 #include "Event/RichRecRing.h"
 #include "Event/RichRecPixel.h"
+#include "Event/MCParticle.h"
 
 // interfaces
 #include "RichKernel/IRichMCTrackInfoTool.h"
@@ -25,6 +26,7 @@
 
 // local
 #include "stringToNumber/stringToNumber.h"
+#include "finder/Constants.h"
 
 // Boost
 #include "boost/lexical_cast.hpp"
@@ -107,9 +109,9 @@ private: // data
   std::map<Rich::DetectorType, std::map<bool, unsigned int> > m_numMcVsRecMatchAgreements;
 
   /// Basis and normal vectors for the Rich panels
-  typedef map<Rich::DetectorType, map<Rich::Side, pair<HepVector3D, HepVector3D> > > RichPanelBases;
-  typedef map<Rich::DetectorType, map<Rich::Side, HepVector3D > > RichPanelNormals;
-  typedef pair<HepVector3D, HepVector3D> RichPanelBasis;
+  typedef std::map<Rich::DetectorType, std::map<Rich::Side, std::pair<HepVector3D, HepVector3D> > > RichPanelBases;
+  typedef std::map<Rich::DetectorType, std::map<Rich::Side, HepVector3D > > RichPanelNormals;
+  typedef std::pair<HepVector3D, HepVector3D> RichPanelBasis;
   RichPanelBases pdBases;
   RichPanelNormals pdNormals;
 
@@ -141,6 +143,12 @@ private: // data
   Histos1DByDetector m_MarkovRingBestMCMatchNumber;
 
   // *** Fraction of agreements between rec segment-matching and MC pixel-matching
+
+  Histos1DByDetector m_MarkovRingPurity;
+  Histos1DByDetector m_MarkovRingEfficiency;
+  Histos1DByDetector m_MarkovEventPurity;
+  Histos1DByDetector m_MarkovEventEfficiency;
+
 
   /// MCPhoton incidence angle to pd plane normal
   Histos1DByDetector m_MarkovRingMCPhotonNormalAngle;

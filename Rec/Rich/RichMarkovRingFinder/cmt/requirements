@@ -2,8 +2,11 @@
 # Created    : 2003-12-02
 # Maintainer : Chris Jones
 #============================================================================
-# $Id: requirements,v 1.6 2004-12-13 18:24:53 abuckley Exp $
+# $Id: requirements,v 1.7 2005-03-23 15:29:54 abuckley Exp $
 # $Log: not supported by cvs2svn $
+# Revision 1.6  2004/12/13 18:24:53  abuckley
+# Markov weighting with the right sort of scaling now in place
+#
 # Revision 1.5  2004/10/22 19:15:27  abuckley
 # Started tracing back ring normals to the radiator volume and lots more histogramming. Now requires head release of e.g. RichKernel for trace-back method and new GOD methods
 #
@@ -35,6 +38,11 @@ use   AIDA             v*    LCG_Interfaces -no_auto_imports
 use   RichRecBase      v1r*  Rich
 use   MCTools          v*    Phys
 use   RichDet          v*    Det
+use   PhysEvent        v*    Event
+use   RichKernel       v*    Rich
+use   RichMCTools      v*    Rich
+use   RichRecSys       v*    Rich
+use   DaVinciAssociators v5r* Phys
 
 #============================================================================
 # Component library building rule

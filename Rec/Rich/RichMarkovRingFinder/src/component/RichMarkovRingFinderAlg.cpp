@@ -1,4 +1,4 @@
-// $Id: RichMarkovRingFinderAlg.cpp,v 1.17 2004-12-14 13:11:23 abuckley Exp $
+// $Id: RichMarkovRingFinderAlg.cpp,v 1.18 2005-03-23 15:29:54 abuckley Exp $
 // Include files
 
 // local
@@ -57,6 +57,7 @@ RichMarkovRingFinderAlg<MyFinder>::RichMarkovRingFinderAlg( const std::string& n
   declareProperty( "PixelToRingMatchByProximity", m_pixToRingMatchByProximity = false );
   declareProperty( "UseDistortedRings", m_useDistortedRings = true );
   declareProperty( "CountUntrackedRingsAsBg", m_CountUntrackedRingsAsBg = true );
+  declareProperty( "ArbitraryScalingHackParam", m_ScalingHackParam = 1000 );
 }
 
 
@@ -128,7 +129,7 @@ StatusCode RichMarkovRingFinderAlg<MyFinder>::initialize()
   debug() << "4 * " << xPixSize << " * " << yPixSize << " * " << demagScale * demagScale 
            << " / " << rich2Radius * rich2Radius << " * " << saturatedCkAngle << " = "
            << m_bgprobToBgcontribScaleFactor << endmsg;
-
+  debug() << "Bg likelihood contribution scaling param = " << m_ScalingHackParam << endreq;
 
   // Configuration debug messages
   debug() << " Configured for " << m_rich << " panel " << m_panel << endreq;
@@ -193,7 +194,7 @@ StatusCode RichMarkovRingFinderAlg<MyFinder>::execute() {
     return Error( "Caught unknown exception from MarkovRingFinder" );
   }
 
-};
+}
 
 
 
@@ -290,23 +291,27 @@ const StatusCode RichMarkovRingFinderAlg<MyFinder>::processEvent() {
     hitBgProbs[&(*hIt)] = bgprob;
     // Set this pixel to believe that this is its background likelihood
     // (the stripping alg can redefine "background" to also include untracked rings --- see later)
-    const double bgcontrib(bgprob * m_bgprobToBgcontribScaleFactor);
-    hIt->richPixel()->setCurrentBackground( bgcontrib );
-    richStatus()->detOverallBkg()[hIt->richPixel()->detector()] += bgcontrib;
+    //const double bgcontrib(bgprob * m_bgprobToBgcontribScaleFactor);
+    hIt->richPixel()->setCurrentBackground( bgprob );
+    richStatus()->detOverallBkg()[hIt->richPixel()->detector()] += bgprob;
 
     // Initialise best assoc prob pair
     bestHitCircleProbs[&(*hIt)] = pair<MarkovCircle*, double>(0, 0);
 
     // Get the probabilities for each circle associating to this pixel
+    double probsum(0);
     for ( typename MarkovCircles::const_iterator iCircle = bestRPSoFar.getCircles().begin(); iCircle != bestRPSoFar.getCircles().end(); ++iCircle ) {
       const double prob( inf.probabilityHitWasMadeByGivenCircle(hIt, iCircle) );
       hitToCircleProbs[&(*hIt)][&(*iCircle)] = prob;
+      probsum += prob;
 
       // Update the best match if this is better than the current best
       if ( prob > bestHitCircleProbs[&(*hIt)].second ) {
         bestHitCircleProbs[&(*hIt)] = pair<const MarkovCircle*, double>(&(*iCircle), prob);
       }
     }
+    //info() << "Sum of all probabilities for hit " << hIt->richPixel()->key() << " = "
+    //       << bgprob + probsum << endmsg;
   }
 
 
@@ -337,7 +342,7 @@ const StatusCode RichMarkovRingFinderAlg<MyFinder>::processEvent() {
         }
       }
 
-    } else {
+    } else { // Match by relative Markov bg probabilities
       
       // Run over hits (even though it doesn't look like it)
       for ( typename HitToCircleProbs::const_iterator circleProbs = hitToCircleProbs.begin();
@@ -371,7 +376,7 @@ const StatusCode RichMarkovRingFinderAlg<MyFinder>::processEvent() {
       // insert in container
       rings->insert( newRing );
             
-      // set center point and radius (same units as cherenkov angle)
+      // Set center point and radius (same units as Cerenkov angle)
       const HepPoint3D centreLocal ( (*iCircle).centre().x()/scale, (*iCircle).centre().y()/scale, 0 );
       newRing->setCentrePointLocal ( centreLocal );
       newRing->setCentrePointGlobal( m_smartIDTool->globalPosition( centreLocal, rich(), panel() ) );
@@ -416,12 +421,14 @@ const StatusCode RichMarkovRingFinderAlg<MyFinder>::processEvent() {
             // ... and it's a better match than we've seen so far ...
             if (normSeparation < currentBestNormSeparation) {
               // ... then we'll select it!
-              chosenSeg = *iSeg;
               currentBestNormSeparation = normSeparation;
+              chosenSeg = *iSeg;
+              verbose() << "Current best seg = " << chosenSeg << endreq;
             }
           }
         }
       }
+      verbose() << "Overall best seg = " << chosenSeg << endreq;
 
       // set segment
       newRing->setRichRecSegment( chosenSeg );
@@ -465,24 +472,33 @@ const StatusCode RichMarkovRingFinderAlg<MyFinder>::processEvent() {
         }
       }
       const double bgprob(1 - trackedSignalProb);
-      const double bgcontrib(bgprob * m_bgprobToBgcontribScaleFactor);
-      hit->richPixel()->setCurrentBackground( bgcontrib );
-      richStatus()->detOverallBkg()[hit->richPixel()->detector()] += bgcontrib;
-      debug() << "Weighted pixel " << hit->richPixel()->key() << " with background contribution = " << bgcontrib << endreq;
+      hit->richPixel()->setCurrentBackground( bgprob );
+      richStatus()->detOverallBkg()[hit->richPixel()->detector()] += bgprob;
     }
   }
+
+  // Rescale probabilities to match the std concept of a background "contribution"
+  for ( typename MarkovHits::iterator hit = eio.data().hits.begin(); hit != eio.data().hits.end(); ++hit ) {
+    const double bgcontrib(hit->richPixel()->currentBackground() * m_bgprobToBgcontribScaleFactor);
+    hit->richPixel()->setCurrentBackground(m_ScalingHackParam * bgcontrib); // arbitrary scaling!
+    verbose() << "Weighted pixel " << hit->richPixel()->key() << " with background contribution = " 
+            << hit->richPixel()->currentBackground() << endreq;
+  }
+  richStatus()->detOverallBkg()[Rich::Rich1] *= (m_ScalingHackParam * m_bgprobToBgcontribScaleFactor); // arbitrary scaling!
+  richStatus()->detOverallBkg()[Rich::Rich2] *= (m_ScalingHackParam * m_bgprobToBgcontribScaleFactor); // arbitrary scaling!
+  debug() << "Overall bg contribution in Rich1 = " << richStatus()->detOverallBkg()[Rich::Rich1] << endreq;
   debug() << "Overall bg contribution in Rich2 = " << richStatus()->detOverallBkg()[Rich::Rich2] << endreq;
 
 
-  // Painfully complicated printout of what track-matched Markov rings are attached to a given matched segment
+  // Print out what track-matched Markov rings are attached to a given matched segment
   for (SegsToRings::const_iterator segToRings = segsToRings.begin(); segToRings != segsToRings.end(); ++segToRings ) {
-    info() << "Segment " << segToRings->first->key() << " associates to rings { ";
+    verbose() << "Segment " << segToRings->first->key() << " associates to rings { ";
     unsigned int ringcounter(0);
     for (vector<RichRecRing*>::const_iterator ring = segToRings->second.begin(); ring != segToRings->second.end(); ++ring) {
       ++ringcounter;
-      info() << (*ring)->key() << (ringcounter != segToRings->second.size() ? "," : "") << " ";
+      verbose() << (*ring)->key() << (ringcounter != segToRings->second.size() ? "," : "") << " "; // use commas nicely
     }
-    info() << "}" << endreq;
+    verbose() << "}" << endreq;
   }
 
   return StatusCode::SUCCESS;
@@ -560,8 +576,8 @@ RichMarkovRingFinderAlg<MyFinder>::addDataPoints( AnInitialisationObject & eio )
         distortedX *= (1 + 2.5/131.0);
         distortedY *= (1 - 2.5/131.0);
       }
-      debug() << "Adding data point at " << scale * distortedX
-              << "," << scale * distortedY << endreq;
+      verbose() << "Adding data point at " << scale * distortedX
+                << "," << scale * distortedY << endreq;
       eio.addHit( Hit( scale * distortedX, scale * distortedY, *iPix ) );
     }
   }

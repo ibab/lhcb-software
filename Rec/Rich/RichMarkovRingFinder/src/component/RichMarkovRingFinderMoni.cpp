@@ -1,4 +1,4 @@
-// $Id: RichMarkovRingFinderMoni.cpp,v 1.17 2004-11-22 16:24:39 abuckley Exp $
+// $Id: RichMarkovRingFinderMoni.cpp,v 1.18 2005-03-23 15:29:54 abuckley Exp $
 // Include files
 
 // from Gaudi
@@ -7,9 +7,10 @@
 #include "GaudiKernel/SmartDataPtr.h"
 
 // local
-using namespace std;
 #include "RichMarkovRingFinderMoni.h"
 
+using namespace std;
+using namespace RichMarkov;
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : RichMarkovRingFinderMoni
@@ -143,32 +144,62 @@ RichMarkovRingFinderMoni::execute()
     return StatusCode::SUCCESS;
   } else if ( msgLevel(MSG::DEBUG) ) {
     debug() << "Successfully located " << mcRichSegments->size() << " MCRichSegments at "
-            << RichRecRingLocation::MarkovRings << endreq;
+            << MCRichSegmentLocation::Default << endreq;
+  }
+
+  // And the same for the MCParticles...
+  SmartDataPtr<MCParticles> mcParticles( eventSvc(), MCParticleLocation::Default );
+  if ( !mcParticles ) {
+    warning() << "Failed to find MCParticles at " << MCParticleLocation::Default << endreq;
+    return StatusCode::SUCCESS;
+  } else if ( msgLevel(MSG::DEBUG) ) {
+    debug() << "Successfully located " << mcParticles->size() << " MCRichParticles at "
+            << MCParticleLocation::Default << endreq;
   }
 
   // Just some basic histogramming of pixs and rings in the event
+  map<MCParticle*, unsigned int> numRecPixelsPerMCParticle;
   {
     // Loop over event pixels
     map<Rich::DetectorType, unsigned int> numPixelsInEvent;
-    for (RichRecPixels::const_iterator iPix = richPixels()->begin();
-         iPix != richPixels()->end(); ++iPix) {
+    for (RichRecPixels::const_iterator iPix = richPixels()->begin(); iPix != richPixels()->end(); ++iPix) {
       // Is this a RICH1 or RICH2 pixel?
       const Rich::DetectorType whichRich( (*iPix)->detector() );
       numPixelsInEvent[whichRich]++;
+
+      // Get a number of rec pixels associated to each MCParticle
+      MCParticleVector mcParts;
+      m_richRecMCTruth->mcParticle( *iPix, mcParts );
+      for (MCParticleVector::const_iterator mcp = mcParts.begin(); mcp != mcParts.end(); ++mcp) {
+        MCParticle* tempMCP(const_cast<MCParticle*>(*mcp));
+        numRecPixelsPerMCParticle[tempMCP]++;
+      }
     }
     m_NumPixsPerEvent[Rich::Rich1]->fill(numPixelsInEvent[Rich::Rich1]);
     m_NumPixsPerEvent[Rich::Rich2]->fill(numPixelsInEvent[Rich::Rich2]);
-
-    // Loop over event rings
-    map<Rich::DetectorType, unsigned int> numRingsInEvent;
-    for ( RichRecRings::const_iterator iRing = rings->begin(); iRing != rings->end(); ++iRing ) {
-      // Is this a RICH1 or RICH2 ring?
-      const Rich::DetectorType whichRich( (*iRing)->rich() );
-      numRingsInEvent[whichRich]++;
-    }
-    m_NumRingsPerEvent[Rich::Rich1]->fill(numRingsInEvent[Rich::Rich1]);
-    m_NumRingsPerEvent[Rich::Rich2]->fill(numRingsInEvent[Rich::Rich2]);
   }
+
+
+  // Loop over event rings
+  map<Rich::DetectorType, unsigned int> numRingsInEvent;
+  for ( RichRecRings::const_iterator iRing = rings->begin(); iRing != rings->end(); ++iRing ) {
+    // Is this a RICH1 or RICH2 ring?
+    const Rich::DetectorType whichRich( (*iRing)->rich() );
+    numRingsInEvent[whichRich]++;
+  }
+  m_NumRingsPerEvent[Rich::Rich1]->fill(numRingsInEvent[Rich::Rich1]);
+  m_NumRingsPerEvent[Rich::Rich2]->fill(numRingsInEvent[Rich::Rich2]);
+
+
+  // Number of "good" Markov rings in the event, used to calculate the event's "Markov purity"
+  map<Rich::DetectorType, unsigned int> numGoodRingsInEvent;
+  numGoodRingsInEvent[Rich::Rich1] = 0;
+  numGoodRingsInEvent[Rich::Rich2] = 0;
+
+
+  // Way of recording how many unique MC particles are found by the Markov process per event
+  // for calculating the event's "Markov efficiency"
+  map<Rich::DetectorType, map<MCParticle*, unsigned int> > ringPixMCParts;
 
 
   // Mean photon directions (from MC data)
@@ -180,7 +211,7 @@ RichMarkovRingFinderMoni::execute()
 
 
   // Loop over rings for more in-depth purposes
-  info() << endreq;
+  debug() << endreq;
   for ( RichRecRings::const_iterator iRing = rings->begin(); iRing != rings->end(); ++iRing ) {
 
     // Is this a RICH1 or RICH2 ring?
@@ -269,7 +300,7 @@ RichMarkovRingFinderMoni::execute()
 
       // Let's invent a measure of ring "quality"
       // *** maybe a probability-weighted sum over pixs in rec mode?
-      const double ringquality( mostMatchedMCPNoMatches ); // normalising would be nice, but hey: can't have everything
+      // *** const double ringquality( mostMatchedMCPNoMatches ); // normalising would be nice, but hey: can't have everything
 
       // Histogram the best match fraction and absolute number
       m_MarkovRingBestMCMatchNumber[whichRich]->fill(mostMatchedMCPNoMatches);
@@ -282,19 +313,56 @@ RichMarkovRingFinderMoni::execute()
       // numerically 0               1           2           3           4               -1
       const MCParticle* pixMCPart( mostMatchedMCP );
       const Rich::ParticleIDType pixMCType( m_richMCTruth->mcParticleType(pixMCPart) );
+      ringPixMCParts[whichRich][const_cast<MCParticle*>(pixMCPart)]++;
+
 
       // Get the MCParticle associated to the "best" reconstructed RichRecSegment for this ring
       const MCParticle* segMCPart( m_richRecMCTruth->mcParticle( (*iRing)->richRecSegment() ) );
 
 
+      // Find the best MCRichSegment matching the ring
+      MCRichSegment* chosenMCSeg(0);
+      double currentBestSeparation( static_cast<double>( std::numeric_limits<int>::max() ) ); // VC++ problem with numeric_limits<double>::max()
+      for ( MCRichSegments::const_iterator mcseg = mcRichSegments->begin(); mcseg != mcRichSegments->end(); ++mcseg ) {
+        // Skip if ring and segment RICH types don't match
+        if ( (*iRing)->rich() != (*mcseg)->rich() ) continue;
+
+        // Find the PD panel point corresponding to the track projection
+        HepPoint3D mcsegPoint;
+        m_mcRichTrackInfo->panelIntersectLocal(*mcseg, mcsegPoint);
+        
+        // Do some ring-segment matching...
+        const double separation( mcsegPoint.distance((*iRing)->centrePointLocal()) );
+        // If the projected segment is a better match than we've seen so far ...
+        if (separation < currentBestSeparation) {
+          // ... then we'll select it!
+          currentBestSeparation = separation;
+          chosenMCSeg = *mcseg;
+          verbose() << "Current best seg = " << chosenMCSeg << endreq;
+        }
+      }
+      const MCParticle* mcsegMCPart( chosenMCSeg ? chosenMCSeg->mcParticle() : 0 );
+
 
       // Ring and event purity and efficiency
       const double ringPurity(bestMatchFraction);
-      // *** ringEfficiency = number of pixels from MCPi (MC) in ringj / total number of pixels from MCPi (MC)
-      // *** eventMarkovPurity = number of true Markov rings / total number of Markov rings
-      // *** eventMarkovEfficiency = size of Markov MCParticle set / size of "reconstructible" MCParticle set
+      m_MarkovRingPurity[whichRich]->fill(ringPurity);
+
+      const double ringEfficiency( mostMatchedMCPNoMatches / 
+                                   static_cast<double>(numRecPixelsPerMCParticle[const_cast<MCParticle*>(pixMCPart)]) );
+      m_MarkovRingEfficiency[whichRich]->fill(ringEfficiency);
 
 
+      // Agreement between non-null MC parts from pix and MCseg matching
+      // Used to calculate event-wise Markov purity
+      if ( mcsegMCPart && pixMCPart && mcsegMCPart == pixMCPart ) { 
+        numGoodRingsInEvent[whichRich]++;
+      }
+
+
+      // ======================================================================================
+      // Make cut off on the fraction of pixels matched to the majority MCParticle
+      // ======================================================================================
 
       // Decide whether this ring is to be considered "sufficiently uniquely matched" to the
       // best MCParticle candidate to be considered a successful Markov ring
@@ -308,16 +376,16 @@ RichMarkovRingFinderMoni::execute()
         // Do the rec segment and the MC particle correspond to each other? (when neither is null)
         if ( segMCPart && pixMCPart ) {
           if ( pixMCPart != segMCPart ) {
-            info() << "Non-null geometry-matched (" << segMCPart
-                   << ") and pixel-matched (" << pixMCPart
-                   << ") MCParticles disagree for Markov ring " << *iRing << endreq;
+            debug() << "Non-null geometry-matched (" << segMCPart
+                    << ") and pixel-matched (" << pixMCPart
+                    << ") MCParticles disagree for Markov ring " << *iRing << endreq;
           }
-          ++(m_numMcVsRecMatchAgreements[whichRich][pixMCPart!=segMCPart]);
-          info() << "Incremented MC vs rec agreement: "
-                 << Rich::text(whichRich) <<  "::"
-                 << boolalpha << (pixMCPart!=segMCPart) << " => "
-                 << m_numMcVsRecMatchAgreements[whichRich][pixMCPart!=segMCPart] << " entries"
-                 << endreq;
+          ++(m_numMcVsRecMatchAgreements[whichRich][pixMCPart==segMCPart]);
+          debug() << "Incremented MC vs rec agreement: "
+                  << Rich::text(whichRich) <<  "::"
+                  << boolalpha << (pixMCPart==segMCPart) << " => "
+                  << m_numMcVsRecMatchAgreements[whichRich][pixMCPart==segMCPart] << " entries"
+                  << endreq;
         }
 
 
@@ -338,12 +406,12 @@ RichMarkovRingFinderMoni::execute()
           const MCParticle * mostMother(pixMCPart->mother()), * tmpMother(pixMCPart->mother());
           while( tmpMother ) { mostMother = tmpMother; tmpMother = mostMother->mother(); }
           if ( mostMother ) {
-            info() << "Complete tree:" << endreq;
+            debug() << "Complete tree:" << endreq;
             m_debugger->printTree( mostMother );
-          } else { info() << "No mothers" << endreq; }
-          info() << "Origin vertex position of pixMCPart: " << pixMCPart->originVertex()->position() << endreq;
+          } else { debug() << "No mothers" << endreq; }
+          debug() << "Origin vertex position of pixMCPart: " << pixMCPart->originVertex()->position() << endreq;
           if (segMCPart) {
-            info() << "Origin vertex position of segMCPart: " << segMCPart->originVertex()->position() << endreq;
+            debug() << "Origin vertex position of segMCPart: " << segMCPart->originVertex()->position() << endreq;
           }
         }
         const RecType recOrNot(tempRecOrNot); // I want this to be const, thank you very much!
@@ -400,10 +468,10 @@ RichMarkovRingFinderMoni::execute()
         normalEndDir *= -1;
         meanEndDir *= -1;
         // Tell the world
-        info() << "Normal-back-traced tracking point on sph mirror: "
-               << normalEndPoint << ") in 'track' direction (" << normalEndDir << ")" << endreq;
-        info() << "Mean-back-traced tracking point on sph mirror: "
-               << meanEndPoint << ") in 'track' direction (" << meanEndDir << ")" << endreq;
+        debug() << "Normal-back-traced tracking point on sph mirror: "
+                << normalEndPoint << ") in 'track' direction (" << normalEndDir << ")" << endreq;
+        debug() << "Mean-back-traced tracking point on sph mirror: "
+                << meanEndPoint << ") in 'track' direction (" << meanEndDir << ")" << endreq;
 
 
 
@@ -412,10 +480,10 @@ RichMarkovRingFinderMoni::execute()
         if ((*iRing)->richRecSegment() ) {
           const double thetaExp( m_ckAngle->avgCherenkovTheta( (*iRing)->richRecSegment(), pixMCType ) );
           const double thetaMarkov( (*iRing)->radius() );
-          info() << "Expected theta = " << thetaExp
-                 << " vs. Markov theta = " << thetaMarkov
-                 << " (shift = " << thetaMarkov - thetaExp <<  ")"
-                 << endreq;
+          debug() << "Expected theta = " << thetaExp
+                  << " vs. Markov theta = " << thetaMarkov
+                  << " (shift = " << thetaMarkov - thetaExp <<  ")"
+                  << endreq;
           m_CkPull[whichRich][recOrNot]->fill(thetaMarkov - thetaExp);
 
 
@@ -442,9 +510,9 @@ RichMarkovRingFinderMoni::execute()
             double normalBacktraceAngleError( normalEndDir.angle( mcSegment->bestMomentum(0.5) ) );
             double meanBacktraceAngleError  ( meanEndDir.angle(   mcSegment->bestMomentum(0.5) ) );
 
-            info() << "Exit point error = " << normalBacktracePointError.mag()
-                   << " and slope error = " << normalBacktraceSlopeError.mag()
-                   << " and angle error = " << normalBacktraceAngleError << " (normal)" << endreq;
+            debug() << "Exit point error = " << normalBacktracePointError.mag()
+                    << " and slope error = " << normalBacktraceSlopeError.mag()
+                    << " and angle error = " << normalBacktraceAngleError << " (normal)" << endreq;
 
             // And histogram qtys
             // for exit points
@@ -474,7 +542,8 @@ RichMarkovRingFinderMoni::execute()
 
 
         // Origin vertices
-        // Examine the particle origin vertex type and position
+        // Examine the particle origin vertex type and position (for particles which have 
+        // enough MC pixels on this Markov ring to be considered as "real" rings)
         const MCVertex::MCVertexType originvertextype( pixMCPart->originVertex()->type() );
         string originvertextypename("Other");
         if (MCVertex::ppCollision == originvertextype) {
@@ -489,12 +558,12 @@ RichMarkovRingFinderMoni::execute()
         } else if (MCVertex::Unknown == originvertextype) {
           originvertextypename = "Unknown";
         }
-        info() << "Origin vertex (MC) is " << originvertextypename << endreq;
+        debug() << "Origin vertex (MC) is of type " << originvertextypename << endreq;
 
 
         // Get the MCParticle origin vertex position
         const HepPoint3D& startPoint = pixMCPart->originVertex()->position();
-        info() << "Origin vtx position = " << startPoint/m << endreq;
+        debug() << "Origin vtx position = " << startPoint/m << endreq;
 
 
         // Categorize which subdetector the origin falls within by z coord
@@ -588,6 +657,24 @@ RichMarkovRingFinderMoni::execute()
 
   } // end ring loop
 
+  vector<Rich::DetectorType> riches;
+  riches.push_back(Rich::Rich1);
+  riches.push_back(Rich::Rich2);
+
+  for (vector<Rich::DetectorType>::const_iterator rich = riches.begin(); rich != riches.end(); ++rich) {
+    // eventMarkovPurity = number of true (?) Markov rings / total number of Markov rings in that RICH
+    const double eventPurity(numGoodRingsInEvent[*rich] / static_cast<double>(numRingsInEvent[*rich]));
+    m_MarkovEventPurity[*rich]->fill(eventPurity);
+    
+    // eventMarkovEfficiency = size of Markov MCParticle set / size of "reconstructible" MCParticle set
+    /// Note problem in that not all recbl MCParticles will leave tracks in either RICH...
+    unsigned int numRecblMCParts(0);
+    for (MCParticles::const_iterator mcParticle = mcParticles->begin(); mcParticle != mcParticles->end(); ++mcParticle) {
+      if ( m_mcReconstructible->reconstructible(*mcParticle) != IMCEffReconstructible::NotRec ) { numRecblMCParts++; }
+    }
+    const double eventEfficiency(ringPixMCParts[*rich].size() / static_cast<double>(numRecblMCParts));
+    m_MarkovEventEfficiency[*rich]->fill(eventEfficiency);
+  }
 
   return StatusCode::SUCCESS;
 }
@@ -615,7 +702,7 @@ RichMarkovRingFinderMoni::bookHistograms() {
     // Event params
     id = "NumRingsPerEvent";
     title = "Number of Markov rings per event in " + mainsubtitle;
-    m_NumRingsPerEvent[richType] = histoSvc()->book(mainhistopath, id, title, 51, -0.5, 50.5);
+    m_NumRingsPerEvent[richType] = histoSvc()->book(mainhistopath, id, title, 101, -0.5, 100.5);
     id = "NumPixsPerEvent";
     title = "Number of pixels per event in " + mainsubtitle;
     m_NumPixsPerEvent[richType] =  histoSvc()->book(mainhistopath, id, title, 51, -10, 2010);
@@ -623,13 +710,13 @@ RichMarkovRingFinderMoni::bookHistograms() {
     // Ring params
     id = "MarkovRingRadius";
     title = "Ring radius (radians) in " + mainsubtitle;
-    m_MarkovRingRadius[richType] = histoSvc()->book(mainhistopath, id, title, 50, 0, 0.3); // radians
+    m_MarkovRingRadius[richType] = histoSvc()->book(mainhistopath, id, title, 50, 0, 0.05); // radians
     id = "MarkovRingNumPixs";
     title = "Number of pixs per ring in " + mainsubtitle;
-    m_MarkovRingNumPixs[richType] = histoSvc()->book(mainhistopath, id, title, 51, -0.5, 50.5);
+    m_MarkovRingNumPixs[richType] = histoSvc()->book(mainhistopath, id, title, 201, -0.5, 200.5);
     id = "MarkovRingRadiusVsNumPixs";
     title = "Markov ring radius (radians) vs num pixs in "  + mainsubtitle;
-    m_MarkovRingRadiusVsNumPixs[richType] = histoSvc()->book(mainhistopath, id, title, 30, 0, 0.3, 51, -0.5, 50.5);
+    m_MarkovRingRadiusVsNumPixs[richType] = histoSvc()->book(mainhistopath, id, title, 30, 0, 0.05, 51, -0.5, 50.5);
 
     // MC-rec matching
     id = "MarkovRingBestMCMatchNumber";
@@ -638,6 +725,20 @@ RichMarkovRingFinderMoni::bookHistograms() {
     id = "MarkovRingBestMCMatchFraction";
     title = "Frac MC matches for the best MCParticle in " + mainsubtitle;
     m_MarkovRingBestMCMatchFraction[richType] = histoSvc()->book(mainhistopath, id, title, 50, 0, 1);
+
+    // Purities and efficiencies
+    id = "MarkovRingPurity";
+    title = "Markov ring pixel set purity in " + mainsubtitle;
+    m_MarkovRingPurity[richType] = histoSvc()->book(mainhistopath, id, title, 50, 0, 1);
+    id = "MarkovRingEfficiency";
+    title = "Markov ring pixel set efficiency in " + mainsubtitle;
+    m_MarkovRingEfficiency[richType] = histoSvc()->book(mainhistopath, id, title, 50, 0, 1);
+    id = "MarkovEventPurity";
+    title = "Markov ring set purity in " + mainsubtitle;
+    m_MarkovEventPurity[richType] = histoSvc()->book(mainhistopath, id, title, 50, 0, 1);
+    id = "MarkovEventEfficiency";
+    title = "Markov ring set efficiency in " + mainsubtitle;
+    m_MarkovEventEfficiency[richType] = histoSvc()->book(mainhistopath, id, title, 50, 0, 1);
 
     // MC photon angles and in-plane shifts from the PD normal
     id = "MarkovRingMCPhotonNormalAngle";
