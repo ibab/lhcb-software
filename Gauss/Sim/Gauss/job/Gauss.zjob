@@ -15,7 +15,7 @@
 #  define the job name
 #BSUB -J Gauss
 #  define the queue
-#BSUB -q 8nh
+#BSUB -q 1nw
 #
 ###############################################################################
 limit   coredumpsize   500000
@@ -28,7 +28,7 @@ typeset  VERS=v7r0
 ###############################################################################
 # set the environment 
 ###############################################################################
-. $LHCb_release_area/GaussEnv/$VERS/cmt/setup.csh
+. $LHCb_release_area/GaussEnv/$VERS/cmt/setup.sh
 ###############################################################################
 
 typeset  JDIR=~/newmycmt/Sim/Gauss/$VERS
@@ -94,44 +94,43 @@ else
   ln -fs $TMPJOBROOT/$MODE/Gauss.exe _Gauss.exe
 fi
     
-cp $GAUSSOPTS/Gauss.opts   ./job.opts    
+cp $GAUSSOPTS/Gauss.opts   ./_job.opts    
 
 ###############################################################################
 # redefine few parameters from standard options file                          #
 ###############################################################################
-echo '//                                                  '    >>!  job.opts
-echo '// ************************************************ '    >>!  job.opts
-echo '// * redefined parameters from batch stript       * '    >>!  job.opts
-echo '// ************************************************ '    >>!  job.opts
-echo '// ************************************************ '    >>!  job.opts
-echo '// * (re)define number of events to be processed  * '    >>!  job.opts
-echo '// ************************************************ '    >>!  job.opts
-echo ' ApplicationMgr.EvtMax    = '$NUMEVENTS'  ;         '    >>!  job.opts
-echo '//                                                  '    >>!  job.opts
-echo '// ************************************************ '    >>!  job.opts
-echo '// * (re)define the output DST file               * '    >>!  job.opts
-echo '// ************************************************ '    >>!  job.opts
-echo ' GaussTape.Output =                                 '    >>!  job.opts
-echo \"DATAFILE=\'Gauss.root\' TYP=\'ROOT\' OPT=\'NEW\' \" \;  >>!  job.opts
-echo '// ************************************************ '    >>!  job.opts
+echo '//                                                  '     >>! ./_job.opts
+echo '// ************************************************ '     >>! ./_job.opts
+echo '// * redefined parameters from batch stript       * '     >>! ./_job.opts
+echo '// ************************************************ '     >>! ./_job.opts
+echo '// ************************************************ '     >>! ./_job.opts
+echo '// * (re)define number of events to be processed  * '     >>! ./_job.opts
+echo '// ************************************************ '     >>! ./_job.opts
+echo ' ApplicationMgr.EvtMax    = '$NUMEVENTS'  ;         '     >>! ./_job.opts
+echo '//                                                  '     >>! ./_job.opts
+echo '// ************************************************ '     >>! ./_job.opts
+echo '// * (re)define the output DST file               * '     >>! ./_job.opts
+echo '// ************************************************ '     >>! ./_job.opts
+echo ' GaussTape.Output =                                 '     >>! ./_job.opts
+echo \"DATAFILE=\'$OUTPUTFILE\' TYP=\'ROOT\' OPT=\'NEW\' \" \;  >>! ./_job.opts
+echo '// ************************************************ '     >>! ./_job.opts
 ###############################################################################
 
-
 echo  ' * '$SELF' ************************************************************ '
-echo  ' * '$SELF' * cat ./jobs.opts                                          * '
+echo  ' * '$SELF' * cat ./_jobs.opts                                          * '
 echo  ' * '$SELF' ************************************************************ '
-cat ./job.opts
+cat ./_job.opts
 echo  ' * '$SELF' ************************************************************ '
-echo  ' * '$SELF' * end of cat ./jobs.opts                                   * '
+echo  ' * '$SELF' * end of 'cat ./_jobs.opts'                                * '
 echo  ' * '$SELF' ************************************************************ '
 
 
 # == run the excutable ================================
 if [[ ${MODE} != 'Linuxdbx' ]] then
-  time ./_Gauss.exe ./job.opts
+  time ./_Gauss.exe ./_job.opts
 else
   typeset PATH=/usr/local/bin:PATH
-  gvd  ./_Gauss.exe ./job.opts
+  gvd  ./_Gauss.exe ./_job.opts
 fi
 
 echo  ' * '$SELF' ************************************************************ '
@@ -149,7 +148,7 @@ fi
 
 if [[ $BATCH -eq 1 ]] then
   rm -f ./_Gauss.exe
-  rm -f ./job.opts
+  rm -f ./_job.opts
 # if in batch copy all other files to user directories
   ls *.* >! RETURN
 fi 

@@ -1,0 +1,11 @@
+#!/usr/local/bin/zsh
+
+bjobs 
+
+#( echo '#!/usr/local/bin/zsh'; echo set   5   file5.root ; cat ./Gauss.zjob ) | bsub
+#( echo '#!/usr/local/bin/zsh'; echo set  10  file10.root ; cat ./Gauss.zjob ) | bsub
+( echo '#!/usr/local/bin/zsh'; echo set  25  file25.root ; cat ./Gauss.zjob ) | bsub
+#( echo '#!/usr/local/bin/zsh'; echo set  50  file50.root ; cat ./Gauss.zjob ) | bsub
+#( echo '#!/usr/local/bin/zsh'; echo set 100 file100.root ; cat ./Gauss.zjob ) | bsub
+
+bjobs 
