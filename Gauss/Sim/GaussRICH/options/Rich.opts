@@ -1,12 +1,12 @@
 // Rich specific job options
-GiGa.StepSeq.Members             += { "RichG4StepAnalysis3/RichStep" } ;
+
+//GiGa.StepSeq.Members             += { "RichG4StepAnalysis3/RichStep" } ;
 
 GiGa.TrackSeq.Members      += { "RichG4TrackActionPhotOpt/RichG4PhotOpt" } ;
 GiGa.TrackSeq.Members      += { "Rich1G4TrackActionUpstrPhoton/Rich1UpstrPhotonTrack" } ;
 //GiGa.TrackSeq.Members      += { "RichG4TrackAction/RichTrack" } ;
 
-
-GiGa.EventSeq.Members     += { "RichG4EventAction/RichG4Event" } ;
+//GiGa.EventSeq.Members     += { "RichG4EventAction/RichG4Event" } ;
 
 //GiGa.EventSeq.RichG4Event.RichEventActionVerbose = 3 ;
 //GiGa.EventSeq.RichG4Event.RichEventActionVerbose = 2 ;
@@ -22,7 +22,7 @@ GiGa.EventSeq.RichG4Event.RichG4EventActivateCounting=false;
 GiGa.EventSeq.RichG4Event.RichEventActionHistoFillTimer=true;
 
 
-GiGa.RunSeq.Members           += { "RichG4RunAction/RichG4Run" } ;
+//GiGa.RunSeq.Members           += { "RichG4RunAction/RichG4Run" } ;
  GiGa.RunSeq.RichG4Run.DefineRichG4HistoSet1=false;
  GiGa.RunSeq.RichG4Run.DefineRichG4HistoSet2=false;
  GiGa.RunSeq.RichG4Run.DefineRichG4HistoSet3=false;
