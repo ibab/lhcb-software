@@ -1,23 +1,8 @@
-// $Id: GiGaLVolumeCnv.cpp,v 1.8 2002-01-22 18:24:44 ibelyaev Exp $ 
+// $Id: GiGaLVolumeCnv.cpp,v 1.9 2002-05-03 19:33:39 ibelyaev Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
-// Revision 1.7  2001/08/15 14:48:05  ibelyaev
-// update from DetDesc v7 to DetDesc v8
-//
-// Revision 1.6  2001/08/12 17:24:53  ibelyaev
-// improvements with Doxygen comments
-//
-// Revision 1.5  2001/07/25 17:19:32  ibelyaev
-// all conversions now are moved from GiGa to GiGaCnv
-//
-// Revision 1.4  2001/07/24 11:13:55  ibelyaev
-// package restructurization(III) and update for newer GiGa
-//
-// Revision 1.3  2001/07/15 20:45:11  ibelyaev
-// the package restructurisation
-// 
 // ============================================================================
 #define GIGACNV_GIGALVOLUMECNV_CPP 1 
 // ============================================================================
@@ -36,6 +21,8 @@
 #include "G4LogicalVolume.hh"
 #include "G4PVPlacement.hh"
 /// GiGa & GiGaCnv 
+#include "GiGa/IGiGaSensDet.h"
+#include "GiGa/IGiGaMagField.h"
 #include "GiGaCnv/IGiGaGeomCnvSvc.h"
 #include "GiGaCnv/GiGaCnvUtils.h"
 /// local
@@ -197,15 +184,31 @@ StatusCode GiGaLVolumeCnv::updateRep
         { return Error("updateRep:: coudl not install DPV for " 
                        + lv->name() ) ; }
     }
+  /// sensitivity
+  if( !lv->sdName().empty() ) 
+    {
+      IGiGaSensDet* det = 0 ;
+      StatusCode sc = geoSvc()->sensDet ( lv->sdName(),  det );
+      if( sc.isFailure() ) 
+        { return Error("updateRep:: Could no create SensDet " , sc ) ; }
+      if( 0 == det ) 
+        { return Error("updateRep:: Could no create SensDet "      ) ; }
+      // set sensitive detector 
+      G4LV->SetSensitiveDetector( det );
+    }
+  /// magnetic field 
+  if( !lv->mfName().empty()) 
+    { return Error("Magnetic field per volume is not yet implemented!"); }
   /// convert surfaces (if any) 
-//    {
-//      for( LVolume::Surfaces::iterator it = lv->surfaces().begin() ; 
-//           lv->surfaces().end() != it ; ++it )
-//        { 
-//          StatusCode sc = GiGaCnvUtils::createRep( cnvSvc() , *it );
-//          if( sc.isFailure() ) { return Error("Could not convert surfaces!"); }
-//        }
-//    }
+  //    {
+  //      for( LVolume::Surfaces::iterator it = lv->surfaces().begin() ; 
+  //           lv->surfaces().end() != it ; ++it )
+  //        { 
+  //          StatusCode sc = GiGaCnvUtils::createRep( cnvSvc() , *it );
+  //          if( sc.isFailure() ) 
+  //           { return Error("Could not convert surfaces!"); }
+  //        }
+  //    }
   /// look again at the Geant4 static store
   if( 0 != GiGaVolumeUtils::findLVolume( lv->name() ) ) 
     { return StatusCode::SUCCESS ; }                          ///< RETURN !!!

@@ -1,8 +1,11 @@
-// $Id: GiGaLAssemblyCnv.cpp,v 1.1 2002-01-22 18:24:43 ibelyaev Exp $
+// $Id: GiGaLAssemblyCnv.cpp,v 1.2 2002-05-03 19:33:39 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.1  2002/01/22 18:24:43  ibelyaev
+//  Vanya: update for newer versions of Geant4 and Gaudi
+//
 // ============================================================================
 // Includes 
 #include "GaudiKernel/CnvFactory.h"
@@ -152,6 +155,12 @@ StatusCode GiGaLAssemblyCnv::updateRep
                            pv->name()                              );
     }
   ///
+  /// sensitivity
+  if( !lv->sdName().empty() ) 
+    { return Error("LAssembly could not be sensitive (now)"            ) ; }
+  /// magnetic field 
+  if( !lv->mfName().empty()) 
+    { return Error("Magnetic field per volume is not yet implemented!" ) ; }
   ///
   return StatusCode::SUCCESS ;
   ///

@@ -1,10 +1,17 @@
-! $Id: release.notes,v 1.16 2002-05-01 18:33:18 ibelyaev Exp $
+! $Id: release.notes,v 1.17 2002-05-03 19:33:39 ibelyaev Exp $
 ! =============================================================================
 ! CVS tag $Name: not supported by cvs2svn $
 ! =============================================================================
 Package         : GiGaCnv
 Package Manager : Vanya Belyaev
 ! =============================================================================
+
+!==============================================================================
+! 3 May 2002  v5r0 Vanya Belyaev
+! GiGaLVolumeCnv.cpp and GiGaLAssemblyCnv.cpp 
+! - reintroduce the creation of sensitive detectors
+!   (somehow these lines disappeared from mainstream development) 
+!==============================================================================
 
 !==============================================================================
 ! 1 May 2002  v5r0 Vanya Belyaev
