@@ -50,7 +50,7 @@ ApplicationMgr.DLLs += { "MuonID", "MuonTools" };
 #pragma print off
 #include "$CALORECOOPTS/Reco.opts"
 #include "$CALOPIDSOPTS/CaloPIDs.opts"
-#include "$MUONIDROOT/options/MuonIDdll.opts"
+#include "$MUONIDROOT/options/MuonIDDLLTool.opts"
 #pragma print on
 
 // Physics packages and necessary dependent packages

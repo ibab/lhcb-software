@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.59 2003-05-28 12:52:45 gcorti Exp $
+# $Id: requirements,v 1.60 2003-05-30 11:49:40 gcorti Exp $
 # Created    : 07/02/2002
 # Maintainer : Gloria Corti
 #
@@ -34,12 +34,12 @@ use  XmlDDDB		v15r3	 Det
 #--- DaVinciSys v8r0 packages 
 
 #    Enable L0 and L1 Trigger reprocessing and HLT 
-use  L0DU          	v6r4	 L0
+use  L0DU          	v6r5	 L0
 use  L1Decision         v1r7     L1
 use  HltTools           v2r0     Hlt
 use  HltVelo            v2r0     Hlt
 use  HltVeloTT          v2r0     Hlt
-use  HltLongTrack       v2r0     Hlt
+use  HltLongTrack       v2r1     Hlt
 use  HltChecker         v2r0     Hlt
 
 #    Enable neutral ProtoParticles production and CaloPIDs
@@ -66,9 +66,9 @@ use  MCTools            v1r1     Phys
 use  DaVinciTools       v8r1     Phys
 use  DaVinciAssociators v4r1     Phys
 use  DaVinciMCTools     v5r0     Phys
-use  DaVinciTest        v4r1     Phys
+use  DaVinciTest        v4r1p1   Phys
 use  PhysSelections	v5r0     Phys
-use  FlavourTagging     v4r5     Phys
+use  FlavourTagging     v4r4p1   Phys
 use  DaVinciEff         v2r5     Phys
 use  DaVinciUser        v4r1     Phys
 use  PhysSelSys		v5r2     PhysSel
@@ -90,5 +90,5 @@ macro DaVinci_linkopts    "${application_linkopts}"
 
 # set the DaVinci version = v * 100000 + r * 100 + p
 #============================================================================
-macro_append cppflags " -DDaVinciVersion=800000 " \
-             VisualC  " /DDaVinciVersion=800000 "
+macro_append cppflags " -DDaVinciVersion=800100 " \
+             VisualC  " /DDaVinciVersion=800100 "

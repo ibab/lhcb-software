@@ -7,7 +7,7 @@
  */
 
 // Redo MuonID with new tuning
-#include "$DAVINCIROOT/optiosn/MuonIDReTuning.opts"
+#include "$DAVINCIROOT/options/MuonIDReTuning.opts"
 
 // Charged ProtoParticles using new MuonID
 ApplicationMgr.TopAlg += { "ChargedProtoPAlg" };
