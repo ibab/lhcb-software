@@ -4,12 +4,12 @@
 ! Purpose     : List of packages in Boole project
 !-----------------------------------------------------------------------------
 
-!======================== BooleSys v2r0 2003-10-06 ========================
-! 2003-10-06 - Marco Cattaneo
+!======================== BooleSys v2r0 2003-10-08 ========================
+! 2003-10-08 - Marco Cattaneo
  - Packages added:    RichReadout v1r0, RiSicbCnv v3r4
  - Packages modified: Boole v2r0, DigiAlg v2r0, ITCheckers v1r3p1, MuonAlgs v5r0,
      MuonBackground v1r3, OTAlgorithms v13r2, RichDetTools v3r0, RichDigiQC v1r1,
-     RichUtils v3r3
+     RichUtils v3r3, L1Decision v2r2
  - Packages removed:  BrunelSicb, BrunelAlgs, MCTools, recevt, recrich
 
 !======================== BooleSys v1r0 2003-07-17 ========================
