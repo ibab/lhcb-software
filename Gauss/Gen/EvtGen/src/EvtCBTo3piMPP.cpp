@@ -75,7 +75,22 @@ void EvtCBTo3piMPP::init(){
 }
 
 void EvtCBTo3piMPP::initProbMax(){
+  double alpha = getArg(0);
 
+  int iset;
+  iset=10000;
+
+  double p4pi1[4],p4pi2[4],p4pi3[4]; 
+
+  double realA,imgA,realbarA,imgbarA;
+
+#ifdef WIN32
+  EVT3PIONSMPP(&alpha,&iset,p4pi1,p4pi2,p4pi3,
+  	     &realA,&imgA,&realbarA,&imgbarA);
+#else
+  evt3pionsmpp_(&alpha,&iset,p4pi1,p4pi2,p4pi3,
+  	     &realA,&imgA,&realbarA,&imgbarA);
+#endif
   setProbMax(1.5);
 
 }
@@ -97,16 +112,7 @@ void EvtCBTo3piMPP::decay( EvtParticle *p ){
   double alpha = getArg(0);
 
   int iset;
-
-  static int first=1;
-
-  if (first==1) {
-    iset=10000;
-    first=0;
-  }
-  else{
-    iset=0;
-  }
+  iset=0;
 
   double p4pi1[4],p4pi2[4],p4pi3[4]; 
 

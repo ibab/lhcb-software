@@ -80,6 +80,25 @@ void EvtBTo3piCP::init(){
 
 void EvtBTo3piCP::initProbMax(){
 
+  // perform common blocks initialization before
+  // first use
+  double alpha=getArg(1);
+  int iset;
+
+  iset=10000;
+
+  double p4piplus[4],p4piminus[4],p4gamm1[4],p4gamm2[4]; 
+
+  double realA,imgA,realbarA,imgbarA;
+
+#ifdef WIN32
+  EVT3PIONS(&alpha,&iset,p4piplus,p4piminus,p4gamm1,p4gamm2,
+	     &realA,&imgA,&realbarA,&imgbarA);
+#else
+  evt3pions_(&alpha,&iset,p4piplus,p4piminus,p4gamm1,p4gamm2,
+	     &realA,&imgA,&realbarA,&imgbarA);
+#endif
+
   setProbMax(1.5);
 
 }
@@ -110,16 +129,8 @@ void EvtBTo3piCP::decay( EvtParticle *p){
   double alpha=getArg(1);
   int iset;
 
-  static int first=1;
-
-  if (first==1) {
-    iset=10000;
-    first=0;
-  }
-  else{
-    iset=0;
-  }
-
+  iset=0;
+  
   double p4piplus[4],p4piminus[4],p4gamm1[4],p4gamm2[4]; 
 
   double realA,imgA,realbarA,imgbarA;

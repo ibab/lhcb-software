@@ -6,6 +6,9 @@ Package manager : Patrick Robbe and Witek Pokorski
  - EvtBTo3pi.F, EvtBTo3piMPP.F, EvtBTo3piP00.F, EvtBToKpipi.F : use
     evtranf instead of ranf to ensure reproducibility
  - cranf.cpp, ranf.F : remove and use EvtRanf.cpp instead
+ - EvtBTo3piCP.cpp, EvtBToKpipiCP.cpp, EvtCBTo3piMPP.cpp, EvtCBTo3piP00.cpp,
+   EvtGen.cpp : changes to reproduce all events in B->3 pi decays 
+   (and similar decay modes).
 
 ! 2003-11-06 - Patrick Robbe
  - EvtHelAmp.cpp : fix for windows

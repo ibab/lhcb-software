@@ -84,6 +84,28 @@ void EvtCBTo3piP00::init(){
 
 
 void EvtCBTo3piP00::initProbMax(){
+  double alpha = getArg(0);
+  int iset;
+  iset=10000;
+
+  double p4pi1[4],p4Gamma11[4],p4Gamma12[4];
+  double p4Gamma21[4],p4Gamma22[4];
+
+  double realA,imgA,realbarA,imgbarA;
+
+#ifdef WIN32
+  EVT3PIONSP00(&alpha,&iset,
+		 p4pi1,
+		 p4Gamma11,p4Gamma12,
+		 p4Gamma21,p4Gamma22,
+		 &realA,&imgA,&realbarA,&imgbarA);
+#else
+  evt3pionsp00_(&alpha,&iset,
+		 p4pi1,
+		 p4Gamma11,p4Gamma12,
+		 p4Gamma21,p4Gamma22,
+		 &realA,&imgA,&realbarA,&imgbarA);
+#endif
 
   setProbMax(1.5);
 
@@ -106,15 +128,7 @@ void EvtCBTo3piP00::decay( EvtParticle *p ){
   EvtVector4R p4[3];
   double alpha = getArg(0);
   int iset;
-  static int first=1;
-
-  if (first==1) {
-    iset=10000;
-    first=0;
-  }
-  else{
-    iset=0;
-  }
+  iset=0;
 
   double p4pi1[4],p4Gamma11[4],p4Gamma12[4];
   double p4Gamma21[4],p4Gamma22[4];

@@ -83,6 +83,22 @@ void EvtBToKpipiCP::init(){
   checkSpinDaughter(1,EvtSpinType::SCALAR);
   checkSpinDaughter(2,EvtSpinType::SCALAR);
 
+  double alpha=getArg(1);
+  double beta=getArg(2);
+  int iset;
+  iset=10000;
+
+  double p4Kplus[4],p4piminus[4],p4gamm1[4],p4gamm2[4]; 
+
+  double realA,imgA,realbarA,imgbarA;
+
+#ifdef WIN32
+  EVTKPIPI(&alpha,&beta,&iset,p4Kplus,p4piminus,p4gamm1,p4gamm2,
+	     &realA,&imgA,&realbarA,&imgbarA);
+#else
+  evtkpipi_(&alpha,&beta,&iset,p4Kplus,p4piminus,p4gamm1,p4gamm2,
+	     &realA,&imgA,&realbarA,&imgbarA);
+#endif
 }
 
 
@@ -111,15 +127,7 @@ void EvtBToKpipiCP::decay( EvtParticle *p){
   double beta=getArg(2);
   int iset;
 
-  static int first=1;
-
-  if (first==1) {
-    iset=10000;
-    first=0;
-  }
-  else{
-    iset=0;
-  }
+  iset=0;
 
   double p4Kplus[4],p4piminus[4],p4gamm1[4],p4gamm2[4]; 
 

@@ -85,6 +85,16 @@ EvtGen::EvtGen(const char* const decayName,
 	       EvtRandomEngine* randomEngine,
 	       EvtAbsRadCorr* isrEngine){
 
+  if (randomEngine==0){
+    static EvtRandomEngine defaultRandomEngine;
+    EvtRandom::setRandomEngine(&defaultRandomEngine);
+    report(INFO,"EvtGen") <<"No random engine given in "
+			  <<"EvtGen::EvtGen constructor, "
+			  <<"will use default EvtRandomEngine."<<std::endl;
+  }
+  else{
+    EvtRandom::setRandomEngine(randomEngine);    
+  }
 
   report(INFO,"EvtGen") << "Initializing EvtGen"<<std::endl;
 
@@ -109,21 +119,9 @@ EvtGen::EvtGen(const char* const decayName,
 
   _pdl.readPDT(pdtTableName);
 
-
   std::ifstream indec;
 
   EvtDecayTable::readDecayFile(decayName);
-
-  if (randomEngine==0){
-    static EvtRandomEngine defaultRandomEngine;
-    EvtRandom::setRandomEngine(&defaultRandomEngine);
-    report(INFO,"EvtGen") <<"No random engine given in "
-			  <<"EvtGen::EvtGen constructor, "
-			  <<"will use default EvtRandomEngine."<<std::endl;
-  }
-  else{
-    EvtRandom::setRandomEngine(randomEngine);    
-  }
 
   report(INFO,"EvtGen") << "Done initializing EvtGen"<<std::endl;
 
