@@ -1,4 +1,4 @@
-// $Id: SimplePlotTool.h,v 1.2 2005-01-10 09:57:17 pkoppenb Exp $
+// $Id: SimplePlotTool.h,v 1.3 2005-01-13 12:28:01 pkoppenb Exp $
 #ifndef SIMPLEPLOTTOOL_H 
 #define SIMPLEPLOTTOOL_H 1
 
@@ -34,10 +34,12 @@ public:
   StatusCode setPath(const std::string&);
 
   /// Fill plots using a ParticleVector
-  StatusCode fillPlots(const ParticleVector&);
+  StatusCode fillPlots(const ParticleVector&,
+                       const std::string trailer = "");
 
   /// Fill plots using a single Particle
-  StatusCode fillPlots(const Particle*);  
+  StatusCode fillPlots(const Particle*,
+                       const std::string trailer = "");  
 
 protected:
 
@@ -65,7 +67,7 @@ private:
     double m_min ;
     double m_max ;
   };
-  StatusCode doPlot(const Particle*,MyHisto&) ;
+  StatusCode doPlot(const Particle*,MyHisto&,std::string) ;
 
   std::vector<MyHisto> m_histos ; ///< All histogram definitions
   bool m_allDefault ; ///< All histograms are default

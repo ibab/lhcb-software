@@ -1,4 +1,4 @@
-// $Id: RecursivePlotTool.h,v 1.1 2005-01-10 09:57:17 pkoppenb Exp $
+// $Id: RecursivePlotTool.h,v 1.2 2005-01-13 12:28:01 pkoppenb Exp $
 #ifndef RECURSIVEPLOTTOOL_H 
 #define RECURSIVEPLOTTOOL_H 1
 
@@ -30,10 +30,12 @@ public:
   StatusCode setPath(const std::string&);
 
    /// Fill plots using a ParticleVector
-  StatusCode fillPlots(const ParticleVector&);
+  StatusCode fillPlots(const ParticleVector&,
+                       const std::string trailer);
 
   /// Fill plots using a single Particle
-  StatusCode fillPlots(const Particle*);  
+  StatusCode fillPlots(const Particle*,
+                       const std::string trailer);  
  
 
 protected:
@@ -44,7 +46,10 @@ private:
   std::vector<double> m_minima ;    ///< Lower bounds for this variable
   std::vector<double> m_maxima ;    ///< Upper bounds for this variable
 
+  /// IPlotTool interface for simple plot tool
   IPlotTool* m_simplePlotTool ;
+  /// Accessor for ParticlePropertySvc
+  IParticlePropertySvc* m_ppSvc ;
   
 
 };

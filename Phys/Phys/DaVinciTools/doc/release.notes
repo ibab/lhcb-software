@@ -1,7 +1,14 @@
-! $Id: release.notes,v 1.145 2005-01-12 15:43:26 pkoppenb Exp $
+! $Id: release.notes,v 1.146 2005-01-13 12:28:01 pkoppenb Exp $
 ! Package     : DaVinciTools
 ! Responsible : P. Koppenburg
 
+! 2005-01-13 - P. Koppenburg
+  - src/SimplePlotTool.{h,cpp}
+  - src/RecursivePlotTool.{h,cpp}
+    . Implement default argument "trailer" in fillPlots method.
+  - src/RecursivePlotTool.{h,cpp}
+    . Add trailer "from [MotherName]" for all particles in recursive loop.
+      
 ! 2005-01-12 - P. Koppenburg
   - src/DecodeSimpleDecayString.{h,cpp}
     . Add a reset() method to reset the vectors when a new DecayDescriptor 

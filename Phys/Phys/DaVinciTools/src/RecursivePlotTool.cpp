@@ -1,9 +1,11 @@
-// $Id: RecursivePlotTool.cpp,v 1.1 2005-01-10 09:57:17 pkoppenb Exp $
+// $Id: RecursivePlotTool.cpp,v 1.2 2005-01-13 12:28:01 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h" 
 #include "GaudiKernel/SmartIF.h" 
+#include "GaudiKernel/IParticlePropertySvc.h"
+#include "GaudiKernel/ParticleProperty.h"
 
 // local
 #include "RecursivePlotTool.h"
@@ -46,8 +48,12 @@ StatusCode RecursivePlotTool::initialize() {
   StatusCode sc = GaudiTool::initialize();
   if (!sc) return sc;
 
-  //  m_simplePlotTool = tool<IPlotTool>("SimplePlotTool",this);
-  sc = toolSvc()->retrieveTool("SimplePlotTool",m_simplePlotTool,this); // old way!
+  m_ppSvc = svc<IParticlePropertySvc>("ParticlePropertySvc", true);
+  if( !m_ppSvc ) {
+    err() << "Unable to locate Particle Property Service" << endreq;
+    return StatusCode::FAILURE;
+  }          
+  m_simplePlotTool = tool<IPlotTool>("SimplePlotTool",this);
   if( !m_simplePlotTool ) {
     err() << "Unable to get SimplePlotTool" << endreq;
     return StatusCode::FAILURE;
@@ -85,9 +91,10 @@ StatusCode RecursivePlotTool::setPath(const std::string& path) {
 //=============================================================================
 // Fill plots for a vector of particles
 //=============================================================================
-StatusCode RecursivePlotTool::fillPlots(const ParticleVector& PV) {
+StatusCode RecursivePlotTool::fillPlots(const ParticleVector& PV,
+                                        const std::string trailer) {
   for ( ParticleVector::const_iterator p = PV.begin() ; p != PV.end() ; ++p ){
-    StatusCode sc = fillPlots(*p);
+    StatusCode sc = fillPlots(*p,trailer);
     if (!sc) return sc;
   }
   return StatusCode::SUCCESS;
@@ -95,13 +102,17 @@ StatusCode RecursivePlotTool::fillPlots(const ParticleVector& PV) {
 //=============================================================================
 // Fill plots for particle and daughters
 //=============================================================================
-StatusCode RecursivePlotTool::fillPlots(const Particle* p) {
+StatusCode RecursivePlotTool::fillPlots(const Particle* p,
+                                        const std::string trailer) {
   debug() << "Filling plots for particle " << p->particleID().pid() 
           << " " << p->momentum() << endmsg ;
-  StatusCode sc = m_simplePlotTool->fillPlots(p);
+  StatusCode sc = m_simplePlotTool->fillPlots(p,trailer);
   if (!sc) return sc;
   const Vertex* v = p->endVertex();
   if (v){
+    std::string newtrailer ;
+    ParticleProperty *pp = m_ppSvc->findByPythiaID(abs(p->particleID().pid()));
+    if (pp) newtrailer = "from "+pp->particle();
     SmartRefVector<Particle> pv = v->products();
     if (pv.empty()){
       err() << "Particle has endvertex but no products" << endmsg;
@@ -111,7 +122,7 @@ StatusCode RecursivePlotTool::fillPlots(const Particle* p) {
     // loop on daughters
     for ( SmartRefVector<Particle>::const_iterator ip = pv.begin();
           ip!=pv.end();++ip) {
-      StatusCode sc = this->fillPlots(*ip); // call this recursively
+      StatusCode sc = this->fillPlots(*ip,newtrailer); // call this recursively
       if (!sc) return StatusCode::FAILURE;
     } 
   }

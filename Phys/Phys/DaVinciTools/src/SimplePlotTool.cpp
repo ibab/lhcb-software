@@ -1,4 +1,4 @@
-// $Id: SimplePlotTool.cpp,v 1.3 2005-01-12 16:50:57 pkoppenb Exp $
+// $Id: SimplePlotTool.cpp,v 1.4 2005-01-13 12:28:01 pkoppenb Exp $
 // Include files 
 #include "gsl/gsl_math.h"
 // from Gaudi
@@ -138,9 +138,10 @@ StatusCode SimplePlotTool::setPath(const std::string& path) {
 //=============================================================================
 // 
 //=============================================================================
-StatusCode SimplePlotTool::fillPlots(const ParticleVector& PV) {
+StatusCode SimplePlotTool::fillPlots(const ParticleVector& PV,
+                                     const std::string trailer) {
   for ( ParticleVector::const_iterator p = PV.begin() ; p != PV.end() ; ++p ){
-    StatusCode sc = fillPlots(*p);
+    StatusCode sc = fillPlots(*p,trailer);
     if (!sc) return sc;
   }
   return StatusCode::SUCCESS;
@@ -148,12 +149,13 @@ StatusCode SimplePlotTool::fillPlots(const ParticleVector& PV) {
 //=============================================================================
 // 
 //=============================================================================
-StatusCode SimplePlotTool::fillPlots(const Particle* p) {
+StatusCode SimplePlotTool::fillPlots(const Particle* p,
+                                     const std::string trailer) {
 
   debug() << "Filling plots for " << p->particleID().pid() << endmsg;
   for ( std::vector<MyHisto>::iterator H = m_histos.begin() ; 
         H != m_histos.end() ; ++H ){
-    StatusCode sc = doPlot(p,(*H));
+    StatusCode sc = doPlot(p,(*H),trailer);
     if (!sc) return sc ;
   }
   return StatusCode::SUCCESS;
@@ -162,17 +164,19 @@ StatusCode SimplePlotTool::fillPlots(const Particle* p) {
 //=============================================================================
 //  Plot
 //=============================================================================
-StatusCode SimplePlotTool::doPlot(const Particle* P, MyHisto& H) {
+StatusCode SimplePlotTool::doPlot(const Particle* P, MyHisto& H, 
+                                  std::string trailer) {
   std::string var = H.getVar();
   ParticleProperty *pp = m_ppSvc->findByPythiaID(abs(P->particleID().pid()));
   std::string name = "Unknown";
   if (pp) name = pp->particle();
+  if (trailer!="") name+=" "+trailer;
   double hmin = H.getMin();
   double hmax = H.getMax();
 
   debug() << "Filling plot for " << var << " of " << name << endmsg;
 
-  if ( var == "M" ){
+  if ( ( var == "M" ) && (P->endVertex())){
     if ( hmin < 0 ){
       double mn = pp->mass() - gsl_max(pp->mass()/50.,pp->maxWidth()); // at least 2%
       double mx = pp->mass() + gsl_max(pp->mass()/50.,pp->maxWidth());
@@ -195,27 +199,28 @@ StatusCode SimplePlotTool::doPlot(const Particle* P, MyHisto& H) {
             << PVContainer << endreq;
       return false ;
     }
+// IP or IPs
+    double bestf = -1. , bestfe = -1., minip = 9999999.;
     for (VertexVector::const_iterator iv=PV->begin();iv!=PV->end();++iv) {
-      if ( var == "IP" || var == "IPs" ){      
-        double ip = -1 ,ipe = -1.;
-        StatusCode sc = m_geomTool->calcImpactPar(*P, *(*iv), ip, ipe);
-        if (!sc) continue;
-        if ( var == "IP" ){
-          plot(ip,"IP of "+name,hmin,hmax);
-        } else if ( var == "IPs" ){
-          if (ipe>0) plot(ip/ipe,"IP/err of "+name,hmin,hmax);       
-        }
-      } else {
-        double f = -1. , fe = -1.;
-        if (P->endVertex()) {
-          StatusCode sc = m_geomTool->calcVertexDis(*(*iv), (*P->endVertex()), f, fe);
-          if (!sc) return  StatusCode::SUCCESS;
-          if ( var == "DPV" ){
-            plot(f,"PV distance of "+name,hmin,hmax);
-          } else if ( var == "FS" ){
-            if (fe>0) plot(f/fe,"Flight signif. of "+name,hmin,hmax);       
-          }
-        }
+      double ip = -1 ,ipe = -1.;
+      StatusCode sc = m_geomTool->calcImpactPar(*P, *(*iv), ip, ipe);
+      if (!sc) continue;
+      if ( var == "IP" ){
+        plot(ip,"IP of "+name,hmin,hmax);
+      } else if ( var == "IPs" ){
+        if (ipe>0) plot(ip/ipe,"IP/err of "+name,hmin,hmax);       
+// DPV or FS - to "best PV"
+      } else if ( (P->endVertex()) && ( ip/ipe < minip ) ) {
+        minip = ip/ipe ; // new best PV
+        StatusCode sc = m_geomTool->calcVertexDis(*(*iv), (*P->endVertex()), bestf ,bestfe );
+        if (!sc) continue;  // ignore
+      }
+    } // PV loop
+    if (minip < 9999999.){      
+      if ( var == "DPV" ){
+        plot(bestf,"PV distance of "+name,hmin,hmax);
+      } else if ( var == "FS" ){
+        if (bestfe>0) plot(bestf/bestfe,"Flight signif. of "+name,hmin,hmax);       
       }
     }
   } else {
