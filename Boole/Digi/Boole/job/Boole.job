@@ -63,8 +63,9 @@ else
 endif
 
 # == run the excutable ================================
-if ($MODE == "Linuxdbx") then
-  ddd tmpjob_$Dver.exe $BOOLEOPTS/$Dver.opts
+if ($MODE == $CMTDEB) then
+  setenv JOBOPTPATH $BOOLEOPTS/$Dver.opts
+  gvd tmpjob_$Dver.exe
 else
   time tmpjob_$Dver.exe $BOOLEOPTS/$Dver.opts
 endif
