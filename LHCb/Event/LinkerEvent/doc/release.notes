@@ -5,6 +5,10 @@
 !-----------------------------------------------------------------------------
 
 !====================== LinkerEvent v1r6 2005-01-31 ==========================
+! 2005-02-04 - Olivier Callot
+ - Fix a bug in accessing relations, as all the linked containers are not 
+   loaded by default
+
 ! 2005-01-31 - Marco Cattaneo
  - Fix a windows warning in LinkReference constructor and LinksByKey.cpp
 

@@ -1,4 +1,4 @@
-// $Id: LinksByKey.cpp,v 1.7 2005-01-31 15:45:29 cattanem Exp $
+// $Id: LinksByKey.cpp,v 1.8 2005-02-04 16:04:18 ocallot Exp $
 // Include files 
 
 #include "GaudiKernel/IRegistry.h"
@@ -133,7 +133,11 @@ bool LinksByKey::firstReference ( int key,
                                   LinkReference& reference ) const {
   int linkID = -1;           // Case with only a key
   if ( NULL != container ) {
-    LinkManager::Link* link = linkMgr()->link( container );
+    LinkManager::Link* link = linkMgr()->link( container ); // test with pointer
+    if ( 0 == link ) {  // try with name, and store pointer if OK
+      link = linkMgr()->link( container->registry()->identifier() ); 
+      if ( 0 != link )  link->setObject( container );
+    }
     if ( 0 == link ) return false;
     linkID = link->ID();
   }
