@@ -1,9 +1,14 @@
-$Id: release.notes,v 1.4 2004-06-28 13:40:57 cattanem Exp $
+$Id: release.notes,v 1.5 2004-07-14 13:07:13 cattanem Exp $
 Package: IOExample
 Package Manager: M.Frank
 Purpose: Demonstrate how to write and read back event data using POOL I/O.
 
-!======================= IOExample v1r2 2004-06-28 ========================
+!======================= IOExample v1r2 2004-07-14 ========================
+! 2004-07-14 - Marco Cattaneo
+ - Remove usage of obsolete GaudiRootDb format
+ - Update WriteMin input files to files produced in DC04
+ - Update Dst,Digi,Sim contents to DC04 versions
+
 ! 2004-06-28 - Marco Cattaneo
  - Adapted job options for DAQEvent change to component library
 

@@ -1,9 +1,10 @@
-// Options to read an OOSIM file written with Root/IO and copy it to POOL
+// Options to read POOL .sim file and make a copy
 
 EventSelector.Input   = {
-"DATAFILE='rfio:/castor/cern.ch/lhcb/prod/00000422_00000004_1.oosim' TYP='ROOT' OPT='READ'"
-};
+  "DATAFILE='PFN:rfio:/castor/cern.ch/lhcb/DC04/00000541_00000001_1.sim' TYP='POOL_ROOTTREE' OPT='READ'",
+}; // Event type 10000000 - incl_b
 
+// Define the SIM content to copy
 #include "$IOEXAMPLEROOT/options/GaussTape.opts"
 
 SimWriter.Output = "DATAFILE='PFN:PoolSim.root' TYP='POOL_ROOTTREE' OPT='REC'";

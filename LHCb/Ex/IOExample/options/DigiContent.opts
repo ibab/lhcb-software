@@ -1,12 +1,14 @@
-// Define Digi content for output of digitization (copied from Boole v5r2)
+// Define Digi content for output of digitization (copied from Boole v5r9)
 // ----------------------------------------------
 DigiWriter.OptItemList =
 {
-  "/Event/Prev#*"
-, "/Event/PrevPrev#*"
-, "/Event/Next#*"
-, "/Event/LHCBackground#*"
-, "/Event/Gen/HepMCEvents#1"
+  "/Event/Prev#1"
+, "/Event/Prev/Header#1"
+, "/Event/PrevPrev#1"
+, "/Event/PrevPrev/Header#1"
+, "/Event/Next#1"
+, "/Event/Next/Header#1"
+, "/Event/MC/Signal#1"
 }; 
 DigiWriter.ItemList = 
 {
@@ -18,9 +20,12 @@ DigiWriter.ItemList =
 , "/Event/Gen#1"
 , "/Event/Gen/Header#1"
 , "/Event/Gen/Collisions#1"
+, "/Event/Gen/HepMCEvents#1"
+, "/Event/Gen/HardProcesses#1"
 , "/Event/MC#1"
-, "/Event/MC/Particles#1"  // To be Filtered in Gauss
-, "/Event/MC/Vertices#1"   // To be Filtered in Gauss
+, "/Event/MC/Particles#1"
+, "/Event/MC/Vertices#1"
+, "/Event/MC/MCTrackInfo#1"
 , "/Event/MC/Velo#1"
 , "/Event/MC/Velo/Hits#1"
 , "/Event/MC/Velo/PuHits#1"
@@ -49,9 +54,8 @@ DigiWriter.ItemList =
 , "/Event/Trig/L0/Muon#1"
 , "/Event/Trig/L0/PuVeto#1"
 , "/Event/Trig/L0/Decision#1" 
+  // Keep directory nodes, to avoid loading them when recreating digits 
 , "/Event/Raw#2"
-, "/Event/Raw/Velo/Clusters#1"
-, "/Event/Raw/IT/Digits#1"
 , "/Event/Rec#1"
 , "/Event/Rec/Relations#1"
 , "/Event/Rec/Relations/ITDigits2MCHits#1"
@@ -68,15 +72,11 @@ DigiWriter.ItemList =
 , "/Event/Link/Trig/L0#1"
 , "/Event/Link/Trig/L0/Calo#1"
 , "/Event/Link/Trig/L0/FullCalo#1"
-};
-// Additional objects from new L1 simulation
-DigiWriter.ItemList += {
-  ,"/Event/Link/Raw#1"
-  ,"/Event/Link/Raw/Velo#1"
-  ,"/Event/Link/Raw/Velo/Clusters#1"
-  ,"/Event/Link/Raw/IT#1"
-  ,"/Event/Link/Raw/IT/Digits#1"
-  ,"/Event/Link/Raw/OT#1"
-  ,"/Event/Link/Raw/OT/Digits#1"
-  ,"/Event/MC/MCTrackInfo#1"
+, "/Event/Link/Raw#1"
+, "/Event/Link/Raw/Velo#1"
+, "/Event/Link/Raw/Velo/Clusters#1"
+, "/Event/Link/Raw/IT#1"
+, "/Event/Link/Raw/IT/Digits#1"
+, "/Event/Link/Raw/OT#1"
+, "/Event/Link/Raw/OT/Digits#1"
 };

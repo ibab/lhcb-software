@@ -1,11 +1,13 @@
+// Options to read POOL .digi file and make a copy
+
 // Load associators DLLs as they contain the relations factories
 #include "$ASSOCIATORSSYSROOT/options/DLLs.opts"
 
 EventSelector.Input   = {
-  "DATAFILE='rfio:/castor/cern.ch/user/c/cattanem/Boole/v5r2/411300.oodigi' TYP='ROOT' OPT='READ'"
-};
+  "DATAFILE='PFN:rfio:/castor/cern.ch/lhcb/DC04/00000541_00000001_5.digi' TYP='POOL_ROOTTREE' OPT='READ'"
+}; // Event type 10000000 - incl_b
 
-// Define the OODIGI content to copy
+// Define the DIGI content to copy
 #include "$IOEXAMPLEROOT/options/DigiContent.opts"
 
 DigiWriter.Output = "DATAFILE='PFN:PoolDigi.root' TYP='POOL_ROOTTREE' OPT='REC'";

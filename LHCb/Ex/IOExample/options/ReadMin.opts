@@ -1,4 +1,4 @@
-// $Id: ReadMin.opts,v 1.7 2004-06-28 13:40:57 cattanem Exp $
+// $Id: ReadMin.opts,v 1.8 2004-07-14 13:07:13 cattanem Exp $
 
 //--------------------------------------------------------------------
 // Example to navigate the event data store, starting from a POOL file
@@ -11,10 +11,6 @@ ApplicationMgr.EvtMax      = 5;
 
 // Job options to set up the POOL persistency
 #include "$GAUDIPOOLDBROOT/options/GaudiPoolDbRoot.opts"
-
-// Job options for the old Root/IO persistency. Needed for DST and DIGI example
-// They enable navigation to event objects not on the POOL file 
-#include "$STDOPTS/RootDb.opts"
 
 // DLLs that contain the necessary dictionaries and factories
 ApplicationMgr.DLLs += { "CaloEvent", "DAQEvent" };
@@ -31,8 +27,8 @@ StoreExplorer.ExploreRelations = 1;
 // Input data file can be produced by first running IOMin.exe with WriteMin.opts
 
 // Brunel file
-EventSelector.Input = {"DATAFILE='PFN:PoolDst.root' TYP='POOL_ROOT' OPT='READ'"};
+//EventSelector.Input = {"DATAFILE='PFN:PoolDst.root' TYP='POOL_ROOT' OPT='READ'"};
 // Boole file
 //EventSelector.Input  = {"DATAFILE='PFN:PoolDigi.root' TYP='POOL_ROOT' OPT='READ'" };
 // Gauss file
-//EventSelector.Input = {"DATAFILE='PFN:PoolSim.root' TYP='POOL_ROOT' OPT='READ'"};
+EventSelector.Input = {"DATAFILE='PFN:PoolSim.root' TYP='POOL_ROOT' OPT='READ'"};

@@ -1,4 +1,4 @@
-// Define DST content for Brunel (copied from Brunel v23r2)
+// Define DST content for Brunel (copied from Brunel v23r7)
 
 DstWriter.OptItemList =
 {
@@ -8,9 +8,7 @@ DstWriter.OptItemList =
 , "/Event/PrevPrev/Header#1"
 , "/Event/Next#1"
 , "/Event/Next/Header#1"
-, "/Event/LHCBackground#1"
-, "/Event/LHCBackground/Header#1"
-, "/Event/Gen/HepMCEvents#1"
+, "/Event/MC/Signal#1"
 }; 
 DstWriter.ItemList = 
 {
@@ -19,6 +17,8 @@ DstWriter.ItemList =
 , "/Event/Gen#1"
 , "/Event/Gen/Header#1"
 , "/Event/Gen/Collisions#1"
+, "/Event/Gen/HepMCEvents#1"
+, "/Event/Gen/HardProcesses#1"
 , "/Event/MC#1"
 , "/Event/MC/Particles#1"
 , "/Event/MC/Vertices#1"
@@ -32,16 +32,12 @@ DstWriter.ItemList =
 , "/Event/DAQ#1"
 , "/Event/DAQ/L1Buffer#1"
 , "/Event/DAQ/RawBuffer#1"
-, "/Event/Raw#1"
-, "/Event/Raw/Velo#1"
-, "/Event/Raw/Velo/Clusters#1"
+, "/Event/Raw#2"
 , "/Event/Rec#1"
 , "/Event/Rec/Status#1"
 , "/Event/Rec/IT#1"
 , "/Event/Rec/IT/Summary#1"
-, "/Event/Rec/IT/Clusters#1"
 , "/Event/Rec/OT#1"
-, "/Event/Rec/OT/Clusters#1"
 , "/Event/Rec/Tr#1"
 , "/Event/Rec/Tr/Best#1"
 , "/Event/Rec/Tr/ITClusters#1"
@@ -66,6 +62,7 @@ DstWriter.ItemList =
 , "/Event/Rec/Calo/PrsE#1"
 , "/Event/Rec/Calo/EcalE#1"
 , "/Event/Rec/Muon#1"
+  // Muon coordinates need by MuonID log likelihood
 , "/Event/Rec/Muon/M1#1"
 , "/Event/Rec/Muon/M2#1"
 , "/Event/Rec/Muon/M3#1"
@@ -80,7 +77,7 @@ DstWriter.ItemList =
   // "Relations" MC truth
 , "/Event/Rec/Relations#1"
 , "/Event/Rec/Relations/EcalClusters2MCParticles#1"
-  //, "/Event/Rec/Relations/Tr2MCP#1" //- needs TrAssociators...
+, "/Event/Rec/Relations/Tr2MCP#1"
   // "Links" MC truth
 , "/Event/Link#1"
 , "/Event/Link/Trig#1"

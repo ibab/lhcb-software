@@ -1,16 +1,13 @@
-//-------------------------------------------------------------------------
-// Job options to read a ROOT/IO file and write the corresponding POOL file
-//-------------------------------------------------------------------------
+//---------------------------------------------------------------------------
+// Job options to read a POOL file and copy its contents to another POOL file
+//---------------------------------------------------------------------------
 ApplicationMgr.ExtSvc = { "EventSelector" };
 ApplicationMgr.HistogramPersistency = "NONE";
 ApplicationMgr.EvtMax   = 100;
 EventSelector.PrintFreq = 1;
 
-// Job options to set up the POOL persistency for the output file
+// Job options to set up the POOL persistency
 #include "$GAUDIPOOLDBROOT/options/GaudiPoolDbRoot.opts"
-
-// Job options to read the old ROOT/IO persistency files
-#include "$STDOPTS/RootDb.opts"
 
 // DLLs that contain the necessary dictionaries and factories
 ApplicationMgr.DLLs += { "CaloEvent", "DAQEvent" };
@@ -27,6 +24,6 @@ EventDataSvc.ForceLeaves = 1;
 
 PoolDbCacheSvc.OutputLevel = 3;
 
-#include "$IOEXAMPLEROOT/options/PoolDst.opts"  // Copy a OODST
+//#include "$IOEXAMPLEROOT/options/PoolDst.opts"  // Copy a OODST
 //#include "$IOEXAMPLEROOT/options/PoolDigi.opts"  // Copy a OODIGI
-//#include "$IOEXAMPLEROOT/options/PoolSim.opts"  // Copy a OOSIM
+#include "$IOEXAMPLEROOT/options/PoolSim.opts"  // Copy a OOSIM
