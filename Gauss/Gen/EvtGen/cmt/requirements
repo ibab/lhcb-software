@@ -19,4 +19,4 @@ apply_pattern package_linkopts
 macro_append EvtGen_pp_fflags "" WIN32 "/DWIN32"
 
 macro_append EvtGen_linkopts " -L$(CERNLIB_path)/lib -lphotos202" \
-             WIN32            " /libpath:"(CERNLIB_path)/lib photos.lib"
+             WIN32            " /libpath:"(CERNLIB_path)/lib photos202.lib"
