@@ -4,6 +4,9 @@
 ! Purpose     : LHCb OO kernel packages
 !-----------------------------------------------------------------------------
 
+! 2003-07-22 - Marco Cattaneo
+ - Modified packages: GaudiConf v7r1
+
 !======================== LHCbSys v13r0 2003-07-17 ========================
 ! 2003-07-17 - Marco Cattaneo
  - Removed all packages under SICB hat (moved to new SICBOO project)
