@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.53 2005-03-04 19:34:08 ibelyaev Exp $ 
+# $Id: requirements,v 1.54 2005-03-05 14:07:57 ibelyaev Exp $ 
 # =============================================================================
 # CVS tag $Name: not supported by cvs2svn $
 # =============================================================================
@@ -32,7 +32,7 @@ use           BenderTest     v4r6   Tests
 use           LoKiTest       v3r9   Tests 
 # =========== examples of usage of Bender "in practice" =======================
 use           BenderExample  v4r7   Ex  
-use           LoKiExample    v3r9p1 Ex 
+use           LoKiExample    v3r9p2 Ex 
 # =========== Test suit for Bender ============================================
 use           BenderVis      v4r5   Vis 
 # =========== empty 'user' package ============================================
