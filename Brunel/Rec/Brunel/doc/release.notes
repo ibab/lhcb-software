@@ -3,14 +3,19 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
+! 2002-07-05 - Marco Cattaneo
+ - Upstream tracks saved on DST in Tr/Best container
+ - MuonID performed on all "unique" long tracks in Tr/Best container
+ - IT Digitisation now uses XmlDDDB, can process data from new TT1
+ - Skip Rich reconstruction in events with more than 300 forward tracks
+
+   DST is now complete, except for:
+   . filtering of tracking clusters not used by tracks
+
 ! 2002-07-04 - Marco Cattaneo
  - Add upstream tracking. Algorithm executed but output not yet saved
  - Fix and enable filtering of MCParticles/MCVertices
  - Improve handling of Muon background in Sicb converters
-
-   DST is now complete, except for:
-   . "upstream" tracks (from upstream track following algorithm) 
-   . filtering of tracking clusters not used by tracks
 
 ! 2002-07-02 - Marco Cattaneo
  - Add TimingAlg in new Timing sequence at end of Reco phase

@@ -177,7 +177,7 @@ RichPidCnvVerifier.InputStoredTracks       = "Rec/Tr/Forward";
 ElectronMatch.Tracks                       = "Rec/Tr/Forward";
 PhotonMatch.Tracks                         = "Rec/Tr/Forward";
 BremMatch.Tracks                           = "Rec/Tr/Forward";
-MuonIDFOI.TrackLocation                    = "Rec/Tr/Forward";
+//MuonIDFOI.TrackLocation                    = "Rec/Tr/Forward";
 
 // Modify printout defaults
 #include "$BRUNELOPTS/BrunelMessage.opts"
