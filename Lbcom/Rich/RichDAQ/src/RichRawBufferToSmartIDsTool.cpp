@@ -5,8 +5,11 @@
  * Implementation file for class : RichRawBufferToSmartIDsTool
  *
  * CVS Log :-
- * $Id: RichRawBufferToSmartIDsTool.cpp,v 1.7 2005-01-13 13:11:33 jonrob Exp $
+ * $Id: RichRawBufferToSmartIDsTool.cpp,v 1.8 2005-01-14 16:58:22 jonrob Exp $
  * $Log: not supported by cvs2svn $
+ * Revision 1.7  2005/01/13 13:11:33  jonrob
+ * Use new RichSmartID sorting utility class
+ *
  * Revision 1.6  2005/01/07 12:35:59  jonrob
  * Complete rewrite
  *
@@ -100,11 +103,22 @@ void RichRawBufferToSmartIDsTool::fillRichSmartIDs() const
   // Use raw format tool to decode event
   m_rawFormatT->decodeToSmartIDs( m_smartIDs );
 
-  // Sort into order of Rich/Panel/HPD/Pixel
+  // Sort into order of Rich/Panel/HPD/Pixel if required
   if ( m_sortIDs )
   {
-    RichSmartIDSorter sorter;
+    debug() << "Sorting the RichSmartIDs..." << endreq;
+    const RichSmartIDSorter sorter;
     sorter.sortByRegion( m_smartIDs );
+  }
+
+  // Printout the RichSmartIDs...
+  if ( msgLevel(MSG::VERBOSE) )
+  {
+    verbose() << "RichSmartIDs :-" << endreq;
+    for ( RichSmartID::Collection::const_iterator iID = m_smartIDs.begin(); iID != m_smartIDs.end(); ++iID )
+    {
+      verbose() << "   " << *iID << " " << (*iID).key() << endreq;
+    }
   }
 
 }
