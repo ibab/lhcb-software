@@ -1,4 +1,5 @@
 C--------------------------------------------------------------------------
+C $Id: begevtgenstorex.F,v 1.4 2004-05-06 17:49:32 robbep Exp $
 C
 C Environment:
 C      This software is part of the EvtGen package developed jointly
@@ -30,7 +31,7 @@ C------------------------------------------------------------------------
 *
 * 
 
-#include "EvtGenModels/stdhep.inc"
+#include "EvtGenModels/common_hepevt.inc"
       logical qedrad
       integer ph_nmxhep ! this is parameter nmxhep in photos/photos_make
 *                     ! Renamed here to avoid name conflict in stdhep.inc
@@ -46,23 +47,23 @@ C------------------------------------------------------------------------
       stdhepnum=partnum
       
       
-      nevhep=eventnum
-      nhep=numparticle
-      isthep(entry)=istat
-      idhep(entry)=stdhepnum
-      jmohep(1,entry)=mother
-      jmohep(2,entry)=0
-      jdahep(1,entry)=daugfirst
-      jdahep(2,entry)=dauglast
-      phep(1,entry)=px
-      phep(2,entry)=py
-      phep(3,entry)=pz
-      phep(4,entry)=e
-      phep(5,entry)=m
-      vhep(1,entry)=x
-      vhep(2,entry)=y
-      vhep(3,entry)=z
-      vhep(4,entry)=t
+      d_h_nevhep=eventnum
+      d_h_nhep=numparticle
+      d_h_isthep(entry)=istat
+      d_h_idhep(entry)=stdhepnum
+      d_h_jmohep(1,entry)=mother
+      d_h_jmohep(2,entry)=0
+      d_h_jdahep(1,entry)=daugfirst
+      d_h_jdahep(2,entry)=dauglast
+      d_h_phep(1,entry)=px
+      d_h_phep(2,entry)=py
+      d_h_phep(3,entry)=pz
+      d_h_phep(4,entry)=e
+      d_h_phep(5,entry)=m
+      d_h_vhep(1,entry)=x
+      d_h_vhep(2,entry)=y
+      d_h_vhep(3,entry)=z
+      d_h_vhep(4,entry)=t
       
       qedrad(entry)=.true.
       if (daugfirst.gt.0 .and. dauglast.gt.0) THEN

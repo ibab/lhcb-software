@@ -1,4 +1,5 @@
 C--------------------------------------------------------------------------
+C $Id: begevtgengetx.F,v 1.3 2004-05-06 17:49:32 robbep Exp $
 C
 C Environment:
 C      This software is part of the EvtGen package developed jointly
@@ -30,16 +31,7 @@ C------------------------------------------------------------------------
 * 
       implicit none
 
-C      INTEGER NMXHEP
-C      PARAMETER (NMXHEP=4000) !!! KRAL - NEW SIZE
-C
-C      INTEGER IDHEP,ISTHEP,JDAHEP,JMOHEP,NEVHEP,NHEP
-C      real PHEP,VHEP !!! Kral - double precision for STDHEP v3.0
-C      COMMON/XHEPEVT/NEVHEP,NHEP,ISTHEP(NMXHEP),IDHEP(NMXHEP),
-C     &JMOHEP(2,NMXHEP),JDAHEP(2,NMXHEP),PHEP(5,NMXHEP),VHEP(4,NMXHEP)
-C      SAVE /XHEPEVT/
-
-#include "EvtGenModels/stdhep.inc"
+#include "EvtGenModels/common_hepevt.inc"
 
         integer entry,eventnum,numparticle,istat,partnum
         integer mother,daugfirst,dauglast
@@ -52,22 +44,22 @@ C      SAVE /XHEPEVT/
 
 
 
-        eventnum=nevhep
-        numparticle=nhep
-        istat=isthep(entry)
-        stdhepnum=idhep(entry)
-        mother=jmohep(1,entry)
-        daugfirst=jdahep(1,entry)
-        dauglast=jdahep(2,entry)
-        px=phep(1,entry)
-        py=phep(2,entry)
-        pz=phep(3,entry)
-        e=phep(4,entry)
-        m=phep(5,entry)
-        x=vhep(1,entry)
-        y=vhep(2,entry)
-        z=vhep(3,entry)
-        t=vhep(4,entry)
+        eventnum=d_h_nevhep
+        numparticle=d_h_nhep
+        istat=d_h_isthep(entry)
+        stdhepnum=d_h_idhep(entry)
+        mother=d_h_jmohep(1,entry)
+        daugfirst=d_h_jdahep(1,entry)
+        dauglast=d_h_jdahep(2,entry)
+        px=d_h_phep(1,entry)
+        py=d_h_phep(2,entry)
+        pz=d_h_phep(3,entry)
+        e=d_h_phep(4,entry)
+        m=d_h_phep(5,entry)
+        x=d_h_vhep(1,entry)
+        y=d_h_vhep(2,entry)
+        z=d_h_vhep(3,entry)
+        t=d_h_vhep(4,entry)
 
  	 return
 

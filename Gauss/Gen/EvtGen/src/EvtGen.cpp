@@ -48,20 +48,6 @@
 #include "EvtGenBase/EvtRadCorr.hh"
 #include "EvtGenModels/EvtPHOTOS.hh"
 
-#ifdef WIN32
-extern "C" void __stdcall BEGEVTGENSTORE(int *,int *,int *,int *,
-				int *,int *,int *,int *,int *,
-                                double *,double *,double *, 
-                                double *,double *,double *, 
-                                double *,double *,double *);
-#else
-extern "C" void begevtgenstore_(int *,int *,int *,int *,
-				int *,int *,int *,int *,int *,
-                                double *,double *,double *, 
-                                double *,double *,double *, 
-                                double *,double *,double *);
-#endif
-
 extern "C" {
 extern void evtgen_(float svertex[3],float *e_cms,float *beta_zs,
                     int *mode);
@@ -312,20 +298,6 @@ void EvtGen::generateEvent(EvtParticle *root_part,HepLorentzVector D){
     t=x4.get(0)+D.t();
       
     m=p4.mass();
-
-#ifdef WIN32
-    BEGEVTGENSTORE(&j,&nevent,&npart,&istat,
-		    &partnum,&jmotherfirst,&jmotherlast,
-		    &jdaugfirst,&jdauglast,
-		    &px,&py,&pz,&e,
-		    &m,&x,&y,&z,&t);
-#else
-    begevtgenstore_(&j,&nevent,&npart,&istat,
-		    &partnum,&jmotherfirst,&jmotherlast,
-		    &jdaugfirst,&jdauglast,
-		    &px,&py,&pz,&e,
-		    &m,&x,&y,&z,&t);
-#endif
   }
 
 }

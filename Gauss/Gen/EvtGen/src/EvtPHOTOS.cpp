@@ -42,7 +42,7 @@ extern "C" {
 			      double *,double *,double *, 
 			      double *,double *,double *, 
 			      double *,double *,double *);
-  void __stdcall HEPLST(int *);
+  //  void __stdcall HEPLST(int *);
   void __stdcall PHOTOS(int *);
   void __stdcall PHOINI( ) ;
 }
@@ -59,7 +59,7 @@ extern "C" void begevtgengetx_(int *,int *,int *,int *,
 			      double *,double *,double *, 
 			      double *,double *,double *);
 
-extern "C" void heplst_(int *);
+// extern "C" void heplst_(int *);
 
 extern "C" void photos_(int *);
 
@@ -164,7 +164,8 @@ void EvtPHOTOS::doRadCorr( EvtParticle *p){
 
   entry=1;
 
-  //  report(INFO,"EvtGen") << "Doing photos " << EvtPDL::name(p->getId()) << std::endl;
+  //  report(INFO,"EvtGen") << "Doing photos " << 
+  // EvtPDL::name(p->getId()) << std::endl;
 #ifdef WIN32
   PHOTOS(&entry);
 #else
@@ -181,7 +182,8 @@ void EvtPHOTOS::doRadCorr( EvtParticle *p){
 		    &px,&py,&pz,&e,&m,&x,&y,&z,&t);
 #endif    
 
-  //report(INFO,"EvtGen") << "numparticlephotos:"<<numparticlephotos<<std::endl;
+  //report(INFO,"EvtGen") << "numparticlephotos:"<<numparticlephotos
+  // <<std::endl;
   
   if (numparticle==numparticlephotos) return;
 
@@ -233,7 +235,10 @@ void EvtPHOTOS::doRadCorr( EvtParticle *p){
     EvtPhotonParticle* gamma;
     gamma=new EvtPhotonParticle;
     gamma->init(GAMM,new4mom);
-    //    report(INFO,"EvtGen") << gamma << " " << p << " "<< px << " " << py << " " << pz << " " << p->getNDaug() << " " << EvtPDL::name(p->getId())<<" " << entry << " " <<numparticlephotos<<std::endl;
+    //    report(INFO,"EvtGen") << gamma << " " << p << " "<< px << " " 
+    //<< py << " " << pz << " " << p->getNDaug() << " " << 
+    //EvtPDL::name(p->getId())<<" " << entry << " " <<numparticlephotos
+    //<<std::endl;
     gamma->addDaug(p);
 
 //    p->getDaug(i)->set_type(EvtSpinType::PHOTON);
