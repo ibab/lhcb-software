@@ -429,6 +429,9 @@
   <class name="RichGlobalPIDSummary" file="Event/RichGlobalPIDSummary"/>
   <class name="RichGlobalPIDTrack" file="Event/RichGlobalPIDTrack"/>
   <class name="RichGlobalPID" file="Event/RichGlobalPID"/>
+  <class name="RichRingRefit" file="Event/RichRingRefit"/>
+  <class name="RichRingRefitPID" file="Event/RichRingRefitPID"/>
+  <class name="RichLocalPID" file="Event/RichLocalPID"/>
 
   <!-- classes of package FML -->
   <class name="LinearConstraint" file="FML/LinearConstraint"/>
@@ -1163,6 +1166,9 @@
   <class name="IRichRefractiveIndex" file="RichKernel/IRichRefractiveIndex"/>
   <class name="IRichMCTrackInfoTool" file="RichKernel/IRichMCTrackInfoTool"/>
 
+  <!-- classes of package RichLocalPID -->
+  <class name="IRichLocalPIDTool" file="RichLocalPID/IRichLocalPIDTool"/>
+
   <!-- classes of package RichRecBase -->
   <class name="IRichRecGeomTool" file="RichRecBase/IRichRecGeomTool"/>
   <class name="IRichExpectedTrackSignal" file="RichRecBase/IRichExpectedTrackSignal"/>
@@ -1190,6 +1196,9 @@
   <class name="IRichRayTraceCherenkovCone" file="RichRecBase/IRichRayTraceCherenkovCone"/>
   <class name="IRichStatusCreator" file="RichRecBase/IRichStatusCreator"/>
   <class name="IRichPhotonCreator" file="RichRecBase/IRichPhotonCreator"/>
+
+  <!-- classes of package RichRingRefit -->
+  <class name="FastRingFitter" file="RichRingRefit/FastRingFitter"/>
 
   <!-- classes of package STDAQ -->
   <class name="STDAQChannelID" file="STDAQ/STDAQChannelID"/>
