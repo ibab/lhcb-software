@@ -79,8 +79,10 @@ GaussPostTrackAction::GaussPostTrackAction
   /// container of definitions of own   types 
     , m_ownStoredTypes        (        ) 
   /// container of definitions  of child types 
-    , m_childStoredTypes      (        )  
-  ///
+    , m_childStoredTypes      (        ) 
+ ///
+    , m_storeBySecondariesProcess ( false )
+    , m_childStoredProcess()
 {
   // declare own properties
   declareProperty( "StoreAll"              , m_storeAll              ) ; 
@@ -95,6 +97,8 @@ GaussPostTrackAction::GaussPostTrackAction
   declareProperty( "ChildEnergyThreshold"  , m_childEnergyThreshold  ) ; 
   declareProperty( "StoredOwnTypes"        , m_ownStoredTypesNames   ) ;
   declareProperty( "StoredChildTypes"      , m_childStoredTypesNames ) ;
+  declareProperty( "StoreByChildProcess"   , m_storeBySecondariesProcess);
+  declareProperty( "StoredChildProcesses"  , m_childStoredProcess);
 };
 // ============================================================================
 
@@ -253,7 +257,16 @@ void GaussPostTrackAction::PostUserTrackingAction ( const G4Track* track )
   trackMgr()->SetStoreTrajectory( false );
   // (3) store  all     particles ? 
   if ( m_storeAll )                                        
-    { trackMgr()->SetStoreTrajectory( true ) ;     return ; } /// RETURN !!!  
+    {      
+      trackMgr()->SetStoreTrajectory( true );
+      
+      if(track->GetCreatorProcess())
+        {
+          GaussTrajectory* traj=(GaussTrajectory*)(trackMgr()->GimmeTrajectory());
+          traj->setProcessName(track->GetCreatorProcess()->GetProcessName());
+        }
+      return ; 
+    } /// RETURN !!!  
 
   // (3.5) store forced-decay products 
   if (m_storeDecayProducts && 
@@ -289,26 +302,56 @@ void GaussPostTrackAction::PostUserTrackingAction ( const G4Track* track )
                 }
             }
           trackMgr()->SetStoreTrajectory( true );
+
+          if(track->GetCreatorProcess())
+            {
+              GaussTrajectory* traj=(GaussTrajectory*)(trackMgr()->GimmeTrajectory());
+              traj->setProcessName(track->GetCreatorProcess()->GetProcessName());
+            }
           return ; 
         }
     }
   
   // (4) store  primary particles ? 
   if ( m_storePrimaries &&  0 == track->GetParentID() )     
-    { trackMgr()->SetStoreTrajectory( true ) ;     return ; } /// RETURN !!!  
+    { 
+      if(track->GetCreatorProcess())
+        {
+          GaussTrajectory* traj=(GaussTrajectory*)(trackMgr()->GimmeTrajectory());
+          traj->setProcessName(track->GetCreatorProcess()->GetProcessName());
+        }
+
+      trackMgr()->SetStoreTrajectory( true );     
+      return; 
+    } /// RETURN !!!  
   // (5) store particles with kinetic energy over the threshold value. 
   //     See also PreAction
   if( m_storeByOwnEnergy 
       && ( track->GetKineticEnergy() > 
            m_ownEnergyThreshold      ) ) 
-    { trackMgr()->SetStoreTrajectory( true ) ;     return ; } /// RETURN !!! 
+    { 
+      if(track->GetCreatorProcess())
+        {
+          GaussTrajectory* traj=(GaussTrajectory*)(trackMgr()->GimmeTrajectory());
+          traj->setProcessName(track->GetCreatorProcess()->GetProcessName());
+        }
+      trackMgr()->SetStoreTrajectory( true ) ;     
+      return ; } /// RETURN !!! 
   // (6) store all predefined particle types: 
   if ( m_storeByOwnType  
        && ( std::find( m_ownStoredTypes.begin() ,  
                        m_ownStoredTypes.end  () , 
                        track->GetDefinition  () ) 
             != m_ownStoredTypes.end() )         )
-    { trackMgr()->SetStoreTrajectory( true ) ;     return ; } /// RETURN !!!
+    { 
+      if(track->GetCreatorProcess())
+        {
+          GaussTrajectory* traj=(GaussTrajectory*)(trackMgr()->GimmeTrajectory());
+          traj->setProcessName(track->GetCreatorProcess()->GetProcessName());
+        }
+      
+      trackMgr()->SetStoreTrajectory( true );     
+      return; } /// RETURN !!!
   // (7) store the particle if it has a certain type of daughter particle 
   //     or at least one from secondaries  particle have kinetic energy over 
   //     threshold  
@@ -324,14 +367,56 @@ void GaussPostTrackAction::PostUserTrackingAction ( const G4Track* track )
           if( m_storeByChildEnergy 
               && ( tr->GetKineticEnergy() > 
                    m_childEnergyThreshold ) ) 
-            { trackMgr()->SetStoreTrajectory( true ) ;   return ; } /// RETURN 
+            { 
+      if(track->GetCreatorProcess())
+        {
+          GaussTrajectory* traj=(GaussTrajectory*)(trackMgr()->GimmeTrajectory());
+          traj->setProcessName(track->GetCreatorProcess()->GetProcessName());
+        }
+
+      trackMgr()->SetStoreTrajectory( true );   
+      return; } /// RETURN 
           //
           if( m_storeByChildType
               && ( std::find( m_childStoredTypes.begin() ,  
                               m_childStoredTypes.end  () , 
                               tr->GetDefinition       () ) 
                    != m_childStoredTypes.end() )         ) 
-            { trackMgr()->SetStoreTrajectory( true ) ;   return ; } /// RETURN
+            { 
+              if(track->GetCreatorProcess())
+                {
+                  GaussTrajectory* traj=(GaussTrajectory*)(trackMgr()->GimmeTrajectory());
+                  traj->setProcessName(track->GetCreatorProcess()->GetProcessName());
+                }
+              
+              trackMgr()->SetStoreTrajectory( true );   
+              return; } /// RETURN
+          ///
+        }
+    }
+
+  // (7.5) store tracks according to creator process of its daughters
+  if( m_storeBySecondariesProcess && 0 != trackMgr()->GimmeSecondaries())
+    {
+      const G4TrackVector* childrens = trackMgr()->GimmeSecondaries() ; 
+      for( unsigned int index = 0 ; index < childrens->size() ; ++index )
+        {
+          const G4Track* tr = (*childrens)[index];
+          if( 0 == tr ) { continue; }
+          // 
+          if(std::find(m_childStoredProcess.begin(), m_childStoredProcess.end(), 
+                       tr->GetCreatorProcess()->GetProcessName()) 
+             != m_childStoredProcess.end()) 
+            { 
+              if(track->GetCreatorProcess())
+                {
+                  GaussTrajectory* traj=(GaussTrajectory*)(trackMgr()->GimmeTrajectory());
+                  traj->setProcessName(track->GetCreatorProcess()->GetProcessName());
+                }
+              
+              trackMgr()->SetStoreTrajectory( true );   
+              return; /// RETURN
+            } 
           ///
         }
     }
@@ -340,12 +425,18 @@ void GaussPostTrackAction::PostUserTrackingAction ( const G4Track* track )
   if( m_storeMarkedTracks ) 
     {
       G4VUserTrackInformation* ui = track->GetUserInformation(); 
-      GaussTrackInformation*    gi = 
-        ( 0 == ui )  ? 0 : static_cast<GaussTrackInformation*> ( ui );
+      GaussTrackInformation* gi = (GaussTrackInformation*) ui;
       if( 0 != gi && gi->toBeStored() ) 
-        { trackMgr()->SetStoreTrajectory   ( true )  ;   return ; }  /// RETURN 
-    }  
-
+        { 
+          if(track->GetCreatorProcess())
+            {
+              GaussTrajectory* traj=(GaussTrajectory*)(trackMgr()->GimmeTrajectory());              
+              
+              traj->setProcessName(track->GetCreatorProcess()->GetProcessName());
+            }
+          trackMgr()->SetStoreTrajectory( true );   
+          return; }  /// RETURN 
+    }
   
   //  
   // check if track is to be stored 
@@ -373,8 +464,7 @@ void GaussPostTrackAction::PostUserTrackingAction ( const G4Track* track )
     }
   // also update the trackID in the hits
   G4VUserTrackInformation* uinf = track->GetUserInformation(); 
-  GaussTrackInformation*    ginf = 
-    ( 0 == uinf )  ? 0 : static_cast<GaussTrackInformation*> ( uinf );
+  GaussTrackInformation* ginf = (GaussTrackInformation*) uinf;
   ginf->updateHitsTrackID( track->GetParentID() );
   
   // delete the trajectory by hand 

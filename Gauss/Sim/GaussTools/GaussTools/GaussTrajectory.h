@@ -1,8 +1,11 @@
-// $Id: GaussTrajectory.h,v 1.3 2003-03-11 09:45:18 ibelyaev Exp $ 
+// $Id: GaussTrajectory.h,v 1.4 2003-10-09 09:12:58 witoldp Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.3  2003/03/11 09:45:18  ibelyaev
+//  update for Win2K
+//
 // Revision 1.2  2002/12/07 21:19:13  ibelyaev
 //  few optimization updates
 //
@@ -31,7 +34,7 @@ public:
   int operator == (const GaussTrajectory& right) const
   { return ( &right == this );} 
   ///
-  virtual        void AppendStep      ( const G4Step*  )       ;
+  virtual void AppendStep( const G4Step*  );
   virtual GiGaTrajectory* clone() const ;
   ///
 private:

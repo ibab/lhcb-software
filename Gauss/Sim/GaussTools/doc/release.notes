@@ -5,6 +5,12 @@
 ! Purpose       : G4 actions, and some miscealenous algs for Gauss
 !-----------------------------------------------------------------------------
 
+!======================== GaussTools v8r6 =================================
+! 2003-10-09 - Witek Pokorski
+ - GaussTrackAction - added possibility of storing trajectories according
+                      to the creator process of its daughter
+ - PrintEventAlg - added printing of vertex type
+
 !======================== GaussTools v8r5 2003-09-25 ======================
 ! 2003-09-22 - Vanya BELYAEV
  - cmt/requirements     - increase the version to v8r5 

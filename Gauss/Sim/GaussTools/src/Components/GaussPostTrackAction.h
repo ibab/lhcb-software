@@ -140,6 +140,10 @@ private:
   double m_ownEnergyThreshold;
   /// threshold for child kinetic energy 
   double m_childEnergyThreshold;
+  /// store particles undorgoing specific process
+  bool m_storeBySecondariesProcess;
+  /// container for the process names
+  std::vector<std::string> m_childStoredProcess;
   ///  
   /// container of names of own   types 
   TypeNames       m_ownStoredTypesNames   ;  

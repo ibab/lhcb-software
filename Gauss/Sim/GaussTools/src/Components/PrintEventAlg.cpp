@@ -221,17 +221,63 @@ void PrintEventAlg::printDecayTree
       name= p->particle();
     }
   double x,y,z;
+  enum MCVertexType {Unknown=0, ppCollision, Decay, Hadronic, Brem, Pair, 
+                     Compton, DeltaRay, MuonBackground, MuonBackgroundFlat, 
+                     MuonBackgroundSpillover};
+  std::string vertype;
+  
   if(mother->originVertex())
     {
       x=mother->originVertex()->position().x();
       y=mother->originVertex()->position().y();
       z=mother->originVertex()->position().z();
+      switch(mother->originVertex()->type())
+        {
+        case 0:
+          vertype="Unknown";
+          break;
+        case 1:
+          vertype="ppCollision";
+          break;
+        case 2:
+          vertype="Decay";
+          break;
+        case 3:
+          vertype="Hadronic";
+          break;
+        case 4:
+          vertype="Brem";
+          break;
+        case 5:
+          vertype="Pair";
+          break;
+        case 6:
+          vertype="Compton";
+          break;
+        case 7:
+          vertype="DeltaRay";
+          break;
+        case 8:
+          vertype="MuonBackground";
+          break;
+        case 9:
+          vertype="MuonBackgroundFlat";
+          break;
+        case 10:
+          vertype="MuonBackgroundSpillover";
+          break;
+          
+        default:
+          vertype="Unset";
+          break;
+        }
     }
   else
     {
       x=-99999.9;
       y=-99999.9;
       z=-99999.9;
+      vertype=MCVertex::Unknown;
     }
 
   if (mother->collision())
@@ -242,7 +288,7 @@ void PrintEventAlg::printDecayTree
       << "    En(MeV):"   << std::setw(12) << mother->momentum().e()
       << " x:" << std::setw(12) << x
       << " y:" << std::setw(12) << y
-      << " z:" << std::setw(12) << z << " process " 
+      << " z:" << std::setw(12) << z << " vertexType " << vertype << " process " 
       << mother->collision()->processType() 
       << " signal " << mother->collision()->isSignal()
       << " primary vertex " 

@@ -33,7 +33,7 @@ namespace GaussTrajectoryLocal
 /// constructor 
 // ============================================================================
 GaussTrajectory::GaussTrajectory ( ) 
-  : GiGaTrajectory                      (   ) 
+  : GiGaTrajectory()
 {
 #ifdef GIGA_DEBUG
   GaussTrajectoryLocal::s_Counter.increment();
@@ -110,8 +110,7 @@ void GaussTrajectory::AppendStep      ( const G4Step*  step )
   ///
   bool append = false;
   G4VUserTrackInformation* uinf = step->GetTrack()->GetUserInformation(); 
-  GaussTrackInformation* ginf = 
-    ( 0 == uinf )  ? 0 : dynamic_cast<GaussTrackInformation*> ( uinf );
+  GaussTrackInformation* ginf = (GaussTrackInformation*) uinf;
   /// 
 
   if( empty() )  
