@@ -1,6 +1,9 @@
 package DetDesc
 package manager : N.N 
 
+! 20010625 - DestDesc v7 (Flr)
+  requirements - adapted to GaudiKernel v10, GaudiPolicy v5, CMT v1r8
+
 !===========================================================================
 ! 20010622 - Sebastien Ponce
  - Added checks in the userParameter(Vector) processing. If a parameter (or

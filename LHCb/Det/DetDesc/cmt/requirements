@@ -12,16 +12,14 @@ use XML v*
 
 # build a Linker library
 library DetDescLib   Lib/*.cpp
+apply_pattern package_Lstamps
 
 # build a component library
 library DetDesc      component/*.cpp
 
-ignore_pattern package_stamps
-macro DetDesc_stamps "$(DETDESCROOT)/$(BINDIR)/DetDescLib.stamp"
-
 apply_pattern package_Llinkopts
 
-apply_pattern ld_library_path
+apply_pattern linker_path
 
 #==================================================================
 private
