@@ -152,16 +152,10 @@ StatusCode RichFrontEndResponse::Simple() {
       m_pulseHeight->fill( value, 1.);
 
       if( value >= m_AdcCut) {
-
         MCRichDigit* newDigit = new MCRichDigit();
-        if( !mcRichDigits->object( (*iSumDep)->key() ) ){
-          mcRichDigits->insert( newDigit, ((*iSumDep)->key()) );
-        } else {
-          delete newDigit;
-          log << MSG::ERROR << "Attempted duplicate digit" << endreq;
-          return StatusCode::FAILURE;
-        }
+        mcRichDigits->insert( newDigit, ((*iSumDep)->key()) );
       }
+
     }
   }
 
@@ -273,17 +267,10 @@ StatusCode RichFrontEndResponse::Digital(){
 
       const RichFrontEndDigitiser* ADC = readOut->ADC();
       StatusCode scDigit = ADC->process((*tsc_it).second);
-
-      if (scDigit.isSuccess()){
+      if ( scDigit ){
         RichSmartID id((*tsc_it).first);
         MCRichDigit* newDigit = new MCRichDigit();
-        if( !mcRichDigits->object(id) ){
-          mcRichDigits->insert( newDigit, id );
-        } else {
-          delete newDigit;
-          log << MSG::ERROR << "Attempt to duplicate digit" << endreq;
-          return StatusCode::FAILURE;
-        }
+        mcRichDigits->insert( newDigit, id );
       }
 
     }
