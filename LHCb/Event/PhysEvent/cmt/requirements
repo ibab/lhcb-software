@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.8 2002-03-27 19:51:36 gcorti Exp $
+# $Id: requirements,v 1.9 2002-04-03 15:54:22 gcorti Exp $
 # Created      : 20/06/2001
 # Maintainer   : Gloria Corti
 #
@@ -17,21 +17,25 @@ include_dirs $(PHYSEVENTROOT)
 
 # Used packages. 
 #============================================================================
-#use LHCbKernel   v1r*
-use EventKernel  v1r*    Event
 use GaudiObjDesc v3r*
-# the following line decide if compatible with old/new event model
-use LHCbEvent    v12r* Event
+# For next release with Full new Event Model uncomment following lines
+#use LHCbKernel   v1r*
+#use EventKernel  v1r*    Event
 #use Event        v1r*  Event
+# For this release with partial old Event Model remove following lines
+use EventKernel  v1r0  Event
+use LHCbEvent    v12r* Event
 
 # Produce Header-Files & dictionary from XML description
 #============================================================================
 document obj2doth PhysEventObj2Doth ../xml/PhysEvent.xml
+# For the moment no dictionary
 #document obj2dict PhysEventObj2Dict ../xml/PhysEvent.xml
 
 # Build library (including dictionary)
 #============================================================================
 library     PhysEvent    *.cpp         
+# For the moment no dictionary
 #                         ../dict/*.cpp
 
 # Define link options
