@@ -1,6 +1,9 @@
-! $Id: release.notes,v 1.15 2002-06-19 13:22:18 roiser Exp $
+! $Id: release.notes,v 1.16 2002-07-04 10:05:28 mato Exp $
 ! Package     : PhysEvent 
 ! Responsible : Gloria Corti
+
+! 2002-07-04 - Pere Mato
+ - Added /include:_<package>_loadRef in <package>_linkopts for Windows
 
 ! 2002-06-18 - Stefan Roiser
  - changed use-statement of GaudiObjDesc to v4r4
