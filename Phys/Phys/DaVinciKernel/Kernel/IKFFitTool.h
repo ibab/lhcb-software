@@ -7,12 +7,12 @@
 #include "Event/Particle.h"
 #include "Event/Vertex.h"
 
-// Forward declarations
-class HepVector;
-class HepSymMatrix;
-class HepMatrix;
+#include "CLHEP/Matrix/Vector.h"
+#include "CLHEP/Matrix/Matrix.h"
+#include "CLHEP/Matrix/SymMatrix.h"
+#include "CLHEP/Matrix/DiagMatrix.h"
 
-static const InterfaceID IID_IKFFitTool("IKFFitTool", 1 , 1); 
+static const InterfaceID IID_IKFFitTool("IKFFitTool", 1 , 2 ); 
 
 /** @class IKFFitTool IKFFitTool.h Kernel/IKFFitTool.h 
  *  

@@ -1,11 +1,8 @@
-// $Id: GeomDispCalculator.cpp,v 1.2 2005-01-06 10:41:58 pkoppenb Exp $
+// $Id: GeomDispCalculator.cpp,v 1.3 2005-02-09 17:18:48 pkoppenb Exp $
 
 // Include files
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h"
-#include "GaudiKernel/MsgStream.h"
-#include "GaudiKernel/IToolSvc.h"
-#include "GaudiKernel/GaudiException.h"
 #include "Kernel/IParticleTransporter.h"
 
 // from Event
@@ -42,7 +39,7 @@ const IToolFactory& GeomDispCalculatorFactory = s_factory;
 //==================================================================
 GeomDispCalculator::GeomDispCalculator(const std::string& type, 
                     const std::string& name, const IInterface* parent) 
-  : AlgTool( type, name, parent)
+  : GaudiTool( type, name, parent)
   , m_pTransporter(0)
   , m_transporterType("CombinedTransporter")
 {
@@ -55,31 +52,18 @@ GeomDispCalculator::GeomDispCalculator(const std::string& type,
 // Initialize
 //==================================================================
 StatusCode GeomDispCalculator::initialize() {
-  MsgStream log( msgSvc(), name() );
   
-  StatusCode sc = StatusCode::FAILURE;
-  sc = toolSvc()->retrieveTool(m_transporterType, m_pTransporter, this);
-  if(sc.isFailure()) {
-    log << MSG::FATAL << "    Unable to retrieve ParticleTransporter  tool" ;
-    return sc;
+  StatusCode sc = GaudiTool::initialize();
+  if (!sc) return sc;
+  m_pTransporter = tool<IParticleTransporter>(m_transporterType, this);
+  if(!m_pTransporter) {
+    fatal() << "    Unable to retrieve ParticleTransporter  tool" ;
+    return StatusCode::FAILURE;
   }
   
   return StatusCode::SUCCESS;
   
 }
-
-//==================================================================
-// Initialize
-//==================================================================
-StatusCode GeomDispCalculator::finalize() {
-  MsgStream msg( msgSvc(), name() );
-  msg << MSG::DEBUG << " Release tools" << endreq;
-
-  if( m_pTransporter ) toolSvc()->releaseTool( m_pTransporter );
-
-  return StatusCode::SUCCESS;
-}
-
 
 //==================================================================
 // Calculate the impact parameter of a particle with respect to
@@ -88,8 +72,6 @@ StatusCode GeomDispCalculator::finalize() {
 StatusCode GeomDispCalculator::calcImpactPar( const Particle& particle,
                          const Vertex& vertex, double& ip, double& ipErr,
                          Hep3Vector& ipVector, HepSymMatrix& errMatrix ) { 
-  MsgStream log(msgSvc(), name());
-
 
   // Get the displacemente vector between a point on the track and 
   // the vertex. Use the transporter tool to move the first
@@ -101,7 +83,7 @@ StatusCode GeomDispCalculator::calcImpactPar( const Particle& particle,
                                                  vtx.z(),
                                                  transParticle);
     if ( !sctrans.isSuccess() ) {
-      log << MSG::DEBUG << "Transporter failed" << endreq;
+      debug() << "Transporter failed" << endreq;
       return sctrans;
     }
 
@@ -178,8 +160,6 @@ StatusCode GeomDispCalculator::calcImpactPar( const Particle& particle,
 StatusCode GeomDispCalculator::calcImpactPar( const Particle& particle,
                          const Vertex& vertex, double& ip, double& ipErr,
                          Hep3Vector& ipVector, Hep3Vector& errVector ) { 
-  MsgStream log(msgSvc(), name());
-
 
   // Get the displacemente vector between a point on the track and 
   // the vertex. Use the transporter tool to move the first
@@ -191,7 +171,7 @@ StatusCode GeomDispCalculator::calcImpactPar( const Particle& particle,
                                                  vtx.z(),
                                                  transParticle);
     if ( !sctrans.isSuccess() ) {
-      log << MSG::DEBUG << "Transporter failed" << endreq;
+      debug() << "Transporter failed" << endreq;
       return sctrans;
     }
 
@@ -323,8 +303,6 @@ StatusCode GeomDispCalculator::calcImpactPar( const Particle& particle,
                              HepPoint3D& point, double& ip, double& ipErr,
                              Hep3Vector& ipVector, HepSymMatrix& errMatrix ) {
 
-  MsgStream log(msgSvc(), name());
-
 
   // Get the displacemente vector between a point on the track and
   // the HepPoint3D point. Use the transporter tool to move the first
@@ -334,7 +312,7 @@ StatusCode GeomDispCalculator::calcImpactPar( const Particle& particle,
                                                  point.z(),
                                                  transParticle);
     if ( !sctrans.isSuccess() ) {
-      log << MSG::DEBUG << "Transporter failed" << endreq;
+      debug() << "Transporter failed" << endreq;
       return sctrans;
     }
 
@@ -412,8 +390,6 @@ StatusCode GeomDispCalculator::calcCloseAppr( const Particle& particle1,
                              const Particle& particle2, double& dist, 
                              double& distErr ) {
 
-  MsgStream log(msgSvc(), name());
- 
 
   //Flag to indicate parallel tracks
   int aux = 0;
@@ -422,7 +398,8 @@ StatusCode GeomDispCalculator::calcCloseAppr( const Particle& particle1,
   Hep3Vector mom2(particle2.momentum().v()); 
   Hep3Vector perpDirection = mom1.cross(mom2);
   // Get the displacement vector between the two particles
-  Hep3Vector disp = particle1.pointOnTrack() - particle2.pointOnTrack();
+  HepPoint3D disp3D = particle1.pointOnTrack() - particle2.pointOnTrack();
+  Hep3Vector disp(disp3D.x(),disp3D.y(),disp3D.z()); // quite stupid, no?
 
   // Calculate the perpendicular direction when the tracks are parallel:
   if (perpDirection == 0) {
@@ -509,10 +486,8 @@ StatusCode GeomDispCalculator::calcVertexDis( const Vertex& vertex1,
                              const Vertex& vertex2, double& dist, 
                              double& distErr ) {
 
-  MsgStream log(msgSvc(), name());
- 
   //Calculate the distance between two vectors:
-  Hep3Vector diff = vertex1.position() - vertex2.position();
+  HepPoint3D diff = vertex1.position() - vertex2.position();
   dist = diff.mag();
   if (dist == 0) return StatusCode::FAILURE;
 
@@ -520,7 +495,7 @@ StatusCode GeomDispCalculator::calcVertexDis( const Vertex& vertex1,
   HepSymMatrix v1Err = vertex1.positionErr();
   HepSymMatrix v2Err = vertex2.positionErr();
   HepSymMatrix errMatrix = dsum(v1Err,v2Err);
-  Hep3Vector unitario(diff/dist);
+  HepPoint3D unitario(diff.unit());
   HepVector u(3);
   u(1) = unitario.x();
   u(2) = unitario.y();

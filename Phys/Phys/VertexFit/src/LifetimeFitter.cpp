@@ -1,18 +1,9 @@
-// $Id: LifetimeFitter.cpp,v 1.3 2005-01-06 10:41:58 pkoppenb Exp $
+// $Id: LifetimeFitter.cpp,v 1.4 2005-02-09 17:18:48 pkoppenb Exp $
 
 // Include files from Gaudi
 #include "GaudiKernel/ToolFactory.h"
-#include "GaudiKernel/MsgStream.h"
-#include "GaudiKernel/IToolSvc.h"
 #include "GaudiKernel/IParticlePropertySvc.h"
 #include "GaudiKernel/ParticleProperty.h"
-#include "GaudiKernel/GaudiException.h"
-//
-
-#include "CLHEP/Matrix/Vector.h"
-#include "CLHEP/Matrix/Matrix.h"
-#include "CLHEP/Matrix/SymMatrix.h"
-#include "CLHEP/Matrix/DiagMatrix.h"
 
 // Include files from Event
 #include "Event/Particle.h"
@@ -46,23 +37,13 @@ const IToolFactory& LifetimeFitterFactory = s_factory;
 LifetimeFitter::LifetimeFitter(const std::string& type, 
                                const std::string& name, 
                                const IInterface* parent) 
-  : AlgTool( type, name, parent )
+  : GaudiTool( type, name, parent )
 {
   declareInterface<ILifetimeFitter>(this);
   declareProperty( "MaxIter", m_maxIter = 10);
   declareProperty( "MaxDeltaChiSq", m_maxDeltaChiSq = 0.01);
 
 }
-
-//==================================================================
-// Initialize
-//==================================================================
-StatusCode LifetimeFitter::initialize() {
-  return StatusCode::SUCCESS;
-  
-}
-
-
 //==================================================================
 // Perform fit
 //==================================================================
@@ -72,8 +53,7 @@ StatusCode LifetimeFitter::fit(const Vertex& productionVtx,
                                double& chisq) const
 {
 
-  MsgStream log(msgSvc(), name());
-  log << MSG::DEBUG << " lifetime fitter starting " << endmsg;
+  debug() << " lifetime fitter starting " << endmsg;
 
   // problem is parameterized by 7 parameters: v,p,tau
   HepVector p(7);
@@ -89,7 +69,7 @@ StatusCode LifetimeFitter::fit(const Vertex& productionVtx,
   double prev_chi_sq = 1.E20;
   for (unsigned i=0;i<m_maxIter&&!converged;++i) {
      double chi_sq = iterate( p, Cp, mass, O, W );
-     log<< MSG::DEBUG << " iteration " << i << " chisq: " << chi_sq << endmsg;
+     debug() << " iteration " << i << " chisq: " << chi_sq << endmsg;
      if(chi_sq<-9999.) {
        converged=false;
        break;
@@ -101,7 +81,7 @@ StatusCode LifetimeFitter::fit(const Vertex& productionVtx,
      chisq = prev_chi_sq;
      lifetime = p[6];
      lifetimeError = sqrt(Cp[6][6]);
-     log << MSG::DEBUG << " found lifetime " << lifetime 
+     debug() << " found lifetime " << lifetime 
          << " +- " << lifetimeError <<  "   ( " << prev_chi_sq << " ) " << endmsg;
 
      return StatusCode::SUCCESS;
@@ -115,11 +95,12 @@ LifetimeFitter::setup(const Particle& part, const Vertex& vert,
                       double &mass,
                       HepVector& p,HepVector& O, HepSymMatrix& W) const
 {
-  MsgStream log(msgSvc(), name());
 
   mass = part.mass();
   // initial guestimate of the 7 parameters:
-  const Hep3Vector& mom = part.momentum().vect();
+  const Hep3Vector& momV = part.momentum().vect();
+  const HepPoint3D mom(momV.x(),momV.y(),momV.z());
+
   const Vertex* decayVtx = part.endVertex();
   const HepPoint3D& decay = decayVtx->position();
   const HepPoint3D& production = vert.position();
@@ -152,8 +133,8 @@ LifetimeFitter::setup(const Particle& part, const Vertex& vert,
   int ier=0;
   W.invert(ier);
   if (ier!=0) {
-     log << MSG::ERROR << "could not invert matrix in LifetimeFitter::setup" << endmsg;
-     log << MSG::ERROR << "matrix W has determinant " << W.determinant() <<endmsg;
+     err() << "could not invert matrix in LifetimeFitter::setup" << endmsg;
+     err() << "matrix W has determinant " << W.determinant() <<endmsg;
   }
   return (ier==0);
 }
@@ -166,8 +147,6 @@ double
 LifetimeFitter::iterate(HepVector& p, HepSymMatrix& Cp, 
                         const double& mass,const HepVector& O, const HepSymMatrix& W)  const
 {
-  MsgStream log(msgSvc(), name());
-  // [] start from [0], () start from (1)...
 
   HepVector R(9);
   { for (unsigned i=0;i<6;++i) R[i] = O[i]-p[i]; }
@@ -189,8 +168,8 @@ LifetimeFitter::iterate(HepVector& p, HepSymMatrix& Cp,
   int ier=0;
   Cp = DWD.inverse(ier);
   if (ier!=0) {
-     log << MSG::ERROR << "could not invert matrix in LifetimeFitter::iterate" << endmsg;
-     log << MSG::ERROR << "matrix DWD has determinant " << DWD.determinant() <<endmsg;
+     err() << "could not invert matrix in LifetimeFitter::iterate" << endmsg;
+     err() << "matrix DWD has determinant " << DWD.determinant() <<endmsg;
      return -999999.;
   }
 

@@ -1,4 +1,4 @@
-// $Id: LifetimeFitter.h,v 1.2 2005-01-06 10:41:58 pkoppenb Exp $
+// $Id: LifetimeFitter.h,v 1.3 2005-02-09 17:18:48 pkoppenb Exp $
 #ifndef LIFETIMEFITTER_H
 #define LIFETIMEFITTER_H 1
 
@@ -7,15 +7,15 @@
 #include <string>
 
 // Include files from Gaudi
-#include "GaudiKernel/AlgTool.h"
+#include "GaudiAlg/GaudiTool.h"
 
 // Include files from DaVinciTools
 #include "Kernel/ILifetimeFitter.h"
 
-// Forward declarations
-
-class HepVector;
-class HepSymMatrix;
+#include "CLHEP/Matrix/Vector.h"
+#include "CLHEP/Matrix/Matrix.h"
+#include "CLHEP/Matrix/SymMatrix.h"
+#include "CLHEP/Matrix/DiagMatrix.h"
 
 
 /** @class LifetimeFitter LifetimeFitter.h 
@@ -32,7 +32,7 @@ class HepSymMatrix;
  *
 */
 
-class LifetimeFitter : public AlgTool,
+class LifetimeFitter : public GaudiTool,
                        virtual public ILifetimeFitter {
 
 public:
@@ -44,10 +44,6 @@ public:
 
   /// Standard Destructor
   virtual ~LifetimeFitter() { }
-
-  /// Retrieve the Transporter, the Unconstrained Vertex Fitter 
-  /// and the ParticlePropertyService.
-  StatusCode initialize();    
 
   StatusCode fit(const Vertex& v, const Particle& p,
                  double& lifetime, double& lifetimeError,

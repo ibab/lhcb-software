@@ -1,4 +1,4 @@
-// $Id: GeomDispCalculator.h,v 1.2 2005-01-06 10:41:58 pkoppenb Exp $
+// $Id: GeomDispCalculator.h,v 1.3 2005-02-09 17:18:48 pkoppenb Exp $
 #ifndef GEOMDISPCALCULATOR_H
 #define GEOMDISPCALCULATOR_H 1
 
@@ -8,7 +8,7 @@
 #include <string>
 
 // from Gaudi
-#include "GaudiKernel/AlgTool.h"
+#include "GaudiAlg/GaudiTool.h"
 #include "CLHEP/Vector/LorentzVector.h"
 
 // from DaVinciTools
@@ -24,7 +24,7 @@ class IParticleTransporter;
  * @date 20/03/2002 
 */
 
-class GeomDispCalculator : public AlgTool,
+class GeomDispCalculator : public GaudiTool,
                    virtual public IGeomDispCalculator {
 
 public:
@@ -38,9 +38,6 @@ public:
 
   /// Retrieve the necessary tools
   StatusCode initialize();    
-
-  /// Release the tools
-  StatusCode finalize();    
 
   /// Calculates the Impact Parameter and its error. 
   /// Inputs: a particle and a vertex.

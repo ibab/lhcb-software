@@ -7,18 +7,11 @@
 #include <string>
 
 // Include files from Gaudi
-#include "GaudiKernel/AlgTool.h"
+#include "GaudiAlg/GaudiTool.h"
 
 // Include files from DaVinciTools
 #include "Kernel/IKFFitTool.h"
 #include "Kernel/IParticleTransporter.h"
-
-// Forward declarations
-
-class HepVector;
-class HepSymMatrix;
-class HepMatrix;
-
 
 /** @class KFFitTool KFFitTool.h 
  * Kalman Filter type kinematic fit and refit tool for particle decay. 
@@ -38,15 +31,15 @@ class HepMatrix;
  *
 */
 
-class KFFitTool : public AlgTool,
-                       virtual public IKFFitTool {
+class KFFitTool : public GaudiTool,
+                  virtual public IKFFitTool {
 
 public:
 
   /// Standard Constructor
   KFFitTool( const std::string& type, 
-                            const std::string& name, 
-                            const IInterface* parent);
+             const std::string& name, 
+             const IInterface* parent);
 
   /// Standard Destructor
   virtual ~KFFitTool() { }

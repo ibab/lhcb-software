@@ -1,8 +1,11 @@
-// $Id: IPhotonParams.h,v 1.1 2005-01-06 10:30:43 pkoppenb Exp $
+// $Id: IPhotonParams.h,v 1.2 2005-02-09 17:20:43 pkoppenb Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.1  2005/01/06 10:30:43  pkoppenb
+// *.h moved from DaVinciTools to Kernel
+//
 // Revision 1.2  2004/10/27 14:09:58  pkoppenb
 // IPVLocator
 //
@@ -27,14 +30,14 @@
 // Include files
 // GaudiKernel
 #include "GaudiKernel/IAlgTool.h"
+#include "CLHEP/Geometry/Point3D.h"
+#include "CLHEP/Matrix/SymMatrix.h"
 // DaVinciTools 
 #include "Kernel/IIDIPhotonParams.h"
 // forward declarations 
 class Particle     ;
 class PrimVertex   ;
 class Vertex       ;
-class HepPoint3D   ;
-class HepSymMatrix ;
 
 /** @class IPhotonParams IPhotonParams.h Kernel/IPhotonParams.h
  *  

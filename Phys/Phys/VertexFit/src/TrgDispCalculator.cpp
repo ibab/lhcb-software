@@ -1,4 +1,4 @@
-// $Id: TrgDispCalculator.cpp,v 1.1 2005-02-08 08:50:22 pkoppenb Exp $
+// $Id: TrgDispCalculator.cpp,v 1.2 2005-02-09 17:18:48 pkoppenb Exp $
 
 // Include files
 // from Gaudi
@@ -209,7 +209,8 @@ StatusCode TrgDispCalculator::calcImpactPar( const Particle& part,
 // Distance of closest approach between two particles
 //==================================================================
 StatusCode TrgDispCalculator::calcCloseAppr( const Particle& part1,
-                             const Particle& part2, double& dist, double& distErr ) {
+                                             const Particle& part2, 
+                                             double& dist, double& distErr ) {
 
   return StatusCode::SUCCESS;
 }
@@ -223,7 +224,8 @@ StatusCode TrgDispCalculator::calcVertexDis( const Vertex& vertex1,
                              double& distErr ) {
  
   //Calculate the distance between two vectors:
-  Hep3Vector diff = vertex1.position() - vertex2.position();
+  HepPoint3D d3D = vertex1.position() - vertex2.position();
+  Hep3Vector diff(d3D.x(),d3D.y(),d3D.z());
   dist = diff.mag();
   if (dist == 0) return StatusCode::FAILURE;
 

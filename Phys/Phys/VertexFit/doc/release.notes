@@ -1,6 +1,21 @@
-! $Id: release.notes,v 1.16 2005-02-08 08:50:22 pkoppenb Exp $
+! $Id: release.notes,v 1.17 2005-02-09 17:18:48 pkoppenb Exp $
 ! Package     : VertexFit
 ! Responsible : Yuehong Xie, P. Koppenburg
+
+! 2005-02-09 - P. Koppenburg
+  - src/GeomDispCalculator.cpp
+  - src/GeomDispCalculator.h
+  - src/KFFitTool.cpp
+  - src/KFFitTool.h
+  - src/LifetimeFitter.cpp
+  - src/LifetimeFitter.h
+  - src/TrgDispCalculator.cpp
+    . Adapt to the plain stupid new structure of CLHEP 1.9, ensuring
+      backward compatibility (hence no forward declarations). One cannot
+      mix Vectors and Points in formulae anymore. One cannot easily convert
+      one to the others. :-(
+    . Make them GaudiTools where not already done.
+    . Fix a few compilation warnings.
 
 ! 2005-02-08 - P. Koppenburg for Hugo Ruiz
   - src/TrgVertexFitter.{cpp,h}
