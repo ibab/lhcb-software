@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/L0/L0Muon/src/component/L0mTrigger.cpp,v 1.1 2001-06-07 16:34:18 atsareg Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/L0/L0Muon/src/component/L0mTrigger.cpp,v 1.2 2001-06-18 12:27:14 atsareg Exp $
 
 /// Gaudi factories for algorithms and converters
 #include "GaudiKernel/AlgFactory.h"
@@ -94,26 +94,28 @@ StatusCode L0mTrigger::execute() {
   } else {
     ObjectVector<L0MuonCandidate>::iterator ilcd;
     for (ilcd=lcd->begin(); ilcd != lcd->end(); ilcd++) {
-      log << MSG::DEBUG << " Trigger: Pt/x/y/theta/phi " 
-			<< (*ilcd)->pt() <<  "/"
-			<< (*ilcd)->x() <<  "/"
-			<< (*ilcd)->y() <<  "/"
-			<< (*ilcd)->theta() <<  "/"
-			<< (*ilcd)->phi()  << endreq;
+      if ( (*ilcd)->status() == L0Muon::OK ) {
+	log << MSG::DEBUG << " Trigger: Pt/x/y/theta/phi " 
+			  << (*ilcd)->pt() <<  "/"
+			  << (*ilcd)->x() <<  "/"
+			  << (*ilcd)->y() <<  "/"
+			  << (*ilcd)->theta() <<  "/"
+			  << (*ilcd)->phi()  << endreq;
 
-      log << MSG::DEBUG << " Pads used:  " << endreq;
-      log << MSG::DEBUG << "    Pad M1: x/y/z: " 
-	                << (*ilcd)->pad(0)->x() << "/"
-			<< (*ilcd)->pad(0)->y() << "/"
-			<< (*ilcd)->pad(0)->z() <<endreq; 
-      log << MSG::DEBUG << "    Pad M2: x/y/z: " 
-	                << (*ilcd)->pad(1)->x() << "/"
-			<< (*ilcd)->pad(1)->y() << "/"
-			<< (*ilcd)->pad(1)->z() <<endreq; 	
-      log << MSG::DEBUG << "    Pad M3: x/y/z: " 
-	                << (*ilcd)->pad(2)->x() << "/"
-			<< (*ilcd)->pad(2)->y() << "/"
-			<< (*ilcd)->pad(2)->z() <<endreq;						  
+	log << MSG::DEBUG << " Pads used:  " << endreq;
+	log << MSG::DEBUG << "    Pad M1: x/y/z: " 
+	                  << (*ilcd)->pad(0)->x() << "/"
+			  << (*ilcd)->pad(0)->y() << "/"
+			  << (*ilcd)->pad(0)->z() <<endreq; 
+	log << MSG::DEBUG << "    Pad M2: x/y/z: " 
+	                  << (*ilcd)->pad(1)->x() << "/"
+			  << (*ilcd)->pad(1)->y() << "/"
+			  << (*ilcd)->pad(1)->z() <<endreq; 	
+	log << MSG::DEBUG << "    Pad M3: x/y/z: " 
+	                  << (*ilcd)->pad(2)->x() << "/"
+			  << (*ilcd)->pad(2)->y() << "/"
+			  << (*ilcd)->pad(2)->z() <<endreq;
+      }			  						  
     }
   }    
  
