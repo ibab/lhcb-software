@@ -1,5 +1,5 @@
 package BooleSys
-version v5r5
+version v5r6
 
 branches cmt doc
  
@@ -8,7 +8,7 @@ branches cmt doc
 #=======================================================
 
 # Boole application
-use Boole		v5r5	Digi
+use Boole		v5r6	Digi
 use DigiAlg		v2r3	Digi
 use LHCbTools		v1r1	Kernel
 

@@ -3,6 +3,17 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
+</PRE><H1><A NAME=v5r6>2004-04-16 Boole v5r6</A></H1><PRE>
+
+- Persistency changes
+  . Remove Spillover hits from output file
+
+- Bug fixes
+  . Do not use spillover hits for Muoncoord2MCParticle association
+    (MuonAssociators v1r3)
+  . Do not retrieve VeloCluster2MCHitAsct tool at every event
+    (VeloAssociators v1r10)
+
 </PRE><H1><A NAME=v5r5>2004-04-15 Boole v5r5</A></H1><PRE>
 
 - New features

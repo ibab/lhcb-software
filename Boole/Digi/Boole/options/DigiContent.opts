@@ -2,11 +2,14 @@
 // ----------------------------------------------
 DigiWriter.OptItemList =
 {
-  "/Event/Prev#*"
-, "/Event/PrevPrev#*"
-, "/Event/Next#*"
-, "/Event/LHCBackground#*"
-  //, "/Event/Gen/HepMCEvents#1"
+  "/Event/Prev#1"
+  "/Event/Prev/Header#1"
+, "/Event/PrevPrev#1"
+, "/Event/PrevPrev/Header#1"
+, "/Event/Next#1"
+, "/Event/Next/Header#1"
+  //, "/Event/Gen/HepMCEvents#1" needs Gauss v15r4
+  //, "/Event/Gen/HardProcesses#1" needs Gauss v15r4
 }; 
 DigiWriter.ItemList = 
 {
@@ -21,6 +24,7 @@ DigiWriter.ItemList =
 , "/Event/MC#1"
 , "/Event/MC/Particles#1"  // To be Filtered in Gauss
 , "/Event/MC/Vertices#1"   // To be Filtered in Gauss
+  //, "/Event/MC/Signal#1" needs Gauss v15r4
 , "/Event/MC/Velo#1"
 , "/Event/MC/Velo/Hits#1"
 , "/Event/MC/Velo/PuHits#1"
