@@ -70,7 +70,7 @@ StatusCode LagrangeMassVertexFitter::initialize() {
     return StatusCode::FAILURE;
   }
 
-  sc = toolSvc()->retrieveTool("ParticleTransporter", 
+  sc = toolSvc()->retrieveTool("CombinedTransporter", 
                                m_pTransporter, this);
   if(sc.isFailure()) {
     log << MSG::FATAL << " Unable to retrieve ParticleTransporter tool" ;
