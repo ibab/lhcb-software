@@ -1,6 +1,12 @@
-rem $Id: setupDB.bat,v 1.2 2002-03-01 16:00:09 andreav Exp $
-rem Setup Oracle environment variables
-set DETCONDEXAMPLE_DBUSER=AVALASSI
-set DETCONDEXAMPLE_DBPSWD=********
-set DETCONDEXAMPLE_DBHOST=SUNDB06
-set DETCONDEXAMPLE_DBNAME=MYCONDDB
+@echo off
+rem $Id: setupDB.bat,v 1.3 2002-03-28 13:29:30 andreav Exp $
+if "%CONDDB_implementation%." == "." ( 
+  echo "The environment variable CONDDB_implementation is not set"
+  echo "This should never happen: check your requirements file(s)!"
+) ELSE if "%CONDDB_implementation%" == "CondDBOracle" (
+  call setupDB_Oracle.bat
+) ELSE (
+  echo "CONDDB_implementation is set to %CONDDB_implementation%"
+  echo "ERROR: the only valid value is CondDBOracle!!!"
+)
+
