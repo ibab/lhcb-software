@@ -1,0 +1,15 @@
+!-----------------------------------------------------------------------------
+! Package          : Sim/GaussTracker
+! Responsible	   : Witold Pokorski
+! Purpose          : collection of sensitive detectors, G4 actions, etc for
+!                    tracker like detectors (Velo, OT, IT, Muon)
+!-----------------------------------------------------------------------------
+	
+
+
+!=========================== GaussTracker v1r0 2002-12-11 ========================
+! 2002-12-11 - Witek Pokorski
+  - New package: contains all tracker-like specific implementations of sensitive
+                  detectors and converters 
+
+!==============================================================================
