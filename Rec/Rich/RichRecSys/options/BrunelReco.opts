@@ -29,7 +29,7 @@ BrunelRecoRICHSeq.Members += { "RichGlobalPIDFinalize/RichGloPIDFin" };
 // Make final output PID results
 BrunelRecoRICHSeq.Members += { "RichPIDSimpleMerge/MergeRichPIDs" };
 
-BrunelRecoRICHSeq.Members += { "RichMarkovRingFinderAlg" };
+//BrunelRecoRICHSeq.Members += { "RichMarkovRingFinderAlg" };
 
 // parameters for the reco algorithms
 #include "$RICHRECSYSOPTS/RecoAlgPara.opts"
