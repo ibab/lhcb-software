@@ -1,5 +1,5 @@
 package RichReadout
-version v1r8
+version v1r9
 
 # ================ structure =================================================
 branches cmt doc src
@@ -9,7 +9,6 @@ include_path none
 set RICHREADOUTOPTS $(RICHREADOUTROOT)/options
 
 # ================ dependencies ==============================================
-use AIDA             v*      -no_auto_imports
 use RichEvent        v7r*    Event
 
 # ================ component library =========================================
