@@ -1,6 +1,4 @@
-! $Id: release.notes,v 1.22 2002-11-13 20:36:51 ibelyaev Exp $
-! =============================================================================
-! CVS tag $Name: not supported by cvs2svn $
+! $Id: release.notes,v 1.23 2002-11-19 09:57:12 cattanem Exp $
 ! =============================================================================
 ! Package     : CaloKernel
 ! Responsible : Vanya Belyaev Ivan.Belyaev@itep.ru
@@ -9,6 +7,7 @@
 ! which are essentially independent from Detector and Event models 
 ! =============================================================================
 
+! ====================== CaloKernel v2r1 2002-11-19 ===========================
 ! 2002-11-12 - Ivan Belyaev
  - CaloKernel/CaloALhorithm.h, CaloTool.h   - introduce "maximal number of 
  - src/CaloALhorithm.cpp, CaloTool.cpp        error/warning printouts"
@@ -18,7 +17,7 @@
  - CaloKernel/CaloAlgborithm.h
   fix a bug, found by O.Callot in 'setDetData' method
 
-! =============================================================================
+! ====================== CaloKernel v2r0 2002-05-02 ===========================
 ! 2 May 2002 - Vanya Belyaev
 ! CaloKernel/CaloAlgorithm.h - bug fix for Win32 
 ! CaloKernel/CaloTool.h      - bug fix for Win32 
