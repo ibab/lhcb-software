@@ -1,8 +1,11 @@
-// $Id: CaloMap.h,v 1.6 2004-07-27 14:07:51 ibelyaev Exp $
+// $Id: CaloMap.h,v 1.7 2004-07-28 16:36:44 cattanem Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.6  2004/07/27 14:07:51  ibelyaev
+//  modification/simplification of classes CaloMap&CaloHashMap
+//
 // Revision 1.5  2004/07/27 14:01:37  ibelyaev
 //  modification/simplification of classes CaloMap&CaloHashMap
 //
@@ -46,10 +49,10 @@ public:
 public:
   
   /// Standard constructor
-  Map() : m_map  () {};
+  CaloMap() : m_map  () {};
   
   /// destructor (virtual)
-  virtual ~Map() { clear() ; };
+  virtual ~CaloMap() { clear() ; };
   
   /** get the size ( == number of elements )
    *  @return number of elements 
