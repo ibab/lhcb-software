@@ -3,7 +3,7 @@
 # Maintainer : Chris Jones
 #============================================================================
 package           RichRecSys
-version           v1r1
+version           v1r2
 
 # ================ structure ================================================
 branches          cmt doc options
@@ -12,11 +12,11 @@ branches          cmt doc options
 set RICHRECSYSOPTS $(RICHRECSYSROOT)/options
 
 # ================ dependencies =============================================
-use RichRecBase    v1r3   Rich
-use RichRecTools   v2r2   Rich
+use RichRecBase    v1r4   Rich
+use RichRecTools   v2r3   Rich
 use RichRecMCTools v1r0   Rich
 use RichRecCommon  v1r1   Rich
 use RichRingRefit  v1r1   Rich
-use RichLocalPID   v1r1   Rich
+use RichLocalPID   v2r0   Rich
 use RichGlobalPID  v1r1   Rich
-use RichPIDMerge   v1r0   Rich
+use RichPIDMerge   v1r1   Rich
