@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.12 2004-06-29 07:02:39 ibelyaev Exp $ 
+# $Id: requirements,v 1.13 2004-07-08 19:36:57 ibelyaev Exp $ 
 # =============================================================================
 # CVS tag $Name: not supported by cvs2svn $
 # =============================================================================
@@ -6,12 +6,10 @@
 #     Interactive LHCb Physics Analysis with Python  
 # =============================================================================
 package       BenderSys
-version       v3r3
+version       v3r4
 author        Vanya BELYAEV
 
-#use PI          v1r112p1 
 use HIPPODRAW   v1r133 
-#use GaudiPython v6r4 
 
 # =========== Bender Application itself =======================================
 use           Bender         v3r3 Phys 
@@ -41,6 +39,9 @@ use           BenderUser     v3r0 Phys
 # The END 
 # =============================================================================
 # $Log: not supported by cvs2svn $
+# Revision 1.12  2004/06/29 07:02:39  ibelyaev
+#  change versions
+#
 # Revision 1.11  2004/06/28 17:02:35  ibelyaev
 #  update the version
 #
