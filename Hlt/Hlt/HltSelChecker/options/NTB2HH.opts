@@ -6,17 +6,17 @@
 // The offline selection (note that the PreLoadParticles/Combined must be added before)
 #include "$B2HHROOT/options/DoTDRselB2HH.opts"
 
-ApplicationMgr.TopAlg += {"GaudiSequencer/CheckHLTBd2HH"};
+ApplicationMgr.TopAlg += {"GaudiSequencer/CheckHLTB2HH"};
 
-CheckHLTBd2HH.IgnoreFilterPassed = false ; // Act as Sequencer
-CheckHLTBd2HH.MeasureTime = false;
+CheckHLTB2HH.IgnoreFilterPassed = false ; // Act as Sequencer
+CheckHLTB2HH.MeasureTime = false;
 
-CheckHLTBd2HH.Members ={ "TrgL0Filter", "PrintHeader/PassedL0",
-                         "TrgL1Filter", "PrintHeader/PassedL1",
-                         "CheckSelResult/MergeOffB2HH",
-                         "DecayChainNTuple/OffB2HHTree",
-                         "CheckSelResult/MergeHLTBd2HH",
-                         "DecayChainNTuple/HLTB2HHTree"};
+CheckHLTB2HH.Members ={ "TrgL0Filter", "PrintHeader/PassedL0",
+                        "TrgL1Filter", "PrintHeader/PassedL1",
+                        "CheckSelResult/MergeOffB2HH",
+                        "DecayChainNTuple/OffB2HHTree",
+                        "CheckSelResult/MergeHLTB2HH",
+                        "DecayChainNTuple/HLTB2HHTree"};
  
 PassedL0.OutputLevel = 3;
 PassedL1.OutputLevel = 3;
@@ -24,10 +24,10 @@ PassedL1.OutputLevel = 3;
 MergeOffB2HH.Algorithms = {"TDRselBd2PiPi", "TDRselBd2KPi", "TDRselBs2KK", "TDRselBs2PiK"};
 MergeOffB2HH.ANDmode = false;
 MergeOffB2HH.AvoidSelResult = false;
-MergeHLTBd2HH.Algorithms = { "HLTFilterB2HH"};
+MergeHLTB2HH.Algorithms = { "HLTFilterB2HH"};
 
 MergeOffB2HH.OutputLevel = 4;
-MergeHLTBd2HH.OutputLevel = 4;
+MergeHLTB2HH.OutputLevel = 4;
 
 //------------------------------------------------------------------------------
 // Write Tree for Off selection
@@ -46,9 +46,9 @@ OffB2HHTree.Decay = "{B0 -> ^pi+ ^pi-, B0 -> ^K+ ^pi-, B~0 -> ^K- ^pi+, B_s0 -> 
 OffB2HHTree.MCDecay = "{B0 -> ^pi+ ^pi-, B~0 -> ^pi+ ^pi-, B0 -> ^K+ ^pi-, B0 -> ^K- ^pi+, B~0 -> ^K- ^pi+, B~0 -> ^K+ ^pi-
 , B_s0 -> ^K+ ^K-, B_s~0 -> ^K+ ^K-, B_s0 -> ^pi+ ^K-, B_s0 -> ^pi- ^K+, B_s~0 -> ^pi- ^K+, B_s~0 -> ^pi+ ^K-}";
 OffB2HHTree.NtupleName = "FILE1/OffB2HH";
+OffB2HHTree.FillMCDecay = true;
 OffB2HHTree.PVLocator.PVLocation = "/Event/Phys/PrimaryVertices";
 OffB2HHTree.UseRichPID = false;
-OffB2HHTree.FillMCDecay = true;
 OffB2HHTree.OutputLevel = 3;
 //------------------------------------------------------------------------------
 
@@ -56,22 +56,21 @@ OffB2HHTree.OutputLevel = 3;
 // Write Tree for HLT selection
 HLTB2HHTree.PhysDesktop.InputLocations = {"Phys/HLTFilterB2HH"};
 
-HLTB2HHTree.LinkAsct.Location      = "Phys/Relations/Particle2MCLinksHLTBd2HH";
+HLTB2HHTree.LinkAsct.Location      = "Phys/Relations/Particle2MCLinksHLTB2HH";
 HLTB2HHTree.LinkAsct.AlgorithmType = "Particle2MCLinks";
-HLTB2HHTree.LinkAsct.AlgorithmName = "Particle2MCLinksHLTBd2HH";
+HLTB2HHTree.LinkAsct.AlgorithmName = "Particle2MCLinksHLTB2HH";
 HLTB2HHTree.LinkAsct.OutputLevel = 3;
 
-Particle2MCLinksHLTBd2HH.InputData  = {"Phys/HLTPions/Particles", "Phys/HLTKaons/Particles", "Phys/HLTPreselPions/Particles", "Phys/HLTPreselKaons/Particles"};
-Particle2MCLinksHLTBd2HH.OutputLevel = 3;
+Particle2MCLinksHLTB2HH.InputData  = {"Phys/HLTPions/Particles", "Phys/HLTKaons/Particles", "Phys/HLTPreselPions/Particles", "Phys/HLTPreselKaons/Particles"};
+Particle2MCLinksHLTB2HH.OutputLevel = 3;
 
 // In the HLT we always form B0 -> pi+ pi-
 HLTB2HHTree.Decay = "B0 -> ^pi+ ^pi-";
 HLTB2HHTree.MCDecay = "{B0 -> ^pi+ ^pi-, B~0 -> ^pi+ ^pi-, B0 -> ^K+ ^pi-, B0 -> ^K- ^pi+, B~0 -> ^K- ^pi+, B~0 -> ^K+ ^pi-
 , B_s0 -> ^K+ ^K-, B_s~0 -> ^K+ ^K-, B_s0 -> ^pi+ ^K-, B_s0 -> ^pi- ^K+, B_s~0 -> ^pi- ^K+, B_s~0 -> ^pi+ ^K-}";
-HLTB2HHTree.NtupleName = "FILE1/HLTBd2HH";
-//HLTB2HHTree.MCNtupleName = "FILE1/MCHLTBd2HH";
+HLTB2HHTree.NtupleName = "FILE1/HLTB2HH";
+HLTB2HHTree.FillMCDecay = true;
 HLTB2HHTree.PVLocator.PVLocation = "/Event/Phys/Trg/Vertices";
 HLTB2HHTree.UseRichPID = true;
-HLTB2HHTree.FillMCDecay = true;
-HLTB2HHTree.OutputLevel = 2;
+HLTB2HHTree.OutputLevel = 3;
 //------------------------------------------------------------------------------

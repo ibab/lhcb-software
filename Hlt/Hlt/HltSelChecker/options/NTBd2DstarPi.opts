@@ -43,7 +43,7 @@ OffBd2DstarPiTree.Decay = "{B0 -> (^D*(2010)- -> (^D~0 -> ^K+ ^pi-)  ^pi-) ^pi+,
 OffBd2DstarPiTree.MCDecay = "{B0 -> (^D*(2010)- -> (^D~0 -> ^K+ ^pi-)  ^pi-) ^pi+, B0 -> (^D*(2010)+ -> (^D0 -> ^K- ^pi+)  ^pi+) ^pi-
 , B~0 -> (^D*(2010)+ -> (^D0 -> ^K- ^pi+)  ^pi+) ^pi-, B~0 -> (^D*(2010)- -> (^D~0 -> ^K+ ^pi-)  ^pi-) ^pi+}";
 OffBd2DstarPiTree.NtupleName = "FILE1/OffBd2DstarPi";
-OffBd2DstarPiTree.MCNtupleName = "FILE1/MCOffBd2DstarPi";
+OffBd2DstarPiTree.FillMCDecay = true;
 OffBd2DstarPiTree.PVLocator.PVLocation = "/Event/Phys/PrimaryVertices";
 OffBd2DstarPiTree.UseRichPID = false;
 OffBd2DstarPiTree.OutputLevel = 3;
@@ -58,20 +58,26 @@ HLTBd2DstarPiTree.LinkAsct.AlgorithmType = "Particle2MCLinks";
 HLTBd2DstarPiTree.LinkAsct.AlgorithmName = "Particle2MCLinksHLTBd2DstarPi";
 HLTBd2DstarPiTree.LinkAsct.OutputLevel = 3;
 
-// The location depends on the way of forming the particles: ChangeDecayChain or ChangePIDByMass!!!
-// For ChangePIDByMass
-Particle2MCLinksHLTBd2DstarPi.InputData  = {"Phys/HLTPions/Particles", "Phys/HLTKaons/Particles", "Phys/HLTPreselPions/Particles", "Phys/HLTPreselKaons/Particles"
-                                            , "Phys/SoftPionForHLTDstar2D0/Particles", "Phys/HardPionForHLTDstar2D0/Particles"};
-// For ChangeDecayChain
+Particle2MCLinksHLTBd2DstarPi.InputData  = {"Phys/HLTPions/Particles", "Phys/HLTKaons/Particles", "Phys/HLTPreselPions/Particles", "Phys/HLTPreselKaons/Particles"};
 // Particle2MCLinksHLTBd2DstarPi.InputData  = {"Phys/HLTPions/Particles", "Phys/HLTKaons/Particles", "Phys/HLTSeedingKPiDaughters/Particles"
 //                                             , "Phys/SoftPionForHLTDstar2D0/Particles", "Phys/HardPionForHLTDstar2D0/Particles"};
 Particle2MCLinksHLTBd2DstarPi.OutputLevel = 3;
 
-HLTBd2DstarPiTree.Decay = "{B0 -> (^D*(2010)- -> (^D~0 -> ^K+ ^pi-)  ^pi-) ^pi+, B~0 -> (^D*(2010)+ -> (^D0 -> ^K- ^pi+)  ^pi+) ^pi-}";
+// No D~0 in the HLT, but we form: D0 -> pi+ pi-, K+ pi-, pi+ K- and K+ K-
+HLTBd2DstarPiTree.Decay = "{
+B0 -> (^D*(2010)- -> (^D0 -> ^pi+ ^pi-)  ^pi-) ^pi+, 
+B0 -> (^D*(2010)- -> (^D0 -> ^K+ ^pi-)  ^pi-) ^pi+, 
+B0 -> (^D*(2010)- -> (^D0 -> ^pi+ ^K-)  ^pi-) ^pi+, 
+B0 -> (^D*(2010)- -> (^D0 -> ^K+ ^K-)  ^pi-) ^pi+, 
+B~0 -> (^D*(2010)+ -> (^D0 -> ^pi+ ^pi-)  ^pi+) ^pi-,
+B~0 -> (^D*(2010)+ -> (^D0 -> ^K+ ^pi-)  ^pi+) ^pi-,
+B~0 -> (^D*(2010)+ -> (^D0 -> ^pi+ ^K-)  ^pi+) ^pi-,
+B~0 -> (^D*(2010)+ -> (^D0 -> ^K+ ^K-)  ^pi+) ^pi-
+}";
 HLTBd2DstarPiTree.MCDecay = "{B0 -> (^D*(2010)- -> (^D~0 -> ^K+ ^pi-)  ^pi-) ^pi+, B0 -> (^D*(2010)+ -> (^D0 -> ^K- ^pi+)  ^pi+) ^pi-
 , B~0 -> (^D*(2010)+ -> (^D0 -> ^K- ^pi+)  ^pi+) ^pi-, B~0 -> (^D*(2010)- -> (^D~0 -> ^K+ ^pi-)  ^pi-) ^pi+}";
 HLTBd2DstarPiTree.NtupleName = "FILE1/HLTBd2DstarPi";
-HLTBd2DstarPiTree.MCNtupleName = "FILE1/MCHLTBd2DstarPi";
+HLTBd2DstarPiTree.FillMCDecay = true;
 HLTBd2DstarPiTree.PVLocator.PVLocation = "/Event/Phys/Trg/Vertices";
 HLTBd2DstarPiTree.UseRichPID = true;
 HLTBd2DstarPiTree.OutputLevel = 3;

@@ -2,7 +2,20 @@
 
 ApplicationMgr.DLLs += {"HltSelChecker"};
 
-// WARNING: comment the NTuples in DVHLTExSelections.opts when running DVHLTCheck
+// For the association on 'Trg' particles
+// Do not include this line if running DVHLTCorr.opts at the same time
+// Do not include this line if Truth.opts is included after
+TrueSignals.Members += {"TrgL1Filter/TrueTrgL1Filter","TrgTrackToContainer","TrgTrack2MCParticle"};
+
+//==============================================================================
+// MC truth
+//==============================================================================
+// Include this to overwrite input to take *only* MC truth particles into account
+// #include "$HLTSELCHECKERROOT/options/Truth.opts"
+// Include this to overwrite input to take *only* MC truth particles into account
+//#include "$HLTSELCHECKERROOT/options/TruthInput.opts" // !!! ONLY MCTRUTH
+
+// WARNING: comment the NTuples in DVHLTExSelections.opts when running DVHLTNTuplesCheck.opts
 // and comment the all the other exclusive channels, excepted the one to check
 
 // Include this if you also need to run on offline particles and if 
@@ -18,34 +31,33 @@ SetOfflinePV.ResetToOffline = true;
 // and add it here ... 
 ApplicationMgr.TopAlg += { "PreLoadParticles/Combined" } ;
 
-HLTExclusiveSelectionsFlag.OutputLevel = 4;
 MessageSvc.OutputLevel = 4;
 ToolSvc.OutputLevel    = 4;
 
 //==============================================================================
 // Checking B -> H H
 //==============================================================================
-#include "$HLTSELCHECKERROOT/options/NTB2HH.opts"
+// #include "$HLTSELCHECKERROOT/options/NTB2HH.opts"
 
 //==============================================================================
 // Checking B_s0 -> phi(1020) phi(1020)
 //==============================================================================
-//#include "$HLTSELCHECKERROOT/options/NTBs2PhiPhi.opts"
+#include "$HLTSELCHECKERROOT/options/NTBs2PhiPhi.opts"
 
 //==============================================================================
 // Checking B0 -> (D~0 -> K+ pi-) (K*(892)0 -> K+ pi-) and cc
 //==============================================================================
-//#include "$HLTSELCHECKERROOT/options/NTBd2D0Kstar.opts"
+// #include "$HLTSELCHECKERROOT/options/NTBd2D0Kstar.opts"
 
 //==============================================================================
 // Checking B0 -> (D*(2010)- -> (D~0 -> K+ pi-)  pi-) pi+ and cc
 //==============================================================================
-//#include "$HLTSELCHECKERROOT/options/NTBd2DstarPi.opts"
+// #include "$HLTSELCHECKERROOT/options/NTBd2DstarPi.opts"
 
 //==============================================================================
 // Checking B_s0 -> (D_s- -> K+ K- pi-) h+ and cc
 //==============================================================================
-//#include "$HLTSELCHECKERROOT/options/NTBs2DsH.opts"
+// #include "$HLTSELCHECKERROOT/options/NTBs2DsH.opts"
 
 //==============================================================================
 // Checking B_s0 -> phi(1020) gamma
@@ -72,7 +84,7 @@ EventSelector.Input   = {};
 //===================================================
 // B-> H H
 // Bd -> Pi Pi
-#include "$HLTSELECTIONSROOT/options/L0L1TDR-Bd2PiPi.opts"
+// #include "$HLTSELECTIONSROOT/options/L0L1TDR-Bd2PiPi.opts"
 // Bd -> K Pi
 // #include "$HLTSELECTIONSROOT/options/L0L1TDR-Bd2KPi.opts"
 // Bs -> K K
@@ -81,7 +93,7 @@ EventSelector.Input   = {};
 // #include "$HLTSELECTIONSROOT/options/L0L1TDR-Bs2PiK.opts"
 //===================================================
 // Bs -> Phi Phi
-// #include "$HLTSELECTIONSROOT/options/L0L1TDR-Bs2PhiPhi.opts"
+#include "$HLTSELECTIONSROOT/options/L0L1TDR-Bs2PhiPhi.opts"
 //===================================================
 // Bd -> D0 K*
 // #include "$HLTSELECTIONSROOT/options/L0L1TDR-Bd2D0Kstar.opts"
@@ -114,3 +126,7 @@ ApplicationMgr.EvtMax    = 10;
 // ApplicationMgr.EvtMax    = -1;
 EventSelector.FirstEvent = 1;
 EventSelector.PrintFreq  = 1;
+
+
+// #include "$HLTGENERICROOT/options/HltGeneric.opts"
+// HltGenericDecision.Filter = false; // false is default

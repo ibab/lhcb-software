@@ -51,9 +51,9 @@ DecayChainNTuple::DecayChainNTuple( const std::string& name,
 #endif
     ,m_pathTrg(TrgDecisionLocation::Default)
 {
-  declareProperty("Decay", m_Decay = "");
+  declareProperty("Decay", m_Decay = "B0 -> ^pi+ ^pi-");
 #ifdef MCCheck
-  declareProperty("MCDecay", m_MCDecay = "");
+  declareProperty("MCDecay", m_MCDecay = "B0 -> ^pi+ ^pi-");
   declareProperty("FillMCDecay", m_FillMCDecay = false);
 #endif
   declareProperty("NtupleName", m_ntupleName = "FILE1/MySelection" );
@@ -134,7 +134,7 @@ StatusCode DecayChainNTuple::initialize() {
   // Set the MC dk to be looked at
   m_pMCDKFinder->setDecay(m_MCDecay);
   info() << "Will look for the MC decay: "<< m_pMCDKFinder->decay() << endreq;
-
+  
   // Link associator
   sc = toolSvc()->retrieveTool("Particle2MCLinksAsct", "LinkAsct", m_pAsctLinks, this);
   if(sc.isFailure()){
@@ -217,13 +217,12 @@ StatusCode DecayChainNTuple::execute() {
   
   bool foundDK = (mothervec.size()>0);
 
-#ifndef MCCheck
   // Skip event if no DOI
   if(!foundDK){
     debug() << "Leaving since no DOI found" << endreq;
     return StatusCode::SUCCESS ;    
   }
-#endif
+
   //---------------------------------------------
 
 #ifdef MCCheck
@@ -240,19 +239,13 @@ StatusCode DecayChainNTuple::execute() {
   // container holding the mc head of the decay
   std::vector<MCParticle*> MCHead;
   const MCParticle* imc = NULL;
+
   while (m_pMCDKFinder->findDecay(kmcparts, imc)){
     MCParticle* jmc = const_cast<MCParticle*>(imc);
     MCHead.push_back(jmc);
-  }
-
+    }
   debug() << "Found " << MCHead.size() << " true decay: " << m_pMCDKFinder->decay() << endreq;
-
-  bool foundMCDK = (MCHead.size()>0);
-
-  if(!foundDK && !foundMCDK){
-    debug() << "Leaving since no DOI found" << endreq;
-    return StatusCode::SUCCESS ;    
-  }
+  
   //---------------------------------------------
 #endif
 

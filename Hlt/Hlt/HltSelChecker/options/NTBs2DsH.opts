@@ -46,7 +46,7 @@ OffBs2DsHTree.Decay = "{B_s0 -> (^D_s- => ^K+ ^K- ^pi-) ^pi+, B_s0 -> (^D_s+ => 
 OffBs2DsHTree.MCDecay = "{B_s0 -> (^D_s- => ^K+ ^K- ^pi-) ^pi+, B_s0 -> (^D_s+ => ^K- ^K+ ^pi+) ^pi-, B_s~0 -> (^D_s+ => ^K- ^K+ ^pi+) ^pi-, B_s~0 -> (^D_s- => ^K+ ^K- ^pi-) ^pi+
 ,B_s0 -> (^D_s- => ^K+ ^K- ^pi-) ^K+, B_s0 -> (^D_s+ => ^K- ^K+ ^pi+) ^K-, B_s~0 -> (^D_s+ => ^K- ^K+ ^pi+) ^K-, B_s~0 -> (^D_s- => ^K+ ^K- ^pi-) ^K+}";
 OffBs2DsHTree.NtupleName = "FILE1/OffBs2DsH";
-OffBs2DsHTree.MCNtupleName = "FILE1/MCOffBs2DsH";
+OffBs2DsHTree.FillMCDecay = true;
 OffBs2DsHTree.PVLocator.PVLocation = "/Event/Phys/PrimaryVertices";
 OffBs2DsHTree.UseRichPID = false;
 OffBs2DsHTree.OutputLevel = 3;
@@ -61,17 +61,14 @@ HLTBs2DsHTree.LinkAsct.AlgorithmType = "Particle2MCLinks";
 HLTBs2DsHTree.LinkAsct.AlgorithmName = "Particle2MCLinksHLTBs2DsH";
 HLTBs2DsHTree.LinkAsct.OutputLevel = 3;
 
-// The location depends on the way of forming the particles: ChangeDecayChain or ChangePIDByMass!!!
-// Input hereafter correspond to the 3-prong way
-Particle2MCLinksHLTBs2DsH.InputData  = {"Phys/HLTPions/Particles", "Phys/HLTKaons/Particles", "Phys/HLTBachelorForHLTBs2DsH/Particles", "Phys/HLTDaughtersFromDs/Particles"};
+Particle2MCLinksHLTBs2DsH.InputData  = {"Phys/HLTPions/Particles", "Phys/HLTKaons/Particles",  "Phys/HLTPreselPions/Particles", "Phys/HLTPreselKaons/Particles"};
 Particle2MCLinksHLTBs2DsH.OutputLevel = 3;
 
-// H is generically a pion in the HLT (if no Rich PID)
 HLTBs2DsHTree.Decay = "{B_s0 -> (^D_s- => ^K+ ^K- ^pi-) ^pi+, B_s~0 -> (^D_s+ => ^K- ^K+ ^pi+) ^pi-, B_s0 -> (^D_s- => ^K+ ^K- ^pi-) ^K+, B_s~0 -> (^D_s+ => ^K- ^K+ ^pi+) ^K-}";
 HLTBs2DsHTree.MCDecay = "{B_s0 -> (^D_s- => ^K+ ^K- ^pi-) ^pi+, B_s0 -> (^D_s+ => ^K- ^K+ ^pi+) ^pi-, B_s~0 -> (^D_s+ => ^K- ^K+ ^pi+) ^pi-, B_s~0 -> (^D_s- => ^K+ ^K- ^pi-) ^pi+
 ,B_s0 -> (^D_s- => ^K+ ^K- ^pi-) ^K+, B_s0 -> (^D_s+ => ^K- ^K+ ^pi+) ^K-, B_s~0 -> (^D_s+ => ^K- ^K+ ^pi+) ^K-, B_s~0 -> (^D_s- => ^K+ ^K- ^pi-) ^K+}";
 HLTBs2DsHTree.NtupleName = "FILE1/HLTBs2DsH";
-HLTBs2DsHTree.MCNtupleName = "FILE1/MCHLTBs2DsH";
+HLTBs2DsHTree.FillMCDecay = true;
 HLTBs2DsHTree.PVLocator.PVLocation = "/Event/Phys/Trg/Vertices";
 HLTBs2DsHTree.UseRichPID = true;
 HLTBs2DsHTree.OutputLevel = 3;

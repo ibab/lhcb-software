@@ -42,7 +42,7 @@ Particle2MCLinksOffBs2PhiPhi.OutputLevel = 3;
 OffBs2PhiPhiTree.Decay = "B_s0 -> (^phi(1020) -> ^K- ^K+) (^phi(1020) -> ^K- ^K+)";
 OffBs2PhiPhiTree.MCDecay = "{B_s0 -> (^phi(1020) -> ^K- ^K+) (^phi(1020) -> ^K- ^K+),B_s~0 -> (^phi(1020) -> ^K- ^K+) (^phi(1020) -> ^K- ^K+)}";
 OffBs2PhiPhiTree.NtupleName = "FILE1/OffBs2PhiPhi";
-OffBs2PhiPhiTree.MCNtupleName = "FILE1/MCOffBs2PhiPhi";
+OffBs2PhiPhiTree.FillMCDecay = true;
 OffBs2PhiPhiTree.PVLocator.PVLocation = "/Event/Phys/PrimaryVertices";
 OffBs2PhiPhiTree.UseRichPID = false;
 OffBs2PhiPhiTree.OutputLevel = 3;
@@ -57,17 +57,14 @@ HLTBs2PhiPhiTree.LinkAsct.AlgorithmType = "Particle2MCLinks";
 HLTBs2PhiPhiTree.LinkAsct.AlgorithmName = "Particle2MCLinksHLTBs2PhiPhi";
 HLTBs2PhiPhiTree.LinkAsct.OutputLevel = 3;
 
-// The location depends on the way of forming the particles: ChangeDecayChain or ChangePIDByMass!!!
-// For ChangePIDByMass
 Particle2MCLinksHLTBs2PhiPhi.InputData  = {"Phys/HLTPions/Particles", "Phys/HLTKaons/Particles", "Phys/HLTPreselPions/Particles", "Phys/HLTPreselKaons/Particles"};
-// For ChangeDecayChain
 // Particle2MCLinksHLTBs2PhiPhi.InputData  = {"Phys/HLTPions/Particles", "Phys/HLTKaons/Particles", "Phys/HLTSeedingKKDaughters/Particles"};
 Particle2MCLinksHLTBs2PhiPhi.OutputLevel = 3;
 
 HLTBs2PhiPhiTree.Decay = "B_s0 -> (^phi(1020) -> ^K- ^K+) (^phi(1020) -> ^K- ^K+)";
 HLTBs2PhiPhiTree.MCDecay = "{B_s0 -> (^phi(1020) -> ^K- ^K+) (^phi(1020) -> ^K- ^K+),B_s~0 -> (^phi(1020) -> ^K- ^K+) (^phi(1020) -> ^K- ^K+)}";
 HLTBs2PhiPhiTree.NtupleName = "FILE1/HLTBs2PhiPhi";
-HLTBs2PhiPhiTree.MCNtupleName = "FILE1/MCHLTBs2PhiPhi";
+HLTBs2PhiPhiTree.FillMCDecay = true;
 HLTBs2PhiPhiTree.PVLocator.PVLocation = "/Event/Phys/Trg/Vertices";
 HLTBs2PhiPhiTree.UseRichPID = true;
 HLTBs2PhiPhiTree.OutputLevel = 3;

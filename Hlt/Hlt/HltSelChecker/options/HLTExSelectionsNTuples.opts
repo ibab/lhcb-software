@@ -4,6 +4,8 @@
 // Author: Luis Fernandez, 13/08/2004
 // Changed: Luis Fernandez, 10/12/2004
 
+ApplicationMgr.DLLs += {"HltSelChecker"};
+
 ApplicationMgr.TopAlg += {"GaudiSequencer/MBExSelectionsNTuples"};
 
 MBExSelectionsNTuples.IgnoreFilterPassed = true; // make all
@@ -32,7 +34,7 @@ MergeHLTSel.OutputLevel = 3;
 HTLSelTrees.IgnoreFilterPassed = true; // make all
 HTLSelTrees.MeasureTime = false;
 
-HTLSelTrees.Members ={"DecayChainNTuple/HLTBd2HHTree",
+HTLSelTrees.Members ={"DecayChainNTuple/HLTB2HHTree",
                       "DecayChainNTuple/HLTBs2PhiPhiTree",
                       "DecayChainNTuple/HLTBd2D0KstarTree", 
                       "DecayChainNTuple/HLTBd2DstarPiTree",
@@ -46,14 +48,14 @@ HTLSelTrees.OutputLevel = 3;
 //==============================================================================
 
 // Write Tree for HLT selection
-HLTBd2HHTree.PhysDesktop.InputLocations = {"Phys/HLTFilterB2HH"};
+HLTB2HHTree.PhysDesktop.InputLocations = {"Phys/HLTFilterB2HH"};
  
 // In the HLT we always form B0 -> pi+ pi-
-HLTBd2HHTree.Decay = "B0 -> ^pi+ ^pi-";
-HLTBd2HHTree.NtupleName = "FILE1/HLTBd2HH";
-HLTBd2HHTree.PVLocator.PVLocation = "/Event/Phys/Trg/Vertices";
-HLTBd2HHTree.UseRichPID = false;
-HLTBd2HHTree.OutputLevel = 3;
+HLTB2HHTree.Decay = "B0 -> ^pi+ ^pi-";
+HLTB2HHTree.NtupleName = "FILE1/HLTB2HH";
+HLTB2HHTree.PVLocator.PVLocation = "/Event/Phys/Trg/Vertices";
+HLTB2HHTree.UseRichPID = true;
+HLTB2HHTree.OutputLevel = 3;
 
 //==============================================================================
 // B_s0 -> phi(1020) phi(1020)
@@ -65,7 +67,7 @@ HLTBs2PhiPhiTree.PhysDesktop.InputLocations = {"Phys/HLTFilterBs2PhiPhi"};
 HLTBs2PhiPhiTree.Decay = "B_s0 -> (^phi(1020) -> ^K- ^K+) (^phi(1020) -> ^K- ^K+)";
 HLTBs2PhiPhiTree.NtupleName = "FILE1/HLTBs2PhiPhi";
 HLTBs2PhiPhiTree.PVLocator.PVLocation = "/Event/Phys/Trg/Vertices";
-HLTBs2PhiPhiTree.UseRichPID = false;
+HLTBs2PhiPhiTree.UseRichPID = true;
 HLTBs2PhiPhiTree.OutputLevel = 3;
 
 //==============================================================================
@@ -74,11 +76,21 @@ HLTBs2PhiPhiTree.OutputLevel = 3;
 
 // Write Tree for HLT selection
 HLTBd2D0KstarTree.PhysDesktop.InputLocations = {"Phys/HLTFilterBd2D0Kstar"};
- 
-HLTBd2D0KstarTree.Decay = "{B0 -> (^D~0 -> ^K+ ^pi-) (^K*(892)0 -> ^K+ ^pi-), B~0 -> (^D0 -> ^K- ^pi+) (^K*(892)~0 -> ^K- ^pi+)}";
+
+// No D~0 in the HLT, but we form: D0 -> pi+ pi-, K+ pi-, pi+ K- and K+ K-
+HLTBd2D0KstarTree.Decay = "{
+B0 -> (^D0 -> ^pi+ ^pi-) (^K*(892)0 -> ^K+ ^pi-),
+B0 -> (^D0 -> ^K+ ^pi-) (^K*(892)0 -> ^K+ ^pi-),
+B0 -> (^D0 -> ^pi+ ^K-) (^K*(892)0 -> ^K+ ^pi-),
+B0 -> (^D0 -> ^K+ ^K-) (^K*(892)0 -> ^K+ ^pi-),
+B~0 -> (^D0 -> ^pi+ ^pi-) (^K*(892)~0 -> ^K- ^pi+),
+B~0 -> (^D0 -> ^K+ ^pi-) (^K*(892)~0 -> ^K- ^pi+),
+B~0 -> (^D0 -> ^pi+ ^K-) (^K*(892)~0 -> ^K- ^pi+),
+B~0 -> (^D0 -> ^K+ ^K-) (^K*(892)~0 -> ^K- ^pi+)
+}";
 HLTBd2D0KstarTree.NtupleName = "FILE1/HLTBd2D0Kstar";
 HLTBd2D0KstarTree.PVLocator.PVLocation = "/Event/Phys/Trg/Vertices";
-HLTBd2D0KstarTree.UseRichPID = false;
+HLTBd2D0KstarTree.UseRichPID = true;
 HLTBd2D0KstarTree.OutputLevel = 3;
 
 //==============================================================================
@@ -88,10 +100,20 @@ HLTBd2D0KstarTree.OutputLevel = 3;
 // Write Tree for HLT selection
 HLTBd2DstarPiTree.PhysDesktop.InputLocations = {"Phys/HLTFilterBd2DstarPi"};
  
-HLTBd2DstarPiTree.Decay = "{B0 -> (^D*(2010)- -> (^D~0 -> ^K+ ^pi-)  ^pi-) ^pi+, B~0 -> (^D*(2010)+ -> (^D0 -> ^K- ^pi+)  ^pi+) ^pi-}";
+// No D~0 in the HLT, but we form: D0 -> pi+ pi-, K+ pi-, pi+ K- and K+ K-
+HLTBd2DstarPiTree.Decay = "{
+B0 -> (^D*(2010)- -> (^D0 -> ^pi+ ^pi-)  ^pi-) ^pi+,
+B0 -> (^D*(2010)- -> (^D0 -> ^K+ ^pi-)  ^pi-) ^pi+,
+B0 -> (^D*(2010)- -> (^D0 -> ^pi+ ^K-)  ^pi-) ^pi+,
+B0 -> (^D*(2010)- -> (^D0 -> ^K+ ^K-)  ^pi-) ^pi+,
+B~0 -> (^D*(2010)+ -> (^D0 -> ^pi+ ^pi-)  ^pi+) ^pi-,
+B~0 -> (^D*(2010)+ -> (^D0 -> ^K+ ^pi-)  ^pi+) ^pi-,
+B~0 -> (^D*(2010)+ -> (^D0 -> ^pi+ ^K-)  ^pi+) ^pi-,
+B~0 -> (^D*(2010)+ -> (^D0 -> ^K+ ^K-)  ^pi+) ^pi-
+}";
 HLTBd2DstarPiTree.NtupleName = "FILE1/HLTBd2DstarPi";
 HLTBd2DstarPiTree.PVLocator.PVLocation = "/Event/Phys/Trg/Vertices";
-HLTBd2DstarPiTree.UseRichPID = false;
+HLTBd2DstarPiTree.UseRichPID = true;
 HLTBd2DstarPiTree.OutputLevel = 3;
 
 //==============================================================================
@@ -100,12 +122,11 @@ HLTBd2DstarPiTree.OutputLevel = 3;
 
 // Write Tree for HLT selection
 HLTBs2DsHTree.PhysDesktop.InputLocations = {"Phys/HLTFilterBs2DsH"};
- 
-// H is generically a pion in the HLT (if no Rich PID)
+
 HLTBs2DsHTree.Decay = "{B_s0 -> (^D_s- => ^K+ ^K- ^pi-) ^pi+, B_s~0 -> (^D_s+ => ^K- ^K+ ^pi+) ^pi-, B_s0 -> (^D_s- => ^K+ ^K- ^pi-) ^K+, B_s~0 -> (^D_s+ => ^K- ^K+ ^pi+) ^K-}";
 HLTBs2DsHTree.NtupleName = "FILE1/HLTBs2DsH";
 HLTBs2DsHTree.PVLocator.PVLocation = "/Event/Phys/Trg/Vertices";
-HLTBs2DsHTree.UseRichPID = false;
+HLTBs2DsHTree.UseRichPID = true;
 HLTBs2DsHTree.OutputLevel = 3;
 
 //==============================================================================
@@ -118,5 +139,5 @@ HLTBs2PhiGammaTree.PhysDesktop.InputLocations = {"Phys/HLTFilterBs2PhiGamma"};
 HLTBs2PhiGammaTree.Decay = "B_s0 -> (^phi(1020) -> ^K- ^K+) ^gamma";
 HLTBs2PhiGammaTree.NtupleName = "FILE1/HLTBs2PhiGamma";
 HLTBs2PhiGammaTree.PVLocator.PVLocation = "/Event/Phys/Trg/Vertices";
-HLTBs2PhiGammaTree.UseRichPID = false;
+HLTBs2PhiGammaTree.UseRichPID = true;
 HLTBs2PhiGammaTree.OutputLevel = 3;

@@ -42,7 +42,7 @@ Particle2MCLinksOffBs2PhiGamma.OutputLevel = 3;
 OffBs2PhiGammaTree.Decay = "B_s0 -> (^phi(1020) -> ^K- ^K+) ^gamma";
 OffBs2PhiGammaTree.MCDecay = "{B_s0 -> (^phi(1020) -> ^K- ^K+) ^gamma, B_s~0 -> (^phi(1020) -> ^K- ^K+) ^gamma}";
 OffBs2PhiGammaTree.NtupleName = "FILE1/OffBs2PhiGamma";
-OffBs2PhiGammaTree.MCNtupleName = "FILE1/MCOffBs2PhiGamma";
+OffBs2PhiGammaTree.FillMCDecay = true;
 OffBs2PhiGammaTree.PVLocator.PVLocation = "/Event/Phys/PrimaryVertices";
 OffBs2PhiGammaTree.UseRichPID = false;
 OffBs2PhiGammaTree.OutputLevel = 3;
@@ -57,17 +57,14 @@ HLTBs2PhiGammaTree.LinkAsct.AlgorithmType = "Particle2MCLinks";
 HLTBs2PhiGammaTree.LinkAsct.AlgorithmName = "Particle2MCLinksHLTBs2PhiGamma";
 HLTBs2PhiGammaTree.LinkAsct.OutputLevel = 3;
 
-// The location depends on the way of forming the particles: ChangeDecayChain or ChangePIDByMass!!!
-// For ChangePIDByMass
-// Particle2MCLinksHLTBs2PhiGamma.InputData  = {"Phys/HLTPions/Particles", "Phys/HLTKaons/Particles", "Phys/HLTPreselPions/Particles", "Phys/HLTPreselKaons/Particles"};
-// For ChangeDecayChain
-Particle2MCLinksHLTBs2PhiGamma.InputData  = {"Phys/HLTPions/Particles", "Phys/HLTKaons/Particles", "Phys/HLTSeedingKKDaughters/Particles"};
+Particle2MCLinksHLTBs2PhiGamma.InputData  = {"Phys/HLTPions/Particles", "Phys/HLTKaons/Particles", "Phys/HLTPreselPions/Particles", "Phys/HLTPreselKaons/Particles"};
+// Particle2MCLinksHLTBs2PhiGamma.InputData  = {"Phys/HLTPions/Particles", "Phys/HLTKaons/Particles", "Phys/HLTSeedingKKDaughters/Particles"};
 Particle2MCLinksHLTBs2PhiGamma.OutputLevel = 3;
 
 HLTBs2PhiGammaTree.Decay = "B_s0 -> (^phi(1020) -> ^K- ^K+) ^gamma";
 HLTBs2PhiGammaTree.MCDecay = "{B_s0 -> (^phi(1020) -> ^K- ^K+) ^gamma, B_s~0 -> (^phi(1020) -> ^K- ^K+) ^gamma}";
 HLTBs2PhiGammaTree.NtupleName = "FILE1/HLTBs2PhiGamma";
-HLTBs2PhiGammaTree.MCNtupleName = "FILE1/MCHLTBs2PhiGamma";
+HLTBs2PhiGammaTree.FillMCDecay = true;
 HLTBs2PhiGammaTree.PVLocator.PVLocation = "/Event/Phys/Trg/Vertices";
 HLTBs2PhiGammaTree.UseRichPID = false;
 HLTBs2PhiGammaTree.OutputLevel = 3;
