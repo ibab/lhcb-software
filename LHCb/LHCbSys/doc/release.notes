@@ -4,6 +4,11 @@
 ! Purpose     : LHCb OO kernel packages
 !-----------------------------------------------------------------------------
 
+!====================== LHCbSys v11r6 2003-01-08 =============================
+! 2003-01-08 - Marco Cattaneo
+ - requirements:
+   use explicitly all packages of project, for use by getpack -r
+
 ! 2002-12-20 - Marco Cattaneo
  - requirements:
    use SICBSys v1r1, AssociatorsSys v1r1, EventSys v13r1, DetSys v1r2
