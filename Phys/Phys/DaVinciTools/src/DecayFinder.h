@@ -1,4 +1,4 @@
-// $Id: DecayFinder.h,v 1.2 2002-06-26 13:54:23 odie Exp $
+// $Id: DecayFinder.h,v 1.3 2002-07-12 09:32:41 odie Exp $
 #ifndef TOOLS_DECAYFINDER_H 
 #define TOOLS_DECAYFINDER_H 1
 
@@ -33,7 +33,8 @@ struct yy_buffer_state;
  *  - a set of 'particle's or their charge conjugate, expressed as "[A,B,C]cc",
  *  - a 'particle' with it's oscillation flag set ("[A]os") [NOT AVAILABLE ON
  *    RECONSTRUCTED DATA],
- *  - a 'wildcard' [(almost) NOT IMPLEMENTED YET].
+ *  - a 'wildcard', any particle with some quarks inside is expressed as "<Xq>"
+ *    with up to tree quarks in place of "q". Quarks are u,d,c,s,t,b,u~,d~,...
  *  a 'decay' is one of:
  *  - an optional "(" and a 'particle' and the matching ")" if needed,
  *  - a "(", a 'particle', one of "->" or "=>", a blank separated list of decay,
@@ -75,7 +76,9 @@ public:
   StatusCode initialize( void );
 
   /// Does the described decay exists in the event?
-  bool hasDecay( const std::vector<Particle*> &event );
+  bool hasDecay( const ParticleVector &event );
+
+  bool hasDecay( const Particles &event );
 
   /** Try to find the (next) match of the decay in the event.
    *
@@ -86,7 +89,10 @@ public:
    *         parameter, a reference to a const Particle *.
    *  The particle pointed to by previous_result must be contained in event.
    */
-  bool findDecay( const std::vector<Particle*> &event,
+  bool findDecay( const ParticleVector &event,
+                  const Particle *&previous_result );
+
+  bool findDecay( const Particles &event,
                   const Particle *&previous_result );
 
 private:
@@ -151,7 +157,7 @@ private:
 
     ~Descriptor();
 
-    bool test( const std::vector<Particle*> &event,
+    template<class iter> bool test( const iter first, const iter last,
                const Particle *&result );
 
     void setAlternate( Descriptor *a ) { alternate = a; }
