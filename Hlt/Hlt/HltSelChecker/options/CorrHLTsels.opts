@@ -1,12 +1,12 @@
 // correlation of HLT selections
 
 HLTCorrelations.Members += { "SelResultCorrelations/HLTCorr" };
-HLTCorr.Algorithms = { "HLTExclusiveSelectionsFlag"
+HLTCorr.Algorithms = { "CheckHLTGeneric"	
+			, "HLT2kHzFlag"
+                        , "HLTExclusiveSelectionsFlag"
 			, "HLTUnbiasedJpsis"	
 			, "HLTSingleMuons"	
 			, "HLTFilterDstar"	
-			, "HLT2kHzFlag"
-			, "CheckHLTGeneric"	
                         , "HLTFilterB2HH"
                         , "HLTFilterBd2D0Kstar"
                         , "HLTFilterBd2DstarPi"
