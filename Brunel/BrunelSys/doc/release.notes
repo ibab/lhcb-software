@@ -4,7 +4,19 @@
 ! Purpose     : List of packages in Brunel project
 !-----------------------------------------------------------------------------
 
-!======================= BrunelSys v23r0 2003-01-13 =======================
+!======================= BrunelSys v23r1 2004-01-27 =======================
+! 2004-01-27 - Marco Cattaneo
+ - Modified requirements for Brunel v23r1
+
+   Packages added:    TrKShort v1r0, LHCbTools v1r0
+
+   Packages modified: ITAlgorithms v13r2, BrunelAlgs v3r4
+
+   Packages removed:  TrIntraPR, UpstreamPR (replaced by TrKShort)
+                      RiSicbGeom, CaloInterfaces, CaloUtils, MCTools 
+                      (now in LHCB project)
+
+!======================= BrunelSys v23r0 2004-01-13 =======================
 ! 2004-01-13 - Marco Cattaneo
  - Modified requirements for Brunel v23r0. Uses LHCB v15r0, GAUDI v14r0
 

@@ -1,5 +1,5 @@
 package BrunelSys
-version v23r0
+version v23r1
 
 branches cmt doc
  
@@ -8,15 +8,13 @@ branches cmt doc
 #=======================================================
 
 # Brunel application
-use Brunel              v23r0	Rec
+use Brunel              v23r1	Rec
 
 # Brunel utilities
-use BrunelAlgs          v3r3	Rec
-use MCTools		v1r1p1	Phys
+use BrunelAlgs          v3r4	Rec
+use LHCbTools           v1r0    Kernel
 
 # Calorimeter
-use CaloInterfaces      v3r1	Calo
-use CaloUtils           v4r6	Calo
 use CaloMonitor         v1r6  	Calo
 use CaloReco            v1r8	Calo
 use CaloPIDs		v1r2	Calo
@@ -25,7 +23,7 @@ use CaloPIDs		v1r2	Calo
 use VeloAlgorithms      v2r9	Velo
 
 # Inner Tracker
-use ITAlgorithms        v13r1	IT
+use ITAlgorithms        v13r2	IT
 use ITCheckers          v1r4	IT
 
 # Outer Tracker
@@ -41,9 +39,8 @@ use TrTools             v2r5	Tr
 use Seeding             v2r6	Tr 
 use TrMatching          v2r8	Tr
 use TrCleanEx           v2r7p2	Tr
-use TrIntraPR           v2r8	Tr
-use UpstreamPR          v2r9	Tr
 use VeloTT              v1r6p1	Tr
+use TrKShort		v1r0	Tr
 
 # Muon
 use MuonUtils		v1r0	Muon
@@ -64,6 +61,3 @@ use RichDetTools	v3r5	Rich
 use RichRecQC		v1r4	Rich
 use RichRecMCTools	v1r1	Rich
 use RichDAQ		v1r1	Rich
-
-# SICB package still needed by RichDetTools
-use RiSicbGeom		v3r8	SICB
