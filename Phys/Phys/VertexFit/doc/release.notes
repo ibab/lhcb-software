@@ -2,6 +2,9 @@
 ! Package     : VertexFit
 ! Responsible : Yuehong Xie
 
+! 2004-12-15 - P. Koppenburg
+  - src/UnconstVertexFitter.cpp
+    . Initialize GaudiTool
 ! 2004-12-14 - P. Koppenburg for Luis Fernandez
   - src/UnconstVertexFitter.*
     . Add the possibility to treat photons correctly

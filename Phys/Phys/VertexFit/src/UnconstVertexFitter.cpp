@@ -1,4 +1,4 @@
-// $Id: UnconstVertexFitter.cpp,v 1.2 2004-12-14 18:46:31 pkoppenb Exp $
+// $Id: UnconstVertexFitter.cpp,v 1.3 2004-12-15 15:29:03 pkoppenb Exp $
 // Include files
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h"
@@ -70,6 +70,9 @@ UnconstVertexFitter::UnconstVertexFitter(const std::string& type,
 //==================================================================
 StatusCode UnconstVertexFitter::initialize() {
   
+  StatusCode sc = GaudiTool::initialize();
+  if (!sc) return sc;
+
   m_pTransporter = tool<IParticleTransporter>( m_transporterType, this);
   if(!m_pTransporter) {
     fatal() << "    Unable to retrieve ParticleTransporter  tool" ;
