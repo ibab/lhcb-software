@@ -4,8 +4,11 @@
  *  Header file for tool : RichSmartIDTool
  *
  *  CVS Log :-
- *  $Id: RichSmartIDTool.h,v 1.6 2004-10-27 14:41:03 jonrob Exp $
+ *  $Id: RichSmartIDTool.h,v 1.7 2005-01-07 13:24:31 jonrob Exp $
  *  $Log: not supported by cvs2svn $
+ *  Revision 1.6  2004/10/27 14:41:03  jonrob
+ *  Various updates
+ *
  *  Revision 1.5  2004/10/12 09:58:26  papanest
  *  speed up globaltoPDpanel
  *
@@ -18,9 +21,6 @@
 
 #ifndef RICHTOOLS_RICHSMARTIDTOOL_H
 #define RICHTOOLS_RICHSMARTIDTOOL_H 1
-
-// from STL
-#include <string>
 
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h"
@@ -77,7 +77,7 @@ public: // methods (and doxygen comments) inherited from interface
                               RichSmartID& smartid ) const;
 
   // Supplies a vector of all currently active and valid channels in the RICH detectors
-  virtual StatusCode readoutChannelList ( std::vector<RichSmartID>& readoutChannels ) const;
+  virtual const RichSmartID::Collection & readoutChannelList( ) const;
 
   /** Converts a position in global coordinates to the local coordinate system.
    *  The panel Rich::Left has positive x and panel Rich::Right has negative 
