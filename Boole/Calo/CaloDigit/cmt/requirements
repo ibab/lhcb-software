@@ -13,7 +13,7 @@ version          v1r8
 #
 # Structure, i.e. directories to process. 
 #============================================================================
-branches         cmt doc src options
+branches         cmt doc src
 
 #============================================================================
 # Used packages. Specify the version, * at the end specifies 'any revision'
