@@ -1,30 +1,31 @@
 package DaVinciSys
-version v11r8
+version v11r9
 
 branches doc cmt
 
 #=======================================================
 # Don't forget DaVinci itself
 #=======================================================
-use  DaVinci            v11r8 Phys   
+use  DaVinci            v11r9 Phys   
 
 #=======================================================
 # packages included in the DAVINCI tree
 #=======================================================
 # Trigger packages
 use  L0DU               v6r7     L0
-use  L0Calo             v7r5     L0
+use  L0Calo             v7r6     L0
+use  L0Checker          v2r1     L0
 
-use  L1Decision         v1r1p1   Trg
-use  L1Reco             v3r1     Trg
-use  TrgChecker         v3r1     Trg
-use  TrgForward         v1r2     Trg
-use  TrgMonitor         v1r0     Trg
-use  TrgPrimVertex      v1r1     Trg
-use  TrgTools           v3r1     Trg
-use  TrgVelo            v3r0     Trg
-use  TrgVeloTT          v3r1     Trg
-use  STDAQ              v1r1     IT
+use  L1Decision         v2r0     Trg
+use  L1Reco             v4r0     Trg
+use  TrgChecker         v4r0     Trg
+use  TrgForward         v2r0     Trg
+use  TrgMonitor         v2r0     Trg
+use  TrgPrimVertex      v2r0     Trg
+use  TrgTools           v4r0     Trg
+use  TrgVelo            v4r0     Trg
+use  TrgVeloTT          v4r0     Trg
+use  STDAQ              v1r2     IT
 
 # To rebuild velo clusters
 use  VeloDAQ            v1r0     Velo
@@ -45,52 +46,52 @@ use  TrExtrapolator     v2r12    Tr
 
 # Reconstruction tools 
 use  RecoTools          v1r1     Rec
-use  Utilities          v1r4     Tools
+use  Utilities          v1r5     Tools
 
 use  LoKi               v2r5p1   Tools  
 
 # Physics packages
 use  CommonParticles    v1r5     Phys
-use  DaVinciAssociators v4r5p2   Phys
+use  DaVinciAssociators v5r0     Phys
 use  DaVinciChecks      v2r3p2   Phys
-use  DaVinciEff         v2r10    Phys
+use  DaVinciEff         v3r0     Phys
 use  DaVinciMCTools     v5r4     Phys
 use  DaVinciTest        v4r4     Phys
 use  DaVinciTools       v9r5     Phys
 use  DaVinciUser        v5r1     Phys
 use  FlavourTagging     v5r0     Phys
-use  Ks2PiPiSel         v1r3     Phys
-use  PhysSelections	v6r6     Phys
+use  Ks2PiPiSel         v1r4     Phys
+use  PhysSelections	v6r7     Phys
 
-use  PhysSelSys		v7r2     PhysSel
+use  PhysSelSys		v7r3     PhysSel
 
 use  B2DstarX2D02hh  v2r1    PhysSel
-use  B2HH            v2r2    PhysSel
-use  B2RhoRho        v1r4p1  PhysSel
-use  B2XGamma        v2r2    PhysSel
-use  Bd2D0Kstar      v4r1    PhysSel
-use  Bd2DstarPi      v2r2    PhysSel
-use  Bd2JpsiKs       v2r2    PhysSel
+use  B2HH            v2r3    PhysSel
+use  B2RhoRho        v1r5    PhysSel
+use  B2XGamma        v2r3    PhysSel
+use  Bd2D0Kstar      v4r2    PhysSel
+use  Bd2DstarPi      v2r3    PhysSel
+use  Bd2JpsiKs       v2r3    PhysSel
 use  Bd2JpsiKstar    v2r1    PhysSel
-use  Bd2MuMuKstar    v2r1    PhysSel
-use  Bd2PhiKs        v4r0    PhysSel
-use  Bd2PiPiPi0      v2r1p1  PhysSel
+use  Bd2MuMuKstar    v2r2    PhysSel
+use  Bd2PhiKs        v4r1    PhysSel
+use  Bd2PiPiPi0      v2r2    PhysSel
 use  Bd2a1Dstar      v2r2    PhysSel
 use  Bs2DsH          v3r2    PhysSel
 use  Bs2JpsiEta      v3r2    PhysSel
 use  Bs2JpsiPhi      v2r0p1  PhysSel
 use  Bs2KsKs         v2r1    PhysSel
-use  Bs2KstarKstar   v1r2    PhysSel
-use  Bs2MuMu         v2r1    PhysSel
-use  Bs2PhiEtac      v2r1    PhysSel
+use  Bs2KstarKstar   v1r3    PhysSel
+use  Bs2MuMu         v2r2    PhysSel
+use  Bs2PhiEtac      v2r2    PhysSel
 use  Bs2PhiPhi       v2r1    PhysSel
-use  Bu2KsPi         v2r2    PhysSel
-use  D02MuMu         v1r3    PhysSel 
+use  Bu2KsPi         v2r3    PhysSel
+use  D02MuMu         v1r4    PhysSel 
 use  Gamma2ee        v1r1    PhysSel
-use  Jpsi            v1r0    PhysSel
+use  Jpsi            v1r1    PhysSel
 
 #--- TriggerFilter
-use  TriggerFilter       v4r8   Tools
+use  TriggerFilter       v4r9   Tools
 
 #--- DecayPreselections
 use  DecayPresel         v4r6   Tools
