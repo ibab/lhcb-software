@@ -1,0 +1,38 @@
+# $Id: README.nonLHCb,v 1.1 2002-11-25 23:26:12 andreav Exp $
+
+------------------------------------------------------------------------------
+How to install the code from a non-LHCb account
+------------------------------------------------------------------------------
+
+The following is a short summary of what you should do from a non-LHCb 
+account if you want to use the CondDB example. 
+I assume RedHat7.3 Linux (lxplus7) using the csh/tcsh shell.
+Mind the order!
+   setenv LHCBHOME /afs/cern.ch/lhcb
+   source /afs/cern.ch/lhcb/scripts/CMT.csh
+   setenv PATH ${LHCBHOME}/bin:${LHCBHOME}/scripts:${PATH}
+   setenv CMTPATH ${HOME}/newmycmt:${GAUDISOFT}/GAUDI_v11r1
+   mkdir newmycmt
+   cd newmycmt
+   tar -xvzf /afs/cern.ch/user/a/andreav/public/DetCondExample_v4r1.tar.gz
+   cd Ex/DetCondExample/v4r1/cmt
+   cmt broadcast -select=mycmt cmt config
+
+You may then follow the rest of the instructions in the README file
+(from "How to set the environment and lnk..." onwards). In brief:
+   cmt broadcast -select=mycmt gmake tag=$CMTDEB
+   source setup.csh -tag=$CMTDEB
+   setenv DETCONDEXAMPLE_DBHOST <host> (e.g., DB9)
+   setenv DETCONDEXAMPLE_DBUSER <user>
+   setenv DETCONDEXAMPLE_DBNAME <name> (e.g., MYCONDDB)
+   setenv DETCONDEXAMPLE_DBPSWD <password>
+   cd ../options
+   ../$CMTDEB/DetCondExample.exe testXml.opts
+   ../$CMTDEB/DetCondExample.exe fillCondDB.opts
+   ../$CMTDEB/DetCondExample.exe testCondDB.opts
+   ../$CMTDEB/DetCondExample.exe daqCondDB.opts
+  
+==============================================================================
+
+
+

@@ -1,4 +1,4 @@
-# $Id: README,v 1.26 2002-11-25 22:50:34 andreav Exp $
+# $Id: README,v 1.27 2002-11-25 23:26:02 andreav Exp $
 
 Three examples are distributed in this package: a test of condition data 
 stored in flat XML files, a test of condition data stored in the CondDB,
@@ -44,20 +44,20 @@ Version v1r12p20020412 of CMT is assumed as the default on all platforms.
 It is assumed that CMTPATH contains the release directory in ${HOME}/newmycmt
 (i.e. ~/newmycmt), as well as Gaudi v11r1. Put the following line in .cshrc 
 to achieve this:
-        setenv CMTPATH ${HOME}/newmycmt:${GAUDISOFT}/GAUDI_v11r1
+    setenv CMTPATH ${HOME}/newmycmt:${GAUDISOFT}/GAUDI_v11r1
 Check the result with
-        printenv CMTPATH
+    printenv CMTPATH
 
 To run the detector condition example, you need the following packages,
 as well as the standard Gaudi packages from the release area of Gaudi v11.
-        cd ~/newmycmt
-        getpack Det/DetCond        v4r1     head
-        getpack Ex/DetCondExample  v4r1     head
-	getpack Det/DetDesc        v11r2
+    cd ~/newmycmt
+    getpack Det/DetCond        v4r1     head
+    getpack Ex/DetCondExample  v4r1     head
+    getpack Det/DetDesc        v11r2
 Under Linux (RedHat6.1)
-        getpack CONDDB             v3r02p3  head
+    getpack CONDDB             v3r02p3  head
 Under Windows and Linux (RedHat7.3)
-        getpack Det/CondDBOracle   v4r16    head
+    getpack Det/CondDBOracle   v4r16    head
 
 It may be that the CONDDB you get is not the latest version yet. Check by
     more CONDDB/v3r02p3/cmt/requirements | grep 'version v'
