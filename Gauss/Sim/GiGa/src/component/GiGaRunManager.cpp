@@ -1,17 +1,8 @@
-// $Id: GiGaRunManager.cpp,v 1.8 2002-12-13 13:36:31 ibelyaev Exp $ 
+// $Id: GiGaRunManager.cpp,v 1.9 2002-12-15 17:13:21 ibelyaev Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
-// Revision 1.7  2002/12/07 14:27:52  ibelyaev
-//  see $GIGAROOT/cmt/requirements file
-//
-// Revision 1.6  2002/09/26 18:05:29  ibelyaev
-//  repackaging: remove all concrete implementations
-//
-// Revision 1.14  2002/05/07 12:21:33  ibelyaev
-//  see $GIGAROOT/doc/release.notes  7 May 2002
-//
 // ============================================================================
 #define GIGA_GIGARUNMANAGER_CPP 1 
 // ============================================================================
@@ -102,6 +93,12 @@ GiGaRunManager::GiGaRunManager
   , m_delStackAction ( false   ) 
   , m_delTrackAction ( false   ) 
   , m_delStepAction  ( false   ) 
+  //
+#ifdef GIGA_DEBUG 
+  , m_verbosity      ( 100     )
+#else 
+  , m_verbosity      ( 0       )
+#endif 
 { 
   ///
   declareInterface<IGiGaRunManager> ( this ) ; 
@@ -113,6 +110,8 @@ GiGaRunManager::GiGaRunManager
   declareProperty ( "DeleteStackAction"          , m_delStackAction ) ;
   declareProperty ( "DeleteTrackAction"          , m_delTrackAction ) ;
   declareProperty ( "DeleteStepAction"           , m_delStepAction  ) ;
+  /// 
+  declareProperty ( "Verbosity"                  , m_verbosity      ) ;
   ///
 #ifdef GIGA_DEBUG
   GiGaRunManagerLocal::s_Counter.increment () ;
@@ -124,7 +123,12 @@ GiGaRunManager::GiGaRunManager
 // destructor 
 // ============================================================================
 GiGaRunManager::~GiGaRunManager() 
-{  
+{
+  // increase the verbosity level for DEBUG mode 
+#ifdef GIGA_DEBUG 
+  G4RunManager::SetVerboseLevel( 1000000 );
+#endif 
+  
   if( !m_delDetConstr   ) { G4RunManager::SetUserInitialization
                               ( ( G4VUserDetectorConstruction*   ) 0 ) ; }
   if( !m_delPrimGen     ) { G4RunManager::SetUserAction        
@@ -217,16 +221,15 @@ StatusCode GiGaRunManager::processTheEvent()
   if( G4RunManager::verboseLevel > 0 )
     {
       (G4RunManager::timer)->Stop();
-      G4cout << "Run terminated." << G4endl;
-      G4cout << "Run Summary"     << G4endl;
+      // G4cout << "Run terminated." << G4endl;
+      // G4cout << "Run Summary"     << G4endl;
       if( G4RunManager::runAborted ) 
-        { G4cout << "  Run Aborted after " << 1 
-                 << " events processed." << G4endl; }
+        { G4cout << " G4Run Aborted after " << 1 << " events processed."  ; }
       else                           
-        { G4cout << "  Number of events processed : " << 1 << G4endl; }
-      G4cout << "  "  << *(G4RunManager::timer) << G4endl;
+        { G4cout << " G4: Number of events processed : " << 1             ; }
+      G4cout << " Timer: " << *(G4RunManager::timer) << G4endl;
     }
-   ///
+  ///
   set_evt_Is_Processed( true  ); 
   set_evt_Is_Prepared ( false ); 
   ///
@@ -344,7 +347,7 @@ StatusCode  GiGaRunManager::initializeRun()
   if( !G4RunManager::ConfirmBeamOnCondition()          )
     { return Exception("initializeRun(): no G4 Beam-On conditions!");}
   ///
-  G4RunManager::RunInitialization();  
+  G4RunManager::RunInitialization();
   set_run_Is_Initialized( true );
   ///
   return Print("Geant4 Run is initialized  successfully" , 

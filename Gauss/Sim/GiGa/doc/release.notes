@@ -1,9 +1,14 @@
-! $Id: release.notes,v 1.66 2002-12-13 13:36:31 ibelyaev Exp $
+! $Id: release.notes,v 1.67 2002-12-15 17:13:21 ibelyaev Exp $
 ! =============================================================================
 ! CVS tag $Name: not supported by cvs2svn $ 
 ! =============================================================================
 Package:          GiGa
 Package manager : Vanya Belyaev
+
+! 2002-12-15 - Ivan Belyaev
+ - src/component/GiGaRunManager.cpp             Fix problems and improve   
+   src/component/GiGaRunManager.h               the verbosity control of G4 
+   src/component/GiGaRunManagerInterface.cpp   
 
 ! 2002-12-13 - Ivan Belyaev
  - src/component/GiGa.cpp,GiGa.h          - add the usage of Random Number Service

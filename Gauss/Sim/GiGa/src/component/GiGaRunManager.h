@@ -1,8 +1,11 @@
-// $Id: GiGaRunManager.h,v 1.4 2002-12-07 14:27:52 ibelyaev Exp $ 
+// $Id: GiGaRunManager.h,v 1.5 2002-12-15 17:13:21 ibelyaev Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.4  2002/12/07 14:27:52  ibelyaev
+//  see $GIGAROOT/cmt/requirements file
+//
 // Revision 1.3  2002/09/26 18:05:30  ibelyaev
 //  repackaging: remove all concrete implementations
 //
@@ -286,6 +289,8 @@ private:
   bool                       m_delTrackAction  ;
   bool                       m_delStepAction   ;
 
+  int                        m_verbosity       ;
+  
 };
 // ============================================================================
 

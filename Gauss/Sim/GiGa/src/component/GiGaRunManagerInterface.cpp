@@ -1,8 +1,11 @@
-// $Id: GiGaRunManagerInterface.cpp,v 1.2 2002-12-07 14:27:52 ibelyaev Exp $ 
+// $Id: GiGaRunManagerInterface.cpp,v 1.3 2002-12-15 17:13:21 ibelyaev Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2002/12/07 14:27:52  ibelyaev
+//  see $GIGAROOT/cmt/requirements file
+//
 // Revision 1.1  2002/09/26 18:05:30  ibelyaev
 //  repackaging: remove all concrete implementations
 //
@@ -46,6 +49,8 @@ StatusCode GiGaRunManager::initialize ()
   StatusCode sc = GiGaBase::initialize();
   if( sc.isFailure() ) 
     { return Error("Could not initialize the base class " , sc ) ; }
+  ///
+  G4RunManager::SetVerboseLevel( m_verbosity );
   ///
   return Print("GiGaRunManager initialized successfully" , 
                StatusCode::SUCCESS                       , MSG::VERBOSE );
