@@ -1,4 +1,4 @@
-// $Id: OTLayer.h,v 1.1.1.1 2002-05-26 22:36:34 jvantilb Exp $
+// $Id: OTLayer.h,v 1.2 2002-05-27 14:55:53 ocallot Exp $
 #ifndef _OTLayer_H
 #define _OTLayer_H 1
 
@@ -31,44 +31,19 @@ public:
   /// destructor
   virtual ~OTLayer();
 
-  /// get unique layer ID
-  virtual int    getAbsLayerID() const;
-
-  /// layer Id relative to station number
-  virtual int    getLayerID() const ;
-
-  /// station ID
-  virtual int getStationID() const;
-
-  /// z of layer
-  virtual double getZ() const;
-
-  /// returns u of straw iStraw in module iModule of this layer
-  double getU(const int iStraw, const int iModule) const;
-
-  /// returns z of the straw
-  double getZofStraw(const int iStraw, const int iModule) const;  
-
-  /// returns (x,y,z) of the center of straw
-  HepPoint3D getXYZofStrawCenter(const int iStraw, const int iModule) const;
-
-  /// returns stereo angle of the layer
-  double getStereoAngle() const;
-
-  /// radius of straw
-  double getCellRadius() const; 
-
-  int nStrawsInModule(const int iModule) const;
-  
   // basic routine to calculate hits for MC hit
   bool calculateHits( HepPoint3D entryPoint,
                       HepPoint3D exitPoint,
                       std::vector<OTChannelID>& channels,
                       std::vector<double>& driftDistances);
 
+  /// returns (x,y,z) of the center of straw
+  HepPoint3D centerOfStraw(const int iStraw, const int iModule) const;
+
   /// returns distance to electronics along the wire
   double distanceAlongWire(const int iModule, 
-                           const double xHit, const double yHit) const;
+                           const double xHit, 
+                           const double yHit) const;
 
   /// wire halfLength
   double wireHalfLength(const int iModule) const; 
@@ -81,7 +56,52 @@ public:
   void nextLeftStraw(int iHitStraw,int iHitModule,
                     int& iLeftStraw,int& iLeftModule) const;
 
+  /// returns the layer ID in the station
+  unsigned int layerID()      const { return m_layerID ; }
+
+  /// returns the station ID
+  unsigned int stationID()    const { return m_stationID ; }
+
+  /// Number of modules in this layer
+  unsigned int nbModules()    const { return 2 * m_halfNumModule; }
+
+  /// z of layer
+  double z()                  const { return m_zOfLayer ;  }
+  
+  /// stereo angle
+  double stereoAngle()        const { return m_stereoAngle ;  }
+
+  /// returns u of straw iStraw in module iModule of this layer
+  double uOfStraw(const int iStraw, const int iModule) const;
+
+  /// returns z of the straw
+  double zOfStraw(const int iStraw, const int iModule) const;  
+
 private:
+
+  /// get unique layer ID
+  virtual int    getAbsLayerID() const;
+
+  /// layer Id relative to station number
+  virtual int    getLayerID() const ;
+
+  /// station ID
+  virtual int getStationID() const;
+
+  /// z of layer
+  virtual double getZ() const;
+
+  /// returns stereo angle of the layer
+  double getStereoAngle() const;
+
+  /// radius of straw
+  double getCellRadius() const; 
+
+  /// number of straw in that module
+  int nStrawsInModule(const int iModule) const;
+
+  /// cell radius
+  double cellRadius()         const { return m_cellRadius ;  }
 
   /// (x,y) -> (u,v) transformation
   void xy2uv(const double x, const double y, 
@@ -102,37 +122,37 @@ private:
 		          int& hitMod, int& hitStrA, int& hitStrB) const;
 
 
-  int     m_LayerID;         // index of layer in this station
+  int     m_layerID;         // index of layer in this station
 
-  int     m_StationID;       // index of station the layer belongs to;
+  int     m_stationID;       // index of station the layer belongs to;
 
-  double  m_ZOfLayer;        // z of the center of layer
+  double  m_zOfLayer;        // z of the center of layer
 
-  int     m_HalfNumModule;   // half a number of modules 
+  int     m_halfNumModule;   // half a number of modules 
                             // ( = nr of top modules = nr of bottom modules) 
 
-  int*    m_HalfNumStraw;    // array of nr of straws in one monolayer
+  int*    m_halfNumStraw;    // array of nr of straws in one monolayer
 
-  double* m_XFirstStrawA ;   // array of x-positions of first straw in module
+  double* m_xFirstStrawA ;   // array of x-positions of first straw in module
                             // relative to the center of module
 
-  double* m_XModuleCenter;   // array of x-coordinates of module centers
+  double* m_xModuleCenter;   // array of x-coordinates of module centers
 
-  double* m_YModuleCenter;   // array of y-coordinates of module centers
+  double* m_yModuleCenter;   // array of y-coordinates of module centers
 
-  double* m_XModuleSize;     // array of x-sizes of module centers
+  double* m_xModuleSize;     // array of x-sizes of module centers
 
-  double* m_YModuleSize;     // array of y-sizes of module centers
+  double* m_yModuleSize;     // array of y-sizes of module centers
 
-  double  m_PitchStraw;      // distance between straws
+  double  m_pitchStraw;      // distance between straws
 
-  double  m_CellRadius;      // straw radius
+  double  m_cellRadius;      // straw radius
 
-  double  m_StereoAngle;     // stereo angle
+  double  m_stereoAngle;     // stereo angle
 
-  double  m_SinAngle;        // sin of the stereo angle
+  double  m_sinAngle;        // sin of the stereo angle
 
-  double  m_CosAngle;        // cos of the stereo angle
+  double  m_cosAngle;        // cos of the stereo angle
 
 
 };

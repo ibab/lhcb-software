@@ -1,4 +1,4 @@
-// $Id: DeOTDetector.cpp,v 1.1.1.1 2002-05-26 22:36:33 jvantilb Exp $
+// $Id: DeOTDetector.cpp,v 1.2 2002-05-27 14:55:53 ocallot Exp $
 
 // from Det/OTDet
 #include "OTDet/DeOTDetector.h"
@@ -25,7 +25,7 @@ DeOTDetector::DeOTDetector( const std::string& name ) :
 
 DeOTDetector::~DeOTDetector()
 {
-  vector<OTLayer*>::iterator iLayer;
+  std::vector<OTLayer*>::iterator iLayer;
   for (iLayer = m_layers.begin(); iLayer != m_layers.end(); ++iLayer) {
     delete *iLayer;
     m_layers.erase(iLayer);
@@ -48,10 +48,10 @@ StatusCode DeOTDetector::initialize()
     return sc ; 
   }
 
-  m_NumStation = this->userParameterAsInt("numStations");
+  m_numStation = this->userParameterAsInt("numStations");
   m_FirstOTStation =  this->userParameterAsInt("firstOTStation");
 
-  int stationNum = m_FirstOTStation;
+  unsigned int stationNum = m_FirstOTStation;
   // loop over station and layer and fill layer container
   IDetectorElement::IDEContainer::const_iterator iStation;
   for (iStation = this->childBegin(); this->childEnd() != iStation; 
@@ -72,6 +72,7 @@ StatusCode DeOTDetector::initialize()
     //loop over layers
     IDetectorElement::IDEContainer::const_iterator iLayer;
     int layerNum = 1;
+    
     for( iLayer = (*iStation)->childBegin(); (*iStation)->childEnd() != iLayer;
          ++iLayer ) {
 
@@ -132,10 +133,10 @@ OTLayer* DeOTDetector::layer(double z) const {
   MsgStream log(msgSvc(), name());
 
   OTLayer* closestLayer;
-  vector<OTLayer*>::const_iterator iLayer;
+  std::vector<OTLayer*>::const_iterator iLayer;
   double dist = 99999.0;
   for ( iLayer = m_layers.begin(); m_layers.end() != iLayer; ++iLayer) {
-    double newDist = fabs( (*iLayer)->getZ() - z );
+    double newDist = fabs( (*iLayer)->z() - z );
     if ( newDist < dist ) {
       dist = newDist;
       closestLayer = *iLayer;
@@ -153,32 +154,32 @@ OTLayer* DeOTDetector::layer(double z) const {
 
 OTLayer* DeOTDetector::layer(OTChannelID aChannel) const {
 
-  const int iStation = aChannel.station();
-  const int iLayer   = aChannel.layer();
-  if ((iStation < m_FirstOTStation) || (iStation > m_NumStation)) {
+  const unsigned int iStation = aChannel.station();
+  const unsigned int iLayer   = aChannel.layer();
+  if ((iStation < m_FirstOTStation) || (iStation > m_numStation)) {
     return 0;
   }
 
   // Find the layer
-  vector<OTLayer*>::const_iterator iterLayer = m_layers.begin();
+  std::vector<OTLayer*>::const_iterator iterLayer = m_layers.begin();
   while ( iterLayer != m_layers.end() &&
-         !( (*iterLayer)->getStationID() == iStation &&
-            (*iterLayer)->getLayerID() == iLayer        ) ) iterLayer++;
+         !( (*iterLayer)->stationID() == iStation &&
+            (*iterLayer)->layerID() == iLayer        ) ) iterLayer++;
   OTLayer* hitLayer = (*iterLayer);
 
   return hitLayer;
 }
 
 
-double DeOTDetector::distanceAlongWire(OTChannelID channelID, 
+double DeOTDetector::distanceAlongWire(OTChannelID channelID,
                                        double xHit, double yHit) const {
 
   // distance along wire
   OTLayer* hitLayer = this->layer(channelID);
   if ( 0 == hitLayer ) {
     MsgStream log(msgSvc(), name());
-    log << MSG::WARNING 
-        << "Propagation delay requested for layer that does not exist " 
+    log << MSG::WARNING
+        << "Propagation delay requested for layer that does not exist "
         << endreq;
     return 0.0;
   }

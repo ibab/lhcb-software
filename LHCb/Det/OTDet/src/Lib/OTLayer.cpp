@@ -1,4 +1,4 @@
-// $Id: OTLayer.cpp,v 1.1.1.1 2002-05-26 22:36:33 jvantilb Exp $
+// $Id: OTLayer.cpp,v 1.2 2002-05-27 14:55:53 ocallot Exp $
 //
 // This File contains the definition of the OTLayer-class
 //
@@ -27,15 +27,15 @@ OTLayer::OTLayer(int iLayer, int iStation, double zLayer,
                                    double xOut,  double yOut, 
                                    int nStandStraw, double pitchStraw, 
                                    double stereoAngle ) : 
-      m_LayerID(iLayer), 
-      m_StationID(iStation), 
-      m_ZOfLayer(zLayer), 
-      m_PitchStraw(pitchStraw),  
-      m_CellRadius(2.5*mm),
-      m_StereoAngle(stereoAngle*degree)
+      m_layerID(iLayer), 
+      m_stationID(iStation), 
+      m_zOfLayer(zLayer), 
+      m_pitchStraw(pitchStraw),  
+      m_cellRadius(2.5*mm),
+      m_stereoAngle(stereoAngle*degree)
 {
-  m_SinAngle = sin(stereoAngle*degree);  
-  m_CosAngle = cos(stereoAngle*degree);  
+  m_sinAngle = sin(stereoAngle*degree);  
+  m_cosAngle = cos(stereoAngle*degree);  
 
   // calculate number of modules, width and pitch of various module types
 
@@ -62,41 +62,41 @@ OTLayer::OTLayer(int iLayer, int iStation, double zLayer,
 
   // half nr of modules = 
   // 1 central + 2 wing + 2 end + 2* n_standard 
-  m_HalfNumModule = 1 + 2 + 2 + 2 * nMod3;  // always odd number  
+  m_halfNumModule = 1 + 2 + 2 + 2 * nMod3;  // always odd number  
 
-  m_HalfNumStraw  = new    int[2*m_HalfNumModule+1];
-  m_XFirstStrawA  = new double[2*m_HalfNumModule+1];
-  m_XModuleCenter = new double[2*m_HalfNumModule+1];
-  m_YModuleCenter = new double[2*m_HalfNumModule+1];
-  m_XModuleSize   = new double[2*m_HalfNumModule+1];
-  m_YModuleSize   = new double[2*m_HalfNumModule+1];
+  m_halfNumStraw  = new    int[2*m_halfNumModule+1];
+  m_xFirstStrawA  = new double[2*m_halfNumModule+1];
+  m_xModuleCenter = new double[2*m_halfNumModule+1];
+  m_yModuleCenter = new double[2*m_halfNumModule+1];
+  m_xModuleSize   = new double[2*m_halfNumModule+1];
+  m_yModuleSize   = new double[2*m_halfNumModule+1];
 
-  // fill arrays ( modules are counted from 1 to 2*m_HalfNumModule )
-  m_HalfNumStraw[0]  = 0;
-  m_XFirstStrawA[0]  = 0.0;
-  m_XModuleCenter[0] = 0.0;  
-  m_YModuleCenter[0] = 0.0;
-  m_XModuleSize[0]   = 0.0;
-  m_YModuleSize[0]   = 0.0;
+  // fill arrays ( modules are counted from 1 to 2*m_halfNumModule )
+  m_halfNumStraw[0]  = 0;
+  m_xFirstStrawA[0]  = 0.0;
+  m_xModuleCenter[0] = 0.0;  
+  m_yModuleCenter[0] = 0.0;
+  m_xModuleSize[0]   = 0.0;
+  m_yModuleSize[0]   = 0.0;
 
   // central modules top and bottom
-  int iCenBot = m_HalfNumModule/2 + 1; 
-  int iCenTop = iCenBot+m_HalfNumModule;
+  int iCenBot = m_halfNumModule/2 + 1; 
+  int iCenTop = iCenBot+m_halfNumModule;
 
-  m_HalfNumStraw[iCenTop] = nStraw1;
-  m_HalfNumStraw[iCenBot] = nStraw1;
+  m_halfNumStraw[iCenTop] = nStraw1;
+  m_halfNumStraw[iCenBot] = nStraw1;
 
-  m_XModuleSize[iCenTop]  = pitchMod1; 
-  m_XModuleSize[iCenBot]  = pitchMod1 ; 
+  m_xModuleSize[iCenTop]  = pitchMod1; 
+  m_xModuleSize[iCenBot]  = pitchMod1 ; 
 
-  m_YModuleSize[iCenTop]  = yOut-yCen; 
-  m_YModuleSize[iCenBot]  = yOut-yCen; 
+  m_yModuleSize[iCenTop]  = yOut-yCen; 
+  m_yModuleSize[iCenBot]  = yOut-yCen; 
 
-  m_XModuleCenter[iCenTop] = -m_SinAngle * (yCen+yOut)/2.;
-  m_XModuleCenter[iCenBot] = -m_XModuleCenter[iCenTop];
+  m_xModuleCenter[iCenTop] = -m_sinAngle * (yCen+yOut)/2.;
+  m_xModuleCenter[iCenBot] = -m_xModuleCenter[iCenTop];
 
-  m_YModuleCenter[iCenTop] = m_CosAngle * (yCen+yOut)/2.;
-  m_YModuleCenter[iCenBot] = -m_YModuleCenter[iCenTop];
+  m_yModuleCenter[iCenTop] = m_cosAngle * (yCen+yOut)/2.;
+  m_yModuleCenter[iCenBot] = -m_yModuleCenter[iCenTop];
 
 
   // wing modules
@@ -105,33 +105,33 @@ OTLayer::OTLayer(int iLayer, int iStation, double zLayer,
   int iLeftUp    = iCenTop - 1;
   int iLeftDown  = iCenBot - 1;
 
-  m_HalfNumStraw[iRightUp  ] = nStraw2;
-  m_HalfNumStraw[iRightDown] = nStraw2;
-  m_HalfNumStraw[iLeftUp   ] = nStraw2;
-  m_HalfNumStraw[iLeftDown ] = nStraw2;
+  m_halfNumStraw[iRightUp  ] = nStraw2;
+  m_halfNumStraw[iRightDown] = nStraw2;
+  m_halfNumStraw[iLeftUp   ] = nStraw2;
+  m_halfNumStraw[iLeftDown ] = nStraw2;
 
-  m_XModuleSize[iRightUp  ]  = pitchMod2; 
-  m_XModuleSize[iRightDown]  = pitchMod2; 
-  m_XModuleSize[iLeftUp   ]  = pitchMod2; 
-  m_XModuleSize[iLeftDown ]  = pitchMod2; 
+  m_xModuleSize[iRightUp  ]  = pitchMod2; 
+  m_xModuleSize[iRightDown]  = pitchMod2; 
+  m_xModuleSize[iLeftUp   ]  = pitchMod2; 
+  m_xModuleSize[iLeftDown ]  = pitchMod2; 
 
-  m_YModuleSize[iRightUp  ]  = yOut-ySide; 
-  m_YModuleSize[iRightDown]  = yOut-ySide; 
-  m_YModuleSize[iLeftUp   ]  = yOut-ySide; 
-  m_YModuleSize[iLeftDown ]  = yOut-ySide;
+  m_yModuleSize[iRightUp  ]  = yOut-ySide; 
+  m_yModuleSize[iRightDown]  = yOut-ySide; 
+  m_yModuleSize[iLeftUp   ]  = yOut-ySide; 
+  m_yModuleSize[iLeftDown ]  = yOut-ySide;
  
-  xshift = -m_SinAngle * (ySide+yOut)/2.;
+  xshift = -m_sinAngle * (ySide+yOut)/2.;
   xcenter = pitchMod1/2. + pitchMod2/2.;
-  m_XModuleCenter[iRightUp  ] =  xcenter + xshift;
-  m_XModuleCenter[iRightDown] =  xcenter - xshift;
-  m_XModuleCenter[iLeftUp   ] = -xcenter + xshift;
-  m_XModuleCenter[iLeftDown ] = -xcenter - xshift;
+  m_xModuleCenter[iRightUp  ] =  xcenter + xshift;
+  m_xModuleCenter[iRightDown] =  xcenter - xshift;
+  m_xModuleCenter[iLeftUp   ] = -xcenter + xshift;
+  m_xModuleCenter[iLeftDown ] = -xcenter - xshift;
 
-  ycenter = m_CosAngle * (ySide+yOut)/2.;
-  m_YModuleCenter[iRightUp  ] =  ycenter;
-  m_YModuleCenter[iRightDown] = -ycenter;
-  m_YModuleCenter[iLeftUp   ] =  ycenter;
-  m_YModuleCenter[iLeftDown]  = -ycenter;
+  ycenter = m_cosAngle * (ySide+yOut)/2.;
+  m_yModuleCenter[iRightUp  ] =  ycenter;
+  m_yModuleCenter[iRightDown] = -ycenter;
+  m_yModuleCenter[iLeftUp   ] =  ycenter;
+  m_yModuleCenter[iLeftDown]  = -ycenter;
 
   // standard modules
   int iMod;
@@ -142,33 +142,33 @@ OTLayer::OTLayer(int iLayer, int iStation, double zLayer,
     iLeftUp    = iCenTop - 1 - iMod;
     iLeftDown  = iCenBot - 1 - iMod;
   
-    m_HalfNumStraw[iRightUp  ] = nStraw3;
-    m_HalfNumStraw[iRightDown] = nStraw3;
-    m_HalfNumStraw[iLeftUp   ] = nStraw3;
-    m_HalfNumStraw[iLeftDown ] = nStraw3;
+    m_halfNumStraw[iRightUp  ] = nStraw3;
+    m_halfNumStraw[iRightDown] = nStraw3;
+    m_halfNumStraw[iLeftUp   ] = nStraw3;
+    m_halfNumStraw[iLeftDown ] = nStraw3;
   
-    m_XModuleSize[iRightUp  ]  = pitchMod3; 
-    m_XModuleSize[iRightDown]  = pitchMod3; 
-    m_XModuleSize[iLeftUp   ]  = pitchMod3; 
-    m_XModuleSize[iLeftDown ]  = pitchMod3; 
+    m_xModuleSize[iRightUp  ]  = pitchMod3; 
+    m_xModuleSize[iRightDown]  = pitchMod3; 
+    m_xModuleSize[iLeftUp   ]  = pitchMod3; 
+    m_xModuleSize[iLeftDown ]  = pitchMod3; 
   
-    m_YModuleSize[iRightUp  ]  = yOut; 
-    m_YModuleSize[iRightDown]  = yOut; 
-    m_YModuleSize[iLeftUp   ]  = yOut; 
-    m_YModuleSize[iLeftDown ]  = yOut;
+    m_yModuleSize[iRightUp  ]  = yOut; 
+    m_yModuleSize[iRightDown]  = yOut; 
+    m_yModuleSize[iLeftUp   ]  = yOut; 
+    m_yModuleSize[iLeftDown ]  = yOut;
    
-    xshift = -m_SinAngle * yOut/2.;
+    xshift = -m_sinAngle * yOut/2.;
     xcenter = pitchMod1/2.+pitchMod2 + (iMod-0.5)*pitchMod3;
-    m_XModuleCenter[iRightUp  ] =  xcenter + xshift;
-    m_XModuleCenter[iRightDown] =  xcenter - xshift;
-    m_XModuleCenter[iLeftUp   ] = -xcenter + xshift;
-    m_XModuleCenter[iLeftDown ] = -xcenter - xshift;
+    m_xModuleCenter[iRightUp  ] =  xcenter + xshift;
+    m_xModuleCenter[iRightDown] =  xcenter - xshift;
+    m_xModuleCenter[iLeftUp   ] = -xcenter + xshift;
+    m_xModuleCenter[iLeftDown ] = -xcenter - xshift;
   
-    ycenter = m_CosAngle * yOut/2.;
-    m_YModuleCenter[iRightUp  ] =  ycenter;
-    m_YModuleCenter[iRightDown] = -ycenter;
-    m_YModuleCenter[iLeftUp   ] =  ycenter;
-    m_YModuleCenter[iLeftDown]  = -ycenter;
+    ycenter = m_cosAngle * yOut/2.;
+    m_yModuleCenter[iRightUp  ] =  ycenter;
+    m_yModuleCenter[iRightDown] = -ycenter;
+    m_yModuleCenter[iLeftUp   ] =  ycenter;
+    m_yModuleCenter[iLeftDown]  = -ycenter;
   
  }
 
@@ -178,39 +178,39 @@ OTLayer::OTLayer(int iLayer, int iStation, double zLayer,
   iLeftUp    = iCenTop - 1 - nMod3 -1;
   iLeftDown  = iCenBot - 1 - nMod3 -1;
 
-  m_HalfNumStraw[iRightUp  ] = nStraw4;
-  m_HalfNumStraw[iRightDown] = nStraw4;
-  m_HalfNumStraw[iLeftUp   ] = nStraw4;
-  m_HalfNumStraw[iLeftDown ] = nStraw4;
+  m_halfNumStraw[iRightUp  ] = nStraw4;
+  m_halfNumStraw[iRightDown] = nStraw4;
+  m_halfNumStraw[iLeftUp   ] = nStraw4;
+  m_halfNumStraw[iLeftDown ] = nStraw4;
 
-  m_XModuleSize[iRightUp  ]  = pitchMod4; 
-  m_XModuleSize[iRightDown]  = pitchMod4; 
-  m_XModuleSize[iLeftUp   ]  = pitchMod4; 
-  m_XModuleSize[iLeftDown ]  = pitchMod4; 
+  m_xModuleSize[iRightUp  ]  = pitchMod4; 
+  m_xModuleSize[iRightDown]  = pitchMod4; 
+  m_xModuleSize[iLeftUp   ]  = pitchMod4; 
+  m_xModuleSize[iLeftDown ]  = pitchMod4; 
 
-  m_YModuleSize[iRightUp  ]  = yOut; 
-  m_YModuleSize[iRightDown]  = yOut; 
-  m_YModuleSize[iLeftUp   ]  = yOut; 
-  m_YModuleSize[iLeftDown ]  = yOut;
+  m_yModuleSize[iRightUp  ]  = yOut; 
+  m_yModuleSize[iRightDown]  = yOut; 
+  m_yModuleSize[iLeftUp   ]  = yOut; 
+  m_yModuleSize[iLeftDown ]  = yOut;
  
-  xshift = -m_SinAngle * yOut/2.;
+  xshift = -m_sinAngle * yOut/2.;
   xcenter = pitchMod1/2. + pitchMod2 + nMod3*pitchMod3 + pitchMod4/2.;
-  m_XModuleCenter[iRightUp  ] =  xcenter + xshift;
-  m_XModuleCenter[iRightDown] =  xcenter - xshift;
-  m_XModuleCenter[iLeftUp   ] = -xcenter + xshift;
-  m_XModuleCenter[iLeftDown ] = -xcenter - xshift;
+  m_xModuleCenter[iRightUp  ] =  xcenter + xshift;
+  m_xModuleCenter[iRightDown] =  xcenter - xshift;
+  m_xModuleCenter[iLeftUp   ] = -xcenter + xshift;
+  m_xModuleCenter[iLeftDown ] = -xcenter - xshift;
 
-  ycenter = m_CosAngle * yOut/2.;
-  m_YModuleCenter[iRightUp  ] =  ycenter;
-  m_YModuleCenter[iRightDown] = -ycenter;
-  m_YModuleCenter[iLeftUp   ] =  ycenter;
-  m_YModuleCenter[iLeftDown]  = -ycenter;
+  ycenter = m_cosAngle * yOut/2.;
+  m_yModuleCenter[iRightUp  ] =  ycenter;
+  m_yModuleCenter[iRightDown] = -ycenter;
+  m_yModuleCenter[iLeftUp   ] =  ycenter;
+  m_yModuleCenter[iLeftDown]  = -ycenter;
 
   
-  for (iMod=1; iMod<=2*m_HalfNumModule; iMod++) {
-     m_XFirstStrawA[iMod] = -(((double) m_HalfNumStraw[iMod])/2. + 0.25)*
-                                                           m_PitchStraw;
-     m_XModuleSize[iMod]*=m_CosAngle;
+  for (iMod=1; iMod<=2*m_halfNumModule; iMod++) {
+     m_xFirstStrawA[iMod] = -(((double) m_halfNumStraw[iMod])/2. + 0.25)*
+                                                           m_pitchStraw;
+     m_xModuleSize[iMod]*=m_cosAngle;
   }
 
 }
@@ -219,47 +219,47 @@ OTLayer::OTLayer(int iLayer, int iStation, double zLayer,
 OTLayer::~OTLayer()
 {
   // destructer
-  delete[] m_HalfNumStraw;
-  delete[] m_XFirstStrawA;
-  delete[] m_XModuleCenter;
-  delete[] m_YModuleCenter;
-  delete[] m_XModuleSize;
-  delete[] m_YModuleSize;
+  delete[] m_halfNumStraw;
+  delete[] m_xFirstStrawA;
+  delete[] m_xModuleCenter;
+  delete[] m_yModuleCenter;
+  delete[] m_xModuleSize;
+  delete[] m_yModuleSize;
 }
 
 int OTLayer::getAbsLayerID() const {
 
-  return (100*m_StationID)+m_LayerID;
+  return (100*m_stationID)+m_layerID;
 }
 
 int OTLayer::getLayerID() const {
 
-  return m_LayerID;
+  return m_layerID;
 }
 
 int OTLayer::getStationID() const {
 
-  return m_StationID;
+  return m_stationID;
 }
 
 double OTLayer::getZ() const {
  
-  return m_ZOfLayer;
+  return m_zOfLayer;
 }
 
 double OTLayer::getStereoAngle() const{
-  return m_StereoAngle;
+  return m_stereoAngle;
 }
 
 double OTLayer::getCellRadius() const {
-  return m_CellRadius;
+  return m_cellRadius;
 }
 
 int OTLayer::nStrawsInModule(const int iModule) const {
  
   int nStraw = 0;
-  if (iModule<(2*m_HalfNumModule+1)){
-    nStraw = 2*m_HalfNumStraw[iModule];
+  if (iModule<(2*m_halfNumModule+1)){
+    nStraw = 2*m_halfNumStraw[iModule];
   }
   return nStraw;
 }
@@ -311,7 +311,7 @@ bool OTLayer::calculateHits( HepPoint3D entryPoint,
   if( fabs(z1-z2)<0.5 && distXY<5. ) {
     return false;
   }
-  if( fabs((z1+z2)/2.-m_ZOfLayer)>2.0*m_CellRadius ) {
+  if( fabs((z1+z2)/2.-m_zOfLayer)>2.0*m_cellRadius ) {
     return false;
   }
 
@@ -320,8 +320,8 @@ bool OTLayer::calculateHits( HepPoint3D entryPoint,
 
     double dUdZ=(u2-u1)/(z2-z1);  
   
-    double uAtMonoA = u1 + dUdZ*(m_ZOfLayer-0.5*m_PitchStraw-z1);  
-    double uAtMonoB = u1 + dUdZ*(m_ZOfLayer+0.5*m_PitchStraw-z1);
+    double uAtMonoA = u1 + dUdZ*(m_zOfLayer-0.5*m_pitchStraw-z1);  
+    double uAtMonoB = u1 + dUdZ*(m_zOfLayer+0.5*m_pitchStraw-z1);
   
     // calculate which module was hit
 
@@ -349,19 +349,19 @@ bool OTLayer::calculateHits( HepPoint3D entryPoint,
   
     // store hits for part A
     if ( iHitModuleA > 0 ) {
-      if ((iHitStrawA >= 1) && (iHitStrawA <= m_HalfNumStraw[iHitModuleA])) {
+      if ((iHitStrawA >= 1) && (iHitStrawA <= m_halfNumStraw[iHitModuleA])) {
   
-  	double uHitStrawA = getU(iHitStrawA,iHitModuleA);
+  	double uHitStrawA = uOfStraw ( iHitStrawA, iHitModuleA);
       	distTmp = (uAtMonoA - uHitStrawA) * cosTrack;
      
-  	betweenU = ( uHitStrawA > uLow-m_PitchStraw ) && 
-  		   ( uHitStrawA < uHigh+m_PitchStraw);
+  	betweenU = ( uHitStrawA > uLow-m_pitchStraw ) && 
+  		   ( uHitStrawA < uHigh+m_pitchStraw);
   
-  	if ( (fabs(distTmp) < m_CellRadius) && betweenU ) {
+  	if ( (fabs(distTmp) < m_cellRadius) && betweenU ) {
   	  iStraw=iHitStrawA;
   	  iModule=iHitModuleA;
 
-          OTChannelID tmpChan = OTChannelID(m_StationID, m_LayerID, 
+          OTChannelID tmpChan = OTChannelID(m_stationID, m_layerID, 
                                             iModule, iStraw);
           channels.push_back(tmpChan);
           driftDistances.push_back(distTmp);
@@ -375,19 +375,19 @@ bool OTLayer::calculateHits( HepPoint3D entryPoint,
   	for (int iRStraw = 1; iRStraw < nSideStraws + 1; iRStraw++) { 
   	  nextRightStraw( iHiStr, iHiMod, iRightStraw, iRightModule);
   	  if (iRightModule < 0 ) { break; }
-  	  uStraw=getU(iRightStraw,iRightModule);
+  	  uStraw  = uOfStraw( iRightStraw, iRightModule);
   	  distTmp = (uAtMonoA - uStraw) * cosTrack;
     
   	  iHiStr = iRightStraw;
   	  iHiMod = iRightModule;
     
-  	  betweenU = ( uStraw > uLow-m_PitchStraw ) && 
-  		     ( uStraw < uHigh+m_PitchStraw);
+  	  betweenU = ( uStraw > uLow-m_pitchStraw ) && 
+  		     ( uStraw < uHigh+m_pitchStraw);
   
-  	  if ( (fabs(distTmp) < m_CellRadius) && betweenU ) {
+  	  if ( (fabs(distTmp) < m_cellRadius) && betweenU ) {
   	    iStraw=iRightStraw;
   	    iModule=iRightModule;
-            OTChannelID tmpChan = OTChannelID(m_StationID, m_LayerID, 
+            OTChannelID tmpChan = OTChannelID(m_stationID, m_layerID, 
                                               iModule, iStraw);
             channels.push_back(tmpChan);
             driftDistances.push_back(distTmp);
@@ -401,18 +401,18 @@ bool OTLayer::calculateHits( HepPoint3D entryPoint,
   	for (int iLStraw = 1; iLStraw < nSideStraws + 1; iLStraw++) { 
   	  nextLeftStraw( iHiStr, iHiMod, iLeftStraw, iLeftModule);
   	  if (iLeftModule < 0 ) { break; }
-  	  uStraw=getU(iLeftStraw,iLeftModule);
+  	  uStraw  = uOfStraw( iLeftStraw, iLeftModule);
   	  distTmp = (uAtMonoA - uStraw) * cosTrack; 
     
   	  iHiStr = iLeftStraw;
   	  iHiMod = iLeftModule;
     
-  	  betweenU = ( uStraw > uLow-m_PitchStraw ) && 
-  		     ( uStraw < uHigh+m_PitchStraw);
-  	  if ( (fabs(distTmp) < m_CellRadius) && betweenU ) {
+  	  betweenU = ( uStraw > uLow-m_pitchStraw ) && 
+  		     ( uStraw < uHigh+m_pitchStraw);
+  	  if ( (fabs(distTmp) < m_cellRadius) && betweenU ) {
   	    iStraw=iLeftStraw;
   	    iModule=iLeftModule;
-            OTChannelID tmpChan = OTChannelID(m_StationID, m_LayerID, 
+            OTChannelID tmpChan = OTChannelID(m_stationID, m_layerID, 
                                               iModule, iStraw);
             channels.push_back(tmpChan);
             driftDistances.push_back(distTmp);
@@ -423,19 +423,19 @@ bool OTLayer::calculateHits( HepPoint3D entryPoint,
       
     // store hits for part B
     if ( iHitModuleB > 0 ) {
-      if ((iHitStrawB >= m_HalfNumStraw[iHitModuleB]+1) && 
-  	  (iHitStrawB <= 2*m_HalfNumStraw[iHitModuleB])) {
+      if ((iHitStrawB >= m_halfNumStraw[iHitModuleB]+1) && 
+  	  (iHitStrawB <= 2*m_halfNumStraw[iHitModuleB])) {
     
-  	double uHitStrawB = getU(iHitStrawB,iHitModuleB);
+  	double uHitStrawB = uOfStraw(iHitStrawB,iHitModuleB);
   
   	distTmp = (uAtMonoB - uHitStrawB) * cosTrack;
     
-  	betweenU = ( uHitStrawB > uLow-m_PitchStraw ) && 
-  		   ( uHitStrawB < uHigh+m_PitchStraw);
-  	if ( (fabs(distTmp) < m_CellRadius) && betweenU ) {
+  	betweenU = ( uHitStrawB > uLow-m_pitchStraw ) && 
+  		   ( uHitStrawB < uHigh+m_pitchStraw);
+  	if ( (fabs(distTmp) < m_cellRadius) && betweenU ) {
   	  iStraw=iHitStrawB;
   	  iModule=iHitModuleB;
-          OTChannelID tmpChan = OTChannelID(m_StationID, m_LayerID, 
+          OTChannelID tmpChan = OTChannelID(m_stationID, m_layerID, 
                                             iModule, iStraw);
           channels.push_back(tmpChan);
           driftDistances.push_back(distTmp);
@@ -449,18 +449,18 @@ bool OTLayer::calculateHits( HepPoint3D entryPoint,
   	for (int iRStraw = 1; iRStraw < nSideStraws + 1; iRStraw++) { 
   	  nextRightStraw( iHiStr, iHiMod, iRightStraw, iRightModule);
   	  if (iRightModule < 0 ) { break; }
-  	  uStraw=getU(iRightStraw,iRightModule); 
+  	  uStraw= uOfStraw(iRightStraw,iRightModule); 
   	  distTmp = (uAtMonoB - uStraw) * cosTrack; 
     
   	  iHiStr = iRightStraw;
   	  iHiMod = iRightModule;
     
-  	  betweenU = ( uStraw > uLow-m_PitchStraw ) && 
-  		     ( uStraw < uHigh+m_PitchStraw);
-  	  if ( (fabs(distTmp) < m_CellRadius) && betweenU ) {
+  	  betweenU = ( uStraw > uLow-m_pitchStraw ) && 
+  		     ( uStraw < uHigh+m_pitchStraw);
+  	  if ( (fabs(distTmp) < m_cellRadius) && betweenU ) {
   	    iStraw=iRightStraw;
   	    iModule=iRightModule;
-            OTChannelID tmpChan = OTChannelID(m_StationID, m_LayerID, 
+            OTChannelID tmpChan = OTChannelID(m_stationID, m_layerID, 
                                               iModule, iStraw);
             channels.push_back(tmpChan);
             driftDistances.push_back(distTmp);
@@ -473,19 +473,19 @@ bool OTLayer::calculateHits( HepPoint3D entryPoint,
   	for (int iLStraw = 1; iLStraw < nSideStraws + 1; iLStraw++) { 
   	  nextLeftStraw( iHiStr, iHiMod, iLeftStraw, iLeftModule);
   	  if (iLeftModule < 0 ) { break; }
-  	  uStraw=getU(iLeftStraw,iLeftModule);
+  	  uStraw= uOfStraw(iLeftStraw,iLeftModule);
   	  distTmp = (uAtMonoB - uStraw) * cosTrack;
     
   	  iHiStr = iLeftStraw;
   	  iHiMod = iLeftModule;
     
-  	  betweenU = ( uStraw > uLow-m_PitchStraw ) && 
-  		     ( uStraw < uHigh+m_PitchStraw);
+  	  betweenU = ( uStraw > uLow-m_pitchStraw ) && 
+  		     ( uStraw < uHigh+m_pitchStraw);
   
-  	  if ( (fabs(distTmp) < m_CellRadius) && betweenU ) {
+  	  if ( (fabs(distTmp) < m_cellRadius) && betweenU ) {
   	    iStraw=iLeftStraw;
   	    iModule=iLeftModule;
-            OTChannelID tmpChan = OTChannelID(m_StationID, m_LayerID, 
+            OTChannelID tmpChan = OTChannelID(m_stationID, m_layerID, 
                                               iModule, iStraw);
             channels.push_back(tmpChan);
             driftDistances.push_back(distTmp);
@@ -499,21 +499,21 @@ bool OTLayer::calculateHits( HepPoint3D entryPoint,
 
     double z3Circ,zCirc,uCirc,rCirc;
 
-    //    z3Circ = m_ZOfLayer;
+    //    z3Circ = m_zOfLayer;
     double zfrac,zint;
     // zfrac is between 0 and 1. 2.7839542167 means nothing.
     // if distance xy entry-exit is small generate z3 close
     // to the z1 and z2 ( z1 is close to z2)
     zfrac = modf( (fabs(u1)+fabs(v1))/2.7839542167, &zint);
-    if (distXY > 2.0 *m_PitchStraw ) {
-      z3Circ = m_ZOfLayer + 2.0*(zfrac-0.5)*m_PitchStraw;
+    if (distXY > 2.0 *m_pitchStraw ) {
+      z3Circ = m_zOfLayer + 2.0*(zfrac-0.5)*m_pitchStraw;
     }
     else {
-      if ( z1-m_ZOfLayer < 0 ) {
-        z3Circ = m_ZOfLayer - zfrac*m_PitchStraw; 
+      if ( z1-m_zOfLayer < 0 ) {
+        z3Circ = m_zOfLayer - zfrac*m_pitchStraw; 
       } 
       else {
-        z3Circ = m_ZOfLayer + zfrac*m_PitchStraw; 
+        z3Circ = m_zOfLayer + zfrac*m_pitchStraw; 
       }
     }
 
@@ -523,13 +523,13 @@ bool OTLayer::calculateHits( HepPoint3D entryPoint,
     int iStrawA;
     int iModuleA;
     hitModuleAndStraw(uLow,v1,iModuleA,iStrawA,iDummy);
-    double zStrawA = getZofStraw(iStrawA,iModuleA);
+    double zStrawA = zOfStraw(iStrawA,iModuleA);
     double uStep = uLow;
     int iCount = 0;
 
     while ( (uStep < uHigh) && (iCount < 100) && (iModuleA > 0) ) {
       iCount++;
-      uStep = getU(iStrawA,iModuleA);
+      uStep =  uOfStraw(iStrawA,iModuleA);
       double distCirc = 
          sqrt((zCirc-zStrawA)*(zCirc-zStrawA) + (uCirc-uStep)*(uCirc-uStep));
       double distTmp = fabs(distCirc-rCirc);
@@ -538,9 +538,9 @@ bool OTLayer::calculateHits( HepPoint3D entryPoint,
 
       double ambTmp = - (uStep-(u1+u2)/2.) * (distCirc-rCirc);
       
-      if ( distTmp < m_CellRadius ) {
+      if ( distTmp < m_cellRadius ) {
         if (ambTmp < 0.0 ) distTmp *= -1.0;
-        OTChannelID tmpChan = OTChannelID(m_StationID, m_LayerID, 
+        OTChannelID tmpChan = OTChannelID(m_stationID, m_layerID, 
                                           iModule, iStraw);
         channels.push_back(tmpChan);
         driftDistances.push_back(distTmp);
@@ -552,13 +552,13 @@ bool OTLayer::calculateHits( HepPoint3D entryPoint,
     int iStrawB;
     int iModuleB;
     hitModuleAndStraw(uLow,v1,iModuleB,iDummy,iStrawB);
-    double zStrawB = getZofStraw(iStrawB,iModuleB);
+    double zStrawB = zOfStraw(iStrawB,iModuleB);
     uStep = uLow;
     iCount = 0;
    
     while ( (uStep < uHigh) && (iCount < 100) && (iModuleB > 0) ) {
       iCount++;
-      uStep = getU(iStrawB,iModuleB);
+      uStep =  uOfStraw(iStrawB,iModuleB);
       //double vStep = v1+((v2-v1)/(u2-u1))*(uStep-u1);
       double distCirc = 
         sqrt((zCirc-zStrawB)*(zCirc-zStrawB) + (uCirc-uStep)*(uCirc-uStep));
@@ -567,9 +567,9 @@ bool OTLayer::calculateHits( HepPoint3D entryPoint,
       int iStraw  = iStrawB;
 
       double ambTmp = - (uStep-(u1+u2)/2.) * (distCirc-rCirc);
-      if ( distTmp < m_CellRadius ) {
+      if ( distTmp < m_cellRadius ) {
         if (ambTmp < 0.0) distTmp *= -1.0;
-        OTChannelID tmpChan = OTChannelID(m_StationID, m_LayerID, 
+        OTChannelID tmpChan = OTChannelID(m_stationID, m_layerID, 
                                           iModule, iStraw);
         channels.push_back(tmpChan);
         driftDistances.push_back(distTmp);
@@ -588,33 +588,35 @@ bool OTLayer::calculateHits( HepPoint3D entryPoint,
 void OTLayer::xy2uv(const double x, const double y, 
                              double& u, double& v) const
 {
-  u =  x*m_CosAngle + y*m_SinAngle;
-  v = -x*m_SinAngle + y*m_CosAngle;
+  u =  x*m_cosAngle + y*m_sinAngle;
+  v = -x*m_sinAngle + y*m_cosAngle;
 }
 
 void OTLayer::uv2xy(const double u, const double v, 
                              double& x, double& y) const
 {
-  x =  u*m_CosAngle - v*m_SinAngle;
-  y =  u*m_SinAngle + v*m_CosAngle;
+  x =  u*m_cosAngle - v*m_sinAngle;
+  y =  u*m_sinAngle + v*m_cosAngle;
 }
 
-void OTLayer::nextRightStraw(int iHitStraw,int iHitModule,
-                                      int& iRightStraw,int& iRightModule) const {
+void OTLayer::nextRightStraw( int iHitStraw,
+                              int iHitModule,
+                              int& iRightStraw,
+                              int& iRightModule) const {
 
-  if( (iHitModule == m_HalfNumModule || iHitModule == 2*m_HalfNumModule ) &&
-      (iHitStraw  == m_HalfNumStraw[iHitModule] || 
-                                   iHitStraw == 2*m_HalfNumStraw[iHitModule])) {
+  if( (iHitModule == m_halfNumModule || iHitModule == 2*m_halfNumModule ) &&
+      (iHitStraw  == m_halfNumStraw[iHitModule] || 
+                                   iHitStraw == 2*m_halfNumStraw[iHitModule])) {
     iRightModule = -9999;
     iRightStraw  = -9999;
   }
-  else if( iHitStraw == m_HalfNumStraw[iHitModule] ) {
+  else if( iHitStraw == m_halfNumStraw[iHitModule] ) {
     iRightModule = iHitModule + 1 ;
     iRightStraw  = 1;
   }
-  else if( iHitStraw == 2*m_HalfNumStraw[iHitModule] ) {
+  else if( iHitStraw == 2*m_halfNumStraw[iHitModule] ) {
     iRightModule = iHitModule + 1 ;
-    iRightStraw  = m_HalfNumStraw[iRightModule]+1;
+    iRightStraw  = m_halfNumStraw[iRightModule]+1;
   }
   else {
     iRightStraw  = iHitStraw + 1;
@@ -625,18 +627,18 @@ void OTLayer::nextRightStraw(int iHitStraw,int iHitModule,
 void OTLayer::nextLeftStraw(int iHitStraw,int iHitModule,
                                      int& iLeftStraw,int& iLeftModule) const {
 
-  if( (iHitModule == 1 || iHitModule == m_HalfNumModule+1 ) &&
-      (iHitStraw  == 1 || iHitStraw == m_HalfNumStraw[iHitModule]+1)) {
+  if( (iHitModule == 1 || iHitModule == m_halfNumModule+1 ) &&
+      (iHitStraw  == 1 || iHitStraw == m_halfNumStraw[iHitModule]+1)) {
     iLeftModule = -9998;
     iLeftStraw  = -9998;
   }
   else if( iHitStraw == 1 ) {
     iLeftModule = iHitModule - 1 ;
-    iLeftStraw  = m_HalfNumStraw[iLeftModule];
+    iLeftStraw  = m_halfNumStraw[iLeftModule];
   }
-  else if( iHitStraw == m_HalfNumStraw[iHitModule]+1 ) {
+  else if( iHitStraw == m_halfNumStraw[iHitModule]+1 ) {
     iLeftModule = iHitModule - 1 ;
-    iLeftStraw  = 2*m_HalfNumStraw[iLeftModule];
+    iLeftStraw  = 2*m_halfNumStraw[iLeftModule];
   }
   else {
     iLeftStraw  = iHitStraw - 1;
@@ -644,49 +646,50 @@ void OTLayer::nextLeftStraw(int iHitStraw,int iHitModule,
   }
 }
 
-double OTLayer::getU(const int iStraw, const int iModule) const{
+double OTLayer::uOfStraw(const int iStraw, const int iModule) const{
 
   int locStraw = iStraw;
-  double uFirst=m_XFirstStrawA[iModule];
+  double uFirst=m_xFirstStrawA[iModule];
 
-  if (iStraw > m_HalfNumStraw[iModule]) {
-    uFirst += 0.5*m_PitchStraw;
-    locStraw-=m_HalfNumStraw[iModule];
+  if (iStraw > m_halfNumStraw[iModule]) {
+    uFirst += 0.5*m_pitchStraw;
+    locStraw-=m_halfNumStraw[iModule];
   }
 
   double uCen,vCen;
-  this->xy2uv(m_XModuleCenter[iModule],m_YModuleCenter[iModule],uCen,vCen);
+  this->xy2uv(m_xModuleCenter[iModule],m_yModuleCenter[iModule],uCen,vCen);
 
-  return ( uCen + uFirst + (locStraw-1)*m_PitchStraw);
+  return ( uCen + uFirst + (locStraw-1)*m_pitchStraw);
 
 }
 
-double OTLayer::getZofStraw(const int iStraw, const int iModule) const {
+double OTLayer::zOfStraw(const int iStraw, const int iModule) const {
 
-  if (( iStraw < 1 ) || ( iStraw > 2*m_HalfNumStraw[iModule] )) {
+  if (( iStraw < 1 ) || ( iStraw > 2*m_halfNumStraw[iModule] )) {
     return  -99999.; 
   }
 
-  if ( iStraw <= m_HalfNumStraw[iModule] ) {
-    return (m_ZOfLayer-0.5*m_PitchStraw);
+  if ( iStraw <= m_halfNumStraw[iModule] ) {
+    return (m_zOfLayer-0.5*m_pitchStraw);
   }
   else {
-    return (m_ZOfLayer+0.5*m_PitchStraw);
+    return (m_zOfLayer+0.5*m_pitchStraw);
   }
 
 }
 
-HepPoint3D OTLayer::getXYZofStrawCenter(const int iStraw, const int iModule) const{
+HepPoint3D OTLayer::centerOfStraw( const int iStraw, 
+                                   const int iModule) const{
 
   double x,y,z,u,v,uCen,vCen;
 
   HepPoint3D tmpPoint(0.,0.,0.);
 
-  z = this->getZofStraw(iStraw,iModule);
+  z = this->zOfStraw(iStraw,iModule);
 
-  xy2uv(m_XModuleCenter[iModule],m_YModuleCenter[iModule],uCen,vCen);
+  xy2uv(m_xModuleCenter[iModule],m_yModuleCenter[iModule],uCen,vCen);
 
-  u = this->getU(iStraw,iModule);
+  u = this->uOfStraw(iStraw,iModule);
   v = vCen;
 
   uv2xy(u,v,x,y);
@@ -707,15 +710,15 @@ double OTLayer::distanceAlongWire(const int iModule,
 
   double uHit,vHit,uCen,vCen;
   xy2uv(xHit,yHit,uHit,vHit);
-  xy2uv(m_XModuleCenter[iModule],m_YModuleCenter[iModule],uCen,vCen);
+  xy2uv(m_xModuleCenter[iModule],m_yModuleCenter[iModule],uCen,vCen);
 
   double dist;
-  if ( iModule <= m_HalfNumModule ) {
+  if ( iModule <= m_halfNumModule ) {
     // Bottom Module
-    dist = vHit - vCen + (0.5*m_YModuleSize[iModule]);
+    dist = vHit - vCen + (0.5*m_yModuleSize[iModule]);
   } else {
     // Top Module
-    dist = vCen - vHit + (0.5*m_YModuleSize[iModule]);
+    dist = vCen - vHit + (0.5*m_yModuleSize[iModule]);
   }
 
   if (dist < 0.0 ) {
@@ -740,7 +743,7 @@ void OTLayer::sCircle(const double z1, const double u1, const double z2,
 
 double OTLayer::wireHalfLength(const int iModule) const{
   // half length of wire
-  return (m_YModuleSize[iModule]/2.);
+  return (m_yModuleSize[iModule]/2.);
 }
 
 
@@ -753,12 +756,12 @@ void OTLayer::hitModuleAndStraw( double u, double v,
 
   double uCen,vCen,uHalf,vHalf;
 
-  for (int iMod=1; iMod<=2*m_HalfNumModule; iMod++) {
+  for (int iMod=1; iMod<=2*m_halfNumModule; iMod++) {
 
-    xy2uv(m_XModuleCenter[iMod],m_YModuleCenter[iMod],uCen,vCen);
+    xy2uv(m_xModuleCenter[iMod],m_yModuleCenter[iMod],uCen,vCen);
 
-    uHalf=m_XModuleSize[iMod]/2.;
-    vHalf=m_YModuleSize[iMod]/2.;
+    uHalf=m_xModuleSize[iMod]/2.;
+    vHalf=m_yModuleSize[iMod]/2.;
 
     if ( (u <= uCen+uHalf && u >= uCen-uHalf) &&
          (v <= vCen+vHalf && v >= vCen-vHalf) ) {
@@ -770,16 +773,16 @@ void OTLayer::hitModuleAndStraw( double u, double v,
     return;
   }
 
-  double uFirstStrawA = m_XFirstStrawA[hitMod];
-  double uFirstStrawB = uFirstStrawA + 0.5*m_PitchStraw;   
+  double uFirstStrawA = m_xFirstStrawA[hitMod];
+  double uFirstStrawB = uFirstStrawA + 0.5*m_pitchStraw;   
 
-  hitStrA = (int) ((u-(uCen+uFirstStrawA))/m_PitchStraw+1.5);
-  hitStrB = (int) ((u-(uCen+uFirstStrawB))/m_PitchStraw+1.5);
+  hitStrA = (int) ((u-(uCen+uFirstStrawA))/m_pitchStraw+1.5);
+  hitStrB = (int) ((u-(uCen+uFirstStrawB))/m_pitchStraw+1.5);
 
   if ( hitStrA < 1 ) { hitStrA = 1; }
   if ( hitStrB < 1 ) { hitStrB = 1; }
-  if ( hitStrA > m_HalfNumStraw[hitMod]) { hitStrA = m_HalfNumStraw[hitMod]; }
-  if ( hitStrB > m_HalfNumStraw[hitMod]) { hitStrB = m_HalfNumStraw[hitMod]; }
-  hitStrB += m_HalfNumStraw[hitMod];
+  if ( hitStrA > m_halfNumStraw[hitMod]) { hitStrA = m_halfNumStraw[hitMod]; }
+  if ( hitStrB > m_halfNumStraw[hitMod]) { hitStrB = m_halfNumStraw[hitMod]; }
+  hitStrB += m_halfNumStraw[hitMod];
 }    
 

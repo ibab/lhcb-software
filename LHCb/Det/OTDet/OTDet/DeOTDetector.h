@@ -1,4 +1,4 @@
-// $Id: DeOTDetector.h,v 1.1.1.1 2002-05-26 22:36:33 jvantilb Exp $
+// $Id: DeOTDetector.h,v 1.2 2002-05-27 14:55:53 ocallot Exp $
 #ifndef OTDET_DEOTDETECTOR_H
 #define OTDET_DEOTDETECTOR_H 1
 
@@ -45,8 +45,9 @@ public:
   OTLayer* layer(OTChannelID aChannel) const;
 
   /// return the distance along the wire given a channel and position x,y
-  double distanceAlongWire(OTChannelID channelID, 
-			   double xHit, double yHit) const;
+  double distanceAlongWire(OTChannelID channelID,
+                           double xHit,
+                           double yHit) const;
 
   /// return the channel right from a given channel
   OTChannelID nextChannelRight(OTChannelID aChannel) const;
@@ -54,14 +55,16 @@ public:
   /// return the channel left from a given channel
   OTChannelID nextChannelLeft(OTChannelID aChannel) const;
 
+  unsigned int numStation()  { return m_numStation; }
+
+  std::vector<OTLayer*> allLayers() const { return m_layers; }
 
 private:
 
   /// data members
-  int m_NumStation;
-  int m_FirstOTStation;
-  vector<OTLayer*> m_layers;
-
+  unsigned int m_numStation;
+  unsigned int m_FirstOTStation;
+  std::vector<OTLayer*> m_layers;
 };
 
 #endif  // OTDET_DEOTDETECTOR_H
