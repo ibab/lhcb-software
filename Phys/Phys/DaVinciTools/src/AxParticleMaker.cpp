@@ -1,4 +1,4 @@
-// $Id: AxParticleMaker.cpp,v 1.1 2002-05-15 23:37:13 gcorti Exp $
+// $Id: AxParticleMaker.cpp,v 1.2 2002-05-17 11:41:51 gcorti Exp $
 // Include files 
 
 // from Gaudi
@@ -322,7 +322,7 @@ StatusCode AxParticleMaker::makeParticles( ParticleVector & parts ) {
 StatusCode AxParticleMaker::finalize() {
   
   MsgStream log(msgSvc(), name());
-  log << MSG::DEBUG << "==> AxParticleMaker::finalizing" << endreq;
+  log << MSG::DEBUG << "==> AxParticleMaker::finalize" << endreq;
   
   return StatusCode::SUCCESS;
 }

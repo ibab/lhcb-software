@@ -1,4 +1,4 @@
-// $Id: ParabolicTransporter.cpp,v 1.1 2002-05-15 23:19:09 gcorti Exp $
+// $Id: ParabolicTransporter.cpp,v 1.2 2002-05-17 11:42:32 gcorti Exp $
 // Include files 
 
 // Utility Classes
@@ -352,8 +352,6 @@ StatusCode ParabolicTransporter::magfTransport(Particle *& workParticle,
 StatusCode ParabolicTransporter::finalize() {
   
   MsgStream log(msgSvc(), name());
-  
-  log << MSG::INFO << "finalize" << endreq;
-
+  log << MSG::DEBUG << "==> ParabolicTransporter::finalize" << endreq;
   return StatusCode::SUCCESS;
 }

@@ -1,4 +1,4 @@
-// $Id: CombinedTransporter.cpp,v 1.1 2002-05-15 23:19:28 gcorti Exp $
+// $Id: CombinedTransporter.cpp,v 1.2 2002-05-17 11:42:05 gcorti Exp $
 // Include files 
 
 // Utility Classes
@@ -274,8 +274,7 @@ StatusCode CombinedTransporter::transport(Particle & iterP,
 StatusCode CombinedTransporter::finalize() {
   
   MsgStream log(msgSvc(), name());
-  
-  log << MSG::INFO << "finalize" << endreq;
+  log << MSG::DEBUG << "==> CombinedTransporter::finalize" << endreq;
   
   return StatusCode::SUCCESS;
 }

@@ -1,4 +1,4 @@
-// $Id: NsctVeloTransporter.cpp,v 1.1 2002-05-15 23:18:32 gcorti Exp $
+// $Id: NsctVeloTransporter.cpp,v 1.2 2002-05-17 11:42:14 gcorti Exp $
 // Include files 
 
 // Utility Classes
@@ -348,9 +348,7 @@ StatusCode NsctVeloTransporter::veloTransport(Particle *&workParticle,
 StatusCode NsctVeloTransporter::finalize() {
   
   MsgStream log(msgSvc(), name());
-  
-  log << MSG::INFO << "finalize" << endreq;
- 
+  log << MSG::DEBUG << "==> NsctVeloTransporter::finalize" << endreq;
   m_zVelo.clear();
   
   return StatusCode::SUCCESS;
