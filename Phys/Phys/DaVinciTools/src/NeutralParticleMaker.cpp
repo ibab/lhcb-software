@@ -169,10 +169,6 @@ StatusCode NeutralParticleMaker::initialize() {
     
   }  //if(m_particleNames[0] != "All")
 
-  logbk<< MSG::INFO <<"No Selection applied yet !\n"
-       <<"all ProtoParticles are converted to Gamma Particle"<<endreq;
-
-
   // ECAL
   SmartDataPtr<DeCalorimeter> detecal (detSvc(),m_nameEcal);
   if(!detecal)
