@@ -1,4 +1,4 @@
-// $Id: SimplePlots.h,v 1.1 2005-01-06 10:37:47 pkoppenb Exp $
+// $Id: SimplePlots.h,v 1.2 2005-01-10 09:57:17 pkoppenb Exp $
 #ifndef SIMPLEPLOTS_H 
 #define SIMPLEPLOTS_H 1
 
@@ -35,6 +35,7 @@ protected:
 
 private:
   IPlotTool* m_plots;
+  std::string m_plotTool;
   
 };
 #endif // SIMPLEPLOTS_H

@@ -1,4 +1,4 @@
-// $Id: SimplePlotTool.h,v 1.1 2005-01-06 10:37:47 pkoppenb Exp $
+// $Id: SimplePlotTool.h,v 1.2 2005-01-10 09:57:17 pkoppenb Exp $
 #ifndef SIMPLEPLOTTOOL_H 
 #define SIMPLEPLOTTOOL_H 1
 
@@ -42,6 +42,10 @@ public:
 protected:
 
 private:
+
+  StatusCode firstInitialize(); ///< Initialize everything
+  StatusCode reInitialize(); ///< Re-Initialize whatever can be
+
   // histo definition container
   class MyHisto{
   public:
@@ -73,8 +77,13 @@ private:
   /// Accessor for ParticlePropertySvc
   IParticlePropertySvc* m_ppSvc ;
   /// IP tool
-  IGeomDispCalculator* m_ipTool;
+  IGeomDispCalculator* m_geomTool;
   /// PV tool
-  IPVLocator* m_pv;
+  IPVLocator* m_pvLocator;
+
+  /// Initialisation flag
+  bool m_isInitialised;
+  
+  
 };
 #endif // SIMPLEPLOTTOOL_H

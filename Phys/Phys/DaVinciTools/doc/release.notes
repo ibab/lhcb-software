@@ -1,6 +1,19 @@
-! $Id: release.notes,v 1.143 2005-01-06 10:37:47 pkoppenb Exp $
+! $Id: release.notes,v 1.144 2005-01-10 09:57:17 pkoppenb Exp $
 ! Package     : DaVinciTools
 ! Responsible : P. Koppenburg
+
+! 2005-01-10 - P. Koppenburg
+  - src/RecursivePlotTool.{cpp,h}
+    . IPlotTool that calls SimplePlotTool for all particles in vector and 
+      all decendents recursively
+  - src/SimplePlotTool.{cpp,h}
+    . Foresee re-initialization to allow RecursivePlotTool to change
+      the SimplePlotTool properties.
+  - src/SimplePlots.{cpp,h}
+    . Add option ("PlotTool", m_plotTool = "SimplePlotTool/Plots") that allows
+      to change the IPlotTool used.    
+  - src/DaVinciTools_load.cpp
+    . New tool RecursivePlotTool
 
 ! 2005-01-06 - P. Koppenburg
   - src/*.*
@@ -14,7 +27,6 @@
       HLTB2HHPlots.Plots.Variables = { "M", "Chi2", "Pt" } ;
   - src/SimplePlots.cpp
     . Moved from HltSelChecher package. Applied SimplePlotTool to InputLocation.
-    
     
 !========================== DaVinciTools v11r3 2004-12-01 ===================
 ! 2004-11-18 - P. Koppenburg

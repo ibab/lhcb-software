@@ -1,4 +1,4 @@
-// $Id: SimplePlotTool.cpp,v 1.1 2005-01-06 10:37:47 pkoppenb Exp $
+// $Id: SimplePlotTool.cpp,v 1.2 2005-01-10 09:57:17 pkoppenb Exp $
 // Include files 
 #include "gsl/gsl_math.h"
 // from Gaudi
@@ -32,6 +32,9 @@ SimplePlotTool::SimplePlotTool( const std::string& type,
   , m_histos()
   , m_allDefault(true)
   , m_ppSvc(0)
+  , m_geomTool(0)
+  , m_pvLocator(0)
+  , m_isInitialised(false)
 {
   declareInterface<IPlotTool>(this);
 
@@ -45,18 +48,48 @@ SimplePlotTool::SimplePlotTool( const std::string& type,
 SimplePlotTool::~SimplePlotTool() {}; 
 
 //=============================================================================
-// Initilisation
+// Initialisation
 //=============================================================================
 StatusCode SimplePlotTool::initialize () {
+  if (!m_isInitialised){
+    StatusCode sc = firstInitialize(); // major unique initialization
+    if (!sc) return sc;
+  }
+  return reInitialize(); //  re-initialization in case options are overwritten
+}
+//=============================================================================
+// Initialize everything
+//=============================================================================
+StatusCode SimplePlotTool::firstInitialize () {
+
   StatusCode sc = GaudiHistoTool::initialize();
   if (!sc) return sc;
-  
+
   m_ppSvc = svc<IParticlePropertySvc>("ParticlePropertySvc", true);
   if( !m_ppSvc ) {
-    err() << "    Unable to locate Particle Property Service" << endreq;
+    err() << "Unable to locate Particle Property Service" << endreq;
     return StatusCode::FAILURE;
-  }                                              
+  }          
 
+  m_geomTool = tool<IGeomDispCalculator>("GeomDispCalculator",this);
+  if( !m_geomTool ) {
+    err() << "Unable to get GeomDispCalculator" << endreq;
+    return StatusCode::FAILURE;
+  }          
+
+  m_pvLocator = tool<IPVLocator>("PVLocator");
+  if( !m_pvLocator ) {
+    err() << "Unable to get PVLocator" << endreq;
+    return StatusCode::FAILURE;
+  }          
+  m_isInitialised = true ; // don't re-do this
+  return StatusCode::SUCCESS;
+}
+//=============================================================================
+// Re-Initialize whatever can be
+//=============================================================================
+StatusCode SimplePlotTool::reInitialize () {
+  
   if ( m_minima.empty() && m_maxima.empty() ){
     m_allDefault = true ;
   } else {
@@ -69,7 +102,13 @@ StatusCode SimplePlotTool::initialize () {
       return StatusCode::FAILURE ;
     } 
   }
-
+  if (!m_histos.empty()){ // do not re-initialise if already done 
+    err() << "Variables have already been overwritten by another tool/algorithm" 
+          << endreq;
+    return StatusCode::FAILURE;
+  }
+  // clear and fill histograms
+  m_histos.clear();
   for ( unsigned int i = 0; i < m_variables.size(); ++i ) {
     MyHisto H;
     bool ok ;
@@ -83,6 +122,8 @@ StatusCode SimplePlotTool::initialize () {
     info() << "Histogram with variable " << H.getVar() << " with boundaries" 
            << H.getMin() << " " << H.getMax() << endreq ;
   }
+  info() << "Done initialization for " <<  m_variables.size() 
+         << " variables" << endmsg ;
 
   return StatusCode::SUCCESS;  
 };
@@ -109,10 +150,11 @@ StatusCode SimplePlotTool::fillPlots(const ParticleVector& PV) {
 //=============================================================================
 StatusCode SimplePlotTool::fillPlots(const Particle* p) {
 
+  debug() << "Filling plots for " << p->particleID().pid() << endmsg;
   for ( std::vector<MyHisto>::iterator H = m_histos.begin() ; 
         H != m_histos.end() ; ++H ){
-      StatusCode sc = doPlot(p,(*H));
-      if (!sc) return sc ;
+    StatusCode sc = doPlot(p,(*H));
+    if (!sc) return sc ;
   }
   return StatusCode::SUCCESS;
 }; 
@@ -123,27 +165,58 @@ StatusCode SimplePlotTool::fillPlots(const Particle* p) {
 StatusCode SimplePlotTool::doPlot(const Particle* P, MyHisto& H) {
   std::string var = H.getVar();
   ParticleProperty *pp = m_ppSvc->findByPythiaID(abs(P->particleID().pid()));
+  std::string name = "Unknown";
+  if (pp) name = pp->particle();
+  double hmin = H.getMin();
+  double hmax = H.getMax();
+
+  debug() << "Filling plot for " << var << " of " << name << endmsg;
+
   if ( var == "M" ){
-    if ( H.getMin() < 0 ){
+    if ( hmin < 0 ){
       double mn = pp->mass() - gsl_max(pp->mass()/50.,pp->maxWidth()); // at least 2%
       double mx = pp->mass() + gsl_max(pp->mass()/50.,pp->maxWidth());
-      plot(P->mass(),"Mass of "+pp->particle(),mn,mx );
+      plot(P->mass(),"Mass of "+name,mn,mx );
     } else {
-      plot(P->mass(),"Mass of "+pp->particle(),H.getMin(),H.getMax() );
+      plot(P->mass(),"Mass of "+name,hmin,hmax );
     }
   } else if ( var == "P" ){
-    plot(P->p(),"Momentum of "+pp->particle(),H.getMin(),H.getMax());
+    plot(P->p(),"Momentum of "+name,hmin,hmax);
   } else if ( var == "Pt" ){
-    plot(P->pt(),"Pt of "+pp->particle(),H.getMin(),H.getMax());
+    plot(P->pt(),"Pt of "+name,hmin,hmax);
   } else if ( var == "Chi2" ){
-    if (P->endVertex()){
-      plot(P->endVertex()->chi2(),"Chi2 of "+pp->particle(),H.getMin(),H.getMax());
+    if (P->endVertex()) plot(P->endVertex()->chi2(),"Chi2 of "+name,hmin,hmax);
+  } else if ( var == "IP" || var == "IPs" || var == "DPV" || var == "FS"){
+    std::string PVContainer = m_pvLocator->getPVLocation() ;
+    verbose() << "Getting PV from " << PVContainer << endreq ;
+    Vertices* PV = get<Vertices>(PVContainer);
+    if ( !PV ) {
+      err() << "Could not find primary vertex location " 
+            << PVContainer << endreq;
+      return false ;
     }
-  } else if ( var == "IP" || var == "IPs"){
-    if ( var == "IP" ){
-      
-    } else if ( var == "IPs" ){
-      
+    for (VertexVector::const_iterator iv=PV->begin();iv!=PV->end();++iv) {
+      if ( var == "IP" || var == "IPs" ){      
+        double ip = -1 ,ipe = -1.;
+        StatusCode sc = m_geomTool->calcImpactPar(*P, *(*iv), ip, ipe);
+        if (!sc) continue;
+        if ( var == "IP" ){
+          plot(ip,"IP of "+name,hmin,hmax);
+        } else if ( var == "IPs" ){
+          if (ipe>0) plot(ip/ipe,"IP/err of "+name,hmin,hmax);       
+        }
+      } else {
+        double f = -1. , fe = -1.;
+        if (P->endVertex()) {
+          StatusCode sc = m_geomTool->calcVertexDis(*(*iv), (*P->endVertex()), f, fe);
+          if (!sc) return  StatusCode::SUCCESS;
+          if ( var == "DPV" ){
+            plot(f,"PV distance of "+name,hmin,hmax);
+          } else if ( var == "FS" ){
+            if (fe>0) plot(f/fe,"Flight signif. of "+name,hmin,hmax);       
+          }
+        }
+      }
     }
   } else {
     err() << "Unknown variable " << var << endreq ;
@@ -168,12 +241,18 @@ bool SimplePlotTool::MyHisto::setHisto(const std::string& var ){
   } else if ( var == "Chi2" ){
     m_min = 0. ;
     m_max = 100. ;
-    //  } else if ( var == "IP" ){
-    //    m_min = 0. ;
-    //    m_max = 1. ;
-    //  } else if ( var == "IPs" ){
-    //    m_min = 0. ;
-    //    m_max = 10. ;
+  } else if ( var == "IP" ){
+    m_min = 0. ;
+    m_max = 1. ;
+  } else if ( var == "IPs" ){
+    m_min = 0. ;
+    m_max = 10. ;
+  } else if ( var == "DPV" ){
+    m_min = 0. ;
+    m_max = 1. ;
+  } else if ( var == "FS" ){
+    m_min = 0. ;
+    m_max = 10. ;
   } else {
     return false;
   }

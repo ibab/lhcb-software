@@ -1,4 +1,4 @@
-// $Id: SimplePlots.cpp,v 1.1 2005-01-06 10:37:47 pkoppenb Exp $
+// $Id: SimplePlots.cpp,v 1.2 2005-01-10 09:57:17 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
@@ -26,6 +26,7 @@ SimplePlots::SimplePlots( const std::string& name,
   : DVAlgorithm ( name , pSvcLocator )
     , m_plots(0)
 {
+  declareProperty( "PlotTool", m_plotTool = "SimplePlotTool/Plots"  );
 }
 //=============================================================================
 // Destructor
@@ -38,9 +39,9 @@ SimplePlots::~SimplePlots() {};
 StatusCode SimplePlots::initialize() {
 
   debug() << "==> Initialize" << endmsg;
-  m_plots = tool<IPlotTool>("SimplePlotTool","Plots",this);
+  m_plots = tool<IPlotTool>(m_plotTool,this);
   if (!m_plots) {
-    err() << "Unable to retrieve SimplePlotTool" << endmsg;
+    err() << "Unable to retrieve Plot Tool " << m_plotTool << endmsg;
     return StatusCode::FAILURE;
   }
   m_plots->setPath(name());
