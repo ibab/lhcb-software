@@ -35,7 +35,7 @@
 */
 L0Muon::L0BufferUnit::L0BufferUnit(int & type){
    
-  m_type = type; // 0 for standard; 1 for PLL
+  m_bufferType = type; // 0 for standard; 1 for PLL
 
   m_l0bufferFile = NULL;
   m_l0EventNumber=0;
@@ -69,7 +69,7 @@ L0Muon::L0BufferUnit::~L0BufferUnit(){
 */
 void L0Muon::L0BufferUnit::setL0buf(){
 
-  if (m_type == 0) {
+  if (m_bufferType == 0) {
     setL0bufStd();
   } else {
     setOLPLL();
@@ -386,7 +386,7 @@ void L0Muon::L0BufferUnit::setOLPLL(){
 */
 void L0Muon::L0BufferUnit::execute(){
   
-  if (m_debug) std::cout << "L0BufferUnit::execute" << std::endl;
+  if (m_debug) std::cout << "L0BufferUnit::execute type is "<<m_bufferType << std::endl;
 
   setL0buf();
 

@@ -48,9 +48,6 @@ namespace L0Muon {
   
     /// Return y foi in station sta
     int yHardFoi(int sta);
-
-    /// Return the type of the buffer 
-    int type(int type){return m_type;}
     
     /// Fill the bits of the output register
     void setL0buf();
@@ -81,7 +78,7 @@ namespace L0Muon {
     MuonTileID m_pu;
     
     /// Type of the Unit : "standard" or PLL type.
-    int m_type;
+    int m_bufferType;
 
     /// Pointer to the file where to write the L0Buffer
     FILE *m_l0bufferFile;
