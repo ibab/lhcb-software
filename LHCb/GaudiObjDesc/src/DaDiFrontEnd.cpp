@@ -1,4 +1,4 @@
-// $Id: DaDiFrontEnd.cpp,v 1.20 2002-01-30 20:29:05 mato Exp $
+// $Id: DaDiFrontEnd.cpp,v 1.21 2002-01-31 15:13:55 mato Exp $
 
 #include "GaudiKernel/Kernel.h"
 
@@ -210,6 +210,131 @@ void parseLocation(DOM_Node node,
 
 }
 
+//-----------------------------------------------------------------------------
+void parseArg(DOM_Node node,
+              DaDiMethArgument* gddArg)
+//-----------------------------------------------------------------------------
+{
+  DOMString argType = node.getAttributes().
+    getNamedItem(DOMString::transcode("type")).getNodeValue();
+        
+  if (isPointer(argType))
+  {
+    gddArg->setIsPointer(true);
+    gddArg->setType(argType.substringData(0,argType.length()-1));      
+  }
+  else
+  {
+    gddArg->setIsPointer(false);
+    gddArg->setType(argType);
+  }
+                
+  if (!node.getAttributes().getNamedItem(DOMString::transcode("name")).isNull())
+  {
+    gddArg->setName(node.getAttributes().
+      getNamedItem(DOMString::transcode("name")).getNodeValue());
+  }
+  else
+  {
+    gddArg->setName(0);
+  }
+
+  if (node.getAttributes().getNamedItem(DOMString::transcode("const")).
+      getNodeValue().equals("TRUE"))
+  {
+    gddArg->setConst_(true);
+  }
+  else
+  {
+    gddArg->setConst_(false);
+  }
+
+  gddArg->setInout(node.getAttributes().
+    getNamedItem(DOMString::transcode("inout")).getNodeValue());
+}
+
+
+//-----------------------------------------------------------------------------
+template <class T> void parseArgList(DOM_Node node,
+                                     T* gddElement,
+                                     std::string methName)
+//-----------------------------------------------------------------------------
+{
+  std::vector<DOMString> argList, argInOut;
+  if (!node.getAttributes().
+      getNamedItem(DOMString::transcode("argList")).isNull())
+  {
+    argList = findWords(node.getAttributes().
+      getNamedItem(DOMString::transcode("argList")).
+      getNodeValue(), ",");
+
+    for (std::vector<DOMString>::iterator iterL = argList.begin();
+         iterL != argList.end(); ++iterL)     
+    {
+      DOMString argType = "", argEType = "";
+      std::vector<DOMString> argWords = findWords(*iterL," ");
+
+      if (argWords.size() < 2)
+      {
+        std::cerr << argV0 
+          << ": Error in 'argList'-description of method "
+          << methName << " (Class: " 
+          << gddClass->className().transcode()
+          << "), you have to provide at least a type-name-pair" 
+          << std::endl;
+        exit(1);
+      }
+
+      DaDiMethArgument* gddArg = new DaDiMethArgument();
+      gddElement->pushDaDiMethArgument(gddArg);
+
+      gddArg->setName(argWords[argWords.size()-1]);
+      argWords.pop_back();
+
+      argType = argWords[argWords.size()-1];
+      argWords.pop_back();  
+
+      if (isPointer(argType))
+      {
+        argType.deleteData(argType.length()-1,1);
+        gddArg->setIsPointer(true);
+      }
+      else
+      {
+        gddArg->setIsPointer(false);
+      }
+			  
+      gddArg->setConst_(false);
+      for (std::vector<DOMString>::iterator iterW = argWords.begin();
+           iterW != argWords.end(); ++iterW)
+      {
+        if (iterW->equals("const"))
+        {
+          gddArg->setConst_(true);
+        }
+        else
+        {
+          argEType += *iterW;
+          argEType += " ";
+        }
+      }
+      argEType += argType;
+      gddArg->setType(argEType);
+
+
+      if (!DaDiTools::isSimple(argType.transcode()))
+			{
+			  gddArg->setConst_(true);
+			}
+//
+// handling of Input/Output arguments here !!!!
+//
+      gddArg->setInout("INPUT");
+
+    }
+  }
+}
+
 
 //-----------------------------------------------------------------------------
 void parseMethod(DOM_Node node,
@@ -221,17 +346,9 @@ void parseMethod(DOM_Node node,
     getNamedItem(DOMString::transcode("name")).
     getNodeValue());
           
-  if (!node.getAttributes().
-      getNamedItem(DOMString::transcode("desc")).isNull())
-  {
-    gddMethod->setDesc(node.getAttributes().
-      getNamedItem(DOMString::transcode("desc")).
-      getNodeValue());
-  }
-  else
-  {
-    gddMethod->setDesc(0);
-  }
+  gddMethod->setDesc(node.getAttributes().
+    getNamedItem(DOMString::transcode("desc")).
+    getNodeValue());
             
   gddMethod->setAccess(node.getAttributes().
     getNamedItem(DOMString::transcode("access")).
@@ -314,82 +431,8 @@ void parseMethod(DOM_Node node,
     gddMethReturn->setType(0);
   }
 
-  //
-  // Handling of argList and argInOut
-  //
-  std::vector<DOMString> argList, argInOut;
-  if (!node.getAttributes().
-      getNamedItem(DOMString::transcode("argList")).isNull())
-  {
-    argList = findWords(node.getAttributes().
-      getNamedItem(DOMString::transcode("argList")).
-      getNodeValue(), ",");
 
-    for (std::vector<DOMString>::iterator iterL = argList.begin();
-         iterL != argList.end(); ++iterL)     
-    {
-      DOMString argType = "", argEType = "";
-      std::vector<DOMString> argWords = findWords(*iterL," ");
-
-      if (argWords.size() < 2)
-      {
-        std::cerr << argV0 
-          << ": Error in 'argList'-description of method "
-          << gddMethod->name().transcode() << " (Class: " 
-          << gddClass->className().transcode()
-          << "), you have to provide at least a type-name-pair" 
-          << std::endl;
-        exit(1);
-      }
-
-      DaDiMethArgument* gddMethArgument = new DaDiMethArgument();
-      gddMethod->pushDaDiMethArgument(gddMethArgument);
-
-      gddMethArgument->setName(argWords[argWords.size()-1]);
-      argWords.pop_back();
-
-      argType = argWords[argWords.size()-1];
-      argWords.pop_back();  
-
-      if (isPointer(argType))
-      {
-        argType.deleteData(argType.length()-1,1);
-        gddMethArgument->setIsPointer(true);
-      }
-      else
-      {
-        gddMethArgument->setIsPointer(false);
-      }
-			  
-      gddMethArgument->setConst_(false);
-      for (std::vector<DOMString>::iterator iterW = argWords.begin();
-           iterW != argWords.end(); ++iterW)
-      {
-        if (iterW->equals("const"))
-        {
-          gddMethArgument->setConst_(true);
-        }
-        else
-        {
-          argEType += *iterW;
-          argEType += " ";
-        }
-      }
-      argEType += argType;
-      gddMethArgument->setType(argEType);
-
-
-      if (!DaDiTools::isSimple(argType.transcode()))
-			{
-			  gddMethArgument->setConst_(true);
-			}
-//
-// handling of Input/Output arguments here !!!!
-//
-      gddMethArgument->setInout("INPUT");
-
-    }
-  }
+  parseArgList(node, gddMethod, gddMethod->name().transcode());
 
   //
   // Child Elements of Method
@@ -432,50 +475,11 @@ void parseMethod(DOM_Node node,
         getNodeValue());
       }
       if(met_child.getNodeName().equals("arg"))
-      {
+      {        
         DaDiMethArgument* gddMethArgument = new DaDiMethArgument();
         gddMethod->pushDaDiMethArgument(gddMethArgument);
-        DOMString argType = met_child.getAttributes().
-          getNamedItem(DOMString::transcode("type")).
-          getNodeValue();
-        if (isPointer(argType))
-        {
-          gddMethArgument->setIsPointer(true);
-          gddMethArgument->setType(argType.
-            substringData(0,argType.length()-1));
-        }
-        else
-        {
-          gddMethArgument->setIsPointer(false);
-          gddMethArgument->setType(argType);
-        }
-                
-        if (!met_child.getAttributes().
-            getNamedItem(DOMString::transcode("name")).isNull())
-        {
-          gddMethArgument->setName(met_child.getAttributes().
-            getNamedItem(DOMString::transcode("name")).
-            getNodeValue());
-        }
-        else
-        {
-          gddMethArgument->setName(0);
-        }
+        parseArg(met_child, gddMethArgument);
 
-        if (met_child.getAttributes().
-            getNamedItem(DOMString::transcode("const")).
-            getNodeValue().equals("TRUE"))
-        {
-          gddMethArgument->setConst_(true);
-        }
-        else
-        {
-          gddMethArgument->setConst_(false);
-        }
-
-        gddMethArgument->setInout(met_child.getAttributes().
-          getNamedItem(DOMString::transcode("inout")).
-          getNodeValue());
       }    
     }
     default:
@@ -492,17 +496,9 @@ void parseConstructor(DOM_Node node,
                       DaDiConstructor *gddConstructor)
 //-----------------------------------------------------------------------------
 {
-  if (!node.getAttributes().
-      getNamedItem(DOMString::transcode("desc")).isNull())
-  {
-    gddConstructor->setDesc(node.getAttributes().
-      getNamedItem(DOMString::transcode("desc")).
-      getNodeValue());
-  }
-  else
-  {
-    gddConstructor->setDesc(0);
-  }
+  gddConstructor->setDesc(node.getAttributes().
+    getNamedItem(DOMString::transcode("desc")).
+    getNodeValue());
 
   if (!node.getAttributes().
       getNamedItem(DOMString::transcode("initList")).isNull())
@@ -514,87 +510,11 @@ void parseConstructor(DOM_Node node,
   }
   else
   {
-    gddConstructor->setDesc(0);
+    gddConstructor->setInitList(0);
   }
+
+  parseArgList(node, gddConstructor, "Constructor");
   
-  //
-  // Handling of argList and argInOut
-  //
-  std::vector<DOMString> argList, argInOut;
-  if (!node.getAttributes().
-      getNamedItem(DOMString::transcode("argList")).isNull())
-  {
-    argList = findWords(node.getAttributes().
-      getNamedItem(DOMString::transcode("argList")).
-      getNodeValue(), ",");
-
-    for (std::vector<DOMString>::iterator iterL = argList.begin();
-         iterL != argList.end(); ++iterL)     
-    {
-      DOMString argType = "", argEType = "";
-      std::vector<DOMString> argWords = findWords(*iterL," ");
-
-      if (argWords.size() < 2)
-      {
-        std::cerr << argV0 
-          << ": Error in 'argList'-description of constructor in Class "
-          << gddClass->className().transcode()
-          << ", you have to provide at least a type-name-pair" 
-          << std::endl;
-        exit(1);
-      }
-
-      DaDiMethArgument* gddMethArgument = new DaDiMethArgument();
-      gddConstructor->pushDaDiMethArgument(gddMethArgument);
-
-      gddMethArgument->setName(argWords[argWords.size()-1]);
-      argWords.pop_back();
-
-      argType = argWords[argWords.size()-1];       
-      argWords.pop_back();  
-
-      if (isPointer(argType))
-      {
-        argType.deleteData(argType.length()-1,1);
-        gddMethArgument->setIsPointer(true);
-      }
-      else
-      {
-        gddMethArgument->setIsPointer(false);
-      }
-      
-      gddMethArgument->setConst_(false);
-      for (std::vector<DOMString>::iterator iterW = argWords.begin();
-           iterW != argWords.end(); ++iterW)       
-      {
-        if (iterW->equals("const"))
-        {
-          gddMethArgument->setConst_(true);
-        }
-        else
-        {
-          argEType += *iterW;
-          argEType += " ";
-        }
-      }
-      argEType += argType;
-      gddMethArgument->setType(argEType);
-
-      if (!DaDiTools::isSimple(argEType.transcode()))
-			{
-			  gddMethArgument->setConst_(true);
-			}
-
-//
-// handling of Input/Output arguments here !!!!
-//
-
-      gddMethArgument->setInout("INPUT");
-
-    }  
-  }
-
-
   //
   // Child Elements of Constructor
   //
@@ -618,35 +538,7 @@ void parseConstructor(DOM_Node node,
       {
         DaDiMethArgument* gddMethArgument = new DaDiMethArgument();
         gddConstructor->pushDaDiMethArgument(gddMethArgument);
-        gddMethArgument->setType(met_child.getAttributes().
-          getNamedItem(DOMString::transcode("type")).
-          getNodeValue());
-        if (!met_child.getAttributes().
-            getNamedItem(DOMString::transcode("name")).isNull())
-        {
-          gddMethArgument->setName(met_child.getAttributes().
-            getNamedItem(DOMString::transcode("name")).
-            getNodeValue());
-        }
-        else
-        {
-          gddMethArgument->setName(0);
-        }
-
-        if (met_child.getAttributes().
-            getNamedItem(DOMString::transcode("const")).
-            getNodeValue().equals("TRUE"))
-        {
-          gddMethArgument->setConst_(true);
-        }
-        else
-        {
-          gddMethArgument->setConst_(false);
-        }
-
-        gddMethArgument->setInout(met_child.getAttributes().
-          getNamedItem(DOMString::transcode("inout")).
-          getNodeValue());
+        parseArg(met_child, gddMethArgument);
       }
     }
     default:
@@ -663,7 +555,6 @@ void parseDestructor(DOM_Node node,
                      DaDiDestructor* gddDestructor)
 //-----------------------------------------------------------------------------
 {
-
   if (!node.getAttributes().
       getNamedItem(DOMString::transcode("desc")).isNull())
   {
@@ -675,77 +566,8 @@ void parseDestructor(DOM_Node node,
   {
     gddDestructor->setDesc(0);
   }
-          
-  //
-  // Handling of argList and argInOut
-  //
-  std::vector<DOMString> argList, argInOut;
-  if (!node.getAttributes().
-      getNamedItem(DOMString::transcode("argList")).isNull())
-  {
-    argList = findWords(node.getAttributes().
-      getNamedItem(DOMString::transcode("argList")).
-      getNodeValue(), ",");
 
-    for (std::vector<DOMString>::iterator iterL = argList.begin();
-         iterL != argList.end(); ++iterL)     
-    {
-      DOMString argType = "", argEType = "";
-      std::vector<DOMString> argWords = findWords(*iterL," ");
-      if (argWords.size() < 2)
-      {
-        std::cerr << argV0 
-          << ": Error in 'argList'-description of destructor in Class "
-          << gddClass->className().transcode()
-          << ", you have to provide at least a type-name-pair" 
-          << std::endl;
-        exit(1);
-      }
-
-      DaDiMethArgument* gddMethArgument = new DaDiMethArgument();
-      gddDestructor->pushDaDiMethArgument(gddMethArgument);
-
-      gddMethArgument->setName(argWords[argWords.size()-1]);
-        argWords.pop_back();
-
-      argType = argWords[argWords.size()-1];
-      argWords.pop_back();  
-
-      if (isPointer(argType))
-      {
-        argType.deleteData(argType.length()-1,1);
-        gddMethArgument->setIsPointer(true);
-      }
-      else
-      {
-        gddMethArgument->setIsPointer(false);
-      }
-             
-      for (std::vector<DOMString>::iterator iterW = argWords.begin();
-           iterW != argWords.end(); ++iterW)
-      {
-        if (iterW->equals("const"))
-        {
-          gddMethArgument->setConst_(true);
-        }
-        else
-        {
-          argEType += *iterW;
-          argEType += " ";
-        }
-      }
-      argEType += argType;
-      gddMethArgument->setType(argEType);
-
-//
-// handling of Input/Output arguments here !!!!
-//
-
-      gddMethArgument->setInout("INPUT");
-
-    }
-  }
-
+  parseArgList(node, gddDestructor, "Destructor"); 
 
   //
   // Child Elements of Destructor
@@ -770,35 +592,7 @@ void parseDestructor(DOM_Node node,
       {
         DaDiMethArgument* gddMethArgument = new DaDiMethArgument();
         gddDestructor->pushDaDiMethArgument(gddMethArgument);
-        gddMethArgument->setType(met_child.getAttributes().
-          getNamedItem(DOMString::transcode("type")).
-          getNodeValue());
-        if (!met_child.getAttributes().
-            getNamedItem(DOMString::transcode("name")).isNull())
-        {
-          gddMethArgument->setName(met_child.getAttributes().
-            getNamedItem(DOMString::transcode("name")).
-            getNodeValue());
-        }
-        else
-        {
-          gddMethArgument->setName(0);
-        }
-
-        if (met_child.getAttributes().
-            getNamedItem(DOMString::transcode("const")).
-            getNodeValue().equals("TRUE"))
-        {
-          gddMethArgument->setConst_(true);
-        }
-        else
-        {
-          gddMethArgument->setConst_(false);
-        }
-
-        gddMethArgument->setInout(met_child.getAttributes().
-          getNamedItem(DOMString::transcode("inout")).
-          getNodeValue());
+        parseArg(met_child, gddMethArgument);
       }
     }
     default:

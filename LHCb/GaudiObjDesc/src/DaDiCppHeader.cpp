@@ -1,4 +1,4 @@
-// $Id: DaDiCppHeader.cpp,v 1.34 2002-01-31 09:15:43 mato Exp $
+// $Id: DaDiCppHeader.cpp,v 1.35 2002-01-31 15:13:56 mato Exp $
 
 #include "GaudiKernel/Kernel.h"
 
@@ -101,13 +101,75 @@ void version(std::string argV0)
 std::string argV0;
 
 
+
+//-----------------------------------------------------------------------------
+template <class T> void printArguments(std::ofstream& xmlOut,
+                                       T* gdd)
+//-----------------------------------------------------------------------------
+{
+  int j;
+  for(j=0; j<gdd->sizeDaDiMethArgument(); j++)
+  {
+    DaDiMethArgument* gddArg = gdd->popDaDiMethArgument();
+    if (j>0)
+    {
+      xmlOut << ", ";
+    }
+    if (!DaDiTools::isSimple(gddArg->type().transcode()) && gddArg->const_())
+    {
+      xmlOut << "const ";
+    }
+	  else if (gddArg->const_())
+    {
+      xmlOut << "const ";
+    }
+    xmlOut << gddArg->type().transcode();
+    if (gddArg->isPointer()) 
+    {
+      xmlOut << "*";
+    }
+    if (gddArg->inout().equals("BOTH") ||
+        !DaDiTools::isSimple(gddArg->type().transcode()) )
+    {
+      xmlOut << "&";
+    }
+
+    if (gddArg->name() != NULL)
+    {
+      xmlOut << " " << gddArg->name().transcode();
+    }
+    else
+    {
+      xmlOut << " value" << j;
+    }
+  }
+
+ /*       if (gddMethArgument->const_() ||
+          (!DaDiTools::isSimple(gddMethArgument->type().transcode()) &&
+			 gddMethArgument->const_()) ) */
+      
+      
+      
+      
+
+    
+    
+
+    
+    
+
+
+
+}
+
+
 //-----------------------------------------------------------------------------
 void printMethodDecl(std::ofstream& xmlOut,
                      DaDiClass* gddClass, 
                      char* accessor)
 //-----------------------------------------------------------------------------
 {
-  int i,j;
+  int i;
   for(i=0; i < gddClass->sizeDaDiMethod(); i++)
   {
     DaDiMethod* gddMethod = gddClass->popDaDiMethod();
@@ -135,41 +197,8 @@ void printMethodDecl(std::ofstream& xmlOut,
     xmlOut << gddMethod->daDiMethReturn()->type().transcode() << " " 
       << gddMethod->name().transcode() << "(";
     
-    for(j=0; j<gddMethod->sizeDaDiMethArgument(); j++)
-    {
-      DaDiMethArgument* gddMethArgument = gddMethod->popDaDiMethArgument();
-      if (j>0)
-      {
-        xmlOut << ", ";
-      }
-      if (!DaDiTools::isSimple(gddMethArgument->type().transcode()) && gddMethArgument->const_())
-      {
-        xmlOut << "const ";
-      }
-	  else if (gddMethArgument->const_())
-	  {
-		xmlOut << "const ";
-	  }
-      xmlOut << gddMethArgument->type().transcode();
-      if (gddMethArgument->isPointer()) 
-      {
-        xmlOut << "*";
-      }
-      if ( gddMethArgument->inout().equals("BOTH") ||
-        !DaDiTools::isSimple(gddMethArgument->type().transcode()) )
-      {
-        xmlOut << "&";
-      }
-
-      if (gddMethArgument->name() != NULL)
-      {
-        xmlOut << " " << gddMethArgument->name().transcode();
-      }
-      else
-      {
-        xmlOut << " value" << j;
-      }
-    }
+    printArguments(xmlOut, gddMethod);    
+    
     xmlOut << ")";
     if (gddMethod->const_())
     {
@@ -193,13 +222,14 @@ void printMethodDecl(std::ofstream& xmlOut,
 }
 
 
+
 //-----------------------------------------------------------------------------
 void printMethodImpl(std::ofstream& xmlOut,
                      DaDiClass* gddClass,
                      char* accessor)
 //-----------------------------------------------------------------------------
 {
-  int i,j;
+  int i;
   for(i=0; i<gddClass->sizeDaDiMethod(); i++)
   {
     DaDiMethod* gddMethod = gddClass->popDaDiMethod();
@@ -223,39 +253,9 @@ void printMethodImpl(std::ofstream& xmlOut,
       xmlOut << gddMethod->daDiMethReturn()->type().transcode() << " " 
         << gddClass->className().transcode() << "::" 
         << gddMethod->name().transcode() << "(";
-      for(j=0; j<gddMethod->sizeDaDiMethArgument(); j++)
-      {
-        DaDiMethArgument* gddMethArgument = gddMethod->popDaDiMethArgument();
-        if (j>0)
-        {
-          xmlOut << ", ";
-        }
-        if (gddMethArgument->const_() ||
-          (!DaDiTools::isSimple(gddMethArgument->type().transcode()) &&
-			 gddMethArgument->const_()) )
-        {
-          xmlOut << "const ";
-        }
-        xmlOut << gddMethArgument->type().transcode();
-        if (gddMethArgument->isPointer()) 
-        {
-          xmlOut << "*";
-        }
-        if ( gddMethArgument->inout().equals("BOTH") ||
-          !DaDiTools::isSimple(gddMethArgument->type().transcode()) )
-        {
-          xmlOut << "&";
-        }
 
-        if(gddMethArgument->name() != NULL)
-        {
-          xmlOut << " " << gddMethArgument->name().transcode();
-        }
-        else
-        {
-          xmlOut << " value" << j;
-        }
-      }
+      printArguments(xmlOut, gddMethod);
+            
       xmlOut << ")";
       if (gddMethod->const_())
       {
@@ -737,7 +737,7 @@ void printClass(std::ofstream& xmlOut,
 //-----------------------------------------------------------------------------
 {
   time_t ltime;
-  int i,j;
+  int i;
   bool isEventClass = false, classTemplate = false, classTemplateVector = false,
     classTemplateList = false;
   std::vector<std::string>::iterator coIter, koIter;
@@ -922,32 +922,9 @@ void printClass(std::ofstream& xmlOut,
     xmlOut << "  " << gddClass->className().transcode() << "(";
 
     if (gddConstructor->sizeDaDiMethArgument() == 0) {constWithZeroArgs = true;}
-    for(j=0; j<gddConstructor->sizeDaDiMethArgument(); ++j)
-    {
-      DaDiMethArgument* gddMethArgument = gddConstructor->popDaDiMethArgument();
 
-      if(j!=0)
-      {
-        xmlOut << ", ";
-      }
-      if (gddMethArgument->const_())
-      {
-        xmlOut << "const ";
-      }
-      xmlOut << gddMethArgument->type().transcode();
-      if (gddMethArgument->isPointer())
-      {
-        xmlOut << "*";
-      }
-      if (gddMethArgument->name() != NULL)
-      {
-        xmlOut << " " << gddMethArgument->name().transcode();
-      }
-      else 
-      {
-        xmlOut << " value" << j;
-      }
-    }
+    printArguments(xmlOut, gddConstructor);
+    
     xmlOut << ")";
 
     if (gddConstructor->code() != NULL)
@@ -1038,32 +1015,9 @@ void printClass(std::ofstream& xmlOut,
         xmlOut << "  /// " << gddDestructor->desc().transcode() << std::endl;
       }
       xmlOut << "  ~" << gddClass->className().transcode() << "(";
-      for(j=0; j<gddDestructor->sizeDaDiMethArgument(); ++j)
-      {
-        DaDiMethArgument* gddMethArgument =gddDestructor->popDaDiMethArgument();
 
-        if(j!=0)
-        {
-          xmlOut << ", ";
-        }
-        if (gddMethArgument->const_())
-        {
-          xmlOut << "const ";
-        }
-        xmlOut << gddMethArgument->type().transcode();
-        if (gddMethArgument->isPointer())
-        {
-          xmlOut << "*";
-        }
-        if (gddMethArgument->name() != NULL)
-        {
-          xmlOut << " " << gddMethArgument->name().transcode();
-        }
-        else 
-        {
-          xmlOut << " value" << j;
-        }
-      }
+      printArguments(xmlOut, gddDestructor);
+
       xmlOut << ")";
       if (gddDestructor->code() != NULL)
       {
