@@ -1,8 +1,11 @@
-// $Id: CaloAlgorithm.cpp,v 1.10 2002-04-07 15:32:00 ibelyaev Exp $ 
+// $Id: CaloAlgorithm.cpp,v 1.11 2002-04-27 14:38:20 ibelyaev Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.10  2002/04/07 15:32:00  ibelyaev
+//  improve printout and bug fix
+//
 // Revision 1.9  2002/04/05 17:05:44  ibelyaev
 //  improve teh MSG::DEBUG printout for CaloTool/CaloAlgorithm classes
 //
@@ -57,6 +60,8 @@
 #include "GaudiKernel/Stat.h"
 #include "GaudiKernel/System.h"
 #include "GaudiKernel/MsgStream.h"
+// LHCbKernel
+#include "CaloKernel/CaloPrint.h"
 // CaloKernel 
 #include "CaloKernel/CaloException.h"
 #include "CaloKernel/CaloAlgorithm.h"
@@ -86,6 +91,8 @@ CaloAlgorithm::CaloAlgorithm
   , m_inputData  ( "" ) ///< no default value
   , m_outputData ( "" ) ///< no default value
   , m_detData    ( "" ) ///< no default value
+  , m_errors     () 
+  , m_warnings   () 
 {
   ///
   declareProperty  ("Input"        , m_inputData  );
@@ -111,6 +118,9 @@ StatusCode CaloAlgorithm::Error
 ( const std::string& msg , 
   const StatusCode & st  ) const 
 {
+  // increase local counter of errors  
+  m_errors[ msg ] += 1 ;
+  // increase global error counter 
   Stat stat( chronoSvc() , name()+":Error" ); 
   return Print( msg , st , MSG::ERROR ); 
 };
@@ -125,7 +135,10 @@ StatusCode CaloAlgorithm::Error
 StatusCode CaloAlgorithm::Warning   
 ( const std::string& msg , 
   const StatusCode & st  ) const 
-{
+{ 
+  // increase local counter of warnings  
+  m_warnings[ msg ] += 1 ;
+  // increase global warning counter 
   Stat stat( chronoSvc() , name()+":Warning" ); 
   return Print( msg , st , MSG::WARNING ); 
 };
@@ -307,6 +320,31 @@ StatusCode CaloAlgorithm::finalize()
   MsgStream log(msgSvc(), name());
   log << MSG::DEBUG 
       << " ==> Finalize the base class CaloAlgorithm " << endreq;
+  // format printout 
+  CaloPrint print;
+  log << MSG::INFO << " finalize(): Errors/Warnings statistics  " << endreq ; 
+  // print error counter 
+  if(  0 == m_errors.size () )
+    { log << MSG::INFO << " #ERRORS " << print( 0 ) << endreq ; }
+  for( Counter::const_iterator error = m_errors.begin() ;
+       m_errors.end() != error ; ++error )
+    {
+      log << MSG::INFO 
+          << " #ERRORS  = " << print( error->second ) 
+          << " Message='"   <<        error->first    << "'" << endreq ; 
+    }  
+  m_errors.clear();
+  // print warning counter 
+  if(  0 == m_errors.size () )
+    { log << MSG::INFO << " #WARNINGS= " << print( 0 ) << endreq ; }
+  for( Counter::const_iterator warning = m_warnings.begin() ;
+       m_warnings.end() != warning ; ++warning )
+    {
+      log << MSG::INFO 
+          << " #WARNINGS= " << print( warning->second ) 
+          << " Message='"   <<        warning->first  << "'" << endreq ; 
+    }  
+  m_warnings.clear();
   ///
   return StatusCode::SUCCESS;
 };

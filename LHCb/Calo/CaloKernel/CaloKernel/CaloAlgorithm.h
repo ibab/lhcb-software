@@ -1,8 +1,11 @@
-// $Id: CaloAlgorithm.h,v 1.12 2002-04-27 10:55:33 ibelyaev Exp $ 
+// $Id: CaloAlgorithm.h,v 1.13 2002-04-27 14:38:18 ibelyaev Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.12  2002/04/27 10:55:33  ibelyaev
+//  update in template accessors for location of 'tools'
+//
 // ============================================================================
 #ifndef CALOKERNEL_CALOALGORITHM_H 
 #define CALOKERNEL_CALOALGORITHM_H 1
@@ -10,6 +13,7 @@
 // Include files
 // from STL
 #include <string>
+#include <map>
 #include <algorithm>
 // from Gaudi
 #include "GaudiKernel/StatusCode.h"
@@ -20,6 +24,8 @@
 #include "GaudiKernel/IDataProviderSvc.h"
 #include "GaudiKernel/SmartDataPtr.h"
 #include "GaudiKernel/System.h"
+// From LHCbKernel 
+#include "Kernel/CaloMap.h"
 // From CaloKernel 
 #include "CaloKernel/CaloException.h"
 
@@ -405,7 +411,13 @@ private:
   std::string      m_outputData ;
   /// address/location/name in Transient Store of detector data  
   std::string      m_detData    ;
-
+  
+  typedef CaloMap<std::string,unsigned int> Counter;
+  /// counter of error
+  mutable Counter m_errors   ;
+  /// counter of error
+  mutable Counter m_warnings ;
+  
 };
 
 // ============================================================================
@@ -446,7 +458,8 @@ CaloAlgorithm::Assert
   return OK ? ok : Exception( msg , MSG::FATAL , sc ) ; 
 };
 
-
+// ============================================================================
+// The END 
 // ============================================================================
 #endif // CALOALGORITHM_H 
 // ============================================================================

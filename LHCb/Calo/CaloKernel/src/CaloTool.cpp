@@ -1,8 +1,11 @@
-// $Id: CaloTool.cpp,v 1.7 2002-04-07 15:32:00 ibelyaev Exp $
+// $Id: CaloTool.cpp,v 1.8 2002-04-27 14:38:20 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.7  2002/04/07 15:32:00  ibelyaev
+//  improve printout and bug fix
+//
 // Revision 1.6  2002/04/05 17:05:44  ibelyaev
 //  improve teh MSG::DEBUG printout for CaloTool/CaloAlgorithm classes
 //
@@ -33,6 +36,8 @@
 #include "GaudiKernel/Property.h"
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/Stat.h"
+// LHCbKernel
+#include "Kernel/CaloPrint.h"
 // CaloKernel
 #include "CaloKernel/CaloException.h"
 #include "CaloKernel/CaloTool.h"
@@ -68,6 +73,8 @@ CaloTool::CaloTool
   , m_detSvc    ( 0  ) 
   , m_det       ( 0  ) 
   , m_detName   ( "" )
+  , m_errors    (    )
+  , m_warnings  (    )
 {
   /// check for servce locator 
   if   ( 0 != serviceLocator() ) { m_svcLoc = serviceLocator    () ; }
@@ -103,7 +110,7 @@ StatusCode    CaloTool::initialize ()
       { return Error("Could not set own properties ",sc);} 
   }
   ///
-  { /// reset Chrono & Stat service 
+  { // reset Chrono & Stat service 
     if( 0 != chronoSvc() ) { chronoSvc()->release() ; m_chronoSvc = 0 ; }
     StatusCode sc = 
       svcLoc()->service("ChronoStatSvc" , m_chronoSvc , true );
@@ -112,7 +119,7 @@ StatusCode    CaloTool::initialize ()
     if( 0 != chronoSvc() ) { chronoSvc()->addRef() ; }
   }
   ///
-  { /// reset Tool  service 
+  { // reset Tool  service 
     if( 0 != toolSvc()   ) { toolSvc()->release() ; m_toolSvc = 0 ; }
     ///
     StatusCode sc = 
@@ -122,7 +129,7 @@ StatusCode    CaloTool::initialize ()
     if( 0 != toolSvc()   ) { toolSvc()->addRef() ; }
   }
   ///
-  { /// locate detector data svc 
+  { // locate detector data svc 
     if( 0 != detSvc()    ) { detSvc()->release() ; m_detSvc = 0 ; }
     StatusCode sc = 
       svcLoc()->service( s_detSvcName   , m_detSvc    , true );
@@ -131,13 +138,13 @@ StatusCode    CaloTool::initialize ()
     if( 0 != detSvc()   ) { detSvc()->addRef() ; }    
   }
   ///
-  { /// reset detector 
+  { // reset detector 
     if( 0 != det() ) { m_det = 0 ; }
     if( !detName().empty() && 0 == detSvc() )
       { return Error("Detector name is '"+detName()+"' ,but detSvc()==0!"); }
   }
   ///
-  { /// print ALL properties 
+  { // print ALL properties 
     typedef std::vector<Property*> Properties;
     const Properties& properties = getProperties() ;
     log << MSG::DEBUG 
@@ -180,6 +187,33 @@ StatusCode    CaloTool::finalize   ()
   if( 0 != detSvc     () ) { detSvc   ()->release() ; m_detSvc    = 0 ; }
   ///
   if( 0 != det        () ) { m_det = 0 ; }
+  ///
+  MsgStream log( msgSvc() , name() );
+  // format printout 
+  CaloPrint print;
+  log << MSG::INFO << " finalize(): Errors/Warnings statistics  " << endreq ; 
+  // print error counter 
+  if(  0 == m_errors.size () )
+    { log << MSG::INFO << " #ERRORS " << print( 0 ) << endreq ; }
+  for( Counter::const_iterator error = m_errors.begin() ;
+       m_errors.end() != error ; ++error )
+    {
+      log << MSG::INFO 
+          << " #ERRORS  = " << print( error->second ) 
+          << " Message='"   <<        error->first    << "'" << endreq ; 
+    }  
+  m_errors.clear();
+  // print warning counter 
+  if(  0 == m_errors.size () )
+    { log << MSG::INFO << " #WARNINGS= " << print( 0 ) << endreq ; }
+  for( Counter::const_iterator warning = m_warnings.begin() ;
+       m_warnings.end() != warning ; ++warning )
+    {
+      log << MSG::INFO 
+          << " #WARNINGS= " << print( warning->second ) 
+          << " Message='"   <<        warning->first  << "'" << endreq ; 
+    }  
+  m_warnings.clear();
   ///
   return StatusCode::SUCCESS;
 };
@@ -227,6 +261,9 @@ StatusCode CaloTool::Error
 ( const std::string& msg , 
   const StatusCode & st  ) const 
 {
+  // increase local counter of errors  
+  m_errors[ msg ] += 1 ;
+  // increase global error counter 
   Stat stat( chronoSvc() , name()+":Error" ); 
   return Print( msg , st , MSG::ERROR ); 
 };
@@ -242,6 +279,9 @@ StatusCode CaloTool::Warning
 ( const std::string& msg , 
   const StatusCode & st  ) const 
 {
+  // increase local counter of warnings  
+  m_warnings[ msg ] += 1 ;
+  // increase global error counter 
   Stat stat( chronoSvc() , name()+":Warning" ); 
   return Print( msg , st , MSG::WARNING ); 
 };

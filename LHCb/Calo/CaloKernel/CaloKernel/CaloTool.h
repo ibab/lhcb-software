@@ -1,8 +1,11 @@
-// $Id: CaloTool.h,v 1.9 2002-04-27 10:55:34 ibelyaev Exp $
+// $Id: CaloTool.h,v 1.10 2002-04-27 14:38:19 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.9  2002/04/27 10:55:34  ibelyaev
+//  update in template accessors for location of 'tools'
+//
 // ============================================================================
 #ifndef CALOKERNEL_CALOTOOL_H 
 #define CALOKERNEL_CALOTOOL_H 1
@@ -17,6 +20,8 @@
 #include "GaudiKernel/IDataProviderSvc.h"
 #include "GaudiKernel/SmartDataPtr.h"
 #include "GaudiKernel/GaudiException.h"
+// LHCbKernel 
+#include "Kernel/CaloMap.h"
 // CaloKernel 
 #include "CaloKernel/CaloException.h"
 
@@ -384,6 +389,12 @@ private:
   
   const DeCalorimeter*   m_det       ;
   std::string            m_detName   ;
+  
+  typedef CaloMap<std::string,unsigned int> Counter;
+  /// counter of error
+  mutable Counter m_errors   ;
+  /// counter of error
+  mutable Counter m_warnings ;
   
 };
 // ============================================================================
