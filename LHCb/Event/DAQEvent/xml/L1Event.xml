@@ -1,0 +1,34 @@
+<!-- ****************************************************************
+     * L1Event                                                    *
+     ****************************************************************-->
+     <class 
+      author="Helder Lopes"
+      desc="L1 event"
+      name="L1Event"
+      location="DAQ/L1Event"
+      id="1004"
+      serializers="FALSE"
+     >
+       <base name="DataObject"/>
+       <attribute
+        desc="Map with L1Banks (values) for each class ID(keys)"
+        name="eventMap"
+        type="std::map &lt;int, std::vector&lt;L1Bank&gt; &gt;"
+        getMeth="FALSE"
+        setMeth="FALSE"
+     />
+       <constructor
+        desc="Constructor from a map"
+       >
+         <arg name="eventMap" type="std::map &lt;int, std::vector&lt;L1Bank&gt; &gt;"/>
+         <code>m_eventMap=eventMap ; </code>
+       </constructor>
+       <method
+        desc="accessor method to the vector of L1 banks for a given class ID"
+        name="banks"
+        type="const std::vector &lt;L1Bank &gt; &amp; "
+        argList="int class_ID"     
+       >
+         <code> return (m_eventMap[class_ID]); </code>
+       </method>
+      </class>

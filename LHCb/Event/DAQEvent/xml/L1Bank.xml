@@ -1,0 +1,57 @@
+<!-- ****************************************************************
+     * L1Bank                                                    *
+     ****************************************************************-->
+     <class 
+      author="Helder Lopes"
+      desc="L1 bank"
+      name="L1Bank"
+      stdVectorTypeDef="TRUE"
+      serializers="FALSE"
+     >
+       <import name="Event/DAQTypes" soft="FALSE"/>
+       <attribute
+        desc="Pointer to each data bank(Header+body)"
+        name="data"
+        type="l1_int *"
+        getMeth="FALSE"
+        setMeth="FALSE"
+     />
+       <constructor
+        desc="Constructor from a pointer to a data bank"
+       >
+         <arg name="pBank" type="l1_int *"/>
+         <code> m_data = pBank; </code>
+       </constructor>
+       <method
+        desc="Return size of the data body part of the bank"
+        name="size"
+        type="long"
+        const="TRUE"
+       >
+         <code> return int(m_data[0]&amp;127); </code>
+       </method>
+       <method
+        desc="Return Class_ID of this bank "
+        name="bankClass_ID"
+        type="int"
+        const="TRUE"
+        >
+        <code> return int(m_data[0]&gt;&gt;14); </code>
+       </method>     
+       <method
+        desc="Return Source_ID of this bank "
+        name="bankSource_ID"
+        type="int"
+        const="TRUE"
+        >
+        <code> return int((m_data[0]&gt;&gt;7)&amp;127); </code>
+       </method>     
+       <method
+        desc="Return pointer to begining of data body of the bank"
+        name="data"
+        type="l1_int *"
+        const="TRUE"
+        >
+        <code> return (m_data+1); </code>
+       </method>     
+     </class>

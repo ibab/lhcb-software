@@ -1,13 +1,26 @@
 Package: DAQEvent
 Author: Jose' Helder Lopes
-Purpose: Define the HLTBuffer, HLTEvent and HLTBank classes.
+Purpose: Define the L1Buffer,  L1Event, L1Bank, HLTBuffer, HLTEvent and 
+         HLTBank classes.
 
 
-!=============== DAQEvent v1r0 31-07-2003 =============================
-  - DAQTypes.h: Header file with typedef's for hlt_int and l1_int types.
+!=============== DAQEvent v1r0 22-09-2003 =============================
+  - DAQTypes.h: Header file with typedef's for hlt_int (32 bits) and l1_int 
+                (16 bits) types.
+
+  - L1Buffer:   Holds event size(s) information and a buffer(raw array of l1_int)
+                with the data for L1 trigger. Serialize and fillStream methods 
+                not implemented yet. Header word with source (7 bits), class 
+                (2 bits) and size (7 bits) info for each data bank.
+
+  - L1Event:    Scan the L1 buffer and save a std::vector of L1Banks for each
+                different class_ID found in the TES.
+
+  - L1Bank:     Holds the size and the pointer to the data in L1 buffer for each
+                data bank
 
   - HLTBuffer:  Holds event size(s) information and a buffer(raw array of hlt_int)
-                with the data, following the Online Data Format prescription
+                with the data for HLT, following the Online Data Format prescription
                 (LHCb note 2001-097). Should be filled at the end of the 
                 digitization phase for each detector sub-system. Serialize and 
                 fillStream methods not implemented yet. Transport header and tail

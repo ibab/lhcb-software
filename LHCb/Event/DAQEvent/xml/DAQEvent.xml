@@ -1,12 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE gdd SYSTEM "gdd.dtd"[
 
-<!ENTITY HLTBuffer.xml         SYSTEM "HLTBuffer.xml"        >
-<!ENTITY HLTEvent.xml          SYSTEM "HLTEvent.xml"         >
-<!ENTITY HLTBank.xml            SYSTEM "HLTBank.xml"         >
+<!ENTITY L1Buffer.xml         SYSTEM "L1Buffer.xml"        >
+<!ENTITY L1Event.xml          SYSTEM "L1Event.xml"         >
+<!ENTITY L1Bank.xml           SYSTEM "L1Bank.xml"          >
+
+<!ENTITY HLTBuffer.xml        SYSTEM "HLTBuffer.xml"       >
+<!ENTITY HLTEvent.xml         SYSTEM "HLTEvent.xml"        >
+<!ENTITY HLTBank.xml          SYSTEM "HLTBank.xml"         >
 
 ]>
- 
+
 <gdd>
 
   <package name="DAQEvent">
@@ -14,12 +18,17 @@
     <import name="Kernel/CLHEPStreams"/>
 
     <!-- Event Header class -->
-    &HLTBuffer.xml; 
+    &L1Buffer.xml;
+    &HLTBuffer.xml;
 
     <!-- DAQ Event class -->
+    &L1Bank.xml;
     &HLTBank.xml;
+
+    &L1Event.xml;
     &HLTEvent.xml;
 
   </package>
 
 </gdd>
+
