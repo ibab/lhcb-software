@@ -1,4 +1,4 @@
-//  $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/Lib/XmlBaseDetElemCnv.cpp,v 1.9 2001-07-02 14:11:03 sponce Exp $
+//  $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/Lib/XmlBaseDetElemCnv.cpp,v 1.10 2001-07-03 06:33:27 sponce Exp $
 
 // include files
 #include <cstdlib>
@@ -62,6 +62,20 @@ StatusCode XmlBaseDetElemCnv::initialize() {
     }
   }
   return sc;
+}
+
+
+// -----------------------------------------------------------------------
+// Resolve the references of the created transient object.
+// -----------------------------------------------------------------------
+StatusCode XmlBaseDetElemCnv::fillObjRefs (IOpaqueAddress* childElement,
+                                           DataObject* refpObject) {
+  // gets the object
+  DetectorElement* dataObj = dynamic_cast<DetectorElement*> (refpObject);
+  // initializes it
+  dataObj->initialize();
+  // returns
+  return StatusCode::SUCCESS;
 }
 
 
@@ -340,19 +354,6 @@ StatusCode XmlBaseDetElemCnv::i_fillObj (DOM_Element childElement,
   // returns
   return StatusCode::SUCCESS;
 } // end i_fillObj
-
-
-// -----------------------------------------------------------------------
-// Process an object already created an filled
-// -----------------------------------------------------------------------
-StatusCode XmlBaseDetElemCnv::i_processObj(DataObject* refpObject) {
-  // gets the object
-  DetectorElement* dataObj = dynamic_cast<DetectorElement*> (refpObject);
-  // initializes it
-  dataObj->initialize();
-  // returns
-  return StatusCode::SUCCESS;
-} // end i_processObj
 
 
 // -----------------------------------------------------------------------

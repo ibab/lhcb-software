@@ -1,7 +1,12 @@
-! $Id: release.notes,v 1.43 2001-06-28 14:24:16 ibelyaev Exp $
+! $Id: release.notes,v 1.44 2001-07-03 06:33:27 sponce Exp $
 
 package DetDesc
 package manager : N.N 
+
+!===========================================================================
+! 20010703 - Sebastien Ponce
+  - every DetectorElement has an initialize method. This one is now called
+  in method fillObjRefs of the base converter.
 
 !===========================================================================
 ! 20010628 - Vanya Belyaev

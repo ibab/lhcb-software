@@ -1,4 +1,4 @@
-///  $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/DetDesc/XmlBaseDetElemCnv.h,v 1.2 2001-06-28 09:43:53 sponce Exp $
+///  $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/DetDesc/XmlBaseDetElemCnv.h,v 1.3 2001-07-03 06:33:23 sponce Exp $
 
 #ifndef DETDESC_XMLDETELEMCNV_H
 #define DETDESC_XMLDETELEMCNV_H
@@ -61,6 +61,11 @@ protected:
    */
   virtual ~XmlBaseDetElemCnv() {}
 
+  /**
+   * Resolves the references of the created transient object.
+   */
+  virtual StatusCode fillObjRefs(IOpaqueAddress* pAddress, DataObject* pObject);
+
   /** Creates the transient representation of an object from a DOM_Element.
    * Overrides the default method in XmlGenericCnv
    * @param element the DOM_Element to be used to builds the object
@@ -78,13 +83,6 @@ protected:
    */
   virtual StatusCode i_fillObj (DOM_Element childElement,
                                 DataObject* refpObject);
-
-  /** This is called after the current object was filled. This is were
-   *  some computation based on the object content could be done
-   *  @param refpObject the object to be processed
-   *  @return status depending on the completion of the call
-   */
-  virtual StatusCode i_processObj (DataObject* refpObject);
 
   /** This fills the current object for specific child.
    * Specific children are children of children <specific>
