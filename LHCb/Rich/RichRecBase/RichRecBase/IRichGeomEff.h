@@ -1,4 +1,4 @@
-// $Id: IRichGeomEff.h,v 1.1 2003-06-30 15:11:54 jonrob Exp $
+// $Id: IRichGeomEff.h,v 1.2 2004-02-02 14:23:02 jonesc Exp $
 #ifndef RICHRECTOOLS_IRICHGEOMEFF_H
 #define RICHRECTOOLS_IRICHGEOMEFF_H 1
 
@@ -25,11 +25,11 @@ public:
 
   /// Obtain signal geometrical efficiency for the given RichRecSegment and mass hypothesis
   virtual double geomEfficiency ( RichRecSegment * segment,
-                                  const Rich::ParticleIDType id ) = 0;
+                                  const Rich::ParticleIDType id ) const = 0;
 
   /// Obtain scattered geometrical efficiency for the given RichRecSegment and mass hypothesis
   virtual double geomEfficiencyScat ( RichRecSegment * segment,
-                                      const Rich::ParticleIDType id ) = 0;
+                                      const Rich::ParticleIDType id ) const = 0;
 
 };
 

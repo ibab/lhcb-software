@@ -1,4 +1,4 @@
-// $Id: RichRecPixelParentType.h,v 1.3 2003-12-04 07:36:19 cattanem Exp $
+// $Id: RichRecPixelParentType.h,v 1.4 2004-02-02 14:23:04 jonesc Exp $
 #ifndef RICHRECKERNEL_RICHRECPIXELPARENTTYPE_H
 #define RICHRECKERNEL_RICHRECPIXELPARENTTYPE_H 1
 
@@ -46,14 +46,14 @@ inline StreamBuffer& operator >> ( StreamBuffer& s,
                                    Rich::RecPixel::ParentType& pixel ) {
   int intType;
   s >> intType;
-  pixel = (Rich::RecPixel::ParentType)intType;
+  pixel = static_cast<Rich::RecPixel::ParentType>(intType);
   return s;
 }
 
 /// Implement StreamBuffer << method for Rich::RecPixel::ParentType enumeration
 inline StreamBuffer& operator << ( StreamBuffer& s,
                                    const Rich::RecPixel::ParentType& pixel ) {
-  s << (int)pixel;
+  s << static_cast<int>(pixel);
   return s;
 }
 

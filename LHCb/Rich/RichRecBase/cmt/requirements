@@ -1,13 +1,13 @@
 #============================================================================
 # Created    : 2002-11-19
-# Maintainer : Chris Jones
+# Maintainer : Chris Jones   Christopher.Rob.Jones@cern.ch 
 #
 # Documentation on the requirement file can be found at
 # http://cern.ch/lhcb-comp/Support/html/new_structure.pdf
 #============================================================================
 
 package   RichRecBase
-version   v1r8
+version   v1r9
 
 #============================================================================
 # Structure
@@ -19,6 +19,7 @@ branches xml doc src cmt Event RichRecBase
 #============================================================================
 use   RichEvent      v7r*  Event
 use   RichDetTools   v3r*  Rich
+use   RichMCTools    v1r*  Rich
 
 #============================================================================
 # Environment
@@ -28,11 +29,10 @@ include_dirs $(RICHRECBASEROOT)
 #============================================================================
 # Build GOD objects
 #============================================================================
-
-# Common XML
 document obj2doth RichRecBase_CommonObj2Doth   ../xml/RichRecBase_Event.xml
 document obj2dict RichRecBase_CommonObj2Dict   ../xml/RichRecBase_Event.xml
 
+#============================================================================
 # Build libraries (including dictionary)
 #============================================================================
 library RichRecBase           ../src/event/*.cpp ../src/base/*.cpp
@@ -41,5 +41,6 @@ library RichRecBaseEventDict  ../dict/*.cpp
 apply_pattern component_library library=RichRecBaseEventDict
 apply_pattern linker_library    library=RichRecBase
 
+#============================================================================
 private
 include_dirs $(RICHRECBASEROOT)/Event

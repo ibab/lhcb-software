@@ -1,4 +1,4 @@
-// $Id: RichPhotonSpectra.cpp,v 1.1 2003-08-06 09:55:31 jonrob Exp $
+// $Id: RichPhotonSpectra.cpp,v 1.2 2004-02-02 14:23:05 jonesc Exp $
 // Include files 
 
 // local
@@ -10,7 +10,7 @@
 // 2003-07-12 : Chris Jones
 //-----------------------------------------------------------------------------
 
-double RichPhotonSpectra::integral( const Rich::ParticleIDType id ) {
+double RichPhotonSpectra::integral( const Rich::ParticleIDType id ) const {
 
   double sum = 0;
   for ( RichPhotonSpectra::PhotonData::const_iterator i = energyDist(id).begin();
@@ -28,8 +28,4 @@ bool RichPhotonSpectra::multiply( const Rich::ParticleIDType id,
         i != energyDist(id).end(); ++i ) { *i *= *j; ++j; }
   
   return true;
-}
-
-void RichPhotonSpectra::reset() {
-
 }

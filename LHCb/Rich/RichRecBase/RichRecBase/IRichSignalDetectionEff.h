@@ -1,4 +1,4 @@
-// $Id: IRichSignalDetectionEff.h,v 1.2 2003-08-26 14:37:22 jonrob Exp $
+// $Id: IRichSignalDetectionEff.h,v 1.3 2004-02-02 14:23:03 jonesc Exp $
 #ifndef RICHRECTOOLS_IRICHSIGNALDETECTIONEFF_H
 #define RICHRECTOOLS_IRICHSIGNALDETECTIONEFF_H 1
 
@@ -24,7 +24,7 @@ public:
 
   /// Returns the detection efficiency for a cherenkov photon of a given energy
   virtual double photonDetEfficiency( RichRecSegment * segment,
-                                      double energy ) = 0;
+                                      const double energy ) const = 0;
   
 };
 

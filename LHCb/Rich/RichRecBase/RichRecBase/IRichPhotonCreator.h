@@ -1,4 +1,4 @@
-// $Id: IRichPhotonCreator.h,v 1.2 2003-08-06 09:55:31 jonrob Exp $
+// $Id: IRichPhotonCreator.h,v 1.3 2004-02-02 14:23:02 jonesc Exp $
 #ifndef RICHRECTOOLS_IRICHPHOTONCREATOR_H
 #define RICHRECTOOLS_IRICHPHOTONCREATOR_H 1
 
@@ -27,31 +27,31 @@ public:
   static const InterfaceID& interfaceID() { return IID_IRichPhotonCreator; }
 
   /// Return Pointer to the container of RichRecPhotons
-  virtual RichRecPhotons *& richPhotons() = 0;
+  virtual RichRecPhotons * richPhotons() const = 0;
 
   /// Form a RichRecPhoton candidate from a given segment and a pixel.
   virtual RichRecPhoton * reconstructPhoton( RichRecSegment * segment,
-                                             RichRecPixel * pixel ) = 0;
+                                             RichRecPixel * pixel ) const = 0;
 
   /// Form all photon candidates for a given track and pixel.
   virtual RichRecTrack::Photons
-  reconstructPhotons( RichRecTrack * track, RichRecPixel * pixel ) = 0;
+  reconstructPhotons( RichRecTrack * track, RichRecPixel * pixel ) const = 0;
 
   /// Form all photon candidates for a given track, with all possible pixels.
-  virtual RichRecTrack::Photons &
-  reconstructPhotons( RichRecTrack * track ) = 0;
+  virtual const RichRecTrack::Photons &
+  reconstructPhotons( RichRecTrack * track ) const = 0;
 
   /// Form all photon candidates for a given pixel, with all possible tracks.
-  virtual RichRecPixel::Photons &
-  reconstructPhotons( RichRecPixel * pixel ) = 0;
+  virtual const RichRecPixel::Photons &
+  reconstructPhotons( RichRecPixel * pixel ) const = 0;
 
   /// Form all photon candidates for a given segment, with all possible pixels.
-  virtual RichRecSegment::Photons &
-  reconstructPhotons( RichRecSegment * segment ) = 0;
+  virtual const RichRecSegment::Photons &
+  reconstructPhotons( RichRecSegment * segment ) const = 0;
 
   /// Method to perform the reconstruction of all tracks and pixels. 
   /// The most efficient methods to create all possible photon candidates.
-  virtual void reconstructPhotons() = 0;
+  virtual void reconstructPhotons() const = 0;
 
 };
 

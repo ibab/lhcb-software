@@ -1,4 +1,4 @@
-// $Id: RichRecAlgBase.h,v 1.10 2003-11-02 21:46:02 jonrob Exp $
+// $Id: RichRecAlgBase.h,v 1.11 2004-02-02 14:23:04 jonesc Exp $
 #ifndef RICHRECALGS_RICHRECALGBASE_H
 #define RICHRECALGS_RICHRECALGBASE_H 1
 
@@ -44,30 +44,105 @@ public:
 
 protected:  // Protected methods
 
-  // Get Rich Reconstruction data
-  RichRecTracks * richTracks();     ///< Returns RichRecTracks pointer
-  RichRecPixels * richPixels();     ///< Returns RichRecPixels pointer
-  RichRecSegments * richSegments(); ///< Returns RichRecSegments pointer
-  RichRecPhotons * richPhotons();   ///< Returns RichRecPhotons pointer
-  RichRecStatus * richStatus();     ///< Returns RichRecStatus pointer
- 
+  // Read/write access to data
+
+  /// Returns RichRecTracks pointer
+  inline RichRecTracks * richTracks()
+  {
+    return trackCreator()->richTracks();
+  }
+
+  /// Returns RichRecPixels pointer
+  inline RichRecPixels * richPixels()
+  {
+    return pixelCreator()->richPixels();
+  }
+
+  /// Returns RichRecSegments pointer
+  inline RichRecSegments * richSegments()
+  {
+    return segmentCreator()->richSegments();
+  }
+
+  /// Returns RichRecPhotons pointer
+  inline RichRecPhotons * richPhotons()
+  {
+    return photonCreator()->richPhotons();
+  }
+
+  /// Returns RichRecStatus pointer
+  inline RichRecStatus * richStatus()
+  {
+    return statusCreator()->richStatus();
+  }
+
+  // read only access to data
+
+  /// Returns RichRecTracks pointer
+  inline const RichRecTracks * richTracks() const
+  {
+    return trackCreator()->richTracks();
+  }
+
+  /// Returns RichRecPixels pointer
+  inline const RichRecPixels * richPixels() const
+  {
+    return pixelCreator()->richPixels();
+  }
+
+  /// Returns RichRecSegments pointer
+  inline const RichRecSegments * richSegments() const
+  {
+    return segmentCreator()->richSegments();
+  }
+
+  /// Returns RichRecPhotons pointer
+  inline const RichRecPhotons * richPhotons() const
+  {
+    return photonCreator()->richPhotons();
+  }
+
+  /// Returns RichRecStatus pointer
+  inline const RichRecStatus * richStatus() const
+  {
+    return statusCreator()->richStatus();
+  }
+
+  // Pointers to data object creator tools
+
+  /// Returns pointer to RichRecTrack creator tool
+  inline const IRichTrackCreator * trackCreator() const
+  {
+    return m_tkTool;
+  }
+
+  /// Returns pointer to RichRecSegment creator tool
+  inline const IRichSegmentCreator * segmentCreator() const
+  {
+    return m_segTool;
+  }
+
+  /// Returns pointer to RichRecPixel creator tool
+  inline const IRichPixelCreator * pixelCreator() const
+  {
+    return m_pixTool;
+  }
+
+  /// Returns pointer to RichRecPhoton creator tool
+  inline const IRichPhotonCreator * photonCreator() const
+  {
+    return m_photTool;
+  }
+
+  /// Returns pointer to RichRecStatus creator tool
+  inline const IRichStatusCreator * statusCreator() const
+  {
+    return m_statTool;
+  }
+
 private:   // Private data
 
-  /// Pointer to RichRecTracks
-  RichRecTracks ** m_richTracks;
-
-  /// Pointer to RichRecPixels
-  RichRecPixels ** m_richPixels;
-
-  /// Pointer to RichRecSegments
-  RichRecSegments ** m_richSegments;
-
-  /// Pointer to RichRecPhotons
-  RichRecPhotons ** m_richPhotons;
-
-  /// Pointer to RichRecStatus
-  RichRecStatus ** m_richStatus;
-
+  // pointers to too interfaces
   IRichPixelCreator * m_pixTool;
   IRichTrackCreator * m_tkTool;
   IRichStatusCreator * m_statTool;
@@ -75,30 +150,5 @@ private:   // Private data
   IRichPhotonCreator * m_photTool;
 
 };
-
-inline RichRecTracks * RichRecAlgBase::richTracks()
-{
-  return *m_richTracks;
-}
-
-inline RichRecPixels * RichRecAlgBase::richPixels()
-{
-  return *m_richPixels;
-}
-
-inline RichRecSegments * RichRecAlgBase::richSegments()
-{
-  return *m_richSegments;
-}
-
-inline RichRecPhotons * RichRecAlgBase::richPhotons()
-{
-  return *m_richPhotons;
-}
-
-inline RichRecStatus * RichRecAlgBase::richStatus()
-{
-  return *m_richStatus;
-}
 
 #endif // RICHRECALGS_RICHRECALGBASE_H

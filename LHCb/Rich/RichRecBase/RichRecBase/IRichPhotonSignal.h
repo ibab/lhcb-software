@@ -1,4 +1,4 @@
-// $Id: IRichPhotonSignal.h,v 1.4 2003-11-25 13:20:56 jonrob Exp $
+// $Id: IRichPhotonSignal.h,v 1.5 2004-02-02 14:23:02 jonesc Exp $
 #ifndef RICHRECTOOLS_IRICHPHOTONSIGNAL_H
 #define RICHRECTOOLS_IRICHPHOTONSIGNAL_H 1
 
@@ -26,15 +26,15 @@ public:
 
   /// Predicted pixel signal for a given reconstructed photon under a given mass hypothesis
   virtual double predictedPixelSignal( RichRecPhoton * photon,
-                                       const Rich::ParticleIDType id ) = 0;
+                                       const Rich::ParticleIDType id ) const = 0;
 
   /// Returns the value of the signal probablity function for the given photon at its cherenkov theta, for the given mass hypothesis
   virtual double signalProb( RichRecPhoton * photon,
-                             const Rich::ParticleIDType id ) = 0;
+                             const Rich::ParticleIDType id ) const = 0;
 
   /// Returns the value of the scatter probablity function for the given photon at its cherenkov theta, for the given mass hypothesis
   virtual double scatterProb( RichRecPhoton * photon,
-                              const Rich::ParticleIDType id ) = 0;
+                              const Rich::ParticleIDType id ) const = 0;
 
 };
 

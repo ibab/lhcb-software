@@ -1,9 +1,11 @@
-// $Id: IRichRecMCTruthTool.h,v 1.5 2003-10-13 16:10:53 jonrob Exp $
+// $Id: IRichRecMCTruthTool.h,v 1.6 2004-02-02 14:23:03 jonesc Exp $
 #ifndef RICHRECTOOLS_IRICHRECMCTRUTHTOOL_H
 #define RICHRECTOOLS_IRICHRECMCTRUTHTOOL_H 1
 
 // Event Model
 class MCRichOpticalPhoton;
+class MCRichSegment;
+class MCRichTrack;
 class MCRichDigit;
 class MCParticle;
 class MCRichHit;
@@ -27,10 +29,10 @@ public:
   static const InterfaceID& interfaceID() { return IID_IRichRecMCTruthTool; }
 
   /// Find best MCParticle association for a given RichRecTrack
-  virtual const MCParticle * mcParticle( const RichRecTrack * richTrack ) = 0;
+  virtual const MCParticle * mcParticle( const RichRecTrack * richTrack ) const = 0;
 
   /// Find best MCParticle association for a given RichRecSegment
-  virtual const MCParticle * mcParticle( const RichRecSegment * richSegment ) = 0;
+  virtual const MCParticle * mcParticle( const RichRecSegment * richSegment ) const = 0;
 
   /// Truth particle type for given RichRecTrack
   virtual Rich::ParticleIDType mcParticleType( const RichRecTrack * richTrack ) = 0;
@@ -65,6 +67,12 @@ public:
   /// Do the associated track and pixel have the same MC parent
   virtual const MCParticle * trueRecPhoton( const RichRecPhoton * photon ) = 0;
 
+  /// Returns the associated MCRichHit if given RichRecPhoton is true (null otherwise)
+  virtual const MCRichHit * trueCherenkovHit( const RichRecPhoton * photon ) = 0;
+
+  /// Returns the associated MCRichOpticalPhoton if given RichRecPhoton is true (null otherwise)
+  virtual const MCRichOpticalPhoton * trueOpticalPhoton( const RichRecPhoton * photon ) = 0;
+
   /// Is this a true photon candidate ?
   /// Do the segment and pixel have the same MC parent
   virtual const MCParticle * trueRecPhoton( const RichRecSegment * segment,
@@ -85,8 +93,20 @@ public:
   virtual const MCParticle * trueCherenkovRadiation( const RichRecPixel * pixel,
                                                      Rich::RadiatorType rad  ) = 0;
 
-  /// Returns a vector of true Cherenkov pixels for this segment
-  //virtual RichRecPixelVector* trueCkPixels( const RichRecSegment * segment ) = 0;
+  /// Returns the MCRichSegment associated to a given RichRecSegment
+  virtual const MCRichSegment * mcRichSegment( const RichRecSegment * segment ) = 0;
+
+  /// Returns the MCRichTrack associated to a given RichRecTrack
+  virtual const MCRichTrack * mcRichTrack( const RichRecTrack * track ) = 0;
+
+  /// Returns the MCRichTrack associated to a given RichRecSegment
+  virtual const MCRichTrack * mcRichTrack( const RichRecSegment * segment ) = 0;
+
+  /// Returns pointer to vector of MCRichSegments associated to a given RichRecTrack
+  virtual const SmartRefVector<MCRichSegment> * mcRichSegments( const RichRecTrack * track ) = 0;
+
+  /// Is this RichRecPixel background ?
+  virtual bool isBackground( const RichRecPixel * pixel ) = 0;
 
 };
 

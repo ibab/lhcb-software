@@ -1,4 +1,4 @@
-// $Id: RichPhotonSpectra.h,v 1.4 2003-09-04 08:45:52 jonrob Exp $
+// $Id: RichPhotonSpectra.h,v 1.5 2004-02-02 14:23:04 jonesc Exp $
 #ifndef RICHRECBASE_RICHPHOTONSPECTRA_H
 #define RICHRECBASE_RICHPHOTONSPECTRA_H 1
 
@@ -13,7 +13,8 @@
 
 /** @class RichPhotonSpectra RichPhotonSpectra.h RichRecBase/RichPhotonSpectra.h
  *
- *
+ *  A utility class describing a photon energy spectra
+ * 
  *  @author Chris Jones
  *  @date   2003-07-12
  */
@@ -28,9 +29,9 @@ public:
 public:
 
   /// Standard constructor
-  RichPhotonSpectra( unsigned int enBins = 5,
-                     double minEn = 0,
-                     double maxEn = 5 )
+  RichPhotonSpectra( const unsigned int enBins = 5,
+                     const double minEn = 0,
+                     const double maxEn = 5 )
     : m_enBins   ( enBins ),
       m_minEn    ( minEn ),
       m_maxEn    ( maxEn ),
@@ -41,25 +42,25 @@ public:
 
   unsigned int energyBins() const;    ///< Returns the number of energy bins
 
-  void setEnergyBins( unsigned int bins ); ///< Set the number of energy bins
+  void setEnergyBins( const unsigned int bins ); ///< Set the number of energy bins
 
   double minEnergy() const;  ///< Returns the minimum photon energy
 
-  void setMinEnergy( double en ); ///< Sets the minimum photon energy
+  void setMinEnergy( const double en ); ///< Sets the minimum photon energy
 
   double maxEnergy() const;  ///< Returns the maximum photon energy
 
-  void setMaxEnergy( double en ); ///< Sets the maximum photon energy
+  void setMaxEnergy( const double en ); ///< Sets the maximum photon energy
 
   double binSize() const;    ///< Returns the energy bin size
 
-  void setBinSize( double size ); ///< Set the energy bin size
+  void setBinSize( const double size ); ///< Set the energy bin size
 
-  double binEnergyLowerEdge( unsigned int bin );   ///< The lower edge of the energy bin
+  double binEnergyLowerEdge( const unsigned int bin ) const;   ///< The lower edge of the energy bin
 
-  double binEnergyUpperEdge( unsigned int bin );   ///< The upper edge of the energy bin
+  double binEnergyUpperEdge( const unsigned int bin ) const;   ///< The upper edge of the energy bin
 
-  double binEnergy( unsigned int bin );   ///< The average bin energy
+  double binEnergy( const unsigned int bin ) const;   ///< The average bin energy
 
   /// Returns the energy distribution for a given mass hypothesis
   RichPhotonSpectra::PhotonData & energyDist( const Rich::ParticleIDType id );
@@ -74,7 +75,7 @@ public:
   const RichPhotonSpectra::HypoPhotonData & hypoData( ) const;
 
   /// Returns the integral of the distribution
-  double integral( const Rich::ParticleIDType id );
+  double integral( const Rich::ParticleIDType id ) const;
 
   /// multiply by another distribution
   bool multiply(  const Rich::ParticleIDType id,
@@ -84,7 +85,7 @@ public:
   void reset();
 
   /// Set the energy range
-  void setEnergyRange( double min, double max );
+  void setEnergyRange( const double min, const double max );
 
 private: // data
 
@@ -102,7 +103,7 @@ inline unsigned int RichPhotonSpectra::energyBins() const
   return m_enBins;
 }
 
-inline void RichPhotonSpectra::setEnergyBins( unsigned int bins ) 
+inline void RichPhotonSpectra::setEnergyBins( const unsigned int bins ) 
 {
   m_enBins = bins;
 } 
@@ -112,7 +113,7 @@ inline double RichPhotonSpectra::minEnergy() const
   return m_minEn;
 }
 
-inline void RichPhotonSpectra::setMinEnergy( double en )
+inline void RichPhotonSpectra::setMinEnergy( const double en )
 {
   m_minEn = en;
 }
@@ -122,7 +123,7 @@ inline double RichPhotonSpectra::maxEnergy() const
   return m_maxEn;
 }
 
-inline void RichPhotonSpectra::setMaxEnergy( double en )
+inline void RichPhotonSpectra::setMaxEnergy( const double en )
 {
   m_maxEn = en;
 }
@@ -132,27 +133,27 @@ inline double RichPhotonSpectra::binSize() const
   return m_binSize;
 }
 
-inline void RichPhotonSpectra::setBinSize( double size ) 
+inline void RichPhotonSpectra::setBinSize( const double size ) 
 {
   m_binSize = size;
 }
 
-inline double RichPhotonSpectra::binEnergyLowerEdge( unsigned int bin )
+inline double RichPhotonSpectra::binEnergyLowerEdge( const unsigned int bin ) const
 {
-  return ( minEnergy() + (double)bin*binSize() );
+  return ( minEnergy() + static_cast<double>(bin)*binSize() );
 }
 
-inline double RichPhotonSpectra::binEnergyUpperEdge( unsigned int bin )
+inline double RichPhotonSpectra::binEnergyUpperEdge( const unsigned int bin ) const
 {
-  return ( minEnergy() + (double)(1+bin)*binSize() );
+  return ( minEnergy() + static_cast<double>(1+bin)*binSize() );
 }
 
-inline double RichPhotonSpectra::binEnergy( unsigned int bin )
+inline double RichPhotonSpectra::binEnergy( const unsigned int bin ) const
 {
-  return ( minEnergy() + (double)(0.5+bin)*binSize() );
+  return ( minEnergy() + static_cast<double>(0.5+bin)*binSize() );
 }
 
-inline void RichPhotonSpectra::setEnergyRange( double min, double max )
+inline void RichPhotonSpectra::setEnergyRange( const double min, const double max )
 {
   m_minEn = min;
   m_maxEn = max;
@@ -179,6 +180,11 @@ inline const RichPhotonSpectra::HypoPhotonData &
 RichPhotonSpectra::hypoData() const
 {
   return m_photdata;
+}
+
+inline void RichPhotonSpectra::reset() 
+{
+  // Nothing here yet....
 }
 
 // Methods for GOD

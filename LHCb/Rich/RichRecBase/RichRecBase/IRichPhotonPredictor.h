@@ -1,4 +1,4 @@
-// $Id: IRichPhotonPredictor.h,v 1.1 2003-06-30 15:11:54 jonrob Exp $
+// $Id: IRichPhotonPredictor.h,v 1.2 2004-02-02 14:23:02 jonesc Exp $
 #ifndef RICHRECTOOLS_IRICHPHOTONPREDICTOR_H
 #define RICHRECTOOLS_IRICHPHOTONPREDICTOR_H 1
 
@@ -28,11 +28,11 @@ public:
   /// Returns square of distance seperating the pixel hit and hit position extrapolated
   /// using the RichRecSegment direction.
   virtual double trackPixelHitSep2( const RichRecSegment * segment,
-                                    const RichRecPixel * pixel ) = 0;
+                                    const RichRecPixel * pixel ) const = 0;
 
   /// Is it possible to make a photon candidate using this segment and pixel.
   virtual bool photonPossible( RichRecSegment * segment,
-                               RichRecPixel * pixel ) = 0;
+                               RichRecPixel * pixel ) const = 0;
 
 };
 

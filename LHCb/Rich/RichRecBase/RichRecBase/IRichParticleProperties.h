@@ -1,4 +1,4 @@
-// $Id: IRichParticleProperties.h,v 1.1 2003-08-06 09:55:30 jonrob Exp $
+// $Id: IRichParticleProperties.h,v 1.2 2004-02-02 14:23:02 jonesc Exp $
 #ifndef RICHRECTOOLS_IRICHPARTICLEPROPERTIES_H
 #define RICHRECTOOLS_IRICHPARTICLEPROPERTIES_H 1
 
@@ -29,17 +29,17 @@ public:
 
   /// Returns 'beta' for given particle hypothesis
   virtual double beta( RichRecSegment * segment,
-                       const Rich::ParticleIDType id ) = 0; 
+                       const Rich::ParticleIDType id ) const = 0; 
 
   /// Returns the nominal mass for a given particle type
-  virtual double mass( const Rich::ParticleIDType id ) = 0;
+  virtual double mass( const Rich::ParticleIDType id ) const = 0;
 
   /// Returns the nominal mass squared for a given particle hypothesis
-  virtual double massSq( const Rich::ParticleIDType id ) = 0;
+  virtual double massSq( const Rich::ParticleIDType id ) const = 0;
 
   /// Returns the threshold momentum for a given hypothesis in a given radiator
   virtual double thresholdMomentum( const Rich::ParticleIDType id,
-                                    const Rich::RadiatorType rad ) = 0;
+                                    const Rich::RadiatorType rad ) const = 0;
 
 };
 

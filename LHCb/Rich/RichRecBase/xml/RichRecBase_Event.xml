@@ -129,13 +129,13 @@
                 <code/>
             </constructor>
             <method const="TRUE" desc="Returns Rich Detector" name="detector" type="Rich::DetectorType">
-                <code>return (Rich::DetectorType)m_smartID.rich();</code>
+                <code>return m_smartID.rich();</code>
             </method>
             <method const="TRUE" desc="Returns unique integer pd identifier" name="pd" type="int">
-                <code>return (int)m_smartID.pdID();</code>
+                <code>return m_smartID.pdID();</code>
             </method>
             <method const="TRUE" desc="Returns unique integer Rich panel identifier" name="panel" type="int">
-                <code>return (int)m_smartID.panelID();</code>
+                <code>return m_smartID.panelID();</code>
             </method>
             <attribute desc="RichSmartID" init="0" name="smartID" type="RichSmartID"/>
             <attribute desc="Position in global coordinates" init="0" name="globalPosition" type="HepPoint3D"/>
@@ -266,7 +266,8 @@
             <attribute desc="Geometrical efficiency for scattered component" name="geomEfficiencyScat" type="RichHypoData&lt;double&gt;"/>
             <attribute desc="The average Cherenkov theta angle for given particle ID type" name="averageCKTheta" type="RichHypoData&lt;double&gt;"/>
             <attribute desc="Track segment, the passage of a track through a Rich detector" name="trackSegment" type="RichTrackSegment"/>
-            <attribute desc="Ray traced PD panel impact point" name="pdPanelHitPoint" type="HepPoint3D"/>
+            <attribute desc="Ray traced PD panel impact point in global coordinates" name="pdPanelHitPoint" type="HepPoint3D"/>
+            <attribute desc="Ray traced PD panel impact point in local coordinates" name="pdPanelHitPointLocal" type="HepPoint3D"/>
             <attribute desc="Detector regions accessible to this segment" init="0" name="hitDetectorRegions" type="bitfield">
                 <bitfield desc="Photons observable in x&gt;0 region of detector" length="1" name="photonsInXPlus"/>
                 <bitfield desc="Photons observable in x&lt;0 region of detector" length="1" name="photonsInXMinus"/>
@@ -340,14 +341,24 @@
             <method desc="Set the overall background for given RICH" name="setDetOverallBkg">
                 <arg inout="BYVALUE" name="rich" type="Rich::DetectorType"/>
                 <arg name="bkg" type="double"/>
-                <code>m_detOverallBkg[ rich ] = bkg;</code>
+                <code>m_detOverallBkg[rich] = bkg;</code>
             </method>
             <method const="TRUE" desc="Retrieve the overall background for given RICH" inline="TRUE" name="detOverallBkg" type="double">
                 <arg const="TRUE" inout="BYVALUE" name="rich" type="Rich::DetectorType"/>
-                <code>return m_detOverallBkg[ rich ];</code>
+                <code>return m_detOverallBkg[rich];</code>
             </method>
             <attribute desc="Boolean to indicate if the event was successfully processed" init="true" name="eventOK" type="bool"/>
             <attribute desc="Overall background estimates for each RICH" init="Rich::NRiches" name="detOverallBkg" type="std::vector&lt;double&gt;"/>
+        </class>
+        <class author="Chris Jones    Christopher.Rob.Jones@cern.ch" desc="A ring candidate. A collection of RichRecPixels associated to a single Cherenkov ring" id="12426" location="Rec/Rich/Common/Rings" name="RichRecRing">
+            <base name="KeyedObject&lt;long&gt;"/>
+            <import name="GaudiKernel/ContainedObject"/>
+            <location name="Markov" place="Rec/Rich/Markov/Rings"/>
+            <attribute desc="Reconstructed centre point in global coordinates on HPD panel" name="centrePointGlobal" type="HepPoint3D"/>
+            <attribute desc="Reconstructed centre point in local coordinates on HPD panel" name="centrePointLocal" type="HepPoint3D"/>
+            <attribute desc="The radius of the reconstructed ring, in radians" init="0" name="radius" type="double"/>
+            <relation desc="The RichRecPixels associated to this single ring" multiplicity="N" name="richRecPixels" type="RichRecPixel"/>
+            <relation desc="Associated RichRecSegment (if available)" name="richRecSegment" type="RichRecSegment"/>
         </class>
     </package>
 </gdd>

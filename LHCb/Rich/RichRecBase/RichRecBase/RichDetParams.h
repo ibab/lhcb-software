@@ -1,4 +1,4 @@
-// $Id: RichDetParams.h,v 1.4 2003-11-25 13:20:56 jonrob Exp $
+// $Id: RichDetParams.h,v 1.5 2004-02-02 14:23:04 jonesc Exp $
 #ifndef RICHKERNEL_RICHDETPARAMS_H
 #define RICHKERNEL_RICHDETPARAMS_H 1
 
@@ -8,7 +8,7 @@
 #define RICH_HISTO_OFFSET   const int richOffset = 100000
 #define RAD_HISTO_OFFSET    const int radOffset  = 10000
 #define HYPO_HISTO_OFFSET   const int hypoOffset = 1000
-#define MAX_CKTHETA_RAD     const double maxCkTheta[] = { 0.255, 0.055, 0.032 }
+#define MAX_CKTHETA_RAD     const double maxCkTheta[] = { 0.255, 0.055, 0.0375 }
 #define MIN_CKTHETA_RAD     const double minCkTheta[] = { 0.05,  0.0,   0.0 }
 
 #define RADIATOR_MAX_CKTHETA \

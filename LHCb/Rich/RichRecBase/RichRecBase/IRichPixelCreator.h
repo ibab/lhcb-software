@@ -1,4 +1,4 @@
-// $Id: IRichPixelCreator.h,v 1.2 2003-10-13 16:10:53 jonrob Exp $
+// $Id: IRichPixelCreator.h,v 1.3 2004-02-02 14:23:02 jonesc Exp $
 #ifndef RICHRECTOOLS_IRICHPIXELCREATOR_H
 #define RICHRECTOOLS_IRICHPIXELCREATOR_H 1
 
@@ -25,14 +25,14 @@ public:
 
   /// Returns a RichRecPixel object pointer for given ContainedObject.
   /// If if it not possible NULL is return.
-  virtual RichRecPixel * newPixel( const ContainedObject * obj ) = 0;
+  virtual RichRecPixel * newPixel( const ContainedObject * obj ) const = 0;
 
   /// Form all possible RichRecPixels from input Objects.
   /// The most efficient way to make all RichRecTrack objects in the event.
-  virtual StatusCode newPixels() = 0;
+  virtual StatusCode newPixels() const = 0;
 
   /// Returns a pointer to the RichRecPixels
-  virtual RichRecPixels *& richPixels() = 0;
+  virtual RichRecPixels * richPixels() const = 0;
 
 };
 

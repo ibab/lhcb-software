@@ -1,4 +1,4 @@
-// $Id: IRichSellmeirFunc.h,v 1.2 2003-08-26 14:37:21 jonrob Exp $
+// $Id: IRichSellmeirFunc.h,v 1.3 2004-02-02 14:23:03 jonesc Exp $
 #ifndef RICHRECTOOLS_IRICHSELLMEIRFUNC_H
 #define RICHRECTOOLS_IRICHSELLMEIRFUNC_H 1
 
@@ -28,7 +28,7 @@ public:
   virtual double photonsInEnergyRange( RichRecSegment * segment, 
                                        const Rich::ParticleIDType id,
                                        double botEn,
-                                       double topEn ) = 0;
+                                       double topEn ) const = 0;
 
 };
 

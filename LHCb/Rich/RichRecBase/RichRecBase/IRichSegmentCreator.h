@@ -1,9 +1,9 @@
-// $Id: IRichSegmentCreator.h,v 1.2 2003-08-06 09:55:31 jonrob Exp $
+// $Id: IRichSegmentCreator.h,v 1.3 2004-02-02 14:23:03 jonesc Exp $
 #ifndef RICHRECTOOLS_IRICHSEGMENTCREATOR_H
 #define RICHRECTOOLS_IRICHSEGMENTCREATOR_H 1
 
 // Event model
-class RichRecSegment;
+#include "Event/RichRecSegment.h"
 
 /** @class IRichSegmentCreator IRichSegmentCreator.h
  *
@@ -24,14 +24,14 @@ public:
   static const InterfaceID& interfaceID() {return IID_IRichSegmentCreator;}
 
   /// Saves a new RichRecSegment
-  virtual void saveSegment( RichRecSegment * segment ) = 0;
+  virtual void saveSegment( RichRecSegment * segment ) const = 0;
 
   /// Create a new RichRecSegment
   virtual RichRecSegment * newSegment( RichTrackSegment& segment, 
-                                       RichRecTrack* pTrk ) = 0;
+                                       RichRecTrack* pTrk ) const = 0;
 
   /// Returns a pointer to container of RichRecSegments
-  virtual RichRecSegments *& richSegments() = 0;
+  virtual RichRecSegments * richSegments() const = 0;
 
 };
 

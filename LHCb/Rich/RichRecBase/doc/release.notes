@@ -4,6 +4,12 @@
 ! Purpose     : Base package for RICH Reconstruction Packages
 !-----------------------------------------------------------------------------
 
+! 2004-01-13 - Chris Jones
+ - Add RichRecRing object to reconstruction event model, to support development
+   of standalone ring finding algorithms.
+ - Miscellaneous changes and tidying up of the code
+ - Improvements to algorithm and tool base classes
+
 !======================= RichRecBase v1r8 2004-01-08 =======================
 ! 2004-01-08 - Marco Cattaneo
  - Move to Gaudi v14 (use RichEvent v7r* in requirements, 

@@ -200,7 +200,7 @@ std::ostream& operator << ( std::ostream& s, const RichMap<T1,T2>& m )
 
 /// Output serialize a RichMap
 template <class T1, class T2> inline
-StreamBuffer& operator << ( StreamBuffer& s, const RichMap<T1,T2>& m ) 
+StreamBuffer& operator << ( StreamBuffer& s, const RichMap<T1,T2>& m )
 {
   s << m.size();
   for ( typename RichMap<T1,T2>::const_iterator i = m.begin(); i != m.end(); i++ ) {
@@ -211,12 +211,12 @@ StreamBuffer& operator << ( StreamBuffer& s, const RichMap<T1,T2>& m )
 
 /// Input serialize a RichMap
 template <class T1, class T2> inline
-StreamBuffer& operator >> ( StreamBuffer& s, RichMap<T1,T2>& m ) 
+StreamBuffer& operator >> ( StreamBuffer& s, RichMap<T1,T2>& m )
 {
   long length;
   s >> length;
   T1 key;
-  T2 value; 
+  T2 value;
   for ( int i = 0; i < length; i++ ) {
     s >> key;
     s >> value;

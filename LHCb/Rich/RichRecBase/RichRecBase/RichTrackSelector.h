@@ -1,4 +1,4 @@
-// $Id: RichTrackSelector.h,v 1.1 2003-10-13 16:10:54 jonrob Exp $
+// $Id: RichTrackSelector.h,v 1.2 2004-02-02 14:23:05 jonesc Exp $
 #ifndef RICHRECBASE_RICHTRACKSELECTOR_H
 #define RICHRECBASE_RICHTRACKSELECTOR_H 1
 
@@ -24,10 +24,10 @@ public:
   ~RichTrackSelector() {} ///< Destructor
 
   /// Test it the given TrStoredTrack is selected
-  bool trackSelected( TrStoredTrack * trTrack );
+  bool trackSelected( const TrStoredTrack * trTrack );
 
   /// Test it the given TrStoredTrack is selected
-  bool trackSelected( RichRecTrack * track );
+  bool trackSelected( const RichRecTrack * track );
 
   /// Returns vector of selected track types
   std::vector<std::string> & selectedTrackTypes() { return m_trNames; }
@@ -52,14 +52,14 @@ private: // private data
 
 };
 
-inline bool RichTrackSelector::trackSelected( TrStoredTrack * trTrack )
+inline bool RichTrackSelector::trackSelected( const TrStoredTrack * trTrack )
 {
   return ( trTrack && 
            !(m_uniqueTrOnly && !trTrack->unique()) &&
            (trTrack->history() & m_trBits) );
 }
 
-inline bool RichTrackSelector::trackSelected( RichRecTrack * track )
+inline bool RichTrackSelector::trackSelected( const RichRecTrack * track )
 {
   return ( track && 
            !(m_uniqueTrOnly && !track->trackID().unique()) &&

@@ -1,4 +1,4 @@
-// $Id: IRichCherenkovResolution.h,v 1.1 2003-08-06 09:55:30 jonrob Exp $
+// $Id: IRichCherenkovResolution.h,v 1.2 2004-02-02 14:23:01 jonesc Exp $
 #ifndef RICHRECTOOLS_IRICHCHERENKOVRESOLUTION_H
 #define RICHRECTOOLS_IRICHCHERENKOVRESOLUTION_H 1
 
@@ -24,7 +24,7 @@ public:
 
   /// Cherenkov theta resolution for given particle hypothesis
   virtual double ckThetaResolution( RichRecSegment * segment,
-                                    const Rich::ParticleIDType id = Rich::Pion ) = 0;
+                                    const Rich::ParticleIDType id = Rich::Pion ) const = 0;
 
 };
 

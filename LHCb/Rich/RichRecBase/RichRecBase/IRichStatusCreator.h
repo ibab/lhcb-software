@@ -1,4 +1,4 @@
-// $Id: IRichStatusCreator.h,v 1.1 2003-07-02 09:02:26 jonrob Exp $
+// $Id: IRichStatusCreator.h,v 1.2 2004-02-02 14:23:03 jonesc Exp $
 #ifndef RICHRECTOOLS_IRICHSTATUSCREATOR_H
 #define RICHRECTOOLS_IRICHSTATUSCREATOR_H 1
 
@@ -24,7 +24,7 @@ public:
   static const InterfaceID& interfaceID() {return IID_IRichStatusCreator;}
 
   /// Returns a pointer to the RichRecStatus
-  virtual RichRecStatus *& richStatus() = 0;
+  virtual RichRecStatus * richStatus() const = 0;
 
 };
 

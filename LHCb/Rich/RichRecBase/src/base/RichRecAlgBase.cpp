@@ -1,4 +1,4 @@
-// $Id: RichRecAlgBase.cpp,v 1.10 2003-11-02 21:46:02 jonrob Exp $
+// $Id: RichRecAlgBase.cpp,v 1.11 2004-02-02 14:23:05 jonesc Exp $
 
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -19,14 +19,11 @@
 RichRecAlgBase::RichRecAlgBase( const std::string& name,
                                 ISvcLocator* pSvcLocator )
   : RichAlgBase ( name, pSvcLocator ),
-    m_richTracks   ( 0 ),
-    m_richPixels   ( 0 ),
-    m_richSegments ( 0 ),
-    m_richPhotons  ( 0 ),
-    m_richStatus   ( 0 )
-{
-
-}
+    m_pixTool      ( 0 ),
+    m_tkTool       ( 0 ),
+    m_statTool     ( 0 ),
+    m_segTool      ( 0 ),
+    m_photTool     ( 0 ) { }
 
 // Destructor
 RichRecAlgBase::~RichRecAlgBase() {};
@@ -37,17 +34,12 @@ StatusCode RichRecAlgBase::initialize() {
   // Execute the base class initialize
   if ( !RichAlgBase::initialize() ) return StatusCode::FAILURE;
 
-  // initialise data pointers
-  acquireTool("RichSegmentCreator", m_segTool);
-  m_richSegments = &(m_segTool->richSegments());
-  acquireTool("RichPhotonCreator", m_photTool);
-  m_richPhotons = &(m_photTool->richPhotons());
-  acquireTool("RichPixelCreator", m_pixTool);
-  m_richPixels = &(m_pixTool->richPixels());
-  acquireTool("RichTrackCreator", m_tkTool);
-  m_richTracks = &(m_tkTool->richTracks());
-  acquireTool("RichStatusCreator", m_statTool);
-  m_richStatus = &(m_statTool->richStatus());
+  // initialise data pointers and tools
+  acquireTool("RichSegmentCreator", m_segTool  );
+  acquireTool("RichPhotonCreator",  m_photTool );
+  acquireTool("RichPixelCreator",   m_pixTool  );
+  acquireTool("RichTrackCreator",   m_tkTool   );
+  acquireTool("RichStatusCreator",  m_statTool );
 
   return StatusCode::SUCCESS;
 };

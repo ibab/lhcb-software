@@ -1,4 +1,4 @@
-// $Id: RichTrackID.h,v 1.3 2003-12-04 07:36:19 cattanem Exp $
+// $Id: RichTrackID.h,v 1.4 2004-02-02 14:23:05 jonesc Exp $
 #ifndef RICHRECBASE_RICHTRACKID_H
 #define RICHRECBASE_RICHTRACKID_H 1
 
@@ -75,29 +75,29 @@ public:
       m_parentType ( Rich::TrackParent::Unknown ),
       m_history    ( 0 ),
       m_unique     ( true ) { }
-  
+
   /// Constructor from a ContainedObject
   RichTrackID( const ContainedObject * obj );
-  
+
   ~RichTrackID( ) {} ///< Destructor
-  
+
   /// Retrieve the track type
   Rich::Track::Type trackType() const { return m_tkType; }
 
   /// Set the track type
-  void setTrackType( Rich::Track::Type type ) { m_tkType = type; }
+  void setTrackType( const Rich::Track::Type type ) { m_tkType = type; }
 
   /// Retrieve the parent type
   Rich::TrackParent::Type parentType() const { return m_parentType; }
 
   /// Set the parent type
-  void setParentType( Rich::TrackParent::Type type ) { m_parentType = type; }
+  void setParentType( const Rich::TrackParent::Type type ) { m_parentType = type; }
 
   /// Retrieve origin of the track
   unsigned long history() const { return m_history; }
 
   /// Set the origin of the track
-  void setHistory( unsigned long hist ) { m_history = hist; }
+  void setHistory( const unsigned long hist ) { m_history = hist; }
 
   /// Is this track unique ?
   bool unique() const { return m_unique; }
@@ -184,8 +184,8 @@ inline MsgStream& operator << ( MsgStream& s,
 inline StreamBuffer& operator >> ( StreamBuffer& s,
                                    RichTrackID& id ) {
   int iTemp;
-  s >> iTemp; id.setTrackType( (Rich::Track::Type)iTemp );
-  s >> iTemp; id.setParentType( ( Rich::TrackParent::Type)iTemp );
+  s >> iTemp; id.setTrackType( static_cast<Rich::Track::Type>(iTemp) );
+  s >> iTemp; id.setParentType( static_cast<Rich::TrackParent::Type>(iTemp) );
   unsigned long history; s >> history; id.setHistory( history );
   s >> iTemp; id.setUnique( 0 != iTemp );
   return s;
@@ -194,10 +194,10 @@ inline StreamBuffer& operator >> ( StreamBuffer& s,
 /// Implement StreamBuffer << method for RichTrackID
 inline StreamBuffer& operator << ( StreamBuffer& s,
                                    const RichTrackID& id ) {
-  s << (int)id.trackType()
-    << (int)id.parentType()
+  s << static_cast<int>(id.trackType())
+    << static_cast<int>(id.parentType())
     << id.history()
-    << (int)id.unique();
+    << static_cast<int>(id.unique());
   return s;
 }
 

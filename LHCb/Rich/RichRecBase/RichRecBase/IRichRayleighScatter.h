@@ -1,4 +1,4 @@
-// $Id: IRichRayleighScatter.h,v 1.1 2003-08-12 13:36:31 jonrob Exp $
+// $Id: IRichRayleighScatter.h,v 1.2 2004-02-02 14:23:03 jonesc Exp $
 #ifndef RICHRECTOOLS_IRICHRAYLEIGHSCATTER_H
 #define RICHRECTOOLS_IRICHRAYLEIGHSCATTER_H 1
 
@@ -24,7 +24,7 @@ public:
 
   /// Rayleigh scattering probability for given pathlength (segment) and photyon energy
   virtual double photonScatteredProb( const RichRecSegment * segment,
-                                      const double energy ) = 0;
+                                      const double energy ) const = 0;
 
 };
 
