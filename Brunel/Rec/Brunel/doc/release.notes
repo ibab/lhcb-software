@@ -4,18 +4,46 @@ Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
 </PRE><H1><A NAME=v15r1>2002-11-18 Brunel v15r1</A></H1><PRE>
+
  - New tuning:
    . Add OT straw inefficiency at y=0 (OTDet v3r2)
    . Reoptimisation of Velo tracking (VeloTrack v4r3)
+   . New package for the whole chain of Calorimeter digitization, 
+     signal processing and zero suppression (CaloDigit v1r0)
+   . Use 4th TT hit when possible in VTT tracks (VeloTrack v1r2)
+   . Improvements in calorimeter S&L corrections (VeloRec v1r0)
+   . New calorimeter energy calibration (VeloRec v1r0)
+
+ - New features:
+   . Possibility to use units in job options files (GaudiConf v6r4)
+   . Calorimeter algorithms and tools do not print the same message after a
+     maximum number of times. Default is 10 (CaloKernel v2r1)
+   . Take into account time information in Calo digitization (CaloDigit v1r0)
 
  - DST changes:
    . Updated list of algorithms in Trig/AlgUsedTimes and added elapsed time 
      measurement. This last change is not backwards compatible: to read 
      AlgUsedTimes from old DSTs must use Event/Event < v2r1
      (Event v2r1, EventSys v12r9, BrunelAlgs v1r6)
+   . Add /Event/Rec/Calo/Particles and optional calorimeter ID objects
+     /Event/Rec/Calo/HcalE, HcalIDe, HcalIDmu, PrsE, PrsID, EcalID
+     These objects are used to build ProtoParticles and will be removed from
+     the DST when  ProtoParticle cration is moved to Brunel.
+   . Rename CaloClusters2MCParticles to EcalClusters2MCParticles
+     EcalCelAutoClusters to EcalClusters, SplitClusters to EcalSplitClusters
 
  - Bug fixes:
    . Fix a memory leak in SicbMuonHitCnv (MuonSicbCnv v6r6)
+   . Minor bug fixes for evaluation of cluster spread and covarinances
+     (CaloUtils v4r3)
+
+ - Code cleanup:
+   . Repackaging of Calo software
+     New packages: CaloDigit v1r0, CaloRec v1r0
+     Removed packages: CaloTools, CaloAlgs, CaloRec, CaloTrackTools  
+   . Add default locations and relations factories (CaloEvent v11r3)
+   . Version change to force recompilation 
+     (CaloSicbCnv v7r2, CaloDet v5r2, CaloDetXmlCnv v2r1, L0Calo v6r2)
 
 </PRE><H1><A NAME=v15r0>2002-11-11 Brunel v15r0</A></H1><PRE>
  - New tuning:

@@ -57,17 +57,21 @@ BrunelTriggerTRIGGERSeq.Members += { "L1Track2dTruth" };
 BrunelTriggerTRIGGERSeq.Members += { "L1Track3dTruth" };
 
 // Calorimeter digitisation and reconstruction
-ApplicationMgr.DLLs += { "CaloSicbCnv", "CaloDetXmlCnv" };
+ApplicationMgr.DLLs += { "CaloSicbCnv"   , 
+                         "CaloDetXmlCnv" , 
+                         "CaloReco"      , 
+                         "CaloDigit"     ,
+                         "CaloEvent"     };
+#pragma print off 
+#include "$CALODIGITROOT/options/Brunel.opts"
 #pragma print off
-#include "$CALOTOOLSOPTS/Brunel.opts"
+#include "$CALORECOOPTS/Brunel.opts"
 #pragma print off
-#include "$CALOALGSOPTS/Brunel.opts"
+#include "$CALORECOOPTS/Reco.opts"
 #pragma print off
-#include "$CALORECOPTS/Brunel.opts"
+#include "$CALORECOOPTS/Filters.opts"
 #pragma print off
 #include "$CALOASSOCIATORSOPTS/Brunel.opts"
-#pragma print off
-#include "$CALOTRACKTOOLSOPTS/Brunel.opts"
 #pragma print off
 #include "$CALOMONITOROPTS/Brunel.opts"
 #pragma print on

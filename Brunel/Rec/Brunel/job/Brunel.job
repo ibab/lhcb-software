@@ -2,20 +2,22 @@
 ###########################################################
 #   Initialize LSF queue parameters
 #
-# "-q" gives the queue (1nh by default)
+# "-q" gives the queue (1nd by default)
 # "-c" gives the CPU time in minutes
 #
-# -q 8nm  = about 30 min HP735     express
-# -q 1nh           3 hours         short
-# -q 8nh           1 day           medium
-# -q 1nd           3 days          long
-# -q 1nw          10 days HP K260  verylong
+# -q 8nm  express
+# -q 1nh  short
+# -q 8nh  medium
+# -q 1nd  long -> default, necessary for 500 events
+# -q 1nw  verylong
 #
 #
 #  define the job name
 #BSUB -J brunel
 #  define the queue
-#BSUB -q 8nh
+#BSUB -q 1nd
+#  request a minimum amount of memory resources
+#BSUB -R "maxmem > 270"
 #
 ###########################################################
 #
