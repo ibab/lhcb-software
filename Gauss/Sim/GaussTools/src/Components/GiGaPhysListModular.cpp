@@ -162,7 +162,7 @@ void GiGaPhysListModular::SetCuts()
       << " The cut for anti_neutron is set to \t" 
       << cutForAntiNeutron () / mm << " mm " << endreq ;
   
-  if (verboseLevel>0) { DumpCutValuesTable(); }
+  //  if (verboseLevel>0) { DumpCutValuesTable(); }
 };
   
 

@@ -31,12 +31,6 @@ IMPLEMENT_GiGaFactory( TrCutsRunAction ) ;
 
 // ============================================================================
 /** standard constructor 
- *  @see GiGaPhysListBase
- *  @see GiGaBase 
- *  @see AlgTool 
- *  @param type type of the object (?)x
- *  @param name name of the object
- *  @param parent  pointer to parent object
  */
 // ============================================================================
 TrCutsRunAction::TrCutsRunAction
@@ -44,11 +38,11 @@ TrCutsRunAction::TrCutsRunAction
   const std::string& name   ,
   const IInterface*  parent ) 
   : GiGaRunActionBase( type , name , parent )
-    , m_ecut(1.0)
-    , m_phcut(1.0)
-    , m_hcut(10.0)
-    , m_ncut(10.0)
-    , m_mcut(10.0)
+    , m_ecut(1.0) //MeV
+    , m_phcut(1.0) //MeV
+    , m_hcut(10.0) //MeV
+    , m_ncut(10.0) //MeV
+    , m_mcut(10.0) //MeV
     , m_killloops(true)
     , m_maxsteps(100)
     , m_minstep(0.001)
@@ -114,6 +108,12 @@ void TrCutsRunAction::BeginOfRunAction( const G4Run* run )
       else if(abs(particleCode)==2112)
         {
           acut=m_ncut;
+        }
+      else if(abs(particleCode)==12 || abs(particleCode)==14 
+              || abs(particleCode)==16)
+        {
+          // do not track neutrinos
+          acut=100000000.0;
         }
       else 
         {

@@ -5,6 +5,12 @@
 ! Purpose       : G4 actions, and some miscealenous algs for Gauss
 !-----------------------------------------------------------------------------
 
+!======================== GaussTools v8r8 =================================
+- TraCutsRunAction - added cut for neutrinos (not to track them)
+- GaussPostStepAction - added possibility of storing trajectories
+                        according to their creator process
+- GiGaSensDetPrint - removed obsolete files
+
 !======================== GaussTools v8r7 =================================
 ! 2003-10-30 - Witek Pokorski
  - G4cout replaced by std::cout in a few files

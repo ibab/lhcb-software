@@ -1,6 +1,6 @@
 # =============================================================================
 package GaussTools
-version v8r7
+version v8r8
 
 # =============== package structure ===========================================
 branches          cmt src doc GaussTools

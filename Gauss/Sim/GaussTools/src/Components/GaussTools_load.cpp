@@ -35,7 +35,6 @@ void GaussTools_load()
   DECLARE_GiGaFactory     (    GiGaPhysListGeantino    ) ;
  
   /// Sensitive Detector 
-  DECLARE_GiGaFactory     (    GiGaSensDetPrint        ) ;
   DECLARE_GiGaFactory     (    GiGaSensDetBudget       ) ;
 
   /// tracking action 

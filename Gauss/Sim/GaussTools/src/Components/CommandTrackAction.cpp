@@ -36,9 +36,12 @@ CommandTrackAction::CommandTrackAction
 ( const std::string& type   ,
   const std::string& name   ,
   const IInterface*  parent ) 
-  : GiGaTrackActionBase( type , name , parent ), m_trackid(1)
+  : GiGaTrackActionBase( type , name , parent ), m_trackid(1), 
+    m_precommand("/tracking/verbose 1"), m_postcommand("/tracking/verbose 0")
 {
   declareProperty("TrackID", m_trackid);
+  declareProperty("PreCommand", m_precommand);  
+  declareProperty("PostCommand", m_postcommand);
 };
 // ============================================================================
 
@@ -110,11 +113,11 @@ void CommandTrackAction::PreUserTrackingAction ( const G4Track* track )
   if(track->GetTrackID()==m_trackid)
     {
       m_test=true;
-      ui->ApplyCommand("/tracking/verbose 1" ); 
+      ui->ApplyCommand(m_precommand); 
     }
   else if(m_test)
     {
-      ui->ApplyCommand("/tracking/verbose 0" );
+      ui->ApplyCommand(m_postcommand);
     }
 };
 

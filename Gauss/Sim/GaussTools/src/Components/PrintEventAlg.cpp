@@ -24,6 +24,11 @@
 #include "Event/MCHit.h"
 #include "Event/GenHeader.h"
 #include "Event/Collision.h"
+
+
+#include"G4Material.hh"
+
+
 /// local 
 #include "PrintEventAlg.h"
 
@@ -96,6 +101,10 @@ StatusCode PrintEventAlg::initialize()
 // ============================================================================
 StatusCode PrintEventAlg::execute() 
 {
+
+
+  //  std::cout << *(G4Material::GetMaterialTable()) << std::endl;
+
   ///
   typedef MCParticles Particles ;
   typedef MCVertices  Vertices  ;

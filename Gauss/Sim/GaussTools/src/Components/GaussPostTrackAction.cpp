@@ -83,6 +83,9 @@ GaussPostTrackAction::GaussPostTrackAction
  ///
     , m_storeBySecondariesProcess ( false )
     , m_childStoredProcess()
+ ///
+    , m_storeByOwnProcess ( false )
+    , m_ownStoredProcess()
 {
   // declare own properties
   declareProperty( "StoreAll"              , m_storeAll              ) ; 
@@ -99,6 +102,8 @@ GaussPostTrackAction::GaussPostTrackAction
   declareProperty( "StoredChildTypes"      , m_childStoredTypesNames ) ;
   declareProperty( "StoreByChildProcess"   , m_storeBySecondariesProcess);
   declareProperty( "StoredChildProcesses"  , m_childStoredProcess);
+  declareProperty( "StoreByOwnProcess"     , m_storeByOwnProcess);
+  declareProperty( "StoredOwnProcesses"    , m_ownStoredProcess);
 };
 // ============================================================================
 
@@ -419,6 +424,25 @@ void GaussPostTrackAction::PostUserTrackingAction ( const G4Track* track )
             } 
           ///
         }
+    }
+  // (7.6) store tracks according to creator process 
+  if( m_storeByOwnProcess )
+    {
+      // 
+      if(std::find(m_ownStoredProcess.begin(), m_ownStoredProcess.end(), 
+                   track->GetCreatorProcess()->GetProcessName()) 
+         != m_ownStoredProcess.end()) 
+        { 
+          if(track->GetCreatorProcess())
+            {
+              GaussTrajectory* traj=(GaussTrajectory*)(trackMgr()->GimmeTrajectory());
+              traj->setProcessName(track->GetCreatorProcess()->GetProcessName());
+            }
+          
+          trackMgr()->SetStoreTrajectory( true );   
+          return; /// RETURN
+        } 
+      ///
     }
   
   // (8) store  tracks, marked through GaussTrackInformation class

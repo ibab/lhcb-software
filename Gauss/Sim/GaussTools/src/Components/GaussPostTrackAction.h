@@ -144,6 +144,10 @@ private:
   bool m_storeBySecondariesProcess;
   /// container for the process names
   std::vector<std::string> m_childStoredProcess;
+  /// store particles produced in specific process
+  bool m_storeByOwnProcess;
+  /// container for own process names
+  std::vector<std::string> m_ownStoredProcess;
   ///  
   /// container of names of own   types 
   TypeNames       m_ownStoredTypesNames   ;  
