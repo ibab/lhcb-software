@@ -91,13 +91,13 @@ for(iterOrigin=orig.hitsTraceBack().begin();iterOrigin<orig.hitsTraceBack().end(
       if(quadrant==0){
                       newidX=idX; 
                       newidY=idY;
-                     }else if(quadrant==1){
+                     }else if(quadrant==3){
                       newidX=numberOfPCX-idX-1; 
                       newidY=idY;                          
                      }else if(quadrant==2){
                       newidX=numberOfPCX-idX-1; 
                       newidY=numberOfPCY-idY-1;
-                     }else if(quadrant==3){
+                     }else if(quadrant==1){
                           newidX=idX;
                           newidY=numberOfPCY-idY-1;
                      }
