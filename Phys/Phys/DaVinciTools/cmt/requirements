@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.31 2004-03-11 13:02:14 pkoppenb Exp $
+# $Id: requirements,v 1.32 2004-03-11 16:12:34 pkoppenb Exp $
 # Created    : 05/02/2002
 # Maintainer : P. Koppenburg
 #
@@ -10,7 +10,7 @@ version           v9r0
 
 # Structure, i.e. directories to process. 
 #============================================================================
-branches          cmt doc options src DaVinciTools
+branches          cmt doc options src Lib DaVinciTools
 
 # Exported header files
 #============================================================================
@@ -22,7 +22,6 @@ use  PhysEvent      v*     Event
 use  AIDA           v*
 use  CaloUtils      v*     Calo
 use  CaloInterfaces v*     Calo
-use  DaVinciKernel  v*     Phys
 
 # Extra language for translating yacc to c++
 # This is used to generate once the necessary files on Linux that are
@@ -40,6 +39,10 @@ use  DaVinciKernel  v*     Phys
 #document lex_to_icpp RecLexer reclexer.lpp
 #macro reclexer_lpp_lexpp_prefix "DecayFinder::"
 
+# Linker library building rule (has to come first)
+#============================================================================
+library          DaVinciToolsLib  ../Lib/*.cpp
+
 # Component library building rule
 #============================================================================
 library          DaVinciTools    ../src/*.cpp
@@ -47,3 +50,6 @@ library          DaVinciTools    ../src/*.cpp
 # define component library link options
 #============================================================================
 apply_pattern component_library library=DaVinciTools
+apply_pattern linker_library    library=DaVinciToolsLib
+
+

@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.68 2004-03-11 13:02:14 pkoppenb Exp $
+! $Id: release.notes,v 1.69 2004-03-11 16:12:34 pkoppenb Exp $
 ! Package     : DaVinciTools
 ! Responsible : P. Koppenburg, Sandra Amato
 
@@ -15,13 +15,12 @@
  - src/PhotonParticleMaker.cpp
    . New calo tools 
  - src/PhysDesktop.cpp, PreDV.*
-   . Removed Outputlocation. New mandatory DVAlgorithm. 
+   . Removed Outputlocation. New mandatory DVAlgorithm PreDV. 
  - src/reclecer.* (Odie)
    . Correct eta_prime bug
  - DaVinciHeader.cpp
    . moved to src
- - DaVinciTools/I*.h, DaVinciTools/DVAlgorith.h
-   . Moved to DaVinciKernel
+ - created directory Lib and linker library DaVinciAlgLib
    
 !========================== DaVinciTools v8r5 2004-02-11 ==================
 ! 2004-02-11 - Gloria CORTI for Vincenzo VAGNONI
