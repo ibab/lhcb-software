@@ -46,17 +46,13 @@ CaloLCorrectionSimple::CaloLCorrectionSimple(const std::string& type,
                                              const std::string& name, 
                                              const IInterface* parent) 
   : CaloTool( type, name, parent )
-  , m_Ec(7.3)
-  , m_X0(17.1)
+  , m_Cste(78.59)
   , m_Zecal(12490.)
-  , m_LogCste(-0.8)
-  , m_Coeff() {
+  , m_LogCste(12.04) {
   declareInterface<ICaloHypoTool>(this);
-  declareProperty("Ec",m_Ec);
-  declareProperty("X0",m_X0);
+  declareProperty("Cste",m_Cste);
   declareProperty("Zecal",m_Zecal);
   declareProperty("LogCste",m_LogCste);
-  declareProperty("Coeff",m_Coeff);
 }
 // ============================================================================
 
@@ -84,17 +80,8 @@ StatusCode CaloLCorrectionSimple::initialize()
     Error("Could not initialize the base class ",sc);
     return StatusCode::FAILURE;
   }
-  if (2!=m_Coeff.size()) {
-    logmsg << MSG::INFO << "number of coeff=" << m_Coeff.size() 
-           << "!!!" << endreq;
-    return StatusCode::FAILURE;
-  }
-  unsigned int i=0;
-  for (i=0;i<m_Coeff.size();i++) {
-    logmsg << MSG::INFO << "coeff[" << i << "]=" << m_Coeff[i] << endreq;
-  }
-  logmsg << MSG::INFO << "Ec=" << m_Ec 
-         << " X0=" << m_X0
+  logmsg << MSG::INFO 
+         << " Cste=" << m_Cste
          << " Zecal=" << m_Zecal
          << " LogCste=" << m_LogCste << endreq;
 
@@ -149,10 +136,9 @@ StatusCode CaloLCorrectionSimple::operator() ( CaloHypo* hypo  ) const
   const double x = hypo -> position () -> x () ;
   const double y = hypo -> position () -> y () ;
   // compute trigonometric things...
-  double theta=atan(sqrt(x*x+y*y)/m_Zecal);
   double result = m_Zecal+
-    ((log(e/m_Ec)+m_LogCste+m_Coeff[0])*m_X0*m_Coeff[1])
-    *cos(theta);
+    (m_Cste+m_LogCste*log(e))
+    /sqrt(1+((x*x+y*y)/(m_Zecal*m_Zecal)));
   // talk to user
   MsgStream logmsg(msgSvc(),name());
   logmsg << MSG::VERBOSE << "calculate() has been called"

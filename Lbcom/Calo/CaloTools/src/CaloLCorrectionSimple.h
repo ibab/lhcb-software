@@ -70,8 +70,7 @@ protected:
   virtual ~CaloLCorrectionSimple() ;
   
 private:
-  double m_Ec,m_X0,m_Zecal,m_LogCste;
-  std::vector<double> m_Coeff;
+  double m_Cste,m_Zecal,m_LogCste;
 };
 // ============================================================================
 
