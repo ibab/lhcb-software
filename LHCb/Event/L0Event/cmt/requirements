@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.19 2002-06-19 13:26:23 roiser Exp $
+# $Id: requirements,v 1.20 2002-06-19 13:54:08 roiser Exp $
 package L0Event
 version v12r0
 
@@ -9,7 +9,7 @@ include_dirs $(L0EVENTROOT)
 use 	LHCbKernel	v1r*    Kernel
 use     EventKernel     v2r*    Event
 use 	MuonKernel 	v2r* 	Muon
-use 	GaudiObjDesc	v4r4    -no_auto_imports
+use 	GaudiObjDesc	v4r3    -no_auto_imports
 
 #---- Produce Header-Files and from XML description
 private
