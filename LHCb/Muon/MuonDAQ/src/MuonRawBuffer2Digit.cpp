@@ -1,4 +1,4 @@
-// $Id: MuonRawBuffer2Digit.cpp,v 1.4 2004-02-10 17:08:25 asatta Exp $
+// $Id: MuonRawBuffer2Digit.cpp,v 1.5 2004-04-13 13:56:45 asatta Exp $
 // Include files 
 
 // from Gaudi
@@ -239,10 +239,10 @@ StatusCode MuonRawBuffer2Digit::execute() {
     //}
   }
   
-   eventSvc()->registerObject( MuonDigitLocation::MuonDigit, MuonDigitsCon );
+  StatusCode sc= eventSvc()->registerObject( MuonDigitLocation::MuonDigit, MuonDigitsCon );
   //StatusCode sc=
 //	eventSvc()->registerObject("Raw/Muon/DigitsTest", MuonDigitsCon );
- // if(sc.isFailure())msg<<MSG::INFO<<"error "<<endreq;
+  if(sc.isFailure())msg<<MSG::INFO<<"error "<<endreq;
   
   return StatusCode::SUCCESS;
 };
@@ -282,7 +282,7 @@ void MuonRawBuffer2Digit::TilePrintOut(MuonTileID digitTile)
 unsigned int MuonRawBuffer2Digit::readoutType(int partition, MuonLayout lay)
 {
   //  MsgStream  msg( msgSvc(), name() );
-  unsigned int itype=-1;
+  unsigned int itype=10;
   
   for (int mapNumber=0;mapNumber<(int)m_pGetInfo->
          getLogMapPerRegion(partition);mapNumber++){
