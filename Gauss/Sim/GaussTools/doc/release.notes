@@ -4,6 +4,10 @@
 ! Purpose       : G4 actions and some miscellaneous algs for Gauss
 !-----------------------------------------------------------------------------
 
+! 2005-01-19 - Patrick Robbe
+ - src/Components/TrCutsRunAction.h/cpp
+   . do not apply MinEkine cuts to short lived particles
+
 ! 2005-01-17 - Patrick Robbe
  - src/Components/GaussPostTrackAction.cpp
    . transmit the pointer to the HepMC event and the barcode of
