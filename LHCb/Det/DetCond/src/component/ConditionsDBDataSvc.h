@@ -1,4 +1,4 @@
-//$Id: ConditionsDBDataSvc.h,v 1.2 2001-11-23 17:14:25 andreav Exp $
+//$Id: ConditionsDBDataSvc.h,v 1.3 2001-11-26 19:04:56 andreav Exp $
 #ifndef DETCOND_CONDITIONSDBDATASVC_H
 #define DETCOND_CONDITIONSDBDATASVC_H 1
 
@@ -15,7 +15,8 @@ class IRegistry;
 ///---------------------------------------------------------------------------
 /** @class ConditionsDBDataSvc ConditionsDBDataSvc.h Det/DetCond/ConditionsDBDataSvc.h
 
-    A data service for ConditionData from the CERN-IT CondDB.
+    A data service for DataObjects corresponding to condition data 
+    from the CERN-IT ConditionsDB.
 
     @author Andrea Valassi 
     @date August 2001
@@ -72,10 +73,10 @@ class ConditionsDBDataSvc : virtual public ConditionDataSvc,
   StatusCode getNameInStore         ( std::string&       path,
 				      const std::string& folderName );
   
-  /// Create a ConditionData object by folder name (for default tag and key),
+  /// Create a valid DataObject by folder name (for default tag and key),
   /// then load it in the TDS using the implicit naming convention:
-  /// if the ConditionData exists already, update it instead (if necessary).
-  /// Specify the clID of the ConditionData and the technology type 
+  /// if the DataObject exists already, update it instead (if necessary).
+  /// Specify the clID of the DataObject and the technology type 
   /// for the strings stored in the CondDB 
   StatusCode retrieveValidCondition  ( DataObject*&         refpObject,
 				       const std::string&   folderName,

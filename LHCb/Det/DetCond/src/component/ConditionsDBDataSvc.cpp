@@ -1,13 +1,13 @@
-//$Id: ConditionsDBDataSvc.cpp,v 1.2 2001-11-23 17:16:21 andreav Exp $
+//$Id: ConditionsDBDataSvc.cpp,v 1.3 2001-11-26 19:05:19 andreav Exp $
 #include <string>
 
 #include "ConditionsDBDataSvc.h"
 
 #include "ConditionsDBAddress.h"
 
-#include "DetCond/ConditionData.h"
 #include "DetCond/IConditionsDBCnvSvc.h"
 
+#include "GaudiKernel/DataObject.h"
 #include "GaudiKernel/IConversionSvc.h"
 #include "GaudiKernel/ISvcLocator.h"
 #include "GaudiKernel/ITime.h"
@@ -143,7 +143,7 @@ ConditionsDBDataSvc::getNameInCondDB  ( std::string& folderName,
   MsgStream log(msgSvc(), "ConditionsDBDataSvc" );
   if ( tdsName.find(m_conditionStoreRoot) != 0 ) {
     log << MSG::DEBUG 
-	<< "ConditionData path in the Data Store " << tdsName 
+	<< "DataObject path in the Data Store " << tdsName 
 	<< " does not contain root path " << m_conditionStoreRoot << endreq;
     return StatusCode::FAILURE;  
   }
@@ -165,14 +165,14 @@ ConditionsDBDataSvc::getNameInStore ( std::string& path,
   path = m_conditionStoreRoot + folderName;
   if ( path.length() == 0 || path == m_rootName ) {
     log << MSG::ERROR
-	<< "Invalid path for ConditionData: " << path << endreq;
+	<< "Invalid path for DataObject: " << path << endreq;
     log << MSG::ERROR
 	<< "This path is reserved for the data store root" << endreq;
     return StatusCode::FAILURE;
   }
   else if ( path[0] != IDataProviderSvc::SEPARATOR ) {
     log << MSG::ERROR
-	<< "Invalid path for ConditionData: " << path << endreq;
+	<< "Invalid path for DataObject: " << path << endreq;
     log << MSG::ERROR
 	<< "Specify a full path instead of a relative path" << endreq;
     return StatusCode::FAILURE;
@@ -182,10 +182,10 @@ ConditionsDBDataSvc::getNameInStore ( std::string& path,
 
 //----------------------------------------------------------------------------
 
-/// Create a ConditionData object by folder name (for default tag and key),
+/// Create a valid DataObject by CondDB folder name (for default tag and key),
 /// then load it in the TDS using the implicit naming convention:
-/// if the ConditionData exists already, update it instead (if necessary).
-/// Specify the classID of the ConditionData and the technology type for 
+/// if the DataObject exists already, update it instead (if necessary).
+/// Specify the classID of the DataObject and the technology type for 
 /// the strings stored in the CondDB. 
 StatusCode 
 ConditionsDBDataSvc::retrieveValidCondition  ( DataObject*&         refpObject,
@@ -196,11 +196,11 @@ ConditionsDBDataSvc::retrieveValidCondition  ( DataObject*&         refpObject,
   MsgStream log(msgSvc(), "ConditionsDBDataSvc" );
   StatusCode sc;
   log << MSG::DEBUG 
-      << "Retrieving a valid ConditionData from folder:" << endreq;
+      << "Retrieving a valid DataObject from ConditionsDB folder:" << endreq;
   log << MSG::DEBUG << folderName << endreq;
 
   // Check if the event time is set
-  if ( 0 == eventTime() ) {
+  if ( !checkEventTime() ) {
     log << MSG::ERROR << "The event time is not set yet" << endreq;
     return StatusCode::FAILURE;
   }
@@ -210,7 +210,7 @@ ConditionsDBDataSvc::retrieveValidCondition  ( DataObject*&         refpObject,
   sc = getNameInStore( path, folderName );
   if ( !sc.isSuccess() ) return sc;
   log << MSG::DEBUG 
-      << "ConditionData will be registered in the store as:" << endreq;
+      << "DataObject will be registered in the store as:" << endreq;
   log << MSG::DEBUG << path << endreq;
   
   // Check if a DataObject is already registered in the store with this name
@@ -264,7 +264,7 @@ ConditionsDBDataSvc::retrieveValidCondition  ( DataObject*&         refpObject,
       << "Create a new address and associate it to:" << endreq;
   log << MSG::DEBUG << path << endreq;
   IOpaqueAddress* theAddress = new ConditionsDBAddress
-    ( folderName, m_tagName, *eventTime(), classID, type, entry );
+    ( folderName, m_tagName, eventTime(), classID, type, entry );
   log << MSG::DEBUG << "Address of CondDB type=" << (int)theAddress->svcType() 
       << " classID=" << classID << " stringType=" << (int)type << endreq;
   entry->setAddress(theAddress);

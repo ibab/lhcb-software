@@ -1,4 +1,4 @@
-//$Id: ConditionsDBAddress.cpp,v 1.2 2001-11-23 17:18:48 andreav Exp $
+//$Id: ConditionsDBAddress.cpp,v 1.3 2001-11-26 19:07:34 andreav Exp $
 
 #include "ConditionsDBAddress.h"
 
@@ -60,8 +60,8 @@ ConditionsDBAddress::~ConditionsDBAddress()
 //---------------------------------------------------------------------------
 
 /// Get the event time  
-const ITime* ConditionsDBAddress::time ( ) {
-  return m_time; 
+const ITime& ConditionsDBAddress::time ( ) {
+  return *m_time; 
 }
 
 //---------------------------------------------------------------------------

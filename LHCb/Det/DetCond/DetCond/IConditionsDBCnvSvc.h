@@ -1,4 +1,4 @@
-//$Id: IConditionsDBCnvSvc.h,v 1.2 2001-11-23 17:05:41 andreav Exp $
+//$Id: IConditionsDBCnvSvc.h,v 1.3 2001-11-26 18:57:46 andreav Exp $
 #ifndef DETCOND_ICONDITIONSDBCNVSVC_H
 #define DETCOND_ICONDITIONSDBCNVSVC_H 1
 
@@ -15,7 +15,7 @@
 static const InterfaceID IID_IConditionsDBCnvSvc (19702, 1, 0);
 
 // Forward declarations
-class ConditionData;
+class DataObject;
 class IConditionsDBGate;
 class ITime;
 
@@ -23,6 +23,8 @@ class ITime;
 /** @class IConditionsDBCnvSvc IConditionsDBCnvSvc.h Det/DetCond/IConditionsDBCnvSvc.h
 
     Abstract interface of a conversion service for CERN-IT CondDB persistency.
+    Allows to create and update condition data objects (i.e. DataObjects
+    implementing IValidity).
 
     @author Andrea Valassi 
     @date February 2001
@@ -40,42 +42,42 @@ class IConditionsDBCnvSvc : virtual public IInterface
 
  public:
   
-  // Create/update ConditionData that's not necessarily registered in the TDS.
+  // Create/update condition DataObject not necessarily registered in the TDS.
 
-  /// Create a ConditionData object by folder name, tag and time.
-  /// This method does not register ConditionData in the transient data store.
+  /// Create a condition DataObject by folder name, tag and time.
+  /// This method does not register DataObject in the transient data store.
   virtual 
-    StatusCode createConditionData ( ConditionData*&      refpCdata,
+    StatusCode createConditionData ( DataObject*&         refpObject,
 				     const std::string&   folderName,
 				     const std::string&   tagName,
 				     const ITime&         time,
 				     const CLID&          classID,
 				     const unsigned char& type )       = 0;
 
-  /// Create a ConditionData object by folder name, tag and time.
-  /// This method does not register ConditionData in the transient data store.
+  /// Create a condition DataObject by folder name, tag and time.
+  /// This method does not register DataObject in the transient data store.
   /// If not specifed, type and clID are discovered at runtime in the CondDB.
   virtual 
-    StatusCode createConditionData ( ConditionData*&      refpCdata,
+    StatusCode createConditionData ( DataObject*&         refpObject,
 				     const std::string&   folderName,
 				     const std::string&   tagName,
 				     const ITime&         time )       = 0;
 
-  /// Update a ConditionData object by folder name, tag and time.
-  /// This method does not register ConditionData in the transient data store.
+  /// Update a condition DataObject by folder name, tag and time.
+  /// This method does not register DataObject in the transient data store.
   virtual 
-    StatusCode updateConditionData ( ConditionData*       pCdata,
+    StatusCode updateConditionData ( DataObject*          pObject,
 				     const std::string&   folderName,
 				     const std::string&   tagName,
 				     const ITime&         time,
 				     const CLID&          classID,
 				     const unsigned char& type )       = 0;
 
-  /// Update a ConditionData object by folder name, tag and time.
-  /// This method does not register ConditionData in the transient data store.
+  /// Update a condition DataObject by folder name, tag and time.
+  /// This method does not register DataObject in the transient data store.
   /// If not specifed, type and clID are discovered at runtime in the CondDB.
   virtual 
-    StatusCode updateConditionData ( ConditionData*       pCdata,
+    StatusCode updateConditionData ( DataObject*          pObject,
 				     const std::string&   folderName,
 				     const std::string&   tagName,
 				     const ITime&         time )       = 0;

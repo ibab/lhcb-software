@@ -1,4 +1,4 @@
-//$Id: ConditionsDBCnvSvc.h,v 1.3 2001-11-23 17:22:03 andreav Exp $
+//$Id: ConditionsDBCnvSvc.h,v 1.4 2001-11-26 19:08:17 andreav Exp $
 #ifndef DETCOND_CONDITIONSDBCNVSVC_H
 #define DETCOND_CONDITIONSDBCNVSVC_H 1
 
@@ -15,6 +15,8 @@ class IOpaqueAddress;
 /** @class ConditionsDBCnvSvc ConditionsDBCnvSvc.h Det/DetCond/ConditionsDBCnvSvc.h
 
     A conversion service for CERN-IT CondDB persistency.
+    Allows to create and update condition data objects (i.e. DataObjects
+    implementing IValidity).
 
     @author Andrea Valassi 
     @date February 2001
@@ -72,38 +74,38 @@ class ConditionsDBCnvSvc : public ConversionSvc,
  public:
 
   // Implementation of IConditionsDBCnvSvc.
-  // Create/update ConditionData that's not necessarily registered in the TDS.
+  // Create/update condition DataObject not necessarily registered in the TDS.
   
-  /// Create a ConditionData object by folder name, tag and time.
-  /// This method does not register ConditionData in the transient data store.
-  StatusCode createConditionData   ( ConditionData*&      refpCdata,
+  /// Create a condition DataObject by folder name, tag and time.
+  /// This method does not register DataObject in the transient data store.
+  StatusCode createConditionData   ( DataObject*&         refpObject,
 				     const std::string&   folderName,
 				     const std::string&   tagName,
 				     const ITime&         time,
 				     const CLID&          classID,
 				     const unsigned char& type );
   
-  /// Create a ConditionData object by folder name, tag and time.
-  /// This method does not register ConditionData in the transient data store.
+  /// Create a condition DataObject by folder name, tag and time.
+  /// This method does not register DataObject in the transient data store.
   /// If not specifed, type and clID are discovered at runtime in the CondDB.
-  StatusCode createConditionData   ( ConditionData*&      refpCdata,
+  StatusCode createConditionData   ( DataObject*&         refpObject,
 				     const std::string&   folderName,
 				     const std::string&   tagName,
 				     const ITime&         time );
   
-  /// Update a ConditionData object by folder name, tag and time.
-  /// This method does not register ConditionData in the transient data store.
-  StatusCode updateConditionData   ( ConditionData*       pCdata,
+  /// Update a condition DataObject by folder name, tag and time.
+  /// This method does not register DataObject in the transient data store.
+  StatusCode updateConditionData   ( DataObject*          pObject,
 				     const std::string&   folderName,
 				     const std::string&   tagName,
 				     const ITime&         time,
 				     const CLID&          classID,
 				     const unsigned char& type );
   
-  /// Update a ConditionData object by folder name, tag and time.
-  /// This method does not register ConditionData in the transient data store.
+  /// Update a condition DataObject by folder name, tag and time.
+  /// This method does not register DataObject in the transient data store.
   /// If not specifed, type and clID are discovered at runtime in the CondDB.
-  StatusCode updateConditionData   ( ConditionData*       pCdata,
+  StatusCode updateConditionData   ( DataObject*          pObject,
 				     const std::string&   folderName,
 				     const std::string&   tagName,
 				     const ITime&         time );
@@ -129,16 +131,16 @@ class ConditionsDBCnvSvc : public ConversionSvc,
   StatusCode i_decodeAddress       ( IOpaqueAddress*      pAddress, 
 				     std::string&         folderName,
 				     std::string&         tagName, 
-				     const ITime*&        evtTime,
+				     ITime&               evtTime,
 				     CLID&                classID,
 				     unsigned char&       type);
   
  private:
 
-  /// Handle to the low-level CondDB gate
+  /// Handle to the low-level ConditionsDB gate
   ConditionsDBGate*    m_conditionsDBGate;
 
-  /// IConversionSvc interface of the DetectorPersistencySvc
+  /// Handle to the IConversionSvc interface of the DetectorPersistencySvc
   IConversionSvc*      m_detPersSvc;
 
 };

@@ -1,6 +1,14 @@
-# $Id: release.notes,v 1.3 2001-11-23 18:23:11 andreav Exp $
+# $Id: release.notes,v 1.4 2001-11-26 19:11:35 andreav Exp $
 Package Det/DetCond
 Package manager : Andrea Valassi 
+
+!20011126 - Andrea Valassi
+- A few changes before including my data service in GaudiSvc.
+-> move ConditionData from DetCond/src/Lib to DetCondExample
+   > only DataObjects are manipulated, with dynamic casts to IValidity
+   > no Lib anymore in DetCond/src
+-> manipulate ITime and TimePoint objects rather than ITime pointers
+   > add bool method to check if the event time is defined in ConditionDataSvc
 
 !20011123 - Andrea Valassi (v2)
 - Upgrade to Gaudi v9

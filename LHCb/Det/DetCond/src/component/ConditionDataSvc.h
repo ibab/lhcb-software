@@ -1,4 +1,4 @@
-//$Id: ConditionDataSvc.h,v 1.2 2001-11-23 17:18:13 andreav Exp $
+//$Id: ConditionDataSvc.h,v 1.3 2001-11-26 19:06:49 andreav Exp $
 #ifndef DETCOND_CONDITIONDATASVC_H
 #define DETCOND_CONDITIONDATASVC_H 1
 
@@ -9,11 +9,13 @@
 // Forward and external declarations
 class ITime;
 class StatusCode;
+class TimePoint;
 
 ///---------------------------------------------------------------------------
 /** @class ConditionDataSvc ConditionDataSvc.h Det/DetCond/ConditionDataSvc.h
 
-    A DataSvc specialised in ConditionData.
+    A DataSvc specialised in condition data
+    (i.e. DataObjects implementing IValidity).
 
     @author Andrea Valassi 
     @date August 2001
@@ -62,13 +64,19 @@ class ConditionDataSvc : public DataSvc,
   /// Set the new event time  
   virtual void setEventTime            ( const ITime& time );
 
+  /// Check if the event time has been set 
+  virtual const bool checkEventTime    ( );
+
   /// Get the event time  
-  virtual const ITime* eventTime       ( );
+  virtual const ITime& eventTime       ( );
 
  private:
 
-  /// Current event time (should be set by the event loop manager)
-  ITime*             m_eventTime;       // Current event time
+  /// Has the event time been defined?
+  bool               m_eventTimeDefined;
+
+  /// Current event time
+  ITime*              m_eventTime;
 
 };
 

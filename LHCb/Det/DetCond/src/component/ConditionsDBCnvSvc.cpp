@@ -1,4 +1,4 @@
-//$Id: ConditionsDBCnvSvc.cpp,v 1.3 2001-11-23 17:25:40 andreav Exp $
+//$Id: ConditionsDBCnvSvc.cpp,v 1.4 2001-11-26 19:09:10 andreav Exp $
 #include <string>
 #include <stdio.h>
 #include <unistd.h>
@@ -8,11 +8,11 @@
 #include "ConditionsDBAddress.h"
 #include "ConditionsDBGate.h"
 
-#include "DetCond/ConditionData.h"
-
+#include "GaudiKernel/DataObject.h"
 #include "GaudiKernel/IConverter.h"
 #include "GaudiKernel/IDataProviderSvc.h"
 #include "GaudiKernel/ISvcLocator.h"
+#include "GaudiKernel/IValidity.h"
 #include "GaudiKernel/TimePoint.h"
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/SvcFactory.h"
@@ -78,10 +78,10 @@ StatusCode ConditionsDBCnvSvc::initialize()
     return sc;
   }
 
-  // Set the condition data store
+  // Set the DetectorDataSvc as data provider service
   sc = setDataProvider ( pDDS );
   if ( !sc.isSuccess() ) {
-    log << MSG::ERROR << "Could not set transient store" << endreq;
+    log << MSG::ERROR << "Could not set data provider" << endreq;
     return sc;
   }
 
@@ -99,7 +99,7 @@ StatusCode ConditionsDBCnvSvc::initialize()
 	<< endreq;
   }
   
-  // Query the IAddressCreator interface of the detector data service
+  // Query the IAddressCreator interface of the detector persistency service
   IAddressCreator* iAddrCreator;
   sc = m_detPersSvc->queryInterface(IID_IAddressCreator, 
 				    (void**) &iAddrCreator);
@@ -171,7 +171,7 @@ StatusCode ConditionsDBCnvSvc::createObj ( IOpaqueAddress* pAddress,
   /// First, decode the opaque address 
   std::string   folderName;
   std::string   tagName;
-  const ITime*  evtTime;
+  TimePoint     evtTime;
   CLID          classID;
   unsigned char type;
   StatusCode status = i_decodeAddress 
@@ -181,17 +181,15 @@ StatusCode ConditionsDBCnvSvc::createObj ( IOpaqueAddress* pAddress,
     return StatusCode::FAILURE;
   }
 
-  /// Second, create a new ConditionData object for the given folder, time, tag
+  /// Second, create a new condition DataObject for the given folder, time, tag
   //  Notice that the ConditionsDBCnvSvc has no converters of its own:
   //  object creation is delegated to another CnvSvc via a temporary address
-  ConditionData* pCdata;
   status = createConditionData 
-    (pCdata, folderName, tagName, *evtTime, classID, type);
+    (refpObject, folderName, tagName, evtTime, classID, type);
   if ( !status.isSuccess() ) {
-    log << MSG::ERROR << "Could not create ConditionData" << endreq;
+    log << MSG::ERROR << "Could not create condition DataObject" << endreq;
     return StatusCode::FAILURE;
   }
-  refpObject = pCdata;
 
   log << MSG::DEBUG << "Method createObj exiting" << endreq;
   return StatusCode::SUCCESS;
@@ -225,7 +223,7 @@ StatusCode ConditionsDBCnvSvc::updateObj ( IOpaqueAddress* pAddress,
   /// First, decode the opaque address 
   std::string   folderName;
   std::string   tagName;
-  const ITime*  evtTime;
+  TimePoint     evtTime;
   CLID          classID;
   unsigned char type;
   StatusCode status = i_decodeAddress 
@@ -240,26 +238,32 @@ StatusCode ConditionsDBCnvSvc::updateObj ( IOpaqueAddress* pAddress,
     log << MSG::ERROR << "There is no object to update" << endreq;
     return StatusCode::FAILURE;
   }
-  ConditionData* pCdata = dynamic_cast<ConditionData*>(pObject);
-  if ( 0 == pCdata ) {
+  IValidity* pValidity = dynamic_cast<IValidity*>(pObject);
+  if ( 0 == pValidity ) {
     log << MSG::ERROR 
-	<< "Object to update does not point to a ConditionData" << endreq;
+	<< "Object to update does not implement IValidity" << endreq;
     return StatusCode::FAILURE;
   }
-  log << MSG::DEBUG << "Old ConditionData was valid since "
-      << pCdata->validSince().absoluteTime() << " till "
-      << pCdata->validTill().absoluteTime()  << endreq;
+  log << MSG::DEBUG << "Old condition DataObject was valid since "
+      << pValidity->validSince().absoluteTime() << " till "
+      << pValidity->validTill().absoluteTime()  << endreq;
   status = updateConditionData 
-    (pCdata, folderName, tagName, *evtTime, classID, type);
+    (pObject, folderName, tagName, evtTime, classID, type);
   if ( !status.isSuccess() ) {
-    log << MSG::ERROR << "Could not update ConditionData" << endreq;
+    log << MSG::ERROR << "Could not update condition DataObject" << endreq;
     return StatusCode::FAILURE;
   }
 
   // Last, check that everything is OK
-  log << MSG::DEBUG << "New ConditionData is valid since "
-      << pCdata->validSince().absoluteTime() << " till "
-      << pCdata->validTill().absoluteTime()  << endreq;
+  pValidity = dynamic_cast<IValidity*>(pObject);
+  if ( 0 == pValidity ) {
+    log << MSG::ERROR 
+	<< "Updated object does not implement IValidity" << endreq;
+    return StatusCode::FAILURE;
+  }
+  log << MSG::DEBUG << "New condition DataObject is valid since "
+      << pValidity->validSince().absoluteTime() << " till "
+      << pValidity->validTill().absoluteTime()  << endreq;
 
   log << MSG::DEBUG << "Method updateObj exiting" << endreq;
   return StatusCode::SUCCESS;
@@ -285,7 +289,7 @@ StatusCode
 ConditionsDBCnvSvc::i_decodeAddress ( IOpaqueAddress*   pAddress, 
 				      std::string&      folderName,
 				      std::string&      tagName, 
-				      const ITime*&     evtTime,
+				      ITime&            evtTime,
 				      CLID&             classID,
 				      unsigned char&    type) {
   
@@ -312,7 +316,6 @@ ConditionsDBCnvSvc::i_decodeAddress ( IOpaqueAddress*   pAddress,
   folderName = addr->folderName();
   tagName    = addr->tagName();
   evtTime    = addr->time();
-  //classID    = addr->clID();    
   classID    = pAddress->clID();    
   type       = addr->stringType();    
 
@@ -320,7 +323,7 @@ ConditionsDBCnvSvc::i_decodeAddress ( IOpaqueAddress*   pAddress,
   log << MSG::DEBUG
       << "folder="  << folderName << endreq;
   log << MSG::DEBUG << "tag=" << tagName
-      << " time=" << evtTime->absoluteTime()
+      << " time=" << evtTime.absoluteTime()
       << " clID=" << classID << " stringType=" << (int)type << endreq;
   return StatusCode::SUCCESS;
 
@@ -328,15 +331,15 @@ ConditionsDBCnvSvc::i_decodeAddress ( IOpaqueAddress*   pAddress,
 
 //----------------------------------------------------------------------------
 
-/// Create a ConditionData object by folder name, tag and time.
-/// This method does not register ConditionData in the transient data store.
+/// Create a condition DataObject by folder name, tag and time.
+/// This method does not register DataObject in the transient data store.
 /// Implementation:
 /// - create a temporary address containing storage type and classID;
 /// - dispatch to appropriate conversion service according to storage type;
 /// - this will dispatch to appropriate converter according to CLID
 ///   (ConditionsDBCnvSvc has no converters of its own).
 StatusCode 
-ConditionsDBCnvSvc::createConditionData ( ConditionData*&      refpCdata,
+ConditionsDBCnvSvc::createConditionData ( DataObject*&         refpObject,
 					  const std::string&   folderName,
 					  const std::string&   tagName,
 					  const ITime&         time,
@@ -405,15 +408,23 @@ ConditionsDBCnvSvc::createConditionData ( ConditionData*&      refpCdata,
   // Now create the object
   log << MSG::DEBUG 
       << "Delegate object creation to the persistency service" << endreq;
-  status = m_detPersSvc->createObj ( tmpAddress, (DataObject*&)refpCdata );
+  status = m_detPersSvc->createObj ( tmpAddress, refpObject );
   tmpAddress->release();
   if ( !status.isSuccess() ) {
     log << MSG::ERROR 
 	<< "Persistency service could not create a new object" << endreq;
     return status;
   }
+
+  // Set validity of created object
+  IValidity* pValidity = dynamic_cast<IValidity*>(refpObject);
+  if ( 0 == pValidity ) {
+    log << MSG::ERROR 
+	<< "Created object does not implement IValidity" << endreq;
+    return StatusCode::FAILURE;
+  }
   log << MSG::DEBUG << "New object successfully created" << endreq;
-  refpCdata->setValidity ( since, till );
+  pValidity->setValidity ( since, till );
   return StatusCode::SUCCESS;
 
 }
@@ -422,12 +433,12 @@ ConditionsDBCnvSvc::createConditionData ( ConditionData*&      refpCdata,
 
 /// If not specifed, type and classID are discovered at runtime in the CondDB
 StatusCode 
-ConditionsDBCnvSvc::createConditionData (ConditionData*&      refpCdata,
+ConditionsDBCnvSvc::createConditionData (DataObject*&         refpObject,
 					 const std::string&   folderName,
 					 const std::string&   tagName,
 					 const ITime&         time )
 {
-  return createConditionData ( refpCdata,
+  return createConditionData ( refpObject,
 			       folderName,
 			       tagName,
 			       time,
@@ -437,17 +448,17 @@ ConditionsDBCnvSvc::createConditionData (ConditionData*&      refpCdata,
 
 //----------------------------------------------------------------------------
 
-/// Update a ConditionData object by folder name, tag and time.
-/// Always update even if ConditionData is valid at the specified time:
-/// previous ConditionData may refer to a different tag at the same time.
-/// This method does not register ConditionData in the transient data store.
+/// Update a condition DataObject by folder name, tag and time.
+/// Always update even if condition DataObject is valid at the specified time:
+/// previous DataObject may refer to a different tag at the same time.
+/// This method does not register DataObject in the transient data store.
 /// Implementation:
 /// - create a temporary address containing storage type and classID;
 /// - dispatch to appropriate conversion service according to storage type;
 /// - this will dispatch to appropriate converter according to CLID
 ///   (the ConditionsDBCnvSvc has no converters of its own).
 StatusCode 
-ConditionsDBCnvSvc::updateConditionData ( ConditionData*       pCdata,
+ConditionsDBCnvSvc::updateConditionData ( DataObject*          pObject,
 					  const std::string&   folderName,
 					  const std::string&   tagName,
 					  const ITime&         time,
@@ -458,8 +469,8 @@ ConditionsDBCnvSvc::updateConditionData ( ConditionData*       pCdata,
   StatusCode status;
 
   // Is there an object to be updated?
-  if ( 0 == pCdata ) {
-    log << MSG::ERROR << "There is no ConditionData to update" << endreq;
+  if ( 0 == pObject ) {
+    log << MSG::ERROR << "There is no DataObject to update" << endreq;
     return StatusCode::FAILURE;
   }
 
@@ -490,10 +501,10 @@ ConditionsDBCnvSvc::updateConditionData ( ConditionData*       pCdata,
   }
 
   // Is object an instance of the specified class?
-  if ( theClassID != pCdata->clID() ) {
+  if ( theClassID != pObject->clID() ) {
     log << MSG::ERROR << "Update requested for clID " << theClassID
-	<< " while ConditionData is of clID " 
-	<< pCdata->clID() << endreq;
+	<< " while DataObject is of clID " 
+	<< pObject->clID() << endreq;
     return StatusCode::FAILURE;
   }
 
@@ -530,14 +541,22 @@ ConditionsDBCnvSvc::updateConditionData ( ConditionData*       pCdata,
 
   // Now update the object
   log << MSG::DEBUG << "Delegate update to the persistency service" << endreq;
-  status = m_detPersSvc->updateObj ( tmpAddress, (DataObject*&)pCdata );
+  status = m_detPersSvc->updateObj ( tmpAddress, pObject );
   tmpAddress->release();
   if ( !status.isSuccess() ) {
     log << MSG::ERROR 
 	<< "Persistency service could not update object" << endreq;
     return status;
   }
-  pCdata->setValidity ( since, till );
+
+  // Set validity of updated object
+  IValidity* pValidity = dynamic_cast<IValidity*>(pObject);
+  if ( 0 == pValidity ) {
+    log << MSG::ERROR 
+	<< "Updated object does not implement IValidity" << endreq;
+    return StatusCode::FAILURE;
+  }
+  pValidity->setValidity ( since, till );
   return StatusCode::SUCCESS;
 
 }
@@ -546,12 +565,12 @@ ConditionsDBCnvSvc::updateConditionData ( ConditionData*       pCdata,
 
 /// If not specifed, type and classID are discovered at runtime in the CondDB
 StatusCode 
-ConditionsDBCnvSvc::updateConditionData (ConditionData*       pCdata,
+ConditionsDBCnvSvc::updateConditionData (DataObject*          pObject,
 					 const std::string&   folderName,
 					 const std::string&   tagName,
 					 const ITime&         time )
 {
-  return updateConditionData ( pCdata,
+  return updateConditionData ( pObject,
 			       folderName,
 			       tagName,
 			       time,

@@ -1,4 +1,4 @@
-//$Id: ConditionsDBAddress.h,v 1.2 2001-11-23 17:18:48 andreav Exp $
+//$Id: ConditionsDBAddress.h,v 1.3 2001-11-26 19:07:34 andreav Exp $
 #ifndef DETCOND_CONDITIONSDBADDRESS_H
 #define DETCOND_CONDITIONSDBADDRESS_H 1
 
@@ -45,7 +45,7 @@ class ConditionsDBAddress : virtual public IConditionsDBAddress,
   // Implementation of IConditionAddress
 
   /// Get the event time  
-  virtual const ITime* time ( );
+  virtual const ITime& time ( );
 
   /// Set the new validity time  
   virtual void setTime ( const ITime& time );
