@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.8 2004-06-10 14:40:48 jonesc Exp $
+# $Id: requirements,v 1.9 2004-06-18 09:59:41 jonesc Exp $
 # Created    : 15/09/2003
 # Maintainer : Christopher Rob Jones
 #
@@ -12,7 +12,6 @@ include_path none
 
 # ================ dependencies =============================================
 use RichRecBase        v1r*   Rich
-#use LinkerEvent        v1r*   Event
 
 # ================ component library=========================================
 library          RichRecMCTools  ../src/*.cpp

@@ -1,4 +1,4 @@
-// $Id: RichRecMCTruthTool.cpp,v 1.5 2004-06-10 14:40:52 jonesc Exp $
+// $Id: RichRecMCTruthTool.cpp,v 1.6 2004-06-18 09:59:42 jonesc Exp $
 
 // local
 #include "RichRecMCTruthTool.h"
@@ -18,7 +18,7 @@ RichRecMCTruthTool::RichRecMCTruthTool( const std::string& type,
                                         const std::string& name,
                                         const IInterface* parent )
   : RichRecToolBase ( type, name, parent ),
-    m_truth         ( 0     )
+    m_truth         ( 0 )
 {
   declareInterface<IRichRecMCTruthTool>(this);
 }
@@ -62,7 +62,8 @@ RichRecMCTruthTool::mcParticle( const RichRecTrack * richTrack ) const
 const SmartRefVector<MCRichHit> &
 RichRecMCTruthTool::mcRichHits( const RichRecPixel * richPixel ) const
 {
-  return m_truth->mcRichHits( mcRichDigit(richPixel) );
+  const MCRichDigit * mcDigit = mcRichDigit(richPixel);
+  return ( mcDigit ? mcDigit->hits() : m_emptyContainer );
 }
 
 const MCRichDigit *

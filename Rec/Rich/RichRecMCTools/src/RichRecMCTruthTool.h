@@ -1,4 +1,4 @@
-// $Id: RichRecMCTruthTool.h,v 1.5 2004-06-10 14:40:52 jonesc Exp $
+// $Id: RichRecMCTruthTool.h,v 1.6 2004-06-18 09:59:42 jonesc Exp $
 #ifndef RICHRECTOOLS_RICHRECMCTRUTHTOOL_H
 #define RICHRECTOOLS_RICHRECMCTRUTHTOOL_H 1
 
@@ -31,7 +31,7 @@
 
 // Interfaces
 #include "RichRecBase/IRichRecMCTruthTool.h"
-#include "RichMCTools/IRichMCTruthTool.h"
+#include "RichKernel/IRichMCTruthTool.h"
 
 // CLHEP
 #include "CLHEP/Units/PhysicalConstants.h"
@@ -142,6 +142,9 @@ private: // private data
 
   /// pointer to RichMCTruth tool
   IRichMCTruthTool * m_truth;
+
+  // Empty container for missing links
+  SmartRefVector<MCRichHit> m_emptyContainer;
 
 };
 

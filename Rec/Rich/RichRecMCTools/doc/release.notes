@@ -4,6 +4,9 @@
 ! Purpose     : Monte Carlo Utility tools for RICH reconstruction algorithms
 !------------------------------------------------------------------------------
 
+! 2004-06-18 - Chris Jones
+ - Update includes for new package structure
+
 ! 2004-06-04 - Chris Jones
  - Rework the MC reconstruction tools so they now work + add a few new versions
  - Possible usage of the new tools is outlined in the file 
