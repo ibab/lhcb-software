@@ -1,0 +1,9 @@
+!-----------------------------------------------------------------------------
+! Package     : Tr/TrackTools
+! Responsible : Jose Hernando, Eduardo Rodrigues
+! Purpose     : Package for tracking tools
+!-----------------------------------------------------------------------------
+
+! 2005-04-01 - Jose Hernando, Eduardo Rodrigues
+ - first version of a help tool to convert from the LHCbID
+   to a OTTime or XxxCluster, and vice-versa
