@@ -1,4 +1,4 @@
-// $Id: ProtoParticle2MCAsct.h,v 1.3 2003-04-17 09:58:25 phicharp Exp $
+// $Id: ProtoParticle2MCAsct.h,v 1.4 2003-04-24 13:55:07 gcorti Exp $
 #ifndef ASSOCIATORS_ProtoParticle2MCASCT_H 
 #define ASSOCIATORS_ProtoParticle2MCASCT_H 1
 
@@ -44,7 +44,7 @@ protected:
     setProperty( "Location", ChargedPP2MCAsctLocation );
     setProperty( "AlgorithmType", "ChargedPP2MC" );
     setProperty( "AlgorithmName", "ChargedPP2MC" );
-    setDecreasing( true );
+//     setDecreasing( true );
   }; 
 
   virtual ~ProtoParticle2MCAsct() { }; ///< Destructor

@@ -1,4 +1,4 @@
-// $Id: Particle2MCLinksAsct.h,v 1.1 2003-04-17 09:58:25 phicharp Exp $
+// $Id: Particle2MCLinksAsct.h,v 1.2 2003-04-24 13:55:07 gcorti Exp $
 #ifndef Particle2MCLinksASCT_H 
 #define Particle2MCLinksASCT_H 1
 
@@ -45,7 +45,7 @@ public:
     setProperty( "Location", Particle2MCLinksAsctLocation );
     setProperty( "AlgorithmType", "Particle2MCLinks" );
     setProperty( "AlgorithmName", "Particle2MCLinks" );
-    setDecreasing( true ) ;
+//     setDecreasing( true ) ;
   }; 
 
   virtual ~Particle2MCLinksAsct( ){}; ///< Destructor

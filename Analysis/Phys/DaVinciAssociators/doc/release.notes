@@ -1,8 +1,15 @@
-! $Id: release.notes,v 1.23 2003-04-17 09:58:25 phicharp Exp $
+! $Id: release.notes,v 1.24 2003-04-24 13:55:07 gcorti Exp $
 ! Package     : DaVinciAssociators
 ! Responsible : Philippe Charpentier
 
-!================= DaVinciAssociators v4r0 2003-04-16 ======================
+!================= DaVinciAssociators v4r0 2003-04-24 ======================
+! 2003-04-24 - Gloria Corti
+ - CompositeParticle2MCLinks.h/.cpp - Introduce property AllowExtraPhotons to
+   allow in MC Particle decay tree to have a missing photon when associating
+   to a composite reconstructed particle.
+   This is usefull for reconstructed J/Psi -> l+ l- where there can be a gamma
+   in the MCTruth.
+
 ! 2003-04-16 - Philippe Charpentier
  - For Links associator, allow not to build a table (declared as "") to get 
    relations on the flight (reimplementation of the IAsct interface)
