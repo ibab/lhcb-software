@@ -49,6 +49,8 @@ namespace RichMarkov {
     inline double thetaDistribution(const double r) const { return richThetaDistribution(r); }
     inline double probabilityThetaAbove(const double r) const { return richThetaDistribution(r); }
 
+    virtual const std::string approxCoPointSepCacheFileName() const = 0;
+
   protected:
 
     const RichThetaSampler          richThetaSampler;

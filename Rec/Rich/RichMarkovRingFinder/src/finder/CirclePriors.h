@@ -3,8 +3,6 @@
 #define RICHMARKOV_CIRCLE_PRIORS_H
 
 #include <cmath>
-
-#include "MathsConstants/MathsConstants.h"
 #include "Constants.h"
 #include "geometry/CircleTheorems.h"
 #include "CircleParams.h"
@@ -13,8 +11,6 @@
 #include "CLHEP/Random/RandGauss.h"
 #include "CLHEP/Random/RandExponential.h"
 #include "probabilityUtilities/ProbabilityUtils.h"
-#include "RichModels.h"
-#include "CacheHandler.h"
 #include "FinderExternalException.h"
 
 namespace RichMarkov {
@@ -145,7 +141,7 @@ namespace RichMarkov {
       if (first) {
         first = false;
 
-        std::ifstream f(CacheHandler::approxCoPointSepCacheFileName().c_str());
+        std::ifstream f(mode.approxCoPointSepCacheFileName().c_str());
 
         if (true/*FIX*/) {
           double key,ans;
@@ -229,7 +225,7 @@ namespace RichMarkov {
             cache[deltaOnTwo]=avg;
             //std::cout<<"Calculated cop[ "<<deltaOnTwo<<" ] = " << avg<<std::endl;
             {
-              std::ofstream cf(CacheHandler::approxCoPointSepCacheFileName().c_str(),std::ios::app);
+              std::ofstream cf(mode.approxCoPointSepCacheFileName().c_str(), std::ios::app);
               if ( RichMarkov::finite(deltaOnTwo) && RichMarkov::finite(avg) ) {
                 cf << std::setprecision(25) << deltaOnTwo << " " << avg << std::endl;
               };

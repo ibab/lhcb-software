@@ -43,6 +43,12 @@ namespace RichMarkov {
     inline const double circleMeanRadiusParameter()  const { return Constants::circleMeanRadiusParameterRich1; }
     inline const double circleRadiusSigmaAboutMean() const { return Constants::circleRadiusSigmaAboutMeanRich1; }
 
+    inline const std::string approxCoPointSepCacheFileName() const 
+    { 
+      const std::string paramfilesroot( static_cast<std::string>(getenv("PARAMFILESROOT")) );
+      return paramfilesroot + "/data/Rich1_MarkovRingFinder_approxCoPointSep.cache"; 
+    }
+
   private:
     const Pane m_pane;
 

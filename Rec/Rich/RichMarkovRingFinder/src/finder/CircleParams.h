@@ -2,12 +2,11 @@
 #define RICHMARKOV_CIRCLE_PARAMS_H
 
 #include <cassert>
-
+#include <iostream>
 #include "MathsConstants/MathsConstants.h"
 #include "Constants.h"
-
 #include "CLHEP/Vector/TwoVector.h"
-#include <iostream>
+
 
 namespace RichMarkov {
   class Canvas;  // fwd decs
