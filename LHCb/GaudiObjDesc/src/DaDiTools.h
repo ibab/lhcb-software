@@ -1,9 +1,9 @@
-// $Id: DaDiTools.h,v 1.11 2003-04-30 12:04:19 mato Exp $
+// $Id: DaDiTools.h,v 1.12 2003-11-27 10:22:55 mato Exp $
 #ifndef DADITOOLS_H
 #define DADITOOLS_H 1
 
 // Some pragmas to avoid warnings in VisualC
-#ifdef WIN32
+#ifdef _WIN32
 // Disable warning C4786: identifier was truncated to '255' characters in the 
 // debug information
 #pragma warning ( disable : 4786 )

@@ -1,4 +1,4 @@
-// $Id: DaDiCppDict.cpp,v 1.36 2003-04-30 12:04:16 mato Exp $
+// $Id: DaDiCppDict.cpp,v 1.37 2003-11-27 10:22:53 mato Exp $
 
 #include "DaDiTools.h"
 #include "DaDiCppDict.h"
@@ -1328,7 +1328,7 @@ int main(int argC, char* argV[])
 //-----------------------------------------------------------------------------
 {
 
-#ifdef WIN32
+#ifdef _WIN32
   const char* sep = "\\";
 #else
   const char* sep = "/";
