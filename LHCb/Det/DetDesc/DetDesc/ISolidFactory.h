@@ -1,11 +1,8 @@
-// $Id:
+// $Id: ISolidFactory.h,v 1.3 2002-05-04 13:13:24 ibelyaev Exp $
 // ==========================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ==========================================================================
 // $Log: not supported by cvs2svn $
-// Revision 1.1  2001/08/09 16:47:57  ibelyaev
-// update in interfaces and redesign of solids
-// 
 // ==========================================================================
 #ifndef DETDESC_ISOLIDFACTORY_H 
 #define DETDESC_ISOLIDFACTORY_H 1

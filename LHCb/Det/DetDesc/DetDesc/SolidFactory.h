@@ -1,11 +1,8 @@
-// $Id: SolidFactory.h,v 1.2 2002-05-04 13:09:13 ibelyaev Exp $ 
+// $Id: SolidFactory.h,v 1.3 2002-05-04 13:13:24 ibelyaev Exp $ 
 // ===========================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ===========================================================================
 // $Log: not supported by cvs2svn $
-// Revision 1.1  2001/08/09 16:47:58  ibelyaev
-// update in interfaces and redesign of solids
-// 
 // ===========================================================================
 #ifndef DETDESC_SOLIDFACTORY_H 
 #define DETDESC_SOLIDFACTORY_H 1

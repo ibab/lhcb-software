@@ -1,14 +1,8 @@
-// $Id: LVolume.cpp,v 1.16 2002-05-04 13:09:13 ibelyaev Exp $ 
+// $Id: LVolume.cpp,v 1.17 2002-05-04 13:13:24 ibelyaev Exp $ 
 // ===========================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ===========================================================================
 // $Log: not supported by cvs2svn $
-// Revision 1.15  2002/04/24 10:52:39  ibelyaev
-//  fix problems with TransportSvc ('LHCb Geane')
-//
-// Revision 1.14  2001/11/18 15:32:45  ibelyaev
-//  update for Logical Assemblies
-//
 // ===========================================================================
 /// STD & STL includes 
 #include <iostream> 

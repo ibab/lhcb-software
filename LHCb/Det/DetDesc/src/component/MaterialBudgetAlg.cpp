@@ -1,8 +1,8 @@
-// $Id: MaterialBudgetAlg.cpp,v 1.1 2002-05-04 13:09:14 ibelyaev Exp $
+// $Id: MaterialBudgetAlg.cpp,v 1.2 2002-05-04 13:13:25 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
-// $Log: not supported by cvs2svn $ 
+// $Log: not supported by cvs2svn $
 // ============================================================================
 // Include files
 // STL & STD 
