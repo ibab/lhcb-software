@@ -21,7 +21,7 @@
 // ********************************************************************
 //
 //
-// $Id: RichG4Cerenkov.hh,v 1.2 2004-02-04 13:52:24 seaso Exp $
+// $Id: RichG4Cerenkov.hh,v 1.3 2004-06-03 12:44:44 seaso Exp $
 // GEANT4 tag $Name: not supported by cvs2svn $
 //
 // 
@@ -62,7 +62,7 @@
 #include "G4PhysicsTable.hh"
 #include "G4MaterialPropertiesTable.hh"
 #include "G4PhysicsOrderedFreeVector.hh"
-
+#include <vector>
 // Class Description:
 // Continuous Process -- Generation of Cerenkov Photons.
 // Class inherits publicly from G4VContinuousProcess.
@@ -89,7 +89,8 @@ public: // Without description
 	// Constructors and Destructor
 	////////////////////////////////
 
-	RichG4Cerenkov(const G4String& processName = "RichG4Cerenkov");
+	RichG4Cerenkov(const G4String& processName = "RichG4Cerenkov",
+                       G4ProcessType aType = fOptical);
 
 	// RichG4Cerenkov(const RichG4Cerenkov &right);
 
@@ -137,8 +138,19 @@ public: // With description
       G4bool GetRichVerboseInfoTag(){return  fRichVerboseInfoTag;}
       void SetRichVerboseInfoTag(G4bool aVTagValue)
              {fRichVerboseInfoTag = aVTagValue;}
+        
+      void SetMaxPhotonPerRadiatorFlag
+      (const G4bool aMaxNumPerStepRadiatorFlag)
+      {fMaxPhotonPerRadiatorFlag=aMaxNumPerStepRadiatorFlag;}
   
+      void  SetMaxPhotPerStepInRadiator 
+      (const  std::vector<G4int> aMaxPerRichStep )
+      { fMaxPhotPerStepInRadiator = aMaxPerRichStep;}
     
+      void  SetRadiatorMaterialIndex
+      (const std::vector<G4int> aRadiatorMaterialIndex) 
+      {fRadiatorMaterialIndex = aRadiatorMaterialIndex;}
+
     
 private:
 
@@ -168,7 +180,9 @@ private:
 	G4bool fTrackSecondariesFirst;
 	G4int  fMaxPhotons;
   G4bool fRichVerboseInfoTag;
-  
+  G4bool fMaxPhotonPerRadiatorFlag;
+  std::vector<G4int> fMaxPhotPerStepInRadiator;
+  std::vector<G4int> fRadiatorMaterialIndex;
 };
 
 ////////////////////
@@ -192,6 +206,7 @@ void RichG4Cerenkov::SetMaxNumPhotonsPerStep(const G4int NumPhotons)
 { 
 	fMaxPhotons = NumPhotons;
 }
+
 
 inline
 void RichG4Cerenkov::DumpPhysicsTable() const

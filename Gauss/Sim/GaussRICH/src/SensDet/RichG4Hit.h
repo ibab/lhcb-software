@@ -71,9 +71,30 @@ private:
   G4ThreeVector m_OptPhotAgelExitPos;   // Position where photon exited from Aerogel.
   // Only with RichVerboseTag mode and RichStepAnalysis4
 
+
+  G4ThreeVector  m_Mirror1PhotonReflPosition; // Photon Reflection Point on Spherical mirror which is mirror1.
+  // Only with RichVerboseTag mode and RichStepAnalysis5
+
+  G4ThreeVector  m_Mirror2PhotonReflPosition; // Photon Reflection Point on Flat mirror which is mirror2.
+  // Only with RichVerboseTag mode and RichStepAnalysis5
+
+  G4int m_Mirror1PhotonDetectorCopyNum;      // For the reflection point on Sperical mirror, this is 
+                                            //  1000* mirrortype + 100*richdetnum+ MirrorCopyNum
+                                            // where mirrortype =0 for spherical mirror.
+                                            // richdetnum=0 for rich1 and  1 for rich2.
+                                            // MirrorCopyNum = copy number of the spherical mirror.
+                                    // Only with RichVerboseTag mode and RichStepAnalysis5
+
+
+  G4int m_Mirror2PhotonDetectorCopyNum;      // For the reflection point on Flat mirror, this is
+                                            // 1000*mirrortype + 100*richdetnum+ MirrorCopyNum
+                                            // where mirrortype = 1 for flat mirror.
+                                            // richdetnum=0 for rich1 and  1 for rich2.
+                                            // MirrorCopyNum = copy number of the flat mirror.
+                                    // Only with RichVerboseTag mode and RichStepAnalysis5
+
   G4int m_RichVerboseHitInfo;        // if 0 the variables with  RichVerboseTag are disabled and have
   // no meaningful values. If not 0 they have the expected values.
-
 
 public:
 
@@ -226,10 +247,32 @@ public:
   inline const G4ThreeVector & OptPhotAgelExitPos() const
   { return m_OptPhotAgelExitPos; }
 
-  inline G4int RichVerboseHitInfo() const {return m_RichVerboseHitInfo;}
+
+
+  inline void  setMirror1PhotonReflPosition( const G4ThreeVector & aMirror1PhotonReflPosition )
+    {m_Mirror1PhotonReflPosition= aMirror1PhotonReflPosition;}
+
+  inline const G4ThreeVector & Mirror1PhotonReflPosition() const 
+    {return   m_Mirror1PhotonReflPosition;}
+
+  inline void  setMirror2PhotonReflPosition( const G4ThreeVector & aMirror2PhotonReflPosition )
+    {m_Mirror2PhotonReflPosition= aMirror2PhotonReflPosition;}
+
+  inline const G4ThreeVector & Mirror2PhotonReflPosition() const 
+    {return   m_Mirror2PhotonReflPosition;}
+
+  inline void setMirror1PhotonDetectorCopyNum(const G4int aMirror1PhotonDetectorCopyNum) 
+    {m_Mirror1PhotonDetectorCopyNum = aMirror1PhotonDetectorCopyNum;}
+  inline G4int Mirror1PhotonDetectorCopyNum() const {return m_Mirror1PhotonDetectorCopyNum;}
+
+  inline void setMirror2PhotonDetectorCopyNum(const G4int aMirror2PhotonDetectorCopyNum) 
+    {m_Mirror2PhotonDetectorCopyNum = aMirror2PhotonDetectorCopyNum;}
+  inline G4int Mirror2PhotonDetectorCopyNum() const {return m_Mirror2PhotonDetectorCopyNum;}
 
   inline void setRichVerboseHitInfo( const G4int aVerboseValue )
   {m_RichVerboseHitInfo = aVerboseValue; }
+  inline G4int RichVerboseHitInfo() const {return m_RichVerboseHitInfo;}
+
 
 };
 

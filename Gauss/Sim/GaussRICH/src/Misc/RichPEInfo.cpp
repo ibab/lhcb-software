@@ -16,7 +16,11 @@ RichPEInfo::RichPEInfo() :
  m_PhotonRayleighScatteringFlag(0), 
  m_PhotonAerogelExitPos(0),
  m_VerbosePeTagFlag(false),
- m_OptPhotonId(0)  {; }
+ m_OptPhotonId(0),
+ m_Mirror1PhotReflPosition(0),
+ m_Mirror2PhotReflPosition(0),
+ m_Mirror1PhotDetCopyNum(0),
+ m_Mirror2PhotDetCopyNum(0){; }
 
 RichPEInfo::~RichPEInfo() {;}
 

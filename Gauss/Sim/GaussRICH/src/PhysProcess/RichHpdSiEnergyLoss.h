@@ -14,7 +14,7 @@ class RichHpdSiEnergyLoss :  public G4VEnergyLoss {
 
 public:  
 
-  RichHpdSiEnergyLoss(const G4String& processName);
+  RichHpdSiEnergyLoss(const G4String& processName ,G4ProcessType   aType = fUserDefined  );
 
   virtual ~RichHpdSiEnergyLoss();
 

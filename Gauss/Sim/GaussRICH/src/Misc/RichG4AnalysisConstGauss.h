@@ -38,6 +38,10 @@ static const G4String LogVolRich1Mirror1NameAnalysis=
                               "/dd/Geometry/Rich1/lvRich1Mirror1";
 static const G4String LogVolRich1Mirror2NameAnalysis=
                              "/dd/Geometry/Rich1/lvRich1Mirror2";
+static const G4String LogVolRich2Mirror1NameAnalysis=
+                              "/dd/Geometry/Rich2/lvRich2SphMirror";
+static const G4String LogVolRich2Mirror2NameAnalysis=
+                              "/dd/Geometry/Rich2/lvRich2FlatMirrorSeg";
 static const G4String LogVolRich1MagShNameAnalysis=
                              "/dd/Geometry/Rich1/lvRich1MagSh" ;
 static const G4String LogColRich1GasQWNameAnalysis=

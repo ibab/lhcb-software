@@ -89,6 +89,11 @@ protected:
     m_defineRichG4HistoSet4= aboolValue4;
   }
 
+  bool FirstTimeOfBeginRichRun() {
+    return m_FirstTimeOfBeginRichRun;}
+
+  void setFirstTimeOfBeginRichRun( bool aboolValue) {
+    m_FirstTimeOfBeginRichRun=aboolValue;}
 private:
 
   ///no default constructor
@@ -114,6 +119,8 @@ private:
   RichG4HistoDefineSet3* m_aRichG4HistoSet3;
   RichG4HistoDefineSet4* m_aRichG4HistoSet4;
   RichG4HistoDefineTimer* m_aRichG4HistoTimer;
+
+  bool  m_FirstTimeOfBeginRichRun;
 
 };
 // ============================================================================

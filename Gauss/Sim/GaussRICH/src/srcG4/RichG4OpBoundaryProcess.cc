@@ -77,8 +77,9 @@
 // Constructors
 /////////////////
 
-RichG4OpBoundaryProcess::RichG4OpBoundaryProcess(const G4String& processName)
-  : G4VDiscreteProcess(processName)
+RichG4OpBoundaryProcess::RichG4OpBoundaryProcess(const G4String& processName ,
+      G4ProcessType aType )
+  : G4VDiscreteProcess(processName,aType )
 {
   if ( verboseLevel > 0) {
     G4cout << GetProcessName() << " is created " << G4endl;

@@ -96,12 +96,26 @@ public:
     m_AerogelExitPosition = aAgelExitPos;
   }
 
+ 
+  void setMirror1ReflPosition( const  G4ThreeVector & aMirror1ReflPosition) 
+    { m_Mirror1ReflPosition= aMirror1ReflPosition;}
+  G4ThreeVector Mirror1ReflPosition() {return m_Mirror1ReflPosition;}
+  void setMirror2ReflPosition( const  G4ThreeVector & aMirror2ReflPosition) 
+    { m_Mirror2ReflPosition= aMirror2ReflPosition;}
+  G4ThreeVector Mirror2ReflPosition() {return m_Mirror2ReflPosition;}
+  void setMirror1DetCopyNum(const G4int aMirror1DetCopyNum) {m_Mirror1DetCopyNum=aMirror1DetCopyNum;}
+  G4int Mirror1DetCopyNum() {return  m_Mirror1DetCopyNum;}
+  void setMirror2DetCopyNum(const G4int aMirror2DetCopyNum) {m_Mirror2DetCopyNum=aMirror2DetCopyNum;}
+  G4int Mirror2DetCopyNum() {return  m_Mirror2DetCopyNum;}
+
+
   G4bool  VerbosePhotTagFlag()const
   {    return  m_VerbosePhotTagFlag;}
 
   void setVerbosePhotTagFlag(const G4bool aVTFlag)
   { m_VerbosePhotTagFlag=aVTFlag;}
 
+  
 private:
 
   G4int m_MotherChTrackPDGcode;
@@ -115,8 +129,11 @@ private:
   G4ThreeVector m_ChTrackCkvPoststep;
   G4int  m_PhotonRayleighScatFlag;
   G4ThreeVector m_AerogelExitPosition;  // filled only from user step action.
+  G4ThreeVector m_Mirror1ReflPosition;
+  G4ThreeVector m_Mirror2ReflPosition;
+  G4int m_Mirror1DetCopyNum;
+  G4int m_Mirror2DetCopyNum;
   G4bool m_VerbosePhotTagFlag;
-
 };
 
 #endif

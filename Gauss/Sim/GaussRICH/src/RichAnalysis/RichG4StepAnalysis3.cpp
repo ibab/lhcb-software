@@ -1,4 +1,4 @@
-// $Id: RichG4StepAnalysis3.cpp,v 1.5 2004-02-10 14:24:15 jonesc Exp $
+// $Id: RichG4StepAnalysis3.cpp,v 1.6 2004-06-03 12:44:00 seaso Exp $
 // Include files
 
 #include "G4Track.hh"
@@ -37,6 +37,8 @@
 #include "RichG4Counters.h"
 #include "RichInfo.h"
 #include "RichPEInfo.h"
+#include "RichPhotoElectron.h"
+
 //-----------------------------------------------------------------------------
 // Implementation file for class : RichG4StepAnalysis3
 //
@@ -136,10 +138,22 @@ void RichG4StepAnalysis3::UserSteppingAction( const G4Step* aStep )
 
         const G4String & prePosMaterialName=aPreStepPoint->GetPhysicalVolume()->
           GetLogicalVolume()->GetMaterial()->GetName();
+	// test of rad length.
+        //  G4double RadLenPre= aPreStepPoint->GetPhysicalVolume()->
+        //    GetLogicalVolume()->GetMaterial()-> GetRadlen();
+        //  G4double RadLenPost= aPostStepPoint->GetPhysicalVolume()->
+        //    GetLogicalVolume()->GetMaterial()-> GetRadlen();
+	//   G4double NucLenPre = aPreStepPoint->GetPhysicalVolume()->
+        //    GetLogicalVolume()->GetMaterial()->GetNuclearInterLength ();
+        //  G4double NucLenPost = aPostStepPoint->GetPhysicalVolume()->
+        //    GetLogicalVolume()->GetMaterial()->GetNuclearInterLength ();
+        //         G4cout<<"pre and Post step material name radlen pre post nuclen prepost"
+        //     <<  prePosMaterialName <<"   "
+	//		       <<postPosMaterialName<<"   "
+	//	       <<RadLenPre<<"   "<<RadLenPost<<"   "
+	//              <<  NucLenPre<<"   "<<NucLenPost << G4endl;
+		 
 
-        //           G4cout<<"pre and Post step material name "
-        //      <<  prePosMaterialName <<"   "
-        // <<postPosMaterialName<<G4endl;
 
         // Now for the photon production point in c4f10.
 
@@ -273,7 +287,9 @@ void RichG4StepAnalysis3::UserSteppingAction( const G4Step* aStep )
 
     //          G4cout<<"Now in Step analysis 3 A "<<G4endl;
 
-  }else if( aParticle->GetDefinition() == G4Electron::Electron() ) {
+    //  }else if( aParticle->GetDefinition() == G4Electron::Electron() ) {
+  }else if( ( aParticle->GetDefinition() == RichPhotoElectron::PhotoElectron()) || 
+            ( aParticle->GetDefinition() == G4Electron::Electron())) {
 
     const G4ThreeVector & eprePos=aPreStepPoint->GetPosition();
     if(eprePos.z() >= ZUpsRich1Analysis &&

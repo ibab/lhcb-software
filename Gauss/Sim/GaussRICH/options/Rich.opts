@@ -1,41 +1,52 @@
 // Rich specific job options
 // ==========================================================
-// GiGa.ModularPL.GiGaPhysConstructorOp.RichActivateRichPhysicsProcVerboseTag=false;
-// the following value is the default anyway.
-// GiGa.ModularPL.GiGaPhysConstructorOp.RichMaxNumPhotPerCherenkovStep=900;
-
-//GiGa.StepSeq.Members             += { "RichG4StepAnalysis3/RichStep" } ;
-//GiGa.StepSeq.Members             += { "RichG4StepAnalysis4/RichStepAgelExit" } ;
-
-GiGa.TrackSeq.Members      += { "RichG4TrackActionPhotOpt/RichG4PhotOpt" } ;
-GiGa.TrackSeq.Members      += { "Rich1G4TrackActionUpstrPhoton/Rich1UpstrPhotonTrack" } ;
-//GiGa.TrackSeq.Members      += { "RichG4TrackAction/RichTrack" } ;
-
-//GiGa.EventSeq.Members     += { "RichG4EventAction/RichG4Event" } ;
-
-//GiGa.EventSeq.RichG4Event.RichEventActionVerbose = 3 ;
-//GiGa.EventSeq.RichG4Event.RichEventActionVerbose = 2 ;
-GiGa.EventSeq.RichG4Event.RichEventActionVerbose = 0 ;
-GiGa.EventSeq.RichG4Event.RichEventActionHistoFillSet1=false;
-GiGa.EventSeq.RichG4Event.RichEventActionHistoFillSet2=false;
-GiGa.EventSeq.RichG4Event.RichEventActionHistoFillSet3=false;
-GiGa.EventSeq.RichG4Event.RichEventActionHistoFillSet4=false;
-GiGa.EventSeq.RichG4Event.RichG4EventActivateCounting =false;
-GiGa.EventSeq.RichG4Event.RichEventActionHistoFillTimer=true;
-GiGa.EventSeq.RichG4Event.RichG4EventActivateCkvReconstruction=false;
-//GiGa.EventSeq.RichG4Event.RichG4EventHitReconUseSaturatedHit=false;
-//GiGa.EventSeq.RichG4Event.RichG4EventHitReconUseMidRadiator=false;
-
-//GiGa.RunSeq.Members           += { "RichG4RunAction/RichG4Run" } ;
-GiGa.RunSeq.RichG4Run.DefineRichG4HistoSet1=false;
-GiGa.RunSeq.RichG4Run.DefineRichG4HistoSet2=false;
-GiGa.RunSeq.RichG4Run.DefineRichG4HistoSet3=false;
-GiGa.RunSeq.RichG4Run.DefineRichG4HistoSet4=false;
-// GiGa.RunSeq.RichG4Run.DefineRichG4HistoSet1=true;
-// GiGa.RunSeq.RichG4Run.DefineRichG4HistoSet2=true;
-// GiGa.RunSeq.RichG4Run.DefineRichG4HistoSet3=false;
-GiGa.RunSeq.RichG4Run.DefineRichG4HistoTimer=true;
+// the following line is now in Simulation.opts and is now the default value.
+// GiGa.ModularPL.GiGaPhysConstructorOp.RichMaxNumPhotPerCherenkovStep=40;
+// when RichApplyMaxNumCkvPhotPerStepPerRadiator is false the global
+// value as given by RichMaxNumPhotPerCherenkovStep is used fo all radiators.
+// when RichApplyMaxNumCkvPhotPerStepPerRadiator is true the individual value for
+// each radiator as given by RichMaxPhotonsPerCherenkovStepInRich1Agel,
+// RichMaxPhotonsPerCherenkovStepInRich1Gas,RichMaxPhotonsPerCherenkovStepInRich2Gas
+// are used. 
+//
+GiGa.ModularPL.GiGaPhysConstructorOp.RichApplyMaxNumCkvPhotPerStepPerRadiator
+=true;
+GiGa.ModularPL.GiGaPhysConstructorOp.RichMaxPhotonsPerCherenkovStepInRich1Agel
+=900;
+GiGa.ModularPL.GiGaPhysConstructorOp.RichMaxPhotonsPerCherenkovStepInRich1Gas
+=40;
+GiGa.ModularPL.GiGaPhysConstructorOp.RichMaxPhotonsPerCherenkovStepInRich2Gas
+=40;
+// to create  'extended output info' for detailed analysis, 
+// (a) uncomment the line in this file with RichVerbose.opts.
+// (b) comment the three lines in this file where   RichOpticalPhotons = "" 
+//      RichSegments=""  and RichTracks         = ""
+// (c) to write these extended info to output tape, in   GaussTape.opts
+//     uncomment the lines /Event/MC/Rich/OpticalPhotons#1, /Event/MC/Rich/Tracks#1
+//     /Event/MC/Rich/Segments#1
+// 
+#include "$GAUSSRICHROOT/options/RichVerbose.opts"
 GetHits.RichOpticalPhotons = "";
 GetHits.RichSegments       = "";
 GetHits.RichTracks         = "";
+
+
+
+GiGa.TrackSeq.Members      += { "RichG4TrackActionPhotOpt/RichG4PhotOpt" } ;
+GiGa.TrackSeq.Members      += { "Rich1G4TrackActionUpstrPhoton/Rich1UpstrPhotonTrack" } ;
+
+// To print RICH hits on the screen, uncomment the line with RichG4EventAction/RichG4Event
+// and the line with RichEventActionVerbose=3
+//GiGa.EventSeq.Members     += { "RichG4EventAction/RichG4Event" } ;
+//GiGa.EventSeq.RichG4Event.RichEventActionVerbose = 3 ;
+//GiGa.EventSeq.RichG4Event.RichEventActionVerbose = 0 ;
+// To activate the various analysis which are in GaussRICH 
+// uncomment the line in this file with RichAnalysis.opts
+// and uncomment the various lines in RichAnalysis.opts as needed.
+// This file has the options various StepActions, EventActions, RunActions,
+// histogramming, counters. It also has Cherenkov angle reconstruction 
+// software for resolution studies. The RichAnalysis.opts is not needed
+// for for any standard MC production runs. It is also not needed for any production 
+// runs with 'extended output info'.
+#include "$GAUSSRICHROOT/options/RichAnalysis.opts"
 

@@ -22,7 +22,7 @@
 //
 //
 // RichG4Cerenkov.cc
-// $Id: RichG4Cerenkov.cc,v 1.3 2004-03-26 17:15:09 jonesc Exp $
+// $Id: RichG4Cerenkov.cc,v 1.4 2004-06-03 12:44:44 seaso Exp $
 // GEANT4 tag $Name: not supported by cvs2svn $
 //
 ////////////////////////////////////////////////////////////////////////
@@ -76,13 +76,18 @@
 // Constructors
 /////////////////
 
-RichG4Cerenkov::RichG4Cerenkov(const G4String& processName)
-  : G4VContinuousProcess(processName),
-    fRichVerboseInfoTag(false)
+RichG4Cerenkov::RichG4Cerenkov(const G4String& processName ,
+                             G4ProcessType aType )
+  : G4VContinuousProcess(processName,aType ),
+    fRichVerboseInfoTag(false),
+    fMaxPhotonPerRadiatorFlag(false),
+    fMaxPhotPerStepInRadiator(std::vector<G4int> (3)),
+    fRadiatorMaterialIndex(std::vector<G4int> (3))
 {
+  // In the above the 3 is for the three RICH radiators.
   fTrackSecondariesFirst = false;
   fMaxPhotons = 0;
-
+   
   thePhysicsTable = NULL;
 
   if (verboseLevel>0) {
@@ -327,7 +332,7 @@ RichG4Cerenkov::AlongStepDoIt(const G4Track& aTrack, const G4Step& aStep)
 
     G4Track* aTaggedSecondaryTrack
       = RichG4CherenkovPhotProdTag(aTrack,aSecondaryTrack,
-                                   cosTheta,phi,sampledMomentum,fRichVerboseInfoTag );
+             cosTheta,phi,sampledMomentum,fRichVerboseInfoTag );
 
 
     aParticleChange.AddSecondary(aTaggedSecondaryTrack);
@@ -492,6 +497,30 @@ RichG4Cerenkov::GetContinuousStepLimit(const G4Track& aTrack,
   if(MeanNumPhotons <= 0.0) return DBL_MAX;
 
   G4double StepLimit = fMaxPhotons / MeanNumPhotons;
+  // Change by SE to modify the step limit for different
+  // radiators if the flag for that is switched on.
+  // June 2004.
+  if( fMaxPhotonPerRadiatorFlag) {
+    G4int  fRadiatorMaterialIndexSize= (G4int) fRadiatorMaterialIndex.size();
+    //    if(fRadiatorMaterialIndexSize != 0 && 
+    if( fRadiatorMaterialIndexSize == 
+          (G4int) fMaxPhotPerStepInRadiator.size () ) { 
+          G4int CurMatIndex =  aMaterial-> GetIndex();
+          int ir=0; 
+          bool rFound=false;
+          while(ir<fRadiatorMaterialIndexSize && !( rFound)  ) {
+            if( CurMatIndex == fRadiatorMaterialIndex[ir] ){
+	      //	      if( fMaxPhotPerStepInRadiator[ir] != 0 ) {
+               StepLimit = fMaxPhotPerStepInRadiator[ir]/MeanNumPhotons;
+	       //   }
+               rFound=true;
+            }
+            ir++;
+          } 
+
+    }
+  }
+  // end of modification by SE  
 
   return StepLimit;
 }
@@ -505,7 +534,7 @@ RichG4Cerenkov::GetContinuousStepLimit(const G4Track& aTrack,
 G4double
 RichG4Cerenkov::GetAverageNumberOfPhotons(const G4DynamicParticle* aParticle,
                                           const G4Material* aMaterial,
-                                          const G4MaterialPropertyVector* Rindex) const
+                                const G4MaterialPropertyVector* Rindex) const
 {
   const G4double Rfact = 369.81/(eV * cm);
 

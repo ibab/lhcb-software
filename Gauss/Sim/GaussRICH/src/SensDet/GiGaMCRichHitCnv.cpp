@@ -224,7 +224,9 @@ StatusCode GiGaMCRichHitCnv::updateObj ( IOpaqueAddress*  address ,
 
           // Set data
           mchit->setEntry( g4hit->GetGlobalPos() );
-          mchit->setEnergy( g4hit->GetEdep()/10 ); // Fix for energy bug
+          mchit->setEnergy( g4hit->GetEdep() );
+	  //          mchit->setEnergy( g4hit->GetEdep()/10 ); // Fix for energy bug
+          // changed by back by SE May 26, 2004.
           mchit->setTimeOfFlight( g4hit->RichHitGlobalTime() );
 
           // Now for the Rich Specific word.

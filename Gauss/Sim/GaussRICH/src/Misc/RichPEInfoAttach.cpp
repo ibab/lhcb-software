@@ -75,6 +75,11 @@ G4Track* RichPEInfoAttach(const G4Track& aPhotonTk, G4Track* aPETk)
 
             CurRichPEInfo->setPhotonAerogelExitPos ( aPhotInfo->
                                                      AerogelExitPosition() );
+            
+	    CurRichPEInfo->setMirror1PhotReflPosition(aPhotInfo->Mirror1ReflPosition() );
+	    CurRichPEInfo->setMirror2PhotReflPosition(aPhotInfo->Mirror2ReflPosition() );
+	    CurRichPEInfo->setMirror1PhotDetCopyNum(aPhotInfo->Mirror1DetCopyNum());
+	    CurRichPEInfo->setMirror2PhotDetCopyNum(aPhotInfo->Mirror2DetCopyNum());
 
           }
 

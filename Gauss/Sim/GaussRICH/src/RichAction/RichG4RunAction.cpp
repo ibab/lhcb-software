@@ -49,7 +49,9 @@ RichG4RunAction::RichG4RunAction
   , m_aRichG4HistoSet2(0)
   , m_aRichG4HistoSet3(0)
   , m_aRichG4HistoSet4(0)
-  , m_aRichG4HistoTimer(0)
+  , m_aRichG4HistoTimer(0),
+    m_FirstTimeOfBeginRichRun(true)
+
 {
   declareProperty("BeginOfRunCommands", m_beginCmds );
   declareProperty("EndOfRunCommands"  , m_endCmds   );
@@ -96,7 +98,10 @@ void RichG4RunAction::BeginOfRunAction( const G4Run* run )
   //        ui->ApplyCommand( *iCmd );
   //      }
   //  }
+  //  The rich specific histo booking and counters are done only
+  // at the first time this BeginRunAction is called.
 
+  if(  m_FirstTimeOfBeginRichRun ) {
   if(m_defineRichG4HistoSet1) {
 
     m_aRichG4HistoSet1 = new RichG4HistoDefineSet1();
@@ -126,6 +131,8 @@ void RichG4RunAction::BeginOfRunAction( const G4Run* run )
 
   RichG4Counters* aRichCounter=  RichG4Counters::getInstance();
 
+   m_FirstTimeOfBeginRichRun= false;
+}
 };
 // ============================================================================
 

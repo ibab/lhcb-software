@@ -21,7 +21,7 @@
 // ********************************************************************
 //
 //
-// $Id: RichG4OpRayleigh.hh,v 1.2 2004-02-04 13:52:24 seaso Exp $
+// $Id: RichG4OpRayleigh.hh,v 1.3 2004-06-03 12:44:44 seaso Exp $
 // GEANT4 tag $Name: not supported by cvs2svn $
 //
 // 
@@ -87,7 +87,8 @@ public: // Without description
         // Constructors and Destructor
         ////////////////////////////////
  
-        RichG4OpRayleigh(const G4String& processName = "RichG4OpRayleigh");
+        RichG4OpRayleigh(const G4String& processName = "RichG4OpRayleigh",
+           G4ProcessType aType =   fOptical);
 
         // RichG4OpRayleigh(const RichG4OpRayleigh &right);
 

@@ -25,7 +25,7 @@
 #include "RichSensDet.h"
 #include "RichInfo.h"
 #include "RichPEInfo.h"
-
+#include "RichPhotoElectron.h"
 // ============================================================================
 /// factory business
 // ============================================================================
@@ -98,9 +98,8 @@ bool RichSensDet::ProcessHits( G4Step* aStep ,
 
   // cout<<"Rich SensDet CurEdep "<< CurEdep<<endl;
 
-  if ( CurEdep <= 0.1 ) { return false; }
-  // if(  CurEdep <= 0.005 ) { return false;
-  // }
+  //if ( CurEdep <= 0.1 ) { return false; }
+   if(  CurEdep <= 0.001 ) { return false; }
 
   // end of Modif in June 2003 by SE.
 
@@ -124,7 +123,8 @@ bool RichSensDet::ProcessHits( G4Step* aStep ,
   G4String aCreatorProcessName = "NullProcess";
   const G4VProcess* aProcess = aTrack->GetCreatorProcess();
   if(aProcess) aCreatorProcessName =  aProcess->GetProcessName();
-  if((aTrack->GetDefinition() == G4Electron::Electron()) &&
+  if(((aTrack->GetDefinition() == G4Electron::Electron()) ||
+      (aTrack->GetDefinition() == RichPhotoElectron::PhotoElectron())) &&
      (aCreatorProcessName  == "RichHpdPhotoelectricProcess"))
   {
     CurPEOrigin = aTrack->GetVertexPosition() ;
@@ -209,11 +209,16 @@ bool RichSensDet::ProcessHits( G4Step* aStep ,
   G4ThreeVector CurChTrackCkvPostStepPos;
   G4int CurPhotRayleighScatFlag=0;
   G4ThreeVector CurPhotAgelExitPos;
+  G4ThreeVector CurMirror1PhotonReflPosition;   
+  G4ThreeVector CurMirror2PhotonReflPosition;
+  G4int CurMirror1PhotonDetectorCopyNum=-1;
+  G4int CurMirror2PhotonDetectorCopyNum=-1;  
   G4int aRichVerboseFlag=0;
   G4int CurOptPhotID =0;
 
 
-  if((aTrack->GetDefinition() == G4Electron::Electron()) &&
+  if( ( (aTrack->GetDefinition() == G4Electron::Electron()) || 
+        (aTrack->GetDefinition() == RichPhotoElectron::PhotoElectron()))  &&
      (aCreatorProcessName  == "RichHpdPhotoelectricProcess")) {
 
     G4VUserTrackInformation* aUserTrackinfo=aTrack->GetUserInformation();
@@ -262,9 +267,11 @@ bool RichSensDet::ProcessHits( G4Step* aStep ,
                 aPEInfo->PhotonRayleighScatteringFlag();
               CurPhotAgelExitPos=
                 aPEInfo->  PhotonAerogelExitPos();
-
-
-
+              CurMirror1PhotonReflPosition= aPEInfo->Mirror1PhotReflPosition();
+              CurMirror2PhotonReflPosition= aPEInfo->Mirror2PhotReflPosition();
+              CurMirror1PhotonDetectorCopyNum=aPEInfo->Mirror1PhotDetCopyNum();
+              CurMirror2PhotonDetectorCopyNum=aPEInfo->Mirror2PhotDetCopyNum();
+                 
             }
 
 
@@ -306,7 +313,11 @@ bool RichSensDet::ProcessHits( G4Step* aStep ,
   newHit -> setChTrackCkvPreStepPos(CurChTrackCkvPreStepPos);
   newHit -> setChTrackCkvPostStepPos(CurChTrackCkvPostStepPos);
   newHit -> setOptPhotRayleighFlag(CurPhotRayleighScatFlag);
-  newHit ->   setOptPhotAgelExitPos(  CurPhotAgelExitPos);
+  newHit -> setOptPhotAgelExitPos(  CurPhotAgelExitPos);
+  newHit -> setMirror1PhotonReflPosition(CurMirror1PhotonReflPosition);
+  newHit -> setMirror2PhotonReflPosition(CurMirror2PhotonReflPosition);
+  newHit -> setMirror1PhotonDetectorCopyNum(CurMirror1PhotonDetectorCopyNum);
+  newHit -> setMirror2PhotonDetectorCopyNum(CurMirror2PhotonDetectorCopyNum);
   newHit -> setRichVerboseHitInfo(aRichVerboseFlag);
 
   // now for the trackID from the Gausshit base class.

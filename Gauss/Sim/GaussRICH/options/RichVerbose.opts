@@ -3,21 +3,7 @@
 GiGa.ModularPL.GiGaPhysConstructorOp.RichActivateRichPhysicsProcVerboseTag=true;
 
 GiGa.StepSeq.Members  += { "RichG4StepAnalysis4/RichStepAgelExit" } ;
-
-GiGa.EventSeq.Members += { "RichG4EventAction/RichG4Event" } ;
-
-GiGa.EventSeq.RichG4Event.RichG4EventActivateCounting=false;
-GiGa.EventSeq.RichG4Event.RichEventActionHistoFillTimer=true;
-GiGa.EventSeq.RichG4Event.RichG4EventActivateCkvReconstruction=false;
-GiGa.EventSeq.RichG4Event.RichG4EventHitReconUseSaturatedHit=false;
-GiGa.EventSeq.RichG4Event.RichG4EventHitReconUseMidRadiator=false;
-
-GiGa.RunSeq.Members           += { "RichG4RunAction/RichG4Run" } ;
-GiGa.RunSeq.RichG4Run.DefineRichG4HistoSet1=false;
-GiGa.RunSeq.RichG4Run.DefineRichG4HistoSet2=false;
-GiGa.RunSeq.RichG4Run.DefineRichG4HistoSet3=false;
-GiGa.RunSeq.RichG4Run.DefineRichG4HistoSet4=false;
-GiGa.RunSeq.RichG4Run.DefineRichG4HistoTimer=true;
+GiGa.StepSeq.Members  += { "RichG4StepAnalysis5/RichStepMirrorRefl" } ;
 
 // now switch on creation of rich debug verbose output convertors.
 GetHits.RichOpticalPhotons = "/Event/MC/Rich/OpticalPhotons";

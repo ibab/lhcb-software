@@ -12,7 +12,12 @@ RichPhotInfo::RichPhotInfo() :
   m_ChTrackCkvPoststep(0),
   m_PhotonRayleighScatFlag(0), 
   m_AerogelExitPosition(0),
-  m_VerbosePhotTagFlag(false) {; }
+  m_Mirror1ReflPosition(0),
+  m_Mirror2ReflPosition(0),
+  m_Mirror1DetCopyNum(-1),
+  m_Mirror2DetCopyNum(-1),
+  m_VerbosePhotTagFlag(false)
+   {; }
 
 RichPhotInfo::~RichPhotInfo() {;}
 

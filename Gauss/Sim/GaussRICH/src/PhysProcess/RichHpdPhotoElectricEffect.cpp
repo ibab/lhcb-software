@@ -1,6 +1,10 @@
 #include "RichHpdPhotoElectricEffect.h"
 
 #include "G4TransportationManager.hh"
+#include "G4ParticleDefinition.hh"
+#include "G4ProcessVector.hh"
+#include "G4ProcessManager.hh"
+
 #include "CLHEP/Units/PhysicalConstants.h"
 #include <math.h>
 
@@ -8,9 +12,10 @@
 #include "RichPhotoElectron.h"
 #include "RichPEInfoAttach.h"
 #include "RichG4AnalysisPhotElec.h"
-RichHpdPhotoElectricEffect::RichHpdPhotoElectricEffect( const GiGaBase* gigabase,
-                                                        const G4String& processName)
-  : G4VDiscreteProcess(processName),
+RichHpdPhotoElectricEffect::RichHpdPhotoElectricEffect(const GiGaBase* gigabase,
+                                  const G4String& processName, 
+                                  G4ProcessType   aType)
+  : G4VDiscreteProcess(processName, aType ),
     m_numTotHpd(std::vector<int>(2))
 {
   IDataProviderSvc* detSvc;
@@ -197,7 +202,7 @@ RichHpdPhotoElectricEffect::PostStepDoIt(const G4Track& aTrack,
     G4double ElecOriginTolerence= 0.004*mm;
     G4ThreeVector LocalElectronOrigin (LocalElectronOriginInit.x(),
                                        LocalElectronOriginInit.y(),
-                                       LocalElectronOriginInit.z()- ElecOriginTolerence );
+                 LocalElectronOriginInit.z()- ElecOriginTolerence );
 
     std::vector<double> CurDemagFactor=
       getCurrentHpdDemag(currentHpdNumber,currentRichDetNumber);
@@ -211,16 +216,31 @@ RichHpdPhotoElectricEffect::PostStepDoIt(const G4Track& aTrack,
     G4double PsfRandomRad= G4RandGauss::shoot(0.0,PSFsigma);
     G4double PsfX= PsfRandomRad*cos( PsfRandomAzimuth);
     G4double PsfY= PsfRandomRad*sin( PsfRandomAzimuth);
+    // G4cout<<" Photoelec: Current psfSigma psfX psfY "<<PSFsigma
+    //      <<"    "<< PsfX<<"   "<< PsfY<<G4endl;
+
     // for now apply only the linear factor of the demag;
     G4ThreeVector
       LocalElectronDirection(
-                             (CurDemagFactor[0]-1.0)*LocalElectronOrigin.x()+PsfX,
-                             (CurDemagFactor[0]-1.0)*LocalElectronOrigin.y()+PsfY,
-                             -( m_PhCathodeToSilDetMaxDist-
-                                ( m_hpdPhCathodeInnerRadius-LocalElectronOrigin.z())));
+               (CurDemagFactor[0]-1.0)*LocalElectronOrigin.x()+PsfX,
+               (CurDemagFactor[0]-1.0)*LocalElectronOrigin.y()+PsfY,
+                -( m_PhCathodeToSilDetMaxDist-
+               ( m_hpdPhCathodeInnerRadius-LocalElectronOrigin.z())));
+
+    // test printout
+    // G4cout<<"Photoeleceff: Local eln origin dir "<<
+    //   LocalElectronOrigin.x()<<"   "<< LocalElectronOrigin.y()<<
+    //   "    "<<      LocalElectronOrigin.z()<<"   "<<
+    //    LocalElectronDirection.x()<<"   "<<   LocalElectronDirection.y()<<
+    //   "    "<< LocalElectronDirection.z()<<G4endl;
+    
     //normalize this vector and then transform back to global coord system.
     LocalElectronDirection = LocalElectronDirection.unit();
 
+    //  G4cout<<"Photoeleceff: normalized Local eln  dir "<<
+    //   LocalElectronDirection.x()<<"   "<<   LocalElectronDirection.y()<<
+    //   "    "<< LocalElectronDirection.z()<<G4endl;
+       
     const G4ThreeVector GlobalElectronDirection = theNavigator->
       GetLocalToGlobalTransform().
       TransformAxis(LocalElectronDirection);
@@ -228,22 +248,49 @@ RichHpdPhotoElectricEffect::PostStepDoIt(const G4Track& aTrack,
 
     // temporay fix for not having the shielding of hpds in Gauss. SE 14-3-2003.
 
-    //      G4double ElecKineEnergy= m_HpdPhElectronKE;
+    //   G4double ElecKineEnergy= m_HpdPhElectronKE;
 
     //create the photoelectron
-    G4double ElecKineEnergy= 100000*m_HpdPhElectronKE;
+      G4double ElecKineEnergy= 100000*m_HpdPhElectronKE;
 
-    G4DynamicParticle* aElectron=
-      new G4DynamicParticle (G4Electron::Electron(),
-                             GlobalElectronDirection, ElecKineEnergy) ;
-
+      // G4DynamicParticle* aElectron=
+      // new G4DynamicParticle (G4Electron::Electron(),
+      //                       GlobalElectronDirection, ElecKineEnergy) ;
+    //
     // end of temporary fix.
+    //   test of number of proc for the photoelectron particle
+    // G4cout<<" stat test for photoelectron "<<G4endl;
+    // 
+    //      G4ParticleDefinition* photoelectronDef = 
+    //      RichPhotoElectron::PhotoElectron();
+    //    G4cout<<" Now checking if photoelectron def exists "<<G4endl;
+    //    G4String pname= photoelectronDef->GetParticleName();
+    //    G4cout<<" Now checking if photoelectron def exists "<<
+    //      pname<< G4endl;
+    //  
+    //    if( photoelectronDef) {
+    //      
+    //     G4ProcessManager* pmanager =  photoelectronDef->GetProcessManager();
+    //     G4cout<< "Check if pmanager exists "<<G4endl;
+    //     if(pmanager) {  
+    //     G4ProcessVector* pVector = 
+    //          pmanager->GetProcessList();
+    //      G4cout << "size of ProcList for pe-   "
+    //             << (G4int) pVector->size()<< G4endl;
+    //      G4cout << "List of phys proc for pe-   " << G4endl;          
+    //      pmanager->DumpInfo();
+    //     }
+    //     
+    //    }       
+    //      G4cout<<" end test for photoelectron "<<G4endl;
+    //      
+    // end of test of number of proc for photoelectron particle.	   
+    //
+    //    G4double ElecKineEnergy= m_HpdPhElectronKE;
 
-    //     G4double ElecKineEnergy= m_HpdPhElectronKE;
-
-    //       G4DynamicParticle* aElectron=
-    //   new G4DynamicParticle (RichPhotoElectron::PhotoElectron(),
-    //                   GlobalElectronDirection, ElecKineEnergy) ;
+           G4DynamicParticle* aElectron=
+             new G4DynamicParticle (RichPhotoElectron::PhotoElectron(),
+                       GlobalElectronDirection, ElecKineEnergy) ;
 
     aParticleChange.SetNumberOfSecondaries(1) ;
     //  aParticleChange.AddSecondary( aElectron ) ;

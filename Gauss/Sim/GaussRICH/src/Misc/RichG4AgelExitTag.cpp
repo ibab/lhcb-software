@@ -1,4 +1,4 @@
-// $Id: RichG4AgelExitTag.cpp,v 1.2 2004-02-10 10:14:09 jonesc Exp $
+// $Id: RichG4AgelExitTag.cpp,v 1.3 2004-06-03 12:42:34 seaso Exp $
 // Include files
 
 #include "GaussTools/GaussTrackInformation.h"
@@ -35,6 +35,8 @@ void RichG4AgelExitTag(const G4Track* aPhotonTk,
 
           // now add the info.
           // only if the verbose tag is activated.
+	  // G4cout<<"AgelExit Tag "<<aRichPhotInfo -> VerbosePhotTagFlag()
+          //      <<G4endl;
           if( aRichPhotInfo -> VerbosePhotTagFlag() ) {
             aRichPhotInfo -> setAerogelExitPosition(aAgelExitPos);
           }

@@ -23,7 +23,8 @@ class RichHpdPhotoElectricEffect : public G4VDiscreteProcess {
 
 public:
 
-  RichHpdPhotoElectricEffect(const GiGaBase*, const G4String&);
+  RichHpdPhotoElectricEffect(const GiGaBase*, const G4String&, 
+                          G4ProcessType   aType = fOptical);
 
   virtual ~RichHpdPhotoElectricEffect();
 

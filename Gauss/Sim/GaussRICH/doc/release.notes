@@ -4,7 +4,26 @@
 ! Responsible	     : Witold Pokorski
 ! Purpose          : collection of sensitive detectors, G4 actions, etc for RICH
 !-----------------------------------------------------------------------------
-
+! 2004-06-02 - Sajan Easo
+  - Created RichPhotoelectron particle for transport inside HPD.
+  - It still has 2 GeV/c momentum to ensure straight line tracking.
+    A low momentum of 20 keV has devaition from straight line when
+    tracked by B=0 field tracking. 
+  - the photoelectron has only transportation and hpdenergyloss process.
+  - Files modified are GiGaPhysConstructorHpd.cpp and .h, 
+     RichHpdPhotoElectricEffect.cpp, RichHpdSiEnergyLoss.cpp
+  - Fixed the GiGaMCRichHitCnv.cpp to avoid the division by 10 for the
+    the energy of the hit which is the energy deposted by photoelectron.
+    Typcial energy of the hit is 20 keV.
+  - Process Type created for all processes defined in GaussRICH.
+  - Coordinates of Photon Reflection points on spherical and flat Mirrors 
+    added to RichG4Hit so that they can be accessed when running in 'Verbose Output' mode.
+  - Added the functionality to set different max number 
+    of Cherenkov photons created per step in the three different Radiators.
+    These values can be set from Rich.opts file. The default setup is to use a single
+    value for all radiators.
+  - Further cleanup of Rich.opts, RichVerbose.opts and RichAnalysis.opts.
+    
 ! 2004-05-05 - Gloria CORTI
  - Clean up of Rich.opts so that commented options refer to tools instances
    as in standard simulation

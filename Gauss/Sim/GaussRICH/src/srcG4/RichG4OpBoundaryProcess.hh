@@ -21,7 +21,7 @@
 // ********************************************************************
 //
 //
-// $Id: RichG4OpBoundaryProcess.hh,v 1.1 2003-04-29 17:08:06 seaso Exp $
+// $Id: RichG4OpBoundaryProcess.hh,v 1.2 2004-06-03 12:44:44 seaso Exp $
 // GEANT4 tag $Name: not supported by cvs2svn $
 //
 // 
@@ -104,7 +104,8 @@ public: // Without description
         // Constructors and Destructor
         ////////////////////////////////
 
-        RichG4OpBoundaryProcess(const G4String& processName = "RichG4OpBoundary");
+        RichG4OpBoundaryProcess(const G4String& processName = "RichG4OpBoundary",
+                                G4ProcessType aType = fOptical );
 
 	~RichG4OpBoundaryProcess();
 

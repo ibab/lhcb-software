@@ -11,10 +11,14 @@
 #include "G4ParticleWithCuts.hh"
 #include "G4ProcessManager.hh"
 #include "G4ProcessVector.hh"
+#include "G4VProcess.hh"
 #include "G4ParticleTable.hh"
 #include "G4Material.hh"
 #include "G4Decay.hh"
 #include "G4ios.hh"
+#include "G4Material.hh"
+#include "G4MaterialTable.hh"
+
 //#include "g4std/iomanip"                
 // local
 #include "GiGaPhysConstructorOp.h"
@@ -24,7 +28,8 @@
 #include "G4MultipleScattering.hh"
 #include "G4ProcessVector.hh"
 #include "G4LossTableManager.hh"
-
+#include <vector>
+#include "RichG4AnalysisConstGauss.h"
 
 // ============================================================================
 /// Factory
@@ -39,15 +44,29 @@ GiGaPhysConstructorOp::GiGaPhysConstructorOp
   const IInterface*  parent )
   : GiGaPhysConstructorBase( type , name , parent ),
     m_RichActivateVerboseProcessInfoTag(false),
-    m_MaxPhotonsPerRichCherenkovStep(900)
+    m_MaxPhotonsPerRichCherenkovStep(40),
+    m_ApplyMaxPhotCkvLimitPerRadiator(false),
+    m_MaxPhotonsPerRichCherenkovStepInRich1Agel(900),
+    m_MaxPhotonsPerRichCherenkovStepInRich1Gas(40),
+    m_MaxPhotonsPerRichCherenkovStepInRich2Gas(40),
+    m_RichRadiatorMaterialName(std::vector<G4String> (3)),
+    m_RichRadiatorMaterialIndex(std::vector<G4int> (3))
 {
+  // in the above 3 is for the three radiators.
+
   declareProperty("RichActivateRichPhysicsProcVerboseTag",
                   m_RichActivateVerboseProcessInfoTag);
-  
   declareProperty("RichMaxNumPhotPerCherenkovStep",
-                  m_MaxPhotonsPerRichCherenkovStep);
+                  m_MaxPhotonsPerRichCherenkovStep);  
+  declareProperty("RichApplyMaxNumCkvPhotPerStepPerRadiator",
+                  m_ApplyMaxPhotCkvLimitPerRadiator);
+  declareProperty("RichMaxPhotonsPerCherenkovStepInRich1Agel",
+                  m_MaxPhotonsPerRichCherenkovStepInRich1Agel);
+  declareProperty("RichMaxPhotonsPerCherenkovStepInRich1Gas",
+                  m_MaxPhotonsPerRichCherenkovStepInRich1Gas);
+  declareProperty("RichMaxPhotonsPerCherenkovStepInRich2Gas",
+                  m_MaxPhotonsPerRichCherenkovStepInRich2Gas);
   
-    
 };
 // ============================================================================
 
@@ -61,70 +80,68 @@ GiGaPhysConstructorOp::~GiGaPhysConstructorOp(){};
 // ============================================================================
 void GiGaPhysConstructorOp::ConstructParticle()
 {
-  //   RichPhotoElectron::PhotoElectronDefinition(); 
+  //     RichPhotoElectron::PhotoElectronDefinition(); 
 };
 
 // ============================================================================
 // ============================================================================
 void GiGaPhysConstructorOp::ConstructProcess()
 {
-  // ConstructPeProcess();
+  //  ConstructPeProcess();
   ConstructOp();
 };
 
 void  GiGaPhysConstructorOp::ConstructPeProcess() 
 {
 
-  MsgStream msg(msgSvc(), name());
+  //  MsgStream msg(msgSvc(), name());
 
   //        G4double aPeCut=10.0*km;
-  G4double aPeCut=0.1*mm;
-  G4ParticleDefinition* photoelectronDef = 
-    RichPhotoElectron::PhotoElectron();
-  photoelectronDef->SetCuts(aPeCut);
-  photoelectronDef->SetApplyCutsFlag(true);
-  photoelectronDef-> DumpTable() ;
-  
-  G4Transportation* theTransportationProcess= new G4Transportation();
-  G4MultipleScattering* theMultipleScattering = new G4MultipleScattering();
-
-  theParticleIterator->reset();
-  while( (*theParticleIterator)() ){
-    G4ParticleDefinition* particle = theParticleIterator->value();
-    if(  particle->GetParticleName() == "pe-" )
-      {
-        G4ProcessManager* pmanager =  particle->GetProcessManager();
-        pmanager ->AddProcess(theTransportationProcess,-1,2,2);
-        pmanager->AddProcess(theMultipleScattering,-1,1,1);
-        pmanager ->SetProcessOrderingToFirst
-          (theTransportationProcess, idxAlongStep);
-        pmanager ->SetProcessOrderingToFirst
-          (theTransportationProcess, idxPostStep);
-        pmanager ->SetProcessOrderingToFirst
-          (theMultipleScattering, idxAlongStep);
-        pmanager ->SetProcessOrderingToFirst(theMultipleScattering, idxPostStep);
-        particle->SetCuts(aPeCut);
-        particle->SetApplyCutsFlag(true);
+  // G4double aPeCut=0.1*mm;
+  //  G4ParticleDefinition* photoelectronDef = 
+  //  RichPhotoElectron::PhotoElectron();
+  //  photoelectronDef->SetCuts(aPeCut);
+  //  photoelectronDef->SetApplyCutsFlag(true);
+  // photoelectronDef-> DumpTable() ;  
+  // G4Transportation* theTransportationProcess= new G4Transportation();
+  // G4MultipleScattering* theMultipleScattering = new G4MultipleScattering();  
+  // theParticleIterator->reset();
+  // while( (*theParticleIterator)() ){
+  //  G4ParticleDefinition* particle = theParticleIterator->value();
+  //  if(  particle->GetParticleName() == "pe-" )
+  //    {
+  //      G4ProcessManager* pmanager =  particle->GetProcessManager();
+  //      pmanager ->AddProcess(theTransportationProcess,-1,2,2);
+  //      pmanager->AddProcess(theMultipleScattering,-1,1,1);
+  //      pmanager ->SetProcessOrderingToFirst
+  //        (theTransportationProcess, idxAlongStep);
+  //      pmanager ->SetProcessOrderingToFirst
+  //        (theTransportationProcess, idxPostStep);
+  //      pmanager ->SetProcessOrderingToFirst
+  //        (theMultipleScattering, idxAlongStep);
+  //      pmanager ->SetProcessOrderingToFirst(theMultipleScattering, idxPostStep);
+  //      particle->SetCuts(aPeCut);
+  //      particle->SetApplyCutsFlag(true);
         //       BuildPhysicsTable(particle);
         //  G4LossTableManager* aG4LossTableManager = G4LossTableManager::Instance();
         // aG4LossTableManager->BuildPhysicsTable(particle);
         
-        G4int j;
+  //      G4int j;
         // Rebuild the physics tables for every process for this particle type
-        G4ProcessVector* pVector = 
-          (particle->GetProcessManager())->GetProcessList();
-        msg << MSG::DEBUG << "size ProcList pe- "<< pVector->size()<< endreq;
-        
-        for ( j=0; j < pVector->size(); ++j) 
-          {
-            (*pVector)[j]->BuildPhysicsTable(*particle);
-          }
-        particle->DumpTable();
-        pmanager->DumpInfo();
-        G4int  an1 =  pmanager ->GetProcessListLength() ;
-        msg << MSG::DEBUG << "Num proc for pe so far = " << an1 << endreq;
-      }
-  }
+  //      G4ProcessVector* pVector = 
+  //        (particle->GetProcessManager())->GetProcessList();
+  //      msg << MSG::DEBUG << "size ProcList pe- "<< pVector->size()<< endreq;
+  //      
+  //      for ( j=0; j < pVector->size(); ++j) 
+  //        {
+  //          (*pVector)[j]->BuildPhysicsTable(*particle);
+  //        }
+  //      particle->DumpTable();
+  //      pmanager->DumpInfo();
+  //      G4int  an1 =  pmanager ->GetProcessListLength() ;
+  //      msg << MSG::DEBUG << "Num proc for pe so far = " << an1 << endreq;
+  //    }
+  // }
   
   //       G4ProcessManager* pmanager =  photoelectronDef->GetProcessManager();
   //   G4ProcessManager* pmanager =  new  G4ProcessManager( photoelectronDef);
@@ -166,14 +183,18 @@ void GiGaPhysConstructorOp::ConstructOp() {
   msg << MSG::DEBUG <<" Activation for verbose Output in Rich Optical Proc = "
       << m_RichActivateVerboseProcessInfoTag << endreq;
 
-  RichG4Cerenkov*   theCerenkovProcess = new RichG4Cerenkov("RichG4Cerenkov");
+  RichG4Cerenkov*   theCerenkovProcess = 
+             new RichG4Cerenkov("RichG4Cerenkov", fOptical );
   G4OpAbsorption* theAbsorptionProcess = new G4OpAbsorption();
-  RichG4OpRayleigh*   theRayleighScatteringProcess = new RichG4OpRayleigh();
-  RichG4OpBoundaryProcess* theBoundaryProcess = new RichG4OpBoundaryProcess();
+  RichG4OpRayleigh*   theRayleighScatteringProcess = 
+    new RichG4OpRayleigh("RichG4OpRayleigh", fOptical);
+  RichG4OpBoundaryProcess* theBoundaryProcess = 
+    new RichG4OpBoundaryProcess("RichG4OpBoundary", fOptical );
   
   //  G4cout<<"Now creating Photoelectric  processes"<<G4endl;
   RichHpdPhotoElectricEffect* theRichHpdPhotoElectricProcess= 
-    new RichHpdPhotoElectricEffect(this,"RichHpdPhotoelectricProcess");
+    new RichHpdPhotoElectricEffect(this,
+                     "RichHpdPhotoelectricProcess", fOptical);
   
   theCerenkovProcess->SetVerboseLevel(0);
   theAbsorptionProcess->SetVerboseLevel(0);
@@ -182,12 +203,40 @@ void GiGaPhysConstructorOp::ConstructOp() {
   
   //  G4int MaxNumPhotons = 300;
   // The following is now input from options file. SE 2-2-2004
-  // the default value is 900.
-  // G4int MaxNumPhotons = 900;
+  // the default value was 900. now changed the default to 40.
+  // G4int MaxNumPhotons = 40;
 
   G4int MaxNumPhotons = (G4int)m_MaxPhotonsPerRichCherenkovStep; 
-  msg << MSG::DEBUG << " Max Number of Photons per Cherenkov step=  "
-      << MaxNumPhotons << endreq;
+  // msg << MSG::DEBUG << " Global value of Max Number of Photons per Cherenkov step=  "
+  //    << MaxNumPhotons << endreq;
+  msg<<MSG::DEBUG << "  Apply Flag for MaxNumCherenkov Phot per Step Radiator "
+     <<   m_ApplyMaxPhotCkvLimitPerRadiator <<endreq;
+  if(m_ApplyMaxPhotCkvLimitPerRadiator) {
+    msg<< MSG::DEBUG <<" Agel Rich1Gas Rich2Gas have different Max Phot per Cherenkov Step = "  
+       << m_MaxPhotonsPerRichCherenkovStepInRich1Agel<<"   "
+       << m_MaxPhotonsPerRichCherenkovStepInRich1Gas<<"    "
+       << m_MaxPhotonsPerRichCherenkovStepInRich2Gas  <<endreq;    
+  }else {
+    msg<<MSG::DEBUG <<"All Radiators have the same Max Phot per Cherenkov Step=  "
+       << m_MaxPhotonsPerRichCherenkovStep <<endreq;
+    
+  }
+  
+  std::vector<G4int> aMaxPhotLim;
+  aMaxPhotLim.clear();
+  aMaxPhotLim.push_back((G4int) m_MaxPhotonsPerRichCherenkovStepInRich1Agel);
+  aMaxPhotLim.push_back((G4int) m_MaxPhotonsPerRichCherenkovStepInRich1Gas);
+  aMaxPhotLim.push_back((G4int) m_MaxPhotonsPerRichCherenkovStepInRich2Gas);
+  std::vector<G4String> aRichRadiatorMaterialName;
+  aRichRadiatorMaterialName.clear();
+  aRichRadiatorMaterialName.push_back(Rich1AerogelMatName);
+  aRichRadiatorMaterialName.push_back(Rich1C4F10MatName);
+  aRichRadiatorMaterialName.push_back(Rich2CF4MatName);
+  setRichRadiatorMaterialName(aRichRadiatorMaterialName);
+  // the following can possibly be setup as a general function in the future. SE.
+  std::vector<G4int> aRadMatIndex = 
+       FindRichRadiatorMaterialIndices(aRichRadiatorMaterialName);
+  setRichRadiatorMaterialIndex(aRadMatIndex);
   
   //  theCerenkovProcess->SetTrackSecondariesFirst(true);
   // the following change made in March 2004 to fix the problem in G4.
@@ -195,6 +244,17 @@ void GiGaPhysConstructorOp::ConstructOp() {
   theCerenkovProcess->SetMaxNumPhotonsPerStep(MaxNumPhotons);
   theCerenkovProcess->
     SetRichVerboseInfoTag( (G4bool) m_RichActivateVerboseProcessInfoTag);
+  theCerenkovProcess->
+    SetMaxPhotonPerRadiatorFlag((G4bool) m_ApplyMaxPhotCkvLimitPerRadiator);
+  theCerenkovProcess->SetMaxPhotPerStepInRadiator(aMaxPhotLim);
+  theCerenkovProcess->SetRadiatorMaterialIndex(aRadMatIndex);
+  if( ((int) aMaxPhotLim.size () ) != ((int) aRadMatIndex.size ()) ){
+    G4cout<<" GigaPhysConstructorOp : Mismatched array size for  MaxPhotLim and  RadMatIndex  "
+          <<(int) aMaxPhotLim.size () <<"  "
+          << (int) aRadMatIndex.size ()<<G4endl;
+    
+  }
+  
   
   G4OpticalSurfaceModel themodel = glisur;
   theBoundaryProcess->SetModel(themodel);
@@ -228,7 +288,36 @@ void GiGaPhysConstructorOp::ConstructOp() {
      }
   }
 }
+std::vector<G4int> GiGaPhysConstructorOp::FindRichRadiatorMaterialIndices
+  (std::vector<G4String> aRadiatorMaterialNames)
+{
+  std::vector<G4int> aIndexVect;
+  aIndexVect.clear();
+  static const G4MaterialTable* theMaterialTable =
+    G4Material::GetMaterialTable();
+  int numberOfMat= (int) theMaterialTable->size() ;
 
+  for(int iname=0; iname< (int) aRadiatorMaterialNames.size(); ++iname){
+    //    G4cout<<" GigaPhysCons iname "<<iname<<G4endl;
+    G4String curName= aRadiatorMaterialNames[iname];
+    int im=0;
+    bool nameFound=false;
+    while( im< numberOfMat && ! (nameFound)  ) {
+      if( curName == (*theMaterialTable)[im]->GetName() ) {  
+        aIndexVect.push_back( (*theMaterialTable)[im]->GetIndex()   );
+        nameFound=true;
+      }
+      im++;    
+    }  
+    
+  }  
+
+  return aIndexVect;
+  
+}
+
+
+  
 // void GiGaPhysConstructorOp::SetCuts() {
 //       G4double apeCut = 10.0*km;
 //     SetCutValue(apeCut,"pe-");

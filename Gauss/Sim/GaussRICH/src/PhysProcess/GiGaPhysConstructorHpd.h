@@ -35,6 +35,7 @@ public:
 
 private:
 
+  void ConstructPeGenericProcess();
   void ConstructHpdSiEnLoss  ();
   ///
 

@@ -101,6 +101,18 @@ public:
   {    return m_OptPhotonId; }
   void setOptPhotonId( const G4int aIdValue){m_OptPhotonId=aIdValue;}
 
+  void setMirror1PhotReflPosition( const  G4ThreeVector & aMirror1PhotReflPosition) 
+    { m_Mirror1PhotReflPosition= aMirror1PhotReflPosition;}
+  G4ThreeVector Mirror1PhotReflPosition() {return m_Mirror1PhotReflPosition;}
+  void setMirror2PhotReflPosition( const  G4ThreeVector & aMirror2PhotReflPosition) 
+    { m_Mirror2PhotReflPosition= aMirror2PhotReflPosition;}
+  G4ThreeVector Mirror2PhotReflPosition() {return m_Mirror2PhotReflPosition;}
+  void setMirror1PhotDetCopyNum(const G4int aMirror1PhotDetCopyNum) {m_Mirror1PhotDetCopyNum=aMirror1PhotDetCopyNum;}
+  G4int Mirror1PhotDetCopyNum() {return  m_Mirror1PhotDetCopyNum;}
+  void setMirror2PhotDetCopyNum(const G4int aMirror2PhotDetCopyNum) {m_Mirror2PhotDetCopyNum=aMirror2PhotDetCopyNum;}
+  G4int Mirror2PhotDetCopyNum() {return  m_Mirror2PhotDetCopyNum;}
+
+
 private:
 
   G4int m_PhotOriginRadiatorNumber;
@@ -119,7 +131,10 @@ private:
   G4ThreeVector m_PhotonAerogelExitPos;
   G4bool m_VerbosePeTagFlag;
   G4int m_OptPhotonId;
-
+  G4ThreeVector m_Mirror1PhotReflPosition;
+  G4ThreeVector m_Mirror2PhotReflPosition;
+  G4int  m_Mirror1PhotDetCopyNum;
+  G4int  m_Mirror2PhotDetCopyNum;
 };
 
 #endif

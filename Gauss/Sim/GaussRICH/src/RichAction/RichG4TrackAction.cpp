@@ -9,6 +9,7 @@
 #include "G4ParticleTable.hh"
 #include "G4DynamicParticle.hh"
 #include "G4Electron.hh"
+#include "RichPhotoElectron.h"
 #include "G4ThreeVector.hh"
 #include "G4OpticalPhoton.hh"
 #include "globals.hh"
@@ -97,8 +98,10 @@ void RichG4TrackAction::PostUserTrackingAction ( const G4Track* aTrack )
         const G4TrackVector* PhotSec = trackMgr()->GimmeSecondaries() ;
 	      for( unsigned int isec = 0 ; isec <PhotSec->size() ; ++isec ){
               G4Track* SecTrk = (*PhotSec)[isec];
-              if(SecTrk->GetDynamicParticle()->
-                 GetDefinition() == G4Electron::Electron() ) {
+              if(( SecTrk->GetDynamicParticle()->
+                 GetDefinition() == G4Electron::Electron()) || 
+                 ( SecTrk->GetDynamicParticle()->
+                 GetDefinition() == RichPhotoElectron::PhotoElectron()) ) {
   	      // set the opticalphoton to be a trajectory.
 	      
 	                trackMgr()->SetStoreTrajectory( true );

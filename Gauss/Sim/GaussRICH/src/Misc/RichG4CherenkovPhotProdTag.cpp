@@ -25,7 +25,9 @@ G4Track* RichG4CherenkovPhotProdTag(const G4Track& aChTrack,
   //                =new RichGiGaPhotTrackInformation();
   //          RichPhotInfo* aPhotInfo=aRichPhotTrackInfo->
   //          AttachedRichPhotInfo();
-  
+ 
+  // G4cout<<" RichG4CherenkovPhotProdTag: Verbose flag "<<aVerboseTagFlag
+  //	<<G4endl; 
   const G4DynamicParticle* aChTrackParticle 
     = aChTrack.GetDynamicParticle(); 
   

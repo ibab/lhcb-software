@@ -1,43 +1,34 @@
-// Rich specific job options
-GiGa.ModularPL.OpPhysOptions.RichActivateRichPhysicsProcVerboseTag=true;
-// the following value is the default anyway.
-// GiGa.ModularPL.OpPhysOptions.RichMaxNumPhotPerCherenkovStep=900;
+// Rich specific Analysis job options
 
-//GiGa.StepSeq.Members             += { "RichG4StepAnalysis3/RichStep" } ;
-GiGa.StepSeq.Members             += { "RichG4StepAnalysis4/RichStepAgelExit" } ;
-
-GiGa.TrackSeq.Members      += { "RichG4TrackActionPhotOpt/RichG4PhotOpt" } ;
-GiGa.TrackSeq.Members      += { "Rich1G4TrackActionUpstrPhoton/Rich1UpstrPhotonTrack" } ;
+GiGa.StepSeq.Members             += { "RichG4StepAnalysis3/RichStep" } ;
 //GiGa.TrackSeq.Members      += { "RichG4TrackAction/RichTrack" } ;
-
 GiGa.EventSeq.Members     += { "RichG4EventAction/RichG4Event" } ;
-
-GiGa.EventSeq.RichG4Event.RichEventActionVerbose = 3 ;
+//GiGa.EventSeq.RichG4Event.RichEventActionVerbose = 3 ;
 //GiGa.EventSeq.RichG4Event.RichEventActionVerbose = 2 ;
-//GiGa.EventSeq.RichG4Event.RichEventActionVerbose = 0 ;
+GiGa.EventSeq.RichG4Event.RichEventActionVerbose = 0 ;
 GiGa.EventSeq.RichG4Event.RichEventActionHistoFillSet1=false;
 GiGa.EventSeq.RichG4Event.RichEventActionHistoFillSet2=true;
-GiGa.EventSeq.RichG4Event.RichEventActionHistoFillSet3=false;
-GiGa.EventSeq.RichG4Event.RichEventActionHistoFillSet4=true;
+GiGa.EventSeq.RichG4Event.RichEventActionHistoFillSet3=true;
+GiGa.EventSeq.RichG4Event.RichEventActionHistoFillSet4=false;
 //GiGa.EventSeq.RichG4Event.RichG4EventActivateCounting=false;
 //GiGa.EventSeq.RichG4Event.RichEventActionHistoFillSet2=false;
 //GiGa.EventSeq.RichG4Event.RichEventActionHistoFillSet1=true;
 //GiGa.EventSeq.RichG4Event.RichEventActionHistoFillSet3=false;
 GiGa.EventSeq.RichG4Event.RichG4EventActivateCounting=true;
-GiGa.EventSeq.RichG4Event.RichEventActionHistoFillTimer=true;
-GiGa.EventSeq.RichG4Event.RichG4EventActivateCkvReconstruction=true;
+//GiGa.EventSeq.RichG4Event.RichEventActionHistoFillTimer=true;
+GiGa.EventSeq.RichG4Event.RichG4EventActivateCkvReconstruction=false;
 GiGa.EventSeq.RichG4Event.RichG4EventHitReconUseSaturatedHit=true;
 GiGa.EventSeq.RichG4Event.RichG4EventHitReconUseMidRadiator=false;
 
  GiGa.RunSeq.Members           += { "RichG4RunAction/RichG4Run" } ;
  GiGa.RunSeq.RichG4Run.DefineRichG4HistoSet1=false;
  GiGa.RunSeq.RichG4Run.DefineRichG4HistoSet2=true;
- GiGa.RunSeq.RichG4Run.DefineRichG4HistoSet3=false;
- GiGa.RunSeq.RichG4Run.DefineRichG4HistoSet4=true;
+ GiGa.RunSeq.RichG4Run.DefineRichG4HistoSet3=true;
+ GiGa.RunSeq.RichG4Run.DefineRichG4HistoSet4=false;
 // GiGa.RunSeq.RichG4Run.DefineRichG4HistoSet1=true;
 // GiGa.RunSeq.RichG4Run.DefineRichG4HistoSet2=true;
 // GiGa.RunSeq.RichG4Run.DefineRichG4HistoSet3=false;
-GiGa.RunSeq.RichG4Run.DefineRichG4HistoTimer=true;
+//GiGa.RunSeq.RichG4Run.DefineRichG4HistoTimer=true;
 // now switch on creation of rich debug verbose output convertors.
 //GetHits.RichOpticalPhotons = "";
 //GetHits.RichSegments       = "";

@@ -21,7 +21,7 @@
 // ********************************************************************
 //
 //
-// $Id: RichG4OpRayleigh.cc,v 1.4 2004-03-26 17:15:13 jonesc Exp $
+// $Id: RichG4OpRayleigh.cc,v 1.5 2004-06-03 12:44:44 seaso Exp $
 // GEANT4 tag $Name: not supported by cvs2svn $
 //
 //
@@ -74,8 +74,9 @@
 // Constructors
 /////////////////
 
-RichG4OpRayleigh::RichG4OpRayleigh(const G4String& processName)
-  : G4VDiscreteProcess(processName),
+RichG4OpRayleigh::RichG4OpRayleigh(const G4String& processName,
+         G4ProcessType aType)
+  : G4VDiscreteProcess(processName, aType ),
     fRichVerboseInfoTag(false)
 {
 

@@ -1,4 +1,4 @@
-// $Id: RichG4StepAnalysis4.cpp,v 1.2 2004-02-10 14:24:17 jonesc Exp $
+// $Id: RichG4StepAnalysis4.cpp,v 1.3 2004-06-03 12:44:00 seaso Exp $
 // Include files
 
 
@@ -55,7 +55,7 @@ RichG4StepAnalysis4::~RichG4StepAnalysis4(  ) { }
 void RichG4StepAnalysis4::UserSteppingAction( const G4Step* aStep )
 {
 
-  //    G4cout<<"Now in Rich Step Analysis 4 " <<G4endl;
+  //     G4cout<<"Now in Rich Step Analysis 4 " <<G4endl;
 
   G4StepPoint* aPreStepPoint = aStep->GetPreStepPoint();
   G4StepPoint* aPostStepPoint = aStep->GetPostStepPoint();

@@ -12,10 +12,14 @@
 #include "G4ParticleTable.hh"
 #include "G4Material.hh"
 #include "G4ios.hh"
+#include "G4Transportation.hh"
+#include "G4MultipleScattering.hh"
+#include "G4LossTableManager.hh"
 //#include "g4std/iomanip"                
 // local
 #include "GiGaPhysConstructorHpd.h"
 #include "RichPhotoElectron.h"
+//#include "G4Decay.hh"
 
 // ============================================================================
 /// Factory
@@ -42,17 +46,64 @@ GiGaPhysConstructorHpd::~GiGaPhysConstructorHpd(){};
 // ============================================================================
 void GiGaPhysConstructorHpd::ConstructParticle()
 {
- 
+      RichPhotoElectron::PhotoElectronDefinition(); 
+
 };
 
 // ============================================================================
 // ============================================================================
 void GiGaPhysConstructorHpd::ConstructProcess()
 {  
+  ConstructPeGenericProcess();
   ConstructHpdSiEnLoss();
+
 };
 
-//#include "G4Decay.hh"
+void GiGaPhysConstructorHpd::ConstructPeGenericProcess() {
+  // first remove any process assigned to this particle from elsewhere.
+  // then add the Transportation, HpdSiEnergyloss process to it.
+  // More processes to be added later.
+  MsgStream msg(msgSvc(), name());
+
+  //        G4double aPeCut=10.0*km;
+  // G4double aPeCut=0.1*mm;
+  //  G4ParticleDefinition* photoelectronDef = 
+  //  RichPhotoElectron::PhotoElectron();
+  G4Transportation* theTransportationProcess= new G4Transportation();
+  theParticleIterator->reset();
+  while( (*theParticleIterator)() ){
+    G4ParticleDefinition* particle = theParticleIterator->value();
+    if(  particle->GetParticleName() == "pe-" )
+      {
+        G4ProcessManager* pmanager =  particle->GetProcessManager();
+        G4ProcessVector* pVector = 
+          (particle->GetProcessManager())->GetProcessList();
+        // msg << MSG::DEBUG << "size of ProcList for pe-  so far  "
+        //  <<(G4int)  pVector->size() << endreq;
+        if( (G4int)  pVector->size() > 0 ) { 
+          //  msg << MSG::DEBUG 
+          //  <<" For pe-  disassociating following processes "<<  endreq; 
+          //  pmanager->DumpInfo();
+          for(G4int ip=0; ip < (G4int)  pVector->size() ; ++ip ){
+       	    pmanager->RemoveProcess(ip);
+          }
+          //  msg << MSG::DEBUG <<" For pe- end of process cleanup "<<  endreq; 
+          pmanager ->AddProcess(theTransportationProcess,-1,1,2);
+         } else {
+           //  msg << MSG::DEBUG 
+           //   <<"  pe-  only has no process so far"<<  endreq;
+        
+           pmanager ->AddProcess(theTransportationProcess,-1,1,2);          
+         }
+        
+        
+        //  pmanager->DumpInfo();
+          //particle->SetCuts(aPeCut);
+          // particle->SetApplyCutsFlag(true);
+        // particle-> DumpTable() ;
+      }
+  }
+}
 #include "RichHpdSiEnergyLoss.h"
 
 void GiGaPhysConstructorHpd::ConstructHpdSiEnLoss()
@@ -61,7 +112,7 @@ void GiGaPhysConstructorHpd::ConstructHpdSiEnLoss()
   //  G4Decay* theDecayProcess = new G4Decay();
 
   RichHpdSiEnergyLoss* theRichHpdSiEnergyLossProcess =
-    new RichHpdSiEnergyLoss("RichHpdSiEnergyLossProcess");
+    new RichHpdSiEnergyLoss("RichHpdSiEnergyLossProcess", fUserDefined );
 
   theParticleIterator->reset();
   while( (*theParticleIterator)() ){
@@ -83,13 +134,14 @@ void GiGaPhysConstructorHpd::ConstructHpdSiEnLoss()
             pmanager->AddProcess( theRichHpdSiEnergyLossProcess ,-1,2,2);
           }
         
-        // if(particle->GetParticleName() == "pe-")
-          //  {
-            //    pmanager->DumpInfo();  
+         if(particle->GetParticleName() == "pe-")
+            {
+              //   G4cout<<" All the processes for pe- " <<G4endl;
+              //  pmanager->DumpInfo();  
             
             //  (RichPhotoElectron::PhotoElectron())->SetProcessManager(pmanager);
             // (RichPhotoElectron::PhotoElectron())->GetProcessManager()->DumpInfo();
-            //  }
+            }
       }
     //    if (theDecayProcess->IsApplicable(*particle)) { 
     //      pmanager ->AddProcess(theDecayProcess);

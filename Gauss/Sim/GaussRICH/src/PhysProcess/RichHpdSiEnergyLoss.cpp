@@ -1,14 +1,17 @@
 #include "RichHpdSiEnergyLoss.h"
 #include "G4Material.hh"
 #include "G4ParticleDefinition.hh"
+#include "G4Navigator.hh"
+#include "G4TransportationManager.hh"
 #include "Randomize.hh"
 #include <algorithm>
 #include <math.h>
 #include <vector>
 
-RichHpdSiEnergyLoss::RichHpdSiEnergyLoss(const G4String& processName)
+RichHpdSiEnergyLoss::RichHpdSiEnergyLoss(const G4String& processName,
+                                        G4ProcessType   aType )
 
-  : G4VEnergyLoss(processName),
+  : G4VEnergyLoss(processName, aType ),
     MinKineticEnergy(1.*keV),
     MipEnergyHpdSiEloss(1.0*GeV),
     finalRangeforSiDetStep(0.15*mm),
@@ -67,11 +70,11 @@ G4bool RichHpdSiEnergyLoss::IsApplicable(const G4ParticleDefinition&
                                          aParticleType) {
 
   //  return(aParticleType.GetPDGCharge()!= 0.);
-  //  return(( aParticleType.GetPDGCharge()!= 0.) &&
-  //       ( (aParticleType.GetParticleName() == "e-") ||
-  //         (aParticleType.GetParticleName() == "pe-")) );
-  return(( aParticleType.GetPDGCharge()!= 0.) &&
-         (aParticleType.GetParticleName() == "e-")) ;
+    return(( aParticleType.GetPDGCharge()!= 0.) &&
+         ( (aParticleType.GetParticleName() == "e-") ||
+          (aParticleType.GetParticleName() == "pe-")) );
+  // return(( aParticleType.GetPDGCharge()!= 0.) &&
+  //       (aParticleType.GetParticleName() == "e-")) ;
 
 }
 
@@ -124,15 +127,73 @@ G4VParticleChange* RichHpdSiEnergyLoss::AlongStepDoIt(const G4Track& aTrack,
 
   const G4DynamicParticle* aParticle = aTrack.GetDynamicParticle();
   G4double aKinEnergyInit = aParticle->GetKineticEnergy();
+  G4String  aCreatorProcessName= "NullProcess";
+  const G4VProcess* aProcess = aTrack.GetCreatorProcess();
+  if(aProcess) aCreatorProcessName =  aProcess->GetProcessName();
+
+
+
+
   //    G4cout<<"Now particle  "<<aParticle->GetDefinition()->GetParticleName()
   //       << "in HpdEnergyloss KE= "<<aKinEnergyInit <<G4endl;
   // if the Photoelectron hits the kovar of the Hpd envelope
   // endcap or barrel,  then the kill the photoelectron.
   // G4ParticleDefinition* aParticleDef = aParticle-> GetDefinition();
-  G4String  aCreatorProcessName= "NullProcess";
-  const G4VProcess* aProcess = aTrack.GetCreatorProcess();
-  if(aProcess) aCreatorProcessName =  aProcess->GetProcessName();
+      // start of test printout
+  // if( fMatIndexHpdEnvelopeKovar == 
+  //        (G4int) aTrack.GetMaterial() -> GetIndex()) {
+  //
+     //     G4String aparticleName= aParticle-> GetDefinition()->GetParticleName();
+
+     //  G4cout<<" Hpd energyloss Particle name in Kovar creatorProc energy "
+     //   << aparticleName<<"   "
+     //      << aCreatorProcessName<< "   "<<aKinEnergyInit<< G4endl;
+     
+     //   G4StepPoint* pPreStepPoint  = aStep.GetPreStepPoint();
+     //   G4StepPoint* pPostStepPoint = aStep.GetPostStepPoint();
+     //   const G4ThreeVector prePos= pPreStepPoint->GetPosition();
+     //   const G4ThreeVector postPos= pPostStepPoint->GetPosition();
+     //   G4Navigator* theNavigator =
+     //    G4TransportationManager::GetTransportationManager()->
+     //        GetNavigatorForTracking();
+     //    G4ThreeVector aLocalPostPos =
+     //     theNavigator-> GetGlobalToLocalTransform().
+     //                    TransformPoint(postPos);
+     //    G4ThreeVector aLocalPrePos =
+     //    theNavigator-> GetGlobalToLocalTransform().
+     //                  TransformPoint(prePos);
+     //    G4ThreeVector aGlobalVertexPos= aTrack.GetVertexPosition();
+    
+     //    G4ThreeVector aLocalVertexPos =  theNavigator-> 
+     //    GetGlobalToLocalTransform(). TransformPoint( aGlobalVertexPos);
+     //  
+     //    G4ThreeVector aLocalDirUnorm =  (aLocalPrePos- aLocalVertexPos);
+     //    G4ThreeVector aLocalDir =  aLocalDirUnorm.unit();
+     // 
+     //   G4cout<<" pe Global pre post pos "<< prePos.x()<<"   "<< prePos.y()<<"   "
+     //      << prePos.z()<<"   "<< postPos.x()<<"   "<< postPos.y()
+     //      <<"   "<<postPos.z()<<G4endl;
+     //   G4cout<<" pe Local pre post pos "<<aLocalPrePos.x()
+     //         <<"  "<<aLocalPrePos.y()
+     //         <<"   "<<aLocalPrePos.z()<<"   "<<aLocalPostPos.x()<<"   "
+     //         <<aLocalPostPos.y()<<"   "<<aLocalPostPos.z()<<G4endl;
+     //   G4cout<<" pe vertex pos unnorm local dir "<<  aLocalVertexPos.x()<<"   "
+     //     << aLocalVertexPos.y()<<"   "<<aLocalVertexPos.z()<<"   "
+     //     << aLocalDirUnorm.x()<<"   "<<aLocalDirUnorm.y()<<"    "
+     //     <<  aLocalDirUnorm.z()<<G4endl;
+     // 
+     //  G4cout<<"pe vertex local dir normalized "<< aLocalDir.x()<<"   "
+     //        << aLocalDir.y()<<"   "<<aLocalDir.z()<<G4endl;
+     // }
+   
+   
+  
+      // end of test printout.
+   //  G4String  aCreatorProcessName= "NullProcess";
+   //const G4VProcess* aProcess = aTrack.GetCreatorProcess();
+   //if(aProcess) aCreatorProcessName =  aProcess->GetProcessName();
   if( fMatIndexHpdEnvelopeKovar == (G4int) aTrack.GetMaterial() -> GetIndex()) {
+    //  G4cout<<"particle in HPD Kovar "<<G4endl;
     if(aCreatorProcessName == "RichHpdPhotoelectricProcess" ) {
       aParticleChange.SetStatusChange(fStopAndKill);
     }
@@ -153,7 +214,7 @@ G4VParticleChange* RichHpdSiEnergyLoss::AlongStepDoIt(const G4Track& aTrack,
   //
   // temporary fix until the magnetic shielding is implemented in
   //Gauss. SE 14-3-2003. The energy of the photoelectron is made to
-  // be 20 GeV just to avoid the problem of field in richhpdphotoelectric effect.
+  // be 2 GeV just to avoid the problem of field in richhpdphotoelectric effect.
   // once the shielding is implemented, this will be put back to 20 keV.
 
 
@@ -161,16 +222,17 @@ G4VParticleChange* RichHpdSiEnergyLoss::AlongStepDoIt(const G4Track& aTrack,
   // between the energy depostied by other proceseses and this
   // process. The other processes typicaly deposit about 60 KeV
   // So this process deposits 20*10 = 200 keV.
+  // SE June 2004. now using RichPhotoelectron where no further deposit of
+  // energy. Hence the energy deposited on the hit is 20 keV.
   G4double EnegydepositMultFactor=1.0;
 
-  if(aCreatorProcessName == "RichHpdPhotoelectricProcess" ) {
-    if(aKinEnergyInit > 1500 ) {
-      aKinEnergyInit= aKinEnergyInit/100000;
-      EnegydepositMultFactor=10.0;
-
-    }
-
-  }
+       if(aCreatorProcessName == "RichHpdPhotoelectricProcess" ) {
+        if(aKinEnergyInit > 1500 ) {
+          aKinEnergyInit= aKinEnergyInit/100000;
+          // EnegydepositMultFactor=10.0;
+        }    
+       }
+    
   //end of temporary fix.
 
   if(aKinEnergyInit < MinKineticEnergy ) {  Eloss=0.0 ; }
@@ -186,10 +248,11 @@ G4VParticleChange* RichHpdSiEnergyLoss::AlongStepDoIt(const G4Track& aTrack,
   //const G4double aEnergyAlreadyDeposit = aStep.GetTotalEnergyDeposit();
   //   cout<<"Hpd sidet Energy already deposited  "
   //             <<aEnergyAlreadyDeposit<<endl;
-
+  //  G4cout<<"HpdEnergyloss: pe Energy before transfer "<<Eloss<<G4endl;
+  
   G4double EnergyTransfer=
     EnegydepositMultFactor* RichHpdSiEnergyDeposit(Eloss);
-  //    G4cout<<"EnergyTransfer in sidetEloss " << EnergyTransfer<<G4endl;
+  //     G4cout<<"EnergyTransfer in sidetEloss " << EnergyTransfer<<G4endl;
 
 
   if(   EnergyTransfer > 0.0 ) {
@@ -198,7 +261,8 @@ G4VParticleChange* RichHpdSiEnergyLoss::AlongStepDoIt(const G4Track& aTrack,
   }
 
 
-  if (aKinEnergyFinal <= MinKineticEnergy ) {
+  if ( (aKinEnergyFinal <= MinKineticEnergy) || 
+      (aCreatorProcessName == "RichHpdPhotoelectricProcess") ) {
     aParticleChange.SetStatusChange(fStopAndKill);
 
   }else {

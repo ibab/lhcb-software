@@ -42,6 +42,10 @@ RichG4Hit::RichG4Hit(const RichG4Hit &right)
     m_ChTrackCkvPostStepPos(right.m_ChTrackCkvPostStepPos ),
     m_OptPhotRayleighFlag(right.m_OptPhotRayleighFlag ),
     m_OptPhotAgelExitPos ( right.m_OptPhotAgelExitPos ),
+    m_Mirror1PhotonReflPosition(right.m_Mirror1PhotonReflPosition),
+    m_Mirror2PhotonReflPosition(right.m_Mirror2PhotonReflPosition),
+    m_Mirror1PhotonDetectorCopyNum(right.m_Mirror1PhotonDetectorCopyNum),
+    m_Mirror2PhotonDetectorCopyNum(right.m_Mirror2PhotonDetectorCopyNum),
     m_RichVerboseHitInfo(right.m_RichVerboseHitInfo )
 {}
 
@@ -75,6 +79,10 @@ const RichG4Hit& RichG4Hit::operator=(const RichG4Hit &right)
   m_ChTrackCkvPostStepPos=right.m_ChTrackCkvPostStepPos;
   m_OptPhotRayleighFlag=right.m_OptPhotRayleighFlag;
   m_OptPhotAgelExitPos = right.m_OptPhotAgelExitPos;
+  m_Mirror1PhotonReflPosition=right.m_Mirror1PhotonReflPosition;
+  m_Mirror2PhotonReflPosition=right.m_Mirror2PhotonReflPosition;
+  m_Mirror1PhotonDetectorCopyNum=right.m_Mirror1PhotonDetectorCopyNum;
+  m_Mirror2PhotonDetectorCopyNum=right.m_Mirror2PhotonDetectorCopyNum;
   m_RichVerboseHitInfo=right.m_RichVerboseHitInfo;
 
   return *this;
@@ -181,6 +189,16 @@ void RichG4Hit::Print()
           << m_OptPhotAgelExitPos.x() <<"    "
           << m_OptPhotAgelExitPos.y()<<"     "
           <<  m_OptPhotAgelExitPos.z() <<G4endl;
+    G4cout<<" RichG4Hit: Mirror1ReflXYZ Mirror2ReflXYZ "
+          <<   m_Mirror1PhotonReflPosition.x()<<"   "
+          <<   m_Mirror1PhotonReflPosition.y()<<"   "
+          <<   m_Mirror1PhotonReflPosition.z()<<"   "
+          <<   m_Mirror2PhotonReflPosition.x()<<"   "
+          <<   m_Mirror2PhotonReflPosition.y()<<"   "
+          <<   m_Mirror2PhotonReflPosition.z()<<G4endl;
+    G4cout<<" RichG4Hit: Mirror1ReflEncodedCopyNum  Mirror2ReflEncodedCopyNum   "
+          << m_Mirror1PhotonDetectorCopyNum<<"   "<< m_Mirror2PhotonDetectorCopyNum
+          <<G4endl;
 
   }
 
