@@ -4,6 +4,7 @@
 ! Purpose     : Quality Control monitoring algorithms for RICH digitisation
 !-----------------------------------------------------------------------------
 
+!======================== RichDigiQC v1r8 2004-11-16 ========================
 ! 2004-10-27 - Chris Jones
  - Use RichEvent v8r*
 
