@@ -7,6 +7,9 @@
 !                  : G4 actions, etc for LHCb calorimeters
 !-----------------------------------------------------------------------------
 
+! 2003-07-08 - Patrick Robbe
+ - src/EcalSensDet.h,.cpp : Adaptation to the new interface
+
 ! 2003-07-07 - Vanya BELYAEV
  - substitute G4Material with G4MaterialCutsCouple for 
    DEDX evaluation for all classes. 

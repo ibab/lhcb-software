@@ -1,8 +1,11 @@
-// $Id: EcalSensDet.cpp,v 1.2 2003-07-07 16:27:46 ibelyaev Exp $ 
+// $Id: EcalSensDet.cpp,v 1.3 2003-07-08 10:22:50 robbep Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2003/07/07 16:27:46  ibelyaev
+//  substitupe G4Material with G4MaterialCutsCouple
+//
 // Revision 1.1  2003/07/07 08:21:09  ibelyaev
 //  split the general CaloSensDet class
 //
@@ -82,58 +85,6 @@ EcalSensDet::EcalSensDet
   , m_a_local_outer_ecal ( 0.012 ) // local non uniformity amplitude 
   // outer ecal
 {
-  // Initialisation of Histograms for timing of ECAL
-  m_ecalTimeHisto[0][0]  = 1. ;
-  m_ecalTimeHisto[0][1]  = 1. ;
-  m_ecalTimeHisto[0][2]  = 0.99 ;
-  m_ecalTimeHisto[0][3]  = 0.985 ;
-  m_ecalTimeHisto[0][4]  = 0.98 ;
-  m_ecalTimeHisto[0][5]  = 0.96 ;
-  m_ecalTimeHisto[0][6]  = 0.935 ;
-  m_ecalTimeHisto[0][7]  = 0.9 ;
-  m_ecalTimeHisto[0][8]  = 0.86 ;
-  m_ecalTimeHisto[0][9]  = 0.81 ;
-  m_ecalTimeHisto[0][10] = 0.75 ;
-  m_ecalTimeHisto[0][11] = 0.68 ;
-  m_ecalTimeHisto[0][12] = 0.59 ;
-  m_ecalTimeHisto[0][13] = 0.51 ;
-  m_ecalTimeHisto[0][14] = 0.42 ;
-  m_ecalTimeHisto[0][15] = 0.35 ;
-  m_ecalTimeHisto[0][16] = 0.28 ;
-  m_ecalTimeHisto[0][17] = 0.2  ;
-  m_ecalTimeHisto[0][18] = 0.14 ;
-  m_ecalTimeHisto[0][19] = 0.09 ;
-  m_ecalTimeHisto[0][20] = 0.06 ;
-  m_ecalTimeHisto[0][21] = 0.025 ;
-  m_ecalTimeHisto[0][22] = 0.01 ;
-  m_ecalTimeHisto[0][23] = 0. ;
-  m_ecalTimeHisto[0][24] = 0. ;
-  //
-  m_ecalTimeHisto[1][0]  = 0. ;
-  m_ecalTimeHisto[1][1]  = 0. ;
-  m_ecalTimeHisto[1][2]  = 0. ;
-  m_ecalTimeHisto[1][3]  = 0.005 ;
-  m_ecalTimeHisto[1][4]  = 0.035 ;
-  m_ecalTimeHisto[1][5]  = 0.065 ;
-  m_ecalTimeHisto[1][6]  = 0.09 ;
-  m_ecalTimeHisto[1][7]  = 0.13 ;
-  m_ecalTimeHisto[1][8]  = 0.18 ;
-  m_ecalTimeHisto[1][9]  = 0.24 ;
-  m_ecalTimeHisto[1][10] = 0.31 ;
-  m_ecalTimeHisto[1][11] = 0.36 ;
-  m_ecalTimeHisto[1][12] = 0.44 ;
-  m_ecalTimeHisto[1][13] = 0.51 ;
-  m_ecalTimeHisto[1][14] = 0.59 ;
-  m_ecalTimeHisto[1][15] = 0.67 ;
-  m_ecalTimeHisto[1][16] = 0.74 ;
-  m_ecalTimeHisto[1][17] = 0.8 ;
-  m_ecalTimeHisto[1][18] = 0.85 ;
-  m_ecalTimeHisto[1][19] = 0.91 ;
-  m_ecalTimeHisto[1][20] = 0.94 ;
-  m_ecalTimeHisto[1][21] = 0.96 ;
-  m_ecalTimeHisto[1][22] = 0.985 ;
-  m_ecalTimeHisto[1][23] = 0.99 ;
-  m_ecalTimeHisto[1][24] = 1. ;
   ///
   declareProperty ( "a_local_inner_ecal"   ,  m_a_local_inner_ecal ) ;
   declareProperty ( "a_local_middle_ecal"  ,  m_a_local_middle_ecal ) ;
@@ -165,11 +116,11 @@ EcalSensDet::EcalSensDet
 StatusCode    EcalSensDet::fillHitInfo 
 ( CaloSubHit*                    hit           ,
   const HepPoint3D&              prePoint      ,
-  const double                /* globalTime */ , 
+  const double                   time , 
   const double                   deposit       ,
-  const G4Track*              /* track    */   , 
-  const G4ParticleDefinition* /* pdef     */   ,
-  const G4MaterialCutsCouple* /* material */   ,
+  const G4Track*                 track   , 
+  const G4ParticleDefinition*    particle   ,
+  const G4MaterialCutsCouple*    material   ,
   const G4Step*                  step          ) const 
 {
   
@@ -178,24 +129,42 @@ StatusCode    EcalSensDet::fillHitInfo
   // get the cell 
   const CaloCellID& cellID = hit->cellID() ;
   
-  // add current energy deposition to the sub-hit
-  CaloSubHit::Time tm = 0   ;
-  
   // Birk's Law Correction
-  double ecorrected = deposit ;
-  
-  ecorrected *= birkCorrection(step) ;
-  
-  // Timing
-  double frac1, frac2 ;
-  int timeBin ;
-  timeFraction( step , cellID , frac1 , frac2 , timeBin ) ;
+  double ecorrected = deposit *
+    birkCorrection( particle ,
+                    track->GetKineticEnergy() ,
+                    material ) ;
   
   //Local NonUniformity
-  ecorrected *= localNonUniformity( step , cellID ) ;
+  // if the cell is not valid do not apply the correction
+  // (Anyway it will not be used)
+  if ( calo() -> valid ( cellID ) ) {
+    ecorrected = ecorrected * localNonUniformity( prePoint , cellID ) ;
+  }
   
-  if ( frac1 > 1E-7 ) hit->add( timeBin   , ecorrected*frac1 ) ;
-  if ( frac2 > 1E-7 ) hit->add( timeBin+1 , ecorrected*frac2 ) ;
+  // Timing
+  // Uses method in EHCalSensDet
+  CaloSubHit::Time slot = 0   ;
+  Fractions fractions ;
+  StatusCode sc = timing( time , cellID , slot , fractions ) ;
+
+  if ( sc.isFailure() ) {
+    return Error( "Error in timing()" , sc ) ;
+  }
+  
+  if ( fractions.empty() ) {
+    Warning("The vector of fractions of energy is empty.") ;
+  }
+  
+  for ( Fractions::const_iterator ifr = fractions.begin() ;
+        fractions.end() != ifr ;
+        ++ifr ) {
+    const double fr = *ifr ;
+    if ( fr > 1E-6 ) {
+      hit->add( slot , ecorrected * fr ) ;
+    }
+    slot++ ;
+  }
   
   return StatusCode::SUCCESS ;
 };
@@ -208,99 +177,47 @@ StatusCode    EcalSensDet::fillHitInfo
  *  collection efficiency in cell cell
  */
 
-double EcalSensDet::localNonUniformity( const G4Step*     step , 
+double EcalSensDet::localNonUniformity( const HepPoint3D& prePoint , 
                                         const CaloCellID& cell ) const 
 {
   
   // Only for ECal for the moment
   double correction = 1. ;
   
-  if ( CaloCellCode::CaloNameFromNum( cell.calo() ) == "Ecal" ) {
+  // Find the position of the step
+  double x        = prePoint.x() ;
+  double y        = prePoint.y() ;
+  // Center of the cell
+  double x0       = calo()->cellX( cell ) ;
+  double y0       = calo()->cellY( cell ) ;
+
+  // Distance between fibers 
+  // and correction amplitude
+  double d        = 10.1 * mm ;
+  double A_local  = m_a_local_inner_ecal ; // in inner Ecal
+
+  // Assign amplitude of non uniformity as a function of the
+  // Ecal region
   
-    // Find the position of the step
-    double x        = step->GetPreStepPoint()->GetPosition().x() ;
-    double y        = step->GetPreStepPoint()->GetPosition().y() ;
-    // Center of the cell
-    double x0       = calo()->cellX( cell ) ;
-    double y0       = calo()->cellY( cell ) ;
-    // Distance between fibers 
-    // and correction amplitude
-    double d        = 10.1 * mm ;
-    double A_local  = m_a_local_inner_ecal ;
-
-    // Assign amplitude of non uniformity as a function of the
-    // Ecal region
-    
-    if ( cell.area() == 0 ) { // outer Ecal
-      A_local = m_a_local_outer_ecal ;
-      d       = 15.25 * mm ;
-    }
-    else if ( cell.area() == 1 ) { // middle Ecal
-      A_local = m_a_local_middle_ecal ;
-    }
-
-    
-    // Local uniformity is product of x and y sine-like functions
-    // The Amplitude of the sin-like function is a function of x and 
-    // y
-    correction =
-      1. + 
-      A_local * 
-      ( 1. - cos( 2.*pi * (x-x0)/d ) ) *
-      ( 1. - cos( 2.*pi * (y-y0)/d ) ) ;
+  if ( cell.area() == 0 ) { // outer Ecal
+    A_local = m_a_local_outer_ecal ;
+    d       = 15.25 * mm ;
   }
+  else if ( cell.area() == 1 ) { // middle Ecal
+    A_local = m_a_local_middle_ecal ;
+  }
+
+    
+  // Local uniformity is product of x and y sine-like functions
+  // The Amplitude of the sin-like function is a function of x and 
+  // y
+  correction =
+    1. + 
+    A_local * 
+    ( 1. - cos( 2.*pi * (x-x0)/d ) ) *
+    ( 1. - cos( 2.*pi * (y-y0)/d ) ) ;
   
   return correction ;
-  
-};
-
-// ============================================================================
-// Get Fraction of energy in consecutive time windows
-// ============================================================================
-
-/** The energy deposited in the cell by the step contributes 
- *  - frac1*energy in the time bin timeBin (25 ns bins)
- *  - frac2*energy in the time bin timeBin+1
- *  the origin is the time of collision
- */
-void EcalSensDet::timeFraction ( const G4Step*     step    , 
-                                 const CaloCellID& cell    ,
-                                 double&           frac1   , 
-                                 double&           frac2   , 
-                                 int&              timeBin ) const 
-{
-  frac1 = 1. ;
-  frac2 = 0. ;
-  timeBin = 0 ;
-  
-  // Only for ECAL for the moment
-  if ( CaloCellCode::CaloNameFromNum( cell.calo() ) == "Ecal" ) {  
-    
-    // Time of the step in Geant = time since the primary event
-    
-    double timeOfStep = step->GetPreStepPoint()->GetGlobalTime() ;
-    // Time of flight between z=0 and z=Ecal 
-    double dist       = sqrt( calo()->cellX(cell)*
-                              calo()->cellX(cell)
-                              + calo()->cellY(cell)*
-                              calo()->cellY(cell) 
-                              + (12490.*mm) * (12490.*mm) ) ;
-    
-    double tFlight = dist / c_light ;
-    // substract 0.5 ns (from SICB)
-    tFlight -= 0.5 * ns ;
-    
-    // Find bin number in term of 25ns sampling
-    double tNow = timeOfStep - tFlight ;
-    int bin     = (int) floor( tNow - floor( tNow / (25.*ns) ) * (25.*ns) ) ;
-    
-    // Frac1 = fraction of energy in first 25ns time window
-    frac1 = m_ecalTimeHisto[0][bin] ;
-    // Frac2 = fraction of energy in second 25 ns time window
-    frac2 = m_ecalTimeHisto[1][bin] ;
-    // timeBin = absolute bin number with respect to tFlight
-    timeBin = (int) floor( tNow / (25.*ns) ) ;
-  }
 };
 
 // ============================================================================
