@@ -1,4 +1,4 @@
-# $Id: README.nonLHCb,v 1.10 2002-12-04 15:12:11 andreav Exp $
+# $Id: README.nonLHCb,v 1.11 2003-01-31 20:46:36 andreav Exp $
 
 ------------------------------------------------------------------------------
 How to install the code from a non-LHCb account
@@ -24,19 +24,19 @@ area (eg a scratch area for lack of quota...) change the first line!
    setenv PATH ${LHCBHOME}/bin:${LHCBHOME}/scripts:${PATH}
    setenv CMTPATH ${CDBCMT}
    setenv CMTPATH ${CMTPATH}:${GAUDISOFT}/GAUDI_v11r2
-   setenv CMTPATH ${CMTPATH}:${LHCBSOFT}/project/LHCB/LHCB_v11r2
+   setenv CMTPATH ${CMTPATH}:${LHCBSOFT}/project/LHCB/LHCB_v11r5
    mkdir ${CDBCMT}
 
    # Download the code (you can use getpack instead in LHCb!)
    cd ${CDBCMT}
-   tar -xvzf /afs/cern.ch/user/a/andreav/public/DetCondExample_v4r2.tar.gz
-   cd Ex/DetCondExample/v4r2/cmt
+   tar -xvzf /afs/cern.ch/user/a/andreav/public/DetCondExample_v4r3.tar.gz
+   cd Ex/DetCondExample/v4r3/cmt
    cmt broadcast -select=$CDBCMT cmt config
    cmt config
 
    # Build the code in debug mode
    cd ${CDBCMT}
-   cd Ex/DetCondExample/v4r2/cmt
+   cd Ex/DetCondExample/v4r3/cmt
    cmt broadcast -select=$CDBCMT gmake tag=$CMTDEB
    gmake tag=$CMTDEB
 

@@ -1,6 +1,6 @@
-# $Id: requirements,v 1.17 2002-12-04 14:40:51 andreav Exp $
+# $Id: requirements,v 1.18 2003-01-31 20:46:11 andreav Exp $
 package DetCondExample
-version v4r2
+version v4r3
 
 branches doc src job options cmt XMLDDDB sql
 ignore_pattern package_stamps 
@@ -17,7 +17,7 @@ use GaudiAlg v6r*
 use DetDesc v11r* Det
 
 # Detector Conditions
-use DetCond v4r2* Det
+use DetCond v4r3* Det
 
 # XML detector description database location
 set DETCONDEXAMPLE_XMLDDDB ${DETCONDEXAMPLEROOT}/XMLDDDB

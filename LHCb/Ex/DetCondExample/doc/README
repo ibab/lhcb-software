@@ -1,4 +1,4 @@
-# $Id: README,v 1.32 2002-12-04 14:40:51 andreav Exp $
+# $Id: README,v 1.33 2003-01-31 20:46:36 andreav Exp $
 
 Three examples are distributed in this package: a test of condition data 
 stored in flat XML files, a test of condition data stored in the CondDB,
@@ -35,7 +35,7 @@ The detector elements used in the tests are the following:
 > LHCb is used to test geometry data in the CondDB
 
 ------------------------------------------------------------------------------
-Packages needed to run DetCondExample v4r2
+Packages needed to run DetCondExample v4r3
 ------------------------------------------------------------------------------
 
 For general information on configuring the Gaudi environment, 
@@ -52,16 +52,15 @@ It is assumed that CMTPATH contains the release directory in ${HOME}/newmycmt
 Put the following line in .cshrc to achieve this:
     setenv CMTPATH ${HOME}/newmycmt
     setenv CMTPATH ${CMTPATH}:${GAUDISOFT}/GAUDI_v11r2
-    setenv CMTPATH ${CMTPATH}:${LHCBSOFT}/project/LHCB/LHCB_v11r2
+    setenv CMTPATH ${CMTPATH}:${LHCBSOFT}/project/LHCB/LHCB_v11r5
 Check the result with
     printenv CMTPATH
 
 To run the detector condition example, you need the following packages,
 as well as the standard Gaudi packages from the release area of Gaudi v11.
     cd ~/newmycmt
-    getpack Det/DetCond        v4r2     head
-    getpack Ex/DetCondExample  v4r2     head
-    getpack Det/DetDesc        v11r2
+    getpack Det/DetCond        v4r3     head
+    getpack Ex/DetCondExample  v4r3     head
 Under Linux (RedHat6.1)
     getpack CONDDB             v3r02p3  head
 Under Windows and Linux (RedHat7.3)
@@ -95,7 +94,7 @@ How to setup the environment and link DetCondExample on lxplus/lxplus7
 cd ~/newmycmt
 
 # Go to the cmt directory
-cd Ex/DetCondExample/v4r2/cmt
+cd Ex/DetCondExample/v4r3/cmt
 
 # Setup the environment
 # This will setup Gaudi and also execute some implementation-dependent actions
@@ -148,7 +147,7 @@ How to run DetCondExample on lxplus/lxplus7 (without debugger)
 cd ~/newmycmt
 
 # Go to the working directory
-cd Ex/DetCondExample/v4r2/options
+cd Ex/DetCondExample/v4r3/options
 
 ============
 (1) testXml
@@ -208,7 +207,7 @@ How to run DetCondExample on lxplus/lxplus7 with the debugger
 cd ~/newmycmt
 
 # Go to the working directory
-cd Ex/DetCondExample/v4r2/options
+cd Ex/DetCondExample/v4r3/options
 
 # To use the debugger, link one of the three option files to job.opts
 /bin/rm -f job.opts
@@ -238,7 +237,7 @@ How to cleanup the environment on lxplus/lxplus7
 cd ~/newmycmt
 
 # Go to the cmt directory
-cd Ex/DetCondExample/v4r2/cmt
+cd Ex/DetCondExample/v4r3/cmt
 
 # Remove old makefiles and dependencies
 cmt broadcast -select=mycmt '/bin/rm -f *make*'
@@ -259,7 +258,7 @@ How to browse the Oracle DB using SQL commands on lxplus7 (RedHat7.3)
 cd ~/newmycmt
 
 # Go to the cmt directory
-cd Ex/DetCondExample/v4r2/cmt
+cd Ex/DetCondExample/v4r3/cmt
 
 # Setup the environment
 # Remember to also set the four environment variables to access the DB
@@ -306,7 +305,7 @@ How to setup the environment and link DetCondExample under Windows
 cd I:\newmycmt
 
 # Go to the cmt directory
-cd Ex\DetCondExample\v4r2\cmt
+cd Ex\DetCondExample\v4r3\cmt
 
 # Setup the environment
 setup
@@ -350,7 +349,7 @@ How to run DetCondExample under Windows
 cd I:\newmycmt
 
 # Go to the working directory
-cd Ex\DetCondExample\v4r2\options
+cd Ex\DetCondExample\v4r3\options
 
 ============
 (1) testXml
@@ -411,7 +410,7 @@ How to browse the Oracle database using SQL commands on Windows
 cd I:\newmycmt
 
 # Go to the cmt directory
-cd Ex\DetCondExample\v4r2\cmt
+cd Ex\DetCondExample\v4r3\cmt
 
 # Setup the environment
 # This sets the path to the DB if you modified the relevant scripts as above
@@ -453,7 +452,7 @@ setenv DETCONDEXAMPLE_DBNAME MYCONDDB_WIN32
 # You can run the testCondDB example again on Windows after setting
 set DETCONDEXAMPLE_DBNAME=MYCONDDB_LINUX
 # You can compare the output to that in the ..\job directory
-run DetCondExample testCondDB.opts | sed "s|I:\\\\newmycmt11\\\\Ex\\\\DetCondExample\\\\v4r2\\\\|DETCONDEXAMPLEROOT/|" > log.testCondDB.%CMTCONFIG%.%DETCONDEXAMPLE_DBNAME%
+run DetCondExample testCondDB.opts | sed "s|I:\\\\newmycmt11\\\\Ex\\\\DetCondExample\\\\v4r3\\\\|DETCONDEXAMPLEROOT/|" > log.testCondDB.%CMTCONFIG%.%DETCONDEXAMPLE_DBNAME%
 
 # The result of this test is that there are no significant differences
 # between log.testCondDB.Win32Debug.MYCONDDB_LINUX and [...].Win32Debug, or
