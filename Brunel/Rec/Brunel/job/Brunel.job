@@ -42,9 +42,8 @@ set MODE = $CMTCONFIG
 
 if ($?LS_SUBCWD) then 
 # in BATCH, WORKDIR is set by the system
-# in BATCH, location of executable has to be given explicitly
+# in BATCH, location of executable has to be given explicitly - e.g.:
   setenv MYJOBROOT ~/newmycmt/Rec/Brunel/$Bversion
-#setenv MYJOBROOT $LHCb_release_area/BRUNEL/BRUNEL_$Bversion/Rec/Brunel/$Bversion
 else
 # in interactive set WORKDIR to submission directory
   set WORKDIR = $PWD
@@ -56,7 +55,11 @@ else
 endif
 
 # == set the program environment
-source $LHCb_release_area/BrunelEnv/$Bversion/cmt/setup.csh
+if ($?Brunel_release_area) then
+  source $Brunel_release_area/BrunelEnv/$Bversion/cmt/setup.csh
+else
+  source $LHCb_release_area/BrunelEnv/$Bversion/cmt/setup.csh
+endif
 source $MYJOBROOT/cmt/setup.csh -tag=$MODE
 
 # Go to working directory
