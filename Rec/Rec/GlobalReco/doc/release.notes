@@ -4,6 +4,7 @@
 ! Purpose     : Holds final reconstruction code
 !-----------------------------------------------------------------------------
 
+!========================== GlobalReco v4r8 2004-07-22 ===================
 ! 2004-07-15 - Gloria CORTI
  - src/ChargedProtoPAlg.{h,cpp}
    . introduce protection against problem spotted when reading back from
