@@ -1,0 +1,30 @@
+package  CaloDet 
+version  v1
+
+# =============== structure ===============================================	
+branches         src cmt doc CaloDet
+
+# =============== own includes ============================================
+include_dirs      ${CALODETROOT}
+
+# =============== used packages ===========================================
+use DetDesc      v6*  Det 
+use CaloGen      v1*  Calo 
+
+# =============== link library (base classes) =============================
+library          CaloDetLib        Lib/*.cpp 
+macro_append     CaloDet_stamps   "$(CaloDetDir)/CaloDetLib.stamp"
+
+# =============== component library =======================================
+library          CaloDet           component/*.cpp
+
+apply_pattern    package_Llinkopts    
+apply_pattern    ld_library_path
+
+#================ private stuff ===========================================
+private
+ignore_pattern   package_stamps 
+apply_pattern    package_Cshlibflags
+apply_pattern    package_Lshlibflags
+macro_append CaloAlgLib_shlibflags " $(GaudiKernel_linkopts) $(CLHEP_linkopts)"
+
