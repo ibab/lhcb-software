@@ -1,6 +1,11 @@
 package GaudiConf
 package manager: F.Ranjard
 
+!========================== GaudiConf v6r7 2003-04-16 ======================
+! 2003-04-16 - Marco Cattaneo, Gloria Corti
+ - Add RawhContent.opts defining content of OORAWH files converted from ZEBRA
+   RAWH
+
 !========================== GaudiConf v6r6 2003-04-03 ======================
 ! 2003-04-03 - Marco Cattaneo
  - Add missing L1/OT,IT,TTClusters to DstContent.opts, and retag as v6r6
