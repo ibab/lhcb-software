@@ -4,6 +4,17 @@
 ! Purpose     : List of packages in Brunel project
 !-----------------------------------------------------------------------------
 
+!======================= BrunelSys v25r1 2004-11-25 =======================
+! 2004-11-25 - Marco Cattaneo
+ - Modified requirements for Brunel v25r0
+
+   Packages removed:  CaloMonitor (obsolete)
+   Packages added:    CaloMiniDst (replaces CaloMonitor)
+   Packages modified: RichGlobalPID v1r8, RichLocalPID v1r9, RichPIDMerge v1r5,
+     RichRecBase v1r14, RichRecCommon v1r10, RichRecMCTools v1r7,
+     RichRecQC v1r10, RichRecSys v1r13, RichRecTools v2r12, RichRingRefit v1r9,
+     TrExtrapolator v2r14, ITAlgorithms v14r4, TrFitAssociators v1r3
+
 !======================= BrunelSys v25r0 2004-10-28 =======================
 ! 2004-10-28 - Marco Cattaneo
  - Modified requirements for Brunel v25r0
