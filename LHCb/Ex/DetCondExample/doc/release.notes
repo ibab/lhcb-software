@@ -1,6 +1,10 @@
-#$Id: release.notes,v 1.27 2003-01-31 21:18:40 andreav Exp $
+#$Id: release.notes,v 1.28 2004-12-08 17:23:10 marcocle Exp $
 Package Ex/DetCondExample
-Package manager : Andrea Valassi 
+Package manager : Marco Clemencic
+
+! 2004-12-08 - Marco Clemencic
+ - Update to new versions of CONDDB and Det/DetCond
+Requirements v5r0
 
 ==============================================================================
 !20030131 - Andrea Valassi
