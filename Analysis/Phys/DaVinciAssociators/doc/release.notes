@@ -1,6 +1,20 @@
-! $Id: release.notes,v 1.15 2002-10-02 07:06:26 phicharp Exp $
+! $Id: release.notes,v 1.16 2002-10-10 18:43:01 gcorti Exp $
 ! Package     : DaVinciAssociators
 ! Responsible : Philippe Charpentier
+
+! 2002-10-10 - Gloria Corti
+ - Changes to compile and run on Windows
+   - remove AsctAlgorithm:: in AsctAlgorithm.h 
+   - introduce missing std:: in CompositeParticlesLink.h and TestAssociators
+   - add CompositeParticlesLinks to DaVinciAssociators_load
+ - Adapt to coding convention indentations in CompositeParticlesLinks
+ - Modify CompositeParticlesLinks options to adapt to changes
+ - Introduce CompositeParticlesLinks in DaVinciAssociators.opts
+
+! 2002-10-09 - Gloria Corti
+ - Modify CompositeParticle2MCLinks to have Particle2MCLinks as weighted
+   given modifications in Particle2MCLinks, introduce shortcut name of
+   used associator
 
 ! 2002-09-30 - Philippe Charpentier
  - Add CompositeParticle2MCLinks associator (G.Raven)
