@@ -1,4 +1,4 @@
-// $Id: DaVinciMain.cpp,v 1.6 2004-08-25 09:59:41 pkoppenb Exp $
+// $Id: DaVinciMain.cpp,v 1.7 2004-10-08 13:10:13 pkoppenb Exp $
 //------------------------------------------------------------------------------
 //
 //  Package    : DaVinci
@@ -28,7 +28,14 @@ int main ( int argc, char** argv ) {
   }
 
   // Print a program header ( name and version )
-  std::string version = (std::string)getenv("APPVERSION");
+  char* pget = getenv("APPVERSION");
+  if ( !pget ){
+    std::cout << "You need to define the APPVERSION environment variable." << std::endl;
+    std::cout << "In principle you should get it from the requirements file..." << std::endl;
+    std::cout << "Aborting" << std::endl;
+    return 2 ;
+  }
+  std::string version = (std::string)pget;
   std::cout << "**********************************************************" 
             << std::endl;
   std::cout << "*                                                        *" 
