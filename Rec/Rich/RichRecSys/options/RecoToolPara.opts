@@ -97,49 +97,12 @@ ToolSvc.RichSellmeirFunc.WaveIndpTrans = 1.0;
 
 // Photon detection efficiency using XML tabulation
 ToolSvc.RichToolRegistry.Tools += { "RichTabulatedSignalDetectionEff/RichSignalDetectionEff" };
-//ToolSvc.RichSignalDetectionEff.RichSphMirrorLocations = {
-//  "/dd/Geometry/Rich1/Rich1SurfaceTabProperties/Rich1Mirror1SurfaceReflectivityPT",
-//  "/dd/Geometry/Rich2/Rich2SurfaceTabProperties/Rich2Mirror1SurfaceReflectivityPT"
-//};
-//ToolSvc.RichSignalDetectionEff.RichFlatMirrorLocations = {
-//  "/dd/Geometry/Rich1/Rich1SurfaceTabProperties/Rich1Mirror2SurfaceReflectivityPT",
-//  "/dd/Geometry/Rich2/Rich2SurfaceTabProperties/Rich2Mirror2SurfaceReflectivityPT"
-//};
-ToolSvc.RichSignalDetectionEff.RichSphMirrorLocations = {
-  "/dd/Geometry/Rich1/Rich1SurfaceTabProperties/Rich1Mirror1SurfaceIdealReflectivityPT",
-  "/dd/Geometry/Rich2/Rich2SurfaceTabProperties/Rich2Mirror1SurfaceIdealReflectivityPT"
-};
-ToolSvc.RichSignalDetectionEff.RichFlatMirrorLocations = {
-  "/dd/Geometry/Rich1/Rich1SurfaceTabProperties/Rich1Mirror2SurfaceIdealReflectivityPT",
-  "/dd/Geometry/Rich2/Rich2SurfaceTabProperties/Rich2Mirror2SurfaceIdealReflectivityPT"
-};
-ToolSvc.RichSignalDetectionEff.QETableLocation =
-  "/dd/Materials/RichMaterialTabProperties/HpdQuantumEff";
 
 // Refractive index using XML tabulation
 ToolSvc.RichToolRegistry.Tools += { "RichTabulatedRefractiveIndex/RichRefractiveIndex" };
-//ToolSvc.RichRefractiveIndex.RefIndexLocations = {
-//  "/dd/Materials/RichMaterialTabProperties/AerogelRIndexPT",
-//  "/dd/Materials/RichMaterialTabProperties/C4F10SellParamRIndexPT",
-//  "/dd/Materials/RichMaterialTabProperties/CF4RIndexPT"
-//};
-//ToolSvc.RichRefractiveIndex.RefIndexLocations = {
-//  "/dd/Materials/RichMaterialTabProperties/AerogelIdealRIndexPT",
-//  "/dd/Materials/RichMaterialTabProperties/C4F10SellParamRIndexPT",
-//  "/dd/Materials/RichMaterialTabProperties/CF4RIndexPT"
-//};
-ToolSvc.RichRefractiveIndex.RefIndexLocations = {
-  "/dd/Materials/RichMaterialTabProperties/AerogelIdealCkvRIndexFilterPT",
-  "/dd/Materials/RichMaterialTabProperties/C4F10SellParamRIndexPT",
-  "/dd/Materials/RichMaterialTabProperties/CF4RIndexPT"
-};
-ToolSvc.RichRefractiveIndex.QETableLocation =
-  "/dd/Materials/RichMaterialTabProperties/HpdQuantumEff";
 
 // Rayleigh scattering using XML tabulation
 ToolSvc.RichToolRegistry.Tools += { "RichTabulatedRayleighScatter/RichRayleighScatter" };
-ToolSvc.RichRayleighScatter.RayScatLengthLocation =
-  "/dd/Materials/RichMaterialTabProperties/AerogelRayleighPT";
 
 // Rayleigh scattering using analytic function
 //ToolSvc.RichToolRegistry.Tools += { "RichFunctionalRayleighScatter/RichRayleighScatter" };
@@ -152,9 +115,6 @@ ToolSvc.RichToolRegistry.Tools += { "RichParticleProperties/RichParticleProperti
 
 // Gas Quartz window transmission
 ToolSvc.RichToolRegistry.Tools += { "RichTabulatedGasQuartzWindowAbs/RichGasQuartzWindow" };
-ToolSvc.RichGasQuartzWindow.GasQuartzWindowLocation =
-  "/dd/Materials/RichMaterialTabProperties/GasWindowQuartzIdealAbsLengthPT";
-//  "/dd/Materials/RichMaterialTabProperties/GasWindowQuartzAbsLengthPT";
 
 // Detector Parameters
 ToolSvc.RichToolRegistry.Tools += { "RichDetParameters/RichDetParameters" };

@@ -1,0 +1,19 @@
+//
+// =================== Rich online Reconstruction =====================
+//
+
+// Fast Local PID
+//===========================================================================
+//ToolSvc.RichToolRegistry.Tools += { "RichTrgLocalPIDTool/RichTrgLocalPIDTool" };
+//BrunelRecoRICHSeq.Members += { "RichTrgLocalPIDMakerAlg/MakeRichTrgLocalPIDs" };
+//ToolSvc.RichTrgLocalPIDTool.kpcuts = 0;
+//MakeRichTrgLocalPIDs.OutputPIDLocation = "Rec/Rich/TrgLocalPIDs";
+
+// Fast Global PID
+//===========================================================================
+//BrunelRecoRICHSeq.Members              += { "RichTrgGlobalPIDAlgOLD/RichTrgGlobalPID" };
+BrunelRecoRICHSeq.Members              += { "RichTrgGlobalPIDAlg/RichTrgGlobalPID" };
+RichTrgGlobalLLMinAlg.BuildRichPIDs     = true;
+RichTrgGlobalLLMinAlg.TrackSelection    = { "trigger" };
+RichTrgGlobalLLMinAlg.TrackMomentumCuts = { "trigger/0/99999999" };
+//RichTrgGlobalLLMinAlg.OutputPIDLocation = "Rec/Rich/TrgGlobalPIDs";

@@ -4,6 +4,14 @@
 ! Purpose     : Co-ordinates the RICH reconstruction packages
 !-----------------------------------------------------------------------------
 
+! 2004-10-27 - Chris Jones
+ - New packages : RichDAQ, RichRecBase, RichRecTools, RichRecCommon, 
+   RichGlobalPID, RichLocalPID, RichRingRefit, RichPIDMerge, 
+   RichRecMCTools
+ - Remove hardcoded XmlDDDB locations from job options - Now obtained directly 
+   from Rich Detector Elements.
+ - Reworking of Brunel options files for off/on-line running
+
 ! 2004-10-13 - Chris Jones
  - Various new options in tool configurations
 

@@ -2,12 +2,15 @@
 # Created    : 2003-07-01
 # Maintainer : Chris Jones   Christopher.Rob.Jones@cern.ch
 #============================================================================
-# $Id: requirements,v 1.27 2004-07-30 11:15:05 jonrob Exp $
+# $Id: requirements,v 1.28 2004-10-27 14:38:59 jonrob Exp $
 # $Log: not supported by cvs2svn $
+# Revision 1.27  2004/07/30 11:15:05  jonrob
+# Add CVS log to requirements file
+#
 #============================================================================
 
 package           RichRecSys
-version           v1r12
+version           v1r13
 
 # ================ structure ================================================
 branches          cmt doc options
@@ -18,25 +21,30 @@ set RICHRECSYSOPTS $(RICHRECSYSROOT)/options
 # ================ dependencies =============================================
 
 # DAQ Decoding
-use RichDAQ         v1r5   Rich
+use RichDAQ         v1r6   Rich
 
 # Common RICH reconstruction packages
-use RichRecBase     v1r13  Rich
-use RichRecTools    v2r11  Rich
-use RichRecCommon   v1r9   Rich
+use RichRecBase     v1r14  Rich
+use RichRecTools    v2r12  Rich
+use RichRecCommon   v1r10  Rich
 
-# PID packages
-use RichGlobalPID   v1r7   Rich
-use RichLocalPID    v1r8   Rich
-use RichRingRefit   v1r8   Rich
+# "Offline" PID packages
+use RichGlobalPID   v1r8   Rich
+use RichLocalPID    v1r9   Rich
+use RichRingRefit   v1r9   Rich
+
+# Online PID packages
+use RichTrgTools      v1r0   Rich
+use RichTrgLocalPID   v1r0   Rich
+use RichTrgGlobalPID  v1r0   Rich
 
 # Result merging algorithms
-use RichPIDMerge    v1r4   Rich
+use RichPIDMerge    v1r5   Rich
 
 # MC packages
-use RichRecMCTools  v1r6   Rich
+use RichRecMCTools  v1r7   Rich
 
 # =================================
-# Developmental algorithms..
+# Developmental algorithms ...
 
 #use RichMarkovRingFinder v1r0 Rich

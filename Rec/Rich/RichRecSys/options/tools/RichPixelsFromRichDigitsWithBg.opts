@@ -8,6 +8,5 @@ ToolSvc.RichToolRegistry.Tools += { "RichPixelCreatorFromRichDigitsWithBg/RichPi
 // number of particles to add each event
 ToolSvc.RichPixelCreator.NumBgRingsToAdd = 5;
 
-// which radiators to use
-//                                        Aerogel  C4F10  CF4
-ToolSvc.RichPixelCreator.UseRadiators = { true,    true,  true };
+// Which RICH detectors to use             RICH1   RICH2
+ToolSvc.RichPixelCreator.UseDetectors = {  true,   true   };

@@ -1,4 +1,50 @@
+
+// Define the algorithms to run and in which order
+// ============================================================================
+
+// Markov chain ring finder
+//BrunelRecoRICHSeq.Members += {
+  //"Rich1MarkovRingFinderAlg/Rich1P0RingFinder",   // Rich1 Upper panel
+  //"Rich1MarkovRingFinderAlg/Rich1P1RingFinder",   // Rich1 Lower panel
+  //"Rich2LMarkovRingFinderAlg/Rich2P0RingFinder",  // Rich2 left panel 
+  //"Rich2RMarkovRingFinderAlg/Rich2P1RingFinder"   // Rich2 right panel
+//};
+
+// Run the Local PID first
+BrunelRecoRICHSeq.Members += { "RichLocalPIDAlg/RichLocPID" };
+
+// Initialise GlobalPID each event
+BrunelRecoRICHSeq.Members += { "RichGlobalPIDInitialize/RichGloPIDInit" };
+BrunelRecoRICHSeq.Members += { "RichGlobalPIDDigitSel/RichGloPIDDigSel" };
+BrunelRecoRICHSeq.Members += { "RichGlobalPIDTrTrackSel/RichGloPIDTrSel" };
+
+// Backgroud alg - Uses local PID results as working particle hypotheses
+BrunelRecoRICHSeq.Members += { "RichRecBackgroundEsti/RichBckEst1" };
+
+// First iteration of Global PID
+BrunelRecoRICHSeq.Members += { "RichGlobalPIDAlg/RichGloPIDIt1" };
+
+// Backgroud alg - Uses global 1st iter results as working particle hypotheses
+BrunelRecoRICHSeq.Members += { "RichRecBackgroundEsti/RichBckEst2" };
+
+// Second iteration of Global PID
+BrunelRecoRICHSeq.Members += { "RichGlobalPIDAlg/RichGloPIDIt2" };
+
+// Ring refit - uses working PIDs to identify good photons and refit angles
+// Results as yet not used in formation of final PID
+//BrunelRecoRICHSeq.Members += { "RichRingRefitAlg/RichRingRefit" };
+
+// Finalise Global PID algorithm each event
+BrunelRecoRICHSeq.Members += { "RichGlobalPIDFinalize/RichGloPIDFin" };
+
+// Make final output PID results
+// Current uses for each track Global PID if it exists, 
+// otherwise local if that exists
+BrunelRecoRICHSeq.Members += { "RichHierarchicalPIDMerge/MergeRichPIDs" };
+
 // Reconstruction algorithm parameters
+// ========================================================================================
+
 // Local Algorithm parameters
 RichLocPID.TrackSelection = { "unique","seed","match","forward","follow","KsTrack","veloTT" };
 RichLocPID.MinimumPtot                       = 0.0*GeV;
@@ -42,7 +88,6 @@ RichGloPIDIt2.MinSignalForNoLLCalc        = 1e-25;
 RichGloPIDIt2.MinSignalForAproxLLCalc     = 1e-5;
 
 // Ring Refit
-//RichRingRefit.TrackSelection              = { "unique", "forward", "match" };
 RichRingRefit.TrackSelection = { "unique","seed","match","forward","KsTrack" };
 //                                             Aero   C4F10   CF4
 RichRingRefit.MinSignalPhotonProb         = {  999,   1e-2,  1.50e-3  };
