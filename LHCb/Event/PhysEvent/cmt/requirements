@@ -1,7 +1,7 @@
 package PhysEvent
 version v3r0
 
-branches PhysEvent cmt doc src
+branches Event cmt doc src xml
 
 use GaudiObjDesc v3r*  
 use EventKernel  v1r*  Event
@@ -10,7 +10,7 @@ use LHCbEvent    v12r* Event
 include_dirs $(PHYSEVENTROOT)
 
 #---- Produce Header-Files from XML description
-#document obj2doth PhysEventObj2Doth ../xml/PhysEvent.xml
+document obj2doth PhysEventObj2Doth ../xml/PhysEvent.xml
 
 # static library
 library PhysEventLib -no_share ../src/PhysSelDecay.cpp \
