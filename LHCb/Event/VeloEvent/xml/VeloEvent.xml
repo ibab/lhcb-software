@@ -8,13 +8,9 @@
            author="Chris Parkes" 
            desc="Raw GEANT hit information for VELO silicon sensors. It is populated by a Sicb converter (SicbMCVeloHitCnv) from the VRPR (VELO) and VPRW (pile-up) classes."
 	   location="/Event/MC/Velo/Hit">
-           <base name="KeyedObject&lt;int&gt;"/>
-           <attribute name="sensorNumber" type="long" desc="Sensor Number"/>
-           <attribute name="entry" type="HepPoint3D" desc="Entry Point"/>
-           <attribute name="exit" type="HepPoint3D" desc="Entry Point"/>
-           <attribute name="energy" type="double" desc="Energy (MeV)"/>
-           <attribute name="timeOfFlight" type="double" desc="Time Of Flight"/>
-           <relation name="MCParticle" type="MCParticle" desc="Pointer to MCParticle causing the hit"/>
+           <base name="MCHit"/>
+          <import name="Event/MCHit"/>
+           <attribute name="sensor" type="long" desc="Sensor Number"/>
     </class>
 
     <class name="MCVeloFE" 
@@ -22,16 +18,25 @@
            author="Chris Parkes" 
            desc="This class represents the output of the front-end chip and contains information about the simulation of the silicon and FE chip response stored for a single silicon/output channel. Constructed from MCVeloHits (i.e. GEANT deposits), MCVeloFE of previous events (spill over), noise (above a threshold)"
            location="/Event/MC/Velo/FE">
-           <base name="KeyedObject&lt;VeloStripSensorID&gt;"/>
-           <import name="/afs/cern.ch/user/p/parkesb/newmycmt/Velo/VeloAlgs/v1/VeloAlgs/VeloStripSensorID"/>
-           <method name="stripSensorID" type="VeloStripSensorID" desc="combined sensor and strip number ID" const="TRUE">
+           <base name="KeyedObject&lt;VeloChannelID&gt;"/>
+           <import name="Kernel/VeloChannelID"/>
+           <constructor desc="Constructor with key" 
+                        initList="KeyedObject&lt;VeloChannelID&gt;(key),
+                                  m_addedSignal(0.0),
+                                  m_addedPedestal(0.0),
+                                  m_addedNoise(0.0),
+                                  m_addedCMNoise(0.0)" >
+             <arg type="VeloChannelID" name="key" const="TRUE"/>
+             <code/>                 
+           </constructor> 
+           <method name="channelID" type="VeloChannelID" desc="combined sensor and strip number ID" const="TRUE">
                    <code>return key();</code>
            </method>
-           <method name="sensorNumber" type="long" desc="Sensor Number" const="TRUE">
-                  <code>return key().sensorNumber();</code>
+           <method name="sensor" type="long" desc="Sensor Number" const="TRUE">
+                  <code>return key().sensor();</code>
            </method>
-           <method name="stripNumber" type="long" desc="Strip Number" const="TRUE">
-                 <code>return key().stripNumber();</code>
+           <method name="strip" type="long" desc="Strip Number" const="TRUE">
+                 <code>return key().strip();</code>
            </method>
            <attribute name="addedSignal" type="double" desc="Added Signal in units of electrons"/>
            <attribute name="addedPedestal" type="double" desc="pedestal added in Si/FE chip simulation in units of electrons"/>
@@ -51,15 +56,26 @@
            author="Chris Parkes" 
            desc="Full information on a reconstructed single digitised velo channel. This info. is available inside the data processor but is not normally output on DAQ stream for all channels. It does not contain any simulation information"
 	   location="/Event/Rec/Velo/FullDigit">
-           <base name="KeyedObject&lt;VeloStripSensorID&gt;"/>
-           <method name="stripSensorID" type="VeloStripSensorID" desc="combined sensor and strip number ID" const="TRUE">
+           <base name="KeyedObject&lt;VeloChannelID&gt;"/>
+           <constructor desc="Constructor with key" 
+                        initList="KeyedObject&lt;VeloChannelID&gt;(key),
+                                  m_ADCValue(0.0),
+                                  m_rawADCValue(0),
+                                  m_subtractedPedestal(0.0),
+                                  m_subtractedCM(0.0),
+                                  m_rawNoise(0.0),
+                                  m_noise(0.0)">
+             <arg type="VeloChannelID" name="key" const="TRUE"/>
+             <code/>                 
+           </constructor> 
+           <method name="channelID" type="VeloChannelID" desc="combined sensor and strip number ID" const="TRUE">
                    <code>return key();</code>
            </method>
-           <method name="sensorNumber" type="long" desc="Sensor Number" const="TRUE">
-                  <code>return key().sensorNumber();</code>
+           <method name="sensor" type="long" desc="Sensor Number" const="TRUE">
+                  <code>return key().sensor();</code>
            </method>
-           <method name="stripNumber" type="long" desc="Strip Number" const="TRUE">
-                 <code>return key().stripNumber();</code>
+           <method name="strip" type="long" desc="Strip Number" const="TRUE">
+                 <code>return key().strip();</code>
            </method>
 
            <attribute name="ADCValue" type="double" desc="ADC value with common mode noise and pedestal subtracted"/>
@@ -80,7 +96,7 @@
 	   location="/Event/Rec/Velo/Cluster">
            <import name="Kernel/SerializeStl"/>
            <base name="KeyedObject&lt;int&gt;"/>
-           <attribute name="sensorNumber" type="long" desc="Sensor Number"/>
+           <attribute name="sensor" type="long" desc="Sensor Number"/>
            <attribute name="stripSignals" type="std::vector&lt;std::pair&lt;long,double&gt; &gt;" desc="strip numbers and their signals"/>
            <method name="size" type="long" desc="number of strips in cluster" const="TRUE">
                  <code>return stripSignals().size();</code>

@@ -1,15 +1,15 @@
 package VeloEvent
-version v10
+version v10r0
 
 branches Event src cmt xml dict
 
-use GaudiKernel v11r*
-use GaudiObjDesc v3r3p1
+use GaudiKernel v11*
+use GaudiObjDesc v4r0
 use CLHEP v17r*
-use LHCbEvent v12r* Event
-use EventKernel v1* Event
+use LHCbEvent v* Event
+use EventKernel v* Event
 use VeloAlgs v1* Velo
-use LHCbKernel v1* 
+use LHCbKernel v*
 
 include_dirs $(VELOEVENTROOT)
 
