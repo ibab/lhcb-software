@@ -29,7 +29,7 @@
 <!ELEMENT base EMPTY>
 <!ATTLIST base
 	name CDATA #REQUIRED
-	virtual (TRUE | FALSE) "TRUE"
+	virtual (TRUE | FALSE) "FALSE"
 	access (PUBLIC | PROTECTED | PRIVATE) "PUBLIC"
 >
 <!ELEMENT constructor (arg*, code?)>
