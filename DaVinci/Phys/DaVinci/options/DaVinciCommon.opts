@@ -12,6 +12,7 @@ EventPersistencySvc.CnvServices     = { "SicbEventCnvSvc" };
 
 ApplicationMgr.DLLs = { "SicbCnv", "GaudiAud"};
 ApplicationMgr.DLLs += { "GaudiAlg", "GaudiTools" };
+ApplicationMgr.DLLs += { "DaVinciTools" };
 
 ApplicationMgr.HistogramPersistency = "NONE";
 

@@ -45,9 +45,8 @@ ApplicationMgr.TopAlg = { "DaVinciInitialisation" };
 // or private code.
 // >>>>>>>>>>>> To be customized for a specific job <<<<<<<<<<<<
 //--------------------------------------------------------------
-#include "$DAVINCIROOT/options/L0.opts"
 
-//ApplicationMgr.TopAlg += { "AxPrimVertexAlgorithm" };
+ApplicationMgr.TopAlg += { "AxPrimVertexAlgorithm" };
 ApplicationMgr.TopAlg += { "PhysSelectAlgorithm" };
 ApplicationMgr.TopAlg += { "DaVinciTestAlgorithm" }; 
 
@@ -67,15 +66,17 @@ ApplicationMgr.TopAlg += { "DaVinciFinalisation" };
 // you can overwrite any of the default options
 //-----------------------------------------------------------------
 #include "$DAVINCITOOLSROOT/options/DaVinciTools.opts"
-//PhysSelectAlgorithm.DecayName    = "B0JM";
-//PhysSelectAlgorithm.CutsFileName = "$AXSELLIBROOT/cdf/seldecay.cdf";
+#include "$DAVINCISICBROOT/options/DaVinciSicb.opts"
+//PhysSelectAlgorithm.DecayName    = "MBIA";
+//PhysSelectAlgorithm.SelLevel     = 0;
+//PhysSelectAlgorithm.FlavourTag   = 0;
 PhysSelectAlgorithm.Histograms   = 1;
 
 //-----------------------------------------------------------------
 // Private algorithms options
 //-----------------------------------------------------------------
 DaVinciTestAlgorithm.SearchParticle       = "B0";
-DaVinciTestAlgorithm.PhysSelDecayChannel  = "B0PP";
+DaVinciTestAlgorithm.DecayProducts        = { "pi+", "pi-" };
 
 //--------------------------------------------------------------
 // Set output level thresholds (2=DEBUG, 3=INFO, 4=WARNING, 5=ERROR, 6=FATAL )
@@ -89,7 +90,7 @@ ToolSvc.OutputLevel    = 3;
 //---------------------------------------------------------------
 // Number of events to process, skip and printing frequency
 //---------------------------------------------------------------
-ApplicationMgr.EvtMax = 500;
+ApplicationMgr.EvtMax = 1000;
 //EventSelector.FirstEvent = 6;
 //EventSelector.PrintFreq = 1;
  
@@ -98,9 +99,6 @@ ApplicationMgr.EvtMax = 500;
 // Examples of input data
 //---------------------------------------------------------------
 // B->pi+pi-, Brunel v5r1
-EventSelector.Input = {"JOBID='66040'"};
-// B->J/Psi(mu+mu-) Ks(pi+pi-), SICBDST v235r1
-//EventSelector.Input = {"JOBID='45904'"};
-//EventSelector.Input = {"FILE='/castor/cern.ch/lhcb/mc/D223226'"};
+EventSelector.Input = {"JOBID='64026,64025'"};
 //################################################################
 
