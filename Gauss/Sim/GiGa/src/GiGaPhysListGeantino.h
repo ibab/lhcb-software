@@ -2,7 +2,7 @@
 #define    GIGA_GiGaPhysListGEANTINO_H 1 
 
 
-#include "GiGa/GiGaPhysList.h" 
+#include "GiGa/GiGaPhysListBase.h" 
 
 
 template <class PL> class GiGaPhysListFactory;
@@ -22,23 +22,22 @@ template <class PL> class GiGaPhysListFactory;
 */
 
 
-class GiGaPhysListGeantino : public GiGaPhysList
+class GiGaPhysListGeantino : public GiGaPhysListBase
 {
   ///
   friend class GiGaPhysListFactory<GiGaPhysListGeantino>;
   ///
  protected:
   ///
-  GiGaPhysListGeantino( const std::string& nick , ISvcLocator* loc );
+  GiGaPhysListGeantino( const std::string& , ISvcLocator* );
   virtual ~GiGaPhysListGeantino();
   ///
-  
+public:
   /// from G4VUserPhysicsList 
   void ConstructParticle ();
   void ConstructProcess  ();
   void SetCuts           ();
   ///
-  
  private:
   ///
   GiGaPhysListGeantino();

@@ -2,7 +2,7 @@
 #define       GIGA_GiGaStepActionEmpty_H 1 
 
 
-#include "GiGa/GiGaStepAction.h"
+#include "GiGa/GiGaStepActionBase.h"
 
 template <class SA> class GiGaSensDetFactory;
 
@@ -16,15 +16,14 @@ template <class SA> class GiGaSensDetFactory;
 */
 
 
-class GiGaStepActionEmpty: virtual public GiGaStepAction
+class GiGaStepActionEmpty: virtual public GiGaStepActionBase
 {
   ///
   friend class GiGaStepActionFactory<GiGaStepActionEmpty>;
   ///
  protected:
   ///
-  GiGaStepActionEmpty( const std::string& name , ISvcLocator* Loc );
-  ///  
+  GiGaStepActionEmpty( const std::string& , ISvcLocator* );
   virtual ~GiGaStepActionEmpty();
   ////
  public: 

@@ -1,34 +1,24 @@
-
-
-///
+/// GaudiKernel
 #include "GaudiKernel/ILVolume.h"
 #include "GaudiKernel/IPVolume.h"
 #include "GaudiKernel/IAddressCreator.h"
 #include "GaudiKernel/CnvFactory.h"
 #include "GaudiKernel/DataObject.h"
-
-///
+/// DetDesc
 #include "DetDesc/CLIDLVolume.h"
-
-
-/// formn Geant4
+/// Geant4
 #include "G4LogicalVolume.hh"
 #include "G4LogicalVolumeStore.hh"
 #include "G4PVPlacement.hh"
-
-
 /// local
 #include "GiGaLVolumeCnv.h" 
 
 
-
 static const  CnvFactory<GiGaLVolumeCnv>                        s_GiGaLVolumeCnvFactory ;
 const        ICnvFactory&                 GiGaLVolumeCnvFactory = s_GiGaLVolumeCnvFactory ;
-
-
 /// constructor 
 GiGaLVolumeCnv::GiGaLVolumeCnv( ISvcLocator* Locator ) 
-  : GiGaCnv( storageType() , classID() , Locator ) 
+  : GiGaCnvBase( storageType() , classID() , Locator ) 
 {
   setNameOfGiGaConversionService( "GiGaGeomCnvSvc" ); 
   setConverterName              ( "GiGaLVolumeCnv" ); 

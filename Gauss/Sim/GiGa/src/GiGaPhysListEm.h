@@ -2,7 +2,7 @@
 #define    GIGA_GiGaPhysListEM_H 1 
 
 
-#include "GiGa/GiGaPhysList.h" 
+#include "GiGa/GiGaPhysListBase.h" 
 
 
 template <class PL> class GiGaPhysListFactory;
@@ -20,37 +20,35 @@ template <class PL> class GiGaPhysListFactory;
 */
 
 
-class GiGaPhysListEm : public GiGaPhysList
+class GiGaPhysListEm : public GiGaPhysListBase
 {
   ///
   friend class GiGaPhysListFactory<GiGaPhysListEm>;
   ///
- protected:
+protected:
   ///
-  GiGaPhysListEm( const std::string& nick , ISvcLocator* loc );
+  GiGaPhysListEm( const std::string& , ISvcLocator* );
   virtual ~GiGaPhysListEm();
   ///
-  
+public:
   /// from G4VUserPhysicsList 
   void ConstructParticle ();
   void ConstructProcess  ();
   void SetCuts           ();
   ///
-  
- private:
-  
-  // these methods Construct particles 
+private:
+  ////
+  /// these methods Construct particles 
   void ConstructBosons   ();
   void ConstructLeptons  ();
   void ConstructMesons   ();
   void ConstructBaryons  ();
-  
-  // these methods Construct physics processes and register them
+  ///
+  /// these methods Construct physics processes and register them
   void ConstructGeneral  ();
   void ConstructEM       ();
-  
-
- private:
+  ///
+private:
   ///
   GiGaPhysListEm();
   GiGaPhysListEm           ( const GiGaPhysListEm& );
@@ -60,3 +58,14 @@ class GiGaPhysListEm : public GiGaPhysList
 
 
 #endif     GIGA_GiGaPhysListEM_H
+
+
+
+
+
+
+
+
+
+
+

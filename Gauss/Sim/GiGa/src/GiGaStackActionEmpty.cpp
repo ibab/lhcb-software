@@ -26,12 +26,12 @@ const       IGiGaStackActionFactory&             GiGaStackActionEmptyFactory = s
 
 /////////////////////////////////////////////////////////////////////////////////////////////////
 GiGaStackActionEmpty::GiGaStackActionEmpty( const std::string& Name , ISvcLocator* Loc ) 
-  : GiGaStackAction            ( Name , Loc ) 
+  : GiGaStackActionBase( Name , Loc ) 
 {};
 /////////////////////////////////////////////////////////////////////////////////////////////////
 GiGaStackActionEmpty::~GiGaStackActionEmpty(){};
 /////////////////////////////////////////////////////////////////////////////////////////////////
-StatusCode GiGaStackActionEmpty::initialize () { return GiGaStackAction::initialize() ; } ;
+StatusCode GiGaStackActionEmpty::initialize () { return GiGaStackActionBase::initialize() ; } ;
 /////////////////////////////////////////////////////////////////////////////////////////////////
-StatusCode GiGaStackActionEmpty::finalize   () { return GiGaStackAction::initialize() ; } ;
+StatusCode GiGaStackActionEmpty::finalize   () { return GiGaStackActionBase::initialize() ; } ;
 /////////////////////////////////////////////////////////////////////////////////////////////////

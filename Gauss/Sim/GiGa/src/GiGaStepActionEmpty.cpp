@@ -1,23 +1,15 @@
-
 #include "CLHEP/Geometry/Point3D.h"
-
+///
 #include "G4Step.hh"
 #include "G4TouchableHistory.hh"
 #include "G4VPhysicalVolume.hh"
 #include "G4LogicalVolume.hh"
-
-//
+///
 #include "GaudiKernel/MsgStream.h"
-
-// GiGa 
+/// GiGa 
 #include "GiGa/GiGaStepActionFactory.h"
-
-
 /// local
 #include "GiGaStepActionEmpty.h"
-
-
-
 
 /////////////////////////////////////////////////////////////////////////////////////////////////
 static const GiGaStepActionFactory<GiGaStepActionEmpty>                      s_GiGaStepActionEmptyFactory;
@@ -26,12 +18,12 @@ const       IGiGaStepActionFactory&             GiGaStepActionEmptyFactory = s_G
 
 /////////////////////////////////////////////////////////////////////////////////////////////////
 GiGaStepActionEmpty::GiGaStepActionEmpty( const std::string& Name , ISvcLocator* Loc ) 
-  : GiGaStepAction            ( Name , Loc ) 
+  : GiGaStepActionBase            ( Name , Loc ) 
 {};
 /////////////////////////////////////////////////////////////////////////////////////////////////
 GiGaStepActionEmpty::~GiGaStepActionEmpty(){};
 /////////////////////////////////////////////////////////////////////////////////////////////////
-StatusCode GiGaStepActionEmpty::initialize () { return GiGaStepAction::initialize() ; } ;
+StatusCode GiGaStepActionEmpty::initialize () { return GiGaStepActionBase::initialize() ; } ;
 /////////////////////////////////////////////////////////////////////////////////////////////////
-StatusCode GiGaStepActionEmpty::finalize   () { return GiGaStepAction::initialize() ; } ;
+StatusCode GiGaStepActionEmpty::finalize   () { return GiGaStepActionBase::initialize() ; } ;
 /////////////////////////////////////////////////////////////////////////////////////////////////

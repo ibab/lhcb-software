@@ -31,7 +31,7 @@ const        ICnvFactory&                        GiGaDetectorElementCnvFactory =
 ///
 /// constructor 
 GiGaDetectorElementCnv::GiGaDetectorElementCnv( ISvcLocator* Locator ) 
-  : GiGaCnv( storageType() , classID() , Locator ) 
+  : GiGaCnvBase( storageType() , classID() , Locator ) 
 {
   setNameOfGiGaConversionService( "GiGaGeomCnvSvc" ); 
   setConverterName              ( "GiGaDetectorElementCnv" ); 

@@ -1,29 +1,17 @@
-///
-/// header file":
-#include "GiGa/GiGaSensDet.h"
-
-/// 
-#include "GaudiKernel/ISvcLocator.h"
-#include "GaudiKernel/IDataProviderSvc.h"
-#include "GaudiKernel/IMessageSvc.h"
-#include "GaudiKernel/IIncidentSvc.h"
+#ifndef     GIGA_GiGaSensDetBase_ICPP
+#define     GIGA_GiGaSensDetBase_ICPP 1 
+/// from STL
+#include <vector>
+/// GaudiKernel 
 #include "GaudiKernel/IDetectorElement.h"
-
-///
-#include "GaudiKernel/MsgStream.h"
-#include "GaudiKernel/PropertyMgr.h"
-#include "GaudiKernel/StreamBuffer.h"
 #include "GaudiKernel/DataObject.h"
 #include "GaudiKernel/SmartDataPtr.h"
-#include "GaudiKernel/System.h"
-///
-///
-#include "GiGa/GiGaException.h"
+/// GiGa
+#include "GiGa/GiGaSensDetBase.h" 
 
 
-///
-GiGaSensDet::GiGaSensDet( const std::string & nick       , 
-		ISvcLocator       * svc        ) 
+////////////////////////////////////////////////////////////////////////////////////////////////
+inline GiGaSensDetBase::GiGaSensDetBase( const std::string& nick , ISvcLocator* svc )
   : G4VSensitiveDetector( nick                 ) /// ATTENTION !!! this name ill be overwritten later!!!!
   ///
   , GiGaBase            ( nick     ,   svc     ) 
@@ -39,10 +27,10 @@ GiGaSensDet::GiGaSensDet( const std::string & nick       ,
   declareProperty( "DetectorElement"       , m_detName  );
   declareProperty( "Active"                , m_active   );
 };
-//////////////////////////////////////////////////////////////////////////////////////////  
-GiGaSensDet::~GiGaSensDet(){};
-//////////////////////////////////////////////////////////////////////////////////////////
-StatusCode GiGaSensDet::initialize() 
+/// virtual destructor /////////////////////////////////////////////////////////////////////////
+inline GiGaSensDetBase::~GiGaSensDetBase(){};
+////////////////////////////////////////////////////////////////////////////////////////////////
+inline StatusCode GiGaSensDetBase::initialize() 
 {
   StatusCode sc = GiGaBase::initialize() ; 
   if( sc.isFailure() ) { return Error("Could not initialize Base class!"); } 
@@ -63,17 +51,17 @@ StatusCode GiGaSensDet::initialize()
     pos = tmp.find_last_of('/') ; 
     if( std::string::npos == pos )
       { 
-	G4VSensitiveDetector::SensitiveDetectorName = tmp              ;  /// ATTENTION !!!
-	G4VSensitiveDetector::thePathName           = "/"              ;  /// ATTENTION !!! 
+        G4VSensitiveDetector::SensitiveDetectorName = tmp              ;  /// ATTENTION !!!
+        G4VSensitiveDetector::thePathName           = "/"              ;  /// ATTENTION !!! 
       }
     else 
       {
-	G4VSensitiveDetector::SensitiveDetectorName = tmp              ; /// ATTENTION !!!
-	G4VSensitiveDetector::SensitiveDetectorName.remove(0,pos+1)    ; /// ATTENTION !!!
-	G4VSensitiveDetector::thePathName           = tmp              ; /// ATTENTION !!! 
-	G4VSensitiveDetector::thePathName.remove(pos+1,tmp.length()-1) ; /// ATTENTION !!! 
-	if( '/' != G4VSensitiveDetector::thePathName[(unsigned int)(0)] ) 
-  { G4VSensitiveDetector::thePathName.insert(0,'/'); }            /// ATTENTION !!! 
+        G4VSensitiveDetector::SensitiveDetectorName = tmp              ; /// ATTENTION !!!
+        G4VSensitiveDetector::SensitiveDetectorName.remove(0,pos+1)    ; /// ATTENTION !!!
+        G4VSensitiveDetector::thePathName           = tmp              ; /// ATTENTION !!! 
+        G4VSensitiveDetector::thePathName.remove(pos+1,tmp.length()-1) ; /// ATTENTION !!! 
+        if( '/' != G4VSensitiveDetector::thePathName[(unsigned int)(0)] ) 
+	  { G4VSensitiveDetector::thePathName.insert(0,'/'); }            /// ATTENTION !!! 
       } 
     ///
     G4VSensitiveDetector::fullPathName =                                  /// ATTENTION !!!
@@ -82,7 +70,7 @@ StatusCode GiGaSensDet::initialize()
     ///
     MsgStream log( msgSvc() , name() ) ;
     log << MSG::DEBUG 
-	<< System::typeinfoName( typeid( *this ) ) << "::initialize() Names for G4VSensitiveDetector are: "  
+        << System::typeinfoName( typeid( *this ) ) << "::initialize() Names for G4VSensitiveDetector are: "  
         << " Path="          << G4VSensitiveDetector::GetPathName()   
         << " Name="          << G4VSensitiveDetector::GetName() 
         << " FullPathName="  << G4VSensitiveDetector::GetFullPathName() << endreq;  
@@ -93,19 +81,19 @@ StatusCode GiGaSensDet::initialize()
     Activate( m_active );                                                 /// ATTENTION !!!   
     MsgStream log( msgSvc() , name() ); 
     log << ( !isActive() ? MSG::FATAL : MSG::DEBUG )                      /// ATTENTION !!!
-	<< System::typeinfoName( typeid (*this) )  
-	<< "::initialize() Sensitive Detector is " 
-	<< ( !isActive() ? "*NOT* activated " : "activated" ) <<  endreq; /// ATTENTION !!! 
+        << System::typeinfoName( typeid (*this) )  
+        << "::initialize() Sensitive Detector is " 
+        << ( !isActive() ? "*NOT* activated " : "activated" ) <<  endreq; /// ATTENTION !!! 
   }
   ///
   m_init = true;
   ///
   return StatusCode::SUCCESS;
 }; 
+////////////////////////////////////////////////////////////////////////////////////////////////
+inline StatusCode GiGaSensDetBase::finalize() { return GiGaBase::finalize();  };
 ///////////////////////////////////////////////////////////////////////////
-StatusCode GiGaSensDet::finalize() { return GiGaBase::finalize();  };
-///////////////////////////////////////////////////////////////////////////
-StatusCode GiGaSensDet::queryInterface( const InterfaceID& iid , void** ppI)
+StatusCode GiGaSensDetBase::queryInterface( const InterfaceID& iid , void** ppI)
 {
   if( 0 == ppI ) { return StatusCode::FAILURE; } 
   *ppI = 0; 
@@ -114,8 +102,8 @@ StatusCode GiGaSensDet::queryInterface( const InterfaceID& iid , void** ppI)
   addRef();
   return StatusCode::SUCCESS;
 };
-/// serialize object for reading ///////////////////////
-StreamBuffer& GiGaSensDet::serialize( StreamBuffer& S )       
+/// serialize object for reading ///////////////////////////////////////////////////////////////
+inline StreamBuffer& GiGaSensDetBase::serialize( StreamBuffer& S )       
 {
   GiGaBase::serialize( S ) ; 
   m_init = false ; 
@@ -127,13 +115,20 @@ StreamBuffer& GiGaSensDet::serialize( StreamBuffer& S )
   ///
   return S;       
 };  
-/// serialize object for writing //////////////////////////
-StreamBuffer& GiGaSensDet::serialize( StreamBuffer& S ) const 
+/// serialize object for writing /////////////////////////////////////////////////////////////////
+inline StreamBuffer& GiGaSensDetBase::serialize( StreamBuffer& S ) const 
 {
   GiGaBase::serialize( S ) ; 
   return S << m_detName << (int) m_active ;
 }; 
-///////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+
+
+
+#endif   // GIGA_GiGaSensDetBase_ICPP
+
 
 
 

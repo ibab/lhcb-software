@@ -27,15 +27,15 @@ const       IGiGaSensDetFactory&             GiGaSensDetPrintFactory = s_GiGaSen
 
 /////////////////////////////////////////////////////////////////////////////////////////////////
 GiGaSensDetPrint::GiGaSensDetPrint( const std::string& Name , ISvcLocator* Loc ) 
-  : GiGaSensDet            ( Name , Loc ) 
+  : GiGaSensDetBase     ( Name , Loc ) 
   , G4VSensitiveDetector( Name )
 {};
 /////////////////////////////////////////////////////////////////////////////////////////////////
 GiGaSensDetPrint::~GiGaSensDetPrint(){};
 /////////////////////////////////////////////////////////////////////////////////////////////////
-StatusCode GiGaSensDetPrint::initialize () { return GiGaSensDet::initialize() ; } ;
+StatusCode GiGaSensDetPrint::initialize () { return GiGaSensDetBase::initialize() ; } ;
 /////////////////////////////////////////////////////////////////////////////////////////////////
-StatusCode GiGaSensDetPrint::finalize   () { return GiGaSensDet::initialize() ; } ;
+StatusCode GiGaSensDetPrint::finalize   () { return GiGaSensDetBase::initialize() ; } ;
 /////////////////////////////////////////////////////////////////////////////////////////////////
 bool       GiGaSensDetPrint::ProcessHits( G4Step* step , G4TouchableHistory* /* history */ )  /// "the main" method :-))
 {

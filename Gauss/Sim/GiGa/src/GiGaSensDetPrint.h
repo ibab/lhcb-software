@@ -3,7 +3,7 @@
 
 
 
-#include "GiGa/GiGaSensDet.h"
+#include "GiGa/GiGaSensDetBase.h"
 
 template <class SD> class GiGaSensDetFactory;
 
@@ -18,15 +18,14 @@ template <class SD> class GiGaSensDetFactory;
 */
 
 
-class GiGaSensDetPrint: virtual public GiGaSensDet
+class GiGaSensDetPrint: virtual public GiGaSensDetBase
 {
   ///
   friend class GiGaSensDetFactory<GiGaSensDetPrint>;
   ///
  protected:
   ///
-  GiGaSensDetPrint( const std::string& name , ISvcLocator* Loc );
-  ///  
+  GiGaSensDetPrint( const std::string&  , ISvcLocator* );
   virtual ~GiGaSensDetPrint();
   ////
  public: 

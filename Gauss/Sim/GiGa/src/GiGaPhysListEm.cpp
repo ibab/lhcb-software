@@ -26,7 +26,7 @@ const       IGiGaPhysListFactory&    GiGaPhysListEmFactory = s_GiGaPhysListEmFac
 
 /// constructor 
 GiGaPhysListEm::GiGaPhysListEm( const std::string& nick , ISvcLocator* loc ) 
-  : GiGaPhysList( nick , loc )
+  : GiGaPhysListBase( nick , loc )
 {};
 /// destructor 
 GiGaPhysListEm::~GiGaPhysListEm()

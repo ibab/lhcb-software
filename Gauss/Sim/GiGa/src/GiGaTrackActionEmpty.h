@@ -3,7 +3,7 @@
 
 
 
-#include "GiGa/GiGaTrackAction.h"
+#include "GiGa/GiGaTrackActionBase.h"
 
 template <class TA> class GiGaTrackActionFactory;
 
@@ -17,14 +17,14 @@ template <class TA> class GiGaTrackActionFactory;
 */
 
 
-class GiGaTrackActionEmpty: virtual public GiGaTrackAction
+class GiGaTrackActionEmpty: virtual public GiGaTrackActionBase
 {
   ///
   friend class GiGaTrackActionFactory<GiGaTrackActionEmpty>;
   ///
  protected:
   ///
-  GiGaTrackActionEmpty( const std::string& name , ISvcLocator* Loc );
+  GiGaTrackActionEmpty( const std::string& , ISvcLocator* );
   ///  
   virtual ~GiGaTrackActionEmpty();
   ////
@@ -43,8 +43,6 @@ class GiGaTrackActionEmpty: virtual public GiGaTrackAction
   ///
 };
 ///
-///
-
 
 
 #endif  //    GIGA_GiGaTrackActionEmpty_H

@@ -1,7 +1,7 @@
 #ifndef    GIGA_GIGAMagFieldUniform_H
 #define    GIGA_GIGAMagFieldUniform_H 1 
 
-#include "GiGa/GiGaMagField.h"
+#include "GiGa/GiGaMagFieldBase.h"
 
 template <class MagField> class GiGaMagFieldFactory;
 
@@ -14,7 +14,7 @@ template <class MagField> class GiGaMagFieldFactory;
     @author Vanya Belyaev
 */
 
-class GiGaMagFieldUniform: public GiGaMagField 
+class GiGaMagFieldUniform: public GiGaMagFieldBase 
 {
   ///
   friend class GiGaMagFieldFactory<GiGaMagFieldUniform>;

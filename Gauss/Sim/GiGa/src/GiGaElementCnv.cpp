@@ -4,21 +4,16 @@
 #include "GaudiKernel/IGiGaSetUpSvc.h" 
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/IDataSelector.h"
-
 // DetDesc
 #include "DetDesc/Element.h"
 #include "DetDesc/Isotope.h"
-
 // GiGa 
 #include "GiGa/GiGaException.h" 
-
 /// Geant4 includes
 #include "G4Element.hh" 
 #include "G4Material.hh" 
-
 // Local
 #include "GiGaElementCnv.h" 
-
 
 
 static const  CnvFactory<GiGaElementCnv>                                      s_GiGaElementCnvFactory ;
@@ -26,7 +21,7 @@ const        ICnvFactory&                             GiGaElementCnvFactory = s_
 
 /// constructor 
 GiGaElementCnv::GiGaElementCnv( ISvcLocator* Locator ) 
-  : GiGaCnv( storageType() , classID() , Locator ) 
+  : GiGaCnvBase( storageType() , classID() , Locator ) 
 {
   setNameOfGiGaConversionService( "GiGaGeomCnvSvc" ); 
   setConverterName              ( "GiGaElementCnv" );

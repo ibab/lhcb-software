@@ -3,7 +3,7 @@
 
 
 
-#include "GiGa/GiGaStackAction.h"
+#include "GiGa/GiGaStackActionBase.h"
 
 template <class SA> class GiGaStackActionFactory;
 
@@ -17,7 +17,7 @@ template <class SA> class GiGaStackActionFactory;
 */
 
 
-class GiGaStackActionEmpty: virtual public GiGaStackAction
+class GiGaStackActionEmpty: virtual public GiGaStackActionBase
 {
   ///
   friend class GiGaStackActionFactory<GiGaStackActionEmpty>;

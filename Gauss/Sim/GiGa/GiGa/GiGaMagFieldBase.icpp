@@ -1,25 +1,26 @@
+#ifndef    GIGA_GIGAMagFieldBase_ICPP
+#define    GIGA_GIGAMagFieldBase_ICPP 1 
 
-
-#include "GiGa/GiGaMagField.h"
-#include "GiGa/GiGaMagFieldFactory.h"
-
+///
+#include "GiGa/GiGaMagFieldBase.h"
 
 ///////////////////////////////////////////////////////////////////////////////////////
-GiGaMagField::GiGaMagField( const std::string& nick , ISvcLocator* loc) : GiGaBase ( nick , loc ) {};
+inline GiGaMagFieldBase::GiGaMagFieldBase( const std::string& nick , ISvcLocator* loc ) 
+  : GiGaBase( nick , loc ) {};
+/// virtual destructor ////////////////////////////////////////////////////////////////
+inline GiGaMagFieldBase::~GiGaMagFieldBase() {};
 ///////////////////////////////////////////////////////////////////////////////////////
-GiGaMagField::~GiGaMagField(){};
-///////////////////////////////////////////////////////////////////////////////////////
-StatusCode GiGaMagField::queryInterface( const InterfaceID& id , void** ppI) 
+inline StatusCode GiGaMagFieldBase::queryInterface( const InterfaceID& id , void** ppI) 
 {
   if( 0 == ppI ) { return StatusCode::FAILURE; } 
   *ppI = 0 ; 
-  if   ( IID_IGiGaMagField == id ) { *ppI = static_cast<IGiGaMagField*> (this) ; } 
-  else                           {  return GiGaBase::queryInterface( id , ppI ); } /// RETURN ;
+  if   ( IGiGaMagField::interfaceID() == id ) { *ppI = static_cast<IGiGaMagField*> (this) ; } 
+  else                                        {  return GiGaBase::queryInterface( id , ppI ); } /// RETURN ;
   addRef();
   return StatusCode::SUCCESS; 
 };
 ///////////////////////////////////////////////////////////////////////////////////////
-StatusCode GiGaMagField::initialize ()  
+inline StatusCode GiGaMagFieldBase::initialize ()  
 {
   /// initialize base class 
   StatusCode sc = GiGaBase::initialize (); 
@@ -29,5 +30,18 @@ StatusCode GiGaMagField::initialize ()
   return StatusCode::SUCCESS;
 };
 ///////////////////////////////////////////////////////////////////////////////////////
-StatusCode GiGaMagField::finalize   ()  { return GiGaBase::finalize   (); };
+inline StatusCode GiGaMagFieldBase::finalize   ()  { return GiGaBase::finalize   (); };
 ///////////////////////////////////////////////////////////////////////////////////////
+
+#endif  // GIGA_GIGAMagFieldBase_ICPP
+
+
+
+
+
+
+
+
+
+
+

@@ -28,7 +28,7 @@ const        ICnvFactory&                             GiGaIsotopeCnvFactory = s_
 
 /// constructor 
 GiGaIsotopeCnv::GiGaIsotopeCnv( ISvcLocator* Locator ) 
-  : GiGaCnv( storageType() , classID() , Locator ) 
+  : GiGaCnvBase( storageType() , classID() , Locator ) 
 {
   setNameOfGiGaConversionService( "GiGaGeomCnvSvc" ); 
   setConverterName              ( "GiGaIsotopeCnv" ); 

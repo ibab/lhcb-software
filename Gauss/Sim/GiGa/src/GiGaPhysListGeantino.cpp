@@ -17,7 +17,7 @@ const       IGiGaPhysListFactory&    GiGaPhysListGeantinoFactory = s_GiGaPhysLis
 
 /// constructor 
 GiGaPhysListGeantino::GiGaPhysListGeantino( const std::string& nick , ISvcLocator* loc ) 
-  : GiGaPhysList( nick , loc )
+  : GiGaPhysListBase( nick , loc )
 {};
 /// destructor 
 GiGaPhysListGeantino::~GiGaPhysListGeantino()

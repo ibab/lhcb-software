@@ -22,24 +22,25 @@ class GiGaTrajectoryPoint: public G4TrajectoryPoint
   ///
 public:
   ///
-  GiGaTrajectoryPoint(); 
-  GiGaTrajectoryPoint( const Hep3Vector& , const double&     );
-  GiGaTrajectoryPoint( const HepLorentzVector&               );
-  GiGaTrajectoryPoint(            const GiGaTrajectoryPoint& ); 
-  virtual ~GiGaTrajectoryPoint();
+  inline GiGaTrajectoryPoint ();
+  inline GiGaTrajectoryPoint ( const Hep3Vector&  Pos  , const double& Time );
+  inline GiGaTrajectoryPoint ( const HepLorentzVector&    right );
+  inline GiGaTrajectoryPoint ( const GiGaTrajectoryPoint& right ); 
   ///
-  inline void* operator new(size_t);
-  inline void  operator delete(void*);
+  virtual inline ~GiGaTrajectoryPoint();
   ///
-  bool operator==( const GiGaTrajectoryPoint& right )
-  { return (&right) == this ; } 
+  inline void* operator new    ( size_t );
+  inline void  operator delete ( void*  );
   ///
-  inline const double&           time       () const        { return m_time ; } 
-  inline void                    setTime    ( double Time ) { m_time = Time ; }  
-  inline const double&           GetTime    () const        { return time() ; } 
+  bool operator==( const GiGaTrajectoryPoint& right ) { return (&right) == this ; } /// ?
   ///
-  inline const HepLorentzVector  fourVector () const 
+  inline const double&           time       () const        { return m_time                ; } 
+  inline GiGaTrajectoryPoint&    setTime    ( double Time ) { m_time = Time ; return *this ; }  
+  inline const double&           GetTime    () const        { return time()                ; } 
+  inline const HepLorentzVector  fourVector () const        
   { return HepLorentzVector( GetPosition() , GetTime() ) ; };  
+  ///
+  inline GiGaTrajectoryPoint*    clone      () const ;
   ///
 private:
   ///
@@ -47,15 +48,8 @@ private:
   ///
 };
 ///
-extern G4Allocator<GiGaTrajectoryPoint> s_GiGaTrajectoryPointAllocator;
+#include "GiGa/GiGaTrajectoryPoint.icpp"
 ///
-inline void* GiGaTrajectoryPoint::operator new(size_t)
-{ return (void *) s_GiGaTrajectoryPointAllocator.MallocSingle(); };
-///
-inline void GiGaTrajectoryPoint::operator delete(void *aTrajectoryPoint)
-{ s_GiGaTrajectoryPointAllocator.FreeSingle((GiGaTrajectoryPoint *) aTrajectoryPoint); }
-///
-
 
 #endif  //  GIGA_GIGATRAJECTORYPOINT_H
 

@@ -1,7 +1,7 @@
 #ifndef    GIGA_GIGAMagFieldGLOBAL_H
 #define    GIGA_GIGAMagFieldGLOBAL_H 1 
 
-#include "GiGa/GiGaMagField.h"
+#include "GiGa/GiGaMagFieldBase.h"
 
 template <class MagField> class GiGaMagFieldFactory;
 
@@ -14,7 +14,7 @@ template <class MagField> class GiGaMagFieldFactory;
     @author Vanya Belyaev
 */
 
-class GiGaMagFieldGlobal: public GiGaMagField 
+class GiGaMagFieldGlobal: public GiGaMagFieldBase 
 {
   ///
   friend class GiGaMagFieldFactory<GiGaMagFieldGlobal>;
@@ -35,7 +35,9 @@ class GiGaMagFieldGlobal: public GiGaMagField
   GiGaMagFieldGlobal           ( const GiGaMagFieldGlobal& ) ; /// no copy constructor!
   GiGaMagFieldGlobal& operator=( const GiGaMagFieldGlobal& ) ; /// no assignment! 
   ///
- private:
+private:
+  ///
+  mutable HepVector3D  m_field;
   ///
 };
 ///

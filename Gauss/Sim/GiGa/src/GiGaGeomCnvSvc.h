@@ -1,52 +1,45 @@
 #ifndef      __GIGA_GEOMETRYCONVERSIONSERVICE_GIGAGEOMCNVSVC_H__ 
 #define      __GIGA_GEOMETRYCONVERSIONSERVICE_GIGAGEOMCNVSVC_H__  1 
-
-///
-/// from STL 
+/// STL 
 #include <string> 
 #include <vector> 
-
-///
-/// from GiGa 
-#include "GiGa/GiGaCnvSvc.h" 
+/// GiGa 
+#include "GiGa/GiGaCnvSvcBase.h" 
 #include "GiGa/IGiGaGeomCnvSvc.h" 
-
 ///
-/// forward declarations
-///
-
 class G4VPhysicalVolume; 
 class G4VSolid;
 class G4LogicalVolume; 
-
-
+///
 class IDataSelector; 
 class SolidBoolean;
-
+///
 class IGiGaSensDet;
 class IGiGaSensDetFactory;
-
+///
 class IGiGaMagField;
 class IGiGaMagFieldFactory;
-
-template <class SERVICE> class SvcFactory; 
-
-
 ///
-///  GiGaGeomCnvSvc: conversion service  for converting of Gaudi 
-///                  Geometry to Geant4 Geometry  
-///  
-///  Author: Vanya Belyaev 
-///  Date    7 Aug 2000 
+template <class SERVICE> 
+class SvcFactory; 
 
+
+/** @class GiGaGeomCnvSvc GiGaGeomCnvSvc.h GiGa/GiGaGeomCnvSvc.h
+    
+    Convertersion service for convertiong Gaugi detector and geometry description 
+    into Geant4 geometry and detectro description 
+    
+    @author  Vanya Belyaev
+    @date    07/08/2000
+*/
 
 class GiGaGeomCnvSvc:  virtual public  IGiGaGeomCnvSvc , 
-                       public   GiGaCnvSvc    
+                       public   GiGaCnvSvcBase    
 { 
   ///
   friend class SvcFactory<GiGaGeomCnvSvc>;
   ///  
- public:
+public:
   ///
   typedef  std::vector<IGiGaSensDet*>                     SDobjects; 
   typedef  std::vector<const IGiGaSensDetFactory*>        SDfactories; 
@@ -55,8 +48,7 @@ class GiGaGeomCnvSvc:  virtual public  IGiGaGeomCnvSvc ,
   ///
  protected: 
   /// constructor
-  GiGaGeomCnvSvc( const std::string&  ServiceName          , 
-		  ISvcLocator*        ServiceLocator       );
+  GiGaGeomCnvSvc( const std::string& , ISvcLocator* );
   /// virtual destructor
   virtual ~GiGaGeomCnvSvc(){};
  

@@ -2,7 +2,8 @@
 #define    GIGA_GiGaPhysListFULL_H 1 
 
 
-#include "GiGa/GiGaPhysList.h" 
+
+#include "GiGa/GiGaPhysListBase.h" 
 
 
 template <class PL> class GiGaPhysListFactory;
@@ -19,29 +20,27 @@ template <class PL> class GiGaPhysListFactory;
 */
 
 
-class GiGaPhysListFull : public GiGaPhysList
+class GiGaPhysListFull : public GiGaPhysListBase
 {
   ///
   friend class GiGaPhysListFactory<GiGaPhysListFull>;
   ///
- protected:
+protected:
   ///
   GiGaPhysListFull( const std::string& nick , ISvcLocator* loc );
   virtual ~GiGaPhysListFull();
   ///
-  
+public:
   /// from G4VUserPhysicsList 
   void ConstructParticle ();
   void ConstructProcess  ();
   void SetCuts           ();
   ///
-
- private:
-  
+private:
+  ///
   virtual void ConstructGeneral ();
   virtual void ConstructEM      ();
   virtual void ConstructHad     ();
-  
   // these methods Construct all particles in each category
   virtual void ConstructAllBosons      ();
   virtual void ConstructAllLeptons     ();
@@ -49,8 +48,8 @@ class GiGaPhysListFull : public GiGaPhysList
   virtual void ConstructAllBaryons     ();
   virtual void ConstructAllIons        ();
   virtual void ConstructAllShortLiveds ();
-  
- private:
+  ///
+private:
   ///
   GiGaPhysListFull();
   GiGaPhysListFull           ( const GiGaPhysListFull& );
@@ -60,3 +59,13 @@ class GiGaPhysListFull : public GiGaPhysList
 
 
 #endif     GIGA_GiGaPhysListFULL_H
+
+
+
+
+
+
+
+
+
+

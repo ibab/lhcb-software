@@ -1,97 +1,52 @@
 #ifndef         __GIGA_GEOMCONVERSION_GIGAMixtureCnv_H__
 #define         __GIGA_GEOMCONVERSION_GIGAMixtureCnv_H__  1 
-
-
-///
 /// from STL 
 #include <set>
-
-///
 /// base class from GiGa
-#include "GiGa/GiGaCnv.h" 
-template <class TYPE> class CnvFactory;
-
+#include "GiGa/GiGaCnvBase.h" 
 ///
-/// from Gaudi
+template <class TYPE> 
+class CnvFactory;
 class Material;
 class Mixture;
 class Element; 
 class Isotope; 
 
-///
-/// 
+/** @class GiGaMixtureCnv GiGaMixtureCnv.h GiGa/GiGaMixtureCnv.h
+    
+    Converter of Mixture class to Geant4 
+    
+    @author  Vanya Belyaev
+*/
 
-
-class GiGaMixtureCnv: public GiGaCnv
+class GiGaMixtureCnv: public GiGaCnvBase
 {
-  
   ///
-  ///
-  ///
-
   friend class CnvFactory<GiGaMixtureCnv>; 
-
-  ///
-  ///
-  ///
- 
- protected: 
- 
-  ///
+  /// 
+protected: 
   /// Standard Constructor
-  ///
-  
-  GiGaMixtureCnv( ISvcLocator* Locator );
-
-  ///
+  GiGaMixtureCnv( ISvcLocator* );
   /// Standard (virtual) destructor 
-  ///
-
   virtual ~GiGaMixtureCnv();
-
   ///
-  ///
-  ///
-  
- public:
-
-  ///
+public:
   /// Create representation 
-  ///
-  
   virtual StatusCode createRep(DataObject*     Object  , IOpaqueAddress*& Address ) ;
-  
-  ///
   /// Update representation 
-  ///
-  
   virtual StatusCode updateRep(DataObject*     Object  , IOpaqueAddress*  Address ) ; 
-  
-  ///
   /// Class ID for created object == class ID for this specific converter
-  ///
-
   static const CLID&          classID();
-
-
-  ///
   /// storage Type 
-  ///
-
   static const unsigned char storageType() ; 
-
   ///
-  ///
-  ///
-
- protected: 
-
-  ///
+protected: 
   /// miscellaneous functions which performs the conversion itself
-  ///  
-
- private: 
-
+private: 
+  ///
+  GiGaMixtureCnv           ()                       ; /// no default constructor 
+  GiGaMixtureCnv           ( const GiGaMixtureCnv& ); /// no copy
+  GiGaMixtureCnv& operator=( const GiGaMixtureCnv& ); /// no assignment 
   ///
 };
 

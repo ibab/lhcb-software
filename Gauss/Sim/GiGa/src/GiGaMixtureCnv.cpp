@@ -2,33 +2,23 @@
 #include "GaudiKernel/IAddressCreator.h" 
 #include "GaudiKernel/IOpaqueAddress.h" 
 #include "GaudiKernel/IGiGaSetUpSvc.h" 
-
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/IDataSelector.h"
-
+/// DetDesc 
 #include "DetDesc/Mixture.h"
-
+/// GiGa 
 #include "GiGa/GiGaException.h" 
-
-///
-/// Geant4 includes
-///
-
+/// Geant4 
 #include "G4Element.hh"
 #include "G4Material.hh"
-
 /// local 
 #include "GiGaMixtureCnv.h" 
 
 static const  CnvFactory<GiGaMixtureCnv>                                      s_GiGaMixtureCnvFactory ;
 const        ICnvFactory&                             GiGaMixtureCnvFactory = s_GiGaMixtureCnvFactory ;
-
-///
 /// constructor 
-///
-
 GiGaMixtureCnv::GiGaMixtureCnv( ISvcLocator* Locator ) 
-  : GiGaCnv( storageType() , classID() , Locator ) 
+  : GiGaCnvBase( storageType() , classID() , Locator ) 
 {
   setNameOfGiGaConversionService( "GiGaGeomCnvSvc" ); 
   setConverterName              ( "GiGaMixtureCnv" );

@@ -1,18 +1,13 @@
-
 #include "CLHEP/Geometry/Point3D.h"
-
+///
 #include "G4Step.hh"
 #include "G4TouchableHistory.hh"
 #include "G4VPhysicalVolume.hh"
 #include "G4LogicalVolume.hh"
-
-//
+///
 #include "GaudiKernel/MsgStream.h"
-
 // GiGa 
 #include "GiGa/GiGaTrackActionFactory.h"
-
-
 /// local
 #include "GiGaTrackActionEmpty.h"
 
@@ -26,12 +21,12 @@ const       IGiGaTrackActionFactory&             GiGaTrackActionEmptyFactory = s
 
 /////////////////////////////////////////////////////////////////////////////////////////////////
 GiGaTrackActionEmpty::GiGaTrackActionEmpty( const std::string& Name , ISvcLocator* Loc ) 
-  : GiGaTrackAction            ( Name , Loc ) 
+  : GiGaTrackActionBase( Name , Loc ) 
 {};
 /////////////////////////////////////////////////////////////////////////////////////////////////
 GiGaTrackActionEmpty::~GiGaTrackActionEmpty(){};
 /////////////////////////////////////////////////////////////////////////////////////////////////
-StatusCode GiGaTrackActionEmpty::initialize () { return GiGaTrackAction::initialize() ; } ;
+StatusCode GiGaTrackActionEmpty::initialize () { return GiGaTrackActionBase::initialize() ; } ;
 /////////////////////////////////////////////////////////////////////////////////////////////////
-StatusCode GiGaTrackActionEmpty::finalize   () { return GiGaTrackAction::initialize() ; } ;
+StatusCode GiGaTrackActionEmpty::finalize   () { return GiGaTrackActionBase::initialize() ; } ;
 /////////////////////////////////////////////////////////////////////////////////////////////////

@@ -1,23 +1,24 @@
 #ifndef     GIGA_GIGABASE_H
 #define     GIGA_GIGABASE_H 1 
-
-
+/// STL
+#include <string>
+/// GaudiKernel 
 #include "GaudiKernel/IProperty.h"
 #include "GaudiKernel/ISerialize.h"
 #include "GaudiKernel/IIncidentListener.h"
-
-#include "GaudiKernel/PropertyMgr.h"
-
 ///
-class ISvcLocator           ;
-class IGiGaSvc              ;
-class IGiGaSetUpSvc         ;
-class IMessageSvc           ;
-class IIncidentSvc          ;
-class IDataProviderSvc      ;
-class IParticlePropertySvc  ;
-class IChronoStatSvc        ;
-class IMagneticFieldSvc     ;
+class IMessageSvc          ;
+class IChronoStatSvc       ;
+class IDataProviderSvc     ;
+class IParticlePropertySvc ;  
+class IMagneticFieldSvc    ;
+class IIncidentSvc         ;
+class IGiGaSvc             ; 
+class IGiGaSetUpSvc        ; 
+///
+class PropertyMgr          ;
+class MsgStream            ;
+class StreamBuffer         ;
 ///
 
 /** @class GiGaBase GiGaBase.h GiGa/GiGaBase.h
@@ -35,72 +36,44 @@ class  GiGaBase: virtual public IProperty         ,
                  virtual public IIncidentListener 
 {
   ///
- protected:
+protected:
   ///
-  /** 
-      Constructor and (virtual) Destructor 
-  */
+  /// Constructor and (virtual) Destructor 
+  inline GiGaBase( const std::string& , ISvcLocator* );
+  virtual inline ~GiGaBase();
   ///
-  GiGaBase( const std::string& name , ISvcLocator* );
+public:
   ///
-  virtual ~GiGaBase();
+  virtual const std::string&     name    () const { return m_name     ; };
   ///
- public:
-  
-  virtual const std::string&     name     () const { return m_name     ; };
-  
-  /**
-     Implementation(partial)  of IInterface  interface 
-  */
   /// Increment the reference count of Interface instance
-  virtual unsigned long     addRef  ()       { return ++m_count                   ; }; 
+  virtual unsigned long          addRef  ()        { return ++m_count                   ; }; 
   /// Release Interface instance
-  virtual unsigned long     release ()       { return 0 < m_count ? --m_count : 0 ; };
-  ///
-  virtual StatusCode queryInterface(const InterfaceID& , void** );
-  ///
-
-  virtual StatusCode initialize() ;
-
-  virtual StatusCode finalize  () ;
-  ///
-  
-  /**
-     Implementation of ISerialize interface 
-  */
+  virtual unsigned long          release ()        { return 0 < m_count ? --m_count : 0 ; };
+  /// query interface 
+  virtual inline StatusCode queryInterface(const InterfaceID& , void** );
+  /// initialize object 
+  virtual inline StatusCode initialize() ;
+  /// finalize the obkject 
+  virtual inline StatusCode finalize  () ;
   /// serialize object for reading 
-  virtual StreamBuffer& serialize( StreamBuffer& S )       ;
+  virtual inline StreamBuffer& serialize( StreamBuffer& S )       ;
   /// serialize object for writing 
-  virtual StreamBuffer& serialize( StreamBuffer& S ) const ; 
-  ///
-
-  /**
-     Implementation of IProperty interface
-  */
+  virtual inline StreamBuffer& serialize( StreamBuffer& S ) const ; 
   /// Set the property by property
-  virtual StatusCode                    setProperty   ( const Property& p       )       ;
+  virtual inline StatusCode                    setProperty   ( const Property& p       )       ;
   /// Get the property by property
-  virtual StatusCode                    getProperty   ( Property* p             ) const ;
+  virtual inline StatusCode                    getProperty   ( Property* p             ) const ;
   /// Get the property by name
-  virtual const Property&               getProperty   ( const std::string& name ) const ; 
+  virtual inline const Property&               getProperty   ( const std::string& name ) const ; 
   /// Get list of properties
-  virtual const std::vector<Property*>& getProperties ( )                         const ;
-  ///  
-
-  /**
-   Implementation of IIncidentListener interface
-  */  
+  virtual inline const std::vector<Property*>& getProperties ( )                         const ;
+  ///  handle the incident 
+  virtual inline void handle( const Incident& ) ;
   /// 
-  virtual void handle( const Incident& ) ;
-  /// 
-  
  protected:
   ///
-  
-  /** 
-      Accesors to needed services and Service Locator 
-  */
-  ///
+  ///  Accesors to needed services and Service Locator 
   inline bool                   init      () const { return m_init      ; };
   inline ISvcLocator*           svcLoc    () const { return m_svcLoc    ; };  
   inline IGiGaSvc*              gigaSvc   () const { return m_gigaSvc   ; }; 
@@ -112,44 +85,34 @@ class  GiGaBase: virtual public IProperty         ,
   inline IIncidentSvc*          incSvc    () const { return m_incSvc    ; }; 
   inline IParticlePropertySvc*  ppSvc     () const { return m_ppSvc     ; }; 
   inline IMagneticFieldSvc*     mfSvc     () const { return m_mfSvc     ; };
-  /// 
-  inline  PropertyMgr*           propMgr   () const { return m_propMgr   ; };  
+  inline PropertyMgr*           propMgr   () const { return m_propMgr   ; };  
   ///
- protected: 
+protected: 
   ///
-  
-  /**
-     Methods for declaring properties to the property manager
-  */
+  /// Methods for declaring properties to the property manager
   template <class TYPE>
-    StatusCode declareProperty( const std::string& name , TYPE& reference )
-    {
-      if( 0 != propMgr() ) { propMgr()->declareProperty( name , reference ); } 
-      return 0 != propMgr() ? StatusCode::SUCCESS : StatusCode::FAILURE ; 
-    }
+  StatusCode declareProperty( const std::string& name , TYPE& reference )
+  {
+    if( 0 != propMgr() ) { propMgr()->declareProperty( name , reference ); } 
+    return 0 != propMgr() ? StatusCode::SUCCESS : StatusCode::FAILURE ; 
+  };
+  inline StatusCode setProperties  () ; 
   ///
-  StatusCode setProperties  () ; 
-  ///
- 
- protected:
-  ///
-  
+protected:
   ///  Print the error    message and return status code 
-  StatusCode Error        ( const std::string& Message , const StatusCode & Status  = StatusCode::FAILURE ) const ;  
+  inline StatusCode Error   ( const std::string& Message , const StatusCode & Status  = StatusCode::FAILURE ) const ;  
   ///  Print the warning  message and return status code 
-  StatusCode Warning      ( const std::string& Message , const StatusCode & Status  = StatusCode::FAILURE ) const ;  
+  inline StatusCode Warning ( const std::string& Message , const StatusCode & Status  = StatusCode::FAILURE ) const ;  
   ///  Print the warning  message and return status code 
-  StatusCode Print        ( const std::string& Message , const StatusCode & Status  = StatusCode::FAILURE ) const ;  
+  inline StatusCode Print   ( const std::string& Message , const StatusCode & Status  = StatusCode::FAILURE ) const ;  
   ///
-  
-  ///
- private: 
+private: 
   ///
   GiGaBase();                              /// no default 
   GiGaBase           ( const GiGaBase& );  /// no copy 
   GiGaBase& operator=( const GiGaBase& );  /// no assignment 
   ///
- private:
+private:
   ///
   unsigned long         m_count      ; 
   std::string           m_name       ; 
@@ -180,7 +143,9 @@ class  GiGaBase: virtual public IProperty         ,
   IMagneticFieldSvc*    m_mfSvc      ;
   ///
 };
- 
+///
+#include "GiGa/GiGaBase.icpp"
+///
 
 #endif //   GIGA_GIGABASE_H
 

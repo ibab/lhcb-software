@@ -1,57 +1,51 @@
-#ifndef      __GIGA_HitsCONVERSIONSERVICE_GIGAHitsCNVSVC_H__ 
-#define      __GIGA_HitsCONVERSIONSERVICE_GIGAHitsCNVSVC_H__  1 
-
-///
-/// from STL 
+#ifndef      GIGA_GIGAHitsCNVSVC_H 
+#define      GIGA_GIGAHitsCNVSVC_H  1 
+/// STL 
 #include <string> 
-
-///
-/// from GiGa 
-#include "GiGa/GiGaCnvSvc.h" 
+/// GiGa 
+#include "GiGa/GiGaCnvSvcBase.h" 
 #include "GiGa/IGiGaHitsCnvSvc.h" 
-
 ///
-/// forward declarations
+template <class SERVICE> 
+class SvcFactory; 
 ///
-
-template <class SERVICE> class SvcFactory; 
-
 class    IGiGaSvc; 
 class    IParticlePropertySvc; 
 class    IDataSelector; 
 
-///
-///  GiGaHitsCnvSvc: conversion service  for converting of Gaudi 
-///                  MCParticle/MCVertex structure into Geant4 primary event record  
-///  
-///  Author: Vanya Belyaev 
-///  Date    7 Aug 2000 
+/** @class GiGaGeomCnvSvc GiGaGeomCnvSvc.h GiGa/GiGaGeomCnvSvc.h
+    
+    Convertersion service for convertiong Geant4 hits info Gaudi hits 
+    
+    @author  Vanya Belyaev
+    @date    23/02/2001
+*/
+
 
 ///
-class GiGaHitsCnvSvc:  public          GiGaCnvSvc   ,
+class GiGaHitsCnvSvc:  public          GiGaCnvSvcBase   ,
                        virtual public IGiGaHitsCnvSvc 
 {
   ///
   friend class SvcFactory<GiGaHitsCnvSvc>;
   ///
- protected: 
+protected: 
   ///
   GiGaHitsCnvSvc( const std::string&  ServiceName          , 
 		  ISvcLocator*        ServiceLocator       );
   ///
   virtual ~GiGaHitsCnvSvc(){};
   ///
- public: 
+public: 
   ///
   virtual StatusCode            initialize() ;
   ///
   virtual StatusCode            finalize  () ; 
   ///
-  virtual IParticlePropertySvc* ppSvc     () { return GiGaCnvSvc::ppSvc(); } 
-  ///
 };        
 ///
-#endif  //   __GIGA_HitsCONVERSIONSERVICE_GIGAHitsCNVSVC_H__ 
+
+#endif  //   GIGA_GIGAHitsCNVSVC_H 
 
 
 

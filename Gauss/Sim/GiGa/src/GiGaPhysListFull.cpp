@@ -38,7 +38,7 @@ const       IGiGaPhysListFactory&    GiGaPhysListFullFactory = s_GiGaPhysListFul
 
 /// constructor 
 GiGaPhysListFull::GiGaPhysListFull( const std::string& nick , ISvcLocator* loc ) 
-  : GiGaPhysList( nick , loc )
+  : GiGaPhysListBase( nick , loc )
 {};
 /// destructor 
 GiGaPhysListFull::~GiGaPhysListFull()

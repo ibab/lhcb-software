@@ -1,0 +1,159 @@
+#ifndef    GIGA_GIGATRAJECTORY_ICPP
+#define    GIGA_GIGATRAJECTORY_ICPP 1 
+
+/// STL 
+#include <vector>
+#include <algorithm>
+#include <functional>
+/// Geant4 
+#include "G4Step.hh"
+#include "G4Track.hh"
+#include "G4Polyline.hh"
+#include "G4Circle.hh"
+#include "G4Colour.hh"
+#include "G4VisAttributes.hh"
+#include "G4VVisManager.hh"
+/// GiGa 
+#include "GiGa/GiGaTrajectoryPoint.h"
+#include "GiGa/GiGaTrajectory.h"
+///
+
+//////////////////////////////////////////////////////////////////////////////////////////
+extern G4Allocator<GiGaTrajectory> s_GiGaTrajectoryAllocator;
+//////////////////////////////////////////////////////////////////////////////////////////
+
+///////////////////////////////////////////////////////////////////////////////////////////
+inline GiGaTrajectory::GiGaTrajectory (   )
+  : G4VTrajectory                     (   ) 
+  , std::vector<GiGaTrajectoryPoint*> (   ) 
+  , m_trackID                         ( 0 ) 
+  , m_parentID                        ( 0 )
+  , m_partDef                         ( 0 ) 
+  , m_4vect                           (   )
+{};
+///////////////////////////////////////////////////////////////////////////////////////////
+inline GiGaTrajectory::GiGaTrajectory   ( const G4Track* aTrack )
+  : G4VTrajectory(                                              ) 
+  , std::vector<GiGaTrajectoryPoint*>   (                       )
+  , m_trackID    ( aTrack->GetTrackID        ()                 ) 
+  , m_parentID   ( aTrack->GetParentID       ()                 )
+  , m_partDef    ( aTrack->GetDefinition     ()                 ) 
+  , m_4vect      ( aTrack->GetDynamicParticle()->Get4Momentum() )
+{
+  ///
+  GiGaTrajectoryPoint* firstPoint = 
+    new GiGaTrajectoryPoint( aTrack->GetPosition() , aTrack->GetGlobalTime() );
+  push_back( firstPoint );
+  ///
+};
+///////////////////////////////////////////////////////////////////////////////////////////
+inline GiGaTrajectory::GiGaTrajectory ( const GiGaTrajectory & right )
+  : G4VTrajectory                     (                              )
+  , std::vector<GiGaTrajectoryPoint*> (                              )
+  , m_trackID                         ( right.trackID       ()       )
+  , m_parentID                        ( right.parentID      ()       )
+  , m_partDef                         ( right.partDef       ()       )
+  , m_4vect                           ( right.fourMomentum  ()       )
+{
+  /// copy(through clone) points from right 
+  std::transform( right.begin() , right.end() , 
+		  std::back_inserter( *this ) ,
+		  std::mem_fun(&GiGaTrajectoryPoint::clone) );
+};
+///////////////////////////////////////////////////////////////////////////////////////////
+inline GiGaTrajectory::~GiGaTrajectory()
+{
+  /// delete all points 
+  for( iterator it = begin() ; it != end() ; ++it )
+    { if( 0 != *it ) { delete *it ; *it = 0 ; } }  
+  /// clear container 
+  clear();
+  ///
+};
+////////////////////////////////////////////////////////////////////////////////////
+inline int GiGaTrajectory::GetPointEntries() const 
+{ return size(); } 
+////////////////////////////////////////////////////////////////////////////////////
+inline G4VTrajectoryPoint* GiGaTrajectory::GetPoint       ( int indx ) const  
+{ return indx < size() ? *(begin()+indx) : 0 ; }
+////////////////////////////////////////////////////////////////////////////////////
+inline void* GiGaTrajectory::operator new(size_t)
+{ return (void*) s_GiGaTrajectoryAllocator.MallocSingle(); };
+////////////////////////////////////////////////////////////////////////////////////
+inline void  GiGaTrajectory::operator delete(void* aTrajectory)
+{ s_GiGaTrajectoryAllocator.FreeSingle( (GiGaTrajectory*) aTrajectory ); };
+////////////////////////////////////////////////////////////////////////////////////
+inline void GiGaTrajectory::ShowTrajectory  () const {};
+//////////////////////////////////////////////////////////////////////////////////// 
+void GiGaTrajectory::DrawTrajectory  (G4int i_mode=0 ) const 
+{
+  ///
+  G4VVisManager* pVVisManager = G4VVisManager::GetConcreteInstance();
+  G4ThreeVector pos;
+  ///
+  if(i_mode>=0)
+    {
+      G4Polyline pPolyline;
+      for( const_iterator it = begin() ; end() != it ; ++it ) 
+	{ if( 0 != *it ) { pPolyline.append( (*it)->GetPosition() ) ; } } 
+      G4Colour colour;
+      if     ( 0 != partDef() && partDef()->GetPDGCharge() < 0.) 
+        { colour = G4Colour(1.,0.,0.); } 
+      else if( 0 != partDef() && partDef()->GetPDGCharge() > 0.) 
+        { colour = G4Colour(0.,0.,1.); } 
+      else 
+        { colour = G4Colour(0.,1.,0.); } 
+      G4VisAttributes attribs(colour);
+      pPolyline.SetVisAttributes(attribs);
+      if(pVVisManager) pVVisManager->Draw(pPolyline);
+    }
+  ///
+  if(i_mode!=0)
+    {
+      for( const_iterator it = begin() ; end() != it ; ++it ) 
+	{
+	  if( 0 == *it ) { continue; } 
+          G4Circle circle ( (*it)->GetPosition()  ); 
+          circle.SetScreenSize( 0.001*i_mode      ); 
+	  circle.SetFillStyle ( G4Circle::filled  );
+	  G4Colour colSpot    ( 0. , 0. , 0.      );
+	  G4VisAttributes attSpot( colSpot );
+	  circle.SetVisAttributes( attSpot );
+	  if(pVVisManager) { pVVisManager->Draw( circle ); } 
+	} 
+    }
+};
+//////////////////////////////////////////////////////////////////////////////////// 
+inline void GiGaTrajectory::AppendStep      ( const G4Step*  aStep )       
+{
+  ///
+  if( empty() 
+      || aStep->GetPostStepPoint()->GetGlobalTime () != back()->GetTime     () 
+      || aStep->GetPostStepPoint()->GetPosition   () != back()->GetPosition () )
+    {
+      GiGaTrajectoryPoint* p = 
+	new GiGaTrajectoryPoint( aStep->GetPostStepPoint()->GetPosition   () ,
+				 aStep->GetPostStepPoint()->GetGlobalTime () ) ; 
+      push_back( p );
+      ///
+    };
+};
+//////////////////////////////////////////////////////////////////////////////////// 
+inline void GiGaTrajectory::MergeTrajectory ( G4VTrajectory* st )       
+{
+  if( 0 == st                    ) { return ; } 
+  if( 1 >= st->GetPointEntries() ) { return ; }  /// do not copy "almost empty" trajectories
+  GiGaTrajectory* gt = dynamic_cast<GiGaTrajectory*> ( st );
+  if( 0 == gt || this == gt      ) { return ; } 
+  /// copy points 
+  iterator it = gt->empty() ? gt->end() : gt->begin() + 1 ;  /// skip the first point from copy
+  std::copy( it , gt->end() , std::back_inserter( *this ) );
+  /// remove copied points   
+  gt->erase( it , gt->end() );
+  ///
+};
+/////////////////////////////////////////////////////////////////////////////////// 
+ 
+#endif  // GIGA_GIGATRAJECTORY_ICPP
+
+

@@ -1,11 +1,10 @@
 #ifndef    GIGA_GIGADETECTORELEMENT_H
 #define    GIGA_GIGADETECTORELEMENT_H 1 
-
-
-#include "GiGa/GiGaCnv.h"
-
-
-template <class T> class CnvFactory;
+/// GiGa 
+#include "GiGa/GiGaCnvBase.h"
+///
+template <class T> 
+class CnvFactory;
 
 /** @class GiGaDetectorElementCnv     GiGaDetectorElementCnv.h GiGaDetectorElementCnv.h
 
@@ -14,15 +13,14 @@ template <class T> class CnvFactory;
     @author Vanya Belyaev
 */
 
-
-class GiGaDetectorElementCnv: public GiGaCnv
+class GiGaDetectorElementCnv: public GiGaCnvBase
 {
   ///
   friend class CnvFactory<GiGaDetectorElementCnv>;
   ///
- public:
+public:
   ///
-  GiGaDetectorElementCnv( ISvcLocator* Locator );
+  GiGaDetectorElementCnv( ISvcLocator* );
   /// Standard (virtual) destructor 
   virtual ~GiGaDetectorElementCnv();
   ///

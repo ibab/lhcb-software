@@ -1,17 +1,16 @@
 #ifndef    GIGA_GIGATRAJECTORY_H
 #define    GIGA_GIGATRAJECTORY_H 1 
-
-///
+/// STL
 #include <vector>
-
 /// base "interface" class
 #include "G4VTrajectory.hh" 
-
+/// GiGa 
 #include "GiGa/GiGaTrajectoryPoint.h"
-
+///
 class G4ParticleDefinition;
 class G4Track;
 class G4Step;
+///
 
 /** @class GiGaTrajectory GiGaTrajectory.h GiGa/GiGaTrajectory.h
 
@@ -23,24 +22,20 @@ class G4Step;
 */
 
 
-class GiGaTrajectory: public G4VTrajectory
+class GiGaTrajectory: public G4VTrajectory                    , 
+		      public std::vector<GiGaTrajectoryPoint*>
 {
   ///
 public:
   ///
-  typedef   std::vector<GiGaTrajectoryPoint*>  POINTS;
-  typedef   POINTS::iterator                   IT    ;
-  typedef   POINTS::const_iterator             CI    ;
-  typedef   POINTS::reverse_iterator           RI    ;
-  typedef   POINTS::const_reverse_iterator     CRI   ;
+  inline GiGaTrajectory (                        );
+  inline GiGaTrajectory ( const G4Track*         );
+  inline GiGaTrajectory ( const GiGaTrajectory & );
+  virtual inline ~GiGaTrajectory();
   ///  
-  GiGaTrajectory ();
-  GiGaTrajectory ( const G4Track* aTrack  );
-  GiGaTrajectory ( const GiGaTrajectory & );
-  virtual ~GiGaTrajectory();
-  ///  
-  inline void* operator new(size_t);
-  inline void  operator delete(void*);
+  inline void* operator new    ( size_t ) ;
+  inline void  operator delete ( void*  ) ;
+  ///
   inline int operator == (const GiGaTrajectory& right) const
   {return ( &right == this );} 
   ///
@@ -54,28 +49,15 @@ public:
   /// 
   inline const G4ParticleDefinition* partDef     () const { return m_partDef ; } 
   ///
-  virtual void ShowTrajectory  ()                 const ;
-  virtual void DrawTrajectory  ( G4int i_mode=0 ) const ;
-  virtual void AppendStep      ( const G4Step*  )       ;
-  virtual void MergeTrajectory ( G4VTrajectory* )       ;
+  virtual inline void ShowTrajectory  ()                 const ;
+  virtual inline void DrawTrajectory  ( G4int i_mode=0 ) const ;
+  virtual inline void AppendStep      ( const G4Step*  )       ;
+  virtual inline void MergeTrajectory ( G4VTrajectory* )       ;
   ///
-  virtual int                 GetPointEntries(          ) const 
-  { return m_points.size(); } 
-  virtual G4VTrajectoryPoint* GetPoint       ( int indx ) const  
-  { return indx < m_points.size() ? m_points[indx] : 0 ; }
-  ///
-  inline  POINTS::iterator                begin ()       { return m_points.begin () ; };
-  inline  POINTS::const_iterator          begin () const { return m_points.begin () ; };
-  inline  POINTS::reverse_iterator        rbegin()       { return m_points.rbegin() ; };
-  inline  POINTS::const_reverse_iterator  rbegin() const { return m_points.rbegin() ; };
-  inline  POINTS::iterator                end   ()       { return m_points.end   () ; };
-  inline  POINTS::const_iterator          end   () const { return m_points.end   () ; };
-  inline  POINTS::reverse_iterator        rend  ()       { return m_points.rend  () ; };
-  inline  POINTS::const_reverse_iterator  rend  () const { return m_points.rend  () ; };
+  virtual int                 GetPointEntries(          ) const ;
+  virtual G4VTrajectoryPoint* GetPoint       ( int indx ) const ;  
   ///
 private: 
-  ///
-  POINTS                       m_points   ;
   ///
   int                          m_trackID  ;
   int                          m_parentID ;
@@ -84,15 +66,10 @@ private:
   /// 
 };
 ///
-extern G4Allocator<GiGaTrajectory> s_GiGaTrajectoryAllocator;
-///
-inline void* GiGaTrajectory::operator new(size_t)
-{ return (void*) s_GiGaTrajectoryAllocator.MallocSingle(); };
-///
-inline void  GiGaTrajectory::operator delete(void* aTrajectory)
-{ s_GiGaTrajectoryAllocator.FreeSingle( (GiGaTrajectory*) aTrajectory ); };
+#include "GiGa/GiGaTrajectory.icpp"
 ///
 
 #endif  // GIGA_GIGATRAJECTORY_H
+
 
 

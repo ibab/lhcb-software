@@ -2,6 +2,30 @@ Package:          GiGa
 Package manager : Vanya Belyaev 
 
 !===========================================================================
+! 20010224 - Vanya Belyaev
+     (1) A lot of modifications and renaming in  /GiGa subdirectory   
+        (a) GiGaCnv          --> GiGaCnvBase 
+        (b) GiGaCnvSvc       --> GiGaCnvSvcBase
+        (c) GiGaSensDet      --> GiGaSensDetBase  
+        (d) GiGaPhysList     --> GiGaPhysListBase  
+        (e) GiGaMagField     --> GiGaMagFieldBase  
+        (f) GiGaStackAction  --> GiGaStackActionBase  
+        (g) GiGaStepAction   --> GiGaStepActionBase  
+        (h) GiGaTrackAction  --> GiGaTrackActionBase  
+     (2) For all classes in /GiGa subdirectory move all inline functions 
+         from *.h files into *.icpp files 
+     (3) New files 
+        (a) new service for conversion of Geant4 hits into Gaudi hits 
+            - src/GiGaHitsCnvSvc.h
+            - src/GiGaHitsCnvSvc.cpp 
+        (b) new class for implementation of Track Information 
+            (inherits from G4VUserTrackInformation). To be extended in future,
+            now iomplements only "toBeStored" method. 
+            - GiGa/GiGaTrackInformation.h
+            - GiGa/GiGaTrackInformation.icpp
+            - src/GiGaTrackInformationAllocator.cpp
+
+!===========================================================================
 ! 20010222 - Vanya Belyaev
      New classes: 
      GiGaTrajectoryPoint and GiGaTrajectory - customisation of "standard"

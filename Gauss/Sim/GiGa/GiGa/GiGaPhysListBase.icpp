@@ -1,30 +1,32 @@
+#ifndef   GIGA_GIGAPHYSLISTBASE_ICPP 
+#define   GIGA_GIGAPHYSLISTBASE_ICPP 1  
+
+
 #include "GaudiKernel/MsgStream.h"
 
-#include "GiGa/GiGaPhysList.h"
+#include "GiGa/GiGaPhysListBase.h"
 
-///////////////////////////////////////////////////////////////////////////////////////
-GiGaPhysList::GiGaPhysList( const std::string& nick , ISvcLocator* loc) 
+////////////////////////////////////////////////////////////////////////////////////////
+inline GiGaPhysListBase::GiGaPhysListBase( const std::string& nick , ISvcLocator* loc) 
   : GiGaBase          ( nick , loc  )
-  , m_DefaultCutValue ( 5.0 * mm    )
-  , m_misc ( 0 ) 
+  , m_DefaultCutValue ( 2.0 * mm    )
 { 
-  declareProperty( "cut" , m_DefaultCutValue ); 
-  declareProperty( "misc" , m_misc ); 
+  declareProperty( "Cut" , m_DefaultCutValue ); 
 };
 ///////////////////////////////////////////////////////////////////////////////////////
-GiGaPhysList::~GiGaPhysList(){};
+inline GiGaPhysListBase::~GiGaPhysListBase(){};
 ///////////////////////////////////////////////////////////////////////////////////////
-StatusCode GiGaPhysList::queryInterface( const InterfaceID& id , void** ppI) 
+inline StatusCode GiGaPhysListBase::queryInterface( const InterfaceID& id , void** ppI) 
 {
   if( 0 == ppI ) { return StatusCode::FAILURE; } 
   *ppI = 0 ; 
-  if   ( IID_IGiGaPhysList == id ) { *ppI = static_cast<IGiGaPhysList*> (this) ; } 
-  else {  return GiGaBase::queryInterface( id , ppI ); } /// RETURN ;
+  if   ( IGiGaPhysList::interfaceID() == id ) { *ppI = static_cast<IGiGaPhysList*> (this)    ; } 
+  else                                        {  return GiGaBase::queryInterface( id , ppI ) ; } /// RETURN ;
   addRef();
   return StatusCode::SUCCESS; 
 };
 ///////////////////////////////////////////////////////////////////////////////////////
-StatusCode GiGaPhysList::initialize ()  
+inline StatusCode GiGaPhysListBase::initialize ()  
 {
   /// initialize base class
   StatusCode sc = GiGaBase::initialize (); 
@@ -43,6 +45,8 @@ StatusCode GiGaPhysList::initialize ()
   return StatusCode::SUCCESS;
 };
 ///////////////////////////////////////////////////////////////////////////////////////
-StatusCode GiGaPhysList::finalize   ()  { return GiGaBase::finalize   (); };
+inline StatusCode GiGaPhysListBase::finalize   ()  { return GiGaBase::finalize   (); };
 ///////////////////////////////////////////////////////////////////////////////////////
+
+#endif // GIGA_GIGAPHYSLISTBASE_ICPP 
 

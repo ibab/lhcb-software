@@ -71,8 +71,8 @@ const        ISvcFactory&                GiGaGeomCnvSvcFactory = s_GiGaGeomCnvSv
 /// constructor
 GiGaGeomCnvSvc::GiGaGeomCnvSvc( const std::string&   ServiceName          , 
   				ISvcLocator*         ServiceLocator       ) 
-  : GiGaCnvSvc(                                      ServiceName          , 
-		                                     ServiceLocator       , 
+  : GiGaCnvSvcBase(                                  ServiceName          , 
+						     ServiceLocator       , 
 						     GiGaGeom_StorageType )
   , m_worldPV       ( 0                   ) 
   , m_worldMaterial ( "/dd/Materials/Air" )
@@ -293,11 +293,11 @@ G4VSolid*  GiGaGeomCnvSvc::g4BoolSolid( const SolidBoolean* Sd )
   ///
   return g4total;
 };
-///
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////
 StatusCode GiGaGeomCnvSvc::initialize() 
 { 
   ///
-  StatusCode sc = GiGaCnvSvc::initialize();
+  StatusCode sc = GiGaCnvSvcBase::initialize();
   if(sc.isFailure() ) { return Error(" Failed to initialize GiGaCnvSvc", sc  ) ;}
   /// we explicitely need detSvc(), check it! 
   if( 0 == detSvc() ) { return Error(" DetectorProviderSvc is not located! " ) ;}
@@ -305,14 +305,10 @@ StatusCode GiGaGeomCnvSvc::initialize()
   return sc;
   ///
 };
-///
+////////////////////////////////////////////////////////////////////////////////////////////////////////////
 StatusCode GiGaGeomCnvSvc::finalize()   
-{ 
-  ///
-  return GiGaCnvSvc::finalize(); 
-  ///
-};
-///
+{ return GiGaCnvSvcBase::finalize(); };
+////////////////////////////////////////////////////////////////////////////////////////////////////////////
 G4VPhysicalVolume* GiGaGeomCnvSvc::G4WorldPV() 
 {
   /// already created? 
@@ -355,7 +351,7 @@ G4VPhysicalVolume* GiGaGeomCnvSvc::G4WorldPV()
   ///
   return m_worldPV ; 
 }; 
-/// Convert a collection of transient data objects into another representation.
+/// Convert a collection of transient data objects into another representation ///////////////////////////////////////////
 StatusCode GiGaGeomCnvSvc::createReps(IDataSelector* pSelector)  
 {
   Context::iterator       i;
@@ -409,8 +405,8 @@ StatusCode GiGaGeomCnvSvc::queryInterface( const IID& iid , void** ppI )
   ///
   if  ( 0 == ppI                    ) { return StatusCode::FAILURE                     ; } 
   *ppI = 0 ; 
-  if  ( IID_IGiGaGeomCnvSvc  == iid ) { *ppI  = static_cast<IGiGaGeomCnvSvc*> (this)   ; } 
-  else                                { return GiGaCnvSvc::queryInterface( iid , ppI ) ; } 
+  if  ( IGiGaGeomCnvSvc::interfaceID()  == iid ) { *ppI  = static_cast<IGiGaGeomCnvSvc*> (this)   ; } 
+  else                                           { return GiGaCnvSvcBase::queryInterface( iid , ppI ) ; } 
   ///
   addRef();
   ///

@@ -1,0 +1,38 @@
+#ifndef     GIGA_GIGASTEPACTIONBASE_ICPP
+#define     GIGA_GIGASTEPACTIONBASE_ICPP 1 
+///
+#include "GiGa/GiGaStepActionBase.h"
+///
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////
+inline GiGaStepActionBase::GiGaStepActionBase( const std::string& nick , ISvcLocator* svc ) 
+  : G4UserSteppingAction() 
+  , GiGaBase            ( nick     ,   svc     ) 
+{ };
+////////////////////////////////////////////////////////////////////////////////////////////////////////
+inline GiGaStepActionBase::~GiGaStepActionBase(){};
+////////////////////////////////////////////////////////////////////////////////////////////////////////
+inline StatusCode GiGaStepActionBase::initialize() 
+{
+  StatusCode sc = GiGaBase::initialize() ; 
+  if( sc.isFailure() ) { return Error("Could not initialize Base class!"); } 
+  ///
+  return StatusCode::SUCCESS;
+}; 
+/////////////////////////////////////////////////////////////////////////////////////////////////////////
+inline StatusCode GiGaStepActionBase::finalize() { return GiGaBase::finalize();  };
+/////////////////////////////////////////////////////////////////////////////////////////////////////////
+inline StatusCode GiGaStepActionBase::queryInterface( const InterfaceID& iid , void** ppI)
+{
+  if( 0 == ppI ) { return StatusCode::FAILURE; } 
+  *ppI = 0; 
+  if  ( IGiGaStepAction::interfaceID() == iid ) { *ppI = static_cast<IGiGaStepAction*>        ( this ) ; } 
+  else                                          { return GiGaBase::queryInterface( iid , ppI ) ; } /// RETURN!!!
+  addRef();
+  return StatusCode::SUCCESS;
+};
+/////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+#endif  //  GIGA_GIGASTEPACTIONBASE_ICPP
+

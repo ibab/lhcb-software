@@ -1,16 +1,15 @@
 #ifndef         __GIGA_KINECONVERSION_GIGAMCParticleCNV_H__
 #define         __GIGA_KINECONVERSION_GIGAMCParticleCNV_H__  1 
-
-/// from STL 
+/// STL 
 #include <set>
-
+/// GiGa
+#include "GiGa/GiGaCnvBase.h" 
+template <class TYPE> 
+class CnvFactory;
 ///
-/// base class from GiGa
-#include "GiGa/GiGaCnv.h" 
-template <class TYPE> class CnvFactory;
-
 class MCParticle;
 class GiGaTrajectory;
+///
 
 /** @class GiGaMCParticleCnv GiGaMCParticleCnv.h GiGa/GiGaMCParticleCnv.h
 
@@ -21,15 +20,14 @@ class GiGaTrajectory;
 */
 
 
-
-class GiGaMCParticleCnv: public GiGaCnv
+class GiGaMCParticleCnv: public GiGaCnvBase
 {
   ///
   friend class CnvFactory<GiGaMCParticleCnv>; 
   /// 
  protected: 
   /// Standard Constructor
-  GiGaMCParticleCnv( ISvcLocator* Locator );
+  GiGaMCParticleCnv( ISvcLocator* );
   /// Standard (virtual) destructor 
   virtual ~GiGaMCParticleCnv();
   ///
@@ -47,6 +45,12 @@ class GiGaMCParticleCnv: public GiGaCnv
   static const CLID&          classID();
   /// storage Type 
   static const unsigned char storageType() ; 
+  ///
+private:
+  ///
+  GiGaMCParticleCnv           ()                           ; /// no default constructor 
+  GiGaMCParticleCnv           ( const GiGaMCParticleCnv& ) ; /// no copy 
+  GiGaMCParticleCnv& operator=( const GiGaMCParticleCnv& ) ; /// no assignement
   ///
 private: 
   ///
