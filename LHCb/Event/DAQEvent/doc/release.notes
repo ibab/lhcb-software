@@ -3,6 +3,19 @@ Author: Jose' Helder Lopes
 Purpose: Define the L1Buffer,  L1Event, L1Bank, HLTBuffer, HLTEvent and 
          HLTBank classes.
 
+!=============== DAQEvent v2r0 2003-11-03 =============================
+! 2003-10-30 - Jose Helder Lopes
+
+  - Identifier Source_ID changed to SourceID to conform to LHCb coding rules.
+  - Identifier Class_ID changed to bankType to avoid confusion with the class ID
+    used by the LHCb event data classes.
+  - L1 header changed: Use 7 bits for bank sizes, 6 bits for source Id's and 3
+    bits for bank types.
+  - Introduced definitions of L1 bank types in L1Buffer.
+  - The HLT classes names changed (HLT -> Hlt) to improve  readability.
+  - The method size() of L1Bank and HltBank was renamed to dataSize() and now
+    returns the size of the data part only, excluding the header.
+
 !=============== DAQEvent v1r1 2003-10-03 =============================
 ! 2003-10-03 - Marco Cattaneo
  - Add constructors HLTEvent( HLTBuffer& ) and L1Event( L1Buffer& )

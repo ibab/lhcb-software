@@ -12,7 +12,7 @@
      >
        <base name="DataObject"/>
        <attribute
-        desc="Map with L1Banks (values) for each class ID(keys)"
+        desc="Map with L1Banks (values) for each bank type"
         name="eventMap"
         type="std::map &lt;int, std::vector&lt;L1Bank&gt; &gt;"
         getMeth="FALSE"
@@ -29,11 +29,11 @@
        </constructor>
 
        <method
-        desc="accessor method to the vector of L1 banks for a given class ID"
+        desc="accessor method to the vector of L1 banks for a given bank type"
         name="banks"
         type="const std::vector &lt;L1Bank &gt; &amp; "
-        argList="int class_ID"     
+        argList="int bankType"     
        >
-         <code> return (m_eventMap[class_ID]); </code>
+         <code> return (m_eventMap[bankType]); </code>
        </method>
       </class>

@@ -1,10 +1,12 @@
-// $Id: L1Event.cpp,v 1.1 2003-10-03 13:59:11 cattanem Exp $
+// $Id: L1Event.cpp,v 1.2 2003-11-03 07:41:38 cattanem Exp $
 // Include files 
+#include <stdio.h>
 
 // from Gaudi
 
 // local
 #include "Event/L1Event.h"
+#include "GaudiKernel/MsgStream.h"
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : L1Event
@@ -22,11 +24,10 @@ L1Event::L1Event( L1Buffer& l1Buffer ) {
   long i=0;
   while( i < l1Size ){
     int bankSize = int(buffer[i]&127);
-    //    int source_ID =int(((buffer[i]>>7)&127));
-    int class_ID  =int( (buffer[i]>>14));
-
+    //int sourceID =int(((buffer[i]>>7)&63));
+    int bankType  =int( (buffer[i]>>13));
     // Add this bank address to Event Map
-    (m_eventMap[class_ID]).push_back(L1Bank(buffer+i));
+    (m_eventMap[bankType]).push_back(L1Bank(buffer+i));
     // Go to the next bank
     i+=bankSize;
   }

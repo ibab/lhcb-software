@@ -24,27 +24,27 @@
        </constructor>
        <method
         desc="Return size of the data body part of the bank"
-        name="size"
+        name="dataSize"
         type="long"
         const="TRUE"
        >
-         <code> return int(m_data[0]&amp;127); </code>
+         <code> return int(m_data[0]&amp;127) - 1; </code>
        </method>
        <method
-        desc="Return Class_ID of this bank "
-        name="bankClass_ID"
+        desc="Return bankType of this bank "
+        name="bankType"
         type="int"
         const="TRUE"
         >
-        <code> return int(m_data[0]&gt;&gt;14); </code>
+        <code> return int(m_data[0]&gt;&gt;13); </code>
        </method>     
        <method
-        desc="Return Source_ID of this bank "
-        name="bankSource_ID"
+        desc="Return SourceID of this bank "
+        name="bankSourceID"
         type="int"
         const="TRUE"
         >
-        <code> return int((m_data[0]&gt;&gt;7)&amp;127); </code>
+        <code> return int((m_data[0]&gt;&gt;7)&amp;63); </code>
        </method>     
        <method
         desc="Return pointer to begining of data body of the bank"

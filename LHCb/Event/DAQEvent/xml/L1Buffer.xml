@@ -9,6 +9,12 @@
       id="1003"
       serializers="FALSE"
      >
+       <enum
+        desc="Define the bank types for L1 trigger buffer"
+        name="BankType"
+        value="VeloR=0, VeloPhi, TT, LODU, L0Calo"
+        access="PUBLIC"
+       />
        <base name="DataObject"/>
        <import name="Event/DAQTypes" soft="FALSE"/>
        <import name="l1_int" ignore="TRUE"/>
@@ -64,8 +70,8 @@
         name="addBank"
         type="void"
        >
-       <arg type="int" name="source_ID" />
-       <arg type="int" name="class_ID"  />
+       <arg type="int" name="sourceID" />
+       <arg type="int" name="bankType"  />
        <arg type="l1_int *" name="data"    />
        <arg type="long" name="dataSize"  />
          <code> 
@@ -73,9 +79,9 @@
   long evtSize=m_currentSize+bankSize;
   if(evtSize &gt; m_allocatedSize ) reallocate( evtSize );
   long size=m_currentSize;
-// Assigning 7 bits to bankSize (bankSize&lt;128), 7 bits to source_ID (source_ID &lt; 128) and
-// 2 bits to class_ID (class_ID &lt; 4 )
-  m_buffer[size++]=l1_int(bankSize)+(l1_int(source_ID)&lt;&lt;7)+(l1_int(class_ID)&lt;&lt;14);
+// Assigning 7 bits to bankSize (bankSize&lt;128), 6 bits to sourceID (sourceID &lt; 64) and
+// 3 bits to bankType (bankType &lt; 8 )
+  m_buffer[size++]=l1_int(bankSize)+(l1_int(sourceID)&lt;&lt;7)+(l1_int(bankType)&lt;&lt;13);
 
   for( long i =0; i&lt;dataSize;++i) m_buffer[size++] = *(data++);
   m_currentSize+=bankSize;
@@ -86,15 +92,15 @@
         name="addBank"
         type="void"
        >
-       <arg type="int" name="source_ID" />
-       <arg type="int" name="class_ID"  />
+       <arg type="int" name="sourceID" />
+       <arg type="int" name="bankType"  />
        <arg type="std::vector &lt;l1_int&gt;" name="data"    />
          <code> 
   long bankSize = 1 + data.size() ;
   long evtSize=m_currentSize+bankSize;
   if(evtSize &gt; m_allocatedSize ) reallocate( evtSize );
   long size=m_currentSize;
-  m_buffer[size++]=l1_int(bankSize)+(l1_int(source_ID)&lt;&lt;7)+(l1_int(class_ID)&lt;&lt;14);
+  m_buffer[size++]=l1_int(bankSize)+(l1_int(sourceID)&lt;&lt;7)+(l1_int(bankType)&lt;&lt;13);
   for( std::vector&lt;l1_int&gt;::iterator i =data.begin(); i!=data.end();++i) m_buffer[size++] = *i;
   m_currentSize+=bankSize;
  </code>
@@ -107,7 +113,6 @@
        >
        <arg type="long" name="evtSize" />
          <code>
-// cout &lt;&lt; " Using reallocate method" &lt;&lt; endl;
 // To avoid many reallocations we are giving at least m_initialSize extra space
   long newSize = evtSize+m_initialSize;
   l1_int * newBuffer = new l1_int[newSize];
