@@ -5,6 +5,27 @@
 ! Purpose     : LHCb OO kernel packages
 !-----------------------------------------------------------------------------
 
+!======================= LHCbSys v17r3 2005-01-14 =======================
+! 2005-01-14 - Marco Cattaneo
+ - New packages:      DAQSys v1r0, CaloDAQ v1r0
+ - Modified packages: EventSys v19r3, CaloEvent v13r8, L0Event v14r2
+
+ - In DAQSys v1r0:
+   . Hat package for all xxDAQ packages
+   . RawBuffer.opts to set up RawBuffer decoding via DataOnDemandSvc
+
+ - In CaloDAQ v1r0:
+   . RawBuffer encoding and decoding for Calo (moved from CaloEvent)
+   . More compact coding of Prs/Ecal/Hcal energies (-1.5 kByte/evt). Decoding
+     compatible both with this new format and the old one
+
+ - In CaloEvent v13r8:
+   . RawBuffer encoding, decoding (and data on demand options) moved to CaloDAQ
+
+ - In L0Event v14r2:
+   . Re-implement L0PrsSpdHit and L0CaloADC
+   . L0PrsSpdHit is now a KeyedObject (transient object)
+ 
 !====================== LHCbSys v17r2p1 2005-01-13 ======================
 ! 2005-01-13 - Marco Cattaneo
  - Add configuration files for doxygen documentation
