@@ -1,4 +1,4 @@
-// $Id: MuonBackground.cpp,v 1.5 2003-04-08 09:29:42 cattanem Exp $
+// $Id: MuonBackground.cpp,v 1.6 2003-04-11 06:56:01 cattanem Exp $
 // Include files 
 
 // from Gaudi
@@ -754,7 +754,7 @@ MuonBackground::initializeRNDDistribution2D(IHistogram2D* histoPointer,
   xmin=axisx.lowerEdge();
   xmax=axisx.upperEdge();
   const IAxis& axisy=(histoPointer->yAxis());
-  int nbiny=axisy.bins();
+  //  int nbiny=axisy.bins();
   ymin=axisy.lowerEdge();
   ymax=axisy.upperEdge();
   for(int xbin=0;xbin<nbinx;xbin++){
@@ -767,21 +767,21 @@ MuonBackground::initializeRNDDistribution2D(IHistogram2D* histoPointer,
       sliceY( "MuBG/1" , *histoPointer, xbin);
     int entries=ySlice->entries();
     if(entries==0)msg<<MSG::INFO<<" zero entries"<<endreq;
-  //  msg<<MSG::INFO<<" entries "<<entries<<endreq;
-    //    histoSvc()->print(ySlice);
-    for(int bincount=0;bincount<nbiny;bincount++){
-      /*      msg<<MSG::INFO<<" entries in bin "<<bincount<<" "<<
-        ySlice->binEntries(bincount)<<" "<<
-        ySlice->binHeight(bincount)<<endreq;  */
-    }
+    //  msg<<MSG::INFO<<" entries "<<entries<<endreq;
+    //  histoSvc()->print(ySlice);
+    /*  for(int bincount=0;bincount<nbiny;bincount++){
+      msg<<MSG::INFO<<" entries in bin "<<bincount<<" "<<
+      ySlice->binEntries(bincount)<<" "<<
+      ySlice->binHeight(bincount)<<endreq;
+    } */
     
     initializeRNDDistribution1D(ySlice,distributions , 
                                 pointerToFlags,ymin, ymax);
-//    msg<<MSG::INFO<<"slicing "<<xbin<<" "<<ymax<<endreq;
-    
+    // msg<<MSG::INFO<<"slicing "<<xbin<<" "<<ymax<<endreq;
+    histoSvc()->unregisterObject( ySlice );
   }
   
- return StatusCode::SUCCESS;
+  return StatusCode::SUCCESS;
 }
 
 StatusCode MuonBackground::createHit(KeyedContainer<MCMuonHit>** 
