@@ -1,6 +1,6 @@
 package     EvtGen
 version     v5r5
-
+ 
 branches    cmt src doc EvtGen EvtGenModels EvtGenBase 
 
 use         CLHEP        v*
