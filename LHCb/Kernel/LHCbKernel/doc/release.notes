@@ -2,6 +2,13 @@ Package LHCbKernel
 Package manager: M.Cattaneo
 Purpose: LHCb specific Kernel classes 
 
+! =============================================================================
+! 8 Apr 2002:  Vanya BElyaev Ivan.Belyaev@itep.ru 
+! - new version of "Relations"-subpackage
+! - rename *RelationTool*          into *Associator*
+! - rename *RelationWeightedTool*  into *AssociatorWeighted* 
+! =============================================================================
+
 ! 20020409 M. Needham
  - add uniqueLayer/uniqueWafer members to ITChannelID.h
 

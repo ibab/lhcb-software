@@ -1,11 +1,11 @@
-// $Id: RelationTool.h,v 1.1 2002-04-03 15:35:18 ibelyaev Exp $
+// $Id: AssociatorWeighted.h,v 1.1 2002-04-08 14:26:01 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
-// $Log: not supported by cvs2svn $ 
+// $Log: not supported by cvs2svn $
 // ============================================================================
-#ifndef RELATIONS_RELATIONTOOL_H 
-#define RELATIONS_RELATIONTOOL_H 1
+#ifndef RELATIONS_AssociatorWeighted_H 
+#define RELATIONS_AssociatorWeighted_H 1
 // Include files
 // from STL
 #include <string>
@@ -14,39 +14,41 @@
 #include "GaudiKernel/SmartIF.h"
 #include "GaudiKernel/IAlgorithm.h"
 // Relations
-#include "Relations/RelationToolBase.h"
-#include "Relations/Relation1D.h"
-#include "Relations/IRelationTool.h"
+#include "Relations/AssociatorBase.h"
+#include "Relations/RelationWeighted1D.h"
+#include "Relations/IRelationWeighted2D.h"
+#include "Relations/IAssociatorWeighted.h"
 
-/** @class RelationTool RelationTool.h Relations/RelationTool.h
- *  
- *  Implementation of generic relation tool 
+/** @class AssociatorWeighted AssociatorWeighted.h 
+ * 
+ *  Generic relation tool for weighted relations 
+ *  @see IAssociatorWeighted
  *
  *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
  *  @date   24/03/2002
  */
 
-template <class FROM,class TO>
-class RelationTool : 
-  public virtual IRelationTool<FROM,TO> , 
-  public          Relations::RelationToolBase       
+template <class FROM , class TO , class WEIGHT>
+class AssociatorWeighted : 
+  public virtual   IAssociatorWeighted<FROM,TO,WEIGHT> , 
+  public Relations::AssociatorBase                     
 {
   
 public:
   
   /// shortcut for own type 
-  typedef  RelationTool<FROM,TO>   OwnType         ;
+  typedef  AssociatorWeighted<FROM,TO,WEIGHT>   OwnType         ;
   /// shortcut for interface type 
-  typedef IRelationTool<FROM,TO>   IBase           ;
+  typedef IAssociatorWeighted<FROM,TO,WEIGHT>   IBase           ;
   
 protected:
   
   /// shortcut for local representation of direct  table 
-  typedef  Relation1D<FROM,TO>       LocalDirectType  ;
+  typedef  RelationWeighted1D<FROM,TO,WEIGHT>  LocalDirectType  ;
   /// shortcut for local representation of inverse table 
-  typedef  Relation1D<TO,FROM>       LocalInverseType ;
+  typedef  RelationWeighted1D<TO,FROM,WEIGHT>  LocalInverseType ;
   /// shortcut for possible 2D-representation
-  typedef  IRelation2D<FROM,TO>      Direct2DType     ;
+  typedef  IRelationWeighted2D<FROM,TO,WEIGHT> Direct2DType     ;
   
 public:
   
@@ -56,9 +58,9 @@ public:
 public:
   
   /** accessor to  "direct" relations 
-   *  (from 'FROM'-objects  to 'TO'-object)  (non const version)
-   *  @see IRelationTool
-   *  @see IRelation
+   *  (from 'FROM'-objects  to 'TO'-object) (non const version)
+   *  @see IAssociatorWeighted
+   *  @see IRelationWeighted
    *  @return pointer to "direct" relation table 
    */
    virtual       DirectType*   direct  ()   
@@ -69,8 +71,8 @@ public:
   
   /** accessor to  "direct" relations 
    *  (from 'FROM'-objects  to 'TO'-object) (const version)
-   *  @see IRelationTool
-   *  @see IRelation
+   *  @see IAssociatorWeighted
+   *  @see IRelationWeighted
    *  @return pointer to "direct" relation table 
    */
   virtual const DirectType*   direct  () const  
@@ -81,8 +83,8 @@ public:
 
   /** accessor to  "inverse" relations 
    *  (from 'TO'-objects  to 'FROM'-object) (non const version)
-   *  @see IRelationTool
-   *  @see IRelation
+   *  @see IAssociatorWeighted
+   *  @see IRelationWeighted
    *  @return pointer to "inverse" relation table 
    */
   virtual       InverseType*  inverse ()   
@@ -93,36 +95,34 @@ public:
   
   /** accessor to  "inverse" relations 
    *  (from 'TO'-objects  to 'FROM'-object) (const version)
-   *  @see IRelationTool
-   *  @see IRelation
+   *  @see IAssociatorWeighted
+   *  @see IRelationWeighted
    *  @return pointer to "inverse" relation table 
    */
-  virtual const InverseType*  inverse  () const  
+  virtual const InverseType*  inverse () const  
   {
     if( 0 == m_inverse ) { i_inverse () ; }
     return m_inverse ;
   };
   
   /** accessor to relation builder algorithm
-   *  @see IRelation
-   *  @see IRelationTool
-   *  @see RelationToolBase
+   *  @see IAssociatorWeighted
+   *  @see  AssociatorBase
    *  @return pointer to builder algorithm
    */
   virtual IAlgorithm*         algorithm () const 
-  { return RelationToolBase::algorithm () ; }
+  { return AssociatorBase::algorithm () ; }
+  
   
   /** handle the incident
-   *  @see RelationToolBase
+   *  @see  AssociatorBase
    *  @see IIncidentListener 
    *  @see Incident 
    *  @see incident incident to be handled 
    */
   virtual void handle( const Incident& incident ) 
   {
-    // handle incident with base class 
-    RelationToolBase::handle( incident ) ;
-    // release reference tables 
+    AssociatorBase::handle( incident ) ;
     if( 0 != m_direct  ) { m_direct  -> release() ; m_direct  = 0 ; }
     if( 0 != m_inverse ) { m_inverse -> release() ; m_inverse = 0 ; }
   };
@@ -175,47 +175,50 @@ protected:
     return StatusCode::SUCCESS ;
   };
   
+  /** Locate or build the relation table 
+   *  @attention the 'default' behaviour of the method
+   *  could be redefined for specific relations
+   *  @see AssociatorBase::locateOrBuild
+   *  @see AssociatorBase
+   *  @return StatusCode
+   */
+  virtual StatusCode locateOrBuild   () const
+  { return AssociatorBase::locateOrBuild () ; }
+  
 protected:
   
   /** Standard constructor
+   *  @see AssociatorBase 
+   *  @see IAssociatorWeighted 
+   *  @see  AlgTool
+   *  @see IAlgTool
    *  @param type   type   of the tool (?)
    *  @param name   name   of the tool 
    *  @param parent parent of the tool
    */
-  RelationTool
-  ( const std::string& type, 
-    const std::string& name,
-    const IInterface* parent)
-    : RelationToolBase   ( type , name , parent )
+  AssociatorWeighted
+  ( const std::string&  type   , 
+    const std::string&  name   ,
+    const IInterface*   parent )
+    : AssociatorBase   ( type , name , parent )
   {
-    // interfaces 
+    /// add the interface 
     declareInterface<IBase>             ( this );
   };
   
   /// destructor (virtual and protected)
-  virtual ~RelationTool(){};
-  
-private:
-
-  ///  default  constructor  is  private 
-  RelationTool() ;
-  ///  copy     constructor  is  private 
-  RelationTool
-  ( const RelationTool& );
-  ///  assignement operator  is  private 
-  RelationTool& operator=
-  ( const RelationTool& );  
+  virtual ~AssociatorWeighted(){};
   
 private:
   
   // relations 
-  mutable DirectType*   m_direct   ;
-  mutable InverseType*  m_inverse  ;
-
+  mutable DirectType*   m_direct       ;
+  mutable InverseType*  m_inverse      ;
+  
 };
 
 // ============================================================================
 // The End 
 // ============================================================================
-#endif // RELATIONS_RELATIONTOOL_H
+#endif // RELATIONS_AssociatorWeighted_H
 // ============================================================================

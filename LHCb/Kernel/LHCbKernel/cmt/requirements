@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.12 2002-04-05 10:29:23 roiser Exp $
+# $Id: requirements,v 1.13 2002-04-08 14:26:02 ibelyaev Exp $
 # =============================================================================
 # CVS tag $Name: not supported by cvs2svn $
 # =============================================================================
@@ -13,6 +13,7 @@ include_dirs $(LHCBKERNELROOT)
 # Dependency on GaudiKernel via GaudiObjDesc 
 use GaudiObjDesc       v3r*
 use CLHEP              v17r*
+
 
 # Produce Header-Files from XML description, overriding default destination
 #============================================================================

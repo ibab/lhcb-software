@@ -1,4 +1,4 @@
-// $Id: RelationToolBase.cpp,v 1.1 2002-04-03 15:35:19 ibelyaev Exp $
+// $Id: AssociatorBase.cpp,v 1.1 2002-04-08 14:26:02 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
@@ -22,13 +22,21 @@
 #include "GaudiKernel/SmartDataPtr.h"
 #include "GaudiKernel/SmartIF.h"
 #include "GaudiKernel/IAlgorithm.h"
+#include "GaudiKernel/IProperty.h"
+#include "GaudiKernel/Property.h"
 // local
-#include "Relations/RelationToolBase.h"
+#include "Relations/AssociatorBase.h"
 
 // ============================================================================
-/** @file RelationToolBase.cpp
+/** @file AssociatorBase.cpp
  *
- *  Implementation file for class : RelationToolBase
+ *  Implementation file for class : AssociatorBase
+ *
+ *  @see  AssociatorBase 
+ *  @see IAssociator
+ *  @see IAssociatorWeighted 
+ *  @see  AlgTool 
+ *  @see IAlgTool 
  *
  *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
  *  @date 24/03/2002 
@@ -42,7 +50,7 @@
  *  @param parent tool parent
  */
 // ============================================================================
-Relations::RelationToolBase::RelationToolBase
+Relations::AssociatorBase::AssociatorBase
 ( const std::string& type   ,
   const std::string& name   ,
   const IInterface*  parent )
@@ -60,9 +68,9 @@ Relations::RelationToolBase::RelationToolBase
   // interfaces 
   declareInterface<IIncidentListener> ( this );
   // properties 
-  declareProperty  ( "Location" , m_location     ) ;
-  declareProperty  ( "AlgType"  , m_builderType  ) ;  
-  declareProperty  ( "AlgName"  , m_builderName  ) ;  
+  declareProperty  ( "Location"       , m_location     ) ;
+  declareProperty  ( "AlgorithmType"  , m_builderType  ) ;  
+  declareProperty  ( "AlgorithmName"  , m_builderName  ) ;  
 };
 // ============================================================================
 
@@ -70,7 +78,7 @@ Relations::RelationToolBase::RelationToolBase
 /** destructor (virtual and protected)
  */
 // ============================================================================
-Relations::RelationToolBase::~RelationToolBase() {};
+Relations::AssociatorBase::~AssociatorBase() {};
 // ============================================================================
 
 // ============================================================================
@@ -78,7 +86,7 @@ Relations::RelationToolBase::~RelationToolBase() {};
  *  @return status code 
  */
 // ============================================================================
-StatusCode Relations::RelationToolBase::initialize () 
+StatusCode Relations::AssociatorBase::initialize () 
 {
   // initialize the base class ;
   StatusCode sc = AlgTool::initialize();
@@ -111,7 +119,30 @@ StatusCode Relations::RelationToolBase::initialize ()
   // subscribe to the incident 
   incSvc()->addListener( this , "EndEvent"   , 50  );
   incSvc()->addListener( this , "BeginEvent" , 50  );
-  //
+  //  
+  /// print ALL properties 
+  MsgStream log ( msgSvc () , name () );
+  typedef std::vector<Property*> Properties;
+  const Properties& properties = getProperties() ;
+  log << MSG::DEBUG 
+      << " List of ALL properties of "
+      << type ()           << "/" 
+      << name ()           << "   #properties = " 
+      << properties.size() << endreq ;
+  const int   buffer_size  = 256 ;
+  char buffer[buffer_size]       ;
+  for( Properties::const_reverse_iterator property = properties.rbegin() ;
+       properties.rend() != property ; ++property )  
+    {
+      std::fill( buffer , buffer + buffer_size , 0 );
+      std::ostrstream ost ( buffer , buffer_size );
+      (*property)->nameAndValueAsStream( ost );
+      ost.freeze();
+      log << MSG::DEBUG
+          << "Property ['Name': Value] = " 
+          << ost.str() << endreq ;
+    }
+  ///
   return StatusCode::SUCCESS ;
 };
 // ============================================================================
@@ -121,9 +152,16 @@ StatusCode Relations::RelationToolBase::initialize ()
  *  @return status code 
  */
 // ============================================================================
-StatusCode Relations::RelationToolBase::finalize () 
+StatusCode Relations::AssociatorBase::finalize () 
 {
-  // release the builder and  services 
+  // release the builder algorithm 
+  if( 0 != m_algorithm ) 
+    { 
+      m_algorithm -> sysFinalize () ; 
+      m_algorithm -> release     () ; 
+      m_algorithm = 0 ; 
+    }
+  // release the services 
   if( 0 != m_toolSvc   ) { m_toolSvc   -> release () ; m_toolSvc   = 0 ; }
   if( 0 != m_chronoSvc ) { m_chronoSvc -> release () ; m_chronoSvc = 0 ; }
   if( 0 != m_evtSvc    ) { m_evtSvc    -> release () ; m_evtSvc    = 0 ; }
@@ -140,7 +178,7 @@ StatusCode Relations::RelationToolBase::finalize ()
  *  @return       status code 
  */
 // ============================================================================
-StatusCode Relations::RelationToolBase::Error     
+StatusCode Relations::AssociatorBase::Error     
 ( const std::string& msg , 
   const StatusCode & st  ) const 
 {
@@ -156,7 +194,7 @@ StatusCode Relations::RelationToolBase::Error
  *  @return       status code 
  */
 // ============================================================================
-StatusCode Relations::RelationToolBase::Warning   
+StatusCode Relations::AssociatorBase::Warning   
 ( const std::string& msg , 
   const StatusCode & st  ) const 
 {
@@ -172,7 +210,7 @@ StatusCode Relations::RelationToolBase::Warning
  *  @return       status code 
  */
 // ============================================================================
-StatusCode Relations::RelationToolBase::Print     
+StatusCode Relations::AssociatorBase::Print     
 ( const std::string& msg , 
   const StatusCode & st  ,
   const MSG::Level & lvl ) const 
@@ -196,7 +234,7 @@ StatusCode Relations::RelationToolBase::Print
  *  @return       status code (fictive) 
  */
 // ============================================================================
-StatusCode Relations::RelationToolBase::Exception 
+StatusCode Relations::AssociatorBase::Exception 
 ( const std::string    & msg ,
   const GaudiException & exc ,
   const MSG::Level     & lvl ,
@@ -217,7 +255,7 @@ StatusCode Relations::RelationToolBase::Exception
  *  @return       status code (fictive) 
  */
 // ============================================================================
-StatusCode Relations::RelationToolBase::Exception 
+StatusCode Relations::AssociatorBase::Exception 
 ( const std::string    & msg ,  
   const std::exception & exc , 
   const MSG::Level     & lvl ,
@@ -237,7 +275,7 @@ StatusCode Relations::RelationToolBase::Exception
  *  @return       status code (fictive) 
  */
 // ============================================================================
-StatusCode Relations::RelationToolBase::Exception 
+StatusCode Relations::AssociatorBase::Exception 
 ( const std::string    & msg ,  
   const MSG::Level     & lvl ,
   const StatusCode     & sc  ) const 
@@ -255,7 +293,7 @@ StatusCode Relations::RelationToolBase::Exception
  *  @return status code 
  */
 // ============================================================================
-StatusCode Relations::RelationToolBase::locateOrBuild () const 
+StatusCode Relations::AssociatorBase::locateOrBuild () const 
 { 
   // already exists?
   if( 0 != m_object     ) { return StatusCode::SUCCESS                    ; }
@@ -263,10 +301,10 @@ StatusCode Relations::RelationToolBase::locateOrBuild () const
   SmartDataPtr<IInterface>  object1( evtSvc() , location () );
   if( object1 ) { m_object = object1 ; return StatusCode::SUCCESS         ; }
   // (2) get the builder 
-  if( 0 == algorithm () ) { return Error("'Builder is invalid!"         ) ; }
+  if( 0 == algorithm () ) { return Error("'Builder' is invalid!"        ) ; }
   // (3) use builder to build relation tables
   StatusCode sc = algorithm()->sysExecute() ;
-  if( sc.isFailure   () ) { return Error("Error form builder!" , sc ) ; }
+  if( sc.isFailure   () ) { return Error("Error form 'Builder'!"  ,  sc ) ; }
   // (4) locate data in ETS again
   SmartDataPtr<IInterface> object2( evtSvc() , location () );
   if( !object2 ) { return Error("Data after builder are not available!" ) ; }
@@ -283,7 +321,7 @@ StatusCode Relations::RelationToolBase::locateOrBuild () const
  *  @see incident incident to be handled 
  */
 // ============================================================================
-void Relations::RelationToolBase::handle
+void Relations::AssociatorBase::handle
 ( const Incident& /* incident */ ) { m_object = 0 ; };
 // ============================================================================
 
@@ -292,7 +330,7 @@ void Relations::RelationToolBase::handle
  *  @return status code 
  */
 // ============================================================================
-StatusCode Relations::RelationToolBase::locateAlgorithm() const
+StatusCode Relations::AssociatorBase::locateAlgorithm() const
 { 
   // check the existent algorithm 
   if( 0 != m_algorithm      ) { return StatusCode::SUCCESS     ; }

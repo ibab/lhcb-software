@@ -1,43 +1,49 @@
-// $Id: IRelationWeightedTool.h,v 1.1 2002-04-03 15:35:17 ibelyaev Exp $
+// $Id: IAssociatorWeighted.h,v 1.1 2002-04-08 14:26:01 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.1  2002/04/03 15:35:17  ibelyaev
+// essential update and redesing of all 'Relations' stuff
+//
 // ============================================================================
-#ifndef RELATIONS_IRELATIonWeightedTool_H 
-#define RELATIONS_IRELATIonWeightedTool_H 1
+#ifndef RELATIONS_IAssociatorWeighted_H 
+#define RELATIONS_IAssociatorWeighted_H 1
 // Include files
 // GaudiKernel
 #include "GaudiKernel/IAlgTool.h"
 // Relations 
-#include "Relations/IRelation.h"
+#include "Relations/IRelationWeighted.h"
 // forward decalrations 
 class    IAlgorithm ;   // from GaudiKernel 
 
-/** @class IRelationWeightedTool IRelationWeightedTool.h
+/** @class IAssociatorWeighted IAssociatorWeighted.h
  *  
  *  Generic interface (tool) to access the weighted 
  *  relations from Transient Store 
+ *  @see IRelationWeighted
+ *  @see IRelationWeighted2D
+ *  @see IAssociator
  *
  *  @author Vanya Belyaev Ivan.Belyaev@itep
  *  @date   24/03/2002
  */
 
 template<class FROM,class TO,class WEIGHT>
-class IRelationWeightedTool:
+class IAssociatorWeighted:
   public virtual IAlgTool
 {
 public:
   
   /// shorcut for "own"  type 
-  typedef IRelationWeightedTool<FROM,TO,WEIGHT> OwnType     ;
+  typedef IAssociatorWeighted<FROM,TO,WEIGHT>   OwnType       ;
   /// shortcut for "direct relations
-  typedef IRelationWeighted<FROM,TO,WEIGHT>     DirectType  ;
+  typedef IRelationWeighted<FROM,TO,WEIGHT>     DirectType    ;
   /// shortcut for "inverse" relations
-  typedef IRelationWeighted<TO,FROM,WEIGHT>     InverseType ;
+  typedef IRelationWeighted<TO,FROM,WEIGHT>     InverseType   ;
   
 public:
-
+  
   /** accessor to  "direct" relations 
    *  (from 'FROM'-objects  to 'TO'-object)   (non const version)
    *  @see IRelationWeighted
@@ -82,7 +88,7 @@ public:
   static const InterfaceID& interfaceID()
   {
     static const InterfaceID s_iid  =
-      Relations::interfaceID( "IRelationWeightedTool"              ,
+      Relations::interfaceID( "IAssociatorWeighted"                ,
                               DirectType::FromTypeTraits::   id () ,
                               DirectType::ToTypeTraits::     id () , 
                               DirectType::WeightTypeTraits:: id () , 
@@ -93,12 +99,12 @@ public:
 protected:
 
   /// destructor (virtual and protected) 
-  virtual ~IRelationWeightedTool(){}; 
+  virtual ~IAssociatorWeighted(){}; 
 
 };
 
 // ============================================================================
 // The End 
 // ============================================================================
-#endif // RELATIONS_IRELATIonWeightedTool_H
+#endif // RELATIONS_IAssociatorWeighted_H
 // ============================================================================
