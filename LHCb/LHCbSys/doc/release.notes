@@ -5,7 +5,7 @@
 ! Purpose     : LHCb OO kernel packages
 !-----------------------------------------------------------------------------
 
-!======================= LHCbSys v16r0 2004-06-18 =======================
+!======================= LHCbSys v16r0 2004-06-23 =======================
 ! 2004-06-17 - Marco Cattaneo
  - New packages: LHCbTools v1r1 (moved here from applications projects)
                  LHCbAlgs v1r0 (for general purpose algorithms)
@@ -50,7 +50,7 @@
  - In IOExample v1r2
    . StoreBrowser Algorithm moved to LHCbAlgs, example is now just job options
 
-!====================== LHCbSys v15r12 2004-06-18 =======================
+!====================== LHCbSys v15r12 2004-06-23 =======================
 Built against Gaudi v14r6
 
 ! 2004-06-18 - Marco Cattaneo
@@ -91,6 +91,7 @@ Built against Gaudi v14r6
    . Add MCEffMonitor algorithm to read info written by MCEffBuilder
    . Add MCEffReconstructible and MCEffBreakdown tools
    . Add MCTools/IMCEffReconstructed.h interface
+   . Add protection for crazy MCHits in BuildMCTrackInfo.cpp
 
 !====================== LHCbSys v15r11 2004-05-27 =======================
 ! 2004-05-27 - Marco Cattaneo
