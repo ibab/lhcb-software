@@ -1,8 +1,11 @@
-// $Id: GiGaSetSimAttributes.cpp,v 1.7 2003-07-07 16:57:30 ranjard Exp $
+// $Id: GiGaSetSimAttributes.cpp,v 1.8 2003-07-08 17:02:24 ranjard Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.7  2003/07/07 16:57:30  ranjard
+// v8r1 - fix for gcc3.2
+//
 // Revision 1.6  2003/06/03 17:45:06  ibelyaev
 //  fix for the problem, reported by P.Robbe
 //
@@ -141,8 +144,10 @@ G4LogicalVolume* GiGaSetSimAttributes::g4volume
          store -> begin() ; store->end() != ivolume ; ++ivolume ) 
     {
       G4LogicalVolume* vol = *ivolume ;
-      std::string G4VolName = vol->GetName();
-      if( 0 != vol && G4VolName == address ) { return vol ; }
+      if( 0 != vol ) {
+        std::string G4VolName = vol->GetName();
+        if( G4VolName == address ) { return vol ; }
+      }
     }
   Error ( "g4volume('" + address + "'): volume is not found!" ) ;
   return 0 ;

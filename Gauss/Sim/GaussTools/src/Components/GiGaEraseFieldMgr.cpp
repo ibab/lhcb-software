@@ -1,8 +1,11 @@
-// $Id: GiGaEraseFieldMgr.cpp,v 1.3 2003-07-07 16:57:30 ranjard Exp $
+// $Id: GiGaEraseFieldMgr.cpp,v 1.4 2003-07-08 17:02:23 ranjard Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.3  2003/07/07 16:57:30  ranjard
+// v8r1 - fix for gcc3.2
+//
 // Revision 1.2  2003/04/11 09:48:09  witoldp
 // added missing factory
 //
@@ -74,8 +77,10 @@ G4LogicalVolume* GiGaEraseFieldMgr::volume ( const std::string& name ) const
        store->end() != ivol ; ++ivol ) 
     {
       G4LogicalVolume* vol = *ivol ;
-      std::string G4volName = vol->GetName();
-      if( 0 != vol && G4volName == name ) { return vol ; }
+      if( 0 != vol ) {
+        std::string G4volName = vol->GetName();
+        if( G4volName == name ) { return vol ; }
+      }
     }
   Error ( "volume(): G4LogicalVolume('" + name + "') does not exist!" ) ;
   return 0 ;
