@@ -5,6 +5,20 @@
 !-----------------------------------------------------------------------------
 
 !========================== HltSelChecker v1r0 2004-11-18 ====================
+! 2004-11-18 - P. Koppenburg
+  New package Hlt/HltSelChecker that contains all monitors and checkers
+  - options/CorrB2HH.opts,CorrB2MuMu.opts,CorrBd2D02KPiKstar.opts,
+    CorrBd2DstarPi.opts,CorrBd2JpsiKs.opts,CorrBd2MuMuKstar.opts,CorrBs2DsH.opts,
+    CorrBs2JpsiPhi.opts,CorrBs2PhiGamma.opts,CorrBs2PhiPhi.opts,CorrDstar.opts,
+    CorrHLTsels.opts,DVHLTCorr.opts,DVHLTExSelections.opts,
+    HLTExSelectionsNTuples.opts,OfflineTracks.opts,Plots.opts,TrueB2HH.opts,
+    TrueB2MuMu.opts,TrueBd2D02KPiKstar.opts,TrueBd2DstarPi.opts,
+    TrueBd2JpsiKs.opts,TrueBd2MuMuKstar.opts,TrueBs2DsH.opts,TrueBs2JpsiPhi.opts,
+    TrueBs2PhiGamma.opts,TrueBs2PhiPhi.opts,TrueDstar.opts,Truth.opts,
+    TruthCommon.opts,TruthInput.opts
+    . Moved from HltSelections
+  - src/DecayChainNTuple.cpp,DecayChainNTuple.h,SimplePlots.cpp,SimplePlots.h
+    . Moved from HltSelections  
 !========================== In HltSelections ==================================
 ! 2004-10-24 - Luis Fernandez
   - src/DecayChainNtuple.{h,cpp}
