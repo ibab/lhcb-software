@@ -1,100 +1,112 @@
-// $Id: GaussTape.opts,v 1.17 2004-08-02 14:18:34 gcorti Exp $ 
+// $Id: GaussTape.opts,v 1.18 2005-02-21 19:22:35 gcorti Exp $ 
+#pragma print off
 
-/// content of Gauss.oosim 
-GaussTape.ItemList = 
-  {  
-    // event Header
-    "/Event#1"      
-    ,"/Event/Header#1"
-    // Gen Node
-    ,"/Event/Gen#1"
-  };
+/** @file 
+ * 
+ *  Contents of Gauss.oosim.
+ *  List of objects to be written on tape for DEFAULT production. 
+ *
+ *  To write extended RICH info uncomment specific lines
+ *
+ *  @author F.Ranjard
+ *  @author G.Corti
+ *  @date: modified 21 Feb 2001
+ */
 
-GaussTape.OptItemList =
-  {
-    // Generator Header 
-    "/Event/Gen/Header#1"
-    // Generator hard process information
-    ,"/Event/Gen/HardProcesses#1" 
-    // Generated event
-    ,"/Event/Gen/HepMCEvents#1"
-    // Collisions
-    ,"/Event/Gen/Collisions#1"
-    // MC Truth  
-    ,"/Event/MC#1"                     
-    ,"/Event/MC/Particles#1"         
-    ,"/Event/MC/Vertices#1"          
-    // MCHits
-    ,"/Event/MC/Velo#1"
-    ,"/Event/MC/Velo/Hits#1"
-    ,"/Event/MC/Velo/PuHits#1"
-    ,"/Event/MC/Rich#1"
-    ,"/Event/MC/Rich/Hits#1"
-    // Uncomment the following three lines if you want detailed RICH info 
-    //,"/Event/MC/Rich/OpticalPhotons#1"  // optional extra mc debug
-    //,"/Event/MC/Rich/Tracks#1"          // optional extra mc debug
-    //,"/Event/MC/Rich/Segments#1"        // optional extra mc debug  
-    ,"/Event/MC/OT#1"
-    ,"/Event/MC/OT/Hits#1"
-    ,"/Event/MC/IT#1"
-    ,"/Event/MC/IT/Hits#1"
-    ,"/Event/MC/Spd#1"
-    ,"/Event/MC/Spd/Hits#1"
-    ,"/Event/MC/Prs#1"
-    ,"/Event/MC/Prs/Hits#1"
-    ,"/Event/MC/Ecal#1"
-    ,"/Event/MC/Ecal/Hits#1"
-    ,"/Event/MC/Hcal#1"
-    ,"/Event/MC/Hcal/Hits#1"
-    ,"/Event/MC/Muon#1"          // all the leaves must be explicitely specified in order to trigger the conversion of hits
-    ,"/Event/MC/Muon/M1#1"
-    ,"/Event/MC/Muon/M1/R1#1"
-    ,"/Event/MC/Muon/M1/R2#1"
-    ,"/Event/MC/Muon/M1/R3#1"
-    ,"/Event/MC/Muon/M1/R4#1"
-    ,"/Event/MC/Muon/M1/R1/Hits#1"
-    ,"/Event/MC/Muon/M1/R2/Hits#1"
-    ,"/Event/MC/Muon/M1/R3/Hits#1"
-    ,"/Event/MC/Muon/M1/R4/Hits#1"
-    ,"/Event/MC/Muon/M2#1"
-    ,"/Event/MC/Muon/M2/R1#1"
-    ,"/Event/MC/Muon/M2/R2#1"
-    ,"/Event/MC/Muon/M2/R3#1"
-    ,"/Event/MC/Muon/M2/R4#1"
-    ,"/Event/MC/Muon/M2/R1/Hits#1"
-    ,"/Event/MC/Muon/M2/R2/Hits#1"
-    ,"/Event/MC/Muon/M2/R3/Hits#1"
-    ,"/Event/MC/Muon/M2/R4/Hits#1"
-    ,"/Event/MC/Muon/M3#1"
-    ,"/Event/MC/Muon/M3/R1#1"
-    ,"/Event/MC/Muon/M3/R2#1"
-    ,"/Event/MC/Muon/M3/R3#1"
-    ,"/Event/MC/Muon/M3/R4#1"
-    ,"/Event/MC/Muon/M3/R1/Hits#1"
-    ,"/Event/MC/Muon/M3/R2/Hits#1"
-    ,"/Event/MC/Muon/M3/R3/Hits#1"
-    ,"/Event/MC/Muon/M3/R4/Hits#1"
-    ,"/Event/MC/Muon/M4#1"
-    ,"/Event/MC/Muon/M4/R1#1"
-    ,"/Event/MC/Muon/M4/R2#1"
-    ,"/Event/MC/Muon/M4/R3#1"
-    ,"/Event/MC/Muon/M4/R4#1"
-    ,"/Event/MC/Muon/M4/R1/Hits#1"
-    ,"/Event/MC/Muon/M4/R2/Hits#1"
-    ,"/Event/MC/Muon/M4/R3/Hits#1"
-    ,"/Event/MC/Muon/M4/R4/Hits#1"
-    ,"/Event/MC/Muon/M5#1"
-    ,"/Event/MC/Muon/M5/R1#1"
-    ,"/Event/MC/Muon/M5/R2#1"
-    ,"/Event/MC/Muon/M5/R3#1"
-    ,"/Event/MC/Muon/M5/R4#1"
-    ,"/Event/MC/Muon/M5/R1/Hits#1"
-    ,"/Event/MC/Muon/M5/R2/Hits#1"
-    ,"/Event/MC/Muon/M5/R3/Hits#1"
-    ,"/Event/MC/Muon/M5/R4/Hits#1"
-     // Link between signal B in MCParticles and HepMC
-    ,"/Event/MC/Signal#1"
-  };
+GaussTape.ItemList = {  
+  // event Header
+  "/Event#1"      
+  ,"/Event/Header#1"
+  // Gen Node
+  ,"/Event/Gen#1"
+};
+
+GaussTape.OptItemList = {
+  // Generator Header 
+  "/Event/Gen/Header#1"
+  // Generator hard process information
+  ,"/Event/Gen/HardProcesses#1" 
+  // Generated event
+  ,"/Event/Gen/HepMCEvents#1"
+  // Collisions
+  ,"/Event/Gen/Collisions#1"
+  // MC Truth  
+  ,"/Event/MC#1"                     
+  ,"/Event/MC/Particles#1"         
+  ,"/Event/MC/Vertices#1"          
+  // MCHits
+  ,"/Event/MC/Velo#1"
+  ,"/Event/MC/Velo/Hits#1"
+  ,"/Event/MC/Velo/PuHits#1"
+  ,"/Event/MC/Rich#1"
+  ,"/Event/MC/Rich/Hits#1"
+  // Uncomment the following three lines if you want detailed RICH info 
+  //,"/Event/MC/Rich/OpticalPhotons#1"  // optional extra mc debug
+  //,"/Event/MC/Rich/Tracks#1"          // optional extra mc debug
+  //,"/Event/MC/Rich/Segments#1"        // optional extra mc debug  
+  ,"/Event/MC/OT#1"
+  ,"/Event/MC/OT/Hits#1"
+  ,"/Event/MC/IT#1"
+  ,"/Event/MC/IT/Hits#1"
+  ,"/Event/MC/Spd#1"
+  ,"/Event/MC/Spd/Hits#1"
+  ,"/Event/MC/Prs#1"
+  ,"/Event/MC/Prs/Hits#1"
+  ,"/Event/MC/Ecal#1"
+  ,"/Event/MC/Ecal/Hits#1"
+  ,"/Event/MC/Hcal#1"
+  ,"/Event/MC/Hcal/Hits#1"
+  ,"/Event/MC/Muon#1"          // all the leaves must be explicitely specified in order to trigger the conversion of hits
+  ,"/Event/MC/Muon/M1#1"
+  ,"/Event/MC/Muon/M1/R1#1"
+  ,"/Event/MC/Muon/M1/R2#1"
+  ,"/Event/MC/Muon/M1/R3#1"
+  ,"/Event/MC/Muon/M1/R4#1"
+  ,"/Event/MC/Muon/M1/R1/Hits#1"
+  ,"/Event/MC/Muon/M1/R2/Hits#1"
+  ,"/Event/MC/Muon/M1/R3/Hits#1"
+  ,"/Event/MC/Muon/M1/R4/Hits#1"
+  ,"/Event/MC/Muon/M2#1"
+  ,"/Event/MC/Muon/M2/R1#1"
+  ,"/Event/MC/Muon/M2/R2#1"
+  ,"/Event/MC/Muon/M2/R3#1"
+  ,"/Event/MC/Muon/M2/R4#1"
+  ,"/Event/MC/Muon/M2/R1/Hits#1"
+  ,"/Event/MC/Muon/M2/R2/Hits#1"
+  ,"/Event/MC/Muon/M2/R3/Hits#1"
+  ,"/Event/MC/Muon/M2/R4/Hits#1"
+  ,"/Event/MC/Muon/M3#1"
+  ,"/Event/MC/Muon/M3/R1#1"
+  ,"/Event/MC/Muon/M3/R2#1"
+  ,"/Event/MC/Muon/M3/R3#1"
+  ,"/Event/MC/Muon/M3/R4#1"
+  ,"/Event/MC/Muon/M3/R1/Hits#1"
+  ,"/Event/MC/Muon/M3/R2/Hits#1"
+  ,"/Event/MC/Muon/M3/R3/Hits#1"
+  ,"/Event/MC/Muon/M3/R4/Hits#1"
+  ,"/Event/MC/Muon/M4#1"
+  ,"/Event/MC/Muon/M4/R1#1"
+  ,"/Event/MC/Muon/M4/R2#1"
+  ,"/Event/MC/Muon/M4/R3#1"
+  ,"/Event/MC/Muon/M4/R4#1"
+  ,"/Event/MC/Muon/M4/R1/Hits#1"
+  ,"/Event/MC/Muon/M4/R2/Hits#1"
+  ,"/Event/MC/Muon/M4/R3/Hits#1"
+  ,"/Event/MC/Muon/M4/R4/Hits#1"
+  ,"/Event/MC/Muon/M5#1"
+  ,"/Event/MC/Muon/M5/R1#1"
+  ,"/Event/MC/Muon/M5/R2#1"
+  ,"/Event/MC/Muon/M5/R3#1"
+  ,"/Event/MC/Muon/M5/R4#1"
+  ,"/Event/MC/Muon/M5/R1/Hits#1"
+  ,"/Event/MC/Muon/M5/R2/Hits#1"
+  ,"/Event/MC/Muon/M5/R3/Hits#1"
+  ,"/Event/MC/Muon/M5/R4/Hits#1"
+  // Link between signal B in MCParticles and HepMC
+  ,"/Event/MC/Signal#1"
+};
 
 GaussTape.PreLoad     = false ; // ATTENTION ! it MUST be FALSE for GiGa! 
 GaussTape.OutputLevel = 3;
+
+#pragma print on

@@ -1,40 +1,73 @@
-// Options to monitor/study the production
-//=========================================================================
+// $Id: Monitor.opts,v 1.5 2005-02-21 19:22:35 gcorti Exp $ 
+#pragma print off
+
+/** @file 
+ * 
+ *  File containing options to monitor/study details of production.
+ *
+ *  @author G.Corti
+ *  @date 2005-02-21
+ */
 
 // Load the DLLs for histogram persistency
 ApplicationMgr.DLLs += { "HbookCnv" };
 ApplicationMgr.HistogramPersistency = "HBOOK";
-ApplicationMgr.ExtSvc += { "NTupleSvc" };
-NTupleSvc.Output={"FILE1 DATAFILE='GaussMonitor.hbook' TYP='HBOOK' OPT='NEW'"};
 HistogramPersistencySvc.OutputFile = "GaussHistos.hbook";
-
+//ApplicationMgr.ExtSvc += { "NTupleSvc" }; 
+//NTupleSvc.Output={"FILE1 DATAFILE='GaussMonitor.hbook' TYP='HBOOK' OPT='NEW'"};
+ 
 // Switch on filling of summary info in a set of histograms from HepMC
 // Note that if you are running GenStandAlone you will also need to 
 // switch on the algorithm:
 //GenMonitor.Members += {"GenMonitorAlg"};
 GenMonitorAlg.HistoPath   = "GEN/MONITOR/";
+
 // Algorithm filling detailed info in an ntuple from HepMC
-GenMonitor.Members       += { "GeneratorFullMonitor" };
+//GenMonitor.Members       += { "GeneratorFullMonitor" };
+
 // Dump on screen content of generator full info
 //GenMonitor.Members += {"DumpMC"};
 
 // Algorithm filling detailed info in an ntuple from MCParticle
-// When running in GenStandAlone mode comment the following two members 
+// Note that if you are running GenStandAlone you will also need to 
+// switch on the algorithm:
 ApplicationMgr.DLLs      += { "MCTools", "GaussMonitor" };
-SimMonitor.Members       += { "MCTruthFullMonitor" };
+//SimMonitor.Members       += { "MCTruthFullMonitor" };
 
 // Check MCSignal info (only for complete production)
 //Monitor.Members    += { "MCDecayCounter" };
-MCDecayCounter.DetailedPrintOut = true;
+MCDecayCounter.DetailedPrintOut          = true;
 MCDecayCounter.OutputLevel               = 2;
 MCDecayCounter.MCDecayFinder.OutputLevel = 3;
 //MCDecayCounter.EvtCodeFromData = true;
 //MCDecayCounter.EvtCode = 0;
+
+#pragma print on
+// Check MCHits for Silicon tracker
+SimMonitor.Members  += { "MCHitMonitor/STHitMonitor" };
+STHitMonitor.mcPathString = "/Event/MC/IT/Hits";
+STHitMonitor.zStations    = { 2350.0, 2620.0, 7780.0, 8460.0, 9115.0 };
+ 
+// Check MCHits for Outer tracker
+SimMonitor.Members  += { "MCHitMonitor/OTHitMonitor" };
+OTHitMonitor.mcPathString = "/Event/MC/OT/Hits";
+OTHitMonitor.zStations    = { 7938.0, 8625.0, 9315.0 };
+
+// Check MC info for RICH
+#pragma print off
+#include "$GAUSSRICHROOT/options/RichAnalysis.opts"
+#pragma print on
 
 // Check MC Calo Hits
 SimMonitor.Members  += { "MCCaloMonitor/SpdMonitor"  ,
                          "MCCaloMonitor/PrsMonitor"  , 
                          "MCCaloMonitor/EcalMonitor" ,
                          "MCCaloMonitor/HcalMonitor" } ;
+#pragma print off
 #include "$CALOMONISIMOPTS/MoniSim.opts"
+SpdMonitor.OutputLevel = 4;
+PrsMonitor.OutputLevel = 4;
+EcalMonitor.OutputLevel = 4;
+HcalMonitor.OutputLevel = 4;
+#pragma print on
 

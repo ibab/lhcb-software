@@ -1,4 +1,4 @@
-// $Id: Gauss.opts,v 1.58 2005-02-07 09:12:17 ranjard Exp $ 
+// $Id: Gauss.opts,v 1.59 2005-02-21 19:22:35 gcorti Exp $ 
 
 // =========== necessary setup and steps for any Gauss executable =========== 
 #include "$GAUSSOPTS/Common.opts"
@@ -15,29 +15,29 @@ ApplicationMgr.TopAlg += { "Sequencer/Generator"};
 ApplicationMgr.TopAlg += { "Sequencer/Simulation"};
 #include "$GAUSSOPTS/Simulation.opts"
 
-// to run full monitors
-//ApplicationMgr.TopAlg += { "Sequencer/Monitor" };
-//Monitor.Members       += { "Sequencer/GenMonitor" };
-//Monitor.Members       += { "Sequencer/SimMonitor" };     
+// to run partial or full monitors for Generator and Simulation
+ApplicationMgr.TopAlg += { "Sequencer/Monitor" };
+Monitor.Members       += { "Sequencer/GenMonitor" };
+Monitor.Members       += { "Sequencer/SimMonitor" };     
 #include "$GAUSSOPTS/Monitor.opts"
 
-// write an output file
+// write an output file (the contents are in GaussTape.opts)
 ApplicationMgr.OutStream +=  { "GaussTape" };
 GaussTape.Output = "DATAFILE='PFN:Gauss.sim' TYP='POOL_ROOTTREE' OPT='RECREATE'";
 PoolDbCacheSvc.Catalog = { "xmlcatalog_file:NewCatalog.xml" };
 
 // initialize run, event, max event, output level
-ApplicationMgr.EvtMax     = 1;
+ApplicationMgr.EvtMax     = 5;
 Gauss.FirstEventNumber    = 1;
 Gauss.RunNumber           = 1;
 MessageSvc.OutputLevel    = 3;
 
 // Lenght of message to have longer Algorihtm/Tool identifier in printout
-MessageSvc.Format = "% F%30W%S%7W%R%T %0W%M";
+//MessageSvc.Format = "% F%30W%S%7W%R%T %0W%M";
  
 // to simulate <evttype> put a line similar to the following
-//#include "$DECFILESROOT/options/11144100.opts"  // Bd_JpsiKS,mm
-#include "$DECFILESROOT/options/13296200.opts"  // Bs
+#include "$DECFILESROOT/options/11144100.opts"  // Bd_JpsiKS,mm
+//#include "$DECFILESROOT/options/13296200.opts"  // Bs_DsstDs
 //#include "$DECFILESROOT/options/10000000.opts"  // Generic b events
 //#include "$DECFILESROOT/options/30000000.opts"  // Min Bias
 

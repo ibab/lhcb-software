@@ -1,8 +1,16 @@
-// Common.opts
-//=========================================================================
-// this option file is common to all generator option files
-// it must be included in Gauss.opts as first one
-//========================================================================
+// $Id: Common.opts,v 1.7 2005-02-21 19:22:35 gcorti Exp $ 
+#pragma print off
+
+/** @file 
+ * 
+ *  File containing options to all Gauss jobs (setting of DLLs and
+ *  initialization of application).
+ *  It must be included in Gauss.opts as first one
+ *
+ *  @author F.Ranjard
+ *  @author G.Corti
+ *  @date: modified 21 Feb 2001
+ */
 
 #units "$STDOPTS/units.opts"
 
@@ -27,6 +35,7 @@ ApplicationMgr.DLLs += { "GaussTools"} ;
 ApplicationMgr.DLLs += { "GaussAlgs"  } ;
 ApplicationMgr.DLLs += { "GeneratorModules" } ;
 
+#pragma print on
 // Initialization of Gauss applications
 ApplicationMgr.TopAlg  = {
   "LbAppInit/Gauss"
@@ -35,6 +44,7 @@ ApplicationMgr.TopAlg  = {
 // No events are read as input
 ApplicationMgr.EvtSel  = "NONE" ;
 
+#pragma print off
 // Generators settings, necessary for various generators configurations
 #include "$GAUSSOPTS/PythiaSettings.opts"
 // To prevent writing too much in production
@@ -53,12 +63,12 @@ MessageSvc.setWarning += { "XmlGenericCnv" };
 EventDataSvc.ForceLeaves         = true ;
 
 // Objects to be written to output file
-#include "$GAUSSOPTS/GaussTape.opts"
+#include "$GAUSSOPTS/GaussTape.opts"        
 // POOL persistency 
 EventPersistencySvc.CnvServices  = {};  
 #include "$GAUSSOPTS/GaussPoolIO.opts"
 
 // Other outputs
 ApplicationMgr.HistogramPersistency = "NONE";
-// MessageSvc.Format = "% F%40W%S%7W%R%T %0W%M";
 
+#pragma print on

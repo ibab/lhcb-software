@@ -4,6 +4,29 @@
 ! Purpose     : LHCb Simulation Application with Geant4
 !-----------------------------------------------------------------------------
 
+! 2005-02-21 - Gloria Corti
+ - cmt/requirements
+   . add DAWN to path for visualization (commented)
+ - options/Simulation.opts
+   . show example of how to use RichVerbose.opts (commented)
+ - options/Common.opts, GaussTape.opts 
+   . introduce pragma print off/on to reduce print out in production
+   . introduce title/explanation compatible with doxygen documentation 
+ - options/GaussVis.opts
+   . introduce commands to dump geometry tree in ASCII format
+ - options/Monitor.opts
+   . introduce monitor histograms for Silicon Tracker, Outer Tracker, 
+     RICH, Calorimeters
+ - job/Gauss.job
+   . NEW file to control job submission (cshell) on batch, interactively
+     or using gvd as debugger. The Gauss version to be used MUST be passed as
+     first argument. It is set to use $GAUSSOPTS/Gauss.opts as options.
+     In case of core dump in batch it will return trace back info.
+     Example of how to use for batch submission
+        > bsub -q 1nd Gauss.job v19r0
+     Example of how to use interactively in debug with gvd
+        > Gauss.job v19r0 $CMTDEB 
+
 !========================== Gauss v19r0 ==================================
 ! 2005-02-07 - Florence RANJARD
  - requirements - use GeneratorModules v14r1 which does not use PYTHIA 

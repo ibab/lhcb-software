@@ -88,6 +88,9 @@ macro_append Gauss_linkopts " -Wl,-Map,Linux.map " WIN32 ""
 path_remove    PATH  "/Gauss/"
 path_append    PATH  "${GAUSSROOT}/${BINDIR}"
 
+# == for visualization make appropriate engine visible (DAWN)
+#path_append    PATH  "${OSC_release_area}/DAWN/bin/Linux"
+
 # =============== alias =======================================================
 alias gauss " ${GAUSSROOT}/${BINDIR}/Gauss.exe ${GAUSSOPTS}/Gauss.opts "
 alias gaussvis " ${GAUSSROOT}/${BINDIR}/Gauss.exe ${GAUSSOPTS}/GaussVis.opts "
