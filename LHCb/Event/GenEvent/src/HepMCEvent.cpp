@@ -3,7 +3,7 @@
 //
 // AuthorList:
 //
-//         W. Pokorski: Initial coding Jully 02 
+//         W. Pokorski: July 02 
 // -------------------------------------------------------------------------
  
 #include "Event/HepMCEvent.h"
