@@ -1,18 +1,19 @@
-// $Id: CheckPV.cpp,v 1.2 2004-11-18 09:07:25 pkoppenb Exp $
+// $Id: CheckPV.cpp,v 1.3 2004-11-18 09:17:14 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h" 
 
 #include "DaVinciTools/IPVLocator.h"
-
+#include "Event/Vertex.h"
 // local
+
 #include "CheckPV.h"
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : CheckPV
 //
-// 2004-11-15 : Patrick KOPPENBURG
+// 2004-11-18 : Patrick KOPPENBURG
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
@@ -25,8 +26,10 @@ const        IAlgFactory& CheckPVFactory = s_factory ;
 //=============================================================================
 CheckPV::CheckPV( const std::string& name,
                   ISvcLocator* pSvcLocator)
-  : DVAlgorithm ( name , pSvcLocator )
+  : GaudiAlgorithm ( name , pSvcLocator )
   , m_PVLocator()
+  , m_nEvent(0)
+  , m_nPV(0)
 {
   declareProperty( "MinPVs", m_minPV = 1  );
   declareProperty( "MaxPVs", m_maxPV = -1 ); // -1 -> No maximum defined
@@ -41,6 +44,8 @@ CheckPV::~CheckPV() {};
 // Initialization
 //=============================================================================
 StatusCode CheckPV::initialize() {
+  StatusCode sc = GaudiAlgorithm::initialize(); // must be executed first
+  if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
 
   debug() << "==> Initialize" << endmsg;
 
@@ -67,7 +72,7 @@ StatusCode CheckPV::initialize() {
 //=============================================================================
 StatusCode CheckPV::execute() {
 
-  debug() << "==> Execute" << endmsg; 
+  debug() << "==> Execute" << endmsg;
 
   std::string m_PVContainer = m_PVLocator->getPVLocation() ;
   
@@ -80,6 +85,8 @@ StatusCode CheckPV::execute() {
   }
   int n =  PV->size() ;
   debug() << "There are " << n << " primary vertices." << endreq ;
+  m_nPV = m_nPV+n ;
+  ++m_nEvent ;
 
   bool ok = ( n >= m_minPV );      // more than m_minPV
   if ( m_maxPV >= 0 ){              // some maximum?
@@ -89,7 +96,7 @@ StatusCode CheckPV::execute() {
   setFilterPassed(ok);
   if (ok) info() << "Event accepted because there are " << n << " primary vertices." << endreq ;
   else    info() << "Event rejected because there are " << n << " primary vertices." << endreq ; 
-  
+
   return StatusCode::SUCCESS;
 };
 
@@ -99,8 +106,11 @@ StatusCode CheckPV::execute() {
 StatusCode CheckPV::finalize() {
 
   debug() << "==> Finalize" << endmsg;
+  double fpv = (double)m_nPV/(double)m_nEvent ;
+  info() << "Seen " << m_nPV << " PVs in " << m_nEvent 
+         << " events. Average = " <<  fpv << endreq ;
 
-  return  StatusCode::SUCCESS;
+  return GaudiAlgorithm::finalize();  // must be called after all other actions
 }
 
 //=============================================================================
