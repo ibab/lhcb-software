@@ -4,6 +4,10 @@
 ! Purpose     : Utility tools for RICH reconstruction algorithms
 !------------------------------------------------------------------------------
 
+! 2004-07-02 - Chris Jones
+ - Update to new IRichRayTracing interface
+ - Update to new RichDet detector locations
+
 ! 2004-06-29 - Chris Jones
  - Various minor updates
  - Add new photon predictor that uses RichRecRings to select possible 

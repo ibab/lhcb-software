@@ -1,4 +1,4 @@
-// $Id: RichRayTraceCherenkovCone.cpp,v 1.5 2004-06-29 19:53:38 jonesc Exp $
+// $Id: RichRayTraceCherenkovCone.cpp,v 1.6 2004-07-02 14:30:31 jonrob Exp $
 
 // local
 #include "RichRayTraceCherenkovCone.h"
@@ -30,7 +30,7 @@ RichRayTraceCherenkovCone::RichRayTraceCherenkovCone( const std::string& type,
   declareProperty( "NPhotonsRayTrace", m_nRayTrace = 100 );
 }
 
-StatusCode RichRayTraceCherenkovCone::initialize() 
+StatusCode RichRayTraceCherenkovCone::initialize()
 {
   // Sets up various tools and services
   const StatusCode sc = RichRecToolBase::initialize();
@@ -62,7 +62,7 @@ StatusCode RichRayTraceCherenkovCone::finalize()
 
 const std::vector<HepPoint3D> &
 RichRayTraceCherenkovCone::rayTraceLocal ( RichRecRing * ring,
-                                           const DeRichHPDPanel::traceMode mode ) const
+                                           const RichTraceMode mode ) const
 {
   if ( !ring ) Exception( "Null RichRecRing pointer!" );
 
@@ -70,13 +70,13 @@ RichRayTraceCherenkovCone::rayTraceLocal ( RichRecRing * ring,
 
     // Check global points have been computed
     if ( ring->ringPoints().empty() ) rayTrace ( ring, mode );
-    
+
     // convert global to local points
     for ( std::vector<HepPoint3D>::const_iterator iP = ring->ringPoints().begin();
           iP != ring->ringPoints().end(); ++iP ) {
       ring->ringPointsLocal().push_back( m_smartIDTool->globalToPDPanel(*iP) );
     }
-    
+
   }
 
   return ring->ringPointsLocal();
@@ -84,7 +84,7 @@ RichRayTraceCherenkovCone::rayTraceLocal ( RichRecRing * ring,
 
 const std::vector<HepPoint3D> &
 RichRayTraceCherenkovCone::rayTrace ( RichRecRing * ring,
-                                      const DeRichHPDPanel::traceMode mode ) const
+                                      const RichTraceMode mode ) const
 {
   if ( !ring ) Exception( "Null RichRecRing pointer!" );
 
@@ -100,7 +100,7 @@ StatusCode
 RichRayTraceCherenkovCone::rayTrace ( RichRecSegment * segment,
                                       const Rich::ParticleIDType id,
                                       std::vector<HepPoint3D> & points,
-                                      const DeRichHPDPanel::traceMode mode ) const
+                                      const RichTraceMode mode ) const
 {
   return rayTrace( segment,
                    m_ckAngle->avgCherenkovTheta(segment, id),
@@ -111,7 +111,7 @@ StatusCode
 RichRayTraceCherenkovCone::rayTrace ( RichRecSegment * segment,
                                       const double ckTheta,
                                       std::vector<HepPoint3D> & points,
-                                      const DeRichHPDPanel::traceMode mode ) const
+                                      const RichTraceMode mode ) const
 {
   // make sure segment is valid
   if ( !segment ) Exception( "Null RichRecSegment pointer!" );
@@ -129,7 +129,7 @@ RichRayTraceCherenkovCone::rayTrace ( const Rich::DetectorType rich,
                                       const HepVector3D & direction,
                                       const double ckTheta,
                                       std::vector<HepPoint3D> & points,
-                                      const DeRichHPDPanel::traceMode mode ) const
+                                      const RichTraceMode mode ) const
 {
 
   if ( ckTheta > 0 ) {

@@ -1,4 +1,4 @@
-// $Id: RichTrackCreatorFromTrStoredTracks.cpp,v 1.16 2004-06-29 19:53:39 jonesc Exp $
+// $Id: RichTrackCreatorFromTrStoredTracks.cpp,v 1.17 2004-07-02 14:30:31 jonrob Exp $
 
 // local
 #include "RichTrackCreatorFromTrStoredTracks.h"
@@ -63,6 +63,13 @@ StatusCode RichTrackCreatorFromTrStoredTracks::initialize()
 
   // Configure track selector
   if ( !m_trSelector.configureTrackTypes() ) return StatusCode::FAILURE;
+
+  // Configure the ray-tracing mode
+  m_traceMode.setDetPrecision      ( RichTraceMode::circle );
+  m_traceMode.setDetPlaneBound     ( RichTraceMode::loose  );
+  m_traceMode.setForcedSide        ( false                 );
+  m_traceMode.setOutMirrorBoundary ( false                 );
+  m_traceMode.setMirrorSegBoundary ( false                 );
 
   // Setup incident services
   IIncidentSvc * incSvc = svc<IIncidentSvc>( "IncidentSvc", true );
@@ -209,7 +216,7 @@ RichTrackCreatorFromTrStoredTracks::newTrack ( const ContainedObject * obj ) con
                                                       (*iSeg).bestPoint(),
                                                       trackDir,
                                                       hitPoint,
-                                                      DeRichHPDPanel::loose )
+                                                      m_traceMode )
                && m_signal->hasRichInfo(newSegment) ) {
             if ( msgLevel(MSG::VERBOSE) )
               verbose() << " TrackSegment in " << (*iSeg).radiator() << " selected" << endreq;

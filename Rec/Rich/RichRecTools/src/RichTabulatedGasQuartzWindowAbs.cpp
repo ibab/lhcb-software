@@ -1,4 +1,4 @@
-// $Id: RichTabulatedGasQuartzWindowAbs.cpp,v 1.1 2004-04-19 23:06:15 jonesc Exp $
+// $Id: RichTabulatedGasQuartzWindowAbs.cpp,v 1.2 2004-07-02 14:30:31 jonrob Exp $
 
 // local
 #include "RichTabulatedGasQuartzWindowAbs.h"
@@ -24,14 +24,15 @@ RichTabulatedGasQuartzWindowAbs::RichTabulatedGasQuartzWindowAbs ( const std::st
   declareInterface<IRichGasQuartzWindowAbs>(this);
 
   declareProperty( "GasQuartzWindowLocation",
-                   m_gasQWinLoc = "/dd/Materials/RichMaterialTabProperties/GasWindowQuartzAbsLengthPT" );
+                   m_gasQWinLoc = 
+                   "/dd/Materials/RichMaterialTabProperties/GasWindowQuartzAbsLengthPT" );
 
 }
 
 StatusCode RichTabulatedGasQuartzWindowAbs::initialize() {
 
   // Sets up various tools and services
-  StatusCode sc = RichRecToolBase::initialize();
+  const StatusCode sc = RichRecToolBase::initialize();
   if ( sc.isFailure() ) { return sc; }
 
   // Absorption length from XML
@@ -42,8 +43,8 @@ StatusCode RichTabulatedGasQuartzWindowAbs::initialize() {
   m_gasQWin = new Rich1DTabProperty( tab );
 
   // Get Rich Detector elements
-  DeRich1 * Rich1DE = getDet<DeRich1>( DeRich1Location::Default );
-  DeRich2 * Rich2DE = getDet<DeRich2>( DeRich2Location::Default );
+  DeRich1 * Rich1DE = getDet<DeRich1>( DeRichLocation::Rich1 );
+  DeRich2 * Rich2DE = getDet<DeRich2>( DeRichLocation::Rich2 );
 
   // Quartz window thicknesses. Until these parameters exist in the XML add backup default values
   try { m_qWinZSize[Rich::Rich1] = Rich1DE->userParameterAsDouble("Rh1QuartzWindowZSize"); }

@@ -1,4 +1,4 @@
-// $Id: RichTrackCreatorFromTrStoredTracks.h,v 1.14 2004-06-29 19:53:39 jonesc Exp $
+// $Id: RichTrackCreatorFromTrStoredTracks.h,v 1.15 2004-07-02 14:30:31 jonrob Exp $
 #ifndef RICHRECTOOLS_RichTrackCreatorFromTrStoredTracks_H
 #define RICHRECTOOLS_RichTrackCreatorFromTrStoredTracks_H 1
 
@@ -129,6 +129,9 @@ private: // data
   // Track count
   typedef std::vector< std::pair<unsigned,unsigned> > TrackTypeCount;
   mutable TrackTypeCount m_nTracks;
+
+  /// Ray-tracing configuration object
+  RichTraceMode m_traceMode;
 
 };
 

@@ -1,4 +1,4 @@
-// $Id: RichGeomEffPhotonTracing.cpp,v 1.5 2004-04-19 23:06:10 jonesc Exp $
+// $Id: RichGeomEffPhotonTracing.cpp,v 1.6 2004-07-02 14:30:31 jonrob Exp $
 
 // local
 #include "RichGeomEffPhotonTracing.h"
@@ -36,7 +36,7 @@ StatusCode RichGeomEffPhotonTracing::initialize()
 {
 
   // Sets up various tools and services
-  StatusCode sc = RichRecToolBase::initialize();
+  const StatusCode sc = RichRecToolBase::initialize();
   if ( sc.isFailure() ) { return sc; }
 
   // Acquire instances of tools
@@ -59,6 +59,13 @@ StatusCode RichGeomEffPhotonTracing::initialize()
     m_sinCkPhi.push_back( sin(ckPhi) );
     m_cosCkPhi.push_back( cos(ckPhi) );
   }
+
+  // Configure the ray-tracing mode
+  m_traceMode.setDetPrecision      ( RichTraceMode::circle );
+  m_traceMode.setDetPlaneBound     ( RichTraceMode::loose  );
+  m_traceMode.setForcedSide        ( false                 );
+  m_traceMode.setOutMirrorBoundary ( false                 );
+  m_traceMode.setMirrorSegBoundary ( false                 );
 
   return StatusCode::SUCCESS;
 }
@@ -118,7 +125,7 @@ RichGeomEffPhotonTracing::geomEfficiency ( RichRecSegment * segment,
                                                emissionPt,
                                                photDir,
                                                photon,
-                                               DeRichHPDPanel::circle ) ) {
+                                               m_traceMode ) ) {
 
           ++nDetect;
           segment->addToGeomEfficiencyPerPD( id,
@@ -199,7 +206,8 @@ RichGeomEffPhotonTracing::geomEfficiencyScat ( RichRecSegment * segment,
         if ( 0 != m_rayTrace->traceToDetector( trackSeg.rich(),
                                                emissionPt,
                                                photDir,
-                                               photon ) ) { ++nDetect; }
+                                               photon,
+                                               m_traceMode ) ) { ++nDetect; }
 
         // Bail out if tried m_geomEffBailout times and all have failed
         if ( 0 == nDetect && iPhot >= m_nGeomEffBailout ) break;

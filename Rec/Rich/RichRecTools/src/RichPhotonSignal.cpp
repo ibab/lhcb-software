@@ -1,4 +1,4 @@
-// $Id: RichPhotonSignal.cpp,v 1.12 2004-06-29 19:53:38 jonesc Exp $
+// $Id: RichPhotonSignal.cpp,v 1.13 2004-07-02 14:30:31 jonrob Exp $
 
 // local
 #include "RichPhotonSignal.h"
@@ -35,8 +35,8 @@ StatusCode RichPhotonSignal::initialize() {
   acquireTool( "RichCherenkovResolution", m_ckRes   );
 
   // Get Rich Detector elements
-  DeRich1 * Rich1DE = getDet<DeRich1>( DeRich1Location::Default );
-  DeRich2 * Rich2DE = getDet<DeRich2>( DeRich2Location::Default );
+  DeRich1 * Rich1DE = getDet<DeRich1>( DeRichLocation::Rich1 );
+  DeRich2 * Rich2DE = getDet<DeRich2>( DeRichLocation::Rich2 );
 
   // Mirror radii of curvature in mm
   m_radiusCurv[Rich::Rich1] = Rich1DE->sphMirrorRadius();

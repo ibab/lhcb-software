@@ -1,4 +1,4 @@
-// $Id: RichTabulatedSignalDetectionEff.cpp,v 1.4 2004-04-19 23:06:16 jonesc Exp $
+// $Id: RichTabulatedSignalDetectionEff.cpp,v 1.5 2004-07-02 14:30:31 jonrob Exp $
 
 // local
 #include "RichTabulatedSignalDetectionEff.h"
@@ -77,7 +77,7 @@ StatusCode RichTabulatedSignalDetectionEff::initialize() {
   m_sphMirRefl[Rich::Rich2]  = new Rich1DTabProperty( tabS2 );
 
   // Get Rich1 Detector element
-  DeRich1 * Rich1DE = getDet<DeRich1>( DeRich1Location::Default );
+  DeRich1 * Rich1DE = getDet<DeRich1>( DeRichLocation::Rich1 );
 
   // Quartz window eff
   m_quartzWinEff = Rich1DE->userParameterAsDouble( "HPDQuartzWindowEff" );

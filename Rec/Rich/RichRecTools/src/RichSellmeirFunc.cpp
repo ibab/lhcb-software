@@ -1,4 +1,4 @@
-// $Id: RichSellmeirFunc.cpp,v 1.8 2004-04-19 23:06:14 jonesc Exp $
+// $Id: RichSellmeirFunc.cpp,v 1.9 2004-07-02 14:30:31 jonrob Exp $
 
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h"
@@ -37,7 +37,7 @@ RichSellmeirFunc::RichSellmeirFunc ( const std::string& type,
 StatusCode RichSellmeirFunc::initialize() {
 
   // Sets up various tools and services
-  StatusCode sc = RichRecToolBase::initialize();
+  const StatusCode sc = RichRecToolBase::initialize();
   if ( sc.isFailure() ) { return sc; }
 
   // Acquire instances of tools
@@ -55,7 +55,7 @@ StatusCode RichSellmeirFunc::initialize() {
   releaseTool( partProp );
 
   // Get Rich1 Detector element
-  DeRich1 * Rich1DE = getDet<DeRich1>( DeRich1Location::Default );
+  DeRich1 * Rich1DE = getDet<DeRich1>( DeRichLocation::Rich1 );
 
   // Load radiator parameters from XML
   m_selF1[Rich::Aerogel] = Rich1DE->userParameterAsDouble("SellAgelF1Param");

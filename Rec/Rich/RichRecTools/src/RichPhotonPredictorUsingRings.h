@@ -1,4 +1,4 @@
-// $Id: RichPhotonPredictorUsingRings.h,v 1.1 2004-06-29 20:05:55 jonesc Exp $
+// $Id: RichPhotonPredictorUsingRings.h,v 1.2 2004-07-02 14:30:31 jonrob Exp $
 #ifndef RICHRECTOOLS_RICHPHOTONPREDICTORUSINGRINGS_H
 #define RICHRECTOOLS_RICHPHOTONPREDICTORUSINGRINGS_H 1
 
@@ -61,7 +61,7 @@ private:
   /// Initialise for a new event
   void InitNewEvent();
 
-  /// Fetch RichRecRings
+  /// Retuns pointer RichRecRings
   RichRecRings * richRings() const;
 
 private: // private data
@@ -87,6 +87,17 @@ inline void RichPhotonPredictorUsingRings::InitNewEvent()
 {
   // Initialise navigation data
   m_recRings = 0;
+}
+
+inline RichRecRings *
+RichPhotonPredictorUsingRings::richRings() const
+{
+  if ( !m_recRings ) {
+    m_recRings = get<RichRecRings>( m_ringLoc );
+    debug() << "Located " << m_recRings->size() 
+            << " RichRecRings at " << m_ringLoc << endreq;
+  }
+  return m_recRings;
 }
 
 #endif // RICHRECTOOLS_RICHPHOTONPREDICTORUSINGRINGS_H

@@ -1,4 +1,4 @@
-// $Id: RichGeomEffPhotonTracing.h,v 1.4 2004-06-18 11:21:29 jonesc Exp $
+// $Id: RichGeomEffPhotonTracing.h,v 1.5 2004-07-02 14:30:31 jonrob Exp $
 #ifndef RICHRECTOOLS_RICHGEOMEFFPHOTONTRACING_H
 #define RICHRECTOOLS_RICHGEOMEFFPHOTONTRACING_H 1
 
@@ -31,6 +31,8 @@
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
+ *
+ *  @todo  Remove the use of randomn numbers
  */
 
 class RichGeomEffPhotonTracing : public RichRecToolBase,
@@ -87,6 +89,9 @@ private: // Private data
 
   /// Flat Randomn distribution between 0 and 1
   mutable Rndm::Numbers m_uniDist;
+
+  /// Ray-tracing configuration object
+  RichTraceMode m_traceMode;
 
 };
 

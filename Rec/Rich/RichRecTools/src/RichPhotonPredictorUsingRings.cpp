@@ -1,4 +1,4 @@
-// $Id: RichPhotonPredictorUsingRings.cpp,v 1.1 2004-06-29 20:05:55 jonesc Exp $
+// $Id: RichPhotonPredictorUsingRings.cpp,v 1.2 2004-07-02 14:30:31 jonrob Exp $
 
 // local
 #include "RichPhotonPredictorUsingRings.h"
@@ -35,6 +35,7 @@ RichPhotonPredictorUsingRings::RichPhotonPredictorUsingRings( const std::string&
   m_maxROI.push_back( 200 );   // cf4
   declareProperty( "MaxTrackROI", m_maxROI );
 
+  // location in TES of rings to use
   declareProperty( "RichRecRingLocation",  m_ringLoc );
 
 }
@@ -43,7 +44,7 @@ StatusCode RichPhotonPredictorUsingRings::initialize()
 {
 
   // Sets up various tools and services
-  StatusCode sc = RichRecToolBase::initialize();
+  const StatusCode sc = RichRecToolBase::initialize();
   if ( sc.isFailure() ) { return sc; }
 
   // get tools
@@ -89,19 +90,25 @@ bool RichPhotonPredictorUsingRings::photonPossible( RichRecSegment * segment,
   // Temporary whilst no rings in RICH1
   if ( Rich::Rich1 == segment->trackSegment().rich() ) return true;
 
-
   // Run over RichRecRings and check if the current pixel "belongs"
   // to a ring associated to the current segment
-  for (RichRecRings::iterator iRing = richRings()->begin(); iRing != richRings()->end(); ++iRing ) {
-    if ( *iRing && (*iRing)->richRecSegment() && (*iRing)->richRecSegment()->key() == segment->key() ) {
+  // Search could probably be made faster using stl etc...
+  for ( RichRecRings::iterator iRing = richRings()->begin(); 
+        iRing != richRings()->end(); ++iRing ) {
+    
+    if ( *iRing && 
+         (*iRing)->richRecSegment() && 
+         (*iRing)->richRecSegment()->key() == segment->key() ) {
+
       for (SmartRefVector<RichRecPixel>::iterator iPix = (*iRing)->richRecPixels().begin();
            iPix != (*iRing)->richRecPixels().end(); ++iPix) {
         if ( *iPix && (*iPix)->key() == pixel->key() ) { return true; }
       }
+
     }
   }
 
-
+  // Return false if nothing found by above search
   return false;
 }
 
@@ -112,16 +119,3 @@ void RichPhotonPredictorUsingRings::handle ( const Incident& incident )
   if ( IncidentType::BeginEvent == incident.type() ) InitNewEvent();
 }
 
-
-RichRecRings *
-RichPhotonPredictorUsingRings::richRings() const
-{
-  if ( !m_recRings ) {
-    // Fetch them
-    m_recRings = get<RichRecRings>( m_ringLoc );
-    debug() << "Located " << m_recRings->size()
-            << " RichRecRings at " << m_ringLoc << endreq;
-  }
-
-  return m_recRings;
-}

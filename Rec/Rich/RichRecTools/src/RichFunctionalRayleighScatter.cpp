@@ -1,4 +1,4 @@
-// $Id: RichFunctionalRayleighScatter.cpp,v 1.6 2004-04-19 23:06:10 jonesc Exp $
+// $Id: RichFunctionalRayleighScatter.cpp,v 1.7 2004-07-02 14:30:31 jonrob Exp $
 
 // local
 #include "RichFunctionalRayleighScatter.h"
@@ -28,11 +28,11 @@ RichFunctionalRayleighScatter::RichFunctionalRayleighScatter ( const std::string
 StatusCode RichFunctionalRayleighScatter::initialize() {
 
   // Sets up various tools and services
-  StatusCode sc = RichRecToolBase::initialize();
+  const StatusCode sc = RichRecToolBase::initialize();
   if ( sc.isFailure() ) { return sc; }
 
   // Get Rich1 Detector element
-  DeRich1 * Rich1DE = getDet<DeRich1>( DeRich1Location::Default );
+  DeRich1 * Rich1DE = getDet<DeRich1>( DeRichLocation::Rich1 );
 
   // Rayleigh scattering parameters
   m_eVToMicron  = ( h_Planck/(joule*s) * c_light/(m/s) / e_SI ) / nanometer ;
