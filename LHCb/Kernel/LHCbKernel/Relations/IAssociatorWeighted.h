@@ -1,4 +1,4 @@
-// $Id: IAssociatorWeighted.h,v 1.11 2003-12-18 15:32:58 cattanem Exp $
+// $Id: IAssociatorWeighted.h,v 1.12 2004-01-06 12:27:38 cattanem Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
@@ -50,7 +50,7 @@ public:
   typedef DirectType                 Table;
   typedef typename Table::Range               ToRange;
   typedef typename Table::iterator            ToIterator;
-  typedef OwnType::InverseType       InvTable;
+  typedef typename OwnType::InverseType       InvTable;
   typedef typename InvTable::Range            FromRange;
   typedef typename InvTable::iterator         FromIterator;
 
