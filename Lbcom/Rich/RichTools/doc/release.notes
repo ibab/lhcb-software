@@ -4,6 +4,7 @@
 ! Purpose     : General purpose Rich Tools
 !-----------------------------------------------------------------------------
 
+!=========================== RichTools v1r2 2004-11-19 =======================
 ! 2004-10-21 - Antonis Papanestis
  - Added method traceBackFromDetector to RichRayTracing
 
