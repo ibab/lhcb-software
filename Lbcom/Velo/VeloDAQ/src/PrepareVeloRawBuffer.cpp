@@ -1,4 +1,4 @@
-// $Id: PrepareVeloRawBuffer.cpp,v 1.2 2004-11-29 14:16:06 cattanem Exp $
+// $Id: PrepareVeloRawBuffer.cpp,v 1.3 2004-12-06 10:36:38 dhcroft Exp $
 // Include files 
 
 // from Gaudi
@@ -48,13 +48,7 @@ StatusCode PrepareVeloRawBuffer::initialize() {
   debug() << "==> Initialise" << endreq;
 
  //== Get detector element
-  SmartDataPtr<DeVelo> velo( detDataService(), "/dd/Structure/LHCb/Velo" );
-  if ( 0 == velo ) {
-    error() << "Unable to retrieve Velo detector element." << endreq;
-    return StatusCode::FAILURE;
-  }
-  m_velo = velo;
- 
+  m_velo = getDet<DeVelo>("/dd/Structure/LHCb/Velo" );
   return StatusCode::SUCCESS;
 };
 
@@ -69,12 +63,8 @@ StatusCode PrepareVeloRawBuffer::execute() {
   bool isDebug   = msgLevel( MSG::DEBUG );
 
   // Get the input container
-  SmartDataPtr< VeloClusters > clusters ( eventSvc(), 
-                                          VeloClusterLocation::Default );
-  if( 0 == clusters ) {
-    error() << "-- Unable to retrieve VeloClusters --" << endreq;
-    return StatusCode::FAILURE;
-  }
+  VeloClusters * clusters = get<VeloClusters>(VeloClusterLocation::Default );
+
   debug() << "retrieved " <<   clusters->size() 
 	  << " VeloClusters" << endreq;
   //VeloDaqBuffer* outBuf = new VeloDaqBuffer();
@@ -82,14 +72,11 @@ StatusCode PrepareVeloRawBuffer::execute() {
 
   // Get the RAW output buffer. Create it if needed
   RawBuffer* buffer;
-  
-  SmartDataPtr< RawBuffer > theRawBuffer ( eventSvc(), 
-                                           RawBufferLocation::Default );
-  if ( 0 == theRawBuffer ) {
+  if( exist<RawBuffer >(RawBufferLocation::Default ) ){
+    buffer = get< RawBuffer >(RawBufferLocation::Default );
+  }else{
     buffer = new RawBuffer();
     eventSvc()->registerObject( RawBufferLocation::Default, buffer );
-  } else {
-    buffer = theRawBuffer;
   }
   
   std::vector<VeloCluster*> myClus;
@@ -133,25 +120,24 @@ StatusCode PrepareVeloRawBuffer::execute() {
       if ( 0 <= lastSensor ) {
         if ( isDebug ) {
           debug() 
-              << format( "Sensor %3d nClusters %4d words %5d", 
-                         lastSensor, nClusterInSensor, data.size() ) 
-              << endreq;
+            << format( "Sensor %3d nClusters %4d words %5d", 
+                       lastSensor, nClusterInSensor, data.size() ) 
+            << endreq;
         }
         buffer->addBank( lastSensor, bankType, data );
       }
       data.clear();
       while ( ++lastSensor != sensor ) {
-
-	// sensor numbers are discontinuous, skip 40->63 
-	// (gap between R and phi) numbers
-	if( 39 < lastSensor && lastSensor < 64 ) { continue;}
-	// this is an ugly hack: please fix properly
+        // sensor numbers are discontinuous, skip 40->63 
+        // (gap between R and phi) numbers
+        if( 39 < lastSensor && lastSensor < 64 ) { continue;}
+        // this is an ugly hack: please fix properly
 
         if ( isDebug ) {
           debug() 
-              << format( "Sensor %3d no clusters words %5d", 
-                         lastSensor, nClusterInSensor, data.size() ) 
-              << endreq;
+            << format( "Sensor %3d no clusters words %5d", 
+                       lastSensor, nClusterInSensor, data.size() ) 
+            << endreq;
         }
         buffer->addBank( lastSensor, bankType, data );
       }
@@ -164,9 +150,9 @@ StatusCode PrepareVeloRawBuffer::execute() {
     int firstStrip = clu->strip(0);
     raw_int word   = size + (firstStrip << 12);
     int nInWord    = 24;
-    if ( isVerbose ) verbose() 
-                       << format(" Cluster Size %2d First Strip %4d",
-				 size, firstStrip);
+    if ( isVerbose ) verbose() << format(" Cluster Size %2d First Strip %4d",
+                                         size, firstStrip);
+
     for ( strIt = clu->stripSignals().begin() ; 
           clu->stripSignals().end() != strIt ; strIt++ ) {
       if ( isVerbose ) verbose() <<  " ADC " << (*strIt).second;
@@ -197,18 +183,11 @@ StatusCode PrepareVeloRawBuffer::execute() {
   buffer->addBank( lastSensor, bankType, data );
   data.clear();
   
-  while ( m_velo->nbSensor() > ++lastSensor ) {
-    if ( isDebug ) {
-      debug() 
-	<< format( "Sensor %3d no clusters words %5d", 
-		   lastSensor, nClusterInSensor, data.size() ) 
-	<< endreq;
-        }
-      buffer->addBank( lastSensor, bankType, data );
+  while ( static_cast<int>(m_velo->numberNonPUSensors()) > ++lastSensor ) {
+    buffer->addBank( lastSensor, bankType, data );
   }  
 
   debug() << "--- NbOK = " << nbOk << endreq;
   
   return StatusCode::SUCCESS;
 };
-

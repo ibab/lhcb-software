@@ -23,5 +23,3 @@ library          VeloDAQ    ../src/*.cpp -import=AIDA -import=VeloKernel
 
 apply_pattern component_library library=VeloDAQ
 
-
-

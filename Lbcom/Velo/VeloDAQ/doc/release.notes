@@ -1,6 +1,9 @@
 ! Package     : VeloDAQ
 ! Responsible : ChrisParkes
 
+! 2004-12-03 - David Hutchcroft
+ - Modified PrepareVeloRawBufferFPGA to use new Velo Detector element inteface
+
 !==========================  VeloDAQ v2r1 2004-11-29 ======================
 ! 2004-10-26 - David Hutchcroft
  - Changed to sort by VeloChannelID not position (CP's modification)
