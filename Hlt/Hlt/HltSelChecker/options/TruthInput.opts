@@ -25,8 +25,12 @@ HLTPreselKaons.PhysDesktop.InputLocations = {"Phys/SelectB2HH"
 //                                              ,"Phys/SelectBd2JpsiKs" 
 //                                              ,"Phys/SelectDstar2Dpi" 
 					      };
-HLTMuons.PhysDesktop.InputLocations = {"Phys/SelectBs2JpsiPhi"
+HLTDimuons.PhysDesktop.InputLocations = {"Phys/SelectBs2JpsiPhi"
                                        ,"Phys/SelectBd2JpsiKs"
                                        ,"Phys/SelectB2MuMu"
 				       ,"Phys/SelectBd2MuMuKstar"};
 
+HLTSingleMuons.PhysDesktop.InputLocations = {"Phys/SelectBs2JpsiPhi"
+                                       ,"Phys/SelectBd2JpsiKs"
+                                       ,"Phys/SelectB2MuMu"
+				       ,"Phys/SelectBd2MuMuKstar"};
