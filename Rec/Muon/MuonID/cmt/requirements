@@ -1,12 +1,12 @@
 package MuonID
-version v3r3
+version v3r4
 
 branches src cmt doc options
 
 # add "use" statements
 use MuonEvent          v2r*  Event
 use MuonTools          v3r*  Muon
-
+use MuonDet            v4r*  Det
 # build a MuonID library
 library MuonID ../src/*.cpp
 

@@ -1,4 +1,4 @@
-// $Id: MuonIDFOI.h,v 1.3 2002-08-05 13:00:24 dhcroft Exp $
+// $Id: MuonIDFOI.h,v 1.4 2002-11-11 10:54:00 asatta Exp $
 #ifndef MUONIDFOI_H 
 #define MUONIDFOI_H 1
 
@@ -8,6 +8,7 @@
 
 // from Gaudi
 #include "GaudiKernel/Algorithm.h"
+#include "MuonDet/MuonBasicGeometry.h"
 
 // forward declaration of tools
 class IMuonTileXYZTool;
@@ -94,10 +95,15 @@ private:
   std::vector< double >     m_yfoiParam3;
   std::vector< double >     m_yfoiParam4;
 
+
   // Number of stations
   int m_NStation;
-  //Number of regions
+  // Number of regions
   int m_NRegion;
+  //Names of the station
+  std::vector<std::string> m_stationNames;
+
+
 
   // local array of pad sizes in mm
   // all std::vectors here are indexed: [station * m_NRegion + region]

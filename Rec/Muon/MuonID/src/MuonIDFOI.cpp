@@ -1,4 +1,4 @@
-// $Id: MuonIDFOI.cpp,v 1.5 2002-10-09 12:31:40 dhcroft Exp $
+// $Id: MuonIDFOI.cpp,v 1.6 2002-11-11 10:54:00 asatta Exp $
 // Include files
 #include <cstdio>
 
@@ -99,14 +99,28 @@ StatusCode MuonIDFOI::initialize() {
     return sc;
   }
 
-  sc = m_iGeomTool->nStation(m_NStation);
-  if(!sc){
-    return sc;
+  //  sc = m_iGeomTool->nStation(m_NStation);
+  //if(!sc){
+  //return sc;
+  //}
+  // sc = m_iGeomTool->nRegion(m_NRegion);
+  //if(!sc){
+  // return sc;
+  // }
+
+  m_NStation = 0;
+  m_NRegion = 0;
+  MuonBasicGeometry basegeometry( detSvc(),msgSvc());
+  m_NStation= basegeometry.getStations();
+  m_NRegion = basegeometry.getRegions();
+  int i=0;
+  while(i<m_NStation){  
+    m_stationNames.push_back(basegeometry.getStationName(i));
+    //    log<<MSG::DEBUG<<" station "<<i<<" "<<m_stationNames[i]<<endreq;
+    i++;
   }
-  sc = m_iGeomTool->nRegion(m_NRegion);
-  if(!sc){
-    return sc;
-  }
+
+
 
   // set the size of the local vectors
   m_padSizeX.resize(m_NStation * m_NRegion);
@@ -272,11 +286,30 @@ StatusCode MuonIDFOI::fillCoordVectors(){
 
   int station;
   for(station = 0 ; station < m_NStation ; station++){
+  std::string stationPattern = MuonCoordLocation::MuonCoords;
+
+  std::string stationNameWithoutM=m_stationNames[station].
+    substr(1,2);
+  std::string::size_type allsize=stationPattern.size();
+//  std::cout<<"allsize "<< allsize <<endl;
+     std::string::size_type findFirstSeparator=stationPattern.find("%");
+
+  std::string::size_type findLastSeparator=stationPattern.rfind("/");
+//  std::cout<<"allsize kl "<< findLastSeparator <<endl;
+ 
+  std::string firstPartOfName=stationPattern.
+    substr(0,findFirstSeparator);
+  std::string lastPartOfName=stationPattern.
+    substr(findLastSeparator,allsize);
+  
+  std::string TESPath = firstPartOfName+stationNameWithoutM+lastPartOfName; 
+
+
     // get the MuonCoords for each station in turn
-    std::string stationPattern = MuonCoordLocation::MuonCoords;
-    char stationPath[100];
-    sprintf(stationPath,stationPattern.c_str(),station+1);
-    std::string TESPath = stationPath;
+    //std::string stationPattern = MuonCoordLocation::MuonCoords;
+    //char stationPath[100];
+    //sprintf(stationPath,stationPattern.c_str(),station+1);
+    //std::string TESPath = stationPath;
     SmartDataPtr<MuonCoords> coords(eventSvc(),TESPath);
     if(!coords){
       MsgStream log(msgSvc(), name());

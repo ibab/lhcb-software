@@ -1,6 +1,10 @@
-! $Id: release.notes,v 1.18 2002-10-21 14:32:45 cattanem Exp $
+! $Id: release.notes,v 1.19 2002-11-11 10:54:00 asatta Exp $
 ! Package     : MuonID
 ! Responsible : David Hutchcroft
+
+!========================= MuonID v3r4 2002-11-11 =========================
+! 2002-11-11 - Alessia Satta
+ - Fix bugs that did not allow to run on 4 stations setup
 
 !========================= MuonID v3r3 2002-10-21 =========================
 ! 2002-10-16 - David Hutchcroft
