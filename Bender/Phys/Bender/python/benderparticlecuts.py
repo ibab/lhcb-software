@@ -1,10 +1,13 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: benderparticlecuts.py,v 1.5 2004-10-06 18:43:27 ibelyaev Exp $ 
+# $Id: benderparticlecuts.py,v 1.6 2004-11-25 15:20:19 ibelyaev Exp $ 
 # =============================================================================
 # CVS tag $NAme:$ 
 # =============================================================================
 # $Log: not supported by cvs2svn $
+# Revision 1.5  2004/10/06 18:43:27  ibelyaev
+#  v4r1
+#
 
 # =============================================================================
 # @file
@@ -249,4 +252,4 @@ PPHASCALO  = PIDBITS ( 203 )
 
 MCTRUTH    = helper.loadCutP ( gbl.LoKi.Particles.MCTruth       ) 
 
-HASTRGTR   = helper.loadCutP ( gbl.LoKi.TrgTracks.HasTrgTrack   ) 
+HASTRGTR   = helper.loadCutP ( gbl.LoKi.TrgTracks.HasTrgTrack   ) ()
