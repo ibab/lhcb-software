@@ -1,4 +1,4 @@
-// $Id: SerializeStl.h,v 1.2 2002-12-02 10:22:25 jonrob Exp $
+// $Id: SerializeStl.h,v 1.3 2003-06-30 14:17:04 jonrob Exp $
 #ifndef RICHKERNEL_SERIALIZESTL_H 
 #define RICHKERNEL_SERIALIZESTL_H 1
 
@@ -11,7 +11,9 @@
 template <class T1, class T2> inline
 std::ostream& operator << ( std::ostream& s, const std::map<T1,T2>& m )
 {
-  for ( std::map<T1,T2>::const_iterator i = m.begin(); i != m.end(); i++ ) {
+  for ( typename std::map<T1,T2>::const_iterator i = m.begin(); 
+        i != m.end(); 
+        i++ ) {
     s << "[" << i->first << ", " << i->second << "]";
   }
   return s;
@@ -22,7 +24,9 @@ template <class T1, class T2> inline
 StreamBuffer& operator << ( StreamBuffer& s, const std::map<T1,T2>& m ) 
 {
   s << m.size();
-  for ( std::map<T1,T2>::const_iterator i = m.begin(); i != m.end(); i++ ) {
+  for ( typename std::map<T1,T2>::const_iterator i = m.begin(); 
+        i != m.end(); 
+        i++ ) {
     s << i->first << i->second;
   }
   return s;

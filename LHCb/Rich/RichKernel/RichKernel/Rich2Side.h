@@ -1,5 +1,5 @@
-// $Id: Rich2Side.h,v 1.6 2003-04-16 10:48:37 jonrob Exp $
-#ifndef RICHKERNEL_RICH2SIDE_H 
+// $Id: Rich2Side.h,v 1.7 2003-06-30 14:17:03 jonrob Exp $
+#ifndef RICHKERNEL_RICH2SIDE_H
 #define RICHKERNEL_RICH2SIDE_H 1
 
 // Include files
@@ -10,17 +10,14 @@
 // from gaudi
 #include "GaudiKernel/MsgStream.h"
 
-/** @class Rich2Side Rich2Side.h
- *  
- *  Enumeration for Rich2 detector splits
- *
- *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
- *  @date   2002-06-19
- */
-
+/// namespace for RICH detector specifics
 namespace Rich {
 
-  /// Enumeration for Rich2 detector splits
+  /** Enumeration for RICH2 detector splits
+   *
+   *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
+   *  @date   2002-06-19
+   */
   enum Rich2Side {
     left = 0,
     right
@@ -34,7 +31,7 @@ namespace Rich {
     default:            return "?"; // should never happen
     }
   }
-  
+
   /// Std Vector typedef
   typedef std::vector<Rich2Side> Rich2SideVector;
 

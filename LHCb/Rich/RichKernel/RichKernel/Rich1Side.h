@@ -1,5 +1,5 @@
-// $Id: Rich1Side.h,v 1.6 2003-04-16 10:48:37 jonrob Exp $
-#ifndef RICHKERNEL_RICH1SIDE_H 
+// $Id: Rich1Side.h,v 1.7 2003-06-30 14:17:03 jonrob Exp $
+#ifndef RICHKERNEL_RICH1SIDE_H
 #define RICHKERNEL_RICH1SIDE_H 1
 
 // Include files
@@ -10,17 +10,14 @@
 // from gaudi
 #include "GaudiKernel/MsgStream.h"
 
-/** @enumeration Rich1Side Rich1Side.h RichKernel/Rich1Side.h
- *  
- *  Enumeration for Rich1 detector splits
- *
- *  @author Chris Jones
- *  @date   2002-06-19
- */
-
+/// namespace for RICH detector specifics
 namespace Rich {
 
-  /// Enumeration for Rich1 detector splits
+  /** Enumeration for RICH1 detector splits.
+   *
+   *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
+   *  @date   2002-06-19
+   */
   enum Rich1Side {
     top = 0,
     bottom

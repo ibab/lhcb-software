@@ -1,4 +1,4 @@
-// $Id: RichRadiatorType.h,v 1.3 2002-11-07 17:23:40 jonrob Exp $
+// $Id: RichRadiatorType.h,v 1.4 2003-06-30 14:17:04 jonrob Exp $
 #ifndef RICHKERNEL_RICHRADIATORTYPE_H
 #define RICHKERNEL_RICHRADIATORTYPE_H 1
 
@@ -10,24 +10,23 @@
 // from gaudi
 #include "GaudiKernel/MsgStream.h"
 
-/** @enumeration RichRadiatorType RichRadiatorType.h RichKernel/RichRadiatorType.h
- *
- *  Enumeration for Rich radiator types
- *
- *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
- *  @date   2002-06-19
- */
-
+/// namespace for RICH detector specifics
 namespace Rich {
 
-  /// Number of Rich radiators
+  /// Number of RICH radiators
   static const int NRadiatorTypes = 3;
 
-  /// Enumeration for radiator types
+  /** Enumeration for RICH radiator types
+   *
+   *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
+   *  @date   2002-06-19
+   */
   enum RadiatorType {
     Aerogel = 0,
-    C4F10,
-    CF4
+    Rich1Gas,
+    Rich2Gas,
+    C4F10 = 1,  // backwards compatibility
+    CF4 = 2,    // backwards compatibility
   };
 
   /// Text conversion for RadiatorType enumeration

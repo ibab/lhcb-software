@@ -10,12 +10,12 @@
 
 /** @class RichSmartID RichSmartID.h
  *
- *  Smart ID for Rich Objects
+ *  Smart identifier for RICH Objects
  *
  *  @author Andy Presland   (andrew.presland@cern.ch)
  *  @author Chris Jones     (christopher.rob.jones@cern.ch)
  *
- *  created Tue Feb 26 09:25:55 2002
+ *  @date 2002-2-26
  */
 
 class RichSmartID {
@@ -32,11 +32,12 @@ public:
   RichSmartID(): m_key(99999) {}
 
   /** constructor with all arguments
-      @param   Rich      rich identifier
-      @param   Panel     rich panel identifier
-      @param   HPD       rich HPD identifier
-      @param   PixRow    rich pixel row identifier
-      @param   PixCol    rich pixel column identifier
+      @param   Rich        rich detector identifier
+      @param   Panel       rich panel identifier
+      @param   HPDRow      rich HPD row identifier
+      @param   HPDCol      rich HPD row identifier
+      @param   PixelRow    rich pixel row identifier
+      @param   PixelCol    rich pixel column identifier
   */
   RichSmartID ( const unsigned int Rich,
                 const unsigned int Panel,

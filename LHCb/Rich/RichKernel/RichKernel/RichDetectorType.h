@@ -1,4 +1,4 @@
-// $Id: RichDetectorType.h,v 1.4 2003-04-16 10:48:37 jonrob Exp $
+// $Id: RichDetectorType.h,v 1.5 2003-06-30 14:17:03 jonrob Exp $
 #ifndef RICHKERNEL_RICHDETECTORTYPE_H
 #define RICHKERNEL_RICHDETECTORTYPE_H 1
 
@@ -11,19 +11,17 @@
 #include "GaudiKernel/StreamBuffer.h"
 #include "GaudiKernel/MsgStream.h"
 
-/** @enumeration RichDetectorType RichDetectorType.h RichKernel/RichDetectorType.h
- *
- *
- *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
- *  @date   2002-06-19
- */
-
+/// namespace for RICH detector specifics
 namespace Rich {
 
-  /// Number of Rich detectors
+  /// Number of RICH detectors
   static const int NRiches = 2;
 
-  /// Enumeration for Rich detectors 1 and 2
+  /** Enumeration for the main RICH detectors 
+   *
+   *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
+   *  @date   2002-06-19
+   */
   enum DetectorType {
     Rich1 = 0,
     Rich2
@@ -37,10 +35,10 @@ namespace Rich {
     default:            return "?"; // should never happen
     }
   }
-  
+
   /// Std Vector typedef
   typedef std::vector<Rich::DetectorType> DetectorVector;
-  
+
 }
 
 /// Implement StreamBuffer >> method for Rich::DetectorType enumeration

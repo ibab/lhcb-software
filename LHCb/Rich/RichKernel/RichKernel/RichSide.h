@@ -1,4 +1,4 @@
-// $Id: RichSide.h,v 1.6 2003-04-16 10:48:37 jonrob Exp $
+// $Id: RichSide.h,v 1.7 2003-06-30 14:17:04 jonrob Exp $
 #ifndef RICHKERNEL_RICHSIDE_H
 #define RICHKERNEL_RICHSIDE_H 1
 
@@ -10,16 +10,14 @@
 // from gaudi
 #include "GaudiKernel/MsgStream.h"
 
-/** @enumeration Side RichSide.h RichKernel/RichSide.h
- *
- *  Enumeration for Rich1 detector splits
- *
- *  @author Chris Jones
- *  @date   2002-06-19
- */
-
+/// namespace for RICH detector specifics
 namespace Rich {
 
+  /** Enumeration for RICH detector splits
+   *
+   *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
+   *  @date   2002-06-19
+   */
   enum Side {
     top,
     bottom,
