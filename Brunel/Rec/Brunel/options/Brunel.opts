@@ -74,7 +74,7 @@ BrunelRecoCALOSeq.Members += { "CaloReCreateMCLinks" };
 
 // Inner tracker reconstruction (clustering)
 ApplicationMgr.DLLs   += { "ITAlgorithms", "STDAQ" };
-BrunelRecoITSeq.Members +={ "RawBufferToSTDigitAlg"};
+// BrunelRecoITSeq.Members +={ "RawBufferToSTDigitAlg"}; Needs fix to relations
 BrunelRecoITSeq.Members +={"ITClusterCreator","ITSummaryCreator"};
 #include "$ITALGORITHMSROOT/options/itRec.opts"
 ITClusterCreator.clusterSignal2Noise = {3.2,3.2,3.2,3.2,3.2};

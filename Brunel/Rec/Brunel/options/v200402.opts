@@ -19,24 +19,42 @@ DetectorDataSvc.DetDbLocation = "$XMLDDDBROOT/DDDB/lhcb-200402.xml";
 //---------------------------------------------------------------------------
 
 //---------------------------------------------------------------------------
-// Finally, define input and output files, first event, number of events
+// Number of events to process, optionally skipping some events
 //---------------------------------------------------------------------------
-HistogramPersistencySvc.OutputFile = "411300.root";  // Monitoring histos
 ApplicationMgr.EvtMax = 100;
+//EventSelector.FirstEvent = 7;  // To skip some events 
 
-// GaudiDb input. Comment next line if POOL input
-EventSelector.Input = { "DATAFILE='rfio:/castor/cern.ch/user/c/cattanem/Boole/v5r3/411300.oodigi' TYP='ROOT' opt='READ'" }; // evtype 411300
+//---------------------------------------------------------------------------
+// Input and output files.
+// For event data, choose either POOL or GaudiDb following these rules:
+// - If the input files is POOL:
+//   . The output file must be POOL
+//   . The POOL input file should be described in PoolDbCacheSvc.InputCatalog
+//     (If not, it will not be possible to follow links to it from the DST)
+// - If the input files is GaudiDb, output file can be GaudiDb or POOL
+//---------------------------------------------------------------------------
 
-// Uncomment next line for POOL input
-//EventSelector.Input = { "DATAFILE='rfio:/castor/cern.ch/user/c/cattanem/Boole/v5r2/Pool411300.digi' TYP='POOL_ROOTTREE' OPT='READ'" }; // evtype 412400
+HistogramPersistencySvc.OutputFile = "411300.root";  // Monitoring histos
 
+//---------------------------------------------------------------------------
+// Event input
+//---------------------------------------------------------------------------
 
-// Define output file - choose either GaudiDb or POOL
+// POOL
+EventSelector.Input = { "DATAFILE='rfio:/castor/cern.ch/user/c/cattanem/Boole/v5r3/Pool411300.digi' TYP='POOL_ROOTTREE' OPT='READ'" }; // evtype 412400
+PoolDbCacheSvc.InputCatalog = "xmlcatalog_http://cattanem.home.cern.ch/cattanem/POOL/MyCatalog.xml";
 
-// GaudiDb output (possible only with GaudiDb input)
-DstWriter.Output = "DATAFILE='411300.oodst' TYP='ROOT' OPT='NEW'";
+// GaudiDb
+//EventSelector.Input = { "DATAFILE='rfio:/castor/cern.ch/user/c/cattanem/Boole/v5r3/411300.oodigi' TYP='ROOT' opt='READ'" }; // evtype 411300
 
-// POOL output
-//DstWriter.Output = "DATAFILE='PFN:Pool411300.dst' TYP='POOL_ROOTTREE' OPT='REC'";
+//---------------------------------------------------------------------------
+// Event output
+//---------------------------------------------------------------------------
+
+// POOL
+DstWriter.Output = "DATAFILE='PFN:Pool411300.dst' TYP='POOL_ROOTTREE' OPT='REC'";
+
+// GaudiDb
+//DstWriter.Output = "DATAFILE='411300.oodst' TYP='ROOT' OPT='NEW'";
 
 //////////////////////////////////////////////////////////////////////////////
