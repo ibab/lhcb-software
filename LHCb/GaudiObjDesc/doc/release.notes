@@ -3,6 +3,9 @@ Desccription: This package contains a set of tools used to generate code from th
 Package manager : Stefan Roiser
 
 
+!20020925 - Stefan
+- meta-information about constructors added to the dictionary-files
+
 ===============================GaudiObjDesc v4r4p1============================
 
 !20020910 - Flr
