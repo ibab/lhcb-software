@@ -2,6 +2,12 @@ Package LHCbKernel
 Package manager: M.Cattaneo
 Purpose: LHCb specific Kernel classes
 
+!====================== LHCbKernel v4r5 2004-03-25 ========================
+! 2004-03-26 - Marco Cattaneo
+ - Add Kernel/LHCbConstants.h, containing constants of general LHCb interest,
+   previously in ITAlgorithms/ITGeneral.h
+ - Put in LHCbMath.h some Tolerance parameters previously in ITGeneral.h
+
 !====================== LHCbKernel v4r4 2004-03-18 ========================
 ! 2004-03-17 - Vanya BELYAEV
  - Relations/AssociatorBase.h

@@ -1,4 +1,4 @@
-// $Id: LHCbMath.h,v 1.1 2004-03-02 10:33:18 cattanem Exp $
+// $Id: LHCbMath.h,v 1.2 2004-03-26 07:37:01 cattanem Exp $
 #ifndef KERNEL_LHCBMATH_H 
 #define KERNEL_LHCBMATH_H 1
 
@@ -14,10 +14,14 @@
 
 namespace LHCbMath 
 {
+  // Parameters for numerical calculations (M.Needham)
+  static const double hiTolerance = 1e-40;
+  static const double lowTolerance = 1e-20;
+  static const double looseTolerance = 1e-5;
 
-  inline int round(const double x)  {
   // Round to nearest integer. Rounds half integers to the nearest even integer.
   // Provided by Matt Needham 
+  inline int round(const double x)  {
     int i;
     if (x >= 0.0) {
       i = int(x + 0.5);
