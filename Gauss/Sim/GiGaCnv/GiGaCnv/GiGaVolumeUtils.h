@@ -1,8 +1,11 @@
-// $Id: GiGaVolumeUtils.h,v 1.1 2002-07-09 20:33:54 ibelyaev Exp $
+// $Id: GiGaVolumeUtils.h,v 1.2 2003-05-30 15:53:10 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.1  2002/07/09 20:33:54  ibelyaev
+//  move GiGaVolumeUtils into public location
+//
 // Revision 1.1  2002/01/22 18:24:44  ibelyaev
 //  Vanya: update for newer versions of Geant4 and Gaudi
 //
@@ -14,6 +17,7 @@
 #include <string>
 // forward declarations
 class G4LogicalVolume   ; ///< Geant4
+class G4Region          ; ///< Geant4
 class G4VPhysicalVolume ; ///< Geant4
 class GiGaAssembly      ; ///< GiGaCnv
 
@@ -49,6 +53,13 @@ namespace GiGaVolumeUtils
    *  @return pointer to logical assembly
    */
   GiGaAssembly*      findLAssembly ( const std::string& Name );
+
+  /** @function findRegion
+   *  retrieve region from the store by name
+   *  @param name region name
+   *  @return pointer to region
+   */
+  G4Region*          findRegion    ( const std::string& Name );
 
 };
 

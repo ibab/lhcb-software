@@ -1,7 +1,13 @@
-! $Id: release.notes,v 1.46 2003-04-29 10:22:43 witoldp Exp $
+! $Id: release.notes,v 1.47 2003-05-30 15:53:12 ibelyaev Exp $
 ! =============================================================================
 Package         : GiGaCnv
 Package Manager : Vanya Belyaev Ivan.Belyaev@itep.ru
+
+! 2003-05-30 - Ivan BELYAEV
+ - GiGaCnv/GiGaVolumeUtils.h
+   src/Lib/GiGaVolumeUtils.cpp   add 'findRegion' function into the 
+                                 namespace GiGaVolumeUtils
+ - cmt/requiremewnts             increase the version 
 
 !======================= GiGaCnv v12r0 ===============================
 
