@@ -1,5 +1,10 @@
 // Default monitoring options for production jobs
-BrunelMoni.DetectorList = { "Tr","TRIGGER", "OORICH" };
+BrunelMoni.DetectorList  = { "Tr","TRIGGER" };
+#ifdef WIN32
+// OORICH not yet working on Windows
+#else
+BrunelMoni.DetectorList += { "OORICH" };
+#endif
 
 // Monitor for final combined PIDs
 BrunelMoniOORICHSeq.Members = { "RichPIDMonitor/RichOOPIDMoni" };

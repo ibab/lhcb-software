@@ -106,10 +106,10 @@ use OTAssociators  	v2r2  	OT
 
 # Tracking
 use TrKernel            v11r1   Tr
-use TrFitEvent          v3r3    Tr
+use TrFitEvent          v3r4    Tr
 use VeloTrack           v4r3    Velo
 use TrAssociators       v3r2    Tr
-use LongTrack           v1r2    Tr
+use LongTrack           v1r3    Tr
 use TrFitter            v3r5    Tr
 use TrExtrapolator      v2r3    Tr
 use TrTools             v2r2    Tr
@@ -119,7 +119,7 @@ use TrCleanEx           v2r2    Tr
 use TrIntraPR		v2r2	Tr
 use UpstreamPR		v2r4	Tr
 use VeloTT		v1r2	Tr
-use TrCheck             v1r1    Tr
+use TrCheck             v1r2    Tr
 
 # Muon
 use MuonKernel          v2r1    Muon

@@ -31,8 +31,13 @@ ApplicationMgr.TopAlg += { "BrunelPhase/BrunelMoni" };
 BrunelDigi.DetectorList  = { "SpillOver" };
 BrunelDigi.DetectorList += { "VELO" , "IT", "OT" , "RICH" , "CALO", "MUON" };
 BrunelTrigger.DetectorList = { "TRIGGER" };
-BrunelReco.DetectorList = {"VELO","OT","IT","L1","Tr","RICH","OORICH","CALO","MUON","Timing"};
-
+BrunelReco.DetectorList  = {"VELO","OT","IT","L1","Tr","RICH","CALO","MUON" };
+#ifdef WIN32
+// OORICH does not work on Windows
+#else
+BrunelReco.DetectorList += { "OORICH" };
+#endif
+BrunelReco.DetectorList += { "Timing" };
 //--------------------------------------------------------------
 // Subdetector algorithms
 //--------------------------------------------------------------

@@ -36,12 +36,13 @@ BrunelDstWriter.OptItemList =
 , "/Event/Next#1"
 , "/Event/Next/Header#1"
 , "/Event/Rec/Status#1"
-, "/Event/Rec/Calo/HcalE"
-, "/Event/Rec/Calo/HcalIDe"
-, "/Event/Rec/Calo/HcalIDmu"
-, "/Event/Rec/Calo/PrsE"
-, "/Event/Rec/Calo/PrsID"
-, "/Event/Rec/Calo/EcalID"
+, "/Event/Rec/Calo/HcalE#1"
+, "/Event/Rec/Calo/HcalIDe#1"
+, "/Event/Rec/Calo/HcalIDmu#1"
+, "/Event/Rec/Calo/PrsE#1"
+, "/Event/Rec/Calo/PrsID#1"
+, "/Event/Rec/Calo/EcalID#1"
+, "/Event/Rec/Rich/OOPIDs#1" // OORICH not yet working on Windows
 }; 
 BrunelDstWriter.ItemList = 
 {
@@ -93,7 +94,6 @@ BrunelDstWriter.ItemList =
 , "/Event/Rec/Tr/StatesL#1"
 , "/Event/Rec/Rich#1"
 , "/Event/Rec/Rich/PIDs#1"
-, "/Event/Rec/Rich/OOPIDs#1"
 , "/Event/Rec/Calo#1"
 , "/Event/Rec/Calo/EcalClusters#1"
 , "/Event/Rec/Calo/EcalSplitClusters#1" 

@@ -44,7 +44,11 @@ BrunelMoniTrSeq.Members += { "TrAnalyse" };
 // Rich monitoring
 ApplicationMgr.DLLs += { "RichMonitor" };
 #include "$RICHMONITOROPTS/BrunelMoni.opts" // Standard Rich monitoring
+#ifdef WIN32
+// OORICH not yet working on Windows
+#else
 #include "$RICHMONITOROPTS/OORecoMoni.opts" // OO Reco Rich monitoring
+#endif
 
 // Framework monitoring
 EventSelector_0.doHistos = true;

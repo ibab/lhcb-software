@@ -3,7 +3,7 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
-</PRE><H1><A NAME=v15r1>2002-11-18 Brunel v15r1</A></H1><PRE>
+</PRE><H1><A NAME=v15r1>2002-11-19 Brunel v15r1</A></H1><PRE>
 
  - New tuning:
    . Add OT straw inefficiency at y=0 (OTDet v3r2)
@@ -14,6 +14,8 @@ Purpose: LHCb reconstruction program
    . Improvements in calorimeter S&L corrections (VeloRec v1r0)
    . New calorimeter energy calibration (VeloRec v1r0)
    . Don't digitize unnecessarily 'Next' hits (ITAlgorithms v12r4)
+   . Changes in definitions for entries in efficiency table (TrCheck v1r2)
+   . Further tuning of forward tracks (LongTrack v1r3)
 
  - New features:
    . Possibility to use units in job options files (GaudiConf v6r4)
@@ -24,6 +26,7 @@ Purpose: LHCb reconstruction program
    . Add TT occupancy histos (ITCheckers v1r1)
    . New options file to define monitoring for production jobs (included by 
      default) (BrunelMoniProd.opts)
+   . OO Rich global algorithm executed in parallel with Fortran (Linux only)
 
  - DST changes:
    . Updated list of algorithms in Trig/AlgUsedTimes and added elapsed time 
@@ -36,7 +39,7 @@ Purpose: LHCb reconstruction program
      the DST when  ProtoParticle cration is moved to Brunel.
    . Rename CaloClusters2MCParticles to EcalClusters2MCParticles
      EcalCelAutoClusters to EcalClusters, SplitClusters to EcalSplitClusters
-   . Add /Event/Rec/Rich/OOPIDs for tests (not yet useful for physics!)
+   . Add /Event/Rec/Rich/OOPIDs for tests (Linux only, not useful for physics!)
 
  - Bug fixes:
    . Fix small memory leaks (MuonSicbCnv v6r6, TrIntraPR v2r2)
