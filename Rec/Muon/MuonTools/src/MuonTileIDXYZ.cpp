@@ -1,4 +1,4 @@
-// $Id: MuonTileIDXYZ.cpp,v 1.5 2002-04-04 08:32:25 dhcroft Exp $
+// $Id: MuonTileIDXYZ.cpp,v 1.6 2002-04-04 08:36:16 dhcroft Exp $
 // Include files 
 #include <cstdio>
 #include <cmath>
@@ -275,7 +275,7 @@ StatusCode MuonTileIDXYZ::locateChamberTileAndGap(const double& x,
     return StatusCode::FAILURE;
   }
 
-  if( xFraction > 8.000021 || yFraction > 8.000021 ){
+  if( xFraction > 8.08 || yFraction > 8.08 ){
     log << MSG::WARNING << " Found a point outside the active chambers! " 
         << endreq;
     return StatusCode::FAILURE;
@@ -299,7 +299,7 @@ StatusCode MuonTileIDXYZ::locateChamberTileAndGap(const double& x,
   }
   if ( (8.08 > xFraction && 8.08 > yFraction) &&
         (3.96 < xFraction || 3.96 < yFraction) ){
-    // region 3 is 1/2 in x and y (also check not in R2)
+    // region 4 is to outside in x and y (also check not in R3)
     tryRegion.push_back(3);    
   }
 

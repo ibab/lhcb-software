@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.5 2002-04-04 08:32:18 dhcroft Exp $
+! $Id: release.notes,v 1.6 2002-04-04 08:34:44 dhcroft Exp $
 ! =============================================================================
 ! CVS tag $Name: not supported by cvs2svn $ 
 ! =============================================================================
@@ -10,6 +10,7 @@
 ! 04/04/2002 David Hutchcroft
   Corrected mistake in the size of the beam pipe hole (was too large) when
   converting xyz to tiles.
+  Also tweaked the overlaps in the quaters to be slightly larger.
 
 ! =========v1r0==============================================================
 ! 27/3/2002 David Hutchcroft
