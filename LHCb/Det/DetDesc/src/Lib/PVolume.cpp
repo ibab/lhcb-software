@@ -2,6 +2,9 @@
 /// CVS tag $Name: not supported by cvs2svn $ 
 /// ===========================================================================
 /// $Log: not supported by cvs2svn $
+/// Revision 1.9  2001/08/10 16:41:29  ibelyaev
+/// modifitcations in IDetectorElement and related classes
+///
 /// Revision 1.8  2001/08/09 16:48:01  ibelyaev
 /// update in interfaces and redesign of solids
 /// 
@@ -69,6 +72,7 @@ PVolume::PVolume ( const std::string& PhysVol_name  ,
   : m_pv_name      ( PhysVol_name   ) 
   , m_pv_lvname    ( LogVol_name    ) 
   , m_pv_matrix    (                )
+  , m_pv_imatrix   ( 0              )
   , m_pv_lvolume   ( 0              )
 {
   // NB!!! transformaion is given by Translation and then Rotation!!!
@@ -90,6 +94,7 @@ PVolume::PVolume ( const std::string&    PhysVol_name ,
   : m_pv_name      ( PhysVol_name   ) 
   , m_pv_lvname    ( LogVol_name    ) 
   , m_pv_matrix    ( Transform      )
+  , m_pv_imatrix   ( 0              )
   , m_pv_lvolume   ( 0              )
 { addRef(); };
 
