@@ -1,8 +1,8 @@
-# $Id: requirements,v 1.8 2002-12-04 18:39:34 ranjard Exp $
+# $Id: requirements,v 1.9 2003-06-11 11:49:36 cattanem Exp $
 # =========================================================================
 
 package  OTDet 
-version  v3r3
+version  v4r0
 
 # =============== structure ===============================================	
 branches         src cmt doc OTDet 
@@ -36,3 +36,8 @@ apply_pattern    package_Lshlibflags
 macro_append     OTDetLib_shlibflags  " $(DetDesc_linkopts) "
 macro_append     OTDetLib_shlibflags  " $(GaudiKernel_linkopts) "
 macro_append     OTDetLib_shlibflags  " $(CLHEP_linkopts) "
+
+#macro_append cppflags " -pg "
+#macro_append OTDetLib_shlibflags " -pg "
+#macro_append OTDet_shlibflags " -pg "
+

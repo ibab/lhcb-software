@@ -1,10 +1,17 @@
-! $Id: release.notes,v 1.18 2002-12-04 18:39:34 ranjard Exp $
+! $Id: release.notes,v 1.19 2003-06-11 11:49:36 cattanem Exp $
 ! Package     : OTDet
 ! Responsible : J. van Tilburg
 
+! 2003-03-19 - Jeroen van Tilburg
+ - Removed OTLayer. Functionality is now in new class DeOTModule, which 
+   inherits from DetectorElement.
+ - DeOTModule gets its geometry information from the XML geometry-tree.
+   (requires XmlDDDB from v16r0, dbase from v256r0)
+ - Adjusted DeOTDetector to work with DeOTModules instead of OTLayers.
+
 !========================= OTDet v3r3 2002-12-04 =========================
 ! 2002-11-15 - Florence Ranjard
- - reqquirements - use GAUDI v11r2
+ - requirements - use GAUDI v11r2
 
 !========================= OTDet v3r2 2002-11-13 ===========================
 ! 2002-11-12 - Jeroen van Tilburg

@@ -1,4 +1,4 @@
-// $Id: DeOTDetector.h,v 1.10 2002-11-11 11:40:39 jvantilb Exp $
+// $Id: DeOTDetector.h,v 1.11 2003-06-11 11:49:35 cattanem Exp $
 #ifndef OTDET_DEOTDETECTOR_H
 #define OTDET_DEOTDETECTOR_H 1
 
@@ -6,24 +6,29 @@
 #include "DetDesc/DetectorElement.h"
 
 // OTDet
-#include "OTDet/OTLayer.h"
+#include "OTDet/DeOTStation.h"
+#include "OTDet/DeOTLayer.h"
+#include "OTDet/DeOTModule.h"
 
 // Kernel
 #include "Kernel/OTChannelID.h"
 
+// CLHEP
+#include "CLHEP/Geometry/Point3D.h"
 
 /** @class DeOTDetector DeOTDetector.h "OTDet/DeOTDetector.h"
  *
  *  This is the detector element class for the Outer Tracker. It 
- *  is able to get the geometry from the XML. The geometry parameters are
- *  stored inside OTLayers. This detector element is used by the OT 
- *  digitization and the track reconstruction.
+ *  is able to get the geometry from the XML. Many geometry parameters are
+ *  stored inside it grand-children, which are derived from DetectorElement
+ *  as well: DeOTModule. DeOTDetector is used by the OT digitization and 
+ *  the track reconstruction.
  *
  *  @author Jeroen van Tilburg jtilburg@nikhef.nl 
  *  @date   26-05-2002
  */
 
-static const CLID& CLID_DeOTDetector = 10100;
+static const CLID& CLID_DeOTDetector = 8101;
 
 class DeOTDetector : public DetectorElement {
 
@@ -41,13 +46,25 @@ public:
   static const CLID& classID () { return CLID_DeOTDetector ; }
   
   /// initialization method 
-  virtual StatusCode initialize(); 
+  virtual StatusCode initialize();
 
-  /// return the closest layer given a z position
-  OTLayer* layer(const double z) const;
+  /// Find the channels and the distances from the MCHits
+  StatusCode calculateHits(const HepPoint3D& entryPoint, 
+                           const HepPoint3D& exitPoint,
+                           std::vector<OTChannelID>& channels,
+                           std::vector<double>& driftDistances );
 
-  /// return the layer given a channel ID
-  OTLayer* layer(OTChannelID aChannel) const;
+  /// return the station for a given stationID
+  DeOTStation* station(unsigned int stationID) const;
+  
+  /// return the layer for a given channelID
+  DeOTLayer* layer(OTChannelID aChannel) const;
+
+  /// return the module for a given channel ID
+  DeOTModule* module(OTChannelID aChannel) const;
+
+  /// return the module for a given point
+  DeOTModule* module(const HepPoint3D& point) const;
 
   /// return the distance along the wire given a channel and position x,y
   double distanceAlongWire(OTChannelID channelID,
@@ -97,17 +114,17 @@ public:
   /// get the first station with OT technology
   unsigned int firstOTStation()  { return m_firstOTStation; }
 
-  /// get the vector of all OT layers
-  std::vector<OTLayer*> allLayers() const { return m_layers; }
+  /// get the maximum # channels in one module
+  unsigned int nMaxChanInModule() { return m_nMaxChanInModule; }
 
-  /// get the first of all channelIDs
-  OTChannelID beginChannel() const;
+  /// get the vector of all OT modules
+  std::vector<DeOTModule*>& modules() { return m_modules; }
 
-  /// return the 'end' channel (= 0)
-  OTChannelID endChannel() const;
+  /// get the vector of all OT modules
+  const std::vector<DeOTModule*>& modules() const { return m_modules; }
 
-  /// get the next channelID.
-  OTChannelID nextChannel(OTChannelID aChannel) const;
+  /// get the total number of readout channels in the OT
+  unsigned int nChannels()  { return m_nChannels; }
 
 private:
 
@@ -116,11 +133,16 @@ private:
   double m_propagationDelay;      ///< speed of propagation along wire
   double m_maxDriftTime;          ///< maximum drift time
   double m_maxDriftTimeCor;       ///< magn. correction on maximum drift time
-  double m_cellRadius;            ///< cell size
+  double m_cellRadius;            ///< cell radius
 
   unsigned int m_numStations;     ///< number of stations
   unsigned int m_firstOTStation;  ///< first OT station
-  std::vector<OTLayer*> m_layers; ///< vector of layers containing geometry
+  std::vector<DeOTStation*> m_stations;///< vector of stations
+  std::vector<DeOTLayer*> m_layers;   ///< vector of layers
+  std::vector<DeOTModule*> m_modules; ///< vector of modules containing geometry
+  unsigned int m_nChannels;       ///< total number of channels in OT
+  unsigned int m_nMaxChanInModule;///< the maximum # channels in 1 module
+  
 };
 
 // -----------------------------------------------------------------------------
@@ -144,14 +166,25 @@ inline double DeOTDetector::driftDistance( const double driftTime) const
   return driftTime * m_cellRadius / m_maxDriftTime;
 }
 
-inline OTChannelID DeOTDetector::beginChannel() const
-{
-  return OTChannelID(m_firstOTStation,1,1,1);
+inline double DeOTDetector::resolution(const double by) const
+{  
+  // Calculate resolution
+  // The form is p1+p2*B^2 (empirical fit to the testbeam results)
+  // p1, p2 vary for different gas mixes
+  // The parameterization is only valid for Bx<1.4T (or there abouts)
+
+  return ( m_resolution - (m_resolutionCor * by * by) );
 }
 
-inline OTChannelID DeOTDetector::endChannel() const
+inline double DeOTDetector::maxDriftTimeFunc(const double by) const
 {
-  return OTChannelID(0,0,0,0);
+  // Calculate max drift as function of B 
+  // The form is p1+p2*B^2 (empirical fit to the testbeam results)
+  // p1, p2 vary for different gas mixes
+  // The parameterization is only valid for Bx<1.4T (or there abouts)
+
+  return (m_maxDriftTime + (m_maxDriftTimeCor * by * by) );
 }
+
 
 #endif  // OTDET_DEOTDETECTOR_H
