@@ -1,0 +1,31 @@
+! -----------------------------------------------------------------------------
+! Package     :  LoKiExamples
+! Responsible :  Vanya BELYAEV     Ivan.Belyaev@itep.ru 
+! Purpose     :  Collection of examples for LoKi package 
+! -----------------------------------------------------------------------------
+
+! 2003-03-27 - Vanya BELYAEV
+ - src/LoKi_Bs2PhiPhi.cpp      new algorithm 
+
+! 2003-03-26 - Vanya BELYAEV
+ - src/LoKi_Bd2KStarGamma.cpp  new "realistic" algorithms 
+                               (based on Galina Pakhlova's code) with 
+                               "analysis" N-Tuple and Event Tag Collection.
+ - src/LoKiExamples_load.cpp   add new algorithm
+ - cmt/requirements            increase the version 
+
+
+! 2003-03-21 - Vanya BELYAEV
+    new examples 
+ - src/LoKi_EventTagTuple.cpp   
+ - src/LoKi_Histos.cpp
+ - src/LoKi_Tuple.cpp
+[
+! 2003-03-12 - Vanya BELYAEV
+ - the first import 
+
+
+! -----------------------------------------------------------------------------
+! The End 
+! -----------------------------------------------------------------------------
+

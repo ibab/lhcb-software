@@ -1,0 +1,52 @@
+# $Id: requirements,v 1.1.1.1 2003-07-24 16:43:49 ibelyaev Exp $ 
+# =============================================================================
+# CVS tag $Name: not supported by cvs2svn $ 
+# =============================================================================
+
+package         LoKiExample
+version         v1r0
+
+# ============= structure =====================================================
+branches        cmt doc src options 
+
+# ============= environment ===================================================
+set LOKIEXAMPLEDOC    $(LOKIEXAMPLEROOT)/doc 
+set LOKIEXAMPLEOPTS   $(LOKIEXAMPLEROOT)/options
+
+# ============= dependencies  =================================================
+use LoKi  v* Tools
+
+# ============= constituents ==================================================
+library LoKiExample         *.cpp 
+
+# ============= patterns ======================================================
+apply_pattern component_library library=LoKiExample 
+
+set   DAVINCIEXE           "${DAVINCIROOT}/${BINDIR}/DaVinci.exe"    
+set   LOKIEXHISTOS         "${LOKIEXAMPLESOPTS}/DV_LoKi_Histos.opts"
+set   LOKIEXTUPLE          "${LOKIEXAMPLESOPTS}/DV_LoKi_Tuple.opts" 
+set   LOKIEXBS2PHIPHI      "${LOKIEXAMPLESOPTS}/DV_LoKi_Bs2PhiPhi.opts" 
+set   LOKIEXBS2PHIGAMMA    "${LOKIEXAMPLESOPTS}/DV_LoKi_Bs2PhiGamma.opts" 
+set   LOKIEXBD2KSTARGAMMA  "${LOKIEXAMPLESOPTS}/DV_LoKi_Bd2KStarGamma.opts" 
+set   LOKIEXPI0            "${LOKIEXAMPLESOPTS}/DV_LoKi_Pi0fromBdTo3pi.opts" 
+set   LOKIEXEVTTAGS        "${LOKIEXAMPLESOPTS}/DV_LoKi_EventTagTuple.opts" 
+                
+alias Histos_exe           "     ${DAVINCIEXE} ${LOKIEXHISTOS}        " \
+      WIN32                " run ${DAVINCIEXE} ${LOKIEXHISTOS}        " 
+alias Tuple_exe            "     ${DAVINCIEXE} ${LOKIEXTUPLE}         " \
+      WIN32                " run ${DAVINCIEXE} ${LOKIEXTUPLE}         " 
+alias Bs2PhiPhi_exe        "     ${DAVINCIEXE} ${LOKIEXBS2PHIPHI}     " \
+      WIN32                " run ${DAVINCIEXE} ${LOKIEXBS2PHIPHI}     " 
+alias Bs2PhiGamma_exe      "     ${DAVINCIEXE} ${LOKIEXBS2PHIGAMMA}   " \
+      WIN32                " run ${DAVINCIEXE} ${LOKIEXBS2PHIGAMMA}   " 
+alias Bd2KStarGamma_exe    "     ${DAVINCIEXE} ${LOKIEXBD2KSTARGAMMA} " \
+      WIN32                " run ${DAVINCIEXE} ${LOKIEXBD2KSTARGAMMA} " 
+alias Pi0_exe              "     ${DAVINCIEXE} ${LOKIEXPI0}           " \
+      WIN32                " run ${DAVINCIEXE} ${LOKIEXPI0}           " 
+alias EvtTag_exe           "     ${DAVINCIEXE} ${LOKIEXEVTTAGS}       " \
+      WIN32                " run ${DAVINCIEXE} ${LOKIEXEVTTAGS}       " 
+
+# =============================================================================
+# The END 
+# =============================================================================
+

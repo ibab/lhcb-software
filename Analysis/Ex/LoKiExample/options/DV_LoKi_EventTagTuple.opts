@@ -1,0 +1,77 @@
+// $Id: DV_LoKi_EventTagTuple.opts,v 1.1.1.1 2003-07-24 16:43:50 ibelyaev Exp $
+// ============================================================================
+// CVS tag $Name: not supported by cvs2svn $
+// ============================================================================
+// $Log: not supported by cvs2svn $
+// Revision 1.1  2003/05/12 13:21:33  ibelyaev
+//  add the options files for all examples
+// 
+// ============================================================================
+// include files 
+#include "$DAVINCIROOT/options/DaVinciCommon.opts"
+#include "$DAVINCIROOT/options/DaVinciv254r1.opts"
+// Histograms
+#include "$STDOPTS/Hbook.opts"
+// ============================================================================
+
+// ============================================================================
+/** @file 
+ *  Options file to drive the simple LoKi example LoKi_EventTagTuple algorithm
+ *  @see LoKi_EvenTagTuple
+ *  @author Vanya BELYAEV  Ivan.Belyaev@itep.ru
+ *  @date 2003-05-12
+ */
+// ============================================================================
+
+// load nesessary libraries 
+ApplicationMgr.DLLs   += { "LoKiExamples" , "LoKi" } ;
+
+// top level algorithms 
+ApplicationMgr.TopAlg  =  {
+  "ChargedProtoPAlg"     ,  // create charged protoparticles 
+  "LoKiPreLoad/Charged"     // create and put into TES charged particles
+};
+
+// configuration of algorithm 'Charged' 
+Charged.PhysDesktop.ParticleMakerType =  "ChargedParticleMaker";
+Charged.PhysDesktop.ChargedParticleMaker.ParticleNames = 
+  { "pi+" , "pi-" , "K+" , "K-" , "p+" , "p~-" , "e+" , "e-" , "mu+" , "mu-" };
+Charged.PhysDesktop.ChargedParticleMaker.ConfLevelCuts = 
+  { 0.01  , 0.01  , 0.01 , 0.01 , 0.01 , 0.01  , 0.01 , 0.01 , 0.01  , 0.01  };
+Charged.PhysDesktop.OutputLocation      = "/Event/Phys/Charged";
+
+ApplicationMgr.OutStream +=  { "Sequencer/SeqEvtTags"           } ;
+SeqEvtTags.Members       +=  { "LoKi_EventTagTuple/EvtTags"     , 
+                               "EvtCollectionStream/TagsWriter" } ;
+
+// configuration of algorithm 'EvtTags' 
+EvtTags.PhysDesktop.InputLocations  = { "/Event/Phys/Charged" };
+EvtTags.SplitTagsDir = false     ; // use raw names for event tags 
+EvtTags.EventTagsLUN = "EVTTAGS" ; // logical file unit 
+
+// configuration of tag writer 
+TagsWriter.ItemList    = { "/NTUPLES/EVTTAGS/EvtTags/Tags1001" };
+TagsWriter.EvtDataSvc  =   "EvtTupleSvc" ;
+
+// event tag collections service 
+ApplicationMgr.ExtSvc += {"TagCollectionSvc/EvtTupleSvc"};
+EvtTupleSvc.Output += 
+  { "EVTTAGS DATAFILE='EventTags.tags' TYP='ROOT' OPT='NEW' "  } ;
+
+// The number of events to process 
+ApplicationMgr.EvtMax  = 100 ;
+
+// input data set:  Bs -> phi phi 
+#include "$LHCBHOME/project/web/cards/615300.opts"
+
+// control for printout 
+MessageSvc.OutputLevel   =   3 ;  // "WARNING" printout level
+EventSelector.PrintFreq  =  10 ;  // make a print only each 10th event 
+// suppress some messages 
+ChargedProtoPAlg.OutputLevel     = 4 ; 
+PrimVtxFinder.OutputLevel        = 4 ; 
+RootEvtCnvSvc.OutputLevel        = 4 ;
+
+// ============================================================================
+// The END 
+// ============================================================================
