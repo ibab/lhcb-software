@@ -366,7 +366,7 @@ StatusCode CaloSCorrectionSequence::operator() ( CaloHypo* hypo ) const {
   logmsg << MSG::VERBOSE << "CaloPosition created..." << endreq;
   HepVector localposition(3);
   localposition(CaloPosition::X)=x;
-  localposition(CaloPosition::X)=y;
+  localposition(CaloPosition::Y)=y;
   localposition(CaloPosition::E)=energy;
   position->setParameters(localposition);
   logmsg << MSG::VERBOSE << "X/Y/E updated..." << endreq;
