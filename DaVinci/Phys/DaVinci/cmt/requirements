@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.86 2004-02-11 19:52:20 gcorti Exp $
+# $Id: requirements,v 1.87 2004-02-18 10:42:15 gcorti Exp $
 # Created    : 07/02/2002
 # Maintainer : Gloria Corti
 #
@@ -45,7 +45,7 @@ use  GaudiAlg 		v6r5
 use  GaudiAud 		v6r4
 use  GaudiDb 		v9r1
 use  GaudiRootDb 	v9r4
-use  GaudiPoolDb	v1r4
+use  GaudiPoolDb	v1r4p1
 use  GaudiObjDesc       v6r2p1
 use  GaudiGSL           v5r0
 use  GaudiPython        v6r1
@@ -107,3 +107,5 @@ apply_pattern application_path
 
 macro DaVinci_linkopts    "${application_linkopts}"
 
+# define aliases
+alias DaVinci "${DAVINCIROOT}/${BINDIR}/DaVinci.exe"

@@ -3,7 +3,7 @@ Package     : Phys/DaVinci
 Package Coordinator : Gloria Corti
 Purpose     : LHCb analysis program 
 
-</PRE><H1><A NAME=v11r1>2004-02-06 DaVinci v11r1 - Development Version</A></H1><PRE>
+</PRE><H1><A NAME=v11r1>2004-02-18 DaVinci v11r1 - Development Version</A></H1><PRE>
  This version is mostly for developement and the main focus is for new data.
  TDR data can be read but not all features are supported beside decay channel
  selections. See details for DaVinci v11r0 and v10r0.
@@ -30,6 +30,13 @@ Purpose     : LHCb analysis program
 
  - Make ProtoParticles with all type of tracsk by default (GlobalReco v4r3)
 
+ - Use GaudiPoolDb v1r4p1 to fix problem with incorrect loading of HepVector
+   (used in TrState{P,L}). Reading from a Pool file allow to make all
+   types of ProtoParticles and PrimaryVertices. 
+
+ - Define DaVinci alias in requirement file to point to optimized executable
+   Options can be passed as argument.
+
  Bug fixes:
  . Fix bug in TrTrasporter fix bug in the construction of the covariance
    matrix passed to the extrapolator. The bug involved the momentum row
@@ -37,10 +44,9 @@ Purpose     : LHCb analysis program
    properly (DaVinciTools v8r5)
 
  Known problems: 
- . Neutral particles cannot be produced currently for new data because not
-   enough information is present on the DST files
- . ChargedProtoP are not made using TTT tracks when reading a Pool input
-   file 
+ . Neutral particles cannot be produced currently when reading new data
+   saved with GaudiDb persistency because not enough information is
+   present on the DST files
 
 </PRE><H1><A NAME=v11r0>2004-02-06 DaVinci v11r0 - Development Version</A></H1><PRE>
 
@@ -63,7 +69,11 @@ Purpose     : LHCb analysis program
    GaudiDb. 
 
  - Adapt DstContent.opts to what written by Brunel v23r0
- 
+
+ Known problems: 
+ . ChargedProtoP are not made using TTT tracks when reading a Pool input
+   file. The problem is in fact that in optimized mode HepVector in 
+   TrState{P,L} is not correctly loaded.
 
 </PRE><H1><A NAME=v10r0>2004-02-05 DaVinci v10r0 - Development Version</A></H1><PRE>
 
