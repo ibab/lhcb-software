@@ -1,4 +1,4 @@
-// $Id: ParticleStuffer.h,v 1.3 2002-10-15 17:51:27 gcorti Exp $
+// $Id: ParticleStuffer.h,v 1.4 2002-12-20 13:36:29 gcorti Exp $
 #ifndef PARTICLESTUFFER_H 
 #define PARTICLESTUFFER_H 1
 
@@ -11,6 +11,7 @@
 
 // from DaVinciTools
 #include "DaVinciTools/IParticleStuffer.h"
+#include "DaVinciTools/IParticleTransporter.h"
 
 // Forward declarations
 class IParticlePropertySvc;
@@ -19,6 +20,7 @@ class IParticlePropertySvc;
  *  Fill a particle given a vertex and a particle ID
  *  @author Paul Colrain
  *  @date   14/03/2002
+ *  Modified by S. Amato to transport parameters to the vertex position 11/10/2002 
  */
 class ParticleStuffer : public AlgTool, 
                         virtual public IParticleStuffer {
@@ -47,6 +49,9 @@ public:
 
 private:
   IParticlePropertySvc* m_ppSvc;        ///< Reference to ParticlePropertySvc
+  IToolSvc* m_pToolSvc;
+  IParticleTransporter* m_pTransporter; ///< Reference to ParticleTransporter
+  std::string m_transporterType;        ///< Type of transporter to use      
 
 };
 

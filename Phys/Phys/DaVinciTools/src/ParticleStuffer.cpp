@@ -1,12 +1,20 @@
-// $Id: ParticleStuffer.cpp,v 1.5 2002-11-13 16:21:14 gcorti Exp $
+// $Id: ParticleStuffer.cpp,v 1.6 2002-12-20 13:36:29 gcorti Exp $
 // Include files 
 
 // 
 #include <math.h>
+// from CLHEP
+#include "CLHEP/Geometry/Point3D.h"
+#include "CLHEP/Matrix/SymMatrix.h"
+#include "CLHEP/Matrix/Matrix.h"
+#include "CLHEP/Matrix/Vector.h"
+#include "CLHEP/Units/PhysicalConstants.h"
+#include "CLHEP/Vector/ThreeVector.h" 
 
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h"
 #include "GaudiKernel/MsgStream.h" 
+#include "GaudiKernel/IToolSvc.h"
 #include "GaudiKernel/IParticlePropertySvc.h"
 #include "GaudiKernel/ParticleProperty.h"
 
@@ -31,15 +39,17 @@ ParticleStuffer::ParticleStuffer( const std::string& type,
                                   const std::string& name,
                                   const IInterface* parent )
   : AlgTool ( type, name , parent )
-  , m_ppSvc(0) {
+  , m_ppSvc(0)
+  , m_pTransporter(0) 
+  , m_transporterType("CombinedTransporter"){
 
   // declare additional Interface
   declareInterface<IParticleStuffer>(this);
+  declareProperty("Transporter", m_transporterType);
 }
 
 //=============================================================================
-// Initialize
-//=============================================================================
+
 StatusCode ParticleStuffer::initialize() {
   MsgStream log( msgSvc(), name() );
   
@@ -51,7 +61,13 @@ StatusCode ParticleStuffer::initialize() {
     log << MSG::FATAL << "ParticlePropertySvc Not Found" << endreq;
     return StatusCode::FAILURE;
   }
-  
+  sc = toolSvc()->retrieveTool(m_transporterType, m_pTransporter, this);
+  if(sc.isFailure()) {
+    log << MSG::FATAL << "Unable to retrieve " << m_transporterType
+        << "tool" << endreq;
+    return sc;
+  }
+
   return StatusCode::SUCCESS;
   
 }
@@ -75,22 +91,41 @@ StatusCode ParticleStuffer::fillParticle( const Vertex& vtx, Particle& part,
   // Set the ParticleID.
   part.setParticleID( pid ); 
 
+  double zVtxPos = vtx.position().z();
   // Set the four-momentum.
   HepLorentzVector lorVec( 0., 0., 0., 0. );
+  HepLorentzVector MotherlorVec( 0., 0., 0., 0. );
   SmartRefVector<Particle>::const_iterator it;  
-  for (it = vtx.products().begin(); 
-        it != vtx.products().end(); it++ ) {
+  HepSymMatrix meMat( 4, 0 ); 
+  HepSymMatrix MothermeMat( 4, 0 ); 
+  
+  Particle transParticle;
+  for (it = vtx.products().begin(); it != vtx.products().end(); it++ ) {
+    if ( (*it)->pointOnTrack().z() > 950.) {
+      log << MSG::DEBUG << "Position > 950 " 
+          << (*it)->pointOnTrack().z() << endreq;
+    }
+
+    // Transport Particle parameters to the vertex position	 
+    StatusCode sctrans = m_pTransporter->transport(*(*it),
+                                                   zVtxPos,
+                                                   transParticle);
+    if ( !sctrans.isSuccess() ) {
+      log << MSG::DEBUG << "Track extrapolation failed" << endreq;
+      return sctrans;
+    }
     lorVec += (*it)->momentum(); 
+    MotherlorVec += transParticle.momentum(); 
+    // Set the four-momentum error matrix.
+    // The slopes+momentum error matrix is set internally.
+    meMat += (*it)->momentumErr();    
+    MothermeMat += transParticle.momentumErr();    
   }
   part.setMomentum( lorVec );
+  part.setMomentum( MotherlorVec );
 
-  // Set the four-momentum error matrix.
-  // The slopes+momentum error matrix is set internally.
-  HepSymMatrix meMat( 4, 0 ); 
-  for (it = vtx.products().begin(); it != vtx.products().end(); it++) {
-    meMat += (*it)->momentumErr();    
-  }
   part.setMomentumErr( meMat );
+  part.setMomentumErr( MothermeMat );
 
   // Set the measured mass.
   part.setMass( part.momentum().mag() ); 
@@ -113,7 +148,7 @@ StatusCode ParticleStuffer::fillParticle( const Vertex& vtx, Particle& part,
   part.setPointOnTrackErr( vtx.positionErr() ); 
 
   // Set the point - four-momentum error matrix.
-  HepMatrix pmeMat( 4, 3, 0 );
+  HepMatrix pmeMat( 4, 3, 0 );  
   part.setPosMomCorr( pmeMat );
 
   // Set the end vertex reference.
