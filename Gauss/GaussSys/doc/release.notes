@@ -4,6 +4,11 @@
 ! Purpose     : Gauss system
 !-----------------------------------------------------------------------------
 
+!===================== GaussSys v19r1 2005-02-28 ===========================
+! 2005-02-28 - Gloria Corti
+ - requirements - use Geant4 v70r0p1, Pythia 6_226.2, photos 209.2, LHCb v18r0,
+                  XmlDDDB v23r1
+
 !===================== GaussSys v19r0 2005-01-11 ===========================
 ! 2005-01-11 - Florence Ranjard
  - requirements - use Geant4 v70r0, Pythia 6_226.2, photos 209.2, LHCb v17r2,
