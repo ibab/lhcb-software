@@ -1,8 +1,4 @@
-// $Id: CaloClustersMCTruth2Alg.cpp,v 1.1 2002-06-13 12:28:47 ibelyaev Exp $
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $
-// ============================================================================
-// $Log: not supported by cvs2svn $
+// $Id: CaloClustersMCTruth2Alg.cpp,v 1.2 2003-12-18 15:33:36 cattanem Exp $
 // ============================================================================
 // Include files
 // LHCbKernel 
@@ -11,11 +7,8 @@
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h"
 #include "GaudiKernel/MsgStream.h"
-#include "GaudiKernel/SmartRef.h"
-#include "GaudiKernel/StreamBuffer.h"
 // Event 
 #include "Event/MCParticle.h"
-#include "Event/KeyedObject.h"
 // CaloDet
 #include "CaloDet/DeCalorimeter.h"
 // CasloEvent/Event
@@ -25,7 +18,7 @@
 #include "CaloClustersMCTruth2Alg.h"
 
 // ============================================================================
-/** @file CaloClusterMCTruth.cpp
+/** @file CaloClustersMCTruth2Alg.cpp
  * 
  *  Implementation file for class : CaloClustersMCTruth2Alg
  *

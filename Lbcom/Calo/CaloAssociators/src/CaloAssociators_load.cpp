@@ -1,16 +1,9 @@
-// $Id: CaloAssociators_load.cpp,v 1.8 2003-04-02 14:46:54 ibelyaev Exp $
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $
-// ============================================================================
-// $Log: not supported by cvs2svn $
+// $Id: CaloAssociators_load.cpp,v 1.9 2003-12-18 15:33:36 cattanem Exp $
 // ============================================================================
 // Include files
 // GaudiKernel 
 #include "GaudiKernel/DeclareFactoryEntries.h"
-#include "GaudiKernel/SmartRef.h"
-#include "GaudiKernel/StreamBuffer.h"
 // Event
-#include "Event/KeyedObject.h"
 #include "Event/MCParticle.h"
 #include "Event/MCVertex.h"
 // CaloEvent/Event 
