@@ -6,6 +6,30 @@
 
 !====================== LinkerEvent v1r2 2004-02-05 ==========================
 ! 2004-02-05 - Olivier Callot
+ - New wrapper class 'AllLinks' to return all links in the LinksByKey object.
+   Templated with TARGET, SOURCE, TARGETCONTAINER, SOURCECONTAINER.
+   Created as the other, i.e. 
+   AllLinks<TARGET, SOURCE, TARGETCONTAINER, SOURCECONTAINER> test(
+            eventSvc(), msgSvc(), name );
+   SOURCECONTAINER defaults to KeyedContainer<SOURCE>
+   TARGETCONTAINER defaults to KeyedContainer<TARGET>
+   SOURCE defaults to KeyedObject<int>
+
+   Methods: 
+     bool notFound() : return true if the LinksByKey object was not found.
+     TARGET* first() : return the target of the first relation
+     TARGET* next()  : return the next target, NULL if no more targets.
+     double weight() : return the weight of the current relation
+     int    key()    : return the key of the SOURCE of the current relation
+     SOURCE* source(): return the source of the relation.
+                       If a relation was made with only a key, a NULL pointer
+                       is returned in this case. key() will return the proper
+                       value
+   This new wrapper is intended to allow complete scanning of the whole 
+   relation table.
+
+
+! 2004-02-05 - Olivier Callot
  - New method 'notFound()' in LinkedTo and LinkedFrom to indicate if the 
    LinksByKey object was found or not.
  - In LinkerWithKey, the LinksByKey is searched for, and if it exist the new

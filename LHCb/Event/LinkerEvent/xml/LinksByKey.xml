@@ -81,14 +81,12 @@ m_increasing = false;
         type      = "std::vector&lt;std::pair&lt;int,int&gt; &gt;"
         name      = "keyIndex"
 	setMeth   = "FALSE"
-	getMeth   = "FALSE"
         desc      = "List of linked objects" />
 
       <attribute
 	type      = "std::vector&lt;LinkReference&gt;"
         name      = "linkReference"
 	setMeth   = "FALSE"
-	getMeth   = "FALSE"
         desc      = "List of references" />
 
       <method
