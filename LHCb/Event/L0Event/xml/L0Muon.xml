@@ -11,7 +11,7 @@
             value="OK=1, EMPTY, ERROR, CRATE_EMPTY, CRATE_ERROR, PU_EMPTY, PU_ERROR, PU_OVERFLOW"/>
     </namespace>
 
-    <class name='L0MuonCandidate' id='6002' author='A. Tsaregorodtsev' desc='L0Muon trigger candidate'>
+    <class name='L0MuonCandidate' id='6002' author='A. Tsaregorodtsev' location="/Event/Trig/L0/Muon" desc='L0Muon trigger candidate'>
       <desc> *  representing the output of the L0Muon trigger processor.</desc>
       <base name='KeyedObject&lt;long&gt;'/>
       <constructor argList="int status" desc="Constructor with just a status info"/>
