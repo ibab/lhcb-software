@@ -1,3 +1,4 @@
+<PRE>
 !-----------------------------------------------------------------------------
 ! Package     : LbcomSys
 ! Responsible : Marco Cattaneo
@@ -22,3 +23,4 @@
 
  - Backwards incompatible fixes for GaudiObjDesc v7r*
   . Adapt to new names of RichSmartID bitfield accessors (RichRecCommon v1r11)
+</PRE>
