@@ -1,24 +1,24 @@
 # =============================================================================
 package GaussTracker
-version v2r1
+version v2r2
 
 # =============== package structure ===========================================
 branches          cmt src doc
 
 # =============== explicit dependencies =======================================  
-use GaussTools    v6r*     Sim
+use GaussTools    v*     Sim
 
 # =============== Event =======================================================
-use VeloEvent     v12r*     Event
-use MuonEvent     v2r*      Event
+use VeloEvent     v*     Event
+use MuonEvent     v*      Event
 
 # =============== Digitizatin and Monitoring =================================
-use OTAlgorithms        v12r*   OT
-use OTAssociators       v2r*    OT
-use VeloAlgorithms      v2r*    Velo
-use VeloAssociators     v1r*    Velo
-use ITAlgorithms        v12r*   IT
-use ITCheckers          v1r*    IT
+use OTAlgorithms        v*   OT
+use OTAssociators       v*   OT
+use VeloAlgorithms      v*   Velo
+use VeloAssociators     v*   Velo
+use ITAlgorithms        v*   IT
+use ITCheckers          v*   IT
 
 # ============== component library ============================================
 library          GaussTracker   *.cpp                  

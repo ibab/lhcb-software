@@ -5,6 +5,11 @@
 !                    tracker like detectors (Velo, OT, IT, Muon)
 !-----------------------------------------------------------------------------
 
+
+!=========================== GaussTracker v2r2 2002-04-29 ======================
+! 2003-04-29 - Witek Pokorski 
+ - requirements - put v* to avoid changing version in the future\
+
 ! 2003-04-08 - Witek Pokorski
  - cosmetic changes in the sensitive detectors code, a few lines commented out
 
