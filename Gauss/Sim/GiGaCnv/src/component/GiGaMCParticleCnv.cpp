@@ -1,8 +1,11 @@
-// $Id: GiGaMCParticleCnv.cpp,v 1.26 2004-04-07 15:47:55 gcorti Exp $ 
+// $Id: GiGaMCParticleCnv.cpp,v 1.27 2004-05-03 13:50:19 gcorti Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.26  2004/04/07 15:47:55  gcorti
+// signal info, extended collision, new vertex types
+//
 // Revision 1.25  2003/10/31 12:40:05  witoldp
 // fixed units in GiGaHepMCCnv
 //
@@ -245,6 +248,14 @@ StatusCode GiGaMCParticleCnv::updateObj
           const GiGaTrajectory* trajectory = gigaTrajectory(*iTr );
           // convert the trajectory into particle and add it into container 
           MCParticle* mcp = Cnv( trajectory );
+
+          // Check when pdg encoding is zero
+          if( 0 == mcp->particleID().pid() ) {
+            std::string message = "PDGEncoding does not exist, G4 name is ";
+            message += trajectory->partDef()->GetParticleName();
+            Warning( message, StatusCode::SUCCESS, 0 );
+          }
+
           // insert the particle to container and fill the reference table 
           const int index = trajectory->trackID() ;
           particles -> insert( mcp );

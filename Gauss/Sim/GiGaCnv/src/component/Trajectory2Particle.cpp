@@ -1,8 +1,12 @@
-// $Id: Trajectory2Particle.cpp,v 1.6 2004-02-14 08:36:08 robbep Exp $ 
+// $Id: Trajectory2Particle.cpp,v 1.7 2004-05-03 13:50:19 gcorti Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.6  2004/02/14 08:36:08  robbep
+// Propagate mixing information when converting from HepMC to G4PrimaryParticle
+// and from GiGaTrajectory to MCParticle.
+//
 // Revision 1.5  2002/12/04 16:25:19  ibelyaev
 //  remove extra calls for 'addRef'
 //
@@ -96,7 +100,14 @@ GiGaCnvFunctors::Trajectory2Particle::operator()
   particle->setMomentum     ( trajectory->fourMomentum()           ) ;
   particle->setParticleID   ( ParticleID( pDef->GetPDGEncoding() ) ) ;
   particle->setHasOscillated( trajectory->hasOscillated()          ) ;
-  ///
+  // ions have zero as pdg encoding 
+  if( 0 == pDef->GetPDGEncoding() ) {
+    ParticleProperty* pProp = ppSvc()->find( pDef->GetParticleName() );
+    if( NULL != pProp ) {
+      particle->particleID().setPid( pProp->jetsetID() );
+    }
+  }
+  
   return particle;
   ///
 };

@@ -1,9 +1,18 @@
-! $Id: release.notes,v 1.84 2004-04-30 12:19:28 ranjard Exp $ 
+! $Id: release.notes,v 1.85 2004-05-03 13:50:18 gcorti Exp $ 
 ! =============================================================================
 ! CVS tag $Name: not supported by cvs2svn $ 
 ! =============================================================================
 Package         : GiGaCnv
 Package Manager : Vanya Belyaev Ivan.Belyaev@itep.ru
+
+!====================== GiGaCnv v15r5 2004-05-03 ============================
+! 2004-05-03 - Gloria CORTI
+ - src/component/Trajectory2Particle.cpp
+	 . when in G4 pdg encoding is set to zero use the name from the
+     ParticlePropertySvc to get corresponding id
+ - src/component/GiGaMCParticleCnv.cpp
+   . introduce check to print at the end of job name G4 name for particles
+     with pdg encoding equal to zero
 
 !====================== GiGaCnv v15r4 2004-04-30 ============================
 ! 2004-04-30 - Patrick Robbe
