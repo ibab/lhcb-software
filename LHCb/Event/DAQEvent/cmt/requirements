@@ -19,7 +19,7 @@ include_dirs $(DAQEVENTROOT)
 # Used packages.
 #============================================================================
 use LHCbKernel   v2r*    Kernel
-use EventKernel  v2r*    Event
+use EventKernel  v3r*    Event
 use GaudiObjDesc v5r* -no_auto_imports
 
 # Produce Header-Files & dictionary from XML description
