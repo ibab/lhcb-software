@@ -70,6 +70,6 @@ use TrAssociators      	v3r5    Tr
 use TrFitEvent         	v3r6    Tr
 
 # LHCb  Examples
-use DetDescExample      v6r0    Ex
+use DetDescExample      v6r1    Ex
 use DumpEventExample    v7r0    Ex
 

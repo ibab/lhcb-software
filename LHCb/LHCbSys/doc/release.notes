@@ -18,7 +18,7 @@
       DetSys v2r2, ITDet v1r5
  
  - Modified package to remove dependency on SICB converters:
-      DumpEventExample v7r0
+      DumpEventExample v7r0, (also DetDescExample v6r1 to use new GaudiConf)
 
 !======================== LHCbSys v12r1 2003-07-08 ========================
 ! 2003-07-08 - Marco Cattaneo
