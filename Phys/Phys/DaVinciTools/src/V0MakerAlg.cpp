@@ -1,4 +1,4 @@
-// $Id: V0MakerAlg.cpp,v 1.2 2003-02-12 19:31:24 gcorti Exp $
+// $Id: V0MakerAlg.cpp,v 1.3 2003-08-05 17:25:19 gcorti Exp $
 // Include files 
 #include <memory>
 
@@ -72,7 +72,7 @@ StatusCode V0MakerAlg::initialize() {
   m_v0ID.setPid( (*partProp).jetsetID() );
 
   msg << MSG::DEBUG << "Retreiving ParticleStuffer" << endreq;
-  sc = toolSvc()->retrieveTool( "ParticleStuffer", m_pStuffer );
+  sc = toolSvc()->retrieveTool( "ParticleStuffer", m_pStuffer, this );
   if( sc.isFailure() ) {
     msg << MSG::ERROR << "ParticleStuffer not found" << endreq;
     return StatusCode::FAILURE;

@@ -1,4 +1,4 @@
-// $Id: CombinedParticleMaker.cpp,v 1.3 2003-06-03 16:59:51 gcorti Exp $
+// $Id: CombinedParticleMaker.cpp,v 1.4 2003-08-05 17:25:19 gcorti Exp $
 // Include files 
 #include <algorithm>
 
@@ -46,6 +46,9 @@ CombinedParticleMaker::CombinedParticleMaker( const std::string& type,
   , m_input( ProtoParticleLocation::Charged )
   , m_exclusive(true)
   , m_addBremPhoton(false)
+  , m_longTracks(true)
+  , m_upstreamTracks(false)
+  , m_vttTracks(false)
 {
 
   // Declaring implemented interfaces
@@ -77,6 +80,10 @@ CombinedParticleMaker::CombinedParticleMaker( const std::string& type,
   declareProperty("PionSelection", m_pionSelection );  
  
   declareProperty("AddBremPhoton", m_addBremPhoton );
+
+  declareProperty("UseLongTracks",     m_longTracks );
+  declareProperty("UseUpstreamTracks", m_upstreamTracks );
+  declareProperty("UseVTTTracks",      m_vttTracks );
 
 }
 
@@ -213,8 +220,29 @@ StatusCode CombinedParticleMaker::initialize() {
     msg << MSG::INFO << endreq;  
   }
 
-  return StatusCode::SUCCESS;
+  msg << MSG::INFO << "The type of tracks to be used are :";
+  bool atLeastOneType = false;
+  if( m_longTracks ) {
+    msg << MSG::INFO << " Long";
+    atLeastOneType = true;
+  }
+  if( m_upstreamTracks ) {
+    msg << MSG::INFO << " Upstream";
+    atLeastOneType = true;
+  }
+  if( m_vttTracks ) {
+    msg << MSG::INFO << " VTT";
+    atLeastOneType = true;
+  }
+  msg << MSG::INFO << endreq;
+  if( !atLeastOneType ) {
+    msg << MSG::INFO << "At least one track type needs to be selected" 
+        << endreq;
+    return StatusCode::FAILURE;
+  }
 
+  return StatusCode::SUCCESS;
+  
 }
 
 //===========================================================================
@@ -383,6 +411,19 @@ StatusCode CombinedParticleMaker::makeParticles( ParticleVector& parts ) {
   StatusCode sc = StatusCode::SUCCESS;
   for( ProtoParticles::const_iterator iProto=protos->begin(); 
        protos->end()!=iProto; ++iProto ) {
+    // check if the track type is to be used
+    bool trkeep = false;
+    const TrStoredTrack* ptrack = (*iProto)->track();
+    if( m_longTracks && ( ptrack->forward() || ptrack->match() ) ) {
+      trkeep = true;
+    }
+    if( m_upstreamTracks && ptrack->upstream() ) {
+      trkeep = true;
+    }
+    if( m_vttTracks && ptrack->veloTT() ) {
+      trkeep = true;
+    }
+    if( !trkeep ) continue;
     // then loop on all particle types to make and their associated criteria
     for( TypeSelections::const_iterator iSel=m_typeSelections.begin();
          m_typeSelections.end()!=iSel; ++iSel ) {

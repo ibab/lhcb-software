@@ -1,4 +1,4 @@
-// $Id: ElectronParticleMaker.cpp,v 1.3 2002-10-22 17:41:33 gcorti Exp $
+// $Id: ElectronParticleMaker.cpp,v 1.4 2003-08-05 17:25:19 gcorti Exp $
 // Include files 
 
 // from Gaudi
@@ -136,7 +136,7 @@ StatusCode ElectronParticleMaker::makeParticles( ParticleVector & parts ) {
   
   // Loop over all Protoparticles and fill Particle if
   // satisfies the detPID and corresponding CL cut  :
-  ProtoParticles::iterator icand = 0;  // Iterator on ProtoParticles.
+  ProtoParticles::iterator icand;  // Iterator on ProtoParticles.
   for( icand=chargedcandidates->begin();
        icand!=chargedcandidates->end(); icand++ ) {
     

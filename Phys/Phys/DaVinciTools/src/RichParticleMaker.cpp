@@ -1,4 +1,4 @@
-// $Id: RichParticleMaker.cpp,v 1.1 2002-10-15 18:12:41 gcorti Exp $
+// $Id: RichParticleMaker.cpp,v 1.2 2003-08-05 17:25:19 gcorti Exp $
 // Include files 
 
 // from Gaudi
@@ -170,8 +170,8 @@ StatusCode RichParticleMaker::makeParticles( ParticleVector & parts ) {
   log << MSG::INFO << "Making all particles as pions or kaons" << endreq;
   // Loop over all Protoparticles and fill Particle using bestPID :
       
-  ProtoParticles::const_iterator icand = 0;  // Iterator on ProtoParticles.
-  for(icand = candidates->begin(); icand != candidates->end(); icand++){
+  for(ProtoParticles::const_iterator icand = candidates->begin();
+      icand != candidates->end(); icand++){
     protoID=(*icand)->bestPID();
     if( protoID == 0 ) continue;
     // Consider muon Best and electron Best as pions
@@ -247,7 +247,7 @@ StatusCode RichParticleMaker::fillParticle( const ProtoParticle* protoCand,
   const HepSymMatrix& trkCov = trackState->pCovMatrix();
     
   // Set pointOnTrackErr: (Error on x and y. No error on z!)
-  HepSymMatrix pointOnTrackErr(3, 0.0);
+  HepSymMatrix pointOnTrackErr(3, 0);
   pointOnTrackErr = trkCov.sub(1,3);
   pointOnTrackErr(3,1) = 0.0;
   pointOnTrackErr(3,2) = 0.0;
@@ -255,14 +255,14 @@ StatusCode RichParticleMaker::fillParticle( const ProtoParticle* protoCand,
   particle->setPointOnTrackErr(pointOnTrackErr);
   
   // Set slope+Momentum error:
-  HepSymMatrix slpMomErr(3, 0.0);
+  HepSymMatrix slpMomErr(3, 0);
   slpMomErr = trkCov.sub(3,5);
   particle->setSlopesMomErr(slpMomErr);
 
   // Set position-slopes correlation matrix. 
   // Position X Momentum correlation matrix also automatically set.
   // No correlation with Z
-  HepMatrix posSlopesCorr(3, 3, 0.0);
+  HepMatrix posSlopesCorr(3, 3, 0);
   int i, j;
   for( i = 1; i <= 3; i++ ) {
     for ( j = 1; j <= 2; j++ ) {

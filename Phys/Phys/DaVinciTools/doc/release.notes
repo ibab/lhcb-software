@@ -1,8 +1,29 @@
-! $Id: release.notes,v 1.62 2003-07-07 09:53:03 gcorti Exp $
+! $Id: release.notes,v 1.63 2003-08-05 17:25:19 gcorti Exp $
 ! Package     : DaVinciTools
 ! Responsible : Gloria Corti, Sandra Amato
 
-! 2003-07-06 - Gloria CORTI
+!========================== DaVinciTools v8r2 2003-08-05 ==================
+ - DaVinciTools/DVAlgorithm.h
+   src/V0MakerAlg.cpp
+   . make ParticleStuffer a private tool in order to set its property
+     < Transporter > without affecting other algorithms
+ - src/CombinedParticleMaker.h & cpp
+   . introduce new properties to select the type of tracks to be kept
+     for analysis: < UseLongTracks > , < UseUpstreamTracks > ,
+     < UseVTTTracks > ( each one can be switched on/off independenly )
+ 
+! 2003-07-23 - Gloria CORTI
+ - src/ChargedParticleMaker.cpp 
+       ElectronParticleMaker.cpp
+       MuonParticleMaker.cpp, 
+       NeutralParticleMaker.cpp
+       PhysDesktop.cpp
+   . remove initialization of iterator = 0 to please gcc32
+ - src/ElectronParticleMaker_bbincl.cpp
+       RichParticleMaker.cpp       
+   . remove initialization of iterator = 0 to please gcc32
+   . set last argument of Hep(Sym)Matrix constructor as int (gcc32 warning)
+
  - cmt/requirements
    . remove use of DetDesc that is not necessary
 

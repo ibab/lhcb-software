@@ -1,4 +1,4 @@
-// $Id: CombinedParticleMaker.h,v 1.1 2003-05-30 11:55:13 gcorti Exp $
+// $Id: CombinedParticleMaker.h,v 1.2 2003-08-05 17:25:19 gcorti Exp $
 #ifndef COMBINEDPARTICLEMAKER_H 
 #define COMBINEDPARTICLEMAKER_H 1
 
@@ -120,6 +120,15 @@ private:
 
   /// Job option to add or not momentum from Brem photon
   bool m_addBremPhoton;
+
+  // Job options to keep long tracks
+  bool m_longTracks;
+
+  // Job options to keep upstream tracks
+  bool m_upstreamTracks;
+  
+  // Job options to keep VTT tracks
+  bool m_vttTracks;
   
   /// List of particles to make with list of selections with related cuts
   TypeSelections m_typeSelections;

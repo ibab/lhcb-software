@@ -1,4 +1,4 @@
-// $Id: MuonParticleMaker.cpp,v 1.2 2002-09-11 16:45:13 gcorti Exp $
+// $Id: MuonParticleMaker.cpp,v 1.3 2003-08-05 17:25:19 gcorti Exp $
 // Include files 
 
 // from Gaudi
@@ -131,8 +131,8 @@ StatusCode MuonParticleMaker::makeParticles( ParticleVector & parts ) {
   
   // Loop over all ProtoParticles and fill Particle if the ProtoParticle 
   // satisfies the PID and corresponding CL cut  :
-  ProtoParticles::iterator icand = 0;  // Iterator on ProtoParticles.
-  for(icand = candidates->begin();icand != candidates->end();icand++){
+  for(ProtoParticles::iterator icand = candidates->begin();
+      icand != candidates->end();icand++){
     protoCL = (*icand)->detPIDvalue( ProtoParticle::MuonMuon );
     log << MSG::VERBOSE <<  "Muon CL = " << protoCL << endreq;
     log << MSG::VERBOSE <<  "Best Id = " <<  (*icand)->bestPID() 

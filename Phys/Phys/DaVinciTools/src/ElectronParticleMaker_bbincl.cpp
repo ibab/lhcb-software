@@ -1,4 +1,4 @@
-// $Id: ElectronParticleMaker_bbincl.cpp,v 1.2 2003-05-01 17:12:06 gcorti Exp $
+// $Id: ElectronParticleMaker_bbincl.cpp,v 1.3 2003-08-05 17:25:19 gcorti Exp $
 // Include files
 
 // from Gaudi
@@ -212,7 +212,7 @@ StatusCode ElectronParticleMaker_bbincl::makeParticles(
   m_nProtoP = m_nProtoP + chargedcandidates->size();
 
   // Iterator on ProtoParticles.
-  ProtoParticles::iterator icand = 0;
+  ProtoParticles::iterator icand;
   for( icand=chargedcandidates->begin();
        icand!=chargedcandidates->end(); icand++ ) {
     
@@ -347,7 +347,7 @@ StatusCode ElectronParticleMaker_bbincl::fillParticle(
   const HepSymMatrix& trkCov = trackState->pCovMatrix();
     
   // Set pointOnTrackErr: (Error on x and y. No error on z!)
-  HepSymMatrix pointOnTrackErr(3, 0.0);
+  HepSymMatrix pointOnTrackErr(3, 0);
   pointOnTrackErr = trkCov.sub(1,3);
   pointOnTrackErr(3,1) = 0.0;
   pointOnTrackErr(3,2) = 0.0;
@@ -355,14 +355,14 @@ StatusCode ElectronParticleMaker_bbincl::fillParticle(
   particle->setPointOnTrackErr(pointOnTrackErr);
   
   // Set slope+Momentum error:
-  HepSymMatrix slpMomErr(3, 0.0);
+  HepSymMatrix slpMomErr(3, 0);
   slpMomErr = trkCov.sub(3,5);
   particle->setSlopesMomErr(slpMomErr);
 
   // Set position-slopes correlation matrix. 
   // Position X Momentum correlation matrix also automatically set.
   // No correlation with Z
-  HepMatrix posSlopesCorr(3, 3, 0.0);
+  HepMatrix posSlopesCorr(3, 3, 0);
   int i, j;
   for( i = 1; i <= 3; i++ ) {
     for ( j = 1; j <= 2; j++ ) {

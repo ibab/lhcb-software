@@ -1,4 +1,4 @@
-// $Id: ChargedParticleMaker.cpp,v 1.5 2003-06-18 12:21:51 gcorti Exp $
+// $Id: ChargedParticleMaker.cpp,v 1.6 2003-08-05 17:25:19 gcorti Exp $
 // Include files 
 
 // from Gaudi
@@ -191,7 +191,7 @@ StatusCode ChargedParticleMaker::makeParticles( ParticleVector & parts ) {
     msg << MSG::DEBUG << "Making all particles " << endreq;
     // Loop over all Protoparticles and fill Particle using bestPID :
     
-    ProtoParticles::const_iterator icand = 0;  // Iterator on ProtoParticles.
+    ProtoParticles::const_iterator icand;// Iterator on ProtoParticles.
     for(icand = candidates->begin(); icand != candidates->end(); icand++){
       protoID=(*icand)->bestPID();
       if( protoID == 0 ) continue;
@@ -220,7 +220,7 @@ StatusCode ChargedParticleMaker::makeParticles( ParticleVector & parts ) {
     // Loop over all Protoparticles. For each one, create Particle 
     // with the PID's for which the conf. level is above requested cut
     
-    ProtoParticles::const_iterator icand = 0;  // Iterator on ProtoParticles.
+    ProtoParticles::const_iterator icand;  // Iterator on ProtoParticles.
     for(icand = candidates->begin(); icand != candidates->end(); icand++){
       int partPerProto=0;
       ProtoParticle::PIDInfoVector::iterator iProtoID;
@@ -231,8 +231,8 @@ StatusCode ChargedParticleMaker::makeParticles( ParticleVector & parts ) {
         
         if ( protoCL >= m_confLevels[0]  ){ 
           // We have a candidate compatible with this PID:
-          msg << MSG::DEBUG << icand << " ProtoID = " << protoID 
-              << " protoCL = " << protoCL << endreq;
+//           msg << MSG::VERBOSE << (*icand) << " ProtoID = " << protoID 
+//               << " protoCL = " << protoCL << endreq;
           
           partPerProto++;
           Particle* particle = new Particle();
@@ -248,7 +248,7 @@ StatusCode ChargedParticleMaker::makeParticles( ParticleVector & parts ) {
           
         }
       }
-      msg << MSG::DEBUG << "Made " << partPerProto 
+      msg << MSG::VERBOSE << "Made " << partPerProto 
           << " particles with one protoparticle"  << endreq;
     }
     return StatusCode::SUCCESS;
@@ -262,7 +262,7 @@ StatusCode ChargedParticleMaker::makeParticles( ParticleVector & parts ) {
     
     // Loop over all ProtoParticles and fill Particle if the ProtoParticle 
     // satisfies the PID and corresponding CL cut  :
-    ProtoParticles::iterator icand = 0;  // Iterator on ProtoParticles.
+    ProtoParticles::iterator icand;  // Iterator on ProtoParticles.
     for(icand = candidates->begin();icand != candidates->end();icand++){  
       // Iterator on requested PID's
       std::vector<std::pair<int,double> >::iterator iWantedPID; 

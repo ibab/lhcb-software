@@ -437,8 +437,8 @@ StatusCode NeutralParticleMaker::makeParticles( ParticleVector & parts ) {
     
     logbk << MSG::DEBUG << "Making all particles " << endreq;
     
-    ProtoParticles::const_iterator icand = 0;  // Iterator on ProtoParticles.
-    for(icand = candidates->begin(); icand != candidates->end(); icand++){
+    for( ProtoParticles::const_iterator icand = candidates->begin();
+         icand != candidates->end(); icand++){
       
       /*
 	std::vector< std::pair<int,double> >::const_iterator infoDet;
@@ -486,8 +486,8 @@ StatusCode NeutralParticleMaker::makeParticles( ParticleVector & parts ) {
       // Loop over all ProtoParticles and fill Particle if the ProtoParticle 
       // satisfies the PID and corresponding CL cut  :
 
-      ProtoParticles::iterator icand = 0;  // Iterator on ProtoParticles.
-      for(icand = candidates->begin();icand != candidates->end();icand++){  
+      for(ProtoParticles::iterator icand = candidates->begin();
+          icand != candidates->end();icand++){  
 
         // Iterator on requested PID's
 

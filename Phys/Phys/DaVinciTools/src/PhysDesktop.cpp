@@ -1,4 +1,4 @@
-// $Id: PhysDesktop.cpp,v 1.9 2003-06-18 12:21:51 gcorti Exp $
+// $Id: PhysDesktop.cpp,v 1.10 2003-08-05 17:25:19 gcorti Exp $
 // Include files 
 
 // from Gaudi
@@ -364,8 +364,8 @@ StatusCode PhysDesktop::saveDesktop( ParticleVector& pToSave,
   // Register the particles containers in the store
   Particles* particlesToSave = new Particles();
   
-  ParticleVector::const_iterator icand = 0;
-  for( icand = pToSave.begin(); icand != pToSave.end(); icand++ ) {
+  for( ParticleVector::const_iterator icand = pToSave.begin();
+       icand != pToSave.end(); icand++ ) {
     // Check if this was already in a Gaudi container (hence in TES)
     if( 0 == (*icand)->parent() ) {
       particlesToSave->insert(*icand);
@@ -394,8 +394,8 @@ StatusCode PhysDesktop::saveDesktop( ParticleVector& pToSave,
   
   // Register the vertices in the store
   Vertices* verticesToSave = new Vertices();
-  VertexVector::iterator iver = 0;
-  for( iver = vToSave.begin(); iver != vToSave.end(); iver++ ) {
+  for( VertexVector::iterator iver = vToSave.begin();
+       iver != vToSave.end(); iver++ ) {
     // Check if this was already in a Gaudi container (hence in TES)
     if( 0 == (*iver)->parent() ) {
       verticesToSave->insert(*iver);
@@ -441,8 +441,8 @@ StatusCode PhysDesktop::saveTrees(ParticleVector& pToSave) {
   // a container
   ParticleVector allpToSave;
   VertexVector allvToSave;
-  ParticleVector::iterator icand = 0;
-  for( icand = pToSave.begin(); icand != pToSave.end(); icand++ ) {
+  for( ParticleVector::iterator icand = pToSave.begin();
+       icand != pToSave.end(); icand++ ) {
     // Find all descendendant from this particle
     findAllTree( *icand, allpToSave, allvToSave);
   }
@@ -463,8 +463,8 @@ StatusCode PhysDesktop::saveTrees(VertexVector& vToSave){
   // a container
   ParticleVector allpToSave;
   VertexVector allvToSave;
-  VertexVector::iterator ivert = 0;
-  for( ivert = vToSave.begin(); ivert != vToSave.end(); ivert++ ) {
+  for( VertexVector::iterator ivert = vToSave.begin(); 
+       ivert != vToSave.end(); ivert++ ) {
     // Find all descendendant from this vertex
     findAllTree( *ivert, allpToSave, allvToSave);
   }
@@ -518,8 +518,8 @@ StatusCode PhysDesktop::saveTrees( int partid ) {
       << "type = " << partid << endreq;
   
   ParticleVector pToSave;
-  ParticleVector::iterator icand = 0;
-  for( icand = m_parts.begin(); icand != m_parts.end(); icand++ ) {
+  for( ParticleVector::iterator icand = m_parts.begin();
+       icand != m_parts.end(); icand++ ) {
     if( ((*icand)->particleID().pid()) == partid ) {
       pToSave.push_back(*icand);
     }
@@ -593,9 +593,9 @@ StatusCode PhysDesktop::getInput(){
       msg << MSG::DEBUG << "    Number of primary vertices  = " 
           << verts->size() << endreq;
       
-      Vertices::iterator ivert = 0;
       int count = 0;
-      for( ivert = verts->begin(); ivert != verts->end(); ivert++ ) {
+      for( Vertices::iterator ivert = verts->begin();
+           ivert != verts->end(); ivert++ ) {
         count++;
         msg << MSG::DEBUG << "    Vertex coordinates = ( " 
             << (*ivert)->position().x() 
@@ -637,8 +637,8 @@ StatusCode PhysDesktop::getInput(){
       msg << MSG::DEBUG << "    Number of Particles retrieved from "
           << location << " = " << parts->size() << endreq;
       
-      Particles::iterator icand = 0;
-      for( icand = parts->begin(); icand != parts->end(); icand++ ) {
+      for( Particles::iterator icand = parts->begin();
+           icand != parts->end(); icand++ ) {
         (*icand)->setDesktop(1);
         m_parts.push_back(*icand);
       }
@@ -665,8 +665,8 @@ StatusCode PhysDesktop::getInput(){
       msg << MSG::DEBUG << "    Number of vertices retrieved from "
           << location << " = " << verts->size() << endreq;
       
-      Vertices::iterator ivert = 0;
-      for( ivert = verts->begin(); ivert != verts->end(); ++ivert ) {
+      for( Vertices::iterator ivert = verts->begin();
+           ivert != verts->end(); ++ivert ) {
         (*ivert)->setDesktop(1);
         m_verts.push_back(*ivert);
       }

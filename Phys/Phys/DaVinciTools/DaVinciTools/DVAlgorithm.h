@@ -153,7 +153,7 @@ inline StatusCode DVAlgorithm::loadTools() {
   }
   
   msg << MSG::DEBUG << ">>> Retreiving ParticleStuffer" << endreq;
-  sc = toolSvc()->retrieveTool("ParticleStuffer", m_pStuffer);
+  sc = toolSvc()->retrieveTool("ParticleStuffer", m_pStuffer, this);
   if( sc.isFailure() ) {
     msg << MSG::ERROR << ">>> DVAlgorithm[ParticleStuffer] not found" 
         << endreq;
