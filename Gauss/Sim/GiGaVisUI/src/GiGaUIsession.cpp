@@ -1,8 +1,11 @@
-// $Id: GiGaUIsession.cpp,v 1.2 2003-02-18 08:14:04 ranjard Exp $
+// $Id: GiGaUIsession.cpp,v 1.3 2003-03-05 12:52:47 ranjard Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2003/02/18 08:14:04  ranjard
+// v1r2 - remove use of G4VIS_NONE and G4UI_NONE
+//
 // Revision 1.1.1.1  2002/12/12 14:46:26  witoldp
 // new package containing GiGa vis and UI
 //
@@ -32,10 +35,12 @@
 #include   "G4UIXaw.hh"  
 #endif //   G4UI_USE_XAW
 /// G4 
-#include    "G4UIterminal.hh"             
+#include    "G4UIterminal.hh" 
+#ifndef WIN32            
 #include    "G4UItcsh.hh"             
 #include    "G4UIcsh.hh"             
 #include    "G4UIGAG.hh" 
+#endif // not WIN32
 
 // local
 #include "GiGaUIsession.h"
@@ -74,10 +79,14 @@ GiGaUIsession::GiGaUIsession
   , m_session  ( 0 ) 
 {
   // the default ordered list of sessions 
+#ifndef WIN32
   m_sessions.push_back( "tcsh"     ) ;
+#endif
   m_sessions.push_back( "Xm"       ) ; 
   m_sessions.push_back( "Wo"       ) ;
+#ifndef WIN32
   m_sessions.push_back( "GAG"      ) ;
+#endif
   m_sessions.push_back( "Xaw"      ) ;
   m_sessions.push_back( "terminal" ) ;
   /// declare new interface 
@@ -128,11 +137,13 @@ StatusCode GiGaUIsession::initialize  ()
           m_session = new G4UIXaw ( System::argc() , System::argv() ) ; 
 #endif ///< G4UI_USE_XAW
         }
+#ifndef WIN32
       else if ( "GAG"       == *session  )    
         { m_session          = new G4UIGAG                     () ; }
       else if ( "tcsh"      == *session  ) 
         { m_session          = new G4UIterminal( new G4UItcsh ()  ) ; }
-      else if ( "csh"       == *session  ) 
+      else if ( "csh"       == *session  )
+#endif ///< WIN32 
         { m_session          = new G4UIterminal( new G4UIcsh ()  ) ; }
       else if ( "terminal"  == *session  ) 
         { m_session          = new G4UIterminal                 () ; }
