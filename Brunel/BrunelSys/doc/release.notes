@@ -13,7 +13,7 @@ Output data incompatible with DC04 versions
                     RichRecTools, RichRecMCTools, RichRecQC (now in LbcomSys)
 - Packages modified: LongTrack v1r14, ITCheckers v2r4p1, RichRecSys v1r15,
                      TrgTools v7r1, TrgBrunel v1r2, TrCheck v2r8, TrgVelo v7r1,
-                     TrFitEvent v4r8
+                     TrFitEvent v4r9
 
 - New tuning:
   . Use a "new" error matrix calculation in TrgVelo, based on the old one from
@@ -23,7 +23,7 @@ Output data incompatible with DC04 versions
   . Changes to avoid duplicate entries in linker tables (AsctToLinker v1r4)
   . Correctly flag Ks tracks in TrAnalyse summary table (TrCheck v2r8)
   . Correctly recognise VeloBack tracks coming from new TrgVelo (TrgBrunel v1r2)
-  . Fix phi measurement in VeloPhiClusterOnTrack (TrFitEvent v4r8) 
+  . Fix phi measurement in VeloPhiClusterOnTrack (TrFitEvent v4r9) 
   . Use correct Velo sensor numbers (XmlDDDB v23r2)
 
 - Packaging changes:
