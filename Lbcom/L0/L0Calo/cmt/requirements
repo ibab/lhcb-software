@@ -1,11 +1,9 @@
 package		L0Calo
-version 	v7r5
+version 	v7r6
 
 # ================ structure =============================================
 branches	src cmt doc options
-
-# ================ own includes ==========================================
-include_dirs	$(L0CALOROOT)
+include_path none
 
 # ================ options ===============================================
 set L0CALOOPTS	$(L0CALOROOT)/options
