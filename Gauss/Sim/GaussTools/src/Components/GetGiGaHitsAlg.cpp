@@ -1,4 +1,4 @@
-// $Id: GetGiGaHitsAlg.cpp,v 1.3 2003-06-17 15:54:36 witoldp Exp $
+// $Id: GetGiGaHitsAlg.cpp,v 1.4 2003-07-16 12:43:29 seaso Exp $
 // Include files 
 
 // from Gaudi
@@ -19,6 +19,7 @@
 #include "Event/MCMuonHit.h"
 #include "Event/MCCaloHit.h"
 #include "Event/MCMuonHitPath.h"
+#include "Event/MCRichHit.h"
 #include "Event/MCRichOpticalPhoton.h"
 
 // local
@@ -46,7 +47,7 @@ GetGiGaHitsAlg::GetGiGaHitsAlg( const std::string& name,
   , m_velohits    ( MCVeloHitLocation::Default )
   , m_puvelohits  ( MCVeloHitLocation::PuVeto )
   , m_muonhits    ( MCMuonHitLocation::MCMuonHits )
-  , m_richhits    ( MCHitLocation::RiHits )
+  , m_richhits    ( MCRichHitLocation::Default )
   , m_richop      ( MCRichOpticalPhotonLocation::Default )
   , m_caloHits    ()
 { 
@@ -243,7 +244,7 @@ StatusCode GetGiGaHitsAlg::execute() {
   ///
     if( !m_richhits.empty() )
       {
-        SmartDataPtr<MCHits> 
+        SmartDataPtr<MCRichHits> 
           obj( eventSvc(), m_richhits) ;
 
             if( obj ) 

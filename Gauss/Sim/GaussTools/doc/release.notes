@@ -7,6 +7,7 @@
 
 !======================== GaussTools v8r2 2003-07-15 =======================
 ! 2003-07-15 - Witek Pokorski
+ - GetHitsAlg - changed back to MCRichHits
  - PrintEventAlg - added printing of GenHeader and Collisions
 
 !======================== GaussTools v8r1 2003-07-07 =======================
