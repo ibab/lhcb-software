@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.211 2004-11-29 12:26:55 pkoppenb Exp $
+# $Id: requirements,v 1.212 2004-12-01 08:03:44 pkoppenb Exp $
 # Created    : 07/02/2002
 # Maintainer : P. Koppenburg
 #
@@ -43,8 +43,6 @@ use LHCb                v16r4
 # DaVinciSys v12r5
 #=======================================================
 
-use  Tampering                  v0r5     Phys
-
 # L0 Trigger packages
 use  L0DU               	v6r7p2   L0
 use  L0Calo             	v7r6     L0
@@ -62,8 +60,6 @@ use RichRecQC                   v1r10    Rich
 
 #-- HLT trigger
 use HltGeneric                  v2r0     Hlt
-# use HltSelections               v1r8     Hlt
-# use HltSelChecker               v1r0     Hlt
 
 # Enable neutral ProtoParticles production and CaloPIDs
 use  CaloPIDs           	v2r4     Calo 

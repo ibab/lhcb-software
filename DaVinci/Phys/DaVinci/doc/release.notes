@@ -3,6 +3,657 @@ Package     : Phys/DaVinci
 Package Coordinator : Patrick Koppenburg
 Purpose     : LHCb analysis program 
 
+</PRE><H1><A NAME=v12r5>2004-12-01 DaVinci v12r5 - Version with many new developments</A></H1><PRE>
+
+ Many additions:
+ - Hlt: HltGeneric is there. The RICH and Calo can be used in the TrgParticleMaker
+   This needs to add a lot of RICH packages to DaVinci
+ - VertexFit and extrapolators updated.  
+ - New Filters.
+ - Updated LoKi v3r6 and LoKiHlt v2r0
+ - Updated DaVinciEff package
+ - Small change in PhysDeskTop, so please recompile all you private code when 
+   moving to this version.
+
+################################################################################
+#                               DAVINCI v12r5                                  #
+################################################################################
+##################################### CALO #####################################
+##################################### EVENT ####################################
+##################################### HLT ######################################
+!========================== HltGeneric v2r0 2004-12-01 ===================
+! 2004-12-01 - P. Koppenburg
+  - options/HltGeneric.opts
+    . Add DecodeTTFromRaw and empty "GaudiSequencer/TrgRICH4HLTSeq"
+      to follow $TRGSUSROOT/options/Hlt.opts
+
+! 2004-11-18 - P. Koppenburg
+  - options/HltGeneric.opts
+    . Add TrgCalo sequence
+
+! 2004-11-01 - J.A. Hernando
+
+  - src/HltGenericSelection.cpp
+    . Possibility of selecting input/output container of tracks
+      options: InputTracksName and OutputTracksName = "HltGeneric/Velo"
+    . The selected tracks are:
+			 1) in a IP window (option: IPMin, IPMax)
+       2) with an particleID = muon(12) 
+    . The tracks are NOT longer flag, they are ONLY located 
+	in the output container
+    . The Output of the algorithm is a output container with 
+	the selected tracks
+
+  - src/HltGenericDecision.cpp
+    . One can indicate the input container 
+      option: InputTracksName
+    . The output of the algorithm is 
+				the L1Score in an TES location and a filter pass
+    . The tracks are non longer required to be in the IP window!
+    . There is no need to UNflag tracks
+
+  - options/HltGeneric.opts
+    . Some modifications to work with the input/output containers
+
+! 2004-11-01 - P. Koppenburg
+  - cmt/requirements
+    . No explicit need for MCTools
+  - options/HltGeneric.opts
+    . Rename some sequencers so that it can be used blidly instead of 
+      $TRGSYSROOT/options/HLt.opts
+
+! 2004-10-25 - Olivier Callot
+ - Remove the testing/setting of the type of the vertex: No longer implemented
+   All vertices from Trg are anyway primary vertices.
+
+! 2004-10-22 J.A Hernando
+  - HltGenericSelection
+        - Option: no select/flag the tracks as good/bad
+        - Option: no flag the Vertex as Primary
+  - HltGenericDecision
+        - Set a L1Score object in the TES with the results
+          Option: Location of the L1Score
+        - Option: To reset the tracks (VeloTT, Long) and clear the flags 
+           (Velo3D) to restart from the begining the recontruction
+  - HltGenericMonitor
+         Some monitor histograms of the generic (# tracks, candidates, etc)	
+  - HltGenericOptions
+        In HltGenericSeq:
+	       Do the Selection, partical reconstruction and decision
+               Decision store in the TES (a L1Score)	
+            Redo from the begining the reconstruction
+            Note: add here the MakeParticles and Link to MCParticle Algos
+
+! 2004-10-19 - P. Koppenburg
+  - options/HltGeneric.opts
+    . Restore HltTrgTrackToContainer in sequence
+    
+! 2004-10-15 - P. Koppenburg
+  - options/HltGeneric.opts
+    . Change name of sequencer to ensure compatibility with HltChecking.opts
+    . Add TrgMuonID.
+    
+! 2004-10-15 - P. Koppenburg
+  - src/HltGenericDecision.cpp
+    . Change track-level info() to debug()
+    
+! 2004-10-15 - P. Koppenburg
+  - options/HltGeneric.opts
+    . HltGenericDecision.Filter = true ;
+      to be able to use the result
+  - src/HltGenericDecision.cpp, src/HltGenericSelection.cpp
+    . Initalize all global variables
+    . Do not use message service in contructor, where it 
+      has not yet been initialized
+    . return GaudiHistoAlg::finalize() in finalize()
+
+! 2004-10-15 - Jose Angel Hernando
+  - recovering some small errors
+
+! 2004-10-14 - P. Koppenburg
+  - HltGenericDecision.cpp
+    . Fix compilation warning
+  - HltGenericDecision.cpp
+    . Fix compilation error
+  
+! 2004-10-11 - Jose Angel Hernando
+  Import of new package.
+  Short description of sources and options:
+  
+  - TrgUtils.{h,cpp}
+      . Some utility funtions: compure IPs, etc.
+  - TrgNode.{h,cpp}
+	    . Link class between a vertex and some IP tracks associated to ti 
+  - HltGenericSelection.{h,cpp}
+      . Selection Algorithm
+          Input: TrgTracks (Velo3D) and TrgVertices
+          Output: TrgTracks flagged as bad or good. good == candidates
+                  TrgVertex flagged as Primary
+          Method: Select a Primary Vertex:
+                       Each track is associated to a Vertex (smalles IP)
+                       A Vertex has a list of tracks in an IP window
+                       Primary Vertes has the largest number associated tracks
+			            Select tracks-candidates
+                       The tracks associated to the selected Primary Vertex
+  - HltGenericDecision.{h,cpp}
+      . Decision Algorithm:
+           Input: TrgTracks (long) and TrgVertices (a Primary flagged)	
+           Output: Algorithm Filtter passed (controlled by an option)
+                   A L1Score object stored in the TES with the decision
+           Method: Hadronic line:
+                       Track candidates: those with an |IP| respect the Primary Vertex
+											 L1confirmation = log(pt0)+log(pt1) of the 2 highest pt tracks
+                   Calorimeter line: pass
+	                 Muon line: pass       
+  - options/HltGeneric.opts
+	        Options to run the Generic
+###################################### L0 ######################################
+!========================== L0Checker v3r0 2004-12-01 ===================
+! 2004-11-22 - Eduardo Rodrigues
+ - typo corrected in calculation in 'finalize' method
+
+! 2004-11-16 - Eduardo Rodrigues
+ - slight code clean-up
+
+! 2004-11-12 - Eduardo Rodrigues
+ - new properties introduced. Now possible to specify a physics
+   selection algorithm on which to calculate the L0-efficiency.
+   The corresponding "selection flag" ntuple entry is filled accordingly
+ - more extensive summary at end of job
+
+! 2004-11-11 - Eduardo Rodrigues
+ - some ntuple variables were renamed, for future easy extension
+   of the ntuple entries
+##################################### PHYS #####################################
+!========================== DaVinciAssociators v5r2p1 2004-12-01 ===================
+! 2004-11-23 - P. Koppenburg
+ - options/TestAssociators.opts
+   . Renamed as DVTestAssociators.opts
+! 2004-11-16 - P. Koppenburg
+ - src/Particle2MCLink.cpp
+   . Small hack to suppress the annoying message 
+     "cannot find container /Trg/Long..."
+!========================== DaVinciEff v3r2 2004-12-01 ===================
+! 2004-11-25 - Peter Igo-Kemenes
+ - src/EffSelCheck.{h,cpp}
+   . Small bug correction for PhiPhi
+   
+! 2004-11-15 - Patrick Koppenburg
+ - src/EffSelCheck.{h,cpp}
+   . Restore the option SelDecay even if it is obsolete and ignored, to
+     ensure some backward-compatibility with existing options.
+   . Make it a GaudiAlgorithm, use err()...  and tool<>()...
+
+! 2004-11-15 - Peter Igo-Kemenes
+ - src/EffSelCheck.cpp
+   . An error has been corrected: There was an unnecessary "break" statement 
+     in a for-loop preventing one from considering ALL decays of interest 
+     which were found in the selection. The break statement has been taken out.
+   . The code has been modified: the selection efficiency is now correctly
+     normalised in such cases where the decay of interest consists of idendical
+     sub-heads (e.g. Bs->PhiPhi).
+   . The range of the mass-histograms for sub-heads is now calculated
+     automatically using the width information in the ParticleProperties. 
+     The minimum range of the mass histograms is +- 100 MeV about the nominal 
+     mass value; but in the case of broad resonances (e.g. a1) this is increased 
+     to +- twice the "width" with width = ParticleProperty->maxWidth(). 
+ - DaVinciEff/v3r1/src/EffSelCheck.h
+   . The above changes in the .cpp code also implied some changes in the 
+     EffSelCheck.h file.
+ - options/DVEffBd2DstarPi.opts
+ - options/DVEffBs2PhiEtac.opts
+ - options/EffBd2DstarPi.opts
+ - options/EffBs2PhiEtac.opts
+   . Adapted to changes
+ - options/DVEffBd2JpsiKs.opts
+ - options/DVEffBs2DsPi.opts
+ - options/DVEffBs2PhiPhi.opts
+ - options/EffBd2JpsiKs.opts
+ - options/EffBs2DsPi.opts
+ - options/EffBs2PhiPhi.opts
+   . New examples
+!========================== DaVinciFilter v1r3 2004-12-01 ===================
+! 2004-11-29 - P. Koppenburg
+  New tool ByPIDFilterCriterion that implements the functionality of 
+  RefineSelection in a FilterCriterion. 
+  - src/ByPIDFilterCriterion.{cpp,h}
+    . New FilterCRiterions
+  - src/ApplyParticleFilter.{cpp,h}
+    . Algorithms that owns a ByPIDFilterCriterion and applies it to all
+      particles in the InputLocation.   
+  The following example options select K* in a 100 MeV mass window
+  with chi2<100 made of pions and kaons with PVIP > 2sigma and 
+  where the pions ahve Pt>300 MeV;
+      FilterDesktop.PhysDesktop.InputLocations = {"Phys/CombineParticles"};
+      FilterDesktop.Filter.Selections = {
+                                      "K*(892)0 : VtxFilterCriterion/KstarFilter,    
+      				            MassFilterCriterion/KstarMass" 
+                                       ,"K+ : PVIPFilterCriterion/PVFilter"
+                                     , "pi+ : KinFilterCriterion/PiFilter,
+      			                PVIPFilterCriterion/PVFilter"
+            				};
+      FilterDesktop.Filter.FilterByDescendents = true ;// use pi and K
+      FilterDesktop.Filter.KstarFilter.MaxChi2 = 100. ;
+      FilterDesktop.Filter.KstarMass.Window = 100*MeV ;
+      FilterDesktop.Filter.PVFilter.MinIPsignif =  2.0;  // used for both 
+      FilterDesktop.Filter.KFilter.MinIPsignif = 2.0 ;
+      FilterDesktop.Filter.PiFilter.MinPt = 300*MeV ;
+  - options/DVTestByPIDFilterParticles.opts
+    New options containing the above example.
+ 
+! 2004-11-29 - P. Koppenburg
+  - src/BooleanFilterCriterion.cpp
+    . Adapt to tool<> 
+  - src/ApplyParticleFilter.cpp
+    . DVAlgorithm that just applies the particle filter. Allows to use or test
+      any filtercriterion.
+ 
+! 2004-11-11 - P. Koppenburg
+  - src/PVIPFilterCriterion.cpp
+    . Adapt to tool<> 
+ 
+! 2004-10-27 - P. Koppenburg
+  - src/FlightDistanceFilterCriterion.{h,cpp}
+  - src/Momentum2FlightAngleFilterCriterion.{h,cpp}
+  - src/PVIPFilterCriterion.{h,cpp}
+   . Use new PVLocator tool to get PV.
+  - src/LifetimeSignificanceCriterion.{h,cpp}
+   & also make it a GaudiTool
+   
+! 2004-10-27  - P. Koppenburg
+  - src/FlightDistanceFilterCriterion.{h,cpp}
+  - src/Momentum2FlightAngleFilterCriterion.{h,cpp}
+  - src/PVIPFilterCriterion.{h,cpp}
+   . Correct location of Trg PV. Temporary.
+!========================== DaVinciKernel v2r1 2004-12-01 ===================
+! 2004-12-01 - P. Koppenbyrg
+ - DaVinciTools/IPhysDesktop.h
+ - src/component/PhysDesktop.h
+ - src/component/PhysDesktop.cpp
+   . Added StatusCode cloneTrees( ParticleVector& ) method that allows
+     to *clone* selected particles (.i.e. duplicating them in the TES).
+     To be revised someday...
+   
+! 2004-11-11 - P. Koppenbyrg
+ - DaVinciTools/DVAlgorithm.h
+ - src/DVAlgorithm.cpp 
+   . loadTools becomes private
+   . m_toolsLoaded removed
+   . New private method fillSelResult takes care of filling SelResult object
+     and creates the container if needed. PreDV is not necessary anymore.
+   . Adapted to get<> put<>...
+   . Tools are now loaded after GaudiTupleAlg::initialize()
+
+! 2004-11-04 - Yuehong Xie
+ - DaVinciTools/IDirectionFitter.h
+  . Add method fitWithDirection that returns the fitted primary vertex, 
+    which is necessary for computing propertime.
+ - DaVinciTools/IKFFitTool.h
+  . Add interface for new kinematic fit tool KFFitTool
+!========================== DaVinciMCTools v5r7 2004-12-01 ===================
+! 2004-11-24 - P. Koppenburg
+ - src/DebugTool.cpp
+   . Use MeV, mm as default units, not GeV, cm
+   . Allow the user to change that with 
+     MyAlg.DebugTool.EnergyUnit = 1*GeV ;
+     MyAlg.DebugTool.LengthUnit = 1*cm ;
+   . Make it a GaudiTool
+   
+! 2004-11-16 - P. Koppenburg
+ - src/FilterGoodDecay.*
+   . New algorithm that checks if a given decay is present in the MC truth
+     Example options:
+        ApplicationMgr.TopAlg += { "FilterGoodDecay" } ;
+        FilterGoodDecay.MCDecayFinder.Decay =  "[D*(2010)- -> ^pi- (D~0 => ^K+ ^pi-)]cc" ;
+!========================== DaVinciTest v5r4 2004-12-01 ===================
+! 2004-11-26 - P. Koppenburg
+  - src/ChargedProtoPAnalysis.cpp
+    . Correct typo in the ntuple filling.
+    . Add a printout in debug() to easily check the slc3 versus rh7 bug 
+!========================== DaVinciTools v11r3 2004-12-01 ===================
+! 2004-11-18 - P. Koppenburg
+  - src/CheckPV.{h,cpp}
+    . New algorithm that checks if a PV is there and has been reconstructed.
+  - options/DVCheckPV.opts
+    . Example option file
+    
+! 2004-11-15 - P. Koppenburg
+  - PreDV.{h,cpp}
+   . Remove it as it is not necessary anymore.
+!========================== DaVinciTransporter v1r2 2004-12-01 ===================
+! 2004-11-08 - Yuehong Xie
+ - src/ParabolicTransporter.cpp
+   . Fix a bug in computing covariance matrix which affected the transort of Ks from magnetic 
+     field to Velo region using CombinedTransporter due to a mistake in initialization.Note 
+     CombinedTransporter doesn't uses linear transporter for neutral particles. 
+   . The channel affected by this bug is Bd2Jpsiks.
+!========================== VertexFit v1r2 2004-12-01 ===================
+! 2004-11-25 - Yuehong Xie
+  - Modified KFFitTool.cpp/.h to make it work with Ks
+
+! 2004-11-04 - Yuehong Xie
+ - New tool KFFitTool.cpp/.h basically does
+  . recomputation of track covariance matrix to fix a bug in Particle class
+  . vertex fitting with Kalman Filter method
+  . mass constraint of narrow width resonant particles 
+  . adding photon or photon pair to a vertex and giving correct covariance matrix 
+  . At the moment Kshort is not reprocessed. 
+ - LagrangeDirectionFitter.cpp/.h
+  . Add new method fitWithDirection which returns the modified primary vertex
+  . Now Direction fitter and LifetimeFitter give very similar result
+ - LifetimeFitter.cpp
+  . Always check if matrix inversion is successful or not
+
+#################################### PHYSSEL ###################################
+!========================== Bd2a1Dstar v2r4 2004-12-01 ===================
+! 2004-11-23 - K. Ciba
+ - D02PiK.cpp
+    . small bug fixed
+ - Bd2a1Dstar.cpp, Bd2a1Dstar.h
+    . changed NTuple definition
+    . now selecting only ONE B0/event (events with multiple B0s reconstructed 
+      are rejected)
+!========================== Bs2MuMu v2r4p3 2004-12-01 ===================
+! 2004-10-29 - P. Koppenburg
+  - src/<someAlgorithms>.cpp
+    . Remove loadTools
+#####################################  REC  ####################################
+##################################### RICH #####################################
+!========================== RichHLTSys v1r0 2004-12-01 ===================
+! 2004-10-27 - Chris Jones
+ - First import
+!========================== RichTrgGlobalPID v1r0 2004-12-01 ===================
+! 2004-11-27 - Chris Jones
+ - Always create RichPID container, even in aborted events.
+
+! 2004-10-25 - Chris Jones
+ - Update to new algorithm from Roger. Keep old for the time being for 
+   comparision purposes.
+
+! 2004-10-14 - Chris Jones
+ - First import
+!========================== RichTrgLocalPID v1r0 2004-12-01 ===================
+! 2004-11-27 - Chris Jones
+ - Always create RichPID container, even in aborted events
+
+! 2004-10-12 - Cristina Lazzeroni
+ - First Version
+!========================== RichTrgTools v1r0 2004-12-01 ===================
+! 2004-08-27 - Chris Jones
+ - First import. Provides the basic functionality needed to process TrgTracks.
+##################################### TOOLS ####################################
+!========================== LoKi v3r6 2004-12-01 ===================
+! 2004-11-26 - Vanya BELYAEV
+
+ - LoKi/Selected.h 
+    fix a bug/feature/typo   (Thanks to slc3 platform)
+
+! 2004-11-25 - Vanya BELYAEV
+
+ - src/MCMatchObj.cpp
+    bug fix for TrgTrack -> MC matching 
+
+
+! 2004-11-24 - Vanya BELYAEV
+
+ - LoKi/Tuple.h, src/Tuple.cpp
+
+    From now TrgDecision object could be put directly into NTuple with 1 line of code:
+    
+    const TrgDecision* trg = get<TrgDecision>( TrgDecisionLocation::Default );
+    Tuple tuple = nTuple("My Analysis N-Tuple");
+    tuple << TupleColumn("", trg ) ;
+    tuple->write() ;
+
+    Now this trick is available for
+       EventHeader, L0DuReport, L1Score and TrgDecision  classes.
+    e.g.
+
+     const EventHeader* hdr = ... ; 
+     const L0DUReport*  l0  = ... ; 
+     const L1Score*     l1  = ... ; 
+     const TrgDecison*  trg = ... ; 
+  
+     tuple << TupleColumn( "" , hdr ) 
+           << TupleColumn( "" , l0  )
+           << TupleColumn( "" , l1  )
+           << TupleColumn( "" , trg ) ;
+
+     tuple->write() ;
+
+     It worth to emphasize here that "TupleColumn" is applicable 
+     for *ALL* types of column, and in the case of 
+      "no template specialization defined" the expresion
+  
+          tuple << TupleColumn( "name" , object ) ;
+
+     is equivalent to the expression
+   
+          tuple->column( "name" , object ) ;
+
+
+! 2004-11-22 - Vanya BELYAEV
+
+ - few new features to modify the technical implementation of MC truth associations
+
+     1) now LoKi is able to use MC truth accosiation for 
+		     "basic" Particles, created from TrgTrack
+     2) The "input" information is in a form of object 
+        which implements the interface: IRelation<TrgTrack,MCParticle> 
+
+     3) From now LoKi algorithm is able to read relation tables 
+        directly from TES
+        The list of tables used from MC relations is under the control 
+        of new proeprties of classs LoKi::Algo
+       
+   -----------------------------------------------------------------------------------
+    Property     | Default |  Description 
+   --------------|---------|----------------------------------------------------------
+   "P2MCtables"  |  {}     | List of TES locations for objects, 
+                 |         |  which implement the interface
+                 |         |     IRelation<Particle,MCParticle> 
+                 |         |  e.g the relation tables for 
+                 |         |  composite particle associator or "chi2" associator
+   --------------|---------|----------------------------------------------------------
+   "P2MCWTables" |  {}     | List of TES locations for objects, 
+                 |         |  which implement the interface 
+                 |         |    IRelationWeighted<Particle,MCParticle,double> 
+                 |         | e.g. the relation table for 
+                 |         | "with chi2" associatoor 
+   --------------|---------|----------------------------------------------------------
+   "PP2MCTables" |  {}     | List of TES locations for objects,
+                 |         | which implement the interface 
+                 |         |    IRelationWeighted<ProtoParticle,MCParticle,double>
+                 |         | e.g. the relation tables for charged and neutral 
+                 |         | protoparticle associators 
+   --------------|---------|----------------------------------------------------------
+   "TG2MCTables" |  {}     | List of TES locations for objects, 
+                 |         | which implement the interface 
+                 |         |    IRelation<TrgTrack,MCParticle>
+                 |         | e.g. the tabel produced by new algorithm
+                 |         | TrgLinks2TrgTables algorithm from Tools/LoKiHlt package 
+   -----------------------------------------------------------------------------------
+
+  NB:
+      The tables used here need to be properly declared to 'Data-On-Demand' 
+      service, or alternatitevy some "fine tutning" with job-options is required.
+ 
+
+      For some time these properties with coexist with "associators" properties, 
+      later the associators properties will be removed 
+ 
+      For current default configuration, all "new" featured are disabled. 
+      For the next step ( based on LHCB_v17r1 ) the interchange of 
+      "direct tables" and "associators" will be performed.
+      And later, the associators will be removed from LoKi.
+     
+  - LoKi/MCTypes.h    - modified to incldue  
+                        new relation type IRelation<TrgTrack,MCParticle>
+  - LoKi/MCTrgTypes.h - useful file to import new relation type into LoKiHlt package
+  - LoKi/Extract.h    - add new function from LoKiHlt package 
+                 const TrgTrack* trgFromParticle ( const Particle* p ) ;
+ 
+  - LoKi/HltCuts.h    - specific HLT functions  (from LoKiHlt package)
+  - LoKi/TrgTracks.h  - specific HLT functions  (from LoKiHlt package) 
+  - src/TrgTracks.cpp - implementation of specific HLT functions 
+   
+
+! 2004-11-19 - Vanya BELYAEV
+
+ - LoKi/NamedRange.h
+   new concept of templated "named" range is introduced.
+   New class LoKi::NamedRange_<TYPE> extends the standard 
+   LoKi::Range_<TYPE> with string field "name".
+ - LoKi/Selected.h 
+   Substitute  Range_  -> NamedRange_ 
+
+   From now all LoKi's ranegs are "Named" range.
+
+   Through the goodies of templates and typedef *NO* user code 
+   needs to be changed, (But everything *MUST* be recompiled)
+
+   This new concept allows more control over loops ets..
+
+    Range pions = select( "pi" , .... ) ;
+   
+    info() << " Range  name=" << pions.name() 
+           <<        " size=" << pions.size() << endreq ;
+  
+  It is especially useful for "explicit loops" 
+ 
+      Range pions = select( "pi" , ... ) ;
+      Range kaons = select( "K"  , ... ) ;
+    
+     Loop D0 = loop( pions + kaons , "D0" );
+
+  === =============================================================== ===
+  === I DO NO UNDERSTAND AT ALL *WHY* PEOPLE ALWAYS ASK ME FOR SUCH   ===
+  === SEMANTICS. I PERSONALLY SEE NO GAIN IN CODE CLARITY FOR THIS    ===
+  === SEMANTICS. BUT ACCORDING TO NUMEROUS EXPLICIT REQUESTS FOR SUCH ===
+  === LOOPING TECHNIQUE IT IS IN PLACE NOW.                           ===
+  === =============================================================== ===
+
+! 2004-11-18 - Vanya BELYAEV
+
+ - LoKi/MCTruth.h, src/MCTruth.cpp 
+      new method MCTruth::add( const MCParticle* ) 
+
+ - LoKi/MCParticles.h, src/MCParticles.cpp
+   LoKi/MCParticleCuts.h 
+
+     new MCPArticle functions:  
+   Alias     Type 
+   MCMOTHER   LoKi::MCParticles::MCMotherFunction   
+   NINMCDOWN  LoKi::MCParticles::MinMCdownTree  
+
+  1) The first is just simple adapter function wich delegated the 
+     fuction to MCParticle::mother object:
+     
+  2) The second one coundt the number of particles in the MC decay tree 
+    whcih satisfy a certain criteria 
+
+ - LoKi/RangeList.h
+ - LoKi/Algo.h, src/AlgoLoop.cpp 
+
+     new file with new class RangeList_ , whcih represents new concept - 
+     vector of ranges. To be used in "test"-mode for 
+     implementation of 
+      Range p1 = ... ;
+      Range p2 = ... ;
+      Loop D = loop( p1 + p2 , ... ) ;
+
+    Not tested yet and not yet ready for usage 
+
+ - cmt/requirements
+    version increment to v3r6 
+
+
+  
+
+! 2004-11-17 - P. Koppenburg
+  - LoKi/Extract.h
+    . Include Event/RichPID.h explicitly instead of a forward-declaration.
+      Allows to compile with new Rich event model. 
+      Kindly suggested by Chris Jones.
+!========================== LoKiHlt v2r0 2004-12-01 ===================
+! 2004-11-25 - Vanya BELYAEV
+ - src/Components/TrgLinks2TrgTables.cpp
+    fix a bug for TrgTrack --> MC matching 
+
+
+! 2004-11-23 - Vanya BELYAEV
+
+ - src/Components/LoKiHlt_load.cpp
+    fix a typo 
+
+
+! 2004-11-22 - Vanya BELYAEV
+
+ - LoKi/HltCuts.h, LoKi/TrgTracks.h, src/TrgTracks.cpp 
+
+     these files are moved into LoKi to minimize some weird inter-dependencies 
+
+ - src/Components/TrgLinks2TrgTables.cpp
+ 
+     helper algorithm to decode the idiotic "Linker"-bases MC-truth 
+     associations TrgTracks into regular Relation Table
+  
+ - cmt/requirements 
+
+     version incrment to v2r0 
+!========================== Utilities v1r12 2004-12-01 ===================
+! 2004-11-24 - P. Koppenburg
+  - src/CheckSelResult.*
+    . In AndMode, result should be false when one algorithm has not been found.
+    
+! 2004-11-18 - P. Koppenburg
+  - src/TriggerFilter.*
+    . Removed. No one is using it.
+    
+! 2004-11-17 - P. Koppenburg
+  - src/TriggerFilter.cpp
+    . Warn that this algorithm is obsolete and exit.
+      Use TrgL0Filter or TrgL1Filter instead.
+###################################### TR ######################################
+###################################### TRG #####################################
+!========================== TrgSys v1r1 2004-12-01 ===================
+! 2004-11-24 - P. Koppenburg
+ - options/L1.opts
+   . FilterAndL1.IgnoreFilterPassed = true ;
+     This avoids the problem that TrgDecision is not created in events where 
+     L1 says no. Bug kindly reported by Kazuyoshi Akiba. 
+   
+! 2004-11-21 - P. Koppenburg
+ - options/Hlt.opts
+   . Added dummy RICH sequence
+   
+! 2004-11-18 - P. Koppenburg
+ - options/Hlt.opts
+   . Added TrgCalo sequence
+!========================== TrgTools v6r1 2004-12-01 ===================
+! 2004-11-24 - Chris Jones
+ - Update defualt RichPID location to "Rec/Rich/TrgPIDs"
+
+! 2004-11-23 - P. Koppenburg for Chris Jones
+ - TrgParticleMaker: 
+   . In RICH mode, make tracks with no PID as kaons if m_makeKaon
+     is set to true. This allows to asymptotically reach 100% kaon
+     efficiency for an infinite DLL cut.
+
+! 2004-11-18 - P. Koppenburg for Chris Jones
+ - TrgParticleMaker: 
+   . Correct duplicate "new Particle" to avoid a memory leak.
+
+! 2004-11-19 - P. Koppenburg
+ - TrgParticleMaker: 
+   . Remove one "if ( m_makeKaon ) {" block to avoid making all tracks as kaons
+     twice.
+   . Set UseRichPID to false by default.
+
+! 2004-11-18 - P. Koppenburg for Chris Jones
+ - TrgParticleMaker: 
+   . Add possibility to use RICH.
+################################################################################
 </PRE><H1><A NAME=v12r4>2004-11-12 DaVinci v12r4 - updated version for DC04 stripping</A></H1><PRE>
 
  Release for stripping production with updated trigger. All
