@@ -1,6 +1,6 @@
 # =============================================================================
 package GaussTracker
-version v2r5
+version v2r6
 
 # =============== package structure ===========================================
 branches          cmt src doc
@@ -13,12 +13,12 @@ use VeloEvent     v*     Event
 use MuonEvent     v*      Event
 
 # =============== Digitizatin and Monitoring =================================
-use OTAlgorithms        v*   OT
-use OTAssociators       v*   OT
-use VeloAlgorithms      v*   Velo
-use VeloAssociators     v*   Velo
-use ITAlgorithms        v*   IT
-use ITCheckers          v*   IT
+#use OTAlgorithms        v*   OT
+#use OTAssociators       v*   OT
+#use VeloAlgorithms      v*   Velo
+#use VeloAssociators     v*   Velo
+#use ITAlgorithms        v*   IT
+#use ITCheckers          v*   IT
 
 # ============== component library ============================================
 library          GaussTracker   *.cpp                  
