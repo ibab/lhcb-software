@@ -1,8 +1,11 @@
-// $Id: CaloHashMap.h,v 1.2 2002-04-01 11:00:35 ibelyaev Exp $
+// $Id: CaloHashMap.h,v 1.3 2002-04-07 15:32:00 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2002/04/01 11:00:35  ibelyaev
+// enrich CaloAlgorithm,CaloTool,CaloMap and CaloHashMap interafces
+//
 // Revision 1.1  2002/03/26 18:37:05  ibelyaev
 //  some restructurisation and map wrappers
 //
@@ -162,22 +165,22 @@ public:
   /** iterator for sequential access to the content of the "map"
    *  @return begin-iterator (non-const version) 
    */
-  Map::iterator       begin ()       { return m_map.begin() ; }
+  Map::iterator       begin ()       { return m_map.begin () ; }
 
   /** iterator for sequential access to the content of the "map"
    *  @return begin-iterator (const version) 
    */
-  Map::const_iterator begin () const { return m_map.begin() ; }
+  Map::const_iterator begin () const { return m_map.begin () ; }
 
   /** iterator for sequential access to the content of the "map"
    *  @return end-iterator (non-const version) 
    */
-  Map::iterator       end   ()       { return m_map.begin() ; }
+  Map::iterator       end   ()       { return m_map.end   () ; }
 
   /** iterator for sequential access to the content of the "map"
    *  @return end-iterator (const version) 
    */
-  Map::const_iterator end   () const { return m_map.begin() ; }
+  Map::const_iterator end   () const { return m_map.end   () ; }
 
 private:
 

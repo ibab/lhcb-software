@@ -1,8 +1,11 @@
-// $Id: CaloAlgorithm.h,v 1.9 2002-04-05 17:52:51 ibelyaev Exp $ 
+// $Id: CaloAlgorithm.h,v 1.10 2002-04-07 15:32:00 ibelyaev Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.9  2002/04/05 17:52:51  ibelyaev
+//  add 'tool->addRef()' to 'tool()' methods
+//
 // Revision 1.8  2002/04/05 17:05:43  ibelyaev
 //  improve teh MSG::DEBUG printout for CaloTool/CaloAlgorithm classes
 //
@@ -136,8 +139,6 @@ protected:
     TYPE* aux = object ;
     Assert(  aux     ,  " get<>():: No valid data at '" + location + "'" );
     const std::string type( System::typeinfoName( typeid( *aux ) ) );
-    // add the reference 
-    tool -> addRef();                               
     // debug printout 
     Print( " The data of type '"      + type                + 
            "' from address '"         + location            + 
@@ -228,6 +229,8 @@ protected:
             "Could not retrieve Tool'" + type + "'" , sc ) ;
     Assert( 0 != tool      , 
             "Could not retrieve Tool'" + type + "'"     ) ;
+    // add the reference 
+    tool -> addRef();                               
     // debug printout 
     Print( " The Tool of type '" + tool->type() + 
            "'/'"                 + tool->name() + 

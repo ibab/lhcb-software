@@ -1,8 +1,11 @@
-// $Id: CaloTool.cpp,v 1.6 2002-04-05 17:05:44 ibelyaev Exp $
+// $Id: CaloTool.cpp,v 1.7 2002-04-07 15:32:00 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.6  2002/04/05 17:05:44  ibelyaev
+//  improve teh MSG::DEBUG printout for CaloTool/CaloAlgorithm classes
+//
 // Revision 1.5  2002/04/04 20:27:20  ibelyaev
 //  minor improvement in 'get()' and 'put()' methods
 //
@@ -54,9 +57,10 @@ static const std::string s_evtSvcName( "EventDataSvc"    );
  *  @param parent pointer to parent object (service, algorithm or tool)  
  */
 // ============================================================================
-CaloTool::CaloTool( const std::string& type   ,
-                    const std::string& name   ,
-                    const IInterface*  parent )
+CaloTool::CaloTool
+( const std::string& type   ,
+  const std::string& name   ,
+  const IInterface*  parent )
   : AlgTool     ( type , name , parent )
   , m_chronoSvc ( 0  ) 
   , m_toolSvc   ( 0  )
@@ -132,6 +136,30 @@ StatusCode    CaloTool::initialize ()
     if( !detName().empty() && 0 == detSvc() )
       { return Error("Detector name is '"+detName()+"' ,but detSvc()==0!"); }
   }
+  ///
+  { /// print ALL properties 
+    typedef std::vector<Property*> Properties;
+    const Properties& properties = getProperties() ;
+    log << MSG::DEBUG 
+        << " List of ALL properties of "
+        << type ()           << "/" 
+        << name ()           << "   #properties = " 
+        << properties.size() << endreq ;
+    const int   buffer_size  = 256 ;
+    char buffer[buffer_size]       ;
+    for( Properties::const_reverse_iterator property 
+           = properties.rbegin() ;
+         properties.rend() != property ; ++property )  
+      {
+        std::fill( buffer , buffer + buffer_size , 0 );
+        std::ostrstream ost ( buffer , buffer_size );
+        (*property)->nameAndValueAsStream( ost );
+        ost.freeze();
+        log << MSG::DEBUG
+            << "Property ['Name': Value] = " 
+            << ost.str() << endreq ;
+      }
+  } 
   ///
   log << MSG::DEBUG 
       << " Has initialized with 'Detector' = '" << detName() << "'" << endreq ;

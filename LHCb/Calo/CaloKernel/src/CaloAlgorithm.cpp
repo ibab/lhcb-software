@@ -1,8 +1,11 @@
-// $Id: CaloAlgorithm.cpp,v 1.9 2002-04-05 17:05:44 ibelyaev Exp $ 
+// $Id: CaloAlgorithm.cpp,v 1.10 2002-04-07 15:32:00 ibelyaev Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.9  2002/04/05 17:05:44  ibelyaev
+//  improve teh MSG::DEBUG printout for CaloTool/CaloAlgorithm classes
+//
 // Revision 1.8  2002/04/04 20:27:19  ibelyaev
 //  minor improvement in 'get()' and 'put()' methods
 //
@@ -43,6 +46,8 @@
 // from GaudiKernel
 #include "GaudiKernel/IDataProviderSvc.h" 
 #include "GaudiKernel/IToolSvc.h"
+#include "GaudiKernel/IProperty.h"
+#include "GaudiKernel/Property.h"
 #include "GaudiKernel/ISvcLocator.h"
 #include "GaudiKernel/MsgStream.h" 
 #include "GaudiKernel/ObjectVector.h" 
@@ -249,8 +254,6 @@ StatusCode CaloAlgorithm::put
   return sc ;
 };
 
-
-
 // ============================================================================
 /** standard initialization method
  *  @return status code 
@@ -261,6 +264,30 @@ StatusCode CaloAlgorithm::initialize()
   MsgStream log(msgSvc(), name());
   log << MSG::DEBUG 
       << " ==> Initialize the base class CaloAlgorithm" << endreq;
+  ///
+  { /// print ALL properties 
+    typedef std::vector<Property*> Properties;
+    const Properties& properties = getProperties() ;
+    log << MSG::DEBUG 
+        << " List of ALL properties of "
+        << System::typeinfoName( typeid( *this ) ) << "/" 
+        << name ()           << "   #properties = " 
+        << properties.size() << endreq ;
+    const int   buffer_size  = 256 ;
+    char buffer[buffer_size]       ;
+    for( Properties::const_reverse_iterator property 
+           = properties.rbegin() ;
+         properties.rend() != property ; ++property )  
+      {
+        std::fill( buffer , buffer + buffer_size , 0 );
+        std::ostrstream ost ( buffer , buffer_size );
+        (*property)->nameAndValueAsStream( ost );
+        ost.freeze();
+        log << MSG::DEBUG
+            << "Property ['Name': Value] = " 
+            << ost.str() << endreq ;
+      }
+  }
   ///
   log << MSG::DEBUG
       << " \tInput data    ='" << inputData  () << "'" << endreq 
