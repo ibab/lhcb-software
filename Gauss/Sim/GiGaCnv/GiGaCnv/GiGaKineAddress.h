@@ -1,19 +1,20 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Sim/GiGaCnv/GiGaCnv/GiGaKineAddress.h,v 1.2 2001-04-23 17:21:38 ibelyaev Exp $ 
-#ifndef      GIGA_GIGAKINEADDRESS_H
-#define      GIGA_GIGAKINEADDRESS_H  1
+/// ===========================================================================
+/// $Log: not supported by cvs2svn $ 
+/// ===========================================================================
+#ifndef GIGACNV_GIGAKINEADDRESS_H
+#define GIGACNV_GIGAKINEADDRESS_H  1
+/// ===========================================================================
 
 ///
 #include "GaudiKernel/GenericAddress.h"
 
+///
+///   GiGaKineAddress: definition of artificial address
+///                          for Input Kine GiGa store 
+///  Author Vanya Belyaev 
+///  Date   9 Aug 2000
 
-/**      @class GiGaKineAddress GiGaKineAddress.h GiGaCnv/GigaKineAddress.h
-	 
-	 definition of artificial address for Input Kine GiGa store 
-
-	 @author Vanya Belyaev 
-	 @date   9 Aug 2000
-*/
-
+//
 class  GiGaKineAddress: public GenericAddress   
 {
   ///  
@@ -23,7 +24,7 @@ public:
                     const std::string& FileName      , 
                     const int          /* SeqInt */  , 
                     const std::string& ContainerName );
-  ///
+   ///
   GiGaKineAddress(  const GenericLink& Link          ,
                     const std::string& FileName      , 
                     const std::string& ContainerName , 
@@ -38,5 +39,7 @@ public:
 };
 ///
 
+/// ===========================================================================
 #endif   //  __GIGA_GIGACONVERSION_GIGAKINEADDRESS_H__
+/// ===========================================================================
 

@@ -1,6 +1,9 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Sim/GiGaCnv/GiGaCnv/GiGaCnvBase.h,v 1.1.1.1 2001-04-23 08:34:15 ibelyaev Exp $ 
-#ifndef           GIGA_GIGACNVBASE_H 
-#define           GIGA_GIGACNVBASE_H  1 
+/// ===========================================================================
+/// $Log: not supported by cvs2svn $ 
+/// ===========================================================================
+#ifndef GIGA_GIGACNVBASE_H 
+#define GIGA_GIGACNVBASE_H  1 
+/// ===========================================================================
 // STL 
 #include <string> 
 #include <vector> 
@@ -11,6 +14,7 @@
 // GiGa 
 #include "GiGa/IGiGaCnvSvc.h"
 #include "GiGa/IGiGaKineCnvSvc.h"
+// GiGaCnv 
 //
 class IDataProviderSvc     ;
 class IMessageSvc          ; 
@@ -25,10 +29,10 @@ class IGiGaGeomCnvSvc      ;
 class IGiGaHitsCnvSvc      ; 
 //
 
-/** @class IGiGaStackAction IGiGaStackAction.h GiGa/IGiGaStackAction.h
-
+/** @class GiGaCnvBase  GiGaCnvBase.h GiGaCnv/GiGaCnvBase.h
+    
     Base class for  converters from Geant4 to Gaudi and vice versa  
-
+    
     @author  Vanya Belyaev
     @date    21/02/2001
 */
@@ -36,11 +40,12 @@ class IGiGaHitsCnvSvc      ;
 class GiGaCnvBase: public Converter 
 {
   ///  
-protected: 
+ protected: 
   ///
   GiGaCnvBase( const unsigned char  StorageType , 
-                      const CLID&          ClassType   , 
+               const CLID&          ClassType   , 
                ISvcLocator*         Locator     );
+  ///
   virtual ~GiGaCnvBase();
   ///
 public: 
@@ -50,18 +55,29 @@ public:
   ///  
 protected: 
   ///
-  IGiGaCnvSvc*          cnvSvc    () const { return m_GiGaCnvSvc                               ; } 
-  IGiGaGeomCnvSvc*      geoSvc    () const { return m_GiGaGeomCnvSvc                           ; } 
-  IGiGaKineCnvSvc*      kineSvc   () const { return m_GiGaKineCnvSvc                           ; } 
-  IGiGaHitsCnvSvc*      hitsSvc   () const { return m_GiGaHitsCnvSvc                           ; } 
-  IDataProviderSvc*     evtSvc    () const { return m_evtSvc                                   ; }   
-  IDataProviderSvc*     detSvc    () const { return m_detSvc                                   ; }   
-  IChronoStatSvc*       chronoSvc () const { return m_chronoSvc                                ; } 
-  IGiGaSvc*             gigaSvc   () const { return 0 != cnvSvc () ? cnvSvc ()->gigaSvc () : 0 ; } 
-  IGiGaSetUpSvc*        setupSvc  () const { return 0 != cnvSvc () ? cnvSvc ()->setupSvc() : 0 ; } 
-  IParticlePropertySvc* ppSvc     () const { return 0 != kineSvc() ? kineSvc()->ppSvc   () : 0 ; } 
+  inline IGiGaCnvSvc*          cnvSvc    () const 
+  { return m_GiGaCnvSvc                               ; } 
+  inline IGiGaGeomCnvSvc*      geoSvc    () const 
+  { return m_GiGaGeomCnvSvc                           ; } 
+  inline IGiGaKineCnvSvc*      kineSvc   () const 
+  { return m_GiGaKineCnvSvc                           ; } 
+  inline IGiGaHitsCnvSvc*      hitsSvc   () const 
+  { return m_GiGaHitsCnvSvc                           ; } 
+  inline IDataProviderSvc*     evtSvc    () const 
+  { return m_evtSvc                                   ; }   
+  inline IDataProviderSvc*     detSvc    () const 
+  { return m_detSvc                                   ; }   
+  inline IChronoStatSvc*       chronoSvc () const 
+  { return m_chronoSvc                                ; } 
+  inline IGiGaSvc*             gigaSvc   () const 
+  { return 0 != cnvSvc () ? cnvSvc ()->gigaSvc () : 0 ; } 
+  inline IGiGaSetUpSvc*        setupSvc  () const 
+  { return 0 != cnvSvc () ? cnvSvc ()->setupSvc() : 0 ; } 
+  inline IParticlePropertySvc* ppSvc     () const 
+  { return 0 != kineSvc() ? kineSvc()->ppSvc   () : 0 ; } 
   ///  
-  StatusCode Error     ( const std::string& Message , const StatusCode& status = StatusCode::FAILURE );
+  StatusCode Error     ( const std::string& Message , 
+                         const StatusCode& status = StatusCode::FAILURE );
   ///
   StatusCode Exception ( const std::string    & msg                        ,   
                          const GaudiException & exc                        , 
@@ -77,8 +93,8 @@ protected:
   ///
   inline const std::string&  name     () { return m_ConverterName; } 
   ///
-  void setNameOfGiGaConversionService( const std::string& NameOfGiGaConversionService ) 
-  { m_NameOfGiGaConversionService = NameOfGiGaConversionService ; }                     
+  inline void setNameOfGiGaConversionService( const std::string& CnvSvc ) 
+  { m_NameOfGiGaConversionService = CnvSvc ; }                     
   ///
   void setConverterName ( const std::string& ConverterName ) 
 { m_ConverterName  = ConverterName ; } 
@@ -110,7 +126,9 @@ private:
 ///
 
  
+/// ===========================================================================
 #endif    //      GIGA_GIGACNVBASE_H 
+/// ===========================================================================
 
 
 

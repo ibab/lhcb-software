@@ -1,12 +1,16 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Sim/GiGaCnv/src/component/GiGaHitsCnvSvc.h,v 1.1.1.1 2001-04-23 08:34:15 ibelyaev Exp $ 
+/// ===========================================================================
+/// $Log: not supported by cvs2svn $ 
+/// ===========================================================================
+/// ===========================================================================
 #ifndef      GIGA_GIGAHitsCNVSVC_H 
 #define      GIGA_GIGAHitsCNVSVC_H  1 
+/// ===========================================================================
 /// STL 
 #include <string> 
 /// GiGa 
+#include "GiGa/GiGaCnvSvcBase.h" 
 #include "GiGa/IGiGaHitsCnvSvc.h" 
-/// GiGaCnv 
-#include "GiGaCnv/GiGaCnvSvcBase.h" 
+/// GiGaCnv  
 ///
 template <class SERVICE> 
 class SvcFactory; 

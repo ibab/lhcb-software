@@ -1,12 +1,15 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Sim/GiGaCnv/src/component/GiGaKineCnvSvc.h,v 1.1.1.1 2001-04-23 08:34:15 ibelyaev Exp $ 
+/// ===========================================================================
+/// $Log: not supported by cvs2svn $ 
+/// ===========================================================================
 #ifndef      GIGA_GIGAKINECNVSVC_H 
 #define      GIGA_GIGAKINECNVSVC_H  1 
+/// ===========================================================================
 /// from STL 
 #include <string> 
 /// from GiGa 
+#include "GiGa/GiGaCnvSvcBase.h" 
 #include "GiGa/IGiGaKineCnvSvc.h" 
-/// From GiGaCnv 
-#include "GiGaCnv/GiGaCnvSvcBase.h" 
+/// from GiGaCnv  
 ///
 template <class SERVICE> 
 class SvcFactory; 
@@ -43,7 +46,8 @@ public:
   virtual StatusCode            initialize() ;
   virtual StatusCode            finalize  () ; 
   ///
-  virtual IParticlePropertySvc* ppSvc     () { return GiGaCnvSvcBase::ppSvc(); } 
+  virtual IParticlePropertySvc* ppSvc     () 
+  { return GiGaCnvSvcBase::ppSvc(); } 
   ///
 };        
 ///

@@ -1,13 +1,15 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Sim/GiGaCnv/src/component/GiGaGeomCnvSvc.h,v 1.1.1.1 2001-04-23 08:34:15 ibelyaev Exp $ 
-#ifndef      GIGA_GIGAGEOMCNVSVC_H 
-#define      GIGA_GIGAGEOMCNVSVC_H 1 
+/// ===========================================================================
+/// $Log: not supported by cvs2svn $ 
+/// ===========================================================================
+#ifndef  GIGACNV_GIGAGEOMCNVSVC_H 
+#define  GIGACNV_GIGAGEOMCNVSVC_H 1 
+/// ===========================================================================
 /// STL 
 #include <string> 
 #include <vector> 
 /// GiGa 
-#include "GiGa/IGiGaGeomCnvSvc.h" 
-/// GiGaCnv 
 #include "GiGaCnv/GiGaCnvSvcBase.h" 
+#include "GiGa/IGiGaGeomCnvSvc.h" 
 ///
 class G4VPhysicalVolume; 
 class G4VSolid;
@@ -28,7 +30,8 @@ class SvcFactory;
 
 /** @class GiGaGeomCnvSvc GiGaGeomCnvSvc.h GiGa/GiGaGeomCnvSvc.h
     
-    Convertersion service for convertiong Gaugi detector and geometry description 
+    Convertersion service for convertiong Gaugi detector 
+     and geometry description 
     into Geant4 geometry and detectro description 
     
     @author  Vanya Belyaev
@@ -126,13 +129,13 @@ public:
   float                            m_worldY        ;
   float                            m_worldZ        ;
   ///
-  std::string                      m_worldMagField ; /// global magnetic field 
+  std::string  m_worldMagField ; ///< global magnetic field 
   ////
-  SDobjects                        m_SDs           ; /// created sensitive detectors 
-  SDfactories                      m_SDFs          ; /// factories for created sensitive detectors 
+  SDobjects    m_SDs  ; ///< created sensitive detectors 
+  SDfactories  m_SDFs ; ///< factories for created sensitive detectors 
   ///
-  MFobjects                        m_MFs           ; /// created magnetic field objects 
-  MFfactories                      m_MFFs          ; /// factories for created magnetic field objects 
+  MFobjects    m_MFs  ; ///< created magnetic field objects 
+  MFfactories  m_MFFs ; ///< factories for created magnetic field objects 
   ///
 };        
 

@@ -1,7 +1,10 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Sim/GiGaCnv/src/component/GiGaLVolumeCnv.h,v 1.1.1.1 2001-04-23 08:34:15 ibelyaev Exp $ 
+/// ===========================================================================
+/// $Log: not supported by cvs2svn $ 
+/// ===========================================================================
 #ifndef     GIGA_GIGALVOLUMECNV_H
 #define     GIGA_GIGALVOLUMECNV_H 1 
-/// GiGaCnv
+/// ===========================================================================
+/// GiGa
 #include "GiGaCnv/GiGaCnvBase.h"
 ///
 template <class T> 
@@ -28,9 +31,11 @@ protected:
   ///
 public:
   /// create representation
-  virtual StatusCode createRep( DataObject*     Object  , IOpaqueAddress*& Address ) ;
+  virtual StatusCode createRep( DataObject*     Object  , 
+                                IOpaqueAddress*& Address ) ;
   /// Update representation 
-  virtual StatusCode updateRep( DataObject*     Object  , IOpaqueAddress*  Address ) ; 
+  virtual StatusCode updateRep( DataObject*     Object  , 
+                                IOpaqueAddress*  Address ) ; 
   /// class ID for converted objects
   static const CLID&         classID();
   /// storage Type 
@@ -38,7 +43,7 @@ public:
   ///
 private:
   ///
-  GiGaLVolumeCnv           ()                       ; /// no default constructor 
+  GiGaLVolumeCnv(); /// no default constructor 
   GiGaLVolumeCnv           ( const GiGaLVolumeCnv& ); /// no copy
   GiGaLVolumeCnv& operator=( const GiGaLVolumeCnv& ); /// no assignment  
   ///

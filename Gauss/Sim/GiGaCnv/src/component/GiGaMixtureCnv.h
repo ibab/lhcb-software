@@ -1,9 +1,12 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Sim/GiGaCnv/src/component/GiGaMixtureCnv.h,v 1.1.1.1 2001-04-23 08:34:15 ibelyaev Exp $ 
-#ifndef         GIGA_GIGAMixtureCnv_H
-#define         GIGA_GIGAMixtureCnv_H  1 
+/// ===========================================================================
+// $Log: not supported by cvs2svn $
+/// ===========================================================================
+#ifndef        GIGACNV_GIGAMixtureCnv_H
+#define        GIGACNV_GIGAMixtureCnv_H  1 
+/// ===========================================================================
 /// from STL 
 #include <set>
-/// base class from GiGaCnv
+/// base class from GiGa
 #include "GiGaCnv/GiGaCnvBase.h" 
 ///
 template <class TYPE> 
@@ -33,9 +36,11 @@ protected:
   ///
 public:
   /// Create representation 
-  virtual StatusCode createRep(DataObject*     Object  , IOpaqueAddress*& Address ) ;
+  virtual StatusCode createRep(DataObject*     Object  , 
+                               IOpaqueAddress*& Address ) ;
   /// Update representation 
-  virtual StatusCode updateRep(DataObject*     Object  , IOpaqueAddress*  Address ) ; 
+  virtual StatusCode updateRep(DataObject*     Object  , 
+                               IOpaqueAddress*  Address ) ; 
   /// Class ID for created object == class ID for this specific converter
   static const CLID&          classID();
   /// storage Type 
@@ -45,7 +50,7 @@ protected:
   /// miscellaneous functions which performs the conversion itself
 private: 
   ///
-  GiGaMixtureCnv           ()                       ; /// no default constructor 
+  GiGaMixtureCnv(); /// no default constructor 
   GiGaMixtureCnv           ( const GiGaMixtureCnv& ); /// no copy
   GiGaMixtureCnv& operator=( const GiGaMixtureCnv& ); /// no assignment 
   ///

@@ -1,9 +1,12 @@
-// $header: $ 
-#ifndef         GIGA_GIGAElementCnv_H
-#define         GIGA_GIGAElementCnv_H  1 
+/// ===========================================================================
+/// $Log: not supported by cvs2svn $
+/// ===========================================================================
+#ifndef         GIGACNV_GIGAElementCnv_H
+#define         GIGACNV_GIGAElementCnv_H  1 
+/// ===========================================================================
 /// STL 
 #include <set>
-/// GiGa
+/// GiGaCnv
 #include "GiGaCnv/GiGaCnvBase.h" 
 ///
 template <class TYPE> 
@@ -13,12 +16,12 @@ class Mixture;
 class Element; 
 class Isotope; 
 
-/** @class GiGaElementCnv GiGaElementCnv.h GiGa/GiGaElementCnv.h
-
-    Converter of Element class to Geant4 
-
-    @author  Vanya Belyaev
-*/
+/** @class GiGaElementCnv GiGaElementCnv.h 
+ *
+ *  Converter of Element class to Geant4 
+ *
+ *  @author  Vanya Belyaev
+ */
 
 class GiGaElementCnv: public GiGaCnvBase
 {
@@ -33,9 +36,11 @@ class GiGaElementCnv: public GiGaCnvBase
   ///
  public:
   /// Create representation 
-  virtual StatusCode createRep(DataObject*     Object  , IOpaqueAddress*& Address ) ;
+  virtual StatusCode createRep(DataObject*     Object  , 
+                               IOpaqueAddress*& Address ) ;
   /// Update representation 
-  virtual StatusCode updateRep(DataObject*     Object  , IOpaqueAddress*  Address ) ; 
+  virtual StatusCode updateRep(DataObject*     Object  , 
+                               IOpaqueAddress*  Address ) ; 
   /// Class ID for created object == class ID for this specific converter
   static const CLID&          classID();
   /// storage Type 
@@ -45,14 +50,15 @@ class GiGaElementCnv: public GiGaCnvBase
   /// miscellaneous functions which performs the conversion itself
 private: 
   ///  
-  GiGaElementCnv           ()                       ; /// no default constructor 
+  GiGaElementCnv           (); /// no default constructor 
   GiGaElementCnv           ( const GiGaElementCnv& ); /// no copy
   GiGaElementCnv& operator=( const GiGaElementCnv& ); /// no assignment  
  ///
 };
 
-
-#endif   //     __GIGA_GEOMCONVERSION_GIGAElementCnv_H__
+/// ===========================================================================
+#endif   ///< GIGACNV_GIGAElementCnv_H
+/// ===========================================================================
 
 
 

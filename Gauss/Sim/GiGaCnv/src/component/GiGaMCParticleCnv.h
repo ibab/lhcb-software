@@ -1,9 +1,12 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Sim/GiGaCnv/src/component/GiGaMCParticleCnv.h,v 1.1.1.1 2001-04-23 08:34:15 ibelyaev Exp $ 
-#ifndef        GIGA_GIGAMCParticleCNV_H
-#define        GIGA_GIGAMCParticleCNV_H  1 
+/// ===========================================================================
+/// $Log: not supported by cvs2svn $
+/// ===========================================================================
+#ifndef GIGACNV_GIGAMCParticleCNV_H
+#define GIGACNV_GIGAMCParticleCNV_H  1 
+/// ===========================================================================
 /// STL 
 #include <set>
-/// GiGaCnv
+/// GiGa
 #include "GiGaCnv/GiGaCnvBase.h" 
 template <class TYPE> 
 class CnvFactory;
@@ -35,13 +38,17 @@ class GiGaMCParticleCnv: public GiGaCnvBase
  public:
   ///
   /// create Object 
-  virtual StatusCode createObj     ( IOpaqueAddress* /* Address */, DataObject*&     /* Object  */) ;
+  virtual StatusCode createObj     ( IOpaqueAddress*  /* Address */, 
+                                     DataObject*&     /* Object  */) ;
   /// update Object 
-  virtual StatusCode updateObj     ( IOpaqueAddress* /* Address */, DataObject*      /* Object  */) ; 
+  virtual StatusCode updateObj     ( IOpaqueAddress*  /* Address */, 
+                                     DataObject*      /* Object  */) ; 
   /// fill the references 
-  virtual StatusCode fillObjRefs   ( IOpaqueAddress* /* Address */, DataObject*      /* Object  */) ;
+  virtual StatusCode fillObjRefs   ( IOpaqueAddress*  /* Address */, 
+                                     DataObject*      /* Object  */) ;
   /// update the references 
-  virtual StatusCode updateObjRefs ( IOpaqueAddress* /* Address */, DataObject*      /* Object  */) ;
+  virtual StatusCode updateObjRefs ( IOpaqueAddress*  /* Address */, 
+                                     DataObject*      /* Object  */) ;
   /// Class ID for created object == class ID for this specific converter
   static const CLID&          classID();
   /// storage Type 
@@ -49,8 +56,8 @@ class GiGaMCParticleCnv: public GiGaCnvBase
   ///
 private:
   ///
-  GiGaMCParticleCnv           ()                           ; /// no default constructor 
-  GiGaMCParticleCnv           ( const GiGaMCParticleCnv& ) ; /// no copy 
+  GiGaMCParticleCnv () ; /// no default constructor 
+  GiGaMCParticleCnv( const GiGaMCParticleCnv& ) ; /// no copy 
   GiGaMCParticleCnv& operator=( const GiGaMCParticleCnv& ) ; /// no assignement
   ///
 private: 

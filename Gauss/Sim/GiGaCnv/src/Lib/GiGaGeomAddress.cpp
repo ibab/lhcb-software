@@ -1,47 +1,75 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Sim/GiGaCnv/src/Lib/GiGaGeomAddress.cpp,v 1.2 2001-04-23 17:44:39 ibelyaev Exp $ 
-#define   GIGACNV_GIGAGEOMADDRESS_CPP 1 
-/// from STL 
-#include <string> 
-/// from Gaudi
+/// ===========================================================================
+/// $Log: not supported by cvs2svn $
+/// ===========================================================================
+#define GIGACNV_GIGAGEOMCNVADDRESS_CPP 1 
+/// ===========================================================================
+// Include files
+/// 
+#include <string>
+/// GaufiKernel
 #include "GaudiKernel/AddrFactory.h"
-/// from GiGaCnv
-#include "GiGaCnv/GiGaGeomAddress.h" 
+// local
+#include "GiGaCnv/GiGaGeomAddress.h"
+//-----------------------------------------------------------------------------
+// Implementation file for class : GiGaGeomAddress
+//
+// 10/07/2001 : Ivan Belyaev
+//-----------------------------------------------------------------------------
 
-///////////////////////////////////////////////////////////////////////////
+//=============================================================================
+/// Address Factory definition
+//=============================================================================
+static const  AddrFactory<GiGaGeomAddress>
+s_GiGaGeomAddressFactory(GiGaGeom_StorageType);
+const        IAddrFactory&GiGaGeomAddressFactory = s_GiGaGeomAddressFactory;
+
+//=============================================================================
+// creator
+//=============================================================================
 GiGaGeomAddress::GiGaGeomAddress(  const CLID&        Clid          , 
-				   const std::string& FileName      , 
-				   const int          /* SeqInt */  , 
-				   const std::string& ContainerName )
+                                   const std::string& FileName      , 
+                                   const int          /* SeqInt */  , 
+                                   const std::string& ContainerName )
   : GenericAddress( GiGaGeom_StorageType, Clid )
-  {
-    setDbName        ( FileName          );
-    setContainerName ( ContainerName     );
-    setObjectName    ( "GiGaGeomObject"  );
-  };
-/////////////////////////////////////////////////////////////////////////
+{
+  setDbName        ( FileName          );
+  setContainerName ( ContainerName     );
+  setObjectName    ( "GiGaGeomObject"  );
+};
+
+//=============================================================================
+// creator
+//=============================================================================
 GiGaGeomAddress::GiGaGeomAddress(  const GenericLink& Link          ,
-				   const std::string& FileName      , 
-				   const std::string& ContainerName , 
-				   const std::string& ObjName       )
+                                   const std::string& FileName      , 
+                                   const std::string& ContainerName , 
+                                   const std::string& ObjName       )
   : GenericAddress( Link )
 {
   setDbName       ( FileName      );
   setContainerName( ContainerName );
   setObjectName   ( ObjName       );
 };
-/////////////////////////////////////////////////////////////////////////
+
+//=============================================================================
+// creator
+//=============================================================================
 GiGaGeomAddress::GiGaGeomAddress(  const GenericLinkBase & Link     )
   : GenericAddress( Link )
 {};
-/////////////////////////////////////////////////////////////////////////
+
+//=============================================================================
+// creator
+//=============================================================================
 GiGaGeomAddress::GiGaGeomAddress(  const GenericLinkBase * Link     )
   : GenericAddress( Link )
-{};  
-/// Standard destructor ////////////////////////////////////////////////
+{};
+
+/// ===========================================================================
+/// Standard destructor
+/// ===========================================================================
 GiGaGeomAddress::~GiGaGeomAddress(){};
-///////////////////////////////////////////////////////////////////////
 
-
-
+/// ===========================================================================
 
 

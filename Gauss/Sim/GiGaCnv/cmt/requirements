@@ -1,52 +1,50 @@
-# $Header: /afs/cern.ch/project/cvs/reps/lhcb/Sim/GiGaCnv/cmt/requirements,v 1.6 2001-04-27 15:47:07 ibelyaev Exp $ 
+# =============================================================================
+# CVS tag $Name: not supported by cvs2svn $      
+# =============================================================================
+# $Log: not supported by cvs2svn $
+# =============================================================================
 
 package  GiGaCnv 
 version v1
 
-################ structure ################################################
+# ============== structure ====================================================
 branches cmt src doc GiGaCnv 
 
-################ own includes #############################################
+# ============== own includes =================================================
 include_dirs                     $(GIGACNVROOT)
 
-################ own options ##############################################
+# ============== ownoptions ===================================================
 set GIGACNVOPTIONS  "${GIGACNVROOT}/options/GiGaCnvOptions.txt"
 
-################ GiGa #####################################################
+# ============== GiGa =========================================================
 use GiGa          v5*   Sim 
+# ============== LHCbEvent ====================================================
+use LHCbEvent     v11*	Event
+# ============== Detector Description =========================================
+use DetDesc       v7*	Det
 
-################ Event ####################################################
-use LHCbEvent     v9*	Event
 
-################ Detector #################################################
-use DetDesc       v6*	Det
-
-################ linker library ###########################################
-#library GiGaCnvLib  Lib/*.cpp
+# ============== linker library (base classes) ================================
+#library         GiGaCnvLib  -no_share Lib/*.cpp
+library          GiGaCnvLib            Lib/*.cpp
   
-################ component library ########################################
-library GiGaCnv     component/*.cpp Lib/*.cpp 	        
+# ============== component library ============================================
+#library         GiGaCnv     -no_share component/*.cpp 	        
+library          GiGaCnv               component/*.cpp 	        
 
-apply_pattern package_Clinkopts
-apply_pattern packageShr  
+# ============== patterns =====================================================
 
-macro GiGaCnvLinkOpts    "$(GiGaCnvDir)/libGiGaCnv.a " \ 
-	WIN32            "$(GiGaCnvDir)/GiGaCnv.arc "  
+apply_pattern    package_Lstamps
+apply_pattern    package_Llinkopts
+apply_pattern    linker_path
 
-################ private stuff ###########################################
+# ============== private stuff ================================================
 private
-
-macro GiGaCnv_shlibflags  "$(componentshr_linkopts) $(GiGaLinkOpts) $(use_linkopts) "
-
-#apply_pattern  package_Cshlibflags
-#macro_append  GiGaCnvLib_shlibflags  "$(GaudiKernel_linkopts) $(GiGa_linkopts) $(G4Wrapper_linkopts) $(GEANT4_linkopts) $(CLHEP_linkopts)"
-
-################ to reduce number of warnings ############################
- 
-macro_remove cppflags "-Wall "
-
-################ to reduce number of warnings from G4 ####################
-macro_append GiGaCnv_cppflags   " " \ 
-          Linux           "-Wno-unused " 
-
-################ end #####################################################
+apply_pattern    package_Cshlibflags
+apply_pattern    package_Lshlibflags
+macro_append     GiGaCnvLib_shlibflags " $(GaudiKernel_linkopts) "
+macro_append     GiGaCnvLib_shlibflags " $(GiGa_linkopts) "
+macro_append     GiGaCnvLib_shlibflags " $(DetDesc_linkopts) "
+macro_append     GiGaCnvLib_shlibflags " $(LHCbEvent_linkopts) "
+macro_append     GiGaCnvLib_shlibflags " $(GEANT4_linkopts) "
+macro_append     GiGaCnvLib_shlibflags " $(CLHEP_linkopts) "

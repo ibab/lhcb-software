@@ -1,13 +1,16 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Sim/GiGaCnv/src/component/GiGaDetectorElementCnv.h,v 1.1.1.1 2001-04-23 08:34:15 ibelyaev Exp $ 
+/// ===========================================================================
+/// $Log: not supported by cvs2svn $
+/// ===========================================================================
 #ifndef    GIGA_GIGADETECTORELEMENT_H
 #define    GIGA_GIGADETECTORELEMENT_H 1 
-/// GiGa 
+/// ===========================================================================
+/// GiGaCnv 
 #include "GiGaCnv/GiGaCnvBase.h"
 ///
 template <class T> 
 class CnvFactory;
 
-/** @class GiGaDetectorElementCnv     GiGaDetectorElementCnv.h GiGaDetectorElementCnv.h
+/** @class GiGaDetectorElementCnv GiGaDetectorElementCnv.h 
 
     converter of DetectorElements into Geant4 Geometry tree  
 
@@ -26,9 +29,11 @@ public:
   virtual ~GiGaDetectorElementCnv();
   ///
   /// create representation
-  virtual StatusCode createRep( DataObject*     Object  , IOpaqueAddress*& Address ) ;
+  virtual StatusCode createRep( DataObject*     Object  , 
+                                IOpaqueAddress*& Address ) ;
   /// Update representation 
-  virtual StatusCode updateRep( DataObject*     Object  , IOpaqueAddress*  Address ) ; 
+  virtual StatusCode updateRep( DataObject*     Object  , 
+                                IOpaqueAddress*  Address ) ; 
   ///
   /// class ID for converted objects
   static const CLID&         classID();

@@ -1,5 +1,9 @@
+/// ===========================================================================
+/// $Log:
+/// ===========================================================================
 #ifndef    GIGA_GIGAMISCGETEVENTALG_H 
 #define    GIGA_GIGAMISCGETEVENTALG_H 1 
+/// ===========================================================================
 
 
 // Include files
@@ -7,7 +11,7 @@
 
 class IGiGaSvc;
 
-/** @class GiGaMiscGetEventAlg GiGaMiscGetEventAlg.h GiGa/GiGaMiscGetEventalg.h
+/** @class GiGaMiscGetEventAlg GiGaMiscGetEventAlg.h 
 
     Almost empty algorithm to trigger GiGa 
 

@@ -1,18 +1,19 @@
-// $Heeader: $ 
-#ifndef      GIGA_GIGAGEOMADDRESS_H
-#define      GIGA_GIGAGEOMADDRESS_H  1 
+/// ===========================================================================
+/// $Log: not supported by cvs2svn $
+/// ===========================================================================
+#ifndef GIGACNV_GIGAGEOMADDRESS_H
+#define GIGACNV_GIGAGEOMADDRESS_H  1
+/// ===========================================================================
 
 ///
 #include "GaudiKernel/GenericAddress.h"
 
-/**     @class GiGaGeomAddress GiGaGeomAddress.h GiGaCnv/GiGaGeomAddress.h
-	
-	definition of artificial address
-	for Input Geom GiGa store 
-	
-	@author Vanya Belyaev 
-	@date   9 Aug 2000
-*/
+///
+///   GiGaGeomAddress: definition of artificial address
+///                          for Input Geom GiGa store 
+///  Author Vanya Belyaev 
+///  Date   9 Aug 2000
+
 
 
 ///
@@ -24,7 +25,7 @@ public:
   GiGaGeomAddress(  const CLID&        Clid          , 
                     const std::string& FileName      , 
                     const int          /* SeqInt */  , 
-                    const std::string& ContainerName );
+                    const std::string& ContainerName ) ;
   ///
   GiGaGeomAddress(  const GenericLink& Link          ,
                     const std::string& FileName      , 
@@ -39,4 +40,6 @@ public:
   ///
 };
 
+/// ===========================================================================
 #endif   //  __GIGA_GIGACONVERSION_GIGAGEOMADDRESS_H__
+/// ===========================================================================

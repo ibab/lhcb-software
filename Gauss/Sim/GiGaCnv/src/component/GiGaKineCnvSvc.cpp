@@ -1,8 +1,9 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Sim/GiGaCnv/src/component/GiGaKineCnvSvc.cpp,v 1.1.1.1 2001-04-23 08:34:15 ibelyaev Exp $ 
 /// from Gaudi 
 #include "GaudiKernel/AddrFactory.h" 
 #include "GaudiKernel/SvcFactory.h" 
 #include "GaudiKernel/MsgStream.h"
+/// from GiGa 
+#include "GiGa/GiGaCnvSvcBase.h" 
 // local
 #include "GiGaKineCnvSvc.h" 
 

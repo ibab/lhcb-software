@@ -1,9 +1,12 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Sim/GiGaCnv/src/component/GiGaMCVertexCnv.h,v 1.1.1.1 2001-04-23 08:34:15 ibelyaev Exp $ 
-#ifndef         GIGA_GIGAMCVERTEXCNV_H__
-#define         GIGA_GIGAMCVERTEXCNV_H__  1 
+/// ===========================================================================
+/// $Log: not supported by cvs2svn $ 
+/// ===========================================================================
+#ifndef GIGACNV_GIGAMCVERTEXCNV_H
+#define GIGACNV_GIGAMCVERTEXCNV_H 1 
+/// ===========================================================================
 /// STL 
 #include <set>
-/// base class from GiGa
+/// base class from GiGaCnv
 #include "GiGaCnv/GiGaCnvBase.h" 
 /// forward declarations:
 template <class TYPE> 
@@ -37,17 +40,23 @@ protected:
   ///
 public:
   /// create Object 
-  virtual StatusCode createObj     ( IOpaqueAddress* /* Address */ , DataObject*&     /* Object  */ ) ;
+  virtual StatusCode createObj     ( IOpaqueAddress* /* Address */ , 
+                                     DataObject*&     /* Object  */ ) ;
   /// update Object 
-  virtual StatusCode updateObj     ( IOpaqueAddress* /* Address */ , DataObject*      /* Object  */ ) ; 
+  virtual StatusCode updateObj     ( IOpaqueAddress* /* Address */ , 
+                                     DataObject*      /* Object  */ ) ; 
   /// fill the references 
-  virtual StatusCode fillObjRefs   ( IOpaqueAddress* /* Address */ , DataObject*      /* Object  */ ) ;
+  virtual StatusCode fillObjRefs   ( IOpaqueAddress* /* Address */ , 
+                                     DataObject*      /* Object  */ ) ;
   /// update the references 
-  virtual StatusCode updateObjRefs ( IOpaqueAddress* /* Address */ , DataObject*      /* Object  */ ) ;
+  virtual StatusCode updateObjRefs ( IOpaqueAddress* /* Address */ , 
+                                     DataObject*      /* Object  */ ) ;
   /// Create representation 
-  virtual StatusCode createRep     ( DataObject*     /* Object  */ , IOpaqueAddress*& /* Address */ ) ;
+  virtual StatusCode createRep     ( DataObject*     /* Object  */ , 
+                                     IOpaqueAddress*& /* Address */ ) ;
   /// Update representation 
-  virtual StatusCode updateRep     ( DataObject*     /* Object  */ , IOpaqueAddress*  /* Address */ ) ; 
+  virtual StatusCode updateRep     ( DataObject*     /* Object  */ , 
+                                     IOpaqueAddress*  /* Address */ ) ; 
   /// Class ID for created object == class ID for this specific converter
   static const CLID&          classID();
   /// storage Type 
@@ -55,15 +64,18 @@ public:
   ///
 private:
   ///
-  GiGaMCVertexCnv           ()                       ; /// no default constructor 
-  GiGaMCVertexCnv           ( const GiGaMCVertexCnv& ); /// no copy
+  GiGaMCVertexCnv () ; /// no default constructor 
+  GiGaMCVertexCnv ( const GiGaMCVertexCnv& ); /// no copy
   GiGaMCVertexCnv& operator=( const GiGaMCVertexCnv& ); /// no assignment  
   ///
 protected: 
   /// miscellaneous functions which performs the conversion itself
-  G4PrimaryVertex*      VertexFromMCVertex     ( const MCVertex*   vertex   ) ; 
-  G4PrimaryParticle*    ParticleFromMCParticle ( const MCParticle* particle ) ;
-  G4ParticleDefinition* ParticleDefinition     ( const MCParticle* particle ) ; 
+  G4PrimaryVertex*      
+  VertexFromMCVertex     ( const MCVertex*   vertex   ) ; 
+  G4PrimaryParticle*    
+  ParticleFromMCParticle ( const MCParticle* particle ) ;
+  G4ParticleDefinition* 
+  ParticleDefinition     ( const MCParticle* particle ) ; 
   ///
 };
 

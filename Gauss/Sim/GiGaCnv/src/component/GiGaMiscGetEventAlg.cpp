@@ -1,16 +1,22 @@
+/// ===========================================================================
+/// $Log: not supported by cvs2svn $ 
+/// ===========================================================================
+#define GIGACNV_GIGAMISCGETEVENTALG_CPP
+/// ===========================================================================
 /// STL
 #include <string>
 #include <vector>
 #include <list>
 /// GaudiKernel 
 #include "GaudiKernel/ISvcLocator.h"
-#include "GaudiKernel/IGiGaSvc.h"
 #include "GaudiKernel/AlgFactory.h"
 #include "GaudiKernel/IDataProviderSvc.h"
 #include "GaudiKernel/IDataDirectory.h"
 #include "GaudiKernel/SmartDataPtr.h"
 #include "GaudiKernel/DataObject.h"
 #include "GaudiKernel/Stat.h"
+// GiGa 
+#include "GiGa/IGiGaSvc.h"
 /// from LHCbEvent 
 #include "LHCbEvent/MCParticle.h"
 #include "LHCbEvent/MCVertex.h"
@@ -18,11 +24,11 @@
 #include "GiGaMiscGetEventAlg.h"
 
 
-////////////////////////////////////////////////////////////////////////////////////////////////////
 static const  AlgFactory<GiGaMiscGetEventAlg>                  s_Factory;
 const        IAlgFactory&         GiGaMiscGetEventAlgFactory = s_Factory;
-////////////////////////////////////////////////////////////////////////////////////////////////////
-GiGaMiscGetEventAlg::GiGaMiscGetEventAlg(const std::string& name, ISvcLocator* pSvcLocator) 
+
+GiGaMiscGetEventAlg::GiGaMiscGetEventAlg(const std::string& name, 
+                                         ISvcLocator* pSvcLocator) 
   ///
   : Algorithm( name , pSvcLocator) 
   ///
@@ -31,7 +37,7 @@ GiGaMiscGetEventAlg::GiGaMiscGetEventAlg(const std::string& name, ISvcLocator* p
   , m_gigaSvc     (  0        )
   ///
 {};
-//////////////////////////////////////////////////////////////////////////////////////////////////////
+
 StatusCode GiGaMiscGetEventAlg::initialize() 
 {
   ///
@@ -43,12 +49,13 @@ StatusCode GiGaMiscGetEventAlg::initialize()
   ///
   return StatusCode::SUCCESS;
 }
-///////////////////////////////////////////////////////////////////////////////////////////////////////
+
 StatusCode GiGaMiscGetEventAlg::execute() 
 {
   ///
   {
-    SmartDataPtr<MCParticleVector> obj( eventSvc() , "/Event/G4/MCParticles" ) ;
+    SmartDataPtr<MCParticleVector> 
+      obj( eventSvc() , "/Event/G4/MCParticles" ) ;
     if( obj ) 
       { 
         std::cout <<  *obj << std::endl;  
@@ -56,11 +63,12 @@ StatusCode GiGaMiscGetEventAlg::execute()
       } 
     else 
       { std::cout << " particles == 0 " << std::endl ; } 
-
+    
   }
   ///
   {
-    SmartDataPtr<MCVertexVector> obj( eventSvc() , "/Event/G4/MCVertices" ) ;
+    SmartDataPtr<MCVertexVector> 
+      obj( eventSvc() , "/Event/G4/MCVertices" ) ;
     if( obj ) 
       { 
         std::cout <<  *obj << std::endl;  
@@ -72,10 +80,9 @@ StatusCode GiGaMiscGetEventAlg::execute()
   ///
   return StatusCode::SUCCESS;
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 StatusCode GiGaMiscGetEventAlg::finalize() 
 { return StatusCode::SUCCESS; }
-////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
 

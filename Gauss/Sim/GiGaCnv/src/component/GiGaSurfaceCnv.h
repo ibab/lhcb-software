@@ -1,10 +1,13 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Sim/GiGaCnv/src/component/GiGaSurfaceCnv.h,v 1.1.1.1 2001-04-23 08:34:15 ibelyaev Exp $ 
+/// ===========================================================================
+/// $Log: not supported by cvs2svn $
+/// ===========================================================================
 #ifndef         GIGA_GIGASurfaceCnv_H
 #define         GIGA_GIGASurfaceCnv_H  1 
+/// ===========================================================================
 /// from STL 
 #include <string>
 #include <set>
-/// base class from GiGaCnv
+/// base class from GiGa
 #include "GiGaCnv/GiGaCnvBase.h" 
 ///
 template <class TYPE> 
@@ -38,9 +41,11 @@ protected:
   ///
 public:
   /// Create representation 
-  virtual StatusCode createRep(DataObject*     Object  , IOpaqueAddress*& Address ) ;
+  virtual StatusCode createRep(DataObject*     Object  , 
+                               IOpaqueAddress*& Address ) ;
   /// Update representation 
-  virtual StatusCode updateRep(DataObject*     Object  , IOpaqueAddress*  Address ) ; 
+  virtual StatusCode updateRep(DataObject*     Object  , 
+                               IOpaqueAddress*  Address ) ; 
   /// Class ID for created object == class ID for this specific converter
   static const CLID&          classID();
   /// storage Type 
@@ -54,7 +59,7 @@ protected:
   ///
 private: 
   ///
-  GiGaSurfaceCnv           ()                       ; /// no default constructor 
+  GiGaSurfaceCnv           (); /// no default constructor 
   GiGaSurfaceCnv           ( const GiGaSurfaceCnv& ); /// no copy
   GiGaSurfaceCnv& operator=( const GiGaSurfaceCnv& ); /// no assignment 
   ///
