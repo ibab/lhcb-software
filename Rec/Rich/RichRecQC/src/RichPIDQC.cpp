@@ -4,8 +4,12 @@
  *  Implementation file for RICH reconstruction monitoring algorithm : RichPIDQC
  *
  *  CVS Log :-
- *  $Id: RichPIDQC.cpp,v 1.24 2004-08-19 14:14:09 jonrob Exp $
+ *  $Id: RichPIDQC.cpp,v 1.25 2004-08-20 16:08:30 jonrob Exp $
  *  $Log: not supported by cvs2svn $
+ *  Revision 1.24  2004/08/19 14:14:09  jonrob
+ *  Tidy up monitoring algorithms and add new options to create
+ *  histograms for different PID efficiency and purity settings
+ *
  *  Revision 1.23  2004/07/27 13:56:30  jonrob
  *  Add doxygen file documentation and CVS information
  *
@@ -228,9 +232,10 @@ StatusCode RichPIDQC::execute()
       // Track type
       Rich::Track::Type tkType = Rich::Track::type(trTrack);
 
-      // Count PIDS and tracks
+      // Count PIDs and tracks
       ++m_trackCount[0][tkType];
       ++pidCount;
+      ++m_pidPerTypeCount[iPID->pidType()];
 
       // Get best PID
       Rich::ParticleIDType pid = iPID->bestParticleID();
@@ -437,6 +442,11 @@ StatusCode RichPIDQC::finalize()
                << "(" << m_trackCount[1][iTk] << ")";
         ++tkCount;
       }
+    }
+    info() << endreq << " #RichPIDs |";
+    for ( PIDsByType::const_iterator iPC = m_pidPerTypeCount.begin(); 
+          iPC != m_pidPerTypeCount.end(); ++iPC ) {
+      info() << " " << (*iPC).first << "=" << (*iPC).second;
     }
     info() << endreq
            << "-----------+-----------------------------------------------+-----------"

@@ -4,8 +4,12 @@
  *  Header file for RICH reconstruction monitoring algorithm : RichPIDQC
  *
  *  CVS Log :-
- *  $Id: RichPIDQC.h,v 1.11 2004-08-19 14:14:09 jonrob Exp $
+ *  $Id: RichPIDQC.h,v 1.12 2004-08-20 16:08:30 jonrob Exp $
  *  $Log: not supported by cvs2svn $
+ *  Revision 1.11  2004/08/19 14:14:09  jonrob
+ *  Tidy up monitoring algorithms and add new options to create
+ *  histograms for different PID efficiency and purity settings
+ *
  *  Revision 1.10  2004/07/27 13:56:30  jonrob
  *  Add doxygen file documentation and CVS information
  *
@@ -136,6 +140,10 @@ private: // data
   int m_nTracks[2];
 
   unsigned m_trackCount[2][Rich::Track::NTrTypes];
+
+  typedef std::map<std::string,unsigned> PIDsByType;
+  /// Count the number of PID objects by PID type
+  PIDsByType m_pidPerTypeCount;
 
   // Histograms
 
