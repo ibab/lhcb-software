@@ -1,4 +1,4 @@
-// $Id: L0MuonCandidate.cpp,v 1.3 2002-05-07 08:18:07 atsareg Exp $
+// $Id: L0MuonCandidate.cpp,v 1.4 2002-06-17 07:27:34 atsareg Exp $
 
 #include <cmath>
 #include <vector>
@@ -21,6 +21,9 @@ L0MuonCandidate::L0MuonCandidate(double pt,
   for(ip = pads.begin(); ip!=pads.end(); ip++ ) {
     m_pads.push_back(*ip);
   }	
+  if( ! m_pads.empty() ) {
+    setPadM1(m_pads[0]);
+  }
   setStatus(status);			 
 }				 
 
@@ -76,4 +79,20 @@ void L0MuonCandidate::setPadM1(const MuonTileID& pad) {
   setBit(pad.region(),L0MuonBase::ShiftRegion,L0MuonBase::MaskRegion);
   setBit(pad.nX(),L0MuonBase::ShiftX,L0MuonBase::MaskX);
   setBit(pad.nY(),L0MuonBase::ShiftY,L0MuonBase::MaskY);
+}
+
+bool L0MuonCandidate::operator<(const L0MuonCandidate& lmc) const {
+  return pt() < lmc.pt();
+}
+
+MuonTileID L0MuonCandidate::pad(unsigned int station) const {
+  if ( station < m_pads.size() ) {
+    return m_pads[station];
+  } else {
+    return MuonTileID();
+  }
+}
+
+MuonTileID L0MuonCandidate::padM1() const {
+  return pad(0);
 }
