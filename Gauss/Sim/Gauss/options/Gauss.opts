@@ -1,34 +1,29 @@
-// $Id: Gauss.opts,v 1.8 2002-05-10 10:29:10 ranjard Exp $ 
+// $Id: Gauss.opts,v 1.9 2002-05-22 14:04:40 witoldp Exp $ 
 
-#include "$STDOPTIONS"
-
-// remove SicbCnv 
+AuditorSvc.Auditors = { "ChronoAuditor" };
 
 ApplicationMgr.ExtSvc            = 
 { "ParticlePropertySvc" ,
   "EventSelector"       };
 EventPersistencySvc.CnvServices  = {};  
 
+ApplicationMgr.DLLs = { "GaudiAud"};
+ApplicationMgr.DLLs += { "GaudiAlg"} ;
+
+ApplicationMgr.HistogramPersistency = "NONE";
+
 #include "$STDOPTS/DetDesc.opts"
 
 // allow automatic creation of subdirectories in Event Transient Store 
-
 EventDataSvc.ForceLeaves = true ;
 
-// load additional dynamic libraries needed to run Gauss
-
-ApplicationMgr.DLLs += { "GaudiAlg"         } ;
-
 // declare external services needed MAGNETIC FIELD (optional)
-// ATTENTION! to use MagneticFieldSvc ONE MUST to add also 'SicbEventCnvSvc'!
+ApplicationMgr.ExtSvc +=  
+{ "MagneticFieldSvc"  };  
 
-// ApplicationMgr.ExtSvc +=  
-// { "SicbEventCnvSvc" , 
-//   "MagneticFieldSvc"  };  
 ParticlePropertySvc.ParticlePropertiesFile = "../options/particle.cdf" ;
 
 // 3 steps
-
 ApplicationMgr.TopAlg          =  
 { "Sequencer/Generator"    , 
   "Sequencer/Simulation"   ,
@@ -36,19 +31,16 @@ ApplicationMgr.TopAlg          =
 } ;
 
 // read job options for various steps
-
 #include "$GAUSSOPTS/Generator.opts"
 #include "$GAUSSOPTS/Simulation.opts"
 #include "$GAUSSOPTS/Digitisation.opts"
 
 // write an output file
-
 #include "$GAUSSOPTS/GaussRootIO.opts"
 #include "$GAUSSOPTS/GaussTape.opts"
 GaussTape.Output = "DATAFILE='Gauss.root' TYP='ROOT' OPT='NEW'";
 
 // General global options  
-
 MessageSvc.OutputLevel    = 3 ;
 //XmlParserSvc.OutputLevel  = 5 ;
 //RootEvtCnvSvc.OutputLevel = 1 ;
@@ -60,7 +52,7 @@ MessageSvc.OutputLevel    = 3 ;
 //MCParticleGun.OutputLevel = 1;
 
 ApplicationMgr.EvtSel     = "NONE" ;
-ApplicationMgr.EvtMax     = 3 ;
+ApplicationMgr.EvtMax     = 2 ;
 
 
 
