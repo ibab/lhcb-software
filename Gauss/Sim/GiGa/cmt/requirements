@@ -1,0 +1,56 @@
+package  GiGa 
+
+version v3
+set GIGAOPTIONS "${GIGAROOT}/options/GiGaOptions.txt"
+
+branches cmt src doc GiGa 
+
+# Gaudi
+use GaudiSys   v6*
+
+# Event object library
+use LHCbEvent  v8*	Event
+
+# Detector Description package
+use DetDesc    v5*	Det
+
+# Geant4 tool kit 
+use GEANT4     v3r0	Sim
+
+
+###########################################################################
+# * GiGa * GiGa * GiGa * GiGa * GiGa * GiGa * GiGa * GiGa * GiGa * GiGa * #
+###########################################################################
+
+#document tex   GiGaGuide         ../doc/GiGa.tex
+#document tex   GiGaEvolution     ../doc/GiGaEvolution.tex
+
+include_dirs                     ${GIGAROOT}
+
+# component library
+library        GiGa  ../src/*.cpp 	        
+
+# link GiGa statically on NT
+apply_pattern package_Clinkopts
+macro_append  GiGa_linkopts ""\
+              WIN32         '$(GiGaDir)/libGiGa.lib /include:"_GiGa_loadRef"'
+
+apply_pattern packageShr
+#=====================================================================
+private
+apply_pattern package_Cshlibflags
+macro_append GiGa_shlibflags " $(DetDescDir)/libDetDesc.so"
+macro_remove cppflags "W"
+
+
+
+
+
+
+
+
+
+
+
+
+

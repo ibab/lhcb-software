@@ -1,0 +1,193 @@
+#include "GaudiKernel/CnvFactory.h" 
+#include "GaudiKernel/IAddressCreator.h" 
+#include "GaudiKernel/IOpaqueAddress.h" 
+#include "GaudiKernel/IGiGaSetUpSvc.h" 
+
+#include "GaudiKernel/MsgStream.h"
+#include "GaudiKernel/IDataSelector.h"
+
+#include "DetDesc/Mixture.h"
+
+#include "GiGa/GiGaException.h" 
+#include "GiGa/GiGaMixtureCnv.h" 
+
+///
+/// Geant4 includes
+///
+
+#include "G4Element.hh"
+#include "G4Material.hh"
+
+extern unsigned char GiGaGeom_StorageType ; 
+
+static const  CnvFactory<GiGaMixtureCnv>                                      s_GiGaMixtureCnvFactory ;
+const        ICnvFactory&                             GiGaMixtureCnvFactory = s_GiGaMixtureCnvFactory ;
+
+///
+/// constructor 
+///
+
+GiGaMixtureCnv::GiGaMixtureCnv( ISvcLocator* Locator ) 
+  : GiGaCnv( storageType() , classID() , Locator ) 
+{
+  setNameOfGiGaConversionService( "GiGaGeomCnvSvc" ); 
+  setConverterName              ( "GiGaMixtureCnv" );
+}; 
+
+///
+/// destructor 
+///
+
+GiGaMixtureCnv::~GiGaMixtureCnv(){}; 
+
+///
+/// Class ID
+///
+
+const CLID&  GiGaMixtureCnv::classID            () { return Mixture::classID() ; }
+
+
+///
+/// StorageType 
+///
+
+const unsigned char GiGaMixtureCnv::storageType () { return GiGaGeom_StorageType; } 
+
+///
+/// Create representation 
+///
+
+StatusCode GiGaMixtureCnv::createRep( DataObject*     Object  , IOpaqueAddress*& Address ) 
+{
+  ///
+  Address = 0 ; 
+  ///
+  if( 0 == Object        ) { return Error("CreateRep::DataObject* points to NULL"); } 
+  ///
+  ///
+  Mixture* mixture = 0 ; 
+  try        { mixture = dynamic_cast<Mixture*>( Object ) ; } 
+  catch(...) { mixture =                                0 ; } 
+  ///
+  if( 0 == mixture       ) { return Error("CreateRep::Ban cast to Mixture*"); }
+  ///
+  if( 0 == cnvSvc()      ) { return Error("CreateRep::Conversion Service is unavailable"); }
+  ///   
+  /// create IOpaqueAddress
+  IAddressCreator* addrCreator = 0 ; 
+  try        { addrCreator = dynamic_cast<IAddressCreator*> ( cnvSvc() ) ; } 
+  catch(...) { addrCreator =                                           0 ; } 
+  if( 0 == addrCreator   ) { return Error("CreateRep::AddressCreator is unavailable"); }
+  ///
+  StatusCode status = addrCreator->createAddress( repSvcType() , classID() , "GiGaGeom" , "GiGaIsotopeObject" , -1 , Address );   
+  ///
+  if( status.isFailure() ){ return Error("CreateRep::Error in Addres creation"); }
+  ///
+  if( 0 == Address       ){ return Error("CreateRep::Created Address is invalid"); }
+  ///
+  return updateRep( Object , Address ) ; 
+  /// 
+}; 
+
+///
+///
+///
+
+StatusCode GiGaMixtureCnv::updateRep( DataObject*     Object  , IOpaqueAddress* Address ) 
+{
+  ///
+  { MsgStream log( msgSvc() , ConverterName() ); log << MSG::VERBOSE << "UpdateRep::start" << endreq; } 
+  ///
+  IOpaqueAddress* aux = 0 ; aux = Address ; /// just to please the compiler 
+  ///
+  if( 0 == Object        ) { return Error("UpdateRep::DataObject* points to NULL"); } 
+  ///
+  Mixture* mixture = 0 ; 
+  try        { mixture = dynamic_cast<Mixture*>( Object ) ; } 
+  catch(...) { mixture =                                0 ; } 
+  ///
+  if( 0 == mixture       ) { return Error("UpdateRep::Ban cast to Mixture*"); }
+  ///
+  if( 0 == cnvSvc()      ) { return Error("UpdateRep::Conversion Service is unavailable"); }
+  ///
+
+  ///
+  /// check if the mixture is already converted
+  /// 
+  
+  if( 0 !=  G4Material::GetMaterial( mixture->fullpath()  ) ){ return StatusCode::SUCCESS; } 
+  
+  ///
+  /// create new material
+  ///
+  G4Material* NewMaterial = 0 ; 
+  if( 0 == mixture->nOfItems() )
+    {
+      NewMaterial = new G4Material( mixture->fullpath        () , 
+				    mixture->Z               () , 
+				    mixture->A               () , 
+				    mixture->density         () , 
+				    (G4State) mixture->state () ,  
+				    mixture->temperature     () , 
+				    mixture->pressure        () ); 
+    }  
+  else
+    {
+
+      ///
+      /// convert all components first
+      ///
+      
+      {
+	IDataSelector dataSelector; 
+	for( unsigned int index = 0 ; index < (unsigned int) mixture->nOfItems() ; ++index ) 
+	  { 
+	    Element* element = mixture->element( index ); 
+	    if( 0 != element ) { dataSelector.push_back( element );} 
+	  } 
+	///
+        if( dataSelector.size() != (unsigned int) mixture->nOfItems() )
+	  { return Error("UpdateRep::wrong Element number for Mixture="+mixture->fullpath()); } 
+	///
+	StatusCode status = cnvSvc()->createReps( &dataSelector );  
+	if( status.isFailure() ) { return Error("UpdateRep::could not convert elements for "+mixture->fullpath(),status); }
+	/// 
+      }      
+      ///
+      ///
+      /// 
+      NewMaterial = new G4Material( mixture->fullpath        () , 
+				    mixture->density         () , 
+				    mixture->nOfItems        () ,
+				    (G4State) mixture->state () ,  
+				    mixture->temperature     () , 
+				    mixture->pressure        () ); 
+      
+      for( unsigned int index = 0 ; index < (unsigned int) mixture->nOfItems() ; ++index ) 
+	{
+	  G4Material* mat = G4Material::GetMaterial( mixture->element( index )->fullpath() ); 
+          if( 0 == mat ) 
+	    { return Error("UpdateRep::could not extract material="+mixture->element( index )->fullpath() ); }
+          double fraction = 0.10 ; // NB!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+	  NewMaterial->AddMaterial( mat , fraction ); // 
+	}
+    }
+
+  /// 
+  { MsgStream log( msgSvc() , ConverterName() ); log << MSG::VERBOSE << "UpdateRep::end" << endreq; } 
+  ///
+  return StatusCode::SUCCESS; 
+  /// 
+}; 
+
+
+
+
+
+
+
+
+
+
+
+

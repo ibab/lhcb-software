@@ -1,0 +1,57 @@
+Package:          GiGa
+Package manager : Vanya Belyaev 
+
+! 20010122 - GiGa v3 (Flr and G.Gracia)
+  
+  requirements - use GEANT4 v3r0
+                 use GaudiSys v6*
+                 works on NT
+
+!==============================================================
+
+!20000806  Giga v2 
+  Vanya Belyaev
+  new version 
+  restructurized 
+  Kine and Material converters are added 
+  Conversion Service is impemented 
+
+!==============================================================
+
+!20000806  Giga v1r1 
+  Vanya Belyaev
+  package updated for newer version of GEANT4 v2r0 
+  improve in requirements file 
+  now one could build tehpackage in debug mode 
+
+!==============================================================
+
+!20000623 Vanya Belyaev
+  doc/*          - greate update in documentation 
+
+!==============================================================
+
+!20000621 Vanya Belyaev
+  requirements          - minor modification 
+  GiGaRunManager.cpp    - minor and temporary change to allow 
+                          the work with previous version of Gaudi  
+!==============================================================
+
+!20000620 MC
+  requirements - add "document tex GiGaGuide ../doc/GiGa.tex"
+  remove ../doc/GiGa.ps, .aux, .dvi from CVS repository
+
+!==============================================================
+
+!20000618 Vanya Belyaev 
+  some small bugs were fixed 
+
+!==============================================================
+
+!20000504 Vanya Belyaev :
+
+   GiGa - it is a "Gaudi  Interface for Genat4 Application" or 
+                  "Geant4 Interface for Gaudi  Application"
+
+ New package.
+!==============================================================

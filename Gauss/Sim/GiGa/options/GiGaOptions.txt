@@ -1,0 +1,39 @@
+//##############################################################
+//
+// GiGa Job options file
+//
+//==============================================================
+
+//--------------------------------------------------------------
+// GiGa Application Configuration options
+//--------------------------------------------------------------
+ApplicationMgr.ExtSvc = { "XmlCnvSvc" , "GiGaSvc" };
+
+ApplicationMgr.DLLs   = { "LHCbEvent", "HbookCnv", "DetDesc" , 
+                          "GiGa"     };
+
+// No input file
+ApplicationMgr.EvtSel = "NONE";
+
+// Detector Persistency service setup: 
+DetectorPersistencySvc.CnvServices = { "XmlCnvSvc" };
+
+//--------------------------------------------------------------
+// End of GiGa job options file
+//
+//##############################################################
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
