@@ -1,17 +1,19 @@
 
-//-----------------------------------------------------------------------------
+//---------------------------------------------------------------------------------
 /** @file IRichRayTraceCherenkovCone.h
  *
  *  Header file for RICH reconstruction tool interface : IRichRayTraceCherenkovCone
  *
  *  CVS Log :-
- *  $Id: IRichRayTraceCherenkovCone.h,v 1.5 2004-07-26 18:00:57 jonrob Exp $
+ *  $Id: IRichRayTraceCherenkovCone.h,v 1.6 2004-08-19 14:07:41 jonrob Exp $
  *  $Log: not supported by cvs2svn $
+ *  Revision 1.5  2004/07/26 18:00:57  jonrob
+ *  Various improvements to the doxygen comments
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
  */
-//-----------------------------------------------------------------------------
+//---------------------------------------------------------------------------------
 
 #ifndef RICHRECBASE_IRICHRAYTRACECHERENKOVCONE_H
 #define RICHRECBASE_IRICHRAYTRACECHERENKOVCONE_H 1
@@ -20,8 +22,8 @@
 #include "Event/RichRecRing.h"
 class RichRecSegment;
 
-// from RichDet
-#include "RichDet/DeRichHPDPanel.h"
+// RichKernel
+#include "RichKernel/RichTraceMode.h"
 
 /// Static Interface Identification
 static const InterfaceID IID_IRichRayTraceCherenkovCone( "IRichRayTraceCherenkovCone", 1, 0 );

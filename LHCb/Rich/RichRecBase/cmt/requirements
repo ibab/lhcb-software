@@ -2,8 +2,11 @@
 # Created    : 2002-11-19
 # Maintainer : Chris Jones   Christopher.Rob.Jones@cern.ch 
 #============================================================================
-# $Id: requirements,v 1.22 2004-07-30 11:11:05 jonrob Exp $
+# $Id: requirements,v 1.23 2004-08-19 14:07:41 jonrob Exp $
 # $Log: not supported by cvs2svn $
+# Revision 1.22  2004/07/30 11:11:05  jonrob
+# Add CVS log to requirements file
+#
 #============================================================================
 
 package   RichRecBase
@@ -18,9 +21,6 @@ branches xml doc src cmt Event RichRecBase
 # Used packages.
 #============================================================================
 use   RichEvent      v7r*    Event
-# Temporary, until new versions of tools are available where RichDet
-# includes can be removed from the interface header files
-use   RichDet        v8r*     Det
 
 #============================================================================
 # Environment
