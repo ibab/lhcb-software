@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/L0/L0Muon/src/component/L0mTriggerProcD.cpp,v 1.2 2001-06-08 18:27:31 atsareg Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/L0/L0Muon/src/component/L0mTriggerProcD.cpp,v 1.3 2001-06-11 06:43:01 atsareg Exp $
 
 /// Include files
 /// Gaudi interfaces
@@ -89,7 +89,7 @@ StatusCode L0mTriggerProcD::execute() {
   if(!pads) {
     return StatusCode::FAILURE;
   }
-  log << "Done, # of L0mPads " << pads->size() << endl;;  
+  log << "Done, # of L0mPads " << pads->size() << endreq;  
   ObjectVector<L0mPad>::const_iterator ip;
   
   //=========================================
