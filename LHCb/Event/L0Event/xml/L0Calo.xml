@@ -4,7 +4,7 @@
   <package name="L0Event">
     <import name="Kernel/CLHEPStreams"/>
     <namespace desc="L0 namespace" name="L0Calo">
-      <enum desc="L0Type describes the type of candidate" name="L0Type" value="Electron=1, Photon, Hadron, Hadron2, SumEt, Pi0Local, Pi0Global"/>
+      <enum desc="L0Type describes the type of candidate" name="L0Type" value="Electron=1, Photon, Hadron, Hadron2, SumEt, Pi0Local, Pi0Global, SpdMult"/>
     </namespace>
     <class author="Olivier Callot" desc="This class represents the input from the calorimeter to the L0 trigger" id="6001" location="/Event/Trig/L0/Calo" name="L0CaloCandidate">
       <base name="KeyedObject&lt;int&gt;"/>

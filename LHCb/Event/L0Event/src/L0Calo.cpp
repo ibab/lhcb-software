@@ -1,9 +1,6 @@
-// $Id: L0Calo.cpp,v 1.1 2002-04-05 15:10:16 ocallot Exp $
+// $Id: L0Calo.cpp,v 1.2 2002-04-15 08:24:24 ocallot Exp $
 // Include files 
 
-
-
-// local
 #include "Event/L0CaloCandidate.h"
 
 //-----------------------------------------------------------------------------
@@ -25,6 +22,7 @@ std::string L0CaloCandidate::typeName() const {
   case L0Calo::Pi0Local:  return "Pi0 loc ";
   case L0Calo::Pi0Global: return "Pi0 glob";
   case L0Calo::SumEt:     return "Sum Et  ";
+  case L0Calo::SpdMult:   return "Spd Mult";
   default:            return "unknown ";
   }
 }
@@ -34,6 +32,11 @@ std::string L0CaloCandidate::typeName() const {
 // Print on Gaudi MsgStream 
 //=========================================================================
 MsgStream& L0CaloCandidate::fillStream( MsgStream& log ) const {
+
+  if ( L0Calo::SpdMult == m_type ) {
+    log << "L0Calo "  <<  typeName() <<  " Multiplicity " << m_etCode;
+    return log;
+  }
 
   log << "L0Calo "  <<  typeName() <<  " Et(GeV) " ;
   char line[80];
