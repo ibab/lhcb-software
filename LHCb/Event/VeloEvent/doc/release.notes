@@ -1,6 +1,10 @@
 package Event/VeloEvent
 package manager: E.Banas
 
+! 20010621 - VeloEvent v5 (Flr)
+  requirements - use GaudiKernel v10*
+                 adapted to GaudiPolicy v5 and CMT v1r8
+
 ! 20010515 - VeloEvent v4 M.Cattaneo
   requirements - use LHCbEvent v10*
                - build only component library
