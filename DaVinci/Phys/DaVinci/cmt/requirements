@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.51 2003-01-06 17:24:06 gcorti Exp $
+# $Id: requirements,v 1.52 2003-01-06 18:27:05 ranjard Exp $
 # Created    : 07/02/2002
 # Maintainer : Gloria Corti
 #
@@ -6,7 +6,7 @@
 # Allows reading of OO-DST data
 #============================================================================
 package           DaVinci
-version           v6r2
+version           v7r2
 
 # Structure, i.e. directories to process. 
 #============================================================================
@@ -14,106 +14,44 @@ branches          cmt doc src job options
 
 # Used packages. 
 #============================================================================
-#--- CMT and Gaudi policy
-use  GaudiPolicy    	v5r5
 
-#--- External libraries - Gaudi v10r4
-use  ExternalLibs   	v3r6
-use  AIDA           	v2r2
-use  CLHEP          	v17r10p1
-use  HTL            	v13r10p1
-use  NAGC           	v5r0
-use  XERCES         	v16r0p1
-use  CERNLIB        	v2001
-use  ROOT           	v2r303p0
+#---Gaudi libraries 
+use GaudiSys            v11r0
+use HbookCnv            v*
+use GaudiRootDb         v*
+use  RootHistCnv        v*
 
-#--- Gaudi libraries - Gaudi v10r4
-use  GaudiKernel        v12r3
-use  GaudiSvc           v8r4
-use  GaudiAlg           v6r1
-use  GaudiAud           v6r0
-use  GaudiNagC          v7r0
-use  GaudiDb            v8r1
-use  GaudiRootDb        v9r0
+#---LHCb libraries
+use LHCb                v11r5
 
-#--- Histogram persistency
-use  HbookCnv           v12r0
-use  RootHistCnv        v8r0p2
-
-#--- LHCb common libraries
-use  GaudiConf      	v6r4
-use  BookKeeping    	v1r1   Tools
-use  LHCbKernel     	v1r5   Kernel
-
-#--- Subdetector Kernels ( add any other Kernel you need )
-use  VeloKernel   	v1r2   Velo
-use  RichKernel   	v1r3   Rich
-use  TrKernel     	v11r1  Tr
-use  CaloKernel   	v2r1   Calo
-use  MuonKernel   	v2r1   Muon
-
-#--- Detector description ( add any other Det package you need )
-use  DetDesc        	v10r5   Det
-use  XmlDDDB        	v14r3   Det
-use  VeloDet        	v8r0    Det
-use  ITDet          	v1r1    Det
-use  OTDet          	v3r2    Det
-use  CaloDet        	v5r2    Det
-use  CaloDetXmlCnv  	v2r1    Det
-use  Magnet         	v1r1    Det
-use  MuonDet        	v4r2    Det
-
-#--- Event Model
-use  EventKernel  	v2r1    Event
-use  Event        	v2r1    Event
-use  VeloEvent    	v11r1   Event
-use  ITEvent      	v11r0   Event
-use  OTEvent      	v11r0   Event
-use  TrEvent      	v11r4   Event
-use  RichEvent          v3r2    Event
-use  CaloEvent    	v11r3   Event
-use  MuonEvent    	v2r1    Event
-use  L0Event      	v12r2   Event
-use  L1Event      	v11r2   Event
-use  PhysEvent    	v7r2    Event
-use  DbCnv        	v7r0    Event
-
-#--- Associators
-use  ITAssociators      v2r1    IT
-use  OTAssociators      v2r2    OT
-use  VeloAssociators    v1r3    Velo
-use  CaloAssociators    v3r1    Calo
-use  MuonAssociators    v1r0    Muon
-use  TrFitEvent         v3r4    Tr
-use  TrAssociators      v3r3    Tr
-use  L0Calo		v6r3	L0
-use  L1VeloTrack 	v3r3	L1
-
-#--- Trigger
-use  L0DU          	v6r1	L0
-use  L1Decision         v1r2    L1
-
-#--- ProtoParticles 
-use  CaloInterfaces     v2r3   Calo
-use  CaloUtils 	        v4r3   Calo
-use  CaloReco           v1r0   Calo
-use  GlobalReco         v2r2   Rec
-
-#--- Reprocess Kshort
-use  KsReco             v1r2   Rec
-
-#--- Necessary tools
-use  TrExtrapolator     v2r3   Tr
+#--- Geometry description
+use XmlDDDB		v14r4	Det
 
 #--- DaVinci packages
-use  DaVinciTools       v7r1   Phys
-use  DaVinciAssociators v3r0   Phys
-use  DaVinciMCTools     v4r1   Phys
-use  DaVinciTest        v4r0   Phys
-use  PhysSelections     v4r1   Phys
-use  FlavourTagging     v4r1   Phys
-use  DaVinciEff         v2r1   Phys
-use  DaVinciUser        v4r0   Phys
+#use DaVinciSys         v7r2
+use  DaVinciTools       v7r2     Phys
+use  DaVinciAssociators v3r1     Phys
+use  DaVinciMCTools     v4r1     Phys
+use  DaVinciTest        v4r0     Phys
+use  PhysSelections     v4r2     Phys
+use  FlavourTagging     v4r2     Phys
+use  DaVinciEff         v2r1     Phys
+use  DaVinciUser        v4r0     Phys
+use  GlobalReco         v2r3     Rec
+
+#--- Trigger
+use  L0Calo             v6r4     L0
+use  L1VeloTrack        v3r5     L1
+use  L0DU          	v6r2	 L0
+
+#--- ProtoParticles 
+use  CaloInterfaces     v2r4     Calo
+use  CaloUtils 	        v4r4     Calo
+use  CaloReco           v1r2     Calo
+
+#--- Necessary tools
+use  TrExtrapolator     v2r4     Tr
+
 
 # Build DaVinci Application with standard executable
 # Note that user code is located in a component library (see details
@@ -129,5 +67,5 @@ macro DaVinci_linkopts    "${application_linkopts}"
 
 # set the DaVinci version = v * 100000 + r * 100 + p
 #============================================================================
-macro_append cppflags " -DDaVinciVersion=600200 " \
-             VisualC  " /DDaVinciVersion=600200 "
+macro_append cppflags " -DDaVinciVersion=700200 " \
+             VisualC  " /DDaVinciVersion=700200 "
