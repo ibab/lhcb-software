@@ -4,6 +4,7 @@
 ! Purpose     : Common particles
 !-----------------------------------------------------------------------------
 
+!========================== CommonParticles v1r5p1 2004-07-22 ===================
 ! 2004-07-08 - P. Koppenburg
  - options/ProducePairPhotons.opts
     . Use CombinedParticleMaker

@@ -4,6 +4,7 @@
 ! Purpose     : Provide tools and algorithm for tagging B
 !-----------------------------------------------------------------------------
 
+!========================== FlavourTagging v5r1 2004-07-22 ===================
 ! 2004-07-08 - P. Koppenburg for Marco Musy
   - options/BTagging.opts
   - options/CheatedSelection.opts
