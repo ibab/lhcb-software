@@ -1,0 +1,11 @@
+///////////////////////////////////////////////////////////////////////////
+// Neutral ProtoP 2 MC
+
+ToolSvc.NPPs2MCPs.Location      = "Rec/Relations/NeutralPPs2MCParticles" ;
+ToolSvc.NPPs2MCPs.AlgorithmType = "NeutralPP2MC"                    ;
+ToolSvc.NPPs2MCPs.AlgorithmName = "NPPs2MCPs"                              ; 
+
+// WARNING: for the time being, this being a "CaloAlg" (!) can only have one input
+NPPs2MCPs.Input                 = "Rec/ProtoP/Neutrals"                    ;
+NPPs2MCPs.Output                = "Rec/Relations/NeutralPPs2MCParticles"   ;
+NPPs2MCPs.Detector              = "/dd/Structure/LHCb/Ecal"                ;

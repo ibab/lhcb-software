@@ -1,0 +1,12 @@
+///////////////////////////////////////////////////////////////////////////////
+
+/* Define specific parameters for an associator based on the same scheme
+   as the Chi2 one, but with a different algorithm
+*/
+Toolsvc.LinkAsct.Location      = "Phys/Relations/CompPart2MCfromLinks";
+ToolSvc.LinkAsct.AlgorithmType = "CompositeParticle2MCLinks";
+ToolSvc.LinkAsct.AlgorithmName = "CompositeParticle2MCLinks";
+
+// ... definition for the link algorithm
+//Particle2MCLinks.InputData  = { "Phys/Prod/Particles" };
+//

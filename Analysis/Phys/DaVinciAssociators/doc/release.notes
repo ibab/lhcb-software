@@ -1,6 +1,16 @@
-! $Id: release.notes,v 1.14 2002-09-12 12:16:12 gcorti Exp $
+! $Id: release.notes,v 1.15 2002-10-02 07:06:26 phicharp Exp $
 ! Package     : DaVinciAssociators
 ! Responsible : Philippe Charpentier
+
+! 2002-09-30 - Philippe Charpentier
+ - Add CompositeParticle2MCLinks associator (G.Raven)
+ - Add NeutralPP2MC associator (I.Belyaev)
+ - Change name for ProtoParticle2MC associator to ChargedPP2MC (as there is
+   now a NeutralPP2MC
+ - Create options files for each concrete associator (i.e. one per algorithm)
+ - Use dedicated associators "WithChi2" for "Chi2" Asct and of
+   "ChargedPP2MC" for "Particle2MCLinks"
+ - Include TestAssociators algorithm (from DaVinciTest package)
 
 ! 2002-09-12 - Gloria Corti
  - Introduce Neutral ProtoParticle Associator from I.Belyaev

@@ -1,0 +1,14 @@
+///////////////////////////////////////////////////////////////////////////////
+
+/* Definition for the Proto2MC Associator (this is the default)
+ */
+//Toolsvc.ChargedPP2MCAsct.Location = "Rec/Relations/ChargedPP2MC";
+//Toolsvc.ChargedPP2MCAsct.AlgorithmType = "ChargedPP2MC";
+//Toolsvc.ChargedPP2MCAsct.AlgorithmName = "ChargedPP2MC";
+
+// ... definition for the algorithm Proto2MC
+//ChargedPP2MC.InputData    = { "Rec/ProtoP/Charged" };
+//
+ChargedPP2MC.TrackAsct = "Track2MCAsct";
+// This defines where to find the Tr2MC association table (on OODST) *** DO NOT DELETE ***
+ToolSvc.Track2MCAsct.Location = "Rec/Relations/Tr2MCP";
