@@ -1,4 +1,4 @@
-// $Id: RichRecPhotonTool.cpp,v 1.2 2002-11-14 13:54:24 jonrob Exp $
+// $Id: RichRecPhotonTool.cpp,v 1.3 2002-11-14 17:34:17 jonrob Exp $
 #include <cmath>
 
 // from Gaudi
@@ -388,9 +388,8 @@ bool RichRecPhotonTool::photonPossible( RichRecSegment * segment,
 
   // Are they in the same Rich detector.
   if ( fabs( segMiddle.z() - pixelPoint.z() ) > 500. ) return false;
-  return true; // disable selection below for time being
+  //return true; // disable selection below for time being
 
-  /*
   const HepPoint3D & segmentPoint = segment->hpdPanelHitPoint();
   const Rich::Detector & det = segment->trackSegment().rich();
   const Rich::RadiatorType & rad = segment->trackSegment().radiator();
@@ -455,7 +454,6 @@ bool RichRecPhotonTool::photonPossible( RichRecSegment * segment,
   //if ( rad == Rich::C4F10 ) cout << "Success !! " << endl;
 
   return true;
-  */
 }
 
 double RichRecPhotonTool::pixelSignalProb( RichRecPhoton * photon,
