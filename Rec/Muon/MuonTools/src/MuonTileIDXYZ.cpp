@@ -1,4 +1,4 @@
-// $Id: MuonTileIDXYZ.cpp,v 1.8 2002-04-11 09:07:24 dhcroft Exp $
+// $Id: MuonTileIDXYZ.cpp,v 1.9 2002-04-19 12:15:59 dhcroft Exp $
 // Include files 
 #include <cstdio>
 #include <cmath>
@@ -866,11 +866,11 @@ StatusCode MuonTileIDXYZ::getXYZPad(const MuonTileID& tile,
     return sc;
   }
 
-  // number of pads in a chamber is : 
-  // padLayoutX / chamberLayoutX , padLayoutY / chamberLayoutY
-  int xRatio = MuonGeometry::padGridX[station][region] / 
+  // number of pads or logical channels in a chamber is : 
+  // layout.xGrid() / chamberLayoutX , padLayoutY / chamberLayoutY
+  int xRatio = tile.layout().xGrid() / 
     MuonGeometry::chamberGridX[region];
-  int yRatio = MuonGeometry::padGridY[station][region] / 
+  int yRatio = tile.layout().yGrid() / 
     MuonGeometry::chamberGridY[region];
 
   // need to work out offset within chamber
@@ -909,6 +909,10 @@ StatusCode MuonTileIDXYZ::getXYZPad(const MuonTileID& tile,
   
   deltax = cDeltax / (static_cast<double>(xRatio));
   deltay = cDeltay / (static_cast<double>(yRatio));
+
+  // correct to the center of the pad
+  x = x + deltax;
+  y = y + deltay;
 
   return StatusCode::SUCCESS;
 }  
