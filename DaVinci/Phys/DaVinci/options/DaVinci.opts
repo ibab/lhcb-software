@@ -35,7 +35,7 @@
 //
 //--- Charged ProtoParticles
 //
-// 1. Electrons (MUST be first!) (NO TDR version)
+// 1. Electrons (MUST be first!)
 //#include "$DAVINCIROOT/options/DaVinciElectrons.opts"
 // don't forget to call DaVinciReco too.
 //
@@ -44,16 +44,12 @@
 //   ChargedProtoPAlg and PrimVtxFinder are executed in
 //   DaVinciReco and MUST not be executed again
 #include "$DAVINCIROOT/options/DaVinciReco.opts"
-// for TDR data:
-//#include "$DAVINCIROOT/options/DaVinciRecoTDR.opts"
 
 //--- Neutral ProtoParticles (gammas and pi0) 
 //
 // Note that this has also to be executed if you need
 // Bremsstrahlung photons (AddBrem option)
 // #include "$DAVINCIROOT/options/DaVinciNeutrals.opts"
-// for TDR data (else you crash):
-// #include "$DAVINCIROOT/options/DaVinciNeutralsTDR.opts"
 
 //--- For merged and resolved pi0 the corresponding selection algorithm
 //    need to be executed. 

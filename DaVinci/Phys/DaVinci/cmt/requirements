@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.196 2004-10-29 12:49:46 pkoppenb Exp $
+# $Id: requirements,v 1.197 2004-11-03 07:27:22 pkoppenb Exp $
 # Created    : 07/02/2002
 # Maintainer : P. Koppenburg
 #
@@ -21,6 +21,9 @@ apply_pattern DaVinciVersion
 #============================================================================
 
 #-- External libraries now taken from LCG, version defined by GaudiEnv
+
+macro_remove ROOT_native_version "3.10.02"
+macro_append ROOT_native_version "3.10.02_0411"
 
 #-- Gaudi libraries
 use GaudiSys            v*
