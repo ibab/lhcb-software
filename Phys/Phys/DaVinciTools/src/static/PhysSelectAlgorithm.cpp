@@ -1,4 +1,4 @@
-// $Id: PhysSelectAlgorithm.cpp,v 1.1.1.1 2001-07-09 09:28:42 gcorti Exp $
+// $Id: PhysSelectAlgorithm.cpp,v 1.2 2001-07-16 15:15:47 gcorti Exp $
 
 // Include files
 #include "GaudiKernel/Kernel.h"
@@ -134,10 +134,10 @@ StatusCode PhysSelectAlgorithm::initialize() {
         << "- keep default in FORTRAN" << endreq;
   }
   else {
-    if ( MSG::DEBUG == outLevel.value() ) {
+    if ( MSG::VERBOSE == outLevel.value() ) {
       iselPrint = 2;
     }
-    if ( MSG::INFO == outLevel.value() ) {
+    if ( MSG::DEBUG == outLevel.value() ) {
       iselPrint = 1;
     }
   }
@@ -236,25 +236,25 @@ StatusCode PhysSelectAlgorithm::execute() {
   bool lAGRFlag = (bool)iAGRFlag;
   bool lTAGFlag = (bool)iTAGFlag;
   if( lMCFlag ) {
-    log << MSG::INFO << "  The event contain the MC decay requested" << endreq;
+    log << MSG::DEBUG << "  The event contain the MC decay requested" << endreq;
   }
   if( lTKRFlag ) {
-    log << MSG::INFO << " The MC decay has all end tracks reconstructed" 
+    log << MSG::DEBUG << " The MC decay has all end tracks reconstructed" 
         << endreq;
   }
   if( lPQUALFlag ) {
-    log << MSG::INFO << " The MC decay end tracks are of physics quality"
+    log << MSG::DEBUG << " The MC decay end tracks are of physics quality"
         << endreq;
   }
   if( lSELFlag ) {
-    log << MSG::INFO << "  The event passed the decay selection" << endreq;
+    log << MSG::DEBUG << "  The event passed the decay selection" << endreq;
   }
   if( lAGRFlag ) {
-    log << MSG::INFO << "  At least one selected combination is the "
+    log << MSG::DEBUG << "  At least one selected combination is the "
         << "real MC decay" << endreq;
   }
   if( lTAGFlag ) {
-    log << MSG::INFO << "  The event is also flavour tagged" << endreq;
+    log << MSG::DEBUG << "  The event is also flavour tagged" << endreq;
   }
 
   // At this point store the information in a data class
@@ -284,7 +284,7 @@ StatusCode PhysSelectAlgorithm::finalize() {
   log << MSG::INFO << ">>> Finalizing the Physics Selection package" << endreq;
   log << MSG::INFO << "    Number of events processed      = "
       << m_nEvents << endreq;
-  log << MSG::INFO << "    Finalizing AXSEL " << endreq;
+  log << MSG::DEBUG << "    Finalizing AXSEL " << endreq;
 
   // Call the print out summary
   AXSELLAST();

@@ -60,8 +60,8 @@ PhysSelectAlgorithm.FlavourTag = 1;
 //-------------------------------------------------------------------------
 // Message level if different than what set in MessageSvc
 // This level if propagated to the FORTRAN-AXSel infor level
-//   3 (INFO)  = some details on the performance of the selection
-//   2 (DEBUG) = detailed info on the performance of the selection
+//   2 (DEBUG)   = some details on the performance of the selection
+//   1 (VERBOSE) = detailed info on the performance of the selection
 //   otherwise only global info and warnings are printed
 //-------------------------------------------------------------------------
 PhysSelectAlgorithm.OutputLevel        = 3;
