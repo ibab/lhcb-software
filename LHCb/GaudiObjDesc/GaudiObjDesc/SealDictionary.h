@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/GaudiObjDesc/GaudiObjDesc/SealDictionary.h,v 1.1 2003-12-17 17:31:16 mato Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/GaudiObjDesc/GaudiObjDesc/SealDictionary.h,v 1.2 2004-01-22 15:47:51 mato Exp $
 //====================================================================
 //	SealDictionary.h
 //--------------------------------------------------------------------
@@ -832,4 +832,40 @@ namespace GaudiDict  {
     }
   };
 }
+
+#define CONTAINEDOBJECTDICTIONARIES(CLASS)                    \
+namespace {                                                   \
+  struct _InitDict##CLASS                                     \
+  {                                                           \
+    _InitDict##CLASS()                                        \
+    {                                                         \
+      GaudiDict::SmartRefDict<CLASS>();                       \
+      GaudiDict::SmartRefVectorDict<CLASS>();                 \
+      GaudiDict::VectorDict<CLASS*>();                        \
+      GaudiDict::ObjectVectorDict<CLASS>();                   \
+    }                                                         \
+  };                                                          \
+  static _InitDict##CLASS __init##CLASS;                      \
+}                                                             \
+void* __init_InitDict(CLASS* /* dummy */) {                   \
+  return &__init##CLASS;                                      \
+}
+
+#define DATAOBJECTDICTIONARIES(CLASS)                         \
+namespace {                                                   \
+  struct _InitDict##CLASS                                     \
+  {                                                           \
+    _InitDict##CLASS()                                        \
+    {                                                         \
+      GaudiDict::SmartRefDict<CLASS>();                       \
+      GaudiDict::SmartRefVectorDict<CLASS>();                 \
+      GaudiDict::VectorDict<CLASS*>();                        \
+    }                                                         \
+  };                                                          \
+  static _InitDict##CLASS __init##CLASS;                      \
+}                                                             \
+void* __init_InitDict(CLASS* /* dummy */) {                   \
+  return &__init##CLASS;                                      \
+}
+
 #endif // GAUDIKERNEL_SEALDICTIONARY_H

@@ -2,6 +2,12 @@ Package: GaudiObjDesc
 Desccription: This package contains a set of tools used to generate code from the XML description of the data object classes.
 Package manager : Stefan Roiser
 
+===============================GaudiObjDesc v6r2p2============================
+!20040122 - Stefan
+- added macros to KeyedDictionary.h and SealDictionary.h in order to allow instantion
+  of dictionaries through macros (needed e.g. when dictionary production through GOD
+  is not possible because of usage of non GOD compliant containers in Event packages)
+
 ===============================GaudiObjDesc v6r2p1============================
 !20040107 - Stefan
 - bugfix: <import> did not work for associations
