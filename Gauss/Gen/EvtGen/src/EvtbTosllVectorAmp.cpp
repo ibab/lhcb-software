@@ -124,8 +124,8 @@ void EvtbTosllVectorAmp::CalcAmp( EvtParticle *parent,
   
   EvtTensor4C T1,T2;
   
-  static EvtIdSet bmesons("B-","anti-B0");
-  static EvtIdSet bbarmesons("B+","B0");
+  static EvtIdSet bmesons("B-","anti-B0","anti-B_s0");
+  static EvtIdSet bbarmesons("B+","B0","B_s0");
   
   EvtParticle* lepPlus=0;
   EvtParticle* lepMinus=0;

@@ -1,6 +1,9 @@
 Package :EvtGen 
 Package manager : Patrick Robbe and Witek Pokorski
 
+! 2004-02-06 - Patrick Robbe
+ - modifications to use B_s -> omega e+ e- decays
+
 ! 2004-01-15 - Patrick Robbe
  - modifications in order to compile with Windows VC7 compiler.
 

@@ -77,6 +77,7 @@
 #include "EvtGenModels/EvtTauScalarnu.hh"
 #include "EvtGenModels/EvtKstarnunu.hh"
 #include "EvtGenModels/EvtbTosllBall.hh"
+#include "EvtGenModels/EvtbTosllAli.hh"
 #include "EvtGenModels/EvtSingleParticle.hh"
 #include "EvtGenModels/EvtVectorIsr.hh"
 
@@ -176,6 +177,7 @@ EvtModelReg::EvtModelReg() {
   modelist.Register(new EvtTauScalarnu);
   modelist.Register(new EvtKstarnunu);
   modelist.Register(new EvtbTosllBall);
+  modelist.Register(new EvtbTosllAli);
   modelist.Register(new EvtBto2piCPiso);
   modelist.Register(new EvtBtoKpiCPiso);
   modelist.Register(new EvtSVSCPiso);
