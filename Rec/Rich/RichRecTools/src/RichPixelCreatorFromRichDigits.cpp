@@ -1,4 +1,4 @@
-// $Id: RichPixelCreatorFromRichDigits.cpp,v 1.1 2003-06-30 15:47:05 jonrob Exp $
+// $Id: RichPixelCreatorFromRichDigits.cpp,v 1.2 2003-07-03 14:46:59 jonesc Exp $
 
 // local
 #include "RichPixelCreatorFromRichDigits.h"
@@ -69,6 +69,7 @@ StatusCode RichPixelCreatorFromRichDigits::finalize() {
 
   // release services and tools
   if ( m_evtDataSvc ) { m_evtDataSvc->release(); m_evtDataSvc = 0; }
+  releaseTool( m_richDetInt );
 
   // Execute base class method
   return RichRecToolBase::finalize();

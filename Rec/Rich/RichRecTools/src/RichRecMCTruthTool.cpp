@@ -1,4 +1,4 @@
-// $Id: RichRecMCTruthTool.cpp,v 1.10 2003-07-02 17:03:08 jonesc Exp $
+// $Id: RichRecMCTruthTool.cpp,v 1.11 2003-07-03 14:46:59 jonesc Exp $
 
 // local
 #include "RichRecMCTruthTool.h"
@@ -91,8 +91,11 @@ StatusCode RichRecMCTruthTool::finalize() {
   msg << MSG::DEBUG << "Finalize" << endreq;
 
   // release tools and services
-  if ( m_trackToMCP ) { toolSvc()->releaseTool( m_trackToMCP ); m_trackToMCP=0; }
   if ( m_evtDataSvc ) { m_evtDataSvc->release(); m_evtDataSvc = 0; }
+  releaseTool( m_trackToMCP );
+  releaseTool( m_segCreator );
+  releaseTool( m_trackCreator );
+  releaseTool( m_pixelCreator );
 
   // Execute base class method
   return RichRecToolBase::finalize();

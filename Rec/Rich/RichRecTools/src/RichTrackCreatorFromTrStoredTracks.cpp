@@ -1,4 +1,4 @@
-// $Id: RichTrackCreatorFromTrStoredTracks.cpp,v 1.1 2003-06-30 15:47:06 jonrob Exp $
+// $Id: RichTrackCreatorFromTrStoredTracks.cpp,v 1.2 2003-07-03 14:47:00 jonesc Exp $
 
 // local
 #include "RichTrackCreatorFromTrStoredTracks.h"
@@ -71,6 +71,9 @@ StatusCode RichTrackCreatorFromTrStoredTracks::finalize() {
 
   // release services and tools
   if ( m_evtDataSvc ) { m_evtDataSvc->release(); m_evtDataSvc = 0; }
+  releaseTool( m_segCr);
+  releaseTool( m_richDetInt);
+  releaseTool( m_segProps);
 
   // Execute base class method
   return RichRecToolBase::finalize();

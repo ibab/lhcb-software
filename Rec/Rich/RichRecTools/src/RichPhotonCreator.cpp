@@ -1,4 +1,4 @@
-// $Id: RichPhotonCreator.cpp,v 1.3 2003-07-03 13:09:01 jonesc Exp $
+// $Id: RichPhotonCreator.cpp,v 1.4 2003-07-03 14:46:58 jonesc Exp $
 
 // local
 #include "RichPhotonCreator.h"
@@ -88,6 +88,11 @@ StatusCode RichPhotonCreator::finalize() {
 
   // release services and tools
   if ( m_evtDataSvc ) { m_evtDataSvc->release(); m_evtDataSvc = 0; }
+  releaseTool( m_richDetInt );
+  releaseTool( m_trackCreator );
+  releaseTool( m_photonSignal );
+  releaseTool( m_pixelCreator );
+  releaseTool( m_photonPredictor );
 
   // Execute base class method
   return RichRecToolBase::finalize();
@@ -190,7 +195,7 @@ RichRecPhoton * RichPhotonCreator::buildPhoton( RichRecSegment * segment,
       bool keepPhoton = false;
       for ( int iHypo = 0; iHypo < Rich::NParticleTypes; ++iHypo ) {
         if ( m_photonSignal->predictedPixelSignal(newPhoton,
-                       (Rich::ParticleIDType)iHypo) > m_minPhotonProb[rad] ) {
+                                                  (Rich::ParticleIDType)iHypo) > m_minPhotonProb[rad] ) {
           keepPhoton = true;
           break;
         }

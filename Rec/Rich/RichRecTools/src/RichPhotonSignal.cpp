@@ -1,4 +1,4 @@
-// $Id: RichPhotonSignal.cpp,v 1.1 2003-06-30 15:47:05 jonrob Exp $
+// $Id: RichPhotonSignal.cpp,v 1.2 2003-07-03 14:46:59 jonesc Exp $
 
 // local
 #include "RichPhotonSignal.h"
@@ -49,6 +49,9 @@ StatusCode RichPhotonSignal::finalize() {
 
   MsgStream msg( msgSvc(), name() );
   msg << MSG::DEBUG << "Finalize" << endreq;
+
+  // release tools
+  releaseTool( m_segProps );
 
   // Execute base class method
   return RichRecToolBase::finalize();

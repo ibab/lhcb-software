@@ -1,4 +1,4 @@
-// $Id: RichSegmentProperties.cpp,v 1.1 2003-06-30 15:47:06 jonrob Exp $
+// $Id: RichSegmentProperties.cpp,v 1.2 2003-07-03 14:47:00 jonesc Exp $
 
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h"
@@ -309,6 +309,10 @@ StatusCode RichSegmentProperties::finalize() {
 
   MsgStream msg( msgSvc(), name() );
   msg << MSG::DEBUG << "Finalize" << endreq;
+
+  // release tools
+  releaseTool( m_richDetInt );
+  releaseTool( m_geomEff );
 
   // Execute base class method
   return RichRecToolBase::finalize();

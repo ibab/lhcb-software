@@ -1,4 +1,4 @@
-// $Id: RichGlobalPIDAlg.cpp,v 1.1.1.1 2003-06-30 16:10:54 jonesc Exp $
+// $Id: RichGlobalPIDAlg.cpp,v 1.2 2003-07-03 14:47:43 jonesc Exp $
 // Include files
 
 // local
@@ -406,6 +406,11 @@ StatusCode RichGlobalPIDAlg::finalize() {
 
   MsgStream msg(msgSvc(), name());
   msg << MSG::DEBUG << "Finalize" << endreq;
+
+  // release tools
+  releaseTool( m_photonCr );
+  releaseTool( m_photonSig );
+  releaseTool( m_trackProp );
 
   // Execute base class method
   return RichRecAlgBase::finalize();

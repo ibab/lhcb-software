@@ -1,4 +1,4 @@
-// $Id: RichGlobalPIDTrTrackSel.cpp,v 1.2 2003-07-02 09:02:59 jonrob Exp $
+// $Id: RichGlobalPIDTrTrackSel.cpp,v 1.3 2003-07-03 14:47:44 jonesc Exp $
 // Include files
 
 // local
@@ -269,6 +269,10 @@ StatusCode RichGlobalPIDTrTrackSel::finalize() {
 
   MsgStream msg(msgSvc(), name());
   msg << MSG::DEBUG << "Finalize" << endreq;
+
+  // release tools
+  releaseTool( m_trackCr );
+  releaseTool( m_trackProp );
 
   // Execute base class method
   return RichRecAlgBase::finalize();

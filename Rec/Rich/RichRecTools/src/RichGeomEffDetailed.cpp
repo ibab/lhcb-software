@@ -1,4 +1,4 @@
-// $Id: RichGeomEffDetailed.cpp,v 1.1 2003-06-30 15:47:04 jonrob Exp $
+// $Id: RichGeomEffDetailed.cpp,v 1.2 2003-07-03 14:46:58 jonesc Exp $
 
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h"
@@ -87,8 +87,10 @@ StatusCode RichGeomEffDetailed::finalize() {
   MsgStream msg( msgSvc(), name() );
   msg << MSG::DEBUG << "Finalize" << endreq;
 
-  // Release the random generator
+  // Release tools and services
   m_uniDist.finalize();
+  releaseTool( m_richDetInt );
+  releaseTool( m_segProps );
 
   // Execute base class method
   return RichRecToolBase::finalize();
