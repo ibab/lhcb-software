@@ -1,4 +1,4 @@
-// $Id: L0mCrate.cpp,v 1.11 2003-01-24 09:35:00 atsareg Exp $
+// $Id: L0mCrate.cpp,v 1.12 2003-01-24 18:15:53 ooleroy Exp $
 
 #ifdef WIN32
 // Disable warning C4786 identifier truncated to 255 characters in debug info.
@@ -104,8 +104,9 @@ L0Muon::StatusCode L0mCrate::execute(MsgStream& log) {
   if(m_status == L0Muon::OK) {
     if (m_candidates.size() > 2) {    
       //cout << " # of candidate " << m_candidates.size() << endl;
-      // Now sort the candidates in the Pt descending order
-      std::sort(m_candidates.begin(),m_candidates.end(),ComparePt());
+      // DO NOT sort the candidates according to PT because
+      // this will be impossible in the hardware
+      //std::sort(m_candidates.begin(),m_candidates.end(),ComparePt());
       //cout << "After sort " << endl;
       // Erase candidates with smaller Pt
       for (ilmc = m_candidates.end()-1;ilmc != m_candidates.begin()+1; ilmc--) {
