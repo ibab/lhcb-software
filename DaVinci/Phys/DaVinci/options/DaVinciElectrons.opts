@@ -1,4 +1,4 @@
-// $Id: DaVinciElectrons.opts,v 1.3 2004-08-02 14:48:53 pkoppenb Exp $ 
+// $Id: DaVinciElectrons.opts,v 1.4 2004-08-25 13:46:52 pkoppenb Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
@@ -18,22 +18,8 @@
 // The major algorith sequence for "electrons"
 ApplicationMgr.TopAlg        += { "Sequencer/Electrons" } ;
 
-/*---------------------------------------------------
-  TEMPORARY PATCH:
-  Because of a bug in MinimalEventLoopMgr.cpp,
-  an algorithm contained in two sequencers
-  is executed twice. This is the case of 
-  CaloDigitsFromRaw when both the Electrons 
-  and Neutrals sequences are called.
-  To avoid the problem, execute the algorithm
-  in DaVinciCommon.opts, hence in *all* events.
-  
-  !! Don't forget to restore the initial way when
-  a patched version of MinimalEventLoopMgr.cpp
-  comes out !!
----------------------------------------------------*/
 // Re-create CaloDigits from raw buffer 
-//Electrons.Members             = { "CaloDigitsFromRaw"    } ;  
+Electrons.Members             = { "CaloDigitsFromRaw"    } ;  
 
 // For Electrons 
 Electrons.Members            += { "CaloHypoAlg/ElectronCalibration"     } ;
