@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: HandsOn3.py,v 1.3 2004-11-08 17:02:45 ibelyaev Exp $
+# $Id: HandsOn3.py,v 1.4 2004-11-25 12:10:35 ibelyaev Exp $
 # =============================================================================
 # CVS tag $Name: not supported by cvs2svn $ 
 # =============================================================================
@@ -65,17 +65,17 @@ def configure() :
     gaudi.setAlgorithms( [alg ])
     
     # configure the histograms:
-    hsvc = gaudi.service('HistogramPersistencySvc')
-    hsvc.OutputFile = 'mckaonhistos.hbook'
-    gaudi.HistogramPersistency = 'HBOOK' 
+    hsvc = gaudi.histoSvc()
+    hsvc.setOutput('myhistos.hbook', 'HBOOK')
     
     # configure the N-Tuples:
-    ntsvc = gaudi.service('NTupleSvc')
-    ntsvc.Output = [ "MC DATAFILE='mckaontuples.hbook' TYP='HBOOK' OPT='NEW'" ]
+    if not 'NTupleSvc' in gaudi.ExtSvc : gaudi.ExtSvc += ['NTupleSvc']
+    ntsvc = gaudi.nTupleSvc()
+    ntsvc.defineOutput( { 'MC' : 'mytuples.hbook' } , 'HBOOK' )
     
     myAlg = gaudi.algorithm('MCKaons')
     myAlg.NTupleLUN = 'MC'
-
+    
     # redefine input files 
     evtsel = gaudi.evtSel()
     evtsel.open( [ 'LFN:/lhcb/production/DC04/v1/DST/00000543_00000017_5.dst',

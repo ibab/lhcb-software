@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: RCSelect.py,v 1.3 2004-11-08 17:02:47 ibelyaev Exp $
+# $Id: RCSelect.py,v 1.4 2004-11-25 12:10:35 ibelyaev Exp $
 # =============================================================================
 # CVS tag $Name: not supported by cvs2svn $ 
 # =============================================================================
@@ -118,17 +118,17 @@ def configure() :
     gaudi.addAlgorithm( alg ) 
     
     # 3) configure algorithm
-    desktop = gaudi.property('RCSelect.PhysDesktop')
+    desktop = gaudi.tool('RCSelect.PhysDesktop')
     desktop.InputLocations = [ "/Event/Phys/Charged" ]
     
     # configure the histograms:
-    gaudi.HistogramPersistency = 'HBOOK' 
-    hsvc = gaudi.service('HistogramPersistencySvc')
-    hsvc.OutputFile = 'rcselect.hbook'
+    hsvc = gaudi.histoSvc()
+    hsvc.setOutput('myhistos.hbook', 'HBOOK')
     
-    # configure the N-Tuples:
-    ntsvc = gaudi.service('NTupleSvc')
-    ntsvc.Output = [ "RC DATAFILE='rctuples.hbook' TYP='HBOOK' OPT='NEW'" ]
+     # configure the N-Tuples:
+    if not 'NTupleSvc' in gaudi.ExtSvc : gaudi.ExtSvc += ['NTupleSvc']
+    ntsvc = gaudi.nTupleSvc()
+    ntsvc.defineOutput( { 'RC' : 'mytuples.hbook' } , 'HBOOK' )
     
     myAlg = gaudi.algorithm('RC')
     myAlg.NTupleLUN = 'RC'
@@ -158,7 +158,7 @@ if __name__ == '__main__' :
     configure()
 
     # event loop 
-    gaudi.run(50)
+    gaudi.run(100)
 
     # for the interactive mode it is better to comment the last line
     gaudi.exit()

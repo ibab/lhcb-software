@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: RCMCSelect.py,v 1.3 2004-11-08 17:02:46 ibelyaev Exp $
+# $Id: RCMCSelect.py,v 1.4 2004-11-25 12:10:35 ibelyaev Exp $
 # =============================================================================
 # CVS tag $Name: not supported by cvs2svn $ 
 # =============================================================================
@@ -143,13 +143,12 @@ def configure() :
     gaudi.addAlgorithm( alg ) 
     
     # 3) configure algorithm
-    desktop = gaudi.property('RCSelect.PhysDesktop')
+    desktop = gaudi.tool('RCSelect.PhysDesktop')
     desktop.InputLocations = [ "/Event/Phys/Charged" ]
     
     # configure the histograms:
-    gaudi.HistogramPersistency = 'HBOOK' 
-    hsvc = gaudi.service('HistogramPersistencySvc')
-    hsvc.OutputFile = 'rcmc.histos'
+    hsvc = gaudi.histoSvc()
+    hsvc.setOutput('myhistos.hbook', 'HBOOK')
     
     # redefine input files 
     evtsel = gaudi.evtSel()
@@ -176,14 +175,14 @@ if __name__ == '__main__' :
     configure()
 
     # event loop 
-    gaudi.run(500)
+    gaudi.run(100)
 
     # for the interactive mode it is better to comment the last line
     gaudi.exit()
 # =============================================================================
 
 # =============================================================================
-# $Log: not supported by cvs2svn $ 
+# $Log: not supported by cvs2svn $
 # =============================================================================
 # The END 
 # =============================================================================

@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: HandsOn4.py,v 1.3 2004-11-08 17:02:46 ibelyaev Exp $
+# $Id: HandsOn4.py,v 1.4 2004-11-25 12:10:35 ibelyaev Exp $
 # =============================================================================
 # CVS tag $Name: not supported by cvs2svn $ 
 # =============================================================================
@@ -103,21 +103,21 @@ def configure() :
     gaudi.addAlgorithm( alg )
     
     # 3) configure algorithm
-    desktop = gaudi.property('RCKaons.PhysDesktop')
+    desktop = gaudi.tool('RCKaons.PhysDesktop')
     desktop.InputLocations = [ "/Event/Phys/Charged" ]
     
     # configure the histograms:
-    gaudi.HistogramPersistency = 'HBOOK' 
-    hsvc = gaudi.service('HistogramPersistencySvc')
-    hsvc.OutputFile = 'rckaonhistos.hbook'
+    hsvc = gaudi.histoSvc('HistogramPersistencySvc')
+    hsvc.setOutput( 'rckaonhistos.hbook' , 'HBOOK' )    
     
     # configure the N-Tuples:
-    ntsvc = gaudi.service('NTupleSvc')
-    ntsvc.Output = [ "RC DATAFILE='rckaontuples.hbook' TYP='HBOOK' OPT='NEW'" ]
+    if not 'NTupleSvc' in gaudi.ExtSvc : gaudiExtSvc += ['NTupleSvc']
+    ntsvc = gaudi.nTupleSvc('NTupleSvc')
+    ntsvc.defineOutput( { 'RC' : 'rckaontuples.hbook' } , 'HBOOK' )
     
     myAlg = gaudi.algorithm('RCKaons')
     myAlg.NTupleLUN = 'RC'
-
+    
     # redefine input files 
     evtsel = gaudi.evtSel()
     evtsel.open( [ 'LFN:/lhcb/production/DC04/v1/DST/00000543_00000017_5.dst',
@@ -130,7 +130,7 @@ def configure() :
                    'LFN:/lhcb/production/DC04/v1/DST/00000543_00000022_5.dst',
                    'LFN:/lhcb/production/DC04/v1/DST/00000543_00000001_5.dst',
                    'LFN:/lhcb/production/DC04/v1/DST/00000543_00000002_5.dst' ] )
-        
+    
     return SUCCESS
 # =============================================================================
 

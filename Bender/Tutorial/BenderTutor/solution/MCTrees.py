@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: MCTrees.py,v 1.3 2004-11-08 17:02:46 ibelyaev Exp $
+# $Id: MCTrees.py,v 1.4 2004-11-25 12:10:35 ibelyaev Exp $
 # =============================================================================
 # CVS tag $Name: not supported by cvs2svn $ 
 # =============================================================================
@@ -51,7 +51,7 @@ class MCTrees( Algo ) :
             tup.column( name = 'PT'  , value = MCPT( mu ) / GeV )
             tup.column( name = 'ID'  , value = MCID( mu )       )
             tup.column( name = 'Q3'  , value = MC3Q( mu )       )
-            tup.column( name = 'zOR' , value = zOrig( mu ) / mm ) 
+            tup.column( name = 'ZOR' , value = zOrig( mu ) / mm ) 
             tup.write() 
             
         return SUCCESS
@@ -72,13 +72,13 @@ def configure() :
     gaudi.setAlgorithms ( [ alg ] ) 
     
     # configure the histograms:
-    hsvc = gaudi.service('HistogramPersistencySvc')
-    gaudi.HistogramPersistency = 'HBOOK' 
-    hsvc.OutputFile = 'mctreeshistos.hbook'
-
+    hsvc = gaudi.histoSvc()
+    hsvc.setOutput( 'mctreeshistos.hbook', 'HBOOK' )
+    
     # configure the N-Tuples:
-    ntsvc = gaudi.service('NTupleSvc')
-    ntsvc.Output = [ "MC DATAFILE='x.hbook' TYPE='HBOOK' opt='NEW'" ]
+    if not 'NTupleSvc' in gaudi.ExtSvc : gaudi.ExtSvc += ['NTupleSvc']
+    ntsvc = gaudi.nTupleSvc()
+    ntsvc.defineOutput( { 'MC' : 'mytuples.hbook' } , 'HBOOK' )
 
     # configure my own algorithm
     myAlg = gaudi.algorithm('McTree')
@@ -117,7 +117,7 @@ if __name__ == '__main__' :
 # =============================================================================
 
 # =============================================================================
-# $Log: not supported by cvs2svn $ 
+# $Log: not supported by cvs2svn $
 # =============================================================================
 # The END 
 # =============================================================================
