@@ -5,7 +5,10 @@
 ! Purpose            : collection of sensitive detectors, G4 actions, etc for RICH
 !-----------------------------------------------------------------------------
 
-!========================== GaussRICH v4r2 2003-08-19 ======================
+!========================== GaussRICH v4r2 2003-09-03 ======================
+! 2003-09-03 - Florence Ranjard
+ - use RichEvent v* ( instead of v4r*)
+
 ! 2003-08-19 - Witek Pokorski
  - removed some printouts from the converters
 
