@@ -35,14 +35,13 @@ BrunelDstWriter.OptItemList =
 , "/Event/PrevPrev/Header#1"
 , "/Event/Next#1"
 , "/Event/Next/Header#1"
-, "/Event/Rec/Status#1"
 , "/Event/Rec/Calo/HcalE#1"
 , "/Event/Rec/Calo/HcalIDe#1"
 , "/Event/Rec/Calo/HcalIDmu#1"
 , "/Event/Rec/Calo/PrsE#1"
 , "/Event/Rec/Calo/PrsID#1"
 , "/Event/Rec/Calo/EcalID#1"
-, "/Event/Rec/Rich/OOPIDs#1" // OORICH not yet working on Windows
+, "/Event/Rec/Rich/OOPIDs#1" // OORICH not yet in production
 }; 
 BrunelDstWriter.ItemList = 
 {
@@ -80,6 +79,7 @@ BrunelDstWriter.ItemList =
 , "/Event/Raw/Ecal#1"
 , "/Event/Raw/Ecal/Digits#1" // Kept only if "seeds" for stored clusters
 , "/Event/Rec#1"
+, "/Event/Rec/Status#1"
 , "/Event/Rec/IT#1"
 , "/Event/Rec/IT/Summary#1"
 , "/Event/Rec/IT/Clusters#1"

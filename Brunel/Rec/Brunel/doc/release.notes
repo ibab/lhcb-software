@@ -3,6 +3,16 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
+</PRE><H1><A NAME=v15r3>2002-12-03 Brunel v15r3</A></H1><PRE>
+ - New tuning:
+   . Tighten cut on signal/noise of TT clusters (>4) to reduce ghost rate
+     (VeloTT v1r3)
+   . Exclude backward Velo tracks as identified by VeloTrack, rather than by
+     private selection method (VeloTT v1r3)
+
+ - DST changes:
+   . Add ProcStatus to all events (BrunelKernel v5r2, BrunelDst.opts)
+
 </PRE><H1><A NAME=v15r2>2002-11-26 Brunel v15r2</A></H1><PRE>
  N.B.: to take advantage of new Rich tuning, new dbase versions are needed:
  To (re)process data produced with dbase v248r4, use dbase v248r5 and Brunelv248r5.opts
