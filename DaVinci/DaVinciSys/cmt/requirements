@@ -83,10 +83,10 @@ use  TrExtrapolator      v2r6   Tr
 
 #--- TriggerFilter
 use  Utilities           v1r2   Tools
-#use  TriggerFilter       v2r2   Tools
+use  TriggerFilter       v2r2   Tools
 
 #--- DecayPreselections
-#use  DecayPresel         v2r2   Tools
+use  DecayPresel         v2r3   Tools
 
 #--- Tools
 #    not buildable on Win32
