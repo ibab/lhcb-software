@@ -3,6 +3,15 @@ Package manager: M.Cattaneo
 Purpose: LHCb specific Kernel classes 
 
 !=============================================================================
+! 12/05/2002 - Vanya Belyaev
+  - src/Test/LHCbKernelTest.cpp  removed 
+  - src/Test/RelationsTest.cpp   new test application for Relations subpackage
+  - Relations/AssociatoBase.h 
+    Relations/AssociatorBase.cpp  
+    improve the printout and introduce better error/warnins/exception
+    handling and statistics (imported from base classes of LHCb Calo software)
+ 
+!=============================================================================
 ! 10/05/2002 - Philippe Charpentier
   - modified interface to Associators:
     Added methods to retrieve ranges,   delegating to the table

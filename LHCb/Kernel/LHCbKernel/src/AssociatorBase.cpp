@@ -1,14 +1,8 @@
-// $Id: AssociatorBase.cpp,v 1.3 2002-04-09 08:52:05 ibelyaev Exp $
+// $Id: AssociatorBase.cpp,v 1.4 2002-05-12 08:45:28 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
-// Revision 1.2  2002/04/08 21:03:08  ibelyaev
-//  bug fix in constructors (non-initialized pointers)
-//
-// Revision 1.1  2002/04/08 14:26:02  ibelyaev
-//  new version of 'Relations'-subpackage
-//
 // ============================================================================
 // Include files
 // from Gaudi
@@ -30,6 +24,7 @@
 #include "GaudiKernel/IAlgorithm.h"
 #include "GaudiKernel/IProperty.h"
 #include "GaudiKernel/Property.h"
+#include "GaudiKernel/System.h"
 // local
 #include "Relations/AssociatorBase.h"
 
@@ -70,6 +65,9 @@ Relations::AssociatorBase::AssociatorBase
   , m_builderName ( "" )
   , m_algorithm   ( 0  )
   , m_object      ( 0  ) 
+  , m_errors      (    )
+  , m_warnings    (    )
+  , m_exceptions  (    )
 {
   // interfaces 
   declareInterface<IIncidentListener> ( this );
@@ -160,6 +158,49 @@ StatusCode Relations::AssociatorBase::initialize ()
 // ============================================================================
 StatusCode Relations::AssociatorBase::finalize () 
 {
+  // printout of error/warnings/exceptions
+  
+  // format printout 
+  if( 0 != m_errors      .size () || 
+      0 != m_warnings    .size () ||
+      0 != m_exceptions  .size ()  ) 
+    {      
+      MsgStream log( msgSvc() , name() );
+      // format printout 
+      log << MSG::ALWAYS 
+          << " Exceptions/Errors/Warnings statistics:  " 
+          << m_exceptions .size () << "/"
+          << m_errors     .size () << "/"
+          << m_warnings   .size () << endreq ; 
+      // print exceptions counter 
+      for( Counter::const_iterator excp = m_exceptions.begin() ;
+           excp  != m_exceptions.end() ; ++excp  )
+        {
+          log << MSG::ALWAYS 
+              << " #EXCEPTIONS= " << excp ->second  
+              << " Message='"     << excp ->first    << "'" << endreq ; 
+        }  
+      // print errors counter 
+      for( Counter::const_iterator error = m_errors.begin() ;
+           error != m_errors.end() ; ++error )
+        {
+          log << MSG::ALWAYS 
+              << " #ERRORS    = " << error->second  
+              << " Message='"     << error->first    << "'" << endreq ; 
+        }  
+      // print warnings
+      for( Counter::const_iterator warning = m_warnings.begin() ;
+           warning != m_warnings.end() ; ++warning )
+        {
+          log << MSG::ALWAYS 
+              << " #WARNINGS  = " << warning->second  
+              << " Message='"     << warning->first  << "'" << endreq ; 
+        }  
+    }
+  m_errors      .clear();
+  m_warnings    .clear();
+  m_exceptions  .clear();
+  
   // release the builder algorithm 
   if( 0 != m_algorithm ) 
     { 
@@ -188,6 +229,9 @@ StatusCode Relations::AssociatorBase::Error
 ( const std::string& msg , 
   const StatusCode & st  ) const 
 {
+  // increase local errors counter 
+  m_errors [ msg ] += 1 ;
+  // use global error counter 
   Stat stat( chronoSvc() , name()+":Error" ); 
   return Print( msg , st , MSG::ERROR ); 
 };
@@ -204,6 +248,9 @@ StatusCode Relations::AssociatorBase::Warning
 ( const std::string& msg , 
   const StatusCode & st  ) const 
 {
+  // increase local warnings  counter 
+  m_errors [ msg ] += 1 ;
+  // use global warnings counter 
   Stat stat( chronoSvc() , name()+":Warning" ); 
   return Print( msg , st , MSG::WARNING ); 
 };
@@ -223,9 +270,9 @@ StatusCode Relations::AssociatorBase::Print
 {
   MsgStream log( msgSvc() , name() ); 
   log << lvl << type () << " "   << msg ;
-  ///
-  if( !st.isSuccess() ) { log << " \tStatusCode=" << st ;}
-  ///
+  if      ( st.isSuccess  ()          ) { log << " \t SUCCESS "      << st ; }
+  else if ( StatusCode::FAILURE == st ) { log << " \t FAILURE "      << st ; }
+  else                                  { log << " \t StatusCode = " << st ; }
   log << endreq ; 
   return  st;
 };
@@ -246,8 +293,12 @@ StatusCode Relations::AssociatorBase::Exception
   const MSG::Level     & lvl ,
   const StatusCode     & sc  ) const   
 { 
-  Error( msg , lvl );
-  throw GaudiException( msg , "RelationTool" , sc , exc );
+  // increase local counter of exceptions  
+  m_exceptions[ msg ] += 1 ;
+  // increase global exceptions counter 
+  Stat stat( chronoSvc() , name()+":Exception" ); 
+  Print( "Exception (re)throw: " + msg , sc , lvl ); 
+  throw   GaudiException( name() + ":: " + msg , "*Relations*" , sc , exc );
   return  sc ;
 };
 // ============================================================================
@@ -266,9 +317,14 @@ StatusCode Relations::AssociatorBase::Exception
   const std::exception & exc , 
   const MSG::Level     & lvl ,
   const StatusCode     & sc  ) const   
-{ 
-  Error( msg , lvl );
-  throw   GaudiException( msg+"("+exc.what()+")", "RelationTool" , sc );
+{
+  // increase local counter of exceptions  
+  m_exceptions[ msg ] += 1 ;
+  // increase global exceptions counter 
+  Stat stat( chronoSvc() , name()+":Exception" ); 
+  Print( "Exception (re)throw: " + msg , sc , lvl  ); 
+  throw GaudiException( name() + ":: " + msg + 
+                        "(" + exc.what() + ")" , "*Relations*", sc );
   return  sc ;
 };
 // ============================================================================
@@ -286,8 +342,12 @@ StatusCode Relations::AssociatorBase::Exception
   const MSG::Level     & lvl ,
   const StatusCode     & sc  ) const 
 { 
-  Error( msg , lvl );
-  throw GaudiException( msg , "RelationTool" , sc );
+  // increase local counter of exceptions  
+  m_exceptions[ msg ] += 1 ;
+  // increase global exceptions counter 
+  Stat stat( chronoSvc() , name()+":Exception" ); 
+  Print( "Exception  throw: " + msg , sc , lvl  ); 
+  throw  GaudiException( name() + ":: " + msg , "*Relations*" , sc );
   return  sc ;
 };
 // ============================================================================
@@ -314,7 +374,13 @@ StatusCode Relations::AssociatorBase::locateOrBuild () const
   if( 0 != m_object     ) { return StatusCode::SUCCESS                    ; }
   // (1) locate the object in ETS 
   SmartDataPtr<IInterface>  object1( evtSvc() , location () );
-  if( object1 ) { m_object = object1 ; return StatusCode::SUCCESS         ; }
+  if( object1 ) 
+    { 
+      m_object = object1 ; 
+      return Print( "Retrieved relation table is '" + location() + 
+                    "' (type '" + System::typeinfoName( typeid( *m_object ) ) +
+                    "'", StatusCode::SUCCESS , MSG::VERBOSE  ); 
+    }
   // (2) get the builder 
   if( 0 == algorithm () ) { return Error("'Builder' is invalid!"        ) ; }
   // (3) use builder to build relation tables
@@ -322,10 +388,13 @@ StatusCode Relations::AssociatorBase::locateOrBuild () const
   if( sc.isFailure   () ) { return Error("Error form 'Builder'!"  ,  sc ) ; }
   // (4) locate data in ETS again
   SmartDataPtr<IInterface> object2( evtSvc() , location () );
-  if( !object2 ) { return Error("Data after builder are not available!" ) ; }
-  m_object =  object2 ;
-  m_object -> addRef() ;
-  return StatusCode::SUCCESS ;
+  if( !object2 ) { return Error("Data after 'Builder' are not available!" ) ; }
+  m_object =  object2  ;
+  m_object -> addRef() ; // do we need this line ?
+  //
+  return Print( "Builded relation table is '" + location() + 
+                "' (type '" + System::typeinfoName( typeid( *m_object ) ) +
+                "'", StatusCode::SUCCESS , MSG::VERBOSE  ); 
 };
 // ============================================================================
 

@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.17 2002-05-10 12:37:25 ibelyaev Exp $
+# $Id: requirements,v 1.18 2002-05-12 08:45:28 ibelyaev Exp $
 # =============================================================================
 # CVS tag $Name: not supported by cvs2svn $
 # =============================================================================
@@ -41,10 +41,10 @@ apply_pattern package_shlibflags
 #============================================================================
 private
 macro LHCbKernelDict_shlibflags  "$(GaudiIntrospection_linkopts) $(use_linkopts) $(libraryshr_linkopts)"
-
-private
-application   LHCbKernelTest -check Test/*.cpp 
-macro_prepend LHCbKernelTestlinkopts $(LHCbKernel_linkopts)
-apply_pattern     application_path
-path_remove       PATH  "LHCbKernel"
-path_append       PATH  ${LHCBKERNELROOT}/${BINDIR}
+        
+private 
+application   RelationsTest -check  Test/RelationsTest.cpp 
+macro_prepend RelationsTestlinkopts " $(LHCbKernel_linkopts) "
+apply_pattern application_path
+path_remove   PATH                  "LHCbKernel"
+path_append   PATH                  ${LHCBKERNELROOT}/${BINDIR}

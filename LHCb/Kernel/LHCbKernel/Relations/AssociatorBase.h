@@ -1,8 +1,11 @@
-// $Id: AssociatorBase.h,v 1.2 2002-04-25 08:44:02 ibelyaev Exp $
+// $Id: AssociatorBase.h,v 1.3 2002-05-12 08:45:28 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2002/04/25 08:44:02  ibelyaev
+//  bug fix for Win2K
+//
 // Revision 1.1  2002/04/08 14:26:00  ibelyaev
 //  new version of 'Relations'-subpackage
 //
@@ -14,6 +17,8 @@
 #define RELATIONS_AssociatorBase_H 1
 // Include files
 #include "Relations/PragmaWarnings.h"
+// STD & STL
+#include <map> 
 // GaudiKernel
 #include "GaudiKernel/AlgTool.h"
 #include "GaudiKernel/IIncidentListener.h"
@@ -279,6 +284,12 @@ namespace Relations
     mutable IAlgorithm* m_algorithm    ; ///< relation builder itself 
     // relation table!    
     mutable IInterface* m_object       ; ///< relation table
+
+    // error/warnins/exception counters 
+    typedef std::map<std::string,unsigned int> Counter;
+    mutable Counter     m_errors       ; ///< counter of errors      
+    mutable Counter     m_warnings     ; ///< counter of warnings  
+    mutable Counter     m_exceptions   ; ///< counter of exceptions 
     
   };
   
