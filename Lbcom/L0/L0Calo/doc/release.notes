@@ -1,6 +1,11 @@
-! $Id: release.notes,v 1.21 2002-07-09 19:04:26 cattanem Exp $
+! $Id: release.notes,v 1.22 2002-07-18 17:58:13 cattanem Exp $
 Package		: L0/L0Calo
 Package Manager : Olivier Callot
+
+!========================= L0Calo v6r1 2002-07-18 =======================
+! 2002-07-18 - Marco Cattaneo
+ - Force recompilation with CaloEvent v11r1
+ - Remove an INFO message
 
 !========================= L0Calo v6r0 2002-07-09 =======================
 ! 2002-07-01 - Olivier Callot

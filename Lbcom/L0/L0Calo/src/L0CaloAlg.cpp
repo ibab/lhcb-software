@@ -1,4 +1,4 @@
-// $Id: L0CaloAlg.cpp,v 1.13 2002-04-15 11:16:19 ocallot Exp $
+// $Id: L0CaloAlg.cpp,v 1.14 2002-07-18 17:58:13 cattanem Exp $
 
 /// STL
 #include <stdio.h>
@@ -87,7 +87,7 @@ StatusCode L0CaloAlg::initialize() {
 
   MsgStream log(msgSvc(), name());
 
-  log << MSG::INFO << "Initializing" << endreq;
+  log << MSG::DEBUG << "Initializing" << endreq;
 
   // check for the valid names of the input/output data containers
 
