@@ -11,9 +11,9 @@
                  (Moved here from application projects)
 
  - Modified packages: KernelSys v4r2, LHCbKernel v5r2, CaloKernel v3r2,
-                   EventSys v18r2, CaloEvent v13r5, EventAssoc v1r3,
-                   AssociatorsSys v1r15, Associators v2r3, CaloAssociators v4r3,
-                   LHCbAlgs v1r1, CaloInterfaces v4r2
+                 EventSys v18r2, CaloEvent v13r5, EventAssoc v1r3, TrgEvent v4r0,
+                 AssociatorsSys v1r15, Associators v2r3, CaloAssociators v4r3,
+                 LHCbAlgs v1r1, CaloInterfaces v4r2
 
  - In LHCbKernel v5r2:
    . Fix typo in InstanceCounter.h, affecting LoKi
@@ -23,11 +23,18 @@
 
  - In LHCbAlgs v1r1:
    . LbAppInit - Protect against undefined APPVERSION environment variable
-   . LbAppInit - Pring memory usage at each event, if debug() OutputLevel
+   . LbAppInit - Print memory usage at each event, if debug() OutputLevel
 
  - In CaloEvent v13r5:
    . Changes to allow RawBuffer decoding using data-on-demand service
    . Remove dependency on Relations package
+
+ - In TrgEvent v4r0:
+   . Re-implementation of L1Score to handle single muon trigger, better
+     diagnostic of dimuon trigger.
+   . Add TrgCaloParticle for electrons/photons.
+   . Add new TrgTrack containers for downstream and KShort tracks
+   . Add a new field to TrgL0Muon containing MuonTileID.
  
  - In CaloAssociators v4r3, Associators v2r3:
    . All Relations factories moved to Associators package
