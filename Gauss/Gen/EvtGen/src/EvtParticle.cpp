@@ -50,7 +50,6 @@
 #include "EvtGenBase/EvtSecondary.hh"
 #include "EvtGenBase/EvtReport.hh"
 #include "EvtGenBase/EvtGenKine.hh"
-#include "EvtGenBase/EvtCPUtil.hh"
 #include "EvtGenBase/EvtParticleFactory.hh"
 #include "EvtGenBase/EvtIncoherentMixing.hh"
 

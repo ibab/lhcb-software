@@ -1,4 +1,4 @@
-// $Id: EvtIncoherentMixing.cpp,v 1.6 2003-11-06 10:54:50 robbep Exp $
+// $Id: EvtIncoherentMixing.cpp,v 1.7 2003-12-10 11:32:29 robbep Exp $
 // Include files 
 
 #ifdef WIN32 
@@ -25,7 +25,8 @@ bool EvtIncoherentMixing::_doBsMixing = false ;
 bool EvtIncoherentMixing::_enableFlip = false ;
 double EvtIncoherentMixing::_dGammad = 0. ;
 double EvtIncoherentMixing::_deltamd = 0.489e12 ;
-double EvtIncoherentMixing::_dGammas = 6.517e10 ;
+// dGamma_s corresponds to DeltaGamma / Gamma = 13 %
+double EvtIncoherentMixing::_dGammas = 8.537e10 ;
 double EvtIncoherentMixing::_deltams = 15.e12 ;
 
 //=============================================================================
@@ -35,9 +36,10 @@ EvtIncoherentMixing::EvtIncoherentMixing(  ) {
   _doB0Mixing = false ;
   _doBsMixing = false ;
   _dGammad = 0. ;
-  _dGammas = 0. ;
+  // dGammas corresponds to DeltaGamma / Gamma = 13 %
+  _dGammas = 8.537e10 ;
   _deltamd = 0.489e12 ;
-  _deltams = 0. ;
+  _deltams = 15.e12 ;
   _enableFlip = false ;
 }
 //=============================================================================

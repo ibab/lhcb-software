@@ -96,17 +96,14 @@ void EvtSVVCPLH::decay( EvtParticle *p){
   double sdmt=sin(getArg(1)*t/(2*EvtConst::c));
 
   EvtComplex cG0P,cG1P,cG1M;
-
-  static double ctauL=EvtPDL::getctau(EvtPDL::getId("B_s0L"));
-  static double ctauH=EvtPDL::getctau(EvtPDL::getId("B_s0H"));
-  static double ctau=ctauL<ctauH?ctauH:ctauL;
-
-
+  
+  static double deltaGamma = EvtIncoherentMixing::getdGammas() / EvtConst::c ;
+  
   //I'm not sure if the std::fabs() is right when t can be
   //negative as in the case of Bs produced coherently.
   double pt=1;
-  double mt=exp(-fabs(t*(ctauL-ctauH)/(ctauL*ctauH)));
-
+  double mt = exp( - fabs( t * deltaGamma ) ) ;
+  
   if (other_b==BSB){
     cG0P=pt*G0P*(cdmt+lambda_km*EvtComplex(0.0,getArg(2)*sdmt));
     cG1P=pt*G1P*(cdmt+lambda_km*EvtComplex(0.0,getArg(2)*sdmt));
@@ -121,14 +118,14 @@ void EvtSVVCPLH::decay( EvtParticle *p){
     report(ERROR,"EvtGen") << "other_b was not BSB or BS0!"<<std::endl;
     ::abort();
   }
+  
+  EvtComplex A0,AP,AM;
+  
+  A0=cG0P/sqrt(2.0);
+  AP=(cG1P+cG1M)/sqrt(2.0);
+  AM=(cG1P-cG1M)/sqrt(2.0); 
 
-   EvtComplex A0,AP,AM;
-
-   A0=cG0P/sqrt(2.0);
-   AP=(cG1P+cG1M)/sqrt(2.0); 
-   AM=(cG1P-cG1M)/sqrt(2.0); 
-
-   EvtSVVHelAmp::SVVHel(p,_amp2,getDaug(0),getDaug(1),AP,A0,AM);
+  EvtSVVHelAmp::SVVHel(p,_amp2,getDaug(0),getDaug(1),AP,A0,AM);
 
   return ;
 }
