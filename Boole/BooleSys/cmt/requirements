@@ -16,7 +16,7 @@ use CaloMoniDigi        v1r0 	Calo
 use CaloDigit           v1r8	Calo
 
 # Velo
-use VeloAlgorithms      v3r2	Velo
+use VeloAlgorithms      v3r3	Velo
 
 # Inner Tracker
 use ITAlgorithms        v14r4	IT

@@ -3,14 +3,14 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
-</PRE><H1><A NAME=v8r0>2005-02-07 Boole v8r0</A></H1><PRE>
+</PRE><H1><A NAME=v8r0>2005-02-11 Boole v8r0</A></H1><PRE>
 This version uses Gaudi v16r0, LHCb v18r0 (also CLHEP 1.9, ROOT 4.0) 
 Requires input data from Gauss v19r* - Cannot process DC04 Gauss output.
 Output data incompatible with DC04 versions, needs Brunel v26r0 or greater
 
 - Packages removed:  AsctToLinker, L0mConf, L0MuonKernel (now in LHCbSys)
           L0Calo, L0DU, L0MuonTrigger, PuVeto, OTMonitor (now in LbcomSys)
-- Packages modified: ITCheckers v2r4p1, MuonBackground v1r9
+- Packages modified: ITCheckers v2r4p1, MuonBackground v1r9, VeloAlgorithms v3r3
 
 - Persistency changes:
   . Monitoring histograms now saved in Root format
@@ -19,6 +19,7 @@ Output data incompatible with DC04 versions, needs Brunel v26r0 or greater
 
 - Bug fixes:
   . Changes to avoid duplicate entries in linker tables (AsctToLinker v1r4)
+  . Digitize also last four Velo sensors (VeloAlgorithms v3r3, VeloDAQ v2r3)
 
 - Packaging changes:
   . Removed dependency on HbookCnv, replaced by RootHistCnv
