@@ -1,4 +1,4 @@
-// $Id: MuonTileIDXYZ.cpp,v 1.4 2002-04-02 13:05:45 dhcroft Exp $
+// $Id: MuonTileIDXYZ.cpp,v 1.5 2002-04-04 08:32:25 dhcroft Exp $
 // Include files 
 #include <cstdio>
 #include <cmath>
@@ -270,7 +270,7 @@ StatusCode MuonTileIDXYZ::locateChamberTileAndGap(const double& x,
   double yFraction = 8. * fabs(y) / stationExtent[station].dy;
 
   // check not in beam pipe or outside area
-  if( 0.999979 > xFraction && 0.999979 > yFraction ) {
+  if( 0.49 > xFraction && 0.49 > yFraction ) {
     log << MSG::WARNING << " Found a point in the beam pipe! " << endreq;
     return StatusCode::FAILURE;
   }
