@@ -1,14 +1,5 @@
-/// ===========================================================================
-/// CVS tag $Name: not supported by cvs2svn $ 
-/// ===========================================================================
-/// $Log: not supported by cvs2svn $
-/// Revision 1.8  2001/08/09 18:13:38  ibelyaev
-/// modification for solid factories
-///
-/// Revision 1.7  2001/08/09 16:48:03  ibelyaev
-/// update in interfaces and redesign of solids
-/// 
-/// ===========================================================================
+// $Id: SolidTrap.cpp,v 1.10 2002-10-02 13:24:22 cattanem Exp $
+// ===========================================================================
 ///@{
 /**  GaudiKernel package */  
 #include "GaudiKernel/IInspector.h"
@@ -290,20 +281,20 @@ const ISolid*           SolidTrap::cover         () const
   /// cover is calculated already 
   if( 0 != m_cover ) { return m_cover; }             
   ///
-  double ymx1 = abs( point(0).y() )  ;
-  double xmx1 = abs( point(0).x() ) ;
-  double ymx2 = abs( point(4).y() )  ;
-  double xmx2 = abs( point(4).x() ) ;
+  double ymx1 = fabs( point(0).y() )  ;
+  double xmx1 = fabs( point(0).x() ) ;
+  double ymx2 = fabs( point(4).y() )  ;
+  double xmx2 = fabs( point(4).x() ) ;
   ///  
   for( VERTICES::size_type i = 1 ; i <  4 ; ++i )
     {
-      xmx1 = abs( point(i).x() ) > xmx1 ? abs( point(i).x() ) : xmx1 ; 
-      ymx1 = abs( point(i).y() ) > ymx1 ? abs( point(i).y() ) : ymx1 ; 
+      xmx1 = fabs( point(i).x() ) > xmx1 ? abs( point(i).x() ) : xmx1 ; 
+      ymx1 = fabs( point(i).y() ) > ymx1 ? abs( point(i).y() ) : ymx1 ; 
     }  
   for( VERTICES::size_type i1 = 4 ; i1 <  8 ; ++i1 )
     {
-      xmx2 = abs( point(i1).x() ) > xmx2 ? abs( point(i1).x() ) : xmx2 ; 
-      ymx2 = abs( point(i1).y() ) > ymx2 ? abs( point(i1).y() ) : ymx2 ; 
+      xmx2 = fabs( point(i1).x() ) > xmx2 ? abs( point(i1).x() ) : xmx2 ; 
+      ymx2 = fabs( point(i1).y() ) > ymx2 ? abs( point(i1).y() ) : ymx2 ; 
     } 
   ///   
   ISolid* cov = new SolidTrd( "Cover for " + name  () , 

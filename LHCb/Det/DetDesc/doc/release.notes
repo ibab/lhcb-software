@@ -1,9 +1,13 @@
 ! =============================================================================
-! $Id: release.notes,v 1.113 2002-07-17 08:16:17 ranjard Exp $ 
+! $Id: release.notes,v 1.114 2002-10-02 13:24:21 cattanem Exp $ 
 ! =============================================================================
 ! package DetDesc
 ! package manager : N.N 
 ! =============================================================================
+
+! 2002-10-02 - Marco Cattaneo
+ - requirements: set version to v11r1
+ - SolidTrap.cpp, SolidPolycone.cpp, SolidBox.h: use fabs() instead of abs() 
 
 !===================== DetDesc v11r0 2002-07-16 ==============================
 ! 2002-07-16 - Florence Ranjard

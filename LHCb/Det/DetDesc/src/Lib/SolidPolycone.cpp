@@ -1,10 +1,4 @@
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ 
-// ============================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.1  2001/10/25 14:04:05  ibelyaev
-// New shape: SolidPolycone is added
-// 
+// $Id: SolidPolycone.cpp,v 1.3 2002-10-02 13:24:21 cattanem Exp $
 // ============================================================================
 #include "DetDesc/SolidPolycone.h"
 // CLHEP
@@ -317,7 +311,7 @@ const ISolid* SolidPolycone::cover () const
         {
           if( RMax  ( i )   > rmxmx ) { rmxmx = RMax   ( i )   ; }
           if( RMin  ( i )   < rmnmn ) { rmnmn = RMin   ( i )   ; }
-          if( abs( z( i ) ) > zmxmx ) { zmxmx = abs( z ( i ) ) ; }
+          if( fabs( z(i) )  > zmxmx ) { zmxmx = abs( z ( i ) ) ; }
         }
       cov = new SolidTubs( "Cover for " + name () , zmxmx , rmxmx , rmnmn ) ;
     }

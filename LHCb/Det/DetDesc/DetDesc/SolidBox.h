@@ -1,11 +1,5 @@
-/// ===========================================================================
-/// CVS tag $Name: not supported by cvs2svn $ 
-/// ===========================================================================
-/// $Log: not supported by cvs2svn $
-/// Revision 1.8  2001/08/09 16:47:58  ibelyaev
-/// update in interfaces and redesign of solids
-/// 
-/// ===========================================================================
+// $Id: SolidBox.h,v 1.10 2002-10-02 13:24:21 cattanem Exp $
+// ===========================================================================
 #ifndef     DETDESC_SOLIDBOX_H
 #define     DETDESC_SOLIDBOX_H
 /// STD and STL 
@@ -257,9 +251,9 @@ private:
 /// ===========================================================================
 inline bool SolidBox::isInside( const HepPoint3D& point ) const
 { 
-  if ( abs( point.z() ) > zHalfLength() || 
-       abs( point.x() ) > xHalfLength() ||
-       abs( point.y() ) > yHalfLength() ) { return false; }
+  if ( fabs( point.z() ) > zHalfLength() || 
+       fabs( point.x() ) > xHalfLength() ||
+       fabs( point.y() ) > yHalfLength() ) { return false; }
   return true; 
 };
 
