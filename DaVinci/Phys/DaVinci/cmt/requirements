@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.153 2004-08-04 13:42:27 pkoppenb Exp $
+# $Id: requirements,v 1.154 2004-08-05 09:01:55 pkoppenb Exp $
 # Created    : 07/02/2002
 # Maintainer : P. Koppenburg
 #
@@ -69,7 +69,7 @@ use  L0mConf 		v2r2d2   L0
 use  L1Decision         v2r0     Trg
 use  L1Reco             v4r0p1   Trg
 use  TrgChecker         v4r0     Trg
-use  TrgForward         v2r0     Trg
+use  TrgForward         v2r1     Trg
 use  TrgMonitor         v2r0     Trg
 use  TrgPrimVertex      v2r0     Trg
 use  TrgTools           v4r1     Trg

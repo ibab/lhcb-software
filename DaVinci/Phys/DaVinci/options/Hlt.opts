@@ -8,7 +8,6 @@ ApplicationMgr.TopAlg += { "GaudiSequencer/HltWithTrg" };
 HltWithTrg.Members = { //"TrgL0Filter","TrgL1Filter",
                        "TrgInitEvent/InitHltEvent"
                        ,"GaudiSequencer/HLTProcessing"
-                       ,"GaudiSequencer/HLTChecking"
                       };
 
 HLTProcessing.Members =  { "DecodeRawVelo"
@@ -22,19 +21,3 @@ HLTProcessing.Members =  { "DecodeRawVelo"
 
 #include "$TRGFORWARDROOT/options/Field045.opts"
 TrgVeloTTHlt.InputFromRawBuffer = true;
- 
-HLTChecking.Members = { "TrgTrackToContainer/HltTrgTrackToContainer"
-                        ,"TrgTrack2MCParticle/HltTrgTrack2MCParticle"
-                        ,"TrgParticleMaker"
-                        ,"TrgChecker/HltTrgChecker"
-                        ,"TrgVertexMonit/HltVertexMonit"
-                       };
-HltTrgTrackToContainer.prefix = "Hlt/";
-HltTrgTrack2MCParticle.prefix = "Hlt/";
-HltTrgChecker.prefix = "Hlt/";
-
-//HltWithTrg.measureTime = true;
-HltProcessing.measureTime = true;
-//HltChecking.measureTime = true;
-
-TrgParticleMaker.InputTracks = "Hlt/Rec/Trg/LongTracks";

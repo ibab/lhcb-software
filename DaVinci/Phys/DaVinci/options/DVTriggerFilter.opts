@@ -26,6 +26,8 @@
 //#include "$DAVINCIROOT/options/L0Checking.opts"  
 #include "$DAVINCIROOT/options/L1Decision.opts"
 //#include "$DAVINCIROOT/options/L1Checking.opts"  
+//#include "$DAVINCIROOT/options/Hlt.opts"
+//#include "$DAVINCIROOT/options/HltChecking.opts"
 
 ApplicationMgr.TopAlg += { "Sequencer/L0L1Seq" };
 L0L1Seq.Members = { "TriggerFilter/L0Filter", "PrintHeader/PassedL0" , "TriggerFilter/L1Filter", "PrintHeader/PassedL1" };
