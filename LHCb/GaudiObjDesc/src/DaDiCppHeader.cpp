@@ -1,4 +1,4 @@
-// $Id: DaDiCppHeader.cpp,v 1.48 2002-03-13 18:35:46 mato Exp $
+// $Id: DaDiCppHeader.cpp,v 1.49 2002-03-14 09:29:30 mato Exp $
 
 //#include "GaudiKernel/Kernel.h"
 
@@ -2218,22 +2218,28 @@ void printCppHeader(DaDiPackage* gddPackage,
     // Includes
     //
 
-    std::list<std::string> stdImports, normImports, softImports;
+    std::list<std::string> stdImports, normImports, softImports, tmpList;
 
     xmlOut << "// Include files" << std::endl;
 
     stdImports = gddPackage->impStdList();
     normImports = gddPackage->importList();
     softImports = gddPackage->impSoftList();
-    stdImports.merge(gddNamespace->impStdList());
-    normImports.merge(gddNamespace->importList());
-    softImports.merge(gddNamespace->impSoftList());
+    tmpList = gddNamespace->impStdList();
+    stdImports.merge(tmpList);
+    tmpList = gddNamespace->importList();
+    normImports.merge(tmpList);
+    tmpList = gddNamespace->impSoftList();
+    softImports.merge(tmpList);
     for (j=0; j<gddNamespace->sizeDaDiClass(); ++j)
     {
       DaDiClass* gddClass = gddNamespace->popDaDiClass();
-      stdImports.merge(gddClass->impStdList());
-      normImports.merge(gddClass->importList());
-      softImports.merge(gddClass->impSoftList());
+      tmpList = gddClass->impStdList();
+      stdImports.merge(tmpList);
+      tmpList = gddClass->importList();
+      normImports.merge(tmpList);
+      tmpList = gddClass->impSoftList();
+      softImports.merge(tmpList);
     }
     stdImports.sort();
     normImports.sort();
@@ -2374,12 +2380,13 @@ void printCppHeader(DaDiPackage* gddPackage,
     // Includes
     //
 
-    std::list<std::string> stdImports, normImports, softImports;
+    std::list<std::string> stdImports, normImports, softImports, tmpList;
 
     xmlOut << "// Include files" << std::endl;
 
     stdImports = gddPackage->impStdList();
-    stdImports.merge(gddClass->impStdList());
+    tmpList = gddClass->impStdList();
+    stdImports.merge(tmpList);
     stdImports.sort();
     stdImports.unique();
     
@@ -2389,7 +2396,8 @@ void printCppHeader(DaDiPackage* gddPackage,
     }
   
     normImports = gddPackage->importList();
-    normImports.merge(gddClass->importList());
+    tmpList = gddClass->importList();
+    normImports.merge(tmpList);
     normImports.sort();
     normImports.unique();
 
@@ -2416,7 +2424,8 @@ void printCppHeader(DaDiPackage* gddPackage,
     // Forward declarations
     //  
     softImports = gddPackage->impSoftList();
-    softImports.merge(gddClass->impSoftList());
+    tmpList = gddClass->impSoftList();
+    softImports.merge(tmpList);
     softImports.sort();
     softImports.unique();
 

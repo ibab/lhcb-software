@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/GaudiObjDesc/src/DaDiNamespace.h,v 1.6 2002-03-13 18:35:47 mato Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/GaudiObjDesc/src/DaDiNamespace.h,v 1.7 2002-03-14 09:29:30 mato Exp $
 #ifndef DADINAMESPACE_H 
 #define DADINAMESPACE_H 1
 
@@ -345,7 +345,6 @@ inline int DaDiNamespace::sizeNoImports()
 {
 	return m_noImports.size();
 }
-
 
 inline DaDiEnum* DaDiNamespace::popDaDiEnum()
 {
