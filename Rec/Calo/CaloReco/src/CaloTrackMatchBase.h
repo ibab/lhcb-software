@@ -1,4 +1,4 @@
-// $Id: CaloTrackMatchBase.h,v 1.5 2004-10-24 12:17:18 ibelyaev Exp $
+// $Id: CaloTrackMatchBase.h,v 1.6 2004-10-25 12:10:13 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
@@ -101,10 +101,10 @@ public:
   
   /** access to the last used state 
    *  @see ICaloTrackMatch 
-   *  @return teh last used state 
+   *  @return the last used state 
    */
-  virtual const TrState *state() const { return m_state; }
-
+  virtual const TrState* state() const { return m_state; }
+  
   /** the main matching method  
    *
    *  @param caloObj  pointer to "calorimeter" object (position)
@@ -144,6 +144,21 @@ protected:
   ( const TrStoredTrack* trObj , 
     const double         Z     , 
     const double         zExtr ) const ;
+
+  /** Find TrState on specified Z.
+   *  @param Object with Track data
+   *  @param Z    of the TrState
+   *  @param Zext z for extrapolation 
+   *  param  covX allowed X-precision  (sigma**2)
+   *  param  covY allowed Y-precision  (sigma**2)
+   *  @return standard status code
+   */
+  StatusCode findState
+  ( const TrStoredTrack* trObj , 
+    const double         Z     , 
+    const double         zExtr , 
+    const double         covX  ,
+    const double         covY  ) const ;
   
   /// internal type type of parameters for mathematical functions
   struct MatchStruct1
@@ -182,11 +197,13 @@ protected:
   
   /// internal type for mathematical functions 
   typedef MatchStruct1 MatchType1 ;  
+  /// internal type for mathematical functions 
   typedef MatchType1   MatchType  ;  
   
   /// internal type for mathematical functions 
   typedef MatchStruct2 MatchType2;
   
+  // ==========================================================================
   /** chi2 method \n
    * implements a formula:
    * chi2 = dp1(T)*C1(-1)*dp1 + dp2(T)*C2(-1)*dp2 \n
@@ -197,10 +214,11 @@ protected:
    * @param struct with second vector and its covariance
    * @return result chi2
    */
-  inline double chi2 ( const MatchType& mt1 , 
-                       const MatchType& mt2 ) const 
+  inline double chi2
+  ( const MatchType& mt1 , 
+    const MatchType& mt2 ) const 
   {
-
+    
     Assert ( 0 == mt1.error  &&  0 == mt2.error && 
              mt1.cov    .num_row() == mt2.cov    .num_row() && 
              mt1.params .num_row() == mt2.params .num_row() , 
@@ -220,7 +238,9 @@ protected:
       icov2.similarity ( vmean - mt2.params ) ;
     
   };
+  // ==========================================================================
   
+  // ==========================================================================
   /** chi2 method \n
    * implements a formula:
    * chi2 = dp1(T)*C1(-1)*dp1 + dp2(T)*C2(-1)*dp2 \n
@@ -231,8 +251,9 @@ protected:
    * @param struct with second vector and its covariance
    * @return result chi2
    */
-  inline double chi2 ( const MatchType2& mt1 , 
-                       const MatchType2& mt2 ) const 
+  inline double chi2 
+  ( const MatchType2& mt1 , 
+    const MatchType2& mt2 ) const 
   {
     
     Assert ( 0 == mt1.error  &&  0 == mt2.error && 
@@ -252,9 +273,10 @@ protected:
     return 
       icov1.similarity ( vmean - mt1.params ) + 
       icov2.similarity ( vmean - mt2.params ) ;
-    
   };
+  // ==========================================================================
   
+  // ==========================================================================
   /** chi2 method \n
    * implements a formula:
    * chi2 = dp1(T)*C1(-1)*dp1 + dp2(T)*C2(-1)*dp2 \n
@@ -265,8 +287,9 @@ protected:
    * @param struct with second vector and its covariance
    * @return result chi2
    */
-  inline double chi2 ( const MatchType1& mt1 , 
-                       const MatchType2& mt2 ) const 
+  inline double chi2 
+  ( const MatchType1& mt1 , 
+    const MatchType2& mt2 ) const 
   { 
     
     Assert ( 0 == mt1.error  &&  0 == mt2.error && 
@@ -288,7 +311,9 @@ protected:
       icov2.similarity ( vmean - mt2.params ) ;
     
   };
+  // ==========================================================================
   
+  // ==========================================================================
   /** chi2 method \n
    * implements a formula:
    * chi2 = dp1(T)*C1(-1)*dp1 + dp2(T)*C2(-1)*dp2 \n
@@ -299,9 +324,11 @@ protected:
    * @param struct with second vector and its covariance
    * @return result chi2
    */
-  inline double chi2 ( const MatchType2& mt1 , 
-                       const MatchType1& mt2 ) const 
+  inline double chi2 
+  ( const MatchType2& mt1 , 
+    const MatchType1& mt2 ) const 
   { return chi2 ( mt2 , mt1 ) ; }
+  // ==========================================================================
   
   inline int mtrxOp
   ( HepSymMatrix&       cov ,
@@ -391,8 +418,11 @@ protected:
   mutable const TrStoredTrack* m_prevTrack ;  
   
   // default 'bad' value 
-  double                       m_bad       ;
-
+  double                       m_bad           ;
+  
+  // optmization for extrapolators is ON/OFF
+  bool                         m_optimized     ;
+  
 private: 
   
   // allowed interval for closest Z 
@@ -402,7 +432,6 @@ private:
   // particle ID to be used for extrapolation 
   int                          m_pdgID     ;
   mutable ParticleID           m_pid       ;
-
   
   // interface to track extrapolator
   
@@ -410,7 +439,9 @@ private:
   
   // and the extrapolator name
   std::string                  m_extrapolatorName  ;
-
+  
+  // allowed tolerance factor in X/Y (relative!) 
+  double                       m_precision         ;
   // extrapolation tolerance in Z 
   double                       m_tolerance         ;
 

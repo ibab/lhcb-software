@@ -1,4 +1,4 @@
-// $Id: CaloTrackMatchBremm.h,v 1.4 2004-10-25 12:10:13 ibelyaev Exp $
+// $Id: CaloTrackMatchBrem2.h,v 1.1 2004-10-25 12:10:13 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
@@ -21,7 +21,7 @@ template <class TOOL>
 class  ToolFactory;  ///< from GaudiKernel
 // ============================================================================
 
-/** @class CaloTrackMatchBremm CaloTrackMatchBremm.h
+/** @class CaloTrackMatchBrem2 CaloTrackMatchBrem2.h
  *
  *  Tool for matching of calorimeter object
  *  with direction of tracker object without
@@ -37,12 +37,12 @@ class  ToolFactory;  ///< from GaudiKernel
  *  @date   01/11/2001
  */
 
-class CaloTrackMatchBremm:
+class CaloTrackMatchBrem2:
   virtual public     ICaloTrackMatch,
   public              CaloTrackMatchBase
 {
   /// friend factory for tool creation
-  friend class ToolFactory<CaloTrackMatchBremm>;
+  friend class ToolFactory<CaloTrackMatchBrem2>;
 
 public:
   
@@ -66,30 +66,30 @@ protected:
    *  @param parent pointer to parent object
    *         (algorithm, service or another tool)
    */
-  CaloTrackMatchBremm 
+  CaloTrackMatchBrem2 
   ( const std::string& type   ,
     const std::string& name   ,
     const IInterface*  parent );
   
   /** destructor is protected and virtual
    */
-  virtual ~CaloTrackMatchBremm();
+  virtual ~CaloTrackMatchBrem2();
   
 private:
   
   /** default constructor in private!
    */
-  CaloTrackMatchBremm();
+  CaloTrackMatchBrem2();
   
   /** copy constructor is private!
    *  @param copy object to be copied
    */
-  CaloTrackMatchBremm( const CaloTrackMatchBremm &copy );
+  CaloTrackMatchBrem2( const CaloTrackMatchBrem2 &copy );
 
   /** assignement operator is private!
    *  @param copy object to be copied
    */
-  CaloTrackMatchBremm& operator=( const CaloTrackMatchBremm &copy );
+  CaloTrackMatchBrem2& operator=( const CaloTrackMatchBrem2 &copy );
 
   /** Makes struct with vector and covariance
    * with cluster data.
@@ -103,7 +103,8 @@ private:
     v[0] = cluster->x();
     v[1] = cluster->y();
     
-    const HepSymMatrix& clCov = cluster->covariance();
+    // DIFFERENCE with "Bremm"
+    const HepSymMatrix& clCov = cluster->spread();
     
     HepSymMatrix m(2);
     m.fast(1, 1) = clCov(1, 1);
@@ -112,7 +113,7 @@ private:
     
     return MatchType( v , m );
   };
-
+  
   /** Makes struct with vector and covariance
    * with Track data.
    * Returned format is the same as for Cluster.
@@ -142,7 +143,8 @@ private:
 private:
   
   // nominal position of bremm 
-  double        m_bremZ    ;   
+  double        m_bremZ    ;
+   
 };
 // ============================================================================
 // The End

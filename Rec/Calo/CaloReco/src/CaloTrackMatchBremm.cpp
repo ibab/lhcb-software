@@ -1,8 +1,8 @@
-// $Id: CaloTrackMatchBremm.cpp,v 1.5 2004-10-24 12:17:18 ibelyaev Exp $
+// $Id: CaloTrackMatchBremm.cpp,v 1.6 2004-10-25 12:10:13 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
-// $Log: not supported by cvs2svn $ 
+// $Log: not supported by cvs2svn $
 // ============================================================================
 // Include files
 // ============================================================================
@@ -64,18 +64,13 @@ CaloTrackMatchBremm::CaloTrackMatchBremm
   const IInterface  *parent )
   : CaloTrackMatchBase( type, name , parent )
   , m_bremZ  ( 2.165 * meter )
-  , m_counts ( 0  )
-  , m_prints ( 20 )
 {
   declareProperty ( "BremZ"       , m_bremZ  ) ;
-  declareProperty ( "MaxPrints"   , m_prints ) ;
-  
   setProperty ( "Extrapolator" ,  "TrLinearExtrapolator" ) ;
   setProperty ( "ZMin"         ,  "500"                  ) ; //  0.5 * meter
   setProperty ( "ZMax"         ,  "4500"                 ) ; //  4.5 * meter
   setProperty ( "PID"          ,  "22"                   ) ; // photon 
-  setProperty ( "Tolerance"    ,  "50.0"                 ) ; // 50 * mm  
-  
+  setProperty ( "Tolerance"    ,  "15.0"                 ) ; //   15 * mm  
 };
 // ============================================================================
 
@@ -107,7 +102,21 @@ StatusCode CaloTrackMatchBremm::match
   if ( 0 == caloObj   ) { return Error("CaloPosition* points to NULL"); }
   
   // find/extrapolate  the correct state 
-  StatusCode sc = findState( trObj , m_bremZ , caloObj->z() ); 
+  StatusCode sc = StatusCode::SUCCESS ;
+  if ( !m_optimized )
+  {
+    sc = findState ( trObj , m_bremZ , caloObj->z() ); 
+  }
+  else 
+  {
+    const double covXX = caloObj->covariance().fast(1,1) ;
+    const double covYY = caloObj->covariance().fast(2,2) ;  
+    sc = findState ( trObj        , 
+                     m_bremZ      , 
+                     caloObj->z() , 
+                     covXX        , 
+                     covYY        ) ; 
+  }
   if ( sc.isFailure() ) { return Error("Correct state is not found" , sc ) ; }
   
   if ( 0 == m_state   ) { return Error("TrState* points to NULL!"); }
@@ -119,25 +128,11 @@ StatusCode CaloTrackMatchBremm::match
                          prepareTrack  ( m_state ) );
   }
   catch ( const GaudiException &exc )
-  { 
-    if ( msgLevel( MSG::DEBUG ) ) 
-    {
-      debug() << "  Exception " << exc.message() 
-              << "\nMatrix problems, track " << bits ( trObj ) << endreq ;
-      MatchType1 mt1( prepareCluster ( caloObj ) ) ;
-      MatchType1 mt2( prepareTrack   ( m_state ) ) ;
-      debug() << " Err1/Matrix1 " << mt1.error << "/" << mt1.cov    << endreq ;
-      debug() << " Vector1 "      << mt1.params                     << endreq ;
-      debug() << " Err2/Matrix2 " << mt2.error << "/" << mt2.cov    << endreq ;
-      debug() << " Vector2 "      << mt2.params                     << endreq ;
-    } 
-    return Error ( exc.message() ,  exc.code() ) ; 
-  }
+  { return Error ( exc.message() ,  exc.code() ) ; }
   
   return StatusCode::SUCCESS;
 };
 // ============================================================================
-
 
 // ============================================================================
 // The End

@@ -1,4 +1,4 @@
-// $Id: CaloTrackMatchElectron.cpp,v 1.5 2004-10-25 12:10:13 ibelyaev Exp $
+// $Id: CaloTrackMatchBrem2.cpp,v 1.1 2004-10-25 12:10:13 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
@@ -6,36 +6,36 @@
 // ============================================================================
 // Include files
 // ============================================================================
+// CLHEP 
+// ============================================================================
+#include "CLHEP/Matrix/Matrix.h"
+// ============================================================================
 // GaudiKernel
 // ============================================================================
-#include <functional>
 #include "GaudiKernel/ToolFactory.h"
 #include "GaudiKernel/SmartRef.h"
 #include "GaudiKernel/GaudiException.h"
 // ============================================================================
-// CaloInterfaces
-// ============================================================================
-#include "CaloKernel/CaloPrint.h"
-// ============================================================================
 // Calo related
 // ============================================================================
 #include "Event/CaloCluster.h"
+#include "CaloKernel/CaloPrint.h"
 // ============================================================================
 // track related
 // ============================================================================
 #include "Event/TrStoredTrack.h"
 #include "Event/TrStateP.h"
-#include "TrKernel/ITrExtrapolator.h"
 // ============================================================================
 // local
 // ============================================================================
-#include "CaloTrackMatchElectron.h"
+#include "CaloTrackMatchBrem2.h"
 // ============================================================================
 
+
 // ============================================================================
-/** @file CaloTrackMatchElectron.cpp
+/** @file 
  *
- * Implementation file for class : CaloTrackMatchElectron
+ *  Implementation file for class : CaloTrackMatchBrem2
  *
  *  @author Dima  Rusinov Dmitri.Roussinov@cern.ch
  *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
@@ -47,8 +47,8 @@
 /** instantiation of Tool Factory
  */
 // ============================================================================
-static const  ToolFactory<CaloTrackMatchElectron>         s_Factory;
-const        IToolFactory&CaloTrackMatchElectronFactory = s_Factory;
+static const  ToolFactory<CaloTrackMatchBrem2>         s_Factory;
+const        IToolFactory&CaloTrackMatchBrem2Factory = s_Factory;
 
 // ============================================================================
 /** standard constructor
@@ -58,24 +58,29 @@ const        IToolFactory&CaloTrackMatchElectronFactory = s_Factory;
  *         (algorithm, service or another tool)
  */
 // ============================================================================
-CaloTrackMatchElectron::CaloTrackMatchElectron( const std::string &type,
-                                                const std::string &name,
-                                                const IInterface  *parent )
+CaloTrackMatchBrem2::CaloTrackMatchBrem2
+( const std::string &type,
+  const std::string &name,
+  const IInterface  *parent )
   : CaloTrackMatchBase( type, name , parent )
+  , m_bremZ  ( 2.165 * meter )
 {
+  declareProperty ( "BremZ"       , m_bremZ  ) ;
+  
   setProperty ( "Extrapolator" ,  "TrLinearExtrapolator" ) ;
-  setProperty ( "ZMin"         ,  "7000"                 ) ; //  7 * meter
-  setProperty ( "ZMax"         ,  "30000"                ) ; // 30 * meter
-  setProperty ( "PID"          ,  "211"                  ) ; // pion  
-  setProperty ( "Tolerance"    ,  "5"                    ) ; //  5 * mm
-  // supress a little bit the output level 
-  setProperty ( "OutputLevel"  ,  "5"                    ) ; // MSG::ERROR
+  setProperty ( "ZMin"         ,  "500"                  ) ; //  0.5 * meter
+  setProperty ( "ZMax"         ,  "4500"                 ) ; //  4.5 * meter
+  setProperty ( "PID"          ,  "22"                   ) ; // photon 
+  setProperty ( "Tolerance"    ,  "15.0"                 ) ; //   15 * mm  
+  
 };
+// ============================================================================
+
 // ============================================================================
 /** destructor is protected and virtual
  */
 // ============================================================================
-CaloTrackMatchElectron::~CaloTrackMatchElectron() {}
+CaloTrackMatchBrem2::~CaloTrackMatchBrem2() {};
 // ============================================================================
 
 // ============================================================================
@@ -87,70 +92,50 @@ CaloTrackMatchElectron::~CaloTrackMatchElectron() {}
  *  @return status code for matching procedure
  */
 // ============================================================================
-StatusCode CaloTrackMatchElectron::match 
-( const CaloPosition*  caloObj     ,
-  const TrStoredTrack* trObj       ,
-  double&              chi2_result )
+StatusCode CaloTrackMatchBrem2::match
+( const CaloPosition  *caloObj,
+  const TrStoredTrack *trObj,
+  double              &chi2_result )
 {
   // set 'bad' value 
   chi2_result = m_bad ;
   
   // check calo 
-  if ( 0 == caloObj ) { return Error("CaloPosition* points to NULL"); }
+  if ( 0 == caloObj   ) { return Error("CaloPosition* points to NULL"); }
   
   // find/extrapolate  the correct state 
-
   StatusCode sc = StatusCode::SUCCESS ;
   if ( !m_optimized )
   {
-    sc = findState ( trObj , caloObj->z() , caloObj->z() ); 
+    sc = findState ( trObj , m_bremZ , caloObj->z() ); 
   }
   else 
   {
-    const double covXX = caloObj->covariance().fast(1,1) ;
-    const double covYY = caloObj->covariance().fast(2,2) ;  
+    const double covXX = caloObj->spread().fast(1,1) ;
+    const double covYY = caloObj->spread().fast(2,2) ;  
     sc = findState ( trObj        , 
-                     caloObj->z() , 
+                     m_bremZ      , 
                      caloObj->z() , 
                      covXX        , 
                      covYY        ) ; 
   }
   if ( sc.isFailure() ) { return Error("Correct state is not found" , sc ) ; }
   
-  // TrStateP ?
-  const TrStateP *state = dynamic_cast<TrStateP*>( m_state );
-  if ( 0 == state ) { return Error( "Closest state is not 'TrStateP'"); }
+  if ( 0 == m_state   ) { return Error("TrState* points to NULL!"); }
   
-  { // some trivial checks 
-    const HepSymMatrix& cov = state->stateCov() ;
-    if ( 0 >= cov.fast( 1 , 1 ) || 
-         0 >= cov.fast( 2 , 2 ) || 
-         0 >= cov.fast( 5 , 5 ) ) 
-    {
-      if ( msgLevel ( MSG::DEBUG ) ) 
-      {
-        debug() 
-          << " Problems with state covarinace matrix: "
-          << bits( trObj ) << endreq ;
-        Warning("Negative diagonal elements of track covariance matrix "); 
-      } 
-    }
-  }
-  
-  try 
+  // the resulting function can throw an exception in case of failure
+  try
   { 
-    chi2_result = chi2 ( prepareCluster ( caloObj ) , 
-                         prepareTrack   ( state   ) ) ;
-
+    chi2_result = chi2 ( prepareCluster ( caloObj ) ,
+                         prepareTrack   ( m_state ) );
   }
-  catch ( const GaudiException& exc )
-  { return Error( exc.message(), exc.code() ); }
-
+  catch ( const GaudiException &exc )
+  { return Error ( exc.message() ,  exc.code() ) ; }
   
   return StatusCode::SUCCESS;
-  
 };
 // ============================================================================
+
 
 // ============================================================================
 // The End

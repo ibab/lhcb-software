@@ -1,8 +1,11 @@
-// $Id: CaloTrackMatchPhoton.cpp,v 1.3 2004-10-24 12:17:18 ibelyaev Exp $
+// $Id: CaloTrackMatchPhoton.cpp,v 1.4 2004-10-25 12:10:13 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.3  2004/10/24 12:17:18  ibelyaev
+//  remove obsolete features
+//
 // ============================================================================
 // Include files
 // ============================================================================
@@ -60,11 +63,11 @@ CaloTrackMatchPhoton::CaloTrackMatchPhoton
   const IInterface  *parent )
   : CaloTrackMatchBase( type, name , parent )
 {
-  setProperty( "Extrapolator" ,  "TrLinearExtrapolator" ) ;
-  setProperty( "ZMin"         ,  "7000"                 ) ; //  7 * meter
-  setProperty( "ZMax"         ,  "30000"                ) ; // 30 * meter
-  setProperty( "PID"          ,  "211"                  ) ; // pion
-  setProperty( "Tolerance"    ,  "15.0"                 ) ; // 15 * mm
+  setProperty ( "Extrapolator" ,  "TrLinearExtrapolator" ) ;
+  setProperty ( "ZMin"         ,  "7000"                 ) ; //  7 * meter
+  setProperty ( "ZMax"         ,  "30000"                ) ; // 30 * meter
+  setProperty ( "PID"          ,  "211"                  ) ; // pion
+  setProperty ( "Tolerance"    ,  "15"                   ) ; // 15 * mm
 };
 // ============================================================================
 /** destructor is protected and virtual
@@ -93,7 +96,22 @@ StatusCode CaloTrackMatchPhoton::match
   if ( 0 == caloObj   ) { return Error ( "CaloPosition* points to NULL"  ) ; }
   
   // find the closest state and extrapolate it 
-  StatusCode sc = findState ( trObj, caloObj->z(), caloObj->z() );
+  StatusCode sc = StatusCode::SUCCESS ;
+  if ( !m_optimized ) 
+  {
+    sc = findState ( trObj, caloObj->z(), caloObj->z() );
+  }
+  else 
+  {  
+    const double covXX = caloObj->spread().fast(1,1) ;
+    const double covYY = caloObj->spread().fast(2,2) ;  
+    sc = findState ( trObj        , 
+                     caloObj->z() , 
+                     caloObj->z() , 
+                     covXX        , 
+                     covYY        ) ;
+  }
+
   if ( sc.isFailure() ) { return Error ( "No valid state is found!" , sc ) ; }
   
   if ( 0 == m_state   ) { return Error ( "TrState* points to NULL"       ) ; }

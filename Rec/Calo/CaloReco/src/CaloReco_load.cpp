@@ -1,4 +1,4 @@
-// $Id: CaloReco_load.cpp,v 1.14 2004-10-24 12:17:18 ibelyaev Exp $
+// $Id: CaloReco_load.cpp,v 1.15 2004-10-25 12:10:13 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
@@ -93,6 +93,7 @@ DECLARE_FACTORY_ENTRIES(CaloReco)
   DECLARE_TOOL        ( CaloTrackMatchPhoton                ) ;
   DECLARE_TOOL        ( CaloTrackMatchElectron              ) ;
   DECLARE_TOOL        ( CaloTrackMatchBremm                 ) ;
+  DECLARE_TOOL        ( CaloTrackMatchBrem2                 ) ;
 
   DECLARE_ALGORITHM   ( CaloHypoReShuffleAlg                ) ;
 
