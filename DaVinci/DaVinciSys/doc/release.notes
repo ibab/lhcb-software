@@ -641,6 +641,25 @@ use  DsSelector               v1r1p1   PhysSel
 ! 2005-02-15 - P. Koppenburg
   - Small changes in requirements
 
+!========================== TrgTools v6r2 2005-01-15 ===================
+! 2005-02-11 - P. Koppenburg
+ - src/TrgParticleMaker.*
+   . fabs(int) does not compile on Windows. -> abs.
+   
+! 2005-02-01 - P. Koppenburg
+ - src/TrgParticleMaker.*
+   . Added a check that Q/P!=0 for secondTracks. Temporary hack because 
+     there are tracks that go through TT hole in the VTT container.
+     
+! 2005-01-26 - P. Koppenburg for Jose-Angel Hernando
+ - src/TrgParticleMaker.*
+   . Added option "Exclusive" that allows to make only given types of 
+     particles (intended for muons in HltGeneric).
+                                                    
+! 2005-01-26 - Hugo Ruiz
+ - Added TrgInsertTrackParam algorithm, which inserts a (1/pT) error
+   parameterization on tracks
+   
 
 
 
