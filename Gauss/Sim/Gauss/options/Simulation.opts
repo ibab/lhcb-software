@@ -1,4 +1,4 @@
-// $Id: Simulation.opts,v 1.44 2003-10-31 16:52:04 witoldp Exp $ 
+// $Id: Simulation.opts,v 1.45 2003-12-05 14:39:06 witoldp Exp $ 
 
 ////////////////////////////////////////////////////////////////////
 // configuration of services
@@ -6,7 +6,7 @@
 ApplicationMgr.DLLs  += { "SimSvc" };
 
 #include "$STDOPTS/DetDesc.opts"
-DetectorDataSvc.DetDbLocation = "$XMLDDDBROOT/DDDB/lhcb-200309-hpd.xml";
+DetectorDataSvc.DetDbLocation = "$XMLDDDBROOT/DDDB/lhcb.xml";
 
 // declare external services needed MAGNETIC FIELD 
 ApplicationMgr.ExtSvc +=  { "MagneticFieldSvc"  };  
@@ -72,7 +72,7 @@ Geo.StreamItems         += {"/dd/Structure/LHCb/Rich1"};
 Geo.StreamItems         += {"/dd/Geometry/Rich1/Rich1Surfaces"};
 Geo.StreamItems         += {"/dd/Geometry/Rich1/RichHPDSurfaces"};
 Geo.StreamItems         += {"/dd/Structure/LHCb/OT"}; 
-Geo.StreamItems         += {"/dd/Structure/LHCb/Tracker/IT"};
+Geo.StreamItems         += {"/dd/Structure/LHCb/IT"};
 Geo.StreamItems         += {"/dd/Structure/LHCb/Rich2"}; 
 Geo.StreamItems         += {"/dd/Geometry/Rich2/Rich2Surfaces"};
 Geo.StreamItems         += {"/dd/Structure/LHCb/Spd"};  
@@ -84,9 +84,9 @@ Geo.StreamItems         += {"/dd/Structure/LHCb/Muon"};
 
 // physics list  and the production cuts  
 GiGa.PhysicsList              = "GiGaPhysListModular/ModularPL";
-GiGa.ModularPL.Cut            = 4.0 * mm;
+GiGa.ModularPL.Cut            = 1.0 * mm;
 GiGa.ModularPL.CutForElectron = 10000.0 * m;
-GiGa.ModularPL.CutForGamma    = 20.0 * mm;
+GiGa.ModularPL.CutForGamma    = 1.0 * mm;
 
 GiGa.ModularPL.PhysicsConstructors += {"GeneralPhysics"};
 GiGa.ModularPL.PhysicsConstructors += {"EMPhysics"};
@@ -123,8 +123,6 @@ GiGa.TrackSeq.Members      += { "GaussPreTrackAction/PreTrack" };
 // specific configuration of calorimeter stuff 
 #include "$GAUSSCALOROOT/options/Calo.opts"
 
-// to be use with XmlDDDB v16r1
-#include "$GAUSSOPTS/SpdPrs.opts"
 //////////////////////////////////////////////////////////////////////
 
 // mandatory tracking action (2/2)

@@ -1,4 +1,4 @@
-// $Id: Generator.opts,v 1.29 2003-10-31 16:34:37 witoldp Exp $ 
+// $Id: Generator.opts,v 1.30 2003-12-05 14:39:06 witoldp Exp $ 
 
 ApplicationMgr.DLLs += { "GeneratorModules" } ;
 
@@ -22,8 +22,8 @@ ParticleGun.zVertexMax = 0.0;
 
 ParticleGun.MomentumMax = 10.0;
 ParticleGun.MomentumMin = 10.0;
-ParticleGun.ThetaMin = 1.0;
-ParticleGun.ThetaMax = 1.0;
+ParticleGun.ThetMin = 1.0;
+ParticleGun.ThetMax = 1.0;
 ParticleGun.PhiMin = 0.0;
 ParticleGun.PhiMax = 0.0;
 
@@ -31,14 +31,8 @@ ParticleGun.PdgCode = -211;
 ParticleGun.GunMode=1;
 ParticleGun.Mode=0;
 
-// in case you don't want to use the default decay file, uncomment the line below
-// and specify the alternative file name (not to be confused with the user decay file)
-// EvtDecayAlg.DecayFile = "$GAUSSROOT/data/decay.dec";
-
 // in order to generate specific decays put below the following line:
 // #include "$DECFILESROOT/options/event_type.opts" with event_type replaced by the
 // appropriete int
 
-//#include "$DECFILESROOT/options/412800.opts"
 //#include "$DECFILESROOT/options/370000.opts"
-//#include "$DECFILESROOT/options/411300.opts"

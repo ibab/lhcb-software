@@ -1,4 +1,4 @@
-// $Id: Gauss.opts,v 1.33 2003-10-10 16:44:27 witoldp Exp $ 
+// $Id: Gauss.opts,v 1.34 2003-12-05 14:39:06 witoldp Exp $ 
 
 #units "$STDOPTS/units.opts"
 
@@ -36,7 +36,7 @@ ApplicationMgr.TopAlg          =
 // write an output file
 #include "$GAUSSOPTS/GaussRootIO.opts"
 #include "$GAUSSOPTS/GaussTape.opts"
-GaussTape.Output = "DATAFILE='Gauss.oosim' TYP='ROOT' OPT='RECREATE'";
+GaussTape.Output = "DATAFILE='Gauss1.oosim' TYP='ROOT' OPT='RECREATE'";
 
 // General global options  
 MessageSvc.OutputLevel    = 3; 
@@ -48,8 +48,8 @@ ApplicationMgr.EvtSel     = "NONE" ;
 
 // number of events to be processed, first event number and run number
 ApplicationMgr.EvtMax     = 5;
-GaussInit.FirstEventNumber =1;
-GaussInit.RunNumber=1;
+GaussInit.FirstEventNumber = 1;
+GaussInit.RunNumber = 1;
 
 
 // Modify Message Format to print algorithm name with 40 characters

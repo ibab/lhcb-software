@@ -36,7 +36,7 @@ ApplicationMgr.TopAlg += {"GetGiGaHitsAlg/GetHits"};
 ApplicationMgr.EvtSel      ="'Gauss.oosim'";
 
 // Number of events to be processed (default is 10)
-ApplicationMgr.EvtMax = 1;
+ApplicationMgr.EvtMax = 1000;
 
 EventSelector.FirstEvent = 1;
 
