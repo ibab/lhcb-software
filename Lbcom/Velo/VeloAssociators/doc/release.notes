@@ -1,6 +1,10 @@
 ! Package     : VeloAssociator
 ! Responsible : Chris Parkes
 
+!===================== VeloAssociators v1r8 2004-02-12 =====================
+! 2004-02-12 - Marco Cattaneo
+ - Use VeloEvent v14r* and VeloDet v9r*
+
 !===================== VeloAssociators v1r7 2003-12-16 =====================
 ! 2003-12-16 - Marco Cattaneo
  - Move to Gaudi v14 (use VeloEvent v13r* in requirements)
