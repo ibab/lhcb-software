@@ -1,15 +1,18 @@
-# $Id: requirements,v 1.6 2002-04-05 16:38:36 witoldp Exp $ 
+# $Id: requirements,v 1.7 2002-04-09 17:19:39 ibelyaev Exp $ 
 # =============================================================================
 # CVS tag $Name: not supported by cvs2svn $ 
 # =============================================================================
 # $Log: not supported by cvs2svn $
+# Revision 1.6  2002/04/05 16:38:36  witoldp
+# uses restructured GeneratorModules
+#
 # Revision 1.5  2002/03/13 12:56:11  ibelyaev
 #  small restructurusation of job-options
 # 
 # =============================================================================
 
 package Gauss
-version v2r0
+version v2r1
 
 # =============================================================================
 # structure 
@@ -34,7 +37,7 @@ use GaudiRootDb   v5*
 # Histogram persistency
 use HbookCnv      v11r*
 
-# SICB stuff
+# SICB stuff (access to magnetic field service)
 use dbase         v240 SICB
 use SicbCnv       v15r* SICB
 
@@ -43,7 +46,7 @@ use GiGaCnv       v4r2  Sim
 use EvGen         v2r*   Sim
 
 #geometry source 
-use XmlDDDB       v8r*   Det 
+use XmlDDDB       v10r*   Det 
 
 # =============================================================================
 # Essential environment variables 
