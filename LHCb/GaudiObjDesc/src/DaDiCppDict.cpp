@@ -1,4 +1,4 @@
-// $Id: DaDiCppDict.cpp,v 1.44 2004-06-03 14:30:57 mato Exp $
+// $Id: DaDiCppDict.cpp,v 1.45 2004-06-04 09:07:21 mato Exp $
 
 #include "DaDiTools.h"
 #include "DaDiCppDict.h"
@@ -1596,7 +1596,7 @@ void printCppDictionary(DaDiPackage* gddPackage,
           metaOut << "  metaC.addMethod(\"set" << DaDiTools::firstUp(gddRelName)
                   << "\"," << std::endl
                   << indent << "\"" << gddRelDesc << "\"," << std::endl
-                  << indent << "\"SmartRef<" << gddRelType << ">\"," << std::endl
+                  << indent << "\"SmartRef<" << gddRelType << ">&\"," << std::endl
                   << indent << gddClassName << "_set"
                   << DaDiTools::firstUp(gddRelName) << "_" << methodCounter++
                   << ");" << std::endl
@@ -1609,7 +1609,7 @@ void printCppDictionary(DaDiPackage* gddPackage,
         {
           metaOut << "  metaC.addMethod(\"" << gddRelName << "\"," << std::endl
                 << indent << "\"" << gddRelDesc << "\"," << std::endl
-                  << indent << "\"SmartRefVector<" << gddRelType << ">\"," 
+                  << indent << "\"SmartRefVector<" << gddRelType << ">&\"," 
                   << std::endl
                   << indent << gddClassName << "_" << gddRelName  << "_"
                   << methodCounter++ << ");" << std::endl
@@ -1621,7 +1621,7 @@ void printCppDictionary(DaDiPackage* gddPackage,
           metaOut << "  metaC.addMethod(\"set" << DaDiTools::firstUp(gddRelName)
                   << "\"," << std::endl
                   << indent << "\"" << gddRelDesc << "\"," << std::endl
-                  << indent << "\"SmartRefVector<" << gddRelType << ">\"," << std::endl
+                  << indent << "\"SmartRefVector<" << gddRelType << ">&\"," << std::endl
                   << indent << gddClassName << "_set"
                   << DaDiTools::firstUp(gddRelName) << "_" << methodCounter++
                   << ");" << std::endl
@@ -1644,7 +1644,7 @@ void printCppDictionary(DaDiPackage* gddPackage,
           metaOut << "  metaC.addMethod(\"addTo"
                   << DaDiTools::firstUp(gddRelName) << "\"," << std::endl
                   << indent << "\"" << gddRelDesc << "\"," << std::endl
-                  << indent << "\"SmartRef<" << gddRelType << ">\"," << std::endl
+                  << indent << "\"SmartRef<" << gddRelType << ">&\"," << std::endl
                   << indent << gddClassName << "_addTo"
                   << DaDiTools::firstUp(gddRelName) << "_" << methodCounter++
                   << ");" << std::endl
@@ -1656,7 +1656,7 @@ void printCppDictionary(DaDiPackage* gddPackage,
           metaOut << "  metaC.addMethod(\"removeFrom"
                   << DaDiTools::firstUp(gddRelName) << "\"," << std::endl
                   << indent << "\"" << gddRelDesc << "\"," << std::endl
-                  << indent << "\"SmartRef<" << gddRelType << ">\"," << std::endl
+                  << indent << "\"SmartRef<" << gddRelType << ">&\"," << std::endl
                   << indent << gddClassName << "_removeFrom"
                   << DaDiTools::firstUp(gddRelName) << "_" << methodCounter++
                   << ");" << std::endl

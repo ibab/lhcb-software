@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/GaudiObjDesc/GaudiObjDesc/SealDictionary.h,v 1.2 2004-01-22 15:47:51 mato Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/GaudiObjDesc/GaudiObjDesc/SealDictionary.h,v 1.3 2004-06-04 09:07:20 mato Exp $
 //====================================================================
 //	SealDictionary.h
 //--------------------------------------------------------------------
@@ -425,10 +425,9 @@ GaudiDict::SmartRefDict<T>::SmartRefDict() {
     _c_.addMethod("hintID",     "", "long", hintID,             PUBLIC);
     _c_.addMethod("linkID",     "", "long", linkID,             PUBLIC);
     _c_.addMethod("type",       "", "std::type_info*", type,    PUBLIC);
-    _c_.addMethod("data",       "", std::string(_t_+"*").c_str(),  data,             PUBLIC);
     _c_.addMethod("ptr",        "", std::string(_t_+"*").c_str(),  ptr,              PUBLIC);
-    _c_.addMethod("equals",     "", "bool", std::string(_me_+"&").c_str(),equals,    PUBLIC);
-    _c_.addMethod("non_equals", "", "bool", std::string(_me_+"&").c_str(),non_equals,PUBLIC);
+    _c_.addMethod("==",         "", "bool", std::string(_me_+"&").c_str(),equals,    PUBLIC);
+    _c_.addMethod("!=",         "", "bool", std::string(_me_+"&").c_str(),non_equals,PUBLIC);
     _c_.build();
   }
 }
@@ -479,11 +478,6 @@ void* GaudiDict::SmartRefDict<T>::non_equals(void* o, Args arg)  {
 template <class T> __template_method__ 
 void* GaudiDict::SmartRefDict<T>::ptr(void* o)  {
   return (void*)((_Me*)o)->operator->();
-}
-
-template <class T> __template_method__ 
-void* GaudiDict::SmartRefDict<T>::data(void* o)  {
-  return (void*)((_Me*)o)->data();
 }
 
 

@@ -3,8 +3,11 @@ Desccription: This package contains a set of tools used to generate code from th
 Package manager : Stefan Roiser
 
 ===============================GaudiObjDesc v6r2p3============================
-!20040603 - Stefan
+!20040604 - Stefan
 - bugfix: getters in dictionaries sometimes returned by value instead ref
+          params for relation setters are now refs in the dictionary
+	  change to SmartRefDict<T>, renamed functions "equals" to "=="
+	  and "nonequals" to "!=", removed function "data"
 
 !20040512 - Stefan
 - bugfix: Class::resolvePending() now called at the end of the loading of 
