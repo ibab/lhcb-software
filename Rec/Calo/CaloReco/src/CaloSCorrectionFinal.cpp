@@ -1,4 +1,6 @@
 // Include files
+#include <numeric>
+#include <algorithm>
 #include "GaudiKernel/ToolFactory.h"
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/ToolFactory.h"
@@ -31,6 +33,15 @@
  */
 // ============================================================================
 
+#ifdef WIN32
+namespace std 
+{
+    template <class T>
+		inline const T& max( const T& a , const T& b )
+	{ return (a<b) ? b : a ;};
+
+};
+#endif 
 
 // ============================================================================
 /** @var CaloSCorrectionFinalFactory
@@ -303,12 +314,12 @@ StatusCode CaloSCorrectionFinal::operator() ( CaloHypo* hypo ) const {
         energy+=E[i][j];
       }
     }
-    eleft  =E[0][0]+E[0][1]+E[0][1]-max(E[0][0],max(E[0][1],E[0][1]));
+    eleft  =E[0][0]+E[0][1]+E[0][1]-std::max(E[0][0],std::max(E[0][1],E[0][1]));
     evert  =E[1][0]+E[1][1]+E[1][1];
-    eright =E[2][0]+E[2][1]+E[2][1]-max(E[2][0],max(E[2][1],E[2][1]));
-    ebottom=E[0][0]+E[1][0]+E[2][0]-max(E[0][0],max(E[1][0],E[2][0]));
+    eright =E[2][0]+E[2][1]+E[2][1]-std::max(E[2][0],std::max(E[2][1],E[2][1]));
+    ebottom=E[0][0]+E[1][0]+E[2][0]-std::max(E[0][0],std::max(E[1][0],E[2][0]));
     ehori  =E[0][1]+E[1][1]+E[2][1];
-    etop   =E[0][2]+E[1][2]+E[2][2]-max(E[0][2],max(E[1][2],E[2][2]));
+    etop   =E[0][2]+E[1][2]+E[2][2]-std::max(E[0][2],std::max(E[1][2],E[2][2]));
   }
   logmsg << MSG::VERBOSE << "energy: " << energy << endreq;
 
