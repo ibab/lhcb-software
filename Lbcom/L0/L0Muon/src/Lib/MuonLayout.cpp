@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/L0/L0Muon/src/Lib/MuonLayout.cpp,v 1.4 2001-07-12 20:19:56 atsareg Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/L0/L0Muon/src/Lib/MuonLayout.cpp,v 1.5 2001-11-16 10:08:59 atsareg Exp $
 // Include files
 #include <iostream>
 #include "L0Muon/MuonLayout.h"
@@ -146,6 +146,83 @@ std::vector<MuonTile> MuonLayout::tiles(const MuonTile& pad,
   return vmt;
 }
 
+std::vector<MuonTile> MuonLayout::tilesInArea(const MuonTile& pad, 
+					int areaX, int areaY) {
+					
+//  This function returns all the MuonTile's touched by the "pad"
+//  defined with the "playout" MuonLayout +- areaX and +- areaY	
+
+
+  MuonLayout playout = pad.layout();
+  std::vector<MuonTile> vmt;
+
+  int quarter = pad.quarter();
+  int nreg = pad.region();
+
+  // cout << quarter << " " << nreg << " " << rfactor(nreg) << endl;	
+  // cout << m_xgrid << m_ygrid << endl;		
+  // cout << playout.xGrid() << playout.yGrid() << endl;	
+
+  // the finest grid of the two layouts
+  int mxgrid = std::_MAX(m_xgrid, playout.xGrid() );
+  int mygrid = std::_MAX(m_ygrid, playout.yGrid() );
+
+  // cout << mxgrid << mygrid << endl;	    
+
+  MuonLayout fineGrid(mxgrid,mygrid);
+
+  int xratio = m_xgrid/playout.xGrid();
+  int yratio = m_ygrid/playout.yGrid();
+
+  xratio = (xratio == 0) ? 1 : xratio ;
+  yratio = (yratio == 0) ? 1 : yratio ;
+
+  // input pad area in terms of the finest grid
+  int maxX = (pad.nX()+areaX+1)*playout.rfactor(nreg)*xratio-1;
+  int maxY = (pad.nY()+areaY+1)*playout.rfactor(nreg)*yratio-1;
+  int minX = maxX - playout.rfactor(nreg)*xratio*(2*areaX+1) + 1;
+  int minY = maxY - playout.rfactor(nreg)*yratio*(2*areaY+1) + 1;
+  minX = std::_MAX(0,minX);
+  minY = std::_MAX(0,minY);
+
+  // Which tiles are hit ?
+
+  xratio = mxgrid/m_xgrid;
+  yratio = mygrid/m_ygrid;
+
+
+  int nrmin = fineGrid.region(minX,minY);
+  if(nrmin == -1 ) nrmin = 0;
+
+  int ix = minX;
+  int iy = minY;
+  while ( ix <= maxX ) {
+    int nrx = fineGrid.region(ix,iy);
+    if( nrx == -1 ) nrx = 0;
+    while ( iy <= maxY ) {
+      // which region	
+      int nr = fineGrid.region(ix,iy);
+      if( nr == -1 ) nr = 0;
+      int newx = ix/rfactor(nr)/xratio; 	  
+      int newy = iy/rfactor(nr)/yratio;
+
+      // cout << " New MuonTile " << rfactor(nr)*xratio << " " 
+      //      << rfactor(nr)*yratio << " " << quarter << " " 
+      //      << nr << " " << newx << " " << newy << endl;
+
+      vmt.push_back(MuonTile(quarter,nr,newx,newy,*this));
+      iy += rfactor(nr)*yratio;
+    }    
+    iy = minY;
+    ix += rfactor(nrx)*xratio;
+  }
+  for(int it=0; it<5; it++) {
+    vmt.push_back(MuonTile(0,0,10,10,*this));
+  }
+  return vmt;
+}
+
+
 std::vector<MuonTile> MuonLayout::tiles() {
   
   std::vector<MuonTile> vmt;
@@ -203,9 +280,12 @@ std::vector<MuonTile> MuonLayout::tilesInRegion(const MuonTile& pad,
   int nq = pad.quarter();
   
   if(nr == pregion) {
-    return tiles(pad);    
+    return tilesInArea(pad,0,0);    
   } else {
-    std::vector<MuonTile> vmt = tiles(pad); 
+    std::vector<MuonTile> vmt = tilesInArea(pad,0,0); 
+    for(int it=0; it<5; it++) {
+      vmt.pop_back();
+    }
     std::vector<MuonTile>::iterator ivmt;
     std::vector<MuonTile> nvmt;
     // Bring the pads in vmt to the pregion definition
@@ -227,6 +307,9 @@ std::vector<MuonTile> MuonLayout::tilesInRegion(const MuonTile& pad,
 	  }
 	}
       }
+    }
+    for(int it=0; it<5; it++) {
+      nvmt.push_back(MuonTile(0,0,10,10,*this));
     }
     return nvmt;
   }

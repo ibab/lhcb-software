@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/L0/L0Muon/src/component/L0mTriggerProc.cpp,v 1.9 2001-10-18 14:23:36 atsareg Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/L0/L0Muon/src/component/L0mTriggerProc.cpp,v 1.10 2001-11-16 10:08:59 atsareg Exp $
 
 /// Include files
 /// Gaudi interfaces
@@ -100,6 +100,7 @@ StatusCode L0mTriggerProc::execute() {
   
   SmartDataPtr< ObjectVector<L0mPad> > pads(eventSvc(),m_inputPads);
   if(!pads) {
+    log << MSG::DEBUG << "L0mPads are not found "  << endreq; 
     return StatusCode::FAILURE;
   }
   ObjectVector<L0mPad>::const_iterator ip;
@@ -244,9 +245,9 @@ L0mTower* L0mTriggerProc::createTower(L0mPad* pad, ObjectVector<L0mPad>* pads) {
 	  // Check how many M3 pads covers the touched pad in other station
 	  // These the M3 pads defined in terms of nr region 
 	  vmt3 = m_layout[2].tilesInRegion( *ivmt, nr);
-	  
-	  // cout << " After vmt3 " << endl;
-	  
+	  for(int it = 0; it<5; it++) {
+	    vmt3.pop_back();
+	  }
 	  for (ivmt3 = vmt3.begin(); ivmt3 != vmt3.end(); ivmt3++ ) {
 	    int iny = (*ivmt3).nY() - ny;
 	    if( abs(iny) < 2) {

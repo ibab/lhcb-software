@@ -1,11 +1,10 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/L0/L0Muon/L0Muon/MuonLayout.h,v 1.4 2001-07-12 20:20:39 atsareg Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/L0/L0Muon/L0Muon/MuonLayout.h,v 1.5 2001-11-16 10:08:26 atsareg Exp $
 
 #ifndef L0MUON_MUONLAYOUT_H
 #define L0MUON_MUONLAYOUT_H 1   
 
 // Include files
 #include <vector>
-#include "GaudiKernel/SmartDataPtr.h"  
 #include "GaudiKernel/MsgStream.h"  
 
 /** @class MuonLayout MuonLayout.h MuonLayout.h 
@@ -37,16 +36,25 @@ public:
   int yGrid() const { return m_ygrid; }  
   
   /** find a vector of its MuonTile's around the given MuonTile 
-      defined in other MuonLayout within given limits
+      defined in another MuonLayout within given limits
       
       @param pad : central for the search
-      @param layout: MuonLayout in which the seed pad is defined
       @param areaX : limits of the search area in X
       @param areaY : limits of the search area in Y
   */          
+  std::vector<MuonTile> tilesInArea(const MuonTile& pad, 
+			            int areaX,
+			            int areaY );
+  /** find a vector of its MuonTile's touched by a given MuonTile 
+      defined in another MuonLayout 
+      
+      @param pad : central for the search
+      @param areaX : limits of the search area in X
+      @param areaY : limits of the search area in Y
+  */	
   std::vector<MuonTile> tiles(const MuonTile& pad, 
-			      int areaX = 0,
-			      int areaY = 0);
+			            int areaX = 0 ,
+			            int areaY = 0 );	
   /// returns a vector of its MuonTile's	
   std::vector<MuonTile> tiles();			      
   /** returns a vector of its MuonTile's in a given quarter
