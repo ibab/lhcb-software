@@ -426,6 +426,9 @@
   <class name="RichRecStatus" file="Event/RichRecStatus"/>
   <class name="RichRecPixel" file="Event/RichRecPixel"/>
   <class name="RichRecRing" file="Event/RichRecRing"/>
+  <class name="RichGlobalPIDSummary" file="Event/RichGlobalPIDSummary"/>
+  <class name="RichGlobalPIDTrack" file="Event/RichGlobalPIDTrack"/>
+  <class name="RichGlobalPID" file="Event/RichGlobalPID"/>
 
   <!-- classes of package FML -->
   <class name="LinearConstraint" file="FML/LinearConstraint"/>
