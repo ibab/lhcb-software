@@ -1,4 +1,4 @@
-//$Id: ParamSet.cpp,v 1.1 2003-04-23 10:06:49 sponce Exp $
+//$Id: ParamSet.cpp,v 1.2 2003-07-02 16:00:59 sponce Exp $
 
 #include "DetDesc/ParamSet.h"
 #include "DetDesc/ParamException.h"
@@ -188,7 +188,7 @@ void ParamSet::addParam( std::string name,
   aParam.comment = comment;
   aParam.value = value;
   aParam.d_value = d_value;
-  // aParam.i_value is never used
+  aParam.i_value = 0; // never used
   aParam.kind = IParamSet::DOUBLE;
   m_paramMap[name] = aParam;
   return;
@@ -227,8 +227,8 @@ void ParamSet::addParam( std::string name,
   aParam.type = type;
   aParam.comment = comment;
   aParam.value = value;
-  // aParam.d_value is never used
-  // aParam.i_value is never used
+  aParam.d_value = 0.0; // never used
+  aParam.i_value = 0; // never used
   aParam.kind = IParamSet::OTHER;
   m_paramMap[name] = aParam;
   return;
@@ -248,7 +248,7 @@ void ParamSet::addParamVector( std::string name,
   aParamVector.comment = comment;
   aParamVector.value = value;
   aParamVector.d_value = d_value;
-  // aParamVector.i_value is never used
+  aParamVector.i_value = std::vector<int>(); // never used
   aParamVector.kind = IParamSet::DOUBLE;
   m_paramVectorMap[name] = aParamVector;
   return;
@@ -287,8 +287,8 @@ void ParamSet::addParamVector( std::string name,
   aParamVector.type = type;
   aParamVector.comment = comment;
   aParamVector.value = value;
-  // aParamVector.d_value is never used
-  // aParamVector.i_value is never used
+  aParamVector.d_value = std::vector<double>(); // never used
+  aParamVector.i_value = std::vector<int>(); // never used
   aParamVector.kind = IParamSet::OTHER;
   m_paramVectorMap[name] = aParamVector;
   return;
