@@ -1,9 +1,16 @@
-! $Id: release.notes,v 1.7 2002-01-23 13:20:41 ocallot Exp $
+! $Id: release.notes,v 1.8 2002-01-28 18:41:41 ocallot Exp $
 package VeloDet
 package manager : Velo Group
 
 !=============================================================================
-! 23/01/2002 - Olivier Callot  v3r0
+! 28/01/2002 - Olivier Callot  v3r0
+  - Modified the initialize() method to use the child detector elements, to get
+    the individual wafer positions from XML. The type of wafer is still 
+	  hardcoded, as is the detection of PuVeto / Normal Velo boundary.
+    This requires XmlDDDB v7r2 or later.
+
+!=============================================================================
+! 23/01/2002 - Olivier Callot
   - Added new members to DeVelo (.h,.cpp) : rOfStrip, phiOfStrip rPitch and 
     phiPitch to be able to implement the VeloClusterOnTrack with this geometry.
   - Added zVertex method to fix the point to extrapolate in getSpacePoint 

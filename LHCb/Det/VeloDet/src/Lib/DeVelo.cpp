@@ -1,4 +1,4 @@
-// $Id: DeVelo.cpp,v 1.5 2002-01-23 13:20:41 ocallot Exp $
+// $Id: DeVelo.cpp,v 1.6 2002-01-28 18:41:41 ocallot Exp $
 //
 // ============================================================================
 #define  VELODET_DEVELO_CPP 1
@@ -175,55 +175,55 @@ StatusCode DeVelo::initialize() {
   int index = 0;
   double minZ = -200.*mm;
   bool inVeto = true;
+  double z;
   
   IDetectorElement* stations = *childBegin();
 
   for( IDetectorElement::IDEContainer::iterator child = stations->childBegin();
        stations->childEnd() != child ; ++child ) {
     number = child - stations->childBegin();
-    
+
     IGeometryInfo* geoData = (*child)->geometry();
     if ( 0 != geoData ) {
       pointGlobal = geoData->toGlobal( pointLocal );
-      // *** Create the wafers, 4 per 'station'
-      double z =  pointGlobal.z();
+      z = pointGlobal.z();
       if ( inVeto && ( minZ < z ) ) {
         inVeto = false;
         index  = 0;
       }      
-      loging << MSG::DEBUG << "Wafer " << index;
-
-      for ( int j=0 ; 2 > j ; j++ ) {
-        if ( !inVeto) {
-          VeloWafer* phiWafer = new VeloWafer();
-          phiWafer->setNumber( index++ );
-          if ( 0 == number%2 ) {
-            phiWafer->setType( 2*j+1 );    // Negative X
-          } else {
-            phiWafer->setType( 2*j+2 );    // Positive X
-          }
-          phiWafer->setZ( z - 0.65 );      // R-Phi separation = 1.3 mm
-          m_wafer.push_back( phiWafer );
-          loging << " Phi" << phiWafer->type() << " z=" << phiWafer->z();
-        }
-        
-        VeloWafer* radWafer = new VeloWafer();
-        radWafer->setNumber( index++ );
-        radWafer->setType( 0 );
-        if ( inVeto ) {
-          radWafer->setZ( z );
-          m_puWafer.push_back( radWafer );
-        } else {
-          radWafer->setZ( z + 0.65 );
-          m_wafer.push_back( radWafer );
-        }
-        loging << " R z=" << radWafer->z();
-        z = z + 15.0;                    // Right-Left separation 15 mm
-      }
-      loging << endreq;
-    } else {
-      loging << " no geometry !" << endreq;
     }
+    loging << MSG::DEBUG << "Station " << index << " center z = " << z;
+
+    for( IDetectorElement::IDEContainer::iterator waf = (*child)->childBegin();
+         (*child)->childEnd() != waf ; ++waf ) {
+      int j = waf - (*child)->childBegin();
+
+      IGeometryInfo* geoData = (*waf)->geometry();
+      if ( 0 != geoData ) {
+        pointGlobal = geoData->toGlobal( pointLocal );
+        z =  pointGlobal.z();
+
+        VeloWafer* wafer = new VeloWafer();
+        wafer->setNumber( index++ );
+        wafer->setZ( z );
+        if ( 1 == j%2 ) {
+          if ( 0 == number%2 ) {
+            wafer->setType( j );    // Negative X
+          } else {
+            wafer->setType( j+1 );    // Positive X
+          }
+          loging << " Phi" << wafer->type() << " z=" << wafer->z();
+        } else {
+          wafer->setType( 0 );
+          loging << " R z=" << wafer->z();
+        }
+        m_puWafer.push_back( wafer );
+      
+      } else {
+        loging << " no geometry !" << endreq;
+      }
+    }
+    loging << endreq;
   }
   return sc;
 };
