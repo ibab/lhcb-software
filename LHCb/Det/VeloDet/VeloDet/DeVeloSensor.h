@@ -1,4 +1,4 @@
-// $Id: DeVeloSensor.h,v 1.3 2004-02-17 21:36:50 mtobin Exp $
+// $Id: DeVeloSensor.h,v 1.4 2004-02-24 18:25:13 mtobin Exp $
 #ifndef VELODET_DEVELOSENSOR_H 
 #define VELODET_DEVELOSENSOR_H 1
 
@@ -111,11 +111,10 @@ public:
   StatusCode globalToLocal(const HepPoint3D& global, 
                                    HepPoint3D& local);
 
-  /// Convert local phi to global phi
+  /// Convert local phi to rough global phi
   inline double localPhiToGlobal(double phiLocal){
-    if(m_isLeft) return phiLocal;
-    phiLocal += pi;
     if(m_isDownstream) phiLocal = -phiLocal;
+    if(m_isRight) phiLocal += pi;
     return phiLocal;
   }
 
