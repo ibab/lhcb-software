@@ -1,4 +1,4 @@
-// $Id: OTRetrieveBuffer.cpp,v 1.1.1.1 2004-02-03 09:49:17 jnardull Exp $
+// $Id: OTRetrieveBuffer.cpp,v 1.2 2004-02-12 10:29:30 cattanem Exp $
 // Include files 
 
 // from Gaudi
@@ -115,20 +115,10 @@ StatusCode OTRetrieveBuffer::execute() {
         continue;
       }
 
-      // We  create a vector of tipe OT Digit called otDigits
-      OTDigits doubleDigits;
-
-      // Given Gol ID, Bank ID, the Data Word and the empty vector otDigits
-      // we get the OT Digit
-      raw2OTDigit(nbank, GolID, dataWord, doubleDigits);
+      // Given Gol ID, Bank ID, and the Data Word, get the OT digit and
+      // put it in the output container
+      raw2OTDigit(nbank, GolID, dataWord, *outputDigits);
       
-      // Loop over all the doubleDigits vector and put in output container
-      OTDigits::const_iterator iDigit;
-      for ( iDigit = doubleDigits.begin(); 
-            iDigit != doubleDigits.end(); ++iDigit ) {
-        outputDigits->add( *iDigit );
-      }
-
     }// Loop over the data words inside the bank    
   }  // Loop over vector of banks (The Buffer)
 

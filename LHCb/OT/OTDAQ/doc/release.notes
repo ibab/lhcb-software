@@ -1,6 +1,10 @@
 Package         : OTDAQ
 Package manager : J. Nardulli
 
+! 2004-02-12 - Marco Cattaneo
+ - Fix the POOL crash of Brunel: a KeyedObject cannot belong to two containers,
+   so in OTRetrieveBuffer put the digits directly in the ouput container
+
 !====================== OTDAQ v1r0 2004-02-02 ======================
 ! 2004-02-02 - Jacopo Nardulli
 
