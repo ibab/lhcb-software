@@ -1,8 +1,11 @@
-// $Id: GiGaRunManager.cpp,v 1.7 2002-12-07 14:27:52 ibelyaev Exp $ 
+// $Id: GiGaRunManager.cpp,v 1.8 2002-12-13 13:36:31 ibelyaev Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.7  2002/12/07 14:27:52  ibelyaev
+//  see $GIGAROOT/cmt/requirements file
+//
 // Revision 1.6  2002/09/26 18:05:29  ibelyaev
 //  repackaging: remove all concrete implementations
 //
@@ -414,6 +417,8 @@ StatusCode GiGaRunManager::initializeKernel()
 StatusCode GiGaRunManager::finalizeRunManager()
 {
   ///
+  if( 0 !=  G4RunManager::currentEvent )
+    { G4RunManager::StackPreviousEvent(G4RunManager::currentEvent ) ; }
   G4RunManager::RunTermination(); 
   ///
   set_run_Is_Initialized( false ) ; 

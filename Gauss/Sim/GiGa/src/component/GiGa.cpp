@@ -1,8 +1,11 @@
-// $Id: GiGa.cpp,v 1.2 2002-12-07 21:05:31 ibelyaev Exp $ 
+// $Id: GiGa.cpp,v 1.3 2002-12-13 13:36:31 ibelyaev Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2002/12/07 21:05:31  ibelyaev
+//  see $GIGAROOT/doc/release.notes 2002-12-07
+//
 // Revision 1.1  2002/12/07 14:27:52  ibelyaev
 //  see $GIGAROOT/cmt/requirements file
 //
@@ -27,6 +30,7 @@
 #include    "GaudiKernel/MsgStream.h"
 #include    "GaudiKernel/Stat.h"
 #include    "GaudiKernel/PropertyMgr.h"
+#include    "GaudiKernel/IRndmGenSvc.h"
 /// G4 
 #include    "G4UIsession.hh"
 #include    "G4VVisManager.hh"
@@ -106,6 +110,9 @@ GiGa::GiGa( const std::string& name, ISvcLocator* svcloc )
   , m_visManagerName       (                  )
   , m_visManager           (   0              )
   ///
+  , m_rndmSvcName          ( "RndmGenSvc"     )
+  , m_rndmSvc              (   0              )
+  ///
   , m_errors               ()
   , m_warnings             ()
   , m_exceptions           ()
@@ -128,8 +135,10 @@ GiGa::GiGa( const std::string& name, ISvcLocator* svcloc )
   declareProperty( "RunAction"              , m_GiGaRunActionName    ) ;
   /// User Interface Sessions 
   declareProperty( "UIsession"              , m_uiSessionName        ) ;
-  /// Vusual Manager  
+  /// Visual Manager  
   declareProperty( "VisManager"             , m_visManagerName       ) ;  
+  /// Random Numbers Service   
+  declareProperty( "RandomNumberService"    , m_rndmSvcName          ) ;  
 };
 
 // ============================================================================
@@ -353,6 +362,19 @@ GiGa::initialize()
             + "/" + m_visManager -> name() );
     }
   else { Warning("Visualisation Manager is not required to be created!") ; } 
+
+  // Locate random number service 
+  if( !m_rndmSvcName.empty() )
+    {
+      StatusCode sc = 
+        svcLoc()->service( m_rndmSvcName , m_rndmSvc , true ); 
+      if( sc.isFailure()   ) 
+        { return Error("Unable to locate Random Number service '"
+                       + m_rndmSvcName + "'" , sc ) ; } 
+      if( 0 == rndmSvc() ) 
+        { return Error("Unable to locate Random Number service '"
+                       + m_rndmSvcName + "'" , sc ) ; }
+    }
   ///
   return StatusCode::SUCCESS ; 
 };
@@ -366,6 +388,7 @@ StatusCode GiGa::finalize()
 {  
   Print("Finalization" , MSG::DEBUG , StatusCode::SUCCESS );
   // release all used services and tools 
+  if( 0 != rndmSvc  ()  ) { rndmSvc   () -> release () ; m_rndmSvc    = 0 ; } 
   if( 0 != toolSvc  ()  ) { toolSvc   () -> release () ; m_toolSvc    = 0 ; } 
   if( 0 != chronoSvc()  ) { chronoSvc () -> release () ; m_chronoSvc  = 0 ; } 
   if( 0 != geoSrc   ()  ) { geoSrc    () -> release () ; m_geoSrc     = 0 ; } 

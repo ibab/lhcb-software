@@ -1,8 +1,11 @@
-// $Id: GiGa.h,v 1.2 2002-12-07 21:05:31 ibelyaev Exp $ 
+// $Id: GiGa.h,v 1.3 2002-12-13 13:36:31 ibelyaev Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2002/12/07 21:05:31  ibelyaev
+//  see $GIGAROOT/doc/release.notes 2002-12-07
+//
 // Revision 1.1  2002/12/07 14:27:52  ibelyaev
 //  see $GIGAROOT/cmt/requirements file
 //
@@ -29,7 +32,7 @@
 /// forwad declarations  from Gaudi 
 class     IChronoStatSvc                  ;
 class     ISvcLocator                     ;
-class     IObjManager                     ;
+class     IRndmGenSvc                     ;
 class     IToolSvc                        ;
 template   <class TYPE> class SvcFactory  ;
 /// forwad declarations  from GiGa  
@@ -429,6 +432,8 @@ private:
   inline IChronoStatSvc*  chronoSvc () const { return m_chronoSvc      ; } ;
   /// accessor to Tool Service 
   inline IToolSvc*        toolSvc   () const { return m_toolSvc        ; } ;
+  /// accessor to Random Number Service 
+  inline IRndmGenSvc*     rndmSvc   () const { return m_rndmSvc        ; } ;
   /// accessor to Service Locator 
   inline ISvcLocator*     svcLoc    () const { return serviceLocator() ; } ;
   
@@ -639,8 +644,11 @@ private:
   
   std::string       m_uiSessionName       ; ///< GiGa UI session type/name 
   IGiGaUIsession*   m_uiSession           ; ///< GiGa UI session 
-  std::string      m_visManagerName       ; ///< GiGa Vis manager type/name 
-  IGiGaVisManager* m_visManager           ; ///< GiGa Vis manager  
+  std::string       m_visManagerName      ; ///< GiGa Vis manager type/name 
+  IGiGaVisManager*  m_visManager          ; ///< GiGa Vis manager  
+  
+  std::string       m_rndmSvcName         ; ///< name for random number service 
+  IRndmGenSvc*      m_rndmSvc             ; ///< Gaudi random number service 
   
   typedef std::map<std::string,unsigned int> Counter;
   /// counter of errors 
