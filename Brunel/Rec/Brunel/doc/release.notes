@@ -25,6 +25,18 @@ Purupose: LHCb reconstruction program
    use Futil v10r3
 >   ubdropobj - new routine to drop the LAST object in a given partition
 
+   use simmubg v5r1
+>  The routine murmbg.F now uses a new Futil (v10r3) routine, mudropobj.F to
+>  correctly remove background ATMC objects.
+>
+>  murmbg.F      - Calls ubdropobj.F to remove background ATMC references.
+>
+>  murmsingle.F  - Extra debug messages added to catch problems 
+>  murmmulti.F   - with too many ATMC objects (>10000).
+>  murmscomp.F   -   
+>  murmmcomp.F   -
+
+
 ===============================================================================
 ! 20010625 Brunel v3r3 (MC)
    Add possibility to add muon background (switched on by default)
