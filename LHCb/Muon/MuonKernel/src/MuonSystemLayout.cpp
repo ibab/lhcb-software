@@ -1,8 +1,8 @@
-// $Id: MuonSystemLayout.cpp,v 1.2 2002-01-31 10:13:45 atsareg Exp $
+// $Id: MuonSystemLayout.cpp,v 1.3 2002-02-18 09:23:32 atsareg Exp $
 // Include files
 #include <iostream>
 #include "MuonKernel/MuonSystemLayout.h"
-#include "MuonKernel/MuonSystemID.h"
+#include "MuonKernel/MuonTileID.h"
 
 // Hack to get round usage of max
 #ifdef WIN32
@@ -45,13 +45,13 @@ MuonSystemLayout::MuonSystemLayout(const MuonStationLayout& lq) {
 
 MuonSystemLayout::~MuonSystemLayout() {}
 
-std::vector<MuonSystemID> 
-MuonSystemLayout::tiles(const MuonSystemID& pad) const {
+std::vector<MuonTileID> 
+MuonSystemLayout::tiles(const MuonTileID& pad) const {
   return tilesInArea(pad,0,0);
 }
 
-std::vector<MuonSystemID> 
-MuonSystemLayout::tilesInArea(const MuonSystemID& pad, 
+std::vector<MuonTileID> 
+MuonSystemLayout::tilesInArea(const MuonTileID& pad, 
 			      int areaX, int areaY) const {
 					
   int st = pad.station();
@@ -59,13 +59,13 @@ MuonSystemLayout::tilesInArea(const MuonSystemID& pad,
 
 }
 
-std::vector<MuonSystemID> MuonSystemLayout::tiles() const {
+std::vector<MuonTileID> MuonSystemLayout::tiles() const {
 
-  std::vector<MuonSystemID> result;
-  std::vector<MuonSystemID>::iterator it;
+  std::vector<MuonTileID> result;
+  std::vector<MuonTileID>::iterator it;
 
   for (int is = 0; is<5; is++) {
-    std::vector<MuonSystemID> tmp=m_station_layouts[is].tiles();
+    std::vector<MuonTileID> tmp=m_station_layouts[is].tiles();
     for(it = tmp.begin(); it != tmp.end(); it++ ) {
       it->setStation(is);
     }
@@ -74,7 +74,37 @@ std::vector<MuonSystemID> MuonSystemLayout::tiles() const {
   return result;
 }
 
-std::vector<MuonSystemID> MuonSystemLayout::tilesInRegion(const MuonSystemID& pad, 
+std::vector<MuonTileID> MuonSystemLayout::tiles(int iq) const {
+
+  std::vector<MuonTileID> result;
+  std::vector<MuonTileID>::iterator it;
+
+  for (int is = 0; is<5; is++) {
+    std::vector<MuonTileID> tmp=m_station_layouts[is].tiles(iq);
+    for(it = tmp.begin(); it != tmp.end(); it++ ) {
+      it->setStation(is);
+    }
+    result.insert(result.end(),tmp.begin(),tmp.end()); 
+  }					
+  return result;
+}
+
+std::vector<MuonTileID> MuonSystemLayout::tiles(int iq, int ir) const {
+
+  std::vector<MuonTileID> result;
+  std::vector<MuonTileID>::iterator it;
+
+  for (int is = 0; is<5; is++) {
+    std::vector<MuonTileID> tmp=m_station_layouts[is].tiles(iq,ir);
+    for(it = tmp.begin(); it != tmp.end(); it++ ) {
+      it->setStation(is);
+    }
+    result.insert(result.end(),tmp.begin(),tmp.end()); 
+  }					
+  return result;
+}
+
+std::vector<MuonTileID> MuonSystemLayout::tilesInRegion(const MuonTileID& pad, 
                                                 int pregion) const {
     
   int st = pad.station();
@@ -82,13 +112,26 @@ std::vector<MuonSystemID> MuonSystemLayout::tilesInRegion(const MuonSystemID& pa
   
 }  
 
-bool MuonSystemLayout::validID(const MuonSystemID& pad) const {
-
+std::vector<MuonTileID> 
+MuonSystemLayout::neighbours(const MuonTileID& pad) const {
   int st = pad.station();
-  return m_station_layouts[st].validID(pad);
+  return m_station_layouts[st].neighbours(pad);
 }
 
-MuonSystemID MuonSystemLayout::contains(const MuonSystemID& pad) const {
+std::vector<MuonTileID> 
+MuonSystemLayout::neighbours(const MuonTileID& pad,
+                             int dirX, int dirY, int depth) const {
+  int st = pad.station();
+  return m_station_layouts[st].neighbours(pad,dirX,dirY,depth);
+}
+
+bool MuonSystemLayout::isValidID(const MuonTileID& pad) const {
+
+  int st = pad.station();
+  return m_station_layouts[st].isValidID(pad);
+}
+
+MuonTileID MuonSystemLayout::contains(const MuonTileID& pad) const {
   // It is responsibility of the user to assure that the pad
   // layout is finer than the containing layout
   int st = pad.station();

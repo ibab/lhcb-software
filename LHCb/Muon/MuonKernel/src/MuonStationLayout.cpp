@@ -1,8 +1,8 @@
-// $Id: MuonStationLayout.cpp,v 1.2 2002-01-31 10:13:45 atsareg Exp $
+// $Id: MuonStationLayout.cpp,v 1.3 2002-02-18 09:23:32 atsareg Exp $
 // Include files
 #include <iostream>
 #include "MuonKernel/MuonStationLayout.h"
-#include "MuonKernel/MuonSystemID.h"
+#include "MuonKernel/MuonTileID.h"
 
 // Hack to get round usage of max
 #ifdef WIN32
@@ -43,33 +43,69 @@ MuonStationLayout::MuonStationLayout(const MuonLayout& lq) {
 
 MuonStationLayout::~MuonStationLayout() {}
 
-std::vector<MuonSystemID> 
-MuonStationLayout::tiles(const MuonSystemID& pad) const {
+std::vector<MuonTileID> 
+MuonStationLayout::tiles(const MuonTileID& pad) const {
   return tilesInArea(pad,0,0);
 }
 
-std::vector<MuonSystemID> MuonStationLayout::tilesInArea(const MuonSystemID& pad, 
+std::vector<MuonTileID> MuonStationLayout::tilesInArea(const MuonTileID& pad, 
 					int areaX, int areaY) const {
 					
-  int reg = pad.region();
-  return m_layouts[reg].tilesInArea(pad,areaX,areaY);
-
+  unsigned int reg = pad.region();
+  
+  std::vector<MuonTileID> result;
+  std::vector<MuonTileID> vtm;
+  std::vector<MuonTileID>::iterator it;
+  
+  for(unsigned int i = 0; i<4; i++) {
+  
+    int factorX = 1;
+    int factorY = 1;
+    if(i != reg) {
+      factorX = m_layouts[i].xGrid()/m_layouts[reg].xGrid();
+      factorY = m_layouts[i].yGrid()/m_layouts[reg].yGrid();
+    }
+  
+    vtm=m_layouts[i].tilesInArea(pad,areaX*factorX,areaY*factorY);
+    if(!vtm.empty()) {
+      for(it = vtm.begin(); it != vtm.end(); it++) {
+        if(it->region() == i) result.push_back(*it);
+      }
+    }
+  }  
+  return result;
 }
 
-std::vector<MuonSystemID> MuonStationLayout::tiles() const {
+std::vector<MuonTileID> MuonStationLayout::tiles() const {
 					
-  std::vector<MuonSystemID> result;
+  std::vector<MuonTileID> result;
 
   for (int ir = 0; ir<4; ir++) {
     for (int iq = 0; iq<4; iq++) {
-      std::vector<MuonSystemID> tmp=m_layouts[ir].tiles(iq,ir);
+      std::vector<MuonTileID> tmp=m_layouts[ir].tiles(iq,ir);
       result.insert(result.end(),tmp.begin(),tmp.end());
     }    
   }
   return result;
 }
 
-std::vector<MuonSystemID> MuonStationLayout::tilesInRegion(const MuonSystemID& pad, 
+std::vector<MuonTileID> MuonStationLayout::tiles(int iq) const {
+					
+  std::vector<MuonTileID> result;
+
+  for (int ir = 0; ir<4; ir++) {
+    std::vector<MuonTileID> tmp=m_layouts[ir].tiles(iq,ir);
+    result.insert(result.end(),tmp.begin(),tmp.end());
+  }
+  return result;
+}
+
+std::vector<MuonTileID> MuonStationLayout::tiles(int iq, int ir) const {
+					
+  return m_layouts[ir].tiles(iq,ir);
+}
+
+std::vector<MuonTileID> MuonStationLayout::tilesInRegion(const MuonTileID& pad, 
                                                 int pregion) const{
     
   int reg = pad.region();
@@ -77,13 +113,53 @@ std::vector<MuonSystemID> MuonStationLayout::tilesInRegion(const MuonSystemID& p
   
 }  
 
-bool MuonStationLayout::validID(const MuonSystemID& pad) const {
-
-  int reg = pad.region();
-  return m_layouts[reg].validID(pad);
+std::vector<MuonTileID> 
+MuonStationLayout::neighbours(const MuonTileID& pad) const {
+  unsigned int reg = pad.region();			      
+  return m_layouts[reg].neighbours(pad);
 }
 
-MuonSystemID MuonStationLayout::contains(const MuonSystemID& pad) const {
+std::vector<MuonTileID> 
+MuonStationLayout::neighbours(const MuonTileID& pad,
+                              int dirX,
+			      int dirY,
+			      int depth) const {
+			      
+  std::vector<MuonTileID> result;			      
+  std::vector<MuonTileID> vtm;
+  std::vector<MuonTileID>::iterator it;
+  			      
+  unsigned int reg = pad.region();  
+  
+  for(unsigned int i = 0; i<4; i++) {
+  
+    int factorX = 1;
+    int factorY = 1;
+    if(i != reg) {
+      factorX = m_layouts[i].xGrid()/m_layouts[reg].xGrid();
+      factorY = m_layouts[i].yGrid()/m_layouts[reg].yGrid();
+    }
+
+    vtm=m_layouts[i].neighboursInArea(pad,dirX,dirY,
+                                      depth*factorX,
+				      depth*factorY);
+    
+    if(!vtm.empty()) {
+      for(it = vtm.begin(); it != vtm.end(); it++) {
+        if(it->region() == i) result.push_back(*it);
+      }
+    }
+  } 			      
+  return result;
+}
+
+bool MuonStationLayout::isValidID(const MuonTileID& pad) const {
+
+  int reg = pad.region();
+  return m_layouts[reg].isValidID(pad);
+}
+
+MuonTileID MuonStationLayout::contains(const MuonTileID& pad) const {
   // It is responsibility of the user to assure that the pad
   // layout is finer than the containing layout
   int reg = pad.region();
