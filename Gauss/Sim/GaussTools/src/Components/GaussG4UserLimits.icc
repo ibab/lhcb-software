@@ -1,0 +1,20 @@
+// class GaussG4UserLimits inline implementation
+// (based on CMS code by P.Arce) 
+//
+#include "GaussG4UserLimits.h"
+#include "G4Track.hh"
+
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo.....
+inline const G4String& GaussG4UserLimits::GetType() const
+{
+  return fType;
+}
+
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo.....
+inline void GaussG4UserLimits::SetType(const G4String& type)
+{
+  fType = type;
+}
+
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo.....
+inline GaussG4UserLimits::~GaussG4UserLimits(){}

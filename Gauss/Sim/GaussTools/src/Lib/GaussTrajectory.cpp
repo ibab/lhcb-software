@@ -110,12 +110,13 @@ void GaussTrajectory::AppendStep      ( const G4Step*  step )
   ///
   bool append = false;
   G4VUserTrackInformation* uinf = step->GetTrack()->GetUserInformation(); 
-  GaussTrackInformation*    ginf = 
+  GaussTrackInformation* ginf = 
     ( 0 == uinf )  ? 0 : dynamic_cast<GaussTrackInformation*> ( uinf );
   /// 
 
-  if     ( empty()                                       )  
+  if( empty() )  
     { append = true ; } 
+
   /// if some information is not available, 
   /// follow ordinary routine and just add the step
   //  else if( 0 == step->GetTrack()                      || 
@@ -123,7 +124,7 @@ void GaussTrajectory::AppendStep      ( const G4Step*  step )
 	//   step != stepMgr()->GetStep()               || 
 	//   step->GetTrack() != stepMgr()->GetTrack    () ) 
   //  { append = true ; }   
-
+  
   /// if  it is the last step, the step must be appended 
   else if ( fAlive != step->GetTrack()->GetTrackStatus() ) 
     { append = true ; }
@@ -136,13 +137,14 @@ void GaussTrajectory::AppendStep      ( const G4Step*  step )
   
   ///
   if( append && 
-      ( empty()                                                              || 
-	step->GetPostStepPoint()->GetGlobalTime () != back()->GetTime     () ||
-	step->GetPostStepPoint()->GetPosition() != back()->GetPosition () ) ) 
+      ( empty() || 
+        step->GetPostStepPoint()->GetGlobalTime() != back()->GetTime() ||
+        step->GetPostStepPoint()->GetPosition() != back()->GetPosition() ) ) 
     {    
       GiGaTrajectoryPoint* p = 
-	new GiGaTrajectoryPoint( step->GetPostStepPoint()->GetPosition   () ,
-				 step->GetPostStepPoint()->GetGlobalTime () ) ; 
+        new GiGaTrajectoryPoint( step->GetPostStepPoint()->GetPosition() ,
+                                 step->GetPostStepPoint()->GetGlobalTime()) ; 
+      
       push_back( p );
       ///
     };

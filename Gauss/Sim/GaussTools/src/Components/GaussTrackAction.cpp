@@ -1,8 +1,11 @@
-// $Id: GaussTrackAction.cpp,v 1.1 2003-04-09 12:03:48 witoldp Exp $ 
+// $Id: GaussTrackAction.cpp,v 1.2 2003-04-11 17:55:36 witoldp Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.1  2003/04/09 12:03:48  witoldp
+// GaussTrackAction allows GaussTrackInformation attached by process
+//
 // Revision 1.2  2003/02/14 18:14:49  witoldp
 // added production and tracking cuts
 //
@@ -226,28 +229,26 @@ void GaussTrackAction::PreUserTrackingAction  (const G4Track* track )
   // Does trajectory already exist?
   if( 0 == track || 0 == trackMgr() || 0 != trackMgr()->GimmeTrajectory()  ) 
     { return ; } 
-  { 
-    // check if GaussTrackInformation already exists and if not
-    // attach it to the track
-    G4VUserTrackInformation* uinf = track->GetUserInformation();
-    GaussTrackInformation* ti;
-    
-    if(uinf)
-      {
-        ti = static_cast<GaussTrackInformation*> (uinf);
-      }
-    else
-      {
-        ti = new GaussTrackInformation(); 
-        trackMgr()->SetUserTrackInformation(ti);
-      }    
-    //
-    
-    if( storeByOwnEnergy() 
-        && ( track->GetKineticEnergy() > ownEnergyThreshold() ) ) 
-      {  ti->setToBeStored( true ); } 
-    //
-  }
+  
+  // check if GaussTrackInformation already exists and if not
+  // attach it to the track
+  G4VUserTrackInformation* uinf = track->GetUserInformation();
+  GaussTrackInformation* ti;
+  
+  if(uinf)
+    {
+      ti = static_cast<GaussTrackInformation*> (uinf);
+    }
+  else
+    {
+      ti = new GaussTrackInformation(); 
+      trackMgr()->SetUserTrackInformation(ti);
+    }    
+  //
+  
+  if( storeByOwnEnergy() 
+      && ( track->GetKineticEnergy() > ownEnergyThreshold() ) ) 
+    {  ti->setToBeStored( true ); }
   //
   trackMgr()->SetStoreTrajectory( true ) ;  
   //
@@ -255,8 +256,7 @@ void GaussTrackAction::PreUserTrackingAction  (const G4Track* track )
   // create GaussTrajectory and inform Tracking Manager 
   GaussTrajectory* traj = new GaussTrajectory( track ) ; 
   // traj->setStepMgr( trackMgr()->GetSteppingManager() ) ; 
-  trackMgr()->SetTrajectory( traj ) ;
-  
+  trackMgr()->SetTrajectory( traj ) ;  
   //
 };
 

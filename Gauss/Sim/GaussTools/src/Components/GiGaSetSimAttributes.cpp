@@ -1,8 +1,11 @@
-// $Id: GiGaSetSimAttributes.cpp,v 1.1 2003-04-06 19:07:33 ibelyaev Exp $
+// $Id: GiGaSetSimAttributes.cpp,v 1.2 2003-04-11 17:55:36 witoldp Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
-// $Log: not supported by cvs2svn $ 
+// $Log: not supported by cvs2svn $
+// Revision 1.1  2003/04/06 19:07:33  ibelyaev
+//  update foe newer GiGa, add new tools
+// 
 // ============================================================================
 // GiGa
 #include "GiGa/GiGaMACROs.h"
@@ -11,7 +14,7 @@
 // Geant4 
 #include "G4LogicalVolume.hh"
 #include "G4LogicalVolumeStore.hh"
-#include "G4UserLimits.hh"
+#include "GaussG4UserLimits.h"
 // local
 #include "GiGaSetSimAttributes.h"
 // ============================================================================
@@ -158,36 +161,36 @@ StatusCode GiGaSetSimAttributes::process ( const std::string& vol ) const
   if ( 0 == g4lv )  
     { return Error( " process('" + vol + "'): G4LogicalVolume* is invalid" ) ; }
   
-  if( !simSvc()->hasSimAttribute( vol ) ) { return StatusCode::SUCCESS ; }
-  
-  SimAttribute attr   = simSvc() -> simAttribute( vol );
-  
-  // instanciate G4UserLimits
-  G4UserLimits*      ulimit = new G4UserLimits();
-  
-  // set max allowed step
-  if( -1 != attr.maxAllowedStep () ) 
-    { ulimit -> SetMaxAllowedStep     ( attr.maxAllowedStep () ) ; }
-  
-  // set max track length
-  if( -1 != attr.maxTrackLength () )
-    { ulimit -> SetUserMaxTrackLength ( attr.maxTrackLength () ) ; }
-  
-  // set max time
-  if( -1 != attr.maxTime        () )
-    { ulimit -> SetUserMaxTime        ( attr.maxTime        () ) ; }    
-  
-  // set minimum kinetic energy
-  if( -1 != attr.minEkine       () )
-    { ulimit -> SetUserMinEkine       ( attr.minEkine       () ) ; }
-  
-  // set minimum range
-  if( -1 != attr.minRange       () )
-    { ulimit -> SetUserMinRange       ( attr.minRange       () ) ; }
-  
-  // attach user limits to the given G4 volume
-  g4lv -> SetUserLimits( ulimit ) ;
-  
+  if(simSvc()->hasSimAttribute(vol)) 
+    {
+      SimAttribute attr = simSvc() -> simAttribute( vol );
+      
+      // instanciate GaussG4UserLimits
+      GaussG4UserLimits* ulimit = new GaussG4UserLimits("GaussG4UserLimits");
+      
+      // set max allowed step
+      if( -1 != attr.maxAllowedStep() ) 
+        { ulimit -> SetMaxAllowedStep(attr.maxAllowedStep(),0); }
+      
+      // set max track length
+      if( -1 != attr.maxTrackLength() )
+        { ulimit -> SetUserMaxTrackLength(attr.maxTrackLength(),0); }
+      
+      // set max time
+      if( -1 != attr.maxTime() )
+        { ulimit -> SetUserMaxTime(attr.maxTime(),0); }    
+      
+      // set minimum kinetic energy
+      if( -1 != attr.minEkine() )
+        { ulimit -> SetUserMinEkine(attr.minEkine(),0); }
+      
+      // set minimum range
+      if( -1 != attr.minRange() )
+        { ulimit -> SetUserMinRange(attr.minRange(),0); }
+      
+      // attach user limits to the given G4 volume
+      g4lv -> SetUserLimits(ulimit) ;
+    }
   return StatusCode::SUCCESS ;
 };
   

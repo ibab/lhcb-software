@@ -1,8 +1,11 @@
-// $Id: GaussTools_load.cpp,v 1.6 2003-04-09 12:05:58 witoldp Exp $
+// $Id: GaussTools_load.cpp,v 1.7 2003-04-11 17:55:36 witoldp Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.6  2003/04/09 12:05:58  witoldp
+// change of name of GiGaTrackAction
+//
 // Revision 1.5  2003/04/06 19:07:33  ibelyaev
 //  update foe newer GiGa, add new tools
 //
@@ -64,6 +67,7 @@ void GaussTools_load()
   /// run action
   DECLARE_GiGaFactory     (    GiGaRunActionSequence   ) ;
   DECLARE_GiGaFactory     (    GiGaRunActionCommand    ) ;
+  DECLARE_GiGaFactory     (    TrCutsRunAction         ) ;
 
   /// event action 
   DECLARE_GiGaFactory     (    GiGaEventActionEmpty    ) ;
