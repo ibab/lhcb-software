@@ -1,5 +1,8 @@
 # =========================================================================	
 # $Log: not supported by cvs2svn $
+# Revision 1.16  2001/12/09 14:16:17  ibelyaev
+#  update for newer version of Gaudi
+#
 # Revision 1.15  2001/11/25 15:08:46  ibelyaev
 #  update for newer CaloKernel Package
 #
@@ -21,7 +24,7 @@
 # =========================================================================	
 
 package  CaloDet 
-version  v3
+version  v3r0
 
 # =============== structure ===============================================	
 branches         src cmt doc options CaloDet 
@@ -31,7 +34,7 @@ include_dirs      $(CALODETROOT)
 
 # =============== used packages ===========================================
 use CaloKernel   v1r*  Calo 
-use DetDesc      v9*  Det 
+use DetDesc      v9r*  Det 
 
 # =============== own options ==========================================
 set CALODETOPTS  ${CALODETROOT}/options

@@ -1,4 +1,12 @@
+// $Id: CaloDet_load.cpp,v 1.3 2001-12-15 18:28:17 ibelyaev Exp $ 
+// ============================================================================
+// CVS tag $Name: not supported by cvs2svn $ 
+// ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2001/06/29 10:26:18  ibelyaev
+// update to use new features of DetDesc v7 package
+// ============================================================================
+//
 #define CALODET_CALODETLOAD_CPP 1 
 
 //====================================================================
@@ -17,15 +25,9 @@
 #include "GaudiKernel/ISvcFactory.h"
 #include "GaudiKernel/IAlgFactory.h"
 
-///
-///
-/// TMP: all object businedd  should go to LHCbEvent! 
-///
 #include "GaudiKernel/ObjectFactory.h"
 #include "GaudiKernel/ObjectVector.h"
 #include "GaudiKernel/ObjectList.h"
-
-
 
 #define DLL_DECL_SERVICE(x)    extern const ISvcFactory& x##Factory; x##Factory.addRef();
 #define DLL_DECL_CONVERTER(x)  extern const ICnvFactory& x##Factory; x##Factory.addRef();
@@ -38,7 +40,6 @@ _ImplementDataObjectFactory( DeCalorimeter    ) ;
 #include "CaloDet/DeSubCalorimeter.h"
 _ImplementDataObjectFactory( DeSubCalorimeter ) ;
 
-
 void CaloDet_load() 
 {
   
@@ -49,9 +50,15 @@ void CaloDet_load()
   /// Object factories 
   DLL_DECL_OBJECTFACTORY( DeCalorimeter    ) ; 
   DLL_DECL_OBJECTFACTORY( DeSubCalorimeter ) ; 
+
+  DLL_DECL_ALGORITHM(  CaloDetTestAlgorithm ) ;
   
-}
+};
+
 
 extern "C" void CaloDet_loadRef()     {  CaloDet_load(); }
 
+// ============================================================================
+// The End 
+// ============================================================================
 
