@@ -41,6 +41,8 @@ DstWriter.ItemList =
 , "/Event/Raw/Ecal#1"
 , "/Event/Raw/Hcal#1"
 , "/Event/Raw/Velo#1"
+, "/Event/Raw/IT#1"
+, "/Event/Raw/OT#1"
 , "/Event/Rec#1"
 , "/Event/Rec/Status#1"
 , "/Event/Rec/IT#1"
