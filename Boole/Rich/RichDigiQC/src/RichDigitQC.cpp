@@ -5,7 +5,7 @@
  *  Implementation file for RICH Digitisation Quality Control algorithm : RichDigitQC
  *
  *  CVS Log :-
- *  $Id: RichDigitQC.cpp,v 1.11 2005-02-20 20:31:36 jonrob Exp $
+ *  $Id: RichDigitQC.cpp,v 1.12 2005-02-20 20:32:48 jonrob Exp $
  *
  *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
  *  @date   2003-09-08
@@ -103,16 +103,17 @@ StatusCode RichDigitQC::execute()
   }
 
   // Get total number of hits in each event
+  //------------------------------------------------------------------------------
   for ( std::map<std::string,bool>::const_iterator iC = locations.begin(); iC != locations.end(); ++iC )
   {
-    //if ( exist<MCRichHits>( (*iC).first ) )
-    //{
-    MCRichHits * hits = get<MCRichHits>( (*iC).first );
-    for ( MCRichHits::const_iterator iH = hits->begin(); iH != hits->end(); ++iH )
+    if ( exist<MCRichHits>( (*iC).first ) )
     {
-      ++(m_totalSpills[(*iH)->rich()])[(*iC).first];
+      MCRichHits * hits = get<MCRichHits>( (*iC).first );
+      for ( MCRichHits::const_iterator iH = hits->begin(); iH != hits->end(); ++iH )
+      {
+        ++(m_totalSpills[(*iH)->rich()])[(*iC).first];
+      }
     }
-    //}
   }
 
   // count events
