@@ -20,7 +20,7 @@ use CaloPIDs		v2r4	Calo
 
 # Inner Tracker
 use ITAlgorithms        v14r4	IT
-use ITCheckers          v2r3	IT
+use ITCheckers          v2r4	IT
 
 # Outer Tracker
 use OTMonitor           v1r1	OT
