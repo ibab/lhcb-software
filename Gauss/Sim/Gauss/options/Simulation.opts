@@ -1,4 +1,4 @@
-// $Id: Simulation.opts,v 1.35 2003-08-13 14:46:03 witoldp Exp $ 
+// $Id: Simulation.opts,v 1.36 2003-08-19 10:00:33 witoldp Exp $ 
 
 ////////////////////////////////////////////////////////////////////
 // configuration of services
@@ -37,12 +37,12 @@ EventPersistencySvc.CnvServices +=
   "GiGaHits" } ;
 
 Simulation.Members += 
-{	"GiGaDataStoreAlgorithm/GiGaStore" ,   // data store configuration
+{ "GiGaDataStoreAlgorithm/GiGaStore" ,   // data store configuration
   "GiGaInputStream/Geo"              ,   // load the geometry 
-  "GiGaInputStream/Kine"                // load the kinematics 
-//, "GiGaFlushAlgorithm/GiGaFlush"       // flush the event 
-  ,"PrintEventAlg"                    ,   // get MCParticles/MCVertices
-  "GetGiGaHitsAlg/GetHits"          // get MCHits
+  "GiGaInputStream/Kine"                 // load the kinematics 
+//, "GiGaFlushAlgorithm/GiGaFlush"         // flush the event 
+//, "PrintEventAlg"                        // get MCParticles/MCVertices
+//, "GetGiGaHitsAlg/GetHits"               // get MCHits
 };
 
 // configuration of GiGa Data Store 
@@ -103,7 +103,7 @@ GiGa.RunSeq.Members           += { "TrCutsRunAction/TrCuts"};
 GiGa.RunSeq.Members           += { "GiGaRunActionCommand/RunCommand" } ;
 GiGa.RunSeq.RunCommand.BeginOfRunCommands     = 
 { "/control/saveHistory "           ,
-  "/run/verbose 1 "               ,
+  "/run/verbose 0 "               ,
   "/tracking/verbose 0"            ,
   "/geometry/navigator/verbose 0",
   "/tracking/storeTrajectory  1"    } ;

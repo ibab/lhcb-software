@@ -1,9 +1,9 @@
-// $Id: GaussTape.opts,v 1.11 2003-07-15 14:12:46 witoldp Exp $ 
+// $Id: GaussTape.opts,v 1.12 2003-08-19 10:00:33 witoldp Exp $ 
 
 /// create and add the output stream 
 ApplicationMgr.OutStream +=  { "GaussTape" };
 
-/// content of CaloDstTape
+/// content of Gauss.oosim 
 GaussTape.ItemList = 
   {  
     // event Header
@@ -43,14 +43,53 @@ GaussTape.OptItemList =
     ,"/Event/MC/Ecal/Hits#1"
     ,"/Event/MC/Hcal#1"
     ,"/Event/MC/Hcal/Hits#1"
-    ,"/Event/MC/Muon#1"
-    ,"/Event/MC/Muon/M1#3"
-    ,"/Event/MC/Muon/M2#3"
-    ,"/Event/MC/Muon/M3#3"
-    ,"/Event/MC/Muon/M4#3"
-    ,"/Event/MC/Muon/M5#3"
+    ,"/Event/MC/Muon#1"          // all the leaves must be explicitely specified in order to trigger the conversion of hits
+    ,"/Event/MC/Muon/M1#1"
+    ,"/Event/MC/Muon/M1/R1#1"
+    ,"/Event/MC/Muon/M1/R2#1"
+    ,"/Event/MC/Muon/M1/R3#1"
+    ,"/Event/MC/Muon/M1/R4#1"
+    ,"/Event/MC/Muon/M1/R1/Hits#1"
+    ,"/Event/MC/Muon/M1/R2/Hits#1"
+    ,"/Event/MC/Muon/M1/R3/Hits#1"
+    ,"/Event/MC/Muon/M1/R4/Hits#1"
+    ,"/Event/MC/Muon/M2#1"
+    ,"/Event/MC/Muon/M2/R1#1"
+    ,"/Event/MC/Muon/M2/R2#1"
+    ,"/Event/MC/Muon/M2/R3#1"
+    ,"/Event/MC/Muon/M2/R4#1"
+    ,"/Event/MC/Muon/M2/R1/Hits#1"
+    ,"/Event/MC/Muon/M2/R2/Hits#1"
+    ,"/Event/MC/Muon/M2/R3/Hits#1"
+    ,"/Event/MC/Muon/M2/R4/Hits#1"
+    ,"/Event/MC/Muon/M3#1"
+    ,"/Event/MC/Muon/M3/R1#1"
+    ,"/Event/MC/Muon/M3/R2#1"
+    ,"/Event/MC/Muon/M3/R3#1"
+    ,"/Event/MC/Muon/M3/R4#1"
+    ,"/Event/MC/Muon/M3/R1/Hits#1"
+    ,"/Event/MC/Muon/M3/R2/Hits#1"
+    ,"/Event/MC/Muon/M3/R3/Hits#1"
+    ,"/Event/MC/Muon/M3/R4/Hits#1"
+    ,"/Event/MC/Muon/M4#1"
+    ,"/Event/MC/Muon/M4/R1#1"
+    ,"/Event/MC/Muon/M4/R2#1"
+    ,"/Event/MC/Muon/M4/R3#1"
+    ,"/Event/MC/Muon/M4/R4#1"
+    ,"/Event/MC/Muon/M4/R1/Hits#1"
+    ,"/Event/MC/Muon/M4/R2/Hits#1"
+    ,"/Event/MC/Muon/M4/R3/Hits#1"
+    ,"/Event/MC/Muon/M4/R4/Hits#1"
+    ,"/Event/MC/Muon/M5#1"
+    ,"/Event/MC/Muon/M5/R1#1"
+    ,"/Event/MC/Muon/M5/R2#1"
+    ,"/Event/MC/Muon/M5/R3#1"
+    ,"/Event/MC/Muon/M5/R4#1"
+    ,"/Event/MC/Muon/M5/R1/Hits#1"
+    ,"/Event/MC/Muon/M5/R2/Hits#1"
+    ,"/Event/MC/Muon/M5/R3/Hits#1"
+    ,"/Event/MC/Muon/M5/R4/Hits#1"
   };
 
 GaussTape.PreLoad     = false ; // ATTENTION ! it MUST be FALSE for GiGa! 
-GaussTape.OutputLevel = 3;
-
+GaussTape.OutputLevel = 6;

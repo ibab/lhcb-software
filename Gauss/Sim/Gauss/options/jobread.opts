@@ -16,7 +16,7 @@ ApplicationMgr.ExtSvc     +=
 };
 
 ApplicationMgr.ExtSvc     += {"DbEventCnvSvc/RootEvtCnvSvc"};
-ParticlePropertySvc.ParticlePropertiesFile = "$GAUSSROOT/data/particle.cdf" ;
+ParticlePropertySvc.ParticlePropertiesFile = "$PARAMFILESROOT/data/particle.cdf" ;
 
 EventPersistencySvc.CnvServices += { "RootEvtCnvSvc" };
 RootEvtCnvSvc.DbType = "ROOT";

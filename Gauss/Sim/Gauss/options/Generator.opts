@@ -1,13 +1,17 @@
-// $Id: Generator.opts,v 1.23 2003-08-18 14:26:47 witoldp Exp $ 
+// $Id: Generator.opts,v 1.24 2003-08-19 10:00:33 witoldp Exp $ 
 
 ApplicationMgr.DLLs += { "GeneratorModules" } ;
 
+// to use particle gun, uncomment the line below and comment out the other generators
 //Generator.Members += {"ParticleGun"};
 
 Generator.Members += {"PythiaAlg"};
 Generator.Members += {"SetDecayAlg","EvtDecayAlg"};
 Generator.Members += {"SmearVertexAlg"};
 //Generator.Members += {"DumpMC"};
+
+// any Pythia commands (flags) should be specified in the following form:
+//PythiaAlg.PythiaCommand = {"pyinit pylisti 11", "pyinit dumpr 1 100", "pyinit pylistf 1"};
 
 // Particle Gun's options
 //ParticleGun.xVertex = 6.15949;	
@@ -28,7 +32,6 @@ ParticleGun.Mode=0;
 // and specify the alternative file name (not to be confused with the user decay file)
 //EvtDecayAlg.DecayFile = "$GAUSSROOT/data/decay.dec";
 
-//PythiaAlg.PythiaCommand = {"pyinit pylisti 11", "pyinit dumpr 1 100", "pyinit pylistf 1"};
 
 // in order to generate specific decays put below the following line:
 // #include "$DECFILESROOT/options/event_type.opts" with event_type replaced by the
