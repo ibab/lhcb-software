@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE gdd SYSTEM "gdd.dtd">
+ 
+<gdd>
+  <package name="GenEvent">
+    <import name="HepMC/GenEvent"/>
+    <class name="HepMCEvent"
+      author="W. Pokorski"
+      desc="initial coding April 02 (based on ATLAS code)"
+      location="Gen/HepMCEvents"
+      id="2201" >
+      <base name="KeyedObject&lt;int&gt;"/>
+      <attribute
+        desc="HepMC generator event"
+        name="pGenEvt"
+        type="HepMC::GenEvent*" />
+ 
+      <attribute
+        desc="Generator Name"
+        name="generatorName"
+        type="std::string" />
+        
+      <method
+        desc="Assignment operator"
+        name="operator="
+        type="HepMCEvent&amp;"
+        argList="const HepMCEvent evt" />
+       
+      <method
+        name="serialize"
+        type="StreamBuffer&amp;"
+        argList="const HepMCEvent evt"
+        const="TRUE"
+        desc="Serialize out" />
+       
+      <method
+        name="serialize"
+        type="StreamBuffer&amp;"
+        argList="const HepMCEvent evt"
+        desc="Serialize in" />
+    
+     </class>
+  </package>
+</gdd>
