@@ -3,13 +3,6 @@ version v1r1
 
 branches doc cmt src job options
 
-ignore_pattern package_stamps
-
-# Set the default paths for DaVinci job options
-set JOBOPTPATH  ${DAVINCIROOT}/options/DaVinci.opts
-
-# Next line to force static build to go into LinuxStatic directory
-ignore_pattern package_tag
 version_strategy first_choice
 
 # Gaudi Configuration options
@@ -66,6 +59,7 @@ use SicbCnv      v13*  SICB
 use DaVinciTools  v1*  Phys
 #
 #===== build DaVinci =========================
+set EXEC DaVinci
 application DaVinci $(GAUDICONFROOT)/src/GaudiMain.cpp \
                     ../src/*.cpp \
                     ../src/*.F 

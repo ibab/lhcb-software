@@ -13,7 +13,7 @@
 #
 #
 #  define the job name
-#BSUB -J davinci
+#BSUB -J myjob
 #  define the queue
 #BSUB -q z5_1nh
 #
@@ -24,41 +24,157 @@
 # in INTERACTIVE output files are written onto $WORKDIR
 # you have to set $WORKDIR to what you want
 #
-
+set MODE = $CMTCONFIG
 if ($?LS_SUBCWD) then 
 # in BATCH go to the BATCH local directory
   cd $WORKDIR
 else
 # in interactive set WORKDIR to your output directory
-  setenv WORKDIR /tmp
+  setenv WORKDIR $HOME/w1
+  if ($#argv == 1) set MODE = "$1" 
 endif
 #
 # == set the root directory of your job
-setenv MYJOBROOT $HOME/newmycmt/Phys/DaVinci/v1
+setenv MYJOBROOT $LHCBNEW/Phys/DaVinci/v1r1
 # == reset the dynamic library search path
 unsetenv LD_LIBRARY_PATH
 # == set the program environment
-source $MYJOBROOT/cmt/setup.csh
-#
-# == reset jobOptions if different from what set in requirements file
-# setenv JOBOPTPATH $DAVINCIROOT/options/DaVinci.opts
-# == set the name of the executable
-setenv EXEC DaVinci
+source $MYJOBROOT/cmt/setup.csh -tag=$MODE
+# == set soft_links to use packages
+$CMTROOT/mgr/cmt build library_links
+# == to run another executable
+# setenv EXEC anotherexec
 #
 # == in batch copy the executable,======================================= 
-#    in interactive create a link to the executable you want to run =====
+#    in interactive create a link to the executable you want to run =======
 #
 if ($?LS_SUBCWD) then
-  cp $MYJOBROOT/$CMTCONFIG/$EXEC.exe tmpjob.exe
-  cp $JOBOPTPATH DaVinci.opts
-  setenv JOBOPTPATH DaVinci.opts
+  cp $MYJOBROOT/$DAVINCICONFIG/$EXEC.exe tmpjob.exe
 else
-  ln -fs $MYJOBROOT/$CMTCONFIG/$EXEC.exe tmpjob.exe
+  ln -fs $MYJOBROOT/$DAVINCICONFIG/$EXEC.exe tmpjob.exe
 endif
+#
+#==  create temporary joboptions file ==================
+#
+#
+cat >! tmpjob.opts<<EOF
+//##############################################################
+// Default DaVinci job Options
+//
+// This file defines, sequences and configures the algorithms 
+// to be executed
+//==============================================================
+// Standard Gaudi configuration and additional DLLs are in 
+// DaVinciCommon.opts
+//--------------------------------------------------------------
+#include "$DAVINCIROOT/options/DaVinciCommon.opts"
+
+//--------------------------------------------------------------
+// Histogram persistency 
+// Hbook or Root are available, uncomment the one you want to use
+// Keep in mind that the hbook file referred to here contains 
+// all the C++ generated histograms, not those filled in Fortran
+//--------------------------------------------------------------
+// #include "$STDOPTS/Hbook.opts"
+// #include "$STDOPTS/RootHist.opts"
+// HistogramPersistencySvc.OutputFile = "Histos.hbook";
+// HistogramPersistencySvc.OutputFile = "Histos.rt";
+
+//--------------------------------------------------------------
+// No Ntuples by default. Uncomment to switch on
+//--------------------------------------------------------------
+// ApplicationMgr.ExtSvc += { "NTupleSvc" };
+// NTupleSvc.Output={"FILE1 DATAFILE='Ntuples.hbook' TYP='HBOOK' OPT='NEW'"};
+// NTupleSvc.Output={"FILE1 DATAFILE='Ntuples.rt' TYP='ROOT' OPT='NEW'"};
+
+//--------------------------------------------------------------
+// Set up some profiling. Enable/Disable setting lines below to true/false
+//--------------------------------------------------------------
+AuditorSvc.Auditors  = { "NameAuditor", "ChronoAuditor", "MemoryAuditor" };
+NameAuditor.Enable   = false;
+ChronoAuditor.Enable = true;
+MemoryAuditor.Enable = false;
+
+//--------------------------------------------------------------
+// DaVinci Algorithms to be always executed as the first one
+//--------------------------------------------------------------
+ApplicationMgr.TopAlg = { "DaVinciInitialisation" };
+
+//--------------------------------------------------------------
+// Other additional algorithms to be executed, from public 
+// or private code.
+// >>>>>>>>>>>> To be customized for a specific job <<<<<<<<<<<<
+//--------------------------------------------------------------
+//ApplicationMgr.TopAlg += { "AxPrimVertexAlgorithm" };
+ApplicationMgr.TopAlg += { "PhysSelectAlgorithm" };
+ApplicationMgr.TopAlg += { "DaVinciTestAlgorithm" }; 
+
+//--------------------------------------------------------------
+// DaVinci Algorithms to be always executed as the last one,
+// the fortran suanal is called in here 
+//--------------------------------------------------------------
+ApplicationMgr.TopAlg += { "DaVinciFinalisation" };
+
+//--------------------------------------------------------------
+// Uncomment the following line if you want static version
+//--------------------------------------------------------------
+//ApplicationMgr.DLL = {"NONE"};
+
+//-----------------------------------------------------------------
+// Default options for algorithms and tools in DaVinciTools library
+// you can overwrite any of the default options
+//-----------------------------------------------------------------
+#include "$DAVINCITOOLSROOT/options/DaVinciTools.opts"
+//PhysSelectAlgorithm.DecayName    = "B0JM";
+//PhysSelectAlgorithm.CutsFileName = "$AXSELLIBROOT/cdf/seldecay.cdf";
+PhysSelectAlgorithm.Histograms   = 1;
+
+//-----------------------------------------------------------------
+// Private algorithms options
+//-----------------------------------------------------------------
+DaVinciTestAlgorithm.SearchParticle       = "B0";
+DaVinciTestAlgorithm.PhysSelDecayChannel  = "B0PP";
+
+//--------------------------------------------------------------
+// Set output level thresholds (2=DEBUG, 3=INFO, 4=WARNING, 5=ERROR, 6=FATAL )
+//--------------------------------------------------------------
+MessageSvc.OutputLevel = 3;
+ToolSvc.OutputLevel    = 3;
+//DaVinciTestAlgorithm.OutputLevel        = 2;
+//AxPrimaryVertexAlgorithm.OutputLevel    = 2;
+//PhysSelectAlgorithm.OutputLevel         = 2;
+
+//---------------------------------------------------------------
+// Number of events to process, skip and printing frequency
+//---------------------------------------------------------------
+ApplicationMgr.EvtMax = 500;
+//EventSelector.FirstEvent = 6;
+//EventSelector.PrintFreq = 1;
+ 
+  
+//---------------------------------------------------------------
+// Examples of input data
+//---------------------------------------------------------------
+// B->pi+pi-, Brunel v4
+EventSelector.Input = {"JOBID='59573'"};
+//
+// B->pi+pi-, SICBDST v235
+//EventSelector.Input = {"FILE='$SITEROOT/lhcb/data/mc/sicb_bpipi_v233_100ev.dst1'"};
+// B->J/Psi(mu+mu-) Ks(pi+pi-), SICBDST v235r1
+//EventSelector.Input = {"JOBID='45904'"};
+//EventSelector.Input = {"FILE='/castor/cern.ch/lhcb/mc/D223226'"};
+//################################################################
+
+EOF
+
 #
 # == run $EXEC.exe ============================================
 #
-tmpjob.exe 
+if ($MODE == "Linuxdbx") then
+  ddd tmpjob.exe tmpjob.opts
+else
+  time tmpjob.exe tmpjob.opts
+endif
 
 # == job is finished: remove temporary files ==========
 rm tmp*
@@ -70,6 +186,8 @@ if ($?LS_SUBCWD) then
 endif
 
 exit 0
+
+
 
 
 
