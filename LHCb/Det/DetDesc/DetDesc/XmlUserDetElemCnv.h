@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/DetDesc/XmlUserDetElemCnv.h,v 1.4 2001-07-02 14:11:01 sponce Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/DetDesc/XmlUserDetElemCnv.h,v 1.5 2001-10-17 13:12:43 sponce Exp $
 
 #ifndef DDEXAMPLE_XMLUSERDETELEMCNV_H
 #define DDEXAMPLE_XMLUSERDETELEMCNV_H 1
@@ -101,8 +101,8 @@ XmlUserDetElemCnv<DeType>::XmlUserDetElemCnv (ISvcLocator* svc)
 // Create an object corresponding to a DOM element
 // -----------------------------------------------------------------------
 template <class DeType>
-StatusCode XmlUserDetElemCnv<DeType>::i_createObj(DOM_Element element,
-                                                  DataObject*& refpObject) {
+StatusCode XmlUserDetElemCnv<DeType>::i_createObj(DOM_Element /*element*/,
+                                                  DataObject*& /*refpObject*/) {
   MsgStream log(msgSvc(), "XmlUserDetElemCnv" );
   log << MSG::DEBUG << "entering i_createObj" << endreq;
   
@@ -130,8 +130,8 @@ XmlUserDetElemCnv<DeType>::i_fillSpecificObj (DOM_Element childElement,
 // ------------------------------------------------------------------------
 template <class DeType>
 StatusCode
-XmlUserDetElemCnv<DeType>::i_fillSpecificObj (DOM_Element childElement,
-                                              DeType* dataObj) {
+XmlUserDetElemCnv<DeType>::i_fillSpecificObj (DOM_Element /*childElement*/,
+                                              DeType* /*dataObj*/) {
   return StatusCode::SUCCESS;
 }
 
