@@ -1,3 +1,0 @@
-
-// Build links between RichDigits and MCRichDigits
-ApplicationMgr.TopAlg += { "BuildMCRichDigitLinks/RichBuildMCLinks" };

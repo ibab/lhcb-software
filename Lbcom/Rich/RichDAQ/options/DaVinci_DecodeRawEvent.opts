@@ -1,3 +1,0 @@
-
-// Build RichDigits from HltEvent
-ApplicationMgr.TopAlg += { "RawBufferToRichDigitsAlg/RichDecodeRawEvent" };
