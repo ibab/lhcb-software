@@ -1,8 +1,9 @@
-! $Id: release.notes,v 1.66 2004-02-14 08:34:46 robbep Exp $
+! $Id: release.notes,v 1.67 2004-02-17 15:11:48 ranjard Exp $
 ! =============================================================================
 Package         : GiGaCnv
 Package Manager : Vanya Belyaev Ivan.Belyaev@itep.ru
 
+!======================== GiGaCnv v14r2 ==============================
 ! 2004-02-14 - Patrick Robbe
  - GiGaPrimaryParticleInformation : class deriving from 
    G4VUserPrimaryParticleInformation to pass the information on mixing
