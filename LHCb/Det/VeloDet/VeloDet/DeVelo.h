@@ -1,4 +1,4 @@
-// $Id: DeVelo.h,v 1.23 2004-12-03 17:48:37 dhcroft Exp $
+// $Id: DeVelo.h,v 1.24 2005-03-04 16:57:05 cattanem Exp $
 #ifndef       VELODET_DEVELO_H
 #define       VELODET_DEVELO_H 1
 // ============================================================================
@@ -15,7 +15,7 @@
  *  Velo detector element class.
  *
  *  @author David Hutchcroft David.Hutchcroft@cern.ch
- *  @Date 22/4/2003
+ *  @date 22/4/2003
  */
 
 static const CLID& CLID_DeVelo = 8100; 
