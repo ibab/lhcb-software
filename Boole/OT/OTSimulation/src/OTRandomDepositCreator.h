@@ -1,8 +1,8 @@
-// $Id: OTRandomDepositCreator.h,v 1.1 2004-09-10 13:14:23 cattanem Exp $
+// $Id: OTRandomDepositCreator.h,v 1.2 2004-11-10 13:05:14 jnardull Exp $
 #ifndef OTSIMULATION_OTRANDOMDEPOSITCREATOR_H 
 #define OTSIMULATION_OTRANDOMDEPOSITCREATOR_H 1
 
-#include "GaudiKernel/AlgTool.h"
+#include "GaudiAlg/GaudiTool.h"
 #include "GaudiKernel/SmartIF.h"
 #include "OTSimulation/IOTRandomDepositCreator.h"
 
@@ -22,7 +22,7 @@ class DeOTDetector;
  *  @date   28/02/2003
  */
 
-class OTRandomDepositCreator : public AlgTool, 
+class OTRandomDepositCreator : public GaudiTool, 
                                virtual public IOTRandomDepositCreator {
 
 public:

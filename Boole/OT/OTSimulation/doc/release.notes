@@ -1,6 +1,9 @@
-! $Id: release.notes,v 1.3 2004-10-28 15:23:39 cattanem Exp $
+! $Id: release.notes,v 1.4 2004-11-10 13:05:14 jnardull Exp $
 Package         : OTSimulation
 Package manager : J. van Tilburg and Jacopo Nardulli
+
+! 2004-11-09 - Jacopo Nardulli
+ - Move to the New Gaudi Base Classes
 
 !==================== OTSimulation v1r1 2004-10-26 ======================
 ! 2004-10-26 - Marco Cattaneo

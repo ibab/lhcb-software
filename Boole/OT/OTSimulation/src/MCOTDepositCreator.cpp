@@ -1,8 +1,7 @@
-// $Id: MCOTDepositCreator.cpp,v 1.2 2004-09-10 13:14:22 cattanem Exp $
+// $Id: MCOTDepositCreator.cpp,v 1.3 2004-11-10 13:05:14 jnardull Exp $
 
 // Gaudi
 #include "GaudiKernel/xtoa.h" // needed for toolName()
-#include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/AlgFactory.h"
 #include "GaudiKernel/SmartDataPtr.h"
 #include "GaudiKernel/IDataProviderSvc.h"
@@ -42,7 +41,7 @@ const IAlgFactory& MCOTDepositCreatorFactory = s_Factory;
 
 MCOTDepositCreator::MCOTDepositCreator(const std::string& name,
                                        ISvcLocator* pSvcLocator) :
-  Algorithm(name, pSvcLocator),
+  GaudiAlgorithm(name, pSvcLocator),
   m_tempDeposits(0)
 {
   // constructor 
@@ -87,19 +86,13 @@ StatusCode MCOTDepositCreator::initialize()
 
   // sanity checks
   if  (m_spillVector.size() == 0) {
-    MsgStream msg(msgSvc(), name());
-    msg << MSG::ERROR << "No spills selected to be digitized !" 
-        << endreq;
-    return StatusCode::FAILURE;
+    return Error ("No spills selected to be digitized !");
   }
   
   // Loading OT Geometry from XML
   SmartDataPtr<DeOTDetector> tracker( detSvc(), "/dd/Structure/LHCb/OT" );
   if ( !tracker ) {
-    MsgStream msg(msgSvc(), name());
-    msg << MSG::ERROR << "Unable to retrieve Tracker detector element"
-        << " from xml." << endreq;
-    return StatusCode::FAILURE;
+    return Error ( "Unable to retrieve Tracker detector element from xml");
   }
   m_tracker = tracker;
   m_numStations = m_tracker->numStations();
@@ -116,9 +109,7 @@ StatusCode MCOTDepositCreator::initialize()
     // get tool
     sc = toolSvc()->retrieveTool("OTEffCalculator",aName,aSingleCellEff,this);
     if( sc.isFailure() ) {
-      MsgStream msg(msgSvc(), name());
-      msg << MSG::FATAL << " Unable to create OTEffCalculator tool" << endreq;
-      return sc;
+      return Error (" Unable to create OTEffCalculator tool",sc);
     }
     // add tool to vector
     m_singleCellEffVector.push_back(aSingleCellEff);
@@ -132,9 +123,7 @@ StatusCode MCOTDepositCreator::initialize()
     // get tool
     sc = toolSvc()->retrieveTool("OTSmearer",aName,aSmearer,this);
     if( sc.isFailure() ) {
-      MsgStream msg(msgSvc(), name());
-      msg << MSG::FATAL << " Unable to create OTSmearer tool" << endreq;
-      return sc;
+      return Error ( " Unable to create OTSmearer tool",sc);     
     }
     else {
       // add tool to vector
@@ -150,9 +139,7 @@ StatusCode MCOTDepositCreator::initialize()
     // get tool
     sc = toolSvc()->retrieveTool("OTrtRelation",aName,aRTrelation,this);
     if( sc.isFailure() ) {
-      MsgStream msg(msgSvc(), name());
-      msg << MSG::FATAL << " Unable to create  tool OTrtRelation" << endreq;
-      return sc;
+      return Error ( " Unable to create  tool OTrtRelation");
     }
       // add tool to vector
     m_rtRelationVector.push_back(aRTrelation);   
@@ -161,19 +148,14 @@ StatusCode MCOTDepositCreator::initialize()
   // flat rand dist for crosstalk
   sc = m_flatDist.initialize( randSvc(), Rndm::Flat(0.0,1.0));
   if ( !sc.isSuccess() ) {
-    MsgStream msg(msgSvc(), name());
-    msg << MSG::FATAL 
-        << "Unable to initialize rdnm Service" << endreq;
-    return sc;
+    return Error ( "Unable to initialize rdnm Service",sc);
   }
 
   // Read out window tool
   IOTReadOutWindow* aReadOutWindow = 0;
   sc = toolSvc()->retrieveTool("OTReadOutWindow",aReadOutWindow);
   if( !sc.isSuccess() ) {
-    MsgStream msg(msgSvc(), name());
-    msg << MSG::FATAL << " Unable to create OTReadOutWindow tool" << endreq;
-    return sc;
+    return Error (" Unable to create OTReadOutWindow tool",sc);
   }
   m_sizeOfReadOutGate = aReadOutWindow->sizeOfReadOutGate();
   m_startReadOutGate  = aReadOutWindow->startReadOutGate();
@@ -191,11 +173,8 @@ StatusCode MCOTDepositCreator::initialize()
   sc = toolSvc()->retrieveTool(m_noiseToolName,
                                m_noiseToolName, m_noiseTool, this);
   if( sc.isFailure() || 0 == m_noiseTool) {
-    MsgStream msg(msgSvc(), name());
-    msg << MSG::FATAL << " Unable to create noise tool" << endreq;
-    return sc;
+    return Error(" Unable to create noise tool",sc);
   }
-
   return StatusCode::SUCCESS;
 }
 
@@ -204,67 +183,64 @@ StatusCode MCOTDepositCreator::execute(){
   // execute once per event
   StatusCode sc;
 
-  // init the message service
-  MsgStream msg(msgSvc(), name());
-
   // make initial list of deposits
-  msg << MSG::DEBUG << "make digitizations from MCHits" << endreq;
+  msg () << "make digitizations from MCHits" <<  endreq;
   sc = makeDigitizations();
   if (sc.isFailure()){
-    msg << MSG::ERROR << "failed to make digitizations" << endreq;
+    msg ()<< "failed to make digitizations" << endreq;
     return StatusCode::FAILURE;
   }
 
   // single cell eff
-  msg << MSG::DEBUG << "deposits size before applying efficiency = " 
-      << m_tempDeposits->size() << endreq;
+  msg ()<< "deposits size before applying efficiency = " 
+           << m_tempDeposits->size() << endreq;
   sc = singleCellEff();
   if (sc.isFailure()){
-    msg << MSG::ERROR << "problems applying single cell eff" << endreq;
+    msg ()<< "problems applying single cell eff" << endreq;
     return StatusCode::FAILURE;
   }
-  msg << MSG::DEBUG << "deposits size after applying efficiency = " 
+   msg ()<< "deposits size after applying efficiency = " 
       << m_tempDeposits->size() << endreq;
 
   // smear
-  msg << MSG::DEBUG << "apply single cell smearing" << endreq;
+  msg () << "apply single cell smearing" << endreq;
   sc = applySmear();
   if (sc.isFailure()){
-    msg << MSG::ERROR << "problems applying single cell res smear" << endreq;
+    msg () <<"problems applying single cell res smear" << endreq;
     return StatusCode::FAILURE;
   }  
 
   // r-to-t
-  msg << MSG::DEBUG << "convert r-to t" << endreq;
+  msg () <<"convert r-to t" << endreq;
   sc = applyRTrelation();
   if (sc.isFailure()){
-    msg << MSG::ERROR << "problems applying single cell rt relation" << endreq;
+    msg () << "problems applying single cell rt relation" << endreq;
     return StatusCode::FAILURE;
   }  
 
   // add crosstalk
   if (m_addCrossTalk) {
-    msg << MSG::DEBUG << "deposits size before adding XTalk = "
-        << m_tempDeposits->size() << endreq;
+    msg ()<<"deposits size before adding XTalk = "
+             << m_tempDeposits->size() << endreq;
     sc = addCrossTalk();
     if (sc.isFailure()){
-      msg << MSG::ERROR << "problems applying crosstalk" << endreq;
+      msg ()<<"problems applying crosstalk" << endreq;
       return StatusCode::FAILURE;
     }  
-    msg << MSG::DEBUG << "deposits size after XTalk = " 
-        << m_tempDeposits->size() << endreq;
+    msg ()<<"deposits size after XTalk = " 
+             << m_tempDeposits->size() << endreq;
   }
 
   // add random noise
   if (m_addNoise) {
-    msg << MSG::DEBUG << "deposits size before adding noise = "
-        << m_tempDeposits->size() << endreq;
+    msg ()<< "deposits size before adding noise = "
+             << m_tempDeposits->size() << endreq;
     sc = addNoise();
     if (sc.isFailure()){
-      msg << MSG::ERROR << "problems applying noise" << endreq;
+      msg ()<<"problems applying noise" << endreq;
       return StatusCode::FAILURE;
     }  
-    msg << MSG::DEBUG << "deposits size after adding noise = " 
+    msg ()<<"deposits size after adding noise = " 
         << m_tempDeposits->size() << endreq;
   }
 
@@ -284,12 +260,11 @@ StatusCode MCOTDepositCreator::execute(){
   // store deposit container in EvDS
   sc = this->eventSvc()->registerObject(MCOTDepositLocation::Default, deposits);
   if (!sc.isSuccess()) {
-    msg << MSG::ERROR
-        << "Unable to store deposit container in EvDS (sc=" << sc.getCode() 
-        << ")" << endreq;
+    msg () << "Unable to store deposit container in EvDS (sc=" 
+              << sc.getCode() 
+              << ")" << endreq;
     return sc;
   }
-
   return StatusCode::SUCCESS;
 }
 
@@ -334,8 +309,7 @@ StatusCode MCOTDepositCreator::makeDigitizations()
 
     if ( !monteCarloTrackerHits ) {
       // failed to find hits
-      MsgStream msg(msgSvc(), name());
-      msg << MSG::DEBUG << "Unable to retrieve "+m_spillNames[iSpill] << endreq;
+      msg () <<"Unable to retrieve " +m_spillNames[iSpill] << endreq;
     }
     else {
       // found spill - create some digitizations and 

@@ -1,4 +1,4 @@
-// $Id: OTFillRawBuffer.h,v 1.1 2004-09-10 13:14:22 cattanem Exp $
+// $Id: OTFillRawBuffer.h,v 1.2 2004-11-10 13:05:14 jnardull Exp $
 #ifndef OTSIMULATION_OTFILLRAWBUFFER_H 
 #define OTSIMULATION_OTFILLRAWBUFFER_H 1
 
@@ -16,12 +16,12 @@
 #include "Event/DataWord.h"
 
 // from Gaudi
-#include "GaudiKernel/Algorithm.h"
+#include "GaudiAlg/GaudiAlgorithm.h"
 #include "GaudiKernel/AlgFactory.h"
-#include "GaudiKernel/MsgStream.h" 
 
 // Event
 #include "Kernel/OTChannelID.h"
+#include "Event/OTBankVersion.h"
 #include "Event/MCOTTime.h"
 #include "Event/RawBuffer.h"
 #include "Event/RawBank.h"
@@ -35,7 +35,7 @@
  *  @date   2004-01-09
  */
 
-class OTFillRawBuffer : public Algorithm 
+class OTFillRawBuffer : public GaudiAlgorithm 
 {
   
 

@@ -1,8 +1,7 @@
-// $Id: OTSmearer.cpp,v 1.2 2004-09-10 13:14:23 cattanem Exp $
+// $Id: OTSmearer.cpp,v 1.3 2004-11-10 13:05:14 jnardull Exp $
 
 // Gaudi files
 #include "GaudiKernel/ToolFactory.h"
-#include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/IRndmGenSvc.h"
 #include "GaudiKernel/RndmGenerators.h"
 #include "GaudiKernel/IMagneticFieldSvc.h"
@@ -35,7 +34,7 @@ const IToolFactory& OTSmearerFactory = s_factory;
 OTSmearer::OTSmearer(const std::string& type, 
                      const std::string& name, 
                      const IInterface* parent) : 
-  AlgTool( type, name, parent ),
+  GaudiTool( type, name, parent ),
   m_magFieldSvc(0)
 {
   declareInterface<IOTSmearer>(this);
@@ -62,42 +61,32 @@ StatusCode OTSmearer::initialize()
   IRndmGenSvc* randSvc = 0;
   StatusCode sc = serviceLocator()->service( "RndmGenSvc", randSvc, true ); 
   if( sc.isFailure() ) {
-    MsgStream msg(msgSvc(), name());
-    msg << MSG::ERROR << "Failed to retrieve random number service" << endreq;
-    return sc;
+    return Error ("Failed to retrieve random number service",sc);
   }  
 
   // get interface to generator
   sc = randSvc->generator(Rndm::Gauss(0.,1.0),m_genDist.pRef()); 
   if( sc.isFailure() ) {
-    MsgStream msg(msgSvc(), name());
-    msg << MSG::ERROR << "Failed to generate random number distribution" 
-        << endreq;
-    return sc;
+    return Error ("Failed to generate random number distribution",sc);
   }
   randSvc->release();
 
   // retrieve pointer to magnetic field service
   sc = serviceLocator()->service("MagneticFieldSvc", m_magFieldSvc, true);
   if( sc.isFailure() ) {
-    MsgStream msg(msgSvc(), name());
-    msg << MSG::ERROR << "Failed to retrieve magnetic field service" << endreq;
-    return sc;
+     return Error ("Failed to retrieve magnetic field service",sc);
   }
 
   // Loading OT Geometry from XML
   IDataProviderSvc* detSvc; 
   sc = serviceLocator()->service( "DetectorDataSvc", detSvc, true );
   if( sc.isFailure() ) {
-    MsgStream msg(msgSvc(), name());
-    msg << MSG::ERROR << "Failed to retrieve magnetic field service" << endreq;
+    return Error ("Failed to retrieve magnetic field service",sc);
   }
+
   SmartDataPtr<DeOTDetector> tracker( detSvc, "/dd/Structure/LHCb/OT" );
   if ( !tracker ) {
-    MsgStream msg(msgSvc(), name());
-    msg << MSG::ERROR << "Unable to retrieve Tracker detector element"
-        << " from xml." << endreq;
-    return StatusCode::FAILURE;
+    return Error ("Unable to retrieve Tracker detector element from xml");
   }
   m_tracker = tracker;
   detSvc->release();

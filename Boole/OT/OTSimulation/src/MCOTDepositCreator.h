@@ -1,10 +1,11 @@
-// $Id: MCOTDepositCreator.h,v 1.1 2004-09-10 13:14:22 cattanem Exp $
+// $Id: MCOTDepositCreator.h,v 1.2 2004-11-10 13:05:14 jnardull Exp $
 #ifndef OTSIMULATION_MCOTDEPOSITCREATOR_H
 #define OTSIMULATION_MCOTDEPOSITCREATOR_H 1
 
 // Gaudi
-#include "GaudiKernel/Algorithm.h"
 #include "GaudiKernel/RndmGenerators.h"
+#include "GaudiAlg/GaudiAlgorithm.h"
+
 
 // Event
 #include "Event/MCOTDeposit.h"
@@ -38,7 +39,7 @@ class IOTRandomDepositCreator;
 
 typedef std::vector<MCOTDeposit*> MCOTDepositVector;
 
-class MCOTDepositCreator : public Algorithm {
+class MCOTDepositCreator : public GaudiAlgorithm {
 
 public:
  

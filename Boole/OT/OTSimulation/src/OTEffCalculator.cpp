@@ -1,9 +1,8 @@
-// $Id: OTEffCalculator.cpp,v 1.2 2004-09-10 13:14:22 cattanem Exp $
+// $Id: OTEffCalculator.cpp,v 1.3 2004-11-10 13:05:14 jnardull Exp $
 
 // Gaudi files
 #include "GaudiKernel/SmartIF.h"
 #include "GaudiKernel/ToolFactory.h"
-#include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/IRndmGenSvc.h"
 #include "GaudiKernel/RndmGenerators.h"
 
@@ -28,7 +27,7 @@ const IToolFactory& OTEffCalculatorFactory = s_factory;
 OTEffCalculator::OTEffCalculator(const std::string& type, 
                                  const std::string& name, 
                                  const IInterface* parent) : 
-  AlgTool( type, name, parent ),
+  GaudiTool( type, name, parent ),
   m_genEff(0),
   m_cellRadius(2.5*mm) 
 { 
@@ -46,18 +45,13 @@ StatusCode OTEffCalculator::initialize()
   IRndmGenSvc* randSvc = 0;
   StatusCode sc = serviceLocator()->service( "RndmGenSvc", randSvc, true );
   if( sc.isFailure() ) {
-    MsgStream msg(msgSvc(), name());
-    msg << MSG::ERROR << "Failed to retrieve random number service" << endreq;
-    return sc;
+    return Error ("Failed to retrieve random number service",sc);
   }
 
   // get interface to generator
   sc = randSvc->generator(Rndm::Flat(0.,1.),m_genEff.pRef()); 
   if( sc.isFailure() ) {
-    MsgStream msg(msgSvc(), name());
-    msg << MSG::ERROR << "Failed to generate random number distribution" 
-        << endreq;
-    return sc;
+    return Error ("Failed to generate random number distribution",sc);
   }
   randSvc->release();
 

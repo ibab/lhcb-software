@@ -1,10 +1,10 @@
-// $Id: MCOTTimeCreator.h,v 1.1 2004-09-10 13:14:22 cattanem Exp $
+// $Id: MCOTTimeCreator.h,v 1.2 2004-11-10 13:05:14 jnardull Exp $
 
 #ifndef OTSIMULATION_MCOTTIMECREATOR_H
 #define OTSIMULATION_MCOTTIMECREATOR_H 1
 
 // Gaudi
-#include "GaudiKernel/Algorithm.h"
+#include "GaudiAlg/GaudiAlgorithm.h"
 #include "GaudiKernel/SmartDataPtr.h"
 
 // Event
@@ -18,7 +18,7 @@
  *  @author J. Nardulli and J. van Tilburg 
  *  @date   10/6/2004
  */
-class MCOTTimeCreator : public Algorithm
+class MCOTTimeCreator : public GaudiAlgorithm
 
 {
 

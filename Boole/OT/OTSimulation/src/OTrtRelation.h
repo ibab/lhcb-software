@@ -1,9 +1,9 @@
-// $Id: OTrtRelation.h,v 1.1 2004-09-10 13:14:23 cattanem Exp $
+// $Id: OTrtRelation.h,v 1.2 2004-11-10 13:05:14 jnardull Exp $
 #ifndef OTSIMULATION_OTRTRELATION_H
 #define OTSIMULATION_OTRTRELATION_H 1
 
 // Gaudi
-#include "GaudiKernel/AlgTool.h"
+#include "GaudiAlg/GaudiTool.h"
 
 // OTEvent
 #include "Event/MCOTDeposit.h"
@@ -30,7 +30,7 @@ class MCOTDeposit;
  *  @date   21/10/2000
  */
 
-class OTrtRelation : public AlgTool, virtual public IOTrtRelation {
+class OTrtRelation : public GaudiTool, virtual public IOTrtRelation {
 
 public:
 

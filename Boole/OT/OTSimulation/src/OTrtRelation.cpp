@@ -1,8 +1,7 @@
-// $Id: OTrtRelation.cpp,v 1.2 2004-09-10 13:14:23 cattanem Exp $
+// $Id: OTrtRelation.cpp,v 1.3 2004-11-10 13:05:14 jnardull Exp $
 
 // Gaudi files
 #include "GaudiKernel/ToolFactory.h"
-#include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/IMagneticFieldSvc.h"
 #include "GaudiKernel/IService.h"
 #include "GaudiKernel/IDataProviderSvc.h"
@@ -32,7 +31,7 @@ const IToolFactory& OTrtRelationFactory = s_factory;
 OTrtRelation::OTrtRelation(const std::string& type, 
                            const std::string& name, 
                            const IInterface* parent) : 
-  AlgTool( type, name, parent ),
+  GaudiTool( type, name, parent ),
   m_magFieldSvc(0)
 {
   declareInterface<IOTrtRelation>(this); 
@@ -55,26 +54,19 @@ StatusCode OTrtRelation::initialize()
   StatusCode sc = serviceLocator()->service( "MagneticFieldSvc", 
                                              m_magFieldSvc, true ); 
   if( sc.isFailure() ) {
-    MsgStream msg(msgSvc(), name());
-    msg << MSG::ERROR << "Failed to retrieve magnetic field service" << endreq;
-    return StatusCode::FAILURE;
+    return Error ("Failed to retrieve magnetic field service",sc);
   }
 
   // Loading OT Geometry from XML
   IDataProviderSvc* detSvc; 
   sc = serviceLocator()->service( "DetectorDataSvc", detSvc, true );
   if( sc.isFailure() ) {
-    MsgStream msg(msgSvc(), name());
-    msg << MSG::ERROR << "Failed to retrieve DetectorDataSvc" << endmsg;
-    return StatusCode::FAILURE;
+    return Error ("Failed to retrieve DetectorDataSvc",sc);
   }
 
   SmartDataPtr<DeOTDetector> tracker( detSvc, "/dd/Structure/LHCb/OT" );
   if ( !tracker ) {
-    MsgStream msg(msgSvc(), name());
-    msg << MSG::ERROR << "Failed to retrieve OT detector element from DDDB"
-        << endmsg;
-    return StatusCode::FAILURE;
+    return Error ("Failed to retrieve OT detector element from DDDB");
   }
   m_tracker = tracker;
   detSvc->release();

@@ -1,7 +1,6 @@
-// $Id: MCOTTimeCreator.cpp,v 1.2 2004-09-10 13:14:22 cattanem Exp $
+// $Id: MCOTTimeCreator.cpp,v 1.3 2004-11-10 13:05:14 jnardull Exp $
 
 // Gaudi
-#include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/AlgFactory.h"
 
 // OTDAQ
@@ -23,7 +22,7 @@ const IAlgFactory& MCOTTimeCreatorFactory = s_Factory;
 
 MCOTTimeCreator::MCOTTimeCreator(const std::string& name, 
                                    ISvcLocator* pSvcLocator) :
-  Algorithm(name, pSvcLocator),
+  GaudiAlgorithm(name, pSvcLocator),
   m_tempTimeCont(0)
 {
   // constructor 
@@ -52,9 +51,7 @@ StatusCode MCOTTimeCreator::initialize()
   IOTReadOutWindow* aReadOutWindow = 0;
   StatusCode sc = toolSvc()->retrieveTool("OTReadOutWindow",aReadOutWindow);
   if( !sc.isSuccess() ) {
-    MsgStream msg(msgSvc(), name());
-    msg << MSG::FATAL << " Unable to create OTReadOutWindow tool" << endreq;
-    return sc;
+    return Error (" Unable to create OTReadOutWindow tool",sc);
   }
   m_startReadOutGate  = aReadOutWindow->startReadOutGate();
   toolSvc()->releaseTool( aReadOutWindow );
@@ -68,28 +65,22 @@ StatusCode MCOTTimeCreator::execute()
   // execute once per event
   StatusCode sc;
 
-  // init the message service
-  MsgStream msg(msgSvc(), name());
-
   // output container
   MCOTTimes* timeCont = new MCOTTimes();
   sc = this->eventSvc()->registerObject(MCOTTimeLocation::Default, timeCont);
   if (!sc.isSuccess()) {
-    msg << MSG::ERROR
-        << "Unable to store MCOTTime container in EvDS (sc=" << sc.getCode() 
-        << ")" << endreq;
+    msg () << "Unable to store MCOTTime container in EvDS (sc=" 
+              << sc.getCode() << ")" << endreq;
     return sc;
   }
 
   // create times
-  msg << MSG::DEBUG << "Time size before =" << timeCont->size() << endreq;
+  msg () << "Time size before =" << timeCont->size() << endreq;
   sc = createTimes( timeCont );
   if (sc.isFailure()){
-    msg << MSG::ERROR << "problems applying dead time" << endreq;
-    return StatusCode::FAILURE;
+    return Error ("problems applying dead time",sc);
   }  
-  msg << MSG::DEBUG <<"Time size after dead time="<< timeCont->size() << endreq;
-
+  msg () <<"Time size after dead time="<< timeCont->size() << endreq;
   return StatusCode::SUCCESS;
 }
 
@@ -107,8 +98,7 @@ StatusCode MCOTTimeCreator::createTimes( MCOTTimes* times )
     depositCont(eventDataService(),MCOTDepositLocation::Default);
 
   if (!depositCont){
-    MsgStream msg(msgSvc(), name());
-    msg << MSG::WARNING << "Failed to find MCOTDeposits" << endreq;
+    warning () << "Failed to find MCOTDeposits" << endreq;
     return StatusCode::FAILURE;
   }
   MCOTDeposits::const_iterator iterDep = depositCont->begin();

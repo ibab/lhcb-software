@@ -1,10 +1,8 @@
-// $Id: OTFillRawBuffer.cpp,v 1.3 2004-10-28 15:23:39 cattanem Exp $
+// $Id: OTFillRawBuffer.cpp,v 1.4 2004-11-10 13:05:14 jnardull Exp $
 // Include files
 
 // local
 #include "OTFillRawBuffer.h"
-
-// Event model
 #include "Event/OTBankVersion.h"
 
 //-----------------------------------------------------------------------------
@@ -23,7 +21,7 @@ const        IAlgFactory& OTFillRawBufferFactory = s_factory ;
 //=============================================================================
 OTFillRawBuffer::OTFillRawBuffer( const std::string& name,
                                     ISvcLocator* pSvcLocator)
-  : Algorithm ( name , pSvcLocator )
+  : GaudiAlgorithm ( name , pSvcLocator )
 {
   this->declareProperty( "NumberOfBanks", numberOfBanks );
   this->declareProperty( "RawBufferLocation",   
@@ -43,18 +41,12 @@ OTFillRawBuffer::~OTFillRawBuffer(){};
 // Initialisation. Check parameters
 //=============================================================================
 StatusCode OTFillRawBuffer::initialize() {
-  MsgStream  msg( msgSvc(), name() );
-  msg << MSG::DEBUG << "==> Initialise" << endreq;
-
-  msg << MSG::DEBUG
-      << "Loading OT geometry from XML " << endreq;
-  SmartDataPtr<DeOTDetector> Otracker( detSvc(), m_otTrackerPath);
-  if( !Otracker){
-    msg << MSG::ERROR << "Unable to retrieve OT detector element from XML" 
-        << endreq;
-    return StatusCode::FAILURE;
-  }
-  m_otTracker = Otracker;
+ 
+   SmartDataPtr<DeOTDetector> Otracker( detSvc(), m_otTrackerPath);
+   if( !Otracker){
+     return Error ( "Unable to retrieve OT detector element from XML");
+   }
+   m_otTracker = Otracker;
 
   //Fixed Numbers of Banks and of Gols
   numberOfBanks = 24;
@@ -74,15 +66,10 @@ StatusCode OTFillRawBuffer::initialize() {
 //=============================================================================
 StatusCode OTFillRawBuffer::execute() 
 {
-  MsgStream  msg( msgSvc(), name() );
-  msg << MSG::DEBUG << "==> Execute" << endreq;
-
   // Retrieve the RawBuffer
   SmartDataPtr<RawBuffer> rawBuffer( eventSvc(), m_RawBuffLoc );
   if ( !rawBuffer ) {
-    MsgStream  msg( msgSvc(), name() );
-    msg << MSG::ERROR
-        << "Unable to retrieve Raw buffer " <<  m_RawBuffLoc << endreq;
+    warning () << "Unable to retrieve Raw buffer at " <<m_RawBuffLoc << endreq;
     return StatusCode::FAILURE;
   }
   m_rawBuffer = rawBuffer;
@@ -91,8 +78,7 @@ StatusCode OTFillRawBuffer::execute()
   SmartDataPtr<MCOTTimes>
     mcTime ( eventDataService(), MCOTTimeLocation::Default);
   if ( !mcTime ) {
-    msg << MSG::ERROR
-        << "Unable to retrieve MCOTTime " << m_MCOTTimeLoc << endreq;
+    warning () << "Unable to retrieve MCOTTime at " << m_MCOTTimeLoc << endreq;
     return StatusCode::FAILURE;
   }
   m_mcTime = mcTime;
@@ -143,8 +129,6 @@ StatusCode OTFillRawBuffer::execute()
 //=============================================================================
 StatusCode OTFillRawBuffer::finalize() 
 {      
-  MsgStream msg(msgSvc(), name());
-  msg << MSG::DEBUG << "==> Finalize" << endreq;
   delete(dataContainer);
   delete(goldatacontainer);
   delete(finalBuf);
