@@ -1,6 +1,9 @@
-! $Id: release.notes,v 1.126 2004-08-17 13:56:48 pkoppenb Exp $
+! $Id: release.notes,v 1.127 2004-08-23 12:40:48 ranjard Exp $
 ! Package     : DaVinciTools
 ! Responsible : P. Koppenburg
+
+! 2004-08-23 - Florence RANJARD
+ - replace GaudiTools/ with GaudiAlg
 
 !========================== DaVinciTools v10r2 2004-08-17 ===================
 ! 2004-08-12 - P. Koppenburg

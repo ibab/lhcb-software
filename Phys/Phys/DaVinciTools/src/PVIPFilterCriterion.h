@@ -1,4 +1,4 @@
-// $Id: PVIPFilterCriterion.h,v 1.4 2004-08-12 12:33:53 pkoppenb Exp $
+// $Id: PVIPFilterCriterion.h,v 1.5 2004-08-23 12:40:48 ranjard Exp $
 #ifndef PVIPFILTERCRITERION_H 
 #define PVIPFILTERCRITERION_H 1
 
@@ -7,7 +7,7 @@
 #include <string>
 
 // from Gaudi
-#include "GaudiTools/GaudiTool.h"
+#include "GaudiAlg/GaudiTool.h"
 
 // from DaVinciTools
 #include "DaVinciTools/IFilterCriterion.h"

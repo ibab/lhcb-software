@@ -1,10 +1,10 @@
-// $Id: TrackTypeFilterCriterion.h,v 1.2 2004-08-12 12:33:53 pkoppenb Exp $
+// $Id: TrackTypeFilterCriterion.h,v 1.3 2004-08-23 12:40:48 ranjard Exp $
 #ifndef TRACKTYPEFILTERCRITERION_H 
 #define TRACKTYPEFILTERCRITERION_H 1
 
 // Include files
 // from Gaudi
-#include "GaudiTools/GaudiTool.h"
+#include "GaudiAlg/GaudiTool.h"
 #include "DaVinciTools/IFilterCriterion.h"            // Interface
 
 

@@ -6,7 +6,7 @@
 #include <string>
 
 // from Gaudi
-#include "GaudiTools/GaudiTool.h"
+#include "GaudiAlg/GaudiTool.h"
 
 // from DaVinciTools
 #include "DaVinciTools/IFilterCriterion.h"

@@ -1,4 +1,4 @@
-// $Id: MassFilterCriterion.h,v 1.2 2004-08-12 12:33:53 pkoppenb Exp $
+// $Id: MassFilterCriterion.h,v 1.3 2004-08-23 12:40:48 ranjard Exp $
 #ifndef MASSFILTERCRITERION_H 
 #define MASSFILTERCRITERION_H 1
 
@@ -7,7 +7,7 @@
 #include <string>
 
 // from Gaudi
-#include "GaudiTools/GaudiTool.h"
+#include "GaudiAlg/GaudiTool.h"
 
 // from DaVinciTools
 #include "DaVinciTools/IFilterCriterion.h"
