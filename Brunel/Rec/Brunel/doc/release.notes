@@ -9,6 +9,8 @@ Purpose: LHCb reconstruction program
    . Improvements to Velo tracking for K0s (VeloTrack v4r1)
    . Tune Velo noise and signal/noise cuts
      (VeloKernel v1r2, VeloAlgorithms v2r2, VeloTrack v4r1)
+   . Improvements in Upstream tracking 
+     (TrTools v2r1, TrIntraPR v2r1, UpstreamPR v2r2)
 
  - New features:
    . Add support for Muon with MWPC, with/without M1

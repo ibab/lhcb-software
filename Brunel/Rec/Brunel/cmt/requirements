@@ -112,12 +112,12 @@ use FwTrack             v4r2    Tr
 use LongTrack           v1r0    Tr
 use TrFitter            v3r1    Tr
 use TrExtrapolator      v2r1    Tr
-use TrTools             v2r0    Tr
+use TrTools             v2r1    Tr
 use Seeding	        v2r1    Tr
 use TrMatching          v2r0    Tr
 use TrCleanEx           v2r1    Tr
-use TrIntraPR		v2r0	Tr
-use UpstreamPR		v2r1	Tr
+use TrIntraPR		v2r1	Tr
+use UpstreamPR		v2r2	Tr
 
 # Muon
 use MuonKernel          v2r1    Muon
