@@ -5,8 +5,7 @@
  *  Header file for utility has map for the RICH : Rich::HashMap
  *
  *  CVS Log :-
- *  $Id: RichMap.h,v 1.1 2005-01-13 12:21:18 jonrob Exp $
- *  $Log: not supported by cvs2svn $
+ *  $Id: RichMap.h,v 1.2 2005-03-05 16:52:17 jonrob Exp $
  *
  *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
  *  @date   2005-01-11
@@ -19,6 +18,7 @@
 // STL
 #include <map>
 
+//--------------------------------------------------------------------------------
 /** @class RichMap RichMap.h RichKernel/RichMap.h
  *
  *  A utility class providing a standard map object.
@@ -27,6 +27,7 @@
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2005-01-11
  */
+//--------------------------------------------------------------------------------
 
 template < class KEY, class VALUE >
 class RichMap : public std::map < KEY , VALUE > { };
