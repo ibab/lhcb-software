@@ -1,8 +1,11 @@
-// $Id: CaloTool.h,v 1.12 2002-05-07 17:21:35 ibelyaev Exp $
+// $Id: CaloTool.h,v 1.13 2002-11-13 20:36:50 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.12  2002/05/07 17:21:35  ibelyaev
+//  bug fix for Win32
+//
 // ============================================================================
 #ifndef CALOKERNEL_CALOTOOL_H 
 #define CALOKERNEL_CALOTOOL_H 1
@@ -127,9 +130,12 @@ protected:
     Assert( 0 != aux    , " get():: No valid data at '" + location + "'" ); 
     const std::string type( System::typeinfoName( typeid( *aux ) ) );
     // debug printout 
-    Print( " The data of type '"      + type                + 
-           "' from address '"         + location            + 
-           "' are retrieved from TS " , StatusCode::SUCCESS , MSG::DEBUG ) ;
+    Print( " The data from address '"     + location + 
+           "' are retrieved from TS "     , 
+           StatusCode::SUCCESS            , MSG::DEBUG   ) ;
+    Print( " [ The actual data type is '" + type     + 
+           "' ] "                         , 
+           StatusCode::SUCCESS            , MSG::VERBOSE ) ;
     return aux ;
   };
   
@@ -167,7 +173,7 @@ protected:
     Assert( 0 != Tool      , 
             "Could not retrieve Tool'" + type + "'/'" + name + "'"     ) ;
     // add the reference 
-    Tool -> addRef();                               
+    // Tool -> addRef();                               
     // debug printout 
     Print( " The Tool of type '" + Tool->type() + 
            "'/'"                 + Tool->name() + 
@@ -217,7 +223,7 @@ protected:
     Assert( sc.isSuccess() , "Could not retrieve Tool'" + type + "'" , sc ) ;
     Assert( 0 != Tool      , "Could not retrieve Tool'" + type + "'"     ) ;
     // add the reference 
-    Tool -> addRef(); 
+    // Tool -> addRef(); 
     // debug printout 
     Print( " The Tool of type '" + Tool->type() + 
            "'/'"                 + Tool->name() + 
@@ -273,24 +279,28 @@ protected:
   /** Print the error  message, return status code
    *  and perform the statistics of error messages 
    *  @param msg    error message 
-   *  @param st     status code 
-   *  @return       status code 
+   *  @param st     status code  
+   *  @param mx     maximal number of printout
+  *  @return       status code 
    */
   StatusCode 
   Error     
-  ( const std::string& msg , 
-    const StatusCode & st  = StatusCode::FAILURE ) const ;
+  ( const std::string& msg                       , 
+    const StatusCode & st  = StatusCode::FAILURE ,
+    const size_t       mx  = 10                  ) const ;
   
   /** Print the warning  message, return status code 
    *  and perform the statistics of warning  messages 
    *  @param msg    warning message 
    *  @param st     statsu code 
+   *  @param mx     maximal number of printout
    *  @return       status code 
    */
   StatusCode 
   Warning   
   ( const std::string& msg , 
-    const StatusCode & st  = StatusCode::FAILURE ) const ; 
+    const StatusCode & st  = StatusCode::FAILURE ,
+    const size_t       mx  = 10                  ) const ;
   
   /** Print the message and return status code 
    *  @param msg    warning message 

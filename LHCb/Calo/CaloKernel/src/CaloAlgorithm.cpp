@@ -1,8 +1,11 @@
-// $Id: CaloAlgorithm.cpp,v 1.15 2002-05-02 13:24:56 ibelyaev Exp $ 
+// $Id: CaloAlgorithm.cpp,v 1.16 2002-11-13 20:36:51 ibelyaev Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.15  2002/05/02 13:24:56  ibelyaev
+//  improve printout
+//
 // ============================================================================
 #define  CALOKERNEL_CALOALGORITHM_CPP 1 
 // ============================================================================
@@ -75,37 +78,39 @@ CaloAlgorithm::~CaloAlgorithm() {};
 /** Print the error  message and return status code
  *  @param msg    error message 
  *  @param st     status code 
+ *  @param mx     maximal number of prints 
  *  @return       status code 
  */
 // ============================================================================
 StatusCode CaloAlgorithm::Error     
 ( const std::string& msg , 
-  const StatusCode & st  ) const 
+  const StatusCode & st  , 
+  const size_t       mx  ) const 
 {
-  // increase local counter of errors  
-  m_errors[ msg ] += 1 ;
   // increase global error counter 
   Stat stat( chronoSvc() , name()+":Error" ); 
-  return Print( msg , st , MSG::ERROR ); 
+  // increase local counter of errors  
+  return ( ++m_errors[ msg] < mx ) ? Print( msg , st , MSG::ERROR ) : st ;
 };
 // ============================================================================
 
 // ============================================================================
 /** Print the warning  message and return status code 
  *  @param msg    warning message 
- *  @param st     statsu code 
+ *  @param st     status code 
+ *  @param mx     maximal number of prints 
  *  @return       status code 
  */
 // ============================================================================
 StatusCode CaloAlgorithm::Warning   
 ( const std::string& msg , 
-  const StatusCode & st  ) const 
+  const StatusCode & st  ,
+  const size_t       mx  ) const 
 { 
-  // increase local counter of warnings  
-  m_warnings[ msg ] += 1 ;
   // increase global warning counter 
   Stat stat( chronoSvc() , name()+":Warning" ); 
-  return Print( msg , st , MSG::WARNING ); 
+  // increase local counter of warnings  
+  return ( ++m_warnings[ msg] < mx ) ? Print( msg , st , MSG::WARNING ) : st ;
 };
 // ============================================================================
 
@@ -242,7 +247,7 @@ StatusCode CaloAlgorithm::put
           + Type    + "' at address '"
           + Address + "'"  , sc );
   // print and return
-  return Print( ":: The object of type '" + Type +
+  return Print( " The object of type '" + Type +
                 "' is registered in TS at address '" 
                 + Address + "'" , sc , MSG::DEBUG );
 };

@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.21 2002-10-29 13:18:04 ibelyaev Exp $
+! $Id: release.notes,v 1.22 2002-11-13 20:36:51 ibelyaev Exp $
 ! =============================================================================
 ! CVS tag $Name: not supported by cvs2svn $
 ! =============================================================================
@@ -8,6 +8,11 @@
 ! The package contains the general Calo Kernel classes and utilities, 
 ! which are essentially independent from Detector and Event models 
 ! =============================================================================
+
+! 2002-11-12 - Ivan Belyaev
+ - CaloKernel/CaloALhorithm.h, CaloTool.h   - introduce "maximal number of 
+ - src/CaloALhorithm.cpp, CaloTool.cpp        error/warning printouts"
+
 
 ! 2002-10-29 - Ivan Belyaev
  - CaloKernel/CaloAlgborithm.h

@@ -1,8 +1,11 @@
-// $Id: CaloTool.cpp,v 1.11 2002-05-02 08:38:47 ibelyaev Exp $
+// $Id: CaloTool.cpp,v 1.12 2002-11-13 20:36:51 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.11  2002/05/02 08:38:47  ibelyaev
+//  add exception counting into CaloTool&CaloAlgorithm classes
+//
 // Revision 1.10  2002/04/30 18:18:35  ibelyaev
 //  reduce the final printout verbosity
 //
@@ -289,13 +292,13 @@ StatusCode CaloTool::queryInterface ( const InterfaceID& id ,
 // ============================================================================
 StatusCode CaloTool::Error     
 ( const std::string& msg , 
-  const StatusCode & st  ) const 
+  const StatusCode & st  , 
+  const size_t       mx  ) const 
 {
-  // increase local counter of errors  
-  m_errors[ msg ] += 1 ;
   // increase global error counter 
   Stat stat( chronoSvc() , name()+":Error" ); 
-  return Print( msg , st , MSG::ERROR ); 
+  // increase local counter of errors  
+  return ( ++m_errors[ msg ] < mx ) ? Print( msg , st , MSG::ERROR ) : st ;
 };
 // ============================================================================
 
@@ -308,13 +311,13 @@ StatusCode CaloTool::Error
 // ============================================================================
 StatusCode CaloTool::Warning   
 ( const std::string& msg , 
-  const StatusCode & st  ) const 
+  const StatusCode & st  , 
+  const size_t       mx  ) const 
 {
-  // increase local counter of warnings  
-  m_warnings[ msg ] += 1 ;
   // increase global error counter 
   Stat stat( chronoSvc() , name()+":Warning" ); 
-  return Print( msg , st , MSG::WARNING ); 
+  // increase local counter of warnings  
+  return ( ++m_warnings[ msg ] < mx ) ? Print( msg , st , MSG::WARNING ) : st ;
 };
 // ============================================================================
 
