@@ -171,9 +171,12 @@ class genClassDicts(importUtils.importUtils):
     if len(params) : s += ', const std::vector<void*>& argList'
     s += ')\n%s{\n' % self.rem
     if ret != 'void' :
-      ret = self.tools.unQualifyT(ret)
       if ret in self.generatedEnums : ret = 'int'
       ret = self.checkTypedefEnums(ret, cl)
+      if self.tools.isFundamentalT(ret) : pass
+      elif self.tools.isPointerT(ret) : pass
+      elif self.tools.isReferenceT(ret):   ret = 'const ' + ret
+      else : ret = 'const ' + ret + '&'
       if self.tools.isFundamentalT(ret):
         s += '  static %s ret;\n' % ret
         s += '  ret = '
@@ -182,8 +185,7 @@ class genClassDicts(importUtils.importUtils):
       elif self.tools.isPointerT(ret):
         s += '  return (%s) ' % ret
       else :
-        s += '  static %s ret;\n' % ret
-        s += '  ret = '
+        s += '  %s ret = new(\n' % ret
     else : s += '  '
     s += '((%s*)v)->%s(' % (cl, self.tools.lowerGetterName(name))
     indent = (len(cl) + len(name) + 9) * ' '
@@ -207,7 +209,7 @@ class genClassDicts(importUtils.importUtils):
       elif self.tools.isPointerT(ret):
         pass
       else :
-        s += '  return (void*)&ret;\n'
+        s[:-1] += ');\n  return (void*)ret;\n'
     s += '}\n\n'
     self.mNum += 1
     return s
@@ -368,12 +370,16 @@ class genClassDicts(importUtils.importUtils):
       if not self.classIsAbstract : s += '  delete cl;\n\n'
     return s
 #--------------------------------------------------------------------------------
+  def stripConst(self, name) :
+    if name.split()[0] == 'const' : return ' '.join(name.split()[1:])
+    return name
+#--------------------------------------------------------------------------------
   def genMethod(self, name, desc, ret, par, fp, mod=''):
     indent = '\n' + 17 * ' '
     s  = '  metaC.addMethod("%s",' % name
     s += '%s "%s",' % (indent, desc)
-    if ret and ret != 'void' : s += '%s "%s",' % (indent, ret)
-    if par : s += '%s "%s",' % (indent, par)
+    if ret and ret != 'void' : s += '%s "%s",' % (indent, self.stripConst(ret))
+    if par : s += '%s "%s",' % (indent, self.stripConst(par))
     s += '%s %s' % (indent, self.tools.cppEscape(fp))
     if mod : s += ',%s %s' % (indent, mod)
     s += ');\n\n'
@@ -448,11 +454,13 @@ class genClassDicts(importUtils.importUtils):
           attType = 'unsigned int'
         if attAtt['getMeth'] == 'TRUE' :
           ret = self.tools.genReturnFromStrg(attType,[],'')
+          if not ( self.tools.isReferenceT(ret) or self.tools.isPointerT(ret) or self.tools.isFundamentalT(ret) ) : ret += "&"
           s += self.genMethod(attAtt['name'], attAtt['desc'], ret, '', '%s_%s_%d'%(clName,attAtt['name'],self.mNum), 'PUBLIC')
           self.mNum += 1
         if attAtt['setMeth'] == 'TRUE' :
           metName = 'set'+self.tools.firstUp(attAtt['name'])
           param = self.tools.genParamFromStrg(attType)
+          if not ( self.tools.isReferenceT(param) or self.tools.isPointerT(param) or self.tools.isFundamentalT(param) ) : param += "&"
           s += self.genMethod(metName, attAtt['desc'], '', param, '%s_%s_%d'%(clName,metName,self.mNum), 'PUBLIC')
           self.mNum += 1
     if godClass.has_key('relation'):
@@ -463,7 +471,7 @@ class genClassDicts(importUtils.importUtils):
         metNameUp = self.tools.firstUp(relAtt['name'])
         if relAtt['getMeth'] == 'TRUE' :
           ret = ''
-          if mult : ret = self.tools.genReturnFromStrg('SmartRefVector<%s>'%relAtt['type'],[],'')
+          if mult : ret = self.tools.genReturnFromStrg('SmartRefVector<%s>&'%relAtt['type'],[],'')
           else    : ret = self.tools.genReturnFromStrg('%s*'%relAtt['type'],[],'')
           s += self.genMethod(relAtt['name'], relAtt['desc'], ret, '', '%s_%s_%d'%(clName,relAtt['name'],self.mNum),'PUBLIC')
           self.mNum += 1
