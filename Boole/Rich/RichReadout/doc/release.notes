@@ -4,6 +4,7 @@
 ! Purpose     : Rich Digitisation
 !-----------------------------------------------------------------------------
 
+!========================= RichReadout v1r7 2004-03-18 =======================
 ! 2004-03-14 - Chris Jones
  - Fix long finalisation time
  - Adapt to new Gaudi base classes
