@@ -1,4 +1,4 @@
-// $Id: TrTransporter.cpp,v 1.4 2004-03-31 06:54:48 pkoppenb Exp $
+// $Id: TrTransporter.cpp,v 1.5 2004-05-14 09:43:31 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
@@ -103,7 +103,7 @@ StatusCode TrTransporter::transport(ParticleVector::const_iterator &icand,
   }
   
   if ( zl < -500.0 || zr > 21000.0 ){
-    log << MSG::WARNING << " z is out of range, z < -500.0 or z > 21000.0" 
+    log << MSG::DEBUG << " z is out of range, z < -500.0 or z > 21000.0" 
         << endreq;    
     return StatusCode::FAILURE;
   }
@@ -140,7 +140,7 @@ StatusCode TrTransporter::transport(const Particle & icand,
   }
   
   if ( zl < -500.0 || zr > 21000.0 ){
-    log << MSG::WARNING << " z is out of range, z < -500.0 or z > 21000.0" 
+    log << MSG::DEBUG << " z is out of range, z < -500.0 or z > 21000.0" 
         << endreq;    
     return StatusCode::FAILURE;
   }
@@ -178,7 +178,7 @@ StatusCode TrTransporter::transport(Particle & icand,
   }
   
   if ( zl < -500.0 || zr > 21000.0 ){
-    log << MSG::WARNING << " z is out of range, z < -500.0 or z > 21000.0" 
+    log << MSG::DEBUG << " z is out of range, z < -500.0 or z > 21000.0" 
         << endreq;    
     return StatusCode::FAILURE;
   }  

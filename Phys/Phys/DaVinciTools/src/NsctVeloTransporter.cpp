@@ -1,4 +1,4 @@
-// $Id: NsctVeloTransporter.cpp,v 1.6 2004-01-14 19:00:06 gcorti Exp $
+// $Id: NsctVeloTransporter.cpp,v 1.7 2004-05-14 09:43:31 pkoppenb Exp $
 // Include files 
 
 // Utility Classes
@@ -123,7 +123,7 @@ StatusCode NsctVeloTransporter::transport(ParticleVector::const_iterator &icand,
   }
   
   if ( zl < -500.0 || zr > 21000.0 ){
-    log << MSG::WARNING << " z is out of range, z < -500.0 or z > 21000.0" 
+    log << MSG::DEBUG << " z is out of range, z < -500.0 or z > 21000.0" 
         << endreq;    
     return StatusCode::FAILURE;
   }
@@ -162,7 +162,7 @@ StatusCode NsctVeloTransporter::transport(const Particle & icand,
   }
   
   if ( zl < -500.0 || zr > 21000.0 ){
-    log << MSG::WARNING << " z is out of range, z < -500.0 or z > 21000.0" 
+    log << MSG::DEBUG << " z is out of range, z < -500.0 or z > 21000.0" 
         << endreq;    
     return StatusCode::FAILURE;
   }
@@ -200,7 +200,7 @@ StatusCode NsctVeloTransporter::transport(Particle & icand,
   }
   
   if ( zl < -500.0 || zr > 21000.0 ){
-    log << MSG::WARNING << " z is out of range, z < -500.0 or z > 21000.0" 
+    log << MSG::DEBUG << " z is out of range, z < -500.0 or z > 21000.0" 
         << endreq;    
     return StatusCode::FAILURE;
   }

@@ -1,7 +1,18 @@
-! $Id: release.notes,v 1.89 2004-05-14 09:18:07 pkoppenb Exp $
+! $Id: release.notes,v 1.90 2004-05-14 09:43:31 pkoppenb Exp $
 ! Package     : DaVinciTools
 ! Responsible : P. Koppenburg, Sandra Amato
 
+! 2004-05-15 - P. Koppenburg
+  - src/CombinedTransporter.cpp
+  - src/LinearTransporter.cpp
+  - src/NsctVeloTransporter.cpp
+  - src/ParabolicTransporter.cpp
+  - src/TrTransporter.cpp
+    . I am sick of these messages: 
+    <     log << MSG::WARNING << " z is out of range, z < -500.0 or z > 21000.0" 
+    ---
+    >     log << MSG::DEBUG << " z is out of range, z < -500.0 or z > 21000.0" 
+   
 ! 2004-05-15 - P. Koppenburg
  - Lib/DVAlgorithm.cpp
    . Some more debugging messages
