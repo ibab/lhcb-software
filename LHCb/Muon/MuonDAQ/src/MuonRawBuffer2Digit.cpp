@@ -1,4 +1,4 @@
-// $Id: MuonRawBuffer2Digit.cpp,v 1.2 2004-02-09 12:54:23 cattanem Exp $
+// $Id: MuonRawBuffer2Digit.cpp,v 1.3 2004-02-09 14:14:29 cattanem Exp $
 // Include files 
 
 // from Gaudi
@@ -136,37 +136,31 @@ StatusCode MuonRawBuffer2Digit::initialize() {
 //=============================================================================
 StatusCode MuonRawBuffer2Digit::execute() {
 
-  //MsgStream  msg( msgSvc(), name() );
-  //  msg << MSG::DEBUG << "==> Execute" << endreq;
-  //SmartDataPtr<RawEvent> rawEvent( eventSvc(), 
-  //                                  RawEventLocation::Default );
-  // SmartDataPtr<RawBuffer> buf ( eventSvc(), RawBufferLocation::Default );
-  // RawEvent rawEvent( buf );
-  // Retrieve the RawBuffer
-  SmartDataPtr<RawBuffer> rawBuffer( eventSvc(),
-                                     RawBufferLocation::Default );
+  MsgStream  msg( msgSvc(), name() );
+  msg << MSG::DEBUG << "==> Execute" << endreq;
 
-  if ( 0 == rawBuffer ) {
-    //   MsgStream msg(msgSvc(), name());
-    //    msg << MSG::ERROR << "Unable to retrieve RawBuffer" << endmsg;
-    return StatusCode::FAILURE;
+  // Retrieve the Raw event if it already exists, or create it from RawBuffer
+  RawEvent* rawEvent;
+  SmartDataPtr<RawEvent> rawEvtPtr( eventSvc(), RawEventLocation::Default );
+  if( 0 == rawEvtPtr ) {
+    SmartDataPtr<RawBuffer> rawBuffer( eventSvc(), RawBufferLocation::Default );
+    if ( 0 == rawBuffer ) {
+      msg << MSG::ERROR << "Unable to retrieve RawBuffer" << endmsg;
+      return StatusCode::FAILURE;
+    }
+    rawEvent = new RawEvent( rawBuffer );
+    if ( 0 == rawEvent ) {
+      msg << MSG::ERROR << "Unable to allocate memory to RawEvent" << endmsg;
+      return StatusCode::FAILURE;
+    }
+  }
+  else {
+    rawEvent = rawEvtPtr;
   }
 
-  RawEvent* rawEvent = new RawEvent( rawBuffer );
-  
-  if ( 0 == rawEvent ) {
-    //MsgStream msg(msgSvc(), name());
-    // msg << MSG::ERROR << "Unable to allocate memory to RawEvent" <<
-    // endmsg;
-    return StatusCode::FAILURE;
-  }
   MuonDigits* MuonDigitsCon= new MuonDigits;
   
-  
-  
-  //msg<<MSG::INFO<<"ciao "<<rawEvent<<  RawEventLocation::Default<<endreq;
   std::vector<RawBank>  MuonL1Buffer =rawEvent->banks(RawBuffer::Muon);
-  //msg<<MSG::INFO<<"ciao"<<endreq;
   std::vector<RawBank>::const_iterator ibank;
   MuonHLTData hltWord;
   MuonHLTDigitFormat digit;
@@ -237,8 +231,7 @@ StatusCode MuonRawBuffer2Digit::execute() {
     //}
   }
   
-  //eventSvc()->registerObject("/event/Raw/Muon/DigitsTest",
-  //                         MuonDigitsCon);
+  eventSvc()->registerObject( MuonDigitLocation::MuonDigit, MuonDigitsCon );
   return StatusCode::SUCCESS;
 };
 
