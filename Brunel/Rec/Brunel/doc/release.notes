@@ -76,6 +76,7 @@ Purpose: LHCb reconstruction program
    . Bugs 191, 208: see DST changes above.
    . Bug 305: fix initialisation of Calo monitoring (CaloMonitor v1r4)
    . Bugs 138,139: valgrind errors disappeared with new version of Rich code
+   . Bug 396: memory leak reported by valgrind (DetDesc v11r9)
    . Several fixes to geometry solids (DetDesc v11r9)
    . Fix position of magnet material (XmlDDDB v15r3)
    . Minor bug fixes in ITCrossTalk (ITAlgorithms v12r9)
