@@ -1,8 +1,11 @@
-// $Id: RelationWeightedBase.h,v 1.2 2005-01-26 16:27:29 ibelyaev Exp $
+// $Id: RelationWeightedBase.h,v 1.3 2005-01-27 06:54:03 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.2 $
+// CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.3 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2005/01/26 16:27:29  ibelyaev
+//  add 'power input' option to speed-up the filling
+//
 // ============================================================================
 #ifndef RELATIONS_RELATIONWeightedBASE_H
 #define RELATIONS_RELATIONWeightedBASE_H 1
@@ -431,7 +434,7 @@ namespace Relations
      *  Call for this method is MANDATORY after usage of i_push 
      */ 
     inline void i_sort() 
-    { std::sort( m_entries.begin() , m_entries.end() , m_less ) ; };
+    { std::stable_sort( m_entries.begin() , m_entries.end() , m_less ) ; };
     
     /** standard/default constructor
      *  @param reserve size of preallocated reserved space
