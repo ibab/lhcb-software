@@ -1,8 +1,9 @@
-! $Id: release.notes,v 1.33 2004-02-02 14:15:22 jonesc Exp $
+! $Id: release.notes,v 1.34 2004-02-04 08:39:24 cattanem Exp $
 ! Package     : Rich/RichKernel
 ! Responsible : Chris Jones
 ! Purpose     : General purpose RICH classes
 
+!======================= RichKernel v4r4 2004-02-04 =======================
 ! 2004-01-30 - Chris Jones
  - Exported RichDetectorType.h and RichDetectorType.h to Kernel/LHCbKernel
    due to changes in RichSmartID
