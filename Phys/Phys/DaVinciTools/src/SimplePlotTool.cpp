@@ -1,4 +1,4 @@
-// $Id: SimplePlotTool.cpp,v 1.2 2005-01-10 09:57:17 pkoppenb Exp $
+// $Id: SimplePlotTool.cpp,v 1.3 2005-01-12 16:50:57 pkoppenb Exp $
 // Include files 
 #include "gsl/gsl_math.h"
 // from Gaudi
@@ -252,7 +252,7 @@ bool SimplePlotTool::MyHisto::setHisto(const std::string& var ){
     m_max = 1. ;
   } else if ( var == "FS" ){
     m_min = 0. ;
-    m_max = 10. ;
+    m_max = 20. ;
   } else {
     return false;
   }
