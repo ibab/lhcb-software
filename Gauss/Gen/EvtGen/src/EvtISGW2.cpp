@@ -278,7 +278,7 @@ if ( parnum==BP||parnum==BM||parnum==B0||parnum==B0B ) {
        return;
     }
     if ( lnum==TAUP||lnum==TAUM ) {
-      setProbMax(68.0);//???
+      setProbMax(100.0);//???
        return;
     }
   }
@@ -636,7 +636,7 @@ if ( parnum==BS||parnum==BSB ) {
        return;
     }
     if ( lnum==TAUP||lnum==TAUM ) {
-      setProbMax(68.0);//???
+      setProbMax(120.0);//???
        return;
     }
   }
