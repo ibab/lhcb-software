@@ -1,5 +1,5 @@
 package Brunel
-version v13r0
+version v13r2
 
 branches doc cmt job options
 
@@ -27,7 +27,7 @@ use ROOT		v2r303p0
 
 #---Gaudi libraries - Gaudi v10r4
 use GaudiKernel        v12r3
-use GaudiSvc           v8r3
+use GaudiSvc           v8r4
 use GaudiAlg           v6r1
 use GaudiAud           v6r0
 use GaudiNagC          v7r0
@@ -45,23 +45,23 @@ use Futio        v12r0  SICB
 
 # Detector description
 use DetDesc      v10r3  Det
-use XmlDDDB      v12r4  Det
+use XmlDDDB      v12r5  Det
 use CaloDet       v5r0  Det
 use CaloDetXmlCnv v2r0  Det
-use ITDet         v1r0  Det
-use MuonDet       v3r1  Det
-use OTDet         v2r1  Det
+use ITDet         v1r1  Det
+use MuonDet       v3r2  Det
+use OTDet         v2r2  Det
 use VeloDet       v7r0  Det
 use Magnet        v1r1  Det
 
 # Event Model
-use EventSys     v12r2  Event
+use EventSys     v12r4  Event
 
 # SicB event data persistency
-use SicbCnv      v17r1  SICB
-use RiSicbGeom   v2r2   SICB
+use SicbCnv      v17r2  SICB
+use RiSicbGeom   v2r3   SICB
 use CaloSicbCnv  v7r1   SICB
-use MuonSicbCnv  v6r2   SICB
+use MuonSicbCnv  v6r4   SICB
 use RiSicbCnv    v4r3   SICB
 use VSicbCnv     v8r0   SICB
 
@@ -72,9 +72,9 @@ use BrunelAlgs   v1r2   Rec
 
 # L0 trigger
 use L0Calo              v6r1    L0
-use L0Muon              v6r0    L0
+use L0Muon              v6r1    L0
 use PuVeto              v4r0    L0
-use L0DU                v6r0    L0
+use L0DU                v6r1    L0
 
 # L1 trigger
 use L1VeloTrack         v2r1    L1
@@ -100,30 +100,30 @@ use ITAlgorithms	v12r0  	IT
 use ITAssociators	v2r0	IT
 
 # Outer Tracker
-use OTAlgorithms  	v11r0  	OT
-use OTAssociators  	v2r0  	OT
+use OTAlgorithms  	v11r1  	OT
+use OTAssociators  	v2r1  	OT
 
 # Tracking
 use TrKernel            v11r0   Tr
 use TrFitEvent          v3r0    Tr
-use VeloTrack           v4r0    Velo
+use VeloTrack           v4r1    Velo
 use TrAssociators       v3r0    Tr
-use FwTrack             v4r1    Tr
+use FwTrack             v4r2    Tr
 use TrFitter            v3r0    Tr
 use TrExtrapolator      v2r0    Tr
 use TrTools             v2r0    Tr
-use Seeding	        v2r0    Tr
+use Seeding	        v2r1    Tr
 use TrMatching          v2r0    Tr
-use TrCleanEx           v2r0    Tr
+use TrCleanEx           v2r1    Tr
 use TrIntraPR		v2r0	Tr
 use UpstreamPR		v2r1	Tr
 
 # Muon
 use MuonKernel          v2r1    Muon
-use MuonTools           v2r1    Muon
+use MuonTools           v3r0    Muon
 use MuonAlgs		v2r2	Muon
-use MuonRec     	v2r0	Muon
-use MuonID      	v2r1	Muon
+use MuonRec     	v2r2	Muon
+use MuonID      	v3r1	Muon
 use MuonAssociators	v1r0	Muon
 
 # Rich
@@ -149,7 +149,7 @@ macro_append Brunel_linkopts " "\
                 Linuxdbx     " -g -Wl,--start-group "
 
 #== Set the Brunel version = v*10000 + r*100 + p  ==
-macro_append fflags " -DBrunelVersion=130100 " \
-           VisualC  " /DBrunelVersion=130100 "
+macro_append fflags " -DBrunelVersion=130200 " \
+           VisualC  " /DBrunelVersion=130200 "
 
 apply_pattern application_path

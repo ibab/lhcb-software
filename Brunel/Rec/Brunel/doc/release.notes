@@ -3,6 +3,46 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
+! 2002-09-11 - Marco Cattaneo
+ - New tuning:
+   . Tune L0 thresholds (L0DU v6r1)
+
+ - New features:
+   . Support for valgrind memory checking tool (job/Brunel.supp, valgrind.job)
+   . Prepare for variable number of Muon stations in XML
+     (MuonTools v3r0, MuonSicbCnv v6r4, MuonID v3r1, L0Muon v6r1)
+
+ - Bug fixes:
+   . Random number engine initialisation (GaudiSvc v8r4).
+     With this fix, and with initialisation of random numbers at every event
+     (Brunel.opts) reconstruction is reproducible when starting at any event,
+     even when doing spillover
+   . Distance of stagger in wafers of TT1 layers was 2x too big (ITDet v1r1)
+   . Missing [] in delete (SicbCnv v17r2, VeloTrack v4r1, RiSicbGeom v2r3)
+   . Test iterator not at end before accessing it (TrCleanEx v2r1)
+   . Fix uninitialised member variables in L0MuonCandidate 
+     (EventSys v12r4, L0Event v12r2)
+   . Test L0MuonCandidate status (L0DU v6r1)
+   . Fix ProcStatus default path and add to DST 
+     (EventSys v12r4, TrEvent v11r2, VeloTrack v4r1, Seeding v2r1, FwTrack v4r2)
+   . Fixes in Muon MC truth (SicbCnv v17r2, MuonSicbCnv v6r4)
+   . Fixes for Muon cross-talk calculation (MuonDet v3r2)
+   . Fixes to readout and layer bits in MuonTileID (MuonRec v2r2)
+
+ - Geometry changes (XmlDDDB v12r5):
+   . Fix overlap between Velo and Rich1
+   . Complete vertical Rich1 description
+   . Velo fixes and optimisation
+
+ - Fixed memory leaks:
+   . CaloHypo destructor was not deleting its CaloPosition and CaloMomentum
+     (EventSys v12r4, CaloEvent v11r2)
+
+ - Code cleanup:
+   . Apply coding conventions, document (OTDet v2r2, OTAssociators v2r1)
+   . Remove need for OTInitialization alg. (OTAlgorithms v11r1, Brunel.opts)
+   . Release tools at finalize (Seeding v2r1, FwTrack v4r2)
+
 </PRE><H1><A NAME=v13r1>2002-07-30 Brunel v13r1</A></H1><PRE>
 Release of Brunel for summer 2002 production.
 Supported geometry: dbase v248r4 (can process data produced with dbase v248r*)

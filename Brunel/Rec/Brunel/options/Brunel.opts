@@ -86,8 +86,7 @@ ApplicationMgr.ExtSvc += { "MagneticFieldSvc" };
 #pragma print off
 #include "$OTALGORITHMSROOT/options/otDigi.opts"
 #pragma print on
-BrunelDigiOTSeq.Members += { "OTInitialization",
-                             "MCOTDepositCreator",
+BrunelDigiOTSeq.Members += { "MCOTDepositCreator",
                              "MCOTDigitCreator",
                              "OTDigitCreator" };
 #pragma print off
@@ -111,7 +110,6 @@ ApplicationMgr.DLLs += { "FwTrack", "TrFitter", "TrExtrapolator" };
 ApplicationMgr.ExtSvc += { "TransportSvc" };
 BrunelRecoTrSeq.Members += { "FwtFind" };
 BrunelRecoTrSeq.Members += { "TrEventTracksFitter/FitFw" };
-FitFw.TrackContainer = "Rec/FitTrack/Forward";
 
 // Seeding
 ApplicationMgr.DLLs += { "Seeding" }; 
@@ -164,3 +162,6 @@ BrunelRecoTimingSeq.Members += { "TimingAlg" };
 
 // Modify printout defaults
 #include "$BRUNELOPTS/BrunelMessage.opts"
+
+// Intialise random number at every event
+BrunelInit.InitRndmOnce = false;
