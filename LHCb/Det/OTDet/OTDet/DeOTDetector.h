@@ -1,4 +1,4 @@
-// $Id: DeOTDetector.h,v 1.2 2002-05-27 14:55:53 ocallot Exp $
+// $Id: DeOTDetector.h,v 1.3 2002-05-29 12:15:36 cattanem Exp $
 #ifndef OTDET_DEOTDETECTOR_H
 #define OTDET_DEOTDETECTOR_H 1
 
@@ -17,8 +17,7 @@
  *  @author Jeroen van Tilburg jtilburg@nikhef.nl 
  */
 
-// External declarations
-extern const CLID& CLID_DeOTDetector;
+static const CLID& CLID_DeOTDetector = 8999;
 
 class DeOTDetector : public DetectorElement {
 

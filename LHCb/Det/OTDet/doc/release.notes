@@ -1,7 +1,8 @@
-! $Id: release.notes,v 1.2 2002-05-27 14:55:53 ocallot Exp $
+! $Id: release.notes,v 1.3 2002-05-29 12:15:36 cattanem Exp $
 ! Package     : OTDet
 ! Responsible : J. van Tilburg
 
+! >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> OTDet v1r0 <<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 ! 2002-05-27 - Olivier Callot
  - Make private the methods of OTLayer which are not used by OTAlgorithms or
    FwTrack or TrFitEvent. 

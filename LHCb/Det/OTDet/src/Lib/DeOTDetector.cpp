@@ -1,4 +1,4 @@
-// $Id: DeOTDetector.cpp,v 1.2 2002-05-27 14:55:53 ocallot Exp $
+// $Id: DeOTDetector.cpp,v 1.3 2002-05-29 12:20:34 cattanem Exp $
 
 // from Det/OTDet
 #include "OTDet/DeOTDetector.h"
@@ -14,9 +14,6 @@
  *
  *  @author Jeroen van Tilburg jtilburg@nikhef.nl
  */
-
-
-const CLID& CLID_DeOTDetector = 10100;  // User defined
 
 DeOTDetector::DeOTDetector( const std::string& name ) :
   DetectorElement( name )
