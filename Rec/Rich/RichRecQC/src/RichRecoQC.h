@@ -1,4 +1,4 @@
-// $Id: RichRecoQC.h,v 1.1.1.1 2003-06-30 16:51:04 jonesc Exp $
+// $Id: RichRecoQC.h,v 1.2 2003-07-03 13:12:16 jonesc Exp $
 #ifndef RICHRECQC_RICHRECOQC_H
 #define RICHRECQC_RICHRECOQC_H 1
 
@@ -17,8 +17,8 @@
 #include "RichRecBase/IRichRecMCTruthTool.h"
 #include "RichRecBase/RichTrackType.h"
 
-// Kernel
-#include "RichKernel/RichDetParams.h"
+// temporary histogramming numbers
+#include "RichRecBase/RichDetParams.h"
 
 // Event
 #include "Event/RichRecStatus.h"
