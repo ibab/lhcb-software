@@ -1,8 +1,11 @@
-// $Id: GiGaFlushAlgorithm.cpp,v 1.2 2004-02-22 16:52:39 ibelyaev Exp $
+// $Id: GiGaFlushAlgorithm.cpp,v 1.3 2004-11-22 10:13:47 gcorti Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 /// $Log: not supported by cvs2svn $
+/// Revision 1.2  2004/02/22 16:52:39  ibelyaev
+///  printout improvements
+///
 // ============================================================================
 // Include files
 // from Gaudi
@@ -45,7 +48,7 @@ GiGaFlushAlgorithm::GiGaFlushAlgorithm( const std::string& Name   ,
                                         ISvcLocator*       SvcLoc )
   : GaudiAlgorithm ( Name , SvcLoc ) 
   , m_gigaSvcName ( "GiGa" ) 
-  , m_gigaSvc     ( 0         ) 
+  , m_gigaSvc     ( 0         )
 { 
   declareProperty( "GiGa" , m_gigaSvcName ) ; 
 };
@@ -78,8 +81,7 @@ StatusCode GiGaFlushAlgorithm::initialize()
  */
 // ============================================================================
 StatusCode GiGaFlushAlgorithm::execute() 
-{
-  
+{  
   if ( 0 == gigaSvc() ) 
   { m_gigaSvc = svc<IGiGaSvc>( m_gigaSvcName , true ) ; }
   
@@ -88,11 +90,15 @@ StatusCode GiGaFlushAlgorithm::execute()
   
   // extract the event ( "flush the GiGa" )
   const G4Event* event = 0 ;
-  *gigaSvc()  >> event     ;
+  // *gigaSvc()  >> event     ;
+  // equivalent to retrieveEvent(), behind the scene this uses tool 
+  // GiGaRunManager to prepareEvent() if not prepared, processEvent() and 
+  // then retrieve it
+  gigaSvc()->retrieveEvent(event);
   
-  if ( msgLevel( MSG::INFO ) ) 
+  if ( msgLevel( MSG::DEBUG ) ) 
   { 
-    info() << " Dump G4 event object " << endreq ;
+    debug() << " Dump G4 event object " << endreq ;
     if( info().isActive() ) 
     { GiGaUtil::DumpG4Event ( info().stream() , event  ) ; }
     info() << endreq ;

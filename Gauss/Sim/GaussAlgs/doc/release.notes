@@ -3,6 +3,12 @@
 ! Purpose     : 
 ! -----------------------------------------------------------------------------
 
+!===================== GaussAlgs v1r3 2004-11-22 =============================
+! 2004-11-22 - Gloria CORTI
+ - src/GiGaFlushAlgorithm.cpp
+	 . use explicit retrieveEvent() method and put dump of G4 Event in 
+     verbose mode
+
 !===================== GaussAlgs v1r2 2004-11-16 =============================
 ! 2004-11-16 - Gloria CORTI
  - src/GaussInitialization.{h,cpp}
