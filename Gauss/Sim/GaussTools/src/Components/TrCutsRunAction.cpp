@@ -40,7 +40,8 @@ TrCutsRunAction::TrCutsRunAction
   : GiGaRunActionBase( type , name , parent )
     , m_ecut(1.0) //MeV
     , m_phcut(1.0) //MeV
-    , m_hcut(10.0) //MeV
+    , m_pKpicut( 10.0 ) //MeV
+    , m_ocut(0.0) //MeV
     , m_ncut(10.0) //MeV
     , m_nucut(0.0) //MeV
     , m_mcut(10.0) //MeV
@@ -52,10 +53,11 @@ TrCutsRunAction::TrCutsRunAction
 {  
   declareProperty("ElectronTrCut", m_ecut);
   declareProperty("GammaTrCut", m_phcut);
-  declareProperty("HadronTrCut", m_hcut);
+  declareProperty("pKpiCut" , m_pKpicut ) ;
   declareProperty("NeutronTrCut", m_ncut);
   declareProperty("NeutrinoTrCut", m_nucut);
   declareProperty("MuonTrCut", m_mcut);
+  declareProperty("OtherTrCut" , m_ocut ) ;
   declareProperty("KillLoops", m_killloops);
   declareProperty("MaxNumberSteps", m_maxsteps);
   declareProperty("MininumStep", m_minstep);
@@ -118,14 +120,19 @@ void TrCutsRunAction::BeginOfRunAction( const G4Run* run )
 //    acut=100000000.0;
           acut=m_nucut;
         }
+      else if ( (abs(particleCode) == 2212 ) || (abs(particleCode) == 321 )
+                || (abs(particleCode) == 211 ) ) 
+        {
+          acut=m_pKpicut;  
+        }
       else 
         {
-          acut=m_hcut;  
-        }
+          acut = m_ocut ;
+        }      
 
       std::string pname=particle->GetParticleName();
       
-      if(pname!="opticalphoton")
+      if ( (pname!="opticalphoton") && ( ! particle->IsShortLived() ) )
         {          
           G4ProcessManager* procMgr = particle->GetProcessManager();
           procMgr->AddDiscreteProcess(new MinEkineCuts("MinEkineCut",acut) );
