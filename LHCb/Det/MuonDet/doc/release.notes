@@ -1,19 +1,20 @@
-! $Id: release.notes,v 1.13 2002-06-04 16:08:36 dhcroft Exp $
+! $Id: release.notes,v 1.14 2002-06-04 16:51:45 cattanem Exp $
 ! CVS tag $Name: not supported by cvs2svn $
 !
 ! Package     : MuonDet
 ! Responsible : David Hutchcroft
 
-! 20020604 David Hutchcroft
+!===================== MuonDet v3r1 update 2002-06-04 ======================
+! 2002-06-04 David Hutchcroft
   - Added the code to MuonReadoutCond to store the time jitter information
   - Added the code to XmlMuonReadoutCondCnv to read the time jitter pdfs from
     the XML
 
-! 25/04/2022 David Hutchcroft
+! 2002-04-25 David Hutchcroft
   - Another Bug fix in XmlMuonRegionCnv: set FE channel size of Anode and 
     cathode correctly, I think this is the last problem with this code...
 
-! >>>>>>>>>>>>>>>> MuonDet v3r0 <<<<<<<<<<<<<<<<<<<<<
+!===================== MuonDet v3r0 release 2002-05-16 ======================
 ! 20020422 (M.Cattaneo)
   - Use DetDesc v10r* (for Gaudi v10)
 
