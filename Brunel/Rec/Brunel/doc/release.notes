@@ -3,13 +3,14 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
-</PRE><H1><A NAME=v24r0>2004-06-29 Brunel v24r0</A></H1><PRE>
+</PRE><H1><A NAME=v24r0>2004-07-14 Brunel v24r0</A></H1><PRE>
 Development version
 
-- Modified functionality
+- New or modified functionality
   . GaudiAuditors no longer used for algorithm timing, uses GaudiSequencer
     internal timing instead
   . Remove obsolete TimingAlg
+  . Added test1.opts to reproduce a known crash
 
 - DST changes
   . Remove obsolete "/Event/Trig/AlgUsedTimes#1"

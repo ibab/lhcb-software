@@ -1,0 +1,42 @@
+///////////////////////////////////////////////////////////////////////////////
+///   Job options for Brunel test1.                                         ///
+///   Reproduces crash in CaloMergedPi0Alg affecting DC04 production        ///
+///////////////////////////////////////////////////////////////////////////////
+#pragma print off
+#include "$BRUNELOPTS/Brunel.opts"           // Generic options for all jobs
+#include "$BRUNELOPTS/BrunelMoniProd.opts"   // Comment to switch on all histos
+ApplicationMgr.OutStream += { "DstWriter" }; // Comment to switch off DST output
+
+//---------------------------------------------------------------------------
+// Geometry specific options
+//---------------------------------------------------------------------------
+DetectorDataSvc.DetDbLocation = "$XMLDDDBROOT/DDDB/lhcb-200402.xml";
+#include "$STDAQROOT/options/stDAQ-v1.opts"
+#pragma print on
+
+//---------------------------------------------------------------------------
+// Number of events to process, optionally skipping some events
+//---------------------------------------------------------------------------
+ApplicationMgr.EvtMax = 3;
+EventSelector.FirstEvent = 412;  // Brunel v23r7 crashes in event 413
+
+HistogramPersistencySvc.OutputFile = "Pool411300.root";  // Monitoring histos
+
+// POOL file catalogs. First one is read-write, others are read only
+PoolDbCacheSvc.Catalog = {
+  "xmlcatalog_file:NewCatalog.xml"
+ ,"xmlcatalog_http://cattanem.home.cern.ch/cattanem/POOL/MyCatalog.xml"
+ ,"xmlcatalog_http://gcorti.home.cern.ch/gcorti/POOL/MyCatalog.xml"
+};
+
+//---------------------------------------------------------------------------
+// Event input
+//---------------------------------------------------------------------------
+EventSelector.Input = { "DATAFILE='rfio:/castor/cern.ch/lhcb/DC04/debug/00000648_00001486_4.digi' TYP='POOL_ROOT' OPT='READ'" };
+
+//---------------------------------------------------------------------------
+// Event output
+//---------------------------------------------------------------------------
+DstWriter.Output = "DATAFILE='PFN:Pool411300.dst' TYP='POOL_ROOTTREE' OPT='REC'";
+
+//////////////////////////////////////////////////////////////////////////////
