@@ -17,6 +17,7 @@ ToolSvc.RichPhotonPredictor.OutputLevel = 2;
 ToolSvc.RichPhotonSignal.OutputLevel = 2;
 ToolSvc.RichToolRegistry.OutputLevel = 2;
 ToolSvc.RichGeomEff.OutputLevel = 2;
+ToolSvc.RichStatusCreator.OutputLevel = 2;
 
 // Ring Refit
 RichRingRefit.OutputLevel = 2;

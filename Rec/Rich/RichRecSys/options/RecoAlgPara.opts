@@ -18,13 +18,15 @@ RichGloPIDTrSel.MinimumLikelihoodMomentum = 0.0*GeV;
 RichGloPIDTrSel.ResetTracksToPion         = false; 
 
 // Global Algorithm parameters - phase 1
-RichGloPIDIt1.TrackMinDeltaLLThreshold    = -5;
-RichGloPIDIt1.LikelihoodThreshold         = 1e-3;
+RichGloPIDIt1.TrackMinDeltaLLThreshold    = -1;
+RichGloPIDIt1.TrackFreezeOutThreshold     = 3;
+RichGloPIDIt1.LikelihoodThreshold         = 1e-2;
 RichGloPIDIt1.MinSignalForNoLLCalc        = 1e-25;
 RichGloPIDIt1.MinSignalForAproxLLCalc     = 1e-5;
 
 // Global Algorithm parameters - phase 2
 RichGloPIDIt2.TrackMinDeltaLLThreshold    = -5;
+RichGloPIDIt2.TrackFreezeOutThreshold     = 5;
 RichGloPIDIt2.LikelihoodThreshold         = 1e-3;
 RichGloPIDIt2.MinSignalForNoLLCalc        = 1e-25;
 RichGloPIDIt2.MinSignalForAproxLLCalc     = 1e-5;
@@ -36,7 +38,9 @@ RichRingRefit.MaxBackgroundProb           = {  999,    999,    999  };
 RichRingRefit.MaxCandsPerPixel            = {    1,      1,      1  };
 
 // Global Algorithm parameters - phase 3
+// not used yet.
 RichGloPIDIt3.TrackMinDeltaLLThreshold    = -5;
+RichGloPIDIt3.TrackFreezeOutThreshold     = 10;
 RichGloPIDIt3.LikelihoodThreshold         = 1e-3;
 RichGloPIDIt3.MinSignalForNoLLCalc        = 1e-25;
 RichGloPIDIt3.MinSignalForAproxLLCalc     = 1e-5;
