@@ -1,9 +1,15 @@
 ! =============================================================================
-! $Id: release.notes,v 1.118 2002-10-30 15:31:37 ranjard Exp $ 
+! $Id: release.notes,v 1.119 2002-11-05 08:06:07 sponce Exp $ 
 ! =============================================================================
 ! package DetDesc
 ! package manager : N.N 
 ! =============================================================================
+
+! 2002-11-04 - Sebastien Ponce
+ - modified the level of the message telling that no specialized converter was
+   found for a given detector element. Now this is a DEBUG message except if
+   the XmlCnvSvc does not allow generic conversion. In this last case, it is
+   an ERROR message.
 
 !===================== DetDesc v11r2 2002-10-29 =============================
 ! 2002-10-30 - Ivan Belyaev
