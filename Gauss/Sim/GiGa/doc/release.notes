@@ -1,7 +1,13 @@
-! $Id: release.notes,v 1.103 2004-04-20 09:05:50 ranjard Exp $
+! $Id: release.notes,v 1.104 2004-07-05 16:06:19 gcorti Exp $
 ! =============================================================================
 Package:          GiGa
 Package manager : Vanya Belyaev
+
+! 2004-07-05 - Gloria CORTI
+ - GiGa/GiGaFieldMgrBase.h
+   src/Lib/GiGaFieldMgrBase.cpp
+   . introduce new property (DeltaChord) to control the delta chord value,
+     set as default value the G4 default (0.25 * mm ) 
 
 !======================= GiGa v17r0 =====================================
 ! 2004-04-20 - Vanya BELYAEV

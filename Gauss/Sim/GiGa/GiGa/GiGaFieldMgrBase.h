@@ -1,8 +1,11 @@
-// $Id: GiGaFieldMgrBase.h,v 1.2 2003-10-30 16:33:33 witoldp Exp $
+// $Id: GiGaFieldMgrBase.h,v 1.3 2004-07-05 16:06:19 gcorti Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2003/10/30 16:33:33  witoldp
+// modified GiGaFieldManager
+//
 // Revision 1.1  2003/04/06 18:49:45  ibelyaev
 //  see $GIGAROOT/doc/release.notes
 // 
@@ -111,6 +114,8 @@ private:
   double m_deltaintersection;
   // delta one step
   double m_deltaonestep;
+  // delta chord
+  double m_deltaChord;
   // stepper type 
   std::string                     m_stepperType ;
   // the stepper itself 

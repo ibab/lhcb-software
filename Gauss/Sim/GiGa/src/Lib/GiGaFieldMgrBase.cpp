@@ -1,8 +1,11 @@
-// $Id: GiGaFieldMgrBase.cpp,v 1.7 2004-02-17 18:26:51 ibelyaev Exp $
+// $Id: GiGaFieldMgrBase.cpp,v 1.8 2004-07-05 16:06:19 gcorti Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.7  2004/02/17 18:26:51  ibelyaev
+//  fix with external physics constructors/lists
+//
 // ============================================================================
 // Include files
 // Geant4//
@@ -70,6 +73,7 @@ GiGaFieldMgrBase::GiGaFieldMgrBase
     , m_minStep       ( 0.01*mm              )
     , m_deltaintersection (0.001*mm)
     , m_deltaonestep      (0.001*mm)
+    , m_deltaChord    ( 0.25 * mm            )
     , m_stepperType   ( "UNDEFINED"          )
     , m_stepper       ( 0                    )
 {
@@ -80,6 +84,7 @@ GiGaFieldMgrBase::GiGaFieldMgrBase
   declareProperty ("Global", m_global);
   declareProperty ("DeltaIntersection", m_deltaintersection);
   declareProperty ("DeltaOneStep", m_deltaonestep);
+  declareProperty ("DeltaChord", m_deltaChord);
   //
 #ifdef GIGA_DEBUG
   //
@@ -280,6 +285,7 @@ StatusCode GiGaFieldMgrBase::createFieldMgr () const
   m_manager -> SetChordFinder( chordFinder );
   m_manager -> SetDeltaIntersection(m_deltaintersection);
   m_manager -> SetDeltaOneStep(m_deltaonestep);
+  m_manager -> GetChordFinder() -> SetDeltaChord(m_deltaChord);
   
   return StatusCode::SUCCESS ;
 };
