@@ -1,10 +1,13 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: benderloop.py,v 1.2 2004-08-26 19:34:36 ibelyaev Exp $ 
+# $Id: benderloop.py,v 1.3 2004-08-27 11:42:22 ibelyaev Exp $ 
 # =============================================================================
 # CVS tag $NAme:$ 
 # =============================================================================
 # $Log: not supported by cvs2svn $
+# Revision 1.2  2004/08/26 19:34:36  ibelyaev
+#  remove explict PyLCGDict
+#
 # =============================================================================
 
 # =============================================================================
@@ -16,8 +19,10 @@
 # @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 # =============================================================================
 
-# import the global namespace 
-from gaudimodule import gbl
+# import the global namespace
+import gaudimodule as gaudi
+
+gbl=gaudi.gbl 
 
 # load the minimal set of dictionaries
 gaudi.loaddict('BenderDict')

@@ -1,10 +1,13 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: bendermodule.py,v 1.12 2004-08-26 19:34:36 ibelyaev Exp $ 
+# $Id: bendermodule.py,v 1.13 2004-08-27 11:42:22 ibelyaev Exp $ 
 # =============================================================================
 # CVS tag $NAme:$ 
 # =============================================================================
 # $Log: not supported by cvs2svn $
+# Revision 1.12  2004/08/26 19:34:36  ibelyaev
+#  remove explict PyLCGDict
+#
 # Revision 1.11  2004/08/06 12:07:07  ibelyaev
 #  minor improvements
 #
@@ -44,6 +47,8 @@ from   benderalgo    import *
 
 import benderstr
 
+AppMgr = gaudi.AppMgr 
+g      = AppMgr()
 
 # =============================================================================
 # The END 
