@@ -1,8 +1,11 @@
-// $Id: RelationTypeTraits.h,v 1.12 2003-01-17 14:07:01 sponce Exp $
+// $Id: RelationTypeTraits.h,v 1.13 2003-05-15 15:22:10 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.12  2003/01/17 14:07:01  sponce
+// support for gcc 3.2
+//
 // Revision 1.11  2002/10/29 08:53:29  ibelyaev
 //  add the reverse itereators to relations
 //
@@ -15,6 +18,8 @@
 #include <vector>
 // #include <deque>
 #include <functional>
+// GaudiKernel
+#include "GaudiKernel/GaudiException.h"
 // Relations
 #include "Relations/ObjectTypeTraits.h"
 
@@ -135,13 +140,9 @@ namespace Relations
     /** definition of the standard iterator types
      *  @attention the true  @p iterator type is indeed  @p const_iterator !
      */
-    typedef typename Entries::const_iterator         iterator               ;
-    typedef typename Entries::const_iterator         const_iterator         ;
-    typedef typename Entries::const_reference        reference              ;
-    typedef typename Entries::const_reference        const_reference        ;
-    typedef typename Entries::const_reverse_iterator const_reverse_iterator ;
+    typedef typename Entries::const_iterator         iterator  ;    
+    typedef std::pair<iterator,iterator>             RangeBase ;
     
-    typedef std::pair<iterator,iterator>    RangeBase ;
     /** @struct Range
      *
      *  An auxillary structure to provide a little bit
@@ -156,37 +157,75 @@ namespace Relations
       /// short cut for own base class
       typedef RangeBase Base;
       typedef typename Entries::const_iterator         iterator               ;
-      typedef typename Entries::const_reference        reference              ;
       typedef typename Entries::const_iterator         const_iterator         ;
-      typedef typename Entries::const_reference        const_reference        ;
       typedef typename Entries::const_reverse_iterator const_reverse_iterator ;
+      typedef typename Entries::const_reverse_iterator reverse_iterator       ;
+      typedef typename Entries::const_reference        reference              ;
+      typedef typename Entries::const_reference        const_reference        ;
+      typedef typename Entries::value_type             value_type             ;
       /// default constructor
       Range()                                : Base()              {} ;
       /// constructor
       Range( iterator begin , iterator end ) : Base( begin , end ) {} ;
       /// the aliases for standard "first" and "second"
-      /// begin-iterator (non-const version)
-      iterator&        begin  ()       { return Base::first                  ; }
       /// begin-iterator (    const version)
-      iterator         begin  () const { return Base::first                  ; }
-      /// end-iterator   (non-const version)
-      iterator&        end    ()       { return Base::second                 ; }
+      inline iterator         begin  () const { return Base::first           ; }
       /// end-iterator   (    const version)
-      iterator         end    () const { return Base::second                 ; }
+      inline iterator         end    () const { return Base::second          ; }
       /// reverse iterator "begin"
-      const_reverse_iterator rbegin () const 
-      { return const_reverse_iterator( end   () )  ; }
+      inline reverse_iterator rbegin () const
+      { return const_reverse_iterator ( end   () ) ; }
       /// reverse iterator "end"
-      const_reverse_iterator rend   () const 
-      { return const_reverse_iterator( begin () )  ; }
-      /// front element (applied only for 'valid' ranges 
-      const_reference  front  () const { return *(Base::first)               ; }
-      /// back  element (applied only for 'valid' ranges 
-      const_reference  back   () const { return *(Base::second-1)            ; }
+      inline reverse_iterator rend   () const 
+      { return const_reverse_iterator ( begin () ) ; }
+      /** front element (applied only for 'valid' ranges)
+       *  @warning for invalid index the reference 
+       *           to "default" element is returned 
+       */
+      inline const_reference  front  () const { return (*this)( 0 )          ; }
+      /** back  element (applied only for 'valid' ranges)
+       *  @warning for invalid index the reference 
+       *           to "default" element is returned 
+       */
+      inline const_reference  back   () const { return (*this)( size() - 1 ) ; }
       /// number of relations 
-      size_t           size   () const { return Base::second -  Base::first  ; }
+      inline size_t           size   () const { return end () -  begin ()    ; }
       /// empty?
-      bool             empty  () const { return Base::second == Base::first  ; }
+      inline bool             empty  () const { return end () == begin ()    ; }
+      /** the access to the items by index 
+       *  @warning for invalid index the reference 
+       *           to "default" element is returned 
+       *  @param  index the index of the element 
+       *  @return the value 
+       */
+      inline const_reference  operator() ( const size_t index ) const
+      {
+        if ( index < size() ) { return *( begin() + index ) ; }
+        static const_reference s_default = value_type() ;
+        return s_default ;
+      };
+      /** the access to the items by index 
+       *  @warning for invalid index the reference 
+       *           to "default" element is returned 
+       *  @param  index the index of the element 
+       *  @return the value 
+       */
+      inline const_reference  operator[] ( const size_t index ) const
+      { return (*this) ( index ) ; } ;
+      /** the access to the items by index 
+       *  @warning for invalid index the reference 
+       *           to "default" element is returned
+       *  @param  index the index of the element 
+       *  @return the value 
+       */
+      inline const_reference  at         ( const size_t index ) const
+      { 
+        if( index >= size() ) 
+          { throw GaudiException("RelationTypeTraits::Range: index error" , 
+                                 "*Relations*"                            ,
+                                 StatusCode::FAILURE                      ) ; } 
+        return (*this) ( index ) ; 
+      } ;
     };
     
     /** technical definitions, useful for  for implementation 

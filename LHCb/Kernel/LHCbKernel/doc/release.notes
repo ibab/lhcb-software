@@ -2,6 +2,57 @@ Package LHCbKernel
 Package manager: M.Cattaneo
 Purpose: LHCb specific Kernel classes
 
+! 2003-05-15 - Vanya BELYAEV
+ -  Relations/RelationTypeTraits.h 
+    Relations/RelationWeightedTypeTraits.h 
+   Some "improvements" for Ranges
+   1) introduce new methods: "operator()", "operator[]" and "at" 
+      in accordance with STL standard : 
+
+       Range r = ... ; 
+       for( size_t index = 0 ; index < r.size() ; ++index )
+        {
+          // use 'operator()'
+          std::cout << " relation by index " << index 
+                    << " from " <<     r(index).from() 
+                    << " to   " <<     r(index).to  () << std::endl ;
+          std::cout << " relation by index " << index 
+                    << " from " <<     r(index).from() 
+                    << " to   " <<     r(index).to  () << std::endl ;
+          // use 'operator[]'
+          std::cout << " relation by index " << index 
+                    << " from " <<     r[index].from() 
+                    << " to   " <<     r[index].to  () << std::endl ;
+          std::cout << " relation by index " << index 
+                    << " from " <<     r[index].from() 
+                    << " to   " <<     r[index].to  () << std::endl ;
+          // use 'at()'
+          std::cout << " relation by index " << index 
+                    << " from " <<  r.at(index).from() 
+                    << " to   " <<  r.at(index).to  () << std::endl ;
+          std::cout << " relation by index " << index 
+                    << " from " <<  r.at(index).from() 
+                    << " to   " <<  r.at(index).to  () << std::endl ;
+         }
+
+     For invalid indices  'operator()' and 'operator[]'both 
+     return references to "default(empty)" entry in relation table 
+     ('from','to' and 'weight' gets their default values - "0")
+     while "at()" throws the GaudiException 
+   2) "front()" and "back()" methods now ar ereimplemented using 
+       "operator()" and its error handling.(The previous behavior was 
+        undefined for invalid ranges) 
+   3) potential problems of "rbegin" and "rend" methods are fixed 
+   4) add new type to Ranges "value_type" 
+   5) remove few unnesessary types from Range
+
+  Now Range type is fulfill all ANSI C++ signatures for standard containers. 
+  Therefore now it is (from compiler's point of view) undistinguishable 
+  from standard STL containers. 
+  
+- src/Test/RelationsTest.cpp - updated to test the access with indices 
+
+
 ! 2003-04-15 - Philippe Charpentier
  - Add property "DecreasingWeight" to be used in associatedFrom()/To()
    Note: this does not change the behaviour of the Range class (see below)
