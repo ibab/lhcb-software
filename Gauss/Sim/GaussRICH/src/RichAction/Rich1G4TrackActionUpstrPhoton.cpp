@@ -51,18 +51,45 @@ void Rich1G4TrackActionUpstrPhoton::PreUserTrackingAction
   const G4DynamicParticle * aParticle = aTrack->GetDynamicParticle();
   if(aParticle->GetDefinition() == G4OpticalPhoton::OpticalPhoton() ) {
     
-    G4double CurPhotonOrigZcoord= aTrack->GetVertexPosition().z();
+    //    G4double CurPhotonOrigZcoord= aTrack->GetVertexPosition().z();
+    G4double CurPhotonZcoord= aTrack->GetPosition().z();
 
+    // test by SE
+    //    G4cout<<" Cur phot Zorgin = "<<CurPhotonOrigZcoord<<G4endl;
+    // G4cout<<" Cur phot XYZ orgin = "<< aTrack->GetVertexPosition() <<G4endl;
+    // G4cout<<" Cur phot XYZ pos =  "<< aTrack->GetPosition() <<G4endl;
+    
+    
+    // end of test by SE
     // Kill the photons created upstream of Aerogel.
-
-    if( CurPhotonOrigZcoord >= ZUpsRich1Analysis && 
-        CurPhotonOrigZcoord <=  AgelZBeginAnalysis ) {
+    // following change made in July 2003 since origin seems to
+    // be not set at this stage, hence  it is 0,0,0 always.
+    //    if( CurPhotonOrigZcoord >= ZUpsRich1Analysis && 
+    //    CurPhotonOrigZcoord <=  AgelZBeginAnalysis ) {
+    if( CurPhotonZcoord >= ZUpsRich1Analysis && 
+        CurPhotonZcoord <  AgelZBeginAnalysis ) {
       
        trackMgr()->GetTrack() ->SetTrackStatus(fStopAndKill);
 
+       //        G4cout<<"Photon Killed upstr end of rich1 Z= "
+       //      <<CurPhotonZcoord<<G4endl;
+     
+    }
+    // Kill photons in Rich1 which are produced
+    // downstream of the Exitwall.
+
+    //    if( CurPhotonOrigZcoord >=  Rich1ExitWallBeginZAnalysis && 
+    //   CurPhotonOrigZcoord <=  ZDnsRich1Analysis ) {
+    if( CurPhotonZcoord >=  Rich1ExitWallBeginZAnalysis && 
+        CurPhotonZcoord <=  ZDnsRich1Analysis ) {
+      
+       trackMgr()->GetTrack() ->SetTrackStatus(fStopAndKill);
+       //       G4cout<<"Photon Killed downstr end of rich1 Z= "
+       //      <<CurPhotonZcoord<<G4endl;
+       
       
     }
-    
+        
     
   }
   
