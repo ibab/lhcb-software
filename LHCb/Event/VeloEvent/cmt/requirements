@@ -7,7 +7,7 @@ use GaudiSvc v4r0p1  GaudiSys
 use GaudiAlg v1r1 GaudiSys
 use LHCbEvent v8 Event
 
-include_dirs ${VELOEVENTROOT}
+include_dirs $(VELOEVENTROOT)
 
 #Linker library
 library VeloEventLib       ../src/VeloCLIDs.cpp

@@ -15,12 +15,12 @@
 #define LHCBEVENT_FACTORIES_MCINSTANTIATION_CPP  1
 
 // RCS Id for identification of object version
-static const char* rcsid = "$Id: VeloEventInstantiation.cpp,v 1.1.1.1 2000-11-23 13:39:24 ranjard Exp $";
+static const char* rcsid = "$Id: VeloEventInstantiation.cpp,v 1.2 2000-12-06 17:22:22 ranjard Exp $";
 
 // Include files
 #include "GaudiKernel/ObjectFactory.h"
-#include "LHCbEvent/ObjectVector.h"
-#include "LHCbEvent/ObjectList.h"
+#include "GaudiKernel/ObjectVector.h"
+#include "GaudiKernel/ObjectList.h"
 
 #define IMPLEMENT_VELO_CONTAINED_FACTORIES(x)                             \
   static ContainedObjectFactory< x > s_##x##Factory;                    \
