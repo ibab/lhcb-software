@@ -1,4 +1,4 @@
-// $Id: MuonTileIDXYZ.h,v 1.6 2002-08-05 12:53:04 dhcroft Exp $
+// $Id: MuonTileIDXYZ.h,v 1.7 2002-10-21 20:43:54 asatta Exp $
 #ifndef MUONTILEIDXYZ_H 
 #define MUONTILEIDXYZ_H 1
 
@@ -11,6 +11,7 @@
 
 // local
 #include "MuonTools/IMuonTileXYZTool.h"
+#include "MuonDet/MuonBasicGeometry.h"
 
 /** @class MuonTileIDXYZ MuonTileIDXYZ.h
  *  
@@ -163,7 +164,9 @@ private:
   int m_NStation;
   // Number of regions
   int m_NRegion;
-
+  //Names of the station
+  std::vector<std::string> m_stationNames;
+  
 
   // size of logical channels
   std::vector<unsigned int> m_logChanVertGridX;

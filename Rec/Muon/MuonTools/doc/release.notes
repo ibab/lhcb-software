@@ -1,8 +1,11 @@
-! $Id: release.notes,v 1.22 2002-09-25 09:57:49 dhcroft Exp $
+! $Id: release.notes,v 1.23 2002-10-21 20:43:53 asatta Exp $
 ! =============================================================================
 ! Package     : MuonTools
 ! Responsible : David Hutchcroft David.Hutchcroft@cern.ch
 ! =============================================================================
+
+! 2002-10-21 - Alessia Satta
+ - fix to deal with the M1/noM1 cases
 
 ! 2002-09-25 - David Hutchcroft
  - Removed two debugging std::cout lines that should not have been committed

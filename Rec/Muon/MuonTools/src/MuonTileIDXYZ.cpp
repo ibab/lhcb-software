@@ -1,4 +1,4 @@
-// $Id: MuonTileIDXYZ.cpp,v 1.16 2002-09-25 09:57:53 dhcroft Exp $
+// $Id: MuonTileIDXYZ.cpp,v 1.17 2002-10-21 20:43:53 asatta Exp $
 // Include files 
 #include <cstdio>
 #include <cmath>
@@ -82,7 +82,15 @@ MuonTileIDXYZ::MuonTileIDXYZ( const std::string& type,
 
   m_NStation = 0;
   m_NRegion = 0;
-
+  MuonBasicGeometry basegeometry(m_DDS,msgSvc());
+  m_NStation= basegeometry.getStations();
+  m_NRegion = basegeometry.getRegions();
+  int i=0;
+  while(i<m_NStation){  
+    m_stationNames.push_back(basegeometry.getStationName(i));
+    log<<MSG::DEBUG<<" station "<<i<<" "<<m_stationNames[i]<<endreq;
+    i++;
+  }
 }
 
 MuonTileIDXYZ::~MuonTileIDXYZ(){
@@ -402,11 +410,12 @@ StatusCode MuonTileIDXYZ::getXYZAndCache(const int& station,
     //TDS path t chamber is of the form /dd/Structure/LHCb/Muon/M1/R1/Cham001
     // Name this chamber
     char charPath[80];
-    sprintf(charPath,"/dd/Structure/LHCb/Muon/M%1i/R%1i/Cham%03i",
-            station+1,region+1,chamberNum);
-    std::string chamberString = charPath;
+    std::string baseMuonPath="/dd/Structure/LHCb/Muon/";
+    std::string stationPath=m_stationNames[station];
+    sprintf(charPath,"/R%1i/Cham%03i",region+1,chamberNum);   
+    std::string chamberString = baseMuonPath + stationPath+charPath;
 
-    log << MSG::DEBUG << "asking TDS for " << charPath << endreq;
+    log << MSG::DEBUG << "asking TDS for " << chamberString << endreq;
     SmartDataPtr<DeMuonChamber> muChamber(m_DDS, chamberString);
     if(!muChamber){
       log << MSG::ERROR << "Could not read chamber "
