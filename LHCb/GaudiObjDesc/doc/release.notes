@@ -2,9 +2,18 @@ Package: GaudiObjDesc
 Desccription: This package contains a set of tools used to generate code from the XML description of the data object classes.
 Package manager : Stefan Roiser
 
+===============================GaudiObjDesc v6r2p1============================
+!20040107 - Stefan
+- bugfix: <import> did not work for associations
+- bugfix: GaudiCppExport.xml added information for ITCluster, L1Track2d
+          L1Track3d and OTCluster
+- new script to produce GaudiCppExport.xml automatically (not used for this version)
+
+===============================GaudiObjDesc v6r2==============================
 !20031219 - Stefan
 - bugfix: converting XMLCh* to char* when using string with possible replacement
 
+===============================GaudiObjDesc v6r1==============================
 !20031217 - Stefan
 - <assoc> is now a sub-element of <package> 
 - new attribute "from" for element <assoc>

@@ -1,4 +1,4 @@
-// $Id: DaDiCppDict.cpp,v 1.40 2003-12-19 14:41:49 mato Exp $
+// $Id: DaDiCppDict.cpp,v 1.41 2004-01-07 16:49:43 mato Exp $
 
 #include "DaDiTools.h"
 #include "DaDiCppDict.h"
@@ -398,6 +398,15 @@ void printCppDictionary(DaDiPackage* gddPackage,
   delete dbParser;
   //XMLString::release(&dbErrReporter);
 
+  std::vector<std::string> addImp = DaDiTools::addImport();
+  std::vector<std::string>::iterator viter;
+
+  for (viter = addImp.begin(); viter != addImp.end(); ++viter)
+  {
+    std::string::size_type posS = (*viter).find_last_of("/");
+    dbExportClass[(*viter).substr(posS+1,std::string::npos)] = (*viter);
+  }
+
   if (additionalImports)
   {
     const char* addImportsFile = "AddImports.txt";
@@ -485,13 +494,24 @@ void printCppDictionary(DaDiPackage* gddPackage,
 
 
     std::vector<std::string> impvec;
+
+    std::list<std::string> impList = gddPackage->importList();
+    for (std::list<std::string>::const_iterator lIter = impList.begin();
+         lIter != impList.end(); ++lIter)
+    {
+      if (dbExportClass[*lIter] != "")
+      {
+        impvec.push_back(dbExportClass[*lIter]);
+      }
+    }
+
     for (i=0; i<gddPackage->sizeDaDiAssociation(); ++i)
     {
       char* impcToName = XMLString::transcode(gddPackage->popDaDiAssociation()->to());
       std::string impToName = impcToName;
       XMLString::release(&impcToName);
 
-      if (impToName != "float" && impToName != "int" && impToName != "char")
+      if (!DaDiTools::isFundamental(impToName))
       {
         if (dbExportClass[impToName] != "") 
         {
@@ -503,15 +523,15 @@ void printCppDictionary(DaDiPackage* gddPackage,
       std::string impFromName = impcFromName;
       XMLString::release(&impcFromName);
 
-      if (impFromName != "float" && impFromName != "int" && impFromName != "char")
+      if (!DaDiTools::isFundamental(impFromName))
       {
         if (dbExportClass[impFromName] != "") 
         {
           impvec.push_back(dbExportClass[impFromName]);
         }
       }
-    }
-    
+    }    
+
     std::sort(impvec.begin(),impvec.end());
     impvec.erase(std::unique(impvec.begin(), impvec.end()), impvec.end());
 

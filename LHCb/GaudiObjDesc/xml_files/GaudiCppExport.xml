@@ -720,6 +720,10 @@
   </package>
 
   <package name="Event">
+    <class name="ITCluster" author="__UNKNOWN__" desc="__NODESC__"/>
+    <class name="L1Track2d" author="__UNKNOWN__" desc="__NODESC__"/>
+    <class name="L1Track3d" author="__UNKNOWN__" desc="__NODESC__"/>
+    <class name="OTCluster" author="__UNKNOWN__" desc="__NODESC__"/>
     <class name="CaloCellIDKeyTraits" author="__UNKNOWN__" desc="__NODESC__"/>
     <class name="CaloDataFunctor" author="__UNKNOWN__" desc="__NODESC__"/>
     <class name="CaloMCTools" author="__UNKNOWN__" desc="__NODESC__"/>
