@@ -1,4 +1,4 @@
-// $Id: DecayFinder.h,v 1.1 2002-05-20 23:09:36 gcorti Exp $
+// $Id: DecayFinder.h,v 1.2 2002-06-26 13:54:23 odie Exp $
 #ifndef TOOLS_DECAYFINDER_H 
 #define TOOLS_DECAYFINDER_H 1
 
@@ -105,7 +105,7 @@ private:
   public:
     ParticleMatcher( IParticlePropertySvc *ppSvc );
     ParticleMatcher( ParticleMatcher &copy );
-    ParticleMatcher( char *name, IParticlePropertySvc *ppSvc );
+    ParticleMatcher( std::string *name, IParticlePropertySvc *ppSvc );
     ParticleMatcher( Quarks q1, Quarks q2, Quarks q3,
                      IParticlePropertySvc *ppSvc );
     ParticleMatcher( Quantums quantum, Relations relation, double value,
