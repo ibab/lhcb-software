@@ -1,8 +1,11 @@
-// $Id: GiGaRunManagerInterface.cpp,v 1.6 2003-09-22 13:57:11 ibelyaev Exp $ 
+// $Id: GiGaRunManagerInterface.cpp,v 1.7 2003-10-17 13:47:49 ranjard Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.6  2003/09/22 13:57:11  ibelyaev
+//  polishing of addRef/release/releaseTools/finalize
+//
 // Revision 1.5  2003/04/06 18:49:49  ibelyaev
 //  see $GIGAROOT/doc/release.notes
 //
@@ -206,7 +209,7 @@ StatusCode GiGaRunManager::declare( G4VUserPhysicsList             * obj )
     }  
   ///
   G4RunManager::physicsInitialized = false ; 
-  G4RunManager::cutoffInitialized  = false ; 
+  //flr  G4RunManager::cutoffInitialized  = false ; 
   G4RunManager::SetUserInitialization( obj ); 
   ///
   set_krn_Is_Initialized ( false ) ; 

@@ -1,7 +1,12 @@
-! $Id: release.notes,v 1.83 2003-10-09 08:57:28 witoldp Exp $
+! $Id: release.notes,v 1.84 2003-10-17 13:47:49 ranjard Exp $
 ! =============================================================================
 Package:          GiGa
 Package manager : Vanya Belyaev
+
+!========================== GiGa v14r6 2003-10-17 =======================
+! 2003-10-17 - Florence RANJARD
+ - GiGaRunManager.cpp, GiGaRunManagerInterface.cpp - remove all references
+   to "cutoffInitialize" which has been removed from geant4.5.2.ref04.
 
 !========================= GiGa v14r5 2003-10-09 ==========================
 ! 2003-10-09 - Witek Pokorski

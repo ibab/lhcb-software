@@ -1,8 +1,11 @@
-// $Id: GiGaRunManager.cpp,v 1.11 2003-04-06 18:49:48 ibelyaev Exp $ 
+// $Id: GiGaRunManager.cpp,v 1.12 2003-10-17 13:47:49 ranjard Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.11  2003/04/06 18:49:48  ibelyaev
+//  see $GIGAROOT/doc/release.notes
+//
 // Revision 1.10  2002/12/16 16:23:16  ibelyaev
 //  update for newer version of Geant4 (release 5.0)
 //
@@ -411,9 +414,9 @@ StatusCode GiGaRunManager::initializeKernel()
   if( !(G4RunManager::physicsInitialized ) &&  
       ( 0 == G4RunManager::physicsList   )     )
     { return Exception("initializeKernel(): no physics information!");}
-  if( !(G4RunManager::cutoffInitialized  ) &&  
-      ( 0 == G4RunManager::physicsList   )     )
-    { return Exception("initializeKernel(): no cut-off information!");}
+  //flr if( !(G4RunManager::cutoffInitialized  ) &&  
+  //flr      ( 0 == G4RunManager::physicsList   )     )
+  //flr   { return Exception("initializeKernel(): no cut-off information!");}
   ///
   G4RunManager::Initialize();
   ///
