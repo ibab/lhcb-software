@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/GaudiObjDesc/src/DaDiEnum.h,v 1.1 2002-01-21 09:54:25 mato Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/GaudiObjDesc/src/DaDiEnum.h,v 1.2 2002-03-13 18:35:47 mato Exp $
 #ifndef DADIENUM_H 
 #define DADIENUM_H 1
 
@@ -29,7 +29,7 @@ public:
 
   DOMString access();
   void setAccess(DOMString value);
-  
+
 protected:
 
 private:
@@ -38,9 +38,7 @@ private:
             m_desc, 
             m_value, 
             m_access;
-
 };
-
 
 inline DOMString DaDiEnum::name()
 {

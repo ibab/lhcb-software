@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/GaudiObjDesc/src/DaDiPackage.h,v 1.7 2002-02-27 13:25:35 mato Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/GaudiObjDesc/src/DaDiPackage.h,v 1.8 2002-03-13 18:35:47 mato Exp $
 #ifndef DADIPACKAGE_H 
 #define DADIPACKAGE_H 1
 
@@ -27,21 +27,25 @@ public:
   void setPackageName(DOMString value);
 
   std::string popImpSoftList();
+  std::list<std::string> impSoftList();
   void pushImpSoftList(std::string value);
   int sizeImpSoftList();
   void remDblImpSoftList();
   
   std::string popImpStdList();
+  std::list<std::string> impStdList();
   void pushImpStdList(std::string value);
   int sizeImpStdList();
   void remDblImpStdList();
   
   std::string popImportList();
+  std::list<std::string> importList();
   void pushImportList(std::string value);
   int sizeImportList();
   void remDblImportList();
   
 	std::string popNoImports();
+  std::list<std::string> noImports();
 	void pushNoImports(std::string value);
 	int sizeNoImports();
 
@@ -85,6 +89,11 @@ inline std::string DaDiPackage::popImpSoftList()
   return pt;
 }
 
+inline std::list<std::string> DaDiPackage::impSoftList()
+{
+  return m_impSoftList;
+}
+
 inline void DaDiPackage::pushImpSoftList(std::string value)
 {
   bool doImport = true;
@@ -120,6 +129,11 @@ inline std::string DaDiPackage::popImpStdList()
   return pt;
 }
 
+inline std::list<std::string> DaDiPackage::impStdList()
+{
+  return m_impStdList;
+}
+
 inline void DaDiPackage::pushImpStdList(std::string value)
 {
   m_impStdList.push_back(value);
@@ -142,6 +156,11 @@ inline std::string DaDiPackage::popImportList()
   m_importList.push_back(pt);
   m_importList.pop_front();
   return pt;
+}
+
+inline std::list<std::string> DaDiPackage::importList()
+{
+  return m_importList;
 }
 
 inline void DaDiPackage::pushImportList(std::string value)
@@ -213,6 +232,11 @@ inline std::string DaDiPackage::popNoImports()
 	m_noImports.push_back(pt);
 	m_noImports.pop_front();
 	return pt;
+}
+
+inline std::list<std::string> DaDiPackage::noImports()
+{
+  return m_noImports;
 }
 
 inline void DaDiPackage::pushNoImports(std::string value)

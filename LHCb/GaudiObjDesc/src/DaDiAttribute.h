@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/GaudiObjDesc/src/DaDiAttribute.h,v 1.5 2002-02-11 09:24:31 mato Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/GaudiObjDesc/src/DaDiAttribute.h,v 1.6 2002-03-13 18:35:46 mato Exp $
 #ifndef DADIATTRIBUTE_H 
 #define DADIATTRIBUTE_H 1
 
@@ -26,6 +26,9 @@ public:
   
   DOMString desc();
   void setDesc(DOMString value);
+
+  DOMString array();
+  void setArray(DOMString value);
   
   DOMString access();
   void setAccess(DOMString value);
@@ -49,6 +52,7 @@ private:
   DOMString m_name, 
             m_type, 
             m_desc, 
+            m_array,
             m_access,
             m_init,
             m_setMeth, 
@@ -86,6 +90,16 @@ inline DOMString DaDiAttribute::desc()
 inline void DaDiAttribute::setDesc(DOMString value)
 {
   m_desc = value;
+}
+
+inline DOMString DaDiAttribute::array()
+{
+  return m_array;
+}
+
+inline void DaDiAttribute::setArray(DOMString value)
+{
+  m_array = value;
 }
 
 inline DOMString DaDiAttribute::access()

@@ -1,4 +1,4 @@
-// $Id: DaDiCppDict.cpp,v 1.17 2002-03-04 21:50:59 mato Exp $
+// $Id: DaDiCppDict.cpp,v 1.18 2002-03-13 18:35:46 mato Exp $
 
 //#include "GaudiKernel/Kernel.h"
 #include "DaDiTools.h"
@@ -148,6 +148,7 @@ int main(int argC, char* argV[])
   char *envOut = "", *envXmlDB;
   std::string nextArg;
   bool additionalImports = false;
+  std::string dothDir = "Event";
 
   argV0 = std::string(argV[0]);
   argV0.erase(0,argV0.find_last_of("\\")+1);
@@ -172,8 +173,15 @@ int main(int argC, char* argV[])
   {
     for (int i=1; i<argC; ++i)
     {
-        if (strcmp(argV[i],"-o") == 0)
+      if (strcmp(argV[i],"-o") == 0)
       {
+        if (getenv("GODDOTHOUT") != NULL)
+        {
+          dothDir = getenv("GODDOTHOUT");
+          int pos1 = dothDir.find(sep),
+              pos2 = dothDir.rfind(sep);
+          dothDir = dothDir.substr(pos1+1,pos2-pos1-1);
+        }
         nextArg = std::string(argV[i+1]);
         if (((argC-1) == i) || (strcmp(argV[i+1],"-x") == 0) ||
           (nextArg.find_last_of(sep) != (nextArg.length()-1)))
@@ -241,7 +249,7 @@ int main(int argC, char* argV[])
   {
     DaDiPackage* gddPackage = DDFE::DaDiFrontEnd(*iter);
 
-    DDBEdict::printCppDictionary(gddPackage,envXmlDB,envOut,additionalImports);
+    DDBEdict::printCppDictionary(gddPackage,envXmlDB,envOut,additionalImports,dothDir);
   }
 
   return 0;
@@ -252,7 +260,8 @@ int main(int argC, char* argV[])
 void DDBEdict::printCppDictionary(DaDiPackage* gddPackage, 
                                   char* envXmlDB, 
                                   char* envOut, 
-                                  bool additionalImports)
+                                  bool additionalImports,
+                                  std::string dothDir)
 //-----------------------------------------------------------------------------
 {
   int i=0, j=0 ,k=0;
@@ -399,15 +408,15 @@ void DDBEdict::printCppDictionary(DaDiPackage* gddPackage,
   
   DaDiClass* gddClass = gddPackage->popDaDiClass();
 
-  std::string gddClassName = gddClass->className().transcode(),
-              gddClassDesc = gddClass->classDesc().transcode(),
-              gddClassAuthor = gddClass->classAuthor().transcode(),
-              gddClassID = gddClass->classID().transcode();
+  std::string gddClassName = gddClass->name().transcode(),
+              gddClassDesc = gddClass->desc().transcode(),
+              gddClassAuthor = gddClass->author().transcode(),
+              gddClassID = gddClass->ID().transcode();
 
 
-  dbExportClass[std::string(gddClass->className().transcode())] =
+  dbExportClass[std::string(gddClass->name().transcode())] =
     std::string(gddPackage->packageName().transcode()) + "/" 
-    + std::string(gddClass->className().transcode());
+    + std::string(gddClass->name().transcode());
 
 
 // ------------------------------------------------------------------------
@@ -416,7 +425,7 @@ void DDBEdict::printCppDictionary(DaDiPackage* gddPackage,
 
   char* cppFileName = new char[256];
   strcpy(cppFileName,envOut);
-  strcat(cppFileName, gddClass->className().transcode());
+  strcat(cppFileName, gddClass->name().transcode());
   strcat(cppFileName, "_dict.cpp");
   std::cout << "Writing " << cppFileName;
   std::ofstream metaOut(cppFileName);
@@ -455,7 +464,7 @@ void DDBEdict::printCppDictionary(DaDiPackage* gddPackage,
   
     std::string impName = gddClassName;
 
-  metaOut << "#include \"Event/" << impName << ".h\"" << std::endl;
+  metaOut << "#include \"" << dothDir << "/" << impName << ".h\"" << std::endl;
 
   metaOut << "#undef protected" << std::endl
     << "#undef private" << std::endl 

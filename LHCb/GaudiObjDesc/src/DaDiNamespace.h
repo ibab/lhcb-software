@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/GaudiObjDesc/src/DaDiNamespace.h,v 1.5 2002-02-27 13:25:35 mato Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/GaudiObjDesc/src/DaDiNamespace.h,v 1.6 2002-03-13 18:35:47 mato Exp $
 #ifndef DADINAMESPACE_H 
 #define DADINAMESPACE_H 1
 
@@ -38,21 +38,25 @@ public:
 	void setLongDesc(DOMString value);
   
 	std::string popImpSoftList();
+  std::list<std::string> impSoftList();
 	void pushImpSoftList(std::string value);
 	int sizeImpSoftList();
   void remDblImpSoftList();
   
 	std::string popImpStdList();
+  std::list<std::string> impStdList();
 	void pushImpStdList(std::string value);
 	int sizeImpStdList();
   void remDblImpStdList();
   
 	std::string popImportList();
+  std::list<std::string> importList();
 	void pushImportList(std::string value);
 	int sizeImportList();
 	void remDblImportList();
 
 	std::string popNoImports();
+  std::list<std::string> noImports();
 	void pushNoImports(std::string value);
 	int sizeNoImports();
 
@@ -67,6 +71,10 @@ public:
   DaDiAttribute* popDaDiAttribute();
 	void pushDaDiAttribute(DaDiAttribute* value);
 	int sizeDaDiAttribute();
+  
+  DaDiMethod* popDaDiMethod();
+	void pushDaDiMethod(DaDiMethod* value);
+	int sizeDaDiMethod();
   
   DaDiTypeDef* popDaDiTypeDef();
 	void pushDaDiTypeDef(DaDiTypeDef* value);
@@ -87,6 +95,7 @@ private:
 	std::list<DaDiEnum*>      m_daDiEnum;
 	std::list<DaDiClass*>     m_daDiClass;
 	std::list<DaDiAttribute*> m_daDiAttribute;
+	std::list<DaDiMethod*>    m_daDiMethod;
 	std::list<DaDiTypeDef*>   m_daDiTypeDef;
 };
 
@@ -139,6 +148,11 @@ inline std::string DaDiNamespace::popImpSoftList()
 	return pt;
 }
 
+inline std::list<std::string> DaDiNamespace::impSoftList()
+{
+  return m_impSoftList;
+}
+
 inline void DaDiNamespace::pushImpSoftList(std::string value)
 {
   int i;
@@ -183,6 +197,11 @@ inline std::string DaDiNamespace::popImpStdList()
 	return pt;
 }
 
+inline std::list<std::string> DaDiNamespace::impStdList()
+{
+  return m_impStdList;
+}
+
 inline void DaDiNamespace::pushImpStdList(std::string value)
 {
   bool inList = false;
@@ -216,6 +235,11 @@ inline std::string DaDiNamespace::popImportList()
 	m_importList.push_back(pt);
 	m_importList.pop_front();
 	return pt;
+}
+
+inline std::list<std::string> DaDiNamespace::importList()
+{
+  return m_importList;
 }
 
 inline void DaDiNamespace::pushImportList(std::string value)
@@ -307,6 +331,11 @@ inline std::string DaDiNamespace::popNoImports()
 	return pt;
 }
 
+inline std::list<std::string> DaDiNamespace::noImports()
+{
+  return m_noImports;
+}
+
 inline void DaDiNamespace::pushNoImports(std::string value)
 {
   m_noImports.push_back(value);
@@ -370,6 +399,24 @@ inline void DaDiNamespace::pushDaDiAttribute(DaDiAttribute* value)
 inline int DaDiNamespace::sizeDaDiAttribute()
 {
 	return m_daDiAttribute.size();
+}
+
+inline DaDiMethod* DaDiNamespace::popDaDiMethod()
+{
+	DaDiMethod* pt = m_daDiMethod.front();
+	m_daDiMethod.push_back(pt);
+	m_daDiMethod.pop_front();
+	return pt;
+}
+
+inline void DaDiNamespace::pushDaDiMethod(DaDiMethod* value)
+{
+	m_daDiMethod.push_back(value);
+}
+
+inline int DaDiNamespace::sizeDaDiMethod()
+{
+	return m_daDiMethod.size();
 }
 
 inline DaDiTypeDef* DaDiNamespace::popDaDiTypeDef()

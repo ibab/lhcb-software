@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/GaudiObjDesc/src/DaDiClass.h,v 1.18 2002-03-04 21:50:58 mato Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/GaudiObjDesc/src/DaDiClass.h,v 1.19 2002-03-13 18:35:46 mato Exp $
 #ifndef DADICLASS_H 
 #define DADICLASS_H 1
 
@@ -27,24 +27,27 @@
 class DaDiClass {
 public:
 	/// Standard constructor
-	DaDiClass() {};
+	DaDiClass(bool innerClass = false) 
+  {
+    m_innerClass = innerClass;
+  }; 
 
 	virtual ~DaDiClass() {}; ///< Standard destructor
 
-	DOMString className();
-	void setClassName(DOMString value);
+	DOMString name();
+	void setName(DOMString value);
 
-	DOMString classDesc();
-	void setClassDesc(DOMString value);
+	DOMString desc();
+	void setDesc(DOMString value);
 
-	DOMString classAuthor();
-	void setClassAuthor(DOMString value);
+	DOMString author();
+	void setAuthor(DOMString value);
 
-	DOMString classDerived();
-	void setClassDerived(DOMString value);
+	DOMString derived();
+	void setDerived(DOMString value);
 
-	DOMString classID();
-	void setClassID(DOMString value);
+	DOMString ID();
+	void setID(DOMString value);
 
 	DOMString longDesc();
 	void setLongDesc(DOMString value);
@@ -58,22 +61,28 @@ public:
 	bool classTemplateList();
 	void setClassTemplateList(bool value);
 
+	bool innerClass();
+
 	std::string popImpSoftList();
+  std::list<std::string> impSoftList();
 	void pushImpSoftList(std::string value);
 	int sizeImpSoftList();
   void remDblImpSoftList();
   
 	std::string popImpStdList();
+  std::list<std::string> impStdList();
 	void pushImpStdList(std::string value);
 	int sizeImpStdList();
-    void remDblImpStdList();
+  void remDblImpStdList();
   
 	std::string popImportList();
+  std::list<std::string> importList();
 	void pushImportList(std::string value);
 	int sizeImportList();
 	void remDblImportList();
   
 	std::string popNoImports();
+  std::list<std::string> noImports();
 	void pushNoImports(std::string value);
 	int sizeNoImports();
   
@@ -113,19 +122,24 @@ public:
 	void pushDaDiTypeDef(DaDiTypeDef* value);
 	int sizeDaDiTypeDef();
   
+  DaDiClass* popDaDiInnerClass();
+	void pushDaDiInnerClass(DaDiClass* value);
+	int sizeDaDiInnerClass();
+  
 protected:
 
 private:
 
-	DOMString                   m_className, 
-                              m_classDesc,
-                              m_classAuthor, 
-                              m_classDerived,
-                              m_classID,
+	DOMString                   m_name, 
+                              m_desc,
+                              m_author, 
+                              m_derived,
+                              m_ID,
                               m_longDesc,
                               m_location;
   bool                        m_classTemplateVector,
-                              m_classTemplateList;
+                              m_classTemplateList,
+                              m_innerClass;
 	std::list<std::string>      m_impSoftList,
                               m_impStdList,
                               m_importList,
@@ -139,57 +153,57 @@ private:
   std::list<DaDiEnum*>        m_daDiEnum;
   std::list<DaDiLocation*>    m_daDiLocation;
   std::list<DaDiTypeDef*>     m_daDiTypeDef;
+  std::list<DaDiClass*>       m_daDiInnerClass;
 };
 
-
-inline DOMString DaDiClass::className()
+inline DOMString DaDiClass::name()
 {
-	return m_className;
+	return m_name;
 }
 
-inline void DaDiClass::setClassName(DOMString value)
+inline void DaDiClass::setName(DOMString value)
 {
-	m_className = value;
+	m_name = value;
 }
 
-inline DOMString DaDiClass::classDesc()
+inline DOMString DaDiClass::desc()
 {
-	return m_classDesc;
+	return m_desc;
 }
 
-inline void DaDiClass::setClassDesc(DOMString value)
+inline void DaDiClass::setDesc(DOMString value)
 {
-	m_classDesc = value;
+	m_desc = value;
 }
 
-inline DOMString DaDiClass::classAuthor()
+inline DOMString DaDiClass::author()
 {
-	return m_classAuthor;
+	return m_author;
 }
 
-inline void DaDiClass::setClassAuthor(DOMString value)
+inline void DaDiClass::setAuthor(DOMString value)
 {
-	m_classAuthor = value;
+	m_author = value;
 }
 
-inline DOMString DaDiClass::classDerived()
+inline DOMString DaDiClass::derived()
 {
-	return m_classDerived;
+	return m_derived;
 }
 
-inline void DaDiClass::setClassDerived(DOMString value)
+inline void DaDiClass::setDerived(DOMString value)
 {
-	m_classDerived = value;
+	m_derived = value;
 }
 
-inline DOMString DaDiClass::classID()
+inline DOMString DaDiClass::ID()
 {
-	return m_classID;
+	return m_ID;
 }
 
-inline void DaDiClass::setClassID(DOMString value)
+inline void DaDiClass::setID(DOMString value)
 {
-	m_classID = value;
+	m_ID = value;
 }
 
 inline DOMString DaDiClass::longDesc()
@@ -232,12 +246,22 @@ inline void DaDiClass::setClassTemplateList(bool value)
 	m_classTemplateList = value;
 }
 
+inline bool DaDiClass::innerClass()
+{
+	return m_innerClass;
+}
+
 inline std::string DaDiClass::popImpSoftList()
 {
 	std::string pt = m_impSoftList.front();
 	m_impSoftList.push_back(pt);
 	m_impSoftList.pop_front();
 	return pt;
+}
+
+inline std::list<std::string> DaDiClass::impSoftList()
+{
+  return m_impSoftList;
 }
 
 inline void DaDiClass::pushImpSoftList(std::string value)
@@ -284,6 +308,11 @@ inline std::string DaDiClass::popImpStdList()
 	return pt;
 }
 
+inline std::list<std::string> DaDiClass::impStdList()
+{
+  return m_impStdList;
+}
+
 inline void DaDiClass::pushImpStdList(std::string value)
 {
   bool inList = false;
@@ -317,6 +346,11 @@ inline std::string DaDiClass::popImportList()
 	m_importList.push_back(pt);
 	m_importList.pop_front();
 	return pt;
+}
+
+inline std::list<std::string> DaDiClass::importList()
+{
+  return m_importList;
 }
 
 inline void DaDiClass::pushImportList(std::string value)
@@ -406,6 +440,11 @@ inline std::string DaDiClass::popNoImports()
 	m_noImports.push_back(pt);
 	m_noImports.pop_front();
 	return pt;
+}
+
+inline std::list<std::string> DaDiClass::noImports()
+{
+  return m_noImports;
 }
 
 inline void DaDiClass::pushNoImports(std::string value)
@@ -580,6 +619,22 @@ inline int DaDiClass::sizeDaDiTypeDef()
 	return m_daDiTypeDef.size();
 }
 
+inline DaDiClass* DaDiClass::popDaDiInnerClass()
+{
+	DaDiClass* pt = m_daDiInnerClass.front();
+	m_daDiInnerClass.push_back(pt);
+	m_daDiInnerClass.pop_front();
+	return pt;
+}
+
+inline void DaDiClass::pushDaDiInnerClass(DaDiClass* value)
+{
+	m_daDiInnerClass.push_back(value);
+}
+
+inline int DaDiClass::sizeDaDiInnerClass()
+{
+	return m_daDiInnerClass.size();
+}
 
 #endif // DADICLASS_H
-

@@ -1,4 +1,4 @@
-// $Id: DaDiFrontEnd.cpp,v 1.31 2002-03-04 21:50:59 mato Exp $
+// $Id: DaDiFrontEnd.cpp,v 1.32 2002-03-13 18:35:47 mato Exp $
 
 //#include "GaudiKernel/Kernel.h"
 #include "DaDiTools.h"
@@ -127,7 +127,15 @@ template<class T> void parseImport(DOM_Node node,
   {
     if (import_soft == "TRUE")
     {
-      element->pushImpSoftList(import_name);
+      if (import_name.find("/") == std::string::npos)
+      {
+        element->pushImpSoftList(import_name);
+      }
+      else
+      {
+        DaDiTools::pushAddImport(import_name);
+        element->pushImpSoftList(import_name.substr(import_name.find_last_of("/")+1, std::string::npos));
+      }
     }
     else if (import_std == "TRUE")
     {
@@ -250,7 +258,18 @@ void parseLocation(DOM_Node node,
     getNamedItem(DOMString::transcode("place")).getNodeValue().
     transcode());
 
+  if (node.getAttributes().
+    getNamedItem(DOMString::transcode("noQuote")).getNodeValue().
+    equals("TRUE"))
+  {
+    gddLocation->setNoQuote(true);
+  }
+  else
+  {
+    gddLocation->setNoQuote(false);
+  }
 }
+
 
 //-----------------------------------------------------------------------------
 void parseArg(DOM_Node node,
@@ -321,7 +340,7 @@ template <class T> void parseArgList(DOM_Node node,
         std::cerr << argV0 
           << ": Error in 'argList'-description of method "
           << methName << " (Class: " 
-          << gddClass->className().transcode()
+          << gddClass->name().transcode()
           << "), you have to provide at least a type-name-pair" 
           << std::endl;
         exit(1);
@@ -681,6 +700,10 @@ template<class T> void parseAttribute(DOM_Node node,
     getNamedItem(DOMString::transcode("name")).
     getNodeValue());
 
+  gddAttribute->setArray(node.getAttributes().
+    getNamedItem(DOMString::transcode("array")).
+    getNodeValue());
+
   typeWords = findWords(node.getAttributes().
     getNamedItem(DOMString::transcode("type")).
     getNodeValue(), " ");
@@ -753,6 +776,7 @@ void parseRelation(DOM_Node node,
   gddRelation->setType(node.getAttributes().
     getNamedItem(DOMString::transcode("type")).
     getNodeValue());    
+
   gddClass->pushImpSoftList(node.getAttributes().            
     getNamedItem(DOMString::transcode("type")).            
     getNodeValue().transcode());
@@ -853,20 +877,20 @@ void parseClass(DOM_Node node,
 {
   bool classHasDesc = false;
 
-  gddClass->setClassName(node.getAttributes().
+  gddClass->setName(node.getAttributes().
     getNamedItem(DOMString::transcode("name")).
         getNodeValue());
 
   if (!node.getAttributes().getNamedItem(DOMString::transcode("desc")).isNull())
   {
-    gddClass->setClassDesc(node.getAttributes().
+    gddClass->setDesc(node.getAttributes().
       getNamedItem(DOMString::transcode("desc")).
       getNodeValue());
     classHasDesc = true;
   }
   else
   {
-    gddClass->setClassDesc(0);
+    gddClass->setDesc(0);
   }
   
   if (!node.getAttributes().getNamedItem(DOMString::transcode("location")).isNull())
@@ -880,7 +904,7 @@ void parseClass(DOM_Node node,
     gddClass->setLocation(0);
   }
 
-  gddClass->setClassAuthor(node.getAttributes().
+  gddClass->setAuthor(node.getAttributes().
     getNamedItem(DOMString::transcode("author")).
     getNodeValue());
 
@@ -918,13 +942,13 @@ void parseClass(DOM_Node node,
   
   if(!node.getAttributes().getNamedItem(DOMString::transcode("id")).isNull())
   {
-    gddClass->setClassID(node.getAttributes().
+    gddClass->setID(node.getAttributes().
       getNamedItem(DOMString::transcode("id")).
       getNodeValue());
   }
   else
   {
-    gddClass->setClassID(0);
+    gddClass->setID(0);
   }
 
   gddClass->setLongDesc(0);
@@ -973,6 +997,16 @@ void parseClass(DOM_Node node,
           DaDiBaseClass* gddBaseClass = new DaDiBaseClass();
           gddClass->pushDaDiBaseClass(gddBaseClass);
           parseBaseClass(node, gddBaseClass);
+        }
+
+//
+// Parse inner classes
+//
+        else if(node.getNodeName().equals("class"))
+        {
+          DaDiClass* gddInnerClass = new DaDiClass(true);
+          gddClass->pushDaDiInnerClass(gddInnerClass);
+          parseClass(node, gddInnerClass);
         }
 
 //
@@ -1067,7 +1101,7 @@ void parseClass(DOM_Node node,
   }
   if (!classHasDesc)
   {
-    std::cerr << "Class " <<  gddClass->className().transcode() 
+    std::cerr << "Class " <<  gddClass->name().transcode() 
       << " has no description, please add one to the xml-file" << std::endl;
     exit(1);
   }
@@ -1157,6 +1191,16 @@ void parseNamespace(DOM_Node node,
           DaDiAttribute* gddAttribute = new DaDiAttribute();
           gddNamespace->pushDaDiAttribute(gddAttribute);
           parseAttribute(node, gddAttribute, gddNamespace);
+        }
+
+//
+// Parse methods
+//
+        else if(node.getNodeName().equals("method"))
+        {
+          DaDiMethod* gddMethod = new DaDiMethod();
+          gddNamespace->pushDaDiMethod(gddMethod);
+          parseMethod(node, gddMethod);
         }
 
 //
@@ -1353,7 +1397,7 @@ DaDiPackage* DDFE::DaDiFrontEnd(char* filename)
       }
       gdd_node = gdd_node.getNextSibling();
     }
-    std::cout << xmlVersion << std::endl;
+//    std::cout << xmlVersion << std::endl;
   }
   return gddPackage;
 }

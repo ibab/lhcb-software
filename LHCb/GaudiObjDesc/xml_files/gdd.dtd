@@ -15,6 +15,7 @@
 <!ATTLIST package
 	name CDATA #REQUIRED
 >
+<!-- ELEMENT class ((class?, .... -->
 <!ELEMENT class ((desc?, base?, import?, location?, enum?, typedef?, constructor?, destructor?, method?, attribute?, relation?)*)>
 <!ATTLIST class
 	name CDATA #REQUIRED
@@ -34,8 +35,9 @@
 <!ATTLIST location
    name CDATA #REQUIRED
    place CDATA #REQUIRED
+   noQuote (TRUE | FALSE) "FALSE"
 >
-<!ELEMENT namespace ((desc?, typedef?, enum?, class?, import?, attribute?)*)>
+<!ELEMENT namespace ((desc?, typedef?, enum?, class?, import?, attribute?, method?)*)>
 <!ATTLIST namespace
 	name CDATA #REQUIRED
 	author CDATA #IMPLIED
@@ -110,6 +112,7 @@
 	name CDATA #REQUIRED
 	desc CDATA #REQUIRED
 	init CDATA #IMPLIED
+	array CDATA "FALSE"
 	access (PUBLIC | PROTECTED | PRIVATE) "PRIVATE"
 	setMeth (TRUE | FALSE) "TRUE"
 	getMeth (TRUE | FALSE) "TRUE"

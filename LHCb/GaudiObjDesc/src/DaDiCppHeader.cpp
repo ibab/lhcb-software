@@ -1,4 +1,4 @@
-// $Id: DaDiCppHeader.cpp,v 1.47 2002-03-04 21:50:59 mato Exp $
+// $Id: DaDiCppHeader.cpp,v 1.48 2002-03-13 18:35:46 mato Exp $
 
 //#include "GaudiKernel/Kernel.h"
 
@@ -43,9 +43,7 @@ std::string printPlural(const std::string& singular)
 
   for (iter = exceptions.begin(); iter != exceptions.end(); ++iter)
   {
-    pos = singular.rfind((*iter).first);
-    std::cout << singular << pos << std::endl;
-    
+    pos = singular.rfind((*iter).first); 
     if ( pos != -1 && (pos + ((*iter).first).length()) 
         == singular.length())
     {
@@ -135,6 +133,7 @@ template <class T> void printArguments(std::ofstream& xmlOut,
     {
       xmlOut << "*";
     }
+
     if (gddArgInout == "BOTH" || 
         (!DaDiTools::isFundamental(gddArgType) && !gddArgIsPointer) )
     {
@@ -158,15 +157,15 @@ template <class T> void printArguments(std::ofstream& xmlOut,
 
 
 //-----------------------------------------------------------------------------
-void printMethodDecl(std::ofstream& xmlOut,
-                     DaDiClass* gddClass, 
-                     const std::string& accessor)
+template <class T> void printMethodDecl(std::ofstream& xmlOut,
+                                        T* gddElement, 
+                                        const std::string& accessor)
 //-----------------------------------------------------------------------------
 {
   int i;
-  for(i=0; i < gddClass->sizeDaDiMethod(); i++)
+  for(i=0; i < gddElement->sizeDaDiMethod(); i++)
   {
-    DaDiMethod* gddMethod = gddClass->popDaDiMethod();
+    DaDiMethod* gddMethod = gddElement->popDaDiMethod();
     std::string gddMethodAccess = gddMethod->access().transcode(),
                 gddMethodDesc = gddMethod->desc().transcode(),
                 gddMethodVirtual = gddMethod->virtual_().transcode(),
@@ -232,22 +231,22 @@ void printMethodDecl(std::ofstream& xmlOut,
 
 
 //-----------------------------------------------------------------------------
-void printMethodImpl(std::ofstream& xmlOut,
-                     DaDiClass* gddClass,
-                     const std::string& accessor)
+template <class T> void printMethodImpl(std::ofstream& xmlOut,
+                                        T* gddElement,
+                                        const std::string& accessor)
 //-----------------------------------------------------------------------------
 {
   int i;
-  for(i=0; i<gddClass->sizeDaDiMethod(); i++)
+  for(i=0; i<gddElement->sizeDaDiMethod(); i++)
   {
-    DaDiMethod* gddMethod = gddClass->popDaDiMethod();
+    DaDiMethod* gddMethod = gddElement->popDaDiMethod();
     std::string gddMethodName = gddMethod->name().transcode(),
                 gddMethodAccess = gddMethod->access().transcode(),
                 gddMethodArgList = gddMethod->argList().transcode(),
                 gddMethodCode = gddMethod->code().transcode(),
                 gddMethodVirtual = gddMethod->virtual_().transcode(),
                 gddMethReturnType = gddMethod->daDiMethReturn()->type().transcode(),
-                gddClassName = gddClass->className().transcode();
+                gddClassName = gddElement->name().transcode();
 
     bool gddMethodIsConst = gddMethod->const_(),
          gddMethodIsStatic = gddMethod->static_(),
@@ -369,7 +368,7 @@ void printSetGetAttImpl(std::ofstream& xmlOut,
                 gddAttSetMeth = gddAttribute->setMeth().transcode(),
                 gddAttType = gddAttribute->type().transcode(),
                 gddAttName = gddAttribute->name().transcode(),
-                gddClassName = gddClass->className().transcode();
+                gddClassName = gddClass->name().transcode();
       
     if(gddAttGetMeth == accessor)
     {
@@ -551,7 +550,7 @@ void printSetGetRelImpl(std::ofstream& xmlOut,
                 gddRelAddMeth = gddRelation->addMeth().transcode(),
                 gddRelRemMeth = gddRelation->remMeth().transcode(),
                 gddRelClrMeth = gddRelation->clrMeth().transcode(),
-                gddClassName = gddClass->className().transcode(),
+                gddClassName = gddClass->name().transcode(),
                 gddRelName = gddRelation->name().transcode(),
                 gddRelType = gddRelation->type().transcode(),
                 gddRelDesc = gddRelation->desc().transcode(),
@@ -770,8 +769,15 @@ void printMembers(std::ofstream& xmlOut,
   {
     DaDiAttribute* gddAttribute = gddClass->popDaDiAttribute();
     std::string gddAttName = gddAttribute->name().transcode(),
-                gddAttType = gddAttribute->type().transcode();
+                gddAttType = gddAttribute->type().transcode(),
+                gddAttArray = gddAttribute->array().transcode(); 
     
+    int gddAttNameLength = gddAttName.length();
+    if (gddAttArray != "FALSE")
+    {
+      gddAttNameLength = gddAttNameLength + 2 + gddAttArray.length();
+    }
+
     if (gddAttName.length() > maxLengthName)
     { 
       maxLengthName = gddAttName.length(); 
@@ -825,12 +831,18 @@ void printMembers(std::ofstream& xmlOut,
                 gddAttName = gddAttribute->name().transcode(),
                 gddAttType = gddAttribute->type().transcode(),
                 gddAttDesc = gddAttribute->desc().transcode(),
-                gddAttInit = gddAttribute->init().transcode();
+                gddAttInit = gddAttribute->init().transcode(),
+                gddAttArray = gddAttribute->array().transcode();
 //    bool gddAttIsStatic = gddAttribute->static_();
 
     if (gddAttAccess == accessor)
     {
-      std::string fullAttName = " m_" + gddAttName+ ";";
+      std::string fullAttName = " m_" + gddAttName;
+      if (gddAttArray != "FALSE")
+      {
+        fullAttName = fullAttName + "[" + gddAttArray + "]";
+      }
+      fullAttName += ";";
       xmlOut << "  ";
       xmlOut.width(maxLengthType);
       xmlOut << gddAttType; 
@@ -884,18 +896,20 @@ void printClass(std::ofstream& xmlOut,
 {
   time_t ltime;
   int i;
-  bool isEventClass = false, classTemplate = false, classTemplateVector = false,
-    classTemplateList = false;
+  bool isEventClass = false, 
+       classTemplate = false, 
+       classTemplateVector = false,
+       classTemplateList = false;
+
   std::vector<std::string>::iterator coIter, koIter;
 
-  std::string gddClassName = gddClass->className().transcode(),
-              gddClassID = gddClass->classID().transcode(),
+  std::string gddClassName = gddClass->name().transcode(),
+              gddClassID = gddClass->ID().transcode(),
               gddClassLocation = gddClass->location().transcode(),
               gddPackName = gddPackage->packageName().transcode(),
-              gddClassDesc = gddClass->classDesc().transcode(),
+              gddClassDesc = gddClass->desc().transcode(),
               gddClassLongDesc = gddClass->longDesc().transcode(),
-              gddClassAuthor = gddClass->classAuthor().transcode();
-
+              gddClassAuthor = gddClass->author().transcode();
 
   ///
   /// check if Class is an 'Eventclass'
@@ -944,9 +958,13 @@ void printClass(std::ofstream& xmlOut,
       DaDiLocation* gddLocation = gddClass->popDaDiLocation();
       std::string gddLocName = gddLocation->name().transcode(),
                   gddLocPlace = gddLocation->place().transcode();
+      bool gddNoQuote = gddLocation->noQuote();
 
-      xmlOut << "  static const std::string& " << gddLocName << " = \"" 
-          << gddLocPlace << "\";" << std::endl;
+      xmlOut << "  static const std::string& " << gddLocName << " = ";
+      if (!gddNoQuote) { xmlOut << "\""; }
+      xmlOut << gddLocPlace;
+      if (!gddNoQuote) { xmlOut << "\""; }      
+      xmlOut << ";" << std::endl;
     }
     xmlOut << "}" << std::endl 
       << std::endl 
@@ -1037,7 +1055,7 @@ void printClass(std::ofstream& xmlOut,
       coIter = std::find(ContainedObjectClasses.begin(), ContainedObjectClasses.end(), baseClName);
       if (coIter != ContainedObjectClasses.end())
       {
-        ContainedObjectClasses.push_back(gddClass->className().transcode());
+        ContainedObjectClasses.push_back(gddClass->name().transcode());
         if (gddClass->classTemplateVector())
         {
           classTemplateVector = true;
@@ -1297,7 +1315,7 @@ void printClass(std::ofstream& xmlOut,
 
 	xmlOut << "  /// Operator overloading for stringoutput" << std::endl
 	  << "  friend std::ostream& operator<< (std::ostream& s, const "
-	  << gddClass->className().transcode() << "& obj)" << std::endl << "  {" 
+	  << gddClass->name().transcode() << "& obj)" << std::endl << "  {" 
 	  << std::endl << "    return obj.fillStream(s);" << std::endl << "  }" 
 	  << std::endl << std::endl;
 
@@ -1931,10 +1949,10 @@ void printNamespace(std::ofstream& xmlOut,
     << "namespace " << gddNamespName << std::endl 
     << "{" << std::endl;
 
-  // print private typedefs
+  // print typedefs
   printTypeDefs(xmlOut, gddNamespace, "");
 
-
+  // print enums
   printEnums(xmlOut, gddNamespace, "");
 
   xmlOut << std::endl;
@@ -1957,6 +1975,8 @@ void printNamespace(std::ofstream& xmlOut,
       << std::endl;
   }
 
+  printMethodDecl(xmlOut, gddNamespace, "");
+
   for (i=0; i<gddNamespace->sizeDaDiClass(); ++i)
   {
     xmlOut << std::endl;
@@ -1964,8 +1984,12 @@ void printNamespace(std::ofstream& xmlOut,
     printClass(xmlOut,gddClass,gddPackage,dbExportClass);
   }
 
-  xmlOut << "};" << std::endl;
+  xmlOut << "};" << std::endl
+    << std::endl;
 
+  printMethodImpl(xmlOut, gddNamespace, "");
+  
+   
 }
 
 
@@ -1977,9 +2001,12 @@ void printCppHeader(DaDiPackage* gddPackage,
 //-----------------------------------------------------------------------------
 {
   int i=0, j=0, k=0;
+  std::list<std::string>::iterator iIter;
   std::map<std::string,std::string> dbExportClass;
+  
   ContainedObjectClasses.push_back("ContainedObject");
   KeyedObjectClasses.push_back("KeyedObject");
+  
   std::string gddPackName = gddPackage->packageName().transcode();
 
 //
@@ -2190,32 +2217,41 @@ void printCppHeader(DaDiPackage* gddPackage,
     //
     // Includes
     //
+
+    std::list<std::string> stdImports, normImports, softImports;
+
     xmlOut << "// Include files" << std::endl;
 
-    for(i=0; i<gddPackage->sizeImpStdList(); i++)
-    {
-      xmlOut << "#include <" << gddPackage->popImpStdList() << ">" << std::endl;
-    }
-
-    for(i=0; i<gddNamespace->sizeImpStdList(); i++)
-    {
-      xmlOut << "#include <" << gddNamespace->popImpStdList() << ">" << std::endl;
-    }
-
+    stdImports = gddPackage->impStdList();
+    normImports = gddPackage->importList();
+    softImports = gddPackage->impSoftList();
+    stdImports.merge(gddNamespace->impStdList());
+    normImports.merge(gddNamespace->importList());
+    softImports.merge(gddNamespace->impSoftList());
     for (j=0; j<gddNamespace->sizeDaDiClass(); ++j)
     {
       DaDiClass* gddClass = gddNamespace->popDaDiClass();
-      for(i=0; i<gddClass->sizeImpStdList(); i++)
-      {
-        xmlOut << "#include <" << gddClass->popImpStdList() << ">" << std::endl;
-      }
+      stdImports.merge(gddClass->impStdList());
+      normImports.merge(gddClass->importList());
+      softImports.merge(gddClass->impSoftList());
     }
-  
-    gddPackage->remDblImportList();
+    stdImports.sort();
+    normImports.sort();
+    softImports.sort();
+    stdImports.unique();
+    normImports.unique();
+    softImports.unique();
 
-    for(i=0; i<gddPackage->sizeImportList(); i++)
+
+    for(iIter = stdImports.begin(); iIter != stdImports.end(); ++iIter)
     {
-      std::string impName = gddPackage->popImportList();
+      xmlOut << "#include <" << *iIter << ">" << std::endl;
+    }
+
+
+    for(iIter = normImports.begin(); iIter != normImports.end(); ++iIter)
+    {
+      std::string impName = *iIter;
       if (std::find(noImports.begin(), noImports.end(), impName) == noImports.end())
       {
         if(dbExportClass[impName] != "")
@@ -2231,91 +2267,18 @@ void printCppHeader(DaDiPackage* gddPackage,
         xmlOut << "#include \"" << impName << ".h\"" << std::endl;
       }
     }
-
-    gddNamespace->remDblImportList();
-
-    for(i=0; i<gddNamespace->sizeImportList(); i++)
-    {
-      std::string impName = gddNamespace->popImportList();
-      if (std::find(noImports.begin(), noImports.end(), impName) == noImports.end())
-      {
-        if(dbExportClass[impName] != "")
-        {
-          impName = dbExportClass[impName];
-        }
-        else
-        {
-          std::cerr << std::endl 
-            << argV0 << ": No information found for type: " << impName << std::endl 
-            << argV0 << ": Line written: #include \"" << impName << ".h\"" << std::endl;
-        }
-        xmlOut << "#include \"" << impName << ".h\"" << std::endl;
-      }
-    }
-
-
-    for (j=0; j<gddNamespace->sizeDaDiClass(); ++j)
-    {
-      DaDiClass* gddClass = gddNamespace->popDaDiClass();
-      gddClass->remDblImportList();
-      for(i=0; i<gddClass->sizeImportList(); i++)
-      {
-        std::string impName = gddClass->popImportList();
-        if (std::find(noImports.begin(), noImports.end(), impName) == noImports.end())
-        {
-          if(dbExportClass[impName] != "")
-          {
-            impName = dbExportClass[impName];
-          }
-          else
-          {
-            std::cerr << std::endl 
-              << argV0 << ": No information found for type: " << impName << std::endl 
-              << argV0 << ": Line written: #include \"" << impName << ".h\"" << std::endl;
-          }
-          xmlOut << "#include \"" << impName << ".h\"" << std::endl;
-        }
-      }
-    }
-
 
     //
     // Forward declarations
     //  
-    gddPackage->remDblImpSoftList();
-
-    bool classForwardDecl = false;
-    for (i=0; i<gddNamespace->sizeDaDiClass(); ++i)
-    {
-      if (gddNamespace->popDaDiClass()->sizeImpSoftList())
-      {
-        classForwardDecl = true;
-        break;
-      }
-    }
-
-    if (gddPackage->sizeImpSoftList() || classForwardDecl ||
-        gddNamespace->sizeImpSoftList())
+    if (softImports.size())
     {
       xmlOut << std::endl 
         << std::endl
         << "// Forward declarations" << std::endl;
-      for(i=0; i<gddPackage->sizeImpSoftList(); i++)
+      for(iIter = softImports.begin(); iIter != softImports.end(); ++iIter)
       {
-        xmlOut << "class " << gddPackage->popImpSoftList() << ";" << std::endl;
-      }
-      for(i=0; i<gddNamespace->sizeImpSoftList(); i++)
-      {
-        xmlOut << "class " << gddNamespace->popImpSoftList() << ";" << std::endl;
-      }
-      for (j=0; j<gddNamespace->sizeDaDiClass(); ++j)
-      {
-        DaDiClass* gddClass = gddNamespace->popDaDiClass();
-        gddClass->remDblImpSoftList();
-        for(i=0; i<gddClass->sizeImpSoftList(); i++)
-        {
-          xmlOut << "class " << gddClass->popImpSoftList() << ";" << std::endl;
-        }
+        xmlOut << "class " << *iIter << ";" << std::endl;
       }
     }
   
@@ -2345,7 +2308,7 @@ void printCppHeader(DaDiPackage* gddPackage,
   {  
 
     DaDiClass* gddClass = gddPackage->popDaDiClass();
-    std::string gddClassName = gddClass->className().transcode();
+    std::string gddClassName = gddClass->name().transcode();
 
     std::vector<std::string> noImports;
     noImports.clear();
@@ -2371,7 +2334,7 @@ void printCppHeader(DaDiPackage* gddPackage,
 
     char* fileName = new char[256];
     strcpy(fileName, envOut);
-    strcat(fileName, gddClass->className().transcode());
+    strcat(fileName, gddClass->name().transcode());
     strcat(fileName, ".h");
     std::cout << "Writing " << fileName;
     std::ofstream xmlOut(fileName);  
@@ -2410,25 +2373,29 @@ void printCppHeader(DaDiPackage* gddPackage,
     //
     // Includes
     //
+
+    std::list<std::string> stdImports, normImports, softImports;
+
     xmlOut << "// Include files" << std::endl;
 
-    for(i=0; i<gddPackage->sizeImpStdList(); i++)
+    stdImports = gddPackage->impStdList();
+    stdImports.merge(gddClass->impStdList());
+    stdImports.sort();
+    stdImports.unique();
+    
+    for (iIter = stdImports.begin(); iIter != stdImports.end(); ++iIter)
     {
-      xmlOut << "#include <" << gddPackage->popImpStdList() << ">"
-        << std::endl;
-    }
-
-    for(i=0; i<gddClass->sizeImpStdList(); i++)
-    {
-      xmlOut << "#include <" << gddClass->popImpStdList() << ">"
-        << std::endl;
+      xmlOut << "#include <" << *iIter << ">" << std::endl;
     }
   
-    gddPackage->remDblImportList();
+    normImports = gddPackage->importList();
+    normImports.merge(gddClass->importList());
+    normImports.sort();
+    normImports.unique();
 
-    for(i=0; i<gddPackage->sizeImportList(); i++)
+    for (iIter = normImports.begin(); iIter != normImports.end(); ++iIter)
     {
-      std::string impName = gddPackage->popImportList();
+      std::string impName = *iIter;
       if (std::find(noImports.begin(), noImports.end(), impName) == noImports.end())
       {
         if(dbExportClass[impName] != "")
@@ -2444,47 +2411,23 @@ void printCppHeader(DaDiPackage* gddPackage,
         xmlOut << "#include \"" << impName << ".h\"" << std::endl;
       }
     }
-
-    gddClass->remDblImportList();
-
-    for(i=0; i<gddClass->sizeImportList(); i++)
-    {
-      std::string impName = gddClass->popImportList();
-      if (std::find(noImports.begin(), noImports.end(), impName) == noImports.end())
-      {
-        if(dbExportClass[impName] != "")
-        {
-          impName = dbExportClass[impName];
-        }
-        else
-        {
-          std::cerr << std::endl 
-            << argV0 << ": No information found for type: " << impName << std::endl 
-            << argV0 << ": Line written: #include \"" << impName << ".h\"" << std::endl;
-        }
-        xmlOut << "#include \"" << impName << ".h\"" << std::endl;
-      }
-    }
-
 
     //
     // Forward declarations
     //  
-    gddPackage->remDblImpSoftList();
-    gddClass->remDblImpSoftList();
+    softImports = gddPackage->impSoftList();
+    softImports.merge(gddClass->impSoftList());
+    softImports.sort();
+    softImports.unique();
 
-    if (gddPackage->sizeImpSoftList() || gddClass->sizeImpSoftList())
+    if (softImports.size())
     {
       xmlOut << std::endl 
         << std::endl
         << "// Forward declarations" << std::endl;
-      for(i=0; i<gddPackage->sizeImpSoftList(); i++)
+      for(iIter = softImports.begin(); iIter != softImports.end(); ++iIter)
       {
-        xmlOut << "class " << gddPackage->popImpSoftList() << ";" << std::endl;
-      }
-      for(i=0; i<gddClass->sizeImpSoftList(); i++)
-      {
-        xmlOut << "class " << gddClass->popImpSoftList() << ";" << std::endl;
+        xmlOut << "class " << *iIter << ";" << std::endl;
       }
     }
   
