@@ -4,7 +4,10 @@
 ! Purpose     : Utility algorithms and tools for RICH reconstruction algorithms
 !------------------------------------------------------------------------------
 
-!====================== RichRecTools v2r1 2003-07-07 ======================
+!====================== RichRecTools v2r1 2003-07-08 ======================
+! 2003-07-08 - Marco Cattaneo
+ - RichRecSegmentTool: release service after use
+
 ! 2003-06-30 - Chris Jones
  - Improvements to doxygen documentation comments
  - Restructuring of reconstruction tools for more flexibility

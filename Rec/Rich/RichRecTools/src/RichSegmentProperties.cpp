@@ -1,8 +1,9 @@
-// $Id: RichSegmentProperties.cpp,v 1.2 2003-07-03 14:47:00 jonesc Exp $
+// $Id: RichSegmentProperties.cpp,v 1.3 2003-07-08 06:31:26 cattanem Exp $
 
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h"
 #include "GaudiKernel/ParticleProperty.h"
+#include "GaudiKernel/IParticlePropertySvc.h"
 
 // local
 #include "RichSegmentProperties.h"
@@ -141,7 +142,8 @@ StatusCode RichSegmentProperties::initialize() {
   acquireTool("RichGeomEff", m_geomEff);
 
   // Retrieve particle property service
-  if ( !serviceLocator()->service( "ParticlePropertySvc", m_ppSvc ) ) {
+  IParticlePropertySvc * ppSvc = 0;
+  if ( !serviceLocator()->service( "ParticlePropertySvc", ppSvc ) ) {
     msg << MSG::ERROR << "ParticlePropertySvc not found" << endreq;
     sc = StatusCode::FAILURE;
   }
@@ -170,11 +172,11 @@ StatusCode RichSegmentProperties::initialize() {
   }
 
   // Retrieve particle masses
-  m_particleMass.push_back( m_ppSvc->find("e+" )->mass()/MeV );
-  m_particleMass.push_back( m_ppSvc->find("mu+")->mass()/MeV );
-  m_particleMass.push_back( m_ppSvc->find("pi+")->mass()/MeV );
-  m_particleMass.push_back( m_ppSvc->find("K+" )->mass()/MeV );
-  m_particleMass.push_back( m_ppSvc->find("p+" )->mass()/MeV );
+  m_particleMass.push_back( ppSvc->find("e+" )->mass()/MeV );
+  m_particleMass.push_back( ppSvc->find("mu+")->mass()/MeV );
+  m_particleMass.push_back( ppSvc->find("pi+")->mass()/MeV );
+  m_particleMass.push_back( ppSvc->find("K+" )->mass()/MeV );
+  m_particleMass.push_back( ppSvc->find("p+" )->mass()/MeV );
   // cache squares of masses
   m_particleMassSq.push_back( m_particleMass[ Rich::Electron ] *
                               m_particleMass[ Rich::Electron ] );
@@ -302,6 +304,7 @@ StatusCode RichSegmentProperties::initialize() {
     }
   }
 
+  ppSvc->release();
   return sc;
 }
 

@@ -1,9 +1,6 @@
-// $Id: RichSegmentProperties.h,v 1.1 2003-06-30 15:47:06 jonrob Exp $
+// $Id: RichSegmentProperties.h,v 1.2 2003-07-08 06:31:26 cattanem Exp $
 #ifndef RICHRECTOOLS_RICHSEGMENTPROPERTIES_H
 #define RICHRECTOOLS_RICHSEGMENTPROPERTIES_H 1
-
-// from Gaudi
-#include "GaudiKernel/IParticlePropertySvc.h"
 
 // base class
 #include "RichRecBase/RichRecToolBase.h"
@@ -122,9 +119,6 @@ private:  // Private data
   /// Pointers to tool instances
   IRichDetInterface * m_richDetInt;
   IRichGeomEff * m_geomEff;
-
-  /// Pointer to Particle property service
-  IParticlePropertySvc * m_ppSvc;
 
   /// Array containing particle masses
   std::vector<double> m_particleMass;
