@@ -99,7 +99,7 @@
         name="posMomCorr"
         desc="Matrix with correlation errors between momemtum and pointOnTrack (momentum x point)"
         type="HepMatrix"
-        init="3, 3, 0"
+        init="4, 4, 0"
         setMeth="FALSE"
        />
        <method

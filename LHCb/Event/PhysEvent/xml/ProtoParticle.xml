@@ -56,6 +56,10 @@
         place="Rec/ProtoP/Charged"
        />
        <location
+        name="Upstream"
+        place="Rec/ProtoP/Upstream"
+       />
+       <location
         name="Neutrals"
         place="Rec/ProtoP/Neutrals"
        />

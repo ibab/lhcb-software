@@ -1,4 +1,4 @@
-// $Id: Particle.cpp,v 1.7 2002-07-24 21:01:58 gcorti Exp $
+// $Id: Particle.cpp,v 1.8 2002-09-09 13:21:05 gcorti Exp $
 // Include files 
 
 // STD and STL
@@ -30,7 +30,9 @@ Particle::Particle(const Particle& part)
   , m_posSlopesCorr( part.posSlopesCorr() ), m_desktop( 0 )
   , m_origin( part.origin() )
 {
-  m_endVertex = part.endVertex()->clone();
+  if( part.endVertex() != NULL ) {
+    m_endVertex = part.endVertex()->clone();
+  }
 }
 
 //=============================================================================
@@ -119,6 +121,9 @@ void Particle::setPosMomCorr(const HepMatrix& value)
   // Set correlation errors
   m_posMomCorr = value;
 
+  // Put 3x3 position 3-momentum eletement in a temporary matrix
+  HepMatrix temp = value.sub(1,3,1,3);
+
   // Propagate to slopesMomCorr
   HepMatrix trMomToSlopes(3,3,0.0);
   double px = m_momentum.px();
@@ -138,7 +143,7 @@ void Particle::setPosMomCorr(const HepMatrix& value)
   trMomToSlopes(3,3) = pz/p;           ///< dP/dPz 
 
   // Now obtain the new non diagonal elements: lower angle
-  m_posSlopesCorr = trMomToSlopes * m_posMomCorr;
+  m_posSlopesCorr = trMomToSlopes * temp;
   
 }
 
@@ -208,6 +213,14 @@ void Particle::setPosSlopesCorr(const HepMatrix& value)
   trSlopesToMom(3,3) = a;                  ///< dPz/dP  
  
   // Now obtain the new non diagonal elements: lower angle
-  m_posMomCorr = trSlopesToMom * m_posSlopesCorr;
-   
+  HepMatrix temp = trSlopesToMom * m_posSlopesCorr;
+  for( int i = 1; i<=3; i++ ) {
+    for( int j = 1; j<=3; j++ ) {
+      m_posMomCorr(i,j) = temp(i,j);
+    }
+  }
+  for(int i4 = 1; i4<=4; i4++) {
+    m_posMomCorr(4,i4) = 0.0;
+  }
+  
 }
