@@ -60,7 +60,7 @@ use DAQEvent		v1r1	Event
 use DbCnv        	v7r1    Event
 
 # Associators
-use AssociatorsSys	v1r5	Associators
+use AssociatorsSys	v1r6	Associators
 use Associators		v2r1	Associators
 use ITAssociators      	v2r5	IT
 use OTAssociators      	v2r6	OT
