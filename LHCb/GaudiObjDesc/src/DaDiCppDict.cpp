@@ -1,4 +1,4 @@
-// $Id: DaDiCppDict.cpp,v 1.1.1.1 2001-10-03 16:39:17 mato Exp $
+// $Id: DaDiCppDict.cpp,v 1.2 2001-10-05 08:06:57 mato Exp $
 
 #include "GaudiKernel/Kernel.h"
 
@@ -189,7 +189,6 @@ int main(int argC, char* argV[])
 void DDBEdict::printCppDictionary(DaDiPackage* gddPackage, char* envXmlDB, char* envOut, bool additionalImports)
 {
 	int i=0, j=0;
-	time_t ltime;
 	std::map<std::string,std::string> dbExportClass;
 
 //
@@ -353,10 +352,6 @@ void DDBEdict::printCppDictionary(DaDiPackage* gddPackage, char* envXmlDB, char*
 		<< std::endl << std::endl << "#include <string>" << std::endl << std::endl 
 		<< "#define private public" << std::endl;
 	
-	
-	
-	
-	
 		std::string impName = gddClass->className().transcode();
 		if(dbExportClass[impName] != "")
         {
@@ -370,22 +365,8 @@ void DDBEdict::printCppDictionary(DaDiPackage* gddPackage, char* envXmlDB, char*
         }
 		metaOut << "#include \"" << impName << ".h\"" << std::endl;
 
-	
-	
-	
-
 	metaOut << "#undef private" << std::endl << std::endl << "#include \"GaudiIntrospection/Reflection.h\"" 
 		<< std::endl << std::endl << std::endl;
-
-//
-// Class description
-//
-	metaOut << "/** @class " << gddClass->className().transcode() 
-		<< gddClass->className().transcode() << ".h " << gddPackage->packageName().transcode()
-		<< "/" << gddClass->className().transcode() << ".h" << std::endl << " *" << std::endl
-		<< " * " << gddClass->classDesc().transcode() << std::endl << " *" << std::endl 
-		<< " * @author " << gddClass->classAuthor().transcode() << std::endl << " * @date   "
-		<< ctime(&ltime) << " *" << std::endl << " */" << std::endl << std::endl;
 
 //
 // class_dict with constructor
@@ -411,10 +392,7 @@ void DDBEdict::printCppDictionary(DaDiPackage* gddPackage, char* envXmlDB, char*
 // Creation of Metaclass
 //
 	metaOut << "    MetaClass* metaC = new MetaClass(\"" << gddClass->className().transcode() 
-		<< "\", \"" << gddClass->classDesc().transcode() << "\");" << std::endl << std::endl;
-
-	metaOut << "    MetaClass::addForName(std::string(\"" << gddClass->className().transcode()
-		<< "\"), metaC);" << std::endl << std::endl;
+		<< "\", \"" << gddClass->classDesc().transcode() << "\", 0);" << std::endl << std::endl;
 
 //
 // Creation of fields for attributes and relations
@@ -422,21 +400,21 @@ void DDBEdict::printCppDictionary(DaDiPackage* gddPackage, char* envXmlDB, char*
 	for(i=0; i<gddClass->sizeDaDiAttribute(); ++i)
 	{
 		DaDiAttribute* gddAttribute = gddClass->popDaDiAttribute();
-		metaOut << "    new MetaField(\""
+		metaOut << "    metaC->addField(\""
 			<< gddAttribute->name().transcode() << "\", \"" << gddAttribute->type().transcode()
-			<< "\", \"" << gddAttribute->desc().transcode() << "\", &(("
+			<< "\", \"" << gddAttribute->desc().transcode() << "\", 0, &(("
 			<< gddClass->className().transcode() << "*)0)->m_" << gddAttribute->name().transcode()
-			<< ", metaC);" << std::endl << std::endl;
+			<< ");" << std::endl << std::endl;
 	}
 
 	for(i=0; i<gddClass->sizeDaDiRelation(); ++i)
 	{
 		DaDiRelation* gddRelation = gddClass->popDaDiRelation();
-		metaOut << "    new MetaField(\""
+		metaOut << "    metaC->addField(\""
 			<< gddRelation->name().transcode() << "\", \"" << gddRelation->type().transcode()
-			<< "\", \"" << gddRelation->desc().transcode() << "\", &(("
+			<< "\", \"" << gddRelation->desc().transcode() << "\", 0, &(("
 			<< gddClass->className().transcode() << "*)0)->m_" << gddRelation->name().transcode()
-			<< ", metaC);" << std::endl << std::endl;
+			<< ");" << std::endl << std::endl;
 	}
 
 
