@@ -1,4 +1,4 @@
-// $Id: RichRayTracing.cpp,v 1.6 2004-07-15 14:47:06 papanest Exp $
+// $Id: RichRayTracing.cpp,v 1.7 2004-07-15 15:47:24 jonrob Exp $
 // Include files
 
 // from Gaudi
@@ -377,7 +377,7 @@ StatusCode RichRayTracing::reflectBothMirrors( Rich::DetectorType rich,
 StatusCode RichRayTracing::reflectSpherical ( HepPoint3D& position,
                                               HepVector3D& direction,
                                               const HepPoint3D& CoC,
-                                              double radius) const
+                                              const double radius ) const
 {
   // find intersection point
   // for line sphere intersection look at:http://www.realtimerendering.com/int/

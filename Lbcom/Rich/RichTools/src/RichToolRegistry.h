@@ -1,4 +1,4 @@
-// $Id: RichToolRegistry.h,v 1.1.1.1 2004-06-17 12:04:08 cattanem Exp $
+// $Id: RichToolRegistry.h,v 1.2 2004-07-15 15:44:40 jonrob Exp $
 #ifndef RICHUTILS_RICHTOOLREGISTRY_H
 #define RICHUTILS_RICHTOOLREGISTRY_H 1
 
@@ -15,7 +15,7 @@
 
 /** @class RichToolRegistry RichToolRegistry.h
  *
- *  Tool providing a mapping between tool names and types
+ *  Tool providing a mapping between tool "nicknames" and types
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -24,7 +24,7 @@
 class RichToolRegistry : public GaudiTool,
                          virtual public IRichToolRegistry {
 
-public:
+public: // for Gaudi framework
 
   /// Standard constructor
   RichToolRegistry( const std::string& type,
@@ -34,34 +34,45 @@ public:
   /// Destructor
   virtual ~RichToolRegistry() {}
 
-  StatusCode initialize();  ///< Initialize method
-  StatusCode finalize();    ///< Finalize method
+  // Initialization of the tool after creation
+  StatusCode initialize();
 
-  /// Method to return the tool type from the name
-  const std::string & toolType( const std::string & name ) const;
+  // Finalization of the tool before deletion
+  StatusCode finalize();
+
+public: // methods inherited from interface
+
+  // Converts a tool nickname into a particular class name
+  const std::string & toolType( const std::string & nickname ) const;
 
 private: // methods
 
-  /// Add an entry to the tool list
-  void addEntry( const std::string & name, const std::string & type ) const;
+  /** Adds a entry to the map between nicknames and class names
+   */
+  void addEntry( const std::string & nickname, ///< nickname
+                 const std::string & type      ///< class name
+                 ) const;
 
 private: // data
 
+  /// typedef of container of strings for job options
   typedef std::vector<std::string> ToolList;
   /// Tool data from job options
   ToolList m_names;
 
+  /// typedef for the mapping between nicknames and class names
   typedef std::map< std::string, std::string > RichToolMap;
   /// The mapping between the tool name and type
   mutable RichToolMap m_myTools;
 
 };
 
-inline void RichToolRegistry::addEntry( const std::string & name,  
+inline void RichToolRegistry::addEntry( const std::string & nickname,
                                         const std::string & type ) const
 {
-  debug() << " Tool name '" << name << "' maps to type '" << type << "'" << endreq;
-  m_myTools[name] = type;
+  debug() << " Tool name '" << nickname 
+          << "' maps to type '" << type << "'" << endreq;
+  m_myTools[nickname] = type;
 }
 
 #endif // RICHUTILS_RICHTOOLREGISTRY_H

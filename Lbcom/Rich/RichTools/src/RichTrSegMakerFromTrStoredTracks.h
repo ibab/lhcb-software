@@ -1,4 +1,4 @@
-// $Id: RichTrSegMakerFromTrStoredTracks.h,v 1.1.1.1 2004-06-17 12:04:09 cattanem Exp $
+// $Id: RichTrSegMakerFromTrStoredTracks.h,v 1.2 2004-07-15 15:44:40 jonrob Exp $
 #ifndef RICHDETTOOLS_RICHTRSEGMAKERFROMTRSTOREDTRACKS_H
 #define RICHDETTOOLS_RICHTRSEGMAKERFROMTRSTOREDTRACKS_H 1
 
@@ -30,54 +30,89 @@
 
 /** @class RichTrSegMakerFromTrStoredTracks RichTrSegMakerFromTrStoredTracks.h RichDetTools/RichTrSegMakerFromTrStoredTracks.h
  *
- *  Tool to create RichTrackSegments from TrStoredTracks
+ *  Tool to create RichTrackSegments from TrStoredTracks. Use the tracking extrapolation tools
+ *  to access the state information at the entrance and exit points to the radiators, which is
+ *  then used to create the RichTrackSegments.
  *
- *  @author Antonis Papanestis
- *  @author Chris Jones
+ *  @author Chris Jones         Christopher.Rob.Jones@cern.ch
+ *  @author Antonis Papanestis  a.papanestis@rl.ac.uk
  *  @date   14/01/2002
  */
 
 class RichTrSegMakerFromTrStoredTracks : public RichToolBase,
                                          virtual public IRichTrSegMaker {
 
-public:
+public: // Methods for Gaudi Framework
 
+  /// Standard Constructor
   RichTrSegMakerFromTrStoredTracks( const std::string& type,
                                     const std::string& name,
                                     const IInterface* parent );
 
+  /// Standard Destructor
   virtual ~RichTrSegMakerFromTrStoredTracks( );
 
+  // Initialization of the tool after creation
   virtual StatusCode initialize();
+
+  // Finalization of the tool before deletion
   virtual StatusCode finalize  ();
 
-  int constructSegments( const ContainedObject* obj,
+public: // methods (and doxygen comments) inherited from interface
+
+  // Create RichTrackSegments for a given tracking object
+  int constructSegments( const ContainedObject* obj, 
                          std::vector<RichTrackSegment>& segments ) const;
 
 private: // methods
 
-  void fixC4F10EntryPoint( TrStateP* state ) const;
+  /** Correct the entrance point for the C4F10 radiators due to the fact the aerogel
+   *  is contained inside this medium. This means the start of the visable C4F10
+   *  segment is the aerogel exit point, and not the C4F10 entrance point.
+   *
+   *  @param state State information to correct
+   */
+  void fixC4F10EntryPoint( TrStateP * state ) const;
 
-  void correctRadExitMirror( DeRichRadiator* radiator,
+  /** Correct the exit state to the point the track traverses the spherical mirror
+   *
+   *  @param radiator  Pointer to the apropriate radiator detector element
+   *  @param state     State information to correct
+   */
+  void correctRadExitMirror( DeRichRadiator* radiator, 
                              TrStateP * state ) const;
 
-  StatusCode moveState( TrStateP* state, const double z ) const;
+  /** Extrapolate a state to a new z position
+   *
+   * @param state  The state to extrapolate
+   * @param z      The z position to extrapolate the state to
+   *
+   * @return The status of the extrapolation
+   * @retval StatusCode::SUCCESS State was successfully extrapolated to the new z position
+   * @retval StatusCode::FAILURE State could not be extrapolated to the z position. Remains unaltered.
+   */
+  StatusCode moveState( TrStateP* state,
+                        const double z ) const;
 
 private: // data
 
   /// Rich1 and Rich2
   DeRich* m_rich[Rich::NRiches];
 
-  /// Spherical mirror parameters
+  /// Spherical mirror nominal centre of curvature
   HepPoint3D m_nominalCoC[Rich::NRiches][2];
+
+  /// Spherical mirror radius of curvature
   double m_nomSphMirrorRadius[Rich::NRiches];
 
-  /// Radiators
+  /// typedef of array of DeRichRadiators
   typedef boost::array<DeRichRadiator*, Rich::NRadiatorTypes> Radiators;
+  /// Array of radiators
   Radiators m_radiators;
 
   /// Allowable tolerance on state z positions
   std::vector<double> m_zTolerance;
+
   /// Nominal z positions of states at RICHes
   double m_nomZstates[4];
 
@@ -87,13 +122,14 @@ private: // data
   // sanity checks on state information
   double m_minStateDiff[Rich::NRadiatorTypes];
 
-  /// Tools
+  /// Ray tracing tool
   IRichRayTracing* m_rayTracing;
+
   // Track extrapolators
-  ITrExtrapolator * m_trExt1;
-  ITrExtrapolator * m_trExt2;
-  std::string m_Ext1;
-  std::string m_Ext2;
+  ITrExtrapolator * m_trExt1; ///< Primary track extrapolation tool
+  ITrExtrapolator * m_trExt2; ///< Secondary (backup if primary fails) track extrapolation tool
+  std::string m_Ext1; ///< Primary track extrapolation tool name
+  std::string m_Ext2; ///< Secondary track extrapolation tool name
 
 };
 

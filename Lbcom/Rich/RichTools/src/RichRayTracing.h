@@ -1,4 +1,4 @@
-// $Id: RichRayTracing.h,v 1.5 2004-07-15 15:44:40 jonrob Exp $
+// $Id: RichRayTracing.h,v 1.6 2004-07-15 15:47:24 jonrob Exp $
 #ifndef RICHTOOLS_RICHRAYTRACING_H
 #define RICHTOOLS_RICHRAYTRACING_H 1
 
@@ -100,7 +100,7 @@ public: // methods (and doxygen comments) inherited from interface
   StatusCode reflectSpherical ( HepPoint3D& position, 
                                 HepVector3D& direction, 
                                 const HepPoint3D& CoC, 
-                                double radius ) const;
+                                const double radius ) const;
 
 private: // methods
 
