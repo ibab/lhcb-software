@@ -269,10 +269,17 @@ ITDetectionLayer* DeITDetector::layer(const ITChannelID aChannel) const {
   return aLayer;
 }
 
+ITChannelID DeITDetector::nextChannelRight(const ITChannelID aChannel) const{
 
+  ITDetectionLayer* aLayer = this->layer(aChannel);
+  return aLayer->nextRight(aChannel); 
+}
 
+ITChannelID DeITDetector::nextChannelLeft(const ITChannelID aChannel) const{
 
-
+  ITDetectionLayer* aLayer = this->layer(aChannel);
+  return aLayer->nextLeft(aChannel); 
+}
 
 
 

@@ -62,6 +62,9 @@ public:
   ITWafer* wafer(const unsigned int waferID) const;
   double waferThickness() const;
 
+  ITChannelID nextRight(const ITChannelID testChan) const;
+  ITChannelID nextLeft(const ITChannelID testChan) const;
+
   /// print 
   std::ostream& printOut( std::ostream& os ) const;
   MsgStream& printOut( MsgStream& os) const;

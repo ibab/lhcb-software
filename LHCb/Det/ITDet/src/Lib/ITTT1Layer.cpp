@@ -1,4 +1,4 @@
-// $Id: ITTT1Layer.cpp,v 1.3 2002-08-09 12:14:36 mneedham Exp $
+// $Id: ITTT1Layer.cpp,v 1.4 2002-09-05 07:10:34 mneedham Exp $
 //
 // This File contains the definition of the ITSTLayer-class
 //
@@ -36,7 +36,7 @@ ITTT1Layer::ITTT1Layer(int stationID, int layerID, double z,
   m_Wafers.resize(m_WafersNum);
   
   // sensitive area of wafer
-  double sensWaferWidth = pitch * numStrips;
+  double sensWaferWidth = pitch*(double)numStrips;
   double guardRingSize = (waferWidth -sensWaferWidth);
  
   unsigned int nSensorHigh=0;
@@ -62,9 +62,10 @@ ITTT1Layer::ITTT1Layer(int stationID, int layerID, double z,
     for (unsigned int iWafer=1;iWafer<=wafersX1;iWafer++){
 
       ITWafer* aWafer = new ITWafer(pitch, 1,
-                          -0.5*sensWaferWidth, 0.5*sensWaferWidth, 
-	   		  v - 0.5*ladderHeight, 
-		 	  v + 0.5*ladderHeight, 0.5*pow(-1.,iWafer-1)*ladderDist);
+				    stationID,layerID,waferOffset+iWafer,
+                                    -0.5*sensWaferWidth, 0.5*sensWaferWidth, 
+	   		            v - 0.5*ladderHeight, 
+		 	            v + 0.5*ladderHeight, 0.5*pow(-1.,iWafer-1)*ladderDist);
 
        m_Wafers[waferOffset+iWafer-1] = aWafer;
        currStrip += aWafer->lastStrip();
@@ -88,7 +89,8 @@ ITTT1Layer::ITTT1Layer(int stationID, int layerID, double z,
                           -guardRingSize;
 
     for (unsigned int iWafer=1;iWafer<=wafersX1;iWafer++){
-      ITWafer* aWafer = new ITWafer(pitch, 1,  
+      ITWafer* aWafer = new ITWafer(pitch, 1,
+				    stationID,layerID,waferOffset+iWafer,
                         -0.5*sensWaferWidth,0.5*sensWaferWidth, 
 			v - 0.5*ladderHeight, 
 			v + 0.5*ladderHeight,0.5*pow(-1.,iWafer-1)*ladderDist);
@@ -142,9 +144,10 @@ ITTT1Layer::ITTT1Layer(int stationID, int layerID, double z,
       }
 
       ITWafer* aWafer = new ITWafer(pitch, 1,  
+				    stationID,layerID,iWafer+waferOffset,
                         u-0.5*sensWaferWidth,u+0.5*sensWaferWidth, 
 			v - 0.5*ladderHeight, 
-			v + 0.5*ladderHeight, pow(-1,iStart+iWafer)*ladderDist);
+			v + 0.5*ladderHeight, 0.5*pow(-1,iStart+iWafer)*ladderDist);
       m_Wafers[iWafer+waferOffset-1] = aWafer;
       currStrip += aWafer->lastStrip();
   
@@ -178,9 +181,10 @@ ITTT1Layer::ITTT1Layer(int stationID, int layerID, double z,
       double u = holeX+(((double)iWafer-0.5)*(waferWidth-waferOverlap));
 
       ITWafer* aWafer = new ITWafer(pitch,1,  
+				    stationID,layerID,iWafer+waferOffset,
                         u-0.5*sensWaferWidth,u+0.5*sensWaferWidth, 
 			v - 0.5*ladderHeight, 
-			v + 0.5*ladderHeight, pow(-1,iStart+iWafer)*ladderDist);
+			v + 0.5*ladderHeight,0.5*pow(-1,iStart+iWafer)*ladderDist);
       m_Wafers[iWafer+waferOffset-1] = aWafer;
       currStrip += aWafer->lastStrip();
 

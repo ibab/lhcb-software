@@ -1,4 +1,4 @@
-// $Id: ITDetectionLayer.cpp,v 1.2 2002-07-08 12:47:24 mneedham Exp $
+// $Id: ITDetectionLayer.cpp,v 1.3 2002-09-05 07:10:34 mneedham Exp $
 //
 // This File contains the definition of the ITDetectionLayer-class
 //
@@ -140,6 +140,28 @@ MsgStream& ITDetectionLayer::printOut( MsgStream& os ) const{
 
   return os;
 }
+
+ITChannelID ITDetectionLayer::nextRight(const ITChannelID testChan) const{
+  const unsigned int aStrip = testChan.strip();
+  if (aStrip<numStrips()){
+    return ITChannelID(testChan.station(),testChan.layer(),testChan.wafer(),aStrip+1u);
+  }
+  else {
+   return ITChannelID(0.,0.,0.,0.);
+  }
+}
+
+ITChannelID ITDetectionLayer::nextLeft(const ITChannelID testChan) const{
+  const unsigned int aStrip = testChan.strip();
+  if (aStrip>1u){
+    return ITChannelID(testChan.station(),testChan.layer(),testChan.wafer(),aStrip-1u);
+  }
+  else {
+   return ITChannelID(0.,0.,0.,0.);
+  }
+}
+
+
 
 
 

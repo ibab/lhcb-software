@@ -14,9 +14,19 @@ class ITWafer {
     
     /// Standard constructor.
     ITWafer(double Pitch, int FirstStrip, 
-        double UL, double UR, double VD, double VU, double DZ);
+	    unsigned int iStation, unsigned int iLayer, unsigned int iWafer,
+            double UL, double UR, double VD, double VU, double DZ);
 
     virtual ~ITWafer() {}
+
+    /// station strip is in
+    unsigned int stationID() const;   
+
+    /// layer strip is in
+    unsigned int layerID() const;
+
+    /// layer strip is in
+    unsigned int waferID() const;
 
     /// Get strip number at the point (u,v)
     int stripNum(const double u, const double v) const ;
@@ -75,10 +85,17 @@ class ITWafer {
 
  private:
 
+    
     /// Strip pitch
     double m_Pitch;
     /// Number of first strip
     int m_FirstStrip;
+    /// station
+    unsigned int m_station;
+    /// layer
+    unsigned int m_layer;
+    /// wafer id
+    unsigned int m_wafer;
     /// Coordinate of a left edge
     double m_UL;
     /// Coordinate of a right edge
@@ -92,6 +109,18 @@ class ITWafer {
     /// Number of strips
     int m_NumStrips;
 };
+
+inline unsigned int ITWafer::stationID() const{
+  return m_station;
+}
+
+inline unsigned int ITWafer::layerID() const{
+  return m_layer;
+}
+
+inline unsigned int ITWafer::waferID() const{
+  return m_wafer;
+}
 
 inline std::ostream& operator<<( std::ostream& os , const ITWafer* aWafer )
 { return aWafer->printOut( os ); } 

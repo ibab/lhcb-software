@@ -1,4 +1,4 @@
-// $Id: ITSTLayer.cpp,v 1.2 2002-07-08 12:47:25 mneedham Exp $
+// $Id: ITSTLayer.cpp,v 1.3 2002-09-05 07:10:34 mneedham Exp $
 //
 // This File contains the definition of the ITSTLayer-class
 //
@@ -44,7 +44,7 @@ ITSTLayer::ITSTLayer(int stationID, int layerID, double z,
     }
     m_WafersNum = wafersX*numLadders*2;
   }
-  double sensWaferWidth = pitch*numStrips;
+  double sensWaferWidth = pitch*(double)numStrips;
 
   m_Wafers.resize(m_WafersNum);
 
@@ -79,6 +79,7 @@ ITSTLayer::ITSTLayer(int stationID, int layerID, double z,
       double dz = ((double)((iWafer - 1)% 2) - 0.5)*ladderDist;
 
       m_Wafers[currWafer-1] = new ITWafer(pitch, 1, 
+					  stationID,layerID,currWafer,
                         u - sensWaferWidth/2.,  u + sensWaferWidth/2., 
 			v - ladderHeight/2., 
 			v + ladderHeight/2., dz);
@@ -93,6 +94,7 @@ ITSTLayer::ITSTLayer(int stationID, int layerID, double z,
       double dz = ((double)((wafersX - iWafer - 1) % 2) - 0.5)*ladderDist;
 
       m_Wafers[currWafer-1] = new ITWafer(pitch, 1, 
+					  stationID,layerID,currWafer,
                         u - sensWaferWidth/2.,  u + sensWaferWidth/2., 
 			v - ladderHeight/2., 
 			v + ladderHeight/2., dz);
@@ -107,7 +109,8 @@ ITSTLayer::ITSTLayer(int stationID, int layerID, double z,
       double v = topY1*cosAngle() - currTopX *sinAngle();
       double dz = ((double)((iWafer+1) % 2) - 0.5)*ladderDist;
 
-      m_Wafers[currWafer-1] = new ITWafer(pitch, 1, 
+      m_Wafers[currWafer-1] = new ITWafer(pitch, 1,
+					  stationID,layerID,currWafer, 
                            u - sensWaferWidth/2.,  u + sensWaferWidth/2., 
 			   v - ladderHeight/2., v + ladderHeight/2., dz);
       currStrip += m_Wafers[currWafer-1]->lastStrip() + 1;
@@ -122,6 +125,7 @@ ITSTLayer::ITSTLayer(int stationID, int layerID, double z,
       double dz = ((double)((iWafer+1) % 2) - 0.5)*ladderDist;
 
       m_Wafers[currWafer-1] = new ITWafer(pitch, 1, 
+					  stationID,layerID, currWafer,
                            u - sensWaferWidth/2.,  u + sensWaferWidth/2., 
 			   v - ladderHeight/2., v + ladderHeight/2., dz);
       currStrip += m_Wafers[currWafer-1]->lastStrip();
@@ -151,6 +155,7 @@ ITSTLayer::ITSTLayer(int stationID, int layerID, double z,
         double dz = ((double)((iWafer+1) % 2) - 0.5)*ladderDist;
 
         m_Wafers[currWafer-1] = new ITWafer(pitch, 1, 
+					    stationID,layerID, currWafer,
                            u - sensWaferWidth/2.,  u + sensWaferWidth/2., 
 			   v - ladderHeight/2., v + ladderHeight/2., dz);
         currStrip += m_Wafers[currWafer-1]->lastStrip();
@@ -181,6 +186,7 @@ ITSTLayer::ITSTLayer(int stationID, int layerID, double z,
         double dz = ((double)((iWafer+1) % 2) - 0.5)*ladderDist;
 
         m_Wafers[currWafer-1] = new ITWafer(pitch, 1, 
+					    stationID,layerID, currWafer,
                            u - sensWaferWidth/2.,  u + sensWaferWidth/2., 
 			   v - ladderHeight/2., v + ladderHeight/2., dz);
         currStrip += m_Wafers[currWafer-1]->lastStrip();
@@ -209,6 +215,7 @@ ITSTLayer::ITSTLayer(int stationID, int layerID, double z,
         double dz = ((double)((iWafer+1) % 2) - 0.5)*ladderDist;
 
         m_Wafers[currWafer-1] = new ITWafer(pitch, 1, 
+					    stationID,layerID,currWafer,
                            u - sensWaferWidth/2.,  u + sensWaferWidth/2., 
 			   v - ladderHeight/2., v + ladderHeight/2., dz);
         currStrip += m_Wafers[currWafer-1]->lastStrip();
@@ -236,7 +243,8 @@ ITSTLayer::ITSTLayer(int stationID, int layerID, double z,
 
         double dz = ((double)((iWafer+1) % 2) - 0.5)*ladderDist;
 
-        m_Wafers[currWafer-1] = new ITWafer(pitch, 1, 
+        m_Wafers[currWafer-1] = new ITWafer(pitch, 1,
+					    stationID,layerID, currWafer,
                            u - sensWaferWidth/2.,  u + sensWaferWidth/2., 
 			   v - ladderHeight/2., v + ladderHeight/2., dz);
         currStrip += m_Wafers[currWafer-1]->lastStrip();

@@ -58,6 +58,9 @@ public:
 
   // return the layer from layer ID
   ITDetectionLayer* layer(const ITChannelID aChannel) const;
+
+  ITChannelID nextChannelRight(const ITChannelID aChannel) const;
+  ITChannelID nextChannelLeft(const ITChannelID aChannel) const;
   
 private:
 
