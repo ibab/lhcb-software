@@ -17,7 +17,9 @@ Purpose: LHCb reconstruction program
 - Persistency changes
   . New version of RawBuffer for OT: new bank structure, multiple hit
     capability, new straw numbering (OTDAQ v2r0)
-  . HepMC now correctly persistent also for POOL (GenEvent v3r1). 
+  . HepMC can now be made persistent also for POOL data (GenEvent v3r1)
+    Disabled from Dst content as it requires data produced with Gauss v15r4
+    or greater, not yet released.
 
 - New tuning
   . Update signal to noise cuts to be consistent with Boole (ITAlgorithms v14r2)

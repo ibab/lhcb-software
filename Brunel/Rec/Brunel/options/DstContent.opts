@@ -10,7 +10,7 @@ DstWriter.OptItemList =
 , "/Event/Next/Header#1"
 , "/Event/LHCBackground#1"
 , "/Event/LHCBackground/Header#1"
-, "/Event/Gen/HepMCEvents#1"
+  //, "/Event/Gen/HepMCEvents#1"
 }; 
 DstWriter.ItemList = 
 {
