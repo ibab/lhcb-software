@@ -1,0 +1,36 @@
+#============================================================================
+# Created    : 2002-07-08
+# Maintainer : Gloria Corti
+#
+# Documentation on the requirement file can be found at
+# http://cern.ch/lhcb-comp/Support/html/new_structure.pdf
+#============================================================================
+package           GlobalReco
+version           v1r0
+
+#============================================================================
+# This template is an example for a standard Algorithm package
+#
+# Structure, i.e. directories to process. 
+#============================================================================
+branches          cmt doc src 
+
+#============================================================================
+# Used packages.
+#============================================================================
+use  PhysEvent   v5r*  Event
+
+#============================================================================
+# Component library building rule
+#============================================================================
+library          GlobalReco    ../src/*.cpp
+
+#============================================================================
+# define component library link options
+#============================================================================
+apply_pattern    package_Clinkopts
+apply_pattern    packageShr
+
+#============================================================================
+private
+apply_pattern    package_Cshlibflags
