@@ -28,4 +28,8 @@ DECLARE_FACTORY_ENTRIES(FlavourTagging) {
   DECLARE_TOOL(CategoryTaggingTool);
   DECLARE_TOOL(OrderedTaggingTool);
   DECLARE_TOOL(FTCombinedParticleMaker);
+
+  DECLARE_ALGORITHM(BTagging);
+  DECLARE_ALGORITHM(CheatedSelection);
+
 }

@@ -1,0 +1,109 @@
+/** @file 
+ * 
+ *  Configuration file to run example of how to use new B flavour
+ *  tagging with either a real selection or cheated selection
+ * 
+ *  @author M.Musy
+ *  @date 2004-01-28
+ */
+
+///--------------------------------------------------------------
+///              SELECTIONS
+///--------------------------------------------------------------
+///Caveat: be careful not to use the new (or old) tagging code after
+///loose-cut selections, as this may imply that particles belonging
+///to the signal are left as possible taggers, which spoils the tag!
+
+///B0 Channel Selections ----------------------------------------
+
+//#include "$B2HHROOT/options/DVBd2PiPi.opts"
+//BTagging.PhysDesktop.InputLocations = { "/Event/Phys/Bd2pipi" };
+
+//#include "$B2HHROOT/options/DVBd2KPi.opts"
+//BTagging.PhysDesktop.InputLocations = { "/Event/Phys/Bd2Kpi" };
+
+//#include "$BD2JPSIKSTARROOT/options/DVBd2Jpsi2MuMu_Kstar2KPi.opts"
+//BTagging.PhysDesktop.InputLocations = { "/Event/Phys/B0" };
+
+
+///Bs Channel Selections -----------------------------------------
+
+//#include "$B2HHROOT/options/DVBs2PiK.opts"
+//BTagging.PhysDesktop.InputLocations = { "/Event/Phys/Bs2piK" };
+
+//#include "$B2HHROOT/options/DVBs2KK.opts"
+//BTagging.PhysDesktop.InputLocations = { "/Event/Phys/Bs2KK" };
+
+//#include "$BS2DSHOPTS/DVBs2Ds2KKPi_Pi.opts"
+//BTagging.PhysDesktop.InputLocations = { "/Event/Phys/Bs" };
+
+
+///Cheated Selection -----------------------------------------
+//define signal B to look for 
+//uncomment one of these to define your signal:
+CheatedSelection.SignalB = "B0";
+//CheatedSelection.SignalB = "B~0";
+//CheatedSelection.SignalB = "B_s0";
+//CheatedSelection.SignalB = "B_s~0";
+#include "$FLAVOURTAGGINGROOT/options/DVCheatedSelection.opts"
+BTagging.PhysDesktop.InputLocations = { "/Event/Phys/CheatedB" };
+
+///--------------------------------------------------------------
+///               BTagging
+///--------------------------------------------------------------
+ApplicationMgr.TopAlg += { "BTagging" };
+BTagging.WriteNtpl    = false;
+BTagging.OutputLevel  = 3;
+BTagging.PhysDesktop.OutputLevel = 4;
+BTagging.PhysDesktop.OutputLocation = "/Event/Phys/BTagging" ;
+
+BTagging.PhysDesktop.ParticleMakerType = "CombinedParticleMaker";
+BTagging.PhysDesktop.CombinedParticleMaker.MuonSelection = 
+  { "det='MUON' mu-pi='-9.0'" };
+BTagging.PhysDesktop.CombinedParticleMaker.ElectronSelection = 
+  { "det='CALO' e-pi='2.0'" };
+BTagging.PhysDesktop.CombinedParticleMaker.KaonSelection = 
+  { "det='RICH' k-pi='2.0' k-p='3.0'" };
+
+
+//--------------------------------------------------------------
+// Histogram persistency
+#include "$STDOPTS/Hbook.opts"
+HistogramPersistencySvc.OutputFile = "histos.hbook";
+
+//--------------------------------------------------------------
+// Ntuples available by default. Comment to switch off
+//--------------------------------------------------------------
+ApplicationMgr.ExtSvc += { "NTupleSvc" };
+NTupleSvc.Output={"FILE1 DATAFILE='ntuple.rz' TYP='HBOOK' OPT='NEW'"};
+
+//--------------------------------------------------------------
+Particle2MCLinks.OutputLevel   = 4;
+Particle2MCLinks.ChargedPP2MC.OutputLevel = 4;
+ChargedPP2MC.OutputLevel       = 4;
+
+//-----------------------------------------------------------------
+// Set output level thresholds (2=DEBUG, 3=INFO, 4=WARNING, 5=ERROR, 6=FATAL )
+//--------------------------------------------------------------
+MessageSvc.OutputLevel                  = 3;
+XmlParserSvc.OutputLevel                = 4;
+PrimaryVertexFinderAlg.OutputLevel      = 4;
+ChargedProtoPAlg.OutputLevel            = 4;
+BTagging.UnconstVertexFitter.OutputLevel= 5;
+
+// Modify Message Format to print algorithm name with 40 characters
+MessageSvc.Format = "% F%20W%S%7W%R%T %0W%M";
+
+//---------------------------------------------------------------
+// Number of events to process, skip and printing frequency
+//---------------------------------------------------------------
+ApplicationMgr.EvtMax    = 10000000;
+EventSelector.FirstEvent = 1;
+EventSelector.PrintFreq  = 1;
+   
+//---------------------------------------------------------------
+// Input data: Note that the DV... of the selection already 
+//             include their dataset
+//---------------------------------------------------------------
+#include "$LHCBHOME/project/web/cards/412100.opts"  // B0->pipi
+//################################################################

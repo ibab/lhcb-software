@@ -4,7 +4,26 @@
 ! Purpose     : Provide tools and algorithm for tagging Bs
 !-----------------------------------------------------------------------------
 
-!==================== FlavourTagging v4r7 2004-01-14 ===================
+!==================== FlavourTagging v4r7 2004-01-28 ===================
+! 2004-01-28 - Gloria CORTI for Marco MUSY
+ - New version of tagging code to substitute what used for TDR.
+   NOTE: Be CAREFULL to use the new (or old) tagging code after loose-cuts
+         selections as this may imply that particles belonging
+         to the signal are left as possible taggers, which spoils the tag!
+ - src/BTagging.{h,cpp}
+   . new tagging code, the output is provided as a line in the log file
+     in the following sequence:
+     RunNr EventNr Tag TagCategory L0 L1 NrReconPrimVTX NrVisiblePrimVTX
+     ex: BTagging     INFO TAGGINGINFO  429208403 473 1 3 1 0 1 1
+     Tag and TagCategory have the same meaning as in FlavourTagging.
+ - options/DVBTagging_example.opts
+   . example of how to use the new flavour tagging with either a real
+     selection or a cheated selection
+ - src/CheatedSelection.{h,cpp}
+   . to perform tagging studies using a cheated selection
+ - options/DVCheatedSelection.opts
+   . options to execute a cheated selection as a real one
+
 ! 2004-01-14 - Gloria CORTI
  - cmt/requirements
    . use v* to allow compilation against different versions of LHCb
