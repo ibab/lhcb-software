@@ -1,8 +1,11 @@
-// $Id: LogVolumeException.h,v 1.1 2001-11-18 15:32:44 ibelyaev Exp $
+// $Id: LogVolumeException.h,v 1.2 2001-11-18 15:48:50 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name:
 // ============================================================================
-// $Log: not supported by cvs2svn $ 
+// $Log: not supported by cvs2svn $
+// Revision 1.1  2001/11/18 15:32:44  ibelyaev
+//  update for Logical Assemblies
+// 
 // ============================================================================
 #ifndef DETDESC_LOGVOLUMEEXCEPTION_H 
 #define DETDESC_LOGVOLUMEEXCEPTION_H 1
@@ -69,7 +72,7 @@ public:
   /** clone method ("virtual constructor")
    *  @return pointer to newly created object
    */
-  virtual LogVolumeException* clone() const ;
+  virtual GaudiException* clone() const ;
   
 private:
   

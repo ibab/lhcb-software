@@ -1,8 +1,11 @@
-// $Id: LogVolumeException.cpp,v 1.1 2001-11-18 15:32:45 ibelyaev Exp $
+// $Id: LogVolumeException.cpp,v 1.2 2001-11-18 15:48:50 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
-// $Log: not supported by cvs2svn $ 
+// $Log: not supported by cvs2svn $
+// Revision 1.1  2001/11/18 15:32:45  ibelyaev
+//  update for Logical Assemblies
+// 
 // ============================================================================
 // Include files
 // local
@@ -43,10 +46,10 @@ LogVolumeException::LogVolumeException
  */
 // ============================================================================
 LogVolumeException::LogVolumeException
-( const std::string&    name                         ,
-  const GaudiException& excp                         ,
-  const ILVolume*       logvol                       ,
-  const StatusCode&     sc     = StatusCode::FAILURE )
+( const std::string&    name   ,
+  const GaudiException& excp   ,
+  const ILVolume*       logvol ,
+  const StatusCode&     sc     )
   : GaudiException( name , "*LogVolumeException*" , sc , excp )
   , m_logvol ( logvol )
 {};
@@ -115,7 +118,7 @@ MsgStream&    LogVolumeException::printOut
  *  @return pointer to newly created object
  */
 // ============================================================================
-LogVolumeException* LogVolumeException::clone() const 
+GaudiException* LogVolumeException::clone() const 
 { return new LogVolumeException( *this ); }
 
 // ============================================================================
