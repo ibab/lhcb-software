@@ -1,6 +1,6 @@
 ##----------------------------------------------------------------------##
 
-# valgrind error suppression file for Boole v6r1, gcc 3.2.3, valgrind 2.0.0
+# valgrind error suppression file for Boole v6r2, gcc 3.2.3, valgrind 2.0.0
 # See also suppressions in $STDOPTS/Gaudi.supp
 
 # Format of this file is:
@@ -17,7 +17,7 @@
 # }
 
 # Errors from PoolDbCacheSvc::finalize(), not seen in default Brunel v24r1 setup
-# GaudiPoolDb v1r5-v1r8, POOL 1_5_0-POOL_1_7_0, Root 3.10.02
+# GaudiPoolDb v1r5-v1r9, POOL 1_5_0-POOL_1_7_0, Root 3.10.02
 {
   Root/longest_match
   Memcheck:Cond
@@ -50,24 +50,47 @@
   fun:R__Deflate_fast
 }
 
-# Error from seal reflection, should be fixed in 1_4_0 release. 
-# Not tested with Boole v6r0-v6r1 (access violation in main()...)
-# Seen with Boole v5r9 in event 400, related to memory "jumps"?
-#{ 
-#  SEAL_1_3_4/reflection
-#  Memcheck:Leak
-#  fun:_Znwj
-#  fun:_ZN4seal7reflect12ClassBuilder9addMethodEPKcS3_S3_PFPvS4_Ei
-#  fun:_ZN26std__vector_longsint__dictC1Ev
-#}
+# New symptom of old problem with Root zip mechanism, reported to Root team
+# First seen in Boole v6r2
+{
+  POOL_1_7_0/StorageSvc
+  Memcheck:Leak
+  fun:malloc
+  fun:R__huft_build
+  fun:R__Inflate_fixed
+  fun:R__Inflate_block
+}
 
-# POOL_1_6_3 - POOL_1_7_0-gamma
-# Not tested with Boole v6r1 due to core dump at end of job
-# Not seen with Brunel v24r1
-#{
-#  POOL bug 3171
-#  Memcheck:Leak
-#  fun:__builtin_new
-#  fun:_Znwj
-#  fun:_ZN11xercesc_2_317MemoryManagerImpl8allocateEj
-#}
+# Muon background and digitization. Reported to Alessia 20040923
+# First seen in Boole v6r2
+{
+  MuonBackground/start
+  Memcheck:Value4
+  fun:_ZN15MuonGetInfoTool12getStartGapZEii
+  fun:_ZN14MuonBackground9createHitEPP14KeyedContainerI9MCMuonHitN10Containers18KeyedObjectManagerINS2_7hashmapEEEEiii
+  fun:_ZN14MuonBackground7executeEv
+}
+
+{
+  MuonBackground/stop
+  Memcheck:Value4
+  fun:_ZN15MuonGetInfoTool11getStopGapZEii
+  fun:_ZN14MuonBackground9createHitEPP14KeyedContainerI9MCMuonHitN10Containers18KeyedObjectManagerINS2_7hashmapEEEEiii
+  fun:_ZN14MuonBackground7executeEv
+}
+
+{
+  MuonDigitization/stop
+  Memcheck:Value4
+  fun:_ZN15MuonGetInfoTool11getStopGapZEii
+  fun:_ZN16MuonDigitization11createInputER20MuonDigitizationDataI19MuonPhyChannelInputE
+  fun:_ZN16MuonDigitization7executeEv
+}
+
+{
+  MuonDigitization/start
+  Memcheck:Value4
+  fun:_ZN15MuonGetInfoTool12getStartGapZEii
+  fun:_ZN16MuonDigitization11createInputER20MuonDigitizationDataI19MuonPhyChannelInputE
+  fun:_ZN16MuonDigitization7executeEv
+}
