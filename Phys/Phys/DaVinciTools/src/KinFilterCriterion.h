@@ -1,4 +1,4 @@
-// $Id: KinFilterCriterion.h,v 1.1 2002-03-27 20:35:00 gcorti Exp $
+// $Id: KinFilterCriterion.h,v 1.2 2002-05-15 23:24:18 gcorti Exp $
 #ifndef KINFILTERCRITERION_H 
 #define KINFILTERCRITERION_H 1
 
@@ -13,11 +13,12 @@
 #include "DaVinciTools/IFilterCriterion.h"
 
 /** @class KinFilterCriterion KinFilterCriterion.h
- *
+ *  Returns a yes/no depending on the particle minimum momentum and pt.
  *  @author Paul Colrain
  *  @date   14/03/2002
  */
-class KinFilterCriterion : public AlgTool, virtual public IFilterCriterion {
+class KinFilterCriterion : public AlgTool, 
+                           virtual public IFilterCriterion {
 
 public:
 
@@ -26,25 +27,22 @@ public:
                       const std::string& name,
                       const IInterface* parent);
   
-  /// Desctructor
+  /// Destructor
   virtual ~KinFilterCriterion( ){ }; 
 
-  /// Initialize
+  /// Initialize: Prints Out the cut values.
   StatusCode initialize( );
 
-  /// Test if filter is satisfied
+  /// Test if kinematical filter (minimum momentum and pt) is satisfied.
   inline bool isSatisfied( const Particle* const & part );
 
-  /// Test if filter is satisfied
+  /// Test if kinematical filter (minimum momentum and pt) is satisfied.
   inline bool operator()( const Particle* const & part );
 
 private:
-
-  /// Minimum momentum
-  double     m_minMom;
-
-  /// Minimum pt
-  double     m_minPt;
+  
+  double     m_minMom;     ///< Minimum momentum
+  double     m_minPt;      ///< Minimum pt
 
 };
 
