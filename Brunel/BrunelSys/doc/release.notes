@@ -4,10 +4,10 @@
 ! Purpose     : List of packages in Brunel project
 !-----------------------------------------------------------------------------
 
-!======================= BrunelSys v19r1 2003-07-07 =======================
-! 2003-07-07 - Marco Cattaneo
+!======================= BrunelSys v19r1 2003-07-08 =======================
+! 2003-07-08 - Marco Cattaneo
  - Modified requirements for Brunel v19r1
-   Packages removed:  RichRecAlgs, RichMonitor
+   Packages removed:  RichRecAlgs, RichMonitor, KsReco
    Packages added:    RichRecSys, RichRecCommon, RichRingRefit, RichLocalPID,
      RichGlobalPID, RichPIDMerge, RichDigiQC, RichRecQC
    Packages modified: RichUtils v3r2, RichRecBase v1r2, RichRecTools v2r1,

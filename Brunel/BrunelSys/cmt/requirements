@@ -13,7 +13,6 @@ use Brunel              v19r1   Rec
 # Brunel utilities
 use BrunelSicb          v4r1    Rec
 use BrunelAlgs          v2r1	Rec
-use KsReco              v1r5	Rec
 
 # L0 trigger
 use L0Calo              v7r0p1	L0
