@@ -1,4 +1,4 @@
-// $Id: DaVinciMain.cpp,v 1.5 2004-02-06 16:59:22 gcorti Exp $
+// $Id: DaVinciMain.cpp,v 1.6 2004-08-25 09:59:41 pkoppenb Exp $
 //------------------------------------------------------------------------------
 //
 //  Package    : DaVinci
@@ -28,13 +28,22 @@ int main ( int argc, char** argv ) {
   }
 
   // Print a program header ( name and version )
-  std::string version = (std::string)getenv("DAVINCIVERS");
+  std::string version = (std::string)getenv("APPVERSION");
   std::cout << "**********************************************************" 
             << std::endl;
   std::cout << "*                                                        *" 
             << std::endl;
-  std::cout << "                DaVinci version " << version << std::endl;
-  std::cout << std::endl;
+  std::cout << "*                                                        *" 
+            << std::endl;
+  if (version.size()==5){   
+    std::cout << "*                 DaVinci version " << version 
+              << "                  *" << std::endl;
+  } else {
+    std::cout << "*                 DaVinci version " << version 
+              << "                 *" << std::endl;
+  }  
+    std::cout << "*                                                        *"
+            << std::endl;
   std::cout << "*                                                        *"
             << std::endl;
   std::cout << "**********************************************************"
