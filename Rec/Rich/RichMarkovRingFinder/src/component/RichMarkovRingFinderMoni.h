@@ -1,12 +1,6 @@
-// $Id: RichMarkovRingFinderMoni.h,v 1.4 2004-06-23 17:22:29 buckley Exp $
+// $Id: RichMarkovRingFinderMoni.h,v 1.5 2004-06-29 19:42:45 jonesc Exp $
 #ifndef COMPONENT_RICHMARKOVRINGFINDERMONI_H 
 #define COMPONENT_RICHMARKOVRINGFINDERMONI_H 1
-
-// from STL includes
-#include <string>
-#include <map>
-#include <vector>
-#include <utility>
 
 // Event model
 #include "Event/ProcStatus.h"
@@ -14,13 +8,15 @@
 #include "Event/MCRichSegment.h"
 #include "Event/RichRecRing.h"
 
-#include "RichMCTools/IRichMCTrackInfoTool.h"
+// interfaces
+#include "RichKernel/IRichMCTrackInfoTool.h"
 #include "RichRecBase/IRichRecMCTruthTool.h"
-#include "RichMCTools/IRichMCTruthTool.h"
+#include "RichKernel/IRichMCTruthTool.h"
 
 // base class
 #include "RichRecBase/RichRecAlgBase.h"
 
+// local
 #include "stringToNumber/stringToNumber.h"
 
 // Histogramming

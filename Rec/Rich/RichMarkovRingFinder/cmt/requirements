@@ -23,7 +23,6 @@ set RICHMARKOVRINGFINDEROPTS $(RICHMARKOVRINGFINDERROOT)/options
 #============================================================================
 use   AIDA             v*   -no_auto_imports
 use   RichRecBase      v1r*  Rich
-#use   DaVinciMCTools   v5r*  Phys
 
 #============================================================================
 # Component library building rule

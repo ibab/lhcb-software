@@ -1,4 +1,4 @@
-// $Id: RichMarkovRingFinderAlg.h,v 1.5 2004-06-29 16:14:46 buckley Exp $
+// $Id: RichMarkovRingFinderAlg.h,v 1.6 2004-06-29 19:42:45 jonesc Exp $
 #ifndef RICHMARKOVRINGFINDER_RICHMARKOVRINGFINDERALG_H
 #define RICHMARKOVRINGFINDER_RICHMARKOVRINGFINDERALG_H 1
 
@@ -21,12 +21,12 @@
 #include "Event/RichRecStatus.h"
 #include "Event/RichRecRing.h"
 
-// RichKernel
-#include "RichKernel/RichSide.h"
+// Kernel
+#include "Kernel/RichSide.h"
 
 // interfaces
 #include "RichRecBase/IRichCherenkovAngle.h"
-#include "RichDetTools/IRichSmartIDTool.h"
+#include "RichKernel/IRichSmartIDTool.h"
 
 // Ring finder stuff
 #include "finder/Rich1Configuration.h"

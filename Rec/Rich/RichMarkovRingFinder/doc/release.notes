@@ -5,6 +5,9 @@
 ! Purpose     : Uses a Markov Chain sampler to do ring finding without track
 !-----------------------------------------------------------------------------
 
+! 2004-06-29 - Chris Jones
+ - Updates for new package structure
+
 ! 2004-06-29 - Andrew Buckley
  - src/component/*
    . Implemented geometric limits for RICH1 (priors still incorrect for RICH1)

@@ -1,4 +1,4 @@
-// $Id: RichMarkovRingFinderAlg.cpp,v 1.5 2004-06-29 16:14:46 buckley Exp $
+// $Id: RichMarkovRingFinderAlg.cpp,v 1.6 2004-06-29 19:42:45 jonesc Exp $
 // Include files
 
 // local
@@ -23,6 +23,7 @@ static const  AlgFactory< Rich2RMarkovRingFinderAlg >        s_factoryR2R;
 const        IAlgFactory& Rich2RMarkovRingFinderAlgFactory = s_factoryR2R;
 static const  AlgFactory< Rich2LMarkovRingFinderAlg >        s_factoryR2L;
 const        IAlgFactory& Rich2LMarkovRingFinderAlgFactory = s_factoryR2L;
+
 
 //=============================================================================
 // Standard constructor, initializes variables
