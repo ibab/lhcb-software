@@ -1,4 +1,4 @@
-// $Id: IVertexFitter.h,v 1.1 2002-03-27 20:27:46 gcorti Exp $
+// $Id: IVertexFitter.h,v 1.2 2002-05-15 23:08:36 gcorti Exp $
 #ifndef DAVINCITOOLS_IVERTEXFITTER_H
 #define DAVINCITOOLS_IVERTEXFITTER_H 1
 
@@ -9,11 +9,10 @@
 
 // Forward declarations
 
-static const InterfaceID IID_IVertexFitter("IVertexFitter", 1 ,
-                                                  0); 
+static const InterfaceID IID_IVertexFitter("IVertexFitter", 1 , 1); 
 
-/** @class IVertexFitter IVertexFitter.h 
- *  DaVinciTools/IVertexFitter.h
+/** @class IVertexFitter IVertexFitter.h DaVinciTools/IVertexFitter.h 
+ *  
  *  Unconstrained Vertex Fitter Interface
  *
  *  @author Sandra Amato
@@ -24,8 +23,16 @@ class IVertexFitter : virtual public IAlgTool {
  public:
   /// Retrieve interface ID
   static const InterfaceID& interfaceID() { return IID_IVertexFitter; }
-  /// Method to fit the vertex
+
+  /// Method to fit the vertex given a vector of Particles
   virtual StatusCode fitVertex( const  ParticleVector&,  Vertex& ) = 0; 
+
+  /// Method to fit a vertex between two given Particles
+  virtual StatusCode fitVertex( Particle&, Particle&,  Vertex& ) = 0; 
+
+  /// Method to fit a vertex between three given Particles
+  virtual StatusCode fitVertex( Particle&, Particle&, Particle&, Vertex&) = 0; 
+
 };
 
 #endif // DAVINCITOOLS_IVERTEXFITTER_H
