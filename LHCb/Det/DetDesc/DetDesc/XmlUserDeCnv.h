@@ -1,9 +1,9 @@
-/// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/DetDesc/XmlUserDeCnv.h,v 1.1.1.1 2000-11-23 13:44:44 ranjard Exp $
+/// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/DetDesc/XmlUserDeCnv.h,v 1.2 2001-01-22 09:55:38 ibelyaev Exp $
 #ifndef DDEXAMPLE_XMLUSERDECNV_H
 #define DDEXAMPLE_XMLUSERDECNV_H 1
 
 #include "GaudiKernel/Converter.h"
-#include "GaudiKernel/DetectorElement.h"
+#include "DetDesc/DetectorElement.h"
 
 #include "DetDesc/IUserSax8BitDocHandler.h"
 

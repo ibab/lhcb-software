@@ -1,6 +1,14 @@
 package DetDesc
 package manager : R Chytracek
 
+! 20010122 - DetDesc 
+ Vanya Belyaev 
+  new functionality: 
+   (1) Solids , LVolumes , PVolumes, DetectorElements and Geometry Info are "Instectable"
+   (2) restructurization of the package : introduce new library DetDescLib
+   (3) optimization of SolidTrap and SolidTrd 
+!===========================================================================
+
 ! 20010116 - DetDesc 
  Vanya Belyaev 
   new functionality: 

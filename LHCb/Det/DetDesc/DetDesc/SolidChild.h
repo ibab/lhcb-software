@@ -104,6 +104,14 @@ class SolidChild : public ISolid
   inline const HepTransform3D&     matrix       () const ; 
   //
 
+  ///
+  /// Inspectable Interface 
+  ///
+  virtual bool acceptInspector( IInspector* )       ; 
+  ///
+  virtual bool acceptInspector( IInspector* ) const ; 
+  ///
+
  protected:
   
   /// serialization for reading

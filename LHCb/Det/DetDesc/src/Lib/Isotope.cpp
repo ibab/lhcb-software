@@ -1,8 +1,8 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/Isotope.cpp,v 1.1.1.1 2000-11-23 13:44:46 ranjard Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/Lib/Isotope.cpp,v 1.1 2001-01-22 09:55:41 ibelyaev Exp $
 #include "DetDesc/Isotope.h"
 
 /// RCS Id for identification of object version
-///static const char* rcsid = "$Id: Isotope.cpp,v 1.1.1.1 2000-11-23 13:44:46 ranjard Exp $";
+///static const char* rcsid = "$Id: Isotope.cpp,v 1.1 2001-01-22 09:55:41 ibelyaev Exp $";
 
 // Class Isotope 
 const CLID& CLID_Isotope = 1201;

@@ -11,7 +11,7 @@
 #include "DetDesc/XmlCnvAttrList.h"
 #include "DetDesc/IXmlCnv.h"
 
-extern unsigned char    XML_StorageType;
+extern unsigned const char    XML_StorageType;
 extern const    CLID&   CLID_DetectorElement;
 
 template <class DeType>

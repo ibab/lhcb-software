@@ -11,6 +11,7 @@
 //
 //
 
+#include "GaudiKernel/IInspector.h"
 #include "GaudiKernel/IDataProviderSvc.h"
 #include "GaudiKernel/IDataDirectory.h"
 
@@ -104,7 +105,35 @@ ILVolume*         PVolume::findLogical() const
   return m_pv_lvolume;
 };
 
-//
+///
+/// inspection 
+///
+
+bool PVolume::acceptInspector( IInspector* pInspector ) 
+{
+  const IPVolume* pv = this ;
+  return pv->acceptInspector( pInspector ); 
+};
+
+///
+///
+///
+
+bool PVolume::acceptInspector( IInspector* pInspector ) const 
+{
+  ///
+  if( 0 == pInspector ) { return false; } 
+  ///
+  pInspector->inspectByRef( &m_pv_name   , this , "PhysVolumeName"    ) ;
+  pInspector->inspectByRef( &m_pv_lvname , this , "LogicalVolumeName" ) ;
+  ///
+  return true; 
+  ///
+};
+
+
+
+
 
 
 

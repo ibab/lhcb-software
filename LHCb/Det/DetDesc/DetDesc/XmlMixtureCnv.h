@@ -19,7 +19,6 @@ class Isotope;
 class Element;
 class Mixture;
 
-extern unsigned char    XML_StorageType;
 extern const    CLID&   CLID_Element;
 extern const    CLID&   CLID_Mixture;
 

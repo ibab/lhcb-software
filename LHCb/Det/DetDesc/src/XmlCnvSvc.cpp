@@ -1,4 +1,4 @@
-///	$Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/XmlCnvSvc.cpp,v 1.1.1.1 2000-11-23 13:44:47 ranjard Exp $
+///	$Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/XmlCnvSvc.cpp,v 1.2 2001-01-22 09:55:40 ibelyaev Exp $
 #define  DETDESC_CDFCNVSVC_CPP 1
 
 #include <util/PlatformUtils.hpp>
@@ -18,11 +18,11 @@
 #include "DetDesc/XmlExprParser.h"
 
 /// RCS Id for identification of object version
-///static const char* rcsid = "$Id: XmlCnvSvc.cpp,v 1.1.1.1 2000-11-23 13:44:47 ranjard Exp $";
+///static const char* rcsid = "$Id: XmlCnvSvc.cpp,v 1.2 2001-01-22 09:55:40 ibelyaev Exp $";
 
 /// Forward and external declarations
 
-extern unsigned char XML_StorageType;
+extern unsigned const char XML_StorageType;
 extern const IAddrFactory& XmlAddressFactory;
 
 

@@ -1,4 +1,4 @@
-/// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/DetDesc/GeometryInfo.h,v 1.1.1.1 2000-11-23 13:44:42 ranjard Exp $
+/// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/DetDesc/GeometryInfo.h,v 1.2 2001-01-22 09:55:36 ibelyaev Exp $
 #ifndef     __DETDESC_GEOMETRYINFO_GEOMETRYINFO_H__
 #define     __DETDESC_GEOMETRYINFO_GEOMETRYINFO_H__
 
@@ -24,15 +24,19 @@
 #include "GaudiKernel/StatusCode.h"
 #include "GaudiKernel/DataObject.h"
 
-class MsgStream             ;
-class GaudiException        ;
-
 #include "CLHEP/Geometry/Point3D.h"
 #include "CLHEP/Geometry/Transform3D.h"
+
+class MsgStream             ;
+class GaudiException        ;
+class DetectorElement       ;
 
 
 class GeometryInfo:   public IGeometryInfo
 {
+  //
+  friend class DetectorElement;
+  //
 public:
   //
   //
@@ -221,7 +225,20 @@ public:
   // ent  iterator (const version)
   inline virtual IGeometryInfo::IGIChildrens::const_iterator  childEnd  () const ; 
   
- 
+  ///
+  /// IInspectable interface
+  /// 
+  virtual bool acceptInspector( IInspector* )       ; 
+  ///
+  virtual bool acceptInspector( IInspector* ) const ; 
+  ///
+
+  ///
+  /// serialization  for reading 
+  virtual StreamBuffer& serialize( StreamBuffer& )       ; 
+  /// serialization  for writing 
+  virtual StreamBuffer& serialize( StreamBuffer& ) const ; 
+
  private:
 
   //

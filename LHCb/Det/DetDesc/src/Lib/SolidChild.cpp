@@ -1,5 +1,4 @@
-
-#include "GaudiKernel/ISolid.h" 
+#include "GaudiKernel/IInspector.h" 
 #include "GaudiKernel/StreamBuffer.h"
 
 #include "DetDesc/SolidChild.h" 
@@ -99,7 +98,31 @@ StreamBuffer& SolidChild::serialize( StreamBuffer& sb ) const
 } 
 
 
+///
+///
+/// 
 
+bool SolidChild::acceptInspector( IInspector* pInspector ) 
+{
+  ///
+  const ISolid* s = this;
+  return s->acceptInspector( pInspector ) ; 
+};
+
+///
+///
+///
+
+bool SolidChild::acceptInspector( IInspector* pInspector ) const 
+{
+  ///
+  if( 0 == pInspector ) { return false; } 
+  ///
+  pInspector->inspectByRef ( m_sc_solid , this , "ChildSolid" ); 
+  ///
+  return true;
+  ///
+}; 
 
 
 

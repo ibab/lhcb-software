@@ -1,4 +1,5 @@
 #include   "GaudiKernel/StatusCode.h" 
+#include   "GaudiKernel/IInspector.h" 
 #include   "DetDesc/SolidBoolean.h" 
 #include   "DetDesc/SolidChild.h" 
 #include   "DetDesc/SolidException.h" 
@@ -185,3 +186,29 @@ unsigned int SolidBoolean::intersectionTicks ( const HepPoint3D  & point   ,    
 ///
 ///
 ///
+
+bool SolidBoolean::acceptInspector( IInspector* pInspector ) 
+{
+  ///
+  const ISolid* s = this; 
+  return s->acceptInspector( pInspector ) ; 
+};
+
+///
+///
+///
+
+bool SolidBoolean::acceptInspector( IInspector* pInspector ) const 
+{
+  ///
+  if( 0 == pInspector ) { return false; } 
+  ///
+  pInspector->inspectByValue   (  name()         , this , "BooleanName" ) ; 
+  pInspector->inspectByValue   (  typeName()     , this , "TypeName"    ) ; 
+  ///
+  pInspector->inspectByRef     (  m_sb_first     , this , "FirstSolid"  ) ; 
+  pInspector->inspectContByRef ( &m_sb_childrens , this , "Childrens"   ) ; 
+  ///
+  return true; 
+  ///
+};

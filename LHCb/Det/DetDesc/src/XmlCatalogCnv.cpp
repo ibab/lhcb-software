@@ -1,4 +1,4 @@
-///	$Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/XmlCatalogCnv.cpp,v 1.1.1.1 2000-11-23 13:44:47 ranjard Exp $
+///	$Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/XmlCatalogCnv.cpp,v 1.2 2001-01-22 09:55:40 ibelyaev Exp $
 
 /// Include files
 #include "DetDesc/XmlCatalogCnv.h"
@@ -18,6 +18,7 @@
 #include "GaudiKernel/ISvcLocator.h"
 #include "GaudiKernel/IDataProviderSvc.h"
 #include "GaudiKernel/IDataDirectory.h"
+#include "GaudiKernel/Converter.h"
 
 #include "GaudiKernel/MsgStream.h"
 
@@ -26,8 +27,6 @@
 #include "DetDesc/XmlAddress.h"
 #include "DetDesc/XmlCnvAttrList.h"
 
-extern unsigned char    XML_StorageType;
-extern const CLID&      CLID_Catalog;
 extern const CLID&      CLID_DetectorElement;
 extern const CLID&      CLID_LogicalVolume;
 extern const CLID&      CLID_Isotope;
@@ -35,7 +34,7 @@ extern const CLID&      CLID_Element;
 extern const CLID&      CLID_Mixture;
 
 /// RCS Id for identification of object version
-///static const char* rcsid = "$Id: XmlCatalogCnv.cpp,v 1.1.1.1 2000-11-23 13:44:47 ranjard Exp $";
+///static const char* rcsid = "$Id: XmlCatalogCnv.cpp,v 1.2 2001-01-22 09:55:40 ibelyaev Exp $";
 
 /// Instantiation of a static factory class used by clients to create
 /// instances of this service
@@ -350,7 +349,7 @@ const char* XmlCatalogCnv::tag() const
 
 /// Constructor
 XmlCatalogCnv::XmlCatalogCnv(ISvcLocator* svc)
-: XmlGenericCnv( svc, CLID_Catalog ), m_nestedDir( 0 )
+  : XmlGenericCnv( svc, CLID_Catalog ), m_nestedDir( 0 )
 {
   // Register myself as the recevier of ASCII XML SAX events
   set8BitDocHandler( *this );

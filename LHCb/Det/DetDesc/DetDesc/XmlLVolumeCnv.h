@@ -1,4 +1,4 @@
-/// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/DetDesc/XmlLVolumeCnv.h,v 1.1.1.1 2000-11-23 13:44:44 ranjard Exp $
+/// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/DetDesc/XmlLVolumeCnv.h,v 1.2 2001-01-22 09:55:38 ibelyaev Exp $
 #ifndef DETDESC_XMLCNVSVC_XMLLVOLUMECNV_H
 #define DETDESC_XMLCNVSVC_XMLLVOLUMECNV_H
 
@@ -21,7 +21,6 @@ template <class TYPE> class CnvFactory;
 
 class LVolume;
 
-extern unsigned char    XML_StorageType;
 extern const    CLID&   CLID_LogicalVolume;
 
 class   XmlLVolumeCnv : public XmlGenericCnv, public ISax8BitDocHandler

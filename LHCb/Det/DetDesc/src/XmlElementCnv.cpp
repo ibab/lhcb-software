@@ -34,8 +34,6 @@
 #include "DetDesc/Element.h"
 #include "DetDesc/Mixture.h"
 
-extern unsigned char    XML_StorageType;
-
 extern const    CLID&   CLID_Element;
 extern const    CLID&   CLID_Isotope;
 

@@ -1,4 +1,4 @@
-///	$Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/DetDesc/XmlCatalogCnv.h,v 1.1.1.1 2000-11-23 13:44:43 ranjard Exp $
+///	$Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/DetDesc/XmlCatalogCnv.h,v 1.2 2001-01-22 09:55:38 ibelyaev Exp $
 #ifndef DETDESC_XMLCNVSVC_XMLCATALOGCNV_H
 #define DETDESC_XMLCNVSVC_XMLCATALOGCNV_H
 
@@ -6,6 +6,7 @@
 #include "DetDesc/XmlGenericCnv.h"
 
 #include "GaudiKernel/Converter.h"
+#include "GaudiKernel/ClassID.h"
 
 #include "DetDesc/ISax8BitDocHandler.h"
 
@@ -15,8 +16,9 @@ class     RegistryEntry;
 class     XmlCatalogCnv;
 template <class TYPE> class CnvFactory;
 
-extern unsigned char    XML_StorageType;
-extern const CLID& CLID_Catalog;
+extern unsigned const char  XML_StorageType;
+
+extern CLID const  CLID_Catalog;
 
 class XmlCatalogCnv : public XmlGenericCnv, public ISax8BitDocHandler
 {

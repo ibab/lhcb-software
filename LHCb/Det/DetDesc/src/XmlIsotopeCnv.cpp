@@ -33,7 +33,6 @@
 #include "DetDesc/Element.h"
 #include "DetDesc/Mixture.h"
 
-extern unsigned char    XML_StorageType;
 
 extern const    CLID&   CLID_Isotope;
 
@@ -226,21 +225,21 @@ void XmlIsotopeCnv::startElement( const char* const name,
 }
 
 void XmlIsotopeCnv::characters(
-                                const char* const chars
-                               ,const unsigned int length
+			       const char* const  /* chars */  , 
+                               const unsigned int /* length */
                               )
 {
 }
 
 void XmlIsotopeCnv::ignorableWhitespace(
-                                         const char* const chars
-                                        ,const unsigned int length
-                                       )
+					const char* const  /* chars */ , 
+                                        const unsigned int /* length */
+					)
 {
 }
 
 
-void XmlIsotopeCnv::endElement( const char* const name )
+void XmlIsotopeCnv::endElement( const char* const /* name */ )
 {
 }
 

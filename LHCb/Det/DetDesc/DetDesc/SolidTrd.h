@@ -104,7 +104,16 @@ class SolidTrd: public  virtual ISolid ,
   StreamBuffer& serialize( StreamBuffer& )       ; 
   /// serialization for writing
   StreamBuffer& serialize( StreamBuffer& ) const ; 
+  /// 
+
   ///
+  /// Inspectable Interface 
+  ///
+  virtual bool acceptInspector( IInspector* )       ; 
+  ///
+  virtual bool acceptInspector( IInspector* ) const ; 
+  ///
+
  protected:
   ///
   SolidTrd();

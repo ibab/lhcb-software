@@ -94,8 +94,14 @@ class SolidBox: public ISolid
   StreamBuffer& serialize( StreamBuffer& s )       ; 
   /// serialization for writing 
   StreamBuffer& serialize( StreamBuffer& s ) const ; 
-  
+
   ///
+  /// from IInspectable interface  
+  ///
+  virtual bool acceptInspector( IInspector* pInspector )       ; 
+  virtual bool acceptInspector( IInspector* pInspector ) const ; 
+  ///
+ 
  protected:
   ///
   SolidBox();

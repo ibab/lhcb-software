@@ -132,7 +132,16 @@ class SolidCons: public ISolid
   StreamBuffer& serialize( StreamBuffer& s )       ; 
   /// serialization for writing 
   StreamBuffer& serialize( StreamBuffer& s ) const ; 
-  ///   
+  ///
+   
+  ///
+  /// from IInspectable interface 
+  ///
+  virtual bool acceptInspector( IInspector* )       ; 
+  ///
+  virtual bool acceptInspector( IInspector* ) const ; 
+  ///
+
  protected:
   ///
   SolidCons();

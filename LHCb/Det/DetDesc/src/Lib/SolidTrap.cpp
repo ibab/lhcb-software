@@ -2,6 +2,8 @@
 #pragma warning(disable:4786)
 #endif
 
+
+#include "GaudiKernel/IInspector.h"
 #include "DetDesc/SolidTrd.h" 
 #include "DetDesc/SolidBox.h" 
 #include "DetDesc/SolidTicks.h" 
@@ -285,6 +287,39 @@ const ISolid*           SolidTrap::cover         () const
 ///
 ///
 ///
+
+bool SolidTrap::acceptInspector( IInspector* pInspector ) 
+{
+  ///
+  const ISolid* s = this; 
+  return s->acceptInspector( pInspector ) ;
+};
+
+///
+///
+///
+
+bool SolidTrap::acceptInspector( IInspector* pInspector ) const 
+{
+  ///
+  if( 0 == pInspector ) { return false; } 
+  ///
+  pInspector->inspectByRef ( &m_trap_name             , this , "TrapName"  ) ;
+  pInspector->inspectByRef ( &m_trap_zHalfLength      , this , "Z-size/2"  ) ; 
+  pInspector->inspectByRef ( &m_trap_theta            , this , "Theta"     ) ; 
+  pInspector->inspectByRef ( &m_trap_phi              , this , "phi"       ) ; 
+  pInspector->inspectByRef ( &m_trap_dyAtMinusZ       , this , "DyAt-Z"    ) ; 
+  pInspector->inspectByRef ( &m_trap_dxAtMinusZMinusY , this , "DxAt-Z-Y"  ) ; 
+  pInspector->inspectByRef ( &m_trap_dxAtMinusZPlusY  , this , "DxAt-Z+Y"  ) ;  
+  pInspector->inspectByRef ( &m_trap_alphaAtMinusZ    , this , "AlphaAt-Z" ) ; 
+  pInspector->inspectByRef ( &m_trap_dyAtPlusZ        , this , "DyAt+Z"    ) ; 
+  pInspector->inspectByRef ( &m_trap_dxAtPlusZMinusY  , this , "DxAt+Z-Y"  ) ; 
+  pInspector->inspectByRef ( &m_trap_dxAtPlusZPlusY   , this , "DxAt+Z+Y"  ) ;  
+  pInspector->inspectByRef ( &m_trap_alphaAtPlusZ     , this , "AlphaAt+Z" ) ; 
+  ///
+  return true;
+  ///
+};
 
 
 

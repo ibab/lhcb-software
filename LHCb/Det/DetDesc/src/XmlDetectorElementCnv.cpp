@@ -1,4 +1,4 @@
-///	$Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/XmlDetectorElementCnv.cpp,v 1.1.1.1 2000-11-23 13:44:47 ranjard Exp $
+///	$Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/XmlDetectorElementCnv.cpp,v 1.2 2001-01-22 09:55:40 ibelyaev Exp $
 
 /// Include files
 #include "DetDesc/XmlDetectorElementCnv.h"
@@ -21,7 +21,7 @@
 #include "GaudiKernel/MsgStream.h"
 
 #include "GaudiKernel/RegistryEntry.h"
-#include "GaudiKernel/DetectorElement.h"
+#include "DetDesc/DetectorElement.h"
 
 #include "DetDesc/IUserSax8BitDocHandler.h"
 #include "DetDesc/XmlAddress.h"
@@ -31,11 +31,10 @@
 
 #include "DetDesc/GeometryInfo.h"
 
-extern unsigned char    XML_StorageType;
 extern const    CLID&   CLID_DetectorElement;
 
 /// RCS Id for identification of object version
-///static const char* rcsid = "$Id: XmlDetectorElementCnv.cpp,v 1.1.1.1 2000-11-23 13:44:47 ranjard Exp $";
+///static const char* rcsid = "$Id: XmlDetectorElementCnv.cpp,v 1.2 2001-01-22 09:55:40 ibelyaev Exp $";
 
 /// Instantiation of a static factory class used by clients to create
 /// instances of this service

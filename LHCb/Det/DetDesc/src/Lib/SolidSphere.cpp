@@ -1,3 +1,4 @@
+#include "GaudiKernel/IInspector.h" 
 
 #include "DetDesc/SolidSphere.h" 
 #include "DetDesc/SolidBox.h" 
@@ -299,3 +300,33 @@ inline  unsigned int SolidSphere::intersectionTicks ( const HepPoint3D&   point 
 ///
 ///
 ///
+
+
+bool SolidSphere::acceptInspector( IInspector* pInspector ) 
+{
+  ///
+  const ISolid* s = this ; 
+  return s->acceptInspector( pInspector ); 
+};
+
+///
+///
+///
+
+bool SolidSphere::acceptInspector( IInspector* pInspector )  const 
+{
+  ///
+  if( 0 == pInspector ) { return false; } 
+  ///
+  pInspector->inspectByRef ( &m_sphere_name            , this , "SphereName"  ) ; 
+  pInspector->inspectByRef ( &m_sphere_outerRadius     , this , "OuterRadius" ) ; 
+  pInspector->inspectByRef ( &m_sphere_insideRadius    , this , "InnerRadius" ) ; 
+  pInspector->inspectByRef ( &m_sphere_startPhiAngle   , this , "StartPhi"    ) ; 
+  pInspector->inspectByRef ( &m_sphere_deltaPhiAngle   , this , "DeltaPhi"    ) ; 
+  pInspector->inspectByRef ( &m_sphere_startThetaAngle , this , "StartTheta"  ) ; 
+  pInspector->inspectByRef ( &m_sphere_deltaThetaAngle , this , "DeltaTheta"  ) ; 
+  pInspector->inspectByRef ( &m_sphere_coverModel      , this , "CoverModel"  ) ;  
+  ///
+  return true;
+  ///
+};

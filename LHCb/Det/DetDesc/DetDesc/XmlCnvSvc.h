@@ -1,10 +1,15 @@
-///	$Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/DetDesc/XmlCnvSvc.h,v 1.1.1.1 2000-11-23 13:44:43 ranjard Exp $
+///	$Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/DetDesc/XmlCnvSvc.h,v 1.2 2001-01-22 09:55:38 ibelyaev Exp $
 #ifndef DETDESC_XMLCNVSVC_H
 #define DETDESC_XMLCNVSVC_H 1
 
 /// Include files
 #include "GaudiKernel/IXmlSvc.h"
+#include "GaudiKernel/IOpaqueAddress.h"
 #include "GaudiKernel/ConversionSvc.h"
+
+#include "GaudiKernel/ICnvManager.h"
+
+#include "GaudiKernel/System.h"
 
 /// Forward and external declarations
 template <class TYPE> class SvcFactory;
@@ -70,4 +75,16 @@ private:
 };
 
 #endif    // DETDESC_XMLCNVSVC_H
+
+
+
+
+
+
+
+
+
+
+
+
 

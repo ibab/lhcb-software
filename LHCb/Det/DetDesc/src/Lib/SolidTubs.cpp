@@ -245,3 +245,32 @@ inline unsigned int SolidTubs::intersectionTicks( const HepPoint3D  & point   ,
 ///
 ///
 
+
+
+bool SolidTubs::acceptInspector( IInspector* pInspector ) 
+{
+  ///
+  const ISolid* s = this;
+  return s->acceptInspector( pInspector ); 
+};
+
+///
+///
+///
+
+bool SolidTubs::acceptInspector( IInspector* pInspector ) const 
+{
+  ///
+  if( 0 == pInspector ) { return false; } 
+  ///
+  pInspector->inspectByRef ( &m_tubs_name          , this , "TubsName"    ) ; 
+  pInspector->inspectByRef ( &m_tubs_zHalfLength   , this , "Z-size/2"    ) ; 
+  pInspector->inspectByRef ( &m_tubs_outerRadius   , this , "OuterRadius" ) ; 
+  pInspector->inspectByRef ( &m_tubs_innerRadius   , this , "InnerRadius" ) ; 
+  pInspector->inspectByRef ( &m_tubs_startPhiAngle , this , "StartPhi"    ) ; 
+  pInspector->inspectByRef ( &m_tubs_deltaPhiAngle , this , "DeltaPhi"    ) ; 
+  pInspector->inspectByRef ( &m_tubs_coverModel    , this , "CoverModel"  ) ; 
+  ///
+  return true;
+  ///
+};

@@ -166,7 +166,6 @@ void SolidTrd::makeAll()
   {
     ///
     /// construct points (vertoces)
-    /// codes are copied from G4 
     ///
     HepPoint3D p0( - xHalfLength1() , - yHalfLength1() , -zHalfLength() ) ;
     HepPoint3D p1( - xHalfLength1() ,   yHalfLength1() , -zHalfLength() ) ; 
@@ -203,3 +202,46 @@ void SolidTrd::makeAll()
   if( 6 != planes().size() ) { throw SolidException("SolidTrd constructor::wrong number of constructed faces"); } 
   ///
 };
+
+
+///
+///
+///
+
+bool SolidTrd::acceptInspector( IInspector* pInspector ) 
+{
+  ///
+  const ISolid* s = this; 
+  return s->acceptInspector( pInspector ) ;
+};
+
+///
+///
+///
+
+bool SolidTrd::acceptInspector( IInspector* pInspector )  const 
+{
+  ///
+  if( 0 == pInspector ) { return false ; } 
+  ///
+  pInspector->inspectByRef( &m_trd_name         , this , "TrdName"   ) ; 
+  pInspector->inspectByRef( &m_trd_zHalfLength  , this , "X-size/2"  ) ; 
+  pInspector->inspectByRef( &m_trd_xHalfLength1 , this , "X1-size/2" ) ; 
+  pInspector->inspectByRef( &m_trd_xHalfLength2 , this , "X2-size/2" ) ; 
+  pInspector->inspectByRef( &m_trd_yHalfLength1 , this , "Y1-size/2" ) ; 
+  pInspector->inspectByRef( &m_trd_yHalfLength2 , this , "Y2-size/2" ) ; 
+  ///
+  return true; 
+  ///
+};
+
+
+
+
+
+
+
+
+
+
+

@@ -13,13 +13,24 @@
 #include "GaudiKernel/ICnvFactory.h"
 #include "GaudiKernel/ISvcFactory.h"
 #include "GaudiKernel/IAlgFactory.h"
+
 #include "GaudiKernel/IObjectFactory.h"
+
+#include "GaudiKernel/ObjectFactory.h"
+
+
 
 
 #define DLL_DECL_SERVICE(x)       extern const ISvcFactory&        x##Factory; x##Factory.addRef();
 #define DLL_DECL_CONVERTER(x)     extern const ICnvFactory&        x##Factory; x##Factory.addRef();
 #define DLL_DECL_ALGORITHM(x)     extern const IAlgFactory&        x##Factory; x##Factory.addRef();
-#define DLL_DECL_OBJECTFACTORY(x) extern const IFactory& x##Factory; x##Factory.addRef();
+
+
+// #include "DetDesc/LVolume.h"
+// _ImplementDataObjectFactory( LVolume         ) ;  
+
+// #include "DetDesc/DetectorElement.h"
+// _ImplementDataObjectFactory( DetectorElement ) ; 
 
 void DetDesc_load() {
 
@@ -38,7 +49,7 @@ void DetDesc_load() {
   
   // DataObject Factories
   
-  DLL_DECL_OBJECTFACTORY( LVolume         );
+  //  DLL_DECL_OBJECTFACTORY( LVolume         );
   //  DLL_DECL_OBJECTFACTORY( DetectorElement );
   
 }
@@ -48,4 +59,5 @@ void DetDesc_load() {
 ///
 
 extern "C" void DetDesc_loadRef() { DetDesc_load(); }
+
 

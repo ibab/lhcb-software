@@ -34,7 +34,6 @@
 #include "DetDesc/Element.h"
 #include "DetDesc/Mixture.h"
 
-extern unsigned char    XML_StorageType;
 
 extern const    CLID&   CLID_Element;
 extern const    CLID&   CLID_Mixture;
@@ -132,18 +131,18 @@ StatusCode XmlMixtureCnv::createObj( IOpaqueAddress* pAddress,
 
 // Resolve the references of the created transient object.
 StatusCode XmlMixtureCnv::fillObjRefs(
-                                      IOpaqueAddress* pAddress
-                                     ,DataObject* pObject
-                                     )
+				      IOpaqueAddress* /* pAddress */ , 
+				      DataObject*     /* pObject  */ 
+				      )
 {
   return StatusCode::SUCCESS;
 }
 
 // Update the transient object from the other representation.
 StatusCode XmlMixtureCnv::updateObj(
-                                     IOpaqueAddress* //pAddress
-                                    ,DataObject* //pObject
-                                   )
+				    IOpaqueAddress* /* pAddress */ , 
+                                    DataObject*     /* pObject  */
+				    )
 {
   return StatusCode::SUCCESS;
 }
@@ -319,12 +318,13 @@ void XmlMixtureCnv::startElement( const char* const name,
   }
 }
 
-void XmlMixtureCnv::characters( const char* const chars, const unsigned int length )
+void XmlMixtureCnv::characters( const char* const  /* chars */   , 
+				const unsigned int /* length */  )
 {
 }
 
-void XmlMixtureCnv::ignorableWhitespace( const char* const chars,
-                                         const unsigned int length )
+void XmlMixtureCnv::ignorableWhitespace( const char* const  /* chars  */ ,
+                                         const unsigned int /* length */  )
 {
 }
 

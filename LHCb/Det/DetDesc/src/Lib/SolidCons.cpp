@@ -1,3 +1,5 @@
+#include "GaudiKernel/IInspector.h"
+
 #include "DetDesc/SolidCons.h"
 #include "DetDesc/SolidTubs.h"
 #include "DetDesc/SolidTrd.h"
@@ -269,10 +271,37 @@ inline  unsigned int SolidCons::intersectionTicks ( const HepPoint3D &   point  
   return SolidTicks::RemoveAdjancentTicks( ticks , point , vect , tickMin , tickMax , *this );  
   ///
 }
+
+///
+/// IInspectable interface 
+///
+
+bool SolidCons::acceptInspector( IInspector* pInspector ) 
+{
+  ///
+  const ISolid* s = this;
+  return s->acceptInspector( pInspector ); 
+};
+
 ///
 ///
 ///
 
-
+bool SolidCons::acceptInspector( IInspector* pInspector ) const
+{
+  ///
+  if( 0 == pInspector ) { return false; } 
+  ///
+  pInspector->inspectByRef( &m_cons_name              , this , "ConsName"     ) ; 
+  pInspector->inspectByRef( &m_cons_outerRadiusMinusZ , this , "OuterRadAt-Z" ) ; 
+  pInspector->inspectByRef( &m_cons_outerRadiusPlusZ  , this , "OuterRadAt+Z" ) ; 
+  pInspector->inspectByRef( &m_cons_innerRadiusMinusZ , this , "InnerRadAt-Z" ) ; 
+  pInspector->inspectByRef( &m_cons_innerRadiusPlusZ  , this , "InnerRadAt+Z" ) ; 
+  pInspector->inspectByRef( &m_cons_startPhiAngle     , this , "startPhi"     ) ; 
+  pInspector->inspectByRef( &m_cons_deltaPhiAngle     , this , "deltaPhi"     ) ; 
+  pInspector->inspectByRef( &m_cons_coverModel        , this , "CoverModel"   ) ; 
+  ///
+  return true;
+};
 
 

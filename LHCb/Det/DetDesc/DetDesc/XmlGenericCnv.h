@@ -1,4 +1,4 @@
-/// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/DetDesc/XmlGenericCnv.h,v 1.1.1.1 2000-11-23 13:44:44 ranjard Exp $
+/// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/DetDesc/XmlGenericCnv.h,v 1.2 2001-01-22 09:55:38 ibelyaev Exp $
 #ifndef DETDESC_XMLCNVSVC_XMLGENERICCNV_H
 #define DETDESC_XMLCNVSVC_XMLGENERICCNV_H
 
@@ -18,6 +18,9 @@ class SAXParser;
 class ISax8BitDocHandler;
 class XmlCnvAttrList;
 class XmlAddress;
+
+
+extern unsigned const char    XML_StorageType;
 
 template <class TYPE> class CnvFactory;
 
@@ -45,6 +48,9 @@ public:
   
   /// Update the converted representation of a transient object.
   virtual StatusCode updateRep(IOpaqueAddress* pAddress, DataObject* pObject);
+
+  /// 
+  ///  virtual unsigned char repSvsType() const { return XML_StorageType; } 
 
   static const unsigned char& storageType();
  
@@ -133,4 +139,12 @@ protected:
 };
 
 #endif // DETDESC_XMLCNVSVC_XMLGENERICCNV_H
+
+
+
+
+
+
+
+
 

@@ -1,11 +1,11 @@
-/// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/XmlAddress.cpp,v 1.1.1.1 2000-11-23 13:44:47 ranjard Exp $
+/// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/XmlAddress.cpp,v 1.2 2001-01-22 09:55:40 ibelyaev Exp $
 /// Include files
 #include "GaudiKernel/AddrFactory.h"
 
 #include "DetDesc/XmlAddress.h"
 
 /// RCS Id for identification of object version
-///static const char* rcsid = "$Id: XmlAddress.cpp,v 1.1.1.1 2000-11-23 13:44:47 ranjard Exp $";
+///static const char* rcsid = "$Id: XmlAddress.cpp,v 1.2 2001-01-22 09:55:40 ibelyaev Exp $";
 
 /// XmlAddress Factory definition
 static const AddrFactory<XmlAddress> s_Factory(XML_StorageType);
@@ -15,7 +15,7 @@ const IAddrFactory& XmlAddressFactory = s_Factory;
 /// Standard Constructor
 XmlAddress::XmlAddress( const CLID& clid,
                         const std::string& fileName,
-                        int seqId,
+                        int   /* seqId */ ,
                         const std::string& containerName ) 
 : GenericAddress(XML_StorageType, clid)
 {

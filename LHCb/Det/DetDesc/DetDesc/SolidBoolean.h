@@ -88,8 +88,16 @@ class SolidBoolean: public ISolid
   StreamBuffer& serialize( StreamBuffer& )       ; 
   /// serialization for writing 
   StreamBuffer& serialize( StreamBuffer& ) const ; 
+  ///
 
-  ///  
+  ///
+  /// Inspectable Interface 
+  ///
+  virtual bool acceptInspector( IInspector* )       ; 
+  ///
+  virtual bool acceptInspector( IInspector* ) const ; 
+  ///
+
  protected:
   
   // add child to daughter container 

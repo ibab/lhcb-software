@@ -18,7 +18,6 @@ class DataObject;
 class Element;
 class Isotope;
 
-extern unsigned char    XML_StorageType;
 extern const    CLID&   CLID_Element;
 extern const    CLID&   CLID_Isotope;
 

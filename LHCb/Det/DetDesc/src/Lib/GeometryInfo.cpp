@@ -5,6 +5,8 @@
 #include <numeric> 
 
 
+#include "GaudiKernel/IInspector.h"
+
 #include "CLHEP/Geometry/Point3D.h"
 #include "CLHEP/Geometry/Transform3D.h"
 
@@ -12,6 +14,7 @@
 #include "GaudiKernel/DataObject.h"
 #include "GaudiKernel/SmartDataPtr.h" 
 #include "GaudiKernel/TransientStore.h" 
+#include "GaudiKernel/StreamBuffer.h" 
 
 #include "GaudiKernel/MsgStream.h"
 
@@ -92,7 +95,7 @@ GeometryInfo::GeometryInfo( IDetectorElement*            de          ,
 //
 //
 
-// create regular  with numeric replica path 
+/// create regular  with numeric replica path 
 GeometryInfo::GeometryInfo( IDetectorElement*            de          ,
 			    const std::string&           LogVol      , 
 			    const std::string&           Support     ,
@@ -125,11 +128,11 @@ GeometryInfo::GeometryInfo( IDetectorElement*            de          ,
   //
 };
   
-//
-//
-//
+///
+///
+///
 
-// create regular  with name path 
+/// create regular  with name path 
 GeometryInfo::GeometryInfo( IDetectorElement*            de              ,
 			    const std::string&           LogVol          , 
 			    const std::string&           Support         ,
@@ -161,10 +164,97 @@ GeometryInfo::GeometryInfo( IDetectorElement*            de              ,
   Assert( 0 != m_gi_iDetectorElement , "Detector element points to NULL!" );
   //
 };
+
+///
+///
+///
+
+StreamBuffer& GeometryInfo::serialize( StreamBuffer& sb ) 
+{
+  ///
+  reset() ; 
+  ///
+  unsigned long tmp1, tmp2 ; 
+  ///
+  sb >> tmp1 ;   m_gi_has_logical = (bool) tmp1 ; 
+  sb >> m_gi_lvolumeName ; 
+  sb >> tmp2 ;   m_gi_has_support = (bool) tmp2;
+  if( m_gi_has_support ) 
+    { 
+      sb >> m_gi_supportName     ;
+      sb >> m_gi_supportNamePath ; 
+      {
+	unsigned long n ;
+	unsigned long i ;
+	sb >> n ; m_gi_supportPath.clear()   ; 
+	while( n-- > 0 ) { sb >> i ; m_gi_supportPath.push_back( i ) ; }
+      }
+    } 
+  ///
+  return sb;
+};
+
+///
+///
+///
+
+StreamBuffer& GeometryInfo::serialize( StreamBuffer& sb ) const 
+{
+  ///
+  sb << (unsigned long) m_gi_has_logical 
+     <<                 m_gi_lvolumeName 
+     << (unsigned long) m_gi_has_support ;
+  if( m_gi_has_support ) 
+    { 
+      sb << m_gi_supportName  ;
+      sb << m_gi_supportNamePath ; 
+      ///
+      sb << m_gi_supportPath.size() ; 
+      for( unsigned i = 0 ; i < m_gi_supportPath.size() ; ++i ) { sb << m_gi_supportPath[i] ; }
+      ///
+    }
+  ///
+  return sb;
+};
+
+
+///
+/// IInspectable 
+///
+
+bool GeometryInfo::acceptInspector( IInspector* pInspector ) 
+{
+  ///
+  if( 0 == pInspector ) { return false; } 
+  ///
+  pInspector->inspectByRef       (  lvolume()             , this , "HasLogical"  ); 
+  ///
+  const IGeometryInfo* gi = this; 
+  return gi->acceptInspector( pInspector );
+  ///
+};
+
+bool GeometryInfo::acceptInspector( IInspector* pInspector ) const  
+{
+  ///
+  if( 0 == pInspector ) { return false; } 
+  ///
+  pInspector->inspectByRef       ( &m_gi_has_logical      , this , "HasLogical"  ); 
+  pInspector->inspectByRef       ( &m_gi_lvolumeName      , this , "LogVolName"  );
+  pInspector->inspectByRef       ( &m_gi_has_support      , this , "HasSupport"  );
+  pInspector->inspectContByValue (  m_gi_supportPath      , this , "ReplicaPath" );
+  pInspector->inspectContByValue (  m_gi_supportNamePath  , this , "NamePath"    );
+  pInspector->inspectByRef       (  m_gi_iDetectorElement , this , "DetElement"  );
+  ///
+  return true; 
+  ///
+};
+
   
-//
-//
-//
+///
+///
+///
+
 GeometryInfo::~GeometryInfo()
 {
   //

@@ -14,7 +14,6 @@ template <class TYPE> class CnvFactory;
 
 class Isotope;
 
-extern unsigned char    XML_StorageType;
 extern const    CLID&   CLID_Isotope;
 
 class   XmlIsotopeCnv : public XmlGenericCnv, public ISax8BitDocHandler

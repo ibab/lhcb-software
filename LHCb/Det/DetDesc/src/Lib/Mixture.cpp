@@ -1,8 +1,8 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/Mixture.cpp,v 1.1.1.1 2000-11-23 13:44:46 ranjard Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/Lib/Mixture.cpp,v 1.1 2001-01-22 09:55:42 ibelyaev Exp $
 #include "DetDesc/Mixture.h"
 
 /// RCS Id for identification of object version
-///static const char* rcsid = "$Id: Mixture.cpp,v 1.1.1.1 2000-11-23 13:44:46 ranjard Exp $";
+///static const char* rcsid = "$Id: Mixture.cpp,v 1.1 2001-01-22 09:55:42 ibelyaev Exp $";
 
 const CLID& CLID_Mixture = 1203;
 

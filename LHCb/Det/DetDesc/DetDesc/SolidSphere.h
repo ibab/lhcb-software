@@ -107,6 +107,14 @@ class SolidSphere: public ISolid
   StreamBuffer& serialize( StreamBuffer& s ) const ; 
   ///
 
+  ///
+  /// IInspectable interface 
+  ///
+  virtual bool acceptInspector( IInspector* )       ; 
+  ///
+  virtual bool acceptInspector( IInspector* ) const ; 
+  ///
+ 
  protected:
   ///
   SolidSphere();

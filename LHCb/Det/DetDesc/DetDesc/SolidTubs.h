@@ -96,8 +96,16 @@ class SolidTubs: public ISolid
   StreamBuffer& serialize( StreamBuffer& s )       ; 
   /// serialization for writing
   StreamBuffer& serialize( StreamBuffer& s ) const ; 
+  ///
 
   ///
+  /// Inspectable Interface 
+  ///
+  virtual bool acceptInspector( IInspector* )       ; 
+  ///
+  virtual bool acceptInspector( IInspector* ) const ; 
+  ///
+
  protected:
   ///
   SolidTubs();

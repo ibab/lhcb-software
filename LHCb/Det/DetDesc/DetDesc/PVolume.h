@@ -78,10 +78,10 @@ class PVolume: public IPVolume
   inline       bool             isInside   ( const HepPoint3D& PointInMother ) const;
   //
  
-  // 
+  /// 
   virtual inline      std::ostream& printOut( std::ostream& ) const;
   virtual inline      MsgStream&    printOut( MsgStream&    ) const;
-  //
+  ///
 
   /// reset to the initial state
   inline const IPVolume*        reset() const; 
@@ -149,6 +149,14 @@ class PVolume: public IPVolume
 		      const GaudiException& Exception ) const;
   //
 
+
+  ///
+  ///  from IInspectable interface
+  ///
+  virtual bool acceptInspector( IInspector* pInspector )       ; 
+  ///
+  virtual bool acceptInspector( IInspector* pInspector ) const ; 
+  ///
 
  private:
   //

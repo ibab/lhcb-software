@@ -1,3 +1,4 @@
+#include "GaudiKernel/IInspector.h"
 
 #include "DetDesc/SolidBox.h" 
 #include "DetDesc/SolidTicks.h" 
@@ -121,6 +122,30 @@ inline unsigned int SolidBox::intersectionTicks( const HepPoint3D   & point   ,
 };
 
 ///
+/// Inspectable interface
+///
+
+bool SolidBox::acceptInspector( IInspector* pInspector ) 
+{
+  ///
+  const ISolid* s = this; 
+  return s->acceptInspector( pInspector ) ; 
+};
+
+///
 ///
 ///
 
+bool SolidBox::acceptInspector( IInspector* pInspector )  const 
+{
+  ///
+  if( 0 == pInspector ) { return false; } 
+  ///
+  pInspector->inspectByRef ( &m_box_name         ,  this , "BoxName"  ) ; 
+  pInspector->inspectByRef ( &m_box_xHalfLength  ,  this , "X-size/2" ) ; 
+  pInspector->inspectByRef ( &m_box_yHalfLength  ,  this , "Y-size/2" ) ; 
+  pInspector->inspectByRef ( &m_box_zHalfLength  ,  this , "Z-size/2" ) ; 
+  ///
+  return true;
+  ///
+};
