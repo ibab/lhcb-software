@@ -1,8 +1,10 @@
 package Event/VeloEvent
 package manager: E.Banas
 
-! 20010514 - VeloEvent v4 M.Cattaneo
+! 20010515 - VeloEvent v4 M.Cattaneo
   requirements - use LHCbEvent v10*
+               - build only component library
+  VeloCLIDs.cpp - removed, since CLIDs are now defined inline.
 
 ! 20010402 - VeloEvent v3
   requirements - use GaudiSys v7

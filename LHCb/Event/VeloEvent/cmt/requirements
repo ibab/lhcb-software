@@ -7,18 +7,10 @@ use LHCbEvent v10* Event
 
 include_dirs $(VELOEVENTROOT)
 
-#Linker library
-library VeloEventLib -no_share  ../src/VeloCLIDs.cpp
-
 #component library
-library VeloEvent          ../src/VeloEventInstantiation.cpp \
-                           ../src/VeloEvent_dll.cpp
+library VeloEvent          ../src/*.cpp
 
-apply_pattern package_Llinkopts
-
-macro_append VeloEvent_stamps " $(VeloEventDir)/VeloEventLib.stamp"
-macro_append VeloEvent_stamps " $(VeloEventDir)/VeloEventLib.stamp"
-
+apply_pattern package_Clinkopts
 apply_pattern packageShr
 
 # ========================================================================
