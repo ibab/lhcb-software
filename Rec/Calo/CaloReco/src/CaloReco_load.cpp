@@ -1,8 +1,11 @@
-// $Id: CaloReco_load.cpp,v 1.6 2003-03-13 18:47:50 ibelyaev Exp $
+// $Id: CaloReco_load.cpp,v 1.7 2003-04-11 09:33:42 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.6  2003/03/13 18:47:50  ibelyaev
+//  see ../doc/release.notes file
+//
 // ============================================================================
 // Include files
 // LHCbKernel
@@ -111,6 +114,10 @@ DECLARE_FACTORY_ENTRIES(CaloReco)
   DECLARE_TOOL        ( CaloTrackMatchBremm                 ) ;
 
   DECLARE_ALGORITHM   ( CaloHypoReShuffleAlg                ) ;
+
+  DECLARE_TOOL        ( CaloNewECorrection                  ) ;
+  DECLARE_TOOL        ( CaloNewSCorrection                  ) ;
+  DECLARE_TOOL        ( CaloNewLCorrection                  ) ;
 
 };
 

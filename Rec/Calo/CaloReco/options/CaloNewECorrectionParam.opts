@@ -1,0 +1,41 @@
+// $Id:
+// ============================================================================
+// CVS tag $Name: not supported by cvs2svn $ 
+// ============================================================================
+// $Log: not supported by cvs2svn $
+//
+// ============================================================================
+// ============================================================================
+/** @file 
+ *  Configuration of E-correction
+ *
+ */
+// ============================================================================
+ToolSvc.NewECorrection.CorrectionLevel={ 
+  true,    // alpha_1 ( E3x3)
+  true,    // alpha_2 ( barycenter )
+  true,    // alpha_3 ( Module Frame )
+  true,    // Preshower leakage
+  true,    // Global scaling
+  true,    // Spd / No Spd scaling
+  true     // SplitPhoton scaling
+} ;
+// ============================================================================
+//                                       Outer         Middle       Inner 
+// ============================================================================
+// Energie dependency
+ToolSvc.NewECorrection.Corr1_constant={ 1.0299      , 1.0072      ,  0.9798      } ;
+ToolSvc.NewECorrection.Corr1_slope={    0.11064E-03 , 0.32431E-04 , -0.27098E-04 } ;
+// Barycenter position dependency
+ToolSvc.NewECorrection.Corr2_constant={ 0.10159E+01 , 0.10210E+01 ,  0.10256E+01 } ;
+ToolSvc.NewECorrection.Corr2_slope={   -0.67599E-01 ,-0.78525E-01 , -0.89801E-01 } ;
+// Module frame dependency 
+ToolSvc.NewECorrection.Corr3_slopeX={   0.00        , 1.71        , 3.15         } ;
+ToolSvc.NewECorrection.Corr3_slopeY={   0.00        , 3.62        , 4.79         } ;
+// Preshower leakage 
+ToolSvc.NewECorrection.CorrPrs={        8.3         , 8.8         , 9.5          } ;
+// Global rescaling                     No Spd   Spd/No Spd    SplitPhotons
+ToolSvc.NewECorrection.GlobalFactor={   1.060   , 0.9815      , 1.0 } ;
+// ============================================================================
+// The End 
+// ============================================================================

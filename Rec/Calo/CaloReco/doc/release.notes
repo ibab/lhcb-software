@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.26 2003-04-08 08:36:08 ibelyaev Exp $
+! $Id: release.notes,v 1.27 2003-04-11 09:33:29 ibelyaev Exp $
 ! -----------------------------------------------------------------------------
 ! CVS tag $Name: not supported by cvs2svn $
 ! -----------------------------------------------------------------------------
@@ -6,6 +6,18 @@
 ! Responsible : Vanya BELYAEV Ivan.Belyaev@itep.ru
 ! Purpose     : Main Package for Calorimeter Reconstruction Software 
 ! -----------------------------------------------------------------------------
+
+! 2003-04-11 - Vanya BELYAEV
+   new files:
+ - src/CaloNewECorrection.h,.cpp        new Energy correction from O. Deschamps
+ - src/CaloNewSCorrection.h,.cpp        new S-correctin tool from O.Deschamps 
+ - src/CaloNewLCorrection.h,.cpp        new L-correction tool from O.Deschams
+ - options/CaloNewECorrectionParam.opts parameters
+ - options/CaloNewSCorrectionParam.opts parameters
+ - options/CaloNewLCorrectionParam.opts parameters 
+   modified:
+ - src/CaloReco_load.cpp                add new tools 
+ - cmt/requirements                     increse the version to v1r5 
 
 ! 2003-04-08 - Vanya BELYAEV
  - src/CaloHyposMerge.cpp    Add split photons (CaloHypoLocation::SplitPhotons)
