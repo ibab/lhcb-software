@@ -1,4 +1,4 @@
-// $Id: VeloSim.cpp,v 1.16 2002-07-11 18:09:13 ocallot Exp $
+// $Id: VeloSim.cpp,v 1.17 2002-07-17 20:25:50 parkesb Exp $
 // Include files
 // STL
 #include <string>
@@ -290,7 +290,9 @@ StatusCode VeloSim::getInputData() {
 
   //*** make vectors for output
 
-  m_pileUpFEs = new MCVeloFEs();
+  if (m_pileUp) {m_pileUpFEs = new MCVeloFEs();}
+  else          {m_pileUpFEs =NULL;}
+
   m_veloFEs = new MCVeloFEs();
 
   return StatusCode::SUCCESS;
