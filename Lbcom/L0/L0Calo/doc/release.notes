@@ -1,6 +1,10 @@
 Package		: L0/L0Calo
 Package Manager : Olivier Callot
 
+! 2001/04/25 - Olivier Callot
+  A cluster ID may be one of a non-existent cell. In this case the conversion
+  to position is done with the other corner of the cluster
+
 ! 2001/04/19 - Olivier Callot
   Added the HCAL candidates in the output container, with a new type
   Fixed Windows NT incompatibilities, mainly loop indices are defined outside 

@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/L0/L0Calo/src/L0CaloAlg.cpp,v 1.3 2001-04-19 08:56:04 ocallot Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/L0/L0Calo/src/L0CaloAlg.cpp,v 1.4 2001-04-25 13:22:14 ocallot Exp $
 
 /// STL 
 #include <string> 
@@ -557,7 +557,6 @@ StatusCode L0CaloAlg::execute() {
   for ( hCard = 0; hCard < m_hcal->nCards(); ++hCard ) {
     if ( !hcalFe[hCard].empty() ) {
       L0Candidate hclus( m_hcal, m_etScale );
-      int hRow = hcalFe[hCard].rowMax();
       hclus.setCandidate( hcalFe[hCard].etMax() , hCard, 
 			  hcalFe[hCard].cellIdMax() );
       hclus.saveCandidate(  L0::HcalCluster, L0Calo );
@@ -785,10 +784,22 @@ void  L0Candidate::setCandidate( int et, int card, CaloCellID ID ) {
   m_ID     = ID;
   m_card   = card;
   if ( 255 >= et ) { m_et = et; } else { m_et = 255; }
-  m_center = m_det->cellCenter( ID ); 
-  m_tol    = m_det->cellSize( ID ) * .5;
-  m_center.setX( m_center.x() + m_tol );
-  m_center.setY( m_center.y() + m_tol );
+
+  // If the cluster is identified by a non-existent cell, one uses the other
+  // corner of the cluster (+1,+1) to compute the position. This should exist.
+
+  if ( m_det->valid( ID ) ) {
+    m_center = m_det->cellCenter( ID ); 
+    m_tol    = m_det->cellSize( ID ) * .5;
+    m_center.setX( m_center.x() + m_tol );
+    m_center.setY( m_center.y() + m_tol );
+  } else {
+    CaloCellID tmp( ID.calo(), ID.area(), ID.row()+1, ID.col()+1);
+    m_center = m_det->cellCenter( tmp ); 
+    m_tol    = m_det->cellSize( tmp ) * .5;
+    m_center.setX( m_center.x() - m_tol );
+    m_center.setY( m_center.y() - m_tol );
+  }
 };
 
 void  L0Candidate::saveCandidate( int type, L0CaloCandidateVector* L0Calo ) {
