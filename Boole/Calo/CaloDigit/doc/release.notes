@@ -7,8 +7,8 @@
 ! 2005-01-12 - Olivier Callot
  - Remove the production of the RawBuffer for Calo digits and trigger
    This is now done in the (new) Calo/CaloDAQ package by dedicated
-   algorithms. CaloZSup produces banks for the trigger, of type L0PrsSpdHits and 
-   L0CaloAdcs. These are the input (with CaloDigits) for the Raw buffer 
+   algorithms. CaloZSup produces banks for the trigger, of type L0PrsSpdHits
+   and  L0CaloAdcs. These are the input (with CaloDigits) for the Raw buffer 
    creation.
 
 ! 2004-12-16 - Olivier Callot
