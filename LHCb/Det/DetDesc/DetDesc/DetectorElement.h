@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/DetDesc/DetectorElement.h,v 1.5 2001-01-29 13:59:48 ibelyaev Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/DetDesc/DetectorElement.h,v 1.6 2001-02-11 11:30:46 ibelyaev Exp $
 #ifndef  GAUDIKERNEL_DETECTORELEMENT_H
 #define  GAUDIKERNEL_DETECTORELEMENT_H 
 
@@ -244,7 +244,7 @@ inline MsgStream&    operator<<( MsgStream&    os ,  const DetectorElement& de )
 inline MsgStream&    operator<<( MsgStream&    os ,  const DetectorElement* de )
 { return ( (0 == de) ? (os << "DetectorElement* points to NULL") : ( os << *de ) ) ; };
 ///
-#include "DetDesc/DetectorElement.DetectorElementException.h"
+#include "DetDesc/DetectorElementException.h"
 ///
 inline const IGeometryInfo* DetectorElement::geometry   () const { return  m_de_iGeometry    ; };
 inline       IGeometryInfo* DetectorElement::geometry   ()       { return  m_de_iGeometry    ; };

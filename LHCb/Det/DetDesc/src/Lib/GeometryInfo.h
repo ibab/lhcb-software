@@ -1,4 +1,4 @@
-/// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/Lib/GeometryInfo.h,v 1.1 2001-01-29 13:59:52 ibelyaev Exp $
+/// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/Lib/GeometryInfo.h,v 1.2 2001-02-11 11:30:48 ibelyaev Exp $
 #ifndef     __DETDESC_GEOMETRYINFO_GEOMETRYINFO_H__
 #define     __DETDESC_GEOMETRYINFO_GEOMETRYINFO_H__
 
@@ -258,9 +258,9 @@ public:
 //
 //  "private" inline functions (technicalities) 
 //
-#include "GeometryInfo.inlines.h"
-#include "GeometryInfo.methods.h"
-#include "GeometryInfo.relations.h"
+#include "GeometryInfoInlines.h"
+#include "GeometryInfoMethods.h"
+#include "GeometryInfoRelations.h"
 #include "GeometryInfo.icpp" 
 
 //

@@ -36,12 +36,9 @@ class GaudiException;
 class PVolume: public IPVolume
 {
   //
-  //
   friend class LVolume;
   //
-  //
  protected:
-  ///
   /// constructor         ( protected ) 
   PVolume           ( const     std::string&     PhysVol_name                     ,
 		      const     std::string&     LogVol_name                      ,
@@ -57,37 +54,26 @@ class PVolume: public IPVolume
                       IMessageSvc*               msgSvc         = 0               );
  ///
   virtual ~PVolume();
-  
+  ///  
  public:
-  //
   //     the name of the physical volume
   inline const std::string&     name       () const ; 
-  //
   // index is to be used for "replica" and "parametrized" implementation
   inline const std::string&     lvolumeName() const ;
-  inline       ILVolume*        lvolume    () const ; 
- 
+  inline       ILVolume*        lvolume    () const ;  
   // index is to be used for "replica" and "parametrized" implementation
   inline const HepTransform3D&  matrix     () const ;
   inline       HepTransform3D   matrixInv  () const ; 
-  
   //
   inline       HepPoint3D       toLocal    ( const HepPoint3D& PointInMother ) const;
   inline       HepPoint3D       toMother   ( const HepPoint3D& PointInLocal  ) const;
- //
-  inline       bool             isInside   ( const HepPoint3D& PointInMother ) const;
   //
- 
+  inline       bool             isInside   ( const HepPoint3D& PointInMother ) const;
   /// 
   virtual inline      std::ostream& printOut( std::ostream& ) const;
   virtual inline      MsgStream&    printOut( MsgStream&    ) const;
-  ///
-
   /// reset to the initial state
   inline const IPVolume*        reset() const; 
- 
-  
-  ///
   /// intersection of the physical volume with with line.
   /// line is parametrized in the local reference system of the mother 
   /// logical volume by initial Point and direction Vector.
@@ -112,33 +98,22 @@ class PVolume: public IPVolume
 				     const ISolid::Tick        tickMax       , // maximum value of possible Tick
 				     const double              Threshold     );// threshold value 
   ///
-  ///
  private:
-
   // no default constructor 
   PVolume()                           ;
-
   // no public copy constructor 
   PVolume           ( const PVolume& );
-
   // no public assignment
   PVolume& operator=( const PVolume& );
-
-  //
   // technical - 
-
   // find logical volume by name 
   ILVolume*                 findLogical   () const ; 
-
   // return data service 
   inline IDataProviderSvc*  dataSvc       () const ; 
-
   // return message service 
   inline IMessageSvc*       msgSvc        () const ;  
-  
   // Exception
   class PVolumeException;
-
   // Assertion 
   inline void Assert( bool               assertion , 
 		      const std::string& name      ) const;
@@ -147,62 +122,31 @@ class PVolume: public IPVolume
   inline void Assert( bool                  assertion , 
 		      const std::string&    name      , 
 		      const GaudiException& Exception ) const;
-  //
-
-
-  ///
   ///  from IInspectable interface
-  ///
   virtual bool acceptInspector( IInspector* pInspector )       ; 
-  ///
   virtual bool acceptInspector( IInspector* pInspector ) const ; 
   ///
-
  private:
-  //
   // "native" features  - 
-  //
   std::string         m_pv_name;     // name of physical volume
   std::string         m_pv_lvname;   // name of corresponding logical volume ( path in transient store
-  HepTransform3D      m_pv_matrix;   // transformation matrix from (unknown) MOTHER to LOCAL frame
-  
+  HepTransform3D      m_pv_matrix;   // transformation matrix from (unknown) MOTHER to LOCAL frame  
   // C++ pointer to the corresponding logical volume  
-  mutable ILVolume*   m_pv_lvolume;   
-  
+  mutable ILVolume*   m_pv_lvolume;     
   // "very private" 
   IDataProviderSvc*   m_pv_dataSvc; 
   IMessageSvc*        m_pv_messageSvc; 
 };
-
-
 ///
-///
-///
-///
-///
-///
-
 inline MsgStream& operator<<( MsgStream&  os ,  const PVolume& pv ) { return pv.printOut( os ) ; };
-
 ///
-///
-///
-
 inline MsgStream& operator<<( MsgStream&  os ,  const PVolume* ppv )
 {  return ( ( 0 == ppv ) ? (os << "PVolume* points to NULL") : ( os << *ppv ) ); }
 
-///
-///
-///
-
 /// local 
-#include "PVolume.PVolumeException.h"
+#include "PVolumeException.h"
 /// local 
-#include "PVolume.inlines.h" 
-
-
-///
-///
+#include "PVolumeInlines.h" 
 ///
 
 #endif  //  __DETDESC_VOLUMES_PVOLUME_H__

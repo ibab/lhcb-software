@@ -288,25 +288,14 @@ class LVolume: public DataObject ,
   //
 
 };
-
 ///
-///
-///
-
 inline MsgStream& operator<<( MsgStream& os , const LVolume&  lv ) { return lv.printOut( os ); };
 inline MsgStream& operator<<( MsgStream& os , const LVolume* plv ) { return ( ( 0 == plv ) ? ( os << "LVolume* points to NULL") : ( os << *plv) ) ; };
-
 ///
-///
-///
-
-#include "DetDesc/LVolume.LVolumeException.h" 
+#include "DetDesc/LVolumeException.h" 
 #include "DetDesc/LVolume.icpp" 
 ///
-///
-///
 
-  
 #endif  //  __DETDESC_VOLUMES_LVOLUME_H_
 
 

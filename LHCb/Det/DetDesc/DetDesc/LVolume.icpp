@@ -4,8 +4,6 @@
 
 #include <string>
 
-
-
 ///  implementation of inline methods from LVolume class 
 ///  from IValidity Interface:
 inline bool LVolume::isValid ()                 { return validSince() <           validTill() ;};

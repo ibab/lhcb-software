@@ -313,12 +313,6 @@ StreamBuffer& LVolume::serialize( StreamBuffer& s )  const
 ///
 
 
-#include "DetDesc/LVolume.validity.h" 
-#include "DetDesc/LVolume.intersectLine.h" 
-
-
-
-
 
 
 
