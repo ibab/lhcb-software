@@ -2,15 +2,18 @@
 # Created    : 11/05/2003
 # Maintainer : Christopher Rob Jones
 #============================================================================
-# $Id: requirements,v 1.14 2004-10-27 14:21:17 jonrob Exp $
+# $Id: requirements,v 1.15 2005-01-13 14:27:19 jonrob Exp $
 # $Log: not supported by cvs2svn $
+# Revision 1.14  2004/10/27 14:21:17  jonrob
+# Update version number
+#
 # Revision 1.13  2004/07/30 11:07:35  jonrob
 # Add CVS log to requirements file
 #
 #============================================================================
 
 package RichGlobalPID
-version v1r8
+version v1r9
 
 #============================================================================
 # Structure
@@ -38,12 +41,12 @@ document obj2dict RichGlobalPID_Event_Obj2Dict ../xml/RichGlobalPID_Event.xml
 
 # ================ component library=========================================
 library   RichGlobalPID           ../src/*.cpp  -import=AIDA
-library   RichGlobalPIDEventDict  ../dict/*.cpp -import=GaudiIntrospection
+#library   RichGlobalPIDEventDict  ../dict/*.cpp -import=GaudiIntrospection
 
 # define component library link options
 #============================================================================
 apply_pattern component_library library=RichGlobalPID
-apply_pattern component_library library=RichGlobalPIDEventDict
+#apply_pattern component_library library=RichGlobalPIDEventDict
 
 #============================================================================
 private
