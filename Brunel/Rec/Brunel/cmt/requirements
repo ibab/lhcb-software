@@ -54,7 +54,7 @@ use CaloKernel   v1r0   Calo
 
 # Detector description
 use DetDesc      v9r2   Det
-use XmlDDDB      v7r3   Det
+use XmlDDDB      v8r0   Det
 use CaloDet      v3r0   Det
 use VeloDet      v3r0   Det
 
@@ -88,7 +88,9 @@ use L0DU         v4r0   L0
 # Calorimeter
 use CaloInterfaces v1r0 Calo
 use CaloUtils      v1r0 Calo
-use CaloAlgs       v4r0 Calo
+use CaloTools      v1r1 Calo
+use CaloAlgs       v4r1 Calo
+use CaloCA         v3r1 Calo
 
 # Tracking
 use ITAlgorithms v7r0   IT
@@ -137,7 +139,7 @@ macro_append Brunel_linkopts " "\
                 Linux        " -g -Wl,--start-group "\
                 Linuxdbx     " -g -Wl,--start-group "
 
-#== Set the Brunel version = v *10000 + r * 100 + p * 100 ==
+#== Set the Brunel version = v*10000 + r*100 + p  ==
 macro_append fflags " -DBrunelVersion=90000 " \
            VisualC  " /DBrunelVersion=90000 "
 

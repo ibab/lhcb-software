@@ -6,7 +6,7 @@ Purpose: LHCb reconstruction program
 
 </PRE><H1><A NAME=v9r0>20020131 Brunel v9r0</A></H1><PRE>
    Upgraded to use Gaudi v9
-   Added VELO digitisation, VELO tracking, Forward tracking
+   Added VELO digitisation, VELO tracking, Forward tracking, Calo reconstruction
 
    Functionality changes
    ---------------------
@@ -21,6 +21,7 @@ Purpose: LHCb reconstruction program
    In options
    - Brunel.opts: suppress printout of options from included subdetector files
                   add BrunelSicbInit to TopAlg list
+                  add Calo reconstruction
                   add Velo digitisation and tracking
                   add PuVeto to L0 trigger
                   Remove L0SicbCnv
@@ -59,6 +60,11 @@ Purpose: LHCb reconstruction program
      use L0/L0DU           v4r0
      Removed SICB/L0SicbCnv
 
+   Calorimeter C++ reconstruction add (not yet persistent)
+     use Calo/CaloTools   v1r1
+     use Calo/CaloCA      v3r1
+     use Calo/CaloAlgs    v4r1
+
    Additional changes for Gaudi v9 
    -------------------------------
    In job
@@ -73,7 +79,7 @@ Purpose: LHCb reconstruction program
     use TrKernel     v6r0  (was v5r1)
     use CaloKernel   v1r0  (was CaloGen v2)
     use DetDesc      v9r2  (was v7)
-    use XmlDDDB      v7r3  (was v6r1)
+    use XmlDDDB      v8    (was v6r1)
     use CaloDet      v3r0  (was v3r0)
     use LHCbEvent    v12r1 (was v11)
     use VeloEvent    v6r0  (was v5)
@@ -87,7 +93,6 @@ Purpose: LHCb reconstruction program
     use TrSicbCnv    v4r0  (was v3)
     use VSicbCnv     v6r0  (was v5)
     use L0Muon       v4r0  (was v3r1)
-    use CaloAlgs     v4r0  (was v3)
     use ITAlgorithms v7r0  (was v6)
     use OTAlgorithms v7r0	 (was v6)
     use TrAlgorithms v7r0  (was v6r2)
