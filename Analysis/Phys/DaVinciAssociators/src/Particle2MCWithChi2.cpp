@@ -1,4 +1,4 @@
-// $Id: Particle2MCWithChi2.cpp,v 1.3 2002-07-15 15:17:17 phicharp Exp $
+// $Id: Particle2MCWithChi2.cpp,v 1.4 2002-07-27 19:32:32 gcorti Exp $
 // Include files 
 #include <math.h>
 
@@ -92,7 +92,7 @@ StatusCode Particle2MCWithChi2::execute() {
   // Loop on Particles containers //
   //////////////////////////////////
 
-  for( vector<std::string>::iterator inp = m_inputData.begin(); 
+  for( std::vector<std::string>::iterator inp = m_inputData.begin(); 
        m_inputData.end()!= inp; inp++) {
     // Get Particles
     SmartDataPtr<Particles> parts (eventSvc(), *inp);

@@ -1,4 +1,4 @@
-// $Id: ProtoParticle2MCLinks.cpp,v 1.2 2002-07-15 15:17:17 phicharp Exp $
+// $Id: ProtoParticle2MCLinks.cpp,v 1.3 2002-07-27 19:32:32 gcorti Exp $
 // Include files 
 
 // from Gaudi
@@ -86,7 +86,7 @@ StatusCode ProtoParticle2MCLinks::execute() {
   // Loop on Particles containers //
   //////////////////////////////////
 
-  for( vector<std::string>::iterator inp = m_inputData.begin(); 
+  for( std::vector<std::string>::iterator inp = m_inputData.begin(); 
        m_inputData.end()!= inp; inp++) {
     // Get Particles
     SmartDataPtr<ProtoParticles> protos (eventSvc(), *inp);
