@@ -1,11 +1,19 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE gdd SYSTEM "gdd.dtd">
+<gdd>
+<package name="RichRecBase">
+
 <!-- **************************************************************************
-  * $Id: RichRecRing.xml,v 1.3 2004-10-13 09:29:43 jonrob Exp $
+  * $Id: RichRecRing.xml,v 1.4 2004-11-02 13:00:53 jonrob Exp $
   *****************************************************************************
   * XML-description of RichRecRing class                                      *
   * author: Chris Jones   Christopher.Rob.Jones@cern.ch                       *
   * date:   2004-06-23                                                        *
   *****************************************************************************
   * $Log: not supported by cvs2svn $
+  * Revision 1.3  2004/10/13 09:29:43  jonrob
+  * Improvements to RichTrackID and RichTrackSelector
+  *
   * Revision 1.2  2004/07/29 09:03:12  jonesc
   * Add CVS Log history information to XML files
   *
@@ -134,6 +142,7 @@
         <attribute 
                 desc = "Bit packed field containing history information" 
                 name = "historyCode" 
+                init = "0"
                 type = "bitfield" >
                 <bitfield desc="The Rich detector. Either Rich::Rich1 or Rich::Rich2"                                    getMeth="FALSE" length="1" name="rich"  setMeth="FALSE" />
                 <bitfield desc="The Rich panel. For Rich1(Rich2) either Rich::up(Rich::left) or Rich::down(Rich::right)" getMeth="FALSE" length="1" name="panel" setMeth="FALSE" />
@@ -153,3 +162,6 @@
         />
 
 </class>
+
+</package>
+</gdd>

@@ -4,6 +4,11 @@
 ! Purpose     : Base package for RICH Reconstruction Packages
 !-----------------------------------------------------------------------------
 
+! 2004-11-02 - Chris Jones
+ - Update the way the XML is structured so that each file is parsed 
+   individually. This improvement means if an xml file is changed the header
+   file for that class (and only that class) is automatically regenerated.
+
 ! 2004-10-19 - Chris Jones
  - Update usage to RichEvent v8r*
 

@@ -1,11 +1,19 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE gdd SYSTEM "gdd.dtd">
+<gdd>
+<package name="RichRecBase">
+
 <!-- **************************************************************************
-  * $Id: RichRecStatus.xml,v 1.2 2004-07-29 09:03:12 jonesc Exp $
+  * $Id: RichRecStatus.xml,v 1.3 2004-11-02 13:00:53 jonrob Exp $
   *****************************************************************************
   * XML-description of RichRecTrack class                                     *
   * author: Chris Jones   Christopher.Rob.Jones@cern.ch                       *
   * date:   2004-06-23                                                        *
   *****************************************************************************
   * $Log: not supported by cvs2svn $
+  * Revision 1.2  2004/07/29 09:03:12  jonesc
+  * Add CVS Log history information to XML files
+  *
   ************************************************************************* -->
 
 <class 
@@ -20,7 +28,9 @@
         <base name="DataObject"/>
         &DataObject;
             
-        <import name="RichKernel/RichDetectorType"/>
+        <import name="Kernel/CLHEPStreams"/>
+        <import name="Kernel/SerializeStl"/>
+        <import name="Kernel/RichDetectorType"/>
         <import ignore="TRUE" name="Rich"/>
 
 	<typedef 
@@ -68,3 +78,6 @@
         />
         
 </class>
+
+</package>
+</gdd>

@@ -1,11 +1,19 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE gdd SYSTEM "gdd.dtd">
+<gdd>
+<package name="RichRecBase">
+
 <!-- **************************************************************************
-  * $Id: RichRecPixel.xml,v 1.5 2004-10-27 14:34:16 jonrob Exp $
+  * $Id: RichRecPixel.xml,v 1.6 2004-11-02 13:00:52 jonrob Exp $
   *****************************************************************************
   * XML-description of RichRecPixel class                                     *
   * author: Chris Jones   Christopher.Rob.Jones@cern.ch                       *
   * date:   2004-06-23                                                        *
   *****************************************************************************
   * $Log: not supported by cvs2svn $
+  * Revision 1.5  2004/10/27 14:34:16  jonrob
+  * Various updates
+  *
   * Revision 1.4  2004/10/13 09:29:43  jonrob
   * Improvements to RichTrackID and RichTrackSelector
   *
@@ -27,8 +35,10 @@
         <base name="KeyedObject&lt;int&gt;"/>
         &KeyedObject;
             
+        <import name="Kernel/CLHEPStreams"/>
+        <import name="Kernel/SerializeStl"/>
         <import name="RichRecBase/RichRecPixelParentType"/>
-        <import name="RichKernel/RichDetectorType"/>
+        <import name="Kernel/RichDetectorType"/>
 
         <import ignore="TRUE" name="Rich"/>
         <import ignore="TRUE" name="PixelParent"/>
@@ -196,3 +206,6 @@
         />
 
 </class>
+
+</package>
+</gdd>

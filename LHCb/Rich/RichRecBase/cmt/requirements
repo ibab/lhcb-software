@@ -2,8 +2,11 @@
 # Created    : 2002-11-19
 # Maintainer : Chris Jones   Christopher.Rob.Jones@cern.ch 
 #============================================================================
-# $Id: requirements,v 1.25 2004-10-27 14:34:16 jonrob Exp $
+# $Id: requirements,v 1.26 2004-11-02 13:00:52 jonrob Exp $
 # $Log: not supported by cvs2svn $
+# Revision 1.25  2004/10/27 14:34:16  jonrob
+# Various updates
+#
 # Revision 1.24  2004/10/21 09:09:46  jonrob
 # Update version and RichEvent usage
 #
@@ -36,8 +39,8 @@ include_dirs $(RICHRECBASEROOT)
 #============================================================================
 # Build GOD objects
 #============================================================================
-document obj2doth RichRecBase_CommonObj2Doth   ../xml/RichRecBase_Event.xml
-document obj2dict RichRecBase_CommonObj2Dict   ../xml/RichRecBase_Event.xml
+document obj2doth RichRecBase_CommonObj2Doth   ../xml/*.xml
+document obj2dict RichRecBase_CommonObj2Dict   ../xml/*.xml
 
 #============================================================================
 # Build libraries (including dictionary)
