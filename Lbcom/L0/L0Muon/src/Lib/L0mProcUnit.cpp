@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/L0/L0Muon/src/Lib/L0mProcUnit.cpp,v 1.1 2001-06-07 16:35:54 atsareg Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/L0/L0Muon/src/Lib/L0mProcUnit.cpp,v 1.2 2001-06-08 18:28:49 atsareg Exp $
 #include "GaudiKernel/MsgStream.h"
 
 #include "L0Muon/L0mProcUnit.h"
@@ -33,13 +33,12 @@ L0Muon::StatusCode L0mProcUnit::execute(MsgStream& log) {
     int nCandidate = 0;
     
     for ( it=m_towers.begin(); it != m_towers.end(); it++ ) {
+      lcd = 0;
       if ((*it)->isFull()) {
         lcd = (*it)->createCandidate(m_ptParameters,m_foiX,m_foiY);  
       }   
-      if(lcd) {  
-      
+      if(lcd) {        
         //  Track found !
-
         log << MSG::DEBUG << "Track found" << endreq;
         (*it)->draw(log << MSG::DEBUG);
         (*it)->pad(2)->print(log );
