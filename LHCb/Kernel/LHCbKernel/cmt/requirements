@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.4 2002-03-27 17:37:31 cattanem Exp $
+# $Id: requirements,v 1.5 2002-03-27 18:50:06 cattanem Exp $
 # =============================================================================
 # CVS tag $Name: not supported by cvs2svn $
 # =============================================================================
@@ -17,9 +17,9 @@ use GaudiObjDesc       v3r*
 
 # Produce Header-Files from XML description, overriding default destination
 #============================================================================
-macro GODflags " -o "
-set GODDOTHOUT "../Kernel/" \
-    WIN32      "..\Kernel\"
+#macro GODflags " -o "
+#set GODDOTHOUT "../Kernel/" \
+#    WIN32      "..\Kernel\"
 
 document obj2doth LHCbKernelObj2Doth ../xml/*.xml
 
