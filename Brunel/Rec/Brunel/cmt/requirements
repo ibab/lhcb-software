@@ -13,7 +13,7 @@ use LHCb	v*
 use SICBSys	v*	SICB
 
 #-- Database
-use XmlDDDB	v14r3	Det
+use XmlDDDB	v14r4	Det
 
 #-- BrunelSys v16r4 packages
 

@@ -12,6 +12,8 @@ Purpose: LHCb reconstruction program
  - New tuning:
    . New tuning of ST charge sharing and clustering to match test beam
      (ITAlgorithms v12r6)
+   . Increase lateral size of Aerogel to better match CDF description
+     (XmlDDDB v14r4)
 
  - New features:
    . Re-enable OO-Rich by default (Brunel.opts)
