@@ -1,8 +1,11 @@
-// $Id: ICaloSubClusterTag.h,v 1.1 2002-04-02 11:08:12 ibelyaev Exp $
+// $Id: ICaloSubClusterTag.h,v 1.2 2004-02-17 11:42:28 ibelyaev Exp $
 // ============================================================================
 // CVS  tag $Name: not supported by cvs2svn $
 // ============================================================================
-// $Log: not supported by cvs2svn $ 
+// $Log: not supported by cvs2svn $
+// Revision 1.1  2002/04/02 11:08:12  ibelyaev
+//  new interfaces
+// 
 // ============================================================================
 #ifndef CALOINTERFACES_ICALOSUBCLUSTERTAG_H 
 #define CALOINTERFACES_ICALOSUBCLUSTERTAG_H 1
@@ -29,7 +32,7 @@ public:
    *  @see IInterface 
    *  @return unique interface identifier
    */
-  static const InterfaceID& interfaceID()    { return IID_ICaloSubClusterTag ; }
+  static const InterfaceID& interfaceID() ;
   
   /** The main method 
    *  @param cluster pointer to ClaoCluster object to be selected/tagged 
@@ -46,7 +49,7 @@ public:
 protected:
   
   /// destructor (virtual and protected)
-  virtual ~ICaloSubClusterTag(){};
+  virtual ~ICaloSubClusterTag();
   
 };
 

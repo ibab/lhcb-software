@@ -1,15 +1,26 @@
-# $Id: requirements,v 1.15 2004-01-07 09:57:11 cattanem Exp $
+# $Id: requirements,v 1.16 2004-02-17 11:42:29 ibelyaev Exp $
 # =============================================================================
 package           CaloInterfaces
-version           v3r1
+version           v4r0
 
 # =============== structure ===================================================
-branches          cmt doc CaloInterfaces
+branches          cmt doc src CaloInterfaces
 
 # =============== include directories =========================================
 include_dirs      $(CALOINTERFACESROOT)
 
 # =============== dependencies ================================================
 use GaudiKernel   v15r* 
+use LHCbKernel    v*    Kernel
+  
+# =============== thelibrary =================================================
+library           CaloInterfaces *.cpp 
 
-# =============== no constituents! ============================================
+# =============== patterns ====================================================
+apply_pattern     linker_library library=CaloInterfaces 
+
+# =============================================================================
+# The END 
+# =============================================================================
+
+

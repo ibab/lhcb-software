@@ -1,8 +1,11 @@
-// $Id: ICaloSplitTool.h,v 1.2 2002-04-02 11:08:12 ibelyaev Exp $
+// $Id: ICaloSplitTool.h,v 1.3 2004-02-17 11:42:28 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2002/04/02 11:08:12  ibelyaev
+//  new interfaces
+//
 // Revision 1.1  2002/03/19 17:31:26  ibelyaev
 //  add new abstract interface for Cluster Splitting Tools
 // 
@@ -15,8 +18,8 @@
 // GaudiKernel
 #include "GaudiKernel/IAlgTool.h"
 // Local
-#include "CaloInterfaces/ICaloSplitTool.h"
- 
+#include "CaloInterfaces/IIDICaloSplitTool.h"
+
 /** @class ICaloSplitTool ICaloSplitTool.h CaloInterfaces/ICaloSplitTool.h
  *
  *  An abstract interface for "cluster splitting tools", like 
@@ -41,7 +44,7 @@ public:
   /** static interface identification
    *  @return unique interface identifier
    */
-  static const InterfaceID& interfaceID() { return IID_ICaloSplitTool ; }
+  static const InterfaceID& interfaceID() ;
   
   /** The main processing method 
    *  @param  hypo   pointer to CaloHypo object to be processed
@@ -61,10 +64,11 @@ public:
   operator() ( CaloHypo*  hypo  ,
                CaloHypos& hypos ) const = 0 ;
   
-  /** destructor, virtual 
-   */
-  virtual ~ICaloSplitTool(){};
-
+protected:
+  
+  /// destructor, virtual 
+  virtual ~ICaloSplitTool();
+  
 };
 
 // ============================================================================

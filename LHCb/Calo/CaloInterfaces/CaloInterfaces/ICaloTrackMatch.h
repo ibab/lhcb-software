@@ -1,8 +1,11 @@
-// $Id: ICaloTrackMatch.h,v 1.5 2002-05-23 09:41:37 ibelyaev Exp $
+// $Id: ICaloTrackMatch.h,v 1.6 2004-02-17 11:42:29 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $  
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.5  2002/05/23 09:41:37  ibelyaev
+//  add 'state' method to ICaloTrackMatch interface
+//
 // ============================================================================
 #ifndef CALOINTERFACES_ICALOTRACKMATCH_H 
 #define CALOINTERFACES_ICALOTRACKMATCH_H 1
@@ -58,7 +61,7 @@ class ICaloTrackMatch:
   /** interface identification
    *  @return unique interface identifier 
    */
-  static const InterfaceID& interfaceID() { return IID_ICaloTrackMatch ; }
+  static const InterfaceID& interfaceID() ;
   
   /** the main matching method  
    *
@@ -92,7 +95,7 @@ class ICaloTrackMatch:
  protected:
   
   /// destructor
-  virtual ~ICaloTrackMatch(){}; 
+  virtual ~ICaloTrackMatch() ; 
   
 };
 // ============================================================================

@@ -1,8 +1,11 @@
-// $Id: ICaloHypoTool.h,v 1.2 2002-04-02 11:08:12 ibelyaev Exp $
+// $Id: ICaloHypoTool.h,v 1.3 2004-02-17 11:42:28 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2002/04/02 11:08:12  ibelyaev
+//  new interfaces
+//
 // Revision 1.1.1.2  2001/11/02 16:53:13  ibelyaev
 // New Package: the first release
 //
@@ -43,7 +46,7 @@ class ICaloHypoTool:
    *  @see IInterface
    *  @return unique interface identifier
    */
-  static const InterfaceID& interfaceID() { return IID_ICaloHypoTool ; }
+  static const InterfaceID& interfaceID() ;
   
   /** The main processing method 
    *  @param  hypo  pointer to CaloHypo object to be processed
@@ -60,7 +63,7 @@ class ICaloHypoTool:
  protected: 
   
   /// destructor, virtual 
-  virtual ~ICaloHypoTool(){};
+  virtual ~ICaloHypoTool();
   
 };
 

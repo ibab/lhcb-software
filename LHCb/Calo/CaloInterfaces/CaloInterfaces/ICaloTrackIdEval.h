@@ -1,8 +1,11 @@
-// $Id: ICaloTrackIdEval.h,v 1.1 2002-11-13 20:32:30 ibelyaev Exp $
+// $Id: ICaloTrackIdEval.h,v 1.2 2004-02-17 11:42:29 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
-// $Log: not supported by cvs2svn $ 
+// $Log: not supported by cvs2svn $
+// Revision 1.1  2002/11/13 20:32:30  ibelyaev
+//  version update + new interface
+// 
 // ============================================================================
 #ifndef CALOINTERFACES_ICALOTRACKIDEVAL_H 
 #define CALOINTERFACES_ICALOTRACKIDEVAL_H 1
@@ -42,7 +45,7 @@ public:
    *  @see IInterface
    *  @return unique interface identifier
    */
-  static const InterfaceID& interfaceID() { return IID_ICaloTrackIdEval ; }
+  static const InterfaceID& interfaceID() ;
   
   /** The main processing method 
    *  It evaluated the Track ID estimators using the calorimeter information  
@@ -63,7 +66,7 @@ public:
 protected:
   
   /// protected destructor 
-  virtual ~ICaloTrackIdEval(){};
+  virtual ~ICaloTrackIdEval();
   
 };
 

@@ -1,8 +1,25 @@
-! $Id: release.notes,v 1.16 2004-01-07 09:57:11 cattanem Exp $
+! $Id: release.notes,v 1.17 2004-02-17 11:42:29 ibelyaev Exp $
 ! =============================================================================
 ! Package     : CaloInterfaces
 ! Responsible : Vanya Belyaev Ivan.Belyaev@itep.ru
 ! =============================================================================
+
+! 2004-02-17 - Vanya BELYAEV
+
+ - make the fix in the interface names:
+ 
+     ICaloHypoLikelyhood -> ICaloHypoLikelihood
+     ICaloLikelyhood     -> ICaloLikelihood
+
+- src/CaloInterfaces.cpp     
+    new file with the implementations of 
+      I::interfaceID() and I::~I() methods 	   
+    It ensures that dynamic_cast will ALWAYS work 
+    (even without explicit loading of GCC-stuff from GaudiKernel)
+
+- cmt/requirements 
+   increase the major version to v4r0 
+
 
 !======================= CaloInterfaces v3r1 2004-01-07 =====================
 ! 2004-01-07 - Marco Cattaneo

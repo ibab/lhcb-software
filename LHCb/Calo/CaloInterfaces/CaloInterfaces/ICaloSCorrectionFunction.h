@@ -4,11 +4,12 @@
 // Include files
 #include "GaudiKernel/AlgTool.h"
 
-static const InterfaceID IID_ICaloSCorrectionFunction("ICaloSCorrectionFunction",1,0); 
+static const InterfaceID 
+IID_ICaloSCorrectionFunction("ICaloSCorrectionFunction",1,0); 
 
 class ICaloSCorrectionFunction : virtual public IAlgTool {
 public:
-  static const InterfaceID& interfaceID() {return IID_ICaloSCorrectionFunction;}
+  static const InterfaceID& interfaceID() ;
   virtual StatusCode calculate( double min, 
                                 double middle,
                                 double max,
@@ -23,6 +24,8 @@ public:
                                      double x,
                                      double y,
                                      double& result) = 0;
+protected:
+  virtual ~ICaloSCorrectionFunction();
 };
 
 #endif // CALOSSHAPE_ICALOSCORRECTIONFUNCTION_H

@@ -1,4 +1,4 @@
-// $Id: ICaloMomentumTool.h,v 1.1 2002-04-02 11:08:12 ibelyaev Exp $
+// $Id: ICaloMomentumTool.h,v 1.2 2004-02-17 11:42:28 ibelyaev Exp $
 // ============================================================================
 // ============================================================================
 // ============================================================================
@@ -31,7 +31,7 @@ public:
   /** static interface identification
    *  @return unique interface identifier
    */
-  static const InterfaceID& interfaceID() { return IID_ICaloMomentumTool ; }
+  static const InterfaceID& interfaceID() ;
   
   /** The main processing method 
    *  @param  momentum pointer to CaloMomentum object  
@@ -47,9 +47,10 @@ public:
   virtual StatusCode 
   operator() ( CaloMomentum*  momentum  ) const = 0 ;
   
-  /** destructor (virtual) 
-   */
-  virtual ~ICaloMomentumTool(){};
+protected:
+  
+  /// destructor (virtual) 
+  virtual ~ICaloMomentumTool() ;
 
 };
 

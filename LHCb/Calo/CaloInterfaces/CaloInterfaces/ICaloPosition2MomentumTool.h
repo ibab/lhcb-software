@@ -1,4 +1,4 @@
-// $Id: ICaloPosition2MomentumTool.h,v 1.1 2002-04-02 11:08:12 ibelyaev Exp $
+// $Id: ICaloPosition2MomentumTool.h,v 1.2 2004-02-17 11:42:28 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
@@ -35,8 +35,7 @@ public:
   /** static interface identification
    *  @return unique interface identifier
    */
-  static const InterfaceID& interfaceID() 
-  { return IID_ICaloPosition2MomentumTool ; }
+  static const InterfaceID& interfaceID() ;
 
   /** the main processing method 
    *  @param position pointer to CaloPosition object
@@ -61,10 +60,11 @@ public:
   virtual CaloMomentum* 
   operator() ( const CaloPosition* position ) const = 0 ;
 
-  /** destructor (virtual)
-   */
-  virtual ~ICaloPosition2MomentumTool(){};
-
+protected:
+  
+  /// destructor (virtual)
+  virtual ~ICaloPosition2MomentumTool();
+  
 };
 
 // ============================================================================
