@@ -35,7 +35,6 @@ class _VertexType(object) :
 VertexType = _VertexType()
 VertexType.Primary = 1
 
-
         
 g = gaudi.AppMgr()
 # load the minimal set of dictionaries
@@ -52,6 +51,18 @@ Range      = helper.loadRange ( gbl.LoKi.Range_( 'std::vector<Particle*> '   ) )
 VRange     = helper.loadRange ( gbl.LoKi.Range_( 'std::vector<Vertex*> '     ) ) 
 MCRange    = helper.loadRange ( gbl.LoKi.Range_( 'std::vector<MCParticle*> ' ) )
 MCVRange   = helper.loadRange ( gbl.LoKi.Range_( 'std::vector<MCVertex*> '   ) )
+
+Range.list     = helper.range2list
+VRange.list    = helper.range2list
+MCRange.list   = helper.range2list
+MCVRange.list  = helper.range2list
+Range.tuple    = helper.range2tuple
+VRange.tuple   = helper.range2tuple
+MCRange.tuple  = helper.range2tuple
+MCVRange.tuple = helper.range2tuple
+
+Seq2List      = helper.Seq2List
+Seq2Tuple     = helper.Seq2Tuple
 
 FitStrategy   = gbl.LoKi.Fits.FitStrategy
 

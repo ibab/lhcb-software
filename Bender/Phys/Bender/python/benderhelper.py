@@ -156,4 +156,26 @@ def funcTest( fun1 , fun2 ) :
     print ' f1>=f2 ' , fun1 >= fun2 
     print ' f1==f2 ' , fun1 == fun2 
     print ' f1!=f2 ' , fun1 != fun2 
-    
+
+
+def range2list( self ) :
+    " conver <XX>Range object to the list"
+    res = []
+    for obj in self : res += [ obj ]
+    print ' sizes ' , self.size() , len(res) 
+    return res 
+def range2tuple( self ) :
+    " conver <XX>Range object to the tuple"
+    return tuple( self.range2list() )
+
+def Seq2List( range ) :
+    " conver <XX>Range object to the list"
+    res = []
+    for obj in range : res += [ obj ]
+    print ' sizes ' , len(range) , len(res) 
+    return res 
+
+def Seq2Tuple( range ) :
+    " conver <XX>Range object to the tuple "
+    return tuple( Seq2List ( range ) )
+
