@@ -4,11 +4,13 @@
  *  Header file for tool : RichToolRegistry
  *
  *  CVS Log :-
- *  $Id: RichToolRegistry.h,v 1.5 2004-10-13 09:54:04 jonrob Exp $
+ *  $Id: RichToolRegistry.h,v 1.6 2005-01-13 13:19:51 jonrob Exp $
  *  $Log: not supported by cvs2svn $
+ *  Revision 1.5  2004/10/13 09:54:04  jonrob
+ *  various minor changes
+ *
  *  Revision 1.4  2004/07/26 18:03:05  jonrob
  *  Various improvements to the doxygen comments
- *
  *
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -17,6 +19,7 @@
 #ifndef RICHTOOLS_RICHTOOLREGISTRY_H
 #define RICHTOOLS_RICHTOOLREGISTRY_H 1
 
+// STL
 #include <map>
 #include <string>
 
@@ -26,6 +29,10 @@
 
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h"
+
+// Kernel
+#include "RichKernel/RichHashMap.h"
+#include "RichKernel/StringHashFuncs.h"
 
 /** @class RichToolRegistry RichToolRegistry.h
  *
@@ -75,7 +82,7 @@ private: // data
   ToolList m_names;
 
   /// typedef for the mapping between nicknames and class names
-  typedef std::map< std::string, std::string > RichToolMap;
+  typedef RichHashMap< std::string, std::string > RichToolMap;
   /// The mapping between the tool name and type
   mutable RichToolMap m_myTools;
 
