@@ -13,6 +13,7 @@
 #include "GaudiKernel/SmartDataPtr.h"
 
 // local
+#include "VeloAssociators/VeloCluster2MCParticleAsct.h"
 #include "VeloCluster2MCParticleAlg.h"
 #include "VeloTruthTool.h"
 
@@ -30,13 +31,13 @@ VeloCluster2MCParticleAlg::VeloCluster2MCParticleAlg( const std::string& name,
                                         ISvcLocator* pSvcLocator)
   : Algorithm (name,pSvcLocator) 
 {
-
-  // constructer
-  declareProperty( "OutputData", m_outputData  = "MC/VeloClusters2MCParticles" );
+  // constructor
+  declareProperty( "OutputData", 
+                   m_outputData = VeloCluster2MCParticleAsctLocation );
 }
 
 VeloCluster2MCParticleAlg::~VeloCluster2MCParticleAlg() {
-  // destructer
+  // destructor
 }; 
 
 StatusCode VeloCluster2MCParticleAlg::initialize() {
@@ -44,7 +45,7 @@ StatusCode VeloCluster2MCParticleAlg::initialize() {
   MsgStream log(msgSvc(), name());
   log << MSG::DEBUG << "==> Initialise" << endreq;
 
-  SmartDataPtr<DeVelo> velo( detDataService(), "/dd/Structure/LHCb/Velo" );
+  SmartDataPtr<DeVelo> velo( detSvc(), "/dd/Structure/LHCb/Velo" );
    
   if ( 0 == velo ) {
     log << MSG::ERROR << "Unable to retrieve Velo detector element." << endreq;

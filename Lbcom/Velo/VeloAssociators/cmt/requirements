@@ -11,7 +11,7 @@ version           v1r0
 #
 # Structure, i.e. directories to process. 
 #============================================================================
-branches          VeloAssociators src cmt doc options
+branches          VeloAssociators src cmt doc
 
 include_dirs $(VELOASSOCIATORSROOT)
 

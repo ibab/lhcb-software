@@ -1,12 +1,15 @@
 ! Package     : VeloAssociator
 ! Responsible : Chris Parkes
 
-!=============================================================================
-! 22/05/2002 - Chris Parkes  ** v1r0 **
+! >>>>>>>>>>>>>>>>>>>>>> VeloAssociators v1r0 <<<<<<<<<<<<<<<<<<<<<<<<
+! 2002-05-24 - Marco Cattaneo
+ - Add relation factories to VeloAssociators_load.cpp
+ - Standardise TDS path for relations
+
+! 2002-05-24 - Chris Parkes
   - Initial Release. Two Associators and their algorithms added.
     1) Linking VeloClusters and MCVeloHits
-    ambiguities between hits and MCVeloFEs are not solved correctly, 
-just one arbitrarily picked. My (currently unreleased) VeloDetectorElement 
-is needed to help solve this.
+       ambiguities between hits and MCVeloFEs are not solved correctly, 
+       just one arbitrarily picked. My (currently unreleased) 
+       VeloDetectorElement is needed to help solve this.
     2) Linking VeloCluster and MCParticles  
-

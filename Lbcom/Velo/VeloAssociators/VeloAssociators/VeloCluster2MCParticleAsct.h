@@ -12,6 +12,9 @@
 #include "Relations/AssociatorWeighted.h"
 #include "Relations/RelationWeighted2D.h"
 
+static const std::string& VeloCluster2MCParticleAsctLocation = 
+ "Rec/Relations/VeloClusters2MCParticles"; 
+
 /** @class VeloCluster2MCParticleAsct VeloCluster2MCParticleAsct.h Associators/VeloCluster2MCParticleAsct.h
  *  
  *

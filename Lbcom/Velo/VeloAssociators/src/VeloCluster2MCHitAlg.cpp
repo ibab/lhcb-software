@@ -14,6 +14,7 @@
 
 // local
 #include "VeloCluster2MCHitAlg.h"
+#include "VeloAssociators/VeloCluster2MCHitAsct.h"
 #include "VeloTruthTool.h"
 
 //-----------------------------------------------------------------------------
@@ -30,13 +31,12 @@ VeloCluster2MCHitAlg::VeloCluster2MCHitAlg( const std::string& name,
                                         ISvcLocator* pSvcLocator)
   : Algorithm (name,pSvcLocator) 
 {
-
-  // constructer
-  declareProperty( "OutputData", m_outputData  = "MC/VeloClusters2MCHits" );
+  // constructor
+  declareProperty( "OutputData", m_outputData= VeloCluster2MCHitAsctLocation );
 }
 
 VeloCluster2MCHitAlg::~VeloCluster2MCHitAlg() {
-  // destructer
+  // destructor
 }; 
 
 StatusCode VeloCluster2MCHitAlg::initialize() {
