@@ -223,8 +223,8 @@ StatusCode RichSignalSICB::ProcessEvent( std::string hitLoc,
 
           int nphotons;
           double betafac;
-          double winradcurv = 5.5;
-          double winthick = 0.7;
+          double winradcurv = 5.50;
+          double winthick = 0.70;
 
           if ( beta > 2/3 ) {
             betafac = pow( sin( acos( 1.0/(1.5*beta) ) ) , 2 );
