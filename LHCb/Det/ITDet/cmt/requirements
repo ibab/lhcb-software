@@ -5,6 +5,7 @@ branches cmt doc src options
 
 include_dirs $(ITDETROOT)
 
+#use DetDesc v12r* Det
 use DetDescCnv v2r* Det
 use LHCbKernel	v2r*	Kernel
 

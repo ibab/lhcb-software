@@ -1,5 +1,12 @@
-Package         : ITDet
+\Package         : ITDet
 Package manager : M. Needham 
+ 
+! 2003-12-01 - M. Needham
+ - Add methods to return type of ladder (LR,TB ,TT, )
+ - Changes for new XML structure - no tracker catalogue !
+ - Changes to allow tiling with both even and odd numbers of 
+   rows in the TT
+ - remove DetDesc from requirements - it gets it from DetDescCnv
 
 !========================== ITDet v1r6 2003-10-06 ==========================
 ! 2003-10-06 - Marco Cattaneo

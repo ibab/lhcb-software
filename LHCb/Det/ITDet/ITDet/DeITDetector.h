@@ -19,7 +19,7 @@ class ITDetectionLayer;
 class ITChannelID;
 
 namespace DeITDetectorLocation{
-  static const std::string& Default = "/dd/Structure/LHCb/Tracker/IT";
+  static const std::string& Default = "/dd/Structure/LHCb/IT";
 };
 
 static const CLID& CLID_DeITDetector=9999;

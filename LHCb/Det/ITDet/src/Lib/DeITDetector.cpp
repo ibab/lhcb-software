@@ -68,13 +68,14 @@ StatusCode DeITDetector::initialize() {
   unsigned int iStation =(*iterStation)->userParameterAsInt("StationID");
   double SensorWidth=(*iterStation)->userParameterAsDouble("SensorWidth");
   double SensorHeight=(*iterStation)->userParameterAsDouble("SensorHeight");
-  double SensorThickness=(*iterStation)->userParameterAsDouble("SensorThickness");
+ 
   double SensorOverlap=(*iterStation)->userParameterAsDouble("SensorOverlap");
   double holeX =(*iterStation)->userParameterAsDouble("holeX");
   double holeY =(*iterStation)->userParameterAsDouble("holeY");
   double ladderDist=(*iterStation)->userParameterAsDouble("DzLadder");
   unsigned int numStrips =(*iterStation)->userParameterAsInt("numStrips");
   double pitch =(*iterStation)->userParameterAsDouble("pitch");
+  double SensorThickness;
 
   ITDetectionStation* station = new ITDetectionStation(itZ, itThickness, numLayers, iStation);  
   this->setNextStation(station);
@@ -94,8 +95,7 @@ StatusCode DeITDetector::initialize() {
 
       unsigned int NSensorX = (*iterBox)->userParameterAsInt("NSensorX");
       unsigned int NSensorY = (*iterBox)->userParameterAsInt("NSensorY");
-     
-
+       
       log << MSG::DEBUG << "*****now loop over layers"<<endreq;
 
       //  loop over layers ( or rows for old all-Si-TT1)
@@ -133,6 +133,13 @@ StatusCode DeITDetector::initialize() {
           return StatusCode::FAILURE;
         }
 
+        if (iLayer<=4){
+          SensorThickness=(*iterStation)->userParameterAsDouble("SensorThicknessTB");
+	}
+        else {
+          SensorThickness=(*iterStation)->userParameterAsDouble("SensorThicknessLR");
+	}
+
         double stereoAngle=(*iterLayer)->userParameterAsDouble("stereoAngle");
         unsigned int position=(*iterLayer)->userParameterAsInt("position");
 
@@ -151,6 +158,9 @@ StatusCode DeITDetector::initialize() {
      std::vector<int> ladderSize1, ladderSize2;
      unsigned int NSensorX1   =(*iterStation)->userParameterAsInt("NSensorX1");
      unsigned int NSensorX2   =(*iterStation)->userParameterAsInt("NSensorX2");
+     SensorThickness=(*iterStation)->userParameterAsDouble("SensorThickness");
+
+
      ladderSize1 =(*iterStation)->userParameterVectorAsInt("VSensor1");
      ladderSize2 =(*iterStation)->userParameterVectorAsInt("VSensor2");
 

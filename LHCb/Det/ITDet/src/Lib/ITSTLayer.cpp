@@ -1,4 +1,4 @@
-// $Id: ITSTLayer.cpp,v 1.6 2002-11-18 09:45:38 mneedham Exp $
+// $Id: ITSTLayer.cpp,v 1.7 2003-12-01 14:20:10 mneedham Exp $
 //
 // This File contains the definition of the ITSTLayer-class
 //
@@ -41,7 +41,7 @@ ITSTLayer::ITSTLayer(int stationID, int layerID, double z,
   unsigned int currStrip = 0;
 
   if (position == CENTER_POS){
-
+    m_type = "TB";
     // sensor height and y position  
     double yCenterBox = holeY+((ladderHeight*cosAngle())
                                +(waferWidth*fabs(sinAngle())))/2.0;
@@ -74,6 +74,7 @@ ITSTLayer::ITSTLayer(int stationID, int layerID, double z,
   else {
 
     // has to be side
+    m_type = "LR";
     double yWafer = 0.;
 
     for (iBox= -1; iBox < 2; iBox += 2 ){

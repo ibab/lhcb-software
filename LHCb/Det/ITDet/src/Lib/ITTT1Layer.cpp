@@ -33,6 +33,7 @@ ITTT1Layer::ITTT1Layer(int stationID, int layerID, double z,
 {
   // constructer
 
+  m_type = "TT";
 
   // total number of wafers
   m_WafersNum = 2u*((ladderSize1.size()*wafersX1)+(ladderSize2.size()*wafersX2));
@@ -61,9 +62,11 @@ ITTT1Layer::ITTT1Layer(int stationID, int layerID, double z,
   int currStrip = 0;
   double v = -vMax;
   unsigned int startWafer = wafersX2;
-  for (unsigned int iBWafer=1; iBWafer<=ladderSize1.size();iBWafer++){
 
+  for (unsigned int iBWafer=1; iBWafer<=ladderSize1.size();iBWafer++){
+ 
     unsigned int waferOffset = startWafer+(iBWafer-1)*((2*wafersX2)+wafersX1);
+
     v += (waferHeight*(double)ladderSize1[iBWafer-1])/2.0; 
     double ladderHeight = (ladderSize1[iBWafer-1]*waferHeight)
                           -2.0*guardRingSize;
@@ -78,6 +81,7 @@ ITTT1Layer::ITTT1Layer(int stationID, int layerID, double z,
                                     dz,
                                     guardRingSize);
 
+       
        m_Wafers[waferOffset+iWafer-1] = aWafer;
        currStrip += aWafer->lastStrip();
 
@@ -88,7 +92,7 @@ ITTT1Layer::ITTT1Layer(int stationID, int layerID, double z,
 
   // top box
   // wafer number offset
-  startWafer = wafersX2+((1+(ladderSize2.size()/2))*wafersX2*2)
+  startWafer = wafersX2+((int)ceil((double)ladderSize2.size()/2.0)*wafersX2*2)
                + (wafersX1*ladderSize1.size());
 
   v = vMax - ((double)nSensorHigh*waferHeight);
@@ -119,7 +123,7 @@ ITTT1Layer::ITTT1Layer(int stationID, int layerID, double z,
 
   } // iTWafer
 
-  // recalculate vmax
+   // recalculate vmax
   // max dimensions
   nSensorHigh = 0;
   unsigned int iLad2=0;
@@ -137,9 +141,9 @@ ITTT1Layer::ITTT1Layer(int stationID, int layerID, double z,
 
   startWafer = 0;
   double ySideLad = 0.;
+
   // left box
   for (unsigned int iLWafer=1;iLWafer<=wafersX2;iLWafer++){
-
     double dz = (1.-(2.*(iLWafer%2)))*0.5*ladderDist;
     double xLad = -xSideLad[iLWafer-1]; 
     double uLad = xLad*cosAngle() + ySideLad*sinAngle();
@@ -157,11 +161,11 @@ ITTT1Layer::ITTT1Layer(int stationID, int layerID, double z,
                
       // wafer offset
       unsigned int waferOffset;
-      if (iWafer<=(1+(ladderSize2.size()/2))){
+      if ((iWafer<=(1+(ladderSize2.size()/2)))||(ladderSize2.size()%2 == 0)){
         waferOffset = startWafer+((iWafer-1)*((2*wafersX2)+wafersX1));
       }
       else {
-       waferOffset = startWafer+((iWafer-1)*((2*wafersX2)+wafersX1))-1;
+       waferOffset = startWafer+((iWafer-1)*((2*wafersX2)+wafersX1))-wafersX1;
       }
 
       ITWafer* aWafer = new ITWafer(pitch, 1, ladderSize2[iWafer-1],  
@@ -173,7 +177,7 @@ ITTT1Layer::ITTT1Layer(int stationID, int layerID, double z,
                         guardRingSize);
       m_Wafers[iLWafer+waferOffset-1] = aWafer;
       currStrip += aWafer->lastStrip();
-
+ 
       v += 0.5*(waferHeight*(double)ladderSize2[iWafer-1]); 
 
     } //iWafer
@@ -200,11 +204,11 @@ ITTT1Layer::ITTT1Layer(int stationID, int layerID, double z,
        
       // wafer offset
       unsigned int waferOffset;
-      if (iWafer<=ladderSize2.size()/2){
+      if ((iWafer<=ladderSize2.size()/2)||(ladderSize2.size()%2 ==0)){
         waferOffset = startWafer+((iWafer-1)*((2*wafersX2)+wafersX1));
       }
       else {
-       waferOffset = startWafer+((iWafer-1)*((2*wafersX2)+wafersX1))-1;
+       waferOffset = startWafer+((iWafer-1)*((2*wafersX2)+wafersX1))-wafersX1;
       }
 
       ITWafer* aWafer = new ITWafer(pitch, 1, ladderSize2[iWafer-1],  
@@ -226,11 +230,11 @@ ITTT1Layer::ITTT1Layer(int stationID, int layerID, double z,
   m_rowsVector.reserve(ladderSize2.size());
   unsigned int lastWaferInRow;
   for (unsigned int iRow = 1; iRow<= ladderSize2.size(); iRow++){
-    if (iRow<= ladderSize2.size()/2){
+    if ((iRow<= ladderSize2.size()/2)||(ladderSize2.size()%2 == 0)){
       lastWaferInRow = iRow*((2*wafersX2)+wafersX1);
     }
     else {
-      lastWaferInRow = iRow*((2*wafersX2)+wafersX1) -1;
+      lastWaferInRow = iRow*((2*wafersX2)+wafersX1) -wafersX1;
     }
     m_rowsVector.push_back(lastWaferInRow);
   } //iRow 

@@ -16,6 +16,7 @@
 
 #include<cmath>
 #include<vector>
+#include <string>
 
 class ITWafer;
 class ITChannelID;
@@ -65,6 +66,8 @@ public:
   ITChannelID nextRight(const ITChannelID testChan) const;
   ITChannelID nextLeft(const ITChannelID testChan) const;
 
+  std::string type() const;
+
   /// print 
   std::ostream& printOut( std::ostream& os ) const;
   MsgStream& printOut( MsgStream& os) const;
@@ -72,7 +75,7 @@ public:
 protected:
  
   std::vector<ITWafer*> m_Wafers;
-  
+  std::string m_type;
   unsigned int m_WafersNum;
 
 private:
@@ -86,6 +89,7 @@ private:
   double m_Thickness;
   double m_WaferThickness;
   double m_Pitch;
+  
 
 };  
 
@@ -138,6 +142,10 @@ inline unsigned int ITDetectionLayer::numWafers() const {
 
 inline double ITDetectionLayer::waferThickness() const { 
   return m_WaferThickness; 
+}
+
+inline std::string ITDetectionLayer::type() const {
+  return m_type;
 }
 
 inline std::ostream& operator<<( std::ostream& os , const ITDetectionLayer* aLayer )
