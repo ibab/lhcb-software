@@ -1,24 +1,13 @@
-// $Id: XmlMuonReadoutCondCnv.cpp,v 1.4 2002-08-05 18:14:09 asatta Exp $
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ 
-// ============================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.3  2002/06/04 16:08:37  dhcroft
-// Added time jitter pdfs to the readouts
-//
-// Revision 1.2  2002/01/31 10:00:10  dhcroft
-// Moved CLIDs to seperate files for Visual C linker
-//
-// ============================================================================
+// $Id: XmlMuonReadoutCondCnv.cpp,v 1.5 2003-06-16 13:32:51 sponce Exp $
 
 // Include files
 #include <vector>
 
-#include "DetDesc/XmlUserConditionCnv.h"
+#include "DetDescCnv/XmlUserConditionCnv.h"
 #include "MuonDet/MuonReadoutCond.h"
 
 #include "GaudiKernel/RegistryEntry.h"
-#include <dom/DOM_NamedNodeMap.hpp>
+#include <xercesc/dom/DOMNamedNodeMap.hpp>
 
 /** @class XmlMuonReadoutCondCnv
  *
@@ -39,8 +28,7 @@ public:
   /**
    * Default destructor
    */
-  ~XmlMuonReadoutCondCnv() {}
-
+  ~XmlMuonReadoutCondCnv();
 
 protected:
 
@@ -50,7 +38,7 @@ protected:
    * @param refpObject the object to be filled
    * @return status depending on the completion of the call
    */
-  virtual StatusCode i_fillSpecificObj (DOM_Element childElement,
+  virtual StatusCode i_fillSpecificObj (xercesc::DOMElement* childElement,
                                         MuonReadoutCond* dataObj,
                                         IOpaqueAddress* address);
 
@@ -69,6 +57,30 @@ private:
                              const std::string &jitterInc,
                              std::string &jitterValues);
 
+private:
+
+  // Constant strings for element and parameter names
+  const XMLCh* ReadoutString;
+  const XMLCh* ReadoutTypeString;
+  const XMLCh* EfficiencyString;
+  const XMLCh* SyncDriftString;
+  const XMLCh* ChamberNoiseString;
+  const XMLCh* ElectronicsNoiseString;
+  const XMLCh* MeanDeadTimeString;
+  const XMLCh* RMSDeadTimeString;
+  const XMLCh* TimeGateStartString;
+  const XMLCh* PadEdgeSizeXString;
+  const XMLCh* PadEdgeSigmaXString;
+  const XMLCh* ClusterSizeXString;
+  const XMLCh* ClusterProbXString;
+  const XMLCh* PadEdgeSizeYString;
+  const XMLCh* PadEdgeSigmaYString;
+  const XMLCh* ClusterSizeYString;
+  const XMLCh* ClusterProbYString;
+  const XMLCh* JitterMinString;
+  const XMLCh* JitterMaxString;
+  const XMLCh* JitterValuesString;
+
 };
 
 
@@ -86,22 +98,70 @@ const ICnvFactory& XmlMuonReadoutCondCnvFactory = muonreadoutcond_factory;
 XmlMuonReadoutCondCnv::XmlMuonReadoutCondCnv(ISvcLocator* svc) :
   XmlUserConditionCnv<MuonReadoutCond> (svc)
 {
+  ReadoutString = xercesc::XMLString::transcode("Readout");
+  ReadoutTypeString = xercesc::XMLString::transcode("ReadoutType");
+  EfficiencyString = xercesc::XMLString::transcode("Efficiency");
+  SyncDriftString = xercesc::XMLString::transcode("SyncDrift");
+  ChamberNoiseString = xercesc::XMLString::transcode("ChamberNoise");
+  ElectronicsNoiseString = xercesc::XMLString::transcode("ElectronicsNoise");
+  MeanDeadTimeString = xercesc::XMLString::transcode("MeanDeadTime");
+  RMSDeadTimeString = xercesc::XMLString::transcode("RMSDeadTime");
+  TimeGateStartString = xercesc::XMLString::transcode("TimeGateStart");
+  PadEdgeSizeXString = xercesc::XMLString::transcode("PadEdgeSizeX");
+  PadEdgeSigmaXString = xercesc::XMLString::transcode("PadEdgeSigmaX");
+  ClusterSizeXString = xercesc::XMLString::transcode("ClusterSizeX");
+  ClusterProbXString = xercesc::XMLString::transcode("ClusterProbX");
+  PadEdgeSizeYString = xercesc::XMLString::transcode("PadEdgeSizeY");
+  PadEdgeSigmaYString = xercesc::XMLString::transcode("PadEdgeSigmaY");
+  ClusterSizeYString = xercesc::XMLString::transcode("ClusterSizeY");
+  ClusterProbYString = xercesc::XMLString::transcode("ClusterProbY");
+  JitterMinString = xercesc::XMLString::transcode("JitterMin");
+  JitterMaxString = xercesc::XMLString::transcode("JitterMax");
+  JitterValuesString = xercesc::XMLString::transcode("JitterValues");
+}
+
+
+// -----------------------------------------------------------------------
+// Destructor
+// ------------------------------------------------------------------------
+XmlMuonReadoutCondCnv::~XmlMuonReadoutCondCnv() {
+  xercesc::XMLString::release((XMLCh**)&ReadoutString);
+  xercesc::XMLString::release((XMLCh**)&ReadoutTypeString);
+  xercesc::XMLString::release((XMLCh**)&EfficiencyString);
+  xercesc::XMLString::release((XMLCh**)&SyncDriftString);
+  xercesc::XMLString::release((XMLCh**)&ChamberNoiseString);
+  xercesc::XMLString::release((XMLCh**)&ElectronicsNoiseString);
+  xercesc::XMLString::release((XMLCh**)&MeanDeadTimeString);
+  xercesc::XMLString::release((XMLCh**)&RMSDeadTimeString);
+  xercesc::XMLString::release((XMLCh**)&TimeGateStartString);
+  xercesc::XMLString::release((XMLCh**)&PadEdgeSizeXString);
+  xercesc::XMLString::release((XMLCh**)&PadEdgeSigmaXString);
+  xercesc::XMLString::release((XMLCh**)&ClusterSizeXString);
+  xercesc::XMLString::release((XMLCh**)&ClusterProbXString);
+  xercesc::XMLString::release((XMLCh**)&PadEdgeSizeYString);
+  xercesc::XMLString::release((XMLCh**)&PadEdgeSigmaYString);
+  xercesc::XMLString::release((XMLCh**)&ClusterSizeYString);
+  xercesc::XMLString::release((XMLCh**)&ClusterProbYString);
+  xercesc::XMLString::release((XMLCh**)&JitterMinString);
+  xercesc::XMLString::release((XMLCh**)&JitterMaxString);
+  xercesc::XMLString::release((XMLCh**)&JitterValuesString);
 }
 
 
 // -----------------------------------------------------------------------
 // Fill an object with a new specific child element
 // ------------------------------------------------------------------------
-StatusCode XmlMuonReadoutCondCnv::i_fillSpecificObj (DOM_Element childElement,
-                                                     MuonReadoutCond* dataObj,
-                                                 IOpaqueAddress* /*address*/){
+StatusCode
+XmlMuonReadoutCondCnv::i_fillSpecificObj (xercesc::DOMElement* childElement,
+                                          MuonReadoutCond* dataObj,
+                                          IOpaqueAddress* /*address*/){
   MsgStream log (msgSvc(), "XmlMuonReadoutCondCnv");
 
   // gets the element's name
-  std::string tagName = dom2Std (childElement.getNodeName());
+  const XMLCh* tagName = childElement->getNodeName();
 
   log << MSG::DEBUG << "Processing element "
-      << tagName << endreq;
+      << dom2Std(tagName) << endreq;
   /*
         <!--
              ReadoutType      : either Anode or Cathode (must be defined)
@@ -143,51 +203,51 @@ StatusCode XmlMuonReadoutCondCnv::i_fillSpecificObj (DOM_Element childElement,
                           JitterValues  CDATA #REQUIRED>
   */
 
-  if ("Readout" == tagName) {
+  if (0 == xercesc::XMLString::compareString(ReadoutString, tagName)) {
     const std::string rType =
-      dom2Std (childElement.getAttribute ("ReadoutType"));
+      dom2Std (childElement->getAttribute (ReadoutTypeString));
     const std::string eff =
-      dom2Std (childElement.getAttribute ("Efficiency"));
+      dom2Std (childElement->getAttribute (EfficiencyString));
     const std::string syncD =
-      dom2Std (childElement.getAttribute ("SyncDrift"));
+      dom2Std (childElement->getAttribute (SyncDriftString));
     const std::string chamNoise =
-      dom2Std (childElement.getAttribute ("ChamberNoise"));
+      dom2Std (childElement->getAttribute (ChamberNoiseString));
     const std::string elecNoise =
-      dom2Std (childElement.getAttribute ("ElectronicsNoise"));
+      dom2Std (childElement->getAttribute (ElectronicsNoiseString));
     const std::string meanDead =
-      dom2Std (childElement.getAttribute ("MeanDeadTime"));
+      dom2Std (childElement->getAttribute (MeanDeadTimeString));
     const std::string rmsDead =
-      dom2Std (childElement.getAttribute ("RMSDeadTime"));
+      dom2Std (childElement->getAttribute (RMSDeadTimeString));
     const std::string timeOffset =
-      dom2Std (childElement.getAttribute ("TimeGateStart"));
+      dom2Std (childElement->getAttribute (TimeGateStartString));
 
     const std::string padESX =
-      dom2Std (childElement.getAttribute ("PadEdgeSizeX"));
+      dom2Std (childElement->getAttribute (PadEdgeSizeXString));
     const std::string padESigX =
-      dom2Std (childElement.getAttribute ("PadEdgeSigmaX"));
+      dom2Std (childElement->getAttribute (PadEdgeSigmaXString));
     std::string clSzX =
-      dom2Std (childElement.getAttribute ("ClusterSizeX"));
+      dom2Std (childElement->getAttribute (ClusterSizeXString));
     std::string clPrX =
-      dom2Std (childElement.getAttribute ("ClusterProbX"));
+      dom2Std (childElement->getAttribute (ClusterProbXString));
 
     const std::string padESY =
-      dom2Std (childElement.getAttribute ("PadEdgeSizeY"));
+      dom2Std (childElement->getAttribute (PadEdgeSizeYString));
     const std::string padESigY =
-      dom2Std (childElement.getAttribute ("PadEdgeSigmaY"));
+      dom2Std (childElement->getAttribute (PadEdgeSigmaYString));
     std::string clSzY =
-      dom2Std (childElement.getAttribute ("ClusterSizeY"));
+      dom2Std (childElement->getAttribute (ClusterSizeYString));
     std::string clPrY =
-      dom2Std (childElement.getAttribute ("ClusterProbY"));
+      dom2Std (childElement->getAttribute (ClusterProbYString));
 
     const std::string jitterMin =
-      dom2Std (childElement.getAttribute ("JitterMin"));
+      dom2Std (childElement->getAttribute (JitterMinString));
     const std::string jitterMax =
-      dom2Std (childElement.getAttribute ("JitterMax"));
+      dom2Std (childElement->getAttribute (JitterMaxString));
     std::string jitterValues =
-      dom2Std (childElement.getAttribute ("JitterValues"));
+      dom2Std (childElement->getAttribute (JitterValuesString));
     
     
-    if( !(rType == "Anode" || rType == "Cathode") ){
+    if ( !(rType == "Anode") || (rType == "Cathode")) {
       log << MSG::WARNING << "Readout type claimed to be "
           << rType << endreq;
       return StatusCode::FAILURE;
@@ -233,7 +293,7 @@ StatusCode XmlMuonReadoutCondCnv::i_fillSpecificObj (DOM_Element childElement,
   } else {
     // Unknown tag, a warning message could be issued here
     log << MSG::WARNING << "Can not interpret specific type :"
-        << tagName << endreq;
+        << dom2Std(tagName) << endreq;
   }
   return StatusCode::SUCCESS;
 }
@@ -246,7 +306,7 @@ XmlMuonReadoutCondCnv::setClusterSizes(MuonReadoutCond* dataObj,
                                       std::string &clSzY,
                                       std::string &clPrY){
 
-  MsgStream log (msgSvc(), "XmlMuonReadoutCondCnv");                                                 
+  MsgStream log (msgSvc(), "XmlMuonReadoutCondCnv");
   // need to split clSzX and clPrX into component parts 
   // should be a comma seperated list
   

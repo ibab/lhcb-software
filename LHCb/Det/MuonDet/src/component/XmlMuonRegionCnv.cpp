@@ -1,31 +1,4 @@
-// $Id: XmlMuonRegionCnv.cpp,v 1.9 2002-09-27 13:59:41 dhcroft Exp $
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ 
-// ============================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.8  2002/04/25 10:16:31  dhcroft
-// Fix to reading Cathode channels
-//
-// Revision 1.7  2002/04/22 07:42:15  dhcroft
-// Fixed a bug in setting the number of Anode and Cathoed FE channels per chamber
-//
-// Revision 1.6  2002/04/08 14:55:00  dhcroft
-// Changed code to calculate Gaps per FE channel rather than read from XML
-//
-// Revision 1.5  2002/03/20 16:43:40  dhcroft
-// Added the size of the Front end channels to the XML and the mapping from FE to logical channels
-//
-// Revision 1.4  2002/02/21 16:38:44  dhcroft
-// Added methods to retrieve the number of the station, region, chamber and gas gap to DeMuonChamber and
-// DeMuonGasGap objects. Modified XmlMuonRegionCnv to fill these parameters when making the objects.
-//
-// Revision 1.3  2002/02/01 18:02:14  dhcroft
-// Fixed overrun errors in sprintf, thanks to Pere
-//
-// Revision 1.2  2002/01/31 10:00:10  dhcroft
-// Moved CLIDs to seperate files for Visual C linker
-//
-// ============================================================================
+// $Id: XmlMuonRegionCnv.cpp,v 1.10 2003-06-16 13:32:51 sponce Exp $
 
 // Include files
 #include <cstdio>
@@ -33,7 +6,7 @@
 #include <string>
 #include <vector>
 
-#include "DetDesc/XmlUserDetElemCnv.h"
+#include "DetDescCnv/XmlUserDetElemCnv.h"
 #include "MuonDet/DeMuonRegion.h"
 #include "MuonDet/DeMuonChamber.h"
 #include "MuonDet/DeMuonGasGap.h"
@@ -49,7 +22,8 @@
 
 #include "GaudiKernel/RegistryEntry.h"
 #include "GaudiKernel/GenericAddress.h"
-#include <dom/DOM_NamedNodeMap.hpp>
+#include <xercesc/dom/DOMNamedNodeMap.hpp>
+#include <xercesc/dom/DOMNodeList.hpp>
 
 /** @class XmlMuonRegionCnv
  *
@@ -70,7 +44,7 @@ public:
   /**
    * Default destructor
    */
-  ~XmlMuonRegionCnv() {}
+  ~XmlMuonRegionCnv();
 
   virtual StatusCode initialize();
   
@@ -82,24 +56,24 @@ protected:
    * @param refpObject the object to be filled
    * @return status depending on the completion of the call
    */
-  virtual StatusCode i_fillSpecificObj (DOM_Element childElement,
+  virtual StatusCode i_fillSpecificObj (xercesc::DOMElement* childElement,
                                         DeMuonRegion* dataObj,
                                         IOpaqueAddress* address);
   
 private:
 
   // calls to break up the code into more managable blocks.
-  StatusCode chamberRead (DOM_Element &childElement, 
+  StatusCode chamberRead (xercesc::DOMElement* &childElement, 
                           DeMuonRegion* dataObj,
                           IOpaqueAddress* address);
 
-  StatusCode chamberChildrenRead(DOM_Element &childElement,
+  StatusCode chamberChildrenRead(xercesc::DOMElement* &childElement,
                                  std::string &readout,
                                  int &gasGapNumber, int &gasGapOffset,
                                  std::string &gasGapLogvol,
                                  std::string &gasGapSupport);
 
-  StatusCode makeChamberObjects(DOM_Element &childElement,
+  StatusCode makeChamberObjects(xercesc::DOMElement* &childElement,
                                 DeMuonRegion *dataObj,
                                 IOpaqueAddress* address,
                                 std::string &readout,
@@ -117,6 +91,20 @@ private:
   ISvcLocator *m_pSvcLocator;
 
   IDataProviderSvc *m_pDetDataSvc;
+
+private:
+  const XMLCh* ReadoutTypeString;
+  const XMLCh* NFEChamberXString;
+  const XMLCh* NFEChamberYString;
+  const XMLCh* MergeLogicalX1String;
+  const XMLCh* MergeLogicalY1String;
+  const XMLCh* MergeLogicalX2String;
+  const XMLCh* MergeLogicalY2String;
+  const XMLCh* NumberString;
+  const XMLCh* conditionString;
+  const XMLCh* offsetString;
+  const XMLCh* logvolString;
+  const XMLCh* supportString;
 };
 
 
@@ -134,9 +122,39 @@ const ICnvFactory& XmlMuonRegionCnvFactory = muonreg_factory;
 XmlMuonRegionCnv::XmlMuonRegionCnv(ISvcLocator* svc) :
   XmlUserDetElemCnv<DeMuonRegion> (svc),
   m_pSvcLocator(svc),
-  m_pDetDataSvc(0)
-{
+  m_pDetDataSvc(0) {
+  ReadoutTypeString = xercesc::XMLString::transcode("ReadoutType");
+  NFEChamberXString = xercesc::XMLString::transcode("NFEChamberX");
+  NFEChamberYString = xercesc::XMLString::transcode("NFEChamberY");
+  MergeLogicalX1String = xercesc::XMLString::transcode("MergeLogicalX1");
+  MergeLogicalY1String = xercesc::XMLString::transcode("MergeLogicalY1");
+  MergeLogicalX2String = xercesc::XMLString::transcode("MergeLogicalX2");
+  MergeLogicalY2String = xercesc::XMLString::transcode("MergeLogicalY2");
+  NumberString = xercesc::XMLString::transcode("Number");
+  conditionString = xercesc::XMLString::transcode("condition");
+  offsetString = xercesc::XMLString::transcode("offset");
+  logvolString = xercesc::XMLString::transcode("logvol");
+  supportString = xercesc::XMLString::transcode("support");
 }
+
+// -----------------------------------------------------------------------
+// Destructor
+// ------------------------------------------------------------------------
+XmlMuonRegionCnv::~XmlMuonRegionCnv() {
+  xercesc::XMLString::release((XMLCh**)&ReadoutTypeString);
+  xercesc::XMLString::release((XMLCh**)&NFEChamberXString);
+  xercesc::XMLString::release((XMLCh**)&NFEChamberYString);
+  xercesc::XMLString::release((XMLCh**)&MergeLogicalX1String);
+  xercesc::XMLString::release((XMLCh**)&MergeLogicalY1String);
+  xercesc::XMLString::release((XMLCh**)&MergeLogicalX2String);
+  xercesc::XMLString::release((XMLCh**)&MergeLogicalY2String);
+  xercesc::XMLString::release((XMLCh**)&NumberString);
+  xercesc::XMLString::release((XMLCh**)&conditionString);
+  xercesc::XMLString::release((XMLCh**)&offsetString);
+  xercesc::XMLString::release((XMLCh**)&logvolString);
+  xercesc::XMLString::release((XMLCh**)&supportString);
+}
+
 
 StatusCode XmlMuonRegionCnv::initialize(){
   StatusCode sc = XmlBaseDetElemCnv::initialize();
@@ -159,14 +177,15 @@ StatusCode XmlMuonRegionCnv::initialize(){
 // -----------------------------------------------------------------------
 // Fill an object with a new specific child element
 // ------------------------------------------------------------------------
-StatusCode XmlMuonRegionCnv::i_fillSpecificObj (DOM_Element childElement,
-                                                DeMuonRegion* dataObj,
-                                                IOpaqueAddress* address) {
+StatusCode
+XmlMuonRegionCnv::i_fillSpecificObj (xercesc::DOMElement* childElement,
+                                     DeMuonRegion* dataObj,
+                                     IOpaqueAddress* address) {
   MsgStream log (msgSvc(), "XmlMuonRegionCnv");
   StatusCode sc;
   
   // gets the element's name
-  std::string tagName = dom2Std (childElement.getNodeName());
+  std::string tagName = dom2Std (childElement->getNodeName());
 
   log << MSG::DEBUG << "Processing element "
       << tagName << endreq;
@@ -214,19 +233,19 @@ StatusCode XmlMuonRegionCnv::i_fillSpecificObj (DOM_Element childElement,
   } else if("ReadoutMap" == tagName){
 
     const std::string ReadoutType = 
-      dom2Std (childElement.getAttribute ("ReadoutType"));
+      dom2Std (childElement->getAttribute (ReadoutTypeString));
     const std::string NFEChamberX = 
-      dom2Std (childElement.getAttribute ("NFEChamberX"));
+      dom2Std (childElement->getAttribute (NFEChamberXString));
     const std::string NFEChamberY = 
-      dom2Std (childElement.getAttribute ("NFEChamberY"));
+      dom2Std (childElement->getAttribute (NFEChamberYString));
     const std::string MergeLogicalX1 = 
-      dom2Std (childElement.getAttribute ("MergeLogicalX1"));
+      dom2Std (childElement->getAttribute (MergeLogicalX1String));
     const std::string MergeLogicalY1 = 
-      dom2Std (childElement.getAttribute ("MergeLogicalY1"));
+      dom2Std (childElement->getAttribute (MergeLogicalY1String));
     const std::string MergeLogicalX2 = 
-      dom2Std (childElement.getAttribute ("MergeLogicalX2"));
+      dom2Std (childElement->getAttribute (MergeLogicalX2String));
     const std::string MergeLogicalY2 = 
-      dom2Std (childElement.getAttribute ("MergeLogicalY2"));
+      dom2Std (childElement->getAttribute (MergeLogicalY2String));
 
     if(!("Anode" == ReadoutType || "Cathode" == ReadoutType)){
       log << MSG::WARNING << "Was given a readout type :" 
@@ -266,7 +285,7 @@ StatusCode XmlMuonRegionCnv::i_fillSpecificObj (DOM_Element childElement,
 }
 
 
-StatusCode XmlMuonRegionCnv::chamberRead (DOM_Element &childElement,
+StatusCode XmlMuonRegionCnv::chamberRead (xercesc::DOMElement* &childElement,
                                           DeMuonRegion* dataObj,
                                           IOpaqueAddress* address ) {
   MsgStream log (msgSvc(), "XmlMuonRegionCnv");
@@ -275,7 +294,7 @@ StatusCode XmlMuonRegionCnv::chamberRead (DOM_Element &childElement,
   // look for children: 
   // both GasGap and Readout should be here
 
-  if(!childElement.hasChildNodes()){
+  if(!childElement->hasChildNodes()){
     log << MSG::DEBUG << "No readout/gasgap associated to this region" 
         << endreq;
     return StatusCode::FAILURE;
@@ -300,7 +319,7 @@ StatusCode XmlMuonRegionCnv::chamberRead (DOM_Element &childElement,
   dataObj->setGapsPerFE(numberGapsPerFE);
 
   // get a value of the 'Number' attribute
-  const std::string Number = dom2Std (childElement.getAttribute ("Number"));
+  const std::string Number = dom2Std(childElement->getAttribute (NumberString));
 
   if (Number.empty()) {
     log <<MSG::WARNING << "Chamber object did not have number attribute" 
@@ -325,7 +344,7 @@ StatusCode XmlMuonRegionCnv::chamberRead (DOM_Element &childElement,
 }
 
 StatusCode 
-XmlMuonRegionCnv::chamberChildrenRead(DOM_Element &childElement,
+XmlMuonRegionCnv::chamberChildrenRead(xercesc::DOMElement* &childElement,
                                       std::string &readout,
                                       int &gasGapNumber, int &gasGapOffset,
                                       std::string &gasGapLogvol,
@@ -333,44 +352,47 @@ XmlMuonRegionCnv::chamberChildrenRead(DOM_Element &childElement,
   
   MsgStream log (msgSvc(), "XmlMuonRegionCnv");
   
-  DOM_NodeList nodeChildren = childElement.getChildNodes();
+  xercesc::DOMNodeList* nodeChildren = childElement->getChildNodes();
   unsigned int i;
-  for(i=0; i < nodeChildren.getLength(); ++i){
+  for(i=0; i < nodeChildren->getLength(); ++i){
         
     // get child and type it
 
-    if ( nodeChildren.item(i).getNodeType() != DOM_Node::ELEMENT_NODE) {
+    if (nodeChildren->item(i)->getNodeType() !=
+        xercesc::DOMNode::ELEMENT_NODE) {
       log << MSG::WARNING 
           << "Non-element in the chambers tag" << endreq;
       return StatusCode::FAILURE;
     } 
 
-    if(dom2Std(nodeChildren.item(i).getNodeName()) == "readoutinfo"){
+    if(dom2Std(nodeChildren->item(i)->getNodeName()) == "readoutinfo"){
 
-      DOM_NamedNodeMap attributes = nodeChildren.item(i).getAttributes();
-      DOM_Node readoutNode = attributes.getNamedItem("condition");
+      xercesc::DOMNamedNodeMap* attributes =
+        nodeChildren->item(i)->getAttributes();
+      xercesc::DOMNode* readoutNode = attributes->getNamedItem(conditionString);
 
-      readout = dom2Std(readoutNode.getNodeValue());
+      readout = dom2Std(readoutNode->getNodeValue());
       log << MSG::DEBUG << "Readout is "
           << readout << endreq;
 
-    } else if(dom2Std(nodeChildren.item(i).getNodeName()) == "GasGap"){
+    } else if(dom2Std(nodeChildren->item(i)->getNodeName()) == "GasGap"){
 
-      DOM_NamedNodeMap attributes = nodeChildren.item(i).getAttributes();
+      xercesc::DOMNamedNodeMap* attributes =
+        nodeChildren->item(i)->getAttributes();
 
-      DOM_Node ggNumberNode = attributes.getNamedItem("Number");
+      xercesc::DOMNode* ggNumberNode = attributes->getNamedItem(NumberString);
       gasGapNumber = 
-        atol(dom2Std(ggNumberNode.getNodeValue()).c_str());
+        atol(dom2Std(ggNumberNode->getNodeValue()).c_str());
 
-      DOM_Node ggOffsetNode = attributes.getNamedItem("offset");
+      xercesc::DOMNode* ggOffsetNode = attributes->getNamedItem(offsetString);
       gasGapOffset = 
-        atol(dom2Std(ggOffsetNode.getNodeValue()).c_str());
+        atol(dom2Std(ggOffsetNode->getNodeValue()).c_str());
         
-      DOM_Node ggLogvol = attributes.getNamedItem("logvol");
-      gasGapLogvol = dom2Std(ggLogvol.getNodeValue());
+      xercesc::DOMNode* ggLogvol = attributes->getNamedItem(logvolString);
+      gasGapLogvol = dom2Std(ggLogvol->getNodeValue());
 
-      DOM_Node ggSupport = attributes.getNamedItem("support");
-      gasGapSupport = dom2Std(ggSupport.getNodeValue());
+      xercesc::DOMNode* ggSupport = attributes->getNamedItem(supportString);
+      gasGapSupport = dom2Std(ggSupport->getNodeValue());
 
       log << MSG::DEBUG << "GasGap parameters: "
           << "Number " << gasGapNumber 
@@ -381,7 +403,7 @@ XmlMuonRegionCnv::chamberChildrenRead(DOM_Element &childElement,
     } else {
       log << MSG::WARNING 
           << "Problems in the chambers tag: what is a " 
-          << dom2Std(nodeChildren.item(i).getNodeName()) << "?"
+          << dom2Std(nodeChildren->item(i)->getNodeName()) << "?"
           << endreq;
       return StatusCode::FAILURE;
     }
@@ -391,7 +413,7 @@ XmlMuonRegionCnv::chamberChildrenRead(DOM_Element &childElement,
 }
 
 StatusCode 
-XmlMuonRegionCnv::makeChamberObjects(DOM_Element &childElement,
+XmlMuonRegionCnv::makeChamberObjects(xercesc::DOMElement* &childElement,
                                      DeMuonRegion *dataObj,
                                      IOpaqueAddress* address,
                                      std::string &readout,
@@ -449,8 +471,8 @@ XmlMuonRegionCnv::makeChamberObjects(DOM_Element &childElement,
     // with the path npath="pvM5R4Cham190"
     // from the logical volume associated with 
     // support="/dd/Structure/LHCb/Muon/M5/R4"
-    std::string logVolName = dom2Std (childElement.getAttribute ("logvol"));
-    std::string support = dom2Std (childElement.getAttribute ("support"));
+    std::string logVolName = dom2Std(childElement->getAttribute (logvolString));
+    std::string support = dom2Std (childElement->getAttribute (supportString));
     ILVolume::ReplicaPath repPath;
     repPath.push_back(static_cast<unsigned int>(chamNum-1));
 	

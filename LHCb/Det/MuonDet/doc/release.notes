@@ -1,7 +1,11 @@
-! $Id: release.notes,v 1.28 2003-01-17 14:03:55 sponce Exp $
+! $Id: release.notes,v 1.29 2003-06-16 13:32:51 sponce Exp $
 !
 ! Package     : MuonDet
 ! Responsible : David Hutchcroft
+
+! 2003-06-16 - Sebastien Ponce
+ - use new xerces 2.2
+ - use new package DetDescCnv
 
 ! 2003-01-17 - Sebastien Ponce
  - support for gcc 3.2
