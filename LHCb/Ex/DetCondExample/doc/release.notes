@@ -1,7 +1,11 @@
-#$Id: release.notes,v 1.28 2004-12-08 17:23:10 marcocle Exp $
+#$Id: release.notes,v 1.29 2005-02-09 09:07:32 marcocle Exp $
 Package Ex/DetCondExample
 Package manager : Marco Clemencic
 
+! 2005-01-27 - Marco CLEMENCIC
+ - Added few things in the PopulateDB algorithm
+
+==============================================================================
 ! 2004-12-08 - Marco Clemencic
  - Update to new versions of CONDDB and Det/DetCond
 Requirements v5r0
