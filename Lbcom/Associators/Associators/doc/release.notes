@@ -1,6 +1,11 @@
 ! Package     : Associators
 ! Responsible : Rutger Hierck
 
+!======================= Associators v2r4 2004-11-22 =======================
+! 2004-11-22 - Marco Cattaneo
+ - Convert to GaudiAlgorithm
+ - Modify job options for v2r* implementation of Relations
+
 !======================= Associators v2r3 2004-09-06 =======================
 ! 2004-07-29 - Vanya BELYAEV
  - add factories for relation tables and associators from 

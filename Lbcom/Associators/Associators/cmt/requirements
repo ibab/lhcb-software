@@ -1,7 +1,7 @@
 # Created by Rutger Hierck 07-07-2002
 #
 package Associators
-version v2r3
+version v2r4
 
 branches Associators src cmt doc
 
@@ -14,7 +14,7 @@ use VeloEvent   v* Event
 use L0Event	v* Event
 use CaloEvent   v* Event 
 
-use Relations   v* Kernel 
+use Relations   v2r* Kernel 
 
 # default library
 #============================================================================

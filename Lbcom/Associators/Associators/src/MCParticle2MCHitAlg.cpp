@@ -8,13 +8,9 @@
 
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h"
-#include "GaudiKernel/MsgStream.h" 
-#include "GaudiKernel/IDataProviderSvc.h"
-#include "GaudiKernel/SmartDataPtr.h"
-#include "GaudiKernel/DeclareFactoryEntries.h"
 
 // LHCbKernel
-#include "Relations/Associator.h" 
+#include "Relations/Relation1D.h" 
 
 // Event
 #include "Event/MCParticle.h"
@@ -30,7 +26,7 @@ const        IAlgFactory& MCParticle2MCHitAlgFactory = s_factory ;
 
 MCParticle2MCHitAlg::MCParticle2MCHitAlg(const std::string& name,
                                          ISvcLocator* pSvcLocator):
-  Algorithm ( name , pSvcLocator ),
+  GaudiAlgorithm ( name , pSvcLocator ),
   m_inputData( MCHitLocation::OTHits),
   m_outputData( "Rec/Relations/MCParticle2MCHit" )
 {
@@ -46,35 +42,13 @@ MCParticle2MCHitAlg::~MCParticle2MCHitAlg()
 }; 
 
 
-StatusCode MCParticle2MCHitAlg::initialize()
-{
-  // Initialisation. Check parameters
-  
-  MsgStream log(msgSvc(), name());
-  log << MSG::DEBUG << "==> Initialise" << endreq;
-
-  return StatusCode::SUCCESS;
-};
-
-
 StatusCode MCParticle2MCHitAlg::execute()
 {
   // Main execution
-
-  // Initialise
-  MsgStream  log( msgSvc(), name() );
-  log << MSG::DEBUG << "==> Execute" << endreq;
+  debug() << "==> Execute" << endmsg;
 
   // get MCHits
-  SmartDataPtr<MCHits> mcHits (eventSvc(), m_inputData);
-  if(mcHits) {
-    log << MSG::DEBUG << "MCHits retrieved from " << m_inputData<< endreq;
-  }
-  else {
-    log << MSG::FATAL << "*** Could not retrieve MCHits from "
-        << m_inputData<< endreq;
-    return StatusCode::FAILURE;
-  }
+  MCHits* mcHits = get<MCHits>( m_inputData );
 
   /// typedef
   typedef Relation1D<MCParticle, MCHit> LocalDirectType;
@@ -88,8 +62,7 @@ StatusCode MCParticle2MCHitAlg::execute()
     // retrieve MCHit
     MCHit* mcHit = *itHit ;
     if (!mcHit) {
-      log << MSG::ERROR << "Failed retrieving MCHit" << endreq;
-      return StatusCode::FAILURE;
+      return Error( "Failed retrieving MCHit" );
     }
     
     // retrieve associated MCParticle
@@ -100,25 +73,8 @@ StatusCode MCParticle2MCHitAlg::execute()
   }
   
   // Register the table on the TES
-  StatusCode sc = eventSvc()->registerObject( outputData(), table);
-  if(sc.isFailure()) {
-    log << MSG::FATAL << "     *** Could not register table " << outputData()
-        << endreq;
-    delete table;
-    return sc;
-  }
+  put( table, outputData() );
+
   return StatusCode::SUCCESS ;
 };
-
-
-StatusCode MCParticle2MCHitAlg::finalize()
-{
-  //  Finalize
-
-  MsgStream log(msgSvc(), name());
-  log << MSG::DEBUG << "==> Finalize" << endreq;
-
-  // end
-  return StatusCode::SUCCESS;
-}
 

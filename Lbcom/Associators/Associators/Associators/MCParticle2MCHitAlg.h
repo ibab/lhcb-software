@@ -10,12 +10,10 @@
 #include <string>
 
 // GaudiKernel
-#include "GaudiKernel/Algorithm.h"
+#include "GaudiAlg/GaudiAlgorithm.h"
 
 
-class MCParticle2MCHitAlg : public Algorithm {
-  // friend factory for instantiation 
-  friend class AlgFactory<MCParticle2MCHitAlg>;
+class MCParticle2MCHitAlg : public GaudiAlgorithm {
   
 public:
 
@@ -24,9 +22,7 @@ public:
 
   virtual ~MCParticle2MCHitAlg( ); ///< Destructor
 
-  virtual StatusCode initialize();    ///< Algorithm initialization
   virtual StatusCode execute   ();    ///< Algorithm execution
-  virtual StatusCode finalize  ();    ///< Algorithm finalization
 
   /// Location of table in TES
   std::string outputData() { return m_outputData; }
