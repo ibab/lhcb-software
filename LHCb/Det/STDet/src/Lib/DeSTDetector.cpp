@@ -1,5 +1,7 @@
-#include <string>
-#include <stdio.h>
+#include <algorithm>
+
+
+//#include <stdio.h>
 
 #include "STDet/STDetectionStation.h"
 #include "STDet/ITLayer.h"
@@ -298,9 +300,37 @@ ITChannelID DeSTDetector::nextChannelLeft(const ITChannelID aChannel) const{
   return aLayer->nextLeft(aChannel); 
 }
 
+std::vector<double> DeSTDetector::zPositions(std::string aType) const {
 
+  std::vector<double> zCont;  
+  for (unsigned int iStation =1; iStation <= numStations(); ++iStation){
+    STDetectionStation* aStation = station(iStation);
+    for (unsigned int iLayer = 1u; iLayer <= aStation->numLayers();++iLayer){
+      STDetectionLayer* aLayer = aStation->layer(iLayer);
+      if (aLayer->type() == aType){
+        zCont.push_back(aLayer->z()+(0.5*aLayer->stagger()));
+        zCont.push_back(aLayer->z()-(0.5*aLayer->stagger()));
+      }      
+    } // iLayer
+  } // iStation
 
+  std::sort(zCont.begin(),zCont.end());
 
+  return zCont;
+} 
+  
+std::vector<double> DeSTDetector::zPositions(const std::vector<std::string >& typesCont) const {
+
+  std::vector<double> zCont;
+  std::vector<std::string >::const_iterator iterT = typesCont.begin();
+  for ( ; iterT != typesCont.end() ; ++iterT){
+    std::vector<double> tmpCont = zPositions(*iterT);
+    zCont.insert(zCont.begin(),tmpCont.begin(),tmpCont.end());
+  } // iterT
+ 
+  std::sort(zCont.begin(),zCont.end());
+  return zCont; 
+}
 
 
 

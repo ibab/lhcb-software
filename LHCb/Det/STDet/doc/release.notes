@@ -1,6 +1,8 @@
 !Package         : STDet
 !Package manager : M. Needham
 
+! Add functions to return all z positions of ladders
+
 !========================= STDet v1r0 2004-02-02 ========================
 ! 2004-01-29 - M Needham
     - First release of the STDet package

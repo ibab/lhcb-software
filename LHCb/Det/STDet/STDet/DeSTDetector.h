@@ -64,7 +64,10 @@ public:
 
   ITChannelID nextChannelRight(const ITChannelID aChannel) const;
   ITChannelID nextChannelLeft(const ITChannelID aChannel) const;
-  
+
+  std::vector<double> zPositions(std::string aType) const; 
+  std::vector<double> zPositions(const std::vector<std::string >& typesCont) const;
+
 private:
 
   unsigned int m_nTT;

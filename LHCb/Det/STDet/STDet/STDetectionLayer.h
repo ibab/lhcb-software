@@ -67,6 +67,7 @@ public:
   ITChannelID nextLeft(const ITChannelID testChan) const;
 
   std::string type() const;
+  double stagger() const;
 
   /// print 
   std::ostream& printOut( std::ostream& os ) const;
@@ -110,6 +111,11 @@ inline unsigned int STDetectionLayer::stationID() const{
 inline double STDetectionLayer::z() const{
   //layer z position
   return m_Z;
+}
+
+inline double STDetectionLayer::stagger() const{
+  //layer z position
+  return m_zStagger;
 }
 
 inline double STDetectionLayer::stereoAngle() const{
