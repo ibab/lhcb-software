@@ -4,6 +4,14 @@
 ! Purpose     : Holds final reconstruction code
 !-----------------------------------------------------------------------------
 
+! 2002-09-09 - Gloria Corti
+ - change ChargeProtoPAlg to introduce Chi2/NdF cut on tracks, isMuon,
+   counters as for MCPIDProtoPAlg. In addition set value of combined
+   probability to RICH value if for that particle type normalized
+   probability > 0.
+ - add options file NeutralProtoPAlg (consistent with other ProtoPAlg).
+ - increase version number and use PhysEvent v7
+
 ! 2002-09-06 - Ivan Belyaev
  - add options file for NeutralPP creator algorithm 
  - put a minor change into algoriothm itself  
