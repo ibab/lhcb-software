@@ -4,6 +4,11 @@
 ! Purpose     : Provide tools and algorithm for tagging Bs
 !-----------------------------------------------------------------------------
 
+! 2002-10-19 - Olivier Dormond
+ - Fixed a typo which caused the error on the effective efficiency to be wrong.
+ - Added three options files to do tagging with only one kind a particle (Kaon,
+   muon, electron).
+
 ! 2002-09-20 - Olivier Dormond
  - requirement: added DaVinciMCTools v3r* for the monitoring.
  - FlavourTagging.opts: Changed particle maker to Charged and "All".
