@@ -50,6 +50,7 @@ use  Bs2PhiPhi           v1r0   PhysSel
 #--- Trigger
 use  L0DU                v6r5	L0
 use  L1Decision          v2r0   L1
+use  HltVeloTT		 v2r0   Hlt
 use  HltTools            v2r1   Hlt
 use  HltChecker          v2r0   Hlt
 use  HltVelo             v2r0   Hlt
