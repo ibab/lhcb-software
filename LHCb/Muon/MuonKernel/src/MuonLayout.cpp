@@ -1,4 +1,4 @@
-// $Id: MuonLayout.cpp,v 1.6 2002-03-21 15:28:58 atsareg Exp $
+// $Id: MuonLayout.cpp,v 1.7 2002-05-07 06:59:38 atsareg Exp $
 // Include files
 #include <iostream>
 #include <algorithm>
@@ -26,7 +26,7 @@ MuonLayout::MuonLayout() {
     m_ygrid = 0;        
 }
 
-MuonLayout::MuonLayout(unsigned int x, unsigned int y) {	
+MuonLayout::MuonLayout(unsigned int x, unsigned int y) {
     m_xgrid = x;
     m_ygrid = y;       
 }
@@ -36,15 +36,9 @@ MuonLayout::MuonLayout(std::pair<unsigned int, unsigned int> grid) {
     m_ygrid = grid.second;       
 }
 
-MuonLayout::~MuonLayout() {}
+MuonLayout::~MuonLayout() {} 
 
-int MuonLayout::rfactor(int nr) const {
-
-  int rfac = 1 << nr;
-  return rfac;
-}  
-
-int MuonLayout::region(int ix, int iy) const {
+int MuonLayout::region(unsigned int ix, unsigned int iy) const {
 
   int nrx;
   if ( ix/m_xgrid < 1 ) {
@@ -89,6 +83,8 @@ std::vector<MuonTileID> MuonLayout::tilesInArea(const MuonTileID& pad,
 
   MuonLayout playout = pad.layout();
   std::vector<MuonTileID> vmt;
+  
+  if( ! isDefined() ) return vmt;
 
   int quarter = pad.quarter();
   int nreg = pad.region();
@@ -175,6 +171,8 @@ std::vector<MuonTileID> MuonLayout::tiles() const {
   std::vector<MuonTileID> vmt;
   std::vector<MuonTileID> vmtr;
   
+  if( ! isDefined() ) return vmt;
+  
   for(int iq = 0; iq <4; iq++) {
     for(int ir = 0; ir <4; ir++) {
       vmtr = tiles(iq,ir);
@@ -191,6 +189,8 @@ std::vector<MuonTileID> MuonLayout::tiles(int iq) const {
   std::vector<MuonTileID> vmt;
   std::vector<MuonTileID> vmtr;
   
+  if( ! isDefined() ) return vmt;
+    
   for(int ir = 0; ir <4; ir++) {
     vmtr = tiles(iq,ir);
     vmt.insert(vmt.end(),vmtr.begin(),vmtr.end());
@@ -203,6 +203,8 @@ std::vector<MuonTileID> MuonLayout::tiles(int iq) const {
 std::vector<MuonTileID> MuonLayout::tiles(int iq, int ir) const {
 
   std::vector<MuonTileID> vmt;
+  if( ! isDefined() ) return vmt;
+  
   vmt.reserve(xGrid()*yGrid()*3);
   
   MuonTileID newpad;
@@ -223,6 +225,9 @@ std::vector<MuonTileID> MuonLayout::tiles(int iq, int ir) const {
 
 std::vector<MuonTileID> MuonLayout::tilesInRegion(const MuonTileID& pad, 
                                                 int pregion) const{
+						
+  std::vector<MuonTileID> vmt;
+  if( ! isDefined() ) return vmt;						
     
   int nr = pad.region();
   int nq = pad.quarter();
@@ -231,7 +236,7 @@ std::vector<MuonTileID> MuonLayout::tilesInRegion(const MuonTileID& pad,
   if(nr == pregion) {
     return tiles(pad);    
   } else {
-    std::vector<MuonTileID> vmt = tiles(pad); 
+    vmt = tiles(pad); 
     std::vector<MuonTileID>::iterator ivmt;
     std::vector<MuonTileID> nvmt;
     // Bring the pads in vmt to the pregion definition
@@ -386,6 +391,8 @@ std::vector<MuonTileID> MuonLayout::neighboursInArea(const MuonTileID& pad,
 
   MuonLayout playout = pad.layout();
   std::vector<MuonTileID> vmt;
+  
+  if ( ! isDefined() ) return vmt;
 
   int quarter = pad.quarter();
   int nreg = pad.region();
@@ -506,6 +513,11 @@ MuonTileID MuonLayout::contains(const MuonTileID& pad) const {
   // It is responsibility of the user to assure that the pad
   // layout is finer than the containing layout
   std::vector<MuonTileID> mtiles = tiles(pad);
+  if( mtiles.empty() ) return MuonTileID();
   MuonTileID tile = mtiles[0];
   return tile;
 } 
+
+bool MuonLayout::isDefined() const {
+  return xGrid() > 0 && yGrid() > 0;
+}
