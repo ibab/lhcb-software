@@ -17,13 +17,13 @@
 // Track Selections
 //  MCPIDProtoPAlg.UpstreamsTracks = true;  // default = false
 #pragma print on
-MCPIDProtoPAlg.ITFracTrackClass = 0.4;
-MCPIDProtoPAlg.Chi2NdFofITracks = 500.0;
-MCPIDProtoPAlg.Chi2NdFofOTracks = 100.0;
-
+MCPIDProtoPAlg.ITFracTrackClass = 0.4;    // default = 0.4
+MCPIDProtoPAlg.Chi2NdFofITracks = 500.0;  // default = 500.0
+MCPIDProtoPAlg.Chi2NdFofOTracks = 100.0;  // default = 100.0
 
 // Track associator 
 MCPIDProtoPAlg.TrackAsct = "Track2MCAsct";
 ToolSvc.Track2MCAsct.Location = "Rec/Relations/Tr2MCP";
 
+// Monitoring ntuple
 // MCPIDProtoPAlg.Monitor = true;  // default = false

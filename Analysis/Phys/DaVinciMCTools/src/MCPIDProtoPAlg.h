@@ -1,4 +1,4 @@
-// $Id: MCPIDProtoPAlg.h,v 1.3 2002-09-03 12:26:26 gcorti Exp $
+// $Id: MCPIDProtoPAlg.h,v 1.4 2002-09-09 15:22:41 gcorti Exp $
 #ifndef MCPIDPROTOPALG_H 
 #define MCPIDPROTOPALG_H 1
 
@@ -49,7 +49,6 @@ protected:
   /// Forward, Match and Upstream tracks with no error flag and
   /// Chi2 < Max value are taken
   int rejectTrack( const TrStoredTrack* track );
-  bool keepTrack( const TrStoredTrack* track );
   StatusCode addRich( SmartDataPtr<RichPIDs>& richpids, ProtoParticle* proto );
   
 private:
@@ -68,7 +67,6 @@ private:
   double m_trackClassCut;  ///< Fraction of IT clusters to separate Tracks types
   double m_chiSqITracks;   ///< Max Chi2/NoF to make ProtoP from IT Tracks
   double m_chiSqOTracks;   ///< Max Chi2/NoF to make ProtoP from IT Tracks
-  double m_lastChiSqMax;
   
  
   int m_idElectron;           ///< PDG id of e+/-
@@ -95,10 +93,9 @@ private:
   BremMatch*     m_bremMatch;       ///< Name of brem Match
 
   typedef std::map< std::string, int, std::less<std::string> > ErrorTable;
-  ErrorTable m_errorCount;
-    ///< Error counters
+  ErrorTable m_errorCount;          ///< Error counters
 
-  bool m_monitor;                          ///< Fill ntuple and special print
+  bool m_monitor;                   ///< Fill ntuple and special print
   NTuple::Tuple* m_ntuple;
   NTuple::Item<long> m_ntrk;
   NTuple::Item<long> m_nunforw, m_nunmatc, m_nunupst;

@@ -1,4 +1,4 @@
-// $Id: MCPIDProtoPAlg.cpp,v 1.5 2002-09-03 12:26:29 gcorti Exp $
+// $Id: MCPIDProtoPAlg.cpp,v 1.6 2002-09-09 15:22:44 gcorti Exp $
 // Include files 
 #include <memory>
 
@@ -42,10 +42,9 @@ MCPIDProtoPAlg::MCPIDProtoPAlg( const std::string& name,
   , m_electronMatchName( "ElectronMatch" )
   , m_bremMatchName( "BremMatch" )
   , m_upstream( false )
-  , m_trackClassCut( 0.7 )
-  , m_chiSqITracks( 100.0 )
+  , m_trackClassCut( 0.4 )
+  , m_chiSqITracks( 500.0 )
   , m_chiSqOTracks( 100.0 )
-  , m_lastChiSqMax( 1000.0 )
   , m_trackAsctName( "Track2MCParticleAsct" )
   , m_errorCount( )
   , m_monitor( false )
@@ -58,8 +57,8 @@ MCPIDProtoPAlg::MCPIDProtoPAlg( const std::string& name,
                   m_richPath = RichPIDLocation::Default );
   declareProperty("MuonPIDsInput",
                   m_muonPath = MuonIDLocation::Default );
-  declareProperty("ElectronsInput", m_electronPath );
-  declareProperty("PhotonMatching",    m_photonMatchName );
+  declareProperty("ElectronsInput",   m_electronPath );
+  declareProperty("PhotonMatching",   m_photonMatchName );
   declareProperty("ElectronMatching", m_electronMatchName );
   declareProperty("BremMatching",     m_bremMatchName );
   
@@ -71,11 +70,10 @@ MCPIDProtoPAlg::MCPIDProtoPAlg( const std::string& name,
   declareProperty("TrackAsct", m_trackAsctName );
   
   // Selections
-  declareProperty("UpstreamsTracks", m_upstream );
+  declareProperty("UpstreamsTracks",  m_upstream );
   declareProperty("ITFracTrackClass", m_trackClassCut );
   declareProperty("Chi2NdFofITracks", m_chiSqOTracks );
   declareProperty("Chi2NdFofOTracks", m_chiSqITracks );
-  declareProperty("MaxChiSquare", m_lastChiSqMax );
   
   // Monitor
   declareProperty("Monitor", m_monitor );
@@ -93,6 +91,7 @@ MCPIDProtoPAlg::~MCPIDProtoPAlg() {};
 StatusCode MCPIDProtoPAlg::initialize() {
 
   MsgStream log(msgSvc(), name());
+  log << MSG::DEBUG << "==> Initialize" << endreq;
 
   StatusCode sc;
   IParticlePropertySvc* ppSvc;
@@ -209,6 +208,7 @@ StatusCode MCPIDProtoPAlg::initialize() {
 StatusCode MCPIDProtoPAlg::execute() {
 
   MsgStream  log( msgSvc(), name() );
+  log << MSG::DEBUG << "==> Execute" << endreq;
 
   // Prepare output container
   ProtoParticles* chprotos = new ProtoParticles();
@@ -227,7 +227,7 @@ StatusCode MCPIDProtoPAlg::execute() {
     log << MSG::INFO << "Unable to retrieve TrStoredTracks at "
         << m_tracksPath << endreq;
     m_errorCount["No Tracks"] += 1;
-    return StatusCode::FAILURE;
+    return StatusCode::SUCCESS;
   }
   else {   
     log << MSG::DEBUG << "Successfully retrieved " << tracks->size()
@@ -262,7 +262,7 @@ StatusCode MCPIDProtoPAlg::execute() {
     muonData = true;
   }
 
-  // Load Electron results
+  // Load Electron results and tables
   bool caloData = false;
   SmartDataPtr<CaloHypos> electrons ( eventSvc(), m_electronPath );
   if( !electrons || 0 == electrons->size() ) {
@@ -272,7 +272,7 @@ StatusCode MCPIDProtoPAlg::execute() {
   }
   else {
     log << MSG::DEBUG << "Successfully located " << electrons->size()
-        << " CaloHypp at " << m_electronPath << endreq;
+        << " CaloHypo at " << m_electronPath << endreq;
     caloData = true;
   }
 
@@ -281,16 +281,19 @@ StatusCode MCPIDProtoPAlg::execute() {
   if( 0 == phtable ) { 
     log << MSG::DEBUG << "Table from PhotonMatch points to NULL";
     caloData = false;
+    m_errorCount["No photon table"] += 1;
   }
   const ElectronTable* etable = m_electronMatch->inverse();
   if( 0 == etable ) { 
     log << MSG::DEBUG << "Table from PhotonMatch points to NULL";
     caloData = false;
+    m_errorCount["No electron table"] += 1;
   }
   const BremTable* brtable = m_bremMatch->inverse();
   if( 0 == brtable ) { 
     log << MSG::DEBUG << "Table from PhotonMatch points to NULL";
     caloData = false;
+    m_errorCount["No brems table"] += 1;
   }
 
   // ProtoParticles should only be "good tracks"
@@ -369,7 +372,8 @@ StatusCode MCPIDProtoPAlg::execute() {
         const TrStoredTrack* track = (*iMuon)->idTrack();
         if( track == (*iTrack) ) {
           proto->setMuonPID( *iMuon );
-          if( (*iMuon)->InAcceptance() && (*iMuon)->PreSelMomentum() ) {
+//            if( (*iMuon)->InAcceptance() && (*iMuon)->PreSelMomentum() ) {
+          if( (*iMuon)->IsMuon() ) {
             countProto[MuonProto]++;
             ProtoParticle::PIDDetPair iddet;
             iddet.first = ProtoParticle::MuonMuon;
@@ -432,6 +436,17 @@ StatusCode MCPIDProtoPAlg::execute() {
     
   }
 
+  log << MSG::DEBUG << "Found " << countProto[TrackProto]
+      << " tracks of quality to produce ProtoParticles" << endreq;
+  log << MSG::DEBUG << "Made " << countProto[RichProto] 
+      << " ProtoParticle with RichPID " << endreq;
+  log << MSG::DEBUG << "Made " << countProto[MuonProto]
+      << " ProtoParticle with MuonID " << endreq;
+  log << MSG::DEBUG << "Made " << countProto[ElectronProto]
+      << " ProtoParticle with ElectronHypo " << endreq;
+  log << MSG::DEBUG << "Number of ProtoParticles in TES is " 
+      << chprotos->size() << endreq;
+
   if( m_monitor ) {
 
     // Fill Ntuple
@@ -453,17 +468,6 @@ StatusCode MCPIDProtoPAlg::execute() {
     m_nproto = chprotos->size();
     
     m_ntuple->write();
-    
-    log << MSG::DEBUG << "Found " << countProto[TrackProto]
-        << " tracks of quality to produce ProtoParticles" << endreq;
-    log << MSG::DEBUG << "Made " << countProto[RichProto] 
-        << " ProtoParticle with RichPID " << endreq;
-    log << MSG::DEBUG << "Made " << countProto[MuonProto]
-        << " ProtoParticle with MuonID " << endreq;
-    log << MSG::DEBUG << "Made " << countProto[ElectronProto]
-        << " ProtoParticle with ElectronHypo " << endreq;
-    log << MSG::DEBUG << "Number of ProtoParticles in TES is " 
-        << chprotos->size() << endreq;
 
     for( ProtoParticles::iterator ip = chprotos->begin();
          chprotos->end() != ip; ++ip ) {
@@ -564,27 +568,6 @@ int MCPIDProtoPAlg::rejectTrack( const TrStoredTrack* track ) {
     }
   }
   return reject;
-};
-
-//=============================================================================
-//  keepTrack because of good quality
-//=============================================================================
-bool MCPIDProtoPAlg::keepTrack( const TrStoredTrack* track ) {
-
-  bool keep = false;
-  if( 0 != track ) {
-    if( 0 == track->errorFlag() ) {
-      if( track->lastChiSq() <= m_lastChiSqMax ) {
-        if( track->unique() && (track->forward() || track->match()) ) {
-          keep = true;
-        }
-        if( m_upstream && (track->unique() && track->upstream()) ) {
-          keep = true;
-        }
-      }
-    }
-  }
-  return keep;
 };
 
 //=============================================================================
