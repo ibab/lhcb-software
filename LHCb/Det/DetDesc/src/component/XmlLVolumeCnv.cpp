@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/component/XmlLVolumeCnv.cpp,v 1.13 2001-06-20 08:45:15 sponce Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/component/XmlLVolumeCnv.cpp,v 1.14 2001-06-20 12:41:20 sponce Exp $
 
 // Include files
 #include "GaudiKernel/CnvFactory.h"
@@ -278,7 +278,7 @@ StatusCode XmlLVolumeCnv::internalCreateObj (DOM_Element element,
       } else {
         dataObj->createPVolume (volume->physvolName,
                                 volume->logvolName,
-                                *(volume->transformation));
+                                volume->transformation->inverse());
       }
       if (volume->transformation != 0) {
         delete (volume->transformation);
@@ -786,7 +786,8 @@ SolidBoolean* XmlLVolumeCnv::dealWithBoolean (DOM_Element element) {
     while (!solids->empty()) {
       placedSolid = solids->front();
       solids->pop_front();
-      unionResult->unite (placedSolid.solid, placedSolid.transformation);
+      unionResult->unite (placedSolid.solid,
+                          placedSolid.transformation);
       if (placedSolid.transformation != 0) {
         delete (placedSolid.transformation);
         placedSolid.transformation = 0;
@@ -804,8 +805,8 @@ SolidBoolean* XmlLVolumeCnv::dealWithBoolean (DOM_Element element) {
     while (!solids->empty()) {
       placedSolid = solids->front();
       solids->pop_front();
-      subtractionResult->subtract
-        (placedSolid.solid, placedSolid.transformation);
+      subtractionResult->subtract (placedSolid.solid,
+                                   placedSolid.transformation);
       if (placedSolid.transformation != 0) {
         delete (placedSolid.transformation);
         placedSolid.transformation = 0;
@@ -823,8 +824,8 @@ SolidBoolean* XmlLVolumeCnv::dealWithBoolean (DOM_Element element) {
     while (!solids->empty()) {
       placedSolid = solids->front();
       solids->pop_front();
-      intersectionResult->intersect
-        (placedSolid.solid, placedSolid.transformation);
+      intersectionResult->intersect (placedSolid.solid,
+                                     placedSolid.transformation);
       if (placedSolid.transformation != 0) {
         delete (placedSolid.transformation);
         placedSolid.transformation = 0;
@@ -877,6 +878,7 @@ XmlLVolumeCnv::dealWithBooleanChildren (DOM_Element element) {
           tagName = dom2Std (childElement.getNodeName());
           if (isTransformation (tagName)) {
             transformation = dealWithTransformation (element, &i);
+            *transformation = transformation->inverse();
           }
         }
         PlacedSolid newPs = { solid, transformation };
@@ -1516,7 +1518,7 @@ HepTranslate3D* XmlLVolumeCnv::dealWithPosXYZ (DOM_Element element) {
   }
 
   // builds the translation.
-  return new HepTranslate3D(-x, -y, -z);
+  return new HepTranslate3D(x, y, z);
 } // end dealWithPosXYZ
 
 
@@ -1553,7 +1555,7 @@ HepTranslate3D* XmlLVolumeCnv::dealWithPosRPhiZ (DOM_Element element) {
   vect.setPerp (r);
   vect.setPhi (phi);
   vect.setZ (z);
-  return new HepTranslate3D (-1 * vect);
+  return new HepTranslate3D (vect);
 } // end dealWithPosRPhiZ
 
 
@@ -1590,7 +1592,7 @@ HepTranslate3D* XmlLVolumeCnv::dealWithPosRThPhi (DOM_Element element) {
   vect.setMag (r);
   vect.setTheta (theta);
   vect.setPhi (phi);
-  return new HepTranslate3D (-1 * vect);
+  return new HepTranslate3D (vect);
 } // end dealWithPosRThPhi
 
 
@@ -1621,7 +1623,6 @@ HepTransform3D* XmlLVolumeCnv::dealWithRotXYZ (DOM_Element element) {
   HepTransform3D* result = new HepRotateX3D(rx);
   *result = *result * HepRotateY3D(ry);
   *result = *result * HepRotateZ3D(rz);
-  *result = result->inverse();
   return result;
 } // end dealWithRotXYZ
 
@@ -1668,7 +1669,6 @@ HepTransform3D* XmlLVolumeCnv::dealWithRotAxis (DOM_Element element) {
     (angle, Hep3Vector (sin(axTheta)*cos(axPhi),
                         sin(axTheta)*sin(axPhi),
                         cos(axTheta)));
-  *result = result->inverse();
   return result;
 } // end dealWithRotAxis
 
