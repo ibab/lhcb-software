@@ -4,6 +4,17 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+!====================  DaVinciSys v9r1 2003-09-04 =============================
+! 2003-09-04 - Gloria CORTI
+ - use LoKi                v1r7
+       Bd2KstarGamma       v1r2
+       Bd2PhiKs            v2r0
+       Bs2DsH              v2r1
+       Bs2PhiGamma         v1r1
+       PhysSelSys          v5r10
+       DaVinci             v9r1 
+       DecayPresel         v2r1
+
 !====================  DaVinciSys v9r0 2003-08-07 =============================
 ! 2003-08-07 - Gloria CORTI
  - adapt packages to Gaudi v12 and gcc 3.2, almost all packages are modified
