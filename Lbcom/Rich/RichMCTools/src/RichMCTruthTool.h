@@ -5,7 +5,7 @@
  *  Header file for tool : RichMCTruthTool
  *
  *  CVS Log :-
- *  $Id: RichMCTruthTool.h,v 1.15 2005-02-20 18:45:13 jonrob Exp $
+ *  $Id: RichMCTruthTool.h,v 1.16 2005-03-03 15:46:41 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -129,12 +129,6 @@ public: // methods (and doxygen comments) inherited from interface
 
   // Checks if the given MCRichHit is the result of a background
   bool isBackground( const MCRichHit * hit ) const;
-
-  // Checks if the given MCRichHit came from a spillover event
-  bool isSpillover ( const MCRichHit * hit ) const;
-
-  // Checks if the given MCRichDigit came from a spillover event
-  bool isSpillover ( const MCRichDigit * digit ) const;
 
 private: // definitions
 

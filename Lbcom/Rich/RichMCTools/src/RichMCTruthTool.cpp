@@ -5,7 +5,7 @@
  * Implementation file for class : RichMCTruthTool
  *
  * CVS Log :-
- * $Id: RichMCTruthTool.cpp,v 1.16 2005-02-24 14:42:23 jonrob Exp $
+ * $Id: RichMCTruthTool.cpp,v 1.17 2005-03-03 15:46:41 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 14/01/2002
@@ -277,26 +277,4 @@ RichMCTruthTool::TrgTrackToMCP * RichMCTruthTool::trgTrackToMCPLinks() const
     }
   }
   return m_trgTrToMCPLinks;
-}
-
-bool RichMCTruthTool::isSpillover ( const MCRichHit * hit ) const
-{
-  // Compare parent container to known "main event" container
-  return ( hit && mcRichHits() && (hit->parent() != mcRichHits()) );
-}
-
-bool RichMCTruthTool::isSpillover ( const MCRichDigit * digit ) const
-{
-  // Check digit
-  if ( !digit ) return false;
-
-  // iterate over hits and see if any are from signal events
-  for ( SmartRefVector<MCRichHit>::const_iterator iHit = digit->hits().begin();
-        iHit != digit->hits().end(); ++iHit ) 
-  {
-    if ( !isSpillover(*iHit) ) return false;
-  }
-
-  // all are from spillover
-  return true;
 }
