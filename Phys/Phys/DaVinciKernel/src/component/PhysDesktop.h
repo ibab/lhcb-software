@@ -1,4 +1,4 @@
-// $Id: PhysDesktop.h,v 1.8 2005-01-06 10:30:44 pkoppenb Exp $
+// $Id: PhysDesktop.h,v 1.9 2005-02-09 07:32:54 pkoppenb Exp $
 #ifndef PHYSDESKTOP_H 
 #define PHYSDESKTOP_H 1
 
@@ -58,6 +58,12 @@ public:
   /// Retrieve the vertex container 
   const VertexVector& vertices();
   
+  /// Retrieve the PV from vertex container
+  const VertexVector& primaryVertices() ;
+
+  /// Retrieve the secondary vertices
+  const VertexVector& secondaryVertices() ;
+
   /// Add a particle to the DeskTop to which it belongs
   Particle* createParticle( Particle* partToSave );
   
@@ -99,9 +105,6 @@ public:
   /// Internal method to clean the local data
   StatusCode cleanDesktop();
   
-  /// The standard event data service
-  IDataProviderSvc* eventSvc() const;
-
   //hrp
   // Set output location
   void imposeOutputLocation(std::string outputLocationString);
@@ -126,9 +129,10 @@ private:
   std::string m_outputLocn;
   
   ParticleVector m_parts;          ///< Local Container of particles
-  VertexVector m_verts;            ///< Local Container of vertices
+  VertexVector m_secVerts;         ///< Local Container of secondary vertices
+  VertexVector m_primVerts;        ///< Local Container of primary vertices
+  VertexVector m_verts;            ///< Obsolete "on-demand" conatiner
 
-  IDataProviderSvc* m_EDS;         ///< Event data service
   IParticleMaker* m_pMaker;        ///< Reference to Particle maker tool
 
   /// Identify specific type of particle maker requested (Property)

@@ -1,12 +1,25 @@
-! $Id: release.notes,v 1.34 2005-01-21 14:40:06 pkoppenb Exp $
+! $Id: release.notes,v 1.35 2005-02-09 07:32:54 pkoppenb Exp $
 ! Package     : DaVinciKernel
 ! Responsible : P. Koppenburg
+
+! 2005-02-09 - P. Koppenburg
+  - Kernel/IPhysDesktop.h
+  - src/component/PhysDesktop.h
+  - src/component/PhysDesktop.cpp
+    . New methods
+         const VertexVector& primaryVertices();
+         const VertexVector& secondaryVertices();
+      The method
+         const VertexVector& vertices();
+      is deprecated but still exists.
+  - src/DVAlgorithm.cpp
+    . No printout in debug() mode, all in verbose.
 
 ! 2005-01-21 - P. Koppenburg
   - src/component/PhysDesktop.cpp
     . StatusCode sc = setProperties();
       *before* loadtools. Or any change in DVAlgorithm options 
-      affetcying the choice of tools would be ignored.
+      affetcing the choice of tools would be ignored.
 
 !========================== DaVinciKernel v3r0 2005-01-18 ===================
 ! 2005-01-18 - P. Koppenburg

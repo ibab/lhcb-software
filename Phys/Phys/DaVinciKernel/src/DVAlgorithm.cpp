@@ -1,10 +1,6 @@
 #include "Kernel/DVAlgorithm.h"
 
-// @todo Revise the sysInitialize strategy. Maybe need to force people to call 
-// DVAlgorithm::initialize() in their own initialize()...
- 
-
-  /// Standard constructor
+/// Standard constructor
 DVAlgorithm::DVAlgorithm( const std::string& name, ISvcLocator* pSvcLocator ) 
   : GaudiTupleAlg ( name , pSvcLocator )
   , m_typeVertexFit("UnconstVertexFitter")
@@ -154,13 +150,14 @@ StatusCode DVAlgorithm::sysExecute () {
   }
 
   StatusCode sc = this->Algorithm::sysExecute();
+  if (!sc) return sc;
 
   if (!m_setFilterCalled) {
     warning() << "SetFilterPassed not called for this event!" << endreq;
   }
 
   if (!m_avoidSelResult) sc = fillSelResult () ;
-  else debug() << "Avoiding selresult" << endreq ;
+  else verbose() << "Avoiding selresult" << endreq ;
   
   // Reset for next event
   m_setFilterCalled = false;
@@ -204,15 +201,15 @@ StatusCode DVAlgorithm::setFilterPassed  (  bool    state  ) {
 StatusCode DVAlgorithm::fillSelResult () {
 
   std::string location = SelResultLocation::Default;
-  debug() << "SelResult to be saved to " << location << endreq ;
+  verbose() << "SelResult to be saved to " << location << endreq ;
 
   SelResults* resultsToSave ;
   // Check if SelResult contained has been registered by another algorithm
   if ( exist<SelResults>(location) ){
-    debug() << "SelResult exists already " << endreq ;
+    verbose() << "SelResult exists already " << endreq ;
     resultsToSave = get<SelResults>(location);
   } else {
-    debug() << "Putting new SelResult container " << endreq ;
+    verbose() << "Putting new SelResult container " << endreq ;
     resultsToSave = new SelResults();
     StatusCode scRO = put(resultsToSave,location);
     if (scRO.isFailure()){
@@ -232,12 +229,12 @@ StatusCode DVAlgorithm::fillSelResult () {
     
   if (filterPassed()) m_countFilterPassed++;
   m_countFilterWrite++;
-  debug() << "wrote " << filterPassed() << " -> " << 
+  verbose() << "wrote " << filterPassed() << " -> " <<
     m_countFilterWrite << " & " << m_countFilterPassed << endreq ;
 
   resultsToSave->insert(myResult);
-  debug() << "Number of objects in existingSelRes: "
-          << resultsToSave->size() << endreq;
+  verbose() << "Number of objects in existingSelRes: "
+            << resultsToSave->size() << endreq;
   return StatusCode::SUCCESS ;
 
 }
@@ -253,7 +250,7 @@ StatusCode DVAlgorithm::sysFinalize () {
         " times" << endreq;      
     } else if (m_countFilterWrite <= 0 ){      
       warning() << "Executed " << m_countFilterWrite << " times" 
-          << endreq;
+                << endreq;
     } else if (m_countFilterPassed <= 0 ){
       always() << "No events selected in " << 
         m_countFilterWrite << " calls." << endreq;

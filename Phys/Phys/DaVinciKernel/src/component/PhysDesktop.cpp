@@ -1,4 +1,4 @@
-// $Id: PhysDesktop.cpp,v 1.12 2005-01-18 12:08:20 pkoppenb Exp $
+// $Id: PhysDesktop.cpp,v 1.13 2005-02-09 07:32:54 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
@@ -17,13 +17,14 @@
 #include "Kernel/IParticleMaker.h"
 #include "Kernel/IPVLocator.h"
 
-/**----------------------------------------------------------------------------
+/*-----------------------------------------------------------------------------
  * Implementation file for class : PhysDesktop base class 
  *
  * 18/02/2002 : Sandra Amato
  * 04/03/2004 : Hugo Ruiz : automatized outputLocation = algorithm name
  * 11/08/2004 : Patrick Koppenburg : Make it a GaudiTool
  * 17/12/2004 : Patrick Koppenburg : Add PVLocator tool
+ * 08/02/2005 : Patrick Koppenburg : Split vertices into primaries and secondaries
  *-----------------------------------------------------------------------------
  */
 
@@ -38,10 +39,9 @@ PhysDesktop::PhysDesktop( const std::string& type,
                           const std::string& name,
                           const IInterface* parent )
   : GaudiTool ( type, name , parent )
-    , m_EDS(0)
-    , m_pMaker(0)
-    , m_locationWarned(false)
-    , m_PVLocator(0){
+  , m_pMaker(0)
+  , m_locationWarned(false)
+  , m_PVLocator(0){
   
   // Declaring implemented interfaces
   declareInterface<IPhysDesktop>(this);
@@ -80,7 +80,7 @@ StatusCode PhysDesktop::initialize() {
   
   StatusCode sc = GaudiTool::initialize() ;
   if (!sc) return sc ;
-  debug() << ">>>   PhysDesktop::initialize() " << endreq;
+  debug() << ">>>   PhysDesktop::initialize() " << endmsg;
 
   // Register to the Incident service to be notified at the end of one event
   IIncidentSvc* incsvc=0;
@@ -90,34 +90,24 @@ StatusCode PhysDesktop::initialize() {
     incsvc->addListener(this,"EndEvent",100);
   }
   else {
-    fatal() << " Unable to locate Incident Service" << endreq;
+    fatal() << " Unable to locate Incident Service" << endmsg;
     return sc;
-  }  
-  
-  
-  // Retrieve the data service
-  sc = StatusCode::FAILURE;
-  sc = service("EventDataSvc", m_EDS, true);  
-  
-  if( sc.isFailure() ) {
-    fatal() << " Unable to locate Event Data Service" << endreq;
-    return sc; 
   }
   
   if ( m_pMakerType == "" ){
     info() << " No ParticleMaker requested in job options" 
-           << endreq;
+           << endmsg;
     info() << " Only previously produced particles will be loaded"
-           << endreq;
+           << endmsg;
   }
   else{
     
     // Retrieve the ParticleMaker tool:
     info() << " Using " << m_pMakerType << " to make particles"
-           << endreq;
+           << endmsg;
     m_pMaker = tool<IParticleMaker>(m_pMakerType, this);
     if(!m_pMaker) {
-      fatal() << " Unable to retrieve " << m_pMakerType << endreq;
+      fatal() << " Unable to retrieve " << m_pMakerType << endmsg;
       return sc;
     }
   }
@@ -125,7 +115,7 @@ StatusCode PhysDesktop::initialize() {
   // Check if InputLocation has been set
   if( m_inputLocn.size() == 0 ) {
     info() << "No Input from previous processing requested"
-           << endreq;
+           << endmsg;
   }
   else {
     info() << "Particles and Vertices will be loaded from "
@@ -135,13 +125,13 @@ StatusCode PhysDesktop::initialize() {
       
       info() << "   ==>" << *iloc << std::endl;
     }
-    info() << endreq;
+    info() << endmsg;
   }
   
   // PVLocator tool
   m_PVLocator = tool<IPVLocator>("PVLocator");
   if( !m_PVLocator ){
-    err() << " Unable to retrieve PV Locator tool" << endreq;
+    err() << " Unable to retrieve PV Locator tool" << endmsg;
     return StatusCode::FAILURE;
   }
 
@@ -158,14 +148,6 @@ void PhysDesktop::handle(const Incident&)
 }
 
 //=============================================================================
-// Pointer to the Event Data service
-//=============================================================================
-IDataProviderSvc* PhysDesktop::eventSvc() const
-{
-  return m_EDS;
-}
-
-//=============================================================================
 // Provides a reference to its internal container of particles
 //=============================================================================
 const ParticleVector& PhysDesktop::particles()
@@ -178,7 +160,30 @@ const ParticleVector& PhysDesktop::particles()
 //=============================================================================
 const VertexVector& PhysDesktop::vertices()
 {
+  
+  if ( ( m_verts.empty()) && !((m_primVerts.empty()) && (m_secVerts.empty()) )){
+    Warning("Deprecated method: Use faster primaryVertices() and secondaryVertices() methods instead");
+    m_verts = m_primVerts ;
+    m_verts.insert(m_verts.end(),m_secVerts.begin(),m_secVerts.end()); // concatenate
+  }
+  
   return m_verts;
+}
+
+//=============================================================================
+// Provides a reference to its internal container of vertices
+//=============================================================================
+const VertexVector& PhysDesktop::primaryVertices()
+{
+  return m_primVerts;
+}
+
+//=============================================================================
+// Provides a reference to its internal container of vertices
+//=============================================================================
+const VertexVector& PhysDesktop::secondaryVertices()
+{
+  return m_secVerts;
 }
 
 //============================================================================
@@ -187,13 +192,13 @@ const VertexVector& PhysDesktop::vertices()
 StatusCode PhysDesktop::cleanDesktop() 
 {
   
-  debug() << "cleanDesktop()" << endreq;
-  debug() << "Removing all particles from desktop" << endreq;
+  verbose() << "cleanDesktop()" << endmsg;
+  verbose() << "Removing all particles from desktop" << endmsg;
   
   // Some particle have been saved to the TES, so they belong to it
   // others do not and need to be deleted by the PhysDesktop
   verbose() << "Number of particles before cleaning = "
-            << m_parts.size() << endreq;
+            << m_parts.size() << endmsg;
   
   int iTEScount = 0;
   while ( m_parts.size() > 0 ) {
@@ -208,18 +213,18 @@ StatusCode PhysDesktop::cleanDesktop()
     }
   }
   
-  debug() << "Particle in TES = " << iTEScount << endreq;
+  verbose() << "Particle in TES = " << iTEScount << endmsg;
   
   //m_parts.clear();
   
-  debug() << "Removing all vertices from desktop" << endreq;
+  verbose() << "Removing all vertices from desktop" << endmsg;
   verbose() << "Number of vertices before cleaning = "
-            << m_parts.size() << endreq;
+            << m_parts.size() << endmsg;
   
   iTEScount = 0;
-  while ( m_verts.size() > 0 ) {
-    Vertex* ivert = m_verts.back();
-    m_verts.pop_back();
+  while ( m_secVerts.size() > 0 ) {
+    Vertex* ivert = m_secVerts.back();
+    m_secVerts.pop_back();
     if( ivert->parent() ) {
       iTEScount++;
     }
@@ -227,7 +232,16 @@ StatusCode PhysDesktop::cleanDesktop()
       delete ivert;
     }
   }
-  //m_verts.clear();
+  while ( m_primVerts.size() > 0 ) {
+    Vertex* ivert = m_primVerts.back();
+    m_primVerts.pop_back();
+    if( ivert->parent() ) {
+      iTEScount++;
+    }
+    else {
+      delete ivert;
+    }
+  }
   
   return StatusCode::SUCCESS;
   
@@ -247,34 +261,34 @@ StatusCode PhysDesktop::finalize()
 //=============================================================================
 Particle* PhysDesktop::createParticle( Particle* partToSave ){
   
-  debug() << "createParticle in desktop" << endreq;
+  verbose() << "createParticle in desktop" << endmsg;
   
   // Input particle is given check if it already exist in the stack
   if( ( 0 != partToSave ) && ( 0 != partToSave->desktop() ) ) {
-    debug() << "Input particle momentum = " 
-            << partToSave->momentum().px() << " ," 
-            << partToSave->momentum().py() << " ," 
-            << partToSave->momentum().pz() << endreq;
-    verbose() << "Particle address " << partToSave << endreq;
+    verbose() << "Input particle momentum = " 
+              << partToSave->momentum().px() << " ," 
+              << partToSave->momentum().py() << " ," 
+              << partToSave->momentum().pz() << " parent " << partToSave->parent() << endmsg;
+    verbose() << "Particle address " << partToSave << endmsg;
     return partToSave;
   }
   
   // Create new particle on the heap
   Particle* saveP = new Particle();
-  debug() << "New particle momentum = " 
-          << saveP->momentum().px() << " ," 
-          << saveP->momentum().py() << " ," 
-          << saveP->momentum().pz() << endreq;
+  verbose() << "New particle momentum = " 
+            << saveP->momentum().px() << " ," 
+            << saveP->momentum().py() << " ," 
+            << saveP->momentum().pz() << " parent " << partToSave->parent() << endmsg;
   
   // Input Particle from stack is given as input to fill newly created particle
   if( ( 0 != partToSave) && ( 0 == partToSave->desktop() ) ) {
     // Copy contents to newly created particle
     Particle& savePcont = *saveP;
     savePcont = *partToSave;
-    debug() << "Input particle momentum = " 
-            << saveP->momentum().px() << " ," 
-            << saveP->momentum().py() << " ," 
-            << saveP->momentum().pz() << endreq;
+    verbose() << "Input particle momentum = " 
+              << saveP->momentum().px() << " ," 
+              << saveP->momentum().py() << " ," 
+              << saveP->momentum().pz() << endmsg;
     // Check if link to endProducts exist and set it
     if( 0 != partToSave->endVertex() ) {
       Vertex* saveV = createVertex( partToSave->endVertex() );
@@ -287,12 +301,12 @@ Particle* PhysDesktop::createParticle( Particle* partToSave ){
   
   // Put in the desktop container
   saveP->setDesktop(1);
-  debug() << "Momentum of new particle in desktop = "
-          << saveP->momentum().px() << " ," 
-          << saveP->momentum().py() << " ," 
-          << saveP->momentum().pz() << endreq;
+  verbose() << "Momentum of new particle in desktop = "
+            << saveP->momentum().px() << " ," 
+            << saveP->momentum().py() << " ," 
+            << saveP->momentum().pz() << " parent " << partToSave->parent() << endmsg;
   verbose() << "Address of new particle in desktop = "
-            << saveP << endreq;
+            << saveP << endmsg;
   m_parts.push_back(saveP);     
   return saveP;
   
@@ -302,31 +316,31 @@ Particle* PhysDesktop::createParticle( Particle* partToSave ){
 //=============================================================================
 Vertex* PhysDesktop::createVertex( Vertex* vtxToSave ){
 
-  debug() << "createVertex in desktop" << endreq;
+  verbose() << "createVertex in desktop" << endmsg;
   
   // Input vertex is given check if it already exist in the stack
   if( ( 0 != vtxToSave ) && ( 0 != vtxToSave->desktop() ) ) {
-    debug() << "Input vertex position = " 
-            << vtxToSave->position().x() << " ," 
-            << vtxToSave->position().y() << " ," 
-            << vtxToSave->position().z() << endreq;
-    verbose() << "Vertex address " << vtxToSave << endreq;
+    verbose() << "Input vertex position = " 
+              << vtxToSave->position().x() << " ," 
+              << vtxToSave->position().y() << " ," 
+              << vtxToSave->position().z() << endmsg;
+    verbose() << "Vertex address " << vtxToSave << endmsg;
     return vtxToSave;
   }
   
   // Create new vertex on the heap
   Vertex* saveV = new Vertex();
-  debug() << "New vertex position = " 
-          << saveV->position().x() << " ," 
-          << saveV->position().y() << " ," 
-          << saveV->position().z() << endreq;
+  verbose() << "New vertex position = " 
+            << saveV->position().x() << " ," 
+            << saveV->position().y() << " ," 
+            << saveV->position().z() << endmsg;
   
   // Input vertex from stack is given as input to fill new created vertex
   if( ( 0 != vtxToSave ) && ( 0 == vtxToSave->desktop() ) ) {
-    debug() << "Input vertex position = " 
-            << saveV->position().x() << " ," 
-            << saveV->position().y() << " ," 
-            << saveV->position().z() << endreq;
+    verbose() << "Input vertex position = " 
+              << saveV->position().x() << " ," 
+              << saveV->position().y() << " ," 
+              << saveV->position().z() << endmsg;
     // Copy contents to newly created vertex
     Vertex& saveVcont = *saveV;
     saveVcont = *vtxToSave;
@@ -342,13 +356,13 @@ Vertex* PhysDesktop::createVertex( Vertex* vtxToSave ){
   
   // Put in the desktop container
   saveV->setDesktop(1);
-  debug() << "Position of new vertex in desktop = "
-          << saveV->position().x() << " ," 
-          << saveV->position().y() << " ," 
-          << saveV->position().z() << endreq;
+  verbose() << "Position of new vertex in desktop = "
+            << saveV->position().x() << " ," 
+            << saveV->position().y() << " ," 
+            << saveV->position().z() << endmsg;
   verbose() << "Address of new vertex in desktop = "
-            << saveV << endreq;
-  m_verts.push_back(saveV);     
+            << saveV << endmsg;
+  m_secVerts.push_back(saveV);
   return saveV;
   
 }
@@ -359,10 +373,8 @@ Vertex* PhysDesktop::createVertex( Vertex* vtxToSave ){
 //=============================================================================
 StatusCode PhysDesktop::saveDesktop() {
   
-  debug() << " Save all new particles and vertices in desktop " 
-          << endreq;
-  
-  return saveDesktop( m_parts, m_verts );  
+  verbose() << "Save all new particles and vertices in desktop " << endmsg; 
+  return saveDesktop( m_parts, m_secVerts );
   
 }
 
@@ -372,37 +384,41 @@ StatusCode PhysDesktop::saveDesktop() {
 StatusCode PhysDesktop::saveDesktop( ParticleVector& pToSave, 
                                      VertexVector& vToSave) {
   
-  debug() << "Save specified particles and vertices " << endreq;
+  verbose() << "Save specified particles and vertices " << endmsg;
   
   // Register the particles containers in the store
   Particles* particlesToSave = new Particles();
   
   std::string location = m_outputLocn+"/Particles";
   
-  StatusCode sc = eventSvc()->registerObject(location,particlesToSave);
-  
   for( ParticleVector::const_iterator icand = pToSave.begin();
        icand != pToSave.end(); icand++ ) {
     // Check if this was already in a Gaudi container (hence in TES)
-    if( 0 == (*icand)->parent() ) {
+    if(  0 == (*icand)->parent() ) {
       particlesToSave->insert(*icand);
-      verbose() << "Saving " << (*icand)->particleID().pid() 
+      verbose() << "  Saving " << (*icand)->particleID().pid() 
                 << " with P= " << (*icand)->momentum() << " m=" 
-                << (*icand)->mass() << endreq ;
+                << (*icand)->mass() << endmsg ;
+    } else {
+      verbose() << "Skipping " << (*icand)->particleID().pid() 
+                << " with P= " << (*icand)->momentum() << " m=" 
+                << (*icand)->mass() << " with parent " << (*icand)->parent() << endmsg ;
     }
   }
-  debug() << "Saved " << particlesToSave->size()
-          << " new particles in " << location << " from " << pToSave.size() 
-          << " total particles in desktop " << endreq;
+
+  verbose() << "Saving " << particlesToSave->size()
+            << " new particles in " << location << " from " << pToSave.size() 
+            << " total particles in desktop " << endmsg;
  
+  StatusCode sc = put(particlesToSave,location);
   if ( sc.isFailure() ) {
     delete particlesToSave;
-    err() << "    Unable to register" << location << endreq;
+    err() << "    Unable to register" << location << endmsg;
     return StatusCode::FAILURE;
   }
   //else {
-  //  debug() << "Removing particles saved to TES from desktop" 
-  //      << endreq;
+  //  verbose() << "Removing particles saved to TES from desktop" 
+  //      << endmsg;
   //  pToSave.clear();
   //}
   
@@ -418,20 +434,20 @@ StatusCode PhysDesktop::saveDesktop( ParticleVector& pToSave,
   
   location = m_outputLocn+"/Vertices";
   
-  debug() << "Saving " << verticesToSave->size()
-          << " new vertices in " << location << " from " << vToSave.size() 
-          << " vertices in desktop " << endreq;
+  verbose() << "Saving " << verticesToSave->size()
+            << " new vertices in " << location << " from " << vToSave.size() 
+            << " vertices in desktop " << endmsg;
   
-  sc = eventSvc()->registerObject(location,verticesToSave);
+  sc = put(verticesToSave,location);
   
-  if ( sc.isFailure() ) {
+  if ( !sc ) {
     delete verticesToSave;
-    err() << "    Unable to register" << location << endreq;
+    err() << "    Unable to register" << location << endmsg;
     return StatusCode::FAILURE;
   }
   //else {
-  //  debug() << "Removing vertices saved to TES from desktop" 
-  //      << endreq;
+  //  verbose() << "Removing vertices saved to TES from desktop" 
+  //      << endmsg;
   //  vToSave.clear();
   //}
   
@@ -446,7 +462,7 @@ StatusCode PhysDesktop::saveDesktop( ParticleVector& pToSave,
 //=============================================================================
 StatusCode PhysDesktop::saveTrees(ParticleVector& pToSave) {
   
-  debug() << " PhysDesktop SaveTrees(ParticleVector)" << endreq;
+  verbose() << " PhysDesktop SaveTrees(ParticleVector)" << endmsg;
   
   // Find all particles that will need to be saved and put them in
   // a container
@@ -455,6 +471,9 @@ StatusCode PhysDesktop::saveTrees(ParticleVector& pToSave) {
   for( ParticleVector::iterator icand = pToSave.begin();
        icand != pToSave.end(); icand++ ) {
     // Find all descendendant from this particle
+    verbose() << "  Getting " << (*icand)->particleID().pid() 
+              << " with P= " << (*icand)->momentum() << " parent " 
+              << (*icand)->parent() << endmsg ;
     findAllTree( *icand, allpToSave, allvToSave);
   }
   
@@ -467,7 +486,7 @@ StatusCode PhysDesktop::saveTrees(ParticleVector& pToSave) {
 //=============================================================================
 StatusCode PhysDesktop::saveTrees(VertexVector& vToSave){
   
-  debug() << " PhysDesktop SaveTrees(VertexVector) " << endreq;
+  verbose() << " PhysDesktop SaveTrees(VertexVector) " << endmsg;
   
   // Find all particles that will need to be saved and put them in
   // a container
@@ -488,8 +507,8 @@ StatusCode PhysDesktop::saveTrees(VertexVector& vToSave){
 //=============================================================================
 StatusCode PhysDesktop::saveTrees( int partid ) {
   
-  debug() << "PhysDesktop saveParticles(pid code)" 
-          << "type = " << partid << endreq;
+  verbose() << "PhysDesktop saveParticles(pid code)" 
+            << "type = " << partid << endmsg;
   
   ParticleVector pToSave;
   for( ParticleVector::iterator icand = m_parts.begin();
@@ -515,8 +534,8 @@ StatusCode PhysDesktop::cloneTrees( ParticleVector& pToSave ) {
   for (ParticleVector::iterator i=pToSave.begin();i!=pToSave.end();++i) {
     Particle *clone = (*i)->clone();
     cloned.push_back(clone);
-    debug() << "Clone " << clone->particleID().pid() << " with momentum " << 
-      clone->momentum() << " m=" << clone->mass() << endreq ;
+    verbose() << "Clone " << clone->particleID().pid() << " with momentum " << 
+      clone->momentum() << " m=" << clone->mass() << endmsg ;
   }
   return saveTrees(cloned);
     
@@ -563,18 +582,20 @@ void PhysDesktop::findAllTree( Vertex* vert, ParticleVector& parts,
 //=============================================================================
 StatusCode PhysDesktop::getEventInput(){
 
-  debug() << ">>> Hello from getEventInput " << endreq;
-  debug() << "Initial size of local containers (P,V) = " 
-          << m_parts.size() << ", " << m_verts.size() << endreq;
+  verbose() << ">>> Hello from getEventInput " << endmsg;
+  verbose() << "Initial size of local containers (P,PV,SV) = " << m_parts.size() 
+            << ", " << m_primVerts.size() << ", " <<  m_secVerts.size()<< endmsg;
   
   // Make particles with particle maker
   if ( m_pMaker ) {
     StatusCode sc = makeParticles();
     if (!sc) return sc;
   } 
+  if ( !m_verts.empty()) m_verts.clear(); // to make sure it is clean in this event
+
   // Retrieve Primary vertices
   if( "None" == m_primVtxLocn ) {
-    debug() << "Not loading any primary vertices" << endreq;
+    verbose() << "Not loading any primary vertices" << endmsg;
   } else {    
     StatusCode sc = getPrimaryVertices();
     if (!sc) return sc;
@@ -597,21 +618,21 @@ StatusCode PhysDesktop::getEventInput(){
 StatusCode PhysDesktop::makeParticles(){
   // Make particles starting from MC or reconstruction objects
     
-  debug() << "PhysDesktop:Calling " << m_pMakerType 
-          << "::makeParticles() " 
-          << endreq;
+  verbose() << "PhysDesktop:Calling " << m_pMakerType 
+            << "::makeParticles() " 
+            << endmsg;
     
   // Remember that these particles belong to the Desktop and are not
   // in a TES container yet
   StatusCode sc = m_pMaker->makeParticles(m_parts);
   
   if (!sc) {
-    debug() << " not able to make particles " << endreq;
+    verbose() << " not able to make particles " << endmsg;
     return sc;
   }
   
-  debug() << "Number of Particles from " << m_pMakerType
-          << " are " << m_parts.size() << endreq;
+  verbose() << "Number of Particles from " << m_pMakerType
+            << " are " << m_parts.size() << endmsg;
   
   // Flag these particles to be in PhysDesktop
   for( ParticleVector::iterator ip = m_parts.begin(); ip != m_parts.end(); ip++ ) {
@@ -636,22 +657,22 @@ StatusCode PhysDesktop::getParticles(){
     } else {
       Particles* parts = get<Particles>( location );
       if ( !parts ) { 
-        debug() << "Unable to retrieve Particles from " << location << endreq;
+        verbose() << "Unable to retrieve Particles from " << location << endmsg;
       } else if ( parts->empty() ) {
-        debug() << "No Particles retrieved from " << location << endreq;
+        verbose() << "No Particles retrieved from " << location << endmsg;
       } else {
       
         // Msg number of Particles retrieved
-        debug() << "    Number of Particles retrieved from " 
-                << location << " = " << parts->size() << endreq;
+        verbose() << "    Number of Particles retrieved from " 
+                  << location << " = " << parts->size() << endmsg;
       
         for( Particles::iterator icand = parts->begin(); icand != parts->end(); icand++ ) {
           (*icand)->setDesktop(1);
           m_parts.push_back(*icand);
         }
       }    
-      debug() << "Number of Particles after adding " 
-              << location << " = " << m_parts.size() << endreq;
+      verbose() << "Number of Particles after adding " 
+                << location << " = " << m_parts.size() << endmsg;
     }
     
     // Retrieve the vertices:
@@ -664,30 +685,30 @@ StatusCode PhysDesktop::getParticles(){
       Vertices* verts = get<Vertices>( location );    
       
       if ( !verts ) { 
-        debug() << "Unable to retrieve vertices from " << location << endreq;
+        verbose() << "Unable to retrieve vertices from " << location << endmsg;
       }
       else if( 0 == verts->size() ) {
-        debug() << "No vertices retrieved from " << location << endreq;
+        verbose() << "No vertices retrieved from " << location << endmsg;
       }      
       else {
         
-      // Msg number of vertices retrieved
-        debug() << "    Number of vertices retrieved from "
-                << location << " = " << verts->size() << endreq;
+        // Msg number of vertices retrieved
+        verbose() << "    Number of vertices retrieved from "
+                  << location << " = " << verts->size() << endmsg;
       
         for( Vertices::iterator ivert = verts->begin();
              ivert != verts->end(); ++ivert ) {
           (*ivert)->setDesktop(1);
-          m_verts.push_back(*ivert);
+          m_secVerts.push_back(*ivert);
         }
       }
-      debug() << "Number of vertices after adding " 
-              << location << " = " << m_verts.size() << endreq;
+      verbose() << "Number of vertices after adding " 
+                << location << " = " << m_secVerts.size() << endmsg;
       
     }  
   }
-  debug() << "    Total number of particles " << m_parts.size() << endreq;
-  debug() << "    Total number of vertices " << m_verts.size() << endreq; 
+  verbose() << "    Total number of particles " << m_parts.size() << endmsg;
+  verbose() << "    Total number of secondary vertices " << m_secVerts.size() << endmsg; 
   
   return StatusCode::SUCCESS;
 }
@@ -700,7 +721,7 @@ StatusCode PhysDesktop::getPrimaryVertices(){
   if ( m_primVtxLocn == "" ) primVtxLocn = m_PVLocator->getPVLocation() ;
   else primVtxLocn = m_primVtxLocn ;
 
-  debug() << "Getting PV from " << primVtxLocn << endreq;
+  verbose() << "Getting PV from " << primVtxLocn << endmsg;
 
   if ( !exist<Vertices>( primVtxLocn )){
     Warning("Primary vertex location `"+primVtxLocn+"' does not exist") ;
@@ -710,28 +731,27 @@ StatusCode PhysDesktop::getPrimaryVertices(){
        
   Vertices* verts = get<Vertices>( primVtxLocn );
   if( ! verts ) {
-    debug() << " Unable to retrieve vertices from " << primVtxLocn << endreq;
+    verbose() << " Unable to retrieve vertices from " << primVtxLocn << endmsg;
   } else if( verts->empty() ) {
-    debug() << " No vertices retrieved from  " << primVtxLocn << endreq;
+    verbose() << " No vertices retrieved from  " << primVtxLocn << endmsg;
   } else { 
-    debug() << "    Number of primary vertices  = " << verts->size() << endreq;
+    verbose() << "    Number of primary vertices  = " << verts->size() << endmsg;
     
     for( Vertices::iterator ivert = verts->begin();
          ivert != verts->end(); ivert++ ) {
-      debug() << "    Vertex coordinates = ( " 
-              << (*ivert)->position().x() 
-              << " , " << (*ivert)->position().y() 
-              << " , " << (*ivert)->position().z() << " ) " << endreq;
+      verbose() << "    Vertex coordinates = ( " 
+                << (*ivert)->position().x() 
+                << " , " << (*ivert)->position().y() 
+                << " , " << (*ivert)->position().z() << " ) " << endmsg;
       
-      debug() << "    Vertex ChiSquare = " << (*ivert)->chi2() 
-              << endreq;  
+      verbose() << "    Vertex ChiSquare = " << (*ivert)->chi2() 
+                << endmsg;  
       // Put them in local containers
       (*ivert)->setDesktop(1);
-      m_verts.push_back(*ivert);
+      m_primVerts.push_back(*ivert);
     }
   }
-  debug() << "Number of Vertices from " << primVtxLocn
-          << " are " << m_verts.size() << endreq;
+  verbose() << "Number of Vertices from " << primVtxLocn << " are " << m_primVerts.size() << endmsg;
   return StatusCode::SUCCESS;
 }
 //=============================================================================
@@ -741,7 +761,7 @@ void PhysDesktop::imposeOutputLocation(std::string outputLocationString){
   if (outputLocationString != m_outputLocn) {
     if (m_locationWarned) {
       warning() << "Non-standard output location imposed: "
-                << outputLocationString << endreq;
+                << outputLocationString << endmsg;
       m_locationWarned = true ;
     }
     m_outputLocn = outputLocationString;

@@ -1,4 +1,4 @@
-// $Id: IPhysDesktop.h,v 1.1 2005-01-06 10:30:43 pkoppenb Exp $
+// $Id: IPhysDesktop.h,v 1.2 2005-02-09 07:32:54 pkoppenb Exp $
 #ifndef DAVINCIKERNEL_IPHYSDESKTOP_H 
 #define DAVINCIKERNEL_IPHYSDESKTOP_H 1
 
@@ -32,13 +32,19 @@ public:
   /// Retrieve the particles containers
   virtual const ParticleVector& particles() = 0;
 
-  /// Retrieve the vertex container
+  /// Retrieve the vertex container : primaries and secondaries!
   virtual const VertexVector& vertices() = 0;
 
-  /// Add the particles  to the DeskTop
+  /// Retrieve the PV from vertex container
+  virtual const VertexVector& primaryVertices() = 0;
+
+  /// Retrieve the secondary vertices
+  virtual const VertexVector& secondaryVertices() = 0;
+
+  /// Add the particles  to the Desktop
   virtual Particle* createParticle( Particle* input=0 ) = 0;
 
-  /// Add the vertices  to the DeskTop
+  /// Add the vertices  to the Desktop
   virtual Vertex* createVertex( Vertex* input=0 ) = 0;
 
   /// Save the particles to the TES
