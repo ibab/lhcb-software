@@ -3,15 +3,7 @@
  *
  *  Implementation file for detector description class : DeRichFlatMirror
  *
- *  CVS Log :-
- *  $Id: DeRichFlatMirror.cpp,v 1.7 2004-10-20 16:16:36 jonrob Exp $
- *  $Log: not supported by cvs2svn $
- *  Revision 1.6  2004/09/01 15:20:19  papanest
- *  added functions for TabProps
- *
- *  Revision 1.5  2004/07/27 08:55:23  jonrob
- *  Add doxygen file documentation and CVS information
- *
+ *  $Id: DeRichFlatMirror.cpp,v 1.8 2005-02-09 13:39:26 cattanem Exp $
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2004-06-18
@@ -21,7 +13,6 @@
 
 // Include files
 #include "GaudiKernel/MsgStream.h"
-#include "Kernel/CLHEPStreams.h"
 
 // CLHEP files
 #include "CLHEP/Geometry/Vector3D.h"

@@ -3,26 +3,7 @@
  *
  *  Header file for detector description class : DeRichHPDPanel
  *
- *  CVS Log :-
- *  $Id: DeRichHPDPanel.h,v 1.21 2004-10-27 14:18:04 jonrob Exp $
- *  $Log: not supported by cvs2svn $
- *  Revision 1.20  2004/10/20 22:41:54  jonrob
- *  Tidy up inline and virtual functions (whilst solving a windows problem)
- *
- *  Revision 1.19  2004/10/20 17:02:44  jonrob
- *  Updates for windows
- *
- *  Revision 1.18  2004/10/20 16:16:36  jonrob
- *  More minor updates to functions (adding const etc.)
- *
- *  Revision 1.17  2004/10/18 09:21:49  jonrob
- *  Minor updates to functions (adding const etc.)
- *
- *  Revision 1.16  2004/07/28 13:41:16  jonrob
- *  Add doxygen file documentation and CVS information
- *
- *  Revision 1.15  2004/07/27 08:55:22  jonrob
- *  Add doxygen file documentation and CVS information
+ *  $Id: DeRichHPDPanel.h,v 1.22 2005-02-09 13:39:26 cattanem Exp $
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2004-06-18
@@ -37,7 +18,6 @@
 #include "CLHEP/Geometry/Plane3D.h"
 
 // LHCbKernel
-#include "Kernel/CLHEPStreams.h"
 #include "Kernel/RichSmartID.h"
 
 // DetDesc

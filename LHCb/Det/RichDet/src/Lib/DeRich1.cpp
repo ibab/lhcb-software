@@ -3,21 +3,7 @@
  *
  *  Implementation file for detector description class : DeRich1
  *
- *  CVS Log :-
- *  $Id: DeRich1.cpp,v 1.12 2004-10-20 22:41:55 jonrob Exp $
- *  $Log: not supported by cvs2svn $
- *  Revision 1.11  2004/10/18 11:17:45  papanest
- *  mirror reflectivity
- *
- *  Revision 1.10  2004/10/18 09:21:49  jonrob
- *  Minor updates to functions (adding const etc.)
- *
- *  Revision 1.9  2004/09/01 15:20:19  papanest
- *  added functions for TabProps
- *
- *  Revision 1.8  2004/07/27 08:55:23  jonrob
- *  Add doxygen file documentation and CVS information
- *
+ *  $Id: DeRich1.cpp,v 1.13 2005-02-09 13:39:26 cattanem Exp $
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2004-06-18
@@ -31,7 +17,6 @@
 
 // Gaudi
 #include "GaudiKernel/MsgStream.h"
-#include "Kernel/CLHEPStreams.h"
 
 // DetDesc
 #include "DetDesc/Material.h"

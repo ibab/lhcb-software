@@ -8,6 +8,7 @@
 ! 2005-02-08 - Marco Cattaneo
  - Adapt to changed names of RichSmartID bit field accessors of GaudiObjDesc
    v7r*
+ - Remove obsolete CLHEPStreams.h include
 
 !========================= RichDet v8r1 2004-08-27 =========================
 ! 2004-10-27 - Chris Jones
