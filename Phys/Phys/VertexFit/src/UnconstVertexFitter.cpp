@@ -1,4 +1,4 @@
-// $Id: UnconstVertexFitter.cpp,v 1.4 2005-01-06 10:41:58 pkoppenb Exp $
+// $Id: UnconstVertexFitter.cpp,v 1.5 2005-02-04 10:12:53 pkoppenb Exp $
 // Include files
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h"
@@ -135,22 +135,17 @@ StatusCode UnconstVertexFitter::fitVertex( const ParticleVector& pList,
   // Split vector in two lists:
   // charged tracks, or composite particles with an endVertex (including neutrals, gammas from e+e-)
   ParticleVector fromChargedOrResoList;
-
   // neutrals with origin and no endVertex: gammas
   ParticleVector fromNeutralWithOriList;
-
   // Count number of resonances not to refit when one only needs to add gammas
   int nResonances = splitIntoNeutralsAndCharged(pList,fromChargedOrResoList,fromNeutralWithOriList);
+  if (nResonances<0) return StatusCode::FAILURE;
   
-  if((fromChargedOrResoList.size()<2) && (!fromNeutralWithOriList.empty())){
-    info() << "Needs at least two charged tracks when using neutrals with origin" << endreq;
-    return StatusCode::FAILURE;
-  }
-
   // The vertex without neutrals at the beginning
-  Vertex fromChargedOrResoVtx;
+  Vertex fromChargedOrResoVtx ;
 
-  // Do not refit if only *one* composite particle and neutrals with origin (e.g. B_s0 -> (phi(1020) -> K+ K-) gamma)
+  // Do not refit if only *one* composite particle and neutrals with origin 
+  // (e.g. B_s0 -> (phi(1020) -> K+ K-) gamma)
   // special case of only one resonance and neutrals with origin
   bool special = false ;  
   if ((nResonances == 1) && (!fromNeutralWithOriList.empty())){
@@ -199,7 +194,8 @@ StatusCode UnconstVertexFitter::fitVertex( const ParticleVector& pList,
 
 
   //------------------------------------------------------------------------------------  
-  
+  debug() << "Returning vertex " << myVertex.position() << " with error " 
+          <<  myVertex.positionErr() << " size: " << myVertex.products().size() << endmsg ;  
 
   return StatusCode::SUCCESS;
 
@@ -320,11 +316,17 @@ int UnconstVertexFitter::splitIntoNeutralsAndCharged(const ParticleVector& pList
   } // for iPart
   
   debug() << "Particle Vector size is " << pList.size() << endreq;
-  debug() << "-> Number of charged tracks or resonances products is " << fromChargedOrResoList.size() << endreq;
+  debug() << "-> Number of charged tracks or resonances products is " 
+          << fromChargedOrResoList.size() << endreq;
 
-  if (!fromNeutralWithOriList.empty()){  
-    debug() << "-> Number of neutrals with origin is " << fromNeutralWithOriList.size() << endreq;
+  if (!fromNeutralWithOriList.empty()) debug() 
+    << "-> Number of neutrals with origin is " << fromNeutralWithOriList.size() << endreq;
+
+  if((fromChargedOrResoList.size()<2) && (!fromNeutralWithOriList.empty())){
+    err() << "Needs at least two charged tracks when using neutrals with origin" << endreq;
+    return -1;
   }
+
   return nResonances;
 }
 
@@ -341,10 +343,8 @@ StatusCode UnconstVertexFitter::doFitVertex( const ParticleVector& particleList,
    info() << "Particle Vector size is less than 2" << endreq;   
    return StatusCode::FAILURE;
   } else {
-    debug() << "Particle Vector size is " << 
-      particleList.size()<< endreq;    
+    debug() << "Particle Vector size is " << particleList.size()<< endreq;    
   }
-  
     
   // NOTE use of 1..n style indexing in () type brackets.
   
@@ -353,92 +353,43 @@ StatusCode UnconstVertexFitter::doFitVertex( const ParticleVector& particleList,
   
   debug() << "   zestimate " << zEstimate << endreq;
   
-  HepSymMatrix cov(2,0); // 2x2 empty  symmetic matrix
   HepSymMatrix hessian(3,0); // 3x3 empty  symmetic matrix
   HepVector divChi(3,0); //empty vector
   double vertexChi2=0;
-  HepVector vertex(3,0);
   
   ParticleVector::const_iterator iterP;
   for(iterP = particleList.begin(); iterP != particleList.end(); iterP++) {
-    
-
-    // transport particle to zEstimate 
-
+    // transport particle to zEstimate
     Particle transParticle;
-    StatusCode sctrans = m_pTransporter->transport(iterP,
-                                                   zEstimate,
-                                                   transParticle);
+    StatusCode sctrans = m_pTransporter->transport(iterP,zEstimate,transParticle);
 
     if ( !sctrans.isSuccess() ) {
       debug() << "Track extrapolation failed" << endreq;
       return sctrans;
     }
-    
-    HepPoint3D newPoint =transParticle.pointOnTrack();
-    HepSymMatrix newpointErr = transParticle.pointOnTrackErr();
-    HepSymMatrix newSlpMomCorrErr = transParticle.slopesMomErr();
-    HepMatrix newPointSlpMomCorrErr = transParticle.posSlopesCorr();
-    
 
-
-    // Get the track covariance matrix
-    cov(1,1)=newpointErr(1,1); 
-    cov(1,2)=newpointErr(1,2);
-    cov(2,2)=newpointErr(2,2);
-    
-    //std::cout << " covariance Matrix "<<(*iterP)->pointOnTrackErr()<<endl;
-
-    //std::cout << " new Cov Matrix "<< newpointErr <<endl;
-
-    int iFail;
-    cov.invert(iFail); 
-    if( 0 != iFail ){
-      warning() << "Could not invert covariance matrix" << endreq;
-      return StatusCode::FAILURE;
-    }
-    //    std::cout << " new Cov Matrix Inverted "<< cov <<endl;
-    
-    // see LHC-B/TN/95-01 for equations
-    // note divChi[2] (ie z) sign  (wrong in LHCb note)
-    hessian(1,1) += cov(1,1);
-    hessian(1,2) += cov(1,2);
-    hessian(2,2) += cov(2,2);
-    hessian(1,3) -= (cov(1,1)*transParticle.slopeX() +
-                     cov(1,2)*transParticle.slopeY());
-    hessian(2,3) -= (cov(2,2)*transParticle.slopeY() +
-                     cov(1,2)*transParticle.slopeX());
-    hessian(3,3) += (cov(1,1)*transParticle.slopeX()*
-                     transParticle.slopeX() +
-                     cov(2,2)*transParticle.slopeY()*
-                     transParticle.slopeY() +
-                     2.*cov(1,2)*transParticle.slopeX()*
-                     transParticle.slopeY());
-    
-    //    HepPoint3D firstp = (*iterP)->pointOnTrack();
-    //    debug() << " x firstp  " << firstp.x() << endreq;
-    
-    
-    divChi(1) += (cov(1,1)*newPoint.x() +  cov(1,2)*newPoint.y());
-    divChi(2) += (cov(2,2)*newPoint.y() +cov(1,2)*newPoint.x());
-    divChi(3) -= (cov(1,1)*newPoint.x()* transParticle.slopeX() +
-                  cov(2,2)*newPoint.y()* transParticle.slopeY() +
-                  cov(1,2)*(newPoint.x()*transParticle.slopeY() +
-                            newPoint.y()*  transParticle.slopeX()));
-    
-    vertexChi2 += (cov(1,1)*newPoint.x()* newPoint.x() +
-                   cov(2,2)*newPoint.y()*newPoint.y() +
-                   2.*cov(1,2)*newPoint.x()*newPoint.y() );
+    StatusCode sc = matrixMath(hessian,divChi,vertexChi2,transParticle);
+    if (!sc) return sc ;
   }
+  int ndof = (2*particleList.size())-3;
+  return makeVertex( myVertex,zEstimate,ndof,hessian,divChi,vertexChi2);
   
-  
-  
-  
-  
+}
+//=======================================================================
+// Vertex math
+//=======================================================================
+StatusCode UnconstVertexFitter::makeVertex( Vertex& myVertex, double zEstimate,
+                                           int ndof,
+                                           HepSymMatrix& hessian, 
+                                           HepVector& divChi, double vertexChi2){
   // now solve with solve! (HepMatrix::solve as it happens)
   // it inverts the matrix and multiplies by the vector using LU decompositon
   HepMatrix fullHessian = hessian; // need normal matrix for this
+  debug() << "Hessian is  :" << hessian << endmsg ;
+  debug() << "divChi is   :" << divChi << endmsg;
+  HepVector vertex(3,0) ;
   vertex = solve(fullHessian,divChi);
+  debug() << "solution is :" << vertex << endmsg; // FAST //
   
   // calculate chi2 terms : from axvcalc.F
   
@@ -448,7 +399,7 @@ StatusCode UnconstVertexFitter::doFitVertex( const ParticleVector& particleList,
   debug() << "vertexChi2 " << vertexChi2 << endreq;
   
   //offset with  initally estimated z: all calculated relative to that
-  vertex(3)+=zEstimate;
+  vertex(3)+= zEstimate;
   debug() << "vertex position " << vertex(1) << "  " << vertex(2) 
       <<  " "   <<vertex(3) << endreq;
   
@@ -471,17 +422,70 @@ StatusCode UnconstVertexFitter::doFitVertex( const ParticleVector& particleList,
   myVertex.setChi2(vertexChi2);
   myVertex.setPositionErr(errMat);
 
-  int ndof = (2*particleList.size())-3;
   myVertex.setNDoF(ndof);
 
-  myVertex.setType(Vertex::Decay);  
-  
+  myVertex.setType(Vertex::Decay);
+  return StatusCode::SUCCESS ;
+}
+
+//=======================================================================
+// matrix math
+//=======================================================================
+StatusCode UnconstVertexFitter::matrixMath(HepSymMatrix& hessian, 
+                                           HepVector& divChi, 
+                                           double& vertexChi2, 
+                                           Particle& transParticle) {
    
-
-
- 
-  return StatusCode::SUCCESS;
+  HepPoint3D newPoint = transParticle.pointOnTrack();
+  HepSymMatrix newpointErr = transParticle.pointOnTrackErr();
+  HepSymMatrix newSlpMomCorrErr = transParticle.slopesMomErr();
+  HepMatrix newPointSlpMomCorrErr = transParticle.posSlopesCorr();
   
+  HepSymMatrix cov(2,0); // 2x2 empty  symmetic matrix
+  // Get the track covariance matrix
+  cov(1,1)=newpointErr(1,1);
+  cov(1,2)=newpointErr(1,2);
+  cov(2,2)=newpointErr(2,2);
+  
+  int iFail;
+  cov.invert(iFail); 
+  if( 0 != iFail ){
+    warning() << "Could not invert covariance matrix" << endreq;
+    return StatusCode::FAILURE;
+  }
+  //    std::cout << " new Cov Matrix Inverted "<< cov <<endl;
+  
+  // see LHC-B/TN/95-01 for equations
+  // note divChi[2] (ie z) sign  (wrong in LHCb note)
+  hessian(1,1) += cov(1,1);
+  hessian(1,2) += cov(1,2);
+  hessian(2,2) += cov(2,2);
+  hessian(1,3) -= (cov(1,1)*transParticle.slopeX() +
+                   cov(1,2)*transParticle.slopeY());
+  hessian(2,3) -= (cov(2,2)*transParticle.slopeY() +
+                   cov(1,2)*transParticle.slopeX());
+  hessian(3,3) += (cov(1,1)*transParticle.slopeX()*
+                   transParticle.slopeX() +
+                   cov(2,2)*transParticle.slopeY()*
+                   transParticle.slopeY() +
+                   2.*cov(1,2)*transParticle.slopeX()*
+                   transParticle.slopeY());
+  
+  //    HepPoint3D firstp = (*iterP)->pointOnTrack();
+  //    debug() << " x firstp  " << firstp.x() << endreq;
+  
+  
+  divChi(1) += (cov(1,1)*newPoint.x() +  cov(1,2)*newPoint.y());
+  divChi(2) += (cov(2,2)*newPoint.y() +cov(1,2)*newPoint.x());
+  divChi(3) -= (cov(1,1)*newPoint.x()* transParticle.slopeX() +
+                cov(2,2)*newPoint.y()* transParticle.slopeY() +
+                cov(1,2)*(newPoint.x()*transParticle.slopeY() +
+                          newPoint.y()*  transParticle.slopeX()));
+  
+  vertexChi2 += (cov(1,1)*newPoint.x()* newPoint.x() +
+                 cov(2,2)*newPoint.y()*newPoint.y() +
+                 2.*cov(1,2)*newPoint.x()*newPoint.y() );
+  return StatusCode::SUCCESS;
 }
 //=======================================================================
 // First estimate of z position of vertex

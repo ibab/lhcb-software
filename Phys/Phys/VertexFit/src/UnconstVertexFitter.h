@@ -1,4 +1,4 @@
-// $Id: UnconstVertexFitter.h,v 1.3 2005-01-06 10:41:58 pkoppenb Exp $
+// $Id: UnconstVertexFitter.h,v 1.4 2005-02-04 10:12:53 pkoppenb Exp $
 #ifndef UNCONSTVERTEXFITTER_H
 #define UNCONSTVERTEXFITTER_H 1
 
@@ -42,7 +42,7 @@ public:
   virtual ~UnconstVertexFitter() { }
 
   /// Retrieve the Particle Tranporter Tool.
-  StatusCode initialize();    
+  virtual StatusCode initialize();    
 
   /// Fit the vertex given a vector of Particles as input.
   /// In case any particle is a resonance, it uses the daughters and call
@@ -61,6 +61,7 @@ public:
   StatusCode fitVertex( Particle& particle1, Particle& particle2, 
                         Particle& particle3, Vertex& myVertex );
 
+
 private:
 
   /// find "charged" and "neutrals"
@@ -69,10 +70,16 @@ private:
   Vertex* singleResonanceVertex(const ParticleVector& );
   /// Fit the vertex given a vector of Particles as input. 
   StatusCode doFitVertex( const ParticleVector&, Vertex&);  
-  /// get the first estimate for the z position  
-  double getZEstimate (const ParticleVector& particleList);
   /// Add neutrals to vertex
   StatusCode addNeutrals( const ParticleVector&, ParticleVector&, Vertex&);  
+  /// do the matrix math
+  virtual StatusCode matrixMath( HepSymMatrix&, HepVector&, double&, Particle&);  
+  /// get the vertex
+  virtual StatusCode makeVertex( Vertex&, double, int, 
+                                 HepSymMatrix& , HepVector&, double);  
+
+  /// get the first estimate for the z position  
+  double getZEstimate (const ParticleVector& particleList);
 
   
 
