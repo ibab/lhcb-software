@@ -1,8 +1,11 @@
-! $Id: release.notes,v 1.21 2002-08-09 16:39:46 ranjard Exp $
+! $Id: release.notes,v 1.22 2002-09-25 09:57:49 dhcroft Exp $
 ! =============================================================================
 ! Package     : MuonTools
 ! Responsible : David Hutchcroft David.Hutchcroft@cern.ch
 ! =============================================================================
+
+! 2002-09-25 - David Hutchcroft
+ - Removed two debugging std::cout lines that should not have been committed
 
 !========================= MuonTools v3r0 2002-08-9 =======================
 ! 2002-08-05 - David Hutchcroft
