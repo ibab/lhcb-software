@@ -2,6 +2,10 @@ Package LHCbKernel
 Package manager: M.Cattaneo
 Purpose: LHCb specific Kernel classes
 
+! 2004-07-26 - Vanya Belyaev
+ - Kernel/InstanceCounter.h
+    suppress the printout message for zero counters (everything is OK)
+
 !====================== LHCbKernel v5r0 2004-07-19 ========================
 ! 2004-07-19 - Marco Cattaneo
  - Adapt requirements for Gaudi v15

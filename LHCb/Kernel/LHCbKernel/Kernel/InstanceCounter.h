@@ -1,4 +1,4 @@
-// $Id: InstanceCounter.h,v 1.1 2002-07-18 05:50:31 cattanem Exp $
+// $Id: InstanceCounter.h,v 1.2 2004-07-26 08:54:27 ibelyaev Exp $
 #ifndef KERNEL_INSTANCECOUNTER_H 
 #define KERNEL_INSTANCECOUNTER_H 1
 
@@ -23,11 +23,14 @@ public:
   InstanceCounter() : m_count(0)   {
   }
   virtual ~InstanceCounter()   {
-    std::cout << "Number of objects of type: "
-              << System::typeinfoName(typeid(T))
-              << " created, but not destroyed:" 
-              << m_count
-              << std::endl;
+    if ( 0 != m_cout ) 
+    {
+      std::cout << "Number of objects of type: "
+                << System::typeinfoName(typeid(T))
+                << " created, but not destroyed:" 
+                << m_count
+                << std::endl;
+    }
   }
 };
 #endif // KERNEL_INSTANCECOUNTER_H
