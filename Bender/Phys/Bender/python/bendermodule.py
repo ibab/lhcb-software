@@ -240,7 +240,7 @@ VTRACKS = helper.loadFunV ( gbl.LoKi.Vertices.VertexTracks  ) ()
 CHILD   = helper.loadFunP ( gbl.LoKi.Particles.ChildFunction ) 
 MCTRUTH = helper.loadCutP ( gbl.LoKi.Particles.MCTruth       ) 
 
-# mc functions
+# MC functions
 MCP    = helper.loadFunMCP ( gbl.LoKi.MCParticles.Momentum           ) ()
 MCE    = helper.loadFunMCP ( gbl.LoKi.MCParticles.Energy             ) ()
 MCPT   = helper.loadFunMCP ( gbl.LoKi.MCParticles.TransverseMomentum ) ()
@@ -250,6 +250,9 @@ MCPZ   = helper.loadFunMCP ( gbl.LoKi.MCParticles.MomentumZ          ) ()
 MCID   = helper.loadFunMCP ( gbl.LoKi.MCParticles.Identifier         ) ()
 MC3Q   = helper.loadFunMCP ( gbl.LoKi.MCParticles.ThreeCharge        ) ()
 MCCTAU = helper.loadFunMCP ( gbl.LoKi.MCParticles.ProperLifeTime     ) ()
+
+# extratc native ROOT histograms from AIDA
+aida2root = gaudi.gbl.Bender.RootHelper.aida2root
 
 
 # "intermediate" objects 

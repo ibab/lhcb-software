@@ -1,8 +1,11 @@
-// $Id: Bender.cpp,v 1.2 2004-02-10 12:35:03 ibelyaev Exp $
+// $Id: Bender.cpp,v 1.3 2004-02-11 17:46:43 ibelyaev Exp $
 // ============================================================================ 
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================ 
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2004/02/10 12:35:03  ibelyaev
+//  last update
+//
 // Revision 1.1.1.1  2004/01/22 22:29:45  ibelyaev
 // New location of 'old' package
 // 
@@ -38,10 +41,14 @@
 // ============================================================================
 
 void       printHelp () ;
+void       welcome   () ;
+void       goodbye   () ;
 StatusCode processTheFile ( const std::string& name ) ;
 
 int main ( int argc, char** argv ) 
 {
+  
+  welcome() ;
   
   typedef  std::vector<std::string> Arguments ;
   
@@ -69,7 +76,7 @@ int main ( int argc, char** argv )
   std::string vers    
     ( version     , 0 , 
       version.find_first_of( '.' , version.find_first_of('.') + 1 ) );
-  std::cout << "Python version: [" << vers << "]" << std::endl;
+  std::cout << " Bender: Python version: [" << vers << "]" << std::endl;
   
 #if defined(linux) || defined(sun)
   // This is hack to make global the python symbols 
@@ -94,7 +101,8 @@ int main ( int argc, char** argv )
     StatusCode sc = processTheFile( *iarg ) ;
     if( sc.isFailure() ) 
     { 
-      std::cerr << " ERROR in processing file '" << *iarg << "'" << std::endl ; 
+      std::cerr << " Bender:  ERROR in processing file '" 
+                << *iarg << "'" << std::endl ; 
     }    
   }
   
@@ -109,7 +117,7 @@ int main ( int argc, char** argv )
     //
     // ++Py_InteractiveFlag ;
     
-    std::cout << " Invoke interactive prompt " << std::endl;    
+    std::cout << " Bender: Invoke interactive prompt " << std::endl;    
     
 #if !defined( WIN32 )
     //
@@ -123,17 +131,21 @@ int main ( int argc, char** argv )
     PyRun_InteractiveLoop ( stdin , "\0") ;  
   };
   
+  // Good bye
+  void       goodbye   () ;
   
   // finalize python 
-  std::cout << "Finalize Python" << std::endl;
+  std::cout << " Bender: Finalize Python" << std::endl;
   if ( Py_IsInitialized() ) { Py_Finalize() ;}
-  
+
   // finalize python 
-  std::cout << "Exiting now " << std::endl;
+  std::cout << " Bender: Exiting now " << std::endl;
   exit ( 0 ) ;
 };
+// ============================================================================ 
 
 
+// ============================================================================ 
 /** @fn processTheFile 
  *
  *  execute python script
@@ -141,10 +153,11 @@ int main ( int argc, char** argv )
  *  @athor Vanya BELYAEV Ivan.Belyaev@itep.ru
  *  @date 2004-01-29
  */
+// ============================================================================ 
 StatusCode processTheFile( const std::string& name )
 { 
   //
-  std::cout << "Running now '" << name << "'"<< std::endl;    
+  std::cout << " Bender: Running now '" << name << "'"<< std::endl;    
   //
 #if !defined(WIN32)
   FILE* fp = fopen( name.c_str() , "r" );
@@ -169,10 +182,12 @@ StatusCode processTheFile( const std::string& name )
   }
 #endif
   //
-  std::cerr << " ERROR , could not open the file '" + name + "'" << std::endl;
+  std::cerr 
+    << " Bender: ERROR , could not open the file '" + name + "'" << std::endl;
   //
   return StatusCode::FAILURE ;
 };
+// ============================================================================ 
 
 // ============================================================================ 
 /** @fn printHelp
@@ -183,7 +198,7 @@ StatusCode processTheFile( const std::string& name )
 // ============================================================================ 
 void printHelp()
 {
-  std::cout << " Usage : " << std::endl 
+  std::cout << " Bender: Usage : " << std::endl 
             << " Bender.exe [option] [file1] [file2] [file3] ... " 
             << std::endl 
             << "\tOptions and arguments " << std::endl 
@@ -200,6 +215,27 @@ void printHelp()
             << "\t file..n  : script file to be executed  " << std::endl ;
 };
 // ============================================================================ 
+
+
+// ============================================================================ 
+/** @fn welcome
+ *  print the welcome message 
+ *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+ *  @date 2004-02-11
+ */
+// ============================================================================ 
+void welcome () {}
+// ============================================================================
+
+// ============================================================================ 
+/** @fn goodbye
+ *  print the goodbye message 
+ *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+ *  @date 2004-02-11
+ */
+// ============================================================================ 
+void goodbye () {}
+// ============================================================================
 
 // ============================================================================ 
 // The EDN 
