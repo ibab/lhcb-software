@@ -4,7 +4,7 @@
  *
  *  Implementation file for detector description class : DeRichHPDPanel
  *
- *  $Id: DeRichHPDPanel.cpp,v 1.25 2005-02-22 18:11:37 jonrob Exp $
+ *  $Id: DeRichHPDPanel.cpp,v 1.26 2005-02-23 10:26:00 jonrob Exp $
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2004-06-18
@@ -83,7 +83,7 @@ StatusCode DeRichHPDPanel::initialize()
     return StatusCode::FAILURE;
   }
 
-  log << MSG::INFO << "Initializing HPD Panel : " << rich() << " " << (int)side() << endreq;
+  log << MSG::INFO << "Initializing HPD Panel : " << rich() << " Panel" << (int)side() << endreq;
 
   SmartDataPtr<DetectorElement> deRich1(dataSvc(), DeRichLocation::Rich1);
   m_pixelSize = deRich1->userParameterAsDouble("RichHpdPixelXsize");

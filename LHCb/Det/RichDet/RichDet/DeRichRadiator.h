@@ -5,7 +5,7 @@
  *  Header file for detector description class : DeRichRadiator
  *
  *  CVS Log :-
- *  $Id: DeRichRadiator.h,v 1.13 2005-02-22 18:11:37 jonrob Exp $
+ *  $Id: DeRichRadiator.h,v 1.14 2005-02-23 10:26:00 jonrob Exp $
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2004-06-18
@@ -52,6 +52,7 @@ namespace DeRichRadiatorLocation {
   static const std::string& CF4       = "/dd/Structure/LHCb/Rich2/CF4";
 }
 
+//----------------------------------------------------------------------------
 /** @class DeRichRadiator DeRichRadiator.h
  *
  * DeRichRadiator provides information about the Rich radiators.
@@ -60,9 +61,20 @@ namespace DeRichRadiatorLocation {
  *
  * @author Antonis Papanestis a.papanestis@rl.ac.uk
  */
+//----------------------------------------------------------------------------
+
 class DeRichRadiator: public DetectorElement {
 
 public:
+
+  /// Default constructor
+  DeRichRadiator::DeRichRadiator()
+    : DetectorElement (),
+      m_radiatorID    ( Rich::InvalidRadiator ),
+      m_rich          ( Rich::InvalidDetector ),
+      m_refIndex      ( 0                     ),
+      m_rayleigh      ( 0                     ),
+      m_name          ( "UnInitialized"       ) { }
 
   /**
    * This is where most of the geometry is read and variables initialised

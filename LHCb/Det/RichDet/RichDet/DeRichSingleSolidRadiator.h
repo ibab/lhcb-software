@@ -1,20 +1,16 @@
 
+//----------------------------------------------------------------------------
 /** @file DeRichSingleSolidRadiator.h
  *
  *  Header file for detector description class : DeRichSingleSolidRadiator
  *
  *  CVS Log :-
- *  $Id: DeRichSingleSolidRadiator.h,v 1.5 2004-10-20 16:16:36 jonrob Exp $
- *  $Log: not supported by cvs2svn $
- *  Revision 1.4  2004/09/01 15:20:19  papanest
- *  added functions for TabProps
- *
- *  Revision 1.3  2004/07/2D7 08:55:22  jonrob
- *  Add doxygen file documentation and CVS information
+ *  $Id: DeRichSingleSolidRadiator.h,v 1.6 2005-02-23 10:26:00 jonrob Exp $
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2004-06-18
  */
+//----------------------------------------------------------------------------
 
 #ifndef RICHDET_DERICHSINGLESOLIDRADIATOR_H
 #define RICHDET_DERICHSINGLESOLIDRADIATOR_H 1
@@ -25,7 +21,7 @@
 // External declarations
 extern const CLID& CLID_DeRichSingleSolidRadiator;
 
-
+//----------------------------------------------------------------------------
 /** @class DeRichSingleSolidRadiator DeRichSingleSolidRadiator.h
  *
  * Implementation of DeRichRadiator for single solids (can be boolean solids)
@@ -33,6 +29,7 @@ extern const CLID& CLID_DeRichSingleSolidRadiator;
  * @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2004-06-18
  */
+//----------------------------------------------------------------------------
 
 class DeRichSingleSolidRadiator: public DeRichRadiator {
 

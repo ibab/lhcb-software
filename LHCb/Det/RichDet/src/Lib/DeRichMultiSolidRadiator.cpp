@@ -3,7 +3,7 @@
  *
  *  Implementation file for detector description class : DeRichMultiSolidRadiator
  *
- *  $Id: DeRichMultiSolidRadiator.cpp,v 1.8 2005-02-22 18:11:37 jonrob Exp $
+ *  $Id: DeRichMultiSolidRadiator.cpp,v 1.9 2005-02-23 10:26:00 jonrob Exp $
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2004-06-18
@@ -36,7 +36,8 @@ DeRichMultiSolidRadiator::DeRichMultiSolidRadiator() {}
 DeRichMultiSolidRadiator::~DeRichMultiSolidRadiator() {}
 
 // Retrieve Pointer to class defininition structure
-const CLID& DeRichMultiSolidRadiator::classID() {
+const CLID& DeRichMultiSolidRadiator::classID() 
+{
   return CLID_DeRichMultiSolidRadiator;
 }
 
@@ -87,7 +88,7 @@ StatusCode DeRichMultiSolidRadiator::initialize()
   // radiator
   m_refIndex = m_refIndices[0];
 
-  if ( m_rayleighVector.size() != 0 ) m_rayleigh = m_rayleighVector[0];
+  if ( !m_rayleighVector.empty() ) m_rayleigh = m_rayleighVector[0];
   
   return StatusCode::SUCCESS;
 }

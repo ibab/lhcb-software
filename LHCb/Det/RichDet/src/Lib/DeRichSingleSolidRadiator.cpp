@@ -3,7 +3,7 @@
  *
  *  Implementation file for detector description class : DeRichSingleSolidRadiator
  *
- *  $Id: DeRichSingleSolidRadiator.cpp,v 1.9 2005-02-22 18:11:37 jonrob Exp $
+ *  $Id: DeRichSingleSolidRadiator.cpp,v 1.10 2005-02-23 10:26:00 jonrob Exp $
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2004-06-18
@@ -36,7 +36,8 @@ DeRichSingleSolidRadiator::DeRichSingleSolidRadiator() {}
 DeRichSingleSolidRadiator::~DeRichSingleSolidRadiator() {}
 
 // Retrieve Pointer to class defininition structure
-const CLID& DeRichSingleSolidRadiator::classID() {
+const CLID& DeRichSingleSolidRadiator::classID() 
+{
   return CLID_DeRichSingleSolidRadiator;
 }
 
@@ -69,7 +70,7 @@ StatusCode DeRichSingleSolidRadiator::initialize()
     return StatusCode::FAILURE;
   }
 
-  HepPoint3D zero(0.0, 0.0, 0.0);
+  const HepPoint3D zero(0.0, 0.0, 0.0);
   log << MSG::DEBUG << "Found  TabProp " << m_refIndex->name() << " type "
       << m_refIndex->type() << endmsg;
   if ( m_rayleigh )
