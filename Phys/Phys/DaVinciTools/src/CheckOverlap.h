@@ -1,4 +1,4 @@
-// $Id: CheckOverlap.h,v 1.1 2002-10-21 17:58:18 gcorti Exp $
+// $Id: CheckOverlap.h,v 1.2 2005-01-06 10:37:47 pkoppenb Exp $
 #ifndef CHECKOVERLAP_H 
 #define CHECKOVERLAP_H 1
 
@@ -14,7 +14,7 @@
 #include "Event/ProtoParticle.h"
 
 // from DaVinci
-#include "DaVinciTools/ICheckOverlap.h"
+#include "Kernel/ICheckOverlap.h"
 
 /** @class CheckOverlap CheckOverlap.h
  *  

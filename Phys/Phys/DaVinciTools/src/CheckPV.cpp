@@ -1,10 +1,10 @@
-// $Id: CheckPV.cpp,v 1.3 2004-11-18 09:17:14 pkoppenb Exp $
+// $Id: CheckPV.cpp,v 1.4 2005-01-06 10:37:47 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h" 
 
-#include "DaVinciTools/IPVLocator.h"
+#include "Kernel/IPVLocator.h"
 #include "Event/Vertex.h"
 // local
 

@@ -1,4 +1,4 @@
-// $Id: DecayFinder.h,v 1.9 2004-09-07 07:04:46 pkoppenb Exp $
+// $Id: DecayFinder.h,v 1.10 2005-01-06 10:37:47 pkoppenb Exp $
 #ifndef TOOLS_DECAYFINDER_H 
 #define TOOLS_DECAYFINDER_H 1
 
@@ -13,7 +13,7 @@
 #include <string>
 
 #include "GaudiAlg/GaudiTool.h"
-#include "DaVinciTools/IDecayFinder.h"
+#include "Kernel/IDecayFinder.h"
 
 class IParticlePropertySvc;
 class IDataProviderSvc;

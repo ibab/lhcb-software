@@ -1,7 +1,21 @@
-! $Id: release.notes,v 1.142 2004-12-01 07:46:14 pkoppenb Exp $
+! $Id: release.notes,v 1.143 2005-01-06 10:37:47 pkoppenb Exp $
 ! Package     : DaVinciTools
 ! Responsible : P. Koppenburg
 
+! 2005-01-06 - P. Koppenburg
+  - src/*.*
+    . Change all DaVinciTools/ to Kernel/
+  - src/SimplePlotTool.cpp
+    . Simple implementation of PlotTool interface. Makes plots of very basic
+      quantities
+      Example:
+      HLTPlots.Members += { "SimplePlots/HLTB2HHPlots" };
+      HLTB2HHPlots.PhysDesktop.InputLocations = { "Phys/HLTFilterB2HH" } ;
+      HLTB2HHPlots.Plots.Variables = { "M", "Chi2", "Pt" } ;
+  - src/SimplePlots.cpp
+    . Moved from HltSelChecher package. Applied SimplePlotTool to InputLocation.
+    
+    
 !========================== DaVinciTools v11r3 2004-12-01 ===================
 ! 2004-11-18 - P. Koppenburg
   - src/CheckPV.{h,cpp}

@@ -1,4 +1,4 @@
-// $Id: PVLocator.h,v 1.1 2004-10-27 13:49:59 pkoppenb Exp $
+// $Id: PVLocator.h,v 1.2 2005-01-06 10:37:47 pkoppenb Exp $
 #ifndef PVLOCATOR_H 
 #define PVLOCATOR_H 1
 
@@ -6,7 +6,7 @@
 // from Gaudi
 #include "GaudiAlg/GaudiTool.h"
 #include "GaudiKernel/AlgTool.h"
-#include "DaVinciTools/IPVLocator.h"            // Interface
+#include "Kernel/IPVLocator.h"            // Interface
 
 /** @class PVLocator PVLocator.h
  *  

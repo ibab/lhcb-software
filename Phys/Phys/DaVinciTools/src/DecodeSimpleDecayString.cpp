@@ -1,4 +1,4 @@
-// $Id: DecodeSimpleDecayString.cpp,v 1.2 2004-08-11 09:04:25 graven Exp $
+// $Id: DecodeSimpleDecayString.cpp,v 1.3 2005-01-06 10:37:47 pkoppenb Exp $
 // Include files 
 
 // from ANSI C++
@@ -173,7 +173,7 @@ DecodeSimpleDecayString::splitDescriptor(const std::string& descriptor,
   boost::smatch what;
   const std::string desc = descriptor;
   if (!boost::regex_match(desc.begin(),desc.end(),what,expression)) {
-    fatal() << "not a valid decaydescriptor "<< desc << endmsg;
+    fatal() << "not a valid decaydescriptor `"<< desc << "'" << endmsg;
     return StatusCode::FAILURE;
   }
   mother = std::string(what[1].first, what[1].second);

@@ -1,4 +1,4 @@
-// $Id: DecodeSimpleDecayString.h,v 1.3 2004-08-23 13:55:49 pkoppenb Exp $
+// $Id: DecodeSimpleDecayString.h,v 1.4 2005-01-06 10:37:47 pkoppenb Exp $
 #ifndef DECODESIMPLEDECAYSTRING_H 
 #define DECODESIMPLEDECAYSTRING_H 1
 
@@ -6,7 +6,7 @@
 // from Gaudi
 #include "GaudiAlg/GaudiTool.h"
 #include "GaudiKernel/AlgTool.h"
-#include "DaVinciTools/IDecodeSimpleDecayString.h"            // Interface
+#include "Kernel/IDecodeSimpleDecayString.h"            // Interface
 class IParticlePropertySvc;
 
 

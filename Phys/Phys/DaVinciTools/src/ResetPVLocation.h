@@ -1,4 +1,4 @@
-// $Id: ResetPVLocation.h,v 1.1 2004-10-27 13:49:59 pkoppenb Exp $
+// $Id: ResetPVLocation.h,v 1.2 2005-01-06 10:37:47 pkoppenb Exp $
 #ifndef RESETPVLOCATION_H 
 #define RESETPVLOCATION_H 1
 
@@ -6,7 +6,7 @@
 // from Gaudi
 #include "GaudiAlg/GaudiAlgorithm.h"
 // from DaVinci
-#include "DaVinciTools/IPVLocator.h" 
+#include "Kernel/IPVLocator.h" 
 
 
 /** @class ResetPVLocation ResetPVLocation.h
