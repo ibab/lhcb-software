@@ -1,0 +1,56 @@
+// $Id: EcalPIDe.opts,v 1.1.1.1 2003-03-13 18:52:04 ibelyaev Exp $
+// ============================================================================
+// CVS tag $Name: not supported by cvs2svn $ 
+// ============================================================================
+// $Log: not supported by cvs2svn $
+// ============================================================================
+
+/** @file 
+ *  Configuration option for CaloTrack2IdAlg "EcalPIDe" algorithm
+ *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
+ *  @date 2002-10-31
+ */
+
+/// Configuration of the Associator
+
+ToolSvc.EcalPIDe.Location      = "Rec/Calo/EcalPIDe" ;
+ToolSvc.EcalPIDe.AlgorithmType = "CaloTrack2IdAlg"  ;
+ToolSvc.EcalPIDe.AlgorithmName = "EcalPIDe"          ;
+
+/// Configuration of the Algorithm 
+
+// The default value 
+// EcalPIDe.AssociatorType = "Associator<TrStoredTrack,float>";
+EcalPIDe.AssociatorName = "EcalChi2";
+EcalPIDe.Output         = "Rec/Calo/EcalPIDe" ;
+// use only unique tracks? 
+EcalPIDe.UseUnique      = false ;
+// use error tracks ? 
+EcalPIDe.UseError       = false ;
+EcalPIDe.UseForward     = true  ;
+EcalPIDe.UseMatched     = true  ; 
+EcalPIDe.UseVelo        = false ;
+EcalPIDe.UseVeloTT      = false ;
+EcalPIDe.UseVeloBack    = false ;
+EcalPIDe.UseSeed        = false ; 
+EcalPIDe.UseUpstream    = false ;
+
+EcalPIDe.ValueBins      =  51        ;
+EcalPIDe.MomentumBins   =  51        ;
+EcalPIDe.ValueNorm      =  100       ; // "cut" for tanh 
+EcalPIDe.MomentumNorm   =  50. * GeV ; // "cut" for tanh 
+
+#pragma print OFF 
+
+// 2D signal     pseudo-histogram 
+#include "$CALOPIDSOPTS/EcalPIDe_Signal.opts" 
+// 2D background pseudo-histogram 
+#include "$CALOPIDSOPTS/EcalPIDe_Background.opts" 
+
+#pragma print ON
+
+
+// ============================================================================
+// The END 
+// ============================================================================
+

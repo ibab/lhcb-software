@@ -1,0 +1,59 @@
+// $Id: HcalPIDmu.opts,v 1.1.1.1 2003-03-13 18:52:04 ibelyaev Exp $
+// ============================================================================
+// CVS tag $Name: not supported by cvs2svn $ 
+// ============================================================================
+// $Log: not supported by cvs2svn $
+// Revision 1.1  2002/11/17 17:09:26  ibelyaev
+//  new set of options and tools
+//
+// ============================================================================
+
+/** @file 
+ *  Configuration option for CaloTrack2IdAlg "HcalPIDmu" algorithm
+ *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
+ *  @date 2002-10-31
+ */
+
+/// Configuration of the Associator
+
+ToolSvc.HcalPIDmu.Location      = "Rec/Calo/HcalPIDmu" ;
+ToolSvc.HcalPIDmu.AlgorithmType = "CaloTrack2IdAlg"  ;
+ToolSvc.HcalPIDmu.AlgorithmName = "HcalPIDmu"          ;
+
+/// Configuration of the Algorithm 
+
+// The default value 
+// HcalPIDmu.AssociatorType = "Associator<TrStoredTrack,float>";
+HcalPIDmu.AssociatorName = "HcalE";
+HcalPIDmu.Output         = "Rec/Calo/HcalPIDmu" ;
+// use only unique tracks? 
+HcalPIDmu.UseUnique      = false ;
+// use error tracks ? 
+HcalPIDmu.UseError       = false ;
+HcalPIDmu.UseForward     = true  ;
+HcalPIDmu.UseMatched     = true  ; 
+HcalPIDmu.UseVelo        = false ;
+HcalPIDmu.UseVeloTT      = false ;
+HcalPIDmu.UseVeloBack    = false ;
+HcalPIDmu.UseSeed        = true  ; 
+HcalPIDmu.UseUpstream    = true  ;
+
+HcalPIDmu.ValueBins      =  51        ;
+HcalPIDmu.MomentumBins   =  51        ;
+HcalPIDmu.ValueNorm      =  10. * GeV ; // "cut" for tanh 
+HcalPIDmu.MomentumNorm   =  25. * GeV ; // "cut" for tanh 
+
+#pragma print OFF 
+
+// 2D signal     pseudo-histogram 
+#include "$CALOPIDSOPTS/HcalPIDmu_Signal.opts" 
+// 2D background pseudo-histogram 
+#include "$CALOPIDSOPTS/HcalPIDmu_Background.opts" 
+
+
+#pragma print ON
+
+// ============================================================================
+// The END 
+// ============================================================================
+

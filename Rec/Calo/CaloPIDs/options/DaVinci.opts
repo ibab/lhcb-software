@@ -1,0 +1,29 @@
+// $Id: DaVinci.opts,v 1.1.1.1 2003-03-13 18:52:04 ibelyaev Exp $ 
+// ============================================================================
+// CVS tag $Name: not supported by cvs2svn $
+// ============================================================================
+// $Log: not supported by cvs2svn $
+// ============================================================================
+
+/** @file
+ * 
+ *  @code 
+ *  
+ *  /// Load shared library
+ *  ApplicationMgr.DLLs += { "CaloPIDs" };
+ *  
+ *  /// configure components 
+ *  #include "$CALOPIDSOPTS/DaVinci.opts"
+ *  
+ *  @endcode 
+ * 
+ *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+ *  @date 2003-03-13
+ */
+
+#include "$CALOPIDSOPTS/CaloPIDs.opts"
+
+// ============================================================================
+// The END 
+// ============================================================================
+

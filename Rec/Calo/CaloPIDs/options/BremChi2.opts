@@ -1,0 +1,52 @@
+// $Id: BremChi2.opts,v 1.1.1.1 2003-03-13 18:52:04 ibelyaev Exp $
+// ============================================================================
+// CVS tag $Name: not supported by cvs2svn $ 
+// ============================================================================
+// $Log: not supported by cvs2svn $
+// ============================================================================
+
+/** @file 
+ *  Configuration option to run CaloTrack2EstimatorAlg "BremChi2"
+ *  
+ *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
+ *  @date 2002-10-31
+ */
+
+/// Configuration of The Associator
+
+ToolSvc.BremChi2.Location      = "Rec/Calo/BremChi2" ;
+ToolSvc.BremChi2.AlgorithmType = "CaloTrack2EstimatorAlg" ;
+ToolSvc.BremChi2.AlgorithmName = "BremChi2" ;
+
+/// Configuration of The Algorithm
+
+// BremChi2.Input = *TrStoredTrackLocation::Default* 
+BremChi2.Output        = "Rec/Calo/BremChi2" ;
+BremChi2.EvaluatorType = "CaloTrackEcalEval" ;
+BremChi2.EvaluatorName = "BremEvalChi2"      ;
+
+// use only unique tracks? 
+BremChi2.UseUnique     = false ;
+// use error tracks ? 
+BremChi2.UseError      = false ;
+BremChi2.UseForward    = true  ;
+BremChi2.UseMatched    = true  ; 
+BremChi2.UseVelo       = false ;
+BremChi2.UseVeloTT     = false ;
+BremChi2.UseVeloBack   = false ;
+BremChi2.UseSeed       = false ; 
+BremChi2.UseUpstream   = false ;
+
+/// configuration of the Evaluator itself 
+
+// The defualt value 
+// ToolSvc.BremEvalChi2.BadValue       = -1000   ;
+// The defualt value 
+// ToolSvc.BremEvalChi2.AssociatorType = 
+//  "AssociatorWeighted<CaloHypo,TrStoredTrack,float>" ;
+ToolSvc.BremEvalChi2.AssociatorName = "BremMatch"   ;
+
+
+// ============================================================================
+// The END
+// ============================================================================

@@ -1,0 +1,55 @@
+// $Id: EcalChi2.opts,v 1.1.1.1 2003-03-13 18:52:04 ibelyaev Exp $
+// ============================================================================
+// CVS tag $Name: not supported by cvs2svn $ 
+// ============================================================================
+// $Log: not supported by cvs2svn $
+// Revision 1.1  2002/11/17 17:09:26  ibelyaev
+//  new set of options and tools
+//
+// ============================================================================
+
+/** @file 
+ *  Configuration option to run CaloTrack2EstimatorAlg "EcalChi2"
+ *  
+ *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
+ *  @date 2002-10-31
+ */
+
+/// Configuration of The Associator
+
+ToolSvc.EcalChi2.Location      = "Rec/Calo/EcalChi2" ;
+ToolSvc.EcalChi2.AlgorithmType = "CaloTrack2EstimatorAlg" ;
+ToolSvc.EcalChi2.AlgorithmName = "EcalChi2" ;
+
+/// Configuration of The Algorithm
+
+// EcalChi2.Input = *TrStoredTrackLocation::Default* 
+EcalChi2.Output        = "Rec/Calo/EcalChi2" ;
+EcalChi2.EvaluatorType = "CaloTrackEcalEval" ;
+EcalChi2.EvaluatorName = "EcalEvalChi2"      ;
+
+// use only unique tracks? 
+EcalChi2.UseUnique     = false ;
+// use error tracks ? 
+EcalChi2.UseError      = false ;
+EcalChi2.UseForward    = true  ;
+EcalChi2.UseMatched    = true  ; 
+EcalChi2.UseVelo       = false ;
+EcalChi2.UseVeloTT     = false ;
+EcalChi2.UseVeloBack   = false ;
+EcalChi2.UseSeed       = false ; 
+EcalChi2.UseUpstream   = false ;
+
+/// configuration of the Evaluator itself 
+
+// The defualt value 
+// ToolSvc.EcalEvalE.BadValue       = -1000   ;
+// The defualt value 
+// ToolSvc.EcalEvalChi2.AssociatorType = 
+//  "AssociatorWeighted<CaloHypo,TrStoredTrack,float>" ;
+// The defualt value 
+// ToolSvc.EcalEvalChi2.AssociatorName = "ElectronMatch"   ;
+
+// ============================================================================
+// The END
+// ============================================================================

@@ -1,0 +1,43 @@
+// $Id: Brunel.opts,v 1.1.1.1 2003-03-13 18:52:04 ibelyaev Exp $ 
+// ============================================================================
+// CVS tag $Name: not supported by cvs2svn $ 
+// ============================================================================
+// $Log: not supported by cvs2svn $ 
+// ============================================================================
+
+/** @file 
+ *
+ *  Job options to run Calo PID techniques in Brunel 
+ *  
+ *  @code 
+ *  
+ *  /// load shared library
+ *  ApplicationMgr.DLLs += { "CaloPIDs" };
+ *
+ *  /// append PIDs algorithms to Brunel Calorimeter Reconstruction sequence
+ *  #include "$CALOPIDSOPTS/Brunel.opts"
+ *
+ *  @endcode 
+ *
+ *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+ *  @date 2002-10-31
+ */
+
+/// Variouse identification techniques 
+BrunelRecoCALOSeq.Members += 
+  {
+    /// must be done in Brunel!
+    "CaloTrack2EstimatorAlg/HcalE"         /// estimator for Hcal energy
+    ,"CaloTrack2EstimatorAlg/PrsE"         /// estimator for Prs energy 
+    ,"CaloTrack2EstimatorAlg/EcalE"        /// estimator for Ecal energy 
+    /// ,"CaloTrack2IdAlg/PrsPIDe"         /// estimator for Prs  e+/e-   PID 
+    /// ,"CaloTrack2IdAlg/HcalPIDe"        /// estimator for Hcal e+/e-   PID 
+    /// ,"CaloTrack2IdAlg/EcalPIDmu"       /// estimator for Ecal mu+/mu- PID 
+    /// ,"CaloTrack2IdAlg/HcalPIDmu"       /// estimator for Hcal mu+/mu- PID 
+  };
+
+#include "$CALOPIDSOPTS/CaloPIDs.opts"
+
+// ============================================================================
+// The END 
+// ============================================================================

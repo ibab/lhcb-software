@@ -1,0 +1,45 @@
+// $Id: HcalE.opts,v 1.1.1.1 2003-03-13 18:52:04 ibelyaev Exp $
+// ============================================================================
+// CVS tag $Name: not supported by cvs2svn $ 
+// ============================================================================
+// $Log: not supported by cvs2svn $
+// ============================================================================
+
+/** @file 
+ *
+ *  Configuration option to run CaloTrack2EstimatorAlg "HcalE"
+ *  
+ *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+ *  @date 2002-10-31
+ */
+
+/// Configuration of The Associator
+ToolSvc.HcalE.Location      = "Rec/Calo/HcalE" ;
+ToolSvc.HcalE.AlgorithmType = "CaloTrack2EstimatorAlg" ;
+ToolSvc.HcalE.AlgorithmName = "HcalE" ;
+
+/// Configuration of The Algorithm
+/// default value 
+// HcalE.Input = *TrStoredTrackLocation::Default* 
+HcalE.Output        = "Rec/Calo/HcalE" ;
+HcalE.EvaluatorType = "CaloTrackEval"  ;
+HcalE.EvaluatorName = "HcalEvalE"      ;
+
+// use only unique tracks? 
+HcalE.UseUnique     = false ;
+// use error tracks ? 
+HcalE.UseError      = false ;
+HcalE.UseForward    = true  ;
+HcalE.UseMatched    = true  ; 
+HcalE.UseVelo       = false ;
+HcalE.UseVeloTT     = false ;
+HcalE.UseVeloBack   = false ;
+HcalE.UseSeed       = true  ; 
+HCalE.UseUpstream   = true  ;
+
+/// configuration of the Evaluator itself 
+///  default 
+
+// ============================================================================
+// The END
+// ============================================================================

@@ -1,0 +1,58 @@
+// $Id: HcalPIDe.opts,v 1.1.1.1 2003-03-13 18:52:04 ibelyaev Exp $ 
+// ============================================================================
+// CVS tag $Name: not supported by cvs2svn $ 
+// ============================================================================
+// $Log: not supported by cvs2svn $
+// ============================================================================
+
+/** @file 
+ *  Configuration option for CaloTrack2IdAlg "HcalPIDe" algorithm
+ *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
+ *  @date 2002-10-31
+ */
+
+
+/// Configuration of the Associator
+
+ToolSvc.HcalPIDe.Location          = "Rec/Calo/HcalPIDe"    ;
+ToolSvc.HcalPIDe.AlgorithmType     = "CaloTrack2IdAlg"      ;
+ToolSvc.HcalPIDe.AlgorithmName     = "HcalPIDe"             ;
+
+/// Configuration of the Algorithm 
+
+// The default value 
+// HcalPIDe.AssociatorType = "Associator<TrStoredTrack,float>";
+HcalPIDe.AssociatorName = "HcalE";
+HcalPIDe.Output         = "Rec/Calo/HcalPIDe" ;
+// use only unique tracks? 
+HcalPIDe.UseUnique      = true  ;
+// use error tracks ? 
+HcalPIDe.UseError       = false ;
+// only tracks "useful" for DaVinci now are listed here 
+HcalPIDe.UseForward     = true  ;
+HcalPIDe.UseMatched     = true  ; 
+HcalPIDe.UseVelo        = false ;
+HcalPIDe.UseVeloTT      = false ;
+HcalPIDe.UseVeloBack    = false ;
+HcalPIDe.UseSeed        = false ; 
+HcalPIDe.UseUpstream    = false ;
+
+HcalPIDe.ValueBins      =  51        ;
+HcalPIDe.MomentumBins   =  51        ;
+HcalPIDe.ValueNorm      =   5. * GeV ; // tanh "cut" 
+HcalPIDe.MomentumNorm   =  50. * GeV ; // tanh "cut"
+
+#pragma print OFF 
+
+// 2D signal     pseudo-histogram 
+#include "$CALOPIDSOPTS/HcalPIDe_Signal.opts" 
+// 2D background pseudo-histogram 
+#include "$CALOPIDSOPTS/HcalPIDe_Background.opts" 
+
+#pragma print ON
+
+
+// ============================================================================
+// The END 
+// ============================================================================
+

@@ -1,0 +1,56 @@
+// $Id: BremPIDe.opts,v 1.1.1.1 2003-03-13 18:52:04 ibelyaev Exp $
+// ============================================================================
+// CVS tag $Name: not supported by cvs2svn $ 
+// ============================================================================
+// $Log: not supported by cvs2svn $
+// ============================================================================
+
+/** @file 
+ *  Configuration option for CaloTrack2IdAlg "EcalPIDe" algorithm
+ *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
+ *  @date 2002-10-31
+ */
+
+/// Configuration of the Associator
+
+ToolSvc.BremPIDe.Location      = "Rec/Calo/BremPIDe" ;
+ToolSvc.BremPIDe.AlgorithmType = "CaloTrack2IdAlg"  ;
+ToolSvc.BremPIDe.AlgorithmName = "BremPIDe"          ;
+
+/// Configuration of the Algorithm 
+
+// The default value 
+// BremPIDe.AssociatorType = "Associator<TrStoredTrack,float>";
+BremPIDe.AssociatorName = "BremChi2";
+BremPIDe.Output         = "Rec/Calo/BremPIDe" ;
+// use only unique tracks? 
+BremPIDe.UseUnique      = false ;
+// use error tracks ? 
+BremPIDe.UseError       = false ;
+BremPIDe.UseForward     = true  ;
+BremPIDe.UseMatched     = true  ; 
+BremPIDe.UseVelo        = false ;
+BremPIDe.UseVeloTT      = false ;
+BremPIDe.UseVeloBack    = false ;
+BremPIDe.UseSeed        = false ; 
+BremPIDe.UseUpstream    = false ;
+
+BremPIDe.ValueBins      =  51        ;
+BremPIDe.MomentumBins   =  51        ;
+BremPIDe.ValueNorm      =  200       ; // "cut" for tanh 
+BremPIDe.MomentumNorm   =  50. * GeV ; // "cut" for tanh 
+
+#pragma print OFF 
+
+// 2D signal     pseudo-histogram 
+#include "$CALOPIDSOPTS/BremPIDe_Signal.opts" 
+// 2D background pseudo-histogram 
+#include "$CALOPIDSOPTS/BremPIDe_Background.opts" 
+
+#pragma print ON
+
+
+// ============================================================================
+// The END 
+// ============================================================================
+

@@ -1,0 +1,44 @@
+// $Id: PrsE.opts,v 1.1.1.1 2003-03-13 18:52:04 ibelyaev Exp $
+// ============================================================================
+// CVS tag $Name: not supported by cvs2svn $ 
+// ============================================================================
+// $Log: not supported by cvs2svn $
+// ============================================================================
+
+/** @file 
+ *  Configuration option to run CaloTrack2EstimatorAlg "PrsE"
+ *  
+ *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+ *  @date 2002-10-31
+ */
+
+/// Configuration of The Associator
+ToolSvc.PrsE.Location      = "Rec/Calo/PrsE" ;
+ToolSvc.PrsE.AlgorithmType = "CaloTrack2EstimatorAlg" ;
+ToolSvc.PrsE.AlgorithmName = "PrsE" ;
+
+/// Configuration of The Algorithm
+// The default value 
+// PrsE.Input = *TrStoredTrackLocation::Default* 
+PrsE.Output        = "Rec/Calo/PrsE"    ;
+PrsE.EvaluatorType = "CaloTrackPrsEval" ;
+PrsE.EvaluatorName = "PrsEvalE"         ;
+
+// use only unique tracks? 
+PrsE.UseUnique     = false ;
+// use error tracks ? 
+PrsE.UseError      = false ;
+PrsE.UseForward    = true  ;
+PrsE.UseMatched    = true  ; 
+PrsE.UseVelo       = false ;
+PrsE.UseVeloTT     = false ;
+PrsE.UseVeloBack   = false ;
+PrsE.UseSeed       = true  ; 
+PrsE.UseUpstream   = true  ;
+
+/// configuration of the Evaluator itself 
+/// default 
+
+// ============================================================================
+// The END
+// ============================================================================

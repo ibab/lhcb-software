@@ -1,0 +1,58 @@
+// $Id: PrsPIDe.opts,v 1.1.1.1 2003-03-13 18:52:04 ibelyaev Exp $
+// ============================================================================
+// CVS tag $Name: not supported by cvs2svn $ 
+// ============================================================================
+// $Log: not supported by cvs2svn $
+// ============================================================================
+
+/** @file 
+ *  Configuration option for CaloTrack2IdAlg "PrsPIDe" algorithm
+ *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
+ *  @date 2002-10-31
+ */
+
+/// Configuration of the Associator
+
+ToolSvc.PrsPIDe.Location          = "Rec/Calo/PrsPIDe"     ;
+ToolSvc.PrsPIDe.AlgorithmType     = "CaloTrack2IdAlg"      ;
+ToolSvc.PrsPIDe.AlgorithmName     = "PrsPIDe"              ;
+
+/// Configuration of the Algorithm 
+
+// The default value 
+// PrsPIDe.AssociatorType = "Associator<TrStoredTrack,float>";
+PrsPIDe.AssociatorName = "PrsE";
+PrsPIDe.Output         = "Rec/Calo/PrsPIDe" ;
+// use only unique tracks? 
+PrsPIDe.UseUnique      = true  ;
+// use error tracks ? 
+PrsPIDe.UseError       = false ;
+// only tracks "useful" for DaVinci now are listed here 
+PrsPIDe.UseForward     = true  ;
+PrsPIDe.UseMatched     = true  ; 
+PrsPIDe.UseVelo        = false ;
+PrsPIDe.UseVeloTT      = false ;
+PrsPIDe.UseVeloBack    = false ;
+PrsPIDe.UseSeed        = false ; 
+PrsPIDe.UseUpstream    = false ;
+
+PrsPIDe.ValueBins      =  51        ;
+PrsPIDe.MomentumBins   =  51        ;
+PrsPIDe.ValueNorm      = 100. * MeV ; // tanh "cut" 
+PrsPIDe.MomentumNorm   =  50. * GeV ; // tanh "cut"
+
+#pragma print OFF 
+
+// 2D signal     pseudo-histogram 
+#include "$CALOPIDSOPTS/PrsPIDe_Signal.opts" 
+// 2D background pseudo-histogram 
+#include "$CALOPIDSOPTS/PrsPIDe_Background.opts" 
+
+#pragma print ON
+
+
+
+// ============================================================================
+// The END 
+// ============================================================================
+
