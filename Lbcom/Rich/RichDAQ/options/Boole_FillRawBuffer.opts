@@ -3,7 +3,7 @@
 DigiRICHSeq.Members += { "MCRichDigitsToRawBufferAlg/RichFillRawBuffer" };
 
 // Bank version to write
-RichFillRawBuffer.DataVersion = 1;
+RichFillRawBuffer.DataVersion = 2;
 
 // utility tools
 ToolSvc.RichToolRegistry.Tools += { "RichHPDIDTool/RichHPDIDTool" };
