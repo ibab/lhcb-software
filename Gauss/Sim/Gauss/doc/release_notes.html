@@ -4,11 +4,16 @@ Package manager : Witek Pokorski
 </PRE>
 
 !========================================================================
-<H1><A NAME="v14r0">2004-01-22 - Gauss v14r0</A></H1><PRE>
+<H1><A NAME="v14r0">2004-01-26 - Gauss v14r0</A></H1><PRE>
  use GEANT4_v60r0, LHCb v15r0, Gaudi v14r0
  new versions of EvtGen and GeneratorModules to use Pythia masses. Other
  particle properties are taken from the particle property service or from 
  evt.pdl
+ options/Generator.opts - limit verbosity of GeneratorModules and EvtGen
+ options/Gauss.opts - add job options to write PoolIO files
+ options/GaussRootIO.opts - remove DbCnv which does not exist anylonger
+                            include GaussTape.opts
+ options/GaussPoolIO.opts - new job option file to write PoolIO format files
 
 !======================== EvtGen v5r0 ===============================
 ! 2004-01-12 - Patrick Robbe
