@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.101 2004-04-27 12:40:22 ranjard Exp $
+# $Id: requirements,v 1.102 2004-04-27 13:42:13 ranjard Exp $
 # Created    : 07/02/2002
 # Maintainer : P. Koppenburg
 #
@@ -19,47 +19,12 @@ apply_pattern DaVinciVersion
 
 # Used packages. 
 #============================================================================
-# Stolen from Brunel v23r6
-#--- CMT and GaudiPolicy
-use  GaudiPolicy 	v5r15
  
-#--- External libraries (as defined in GAUDI_v14r5)
-use  ExternalLibs	v4r5
-use  AIDA		v3r300		-no_auto_imports
-use  CLHEP		v2r1810p0
-use  GSL		v2r14p0
-use  XERCES		v2r230p0
-use  CERNLIB 		v2r2002p1
-use  ROOT 		v2r31002p0
-use  PI			v1r112p1
-use  PCRE		v1r44
-use  UUID		v1r32
-use  SEAL		v1r134p0
-use  POOL		v1r163p0
-use  BOOST		v2r1302p0	-no_auto_imports
 
-#--- Gaudi libraries (from GAUDI_v14r5)
-use GaudiKernel         v15r3
-use GaudiSvc            v11r6p1
-use GaudiAlg            v7r2
-use GaudiTools          v8r1
-use GaudiAud            v6r4
-use GaudiGSL            v6r0
-use GaudiDb             v9r2
-use GaudiRootDb         v9r4
-use GaudiPoolDb         v1r6p1
-use GaudiObjDesc        v6r2p1
-use RootHistCnv         v9r1
-
-use  GaudiPython        v6r4
-
-#--- Histogram persistency
-use  HbookCnv           v14r1
-use  RootHistCnv    	v9r1
 
 #--- Geometry Database
 use  XmlDDDB		v22r1	 Det
-use  ParamFiles		v3r6	 $(LHCb_release_area)/PARAM -no_auto_imports
+use  ParamFiles		v3r6	 -no_auto_imports
 use  FieldMap           v4r5
 
 #--- LHCb libraries (from LHCB_v15r8)
@@ -116,6 +81,19 @@ use  Ks2PiPiSel         v1r2     Phys
 use  PhysSelections	v6r4     Phys
 
 use  PhysSelSys		v7r0     PhysSel
+
+#--- Gaudi libraries (from GAUDI_v14r5)
+use GaudiSvc            v*
+use GaudiAlg            v*
+use GaudiTools          v*
+use GaudiAud            v*
+use GaudiGSL            v*
+use GaudiRootDb         v*
+use GaudiPoolDb         v*
+use RootHistCnv         v*
+use  GaudiPython        v*
+use  HbookCnv           v*
+
 
 # Build DaVinci Application with standard executable
 # Note that user code is located in a component library (see details
