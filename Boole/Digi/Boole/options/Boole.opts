@@ -6,7 +6,7 @@
 //==============================================================
 #units "$STDOPTS/units.opts"
 
-ApplicationMgr.DLLs += { "GaudiAlg", "LHCbTools", "LHCbAlgs", "DigiAlg" };
+ApplicationMgr.DLLs += { "GaudiAlg", "LHCbTools", "LHCbAlgs" };
 
 // GaudiDb persistency - can be removed if only using POOL
 #include "$STDOPTS/RootDb.opts"
@@ -58,11 +58,14 @@ ApplicationMgr.ExtSvc += { "ParticlePropertySvc" };
 DeVelo.Design = 1;
 
 //--------------------------------------------------------------
-// Spillover, LHC background, Initialization (from DigiAlg DLL)
+// Spillover, LHC background, Initialization
 //--------------------------------------------------------------
+ApplicationMgr.DLLs += { "DigiAlg", "DAQEvent" };
 #include "$DIGIALGROOT/options/Spillover.opts"
 #include "$DIGIALGROOT/options/LHCBackground.opts"
-InitBooleSeq.Members += { "BooleInit" };
+InitBooleSeq.Members += { "LbAppInit/Boole" };
+InitBooleSeq.Members += { "CreateL1Buffer" };
+InitBooleSeq.Members += { "CreateRawBuffer" };
 
 //--------------------------------------------------------------
 // Subdetector algorithms

@@ -3,7 +3,7 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
-</PRE><H1><A NAME=v6r0>2004-06-23 Boole v6r0</A></H1><PRE>
+</PRE><H1><A NAME=v6r0>2004-06-28 Boole v6r0</A></H1><PRE>
 Development version
 
 - Modified functionality
@@ -26,6 +26,8 @@ Development version
   . Removed dependency on GaudiAud package
   . Removed dependency on Trg packages
   . Removed dependency on PYTHIA via HepMC (HepMC v4r121p0)
+  . Use new LbAppInit instead of BooleInit (LHCbAlgs v1r0)
+  . Use CreateL1Buffer and CreateRawBuffer (DAQEvent v4r4)
 
 - Bug fixes
   . Add protection for crazy MCHits in BuildMCTrackInfo (MCTools v1r6)

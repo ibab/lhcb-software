@@ -7,7 +7,7 @@ branches doc cmt job options
 set BOOLEOPTS  $(BOOLEROOT)/options
 
 #== Set the Boole version environment variable, read by BooleInit ==
-pattern BooleVersion path_append BOOLEVERS <version>
+pattern BooleVersion path_append APPVERSION <version>
 apply_pattern BooleVersion
 
 #-- CMT and GaudiPolicy
@@ -51,7 +51,7 @@ use LHCb	v16r0
 
 #-- BooleSys v6r0 packages
 
-use DigiAlg		v2r4	Digi
+use DigiAlg		v3r0	Digi
 use AsctToLinker        v1r2    Rec
 
 # L0 trigger
