@@ -19,7 +19,7 @@ use GeneratorModules    v14r0     Gen
 
 # GiGa stuff...
 use GiGa        	v17r1	Sim        
-use GiGaCnv     	v15r9	Sim
+use GiGaCnv     	v15r10	Sim
 use GiGaVisUI		v3r0	Sim
 
 use VisSvc              v3r3    Vis
