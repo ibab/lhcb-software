@@ -1,11 +1,11 @@
 package GaudiConf
-version v3r2
+version v4
 
 branches doc cmt options
 
 ignore_pattern package_stamps
 
-set STDOPTIONS ${GAUDICONFROOT}/options/Common.txt
+set STDOPTIONS ${GAUDICONFROOT}/options/Common.opts
 set STDOPTS    ${GAUDICONFROOT}/options
 
  

@@ -4,8 +4,8 @@
 //
 //==============================================================
 
-#include "$STDOPTS/Services.txt"
-#include "$STDOPTS/Dlls.txt"
+#include "$STDOPTS/Services.opts"
+#include "$STDOPTS/Dlls.opts"
 
 //==============================================================
 //

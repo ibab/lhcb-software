@@ -1,6 +1,10 @@
 package GaudiConf
 package manager: F.Ranjard
 
+! 20010306 - GaudiConf v4 (MC)
+  options/ - All files renamed with extension .opts
+
+!============================================================================= 
 ! 20010110 - GaudiConf v3r2 (Flr)
   Services.txt - add ParticlePropertySvc in the EXTSvc list.
 
