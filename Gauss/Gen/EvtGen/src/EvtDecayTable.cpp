@@ -42,6 +42,7 @@
 #include "EvtGenBase/EvtReport.hh"
 #include "EvtGenBase/EvtModelAlias.hh"
 #include "EvtGenBase/EvtRadCorr.hh"
+#include "EvtGenBase/EvtIncoherentMixing.hh"
 #include <vector>
 //static EvtModel modelist;
 
@@ -147,6 +148,58 @@ void EvtDecayTable::readDecayFile(const std::string dec_name){
       report(INFO,"EvtGen") 
 	<< "As requested, PHOTOS will be turned on."<<std::endl; 
     }
+    else if ( token == "yesIncoherentBsMixing" ) {
+      EvtIncoherentMixing::setBsMixing() ;
+
+      std::string name ;
+      int ierr ;
+      name = parser.getToken( itoken++ ) ;
+      std::string StringDeltams = symtable.Get( name , ierr ) ;
+
+      EvtIncoherentMixing::setdeltams( atof ( StringDeltams.c_str() ) ) ;
+      
+      name = parser.getToken( itoken++ ) ;
+      std::string StringDGammas = symtable.Get( name , ierr ) ;
+
+      EvtIncoherentMixing::setdGammas( atof ( StringDGammas.c_str() ) ) ;
+
+      report(INFO,"EvtGen")
+        << "As requested, Bs Mixing will be turned on " 
+        << "With deltams = " << EvtIncoherentMixing::getdeltams()  
+        << " And DGammas = " << EvtIncoherentMixing::getdGammas()
+        << std::endl ;
+    }
+    else if ( token == "noIncoherentBsMixing" ) {
+      EvtIncoherentMixing::unsetBsMixing() ;
+      report(INFO,"EvtGen")
+        << "As requested, Bs Mixing will be turned off" << std::endl;
+    }
+    else if ( token == "yesIncoherentB0Mixing" ) {
+      EvtIncoherentMixing::setB0Mixing() ;
+
+      std::string name ;
+      int ierr ;
+      name = parser.getToken( itoken++ ) ;
+      std::string StringDeltamd = symtable.Get( name , ierr ) ;
+      
+      EvtIncoherentMixing::setdeltamd( atof ( StringDeltamd.c_str() ) ) ;
+
+      name = parser.getToken( itoken++ ) ;
+      std::string StringDGammad = symtable.Get( name , ierr ) ;
+
+      EvtIncoherentMixing::setdGammad( atof ( StringDGammad.c_str() ) ) ;
+
+      report(INFO,"EvtGen")
+        << "As requested, B0 Mixing will be turned on " 
+        << "With deltamd = " << EvtIncoherentMixing::getdeltamd()  
+        << " And DGammad = " << EvtIncoherentMixing::getdGammad()
+        << std::endl ;
+    }
+    else if ( token == "noIncoherentB0Mixing" ) {
+      EvtIncoherentMixing::unsetB0Mixing() ;
+      report(INFO,"EvtGen")
+        << "As requested, B0 Mixing will be turned off" << std::endl;  
+    }    
     else if (token=="normalPhotos"){ 
       EvtRadCorr::setNormalRadCorr();
       report(INFO,"EvtGen") 

@@ -2,6 +2,10 @@ Package :EvtGen
 Package manager : Patrick Robbe and Witek Pokorski
 
 !===================== EvtGen v4r0 ======================================
+! 2003-10-10 - Patrick Robbe
+ - EvtPythia : do not update diquark masses in Pythia
+ - EvtIncoherentMixing : add incoherent B0/B0bar and Bs/Bsbar mixing. 
+
 ! 2003-10-09 - Patrick Robbe
  - Fixes in EvtParticle for B0s mixing
 

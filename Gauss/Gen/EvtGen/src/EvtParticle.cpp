@@ -52,7 +52,7 @@
 #include "EvtGenBase/EvtGenKine.hh"
 #include "EvtGenBase/EvtCPUtil.hh"
 #include "EvtGenBase/EvtParticleFactory.hh"
-
+#include "EvtGenBase/EvtIncoherentMixing.hh"
 
 EvtParticle::~EvtParticle() {}
 
@@ -344,11 +344,15 @@ void EvtParticle::decay(){
   //added by Lange Jan4,2000
   static EvtId BS0=EvtPDL::getId("B_s0");
   static EvtId BSB=EvtPDL::getId("anti-B_s0");  
+  static EvtId B0 =EvtPDL::getId("B0");
+  static EvtId B0B=EvtPDL::getId("anti-B0");  
   
-  if ( ( getId()==BS0 || getId()==BSB ) && ( ! isBsMixed() ) ) {
+  if ( ( getId()==BS0 || getId()==BSB ) 
+       && ( ! EvtIncoherentMixing::isBsMixed( p ) ) 
+       && ( EvtIncoherentMixing::doBsMixing() ) ) {
     double t;
     int mix;
-    EvtCPUtil::incoherentMix(getId(), t, mix);
+    EvtIncoherentMixing::incoherentBsMix(getId(), t, mix);
     setLifetime(t);
     
     if (mix) {
@@ -363,6 +367,39 @@ void EvtParticle::decay(){
       else{
         EvtVector4R p_init(EvtPDL::getMass(BS0),0.0,0.0,0.0);
         scalar_part->init(BS0,p_init);
+      }
+      
+      scalar_part->setLifetime(0);
+      
+      scalar_part->setDiagonalSpinDensity();      
+      
+      insertDaugPtr(0,scalar_part);
+      
+      _ndaug=1;
+      
+      p=scalar_part;      
+    }
+  }
+  else if ( ( getId()==B0 || getId()==B0B ) 
+            && ( ! EvtIncoherentMixing::isB0Mixed( p ) ) 
+            && ( EvtIncoherentMixing::doB0Mixing() ) ) {
+    double t;
+    int mix;
+    EvtIncoherentMixing::incoherentB0Mix(getId(), t, mix);
+    setLifetime(t);
+    
+    if (mix) {
+      
+      EvtScalarParticle* scalar_part;
+      
+      scalar_part=new EvtScalarParticle;
+      if (getId()==B0) {
+        EvtVector4R p_init(EvtPDL::getMass(B0B),0.0,0.0,0.0);
+        scalar_part->init(B0B,p_init);
+      }
+      else{
+        EvtVector4R p_init(EvtPDL::getMass(B0),0.0,0.0,0.0);
+        scalar_part->init(B0,p_init);
       }
       
       scalar_part->setLifetime(0);
@@ -1077,19 +1114,3 @@ void EvtParticle::makeDaughters( int ndaugstore, EvtId *id){
 
   } //else
 } //makeDaughters
-
-bool EvtParticle::isBsMixed ( ) 
-{ 
-  if ( ! ( getParent() ) ) return false ;
-  
-  static EvtId BS0=EvtPDL::getId("B_s0");
-  static EvtId BSB=EvtPDL::getId("anti-B_s0");
-  
-  if ( ( getId() != BS0 ) && ( getId() != BSB ) ) return false ;
-  
-  if ( ( getParent()->getId() == BS0 ) ||
-       ( getParent()->getId() == BSB ) ) return true ;
-  
-  return false ;
-}
-

@@ -1115,28 +1115,32 @@ void EvtPythia::pythiaInit(int dummy){
     
     // Keep the changes made by NBrook :
     // Update masses, width, ... in PYTHIA common
-
+    // Do Not update for diquarks (PR)
     int iipar ;
     for ( iipar = 0 ;
           iipar < EvtPDL::entries() ;
           iipar++ ) {
       ipar = EvtId( iipar , iipar ) ;
       int istdhep = EvtPDL::getStdHep( ipar ) ;
+
+      if ( ! diquark( abs( istdhep ) ) ) {
+
 #ifdef WIN32
-      lundkc = PYCOMP( &istdhep ) ;
+        lundkc = PYCOMP( &istdhep ) ;
 #else
-      lundkc = pycomp_( &istdhep ) ;
+        lundkc = pycomp_( &istdhep ) ;
 #endif
-      if ( 0 != lundkc ) {
-        mass  = EvtPDL::getMeanMass( ipar ) ;
-        width = EvtPDL::getWidth( ipar ) ;
-        maxwidth = mass - EvtPDL::getMinMass( ipar ) ;
-        ctau = EvtPDL::getctau( ipar ) ;
+        if ( 0 != lundkc ) {
+          mass  = EvtPDL::getMeanMass( ipar ) ;
+          width = EvtPDL::getWidth( ipar ) ;
+          maxwidth = mass - EvtPDL::getMinMass( ipar ) ;
+          ctau = EvtPDL::getctau( ipar ) ;
 #ifdef WIN32
-        EVTPYTHIAPART(&lundkc,&mass,&width,&maxwidth,&ctau) ;
+          EVTPYTHIAPART(&lundkc,&mass,&width,&maxwidth,&ctau) ;
 #else
-        evtpythiapart_(&lundkc,&mass,&width,&maxwidth,&ctau) ;
+          evtpythiapart_(&lundkc,&mass,&width,&maxwidth,&ctau) ;
 #endif
+        }
       }
     }
 
