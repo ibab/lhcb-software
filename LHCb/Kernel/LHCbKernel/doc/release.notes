@@ -2,6 +2,9 @@ Package LHCbKernel
 Package manager: M.Cattaneo
 Purpose: LHCb specific Kernel classes
 
+! 2003-11-23 - Chris Jones
+ - Add XML file for RichSmartID
+
 ! 2003-11-22 - Vanya BELYAEV 
 
  - Relations/RelationBase.h     add method "i_reserve" to reserve the number 
