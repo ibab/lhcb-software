@@ -1,10 +1,14 @@
+// $Id: SolidBase.cpp,v 1.3 2002-04-24 10:52:47 ibelyaev Exp $
 // ============================================================================
-/// CVS tag $Name: not supported by cvs2svn $  
+// CVS tag $Name: not supported by cvs2svn $  
 // ============================================================================
-/// $Log: not supported by cvs2svn $
-/// Revision 1.1  2001/08/09 16:48:01  ibelyaev
-/// update in interfaces and redesign of solids
-/// 
+// $Log: not supported by cvs2svn $
+// Revision 1.2  2001/08/13 09:51:36  ibelyaev
+// bug fix in 'reset' method
+//
+// Revision 1.1  2001/08/09 16:48:01  ibelyaev
+// update in interfaces and redesign of solids
+// 
 // ============================================================================
 /// GaudiKernel
 #include "GaudiKernel/StreamBuffer.h"
@@ -206,11 +210,12 @@ bool SolidBase::acceptInspector( IInspector* pI ) const
  */
 // ============================================================================
 unsigned int 
-SolidBase::intersectionTicks ( const HepPoint3D  & Point   ,         
-                               const HepVector3D & Vector  ,         
-                               const ISolid::Tick& tickMin ,         
-                               const ISolid::Tick& tickMax ,         
-                               ISolid::Ticks     & ticks   ) const 
+SolidBase::intersectionTicks 
+( const HepPoint3D  & Point   ,         
+  const HepVector3D & Vector  ,         
+  const ISolid::Tick& tickMin ,         
+  const ISolid::Tick& tickMax ,         
+  ISolid::Ticks     & ticks   ) const 
 {
   ///
   intersectionTicks( Point , Vector , ticks ); 
@@ -246,14 +251,19 @@ SolidBase::intersectionTicks ( const HepPoint3D  & Point   ,
  */
 // ============================================================================
 unsigned int 
-SolidBase::intersectionTicks ( const HepPoint3D  & /* Point */  ,         
-                               const HepVector3D & /* Vector */ ,         
-                               ISolid::Ticks     &    ticks     ) const 
+SolidBase::intersectionTicks 
+( const HepPoint3D  & /* Point */  ,         
+  const HepVector3D & /* Vector */ ,         
+  ISolid::Ticks     &    ticks     ) const 
 {
   ///  reset the output container 
   ticks.clear();
   ///  return container size 
   return ticks.size();
 };
+// ============================================================================
+
+// ============================================================================
+// The End 
 // ============================================================================
 

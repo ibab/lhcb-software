@@ -1,11 +1,15 @@
-/// ===========================================================================
-/// CVS tag $Name: not supported by cvs2svn $ 
-/// ===========================================================================
-/// $Log: not supported by cvs2svn $
-/// Revision 1.1  2001/08/09 16:47:58  ibelyaev
-/// update in interfaces and redesign of solids
-/// 
-/// ===========================================================================
+// $Id: SolidBase.h,v 1.3 2002-04-24 10:52:20 ibelyaev Exp $
+// ===========================================================================
+// CVS tag $Name: not supported by cvs2svn $ 
+// ===========================================================================
+// $Log: not supported by cvs2svn $
+// Revision 1.2  2001/08/13 09:51:36  ibelyaev
+// bug fix in 'reset' method
+//
+// Revision 1.1  2001/08/09 16:47:58  ibelyaev
+// update in interfaces and redesign of solids
+// 
+// ===========================================================================
 #ifndef DETDESC_SOLIDBASE_H 
 #define DETDESC_SOLIDBASE_H 1
 /// DetDesc 
@@ -61,9 +65,10 @@ public:
    *  @return the number of intersection points
    */
   virtual unsigned int 
-  intersectionTicks ( const HepPoint3D  & Point   ,         
-                      const HepVector3D & Vector  ,         
-                      ISolid::Ticks     & ticks   ) const ; 
+  intersectionTicks 
+  ( const HepPoint3D  & Point   ,         
+    const HepVector3D & Vector  ,         
+    ISolid::Ticks     & ticks   ) const ; 
   
   /** - calculate the intersection points("ticks") of the solid objects 
    *    with given line. 
@@ -88,11 +93,12 @@ public:
    *  @return the number of intersection points
    */
   virtual unsigned int 
-  intersectionTicks ( const HepPoint3D  & Point   ,         
-                      const HepVector3D & Vector  ,         
-                      const ISolid::Tick& tickMin ,         
-                      const ISolid::Tick& tickMax ,         
-                      ISolid::Ticks     & ticks   ) const ; 
+  intersectionTicks 
+  ( const HepPoint3D  & Point   ,         
+    const HepVector3D & Vector  ,         
+    const ISolid::Tick& tickMin ,         
+    const ISolid::Tick& tickMax ,         
+    ISolid::Ticks     & ticks   ) const ; 
   
   /** - query the interface 
    *  - implementation of IInterface abstract interface 
@@ -101,7 +107,8 @@ public:
    *  @param ppI placeholder for returned interface
    *  @return status code 
    */
-  virtual StatusCode queryInterface( const InterfaceID& ID , void** ppI );
+  virtual StatusCode queryInterface
+  ( const InterfaceID& ID , void** ppI );
   
   /** - increment the reference count of Interface instance
    *  - implementation of IInterface abstract interface 
@@ -198,6 +205,8 @@ protected:
 
 };
 
+/// ===========================================================================
+/// The End 
 /// ===========================================================================
 #endif ///< DETDESC_SOLIDBASE_H
 /// ===========================================================================

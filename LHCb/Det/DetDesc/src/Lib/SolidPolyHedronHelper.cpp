@@ -1,14 +1,18 @@
-/// ===========================================================================
-/// CVS tag $Name: not supported by cvs2svn $ 
-/// ===========================================================================
-/// $Log: not supported by cvs2svn $
-/// Revision 1.1  2001/08/09 16:48:02  ibelyaev
-/// update in interfaces and redesign of solids
-/// 
-/// ===========================================================================
+// $Id: SolidPolyHedronHelper.cpp,v 1.3 2002-04-24 10:52:56 ibelyaev Exp $ 
+// ===========================================================================
+// CVS tag $Name: not supported by cvs2svn $ 
+// ===========================================================================
+// $Log: not supported by cvs2svn $
+// Revision 1.2  2001/12/18 11:17:29  sponce
+// Bug fix in the code for general trapezoids.
+//
+// Revision 1.1  2001/08/09 16:48:02  ibelyaev
+// update in interfaces and redesign of solids
+// 
+// ===========================================================================
 #include "DetDesc/SolidPolyHedronHelper.h"
 
-/// ===========================================================================
+// ============================================================================
 /** @file SolidPolyHedronHelper.cpp 
  *
  *  Implementation file for class : SolidPolyHedronHelper
@@ -16,28 +20,28 @@
  * @author Vanya Belyaev Ivan.Belyaev@itep.ru
  * @date 06/08/2001 
  */
-/// ===========================================================================
+// ============================================================================
 
-/// ===========================================================================
+// ============================================================================
 /** standard constructor
  *  @param Name name of the solid object
  */
-/// ===========================================================================
+// ============================================================================
 SolidPolyHedronHelper::SolidPolyHedronHelper ( const std::string& Name )
   : SolidBase ( Name ) 
   , m_ph_planes() 
 {};
 
-/// ===========================================================================
+// ============================================================================
 /// destructor 
-/// ===========================================================================
+// ============================================================================
 SolidPolyHedronHelper::~SolidPolyHedronHelper() 
 { 
   reset() ;
   m_ph_planes.clear(); 
 };
 
-/// ===========================================================================
+// ============================================================================
 /** - check for the given 3D-point. 
  *    Point coordinated are in the local reference 
  *    frame of the solid.   
@@ -46,19 +50,19 @@ SolidPolyHedronHelper::~SolidPolyHedronHelper()
  *  @param point point (in local reference system of the solid)
  *  @return true if the point is inside the solid
  */
-/// ===========================================================================
+// ============================================================================
 bool SolidPolyHedronHelper::isInside ( const HepPoint3D& point ) const 
 {
   if( planes().empty() ) { return false; } 
   ///
-  PLANES::const_iterator Plane = planes().begin(); 
-  while( planes().end() != Plane ) 
+  for( PLANES::const_iterator Plane = planes().begin(); 
+       planes().end() != Plane ; ++Plane ) 
     { if( !inside( point , *Plane ) ) { return false; } } 
   ///
   return true ;  
 };
 
-/// ===========================================================================
+// ============================================================================
 /** - calculate the intersection points("ticks") of the solid objects 
  *    with given line. 
  *  -# Line is parametrized with parameter \a t :
@@ -78,19 +82,20 @@ bool SolidPolyHedronHelper::isInside ( const HepPoint3D& point ) const
  *  @return the number of intersection points
  */
 unsigned int 
-SolidPolyHedronHelper::intersectionTicks ( const HepPoint3D&  Point  ,       
-                                           const HepVector3D& Vector ,       
-                                           ISolid::Ticks   &   ticks  ) const
+SolidPolyHedronHelper::intersectionTicks 
+( const HepPoint3D&  Point  ,       
+  const HepVector3D& Vector ,       
+  ISolid::Ticks   &   ticks  ) const
 {
   /// clear the output container 
   ticks.clear(); 
   /// check for valid arguments 
   if( 0 == Vector.mag2() ) { return 0; } 
   /// loop over all faces 
-  PLANES::const_iterator iPlane = planes().begin();  
-  while( planes().end() != iPlane )  
+  for( PLANES::const_iterator iPlane = planes().begin();  
+       planes().end() != iPlane ; ++iPlane )
     {
-      const HepPlane3D& Plane = *iPlane++ ; 
+      const HepPlane3D& Plane = *iPlane ; 
       double vn =  Vector*Plane.normal() ; 
       if(  0 == vn ) { continue ; } 
       ISolid::Tick tick = -1. * ( Plane.distance( Point ) / vn ) ; 
@@ -103,7 +108,7 @@ SolidPolyHedronHelper::intersectionTicks ( const HepPoint3D&  Point  ,
                                            *this  );
 };
 
-/// ===========================================================================
+// ============================================================================
 /**  add a face/plane given with 3 points
  *  @see addFace( const HepPoint3D& , const HepPoint3D& ,
  *                const HepPoint3D& , const HepPoint3D& )
@@ -112,10 +117,11 @@ SolidPolyHedronHelper::intersectionTicks ( const HepPoint3D&  Point  ,
  *  @param Point3  the third  3D-point of the plane 
  *  @return "false" if 3 points belongs to one line 
  */
-/// ===========================================================================
-bool SolidPolyHedronHelper::addFace( const HepPoint3D& Point1 , 
-                                     const HepPoint3D& Point2 , 
-                                     const HepPoint3D& Point3 ) 
+// ============================================================================
+bool SolidPolyHedronHelper::addFace
+( const HepPoint3D& Point1 , 
+  const HepPoint3D& Point2 , 
+  const HepPoint3D& Point3 ) 
 {
   /// check for 3 points on the same line  
   Hep3Vector p1( Point1 ) , p2( Point2 - Point1 ) , p3( Point3 - Point1); 
@@ -136,7 +142,7 @@ bool SolidPolyHedronHelper::addFace( const HepPoint3D& Point1 ,
   ///
 };
 
-/// ===========================================================================
+// ============================================================================
 /**  add a face/plane given with 4 points
  *  @see addFace( const HepPoint3D& , const HepPoint3D& ,
  *                const HepPoint3D& )
@@ -147,11 +153,12 @@ bool SolidPolyHedronHelper::addFace( const HepPoint3D& Point1 ,
  *  @exception SolidException  if 4 pointd do not define the place
  *  @return "false" if 3 points belongs to one line 
  */
-/// ===========================================================================
-bool SolidPolyHedronHelper::addFace( const HepPoint3D& Point1 , 
-                                     const HepPoint3D& Point2 , 
-                                     const HepPoint3D& Point3 , 
-                                     const HepPoint3D& Point4 ) 
+// ============================================================================
+bool SolidPolyHedronHelper::addFace
+( const HepPoint3D& Point1 , 
+  const HepPoint3D& Point2 , 
+  const HepPoint3D& Point3 , 
+  const HepPoint3D& Point4 ) 
 {
   ///
   const HepPoint3D cPoint( ( Point1 + Point2 + Point3 + Point4 ) * 0.25 ) ; 
@@ -181,6 +188,6 @@ bool SolidPolyHedronHelper::addFace( const HepPoint3D& Point1 ,
   ///
 };
 
-/// ===========================================================================
+// ============================================================================
 
 

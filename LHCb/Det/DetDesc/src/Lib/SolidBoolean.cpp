@@ -1,12 +1,16 @@
-/// ===========================================================================
-/// CVS tag $Name: not supported by cvs2svn $ 
-/// ===========================================================================
-/// $Log: not supported by cvs2svn $
-/// Revision 1.5  2001/08/09 16:48:02  ibelyaev
-/// update in interfaces and redesign of solids
-/// 
-/// ===========================================================================
-/// STD & STL 
+// $Id: SolidBoolean.cpp,v 1.7 2002-04-24 10:52:52 ibelyaev Exp $
+// ===========================================================================
+// CVS tag $Name: not supported by cvs2svn $ 
+// ===========================================================================
+// $Log: not supported by cvs2svn $
+// Revision 1.6  2001/08/13 09:51:36  ibelyaev
+// bug fix in 'reset' method
+//
+// Revision 1.5  2001/08/09 16:48:02  ibelyaev
+// update in interfaces and redesign of solids
+// 
+// ===========================================================================
+// STD & STL 
 #include <functional>
 #include <algorithm>
 ///@{
@@ -25,7 +29,7 @@
 #include   "DetDesc/Solid.h" 
 ///@}
 
-/// ===========================================================================
+// ============================================================================
 /** @file SolidBoolean.cpp 
  *
  *  implementation file for class SolidBoolean
@@ -33,14 +37,14 @@
  *  @author Vanya Belyaev Ivan.Belyaev@itep.ru  
  *  @date   xx/xx/xxxx
  */
-/// ===========================================================================
+// ============================================================================
 
-/// ===========================================================================
+// ============================================================================
 /** constructor - "main"("first") solid is mandatory! 
  *  @param name name of the solid 
  *  @param solid pointer to the "first"/"main" solid
  */
-/// ===========================================================================
+// ============================================================================
 SolidBoolean::SolidBoolean( const std::string& name  , 
                             ISolid*            solid )
   : SolidBase     ( name  )
@@ -51,20 +55,20 @@ SolidBoolean::SolidBoolean( const std::string& name  ,
     { throw SolidException("SolidBoolean:: ISolid* points to NULL!"); }
 };
 
-/// ===========================================================================
+// ============================================================================
 /** constructor - "main"("first") solid is mandatory! 
  *  @param name name of the solid 
  */
-/// ===========================================================================
+// ============================================================================
 SolidBoolean::SolidBoolean( const std::string& name  ) 
   : SolidBase     ( name  )
   , m_sb_first    (  0    )
   , m_sb_childrens(       )
 {};
 
-/// ===========================================================================
+// ============================================================================
 /// destructor 
-/// ===========================================================================
+// ============================================================================
 SolidBoolean::~SolidBoolean()
 {
   /// reset the solid;
@@ -78,10 +82,10 @@ SolidBoolean::~SolidBoolean()
   if ( 0 != m_sb_first  ) { delete m_sb_first ; m_sb_first = 0; }
 };
 
-/// ===========================================================================
+// ============================================================================
 /** reset to the initial ("after constructor") state
  */
-/// ===========================================================================
+// ============================================================================
 ISolid* SolidBoolean::reset() 
 {
   SolidBase::reset();
@@ -91,13 +95,13 @@ ISolid* SolidBoolean::reset()
   return this;
 };  
 
-/// ===========================================================================
+// ============================================================================
 /** add child to daughter container 
  *  @param chidl pointer to solid 
  *  @param mtrx  pointer to transformation 
  *  @return status code 
  */
-/// ===========================================================================
+// ============================================================================
 StatusCode SolidBoolean::addChild( ISolid*                  child , 
                                    const HepTransform3D*    mtrx  ) 
 {
@@ -108,13 +112,13 @@ StatusCode SolidBoolean::addChild( ISolid*                  child ,
   return StatusCode::SUCCESS; 
 };
 
-/// ===========================================================================
+// ============================================================================
 /** add child to daughter container 
  *  @param pointer to solid 
  *  @param position position 
  *  @param rotation rotation 
  */
-/// ===========================================================================
+// ============================================================================
 StatusCode SolidBoolean::addChild   ( ISolid*               child    , 
                                       const HepPoint3D&     position , 
                                       const HepRotation&    rotation )
@@ -126,12 +130,12 @@ StatusCode SolidBoolean::addChild   ( ISolid*               child    ,
   return StatusCode::SUCCESS; 
 };
 
-/// ===========================================================================
+// ============================================================================
 /** serialization for reading
  *  @param sb reference to stream buffer
  *  @return reference to stream buffer
  */
-/// ===========================================================================
+// ============================================================================
 StreamBuffer& SolidBoolean::serialize( StreamBuffer& s ) 
 {
   reset();
@@ -165,12 +169,12 @@ StreamBuffer& SolidBoolean::serialize( StreamBuffer& s )
   return s;
 };
 
-/// ===========================================================================
+// ============================================================================
 /** serialization for writing
  *  @param sb reference to stream buffer
  *  @return reference to stream buffer
  */
-/// ===========================================================================
+// ============================================================================
 StreamBuffer& SolidBoolean::serialize( StreamBuffer& s ) const 
 {
   /// serialize the base class
@@ -190,7 +194,7 @@ StreamBuffer& SolidBoolean::serialize( StreamBuffer& s ) const
   return s;
 };
 
-/// ===========================================================================
+// ============================================================================
 /** calculate the intersection points("ticks") with a given line.
  *  Input - line, paramterised by  x_vect = Point + Vector * T
  *  "tick" is just a value of T, at which the intersection occurs
@@ -199,11 +203,12 @@ StreamBuffer& SolidBoolean::serialize( StreamBuffer& s ) const
  *  @param ticks output container of "Ticks"
  *  @return the number of intersection points (=size of Ticks container)
  */
-/// ===========================================================================
+// ============================================================================
 unsigned int 
-SolidBoolean::intersectionTicks ( const HepPoint3D & point  ,      
-                                  const HepVector3D& vect   ,      
-                                  ISolid::Ticks    & ticks  ) const
+SolidBoolean::intersectionTicks 
+( const HepPoint3D & point  ,      
+  const HepVector3D& vect   ,      
+  ISolid::Ticks    & ticks  ) const
 {
   ///
   ticks.clear();
@@ -227,7 +232,7 @@ SolidBoolean::intersectionTicks ( const HepPoint3D & point  ,
   return SolidTicks::RemoveAdjancentTicks( ticks , point , vect , *this );  
 };
 
-/// ===========================================================================
+// ============================================================================
 /** calculate the intersection points("ticks") with a given line.
  *  Input - line, paramterised by  x_vect = Point + Vector * T
  *  "tick" is just a value of T, at which the intersection occurs
@@ -239,13 +244,14 @@ SolidBoolean::intersectionTicks ( const HepPoint3D & point  ,
  *  @return the number of intersection points (=size of Ticks container)
  *  between tickMin and tickMax
  */
-/// ===========================================================================
+// ============================================================================
 unsigned int 
-SolidBoolean::intersectionTicks ( const HepPoint3D  & point   ,
-                                  const HepVector3D & vect    ,
-                                  const ISolid::Tick& tickMin , 
-                                  const ISolid::Tick& tickMax , 
-                                  ISolid::Ticks     & ticks   ) const 
+SolidBoolean::intersectionTicks 
+( const HepPoint3D  & point   ,
+  const HepVector3D & vect    ,
+  const ISolid::Tick& tickMin , 
+  const ISolid::Tick& tickMax , 
+  ISolid::Ticks     & ticks   ) const 
 {
   ///
   intersectionTicks( point , vect , ticks ); 
@@ -255,12 +261,12 @@ SolidBoolean::intersectionTicks ( const HepPoint3D  & point   ,
                                       tickMin , tickMax , *this );  
 };
 
-/// ===========================================================================
+// ============================================================================
 /** printout to STD/STL stream
  *  @param os STD/STL stream
  *  @return reference to the stream
  */
-/// ===========================================================================
+// ============================================================================
 std::ostream& SolidBoolean::printOut( std::ostream& os ) const 
 {
   /// printout the base class 
@@ -268,12 +274,12 @@ std::ostream& SolidBoolean::printOut( std::ostream& os ) const
   return os;
 };
 
-/// ===========================================================================
+// ============================================================================
 /** printout to Gaudi  stream
  *  @param os Gaudi stream
  *  @return reference to the stream
  */
-/// ===========================================================================
+// ============================================================================
 MsgStream&    SolidBoolean::printOut( MsgStream&    os ) const 
 {
   /// printout the base class 
@@ -281,4 +287,4 @@ MsgStream&    SolidBoolean::printOut( MsgStream&    os ) const
   return os;
 };
 
-/// ===========================================================================
+// ============================================================================

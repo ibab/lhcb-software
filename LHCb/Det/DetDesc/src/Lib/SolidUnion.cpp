@@ -1,11 +1,15 @@
-/// ===========================================================================
-/// CVS tag $Name: not supported by cvs2svn $ 
-/// ===========================================================================
-/// $Log: not supported by cvs2svn $
-/// Revision 1.4  2001/08/09 16:48:03  ibelyaev
-/// update in interfaces and redesign of solids
-///
-/// ===========================================================================
+// $Id: SolidUnion.cpp,v 1.6 2002-04-24 10:53:02 ibelyaev Exp $ 
+// ===========================================================================
+// CVS tag $Name: not supported by cvs2svn $ 
+// ===========================================================================
+// $Log: not supported by cvs2svn $
+// Revision 1.5  2001/08/09 18:13:38  ibelyaev
+// modification for solid factories
+//
+// Revision 1.4  2001/08/09 16:48:03  ibelyaev
+// update in interfaces and redesign of solids
+//
+// ===========================================================================
 ///@{
 /** STD & STL  */
 #include <iostream> 

@@ -1,13 +1,17 @@
+// $Id: SolidChild.cpp,v 1.9 2002-04-24 10:52:54 ibelyaev Exp $ 
 // ============================================================================
-/// CVS tag $Name: not supported by cvs2svn $
+// CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
-/// $Log: not supported by cvs2svn $
-/// Revision 1.7  2001/08/09 18:13:37  ibelyaev
-/// modification for solid factories
-///
-/// Revision 1.6  2001/08/09 16:48:02  ibelyaev
-/// update in interfaces and redesign of solids
-/// 
+// $Log: not supported by cvs2svn $
+// Revision 1.8  2001/08/13 09:51:36  ibelyaev
+// bug fix in 'reset' method
+//
+// Revision 1.7  2001/08/09 18:13:37  ibelyaev
+// modification for solid factories
+//
+// Revision 1.6  2001/08/09 16:48:02  ibelyaev
+// update in interfaces and redesign of solids
+// 
 // ============================================================================
 /// CLHEP
 #include "CLHEP/Geometry/Transform3D.h" 
@@ -203,9 +207,10 @@ MsgStream&    SolidChild::printOut     ( MsgStream&    os ) const
  */
 // =============================================================================
 unsigned int 
-SolidChild::intersectionTicks ( const HepPoint3D&  Point  ,
-                                const HepVector3D& Vector ,
-                                ISolid::Ticks&     ticks  ) const
+SolidChild::intersectionTicks 
+( const HepPoint3D&  Point  ,
+  const HepVector3D& Vector ,
+  ISolid::Ticks&     ticks  ) const
 {
   return solid()->
     intersectionTicks(  simple() ? Point  : matrix() * Point  , 

@@ -1,24 +1,29 @@
-/// ===========================================================================
-/// CVS tag $Name: not supported by cvs2svn $ 
-/// ===========================================================================
-/// $Log: not supported by cvs2svn $ 
-/// ===========================================================================
+// $Id: SolidTicks.h,v 1.7 2002-04-24 10:52:27 ibelyaev Exp $ 
+// ===========================================================================
+// CVS tag $Name: not supported by cvs2svn $ 
+// ===========================================================================
+// $Log: not supported by cvs2svn $
+// Revision 1.6  2001/08/09 16:47:59  ibelyaev
+// update in interfaces and redesign of solids
+// 
+// ===========================================================================
 #ifndef     DETDESC_SOLIDTICKS_H
 #define     DETDESC_SOLIDTICKS_H 1 
-///@{ 
 /** STD & STL includes */
 #include <cmath>
 #include <functional>
 #include <algorithm>
-///@} 
-///@{ 
 /** CLHEP includes */ 
 #include "CLHEP/Geometry/Point3D.h"
 #include "CLHEP/Geometry/Vector3D.h"
 #include "CLHEP/Geometry/Plane3D.h"
-///@} 
 /** DetDesc includes */ 
 #include "DetDesc/ISolid.h" 
+
+/** @file SolidTicks.h
+ *  @author      Vanya Belyaev   Ivan.Belyaev@itep.ru 
+ *  @date        10.02.2000 
+ */
 
 /** @namespace SolidTicks SolidTicks.h "DetDesc/SolidTicks.h"
  * 
@@ -32,7 +37,11 @@
 
 namespace SolidTicks
 {
-  /** Sort Ticks, eliminate duplicates and remove all adjancent ticks 
+  /** @fn RemoveAdjancentTicks
+   * 
+   *  Sort Ticks, eliminate duplicates and remove all adjancent ticks 
+   *  @author      Vanya Belyaev   Ivan.Belyaev@itep.ru 
+   *  @date        10.02.2000 
    *  @see ISolid 
    *  @param ticks   container of "ticks" (unsorted!) 
    *  @param point   point for line perametrisation 
@@ -42,25 +51,26 @@ namespace SolidTicks
    */
   template <class SOLID>
   inline unsigned int  
-  RemoveAdjancentTicks( ISolid::Ticks     & ticks , 
-                        const HepPoint3D  & point , 
-                        const HepVector3D & vect  , 
-                        const SOLID       & solid )
+  RemoveAdjancentTicks
+  ( ISolid::Ticks     & ticks , 
+    const HepPoint3D  & point , 
+    const HepVector3D & vect  , 
+    const SOLID       & solid )
   {
-    /// (1) sort container  
+    // (1) sort container  
     std::sort( ticks.begin() , ticks.end() ) ; 
-    /// (2) eliminate duplicates and (3) shrink container 
+    // (2) eliminate duplicates and (3) shrink container 
     ticks.erase( std::unique( ticks.begin() , ticks.end() )  , ticks.end() ); 
     { /// no adjancent ticks! 
       if     ( ticks.size() <  2 ) { ticks.clear() ; return 0 ; } ///< RETURN
       else if( ticks.size() == 2 ) 
-	{
-	  ISolid::Tick tick1 = *( ticks.begin ()  ) ; 
-	  ISolid::Tick tick2 = *( ticks.rbegin()  ) ;
-	  ISolid::Tick tick  = 0.5 * ( tick1 + tick2 ) ;  
-	  if( solid.isInside( point + vect * tick ) ) { return 2 ; }///<RETURN 
-	  else                        { ticks.clear() ; return 0 ; }///<RETURN 
-	}  
+        {
+          ISolid::Tick tick1 = *( ticks.begin ()  ) ; 
+          ISolid::Tick tick2 = *( ticks.rbegin()  ) ;
+          ISolid::Tick tick  = 0.5 * ( tick1 + tick2 ) ;  
+          if( solid.isInside( point + vect * tick ) ) { return 2 ; }///<RETURN 
+          else                        { ticks.clear() ; return 0 ; }///<RETURN 
+        }  
       /// perform removing of adjancent  ticks
       std::vector<unsigned int> tmp ; 
       ISolid::Tick tickNext = 0.0   ;
@@ -69,32 +79,32 @@ namespace SolidTicks
       bool         boolNext = true  ; 
       for ( ISolid::Ticks::iterator it = ticks.begin() ; 
             it != ticks.end() ; ++it ) 
-	{
-	  /// the last point is to be treated in a specific way
-	  if     ( ticks.end   () != it + 1 ) 
-	    { tickNext = 0.5 * ( (*it) + *(it+1) ) ; 
+        {
+          /// the last point is to be treated in a specific way
+          if     ( ticks.end   () != it + 1 ) 
+            { tickNext = 0.5 * ( (*it) + *(it+1) ) ; 
             boolNext = solid.isInside( point + vect * tickNext );  }  
-	  /// get the index 
-	  unsigned int index = it - ticks.begin();                       
-	  /**  to write the last  tick it is enought 
+          /// get the index 
+          unsigned int index = it - ticks.begin();                       
+          /**  to write the last  tick it is enought 
            *   to have the previous interval "inside" 
            */
-	  if      ( ticks.end  () == it + 1 ) 
+          if      ( ticks.end  () == it + 1 ) 
             { if( !boolPrev             ) { tmp.push_back( index ) ; } }
-	  /** to write the first tick it is enought 
+          /** to write the first tick it is enought 
            *  to have the first    interval "inside" 
            */
           else if ( ticks.begin() == it     ) 
             { if( !boolNext             ) { tmp.push_back( index ) ; } }
-	  /**  to write the "regular" tick, it should 
+          /**  to write the "regular" tick, it should 
            *   separate 2 different zones! 
            */
-	  else                                
+          else                                
             { if(  boolPrev == boolNext ) { tmp.push_back( index ) ; } }
-	  ///
-	  boolPrev = boolNext; 
+          ///
+          boolPrev = boolNext; 
           tickPrev = tickNext;
-	}
+        }
       ///
       std::vector<unsigned int>::reverse_iterator cri = tmp.rbegin();
       while( cri != tmp.rend() ) { ticks.erase( ticks.begin() + *cri++ );  }
@@ -104,7 +114,11 @@ namespace SolidTicks
     return ticks.size();
   }
   
-  /** Sort Ticks, eliminate duplicates and remove all adjancent ticks 
+  /** @fn RemoveAdjancentTicks
+   *
+   *  Sort Ticks, eliminate duplicates and remove all adjancent ticks 
+   *  @author      Vanya Belyaev   Ivan.Belyaev@itep.ru 
+   *  @date        10.02.2000 
    *  @see ISolid 
    *  @param ticks   container of "ticks" (sorted!) 
    *  @param point   point for line perametrisation 
@@ -116,12 +130,13 @@ namespace SolidTicks
    */
   template <class SOLID>
   inline unsigned int  
-  RemoveAdjancentTicks( ISolid::Ticks      & ticks   ,
-                        const HepPoint3D   & point   , 
-                        const HepVector3D  & vect    , 
-                        const ISolid::Tick & tickMin , 
-                        const ISolid::Tick & tickMax , 
-                        const SOLID        & solid   )
+  RemoveAdjancentTicks
+  ( ISolid::Ticks      & ticks   ,
+    const HepPoint3D   & point   , 
+    const HepVector3D  & vect    , 
+    const ISolid::Tick & tickMin , 
+    const ISolid::Tick & tickMax , 
+    const SOLID        & solid   )
   {
     ///
     if( tickMin >= tickMax ) { ticks.clear(); return 0 ; } /// RETURN !!!
@@ -219,7 +234,10 @@ namespace SolidTicks
     ///
   }
 
-  /** solving the quadratic equation:  a*x*x + b*x + c = 0; 
+  /** @fn SolveQuadraticEquation
+   *  solving the quadratic equation:  a*x*x + b*x + c = 0; 
+   *  @author      Vanya Belyaev   Ivan.Belyaev@itep.ru 
+   *  @date        10.02.2000 
    *  @param a  equation parameter
    *  @param b  equation parameter 
    *  @param c  equation parameter 
@@ -227,10 +245,11 @@ namespace SolidTicks
    */
   template < class OUTPUTTYPE > 
   inline unsigned int 
-  SolveQuadraticEquation( const double a   , 
-                          const double b   , 
-                          const double c   ,
-                          OUTPUTTYPE   out ) 
+  SolveQuadraticEquation
+  ( const double a   , 
+    const double b   , 
+    const double c   ,
+    OUTPUTTYPE   out ) 
   {
     if( 0 == a ) /// it is a linear equation:  b*x + c = 0 
       {
@@ -252,8 +271,11 @@ namespace SolidTicks
     return 0 == d ? 1 : 2;            // RETURN !!! 
   };
   
-  /** find intersection ticks for the line parametrized as 
+  /** @fn LineIntersectsTheSphere
+   *  find intersection ticks for the line parametrized as 
    *  Point + Vector * Tick  with sphere of radius Radius
+   *  @author      Vanya Belyaev   Ivan.Belyaev@itep.ru 
+   *  @date        10.02.2000 
    *  @param point  point for line parametrisation 
    *  @param vect   vector along the line 
    *  @param radius  sphere radius 
@@ -262,14 +284,15 @@ namespace SolidTicks
    */
   template < class OUTPUTTYPE > 
   inline unsigned int  
-  LineIntersectsTheSphere( const HepPoint3D  & point  , 
-                           const HepVector3D & vect   , 
-                           const double        radius ,
-                           OUTPUTTYPE          out    )
+  LineIntersectsTheSphere
+  ( const HepPoint3D  & point  , 
+    const HepVector3D & vect   , 
+    const double        radius ,
+    OUTPUTTYPE          out    )
   {
-    /// sphere with non-positive radius is not able to intersect the line! 
+    // sphere with non-positive radius is not able to intersect the line! 
     if( radius <= 0 ) { return 0 ; } 
-    /// line with null direction vector does not  intersect the sphere! 
+    // line with null direction vector does not  intersect the sphere! 
     double v2 = vect.mag2(); 
     if( v2 <= 0     ) { return 0 ; }
     double p2 = point.mag2()    ; 
@@ -285,8 +308,11 @@ namespace SolidTicks
     return SolidTicks::SolveQuadraticEquation( a , b , c , out );
   };
   
-  /** find intersection ticks for the line parametrized 
+  /** @fn LineIntersectsTheCylinder 
+   *  find intersection ticks for the line parametrized 
    *  as Point + Vector * Tick with cylinder of radius Radius
+   *  @author      Vanya Belyaev   Ivan.Belyaev@itep.ru 
+   *  @date        10.02.2000 
    *  @param point  point for line parametrisation 
    *  @param vect    vector along the line 
    *  @param radius  cylinder radius 
@@ -320,8 +346,11 @@ namespace SolidTicks
     return SolidTicks::SolveQuadraticEquation( a , b , c , out );  
   };
   
-  /** find intersection ticks for the line parametrized 
+  /** @fn LineIntersectsTheX
+   *  find intersection ticks for the line parametrized 
    *  as Point + Vector * Tick with x-plane x=X
+   *  @author      Vanya Belyaev   Ivan.Belyaev@itep.ru 
+   *  @date        10.02.2000 
    *  @param point  point for line parametrisation 
    *  @param vect    vector along the line 
    *  @param X       x-parameter
@@ -344,8 +373,11 @@ namespace SolidTicks
     return 1;      
   };
 
-  /** find intersection ticks for the line 
+  /** @fn LineIntersectsTheY
+   *  find intersection ticks for the line 
    *  parametrized as Point + Vector * Tick with y-plane y=Y 
+   *  @author      Vanya Belyaev   Ivan.Belyaev@itep.ru 
+   *  @date        10.02.2000 
    *  @param  point   point for line parametrisation 
    *  @param  vect    vector along the line 
    *  @param  Y       y-parameter
@@ -368,8 +400,11 @@ namespace SolidTicks
     return 1;      
   };
   
-  /** find intersection ticks for the line 
+  /** @fn LineIntersectsTheZ
+   *  find intersection ticks for the line 
    *  parametrized as Point + Vector * Tick with z-plane z=Z 
+   *  @author      Vanya Belyaev   Ivan.Belyaev@itep.ru 
+   *  @date        10.02.2000 
    *  @param  point   point for line parametrisation 
    *  @param  vect    vector along the line 
    *  @param  Z       z-parameter
@@ -378,10 +413,11 @@ namespace SolidTicks
    */
   template < class OUTPUTTYPE > 
   inline unsigned int  
-  LineIntersectsTheZ( const HepPoint3D & point  , 
-                      const HepVector3D& vect   , 
-                      const double       Z      ,
-                      OUTPUTTYPE         out    )
+  LineIntersectsTheZ
+  ( const HepPoint3D & point  , 
+    const HepVector3D& vect   , 
+    const double       Z      ,
+    OUTPUTTYPE         out    )
     
   {    
     /**  line with null vector in Z-direction is 
@@ -392,8 +428,11 @@ namespace SolidTicks
     return 1;      
   };
 
-  /** find intersection ticks for the line parametrized 
+  /** @fn LineIntersectsThePhi
+   *  find intersection ticks for the line parametrized 
    *  as Point + Vector * Tick  with half-plane phi=Phi
+   *  @author      Vanya Belyaev   Ivan.Belyaev@itep.ru 
+   *  @date        10.02.2000 
    *  @param  point   point for line parametrisation 
    *  @param  vect    vector along the line 
    *  @param  Phi     phi-parameter
@@ -402,10 +441,11 @@ namespace SolidTicks
    */
   template < class OUTPUTTYPE > 
   inline unsigned int  
-  LineIntersectsThePhi( const HepPoint3D  & point  , 
-                        const HepVector3D & vect   , 
-                        const double        Phi    ,
-                        OUTPUTTYPE          out    )
+  LineIntersectsThePhi
+  ( const HepPoint3D  & point  , 
+    const HepVector3D & vect   , 
+    const double        Phi    ,
+    OUTPUTTYPE          out    )
     
   {
     const double sinphi = sin( Phi ) ; 
@@ -416,8 +456,11 @@ namespace SolidTicks
     return 1; 
   };
   
-  /** find intersection ticks for the line parametrized 
+  /** @fn LineIntersectsTheTheta
+   *  find intersection ticks for the line parametrized 
    *  as Point + Vector * Tick  with cone theta=Theta 
+   *  @author      Vanya Belyaev   Ivan.Belyaev@itep.ru 
+   *  @date        10.02.2000 
    *  @param  point   point for line parametrisation 
    *  @param  vect    vector along the line 
    *  @param  Theta     Theta-parameter
@@ -425,10 +468,12 @@ namespace SolidTicks
    *  @return number  of intersections    
    */
   template < class OUTPUTTYPE > 
-  inline unsigned int  LineIntersectsTheTheta( const HepPoint3D & point  , 
-					       const HepPoint3D & vect   , 
-					       const double       Theta  ,
-					       OUTPUTTYPE         out    )
+  inline unsigned int  
+  LineIntersectsTheTheta
+  ( const HepPoint3D & point  , 
+    const HepPoint3D & vect   , 
+    const double       Theta  ,
+    OUTPUTTYPE         out    )
     
   { 
     /** it is equivalent to solve the equation
@@ -460,8 +505,11 @@ namespace SolidTicks
   };
   
   
-  /** find intersection ticks for the line parametrized 
+  /** @fn LineIntersectsTheCone 
+   *  find intersection ticks for the line parametrized 
    *  as Point + Vector * Tick with conical surface
+   *  @author      Vanya Belyaev   Ivan.Belyaev@itep.ru 
+   *  @date        10.02.2000 
    *  @param  point   point for line parametrisation 
    *  @param  vect    vector along the line 
    *  @param  r1      cone-parameter
@@ -473,13 +521,14 @@ namespace SolidTicks
   */ 
   template < class OUTPUTTYPE > 
   inline unsigned int  
-  LineIntersectsTheCone( const HepPoint3D  & point  , 
-                         const HepVector3D & vect   , 
-                         const double        r1     ,
-                         const double        r2     ,
-                         const double        z1     ,
-                         const double        z2     ,
-                         OUTPUTTYPE          out    )
+  LineIntersectsTheCone
+  ( const HepPoint3D  & point  , 
+    const HepVector3D & vect   , 
+    const double        r1     ,
+    const double        r2     ,
+    const double        z1     ,
+    const double        z2     ,
+    OUTPUTTYPE          out    )
     
   {
     /** it is equivalent to the equation
@@ -509,9 +558,11 @@ namespace SolidTicks
   
 }; ///< end of namespace SolidTicks
 
-/// ===========================================================================
+// ============================================================================
+/// The End 
+// ============================================================================
 #endif   ///<   DETDESC_SOLIDTICKS_H
-/// ===========================================================================
+// ============================================================================
 
 
 

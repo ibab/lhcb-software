@@ -1,22 +1,21 @@
-/// ===========================================================================
-/// CVS tag $Name: not supported by cvs2svn $
-/// ===========================================================================
-/// $Log: not supported by cvs2svn $
-/// Revision 1.4  2001/08/09 16:47:57  ibelyaev
-/// update in interfaces and redesign of solids
-///
-/// ===========================================================================
+// $Id: ISolid.h,v 1.6 2002-04-24 10:52:08 ibelyaev Exp $ 
+// ===========================================================================
+// CVS tag $Name: not supported by cvs2svn $
+// ===========================================================================
+// $Log: not supported by cvs2svn $
+// Revision 1.5  2001/08/13 09:51:35  ibelyaev
+// bug fix in 'reset' method
+//
+// Revision 1.4  2001/08/09 16:47:57  ibelyaev
+// update in interfaces and redesign of solids
+//
+// ===========================================================================
 #ifndef DETDESC_ISOLID_H
 #define DETDESC_ISOLID_H 1
 /// STD & STL
 #include  <iostream>
 #include  <string>
 #include  <vector>
-#if defined(__GNUC__) &&  ( __GNUC__ == 2 &&  __GNUC_MINOR__ == 91 )
-#include  <vector>
-#else
-#include  <deque>
-#endif
 /// Gaudi Kernel
 #include "GaudiKernel/ISerialize.h"
 #include "GaudiKernel/IInspectable.h"
@@ -28,7 +27,7 @@ class HepVector3D;       ///< CLHEP
 class StreamBuffer;      ///< GaudiKernel
 
 /// Declaration of the interface ID ( interface id, major & minor versions)
-static const InterfaceID IID_ISolid( 150 , 3 , 0 );
+static const InterfaceID IID_ISolid( "ISolid" , 4 , 0 );
 
 /** @interface ISolid ISolid.h "DetDesc/ISolid.h"
  *
@@ -39,22 +38,17 @@ static const InterfaceID IID_ISolid( 150 , 3 , 0 );
  *  @date   xx/xx/xxxx 
  */
 
-class ISolid : public virtual ISerialize    ,
+class ISolid : public virtual IInterface   ,
+               public virtual ISerialize   ,
                public virtual IInspectable
 {
 public:
   
-  //@{
   /** useful type definition for dealing 
    *  with intersections of the solid and the line 
    */
   typedef double             Tick  ;
-#if defined (__GNUC__) && ( __GNUC__ == 2 && __GNUC_MINOR__ == 91 )
   typedef std::vector<Tick>  Ticks ;
-#else
-  typedef std::deque<Tick>   Ticks ;
-#endif
-  //@}
   
 public:
   
@@ -134,9 +128,10 @@ public:
    *  @return the number of intersection points
    */
   virtual unsigned int
-  intersectionTicks ( const HepPoint3D & Point  ,
-                      const HepVector3D& Vector ,
-                      Ticks            & ticks  ) const = 0 ;
+  intersectionTicks 
+  ( const HepPoint3D & Point  ,
+    const HepVector3D& Vector ,
+    Ticks            & ticks  ) const = 0 ;
   
   /** calculate the intersection points("ticks") of the solid objects 
    *  with given line. 
@@ -160,11 +155,12 @@ public:
    *  @return the number of intersection points
    */
   virtual unsigned int
-  intersectionTicks ( const HepPoint3D & Point   ,
-                      const HepVector3D& Vector  ,
-                      const Tick       & tickMin ,
-                      const Tick       & tickMax ,
-                      Ticks            & ticks   ) const = 0 ;
+  intersectionTicks 
+  ( const HepPoint3D & Point   ,
+    const HepVector3D& Vector  ,
+    const Tick       & tickMin ,
+    const Tick       & tickMax ,
+    Ticks            & ticks   ) const = 0 ;
   
   /** virtual destructor
    *  @see ISolid::reset()
@@ -173,49 +169,51 @@ public:
   
 };
 
-/// ===========================================================================
+// ============================================================================
 /** output operator to STD/STL stream
  *  @param  os      reference to output stream
  *  @param  solid   reference to ISolid object
  *  @return reference to the stream
  */
-/// ===========================================================================
+// ============================================================================
 inline std::ostream& operator<<( std::ostream&  os , const ISolid&  solid  )
 { return solid.printOut(os); }
 
-/// ===========================================================================
+// ============================================================================
 /** output operator to STD/STL stream
  *  @param  os      reference to output stream
  *  @param  solid   pointer to ISolid object
  *  @return reference to the stream
  */
-/// ===========================================================================
+// ============================================================================
 inline std::ostream& operator<<( std::ostream&  os , const ISolid*  solid  )
 { return ((0 == solid) ? (os<<"ISolid* points to NULL"):(os<<(*solid)));}
 
-/// ===========================================================================
+// ============================================================================
 /** output operator to Gaudi stream
  *  @param  os      reference to output stream
  *  @param  solid   reference to ISolid object
  *  @return reference to the stream
  */
-/// ===========================================================================
+// ============================================================================
 inline MsgStream&    operator<<( MsgStream&     os , const ISolid&  solid  )
 { return solid.printOut(os); }
 
-/// ===========================================================================
+// ============================================================================
 /** output operator to Gaudi stream
  *  @param  os      reference to output stream
  *  @param  solid   pointer  to ISolid object
  *  @return reference to the stream
  */
-/// ===========================================================================
+// ============================================================================
 inline MsgStream&    operator<<( MsgStream&     os , const ISolid*  solid  )
 { return ((0 == solid) ? (os<<"ISolid* points to NULL"):(os<<(*solid)));}
 
-/// ===========================================================================
+// ============================================================================
+// The End 
+// ============================================================================
 #endif   ///< DETDESC_ISOLID_H
-/// ===========================================================================
+// ============================================================================
 
 
 

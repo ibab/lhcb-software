@@ -1,8 +1,11 @@
-// $Id: LogVolBase.cpp,v 1.4 2002-01-21 14:46:46 sponce Exp $
+// $Id: LogVolBase.cpp,v 1.5 2002-04-24 10:52:42 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.4  2002/01/21 14:46:46  sponce
+// Remove all warnings + some bug fixes
+//
 // Revision 1.3  2001/11/20 15:22:23  sponce
 // Lots of changes here :
 //    - make use of the new version of GaudiKernel and GaudiSvc. One consequence
@@ -175,15 +178,19 @@ unsigned long LogVolBase::release ()
  *  @return status code 
  */
 // ============================================================================
-StatusCode LogVolBase::queryInterface( const InterfaceID& ID  , 
-                                       void**             ppI ) 
+StatusCode 
+LogVolBase::queryInterface
+( const InterfaceID& ID  , 
+  void**             ppI ) 
 {
   if(  0 ==  ppI ) { return StatusCode::FAILURE ; }
   *ppI = 0 ;
   if      ( ID == ILVolume::   interfaceID() ) 
-    { *ppI = static_cast<ILVolume*>   ( this ); }
+    { *ppI = static_cast<ILVolume*>   ( this ) ; }
   else if ( ID == ISerialize:: interfaceID() )
-    { *ppI = static_cast<ISerialize*> ( this ); }
+    { *ppI = static_cast<ISerialize*> ( this ) ; }
+  else if ( ID == IInterface:: interfaceID() )
+    { *ppI = static_cast<IInterface*> ( this ) ; }
   else { return StatusCode::FAILURE ; }               ///< RETURN !
   ///
   addRef();
@@ -388,9 +395,10 @@ IPVolume* LogVolBase::createPVolume( const std::string&    PVname         ,
  */
 // ============================================================================
 IPVolume* 
-LogVolBase::createPVolume( const std::string&    PVname      , 
-                           const std::string&    LVnameForPV ,
-                           const HepTransform3D& Transform   )
+LogVolBase::createPVolume
+( const std::string&    PVname      , 
+  const std::string&    LVnameForPV ,
+  const HepTransform3D& Transform   )
 {
   //
   PVolume* pv = 0; 
@@ -449,6 +457,7 @@ LogVolBase::intersectDaughters
       else 
         { Assert( false , 
                   "LVolume::intersect line, IPVolume==NULL for " + name() ); }
+      
       /// merge individidual containers and clear child container 
       std::copy( child.begin() , 
                  child.end  () , 

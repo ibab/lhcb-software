@@ -1,14 +1,18 @@
-// $Id: TransportSvcIntersections.h,v 1.4 2002-04-03 11:01:45 ibelyaev Exp $ 
+// $Id: TransportSvcIntersections.h,v 1.5 2002-04-24 10:53:09 ibelyaev Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
-// $Log: not supported by cvs2svn $ 
+// $Log: not supported by cvs2svn $
+// Revision 1.4  2002/04/03 11:01:45  ibelyaev
+//  fix the problems with Assemblies for TransportSvc
+// 
 // ============================================================================
 #ifndef     __DETDESC_TRANSPORTSVC_TRANSPORTSVCINTERSECTIONS_H__ 
 #define     __DETDESC_TRANSPORTSVC_TRANSPORTSVCINTERSECTIONS_H__  1
 
 #include "TransportSvc.h" 
 
+// ============================================================================
 /** @file TransportSvcIntersecions.h
  * 
  *  a simple implementation of TransportSvc::intersection method 
@@ -20,8 +24,9 @@
  *
  *  @author: Vanya Belyaev 
  */
+// ============================================================================
 
-
+// ============================================================================
 /** general method ( returns the "full history" of the volume 
  *  boundary intersections 
  * with different material properties between 2 points )
@@ -37,6 +42,7 @@
  *  @param AlternativeGeometry source of alternative geometry information 
  *  @param GeometryGuess       a guess for navigation 
  */
+// ============================================================================
 unsigned long TransportSvc::intersections
 ( const HepPoint3D&        point               , 
   const HepVector3D&       vect                , 
@@ -47,7 +53,7 @@ unsigned long TransportSvc::intersections
   IGeometryInfo*           alternativeGeometry , 
   IGeometryInfo*           guessGeometry       ) 
 {
-  
+
   try { 
     
     intersept.clear();
@@ -72,7 +78,6 @@ unsigned long TransportSvc::intersections
         ///
         return intersept.size();  
       }
-    
     
     /** locate the both points inside one "good" 
      *  DetectorElement/GeometryInfo objects
@@ -112,7 +117,7 @@ unsigned long TransportSvc::intersections
     ///
     Assert( 0 != giLocal , "TransportSvc::(1) unable to locate points" ) ; 
     Assert( 0 != gi      , "TransportSvc::(2) unable to locate points" ) ; 
-
+    
     /// redefine previous geometry
     setPreviousGeometry( giLocal ); 
     
@@ -126,8 +131,7 @@ unsigned long TransportSvc::intersections
         tickMax                   , 
         threshold                 ); 
     
-    /// make local copy of all parameters:
-    
+    /// make local copy of all parameters:    
     m_prevPoint1           = point1              ;
     m_prevPoint2           = point2              ; 
     m_previousThreshold    = threshold           ;
@@ -196,9 +200,7 @@ unsigned long TransportSvc::intersections
       }
     }
 
-
-  return intersept.size() ; 
-
+  return intersept.size() ;
   ///
 };
 

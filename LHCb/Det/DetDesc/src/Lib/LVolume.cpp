@@ -1,8 +1,11 @@
-// $Id: LVolume.cpp,v 1.14 2001-11-18 15:32:45 ibelyaev Exp $ 
+// $Id: LVolume.cpp,v 1.15 2002-04-24 10:52:39 ibelyaev Exp $ 
 // ===========================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ===========================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.14  2001/11/18 15:32:45  ibelyaev
+//  update for Logical Assemblies
+//
 // ===========================================================================
 /// STD & STL includes 
 #include <iostream> 
@@ -57,12 +60,13 @@
  *  @param magnetic     name of magnetic field object (for simulation)
  */
 // ===========================================================================
-LVolume::LVolume( const std::string& name        , 
-                  ISolid*            Solid       ,
-                  const std::string& material    ,
-                  const IValidity&   validity    , 
-                  const std::string& sensitivity ,
-                  const std::string& magnetic    )
+LVolume::LVolume
+( const std::string& name        , 
+  ISolid*            Solid       ,
+  const std::string& material    ,
+  const IValidity&   validity    , 
+  const std::string& sensitivity ,
+  const std::string& magnetic    )
   : LogVolBase     ( name        , 
                      validity    , 
                      sensitivity , 
@@ -88,13 +92,14 @@ LVolume::LVolume( const std::string& name        ,
  *  @param magnetic     name of magnetic field object (for simulation)
  */
 // =========================================================================== 
-LVolume::LVolume( const std::string& name         , 
-                  ISolid*            Solid        ,
-                  const std::string& material     ,
-                  const ITime&       validSince   , 
-                  const ITime&       validTill    , 
-                  const std::string& sensitivity  ,
-                  const std::string& magnetic     )
+LVolume::LVolume
+( const std::string& name         , 
+  ISolid*            Solid        ,
+  const std::string& material     ,
+  const ITime&       validSince   , 
+  const ITime&       validTill    , 
+  const std::string& sensitivity  ,
+  const std::string& magnetic     )
   : LogVolBase     ( name        , 
                      validSince  , 
                      validTill   , 
@@ -119,11 +124,12 @@ LVolume::LVolume( const std::string& name         ,
  *  @param magnetic     name of magnetic field object (for simulation)
  */
 // =========================================================================== 
-LVolume::LVolume( const std::string& name        , 
-                  ISolid*            Solid       ,
-                  const std::string& material    ,
-                  const std::string& sensitivity ,
-                  const std::string& magnetic    )
+LVolume::LVolume
+( const std::string& name        , 
+  ISolid*            Solid       ,
+  const std::string& material    ,
+  const std::string& sensitivity ,
+  const std::string& magnetic    )
   : LogVolBase     ( name        , 
                      sensitivity , 
                      magnetic    )
@@ -511,6 +517,7 @@ unsigned int LVolume::intersectBody
       tickMin = *std::min_element( ticks.begin() , ticks.end() ); 
       tickMax = *std::max_element( ticks.begin() , ticks.end() ); 
     }  
+  
   ///
   Intervals               intervals; 
   if( ( useThisVolume && Threshold > 0 ) 

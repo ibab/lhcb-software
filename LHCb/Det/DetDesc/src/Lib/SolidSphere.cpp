@@ -1,15 +1,19 @@
-/// ===========================================================================
-/// CVS tag $Name: not supported by cvs2svn $ 
-/// ===========================================================================
-/// $Log: not supported by cvs2svn $
-/// Revision 1.5  2001/08/09 18:13:38  ibelyaev
-/// modification for solid factories
-///
-/// Revision 1.4  2001/08/09 16:48:03  ibelyaev
-/// update in interfaces and redesign of solids
-/// 
-/// ===========================================================================
-/// CLHEP 
+// $Id: SolidSphere.cpp,v 1.7 2002-04-24 10:52:59 ibelyaev Exp $ 
+// ===========================================================================
+// CVS tag $Name: not supported by cvs2svn $ 
+// ===========================================================================
+// $Log: not supported by cvs2svn $
+// Revision 1.6  2001/10/25 20:14:59  ibelyaev
+// bug fix in SolidSphere constructor
+//
+// Revision 1.5  2001/08/09 18:13:38  ibelyaev
+// modification for solid factories
+//
+// Revision 1.4  2001/08/09 16:48:03  ibelyaev
+// update in interfaces and redesign of solids
+// 
+// ===========================================================================
+// CLHEP 
 #include "CLHEP/Units/PhysicalConstants.h" 
 #include "CLHEP/Geometry/Point3D.h" 
 #include "CLHEP/Geometry/Vector3D.h" 
@@ -43,14 +47,15 @@
  *  @param CoverModel       covering model 
  */
 // ============================================================================ 
-SolidSphere::SolidSphere( const std::string & name             ,
-                          const double        OuterRadius      ,
-                          const double        InsideRadius     , 
-                          const double        StartPhiAngle    , 
-                          const double        DeltaPhiAngle    ,
-                          const double        StartThetaAngle  , 
-                          const double        DeltaThetaAngle  ,
-                          const int           CoverModel       )
+SolidSphere::SolidSphere
+( const std::string & name             ,
+  const double        OuterRadius      ,
+  const double        InsideRadius     , 
+  const double        StartPhiAngle    , 
+  const double        DeltaPhiAngle    ,
+  const double        StartThetaAngle  , 
+  const double        DeltaThetaAngle  ,
+  const int           CoverModel       )
   : SolidBase                ( name            ) 
   , m_sphere_outerR2         ( 0               )  
   , m_sphere_insideR2        ( 0               ) 
@@ -256,8 +261,8 @@ const ISolid* SolidSphere::cover () const
                 180.0 * degree  != deltaThetaAngle()  )           
         { cov = 
             new SolidSphere("Cover for " + name () , 
-                            insideRadius        () , 
-                            outerRadius         () , 
+                            outerRadius        () , 
+                            insideRadius         () , 
                             startPhiAngle       () , 
                             deltaPhiAngle       () ); }
       /** cover for sphere segment with no gap in Theta is 

@@ -1,8 +1,11 @@
-// $Id: TransportSvc.cpp,v 1.6 2002-04-03 11:01:45 ibelyaev Exp $
+// $Id: TransportSvc.cpp,v 1.7 2002-04-24 10:53:05 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.6  2002/04/03 11:01:45  ibelyaev
+//  fix the problems with Assemblies for TransportSvc
+//
 // Revision 1.5  2001/11/18 15:32:45  ibelyaev
 //  update for Logical Assemblies
 // 
@@ -137,20 +140,20 @@ StatusCode TransportSvc::initialize()
   ///
   { 
     /// 2) locate MagneticField Service: 
-    StatusCode statusCode = 
-      serviceLocator()->
-      service( m_magFieldSvc_name , m_magFieldSvc , true ) ;    
-    /// it is a fatal error!!!
-    if( statusCode.isSuccess() && 0 != m_magFieldSvc ) 
-      { magFieldSvc()->addRef(); } 
-    else 
-      { 
-        log << MSG::FATAL 
-            << " Unable to locate  Magnetic Field Service=" 
-            << m_magFieldSvc_name << endreq; 
-        m_magFieldSvc = 0 ;  
-        return StatusCode::FAILURE ; /// RETURN !!! 
-      } 
+//      StatusCode statusCode = 
+//        serviceLocator()->
+//        service( m_magFieldSvc_name , m_magFieldSvc , true ) ;    
+//      /// it is a fatal error!!!
+//      if( statusCode.isSuccess() && 0 != m_magFieldSvc ) 
+//        { magFieldSvc()->addRef(); } 
+//      else 
+//        { 
+//          log << MSG::FATAL 
+//              << " Unable to locate  Magnetic Field Service=" 
+//              << m_magFieldSvc_name << endreq; 
+//          m_magFieldSvc = 0 ;  
+//          return StatusCode::FAILURE ; /// RETURN !!! 
+//        } 
   }
   ///
   { 
