@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.7 2003-12-16 15:20:44 frankb Exp $
+# $Id: requirements,v 1.8 2003-12-17 05:51:46 frankb Exp $
 package IOExample
 version v1r0
 
@@ -10,7 +10,7 @@ use ExternalLibs          v*
 #use Gaudi                v*
 use GaudiSvc              v*
 use GaudiRootDb           v*
-use GaudiODBCDb           v*
+#use GaudiODBCDb           v*
 use GaudiPoolDb           v*
 
 use Event         	  v*  Event
