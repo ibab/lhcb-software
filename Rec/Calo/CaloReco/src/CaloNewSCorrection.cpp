@@ -1,8 +1,11 @@
-// $Id: CaloNewSCorrection.cpp,v 1.1 2003-04-11 09:33:40 ibelyaev Exp $
+// $Id: CaloNewSCorrection.cpp,v 1.2 2003-04-17 07:06:48 cattanem Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.1  2003/04/11 09:33:40  ibelyaev
+//  add new E-,S- and L-corrections from Olivier Deschamps
+//
 // ============================================================================
 // Include files
 // from Gaudi
@@ -320,7 +323,7 @@ StatusCode CaloNewSCorrection::process    ( CaloHypo* hypo  ) const
   // Residual asymmetries due to single exponential approximation
   double DAsx=0.;
   double DAsy=0.;
-  for ( int i = 0 ; i !=8 ; ++i){
+  {for ( int i = 0 ; i !=8 ; ++i){
     if( 0 == area ){ 
       DAsx += Par_ResOut[i] * pow(Asx,i);
       DAsy += Par_ResOut[i] * pow(Asy,i);}
@@ -331,6 +334,8 @@ StatusCode CaloNewSCorrection::process    ( CaloHypo* hypo  ) const
       DAsx += Par_ResInn[i] * pow(Asx,i);
       DAsy += Par_ResInn[i] * pow(Asy,i);}
   }
+  } // Fix VC6 scoping bug
+  
   if(Level[1]){
     Asx -= DAsx ;
     Asy -= DAsy ;
@@ -340,7 +345,7 @@ StatusCode CaloNewSCorrection::process    ( CaloHypo* hypo  ) const
   // Left/Right for (X) & Up/Down for (Y)
   double DDAsx = 0.;
   double DDAsy = 0.;
-  for ( int i = 0 ; i !=3 ; ++i){
+  {for ( int i = 0 ; i !=3 ; ++i){
     if( 0 == area && 0 < xBar ){DDAsx += Par_AsOut[i]   * pow(Asx,i);}
     if( 0 == area && 0 > xBar ){DDAsx += Par_AsOut[i+3] * pow(Asx,i);}
     if( 1 == area && 0 < xBar ){DDAsx += Par_AsMid[i]   * pow(Asx,i);}
@@ -354,6 +359,7 @@ StatusCode CaloNewSCorrection::process    ( CaloHypo* hypo  ) const
     if( 2 == area && 0 < yBar ){DDAsy += Par_AsInn[i]   * pow(Asy,i);}   
     if( 2 == area && 0 > yBar ){DDAsy += Par_AsInn[i+3] * pow(Asy,i);}   
   }
+  } // Fix VC6 scoping bug
   if(Level[2]){
     Asx += DDAsx;
     Asy += DDAsy;
