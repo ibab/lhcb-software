@@ -1,8 +1,13 @@
-! $Id: release.notes,v 1.1.1.1 2002-05-26 22:48:41 jvantilb Exp $
+! $Id: release.notes,v 1.2 2002-05-27 11:38:34 cattanem Exp $
 ! Package     : OTAssociators
 ! Responsible : J. van Tilburg
 
-! 20020527 J. van Tilburg
+! >>>>>>>>>>>>>>>>>>>>>>>> OTAssociators v1r0 <<<<<<<<<<<<<<<<<<<<<<<<
+! 2002-05-27 - Marco Cattaneo
+ - Use more standard TDS path for location of relations tables
+ - Add relation factories to OTAssociators_load.cpp
+
+! 2002-05-27 J. van Tilburg
   This is a new package to associate the Outer Tracker classes with 
   Monte Carlo information.
   Two algorithms to build the relations:

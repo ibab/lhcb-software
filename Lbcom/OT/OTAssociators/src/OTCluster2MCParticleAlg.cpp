@@ -1,4 +1,4 @@
-// $Id: OTCluster2MCParticleAlg.cpp,v 1.1.1.1 2002-05-26 22:48:42 jvantilb Exp $
+// $Id: OTCluster2MCParticleAlg.cpp,v 1.2 2002-05-27 11:38:35 cattanem Exp $
 // Include files 
 
 #include "Event/OTCluster.h"
@@ -15,6 +15,7 @@
 
 // local
 #include "OTCluster2MCParticleAlg.h"
+#include "OTAssociators/OTCluster2MCParticleAsct.h"
 
 
 //-----------------------------------------------------------------------------
@@ -31,16 +32,14 @@ OTCluster2MCParticleAlg::OTCluster2MCParticleAlg( const std::string& name,
                                         ISvcLocator* pSvcLocator)
   : Algorithm (name,pSvcLocator) 
 {
-
-  // constructer
-  declareProperty( "OutputData", m_outputData  = 
-                                 "Rec/Relations/OTClusters2MCParticles" );
+  // constructor
+  declareProperty( "OutputData", m_outputData  = OTCluster2MCParticleLocation );
   this->declareProperty("associatorName", 
                          m_nameAsct = "OTCluster2MCHitAsct" );
 }
 
 OTCluster2MCParticleAlg::~OTCluster2MCParticleAlg() {
-  // destructer
+  // destructor
 }; 
 
 StatusCode OTCluster2MCParticleAlg::initialize() {

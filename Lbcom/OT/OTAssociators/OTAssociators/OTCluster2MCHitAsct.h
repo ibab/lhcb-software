@@ -1,4 +1,4 @@
-// $Id: OTCluster2MCHitAsct.h,v 1.1.1.1 2002-05-26 22:48:41 jvantilb Exp $
+// $Id: OTCluster2MCHitAsct.h,v 1.2 2002-05-27 11:38:34 cattanem Exp $
 #ifndef ASSOCIATORS_OTCluster2MCHitASCT_H 
 #define ASSOCIATORS_OTCluster2MCHitASCT_H 1
 
@@ -14,7 +14,7 @@
 #include "Relations/Relation1D.h"
 
 static const std::string& OTCluster2MCHitLocation =
-                       "Rec/Relations/OTCluster2MCHit";
+                       "Rec/Relations/OTClusters2MCHits";
 
 /** @class OTCluster2MCHitAsct OTCluster2MCHitAsct.h 
  *         Associators/OTCluster2MCHitAsct.h

@@ -1,4 +1,4 @@
-// $Id: OTCluster2MCHitAlg.cpp,v 1.1.1.1 2002-05-26 22:48:42 jvantilb Exp $
+// $Id: OTCluster2MCHitAlg.cpp,v 1.2 2002-05-27 11:38:35 cattanem Exp $
 // Include files 
 
 #include "Event/OTCluster.h"
@@ -17,6 +17,7 @@
 
 // local
 #include "OTCluster2MCHitAlg.h"
+#include "OTAssociators/OTCluster2MCHitAsct.h"
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : OTCluster2MCHitChi2Alg
@@ -33,13 +34,12 @@ OTCluster2MCHitAlg::OTCluster2MCHitAlg( const std::string& name,
   : Algorithm (name,pSvcLocator) 
 {
 
-  // constructer
-  declareProperty( "OutputData", m_outputData  = 
-                                 "Rec/Relations/OTCluster2MCHit" );
+  // constructor
+  declareProperty( "OutputData", m_outputData  = OTCluster2MCHitLocation );
 }
 
 OTCluster2MCHitAlg::~OTCluster2MCHitAlg() {
-  // destructer
+  // destructor
 }; 
 
 StatusCode OTCluster2MCHitAlg::initialize() {
