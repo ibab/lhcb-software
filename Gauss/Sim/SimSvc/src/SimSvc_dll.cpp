@@ -12,29 +12,11 @@
 //
 //====================================================================
 
-// DllMain entry point
-#include "GaudiKernel/DllMain.icpp"
+#include "GaudiKernel/LoadFactoryEntries.h"
 
-void GaudiDll::initialize(
-                           void* //hinstDLL
-                         )
-{
-}
+LOAD_FACTORY_ENTRIES(SimSvc);
 
-void GaudiDll::finalize(
-                         void* //hinstDLL
-                       )
-{
-}
-
-extern void SimSvc_load();
-#include "GaudiKernel/FactoryTable.h"
-extern "C" FactoryTable::EntryList* getFactoryEntries() {
-  static bool first = true;
-  if ( first ) {
-    SimSvc_load();
-    first = false;
-  }
-  return FactoryTable::instance()->getEntries();
-} 
+// ============================================================================
+// THe ENd 
+// ============================================================================
 
