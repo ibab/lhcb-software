@@ -95,7 +95,7 @@ DigiCALOSeq.Members = {
 #include "$CALOASSOCIATORSOPTS/Brunel.opts"
 
 // Rich digitisation
-ApplicationMgr.DLLs += { "RichDetTools", "RichUtils", "RichReadout", "RichDAQ"};
+ApplicationMgr.DLLs += { "RichTools", "RichReadout", "RichDAQ"};
 #include "$RICHREADOUTOPTS/BooleDigi.opts"
 #include "$RICHDAQROOT/options/Boole_FillRawBuffer.opts"
 

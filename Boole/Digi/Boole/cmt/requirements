@@ -85,11 +85,8 @@ use MuonBackground	v1r7	Muon
 use MuonDAQ             v1r1    Muon
 
 # Rich
-use RichDigiQC	        v1r6  	Rich
-use RichUtils		v3r9	Rich
-use RichDetTools	v4r1	Rich
-use RichReadout		v1r8	Rich
-use RichDAQ		v1r4	Rich
+use RichDigiQC	        v1r7  	Rich
+use RichReadout		v1r9	Rich
 
 #
 #===== build Boole =========================

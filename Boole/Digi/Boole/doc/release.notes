@@ -19,7 +19,7 @@ Development version
   . Use new GaudiSequencer base class for ProcessPhase (LHCbAlgs v1r0)
   . Use new GaudiAlg and GaudiTools base classes
     (STDet v1r2, ITAssociators v2r9, STDAQ v1r2, ITAlgorithms v14r3,
-     ITCheckers v2r3)
+     ITCheckers v2r3, RichReadout v1r9, RichDigiQC v1r7, RichTools v1r0)
   . Converters of "Relations" to "Linker" MC truth tables moved to AsctToLinker
     package (from TrgChecker) (AsctToLinker v1r2)
   . Removed dependency on GaudiAud package
