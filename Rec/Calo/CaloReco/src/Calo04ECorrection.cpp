@@ -1,4 +1,4 @@
-// $Id: Calo04ECorrection.cpp,v 1.2 2004-05-11 08:40:18 ibelyaev Exp $
+// $Id: Calo04ECorrection.cpp,v 1.3 2004-06-03 06:04:23 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
@@ -346,6 +346,34 @@ StatusCode Calo04ECorrection::process    ( CaloHypo* hypo  ) const
     locateDigit ( entries.begin () , 
                   entries.end   () , CaloDigitStatus::SeedCell );
   
+  // eEcal from 3x3 ...
+  //  eEcal = 0;
+  for(CaloCluster::Entries::const_iterator ient = entries.begin();
+      ient != entries.end() ; ient++){
+    const CaloDigit*  ent = ient->digit();
+    CaloCellID     cellID = ent->cellID() ;
+    //const CaloDigit*  seed = iseed->digit();
+    // CaloCellID  seedID = seed->cellID() ;
+    // unsigned int    seedCol   = seedID.col();
+    // unsigned int    seedRow   = seedID.row();
+    //unsigned int    seedArea  = seedID.area();
+    unsigned int    Col   = cellID.col();
+    unsigned int    Row   = cellID.row();
+    unsigned int    Area  = cellID.area();
+    //if(Area == seedArea && abs(Col-seedCol) <=1 && abs(Row-seedRow) <=1){
+    //eEcal += ent->e();
+    msg<< MSG::INFO
+       << " ENE entries " << ent->e() << " "
+       << "fraction " << ient->fraction()  << " "
+       << "Id = "<<  Area  << "  " <<  Row << " " << Col
+       << " status " << ient->status()
+       << "For energy " << CaloDigitStatus::UseForEnergy 
+       << endreq;
+    
+  }
+  //  }
+
+
   if(  CaloHypotheses::PhotonFromMergedPi0 == hypo->hypothesis()){
     msg<< MSG::INFO << "Photon From Merged "<< endreq; }
   msg<< MSG::INFO << "ENTRIES " << entries.size() << endreq;
@@ -461,13 +489,6 @@ StatusCode Calo04ECorrection::process    ( CaloHypo* hypo  ) const
 
 
 
-  // Apply global rescaling before correction 
-  // (same rescaling for both Ecal and Preshower)
-  if( Level[4] ){
-    eEcal = eEcal / A0[area] ;
-    ePrsSum = ePrsSum / A0[area];
-    ePrs = ePrs / A0[area];
-  } 
   
 
   double elog=0;
@@ -507,6 +528,10 @@ StatusCode Calo04ECorrection::process    ( CaloHypo* hypo  ) const
   // Split Photon rescaling
   if( Level[5] && CaloHypotheses::PhotonFromMergedPi0 == hypo->hypothesis()  ){
     Ecor = Ecor / SplitFactor[area]; }
+
+
+  if( Level[4] ){ Ecor = Ecor / A0[area] ;  } 
+
 
   if(  CaloHypotheses::PhotonFromMergedPi0 == hypo->hypothesis()){
     msg<< MSG::INFO << "Photon From Merged "<< endreq;}

@@ -35,7 +35,7 @@ ToolSvc.ECorrection.CorrectionLevel={
 // ============================================================================
 
 // Global correction factor
-ToolSvc.ECorrection.GlobalFactor={   1. , 1. , 1. } ;
+ToolSvc.ECorrection.GlobalFactor={   1.004 , 1.005 , 1.017 } ;
 
 
 //--------------------------- Unconverted photons -----------------------//
@@ -95,7 +95,7 @@ ToolSvc.ECorrection.BetaPrs_SpdHit_a={  13.44 ,  15.37 ,  19.15 } ;
 ToolSvc.ECorrection.BetaPrs_SpdHit_b={  -1.29 ,  -1.65 ,  -2.56 } ;
 //----------------------------- Split photons -----------------------//
 // Split Photon Factor
-ToolSvc.ECorrection.SplitPhotonFactor={   1.00 , 1.00 , 1.00 } ;
+ToolSvc.ECorrection.SplitPhotonFactor={   1.00  , 1.00 , 1.00 } ;
 // ============================================================================
 // The End 
 // ============================================================================
