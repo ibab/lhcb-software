@@ -17,6 +17,7 @@
    . change Chi2NdFofUps to Chi2NdFofDown, m_chiSqUps to  m_chiSqDowns
    . decrease Chi2NdFofDown from 5.0 to 3.0
 
+!===================== GlobalReco v4r4 2004-03-11 ===========================
 ! 2004-03-17 - Vanya BELYAEV
  - src/NeutralPPsFromCPsAlg.cpp
    1) add the usage of Frederic's Machefert CaloPhotonEstimatorTool/'PhotonPID'
