@@ -17,7 +17,6 @@ RichDetailedFrontEndResponse::RichDetailedFrontEndResponse( const std::string& n
   //  declareProperty( "SimpleCalibration", m_Calibration = 12500. );
   declareProperty( "SimpleCalibration", m_Calibration = 8330. );
   declareProperty( "SimpleBaseline",    m_Pedestal = 50 );
-  declareProperty( "DetectorMode", m_detMode = "GAUSS" );
   declareProperty( "Noise", m_Noise = 150. );  // in electrons
   declareProperty( "Threshold", m_Threshold = 1400. ); // in electrons
   declareProperty( "ThresholdSigma", m_ThresholdSigma = 140. ); // in electrons
@@ -43,17 +42,10 @@ StatusCode RichDetailedFrontEndResponse::initialize() {
 
   // create a collection of all pixels
   std::vector<RichSmartID> pixels;
-  if ( "SICB" == m_detMode ) {
-    IPixelFinder * finder;
-    acquireTool( "PixelFinder", finder );
-    finder->PixelList(pixels);
-    releaseTool(finder);
-  } else if ( "GAUSS" == m_detMode ) {
-    IRichDetInterface * detint;
-    acquireTool("RichDetInterface" , detint );
-    detint->readoutChannelList(pixels);
-    releaseTool(detint);
-  }
+  IRichSmartIDTool * smartIDs;
+  acquireTool( "RichSmartIDTool" , smartIDs );
+  smartIDs->readoutChannelList(pixels);
+  releaseTool( smartIDs );
   actual_base = theRegistry.GetNewBase( pixels );
 
   m_gaussNoise.initialize( randSvc(), Rndm::Gauss(0., m_Noise) );
@@ -61,7 +53,7 @@ StatusCode RichDetailedFrontEndResponse::initialize() {
   m_gaussThreshold.initialize( randSvc(), Rndm::Gauss(m_Threshold,m_ThresholdSigma));
 
   msg << MSG::DEBUG
-      << " Using detailed HPD frontend response algorithm for " << m_detMode << endreq;
+      << " Using detailed HPD frontend response algorithm" << endreq;
 
   return StatusCode::SUCCESS;
 }

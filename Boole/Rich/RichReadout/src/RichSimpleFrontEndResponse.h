@@ -10,9 +10,7 @@
 #include "GaudiKernel/RndmGenerators.h"
 
 // Detector geom
-#include "RiSicbGeom/SicbGeom.h"
-#include "RiSicbGeom/PixelFinder.h"
-#include "RichDetTools/IRichDetInterface.h"
+#include "RichDetTools/IRichSmartIDTool.h"
 
 // Kernel
 #include "Kernel/RichSmartID.h"
@@ -61,7 +59,6 @@ private: // data
 
   std::string m_mcRichSummedDepositsLocation;
   std::string m_mcRichDigitsLocation;
-  std::string m_detMode;
 
   int m_Baseline;
   int m_AdcCut;

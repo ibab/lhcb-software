@@ -1,5 +1,5 @@
 package RichReadout
-version v1r4
+version v1r5
 
 # ================ structure =================================================
 branches cmt doc src
@@ -11,7 +11,6 @@ set RICHREADOUTOPTS $(RICHREADOUTROOT)/options
 use AIDA             v*                                 -no_auto_imports
 use ParamFiles       v*      $(LHCb_release_area)/PARAM -no_auto_imports
 use RichEvent        v7r*    Event
-use RiSicbGeom       v3r*    SICB
 use RichDetTools     v3r*    Rich
 
 # ================ component library =========================================

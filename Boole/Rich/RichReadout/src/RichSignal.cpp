@@ -20,12 +20,16 @@ RichSignal::RichSignal( const std::string& name,
                    m_RichNextLocation = "Next/" + MCRichHitLocation::Default );
   declareProperty( "NextNextLocation",
                    m_RichNextNextLocation = "NextNext/" + MCRichHitLocation::Default );
+  declareProperty( "LHCBackgroundLocation",
+                   m_lhcBkgLocation = "LHCBackground/" + MCRichHitLocation::Default );
+
   declareProperty( "SummedDepositLocation",
                    m_RichSummedDepositLocation = MCRichSummedDepositLocation::Default );
   declareProperty( "DepositLocation",
                    m_RichDepositLocation = MCRichDepositLocation::Default );
 
-  declareProperty( "UseSpillover", m_doSpillover = true );
+  declareProperty( "UseSpillover",     m_doSpillover = true );
+  declareProperty( "UseLHCBackground", m_doLHCBkg = true );
 
 }
 
@@ -39,16 +43,15 @@ StatusCode RichSignal::initialize() {
   // Initialize base class
   if ( !RichAlgBase::initialize() ) return StatusCode::FAILURE;
 
+  // randomn number generator
   if ( !m_rndm.initialize( randSvc(), Rndm::Flat(0.,1.) ) ) {
     msg << MSG::FATAL << "Unable to create Random generator" << endreq;
     return StatusCode::FAILURE;
   }
 
   // detector tool
-  acquireTool( "RichDetInterface",  m_DetInterface );
+  acquireTool( "RichSmartIDTool", m_smartIDTool );
 
-  msg << MSG::DEBUG
-      << " Using HPD signal algorithm" << endreq;
   msg << MSG::WARNING
       << "Dividing energy by 10 to fix problem in GaussRICH. Remove when fixed."
       << endreq;
@@ -75,8 +78,10 @@ StatusCode RichSignal::execute() {
     return StatusCode::FAILURE;
   }
 
-  // Process main and spillover events with TOF offsets
+  // Process main event
   ProcessEvent( m_RichHitLocation,       0  );
+
+  // if requested, process spillover events
   if ( m_doSpillover ) {
     ProcessEvent( m_RichPrevLocation,     -25 );
     ProcessEvent( m_RichPrevPrevLocation, -50 );
@@ -84,6 +89,9 @@ StatusCode RichSignal::execute() {
     // not needed yet
     //ProcessEvent( m_RichNextNextLocation,  50 );
   }
+
+  // if requested, process LHC background
+  if ( m_doLHCBkg ) { ProcessEvent( m_lhcBkgLocation, 0 ); }
 
   // Debug Printout
   if ( msgLevel(MSG::DEBUG) ) {
@@ -96,8 +104,8 @@ StatusCode RichSignal::execute() {
   return StatusCode::SUCCESS;
 }
 
-StatusCode RichSignal::ProcessEvent( std::string hitLoc,
-                                     double tofOffset ) {
+StatusCode RichSignal::ProcessEvent( const std::string & hitLoc,
+                                     const double tofOffset ) const {
 
   // Load hits
   SmartDataPtr<MCRichHits> hits( eventSvc(), hitLoc );
@@ -119,7 +127,7 @@ StatusCode RichSignal::ProcessEvent( std::string hitLoc,
 
     RichSmartID tempID;
     // Is hit in active pixel
-    if ( (m_DetInterface->smartID((*iHit)->entry(),tempID)).isSuccess() 
+    if ( (m_smartIDTool->smartID((*iHit)->entry(),tempID)).isSuccess() 
          && tempID.isValid() ) {
 
       // For the time being strip sub-pixel information
@@ -131,8 +139,7 @@ StatusCode RichSignal::ProcessEvent( std::string hitLoc,
         // Toss a coin to see if we add this hit to the existing deposits
         // Simulate a 1/8 chance of additional hit falling in same sub-pixel as
         // already existing hit
-        int iRan = (int)(m_rndm()*8.);
-        if ( iRan != 0 ) continue;
+        if ( 0 != static_cast<int>(m_rndm()*8.) ) continue;
       }
 
       // Then create a new deposit
@@ -140,7 +147,7 @@ StatusCode RichSignal::ProcessEvent( std::string hitLoc,
       mcDeposits->insert( newDeposit );
       newDeposit->setParentHit( *iHit );
 
-      // Fix for energy problem. Remove when fixed
+      // Fix for energy problem in Gauss. Remove when fixed
       double energy = (*iHit)->energy();
       if ( energy > 0.02 ) energy /= 10;
       newDeposit->setEnergy( energy );
@@ -165,14 +172,13 @@ StatusCode RichSignal::ProcessEvent( std::string hitLoc,
   return StatusCode::SUCCESS;
 }
 
-
 StatusCode RichSignal::finalize() {
 
   MsgStream msg(msgSvc(), name());
   msg << MSG::DEBUG << "Finalize" << endreq;
 
   // release tools
-  releaseTool( m_DetInterface );
+  releaseTool( m_smartIDTool );
 
   // finalize randomn number generator
   m_rndm.finalize();

@@ -2,17 +2,11 @@
 
 // Process the raw hit signals.
 DigiRICHSeq.Members += { "RichSignal/RichPDSignal" };
-RichPDSignal.UseSpillover = true;
+RichPDSignal.UseSpillover     = true;
+RichPDSignal.UseLHCBackground = false; // requires "Gauss" LHC events
 
 // Detailed treatment of HPD response
 DigiRICHSeq.Members += { "RichDetailedFrontEndResponse/RichPDResponse" };
-
-// Create final container of digits. Use HltBuffer instead
-//DigiRICHSeq.Members += { "RichDigitCreator" };
-
-// temporary. 
-//Tell the monitor what sort of digits we have
-RiDigiAlgMon.DetMode = "GAUSS";
 
 // Refractive index using XML tabulation
 ToolSvc.RichToolRegistry.Tools += { "RichTabulatedRefractiveIndex/RichRefractiveIndex" };
@@ -23,3 +17,6 @@ ToolSvc.RichRefractiveIndex.RefIndexLocations = {
 };
 ToolSvc.RichRefractiveIndex.QETableLocation =
   "/dd/Materials/RichMaterialTabProperties/HpdQuantumEff";
+
+// SmartID manipulation
+ToolSvc.RichToolRegistry.Tools += { "RichSmartIDTool/RichSmartIDTool" };

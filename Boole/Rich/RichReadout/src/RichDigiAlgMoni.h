@@ -1,4 +1,4 @@
-// $Id: RichDigiAlgMoni.h,v 1.8 2003-12-10 16:05:44 cattanem Exp $
+// $Id: RichDigiAlgMoni.h,v 1.9 2004-02-02 14:29:36 jonesc Exp $
 #ifndef RICHMONITOR_RICHDIGIALGMONI_H
 #define RICHMONITOR_RICHDIGIALGMONI_H 1
 
@@ -28,9 +28,11 @@
 // CLHEP
 #include "CLHEP/Units/PhysicalConstants.h"
 
+// GSL
+#include "gsl/gsl_math.h"
+
 // Detector tools
-#include "RiSicbGeom/PixelFinder.h"
-#include "RichDetTools/IRichDetInterface.h"
+#include "RichDetTools/IRichSmartIDTool.h"
 
 // temporary histogramming numbers
 #include "RichDetParams.h"
@@ -68,9 +70,6 @@ private: // methods
   /// Book histograms
   StatusCode bookHistograms();
 
-  /// Computes the position for a given SmartID
-  bool getPosition( const RichSmartID & id, HepPoint3D & position );
-
   /// Returns the mass hypothesis for a given MCParticle
   Rich::ParticleIDType massHypothesis( const MCParticle * mcPart );
 
@@ -92,17 +91,14 @@ private: // methods
 
 private: // data
 
-  IPixelFinder *      m_sicbDet;
-  IRichDetInterface * m_detInt;
+  /// Pointer to RichSmartID tool
+  IRichSmartIDTool * m_smartIDTool;
 
   // job options
   std::string m_histPth;        ///< Output histogram path
   std::string m_mcdigitTES;     ///< Location of MCRichDigits in TES
   std::string m_mcdepTES;       ///< Location of MCRichDeposits in TES
   std::string m_mchitTES;       ///< Location of MCRichHits in TES
-
-  // temporary whilst we have different detector tools
-  std::string m_detMode;
 
   // Particle masses
   std::map<Rich::ParticleIDType,double> m_particleMass;

@@ -17,12 +17,11 @@ RichSimpleFrontEndResponse::RichSimpleFrontEndResponse( const std::string& name,
   declareProperty( "SimpleCalibration", m_Calibration = 4420 );
   declareProperty( "SimpleBaseline", m_Baseline = 50 );
   declareProperty( "SimpleSigma", m_Sigma = 1.0 );
-  declareProperty( "DetectorMode", m_detMode = "GAUSS" );
 
   Rndm::Numbers m_gaussRndm;
 }
 
-RichSimpleFrontEndResponse::~RichSimpleFrontEndResponse (){ };
+RichSimpleFrontEndResponse::~RichSimpleFrontEndResponse () { };
 
 StatusCode RichSimpleFrontEndResponse::initialize() {
 
@@ -34,17 +33,10 @@ StatusCode RichSimpleFrontEndResponse::initialize() {
 
   // create a collection of all pixels
   std::vector<RichSmartID> pixels;
-  if ( "SICB" == m_detMode ) {
-    IPixelFinder* finder;
-    acquireTool( "PixelFinder", finder );
-    finder->PixelList(pixels);
-    releaseTool(finder);
-  } else if ( "GAUSS" == m_detMode ) {
-    IRichDetInterface * detint;
-    acquireTool( "RichDetInterface", detint );
-    detint->readoutChannelList(pixels);
-    releaseTool(detint);
-  }
+  IRichSmartIDTool * smartIDs;
+  acquireTool( "RichSmartIDTool" , smartIDs );
+  smartIDs->readoutChannelList(pixels);
+  releaseTool( smartIDs );
   actual_base = theRegistry.GetNewBase( pixels );
 
   m_AdcCut = 85;
@@ -53,7 +45,7 @@ StatusCode RichSimpleFrontEndResponse::initialize() {
   m_gaussRndm.initialize( randSvc(), Rndm::Gauss(0.0,0.9) );
 
   msg << MSG::DEBUG
-      << " Using simple HPD frontend response algorithm for " << m_detMode << endreq
+      << " Using simple HPD frontend response algorithm" << endreq
       << " Acquired information for " << pixels.size() << " pixels" << endreq;
 
   return StatusCode::SUCCESS;

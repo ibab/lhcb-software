@@ -1,4 +1,4 @@
-// $Id: RichDigiAlgMoni.cpp,v 1.7 2003-11-25 16:31:39 jonrob Exp $
+// $Id: RichDigiAlgMoni.cpp,v 1.8 2004-02-02 14:29:36 jonesc Exp $
 
 // local
 #include "RichDigiAlgMoni.h"
@@ -17,15 +17,13 @@ const        IAlgFactory& RichDigiAlgMoniFactory = s_factory ;
 RichDigiAlgMoni::RichDigiAlgMoni( const std::string& name,
                                   ISvcLocator* pSvcLocator)
   : RichAlgBase ( name, pSvcLocator ),
-    m_sicbDet (0),
-    m_detInt  (0) {
+    m_smartIDTool (0) {
 
   // Declare job options
   declareProperty( "InputMCRichDigits", m_mcdigitTES = MCRichDigitLocation::Default );
   declareProperty( "InputMCRichDeposits", m_mcdepTES = MCRichDepositLocation::Default );
   declareProperty( "InputMCRichHits", m_mchitTES = MCRichHitLocation::Default );
   declareProperty( "HistoPath", m_histPth = "RICH/DIGI/ALGQC" );
-  declareProperty( "DetMode", m_detMode = "HPDSICB" );
 
 }
 
@@ -41,16 +39,8 @@ StatusCode RichDigiAlgMoni::initialize() {
   // Initialize base class
   if ( !RichAlgBase::initialize() ) return StatusCode::FAILURE;
 
-  if ( "HPDSICB" == m_detMode ) {
-    // Use the temporary SICB compatible tool for SICB data
-    acquireTool( "PixelFinder", m_sicbDet );
-  } else if ( "GAUSS" == m_detMode ) {
-    // The main tool. For Gauss data
-    acquireTool("RichDetInterface" , m_detInt );
-  } else {
-    msg << MSG::ERROR << "Unknown detector mode " << m_detMode << endreq;
-    return StatusCode::FAILURE;
-  }
+  // get tools
+  acquireTool( "RichSmartIDTool", m_smartIDTool );
 
   // Book histograms
   if ( !bookHistograms() ) return StatusCode::FAILURE;
@@ -82,8 +72,7 @@ StatusCode RichDigiAlgMoni::initialize() {
   ppSvc->release();
 
   msg << MSG::DEBUG
-      << " Histogram location   = " << m_histPth << endreq
-      << " Detector Mode        = " << m_detMode << endreq;
+      << " Histogram location   = " << m_histPth << endreq;
 
   return StatusCode::SUCCESS;
 };
@@ -334,7 +323,7 @@ StatusCode RichDigiAlgMoni::execute() {
       RichSmartID id = (*iMcDigit)->key();
 
       HepPoint3D point;
-      if ( !getPosition( id, point ) ) {
+      if ( !m_smartIDTool->globalPosition( id, point ) ) {
         msg << MSG::WARNING << "Position conversion error : ID = " << id << endreq;
       }
 
@@ -574,29 +563,16 @@ StatusCode RichDigiAlgMoni::finalize() {
   msg << MSG::DEBUG << "Finalize" << endreq;
 
   // release tools
-  releaseTool(m_sicbDet);
-  releaseTool(m_detInt);
+  releaseTool(m_smartIDTool);
 
   // finalize base class
   return RichAlgBase::finalize();
-}
-
-bool RichDigiAlgMoni::getPosition( const RichSmartID & id, HepPoint3D & position )
-{
-  if ( "HPDSICB" == m_detMode ) {
-    position = 10.0 * (m_sicbDet->globalPosition(id));
-    return true;
-  } else if ( "GAUSS" == m_detMode ) {
-    return m_detInt->globalPosition( id, position );
-  }
-
-  return false;
 }
 
 double RichDigiAlgMoni::mcBeta( const MCParticle * mcPart )
 {
   if ( !mcPart ) return 0;
   double pTot = momentum( mcPart );
-  double Esquare = pTot*pTot + pow(mass(mcPart),2);
+  double Esquare = pTot*pTot + gsl_pow_2(mass(mcPart));
   return ( Esquare > 0 ? pTot/sqrt(Esquare) : 0 );
 }

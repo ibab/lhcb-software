@@ -4,7 +4,6 @@ DECLARE_FACTORY_ENTRIES( RichReadout  ) {
 
   // Process the MCHit signals
   DECLARE_ALGORITHM( RichSignal );
-  DECLARE_ALGORITHM( RichSignalSICB );
 
   // Simulate the frontend response
   DECLARE_ALGORITHM( RichSimpleFrontEndResponse ); 

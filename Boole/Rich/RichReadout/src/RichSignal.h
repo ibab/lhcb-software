@@ -17,7 +17,7 @@
 #include "CLHEP/Geometry/Point3D.h"
 
 // from RichDetTools
-#include "RichDetTools/IRichDetInterface.h"
+#include "RichDetTools/IRichSmartIDTool.h"
 
 #include "Event/MCRichHit.h"
 #include "Event/MCRichDeposit.h"
@@ -36,7 +36,8 @@ public:
 
 private: // methods
 
-  StatusCode ProcessEvent( std::string hitLoc, double tofOffset );
+  StatusCode ProcessEvent( const std::string & hitLoc, 
+                           const double tofOffset ) const;
 
 private: // data
 
@@ -51,12 +52,18 @@ private: // data
   std::string m_RichNextNextLocation;
   std::string m_RichSummedDepositLocation;
   std::string m_RichDepositLocation;
+  std::string m_lhcBkgLocation;
 
+  /// Flag to turn on the use of the spillover events
   bool m_doSpillover;
 
-  IRichDetInterface* m_DetInterface;
+  /// Flag to turn on the use of the LHC backgrounde events
+  bool m_doLHCBkg;
 
-  Rndm::Numbers m_rndm;
+  /// Pointer to RichSmartID tool
+  IRichSmartIDTool * m_smartIDTool;
+
+  mutable Rndm::Numbers m_rndm;
 
 };
 

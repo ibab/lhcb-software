@@ -1,8 +1,14 @@
 !-----------------------------------------------------------------------------
 ! Package     : Rich/RichReadout
-! Responsible : Alex Howard, Chris Jones
+! Responsible : Chris Jones, Alex Howard
 ! Purpose     : Rich Digitisation
 !-----------------------------------------------------------------------------
+
+! 2004-01-26 - Chris Jones
+ - Remove SICB specialisations and dependencies (SICB/RiSicbGeom)
+ - Add reading of LHC background stream (disabled in job options until
+   Gauss LHC events are available)
+ - Switch to new detector tools
 
 !========================= RichReadout v1r4 2004-01-07 =======================
 ! 2004-01-07 - Marco Cattaneo
