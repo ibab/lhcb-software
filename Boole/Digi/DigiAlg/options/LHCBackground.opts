@@ -1,0 +1,32 @@
+// Options to configure instance LHCbkg of MergeEventAlg to
+// read machine background events in /Evemt/LHCbackground merging them
+// with the main event
+
+//ApplicationMgr.DLLs   += { "DigiAlg" };
+//ApplicationMgr.TopAlg += { "MergeEventAlg/LHCbkgAlg" };
+
+LHCbkgAlg.ItemList = {
+ "/Event/Gen#*",
+ "MC#1",
+ "MC/Particles#1",
+ "MC/Vertices#1",
+ "MC/IT#*",
+ "MC/OT#*",
+ "MC/Rich#*",
+ "MC/Spd#*",
+ "MC/Prs#*",
+ "MC/Ecal#1",
+ "MC/Ecal/Hits#1",
+ "MC/Hcal#*",
+ "MC/Velo#*",
+ "MC/Muon#*"
+};
+
+// Default
+//LHCbkgAlg.MergeType = "LHCBackground";
+// Default
+//LHCbkgAlg.EventSelector = "LHCBkgSelector";
+
+//LHCBkgSelector.Input = {
+//  "DATAFILE='$DVDISK/testdata/OORawhProva.root' TYP='ROOT' OPT='READ'" //File written from 00000070_00000001_1.rawh.root'
+//};

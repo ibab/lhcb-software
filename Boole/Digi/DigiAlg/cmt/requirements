@@ -1,0 +1,32 @@
+#============================================================================
+# Created    : 2003-06-23
+# Maintainer : Marco CATTANEO
+#
+# Documentation on the requirement file can be found at
+# http://cern.ch/lhcb-comp/Support/html/new_structure.pdf
+#============================================================================
+package           DigiAlg
+version           v1r0
+
+# Structure, i.e. directories to process. 
+#============================================================================
+branches          cmt doc src options
+
+
+# Used packages. Specify the version, * at the end specifies 'any revision'
+#============================================================================
+use  Event   v* Event
+
+# Component library building rule
+#============================================================================
+library          DigiAlg    ../src/*.cpp
+
+
+# define component library link options
+#============================================================================
+apply_pattern    package_Clinkopts
+apply_pattern    packageShr
+
+#============================================================================
+private
+apply_pattern    package_Cshlibflags

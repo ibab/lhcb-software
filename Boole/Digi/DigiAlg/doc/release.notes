@@ -1,0 +1,16 @@
+!-----------------------------------------------------------------------------
+! Package     : Digi/DigiAlg
+! Responsible : Marco CATTANEO
+! Purpose     : Holds generic digitization algorithms
+!-----------------------------------------------------------------------------
+
+! 2003-06-23 - Gloria CORTI
+ - First import of package
+ - src/MergeEventAlg.h,cpp
+   . new algorithm for merging OO events. An additional event selector is
+     used. For the moment it allows to merge flat events (1 event per main
+     event) for LHC background and puts them in path "/Event/LHCBackground"
+ - options/LHCBackground.opts
+   . options for configuring instance LHCBackground of MergeEventAlg to
+     load necessary items from persistency and put them in TES in location
+     listed above  
