@@ -1,7 +1,8 @@
-// $Id: GaussHitBase.h,v 1.2 2002-12-04 14:42:55 ibelyaev Exp $
+// $Id: GaussHitBase.h,v 1.3 2002-12-07 21:19:13 ibelyaev Exp $
 #ifndef GAUSSTOOLS_GAUSSHITBASE_H 
 #define GAUSSTOOLS_GAUSSHITBASE_H 1
-
+// GiGa 
+#include "GiGa/GiGaUtil.h"
 // Include files
 #include "G4VHit.hh"
 
@@ -33,5 +34,23 @@ private:
 };
 
 #include "GaussTools/GaussHitBase.icpp"  
+
+// ============================================================================
+/** @fn  gaussHit
+ *  Fast cast of G4VHit interface to concrete Gauss implementation
+ *  @param  g4   pointer to G4VHit interface 
+ *  @return cast (dynamic or static) to GaussHitBase
+ *  @author  Vanya Belyaev Ivan.Belyaev@itep.ru
+ *  @date    2002-12-07
+ */
+// ============================================================================
+inline GaussHitBase* gaussHit( G4VHit* g4 )
+{
+  GiGaUtil::FastCast<G4VHit,GaussHitBase> cast ;
+  return cast( g4 );  
+};
+// ============================================================================
+
+
 
 #endif // GAUSSTOOLS_GAUSSHITBASE_H

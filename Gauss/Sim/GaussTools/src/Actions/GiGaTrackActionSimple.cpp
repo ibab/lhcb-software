@@ -1,8 +1,11 @@
-// $Id: GiGaTrackActionSimple.cpp,v 1.4 2002-12-07 14:41:44 ibelyaev Exp $ 
+// $Id: GiGaTrackActionSimple.cpp,v 1.5 2002-12-07 21:19:14 ibelyaev Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.4  2002/12/07 14:41:44  ibelyaev
+//  add new Calo stuff
+//
 // ============================================================================
 #define GIGA_GIGATRACKACKTIONSIMPLE_CPP 1 
 // ============================================================================
@@ -269,14 +272,14 @@ void GiGaTrackActionSimple::PostUserTrackingAction ( const G4Track* track )
   //     See also PreAction
   if( m_storeByOwnEnergy 
       && ( track->GetKineticEnergy() > 
-	   m_ownEnergyThreshold      ) ) 
+           m_ownEnergyThreshold      ) ) 
     { trackMgr()->SetStoreTrajectory( true ) ;     return ; } /// RETURN !!! 
   // (6) store all predefined particle types: 
   if ( m_storeByOwnType  
        && ( std::find( m_ownStoredTypes.begin() ,  
-		       m_ownStoredTypes.end  () , 
-		       track->GetDefinition  () ) 
-	    != m_ownStoredTypes.end() )         )
+                       m_ownStoredTypes.end  () , 
+                       track->GetDefinition  () ) 
+            != m_ownStoredTypes.end() )         )
     { trackMgr()->SetStoreTrajectory( true ) ;     return ; } /// RETURN !!!
   // (7) store the particle if it has a certain type of daughter particle 
   //     or at least one from secondaries  particle have kinetic energy over 
@@ -286,32 +289,32 @@ void GiGaTrackActionSimple::PostUserTrackingAction ( const G4Track* track )
     {
       const G4TrackVector* childrens = trackMgr()->GimmeSecondaries() ; 
       for( unsigned int index = 0 ; index < childrens->size() ; ++index )
-	{
-	  const G4Track* tr = (*childrens)[index];
-	  if( 0 == tr ) { continue; }
-	  // 
-	  if( m_storeByChildEnergy 
-	      && ( tr->GetKineticEnergy() > 
-		   m_childEnergyThreshold ) ) 
-	    { trackMgr()->SetStoreTrajectory( true ) ;   return ; } /// RETURN 
-	  //
-	  if( m_storeByChildType
-	      && ( std::find( m_childStoredTypes.begin() ,  
-			      m_childStoredTypes.end  () , 
-			      tr->GetDefinition       () ) 
-		   != m_childStoredTypes.end() )         ) 
-	    { trackMgr()->SetStoreTrajectory( true ) ;   return ; } /// RETURN
-	  ///
-	}
+        {
+          const G4Track* tr = (*childrens)[index];
+          if( 0 == tr ) { continue; }
+          // 
+          if( m_storeByChildEnergy 
+              && ( tr->GetKineticEnergy() > 
+                   m_childEnergyThreshold ) ) 
+            { trackMgr()->SetStoreTrajectory( true ) ;   return ; } /// RETURN 
+          //
+          if( m_storeByChildType
+              && ( std::find( m_childStoredTypes.begin() ,  
+                              m_childStoredTypes.end  () , 
+                              tr->GetDefinition       () ) 
+                   != m_childStoredTypes.end() )         ) 
+            { trackMgr()->SetStoreTrajectory( true ) ;   return ; } /// RETURN
+          ///
+        }
     }
   // (8) store  tracks, marked through GaussTrackInformation class
   if( m_storeMarkedTracks ) 
     {
       G4VUserTrackInformation* ui = track->GetUserInformation(); 
       GaussTrackInformation*    gi = 
-	( 0 == ui )  ? 0 : dynamic_cast<GaussTrackInformation*> ( ui );
+        ( 0 == ui )  ? 0 : dynamic_cast<GaussTrackInformation*> ( ui );
       if( 0 != gi && gi->toBeStored() ) 
-	{ trackMgr()->SetStoreTrajectory   ( true )  ;   return ; }  /// RETURN 
+        { trackMgr()->SetStoreTrajectory   ( true )  ;   return ; }  /// RETURN 
     }  
   // other storing criteria:
   // add your own storing criteria AFTER this line and 
@@ -320,13 +323,14 @@ void GiGaTrackActionSimple::PostUserTrackingAction ( const G4Track* track )
   
   // check if track is to be stored 
   if (      trackMgr()->GetStoreTrajectory () )         { return ; } /// RETURN 
+  
   // if track is not to be stored, propagate it's parent ID (stored) to its
   // secondaries
   if( 0 != trackMgr()->GimmeSecondaries() ) 
     {
       if( 0 == track->GetParentID() ) 
         { Error("Dangerouse:Primary Particle is not requested to be stored");}
- 
+      
       G4TrackVector* childrens = trackMgr()->GimmeSecondaries() ;
       for( unsigned int index = 0 ; index < childrens->size() ; ++index )
         {
@@ -345,7 +349,7 @@ void GiGaTrackActionSimple::PostUserTrackingAction ( const G4Track* track )
   GaussTrackInformation*    ginf = 
     ( 0 == uinf )  ? 0 : dynamic_cast<GaussTrackInformation*> ( uinf );
   ginf->updateHitsTrackID( track->GetParentID() );
-
+  
   // delete the trajectory by hand 
   if ( !trackMgr()->GetStoreTrajectory() )
     {

@@ -1,8 +1,11 @@
-// $Id: CaloHit.h,v 1.1 2002-12-07 14:41:44 ibelyaev Exp $
+// $Id: CaloHit.h,v 1.2 2002-12-07 21:19:14 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
-// $Log: not supported by cvs2svn $ 
+// $Log: not supported by cvs2svn $
+// Revision 1.1  2002/12/07 14:41:44  ibelyaev
+//  add new Calo stuff
+// 
 // ============================================================================
 #ifndef CALOSIM_CALOHIT_H 
 #define CALOSIM_CALOHIT_H 1
@@ -11,6 +14,8 @@
 #include "GaudiKernel/StatusCode.h" 
 // Kernel
 #include "Kernel/CaloCellID.h"
+// GiGa 
+#include "GiGa/GiGaUtil.h"
 // G4 
 #include "G4VHit.hh"
 #include "G4THitsCollection.hh"
@@ -103,6 +108,38 @@ private:
 
 /// type for the hit collection 
 typedef G4THitsCollection<CaloHit> CaloHitsCollection ;
+
+// ============================================================================
+/** @fn  caloHits
+ *  Fast cast of G4VHitsCollection interface to concrete Gauss implementation
+ *  @param  g4   pointer to G4VHitsCollection interface 
+ *  @return cast (dynamic or static) to CaloHitsColelction*
+ *  @author  Vanya Belyaev Ivan.Belyaev@itep.ru
+ *  @date    2002-12-07
+ */
+// ============================================================================
+inline CaloHitsCollection* caloHits( G4VHitsCollection* g4 )
+{
+  GiGaUtil::FastCast<G4VHitsCollection,CaloHitsCollection> cast ;
+  return cast( g4 );  
+};
+
+// ============================================================================
+/** @fn  caloHit
+ *  Fast cast of G4VHit interface to concrete Gauss implementation
+ *  @param  g4   pointer to G4VHit interface 
+ *  @return cast (dynamic or static) to CaloHit
+ *  @author  Vanya Belyaev Ivan.Belyaev@itep.ru
+ *  @date    2002-12-07
+ */
+// ============================================================================
+inline CaloHit* caloHit( G4VHit* g4 )
+{
+  GiGaUtil::FastCast<G4VHit,CaloHit> cast ;
+  return cast( g4 );  
+};
+// ============================================================================
+
 
 // ============================================================================
 // The END 

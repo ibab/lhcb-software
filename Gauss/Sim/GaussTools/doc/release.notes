@@ -6,6 +6,20 @@
 	
 
 ! 2002-12-07 - Ivan Belyaev
+ - GaussTools/GaussHitBase.h               Instrument the classes with fast and  
+   GaussTools/GaussTrackInformation.h      efficient up-casting from their base 
+   GaussTools/GaussTrajectory.h            classes. Fro non-debug mode there  
+   GaussTools/GaussTrackInformation.icpp   should be significant CPU performance
+   src/Calo/CaloHit.h                      improvement
+   src/Calo/CaloSensDet.cpp
+   src/Calo/CaloSubHit.h
+
+ - src/Actions/GiGaTrackActionSimple.cpp 
+ - src/Calo/GiGaCaloHitCnv.cpp                update for usage of improved casts 
+ - src/Lib/GaussTrackInformationAllocator.cpp remove file 
+ - src/Lib/GaussTrackInformationAllocator.cpp new file 
+
+! 2002-12-07 - Ivan Belyaev
  - src/Calo                    new directory with calorimeter stuff 
    src/Calo/CaloHit.cpp
    src/Calo/CaloHit.h

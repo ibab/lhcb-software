@@ -1,131 +1,17 @@
+// $Id: GaussTrackInformation.icpp,v 1.2 2002-12-07 21:19:13 ibelyaev Exp $ 
 // ============================================================================
-/// CVS tag $Name: not supported by cvs2svn $ 
+// CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
-/// $Log: not supported by cvs2svn $
-/// Revision 1.1  2002/10/30 14:00:36  witoldp
-/// changes following introduction vector of pointers to hits in 
-/// GaussTrackInformation
-///
-/// Revision 1.10  2002/10/28 14:47:12  witoldp
-/// added info whether hit was created by the track
-///
-/// Revision 1.9  2001/08/12 15:42:45  ibelyaev
-/// improvements with Doxygen comments
-///
-/// Revision 1.8  2001/07/23 13:11:44  ibelyaev
-/// the package restructurisation(II)
-/// 
+// $Log: not supported by cvs2svn $
 // ============================================================================
 #ifndef     GaussTools_GaussTrackInformation_ICPP
 #define     GaussTools_GaussTrackInformation_ICPP 1 
 // ============================================================================
 
-/// Geant4 
-#include "globals.hh"
-#include "G4Allocator.hh"
-
 /** implementation of inline methods from class GaussTrackInformation 
  *  
  *  @author Vanya Belyaev 
  */
-
-// ============================================================================
-/// allocator 
-// ============================================================================
-extern G4Allocator<GaussTrackInformation> s_GaussTrackInformationAllocator;
-
-// ============================================================================
-/// constructor 
-// ============================================================================
-inline GaussTrackInformation::GaussTrackInformation()
-  :m_appendStep( false ), m_toBeStored( false ), m_createdHit( false )
-{m_hits.clear();}; 
-
-// ============================================================================
-/// destructor 
-// ============================================================================
-inline GaussTrackInformation::~GaussTrackInformation() {}; 
-
-// ============================================================================
-/// operator new 
-// ============================================================================
-inline void*      GaussTrackInformation::operator new    ( size_t    )
-{ return (void*) s_GaussTrackInformationAllocator.MallocSingle(); };
-
-// ============================================================================
-/// operator delete 
-// ============================================================================
-inline void       GaussTrackInformation::operator delete ( void*  trackInfo  )
-{ 
-  s_GaussTrackInformationAllocator.FreeSingle( (GaussTrackInformation*) 
-                                              trackInfo ); 
-};
-
-// ============================================================================
-/// print
-// ============================================================================
-inline void       GaussTrackInformation::Print() const {};
-
-// ============================================================================
-/// 
-// ============================================================================
-inline GaussTrackInformation&  
-GaussTrackInformation::setAppendStep ( const bool Flag )       
-{ m_appendStep = Flag ; return *this; }; 
-
-// ============================================================================
-/// 
-// ============================================================================
-inline const bool GaussTrackInformation::appendStep ()       
-{return m_appendStep; }; 
-
-// ============================================================================
-/// 
-// ============================================================================
-inline const bool GaussTrackInformation::toBeStored   () const 
-{ return m_toBeStored; };
-
-// ============================================================================
-/// 
-// ============================================================================
-inline GaussTrackInformation&  
-GaussTrackInformation::setToBeStored ( const bool Flag )       
-{ m_toBeStored = Flag ; return *this; }; 
-
-// ============================================================================
-///
-// ============================================================================
-inline GaussTrackInformation&  
-GaussTrackInformation::setCreatedHit ( const bool Flag )       
-{ m_createdHit = Flag ; return *this; }; 
-
-// ============================================================================
-/// 
-// ============================================================================
-inline const bool GaussTrackInformation::createdHit   () const 
-{ return m_createdHit; };
-
-// ============================================================================
-/// 
-// ============================================================================
-inline void GaussTrackInformation::addHit(GaussHitBase* ahit)
-{
-  m_hits.push_back(ahit);
-};
-
-// ============================================================================
-/// 
-// ============================================================================
-
-inline void GaussTrackInformation::updateHitsTrackID(G4int trackID)
-{
-  for(std::vector<GaussHitBase*>::iterator i=m_hits.begin(); 
-      i != m_hits.end(); i++)
-    {
-      (*i)->SetTrackID(trackID);
-    }
-};
-
 
 // ============================================================================
 #endif  //  GaussTools_GaussTrackInformation_ICPP

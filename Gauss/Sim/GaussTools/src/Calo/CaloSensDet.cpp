@@ -1,8 +1,11 @@
-// $Id: CaloSensDet.cpp,v 1.1 2002-12-07 14:41:44 ibelyaev Exp $ 
+// $Id: CaloSensDet.cpp,v 1.2 2002-12-07 21:19:14 ibelyaev Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.1  2002/12/07 14:41:44  ibelyaev
+//  add new Calo stuff
+//
 // Revision 1.4  2002/05/07 12:21:36  ibelyaev
 //  see $GIGAROOT/doc/release.notes  7 May 2002
 //
@@ -196,7 +199,6 @@ StatusCode  CaloSensDet::locateVolumes()
       if( 0 == lv ) 
         { return Error("G4LogicalVolume* points to 0 for "+ (*vol) );}
       m_start.push_back( lv );
-      std::cerr << " located volume " << lv->GetName() << std::endl ;
     }
   if( m_start.empty() ) { return Error("Size of 'StartVolumes' is 0 "); }
   // locate end volume : look through converted volumes 
@@ -204,9 +206,6 @@ StatusCode  CaloSensDet::locateVolumes()
   if( 0 == m_end ) 
     { return Error("G4LogicalVolume* points to 0 for '"+m_endVolumeName+"'");}
   // set flag 
-  //
-  std::cerr << " located volume " << m_end->GetName() << std::endl ;
-  //
   m_volumesLocated = true ;
   //
   return StatusCode::SUCCESS ;
@@ -247,12 +246,7 @@ void CaloSensDet::Initialize( G4HCofThisEvent* HCE )
  */
 // ============================================================================
 void CaloSensDet::EndOfEvent( G4HCofThisEvent* HCE ) 
-{ 
-  std::cerr << " number of hits = " 
-            << m_hitmap.size()  
-            << " total number   = " << numHits( m_hitmap ) << std::endl ;
-  m_hitmap.clear() ; 
-};
+{ m_hitmap.clear() ; };
 // ============================================================================
 
 // ============================================================================
@@ -292,21 +286,21 @@ bool CaloSensDet::ProcessHits( G4Step* step ,
       if( 0 == lv ) { continue ; }                          // CONTINUE 
       
       //  start volume ? 
-      if( m_start .end() != std::find( m_start .begin () , 
-                                       m_start .end   () , lv ) )
-        { path.push_back( tHist->GetReplicaNumber( level ) ); }
-      // end volume ?
-      else if (  m_end == lv  )    { break ; } // BREAK    
+      if      (  m_end == lv  )    { break ; } // BREAK    
       // "useful" volume 
       else if ( !path.empty() ) 
         { path.push_back( tHist->GetReplicaNumber( level ) ); }
+      else if ( m_start .end() != std::find( m_start .begin () , 
+                                             m_start .end   () , lv ) )
+        { path.push_back( tHist->GetReplicaNumber( level ) ); }
+      // end volume ?
     }
-
+  
   if( path.empty() ) 
     { Error("Replica Path is invalid!") ; return false ; }       // RETURN 
   
   // find the cellID 
-  CaloCellID cellID( m_table( path ) ) ;
+  CaloCellID  cellID( m_table( path ) ) ;
   if( CaloCellID() == cellID ) 
     {
       cellID          = calo() -> Cell ( prePoint );
@@ -326,15 +320,14 @@ bool CaloSensDet::ProcessHits( G4Step* step ,
     }
   
   // check the status of the track
-  G4VUserTrackInformation* ui   = track->GetUserInformation(); 
-  GaussTrackInformation*   info = 
-    ( 0 == ui )  ? 0 : dynamic_cast<GaussTrackInformation*> ( ui );
+  GaussTrackInformation* info = 
+    gaussTrackInformation( track->GetUserInformation() );
   if( 0 == info ) 
     { Error("Invalid Track information") ; return false ; }     // RETURN
   
   /// ID of track to be stored 
   int sTrackID     = track -> GetParentID () ;
-  // already amrked to be stored:
+  // already marked to be stored:
   if     ( info -> toBeStored()     ) { sTrackID = trackID ; }
   else  
     {
@@ -346,7 +339,8 @@ bool CaloSensDet::ProcessHits( G4Step* step ,
   CaloSubHit*& sub  = hit->hit( sTrackID ) ;                   // ATTENTION
   // create new subhit if needed 
   if( 0 == sub ) { sub = new CaloSubHit ( cellID , sTrackID ) ; }
-  
+  /// update the track informoation
+  if( trackID == sTrackID ) { info->addToHits( sub ); }
   // add current energy deposition to the sub-hit
   CaloSubHit::Time tm = 0   ; 
   sub->add( tm , edeposit ) ;

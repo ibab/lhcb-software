@@ -1,8 +1,11 @@
-// $Id: CaloSubHit.h,v 1.1 2002-12-07 14:41:44 ibelyaev Exp $
+// $Id: CaloSubHit.h,v 1.2 2002-12-07 21:19:14 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.1  2002/12/07 14:41:44  ibelyaev
+//  add new Calo stuff
+//
 // ============================================================================
 #ifndef CALOSIM_CALOSUBHIT_H 
 #define CALOSIM_CALOSUBHIT_H 1
@@ -10,6 +13,7 @@
 #include "Kernel/CaloCellID.h"
 // GiGa 
 #include "GiGa/GiGaHashMap.h"
+#include "GiGa/GiGaUtil.h"
 // Include files
 #include "GaussTools/GaussHitBase.h"
 // Local 
@@ -120,6 +124,38 @@ private:
   CaloCellID  m_cellID ;
   TheMap      m_map    ;
   
+};
+// ============================================================================
+
+// ============================================================================
+/** @fn  caloSubHit
+ *  Fast cast of G4VHit interface to concrete Gauss implementation
+ *  @param  g4   pointer to G4VHit interface 
+ *  @return cast (dynamic or static) to CaloSubHit
+ *  @author  Vanya Belyaev Ivan.Belyaev@itep.ru
+ *  @date    2002-12-07
+ */
+// ============================================================================
+inline CaloSubHit* caloSubHit( G4VHit* g4 )
+{
+  GiGaUtil::FastCast<G4VHit,CaloSubHit> cast ;
+  return cast( g4 );  
+};
+// ============================================================================
+
+// ============================================================================
+/** @fn  caloSubHit
+ *  Fast cast of GaussHitBase interface to concrete Gauss implementation
+ *  @param  g4   pointer to GaussHitBase interface 
+ *  @return cast (dynamic or static) to CaloSubHit
+ *  @author  Vanya Belyaev Ivan.Belyaev@itep.ru
+ *  @date    2002-12-07
+ */
+// ============================================================================
+inline CaloSubHit* caloSubHit( GaussHitBase* g4 )
+{
+  GiGaUtil::FastCast<GaussHitBase,CaloSubHit> cast ;
+  return cast( g4 );  
 };
 // ============================================================================
 

@@ -1,8 +1,11 @@
-// $Id: GiGaCaloHitCnv.cpp,v 1.1 2002-12-07 14:41:45 ibelyaev Exp $
+// $Id: GiGaCaloHitCnv.cpp,v 1.2 2002-12-07 21:19:14 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
-// $Log: not supported by cvs2svn $ 
+// $Log: not supported by cvs2svn $
+// Revision 1.1  2002/12/07 14:41:45  ibelyaev
+//  add new Calo stuff
+// 
 // ============================================================================
 // STD and STL
 #include <iostream> 
@@ -10,10 +13,13 @@
 #include "GaudiKernel/StreamBuffer.h"
 #include "GaudiKernel/CnvFactory.h"
 #include "GaudiKernel/IOpaqueAddress.h"
+#include "GaudiKernel/IRegistry.h"
 #include "GaudiKernel/DataObject.h"
 // GiGa
 #include "GiGa/IGiGaSvc.h"
 #include "GiGa/GiGaUtil.h"
+#include "GiGa/GiGaHitsByID.h"
+#include "GiGa/GiGaHitsByName.h"
 // GiGaCnv
 #include "GiGaCnv/IGiGaHitsCnvSvc.h"
 #include "GiGaCnv/IGiGaKineCnvSvc.h"
@@ -154,7 +160,6 @@ StatusCode GiGaCaloHitCnv::updateObj
   DataObject*         object    ) 
 { 
   // avoid long names 
-  typedef IGiGaSvc::CollectionNamePair  Collection ;
   typedef CaloHitsCollection            CaloHits   ;
   // check arguments 
   if( 0 ==   address   ) { return Error(" IOpaqueAddress* points to NULL" ) ; }
@@ -162,9 +167,26 @@ StatusCode GiGaCaloHitCnv::updateObj
   MCCaloHits* hits = dynamic_cast<MCCaloHits*> ( object ); 
   if( 0 ==   hits ) { return Error(" DataObject*(of type '"      + 
                                    GiGaUtil::ObjTypeName(object) + 
-                                   "*') is not 'MCCaloHits*'! "   );}  
+                                   "*') is not 'MCCaloHits*'! "   );}
   // clear the object 
   hits->clear();
+  
+  // get the registry
+  const IRegistry* registry = address->registry();
+  if( 0 == registry ) { return Error("IRegistry* points to NULL!");}
+  
+  const std::string& location = registry->identifier();
+  
+  { // try to locate MCParticles explicitely
+    // just to force the loading of the reference table 
+    std::string mcpath = 
+      location.substr( 0, location.find( "/MC" ) ) + "/" + 
+      MCParticleLocation::Default;
+    // get MCparticles 
+    const MCParticles* mcps = get( dataProvider() , mcpath , mcps );
+    if( 0 == mcps ) 
+      { return Error("Can not locate MCparticles at '" + mcpath + "'");}  
+  }
   
   const std::string* par = address->par();
   if( 0 == par || par->empty() ) 
@@ -172,21 +194,26 @@ StatusCode GiGaCaloHitCnv::updateObj
   const std::string& colName = (*par) ;
   
   // get the hits collection from GiGa 
-  Collection col( colName , (G4VHitsCollection*) 0 );
+  GiGaHitsByName col( colName );
   *gigaSvc() >> col ;
-  if( 0 == col.second ) 
-    { return Error(" Collection '"+colName+"' is not found"    ) ; } // RETURN
+  if( 0 == col.hits() ) 
+    { 
+      return Warning(" The hit collection='" + colName             + 
+                     "' is not found! "                            + 
+                     " Return *EMPTY* hit container '"             + 
+                     location + "'"          , StatusCode::SUCCESS ) ; 
+    } // RETURN
   
   // cast to concrete hit collection 
-  const CaloHits* g4hits = dynamic_cast<CaloHits*>( col.second );
-  if( 0 == g4hits    ) { return Error(" Wrong Colelction type" ) ; } // RETURN
+  const CaloHits* g4hits = caloHits( col.hits() );
+  if( 0 == g4hits    ) { return Error(" Wrong Collection type" ) ; } // RETURN
   
   /// get the reference table between G4 tracks/trajectories and MC particles
   const GiGaKineRefTable& table = hitsSvc() -> table() ;
   
   // explicit loop over all hits 
   const size_t size = g4hits->entries();
-  for( int g4hit = 0 ; g4hit < size ; ++g4hit ) 
+  for( size_t  g4hit = 0 ; g4hit < size ; ++g4hit ) 
     {
       // get the hit 
       const CaloHit* hit =  (*g4hits)[g4hit];
