@@ -1,6 +1,10 @@
-! $Id: release.notes,v 1.2 2004-09-10 13:14:22 cattanem Exp $
+! $Id: release.notes,v 1.3 2004-10-28 15:23:39 cattanem Exp $
 Package         : OTSimulation
 Package manager : J. van Tilburg and Jacopo Nardulli
+
+!==================== OTSimulation v1r1 2004-10-26 ======================
+! 2004-10-26 - Marco Cattaneo
+ - OTFillRawBuffer.cpp: add version number OTBankVersion::v1 to RawBuffer banks
 
 !==================== OTSimulation v1r0 2004-09-10 ======================
 ! 2004-30-08 - Jacopo Nardulli
