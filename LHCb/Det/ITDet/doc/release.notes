@@ -1,6 +1,11 @@
 Package         : ITDet
 Package manager : M. Needham 
 
+
+!======================== ITDet v1r2 2002-10-04 ==========================
+! M. Needham
+Swap wafer mapping so that wafer 1 is in the Top box
+
 !========================== ITDet v1r1 2002-10-04 ==========================
 ! 2002-10-03 M Needham
   Bug fixes in ITSTLayer, ITTT1Layer 

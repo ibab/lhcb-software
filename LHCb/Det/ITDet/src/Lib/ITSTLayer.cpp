@@ -1,4 +1,4 @@
-// $Id: ITSTLayer.cpp,v 1.4 2002-10-04 07:24:47 mneedham Exp $
+// $Id: ITSTLayer.cpp,v 1.5 2002-10-04 15:52:28 mneedham Exp $
 //
 // This File contains the definition of the ITSTLayer-class
 //
@@ -46,29 +46,30 @@ ITSTLayer::ITSTLayer(int stationID, int layerID, double z,
     double yCenterBox = holeY+((ladderHeight*cosAngle())
                                +(waferWidth*fabs(sinAngle())))/2.;
 
-      for (iBox= -1; iBox <= 2; iBox += 2 ){     
-      double yWafer = (double)iBox*yCenterBox;
-      for (unsigned int cWafer = 1; cWafer<= wafersX; cWafer++){
+      for (iBox= -1; iBox <= 2; iBox += 2 ){
+	// flip sign so that wafer 1 is in top box     
+        double yWafer = (double)-iBox*yCenterBox;
+        for (unsigned int cWafer = 1; cWafer<= wafersX; cWafer++){
 
-        double xWafer = ((waferWidth-waferOverlap)/cosAngle())
-	  *((double)cWafer-((double)wafersX+1.)/2.);
-        double dz = (1.-(2.*(cWafer%2)))*0.5*ladderDist;    
+          double xWafer = ((waferWidth-waferOverlap)/cosAngle())
+	   *((double)cWafer-((double)wafersX+1.)/2.);
+          double dz = (1.-(2.*(cWafer%2)))*0.5*ladderDist;    
 
-        double uWafer = xWafer*cosAngle() + yWafer*sinAngle();
-        double vWafer = yWafer*cosAngle() - xWafer*sinAngle();
-
-        m_Wafers[currWafer-1] = new ITWafer(pitch, 1,wafersY, 
-					    stationID,layerID,currWafer,
+          double uWafer = xWafer*cosAngle() + yWafer*sinAngle();
+          double vWafer = yWafer*cosAngle() - xWafer*sinAngle();
+ 
+          m_Wafers[currWafer-1] = new ITWafer(pitch, 1,wafersY, 
+	 				    stationID,layerID,currWafer,
                                             uWafer - sensWaferWidth/2.,  
                                             uWafer + sensWaferWidth/2., 
 			                    vWafer - sensLadderHeight/2., 
 			                    vWafer + sensLadderHeight/2., 
                                             dz,guardRingSize);
 
-        currStrip += m_Wafers[currWafer-1]->lastStrip();
-        currWafer++;      
+         currStrip += m_Wafers[currWafer-1]->lastStrip();
+         currWafer++;      
 
-      } // iWafer
+        } // iWafer
       } // boxes
   }
   else {
