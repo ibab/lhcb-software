@@ -1,114 +1,99 @@
-! $Id: release.notes,v 1.19 2002-05-07 12:24:50 ibelyaev Exp $
-! =============================================================================
-! CVS tag $Name: not supported by cvs2svn $
+! $Id: release.notes,v 1.20 2002-05-10 09:48:21 ranjard Exp $
 ! =============================================================================
 Package         : GiGaCnv
 Package Manager : Vanya Belyaev Ivan.Belyaev@itep.ru
-! =============================================================================
 
-!==============================================================================
-! 7 May 2002  v5r0 Vanya  Belyaev
-! Update for changes in GiGa interfaces (see $GIGAROOT/doc/release.notes)
-! All sensitive detectors and magnetic field objects now are "Tools" owned
-! by GiGaGeomCnvSvc  
-!==============================================================================
+! >>>>>>>>>>>>>>>>>>>>>>>> GiGaCnv v5r0 <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
-!==============================================================================
-! 4 May 2002  v5r0 Vanya  Belyaev
-! - GiGaCnv/GiGaKineRefTable.h
-!   make usage of GiGa/GiGaHashMap.h instead of "home-made" implementation of 
-!   map-like interface
-! - GiGaCnv/IGiGaGeomCnvSvc.h
-!   add  new method createG4LV to the interface. This method shoudl be 
-!   used instead of ordinary creation of G4LogicalVolume using  "new" operator.
-!   For volumes, created manually, the automatized evaluation of material 
-!   budget is not possible. 
-! - src/component/GiGaGeomCnv.h,.cpp
-!   add new property "MaterialBudget". This property,being defined with 
-!   "Type/Name" of sensitive detector implies the special run, when ALL 
-!   Logical volumes get the conection to this special sensitive detector.
-!   It is primary oriented for special material budget evaluation runs.
-! - src/component/GiGaLVolumeCnv.cpp
-!   substitute manual call for "new G4LogicalVolume" by 
-!   call to "IGiGaGeomCnvSvc::createG4LV" method.
-!==============================================================================
+! 20020507 - GiGaCnv v5r0
+  requirements - use new library patterns
 
-!==============================================================================
-! 3 May 2002  v5r0 Vanya Belyaev
-! GiGaLVolumeCnv.cpp and GiGaLAssemblyCnv.cpp 
-! - reintroduce the creation of sensitive detectors
-!   (somehow these lines disappeared from mainstream development) 
-!==============================================================================
+! 20020507 - v5r0 Vanya  Belyaev
+ Update for changes in GiGa interfaces (see $GIGAROOT/doc/release.notes)
+ All sensitive detectors and magnetic field objects now are "Tools" owned
+ by GiGaGeomCnvSvc  
 
-!==============================================================================
-! 1 May 2002  v5r0 Vanya Belyaev
-!1) GiGaMCParticleCnv and GiGaMCVertexCnv seems to beOK now 
-!2) import errors/warnings/exception counting technique from LHCb Calo software
-!==============================================================================
+! 20020504 - v5r0 Vanya  Belyaev
+ - GiGaCnv/GiGaKineRefTable.h
+   make usage of GiGa/GiGaHashMap.h instead of "home-made" implementation of 
+   map-like interface
+ - GiGaCnv/IGiGaGeomCnvSvc.h
+   add  new method createG4LV to the interface. This method shoudl be 
+   used instead of ordinary creation of G4LogicalVolume using  "new" operator.
+   For volumes, created manually, the automatized evaluation of material 
+   budget is not possible. 
+ - src/component/GiGaGeomCnv.h,.cpp
+   add new property "MaterialBudget". This property,being defined with 
+   "Type/Name" of sensitive detector implies the special run, when ALL 
+   Logical volumes get the conection to this special sensitive detector.
+   It is primary oriented for special material budget evaluation runs.
+ - src/component/GiGaLVolumeCnv.cpp
+   substitute manual call for "new G4LogicalVolume" by 
+   call to "IGiGaGeomCnvSvc::createG4LV" method.
 
-!==============================================================================
-! 23/04/2002  v5r0 Vanya Belyaev
-!  update for newer Gaudi and Geant4 versions 
-!==============================================================================
+! 20020503 - v5r0 Vanya Belyaev
+ GiGaLVolumeCnv.cpp and GiGaLAssemblyCnv.cpp 
+ - reintroduce the creation of sensitive detectors
+   (somehow these lines disappeared from mainstream development) 
 
-!==============================================================================
-! 13/03/2002  Vanya Belyaev
-! change the version number 
-! remove several warnings 
-!==============================================================================
+! 20020501 -  v5r0 Vanya Belyaev
+1) GiGaMCParticleCnv and GiGaMCVertexCnv seems to beOK now 
+2) import errors/warnings/exception counting technique from LHCb Calo software
 
-!==============================================================================
-! 12/03/2002  Vanya Belyaev
-! remove hash_map and map from public usage on WIN32 platform, 
-! replace std::hash_map with GaudiKernel/HashTable.h
-!==============================================================================
+! 20020423 - v5r0 Vanya Belyaev
+  update for newer Gaudi and Geant4 versions 
 
-!==============================================================================
-! 04/03/2002  Witek Pokorski 
-! added new converter from HepMC to G4 
-!==============================================================================
+! 20020313 - v5r0 Vanya Belyaev
+ change the version number 
+ remove several warnings 
 
-!==============================================================================
+! 20020312 - v5r0  Vanya Belyaev
+ remove hash_map and map from public usage on WIN32 platform, 
+ replace std::hash_map with GaudiKernel/HashTable.h
+
+! >>>>>>>>>>>>>>>>>>>>> GiGaCnv v4r0 <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+
+! 20020304 - GiGaCnv v4r0 - Witek Pokorski 
+ added new converter from HepMC to G4 
+
 ! 22/01/2002  Vanya Belyaev 
 ! update for newer Gaudi and   Geant4 versions 
 ! bug fix for Surface converter 
-!==============================================================================
 
-!==============================================================================
 ! 22/01/2002  Vanya Belyaev
 ! update for newer Gaudi and Geant4 
-!==============================================================================
 
-!==============================================================================
+!>>>>>>>>>>>>>>>>>>>>>>> GiGaCnv v3r0 <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+
 ! 20011119  Vanya Belyaev
 	AddTabulatedProperties.h - bug fix (thanks to Sajan!)
 	GiGaCatalogCnv.h/.cpp    - new converetr to converet the whole 
                              contents of catalog to Geant4   
-!==============================================================================
+
 ! 20010730  Vanya Belyaev 
     GiGaMCVertexCnv.cpp  -  bug fix 
     GiGaCnvFunctors.h     - rewrite comparison functors to make them easier 
-!==============================================================================
+
 ! 20010724  Vanya Belyaev 
     restructurisation and the update due to changes in GiGa 
 
-!==============================================================================
+! >>>>>>>>>>>>>>>>>>>>> GiGaCnv v2 <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+
 ! 20010717 v2  Vanya Belyaev 
     use newer version of GiGa 
     move several interfaces 
     make more the weaker dependencies between the packages 
 
-!==============================================================================
 ! 20010717 Flr
   requirements - add component library linkopts
 
-!==============================================================================
 ! 20010715  Vanya Belyaev package restructurization 
 
-!============================================================================== 
+! >>>>>>>>>>>>>>>>>>>>>>>>> GiGaCnv v1 <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+
 !20010423
     New package:
     It gets all conversion services from GiGa package
     and general(subdetector-neutral, but LHCb-specific) converters
 
-!============================================================================== 
+! >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
