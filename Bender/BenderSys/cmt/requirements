@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.47 2005-02-02 19:19:02 ibelyaev Exp $ 
+# $Id: requirements,v 1.48 2005-02-05 13:55:03 ibelyaev Exp $ 
 # =============================================================================
 # CVS tag $Name: not supported by cvs2svn $
 # =============================================================================
@@ -21,9 +21,12 @@ use           BenderLibs     v4r6   Tools
 use           BenderDet      v4r5   Det 
 # =========== dictionaries for LoKi/Bender classes ============================
 use           BenderDict     v4r6   Tools 
+# =========== dictionaries for Relations ======================================
+use           BenderRels     v4r6   Tools 
 # =========== Bender & LoKi documentation =====================================
 use           BenderDoc      v4r5   Doc 
 use           LoKiDoc        v3r7   Doc 
+# =========== Bender Tutorial =================================================
 use           BenderTutor    v4r5   Tutorial
 # =========== Test suit for Bender ============================================
 use           BenderTest     v4r5   Tests 
@@ -42,9 +45,6 @@ use           LoKiHybrid     v4r5   Tools
 
 # =============================================================================
 # $Log: not supported by cvs2svn $
-# Revision 1.46  2005/02/01 11:10:20  ibelyaev
-#  use DaVinci v12r7
-#
 # =============================================================================
 # The END 
 # =============================================================================
