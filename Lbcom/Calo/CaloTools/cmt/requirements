@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.15 2002-10-03 10:29:43 cattanem Exp $
+# $Id: requirements,v 1.16 2002-11-13 21:35:04 ibelyaev Exp $
 # =============================================================================
 # CVS tag $Name: not supported by cvs2svn $
 # =============================================================================
@@ -6,22 +6,7 @@
 # Maintainer : Vanya Belyaev Ivan.Belyaev@itep.ru
 # =============================================================================
 package            CaloTools
-version            v4r4
+version            v5r0
 
-# ================ structure =================================================
-branches           cmt doc src options 
-
-# ================ environment ===============================================
-set CALOTOOLSOPTS  $(CALOTOOLSROOT)/options
-
-# ================ dependencies ==============================================
-use CaloInterfaces v2r*   Calo 
-use CaloUtils      v4r*   Calo 
-
-# ================ component library =========================================
-library            CaloTools    *.cpp
-
-# ================ standard pattern ==========================================
-apply_pattern      component_library library=CaloTools
-
+setup_script       message 
 # ================ The End ===================================================
