@@ -1,5 +1,5 @@
 package           MuonAssociators
-version           v1r5
+version           v1r5p1
         
 # =============== structure =================================================== 
 branches          MuonAssociators src cmt doc 
@@ -7,7 +7,7 @@ branches          MuonAssociators src cmt doc
 include_dirs $(MUONASSOCIATORSROOT)
 
 # =============== used packages ===============================================
-use MuonEvent     v3r*  Event 
+use MuonEvent     v*    Event 
 use Relations	  v2r*	Kernel
 
 # =============== component library ===========================================
