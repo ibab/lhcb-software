@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.80 2004-04-22 10:07:53 pkoppenb Exp $
+! $Id: release.notes,v 1.81 2004-04-22 16:27:50 pkoppenb Exp $
 ! Package     : DaVinciTools
 ! Responsible : P. Koppenburg, Sandra Amato
 
@@ -9,12 +9,6 @@
  - src/NoPIDsParticleMaker.cpp
  - src/NoPIDsParticleMaker.h
        remove unnesessary location fo services and their release 
-
-! 2004-04-21 - P. Koppenburg
-  - src/MergedPi0Alg.*, src/ResolvedPi0Alg.*
-    Moved from PhysSel/Bd2Rho0Rho0 as it is shared by several analyses.
-  - options/*Pi0Alg.opts
-    Recommended options for these algorithms.
 
 ! 2004-04-21 - Vanya Belyaev
   - src/PhotonParticleMaker.h,(.cpp)
