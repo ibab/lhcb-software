@@ -1,0 +1,27 @@
+//**************************************************************
+// Recommended options for SelectKsPiPi algorithms
+//==============================================================
+
+SelectKsPiPi.HistogramFlag = true;
+
+//-----------------------------------------------------------------
+// Configure PhysDeskTop Tool with necessary values or values
+// different from default
+//-----------------------------------------------------------------
+SelectKsPiPi.PhysDesktop.InputProtoParticles = "";
+SelectKsPiPi.PhysDesktop.OutputLocation = "/Event/Phys/Kshort";
+SelectKsPiPi.PhysDesktop.ParticleNames = {"pi+", "pi-" };
+SelectKsPiPi.PhysDesktop.ConfLevelCuts = {0.05,0.05};
+
+//-----------------------------------------------------------------
+// Configure ParticleFilter Tool
+//-----------------------------------------------------------------
+SelectKsPiPi.ParticleFilter.CriteriaNames = { "PIDFilterCriterion" };
+
+//-----------------------------------------------------------------
+// Configure its PIDFilterCriterion Tool
+//-----------------------------------------------------------------
+SelectKsPiPi.ParticleFilter.PIDFilterCriterion.ParticleNames = { "pi-", "pi+" };
+SelectKsPiPi.ParticleFilter.PIDFilterCriterion.ConfidenceLevels = { 0.05, 0.05 };
+
+//**************************************************************

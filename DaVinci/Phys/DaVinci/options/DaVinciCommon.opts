@@ -16,7 +16,12 @@ ApplicationMgr.DLLs = { "SicbCnv", "GaudiAud"};
 ApplicationMgr.DLLs += { "GaudiAlg", "GaudiTools" };
 ApplicationMgr.DLLs += { "DaVinciTools" };
 
+//-------------------------------------------------------------
+// No Histogram persistency chosen at this point
+//-------------------------------------------------------------
+
 ApplicationMgr.HistogramPersistency = "NONE";
+
 
 //--------------------------------------------------------------
 // Detector description 

@@ -55,7 +55,6 @@ ApplicationMgr.TopAlg += { "SelectJPsiMuMu"  };
 ApplicationMgr.TopAlg += { "SelectKsPiPi" };
 ApplicationMgr.TopAlg += { "SelectB0JPsiKs" };
 //ApplicationMgr.TopAlg += { "DaVinciTestAlgorithm" }; 
-//ApplicationMgr.TopAlg += { "DVTest" }; 
 
 //--------------------------------------------------------------
 // DaVinci Algorithms to be always executed as the last one,
@@ -76,85 +75,39 @@ ApplicationMgr.TopAlg += { "DaVinciFinalisation" };
 #include "$DAVINCISICBROOT/options/DaVinciSicb.opts"
 // The next lines are an example of changing the default behaviour
 // of algorithms in the library 
+//          Execute the PhysSelectAlgorithm for B0JM
 PhysSelectAlgorithm.DecayName    = "B0JM";
-PhysSelectAlgorithm.SelMode = 1;
+PhysSelectAlgorithm.SelMode      = 1;
 PhysSelectAlgorithm.SelLevel     = 2;
 PhysSelectAlgorithm.Histograms   = 1;
 
 //-----------------------------------------------------------------
 // Private algorithms options
 //-----------------------------------------------------------------
+// Private algorithm options can be listed here or included from
+// here as in this case.
+// If a relative path is used you need to copy them to the batch
+// area when running.
 //-----------------------------------------------------------------
-SelectJPsiMuMu.SearchParticle       = "J/psi(1S)";
-SelectJPsiMuMu.DecayProducts        = { "mu+", "mu-" };
-SelectJPsiMuMu.HistogramFlag = true;
-SelectKsPiPi.SearchParticle       = "KS0";
-SelectKsPiPi.DecayProducts        = { "pi+", "pi-" };
-SelectKsPiPi.HistogramFlag = true;
-SelectB0JPsiKs.SearchParticle       = "B0";
-SelectB0JPsiKs.DecayProducts        = { "J/psi(1S)", "KS0" };
-SelectB0JPsiKs.HistogramFlag = true;
-//-----------------------------------------------------------------
-// Configure PhysDeskTop Tool
-// default values are:
-// XXX.PhysDesktop.InputProtoParticles = "
-// XXX.PhysDesktop.InputLocations = { "/Event/Phys/Prod/Particles" };
-// XXX.PhysDesktop.OutputLocation = "/Event/Phys/User";
-//-----------------------------------------------------------------
-SelectJPsiMuMu.PhysDesktop.InputProtoParticles = "";
-SelectJPsiMuMu.PhysDesktop.OutputLocation = "/Event/Phys/JPsi";
-SelectJPsiMuMu.PhysDesktop.ParticleNames = {"mu+", "mu-" };
-SelectJPsiMuMu.PhysDesktop.ConfLevelCuts = {0.05,0.05};
-//
-SelectKsPiPi.PhysDesktop.InputProtoParticles = "";
-SelectKsPiPi.PhysDesktop.OutputLocation = "/Event/Phys/Kshort";
-SelectKsPiPi.PhysDesktop.ParticleNames = {"pi+", "pi-" };
-SelectKsPiPi.PhysDesktop.ConfLevelCuts = {0.05,0.05};
-//
-SelectB0JPsiKs.PhysDesktop.InputProtoParticles = "";
-SelectB0JPsiKs.PhysDesktop.InputLocations = { "/Event/Phys/JPsi/Particles",
-                                  "/Event/Phys/Kshort/Particles" };
-SelectB0JPsiKs.PhysDesktop.ParticleNames = {"J/psi(1S)", "KS0" };
-SelectB0JPsiKs.PhysDesktop.ConfLevelCuts = {1.,1.};
-//-----------------------------------------------------------------
-// Configure ParticleFilter Tool
-//-----------------------------------------------------------------
-//ToolSvc.ParticleFilter.CriteriaNames = { "PIDFilterCriterion", "KinFilterCriterion" };
-SelectJPsiMuMu.ParticleFilter.CriteriaNames = { "PIDFilterCriterion", "KinFilterCriterion" };
-//-----------------------------------------------------------------
-// Configure PIDFilterCriterion Tool
-//-----------------------------------------------------------------
-//ToolSvc.PIDFilterCriterion.ParticleCodes = { 13, -13 };
-//ToolSvc.PIDFilterCriterion.ParticleNames = { "mu-", "mu+" };
-//ToolSvc.PIDFilterCriterion.ConfidenceLevels = { 0.0, 0.0 };
-SelectJPsiMuMu.ParticleFilter.PIDFilterCriterion.ParticleNames = { "mu-", "mu+" };
-SelectJPsiMuMu.ParticleFilter.PIDFilterCriterion.ConfidenceLevels = { 0.0, 0.0 };
-//-----------------------------------------------------------------
-// Configure KinFilterCriterion Tool
-//-----------------------------------------------------------------
-//ToolSvc.KinFilterCriterion.MinMomentum = 0.0;
-//ToolSvc.KinFilterCriterion.MinPt = 0.0;
-SelectJPsiMuMu.ParticleFilter.KinFilterCriterion.MinMomentum = 0.0;
-SelectJPsiMuMu.ParticleFilter.KinFilterCriterion.MinPt = 0.0;
-//-----------------------------------------------------------------
-// Configure test of Physdesktop
-//-----------------------------------------------------------------
-//#include "$DAVINCIROOT/options/DVTest.opts"
+#include "$DAVINCIROOT/options/SelectJPsiMuMu.opts"
+#include "$DAVINCIROOT/options/SelectKsPiPi.opts"
+#include "$DAVINCIROOT/options/SelectB0JPsiKs.opts"
+
 //--------------------------------------------------------------
 // Set output level thresholds (2=DEBUG, 3=INFO, 4=WARNING, 5=ERROR, 6=FATAL )
 //--------------------------------------------------------------
-MessageSvc.OutputLevel = 3;
-ToolSvc.OutputLevel    = 3;
-XmlParserSvc.OutputLevel = 4;
-//DaVinciTestAlgorithm.OutputLevel        = 3;
+MessageSvc.OutputLevel                  = 3;
+ToolSvc.OutputLevel                     = 3;
+XmlParserSvc.OutputLevel                = 4;
 AxPrimaryVertexAlgorithm.OutputLevel    = 3;
 PhysSelectAlgorithm.OutputLevel         = 3;
+FillParticleAlgorithm.OutputLevel       = 3;
+ToolSvc.GeomDispCalculator.OutputLevel  = 4;
 SelectJPsiMuMu.OutputLevel              = 2;
-FillParticleAlgorithm.OutputLevel     = 3;
 SelectJPsiMuMu.PhysDeskTop.OutputLevel              = 3;
-ToolSvc.ParticleFilter.OutputLevel                  = 2;
-ToolSvc.PIDFilterCriterion.OutputLevel              = 2;
-ToolSvc.KinFilterCriterion.OutputLevel              = 2;
+SelectJPsiMuMu.ParticleFilter.OutputLevel           = 2;
+SelectJPsiMuMu.ParticleFilter.PIDFilterCriterion.OutputLevel = 2;
+SelectJPsiMuMu.ParticleFilter.KinFilterCriterion.OutputLevel = 2;
 SelectJPsiMuMu.LagrangeMassVertexFitter.OutputLevel = 3;
 SelectKsPiPi.OutputLevel                = 2;
 SelectB0JPsiKs.OutputLevel              = 2;  
@@ -162,20 +115,18 @@ SelectKsPiPi.PhysDeskTop.OutputLevel                = 3;
 SelectB0JPsiKs.PhysDeskTop.OutputLevel              = 3;
 SelectKsPiPi.LagrangeMassVertexFitter.OutputLevel   = 3;
 SelectB0JPsiKs.LagrangeMassVertexFitter.OutputLevel = 3;
-//DVTest.OutputLevel = 2;
  
 //---------------------------------------------------------------
 // Number of events to process, skip and printing frequency
 //---------------------------------------------------------------
-ApplicationMgr.EvtMax = 10;
+ApplicationMgr.EvtMax = 500;
 EventSelector.FirstEvent = 1;
 //EventSelector.PrintFreq = 1;
- 
-  
+   
 //---------------------------------------------------------------
 // Examples of input data
 //---------------------------------------------------------------
-// B->pi+pi-, Brunel v5r1
-EventSelector.Input = {"JOBID='64026,64025'"};
+// B->J/PsiKs, Brunel v5r1
+EventSelector.Input = {"JOBID='64042'"};
 //################################################################
 
