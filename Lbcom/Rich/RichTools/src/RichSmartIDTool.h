@@ -1,4 +1,4 @@
-// $Id: RichSmartIDTool.h,v 1.2 2004-07-15 15:44:40 jonrob Exp $
+// $Id: RichSmartIDTool.h,v 1.3 2004-07-15 16:47:02 jonrob Exp $
 #ifndef RICHDETTOOLS_RICHSMARTIDTOOL_H
 #define RICHDETTOOLS_RICHSMARTIDTOOL_H 1
 
@@ -58,9 +58,9 @@ public: // methods (and doxygen comments) inherited from interface
                                       const Rich::DetectorType rich, 
                                       const Rich::Side side ) const;
 
-  // Converts a position in global coordinates to the corresponding
-  virtual StatusCode smartID( const HepPoint3D& inPosition,
-                              RichSmartID& outSmartID ) const;
+  // Converts a position in global coordinates to the corresponding RichSmartID
+  virtual StatusCode smartID( const HepPoint3D&  globalPoint,
+                              RichSmartID& smartid ) const;
 
   // Supplies a vector of all currently active and valid channels in the RICH detectors
   virtual StatusCode readoutChannelList ( std::vector<RichSmartID>& readoutChannels ) const;

@@ -1,4 +1,4 @@
-// $Id: RichSmartIDTool.cpp,v 1.2 2004-07-12 14:25:02 jonrob Exp $
+// $Id: RichSmartIDTool.cpp,v 1.3 2004-07-15 16:46:55 jonrob Exp $
 // Include files
 
 // local
@@ -77,41 +77,41 @@ StatusCode RichSmartIDTool::globalPosition ( const RichSmartID& inSmartID,
 
 //=============================================================================
 // Returns the SmartID for a given global position
-StatusCode RichSmartIDTool::smartID ( const HepPoint3D& inPosition,
-                                      RichSmartID& outSmartID) const
+StatusCode RichSmartIDTool::smartID ( const HepPoint3D& globalPoint,
+                                      RichSmartID& smartid) const
 {
-  if (inPosition.z() < 8000.0)
+  if (globalPoint.z() < 8000.0)
     // Rich1
-    if (inPosition.y() > 0.0) {
+    if (globalPoint.y() > 0.0) {
       // top side
 
-      outSmartID.setRich(Rich::Rich1);
-      outSmartID.setPanel(Rich::top);
+      smartid.setRich(Rich::Rich1);
+      smartid.setPanel(Rich::top);
       return ( m_photoDetPanels[Rich::Rich1][Rich::top]->
-               smartID(inPosition, outSmartID) );
+               smartID(globalPoint, smartid) );
     }
     else {
       // bottom side
-      outSmartID.setRich(Rich::Rich1);
-      outSmartID.setPanel(Rich::bottom);
+      smartid.setRich(Rich::Rich1);
+      smartid.setPanel(Rich::bottom);
       return ( m_photoDetPanels[Rich::Rich1][Rich::bottom]->
-               smartID(inPosition, outSmartID) );
+               smartID(globalPoint, smartid) );
     }
   else
     // Rich2
-    if (inPosition.x() > 0.0) {
+    if (globalPoint.x() > 0.0) {
       // left side
-      outSmartID.setRich(Rich::Rich2);
-      outSmartID.setPanel(Rich::left);
+      smartid.setRich(Rich::Rich2);
+      smartid.setPanel(Rich::left);
       return ( m_photoDetPanels[Rich::Rich2][Rich::left]->
-               smartID(inPosition, outSmartID) );
+               smartID(globalPoint, smartid) );
     }
     else {
       // right side
-      outSmartID.setRich(Rich::Rich2);
-      outSmartID.setPanel(Rich::right);
+      smartid.setRich(Rich::Rich2);
+      smartid.setPanel(Rich::right);
       return ( m_photoDetPanels[Rich::Rich2][Rich::right]->
-               smartID(inPosition, outSmartID) );
+               smartID(globalPoint, smartid) );
     }
 
 }
