@@ -25,28 +25,62 @@ script = __name__
 jobexe = 'job.exe'
 jobopt = 'job.opts'
 
-
+verbose = (1>2)
 # =============================================================================
 # Set the generic CMT environment ( Project, etc ...)
 # =============================================================================
-def setCMTEnvironment ( ) :
+def setLHCBenv () :
     """
-    Set the generic CMT environment
+    Set the generic LHCb environment: LHCB*
     """
-    variables = ('CMTROOT','CMTBIN','CMTPATH','CMTCONFIG','CMTDEB')
-    command   = ' . $LHCBHOME/scripts/CMT.sh ; '
-    for v in variables : command += ' echo ' + v + '=$' + v + ' ; '
-    cin,cout,cerr = os.popen3( command )
+    patterns = ( 'ROOT' , 'SITE' , 'DIR' , 'PATH' , 'HOST' , 'TAPES' , 'LHCB' ) 
+    command  = '. $LHCBHOME/scripts/lhcbenv.sh ; '
+    for pattern in patterns  :
+        command += ' env | grep ' + pattern + ' ; ' 
+    cint,cout,cerr = os.popen3( command )
     for line in cout :
+        line  = line.replace('\n','')
         items = line.split(' ')
         for item in items :
-            item = item.replace('\n','')
+            for pattern in patterns : 
+                if -1 == item.find(pattern)     : continue 
+                index  = item.find('=')
+                if -1 == index                  : continue 
+                variable = item[:index]
+                if -1 == variable.find(pattern) : continue 
+                value    = item[index+1:]
+                if not value                    : continue 
+                if verbose  : print ' LHCB: variable/value ' + `variable` + ' ' + `value`
+                os.environ[variable] = value
+    for line in cerr : print 'STDERR: '+ `line`.replace('\n','')
+        
+# =============================================================================
+# Set the generic CMT environment ( Project, etc ...)
+# =============================================================================
+def setCMTenv ( ) :
+    """
+    Set the generic CMT environment: CMT* 
+    """
+    setLHCBenv()
+    
+    variables = ('CMTROOT','CMTBIN','CMTPATH','CMTCONFIG','CMTDEB')
+    command   = '( . $LHCBHOME/scripts/lhcbenv.sh ; '
+    command  += '  . $LHCBHOME/scripts/oldCMT.sh  ; '
+    command  += ' env | grep CMT '
+    command  += ' ) ' 
+    cin,cout,cerr = os.popen3( command )
+    for line in cout :
+        line  = line.replace('\n','')
+        items = line.split(' ')
+        for item in items :
             for variable in variables :
                 pattern = variable + '='
                 index = item.find(pattern)
                 if -1 == index : continue 
-                result = item[index + len(pattern):]
-                if result : os.environ[variable] = result
+                value = item[index + len(pattern):]
+                if not value   : continue 
+                print ' CMT: variable/value ' + `variable` + ' ' + `value`
+                os.environ[variable] = value 
     # errors ? 
     for line in cerr : print 'STDERR' + `line`.replace('\n','')
     # final check 
@@ -72,11 +106,11 @@ def setEnvironment() :
         print "WARNING: redefine LHCBHOME " 
         environ['LHCBHOME'] = '/afs/cern.ch/lhcb'
     if 'LHCBDEV'  not in os.environ.keys() :
-        print "WARNINGL redefine LHCBDEV  " 
+        print "WARNING: redefine LHCBDEV  " 
         environ['LHCBHOME'] = os.environ['LHCBHOME']+'/DEV'
-
-    # set the  generic CMT environment 
-    setCMTEnvironment()
+        
+    # set the  generic LHCB+CMT environment 
+    setCMTenv()
 
     # add Pere's CMT package
     # package is placed now at $LHCBHOME/scripts 
