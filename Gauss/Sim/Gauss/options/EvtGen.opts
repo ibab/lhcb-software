@@ -26,5 +26,5 @@ SingleParticleGun.ModePhi =2;
 //--------------------------------------------------------------
 // Algorithms Private Options
 //--------------------------------------------------------------
-PythiaModule.PythiaCommand = {"pysubs msel 5","pydat3 mdcy 511 1 0"};
+PythiaModule.PythiaCommand = {"pysubs msel 5"};
 
