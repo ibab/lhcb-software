@@ -34,7 +34,6 @@ use HbookCnv            v13r*
 use Magnet              v2r*    Det
 
 #GiGa staff...
-use GiGa		v9r0p*  Sim
 use GiGaCnv             v7r*    Sim
 #use GaussImports        v2r*    Sim 
 
@@ -45,7 +44,7 @@ use GeneratorModules    v3r*    Gen
 #use EvGen               v4r*    Sim 
 
 #geometry source 
-use XmlDDDB             v12r1   Det 
+use XmlDDDB             v12r5   Det 
 
 # =============================================================================
 # Essential environment variables 
