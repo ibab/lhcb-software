@@ -1,4 +1,4 @@
-// $Id: ICheckOverlap.h,v 1.4 2005-02-24 09:13:16 pkoppenb Exp $
+// $Id: ICheckOverlap.h,v 1.5 2005-02-25 14:36:13 pkoppenb Exp $
 #ifndef DAVINCIKERNEL_ICHECKOVERLAP_H 
 #define DAVINCIKERNEL_ICHECKOVERLAP_H 1
 
@@ -54,6 +54,14 @@ public:
   virtual bool foundOverlap( const Particle*,const Particle*,
                              const Particle*,const Particle*) = 0;
 
+  /// Check for duplicate use of a protoparticle to produce particles.
+  /// Continue a previous check using the contents of the vector of pointers 
+  /// to protoparticles.(Most intended for internal use by the other methods).
+  /// Arguments: parts is a vector of pointer to particles. 
+  ///            proto is a vector of pointers to protoparticles.
+  bool foundOverlap( ConstParticleVector & parts,
+                     std::vector<const ContainedObject* > & proto );
+  
   /// Check for duplicate use of a protoparticle to produce decay tree of
   /// any particle in vector. Removes found particles from vector.
   virtual StatusCode removeOverlap( ParticleVector& ) = 0;

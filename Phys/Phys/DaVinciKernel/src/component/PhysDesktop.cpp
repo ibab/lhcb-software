@@ -1,4 +1,4 @@
-// $Id: PhysDesktop.cpp,v 1.13 2005-02-09 07:32:54 pkoppenb Exp $
+// $Id: PhysDesktop.cpp,v 1.14 2005-02-25 14:36:13 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
@@ -162,7 +162,7 @@ const VertexVector& PhysDesktop::vertices()
 {
   
   if ( ( m_verts.empty()) && !((m_primVerts.empty()) && (m_secVerts.empty()) )){
-    Warning("Deprecated method: Use faster primaryVertices() and secondaryVertices() methods instead");
+    Warning("Deprecated method: Use faster primaryVertices() and secondaryVertices() methods instead",StatusCode::SUCCESS,1);
     m_verts = m_primVerts ;
     m_verts.insert(m_verts.end(),m_secVerts.begin(),m_secVerts.end()); // concatenate
   }
