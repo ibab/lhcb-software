@@ -79,7 +79,7 @@ Parameters(IToolSvc* toolSvc, IDataProviderSvc* detSvc, IMessageSvc * msgSvc)
   //a collection of geometrical parameters
   m_partition=m_stationNumber*m_regionNumber;  
   std::string regionName[20];
-  for(int i=0;i<m_stationNumber;i++){
+  for(i=0;i<m_stationNumber;i++){
     for (int k=0;k<4;k++){
       regionName[i*4+k]=geoBase+numsta[i]+"/R"+numreg[k];
     }
