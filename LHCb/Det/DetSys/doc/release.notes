@@ -4,6 +4,10 @@
 ! Purpose     : collect Det packages
 !-----------------------------------------------------------------------------
 
+!=========================== DetSys v1r0 2002-10-29 ========================
+! 2002-10-29 - Florence Ranjard
+ - requirements - use DetDesc v11r2
+
 !=========================== DetSys v1r0 2002-10-01 ========================
 ! 2002-10-01 - Florence Ranjard
  - 1st release of Det/DetSys
