@@ -1,3 +1,25 @@
+//
+// ********************************************************************
+// * DISCLAIMER                                                       *
+// *                                                                  *
+// * The following disclaimer summarizes all the specific disclaimers *
+// * of contributors to this software. The specific disclaimers,which *
+// * govern, are listed with their locations in:                      *
+// *   http://cern.ch/geant4/license                                  *
+// *                                                                  *
+// * Neither the authors of this software system, nor their employing *
+// * institutes,nor the agencies providing financial support for this *
+// * work  make  any representation or  warranty, express or implied, *
+// * regarding  this  software system or assume any liability for its *
+// * use.                                                             *
+// *                                                                  *
+// * This  code  implementation is the  intellectual property  of the *
+// * GEANT4 collaboration.                                            *
+// * By copying,  distributing  or modifying the Program (or any work *
+// * based  on  the Program)  you indicate  your  acceptance of  this *
+// * statement, and all its terms.                                    *
+// ********************************************************************
+//
 #ifndef G4DataQuestionaire_h
 #define G4DataQuestionaire_h 1
 
@@ -33,7 +55,8 @@ class G4DataQuestionaire
 	      G4cout << "Please set the environmental variable G4LEVELGAMMADATA"<<G4endl;
 	      G4cout << "to point to your PhotonEvaporation directory."<<G4endl;
 	      G4cout << "Data are available from the geant4 download page."<<G4endl;
-	      G4Exception("Fatal error: Missing mandatory data for this simulation engine");
+              G4Exception("G4DataQuestionaire", "007", FatalException,
+	                  "Fatal error: Missing mandatory data for this simulation engine");
 	    }
 	    break;
           case neutron:
@@ -44,7 +67,8 @@ class G4DataQuestionaire
 	      G4cout << "to point to your G4NDL directory."<<G4endl;
 	      G4cout << "Data are available from http://cmsdoc.cern.ch/~hpw/G4NDL3.7.tar.gz "<<G4endl;
 	      G4cout << "of the geant4 download page."<<G4endl;
-	      G4Exception("Fatal error: Missing mandatory data for this simulation engine");
+              G4Exception("G4DataQuestionaire", "007", FatalException,
+	                  "Fatal error: Missing mandatory data for this simulation engine");
 	    }
 	    break;
           case radioactive:
@@ -54,7 +78,8 @@ class G4DataQuestionaire
 	      G4cout << "Please set the environmental variable G4RADIOACTIVEDATA"<<G4endl;
 	      G4cout << "to point to your RadiativeDecay directory."<<G4endl;
 	      G4cout << "Data are available from the geant4 download page."<<G4endl;
-	      G4Exception("Fatal error: Missing mandatory data for this simulation engine");
+              G4Exception("G4DataQuestionaire", "007", FatalException,
+	                  "Fatal error: Missing mandatory data for this simulation engine");
 	    }
 	    break;
           case lowenergy:
@@ -64,14 +89,19 @@ class G4DataQuestionaire
 	      G4cout << "Please set the environmental variable G4LEDATA"<<G4endl;
 	      G4cout << "to point to your G4EMLOW directory."<<G4endl;
 	      G4cout << "Data are available from the geant4 download page."<<G4endl;
-	      G4Exception("Fatal error: Missing mandatory data for this simulation engine");
+              G4Exception("G4DataQuestionaire", "007", FatalException,
+	                  "Fatal error: Missing mandatory data for this simulation engine");
 	    }
 	    break;
 	  case no:
 	    // all ok
             break;
 	  default:
-            if(t!=no) G4Exception("data type requested is not known to the system");
+            if(t!=no) 
+	    {
+              G4Exception("G4DataQuestionaire", "007", FatalException,
+	                  "data type requested is not known to the system");
+	    }
 	}
      }
    }

@@ -4,6 +4,10 @@
 ! Purpose          : collection of physics constructors for Gauss
 !-----------------------------------------------------------------------------
 
+!===================== GaussPhysics v2r6 ===================================
+! 2003-12-15 - Witek Pokorski
+ - updated for G4.6.0
+
 !===================== GaussPhysics v2r5 ===================================
 ! 2003-10-23 - Witek Pokorski
  - small reorganization, created a directory Packaging where all the common
