@@ -159,8 +159,6 @@ without applying any additional processing. It contains no simulation info."
            <method name="channelID" type="VeloChannelID" argList="long num" desc="combined sensor and strip number ID (key) of strip in cluster" const="TRUE">
                    <code>return  VeloChannelID(sensor(),strip(num));</code>
            </method>
-           <assoc type="2D" weight="double" to="MCVeloHit" />
-           <assoc type="2D" weight="double" to="MCParticle" />
 
     </class>
 
