@@ -1,9 +1,14 @@
 ! =============================================================================
-! $Id: release.notes,v 1.130 2003-03-28 18:15:34 ibelyaev Exp $ 
+! $Id: release.notes,v 1.131 2003-04-01 13:41:07 sponce Exp $ 
 ! =============================================================================
 ! package DetDesc
 ! package manager : N.N 
 ! =============================================================================
+
+! 2003-04-01 - Sebastien Ponce
+ - add the possibility to use parameters for the indexes of physical volumes
+   inside parametrized volumes
+ - corrected new code for gcc 3.2
 
 ! 2003-03-28 - Vanya BELYAEV
  - src/Lib/SolidSphere.cpp    fix a bug, observed and reported by 

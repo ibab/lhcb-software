@@ -1,8 +1,11 @@
-// $Id: SolidFactory.h,v 1.3 2002-05-04 13:13:24 ibelyaev Exp $ 
+// $Id: SolidFactory.h,v 1.4 2003-04-01 13:41:07 sponce Exp $ 
 // ===========================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ===========================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.3  2002/05/04 13:13:24  ibelyaev
+//  see $DETDESCROOT/doc/release.notes ( 4 May 2002 )
+//
 // ===========================================================================
 #ifndef DETDESC_SOLIDFACTORY_H 
 #define DETDESC_SOLIDFACTORY_H 1
@@ -107,8 +110,8 @@ private:
  *  @date 4 May 2002 
  */
 #define IMPLEMENT_SOLID(x) \
- static const SolidFactory<##x##>         s_##x##Factory ; \
- const       ISolidFactory&##x##Factory = s_##x##Factory ;
+ static const SolidFactory<x>         s_##x##Factory ; \
+ const       ISolidFactory& x##Factory = s_##x##Factory ;
 
 // ===========================================================================
 // The END 

@@ -1,8 +1,11 @@
-// $Id: XmlLVolumeCnv.cpp,v 1.24 2003-01-17 14:03:40 sponce Exp $ 
+// $Id: XmlLVolumeCnv.cpp,v 1.25 2003-04-01 13:41:07 sponce Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.24  2003/01/17 14:03:40  sponce
+// support for gcc 3.2
+//
 // Revision 1.23  2002/05/30 17:12:53  sponce
 // angles are no more tested for units since a angle has no dimension.
 //
@@ -461,7 +464,9 @@ XmlLVolumeCnv::dealWithPhysvol (DOM_Element element) {
     std::string digits = nameAttribute.substr (columnPos + 1);
     nameAttribute = nameAttribute.substr (0, columnPos);
     indexed = true;
-    index = atoi (digits.data());
+    if (!digits.empty()) {
+      index = (int) xmlSvc()->eval(digits, false);
+    }
   }
 
   // builds physvol and returns
