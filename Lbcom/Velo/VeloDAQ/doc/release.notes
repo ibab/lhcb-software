@@ -2,6 +2,9 @@
 ! Responsible : ChrisParkes
 
 !==========================  VeloDAQ v1r0 2004-03-15 ======================
+! 2004-03-19 - Chris Parkes
+ - added a high threshold bit for Olivier
+
 ! 2004-03-06 - Chris Parkes
  - Initial release.
    L1 and HLT Buffers for Velo.
