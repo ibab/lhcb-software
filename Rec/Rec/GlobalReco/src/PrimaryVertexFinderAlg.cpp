@@ -1,4 +1,4 @@
-// $Id: PrimaryVertexFinderAlg.cpp,v 1.5 2002-10-22 21:56:43 gcorti Exp $
+// $Id: PrimaryVertexFinderAlg.cpp,v 1.6 2002-11-11 19:29:16 gcorti Exp $
 // Include files
 ///--------------------------------------------------------- 
 /// std c++ libs
@@ -244,6 +244,12 @@ StatusCode PrimaryVertexFinderAlg::execute() {
     wtra->track = RefTrack;
     
     TrState* sta = const_cast<TrState*>(str->closestState(0.0));
+    // try this
+    if( str->forward() ) {
+      if( 6 == str->states().size() ) {
+        sta = str->states()[1];
+      }
+    }
     
     double ztemp = sta->z();
     
@@ -342,8 +348,11 @@ StatusCode PrimaryVertexFinderAlg::execute() {
       HepSymMatrix cov(5,1);
       cov = myStateL->stateCov();
       wtra->Cov = cov;
-      
-      wtra->p = 400.0;  
+//        wtra->p = 400.0;
+      // assume average pt of 400 MeV
+      double sinTheta = sqrt( (wtra->unitVect.x() * wtra->unitVect.x()) +
+                              (wtra->unitVect.y() * wtra->unitVect.y()) );
+      wtra->p = 400.0 * MeV / sinTheta;
     }
 
 
