@@ -1,8 +1,11 @@
-// $Id: NeutralPPCreator.cpp,v 1.2 2002-07-18 17:57:42 gcorti Exp $
+// $Id: NeutralPPCreator.cpp,v 1.3 2002-07-25 15:54:36 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2002/07/18 17:57:42  gcorti
+// do no set charge
+//
 // Revision 1.1  2002/07/15 19:27:08  ibelyaev
 //  add new algorithm for creation on Neutral ProtoParticles
 // 
@@ -117,7 +120,6 @@ StatusCode NeutralPPCreator::process
   // add the current  hypo to ProtoParticle 
   particle->addToCalo( hypo );
   
-  
   { // get track matching chi2
     // get Ecal cluster 
     const Clusters& clusters = hypo->clusters();
@@ -131,14 +133,15 @@ StatusCode NeutralPPCreator::process
           {
             const double chi2 = range.begin()->weight();
             particle->
-              pIDDetectors().push_back( std::make_pair( 100 , chi2 ) );
+              pIDDetectors().
+              push_back( std::make_pair( ProtoParticle::CaloTrMatch , chi2 ) );
           }
       }
   }
   //        // get Spd/Prs ID 
   const double spdPrsID    = m_spdPrs->likelyhood( hypo ) ;
-  particle->
-    pIDDetectors().push_back( std::make_pair( 101 , spdPrsID   ) );
+  particle-> pIDDetectors().
+    push_back( std::make_pair( ProtoParticle::CaloDepositID , spdPrsID   ) );
   
   const CaloPosition* position = hypo->position();
   // shower shape 
@@ -146,16 +149,19 @@ StatusCode NeutralPPCreator::process
     {
       const double showerShape = 
         position->spread()( 1 , 1 )+ position->spread()( 2 , 2 ) ;
-      particle->
-        pIDDetectors().push_back( std::make_pair( 102 , showerShape ) );
+      particle-> pIDDetectors().
+        push_back( std::make_pair( ProtoParticle::ShowerShape , showerShape ) );
     }
   
-  const CaloMomentum* momentum = hypo->momentum ();
-  // shower mass
-  const double showerMass  = momentum->momentum().m() ;
-  particle->
-    pIDDetectors().push_back( std::make_pair( 103 , showerMass ) );
-
+  if( CaloHypotheses::Pi0Merged == hypo->hypothesis() ) 
+    {
+      const CaloMomentum* momentum = hypo->momentum ();
+      // shower mass
+      const double showerMass  = momentum->momentum().m() ;
+      particle-> pIDDetectors().
+        push_back( std::make_pair( ProtoParticle::ClusterMass , showerMass ) );
+    }
+  
   return StatusCode::SUCCESS ;  
 };
 

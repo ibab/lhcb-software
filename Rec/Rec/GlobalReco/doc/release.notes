@@ -4,6 +4,9 @@
 ! Purpose     : Holds final reconstruction code
 !-----------------------------------------------------------------------------
 
+! 2002-07-25 - Ivan Belyaev
+ - src/NeutralPPCreator.cpp  remove artificial numerical temporary constants.
+
 ! 2002-07-18 - Gloria Corti
  - use PhysEvent v6r0
  - remove setCharge no longer existing for ProtoParticle in NeutralPPCreator
