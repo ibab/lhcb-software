@@ -1,20 +1,11 @@
-// $Id: RelationWeighted1D.h,v 1.5 2002-04-25 08:44:04 ibelyaev Exp $
+// $Id: RelationWeighted1D.h,v 1.6 2002-04-25 14:10:19 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
-// Revision 1.4  2002/04/24 21:16:40  ibelyaev
-//  fix one more problem for Win2K
-//
-// Revision 1.3  2002/04/09 07:58:54  ibelyaev
-// *** empty log message ***
-//
-// Revision 1.2  2002/04/03 15:35:18  ibelyaev
-// essential update and redesing of all 'Relations' stuff
-// 
 // ============================================================================
-#ifndef RELATIONS_RELATIONWeighted1D_H 
-#define RELATIONS_RELATIONWeighted1D_H 1
+#ifndef RELATIONS_RelationWeighted1D_H 
+#define RELATIONS_RelationWeighted1D_H 1
 // Include files
 #include "Relations/PragmaWarnings.h"
 // STD & STL 
@@ -107,12 +98,9 @@ public:
    */
   virtual StreamBuffer& serialize ( StreamBuffer& s ) const 
   {
-    typedef typename FromTypeTraits::Serializer   FromS   ;
-    typedef typename FromTypeTraits::Apply        FromA   ;
-    typedef typename WeightTypeTraits::Serializer WeightS ;
-    typedef typename WeightTypeTraits::Apply      WeightA ;
-    typedef typename ToTypeTraits::Serializer     ToS     ;
-    typedef typename ToTypeTraits::Apply          ToA     ;
+    typedef typename FromTypeTraits::Apply        ApplyF ;
+    typedef typename WeightTypeTraits::Apply      ApplyW ;
+    typedef typename ToTypeTraits::Apply          ApplyT ;
     // serialize the base class
     DataObject::serialize( s );
     // get all relations 
@@ -123,12 +111,9 @@ public:
     // serialise all relations
     for( iterator entry = range.begin() ; range.end() != entry ; ++entry ) 
       {    
-        FromS::serialize   
-          ( s , FromA::apply   ( (*entry).first.first  , this ) ) ;
-        WeightS::serialize 
-          ( s , WeightA::apply ( (*entry).first.second , this ) ) ;
-        ToS::serialize     
-          ( s , ToA::apply     ( (*entry).second       , this ) ) ;
+        s << ApplyF::apply ( (*entry).first.first  , this ) 
+          << ApplyW::apply ( (*entry).first.second , this )
+          << ApplyT::apply ( (*entry).second       , this ) ;
       };
     ///
     return s ;
@@ -141,26 +126,22 @@ public:
    */
   virtual StreamBuffer& serialize ( StreamBuffer& s )       
   {
-    typedef typename FromTypeTraits::Serializer   FromS   ;
-    typedef typename FromTypeTraits::Apply        FromA   ;
-    typedef typename WeightTypeTraits::Serializer WeightS ;
-    typedef typename WeightTypeTraits::Apply      WeightA ;
-    typedef typename ToTypeTraits::Serializer     ToS     ;
-    typedef typename ToTypeTraits::Apply          ToA     ;
+    typedef typename FromTypeTraits::Apply        ApplyF ;
+    typedef typename WeightTypeTraits::Apply      ApplyW ;
+    typedef typename ToTypeTraits::Apply          ApplyT ;
     // clear all existing relations 
     clear();
     // serialize the base class
     DataObject::serialize( s );
     unsigned long _size ;
     s >> _size ;
+    From from ; Weight weight  ; To to ;
     while( _size-- > 0 )
       {
         //
-        From from ; Weight weight  ; To to ;
-        //        
-        FromS::serialize   ( s , FromA::apply   ( from   , this ) ) ;
-        WeightS::serialize ( s , WeightA::apply ( weight , this ) ) ;
-        ToS::serialize     ( s , ToA::apply     ( to     , this ) ) ;
+        s >> ApplyF::apply ( from   , this )  
+          >> ApplyW::apply ( weight , this )   
+          >> ApplyT::apply ( to     , this )  ;
         //
         relate( from , to , weight ) ;
       }
@@ -186,5 +167,5 @@ public:
 // ============================================================================
 // The End 
 // ============================================================================
-#endif // RELATIONS_RELATIONWeighted1D_H
+#endif // RELATIONS_RelationWeighted1D_H
 // ============================================================================

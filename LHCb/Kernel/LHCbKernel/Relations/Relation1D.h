@@ -1,20 +1,11 @@
-// $Id: Relation1D.h,v 1.5 2002-04-25 08:44:03 ibelyaev Exp $
+// $Id: Relation1D.h,v 1.6 2002-04-25 14:10:13 ibelyaev Exp $
 // =============================================================================
 // CV Stag $Name: not supported by cvs2svn $
 // =============================================================================
 // $Log: not supported by cvs2svn $
-// Revision 1.4  2002/04/24 21:16:40  ibelyaev
-//  fix one more problem for Win2K
-//
-// Revision 1.3  2002/04/09 07:58:53  ibelyaev
-// *** empty log message ***
-//
-// Revision 1.2  2002/04/03 15:35:17  ibelyaev
-// essential update and redesing of all 'Relations' stuff
-//
 // =============================================================================
-#ifndef RELATIONS_RELATIONOBJECT_H
-#define RELATIONS_RELATIONOBJECT_H 1
+#ifndef RELATIONS_Relation1D_H
+#define RELATIONS_Relation1D_H 1
 // Include files
 #include "Relations/PragmaWarnings.h"
 // STD & STL
@@ -129,10 +120,8 @@ public:
    */
   virtual StreamBuffer& serialize ( StreamBuffer& s ) const
   {
-    typedef typename FromTypeTraits::Serializer FS;
-    typedef typename FromTypeTraits::Apply      FA;
-    typedef typename ToTypeTraits::Serializer   TS;
-    typedef typename ToTypeTraits::Apply        TA;
+    typedef typename FromTypeTraits::Apply      ApplyF ;
+    typedef typename ToTypeTraits::Apply        ApplyT ;
     // serialize the base class
     DataObject::serialize( s );
     // get all relations 
@@ -144,8 +133,8 @@ public:
     for( iterator entry = range.begin() ;
          range.end() != entry ; ++entry ) 
       {
-        FS::serialize( s , FA::apply( (*entry).first  , this ) ) ;
-        TS::serialize( s , TA::apply( (*entry).second , this ) ) ;
+        s << ApplyF::apply( (*entry).first  , this ) 
+          << ApplyT::apply( (*entry).second , this ) ;
       };
     ///
     return s ;
@@ -158,22 +147,20 @@ public:
    */
   virtual StreamBuffer& serialize ( StreamBuffer& s )
   {
-    typedef typename FromTypeTraits::Serializer FS;
-    typedef typename FromTypeTraits::Apply      FA;
-    typedef typename ToTypeTraits::Serializer   TS;
-    typedef typename ToTypeTraits::Apply        TA;
+    typedef typename FromTypeTraits::Apply      ApplyF ;
+    typedef typename ToTypeTraits::Apply        ApplyT ;
     // clear all existing relations 
     clear();
     // serialize the base class
     DataObject::serialize( s );
     unsigned long _size ;
     s >> _size ;
+    From from ; To to ;
     while( _size-- > 0 )
       {
         //
-        From from ; To to ;
-        FS::serialize( s , FA::apply( from   , this ) ) ;
-        TS::serialize( s , TA::apply( to     , this ) ) ;
+        s >> ApplyF::apply( from   , this ) 
+          >> ApplyT::apply( to     , this )  ;
         //
         relate( from , to ) ;
       }
@@ -185,14 +172,16 @@ public:
    *  @see    DataObject
    *  @return current number of references
    */
-  virtual unsigned long addRef  ()  { return  DataObject::addRef  () ; }
+  virtual unsigned long addRef  ()  
+  { return  DataObject::addRef  () ; }
   
   /** release the reference counter
    *  @see    IInterface
    *  @see    DataObject
    *  @return current number of references
    */
-  virtual unsigned long release ()  { return  DataObject::release () ; }
+  virtual unsigned long release ()  
+  { return  DataObject::release () ; }
   
 };
 
