@@ -1,4 +1,4 @@
-// $Id: DecisionUnit.h,v 1.5 2003-01-30 11:01:11 ocallot Exp $
+// $Id: DecisionUnit.h,v 1.6 2003-05-29 09:13:41 ocallot Exp $
 #ifndef L0DU_DECISIONUNIT_H
 #define L0DU_DECISIONUNIT_H
 
@@ -62,6 +62,7 @@ private:
   L0CaloCandidate* m_SumEt;
   L0CaloCandidate* m_Pi0Local;
   L0CaloCandidate* m_Pi0Global;
+  L0CaloCandidate* m_SpdMult;
   L0MuonCandidate* m_Muon1;
   
   // For El, Ph, Ha, SumEt, Pi0L and Pi0G ( candidates of L0Calo ),
@@ -103,6 +104,9 @@ private:
   int    m_nMuSumMu;
 
   double m_sumPeak2Veto;
+
+  double m_VetoMultCut;
+  double m_SpdMultCut;
   
 };
 

@@ -1,4 +1,4 @@
-// $Id: DecisionUnit.cpp,v 1.15 2003-02-03 11:16:10 ocallot Exp $
+// $Id: DecisionUnit.cpp,v 1.16 2003-05-29 09:13:41 ocallot Exp $
 //#define L0DU_DECISIONUNIT_CPP
 
 #include <math.h>
@@ -49,17 +49,18 @@ DecisionUnit::DecisionUnit( const std::string& name,
   , m_nameOfOutputDecisionUnit    ( L0DUReportLocation::Default      ) 
 { 
   //=== Define the parameters
-  // Tuning by Eduardo Rodrigues and Frederic Teubert, 20/01/2003
-  double thrElectron   = 2.60 * GeV;
-  double thrPhoton     = 3.00 * GeV;
-  double thrHadron     = 3.52 * GeV;
+  // Tuning by Eduardo Rodrigues and Massi Ferro-Luzzi, 28/05/2003
+  double thrElectron   = 2.80 * GeV;
+  double thrPhoton     = 2.60 * GeV;
+  double thrHadron     = 3.60 * GeV;
   double thrSumHadron  = 5.00 * GeV;
-  double thrPi0Local   = 4.85 * GeV;
-  double thrPi0Global  = 4.90 * GeV;
-  double thrMuon       = 1.23 * GeV;
-  double thrSumMuon    = 1.42 * GeV;
-  double thrSumPeak2   = 3.0 ;
-  
+  double thrPi0Local   = 4.50 * GeV;
+  double thrPi0Global  = 4.00 * GeV;
+  double thrMuon       = 1.10 * GeV;
+  double thrSumMuon    = 1.30 * GeV;
+  double thrSumPeak2   = 3.0;
+  double thrVetoMult   = 112.;
+  double thrSpdMult    = 280.;
 
   declareProperty( "L0CaloCandidateData" , m_nameOfInputL0CaloCandidate );
   declareProperty( "L0MuonCandidateData" , m_nameOfInputL0MuonCandidate );
@@ -101,6 +102,10 @@ DecisionUnit::DecisionUnit( const std::string& name,
   declareProperty( "NMuSumMu"            , m_nMuSumMu   = 2 );
 
   declareProperty( "SumPeak2Veto"        , m_sumPeak2Veto = thrSumPeak2 );
+
+  declareProperty( "VetoMultCut"        , m_VetoMultCut = thrVetoMult );
+
+  declareProperty( "SpdMultCut"         , m_SpdMultCut  = thrSpdMult );
   
   m_typeL0Trig     = 0;
   
@@ -155,6 +160,8 @@ StatusCode DecisionUnit::initialize() {
                  m_nMuSumMu,
                  m_eSumMuCut1/GeV ) << endreq;
   log << format( "Veto peak2 >= %5.2f ", m_sumPeak2Veto ) << endreq;
+  log << format( "Veto Mult  >= %5.0f ", m_VetoMultCut ) << endreq;
+  log << format( "Spd Mult   >= %5.0f ", m_SpdMultCut ) << endreq;
   log << "=============================" << endreq;
   
   return StatusCode::SUCCESS;
@@ -173,13 +180,14 @@ StatusCode DecisionUnit::execute() {
       << endreq;
 
   m_typeL0Trig = 0;
-  m_Electron = 0;
-  m_Photon   = 0;
-  m_Hadron   = 0;
-  m_SumEt    = 0;
-  m_Pi0Local = 0;
-  m_Pi0Global = 0;
-  m_Muon1 = 0;
+  m_Electron   = 0;
+  m_Photon     = 0;
+  m_Hadron     = 0;
+  m_SumEt      = 0;
+  m_Pi0Local   = 0;
+  m_Pi0Global  = 0;
+  m_Muon1      = 0;
+  m_SpdMult    = 0;
 
   // Find candidates calo
 
@@ -203,11 +211,11 @@ StatusCode DecisionUnit::execute() {
           << " "
           << (*itCandCalo)->typeName() ;
       if ( L0Calo::SpdMult == (*itCandCalo)->type() ) {
+        m_SpdMult = (*itCandCalo);
         log << " Multiplicity " << (*itCandCalo)->etCode();
       } else {
         log << " Et(GeV) = "  << (*itCandCalo)->et() / GeV ;
       }
-      
       if ( L0Calo::Electron == (*itCandCalo)->type() ) {
         m_Electron = (*itCandCalo);
         log <<"  eCut1(GeV) = "       
@@ -351,9 +359,12 @@ StatusCode DecisionUnit::execute() {
   // For Electron, Photon, PioLocal, PioGlobal, Hadron
   //   and for Mu1
   // Associated bit trig set ( with energy cut1 )
-  //   if eSumEt >= eSumEtCut1 and NOT PileUpVeto and eCandidat > eCandidatCut1
+  //   if eSumEt >= eSumEtCut1
+  //   and NOT PileUpVeto and NOT VetoMultCut and NOT SpdMultCutand
+  //   and eCandidat > eCandidatCut1
   // Associated bit trig_down set ( with energy cut2 )
-  //   if eSumEt >= eSumEtCut1 and NOT PileUpVeto and downscaling
+  //   if eSumEt >= eSumEtCut1
+  //   and NOT PileUpVeto and NOT VetoMultCut and NOT SpdMultCut and downscaling
   //
   // For SumMu
   // Associated bit trig set ( with energy cut1 )
@@ -372,22 +383,33 @@ StatusCode DecisionUnit::execute() {
   // Retrieve the Pile-Up VETO information. CUt on the sum of Peak2.
 
   bool L0NotVeto = true;
+  bool L0NotPVMultVeto  = true;
+  bool L0NotSpdMultVeto = true;
 
   SmartDataPtr<L0PuVeto>  L0PileUp ( eventSvc(), m_nameOfInputPileUpVeto );
   if ( 0 != L0PileUp ) {
     log << MSG::DEBUG << "Pile Up VETO : " << L0PileUp->decision() 
         << " sumPeak2 " << L0PileUp->sumPeak2()
+        << " VetoMult " << L0PileUp->sTot()
         << endreq;
     if ( m_sumPeak2Veto <= L0PileUp->sumPeak2() ) {
     //if ( 0 != L0PileUp->decision() ) {
       L0NotVeto = false;
     }
+    if ( m_VetoMultCut <= L0PileUp->sTot() ) {
+      L0NotPVMultVeto = false;
+    }
   } else {
     log << MSG::DEBUG << "Pile Up VETO not found on " 
         <<  m_nameOfInputPileUpVeto << endreq;
   }
-  
-  if ( L0SumEt && L0NotVeto ) {
+
+  // set the Spd multiplicity veto  
+  if ( m_SpdMultCut <= m_SpdMult->etCode() ) {
+    L0NotSpdMultVeto = false;
+  }
+
+  if ( L0SumEt && L0NotVeto && L0NotPVMultVeto && L0NotSpdMultVeto ) {
 
     if ( 0 !=  m_Electron) {
       setTrig( L0Trig::Electron, m_Electron->et(), m_eElCut1 );
