@@ -1,4 +1,4 @@
-// $Id: MuonSystemLayout.h,v 1.7 2002-03-26 16:40:36 atsareg Exp $
+// $Id: MuonSystemLayout.h,v 1.8 2002-05-07 06:59:23 atsareg Exp $
 
 #ifndef MUONKERNEL_MUONSYSTEMLAYOUT_H
 #define MUONKERNEL_MUONSYSTEMLAYOUT_H 1   
@@ -20,9 +20,8 @@
 // Forward declarations
 
 class MuonTileID;
-class IMuonTile;
 
-class MuonSystemLayout : virtual public IMuonLayout {
+class MuonSystemLayout : public IMuonLayout {
 
 public:
   /// Default constructor
@@ -85,15 +84,15 @@ public:
 				    
   /// returns a vector of its MuonTileID's. 
   /// Implementation of the IMuonLayout	interface
-  std::vector<MuonTileID> tiles() const;
+  virtual std::vector<MuonTileID> tiles() const;
   
   /// returns a vector of its MuonTileID's in a given quarter. 
   /// Implementation of the IMuonLayout	interface
-  std::vector<MuonTileID> tiles(int quarter) const;
+  virtual std::vector<MuonTileID> tiles(int quarter) const;
   
   /// returns a vector of its MuonTileID's in a given quarter and region. 
   /// Implementation of the IMuonLayout	interface
-  std::vector<MuonTileID> tiles(int quarter, int region) const;	
+  virtual std::vector<MuonTileID> tiles(int quarter, int region) const;	
     
   /// find a tile containing the argument tile
   virtual MuonTileID contains(const MuonTileID& pad) const;

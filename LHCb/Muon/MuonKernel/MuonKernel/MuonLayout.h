@@ -1,4 +1,4 @@
-// $Id: MuonLayout.h,v 1.8 2002-03-26 16:40:35 atsareg Exp $
+// $Id: MuonLayout.h,v 1.9 2002-05-07 06:59:23 atsareg Exp $
 
 #ifndef MUONKERNEL_MUONLAYOUT_H
 #define MUONKERNEL_MUONLAYOUT_H 1   
@@ -13,8 +13,10 @@
 
 /** @class MuonLayout MuonLayout.h MuonKernel/MuonLayout.h 
    
-   Defines a Muon station (region) single plane logical layout
-   together with various manipulation functions
+   Defines a Muon station single plane logical layout. Layouts in
+   all the regions of the station are the same with the scaling factor 2
+   when passing from a region to a larger one. The class also implements 
+   various layout/tiles manipulation functions.
    
    @author A.Tsaregorodtsev
    @date 6 April 2001 
@@ -25,9 +27,8 @@
 // Forward declarations
 
 class MuonTileID;
-class IMuonTile;
 
-class MuonLayout : virtual public IMuonLayout {
+class MuonLayout : public IMuonLayout {
 
 public:
   /// Default constructor
@@ -44,11 +45,7 @@ public:
   
   /// Destructor
   virtual ~MuonLayout();
-  
-    /// Accessor to region layout
-  MuonLayout regionLayout(int) const { return *this ; }
-
-    
+     
   /// Accessor to MuonLayout grid corresponding to the given MuonTileID
   /// reimplemented from IMuonLayout
   virtual std::pair<unsigned int, unsigned int> 
@@ -85,20 +82,20 @@ public:
 				    					    				    
   /// returns a vector of its MuonTileID's. 
   /// Implementation of the IMuonLayout	interface
-  std::vector<MuonTileID> tiles() const;	
+  virtual std::vector<MuonTileID> tiles() const;	
   		      
   /** returns a vector of its MuonTileID's in a given quarter
       
       @param quarter : the quarter number to look into
   */	
-  std::vector<MuonTileID> tiles(int quarter) const;
+  virtual std::vector<MuonTileID> tiles(int quarter) const;
   
   /** returns a vector of its MuonTileID's in a given quarter and region
       
       @param quarter : the quarter number to look into
       @param region : the region number to look into
   */	
-  std::vector<MuonTileID> tiles(int quarter, int region) const;	  
+  virtual std::vector<MuonTileID> tiles(int quarter, int region) const;	  
       
   /// find a tile containing the argument tile
   virtual MuonTileID contains(const MuonTileID& pad) const;
@@ -151,6 +148,9 @@ public:
   /// check if the given MuonTileID is valid for this layout
   virtual bool isValidID(const MuonTileID& mt) const;
   
+  /// check if the layout itself is defined
+  bool isDefined() const;
+  
   /// printout to std::ostream 
   inline std::ostream& printOut ( std::ostream& ) const ;
 
@@ -161,9 +161,13 @@ public:
 
 private:
   /// find magnification factor of pads in the given region
-  int rfactor (int nr) const ;
-  /// find region for the given pad indices
-  int region (int bx, int by) const ;
+  int rfactor (unsigned int nr) const { return 1 << nr; }
+  
+  /** find region for the given pad indices. The pad indices
+      are given in terms of the most inner region. If the pad indices
+      are not fitting into the layout, the result returned is -1   
+  */
+  int region (unsigned int bx,unsigned int by) const ;
 
 private:  
   unsigned int m_xgrid; 

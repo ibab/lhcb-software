@@ -1,4 +1,4 @@
-// $Id: MuonStationLayout.h,v 1.7 2002-03-26 16:40:36 atsareg Exp $
+// $Id: MuonStationLayout.h,v 1.8 2002-05-07 06:59:23 atsareg Exp $
 
 #ifndef MUONKERNEL_MUONSTATIONLAYOUT_H
 #define MUONKERNEL_MUONSTATIONLAYOUT_H 1   
@@ -18,9 +18,7 @@
 #include "MuonKernel/MuonLayout.h"
 #include "MuonKernel/MuonTileID.h"
 
-// Forward declarations
-
-class MuonStationLayout : virtual public IMuonLayout {
+class MuonStationLayout : public IMuonLayout {
 
 public:
   /// Default constructor
@@ -34,9 +32,7 @@ public:
   MuonStationLayout(const MuonLayout& lq);		    
   
   /// Destructor
-  virtual ~MuonStationLayout();
-    
-   
+  virtual ~MuonStationLayout();   
     
   /// Accessor to region layout
   MuonLayout regionLayout(int reg) const { return m_layouts[reg] ; }
@@ -76,15 +72,15 @@ public:
 				    
   /// returns a vector of its MuonTileID's. 
   /// Implementation of the IMuonLayout	interface
-  std::vector<MuonTileID> tiles() const;
+  virtual std::vector<MuonTileID> tiles() const;
   
   /// returns a vector of its MuonTileID's in a given quarter. 
   /// Implementation of the IMuonLayout	interface
-  std::vector<MuonTileID> tiles(int quarter) const;
+  virtual std::vector<MuonTileID> tiles(int quarter) const;
   
   /// returns a vector of its MuonTileID's in a given quarter and region. 
   /// Implementation of the IMuonLayout	interface
-  std::vector<MuonTileID> tiles(int quarter, int region) const;
+  virtual std::vector<MuonTileID> tiles(int quarter, int region) const;
   	    
   /// find a tile containing the argument tile
   virtual MuonTileID contains(const MuonTileID& pad) const;
