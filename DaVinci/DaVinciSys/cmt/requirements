@@ -89,7 +89,7 @@ use  PhysSelSys			v7r16    PhysSel
 # Trg
 #=======================================================
 use TrgEvent		v5r3	Event
-use TrgTools		v6r3	Trg
+use TrgTools		v6r3p1	Trg
 use TrgVelo             v6r0p1  Trg
 use TrgVeloTT           v6r0    Trg
 use L1Reco              v6r1    Trg
