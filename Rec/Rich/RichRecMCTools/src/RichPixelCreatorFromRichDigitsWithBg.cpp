@@ -4,8 +4,11 @@
  *  Implementation file for RICH reconstruction tool : RichPixelCreatorFromRichDigitsWithBg
  *
  *  CVS Log :-
- *  $Id: RichPixelCreatorFromRichDigitsWithBg.cpp,v 1.4 2004-10-27 14:35:55 jonrob Exp $
+ *  $Id: RichPixelCreatorFromRichDigitsWithBg.cpp,v 1.5 2004-10-30 19:27:02 jonrob Exp $
  *  $Log: not supported by cvs2svn $
+ *  Revision 1.4  2004/10/27 14:35:55  jonrob
+ *  Update for new RichSmartID Tool
+ *
  *  Revision 1.3  2004/10/21 09:10:48  jonrob
  *  minor update
  *
@@ -15,7 +18,6 @@
  *  Revision 1.1  2004/10/13 09:37:27  jonrob
  *  Add new pixel creator tool.
  *  Add ability to make pixels for particular radiators.
- *
  *
  *  @author Andy Buckley  buckley@hep.phy.cam.ac.uk
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch

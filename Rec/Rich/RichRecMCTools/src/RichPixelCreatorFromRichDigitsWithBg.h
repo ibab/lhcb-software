@@ -4,12 +4,14 @@
  *  Header file for RICH reconstruction tool : RichPixelCreatorFromRichDigitsWithBg
  *
  *  CVS Log :-
- *  $Id: RichPixelCreatorFromRichDigitsWithBg.h,v 1.2 2004-10-13 10:32:49 jonrob Exp $
+ *  $Id: RichPixelCreatorFromRichDigitsWithBg.h,v 1.3 2004-10-30 19:27:02 jonrob Exp $
  *  $Log: not supported by cvs2svn $
+ *  Revision 1.2  2004/10/13 10:32:49  jonrob
+ *  Bug fix
+ *
  *  Revision 1.1  2004/10/13 09:37:27  jonrob
  *  Add new pixel creator tool.
  *  Add ability to make pixels for particular radiators.
- *
  *
  *  @author Andy Buckley   buckley@hep.phy.cam.ac.uk
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
@@ -55,7 +57,7 @@ class RichPixelCreatorFromRichDigitsWithBg : public RichRecToolBase,
                                              virtual public IRichPixelCreator,
                                              virtual public IIncidentListener {
 
-public:
+public: // methods for Gaudi
 
   /// Standard constructor
   RichPixelCreatorFromRichDigitsWithBg( const std::string& type,
@@ -65,29 +67,28 @@ public:
   /// Destructor
   virtual ~RichPixelCreatorFromRichDigitsWithBg(){}
 
-  /// Initialize method
+  // Initialize method
   StatusCode initialize();
 
-  /// Finalize method
+  // Finalize method
   StatusCode finalize();
 
-  /// Implement the handle method for the Incident service.
-  /// This is used to inform the tool of software incidents.
+  // Implement the handle method for the Incident service.
+  // This is used to inform the tool of software incidents.
   void handle( const Incident& incident );
 
-  /// Returns a RichRecPixel object pointer for given ContainedObject.
-  /// If if it not possible NULL is return.
+public: // methods (and doxygen comments) inherited from public interface
+
+  // Returns a RichRecPixel object pointer for given object.
+  // If if it not possible NULL is return.
   RichRecPixel * newPixel( const ContainedObject * obj ) const;
 
-  /// Form all possible RichRecPixels from input RichDigits.
-  /// The most efficient way to make all RichRecPixel objects in the event.
+  // Form all possible RichRecPixels from input RichDigits.
+  // The most efficient way to make all RichRecPixel objects in the event.
   StatusCode newPixels() const;
 
-  /// Returns a pointer to the RichRecPixels
+  // Returns a pointer to the RichRecPixels
   RichRecPixels * richPixels() const;
-
-  /// Add the current event's digits to a collection of bg track digits
-  StatusCode fillBgTrackStack() const;
 
 private: // methods
 
@@ -96,6 +97,9 @@ private: // methods
 
   /// Returns a RichRecPixel object for given smart ID
   RichRecPixel * newPixel( const RichSmartID id ) const;
+
+  /// Add the current event's digits to a collection of bg track digits
+  StatusCode fillBgTrackStack() const;
 
 private: // data
 
