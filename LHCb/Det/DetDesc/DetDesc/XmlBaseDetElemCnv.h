@@ -1,4 +1,4 @@
-///  $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/DetDesc/XmlBaseDetElemCnv.h,v 1.4 2001-12-11 10:02:21 sponce Exp $
+///  $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/DetDesc/XmlBaseDetElemCnv.h,v 1.5 2002-01-18 09:26:52 sponce Exp $
 
 #ifndef DETDESC_XMLDETELEMCNV_H
 #define DETDESC_XMLDETELEMCNV_H
@@ -92,10 +92,12 @@ protected:
    * This will be called for each specific child of the current object
    * @param childElement the specific child processed here
    * @param refpObject the object to be filled
+   * @param address the address for this object
    * @return status depending on the completion of the call
    */
   virtual StatusCode i_fillSpecificObj (DOM_Element childElement,
-                                        DetectorElement* refpObject) = 0;
+                                        DetectorElement* refpObject,
+                                        IOpaqueAddress* address) = 0;
 
 
 private:

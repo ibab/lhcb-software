@@ -1,4 +1,4 @@
-//  $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/Lib/XmlBaseDetElemCnv.cpp,v 1.13 2001-12-13 19:17:39 andreav Exp $
+//  $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/Lib/XmlBaseDetElemCnv.cpp,v 1.14 2002-01-18 09:26:55 sponce Exp $
 
 // include files
 #include <cstdlib>
@@ -238,7 +238,8 @@ StatusCode XmlBaseDetElemCnv::i_fillObj (DOM_Element childElement,
         // gets the current child
         DOM_Node childNode = specificChildren.item(i);
         StatusCode sc = i_fillSpecificObj ((DOM_Element &) childNode,
-                                           dataObj);
+                                           dataObj,
+                                           address);
         if (sc.isFailure()) {
           std::string childNodeName =
             dom2Std (((DOM_Element &) childNode).getNodeName());

@@ -70,10 +70,12 @@ template <class DeType> class XmlUserDetElemCnv : public XmlBaseDetElemCnv {
    * current object to its real type.
    * @param childElement the specific child processed here
    * @param refpObject the object to be filled
+   * @param address the address for this object
    * @return status depending on the completion of the call
    */
   virtual StatusCode i_fillSpecificObj (DOM_Element childElement,
-                                        DetectorElement* refpObject);
+                                        DetectorElement* refpObject,
+                                        IOpaqueAddress* address);
 
   /** This fills the current object for specific child.
    * This should never be called directly but always through the other
@@ -81,10 +83,24 @@ template <class DeType> class XmlUserDetElemCnv : public XmlBaseDetElemCnv {
    * implement a dynamic cast from DetectorElement into DeType.
    * @param childElement the specific child processed here
    * @param refpObject the object to be filled
+   * @param address the address for this object
    * @return status depending on the completion of the call
    */
   virtual StatusCode i_fillSpecificObj (DOM_Element childElement,
+                                        DeType* dataObj,
+                                        IOpaqueAddress* address);
+
+  /** This fills the current object for specific child.
+   * \deprecated This is a deprecated function that was kept for backward
+   * compatibility. You should use the new one which has a third argument
+   * given the address of the created object
+   * @param childElement the specific child processed here
+   * @param refpObject the object to be filled
+   * @return status depending on the completion of the call}
+   */
+  virtual StatusCode i_fillSpecificObj (DOM_Element childElement,
                                         DeType* dataObj);
+
 };
 
 
@@ -120,8 +136,20 @@ StatusCode XmlUserDetElemCnv<DeType>::i_createObj(DOM_Element /*element*/,
 template <class DeType>
 StatusCode
 XmlUserDetElemCnv<DeType>::i_fillSpecificObj (DOM_Element childElement,
-                                              DetectorElement* refpObject) {
+                                              DetectorElement* refpObject,
+                                              IOpaqueAddress* address) {
   DeType* dataObj = dynamic_cast<DeType*> (refpObject);
+  return i_fillSpecificObj (childElement, dataObj, address);
+}
+
+// -----------------------------------------------------------------------
+// Fill an object with a new specific child element
+// ------------------------------------------------------------------------
+template <class DeType>
+StatusCode
+XmlUserDetElemCnv<DeType>::i_fillSpecificObj (DOM_Element childElement,
+                                              DeType* dataObj,
+                                              IOpaqueAddress* /*address*/) {
   return i_fillSpecificObj (childElement, dataObj);
 }
 
