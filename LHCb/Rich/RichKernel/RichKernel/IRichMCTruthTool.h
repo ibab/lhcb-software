@@ -3,8 +3,11 @@
  *  Header file for tool interface : IRichMCTruthTool
  *
  *  CVS Log :-
- *  $Id: IRichMCTruthTool.h,v 1.6 2004-10-13 09:19:23 jonrob Exp $
+ *  $Id: IRichMCTruthTool.h,v 1.7 2004-11-03 12:14:57 jonrob Exp $
  *  $Log: not supported by cvs2svn $
+ *  Revision 1.6  2004/10/13 09:19:23  jonrob
+ *  New MCTruth methods
+ *
  *  Revision 1.5  2004/08/19 13:55:58  jonrob
  *  Add new method to MC truth tool + various other things after CVS server switch
  *
@@ -111,6 +114,17 @@ public:
    */
   virtual const MCRichDigit *
   mcRichDigit ( const RichDigit * digit ) const = 0;
+
+  /** Finds the MCRichDigit association for a RichSmartID channel identifier
+   *
+   *  @param id RichSmartID
+   *
+   *  @return Pointer to an MCRichDigit
+   *  @retval NULL  No Monte Carlo association was possible
+   *  @retval !NULL Association was successful
+   */
+  virtual const MCRichDigit *
+  mcRichDigit ( const RichSmartID id ) const = 0;
 
   /** Finds the MCRichTrack associated to a given TrStoredTrack
    *
