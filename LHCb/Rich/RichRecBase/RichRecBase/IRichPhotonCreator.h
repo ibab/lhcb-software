@@ -1,12 +1,12 @@
-// $Id: IRichPhotonCreator.h,v 1.1 2003-06-30 15:11:54 jonrob Exp $
+// $Id: IRichPhotonCreator.h,v 1.2 2003-08-06 09:55:31 jonrob Exp $
 #ifndef RICHRECTOOLS_IRICHPHOTONCREATOR_H
 #define RICHRECTOOLS_IRICHPHOTONCREATOR_H 1
 
 // Event
-class RichRecTrack;
-class RichRecPixel;
+#include "Event/RichRecTrack.h"
+#include "Event/RichRecPixel.h"
 #include "Event/RichRecPhoton.h"
-class RichRecSegment;
+#include "Event/RichRecSegment.h"
 
 /** @class IRichPhotonCreator IRichPhotonCreator.h
  *
@@ -34,19 +34,19 @@ public:
                                              RichRecPixel * pixel ) = 0;
 
   /// Form all photon candidates for a given track and pixel.
-  virtual SmartRefVector<RichRecPhoton>
+  virtual RichRecTrack::Photons
   reconstructPhotons( RichRecTrack * track, RichRecPixel * pixel ) = 0;
 
   /// Form all photon candidates for a given track, with all possible pixels.
-  virtual SmartRefVector<RichRecPhoton>&
+  virtual RichRecTrack::Photons &
   reconstructPhotons( RichRecTrack * track ) = 0;
 
   /// Form all photon candidates for a given pixel, with all possible tracks.
-  virtual SmartRefVector<RichRecPhoton>&
+  virtual RichRecPixel::Photons &
   reconstructPhotons( RichRecPixel * pixel ) = 0;
 
   /// Form all photon candidates for a given segment, with all possible pixels.
-  virtual SmartRefVector<RichRecPhoton>&
+  virtual RichRecSegment::Photons &
   reconstructPhotons( RichRecSegment * segment ) = 0;
 
   /// Method to perform the reconstruction of all tracks and pixels. 

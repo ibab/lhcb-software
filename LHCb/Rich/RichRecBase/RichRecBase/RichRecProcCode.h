@@ -1,4 +1,4 @@
-// $Id: RichRecProcCode.h,v 1.1 2003-06-30 15:11:57 jonrob Exp $
+// $Id: RichRecProcCode.h,v 1.2 2003-08-06 09:55:31 jonrob Exp $
 #ifndef RICHRECBASE_RICHRECPROCCODE_H
 #define RICHRECBASE_RICHRECPROCCODE_H 1
 
@@ -16,10 +16,11 @@ namespace Rich {
   namespace Rec {
 
     enum ProcStat {
-      ProcStatAbort     = -1,
-      ReachedPixelLimit = -2,
-      NoRichTracks      = -3,
-      ReachedTrackLimit = -4
+      ProcStatAbort         = -1,
+      ReachedPixelLimit     = -2,
+      NoRichTracks          = -3,
+      ReachedTrTrackLimit   = -4,
+      ReachedRichTrackLimit = -5
     };
 
   }

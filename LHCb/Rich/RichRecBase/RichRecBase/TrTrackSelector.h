@@ -1,4 +1,4 @@
-// $Id: TrTrackSelector.h,v 1.1 2003-06-30 15:11:57 jonrob Exp $
+// $Id: TrTrackSelector.h,v 1.2 2003-08-06 09:55:31 jonrob Exp $
 #ifndef RICHRECBASE_TRTRACKSELECTOR_H 
 #define RICHRECBASE_TRTRACKSELECTOR_H 1
 
@@ -27,11 +27,14 @@ public:
 
   ~TrTrackSelector() {} ///< Destructor
 
-  /// Test it the track is selected
+  /// Test it the given TrStoredTrack is selected
   bool trackSelected( TrStoredTrack * trTrack );
 
   /// Returns vector of selected track types
-  std::vector<std::string> & selectedTrackTypes();
+  std::vector<std::string> & selectedTrackTypes() { return m_trNames; }
+
+  /// Returns vector of selected track types
+  const std::vector<std::string> & selectedTrackTypes() const { return m_trNames; }
 
   /// Configure the track selection
   bool configureTrackTypes();
@@ -48,11 +51,6 @@ private: // private data
   bool m_uniqueTrOnly;
 
 };
-
-inline std::vector<std::string> & TrTrackSelector::selectedTrackTypes() 
-{
-  return m_trNames;
-}
 
 inline bool TrTrackSelector::trackSelected( TrStoredTrack * trTrack ) 
 {

@@ -1,4 +1,4 @@
-// $Id: IRichRecMCTruthTool.h,v 1.3 2003-07-02 15:37:27 jonesc Exp $
+// $Id: IRichRecMCTruthTool.h,v 1.4 2003-08-06 09:55:31 jonrob Exp $
 #ifndef RICHRECTOOLS_IRICHRECMCTRUTHTOOL_H
 #define RICHRECTOOLS_IRICHRECMCTRUTHTOOL_H 1
 
@@ -6,6 +6,7 @@
 class MCRichOpticalPhoton;
 class MCRichDigit;
 class MCParticle;
+class MCRichHit;
 
 /** @class IRichRecMCTruthTool IRichRecMCTruthTool.h
  *
@@ -44,7 +45,13 @@ public:
   virtual const MCParticle * mcParticle( const RichRecPixel * richPixel ) = 0;
 
   /// Find parent MCRichDigit association for a given RichRecPixel
-  virtual const MCRichDigit * mcRichDigit( const RichRecPixel * richPixel ) =0;
+  virtual const MCRichDigit * mcRichDigit( const RichRecPixel * richPixel ) = 0;
+
+  /// Find parent MCRichHit association for a given RichRecPixel
+  virtual const MCRichHit * mcRichHit( const RichRecPixel * richPixel ) = 0;
+
+  /// Finds parent MCRichHit association for given MCRichDigit
+  virtual const MCRichHit * mcRichHit( const MCRichDigit * mcDigit ) = 0;
 
   /// Find parent MCRichOpticalPhoton association for a given RichRecPixel
   virtual const MCRichOpticalPhoton * mcRichOpticalPhoton( const RichRecPixel * richPixel ) = 0;

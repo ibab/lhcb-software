@@ -1,4 +1,4 @@
-// $Id: RichRecTrack.cpp,v 1.1 2003-06-30 15:11:58 jonrob Exp $
+// $Id: RichRecTrack.cpp,v 1.2 2003-08-06 09:55:32 jonrob Exp $
 // Include files 
 
 // local
@@ -12,15 +12,14 @@
 
 // Reset information to force recalculation
 void RichRecTrack::reset() {
+ 
+  m_nEmittedPhotons.resetData();
+  m_nDetectablePhotons.resetData();
+  m_nSignalPhotons.resetData();
+  m_nObservableSignalPhotons.resetData();
+  m_nScatteredPhotons.resetData();
+  m_nObservableScatteredPhotons.resetData();
 
-  std::vector<float> resetVector1( Rich::NParticleTypes, -1.0 );
-  setNEmittedPhotons             ( resetVector1 );
-  setNDetectablePhotons          ( resetVector1 );
-  setNSignalPhotons              ( resetVector1 );
-  setNObservableSignalPhotons    ( resetVector1 );
-  setNScatteredPhotons           ( resetVector1 );
-  setNObservableScatteredPhotons ( resetVector1 );
-
-  setCurrentHypothesis           ( Rich::Pion );
+  setCurrentHypothesis( Rich::Pion );
 
 }

@@ -1,4 +1,4 @@
-// $Id: IRichSegmentCreator.h,v 1.1 2003-06-30 15:11:56 jonrob Exp $
+// $Id: IRichSegmentCreator.h,v 1.2 2003-08-06 09:55:31 jonrob Exp $
 #ifndef RICHRECTOOLS_IRICHSEGMENTCREATOR_H
 #define RICHRECTOOLS_IRICHSEGMENTCREATOR_H 1
 
@@ -25,6 +25,10 @@ public:
 
   /// Saves a new RichRecSegment
   virtual void saveSegment( RichRecSegment * segment ) = 0;
+
+  /// Create a new RichRecSegment
+  virtual RichRecSegment * newSegment( RichTrackSegment& segment, 
+                                       RichRecTrack* pTrk ) = 0;
 
   /// Returns a pointer to container of RichRecSegments
   virtual RichRecSegments *& richSegments() = 0;

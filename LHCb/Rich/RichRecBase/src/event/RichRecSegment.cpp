@@ -1,4 +1,4 @@
-// $Id: RichRecSegment.cpp,v 1.1 2003-06-30 15:11:58 jonrob Exp $
+// $Id: RichRecSegment.cpp,v 1.2 2003-08-06 09:55:31 jonrob Exp $
 // Include files 
 
 // local
@@ -15,20 +15,20 @@ void RichRecSegment::reset() {
 
   setHitDetectorRegions( 0 );
 
-  std::vector<float> resetVector1( Rich::NParticleTypes, -1.0 );
-  setNEmittedPhotons    ( resetVector1 );
-  setNDetectablePhotons ( resetVector1 );
-  setNSignalPhotons     ( resetVector1 );
-  setNScatteredPhotons  ( resetVector1 );
-  setGeomEfficiency     ( resetVector1 );
-  setAverageCKTheta     ( resetVector1 );
-  setGeomEfficiencyScat ( resetVector1 );
+  m_nEmittedPhotons.resetData();
+  m_nDetectablePhotons.resetData();
+  m_nSignalPhotons.resetData();
+  m_nScatteredPhotons.resetData();
+  m_geomEfficiency.resetData();
+  m_averageCKTheta.resetData();
+  m_geomEfficiencyScat.resetData();
 
-  std::vector< std::vector<float> > resetVector2( Rich::NParticleTypes );
-  setNEmitPhotsPerEnBin( resetVector2 );
-
-  std::vector< RichMap<int,float> > resetVector3( Rich::NParticleTypes );
+  std::vector< RichMap<int,double> > resetVector3( Rich::NParticleTypes );
   setGeomEfficiencyPerHPD( resetVector3 );
+
+  m_emittedPhotonSpectra.reset();
+  m_detectablePhotonSpectra.reset();
+  m_signalPhotonSpectra.reset();
 
   // reset parent RichRecTrack
   richRecTrack()->reset();

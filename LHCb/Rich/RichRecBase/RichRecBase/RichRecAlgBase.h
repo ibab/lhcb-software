@@ -1,4 +1,4 @@
-// $Id: RichRecAlgBase.h,v 1.7 2003-07-03 14:56:08 jonesc Exp $
+// $Id: RichRecAlgBase.h,v 1.8 2003-08-06 09:55:31 jonrob Exp $
 #ifndef RICHRECALGS_RICHRECALGBASE_H
 #define RICHRECALGS_RICHRECALGBASE_H 1
 
@@ -64,6 +64,8 @@ protected:  // Protected methods
   /// Acquires a tool of the correct type from the RichToolRegistry for a given name
   template <typename TOOL> inline
   TOOL* acquireTool( std::string tName, TOOL*& pTool ) {
+    if ( !m_toolReg ) throw GaudiException( "RichToolRegistry not initialised", 
+                                            name(), StatusCode::FAILURE );
     if ( !toolSvc()->retrieveTool(m_toolReg->toolType(tName),tName,pTool) ) {
       pTool = NULL;
       throw GaudiException( "Unable to retrieve tool '" + tName +
@@ -72,7 +74,7 @@ protected:  // Protected methods
     }
     return pTool;
   }
-
+  
   /// Release a tool
   template <typename TOOL> inline
   void releaseTool( TOOL *& pTool ) {
