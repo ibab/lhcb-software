@@ -1,5 +1,6 @@
-//$Id: DetCond_load.cpp,v 1.4 2005-02-09 08:30:54 marcocle Exp $
+//$Id: DetCond_load.cpp,v 1.5 2005-02-09 08:49:29 marcocle Exp $
 #include "GaudiKernel/DeclareFactoryEntries.h"
+
 DECLARE_FACTORY_ENTRIES( DetCond ) {
   // services ========================
   // --------- Database access interface
@@ -8,5 +9,6 @@ DECLARE_FACTORY_ENTRIES( DetCond ) {
   DECLARE_SERVICE  ( ConditionsDBCnvSvc );
   // converters ======================
   // --------- Fall-back converter
-  DECLARE_CONVERTER( XmlRelyCnv) ;
-}
+  DECLARE_CONVERTER( RelyConverter ) ;
+};
+

@@ -1,4 +1,4 @@
-// $Id: CondDBAccessSvc.h,v 1.1 2005-02-09 08:30:54 marcocle Exp $
+// $Id: CondDBAccessSvc.h,v 1.2 2005-02-09 08:49:29 marcocle Exp $
 #ifndef COMPONENT_CONDDBACCESSSVC_H 
 #define COMPONENT_CONDDBACCESSSVC_H 1
 

@@ -1,4 +1,4 @@
-// $Id: CondDBGenericCnv.h,v 1.2 2005-02-09 08:30:54 marcocle Exp $
+// $Id: CondDBGenericCnv.h,v 1.1 2005-02-09 08:49:29 marcocle Exp $
 #ifndef DETCOND_CONDDBGENERICCNV_H 
 #define DETCOND_CONDDBGENERICCNV_H 1
 

@@ -1,10 +1,18 @@
-# $Id: release.notes,v 1.28 2005-02-09 08:30:54 marcocle Exp $
+# $Id: release.notes,v 1.29 2005-02-09 08:49:29 marcocle Exp $
 Package Det/DetCond
 Package manager : Marco Clemencic
 
+! 2005-02-09 - Marco CLEMENCIC
+ - Upgrade to first public preliminary version of COOL (COOL_0_0_3-pre1)
+ - Renamed XMLRelyCnv to RelyConverter (it can use, in principle, any
+   conversion service).
+ - Moved CondDBGenericCnv to the public interface in order to allow public
+   usage of RelyConverter.
+
+==============================================================================
 ! 2005-01-27 - Marco CLEMENCIC
  - Upgrade to first preliminary version of the Conditions Database API:
-	 COOL_0_0_1
+   COOL_0_0_1
 
 ==============================================================================
 ! 2004-12-08 - Marco Clemencic

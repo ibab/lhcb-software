@@ -1,11 +1,11 @@
-// $Id: XmlRelyCnv.h,v 1.2 2005-02-09 08:30:53 marcocle Exp $
-#ifndef COMPONENT_XMLRELYCNV_H 
-#define COMPONENT_XMLRELYCNV_H 1
+// $Id: RelyConverter.h,v 1.1 2005-02-09 08:49:29 marcocle Exp $
+#ifndef COMPONENT_RELYCONVERTER_H 
+#define COMPONENT_RELYCONVERTER_H 1
 
 // Include files
-#include "CondDBGenericCnv.h"
+#include "DetCond/CondDBGenericCnv.h"
 #include "GaudiKernel/CnvFactory.h"
-#include <string>
+//#include <string>
 
 // from POOL
 #include "AttributeList/AttributeListSpecification.h"
@@ -14,19 +14,19 @@
 class ISvcLocator;
 template <class TYPE> class CnvFactory;
 
-/** @class XmlRelyCnv XmlRelyCnv.h component/XmlRelyCnv.cpp
+/** @class RelyConverter RelyConverter.h component/RelyConverter.cpp
  *  
  *  ConditionsDBCnvSvc rely on the functionalities provided by the XmlCnvSvc.
- *  XmlRelyCnv delegate the creation of the object to the XmlCnvSvc
+ *  RelyConverter delegate the creation of the object to the XmlCnvSvc
  *  (via DetectorPersistencySvc).
  *
  *  @author Marco CLEMENCIC
  *  @date   2004-12-03
  */
-class XmlRelyCnv: public CondDBGenericCnv {
+class RelyConverter: public CondDBGenericCnv {
 
   /// Friend needed for instantiation
-  friend class CnvFactory<XmlRelyCnv>;
+  friend class CnvFactory<RelyConverter>;
 
 public: 
 
@@ -89,8 +89,8 @@ public:
 
 protected:
   /// Standard constructor
-  XmlRelyCnv(ISvcLocator* svc); 
-  virtual ~XmlRelyCnv( ); ///< Destructor
+  RelyConverter(ISvcLocator* svc); 
+  virtual ~RelyConverter( ); ///< Destructor
 
 private:
 
@@ -106,6 +106,13 @@ private:
   StatusCode i_delegatedCreation(IOpaqueAddress* pAddress,
                                  DataObject *&pObject,TimePoint &since,TimePoint &till);
 
+public:
+  /**
+   * Extract the storage_type from the folder description.
+   */
+  static long getStorageType(const std::string &desc);
+
+private:
   /// Handle to the IConversionSvc interface of the DetectorPersistencySvc
   IConversionSvc*      m_detPersSvc;
 

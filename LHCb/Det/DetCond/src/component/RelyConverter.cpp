@@ -1,6 +1,6 @@
-// $Id: XmlRelyCnv.cpp,v 1.2 2005-02-09 08:30:54 marcocle Exp $
+// $Id: RelyConverter.cpp,v 1.1 2005-02-09 08:49:29 marcocle Exp $
 // Include files 
-#include "DetCond/XmlRelyCnv.h"
+#include "DetCond/RelyConverter.h"
 
 #include "DetDesc/ValidDataObject.h"
 #include "GaudiKernel/IConversionSvc.h"
@@ -21,10 +21,13 @@
 #include "CoolKernel/IDatabase.h"
 #include "RelationalCool/RelationalException.h"
 
+#include <string>
+#include <sstream>
+
 // local
 
 //-----------------------------------------------------------------------------
-// Implementation file for class : XmlRelyCnv
+// Implementation file for class : RelyConverter
 //
 // 2004-12-03 : Marco CLEMENCIC
 //-----------------------------------------------------------------------------
@@ -33,15 +36,15 @@
 // Instantiation of a static factory class used by clients to create
 // instances of this service
 // -----------------------------------------------------------------------
-static CnvFactory<XmlRelyCnv> s_factoryXmlRely;
-const ICnvFactory& XmlRelyCnvFactory = s_factoryXmlRely;
+static CnvFactory<RelyConverter> s_factoryRelyCnv;
+const ICnvFactory& RelyConverterFactory = s_factoryRelyCnv;
 
-const CLID XmlRelyCnv::s_CLID_any = 0;
+const CLID RelyConverter::s_CLID_any = 0;
 
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
-XmlRelyCnv::XmlRelyCnv(ISvcLocator* svc):
+RelyConverter::RelyConverter(ISvcLocator* svc):
   CondDBGenericCnv(svc,0)
 {
 
@@ -49,25 +52,25 @@ XmlRelyCnv::XmlRelyCnv(ISvcLocator* svc):
 //=============================================================================
 // Destructor
 //=============================================================================
-XmlRelyCnv::~XmlRelyCnv() {}; 
+RelyConverter::~RelyConverter() {}; 
 
 //=========================================================================
 // Initialization
 //=========================================================================
-StatusCode XmlRelyCnv::initialize() {
+StatusCode RelyConverter::initialize() {
   // Initializes the grand father
   StatusCode sc = CondDBGenericCnv::initialize();
 
   sc = serviceLocator()->service 
     ("DetectorPersistencySvc", m_detPersSvc, true);
   if ( !sc.isSuccess() ) {
-    MsgStream log(msgSvc(),"XmlRelyCnv");
+    MsgStream log(msgSvc(),"RelyConverter");
     log << MSG::ERROR 
         << "Cannot locate IConversionSvc interface of DetectorPersistencySvc"
         << endreq;
     return sc;
   } else {
-    MsgStream log(msgSvc(),"XmlRelyCnv");
+    MsgStream log(msgSvc(),"RelyConverter");
     log << MSG::DEBUG 
         << "Retrieved IConversionSvc interface of DetectorPersistencySvc"
         << endreq;
@@ -78,7 +81,7 @@ StatusCode XmlRelyCnv::initialize() {
 //=========================================================================
 // Finalization
 //=========================================================================
-StatusCode XmlRelyCnv::finalize() {
+StatusCode RelyConverter::finalize() {
   m_detPersSvc->release();
   return CondDBGenericCnv::finalize();
 }
@@ -86,10 +89,10 @@ StatusCode XmlRelyCnv::finalize() {
 //=========================================================================
 // Create the transient representation
 //=========================================================================
-StatusCode XmlRelyCnv::createObj (IOpaqueAddress* pAddress,
+StatusCode RelyConverter::createObj (IOpaqueAddress* pAddress,
                                   DataObject *&pObject)
 {
-  MsgStream log(msgSvc(),"XmlRelyCnv");
+  MsgStream log(msgSvc(),"RelyConverter");
   log << MSG::DEBUG << "entering createObj" << endmsg;
 
   TimePoint since;
@@ -109,10 +112,10 @@ StatusCode XmlRelyCnv::createObj (IOpaqueAddress* pAddress,
 //=========================================================================
 // Update transient representation from persistent one
 //=========================================================================
-StatusCode XmlRelyCnv::updateObj (IOpaqueAddress* pAddress,
+StatusCode RelyConverter::updateObj (IOpaqueAddress* pAddress,
                                   DataObject* pObject)
 {
-  MsgStream log(msgSvc(),"XmlRelyCnv");
+  MsgStream log(msgSvc(),"RelyConverter");
   log << MSG::DEBUG << "Method updateObj starting" << endreq;
   switch(checkUpdatability(pObject)){
   case FAILURE : return StatusCode::FAILURE;
@@ -162,10 +165,10 @@ StatusCode XmlRelyCnv::updateObj (IOpaqueAddress* pAddress,
 //=========================================================================
 // Create the persistent representation
 //=========================================================================
-StatusCode XmlRelyCnv::createRep (DataObject* pObject,
+StatusCode RelyConverter::createRep (DataObject* pObject,
                                   IOpaqueAddress*& pAddress)
 {
-  MsgStream log(msgSvc(),"XmlRelyCnv");
+  MsgStream log(msgSvc(),"RelyConverter");
   log << MSG::WARNING << "createRep() not implemented" << endmsg;
   return StatusCode::SUCCESS;
 }
@@ -173,10 +176,10 @@ StatusCode XmlRelyCnv::createRep (DataObject* pObject,
 //=========================================================================
 // Update the persistent representation
 //=========================================================================
-StatusCode XmlRelyCnv::updateRep (IOpaqueAddress* pAddress,
+StatusCode RelyConverter::updateRep (IOpaqueAddress* pAddress,
                                   DataObject* pObject)
 {
-  MsgStream log(msgSvc(),"XmlRelyCnv");
+  MsgStream log(msgSvc(),"RelyConverter");
   log << MSG::WARNING << "updateRep() not implemented" << endmsg;
   return StatusCode::SUCCESS;
 }
@@ -184,11 +187,11 @@ StatusCode XmlRelyCnv::updateRep (IOpaqueAddress* pAddress,
 //=========================================================================
 // Create an object by delegation
 //=========================================================================
-StatusCode XmlRelyCnv::i_delegatedCreation(IOpaqueAddress* pAddress,
+StatusCode RelyConverter::i_delegatedCreation(IOpaqueAddress* pAddress,
                                            DataObject *&pObject,TimePoint &since,TimePoint &till){
   StatusCode sc;
 
-  MsgStream log(msgSvc(),"XmlRelyCnv");
+  MsgStream log(msgSvc(),"RelyConverter");
 
   TimePoint now;
   sc = eventTime(now);
@@ -204,7 +207,15 @@ StatusCode XmlRelyCnv::i_delegatedCreation(IOpaqueAddress* pAddress,
     cool::IFolderPtr folder = m_dbAccSvc->database()->getFolder(pAddress->par()[0]);    
     cool::IObjectPtr object = folder->findObject(m_condDBCnvSvc->timeToValKey(now));
 
-    long storage_type = object->payloadValue<long>("storage_type");
+    //    long storage_type = object->payloadValue<long>("storage_type");
+    long storage_type = getStorageType(folder->description());
+    if (storage_type <= 0) {
+      log << MSG::ERROR <<
+        "Folder description does not contain a valid storage type: " << endmsg;
+      log << MSG::ERROR <<
+        "desc = \"" << folder->description() << "\"" << endmsg;
+      return StatusCode::FAILURE;
+    }
 
     since = m_condDBCnvSvc->valKeyToTime(object->since());
     till  = m_condDBCnvSvc->valKeyToTime(object->till());
@@ -215,9 +226,8 @@ StatusCode XmlRelyCnv::i_delegatedCreation(IOpaqueAddress* pAddress,
     IOpaqueAddress *tmpAddress;
     const std::string par[2] = { object->payloadValue<std::string>("data"), 
                                  pAddress->par()[1]};
-    sc = dynamic_cast<IConversionSvc*>(m_condDBCnvSvc)->
-      addressCreator()->createAddress
-      ( storage_type,pAddress->clID() , par, 0, tmpAddress );
+    sc = dynamic_cast<IConversionSvc*>(m_condDBCnvSvc)->addressCreator()
+      ->createAddress( storage_type,pAddress->clID() , par, 0, tmpAddress );
     if (sc.isFailure()){
       log << MSG::ERROR 
           << "Persistency service could not create a new address" << endreq;
@@ -227,13 +237,15 @@ StatusCode XmlRelyCnv::i_delegatedCreation(IOpaqueAddress* pAddress,
     if (sc.isFailure()) return sc;
     tmpAddress->addRef();
     if ( pAddress->registry() ){
-      log << MSG::DEBUG << "register tmpAddress to registry " << pAddress->registry()->identifier() << endmsg;
+      log << MSG::DEBUG << "register tmpAddress to registry " << pAddress->registry()->identifier()
+          << endmsg;
     } else {
       log << MSG::WARNING << "the address does not have a registry" << endmsg;
     }
     tmpAddress->setRegistry(pAddress->registry());
     if (tmpAddress->registry()) {
-      log << MSG::DEBUG << "tmpAddress registered to registry " << tmpAddress->registry()->identifier() << endmsg;
+      log << MSG::DEBUG << "tmpAddress registered to registry " << tmpAddress->registry()->identifier()
+          << endmsg;
     } else {
       log << MSG::WARNING << "tmpAddress not registered!" << endmsg;
     }
@@ -262,12 +274,12 @@ StatusCode XmlRelyCnv::i_delegatedCreation(IOpaqueAddress* pAddress,
 //=============================================================================
 
 
-pool::AttributeListSpecification XmlRelyCnv::m_attlist;
+pool::AttributeListSpecification RelyConverter::m_attlist;
 
-const pool::AttributeListSpecification & XmlRelyCnv::attrListSpec() {
+const pool::AttributeListSpecification & RelyConverter::attrListSpec() {
   static bool first = true;
   if (first) {
-    //    MsgStream log(msgSvc(),"XmlRelyCnv");
+    //    MsgStream log(msgSvc(),"RelyConverter");
     //    log << MSG::DEBUG << "Preparing the AttributeListSpecification" << endmsg;
     std::cout << "Preparing the AttributeListSpecification" << std::endl;
     m_attlist.push_back<long>("storage_type");
@@ -278,3 +290,77 @@ const pool::AttributeListSpecification & XmlRelyCnv::attrListSpec() {
 }
 
 //=============================================================================
+
+long RelyConverter::getStorageType(const std::string &desc){
+  // the description string should contain a substring of the form (regexp)
+  // "< *storage_type *= *[0-9]+ *>"
+
+  const char delimiter_begin = '<';
+  const char delimiter_end = '>';
+  const char delimiter_sep = '=';
+  const std::string delimiter_keyword = "storage_type";
+
+  std::string::size_type pos_start;
+  std::string::size_type pos_end;
+  std::string::size_type pos_max;
+  
+  pos_start = pos_end = pos_max = desc.size();
+
+  std::string::size_type tmp_pos = 0;
+
+  while ( pos_start == pos_max || pos_end <= pos_start ){    
+    // find the next occurrence of '<'
+    tmp_pos = desc.find(delimiter_begin,tmp_pos);
+    if (tmp_pos >= pos_max) break; // not found
+
+    // skip spaces
+    ++tmp_pos;
+    while ( desc[tmp_pos] == ' ' || desc[tmp_pos] == '\t' ||  desc[tmp_pos] == '\n' ) ++tmp_pos;
+    
+    // check for the keyword
+    if (desc.compare(tmp_pos, delimiter_keyword.size(), delimiter_keyword) != 0) continue;
+
+    // skip spaces
+    tmp_pos += delimiter_keyword.size();
+    while ( desc[tmp_pos] == ' ' || desc[tmp_pos] == '\t' ||  desc[tmp_pos] == '\n' ) ++tmp_pos;
+  
+    // check for the separator
+    if ( desc[tmp_pos] != delimiter_sep ) continue;
+  
+    // skip spaces
+    ++tmp_pos;
+    while ( desc[tmp_pos] == ' ' || desc[tmp_pos] == '\t' ||  desc[tmp_pos] == '\n' ) ++tmp_pos;
+  
+    // here should start the "int"
+    pos_start = tmp_pos;
+    
+    // "count" the digits
+    while ( desc[tmp_pos] >= '0' && desc[tmp_pos] <= '9' ) ++tmp_pos;
+    
+    // here should be just after the "int"
+    pos_end = tmp_pos;
+    
+    if ( pos_start == pos_end ) continue; // no number found
+    
+    // skip spaces
+    while ( desc[tmp_pos] == ' ' || desc[tmp_pos] == '\t' ||  desc[tmp_pos] == '\n' ) ++tmp_pos;
+
+    // check for the delimiter_end
+    if ( desc[tmp_pos] != delimiter_end ) {
+      // force another loop even if the number was found;
+      pos_start = pos_end = pos_max;
+      continue;
+    }
+  }
+  
+  if ( pos_start == pos_max || pos_end <= pos_start ) { // not found
+    return -1;
+  }
+
+  std::istringstream i(desc.substr(pos_start, pos_end-pos_start));
+  
+  long st;
+  i >> st;
+  
+  return st;
+}

@@ -1,4 +1,4 @@
-// $Id: CondDBAccessSvc.cpp,v 1.1 2005-02-09 08:30:54 marcocle Exp $
+// $Id: CondDBAccessSvc.cpp,v 1.2 2005-02-09 08:49:29 marcocle Exp $
 // Include files 
 #include "CondDBAccessSvc.h"
 #include "GaudiKernel/SvcFactory.h"
@@ -150,6 +150,7 @@ StatusCode CondDBAccessSvc::initialize(){
       log << MSG::DEBUG << "Create Folder \"" << m_test_path << "\"" <<endmsg;
       cool::IFolderPtr folder =
         m_db->createFolder(m_test_path,BasicStringALSpec,
+                           "this is a test folder",
                            cool::FolderVersioning::ONLINE,
                            true);
       pool::AttributeList data(BasicStringALSpec);
@@ -175,29 +176,44 @@ StatusCode CondDBAccessSvc::initialize(){
 
       std::string rootName = "/CONDDB";
 
-      m_db->createFolderSet( rootName+"/SlowControl", true );
-      m_db->createFolderSet( rootName+"/SlowControl/LHCb", true ); 
-      m_db->createFolderSet( rootName+"/SlowControl/Hcal", true ); 
-      m_db->createFolderSet( rootName+"/Geometry", true ); 
-      m_db->createFolderSet( rootName+"/Geometry2", true ); 
-      m_db->createFolderSet( rootName+"/Alignment", true );
-      m_db->createFolderSet( rootName+"/Alignment/Ecal", true );
+      m_db->createFolderSet( rootName+"/SlowControl",
+                             "this is a test folderset", true );
+      m_db->createFolderSet( rootName+"/SlowControl/LHCb",
+                             "this is a test folderset", true ); 
+      m_db->createFolderSet( rootName+"/SlowControl/Hcal",
+                             "this is a test folderset", true ); 
+      m_db->createFolderSet( rootName+"/Geometry",
+                             "this is a test folderset", true ); 
+      m_db->createFolderSet( rootName+"/Geometry2",
+                             "this is a test folderset", true ); 
+      m_db->createFolderSet( rootName+"/Alignment",
+                             "this is a test folderset", true );
+      m_db->createFolderSet( rootName+"/Alignment/Ecal",
+                             "this is a test folderset", true );
       
       m_db->createFolder( rootName+"/pippo", attListSpec,
+                          "this is a test folder",
                           cool::FolderVersioning::ONLINE, true );
       m_db->createFolder( rootName+"/scLHCb", attListSpec,
+                          "this is a test folder",
                           cool::FolderVersioning::ONLINE, true );
       m_db->createFolder( rootName+"/SlowControl/LHCb/scLHCb", attListSpec,
+                          "this is a test folder",
                           cool::FolderVersioning::ONLINE, true );
       m_db->createFolder( rootName+"/SlowControl/Hcal/scHcal", attListSpec,
+                          "this is a test folder",
                           cool::FolderVersioning::ONLINE, true );
       m_db->createFolder( rootName+"/Geometry/LHCb", attListSpec,
+                          "this is a test folder",
                           cool::FolderVersioning::ONLINE, true );
       m_db->createFolder( rootName+"/Geometry2/LHCb", attListSpec,
+                          "this is a test folder",
                           cool::FolderVersioning::ONLINE, true );
       m_db->createFolder( rootName+"/Geometry2/lvLHCb", attListSpec,
+                          "this is a test folder",
                           cool::FolderVersioning::ONLINE, true );
       m_db->createFolder( rootName+"/Alignment/Ecal/alEcal", attListSpec,
+                          "this is a test folder",
                           cool::FolderVersioning::ONLINE, true );
     }
     

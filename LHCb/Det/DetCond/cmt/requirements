@@ -1,7 +1,7 @@
-# $Id: requirements,v 1.26 2005-02-09 08:30:54 marcocle Exp $
+# $Id: requirements,v 1.27 2005-02-09 08:49:29 marcocle Exp $
 # Modified by Marco Clemencic and Nicolas Gilardi (Gen. 2005)
 package DetCond
-version v6r0
+version v6r1
 
 branches DetCond cmt src doc
 
@@ -9,7 +9,7 @@ branches DetCond cmt src doc
 use GaudiKernel v*
 use GaudiSvc    v*
 
-use COOL v0r1
+use COOL v*
 
 # Detector Description
 # This is only needed because updateObj assumes a Condition (TEMPORARY?)
@@ -34,6 +34,4 @@ private
 
 apply_pattern package_Cshlibflags
 macro_append DetCond_shlibflags " $(GaudiKernel_linkopts)"
-macro_append DetCond_shlibflags "" \
-        slc3_ia32_gcc323_dbg " -L/afs/cern.ch/user/c/cattanem/w0/LHCB/LHCB_v18r0/Det/DetDesc/v14r3/slc3_ia32_gcc323 -L/afs/cern.ch/user/c/cattanem/w0/LHCB/LHCB_v18r0/Det/DetDescCnv/v2r3/slc3_ia32_gcc323"
 macro_append DetCond_shlibflags " $(COOL_linkopts)" 

@@ -1,4 +1,4 @@
-//$Id: ConditionsDBCnvSvc.cpp,v 1.14 2005-02-09 08:30:54 marcocle Exp $
+//$Id: ConditionsDBCnvSvc.cpp,v 1.15 2005-02-09 08:49:29 marcocle Exp $
 #include <string>
 #include <stdio.h>
 
@@ -232,7 +232,7 @@ const std::string& ConditionsDBCnvSvc::globalTag ( ) {
 }
 
 //----------------------------------------------------------------------------
-extern ICnvFactory &XmlRelyCnvFactory;
+extern ICnvFactory &RelyConverterFactory;
 
 StatusCode ConditionsDBCnvSvc::addConverter(const CLID& clid){
   MsgStream log(msgSvc(), "ConditionsDBCnvSvc" );
@@ -241,8 +241,8 @@ StatusCode ConditionsDBCnvSvc::addConverter(const CLID& clid){
     return status;
   }else{ // not found in the std way, try the delegation one
     long typ = repSvcType();
-    log << MSG::DEBUG << "converter not found, instantiating XmlRelyCnv" << endmsg;
-    IConverter* pConverter = XmlRelyCnvFactory.instantiate(serviceLocator());
+    log << MSG::DEBUG << "converter not found, instantiating RelyConverter" << endmsg;
+    IConverter* pConverter = RelyConverterFactory.instantiate(serviceLocator());
     if ( 0 != pConverter )    {
       StatusCode status = configureConverter( typ, 0, pConverter );
       if ( status.isSuccess() )   {
