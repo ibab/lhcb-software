@@ -1,4 +1,4 @@
-// $Id: RichTrackCreatorFromCheatedTrStoredTracks.h,v 1.1.1.1 2003-10-13 16:21:50 jonesc Exp $
+// $Id: RichTrackCreatorFromCheatedTrStoredTracks.h,v 1.2 2003-11-25 14:01:51 jonesc Exp $
 #ifndef RICHRECTOOLS_RichTrackCreatorFromCheatedTrStoredTracks_H
 #define RICHRECTOOLS_RichTrackCreatorFromCheatedTrStoredTracks_H 1
 
@@ -71,16 +71,24 @@ public:
   /// Return a pointer to the container of RichRecTracks
   RichRecTracks *& richTracks();
 
-private:
+  /// Returns the number of tracks in the input TrStoredTrack container.
+  long nInputTracks();
+
+private: // methods
+
+  /// Load the TrStoredTracks
+  bool loadTrStoredTracks();
+
+private: // data
 
   // tracking MC truth
   typedef IAssociatorWeighted<TrStoredTrack,MCParticle,double> TrackAsct ;
 
+  /// Pointer to TrStoredTracks
+  TrStoredTracks * m_trTracks;
+
   /// Pointer to RichRecTracks
   RichRecTracks * m_tracks;
-
-  /// Pointer to event data service
-  IDataProviderSvc* m_evtDataSvc;
 
   /// Pointer to the RichSegmentCreator tool
   IRichSegmentCreator * m_segCr;

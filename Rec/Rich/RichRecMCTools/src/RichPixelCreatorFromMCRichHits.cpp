@@ -1,4 +1,4 @@
-// $Id: RichPixelCreatorFromMCRichHits.cpp,v 1.1.1.1 2003-10-13 16:21:50 jonesc Exp $
+// $Id: RichPixelCreatorFromMCRichHits.cpp,v 1.2 2003-11-25 14:01:50 jonesc Exp $
 
 // local
 #include "RichPixelCreatorFromMCRichHits.h"
@@ -143,7 +143,7 @@ RichRecPixel * RichPixelCreatorFromMCRichHits::newPixel( const ContainedObject *
 
       RichSmartID id(0);
       StatusCode sc = m_richDetInt->smartID( hit->entry(), id );
-      if ( sc.isSuccess() && 0 != id.index() ) {
+      if ( sc.isSuccess() && id.isValid() ) {
 
         // Make a new RichRecPixel
         newPixel = new RichRecPixel();
