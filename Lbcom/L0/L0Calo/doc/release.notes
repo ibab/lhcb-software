@@ -1,7 +1,8 @@
-! $Id: release.notes,v 1.24 2002-11-21 17:14:22 ocallot Exp $
+! $Id: release.notes,v 1.25 2002-11-22 07:15:17 cattanem Exp $
 Package		: L0/L0Calo
 Package Manager : Olivier Callot
 
+!========================= L0Calo v6r3 2002-11-22 =======================
 ! 2002-11-21 - Olivier Callot
  - For global pi0, perform ghost cleaning, i.e. don't add the two clusters
    if they share a cell.
