@@ -416,7 +416,7 @@ inline StatusCode DVAlgorithm::sysFinalize () {
       
       msg << MSG::ALWAYS << "Passed " << m_countFilterPassed << 
         " times in " << m_countFilterWrite << " calls -> (" <<
-        100.0*eta << "+/-" << 100.0*delta <<  ")%, reduction= " << 
+        100.0*eta << "+/-" << 100.0*delta <<  ")%, rejection= " << 
         r << "+/-" << re << endreq;
     }
   }
