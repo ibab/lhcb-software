@@ -1,4 +1,4 @@
-// $Id: DaDiCppHeader.cpp,v 1.22 2001-12-07 16:00:21 mato Exp $
+// $Id: DaDiCppHeader.cpp,v 1.23 2001-12-18 12:54:18 mato Exp $
 
 #include "GaudiKernel/Kernel.h"
 
@@ -950,7 +950,7 @@ void DDBEcpp::printCppHeader(DaDiPackage* gddPackage,
         << "(" << gddRelation->type().transcode() << "* value);"
         << std::endl << "void " << "addTo"
         << firstUp(gddRelation->name()).transcode()
-        << "(" << add_arg << gddRelation->type().transcode()
+        << "(const " << add_arg << gddRelation->type().transcode()
         << ">& value); " << std::endl;
       }
       if (gddRelation->remMeth())
@@ -1421,7 +1421,7 @@ void DDBEcpp::printCppHeader(DaDiPackage* gddPackage,
           << std::endl << "}" << std::endl << std::endl 
           << "inline void " << gddClass->className().transcode() << "::" 
           << "addTo" << firstUp(gddRelation->name()).transcode() 
-          << "(" << add_arg << gddRelation->type().transcode() 
+          << "(const " << add_arg << gddRelation->type().transcode() 
           << ">& value)" << std::endl << "{" << std::endl 
           << "   m_" << gddRelation->name().transcode() 
           << ".push_back(value);" << std::endl << "}" 
