@@ -1,7 +1,7 @@
-// $Id: RichRecBaseEvent_load.cpp,v 1.1 2003-06-30 15:11:58 jonrob Exp $
+// $Id: RichRecBaseEvent_load.cpp,v 1.2 2004-01-08 16:15:08 cattanem Exp $
 // Include files
 
-#include "Event/EventFactoryDefs.h"
+#include "GaudiKernel/ContainerFactoryDefs.h"
 
 //-----------------------------------------------------------------------------
 // Implementation file for classes in RichRecEvent

@@ -7,7 +7,7 @@
 #============================================================================
 
 package   RichRecBase
-version   v1r7
+version   v1r8
 
 #============================================================================
 # Structure
@@ -17,9 +17,8 @@ branches xml doc src cmt Event RichRecBase
 #============================================================================
 # Used packages.
 #============================================================================
-use   RichEvent      v6r*  Event
+use   RichEvent      v7r*  Event
 use   RichDetTools   v3r*  Rich
-use   GaudiObjDesc   v5r*  -no_auto_imports
 
 #============================================================================
 # Environment
@@ -37,7 +36,7 @@ document obj2dict RichRecBase_CommonObj2Dict   ../xml/RichRecBase_Event.xml
 # Build libraries (including dictionary)
 #============================================================================
 library RichRecBase           ../src/event/*.cpp ../src/base/*.cpp
-library RichRecBaseEventDict  ../dict/*.cpp -import=GaudiIntrospection
+library RichRecBaseEventDict  ../dict/*.cpp
 
 apply_pattern component_library library=RichRecBaseEventDict
 apply_pattern linker_library    library=RichRecBase

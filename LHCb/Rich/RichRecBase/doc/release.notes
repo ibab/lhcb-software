@@ -4,6 +4,11 @@
 ! Purpose     : Base package for RICH Reconstruction Packages
 !-----------------------------------------------------------------------------
 
+!======================= RichRecBase v1r8 2004-01-08 =======================
+! 2004-01-08 - Marco Cattaneo
+ - Move to Gaudi v14 (use RichEvent v7r* in requirements, 
+                      fix an include in RichRecBaseEvent_load.cpp)
+
 !======================= RichRecBase v1r7 2003-12-10 =======================
 ! 2003-12-10 - Marco Cattaneo
  - Fixes for move to LHCB v14r0 (SerializeStl.h moved to LHCbKernel)
