@@ -1,4 +1,4 @@
-// $Id: L0mTrigger.h,v 1.3 2002-08-02 10:43:54 atsareg Exp $
+// $Id: L0mTrigger.h,v 1.4 2002-11-04 08:38:19 atsareg Exp $
 
 #ifndef L0MUON_L0MTRIGGER_H
 #define L0MUON_L0MTRIGGER_H 1
@@ -33,6 +33,8 @@ public:
   StatusCode finalize();
   
   friend class L0mCrate;
+    
+  std::vector<L0mTower*>* getTowers() {return &m_towers; } 
   
 private: 
  
