@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/L0/L0Muon/src/component/L0mTrigger.cpp,v 1.11 2003-04-11 06:56:33 cattanem Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/L0/L0Muon/src/component/L0mTrigger.cpp,v 1.12 2003-06-23 12:25:03 atsareg Exp $
 
 /// Include files
 /// Gaudi interfaces
@@ -310,7 +310,7 @@ StatusCode L0mTrigger::finalize()  {
   return StatusCode::SUCCESS;
 }
 
-L0mTower* L0mTrigger::createTower(L0mPad* pad, const std::vector<L0mPad>& pads){
+L0mTower* L0mTrigger::createTower(std::vector<L0mPad>::iterator pad, const std::vector<L0mPad>& pads){
 
   MsgStream log(msgSvc(), name());
           
