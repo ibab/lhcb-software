@@ -16,7 +16,7 @@
             <import ignore="TRUE" name="Track"/>
             <import ignore="TRUE" name="Type"/>
             <import name="GaudiKernel/ContainedObject"/>
-            <constructor desc="Default constructor" initList="m_vertexMomentum(0), m_parentType(Rich::RecTrack::Unknown), m_nEmittedPhotons(Rich::NParticleTypes,-1), m_nDetectablePhotons(Rich::NParticleTypes,-1), m_nSignalPhotons(Rich::NParticleTypes,-1), m_nObservableSignalPhotons(Rich::NParticleTypes,-1), m_nScatteredPhotons(Rich::NParticleTypes,-1),  m_nObservableScatteredPhotons(Rich::NParticleTypes,-1), m_currentHypothesis(Rich::Pion), m_inUse(false), m_trackType(Rich::Track::Unknown)">
+            <constructor desc="Default constructor" initList="m_vertexMomentum(0), m_parentType(Rich::RecTrack::Unknown), m_nEmittedPhotons(Rich::NParticleTypes,-1), m_nDetectablePhotons(Rich::NParticleTypes,-1), m_nSignalPhotons(Rich::NParticleTypes,-1), m_nObservableSignalPhotons(Rich::NParticleTypes,-1), m_nScatteredPhotons(Rich::NParticleTypes,-1),  m_nObservableScatteredPhotons(Rich::NParticleTypes,-1), m_currentHypothesis(Rich::Pion), m_inUse(false), m_trackType(Rich::Track::Unknown), m_richTrackInfo(0)">
                 <code/>
             </constructor>
             <method const="FALSE" desc="Set the number of emitted photons for a given particle type" name="setNEmittedPhotons">
@@ -89,6 +89,13 @@
             <attribute desc="The current working particle hypothesis for this track. Used by specific algorithms" name="currentHypothesis" type="Rich::ParticleIDType"/>
             <attribute desc="Flag for use by algorithms to tag in this track is in use or not" name="inUse" serialize="FALSE" type="bool"/>
             <attribute desc="Track Type. Used to define resolutions etc." name="trackType" type="Rich::Track::Type"/>
+            <attribute desc="Bit packed field containing specific detector information" name="richTrackInfo" type="bitfield">
+                <bitfield desc="Flag for whether this track is active in RICH1" length="1" name="inRICH1"/>
+                <bitfield desc="Flag for whether this track is active in RICH2" length="1" name="inRICH2"/>
+                <bitfield desc="Flag for whether this track is active in Aerogel" length="1" name="inAerogel"/>
+                <bitfield desc="Flag for whether this track is active in RICH1 Gas" length="1" name="inGas1"/>
+                <bitfield desc="Flag for whether this track is active in RICH2 Gas" length="1" name="inGas2"/>
+            </attribute>
             <relation desc="Parent Object this track was produced from" name="parentTrack" type="ContainedObject"/>
             <relation desc="Smart Reference vector of radiator segments for this track" multiplicity="N" name="richRecSegments" type="RichRecSegment"/>
             <relation desc="SmartRefVector of RichRecPixels for which this track has valid photon associations" multiplicity="N" name="richRecPixels" type="RichRecPixel"/>
@@ -105,6 +112,12 @@
             <import name="GaudiKernel/ContainedObject"/>
             <import name="RichKernel/RichSmartID"/>
             <constructor desc="Default constructor" initList="m_smartID(0), m_globalPosition(0), m_localPosition(0), m_currentBackground(0), m_parentType(Rich::RecPixel::Unknown)">
+                <code/>
+            </constructor>
+            <constructor desc="Constructor with arguments" initList="m_smartID(smartID), m_globalPosition(gPos), m_localPosition(lPos), m_currentBackground(0), m_parentType(Rich::RecPixel::Unknown)">
+                <arg name="smartID" type="RichSmartID"/>
+                <arg name="gPos" type="HepPoint3D"/>
+                <arg name="lPos" type="HepPoint3D"/>
                 <code/>
             </constructor>
             <method const="TRUE" desc="Returns Rich Detector" name="detector" type="Rich::DetectorType">
@@ -130,7 +143,12 @@
             <import name="RichKernel/RichParticleIDType"/>
             <import name="RichUtils/RichTrackSegment"/>
             <import name="RichRecBase/RichMap"/>
-            <constructor desc="Default Constructor" initList="m_nEmittedPhotons(Rich::NParticleTypes,-1), m_nDetectablePhotons(Rich::NParticleTypes,-1), m_nSignalPhotons(Rich::NParticleTypes,-1), m_nScatteredPhotons(Rich::NParticleTypes,-1), m_nEmitPhotsPerEnBin(Rich::NParticleTypes,std::vector&lt;float&gt;() ), m_geomEfficiencyPerHPD(Rich::NParticleTypes, RichMap&lt;int,float&gt;() ), m_geomEfficiency(Rich::NParticleTypes,-1), m_averageCKTheta(Rich::NParticleTypes,-1), m_hitDetectorRegions(0), m_geomEfficiencyScat(Rich::NParticleTypes,-1)">
+            <constructor desc="Default Constructor" initList="m_nEmittedPhotons(Rich::NParticleTypes,-1), m_nDetectablePhotons(Rich::NParticleTypes,-1), m_nSignalPhotons(Rich::NParticleTypes,-1), m_nScatteredPhotons(Rich::NParticleTypes,-1), m_nEmitPhotsPerEnBin(Rich::NParticleTypes,std::vector&lt;float&gt;() ), m_geomEfficiencyPerHPD(Rich::NParticleTypes, RichMap&lt;int,float&gt;() ), m_geomEfficiency(Rich::NParticleTypes,-1), m_averageCKTheta(Rich::NParticleTypes,-1), m_trackSegment(), m_hitDetectorRegions(0), m_geomEfficiencyScat(Rich::NParticleTypes,-1)">
+                <code/>
+            </constructor>
+            <constructor desc="Constructor from a RichTrackSegment" initList="m_nEmittedPhotons(Rich::NParticleTypes,-1), m_nDetectablePhotons(Rich::NParticleTypes,-1), m_nSignalPhotons(Rich::NParticleTypes,-1), m_nScatteredPhotons(Rich::NParticleTypes,-1), m_nEmitPhotsPerEnBin(Rich::NParticleTypes,std::vector&lt;float&gt;() ), m_geomEfficiencyPerHPD(Rich::NParticleTypes, RichMap&lt;int,float&gt;() ), m_geomEfficiency(Rich::NParticleTypes,-1), m_averageCKTheta(Rich::NParticleTypes,-1), m_trackSegment(segment), m_hitDetectorRegions(0), m_geomEfficiencyScat(Rich::NParticleTypes,-1), m_richRecTrack(pTrk)">
+                <arg name="segment" type="RichTrackSegment"/>
+                <arg inout="BYVALUE" name="pTrk" type="RichRecTrack*"/>
                 <code/>
             </constructor>
             <method const="FALSE" desc="Set the geometrical efficiency for a given particle type" name="setGeomEfficiency">
@@ -242,6 +260,13 @@
             <import name="RichKernel/RichParticleIDType"/>
             <import name="RichUtils/RichGeomPhoton"/>
             <constructor desc="Default Constructor" initList="m_expPixelSignalPhots(Rich::NParticleTypes,-1), m_expPixelScattPhots(Rich::NParticleTypes,-1)">
+                <code/>
+            </constructor>
+            <constructor desc="Constructor from detailed information" initList="m_geomPhoton(photon), m_expPixelSignalPhots(Rich::NParticleTypes,-1), m_expPixelScattPhots(Rich::NParticleTypes,-1), m_richRecSegment(pSeg), m_richRecTrack(pTrk), m_richRecPixel(pPix)">
+                <arg name="photon" type="RichGeomPhoton"/>
+                <arg inout="BYVALUE" name="pSeg" type="RichRecSegment*"/>
+                <arg inout="BYVALUE" name="pTrk" type="RichRecTrack*"/>
+                <arg inout="BYVALUE" name="pPix" type="RichRecPixel*"/>
                 <code/>
             </constructor>
             <method const="FALSE" desc="Set the expected number of signal photons for a given particle hypothesis" name="setExpPixelSignalPhots">
