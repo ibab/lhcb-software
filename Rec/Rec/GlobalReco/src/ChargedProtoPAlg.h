@@ -1,4 +1,4 @@
-// $Id: ChargedProtoPAlg.h,v 1.2 2002-07-11 16:23:38 gcorti Exp $
+// $Id: ChargedProtoPAlg.h,v 1.3 2002-07-18 17:58:07 gcorti Exp $
 #ifndef CHARGEDPROTOPALG_H 
 #define CHARGEDPROTOPALG_H 1
 
@@ -34,13 +34,19 @@ protected:
   /// Forward, Match and Upstream tracks with no error flag and
   /// Chi2 < Max value are taken
   bool keepTrack( const TrStoredTrack* track );
-
+  StatusCode addRich( SmartDataPtr<RichPIDs>& richpids, ProtoParticle* proto );
+  
 private:
 
-  std::string m_tracksPath;   ///< Location in TES of input tracks
-  std::string m_richPath;     ///< Location in TES of input Rich pids
-  std::string m_muonPath;     ///< Location in TES of input Muon pids
-  std::string m_electronPath; ///< Location in TES of input Muon pids
+  std::string m_tracksPath;     ///< Location in TES of input tracks
+  std::string m_richPath;       ///< Location in TES of input Rich pids
+  std::string m_muonPath;       ///< Location in TES of input Muon pids
+  std::string m_electronPath;   ///< Location in TES of input Electron pids
+  std::string m_trkmatchPath;   ///< Location in TES of calo&track match
+  std::string m_caloematchPath; ///< Location in TES of cluster energy match
+  std::string m_bremmatchPath;  ///< Location in TES of bremsstrahlung match
+
+
   std::string m_protoPath;    ///< Location in TES of output ProtoParticles
   
   double m_lastChiSqMax;      ///< Maximum Chi2 of track fit to make a ProtoP

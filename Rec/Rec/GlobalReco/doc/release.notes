@@ -1,8 +1,15 @@
 !-----------------------------------------------------------------------------
 ! Package     : Rec/GlobalReco
 ! Responsible : Gloria Corti
-! Purpose     : Holds final reconstruciton code
+! Purpose     : Holds final reconstruction code
 !-----------------------------------------------------------------------------
+
+! 2002-07-18 - Gloria Corti
+ - use PhysEvent v6r0
+ - remove setCharge no longer existing for ProtoParticle in NeutralPPCreator
+   and in ChargedProtoPAlg
+ - introduce location of tables for electron hypothesis and add muon detid
+   only when track in detector acceptance in ChargedProtoPAlg
 
 ! 2002-07-15 - Vanya Belyaev
  - src/NeutralPPcrator.h,.cpp - new files
