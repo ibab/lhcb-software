@@ -1,6 +1,9 @@
-// $Id: IRichSignalDetectionEff.h,v 1.1 2003-08-06 09:55:31 jonrob Exp $
+// $Id: IRichSignalDetectionEff.h,v 1.2 2003-08-26 14:37:22 jonrob Exp $
 #ifndef RICHRECTOOLS_IRICHSIGNALDETECTIONEFF_H
 #define RICHRECTOOLS_IRICHSIGNALDETECTIONEFF_H 1
+
+// Event model
+class RichRecSegment;
 
 /** @class IRichSignalDetectionEff IRichSignalDetectionEff.h
  *
@@ -20,7 +23,8 @@ public:
   static const InterfaceID& interfaceID() {return IID_IRichSignalDetectionEff;}
 
   /// Returns the detection efficiency for a cherenkov photon of a given energy
-  virtual double photonDetEfficiency( double energy ) = 0;
+  virtual double photonDetEfficiency( RichRecSegment * segment,
+                                      double energy ) = 0;
   
 };
 

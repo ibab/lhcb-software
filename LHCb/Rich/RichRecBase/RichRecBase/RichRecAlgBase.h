@@ -1,9 +1,8 @@
-// $Id: RichRecAlgBase.h,v 1.8 2003-08-06 09:55:31 jonrob Exp $
+// $Id: RichRecAlgBase.h,v 1.9 2003-08-26 14:37:22 jonrob Exp $
 #ifndef RICHRECALGS_RICHRECALGBASE_H
 #define RICHRECALGS_RICHRECALGBASE_H 1
 
 // from Gaudi
-//#include "GaudiAlg/GaudiAlgorithm.h"
 #include "GaudiKernel/Algorithm.h"
 #include "GaudiKernel/IAlgTool.h"
 #include "GaudiKernel/GaudiException.h"
@@ -64,8 +63,13 @@ protected:  // Protected methods
   /// Acquires a tool of the correct type from the RichToolRegistry for a given name
   template <typename TOOL> inline
   TOOL* acquireTool( std::string tName, TOOL*& pTool ) {
-    if ( !m_toolReg ) throw GaudiException( "RichToolRegistry not initialised", 
+    if ( !m_toolReg ) throw GaudiException( "RichToolRegistry not initialised",
                                             name(), StatusCode::FAILURE );
+    if ( msgLevel(MSG::DEBUG) ) {
+      MsgStream msg( msgSvc(), name() );
+      msg << MSG::DEBUG << " Acquiring tool '" << tName
+          << "' of type '" << m_toolReg->toolType(tName) << "'" << endreq;
+    }
     if ( !toolSvc()->retrieveTool(m_toolReg->toolType(tName),tName,pTool) ) {
       pTool = NULL;
       throw GaudiException( "Unable to retrieve tool '" + tName +
@@ -74,11 +78,18 @@ protected:  // Protected methods
     }
     return pTool;
   }
-  
+
   /// Release a tool
   template <typename TOOL> inline
   void releaseTool( TOOL *& pTool ) {
-    if ( pTool ) { toolSvc()->releaseTool( pTool ); pTool = NULL; }
+    if ( pTool ) {
+      if ( msgLevel(MSG::DEBUG) ) {
+        MsgStream msg( msgSvc(), name() );
+        msg << MSG::DEBUG << " Releasing tool '" << pTool->name() << "'" << endreq;
+      }
+      toolSvc()->releaseTool( pTool );
+      pTool = NULL;
+    }
   }
 
 private:   // Private data

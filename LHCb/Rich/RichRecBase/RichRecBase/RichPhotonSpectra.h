@@ -1,4 +1,4 @@
-// $Id: RichPhotonSpectra.h,v 1.2 2003-08-06 12:22:19 jonrob Exp $
+// $Id: RichPhotonSpectra.h,v 1.3 2003-08-26 14:37:22 jonrob Exp $
 #ifndef RICHRECBASE_RICHPHOTONSPECTRA_H
 #define RICHRECBASE_RICHPHOTONSPECTRA_H 1
 
@@ -39,13 +39,21 @@ public:
   
   ~RichPhotonSpectra( ) {}; ///< Destructor
 
-  unsigned int energyBins();    ///< Returns the number of energy bins
+  unsigned int energyBins() const;    ///< Returns the number of energy bins
 
-  double minEnergy();  ///< Returns the minimum photon energy
+  void setEnergyBins( unsigned int bins ); ///< Set the number of energy bins
 
-  double maxEnergy();  ///< Returns the maximum photon energy
+  double minEnergy() const;  ///< Returns the minimum photon energy
 
-  double binSize();    ///< Returns the energy bin size
+  void setMinEnergy( double en ); ///< Sets the minimum photon energy
+
+  double maxEnergy() const;  ///< Returns the maximum photon energy
+
+  void setMaxEnergy( double en ); ///< Sets the maximum photon energy
+
+  double binSize() const;    ///< Returns the energy bin size
+
+  void setBinSize( double size ); ///< Set the energy bin size
 
   double binEnergyLowerEdge( unsigned int bin );   ///< The lower edge of the energy bin
 
@@ -55,6 +63,15 @@ public:
 
   /// Returns the energy distribution for a given mass hypothesis
   RichPhotonSpectra::PhotonData & energyDist( const Rich::ParticleIDType id );
+
+  /// Returns the energy distribution for a given mass hypothesis
+  const RichPhotonSpectra::PhotonData & energyDist( const Rich::ParticleIDType id ) const;
+
+  /// Returns the energy distribution for a given mass hypothesis
+  RichPhotonSpectra::HypoPhotonData & hypoData( );
+
+  /// Returns the energy distribution for a given mass hypothesis
+  const RichPhotonSpectra::HypoPhotonData & hypoData( ) const;
 
   /// Returns the integral of the distribution
   double integral( const Rich::ParticleIDType id );
@@ -80,24 +97,44 @@ private: // data
 
 };
 
-inline unsigned int RichPhotonSpectra::energyBins()
+inline unsigned int RichPhotonSpectra::energyBins() const
 {
   return m_enBins;
 }
 
-inline double RichPhotonSpectra::minEnergy()
+inline void RichPhotonSpectra::setEnergyBins( unsigned int bins ) 
+{
+  m_enBins = bins;
+} 
+
+inline double RichPhotonSpectra::minEnergy() const
 {
   return m_minEn;
 }
 
-inline double RichPhotonSpectra::maxEnergy()
+inline void RichPhotonSpectra::setMinEnergy( double en )
+{
+  m_minEn = en;
+}
+
+inline double RichPhotonSpectra::maxEnergy() const
 {
   return m_maxEn;
 }
 
-inline double RichPhotonSpectra::binSize()
+inline void RichPhotonSpectra::setMaxEnergy( double en )
+{
+  m_maxEn = en;
+}
+
+inline double RichPhotonSpectra::binSize() const
 {
   return m_binSize;
+}
+
+inline void RichPhotonSpectra::setBinSize( double size ) 
+{
+  m_binSize = size;
 }
 
 inline double RichPhotonSpectra::binEnergyLowerEdge( unsigned int bin )
@@ -127,21 +164,49 @@ RichPhotonSpectra::energyDist( const Rich::ParticleIDType id )
   return m_photdata[id];
 }
 
-// Methods for GOD
-
-/// Implement StreamBuffer >> method for RichPhotonSpectra
-inline StreamBuffer& operator >> ( StreamBuffer& s,
-                                   RichPhotonSpectra& spectra )
+inline const RichPhotonSpectra::PhotonData &
+RichPhotonSpectra::energyDist( const Rich::ParticleIDType id ) const
 {
-  // add details later on
-  return s;
+  return m_photdata[id];
 }
+
+inline RichPhotonSpectra::RichPhotonSpectra::HypoPhotonData & 
+RichPhotonSpectra::hypoData()
+{
+  return m_photdata;
+}
+
+inline const RichPhotonSpectra::RichPhotonSpectra::HypoPhotonData & 
+RichPhotonSpectra::hypoData() const
+{
+  return m_photdata;
+}
+
+// Methods for GOD
 
 /// Implement StreamBuffer << method for RichPhotonSpectra
 inline StreamBuffer& operator << ( StreamBuffer& s,
                                    const RichPhotonSpectra& spectra )
 {
-  // add details later on
+  s << spectra.energyBins()
+    << spectra.minEnergy()
+    << spectra.maxEnergy()
+    << spectra.binSize()
+    << spectra.hypoData();
+  return s;
+}
+
+/// Implement StreamBuffer >> method for RichPhotonSpectra
+inline StreamBuffer& operator >> ( StreamBuffer& s,
+                                   RichPhotonSpectra& spectra )
+{
+  unsigned int i;
+  double d;
+  s >> i; spectra.setEnergyBins(i);
+  s >> d; spectra.setMinEnergy(d);
+  s >> d; spectra.setMaxEnergy(d);
+  s >> d; spectra.setBinSize(d);
+  s >> spectra.hypoData();
   return s;
 }
 
@@ -149,12 +214,16 @@ inline StreamBuffer& operator << ( StreamBuffer& s,
 inline std::ostream& operator << ( std::ostream& s,
                                    const RichPhotonSpectra& spectra )
 {
-  //s << "{ " << std::endl
-  //  << " energy bins:\t" << spectra.energyBins() << std::endl
-  // << " minimum energy:\t" << spectra.minEnergy() << std::endl
-  //  << " maximum energy:\t" << spectra.maxEnergy() << std::endl
-  // << " photon data:\t" << spectra.photonData() << std::endl
-  //  << " } ";
+  s << "{ " << std::endl
+    << " energy bins:\t" << spectra.energyBins() << std::endl
+    << " minimum energy:\t" << spectra.minEnergy() << std::endl
+    << " maximum energy:\t" << spectra.maxEnergy() << std::endl
+    //<< " electron data:\t" << spectra.energyDist(Rich::Electron) << std::endl
+    //<< " muon data:\t" << spectra.energyDist(Rich::Muon) << std::endl
+    //<< " pion data:\t" << spectra.energyDist(Rich::Pion) << std::endl
+    //<< " kaon data:\t" << spectra.energyDist(Rich::Kaon) << std::endl
+    //<< " proton data:\t" << spectra.energyDist(Rich::Proton) << std::endl
+    << " } " << std::endl;
   return s;
 }
 

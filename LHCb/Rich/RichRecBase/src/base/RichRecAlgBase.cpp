@@ -1,5 +1,4 @@
-// $Id: RichRecAlgBase.cpp,v 1.8 2003-07-03 14:46:40 jonesc Exp $
-// Include files
+// $Id: RichRecAlgBase.cpp,v 1.9 2003-08-26 14:37:22 jonrob Exp $
 
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -27,8 +26,9 @@ RichRecAlgBase::RichRecAlgBase( const std::string& name,
     m_richPixels(0),
     m_richSegments(0),
     m_richPhotons(0),
-    m_richStatus(0) { 
-  
+    m_richStatus(0)
+{
+
   declareProperty( "ToolRegistryName", m_regName = "RichToolRegistry" );
 
 }
@@ -73,11 +73,11 @@ StatusCode RichRecAlgBase::initialize() {
 StatusCode RichRecAlgBase::finalize() {
 
   // Release all tools
-  releaseTool( m_toolReg );
-  releaseTool( m_pixTool );
-  releaseTool( m_tkTool );
+  releaseTool( m_toolReg  );
+  releaseTool( m_pixTool  );
+  releaseTool( m_tkTool   );
   releaseTool( m_statTool );
-  releaseTool( m_segTool );
+  releaseTool( m_segTool  );
   releaseTool( m_photTool );
 
   return StatusCode::SUCCESS;

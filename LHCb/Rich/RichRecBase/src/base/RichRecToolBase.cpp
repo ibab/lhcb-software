@@ -1,5 +1,4 @@
-// $Id: RichRecToolBase.cpp,v 1.6 2003-08-12 13:36:31 jonrob Exp $
-// Include files
+// $Id: RichRecToolBase.cpp,v 1.7 2003-08-26 14:37:22 jonrob Exp $
 
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h"

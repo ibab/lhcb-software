@@ -1,4 +1,4 @@
-// $Id: RichHypoData.h,v 1.1 2003-08-06 09:41:38 jonrob Exp $
+// $Id: RichHypoData.h,v 1.2 2003-08-26 14:44:11 jonrob Exp $
 #ifndef RICHRECBASE_RICHHYPODATA_H
 #define RICHRECBASE_RICHHYPODATA_H 1
 
@@ -7,10 +7,7 @@
 #include "GaudiKernel/MsgStream.h"
 
 // boost
-#include "boost/array.hpp"
-
-// stl
-//#include <vector>
+#include "RichKernel/BoostArray.h"
 
 // RichKernel
 #include "RichKernel/RichParticleIDType.h"
@@ -34,13 +31,6 @@ public:
 
   /// Default Constructor
   RichHypoData() { resetData(); }
-
-  /// Constructor with initialisation value
-  //RichHypoData() ( TYPE & init ) 
-  // {
-  // for ( Array::iterator i = m_data.begin(); 
-  //       i != m_data.end(); ++i ) { *i = init; }
-  //}
   
   /// Destructor
   ~RichHypoData() { }
