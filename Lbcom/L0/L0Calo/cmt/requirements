@@ -11,7 +11,7 @@ include_dirs	$(L0CALOROOT)
 set L0CALOOPTS	$(L0CALOROOT)/options
 
 # ================ used packages =========================================
-use CaloEvent	v4*	Event
+use CaloEvent	v5*	Event
 use CaloDet	v1*	Det
 
 # ================ component library =====================================
