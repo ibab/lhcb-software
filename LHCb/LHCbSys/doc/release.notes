@@ -9,8 +9,8 @@
   Built against Gaudi v14r2
 
  - Modified packages: KernelSys v3r3, LHCbKernel v4r3, CaloKernel v3r0,
-     DetSys v6r0, VeloDet v9r0, STDet v8r1, CaloDet v6r8, EventSys v18r0,
-     VeloEvent v14r0, ITEvent v13r2, TrEvent v13r1, CaloEvent v13r1,
+     VeloKernel v1r4, DetSys v6r0, VeloDet v9r0, STDet v8r1, CaloDet v6r8, 
+     EventSys v18r0, VeloEvent v14r0,ITEvent v13r2,TrEvent v13r1,CaloEvent v13r1,
      AssociatorsSys v1r11, VeloAssociators v1r8, Associators v2r3, 
      TrAssociators v4r0, CaloAssociators v4r0, MCTools v1r4, IOExample v1r1
 
@@ -20,6 +20,9 @@
    . Change in bit assignment of VeloChannelID
    . Add Kernel/LHCbMath.h, implementing LHCbMath::round( x ) to round double
      and float to nearest int.
+
+ - In VeloKernel v1r4:
+   . Remove VeloRound.h, use LHCbMath::round instead
 
  - In VeloDet v9r0:
    . Total redesign of DeVelo interface, including backwards incompatible

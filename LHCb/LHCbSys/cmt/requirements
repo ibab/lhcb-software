@@ -21,7 +21,7 @@ use CaloKernel  	v3r0	Calo
 use MuonKernel  	v2r5	Muon
 use TrKernel    	v11r3	Tr
 use RichKernel  	v4r4	Rich
-use VeloKernel  	v1r3    Velo
+use VeloKernel  	v1r4    Velo
 
 # Detector description
 use DetSys		v6r0	Det
