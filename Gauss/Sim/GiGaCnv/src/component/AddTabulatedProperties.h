@@ -1,8 +1,11 @@
-// $Id: AddTabulatedProperties.h,v 1.2 2001-11-19 18:27:00 ibelyaev Exp $ 
+// $Id: AddTabulatedProperties.h,v 1.3 2002-11-06 16:56:28 sponce Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2001/11/19 18:27:00  ibelyaev
+//  bux fix and the new converter for catalogs
+//
 // ============================================================================
 #ifndef     GIGACNV_ADDTABULATEDPROPERTIES_H
 #define     GIGACNV_ADDTABULATEDPROPERTIES_H
@@ -47,8 +50,8 @@ inline StatusCode AddTabulatedProperty
   /// 
   tabTo->AddProperty( prop->type().c_str() , vx , vy , size );
   ///
-  delete vx ;
-  delete vy ;
+  delete [] vx ;
+  delete [] vy ;
   ///
   return StatusCode::SUCCESS;
 };

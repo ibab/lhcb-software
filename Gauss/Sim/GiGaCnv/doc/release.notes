@@ -1,7 +1,10 @@
-! $Id: release.notes,v 1.28 2002-09-26 15:12:33 ibelyaev Exp $
+! $Id: release.notes,v 1.29 2002-11-06 16:56:28 sponce Exp $
 ! =============================================================================
 Package         : GiGaCnv
 Package Manager : Vanya Belyaev Ivan.Belyaev@itep.ru
+
+! 2002-11-06 - Sebastien Ponce
+ - insignificant bug fix (delete => delete[]) to please valgrind
 
 ! 2002-09-26 - Ivan Belyaev
  - src/component/GiGaGeomCnvSvc.h,.cpp - 
