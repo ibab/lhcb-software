@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/Magnet/src/MagneticFieldSvc.h,v 1.1.1.1 2002-05-21 09:12:33 gcorti Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/Magnet/src/MagneticFieldSvc.h,v 1.2 2002-05-21 17:08:29 cattanem Exp $
 #ifndef MAGNETICFIELDSVC_H
 #define MAGNETICFIELDSVC_H 1
 
@@ -69,10 +69,10 @@ private:
   StatusCode parseFile( );       ///< Reads the field map from file 
   
   std::string m_filename;        ///< Magnetic field file name
-  std::vector<double> m_Q;       ///< Field vector
-  double m_Dxyz[3];              ///< Steps in x, y and z
+  std::vector<float> m_Q;       ///< Field vector
+  float m_Dxyz[3];              ///< Steps in x, y and z
   int    m_Nxyz[3];              ///< Number of steps in x, y and z
-  double m_zOffSet;              ///< The z offset
+  float m_zOffSet;              ///< The z offset
 
 };
 

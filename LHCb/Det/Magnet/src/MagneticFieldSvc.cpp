@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/Magnet/src/MagneticFieldSvc.cpp,v 1.1.1.1 2002-05-21 09:12:33 gcorti Exp $
+// $Id: MagneticFieldSvc.cpp,v 1.2 2002-05-21 17:08:28 cattanem Exp $
 
 // Include files
 #include "GaudiKernel/AlgFactory.h"
@@ -194,9 +194,9 @@ StatusCode MagneticFieldSvc::parseFile() {
 	    if ( token != NULL ) continue;
       
       // Keep cdf magnetic field values (gauss)
-      double fx = atof( sFx.c_str() );
-      double fy = atof( sFy.c_str() );
-      double fz = atof( sFz.c_str() );
+      float fx = atof( sFx.c_str() );
+      float fy = atof( sFy.c_str() );
+      float fz = atof( sFz.c_str() );
       
       // Add the magnetic field components of each point to 
       // sequentialy in a vector 
@@ -253,22 +253,22 @@ StatusCode MagneticFieldSvc::fieldGrid (const HepPoint3D& r,
   StatusCode scs = StatusCode::SUCCESS;
   StatusCode scf = StatusCode::FAILURE;
   
-  double xmin_FL, ymin_FL, zmin_FL;
-  double xmax_FL, ymax_FL, zmax_FL;
+  float xmin_FL, ymin_FL, zmin_FL;
+  float xmax_FL, ymax_FL, zmax_FL;
   
   // step size in x, y and z
-  double dx_FL, dy_FL, dz_FL;
+  float dx_FL, dy_FL, dz_FL;
   
   // number of steps in x, y and z 
   int nx_FL, ny_FL, nz_FL;
 
   // auxiliary variables defined at the vertices of the cube that
   // contains the (x, y, z) point where the field is interpolated
-  double     x,     y,     z,   hx0,   hx1,   hy0,   hy1,   hz0, hz1;
-  double  h000,  h001,  h010,  h011,  h100,  h101,  h110,  h111;
-  double cx000, cx001, cx010, cx011, cx100, cx101, cx110, cx111;
-  double cy000, cy001, cy010, cy011, cy100, cy101, cy110, cy111;
-  double cz000, cz001, cz010, cz011, cz100, cz101, cz110, cz111;
+  float     x,     y,     z,   hx0,   hx1,   hy0,   hy1,   hz0, hz1;
+  float   h000,  h001,  h010,  h011,  h100,  h101,  h110,  h111;
+  float  cx000, cx001, cx010, cx011, cx100, cx101, cx110, cx111;
+  float  cy000, cy001, cy010, cy011, cy100, cy101, cy110, cy111;
+  float  cz000, cz001, cz010, cz011, cz100, cz101, cz110, cz111;
   
   int i, j, k;
   int ijk000, ijk001, ijk010, ijk011, ijk100, ijk101, ijk110, ijk111;
