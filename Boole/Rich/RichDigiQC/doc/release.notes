@@ -4,6 +4,10 @@
 ! Purpose     : Quality Control monitoring algorithms for RICH digitisation
 !-----------------------------------------------------------------------------
 
+!======================== RichDigiQC v1r2 2003-11-03 ========================
+! 2003-11-03 - Marco Cattaneo
+ - Use RichEvent v6r*
+
 ! 2003-11-02 - Chris Jones
  - Use new base classes in RichUtils plus histogram improvements
 
