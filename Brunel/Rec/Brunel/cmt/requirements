@@ -34,7 +34,7 @@ use GaudiDb 		v9r1
 use GaudiRootDb 	v9r4
 use GaudiPoolDb		v1r2
 use GaudiObjDesc 	v6r2p1
-use RootHistCnv         v9r0
+use RootHistCnv         v9r1
 
 #-- Database
 use XmlDDDB		v20r1	Det
