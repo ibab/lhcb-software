@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.195 2004-10-27 15:16:49 pkoppenb Exp $
+# $Id: requirements,v 1.196 2004-10-29 12:49:46 pkoppenb Exp $
 # Created    : 07/02/2002
 # Maintainer : P. Koppenburg
 #
@@ -6,7 +6,7 @@
 # Allows reading of OO-DST data
 #============================================================================
 package           DaVinci
-version           v12r3
+version           v12r4
 
 # Structure, i.e. directories to process. 
 #============================================================================
@@ -36,14 +36,17 @@ use XmlDDDB             v22r3   Det
 use FieldMap            v4r5
 use ParamFiles          v3r8    -no_auto_imports
 
+#-- Trigger libraries 
+use TrgSys              v1r0  Trg
+
 #-- LHCb libraries 
 use LHCb                v16r3
 
 #=======================================================
-# DaVinciSys v12r3
+# DaVinciSys v12r4
 #=======================================================
 
-# Trigger packages
+# L0 Trigger packages
 use  L0DU               	v6r7p2   L0
 use  L0Calo             	v7r6     L0
 use  L0Checker          	v2r2     L0
@@ -51,16 +54,7 @@ use  L0MuonKernel 		v2r1p1   L0
 use  L0MuonTrigger 		v2r2     L0
 use  L0mConf            	v2r2p3   L0
 
-use  L1Decision         	v3r1     Trg
-use  L1Reco             	v5r0     Trg
-use  TrgChecker         	v5r0     Trg
-use  TrgForward         	v3r0     Trg
-use  TrgMonitor         	v3r0     Trg
-use  TrgMuonID  		v2r0     Trg
-use  TrgPrimVertex      	v3r0     Trg
-use  TrgTools           	v5r0     Trg
-use  TrgVelo            	v5r0     Trg
-use  TrgVeloTT          	v5r0     Trg
+use  HltGeneric                 v2r0     Hlt
 
 # Enable neutral ProtoParticles production and CaloPIDs
 use  CaloPIDs           	v2r4     Calo 
@@ -74,7 +68,7 @@ use  PrimVtx            	v2r1p1   Rec
 use  RecoTools          	v1r1     Rec
 
 # Utility tools
-use  TrExtrapolator     	v2r13    Tr
+use  TrExtrapolator     	v2r13p1  Tr
 
 use  LoKi               	v3r5p1   Tools  
 use  LoKiHlt             	v1r1p1   Tools  
@@ -84,9 +78,9 @@ use  Utilities          	v1r11p1  Tools
 
 # Physics packages
 use  CommonParticles    	v1r5p3   Phys
-use  DaVinciFilter      	v1r2     Phys
-use  DaVinciKernel      	v2r0     Phys
-use  DaVinciTools       	v11r1    Phys
+use  DaVinciFilter      	v1r3     Phys
+use  DaVinciKernel      	v2r1     Phys
+use  DaVinciTools       	v11r2    Phys
 use  DaVinciUser        	v5r1p2   Phys
 use  FlavourTagging     	v5r3     Phys
 use  Ks2PiPiSel         	v1r4p1   Phys
@@ -102,10 +96,10 @@ use  DaVinciMCTools     	v5r6     Phys
 use  DaVinciTest        	v5r2     Phys
 
 # Stripping
-use  Stripping          	v1r5p1   Tools
+use  Stripping          	v1r5p2   Tools
 
 # Physics selections
-use  PhysSelSys			v7r11    PhysSel
+use  PhysSelSys			v7r12    PhysSel
 
 use GaudiPython v*
 

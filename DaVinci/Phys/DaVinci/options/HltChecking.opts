@@ -1,4 +1,4 @@
-HltWithTrg.Members += { "GaudiSequencer/HLTChecking"};
+Hlt.Members += { "GaudiSequencer/HLTChecking"};
 
 HLTChecking.Members = { "TrgTrack2MCParticle/HltTrgTrack2MCParticle"
                         ,"TrgChecker/HltTrgChecker"

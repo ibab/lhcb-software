@@ -54,5 +54,5 @@ MessageSvc.Format = "% F%40W%S%7W%R%T %0W%M";
 EventSelector.FirstEvent = 1;
 
 #include "$DAVINCIROOT/options/DaVinciTestData.opts"
-ApplicationMgr.EvtMax    = 10000 ;
+ApplicationMgr.EvtMax    = 100 ;
 EventSelector.PrintFreq  = 1;
