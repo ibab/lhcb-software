@@ -1,6 +1,6 @@
-// $Id: RichRayleighScatter.h,v 1.1 2003-08-12 13:35:44 jonrob Exp $
-#ifndef RICHRECTOOLS_RICHRAYLEIGHSCATTER_H
-#define RICHRECTOOLS_RICHRAYLEIGHSCATTER_H 1
+// $Id: RichFunctionalRayleighScatter.h,v 1.1 2003-08-26 14:40:19 jonrob Exp $
+#ifndef RICHRECTOOLS_RICHFUNCTIONALRAYLEIGHSCATTER_H
+#define RICHRECTOOLS_RICHFUNCTIONALRAYLEIGHSCATTER_H 1
 
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h"
@@ -24,26 +24,27 @@
 // interfaces
 #include "RichRecBase/IRichRayleighScatter.h"
 
-/** @class RichRayleighScatter RichRayleighScatter.h
+/** @class RichFunctionalRayleighScatter RichFunctionalRayleighScatter.h
  *
- *  Tool to calculate quantities related to Rayleigh scattering
+ *  Tool to calculate quantities related to Rayleigh scattering using a
+ *  analytic functional form
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
  */
 
-class RichRayleighScatter : public RichRecToolBase,
-                            virtual public IRichRayleighScatter {
+class RichFunctionalRayleighScatter : public RichRecToolBase,
+                                      virtual public IRichRayleighScatter {
 
 public:
 
   /// Standard constructor
-  RichRayleighScatter( const std::string& type,
-                       const std::string& name,
-                       const IInterface* parent );
+  RichFunctionalRayleighScatter( const std::string& type,
+                                 const std::string& name,
+                                 const IInterface* parent );
 
   /// Destructor
-  virtual ~RichRayleighScatter() {};
+  virtual ~RichFunctionalRayleighScatter() {};
 
   /// Initialize method
   StatusCode initialize();
@@ -63,4 +64,4 @@ private:  // Private data
 
 };
 
-#endif // RICHRECTOOLS_RICHRAYLEIGHSCATTER_H
+#endif // RICHRECTOOLS_RICHFUNCTIONALRAYLEIGHSCATTER_H

@@ -1,4 +1,4 @@
-// $Id: RichRefractiveIndex.cpp,v 1.1 2003-08-06 11:08:13 jonrob Exp $
+// $Id: RichRefractiveIndexSICB.cpp,v 1.1 2003-08-26 14:40:20 jonrob Exp $
 
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h"
@@ -6,7 +6,7 @@
 #include "GaudiKernel/IParticlePropertySvc.h"
 
 // local
-#include "RichRefractiveIndex.h"
+#include "RichRefractiveIndexSICB.h"
 
 // CLHEP
 #include "CLHEP/Units/PhysicalConstants.h"
@@ -16,19 +16,19 @@
 
 
 //-----------------------------------------------------------------------------
-// Implementation file for class : RichRefractiveIndex
+// Implementation file for class : RichRefractiveIndexSICB
 //
 // 15/03/2002 : Chris Jones   Christopher.Rob.Jones@cern.ch
 //-----------------------------------------------------------------------------
 
 // Declaration of the Tool Factory
-static const  ToolFactory<RichRefractiveIndex>          s_factory ;
-const        IToolFactory& RichRefractiveIndexFactory = s_factory ;
+static const  ToolFactory<RichRefractiveIndexSICB>          s_factory ;
+const        IToolFactory& RichRefractiveIndexSICBFactory = s_factory ;
 
 // Standard constructor
-RichRefractiveIndex::RichRefractiveIndex ( const std::string& type,
-                                           const std::string& name,
-                                           const IInterface* parent )
+RichRefractiveIndexSICB::RichRefractiveIndexSICB ( const std::string& type,
+                                                   const std::string& name,
+                                                   const IInterface* parent )
   : RichRecToolBase( type, name, parent ) {
 
   declareInterface<IRichRefractiveIndex>(this);
@@ -36,7 +36,7 @@ RichRefractiveIndex::RichRefractiveIndex ( const std::string& type,
   // Define job option parameters
 }
 
-StatusCode RichRefractiveIndex::initialize() {
+StatusCode RichRefractiveIndexSICB::initialize() {
 
   MsgStream msg( msgSvc(), name() );
   msg << MSG::DEBUG << "Initialize" << endreq;
@@ -82,24 +82,22 @@ StatusCode RichRefractiveIndex::initialize() {
   m_rho[Rich::CF4]       = 0.00366;
 
   // Informational Printout
-  // msg << MSG::DEBUG;
+  msg << MSG::DEBUG << " Using hardcoded SICB implementation" << endreq;
 
   return sc;
 }
 
-StatusCode RichRefractiveIndex::finalize() {
+StatusCode RichRefractiveIndexSICB::finalize() {
 
   MsgStream msg( msgSvc(), name() );
   msg << MSG::DEBUG << "Finalize" << endreq;
-
-  // release tools
 
   // Execute base class method
   return RichRecToolBase::finalize();
 }
 
-double RichRefractiveIndex::refractiveIndex( const Rich::RadiatorType radiator,
-                                             double energy ) {
+double RichRefractiveIndexSICB::refractiveIndex( const Rich::RadiatorType radiator,
+                                                 double energy ) {
 
   double index = 0;
   double fe =
@@ -115,13 +113,13 @@ double RichRefractiveIndex::refractiveIndex( const Rich::RadiatorType radiator,
   return index;
 }
 
-double RichRefractiveIndex::refractiveIndex( RichRecSegment * segment ) {
+double RichRefractiveIndexSICB::refractiveIndex( RichRecSegment * segment ) {
   return refractiveIndex( segment->trackSegment().radiator() );
 }
 
-double RichRefractiveIndex::refractiveIndex( const Rich::RadiatorType radiator ) {
+double RichRefractiveIndexSICB::refractiveIndex( const Rich::RadiatorType radiator ) {
 
   double meanEnergy = m_referenceQE->meanX( m_referenceQE->minX(),
                                             m_referenceQE->maxX() ) / eV;
-  return this->refractiveIndex( radiator, meanEnergy );
+  return refractiveIndex( radiator, meanEnergy );
 }

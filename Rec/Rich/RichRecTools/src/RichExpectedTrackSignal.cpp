@@ -1,4 +1,4 @@
-// $Id: RichExpectedTrackSignal.cpp,v 1.2 2003-08-12 13:35:43 jonrob Exp $
+// $Id: RichExpectedTrackSignal.cpp,v 1.3 2003-08-26 14:40:18 jonrob Exp $
 
 // local
 #include "RichExpectedTrackSignal.h"
@@ -105,7 +105,7 @@ double RichExpectedTrackSignal::nDetectablePhotons ( RichRecSegment * segment,
     RichPhotonSpectra & detSpectra  = segment->detectablePhotonSpectra();
     for ( unsigned int iEnBin = 0; iEnBin < emitSpectra.energyBins(); ++iEnBin ) {
       double sig = (emitSpectra.energyDist(id))[iEnBin] * 
-        m_sigDetEff->photonDetEfficiency( emitSpectra.binEnergy(iEnBin) );
+        m_sigDetEff->photonDetEfficiency( segment, emitSpectra.binEnergy(iEnBin) );
       signal += ( (detSpectra.energyDist(id))[iEnBin] = sig );
     }
 

@@ -1,42 +1,45 @@
-// $Id: RichRefractiveIndex.h,v 1.1 2003-08-06 11:08:13 jonrob Exp $
-#ifndef RICHRECTOOLS_RICHREFRACTIVEINDEX_H
-#define RICHRECTOOLS_RICHREFRACTIVEINDEX_H 1
+// $Id: RichTabulatedRefractiveIndex.h,v 1.1 2003-08-26 14:40:21 jonrob Exp $
+#ifndef RICHRECTOOLS_RICHTABULATEDREFRACTIVEINDEX_H
+#define RICHRECTOOLS_RICHTABULATEDREFRACTIVEINDEX_H 1
 
 // base class
 #include "RichRecBase/RichRecToolBase.h"
 
 // RichUtils
-#include "RichUtils/IRich1DProperty.h"
 #include "RichUtils/Rich1DTabProperty.h"
 
 // Event model
 #include "Event/RichRecSegment.h"
 
+// boost
+#include "RichKernel/BoostArray.h"
+
 // interfaces
 #include "RichRecBase/IRichRefractiveIndex.h"
 #include "RichDetTools/IRichDetInterface.h"
 
-/** @class RichRefractiveIndex RichRefractiveIndex.h
+/** @class RichTabulatedRefractiveIndex RichTabulatedRefractiveIndex.h
  *
  *  Tool to calculate the effective refractive index for
- *  a given RichRecSegment
+ *  a given RichRecSegment. An implementation that uses the tabulated
+ *  information from the XML
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
  */
 
-class RichRefractiveIndex : public RichRecToolBase,
-                            virtual public IRichRefractiveIndex {
+class RichTabulatedRefractiveIndex : public RichRecToolBase,
+                                     virtual public IRichRefractiveIndex {
 
 public:
 
   /// Standard constructor
-  RichRefractiveIndex( const std::string& type,
-                       const std::string& name,
-                       const IInterface* parent );
+  RichTabulatedRefractiveIndex( const std::string& type,
+                                const std::string& name,
+                                const IInterface* parent );
 
   /// Destructor
-  virtual ~RichRefractiveIndex() {};
+  virtual ~RichTabulatedRefractiveIndex() {};
 
   /// Initialize method
   StatusCode initialize();
@@ -59,18 +62,16 @@ private:  // Private data
   /// Pointers to tool instances
   IRichDetInterface * m_richDetInt;
 
-  // Sellmeir parameters
-  double m_selF1[Rich::NRadiatorTypes];
-  double m_selF2[Rich::NRadiatorTypes];
-  double m_selE1[Rich::NRadiatorTypes];
-  double m_selE2[Rich::NRadiatorTypes];
-  double m_molW[Rich::NRadiatorTypes];
-  double m_rho[Rich::NRadiatorTypes];
-
   /// Quantum Efficiency function.
-  /// For time being assume only one reference curve for all HPDs
   Rich1DTabProperty * m_referenceQE;
+
+  /// Pointers to refractive indices for each radiator type
+  typedef boost::array<Rich1DTabProperty*,Rich::NRadiatorTypes> RefractiveIndices;
+  RefractiveIndices m_refIndex;
+
+  /// vector of locations in XML for refractive indices
+  std::vector<std::string> m_refLocations;
 
 };
 
-#endif // RICHRECTOOLS_RICHREFRACTIVEINDEX_H
+#endif // RICHRECTOOLS_RICHTABULATEDREFRACTIVEINDEX_H

@@ -1,22 +1,22 @@
-// $Id: RichRayleighScatter.cpp,v 1.1 2003-08-12 13:35:44 jonrob Exp $
+// $Id: RichFunctionalRayleighScatter.cpp,v 1.1 2003-08-26 14:40:18 jonrob Exp $
 
 // local
-#include "RichRayleighScatter.h"
+#include "RichFunctionalRayleighScatter.h"
 
 //-----------------------------------------------------------------------------
-// Implementation file for class : RichRayleighScatter
+// Implementation file for class : RichFunctionalRayleighScatter
 //
 // 15/03/2002 : Chris Jones   Christopher.Rob.Jones@cern.ch
 //-----------------------------------------------------------------------------
 
 // Declaration of the Tool Factory
-static const  ToolFactory<RichRayleighScatter>          s_factory ;
-const        IToolFactory& RichRayleighScatterFactory = s_factory ;
+static const  ToolFactory<RichFunctionalRayleighScatter>          s_factory ;
+const        IToolFactory& RichFunctionalRayleighScatterFactory = s_factory ;
 
 // Standard constructor
-RichRayleighScatter::RichRayleighScatter ( const std::string& type,
-                                           const std::string& name,
-                                           const IInterface* parent )
+RichFunctionalRayleighScatter::RichFunctionalRayleighScatter ( const std::string& type,
+                                                               const std::string& name,
+                                                               const IInterface* parent )
   : RichRecToolBase( type, name, parent ),
     m_eVToMicron   ( 0 ),
     m_AeroClarity  ( 0 ) {
@@ -25,7 +25,7 @@ RichRayleighScatter::RichRayleighScatter ( const std::string& type,
 
 }
 
-StatusCode RichRayleighScatter::initialize() {
+StatusCode RichFunctionalRayleighScatter::initialize() {
 
   MsgStream msg( msgSvc(), name() );
   msg << MSG::DEBUG << "Initialize" << endreq;
@@ -42,13 +42,14 @@ StatusCode RichRayleighScatter::initialize() {
 
   // Informational Printout
   msg << MSG::DEBUG
+      << " Using analytic implementation" << endreq
       << " eV to mm conversion factor   = " << m_eVToMicron << endreq
       << " Aerogel clarity              = " << m_AeroClarity << endreq;
 
   return StatusCode::SUCCESS;
 }
 
-StatusCode RichRayleighScatter::finalize() {
+StatusCode RichFunctionalRayleighScatter::finalize() {
 
   MsgStream msg( msgSvc(), name() );
   msg << MSG::DEBUG << "Finalize" << endreq;
@@ -57,8 +58,8 @@ StatusCode RichRayleighScatter::finalize() {
   return RichRecToolBase::finalize();
 }
 
-double RichRayleighScatter::photonScatteredProb( const RichRecSegment * segment,
-                                                 const double energy ) {
+double RichFunctionalRayleighScatter::photonScatteredProb( const RichRecSegment * segment,
+                                                           const double energy ) {
 
   // check this is aerogel
   if ( segment->trackSegment().radiator() != Rich::Aerogel ) return 0;
@@ -73,5 +74,6 @@ double RichRayleighScatter::photonScatteredProb( const RichRecSegment * segment,
   // compute and return prob
   double lambda   = m_eVToMicron/energy;
   double scatLeng = lambda*lambda*lambda*lambda/m_AeroClarity;
+
   return 1 - (scatLeng/path)*(1-exp(-1*path/scatLeng));
 }

@@ -1,4 +1,4 @@
-// $Id: RichPixelCreatorFromRichDigits.cpp,v 1.2 2003-07-03 14:46:59 jonesc Exp $
+// $Id: RichPixelCreatorFromRichDigits.cpp,v 1.3 2003-08-26 14:40:19 jonrob Exp $
 
 // local
 #include "RichPixelCreatorFromRichDigits.h"
@@ -21,6 +21,7 @@ RichPixelCreatorFromRichDigits::RichPixelCreatorFromRichDigits( const std::strin
 
   declareInterface<IRichPixelCreator>(this);
 
+  // Define job option parameters
   declareProperty( "RichRecPixelLocation",
                    m_richRecPixelLocation = RichRecPixelLocation::Default );
   declareProperty( "RecoDigitsLocation",

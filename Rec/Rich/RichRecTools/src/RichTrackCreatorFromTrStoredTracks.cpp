@@ -1,4 +1,4 @@
-// $Id: RichTrackCreatorFromTrStoredTracks.cpp,v 1.4 2003-08-06 11:08:14 jonrob Exp $
+// $Id: RichTrackCreatorFromTrStoredTracks.cpp,v 1.5 2003-08-26 14:40:22 jonrob Exp $
 
 // local
 #include "RichTrackCreatorFromTrStoredTracks.h"
@@ -37,9 +37,9 @@ StatusCode RichTrackCreatorFromTrStoredTracks::initialize() {
   if ( !RichRecToolBase::initialize() ) return StatusCode::FAILURE;
 
   // Acquire instances of tools
-  acquireTool("RichSegmentCreator", m_segCr);
-  acquireTool("RichDetInterface", m_richDetInt);
-  acquireTool("RichExpectedTrackSignal", m_signal);
+  acquireTool( "RichSegmentCreator",      m_segCr      );
+  acquireTool( "RichDetInterface",        m_richDetInt );
+  acquireTool( "RichExpectedTrackSignal", m_signal     );
 
   // Get pointer to EDS
   if ( !serviceLocator()->service( "EventDataSvc", m_evtDataSvc, true ) ) {

@@ -1,6 +1,6 @@
-// $Id: RichSignalDetectionEff.h,v 1.2 2003-08-12 13:35:44 jonrob Exp $
-#ifndef RICHRECTOOLS_RICHSIGNALDETECTIONEFF_H
-#define RICHRECTOOLS_RICHSIGNALDETECTIONEFF_H 1
+// $Id: RichSignalDetectionEffSICB.h,v 1.1 2003-08-26 14:40:21 jonrob Exp $
+#ifndef RICHRECTOOLS_RICHSIGNALDETECTIONEFFSICB_H
+#define RICHRECTOOLS_RICHSIGNALDETECTIONEFFSICB_H 1
 
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h"
@@ -13,7 +13,6 @@
 #include "RichDetTools/IRichDetInterface.h"
 
 // RichUtils
-//#include "RichUtils/IRich1DProperty.h"
 #include "RichUtils/Rich1DTabProperty.h"
 
 // CLHEP
@@ -22,7 +21,7 @@
 // Rich Kernel
 #include "RichKernel/MessageSvcStl.h"
 
-/** @class RichSignalDetectionEff RichSignalDetectionEff.h
+/** @class RichSignalDetectionEffSICB RichSignalDetectionEffSICB.h
  *
  *  Tool providing calculations for the photon detection efficiencies
  *
@@ -30,18 +29,18 @@
  *  @date   15/03/2002
  */
 
-class RichSignalDetectionEff : public RichRecToolBase,
-                               virtual public IRichSignalDetectionEff {
+class RichSignalDetectionEffSICB : public RichRecToolBase,
+                                   virtual public IRichSignalDetectionEff {
 
 public:
 
   /// Standard constructor
-  RichSignalDetectionEff( const std::string& type,
-                          const std::string& name,
-                          const IInterface* parent );
+  RichSignalDetectionEffSICB( const std::string& type,
+                              const std::string& name,
+                              const IInterface* parent );
 
   /// Destructor
-  virtual ~RichSignalDetectionEff() {};
+  virtual ~RichSignalDetectionEffSICB() {};
 
   /// Initialize method
   StatusCode initialize();
@@ -50,11 +49,11 @@ public:
   StatusCode finalize();
 
   /// Returns the detection efficiency for a cherenkov photon of a given energy
-  double photonDetEfficiency( double energy );
+  double photonDetEfficiency( RichRecSegment * segment, double energy );
 
 private:  // Private data
 
-  /// Pointers to tool instances
+  /// Tool pointers
   IRichDetInterface * m_richDetInt;
 
   // Temporary variables
@@ -75,4 +74,4 @@ private:  // Private data
 
 };
 
-#endif // RICHRECTOOLS_RICHSIGNALDETECTIONEFF_H
+#endif // RICHRECTOOLS_RICHSIGNALDETECTIONEFFSICB_H

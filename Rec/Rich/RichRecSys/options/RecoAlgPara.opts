@@ -3,12 +3,12 @@
 // Local Algorithm parameters
 RichLocPID.TrackSelection = { "unique","seed","match","forward","upstream","veloTT" };
 RichLocPID.MinimumPtot                       = 0.0*GeV;
-RichLocPID.LocalPIDToolName                  = "RichLocPIDTool";
 RichLocPID.MaxTrTracks                       = 500;
 RichLocPID.MaxUsedTracks                     = 230;
 ToolSvc.RichLocPIDTool.MinProbThresholdHighP = { 0.03,  0.01, 0.02, 0.02 };
 ToolSvc.RichLocPIDTool.MinProbThresholdLowP  = { 0.1,   0.1,  0.1,  0.09 };
 ToolSvc.RichLocPIDTool.CherenkovThetaRes     = { 0.002, 0.0014, 0.0007   };
+ToolSvc.RichToolRegistry.Tools += { "RichLocalPIDTool/RichLocPIDTool" };
 
 // Global PID digit selection
 RichGloPIDDigSel.MaxUsedPixels            = 8000;
@@ -58,38 +58,61 @@ RichGloPIDIt3.MinSignalForAproxLLCalc     = 1e-5;
 // PID output algorithm
 MergeRichPIDs.OutputPIDLocation = "Rec/Rich/PIDs";
 
-// RichRec Tool Registry
-ToolSvc.RichToolRegistry.Tools = {
-  "RichTrackCreatorFromTrStoredTracks/RichTrackCreator",
-  "RichPixelCreatorFromSICB/RichPixelCreator",
-  "RichPhotonCreator/RichPhotonCreator",
-  "RichSegmentCreator/RichSegmentCreator",
-  "RichStatusCreator/RichStatusCreator",
-  "RichDetInterface/RichDetInterface",
-  "RichGeomEffDetailed/RichGeomEff",
-  //"RichGeomEffFixedValue/RichGeomEff",
-  "RichExpectedTrackSignal/RichExpectedTrackSignal",
-  "RichPhotonPredictor/RichPhotonPredictor",
-  "RichPhotonSignal/RichPhotonSignal",
-  "PixelFinder/SICBPixelGeom",
-  "RichSellmeirFunc/RichSellmeirFunc",
-  "RichCherenkovAngle/RichCherenkovAngle",
-  "RichBinnedCherenkovResolution/RichCherenkovResolution",
-  "RichSignalDetectionEff/RichSignalDetectionEff",
-  "RichRefractiveIndex/RichRefractiveIndex"
-};
 
-// General Reconstruction tool parameters            aero   c4f10   cf4
+// The following options configure the various tools to use
+//==========================================================
+
+// Track creator
+ToolSvc.RichToolRegistry.Tools += { "RichTrackCreatorFromTrStoredTracks/RichTrackCreator" };
+
+// Segment creator
+ToolSvc.RichToolRegistry.Tools += { "RichSegmentCreator/RichSegmentCreator" };
+ToolSvc.RichSegmentCreator.EnergyBins = { 5, 5, 5 };
+
+// Status Creator
+ToolSvc.RichToolRegistry.Tools += { "RichStatusCreator/RichStatusCreator" };
+
+// Pixel creator
+ToolSvc.RichToolRegistry.Tools += { "RichPixelCreatorFromSICB/RichPixelCreator" };
+
+// Detector interface 
+ToolSvc.RichToolRegistry.Tools += { "RichDetInterface/RichDetInterface" };
+
+// SICB geometry (temporary)
+ToolSvc.RichToolRegistry.Tools += { "PixelFinder/SICBPixelGeom" };
+
+// Photon Creator
+ToolSvc.RichToolRegistry.Tools += { "RichPhotonCreator/RichPhotonCreator",
+                                    "RichPhotonPredictor/RichPhotonPredictor" };
 ToolSvc.RichPhotonPredictor.MinTrackROI          = { 130.0,  0.0,   0.0 };
 ToolSvc.RichPhotonPredictor.MaxTrackROI          = { 350.0, 90.0, 250.0 };
 ToolSvc.RichPhotonCreator.MinCherenkovTheta      = { 0.1,  0.005, 0.005 };
 ToolSvc.RichPhotonCreator.MaxCherenkovTheta      = { 0.29, 0.075, 0.045 };
 ToolSvc.RichPhotonCreator.MinPhotonProbability   = { 1e-15, 1e-15, 1e-15 };
 //ToolSvc.RichPhotonCreator.MinPhotonProbability   = { 1e-8, 1e-8, 1e-8 };
+
+// Full Geometrical efficiency
+ToolSvc.RichToolRegistry.Tools += { "RichGeomEffDetailed/RichGeomEff" };
 ToolSvc.RichGeomEff.NPhotonsGeomEffCalc          = 100;
-//ToolSvc.RichGeomEff.NPhotonsGeomEffCalc          = 200;
 ToolSvc.RichGeomEff.NPhotonsGeomEffBailout       = 25;
-//ToolSvc.RichGeomEff.NPhotonsGeomEffBailout       = 50;
+
+// Fast geometrical efficiency
+//ToolSvc.RichToolRegistry.Tools += { "RichGeomEffFixedValue/RichGeomEff" };
+
+// Track signals
+ToolSvc.RichToolRegistry.Tools += { "RichExpectedTrackSignal/RichExpectedTrackSignal" };
+
+// Photon signals
+ToolSvc.RichToolRegistry.Tools += { "RichPhotonSignal/RichPhotonSignal" };
+
+// Sellmeir function
+ToolSvc.RichToolRegistry.Tools += { "RichSellmeirFunc/RichSellmeirFunc" };
+
+// Sellmeir function with SICB parameters hardcoded (temporary)
+//ToolSvc.RichToolRegistry.Tools += { "RichSellmeirFuncSICB/RichSellmeirFunc" };
+
+// Cherenkov resolution - binned implementation
+ToolSvc.RichToolRegistry.Tools += { "RichBinnedCherenkovResolution/RichCherenkovResolution" };
 ToolSvc.RichCherenkovResolution.NAerogelResBins    = { 0.2, 0.25 };
 ToolSvc.RichCherenkovResolution.AerogelForwardRes  = { 0.00304, 0.00239, 0.00221 };
 ToolSvc.RichCherenkovResolution.AerogelMatchRes    = { 0.00296, 0.00261, 0.00221 };
@@ -105,4 +128,44 @@ ToolSvc.RichCherenkovResolution.CF4ForwardRes      = { 0.001011, 0.000745, 0.000
 ToolSvc.RichCherenkovResolution.CF4MatchRes        = { 0.000973, 0.000802, 0.000659 };
 ToolSvc.RichCherenkovResolution.CF4UpStreamRes     = { 0.001082, 0.000811, 0.000737 };
 ToolSvc.RichCherenkovResolution.CF4SeedRes         = { 0.001225, 0.000861, 0.000749 };
-ToolSvc.RichSegmentCreator.EnergyBins              = { 5, 5, 5 };
+
+// Photon detection efficiency SICB hardcodings (temporary)
+//ToolSvc.RichToolRegistry.Tools += { "RichSignalDetectionEffSICB/RichSignalDetectionEff" };
+
+// Photon detection efficiency using XML tabulation
+ToolSvc.RichToolRegistry.Tools += { "RichTabulatedHPDSignalDetectionEff/RichSignalDetectionEff" };
+ToolSvc.RichSignalDetectionEff.RichSphMirrorLocations = {
+  "/dd/Geometry/Rich1/Rich1SurfaceTabProperties/Rich1Mirror1SurfaceIdealReflectivityPT",
+  "/dd/Geometry/Rich2/Rich2SurfaceTabProperties/Rich2Mirror1SurfaceIdealReflectivityPT"
+};
+ToolSvc.RichSignalDetectionEff.RichFlatMirrorLocations = {
+  "/dd/Geometry/Rich1/Rich1SurfaceTabProperties/Rich1Mirror2SurfaceIdealReflectivityPT",
+  "/dd/Geometry/Rich2/Rich2SurfaceTabProperties/Rich2Mirror2SurfaceIdealReflectivityPT"
+};
+
+// Refractive index using SICB hardcodings (temporary)
+//ToolSvc.RichToolRegistry.Tools += { "RichRefractiveIndexSICB/RichRefractiveIndex" };
+
+// Refractive index using XML tabulation
+ToolSvc.RichToolRegistry.Tools += { "RichTabulatedRefractiveIndex/RichRefractiveIndex" };
+ToolSvc.RichRefractiveIndex.RefIndexLocations = {
+  "/dd/Materials/RichMaterialTabProperties/AerogelIdealRIndexPT",
+  "/dd/Materials/RichMaterialTabProperties/C4F10SellParamRIndexPT",
+  "/dd/Materials/RichMaterialTabProperties/CF4RIndexPT"
+};
+
+// Rayleigh scattering using XML tabulation
+//ToolSvc.RichToolRegistry.Tools += { "RichTabulatedRayleighScatter/RichRayleighScatter" };
+//ToolSvc.RichRayleighScatter.RayScatLengthLocation = 
+//    "/dd/Materials/RichMaterialTabProperties/AerogelRayleighPT";
+
+// Rayleigh scattering using analytic function
+ToolSvc.RichToolRegistry.Tools += { "RichFunctionalRayleighScatter/RichRayleighScatter" };
+
+// Expected Cherenkov angles
+ToolSvc.RichToolRegistry.Tools += { "RichCherenkovAngle/RichCherenkovAngle" };
+
+// Rich particle properties
+ToolSvc.RichToolRegistry.Tools += { "RichParticleProperties/RichParticleProperties" };
+
+

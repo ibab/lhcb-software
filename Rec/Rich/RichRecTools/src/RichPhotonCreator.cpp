@@ -1,4 +1,4 @@
-// $Id: RichPhotonCreator.cpp,v 1.7 2003-08-12 13:35:43 jonrob Exp $
+// $Id: RichPhotonCreator.cpp,v 1.8 2003-08-26 14:40:19 jonrob Exp $
 
 // local
 #include "RichPhotonCreator.h"
@@ -29,9 +29,9 @@ RichPhotonCreator::RichPhotonCreator( const std::string& type,
   m_minCKtheta.push_back( 0 );      // cf4
   declareProperty( "MinCherenkovTheta", m_minCKtheta );
 
-  //m_maxCKtheta.push_back( 0.300 ); // aerogel
-  //m_maxCKtheta.push_back( 0.080 ); // c4f10
-  //m_maxCKtheta.push_back( 0.050 ); // cf4
+  m_maxCKtheta.push_back( 0.300 ); // aerogel
+  m_maxCKtheta.push_back( 0.080 ); // c4f10
+  m_maxCKtheta.push_back( 0.050 ); // cf4
   declareProperty( "MaxCherenkovTheta", m_maxCKtheta );
 
   m_minPhotonProb.push_back( 1e-15 ); // aerogel
@@ -56,11 +56,11 @@ StatusCode RichPhotonCreator::initialize() {
   }
 
   // Acquire instances of tools
-  acquireTool("RichDetInterface", m_richDetInt);
-  acquireTool("RichTrackCreator", m_trackCreator);
-  acquireTool("RichPhotonSignal", m_photonSignal);
-  acquireTool("RichPixelCreator", m_pixelCreator);
-  acquireTool("RichPhotonPredictor", m_photonPredictor);
+  acquireTool("RichDetInterface",    m_richDetInt      );
+  acquireTool("RichTrackCreator",    m_trackCreator    );
+  acquireTool("RichPhotonSignal",    m_photonSignal    );
+  acquireTool("RichPixelCreator",    m_pixelCreator    );
+  acquireTool("RichPhotonPredictor", m_photonPredictor );
 
   // Setup incident services
   IIncidentSvc * incSvc;
@@ -88,10 +88,10 @@ StatusCode RichPhotonCreator::finalize() {
 
   // release services and tools
   if ( m_evtDataSvc ) { m_evtDataSvc->release(); m_evtDataSvc = 0; }
-  releaseTool( m_richDetInt );
-  releaseTool( m_trackCreator );
-  releaseTool( m_photonSignal );
-  releaseTool( m_pixelCreator );
+  releaseTool( m_richDetInt      );
+  releaseTool( m_trackCreator    );
+  releaseTool( m_photonSignal    );
+  releaseTool( m_pixelCreator    );
   releaseTool( m_photonPredictor );
 
   // Execute base class method

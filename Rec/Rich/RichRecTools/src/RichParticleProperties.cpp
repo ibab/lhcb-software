@@ -1,4 +1,4 @@
-// $Id: RichParticleProperties.cpp,v 1.2 2003-08-12 13:35:43 jonrob Exp $
+// $Id: RichParticleProperties.cpp,v 1.3 2003-08-26 14:40:19 jonrob Exp $
 
 // local
 #include "RichParticleProperties.h"
@@ -47,13 +47,16 @@ StatusCode RichParticleProperties::initialize() {
   m_particleMass[Rich::Pion]     = ppSvc->find("pi+")->mass()/MeV;
   m_particleMass[Rich::Kaon]     = ppSvc->find("K+" )->mass()/MeV;
   m_particleMass[Rich::Proton]   = ppSvc->find("p+" )->mass()/MeV;
-  ppSvc->release();
+ 
   // cache squares of masses
   m_particleMassSq[Rich::Electron] = pow( m_particleMass[Rich::Electron], 2 );
   m_particleMassSq[Rich::Muon]     = pow( m_particleMass[Rich::Muon], 2 );
   m_particleMassSq[Rich::Pion]     = pow( m_particleMass[Rich::Pion], 2 );
   m_particleMassSq[Rich::Kaon]     = pow( m_particleMass[Rich::Kaon], 2 );
   m_particleMassSq[Rich::Proton]   = pow( m_particleMass[Rich::Proton], 2 );
+
+  // release service
+  ppSvc->release();
 
   // Setup momentum thresholds
   for ( int iRad = 0; iRad < Rich::NRadiatorTypes; ++iRad ) {
@@ -65,7 +68,7 @@ StatusCode RichParticleProperties::initialize() {
   
   // Informational Printout
   msg << MSG::DEBUG
-      << " Particle masses (MeV/c^2)      = " << m_particleMass << endreq;
+      << " Particle masses (MeV/c^2)    = " << m_particleMass << endreq;
 
   return StatusCode::SUCCESS;
 }

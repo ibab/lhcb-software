@@ -1,4 +1,4 @@
-// $Id: RichPhotonSignal.cpp,v 1.5 2003-08-12 13:35:43 jonrob Exp $
+// $Id: RichPhotonSignal.cpp,v 1.6 2003-08-26 14:40:19 jonrob Exp $
 
 // local
 #include "RichPhotonSignal.h"
@@ -46,10 +46,10 @@ StatusCode RichPhotonSignal::initialize() {
   // Rich2 radius of curvature in mm
   m_radiusCurv[Rich::Rich2] = Rich2DE->userParameterAsDouble("Rich2SphMirrorRadius");
   // area of pixel in mm^2
-  m_pixelArea = 2.4*2.4;
-  // XML number needs understanding w.r.t CDF above
-  // m_pixelArea = ( Rich1DE->userParameterAsDouble("RichHpdPixelXsize")/cm *
-  //                 Rich1DE->userParameterAsDouble("RichHpdPixelYsize")/cm );
+  double xSize = Rich1DE->userParameterAsDouble("RichHpdPixelXsize");
+  double ySize = Rich1DE->userParameterAsDouble("RichHpdPixelYsize");
+  double demagScale = Rich1DE->userParameterAsDouble("HPDDemagScaleFactor");
+  m_pixelArea = demagScale*xSize * demagScale*ySize;
   
   // Informational Printout
   msg << MSG::DEBUG

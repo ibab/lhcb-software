@@ -1,22 +1,22 @@
-// $Id: RichSignalDetectionEff.cpp,v 1.1 2003-08-06 11:08:14 jonrob Exp $
+// $Id: RichSignalDetectionEffSICB.cpp,v 1.1 2003-08-26 14:40:21 jonrob Exp $
 
 // local
-#include "RichSignalDetectionEff.h"
+#include "RichSignalDetectionEffSICB.h"
 
 //-----------------------------------------------------------------------------
-// Implementation file for class : RichSignalDetectionEff
+// Implementation file for class : RichSignalDetectionEffSICB
 //
 // 15/03/2002 : Chris Jones   Christopher.Rob.Jones@cern.ch
 //-----------------------------------------------------------------------------
 
 // Declaration of the Tool Factory
-static const  ToolFactory<RichSignalDetectionEff>          s_factory ;
-const        IToolFactory& RichSignalDetectionEffFactory = s_factory ;
+static const  ToolFactory<RichSignalDetectionEffSICB>          s_factory ;
+const        IToolFactory& RichSignalDetectionEffSICBFactory = s_factory ;
 
 // Standard constructor
-RichSignalDetectionEff::RichSignalDetectionEff ( const std::string& type,
-                                                 const std::string& name,
-                                                 const IInterface* parent )
+RichSignalDetectionEffSICB::RichSignalDetectionEffSICB ( const std::string& type,
+                                                         const std::string& name,
+                                                         const IInterface* parent )
   : RichRecToolBase( type, name, parent ) {
 
   declareInterface<IRichSignalDetectionEff>(this);
@@ -28,7 +28,7 @@ RichSignalDetectionEff::RichSignalDetectionEff ( const std::string& type,
 
 }
 
-StatusCode RichSignalDetectionEff::initialize() {
+StatusCode RichSignalDetectionEffSICB::initialize() {
 
   MsgStream msg( msgSvc(), name() );
   msg << MSG::DEBUG << "Initialize" << endreq;
@@ -60,6 +60,7 @@ StatusCode RichSignalDetectionEff::initialize() {
 
   // Informational Printout
   msg << MSG::DEBUG
+      << " Using SICB hardcoded numbers" << endreq
       << " Applying average mirror reflectivity = " << m_detReflectorEff << endreq
       << " Applying quartz window efficiency    = " << m_quartzWinEff << endreq
       << " Applying digitisation pedestal loss  = " << m_pedLoss << endreq;
@@ -67,7 +68,7 @@ StatusCode RichSignalDetectionEff::initialize() {
   return StatusCode::SUCCESS;
 }
 
-StatusCode RichSignalDetectionEff::finalize() {
+StatusCode RichSignalDetectionEffSICB::finalize() {
 
   MsgStream msg( msgSvc(), name() );
   msg << MSG::DEBUG << "Finalize" << endreq;
@@ -79,10 +80,11 @@ StatusCode RichSignalDetectionEff::finalize() {
   return RichRecToolBase::finalize();
 }
 
-double RichSignalDetectionEff::photonDetEfficiency( double energy ) {
+double RichSignalDetectionEffSICB::photonDetEfficiency( RichRecSegment *,
+                                                        double energy ) {
 
   return (*m_referenceQE)[energy*eV]/100 *
     m_quartzWinEff * m_detReflectorEff *
     m_pedLoss * m_photonEffScale;
-  
+
 }
