@@ -63,7 +63,7 @@ return ms; </code>
       <location name="Hcal" place="/Event/Trig/L0/HcalRaw"/>
       <attribute desc="Cell for which the information is given" name="cellID" setMeth="FALSE" type="CaloCellID"/>
       <attribute desc="8-bit transverse energy" name="adc" setMeth="FALSE" type="int"/>
-      <constructor argList="CaloCellID&amp; ID, int adc" desc="Usual constructor, specifies the cell and Et" initList="KeyedObject&lt;int&gt;( ID.index() ), m_cellID(ID), m_adc(adc)">
+      <constructor argList="CaloCellID ID, int adc" desc="Usual constructor, specifies the cell and Et" initList="KeyedObject&lt;int&gt;( ID.index() ), m_cellID(ID), m_adc(adc)">
         <code> </code>
       </constructor>
     </class>
