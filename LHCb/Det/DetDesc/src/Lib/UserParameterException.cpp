@@ -1,4 +1,4 @@
-//$Id: UserParameterException.cpp,v 1.1 2001-12-11 10:02:28 sponce Exp $
+//$Id: UserParameterException.cpp,v 1.2 2003-01-17 14:03:39 sponce Exp $
 
 // Include files
 #include "DetDesc/UserParameterException.h"
@@ -15,7 +15,7 @@ UserParameterException::UserParameterException( const std::string& name )
 //----------------------------------------------------------------------------
 
 /// Destructor
-UserParameterException::~UserParameterException() 
+UserParameterException::~UserParameterException() throw()
 { 
 };
 

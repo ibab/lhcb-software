@@ -1,4 +1,4 @@
-// $Id: SolidTrap.cpp,v 1.10 2002-10-02 13:24:22 cattanem Exp $
+// $Id: SolidTrap.cpp,v 1.11 2003-01-17 14:03:39 sponce Exp $
 // ===========================================================================
 ///@{
 /**  GaudiKernel package */  
@@ -288,13 +288,13 @@ const ISolid*           SolidTrap::cover         () const
   ///  
   for( VERTICES::size_type i = 1 ; i <  4 ; ++i )
     {
-      xmx1 = fabs( point(i).x() ) > xmx1 ? abs( point(i).x() ) : xmx1 ; 
-      ymx1 = fabs( point(i).y() ) > ymx1 ? abs( point(i).y() ) : ymx1 ; 
+      xmx1 = fabs( point(i).x() ) > xmx1 ? fabs( point(i).x() ) : xmx1 ; 
+      ymx1 = fabs( point(i).y() ) > ymx1 ? fabs( point(i).y() ) : ymx1 ; 
     }  
   for( VERTICES::size_type i1 = 4 ; i1 <  8 ; ++i1 )
     {
-      xmx2 = fabs( point(i1).x() ) > xmx2 ? abs( point(i1).x() ) : xmx2 ; 
-      ymx2 = fabs( point(i1).y() ) > ymx2 ? abs( point(i1).y() ) : ymx2 ; 
+      xmx2 = fabs( point(i1).x() ) > xmx2 ? fabs( point(i1).x() ) : xmx2 ; 
+      ymx2 = fabs( point(i1).y() ) > ymx2 ? fabs( point(i1).y() ) : ymx2 ; 
     } 
   ///   
   ISolid* cov = new SolidTrd( "Cover for " + name  () , 

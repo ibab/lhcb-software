@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/Lib/PVolumeException.cpp,v 1.3 2001-03-13 11:58:08 mato Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/Lib/PVolumeException.cpp,v 1.4 2003-01-17 14:03:38 sponce Exp $
 
 // GaudiKernel
 #include "GaudiKernel/MsgStream.h"
@@ -22,7 +22,7 @@ PVolumeException::PVolumeException( const std::string&     name      ,
   , m_pve_pvolume    ( pvolume    ) 
 {} ;
 /////////////////////////////////////////////////////////////////////////////////////////
-PVolumeException::~PVolumeException(){};
+PVolumeException::~PVolumeException() throw() {};
 /////////////////////////////////////////////////////////////////////////////////////////
 std::ostream& PVolumeException::printOut( std::ostream& os             ) const 
 {

@@ -29,7 +29,7 @@ public:
                             const DetectorElement * DetectorElement   = 0                   , 
                             const StatusCode      & sc                = StatusCode::FAILURE  ); 
   /// virtual destructor 
-  virtual ~DetectorElementException();  
+  virtual ~DetectorElementException() throw();
   ///
   virtual std::ostream&    printOut ( std::ostream& os = std::cerr ) const ; 
   ///

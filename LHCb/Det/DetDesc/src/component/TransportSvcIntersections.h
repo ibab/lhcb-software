@@ -1,8 +1,11 @@
-// $Id: TransportSvcIntersections.h,v 1.6 2002-06-21 13:43:44 ocallot Exp $ 
+// $Id: TransportSvcIntersections.h,v 1.7 2003-01-17 14:03:40 sponce Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.6  2002/06/21 13:43:44  ocallot
+// Fix findLocalGI for the transport service.
+//
 // Revision 1.5  2002/04/24 10:53:09  ibelyaev
 //  fix problems with TransportSvc ('LHCb Geane')
 //
@@ -166,9 +169,13 @@ unsigned long TransportSvc::intersections
       std::string message
         ("TransportSvc::intersection(...), exception caught; Params: ");
       {
+#if defined (__GNUC__) && ( __GNUC__ <= 2 )
         const unsigned int buflen = 1024;
         char buffer[buflen] = {0,0}; 
         std::ostrstream ost( buffer , buflen ); 
+#else
+        std::ostringstream ost;
+#endif
         ost << "Point=" << point 
             << ",Vect=" << vect
             << ",Tick=" << tickMin << "/" << tickMax  
@@ -193,9 +200,13 @@ unsigned long TransportSvc::intersections
       std::string message
         ("TransportSvc::intersection(...), unknown exception caught; Params: ");
       {
+#if defined (__GNUC__) && ( __GNUC__ <= 2 )
         const unsigned int buflen = 1024;
         char buffer[buflen] = {0,0}; 
         std::ostrstream ost( buffer , buflen ); 
+#else
+        std::ostringstream ost;
+#endif
         ost << "Point=" << point 
             << ",Vect=" << vect
             << ",Tick=" << tickMin << "/" << tickMax  

@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/component/XmlTabulatedPropertyCnv.cpp,v 1.9 2002-01-22 14:30:47 sponce Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/component/XmlTabulatedPropertyCnv.cpp,v 1.10 2003-01-17 14:03:40 sponce Exp $
 
 // Include files
 #include "GaudiKernel/CnvFactory.h"
@@ -136,7 +136,11 @@ StatusCode XmlTabulatedPropertyCnv::i_fillObj (DOM_Text childText,
   // parses it
   std::string x ;
   std::string y ;
+#if defined (__GNUC__) && ( __GNUC__ <= 2 )
   std::istrstream cstr (textValue, text.length());
+#else
+  std::istringstream cstr (textValue);
+#endif
   while (cstr >> x >> y) {
     const double vx = xmlSvc()->eval (x, false) * m_xunit;
     const double vy = xmlSvc()->eval (y, false) * m_yunit;

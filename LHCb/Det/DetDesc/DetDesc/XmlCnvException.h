@@ -33,7 +33,7 @@ public:
                           const StatusCode     & sc      = StatusCode::FAILURE );
   inline XmlCnvException( const XmlCnvException& ) ;
   ///
-  virtual inline ~XmlCnvException(); 
+  virtual inline ~XmlCnvException() throw(); 
   ///
   inline const char*       getMessage () const;
   inline const char*       getType    () const;

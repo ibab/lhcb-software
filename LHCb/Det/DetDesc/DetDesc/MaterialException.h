@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/DetDesc/MaterialException.h,v 1.3 2001-03-13 11:58:07 mato Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/DetDesc/MaterialException.h,v 1.4 2003-01-17 14:03:38 sponce Exp $
 #ifndef    DETDESC_MATERIALEXCEPTION_H
 #define    DETDESC_MATERIALEXCEPTION_H
 /// GaudiKernel
@@ -26,12 +26,14 @@ public:
   ///
   MaterialException( const MaterialException& );
   ///
-  virtual ~MaterialException();
+  virtual ~MaterialException() throw();
   ///
   virtual std::ostream& printOut ( std::ostream& os = std::cerr ) const;
   virtual MsgStream&    printOut ( MsgStream&    os             ) const;
   ///
-  virtual inline GaudiException* clone() const { return new MaterialException( *this ); } 
+  virtual inline GaudiException* clone() const {
+    return new MaterialException( *this );
+  } 
   ///
 private:
   ///

@@ -18,7 +18,7 @@ public:
                   const GaudiException&  Exception    ,  
                   const ISolid*          solid  =  0  ); 
   ///
-  virtual ~SolidException();
+  virtual ~SolidException() throw();
   ///
   virtual std::ostream&   printOut( std::ostream& os = std::cerr ) const ;
   virtual MsgStream&      printOut( MsgStream&    os             ) const ;

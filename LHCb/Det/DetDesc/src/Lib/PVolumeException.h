@@ -18,7 +18,7 @@ public:
                     const GaudiException&  Exception     ,  
                     const PVolume*         pvolume =  0  );
   ///
-  virtual ~PVolumeException();
+  virtual ~PVolumeException() throw();
   ///
   virtual std::ostream&   printOut ( std::ostream& os = std::cerr ) const ;
   virtual MsgStream&      printOut ( MsgStream&    os             ) const ; 

@@ -1,13 +1,20 @@
-// $Id: TransportSvcFindLocalGI.h,v 1.9 2002-07-11 07:15:05 ibelyaev Exp $
+// $Id: TransportSvcFindLocalGI.h,v 1.10 2003-01-17 14:03:40 sponce Exp $
 // ===========================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ===========================================================================
-// $Log: not supported by cvs2svn $ 
+// $Log: not supported by cvs2svn $
+// Revision 1.9  2002/07/11 07:15:05  ibelyaev
+//  fix the problems with virtual calls inside constructors
+// 
 // ===========================================================================
 #ifndef DETDESC_TRANSPORTSVC_TRANSPORTSVCFINDLOCALGI_H
 #define DETDESC_TRANSPORTSVC_TRANSPORTSVCFINDLOCALGI_H 1
 
+#if defined (__GNUC__) && ( __GNUC__ <= 2 )
 #include <strstream> 
+#else
+#include <sstream>
+#endif
 
 // local
 #include "TransportSvc.h" 
@@ -91,12 +98,16 @@ IGeometryInfo*  TransportSvc::findLocalGI ( const HepPoint3D& point1 ,
       std::string message
         ("TransportSvc::findLocalGI(...), exception caught; Params: ");
       {
+#if defined (__GNUC__) && ( __GNUC__ <= 2 )
         const unsigned int buflen = 1024;
-        char buffer[buflen] = {0,0}; 
-        std::ostrstream ost( buffer , buflen ); 
+        char buffer[buflen] = {0,0};
+        std::ostrstream ost( buffer , buflen );
+#else
+        std::ostringstream ost;
+#endif
         ost << "Point1=" << point1
             << "Point2=" << point2 ; 
-        message += ost.str();             
+        message += ost.str();
         Assert( false , message , Exception );
       }
     }
@@ -106,9 +117,13 @@ IGeometryInfo*  TransportSvc::findLocalGI ( const HepPoint3D& point1 ,
       std::string message
         ("TransportSvc::findLocalGI(...), unknown exception caught; Params: ");
       {
+#if defined (__GNUC__) && ( __GNUC__ <= 2 )
         const unsigned int buflen = 1024;
         char buffer[buflen] = {0,0}; 
         std::ostrstream ost( buffer , buflen ); 
+#else
+        std::ostringstream ost;
+#endif
         ost << "Point1=" << point1
             << "Point2=" << point2 ; 
         message += ost.str();             

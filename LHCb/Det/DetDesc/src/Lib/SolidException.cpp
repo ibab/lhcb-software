@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/Lib/SolidException.cpp,v 1.4 2001-03-13 21:57:33 mato Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/Lib/SolidException.cpp,v 1.5 2003-01-17 14:03:38 sponce Exp $
 
 // GaudiKernel
 #include "DetDesc/ISolid.h"
@@ -20,7 +20,7 @@ SolidException::SolidException( const std::string   &  message   ,
   , m_se_solid    ( solid      ) 
 { } ;
 ///////////////////////////////////////////////////////////////////////////////////////
-SolidException::~SolidException(){};
+SolidException::~SolidException() throw(){};
 ///////////////////////////////////////////////////////////////////////////////////////
 std::ostream& SolidException::printOut( std::ostream& os             ) const 
 {

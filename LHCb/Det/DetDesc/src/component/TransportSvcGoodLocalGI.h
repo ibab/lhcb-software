@@ -1,8 +1,11 @@
-// $Id: TransportSvcGoodLocalGI.h,v 1.5 2002-06-03 09:52:36 ocallot Exp $
+// $Id: TransportSvcGoodLocalGI.h,v 1.6 2003-01-17 14:03:40 sponce Exp $
 // ============================================================================
 // CVS Tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.5  2002/06/03 09:52:36  ocallot
+// fixes in the TransportService
+//
 // Revision 1.4  2002/04/03 11:01:45  ibelyaev
 //  fix the problems with Assemblies for TransportSvc
 //
@@ -61,5 +64,5 @@ inline bool  TransportSvc::goodLocalGI
 // ============================================================================
 // The End 
 // ============================================================================
-#endif        __DETDESC_TRANSPORTSVC_TRANSPORTSVCGOODLOCALGI_H__
+#endif //        __DETDESC_TRANSPORTSVC_TRANSPORTSVCGOODLOCALGI_H__
 // ============================================================================

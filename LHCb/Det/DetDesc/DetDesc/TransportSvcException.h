@@ -45,7 +45,7 @@ class TransportSvcException: public GaudiException
   /// nothing specific (yet) :-))) 
   ///
   
-  virtual ~TransportSvcException(){};
+  virtual ~TransportSvcException() throw() {};
 
   ///
   ///

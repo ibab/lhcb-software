@@ -1,8 +1,11 @@
-// $Id: DetDesc_load.cpp,v 1.11 2002-05-26 10:47:14 ibelyaev Exp $
+// $Id: DetDesc_load.cpp,v 1.12 2003-01-17 14:03:40 sponce Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.11  2002/05/26 10:47:14  ibelyaev
+//  remove checks/tests and update requiements
+//
 // Revision 1.10  2002/05/04 13:13:25  ibelyaev
 //  see $DETDESCROOT/doc/release.notes ( 4 May 2002 )
 //
@@ -38,8 +41,8 @@
  *  @date 06 May 2002 
  */
 #define IMPLEMENT_OBJECT(x) \
- static const DataObjectFactory<##x##>         s_##x##Factory ;\
- const                 IFactory&##x##Factory = s_##x##Factory ;
+ static const DataObjectFactory<x>         s_##x##Factory ;\
+ const              IFactory& x##Factory = s_##x##Factory ;
 // ============================================================================
 
 // ============================================================================

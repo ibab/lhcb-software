@@ -1,8 +1,11 @@
-// $Id: XmlLVolumeCnv.cpp,v 1.23 2002-05-30 17:12:53 sponce Exp $ 
+// $Id: XmlLVolumeCnv.cpp,v 1.24 2003-01-17 14:03:40 sponce Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.23  2002/05/30 17:12:53  sponce
+// angles are no more tested for units since a angle has no dimension.
+//
 // Revision 1.22  2002/01/18 18:23:10  ibelyaev
 //  bug fixes(materials), warning reduced, printout improved
 // 
@@ -200,6 +203,7 @@ std::string XmlLVolumeCnv::createPvName (PVolumeItem* pv) {
     return pv->physvolName;
   }
   // builds the actual name of the volume
+#if defined (__GNUC__) && ( __GNUC__ <= 2 )
   const int buffer_size = 256;
   char buffer [buffer_size] = { 0 , 0 };
   std::ostrstream ost(buffer, buffer_size);
@@ -211,6 +215,11 @@ std::string XmlLVolumeCnv::createPvName (PVolumeItem* pv) {
   std::string result (resstr); 
   delete [] resstr;
   return result;
+#else
+  std::ostringstream ost;
+  ost << pv->physvolName << ":" << pv->tag;
+  return ost.str();
+#endif
 }
 
 
@@ -510,6 +519,7 @@ XmlLVolumeCnv::dealWithParamphysvol (DOM_Element element, unsigned int nD) {
     unsigned int i = 0;
     for (i = 0; i < nD; i++) {
       // builds the actual name of the attribute
+#if defined (__GNUC__) && ( __GNUC__ <= 2 )
       const int buffer_size = 16;
       char buffer [buffer_size] = { 0 , 0 };
       std::ostrstream ost(buffer, buffer_size);
@@ -520,6 +530,16 @@ XmlLVolumeCnv::dealWithParamphysvol (DOM_Element element, unsigned int nD) {
       resstr[len] = 0;
       DOMString attrName = DOMString::transcode (resstr); 
       delete [] resstr;
+#else
+      std::ostringstream ost;
+      ost << "number" << i + 1;
+      const unsigned int len = ost.str().size();
+      char *resstr = new char[len+1];
+      strncpy(resstr,ost.str().c_str(),len);
+      resstr[len] = 0;
+      DOMString attrName = DOMString::transcode (resstr); 
+      delete [] resstr;
+#endif
       numberAttributes[i] = dom2Std (element.getAttribute (attrName));
     }
   }

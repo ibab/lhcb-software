@@ -1,4 +1,4 @@
-// $Id: SolidPolycone.cpp,v 1.3 2002-10-02 13:24:21 cattanem Exp $
+// $Id: SolidPolycone.cpp,v 1.4 2003-01-17 14:03:39 sponce Exp $
 // ============================================================================
 #include "DetDesc/SolidPolycone.h"
 // CLHEP
@@ -311,7 +311,7 @@ const ISolid* SolidPolycone::cover () const
         {
           if( RMax  ( i )   > rmxmx ) { rmxmx = RMax   ( i )   ; }
           if( RMin  ( i )   < rmnmn ) { rmnmn = RMin   ( i )   ; }
-          if( fabs( z(i) )  > zmxmx ) { zmxmx = abs( z ( i ) ) ; }
+          if( fabs( z(i) )  > zmxmx ) { zmxmx = fabs( z ( i ) ) ; }
         }
       cov = new SolidTubs( "Cover for " + name () , zmxmx , rmxmx , rmnmn ) ;
     }

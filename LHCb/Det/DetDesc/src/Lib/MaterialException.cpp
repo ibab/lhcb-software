@@ -26,7 +26,7 @@ MaterialException::MaterialException( const MaterialException& right )
   , m_me_mat      ( right.m_me_mat )
 {};
 ////////////////////////////////////////////////////////////////////////////////////////
-MaterialException::~MaterialException(){ m_me_mat = 0 ; };
+MaterialException::~MaterialException() throw() { m_me_mat = 0 ; };
 ////////////////////////////////////////////////////////////////////////////////////////
 std::ostream& MaterialException::printOut( std::ostream& os ) const 
 {

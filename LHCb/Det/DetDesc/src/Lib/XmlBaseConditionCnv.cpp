@@ -1,4 +1,4 @@
-// $Id: XmlBaseConditionCnv.cpp,v 1.7 2002-05-22 06:21:38 cattanem Exp $
+// $Id: XmlBaseConditionCnv.cpp,v 1.8 2003-01-17 14:03:39 sponce Exp $
 
 // include files
 #include "GaudiKernel/CnvFactory.h"
@@ -177,9 +177,13 @@ StatusCode XmlBaseConditionCnv::i_fillObj (DOM_Element childElement,
     } else if ("paramVector" == tagName) {
       // parses the value
       std::vector<std::string> vect;
+#if defined (__GNUC__) && ( __GNUC__ <= 2 )
       const char *textValue = value.c_str();
-      std::string val;
       std::istrstream cstr (textValue, value.length());
+#else
+      std::istringstream cstr (value);
+#endif
+      std::string val;
       while (cstr >> val) {
         vect.push_back (val);
       }
@@ -193,7 +197,7 @@ StatusCode XmlBaseConditionCnv::i_fillObj (DOM_Element childElement,
            ++it) {
         double dd = xmlSvc()->eval(*it, false);
         if ("int" == type) {
-          i_vect.push_back (dd);
+          i_vect.push_back ((int)dd);
           d_vect.push_back (dd);
         } else if ("double" == type) {
           d_vect.push_back (dd);

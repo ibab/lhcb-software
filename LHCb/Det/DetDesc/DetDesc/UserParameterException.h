@@ -1,4 +1,4 @@
-//$Id: UserParameterException.h,v 1.1 2001-12-11 10:02:20 sponce Exp $
+//$Id: UserParameterException.h,v 1.2 2003-01-17 14:03:38 sponce Exp $
 #ifndef DETDESC_USERPARAMETEREXCEPTION_H
 #define DETDESC_USERPARAMETEREXCEPTION_H 1 
 
@@ -24,7 +24,7 @@ class UserParameterException : public GaudiException
   UserParameterException( const std::string& name );
 
   /// Destructor 
-  virtual ~UserParameterException();  
+  virtual ~UserParameterException() throw();  
 
 };
 

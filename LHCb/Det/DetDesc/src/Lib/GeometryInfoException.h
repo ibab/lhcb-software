@@ -27,7 +27,7 @@ public:
                          const GeometryInfo   * gi   =  0 ,
                          const StatusCode     & sc = StatusCode::FAILURE ) ;
   /// destructor 
-  virtual ~GeometryInfoException();
+  virtual ~GeometryInfoException() throw();
   ///
   virtual std::ostream& printOut( std::ostream& os = std::cerr ) const ; 
   virtual MsgStream&    printOut( MsgStream&    os             ) const ;
