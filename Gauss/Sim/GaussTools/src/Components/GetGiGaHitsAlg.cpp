@@ -1,4 +1,4 @@
-// $Id: GetGiGaHitsAlg.cpp,v 1.5 2003-10-09 09:12:58 witoldp Exp $
+// $Id: GetGiGaHitsAlg.cpp,v 1.6 2003-10-10 18:44:31 witoldp Exp $
 // Include files 
 
 // from Gaudi
@@ -218,7 +218,7 @@ StatusCode GetGiGaHitsAlg::execute() {
     if( !m_muonhits.empty() )
       {
 
-        for(int i=0;i<16;i++)
+        for(int i=0;i<20;i++)
           {
             SmartDataPtr<MCMuonHits> obj( eventSvc() , 
                                           MCMuonHitPath::MCMuonHitPath[i]) ;
