@@ -1,8 +1,11 @@
-# $Id: requirements,v 1.25 2002-04-09 17:16:49 ibelyaev Exp $ 
+# $Id: requirements,v 1.26 2002-04-23 10:47:26 ibelyaev Exp $ 
 # =============================================================================
 # CVS tag $Name: not supported by cvs2svn $ 
 # =============================================================================
 # $Log: not supported by cvs2svn $
+# Revision 1.25  2002/04/09 17:16:49  ibelyaev
+#  printout polishing
+#
 # Revision 1.24  2002/03/13 15:36:24  ibelyaev
 #  update for newer G4 patch
 #
@@ -24,11 +27,11 @@
 # =============================================================================
 
 package  GiGa
-version  v7r2
+version  v8r0
 
 branches         cmt src doc GiGa
 
-use GaudiKernel  v11r* 
+use GaudiKernel  v12r* 
 use GEANT4       v4r0p* Sim 
 
 
