@@ -1,8 +1,11 @@
-// $Id: Reco.opts,v 1.5 2004-03-17 16:32:20 ibelyaev Exp $
+// $Id: Reco.opts,v 1.6 2004-03-29 13:22:21 cattanem Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.5  2004/03/17 16:32:20  ibelyaev
+//  add new (04) Photon calibrations from Olivier Deschamps
+//
 // Revision 1.4  2003/03/13 18:47:49  ibelyaev
 //  see ../doc/release.notes file
 //
@@ -35,10 +38,14 @@
 #include "$CALORECOOPTS/ChargedCluster.opts"
 #include "$CALORECOOPTS/ElectronSelect.opts"
 #include "$CALORECOOPTS/ExtraDigits.opts"
-#include "$CALORECOOPTS/PhotonCorrections.opts"
 #include "$CALORECOOPTS/ElectronCorrections.opts"
- 
 #include "$CALORECOOPTS/PhotonCalibration04.opts"
+
+// Instead of including PhotoCorrections.opts, add only options not already
+// included elsewhere (to avoid wanings about multiple includes...)
+ToolSvc.CaloSPhoton.Detector      = "/dd/Structure/LHCb/Ecal";
+#include "$CALORECOOPTS/PrsCorrG.opts"
+#include "$CALORECOOPTS/SShape2Tanh.opts"
 
 // ============================================================================
 // The END
