@@ -31,9 +31,8 @@ public:
   
   void ConstructParticle ();
   void ConstructProcess  ();
-  ///
-
-private:
+  //  void SetCuts ();
+  void ConstructPeProcess ();
   // Now adding processes for optical photons SE 30-1-2002
   void ConstructOp       ();
   ///

@@ -60,15 +60,18 @@ RichHpdProperties::RichHpdProperties(IDataProviderSvc* detSvc,
       //    RichHpdlog << MSG::ERROR
       //              << "Can't retrieve /dd/Structure/LHCb/Rich2" << endreq;
       
-    }
-  else 
-    {
+    }else if(!Rich1DE) {
+    RichHpdlog <<MSG::ERROR<<"Can't retrieve /dd/Structure/Rich1 for Rich2"
+               <<endreq;
+
+  }else {
       
       // the following line to be un commented after 
       // the rich2 structure.xml file has this info.
       
       // m_numHpdTotRich[1]= Rich2DE->userParameterAsInt("Rich2TotNumHpd");
-      
+      m_numHpdTotRich[1]= Rich1DE->userParameterAsInt("Rich2TotNumHpd");
+     
       if(HpdVerboseLevel >0 ) {
         RichHpdlog << MSG::INFO 
                    <<"Total Number of hpds in rich2= "

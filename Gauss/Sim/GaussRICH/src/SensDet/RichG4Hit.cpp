@@ -12,7 +12,7 @@ RichG4Hit::RichG4Hit() {;}
 
 RichG4Hit::~RichG4Hit(){;}
 
-RichG4Hit::RichG4Hit(const RichG4Hit &right)
+RichG4Hit::RichG4Hit(const RichG4Hit &right):G4VHit(right)
 {
   m_edep = right.m_edep;
   m_GlobalPos = right.m_GlobalPos;
@@ -24,6 +24,19 @@ RichG4Hit::RichG4Hit(const RichG4Hit &right)
   m_CurHpdNum = right.m_CurHpdNum;
   m_CurPixelXNum = right.m_CurPixelXNum;
   m_CurPixelYNum = right.m_CurPixelYNum;
+  m_OptPhotID = right.m_OptPhotID;
+  m_ChTrackID = right.m_ChTrackID;
+  m_ChTrackPDG= right.m_ChTrackPDG;
+  m_PETrackID = right.m_PETrackID;
+  m_PETrackPDG= right.m_PETrackPDG;
+  m_RadiatorNumber=right.m_RadiatorNumber;
+  m_PhotEmisPt=right.m_PhotEmisPt;
+  m_PhotEnergyAtProd=right.m_PhotEnergyAtProd;
+  m_ThetaCkvAtProd=right.m_ThetaCkvAtProd;
+  m_PhiCkvAtProd=right.m_PhiCkvAtProd;
+  m_ChTrackTotMom=right.m_ChTrackTotMom;
+  m_ChTrackMomVect=right.m_ChTrackMomVect;
+
 }
 
 const RichG4Hit& RichG4Hit::operator=(const RichG4Hit &right)
@@ -38,11 +51,26 @@ const RichG4Hit& RichG4Hit::operator=(const RichG4Hit &right)
   m_CurHpdNum = right.m_CurHpdNum;
   m_CurPixelXNum = right.m_CurPixelXNum;
   m_CurPixelYNum = right.m_CurPixelYNum;
+  m_OptPhotID = right.m_OptPhotID;
+  m_ChTrackID = right.m_ChTrackID;
+  m_ChTrackPDG= right.m_ChTrackPDG; 
+  m_PETrackID = right.m_PETrackID;
+  m_PETrackPDG= right.m_PETrackPDG;
+  m_RadiatorNumber=right. m_RadiatorNumber;
+  m_PhotEmisPt=right.m_PhotEmisPt;
+  m_PhotEnergyAtProd=right.m_PhotEnergyAtProd;
+  m_ThetaCkvAtProd=right.m_ThetaCkvAtProd;
+  m_PhiCkvAtProd=right.m_PhiCkvAtProd;
+  m_ChTrackTotMom=right.m_ChTrackTotMom;
+  m_ChTrackMomVect=right.m_ChTrackMomVect;
+
   return *this;
 }
 
 int RichG4Hit::operator==(const RichG4Hit &right) const
 {
+
+  //  return 0;
   return((m_CurRichNum==right.m_CurRichNum)&&(m_CurHpdNum==right.m_CurHpdNum)
          &&(m_CurPixelXNum==right.m_CurPixelXNum)&&
          (m_CurPixelYNum==right.m_CurPixelYNum ) );
@@ -98,6 +126,26 @@ void RichG4Hit::Print()
         << m_GlobalPos <<"         "<< m_LocalPos 
         <<" Global PEOrigin:   "<<m_GlobalPEOriginPos 
         <<" Local PEORigin:   "<<m_LocalPEOriginPos <<G4endl;
+  G4cout<<"RichG4Hit: "<<" Radiator number: "<<m_RadiatorNumber
+        <<" EmissPt X Y Z:   "<<m_PhotEmisPt.x()<<"      "
+        <<m_PhotEmisPt.y()<<"     "<<m_PhotEmisPt.z()<<G4endl;
+
+  G4cout<<"RichG4Hit:  "<<"AtProduction CherenkovTheta = "<< m_ThetaCkvAtProd
+        <<G4endl;
+  G4cout<<"RichG4Hit:  "<<"AtProduction CherenkovPhi ="<< m_PhiCkvAtProd
+        <<G4endl;
+  
+  G4cout<<"RichG4Hit:  "<<"OpticalPhotonEnergy MotherChTrackMom: "<<
+    m_PhotEnergyAtProd<<"     "<< m_ChTrackTotMom<<G4endl;
+  G4cout<<"RichG4Hit: "<<"MotherChTrack MomVect XYZ  PDGCode:  "
+        << m_ChTrackMomVect.x()<<"   "<<m_ChTrackMomVect.y()
+        << "    "<<m_ChTrackMomVect.z()
+        <<"    "<<  m_ChTrackPDG <<G4endl;
+  G4cout<<"RichG4Hit: "<<"TrackID: MotherCh OptPhot PE: "
+        << m_ChTrackID<<"     "<< m_OptPhotID<<"   "
+        << m_PETrackID<<G4endl;
+  
+
   }
 // This is a forward declaration of an instantiated G4Allocator<Type> object.
 // It has been added in order to make code portable for the GNU g++ 

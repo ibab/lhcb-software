@@ -1,25 +1,35 @@
 # =============================================================================
 package GaussRICH
-version v2r1
+version v2r2
 
 # =============== package structure ===========================================
 branches          cmt src doc
 
 # =============== explicit dependencies =======================================  
-use GaussTools    v6r*     Sim
+use GaussTools    v*     Sim
 use AIDA          v*
 # =============== Event =======================================================
 use RichEvent     v4r*      Event
+#geometry source 
+#use XmlDDDB       v15r3   Det 
+
 
 # ============== component library ============================================
 library          GaussRICH    *.cpp             \
                               SensDet/*.cpp     \ 
                               PhysProcess/*.cpp \
-                              PhysProcess/*.cc  \
-                              Misc/*.cpp         
+                              srcG4/*.cc       \
+                              RichAction/*.cpp \
+                              Misc/*.cpp   \
+                              RichAnalysis/*.cpp      
 
 # ============== standard includes ============================================
-include_dirs     $(GAUSSRICHROOT)
+include_dirs     $(GAUSSRICHROOT) \
+                 $(GAUSSRICHROOT)/src/SensDet \
+                 $(GAUSSRICHROOT)/src/PhysProcess \
+                 $(GAUSSRICHROOT)/src/RichAction \
+                 $(GAUSSRICHROOT)/src/Misc \
+                 $(GAUSSRICHROOT)/src/RichAnalysis
         
 # ============== standard patterns ===========================================
 apply_pattern    component_library library=GaussRICH

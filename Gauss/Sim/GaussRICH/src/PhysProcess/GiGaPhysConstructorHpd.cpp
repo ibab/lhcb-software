@@ -15,6 +15,7 @@
 #include "g4std/iomanip"                
 // local
 #include "GiGaPhysConstructorHpd.h"
+#include "RichPhotoElectron.h"
 
 // ============================================================================
 /// Factory
@@ -58,17 +59,38 @@ void GiGaPhysConstructorHpd::ConstructHpdSiEnLoss()
 {
   // Add Decay Process
   //  G4Decay* theDecayProcess = new G4Decay();
+    RichHpdSiEnergyLoss* theRichHpdSiEnergyLossProcess =
+      new RichHpdSiEnergyLoss("RichHpdSiEnergyLossProcess");
 
   theParticleIterator->reset();
   while( (*theParticleIterator)() ){
     G4ParticleDefinition* particle = theParticleIterator->value();
     G4ProcessManager* pmanager = particle->GetProcessManager();
+    //    G4cout<<"ConstructHpdSiEnLoss: Now at particle:  "<< particle->GetParticleName()<<G4endl;
 
-    RichHpdSiEnergyLoss* theRichHpdSiEnergyLossProcess =
-      new RichHpdSiEnergyLoss("RichHpdSiEnergyLossProcess");
-    
-    pmanager->AddProcess( theRichHpdSiEnergyLossProcess ,-1,2,2);
+    pmanager-> SetVerboseLevel(4);
+    if( theRichHpdSiEnergyLossProcess->IsApplicable(*particle) ) {
+    //    RichHpdSiEnergyLoss* theRichHpdSiEnergyLossProcess =
+    //  new RichHpdSiEnergyLoss("RichHpdSiEnergyLossProcess");
+      //  G4cout<<"Now HpdSiLoss adding for "<< particle->GetParticleName()<<G4endl;
+  
+      if( ( particle->GetParticleName() == "pe-") || ( particle->GetParticleName() =="e-" )){
+	G4cout<<"Now at particle "<< particle->GetParticleName()<<G4endl;
 
+         pmanager->AddProcess( theRichHpdSiEnergyLossProcess ,-1,2,2);
+
+
+      }
+      //       pmanager->AddProcess( theRichHpdSiEnergyLossProcess ,-1,2,2);
+
+      if( particle->GetParticleName() == "pe-"){
+          pmanager->DumpInfo();  
+             
+        (RichPhotoElectron::PhotoElectron()) ->SetProcessManager(pmanager);
+        (RichPhotoElectron::PhotoElectron()) ->GetProcessManager()->DumpInfo();
+       
+      }
+    }
     //    if (theDecayProcess->IsApplicable(*particle)) { 
     //      pmanager ->AddProcess(theDecayProcess);
       // set ordering for PostStepDoIt and AtRestDoIt
@@ -76,6 +98,9 @@ void GiGaPhysConstructorHpd::ConstructHpdSiEnLoss()
     //     pmanager ->SetProcessOrdering(theDecayProcess, idxAtRest);
     //}
   }
+
+
+
 }
 
 // ============================================================================

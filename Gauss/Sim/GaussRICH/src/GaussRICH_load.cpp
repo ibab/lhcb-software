@@ -27,6 +27,7 @@ void GaussRICH_load()
   
   /// physics constructors
   DECLARE_GiGaFactory     (    GiGaPhysConstructorOp   );
+
 };
 // ============================================================================
 

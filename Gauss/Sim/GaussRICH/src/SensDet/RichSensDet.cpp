@@ -19,9 +19,12 @@
 #include "G4VProcess.hh"
 
 #include "DetDesc/DetectorElement.h"
+#include "GaussTools/GaussTrackInformation.h"
 
 /// local
 #include "RichSensDet.h"
+#include "RichInfo.h"
+#include "RichPEInfo.h"
 
 // ============================================================================
 /// factory business 
@@ -107,9 +110,12 @@ bool RichSensDet::ProcessHits( G4Step* aStep ,
   // log << MSG::VERBOSE <<" Track Def  and creator proc " 
   // << aTrack->GetDefinition()
   // <<"    "<<aTrack->GetCreatorProcess()-> GetProcessName() <<endreq;
+
+  G4String aCreatorProcessName = "NullProcess";
+  const G4VProcess* aProcess = aTrack->GetCreatorProcess();
+  if(aProcess) aCreatorProcessName =  aProcess->GetProcessName();
   if((aTrack->GetDefinition() == G4Electron::Electron()) &&
-     (aTrack->GetCreatorProcess()-> 
-      GetProcessName() == "RichHpdPhotoelectricProcess"))
+     (aCreatorProcessName  == "RichHpdPhotoelectricProcess"))
     {
       CurPEOrigin = aTrack->GetVertexPosition() ;
     }
@@ -169,6 +175,67 @@ bool RichSensDet::ProcessHits( G4Step* aStep ,
     "Now in ProcessHits() of RichSensDet : PixelX and Y = " << 
     CurrentPixelXNum << "   " << CurrentPixelYNum<<endreq;
 
+  G4int CurOptPhotID= aTrack->GetParentID();   
+
+
+
+  G4int CurOptPhotMotherChTrackID;
+  G4int CurOptPhotMotherChTrackPDG;
+  G4int CurRadiatorNumber=-1;
+  G4ThreeVector CurEmissPt;
+  G4double CurPhotEnergyAtProd;
+  G4double CurThetaCkvAtProd;
+  G4double CurPhiCkvAtProd;
+  G4double CurChTrackTotMom;
+  G4ThreeVector CurChTrackMomVect;
+
+  if((aTrack->GetDefinition() == G4Electron::Electron()) &&
+     (aCreatorProcessName  == "RichHpdPhotoelectricProcess")) {
+    
+   G4VUserTrackInformation* aUserTrackinfo=aTrack->GetUserInformation();
+   GaussTrackInformation* aRichPETrackInfo= (0 == aUserTrackinfo) ? 0 : 
+                 dynamic_cast<GaussTrackInformation*>(aUserTrackinfo);
+
+
+  if(aRichPETrackInfo) {
+    if(aRichPETrackInfo->richInfo() ) {
+      RichInfo* aRichPETypeInfo=aRichPETrackInfo-> richInfo();
+      if(aRichPETypeInfo && aRichPETypeInfo->HasUserPEInfo()) {
+        
+      
+        RichPEInfo* aPEInfo=aRichPETypeInfo->RichPEInformation();
+      if( aPEInfo) {
+  
+       CurOptPhotMotherChTrackID = aPEInfo-> MotherOfPhotonId();
+       CurOptPhotMotherChTrackPDG = aPEInfo-> MotherOfPhotonPDGcode();
+       CurRadiatorNumber   =   aPEInfo->PhotOriginRadiatorNumber();
+       CurEmissPt          =   aPEInfo->PhotonEmisPoint();
+       CurPhotEnergyAtProd =   aPEInfo->PhotonEnergyAtCkvProd();
+       CurThetaCkvAtProd   =   aPEInfo->CherenkovThetaAtProd();
+       CurPhiCkvAtProd     =   aPEInfo->CherenkovPhiAtProd();
+       CurChTrackTotMom    =   aPEInfo-> MotherofPhotonMomAtProd();
+       CurChTrackMomVect    =   aPEInfo->  MotherofPhotonMomVectAtProd();
+
+
+       
+      }
+      
+      }
+      
+      
+    }
+    
+    
+  }
+  
+  
+  
+  }
+  
+  
+  G4int CurPETrackID=aTrack->GetTrackID();
+  G4int CurPETrackPDG=aTrack->GetDefinition()->GetPDGEncoding();
+
   RichG4Hit*  newHit = new RichG4Hit();
   newHit -> SetEdep( CurEdep);
   newHit -> SetGlobalPos( CurGlobalPos );
@@ -180,6 +247,20 @@ bool RichSensDet::ProcessHits( G4Step* aStep ,
   newHit -> SetLocalPEOriginPos( CurPEOriginLocal) ;
   newHit -> SetCurPixelXNum(CurrentPixelXNum);
   newHit -> SetCurPixelYNum(CurrentPixelYNum);
+  newHit -> SetOptPhotID(CurOptPhotID);
+  newHit -> SetChTrackID(CurOptPhotMotherChTrackID);
+  newHit -> SetChTrackPDG(CurOptPhotMotherChTrackPDG);
+  newHit -> SetRadiatorNumber( CurRadiatorNumber);
+  newHit -> SetPhotEmisPt( CurEmissPt);
+  newHit -> SetPhotEnergyAtProd(CurPhotEnergyAtProd);
+  newHit -> SetThetaCkvAtProd(CurThetaCkvAtProd);
+  newHit -> SetPhiCkvAtProd(CurPhiCkvAtProd);
+  newHit -> SetChTrackTotMom(CurChTrackTotMom);
+  newHit -> SetChTrackMomVect(CurChTrackMomVect);
+  newHit -> SetPETrackID(CurPETrackID);
+  newHit -> SetPETrackPDG(CurPETrackPDG);
+
+
 
   int CurrentRichCollectionSet=-1;
   if(  CurrentRichDetNumber == 0 ) {

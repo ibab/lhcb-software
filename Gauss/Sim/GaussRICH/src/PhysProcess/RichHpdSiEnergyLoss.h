@@ -41,7 +41,9 @@ public:  RichHpdSiEnergyLoss(const G4String& processName);
 
  //now the data members.
  G4int fMatIndexHpdSiEloss;
+ G4int fMatIndexHpdEnvelopeKovar;
  G4String HpdSiElossMaterialName;
+ G4String HpdEnvelopeMaterialName;
  G4double MinKineticEnergy ;
  G4double MipEnergyHpdSiEloss;
  G4double finalRangeforSiDetStep;

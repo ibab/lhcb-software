@@ -11,10 +11,18 @@
 #include "G4ProcessVector.hh"
 #include "G4ParticleTable.hh"
 #include "G4Material.hh"
+#include "G4Decay.hh"
 #include "G4ios.hh"
 #include "g4std/iomanip"                
 // local
 #include "GiGaPhysConstructorOp.h"
+#include "RichPhotoElectron.h"
+#include "G4Electron.hh"
+#include "G4Transportation.hh"
+#include "G4MultipleScattering.hh"
+#include "G4ProcessVector.hh"
+#include "G4LossTableManager.hh"
+
 
 // ============================================================================
 /// Factory
@@ -41,15 +49,89 @@ GiGaPhysConstructorOp::~GiGaPhysConstructorOp(){};
 // ============================================================================
 void GiGaPhysConstructorOp::ConstructParticle()
 {
- 
+   RichPhotoElectron::PhotoElectronDefinition(); 
 };
 
 // ============================================================================
 // ============================================================================
 void GiGaPhysConstructorOp::ConstructProcess()
 {
+  ConstructPeProcess();
   ConstructOp();
+
 };
+
+void  GiGaPhysConstructorOp::ConstructPeProcess() 
+{
+  //        G4double aPeCut=10.0*km;
+       G4double aPeCut=0.1*mm;
+       G4ParticleDefinition* photoelectronDef = 
+                RichPhotoElectron::PhotoElectron();
+       photoelectronDef->SetCuts(aPeCut);
+       photoelectronDef->SetApplyCutsFlag(true);
+       photoelectronDef-> DumpTable() ;
+
+       G4Transportation* theTransportationProcess= new G4Transportation();
+       G4MultipleScattering* theMultipleScattering = new G4MultipleScattering();
+       theParticleIterator->reset();
+      while( (*theParticleIterator)() ){
+       G4ParticleDefinition* particle = theParticleIterator->value();
+      if(  particle->GetParticleName() == "pe-" ){
+       G4ProcessManager* pmanager =  particle->GetProcessManager();
+       pmanager ->AddProcess(theTransportationProcess,-1,2,2);
+       pmanager->AddProcess(theMultipleScattering,-1,1,1);
+       pmanager ->SetProcessOrderingToFirst(theTransportationProcess, idxAlongStep);
+       pmanager ->SetProcessOrderingToFirst(theTransportationProcess, idxPostStep);
+        pmanager ->SetProcessOrderingToFirst(theMultipleScattering, idxAlongStep);
+       pmanager ->SetProcessOrderingToFirst(theMultipleScattering, idxPostStep);
+      particle->SetCuts(aPeCut);
+       particle->SetApplyCutsFlag(true);
+       //       BuildPhysicsTable(particle);
+       //  G4LossTableManager* aG4LossTableManager = G4LossTableManager::Instance();
+       // aG4LossTableManager->BuildPhysicsTable(particle);
+
+      G4int j;
+     // Rebuild the physics tables for every process for this particle type
+     G4ProcessVector* pVector = (particle->GetProcessManager())->GetProcessList();
+     G4cout<<"size ProcList pe- "<< pVector->size()<< G4endl;
+ 
+     for ( j=0; j < pVector->size(); ++j) {
+      (*pVector)[j]->BuildPhysicsTable(*particle);
+     }
+
+       particle->DumpTable();
+        pmanager->DumpInfo();
+       G4int  an1 =  pmanager ->GetProcessListLength() ;
+       G4cout<<"NUm proc for pe so far = "<< an1<<G4endl;
+
+      }
+      }
+
+      //       G4ProcessManager* pmanager =  photoelectronDef->GetProcessManager();
+       //   G4ProcessManager* pmanager =  new  G4ProcessManager( photoelectronDef);
+       // photoelectronDef->SetProcessManager( pmanager);
+
+       //   pmanager->SetParticleType(photoelectronDef);
+      //test by SE
+      //   G4ParticleDefinition* aph =  pmanager->GetParticleType();
+      // G4String aPhname = aph-> GetParticleName();
+      // G4cout<<"Name of photoelectron "<<aPhname <<G4endl;
+       //       G4ParticleDefinition* bel = G4Electron::Electron();
+       //  G4ProcessManager* bpman =  bel->GetProcessManager(); 
+       // bpman ->DumpInfo();
+      // end of test by SE   
+
+       //       AddTransportation();
+
+      //       G4Transportation* theTransportationProcess= new G4Transportation();
+      // pmanager ->AddProcess(theTransportationProcess);
+      //  pmanager ->SetProcessOrderingToFirst(theTransportationProcess, idxAlongStep);
+      //  pmanager ->SetProcessOrderingToFirst(theTransportationProcess, idxPostStep);
+      
+      // pmanager->DumpInfo();
+      //       G4int  an1 =  pmanager ->GetProcessListLength() ;
+      //  G4cout<<"NUm proc for pe so far = "<< an1<<G4endl;
+}
 
 // ============================================================================
 #include "G4Cerenkov.hh"
@@ -67,8 +149,7 @@ void GiGaPhysConstructorOp::ConstructOp() {
   G4OpRayleigh*   theRayleighScatteringProcess = new G4OpRayleigh();
   G4OpBoundaryProcess* theBoundaryProcess = new G4OpBoundaryProcess();
 
-  G4cout<<"Now creating Photoelectric  processes"<<G4endl;
-
+  G4cout<<"Now creating Photoelectric  processes"<<endl;
   RichHpdPhotoElectricEffect* theRichHpdPhotoElectricProcess= 
     new RichHpdPhotoElectricEffect(this,"RichHpdPhotoelectricProcess");
 
@@ -85,12 +166,15 @@ void GiGaPhysConstructorOp::ConstructOp() {
   theParticleIterator->reset();
   while( (*theParticleIterator)() ){
     G4ParticleDefinition* particle = theParticleIterator->value();
+    // Avoid the cherenkov preocess for the photoelectron.
     G4ProcessManager* pmanager = particle->GetProcessManager();
     G4String particleName = particle->GetParticleName();
+    if(particleName != "pe-" ){
     if (theCerenkovProcess->IsApplicable(*particle)) {
       pmanager->AddContinuousProcess(theCerenkovProcess);
     }
-    //    G4cout<<"Particle name  "<<particleName<<G4endl;
+    }
+    //    G4cout<<"Particle name  "<<particleName<<endl;
      if (particleName == "opticalphoton") {
       G4cout << " AddDiscreteProcess to OpticalPhoton " << G4endl;
       pmanager->AddDiscreteProcess(theAbsorptionProcess);
@@ -102,6 +186,11 @@ void GiGaPhysConstructorOp::ConstructOp() {
   }
 }
 
+// void GiGaPhysConstructorOp::SetCuts() {
+  //       G4double apeCut = 10.0*km;
+  //     SetCutValue(apeCut,"pe-");
+  
+// }
 // ============================================================================
 // The END 
 // ============================================================================

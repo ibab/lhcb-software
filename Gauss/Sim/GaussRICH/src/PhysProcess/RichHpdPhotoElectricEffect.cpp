@@ -5,6 +5,8 @@
 #include <math.h>
 
 #include "GaudiKernel/IDataProviderSvc.h"
+#include "RichPhotoElectron.h"
+#include "RichPEInfoAttach.h"
 
 RichHpdPhotoElectricEffect::RichHpdPhotoElectricEffect
 ( const GiGaBase* gigabase, 
@@ -160,7 +162,7 @@ RichHpdPhotoElectricEffect::PostStepDoIt(const G4Track& aTrack,
   
   
   if(currentHpdNumber >=  numTotHpdInCurrentRichDet(currentRichDetNumber) ) {
-    G4cout<<"Hpd phot elec: Inadmissible hpd number for richdet num "
+    G4cout<<"Hpd phot elec: Inadmissible hpd number for richdet. Hpdnum= "
           <<currentHpdNumber
           <<"  for richdetnum  "<<currentRichDetNumber<<G4endl;
     return G4VDiscreteProcess::PostStepDoIt(aTrack, aStep);
@@ -171,19 +173,31 @@ RichHpdPhotoElectricEffect::PostStepDoIt(const G4Track& aTrack,
   G4double randomnum = G4UniformRand();
   if(randomnum <  CurPhCathodeQE )
     {
+      G4double aPhotonTime= aParticleChange.GetProperTimeChange(); 
+
       G4ThreeVector GlobalElectronOrigin= pPostStepPoint->GetPosition();
       G4Navigator* theNavigator =
         G4TransportationManager::GetTransportationManager()->
         GetNavigatorForTracking();
-      G4ThreeVector LocalElectronOrigin = theNavigator->
+      G4ThreeVector LocalElectronOriginInit = theNavigator->
         GetGlobalToLocalTransform().
         TransformPoint(GlobalElectronOrigin);
+      
+      
+      // Shift the electron origin by 0.004 mm to avoid multiple scattering in the
+      // photocathode.
+      G4double ElecOriginTolerence= 0.004*mm;
+      G4ThreeVector LocalElectronOrigin (LocalElectronOriginInit.x(),
+                                         LocalElectronOriginInit.y(),
+                        LocalElectronOriginInit.z()- ElecOriginTolerence );
 
-      std::vector<double> CurDemagFactor=getCurrentHpdDemag(currentHpdNumber,currentRichDetNumber);
+      std::vector<double> CurDemagFactor=
+                  getCurrentHpdDemag(currentHpdNumber,currentRichDetNumber);
       //  G4cout<<"Current demag factors "
       // <<CurDemagFactor[0]<<"  "<< CurDemagFactor[1]<<G4endl;
       // now get the Point Spread function.
-      G4double PSFsigma= getCurrentHpdPSFSigma(currentHpdNumber,currentRichDetNumber);
+      G4double PSFsigma= 
+              getCurrentHpdPSFSigma(currentHpdNumber,currentRichDetNumber);
       
       G4double PsfRandomAzimuth = twopi*G4UniformRand();
       G4double PsfRandomRad= G4RandGauss::shoot(0.0,PSFsigma);
@@ -191,10 +205,11 @@ RichHpdPhotoElectricEffect::PostStepDoIt(const G4Track& aTrack,
       G4double PsfY= PsfRandomRad*sin( PsfRandomAzimuth);
       // for now apply only the linear factor of the demag;
       G4ThreeVector
-        LocalElectronDirection((CurDemagFactor[0]-1.0)*LocalElectronOrigin.x()+PsfX,
-                               (CurDemagFactor[0]-1.0)*LocalElectronOrigin.y()+PsfY,
-                               -( m_PhCathodeToSilDetMaxDist-
-                                  ( m_hpdPhCathodeInnerRadius-LocalElectronOrigin.z())));
+        LocalElectronDirection(
+                     (CurDemagFactor[0]-1.0)*LocalElectronOrigin.x()+PsfX,
+                     (CurDemagFactor[0]-1.0)*LocalElectronOrigin.y()+PsfY,
+                      -( m_PhCathodeToSilDetMaxDist-
+                       ( m_hpdPhCathodeInnerRadius-LocalElectronOrigin.z())));
       //normalize this vector and then transform back to global coord system.
       LocalElectronDirection = LocalElectronDirection.unit();
   
@@ -202,15 +217,38 @@ RichHpdPhotoElectricEffect::PostStepDoIt(const G4Track& aTrack,
         GetLocalToGlobalTransform().
 				TransformAxis(LocalElectronDirection);
   
+
+      // temporay fix for not having the shielding of hpds in Gauss. SE 14-3-2003.
+     
       G4double ElecKineEnergy= m_HpdPhElectronKE;
   
-      //create the electron
-      G4DynamicParticle* aElectron= new G4DynamicParticle (G4Electron::Electron(),
-                                                           GlobalElectronDirection, ElecKineEnergy) ;
+      //create the photoelectron
+      //      G4double ElecKineEnergy= 1000000*m_HpdPhElectronKE;
+             G4DynamicParticle* aElectron= 
+                     new G4DynamicParticle (G4Electron::Electron(),
+                           GlobalElectronDirection, ElecKineEnergy) ;
+
+      // end of temporary fix.
+      //     G4DynamicParticle* aElectron=
+      //       new G4DynamicParticle (RichPhotoElectron::PhotoElectron(),
+      //                         GlobalElectronDirection, ElecKineEnergy) ;
 
       aParticleChange.SetNumberOfSecondaries(1) ;
       //  aParticleChange.AddSecondary( aElectron ) ; 
-      aParticleChange.AddSecondary( aElectron,GlobalElectronOrigin,true ) ; 
+      // the following line replaced by the following set of lines.
+      //      aParticleChange.AddSecondary( aElectron,GlobalElectronOrigin,true ) ; 
+
+      // now create a track and add the track directly to the list of
+      // secondaries.
+      G4Track* aSecPETrack =  
+               new G4Track(aElectron,aPhotonTime,GlobalElectronOrigin);
+      aSecPETrack->SetTouchableHandle((G4VTouchable*)0);
+      aSecPETrack->SetParentID(aTrack.GetTrackID());
+      aSecPETrack->SetGoodForTrackingFlag(true);
+      G4Track* aTaggedSecPETrack = RichPEInfoAttach(aTrack,aSecPETrack);      
+      aParticleChange.AddSecondary(aTaggedSecPETrack);
+      
+
 
       // Kill the incident photon when it has converted to photoelectron.
       // G4cout<<"Now killing photon which is converted"<<G4endl;
@@ -223,7 +261,7 @@ RichHpdPhotoElectricEffect::PostStepDoIt(const G4Track& aTrack,
       // simulate the reflections at the Silicon surface.  For now the reflectivity of
       // silicon is 0. This may be changed in the future.
 
-// for now for test the incident photon is killed SE 13-3-02
+      // for now for test the incident photon is killed SE 13-3-02
       //  G4cout<<"Now  killing photon which is not converted"<<G4endl;
       aParticleChange.SetLocalEnergyDeposit(PhotonEnergy);
       // aParticleChange.SetEnergyChange(0.);  
@@ -240,30 +278,38 @@ double RichHpdPhotoElectricEffect::getCurrentHpdQE(int ihpdnum,
   //convert from MeV to eV
   double photonenergyeV=photonenergy*1000000.0   ;
 
-  return m_HpdProperty->getRichHpdQE(ihpdnum,richdetnum)->getHpdQEffFromPhotEnergy(photonenergyeV);
+  return m_HpdProperty->getRichHpdQE(ihpdnum,richdetnum)->
+                            getHpdQEffFromPhotEnergy(photonenergyeV);
 
 }
 
 void RichHpdPhotoElectricEffect::setHpdPhElectronKE(double HpdPhElecKE) {
   m_HpdPhElectronKE=HpdPhElecKE;
 }
-void RichHpdPhotoElectricEffect::setPhCathodeToSilDetMaxDist(double PhCathodeToSilZ){
+void RichHpdPhotoElectricEffect::setPhCathodeToSilDetMaxDist
+                                   (double PhCathodeToSilZ){
   m_PhCathodeToSilDetMaxDist= PhCathodeToSilZ;
 }
-double RichHpdPhotoElectricEffect::getCurrentHpdPSFSigma(int hpdnumb, int richdetnumb){
-  return m_HpdProperty->getRichHpdPSF(hpdnumb,richdetnumb)->hpdPointSpreadFunction();
+double RichHpdPhotoElectricEffect::getCurrentHpdPSFSigma
+                                  (int hpdnumb, int richdetnumb){
+  return m_HpdProperty->getRichHpdPSF(hpdnumb,richdetnumb)
+                                        ->hpdPointSpreadFunction();
 
 }
-std::vector<double>  RichHpdPhotoElectricEffect::getCurrentHpdDemag(int hpdnumber, int richdetnumber){
+std::vector<double>  RichHpdPhotoElectricEffect::getCurrentHpdDemag
+                                 (int hpdnumber, int richdetnumber){
 
-  return m_HpdProperty->getRichHpdDeMag(hpdnumber,richdetnumber)->HpdDemagVect();
+  return m_HpdProperty->getRichHpdDeMag(hpdnumber,richdetnumber)->
+                                            HpdDemagVect();
 
 }
-void RichHpdPhotoElectricEffect::setPrePhotoElectricLogVolName(G4String PrePhotoElecLogVolName){
+void RichHpdPhotoElectricEffect::setPrePhotoElectricLogVolName
+                               (G4String PrePhotoElecLogVolName){
 
   m_PrePhotoElectricLogVolName= PrePhotoElecLogVolName;
 }
-void RichHpdPhotoElectricEffect::setPostPhotoElectricLogVolName(G4String PostPhotoElecLogVolName){
+void RichHpdPhotoElectricEffect::setPostPhotoElectricLogVolName
+                               (G4String PostPhotoElecLogVolName){
   m_PostPhotoElectricLogVolName=PostPhotoElecLogVolName;
 } 
 void  RichHpdPhotoElectricEffect::setNumRichDet(int numrichDetect ) {

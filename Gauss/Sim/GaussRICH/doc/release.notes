@@ -5,7 +5,32 @@
 ! Purpose            : collection of sensitive detectors, G4 actions, etc for RICH
 !-----------------------------------------------------------------------------
 
+!=========================== GaussRICH v2r2 2003-04-29 ========================
+!2003-04-29 - SE
+ - Modification to be compatible with the richInfo pointer
+   from the GaussTrackInformation of the GaussTools package.
+
+
 !=========================== GaussRICH v2r1 2003-03-05 ========================
+!2003-03-21 - SE  
+  - Modifed  various parts to make a running version with
+  - Gauss v9r1. 
+  - Activated the Rich2 by modifying RichHpdProperties
+  - Implemented UserTrackinformation to optical photons and
+  - photoelectrons so that the hits will have lot of informations
+  - regarding the history of the Cherenkvo process. These are to
+  - be used inthe debugging stage of the Rich-Brunel.
+  - This version also needs the modifications that are made in the
+  - Sim/GaussTools/v6r2/src/Components/CutsStepAction.cpp and
+  - GiGaTrackActionSimple.cpp so that the photons and photoelectrons
+  -  are not killed and the UserTrackInformation set in GaussRICH is
+  - is used for photons and photoelectrons.
+  - Also added a couple of paprameters in the options file
+  - for the verbosity of output and histogram activation.
+  -  Three of the .cc files from G4 version 4.5.0.ref02 is 
+  - copied and modifed for the optiomization and filling track related
+  - UserInformation. These are in the src/srcG4 subdirectory.
+
 ! 2003-03-05 - Florence RANJARD
  - replace PhysicalConstants.h (from Geant4) with 
            CLHEP/Units/PhysicalConstants.h
