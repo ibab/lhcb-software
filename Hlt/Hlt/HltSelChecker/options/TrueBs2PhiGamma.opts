@@ -1,13 +1,11 @@
 TrueSignals.Members += {"FilterDesktop/SelectBs2PhiGamma"};
-SelectBs2PhiGamma.PhysDesktop.InputLocations = { "Phys/HLTPions", "Phys/HLTPhotons" } ;
-SelectBs2PhiGamma.Filter.Selections =  { "pi+ : TrueMCFilterCriterion",  "K+ : TrueMCFilterCriterion", "gamma : TrueMCFilterCriterion" } ;                           // select pi-, pi+
-SelectBs2PhiGamma.Filter.TrueMCFilterCriterion.MCDecayFinder.Decay =  "[B_s0 -> (phi(1020) -> ^K+ ^K-) gamma]cc" ;  
+SelectBs2PhiGamma.PhysDesktop.InputLocations = { "Phys/HLTPions", "Phys/HLTKaons", "Phys/HLTPhotons" } ;
+SelectBs2PhiGamma.Filter.Selections =  { "pi+ : TrueMCFilterCriterion",  "K+ : TrueMCFilterCriterion", "gamma : TrueMCFilterCriterion" } ; 
+SelectBs2PhiGamma.Filter.TrueMCFilterCriterion.MCDecayFinder.Decay =  "[B_s0 -> (phi(1020) -> ^K+ ^K-) ^gamma]cc" ;  
 SelectBs2PhiGamma.Filter.TrueMCFilterCriterion.Particle2MCLinksAsct.Location = "Phys/Relations/Particle2MCLinks" ;
 
 // check that all 2 tracks are there
 TrueSignals.Members += {"MakeResonances/AllBs2PhiGammaTracks"};
 AllBs2PhiGammaTracks.PhysDesktop.InputLocations = {"Phys/SelectBs2PhiGamma"};
 //AllBs2PhiGammaTracks.DecayDescriptor = "B0 -> K+ K- gamma" ; // with PID
-//AllBs2PhiGammaTracks.DecayDescriptor = "B0 -> pi+ pi- gamma" ; // no PID
-//AllBs2PhiGammaTracks.DecayDescriptor = "B0 -> K+ K- gamma" ; // with PID
-AllBs2PhiGammaTracks.DecayDescriptor = "B0 -> pi+ pi-" ; // no PID
+AllBs2PhiGammaTracks.DecayDescriptor = "B0 -> pi+ pi- gamma" ; // no PID

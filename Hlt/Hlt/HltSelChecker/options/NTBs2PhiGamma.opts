@@ -58,7 +58,8 @@ HLTBs2PhiGammaTree.LinkAsct.AlgorithmType = "Particle2MCLinks";
 HLTBs2PhiGammaTree.LinkAsct.AlgorithmName = "Particle2MCLinksHLTBs2PhiGamma";
 HLTBs2PhiGammaTree.LinkAsct.OutputLevel = 3;
 
-Particle2MCLinksHLTBs2PhiGamma.InputData  = {"Phys/HLTPions/Particles", "Phys/HLTKaons/Particles", "Phys/HLTPreselPions/Particles", "Phys/HLTPreselKaons/Particles"};
+Particle2MCLinksHLTBs2PhiGamma.InputData  = {"Phys/HLTPions/Particles", "Phys/HLTKaons/Particles", "Phys/HLTPhotons/Particles", 
+                                             "Phys/HLTPreselPions/Particles", "Phys/HLTPreselKaons/Particles", "Phys/HLTPreselPhotons/Particles"};
 // Particle2MCLinksHLTBs2PhiGamma.InputData  = {"Phys/HLTPions/Particles", "Phys/HLTKaons/Particles", "Phys/HLTSeedingKKDaughters/Particles"};
 Particle2MCLinksHLTBs2PhiGamma.OutputLevel = 3;
 

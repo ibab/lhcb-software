@@ -1,3 +1,6 @@
+// Always define MCCheck
+#define MCCheck 1
+
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h"
 #include "GaudiKernel/NTuple.h"
@@ -16,6 +19,9 @@
 #include "MCTools/MCTrackInfo.h"
 #endif
 #include "Event/TrgVertex.h"
+#include "Event/TrgCaloCluster.h"
+#include "CaloKernel/CaloVector.h"
+#include "Event/TrgCaloParticle.h"
 
 // local
 #include "DecayChainNTuple.h"
@@ -48,8 +54,12 @@ DecayChainNTuple::DecayChainNTuple( const std::string& name,
 #ifdef MCCheck
     , m_pMCDKFinder(0)
     , m_pAsctLinks(0)
+    , m_gammaID(22)
+    , m_pAsctCl2MCP(0)
 #endif
-    ,m_pathTrg(TrgDecisionLocation::Default)
+    , m_pathTrg(TrgDecisionLocation::Default)
+    , m_CaloClustersPath(CaloClusterLocation::Ecal)
+    , m_TrgCaloClustersPath(TrgCaloClusterLocation::Ecal)
 {
   declareProperty("Decay", m_Decay = "B0 -> ^pi+ ^pi-");
 #ifdef MCCheck
@@ -57,10 +67,9 @@ DecayChainNTuple::DecayChainNTuple( const std::string& name,
   declareProperty("FillMCDecay", m_FillMCDecay = false);
 #endif
   declareProperty("NtupleName", m_ntupleName = "FILE1/MySelection" );
-  declareProperty("UseRichOnlinePID", m_useRichOnlinePID = false); // For online tracks
+  declareProperty("UseRichOnlinePID", m_useRichOnlinePID = false); // For online tracks with Rich
   declareProperty("RichOnlinePIDLocation", m_richOnlinePIDLocation = "Rec/Rich/TrgPIDs" );
   declareProperty("GeomTool", m_geomToolName = "GeomDispCalculator"); // For online use TrgDispCalculator
-
 }
 //=============================================================================
 // Destructor
@@ -142,6 +151,14 @@ StatusCode DecayChainNTuple::initialize() {
     err() << "Unable to retrieve the Particle2MCLinksAsct" << endreq;
     return sc;
   }
+
+  // for calo clusters association
+  m_pAsctCl2MCP = tool<IAsctCl2MCP>("AssociatorWeighted<CaloCluster,MCParticle,float>", "CCs2MCPs");
+  if(!m_pAsctCl2MCP){
+    err() << "Unable to retrieve the AssociatorWeighted<CaloCluster,MCParticle,float>" << endreq;
+    return sc;
+  }
+
 #endif
 
   // Trigger
@@ -307,6 +324,14 @@ StatusCode DecayChainNTuple::execute() {
 //  Finalize
 //=============================================================================
 StatusCode DecayChainNTuple::finalize() {
+
+  // release tools
+  StatusCode sc = toolSvc()->releaseTool(m_pAsctLinks);
+  if(sc.isFailure()){
+    fatal() << "Unable to release the Particle2MCLinks associator" << endreq;
+    return sc;
+  }
+
   return StatusCode::SUCCESS;
 }
 
@@ -1227,16 +1252,102 @@ StatusCode DecayChainNTuple::WriteNTuple(std::vector<Particle*>& mothervec) {
 #ifdef MCCheck
       // Look if a final state is reconstructed and is signal (only meaningful for final tracks)
       isSig = false;
+      mclink = 0;
 
       verbose() << "Looking for link association for particle with ID: "
              << (*ichild)->particleID().pid() << " " << (*ichild)->momentum() << endreq;
 
-      // Corresponding MC particle
-      mclink = m_pAsctLinks->associatedFrom(*ichild);
 
-      // Check if the associated MCParticle belongs to the DOI
-      isSig = isSignal(mclink, MCHead);
+      // beg FIXME : for now the association of online gammas requires offline clusters
+      // Special case of online gammas (neutrals with origin)
 
+      if((*ichild)->origin() && m_gammaID == (*ichild)->particleID().pid()){ // neutrals with origin
+        
+        // Check that the gamma is made from a TrgCaloParticle
+        const TrgCaloParticle* myTrgCaloPart = dynamic_cast<const TrgCaloParticle*>((*ichild)->origin());
+
+        if(myTrgCaloPart){
+
+          debug() << "Special case of online gammas" << endreq;
+
+          std::vector<CaloCellID> ClusterSeed = myTrgCaloPart->cellIdVector();
+          CaloCellID myTrgCaloPartCellID = ClusterSeed[0];
+        
+          verbose() << "There is a TrgCaloParticle with ID " << myTrgCaloPart->particleID().pid() 
+                    << " and CellID[0] " << ClusterSeed[0] << endreq;
+
+          // The Calo clusters
+          CaloClusters* myCaloClusters = get<CaloClusters>(m_CaloClustersPath);
+          // TrgCaloClusters* myTrgCaloClusters  = get<TrgCaloClusters>(m_TrgCaloClustersPath);
+
+          // Create a CaloVector of CaloClusters for easy access and get rid of split clusters (from pi0)  
+          CaloVector<const CaloCluster*>  CaloClustersVec;
+
+          for(CaloClusters::const_iterator icl = myCaloClusters->begin(); icl != myCaloClusters->end(); ++icl){
+            // forget it if split cluster
+            const CaloCluster* cl = *icl;
+            if (!(myCaloClusters == cl->parent())) continue;
+            CaloClustersVec.addEntry(cl,  cl->seed());
+          }
+
+          verbose() << "CaloClustersVec size: " << CaloClustersVec.size() << endreq;
+          // debug() << "TrgCaloClusters size: " << myTrgCaloClusters->size() << endreq;
+
+          // get the corresponding CaloCluster
+          const CaloCluster* ccluster = CaloClustersVec[myTrgCaloPartCellID];
+          if(!ccluster) return Error("Cluster corresponding to the TrgCaloParticle not found");
+
+          // Now the relation table and association
+          if(false == m_pAsctCl2MCP->tableExists()){
+            return Error("No table retrieved for CaloCluster2MCParticle associator");
+          }
+          const DirectType* table = m_pAsctCl2MCP->direct();
+          if(!table) return Error("No valid direct table for CaloCluster2MCParticle associator");
+        
+          // Check the association
+          const DirectType::Range r = table->relations(ccluster);
+          for(unsigned ii = 0 ; ii<r.size(); ++ii){
+            mclink = r[ii].to();
+            if( !mclink || (*ichild)->particleID().pid() != mclink->particleID().pid()) continue;
+          
+            isSig = isSignal(mclink, MCHead);
+            if(isSig) verbose() << "Found association for online gamma" << endreq;
+            if(isSig) break; // just take one associated MCParticle
+
+          } // ii
+        } // if myTrgCaloPart
+      } // online gammas
+      // end FIXME
+
+      // Old way, no gammas
+      // Particle2MCLinksAsct::IAsct* m_pAsctLinks;
+      // mclink = m_pAsctLinks->associatedFrom(*ichild);
+      // isSig = isSignal(mclink, MCHead);
+
+      // Note : need to go AssociatorWeighted class to treat gammas and charged in the same way
+      AssociatorWeighted<Particle,MCParticle,double>::IAsct *pAsso = m_pAsctLinks;
+
+      // Range
+      // MCsFromParticleLinks mcPartLinksRange = m_pAsctLinks->rangeFrom(*ichild);
+      AssociatorWeighted<Particle,MCParticle,double>::ToRange mcPartAssoRange = pAsso->rangeFrom(*ichild);
+      verbose() << " ... rangeFrom size = " << mcPartAssoRange.size() << endreq; 
+
+      // Iterator
+      // MCsFromParticleLinksIterator mcPartLinksIt;
+      AssociatorWeighted<Particle,MCParticle,double>::ToIterator mcPartAssoIt;
+      
+      for(mcPartAssoIt = mcPartAssoRange.begin(); mcPartAssoIt != mcPartAssoRange.end(); mcPartAssoIt++){
+        mclink = mcPartAssoIt->to();
+        // Check if ID part == ID MC associated part : don't do this because of no PID possibility
+        // if(mclink->particleID().pid() != (*ichild)->particleID().pid()) continue;
+        // Check if the associated MCParticle belongs to the DOI
+        isSig = isSignal(mclink, MCHead);
+        if(isSig) break; // just take one associated MCParticle
+      }
+      
+      // Just for the case with association but not from signal
+      if(!isSig) mclink = 0;
+      
       debug() << "Is the particle reconstructed and signal (1: yes, 0: false)? ==> " << isSig << endreq;
 
 #endif
@@ -1290,11 +1401,6 @@ StatusCode DecayChainNTuple::getPV(VertexVector& PVs) {
   
   Vertices::iterator ivert;
   for( ivert = vertices->begin(); ivert != vertices->end(); ivert++){
-//     verbose() << "Primary vertex coordinates = ( "
-//               << (*ivert)->position().x()
-//               << " , " << (*ivert)->position().y()
-//               << " , " << (*ivert)->position().z() << " ) and chi2 = " 
-//               << (*ivert)->chi2() << " with nDoF " << (*ivert)->nDoF() << endreq;
     PVs.push_back((*ivert));
   }
 
@@ -1381,7 +1487,7 @@ StatusCode DecayChainNTuple::WriteMCNTuple(std::vector<MCParticle*>& MCHead) {
 
     MCVertex::MCVertexType MCPVType = headOriVtx->type();
 
-    if(MCPVType == 1){
+    if(MCPVType == MCVertex::ppCollision){
       debug() << "The head originates from a MC primary vertex" << endreq;
     }
     else{
@@ -1452,15 +1558,52 @@ StatusCode DecayChainNTuple::WriteMCNTuple(std::vector<MCParticle*>& MCHead) {
       Particle* reco = 0;
       isReco = false;
    
-      verbose() << "Looking for link association for MC particle with ID: "
-             << (*imcchild)->particleID().pid() << " " << (*imcchild)->momentum() << endreq;
+      debug() << "Looking for link association for MC particle with ID: "
+              << (*imcchild)->particleID().pid() << " " << (*imcchild)->momentum() << endreq;
 
       // Corresponding particle
       reco = m_pAsctLinks->associatedTo(*imcchild);
-   
-      if(reco){
-        isReco = true;
+      if(reco) isReco = true;
+      
+      // beg FIXME : for now the association of online gammas requires offline clusters
+      // If not reco and gamma check clusters for online
+      if(!reco && (*imcchild)->particleID().pid() == m_gammaID){
+
+        // Get the clusters
+        TrgCaloClusters* myTrgCaloClusters  = get<TrgCaloClusters>(m_TrgCaloClustersPath);
+        
+        // If not running with online : ignore
+        if(!myTrgCaloClusters->empty()){
+          
+          // Now the relation table and association
+          if(false == m_pAsctCl2MCP->tableExists()){
+            return Error("No table retrieved for CaloCluster2MCParticle associator");
+          }
+
+          const InverseType* table = m_pAsctCl2MCP->inverse();
+          if(!table) return Error("No valid inverse table for CaloCluster2MCParticle associator");
+        
+          // Check the inverse association
+          const InverseType::Range r = table->relations(*imcchild);
+          verbose() << "inverse range size = " << r.size() << endreq;
+
+          for(unsigned ii = 0 ; ii<r.size(); ++ii){
+            CaloCluster* cluster = r[ii].to();
+            if(!cluster) continue;
+          
+            CaloCellID myCaloPartCellID = cluster->seed();
+            for(TrgCaloClusters::const_iterator icl = myTrgCaloClusters->begin(); icl != myTrgCaloClusters->end(); ++icl){
+              const TrgCaloCluster* cl = *icl;
+            
+              CaloCellID myTrgCaloPartCellID = cl->seed();
+              if(myCaloPartCellID == myTrgCaloPartCellID) isReco = true;
+              if(isReco) break;
+            } // icl
+            if(isReco) break;
+          } // ii
+        } // if !myTrgCaloClusters->empty()
       }
+      // end FIXME
 
       debug() << "Is the MC particle reconstructed (1: yes, 0: false)? ==> " << isReco << endreq;
 

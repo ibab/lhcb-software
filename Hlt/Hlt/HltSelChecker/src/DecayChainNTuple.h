@@ -1,6 +1,9 @@
 #ifndef DECAYCHAINNTUPLE_H
 #define DECAYCHAINNTUPLE_H 1
 
+// Always define MCCheck
+#define MCCheck 1
+
 // Include files
 // from Gaudi
 #include "GaudiKernel/Algorithm.h"
@@ -20,44 +23,35 @@ class IPVLocator;
 #ifdef MCCheck
 class IMCDecayFinder;
 #include "DaVinciAssociators/Particle2MCLinksAsct.h"
+#include "Relations/IAssociatorWeighted.h"
+#include "Event/CaloCluster.h"
 #endif
 
 /** @class DecayChainNTuple DecayChainNTuple.h
  * 
- *  Creates a NTuple for any generic decay chain (checks association if compiled with MCCheck flag)
+ *  Creates a NTuple for any generic decay chain (and checks association) for particles made from offline or online objects
  * 
- *  Fills the corresponding true decay variables if compiled with MCCheck flag: 
+ *  Fills the corresponding true decay variables if required
  *  -> the number of flagged particles for Decay and MCDecay must be the same!!!
  * 
- *  The children must be flagged with ^
- *  
- *  The decay chain must be written without cc for the labeling to work (otherwise the daughters get mixed)
+ *  Remarks :
  *
- *  Works for different decays, as long as there are the same number of decay produts:
+ *  - the (MC) decay to look at can be set in the (MC) Decay property and follows the syntax of the (MC)DecayFinder
+ *  - the head of the decay is always booked whereas for the children a flag ^ is needed
+ *  - the decay chain must be written without cc for the labeling to work (otherwise the daughters get mixed)
+ *  - works for different decays, as long as there are the same number of decay produts:
+ *  - output file must be read with Root
+ *  - the tree variables have labels '_lab0' for the mother and '_lab1' ... for the daughters (e.g. mass_lab0)
+ *  - the labels are set starting from the rightmost subdecay : 
+ *    the subhead first and then the daughters with the rightmost daughter first
  *
- *  Example 0: {B0 -> ^pi+ ^pi-, B~0 -> ^pi+ ^pi-, B_s0 -> ^pi+ ^K-, B_s0 -> ^pi- ^K+, B_s~0 -> ^pi- ^K+, B_s~0 -> ^pi+ ^K-}
- *  
- *  Example 1 (for a reconstructed decay):
+ *  Example 1 : 
  *  in {B0 -> ^K+ ^pi-, B~0 -> ^K- ^pi+ } the first daughter will be the pi:
- *     - ParticleName (mother) B0
- *     - Label number = 1 , ParticleName pi-
- *     - Label number = 2 , ParticleName K+
- *  and 
- *     - ParticleName (mother) B~0
- *     - Label number = 1 , ParticleName pi+
- *     - Label number = 2 , ParticleName K-
+ *     - ParticleName (mother) B0 or B~0
+ *     - Label number = 1 , ParticleName pi- or pi+
+ *     - Label number = 2 , ParticleName K+ or K-
  *
- *  Example 2 (for a true decay):
- *  in {B0 -> ^pi+ ^pi-, B~0 -> ^pi+ ^pi- } the first daughter will be the pi-:
- *     - ParticleName (mother) B0
- *     - Label number = 1 , ParticleName pi-
- *     - Label number = 2 , ParticleName pi+
- *  and 
- *     - ParticleName (mother) B~0
- *     - Label number = 1 , ParticleName pi-
- *     - Label number = 2 , ParticleName pi+
- * 
- *  Example 3 (for a reconstructed decay):
+ *  Example 2 : 
  *  -> For B0 -> (^D~0 -> ^K+ ^pi-) (^K*(892)0 -> ^K+ ^pi-) we'll have:
  *    - ParticleName (mother) B0
  *    - Label number = 1 , ParticleName K*(892)0
@@ -66,8 +60,6 @@ class IMCDecayFinder;
  *    - Label number = 4 , ParticleName D~0
  *    - Label number = 5 , ParticleName pi-
  *    - Label number = 6 , ParticleName K+
- *  
- *  Output file must be read with ROOT
  *
  *  Warning: some selections save both the B and the B~, whereas 
  *           other selections always save the B
@@ -79,10 +71,11 @@ class IMCDecayFinder;
  *  Possibility to use the TrgDispCalculator tool for online particles
  *  -> uses the approximated HLT covariance matrix for computation of IP, vertex separation, etc ...
  * 
- *  TODO: 
- *  - adapt to gammas ...
- *  - for gammas: re-valuate 4-vector at at secondary vertex for online and offline
- *  - for gammas: get MC association
+ *  Gammas are not re-evaluated at the vertex : 
+ *  -> vertex fitting moves gammas to a reference vertex but by changing the TES particles
+ * 
+ *  FIXME: 
+ *  - association of online gammas requires offline CaloClusters for now
  *
  *  @author Luis Fernandez
  *  @date   2004-08-01
@@ -107,7 +100,7 @@ private:
   std::string m_ntupleName; // Name of the TDirectory
   bool m_useRichOnlinePID;
   std::string m_richOnlinePIDLocation;
-  std::string m_geomToolName ; // Name of Geometrical Tool
+  std::string m_geomToolName; // Name of Geometrical Tool
 
   // Flag to book the NTuple only once
   bool m_bookedNTuple;
@@ -141,6 +134,11 @@ private:
   IMCDecayFinder* m_pMCDKFinder;
   // Ref. to link associator
   Particle2MCLinksAsct::IAsct* m_pAsctLinks;
+  int m_gammaID; // gamma particle ID
+  typedef IAssociatorWeighted<CaloCluster, MCParticle, float> IAsctCl2MCP;
+  typedef IAsctCl2MCP::DirectType DirectType;
+  typedef IAsctCl2MCP::InverseType InverseType;
+  const IAsctCl2MCP* m_pAsctCl2MCP;
 #endif
 
   //=============================================================================
@@ -163,8 +161,10 @@ private:
 #endif
 
   // Trigger
-  std::string m_pathTrg;
+  const std::string m_pathTrg;
   TrgDataProvider* m_dataProvider;
+  const std::string m_CaloClustersPath;
+  const std::string m_TrgCaloClustersPath;
 
   // NTuple global variables
   NTuple::Item<long> m_eventNumber,m_runNumber;
@@ -265,7 +265,6 @@ private:
     NTuple::Array<float> m_px, m_py, m_pz;
     NTuple::Array<float> m_pxvar, m_pyvar, m_pzvar;
 
-    // LUIS
     // Point at which the momentum is given in LHCb reference frame
     NTuple::Array<float> m_onTrx, m_onTry, m_onTrz;
     NTuple::Array<float> m_onTrxvar, m_onTryvar, m_onTrzvar;

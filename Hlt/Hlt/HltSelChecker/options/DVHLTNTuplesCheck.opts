@@ -13,7 +13,7 @@ TrueSignals.Members += {"TrgL1Filter/TrueTrgL1Filter","TrgTrackToContainer","Trg
 // Include this to overwrite input to take *only* MC truth particles into account
 // #include "$HLTSELCHECKERROOT/options/Truth.opts"
 // Include this to overwrite input to take *only* MC truth particles into account
-//#include "$HLTSELCHECKERROOT/options/TruthInput.opts" // !!! ONLY MCTRUTH
+// #include "$HLTSELCHECKERROOT/options/TruthInput.opts" // !!! ONLY MCTRUTH
 
 // WARNING: comment the NTuples in DVHLTExSelections.opts when running DVHLTNTuplesCheck.opts
 // and comment the all the other exclusive channels, excepted the one to check
@@ -42,7 +42,7 @@ ToolSvc.OutputLevel    = 4;
 //==============================================================================
 // Checking B_s0 -> phi(1020) phi(1020)
 //==============================================================================
-#include "$HLTSELCHECKERROOT/options/NTBs2PhiPhi.opts"
+// #include "$HLTSELCHECKERROOT/options/NTBs2PhiPhi.opts"
 
 //==============================================================================
 // Checking B0 -> (D~0 -> K+ pi-) (K*(892)0 -> K+ pi-) and cc
@@ -62,7 +62,7 @@ ToolSvc.OutputLevel    = 4;
 //==============================================================================
 // Checking B_s0 -> phi(1020) gamma
 //==============================================================================
-//#include "$HLTSELCHECKERROOT/options/NTBs2PhiGamma.opts"
+#include "$HLTSELCHECKERROOT/options/NTBs2PhiGamma.opts"
 
 //------------------------------------------------------------------------------
 ApplicationMgr.ExtSvc += { "NTupleSvc" };
@@ -93,7 +93,7 @@ EventSelector.Input   = {};
 // #include "$HLTSELECTIONSROOT/options/L0L1TDR-Bs2PiK.opts"
 //===================================================
 // Bs -> Phi Phi
-#include "$HLTSELECTIONSROOT/options/L0L1TDR-Bs2PhiPhi.opts"
+// #include "$HLTSELECTIONSROOT/options/L0L1TDR-Bs2PhiPhi.opts"
 //===================================================
 // Bd -> D0 K*
 // #include "$HLTSELECTIONSROOT/options/L0L1TDR-Bd2D0Kstar.opts"
@@ -117,7 +117,7 @@ EventSelector.Input   = {};
 // #include "$HLTSELECTIONSROOT/options/L0L1TDR-Bs2JPsiPhi.opts"
 //===================================================
 // Bs -> Phi Gamma
-// #include "$HLTSELECTIONSROOT/options/L0L1TDR-Bs2PhiGamma.opts"
+#include "$HLTSELECTIONSROOT/options/L0L1TDR-Bs2PhiGamma.opts"
 //===================================================
 //------------------------------------------------------------------------------ 
 
@@ -126,7 +126,6 @@ ApplicationMgr.EvtMax    = 10;
 // ApplicationMgr.EvtMax    = -1;
 EventSelector.FirstEvent = 1;
 EventSelector.PrintFreq  = 1;
-
 
 // #include "$HLTGENERICROOT/options/HltGeneric.opts"
 // HltGenericDecision.Filter = false; // false is default

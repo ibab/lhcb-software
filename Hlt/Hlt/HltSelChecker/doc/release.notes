@@ -4,6 +4,12 @@
 ! Purpose     : High-Level Trigger Exclusive Selections - Checking 
 !-----------------------------------------------------------------------------
 
+! 2005-03-20 - Luis Fernandez
+ - src/DecayChainNTuple.{h, cpp}
+   . Association for gammas
+ - options/
+   . Modifications for association of gammas, TrueMCFilterCriterion
+
 ! 2005-03-17 - Luis Fernandez
  - src/DecayChainNTuple.{h, cpp}
    . Added useful variables to the ntuple
