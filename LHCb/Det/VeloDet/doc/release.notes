@@ -1,6 +1,10 @@
-! $Id: release.notes,v 1.25 2002-07-18 19:37:55 cattanem Exp $
+! $Id: release.notes,v 1.26 2002-10-14 15:05:26 ocallot Exp $
 package VeloDet
 package manager : Velo Group
+
+! 2002-10-14 - Olivier Callot
+ - Improve the getSpacePoint method by removing some wrong consistency tests, 
+   as reported by Ivan Kisel.
 
 !========================= VeloDet v7r0 2002-07-18 =========================
 ! 2002-07-11 - Olivier Callot

@@ -1,4 +1,4 @@
-// $Id: DeVelo.cpp,v 1.21 2002-07-11 18:07:40 ocallot Exp $
+// $Id: DeVelo.cpp,v 1.22 2002-10-14 15:05:26 ocallot Exp $
 //
 // ============================================================================
 #define  VELODET_DEVELO_CPP 1
@@ -546,13 +546,10 @@ bool DeVelo::getSpacePoint( unsigned int RSensorNumber,
 
   double zR   = m_sensor[RSensorNumber]->z();
   double zPhi = m_sensor[PhiSensorNumber]->z();
-  if ( fabs(zR - zPhi) > 50. ) {
-    return false;
-  }
 
   bool status = true;
   
-  // Compute R from strip. Could be tabulated for performance, if needed.
+  // Compute R from strip. 
   int    rZone;
   double localR = rOfStrip( RStripNumber, rZone );
   
@@ -560,14 +557,8 @@ bool DeVelo::getSpacePoint( unsigned int RSensorNumber,
   double rAtPhi = localR * ( zPhi - m_zVertex ) / ( zR - m_zVertex );
   double tolPhiBoundary = 5. * m_innerPitch;
 
-  // If the local computed slope is too big, keep R constant...
-  if ( 0.4 < localR / fabs( zR - m_zVertex ) ) { 
-    rAtPhi = localR; 
-    tolPhiBoundary = .5 * fabs( zPhi-zR );   // Don't know the angle -> 45 deg
-  }
-
-  if ( m_innerRadius > rAtPhi ) { return false; }
-  if ( m_outerRadius < rAtPhi ) { return false; }
+  if ( m_innerRadius - tolPhiBoundary > rAtPhi ) { return false; }
+  if ( m_outerRadius + tolPhiBoundary < rAtPhi ) { return false; }
 
   // Coherence in the Phi detector region, with some tolerance
 
@@ -624,20 +615,19 @@ bool DeVelo::getSpacePoint( unsigned int RSensorNumber,
       return false;
     }
   }
-  
+
   //=== put back in the proper space location 
   if ( 0 == phiType%2 ) { phiLocal += pi;  }
 
-  point.set( localR * cos(phiLocal),  localR * sin(phiLocal), zR );
+  point.set( rAtPhi * cos(phiLocal),  rAtPhi * sin(phiLocal), zPhi );
 
   // Here we should convert a local point to a global point, using the 
   // toGlobal method of the R sensor detector element... Not now !
 
-
   // Compute the pitches. 
 
   rPitch   = this->rPitch( localR );
-  phiPitch = this->phiPitch( localR );
+  phiPitch = this->phiPitch( rAtPhi );
   
   return status;
 }
