@@ -1,0 +1,10 @@
+<subsystem type="VELO">
+  <unique string="VeloMonitor          INFO Number of Velo MCVeloHits" pos='8' parname='Number of Velo MCVeloHits/Event' varname='var1'/>
+  <unique string="VeloMonitor          INFO Number of Pileup MCVeloHits" pos='8' parname='Number of Pileup MCVeloHits/Event' varname='var2'/>  
+  <unique string="VeloMonitor          INFO Number of MCVeloFEs" pos='7' parname='Number of MCVeloFEs/Event' varname='var3'/>
+  <unique string="VeloMonitor          INFO FES from signal" pos='5' parname='FES from signal' varname='var4'/>  
+  <unique string="                                    noise" pos='1' parname='FES from noise' varname='var5'/>
+  <unique string="                     spillover / coupling" pos='3' parname='spillover/coupling' varname='var6'/>  
+  <unique string="VeloMonitor          INFO Number of VeloFullDigits" pos='7' parname='Number of VeloFullDigits/Event' varname='var7'/>
+  <unique string="VeloMonitor          INFO Number of VeloClusters" pos='7' parname='Number of VeloClusters/Event' varname='var8'/>  
+</subsystem>

@@ -1,5 +1,6 @@
 // Define Digi content for output of digitization
 // ----------------------------------------------
+DigiWriter.Preload     = false;
 DigiWriter.OptItemList =
 {
   "/Event/Prev#1"

@@ -1,0 +1,6 @@
+<subsystem type="RICH">
+  <unique string="RiDigitQC            INFO RICH1 digit multiplicity" pos='6' parname='RICH1 digit multiplicity' varname='var1'/>
+  <unique string="RiDigitQC            INFO RICH1 digit multiplicity" pos='8' errorname='RICH1 digit multiplicity' varname='var2'/>  
+  <unique string="RiDigitQC            INFO RICH2 digit multiplicity" pos='6' parname='RICH2 digit multiplicity' varname='var3'/>
+  <unique string="RiDigitQC            INFO RICH2 digit multiplicity" pos='8' errorname='RICH2 digit multiplicity' varname='var4'/>  
+</subsystem>

@@ -44,12 +44,12 @@ ApplicationMgr.DLLs += { "RichDigiQC" };
 //#include "$RICHREADOUTOPTS/BooleDigiMoni.opts" // detailed monitoring
 
 // Calorimeters
-ApplicationMgr.DLLs += { "CaloMonitor" };
+ApplicationMgr.DLLs += { "CaloMoniDigi" };
 MoniCALOSeq.Members += { "CaloDigitMonitor/SpdMoni" };
 MoniCALOSeq.Members += { "CaloDigitMonitor/PrsMoni" };
 MoniCALOSeq.Members += { "CaloDigitMonitor/EcalMoni" };
 MoniCALOSeq.Members += { "CaloDigitMonitor/HcalMoni" };
-#include "$CALOMONITOROPTS/Moni.opts"
+#include "$CALOMONIDIGIOPTS/MoniDigi.opts"
 
 //--------------------------------------------------------------
 // Set up some profiling. Enable/Disable setting lines below to true/false

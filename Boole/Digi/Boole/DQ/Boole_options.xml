@@ -1,0 +1,9 @@
+<options>	     
+  <option application="Boole" version="v7r1"/>
+  <option cpunorm="CPU time normalisation" pos='4'/>
+  <option eventsprocessed="events processed" pos='0'/> 
+  <option timeperevent="ChronoStatSvc        INFO Time User   : Tot=" pos='6'/>	    	       
+  <option files="$BOOLEROOT/DQ/boolerich.xml,$BOOLEROOT/DQ/booletrigger.xml,$BOOLEROOT/DQ/boolevelo.xml"/>
+  <option ignorewarnings="$BOOLEROOT/DQ/ignorewarnings"/>
+  <option reftablepath="$BOOLEDQROOT/data"/>
+</options>

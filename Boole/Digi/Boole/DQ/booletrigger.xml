@@ -1,0 +1,9 @@
+<subsystem type="TRIGGER">
+  <unique string="L0Monitor            INFO Accepted L0" pos='6' parname='L0 monitor Accepted L0' varname='var1'/>
+  <unique string="L0Monitor            INFO PileUp Veto" pos='6' parname='L0 monitor PileUp Veto' varname='var2'/>  
+
+<!-- TrgChecker is no longer executed in Boole
+  <unique string="TrgChecker           INFO    Velo RZ" pos='19' parname='TrgChecker Velo RZ Long and TT' varname='var3'/>
+  <unique string="TrgChecker           INFO  L1-Tracks" pos='19' parname='TrgChecker L1-tracks Long and TT' varname='var4'/>    
+-->
+</subsystem>

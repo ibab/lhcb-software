@@ -3,6 +3,51 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
+</PRE><H1><A NAME=v7r1>2004-11-25 Boole v7r1</A></H1><PRE>
+This version uses Gaudi v15r3, LHCb v17r1. Can process DC04 Gauss output.
+Output data incompatible with DC04 versions, needs Brunel v25r0 or greater
+
+- New functionality:
+  . Support for v200411 geometry (Rich1 EDR, Rotated Rich2, TT KLM layout)
+    Not yet tested, needs new Gauss data (v200411.opts, XmlDDDB v23r0)
+  . Support for Data Quality checking. Data Quality reference files built from
+    DC04 log files are provided in $LHCBRELEASES/DBASE/DQ/BooleDQ/v1r0. XML
+    descriptions of log file fields to be verified are in $BOOLEROOT/DQ.
+    To verify a log file, execute the command:
+      python2.2 $LHCBHOME/scripts/checklog.py $BOOLEROOT/DQ/Boole_options.xml
+        <event-type> <log-file>
+
+- Modified functionality
+  . Improvement to initialisation of random numbers. Now three seeds are used
+    (run and event numbers, plus hash of string containing name, event number,
+    run number). Can optionally skip some random numbers before every event,
+    by setting job option Boole.SkipFactor (default is zero). Can revert to
+    previous behaviour by setting job option Boole.SingleSeed = true;
+    (LHCbAlgs v1r2)
+  . Use rootd (instead of rfio) to access castor files
+    (GaudiConf v8r1, v200402.opts)
+  . New options for L0Muon studies (L0MuonKernel v2r2, L0MuonTrigger v2r3)
+  . Minor change to RichSignal algorithm (RichReadout v1r10)
+  . Remove explicit creation of MagneticFieldSvc and ParticlePropertySvc. First
+    one is created on demand, second one is not needed (Boole.opts)
+  . Use clustering by port for RawBuffer filling (STDAQ v1r4, ITAlgorithms v14r4)
+  . Number of ST RawBuffer clusters per board limited to 256 (STDAQ v1r4)
+  . Use DataOnDemandSvc to instantiate associator algorithms 
+    (Relations v2r0, AssociatorsSys v2r1)
+
+- Removed functionality:
+  . Removed support for 200402-TT-alt and Field043 geometries 
+
+- New packaging
+  . Calo monitoring moved to CaloMoniDigi package
+
+- Persistency changes
+  . Fixed TT L1Buffer encoding requires removal of DC04 decoding fix when reading
+
+- Bug fixes
+  . Fix in getPadIndex for Muon stations 4 and 5 (L0MuonKernel v2r2)
+  . Fix DC04 bug in L1Buffer encoding for TT (ITAlgorithms v14r4)
+
 </PRE><H1><A NAME=v7r0>2004-11-01 Boole v7r0</A></H1><PRE>
 This version uses Gaudi v15r3, LHCb v17r0. Can process DC04 Gauss output.
 Output data incompatible with DC04 versions, needs Brunel v25r0 or greater
