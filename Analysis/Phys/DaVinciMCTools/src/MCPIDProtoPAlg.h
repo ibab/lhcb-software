@@ -1,4 +1,4 @@
-// $Id: MCPIDProtoPAlg.h,v 1.5 2002-11-13 16:29:36 gcorti Exp $
+// $Id: MCPIDProtoPAlg.h,v 1.6 2004-03-11 10:53:00 pkoppenb Exp $
 #ifndef MCPIDPROTOPALG_H 
 #define MCPIDPROTOPALG_H 1
 
@@ -64,7 +64,7 @@ private:
 
   std::string m_protoPath;    ///< Location in TES of output ProtoParticles
   
-  bool   m_upstream;       ///< Use or not unique upstream tracks
+  bool   m_downstream;       ///< Use or not unique upstream tracks
   bool   m_velott;         ///< Use or not unique velo-tt tracks
   double m_trackClassCut;  ///< Fraction of IT clusters to separate Tracks types
   double m_chiSqITracks;   ///< Max Chi2/NoF to make ProtoP from IT Tracks

@@ -1,4 +1,4 @@
-// $Id: MCPIDProtoPAlg.cpp,v 1.9 2002-12-19 20:55:56 gcorti Exp $
+// $Id: MCPIDProtoPAlg.cpp,v 1.10 2004-03-11 10:53:00 pkoppenb Exp $
 // Include files 
 #include <memory>
 
@@ -41,7 +41,7 @@ MCPIDProtoPAlg::MCPIDProtoPAlg( const std::string& name,
   , m_photonMatchName( "PhotonMatch" )
   , m_electronMatchName( "ElectronMatch" )
   , m_bremMatchName( "BremMatch" )
-  , m_upstream( false )
+  , m_downstream( false )
   , m_velott( false )
   , m_trackClassCut( 0.4 )
   , m_chiSqITracks( 500.0 )
@@ -71,7 +71,7 @@ MCPIDProtoPAlg::MCPIDProtoPAlg( const std::string& name,
   declareProperty("TrackAsct", m_trackAsctName );
   
   // Selections
-  declareProperty("UpstreamsTracks",  m_upstream );
+  declareProperty("UpstreamsTracks",  m_downstream );
   declareProperty("VeloTTTracks",     m_velott );
   declareProperty("ITFracTrackClass", m_trackClassCut );
   declareProperty("Chi2NdFofITracks", m_chiSqOTracks );
@@ -321,7 +321,7 @@ StatusCode MCPIDProtoPAlg::execute() {
     if( (*iTrack)->unique() ) {
       if( (*iTrack)->forward() )  countTypeTracks[UniqueForward]++;
       if( (*iTrack)->match() )    countTypeTracks[UniqueMatch]++;
-      if( (*iTrack)->upstream() ) countTypeTracks[UniqueUpstream]++;
+      if( (*iTrack)->isDownstream() ) countTypeTracks[UniqueUpstream]++;
       if( (*iTrack)->veloTT() )   countTypeTracks[UniqueVeloTT]++;
     }
     
@@ -550,7 +550,7 @@ int MCPIDProtoPAlg::rejectTrack( const TrStoredTrack* track ) {
       if( track->unique() && (track->forward() || track->match()) ) {
         reject = KeepTrack;
       }
-      if( m_upstream && (track->unique() && track->upstream()) ) {
+      if( m_downstream && (track->unique() && track->isDownstream()) ) {
         reject = KeepTrack; 
       }
       if( m_velott && (track->unique() && track->veloTT()) ) {
