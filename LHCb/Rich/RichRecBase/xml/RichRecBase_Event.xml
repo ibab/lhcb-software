@@ -6,7 +6,7 @@
         <import name="Kernel/SerializeStl"/>
         <class author="Chris Jones   (Christopher.Rob.Jones@cern.ch)" desc="Rich reconstruction working track object." id="12421" keyedContTypeDef="TRUE" location="Rec/Rich/RecBase/Tracks" name="RichRecTrack" stdVectorTypeDef="TRUE">
             <base name="KeyedObject&lt;int&gt;"/>
-            <import name="GaudiKernel/ContainedObject"/>
+            &KeyedObject;
             <import name="RichKernel/RichParticleIDType"/>
             <import name="RichKernel/RichHypoData"/>
             <import name="RichRecBase/RichTrackID"/>
@@ -114,13 +114,13 @@
         </class>
         <class author="Chris Jones   (Christopher.Rob.Jones@cern.ch)" desc="Rich reconstruction working pixel object" id="12422" keyedContTypeDef="TRUE" location="Rec/Rich/Rec/Pixels" name="RichRecPixel" stdVectorTypeDef="TRUE">
             <base name="KeyedObject&lt;int&gt;"/>
+            &KeyedObject;
             <import name="RichRecBase/RichRecPixelParentType"/>
             <import name="RichKernel/RichDetectorType"/>
             <import ignore="TRUE" name="Rich"/>
             <import ignore="TRUE" name="RecPixel"/>
             <import ignore="TRUE" name="ParentType"/>
             <import ignore="TRUE" name="DetectorType"/>
-            <import name="GaudiKernel/ContainedObject"/>
             <import name="Kernel/RichSmartID"/>
             <constructor desc="Constructor with arguments" initList="m_smartID(smartID), m_globalPosition(gPos), m_localPosition(lPos), m_currentBackground(0), m_parentType(Rich::RecPixel::Unknown)">
                 <arg name="smartID" type="RichSmartID"/>
@@ -160,6 +160,7 @@
         </class>
         <class author="Chris Jones   (Christopher.Rob.Jones@cern.ch)" desc="Rich reconstruction object describing a continuous track segment in a single radiator" id="12423" keyedContTypeDef="TRUE" location="Rec/Rich/RecBase/Segments" name="RichRecSegment" stdVectorTypeDef="TRUE">
             <base name="KeyedObject&lt;int&gt;"/>
+            &KeyedObject;
             <import name="RichKernel/RichParticleIDType"/>
             <import name="RichUtils/RichTrackSegment"/>
             <import name="RichRecBase/RichMap"/>
@@ -298,6 +299,7 @@
             <import name="RichKernel/RichHypoData"/>
             <import name="RichKernel/RichParticleIDType"/>
             <import name="RichUtils/RichGeomPhoton"/>
+            &KeyedObject;
             <constructor desc="Constructor from detailed information" initList="m_geomPhoton(photon), m_richRecSegment(pSeg), m_richRecTrack(pTrk), m_richRecPixel(pPix)">
                 <arg name="photon" type="RichGeomPhoton"/>
                 <arg inout="BYVALUE" name="pSeg" type="RichRecSegment*"/>
@@ -336,6 +338,7 @@
         </class>
         <class author="Chris Jones   (Christopher.Rob.Jones@cern.ch)" desc="Status object for Rich Reconstruction" id="12425" location="Rec/Rich/RecBase/Status" name="RichRecStatus" templateList="FALSE" templateVector="FALSE">
             <base name="DataObject"/>
+            &DataObject;
             <import name="RichKernel/RichDetectorType"/>
             <import ignore="TRUE" name="Rich"/>
             <method desc="Set the overall background for given RICH" name="setDetOverallBkg">
@@ -352,7 +355,7 @@
         </class>
         <class author="Chris Jones    Christopher.Rob.Jones@cern.ch" desc="A ring candidate. A collection of RichRecPixels associated to a single Cherenkov ring" id="12426" location="Rec/Rich/Common/Rings" name="RichRecRing">
             <base name="KeyedObject&lt;long&gt;"/>
-            <import name="GaudiKernel/ContainedObject"/>
+            &KeyedObject;
             <import name="Kernel/RichDetectorType"/>
             <import name="Kernel/RichSide"/>
             <import ignore="TRUE" name="Rich"/>
