@@ -1,4 +1,4 @@
-//$Id: ConditionsDBGate.cpp,v 1.6 2002-03-01 11:28:15 andreav Exp $
+//$Id: ConditionsDBGate.cpp,v 1.7 2002-03-01 16:45:07 andreav Exp $
 #include <string>
 
 #ifdef __CondDBObjy__
@@ -411,7 +411,7 @@ ConditionsDBGate::i_buildCondDBInfo( std::string& condDBInfo )
   if ( m_condDBPswd != "" ) {
     log << MSG::DEBUG
 	<< "Using condDBPswd from jobOptions:" << endreq; 
-    log << MSG::DEBUG << m_condDBPswd << endreq;    
+    log << MSG::DEBUG << "********" << endreq;    
   } else {
     log << MSG::ERROR 
 	<< "Property condDBPswd not set in jobOptions" << endreq; 
