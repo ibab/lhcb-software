@@ -1,4 +1,4 @@
-// $Id: TutorialAlgorithm.h,v 1.1 2004-11-09 14:19:08 pkoppenb Exp $
+// $Id: TutorialAlgorithm.h,v 1.2 2004-11-09 14:59:01 pkoppenb Exp $
 #ifndef TutorialAlgorithm_H 
 #define TutorialAlgorithm_H 1
 
@@ -27,11 +27,12 @@ public:
 protected:
 
 private:
-  double m_JPsiMassWin ; ///< Mass window
-  double m_JPsiChi2 ;    ///< Max J/psi chi^2
-  int m_JPsiID ;         ///< J/psi ID
-  double m_JPsiMass ;    ///< J/psi mass
-  int m_nJPsis ;         ///< number of selected J/psis
-  int m_nEvents ;        ///< number of events
+  double m_MassWin ; ///< Mass window
+  double m_Chi2 ;    ///< Max chi^2
+  std::string m_Name ; ///< Name of particle
+  int m_ID ;         ///< ID
+  double m_Mass ;    ///< mass
+  int m_nFound ;     ///< number of selected particles
+  int m_nEvents ;    ///< number of events
 };
 #endif // TutorialAlgorithm_H

@@ -54,7 +54,7 @@ Phi2KK.HistoProduce = true ;
 ApplicationMgr.HistogramPersistency = "HBOOK";
 HistogramPersistencySvc.OutputFile = "DVHistos3.hbook";
 
-ApplicationMgr.EvtMax = -1 ;
+ApplicationMgr.EvtMax = 500 ;
 
 //-- GAUDI data cards generated on Nov 4, 2004 5:34:03 PM
 //-- For Event Type = 13144000 / Data type = DST 1
