@@ -1,4 +1,4 @@
-// $Id: VeloSim.cpp,v 1.3 2002-06-18 14:52:21 ocallot Exp $
+// $Id: VeloSim.cpp,v 1.4 2002-06-19 12:09:50 cattanem Exp $
 // Include files
 // STL
 #include <string>
@@ -187,13 +187,14 @@ StatusCode VeloSim::getInputData() {
     m_spillOverHits=sphits;
 
     if( 0 == m_spillOverHits ) {
-      log << MSG::ERROR
-          << "Unable to retrieve input data container="
-          << m_spillOverInputContainer << endreq;
-      return StatusCode::FAILURE;
+      log << MSG::DEBUG
+          << m_spillOverInputContainer << " not found in this event" << endreq;
     }
-    log << MSG::DEBUG << m_spillOverHits->size() 
-        << " spill over hits retrieved" << endreq;
+    else {
+      log << MSG::DEBUG << m_spillOverHits->size() 
+          << " spill over hits retrieved" << endreq;
+    }
+    
   }
 
   //*** make vector for output
@@ -218,7 +219,8 @@ StatusCode VeloSim::chargeSim(bool spillOver) {
     hits=m_hits;
   }
   else{
-    // hits from spill Over Event
+    // hits from spill Over Event. Return if no spillover
+    if( 0 == m_spillOverHits ) return StatusCode::SUCCESS;
     hits=m_spillOverHits;
   }
 

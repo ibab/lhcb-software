@@ -1,6 +1,9 @@
 ! Package     : VeloAlgoithms
 ! Responsible : Chris Parkes
 
+! 2002-06-19 - Marco Cattaneo
+ - VeloSim.cpp: missing spillover hits container is not an error
+
 ! 2002-06-17 - Olivier Callot
  - Commissioned with VeloDet v6r0. Fixed a problem when merging coupling and
    normal strips. 
