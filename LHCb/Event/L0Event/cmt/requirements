@@ -3,20 +3,19 @@ version v1
 
 branches L0Event src cmt doc
 
-use CaloEvent v3* Event
+use CaloEvent v6* Event
 
 include_dirs $(L0EVENTROOT)
 
 # Linker library
 library L0EventLib   -no_share  ../src/L0CLIDs.cpp
 
+apply_pattern package_Lstamps
 apply_pattern package_Llinkopts
 
 # component library
 library L0Event          ../src/L0EventInstantiation.cpp \
                          ../src/L0Event_dll.cpp
-
-macro_append L0Event_stamps "  " ${L0EventDir}/L0EventLib.stamp" 
 
 apply_pattern packageShr
 #=======================================================================

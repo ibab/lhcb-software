@@ -1,4 +1,4 @@
-#include "GaudiKernel/Kernel.h"
+#include "GaudiKernel/ClassID.h"
 
 // Class IDs for the Level 0 detector start here
 const CLID& CLID_Level0                 = 8000;  // 8001 -> 7999 reserved for Level 0 stuff

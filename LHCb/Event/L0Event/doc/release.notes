@@ -1,6 +1,13 @@
 Package : L0Event
 Package manager : Olivier Callot
 
+! 20010622 - L0Event v2 (Flr)
+  requirements - use CaloEvent v6*
+                 adapted to GaudiPolicy v5 and CMT v1r8
+  L0CLIDS.cpp     - include GaudiKernel/ClassID.h instead of /Kernel.h
+  L0Event_dll.cpp - include GaudiKernel/FactoryTable.h instead of .cpp
+
+!========================================================================
 ! 20010109 - v1 (Flr)
   requirements - L0EventLib is no_share
 
