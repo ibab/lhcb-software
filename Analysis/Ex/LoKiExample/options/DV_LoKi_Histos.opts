@@ -1,8 +1,11 @@
-// $Id: DV_LoKi_Histos.opts,v 1.1.1.1 2003-07-24 16:43:50 ibelyaev Exp $
+// $Id: DV_LoKi_Histos.opts,v 1.2 2004-01-21 10:01:55 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.1.1.1  2003/07/24 16:43:50  ibelyaev
+//  new package with LoKi examples 
+//
 // Revision 1.1  2003/05/12 13:21:33  ibelyaev
 //  add the options files for all examples
 // 
@@ -24,7 +27,7 @@
 // ============================================================================
 
 // load nesessary libraries 
-ApplicationMgr.DLLs   += { "LoKiExamples" , "LoKi" } ;
+ApplicationMgr.DLLs   += { "LoKiExample" , "LoKi" } ;
 
 // top level algorithms 
 ApplicationMgr.TopAlg  =  {

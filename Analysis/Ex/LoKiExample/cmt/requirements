@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.1.1.1 2003-07-24 16:43:49 ibelyaev Exp $ 
+# $Id: requirements,v 1.2 2004-01-21 10:01:54 ibelyaev Exp $ 
 # =============================================================================
 # CVS tag $Name: not supported by cvs2svn $ 
 # =============================================================================
@@ -23,13 +23,13 @@ library LoKiExample         *.cpp
 apply_pattern component_library library=LoKiExample 
 
 set   DAVINCIEXE           "${DAVINCIROOT}/${BINDIR}/DaVinci.exe"    
-set   LOKIEXHISTOS         "${LOKIEXAMPLESOPTS}/DV_LoKi_Histos.opts"
-set   LOKIEXTUPLE          "${LOKIEXAMPLESOPTS}/DV_LoKi_Tuple.opts" 
-set   LOKIEXBS2PHIPHI      "${LOKIEXAMPLESOPTS}/DV_LoKi_Bs2PhiPhi.opts" 
-set   LOKIEXBS2PHIGAMMA    "${LOKIEXAMPLESOPTS}/DV_LoKi_Bs2PhiGamma.opts" 
-set   LOKIEXBD2KSTARGAMMA  "${LOKIEXAMPLESOPTS}/DV_LoKi_Bd2KStarGamma.opts" 
-set   LOKIEXPI0            "${LOKIEXAMPLESOPTS}/DV_LoKi_Pi0fromBdTo3pi.opts" 
-set   LOKIEXEVTTAGS        "${LOKIEXAMPLESOPTS}/DV_LoKi_EventTagTuple.opts" 
+set   LOKIEXHISTOS         "${LOKIEXAMPLEOPTS}/DV_LoKi_Histos.opts"
+set   LOKIEXTUPLE          "${LOKIEXAMPLEOPTS}/DV_LoKi_Tuple.opts" 
+set   LOKIEXBS2PHIPHI      "${LOKIEXAMPLEOPTS}/DV_LoKi_Bs2PhiPhi.opts" 
+set   LOKIEXBS2PHIGAMMA    "${LOKIEXAMPLEOPTS}/DV_LoKi_Bs2PhiGamma.opts" 
+set   LOKIEXBD2KSTARGAMMA  "${LOKIEXAMPLEOPTS}/DV_LoKi_Bd2KStarGamma.opts" 
+set   LOKIEXPI0            "${LOKIEXAMPLEOPTS}/DV_LoKi_Pi0fromBdTo3pi.opts" 
+set   LOKIEXEVTTAGS        "${LOKIEXAMPLEOPTS}/DV_LoKi_EventTagTuple.opts" 
                 
 alias Histos_exe           "     ${DAVINCIEXE} ${LOKIEXHISTOS}        " \
       WIN32                " run ${DAVINCIEXE} ${LOKIEXHISTOS}        " 
