@@ -1,4 +1,4 @@
-// $Id: DeOTDetector.cpp,v 1.4 2002-06-06 08:53:38 jvantilb Exp $
+// $Id: DeOTDetector.cpp,v 1.5 2002-07-25 13:25:53 mneedham Exp $
 
 // from Det/OTDet
 #include "OTDet/DeOTDetector.h"
@@ -124,12 +124,11 @@ StatusCode DeOTDetector::initialize()
 }
 
 
-OTLayer* DeOTDetector::layer(double z) const {
+OTLayer* DeOTDetector::layer(const double z) const {
 
    // find closest layer corresponding to z position
-  MsgStream log(msgSvc(), name());
-
-  OTLayer* closestLayer;
+ 
+  OTLayer* closestLayer = 0;
   std::vector<OTLayer*>::const_iterator iLayer;
   double dist = 99999.0;
   for ( iLayer = m_layers.begin(); m_layers.end() != iLayer; ++iLayer) {
@@ -140,9 +139,9 @@ OTLayer* DeOTDetector::layer(double z) const {
     }
   }
 
-  if ( dist == 99999.0 ) {
+  if ( dist > 99998.0 ) {
+    MsgStream log(msgSvc(), name());
     log << MSG::ERROR << " Failed to find detection layer  "<< endreq;
-    return 0;
   }
 
   return closestLayer;

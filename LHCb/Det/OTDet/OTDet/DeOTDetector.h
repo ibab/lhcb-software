@@ -1,4 +1,4 @@
-// $Id: DeOTDetector.h,v 1.6 2002-06-10 15:58:11 cattanem Exp $
+// $Id: DeOTDetector.h,v 1.7 2002-07-25 13:25:53 mneedham Exp $
 #ifndef OTDET_DEOTDETECTOR_H
 #define OTDET_DEOTDETECTOR_H 1
 
@@ -38,7 +38,7 @@ public:
   virtual StatusCode initialize(); 
 
   /// return the closest layer given a z position
-  OTLayer* layer(double z) const;
+  OTLayer* layer(const double z) const;
 
   /// return the layer given a channel ID
   OTLayer* layer(OTChannelID aChannel) const;
