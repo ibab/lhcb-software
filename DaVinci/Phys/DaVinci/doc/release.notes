@@ -3,31 +3,66 @@ Package     : Phys/DaVinci
 Package Coordinator : Gloria Corti
 Purpose     : LHCb analysis program 
 
+</PRE><H1><A NAME=v8r0>2003-05-02 DaVinci v8r0</A></H1><PRE>
  - New features:
-   . Use LHCb v11r11
-   . Add support for data produced for robustness test (XmlDDB v15r3,
-     DaVinciv254r1-Apr03.opts)
-   . New DaVinciReco.opts where execution of algorithms to produce
-     charged ProtoParticles and Primary Vertices is set.
-   . Remove execution of above algorithms from DaVinciCommon.opts
-   . Introduce use of DaVinciReco.opts in DaVinci.opts to allow easy
-     switching off when reading a MiniDST file where these objects
-     are already present.
-   . Introduce merged Pi0 (DaVinciTools v8r0, GlobalReco v3r1, CaloReco v1r5)
-   . Add CaloReCorrections.opts for new S/L/E correction, necessary for
-     merged pi0.
-   . Add Associator dll loading (DaVinciCommon.opts)
-   . Introduce use of PhysSelections v5r0 with ONLY generic code for
-     selection like Select2ParticleDecay.h/cpp (DaVinciCommon.opts,
-     requirements) 
-   . Introduce use of Utilities v1r0 (DaVinciCommon.opts, requirements) 
-   . Options files to preload particle in different location in TES
-     with assigned particle ID for HLT studies using ProtoParticles,
-     hence offline tracks (PreLoadNoPIDParticles.opts). 
-     Put example of use to uncomment in DaVinci.opts (DaVinciTools v8r0)
-   . For writing copy of OODST with contents as for signal introduce
-     DstContent.opts (L1Cluster not present)
-
+   . Use LHCb v11r11 ( refer to its release.notes for details )
+     .. FlavourTagging is now serializable
+     .. Clone and copy do not follow tree anymore in Particle and Vertex
+     .. New delta log likelihood enum in ProtoParticle
+   . DaVinciv254r1-Apr03.opts
+      new options for data produced for robustness test, necessary only
+      for reprocessing (XmlDDB v15r3)
+   . DaVinciReco.opts
+      new options where execution of algorithms to produce
+      charged ProtoParticles and Primary Vertices is set.
+   . DaVinciCommon.opts
+      remove execution of above algorithms 
+   . DaVinci.opts
+      introduce use of DaVinciReco.opts to allow easy switching off when 
+      reading a MiniDST file where these objects are already present.
+   . Introduce merged Pi0
+      (DaVinciTools v8r0, GlobalReco v3r1, CaloReco v1r5)
+   . CaloReCorrections.opts
+      new options for new S/L/E correction for gammas, necessary for merged pi0
+   . Introduce option to make only non converted photon or both converted
+      and non converted photons in PhotonParticleMaker (DaVinciTools v8r0)
+   . DaVinciCommon.opts
+      add Associator dll loading (DaVinciCommon.opts)
+   . DaVinciCommon.opts, requirements
+      introduce use of PhysSelections v5r0 with ONLY generic code for
+      selection like Select2ParticleDecay.h/cpp 
+   . DaVinciCommon.opts, requirements
+      introduce use of Utilities v1r0
+   . New Particle maker for maing particles with assigned particle ID for 
+      HLT studies using ProtoParticles,hence offline tracks
+   . PreLoadNoPIDParticles.opts
+      options files to preload particle in different location in TES
+      (DaVinciTools v8r0)
+   . DaVinci.opts  
+       put commented example how to use PreLoadNoPIDParticles.opts
+   . DstContent.opts 
+       new options for writing copy of OODST with contents as for signal
+       (L1 clusters not present)
+   . ProtoParticle and ParticleLink associators can be used with Particles
+      not yet in TES (DaVinciAssociators v4r0)
+   . Allow for extra missing photon via jobOptions in CompositeLink 
+      associator (DaVinciAssociators v4r0)
+   . New features of extracting tagged particles in tree in (MC)DecayFinder
+      (DaVinciTools v8r0, DaVinciMCTools v5r0)
+   . New particle maker for electrons for preselection
+      (DaVinciTools v8r0)
+   . FlavourTagging as of beginning of April
+      (FlavourTagging v4r4)
+   . Efficiency algorithm fixed in MCtruth for possible intermediate resonaces
+      (DaVinciEff v2r4)
+   . New versions of decay selections (mostly only options for preselections)
+      look for added packages in PhysSelSys v5r1 and included packages release
+      notes.
+   . requirements
+      change all necessary version numbers and increase version to v8r0
+   . DaVinci.job
+      change version to v8r0
+   
 
 </PRE><H1><A NAME=v7r3>2003-03-21 DaVinci v7r4</A></H1><PRE>
  - New version:
