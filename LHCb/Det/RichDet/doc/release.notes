@@ -10,7 +10,7 @@
    of MaPMTs as well as HPDs.
  - use of new names for user parameters in the xml.
 
-! 2003-08-29 - Antonis Papanestis
+! 2003-09-08 - Antonis Papanestis
  - added the Cdf member functions to the MaPMTPanel for the processing
    of SICBMC Rich data.
 
