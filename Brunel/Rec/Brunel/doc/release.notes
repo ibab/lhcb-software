@@ -34,6 +34,7 @@ Development version
   . Fix an unprotected pointer in Richdetailed monitoring (RichRecCommon v1r7)
   . Add a missing job option for detailed Calo monitoring (BrunelMoni.opts)
   . Fix bug in evaluation of overlap of two rectangular areas (CaloUtils v4r7)
+  . Add fixes suggested by C.Jones for using Brunel.job in debug mode
 
 </PRE><H1><A NAME=v23r7>2004-04-29 Brunel v23r7</A></H1><PRE>
 Version used for DC04
