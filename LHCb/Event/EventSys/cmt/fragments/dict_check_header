@@ -1,3 +1,3 @@
 ${CONSTITUENT} ::
-	@source setup.sh; lcgdictcheck --cmt --info -s $(GAUDIPOOLDBROOT)/$(BINDIR)/libGaudiPoolDb.so libSealSTLDict.so;
+	@source setup.sh; lcgdictcheck --cmt --info -s $(GAUDIPOOLDBROOT)/$(BINDIR)/libGaudiPoolDb.so libSealSTLDict.so libSealCLHEPDict.so;
 
