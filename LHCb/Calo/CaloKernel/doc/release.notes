@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.14 2002-04-22 07:58:39 cattanem Exp $
+! $Id: release.notes,v 1.15 2002-04-22 16:50:33 ibelyaev Exp $
 ! =============================================================================
 ! CVS tag $Name: not supported by cvs2svn $
 ! =============================================================================
@@ -8,6 +8,16 @@
 ! The package contains the general Calo Kernel classes and utilities, 
 ! which are essentially independent from Detector and Event models 
 ! =============================================================================
+
+!=============================================================================
+! 22/04/2002 - Vanya Belyaev
+!  several files are moved from Calo/CaloKernel to Kernel/LHCbKernel package:
+!  CaloKernel/CaloPrint.h   moved to Kernel/CaloPrint.h
+!  CaloKernel/CaloMap.h     moved to Kernel/CaloMap.h
+!  CaloKernel/CaloHashMap.h moved to Kernel/CaloHashMap.h
+!  CaloKernel/OSiterator.h  moved to Kernel/OSiterator.h
+!  src/CaloPrint/cpp        moved to src/CaloPrint.cpp
+!=============================================================================
 
 !=============================================================================
 ! 18/04/2002 - Marco Cattaneo
