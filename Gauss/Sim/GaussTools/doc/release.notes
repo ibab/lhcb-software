@@ -4,6 +4,13 @@
 ! Purpose       : G4 actions and some miscellaneous algs for Gauss
 !-----------------------------------------------------------------------------
 
+! 2004-12-16 - Gloria CORTI
+ - src/Lib/GDMLRunAction.{h,cpp}
+   . introduce new run action provided by Witek Pokorski to dump geometry
+     in GDML file
+ - requirements 
+   . add use of GDMLWriter
+
 ! 2004-12-14 - Gloria CORTI
  - src/Components/SpecialCuts.cpp
    . adapt to use with geant4.7.0 by replacing obsolete methods names with
