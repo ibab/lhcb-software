@@ -16,3 +16,38 @@
 # }
 
 # All Gaudi and external package errors have been moved to $STDOPTS/Gaudi.supp
+
+# Errors from PoolDbCacheSvc::finalize(), not seen in default Brunel v23r3 setup
+# GaudiPoolDb v1r5, POOL 1_5_0, Root 3.10.02
+
+{
+  Root/longest_match
+  Memcheck:Cond
+  fun:R__longest_match
+  fun:R__Deflate_fast
+  fun:R__Deflate
+}
+
+{
+  Root/Deflate_fast
+  Memcheck:Value4
+  fun:R__Deflate_fast
+  fun:R__Deflate
+  fun:R__zip
+}
+
+{
+  Root/ct_tally
+  MemCheck:Value4
+  fun:R__ct_tally
+  fun:R__Deflate_fast
+  fun:R__Deflate
+}
+
+{
+  Root/compress_block
+  MemCheck:Value4
+  fun:R__compress_block
+  fun:R__flush_block
+  fun:R__Deflate_fast
+}
