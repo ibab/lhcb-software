@@ -8,6 +8,10 @@
 !-----------------------------------------------------------------------------
 
 ! 2003-06-05 - Patrick Robbe
+  - options/Calo.opts : remove zero magnetic field declarations (zero
+                        magnetic field is declared in XmlDDDB now)
+
+! 2003-06-05 - Patrick Robbe
  - upgrade version number to v3r0
  - options/Calo.opts : use of 0 magnetic field in ECal and HCal
  - CaloSensDet       : change Birk's Law to work with Geant4.5.1.ref02. Use

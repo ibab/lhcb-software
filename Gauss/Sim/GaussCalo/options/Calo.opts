@@ -1,8 +1,12 @@
-// $Id: Calo.opts,v 1.2 2003-06-05 08:26:13 robbep Exp $ 
+// $Id: Calo.opts,v 1.3 2003-06-05 15:47:06 robbep Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2003/06/05 08:26:13  robbep
+// Add possibility to use 0 magnetic field in ECal and HCal.
+// Change cell names in ECal to work with simplified geometry.
+//
 // Revision 1.1  2003/05/27 12:40:24  robbep
 // Added options/Calo.opts (moved from Gauss package)
 // Added Hcal sensitive detector
@@ -63,12 +67,6 @@ GiGaGeo.Hcal.zMin           =  12300. * mm ;
 GiGaGeo.Hcal.zMax           =  15000. * mm ;
 
 GiGaGeo.Hcal.DetectorPath   =  "/LHCb/Calo"             ;
-
-GiGaGeo.GiGaFieldMgr.MagneticField = "GiGaMagFieldZero/FieldZero" ;
-//"GiGaMagFieldUniform/ZeroField";
-GiGaGeo.GiGaFieldMgr.Global = false;
-GiGaGeo.GiGaFieldMgr.MinStep = 0.01 * mm;
-GiGaGeo.GiGaFieldMgr.Stepper = "ClassicalRK4";
 
 // ============================================================================
 // The END 
