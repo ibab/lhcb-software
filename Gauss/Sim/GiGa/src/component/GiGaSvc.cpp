@@ -2,6 +2,9 @@
 /// CVS tag $Name: not supported by cvs2svn $ 
 /// ===========================================================================
 /// $Log: not supported by cvs2svn $
+/// Revision 1.7  2001/07/25 17:18:09  ibelyaev
+/// move all conversions from GiGa to GiGaCnv
+///
 /// Revision 1.6  2001/07/23 20:53:47  ibelyaev
 /// reorganization of GiGaUtil namespace
 ///
@@ -29,15 +32,11 @@
 #include    "GaudiKernel/Stat.h"
 // from GiGa
 #include    "GiGa/IGiGaPhysList.h"
-#include    "GiGa/IGiGaPhysListFactory.h"
 #include    "GiGa/IGiGaStackAction.h"
-#include    "GiGa/IGiGaStackActionFactory.h"
 #include    "GiGa/IGiGaTrackAction.h"
-#include    "GiGa/IGiGaTrackActionFactory.h"
 #include    "GiGa/IGiGaStepAction.h"
-#include    "GiGa/IGiGaStepActionFactory.h"
 #include    "GiGa/IGiGaEventAction.h"
-#include    "GiGa/IGiGaEventActionFactory.h"
+#include    "GiGa/IGiGaRunAction.h"
 #include    "GiGa/GiGaException.h"
 #include    "GiGa/GiGaRunManager.h" 
 #include    "GiGa/GiGaUtil.h"
@@ -77,10 +76,6 @@ GiGaSvc::GiGaSvc( const std::string& name, ISvcLocator* svcloc )
   , m_objMgrName           ( "ApplicationMgr" )
   ///
   , m_startUIcommands      (                  )
-  , m_startOfEvtUIcommands (                  )
-  , m_endOfEvtUIcommands   (                  )
-  , m_startOfRunUIcommands (                  )
-  , m_endOfRunUIcommands   (                  )
   , m_endUIcommands        (                  )
   ///
   , m_GiGaPhysList         (                  )
@@ -89,16 +84,13 @@ GiGaSvc::GiGaSvc( const std::string& name, ISvcLocator* svcloc )
   , m_GiGaTrackAction      (                  )
   , m_GiGaStepAction       (                  )
   , m_GiGaEventAction      (                  )
+  , m_GiGaRunAction        (                  )
   ///
   , m_UseVisManager        ( false            )
   ///
 {
   /// Geant4 commands to be executed by G4UImanager 
   declareProperty( "StartUIcommands"        , m_startUIcommands      ) ;
-  declareProperty( "StartOfEventUIcommands" , m_startOfEvtUIcommands ) ;
-  declareProperty( "EndOfEventUIcommands"   , m_endOfEvtUIcommands   ) ;
-  declareProperty( "StartOfRunUIcommands"   , m_startOfRunUIcommands ) ;
-  declareProperty( "EndOfRunUIcommands"     , m_endOfRunUIcommands   ) ;
   declareProperty( "EndUIcommands"          , m_endUIcommands        ) ;
   /// list of User Intreface sessions 
   declareProperty( "UIsessions"             , m_UIsessions           ) ;
@@ -114,6 +106,8 @@ GiGaSvc::GiGaSvc( const std::string& name, ISvcLocator* svcloc )
   declareProperty( "SteppingAction"         , m_GiGaStepAction       ) ;
   /// type and Name of Event Action object 
   declareProperty( "EventAction"            , m_GiGaEventAction      ) ;
+  /// type and Name of Run Action object 
+  declareProperty( "RunAction"              , m_GiGaRunAction        ) ;
   /// flag for creation of Visualization Manager 
   declareProperty( "UseVisManager"          , m_UseVisManager        ) ;
   ///
@@ -242,7 +236,7 @@ StatusCode GiGaSvc::initialize()
       Print("Used Stacking Action Object is " + 
             GiGaUtil::ObjTypeName( SA ) + "/"+SA->name() );
     }
-  else { Warning("Stacking Action Object is not required to be loaded") ; } 
+  else { Print("Stacking Action Object is not required to be loaded") ; } 
   ///
   /// try to locate Tracking Action Object and make it known for GiGa 
   if( !m_GiGaTrackAction.empty() )
@@ -267,7 +261,7 @@ StatusCode GiGaSvc::initialize()
       Print("Used Tracking Action Object is " + 
             GiGaUtil::ObjTypeName( TA ) + "/"+TA->name() );
     }
-  else { Warning("Tracking Action Object is not required to be loaded") ; } 
+  else { Print("Tracking Action Object is not required to be loaded") ; } 
   ///
   /// try to locate Stepping Action Object and make it known for GiGa 
   if( !m_GiGaStepAction.empty() )
@@ -292,7 +286,7 @@ StatusCode GiGaSvc::initialize()
       Print("Used Stepping Action Object is " + 
             GiGaUtil::ObjTypeName( SA ) + "/"+SA->name() );
     }
-  else { Warning("Stepping Action Object is not required to be loaded") ; } 
+  else { Print("Stepping Action Object is not required to be loaded") ; } 
   ///
   /// try to locate Event    Action Object and make it known for GiGa 
   if( !m_GiGaEventAction.empty() )
@@ -301,10 +295,10 @@ StatusCode GiGaSvc::initialize()
       StatusCode sc = eventAction  ( m_GiGaEventAction , EA );
       if( sc.isFailure() ) 
         { return Error(" Unable to instantiate Event Action Object " + 
-                       m_GiGaStepAction, sc );} 
+                       m_GiGaEventAction, sc );} 
       if( 0 == EA        ) 
         { return Error(" Unable to instantiate Event Action Object " + 
-                       m_GiGaStepAction     );} 
+                       m_GiGaEventAction     );} 
       ///
       try   { *this << EA ; } 
       catch ( const GaudiException& Excpt ) 
@@ -317,7 +311,32 @@ StatusCode GiGaSvc::initialize()
       Print("Used Event Action Object is " + 
             GiGaUtil::ObjTypeName( EA ) + "/"+EA->name() );
     }
-  else { Warning("Event Action Object is not required to be loaded") ; } 
+  else { Print("Event Action Object is not required to be loaded") ; } 
+  ///
+  /// try to locate Run Action Object and make it known for GiGa 
+  if( !m_GiGaRunAction.empty() )
+    {
+      IGiGaRunAction* RA   = 0 ;
+      StatusCode sc = runAction  ( m_GiGaRunAction , RA );
+      if( sc.isFailure() ) 
+        { return Error(" Unable to instantiate Run Action Object " + 
+                       m_GiGaRunAction, sc );} 
+      if( 0 == RA        ) 
+        { return Error(" Unable to instantiate Run Action Object " + 
+                       m_GiGaRunAction     );} 
+      ///
+      try   { *this << RA ; } 
+      catch ( const GaudiException& Excpt ) 
+        { return Exception( "runAction" , Excpt ) ; } 
+      catch ( const std::exception& Excpt ) 
+        { return Exception( "runAction" , Excpt ) ; } 
+      catch(...)                            
+        { return Exception( "runAction"         ) ; } 
+      ///
+      Print("Used Run Action Object is " + 
+            GiGaUtil::ObjTypeName( RA ) + "/"+RA->name() );
+    }
+  else { Print("Run Action Object is not required to be loaded") ; } 
   ///
 
   /// instantiate Visualisation Manager
@@ -404,10 +423,6 @@ StatusCode GiGaSvc::createGiGaRunManager()
           " Unable to create G4RunManager"   ) ; 
   ///
   m_GiGaRunManager->set_startUIcommands      ( m_startUIcommands      ) ; 
-  m_GiGaRunManager->set_startOfEvtUIcommands ( m_startOfEvtUIcommands ) ; 
-  m_GiGaRunManager->set_endOfEvtUIcommands   ( m_endOfEvtUIcommands   ) ; 
-  m_GiGaRunManager->set_startOfRunUIcommands ( m_startOfRunUIcommands ) ; 
-  m_GiGaRunManager->set_endOfRunUIcommands   ( m_endOfRunUIcommands   ) ; 
   m_GiGaRunManager->set_endUIcommands        ( m_endUIcommands        ) ; 
   ///
   m_GiGaRunManager->set_UIsessions           ( m_UIsessions           ) ; 
@@ -647,7 +662,7 @@ StatusCode GiGaSvc::eventAction( const std::string& TypeName ,
   StatusCode sc = 
     GiGaUtil::SplitTypeAndName( TypeName , Type , Name );
   if( sc.isFailure() ) 
-    { return Error("eventAction(): Stepping Action Type/Name=" + 
+    { return Error("eventAction(): Event Action Type/Name=" + 
                    TypeName+" is unresolved!",sc);}
   /// create the creator 
   GiGaUtil::EventActionCreator creator( objMgr() , serviceLocator() );
@@ -664,6 +679,41 @@ StatusCode GiGaSvc::eventAction( const std::string& TypeName ,
   ///
   return Error(std::string("eventAction(): could not initialize ") + 
                "IGiGaEventAction* Object "+Type+"/"+Name, sc) ;
+  ///
+};
+
+/// ===========================================================================
+/** instantiate new run action object using abstract factory technique 
+ *  @param TypeName    "Type/Name" of run  action object 
+ *  @param RA           reference to new run action object 
+ *  @return status code 
+ */
+/// ===========================================================================
+StatusCode GiGaSvc::runAction( const std::string& TypeName , 
+                               IGiGaRunAction*& RA       )
+{
+  RA = 0 ; /// reset output value 
+  std::string Type , Name ; 
+  StatusCode sc = 
+    GiGaUtil::SplitTypeAndName( TypeName , Type , Name );
+  if( sc.isFailure() ) 
+    { return Error("runAction(): Run Action Type/Name=" + 
+                   TypeName+" is unresolved!",sc);}
+  /// create the creator 
+  GiGaUtil::RunActionCreator creator( objMgr() , serviceLocator() );
+  /// create the object 
+  RA = creator( Type , Name ) ;
+  if( 0 == RA    ) 
+    { return Error(std::string("runAction(): could not instantiate ") + 
+                   "IGiGaRunAction* Object "+Type+"/"+Name );} 
+  ///
+  RA->addRef(); 
+  if( RA->initialize().isSuccess() ) { return StatusCode::SUCCESS; } 
+  //// 
+  RA->release(); delete RA ; RA = 0 ;  
+  ///
+  return Error(std::string("runAction(): could not initialize ") + 
+               "IGiGaRunAction* Object "+Type+"/"+Name, sc) ;
   ///
 };
 

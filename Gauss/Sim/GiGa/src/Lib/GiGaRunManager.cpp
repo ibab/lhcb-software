@@ -2,6 +2,9 @@
 /// CVS tag $Name: not supported by cvs2svn $ 
 /// ===========================================================================
 /// $Log: not supported by cvs2svn $
+/// Revision 1.6  2001/07/25 17:18:09  ibelyaev
+/// move all conversions from GiGa to GiGaCnv
+///
 /// Revision 1.5  2001/07/23 13:12:12  ibelyaev
 /// the package restructurisation(II)
 ///
@@ -145,10 +148,6 @@ GiGaRunManager::GiGaRunManager( const std::string & Name   ,
   , m_msgSvc       (    0    ) 
   , m_chronoSvc    (    0    ) 
   , m_s            (         ) 
-  , m_sE           (         ) 
-  , m_eE           (         ) 
-  , m_sR           (         ) 
-  , m_eR           (         ) 
   , m_e            (         ) 
 {
   ///
@@ -251,7 +250,6 @@ StatusCode GiGaRunManager::processTheEvent()
   if( G4RunManager::verboseLevel > 0    ) { (G4RunManager::timer)->Start() ; } 
   /// apply commands to UI manager 
   ///
-  g4UImanager() << startOfEvtUIcommands();
   if( G4RunManager::GetCurrentEvent()->GetNumberOfPrimaryVertex() == 0 )
     { log << MSG::WARNING << " Empty event to be processed " << endreq; } 
   else
@@ -261,8 +259,6 @@ StatusCode GiGaRunManager::processTheEvent()
       // G4RunManager::currentEvent->Draw();
       // G4RunManager::AnalyzeEvent( G4RunManager::currentEvent );
     } 
-  /// apply commands to UI manager 
-  g4UImanager() << endOfEvtUIcommands();
   ///  to be changed soon  
   ///  if( G4RunManager::pauseAtEndOfEvent && 0 != g4StateManager() ) 
   ///  { g4StateManager()->Pause("EndOfEvent"); }
@@ -364,8 +360,6 @@ StatusCode  GiGaRunManager::initializeRun()
     { 
       log << MSG::INFO << " Current G4 Run is to be terminated " << endreq; 
       G4RunManager::RunTermination();
-      /// Apply commands to UI manager
-      g4UImanager() << endOfRunUIcommands(); 
     }
   ///
   set_run_Is_Initialized( false );
@@ -395,8 +389,6 @@ StatusCode  GiGaRunManager::initializeRun()
   set_run_Is_Initialized( true );
   ///
   log  << MSG::DEBUG << " Geant4 Run is initialized  successfully " << endreq;
-  /// Apply commands to UI manager
-  g4UImanager() << startOfRunUIcommands(); 
   //
   return StatusCode::SUCCESS;
 };
@@ -495,7 +487,6 @@ StatusCode GiGaRunManager::finalizeRunManager()
   ///
   /// Apply commands to Geant4 UI manager
   /// 
-  g4UImanager() << endOfRunUIcommands() ;
   g4UImanager() << endUIcommands()      ;   
   //
   set_run_Is_Initialized( false ) ; 
@@ -790,35 +781,22 @@ StatusCode  GiGaRunManager::createUIsession()
   MsgStream log ( msgSvc() , name() + ".createUIsessions() " );
   ///
 #ifndef G4UI_USE
-  ///
   log << MSG::INFO 
       << "::createUIsessions():: " 
       << " No Geant4 UI sessions will be created! " << endreq;
-  ///
   return StatusCode::SUCCESS ; 
-  ///
 #endif 
   ///
   if( 0 != m_g4UIsession ) { return StatusCode::FAILURE; } 
-  ///
   if( uis_Is_Started()   ) { return StatusCode::FAILURE; } 
-  ///
   set_uis_Is_Started ( false ) ; 
-  ///
   if( UIsessions().empty() ) { return StatusCode::SUCCESS; } 
-  ///
   {
     Strings::const_iterator ci = UIsessions().begin() ;
     while( UIsessions().end() != ci && 0 == m_g4UIsession )  
       {
         ////
         const std::string session ( *ci++ ); 
-        ///
-        log << MSG::VERBOSE 
-            << " Attempt to create UIsession of Type= " << session 
-            << "\t" << "Argc="    << System::argc()
-            << "\t" << "argv="    << System::argv()  << endreq; 
-        
         log << MSG::VERBOSE 
             << " Attempt to create UIsession of Type= " << session 
             << "\t" << "Argc="    << System::argc()

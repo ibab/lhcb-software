@@ -2,6 +2,9 @@
 /// CVS tag $Name: not supported by cvs2svn $ 
 /// ===========================================================================
 /// $Log: not supported by cvs2svn $
+/// Revision 1.1  2001/07/26 16:09:20  ibelyaev
+/// GiGaRunActions budiness
+///
 /// ===========================================================================
 #ifndef    GIGA_GiGaRunActionFACTORY_H
 #define    GIGA_GiGaRunActionFACTORY_H 1 
@@ -27,15 +30,15 @@ template <class ConcreteRA>
 class GiGaRunActionFactory: public IGiGaRunActionFactory
 {
   ///
- public:
+public:
   /// Default constructor
-  GiGaEventRunFactory() 
-    {
-      // Get the class name using the RTTI.
-      m_raType     = System::typeinfoName( typeid( ConcreteEA ) );
-      m_ident      = m_raType;
-      FactoryTable::instance()->addFactory( this );
-    };
+  GiGaRunActionFactory() 
+  {
+    // Get the class name using the RTTI.
+    m_raType     = System::typeinfoName( typeid( ConcreteRA ) );
+    m_ident      = m_raType;
+    FactoryTable::instance()->addFactory( this );
+  };
   /// Default destructor
   virtual ~GiGaRunActionFactory(){};
   /// from IInterface  

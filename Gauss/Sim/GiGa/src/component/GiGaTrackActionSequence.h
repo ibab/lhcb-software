@@ -1,7 +1,10 @@
 /// ===========================================================================
 /// CVS tag $Name: not supported by cvs2svn $ 
 /// ===========================================================================
-/// $Log: not supported by cvs2svn $ 
+/// $Log: not supported by cvs2svn $
+/// Revision 1.1  2001/07/24 09:08:14  ibelyaev
+/// new component GiGaTrackActionSequence
+/// 
 /// ===========================================================================
 #ifndef COMPONENT_GIGATRACKACTIONSEQUENCE_H 
 #define COMPONENT_GIGATRACKACTIONSEQUENCE_H 1
@@ -82,8 +85,11 @@ private:
   
 private:
   
-  MEMBERS   m_members;
-  ACTIONS   m_actions;
+  MEMBERS   m_members ;
+  ACTIONS   m_actions ;
+  
+  /// boolean flag to inform all members about the tracking manager 
+  bool      m_setMgr ;
   
 };
 

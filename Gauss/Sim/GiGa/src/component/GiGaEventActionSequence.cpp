@@ -1,7 +1,10 @@
 /// ===========================================================================
 /// CVS tag $Name: not supported by cvs2svn $ 
 /// ===========================================================================
-/// $Log: not supported by cvs2svn $ 
+/// $Log: not supported by cvs2svn $
+/// Revision 1.1  2001/07/24 09:48:14  ibelyaev
+/// new component GiGaEventActionSequence
+/// 
 /// ===========================================================================
 /// STD & STL 
 #include<functional> 
@@ -91,6 +94,7 @@ StatusCode GiGaEventActionSequence::initialize()
   StatusCode sc = GiGaEventActionBase::initialize();
   if( sc.isFailure() ) 
     { return Error("Could not initialize the base class!");}
+  if( m_members.empty() ) { Warning("The sequence is empty!"); }
   /// create the creator
   GiGaUtil::EventActionCreator  creator( objMgr() , svcLoc() );
   /// instantiate all members using the creator 
@@ -126,7 +130,10 @@ StatusCode GiGaEventActionSequence::initialize()
         }
       ///
       m_actions.push_back( eventAction );
+      Print("Member '"+Type+"'/'"+Name+"' is added to the sequence");
     }
+  ///  
+  Print("The Action initialized successfully");
   ///
   return StatusCode::SUCCESS;
 };

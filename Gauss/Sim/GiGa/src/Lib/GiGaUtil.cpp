@@ -2,6 +2,9 @@
 /// CVS tag $Name: not supported by cvs2svn $ 
 /// ===========================================================================
 /// $Log: not supported by cvs2svn $
+/// Revision 1.3  2001/07/26 16:09:21  ibelyaev
+/// GiGaRunActions budiness
+///
 /// Revision 1.2  2001/07/25 17:18:09  ibelyaev
 /// move all conversions from GiGa to GiGaCnv
 ///
@@ -227,7 +230,7 @@ GiGaUtil::PhysListCreator::operator() ( const std::string& type ,
 /// ===========================================================================
 IGiGaRunAction* 
 GiGaUtil::RunActionCreator::operator() ( const std::string& type ,
-                                           const std::string& name ) const
+                                         const std::string& name ) const
 { 
   /// locate the factory
   const IFactory* factory = Factory( type );

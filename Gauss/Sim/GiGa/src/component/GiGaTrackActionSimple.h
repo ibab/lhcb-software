@@ -1,7 +1,10 @@
 /// ===========================================================================
 /// CVS tag $Name: not supported by cvs2svn $ 
 /// ===========================================================================
-/// $Log: not supported by cvs2svn $ 
+/// $Log: not supported by cvs2svn $
+/// Revision 1.4  2001/07/23 13:12:29  ibelyaev
+/// the package restructurisation(II)
+/// 
 /// ===========================================================================
 #ifndef       GIGA_GiGaTrackActionSimple_H
 #define       GIGA_GiGaTrackActionSimple_H 1 
@@ -62,9 +65,6 @@ public:
   virtual void PostUserTrackingAction ( const G4Track* ) ;
   ///
 protected:
-  ///
-  inline G4TrackingManager* trackMgr() const 
-  { return G4UserTrackingAction::fpTrackingManager; } 
   ///
   /// Should all tracks to be stored?
   inline bool      storeAll             () const ; 

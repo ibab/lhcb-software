@@ -2,6 +2,9 @@
 /// CVS tag $Name: not supported by cvs2svn $ 
 /// ===========================================================================
 /// $Log: not supported by cvs2svn $
+/// Revision 1.2  2001/07/26 16:09:21  ibelyaev
+/// GiGaRunActions budiness
+///
 /// Revision 1.1  2001/07/25 18:13:39  ibelyaev
 /// add new component GiGaEventActionCommand
 /// 
@@ -99,8 +102,12 @@ void GiGaEventActionCommand::BeginOfEventAction( const G4Event* event )
     { Error("BeginOfEventAction:: G4UImanager* points to NULL!") ; return ; }
   else 
     {
-      COMMANDS::const_iterator iCmd = m_beginCmds.begin() ;
-      while( m_beginCmds.end() != iCmd ) { ui->ApplyCommand( *iCmd++ ); }
+      for( COMMANDS::const_iterator iCmd = m_beginCmds.begin() ;
+           m_beginCmds.end() != iCmd ; ++iCmd ) 
+        { 
+          Print("BeginOfEventAction(): execute '"+(*iCmd)+"'");
+          ui->ApplyCommand( *iCmd); 
+        }
     }
   ///
 };
@@ -120,8 +127,12 @@ void GiGaEventActionCommand::EndOfEventAction( const G4Event* event )
     { Error("EndOfEventAction:: G4UImanager* points to NULL!") ; }
   else
     { 
-      COMMANDS::const_iterator iCmd = m_beginCmds.begin() ;
-      while( m_beginCmds.end() != iCmd ) { ui->ApplyCommand( *iCmd++ ); }
+      for( COMMANDS::const_iterator iCmd = m_endCmds.begin() ;
+           m_endCmds.end() != iCmd ; ++iCmd )
+        { 
+          Print("EndOfEventAction(): execute '"+(*iCmd)+"'");
+          ui->ApplyCommand( *iCmd ); 
+        }
     }  
   ///
 };

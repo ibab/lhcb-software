@@ -1,7 +1,10 @@
 /// ===========================================================================
 /// CVS tag $Name: not supported by cvs2svn $ 
 /// ===========================================================================
-/// $Log: not supported by cvs2svn $ 
+/// $Log: not supported by cvs2svn $
+/// Revision 1.1  2001/07/24 09:08:14  ibelyaev
+/// new component GiGaTrackActionSequence
+/// 
 /// ===========================================================================
 /// STD & STL 
 #include <functional>
@@ -39,6 +42,7 @@ GiGaTrackActionSequence::GiGaTrackActionSequence( const std::string& Name ,
   : GiGaTrackActionBase( Name , Loc ) 
   , m_members ()  ///< default empty vertor!
   , m_actions ()
+  , m_setMgr  ( false ) 
 {  
   declareProperty( "Members" , m_members );
 };
@@ -88,6 +92,7 @@ StatusCode GiGaTrackActionSequence::initialize ()
   StatusCode sc = GiGaTrackActionBase::initialize();
   if( sc.isFailure() ) 
     { return Error("Could not initialize the base class!", sc ); }
+  if( m_members.empty() ) { Warning("The sequence is empty!"); }
   /// create the creator
   GiGaUtil::TrackActionCreator  creator( objMgr() , svcLoc() );
   /// instantiate all members using the creator 
@@ -123,7 +128,10 @@ StatusCode GiGaTrackActionSequence::initialize ()
         }
       ///
       m_actions.push_back( trackAction );
+      Print("Member '"+Type+"'/'"+Name+"' is added to the sequence");
     }
+  ///
+  Print("The Action initialized successfully");
   ///
   return StatusCode::SUCCESS;
 };
@@ -150,7 +158,17 @@ StatusCode GiGaTrackActionSequence::finalize   ()
 /// ===========================================================================
 void GiGaTrackActionSequence::PreUserTrackingAction  ( const G4Track* track )
 {
-  if( 0 == track ) { return ; }
+  /// set the tracking manager for all members 
+  if( ! m_setMgr ) 
+    {
+      G4TrackingManager* mgr = trackMgr();
+      std::for_each( m_actions.begin () , 
+                     m_actions.end   () ,
+                     std::bind2nd( std::mem_fun1(&IGiGaTrackAction::
+                                                 SetTrackingManagerPointer) , 
+                                   mgr ) ) ;
+      m_setMgr = true;
+    }
   /// tracking actions of all members  
   std::for_each( m_actions.begin () , 
                  m_actions.end   () ,
@@ -165,7 +183,6 @@ void GiGaTrackActionSequence::PreUserTrackingAction  ( const G4Track* track )
 /// ===========================================================================
 void GiGaTrackActionSequence::PostUserTrackingAction  ( const G4Track* track )
 {
-  if( 0 == track ) { return ; }
   /// tracking actions of all members  
   std::for_each( m_actions.begin () , 
                  m_actions.end   () ,

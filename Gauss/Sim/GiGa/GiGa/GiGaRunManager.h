@@ -2,6 +2,9 @@
 /// CVS tag $Name: not supported by cvs2svn $ 
 /// ===========================================================================
 /// $Log: not supported by cvs2svn $
+/// Revision 1.8  2001/07/25 17:18:07  ibelyaev
+/// move all conversions from GiGa to GiGaCnv
+///
 /// Revision 1.7  2001/07/23 13:11:42  ibelyaev
 /// the package restructurisation(II)
 ///
@@ -221,14 +224,6 @@ public:
 
   /// UI commands to be executed at start
   inline const Strings&  startUIcommands      () const { return m_s  ; } ;
-  /// UI commands to be executed at start of each Event                   
-  inline const Strings&  startOfEvtUIcommands () const { return m_sE ; } ;
-  /// UI commands to be executed at end   of each Event                   
-  inline const Strings&  endOfEvtUIcommands   () const { return m_eE ; } ;
-  /// UI commands to be executed at start of each Run                     
-  inline const Strings&  startOfRunUIcommands () const { return m_sR ; } ;
-  /// UI commands to be executed at end   of each Run                     
-  inline const Strings&  endOfRunUIcommands   () const { return m_eR ; } ;
   /// UI commands to be executed at end                                   
   inline const Strings&  endUIcommands        () const { return m_e  ; } ;
   /// defined UI sessions:                                                
@@ -266,19 +261,20 @@ public:
   
   /// UI commands to be executed at start                                   
   inline void set_startUIcommands     ( const Strings& c ) { m_s   = c ; } ;
-  /// UI commands to be executed at start of each Event                     
-  inline void set_startOfEvtUIcommands( const Strings& c ) { m_sE  = c ; } ;
-  /// UI commands to be executed at end   of each Event                     
-  inline void set_endOfEvtUIcommands  ( const Strings& c ) { m_eE  = c ; } ;
-  /// UI commands to be executed at start of each Run                       
-  inline void set_startOfRunUIcommands( const Strings& c ) { m_sR  = c ; } ;
-  /// UI commands to be executed at end   of each Run                       
-  inline void set_endOfRunUIcommands  ( const Strings& c ) { m_eR  = c ; } ;
   /// UI commands to be executed at end                                     
   inline void set_endUIcommands       ( const Strings& c ) { m_e   = c ; } ;
 
- private:
-
+private:
+  
+  /// no default constructor 
+  GiGaRunManager();
+  /// no copy constructor 
+  GiGaRunManager( const  GiGaRunManager& );
+  /// no assignment 
+  GiGaRunManager& operator=( const  GiGaRunManager& );
+  
+private:
+  
   inline void set_krn_Is_Initialized ( bool st ) { m_krn_st = st ; }
   inline void set_run_Is_Initialized ( bool st ) { m_run_st = st ; }
   inline void set_evt_Is_Prepared    ( bool st ) { m_pre_st = st ; }
@@ -312,14 +308,10 @@ public:
   std::string                m_name       ; 
   IMessageSvc*               m_msgSvc     ; 
   IChronoStatSvc*            m_chronoSvc  ;
-
+  
   Strings                    m_s          ;
-  Strings                    m_sE         ;
-  Strings                    m_eE         ;
-  Strings                    m_sR         ;
-  Strings                    m_eR         ;
   Strings                    m_e          ;
-
+  
   Strings                    m_UIsessions ;
 
 };

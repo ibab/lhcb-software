@@ -2,6 +2,9 @@
 /// CVS tag $Name: not supported by cvs2svn $ 
 /// ===========================================================================
 /// $Log: not supported by cvs2svn $
+/// Revision 1.3  2001/07/24 09:07:26  ibelyaev
+/// bug fix
+///
 /// Revision 1.2  2001/07/24 07:11:05  ibelyaev
 /// new methods for object deletion in GiGaUtil namespace
 ///
@@ -101,6 +104,7 @@ StatusCode GiGaStepActionSequence::initialize()
   StatusCode sc = GiGaStepActionBase::initialize();
   if( sc.isFailure() ) 
     { return Error("Could not initialize the base class!");}
+  if( m_members.empty() ) { Warning("The sequence is empty!"); }
   /// create the creator
   GiGaUtil::StepActionCreator  creator( objMgr() , svcLoc() );
   /// instantiate all members using the creator 
@@ -136,7 +140,10 @@ StatusCode GiGaStepActionSequence::initialize()
         }
       ///
       m_actions.push_back( stepAction );
+      Print("Member '"+Type+"'/'"+Name+"' is added to the sequence");
     }
+  /// 
+  Print("The Action initialized successfully");
   ///
   return StatusCode::SUCCESS;
 };

@@ -1,7 +1,10 @@
 /// ===========================================================================
 /// CVS tag $Name: not supported by cvs2svn $ 
 /// ===========================================================================
-/// $Log: not supported by cvs2svn $ 
+/// $Log: not supported by cvs2svn $
+/// Revision 1.1  2001/07/26 16:09:22  ibelyaev
+/// GiGaRunActions budiness
+/// 
 /// ===========================================================================
 /// STD & STL 
 #include <algorithm>
@@ -90,6 +93,7 @@ StatusCode GiGaRunActionSequence::initialize  ()
   StatusCode sc = GiGaRunActionBase::initialize();
   if( sc.isFailure() ) 
     { return Error("Could not initialize the base class!");}
+  if( m_members.empty() ) { Warning("The sequence is empty!"); }
   /// create the creator
   GiGaUtil::RunActionCreator  creator( objMgr() , svcLoc() );
   /// instantiate all members using the creator 
@@ -125,7 +129,10 @@ StatusCode GiGaRunActionSequence::initialize  ()
         }
       ///
       m_actions.push_back( runAction );
+      Print("Member '"+Type+"'/'"+Name+"' is added to the sequence");
     }
+  ///
+  Print("The Action initialized successfully");
   ///
   return StatusCode::SUCCESS; 
 };

@@ -1,7 +1,10 @@
 /// ===========================================================================
 /// CVS tag $Name: not supported by cvs2svn $ 
 /// ===========================================================================
-/// $Log: not supported by cvs2svn $ 
+/// $Log: not supported by cvs2svn $
+/// Revision 1.7  2001/07/23 13:11:43  ibelyaev
+/// the package restructurisation(II)
+/// 
 /// ===========================================================================
 #ifndef     GIGA_GiGaTrackActionBase_H
 #define     GIGA_GiGaTrackActionBase_H 1 
@@ -48,6 +51,14 @@ public:
   virtual void PreUserTrackingAction  ( const G4Track* );
   virtual void PostUserTrackingAction ( const G4Track* );
   ///
+protected:
+  
+  /** accessor to Geant4 Tracking Manager 
+   *  @return pointer to Geant4 Tracking Manager 
+   */
+  inline G4TrackingManager* trackMgr() const 
+  { return G4UserTrackingAction::fpTrackingManager; }
+  
 private:
   ///
   GiGaTrackActionBase (); ///< no default constructor 

@@ -2,6 +2,9 @@
 /// CVS tag $Name: not supported by cvs2svn $
 /// ===========================================================================
 /// $Log: not supported by cvs2svn $
+/// Revision 1.5  2001/07/23 13:12:29  ibelyaev
+/// the package restructurisation(II)
+///
 /// Revision 1.4  2001/07/15 20:54:36  ibelyaev
 /// package restructurisation
 /// 
@@ -160,7 +163,9 @@ StatusCode GiGaTrackActionSimple::initialize ()
 	} 
     }
   ///
-  return StatusCode::SUCCESS;
+  Print(" Action initialized successfully");
+  ///
+  return StatusCode::SUCCESS ;
 } ;
 
 /// ===========================================================================

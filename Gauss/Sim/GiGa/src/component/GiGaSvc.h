@@ -2,6 +2,9 @@
 /// CVS tag $Name: not supported by cvs2svn $
 /// ===========================================================================
 /// $Log: not supported by cvs2svn $
+/// Revision 1.4  2001/07/25 17:18:10  ibelyaev
+/// move all conversions from GiGa to GiGaCnv
+///
 /// Revision 1.3  2001/07/15 20:54:35  ibelyaev
 /// package restructurisation
 ///
@@ -39,6 +42,7 @@ class     IGiGaStackAction   ;
 class     IGiGaTrackAction   ;
 class     IGiGaStepAction    ;
 class     IGiGaEventAction   ;
+class     IGiGaRunAction     ;
 
 /**  @class GiGaSvc GiGaSvc.h 
      
@@ -539,6 +543,14 @@ private:
   StatusCode eventAction   ( const std::string& TypeAndName , 
 			     IGiGaEventAction*& EventAction  ) ;
 
+  /** instantiate new run action object using abstract factory technique 
+   *  @param TypeAndName    "Type/Name" of run action object 
+   *  @param runAction     reference to new run action object 
+   *  @return status code 
+   */
+  StatusCode runAction     ( const std::string& TypeAndName , 
+			     IGiGaRunAction*&   RunAction  ) ;
+
  private:
   
   ///
@@ -549,19 +561,16 @@ private:
   std::string     m_objMgrName  ; ///< name of object manager object  
   ///
   Strings m_startUIcommands           ; ///< command list 
-  Strings m_startOfEvtUIcommands      ; ///< command list 
-  Strings m_endOfEvtUIcommands        ; ///< command list 
-  Strings m_startOfRunUIcommands      ; ///< command list 
-  Strings m_endOfRunUIcommands        ; ///< command list 
   Strings m_endUIcommands             ; ///< command list
   ///
   Strings m_UIsessions                ; ///< list of sessions 
   ///
   std::string m_GiGaPhysList    ; ///< type/name of PhysicsList Object
-  std::string m_GiGaStackAction ; ///< type/name of  Stacking Action Object 
+  std::string m_GiGaStackAction ; ///< type/name of Stacking Action Object 
   std::string m_GiGaTrackAction ; ///< type/name of Tracking Action Object 
   std::string m_GiGaStepAction  ; ///< type/name of Stepping Action Object 
   std::string m_GiGaEventAction ; ///< type/name of Event    Action Object 
+  std::string m_GiGaRunAction   ; ///< type/name of Run      Action Object 
   ///
   bool        m_UseVisManager ;  ///< flag to use vis manager 
   ///

@@ -2,6 +2,9 @@
 /// CVS tag $Name: not supported by cvs2svn $ 
 /// ===========================================================================
 /// $Log: not supported by cvs2svn $
+/// Revision 1.1  2001/07/26 16:09:22  ibelyaev
+/// GiGaRunActions budiness
+///
 /// 
 /// ===========================================================================
 /// GaudiKernel
@@ -97,8 +100,12 @@ void GiGaRunActionCommand::BeginOfRunAction( const G4Run* run )
     { Error("BeginOfRunAction:: G4UImanager* points to NULL!") ; return ; }
   else 
     {
-      COMMANDS::const_iterator iCmd = m_beginCmds.begin() ;
-      while( m_beginCmds.end() != iCmd ) { ui->ApplyCommand( *iCmd++ ); }
+      for( COMMANDS::const_iterator iCmd = m_beginCmds.begin() ;
+           m_beginCmds.end() != iCmd ; ++iCmd ) 
+        { 
+          Print("BeginOfRunAction(): execute '"+(*iCmd)+"'");
+          ui->ApplyCommand( *iCmd ); 
+        }
     }
   ///
 };
@@ -118,8 +125,12 @@ void GiGaRunActionCommand::EndOfRunAction( const G4Run* run )
     { Error("EndOfRunAction:: G4UImanager* points to NULL!") ; }
   else
     { 
-      COMMANDS::const_iterator iCmd = m_beginCmds.begin() ;
-      while( m_beginCmds.end() != iCmd ) { ui->ApplyCommand( *iCmd++ ); }
+      for( COMMANDS::const_iterator iCmd = m_endCmds.begin() ;
+           m_endCmds.end() != iCmd ; ++iCmd ) 
+        { 
+          Print("EndOfRunAction(): execute '"+(*iCmd)+"'");
+          ui->ApplyCommand( *iCmd ); 
+        }
     }  
   ///
 };

@@ -2,6 +2,9 @@
 /// CVS tag $Name: not supported by cvs2svn $ 
 /// ===========================================================================
 /// $Log: not supported by cvs2svn $
+/// Revision 1.6  2001/07/26 16:09:23  ibelyaev
+/// GiGaRunActions budiness
+///
 /// Revision 1.5  2001/07/25 18:13:39  ibelyaev
 /// add new component GiGaEventActionCommand
 ///
@@ -85,15 +88,15 @@ void GiGa_load()
   DLL_DECL_STEPFACTORY  (    GiGaStepActionEmpty     );
   DLL_DECL_STEPFACTORY  (    GiGaStepActionDraw      );
   DLL_DECL_STEPFACTORY  (    GiGaStepActionSequence  );
+  /// run action
+  DLL_DECL_RUNFACTORY   (    GiGaRunActionSequence   );
+  DLL_DECL_RUNFACTORY   (    GiGaRunActionCommand    );
   /// event action 
   DLL_DECL_EVENTFACTORY (    GiGaEventActionEmpty    );
   DLL_DECL_EVENTFACTORY (    GiGaEventActionDraw     );
   DLL_DECL_EVENTFACTORY (    GiGaEventActionSequence );
   DLL_DECL_EVENTFACTORY (    GiGaEventActionCommand  );
-  /// run action
-  DLL_DECL_RUNFACTORY   (    GiGaRunActionSequence   )
-  DLL_DECL_RUNFACTORY   (    GiGaRunActionCommand    )
-}; 
+};
 
 /// ===========================================================================
 /// ===========================================================================
