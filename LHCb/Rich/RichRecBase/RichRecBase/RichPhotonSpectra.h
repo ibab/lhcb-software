@@ -1,4 +1,4 @@
-// $Id: RichPhotonSpectra.h,v 1.6 2004-04-17 09:28:04 jonesc Exp $
+// $Id: RichPhotonSpectra.h,v 1.7 2004-07-12 14:28:40 jonrob Exp $
 #ifndef RICHRECBASE_RICHPHOTONSPECTRA_H
 #define RICHRECBASE_RICHPHOTONSPECTRA_H 1
 
@@ -14,53 +14,54 @@
 /** @class RichPhotonSpectra RichPhotonSpectra.h RichRecBase/RichPhotonSpectra.h
  *
  *  A utility class describing a photon energy spectra
- * 
+ *
  *  @author Chris Jones
  *  @date   2003-07-12
  */
 
+template <class TYPE>
 class RichPhotonSpectra {
 
 public:
 
-  typedef std::vector<double>      PhotonData;
+  typedef std::vector<TYPE>        PhotonData;
   typedef std::vector<PhotonData>  HypoPhotonData;
 
 public:
 
   /// Standard constructor
   RichPhotonSpectra( const unsigned int enBins = 5,
-                     const double minEn        = 0,
-                     const double maxEn        = 5 )
+                     const TYPE minEn          = 0,
+                     const TYPE maxEn          = 5 )
     : m_enBins   ( enBins ),
       m_minEn    ( minEn  ),
       m_maxEn    ( maxEn  ),
       m_binSize  ( 0 != enBins ? (maxEn-minEn)/enBins : 0 ),
       m_photdata ( Rich::NParticleTypes, PhotonData(enBins) ) { }
-  
+
   ~RichPhotonSpectra( ) {}; ///< Destructor
 
   unsigned int energyBins() const;    ///< Returns the number of energy bins
 
   void setEnergyBins( const unsigned int bins ); ///< Set the number of energy bins
 
-  double minEnergy() const;  ///< Returns the minimum photon energy
+  TYPE minEnergy() const;  ///< Returns the minimum photon energy
 
-  void setMinEnergy( const double en ); ///< Sets the minimum photon energy
+  void setMinEnergy( const TYPE en ); ///< Sets the minimum photon energy
 
-  double maxEnergy() const;  ///< Returns the maximum photon energy
+  TYPE maxEnergy() const;  ///< Returns the maximum photon energy
 
-  void setMaxEnergy( const double en ); ///< Sets the maximum photon energy
+  void setMaxEnergy( const TYPE en ); ///< Sets the maximum photon energy
 
-  double binSize() const;    ///< Returns the energy bin size
+  TYPE binSize() const;    ///< Returns the energy bin size
 
-  void setBinSize( const double size ); ///< Set the energy bin size
+  void setBinSize( const TYPE size ); ///< Set the energy bin size
 
-  double binEnergyLowerEdge( const unsigned int bin ) const;   ///< The lower edge of the energy bin
+  TYPE binEnergyLowerEdge( const unsigned int bin ) const;   ///< The lower edge of the energy bin
 
-  double binEnergyUpperEdge( const unsigned int bin ) const;   ///< The upper edge of the energy bin
+  TYPE binEnergyUpperEdge( const unsigned int bin ) const;   ///< The upper edge of the energy bin
 
-  double binEnergy( const unsigned int bin ) const;   ///< The average bin energy
+  TYPE binEnergy( const unsigned int bin ) const;   ///< The average bin energy
 
   /// Returns the energy distribution for a given mass hypothesis
   RichPhotonSpectra::PhotonData & energyDist( const Rich::ParticleIDType id );
@@ -75,7 +76,7 @@ public:
   const RichPhotonSpectra::HypoPhotonData & hypoData( ) const;
 
   /// Returns the integral of the distribution
-  double integral( const Rich::ParticleIDType id ) const;
+  TYPE integral( const Rich::ParticleIDType id ) const;
 
   /// multiply by another distribution
   bool multiply(  const Rich::ParticleIDType id,
@@ -85,113 +86,131 @@ public:
   void reset();
 
   /// Set the energy range
-  void setEnergyRange( const double min, const double max );
+  void setEnergyRange( const TYPE min, const TYPE max );
 
 private: // data
 
-  int m_enBins;     ///< number of energy bins
-  double m_minEn;   ///< minimum energy
-  double m_maxEn;   ///< maximum energy
-  double m_binSize; ///< bin size
-
-  HypoPhotonData m_photdata;
+  int m_enBins;              ///< number of energy bins
+  TYPE m_minEn;            ///< minimum energy
+  TYPE m_maxEn;            ///< maximum energy
+  TYPE m_binSize;          ///< energy bin size
+  HypoPhotonData m_photdata; ///< The data container
 
 };
 
-inline unsigned int RichPhotonSpectra::energyBins() const
+template <class TYPE>
+inline unsigned int RichPhotonSpectra<TYPE>::energyBins() const
 {
   return m_enBins;
 }
 
-inline void RichPhotonSpectra::setEnergyBins( const unsigned int bins ) 
+template <class TYPE>
+inline void RichPhotonSpectra<TYPE>::setEnergyBins( const unsigned int bins )
 {
   m_enBins = bins;
-} 
+}
 
-inline double RichPhotonSpectra::minEnergy() const
+template <class TYPE>
+inline TYPE RichPhotonSpectra<TYPE>::minEnergy() const
 {
   return m_minEn;
 }
 
-inline void RichPhotonSpectra::setMinEnergy( const double en )
+template <class TYPE>
+inline void RichPhotonSpectra<TYPE>::setMinEnergy( const TYPE en )
 {
   m_minEn = en;
 }
 
-inline double RichPhotonSpectra::maxEnergy() const
+template <class TYPE>
+inline TYPE RichPhotonSpectra<TYPE>::maxEnergy() const
 {
   return m_maxEn;
 }
 
-inline void RichPhotonSpectra::setMaxEnergy( const double en )
+template <class TYPE>
+inline void RichPhotonSpectra<TYPE>::setMaxEnergy( const TYPE en )
 {
   m_maxEn = en;
 }
 
-inline double RichPhotonSpectra::binSize() const
+template <class TYPE>
+inline TYPE RichPhotonSpectra<TYPE>::binSize() const
 {
   return m_binSize;
 }
 
-inline void RichPhotonSpectra::setBinSize( const double size ) 
+template <class TYPE>
+inline void RichPhotonSpectra<TYPE>::setBinSize( const TYPE size )
 {
   m_binSize = size;
 }
 
-inline double RichPhotonSpectra::binEnergyLowerEdge( const unsigned int bin ) const
+template <class TYPE>
+inline TYPE RichPhotonSpectra<TYPE>::binEnergyLowerEdge( const unsigned int bin ) const
 {
-  return ( minEnergy() + static_cast<double>(bin)*binSize() );
+  return ( minEnergy() + static_cast<TYPE>(bin)*binSize() );
 }
 
-inline double RichPhotonSpectra::binEnergyUpperEdge( const unsigned int bin ) const
+template <class TYPE>
+inline TYPE RichPhotonSpectra<TYPE>::binEnergyUpperEdge( const unsigned int bin ) const
 {
-  return ( minEnergy() + static_cast<double>(1+bin)*binSize() );
+  return ( minEnergy() + static_cast<TYPE>(1+bin)*binSize() );
 }
 
-inline double RichPhotonSpectra::binEnergy( const unsigned int bin ) const
+template <class TYPE>
+inline TYPE RichPhotonSpectra<TYPE>::binEnergy( const unsigned int bin ) const
 {
-  return ( minEnergy() + static_cast<double>(0.5+bin)*binSize() );
+  return ( minEnergy() + static_cast<TYPE>(0.5+bin)*binSize() );
 }
 
-inline void RichPhotonSpectra::setEnergyRange( const double min, const double max )
+template <class TYPE>
+inline void RichPhotonSpectra<TYPE>::setEnergyRange( const TYPE min, const TYPE max )
 {
   m_minEn = min;
   m_maxEn = max;
 }
 
-inline RichPhotonSpectra::PhotonData &
-RichPhotonSpectra::energyDist( const Rich::ParticleIDType id )
+template <class TYPE>
+inline typename RichPhotonSpectra<TYPE>::PhotonData &
+RichPhotonSpectra<TYPE>::energyDist( const Rich::ParticleIDType id )
 {
   return m_photdata[id];
 }
 
-inline const RichPhotonSpectra::PhotonData &
-RichPhotonSpectra::energyDist( const Rich::ParticleIDType id ) const
+template <class TYPE>
+inline const typename RichPhotonSpectra<TYPE>::PhotonData &
+RichPhotonSpectra<TYPE>::energyDist( const Rich::ParticleIDType id ) const
 {
   return m_photdata[id];
 }
 
-inline RichPhotonSpectra::HypoPhotonData & RichPhotonSpectra::hypoData()
+template <class TYPE>
+inline typename RichPhotonSpectra<TYPE>::HypoPhotonData & 
+RichPhotonSpectra<TYPE>::hypoData()
 {
   return m_photdata;
 }
 
-inline const RichPhotonSpectra::HypoPhotonData & 
-RichPhotonSpectra::hypoData() const
+template <class TYPE>
+inline const typename RichPhotonSpectra<TYPE>::HypoPhotonData &
+RichPhotonSpectra<TYPE>::hypoData() const
 {
   return m_photdata;
 }
 
-inline void RichPhotonSpectra::reset() 
+template <class TYPE>
+inline void RichPhotonSpectra<TYPE>::reset()
 {
   // Nothing here yet....
 }
 
 // Methods for GOD
 
-/// Implement StreamBuffer << method for RichPhotonSpectra
+/// Implement StreamBuffer << method for RichPhotonSpectra<TYPE>
+template <class TYPE>
 inline StreamBuffer& operator << ( StreamBuffer& s,
-                                   const RichPhotonSpectra& spectra )
+                                   const RichPhotonSpectra<TYPE>& spectra )
 {
   s << spectra.energyBins()
     << spectra.minEnergy()
@@ -201,12 +220,13 @@ inline StreamBuffer& operator << ( StreamBuffer& s,
   return s;
 }
 
-/// Implement StreamBuffer >> method for RichPhotonSpectra
+/// Implement StreamBuffer >> method for RichPhotonSpectra<TYPE>
+template <class TYPE>
 inline StreamBuffer& operator >> ( StreamBuffer& s,
-                                   RichPhotonSpectra& spectra )
+                                   RichPhotonSpectra<TYPE>& spectra )
 {
   unsigned int i;
-  double d;
+  TYPE d;
   s >> i; spectra.setEnergyBins(i);
   s >> d; spectra.setMinEnergy(d);
   s >> d; spectra.setMaxEnergy(d);
@@ -215,9 +235,10 @@ inline StreamBuffer& operator >> ( StreamBuffer& s,
   return s;
 }
 
-/// Implement ostream << method for RichPhotonSpectra
+/// Implement ostream << method for RichPhotonSpectra<TYPE>
+template <class TYPE>
 inline std::ostream& operator << ( std::ostream& s,
-                                   const RichPhotonSpectra& spectra )
+                                   const RichPhotonSpectra<TYPE>& spectra )
 {
   s << "{ " << std::endl
     << " energy bins:\t" << spectra.energyBins() << std::endl

@@ -1,0 +1,143 @@
+<!-- **************************************************************************
+  * $Id: RichRecRing.xml,v 1.1 2004-07-12 14:28:41 jonrob Exp $
+  *****************************************************************************
+  * XML-description of RichRecRing class                                      *
+  * author: Chris Jones   Christopher.Rob.Jones@cern.ch                       *
+  * date:   2004-06-23                                                        *
+  ************************************************************************* -->
+
+
+<class 
+        author   = "Chris Jones    Christopher.Rob.Jones@cern.ch" 
+        desc     = "A Reconstructed Cherenkov Ring" 
+        id       = "12426" 
+        location = "Rec/Rich/RecoEvent/Rings" 
+        name     = "RichRecRing" >
+
+        <base name="KeyedObject&lt;long&gt;"/>
+        &KeyedObject;
+            
+        <import name="Kernel/RichDetectorType"/>
+        <import name="RichKernel/RichParticleIDType"/>
+        <import name="Kernel/RichSide"/>
+        <import ignore="TRUE" name="Rich"/>
+        <import ignore="TRUE" name="DetectorType"/>
+        <import ignore="TRUE" name="Side"/>
+        <import ignore="TRUE" name="ParticleIDType"/>
+
+        <location name="SegmentHypoRings" place="Rec/Rich/RecoEvent/SegmentHypoRings"/>
+        <location name="MarkovRings"      place="Rec/Rich/Markov/Rings"/>
+
+	<typedef 
+		desc   = "type for internal storage for floating point data" 
+		access = "PUBLIC" 
+		def    = "FloatType" 
+		type   = "float"
+	/>
+
+        <method 
+                const = "FALSE" 
+                desc  = "Set the RICH detector identifier. NB: Using custom method until G.O.D. supports specific automatically generated return values." 
+                name  = "setRich" 
+                type  = "void" >
+                <arg const="TRUE" inout="BYVALUE" name="rich" type="Rich::DetectorType"/>
+                <code>
+                        m_historyCode &amp;= ~richMask;
+                        m_historyCode |= (( static_cast&lt;unsigned&gt;(rich) &lt;&lt; richBits ) &amp; richMask );
+                </code>
+        </method>
+            
+        <method 
+                const = "TRUE" 
+                desc  = "Get the RICH detector identifier. NB: Using custom method until G.O.D. supports specific automatically generated return values." 
+                name  = "rich" 
+                type  = "Rich::DetectorType" >
+                <code>
+                        return static_cast&lt;Rich::DetectorType&gt;((m_historyCode &amp; richMask) &gt;&gt; richBits);
+                </code>
+        </method>
+            
+        <method 
+                const = "FALSE" 
+                desc  = "Set the RICH detector identifier. NB: Using custom method until G.O.D. supports specific automatically generated return values." 
+                name  = "setPanel" 
+                type  = "void" >
+                <arg const="TRUE" inout="BYVALUE" name="panel" type="Rich::Side"/>
+                <code>
+                        m_historyCode &amp;= ~panelMask;
+                        m_historyCode |= (( static_cast&lt;unsigned&gt;(panel) &lt;&lt; panelBits ) &amp; panelMask );
+                </code>
+        </method>
+            
+        <method 
+                const = "TRUE" 
+                desc  = "Get the RICH detector identifier. NB: Using custom method until G.O.D. supports specific automatically generated return values." 
+                name  = "panel" 
+                type  = "Rich::Side" >
+                <code>
+                        return static_cast&lt;Rich::Side&gt;((m_historyCode &amp; panelMask) &gt;&gt; panelBits);
+                </code>
+        </method>
+
+        <attribute 
+                desc = "Reconstructed centre point on HPD panel (global coordinates)" 
+                name = "centrePointGlobal" 
+                type = "HepPoint3D"
+                init = "0,0,0"
+        />
+        
+        <attribute 
+                desc = "Reconstructed centre point on HPD panel (local coordinates)"  
+                name = "centrePointLocal" 
+                type = "HepPoint3D"
+                init = "0,0,0"
+        />
+            
+        <attribute 
+                desc = "The radius of the reconstructed ring, in radians" 
+                init = "0" 
+                name = "radius" 
+                type = "RichRecRing::FloatType"
+        />
+            
+        <attribute 
+                desc = "Assumed mass hypothsis for this ring" 
+                init = "Rich::Unknown" 
+                name = "massHypo" 
+                type = "Rich::ParticleIDType"
+        />
+            
+        <attribute 
+                desc = "A collection of points in global coordinates on this ring as projected on the HPD panel" 
+                name = "ringPoints" 
+                type = "std::vector&lt;HepPoint3D&gt;"
+        />
+            
+        <attribute 
+                desc = "A collection of points in local coordinates on this ring as projected on the HPD panel" 
+                name = "ringPointsLocal" 
+                type = "std::vector&lt;HepPoint3D&gt;"
+        />
+
+        <attribute 
+                desc = "Bit packed field containing history information" 
+                name = "historyCode" 
+                type = "bitfield" >
+                <bitfield desc="The Rich detector. Either Rich::Rich1 or Rich::Rich2"                                    getMeth="FALSE" length="1" name="rich"  setMeth="FALSE" />
+                <bitfield desc="The Rich panel. For Rich1(Rich2) either Rich::up(Rich::left) or Rich::down(Rich::right)" getMeth="FALSE" length="1" name="panel" setMeth="FALSE" />
+        </attribute>
+
+        <relation 
+                desc = "RichRecSegment to wich this ring is associated" 
+                name = "richRecSegment" 
+                type = "RichRecSegment"
+        />
+            
+        <relation 
+                desc         = "The RichRecPixels associated to this ring" 
+                multiplicity = "N" 
+                name         = "richRecPixels" 
+                type         = "RichRecPixel"
+        />
+
+</class>

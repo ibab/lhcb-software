@@ -1,0 +1,182 @@
+<!-- **************************************************************************
+  * $Id: RichRecPixel.xml,v 1.1 2004-07-12 14:28:41 jonrob Exp $
+  *****************************************************************************
+  * XML-description of RichRecPixel class                                     *
+  * author: Chris Jones   Christopher.Rob.Jones@cern.ch                       *
+  * date:   2004-06-23                                                        *
+  ************************************************************************* -->
+
+
+<class 
+        name             = "RichRecPixel" 
+        author           = "Chris Jones   (Christopher.Rob.Jones@cern.ch)" 
+        desc             = "Rich reconstruction working pixel object" 
+        id               = "12422" 
+        keyedContTypeDef = "TRUE" 
+        location         = "Rec/Rich/RecoEvent/Pixels" 
+        stdVectorTypeDef = "TRUE" >
+
+        <base name="KeyedObject&lt;int&gt;"/>
+        &KeyedObject;
+            
+        <import name="RichRecBase/RichRecPixelParentType"/>
+        <import name="RichKernel/RichDetectorType"/>
+ <!--       <import name="Event/RichRecTrack"/> -->
+
+        <import ignore="TRUE" name="Rich"/>
+        <import ignore="TRUE" name="RecPixel"/>
+        <import ignore="TRUE" name="ParentType"/>
+        <import ignore="TRUE" name="DetectorType"/>
+        <import name="Kernel/RichSmartID"/>
+            
+	<typedef 
+		desc   = "type for internal storage for floating point data" 
+		access = "PUBLIC" 
+		def    = "FloatType" 
+		type   = "float"
+	/>
+
+        <constructor 
+                desc     = "Constructor with arguments" 
+                initList = "m_smartID(smartID), m_globalPosition(gPos), m_localPosition(lPos), m_currentBackground(0), m_parentType(Rich::RecPixel::Unknown)">
+                <arg  name="smartID" type="RichSmartID" />
+                <arg  name="gPos"    type="HepPoint3D"  />
+                <arg  name="lPos"    type="HepPoint3D"  />
+                <code/>
+        </constructor>
+            
+        <method 
+                const = "TRUE" 
+                desc  = "Returns the RICH Detector for this pixel" 
+                name  = "detector" 
+                type  = "Rich::DetectorType">
+                <code>
+                        return m_smartID.rich();
+                </code>
+        </method>
+            
+        <method 
+                const = "TRUE" 
+                desc  = "Returns unique RichSmartID identifier for the HPD this pixel is in" 
+                name  = "pd" 
+                type  = "RichSmartID" >
+                <code>
+                        return m_smartID.pdID();
+                </code>
+        </method>
+            
+        <method 
+                const = "TRUE" 
+                desc  = "Returns unique RichSmartID identifier for the HPD panel this pixel is in" 
+                name  = "panel" 
+                type  = "RichSmartID" >
+                <code>
+                        return m_smartID.panelID();
+                </code>
+        </method>
+            
+        <attribute 
+                desc = "RichSmartID" 
+                init = "0" 
+                name = "smartID" 
+                type = "RichSmartID"
+        />
+            
+        <attribute 
+                desc = "Position in global coordinates" 
+                name = "globalPosition" 
+                init = "0,0,0" 
+                type = "HepPoint3D"
+        />
+            
+        <attribute 
+                desc = "Position in local coordinates" 
+                init = "0,0,0" 
+                name = "localPosition" 
+                type = "HepPoint3D"
+        />
+            
+        <attribute 
+                desc = "Current value for a working estimate of the background in this pixel" 
+                init = "0" 
+                name = "currentBackground" 
+                type = "RichRecPixel::FloatType"
+        />
+            
+        <attribute 
+                desc = "Enumeration to Parent type" 
+                init = "Rich::RecPixel::Unknown" 
+                name = "parentType" 
+                type = "Rich::RecPixel::ParentType"
+        />
+            
+        <relation 
+                desc = "Parent Object this pixel was produced from" 
+                name = "parentPixel" 
+                type = "ContainedObject"
+        />
+            
+        <typedef 
+                access = "PUBLIC" 
+                def    = "Tracks" 
+                desc   = "Container type for RichRecTracks" 
+                type   = "std::vector&lt;RichRecTrack*&gt;"
+        />
+            
+        <attribute 
+                access = "PRIVATE" 
+                desc   = "Associated RichRecTracks with which this pixel has RichRecPhoton candidates" 
+                name   = "richRecTracks" serialize="FALSE" 
+                type   = "Tracks"
+        />
+                
+        <method 
+                desc   = "Add to associated RichRecTracks" 
+                inline = "TRUE" 
+                name   = "addToRichRecTracks" >
+                <arg const="FALSE" name="track" type="RichRecTrack*"/>
+                <code>
+                        m_richRecTracks.push_back(track);
+                </code>
+        </method>
+            
+        <typedef 
+                access = "PUBLIC" 
+                def    = "Photons" 
+                desc   = "Container type for RichRecPhotons" 
+                type   = "std::vector&lt;RichRecPhoton*&gt;"
+        />
+            
+        <attribute 
+                access    = "PRIVATE" 
+                desc      = "Associated RichRecPhotons" 
+                name      = "richRecPhotons" 
+                serialize = "FALSE" 
+                type      = "Photons"
+        />
+            
+        <method 
+                desc      = "Add to associated RichRecPhotons" 
+                inline    = "TRUE" 
+                name      = "addToRichRecPhotons" >
+                <arg const="FALSE" name="photon" type="RichRecPhoton*"/>
+                <code>
+                        m_richRecPhotons.push_back(photon);
+                </code>
+        </method>
+
+        <relation 
+                desc         = "SmartRefVector of RichRecTracks for which this pixel has valid photon associations" 
+                multiplicity = "N" 
+                name         = "richRecTracksSmartRefs" 
+                type         = "RichRecTrack"
+        />
+            
+        <relation 
+                desc         = "SmartRefVector to associated RichRecPhotons"
+                multiplicity = "N" 
+                name         = "richRecPhotonsSmartRefs" 
+                type         = "RichRecPhoton"
+        />
+    
+</class>

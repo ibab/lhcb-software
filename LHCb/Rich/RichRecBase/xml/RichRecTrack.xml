@@ -1,0 +1,391 @@
+<!-- **************************************************************************
+  * $Id: RichRecTrack.xml,v 1.1 2004-07-12 14:28:41 jonrob Exp $
+  *****************************************************************************
+  * XML-description of RichrecTrack class                                     *
+  * author: Chris Jones   Christopher.Rob.Jones@cern.ch                       *
+  * date:   2004-06-23                                                        *
+  ************************************************************************* -->
+
+<class 
+	name             = "RichRecTrack" 
+	author           = "Chris Jones   (Christopher.Rob.Jones@cern.ch)" 
+	desc             = "Rich reconstruction track object" 
+	location         = "Rec/Rich/RecoEvent/Tracks" 
+	id               = "12421" 
+	keyedContTypeDef = "TRUE" 
+	stdVectorTypeDef = "TRUE"  >
+        
+    	<base name="KeyedObject&lt;int&gt;"/>
+        &KeyedObject;
+	<import name="RichKernel/RichParticleIDType"/>
+	<import name="RichKernel/RichHypoData"/>
+	<import name="RichRecBase/RichTrackID"/>
+	<import name="Event/RichRecSegment"/>
+	<import name="Event/RichRecPixel"/>
+	<import name="Event/RichRecPhoton"/>
+
+	<import ignore="TRUE" name="Rich"/>
+        <import ignore="TRUE" name="ParticleIDType"/>
+            
+        <typedef 
+		desc   = "type for internal storage for floating point data" 
+		access = "PUBLIC" 
+		def    = "FloatType" 
+		type   = "float"
+	/>
+
+	<method 
+		name  = "setNEmittedPhotons"
+		const = "FALSE" 
+		desc  = "Set the number of emitted photons for a given particle type"  >
+                <arg const="TRUE" inout="BYVALUE" name="type"    type="Rich::ParticleIDType" />
+                <arg const="TRUE" inout="BYVALUE" name="photons" type="RichRecTrack::FloatType"  />
+                <code>
+			m_nEmittedPhotons.setData(type,photons);
+		</code>
+	</method>
+
+        <method 
+		name  = "setNDetectablePhotons"
+		const = "FALSE" 
+		desc  = "Set the number of detectable photons for a given particle type" >
+                <arg const="TRUE" inout="BYVALUE" name="type"    type="Rich::ParticleIDType" />
+                <arg const="TRUE" inout="BYVALUE" name="photons" type="RichRecTrack::FloatType" />
+                <code>
+			m_nDetectablePhotons.setData(type,photons);
+		</code>
+        </method>
+        
+	<method 
+		name  = "setNSignalPhotons"
+		const = "FALSE" 
+		desc  = "Set the number of signal photons for a given particle type" >
+                <arg const="TRUE" inout="BYVALUE" name="type"    type="Rich::ParticleIDType" />
+                <arg const="TRUE" inout="BYVALUE" name="photons" type="RichRecTrack::FloatType" />
+                <code>
+			m_nSignalPhotons.setData(type,photons);
+		</code>
+	</method>
+
+	<method 
+		name  = "setNObservableSignalPhotons"
+		const = "FALSE" 
+		desc  = "Set the number of observable signal photons for a given particle type" >
+                <arg const="TRUE" inout="BYVALUE" name="type" type="Rich::ParticleIDType"/>
+                <arg const="TRUE" inout="BYVALUE" name="photons" type="RichRecTrack::FloatType" />
+                <code>
+			m_nObservableSignalPhotons.setData(type,photons);
+		</code>
+        </method>
+         
+	<method 
+		name  = "setNScatteredPhotons"
+		const = "FALSE" 
+		desc  = "Set the number of scattered photons for a given particle type" >
+                <arg const="TRUE" inout="BYVALUE" name="type"    type="Rich::ParticleIDType" />
+                <arg const="TRUE" inout="BYVALUE" name="photons" type="RichRecTrack::FloatType"  />
+                <code>
+			m_nScatteredPhotons.setData(type,photons);
+		</code>
+	</method>
+
+	<method 
+	 	name  = "setNObservableScatteredPhotons"
+		const = "FALSE" 
+		desc  = "Set the number of observable scattered photons for a given particle type">
+                <arg const="TRUE" inout="BYVALUE" name="type"    type="Rich::ParticleIDType" />
+                <arg const="TRUE" inout="BYVALUE" name="photons" type="RichRecTrack::FloatType"  />
+                <code>
+			m_nObservableScatteredPhotons.setData(type,photons);
+		</code>
+	</method>
+        
+    	<method 
+		name  = "nEmittedPhotons" 
+		type  = "RichRecTrack::FloatType"
+		const = "TRUE" 
+		desc  = "Returns the number of emitted photons for a given particle type" >
+                <arg const="TRUE" inout="BYVALUE" name="type" type="Rich::ParticleIDType"    />
+                <code>
+			return m_nEmittedPhotons[type];
+		</code>
+        </method>
+        
+	<method 
+		name  = "nDetectablePhotons" 
+		type  = "RichRecTrack::FloatType"
+		const = "TRUE" 
+		desc  = "Returns the number of detectable photons for a given particle type" >
+                <arg const="TRUE" inout="BYVALUE" name="type" type="Rich::ParticleIDType"    />
+                <code>
+			return m_nDetectablePhotons[type];
+		</code>
+	</method>
+            
+	<method 
+		name  = "nSignalPhotons" 
+		type  = "RichRecTrack::FloatType"
+		const = "TRUE" 
+		desc  = "Returns the number of signal photons for a given particle type" >
+                <arg const="TRUE" inout="BYVALUE" name="type" type="Rich::ParticleIDType" />
+                <code>
+			return m_nSignalPhotons[type];
+		</code>
+ 	</method>
+            
+	<method 
+	 	name  = "nObservableSignalPhotons" 
+		type  = "RichRecTrack::FloatType"
+		const = "TRUE" 
+		desc  = "Returns the number of observable signal photons for a given particle type" >
+                <arg const="TRUE" inout="BYVALUE" name="type" type="Rich::ParticleIDType"/>
+                <code>
+			return m_nObservableSignalPhotons[type];
+		</code>
+        </method>
+        
+	<method 
+		name  = "nScatteredPhotons" 
+		type  = "RichRecTrack::FloatType"
+		const = "TRUE" 
+		desc  = "Returns the number of scattered photons for a given particle type" >
+                <arg const="TRUE" inout="BYVALUE" name="type" type="Rich::ParticleIDType"/>
+                <code>
+			return m_nScatteredPhotons[type];
+		</code>
+        </method>
+            
+	<method 
+		name  = "nObservableScatteredPhotons" 
+		type  = "RichRecTrack::FloatType"
+		const = "TRUE" 
+		desc  = "Returns the number of observable scattered photons for a given particle type">
+                <arg const="TRUE" inout="BYVALUE" name="type" type="Rich::ParticleIDType" />
+                <code>
+			return m_nObservableScatteredPhotons[type];
+		</code>
+        </method>
+            
+	<method 
+ 		name  = "nTotalObservablePhotons" 
+		type  = "RichRecTrack::FloatType"
+		const = "TRUE" 
+		desc  = "Returns the number of photons for a given particle type" >
+                <arg const="TRUE" inout="BYVALUE" name="type" type="Rich::ParticleIDType"/>
+                <code>
+			return m_nSignalPhotons[type] + m_nScatteredPhotons[type];
+		</code>
+        </method>
+            
+	<method 
+		name = "reset" 
+		type = "void"
+		desc = "Reset information to force recalculation" 
+	/>
+        
+    	<attribute 
+		name        = "vertexMomentum" 
+		type        = "RichRecTrack::FloatType"
+		array       = "FALSE" 
+		compression = "FALSE" 
+		desc        = "Reconstructed momentum at track production vertex" 
+		init        = "0" 
+	/>
+        
+    	<attribute 
+		name        = "charge" 
+		type        = "RichRecTrack::FloatType"
+		array       = "FALSE" 
+		compression = "FALSE" 
+		desc        = "Track charge" 
+		init        = "0" 
+	/>
+            
+	<attribute 
+		name        = "nEmittedPhotons"
+		type        = "RichHypoData&lt;RichRecTrack::FloatType&gt;"
+		array       = "FALSE" 
+		compression = "TRUE" 
+		desc        = "The number of emitted photons expected for each particle hypothesis"  
+		init        = "0" 
+	/>
+            
+	<attribute 
+		name        = "nDetectablePhotons"
+		type        = "RichHypoData&lt;RichRecTrack::FloatType&gt;"
+		array       = "FALSE" 
+		compression = "TRUE" 
+		desc        = "The number of detectable emitted photons expected for each particle hypothesis"  
+		init        = "0" 
+	/>
+        
+    	<attribute 
+		name        = "nSignalPhotons"
+		type        = "RichHypoData&lt;RichRecTrack::FloatType&gt;"
+		array       = "FALSE" 
+		compression = "TRUE" 
+		desc        = "The number of signal photons expected for each particle hypothesis"  
+		init        = "0" 
+	/>
+            
+	<attribute 
+		name        = "nObservableSignalPhotons"
+		type        = "RichHypoData&lt;RichRecTrack::FloatType&gt;"
+		array       = "FALSE" 
+		compression = "TRUE" 
+		desc        = "The number of observable signal photons expected for each particle hypothesis"  
+		init        = "0" 
+	/>
+            
+	<attribute 
+		name        = "nScatteredPhotons"
+		type        = "RichHypoData&lt;RichRecTrack::FloatType&gt;"
+		array       = "FALSE" 
+		compression = "TRUE" 
+		desc        = "The number of scattered photons expected for each particle hypothesis"  
+		init        = "0" 
+	/>
+            
+	<attribute 
+		name        = "nObservableScatteredPhotons"
+		type        = "RichHypoData&lt;RichRecTrack::FloatType&gt;"
+		array       = "FALSE" 
+		compression = "TRUE" 
+		desc        = "The number of observable scattered photons expected for each particle hypothesis"  
+		init        = "0" 
+	/>
+            
+	<attribute
+		name        = "currentHypothesis" 
+		type        = "Rich::ParticleIDType"
+		desc        = "The current best guess particle hypothesis for this track." 
+		init        = "Rich::Pion" 
+	/>
+            
+	<attribute 
+		name        = "trackID" 
+		type        = "RichTrackID"
+		desc        = "track type identifier" 
+	/>
+            
+	<relation 
+		name         = "parentTrack" 
+		type         = "ContainedObject"
+		desc         = "Parent object this track was produced from" 
+		multiplicity = "1" 
+	/>
+            
+	<attribute 
+		name        = "richTrackInfo" 
+		type        = "bitfield"
+		desc        = "Bit packed field containing track specific information" 
+		init        = "0" >
+                <bitfield  desc="Flag for whether this track is active in RICH1"                  length="1"  name="inRICH1"        />
+                <bitfield  desc="Flag for whether this track is active in RICH2"                  length="1"  name="inRICH2"        />
+                <bitfield  desc="Flag for whether this track is active in Aerogel"                length="1"  name="inAerogel"      />
+                <bitfield  desc="Flag for whether this track is active in RICH1 Gas"              length="1"  name="inGas1"         />
+                <bitfield  desc="Flag for whether this track is active in RICH2 Gas"              length="1"  name="inGas2"         />
+		<bitfield  desc="Flag for algorithms to tag if this track is in use or not"       length="1"  name="inUse"          />
+		<bitfield  desc="Flag to say if all possible photon candidates have been formed"  length="1"  name="allPhotonsDone" />
+       	</attribute>
+
+            
+	<typedef 
+		desc   = "Container type for RichRecSegments" 
+		access = "PUBLIC" 
+		def    = "Segments" 
+		type   = "std::vector&lt;RichRecSegment*&gt;"
+	/>
+
+            
+	<typedef 
+		desc      = "Container type for RichRecPixels" 
+		access    = "PUBLIC" 
+		def       = "Pixels" 
+		type      = "std::vector&lt;RichRecPixel*&gt;"
+	/>
+
+	<typedef 
+		desc      = "Container type for RichRecPhotons"
+		access    = "PUBLIC" 
+		def       = "Photons" 
+		type      = "std::vector&lt;RichRecPhoton*&gt;"
+	/>
+            
+	<attribute 
+		name      = "richRecSegments"
+		type      = "Segments"
+		access    = "PRIVATE" 
+		desc      = "Associated RichRecSegments for this RichRecTrack" 
+		serialize = "FALSE" 
+	/>
+            
+	<method 
+		name      = "addToRichRecSegments"
+		desc      = "Add to associated RichRecSegments" 
+		inline    = "TRUE" >
+                <arg const="FALSE" name="segment" type="RichRecSegment*"/>
+                <code>
+			m_richRecSegments.push_back(segment);
+		</code>
+        </method>
+            
+	<attribute 
+		name      = "richRecPixels"
+		type      = "Pixels"
+		access    = "PRIVATE" 
+		desc      = "Associated RichRecPixels for which this track has valid photon associations"  
+		serialize = "FALSE" 
+	/>
+            
+	<method 
+		name      = "addToRichRecPixels"
+		desc      = "Add to associated RichRecPixels" 
+		inline    = "TRUE" >
+                <arg const="FALSE" name="pixel" type="RichRecPixel*"/>
+                <code>
+			m_richRecPixels.push_back(pixel);
+		</code>
+        </method>
+            
+	<attribute 
+		name      = "richRecPhotons"
+		access    = "PRIVATE" 
+		desc      = "RichRecPhotons associated with this track" 
+		serialize = "FALSE" 
+		type      = "Photons"
+	/>
+            
+	<method 
+		name      = "addToRichRecPhotons"
+		desc      = "Add to associated RichRecPhotons" inline="TRUE" >
+                <arg const="FALSE" name="photon" type="RichRecPhoton*"/>
+                <code>
+			m_richRecPhotons.push_back(photon);
+		</code>
+        </method>
+
+<!--  
+	<relation 
+		name         = "richRecSegmentsSmartRefs" 
+		type         = "RichRecSegment"
+		desc         = "Smart Reference vector of radiator segments for this track" 
+		multiplicity = "N" 
+	/>
+            
+	<relation 
+		name         = "richRecPixelsSmartRefs" 
+		type         = "RichRecPixel"
+		desc         = "SmartRefVector of RichRecPixels for which this track has valid photon associations" 
+		multiplicity = "N" 
+	/>
+            
+	<relation 
+		name         = "richRecPhotonsSmartRefs" 
+		type         = "RichRecPhoton"
+		desc         = "SmartRefVector of associated RichRecPhotons" 
+		multiplicity = "N" 
+	/>
+-->
+        
+	</class>

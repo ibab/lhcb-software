@@ -1,4 +1,4 @@
-// $Id: RichRecSegment.cpp,v 1.5 2004-06-03 16:19:42 jonesc Exp $
+// $Id: RichRecSegment.cpp,v 1.6 2004-07-12 14:28:40 jonrob Exp $
 // Include files 
 
 // local
@@ -13,7 +13,7 @@
 // Reset information to force recalculation
 void RichRecSegment::reset() 
 {
-  setHitDetectorRegions(0);
+  setTrackInfo(0);
 
   m_nEmittedPhotons.resetData(0);
   m_nDetectablePhotons.resetData(0);
