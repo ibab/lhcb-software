@@ -1,6 +1,6 @@
 # =============================================================================
 package GaussCalo
-version v2r2
+version v3r0
 
 # =============== package structure ===========================================
 branches          cmt src doc
