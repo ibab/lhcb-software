@@ -1,6 +1,10 @@
-! $Id: release.notes,v 1.7 2004-12-10 14:06:45 cattanem Exp $
+! $Id: release.notes,v 1.8 2005-01-14 13:51:31 cattanem Exp $
 Package         : OTSimulation
 Package manager : Jacopo Nardulli
+
+!==================== OTSimulation v1r3 2005-01-14 ======================
+! 2005-01-14 - Jacopo Nardulli
+ - Protect against empty Raw banks
 
 !==================== OTSimulation v1r2 2004-12-10 ======================
 ! 2004-12-06 - Jacopo Nardulli
