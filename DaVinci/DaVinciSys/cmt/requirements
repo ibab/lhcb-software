@@ -30,11 +30,6 @@ use  TrgTools           	v5r0     Trg
 use  TrgVelo            	v5r0     Trg
 use  TrgVeloTT          	v5r0     Trg
 
-use  STDAQ              	v1r3     IT
-
-# To rebuild velo clusters
-use  VeloDAQ            	v1r0     Velo
-
 # Enable neutral ProtoParticles production and CaloPIDs
 use  CaloPIDs           	v2r4     Calo 
 use  CaloReco           	v2r5     Calo
