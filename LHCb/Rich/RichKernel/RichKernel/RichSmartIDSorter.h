@@ -5,11 +5,13 @@
  *  Header file for RichSmartID utility class : RichSmartIDSorter
  *
  *  CVS Log :-
- *  $Id: RichSmartIDSorter.h,v 1.2 2005-01-13 17:45:01 jonrob Exp $
+ *  $Id: RichSmartIDSorter.h,v 1.3 2005-01-14 16:51:24 jonrob Exp $
  *  $Log: not supported by cvs2svn $
+ *  Revision 1.2  2005/01/13 17:45:01  jonrob
+ *  update RichSmartID sorter
+ *
  *  Revision 1.1  2005/01/13 12:21:18  jonrob
  *  Add new files to CVS
- *
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2005-01-10
@@ -45,21 +47,16 @@ private: // utility classes
 
     /** Sort operator
      *
+     *  Sorts the RichSmartIDs into order of RICH/Panel etc.
+     *
      *  @param p1 First RichSmartID
      *  @param p2 Second RichSmartID
      *
      *  @return bool indicating if p1 should be listed before p2
-     *
-     *  @todo Rewrite more efficiently when RichSmartID bit packing is better arranged
      */
     bool operator() ( const RichSmartID p1, const RichSmartID p2 ) const
     {
-      return ( 100000000*p1.rich() + 10000000*p1.panel() +
-               1000000*p1.PDRow() + 10000*p1.PDCol() +
-               100*p1.pixelRow() + p1.pixelCol()  <
-               100000000*p2.rich() + 10000000*p2.panel() +
-               1000000*p2.PDRow() + 10000*p2.PDCol() +
-               100*p2.pixelRow() + p2.pixelCol() );
+      return ( p1.dataBitsOnly().key() < p2.dataBitsOnly().key() );
     }
 
   };
