@@ -4,15 +4,15 @@
 // SPILLOVER: Uncomment next two lines to add spillover events.
 //--------------------------------------------------------------
 // #include "$SICBCNVROOT/options/Brunel.opts"
-// SpillOverSelector.JobInput = "FILE SICBMC_v244_mbias_1.rawh";
+// SpillOverSelector.Input = {"FILE='SICBMC_v244_mbias_1.rawh'"};
 //--------------------------------------------------------------
 // >>> PILEUP now done at generator level, no longer supported in Brunel <<<
 //--------------------------------------------------------------
 // Define the main event data: SICBMC >= v243 (new CALO, TRAC RAWH format)
 //--------------------------------------------------------------
 //EventSelector.Input = {"JOBID='44814'"};
-//EventSelector.Input = {"FILE='/castor/cern.ch/lhcb/mc/L221553'"};
-EventSelector.Input = {"FILE='/shift/shd18/data29/z5/stage/L221553.282724'"};
+EventSelector.Input = {"FILE='/castor/cern.ch/lhcb/mc/L221553'"};
+//EventSelector.Input = {"FILE='/shift/shd18/data29/z5/stage/L221553.282724'"};
 ApplicationMgr.EvtMax = 10;
 //EventSelector.FirstEvent = 6;
 

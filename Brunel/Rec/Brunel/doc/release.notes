@@ -3,6 +3,10 @@ Package Coordinator: Marco Cattaneo
 
 Purupose: LHCb reconstruction program
 
+! 20010522 Brunel v3r1 (MC)
+   options/BrunelInput.opts - Fix format of SpillOverSelector.Input option
+
+===============================================================================
 ! 20010521 Brunel v3 (MC)
   This is the first version to be used for an official LHCB production 
 
