@@ -2,6 +2,9 @@
 /// CVS tag $Name: not supported by cvs2svn $ 
 /// ===========================================================================
 /// $Log: not supported by cvs2svn $
+/// Revision 1.4  2001/07/25 17:19:31  ibelyaev
+/// all conversions now are moved from GiGa to GiGaCnv
+///
 /// Revision 1.3  2001/07/24 11:13:55  ibelyaev
 /// package restructurization(III) and update for newer GiGa
 /// 
@@ -67,82 +70,18 @@ StatusCode GiGaHitsCnvSvc::initialize()
   if( sc.isFailure() ) 
     { return Error("Could not initialize the base class!");}
   /// locate KineCnv  service
- 
-  { 
-    IInterface* p = 0 ;
-    std::string  Name("GiGaKineCnvSvc");
-    sc = svcLoc()->service( Name , p );
-    if( sc.isFailure() )
-      { Error("Could not IInterface* ='" + 
-                     Name + "'", sc ) ; }
-    if( 0 == p ) 
-      { Error("IInterface* points to NULL!" ) ; }
-    Print( "IInterafce: " + GiGaUtil::ObjTypeName(p) ) ;
-  }
-
-  { 
-    IService* p = 0 ;
-    std::string  Name("GiGaKineCnvSvc");
-    sc = svcLoc()->service( Name , p );
-    if( sc.isFailure() )
-      { Error("Could not IService* ='" + 
-                     Name + "'", sc ) ; }
-    if( 0 == p ) 
-      { Error("IService* points to NULL!" ) ; }
-    Print( "IService: " + GiGaUtil::ObjTypeName(p) ) ;
-  }
-
-  { 
-    IConversionSvc* p = 0 ;
-    std::string  Name("GiGaKineCnvSvc");
-    sc = svcLoc()->service( Name , p );
-    if( sc.isFailure() )
-      { Error("Could not IConversionService* ='" + 
-              Name + "'", sc ) ; }
-    if( 0 == p ) 
-      { Error("IConversionService* points to NULL!" ) ; }
-    Print( "IconversionSvc: " + GiGaUtil::ObjTypeName(p) ) ;
-  }
-
-
-  { 
-    IGiGaCnvSvc* p = 0 ;
-    std::string  Name("GiGaKineCnvSvc");
-    sc = svcLoc()->service( Name , p );
-    if( sc.isFailure() )
-      { Error("Could not IGiGaCnvSvc* ='" + 
-              Name + "'", sc ) ; }
-    if( 0 == p ) 
-      { Error("IGiGaCnvSvc* points to NULL!" ) ; }
-    Print( "IgigacnvSvc: " + GiGaUtil::ObjTypeName(p) ) ;
-  }
-
-  { 
-    IGiGaKineCnvSvc* p = 0 ;
-    std::string  Name("GiGaKineCnvSvc");
-    sc = svcLoc()->service( Name , p );
-    if( sc.isFailure() )
-      { Error("Could not IGiGaKineCnvSvc* ='" + 
-              Name + "'", sc ) ; }
-    if( 0 == p ) 
-      { Error("IGiGaKineCnvSvc* points to NULL!" ) ; }
-    Print( "IgigakinecnvSvc: " + GiGaUtil::ObjTypeName(p) ) ;
-  }
-
-  
-
-//    if( !m_kineSvcName.empty() )
-//      {
-//        sc = svcLoc()->service( m_kineSvcName , m_kineSvc );
-//        if( sc.isFailure() )
-//          { return Error("Could Not Locate IGiGaKineCnvSvc* ='" + 
-//                         m_kineSvcName + "'", sc ) ; }
-//        if( 0 == kineSvc() ) 
-//          { return Error("IGiGaKineCnvSvc* points to NULL!" ) ; }
-//        kineSvc()->addRef();
-//      }
-//    else 
-//      { return Error("Empty name for Kine Conversion Service!!"); }
+  if( !m_kineSvcName.empty() )
+    {
+      sc = svcLoc()->service( m_kineSvcName , m_kineSvc );
+      if( sc.isFailure() )
+        { return Error("Could Not Locate IGiGaKineCnvSvc* ='" + 
+                       m_kineSvcName + "'", sc ) ; }
+      if( 0 == kineSvc() ) 
+        { return Error("IGiGaKineCnvSvc* points to NULL!" ) ; }
+      kineSvc()->addRef();
+    }
+  else 
+    { return Error("Empty name for Kine Conversion Service!!"); }
   ///
   return StatusCode::SUCCESS;
 };
