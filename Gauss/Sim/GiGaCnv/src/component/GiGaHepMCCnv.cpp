@@ -1,8 +1,12 @@
-// $Id: GiGaHepMCCnv.cpp,v 1.14 2004-02-14 08:36:08 robbep Exp $
+// $Id: GiGaHepMCCnv.cpp,v 1.15 2004-03-09 08:34:16 robbep Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.14  2004/02/14 08:36:08  robbep
+// Propagate mixing information when converting from HepMC to G4PrimaryParticle
+// and from GiGaTrajectory to MCParticle.
+//
 // Revision 1.13  2003/11/25 14:01:29  witoldp
 // added predefined decay time
 //
@@ -46,6 +50,8 @@
 #include "GiGa/GiGaException.h" 
 #include "GiGa/GiGaUtil.h"
 #include "GiGaCnv/GiGaPrimaryParticleInformation.h"
+/// LHCb
+#include "Kernel/ParticleID.h"
 /// HepMC
 #include "HepMC/GenEvent.h"
 #include "HepMC/GenVertex.h"
@@ -203,22 +209,56 @@ StatusCode GiGaHepMCCnv::updateRep
            pVertex!= (*it)->pGenEvt()->vertices_end();pVertex++)
         {
           // loop over outgoing particles, check for the ones with 
-          // status 1 of 888 and store them in the temporary vector
+          // status 1,2, 888 or 889 and store them in the temporary vector
           
           for (HepMC::GenVertex::particles_out_const_iterator pParticle = 
                  (*pVertex)->particles_out_const_begin();
                (*pVertex)->particles_out_const_end() != pParticle ; ++pParticle)
-            {              
-              // skip particles with status diffrent from 1 or from 888
+            {
+              // Convert it to G4 if 
+              // -> the particle has no production vertex (then convert all the
+              //             daughters)
+              // -> the particle is a hadron, a lepton or a nucleus
+              //             and has only one mother which is not a hadron,
+              //             not a lepton and not a nucleus ie in practice
+              //             which is a string (the convert all the daughters)
+              // -> the particle is hadron, a lepton or a nucleus and has
+              //             several mother (in pratice a quark-gluon
+              //             interaction)
 
-              if(((*pParticle)->status()==1)||
-                 ((*pParticle)->status()==888)||((*pParticle)->status()==889))
-                {
-                  outpart.push_back(*pParticle);
-                }
+              if ( ( (*pParticle) -> status ( ) == 1 ) ||
+                   ( (*pParticle) -> status ( ) == 2 ) ||
+                   ( (*pParticle) -> status ( ) == 888 ) ||
+                   ( (*pParticle) -> status ( ) == 889 ) ) {
+                if ( ! (*pParticle) -> production_vertex() ) {
+                  outpart.push_back ( *pParticle ) ;
+                } else {              
+                  if ( (*pParticle) -> production_vertex() 
+                       -> particles_in_size() == 1 ) {
+                    ParticleID pidM ( (*(*pParticle)->production_vertex()
+                                       -> particles_in_const_begin())
+                                      ->pdg_id() ) ;
+                    ParticleID pid ( (*pParticle) -> pdg_id ( ) ) ;
+                    if ( ( ( ! pidM.isHadron( ) ) &&
+                           ( ! pidM.isLepton( ) ) &&
+                           ( ! pidM.isNucleus( ) ) ) && 
+                         ( ( pid.isHadron( ) ) ||
+                           ( pid.isLepton( ) ) ||
+                           ( pid.isNucleus( ) ) ) )
+                      outpart.push_back ( *pParticle ) ;
+                  }
+                  else {
+                    ParticleID pid ( (*pParticle) -> pdg_id ( ) ) ;
+                    if ( ( pid.isHadron( ) ) ||
+                         ( pid.isLepton( ) ) ||
+                         ( pid.isNucleus( ) ) ) 
+                      outpart.push_back( *pParticle ) ;
+                  }
+                }                
+              }
             }
         }
-      
+  
       // sort the vector, so we always put them in the same order into G4
       std::sort(outpart.begin(), outpart.end(), comp_bar());
       

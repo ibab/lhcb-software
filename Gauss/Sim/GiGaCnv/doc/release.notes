@@ -1,6 +1,12 @@
 Package         : GiGaCnv
 Package Manager : Vanya Belyaev Ivan.Belyaev@itep.ru
 
+! 2004-03-09 - Patrick Robbe
+ - src/component/GiGaHepMCCnv.cpp : change the choice of particles to
+     be converted in G4PrimaryParticles in order to be able to convert
+     B** if needed.
+ - cmt/requirements : increment version to v15r1
+
 !========================== GiGaCnv v15r0 ===============================
 ! 2004-02-20 - Ivan BELYAEV
  - GiGaCnv/IGiGa*.h 
