@@ -69,7 +69,7 @@ ApplicationMgr.TopAlg += { "PrimaryVertexFinderAlg" };
 
 // Bd->J/Psi(mu+mu-)Ks(pi+pi-)
 //  ApplicationMgr.TopAlg += { "SelectJpsi2mumu",
-//                             "SelectKs2pipi",
+//                             "SelectKs2pipiForBd2JpsiKs",
 //                             "SelectBd2JpsiKs" };
 //  #include "$PHYSSELECTIONSOPTS/SelectJpsi2mumuForBd2JpsiKs.opts"
 //  #include "$PHYSSELECTIONSOPTS/SelectKs2pipiForBd2JpsiKs.opts"
@@ -90,7 +90,7 @@ ApplicationMgr.TopAlg += { "PrimaryVertexFinderAlg" };
 //  #include "$PHYSSELECTIONSOPTS/SelectBs2Jpsi2mumu_phi2KK.opts"
 //  // Data sets for this channel (Brunel v16r4 - Xmas production)
 //  #include "$LHCBHOME/project/web/cards/611300.opts"
-//  // Data sets for this channel (Brunel v14r2)
+// Data sets for this channel (Brunel v14r2)
 //  #include "$LHCBHOME/project/web/cards/611300_4.opts"
 
 // Bs ->Ds(KKpi) K

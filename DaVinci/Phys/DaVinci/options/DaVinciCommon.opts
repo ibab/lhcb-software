@@ -34,6 +34,7 @@ ApplicationMgr.DLLs += { "TrAssociators", "L0Calo", "L1VeloTrack" };
 ApplicationMgr.DLLs += { "DaVinciAssociators" };
 
 // Physics packages and necessary dependent packages
+ApplicationMgr.DLLs += { "KsReco" };
 ApplicationMgr.DLLs += { "GlobalReco", "CaloReco" };
 ApplicationMgr.DLLs += { "DaVinciTools", "TrExtrapolator" };
 ApplicationMgr.DLLs += { "PhysSelections" };
@@ -46,7 +47,9 @@ ApplicationMgr.DLLs += { "DaVinciUser" };
 // Options for ProtoParticles creation
 #include "$GLOBALRECOROOT/options/GlobalReco.opts"
 #include "$DAVINCIMCTOOLSROOT/options/MCPIDProtoPAlg.opts"
+#pragma print off
 #include "$CALORECOOPTS/Reco.opts"
+#pragma print on
 
 // Options for Associators
 #include "$DAVINCIASSOCIATORSROOT/options/DaVinciAssociators.opts"

@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.50 2002-12-20 17:07:19 gcorti Exp $
+# $Id: requirements,v 1.51 2003-01-06 17:24:06 gcorti Exp $
 # Created    : 07/02/2002
 # Maintainer : Gloria Corti
 #
@@ -54,7 +54,7 @@ use  MuonKernel   	v2r1   Muon
 
 #--- Detector description ( add any other Det package you need )
 use  DetDesc        	v10r5   Det
-use  XmlDDDB        	v13r1   Det
+use  XmlDDDB        	v14r3   Det
 use  VeloDet        	v8r0    Det
 use  ITDet          	v1r1    Det
 use  OTDet          	v3r2    Det
