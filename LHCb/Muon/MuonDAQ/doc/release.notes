@@ -4,6 +4,10 @@
 ! Purpose     : Muon System Raw Buffer coding and decoding algorithms
 !-----------------------------------------------------------------------------
 
+!========================= MuonDAQ v1r2p2 2005-04-01 ======================
+! 2005-04-01 - Marco Cattaneo
+ - Update requirements to use MuonEvent v*
+
 !========================= MuonDAQ v1r2p1 2005-03-07 ======================
 ! 2005-03-07 - Marco Cattaneo
  - Update requirements to use DAQEvent v*

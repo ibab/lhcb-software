@@ -1,5 +1,5 @@
 package MuonDAQ
-version v1r2p1
+version v1r2p2
 
 # ================ structure ===========================================
 branches src MuonDAQ cmt doc
@@ -7,8 +7,8 @@ branches src MuonDAQ cmt doc
 include_dirs      $(MUONDAQROOT)
 
 # ================ used packages ========================================= 
-use MuonTools   v3r* 	Muon
-use MuonEvent	v3r*	Event	
+use MuonTools   v* 	Muon
+use MuonEvent	v*	Event	
 use DAQEvent    v*      Event
 
 # build a component library
