@@ -4,11 +4,7 @@
  *
  *  Implementation file for RICH DAQ helper class : RichNonZeroSuppData
  *
- *  CVS Log :-
- *  $Id: RichNonZeroSuppData.cpp,v 1.2 2005-01-13 13:10:41 jonrob Exp $
- *  $Log: not supported by cvs2svn $
- *  Revision 1.1  2005/01/07 12:35:59  jonrob
- *  Complete rewrite
+ *  $Id: RichNonZeroSuppData.cpp,v 1.3 2005-02-09 09:16:26 cattanem Exp $
  *
  *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
  *  @date   2004-12-17
@@ -81,8 +77,8 @@ namespace RichNonZeroSuppDataV1 {
         if ( isPixelActive(iRow,iCol) ) {
           ids.push_back( RichSmartID( sID.rich(),
                                       sID.panel(),
-                                      sID.PDRow(),
-                                      sID.PDCol(),
+                                      sID.pdRow(),
+                                      sID.pdCol(),
                                       iRow, iCol ) );
         }
       }

@@ -4,11 +4,7 @@
  *
  *  Implementation file for RICH DAQ helper class : RichZeroSuppData
  *
- *  CVS Log :-
- *  $Id: RichZeroSuppData.cpp,v 1.2 2005-01-13 13:12:05 jonrob Exp $
- *  $Log: not supported by cvs2svn $
- *  Revision 1.1  2005/01/07 12:35:59  jonrob
- *  Complete rewrite
+ *  $Id: RichZeroSuppData.cpp,v 1.3 2005-02-09 09:16:26 cattanem Exp $
  *
  *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
  *  @date   2004-12-17
@@ -157,21 +153,21 @@ namespace RichZeroSuppDataV1 {
 
       // Make first smartid from triplet
       ids.push_back( RichSmartID( sID.rich(), sID.panel(),
-                                  sID.PDRow(), sID.PDCol(),
+                                  sID.pdRow(), sID.pdCol(),
                                   triplet.row0(), triplet.col0() ) );
       ++nDigitsMade;
       if ( nDigitsMade == digitCount ) break;
 
       // Make second smartid from triplet
       ids.push_back( RichSmartID( sID.rich(), sID.panel(),
-                                  sID.PDRow(), sID.PDCol(),
+                                  sID.pdRow(), sID.pdCol(),
                                   triplet.row1(), triplet.col1() ) );
       ++nDigitsMade;
       if ( nDigitsMade == digitCount ) break;
 
       // Make third smartid from triplet
       ids.push_back( RichSmartID( sID.rich(), sID.panel(),
-                                  sID.PDRow(), sID.PDCol(),
+                                  sID.pdRow(), sID.pdCol(),
                                   triplet.row2(), triplet.col2() ) );
       ++nDigitsMade;
       if ( nDigitsMade == digitCount ) break;
@@ -278,7 +274,7 @@ namespace RichZeroSuppDataV2 {
           if ( isBitOn(bits,iB) )
           {
             ids.push_back( RichSmartID( sID.rich(), sID.panel(),
-                                        sID.PDRow(), sID.PDCol(),
+                                        sID.pdRow(), sID.pdCol(),
                                         rowFromAddress(address),
                                         colFromAddressAndBit(address,iB) ) );
             ++nDigitsMade;
@@ -296,7 +292,7 @@ namespace RichZeroSuppDataV2 {
           if ( isBitOn(bits,iB) )
           {
             ids.push_back( RichSmartID( sID.rich(), sID.panel(),
-                                        sID.PDRow(), sID.PDCol(),
+                                        sID.pdRow(), sID.pdCol(),
                                         rowFromAddress(address),
                                         colFromAddressAndBit(address,iB) ) );
             ++nDigitsMade;

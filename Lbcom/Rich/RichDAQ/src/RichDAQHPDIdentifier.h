@@ -3,9 +3,7 @@
  *
  *  Header file for RICH DAQ utility class : RichDAQHPDIdentifier
  *
- *  CVS Log :-
- *  $Id: RichDAQHPDIdentifier.h,v 1.1 2005-01-07 12:35:59 jonrob Exp $
- *  $Log: not supported by cvs2svn $
+ *  $Id: RichDAQHPDIdentifier.h,v 1.2 2005-02-09 09:16:26 cattanem Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   2003-11-06
@@ -102,8 +100,8 @@ namespace RichDAQHPDIdentifierV0 {
     {
       setRich  ( smartID.rich()  );
       setPanel ( smartID.panel() );
-      setPDRow ( smartID.PDRow() );
-      setPDCol ( smartID.PDCol() );
+      setPDRow ( smartID.pdRow() );
+      setPDCol ( smartID.pdCol() );
     }
 
     /// Destructor
