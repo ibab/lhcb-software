@@ -1,16 +1,7 @@
-#!/usr/local/bin/tcsh
-# $Id: setupDB_Oracle.csh,v 1.3 2002-05-06 16:35:26 andreav Exp $
-#================================
-# Use UPPERCASE for all fields!!
-#================================
-# Oracle database host
-setenv DETCONDEXAMPLE_DBHOST DB9
-# Oracle user on this host
-setenv DETCONDEXAMPLE_DBUSER AVALASSI
-# Condition database created in the account of this user
-setenv DETCONDEXAMPLE_DBNAME MYCONDDB_LINUX
-# Oracle password for this user on this host 
-if ( ${?DETCONDEXAMPLE_DBPSWD} != 1 ) then
-  echo Please set the correct value of DETCONDEXAMPLE_DBPSWD if not yet done
-  setenv DETCONDEXAMPLE_DBPSWD PASSWORD
-endif
+# $Id: setupDB_Oracle.csh,v 1.4 2002-12-03 17:34:03 andreav Exp $
+# Setup Oracle environment variables
+source ${CONDDBORACLEROOT}/cmt/setupDB_Oracle.csh
+setenv DETCONDEXAMPLE_DBHOST $CONDDBORACLE_DBHOST
+setenv DETCONDEXAMPLE_DBNAME $CONDDBORACLE_DBNAME
+setenv DETCONDEXAMPLE_DBUSER $CONDDBORACLE_DBUSER
+setenv DETCONDEXAMPLE_DBPSWD $CONDDBORACLE_DBPSWD
