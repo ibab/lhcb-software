@@ -53,6 +53,9 @@ ToolSvc.RichToolRegistry.Tools += { "RichTrSegMakerFromTrStoredTracks/RichDetTrS
 ToolSvc.RichDetTrSegLongVTT.PrimaryTrackExtrapolator = "TrRichExtrapolatorForLongVTT";
 ToolSvc.RichDetTrSegLongVTT.BackupTrackExtrapolator  = "TrHerabExtrapolator";
 
+//ToolSvc.TrRichExtrapolatorForLongVTT.StartPointExtrapolator = "TrParabolicExtrapolator";
+ToolSvc.TrRichExtrapolatorForLongVTT.StartPointExtrapolator = "TrHerabExtrapolator";
+
 // which radiators to use                   Aerogel   C4F10    CF4
 ToolSvc.RichDetTrSegLongVTT.UseRadiators = { true,     true,    true   };
 
@@ -98,6 +101,9 @@ ToolSvc.RichToolRegistry.Tools += { "RichTrSegMakerFromTrStoredTracks/RichDetTrS
 // Extrapolator tools
 ToolSvc.RichDetTrSegSeedKs.PrimaryTrackExtrapolator = "TrRichExtrapolatorForSeedKs";
 ToolSvc.RichDetTrSegSeedKs.BackupTrackExtrapolator  = "TrHerabExtrapolator";
+
+//ToolSvc.TrRichExtrapolatorForSeedKs.StartPointExtrapolator  = "TrParabolicExtrapolator";
+ToolSvc.TrRichExtrapolatorForSeedKs.StartPointExtrapolator  = "TrHerabExtrapolator";
 
 // which radiators to use                   Aerogel   C4F10    CF4
 ToolSvc.RichDetTrSegSeedKs.UseRadiators = { true,     true,    true   };
