@@ -119,8 +119,8 @@ StatusCode CaloSCorrectionDoubleTanh::calculate(double min,
                                                 double y,
                                                 double& result) {
   double bary = (max-min)/(min+middle+max);
-  result = m_Coeff[0]*tanh(m_Coeff[1]*bary)
-    +(1.-m_Coeff[0])*tanh(m_Coeff[2]*bary);
+  result = 0.5*(m_Coeff[0]*tanh(m_Coeff[1]*bary)
+    +(1.-m_Coeff[0])*tanh(m_Coeff[2]*bary));
   MsgStream log(msgSvc(), name());
   log << MSG::VERBOSE << "calculate() has been called"
       << " arg:" << " min:" << min 
