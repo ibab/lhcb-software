@@ -1,0 +1,90 @@
+This file tries to explain how to use the CheatedReco algorithm to create
+combined particles.
+
+The algorithm has the following properties:
+- 'Decays' : A list of string with a very special meaning explained below.
+- 'Key' : This property specify which of the above string describe the final
+          particle to save in the desktop/TES.
+
+Each string in the Decays vector looks like this:
+
+<key name> # <part name> [% <key name>] {@ <decay descriptor>}
+
+- The part in '[' and ']' can occure zero or more times (the [ and ] must not
+  be present in the real string, see example below).
+- The part in '{' and '}' must occure at most one time (the { and } must not
+  be present in the real  string)
+- At least one of the '%' or '@' part must be there.
+
+<key name> is a string which must not contains '#', '%' or '@'.
+<part name> is a particle name which should be legal.
+<decay descriptor> is a decay descriptor as used by the MCDecayFinder.
+
+Each of this string introduced a way to create a particle.
+This way is labeled <key name> (the one before the '#' sign).
+The particle created will be a <part name> one.
+It will be made by fitting together:
+ - the particles created by the previous ways labeled <key name>
+   (the one after each '%' sign) if any and,
+ - the first particles associated to the mc-particles extracted from the
+   <decay descriptor> (you should flag with '^' the particle to extract).
+
+Now a concret example. The following part of a job option will create B0
+from the decay: B0 -> (D*(2010)- -> (D~0 -> K+ pi-) pi-) pi+
+//-------
+ApplicationMgr.TopAlg += { "PreLoadParticles" };
+PreLoadParticles.PhysDesktop.ParticleMakerType = "CombinedParticleMaker";
+PreLoadParticles.PhysDesktop.OutputLocation = "/Event/Phys/Prod";
+Particle2MCLinks.InputData = {"/Event/Phys/Prod/Particles"};
+
+ApplicationMgr.TopAlg += { "CheatedReco" };
+CheatedReco.PhysDesktop.InputLocations = { "/Event/Phys/Prod" };
+CheatedReco.PhysDesktop.OutputLocation = "/Event/Phys/CheatedB";
+CheatedReco.Decays={
+ "key1 # D~0 @ B0 -> (D*(2010)- -> (D~0 -> ^K+ ^pi-) pi-) pi+",
+ "key2 # D*(2010)- % key1 @ B0 -> (D*(2010)- -> (D~0 -> K+ pi-) ^pi-) pi+",
+ "key3 # B0 % key2 @ B0 -> (D*(2010)- -> (D~0 -> K+ pi-) pi-) ^pi+"
+};
+CheatedReco.Key = "key3";
+//-------
+
+As you can notice, particle are preloaded and the algorithm which create
+the association table is configured to use these particles. After that
+the CheatedReco is configured to use these particles so the association
+will work.
+
+The first string define the key 'key1' which tells how to create a 'D~0'
+by just picking the 'K+' and the 'pi-' for the right decay.
+
+The second string define the key 'key2' which tells how to create a 'D*(2010)-'
+from the particle created by 'key1' and the 'pi-' extracted for the decay.
+
+Finally, the third key 'key3' tells a 'B0' can be created from the 'key2'
+the 'pi+' extracted from the decay.
+
+The last property setting tells the algorithm that the key 'key3' is
+the one to save.
+
+On more example: B_s0 -> (J/psi(1S) -> mu+ mu-) (phi(1020) -> K+ K-)
+//-------
+ApplicationMgr.TopAlg += { "PreLoadParticles" };
+PreLoadParticles.PhysDesktop.ParticleMakerType = "CombinedParticleMaker";
+PreLoadParticles.PhysDesktop.OutputLocation = "/Event/Phys/Prod";
+Particle2MCLinks.InputData = {"/Event/Phys/Prod/Particles"};
+
+ApplicationMgr.TopAlg += { "CheatedReco" };
+CheatedReco.PhysDesktop.InputLocations = { "/Event/Phys/Prod" };
+CheatedReco.PhysDesktop.OutputLocation = "/Event/Phys/CheatedB";
+CheatedReco.Decays = {
+ "key1 # J/psi(1S) @ B_s0 -> (J/psi(1S) -> ^mu+ ^mu-) (phi(1020) -> K+ K-)",
+ "key2 # phi(1020) @ B_s0 -> (J/psi(1S) -> mu+ mu-) (phi(1020) -> ^K+ ^K-)",
+ "key3 # B_s0 % key1 % key2"
+};
+CheatedReco.Key = "key3";
+//-------
+
+Same preloading as before for the same reason.
+
+'key1', the 'J/psi(1S)' from the particles associated to the correct mc muons.
+'key2', the 'phi(1020)' from the correct kaons.
+'key3', the 'B_s0' from the previous to keys.

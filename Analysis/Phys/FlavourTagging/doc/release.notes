@@ -4,6 +4,34 @@
 ! Purpose     : Provide tools and algorithm for tagging Bs
 !-----------------------------------------------------------------------------
 
+! 2003-06-13 - Olivier Dormond
+ - cmt/requirement
+   . Added deps for L1 trigger and the visible collision tool.
+   . Bumped version to v4r5
+ - src/CategoryTaggingTool.h, src/CategoryTaggingTool.cpp
+   . New tool which uses the previous one to get a set of tags it uses to
+     categorize the event and make a decision about the final tag.
+ - src/CheatedReco.h, src/CheatedReco.cpp
+   . New algo to create particle from a cheated reconstruction.
+     See doc/CheatedReco.txt for explanation about it's config.
+ - src/FlavourTaggingAlgorithm.h, src/FlavourTaggingAlgorithm.cpp
+   . Moved from Algorithm to DVAlgorithm and cleaned up the code a bit.
+   . The Vertex passed to the tagging tool is now the primary vertex the B
+     is pointing to.
+ - src/FlavourTaggingSummary.h, src/FlavourTaggingSummary.cpp
+   . Added L0 and L1 trigger to the output.
+   . Added # of collision and # of visible collision to the output.
+ - src/FlavourTagging_load.cpp
+   . Added the CheatedReco algorithm and the CategoryTaggingTool tool.
+ - src/KaonSameSideTaggingTool.cpp
+   . Added some debugging output.
+ - options/CombinedFlavourTagging.opts
+   . The option file for the use of the CategoryTaggingTool which combines tags.
+ - doc/CheatedReco.txt
+   . Some documentation for the configuration of the CheatedReco algorithm.
+ - doc/release.notes
+   . This update.
+
 !==================== FlavourTagging v4r4p1 2003-06-03 ===================
 ! 2003-05-30 - Gloria Corti
  - src/SingleParticleTaggingMonitor.h, SingleParticleTaggingMonitor.cpp
