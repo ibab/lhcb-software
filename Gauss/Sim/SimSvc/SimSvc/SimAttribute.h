@@ -1,4 +1,4 @@
-// $Id: SimAttribute.h,v 1.1.1.1 2003-01-24 15:11:38 sponce Exp $
+// $Id: SimAttribute.h,v 1.2 2003-04-16 17:42:44 sponce Exp $
 #ifndef SIMATTRIBUTE_H 
 #define SIMATTRIBUTE_H 1
 
@@ -44,7 +44,7 @@ public:
    * Get accessor to member m_maxAllowedStep
    * @return the current value of m_maxAllowedStep
    */
-  double maxAllowedStep () {
+  const double maxAllowedStep () const {
     return m_maxAllowedStep;
   }
 
@@ -52,7 +52,7 @@ public:
    * Get accessor to member m_maxTrackLength
    * @return the current value of m_maxTrackLength
    */
-  double maxTrackLength () {
+  const double maxTrackLength () const {
     return m_maxTrackLength;
   }
 
@@ -60,7 +60,7 @@ public:
    * Get accessor to member m_maxTime
    * @return the current value of m_maxTime
    */
-  double maxTime () {
+  const double maxTime () const {
     return m_maxTime;
   }
 
@@ -68,7 +68,7 @@ public:
    * Get accessor to member m_minEkine
    * @return the current value of m_minEkine
    */
-  double minEkine () {
+  const double minEkine () const {
     return m_minEkine;
   }
 
@@ -76,7 +76,7 @@ public:
    * Get accessor to member m_minRange
    * @return the current value of m_minRange
    */
-  double minRange () {
+  const double minRange () const {
     return m_minRange;
   }
 
