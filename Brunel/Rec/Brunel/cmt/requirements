@@ -25,7 +25,7 @@ use XERCES         	v16r0p1
 use CERNLIB        	v2001
 use ROOT		v2r303p0
 
-#---Gaudi libraries - Gaudi v10r1
+#---Gaudi libraries - Gaudi v10r4
 use GaudiKernel        v12r3
 use GaudiSvc           v8r3
 use GaudiAlg           v6r1
@@ -39,13 +39,13 @@ use HbookCnv           v12r0
 #---LHCb common libraries
 use GaudiConf    v6r3
 use BookKeeping  v1r1   Tools
-use LHCbKernel   v1r3   Kernel
+use LHCbKernel   v1r4   Kernel
 use Finclude     v13r0  SICB
 use Futio        v12r0  SICB
 
 # Detector description
 use DetDesc      v10r3  Det
-use XmlDDDB      v12r3  Det
+use XmlDDDB      v12r4  Det
 use CaloDet       v5r0  Det
 use CaloDetXmlCnv v2r0  Det
 use ITDet         v1r0  Det
@@ -55,14 +55,14 @@ use VeloDet       v7r0  Det
 use Magnet        v1r1  Det
 
 # Event Model
-use EventSys     v12r0  Event
+use EventSys     v12r2  Event
 
 # SicB event data persistency
 use SicbCnv      v17r1  SICB
 use RiSicbGeom   v2r2   SICB
 use CaloSicbCnv  v7r1   SICB
-use MuonSicbCnv  v6r1   SICB
-use RiSicbCnv    v4r2   SICB
+use MuonSicbCnv  v6r2   SICB
+use RiSicbCnv    v4r3   SICB
 use VSicbCnv     v8r0   SICB
 
 # Brunel utilities
@@ -86,8 +86,8 @@ use CaloUtils      	v4r1 	Calo
 use CaloTools      	v4r2 	Calo
 use CaloAlgs       	v7r1 	Calo
 use CaloMonitor         v1r1    Calo
-use CaloAssociators	v2r1	Calo
-use CaloRec		v2r2	Calo
+use CaloAssociators	v2r2	Calo
+use CaloRec		v2r3	Calo
 use CaloTrackTools	v1r4	Calo
 
 # Velo
@@ -121,14 +121,14 @@ use UpstreamPR		v2r1	Tr
 # Muon
 use MuonKernel          v2r1    Muon
 use MuonTools           v2r1    Muon
-use MuonAlgs		v2r1	Muon
+use MuonAlgs		v2r2	Muon
 use MuonRec     	v2r0	Muon
 use MuonID      	v2r1	Muon
 use MuonAssociators	v1r0	Muon
 
 # Rich
 use RichKernel          v1r2    Rich
-use RichMonitor         v1r1    Rich
+use RichMonitor         v1r2    Rich
 
 # SICBDST packages
 use Futil        v11r0  SICB
@@ -149,7 +149,7 @@ macro_append Brunel_linkopts " "\
                 Linuxdbx     " -g -Wl,--start-group "
 
 #== Set the Brunel version = v*10000 + r*100 + p  ==
-macro_append fflags " -DBrunelVersion=130000 " \
-           VisualC  " /DBrunelVersion=130000 "
+macro_append fflags " -DBrunelVersion=130100 " \
+           VisualC  " /DBrunelVersion=130100 "
 
 apply_pattern application_path
