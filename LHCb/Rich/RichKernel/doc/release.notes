@@ -1,11 +1,12 @@
-! $Id: release.notes,v 1.45 2004-07-02 14:09:27 jonrob Exp $
+! $Id: release.notes,v 1.46 2004-07-02 14:10:52 jonrob Exp $
 ! Package     : Rich/RichKernel
 ! Responsible : Chris Jones
 ! Purpose     : General purpose RICH classes
 
 ! 2004-07-02 - Chris Jones
  - Minor improvements to RichTraceMode
-   - Explicit initialisation of modes in constructor
+   - Explicit initialisation of modes in default constructor
+   - Explicit copy constructor
    - Single return state for inline methods
  - Make RichTraceMode a const variable in IRichRayTracing interface
 
