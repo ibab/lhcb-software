@@ -4,6 +4,11 @@
 ! Purpose     : interface to the xml description
 !-----------------------------------------------------------------------------
 
+! 2005-02-22 - Chris Jones
+ - Add fix to DeRichHPDPanel to protect against invalid pixel information 
+   being set into RichSmartID
+ - Minor other improvements for initialisation speed
+
 !========================= RichDet v8r2 2005-02-08 =========================
 ! 2005-02-08 - Marco Cattaneo
  - Adapt to changed names of RichSmartID bit field accessors of GaudiObjDesc

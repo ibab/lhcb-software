@@ -3,7 +3,7 @@
  *
  *  Header file for detector description class : DeRichHPDPanel
  *
- *  $Id: DeRichHPDPanel.h,v 1.22 2005-02-09 13:39:26 cattanem Exp $
+ *  $Id: DeRichHPDPanel.h,v 1.23 2005-02-22 12:35:17 jonrob Exp $
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2004-06-18
@@ -188,14 +188,17 @@ public:
 
 
   /**
-   * Returns a list with all the available readout channels, in form of
-   * RichSmartIDs.
+   * Adds to the given vector all the available readout channels in this HPD panel
    *
    * @param readoutChannels Vector of valid pixel IDs
+   * @param rich The RICH detector for these channels
+   * @param panel The RICH panel for these channels 
    *
    * @return Status code
    */
-  virtual StatusCode readoutChannelList( std::vector<RichSmartID>& readoutChannels ) const;
+  StatusCode readoutChannelList( std::vector<RichSmartID>& readoutChannels, 
+                                 const Rich::DetectorType,
+                                 const Rich::Side panel ) const;
 
 protected:
 
