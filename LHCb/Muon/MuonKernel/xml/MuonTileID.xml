@@ -48,13 +48,44 @@
       <constructor
         desc="Constructor taking a long needed for the keyed container"
         argList="const long int muonid" >
-	<code>m_muonid = static_cast&lt;unsigned int&gt;(muonid);</code>
+	<code>    m_muonid = static_cast&lt;unsigned int&gt;(muonid);</code>
+      </constructor>
+      <constructor
+        desc="Constructor from a string representation of the MuonTileID"
+        argList="std::string strid" >
+	<code>    const char * str = strid.c_str()+1;
+    char * endptr;
+
+    long sta = strtol(str,&amp;endptr,0);
+    str = endptr+1;
+    long mlx = strtol(str,&amp;endptr,0);
+    str = endptr+1;
+    long mly = strtol(str,&amp;endptr,0);
+    str = endptr+2;
+    long quarter = strtol(str,&amp;endptr,0);
+    str = endptr+2;
+    long region = strtol(str,&amp;endptr,0);
+    str = endptr+1;
+    long nx = strtol(str,&amp;endptr,0);
+    str = endptr+1;
+    long ny = strtol(str,&amp;endptr,0);
+
+    //m_muonid =  MuonTileID(sta,0,0,MuonLayout(mlx,mly),quarter,region,nx,ny).m_muonid;
+    setStation(sta);
+    setLayout(MuonLayout(mlx,mly));
+    setQuarter(quarter);
+    setRegion(region);
+    setLayer(0);
+    setReadout(0);
+    setX(nx);
+    setY(ny);
+	</code>
       </constructor>
       <method const="TRUE"  name="operator long int" type=" "
           desc="convert the MuonTileID to an int for use as a key">
 	 <code> return static_cast&lt;long int&gt;(m_muonid);</code>
       </method>	 
-      <method const="TRUE"  name="station" type="const unsigned"
+      <method const="TRUE"  name="station" type="const unsigned int"
           inline="TRUE"
           desc="Function to extract station">
 	 <code> return ( m_muonid &amp; MuonBase::MaskStation ) &gt;&gt; MuonBase::ShiftStation ;</code>
