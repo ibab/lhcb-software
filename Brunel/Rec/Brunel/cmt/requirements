@@ -1,5 +1,5 @@
 package Brunel
-version v25r2
+version v25r3
 
 branches doc cmt job options
 
@@ -24,13 +24,13 @@ use RootHistCnv         v9r3
 #-- Database
 use XmlDDDB		v23r1	Det
 use FieldMap		v4r5
-use ParamFiles          v3r8    -no_auto_imports
+use ParamFiles          v3r9    -no_auto_imports
 use BrunelDQ		v1r0	DQ
 
-#-- LHCb libraries (from LHCB_v17r2)
-use LHCb	v17r2
+#-- LHCb libraries (from LHCB_v17r3)
+use LHCb	v17r3
 
-#-- BrunelSys v25r2 packages
+#-- BrunelSys v25r3 packages
 
 # Tools
 use AsctToLinker        v1r3    Rec
@@ -72,7 +72,7 @@ use MuonRec             v2r4	Muon
 use MuonID              v3r7p1	Muon
 
 # Rich
-use RichRecSys		v1r13p1	Rich
+use RichRecSys		v1r14	Rich
 use RichRecQC		v1r10	Rich
 
 #

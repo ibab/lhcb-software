@@ -27,7 +27,7 @@ EventDataSvc.RootCLID    =    1;
 //--------------------------------------------------------------
 // Data on demand service for decoding RawBuffer
 //--------------------------------------------------------------
-#include "$BRUNELOPTS/RawBuffer.opts"
+#include "$DAQSYSROOT/options/RawBuffer.opts"
 
 //--------------------------------------------------------------
 // Brunel Phases to be executed

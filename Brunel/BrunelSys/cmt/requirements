@@ -1,5 +1,5 @@
 package BrunelSys
-version v25r2p1
+version v25r3
 
 branches cmt doc
  
@@ -8,7 +8,7 @@ branches cmt doc
 #=======================================================
 
 # Brunel application
-use Brunel              v25r2	Rec
+use Brunel              v25r3	Rec
 
 # Brunel utilities
 use AsctToLinker        v1r3    Rec
@@ -50,9 +50,9 @@ use MuonRec             v2r4	Muon
 use MuonID              v3r7p1	Muon
 
 # Rich
-use RichRecSys		v1r13p1	Rich
+use RichRecSys		v1r14	Rich
 use RichRecBase		v1r14p1	Rich
-use RichRecTools	v2r12	Rich
+use RichRecTools	v2r13	Rich
 use RichRecCommon	v1r10	Rich
 use RichRingRefit	v1r9	Rich
 use RichLocalPID	v1r9p1	Rich

@@ -3,6 +3,16 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
+</PRE><H1><A NAME=v25r3>2005-01-19 Brunel v25r3</A></H1><PRE>
+This version uses Gaudi v15r3, LHCb v17r3.
+Requires data produced by Boole v7r2 or later. It *cannot* process DC04 data
+
+- Packages modified: RichRecSys v1r14, RichRecTools v2r13
+
+- New functionality:
+  . Support for new RawBuffer bank formats of Calo and Rich. Correct decoding is
+    chosen automatically from bank version number (CaloDAQ v1r0, RichDAQ v2r0)
+
 </PRE><H1><A NAME=v25r2p1>2005-01-13 Brunel v25r2p1</A></H1><PRE>
 Documentation moved to BrunelSys package (from Rec/Brunel):
  . These release notes
