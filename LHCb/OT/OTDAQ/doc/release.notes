@@ -1,6 +1,7 @@
 Package         : OTDAQ
 Package manager : J. Nardulli
 
+!====================== OTDAQ v3r2 2004-12-10 ======================
 ! 2004-12-06 - Jacopo Nardulli
 - Complete move to new base classes
 

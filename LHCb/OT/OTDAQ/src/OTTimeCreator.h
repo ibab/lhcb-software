@@ -1,4 +1,4 @@
-// $Id: OTTimeCreator.h,v 1.3 2004-12-10 08:10:25 jnardull Exp $
+// $Id: OTTimeCreator.h,v 1.4 2004-12-10 09:25:08 cattanem Exp $
 #ifndef OTDAQ_OTTIMECREATOR_H 
 #define OTDAQ_OTTIMECREATOR_H 1
 
@@ -69,7 +69,6 @@ private:
   int getStrawID(int otisID, int channel);
 
   // job options
-  std::string m_RawEventLoc;
   std::string m_timeLocation;
   bool m_tofCorrection;                     ///< Time of Flight Correction
   std::vector<double> m_startReadOutGate;   ///< Start of readout gate

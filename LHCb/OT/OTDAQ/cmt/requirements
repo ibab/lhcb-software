@@ -1,5 +1,5 @@
 package OTDAQ
-version v3r1
+version v3r2
 
 branches OTDAQ cmt doc src options xml Event
 
@@ -17,3 +17,6 @@ document obj2doth OTDAQObj2Doth ../xml/OTDAQ.xml
 library OTDAQ ../src/*.cpp
 
 apply_pattern component_library library=OTDAQ
+
+private
+use GaudiObjDesc v*
