@@ -30,10 +30,10 @@
        <method
         desc="Return size of the data body part of the bank"
         name="dataSize"
-        type="long"
+        type="int"
         const="TRUE"
        >
-         <code> return m_data[0] - 2; </code>
+         <code> return int((m_data[0]&gt;&gt;16) - 2); </code>
        </method>
        <method
         desc="Return bankType of this bank "
