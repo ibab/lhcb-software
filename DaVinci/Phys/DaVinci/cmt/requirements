@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.168 2004-09-03 12:17:05 pkoppenb Exp $
+# $Id: requirements,v 1.169 2004-09-03 15:31:18 pkoppenb Exp $
 # Created    : 07/02/2002
 # Maintainer : P. Koppenburg
 #
@@ -71,8 +71,8 @@ use  STDAQ              	v1r3     IT
 use  VeloDAQ            	v1r0     Velo
 
 # Enable neutral ProtoParticles production and CaloPIDs
-use  CaloPIDs           	v2r4     Calo 
-use  CaloReco           	v2r6     Calo
+use  CaloPIDs           	v2r3     Calo 
+use  CaloReco           	v2r4     Calo
 
 # Muon PID
 use  MuonID             	v3r7p1   Muon
@@ -91,7 +91,7 @@ use  LoKi               	v3r4p1   Tools
 use  Utilities          	v1r10    Tools
 
 # Physics packages
-use  CommonParticles    	v1r5p2   Phys
+use  CommonParticles    	v1r5p3   Phys
 use  DaVinciFilter      	v1r1     Phys
 use  DaVinciKernel      	v1r1     Phys
 use  DaVinciTools       	v11r1    Phys
@@ -99,7 +99,7 @@ use  DaVinciUser        	v5r1p1   Phys
 use  FlavourTagging     	v5r2     Phys
 use  Ks2PiPiSel         	v1r4p1   Phys
 use  ParticleMaker      	v1r1     Phys
-use  PhysSelections		v6r9     Phys
+use  PhysSelections		v6r9p1   Phys
 use  DaVinciTransporter 	v1r1     Phys
 use  VertexFit			v1r1     Phys
 
@@ -107,7 +107,7 @@ use  VertexFit			v1r1     Phys
 use  DaVinciAssociators 	v5r1     Phys
 use  DaVinciEff         	v3r1     Phys
 use  DaVinciMCTools     	v5r4     Phys
-use  DaVinciTest        	v5r0     Phys
+use  DaVinciTest        	v5r1     Phys
 
 # Stripping
 use  Stripping          	v1r4     Tools
