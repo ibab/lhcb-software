@@ -17,7 +17,8 @@ const        IAlgFactory& BTaggingFactory = s_factory ;
 BTagging::BTagging(const std::string& name,
 		   ISvcLocator* pSvcLocator) : DVAlgorithm(name, pSvcLocator){
 
-  declareProperty( "TagsLocation",m_TagsLocation  = "/Event/Phys/BTagging" );
+  declareProperty( "UseVertexCharge", m_UseVertexCharge = true );
+  declareProperty( "WriteToTES",      m_WriteToTES = true );
 
   declareProperty( "Muon_Pt_cut", m_AXPt_cut_muon = 1.2 );
   declareProperty( "Muon_P_cut",  m_AXP_cut_muon  = 5.0 );
@@ -59,21 +60,8 @@ StatusCode BTagging::initialize() {
 
   MsgStream req(msgSvc(), name());
   
-  // Load all necessary tools via the base class
-  StatusCode sc = loadTools();
-  if( !sc ) {
-    req << MSG::ERROR << "   Unable to load tools" << endreq;
-    return StatusCode::FAILURE;
-  }
-
-  sc = toolSvc()->retrieveTool( "VisPrimVertTool", m_visTool, this );
+  StatusCode sc = service("ParticlePropertySvc", ppSvc);
   if( sc.isFailure() ) {
-     req << MSG::FATAL << "Unable to retrieve the VisPrimVertTool" << endreq;
-     return sc;
-  }
-  // Access the ParticlePropertySvc to retrieve pID for wanted particles
-  sc = service("ParticlePropertySvc", ppSvc);
-  if( !sc ) {
     req << MSG::FATAL << "Unable to locate Particle Property Service"<<endreq;
     return sc;
   }
@@ -87,17 +75,18 @@ StatusCode BTagging::execute() {
   
   MsgStream  req( msgSvc(), name() );
   StatusCode sc = StatusCode::SUCCESS;  
-  
+
+  if( !filterPassed() ) {
+    req << MSG::DEBUG << "Event was not selected. "<< endreq;
+    setFilterPassed( false );
+    return StatusCode::SUCCESS;
+  }
+  setFilterPassed( true );
+ 
   // Retrieve informations about event
   SmartDataPtr<EventHeader> evt( eventSvc(), EventHeaderLocation::Default );
   if ( !evt ) {   
     req << MSG::ERROR << "    Unable to Retrieve Event" << endreq;
-    return StatusCode::FAILURE;
-  }
-
-  SmartDataPtr<Collisions> mcCollisions(eventSvc(), CollisionLocation::Default);
-  if ( !mcCollisions ) {   
-    req << MSG::ERROR << "    Unable to Retrieve Collisions" << endreq;
     return StatusCode::FAILURE;
   }
 
@@ -110,7 +99,7 @@ StatusCode BTagging::execute() {
   m_trig1 = 0; if( 0 != L1Report ) if( L1Report->decision() ) m_trig1 = 1;
 
   // Counter of events processed
-  req << MSG::INFO << ">>>>>  Tagging Event Nr " << evt->evtNum()
+  req << MSG::DEBUG << ">>>>>  Tagging Event Nr " << evt->evtNum()
       << " Run " << evt->runNum() << "  <<<<<" << endreq;
 
   m_Run   = evt->runNum();
@@ -118,14 +107,9 @@ StatusCode BTagging::execute() {
 
   //----------------------------------------------------------------------
   // Fill the PhysDeskTop
-  StatusCode scDesktop = desktop()->getInput();
-  if (scDesktop.isFailure()) {
-    req << MSG::ERROR << "    Unable to fill PhysDesktop " << endreq;
-    return StatusCode::SUCCESS;
-  }
   const ParticleVector&   parts = desktop()->particles();
   const VertexVector& verts_tmp = desktop()->vertices();    
-  scDesktop = desktop()->saveDesktop();
+  StatusCode scDesktop = desktop()->saveDesktop();
   if (scDesktop) {
     req << MSG::DEBUG 
 	<< "  Nr Vertices: "  << verts_tmp.size() 
@@ -163,7 +147,7 @@ StatusCode BTagging::execute() {
   ParticleVector::const_iterator ipart, jpart;
 
   for ( ipart = parts.begin(); ipart != parts.end(); ipart++){
-     if((*ipart)->particleID().hasBottom()) {
+    if((*ipart)->particleID().hasBottom()) {
       AXB0 = (*ipart);
       axdaugh = FindDaughters(AXB0);
       axdaugh.push_back(AXB0);
@@ -202,8 +186,8 @@ StatusCode BTagging::execute() {
     }
   }
   if( !RecVert ) {
-   req << MSG::ERROR <<"No Reconstructed Vertex!! Skip." <<endreq;
-   return StatusCode::SUCCESS;
+    req << MSG::ERROR <<"No Reconstructed Vertex!! Skip." <<endreq;
+    return StatusCode::SUCCESS;
   }    
 
   //build VertexVector of pileup ----------------------------
@@ -220,7 +204,7 @@ StatusCode BTagging::execute() {
   ParticleVector vtags(0);
 
   for ( ipart = parts.end()-1; ipart != parts.begin()-1; ipart-- ){
-    if( vtags.size() > MAXSIZE-1 ) {
+    if( vtags.size() > MAXSIZETAGS-1 ) {
       req << MSG::WARNING << "Reached array limit on N" <<endreq;  
       break; 
     }
@@ -235,7 +219,7 @@ StatusCode BTagging::execute() {
     ContainedObject* contObj = (*ipart)->origin();
     if (contObj) {
       ProtoParticle* proto = dynamic_cast<ProtoParticle*>(contObj);
-      if(proto->track()->isDownstream()) continue;                 //preselection
+      if(proto->track()->isDownstream()) continue;             //preselection
     }
 
     //eliminate from vtags all parts from a pileup vtx
@@ -248,11 +232,11 @@ StatusCode BTagging::execute() {
     //(the second half is usually doubled for selected events...)
     bool isDup = false;
     for( jpart = ipart-1; jpart != parts.begin()-1; jpart--){
-       if( (*jpart)->origin() == (*ipart)->origin() ) { 
-	 isDup=true; 
-	 req << MSG::DEBUG << "Duplication! p="<< (*ipart)->p()/GeV <<endreq;
-	 break; 
-       }
+      if( (*jpart)->origin() == (*ipart)->origin() ) { 
+	isDup=true; 
+	req << MSG::DEBUG << "Duplication! p="<< (*ipart)->p()/GeV <<endreq;
+	break; 
+      }
     }
     ///////////////////////////////////////
     if(!isDup) vtags.push_back(*ipart); //
@@ -296,12 +280,12 @@ StatusCode BTagging::execute() {
     if (contObj) {
       ProtoParticle* proto = dynamic_cast<ProtoParticle*>(contObj);
       m_trtyp[m_N] = 0;
-      if(proto->track()->forward() ) m_trtyp[m_N] = 1;
-      else if(proto->track()->match()   ) m_trtyp[m_N] = 2;
+      if(proto->track()->isLong() ) m_trtyp[m_N] = 1;
       else if(proto->track()->isDownstream()) m_trtyp[m_N] = 3;
-      else if(proto->track()->veloTT()  ) m_trtyp[m_N] = 4;
-      else if(proto->track()->velo()    ) m_trtyp[m_N] = 5;
-      else if(proto->track()->seed()    ) m_trtyp[m_N] = 6;
+      else if(proto->track()->isUpstream()  ) m_trtyp[m_N] = 4;
+      else if(proto->track()->isVelotrack() ) m_trtyp[m_N] = 5;
+      else if(proto->track()->isTtrack()    ) m_trtyp[m_N] = 6;
+      else if(proto->track()->isBackward()  ) m_trtyp[m_N] = 7;
     }
     printInfo(axp);
 
@@ -309,13 +293,14 @@ StatusCode BTagging::execute() {
   }
 
   ///----------------------------------------------------------VertexCharge
+  double ach = 0;
   int nroftracks=0;
-  double ach = VertexCharge( vtags, nroftracks );
+  if(m_UseVertexCharge) ach = VertexCharge( vtags, nroftracks );
 
   ///----------------------------------------------------------------------
-  //DECIDE NOW TAG
+  //select tag candidates
 
-  // some inits first
+  //some inits first
   int imuon = -1;
   int iele  = -1;
   int ikaon = -1;
@@ -332,34 +317,35 @@ StatusCode BTagging::execute() {
 
   for( int i=0; i < m_N; i++ ) {
     
-    if( m_trtyp[i] > 3 ) continue; //keep only long tracks
+    if( m_trtyp[i] > 2 ) continue; //keep only long tracks
 
     double IPsig= fabs(m_AXip[i]/m_AXiperr[i]);
-    double deta= fabs(log(tan(m_B0the/2)/tan(asin(m_AXPt[i]/m_AXP[i])/2)));
-    double dphi= fabs(m_AXphi[i]-m_B0phi); if(dphi>3.1416) dphi=6.2832-dphi;
-    double dQ  = m_InvMss[i]-m_B0mass;
+    double dQ   = m_InvMss[i]-m_B0mass;
 
-    if(abs(m_AXID[i]) == 13) { // selects OS muon tag
-      if(m_AXPt[i] > m_AXPt_cut_muon &&
-	 m_AXP[i]  > m_AXP_cut_muon  &&
-	 IPsig > m_IP_cut_muon ) {
-	if( m_AXPt[i] > ptmaxm ) { //Pt ordering
-	  imuon = i;
-	  ptmaxm = m_AXPt[i];
+    switch ( abs(m_AXID[i]) ) {
+
+    case 13:                           // selects OS muon tag
+      if(m_AXPt[i] > m_AXPt_cut_muon)
+	if(m_AXP[i]  > m_AXP_cut_muon)
+	  if(IPsig > m_IP_cut_muon) 
+	    if( m_AXPt[i] > ptmaxm ) { //Pt ordering
+	      imuon = i;
+	      ptmaxm = m_AXPt[i];
+	    }   
+      break;
+
+    case 11:                           // selects OS electron tag      
+      if(m_AXPt[i] > m_AXPt_cut_ele)
+	if(m_AXP[i]  > m_AXP_cut_ele  &&
+	   IPsig > m_IP_cut_ele ) {
+	  if( m_AXPt[i] > ptmaxe ) { //Pt ordering
+	    iele = i;
+	    ptmaxe = m_AXPt[i];
+	  }
 	}
-      }
-    }
-    if(abs(m_AXID[i]) == 11) { // selects OS electron tag
-      if(m_AXPt[i] > m_AXPt_cut_ele &&
-	 m_AXP[i]  > m_AXP_cut_ele  &&
-	 IPsig > m_IP_cut_ele ) {
-	if( m_AXPt[i] > ptmaxe ) { //Pt ordering
-	  iele = i;
-	  ptmaxe = m_AXPt[i];
-	}
-      }
-    }
-    if(abs(m_AXID[i]) == 321) { // selects OS kaon tag
+      break;
+
+    case 321:                      // selects OS kaon tag
       if(m_AXPt[i] > m_AXPt_cut_kaon &&
 	 m_AXP[i]  > m_AXP_cut_kaon  &&
 	 m_IPPU[i] > m_IPPU_cut_kaon &&
@@ -370,34 +356,39 @@ StatusCode BTagging::execute() {
 	  ptmaxk = m_AXPt[i];
 	}
       }
-    }
-    if( isBs && abs(m_AXID[i]) == 321 ) { // selects SS KAON tag
-      if(m_AXPt[i] > m_AXPt_cut_kaonS &&
-	 m_AXP[i]  > m_AXP_cut_kaonS  &&
-	 IPsig < m_IP_cut_kaonS &&
-	 dphi < m_phicut_kaonS &&
-	 deta < m_etacut_kaonS &&
-	 dQ   < m_dQcut_kaonS ) {
-	if( m_AXPt[i] > ptmaxkS ) { //Pt ordering
-	  ikaonS = i;
-	  ptmaxkS = m_AXPt[i];
+      if( isBs ) {                // selects SS kaon tag
+	double deta= fabs(log(tan(m_B0the/2)/tan(asin(m_AXPt[i]/m_AXP[i])/2)));
+	double dphi= fabs(m_AXphi[i]-m_B0phi); if(dphi>3.1416) dphi=6.2832-dphi;
+	if(m_AXPt[i] > m_AXPt_cut_kaonS &&
+	   m_AXP[i]  > m_AXP_cut_kaonS  &&
+	   IPsig < m_IP_cut_kaonS &&
+	   dphi < m_phicut_kaonS &&
+	   deta < m_etacut_kaonS &&
+	   dQ   < m_dQcut_kaonS ) {
+	  if( m_AXPt[i] > ptmaxkS ) { //Pt ordering
+	    ikaonS = i;
+	    ptmaxkS = m_AXPt[i];
+	  }
 	}
       }
-    }
-    if( isBd && abs(m_AXID[i]) == 211 ) { // else selects SS PION tag
-      if(m_AXPt[i] > m_AXPt_cut_pionS &&
-	 m_AXP[i]  > m_AXP_cut_pionS  &&
-	 IPsig < m_IP_cut_pionS &&
-	 dQ    < m_dQcut_pionS ) {
-	if( m_AXPt[i] > ptmaxpS ) { //Pt ordering
-	  ipionS = i;
-	  ptmaxpS = m_AXPt[i];
+      break;
+
+    case 211:                       // selects SS PION tag
+      if( isBd ) {
+	if(m_AXPt[i] > m_AXPt_cut_pionS &&
+	   m_AXP[i]  > m_AXP_cut_pionS  &&
+	   IPsig < m_IP_cut_pionS &&
+	   dQ    < m_dQcut_pionS ) {
+	  if( m_AXPt[i] > ptmaxpS ) { //Pt ordering
+	    ipionS = i;
+	    ptmaxpS = m_AXPt[i];
+	  }
 	}
       }
+      break;
     }
   }
-
-  //--- Combine tags:
+  //--- Combine tags: -------------------------------------------------------
 
   //in case ele and mu both exist kill lower Pt
   if( imuon != -1 && iele!= -1 ) {
@@ -415,192 +406,137 @@ StatusCode BTagging::execute() {
   if( isBd && ic==0 ) iSame=ipionS;
   if( iSame != -1)  ic+=   10;
 
-  if(ic==10000) {    // mu 
+  if(     ic==10000) {    // mu 
     ix=1;
     tagdecision = -m_ch[imuon];
   }
-  if(ic== 1000) {    // el 
+  else if(ic== 1000) {    // el 
     ix=2;
     tagdecision = -m_ch[iele];
   }
-  if(ic==  100) {    // K 
+  else if(ic==  100) {    // K 
     ix=3 ;
     if(qk != 0 ) tagdecision = qk>0 ? -1 : 1;
   }
-  if(ic==10100) {   // mu-k
+  else if(ic==10100) {   // mu-k
     ix=4;
     chsum = m_ch[imuon]+m_ch[ikaon];
     if(chsum) tagdecision = chsum>0 ? -1 : 1;
   }
-  if(ic== 1100) {   // e-k 
+  else if(ic== 1100) {   // e-k 
     ix=5;
     chsum = m_ch[iele]+m_ch[ikaon];
     if(chsum) tagdecision = chsum>0 ? -1 : 1;
   }
-  if(ic==    0 && nroftracks >1 ) { // vertex charge
+  else if(ic==    0 && nroftracks >1 ) { // vertex charge
     ix=6;
     if(ach) tagdecision = ach>0 ? -1 : 1;
   }
-  if(ic==   10) {    // Same Side pion or kaon 
+  else if(ic==   10) {    // Same Side pion or kaon 
     ix=7;
     tagdecision = m_ch[iSame];
   }
-  if(ic==10010) {   // mu-kS 
+  else if(ic==10010) {   // mu-kS 
     ix=8;
     chsum = m_ch[imuon]-m_ch[iSame];
     if(chsum) tagdecision = chsum>0 ? -1 : 1;
   }
-  if(ic== 1010) {   // e-kS 
+  else if(ic== 1010) {   // e-kS 
     ix=9;
     chsum = m_ch[iele]-m_ch[iSame];
     if(chsum) tagdecision = chsum>0 ? -1 : 1;
   }
-  if(ic==  110) {   // k-kS 
+  else if(ic==  110) {   // k-kS 
     ix=10;
     chsum = m_ch[ikaon]-m_ch[iSame];
     if(chsum) tagdecision = chsum>0 ? -1 : 1;
   }
-  if(ic==10110) {   // mu-k-kS 
+  else if(ic==10110) {   // mu-k-kS 
     ix=11;
     chsum = m_ch[imuon]+m_ch[ikaon]-m_ch[iSame];
     if(chsum) tagdecision = chsum>0 ? -1 : 1;
   }
-  if(ic== 1110) {   // e-k-kS 
+  else if(ic== 1110) {   // e-k-kS 
     ix=12;
     chsum = m_ch[iele]+m_ch[ikaon]-m_ch[iSame];
     if(chsum) tagdecision = chsum>0 ? -1 : 1;
   }
-
   if(tagdecision==0) ix=0; 
 
-  //look into MCtruth to know how many visible collisions are there
-  //and what process signal corresponds to (info not used for tagging!)
-  m_K = 0;
-  for (Collisions::const_iterator colls = mcCollisions->begin(); 
-       colls != mcCollisions->end(); colls++) 
-    if( m_visTool->isVisible(*colls) ) m_K++;
-  
+  ///OUTPUT to TES ---------------------------------------------------------
+  if( m_WriteToTES ) {
+    FlavourTag* theTag = new FlavourTag;
 
+    theTag->setTaggedB( AXB0 );
+    if(tagdecision== 1) theTag->setDecision( FlavourTag::bbar );
+    else if(tagdecision==-1) theTag->setDecision( FlavourTag::b );
+    else if(tagdecision==0 ) theTag->setDecision( FlavourTag::none );
+    theTag->setCategory(ix);
+
+    SmartDataPtr<FlavourTags> tags( eventSvc(), "/Event/Phys/BTagging/Tags" );
+    if( tags ) {
+      req << MSG::DEBUG << "Inserting in already existing container" <<endreq;
+      tags->insert(theTag);
+    } else {
+      FlavourTags *tags = new FlavourTags;
+      tags->insert(theTag);
+      sc = eventSvc()->registerObject( "/Event/Phys/BTagging/Tags", tags );
+      if( sc.isFailure() )
+	req << MSG::ERROR << "Unable to register the tags"<< endreq;
+      else req << MSG::DEBUG << "Registered tag into new container."<< endreq;
+    }
+
+    SmartDataPtr<Particles> tagCands(eventSvc(),"/Event/Phys/BTagging/Taggers");
+    if( tagCands ) {
+      req << MSG::DEBUG << "Inserting in already existing container: "
+	  << "/Event/Phys/BTagging/Taggers" << endreq;
+      if(imuon !=-1) tagCands->insert( *(vtags.begin()+imuon) );
+      if(iele  !=-1) tagCands->insert( *(vtags.begin()+iele) );
+      if(ikaon !=-1) tagCands->insert( *(vtags.begin()+ikaon) );
+      if(ikaonS!=-1) tagCands->insert( *(vtags.begin()+ikaonS) );
+      if(ipionS!=-1) tagCands->insert( *(vtags.begin()+ipionS) );
+
+    } else {
+      Particles* tagCands = new Particles;
+      if(imuon !=-1) tagCands->insert( *(vtags.begin()+imuon) );
+      if(iele  !=-1) tagCands->insert( *(vtags.begin()+iele) );
+      if(ikaon !=-1) tagCands->insert( *(vtags.begin()+ikaon) );
+      if(ikaonS!=-1) tagCands->insert( *(vtags.begin()+ikaonS) );
+      if(ipionS!=-1) tagCands->insert( *(vtags.begin()+ipionS) );
+
+      sc= eventSvc()->registerObject("/Event/Phys/BTagging/Taggers", tagCands);
+      if( sc.isFailure() )
+	req << MSG::ERROR << "Unable to register candidates."<< endreq;
+      else
+	req << MSG::DEBUG << "Registered a new container: "
+	    << "/Event/Phys/BTagging/Taggers" << endreq;
+    }
+  }
+
+  //check if the decision was right or wrong
+  int truetag = 0;
+  SmartDataPtr<GenMCLinks> sigL(evtSvc(), GenMCLinkLocation::Default);
+  if( sigL ) {
+    MCParticle* Bsig = (*(sigL->begin()))->signal();
+    if(Bsig) truetag = Bsig->particleID().pid()/abs(Bsig->particleID().pid());
+  }
   ///OUTPUT to logfile ----------------------------------------------------
-  req << MSG::INFO << "TAGGINGINFO " << m_Run 
-      << std::setw(5) << m_Event 
+  req << MSG::INFO << "TAGGINGINFO  " << m_Run 
+      << std::setw(4) << m_Event 
       << std::setw(4) << tagdecision 
+      << std::setw(4) << truetag
       << std::setw(3) << ix 
       << std::setw(4) << m_trig0 
       << " " << m_trig1 
       << " " << m_knrec
-      << " " << m_K
       << endreq;
 
-  ///OUTPUT to TES ---------------------------------------------------------
-  FlavourTag* theTag = new FlavourTag;
-
-  theTag->setTaggedB( AXB0 );
-  if(tagdecision== 1) theTag->setDecision( FlavourTag::bbar );
-  if(tagdecision==-1) theTag->setDecision( FlavourTag::b );
-  if(tagdecision==0 ) theTag->setDecision( FlavourTag::none );
-
-  if( ix==6 ) theTag->setType( FlavourTag::vertexCharge );
-   else theTag->setType( FlavourTag::singleParticle );
-  if(tagdecision==0 ) theTag->setType( FlavourTag::unTagged );
-
-  SmartDataPtr<FlavourTags> tags( eventSvc(), m_TagsLocation+"/Tags" );
-  if( tags ) {
-    req << MSG::DEBUG << "Inserting in already existing container" <<endreq;
-    tags->insert(theTag);
-  } else {
-    FlavourTags *tags = new FlavourTags;
-    tags->insert(theTag);
-    sc = eventSvc()->registerObject( m_TagsLocation+"/Tags", tags );
-    if( sc.isFailure() )
-      req << MSG::ERROR << "Unable to register the tags"<< endreq;
-    else req << MSG::DEBUG << "Registered tag into new container."<< endreq;
-  }
-
-  SmartDataPtr<Particles> tagCands( eventSvc(),m_TagsLocation+"/Taggers" );
-  if( tagCands ) {
-    req << MSG::DEBUG << "Inserting in already existing container: "
-	<< m_TagsLocation << "/Taggers" << endreq;
-    if(imuon !=-1) tagCands->insert( *(vtags.begin()+imuon) );
-    if(iele  !=-1) tagCands->insert( *(vtags.begin()+iele) );
-    if(ikaon !=-1) tagCands->insert( *(vtags.begin()+ikaon) );
-    if(ikaonS!=-1) tagCands->insert( *(vtags.begin()+ikaonS) );
-    if(ipionS!=-1) tagCands->insert( *(vtags.begin()+ipionS) );
-
-  } else {
-    Particles* tagCands = new Particles;
-    if(imuon !=-1) tagCands->insert( *(vtags.begin()+imuon) );
-    if(iele  !=-1) tagCands->insert( *(vtags.begin()+iele) );
-    if(ikaon !=-1) tagCands->insert( *(vtags.begin()+ikaon) );
-    if(ikaonS!=-1) tagCands->insert( *(vtags.begin()+ikaonS) );
-    if(ipionS!=-1) tagCands->insert( *(vtags.begin()+ipionS) );
-
-    sc = eventSvc()->registerObject( m_TagsLocation+"/Taggers", tagCands );
-    if( sc.isFailure() )
-      req << MSG::ERROR << "Unable to register candidates."<< endreq;
-    else
-      req << MSG::DEBUG << "Registered a new container: "
-	  << m_TagsLocation << "/Taggers" << endreq;
-  }
-
   ///----------------------------------------------------------------------
-  //Dump short info on taggers used to make the decision
-  int i=-1;
-  if(ic!=0 || nroftracks>1) 
-    req<<MSG::INFO<< "Taggers used:  (code "<< ic <<")" <<endreq;
-  if(imuon!=-1) { 
-    i= imuon;
-    req<<MSG::INFO<<std::setprecision(3)<< "muon :  P=" << m_AXP[i] 
-       << " Pt=" << m_AXPt[i] 
-       << " IPs="<< fabs(m_AXip[i]/m_AXiperr[i]) <<endreq;
-  }
-  if(iele!=-1) { 
-    i= iele;
-    req<<MSG::INFO<<std::setprecision(3)<< "ele  :  P=" << m_AXP[i] 
-       << " Pt=" << m_AXPt[i] 
-       << " IPs="<< fabs(m_AXip[i]/m_AXiperr[i]) <<endreq;
-  }
-  if(ikaon!=-1) { 
-    i= ikaon;
-    req<<MSG::INFO<<std::setprecision(3)<< "kaon :  P=" << m_AXP[i] 
-       << " Pt=" << m_AXPt[i] 
-       << " IPs="<< fabs(m_AXip[i]/m_AXiperr[i]) 
-       << " IPPU="<< m_IPPU[i] 
-       << " qk="<< qk <<endreq;
-  }
-  if(ikaonS!=-1) { 
-    i= ikaonS;
-    double deta= log(tan(m_B0the/2))-log(tan(asin(m_AXPt[i]/m_AXP[i])/2));
-    double dphi= fabs(m_AXphi[i]-m_B0phi); if(dphi>3.1416) dphi=6.2832-dphi;
-    double dQ  = m_InvMss[i]-m_B0mass;
-    req<<MSG::INFO<<std::setprecision(3)<< "kaonS:  P=" << m_AXP[i] 
-       << " Pt=" << m_AXPt[i] 
-       << " IPs="<< fabs(m_AXip[i]/m_AXiperr[i]) 
-       << " dphi="<< dphi << " deta=" << deta << " dQ=" << dQ <<endreq;
-  }
-  if(ipionS!=-1) { 
-    i= ipionS;
-    double deta= log(tan(m_B0the/2))-log(tan(asin(m_AXPt[i]/m_AXP[i])/2));
-    double dphi= fabs(m_AXphi[i]-m_B0phi); if(dphi>3.1416) dphi=6.2832-dphi;
-    double dQ  = m_InvMss[i]-m_B0mass;
-    req<<MSG::INFO<<std::setprecision(3)<< "pionS:  P=" << m_AXP[i] 
-       << " Pt=" << m_AXPt[i] 
-       << " IPs="<< fabs(m_AXip[i]/m_AXiperr[i]) 
-       << " dphi="<< dphi << " deta=" << deta << " dQ=" << dQ <<endreq;
-  }
-  if(nroftracks >1) {
-    req<<MSG::INFO<< "Vtx  :  charge=" << ach 
-       << "  nroftracks=" << nroftracks <<endreq;
-  }
-  if(i!=-1) req<<MSG::DEBUG<< "chsum=" << chsum <<endreq;
-
-
   //internal counters:
-  if(m_trig0 && m_trig1) {
-    trueflavour = 1; //this is ok for B0, Bs non-mixed runs
+  if(m_trig0) if(m_trig1) {
     nsele++;
-    if(tagdecision == trueflavour) nrt[ix]++; 
-    if(tagdecision ==-trueflavour) nwt[ix]++;
+    if(tagdecision == truetag) nrt[ix]++; 
+    else if(tagdecision ==-truetag) nwt[ix]++;
   }
 
   return StatusCode::SUCCESS;
@@ -748,7 +684,6 @@ void BTagging::PileUpIP( Particle* axp, double& ip, double& ipe) {
 void BTagging::printInfo( Particle *axchild ) {
 
   MsgStream req( msgSvc(), name() );
-
   if( req.level() > (MSG::DEBUG) ) return;
 
   if( axchild ) { 
@@ -760,15 +695,14 @@ void BTagging::printInfo( Particle *axchild ) {
       ContainedObject* contObj = axchild->origin();
       if (contObj) {
 	ProtoParticle* proto = dynamic_cast<ProtoParticle*>(contObj);
-	if(proto->track()->forward() ) tipo = "fwd";
-	if(proto->track()->match()   ) tipo = "mat";
-	if(proto->track()->isDownstream()) tipo = "ups";
-	if(proto->track()->veloTT()  ) tipo = "vtt";
-	if(proto->track()->velo()    ) tipo = "vel";
-	if(proto->track()->seed()    ) tipo = "sed";
+	if(proto->track()->isLong()      ) tipo = "lng";
+	if(proto->track()->isDownstream()) tipo = "dwn";
+	if(proto->track()->isUpstream()  ) tipo = "ups";
+	if(proto->track()->isVelotrack() ) tipo = "vel";
+	if(proto->track()->isTtrack()    ) tipo = "ttr";
+	if(proto->track()->isBackward()  ) tipo = "bak";
       }
-      ParticleProperty* ap ;
-      ap = ppSvc->findByStdHepID(axchild->particleID().pid());
+      ParticleProperty* ap= ppSvc->findByStdHepID(axchild->particleID().pid());
       req <<MSG::DEBUG<< tipo << " >>> "<< ap->particle() << " <<<"
 	  << std::setprecision(3)
 	  << "  P=" << axchild->p()/GeV 
@@ -893,12 +827,10 @@ double BTagging::VertexCharge( ParticleVector vtags, int& nroftracks ) {
       if(x > 40.0) probi2=0.6;
       // pt
       x= (*jp)->pt()/GeV;
-      probp1=0.04332+0.9493*x-0.5283*x*x+0.1296*x*x*x
-	-0.01094*pow(x,4);
+      probp1=0.04332+0.9493*x-0.5283*x*x+0.1296*x*x*x-0.01094*pow(x,4);
       if(x > 5.0) probp1=0.65;
       x= (*kp)->pt()/GeV;
-      probp2=0.04332+0.9493*x-0.5283*x*x+0.1296*x*x*x
-	-0.01094*pow(x,4);
+      probp2=0.04332+0.9493*x-0.5283*x*x+0.1296*x*x*x-0.01094*pow(x,4);
       if(x > 5.0) probp2=0.65;
       // angle
       x= ((*jp)->momentum().vect()).angle((*kp)->momentum().vect());
@@ -955,8 +887,7 @@ double BTagging::VertexCharge( ParticleVector vtags, int& nroftracks ) {
       if(x > 40.0) probi1=0.6;
       // pt
       x= (*jpp)->pt()/GeV;
-      probp1=0.04332+0.9493*x-0.5283*x*x+0.1296*x*x*x
-	-0.01094*pow(x,4);
+      probp1=0.04332+0.9493*x-0.5283*x*x+0.1296*x*x*x-0.01094*pow(x,4);
       if(x > 5.0) probp1=0.65;
       // total
       if(probi1<0) probi1=0;

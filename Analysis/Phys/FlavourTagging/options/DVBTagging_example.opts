@@ -1,124 +1,37 @@
 //##############################################################
-//  DaVinci job Options to run a selection + BTagging
+//  Example DaVinci job Options to run Selection + BTagging
 
-//--------------------------------------------------------------
-#pragma print off
-#include "$DAVINCIROOT/options/DaVinciCommon.opts"
-#pragma print on
+///e.g. Bs Channel Selection -------------------------------------
+#include "$B2HHROOT/options/DVTDRselBd2PiPi.opts"
+BTagging.PhysDesktop.InputLocations = { "/Event/Phys/TDRselB2PiPi" };
 
-// Default Database dependent configurations. The latest
-// compatible database is included from here.
-// If you need something different choose from vXXXX.opts when
-// more than one is available
-#include "$DAVINCIROOT/options/DaVinciDDDB.opts"
+///or Cheated Selection ---------------------------------------------
+//#include "$FLAVOURTAGGINGROOT/options/CheatedSelection.opts"
 
-//--------------------------------------------------------------
-// DaVinci Global Reconstruction Algorithms
-// VERY IMPORTANT:
-//   ChargedProtoPAlg and PrimVtxFinder are executed in
-//   DaVinciReco and MUST not be executed again
-// REMEMBER:
-//   to make Neutral ProtoParticles for channels with neutrals
-// REMEMBER:
-//   to make Kshorts with all type of tracks
-//--------------------------------------------------------------
-#include "$DAVINCIROOT/options/DaVinciReco.opts"
+// includes upstream (old VTT) -----------------------------------
+ChargedProtoPAlg.VeloTTTracks = true ; //(not mandatory)
 
-//--- Neutral ProtoParticles (gammas and pi0) 
-// NOTE:: Not enough information in new GaudiRootDB files at the moment to 
-//        produce neutral protoparticles -> only works with POOL input
-//#include "$DAVINCIROOT/options/DaVinciNeutrals.opts"
-
-///--------------------------------------------------------------
-///              SELECTIONS
-///--------------------------------------------------------------
-
-//--- For merged and resolved pi0 the corresponding selection algorithm
-//    need to be executed. 
-//    Note that DaVinciNeutrals MUST be executed
-// ApplicationMgr.DLLs   += { "Bd2PiPiPi0" };
-// ApplicationMgr.TopAlg += { "ResolvedPi0Alg" };
-// #include "$BD2PIPIPI0ROOT/options/ResolvedPi0Alg.opts"
-// ApplicationMgr.TopAlg += { "MergedPi0Alg" };
-// #include "$BD2PIPIPI0ROOT/options/MergedPi0Alg.opts"
-
-//--- Ks->pi+pi- with all type of tracks loose selection + monitoring
-//#include "$DAVINCIROOT/options/DaVinciKshortLoose.opts"
-//--- Ks->pi+pi- with all type of tracks tight selection + monitoring
-//#include "$DAVINCIROOT/options/DaVinciKshortTight.opts"
-
-///B0 Channel Selections ----------------------------------------
-
-//#include "$B2HHROOT/options/DVBd2PiPi.opts"
-//BTagging.PhysDesktop.InputLocations = { "/Event/Phys/Bd2pipi" };
-//#include "$B2HHROOT/options/DVBd2KPi.opts"
-//BTagging.PhysDesktop.InputLocations = { "/Event/Phys/Bd2Kpi" };
-//#include "$BD2JPSIKSTARROOT/options/DVBd2Jpsi2MuMu_Kstar2KPi.opts"
-//BTagging.PhysDesktop.InputLocations = { "/Event/Phys/B0" };
-//...
-
-///Bs Channel Selections ----------------------------------------
-
-//#include "$B2HHROOT/options/DVBs2PiK.opts"
-//BTagging.PhysDesktop.InputLocations = { "/Event/Phys/Bs2piK" };
-//#include "$B2HHROOT/options/DVBs2KK.opts"
-//BTagging.PhysDesktop.InputLocations = { "/Event/Phys/Bs2KK" };
-//#include "$BS2DSHOPTS/DVBs2Ds2KKPi_Pi.opts"
-//BTagging.PhysDesktop.InputLocations = { "/Event/Phys/Bs" };
-//...
-
-///Cheated Selection --------------------------------------------
-
-//you must define the signal B to look for. Uncomment one of these:
-CheatedSelection.SignalB = "B0";
-//CheatedSelection.SignalB = "B~0";
-//CheatedSelection.SignalB = "B_s0";
-//CheatedSelection.SignalB = "B_s~0";
-#include "$FLAVOURTAGGINGROOT/options/CheatedSelection.opts"
-
-// includes upstream  -------------------------------------------
-ChargedProtoPAlg.VeloTTTracks = true; //(not mandatory)
-
-///-----------------------------------------------------------///
+///---------------------------------------------------------------
 ///               BTagging
-///-----------------------------------------------------------///
-ApplicationMgr.TopAlg += { "BTagging" };
-BTagging.OutputLevel   = 3;
+///---------------------------------------------------------------
+#include "$FLAVOURTAGGINGROOT/options/BTagging.opts"
 
-BTagging.PhysDesktop.CombinedParticleMaker.UseVTTTracks  = true;
-BTagging.PhysDesktop.CombinedParticleMaker.AddBremPhoton = true;
-BTagging.PhysDesktop.ParticleMakerType = "CombinedParticleMaker";
-BTagging.PhysDesktop.CombinedParticleMaker.MuonSelection = {
-    "det='MUON' mu-pi='-9.0'" };
-BTagging.PhysDesktop.CombinedParticleMaker.ElectronSelection = {
-    "det='CALO' e-pi='2.0'" };
-BTagging.PhysDesktop.CombinedParticleMaker.KaonSelection = {
-    "det='RICH' k-pi='2.0' k-p='3.0'" };
-BTagging.PhysDesktop.OutputLevel = 4;
-BTagging.UnconstVertexFitter.OutputLevel = 5;
-BTagging.PhysDesktop.OutputLocation = "/Event/Phys/BTagging" ;
-
-//--------------------------------------------------------------
-// Set output level thresholds (2=DEBUG, 3=INFO, 4=WARNING, 5=ERROR, 6=FATAL)
-//--------------------------------------------------------------
-ChargedPP2MC.OutputLevel           = 4;
-NeutralPP2MC.OutputLevel           = 4;
-MessageSvc.OutputLevel             = 3;
-XmlParserSvc.OutputLevel           = 4;
-PrimaryVertexFinderAlg.OutputLevel = 4;
-ChargedProtoPAlg.OutputLevel       = 4;
-MessageSvc.Format = "% F%30W%S%7W%R%T %0W%M";
-
-//---------------------------------------------------------------
-// Number of events to process, skip and printing frequency
-//---------------------------------------------------------------
-ApplicationMgr.EvtMax    = 1000 ;
-EventSelector.FirstEvent = 1;
-EventSelector.PrintFreq  = 1;
+//*************************************************************** Monitor
+ApplicationMgr.TopAlg += { "BTaggingMonitor" };
+BTaggingMonitor.OutputLevel   = 3;
+BTaggingMonitor.DebugTool.OutputLevel   = 3;
+BTaggingMonitor.PhysDesktop.OutputLevel = 4;
+BTaggingMonitor.Particle2MCLinksAsct.Location = "";
+BTaggingMonitor.TagsLocations = { "/Event/Phys/BTagging" };
+BTaggingMonitor.PhysDesktop.InputLocations = { "/Event/Phys/BTagging" };
+NeutralPP2MC.OutputLevel = 4;
+//***********************************************************************
 
 //---------------------------------------------------------------
 // Input data
-//---------------------------------------------------------------
-#include "$LHCBHOME/project/web/cards/412100.opts"
-//#include "$DAVINCIROOT/options/DaVinciTestData.opts"
+#include "$DAVINCIROOT/options/DaVinciTestData.opts"
+//or for Bs->KK
+//EventSelector.Input = { "DATAFILE=
+//'PFN:rfio:/castor/cern.ch/lhcb/prod04/00000479_00000001_5.dst'
+// TYP='POOL_ROOTTREE' OPT='READ'" };
 //################################################################

@@ -1,4 +1,4 @@
-// $Id: CheatedSelection.h,v 1.2 2004-03-11 10:48:05 pkoppenb Exp $
+// $Id: CheatedSelection.h,v 1.3 2004-05-03 13:54:10 pkoppenb Exp $
 #ifndef USER_CheatedSelection_H 
 #define USER_CheatedSelection_H 1
 
@@ -21,6 +21,7 @@
 #include "DaVinciTools/DVAlgorithm.h"
 // from Event 
 #include "Event/EventHeader.h"
+#include "Event/GenMCLink.h"
 #include "Event/Vertex.h"
 #include "Event/Particle.h"
 #include "Event/MCParticle.h"
@@ -66,11 +67,9 @@ private:
   long m_BID;
   double m_BHEPm;
   IDebugTool* m_debug;
-  IParticlePropertySvc* ppSvc;
   Particle2MCLinksAsct::IAsct* m_pAsctLinks;
 
   //properties
-  std::string m_SignalB;
   double m_BMassWindow;
 
 };

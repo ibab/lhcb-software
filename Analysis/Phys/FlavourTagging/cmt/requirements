@@ -1,15 +1,15 @@
 # Created    : 2002-05-22
-# Maintainer : Olivier Dormond
+# Maintainer : Marco Musy
 #
 # Documentation on the requirement file can be found at
 # http://cern.ch/lhcb-comp/Support/html/new_structure.pdf
 #============================================================================
 package           FlavourTagging
-version           v4r9
+version           v5r0
 
 # Structure, i.e. directories to process. 
 #============================================================================
-branches          cmt doc src options FlavourTagging 
+branches          cmt doc src options FlavourTagging summary
 
 # Set the default paths for the Tagging options
 #============================================================================
@@ -23,6 +23,7 @@ use DaVinciMCTools  v*  Phys
 use MCTools         v*  Phys
 use L0Event	    v*  Event
 use L1Event         v*  Event
+use GenEvent        v*  Event
 
 # Component library building rule
 #============================================================================
@@ -32,3 +33,7 @@ library          FlavourTagging    ../src/*.cpp
 #============================================================================
 apply_pattern component_library library=FlavourTagging
 
+# =================== summary application  ==================================
+private 
+ application       summaryof      ../summary/summaryof.cpp
+ apply_pattern     application_path

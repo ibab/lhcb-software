@@ -1,0 +1,21 @@
+//##############################################################
+//  DaVinci job Options for BTagging
+
+ApplicationMgr.TopAlg += { "BTagging" };
+BTagging.OutputLevel   = 3;
+
+BTagging.PhysDesktop.CombinedParticleMaker.UseVTTTracks  = true;
+BTagging.PhysDesktop.CombinedParticleMaker.AddBremPhoton = true;
+BTagging.PhysDesktop.ParticleMakerType = "CombinedParticleMaker";
+BTagging.PhysDesktop.CombinedParticleMaker.MuonSelection = {
+    "det='MUON' mu-pi='-9.0'" };
+BTagging.PhysDesktop.CombinedParticleMaker.ElectronSelection = {
+    "det='CALO' e-pi='2.0'" };
+BTagging.PhysDesktop.CombinedParticleMaker.KaonSelection = {
+    "det='RICH' k-pi='2.0' k-p='3.0'" };
+
+BTagging.DecayDescriptor = { "not specified" };
+BTagging.PhysDesktop.OutputLevel = 4;
+BTagging.UnconstVertexFitter.OutputLevel = 5;
+
+//##############################################################

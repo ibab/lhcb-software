@@ -1,4 +1,4 @@
-// $Id: BTagging.h,v 1.2 2004-03-11 10:48:05 pkoppenb Exp $
+// $Id: BTagging.h,v 1.3 2004-05-03 13:54:09 pkoppenb Exp $
 #ifndef USER_BTagging_H 
 #define USER_BTagging_H 1
 
@@ -21,7 +21,6 @@
 #include "GaudiKernel/SmartRef.h"
 #include "GaudiKernel/GenericAddress.h"
 #include "DaVinciTools/DVAlgorithm.h"
-#include "MCTools/IVisPrimVertTool.h"
 // from Event 
 #include "Event/EventHeader.h"
 #include "Event/Vertex.h"
@@ -30,12 +29,13 @@
 #include "Event/L0DUReport.h"
 #include "Event/L1Report.h"
 #include "Event/FlavourTag.h"
+#include "Event/GenMCLink.h"
 // CLHEP
 #include "CLHEP/Units/PhysicalConstants.h"
 #include "CLHEP/Geometry/Point3D.h"
 #include "CLHEP/Vector/LorentzVector.h"
 
-#define MAXSIZE 100
+#define MAXSIZETAGS 100
 
 /** @class BTagging BTagging.h 
  *  
@@ -78,35 +78,33 @@ private:
   float     m_B0mass;
   long      m_BID;
   float     m_RVz;
-  long      m_K;
   long      m_knrec;
 
   long      m_N;
-  long      m_AXID[MAXSIZE];
-  float     m_AXP[MAXSIZE];
-  float     m_AXPt[MAXSIZE];
-  float     m_AXphi[MAXSIZE];
-  long      m_ch[MAXSIZE];
-  float     m_AXip[MAXSIZE];
-  float     m_AXiperr[MAXSIZE];
-  float     m_IPPU[MAXSIZE];
-  long      m_trtyp[MAXSIZE];
-  float     m_InvMss[MAXSIZE];
-  float     m_ThBp[MAXSIZE];
+  long      m_AXID[MAXSIZETAGS];
+  float     m_AXP[MAXSIZETAGS];
+  float     m_AXPt[MAXSIZETAGS];
+  float     m_AXphi[MAXSIZETAGS];
+  long      m_ch[MAXSIZETAGS];
+  float     m_AXip[MAXSIZETAGS];
+  float     m_AXiperr[MAXSIZETAGS];
+  float     m_IPPU[MAXSIZETAGS];
+  long      m_trtyp[MAXSIZETAGS];
+  float     m_InvMss[MAXSIZETAGS];
+  float     m_ThBp[MAXSIZETAGS];
 
   Hep3Vector ipVec;
   HepSymMatrix errMatrix;
   IParticlePropertySvc* ppSvc;
-  IVisPrimVertTool* m_visTool;
   Vertex* RecVert; 
   VertexVector PileUpVtx;
 
-  int nsele, trueflavour;
+  int nsele;
   int nrt[50];
   int nwt[50];
 
   //properties ----------------
-  std::string m_TagsLocation;
+  bool m_UseVertexCharge, m_WriteToTES;
 
   double m_AXPt_cut_muon;
   double m_AXP_cut_muon;

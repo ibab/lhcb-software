@@ -1,0 +1,43 @@
+//##############################################################
+// DaVinci job Options for CheatedSelection
+
+#include "$DAVINCIROOT/options/DaVinciCommon.opts"
+#include "$DAVINCIROOT/options/DaVinciDDDB.opts"
+#include "$DAVINCIROOT/options/DaVinciReco.opts"
+
+//--------------------------------------------------------------
+// Re-run L0 and L1 Trigger with DC04 tuning
+//#include "$DAVINCIROOT/options/L0.opts"
+//#include "$DAVINCIROOT/options/L1Decision.opts"
+// Run Hlt triggers - not yet there
+//#include "$DAVINCIROOT/options/Hlt.opts"
+
+// MC mass window in GeV to decide if all final state 
+// particles where present and reconstructed 
+CheatedSelection.BMassWindow = 0.3; //GeV
+
+//---------------------------------------------------
+ApplicationMgr.TopAlg += { "Sequencer/SeqCheatedSelection" };
+SeqCheatedSelection.Members = { "PreLoadParticles/Combined", 
+                                "CheatedSelection" };
+
+Combined.PhysDesktop.ParticleMakerType = "CombinedParticleMaker";
+Combined.PhysDesktop.CombinedParticleMaker.MuonSelection = 
+  { "det='MUON' mu-pi='-9.0'" };
+Combined.PhysDesktop.CombinedParticleMaker.ElectronSelection = 
+  { "det='CALO' e-pi='2.0'" };
+Combined.PhysDesktop.CombinedParticleMaker.KaonSelection = 
+  { "det='RICH' k-pi='2.0' k-p='3.0'" };
+
+//---------------------------------------------------
+CheatedSelection.PhysDesktop.InputLocations = { "/Event/Phys/Combined" };
+CheatedSelection.DecayDescriptor = { "not specified" };
+CheatedSelection.PhysDesktop.OutputLevel = 4;
+CheatedSelection.DebugTool.OutputLevel = 4;
+CheatedSelection.OutputLevel = 4;
+
+//---------------------------------------------------
+BTagging.PhysDesktop.InputLocations = { "/Event/Phys/CheatedSelection" };
+Particle2MCLinks.InputData = {"/Event/Phys/Combined/Particles"};
+
+//################################################################

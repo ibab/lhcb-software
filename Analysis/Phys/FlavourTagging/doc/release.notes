@@ -1,9 +1,57 @@
 !-----------------------------------------------------------------------------
 ! Package     : Phys/FlavourTagging
-! Responsible : Olivier Dormond
+! Responsible : Marco Musy
 ! Purpose     : Provide tools and algorithm for tagging Bs
 !-----------------------------------------------------------------------------
 
+! 2004-05-04 - P. Koppenburg for Marco Musy
+  - src/BTagging.cpp
+  - src/BTagging.h
+  - src/CheatedSelection.cpp
+  - src/CheatedSelection.h
+  - src/FlavourTagging_load.cpp
+  - src/BTaggingMonitor.cpp
+  - src/BTaggingMonitor.h
+  - options/DVBTagging_example.opts
+  - options/BTagging.opts
+  - options/CheatedSelection.opts
+  . Modified or added new flavour tagging. Now official.
+    Writes output to TES.
+
+  - summary/summaryof.cpp
+  . Little tool that allows to decode output
+
+  - src/CategoryTaggingTool.cpp
+  - src/CategoryTaggingTool.h
+  - src/CheatedReco.cpp
+  - src/CheatedReco.h
+  - src/FTCombinedParticleMaker.cpp
+  - src/FTCombinedParticleMaker.h
+  - src/FlavourMonitorAlgorithm.cpp
+  - src/FlavourMonitorAlgorithm.h
+  - src/FlavourTaggingAlgorithm.cpp
+  - src/FlavourTaggingAlgorithm.h
+  - src/FlavourTaggingDebug.cpp
+  - src/FlavourTaggingDebug.h
+  - src/FlavourTaggingSummary.cpp
+  - src/FlavourTaggingSummary.h
+  - src/KaonSameSideTaggingTool.cpp
+  - src/KaonSameSideTaggingTool.h
+  - src/OrderedTaggingTool.cpp
+  - src/OrderedTaggingTool.h
+  - src/ParticleTaggerCriterion.cpp
+  - src/ParticleTaggerCriterion.h
+  - src/SingleParticleTaggingMonitor.cpp
+  - src/SingleParticleTaggingMonitor.h
+  - src/SingleParticleTaggingTool.cpp
+  - src/SingleParticleTaggingTool.h
+  - src/VertexChargeTaggingTool.cpp
+  - src/VertexChargeTaggingTool.h
+  - options/CombinedFlavourTagging.opts
+  - options/DVCheatedSelection.opts
+  . Obsolete and moved to src/attic and options/attic
+
+     
 !==================== FlavourTagging v4r9 2004-03-31 ===================
 ! 2004-03-25 - P. Koppenburg 
  - CheatedReco.cpp

@@ -17,7 +17,6 @@ const        IAlgFactory& CheatedSelectionFactory = s_factory ;
 CheatedSelection::CheatedSelection( const std::string& name,
 				    ISvcLocator* pSvcLocator)
   : DVAlgorithm ( name , pSvcLocator ) {
-  declareProperty( "SignalB",     m_SignalB     = "none" );
   declareProperty( "BMassWindow", m_BMassWindow = 0.3 );
 }
 
@@ -28,35 +27,18 @@ CheatedSelection::~CheatedSelection() {};
 StatusCode CheatedSelection::initialize() {
 
   MsgStream req(msgSvc(), name());
-  
+  StatusCode sc;
+
   // Load all necessary tools via the base class
-  StatusCode sc = loadTools();
-  if( !sc ) {
-    req << MSG::ERROR << "Unable to load tools" << endreq;
-    return sc;
-  }
   sc = toolSvc()->retrieveTool( "Particle2MCLinksAsct", m_pAsctLinks, this);
   if( sc.isFailure() || 0 == m_pAsctLinks) {
     req << MSG::FATAL << "Unable to retrieve Link Associator tool" << endreq;
-    return sc;
-  }
-  sc = service("ParticlePropertySvc", ppSvc);
-  if( !sc ) {
-    req << MSG::FATAL << "Unable to locate Particle Property Service" <<endreq;
     return sc;
   }
   sc = toolSvc()->retrieveTool( "DebugTool", m_debug, this );
   if( sc.isFailure() ) {
     req << MSG::FATAL << "Unable to retrieve Debug tool" << endreq;
     return sc;
-  }
-
-  m_BID   = ppSvc->find(m_SignalB)->jetsetID();
-  m_BHEPm = ppSvc->find(m_SignalB)->mass()/GeV;
-
-  if(abs(m_BID)<500 || abs(m_BID)>550) {
-     req << MSG::FATAL << "Please set SignalB property correctly." << endreq;
-     return StatusCode::FAILURE;
   }
 
   return StatusCode::SUCCESS;
@@ -67,6 +49,8 @@ StatusCode CheatedSelection::initialize() {
 //=============================================================================
 StatusCode CheatedSelection::execute() {
   
+  setFilterPassed( false );
+
   MsgStream  req( msgSvc(), name() );
   StatusCode sc = StatusCode::SUCCESS;  
   
@@ -76,8 +60,42 @@ StatusCode CheatedSelection::execute() {
     req << MSG::ERROR << "    Unable to retrieve event" << endreq;
     return StatusCode::FAILURE;
   }
+
   req << MSG::DEBUG << ">>>>>  Processing Event Nr " << evt->evtNum()
       << " Run " << evt->runNum() << "  <<<<<" << endreq;
+
+  //check what is the B forced to decay
+  MCParticle* mcSignal = 0;
+  SmartDataPtr<GenMCLinks> sigLinks(evtSvc(), GenMCLinkLocation::Default);
+  if( 0 == sigLinks ) {
+    req << MSG::DEBUG << "GenMCLinks not found at"
+        << GenMCLinkLocation::Default << endreq;
+    return StatusCode::SUCCESS;
+  } 
+  if( sigLinks->size() != 1 ) {
+    req << MSG::DEBUG << "More than one signal found:"
+	<< sigLinks->size()  << endreq;
+  }
+  for( GenMCLinks::iterator aLink = sigLinks->begin();
+       sigLinks->end() != aLink; ++aLink ) {
+    mcSignal = (*aLink)->signal();
+    req << MSG::DEBUG << "mcSignal:" << endreq;
+    m_debug -> printTree(mcSignal);
+  }
+  m_BID   = mcSignal->particleID().pid();
+  m_BHEPm = mcSignal->momentum().m()/GeV;
+
+  ////////////////////////////////////////////////////
+  if ( !mcSignal ) {
+    req << MSG::ERROR << "Missing Signal B in MC."<< endreq;
+    return StatusCode::FAILURE;                      
+  }
+  ////////////////////////////////////////////////////
+
+  const ParticleVector& Parts = desktop()->particles();
+  const VertexVector& Verts = desktop()->vertices();
+  req << MSG::DEBUG << "NParts=" << Parts.size()
+      << "  NVerts=" << Verts.size()<< endreq;
 
   //----------------------------------------------------------------------
   // Retrieve MCParticles
@@ -88,23 +106,7 @@ StatusCode CheatedSelection::execute() {
   }
   req << MSG::DEBUG << "Nr of MCParticles retrieved="<< mcpart->size()<< endreq;
 
- //----------------------------------------------------------------------
-  // look for Signal B 
-  MCParticle* B0 = 0 ;
-  MCParticles::const_iterator imc;
-  for ( imc = mcpart->begin(); imc != mcpart->end(); imc++ ) 
-            if( (*imc)->particleID().pid() == m_BID )  B0 = (*imc);
-  
-  ////////////////////////////////////////////////////
-  if ( !B0 ) {
-    req << MSG::ERROR << "Missing Signal B in MC."<< endreq;
-    return StatusCode::SUCCESS;                      
-  }
-  ////////////////////////////////////////////////////
-
-  req << MSG::DEBUG << "-------- Found B meson in MC: "<< m_SignalB << endreq;
-  //m_debug -> printTree(B0);
-
+  //----------------------------------------------------------------------
   // CheatedSelection ----------------------------
   HepLorentzVector ptot=0;
   HepLorentzVector ptotmc=0;
@@ -137,7 +139,7 @@ StatusCode CheatedSelection::execute() {
   }
 
   //and set vertex position  
-  VertB.setPosition( (*((B0->endVertices()).begin()))->position() );
+  VertB.setPosition( (*((mcSignal->endVertices()).begin()))->position() );
 
   Particle candB;
   ParticleID BPID(m_BID);
@@ -154,7 +156,8 @@ StatusCode CheatedSelection::execute() {
     return StatusCode::FAILURE;
   }
 
-  req << MSG::INFO << "Reconstructed " << m_SignalB
+  setFilterPassed( true );
+  req << MSG::DEBUG << "Reconstructed " << m_BID
       << " with m=" << candB.momentum().m()/GeV 
       << " p="      << candB.p()/GeV 
       << " pt="     << candB.pt()/GeV <<endreq;
