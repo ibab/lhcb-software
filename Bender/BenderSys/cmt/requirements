@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.43 2004-12-08 18:39:33 ibelyaev Exp $ 
+# $Id: requirements,v 1.44 2005-01-21 10:29:07 ibelyaev Exp $ 
 # =============================================================================
 # CVS tag $Name: not supported by cvs2svn $
 # =============================================================================
@@ -6,34 +6,34 @@
 #                 LHCb Physics Analysis with Python  
 # =============================================================================
 package       BenderSys
-version       v4r4p1	
+version       v4r5 	
 author        Vanya BELYAEV
 
 use           GaudiPython    v6r10 
 
 # =========== Bender Application itself =======================================
-use           Bender         v4r4   Phys 
-use           BenderGCC      v1r0   Tools 
+use           Bender         v4r5   Phys 
+use           BenderGCC      v1r1   Tools 
 # =========== Bender Libraries ================================================
-use           BenderLibs     v4r4   Tools 
+use           BenderLibs     v4r5   Tools 
 # =========== dictionaries for LoKi/Bender classes ============================
 use           BenderDet      v4r5   Det 
 # =========== dictionaries for LoKi/Bender classes ============================
 use           BenderDict     v4r5   Tools 
 # =========== Bender & LoKi documentation =====================================
-use           BenderDoc      v4r4   Doc 
-use           LoKiDoc        v3r6   Doc 
-use           BenderTutor    v4r4   Tutorial
+use           BenderDoc      v4r5   Doc 
+use           LoKiDoc        v3r7   Doc 
+use           BenderTutor    v4r5   Tutorial
 # =========== Test suit for Bender ============================================
-use           BenderTest     v4r4   Tests 
-use           LoKiTest       v3r6   Tests 
+use           BenderTest     v4r5   Tests 
+use           LoKiTest       v3r7   Tests 
 # =========== examples of usage of Bender "in practice" =======================
-use           BenderExample  v4r4   Ex  
-use           LoKiExample    v3r6   Ex 
+use           BenderExample  v4r5   Ex  
+use           LoKiExample    v3r7   Ex 
 # =========== Test suit for Bender ============================================
-use           BenderVis      v4r4   Vis 
+use           BenderVis      v4r5   Vis 
 # =========== empty 'user' package ============================================
-use           BenderUser     v4r4   Phys
+use           BenderUser     v4r5   Phys
 use           LoKiUser       v1r0   Phys   
 # =========== hybrid: Python/C++ solution =====================================
 use           LoKiHybrid     v4r5   Tools 
