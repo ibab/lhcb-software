@@ -1,6 +1,6 @@
-// $Id: RichHypoData.h,v 1.3 2003-10-13 16:04:52 jonrob Exp $
-#ifndef RICHRECBASE_RICHHYPODATA_H
-#define RICHRECBASE_RICHHYPODATA_H 1
+// $Id: RichHypoData.h,v 1.4 2003-11-02 21:38:04 jonrob Exp $
+#ifndef RICHKERNEL_RICHHYPODATA_H
+#define RICHKERNEL_RICHHYPODATA_H 1
 
 // Gaudi
 #include "GaudiKernel/StreamBuffer.h"
@@ -12,15 +12,13 @@
 // RichKernel
 #include "RichKernel/RichParticleIDType.h"
 
-/** @class RichHypoData RichHypoData.h RichRecBase/RichHypoData.h
+/** @class RichHypoData RichHypoData.h RichKernel/RichHypoData.h
  *
  *  A utility class providing an efficient fixed sized array
  *  for particle hypothesis data
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2003-07-31
- *
- *  @todo   Fix data validification to work without test on data value
  */
 
 template <class TYPE>
@@ -29,60 +27,83 @@ class RichHypoData {
 public:
 
   /// Definition of internal array types
-  typedef boost::array<TYPE,Rich::NParticleTypes> Array;
+  typedef boost::array<TYPE,Rich::NParticleTypes> DataArray;
+  typedef boost::array<bool,Rich::NParticleTypes> ValidityArray;
 
   /// Default Constructor
-  RichHypoData( TYPE initValue = (TYPE)-1 ) { resetData(initValue); }
-  
+  RichHypoData( TYPE value = (TYPE)-1 ) { resetData(value); }
+
   /// Destructor
   ~RichHypoData() { }
 
   /// Read access operator
-  const TYPE& operator [] ( Rich::ParticleIDType type ) const { return m_data[type]; }
+  inline const TYPE& operator [] ( const Rich::ParticleIDType type ) const
+  {
+    return m_data[type];
+  }
 
-  /// Write access operator
-  TYPE& operator []       ( Rich::ParticleIDType type )       { return m_data[type]; }
+  /// Set the data vlaue for a given particle hypothesis
+  void setData( const Rich::ParticleIDType type, const TYPE value );
 
-  /// Reset data
-  void resetData( TYPE initValue = (TYPE)-1 );
+  /// Reset all data
+  void resetData( const TYPE value = (TYPE)-1 );
 
-  /// Const Accessor
-  const Array & dataArray() const { return m_data; }
+  /// Reset data for given particle hypothesis
+  void resetData( const Rich::ParticleIDType type, const TYPE value = (TYPE)-1 );
 
-  /// Accessor
-  Array & dataArray() { return m_data; }
+  /// Const Accessor (To be removed ?)
+  inline const DataArray & dataArray() const
+  {
+    return m_data;
+  }
 
   /// Check whether a piece of data has been initialised
-  bool dataIsValid( Rich::ParticleIDType type );
+  inline bool dataIsValid( const Rich::ParticleIDType type )
+  {
+    return m_valid[type];
+  }
 
 private:
 
   /// The internal representation of the data
-  Array m_data;
+  DataArray     m_data;
+  ValidityArray m_valid;
 
 };
 
 template <class TYPE>
-inline bool RichHypoData<TYPE>::dataIsValid( Rich::ParticleIDType type ) 
+inline void RichHypoData<TYPE>::setData( const Rich::ParticleIDType type,
+                                         const TYPE value )
 {
-  return ( m_data[type] > -0.5 );
+  m_valid[type] = true;
+  m_data[type]  = value;
 }
 
 template <class TYPE>
-inline void RichHypoData<TYPE>::resetData( TYPE initValue )
+inline void RichHypoData<TYPE>::resetData( const TYPE value )
 {
-  m_data[Rich::Electron] = initValue;
-  m_data[Rich::Muon]     = initValue;
-  m_data[Rich::Pion]     = initValue;
-  m_data[Rich::Kaon]     = initValue;
-  m_data[Rich::Proton]   = initValue;
+  resetData( Rich::Electron, value );
+  resetData( Rich::Muon,     value );
+  resetData( Rich::Pion,     value );
+  resetData( Rich::Kaon,     value );
+  resetData( Rich::Proton,   value );
+}
+
+template <class TYPE>
+inline void RichHypoData<TYPE>::resetData( const Rich::ParticleIDType type, 
+                                           const TYPE value )
+{
+  m_valid[type] = false;
+  m_data[type]  = value;
 }
 
 /// Implement textual ostream << method
 template <class TYPE>
 inline std::ostream& operator << ( std::ostream& s, const RichHypoData<TYPE>& data )
 {
-  for ( int i = 0; i < Rich::NParticleTypes; ++i ) { s << (data.dataArray())[i] << " "; }
+  for ( int i = 0; i < Rich::NParticleTypes; ++i ) {
+    s << data[(Rich::ParticleIDType)i] << " ";
+  }
   return s;
 }
 
@@ -90,7 +111,9 @@ inline std::ostream& operator << ( std::ostream& s, const RichHypoData<TYPE>& da
 template <class TYPE>
 inline MsgStream& operator << ( MsgStream& s, const RichHypoData<TYPE>& data )
 {
-  for ( int i = 0; i < Rich::NParticleTypes; ++i ) { s << (data.dataArray())[i] << " "; }
+  for ( int i = 0; i < Rich::NParticleTypes; ++i ) {
+    s << data[(Rich::ParticleIDType)i] << " ";
+  }
   return s;
 }
 
@@ -98,7 +121,9 @@ inline MsgStream& operator << ( MsgStream& s, const RichHypoData<TYPE>& data )
 template <class TYPE>
 inline StreamBuffer& operator << ( StreamBuffer& s, const RichHypoData<TYPE>& data )
 {
-  for ( int i = 0; i < Rich::NParticleTypes; ++i ) { s << (data.dataArray())[i]; }
+  for ( int i = 0; i < Rich::NParticleTypes; ++i ) {
+    s << data[(Rich::ParticleIDType)i];
+  }
   return s;
 }
 
@@ -106,8 +131,11 @@ inline StreamBuffer& operator << ( StreamBuffer& s, const RichHypoData<TYPE>& da
 template <class TYPE>
 inline StreamBuffer& operator >> ( StreamBuffer& s, RichHypoData<TYPE>& data )
 {
-  for ( int i = 0; i < Rich::NParticleTypes; ++i ) { s >> (data.dataArray())[i]; }
+  TYPE tmp;
+  for ( int i = 0; i < Rich::NParticleTypes; ++i ) {
+    s >> tmp; data.setData( (Rich::ParticleIDType)i, tmp );
+  }
   return s;
 }
 
-#endif // RICHRECBASE_RICHHYPODATA_H
+#endif // RICHKERNEL_RICHHYPODATA_H

@@ -1,10 +1,11 @@
-! $Id: release.notes,v 1.26 2003-10-30 12:08:19 jonrob Exp $
+! $Id: release.notes,v 1.27 2003-11-02 21:38:04 jonrob Exp $
 ! Package     : Rich/RichKernel
 ! Responsible : Chris Jones
 ! Purpose     : General purpose RICH classes
 
 ! 2003-10-30 - Chris Jones
  - Upgrade RichSmartID class. NB - Not backward compatible
+ - Upgrade RichHypoData with more robust data validity test
 
 !======================= RichKernel v3r3 2003-10-14 =======================
 ! 2003-10-13 - Chris Jones
