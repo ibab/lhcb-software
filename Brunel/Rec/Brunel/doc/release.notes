@@ -8,6 +8,8 @@ Purpose: LHCb reconstruction program
    . Tune L0 thresholds (L0DU v6r1)
    . Change OT dead time from 30 to 50 ns (OTAlgorithms v11r1)
    . Associate decaying tracks (TrAssociators v3r1)
+   . Select unique tracks for Rich reconstruction (RiSicbCnv v4r4) - should
+     reduce effect of cut on 300 tracks
 
  - New features:
    . Support for valgrind memory checking tool (job/Brunel.supp, valgrind.job)
@@ -20,18 +22,20 @@ Purpose: LHCb reconstruction program
      (Brunel.opts) reconstruction is reproducible when starting at any event,
      even when doing spillover
    . Distance of stagger in wafers of TT1 layers was 2x too big (ITDet v1r1)
-   . Missing [] in delete (SicbCnv v17r2, VeloTrack v4r1, RiSicbGeom v2r3)
+   . Missing [] in delete (SicbCnv v17r2, RiSicbGeom v2r3, VeloTrack v4r0p1)
    . Test iterator not at end before accessing it (TrCleanEx v2r1)
    . Fix uninitialised variables in L0MuonCandidate 
      (EventSys v12r4, L0Event v12r2)
    . Test L0MuonCandidate status (L0DU v6r1)
    . Remove uninitialised and unused variable (L1VeloTrack v2r2) 
    . Fix ProcStatus default path and add to DST 
-     (EventSys v12r4, TrEvent v11r2, VeloTrack v4r1, Seeding v2r1, FwTrack v4r2)
+     (EventSys v12r4,TrEvent v11r2, VeloTrack v4r0p1, Seeding v2r1, FwTrack v4r2)
    . Fixes in Muon MC truth (SicbCnv v17r2, MuonSicbCnv v6r4)
    . Fixes for Muon cross-talk calculation (MuonDet v3r2)
    . Fixes to readout and layer bits in MuonTileID (MuonRec v2r2)
    . Fix track fit 'smoother problem' (-ve covariances) (TrExtrapolator v2r1) 
+   . Use fabs instead of abs for doubles. Should fix overlapping volumes and 
+     other problems on Windows (DetDesc v10r4, RiSicbGeom v2r3, RiSicbCnv v4r4)
 
  - Geometry changes (XmlDDDB v12r5):
    . Fix overlap between Velo and Rich1

@@ -110,6 +110,7 @@ ApplicationMgr.DLLs += { "FwTrack", "TrFitter", "TrExtrapolator" };
 ApplicationMgr.ExtSvc += { "TransportSvc" };
 BrunelRecoTrSeq.Members += { "FwtFind" };
 BrunelRecoTrSeq.Members += { "TrEventTracksFitter/FitFw" };
+FitFw.TrackContainer = "Rec/FitTrack/Forward";
 
 // Seeding
 ApplicationMgr.DLLs += { "Seeding" }; 

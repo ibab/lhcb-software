@@ -44,7 +44,7 @@ use Finclude     v13r0  SICB
 use Futio        v12r0  SICB
 
 # Detector description
-use DetDesc      v10r3  Det
+use DetDesc      v10r4  Det
 use XmlDDDB      v12r5  Det
 use CaloDet       v5r0  Det
 use CaloDetXmlCnv v2r0  Det
@@ -62,7 +62,7 @@ use SicbCnv      v17r2  SICB
 use RiSicbGeom   v2r3   SICB
 use CaloSicbCnv  v7r1   SICB
 use MuonSicbCnv  v6r4   SICB
-use RiSicbCnv    v4r3   SICB
+use RiSicbCnv    v4r4   SICB
 use VSicbCnv     v8r0   SICB
 
 # Brunel utilities
@@ -106,7 +106,7 @@ use OTAssociators  	v2r1  	OT
 # Tracking
 use TrKernel            v11r0   Tr
 use TrFitEvent          v3r0    Tr
-use VeloTrack           v4r1    Velo
+use VeloTrack           v4r0p1  Velo
 use TrAssociators       v3r1    Tr
 use FwTrack             v4r2    Tr
 use TrFitter            v3r0    Tr
