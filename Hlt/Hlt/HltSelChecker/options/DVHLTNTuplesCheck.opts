@@ -47,6 +47,11 @@ ToolSvc.OutputLevel    = 4;
 //==============================================================================
 #include "$HLTSELCHECKERROOT/options/NTBs2DsH.opts"
 
+//==============================================================================
+// Checking B_s0 -> phi(1020) gamma
+//==============================================================================
+#include "$HLTSELCHECKERROOT/options/NTBs2PhiGamma.opts"
+
 //------------------------------------------------------------------------------
 ApplicationMgr.ExtSvc += { "NTupleSvc" };
 NTupleSvc.Output={"FILE1 DATAFILE='DVNtuples.root' TYP='ROOT' OPT='NEW'"};
