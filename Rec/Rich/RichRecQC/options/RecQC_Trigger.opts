@@ -1,0 +1,12 @@
+
+// Reco QC - disabled due to POOL MC problems
+//BrunelMoniRICHSeq.Members += { "RichRecoQC" };
+
+// PID Monitors for all tracks combined
+#include "$RICHRECQCOPTS/pid/Moni_TriggerTracks.opts"
+#include "$RICHRECQCOPTS/pid/TriggerTracks_Para.opts"
+
+// Suppress errors from Linker
+MessageSvc.setFatal += { "LinkedTo::MC/Rich/MCPartsToMCRichTracks",
+                         "LinkedTo::MC/Rich/MCRichHitsToOpPhotons" };
+
