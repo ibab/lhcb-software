@@ -8,7 +8,7 @@ const         IAlgFactory& RichDetailedFrontEndResponseFactory = s_factory ;
 // Standard constructor, initializes variables
 RichDetailedFrontEndResponse::RichDetailedFrontEndResponse( const std::string& name,
                                                             ISvcLocator* pSvcLocator)
-  : Algorithm ( name, pSvcLocator ) {
+  : RichAlgBase ( name, pSvcLocator ) {
 
   declareProperty( "MCRichSummedDepositsLocation",
                    m_mcRichSummedDepositsLocation = MCRichSummedDepositLocation::Default );
@@ -30,33 +30,29 @@ RichDetailedFrontEndResponse::RichDetailedFrontEndResponse( const std::string& n
   Rndm::Numbers m_gaussThreshold;
   Rndm::Numbers m_gaussNoise; // currently hardwired to be 150 electrons (sigma) hack
 
-
 }
 
-RichDetailedFrontEndResponse::~RichDetailedFrontEndResponse (){ };
+RichDetailedFrontEndResponse::~RichDetailedFrontEndResponse() {}
 
 StatusCode RichDetailedFrontEndResponse::initialize() {
 
   MsgStream msg(msgSvc(), name());
 
+  // Initialize base class
+  if ( !RichAlgBase::initialize() ) return StatusCode::FAILURE;
+
   // create a collection of all pixels
   std::vector<RichSmartID> pixels;
   if ( "SICB" == m_detMode ) {
-    IPixelFinder* finder;
-    if ( !toolSvc()->retrieveTool("PixelFinder", finder ) ) {
-      msg << MSG::FATAL << "Unable to create PixelFinder tool" << endreq;
-      return StatusCode::FAILURE;
-    }
+    IPixelFinder * finder;
+    acquireTool( "PixelFinder", finder );
     finder->PixelList(pixels);
-    toolSvc()->releaseTool(finder);
+    releaseTool(finder);
   } else if ( "GAUSS" == m_detMode ) {
     IRichDetInterface * detint;
-    if ( !toolSvc()->retrieveTool("RichDetInterface" , detint ) ) {
-      msg << MSG::FATAL << "Unable to create RichDetInterface" << endreq;
-      return StatusCode::FAILURE;
-    }
+    acquireTool("RichDetInterface" , detint );
     detint->readoutChannelList(pixels);
-    toolSvc()->releaseTool(detint);
+    releaseTool(detint);
   }
   actual_base = theRegistry.GetNewBase( pixels );
 
@@ -78,7 +74,8 @@ StatusCode RichDetailedFrontEndResponse::finalize()
   m_gaussNoise.finalize();
   m_gaussThreshold.finalize();
 
-  return StatusCode::SUCCESS;
+  // finalize base class
+  return RichAlgBase::finalize();
 }
 
 StatusCode RichDetailedFrontEndResponse::execute() {
@@ -130,13 +127,15 @@ StatusCode RichDetailedFrontEndResponse::Analog() {
       // Evolve shape --------------------------------------------------
 
       // Inject gaussian noise
-      if ( readOut->Noisifier() ) {
-        ts += readOut->Noisifier()->noisify( ts.MyPixel() );
-      } else {
-        MsgStream msg(msgSvc(), name());
-        msg << MSG::ERROR << " No Noisifier " << endreq;
-        return StatusCode::FAILURE;
-      }
+      // CRJ Disable this feature since it is horribily implemented, very slow 
+      // and doesn't actually do anything yet.....
+      //if ( readOut->Noisifier() ) {
+      //  ts += readOut->Noisifier()->noisify( ts.MyPixel() );
+      //} else {
+      //  MsgStream msg(msgSvc(), name());
+      //  msg << MSG::ERROR << " No Noisifier " << endreq;
+      //  return StatusCode::FAILURE;
+      // }
 
       // Retrieve vector of SmartRefs to contributing deposits (non-const)
       SmartRefVector<MCRichDeposit>& deposits = (*iSumDep)->deposits();
@@ -159,7 +158,7 @@ StatusCode RichDetailedFrontEndResponse::Analog() {
               // make pixel dead for this event
               ts[bin] -= 999999;
             } else {
-              ts[bin] += (*shape)(binTime)*e;
+              ts[bin] += (*shape)[binTime] * e;
             }
           }
         }

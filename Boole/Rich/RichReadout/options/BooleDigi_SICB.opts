@@ -1,0 +1,17 @@
+// Rich digitisation for SICB data
+
+// Process the raw SICB hit signals
+DigiRICHSeq.Members += { "RichSignalSICB/RichPDSignal" };
+RichPDSignal.UseSpillover          = true;
+RichPDSignal.ChargedTrackTreatment = true;
+
+// Detailed treatment of HPD response
+DigiRICHSeq.Members += { "RichDetailedFrontEndResponse/RichPDResponse" };
+RichPDResponse.DetectorMode = "SICB"; // tell alg to use old SICB tool
+
+// Create final container of digits
+DigiRICHSeq.Members += { "RichDigitCreator" };
+
+// temporary. 
+//Tell the monitor what sort of digits we have
+RiDigiAlgMon.DetMode = "HPDSICB";

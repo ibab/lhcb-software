@@ -1,4 +1,4 @@
-// $Id: RichDigitCreator.cpp,v 1.4 2003-10-31 16:46:30 jonrob Exp $
+// $Id: RichDigitCreator.cpp,v 1.5 2003-11-01 16:32:00 jonrob Exp $
 // Include files
 
 // from Gaudi
@@ -24,7 +24,7 @@ const        IAlgFactory& RichDigitCreatorFactory = s_factory ;
 // Standard constructor, initializes variables
 RichDigitCreator::RichDigitCreator( const std::string& name,
                                     ISvcLocator* pSvcLocator)
-  : Algorithm ( name, pSvcLocator ) {
+  : RichAlgBase ( name, pSvcLocator ) {
 
   // Define Job options for this algorithm
   declareProperty( "MCRichDigitsLocation",
@@ -41,6 +41,9 @@ StatusCode RichDigitCreator::initialize() {
 
   MsgStream log(msgSvc(), name());
   log << MSG::DEBUG << "Initialize" << endreq;
+
+  // Initialize base class
+  if ( !RichAlgBase::initialize() ) return StatusCode::FAILURE;
 
   return StatusCode::SUCCESS;
 };
@@ -105,5 +108,6 @@ StatusCode RichDigitCreator::finalize() {
   MsgStream log(msgSvc(), name());
   log << MSG::DEBUG << "Finalize" << endreq;
 
-  return StatusCode::SUCCESS;
+  // finalize base class
+  return RichAlgBase::finalize();
 }

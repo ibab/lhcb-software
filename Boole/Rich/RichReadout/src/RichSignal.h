@@ -1,15 +1,17 @@
 #ifndef RICHREADOUT_RICHSIGNAL_H
 #define RICHREADOUT_RICHSIGNAL_H 1
 
-#include <algorithm>
-#include <string>
-#include <cmath>
+// base class
+#include "RichUtils/RichAlgBase.h"
 
 // from Gaudi
-#include "GaudiKernel/Algorithm.h"
-#include "GaudiKernel/IDataProviderSvc.h"
-#include "GaudiKernel/SmartDataPtr.h"
 #include "GaudiKernel/RndmGenerators.h"
+#include "GaudiKernel/AlgFactory.h"
+#include "GaudiKernel/SmartDataPtr.h"
+
+// Event model
+#include "Event/MCParticle.h"
+#include "Event/ParticleID.h"
 
 // from CLHEP
 #include "CLHEP/Geometry/Point3D.h"
@@ -21,11 +23,11 @@
 #include "Event/MCRichDeposit.h"
 #include "Event/MCRichSummedDeposit.h"
 
-class RichSignal : public Algorithm {
+class RichSignal : public RichAlgBase {
 
 public:
 
-  RichSignal(const std::string& name, ISvcLocator* pSvcLocator );
+  RichSignal ( const std::string& name, ISvcLocator* pSvcLocator );
   virtual ~RichSignal();
 
   virtual StatusCode initialize();
@@ -49,6 +51,8 @@ private: // data
   std::string m_RichNextNextLocation;
   std::string m_RichSummedDepositLocation;
   std::string m_RichDepositLocation;
+
+  bool m_doSpillover;
 
   IRichDetInterface* m_DetInterface;
 

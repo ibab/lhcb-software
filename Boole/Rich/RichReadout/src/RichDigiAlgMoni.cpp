@@ -1,4 +1,4 @@
-// $Id: RichDigiAlgMoni.cpp,v 1.3 2003-10-31 16:46:30 jonrob Exp $
+// $Id: RichDigiAlgMoni.cpp,v 1.4 2003-11-01 16:32:00 jonrob Exp $
 
 // local
 #include "RichDigiAlgMoni.h"
@@ -16,7 +16,7 @@ const        IAlgFactory& RichDigiAlgMoniFactory = s_factory ;
 // Standard constructor, initializes variables
 RichDigiAlgMoni::RichDigiAlgMoni( const std::string& name,
                                   ISvcLocator* pSvcLocator)
-  : Algorithm ( name, pSvcLocator ),
+  : RichAlgBase ( name, pSvcLocator ),
     m_mapmtDet(0),
     m_sicbDet (0),
     m_detInt  (0) {
@@ -40,24 +40,18 @@ StatusCode RichDigiAlgMoni::initialize() {
   MsgStream msg(msgSvc(), name());
   msg << MSG::DEBUG << "Initialize" << endreq;
 
+  // Initialize base class
+  if ( !RichAlgBase::initialize() ) return StatusCode::FAILURE;
+
   if ( "HPDSICB" == m_detMode ) {
     // Use the temporary SICB compatible tool for SICB data
-    if ( !toolSvc()->retrieveTool( "PixelFinder", m_sicbDet ) ) {
-      msg << MSG::ERROR << "Unable to create PixelFinder tool" << endreq;
-      return StatusCode::FAILURE;
-    }
+    acquireTool( "PixelFinder", m_sicbDet );
   } else if ( "MaPMTSICB" == m_detMode ) {
     // Use the temporary tool for MaPMTs from SICB data
-    if ( !toolSvc()->retrieveTool( "MaPMTDetTool", m_mapmtDet ) ) {
-      msg << MSG::ERROR << "Unable to create MaPMTDetTool" << endreq;
-      return StatusCode::FAILURE;
-    }
+    acquireTool( "MaPMTDetTool", m_mapmtDet );
   } else if ( "GAUSS" == m_detMode ) {
     // The main tool. For Gauss data
-    if ( !toolSvc()->retrieveTool("RichDetInterface" , m_detInt ) ) {
-      msg << MSG::ERROR << "Unable to create RichDetInterface" << endreq;
-      return StatusCode::FAILURE;
-    }
+    acquireTool("RichDetInterface" , m_detInt );
   } else {
     msg << MSG::ERROR << "Unknown detector mode " << m_detMode << endreq;
     return StatusCode::FAILURE;
@@ -415,7 +409,7 @@ StatusCode RichDigiAlgMoni::execute() {
         // Count beta=1 PEs
         countNPE( ckPhotMapDig, *iHit );
 
-        // vount digits from charged tracks
+        // count digits from charged tracks
         if ( !thisDigCounted && (*iHit)->chargedTrack() ) {
           thisDigCounted = true;
           ++nChargedTracks[id.rich()];
@@ -618,11 +612,12 @@ StatusCode RichDigiAlgMoni::finalize() {
   msg << MSG::DEBUG << "Finalize" << endreq;
 
   // release tools
-  if (m_sicbDet) { toolSvc()->releaseTool(m_sicbDet); m_sicbDet=0; }
-  if (m_mapmtDet) { toolSvc()->releaseTool(m_mapmtDet); m_mapmtDet=0; }
-  if (m_detInt) { toolSvc()->releaseTool(m_detInt); m_detInt=0; }
+  releaseTool(m_sicbDet);
+  releaseTool(m_mapmtDet);
+  releaseTool(m_detInt);
 
-  return StatusCode::SUCCESS;
+  // finalize base class
+  return RichAlgBase::finalize();
 }
 
 bool RichDigiAlgMoni::getPosition( const RichSmartID & id, HepPoint3D & position )

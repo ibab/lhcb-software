@@ -2,14 +2,12 @@
 #ifndef RICHREADOUT_RICHDETAILEDFRONTENDRESPONSE_H
 #define RICHREADOUT_RICHDETAILEDFRONTENDRESPONSE_H 1
 
+// base class
+#include "RichUtils/RichAlgBase.h"
+
 // from Gaudi
-#include "GaudiKernel/Algorithm.h"
-#include "GaudiKernel/IDataProviderSvc.h"
 #include "GaudiKernel/AlgFactory.h"
-#include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/SmartDataPtr.h"
-#include "GaudiKernel/GaudiException.h"
-#include "GaudiKernel/IToolSvc.h"
 #include "GaudiKernel/RndmGenerators.h"
 
 // Detector geom
@@ -27,7 +25,6 @@
 #include "RichFrontEndDigitiser.h"
 #include "RichRegistry.h"
 #include "RichPixelReadout.h"
-//#include "RichShape_flat.h"
 #include "RichShape.h"
 #include "RichNoisifier.h"
 #include "RichBase.h"
@@ -38,10 +35,10 @@
 #include "Event/MCRichSummedDeposit.h"
 #include "Event/MCRichDigit.h"
 
-// CLHep
+// CLHEP
 #include "CLHEP/Random/Random.h"
 
-class RichDetailedFrontEndResponse : public Algorithm {
+class RichDetailedFrontEndResponse : public RichAlgBase {
 
 public:
 

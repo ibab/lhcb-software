@@ -43,21 +43,25 @@ public:
     return TimeFrame[i];
   }
 
-  RichTimeSample& operator*=(double c)
+  RichTimeSample& operator *= ( double c )
   {
     for ( unsigned int i = 0; i < size(); ++i ) { TimeFrame[i] *= c; }
     return *this;
   }
-
-  RichTimeSample& operator+=(const RichTimeSample & ts)
+  
+  /*
+  RichTimeSample& operator += ( const RichTimeSample & ts )
   {
     if ( size() == ts.size() ) {
-      for ( unsigned int i=0; i < size(); ++i ) TimeFrame[i] += ts.TimeFrame[i];
+      for ( unsigned int i=0; i < size(); ++i ) { 
+        TimeFrame[i] += ts.TimeFrame[i];
+      }
     }
     return *this;
   }
+  */
 
-  RichTimeSample operator<<(unsigned int n)
+  RichTimeSample operator << ( unsigned int n )
   {
     unsigned int i;
     RichTimeSample ts(*this);

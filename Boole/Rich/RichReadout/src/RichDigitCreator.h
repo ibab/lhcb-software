@@ -1,14 +1,12 @@
-// $Id: RichDigitCreator.h,v 1.2 2003-10-31 16:46:30 jonrob Exp $
+// $Id: RichDigitCreator.h,v 1.3 2003-11-01 16:32:00 jonrob Exp $
 #ifndef RICHREADOUT_RICHDIGITCREATOR_H
 #define RICHREADOUT_RICHDIGITCREATOR_H 1
 
-// Fram Gaudi framework
-#include "GaudiKernel/Algorithm.h"
-#include "GaudiKernel/IDataProviderSvc.h"
+// base class
+#include "RichUtils/RichAlgBase.h"
+
+// Gaudi framework
 #include "GaudiKernel/SmartDataPtr.h"
-#include "GaudiKernel/ContainedObject.h"
-#include "GaudiKernel/SmartRef.h"
-#include "GaudiKernel/SmartRefVector.h"
 
 // From Rich Event
 #include "Event/RichDigit.h"
@@ -27,7 +25,7 @@
  *
  */
 
-class RichDigitCreator : public Algorithm {
+class RichDigitCreator : public RichAlgBase {
 
 public:
 

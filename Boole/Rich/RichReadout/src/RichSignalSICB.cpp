@@ -8,7 +8,7 @@ const         IAlgFactory& RichSignalSICBFactory = s_factory ;
 // Standard constructor, initializes variables
 RichSignalSICB::RichSignalSICB( const std::string& name,
                                 ISvcLocator* pSvcLocator)
-  : Algorithm ( name, pSvcLocator ) {
+  : RichAlgBase ( name, pSvcLocator ) {
 
   declareProperty( "HitLocation",
                    m_RichHitLocation =  MCRichHitLocation::Default );
@@ -37,10 +37,11 @@ StatusCode RichSignalSICB::initialize() {
   MsgStream msg(msgSvc(), name());
   msg << MSG::DEBUG << "Initialize" << endreq;
 
-  if ( !toolSvc()->retrieveTool( "PixelFinder", m_finder ) ) {
-    msg << MSG::FATAL << "Unable to create PixelFinder tool" << endreq;
-    return StatusCode::FAILURE;
-  }
+  // Initialize base class
+  if ( !RichAlgBase::initialize() ) return StatusCode::FAILURE;
+
+  // detector tool
+  acquireTool( "PixelFinder", m_finder );
 
   if ( !m_rndm.initialize( randSvc(), Rndm::Flat(0.,1.) ) ) {
     msg << MSG::FATAL << "Unable to create Random generator" << endreq;
@@ -81,7 +82,8 @@ StatusCode RichSignalSICB::execute() {
     ProcessEvent( m_RichPrevLocation,     -25 );
     ProcessEvent( m_RichPrevPrevLocation, -50 );
     ProcessEvent( m_RichNextLocation,      25 );
-    ProcessEvent( m_RichNextNextLocation,  50 );
+    // not needed yet
+    //ProcessEvent( m_RichNextNextLocation,  50 );
   }
 
   // Debug Printout
@@ -356,12 +358,13 @@ StatusCode RichSignalSICB::finalize() {
   msg << MSG::DEBUG << "Finalize" << endreq;
 
   // release tools
-  if (m_finder) { toolSvc()->releaseTool(m_finder); m_finder = NULL; }
+  releaseTool( m_finder );
 
   // finalize randomn number generator
   m_rndm.finalize();
 
-  return StatusCode::SUCCESS;
+  // finalize base class
+  return RichAlgBase::finalize();
 }
 
 double RichSignalSICB::SimpleEnergy() {
@@ -423,8 +426,8 @@ bool RichSignalSICB::InitParameters() {
   m_NPhotons.insert( photonmap2::value_type(18,  0));
 
   std::ifstream input;
-  std::string dataRoot = (std::string)getenv("RICHREADOUTHPDOPTS");
-  std::string dataFile = dataRoot + "/sicb_incident_track.data";
+  std::string dataFile = ( (std::string)getenv("PARAMFILESROOT") + 
+                           "/data/RichHPD_sicb_incident_track.data" );
   input.open(dataFile.c_str());
 
   if ( !input ) {

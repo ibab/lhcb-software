@@ -1,24 +1,14 @@
 
-#include "GaudiKernel/AlgFactory.h"
-#include "GaudiKernel/MsgStream.h"
-#include "GaudiKernel/SmartDataPtr.h"
-#include "GaudiKernel/GaudiException.h"
-#include "GaudiKernel/IToolSvc.h"
-#include "GaudiKernel/IHistogramSvc.h"
-
-#include "Event/MCParticle.h"
-#include "Event/ParticleID.h"
-
 #include "RichSignal.h"
 
 // Declaration of the Algorithm Factory
-static const  AlgFactory<RichSignal>  s_factory ;
+static const  AlgFactory<RichSignal>  s_factory;
 const         IAlgFactory& RichSignalFactory = s_factory ;
 
 // Standard constructor, initializes variables
 RichSignal::RichSignal( const std::string& name,
-                        ISvcLocator* pSvcLocator)
-  : Algorithm ( name, pSvcLocator ) {
+                        ISvcLocator* pSvcLocator )
+  : RichAlgBase ( name, pSvcLocator ) {
 
   declareProperty( "HitLocation",
                    m_RichHitLocation =  MCRichHitLocation::Default );
@@ -35,6 +25,8 @@ RichSignal::RichSignal( const std::string& name,
   declareProperty( "DepositLocation",
                    m_RichDepositLocation = MCRichDepositLocation::Default );
 
+  declareProperty( "UseSpillover", m_doSpillover = true );
+
 }
 
 RichSignal::~RichSignal() {};
@@ -44,16 +36,16 @@ StatusCode RichSignal::initialize() {
   MsgStream msg(msgSvc(), name());
   msg << MSG::DEBUG << "Initialize" << endreq;
 
+  // Initialize base class
+  if ( !RichAlgBase::initialize() ) return StatusCode::FAILURE;
+
   if ( !m_rndm.initialize( randSvc(), Rndm::Flat(0.,1.) ) ) {
     msg << MSG::FATAL << "Unable to create Random generator" << endreq;
     return StatusCode::FAILURE;
   }
 
   // detector tool
-  if ( !toolSvc()->retrieveTool( "RichDetInterface", m_DetInterface ) ) {
-    msg << MSG::FATAL << "Unable to create RichDetInterface" << endreq;
-    return StatusCode::FAILURE;
-  }
+  acquireTool( "RichDetInterface",  m_DetInterface );
 
   msg << MSG::DEBUG
       << " Using HPD signal algorithm" << endreq;
@@ -83,18 +75,23 @@ StatusCode RichSignal::execute() {
     return StatusCode::FAILURE;
   }
 
-  // Process main and spillover events
+  // Process main and spillover events with TOF offsets
   ProcessEvent( m_RichHitLocation,       0  );
-  ProcessEvent( m_RichPrevLocation,     -25 );
-  ProcessEvent( m_RichPrevPrevLocation, -50 );
-  ProcessEvent( m_RichNextLocation,      25 );
-  ProcessEvent( m_RichNextNextLocation,  50 );
+  if ( m_doSpillover ) {
+    ProcessEvent( m_RichPrevLocation,     -25 );
+    ProcessEvent( m_RichPrevPrevLocation, -50 );
+    ProcessEvent( m_RichNextLocation,      25 );
+    // not needed yet
+    //ProcessEvent( m_RichNextNextLocation,  50 ); 
+  }
 
   // Debug Printout
-  msg << MSG::DEBUG << "Created " << mcSummedDeposits->size()
-      << " MCRichSummedDeposits at " << m_RichSummedDepositLocation << endreq;
-  msg << MSG::DEBUG << "Created " << mcDeposits->size()
-      << " MCRichDeposits at " << m_RichDepositLocation << endreq;
+  if ( msgLevel(MSG::DEBUG) ) {
+    msg << MSG::DEBUG << "Created " << mcSummedDeposits->size()
+        << " MCRichSummedDeposits at " << m_RichSummedDepositLocation << endreq;
+    msg << MSG::DEBUG << "Created " << mcDeposits->size()
+        << " MCRichDeposits at " << m_RichDepositLocation << endreq;
+  }
 
   return StatusCode::SUCCESS;
 }
@@ -102,14 +99,17 @@ StatusCode RichSignal::execute() {
 StatusCode RichSignal::ProcessEvent( std::string hitLoc,
                                      double tofOffset ) {
 
-  MsgStream msg(msgSvc(), name());
-
   // Load hits
   SmartDataPtr<MCRichHits> hits( eventSvc(), hitLoc );
   if ( !hits ) {
-    msg << MSG::DEBUG << "Cannot locate MCRichHits at " << hitLoc << endreq;
+    if ( msgLevel(MSG::DEBUG) ) {
+      MsgStream msg(msgSvc(), name());
+      msg << MSG::DEBUG << "Cannot locate MCRichHits at " << hitLoc << endreq;
+    }
     return StatusCode::SUCCESS;
-  } else {
+  }
+  if ( msgLevel(MSG::DEBUG) ) {
+    MsgStream msg(msgSvc(), name());
     msg << MSG::DEBUG << "Successfully located " << hits->size()
         << " MCRichHits at " << hitLoc << endreq;
   }
@@ -139,8 +139,13 @@ StatusCode RichSignal::ProcessEvent( std::string hitLoc,
         MCRichDeposit* newDeposit = new MCRichDeposit();
         mcDeposits->insert( newDeposit );
         newDeposit->setParentHit( *iHit );
-        // Divide energy by 10 to fix Gauss energy problem
-        newDeposit->setEnergy( (*iHit)->energy()/10 );
+
+        // Fix for energy problem. Remove when fixed
+        double energy = (*iHit)->energy();
+        if ( energy > 0.02 ) energy /= 10;
+        newDeposit->setEnergy( energy );
+
+        // TOF
         newDeposit->setTime( tofOffset + (*iHit)->timeOfFlight() );
 
         // Add to the set of other deposits in the pixel
@@ -166,11 +171,12 @@ StatusCode RichSignal::finalize() {
   msg << MSG::DEBUG << "Finalize" << endreq;
 
   // release tools
-  if ( m_DetInterface ) { toolSvc()->releaseTool(m_DetInterface); m_DetInterface=0; }
+  releaseTool( m_DetInterface );
 
   // finalize randomn number generator
   m_rndm.finalize();
 
-  return StatusCode::SUCCESS;
+  // finalize base class
+  return RichAlgBase::finalize();
 }
 

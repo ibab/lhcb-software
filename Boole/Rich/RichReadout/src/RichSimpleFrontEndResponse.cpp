@@ -8,7 +8,7 @@ const         IAlgFactory& RichSimpleFrontEndResponseFactory = s_factory ;
 // Standard constructor, initializes variables
 RichSimpleFrontEndResponse::RichSimpleFrontEndResponse( const std::string& name,
                                                         ISvcLocator* pSvcLocator )
-  : Algorithm ( name, pSvcLocator ) {
+  : RichAlgBase ( name, pSvcLocator ) {
 
   declareProperty( "MCRichSummedDepositsLocation",
                    m_mcRichSummedDepositsLocation = MCRichSummedDepositLocation::Default );
@@ -26,27 +26,24 @@ RichSimpleFrontEndResponse::~RichSimpleFrontEndResponse (){ };
 
 StatusCode RichSimpleFrontEndResponse::initialize() {
 
-  MsgStream log(msgSvc(), name());
-  log << MSG::DEBUG << "Initialize" << endreq;
+  MsgStream msg(msgSvc(), name());
+  msg << MSG::DEBUG << "Initialize" << endreq;
+
+  // Initialize base class
+  if ( !RichAlgBase::initialize() ) return StatusCode::FAILURE;
 
   // create a collection of all pixels
   std::vector<RichSmartID> pixels;
   if ( "SICB" == m_detMode ) {
     IPixelFinder* finder;
-    if ( !toolSvc()->retrieveTool( "PixelFinder", finder ) ) {
-      log << MSG::FATAL << "Unable to create PixelFinder tool" << endreq;
-      return StatusCode::FAILURE;
-    }
+    acquireTool( "PixelFinder", finder );
     finder->PixelList(pixels);
-    toolSvc()->releaseTool(finder);
+    releaseTool(finder);
   } else if ( "GAUSS" == m_detMode ) {
     IRichDetInterface * detint;
-    if ( !toolSvc()->retrieveTool( "RichDetInterface", detint ) ) {
-      log << MSG::FATAL << "Unable to create RichDetInterface" << endreq;
-      return StatusCode::FAILURE;
-    }
+    acquireTool( "RichDetInterface", detint );
     detint->readoutChannelList(pixels);
-    toolSvc()->releaseTool(detint);
+    releaseTool(detint);
   }
   actual_base = theRegistry.GetNewBase( pixels );
 
@@ -55,7 +52,7 @@ StatusCode RichSimpleFrontEndResponse::initialize() {
   // Gauss randomn dist
   m_gaussRndm.initialize( randSvc(), Rndm::Gauss(0.0,0.9) );
 
-  log << MSG::DEBUG
+  msg << MSG::DEBUG
       << " Using simple HPD frontend response algorithm for " << m_detMode << endreq
       << " Acquired information for " << pixels.size() << " pixels" << endreq;
 
@@ -64,29 +61,31 @@ StatusCode RichSimpleFrontEndResponse::initialize() {
 
 StatusCode RichSimpleFrontEndResponse::finalize() {
 
-  MsgStream log(msgSvc(), name());
-  log << MSG::DEBUG << "finalize" << endreq;
+  MsgStream msg(msgSvc(), name());
+  msg << MSG::DEBUG << "finalize" << endreq;
 
   // finalize randomn number generator
   m_gaussRndm.finalize();
 
-  return StatusCode::SUCCESS;
+  // finalize base class
+  return RichAlgBase::finalize();
 }
 
 StatusCode RichSimpleFrontEndResponse::execute() {
 
-  MsgStream log(msgSvc(), name());
-  log << MSG::DEBUG << "Execute" << endreq;
+  MsgStream msg(msgSvc(), name());
+  msg << MSG::DEBUG << "Execute" << endreq;
 
   SmartDataPtr<MCRichSummedDeposits> DepPtr( eventSvc(),
                                              m_mcRichSummedDepositsLocation );
   SummedDeposits = DepPtr;
   if ( !SummedDeposits ) {
-    log << MSG::WARNING << "Cannot locate MCRichSummedDeposits at "
+    msg << MSG::WARNING << "Cannot locate MCRichSummedDeposits at "
         << m_mcRichSummedDepositsLocation << endreq;
     return StatusCode::FAILURE;
-  } else {
-    log << MSG::DEBUG << "Successfully located " << SummedDeposits->size()
+  }
+  if ( msgLevel(MSG::DEBUG) ) {
+    msg << MSG::DEBUG << "Successfully located " << SummedDeposits->size()
         << " MCRichSummedDeposits at " << m_mcRichSummedDepositsLocation << endreq;
   }
 
@@ -98,11 +97,10 @@ StatusCode RichSimpleFrontEndResponse::execute() {
 
 StatusCode RichSimpleFrontEndResponse::Simple() {
 
-  MsgStream log(msgSvc(), name());
-
   MCRichDigits* mcRichDigits = new MCRichDigits();
   if ( !eventSvc()->registerObject(m_mcRichDigitsLocation, mcRichDigits) ) {
-    log << MSG::ERROR << "Failed to register MCRichDigits at " 
+    MsgStream msg(msgSvc(), name());
+    msg << MSG::ERROR << "Failed to register MCRichDigits at " 
         << m_mcRichDigitsLocation << endreq;
     return StatusCode::FAILURE;
   }
@@ -140,9 +138,11 @@ StatusCode RichSimpleFrontEndResponse::Simple() {
 
   }
 
-  log << MSG::DEBUG << "Created " << mcRichDigits->size() << " MCRichDigits at "
-      << m_mcRichDigitsLocation << endreq;
+  if ( msgLevel(MSG::DEBUG) ) {
+    MsgStream msg(msgSvc(), name());
+    msg << MSG::DEBUG << "Created " << mcRichDigits->size() << " MCRichDigits at "
+        << m_mcRichDigitsLocation << endreq;
+  }
 
   return StatusCode::SUCCESS;
-
 }

@@ -1,11 +1,11 @@
-// $Id: RichDigiAlgMoni.h,v 1.3 2003-10-31 16:46:30 jonrob Exp $
+// $Id: RichDigiAlgMoni.h,v 1.4 2003-11-01 16:32:00 jonrob Exp $
 #ifndef RICHMONITOR_RICHDIGIALGMONI_H
 #define RICHMONITOR_RICHDIGIALGMONI_H 1
 
+// base class
+#include "RichUtils/RichAlgBase.h"
+
 // from Gaudi
-#include "GaudiKernel/Algorithm.h"
-#include "GaudiKernel/AlgFactory.h"
-#include "GaudiKernel/IHistogramSvc.h"
 #include "GaudiKernel/SmartDataPtr.h"
 #include "GaudiKernel/IParticlePropertySvc.h"
 #include "GaudiKernel/ParticleProperty.h"
@@ -47,7 +47,7 @@
  *  @date   2003-09-08
  */
 
-class RichDigiAlgMoni : public Algorithm {
+class RichDigiAlgMoni : public RichAlgBase {
 
 public:
 
@@ -171,7 +171,7 @@ inline Rich::ParticleIDType RichDigiAlgMoni::massHypothesis( const MCParticle * 
 
 inline double RichDigiAlgMoni::momentum( const MCParticle * mcPart )
 {
-  return mcPart->momentum().vect().mag();
+  return ( mcPart ? mcPart->momentum().vect().mag() : 0 );
 }
 
 #endif // RICHMONITOR_RICHDIGIALGMONI_H

@@ -3,22 +3,20 @@
 
 #include <fstream>
 
+// base class
+#include "RichUtils/RichAlgBase.h"
+
 // from Gaudi
-#include "GaudiKernel/Algorithm.h"
-#include "GaudiKernel/IDataProviderSvc.h"
 #include "GaudiKernel/SmartDataPtr.h"
 #include "GaudiKernel/RndmGenerators.h"
 #include "GaudiKernel/AlgFactory.h"
-#include "GaudiKernel/MsgStream.h"
-#include "GaudiKernel/GaudiException.h"
-#include "GaudiKernel/IToolSvc.h"
-#include "GaudiKernel/IParticlePropertySvc.h"
 
 // from CLHEP
 #include "CLHEP/Geometry/Point3D.h"
 #include "CLHEP/Geometry/Vector3D.h"
 #include "CLHEP/Vector/LorentzVector.h"
 
+// dectector
 #include "RiSicbGeom/SicbGeom.h"
 #include "RiSicbGeom/PixelFinder.h"
 
@@ -31,7 +29,7 @@
 #include "Event/MCRichDeposit.h"
 #include "Event/MCRichSummedDeposit.h"
 
-class RichSignalSICB : public Algorithm {
+class RichSignalSICB : public RichAlgBase {
 
 public:
 
