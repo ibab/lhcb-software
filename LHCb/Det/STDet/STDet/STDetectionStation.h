@@ -1,5 +1,5 @@
 #ifndef _STDETECTIONSTATION_
-#define _sTDETECTIONSTATION_ 1
+#define _STDETECTIONSTATION_ 1
 
 // Declaration of STDetectionStation class
 //   Inner tracker station description
