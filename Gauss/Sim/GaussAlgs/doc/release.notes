@@ -3,6 +3,11 @@
 ! Purpose     : 
 ! -----------------------------------------------------------------------------
 
+!============================ GaussAlgs v1r5 ==============================
+! 2005-03-07 - Gloria Corti
+ - src/GiGaGetHitsAlg.cpp
+   . adapt to modification in MCRichHit
+
 !==================== GaussAlgs v1r4 2005-02-02 ===========================
 ! 2005-02-02 - Gloria Corti
  - src/GiGaGetEventAlg.cpp

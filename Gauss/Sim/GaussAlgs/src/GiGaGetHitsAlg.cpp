@@ -1,4 +1,4 @@
-// $Id: GiGaGetHitsAlg.cpp,v 1.3 2005-02-02 15:05:54 gcorti Exp $
+// $Id: GiGaGetHitsAlg.cpp,v 1.4 2005-03-09 16:33:56 gcorti Exp $
 // Include files
 
 // from Gaudi
@@ -231,7 +231,6 @@ void GiGaGetHitsAlg::infoRICH()
       if( (*hiter)->rich() == Rich::Rich2 ) nHitsRich2++;
       verbose() << "Rich: " << (*hiter)->rich() 
                 << " Radiator: " << (*hiter)->radiator()
-                << " Photodetector: " << (*hiter)->photoDetector()
                 << "  Entry point: " << (*hiter)->entry();
       if( (*hiter)->mcParticle() != NULL ) {
         verbose() << "   MCParticle: "
