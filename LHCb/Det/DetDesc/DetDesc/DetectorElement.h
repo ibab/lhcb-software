@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/DetDesc/DetectorElement.h,v 1.12 2001-06-25 14:21:32 sponce Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/DetDesc/DetectorElement.h,v 1.13 2001-06-28 09:43:52 sponce Exp $
 
 #ifndef  DETDESC_DETECTORELEMENT_H
 #define  DETDESC_DETECTORELEMENT_H 1
@@ -263,7 +263,14 @@ public:
           const std::string& namePath);
 
   /**
-   * This adds a new numerical userParameter to the detectorElement.
+   * This method initializes the detector element. It should be overridden
+   * and used for computation purposes. This is a kind of hook for adding
+   * user code easily in the initialization of a detector element.
+   */
+  virtual StatusCode initialize();
+
+  /**
+   * This adds a new double userParameter to the detectorElement.
    * This parameter has a name, a type, a comment and a value, given both
    * as a std::string and as a double.
    * If this parameter was already existing, it is replaced by the new one.
@@ -279,6 +286,25 @@ public:
                                         std::string comment,
                                         std::string value,
                                         double d_value);
+
+  /**
+   * This adds a new integer userParameter to the detectorElement.
+   * This parameter has a name, a type, a comment and a value, given both
+   * as a std::string and as an int.
+   * If this parameter was already existing, it is replaced by the new one.
+   * @param name the name of the parameter
+   * @param type the type of the parameter. This is only a clue for the user, it
+   * is not used by the detector element itself
+   * @param comment a comment on this parameter use
+   * @param value the value of the parameter, as a string
+   * @param i_value the value of the parameter, as an int
+   */
+  inline virtual void addUserParameter (std::string name,
+                                        std::string type,
+                                        std::string comment,
+                                        std::string value,
+                                        double d_value,
+                                        int i_value);
   
   /**
    * This adds a new non-numerical userParameter to the detectorElement.
@@ -298,7 +324,7 @@ public:
                                         std::string value);
   
   /**
-   * This adds a new numerical userParameterVector to the detectorElement.
+   * This adds a new double userParameterVector to the detectorElement.
    * This parameter has a name, a type, a comment and a value, given both as a
    * std::vector<std::string> and as a std::vector<double>
    * If this parameter vector was already existing, it is replaced by the new
@@ -309,13 +335,32 @@ public:
    * @param comment a comment on this parameter vector use
    * @param value the value of the parameter vector, as a vector of strings
    * @param d_value the value of the parameter vector, as a vector of doubles
-   * strings by default
    */
   inline virtual void addUserParameterVector (std::string name,
                                               std::string type,
                                               std::string comment,
                                               std::vector<std::string> value,
                                               std::vector<double> d_value);
+  
+  /**
+   * This adds a new integer userParameterVector to the detectorElement.
+   * This parameter has a name, a type, a comment and a value, given both as a
+   * std::vector<std::string> and as a std::vector<int>
+   * If this parameter vector was already existing, it is replaced by the new
+   * one.
+   * @param name the name of the parameter vector
+   * @param type the type of the parameter vector. This is only a clue for
+   * the user, it is not used by the detector element itself
+   * @param comment a comment on this parameter vector use
+   * @param value the value of the parameter vector, as a vector of strings
+   * @param d_value the value of the parameter vector, as a vector of ints
+   */
+  inline virtual void addUserParameterVector (std::string name,
+                                              std::string type,
+                                              std::string comment,
+                                              std::vector<std::string> value,
+                                              std::vector<double> d_value,
+                                              std::vector<int> i_value);
   
   /**
    * This adds a new non-numerical userParameterVector to the detectorElement.
@@ -358,11 +403,30 @@ public:
    * @param name the name of the parameter
    * @return its value, as a string
    */
-  inline virtual std::string userParameterValue (std::string name);
+  inline virtual std::string userParameterAsString (std::string name);
   
   /**
-   * this gets the value of the parameter as a double.
-   *  If the value is not a double, it raises a DetectorElementException.
+   * this gets the value of a parameter, as an int
+   * If the value is not an int, it raises a DetectorElementException.
+   * If this parameter does not exist, it raises a DetectorElementException.
+   * @param name the name of the parameter
+   * @return its value, as a string
+   */
+  inline virtual int userParameterAsInt (std::string name);
+  
+  /**
+   * this gets the value of a parameter, as a double
+   * If the value is not a number, it raises a DetectorElementException.
+   * If this parameter does not exist, it raises a DetectorElementException.
+   * @param name the name of the parameter
+   * @return its value, as a double
+   */
+  inline virtual double userParameterAsDouble (std::string name);
+  
+  /**
+   * this gets the value of the parameter as a double. This actually is an
+   * equivalent of userParameterAsDouble.
+   * If the value is not a double, it raises a DetectorElementException.
    * If this parameter does not exist, it raises a DetectorElementException.
    * @param name the name of the parameter
    * @return its value, as a double
@@ -392,10 +456,32 @@ public:
    * @return its value, as a string
    */
   inline virtual std::vector<std::string>
-  userParameterVectorValue (std::string name);
+  userParameterVectorAsString (std::string name);
+  
+  /**
+   * this gets the value of a parameter vector, as a vector of int
+   * If the parameter vector is not made of ints, it raises a
+   * DetectorElementException.
+   * If this parameter does not exist, it raises a DetectorElementException.
+   * @param name the name of the parameter vector
+   * @return its value, as a string
+   */
+  inline virtual std::vector<int> userParameterVectorAsInt (std::string name);
   
   /**
    * this gets the value of a parameter as a vector of double.
+   * If the parameter vector is not made of numbers, it raises a
+   * DetectorElementException.
+   * If this parameter does not exist, it raises a DetectorElementException.
+   * @param name the name of the parameter
+   * @return its value, as a vector of double
+   */
+  inline virtual std::vector<double>
+  userParameterVectorAsDouble (std::string name);
+
+  /**
+   * this gets the value of a parameter as a vector of double. This actually is
+   * an equivalent of userParameterVectorAsDouble.
    * If the parameter vector is not made of doubles, it raises a
    * DetectorElementException.
    * If this parameter does not exist, it raises a DetectorElementException.
@@ -460,13 +546,17 @@ private:
   IMessageSvc*           m_de_msgSvc        ; 
   ISvcLocator*           m_de_svcLoc        ;
 
+  /// This defines the type of a userParameter
+  enum userParamKind { DOUBLE, INT, OTHER };
+
   /// This defines a user parameter
   typedef struct _userParam {
     std::string type;
     std::string comment;
     std::string value;
     double d_value;
-    bool is_numeric;
+    int i_value;
+    userParamKind kind;
   } UserParam;
 
   /// this defines a map of UserParam
@@ -478,7 +568,8 @@ private:
     std::string comment;
     std::vector<std::string> value;
     std::vector<double> d_value;
-    bool is_numeric;
+    std::vector<int> i_value;
+    userParamKind kind;
   } UserParamVector;
 
   /// this defines a map of UserParamVector

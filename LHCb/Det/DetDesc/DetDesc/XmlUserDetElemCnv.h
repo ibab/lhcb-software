@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/DetDesc/XmlUserDetElemCnv.h,v 1.2 2001-05-17 13:26:48 sponce Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/DetDesc/XmlUserDetElemCnv.h,v 1.3 2001-06-28 09:43:53 sponce Exp $
 
 #ifndef DDEXAMPLE_XMLUSERDETELEMCNV_H
 #define DDEXAMPLE_XMLUSERDETELEMCNV_H 1
@@ -84,7 +84,7 @@ template <class DeType> class XmlUserDetElemCnv : public XmlBaseDetElemCnv {
    * @return status depending on the completion of the call
    */
   virtual StatusCode i_fillSpecificObj (DOM_Element childElement,
-                                        DeType* dataObj) = 0;
+                                        DeType* dataObj);
 };
 
 
@@ -125,6 +125,16 @@ XmlUserDetElemCnv<DeType>::i_fillSpecificObj (DOM_Element childElement,
                                               DetectorElement* refpObject) {
   DeType* dataObj = dynamic_cast<DeType*> (refpObject);
   return i_fillSpecificObj (childElement, dataObj);
+}
+
+// -----------------------------------------------------------------------
+// Fill an object with a new specific child element
+// ------------------------------------------------------------------------
+template <class DeType>
+StatusCode
+XmlUserDetElemCnv<DeType>::i_fillSpecificObj (DOM_Element childElement,
+                                              DeType* dataObj) {
+  return StatusCode::SUCCESS;
 }
 
 #endif // DDEXAMPLE_XMLUSERDETELEMCNV_H

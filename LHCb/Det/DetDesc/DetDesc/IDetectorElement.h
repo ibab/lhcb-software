@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/DetDesc/IDetectorElement.h,v 1.5 2001-06-25 14:21:32 sponce Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/DetDesc/IDetectorElement.h,v 1.6 2001-06-28 09:43:53 sponce Exp $
 #ifndef  DETDESC_IDETECTORELEMENT_H 
 #define  DETDESC_IDETECTORELEMENT_H 1 
 
@@ -141,6 +141,13 @@ class IDetectorElement: virtual public IInspectable
   virtual ~IDetectorElement(){};
 
   /**
+   * This method initializes the detector element. It should be overridden
+   * and used for computation purposes. This is a kind of hook for adding
+   * user code easily in the initialization of a detector element.
+   */
+  virtual StatusCode initialize() = 0;
+
+  /**
    * this gets the type of a parameter.
    * If this parameter does not exist, it raises a DetectorElementException.
    * @param name the name of the parameter
@@ -162,10 +169,29 @@ class IDetectorElement: virtual public IInspectable
    * @param name the name of the parameter
    * @return its value, as a string
    */
-  inline virtual std::string userParameterValue (std::string name) = 0;
+  inline virtual std::string userParameterAsString (std::string name) = 0;
   
   /**
-   * this gets the value of the parameter as a double.
+   * this gets the value of a parameter, as an int
+   * If the value is not an int, it raises a DetectorElementException.
+   * If this parameter does not exist, it raises a DetectorElementException.
+   * @param name the name of the parameter
+   * @return its value, as a string
+   */
+  inline virtual int userParameterAsInt (std::string name) = 0;
+  
+  /**
+   * this gets the value of a parameter, as a double
+   * If the value is not a number, it raises a DetectorElementException.
+   * If this parameter does not exist, it raises a DetectorElementException.
+   * @param name the name of the parameter
+   * @return its value, as a double
+   */
+  inline virtual double userParameterAsDouble (std::string name) = 0;
+  
+  /**
+   * this gets the value of the parameter as a double. This actually is an
+   * equivalent of userParameterAsDouble.
    *  If the value is not a double, it raises a DetectorElementException.
    * If this parameter does not exist, it raises a DetectorElementException.
    * @param name the name of the parameter
@@ -196,10 +222,33 @@ class IDetectorElement: virtual public IInspectable
    * @return its value, as a string
    */
   inline virtual std::vector<std::string>
-  userParameterVectorValue (std::string name) = 0;
+  userParameterVectorAsString (std::string name) = 0;
+  
+  /**
+   * this gets the value of a parameter vector, as a vector of int
+   * If the parameter vector is not made of ints, it raises a
+   * DetectorElementException.
+   * If this parameter does not exist, it raises a DetectorElementException.
+   * @param name the name of the parameter vector
+   * @return its value, as a string
+   */
+  inline virtual std::vector<int>
+  userParameterVectorAsInt (std::string name) = 0;
   
   /**
    * this gets the value of a parameter as a vector of double.
+   * If the parameter vector is not made of numbers, it raises a
+   * DetectorElementException.
+   * If this parameter does not exist, it raises a DetectorElementException.
+   * @param name the name of the parameter
+   * @return its value, as a vector of double
+   */
+  inline virtual std::vector<double>
+  userParameterVectorAsDouble (std::string name) = 0;
+  
+  /**
+   * this gets the value of a parameter as a vector of double. This actually is
+   * an equivalent of userParameterVectorAsDouble.
    * If the parameter vector is not made of doubles, it raises a
    * DetectorElementException.
    * If this parameter does not exist, it raises a DetectorElementException.

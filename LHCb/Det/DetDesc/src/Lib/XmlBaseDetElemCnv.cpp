@@ -1,4 +1,4 @@
-//  $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/Lib/XmlBaseDetElemCnv.cpp,v 1.7 2001-06-25 14:21:38 sponce Exp $
+//  $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/Lib/XmlBaseDetElemCnv.cpp,v 1.8 2001-06-28 09:43:57 sponce Exp $
 
 // include files
 #include <cstdlib>
@@ -265,7 +265,15 @@ StatusCode XmlBaseDetElemCnv::i_fillObj (DOM_Element childElement,
       log << MSG::DEBUG << "Adding user parameter " << name << " with value "
           << value << ", type " << type << " and comment \"" << comment
           << "\"" << endreq;
-      if (type == "int" || type == "double") {
+      if (type == "int") {
+        double dd = xmlSvc()->eval(value, false);
+        dataObj->addUserParameter (name,
+                                   type,
+                                   comment,
+                                   value,
+                                   dd,
+                                   int (dd));
+      } else if(type == "double") {
         dataObj->addUserParameter (name,
                                    type,
                                    comment,
@@ -288,13 +296,17 @@ StatusCode XmlBaseDetElemCnv::i_fillObj (DOM_Element childElement,
       }
 
       // depending on the type, evaluates the value
-      bool is_numeric = (type == "int" || type == "double");
       std::vector<double> d_vect;
-      if (is_numeric) {
-        for (std::vector<std::string>::iterator it = vect.begin();
-             vect.end() != it;
-             ++it) {
-          d_vect.push_back (xmlSvc()->eval(*it, false));
+      std::vector<int> i_vect;
+      for (std::vector<std::string>::iterator it = vect.begin();
+           vect.end() != it;
+           ++it) {
+        double dd = xmlSvc()->eval(*it, false);
+        if ("int" == type) {
+          i_vect.push_back (dd);
+          d_vect.push_back (dd);
+        } else if ("double" == type) {
+          d_vect.push_back (dd);
         }
       }
       // adds the new parameterVector to the detectorElement
@@ -307,7 +319,10 @@ StatusCode XmlBaseDetElemCnv::i_fillObj (DOM_Element childElement,
       }
       log << ", type " << type << " and comment \""
           << comment << "\"." << endreq;
-      if (is_numeric) {
+      if ("int" == type) {
+        dataObj->addUserParameterVector
+          (name, type, comment, vect, d_vect, i_vect);
+      } else if ("double" == type) {
         dataObj->addUserParameterVector (name, type, comment, vect, d_vect);
       } else {
         dataObj->addUserParameterVector (name, type, comment, vect);
@@ -323,6 +338,19 @@ StatusCode XmlBaseDetElemCnv::i_fillObj (DOM_Element childElement,
   // returns
   return StatusCode::SUCCESS;
 } // end i_fillObj
+
+
+// -----------------------------------------------------------------------
+// Process an object already created an filled
+// -----------------------------------------------------------------------
+StatusCode XmlBaseDetElemCnv::i_processObj(DataObject* refpObject) {
+  // gets the object
+  DetectorElement* dataObj = dynamic_cast<DetectorElement*> (refpObject);
+  // initializes it
+  dataObj->initialize();
+  // returns
+  return StatusCode::SUCCESS;
+} // end i_processObj
 
 
 // -----------------------------------------------------------------------

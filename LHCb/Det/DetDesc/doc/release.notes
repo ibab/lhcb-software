@@ -3,6 +3,13 @@ package manager : N.N
 
 !===========================================================================
 ! 20010628 - Sebastien Ponce
+  - added new way of reaching userParameter. Int, Double and String
+  parameters are now handled correctly. An int can be retrieved as an int,
+  a double or a string, a double can only be retrieved as a double or
+  a string, and a string is a string !
+
+!===========================================================================
+! 20010628 - Sebastien Ponce
   - added interface for caching inthe XmlParserSvc and XmlSvc. This consist
   at this time in a single method : clearCache
 

@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/Lib/DetectorElement.cpp,v 1.6 2001-03-13 21:57:32 mato Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/Lib/DetectorElement.cpp,v 1.7 2001-06-28 09:43:57 sponce Exp $
 #include "GaudiKernel/Kernel.h"
 
 #include "DetDesc/IGeometryInfo.h"
@@ -260,6 +260,11 @@ StatusCode    DetectorElement::updateValidity    ()
   return StatusCode::SUCCESS;
 };
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+StatusCode DetectorElement::initialize() {
+  // this is a default implementation that does nothing.
+  // it is up to the user to override this in a child of DetectorElement
+  return StatusCode::SUCCESS;
+}
 
 
 
