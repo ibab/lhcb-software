@@ -7,15 +7,24 @@
 
 // from Gaudi
 #include "GaudiKernel/Algorithm.h"
+#include "GaudiKernel/MsgStream.h" 
+#include "GaudiKernel/IToolSvc.h"
+#include "GaudiKernel/IParticlePropertySvc.h"
+#include "GaudiKernel/ParticleProperty.h"
 
-// Forward declarations
-class IHistogram1D;
-class IPhysDesktop;
-class IMassVertexFitter;
-class IVertexFitter;
-class IGeomDispCalculator;
-class IParticleStuffer;
-class IParticleFilter;
+// from EventSys
+#include "Event/Particle.h"
+#include "Event/Vertex.h"
+
+// from DaVinciTools
+#include "DaVinciTools/IPhysDesktop.h"
+#include "DaVinciTools/IMassVertexFitter.h"
+#include "DaVinciTools/IVertexFitter.h"
+#include "DaVinciTools/IGeomDispCalculator.h"
+#include "DaVinciTools/IParticleStuffer.h"
+#include "DaVinciTools/IParticleFilter.h"
+
+
 
 /** @class DVAlgorithm DVAlgorithm.h DaVinciTools/DVAlgorithm.h
  *  Base Class for DaVinci Selection Algorithms:
@@ -28,13 +37,14 @@ class DVAlgorithm : public Algorithm {
 public:
   /// Standard constructor
   DVAlgorithm( const std::string& name, ISvcLocator* pSvcLocator ) 
-    : Algorithm ( name , pSvcLocator ),
-      m_pDesktop(0),
-      m_pLagFit(0),
-      m_pVertexFit(0),
-      m_pGeomDispCalc(0),
-      m_pStuffer(0),
-      m_pFilter(0) {  
+    : Algorithm ( name , pSvcLocator )
+    , m_pDesktop(0)
+    , m_pLagFit(0)
+    , m_pVertexFit(0)
+    , m_pGeomDispCalc(0)
+    , m_pStuffer(0)
+    , m_pFilter(0)
+    , m_ppSvc(0) {  
 
     declareProperty("VertexFitter", m_typeVertexFit="UnconstVertexFitter");
     declareProperty("MassVertexFitter", 
@@ -48,23 +58,26 @@ public:
   /// The base class provides an instance of all type of tools
   StatusCode loadTools();
   
-  /// Acessor for PhysDesktop Tool
+  /// Accessor for PhysDesktop Tool
   IPhysDesktop* desktop() const; 
 
-  /// Acessor for Mass Constrained Vertex Fitter Tool
+  /// Accessor for Mass Constrained Vertex Fitter Tool
   IMassVertexFitter* massVertexFitter() const; 
 
-  /// Acessor for Unconstrained Vertex Fitter Tool
+  /// Accessor for Unconstrained Vertex Fitter Tool
   IVertexFitter* vertexFitter() const;
 
-  /// Acessor for Geometrical Displacement Calculation Tool
+  /// Accessor for Geometrical Displacement Calculation Tool
   IGeomDispCalculator* geomDispCalculator() const;
 
-  /// Acessor for Particle Stuffer Tool
+  /// Accessor for Particle Stuffer Tool
   IParticleStuffer* particleStuffer() const;
 
-  /// Acessor for Particle Filter Tool
+  /// Accessor for Particle Filter Tool
   IParticleFilter* particleFilter() const;
+
+  /// Accessor for ParticlePropertySvc
+  IParticlePropertySvc* ppSvc() const;
   
 protected:
 
@@ -87,25 +100,13 @@ private:
   mutable IParticleStuffer* m_pStuffer;  
   /// Reference to ParticleFilter.
   mutable IParticleFilter* m_pFilter;
-
+  /// Reference to ParticlePropertySvc
+  mutable IParticlePropertySvc* m_ppSvc;
   
 };
 // ---------------------------------------------------------------------------
 //   end of class
 // ---------------------------------------------------------------------------
-// Include files 
-
-// from Gaudi
-#include "GaudiKernel/MsgStream.h" 
-#include "GaudiKernel/IToolSvc.h"
-
-// from DaVinciTools
-#include "DaVinciTools/IPhysDesktop.h"
-#include "DaVinciTools/IMassVertexFitter.h"
-#include "DaVinciTools/IVertexFitter.h"
-#include "DaVinciTools/IGeomDispCalculator.h"
-#include "DaVinciTools/IParticleStuffer.h"
-#include "DaVinciTools/IParticleFilter.h"
 
 //=============================================================================
 // Load standard tools
@@ -113,16 +114,16 @@ private:
 inline StatusCode DVAlgorithm::loadTools() {
 
   MsgStream  log( msgSvc(), name() );
-  log << MSG::INFO << ">>> Retriving tools" << endreq;
+  log << MSG::INFO << ">>> Retreiving tools" << endreq;
   
-  log << MSG::DEBUG << ">>> Retriving PhysDesktop" << endreq;
+  log << MSG::DEBUG << ">>> Retreiving PhysDesktop" << endreq;
   StatusCode sc = toolSvc()->retrieveTool("PhysDesktop", m_pDesktop, this);
   if( sc.isFailure() ) {
     log << MSG::ERROR << ">>> DVAlgorithm[PhysDesktop] not found" << endreq;
     return StatusCode::FAILURE;
   }
 
-  log << MSG::DEBUG << ">>> Retriving " << m_typeLagFit 
+  log << MSG::DEBUG << ">>> Retreiving " << m_typeLagFit 
       << " as IMassVertexFitter" << endreq;
   sc = toolSvc()->retrieveTool(m_typeLagFit, m_pLagFit, this);
   if( sc.isFailure() ) {
@@ -131,7 +132,7 @@ inline StatusCode DVAlgorithm::loadTools() {
     return StatusCode::FAILURE;
   }
      
-  log << MSG::DEBUG << ">>> Retriving " << m_typeVertexFit 
+  log << MSG::DEBUG << ">>> Retreiving " << m_typeVertexFit 
       << " as IVertexFitter" << endreq;
   sc = toolSvc()->retrieveTool(m_typeVertexFit, m_pVertexFit, this);
   if( sc.isFailure() ) {
@@ -140,7 +141,7 @@ inline StatusCode DVAlgorithm::loadTools() {
     return StatusCode::FAILURE;
   }
   
-  log << MSG::DEBUG << ">>> Retriving GeomDispCalculator" << endreq;
+  log << MSG::DEBUG << ">>> Retreiving GeomDispCalculator" << endreq;
   sc = toolSvc()->retrieveTool("GeomDispCalculator", m_pGeomDispCalc, this);
   if( sc.isFailure() ) {
     log << MSG::ERROR << ">>> DVAlgorithm[GeomDispCalculator] not found" 
@@ -148,7 +149,7 @@ inline StatusCode DVAlgorithm::loadTools() {
     return StatusCode::FAILURE;
   }
   
-  log << MSG::DEBUG << ">>> Retriving ParticleStuffer" << endreq;
+  log << MSG::DEBUG << ">>> Retreiving ParticleStuffer" << endreq;
   sc = toolSvc()->retrieveTool("ParticleStuffer", m_pStuffer);
   if( sc.isFailure() ) {
     log << MSG::ERROR << ">>> DVAlgorithm[ParticleStuffer] not found" 
@@ -157,12 +158,20 @@ inline StatusCode DVAlgorithm::loadTools() {
 
   }
    
-  log << MSG::DEBUG << ">>> Retriving one ParticleFilter" << endreq;
+  log << MSG::DEBUG << ">>> Retreiving one ParticleFilter" << endreq;
   sc = toolSvc()->retrieveTool("ParticleFilter", m_pFilter, this);
   if( sc.isFailure() ) {
     log << MSG::ERROR << ">>> DVAlgorithm[ParticleFilter] not found" << endreq;
     return StatusCode::FAILURE;
   }
+
+  log << MSG::DEBUG << ">>> Retrieving ParticlePropertySvc" << endreq;
+  sc = service("ParticlePropertySvc", m_ppSvc, true);
+  if( sc.isFailure() ) {
+    log << MSG::FATAL << "    Unable to locate Particle Property Service" 
+        << endreq;
+    return StatusCode::FAILURE;
+  }  
 
   return StatusCode::SUCCESS;
 }
@@ -191,10 +200,16 @@ inline IGeomDispCalculator* DVAlgorithm::geomDispCalculator() const {
 //=============================================================================
 inline IParticleStuffer* DVAlgorithm::particleStuffer() const {
   return m_pStuffer;
-}  
+} 
+ 
 //=============================================================================
 inline IParticleFilter* DVAlgorithm::particleFilter() const {
   return m_pFilter;
+}
+
+//=============================================================================
+inline IParticlePropertySvc* DVAlgorithm::ppSvc() const {
+  return m_ppSvc;
 }
 
 #endif // DAVINCITOOLS_DVALGORITHM_H
