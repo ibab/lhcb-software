@@ -4,11 +4,13 @@
 ! Purpose     : Provide tools and algorithm for tagging B
 !-----------------------------------------------------------------------------
 
+!========================== FlavourTagging v5r3 2004-10-04 ===================
 ! 2004-09-13 - P. Koppenburg for Thomas Ruf
   - src/BTagging.cpp
     . Do not wrap string over several lines. 
       Causes compilation problems on widows.
-!========================== FlavourTagging v5r3 2004-09-16 ===================
+  - Re-tag as v5r3 as it is already corrected on the release are in DaVinci 
+    v12r1
 ! 2004-09-13 - P. Koppenburg for Julien Babel
   Include trigger again
 !========================== FlavourTagging v5r2 2004-08-03 ===================
