@@ -4,6 +4,7 @@
 ! Purpose     : Provides basic tools for RICH MC information
 !-----------------------------------------------------------------------------
 
+!========================== RichMCTools v2r5 2005-03-07 ======================
 ! 2005-02-20 - Chris Jones
  - Add new methods to MC truth tool
 
