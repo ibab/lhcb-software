@@ -83,3 +83,5 @@ DigiWriter.ItemList =
 , "/Event/Rec/Relations/L1Track2d2MCP#1" // To be replaced by new Link objects
 , "/Event/Rec/Relations/L1Track3d2MCP#1" // To be replaced by new Link objects
 };
+// Additional objects from new L1 simulation
+#include "$BOOLEOPTS/L1Output.opts"

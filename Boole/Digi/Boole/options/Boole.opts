@@ -70,6 +70,7 @@ TriggerL0Seq.Members += { "L0mTrigger/L0Muon" };
 #include "$L0MUONROOT/options/Boole.opts"
 TriggerL0Seq.Members += { "PuVetoAlg" };
 TriggerL0Seq.Members += { "DecisionUnit" };
+TriggerL0Seq.Members += { "PrepareL0DUL1Buffer" };
 
 // Old L1 trigger (Obsolete)
 //TriggerL1Seq.Members = { "CreateL1Event" };

@@ -8,6 +8,14 @@ Purpose: LHCb Digitization program
 - New tuning
   - use GSL spline in ITChargeSharingTool for interpolation (ITAlgorithms v13r2)
 
+- New functionality
+  - Add PrepareL0DUL1Buffer to fill L1 buffer with L0 decision unit result
+    (L0DU v6r7)
+  - POOL improvements:
+    . All output classes can now be written (LHCbKernel v4r1)
+    . Factor 2.5 speed improvement in writing - now 1.4 s/evt (Gaudi v14r1)
+    . No more limit on output file size (POOL 1.5.0)
+
 - Bug fixes
   - bug 2241: spillover probability was not reproducible because it was 
               determined before event by event random number initialization
