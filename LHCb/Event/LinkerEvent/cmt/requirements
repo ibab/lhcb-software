@@ -19,9 +19,8 @@ include_dirs $(LINKEREVENTROOT)
 # Used packages. Specify the version, * at the end specifies 'any revision'
 #    Put as many lines as needed, with all packages, without the '#'
 #============================================================================
-use   EventSys	v17r*	Event
 
-use 	GaudiObjDesc	v6r*    -no_auto_imports
+use LHCbKernel	v4r*	Kernel	
 
 #============================================================================
 #---- Produce Header-Files and from XML description
@@ -32,15 +31,12 @@ document obj2dict LinkerEventObj2Dict ../xml/*.xml
 
 public
 library          LinkerEvent         ../src/*.cpp
-library          LinkerEventDict     ../dict/*.cpp -import=GaudiIntrospection
+library          LinkerEventDict     ../dict/*.cpp
 
 #============================================================================
-# define component library link options
+# define library link options
 #============================================================================
-apply_pattern      package_linkopts
-apply_pattern      package_stamps
-apply_pattern      linker_path
+apply_pattern component_library library=LinkerEventDict
+apply_pattern linker_library	library=LinkerEvent
 macro_append LinkerEvent_linkopts "" WIN32 "/include:_LinkerEvent_loadRef"
-
-apply_pattern      package_shlibflags
 

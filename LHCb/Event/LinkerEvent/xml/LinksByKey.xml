@@ -52,6 +52,7 @@ m_weight    = weight;
       id          = "400">
 
       <base   name = "DataObject"/>
+      &DataObject;
       <import name = "Event/LinkReference"/>
       <import name = "GaudiKernel/IDataProviderSvc" />
 
