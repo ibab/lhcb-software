@@ -1,6 +1,6 @@
-// $Id: MCRichDigitsToHLTBuffAlg.h,v 1.2 2003-11-09 12:39:28 jonrob Exp $
-#ifndef RICHDAQ_MCRICHDIGITSTOHLTBUFFALG_H
-#define RICHDAQ_MCRICHDIGITSTOHLTBUFFALG_H 1
+// $Id: MCRichDigitsToRawBufferAlg.h,v 1.1 2003-11-26 11:11:29 cattanem Exp $
+#ifndef RICHDAQ_MCRICHDIGITSTORAWBUFFERALG_H
+#define RICHDAQ_MCRICHDIGITSTORAWBUFFERALG_H 1
 
 // from STL
 #include <string>
@@ -13,7 +13,7 @@
 
 // Event Model
 #include "Event/DAQTypes.h"
-#include "Event/HltBuffer.h"
+#include "Event/RawBuffer.h"
 #include "Event/RichDigit.h"
 
 // RichDAQ utility classes
@@ -22,22 +22,22 @@
 #include "RichDAQLinkNumber.h"
 #include "RichNonZeroSuppData.h"
 
-/** @class MCRichDigitsToHLTBuffAlg MCRichDigitsToHLTBuffAlg.h
+/** @class MCRichDigitsToRawBufferAlg MCRichDigitsToRawBufferAlg.h
  *
- *  Algorithm to fill the HLT buffer with RICH information from MCRichDigits
+ *  Algorithm to fill the Raw buffer with RICH information from MCRichDigits
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2003-11-06
  */
 
-class MCRichDigitsToHLTBuffAlg : public RichAlgBase {
+class MCRichDigitsToRawBufferAlg : public RichAlgBase {
 
 public:
 
   /// Standard constructor
-  MCRichDigitsToHLTBuffAlg( const std::string& name, ISvcLocator* pSvcLocator );
+  MCRichDigitsToRawBufferAlg(const std::string& name, ISvcLocator* pSvcLocator);
 
-  virtual ~MCRichDigitsToHLTBuffAlg( ); ///< Destructor
+  virtual ~MCRichDigitsToRawBufferAlg( ); ///< Destructor
 
   virtual StatusCode initialize();    ///< Algorithm initialization
   virtual StatusCode execute   ();    ///< Algorithm execution
@@ -46,22 +46,23 @@ public:
 private: // methods
 
   void fillZeroSuppressed    ( RichSmartID pdID,
-                               Rich::HLTBank & dataBank,
+                               Rich::RAWBank & dataBank,
                                const MCRichDigitVector & pdHits );
   void fillNonZeroSuppressed ( RichSmartID pdID,
-                               Rich::HLTBank & dataBank,
+                               Rich::RAWBank & dataBank,
                                const MCRichDigitVector & pdHits );
 
 private: // data
 
-  /// Location of HLT buffer in TES
-  std::string m_hltBuffLoc;
+  /// Location of Raw buffer in TES
+  std::string m_rawBuffLoc;
 
   /// Location of input MCRichDigits in TES
   std::string m_digitsLoc;
 
-  /// The number of hits marking the transistion between zero and non-zero suppressed data
+  /// The number of hits marking the transistion between zero and 
+  /// non-zero suppressed data
   unsigned int m_zeroSuppresCut;
 
 };
-#endif // RICHDAQ_RICHDIGITSTOHLTBUFFALG_H
+#endif // RICHDAQ_RICHDIGITSTORAWBUFFERALG_H

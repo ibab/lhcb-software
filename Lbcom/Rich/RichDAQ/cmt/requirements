@@ -8,12 +8,9 @@
 package           RichDAQ
 version           v1r0
 
-#===================== environment ==========================================
-set RICHDAQOPTS $(RICHDAQROOT)/options
-
 # Structure, i.e. directories to process. 
 #============================================================================
-branches          cmt doc src RichDAQ options
+branches          cmt doc src
 
 #============================================================================
 # Used packages. Specify the version, * at the end specifies 'any revision'
@@ -21,7 +18,7 @@ branches          cmt doc src RichDAQ options
 #============================================================================
 use   RichUtils      v3r*    Rich
 use   RichEvent      v6r*    Event
-use   DAQEvent       v2r*    Event
+use   DAQEvent       v3r*    Event
 
 #============================================================================
 # Component library building rule

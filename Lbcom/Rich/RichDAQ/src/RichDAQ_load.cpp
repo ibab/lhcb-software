@@ -1,20 +1,17 @@
-// $Id: RichDAQ_load.cpp,v 1.3 2003-11-10 14:59:59 jonrob Exp $
+// $Id: RichDAQ_load.cpp,v 1.4 2003-11-26 11:11:29 cattanem Exp $
 // Include files 
 
 #include "GaudiKernel/DeclareFactoryEntries.h"
 
 DECLARE_FACTORY_ENTRIES( RichDAQ ) {
 
-  // Algorithm to convert RichDigits to HLT Buffer
-  DECLARE_ALGORITHM( MCRichDigitsToHLTBuffAlg );
+  // Algorithm to convert RichDigits to Raw Buffer
+  DECLARE_ALGORITHM( MCRichDigitsToRawBufferAlg );
 
-  // Algorithm to create RichDigits from HLT Buffer
-  DECLARE_ALGORITHM( HLTBuffToRichDigitsAlg );
+  // Algorithm to create RichDigits from Raw Buffer
+  DECLARE_ALGORITHM( RawBufferToRichDigitsAlg );
 
   // Create links between RichDigits and MCRichDigits
   DECLARE_ALGORITHM( BuildMCRichDigitLinks );
-
-  // Converter for RichDigits
-  //DECLARE_CONVERTER( HLTBuffToRichDigitsCnv );
   
 }

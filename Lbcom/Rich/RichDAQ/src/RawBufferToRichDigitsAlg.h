@@ -1,6 +1,6 @@
-// $Id: HLTBuffToRichDigitsAlg.h,v 1.3 2003-11-10 14:59:58 jonrob Exp $
-#ifndef RICHDAQ_HLTBUFFTORICHDIGITSALG_H 
-#define RICHDAQ_HLTBUFFTORICHDIGITSALG_H 1
+// $Id: RawBufferToRichDigitsAlg.h,v 1.1 2003-11-26 11:11:29 cattanem Exp $
+#ifndef RICHDAQ_RAWBUFFERTORICHDIGITSALG_H 
+#define RICHDAQ_RAWBUFFERTORICHDIGITSALG_H 1
 
 // gaudi
 #include "GaudiKernel/SmartDataPtr.h"
@@ -15,22 +15,22 @@
 #include "RichDAQLinkNumber.h"
 #include "RichNonZeroSuppData.h"
 
-/** @class HLTBuffToRichDigitsAlg HLTBuffToRichDigitsAlg.h
+/** @class RawBuffeToRichDigitsAlg RawBufferToRichDigitsAlg.h
  *  
- *  Algorithm to create RichDigits from HLTEvent object
+ *  Algorithm to create RichDigits from RawEvent object
  * 
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2003-11-06
  */
 
-class HLTBuffToRichDigitsAlg : public RichAlgBase {
+class RawBufferToRichDigitsAlg : public RichAlgBase {
 
 public:
 
   /// Standard constructor
-  HLTBuffToRichDigitsAlg( const std::string& name, ISvcLocator* pSvcLocator );
+  RawBufferToRichDigitsAlg( const std::string& name, ISvcLocator* pSvcLocator );
 
-  virtual ~HLTBuffToRichDigitsAlg( ); ///< Destructor
+  virtual ~RawBufferToRichDigitsAlg( ); ///< Destructor
 
   virtual StatusCode initialize();    ///< Algorithm initialization
   virtual StatusCode execute   ();    ///< Algorithm execution
@@ -39,18 +39,15 @@ public:
 private: // methods
 
   /// Decode a zero suppress data block
-  unsigned int decodeZeroSuppressedBank( const HltBank & bank ); 
+  unsigned int decodeZeroSuppressedBank( const RawBank & bank ); 
 
   /// Decode a non-zero suppress data block
-  unsigned int decodeNonZeroSuppressedBank( const HltBank & bank ); 
-
-  // temporary
-  HltEvent * createHltEvent();
+  unsigned int decodeNonZeroSuppressedBank( const RawBank & bank ); 
 
 private: // data
 
-  /// Input location for HltEvent in TES
-  std::string m_hltEventLoc;
+  /// Input location for RawEvent in TES
+  std::string m_rawEventLoc;
 
   /// Output location for RichDigits
   std::string m_richDigitsLoc;
@@ -60,4 +57,4 @@ private: // data
 
 };
 
-#endif // RICHDAQ_HLTBUFFTORICHDIGITSALG_H
+#endif // RICHDAQ_RAWBUFFERTORICHDIGITSALG_H

@@ -1,4 +1,4 @@
-// $Id: RichNonZeroSuppData.h,v 1.7 2003-11-10 14:59:59 jonrob Exp $
+// $Id: RichNonZeroSuppData.h,v 1.8 2003-11-26 11:11:29 cattanem Exp $
 #ifndef RICHDAQ_RICHNONZEROSUPPDATA_H
 #define RICHDAQ_RICHNONZEROSUPPDATA_H 1
 
@@ -43,13 +43,14 @@ public:
     }
   }
 
-  /// Constructor from an HltBank
-  RichNonZeroSuppData( const HltBank & bank )
+  /// Constructor from a RawBank
+  RichNonZeroSuppData( const RawBank & bank )
   {
     initData();
     // Loop over data entries and set data.
     for ( Rich::ShortType iData = 0; iData < dataSize(); ++iData ) {
-      m_data[iData] = bank.data()[iData+1];// NB: Skip 0th row since this is the header...
+      // NB: Skip 0th row since this is the header...
+      m_data[iData] = bank.data()[iData+1];
     }
   }
 
@@ -104,11 +105,11 @@ public:
     }
   }
 
-  /// Fill a vector with HLT data words
-  inline void fillHLT( Rich::HLTBank & hltData ) const
+  /// Fill a vector with Raw data words
+  inline void fillRAW( Rich::RAWBank & rawData ) const
   {
     for ( Rich::ShortType iData = 0; iData < dataSize(); ++iData ) {
-      hltData.push_back( m_data[iData] );
+      rawData.push_back( m_data[iData] );
     }
   }
 
@@ -125,7 +126,8 @@ private: // methods
   }
 
   /// Test if a given bit in a word is set on
-  inline bool isBitOn( const Rich::LongType data, const Rich::ShortType pos ) const
+  inline bool 
+  isBitOn( const Rich::LongType data, const Rich::ShortType pos ) const
   {
     return ( 0 != (data & (1<<pos)) );
   }

@@ -1,4 +1,4 @@
-// $Id: MCRichDigitsToHLTBuffAlg.cpp,v 1.7 2003-11-21 13:13:40 jonrob Exp $
+// $Id: MCRichDigitsToRawBufferAlg.cpp,v 1.1 2003-11-26 11:11:29 cattanem Exp $
 // Include files
 
 // from Gaudi
@@ -6,35 +6,37 @@
 #include "GaudiKernel/MsgStream.h"
 
 // local
-#include "MCRichDigitsToHLTBuffAlg.h"
+#include "MCRichDigitsToRawBufferAlg.h"
 
 //-----------------------------------------------------------------------------
-// Implementation file for class : MCRichDigitsToHLTBuffAlg
+// Implementation file for class : MCRichDigitsToRawBufferAlg
 //
 // 2003-11-06 : Chris Jones   Christopher.Rob.Jones@cern.ch
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-static const  AlgFactory<MCRichDigitsToHLTBuffAlg>          s_factory ;
-const        IAlgFactory& MCRichDigitsToHLTBuffAlgFactory = s_factory ;
+static const  AlgFactory<MCRichDigitsToRawBufferAlg>          s_factory ;
+const        IAlgFactory& MCRichDigitsToRawBufferAlgFactory = s_factory ;
 
 // Standard constructor
-MCRichDigitsToHLTBuffAlg::MCRichDigitsToHLTBuffAlg( const std::string& name,
-                                                    ISvcLocator* pSvcLocator )
+MCRichDigitsToRawBufferAlg::MCRichDigitsToRawBufferAlg( const std::string& name,
+                                                      ISvcLocator* pSvcLocator )
   : RichAlgBase ( name, pSvcLocator )
 {
 
-  declareProperty( "HLTBufferLocation",   m_hltBuffLoc = HltBufferLocation::Default );
-  declareProperty( "MCRichDigitsLocation", m_digitsLoc = MCRichDigitLocation::Default );
+  declareProperty( "RawBufferLocation",
+                   m_rawBuffLoc = RawBufferLocation::Default );
+  declareProperty( "MCRichDigitsLocation", 
+                   m_digitsLoc = MCRichDigitLocation::Default );
   declareProperty( "ZeroSuppressHitCut", m_zeroSuppresCut = 96 );
 
 }
 
 // Destructor
-MCRichDigitsToHLTBuffAlg::~MCRichDigitsToHLTBuffAlg() {};
+MCRichDigitsToRawBufferAlg::~MCRichDigitsToRawBufferAlg() {};
 
 // Initialisation.
-StatusCode MCRichDigitsToHLTBuffAlg::initialize() {
+StatusCode MCRichDigitsToRawBufferAlg::initialize() {
 
   // intialise base
   if ( !RichAlgBase::initialize() ) return StatusCode::FAILURE;
@@ -43,27 +45,28 @@ StatusCode MCRichDigitsToHLTBuffAlg::initialize() {
     MsgStream msg(msgSvc(), name());
     msg << MSG::DEBUG << "Initialise :-" << endreq
         << " MCRichDigit location                = " << m_digitsLoc << endreq
-        << " HltBuffer location                  = " << m_hltBuffLoc << endreq
-        << " Max hits for zero-suppressed data   = " << m_zeroSuppresCut << endreq;
+        << " RawBuffer location                  = " << m_rawBuffLoc << endreq
+        << " Max hits for zero-suppressed data   = " << m_zeroSuppresCut 
+        << endreq;
   }
 
   return StatusCode::SUCCESS;
 };
 
 // Main execution
-StatusCode MCRichDigitsToHLTBuffAlg::execute() {
+StatusCode MCRichDigitsToRawBufferAlg::execute() {
 
   if ( msgLevel(MSG::DEBUG) ) {
     MsgStream  msg( msgSvc(), name() );
     msg << MSG::DEBUG << "Execute" << endreq;
   }
 
-  // Retrieve the HLTBuffer
-  SmartDataPtr<HltBuffer> hltBuffer( eventSvc(), m_hltBuffLoc );
-  if ( !hltBuffer ) {
+  // Retrieve the RawBuffer
+  SmartDataPtr<RawBuffer> rawBuffer( eventSvc(), m_rawBuffLoc );
+  if ( 0 == rawBuffer ) {
     MsgStream  msg( msgSvc(), name() );
     msg << MSG::ERROR
-        << "Unable to retrieve HLT buffer from " <<  m_hltBuffLoc << endreq;
+        << "Unable to retrieve Raw buffer from " <<  m_rawBuffLoc << endreq;
     return StatusCode::FAILURE;
   }
 
@@ -89,7 +92,7 @@ StatusCode MCRichDigitsToHLTBuffAlg::execute() {
         iPD != PDDigits.end(); ++iPD ) {
 
     // Make a new data bank
-    Rich::HLTBank dataBank;
+    Rich::RAWBank dataBank;
 
     // Based on number of hits, decide whether to zero suppress or not
     if ( ((*iPD).second).size() < m_zeroSuppresCut ) {
@@ -98,9 +101,9 @@ StatusCode MCRichDigitsToHLTBuffAlg::execute() {
       fillNonZeroSuppressed( (*iPD).first, dataBank, (*iPD).second );
     }
 
-    // Add this bank to the HLT buffer
+    // Add this bank to the Raw buffer
     RichDAQHeaderPD header ( dataBank[0] );
-    hltBuffer->addBank( header.linkNumber(), HltBuffer::Rich, dataBank );
+    rawBuffer->addBank( header.linkNumber(), RawBuffer::Rich, dataBank );
 
   } // end photon detector loop
 
@@ -108,15 +111,15 @@ StatusCode MCRichDigitsToHLTBuffAlg::execute() {
     MsgStream  msg( msgSvc(), name() );
     msg << MSG::DEBUG
         << "Created " << PDDigits.size() << " Rich banks for "
-        << digits->size() << " MCRichDigits in HltBuffer" << endreq;
+        << digits->size() << " MCRichDigits in RawBuffer" << endreq;
   }
 
   return StatusCode::SUCCESS;
 };
 
-void MCRichDigitsToHLTBuffAlg::fillZeroSuppressed( RichSmartID pdID,
-                                                   Rich::HLTBank & dataBank,
-                                                   const MCRichDigitVector & pdHits ) {
+void MCRichDigitsToRawBufferAlg::fillZeroSuppressed( RichSmartID pdID,
+                                                     Rich::RAWBank & dataBank,
+                                            const MCRichDigitVector & pdHits ) {
 
   // Make a new header word for this PD and add to data bank
   RichDAQLinkNumber linkNumber( pdID.rich(), pdID.panel(),
@@ -160,9 +163,9 @@ void MCRichDigitsToHLTBuffAlg::fillZeroSuppressed( RichSmartID pdID,
 
 }
 
-void MCRichDigitsToHLTBuffAlg::fillNonZeroSuppressed( RichSmartID pdID,
-                                                      Rich::HLTBank & dataBank,
-                                                      const MCRichDigitVector & pdHits ) {
+void MCRichDigitsToRawBufferAlg::fillNonZeroSuppressed( RichSmartID pdID,
+                                            Rich::RAWBank & dataBank,
+                                            const MCRichDigitVector & pdHits ) {
 
   // Make a new header word for this PD and add to data bank
   RichDAQLinkNumber linkNumber( pdID.rich(), pdID.panel(),
@@ -181,9 +184,9 @@ void MCRichDigitsToHLTBuffAlg::fillNonZeroSuppressed( RichSmartID pdID,
     }
   }
 
-  // Create the non zero suppressed data block and update HLTBank
+  // Create the non zero suppressed data block and update RAWBank
   RichNonZeroSuppData nonZSdata( pdHits );
-  nonZSdata.fillHLT( dataBank );
+  nonZSdata.fillRAW( dataBank );
 
   // Printout of data array
   if ( msgLevel(MSG::VERBOSE) ) {
@@ -194,7 +197,7 @@ void MCRichDigitsToHLTBuffAlg::fillNonZeroSuppressed( RichSmartID pdID,
 }
 
 //  Finalize
-StatusCode MCRichDigitsToHLTBuffAlg::finalize() {
+StatusCode MCRichDigitsToRawBufferAlg::finalize() {
 
   if ( msgLevel(MSG::DEBUG) ) {
     MsgStream msg(msgSvc(), name());
