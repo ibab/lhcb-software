@@ -1,4 +1,4 @@
-// $Id: Simulation.opts,v 1.45 2003-12-05 14:39:06 witoldp Exp $ 
+// $Id: Simulation.opts,v 1.46 2003-12-05 15:25:00 witoldp Exp $ 
 
 ////////////////////////////////////////////////////////////////////
 // configuration of services
@@ -84,9 +84,9 @@ Geo.StreamItems         += {"/dd/Structure/LHCb/Muon"};
 
 // physics list  and the production cuts  
 GiGa.PhysicsList              = "GiGaPhysListModular/ModularPL";
-GiGa.ModularPL.Cut            = 1.0 * mm;
+GiGa.ModularPL.Cut            = 4.0 * mm;
 GiGa.ModularPL.CutForElectron = 10000.0 * m;
-GiGa.ModularPL.CutForGamma    = 1.0 * mm;
+GiGa.ModularPL.CutForGamma    = 10.0 * mm;
 
 GiGa.ModularPL.PhysicsConstructors += {"GeneralPhysics"};
 GiGa.ModularPL.PhysicsConstructors += {"EMPhysics"};
