@@ -1,4 +1,4 @@
-// $Id: Relation1D.h,v 1.1 2002-03-18 19:32:17 ibelyaev Exp $
+// $Id: Relation1D.h,v 1.2 2002-04-03 15:35:17 ibelyaev Exp $
 // =============================================================================
 // CV Stag $Name: not supported by cvs2svn $
 // =============================================================================
@@ -19,7 +19,7 @@
 #include "Relations/RelationUtils.h"
 #include "Relations/IRelation.h"
 #include "Relations/RelationBase.h"
-#include "Relations/Apply.h"
+#include "Relations/Relation.h"
 
 /** @class Relation1D Relation1D.h Relations/Relation1D.h
  *
@@ -40,7 +40,7 @@
  *  @see ObjectTypeTraits 
  *  @see StreamBuffer 
  *  @warning for the current implementation the actual type of 
- *           FROM shoudl differ from the actual type of TO
+ *           FROM should differ from the actual type of TO
  *  
  *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
  *  @date   25/01/2002
@@ -48,8 +48,9 @@
 
 template<class FROM,class TO>
 class Relation1D :
-  public virtual IRelation<FROM,TO> ,
-  public         DataObject
+  public         DataObject                   ,
+  public virtual IRelation <FROM,TO>          ,
+  public          Relations::Relation<FROM,TO>   
 {
   
 public:
@@ -61,22 +62,32 @@ public:
   /// short cut for interface 
   typedef IRelation<FROM,TO>               IBase          ;
   /// short cut for the actual implementation type 
-  typedef Relations::RelationBase<FROM,TO> Base           ;
+  typedef Relations::Relation<FROM,TO>     Base           ;
   
 public:
   
   /// the default constructor
-  Relation1D ( const Base::size_type reserve = 0 ) 
-    : DataObject () , m_base ( reserve ) {};
+  Relation1D ( const size_t reserve = 0 ) 
+    : DataObject () , Base( reserve    ) {};
   
   /** constructor from "inverted object"
-   *  @param copy object to be inverted
+   *  @param inv object to be inverted
+   *  @param flag artificial argument to distinguisch from 
+   *  copy constructor
    */
-  Relation1D ( const InvType& inv ) 
-    : DataObject () , m_base ( inv.m_base ) {};
+  Relation1D ( const InvType& inv , int flag ) 
+    : DataObject ( inv ) , Base( inv  , flag ) {};
+
+  /** constructor from "inverted interface"
+   *  @param inv object to be inverted
+   *  @param flag artificial argument to distinguisch from 
+   *  copy constructor
+   */
+  Relation1D ( const IBase::InverseType& inv , int flag ) 
+    : DataObject () , Base( inv  , flag ) {};
   
   /// destructor (virtual)
-  virtual ~Relation1D(){};
+  virtual ~Relation1D(){ clear() ; };
   
   /** object identification (static method)
    *  @see DataObject
@@ -87,9 +98,11 @@ public:
   static  const CLID& classID()
   {
     static const CLID s_clid =
-      Relations::clid( "Relation1D"          ,
-                       FromTypeTraits:: id() ,
-                       ToTypeTraits::   id() );
+      Relations::clid( "Relation1D"             ,
+                       FromTypeTraits:: id()    ,
+                       ToTypeTraits::   id()    ,
+                       0                        ,
+                       TypeTraits::     version , 0 );
     return s_clid ;
   };
   
@@ -106,17 +119,25 @@ public:
    */
   virtual StreamBuffer& serialize ( StreamBuffer& s ) const
   {
+    typedef typename FromTypeTraits::SERIALIZER FS;
+    typedef typename FromTypeTraits::APPLY      FA;
+    typedef typename ToTypeTraits::SERIALIZER   TS;
+    typedef typename ToTypeTraits::APPLY        TA;
     // serialize the base class
     DataObject::serialize( s );
-    // serialize number of relations
-    s << m_base.i_entries().size() ;
-    // serialize all relations
-    for( Base::CIT it = m_base.i_entries().begin() ; 
-         m_base.i_entries().end() != it ; ++it )
-      { 
-        s << Relations::apply( (*it).first  , this ) 
-          << Relations::apply( (*it).second , this ) ;
-      }
+    // get all relations 
+    Range range = relations() ;
+    // serialize the number of relations 
+    unsigned long _size = range.end() - range.begin() ;
+    s << _size ;
+    // serialise all relations
+    for( iterator entry = range.begin() ;
+         range.end() != entry ; ++entry ) 
+      {
+        FS::serialize( s , FA::apply( (*entry).first  , this ) ) ;
+        TS::serialize( s , TA::apply( (*entry).second , this ) ) ;
+      };
+    ///
     return s ;
   };
   
@@ -127,169 +148,41 @@ public:
    */
   virtual StreamBuffer& serialize ( StreamBuffer& s )
   {
-    // reset existing relations
-    m_base.i_entries().clear();
+    typedef typename FromTypeTraits::SERIALIZER FS;
+    typedef typename FromTypeTraits::APPLY      FA;
+    typedef typename ToTypeTraits::SERIALIZER   TS;
+    typedef typename ToTypeTraits::APPLY        TA;
+    // clear all existing relations 
+    clear();
     // serialize the base class
     DataObject::serialize( s );
-    // get the total number of relations
-    typename Base::Entries::size_type num ;
-    s >> num ;
-    while( num-- > 0 )
+    unsigned long _size ;
+    s >> _size ;
+    while( _size-- > 0 )
       {
-        // serialize all relations
-        From from ; To to ; 
-        s >> Relations::apply( from , this )  
-          >> Relations::apply( to   , this )  ;
-        m_base.i_relate( from , to );
+        //
+        From from ; To to ;
+        FS::serialize( s , FA::apply( from   , this ) ) ;
+        TS::serialize( s , TA::apply( to     , this ) ) ;
+        //
+        relate( from , to ) ;
       }
-    ///
     return s ;
   };
   
-  /** retrive all relations from the object
-   *
-   *   - the CPU performance is proportional to log(N), 
-   *     where N is the total number of relations
-   *
-   *  @see IRelation
-   *  @see RelationBase
-   *  @param object  smart reference to the object
-   *  @return pair of iterators for output relations
-   */
-  virtual Range       relations
-  ( const From&       object    ) const
-  {
-    Base::IP ip = m_base.i_relations( object );
-    return Range( ip.first , ip.second );
-  };
-
-  /** make the relation between 2 objects
-   *
-   *   - StatusCode::FAILURE is returned if the relation
-   *     between the given objects  is already set
-   *
-   *   - the CPU performance is proportional to log(N)
-   *     for location of the object plus some overhead for 
-   *     list operations, which is more or less constant for 
-   *     std::deque implementation of the underlying relation 
-   *     store and proportional to N for std::vector implementation, 
-   *     where N is the total number of relations 
-   *
-   *  @see IRelation
-   *  @see RelationTypeTraits
-   *  @see RelationBase
-   *  @param object1  the first object
-   *  @param object2  the second object
-   *  @return status code
-   */
-  virtual  StatusCode relate
-  ( const  From&      object1 ,
-    const  To&        object2 )
-  { return m_base.i_relate( object1 , object2 ) ; }
-
-  /** remove the concrete relation between objects
-   *
-   *   - StatusCode::FAILURE is returned if the relation
-   *     between the given objects  is already set
-   *
-   *   - the CPU performance is proportional to log(N)
-   *     for location of the object plus some overhead for 
-   *     list operations, which is more or less constant for 
-   *     std::deque implementation of the underlying relation 
-   *     store and proportional to N for std::vector implementation, 
-   *     where N is the total number of relations 
-   *
-   *  @see IRelation
-   *  @see RelationTypeTraits
-   *  @see RelationBase
-   *  @param object1  smart reference to the first object
-   *  @param object2  smart reference to the second object
-   *  @return status code
-   */
-  virtual  StatusCode remove
-  ( const  From&      object1 ,
-    const  To&        object2 )
-  { return m_base.i_remove( object1 , object2 ) ; }
-
-  /** remove all relations FROM the defined object
-   *
-   *   - StatusCode::FAILURE is returned if there are no relations
-   *     from the given object
-   *
-   *   - the CPU performance is proportional to log(N)
-   *     for location of the object plus some overhead for 
-   *     list operations, which is more or less constant for 
-   *     std::deque (or std::list) implementation of the 
-   *     underlying relation store and proportional to N
-   *     for std::vector implementation, where N is the 
-   *     total number of relations 
-   *
-   *  @see IRelation
-   *  @see RelationBase
-   *  @param object  smart reference to the object
-   *  @return status code
-   */
-  virtual  StatusCode remove
-  ( const  From&      object )
-  { return m_base.i_remove( object ) ; }
-
-  /** remove all relations TO the defined object
-   *
-   *   - StatusCode::FAILURE is returned if there are no relations
-   *     from the given object
-   *
-   *   - the CPU performance is proportional to 
-   *     the total number of relations 
-   *   
-   *  @see IRelation
-   *  @see RelationBase
-   *  @param object  smart reference to the object
-   *  @return status code
-   */
-  virtual  StatusCode remove
-  ( const  To&        object )
-  { return m_base.i_remove( object ) ; }
-
-  /** query the interface
-   *  @see    IRelation
-   *  @see    IInterface
-   *  @param  id  interface identifier
-   *  @param  ret placeholder for returned interface 
-   *  @return status code
-   */
-  virtual StatusCode queryInterface
-  ( const InterfaceID& id , void** ret )
-  {
-    if( 0 == ret  )          { return StatusCode::FAILURE ; } // RETURN !!!
-    if( IInterface::interfaceID() == id )
-      { *ret = static_cast<IInterface*> ( this ); }
-    else if( IBase::interfaceID() == id )
-      { *ret = static_cast<IBase*>      ( this ); }
-    else                     { return StatusCode::FAILURE ; } //  RETURN !!!
-    ///
-    addRef() ;
-    return StatusCode::SUCCESS ;
-  };
-
   /** increase the reference counter
    *  @see    IInterface
    *  @see    DataObject
    *  @return current number of references
    */
-  virtual unsigned long addRef  ()
-  { return  DataObject::addRef  () ; }
-
+  virtual unsigned long addRef  ()  { return  DataObject::addRef  () ; }
+  
   /** release the reference counter
    *  @see    IInterface
    *  @see    DataObject
    *  @return current number of references
    */
-  virtual unsigned long release ()
-  { return  DataObject::release () ; }
-
-private:
-  
-  Base m_base ;  ///< the holder of all relations 
+  virtual unsigned long release ()  { return  DataObject::release () ; }
   
 };
 

@@ -1,4 +1,4 @@
-// $Id: RelationWeightedBase.h,v 1.1 2002-03-18 19:32:18 ibelyaev Exp $
+// $Id: RelationWeightedBase.h,v 1.2 2002-04-03 15:35:18 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
@@ -53,8 +53,6 @@ namespace Relations
     typedef TypeTraits::Entry                                     Entry      ;
     /// container type 
     typedef TypeTraits::Entries                                   Entries    ;
-    /// size_type 
-    typedef Entries::size_type                                    size_type  ;
     /// iterator type 
     typedef Entries::iterator                                     iterator   ;
     /// iterator type (internal) 
@@ -125,7 +123,19 @@ namespace Relations
      */
     inline  IP    i_relations
     ( const From& object      ) const
-    { return std::equal_range( begin() , end() , Entry( object ) , Less1() );};
+    { return std::equal_range( m_entries.begin () , 
+                               m_entries.end   () , 
+                               Entry( object ) , Less1() );};
+    
+    /** retrive AA relations from the ALL objects
+     *
+     *  @see    IRelationWeighted
+     *  @see    TypeTraits
+     *  @param  object  smart reference to the object
+     *  @return pair of iterators for output relations
+     */
+    inline  IP    i_relations () const
+    { return IP( m_entries.begin() , m_entries.end() ) ;};
     
     /** retrive all relations from the object which has weigth
      *  larger/smaller than the threshold value
@@ -232,7 +242,7 @@ namespace Relations
      *  @param  object  smart reference to the object
      *  @return status code
      */
-    inline  StatusCode i_remove
+    inline  StatusCode i_removeFrom
     ( const From&      object )
     {
       // get all existing relations form object1
@@ -257,16 +267,17 @@ namespace Relations
      *  @param object  smart reference to the object
      *  @return status code
      */
-    inline  StatusCode i_remove
+    inline  StatusCode i_removeTo
     ( const To&        object )
     {
       iterator it =
-        std::remove_if( begin() , end() ,
+        std::remove_if( m_entries.begin() , 
+                        m_entries.end  () ,
                         std::bind2nd( Equal() , Entry( From() , object ) ) ) ;
       // no relations are found!
-      if( end() == it ) { return StatusCode::FAILURE ; }           // RETURN !!
+      if( m_entries.end() == it ) { return StatusCode::FAILURE ; }// RETURN !!
       // remove relations
-      m_entries.erase( it , end() ) ;
+      m_entries.erase( it , m_entries.end() ) ;
       return StatusCode::SUCCESS ;
     };
     
@@ -286,7 +297,7 @@ namespace Relations
      *  @param  flag       flag for larger/smaller
      *  @return status     code
      */
-    inline  StatusCode i_filter
+    inline  StatusCode i_filterFrom
     ( const From&      object    ,
       const Weight&    threshold ,
       const bool       flag      )
@@ -316,25 +327,27 @@ namespace Relations
      *  @param     flag       flag for larger/smaller
      *  @return    status     code
      */
-    inline  StatusCode i_filter
+    inline  StatusCode i_filterTo
     ( const To&        object    ,
       const Weight&    threshold ,
       const bool       flag      )
     {
       // remove using predicates
       iterator it = flag ?
-        std::remove_if( begin() , end  () ,
+        std::remove_if( m_entries.begin () , 
+                        m_entries.end   () ,
                         std::bind2nd( Comp1() , Entry( From ()   , 
                                                        object    , 
                                                        threshold ) ) ) :
-        std::remove_if( begin() , end() ,
+        std::remove_if( m_entries.begin () , 
+                        m_entries.end   () ,
                         std::bind2nd( Comp2() , Entry( From ()   , 
                                                        object    , 
                                                        threshold ) ) ) ;
       // nothing to be removed
-      if( end() == it ) { return StatusCode::FAILURE ; }    // RETURN !!!
+      if( m_entries.end() == it ) { return StatusCode::FAILURE ; }// RETURN !!!
       // erase the relations
-      m_entries.erase( it , end() );
+      m_entries.erase( it , m_entries.end() );
       return StatusCode::SUCCESS ;
     };
     
@@ -359,32 +372,47 @@ namespace Relations
     {
       // remove using the predicates
       iterator it = flag ?
-        std::remove_if( begin() , end  () ,
+        std::remove_if( m_entries.begin () , 
+                        m_entries.end   () ,
                         std::bind2nd( Less2() ,
                                       Entry( From () ,
                                              To   () , threshold ) ) ) :
-        std::remove_if( begin() , end  () ,
+        std::remove_if( m_entries.begin () , 
+                        m_entries.end   () ,
                         std::not1( std::bind2nd( Less2() ,
                                                  Entry( From () ,
                                                         To   ()   ,
                                                         threshold ) ) ) ) ;
       // nothing to be removed
-      if( end() == it ) { return StatusCode::FAILURE ; }       // RETURN !!!
+      if( m_entries.end() == it ) { return StatusCode::FAILURE ; } // RETURN 
       // erase the relations
-      m_entries.erase( it , end() );
+      m_entries.erase( it , m_entries.end() );
       return StatusCode::SUCCESS ;
     };
+
+    /** remove ALL relations from ALL objects to ALL objects 
+     *
+     *  @see    IRelationWeighted
+     *  @param  object1  smart reference to the first object
+     *  @param  object2  smart reference to the second object
+     *  @return status code
+     */
+    inline  StatusCode i_clear ()
+    {
+      m_entries.clear() ;
+      return StatusCode::SUCCESS ;
+    };
+
     
     /** standard/default constructor
      *  @param reserve size of preallocated reserved space
      */
-    RelationWeightedBase( const size_type reserve = 0 )
+    RelationWeightedBase( const size_t reserve = 0 )
       : m_entries() 
     { if( reserve ) { Relations::reserve( m_entries , reserve ) ; } };
     
     /// destructor (virtual)
-    virtual ~RelationWeightedBase()
-    { m_entries.clear(); }
+    virtual ~RelationWeightedBase() { i_clear(); }
     
     /** constructor from inverse relation table
      *  @attention it is the way to invert existing relations!
@@ -409,21 +437,6 @@ namespace Relations
       m_entries = copy.m_entries;
       return *this;
     };
-    
-    inline iterator begin ()        { return m_entries.begin () ; }
-    inline iterator begin ()  const { return m_entries.begin () ; }
-    inline iterator end   ()        { return m_entries.end   () ; }
-    inline iterator end   ()  const { return m_entries.end   () ; }
-    
-    /** accessor to the container of entries
-     *  @return reference to the whole store of relations
-     */
-    inline       Entries& i_entries ()        { return m_entries ; }
-    
-    /** accessor to the container of entries (const version)
-     *  @return reference to the whole store of relations
-     */
-    inline const Entries& i_entries () const  { return m_entries ; }
     
   private:
     

@@ -1,63 +1,155 @@
-// $Id: Apply.h,v 1.1 2002-03-18 19:32:17 ibelyaev Exp $
+// $Id: Apply.h,v 1.2 2002-04-03 15:35:16 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
-// $Log: not supported by cvs2svn $
+// $Log: not supported by cvs2svn $ 
 // ============================================================================
 #ifndef RELATIONS_APPLY_H 
 #define RELATIONS_APPLY_H 1
 // Include files
-#include "Relations/ObjectTypeTraits.h"
 
 /** @file Apply.h Relations/Apply.h
  *  
- *  Auxillary function to set the environemnt 
- *  for smart references. 
+ *  definition of helper structure for "applying" of 
+ *  DataObject/Contained object 
+ *  information for serializations 
  *
- *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
- *  @date   28/01/2002
+ *  @author Vanya Belyaev Ivan Belyaev
+ *  @date   24/03/2002
  */
 
-// forward declarations
-template <class TYPE>
-class     SmartRef        ; // from GaudiKernel package
-template <class TYPE>
-class     SmartRefVector  ; // from GaudiKernel package
-class     DataObject      ; // from GaudiKernel package
-class     ContainedObject ; // from GaudiKernel package
-
-
+#ifdef WIN32 
+#include "Relations/Apply_WIN32.h"  // use another implementation for WIN32!
+#else
 namespace Relations
-{
-  
-  /** @function apply Apply.h Relations/Apply.h
+{  
+  /** @struct Apply Apply.h Relations/Apply.h
    *  
-   *  Auxillary function to set the environemnt for smart references. 
+   *  A helper stucture to handle the specific serialization
    *
-   *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
-   *  @date   07/02/2002
+   *  @author Vanya Belyaev Ivan Belyaev
+   *  @date   24/03/2002
    */
-  template<class TYPE, class OBJECT> 
-  inline                TYPE&                 
-  apply
-  (                TYPE & type , OBJECT*        ) { return type            ; }
-  
-  template<class TYPE, class OBJECT>
-  inline const          TYPE& 
-  apply
-  ( const          TYPE & type , OBJECT*        ) { return type            ; }
-  
-  template<class TYPE, class OBJECT>
-  inline       SmartRef<TYPE>& 
-  apply
-  (       SmartRef<TYPE>& type , OBJECT* object ) { return type ( object ) ; }
+  template <class OBJECT>
+  struct Apply
+  { 
+    typedef OBJECT      Type  ;
+    typedef Apply<Type> APPLY ;
 
-  template<class TYPE, class OBJECT>
-  inline const SmartRef<TYPE>& 
-  apply
-  ( const SmartRef<TYPE>& type , OBJECT* object ) { return type ( object ) ; }
+    /** mandatory method for serialization of SmartRef structure (read)
+     *  @see SmartRef
+     *  @param  type      reference to the object
+     *  @param  object    pointer to DataObject/ContainedObject
+     *  @return reference to the object
+     */
+    template<class OBJ>
+    static        Type& apply(       Type& type  ,       OBJ* /* object */ )
+    { return type          ; }
+    
+    /** mandatory method for serialization of SmartRef structure (write)
+     *  @see SmartRef
+     *  @param  type      const reference to the object
+     *  @param  object    pointer to const DataObject/ContainedObject
+     *  @return const reference to the object
+     */
+    template<class OBJ>
+    static  const Type& apply( const Type& type  , const OBJ* /* object */ )
+    { return type          ; }
+  };
 
-}; ///< end of namespace Raltions 
+  
+  template <class OBJECT>
+  struct Apply<const OBJECT>
+  { 
+    typedef OBJECT      Type  ;
+    typedef Apply<Type> APPLY ;
+    
+    template<class OBJ>
+    static        Type& apply(       Type& type  ,       OBJ*    object    )
+    { return APPLY::apply( type , object ); };
+    
+    template<class OBJ>
+    static  const Type& apply( const Type& type  , const OBJ*    object    )
+    { return APPLY::apply( type , object ); };
+  };
+  
+  template <class OBJECT>
+  struct Apply<OBJECT*>
+  { 
+    typedef OBJECT      Type  ;
+    typedef Apply<Type> APPLY ;
+    
+    template<class OBJ>
+    static        Type& apply(       Type& type  ,       OBJ*    object    )
+    { return APPLY::apply( type , object ); };
+    
+    template<class OBJ>
+    static  const Type& apply( const Type& type  , const OBJ*    object    )
+    { return APPLY::apply( type , object ); };
+  };
+
+  template <class OBJECT>
+  struct Apply<OBJECT&>
+  { 
+    typedef OBJECT      Type  ;
+    typedef Apply<Type> APPLY ;
+    
+    template<class OBJ>
+    static        Type& apply(       Type& type  ,       OBJ*    object    )
+    { return APPLY::apply( type , object ); };
+    
+    template<class OBJ>
+    static  const Type& apply( const Type& type  , const OBJ*    object    )
+    { return APPLY::apply( type , object ); };
+  };
+
+  template <class OBJECT>
+  struct Apply<const OBJECT*>
+  { 
+    typedef OBJECT      Type  ;
+    typedef Apply<Type> APPLY ;
+    
+    template<class OBJ>
+    static        Type& apply(       Type& type  ,       OBJ*    object    )
+    { return APPLY::apply( type , object ); };
+    
+    template<class OBJ>
+    static  const Type& apply( const Type& type  , const OBJ*    object    )
+    { return APPLY::apply( type , object ); };
+  };
+  
+  template <class OBJECT>
+  struct Apply<const OBJECT&>
+  { 
+    typedef OBJECT      Type  ;
+    typedef Apply<Type> APPLY ;
+    
+    template<class OBJ>
+    static        Type& apply(       Type& type  ,       OBJ*    object    )
+    { return APPLY::apply( type , object ); };
+    
+    template<class OBJ>
+    static  const Type& apply( const Type& type  , const OBJ*    object    )
+    { return APPLY::apply( type , object ); };
+  };
+
+  template <class OBJECT>
+  struct Apply<SmartRef<OBJECT> >
+  { 
+    typedef SmartRef<OBJECT> Type  ;
+    typedef Apply<Type>      APPLY ;
+    
+    template<class OBJ>
+    static        Type& apply(       Type& type  ,       OBJ*    object    )
+    { return  type( object ) ; };
+    
+    template<class OBJ>
+    static  const Type& apply( const Type& type  , const OBJ*    object    )
+    { return  type( object ) ; };
+  };
+  
+};
+#endif 
 
 // ============================================================================
 // The End 

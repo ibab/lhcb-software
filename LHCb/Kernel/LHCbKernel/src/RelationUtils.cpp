@@ -1,4 +1,4 @@
-// $Id: RelationUtils.cpp,v 1.1 2002-03-18 19:32:19 ibelyaev Exp $
+// $Id: RelationUtils.cpp,v 1.2 2002-04-03 15:35:19 ibelyaev Exp $
 // ============================================================================
 // CVS tag $name:$
 // ============================================================================
@@ -25,7 +25,7 @@
 // ============================================================================
 
 // ============================================================================
-/** @functon interfaceID 
+/** @fn interfaceID 
  *   
  *  funtion to create the uniqie relation 
  *  interfaceID from interface name, CLIDs and types 
@@ -60,7 +60,7 @@ InterfaceID Relations::interfaceID ( const std::string&  id       ,
 };
 
 // ============================================================================
-/** @function clid 
+/** @fn clid 
  *   
  *  function to create the uniqie relation 
  *  clid from object name, CLIDs and types 
@@ -72,12 +72,16 @@ InterfaceID Relations::interfaceID ( const std::string&  id       ,
  *  @param idFrom   ID for the first ("FROM") object  
  *  @param idTo     ID for the second("TO")   object
  *  @param weight   ID of weight class 
+ *  @param major    major version 
+ *  @param minor    minor version 
  */
 // ============================================================================
 CLID        Relations::clid        ( const std::string&  id       ,
                                      const unsigned long idFrom   ,
                                      const unsigned long idTo     ,
-                                     const unsigned long weight   ) 
+                                     const unsigned long weight   , 
+                                     const unsigned long major    , 
+                                     const unsigned long minor    ) 
 {
   std::string name( id ) ;
   char a[128];
@@ -87,7 +91,7 @@ CLID        Relations::clid        ( const std::string&  id       ,
     { name += "," + std::string( a , a + sprintf( a , "%d" , (int) weight ) ) ;}
   name += ">" ;
   ///
-  return (CLID) InterfaceID( name.c_str() , 0 , 0 ).id() ;
+  return (CLID) InterfaceID( name.c_str() , major , minor ).id() ;
 };
 
 // ============================================================================

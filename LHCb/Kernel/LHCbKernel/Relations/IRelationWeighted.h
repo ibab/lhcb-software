@@ -1,4 +1,4 @@
-// $Id: IRelationWeighted.h,v 1.1 2002-03-18 19:32:17 ibelyaev Exp $
+// $Id: IRelationWeighted.h,v 1.2 2002-04-03 15:35:17 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
@@ -81,7 +81,14 @@ public:
    */
   virtual Range      relations
   ( const From&      object    ) const = 0 ;
-  
+
+  /** retrive ALL relations from ALL objects
+   *
+   *  @param  object  the object
+   *  @return pair of iterators for output relations
+   */
+  virtual Range      relations () const = 0 ;
+
   /** retrive all relations from the object which has weigth
    *  larger/smaller than the threshold value
    *  @param  object    the object
@@ -104,7 +111,7 @@ public:
   ( const From&      object1 ,
     const To&        object2 ,
     const Weight&    weight  ) = 0 ;
-  
+
   /** remove the concrete relation between objects
    *  @param  object1 the first object
    *  @param  object2 the second object
@@ -118,14 +125,14 @@ public:
    *  @param  object the object
    *  @return status code
    */
-  virtual StatusCode remove
+  virtual StatusCode removeFrom
   ( const From&      object )  = 0 ;
 
   /** remove all relations TO the defined object
    *  @param  object the object
    *  @return status code
    */
-  virtual StatusCode remove
+  virtual StatusCode removeTo
   ( const To&        object )  = 0 ;
 
   /** filter out the relations FROM the defined object, which
@@ -135,11 +142,11 @@ public:
    *  @param  flag      flag for larger/smaller
    *  @return status code
    */
-  virtual StatusCode filter
+  virtual StatusCode filterFrom
   ( const From&      object    ,
     const Weight&    threshold ,
     const bool       flag      )  = 0 ;
-  
+
   /** filter out the relations TO the defined object, which
    *  have a weight larger/smaller than the threshold weight
    *  @param  object    the object
@@ -147,11 +154,11 @@ public:
    *  @param  flag      flag for larger/smaller
    *  @return status code
    */
-  virtual StatusCode filter
+  virtual StatusCode filterTo
   ( const To&        object    ,
     const Weight&    threshold ,
     const bool       flag      )  = 0 ;
-  
+
   /** filter out all relations which
    *  have a weight larger/smaller than the threshold weight
    *  @param  threshold threshold value for the weight
@@ -161,22 +168,30 @@ public:
   virtual StatusCode filter
   ( const Weight&    threshold ,
     const bool       flag      )  = 0 ;
-  
-  /** filter out all "to-many" relations and convert them 
-   *  into "to-one" relations, keeping only the 
-   *  relations with the largest/smallest weight 
+
+  /** filter out all "to-many" relations and convert them
+   *  into "to-one" relations, keeping only the
+   *  relations with the largest/smallest weight
    *  have a weight larger/smaller than the threshold weight
    *  @param  flag   flag for larger/smaller
    *  @return status code
    */
-  //  virtual StatusCode filter
+  // virtual StatusCode filter
   // ( const bool       flag      )  = 0 ;
 
+  /** reomve ALL relations from ALL objects to ALL objects 
+   *  have a weight larger/smaller than the threshold weight
+   *  @param  threshold threshold value for the weight
+   *  @param  flag      flag for larger/smaller
+   *  @return status code
+   */
+  virtual StatusCode clear ()  = 0 ;
+  
   /** static interface identification
-   *  @attention the unique interface identifier is 
-   *  constructed "on-fly" using hash-technique from 
-   *  the generic interface name and unique identifiers 
-   *  of related objects and teh identifier of the type of the weight 
+   *  @attention the unique interface identifier is
+   *  constructed "on-fly" using hash-technique from
+   *  the generic interface name and unique identifiers
+   *  of related objects and teh identifier of the type of the weight
    *  @see IInterface
    *  @return the uniqie interface identifier
    */
@@ -186,16 +201,17 @@ public:
       Relations::interfaceID( "IRelationWeighted"     ,
                               FromTypeTraits::   id() ,
                               ToTypeTraits::     id() ,
-                              WeightTypeTraits:: id() , 
+                              WeightTypeTraits:: id() ,
                               TypeTraits::version     , 0 ) ;
     return s_iid ;
   };
+
+protected:
   
-  /// destructor (virtual)
+  /// destructor (virtual and protected)
   virtual ~IRelationWeighted(){};
 
 };
-
 
 // ============================================================================
 // The End

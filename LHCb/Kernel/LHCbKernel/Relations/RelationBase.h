@@ -1,4 +1,4 @@
-// $Id: RelationBase.h,v 1.1 2002-03-18 19:32:18 ibelyaev Exp $
+// $Id: RelationBase.h,v 1.2 2002-04-03 15:35:18 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
@@ -72,6 +72,15 @@ namespace Relations
     
   public:
     
+    /** retrive all relations 
+     *
+     *  @see IRelation 
+     *  @param  object  smart reference to the object
+     *  @return the pair of iterators for output relations   
+     */
+    inline  IP    i_relations () const 
+    { return IP( m_entries.begin() , m_entries.end() ) ;};
+    
     /** retrive all relations from the object
      *
      *   - the CPU performance is proportional to log(N), 
@@ -83,7 +92,10 @@ namespace Relations
      */
     inline  IP    i_relations
     ( const From& object      ) const
-    { return std::equal_range( begin() , end() , Entry( object ) , Less1() ) ;};
+    { return std::equal_range( m_entries.begin() , 
+                               m_entries.end  () , 
+                               Entry ( object  ) , 
+                               Less1          () ) ;};
     
     /** make the relation between 2 objects
      * 
@@ -109,10 +121,12 @@ namespace Relations
     {
       // look for existing relations 
       const Entry ent ( object1 , object2 ) ;
-      Less  cmp;
-      iterator it = std::lower_bound( begin() , end() , ent , cmp ) ;
+      Less  cmp ;
+      iterator it = 
+        std::lower_bound( m_entries.begin () , m_entries.end () , ent , cmp ) ;
       // the relation does exist ! 
-      if( end () != it && !cmp( ent , *it ) ) { return StatusCode::FAILURE; }
+      if( m_entries.end () != it && !cmp( ent , *it ) ) 
+        { return StatusCode::FAILURE; }
       // insert new relation !
       m_entries.insert( it , ent ) ;
       return StatusCode::SUCCESS ;
@@ -144,9 +158,11 @@ namespace Relations
       // look for existing relations 
       const Entry ent ( object1 , object2 );
       Less  cmp ;
-      iterator it  = std::lower_bound( begin() , end() , ent , cmp ) ;
+      iterator it  = 
+        std::lower_bound( m_entries.begin() , m_entries.end() , ent , cmp ) ;
       // the relation does not exist ! 
-      if( end() == it || cmp( ent , *it ) ) { return StatusCode::FAILURE ; }
+      if( m_entries.end() == it || cmp( ent , *it ) ) 
+        { return StatusCode::FAILURE ; }
       // remove existing relation     
       m_entries.erase( it );
       return StatusCode::SUCCESS ; 
@@ -169,7 +185,7 @@ namespace Relations
      *  @param  object  to the object
      *  @return status code 
      */
-    inline  StatusCode i_remove 
+    inline  StatusCode i_removeFrom 
     ( const From&      object  )
     {
       // look for all existing relations from the given object  
@@ -194,19 +210,29 @@ namespace Relations
      *  @param  object the object
      *  @return status code 
      */
-    inline  StatusCode i_remove 
+    inline  StatusCode i_removeTo 
     ( const To&        object  ) 
     {
       // use the predicate "Equal"
       iterator it = 
-        std::remove_if( begin() , end() , 
+        std::remove_if( m_entries.begin () , 
+                        m_entries.end   () , 
                         std::bind2nd( Equal() , Entry( From() , object ) ) ) ;
       // no relations are found!
-      if( end() == it ) { return StatusCode::FAILURE ; }          // RETURN !!!
+      if( m_entries.end() == it ) { return StatusCode::FAILURE ; }// RETURN !!!
       // erase the relations 
-      m_entries.erase( it , end() ) ;
+      m_entries.erase( it , m_entries.end() ) ;
       return StatusCode::SUCCESS ;
     };
+
+    /** remove ALL relations from ALL  object to ALL objects
+     *
+     *  @see    IRelation 
+     *  @param  object the object
+     *  @return status code 
+     */
+    inline  StatusCode i_clear() 
+    { m_entries.clear() ; return StatusCode::SUCCESS ; }
     
     /// standard/default constructor 
     RelationBase( const size_type reserve = 0 ) 
@@ -224,34 +250,19 @@ namespace Relations
     /** constructor from the inverse type! 
      *  @attention it is indeed the effective way to get the inverse relations!
      *  @param inv object to be inversed!
+     *  @param flag artificial agument to make teh difference 
+     *  for Win#2 platform
      */
-    RelationBase(  const InvType& inv ) : m_entries()
+    RelationBase(  const InvType& inv , int /* flag */ ) : m_entries()
     {
+      /// get all relations from "inv"
+      InvType::IP ip = inv.i_relations() ;
       // reserve the space for relations
-      m_entries.reserve( inv.end() - inv.begin() );
+      m_entries.reserve( ip.second - ip.first  );
       /// invert the relations    
-      for( InvType::CIT it = inv.begin() ; inv.end() != it ; ++it ) 
+      for( InvType::CIT it = ip.first ; ip.second != it ; ++it ) 
         { i_relate( it->to() , it->from() ) ;  }
     };
-    
-    /// accessor to "begin" iterator  (const     version)
-    inline iterator begin ()  const { return m_entries.begin () ; }
-    /// accessor to "begin" iterator  (non-const version)
-    inline iterator begin ()        { return m_entries.begin () ; }
-    /// accessor to "end"   iterator  (const     version)
-    inline iterator end   ()  const { return m_entries.end   () ; }
-    /// accessor to "end"   iterator  (non-const version)
-    inline iterator end   ()        { return m_entries.end   () ; }
-    
-    /** accessor to the container of entries 
-     *  @return reference to the whole store of relations  
-     */
-    inline       Entries& i_entries ()        { return m_entries ; }
-    
-    /** accessor to the container of entries (const version)
-     *  @return reference to the whole store of relations  
-     */
-    inline const Entries& i_entries () const  { return m_entries ; }
     
   private:
     

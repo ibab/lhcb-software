@@ -1,4 +1,4 @@
-// $Id: Reserve.h,v 1.1 2002-03-18 19:32:19 ibelyaev Exp $
+// $Id: Reserve.h,v 1.2 2002-04-03 15:35:19 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
@@ -6,28 +6,31 @@
 // ============================================================================
 #ifndef RELATIONS_RESERVE_H 
 #define RELATIONS_RESERVE_H 1
-
+// STD & STL  
+#include <vector>
 namespace Relations
 {
-  /** @function reserve Reserve.h Relations/Reserve.h
+  /** @fn reserve Reserve.h Relations/Reserve.h
    *
    *  Helper function to reserve the size of container 
+   *
+   *  @warning the implementation  is platform dependent! 
    *
    *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
    *  @date   07/02/2002
    */
-  template<class TYPE, class SIZE> 
-  inline void reserve(             TYPE & object , const SIZE size ) { ;};
+  template<class TYPE> 
+  inline void reserve( TYPE &            /* object */ ,
+                       const size_t      /* size   */ ) 
+  {};
   
+#ifndef WIN32 
   template<class TYPE>
-  inline void reserve( std::vector<TYPE>& object , 
-                       const typename std::vector<TYPE>::size_type  size )   
-  { 
-    std::cerr << "special reservation!" << std::endl;
-    
-    object.reserve( size ); 
-  };
-  
+  inline void reserve( std::vector<TYPE>&   object    , 
+                       const size_t         size      )   
+  { object.reserve( size ); };
+#endif
+
 }; ///< end of namespace Relations 
 
 // ============================================================================

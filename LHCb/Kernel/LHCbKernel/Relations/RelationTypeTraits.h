@@ -1,4 +1,4 @@
-// $Id: RelationTypeTraits.h,v 1.1 2002-03-18 19:32:18 ibelyaev Exp $
+// $Id: RelationTypeTraits.h,v 1.2 2002-04-03 15:35:18 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
@@ -40,9 +40,9 @@ namespace Relations
     typedef ToTypeTraits::Type                To             ;
     
     /// "less" function object for "From" objects 
-    typedef std::less<From>                    LessF         ;
+    typedef FromTypeTraits::Less               LessF         ;
     /// "less" function object for "To" objects 
-    typedef std::less<To>                      LessT         ;
+    typedef ToTypeTraits::Less                 LessT         ;
     /// "equality" function object for "To" objects 
     typedef std::equal_to<To>                  EqualT        ;
 

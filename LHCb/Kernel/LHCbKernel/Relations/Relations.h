@@ -1,4 +1,4 @@
-// $Id: Relations.h,v 1.1 2002-03-18 19:32:18 ibelyaev Exp $
+// $Id: Relations.h,v 1.2 2002-04-03 15:35:18 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
@@ -14,8 +14,9 @@ class    SmartRef;            // From GaudiKernel
 #include "Relations/ObjectTypeTraits.h"
 #include "Relations/RelationTypeTraits.h"
 #include "Relations/RelationWeightedTypeTraits.h"
-#include "Relations/Apply.h"
 #include "Relations/Reserve.h"
+#include "Relations/Apply.h"
+#include "Relations/Serializer.h"
 
 // ============================================================================
 // The End 

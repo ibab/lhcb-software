@@ -1,0 +1,337 @@
+// $Id: RelationToolBase.cpp,v 1.1 2002-04-03 15:35:19 ibelyaev Exp $
+// ============================================================================
+// CVS tag $Name: not supported by cvs2svn $
+// ============================================================================
+// $Log: not supported by cvs2svn $
+// ============================================================================
+// Include files
+// from Gaudi
+#include "GaudiKernel/ISvcLocator.h"
+#include "GaudiKernel/IToolSvc.h"
+#include "GaudiKernel/IMessageSvc.h"
+#include "GaudiKernel/IProperty.h"
+#include "GaudiKernel/IDataProviderSvc.h"
+#include "GaudiKernel/IIncidentSvc.h"
+#include "GaudiKernel/IChronoStatSvc.h"
+#include "GaudiKernel/IAlgorithm.h"
+#include "GaudiKernel/IAlgManager.h"
+#include "GaudiKernel/MsgStream.h"
+#include "GaudiKernel/Stat.h"
+#include "GaudiKernel/GaudiException.h"
+#include "GaudiKernel/DataObject.h"
+#include "GaudiKernel/SmartDataPtr.h"
+#include "GaudiKernel/SmartIF.h"
+#include "GaudiKernel/IAlgorithm.h"
+// local
+#include "Relations/RelationToolBase.h"
+
+// ============================================================================
+/** @file RelationToolBase.cpp
+ *
+ *  Implementation file for class : RelationToolBase
+ *
+ *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
+ *  @date 24/03/2002 
+ */
+// ============================================================================
+
+// ============================================================================
+/** Standard constructor
+ *  @param type   tool type (?) 
+ *  @param name   tool name 
+ *  @param parent tool parent
+ */
+// ============================================================================
+Relations::RelationToolBase::RelationToolBase
+( const std::string& type   ,
+  const std::string& name   ,
+  const IInterface*  parent )
+  : AlgTool ( type, name , parent )
+  , m_evtSvc      ( 0  ) 
+  , m_toolSvc     ( 0  ) 
+  , m_chronoSvc   ( 0  )
+  , m_incSvc      ( 0  )
+  , m_location    ( "" )
+  , m_builderType ( "" )
+  , m_builderName ( "" )
+  , m_algorithm   ( 0  )
+  , m_object      ( 0  ) 
+{
+  // interfaces 
+  declareInterface<IIncidentListener> ( this );
+  // properties 
+  declareProperty  ( "Location" , m_location     ) ;
+  declareProperty  ( "AlgType"  , m_builderType  ) ;  
+  declareProperty  ( "AlgName"  , m_builderName  ) ;  
+};
+// ============================================================================
+
+// ============================================================================
+/** destructor (virtual and protected)
+ */
+// ============================================================================
+Relations::RelationToolBase::~RelationToolBase() {};
+// ============================================================================
+
+// ============================================================================
+/** standard initialization method
+ *  @return status code 
+ */
+// ============================================================================
+StatusCode Relations::RelationToolBase::initialize () 
+{
+  // initialize the base class ;
+  StatusCode sc = AlgTool::initialize();
+  if( sc.isFailure()     ) 
+    { return Error("Could not initialize base class AlgTool!"      , sc ); }
+  // locate Chrono & Stat service 
+  sc = serviceLocator()->service ( "ChronoStatSvc" , m_chronoSvc   , true );  
+  if( sc.isFailure()     ) 
+    { return Error("Could not locate 'ChronoStatSvc'"              , sc ); }
+  if( 0 == m_chronoSvc   ) 
+    { return Error("Could not locate 'ChronoStatSvc'"                   ); }
+  // locate the  event data service
+  sc = serviceLocator()->service ( "EventDataSvc"  , m_evtSvc      , true );
+  if( sc.isFailure()  ) 
+    { return Error("Could not locate IDataProvider='EventDataSvc'" , sc ); }
+  if( 0 == m_evtSvc   ) 
+    { return Error("Could not locate IDataProvider='EventDataSvc'"      ); }
+  // locate tool service
+  sc = serviceLocator()->service ( "ToolSvc"       , m_toolSvc     , true );
+  if( sc.isFailure()  ) 
+    { return Error("Could not locate IToolSvc='ToolSvc'"           , sc ); }
+  if( 0 == m_toolSvc   ) 
+    { return Error("Could not locate IToolSvc='ToolSvc'"                ); }
+  // locate incident service
+  sc = serviceLocator()->service ( "IncidentSvc"   , m_incSvc      , true );
+  if( sc.isFailure()  ) 
+    { return Error("Could not locate IIncidentSvc='IncidentSvc'"   , sc ); }
+  if( 0 == m_incSvc   ) 
+    { return Error("Could not locate IIncidentSvc='IncidentSvc'"        ); }
+  // subscribe to the incident 
+  incSvc()->addListener( this , "EndEvent"   , 50  );
+  incSvc()->addListener( this , "BeginEvent" , 50  );
+  //
+  return StatusCode::SUCCESS ;
+};
+// ============================================================================
+
+// ============================================================================
+/** standard finalization method
+ *  @return status code 
+ */
+// ============================================================================
+StatusCode Relations::RelationToolBase::finalize () 
+{
+  // release the builder and  services 
+  if( 0 != m_toolSvc   ) { m_toolSvc   -> release () ; m_toolSvc   = 0 ; }
+  if( 0 != m_chronoSvc ) { m_chronoSvc -> release () ; m_chronoSvc = 0 ; }
+  if( 0 != m_evtSvc    ) { m_evtSvc    -> release () ; m_evtSvc    = 0 ; }
+  if( 0 != m_incSvc    ) { m_incSvc    -> release () ; m_incSvc    = 0 ; }
+  // finalize the base class 
+  return AlgTool::finalize() ;
+};
+// ============================================================================
+
+// ============================================================================
+/** Print the error  message and return status code
+ * @param msg    error message 
+ *  @param st     status code 
+ *  @return       status code 
+ */
+// ============================================================================
+StatusCode Relations::RelationToolBase::Error     
+( const std::string& msg , 
+  const StatusCode & st  ) const 
+{
+  Stat stat( chronoSvc() , name()+":Error" ); 
+  return Print( msg , st , MSG::ERROR ); 
+};
+// ============================================================================
+
+// ============================================================================
+/** Print the warning  message and return status code 
+ *  @param msg    warning message 
+ *  @param st     statsu code 
+ *  @return       status code 
+ */
+// ============================================================================
+StatusCode Relations::RelationToolBase::Warning   
+( const std::string& msg , 
+  const StatusCode & st  ) const 
+{
+  Stat stat( chronoSvc() , name()+":Warning" ); 
+  return Print( msg , st , MSG::WARNING ); 
+};
+
+// ============================================================================
+/** Print the message and return status code 
+ *  @param msg    warning message 
+ *  @param st     status code 
+ *  @param lvl    print level 
+ *  @return       status code 
+ */
+// ============================================================================
+StatusCode Relations::RelationToolBase::Print     
+( const std::string& msg , 
+  const StatusCode & st  ,
+  const MSG::Level & lvl ) const 
+{
+  MsgStream log( msgSvc() , name() ); 
+  log << lvl << type () << " "   << msg ;
+  ///
+  if( !st.isSuccess() ) { log << " \tStatusCode=" << st ;}
+  ///
+  log << endreq ; 
+  return  st;
+};
+// ============================================================================
+
+// ============================================================================
+/** Create and (re)-throw the exception  
+ *  @param msg    exception message 
+ *  @param exc    (previous) exception of type GaudiException
+ *  @param lvl    print level 
+ *  @param sc     status code  
+ *  @return       status code (fictive) 
+ */
+// ============================================================================
+StatusCode Relations::RelationToolBase::Exception 
+( const std::string    & msg ,
+  const GaudiException & exc ,
+  const MSG::Level     & lvl ,
+  const StatusCode     & sc  ) const   
+{ 
+  Error( msg , lvl );
+  throw GaudiException( msg , "RelationTool" , sc , exc );
+  return  sc ;
+};
+// ============================================================================
+
+// ============================================================================
+/** Create and (re)-throw the exception  
+ *  @param msg    exception message 
+ *  @param exc    (previous) exception of type GaudiException
+ *  @param lvl    print level 
+ *  @param sc     status code  
+ *  @return       status code (fictive) 
+ */
+// ============================================================================
+StatusCode Relations::RelationToolBase::Exception 
+( const std::string    & msg ,  
+  const std::exception & exc , 
+  const MSG::Level     & lvl ,
+  const StatusCode     & sc  ) const   
+{ 
+  Error( msg , lvl );
+  throw   GaudiException( msg+"("+exc.what()+")", "RelationTool" , sc );
+  return  sc ;
+};
+// ============================================================================
+
+// ============================================================================
+/** Create and throw the exception  
+ *  @param msg    exception message 
+ *  @param lvl    print level 
+ *  @param sc     status code  
+ *  @return       status code (fictive) 
+ */
+// ============================================================================
+StatusCode Relations::RelationToolBase::Exception 
+( const std::string    & msg ,  
+  const MSG::Level     & lvl ,
+  const StatusCode     & sc  ) const 
+{ 
+  Error( msg , lvl );
+  throw GaudiException( msg , "RelationTool" , sc );
+  return  sc ;
+};
+// ============================================================================
+
+// ============================================================================
+/** locate relation table in Gaudi Event Transient Store 
+ *  or call for Relation builder to build and register 
+ *  the relation table in Gaudi Event Transient Store 
+ *  @return status code 
+ */
+// ============================================================================
+StatusCode Relations::RelationToolBase::locateOrBuild () const 
+{ 
+  // already exists?
+  if( 0 != m_object     ) { return StatusCode::SUCCESS                    ; }
+  // (1) locate the object in ETS 
+  SmartDataPtr<IInterface>  object1( evtSvc() , location () );
+  if( object1 ) { m_object = object1 ; return StatusCode::SUCCESS         ; }
+  // (2) get the builder 
+  if( 0 == algorithm () ) { return Error("'Builder is invalid!"         ) ; }
+  // (3) use builder to build relation tables
+  StatusCode sc = algorithm()->sysExecute() ;
+  if( sc.isFailure   () ) { return Error("Error form builder!" , sc ) ; }
+  // (4) locate data in ETS again
+  SmartDataPtr<IInterface> object2( evtSvc() , location () );
+  if( !object2 ) { return Error("Data after builder are not available!" ) ; }
+  m_object = object2 ;
+  m_object->addRef() ;
+  return StatusCode::SUCCESS ;
+};
+// ============================================================================
+
+// ============================================================================
+/** handle the incident 
+ *  @see IIncidentListener 
+ *  @see Incident 
+ *  @see incident incident to be handled 
+ */
+// ============================================================================
+void Relations::RelationToolBase::handle
+( const Incident& /* incident */ ) { m_object = 0 ; };
+// ============================================================================
+
+// ============================================================================
+/** locate the algorithm for building the relations
+ *  @return status code 
+ */
+// ============================================================================
+StatusCode Relations::RelationToolBase::locateAlgorithm() const
+{ 
+  // check the existent algorithm 
+  if( 0 != m_algorithm      ) { return StatusCode::SUCCESS     ; }
+  if( m_builderType.empty() ) { return StatusCode::FAILURE     ; }
+  if( m_builderName.empty() ) { m_builderName = m_builderType  ; }
+  // Get the algorithm's manager 
+  IInterface* tmp = 0 ;
+  StatusCode sc = 
+    serviceLocator()->getService( "" , IAlgManager::interfaceID() , tmp );
+  if( sc.isFailure() ) { return Error("Could not locate IAlgManager 1", sc );}
+  if( 0 == tmp       ) { return Error("Could not locate IAlgManager 2"     );}
+  IAlgManager* algMgr = dynamic_cast<IAlgManager*> ( tmp );
+  if( 0 == algMgr    ) { return Error("Could not locate IAlgManager 3"     );}
+  // check the existence of the algorithm
+  typedef std::list<IAlgorithm*> Algs;
+  Algs& algs = algMgr->getAlgorithms() ;
+  for( Algs::iterator ia = algs.begin() ; algs.end() != ia ; ++ia )
+    {
+      if( 0 == *ia                       ) { continue ; }
+      if( (*ia)->name() != m_builderName ) { continue ; }
+      /// algorithm is found ! 
+      m_algorithm = *ia ;
+      m_algorithm -> addRef() ;
+      return StatusCode::SUCCESS ;                         // RETURN ! 
+    }
+  // algorithm is nor foundt create it! 
+  sc = algMgr->createAlgorithm( m_builderType , m_builderName , m_algorithm );
+  if( sc.isFailure()   ) { return Error("Could not create algorithm!", sc ) ; }
+  if( 0 == m_algorithm ) { return Error("Could not create algorithm!"     ) ; }
+  // add the reference to the algorithm 
+  m_algorithm->addRef() ;
+  // execute the initializatin of the algorithm
+  sc = m_algorithm->sysInitialize() ;
+  if( sc.isFailure() ) { return Error( "Error from algorithm initialization!");}
+  //
+  return StatusCode::SUCCESS ;
+};
+// ============================================================================
+
+// ============================================================================
+// The End 
+// ============================================================================

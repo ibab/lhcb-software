@@ -1,4 +1,4 @@
-// $Id: RelationWeightedTypeTraits.h,v 1.1 2002-03-18 19:32:18 ibelyaev Exp $
+// $Id: RelationWeightedTypeTraits.h,v 1.2 2002-04-03 15:35:18 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
@@ -12,11 +12,12 @@
 // Relations
 #include "Relations/ObjectTypeTraits.h"
 
+
 namespace Relations
 {
   /** @struct RelationWeightedTypeTraits RelationWeightedTypeTraits.h
    *
-   *  Type traits for relations with teh weight ("link attributes") 
+   *  Type traits for relations with the weight ("link attributes") 
    *
    *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
    *  @date   06/02/2002
@@ -25,7 +26,7 @@ namespace Relations
   struct RelationWeightedTypeTraits
   {
     /// type traits version  
-    enum { version = 1 };
+    enum { version = 1 } ;
     /// type traits for "FROM" object 
     typedef Relations::ObjectTypeTraits<FROM>   FromTypeTraits   ;
     /// type traits for "TO" object 
@@ -40,11 +41,11 @@ namespace Relations
     typedef WeightTypeTraits::Type              Weight           ;
     
     /// "less" function object for "From" objects 
-    typedef std::less<From>                     LessF            ;
+    typedef FromTypeTraits::Less                LessF            ;
     /// "less" function object for "To" objects 
-    typedef std::less<To>                       LessT            ;
+    typedef ToTypeTraits::Less                  LessT            ;
     /// "less" function object for "Weight" objects 
-    typedef std::less<Weight>                   LessW            ;
+    typedef WeightTypeTraits::Less              LessW            ;
     /// "equality" function object for "To" objects 
     typedef std::equal_to<To>                   EqualT           ;
     
@@ -184,8 +185,7 @@ namespace Relations
       iterator  end   () const { return second ; }
     };
     
-    /** technical definitions, useful and
-     *  needed for implementation 
+    /** technical definitions, useful and needed for implementation 
      */
     typedef Entries::iterator       IT  ;
     typedef Entries::const_iterator CIT ;

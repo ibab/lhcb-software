@@ -1,4 +1,4 @@
-// $Id: RelationUtils.h,v 1.1 2002-03-18 19:32:18 ibelyaev Exp $
+// $Id: RelationUtils.h,v 1.2 2002-04-03 15:35:18 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
@@ -15,7 +15,7 @@
 
 namespace Relations
 {
-  /** @function interfaceID 
+  /** @fn interfaceID 
    *   
    *  funtion to create the uniqie relation 
    *  interfaceID from interface name, CLIDs and types 
@@ -37,7 +37,7 @@ namespace Relations
                             const unsigned long major   = 0  , 
                             const unsigned long minor   = 0  ) ;
   
-  /** @function clid 
+  /** @fn clid 
    *   
    *  function to create the uniqie relation 
    *  clid from object name, CLIDs and types 
@@ -49,11 +49,15 @@ namespace Relations
    *  @param idFrom   ID for the first ("FROM") object  
    *  @param idTo     ID for teh second("TO")   object
    *  @param weight   ID of weight class 
+   *  @param major    major version 
+   *  @param minor    minor version 
    */
   CLID        clid        ( const std::string&  id           ,
                             const unsigned long idFrom       ,
                             const unsigned long idTo         ,
-                            const unsigned long weight   = 0 ) ;
+                            const unsigned long weight   = 0 , 
+                            const unsigned long major    = 0 ,
+                            const unsigned long minor    = 0 ) ;
   
 }; // end of namespace RelationUtils
 
