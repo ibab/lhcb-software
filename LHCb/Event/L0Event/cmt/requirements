@@ -1,6 +1,6 @@
-# $Id: requirements,v 1.22 2002-07-04 10:02:26 mato Exp $
+# $Id: requirements,v 1.23 2002-07-25 08:07:53 cattanem Exp $
 package L0Event
-version v12r0
+version v12r1
 
 branches Event cmt doc xml src
 
@@ -14,7 +14,6 @@ use 	GaudiObjDesc	v4r4    -no_auto_imports
 #---- Produce Header-Files and from XML description
 private
 document obj2doth L0EventObj2Doth ../xml/*.xml
-# Dictionary does not work (problem with MsgStream stuff)
 document obj2dict L0EventObj2Dict ../xml/*.xml    
 
 # ================ build library (including dictionary) ==================
