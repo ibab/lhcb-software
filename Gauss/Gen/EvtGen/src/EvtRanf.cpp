@@ -1,6 +1,6 @@
 //--------------------------------------------------------------------------
 // File and Version Information:
-//      $Id: EvtRanf.cpp,v 1.1 2003-11-18 17:28:22 robbep Exp $
+//      $Id: EvtRanf.cpp,v 1.2 2004-01-15 13:43:05 robbep Exp $
 //
 // Description:
 //	subroutine evtranf_.
@@ -22,7 +22,7 @@
 #include "EvtGenBase/EvtRandom.hh"
 #ifdef WIN32
 extern "C" {
-  float EVTRANF( ) 
+  float __stdcall EVTRANF( ) 
   {
     return ( (float) EvtRandom::Flat() ) ;
   }
