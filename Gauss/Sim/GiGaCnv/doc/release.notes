@@ -1,9 +1,16 @@
-! $Id: release.notes,v 1.90 2004-08-02 13:16:58 gcorti Exp $ 
+! $Id: release.notes,v 1.91 2005-01-13 15:04:41 gcorti Exp $ 
 ! =============================================================================
 ! CVS tag $Name: not supported by cvs2svn $ 
 ! =============================================================================
 Package         : GiGaCnv
 Package Manager : Vanya Belyaev Ivan.Belyaev@itep.ru
+
+!====================== GiGaCnv v15r9 2005-01-13 ===========================
+! 2005-01-13 - Gloria CORTI
+ - src/component/GiGaGeo.cpp
+   . bug fix for "HepTransform3D::inverse error: zero determinant" appearing
+     on slc3 with the new G4 version due to setting 0.0 elements with test 
+     on abs() instead of fabs()
 
 !====================== GiGaCnv v15r8 2004-08-02 ===========================
 ! 2004-08-02 - Gloria CORTI

@@ -1,8 +1,11 @@
-// $Id: GiGaGeo.cpp,v 1.15 2004-08-02 13:16:59 gcorti Exp $ 
+// $Id: GiGaGeo.cpp,v 1.16 2005-01-13 15:04:41 gcorti Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.15  2004/08/02 13:16:59  gcorti
+// adapt to new Gaudi
+//
 // Revision 1.14  2004/04/20 04:26:46  ibelyaev
 //  fix reference counters and add warning counter
 //
@@ -460,7 +463,7 @@ G4VSolid*  GiGaGeo::g4BoolSolid( const SolidBoolean* Sd )
           
           for(int i=0;i<3;i++)
             for(int j=0;j<4;j++)
-              if(abs((child->matrix())[i][j])<0.0000001)
+              if(fabs((child->matrix())[i][j])<0.0000001)
                 {
                   temp[i][j]=0.0;
                 }        
@@ -476,7 +479,6 @@ G4VSolid*  GiGaGeo::g4BoolSolid( const SolidBoolean* Sd )
           HepTransform3D newtransf(newrot, Hep3Vector(temp[0][3],
                                                       temp[1][3],
                                                       temp[2][3]));
-          
           g4total = 
             new G4SubtractionSolid  ( Sd->first()->name()+"-"+child->name() , 
                                       g4total , g4child ,
