@@ -4,6 +4,15 @@
 ! Purpose     : Analaysis program for LHCb
 !-----------------------------------------------------------------------------
 
+! 2004-09-15 - P. Koppenburg for Luisanna Tocco
+  - options/L0Muon.opts
+    . Use same options as Boole except for some details.
+    
+! 2004-09-15 - P. Koppenburg for Vanya Belyaev
+  - options/DVStripping.opts
+  - options/DVMerge.opts
+    . Do also ETC for merging.
+  
 ! 2004-09-14 - P. Koppenburg for Vanya Belyaev
 Vanya writes:
     I've put few modifications into Event/CaloEvent package 

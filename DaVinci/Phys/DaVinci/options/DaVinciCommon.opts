@@ -42,7 +42,7 @@ EventDataSvc.RootCLID    =    1;
 // Associators
 ApplicationMgr.DLLs += { "ITAssociators", "OTAssociators" };
 ApplicationMgr.DLLs += { "VeloAssociators", "MuonAssociators" };
-ApplicationMgr.DLLs += { "CaloEvent", "CaloAssociators" };
+ApplicationMgr.DLLs += { "CaloAssociators" };
 ApplicationMgr.DLLs += { "TrAssociators" };
 ApplicationMgr.DLLs += { "Associators" };
 ApplicationMgr.DLLs += { "DaVinciAssociators" };

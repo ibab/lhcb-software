@@ -3,9 +3,14 @@
 // directory
 #include "$STRIPPINGROOT/options/DVMerge.opts" 
 
-// data
-// #include "$DAVINCIROOT/options/Presel1.opts" // to be overwritten by Dirac
-
 ApplicationMgr.EvtMax    = -1 ;
 EventSelector.PrintFreq  = 1;
 
+// things overwritten by Dirac
+//======================================================
+// put Data in here
+EventSelector.Input   = {"DATAFILE='PFN:${Presel_Filename}' TYP='POOL_ROOTTREE' OPT='READ'"};
+DSTORComb.Output  = "DATAFILE='Merged.dst' TYP='POOL_ROOTTREE' OPT='CREATE'" ; // to be overwritten by Dirac
+EvtTupleSvc.Output = { "EVTTAGS DATAFILE='${ETC_Filename}' TYP='POOL_ROOTTREE' OPT='RECREAT' " } ;
+
+CheckSelections.NumberOfEvents = 10000 ;  // computed from sum of input files
