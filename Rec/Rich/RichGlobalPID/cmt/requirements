@@ -2,8 +2,11 @@
 # Created    : 11/05/2003
 # Maintainer : Christopher Rob Jones
 #============================================================================
-# $Id: requirements,v 1.15 2005-01-13 14:27:19 jonrob Exp $
+# $Id: requirements,v 1.16 2005-01-13 14:28:39 jonrob Exp $
 # $Log: not supported by cvs2svn $
+# Revision 1.15  2005/01/13 14:27:19  jonrob
+# Update version + disable dictionary library
+#
 # Revision 1.14  2004/10/27 14:21:17  jonrob
 # Update version number
 #
@@ -37,7 +40,7 @@ include_dirs $(RICHGLOBALPIDROOT)
 
 # Global PID XML
 document obj2doth RichGlobalPID_Event_Obj2Doth ../xml/RichGlobalPID_Event.xml
-document obj2dict RichGlobalPID_Event_Obj2Dict ../xml/RichGlobalPID_Event.xml
+#document obj2dict RichGlobalPID_Event_Obj2Dict ../xml/RichGlobalPID_Event.xml
 
 # ================ component library=========================================
 library   RichGlobalPID           ../src/*.cpp  -import=AIDA

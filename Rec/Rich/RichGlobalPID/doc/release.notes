@@ -4,6 +4,9 @@
 ! Purpose     : The Rich Global PID algorithm
 !-----------------------------------------------------------------------------
 
+! 2005-01-13 - Chris Jones
+ - Disable creation of dictionary library, until it is needed
+
 ! 2004-11-20 - Chris Jones
  - Improved handling of events with no pixels.
 
