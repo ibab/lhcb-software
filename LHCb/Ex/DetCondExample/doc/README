@@ -1,4 +1,4 @@
-# $Id: README,v 1.6 2001-10-29 15:59:08 andreav Exp $
+# $Id: README,v 1.7 2001-10-29 17:07:12 andreav Exp $
 
 ------------------------------------------------------------------------------
 Packages needed to run DetCondExample v1
@@ -263,4 +263,5 @@ cvs status -v
 	cd v3r01/cmt
 	cmt config
 
-
+# To compare a file to that from another version
+cvs diff -r h20010917 file
