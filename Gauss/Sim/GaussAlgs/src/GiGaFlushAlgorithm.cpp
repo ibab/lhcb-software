@@ -1,20 +1,8 @@
-// $Id: GiGaFlushAlgorithm.cpp,v 1.1.1.1 2004-02-20 19:43:29 ibelyaev Exp $
+// $Id: GiGaFlushAlgorithm.cpp,v 1.2 2004-02-22 16:52:39 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 /// $Log: not supported by cvs2svn $
-/// Revision 1.3  2002/12/13 16:58:45  ibelyaev
-///  put modifications and bug fixes
-///
-/// Revision 1.2  2002/12/07 14:41:45  ibelyaev
-///  add new Calo stuff
-///
-/// Revision 1.1  2002/09/26 18:10:56  ibelyaev
-///  repackageing: add all concrete implementations from GiGa
-///
-/// Revision 1.1  2002/01/22 18:20:53  ibelyaev
-///  Vanya: update for newer versions of Gaudi and Geant4
-/// 
 // ============================================================================
 // Include files
 // from Gaudi
@@ -23,6 +11,7 @@
 #include "GaudiKernel/MsgStream.h"
 // from GiGa 
 #include "GiGa/IGiGaSvc.h"
+#include "GiGa/DumpG4Event.h"
 // local
 #include "GiGaFlushAlgorithm.h"
 
@@ -54,10 +43,12 @@ const        IAlgFactory&GiGaFlushAlgorithmFactory = s_factory ;
 // ============================================================================
 GiGaFlushAlgorithm::GiGaFlushAlgorithm( const std::string& Name   ,
                                         ISvcLocator*       SvcLoc )
-  : Algorithm ( Name , SvcLoc ) 
+  : GaudiAlgorithm ( Name , SvcLoc ) 
   , m_gigaSvcName ( "GiGa" ) 
   , m_gigaSvc     ( 0         ) 
-{ declareProperty( "GiGa" , m_gigaSvcName ) ; };
+{ 
+  declareProperty( "GiGa" , m_gigaSvcName ) ; 
+};
 
 // ============================================================================
 /** destructor 
@@ -72,32 +63,14 @@ GiGaFlushAlgorithm::~GiGaFlushAlgorithm() {};
 // ============================================================================
 StatusCode GiGaFlushAlgorithm::initialize() 
 {
+  StatusCode sc = GaudiAlgorithm::initialize() ;
+  if( sc.isFailure() ) { return sc ; }
   
-  MsgStream log(msgSvc(), name());
-  log << MSG::DEBUG << "==> Initialise" << endreq;
+  m_gigaSvc = svc<IGiGaSvc>( m_gigaSvcName , true ) ;
   
-  /// locate GiGa service
-  StatusCode status =  
-    serviceLocator()->service( m_gigaSvcName, m_gigaSvc , true ) ;
-  if( status.isFailure() ) 
-    {
-      log << MSG::ERROR 
-          << " Could not locate GiGaService using the name '" 
-          << m_gigaSvcName << "'" << endreq ;
-      return status ;
-    }
-  if( 0 == gigaSvc() ) 
-    {
-      log << MSG::ERROR 
-          << " GiGaService name '" 
-          << m_gigaSvcName << "' points to NULL!" << endreq ;
-      return StatusCode::FAILURE ;
-    }
-  ///
-  /// gigaSvc()->addRef();
-  
-  return StatusCode::SUCCESS;
-};
+  return StatusCode::SUCCESS ;
+}
+// ============================================================================
 
 // ============================================================================
 /** standard algorithm execution 
@@ -107,37 +80,24 @@ StatusCode GiGaFlushAlgorithm::initialize()
 StatusCode GiGaFlushAlgorithm::execute() 
 {
   
-  MsgStream  log( msgSvc(), name() );
-  log << MSG::DEBUG << "==> Execute" << endreq;
+  if ( 0 == gigaSvc() ) 
+  { m_gigaSvc = svc<IGiGaSvc>( m_gigaSvcName , true ) ; }
   
-  if( 0 == gigaSvc() ) 
-    {
-      log << MSG::ERROR 
-          << " IGiGaSvc* points to NULL! " << endreq ;
-      return StatusCode::FAILURE ;
-    }
+  if ( 0 == gigaSvc() ) 
+  { return Error ( " execute(): IGiGaSvc* points to NULL" ) ;}
   
-  /// extract the event ( "flush the GiGa" )
+  // extract the event ( "flush the GiGa" )
   const G4Event* event = 0 ;
-  *gigaSvc() >> event      ;
-  ///
+  *gigaSvc()  >> event     ;
   
-  return StatusCode::SUCCESS;
-};
+  if ( msgLevel( MSG::INFO ) ) 
+  { 
+    info() << " Dump G4 event object " << endreq ;
+    if( info().isActive() ) 
+    { GiGaUtil::DumpG4Event ( info().stream() , event  ) ; }
+    info() << endreq ;
+  };
 
-// ============================================================================
-/** standard algorithm finalization 
- *  @return status code
- */
-// ============================================================================
-StatusCode GiGaFlushAlgorithm::finalize() 
-{
-  MsgStream log(msgSvc(), name());
-  log << MSG::DEBUG << "==> Finalize" << endreq;
-  
-  /// release services 
-  if( 0 != gigaSvc() ) { gigaSvc()->release() ; m_gigaSvc = 0 ; }
-  
   return StatusCode::SUCCESS;
 };
 

@@ -1,4 +1,4 @@
-// $Id: PrintEventAlg.h,v 1.1.1.1 2004-02-20 19:43:29 ibelyaev Exp $
+// $Id: PrintEventAlg.h,v 1.2 2004-02-22 16:52:39 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
@@ -8,7 +8,7 @@
 #define    GaussTools_PrintEventAlg_H 1 
 // ============================================================================
 // Include files
-#include "GaudiKernel/Algorithm.h"
+#include "GaudiAlg/GaudiAlgorithm.h"
 // forward declaration 
 template <class ALGORITHM>
 class AlgFactory            ; ///< GaudiKernel 
@@ -21,7 +21,7 @@ class AlgFactory            ; ///< GaudiKernel
  *  @date    09/12/2002
  */
 class PrintEventAlg: 
-  public Algorithm 
+  public GaudiAlgorithm 
 {
   /// friend factory for instantiation
   friend class AlgFactory<PrintEventAlg>;
@@ -81,7 +81,6 @@ private:
   ///
   std::string    m_particles   ;
   std::string    m_vertices    ;
-  std::string    m_hits    ;
   long m_depth;
 
   int m_licznik;

@@ -21,11 +21,12 @@
 /// from LHCbEvent 
 #include "Event/MCParticle.h"
 #include "Event/MCVertex.h"
-#include "Event/MCHit.h"
 #include "Event/GenHeader.h"
 #include "Event/Collision.h"
 /// local 
 #include "PrintEventAlg.h"
+// Boost 
+#include "boost/lexical_cast.hpp"
 
 // ============================================================================
 /** @file PrintEventAlg.cpp
@@ -52,17 +53,15 @@ const        IAlgFactory&PrintEventAlgFactory = s_Factory;
 PrintEventAlg::PrintEventAlg(const std::string& name, 
                                          ISvcLocator* pSvcLocator) 
   ///
-  : Algorithm( name , pSvcLocator) 
+  : GaudiAlgorithm( name , pSvcLocator) 
   , m_particles   ( MCParticleLocation::Default )
   , m_vertices    ( MCVertexLocation::Default   )
-  , m_hits        ( MCHitLocation::OTHits   )
-    , m_licznik(0)
-    , m_liczevent(0)
+  , m_licznik(0)
+  , m_liczevent(0)
 { 
-  declareProperty( "Particles" , m_particles); 
-  declareProperty( "Vertices"  , m_vertices); 
-  declareProperty( "Hits"      , m_hits); 
-  declareProperty( "DecayDepth" , m_depth = 99);
+  declareProperty( "Particles"  , m_particles  ) ; 
+  declareProperty( "Vertices"   , m_vertices   ) ; 
+  declareProperty( "DecayDepth" , m_depth = 99 ) ;
 };
 
 // ============================================================================
@@ -79,15 +78,11 @@ PrintEventAlg::~PrintEventAlg(){};
 // ============================================================================
 StatusCode PrintEventAlg::initialize() 
 {
-  MsgStream log( msgSvc() , name() ) ;
-
-  // Accessing particle properties
-  StatusCode sc = service("ParticlePropertySvc", m_ppSvc );
-  if( !sc.isSuccess() ) {
-    log << MSG::FATAL << "Unable to locate Particle Property Service" << endreq;
-    return sc;
-  }
- return StatusCode::SUCCESS; 
+  StatusCode sc = GaudiAlgorithm::initialize () ;
+  if( sc.isFailure() ) { return sc ; }
+  
+  m_ppSvc = svc<IParticlePropertySvc> ( "ParticlePropertySvc", true );
+  return StatusCode::SUCCESS; 
 };
 
 // ============================================================================
@@ -111,92 +106,59 @@ StatusCode PrintEventAlg::execute()
   SmartDataPtr<GenHeader> hobj( eventSvc() , GenHeaderLocation::Default ) ;
   
   if( hobj ) 
-    {
-      log << MSG::INFO
-              << "Event type "
-          << hobj->evType() 
-          << endreq ;
-    }  
+  { info () << "Event type " << hobj->evType() << endreq ; }  
   
   SmartDataPtr<Collisions> colobj(eventSvc(), CollisionLocation::Default);  
   
   if(colobj)
+  {
+    info() << "Number of collisions " << colobj->size() << endreq;
+    
+    for(Collisions::const_iterator citer=colobj->begin();colobj->end()!=citer;
+        citer++)
     {
-      log << MSG::INFO<<"Number of collisions " << colobj->size() 
-          << endreq;
-      
-      for(Collisions::const_iterator citer=colobj->begin();colobj->end()!=citer;
-          citer++)
-        {
-          log << MSG::INFO << "Process type " << (*citer)->processType()
-              << " signal " << (*citer)->isSignal() <<
-            " vertex " << (*citer)->primVtxPosition()<< endreq;
-        }
+      info () << "Process type " << (*citer)->processType()
+              << " signal " << (*citer)->isSignal() 
+              << " vertex " << (*citer)->primVtxPosition()<< endreq;
     }
+  }
   
   
   if( !m_particles.empty() )
+  {
+    MCParticles* obj = get<MCParticles>( m_particles ) ;
+    
+    MCParticles::const_iterator ipart;
+    for ( ipart = obj->begin(); ipart != obj->end(); ipart++ )  
     {
-      SmartDataPtr<Particles> obj( eventSvc() , m_particles ) ;
-      if( obj ) 
-        {
-          log << MSG::INFO
-              << "Number of extracted particles '"
-              << m_particles << "' \t"
-              << obj->size() 
-              << endreq ;
-          // Stat stat( chronoSvc() , "#particles" , obj->size() ) ; 
-          
-          MCParticles::const_iterator ipart;
-          for ( ipart = obj->begin(); ipart != obj->end(); ipart++ )  
-            {
-              if ( !((*ipart)->mother()))            
-                {
-                  licz++;
-                  log << MSG::INFO << " "  << endreq;
-                  printDecayTree( 0, " |", *ipart );
-                }
-            }
-          log << MSG::INFO << "Number of 'primary' particles " 
-              << licz << endreq;
-          m_licznik = m_licznik+licz;
-          
-        } 
+      if ( !((*ipart)->mother()))            
+      {
+        licz++;
+        log << MSG::INFO << " "  << endreq;
+        printDecayTree( 0, " |", *ipart );
+      }
     }
-  else 
-    { 
-      log << MSG::ERROR 
-          << " Could not extract 'Particles' from '"
-          << m_particles << "'" 
-          << endreq ;
-      ///
-      return StatusCode::FAILURE;
-    } 
-
+    
+    info() << "Number of extracted particles '"
+           << m_particles << "' \t"
+           << obj->size() 
+           << endreq ;
+    info() << "Number of 'primary' particles " 
+           << licz << endreq;
+    
+    m_licznik = m_licznik+licz;
+    
+  }
+  
   ///
   if( !m_vertices.empty() )
-    {
-      SmartDataPtr<Vertices> obj( eventSvc() , m_vertices ) ;
-      if( obj ) 
-        { 
-          log << MSG::INFO
-              << "Number of extracted vertices  '"
-              << m_vertices << "'  \t" 
-              << obj->size() 
-              << endreq ;
-          // Stat stat( chronoSvc() , "#vertices" , obj->size() ) ;
-        }
-      else 
-        { 
-          log << MSG::ERROR 
-              << " Could not extract 'Vertices' from '"
-              << m_vertices << "' \t" 
-              << endreq ;
-          ///
-          return StatusCode::FAILURE;
-        } 
-    }
-
+  {
+    MCVertices* obj = get<MCVertices>( m_vertices ) ;
+    info() << "Number of extracted vertices  '"
+           << m_vertices << "'  \t" 
+           << obj->size() 
+           << endreq ;
+  }
   ///
   return StatusCode::SUCCESS;
 };
@@ -210,12 +172,11 @@ StatusCode PrintEventAlg::execute()
 StatusCode PrintEventAlg::finalize()
 { 
   MsgStream log( msgSvc() , name() ) ;
-
-  log << MSG::INFO << "Average number of 'primary' particles "
-      << m_licznik/m_liczevent << endreq;
   
-
-  return StatusCode::SUCCESS; 
+  always () << "Average number of 'primary' particles "
+            << m_licznik/m_liczevent << endreq;
+  
+  return GaudiAlgorithm::finalize();
 }
 
 // printing the decay tree of a given mother particle
@@ -228,15 +189,16 @@ void PrintEventAlg::printDecayTree
   std::string name;
   
   if(!p) 
-    {
-      log << MSG::INFO << " Particle not recognized " 
-          << mother->particleID().pid() << endreq;
-      name="XXXX";
-    }
+  {
+    Warning( " Particle not recognized " +
+             boost::lexical_cast<std::string>
+             ( mother->particleID().pid() ) , StatusCode::FAILURE , 0 ) ;
+    name="XXXX";
+  }
   else
-    {
-      name= p->particle();
-    }
+  {
+    name= p->particle();
+  }
   double x,y,z;
   enum MCVertexType {Unknown=0, ppCollision, Decay, Hadronic, Brem, Pair, 
                      Compton, DeltaRay, MuonBackground, MuonBackgroundFlat, 

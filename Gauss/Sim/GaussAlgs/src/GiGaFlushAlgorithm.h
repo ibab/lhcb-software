@@ -1,8 +1,11 @@
-// $Id: GiGaFlushAlgorithm.h,v 1.1.1.1 2004-02-20 19:43:29 ibelyaev Exp $
+// $Id: GiGaFlushAlgorithm.h,v 1.2 2004-02-22 16:52:39 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.1.1.1  2004/02/20 19:43:29  ibelyaev
+// New package 
+//
 // Revision 1.1  2002/09/26 18:10:56  ibelyaev
 //  repackageing: add all concrete implementations from GiGa
 //
@@ -12,16 +15,19 @@
 // ============================================================================
 #ifndef GIGA_GIGAFLUSHALGORITHM_H 
 #define GIGA_GIGAFLUSHALGORITHM_H 1
+// ============================================================================
 // Include files
-// from STL
-#include <string>
-// from Gaudi
-#include "GaudiKernel/Algorithm.h"
-
+// ============================================================================
+// from GaudiAlg
+// ============================================================================
+#include "GaudiAlg/GaudiAlgorithm.h"
+// ============================================================================
 // forward declarations
+// ============================================================================
 template <class ALGORITHM>
 class AlgFactory             ; ///< GaudiKernel
 class IGiGaSvc               ; ///< GiGa
+// ============================================================================
 
 /** @class GiGaFlushAlgorithm GiGaFlushAlgorithm.h 
  *  
@@ -30,7 +36,7 @@ class IGiGaSvc               ; ///< GiGa
  *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
  *  @date   22/01/2002
  */
-class GiGaFlushAlgorithm : public Algorithm 
+class GiGaFlushAlgorithm : public GaudiAlgorithm 
 {
   /// friend factory for instantiation 
   friend class AlgFactory<GiGaFlushAlgorithm>;
@@ -46,11 +52,6 @@ public:
    *  @return status code
    */
   virtual StatusCode execute   ();   
-  
-  /** standard algorithm finalization 
-   *  @return status code
-   */
-  virtual StatusCode finalize  ();   
   
 protected:
 
