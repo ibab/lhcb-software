@@ -7,7 +7,7 @@ use DetDesc	   v11r8	Det
 use VeloDet        v8r3 	Det     
 use ITDet          v1r3		Det     
 use OTDet          v3r3		Det
-use CaloDet	   v6r3		Det
+use CaloDet	   v6r4		Det
 use CaloDetXmlCnv  v2r2		Det
 use MuonDet        v4r3		Det
 use Magnet         v2r1		Det

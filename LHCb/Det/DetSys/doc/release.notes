@@ -4,7 +4,10 @@
 ! Purpose     : collect Det packages
 !-----------------------------------------------------------------------------
 
-!========================= DetSys v1r3 2003-01-22 =========================
+!========================= DetSys v1r3 2003-01-23 =========================
+! 2003-01-23 - Marco Cattaneo
+ - requirements - use CaloDet v6r4
+
 ! 2003-01-22 - Marco Cattaneo
  - requirements - use RichDet v4r0
 
