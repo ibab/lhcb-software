@@ -6,11 +6,15 @@
 
 ! 2004-12-22 - Chris Jones
  - Complete rewrite. 
-   + Add new version of data format
+   + Add new versions of data format
+    . Version 0 : Old version used for DC04
+    . Version 1 : Same HPD bank structure as version 0, but new headers and 
+                  L1 board grouping
+    . Version 2 : Same as version 1 but using new zero-suppressed HPD format
    + More flexible to make it easier to add new formats in the future
    + Remove all MC dependencies (moved to RichReadout and RichMCTools)
    + Add tools to deal with mappings between HPD numbering schemes
-   + Add Level 1 numbering tool
+   + Add Level 1 numbering tool to map between HPDs and Level 1 boards
 
 !========================== RichDAQ v1r6 2004-11-16 =========================
 ! 2004-11-03 - Chris Jones
