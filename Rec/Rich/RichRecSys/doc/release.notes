@@ -4,6 +4,10 @@
 ! Purpose     : Co-ordinates the RICH reconstruction packages
 !-----------------------------------------------------------------------------
 
+!===================== RichRecSys v1r13p1 2004-12-09 =====================
+! 2004-12-09 - Marco Cattaneo
+ - Some fixes to use GaudiObjDesc v7
+
 !====================== RichRecSys v1r13 2004-11-16 ======================
 ! 2004-11-16 - Marco Cattaneo
  - Remove "online" PID packages, as these should not be in BrunelSys for now

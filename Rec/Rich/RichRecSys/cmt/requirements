@@ -2,8 +2,11 @@
 # Created    : 2003-07-01
 # Maintainer : Chris Jones   Christopher.Rob.Jones@cern.ch
 #============================================================================
-# $Id: requirements,v 1.30 2004-11-18 08:02:58 cattanem Exp $
+# $Id: requirements,v 1.31 2004-12-09 15:41:09 cattanem Exp $
 # $Log: not supported by cvs2svn $
+# Revision 1.30  2004/11/18 08:02:58  cattanem
+# v1r13
+#
 # Revision 1.29  2004/10/30 19:31:34  jonrob
 # Add options to decode directly from the RawBuffer
 #
@@ -16,7 +19,7 @@
 #============================================================================
 
 package           RichRecSys
-version           v1r13
+version           v1r13p1
 
 # ================ structure ================================================
 branches          cmt doc options
@@ -30,13 +33,13 @@ set RICHRECSYSOPTS $(RICHRECSYSROOT)/options
 use RichDAQ         v1r6   Rich
 
 # Common RICH reconstruction packages
-use RichRecBase     v1r14  Rich
+use RichRecBase     v1r14p1  Rich
 use RichRecTools    v2r12  Rich
 use RichRecCommon   v1r10  Rich
 
 # "Offline" PID packages
 use RichGlobalPID   v1r8   Rich
-use RichLocalPID    v1r9   Rich
+use RichLocalPID    v1r9p1 Rich
 use RichRingRefit   v1r9   Rich
 
 # Result merging algorithms
