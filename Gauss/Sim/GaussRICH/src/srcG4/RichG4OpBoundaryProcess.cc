@@ -112,22 +112,18 @@ RichG4OpBoundaryProcess::PostStepDoIt
 {
   aParticleChange.Initialize(aTrack);
 
-  G4StepPoint* pPreStepPoint  = aStep.GetPreStepPoint();
-  G4StepPoint* pPostStepPoint = aStep.GetPostStepPoint();
-
+  const G4StepPoint* pPostStepPoint = aStep.GetPostStepPoint();
   if (pPostStepPoint->GetStepStatus() != fGeomBoundary)
     return G4VDiscreteProcess::PostStepDoIt(aTrack, aStep);
 
   if (aTrack.GetStepLength()<=kCarTolerance/2)
     return G4VDiscreteProcess::PostStepDoIt(aTrack, aStep);
 
-  Material1 = pPreStepPoint ->GetPhysicalVolume()->
-    GetLogicalVolume()->GetMaterial();
-  Material2 = pPostStepPoint->GetPhysicalVolume()->
-    GetLogicalVolume()->GetMaterial();
+  const G4StepPoint* pPreStepPoint  = aStep.GetPreStepPoint();
+  Material1 = pPreStepPoint ->GetPhysicalVolume()->GetLogicalVolume()->GetMaterial();
+  Material2 = pPostStepPoint->GetPhysicalVolume()->GetLogicalVolume()->GetMaterial();
 
   const G4DynamicParticle* aParticle = aTrack.GetDynamicParticle();
-
   thePhotonMomentum = aParticle->GetTotalMomentum();
   OldMomentum       = aParticle->GetMomentumDirection();
   OldPolarization   = aParticle->GetPolarization();
@@ -180,8 +176,7 @@ RichG4OpBoundaryProcess::PostStepDoIt
     theModel  = OpticalSurface->GetModel();
     theFinish = OpticalSurface->GetFinish();
 
-    aMaterialPropertiesTable = OpticalSurface->
-      GetMaterialPropertiesTable();
+    aMaterialPropertiesTable = OpticalSurface->GetMaterialPropertiesTable();
 
     if (aMaterialPropertiesTable) {
 
@@ -268,20 +263,19 @@ RichG4OpBoundaryProcess::PostStepDoIt
     G4cout << " Old Polarization:     " << OldPolarization<< G4endl;
   }
 
-  G4ThreeVector theGlobalPoint = pPostStepPoint->GetPosition();
+  const G4ThreeVector & theGlobalPoint = pPostStepPoint->GetPosition();
 
   G4Navigator* theNavigator =
     G4TransportationManager::GetTransportationManager()->
     GetNavigatorForTracking();
 
-  G4ThreeVector theLocalPoint = theNavigator->
+  const G4ThreeVector theLocalPoint = theNavigator->
     GetGlobalToLocalTransform().
     TransformPoint(theGlobalPoint);
 
-  G4ThreeVector theLocalNormal; // Normal points back into volume
-
   G4bool valid;
-  theLocalNormal = theNavigator->GetLocalExitNormal(&valid);
+  // Normal points back into volume
+  G4ThreeVector theLocalNormal = theNavigator->GetLocalExitNormal(&valid);
 
   if (valid) {
     theLocalNormal = -theLocalNormal;
@@ -326,8 +320,10 @@ RichG4OpBoundaryProcess::PostStepDoIt
 
   }
 
-  NewMomentum = NewMomentum.unit();
-  NewPolarization = NewPolarization.unit();
+  //NewMomentum = NewMomentum.unit();
+  //NewPolarization = NewPolarization.unit();
+  NewMomentum.setMag(1);
+  NewPolarization.setMag(1);
 
   if ( verboseLevel > 0) {
     G4cout << " New Momentum Direction: " << NewMomentum     << G4endl;
@@ -689,12 +685,12 @@ void RichG4OpBoundaryProcess::DielectricDielectric()
               (Material2->GetName() ==  Rich2QuartzMatName))  ||
              ((Material2->GetName() ==  Rich2CF4MatName )      &&
               (Material1->GetName() ==  Rich2QuartzMatName)) )
-          {
+            {
 
-            DoAbsorption();
+              DoAbsorption();
 
 
-          }
+            }
 
           // end of modif by SE.
 
