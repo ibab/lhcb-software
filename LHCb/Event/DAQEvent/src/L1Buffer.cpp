@@ -1,4 +1,4 @@
-// $Id: L1Buffer.cpp,v 1.1 2003-11-10 13:26:02 cattanem Exp $
+// $Id: L1Buffer.cpp,v 1.2 2003-11-10 15:51:46 cattanem Exp $
 // Include files 
 
 // from Gaudi
@@ -42,7 +42,13 @@ StreamBuffer& L1Buffer::serialize( StreamBuffer& s ) {
   m_buffer = new l1_int[m_currentSize];
   long i = 0;
   while( i < this->currentSize() ) {
+#ifdef WIN32 // VERY temporary hack for Windows!
+	short hack;
+	s >> hack;
+	m_buffer[i] = hack;
+#else
     s >> m_buffer[i];
+#endif
     i++;
   }
   return s;
@@ -51,7 +57,7 @@ StreamBuffer& L1Buffer::serialize( StreamBuffer& s ) {
 //=============================================================================
 // Serialization for printing
 //=============================================================================
-inline std::ostream& L1Buffer::fillStream(std::ostream& s) const
+std::ostream& L1Buffer::fillStream(std::ostream& s) const
 {
   s << "{ "
     << " initialSize:\t" << m_initialSize << std::endl

@@ -1,4 +1,4 @@
-// $Id: HltBuffer.cpp,v 1.1 2003-11-10 13:26:02 cattanem Exp $
+// $Id: HltBuffer.cpp,v 1.2 2003-11-10 15:51:46 cattanem Exp $
 // Include files 
 
 // from Gaudi
@@ -43,18 +43,30 @@ StreamBuffer& HltBuffer::serialize( StreamBuffer& s ) {
   m_buffer = new hlt_int[m_currentSize];
   long i = 0;
   while( i < this->currentSize() ) {
+#ifdef WIN32 // VERY temporary hack for Windows!
+	int hack;
+	s >> hack;
+	m_buffer[i] = hack;
+#else
     s >> m_buffer[i];
+#endif
     i++;
   }
 
+#ifdef WIN32 // VERY temporary hack for Windows!
+  int hack;
+  s >> hack;
+  m_magic = hack;
+#else
   s >> m_magic;
+#endif
   return s;
 };
 
 //=============================================================================
 // Serialization for printing
 //=============================================================================
-inline std::ostream& HltBuffer::fillStream(std::ostream& s) const
+std::ostream& HltBuffer::fillStream(std::ostream& s) const
 {
   s << "{ "
     << " initialSize:\t" << m_initialSize << std::endl

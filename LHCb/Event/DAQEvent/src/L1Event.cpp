@@ -1,5 +1,6 @@
-// $Id: L1Event.cpp,v 1.2 2003-11-03 07:41:38 cattanem Exp $
+// $Id: L1Event.cpp,v 1.3 2003-11-10 15:51:46 cattanem Exp $
 // Include files 
+#include "GaudiKernel/Kernel.h"
 #include <stdio.h>
 
 // from Gaudi
