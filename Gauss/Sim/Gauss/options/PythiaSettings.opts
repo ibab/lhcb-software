@@ -28,8 +28,8 @@ PythiaAlg.BasePythiaCommand = { "pysubs msel 0" ,
                                  "pypars parp 82 3.47" ,
                                  "pypars parp 89 14000" ,
                                  "pypars parp 90 0.174" ,
-                                 "pydat1 parj 13 0.7625" ,
-                                 "pydat1 parj 14 0.320" ,
-                                 "pydat1 parj 15 0.033" ,
-                                 "pydat1 parj 16 0.099" ,
-                                 "pydat1 parj 17 0.165" } ;
+                                 "pydat1 parj 13 0.750" ,
+                                 "pydat1 parj 14 0.162" ,
+                                 "pydat1 parj 15 0.018" ,
+                                 "pydat1 parj 16 0.054" ,
+                                 "pydat1 parj 17 0.090" } ;
