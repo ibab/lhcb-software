@@ -1,4 +1,4 @@
-//$Id: IConditionsDBDataSvc.h,v 1.3 2001-11-27 18:17:46 andreav Exp $
+//$Id: IConditionsDBDataSvc.h,v 1.4 2001-11-28 09:27:42 andreav Exp $
 #ifndef DETCOND_ICONDITIONSDBDATASVC_H
 #define DETCOND_ICONDITIONSDBDATASVC_H 1
 
@@ -34,12 +34,6 @@ class IConditionsDBDataSvc : virtual public IInterface
   static const InterfaceID& interfaceID() { return IID_IConditionsDBDataSvc; }
 
  public:
-
-  /// Set the global tag name 
-  virtual void setTagName              ( const std::string& tag )         = 0;
-
-  /// Get the global tag name
-  virtual const std::string& tagName   ( )                                = 0;
 
   /// Convert the folder name in the CondDB to the transient data store path
   virtual StatusCode getNameInCondDB   ( std::string& folderName,

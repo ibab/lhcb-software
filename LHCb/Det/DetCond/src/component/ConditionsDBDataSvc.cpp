@@ -1,12 +1,11 @@
-//$Id: ConditionsDBDataSvc.cpp,v 1.5 2001-11-27 18:21:53 andreav Exp $
+//$Id: ConditionsDBDataSvc.cpp,v 1.6 2001-11-28 09:28:32 andreav Exp $
 #include <string>
 
 #include "ConditionsDBDataSvc.h"
 #include "ConditionsDBAddress.h"
 
-#include "DetCond/IConditionsDBCnvSvc.h"
-
 #include "GaudiKernel/DataObject.h"
+#include "GaudiKernel/IAddressCreator.h"
 #include "GaudiKernel/IConversionSvc.h"
 #include "GaudiKernel/ISvcLocator.h"
 #include "GaudiKernel/ITime.h"
@@ -32,7 +31,6 @@ ConditionsDBDataSvc::ConditionsDBDataSvc( const std::string& name,
   m_rootName           = "/dd";
   m_rootCLID           = CLID_Catalog;
   m_conditionStoreRoot = m_rootName; 
-  declareProperty( "condDBGlobalTag",  m_tagName = "HEAD" ); // Def: HEAD
 }
 
 //----------------------------------------------------------------------------
@@ -91,15 +89,16 @@ StatusCode ConditionsDBDataSvc::initialize()
     }
   }
 
-  // Get properties from the JobOptionsSvc
-  sc = setProperties();
-  if ( !sc.isSuccess() ) {
-    log << MSG::ERROR << "Could not set jobOptions properties" << endreq;
+  // Locate the ConditionsDBCnvSvc
+  // This is used to create addresses of ConditionsDB type using the right tag
+  sc = serviceLocator()->service 
+    ( "ConditionsDBCnvSvc", m_conditionsDBCnvSvc );
+  if( !sc.isSuccess() ) {
+    log << MSG::ERROR << "Can't locate ConditionsDBCnvSvc" << endreq;
     return sc;
+  } else {
+    log << MSG::INFO << "Succesfully located ConditionDBCnvSvc" << endreq;
   }
-  log << MSG::DEBUG << "Properties were read from jobOptions" << endreq;
-  log << MSG::DEBUG 
-      << "Global tag name:        " << m_tagName         << endreq;
 
   log << MSG::DEBUG << "Specific initialization completed" << endreq;
   return sc;
@@ -117,20 +116,6 @@ StatusCode ConditionsDBDataSvc::finalize()
   // Finalize the base class
   return ConditionDataSvc::finalize();
 
-}
-
-//----------------------------------------------------------------------------
-
-/// Set the new global tag
-void ConditionsDBDataSvc::setTagName ( const std::string& tag ) { 
-  m_tagName = tag; 
-}
-
-//----------------------------------------------------------------------------
-
-/// Get the global tag  
-const std::string& ConditionsDBDataSvc::tagName ( ) { 
-  return m_tagName; 
 }
 
 //----------------------------------------------------------------------------
@@ -262,10 +247,20 @@ ConditionsDBDataSvc::retrieveValidCondition  ( DataObject*&         refpObject,
   log << MSG::DEBUG
       << "Create a new address and associate it to:" << endreq;
   log << MSG::DEBUG << path << endreq;
-  IOpaqueAddress* theAddress = new ConditionsDBAddress
-    ( folderName, m_tagName, classID, type );
-  log << MSG::DEBUG << "Address of CondDB type=" << (int)theAddress->svcType() 
-      << " classID=" << classID << " stringType=" << (int)type << endreq;
+  IOpaqueAddress* theAddress;
+  const std::string par[2] = {folderName, "DEFAULT"};
+  const unsigned long ipar[1] = {type};
+  sc = m_conditionsDBCnvSvc->createAddress
+    ( CONDDB_StorageType, classID, par, ipar, theAddress );
+  if ( !sc.isSuccess() ) {
+    log << MSG::ERROR << "Cannot create address" << endreq;
+    return sc;
+  } else {
+    log << MSG::DEBUG 
+	<< "Created new address of type=" << (int)theAddress->svcType() 
+	<< " classID=" << classID
+	<< " stringType=" << (int)type << endreq;
+  }
   theAddress->setRegistry(entry);
   entry->setAddress(theAddress);
   theAddress->addRef();

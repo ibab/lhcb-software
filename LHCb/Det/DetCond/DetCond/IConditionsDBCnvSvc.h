@@ -1,4 +1,4 @@
-//$Id: IConditionsDBCnvSvc.h,v 1.3 2001-11-26 18:57:46 andreav Exp $
+//$Id: IConditionsDBCnvSvc.h,v 1.4 2001-11-28 09:27:42 andreav Exp $
 #ifndef DETCOND_ICONDITIONSDBCNVSVC_H
 #define DETCOND_ICONDITIONSDBCNVSVC_H 1
 
@@ -12,7 +12,7 @@
 #include "ConditionsDB/CondDBKey.h"
 
 // IConditionsDBCnvSvc service ID (interface id, major version, minor version) 
-static const InterfaceID IID_IConditionsDBCnvSvc (19702, 1, 0);
+static const InterfaceID IID_IConditionsDBCnvSvc ("IConditionsDBCnvSvc", 1, 0);
 
 // Forward declarations
 class DataObject;
@@ -94,9 +94,11 @@ class IConditionsDBCnvSvc : virtual public IInterface
 				     const unsigned char& type,
 				     std::string&         description) = 0;
   
-  /// Handle to the ConditionsDBGate.
-  virtual IConditionsDBGate* 
-    conditionsDBGate               ( )                                 = 0;
+  /// Get the global tag name
+  virtual const std::string& globalTag ( ) = 0;
+
+  /// Get a handle to the ConditionsDBGate
+  virtual IConditionsDBGate* conditionsDBGate ( ) = 0;
 
 };
 

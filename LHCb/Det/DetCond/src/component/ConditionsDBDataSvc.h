@@ -1,4 +1,4 @@
-//$Id: ConditionsDBDataSvc.h,v 1.3 2001-11-26 19:04:56 andreav Exp $
+//$Id: ConditionsDBDataSvc.h,v 1.4 2001-11-28 09:28:32 andreav Exp $
 #ifndef DETCOND_CONDITIONSDBDATASVC_H
 #define DETCOND_CONDITIONSDBDATASVC_H 1
 
@@ -8,6 +8,7 @@
 
 /// Forward and external declarations
 template <class TYPE> class SvcFactory;
+class IAddressCreator;
 class IConditionsDBCnvSvc;
 class IOpaqueAddress;
 class IRegistry;
@@ -59,12 +60,6 @@ class ConditionsDBDataSvc : virtual public ConditionDataSvc,
   
   // Implementation of the IConditionsDBDataSvc interface
 
-  /// Set the global tag name 
-  void setTagName ( const std::string& tag );
-
-  /// Get the default global tag
-  const std::string& tagName ( );
-
   /// Convert the folder name in the CondDB to the transient data store path
   StatusCode getNameInCondDB        ( std::string&       folderName,
 				      const std::string& path );
@@ -99,11 +94,11 @@ class ConditionsDBDataSvc : virtual public ConditionDataSvc,
 
   // Private data members
 
-  /// Default tag name (can be set using the JobOptionsSvc)
-  std::string         m_tagName;            // Default tag name
-
   /// TDS root path for the naming convention (set equal to m_root)
-  std::string         m_conditionStoreRoot; // Default: m_root = "/dd"  
+  std::string      m_conditionStoreRoot; // Default: m_root = "/dd"  
+
+  /// Handle to the IAddressCreator interface of the ConditionsDBCnvSvc
+  IAddressCreator* m_conditionsDBCnvSvc;
 
 };
 
