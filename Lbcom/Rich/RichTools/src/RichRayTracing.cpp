@@ -1,4 +1,4 @@
-// $Id: RichRayTracing.cpp,v 1.2 2004-06-17 14:52:07 jonesc Exp $
+// $Id: RichRayTracing.cpp,v 1.3 2004-07-01 11:10:08 papanest Exp $
 // Include files
 
 // from Gaudi
@@ -12,8 +12,7 @@
 #include "CLHEP/Units/PhysicalConstants.h"
 
 // RichDet
-#include "RichDet/DeRich1.h"
-#include "RichDet/DeRich2.h"
+#include "RichDet/DeRich.h"
 
 // local
 #include "RichRayTracing.h"
@@ -57,8 +56,8 @@ StatusCode RichRayTracing::initialize()
                                            { DeRichHPDPanelLocation::Rich2Panel0,
                                              DeRichHPDPanelLocation::Rich2Panel1 } };
 
-  DeRich1 * rich1 = getDet<DeRich1>( DeRich1Location::Default );
-  DeRich2 * rich2 = getDet<DeRich2>( DeRich2Location::Default );
+  DeRich* rich1 = getDet<DeRich>( DeRichLocation::Rich1 );
+  DeRich* rich2 = getDet<DeRich>( DeRichLocation::Rich2 );
 
   //loop over riches and photo detector panels
   unsigned int rich, panel;
@@ -122,13 +121,15 @@ StatusCode RichRayTracing::traceToDetector ( Rich::DetectorType rich,
                                              const HepPoint3D& startPoint,
                                              const HepVector3D& startDir,
                                              RichGeomPhoton& photon,
-                                             DeRichHPDPanel::traceMode mode)
+                                             RichTraceMode mode,
+                                             Rich::Side fSide )
   const {
 
   HepPoint3D tmpPosition( startPoint );
   HepVector3D tmpDirection( startDir );
 
-  if (reflectBothMirrors(rich, tmpPosition, tmpDirection, photon).isFailure() )
+  if ( reflectBothMirrors( rich, tmpPosition, tmpDirection, photon,
+                           mode, fSide ).isFailure() )
     return StatusCode::FAILURE;
 
   HepPoint3D hitPosition;
@@ -159,18 +160,20 @@ StatusCode RichRayTracing::intersectPDPanel ( Rich::DetectorType,
 // geometrical boundaries checking depends on the traceMode variable
 //=============================================================================
 StatusCode
-RichRayTracing::traceToDetectorWithoutEff(Rich::DetectorType rich,
-                                          const HepPoint3D& position,
-                                          const HepVector3D& direction,
-                                          HepPoint3D& hitPosition,
-                                          DeRichHPDPanel::traceMode mode)const{
+RichRayTracing::traceToDetectorWithoutEff( Rich::DetectorType rich,
+                                           const HepPoint3D& position,
+                                           const HepVector3D& direction,
+                                           HepPoint3D& hitPosition,
+                                           RichTraceMode mode,
+                                           Rich::Side fSide ) const {
 
   HepPoint3D tmpPosition( position );
   HepVector3D tmpDirection( direction );
 
   RichGeomPhoton photon;
 
-  if (reflectBothMirrors(rich, tmpPosition, tmpDirection, photon).isFailure() )
+  if ( reflectBothMirrors( rich, tmpPosition, tmpDirection, photon,
+                           mode, fSide ).isFailure() )
     return StatusCode::FAILURE;
 
   const Rich::Side side = m_rich[rich]->side(tmpPosition);
@@ -185,15 +188,22 @@ RichRayTracing::traceToDetectorWithoutEff(Rich::DetectorType rich,
 //  reflect a photon on both mirrors and return the position and direction
 //  on the flat mirror.
 //=========================================================================
-StatusCode RichRayTracing::reflectBothMirrors (Rich::DetectorType rich,
-                                               HepPoint3D& position,
-                                               HepVector3D& direction,
-                                               RichGeomPhoton& photon ) const {
+StatusCode RichRayTracing::reflectBothMirrors(Rich::DetectorType rich,
+                                              HepPoint3D& position,
+                                              HepVector3D& direction,
+                                              RichGeomPhoton& photon,
+                                              RichTraceMode mode,
+                                              Rich::Side fSide) const {
 
   HepPoint3D tmpPosition( position );
   HepVector3D tmpDirection( direction );
 
-  Rich::Side side = m_rich[rich]->side(tmpPosition);
+  Rich::Side side;
+
+  if ( !mode.forcedSide() ) 
+    side = m_rich[rich]->side(tmpPosition);
+  else
+    side = fSide;
 
   // Spherical mirror reflection with nominal parameters
   if ( !reflectSpherical( tmpPosition, tmpDirection,
@@ -201,17 +211,20 @@ StatusCode RichRayTracing::reflectBothMirrors (Rich::DetectorType rich,
                           m_nomSphMirrorRadius[rich]) )
     return StatusCode::FAILURE;
 
-  // check if still same side, if not change sides
-  const Rich::Side tmpSide = m_rich[rich]->side(tmpPosition);
-  if ( side != tmpSide ) {
-    side = tmpSide;
-    tmpPosition = position;
-    tmpDirection = direction;
-    if ( !reflectSpherical( tmpPosition, tmpDirection,
-                            m_nominalCoC[rich][side],
-                            m_nomSphMirrorRadius[rich]) )
-      return StatusCode::FAILURE;
+  // if not forced, check if still same side, if not change sides
+  if ( !mode.forcedSide() ) {
+    const Rich::Side tmpSide = m_rich[rich]->side(tmpPosition);
+    if ( side != tmpSide ) {
+      side = tmpSide;
+      tmpPosition = position;
+      tmpDirection = direction;
+      if ( !reflectSpherical( tmpPosition, tmpDirection,
+                              m_nominalCoC[rich][side],
+                              m_nomSphMirrorRadius[rich]) )
+        return StatusCode::FAILURE;
+    }
   }
+  
 
   // find segment
   DeRichSphMirror* sphSegment = m_mirrorSegFinder->findSphMirror( rich,
@@ -220,10 +233,17 @@ StatusCode RichRayTracing::reflectBothMirrors (Rich::DetectorType rich,
   tmpPosition = position;
   tmpDirection = direction;
 
-  // Spherical mirror reflection with exect parameters
+  // depending on the tracing flag:
+  if ( mode.mirrorSegBoundary() ) {
+    // if reflection from a mirror segment is required
+    if ( !sphSegment->intersects( tmpPosition, tmpDirection ) )
+      return StatusCode::FAILURE;
+  } 
+
+  // Spherical mirror reflection with exact parameters
   if ( !reflectSpherical( tmpPosition, tmpDirection,
                           sphSegment->centreOfCurvature(),
-                          m_nomSphMirrorRadius[rich]) )
+                          sphSegment->radius() ) )
     return StatusCode::FAILURE;
 
 
@@ -265,7 +285,8 @@ StatusCode RichRayTracing::reflectBothMirrors (Rich::DetectorType rich,
 StatusCode RichRayTracing::reflectSpherical ( HepPoint3D& position,
                                               HepVector3D& direction,
                                               const HepPoint3D& CoC,
-                                              double radius ) const 
+                                              double radius,
+                                              RichTraceMode mode ) const 
 {
   // find intersection point
   // for line sphere intersection look at:http://www.realtimerendering.com/int/

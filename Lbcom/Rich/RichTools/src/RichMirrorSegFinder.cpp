@@ -1,4 +1,4 @@
-// $Id: RichMirrorSegFinder.cpp,v 1.4 2004-06-21 13:39:15 jonesc Exp $
+// $Id: RichMirrorSegFinder.cpp,v 1.5 2004-07-01 11:10:08 papanest Exp $
 
 // local
 #include "RichMirrorSegFinder.h"
@@ -45,8 +45,8 @@ StatusCode RichMirrorSegFinder::initialize( ) {
   if ( sc.isFailure() ) return sc;
 
   // get the RICH detectors
-  DeRich1 * rich1 = getDet<DeRich1>( DeRich1Location::Default );
-  DeRich2 * rich2 = getDet<DeRich2>( DeRich2Location::Default );
+  DeRich* rich1 = getDet<DeRich>( DeRichLocation::Rich1 );
+  DeRich* rich2 = getDet<DeRich>( DeRichLocation::Rich2 );
 
   // find all the mirrors in Rich1
   unsigned int mirrorNum(0);

@@ -1,4 +1,4 @@
-// $Id: RichRayTracing.h,v 1.1.1.1 2004-06-17 12:04:08 cattanem Exp $
+// $Id: RichRayTracing.h,v 1.2 2004-07-01 11:10:08 papanest Exp $
 #ifndef RICHDETTOOLS_RICHRAYTRACING_H
 #define RICHDETTOOLS_RICHRAYTRACING_H 1
 
@@ -17,6 +17,7 @@
 #include "RichKernel/IRichMirrorSegFinder.h"
 #include "RichKernel/BoostArray.h"
 #include "RichKernel/Rich1DTabProperty.h"
+#include "RichKernel/RichTraceMode.h"
 
 // RichEvent
 #include "RichEvent/RichGeomPhoton.h"
@@ -31,6 +32,7 @@
 // RichDet
 #include "RichDet/DeRichSphMirror.h"
 #include "RichDet/DeRichFlatMirror.h"
+#include "RichDet/DeRichHPDPanel.h"
 
 
 /** @class RichRayTracing RichRayTracing.h
@@ -58,19 +60,21 @@ public:
 
   /// For a given detector, raytraces a given direction from a given point to
   /// the photo detectors. Returns the result in the form of a RichGeomPhoton
-  virtual StatusCode traceToDetector ( Rich::DetectorType,
-                                       const HepPoint3D&,
-                                       const HepVector3D&,
-                                       RichGeomPhoton&,
-                                       DeRichHPDPanel::traceMode mode =
-                                       DeRichHPDPanel::circle) const;
+  virtual StatusCode traceToDetector ( Rich::DetectorType rich,
+                                       const HepPoint3D& startPoint,
+                                       const HepVector3D& startDir,
+                                       RichGeomPhoton& photon,
+                                       RichTraceMode mode = RichTraceMode(),
+                                       Rich::Side fSide = Rich::top
+                                       ) const;
 
-  virtual StatusCode traceToDetectorWithoutEff( Rich::DetectorType,
-                                                const HepPoint3D&,
-                                                const HepVector3D&,
-                                                HepPoint3D&,
-                                                DeRichHPDPanel::traceMode =
-                                                DeRichHPDPanel::loose) const;
+  virtual StatusCode traceToDetectorWithoutEff( Rich::DetectorType rich,
+                                                const HepPoint3D& position,
+                                                const HepVector3D& direction,
+                                                HepPoint3D& hiPosition,
+                                                RichTraceMode mode = RichTraceMode(),
+                                                Rich::Side fSide = Rich::top
+                                                ) const;
 
 
   /// For a given detector, raytraces a given direction from a given point
@@ -90,14 +94,17 @@ public:
   StatusCode reflectSpherical ( HepPoint3D& position,
                                 HepVector3D& direction,
                                 const HepPoint3D& CoC,
-                                double radius) const;
+                                double radius,
+                                RichTraceMode mode = RichTraceMode() ) const;
 private:
 
   // methods
   StatusCode reflectBothMirrors ( Rich::DetectorType rich,
                                   HepPoint3D& position,
                                   HepVector3D& direction,
-                                  RichGeomPhoton& photon ) const;
+                                  RichGeomPhoton& photon,
+                                  RichTraceMode mode,
+                                  Rich::Side fSide ) const;
 
 
   StatusCode reflectFlat ( HepPoint3D& position,

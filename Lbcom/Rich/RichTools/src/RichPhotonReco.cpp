@@ -1,4 +1,4 @@
-// $Id: RichPhotonReco.cpp,v 1.2 2004-06-18 09:43:22 jonesc Exp $
+// $Id: RichPhotonReco.cpp,v 1.3 2004-07-01 11:10:08 papanest Exp $
 
 // local
 #include "RichPhotonReco.h"
@@ -48,8 +48,8 @@ StatusCode RichPhotonReco::initialize() {
   const StatusCode sc = RichToolBase::initialize();
   if ( sc.isFailure() ) return sc;
 
-  DeRich1 * rich1 = getDet<DeRich1>( DeRich1Location::Default );
-  DeRich2 * rich2 = getDet<DeRich2>( DeRich2Location::Default );
+  DeRich* rich1 = getDet<DeRich>( DeRichLocation::Rich1 );
+  DeRich* rich2 = getDet<DeRich>( DeRichLocation::Rich2 );
 
   // load the nominal centre of curvature and flat mirror plane
   m_nominalCoC[Rich::Rich1][Rich::top] = rich1->

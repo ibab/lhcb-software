@@ -1,4 +1,4 @@
-// $Id: RichTrSegMakerFromTrStoredTracks.cpp,v 1.1.1.1 2004-06-17 12:04:08 cattanem Exp $
+// $Id: RichTrSegMakerFromTrStoredTracks.cpp,v 1.2 2004-07-01 11:10:08 papanest Exp $
 // Include files
 
 // from Gaudi
@@ -73,8 +73,8 @@ StatusCode RichTrSegMakerFromTrStoredTracks::initialize()
 
   m_rayTracing = tool<IRichRayTracing>( "RichRayTracing" );
   
-  DeRich1* rich1 = getDet<DeRich1>( DeRich1Location::Default );
-  DeRich2* rich2 = getDet<DeRich2>( DeRich2Location::Default );
+  DeRich* rich1 = getDet<DeRich>( DeRichLocation::Rich1 );
+  DeRich* rich2 = getDet<DeRich>( DeRichLocation::Rich2 );
 
   m_rich[Rich::Rich1] = rich1;
   m_rich[Rich::Rich2] = rich2;
