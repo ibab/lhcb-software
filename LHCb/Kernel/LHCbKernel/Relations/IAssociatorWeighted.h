@@ -1,8 +1,11 @@
-// $Id: IAssociatorWeighted.h,v 1.2 2002-04-25 08:44:03 ibelyaev Exp $
+// $Id: IAssociatorWeighted.h,v 1.3 2002-04-26 13:21:42 phicharp Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2002/04/25 08:44:03  ibelyaev
+//  bug fix for Win2K
+//
 // Revision 1.1  2002/04/08 14:26:01  ibelyaev
 //  new version of 'Relations'-subpackage
 //
@@ -46,6 +49,15 @@ public:
   /// shortcut for "inverse" relations
   typedef IRelationWeighted<TO,FROM,WEIGHT>     InverseType   ;
   
+  /// another set of shortcuts may be easier to remember (PhC)
+  typedef OwnType                             IAsct;
+  typedef DirectType                          FromTable;
+  typedef FromTable::Range                    ToRange;
+  typedef FromTable::iterator                 ToIterator;
+  typedef OwnType::InverseType                ToTable;
+  typedef ToTable::Range                      FromRange;
+  typedef ToTable::iterator                   FromIterator;
+
 public:
   
   /** accessor to  "direct" relations 
@@ -99,6 +111,20 @@ public:
                               DirectType::TypeTraits::     version , 0 );
     return s_iid ;
   };
+
+  /** Method to retrieve a range associated to a given FROM element
+   */
+  ToRange directAsctRange( const FROM* from ) 
+  {
+    return direct()->relations( from );
+  }
+
+  /** Method to retrieve a range associated to a given TO element
+   */
+  FromRange inverseAsctRange( const TO* to )
+  {
+    return inverse()->relations( to );
+  }
 
 protected:
 
