@@ -1,0 +1,29 @@
+// check for TDR and MC truth
+ApplicationMgr.TopAlg += { "CheckSelResult/Bs2JpsiPhiAndTDR" };
+Bs2JpsiPhiAndTDR.ANDmode = true ;
+Bs2JpsiPhiAndTDR.Algorithms = { "TDRselBs2Jpsi2MuMu_Phi2KK" , "AllBs2JpsiPhiTracks" } ;
+Bs2JpsiPhiAndTDR.AvoidSelResult = false ;
+
+// correlation of HLT and TDR
+ApplicationMgr.TopAlg += { "SelResultCorrelations/CorrBs2JpsiPhi" };
+CorrBs2JpsiPhi.Algorithms = { "AllBs2JpsiPhiTracks", 
+			"HLTKKFrom",
+                        "HLTAllJpsis",
+                        "HLTJpsiForBs2JpsiPhi",
+			"HLTPhiForBs2JpsiPhi",
+			"HLTBs2JpsiPhi",
+                        "HLTFilterBs2JpsiPhi", 
+                        "TDRselBs2Jpsi2MuMu_Phi2KK",
+                        "Bs2JpsiPhiAndTDR" } ;
+
+// check for TDR and MC truth
+ApplicationMgr.TopAlg += { "Sequencer/ShowFoundBs2JpsiPhi" };
+ShowFoundBs2JpsiPhi.Members += { "CheckSelResult/Bs2JpsiPhiAndTruth",  "PrintTree/PrintFoundBs2JpsiPhi"};
+
+Bs2JpsiPhiAndTruth.ANDmode = true ;
+Bs2JpsiPhiAndTruth.Algorithms = { "HLTFilterBs2JpsiPhi" , "AllBs2JpsiPhiTracks" } ;
+Bs2JpsiPhiAndTruth.AvoidSelResult = false ;
+
+PrintFoundBs2JpsiPhi.DebugTool.Informations = "Name E M P Px Py Pz Pt phi Vz" ;
+PrintFoundBs2JpsiPhi.PhysDesktop.InputLocations = { "Phys/HLTFilterBs2JpsiPhi" } ;
+PrintFoundBs2JpsiPhi.OutputLevel = 3 ;

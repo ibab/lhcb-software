@@ -1,0 +1,25 @@
+# $Id: requirements,v 1.1.1.1 2004-11-18 12:38:36 pkoppenb Exp $
+# Created    : 05/02/2002
+# Maintainer : P. Koppenburg
+
+package           HltSelChecker
+version           v1r0
+
+# Structure, i.e. directories to process. 
+#============================================================================
+branches          cmt doc options src
+
+# Used packages. 
+#============================================================================
+use  HltSelections          v*          Hlt
+
+# Component library building rule
+#============================================================================
+library           HltSelChecker   ../src/*.cpp 
+
+# standard patterns
+#============================================================================
+apply_pattern component_library library=HltSelChecker
+	     
+macro_append     cppflags " -DMCCheck " \
+                 VisualC  " /DMCCheck "

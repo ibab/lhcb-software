@@ -1,0 +1,30 @@
+!-----------------------------------------------------------------------------
+! Package     : Hlt/HltSelChecker
+! Responsible : P. Koppenburg
+! Purpose     : High-Level Trigger Exclusive Selections 
+!-----------------------------------------------------------------------------
+
+!========================== HltSelChecker v1r0 2004-11-18 ====================
+!========================== In HltSelections ==================================
+! 2004-10-24 - Luis Fernandez
+  - src/DecayChainNtuple.{h,cpp}
+    . Modify such that the MC primary vertex is no longer the origin vertex
+      of the head of the decay (works for B decays), but is taken as the 
+      primary collision (needed e.g. for prompt J/Psi)
+
+! 2004-10-12 - Luis Fernandez
+  - src/DecayChainNtuple.cpp
+    . Add MCTruth
+
+! 2004-09-15 - P. Koppenburg for Luis Fernandez
+  - src/DecayChainNtuple.cpp
+    . Simply label daughters as 0, 1... 
+    
+! 2004-09-13 - P. Koppenburg for Luis Fernandez
+  - src/DecayChainNtuple.cpp
+    . Take cc into account (preliminary)
+  - options/*
+    . Open all cuts to check that TDR events pass (preliminary)
+  - cmt/requirements
+    . Do not depend on DaVinciTools anymore but DaVinciKernel and TrgEvent
+    

@@ -1,0 +1,21 @@
+//==============================================================================
+// MC truth again - overwrite input to take only MC truth
+//==============================================================================
+HLTPreselPions.PhysDesktop.InputLocations = { "Phys/SelectB2HH"
+                                              ,"Phys/SelectBs2PhiPhi"
+                                              ,"Phys/SelectBd2D02KPiKstar"
+                                              ,"Phys/SelectBd2DstarPi"
+                                              ,"Phys/SelectBs2DsH"
+                                              ,"Phys/SelectBs2PhiGamma" 
+//                                              ,"Phys/SelectB2MuMu" 
+                                              ,"Phys/SelectBd2MuMuKstar" 
+                                              ,"Phys/SelectBs2JpsiPhi" 
+//                                              ,"Phys/SelectBd2JpsiKs" 
+/                                              ,"Phys/SelectDstar2Dpi" 
+					      } ;
+HLTKaons.PhysDesktop.InputLocations = {"Phys/SelectBs2DsH"};
+HLTMuons.PhysDesktop.InputLocations = {"Phys/SelectBs2JpsiPhi"
+                                       ,"Phys/SelectBd2JpsiKs"
+                                       ,"Phys/SelectB2MuMu"
+				       ,"Phys/SelectBd2MuMuKstar"};
+

@@ -1,0 +1,110 @@
+//==============================================================================
+// HLT Selection of B -> H H
+//==============================================================================
+// Author: Luis Fernandez, 13/08/2004
+
+//------------------------------------------------------------------------------
+ApplicationMgr.TopAlg += {"DecayChainNTuple/HLTB2HHTree"};
+HLTB2HHTree.PhysDesktop.InputLocations = {"Phys/HLTFilterB2HH"};
+HLTB2HHTree.Decay = "B0 -> ^pi+ ^pi-"; 
+HLTB2HHTree.NtupleName = "FILE1/HLTB2HH";
+HLTB2HHTree.OutputLevel = 3;
+//------------------------------------------------------------------------------
+
+// //------------------------------------------------------------------------------
+// ApplicationMgr.TopAlg += {"DecayChainNTuple/HLTBd2PiPiTree"};
+// HLTBd2PiPiTree.PhysDesktop.InputLocations = {"Phys/HLTFilterBd2PiPi"};
+// HLTBd2PiPiTree.Decay = "B0 -> ^pi+ ^pi-";
+// HLTBd2PiPiTree.NtupleName = "FILE1/HLTBd2PiPi";
+// HLTBd2PiPiTree.OutputLevel = 3;
+// //------------------------------------------------------------------------------
+ 
+// //------------------------------------------------------------------------------
+// ApplicationMgr.TopAlg += {"DecayChainNTuple/HLTBd2KPiTree"};
+// HLTBd2KPiTree.PhysDesktop.InputLocations = {"Phys/HLTFilterBd2KPi"};
+// HLTBd2KPiTree.Decay = "{B0 -> ^K+ ^pi-, B~0 -> ^K- ^pi+ }";
+// HLTBd2KPiTree.NtupleName = "FILE1/HLTBd2KPi";
+// HLTBd2KPiTree.OutputLevel = 3;
+// //------------------------------------------------------------------------------
+ 
+// //------------------------------------------------------------------------------
+// ApplicationMgr.TopAlg += {"DecayChainNTuple/HLTBs2KKTree"};
+// HLTBs2KKTree.PhysDesktop.InputLocations = {"Phys/HLTFilterBs2KK"};
+// HLTBs2KKTree.Decay = "B_s0 -> ^K+ ^K-";
+// HLTBs2KKTree.NtupleName = "FILE1/HLTBs2KK";
+// HLTBs2KKTree.OutputLevel = 3;
+// //------------------------------------------------------------------------------
+ 
+// //------------------------------------------------------------------------------
+// ApplicationMgr.TopAlg += {"DecayChainNTuple/HLTBs2PiKTree"};
+// HLTBs2PiKTree.PhysDesktop.InputLocations = {"Phys/HLTFilterBs2PiK"};
+// HLTBs2PiKTree.Decay = "{B_s0 -> ^pi+ ^K-, B_s~0 -> ^pi- ^K+}";
+// HLTBs2PiKTree.NtupleName = "FILE1/HLTBs2PiK";
+// HLTBs2PiKTree.OutputLevel = 3;
+// //------------------------------------------------------------------------------
+
+//==============================================================================
+// HLT Selection NTuple for B_s0 -> phi(1020) phi(1020)
+//==============================================================================
+
+//------------------------------------------------------------------------------
+ApplicationMgr.TopAlg += {"DecayChainNTuple/HLTBs2PhiPhiTree"};
+HLTBs2PhiPhiTree.PhysDesktop.InputLocations = {"Phys/HLTFilterBs2PhiPhi"};
+HLTBs2PhiPhiTree.Decay = "B_s0 -> (^phi(1020) -> ^K- ^K+) (^phi(1020) -> ^K- ^K+)"; 
+HLTBs2PhiPhiTree.NtupleName = "FILE1/HLTBs2PhiPhi";
+HLTBs2PhiPhiTree.OutputLevel = 3;
+//------------------------------------------------------------------------------
+
+//==============================================================================
+// HLT Selection of B0 -> (D~0 -> K+ pi-) (K*(892)0 -> K+ pi-)
+//==============================================================================
+
+//------------------------------------------------------------------------------
+ApplicationMgr.TopAlg += {"DecayChainNTuple/HLTBd2D02KPiKstarTree"};
+HLTBd2D02KPiKstarTree.PhysDesktop.InputLocations = {"Phys/HLTFilterBd2D02KPiKstar"};
+HLTBd2D02KPiKstarTree.Decay = "{B0 -> (^D~0 -> ^K+ ^pi-) (^K*(892)0 -> ^K+ ^pi-), B~0 -> (^D0 -> ^K- ^pi+) (^K*(892)~0 -> ^K- ^pi+)}";
+HLTBd2D02KPiKstarTree.NtupleName = "FILE1/HLTBd2D02KPiKstar";
+HLTBd2D02KPiKstarTree.OutputLevel = 3;
+//------------------------------------------------------------------------------
+
+//==============================================================================
+// HLT Selection NTuple for B0 -> (D*(2010)- -> (D~0 -> K+ pi-)  pi-) pi+ 
+//==============================================================================
+
+//------------------------------------------------------------------------------
+ApplicationMgr.TopAlg += {"DecayChainNTuple/HLTBd2DstarPiTree"};
+HLTBd2DstarPiTree.PhysDesktop.InputLocations = {"Phys/HLTFilterBd2DstarPi"};
+HLTBd2DstarPiTree.Decay = "{B0 -> (^D*(2010)- -> (^D~0 -> ^K+ ^pi-)  ^pi-) ^pi+, B~0 -> (^D*(2010)+ -> (^D0 -> ^K- ^pi+)  ^pi+) ^pi-}"; 
+HLTBd2DstarPiTree.NtupleName = "FILE1/HLTBd2DstarPi";
+HLTBd2DstarPiTree.OutputLevel = 3;
+//------------------------------------------------------------------------------
+
+//==============================================================================
+// HLT Selection NTuples for B_s0 -> (D_s- -> K+ K- pi-) h+
+//==============================================================================
+
+//------------------------------------------------------------------------------
+ApplicationMgr.TopAlg += {"DecayChainNTuple/HLTBs2DsHTree"};
+HLTBs2DsHTree.PhysDesktop.InputLocations = {"Phys/HLTFilterBs2DsH"};
+// H is generically a pion in the HLT
+HLTBs2DsHTree.Decay = "{B_s0 -> (^D_s- => ^K+ ^K- ^pi-) ^pi+, B_s~0 -> (^D_s+ => ^K- ^K+ ^pi+) ^pi-}"; 
+HLTBs2DsHTree.NtupleName = "FILE1/HLTBs2DsH";
+HLTBs2DsHTree.OutputLevel = 3;
+//------------------------------------------------------------------------------
+
+// //------------------------------------------------------------------------------
+// ApplicationMgr.TopAlg += {"DecayChainNTuple/HLTBs2DsPiTree"};
+// HLTBs2DsPiTree.PhysDesktop.InputLocations = {"Phys/HLTFilterBs2DsPi"};
+// HLTBs2DsPiTree.Decay = "{B_s0 -> (^D_s- -> ^K+ ^K- ^pi-) ^pi+, B_s~0 -> (^D_s+ -> ^K- ^K+ ^pi+) ^pi-}";
+// HLTBs2DsPiTree.NtupleName = "FILE1/HLTBs2DsPi";
+// HLTBs2DsPiTree.OutputLevel = 3;
+// //------------------------------------------------------------------------------
+
+// //------------------------------------------------------------------------------
+// ApplicationMgr.TopAlg += {"DecayChainNTuple/HLTBs2DsKTree"};
+// HLTBs2DsKTree.PhysDesktop.InputLocations = {"Phys/HLTFilterBs2DsK"};
+// HLTBs2DsKTree.Decay = "{B_s0 -> (^D_s- -> ^K+ ^K- ^pi-) ^K+, B_s~0 -> (^D_s+ -> ^K- ^K+ ^pi+) ^K-}"; 
+// HLTBs2DsKTree.NtupleName = "FILE1/HLTBs2DsK";
+// HLTBs2DsKTree.OutputLevel = 3;
+// //------------------------------------------------------------------------------
+

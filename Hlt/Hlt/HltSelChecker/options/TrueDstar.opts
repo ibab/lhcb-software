@@ -1,0 +1,22 @@
+TrueSignals.Members += {"RefineSelection/SelectDstar2Dpi"};
+SelectDstar2Dpi.PhysDesktop.InputLocations = { "Phys/HLTPions" } ;
+SelectDstar2Dpi.ParticleNames =  { "pi-", "pi+"  } ;                           // select pi-, pi+
+SelectDstar2Dpi.FilterNames = { "TrueMC", "TrueMC" };                         // filter by TrueMC
+SelectDstar2Dpi.TrueMC.CriteriaNames =  { "TrueMCFilterCriterion/Dstar2Dpi" } ;   // 
+SelectDstar2Dpi.TrueMC.Dstar2Dpi.MCDecayFinder.Decay =  "[D*(2010)- -> ^pi- (D~0 -> ^K+ ^pi-)]cc, [D*(2010)- -> ^pi- (D~0 -> ^pi+ ^pi-)]cc, [D*(2010)- -> ^pi- (D~0 -> ^K+ ^K-)]cc" ;
+SelectDstar2Dpi.TrueMC.Dstar2Dpi.Particle2MCLinks.Location = "Phys/Relations/Particle2MCLinks" ;
+
+// check that all 2 tracks are there
+TrueSignals.Members += {"CombineParticles/AllDstar2DpiTracks"};
+AllDstar2DpiTracks.PhysDesktop.InputLocations = {"Phys/SelectDstar2Dpi"};
+AllDstar2DpiTracks.DecayDescriptor = "D*(2010)- -> pi+ pi- pi-" ;
+AllDstar2DpiTracks.Selections = {   "D*(2010)- : BooleanFilterCriterion", 
+                               "pi+ : BooleanFilterCriterion", 
+                               "pi- : BooleanFilterCriterion"} ;
+
+
+// only here
+TrueSignals.Members += {"PrintTree/PrintDstarTracks"};
+PrintDstarTracks.DebugTool.Informations = "Name E M P Px Py Pz Pt phi Vz" ;
+PrintDstarTracks.PhysDesktop.InputLocations = { "Phys/AllDstar2DpiTracks"} ;
+

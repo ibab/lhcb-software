@@ -1,0 +1,15 @@
+// correlation of HLT selections
+
+ApplicationMgr.TopAlg += { "SelResultCorrelations/HLTCorr" };
+HLTCorr.Algorithms = {  "HLTFilterB2HH"
+			,"HLTFilterBd2D02KPiKstar"
+			,"HLTFilterBd2DstarPi"
+			,"HLTFilterBs2DsH"
+			,"HLTFilterBs2PhiPhi"
+			,"HLTFilterB2MuMu"
+			,"HLTFilterBd2MuMuKstar"
+			,"HLTFilterBs2PhiGamma"
+			,"HLTHotJpsis"
+			,"HLTHotMuons"
+			,"HLTFilterDstar"
+} ;

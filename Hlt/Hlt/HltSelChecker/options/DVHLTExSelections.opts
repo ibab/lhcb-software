@@ -1,0 +1,60 @@
+//==============================================================================
+// HLT exclusive hadronic selections
+//==============================================================================
+// Author: Luis Fernandez, 13/08/2004
+
+//------------------------------------------------------------------------------ 
+ApplicationMgr.DLLs += {"HltSelChecker"};
+//------------------------------------------------------------------------------ 
+
+//------------------------------------------------------------------------------
+#pragma print off
+#include "$DAVINCIROOT/options/DaVinciCommon.opts"
+#pragma print on
+
+// The L0 and L1 triggers
+#include "$DAVINCIROOT/options/L0.opts"
+#include "$TRGSYSROOT/options/L1.opts"
+
+//==============================================================================
+#include "$HLTSELECTIONSROOT/options/HLTSelections.opts"
+
+//==============================================================================
+// For producing NTuples when running on MB; comment not to produce any 
+// Not configured for MC truth (i.e. run without the MCCheck compilation flag)
+//==============================================================================
+// #include "$HLTSELCHECKERROOT/options/HLTExSelectionsNTuples.opts"
+
+// ApplicationMgr.ExtSvc += { "NTupleSvc" };
+// NTupleSvc.Output={"FILE1 DATAFILE='DVNtuples.root' TYP='ROOT' OPT='NEW'"};
+
+//------------------------------------------------------------------------------
+MessageSvc.OutputLevel  = 3;
+//------------------------------------------------------------------------------
+
+//------------------------------------------------------------------------------
+// PK's stripping of signal passing L0 and L1:
+// #include "$HLTSELECTIONSROOT/options/MBL0L1-new.opts"
+//------------------------------------------------------------------------------
+// #include "$HLTSELECTIONSROOT/options/DC04_L0L1_Bd2PiPi.opts"
+// #include "$HLTSELECTIONSROOT/options/DC04_L0L1_Bd2KPi.opts"
+// #include "$HLTSELECTIONSROOT/options/DC04_L0L1_Bs2KK.opts"
+// #include "$HLTSELECTIONSROOT/options/DC04_L0L1_Bs2PiK.opts"
+// #include "$HLTSELECTIONSROOT/options/DC04_L0L1_Bs_phiphi.opts"
+// #include "$HLTSELECTIONSROOT/options/DC04_L0L1_Bd_D0_KPi_Kstar.opts"
+// #include "$HLTSELECTIONSROOT/options/DC04_L0L1_Bd_DstarPi.opts"
+// #include "$HLTSELECTIONSROOT/options/DC04_L0L1_Bs_DsPi.opts"
+// #include "$HLTSELECTIONSROOT/options/DC04_L0L1_Bs_DsK.opts"
+
+// sums of the above
+//#include "$HLTSELECTIONSROOT/options/DC04_L0L1_Signals.opts"
+//#include "$HLTSELECTIONSROOT/options/DC04_L0L1_B2HH.opts"
+//#include "$HLTSELECTIONSROOT/options/DC04_L0L1_Bs_DsH.opts"
+//------------------------------------------------------------------------------
+MessageSvc.Format = "% F%60W%S%7W%R%T %0W%M";
+//------------------------------------------------------------------------------
+
+ApplicationMgr.EvtMax    = 100 ;
+EventSelector.FirstEvent = 1;
+EventSelector.PrintFreq  = 1;
+//------------------------------------------------------------------------------

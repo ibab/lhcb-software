@@ -1,0 +1,26 @@
+// check for TDR and MC truth
+ApplicationMgr.TopAlg += { "CheckSelResult/B2MuMuAndTDR" };
+B2MuMuAndTDR.ANDmode = true ;
+B2MuMuAndTDR.Algorithms = { "TDRselB2MuMu" , "AllB2MuMuTracks" } ;
+B2MuMuAndTDR.AvoidSelResult = false ;
+
+// correlation of HLT and TDR
+ApplicationMgr.TopAlg += { "SelResultCorrelations/CorrB2MuMu" };
+CorrB2MuMu.Algorithms = { "AllB2MuMuTracks", 
+                        "HLTDimuons",
+                        "HLTB2MuMu", 
+                        "HLTFilterB2MuMu", 
+                        "TDRselBs2MuMu",
+                        "B2MuMuAndTDR" } ;
+
+// check for TDR and MC truth
+ApplicationMgr.TopAlg += { "Sequencer/ShowFoundB2MuMu" };
+ShowFoundB2MuMu.Members += { "CheckSelResult/B2MuMuAndTruth",  "PrintTree/PrintFoundB2MuMu"};
+
+B2MuMuAndTruth.ANDmode = true ;
+B2MuMuAndTruth.Algorithms = { "HLTFilterB2MuMu" , "AllB2MuMuTracks" } ;
+B2MuMuAndTruth.AvoidSelResult = false ;
+
+PrintFoundB2MuMu.DebugTool.Informations = "Name E M P Px Py Pz Pt phi Vz" ;
+PrintFoundB2MuMu.PhysDesktop.InputLocations = { "Phys/HLTFilterB2MuMu" } ;
+PrintFoundB2MuMu.OutputLevel = 3 ;

@@ -1,0 +1,20 @@
+
+// correlation of HLT and truth
+ApplicationMgr.TopAlg += { "SelResultCorrelations/CorrDstar" };
+CorrDstar.Algorithms = { "AllDstar2DpiTracks"
+                        ,"HLTSharedD02HH"
+                        ,"HLTDstar2D02HH"
+			,"HLTFilterDstar" } ;
+
+// check for TDR and MC truth
+ApplicationMgr.TopAlg += { "Sequencer/ShowFoundDstar" };
+ShowFoundDstar.Members += { "CheckSelResult/DstarAndTruth",  "PrintTree/PrintFoundDstar"};
+
+DstarAndTruth.ANDmode = true ;
+DstarAndTruth.Algorithms = { "HLTFilterDstar" , "AllDstar2DpTracks" } ;
+DstarAndTruth.AvoidSelResult = false ;
+
+PrintFoundDstar.DebugTool.Informations = "Name E M P Px Py Pz Pt phi Vz" ;
+PrintFoundDstar.PhysDesktop.InputLocations = { "Phys/HLTFilterDstar" } ;
+PrintFoundDstar.OutputLevel = 3 ;
+

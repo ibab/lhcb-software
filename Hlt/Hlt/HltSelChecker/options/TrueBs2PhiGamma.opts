@@ -1,0 +1,15 @@
+TrueSignals.Members += {"RefineSelection/SelectBs2PhiGamma"};
+SelectBs2PhiGamma.PhysDesktop.InputLocations = { "Phys/HLTPions" } ;// ignore gamma so far
+SelectBs2PhiGamma.ParticleNames =  { "pi-", "pi+"  } ;                           // select pi-, pi+
+SelectBs2PhiGamma.FilterNames = { "TrueMC", "TrueMC" };                         // filter by TrueMC
+SelectBs2PhiGamma.TrueMC.CriteriaNames =  { "TrueMCFilterCriterion/Bs2PhiGamma" } ;   // 
+SelectBs2PhiGamma.TrueMC.Bs2PhiGamma.MCDecayFinder.Decay =  "[B_s0 -> (phi(1020) -> ^K+ ^K-) gamma]cc" ;  // ignore gamma so far
+SelectBs2PhiGamma.TrueMC.Bs2PhiGamma.Particle2MCLinks.Location = "Phys/Relations/Particle2MCLinks" ;
+
+// check that all 2 tracks are there
+TrueSignals.Members += {"CombineParticles/AllBs2PhiGammaTracks"};
+AllBs2PhiGammaTracks.PhysDesktop.InputLocations = {"Phys/SelectBs2PhiGamma"};
+AllBs2PhiGammaTracks.DecayDescriptor = "B0 -> pi+ pi-" ;// ignore gamma so far
+AllBs2PhiGammaTracks.Selections = {   "B0 : BooleanFilterCriterion", 
+                               "pi+ : BooleanFilterCriterion", 
+                               "pi- : BooleanFilterCriterion"} ;

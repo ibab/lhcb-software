@@ -1,0 +1,17 @@
+//==============================================================================
+// HLT with offline tracks
+//==============================================================================
+#include "$DAVINCIROOT/options/DaVinciReco.opts"
+
+// Here it is topAlg
+ApplicationMgr.TopAlg+= {"GaudiSequencer/HLTSelections"};
+HLTSelections.IgnoreFilterPassed = true ; // make them all
+HLTSelections.MeasureTime = true ;
+
+// Make all particles as "pions" with long tracks
+HLTSelections.Members += {"PreLoadParticles/HLTPions"};
+HLTPions.PhysDesktop.ParticleMakerType = "NoPIDsParticleMaker";
+HLTPions.PhysDesktop.NoPIDsParticleMaker.Particle = "PIONS";
+HLTPions.PhysDesktop.NoPIDsParticleMaker.UseLongTracks       = true;
+HLTPions.PhysDesktop.NoPIDsParticleMaker.UseUpstreamTracks   = false;
+HLTPions.PhysDesktop.NoPIDsParticleMaker.UseDownstreamTracks = false;

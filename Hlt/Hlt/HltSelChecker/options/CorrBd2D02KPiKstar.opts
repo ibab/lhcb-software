@@ -1,0 +1,17 @@
+// check for TDR and MC truth
+ApplicationMgr.TopAlg += { "CheckSelResult/Bd2D02KPiKstarAndTDR" };
+Bd2D02KPiKstarAndTDR.ANDmode = true ;
+Bd2D02KPiKstarAndTDR.Algorithms = { "TDRselBd2D02KpiKstar" , "AllBd2D02KPiKstarTracks" } ;
+Bd2D02KPiKstarAndTDR.AvoidSelResult = false ;
+
+// correlation of HLT and TDR
+ApplicationMgr.TopAlg += { "SelResultCorrelations/CorrBd2D02KPiKstar" };
+CorrBd2D02KPiKstar.Algorithms = { "AllBd2D02KPiKstarTracks", 
+                               "HLTSharedD02KPi",
+                              "FilterD0ForHLTBd2D0Kstar",
+                              "FilterKstarForHLTBd2D0Kstar",
+                              "HLTBd2D02KPiKstar",
+			      "HLTFilterBd2D02KPiKstar", 
+			      "TDRselBd2D02KpiKstar",
+			      "Bd2D02KPiKstarAndTDR" } ;
+

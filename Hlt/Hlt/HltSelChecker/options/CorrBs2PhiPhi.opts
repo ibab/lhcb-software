@@ -1,0 +1,15 @@
+// check for TDR and MC truth
+ApplicationMgr.TopAlg += { "CheckSelResult/Bs2PhiPhiAndTDR" };
+Bs2PhiPhiAndTDR.ANDmode = true ;
+Bs2PhiPhiAndTDR.Algorithms = { "TDRselBs2PhiPhi" , "AllBs2PhiPhiTracks" } ;
+Bs2PhiPhiAndTDR.AvoidSelResult = false ;
+
+// correlation of HLT and TDR
+ApplicationMgr.TopAlg += { "SelResultCorrelations/CorrBs2PhiPhi" };
+CorrBs2PhiPhi.Algorithms = { "AllBs2PhiPhiTracks", 
+                              "PhiSelHLTBs2PhiPhi", 
+                              "HLTBs2PhiPhi", 
+			      "HLTFilterBs2PhiPhi", 
+			      "TDRselBs2PhiPhi",
+			      "Bs2PhiPhiAndTDR" } ;
+
