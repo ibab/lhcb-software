@@ -1,4 +1,4 @@
-// $Id: L0mPadBuilder.cpp,v 1.2 2001-07-09 19:28:13 atsareg Exp $
+// $Id: L0mPadBuilder.cpp,v 1.3 2001-12-18 18:18:51 atsareg Exp $
 
 /// Include files
 
@@ -73,6 +73,22 @@ StatusCode L0mPadBuilder::execute() {
   
   log << MSG::DEBUG << "execute" << endreq;
    
+//=======================================  
+// create the collection of L0mPads
+//=======================================
+
+  StatusCode sc;    
+  ObjectVector<L0mPad>* pc = new ObjectVector<L0mPad>;
+  log << MSG::DEBUG << "Registering pc ...  "  ;  
+  sc = eventSvc()->registerObject(m_outputPads,pc);
+  log << MSG::DEBUG << "done, status " << sc << endreq;  
+  if( sc.isFailure() ) {
+    if( 0 != pc ) { delete pc; }
+    log << MSG::ERROR << "Unable to register the output container="
+        << m_outputPads << endreq;
+    return sc ;
+  } 
+  
 //=============================
 // get Muon digitisations
 //=============================
@@ -89,21 +105,7 @@ StatusCode L0mPadBuilder::execute() {
   
   log << MSG::DEBUG << " MUPD size " << mupdpc->size() << endreq; 
   
-//=======================================  
-// create the collection of L0mPads
-//=======================================
 
-  StatusCode sc;    
-  ObjectVector<L0mPad>* pc = new ObjectVector<L0mPad>;
-  log << MSG::DEBUG << "Registering pc ...  "  ;  
-  sc = eventSvc()->registerObject(m_outputPads,pc);
-  log << MSG::DEBUG << "done, status " << sc << endreq;  
-  if( sc.isFailure() ) {
-    if( 0 != pc ) { delete pc; }
-    log << MSG::ERROR << "Unable to register the output container="
-        << m_outputPads << endreq;
-    return sc ;
-  } 
    
 //====================================
 // Fill in the L0mPad's now
