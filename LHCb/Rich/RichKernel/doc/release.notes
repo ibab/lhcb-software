@@ -1,10 +1,11 @@
-! $Id: release.notes,v 1.21 2003-09-20 14:51:25 jonrob Exp $
+! $Id: release.notes,v 1.22 2003-09-20 14:51:55 jonrob Exp $
 ! Package     : Rich/RichKernel
 ! Responsible : Chris Jones
 ! Purpose     : General purpose RICH classes
 
 ! 2003-07-06 - Chris Jones
  - Add container class for hypothesis data using boost::array class
+ - Remove explicit HPD references
 
 !======================= RichKernel v3r1 2003-07-03 =======================
 ! 2003-06-30 - Chris Jones
