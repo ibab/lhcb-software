@@ -1,8 +1,11 @@
-// $Id: GiGaGeomCnvSvc.h,v 1.7 2002-05-07 12:24:50 ibelyaev Exp $ 
+// $Id: GiGaGeomCnvSvc.h,v 1.8 2002-09-26 15:12:33 ibelyaev Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.7  2002/05/07 12:24:50  ibelyaev
+//  see $GIGACNVROOT/doc/release.notes 7 May 2002
+//
 // ============================================================================
 #ifndef  GIGACNV_GIGAGEOMCNVSVC_H 
 #define  GIGACNV_GIGAGEOMCNVSVC_H 1 
@@ -85,6 +88,10 @@ public:
   
   /** Convert the transient object to the requested representation.
    *  e.g. conversion to persistent objects.
+   *  @see GiGaCnvSvcBase 
+   *  @see  ConversionSvc 
+   *  @see IConversionSvc 
+   *  @see IConverter  
    *  @param     object  Pointer to location of the object 
    *  @param     address Reference to location of pointer with the 
    *                     object address.
@@ -94,7 +101,49 @@ public:
   ( DataObject*      object ,
     IOpaqueAddress*& address ) ;
   
-  /** standard method foe query the interface
+  /** Resolve the references of the converted object.
+   *  After the requested representation was created the references in this 
+   *  representation must be resolved.
+   *  @see GiGaCnvSvcBase 
+   *  @see  ConversionSvc 
+   *  @see IConversionSvc 
+   *  @see IConverter  
+   *  @param     address object address.
+   *  @param     object  pointer to location of the object 
+   *  @return    Status code indicating success or failure
+   */
+  virtual StatusCode fillRepRefs 
+  ( IOpaqueAddress* address , 
+    DataObject*     object  )  ;
+  
+  /** Update the converted representation of a transient object.
+   *  @see GiGaCnvSvcBase 
+   *  @see  ConversionSvc 
+   *  @see IConversionSvc 
+   *  @see IConverter  
+   *  @param     address object address.
+   *  @param     object     Pointer to location of the object 
+   *  @return    Status code indicating success or failure
+   */
+  virtual StatusCode updateRep 
+  ( IOpaqueAddress* address , 
+    DataObject*     object  )  ;
+  
+  /** Update the references of an already converted object.
+   *  The object must be retrieved before it can be updated.
+   *  @see GiGaCnvSvcBase 
+   *  @see  ConversionSvc 
+   *  @see IConversionSvc 
+   *  @see IConverter  
+   *  @param     address object address.
+   *  @param     object     Pointer to location of the object 
+   *  @return    Status code indicating success or failure
+   */
+  virtual StatusCode updateRepRefs
+  ( IOpaqueAddress* address , 
+    DataObject*     object  )  ;
+  
+  /** standard method for query the interface
    *  @return status code 
    */
   virtual StatusCode queryInterface 

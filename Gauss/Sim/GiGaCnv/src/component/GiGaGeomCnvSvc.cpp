@@ -1,8 +1,11 @@
-// $Id: GiGaGeomCnvSvc.cpp,v 1.14 2002-07-09 20:33:54 ibelyaev Exp $ 
+// $Id: GiGaGeomCnvSvc.cpp,v 1.15 2002-09-26 15:12:33 ibelyaev Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.14  2002/07/09 20:33:54  ibelyaev
+//  move GiGaVolumeUtils into public location
+//
 // ===========================================================================
 #define GIGACNV_GIGAGEOMCNVSVC_CPP 1 
 // ============================================================================
@@ -578,6 +581,101 @@ StatusCode GiGaGeomCnvSvc::createRep
   return cnv->createRep( object , address );
 };
 
+// ============================================================================
+/** Resolve the references of the converted object.
+ *  After the requested representation was created the references in this 
+ *  representation must be resolved.
+ *  @see GiGaCnvSvcBase 
+ *  @see  ConversionSvc 
+ *  @see IConversionSvc 
+ *  @see IConverter  
+ *  @param     address object address.
+ *  @param     object  pointer to location of the object 
+ *  @return    Status code indicating success or failure
+ */
+// ============================================================================
+StatusCode GiGaGeomCnvSvc::fillRepRefs 
+( IOpaqueAddress* address , 
+  DataObject*     object  )  
+{
+  ///
+  if( 0 == object ) 
+    { return Error(" fillRepRefs:: DataObject* points to NULL!");}
+  ///
+  const IDetectorElement* de = dynamic_cast<IDetectorElement*> ( object ) ;
+  IConverter* cnv = 
+    converter( 0 == de ? object->clID() : CLID_DetectorElement );
+  if( 0 == cnv ) 
+    { return Error(" fillRepRefs:: converter is not found for '" 
+                   + object->registry()->identifier() + "'" );}
+  ///
+  return cnv->fillRepRefs( address , object );
+};
+// ============================================================================
+
+// ============================================================================
+/** Update the converted representation of a transient object.
+ *  @see GiGaCnvSvcBase 
+ *  @see  ConversionSvc 
+ *  @see IConversionSvc 
+ *  @see IConverter  
+ *  @param     address object address.
+ *  @param     object     Pointer to location of the object 
+ *  @return    Status code indicating success or failure
+ */
+// ============================================================================
+StatusCode GiGaGeomCnvSvc::updateRep 
+( IOpaqueAddress* address , 
+  DataObject*     object  )  
+{
+  ///
+  if( 0 == object ) 
+    { return Error(" updateRep:: DataObject* points to NULL!");}
+  ///
+  const IDetectorElement* de = dynamic_cast<IDetectorElement*> ( object ) ;
+  IConverter* cnv = 
+    converter( 0 == de ? object->clID() : CLID_DetectorElement );
+  if( 0 == cnv ) 
+    { return Error(" updateRep:: converter is not found for '" 
+                   + object->registry()->identifier() + "'" );}
+  ///
+  return cnv->updateRep( address , object );
+};
+// ============================================================================
+
+// ============================================================================
+/** Update the references of an already converted object.
+ *  The object must be retrieved before it can be updated.
+ *  @see GiGaCnvSvcBase 
+ *  @see  ConversionSvc 
+ *  @see IConversionSvc 
+ *  @see IConverter  
+ *  @param     address object address.
+ *  @param     object     Pointer to location of the object 
+ *  @return    Status code indicating success or failure
+ */
+// ============================================================================
+StatusCode GiGaGeomCnvSvc::updateRepRefs
+( IOpaqueAddress* address , 
+  DataObject*     object  )  
+{
+  ///
+  if( 0 == object ) 
+    { return Error(" updateRepRefs:: DataObject* points to NULL!");}
+  ///
+  const IDetectorElement* de = dynamic_cast<IDetectorElement*> ( object ) ;
+  IConverter* cnv = 
+    converter( 0 == de ? object->clID() : CLID_DetectorElement );
+  if( 0 == cnv ) 
+    { return Error(" updateRepRefs:: converter is not found for '" 
+                   + object->registry()->identifier() + "'" );}
+  ///
+  return cnv->updateRepRefs( address , object );
+};
+// ============================================================================
+
+
+// ============================================================================
 StatusCode GiGaGeomCnvSvc::queryInterface( const IID& iid , void** ppI )
 { 
   ///

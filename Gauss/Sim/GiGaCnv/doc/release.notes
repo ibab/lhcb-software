@@ -1,7 +1,12 @@
-! $Id: release.notes,v 1.27 2002-08-23 08:19:40 witoldp Exp $
+! $Id: release.notes,v 1.28 2002-09-26 15:12:33 ibelyaev Exp $
 ! =============================================================================
 Package         : GiGaCnv
 Package Manager : Vanya Belyaev Ivan.Belyaev@itep.ru
+
+! 2002-09-26 - Ivan Belyaev
+ - src/component/GiGaGeomCnvSvc.h,.cpp - 
+   reimplement few methods from IConverter/IConversioinSvc to handge 
+   different types of DetectroElements
 
 ! 2002-08-23 - Witek Pokorski
   removed G4Hits converters implementations (and moved to GaussTools)
