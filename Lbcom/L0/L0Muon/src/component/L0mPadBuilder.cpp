@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/L0/L0Muon/src/component/L0mPadBuilder.cpp,v 1.1 2001-06-07 16:34:16 atsareg Exp $
+// $Id: L0mPadBuilder.cpp,v 1.2 2001-07-09 19:28:13 atsareg Exp $
 
 /// Include files
 
@@ -15,7 +15,7 @@
 /// Private classes to the example
 #include "L0Muon/L0mPadBuilder.h"
 #include "L0Muon/L0mPad.h"
-#include "L0Muon/MuonPadLayout.h"
+#include "L0Muon/MuonLogicalPadLayout.h"
 #include "LHCbEvent/MuonDigit.h"
 
 //------------------------------------------------------------------------------
@@ -38,8 +38,6 @@ L0mPadBuilder::L0mPadBuilder(const std::string& name, ISvcLocator* pSvcLocator)
     m_layout_xml=true;
     declareProperty("XMLdata",m_layout_xml);
     declareProperty("ZStations",m_zStation);
-    declareProperty("BasicCellX",m_basicCellX);
-    declareProperty("BasicCellY",m_basicCellY);
     declareProperty("Regions1",m_regions[0]);
     declareProperty("Regions2",m_regions[1]);
     declareProperty("Regions3",m_regions[2]);
@@ -59,15 +57,12 @@ StatusCode L0mPadBuilder::initialize()   {
   log << MSG::INFO << "Retrieving Muon Pad Layout" << endreq;
    
   if(m_layout_xml) {
-      m_layout = new MuonPadLayout(detSvc(), log);
+      m_layout = new MuonLogicalPadLayout(detSvc(), log);
   } else {
-      m_layout = new MuonPadLayout(m_zStation,
-                                   m_basicCellX,
-				   m_basicCellY,
-				   m_regions);    
+      m_layout = new MuonLogicalPadLayout(m_zStation,m_regions);    
   }   
   
-  log << MSG::DEBUG << *m_layout << endreq; 
+  // log << MSG::DEBUG << *m_layout << endreq; 
   
   return StatusCode::SUCCESS;
 }
@@ -117,30 +112,19 @@ StatusCode L0mPadBuilder::execute() {
   MuonDigit* pad;
   L0mPad* l0mpad;     
   ObjectVector<MuonDigit>::iterator impc;
-
-//  SmartRefVector<MCParticle> vmc;
-//  SmartRefVector<MCParticle>::iterator ivmc;
   
   for(impc = mupdpc->begin(); impc != mupdpc->end(); impc++) {
-
-//      log << MSG::DEBUG << "Muon Hit Z " << (*impc)->getZ() << endreq;
-//      vmc = (*impc)->mcParticles();
-//      int ic = 1;
-//      for(ivmc = vmc.begin(); ivmc != vmc.end(); ivmc++, ic++) {
-//          log << MSG::DEBUG  << "MC track " << ic << " id: " 
-//	        << (*ivmc)->particleID().id() << "\n" << endreq; 
-//      }
-
     pad = *impc;
     l0mpad = m_layout->createPad(pad);
     l0mpad->setMCParticles(pad->mcParticles());
     pc->push_back(l0mpad);     
+    
   }
-  
-
   return StatusCode::SUCCESS;
 }
 
 StatusCode L0mPadBuilder::finalize()  {
   return StatusCode::SUCCESS;
 }
+
+
