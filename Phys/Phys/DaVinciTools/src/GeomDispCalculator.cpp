@@ -1,4 +1,4 @@
-// $Id: GeomDispCalculator.cpp,v 1.2 2002-05-15 23:29:36 gcorti Exp $
+// $Id: GeomDispCalculator.cpp,v 1.3 2002-07-27 20:23:35 gcorti Exp $
 
 // Include files
 // from Gaudi
@@ -254,17 +254,23 @@ StatusCode GeomDispCalculator::calcCloseAppr( const Particle& particle1,
 
   MsgStream log(msgSvc(), name());
  
+
+  //Flag to indicate parallel tracks
+  int aux = 0;
   // Get the direction perpendicular to both particle tracks:
   Hep3Vector mom1(particle1.momentum().v()); 
   Hep3Vector mom2(particle2.momentum().v()); 
   Hep3Vector perpDirection = mom1.cross(mom2);
-
-  if (perpDirection == 0) return StatusCode::FAILURE;
-
-  Hep3Vector perpUnit = perpDirection/perpDirection.mag();       
- 
   // Get the displacement vector between the two particles
   Hep3Vector disp = particle1.pointOnTrack() - particle2.pointOnTrack();
+
+  // Calculate the perpendicular direction when the tracks are parallel:
+  if (perpDirection == 0) {
+     aux = 1;
+     perpDirection = (disp.cross(mom1)).cross(mom1);
+  }
+
+  Hep3Vector perpUnit = perpDirection/perpDirection.mag();       
 
   // Calculate the distance of closest approach as the projection
   // of this vector in the perpendicular direction:
@@ -287,25 +293,49 @@ StatusCode GeomDispCalculator::calcCloseAppr( const Particle& particle1,
   HepSymMatrix errMatrix(12,0);
   errMatrix.assign(errMatrixTotal);
 
-  Hep3Vector derivP1 = (((disp.dot(perpUnit)*perpUnit) - disp) /
-                     perpDirection.mag()).cross(mom2);
-  Hep3Vector derivP2 = -(((disp.dot(perpUnit)*perpUnit) - disp) /
-                     perpDirection.mag()).cross(mom1);
   HepVector u(3);
+  HepVector u1(3);
+  HepVector u2(3);
+  Hep3Vector derivP1;
+  Hep3Vector derivP2;
+  Hep3Vector derivR1;
+  //The derivatives depend if the tracks are parallel or not
+  if(aux == 0){
+  derivP1 = (((disp.dot(perpUnit)*perpUnit) - disp) /
+                     perpDirection.mag()).cross(mom2);
+  derivP2 = -(((disp.dot(perpUnit)*perpUnit) - disp) /
+                     perpDirection.mag()).cross(mom1);
   u(1) = perpUnit.x();
   u(2) = perpUnit.y();
   u(3) = perpUnit.z();
-  HepVector u1(3);
-  u1(1) = derivP1.x();
-  u1(2) = derivP1.y();
-  u1(3) = derivP1.z();
-  HepVector u2(3);
   u2(1) = derivP2.x();
   u2(2) = derivP2.y();
   u2(3) = derivP2.z();
+  }
+  else {
+  derivP1 = (1./perpDirection.mag())*(
+            (disp.dot(mom1)*disp) - (disp*disp*mom1) - 
+            (disp.dot(perpUnit))*(disp.dot(mom1))*perpUnit +
+            (disp.dot(perpUnit))*(disp.dot(perpUnit))*mom1 -
+            (disp.cross(mom1)).cross(perpUnit)*(disp.dot(perpUnit)));
+  derivR1 = perpUnit + (1./perpDirection.mag())*(
+                        mom1*(disp.dot(mom1)) - mom1*mom1*disp -
+                        disp.dot(perpUnit)*perpUnit.dot(mom1)*mom1 +
+                        mom1*mom1*disp.dot(perpUnit)*perpUnit);
+  u(1) = derivR1.x();
+  u(2) = derivR1.y();
+  u(3) = derivR1.z();
+  u2(1) = 0.;
+  u2(2) = 0.;
+  u2(3) = 0.;
+  }
+  u1(1) = derivP1.x();
+  u1(2) = derivP1.y();
+  u1(3) = derivP1.z();
   HepVector deriv1 = dsum(u,u1);
   HepVector deriv2 = dsum(-u,u2);
   HepVector derivTotal = dsum(deriv1,deriv2);
+
   distErr = sqrt(fabs(dot(derivTotal,errMatrix*derivTotal)));
 
   return StatusCode::SUCCESS;
