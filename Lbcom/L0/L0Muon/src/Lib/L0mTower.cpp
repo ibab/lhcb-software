@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/L0/L0Muon/src/Lib/L0mTower.cpp,v 1.5 2001-07-12 15:04:37 atsareg Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/L0/L0Muon/src/Lib/L0mTower.cpp,v 1.6 2001-07-12 20:30:18 atsareg Exp $
 #include "GaudiKernel/MsgStream.h"
 
 #include <set>
@@ -323,7 +323,7 @@ void L0mTower::limitedY() {
   
   
   int puRegion = mainPu.region();
-  int puX = mainPu.nX();
+  // int puX = mainPu.nX();
   int puY = mainPu.nY();
   int nx = padM3()->nX();
   int ny = padM3()->nY();
