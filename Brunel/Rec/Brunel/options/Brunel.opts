@@ -146,6 +146,7 @@ BrunelRecoTrSeq.Members += { "TrTrackCloneKiller" };
 ApplicationMgr.DLLs += { "VeloTT" };
 BrunelRecoTrSeq.Members += { "VeloTTFind" };
 #include "$VELOTTROOT/options/Brunel.opts"
+BrunelRecoTrSeq.Members += { "TrPrepareVelo" };
 
 BrunelRecoTrSeq.Members += { "TrFit2StoredTrackCnv/StoreBest" };
 #include "$TRCLEANEXROOT/options/Brunel.opts"

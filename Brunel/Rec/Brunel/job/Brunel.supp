@@ -125,17 +125,17 @@
   fun:addUserParameter__15DetectorElementGt12basic_string*
 }
 
-# Intermittent Velo problems (Brunel v17r0, v253r0 data)
+# Intermittent Velo (geometry?) problems (Brunel v17r0)
 {
-  Velo/VeloAlgorithms/v2r5
+  Velo/VeloAlgorithms/v2r6
   Addr4
   fun:*
-  fun:TryToAddChannel__16VeloClusterMakerP11VeloClusterRfP13VeloFullDigit1
+  fun:TryToAddChannel__16VeloClusterMakerP11VeloClusterRfP13VeloFullDigiti
   fun:makeClusterFromDigit__16VeloClusterMakerP13VeloFullDigitRf
 }
 
 {
-  Velo/VeloAlgorithms/v2r5
+  Velo/VeloAlgorithms/v2r6
   Addr4
   fun:*
   fun:TryToAddCentralChannel__16VeloClusterMakerP11VeloClusterRfP13VeloFullDigit

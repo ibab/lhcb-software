@@ -3,9 +3,32 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
-</PRE><H1><A NAME=v17r1>2003-01-?? Brunel v17r1</A></H1><PRE>
+</PRE><H1><A NAME=v17r1>2003-01-17 Brunel v17r1</A></H1><PRE>
+ - New tuning:
+   . Tune Match tracking for field043 (TrTools v2r4, TrMatching v2r5)
+   . Use slope on x instead of atan(x/9450) in parabolic correction of pt-kick
+     tool (TrTools v2r4)
+
+ - New features:
+   . Drop support for dbases prior to v253r99, add support for v253r99, v254r0
+     > Use dbase v253r99 for data produced with dbase v253r0 (Xmas production)
+     > Use dbase v254r0 for field043 data (e.g. test data produced with v253r1)
+     > Data produced with dbase < v253r0 no longer supported
+   . New accessor for noise level in ITSignalToNoiseTool (ITAlgorithms v12r8)
+
+ - DST changes:
+   . add a TrStateP to velo and veloBack unique tracks (2nd state on the track)
+     at the Z closest to the beamline, assuming Pt=400 MeV/c and dp/p=0.1
+     (TrCleanEx v2r5, Brunel.opts - new algorithm TrPrepareVelo) 
+
  - Bug fixes:
-   . Fix minor problems flagged by valgrind (TrExtrapolator v2r5)
+   . Fix Pi0Local per validation card: The 2x2 energy was used, instead of the
+     total card energy (L0Calo v6r6)
+   . Protect against possibility of zero deposited energy in MCHit 
+     (VeloAlgorithms v2r6)
+   . Fix minor problems flagged by valgrind 
+     (TrExtrapolator v2r5, MuonSicbCnv v6r8)
+   . Fix uninitialised variable (L1Decision v1r5)
 
 </PRE><H1><A NAME=v17r0>2003-01-09 Brunel v17r0</A></H1><PRE>
  - New tuning:
