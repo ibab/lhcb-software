@@ -1,17 +1,10 @@
-// $Id: MuonTileID.cpp,v 1.5 2002-05-07 07:04:33 atsareg Exp $
+// $Id: MuonTileID.cpp,v 1.6 2003-12-09 13:55:01 cattanem Exp $
 // Include files
 
 #include "MuonKernel/MuonTileID.h"
 #include "MuonKernel/MuonStationLayout.h"
 #include "MuonKernel/MuonSystemLayout.h"
-
-// Hack to get round usage of max
-#ifdef WIN32
-#include <xutility>
-#else
-#define _MIN min
-#define _MAX max
-#endif // WIN32
+#include <numeric>
 
 MuonTileID::MuonTileID(const MuonTileID& id,
         		   const IMuonLayout& lay,
@@ -98,8 +91,8 @@ MuonTileID MuonTileID::intercept(const MuonTileID& otherID) const {
   MuonTileID resultID(*this);
   resultID.setX(indX);
   resultID.setY(indY);
-  int lx = std::_MAX(thisGridX,otherGridX);
-  int ly = std::_MAX(thisGridY,otherGridY);
+  int lx = std::max(thisGridX,otherGridX);
+  int ly = std::max(thisGridY,otherGridY);
   resultID.setLayout(MuonLayout(lx,ly));
   
   return resultID;

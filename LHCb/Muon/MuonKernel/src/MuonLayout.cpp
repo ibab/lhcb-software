@@ -1,17 +1,10 @@
-// $Id: MuonLayout.cpp,v 1.8 2003-06-16 13:48:01 sponce Exp $
+// $Id: MuonLayout.cpp,v 1.9 2003-12-09 13:55:01 cattanem Exp $
 // Include files
 #include <iostream>
 #include <algorithm>
+#include <numeric>
 #include "MuonKernel/MuonLayout.h"
 #include "MuonKernel/MuonTileID.h"
-
-// Hack to get round usage of max
-#ifdef WIN32
-#include <xutility>
-#else
-#define _MIN min
-#define _MAX max
-#endif // WIN32
 
 //------------------------------------------------------------------------------
 //
@@ -64,7 +57,7 @@ int MuonLayout::region(unsigned int ix, unsigned int iy) const {
   } else {
     nry = 3; 	
   }	
-  return std::_MAX(nrx,nry);
+  return std::max(nrx,nry);
     
 }
 
@@ -95,8 +88,8 @@ std::vector<MuonTileID> MuonLayout::tilesInArea(const MuonTileID& pad,
   // cout << playout.xGrid() << playout.yGrid() << endl;	
 
   // the finest grid of the two layouts
-  int mxgrid = std::_MAX(m_xgrid, playout.xGrid() );
-  int mygrid = std::_MAX(m_ygrid, playout.yGrid() );
+  int mxgrid = std::max(m_xgrid, playout.xGrid() );
+  int mygrid = std::max(m_ygrid, playout.yGrid() );
 
   // cout << mxgrid << mygrid << endl;	    
 
@@ -121,8 +114,8 @@ std::vector<MuonTileID> MuonLayout::tilesInArea(const MuonTileID& pad,
   int minY = maxY - rfactor(nreg)*yratio - 2*areaY*rfactor(nreg) + 1;
   
   
-  minX = std::_MAX(0,minX);
-  minY = std::_MAX(0,minY);
+  minX = std::max(0,minX);
+  minY = std::max(0,minY);
 
   // Which tiles are hit ?
 
@@ -399,8 +392,8 @@ std::vector<MuonTileID> MuonLayout::neighboursInArea(const MuonTileID& pad,
   int nreg = pad.region();
 
   // the finest grid of the two layouts
-  int mxgrid = std::_MAX(m_xgrid, playout.xGrid() );
-  int mygrid = std::_MAX(m_ygrid, playout.yGrid() );
+  int mxgrid = std::max(m_xgrid, playout.xGrid() );
+  int mygrid = std::max(m_ygrid, playout.yGrid() );
 
   // cout << mxgrid << mygrid << endl;	    
 
@@ -439,8 +432,8 @@ std::vector<MuonTileID> MuonLayout::neighboursInArea(const MuonTileID& pad,
     minY = (pad.nY())*rfactor(nreg)*yratio;
   }
     
-  minX = std::_MAX(0,minX);
-  minY = std::_MAX(0,minY);
+  minX = std::max(0,minX);
+  minY = std::max(0,minY);
 
   //cout << minX << " " << minY << " " << maxX << " " << maxY << " " << endl;
 
