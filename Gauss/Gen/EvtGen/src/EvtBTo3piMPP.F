@@ -41,7 +41,7 @@ C                 meaning of the above is made explicit in the HowToUse
 C                 routine.
 C [1] first_step_MPP
 C                 Generation of the kinematics of the 3 pions 
-C                 It uses the function ranf which is a random number 
+C                 It uses the function evtranf which is a random number 
 C                 generator providing an uniform distribution 
 C                 of Real*4 random number between 0 and 1	
 C [2] compute
@@ -95,7 +95,7 @@ c      End
       Real*8  Weight,Weight_max
       Real*8  ABp,ABm
       Real*8  m_rho12,m_rho13
-      Real*4  Ranf,Tag
+      Real*4  Evtranf,Tag
       alpha      = 0.4
       N_gener    = 0
       N_asked    = 100000
@@ -127,7 +127,7 @@ c communication of data is done by argument only <<<<<<<<
      
 C that is it !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!  
 c select the Tag 
-      Tag   =ranf()
+      Tag   =evtranf()
 C get the relevant quantities            
       ABp   = Real_Bp   **2 + Imag_Bp   **2
       ABm   = Real_Bp   **2 + Imag_Bm   **2
@@ -144,7 +144,7 @@ c a Bp tag =>  the decay is one from a Bm
       
       End If
 		     Call hf1(14,Real(Weight),1.) 
-      If(Weight.Gt.ranf()) Then
+      If(Weight.Gt.evtranf()) Then
 c----------------------------------------------------------------------------         
 c unweighted event production
 c---------------------------------------------------------------------------- 
@@ -363,7 +363,7 @@ c	----------------------------------------------------------
 c 	--- Used Functions 
 c	----------------------------------------------------------
 
-	real ranf
+	real evtranf
 	
 
 c	----------------------------------------------------------
@@ -411,7 +411,7 @@ c	--- Generation of the Mass of the Rho(0)
 c	----------------------------------------------------------
 
         If(.not.Phase_space) Then      
-	y = ranf()*PI - PI/2.
+	y = evtranf()*PI - PI/2.
 	x = Dtan(y)
 	mass = x*Gam_rho/2. +Mass_rho
         End If
@@ -421,28 +421,28 @@ c	--- z is the Flag needed to choose between the generation
 c	--- of a Rho0 = pi- pi+[1] or pi- pi+[2]
 c	----------------------------------------------------------
 
-	z = ranf()
+	z = evtranf()
 	
 	if(z.lt..5) Then
 
 		If(Phase_space) Then
-		m12 = ranf()*(max_m12-min_m12)+min_m12
+		m12 = evtranf()*(max_m12-min_m12)+min_m12
 		Else
 	 	m12 = mass**2
 		End If	
 			
-	m13 = ranf()*(max_m13-min_m13)+min_m13
+	m13 = evtranf()*(max_m13-min_m13)+min_m13
 	m23 = MB2 - m12 - m13
 	
 	else 
 
 		If(Phase_space) Then
-		m13 = ranf()*(max_m13-min_m13)+min_m13
+		m13 = evtranf()*(max_m13-min_m13)+min_m13
 		Else
 		m13 =  mass**2
 		End If
 		
-	m12 = ranf()*(max_m12-min_m12)+min_m12
+	m12 = evtranf()*(max_m12-min_m12)+min_m12
 	m23 = MB2 - m12 - m13
 
 	endif

@@ -41,7 +41,7 @@ C                 meaning of the above is made explicit in the HowToUse
 C                 routine.
 C [1] first_step_Kpipi
 C                 Generation of the kinematics of the 3 prongs
-C                 It uses the function ranf which is a random number 
+C                 It uses the function Evtranf which is a random number 
 C                 generator providing an uniform distribution 
 C                 of Real*4 random number between 0 and 1	
 C [2] compute
@@ -86,7 +86,7 @@ C      End
       Real*8  Weight,Weight_max
       Real*8  m_Kstarp,m_Kstar0,m_rhom
       Real*8  Wrong
-      Real*4  Ranf,Tag
+      Real*4  Evtranf,Tag
       
       alphaCP      = 1.35
       betaCP       = 0.362
@@ -124,7 +124,7 @@ c communication of data is done by argument only <<<<<<<<
      + Real_B0,Imag_B0,real_B0bar,Imag_B0bar)     
 C that is it !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!  
 c select the Tag 
-      Tag   =ranf()
+      Tag   =Evtranf()
 c generate acording to the tag 
       If(Tag.gt.0.5) Then
       
@@ -139,7 +139,7 @@ c a B0    tag =>  the decay is one from a B0bar
       End If
 		     Call hf1(1,Real(Weight),1.)
 		      
-      If(Weight.Gt.ranf()) Then
+      If(Weight.Gt.Evtranf()) Then
 c----------------------------------------------------------------------------         
 c unweighted event production
 c---------------------------------------------------------------------------- 
@@ -388,7 +388,7 @@ c	----------------------------------------------------------
 c 	--- Used Functions 
 c	----------------------------------------------------------
 
-	real ranf
+	real Evtranf
 
 c	----------------------------------------------------------
 c 	--- Variables in Argument
@@ -437,50 +437,50 @@ c	--- z is the Flag needed to choose between the generation
 c	--- of a K*+, K*0 or rho- resonance
 c	----------------------------------------------------------
 
-	z = 3.*ranf()
+	z = 3.*Evtranf()
 
         MC2 = M_B**2
 	
 	If(z.lt.1.) Then
 c K*+ production
 		If(Phase_space) Then
-		m13 = ranf()*(max_m13-min_m13)+min_m13
+		m13 = Evtranf()*(max_m13-min_m13)+min_m13
 		Else
-    	        y = ranf()*PI - PI/2.
+    	        y = Evtranf()*PI - PI/2.
 	        x = Dtan(y)
 	        mass = x*Gam_Kstarp/2. +Mass_Kstarp		
 	 	m13 = mass**2
 		End If	
 			
-	m12 = ranf()*(max_m12-min_m12)+min_m12
+	m12 = Evtranf()*(max_m12-min_m12)+min_m12
 	m23 = MC2 - m12 - m13
 	
 	ElseIf(z.lt.2.) Then
 c K*0 production
 		If(Phase_space) Then
-		m12 = ranf()*(max_m12-min_m12)+min_m12
+		m12 = Evtranf()*(max_m12-min_m12)+min_m12
 		Else
-    	        y = ranf()*PI - PI/2.
+    	        y = Evtranf()*PI - PI/2.
 	        x = Dtan(y)
 	        mass = x*Gam_Kstar0/2. +Mass_Kstar0				
 		m12 =  mass**2
 		End If
 		
-	m13 = ranf()*(max_m13-min_m13)+min_m13
+	m13 = Evtranf()*(max_m13-min_m13)+min_m13
 	m23 = MC2 - m12 - m13
 	
 	Else		
 c rho- production
 		If(Phase_space) Then
-		m23 = ranf()*(max_m23-min_m23)+min_m23
+		m23 = Evtranf()*(max_m23-min_m23)+min_m23
 		Else
-    	        y = ranf()*PI - PI/2.
+    	        y = Evtranf()*PI - PI/2.
 	        x = Dtan(y)
 	        mass = x*Gam_rho/2. +Mass_rho				
 		m23 =  mass**2
 		End If
 		
-	m13 = ranf()*(max_m13-min_m13)+min_m13
+	m13 = Evtranf()*(max_m13-min_m13)+min_m13
 	m12 = MC2 - m23 - m13
 	
 	Endif

@@ -41,7 +41,7 @@ C                 meaning of the above is made explicit in the HowToUse
 C                 routine.
 C [1] first_step
 C                 Generation of the kinematics of the 3 pions 
-C                 It uses the function ranf which is a random number 
+C                 It uses the function evtranf which is a random number 
 C                 generator providing an uniform distribution 
 C                 of Real*4 random number between 0 and 1	
 C [2] compute
@@ -91,7 +91,7 @@ c      End
       Real*8  t3pions,ttag,t,Weight,Weight_max
       Real*8  AB0,AB0bar,Ainter,xd
       Real*8  m_rhop_2,m_rhom_2
-      Real*4  Ranf,Tag
+      Real*4  Evtranf,Tag
       Real*8  Kin_moy,Kin_moy2,Kin,Lambda
       
       Call Hlimit(1000000)
@@ -135,16 +135,16 @@ c what follows is just to show how the ouput of EVT3pions
 C should be used at the time dependant level.     
 c Decay time of the B->-3 pions
  1    Continue
-      t3pions=-Alog(Ranf())
+      t3pions=-Alog(Evtranf())
       If(t3pions.gt.10.) Go to 1
 c Decay time of the tagging B
  2    Continue
-      ttag   =-Alog(Ranf())                
+      ttag   =-Alog(Evtranf())                
       If(ttag   .gt.10.) Go to 2
 c time-difference between the 3pi decay and the tagging decay     
       t=t3pions-ttag      
 c select the Tag
-      Tag   =ranf()
+      Tag   =evtranf()
 C get the relevant quantities            
       AB0   = Real_B0   **2 + Imag_B0   **2
       AB0bar= Real_B0bar**2 + Imag_B0bar**2
@@ -166,7 +166,7 @@ c a B0    tag => at t3pions=ttag the decay is one from a B0bar
      
       End If
 c 	Print*,'weight',weight
-      If(Weight.Gt.ranf()) Then
+      If(Weight.Gt.evtranf()) Then
 c	Print*,'unweighted events'
 c----------------------------------------------------------------------------         
 c unweighted event production
@@ -474,7 +474,7 @@ c	----------------------------------------------------------
 c 	--- Used Functions 
 c	----------------------------------------------------------
 
-	real ranf
+	real evtranf
 
 c	----------------------------------------------------------
 c 	--- Variables in Argument
@@ -533,7 +533,7 @@ c	--- Generation of the Mass of the Rho(+,-,0)
 c	----------------------------------------------------------
 
         If(.not.Phase_space) Then
-	y = ranf()*PI - PI/2.
+	y = evtranf()*PI - PI/2.
 	x = Dtan(y)
 	mass = x*Gam_rho/2. +Mass_rho
         End If
@@ -543,34 +543,34 @@ c	--- z is the Flag needed to choose between the generation
 c	--- of a Rho+, a Rho-,or a Rho0
 c	----------------------------------------------------------
 
-	z = 3.* ranf()
+	z = 3.* evtranf()
 	
 	if(z.lt.1.) Then
 
 	If(Phase_space) Then
-		m12 = ranf()*(max_m12-min_m12)+min_m12
+		m12 = evtranf()*(max_m12-min_m12)+min_m12
 	Else
 		m12 = mass**2
 	End If		
-		m13 = ranf()*(max_m13-min_m13)+min_m13
+		m13 = evtranf()*(max_m13-min_m13)+min_m13
 		m23 = MB2 - m12 - m13
 	else if (z.lt.2.) Then
 
 	If(Phase_space) Then
-		m13 = ranf()*(max_m13-min_m13)+min_m13
+		m13 = evtranf()*(max_m13-min_m13)+min_m13
 	Else
 		m13 =  mass**2
 	End If
-	 	m12 = ranf()*(max_m12-min_m12)+min_m12
+	 	m12 = evtranf()*(max_m12-min_m12)+min_m12
 		m23 = MB2 - m12 - m13
 	else
 
 	If(Phase_space) Then
-		m23 = ranf()*(max_m23-min_m23)+min_m23
+		m23 = evtranf()*(max_m23-min_m23)+min_m23
 	Else
 		m23 = mass**2
 	End If
-		m12 = ranf()*(max_m12-min_m12)+min_m12
+		m12 = evtranf()*(max_m12-min_m12)+min_m12
       		m13 = MB2 - m12 - m23
 	endif
 
@@ -955,7 +955,7 @@ c --- commons
 	
 c --- Used Functions 
 
-	Real ranf	
+	Real evtranf	
 
 c --- Variables in Argument
 
@@ -977,9 +977,9 @@ c --- Local Variables
         EGammaCmsPi0 = Dsqrt(P2(5))/2.
         
         
-        cosThetaRot = ranf()*2.D+00-1.D+00
+        cosThetaRot = evtranf()*2.D+00-1.D+00
         sinThetaRot = Dsqrt(1.D+00 - cosThetaRot**2)
-        PhiRot = ranf()*2.D+00*pi
+        PhiRot = evtranf()*2.D+00*pi
         
         PGamma1(1) = EGammaCmsPi0 * sinThetaRot * Dcos(PhiRot)
         PGamma1(2) = EGammaCmsPi0 * sinThetaRot * Dsin(PhiRot)
@@ -1068,7 +1068,7 @@ c------------------------------------------------------------------
       	Real*8 c1,c2,c3,s1,s2,s3
       	Real*8 MatRot(3,3)
         save MatRot
-      	Real ranf
+      	Real evtranf
       	Integer new,i,j
       
       	If(new.ne.0) Then
@@ -1076,10 +1076,10 @@ c	---------------------------------------------------------
 C 	--- generate a random rotation 
 c	--------------------------------------------------------- 
      
-      		phi2=ranf()*2.*pi
-      		phi3=ranf()*2.*pi
+      		phi2=evtranf()*2.*pi
+      		phi3=evtranf()*2.*pi
       
-                c1=2.D+00*ranf()-1.D+00
+                c1=2.D+00*evtranf()-1.D+00
        		c2=Dcos(phi2)
       		c3=Dcos(phi3)
       

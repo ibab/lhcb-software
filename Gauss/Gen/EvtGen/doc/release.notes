@@ -1,6 +1,12 @@
 Package :EvtGen 
 Package manager : Patrick Robbe and Witek Pokorski
 
+! 2003-11-18 - Patrick Robbe
+ - requirements : remove dependancy to GaudiKernel
+ - EvtBTo3pi.F, EvtBTo3piMPP.F, EvtBTo3piP00.F, EvtBToKpipi.F : use
+    evtranf instead of ranf to ensure reproducibility
+ - cranf.cpp, ranf.F : remove and use EvtRanf.cpp instead
+
 ! 2003-11-06 - Patrick Robbe
  - EvtHelAmp.cpp : fix for windows
  - EvtIncoherentMixing.cpp : fix for windows
