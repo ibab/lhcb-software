@@ -1,8 +1,11 @@
-// $Id: CovarianceEstimator.cpp,v 1.7 2002-05-23 11:16:30 ibelyaev Exp $ 
+// $Id: CovarianceEstimator.cpp,v 1.8 2002-05-29 07:42:43 ibelyaev Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.7  2002/05/23 11:16:30  ibelyaev
+//  remove extra printout
+//
 // Revision 1.6  2002/05/23 11:07:09  ibelyaev
 //  see /afs/cern.ch/user/i/ibelyaev/w0/Calo/CaloUtils/v2r0/doc/release.notes
 //
@@ -224,21 +227,20 @@ StatusCode CovarianceEstimator::operator()( CaloCluster* cluster ) const
   
   // update cluster patameters  
   CaloPosition::Parameters& parameters = cluster->position().parameters();
-  parameters( 1 ) = Ecl ;   // E 
-  parameters( 2 ) = Xcl ;   // X 
-  parameters( 3 ) = Ycl ;   // Y 
+  parameters( CaloPosition::E ) = Ecl ;   // E 
+  parameters( CaloPosition::X ) = Xcl ;   // X 
+  parameters( CaloPosition::Y ) = Ycl ;   // Y 
 
   // update cluster matrix   
   CaloPosition::Covariance& covariance = cluster->position().covariance();
-  covariance.fast( 1 , 1 ) = CovEE ;
-  covariance.fast( 2 , 1 ) = CovEX ;
-  covariance.fast( 2 , 2 ) = CovXX ;
-  covariance.fast( 3 , 1 ) = CovEY ;
-  covariance.fast( 3 , 2 ) = CovXY ;
-  covariance.fast( 3 , 3 ) = CovYY ;
+  covariance( CaloPosition::X , CaloPosition::X ) = CovXX ;
+  covariance( CaloPosition::Y , CaloPosition::X ) = CovXY ;
+  covariance( CaloPosition::E , CaloPosition::X ) = CovEX ;
+  covariance( CaloPosition::Y , CaloPosition::Y ) = CovYY ;
+  covariance( CaloPosition::E , CaloPosition::Y ) = CovEY ;
+  covariance( CaloPosition::E , CaloPosition::E ) = CovEE ;
   
   return StatusCode::SUCCESS;
-  
 };
 // ============================================================================
 

@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.7 2002-05-23 11:07:09 ibelyaev Exp $
+# $Id: requirements,v 1.8 2002-05-29 07:42:43 ibelyaev Exp $
 # =============================================================================
 # CVS tag $Name: not supported by cvs2svn $ 
 # =============================================================================
@@ -7,11 +7,8 @@
 # Created    : 02/11/2001
 # Maintainer : Vanya Belyaev Ivan.Belyaev@itep.ru
 # =============================================================================
-# Documentation on the requirement file can be found at
-# http://cern.ch/lhcb-comp/Support/html/new_structure.pdf
-# =============================================================================
 package             CaloUtils
-version             v2r1
+version             v2r2
 
 # ================= structure =================================================
 branches            cmt doc src CaloUtils
