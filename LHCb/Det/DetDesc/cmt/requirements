@@ -1,10 +1,13 @@
 # =============================================================================
 # CVS tag $Name: not supported by cvs2svn $ 
 # =============================================================================
-# $Log: not supported by cvs2svn $ 
+# $Log: not supported by cvs2svn $
+# Revision 1.17  2001/08/09 16:48:00  ibelyaev
+# update in interfaces and redesign of solids
+# 
 # =============================================================================
 package DetDesc
-version v8
+version v8r1
 
 branches DetDesc doc cmt src
 
