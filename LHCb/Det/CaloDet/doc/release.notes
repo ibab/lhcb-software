@@ -1,8 +1,9 @@
-! $Id: release.notes,v 1.30 2002-12-17 15:39:53 ocallot Exp $ 
+! $Id: release.notes,v 1.31 2003-01-08 16:12:04 cattanem Exp $ 
 ! =============================================================================
 Package         : CaloDet   
 Package manager : Vanya Belyaev Ivan.Belyaev@itep.ru
 
+!========================= CaloDet v6r3 2003-01-08 =========================
 ! 2002-12-15 - Olivier Callot
  - Added the concept of Validation Card, new method to retrieve the validation
    card for a given card, valid and useful only for Ecal cards.
