@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.11 2004-06-28 17:02:35 ibelyaev Exp $ 
+# $Id: requirements,v 1.12 2004-06-29 07:02:39 ibelyaev Exp $ 
 # =============================================================================
 # CVS tag $Name: not supported by cvs2svn $
 # =============================================================================
@@ -29,8 +29,8 @@ use           LoKiDoc        v2r6 Doc
 # =========== Test suit for Bender ============================================
 use           BenderTest     v3r0 Tests 
 # =========== examples of usage of Bender "in practice" =======================
-use           BenderExample  v3r0 Ex  
-use           LoKiExample    v2r6 Ex 
+use           BenderExample  v3r3 Ex  
+use           LoKiExample    v2r7 Ex 
 # =========== Test suit for Bender ============================================
 use           BenderVis      v1r0 Vis 
 # =========== Detector description related stuff ==============================
@@ -41,6 +41,9 @@ use           BenderUser     v3r0 Phys
 # The END 
 # =============================================================================
 # $Log: not supported by cvs2svn $
+# Revision 1.11  2004/06/28 17:02:35  ibelyaev
+#  update the version
+#
 # Revision 1.10  2004/06/28 16:00:53  ibelyaev
 #  increment the version
 #
