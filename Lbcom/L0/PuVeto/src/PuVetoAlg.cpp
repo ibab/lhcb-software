@@ -1,4 +1,4 @@
-// $Id: PuVetoAlg.cpp,v 1.2 2002-02-01 15:05:45 ocallot Exp $
+// $Id: PuVetoAlg.cpp,v 1.3 2002-04-05 09:26:03 ocallot Exp $
 // Include files 
 
 // from Gaudi
@@ -6,9 +6,6 @@
 #include "GaudiKernel/MsgStream.h" 
 #include "GaudiKernel/SmartDataPtr.h"
 #include "GaudiKernel/ObjectVector.h"
-
-// from L1Event
-#include "L1Event/L1Buffer.h"
 
 // from L0Event
 #include "Event/L0PuVeto.h"
@@ -32,7 +29,7 @@ const        IAlgFactory& PuVetoAlgFactory = s_factory ;
 PuVetoAlg::PuVetoAlg( const std::string& name,
                       ISvcLocator* pSvcLocator)
   : Algorithm ( name , pSvcLocator )
-  , m_inputContainer      ( "/Event/Raw/PuvDigit" )
+  , m_inputContainer      ( L1RawLocation::Default )
   , m_outputContainer     ( L0PuVetoLocation::Default )
   , m_lowThreshold        (    2.     )
   , m_highThreshold       (    2.     )
@@ -117,7 +114,7 @@ StatusCode PuVetoAlg::execute() {
 
   //*** get the input data
 
-  SmartDataPtr< ObjectVector<L1Buffer> > digs ( eventDataService() , 
+  SmartDataPtr< L1Raws > digs ( eventDataService() , 
                                                 m_inputContainer );
   if( 0 == digs ) {
     log << MSG::ERROR
@@ -213,7 +210,7 @@ StatusCode PuVetoAlg::finalize() {
 //=========================================================================
 //  Fill the histogram
 //=========================================================================
-void PuVetoAlg::fillHisto ( ObjectVector<L1Buffer>* digs ) {
+void PuVetoAlg::fillHisto ( L1Raws* digs ) {
   MsgStream  log( msgSvc(), name() );
   // clear histo
   for ( unsigned int j=0 ; m_hist.size() > j ; j++ ) {
@@ -225,13 +222,19 @@ void PuVetoAlg::fillHisto ( ObjectVector<L1Buffer>* digs ) {
   int    zoneA, zoneB;
   int    bin;
 
-  ObjectVector<L1Buffer>::iterator itWaf = digs->begin();
-  
+  L1Raws::iterator itWaf = digs->begin();
+  L1Raw* wafA;
+  L1Raw* wafB;
+
   for ( unsigned int i1 = 0 ; 2 > i1 ; i1++, itWaf++ ) {
-    std::vector<int>* digsA = (*itWaf)->digits();
-    zA = m_velo->zPuWafer( (*itWaf)->waferNumber() );
-    std::vector<int>* digsB = (*(itWaf+2))->digits();
-    zB = m_velo->zPuWafer( (*(itWaf+2))->waferNumber() );
+    wafA = (*itWaf);
+    wafB = (*(itWaf+2));
+
+    zA = m_velo->zPuWafer( wafA->key() );
+    zB = m_velo->zPuWafer( wafB->key() );
+
+    std::vector<int>* digsA = & wafA->digits();
+    std::vector<int>* digsB = & wafB->digits() ;
 
     log << MSG::VERBOSE << "Loop on Wafer " << i1 
         << " z = " << zA << " " << zB
@@ -282,7 +285,7 @@ void PuVetoAlg::fillHisto ( ObjectVector<L1Buffer>* digs ) {
 //=========================================================================
 //  Mask the hits contributing to the vertex
 //=========================================================================
-void PuVetoAlg::maskHits ( ObjectVector<L1Buffer>* digs, 
+void PuVetoAlg::maskHits ( L1Raws* digs, 
                            double zVertex,
                            double zTol   ) {
   MsgStream  log( msgSvc(), name() );
@@ -291,13 +294,18 @@ void PuVetoAlg::maskHits ( ObjectVector<L1Buffer>* digs,
   double rA, rB;
   int    zoneA, zoneB;
 
-  ObjectVector<L1Buffer>::iterator itWaf = digs->begin();
+  L1Raws::iterator itWaf = digs->begin();
+  L1Raw* wafA;
+  L1Raw* wafB;
   
   for ( unsigned int i1 = 0 ; 2 > i1 ; i1++, itWaf++ ) {
-    std::vector<int>* digsA = (*itWaf)->digits();
-    zA = m_velo->zPuWafer( (*itWaf)->waferNumber() );
-    std::vector<int>* digsB = (*(itWaf+2))->digits();
-    zB = m_velo->zPuWafer( (*(itWaf+2))->waferNumber() );
+    wafA = (*itWaf);
+    wafB = (*(itWaf+2));
+    zA = m_velo->zPuWafer( wafA->key() );
+    zB = m_velo->zPuWafer( wafB->key() );
+
+    std::vector<int>* digsA = & wafA->digits();
+    std::vector<int>* digsB = & wafB->digits() ;
 
     for ( std::vector<int>::iterator dA = digsA->begin() ; 
           digsA->end() != dA ; dA++ ) {
