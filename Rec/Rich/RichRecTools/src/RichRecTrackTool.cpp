@@ -1,4 +1,4 @@
-// $Id: RichRecTrackTool.cpp,v 1.4 2002-12-19 09:32:44 cattanem Exp $
+// $Id: RichRecTrackTool.cpp,v 1.5 2002-12-20 13:27:53 cattanem Exp $
 
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h"
@@ -259,7 +259,7 @@ RichRecTrackTool::newTrack ( TrStoredTrack * trTrack ) {
             HepPoint3D & hitPoint = newSegment->hpdPanelHitPoint();
             HepVector3D trackDir = (*iSeg).exitPoint() - (*iSeg).entryPoint();
             if ( !m_richDetInterface->traceToDetectorWithoutEff( (*iSeg).rich(),
-                                                                 (*iSeg).middlePoint(),
+                                                          (*iSeg).middlePoint(),
                                                                  trackDir,
                                                                  hitPoint ) ) {
 
@@ -384,7 +384,7 @@ bool RichRecTrackTool::activeInRadiator( RichRecTrack * track,
         segment != track->richRecSegments().end();
         ++segment ) {
     if ( rad == (*segment)->trackSegment().radiator() ) {
-      if ( m_richRecSegmentTool->emittedPhotons(*segment,id) > 0.0 ) return true;
+      if( m_richRecSegmentTool->emittedPhotons(*segment,id) > 0.0 ) return true;
     }
   }
 
