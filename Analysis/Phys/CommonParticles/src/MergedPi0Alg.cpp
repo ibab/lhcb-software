@@ -129,6 +129,7 @@ MergedPi0Alg::initialize()
       return StatusCode::FAILURE;
     }
   }    
+  logbk<<MSG::WARNING<<"setFilterPassed is systematically TRUE"<<endreq;
 
   return StatusCode::SUCCESS;  
 };
@@ -167,7 +168,7 @@ MergedPi0Alg::execute()
 {
   MsgStream  logbk( msgSvc(), name() );
 
-  setFilterPassed(false);	
+  setFilterPassed(true);	
   // Counter of events processed
   logbk << MSG::DEBUG << "    processing event number " << ++m_nEvents <<endreq;
   

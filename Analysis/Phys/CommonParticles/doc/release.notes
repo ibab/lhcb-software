@@ -5,6 +5,8 @@
 !-----------------------------------------------------------------------------
 
 ! 2004-04-28 - P.Koppenburg
+ - src/MergedPi0Alg.cpp
+   . SetFilterPassed(true).
  - options/ResolvedPi0Alg.opts
  - src/ResolvedPi0Alg.cpp
  - src/ResolvedPi0Alg.h
