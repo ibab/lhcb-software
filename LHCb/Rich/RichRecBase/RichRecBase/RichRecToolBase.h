@@ -5,8 +5,11 @@
  * Header file for reconstruction tool base class : RichRecToolBase
  *
  * CVS Log :-
- * $Id: RichRecToolBase.h,v 1.14 2004-07-26 18:00:58 jonrob Exp $
+ * $Id: RichRecToolBase.h,v 1.15 2005-04-06 20:29:43 jonrob Exp $
  * $Log: not supported by cvs2svn $
+ * Revision 1.14  2004/07/26 18:00:58  jonrob
+ * Various improvements to the doxygen comments
+ *
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date   2002-07-26
@@ -26,6 +29,7 @@
 #include "RichRecBase/IRichPixelCreator.h"
 #include "RichRecBase/IRichStatusCreator.h"
 
+//-----------------------------------------------------------------------------
 /** @class RichRecToolBase RichRecToolBase.h RichRecBase/RichRecToolBase.h
  *
  *  Abstract base class for RICH reconstruction tools providing
@@ -34,6 +38,7 @@
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2002-07-26
  */
+//-----------------------------------------------------------------------------
 
 class RichRecToolBase : public RichToolBase {
 
