@@ -20,8 +20,8 @@ ApplicationMgr.DLLs += { "TrgTools"
 ApplicationMgr.TopAlg += { "GaudiSequencer/L1WithTrg" };
 
 L1WithTrg.Members += { //"TrgL0Filter",
-                       "TrgInitEvent",
-                       "GaudiSequencer/L1Processing"
+                       "TrgInitEvent"
+                       ,"GaudiSequencer/L1Processing"
                        ,"GaudiSequencer/L1Checking"
 };
 

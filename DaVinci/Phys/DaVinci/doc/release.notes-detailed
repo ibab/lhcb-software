@@ -5,6 +5,13 @@
 !-----------------------------------------------------------------------------
 
 ! 2004-08-02 - P. Koppenburg
+  - options/DVTriggerFilter.opts
+  - options/L0.opts
+  - options/L0base.opts (new)
+    . Changes that allow to run the triggerfilter without any MC truth check
+      (faster by a factor 2)
+
+! 2004-08-02 - P. Koppenburg
   - options/DaVinciCommon.opts 
   - options/DaVinciElectrons.opts
   - options/DaVinciNeutrals.opts
