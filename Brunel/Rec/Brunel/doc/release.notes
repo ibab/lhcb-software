@@ -3,6 +3,31 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
+</PRE><H1><A NAME=v19r1>2003-07-07 Brunel v19r1</A></H1><PRE>
+- New tuning:
+   . Update of Rich reconstruction software. Includes repackaging of algorithms.
+     (RichUtils v3r2, RichRecBase v1r2, RichGlobalPID v1r0, RichLocalPID v1r0,
+      RichRingRefit v1r0, RichPIDMerge v1r0, RichRecTools v2r1, RichRecSys v1r0)
+
+- New packaging:
+   . Split Rich monitoring into distinct Digi and Reco packages
+     (RichRecQC v1r0, RichDigiQC v1r0)
+
+- New functionality:
+   . Add MCRichHit class to Event model, for detector information from Gauss
+     (RichEvent v5r0, RiSicbCnv v6r0, Event v3r4, SicbCnv v17r7)
+   . Add support for valgrind 1.9.6 with gcc32 
+     (new file Brunel.supp.gcc32, invoked by valgrind.job)
+
+- DST changes:
+   . Update list of algorithms to be timed with new Rich Global PID iterations
+     (BrunelAlgs v2r1)
+
+- Bug fixes
+   . Release services etc. after use, to please valgrind
+     (RiSicbCnv v6r0, RichRecBase v1r2)
+
+
 </PRE><H1><A NAME=v19r0>2003-07-03 Brunel v19r0</A></H1><PRE>
   This version is built against Gaudi v12 and introduces support for gcc 3.2
 

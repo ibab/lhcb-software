@@ -47,11 +47,20 @@ ApplicationMgr.DLLs += { "VeloAssociators" };
 ApplicationMgr.DLLs += { "TrCheck" };
 BrunelMoniTrSeq.Members += { "TrAnalyse" };
 
-// Rich
-ApplicationMgr.DLLs += { "RichMonitor" };
+// Rich reconstruction
+ApplicationMgr.DLLs += { "RichRecQC" };
+#include "$RICHRECQCOPTS/RecQC_Brunel.opts"
+
+// Rich digitisation
 BrunelMoniRICHSeq.Members += { "RichDigitCnvVerifier" }; // SICB digit Cnv checks
-#include "$RICHMONITOROPTS/DigiMoni_Brunel.opts"    // Digitisation
-#include "$RICHMONITOROPTS/RichPIDMoni_Brunel.opts" // Monitor Rec/Rich/PIDs
+ApplicationMgr.DLLs += { "RichDigiQC" };
+#include "$RICHDIGIQCOPTS/DigiQC_Brunel.opts"
+
+// detailed RICH reconstruction monitors
+//#include "$RICHRECCOMMONOPTS/RecoMoni_Brunel.opts"
+//#include "$RICHGLOBALPIDOPTS/RecoMoni_Brunel.opts"
+//#include "$RICHLOCALPIDOPTS/RecoMoni_Brunel.opts"
+//#include "$RICHRINGREFITOPTS/RecoMoni_Brunel.opts"
 
 // Calorimeters
 #include "$CALOMONITOROPTS/Brunel.opts"

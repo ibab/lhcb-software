@@ -1,5 +1,5 @@
 package Brunel
-version v19r0
+version v19r1
 
 branches doc cmt job options
 
@@ -32,11 +32,11 @@ use HbookCnv 		v13r3
 #-- Database
 use XmlDDDB		v16r1	Det
 
-#-- LHCb libraries (from LHCB_v12r0)
-use LHCb	v12r0
+#-- LHCb libraries (from LHCB_v12r1)
+use LHCb	v12r1
 
-#-> SICB basic libraries (from LHCB_v12r0)
-use SICBSys	v1r4	SICB
+#-> SICB basic libraries (from LHCB_v12r1)
+use SICBSys	v1r5	SICB
 
 #-- BrunelSys v19r0 packages
 
@@ -45,7 +45,7 @@ use MCTools		v1r1p1	Phys
 
 # Brunel utilities
 use BrunelSicb          v4r1    Rec
-use BrunelAlgs          v2r0p1	Rec
+use BrunelAlgs          v2r1	Rec
 use KsReco              v1r5	Rec
 
 # LHC background
@@ -101,12 +101,10 @@ use MuonRec             v2r3    Muon
 use MuonID              v3r6    Muon
 
 # Rich
-use RichMonitor         v3r0p1 	Rich
-use RichRecAlgs		v2r0p2	Rich
-use RichRecTools	v2r0p1	Rich
-use RichRecBase		v1r1  	Rich
-use RichUtils		v3r1  	Rich
-use RichDetTools	v2r1  	Rich
+use RichUtils		v3r2  	Rich
+use RichRecSys		v1r0	Rich
+use RichRecQC		v1r0  	Rich
+use RichDigiQC		v1r0  	Rich
 
 # SICBDST packages
 use recevt              v3r5  	SICB
@@ -125,8 +123,8 @@ macro_append Brunel_linkopts " "\
                 Linuxdbx     " -g -Wl,--start-group "
 
 #== Set the Brunel version = v*10000 + r*100 + p  ==
-macro_append fflags " -DBrunelVersion=190000 " \
-           VisualC  " /DBrunelVersion=190000 "
+macro_append fflags " -DBrunelVersion=190100 " \
+           VisualC  " /DBrunelVersion=190100 "
 
 apply_pattern application_path
 

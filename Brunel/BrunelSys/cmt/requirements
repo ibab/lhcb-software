@@ -1,5 +1,5 @@
 package BrunelSys
-version v19r0
+version v19r1
 
 branches cmt doc
  
@@ -8,11 +8,11 @@ branches cmt doc
 #=======================================================
 
 # Brunel application
-use Brunel              v19r0   Rec
+use Brunel              v19r1   Rec
 
 # Brunel utilities
 use BrunelSicb          v4r1    Rec
-use BrunelAlgs          v2r0p1	Rec
+use BrunelAlgs          v2r1	Rec
 use KsReco              v1r5	Rec
 
 # L0 trigger
@@ -68,12 +68,18 @@ use MuonID              v3r6    Muon
 use MuonBackground	v1r2	Muon
 
 # Rich
-use RichRecBase		v1r1	Rich
-use RichMonitor         v3r0p1	Rich
-use RichRecAlgs		v2r0p2 	Rich
-use RichRecTools	v2r0p1	Rich
-use RichUtils		v3r1  	Rich
+use RichRecSys		v1r0	Rich
+use RichRecBase		v1r2	Rich
+use RichRecTools	v2r1	Rich
+use RichRecCommon	v1r0	Rich
+use RichRingRefit	v1r0	Rich
+use RichLocalPID	v1r0	Rich
+use RichGlobalPID	v1r0	Rich
+use RichPIDMerge	v1r0	Rich
+use RichUtils		v3r2  	Rich
 use RichDetTools	v2r1  	Rich
+use RichDigiQC		v1r0	Rich
+use RichRecQC		v1r0	Rich
 
 # Phys
 use MCTools		v1r1p1	Phys

@@ -180,9 +180,10 @@ BrunelRecoTrSeq.Members += { "TrFit2StoredTrackCnv/StoreBest" };
 #include "$TRCLEANEXROOT/options/Brunel.opts"
 TrTrackCloneKiller.flagMode = true;
 
-// Rich OO Reconstruction
-ApplicationMgr.DLLs += { "RichDetTools", "RichRecTools", "RichRecAlgs" };
-#include "$RICHRECALGSOPTS/BrunelReco.opts"
+// Rich Reconstruction
+ApplicationMgr.DLLs += { "RichDetTools", "RichRecTools", "RichRecCommon",
+        "RichGlobalPID", "RichLocalPID", "RichRingRefit", "RichPIDMerge" };
+#include "$RICHRECSYSOPTS/BrunelReco.opts"
 
 // Muon coordinate reconstruction, MuonID, cleaning
 ApplicationMgr.DLLs += { "MuonRec", "MuonID" };
