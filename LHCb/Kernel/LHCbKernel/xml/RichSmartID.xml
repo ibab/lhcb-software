@@ -1,11 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE gdd SYSTEM "gdd.dtd">
+<gdd>
+
 <!-- **************************************************************************
-  * $Id: RichSmartID.xml,v 1.10 2004-11-03 09:28:13 jonrob Exp $
+  * $Id: RichSmartID.xml,v 1.11 2004-11-29 13:59:49 cattanem Exp $
   *****************************************************************************
   * XML-description of RichSmartID class                                      *
   * author: Chris Jones   Christopher.Rob.Jones@cern.ch                       *
   * date:   2004-06-23                                                        *
   *****************************************************************************
   * $Log: not supported by cvs2svn $
+  * Revision 1.10  2004/11/03 09:28:13  jonrob
+  * Update RIchSmartID
+  *
   * Revision 1.9  2004/10/30 19:06:32  jonrob
   * Add vector typedef
   *
@@ -14,6 +21,7 @@
   *
   ************************************************************************* -->
 
+  <package name='LHCbKernel'>
      <class 
         name             = "RichSmartID"
         author           = "Chris Jones   Christopher.Rob.Jones@cern.ch" 
@@ -394,3 +402,5 @@
         </method>
 
     </class>
+  </package>
+</gdd>

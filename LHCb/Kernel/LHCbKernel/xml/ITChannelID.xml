@@ -1,3 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE gdd SYSTEM "gdd.dtd">
+
+<gdd>
+  <package name='LHCbKernel'>
     <class name='ITChannelID' author='Matthew Needham' desc='ITChannelID is a class that describes a single channel of LHCb Inner tracker.'>
       &StlVector;
       <desc> *  Now, only the station, layer, wafer and strip number can be retrieved.
@@ -45,3 +50,5 @@
       <enum access="PUBLIC" desc="general storage enum" name="general" 
       value='nullStrip = 0xFFFF'/>
     </class>
+  </package>
+</gdd>

@@ -1,4 +1,4 @@
-// $Id: lcgStl.h,v 1.5 2004-05-05 14:14:01 cattanem Exp $
+// $Id: lcgStl.h,v 1.6 2004-11-29 13:59:49 cattanem Exp $
 #ifndef KERNEL_LCGSTL_H 
 #define KERNEL_LCGSTL_H 1
 
@@ -14,21 +14,18 @@
 #include "Kernel/VeloChannelID.h"
 #include "Kernel/ITChannelID.h"
 #include "Kernel/OTChannelID.h"
+#include "Kernel/CaloCellID.h"
 
 namespace {
-  std::vector<std::pair<VeloChannelID,int> > a;
-  std::pair<VeloChannelID,int>               b;
-  std::vector<std::pair<ITChannelID,int> >   c;
-  std::pair<ITChannelID,int>                 d;
-  std::vector<std::pair<OTChannelID,int> >   e;
-  std::pair<OTChannelID,int>                 f;
-  std::vector<std::pair<int,int> >           g;
-  std::pair<int,int>                         h;
-  std::vector<std::pair<long,double> >       i;
-  std::pair<long,double>                     j;
-  std::vector<std::pair<int,double> >        k;
-  std::pair<int,double>                      l;
-  std::map<int,int>                          m;
-  SmartRefVector<ContainedObject>            n;
+  std::vector<std::pair<int,int> >           a;
+  std::vector<std::pair<long,double> >       b;
+  std::vector<std::pair<int,double> >        c;
+  std::vector<std::pair<double,double> >     d;
+  std::map<int,int>                          e;
+  SmartRefVector<ContainedObject>            f;
+  std::vector<std::pair<VeloChannelID,int> > g;
+  std::vector<std::pair<ITChannelID,int> >   h;
+  std::vector<std::pair<OTChannelID,int> >   i;
+  std::vector<std::pair<double,CaloCellID> > k;
 }
 #endif // KERNEL_LCGSTL_H

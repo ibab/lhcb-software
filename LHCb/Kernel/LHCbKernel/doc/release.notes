@@ -2,6 +2,11 @@ Package LHCbKernel
 Package manager: M.Cattaneo
 Purpose: LHCb specific Kernel classes
 
+!====================== LHCbKernel v5r5 2004-11-29 ========================
+! 2004-11-29 - Marco Cattaneo
+ - Add std:pair<double,double> to lcgStl.h, lcg_selection.xml
+ - Make .xml files independent of each other
+
 !====================== LHCbKernel v5r4 2004-11-19 ========================
 ! 2004-11-03 - Chris Jones
  - Update RichSmartID (backwards compatible)

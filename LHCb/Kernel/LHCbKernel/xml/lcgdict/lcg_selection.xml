@@ -3,9 +3,11 @@
   <class name="std::vector<std::pair<int,int> >"/>
   <class name="std::vector<std::pair<int,double> >"/>
   <class name="std::vector<std::pair<long int,double> >"/>
+  <class name="std::vector<std::pair<double,double> >"/>
   <class name="std::pair<long int,double>"/>
   <class name="std::pair<int,double>"/>
   <class name="std::pair<int,int>"/>
+  <class name="std::pair<double,double>"/>
   <class name="std::vector<std::pair<VeloChannelID,int> >"/>
   <class name="std::pair<VeloChannelID,int>"/>
   <class name="std::vector<std::pair<ITChannelID,int> >"/>
@@ -20,4 +22,6 @@
     <field name="m_contd" transient="true"/>  
   </class>
   <class name="std::vector<SmartRef<ContainedObject> >"/>
+  <class name="std::pair<double,CaloCellID>"/>
+  <class name="std::vector<std::pair<double,CaloCellID> >"/>
 </lcgdict>

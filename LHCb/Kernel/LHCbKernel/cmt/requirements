@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.63 2004-11-19 10:11:49 cattanem Exp $
+# $Id: requirements,v 1.64 2004-11-29 13:59:49 cattanem Exp $
 # =============================================================================
 package LHCbKernel
 author  M.Frank    CERN/LHCb
@@ -15,17 +15,17 @@ use CLHEP        v*    LCG_Interfaces
 #============================================================================
 macro LHCbKernelObj2Doth_GODflags " -o ../Kernel/ " \
       WIN32                       " -o ..\Kernel\ "
-document obj2doth LHCbKernelObj2Doth ../xml/LHCbKernel.xml ../xml/LHCbID.xml
+document obj2doth LHCbKernelObj2Doth ../xml/*.xml
 
 macro LHCbKernelObj2Dict_GODflags " -l Kernel/ " \
       WIN32                       " -l Kernel\ "
-document obj2dict LHCbKernelObj2Dict ../xml/LHCbKernel.xml ../xml/LHCbID.xml
+document obj2dict LHCbKernelObj2Dict ../xml/*.xml
 
 # Produce lcg dictionary for stl containers used in LHCb
 document lcg_dictionary_generator LHCbKernelGen \
       $(LHCBKERNELROOT)/Kernel/lcgStl.h dictionary=LHCbKernel
 macro_append LHCbKernel_lcgdict_options \
-      '--select=$(LHCBKERNELROOT)/xml/lcg_selection.xml --split --pool \
+      '--select=$(LHCBKERNELROOT)/xml/lcgdict/lcg_selection.xml --split --pool \
        -I"$(POOL_home)/../include" $(includes)'
 
 # Build libraries (including dictionary)

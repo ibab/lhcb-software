@@ -1,3 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE gdd SYSTEM "gdd.dtd">
+
+<gdd>
+  <package name='LHCbKernel'>
     <class name='OTChannelID' 
            author='Jeroen van Tilburg and Jacopo Nardulli'
            desc='OTChannelID is a class that describes a single straw and containes the TDC-Time'>
@@ -65,3 +70,5 @@
                   desc='Unique layer' setMeth='FALSE'/>
       </attribute>
     </class>
+  </package>
+</gdd>
