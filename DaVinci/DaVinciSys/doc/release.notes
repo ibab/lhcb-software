@@ -3,6 +3,262 @@ Package     : Phys/DaVinci
 Package Coordinator : Patrick Koppenburg
 Purpose     : LHCb analysis program 
 
+</PRE><H1><A NAME=v12r9>2005-03-22 DaVinci v12r9 - Stripping version for DC04v2</A></H1><PRE>
+DaVinci for DC04v2 stripping with updated preselections and new
+L0 and L1 tunings.
+
+################################################################################
+#                               DAVINCI v12r9                                  #
+################################################################################
+##################################### L0 #######################################
+!========================= L0DU v6r7p4 2005-03-16 =========================
+! 2005-03-16 - P. Koppenburg for Eduardo Rodrigues
+ - Thresholds retuned for analysis of the DC'04 data
+!
+! Built on a branch v6r7b2 on v6r7p2
+!
+##################################### HLT ######################################
+!========================== HltGeneric v2r3 2005-03-22 ===================
+! 2005-03-03 - J.A. Hernando
+  - src/HltGenericDecision (h,cpp)  
+    . making JPsi a container of particle and store them in the TES
+      location of JPsis: /Event/Phys/HltGeneric/JPsi/Particles (/Vertices) 
+      location of HltGeneric particles: /Event/Phys/HltGeneric
+    . making a line for dimuons with mass < 2.5 GeV and IP>0.1 mm
+    . the L1Score information is located in /Event/Trig/HltGenericScore
+  - src/HltGenericMonitor
+    . monitoring the HltGenericDecision 
+        (nof of particles, muons, dimuons)  
+        (and what trigger HltGeneric)
+
+!========================== HltSelChecker v3r0 2005-03-22 ===================
+! 2005-03-21 - Luis Fernandez
+ - src/DecayChainNTuple.{h, cpp}
+   . Removed, will be in DaVinciMCTools
+ - src/HltSelChecker_load.cpp
+   . DecayChainNTuple
+ - cmt/requirements
+   . Remove flag
+
+! 2005-03-16 - P. Koppenburg
+  - options/DVWriteDST.opts
+   . Writes out DST with trigger-accepted events.
+
+! 2005-03-21 - Luis Fernandez
+  - src/DecayChainNTuple.{h, cpp}
+    . Remove TrgDataProvider stuff, get L1 through L1Score
+
+! 2005-03-21 - P. Koppenburg
+    . Many changes reflecting the fact that the muons are now done in HltGeneric
+
+! 2005-03-20 - Luis Fernandez
+  - src/DecayChainNTuple.{h, cpp}
+    . Association for gammas
+  - options/
+    . Modifications for association of gammas, TrueMCFilterCriterion
+
+! 2005-03-17 - Luis Fernandez
+  - src/DecayChainNTuple.{h, cpp}
+    . Added useful variables to the ntuple
+
+!========================== HltSelections v3r0 2005-03-22 ===================
+! 2005-03-21 - P. Koppenburg
+   . Many changes reflecting the fact that the muons are now done in HltGeneric
+
+! 2005-03-21 - Luis Fernandez
+ - options/HLTSelections.opts
+   . Small change in options order, for dummy TrueSignals sequence
+
+##################################### PHYS #####################################
+!========================== DaVinciEff v3r2p2 2005-03-22 ===================
+! 2004-03-11 - P. Koppenburg
+ - src/EffSelCheck.cpp
+   . Suppress annoying warning  
+     WARNING ! Particles Container not found at /Event/Phys/*/Particles
+
+!========================== DaVinciMCTools v5r9 2005-03-22 ===================
+! 2005-03-21 - Luis Fernandez
+ - src/DecayChainNTuple.{h,pp}
+	 . Added generic decay chain ntuple (from HltSelChecker)
+ - src/DaVinciMCTools_load.cpp
+   . Load DecayChainNTuple
+
+! 2005-03-21 - Luis Fernandez
+ - src/TrueMCFilterCriterion.{h,cpp}
+   . Reviewed to find association of particles made from charged (online and 
+     offline) tracks or offline gammas in the same way. Works for online gammas, 
+     but requires offline calo clusters. To be fixed
+
+!========================== DaVinciTools v11r7 2005-03-22 ===================
+! 2005-03-11 - P. Koppenburg
+  - src/DaVinciTools_load.cpp
+    . Move MakeResonances from HltSelections
+  - src/MakeResonances.{cpp,h}
+    . Algorithm replacing CombineParticles (in PhysSelections).    
+    ALL entries about MakeResonances copied from HltSelections:
+    2005-03-11 - P. Koppenburg
+    . In cases when two particles of same PID are used in a decay,
+      avoid duplication of the mother. Implementation: sorts vector if PID
+      and checks that keys of particles with identical pids are ordered.
+      Bug reported by Luis Fernandez
+    2005-02-23 - P. Koppenburg
+    . Use CheckOverlap tool to kill overlap. Corrects bug that was affecting
+      decays with intermediate resonances.
+    2005-01-18 - P. Koppenburg
+    . Add MinMomentum and MinPt options to apply to sum 4-momentum
+      *before* mother particle is made
+    2005-01-13 - P. Koppenburg
+    . Override produceHitsos variable from GaudiHistoAlg so that it is off
+      by default
+    . New option "DecayDescriptors", a vector of strings that *supercedes*
+      the DecayDescriptor for the initialisation of the 
+      DecodeSimpleDecayDescriptor tool. This allows the same algorithm to
+      find several decays. 
+      Example:
+    2005-01-10 - P. Koppenburg
+    . Use IPlotTools to make recursive plots.
+      Example:
+         // D* stream
+         HLTselDstar.Members += {"MakeResonances/HLTFilterDstar"};
+         [...]
+         HLTFilterDstar.HistoProduce = true ;
+         HLTFilterDstar.DaughterPlots.Variables = { "M", "Chi2", "Pt", "IPs" } ;
+         HLTFilterDstar.MotherPlots.Variables =   { "M", "Chi2", "Pt", "IPs", "FS" } ;
+         HLTFilterDstar.DaughterPlotsPath = "DstarIn" ;
+         HLTFilterDstar.MotherPlotsPath   = "DstarOut";
+    2004-12-02 - P. Koppenburg
+    . Replacement algorithm for CombineParticles.
+    . Uses the ByPIDFilterCriterion to have the same syntax as 
+      FilterDesktop (replacing RefineSelection), in Phys/DaVinciFilter
+    . Allows to apply a mass window *before* the vertex cut that can 
+      save orders of magnitude in CPU time for a three-body decay 
+      for instance.
+    . Allows to kill overlapping combination of particles (can be switched off
+      by options)  
+    . Practical Example:
+         MakeResonances.PhysDesktop.InputLocations = {"Phys/PreLoadKaons", "Phys/PreLoadPions", "Phys/PreLoadProtons"};
+
+         MakeResonances.DecayDescriptor = "[D_s- -> K+ K- pi-]cc";
+         //MakeResonances.DaughterFilter.Selections = {"K- : BooleanFilterCriterion",
+         //                                           "pi+ : BooleanFilterCriterion"};
+         MakeResonances.MotherFilter.Selections = {"D_s- : VtxFilterCriterion/DsFilter"};
+         MakeResonances.Window = 50*MeV ;
+         MakeResonances.KillOverlap = true ;
+         MakeResonances.MotherFilter.DsFilter.MaxChi2 = 200 ; // some filtering
+  - options/DVTestMakeResonances.opts
+    . Tests that MakeResonances gets the same results as CombineParticles.
+    
+! 2005-03-10- P. Koppenburg for Luis Fernadez
+  - src/CheckOverlap.{h,cpp}
+    . Correct another bugs
+     
+!========================== ParticleMaker v1r4 2005-03-22 ===================
+! 2005-03-11 - P. Koppenburg
+ - src/CombinedParticleMaker.{cpp,h}
+   . Set AddBremPhoton to true by default
+#################################### PHYSSEL ###################################
+!========================== B2HH v2r5 2005-03-22 ===================
+! 2004-10-29 - P. Koppenburg for Angelo Carbone
+  - options/PreselB2hh.opts
+    . Harder cuts because of ExclusieSelection = false ;
+!========================== B2RhoRho v1r8 2005-03-22 ===================
+! 2005-03-11- P. Koppenburg
+  - src/PreselBd2RhoRho.{cpp,h}
+  - options/PreselBd2RhoRho.opts
+    . Harder cuts fro DC04v2
+!========================== Bd2DPi v1r0 2005-03-22 ===================
+! 2005-03-18 - P. Koppenburg
+    . First import
+!========================== Bs2DsH v3r4 2005-03-22 ===================
+! 2005-03-21 - Luis Fernandez
+ - src/Bs2DsHStrip.cpp
+   . Tighten a little bit some preselection cuts
+! 2004-03-16 - P. Koppenburg for Luis Fernandez
+ - options/PreselBs2DsH.opts
+ - src/Bs2DsHStrip.cpp
+ - src/Bs2DsHStrip.h
+   . New cuts to achieve a better reduction rate. Based on the study by
+     Louis Nicolas.
+!========================== Bs2KstarKstar v1r4 2005-03-22 ===================
+! 2004-03-22 - P. Koppenburg
+ - options/PreselBs2KstarKstar.opts
+   . Harder cuts for DC04v2
+!========================== Bs2PhiEtac v3r0 2005-03-22 ===================
+! 2005-03-21 - P. Koppenburg
+ - options/DVPreselBs2PhiEtac.opts
+   . Fool stripping tool
+
+! 2005-03-21 - Luis Fernandez
+ - options/DVMonitorBs2PhiEtac.opts
+   . Prepare for release, remove some DLL
+
+! 2005-03-18 - Luis Fernandez
+ - options Now use the generic HLT algorithms and tools
+   . New preselection files for the second round of stripping
+   . Monitoring options (efficiency, trigger, tagging, ntuple)
+   . All DC04 data for event type 13336000
+
+! 2005-03-18 - Luis Fernandez
+ - src/Bs2PhiEtac.cpp, Etac2FourHad.cpp
+   . Interface for CheckOverlap
+ - options
+   . Remove obsolete option files, just keep 'TDRsel' files
+
+!========================== Bu2LLK v2r0 2005-03-22 ===================
+! 2005-03-18 - P. Koppenburg
+  - options/*.opts
+    . Use new MakeResonances algorithm for preselection. Allows
+      to use the same instance for ee and mumu. Alos use
+      standard combined partticle maker.
+       
+!========================== PhysSelSys v8r0 2005-03-22 ===================
+use  B2HH                     v2r5     PhysSel
+use  B2RhoRho                 v1r8     PhysSel
+use  Bd2DPi                   v1r0     PhysSel
+use  Bs2DsDs                  v1r1     PhysSel
+use  Bs2DsH                   v3r4     PhysSel
+use  Bs2KstarKstar            v1r4     PhysSel
+use  Bs2PhiEtac               v3r0     PhysSel
+use  Bu2LLK                   v2r0     PhysSel
+use  Bu2D0K                   v1r0     PhysSel
+   
+   
+#####################################  REC  ####################################
+##################################### RICH #####################################
+##################################### TOOLS ####################################
+!========================== LoKi v3r10 2005-03-22 ===================
+! 2005-03-05 - Vanya BELYAEV
+
+ - LoKi/Particles.h, src/Particles.cpp, LoKi/ParticleCuts.h 
+    new functions 
+     LoKi::Particles::PseudoRapidity    (shortcut:   ETA)
+     LoKi::Particles::Phi               (shortcut:   PHI) 
+
+ - LoKi/MCParticles.h, src/MCParticles.cpp, LoKi/MCParticleCuts.h 
+    new functions 
+     LoKi::MCParticles::PseudoRapidity  (shortcut: MCETA)
+     LoKi::MCParticles::Phi             (shortcut: MCPHI) 
+
+
+! 2005-03-05 - Vanya BELYAEV
+ - src/Tuples.cpp 
+   add all subtriggers for L0DUReport class 
+ - cmt/requirements
+   version increment to v3r10 
+
+!========================== Stripping v2r0 2005-03-22 ===================
+! 2005-03-22 - P. Koppenburg
+  - options/DVMerge.opts
+    . Exception of Jpsi2MuMu
+! 2005-03-21 - P. Koppenburg
+  - options/DVMerge.opts
+  - python/strip.py
+    . New preselection Bu2D0K
+! 2005-03-18 - P. Koppenburg
+  - options/DVMerge.opts
+  - python/strip.py
+    . New preselection Bd2DPi.
+
 </PRE><H1><A NAME=v12r8>2005-03-03 DaVinci v12r8 - Parralel version with v13r0</A></H1><PRE>
 Version released in parralel with v13r0 containing a lot of trivial
 fixes to accomodate CLHEP 1.9 (used in v13r0, not in this version).
@@ -23,6 +279,20 @@ There are some changes in Physics tools:
   for the vector.
   
 - A new OverlapFilterCriterion applies the CheckOverlap tool in a filter.
+###################################### TRG #####################################
+!========================== L1Decision v4r4 2005-03-22 ===================
+! 2005-03-18 - Thomas Martin Schietinger
+ - L1Decision.cpp: adapt default thresholds to new L0 thresholds, J/psi window 
+   new open from m(J/psi)-500 to infinity (to include psi(2S) etc.)
+!========================== TrgPrimVertex v4r1 2005-03-22 ===================
+! 2005-03-21 - P. Koppenburg
+  - src/TrgPrimVertexFinder.*
+    . Make it a GaudiAlgorithm, split execute() method in readable blocks
+!========================== TrgSys v1r5 2005-03-22 ===================
+! 2005-03-21 - P. Koppenburg
+  - New TrgPrimVertex
+  - New L1Decision
+
 
 ################################################################################
 #                               DAVINCI v12r8                                  #
