@@ -11,7 +11,7 @@ branches cmt doc
 use Brunel              v23r4	Rec
 
 # Brunel utilities
-use BrunelAlgs          v3r4	Rec
+use BrunelAlgs          v3r4p1	Rec
 use LHCbTools           v1r0    Kernel
 use AsctToLinker        v1r1    Rec
 

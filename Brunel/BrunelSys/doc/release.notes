@@ -10,7 +10,8 @@
 
    Packages removed:  VeloAlgorithms
 
-   Packages modified: ITAlgorithms v14r2, ITCheckers v2r2, STDAQ v1r1
+   Packages modified: ITAlgorithms v14r2, ITCheckers v2r2, STDAQ v1r1,
+                      BrunelAlgs v3r4p1
 
 !======================= BrunelSys v23r3 2004-03-18 =======================
 ! 2004-03-18 - Marco Cattaneo
