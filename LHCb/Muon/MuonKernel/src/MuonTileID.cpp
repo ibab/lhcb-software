@@ -1,4 +1,4 @@
-// $Id: MuonTileID.cpp,v 1.6 2003-12-09 13:55:01 cattanem Exp $
+// $Id: MuonTileID.cpp,v 1.7 2005-03-06 13:54:01 atsareg Exp $
 // Include files
 
 #include "MuonKernel/MuonTileID.h"
@@ -122,3 +122,20 @@ int MuonTileID::localY(const IMuonLayout& lay) const {
   return nY() % padLayout.yGrid() ;
 
 } 
+
+std::string MuonTileID::toString() const {
+
+  char bufnm[64];
+ 
+  sprintf(bufnm,"S%d(%d,%d)Q%d,R%d,%d,%d",
+        	station(),
+		layout().xGrid(),
+		layout().yGrid(),
+		quarter(),
+		region(),
+		nX(),
+		nY()); 
+  std::string result = bufnm;
+  return result;  		
+
+}
