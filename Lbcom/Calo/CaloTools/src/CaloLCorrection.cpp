@@ -1,8 +1,11 @@
-// $Id: CaloLCorrection.cpp,v 1.4 2002-06-21 11:02:47 ibelyaev Exp $
+// $Id: CaloLCorrection.cpp,v 1.5 2002-07-03 10:59:10 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.4  2002/06/21 11:02:47  ibelyaev
+//  update in S-,L- and E-corrections
+//
 // Revision 1.3  2002/06/19 17:09:46  ibelyaev
 //  small update in L-correction
 //
@@ -173,8 +176,7 @@ StatusCode CaloLCorrection::operator() ( CaloHypo* hypo  ) const
   double deltaZ = cosTheta * Tbar;
   
   // "correct" parameters 
-  //  hypo -> position() -> setZ( z - deltaZ );
-  hypo -> position() -> setZ( z + deltaZ );
+  hypo -> position() -> setZ( z + deltaZ ) ;
   
   return StatusCode::SUCCESS ;
   
