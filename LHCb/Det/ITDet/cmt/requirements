@@ -1,12 +1,12 @@
 package ITDet
-version v1r2
+version v1r3
 
 branches cmt doc src options
 
 include_dirs $(ITDETROOT)
 
-use DetDesc v10r* Det
-use LHCbKernel v1r* Kernel
+use DetDesc v11r* Det
+use LHCbKernel v2r* Kernel
 
 #---- link library
 library ITDetLib ../src/Lib/*.cpp 

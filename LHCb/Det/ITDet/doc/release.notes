@@ -1,6 +1,10 @@
 Package         : ITDet
 Package manager : M. Needham 
 
+!========================= ITDet v1r3 2002-12-04 =========================
+! 2002-11-19 - Florence Ranjard
+ - requirements - use Gaudi v11r0
+
 !========================== ITDet v1r2 2002-11-18 ==========================
 M. Needham
   DeITDetector.cpp Initialize all variables
