@@ -7,6 +7,9 @@
 
 !======================= LHCbSys v16r2 2004-09-06 =======================
 ! 2004-09-06 - Marco Cattaneo
+ - New packages: MuonDAQ v1r2, VeloDAQ v1r0, STDAQ v1r3
+                 (Moved here from application projects)
+
  - Modified packages: KernelSys v4r2, LHCbKernel v5r2, CaloKernel v3r2,
                    EventSys v18r2, CaloEvent v13r5, EventAssoc v1r3,
                    AssociatorsSys v1r15, Associators v2r3, CaloAssociators v4r3,
@@ -31,6 +34,9 @@
 
  - In CaloInterfaces v4r2:
    . Modifications to prepare for HLT developments
+
+ - In MuonDAQ v1r2
+   . Include files moved to public directory
  
 !======================= LHCbSys v16r1 2004-07-29 =======================
 This version is built against Gaudi v15r1

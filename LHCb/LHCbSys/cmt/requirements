@@ -67,6 +67,12 @@ use CaloAssociators    	v4r3	Calo
 use MuonAssociators    	v1r4	Muon
 use Relations		v1r0	Kernel
 
+# Raw buffer encoding and decoding
+use MuonDAQ		v1r2	Muon
+use STDAQ		v1r3	IT
+use VeloDAQ		v1r0	Velo
+use RichDAQ		v1r5	Rich
+
 # Other stuff
 use LHCbInterfaces	v1r0	Kernel
 use LHCbAlgs		v1r1	Kernel
@@ -75,7 +81,6 @@ use CaloInterfaces	v4r2	Calo
 use CaloUtils		v4r7	Calo
 use RichTools		v1r0	Rich
 use RichMCTools		v2r0	Rich
-use RichDAQ		v1r5	Rich
 
 # LHCb  Examples
 use DetDescChecks	v2r1	Det
