@@ -1,0 +1,42 @@
+#============================================================================
+# Created    : 2002-05-22
+# Maintainer : Olivier Dormond
+#
+# Documentation on the requirement file can be found at
+# http://cern.ch/lhcb-comp/Support/html/new_structure.pdf
+#============================================================================
+package           FlavourTagging
+version           v1r0
+
+#============================================================================
+# Structure, i.e. directories to process. 
+#============================================================================
+branches          cmt doc src options FlavourTagging 
+
+#============================================================================
+# Set the default paths for the Tagging options
+#============================================================================
+set FLAVOURTAGGINGOPTS ${FLAVOURTAGGINGROOT}/options
+include_dirs           $(FLAVOURTAGGINGROOT)
+
+#============================================================================
+# Used packages. 
+#============================================================================
+use DaVinciTools	v4r*	Phys
+use PhysEvent           v4r*    Event
+
+#============================================================================
+# Component library building rule
+#============================================================================
+library          FlavourTagging    ../src/*.cpp
+
+#============================================================================
+# define component library link options
+#============================================================================
+apply_pattern    package_Clinkopts
+apply_pattern    packageShr
+
+#============================================================================
+private
+apply_pattern    package_Cshlibflags
+

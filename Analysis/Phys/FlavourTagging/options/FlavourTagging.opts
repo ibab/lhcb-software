@@ -1,0 +1,75 @@
+//
+//FlavourTaggingAlgorithm.TagLocation = "/Event/Phys/User/Tags";
+FlavourTaggingAlgorithm.ParticlesLocation = "/Event/Phys/Prod";
+//FlavourTaggingAlgorithm.PrimaryVerticesLocation = "";
+//FlavourTaggingAlgorithm.DesktopName = "PhysDesktop";
+FlavourTaggingAlgorithm.PhysDesktop.InputLocations = { "/Event/Phys/User" };
+//FlavourTaggingAlgorithm.TaggingTool = "OrderedTaggingTool";
+
+FlavourTaggingAlgorithm.OrderedTaggingTool.TaggingTools =
+{ "SingleParticleTaggingTool/MuonTagger",
+  "SingleParticleTaggingTool/ElectronTagger",
+  "SingleParticleTaggingTool/KaonTagger" };
+
+// --- Muon tags
+
+FlavourTaggingAlgorithm.OrderedTaggingTool.MuonTagger.FilterName = "ParticleFilter";
+//FlavourTaggingAlgorithm.OrderedTaggingTool.MuonTagger.GeomDispCalculator = "GeomDispCalculator";
+//FlavourTaggingAlgorithm.OrderedTaggingTool.MuonTagger.PrimaryVertices = "";
+//FlavourTaggingAlgorithm.OrderedTaggingTool.MuonTagger.InverseCharge = true;
+FlavourTaggingAlgorithm.OrderedTaggingTool.MuonTagger.AllVertices = true;
+FlavourTaggingAlgorithm.OrderedTaggingTool.MuonTagger.MinImpactSignificance = -1; // -1 == disable
+FlavourTaggingAlgorithm.OrderedTaggingTool.MuonTagger.MaxImpactSignificance = -1; // -1 == disable
+
+FlavourTaggingAlgorithm.OrderedTaggingTool.MuonTagger.ParticleFilter.CriteriaNames = { "ParticleTaggerCriterion" };
+FlavourTaggingAlgorithm.OrderedTaggingTool.MuonTagger.ParticleFilter.ParticleTaggerCriterion.ParticleName = "mu+";
+FlavourTaggingAlgorithm.OrderedTaggingTool.MuonTagger.ParticleFilter.ParticleTaggerCriterion.MinConfLevel = 0.9;
+FlavourTaggingAlgorithm.OrderedTaggingTool.MuonTagger.ParticleFilter.ParticleTaggerCriterion.MaxConfLevel = -1; // -1 == disable
+FlavourTaggingAlgorithm.OrderedTaggingTool.MuonTagger.ParticleFilter.ParticleTaggerCriterion.MinTransverseMomentum = 1200; // -1 == disable
+FlavourTaggingAlgorithm.OrderedTaggingTool.MuonTagger.ParticleFilter.ParticleTaggerCriterion.MaxTransverseMomentum = -1; // -1 == disable
+FlavourTaggingAlgorithm.OrderedTaggingTool.MuonTagger.ParticleFilter.ParticleTaggerCriterion.MinMomentum = 4500; // -1 == disable
+FlavourTaggingAlgorithm.OrderedTaggingTool.MuonTagger.ParticleFilter.ParticleTaggerCriterion.MaxMomentum = -1; // -1 == disable
+FlavourTaggingAlgorithm.OrderedTaggingTool.MuonTagger.ParticleFilter.ParticleTaggerCriterion.MinVeloZ = -2000;
+FlavourTaggingAlgorithm.OrderedTaggingTool.MuonTagger.ParticleFilter.ParticleTaggerCriterion.MaxVeloZ = 1000;
+
+// --- Electron tags
+
+FlavourTaggingAlgorithm.OrderedTaggingTool.ElectronTagger.FilterName = "ParticleFilter";
+//FlavourTaggingAlgorithm.OrderedTaggingTool.ElectronTagger.GeomDispCalculator = "GeomDispCalculator";
+//FlavourTaggingAlgorithm.OrderedTaggingTool.ElectronTagger.PrimaryVertices = "";
+//FlavourTaggingAlgorithm.OrderedTaggingTool.ElectronTagger.InverseCharge = true;
+FlavourTaggingAlgorithm.OrderedTaggingTool.ElectronTagger.AllVertices = true;
+FlavourTaggingAlgorithm.OrderedTaggingTool.ElectronTagger.MinImpactSignificance = -1; // -1 == disable
+FlavourTaggingAlgorithm.OrderedTaggingTool.ElectronTagger.MaxImpactSignificance = -1; // -1 == disable
+
+FlavourTaggingAlgorithm.OrderedTaggingTool.ElectronTagger.ParticleFilter.CriteriaNames = { "ParticleTaggerCriterion" };
+FlavourTaggingAlgorithm.OrderedTaggingTool.ElectronTagger.ParticleFilter.ParticleTaggerCriterion.ParticleName = "e+";
+FlavourTaggingAlgorithm.OrderedTaggingTool.ElectronTagger.ParticleFilter.ParticleTaggerCriterion.MinConfLevel = 0.7;
+FlavourTaggingAlgorithm.OrderedTaggingTool.ElectronTagger.ParticleFilter.ParticleTaggerCriterion.MaxConfLevel = -1; // -1 == disable
+FlavourTaggingAlgorithm.OrderedTaggingTool.ElectronTagger.ParticleFilter.ParticleTaggerCriterion.MinTransverseMomentum = 1000; // -1 == disable
+FlavourTaggingAlgorithm.OrderedTaggingTool.ElectronTagger.ParticleFilter.ParticleTaggerCriterion.MaxTransverseMomentum = -1; // -1 == disable
+FlavourTaggingAlgorithm.OrderedTaggingTool.ElectronTagger.ParticleFilter.ParticleTaggerCriterion.MinMomentum = 8000; // -1 == disable
+FlavourTaggingAlgorithm.OrderedTaggingTool.ElectronTagger.ParticleFilter.ParticleTaggerCriterion.MaxMomentum = -1; // -1 == disable
+FlavourTaggingAlgorithm.OrderedTaggingTool.ElectronTagger.ParticleFilter.ParticleTaggerCriterion.MinVeloZ = -2000;
+FlavourTaggingAlgorithm.OrderedTaggingTool.ElectronTagger.ParticleFilter.ParticleTaggerCriterion.MaxVeloZ = 1000;
+
+// --- Kaon tags
+
+FlavourTaggingAlgorithm.OrderedTaggingTool.KaonTagger.FilterName = "ParticleFilter";
+//FlavourTaggingAlgorithm.OrderedTaggingTool.KaonTagger.GeomDispCalculator = "GeomDispCalculator";
+//FlavourTaggingAlgorithm.OrderedTaggingTool.KaonTagger.PrimaryVertices = "";
+//FlavourTaggingAlgorithm.OrderedTaggingTool.KaonTagger.InverseCharge = true;
+FlavourTaggingAlgorithm.OrderedTaggingTool.KaonTagger.AllVertices = true;
+FlavourTaggingAlgorithm.OrderedTaggingTool.KaonTagger.MinImpactSignificance = 4.2; // -1 == disable
+FlavourTaggingAlgorithm.OrderedTaggingTool.KaonTagger.MaxImpactSignificance = -1; // -1 == disable
+
+FlavourTaggingAlgorithm.OrderedTaggingTool.KaonTagger.ParticleFilter.CriteriaNames = { "ParticleTaggerCriterion" };
+FlavourTaggingAlgorithm.OrderedTaggingTool.KaonTagger.ParticleFilter.ParticleTaggerCriterion.ParticleName = "K+";
+FlavourTaggingAlgorithm.OrderedTaggingTool.KaonTagger.ParticleFilter.ParticleTaggerCriterion.MinConfLevel = 0.95;
+FlavourTaggingAlgorithm.OrderedTaggingTool.KaonTagger.ParticleFilter.ParticleTaggerCriterion.MaxConfLevel = -1; // -1 == disable
+FlavourTaggingAlgorithm.OrderedTaggingTool.KaonTagger.ParticleFilter.ParticleTaggerCriterion.MinTransverseMomentum = 400; // -1 == disable
+FlavourTaggingAlgorithm.OrderedTaggingTool.KaonTagger.ParticleFilter.ParticleTaggerCriterion.MaxTransverseMomentum = -1; // -1 == disable
+FlavourTaggingAlgorithm.OrderedTaggingTool.KaonTagger.ParticleFilter.ParticleTaggerCriterion.MinMomentum = 2000; // -1 == disable
+FlavourTaggingAlgorithm.OrderedTaggingTool.KaonTagger.ParticleFilter.ParticleTaggerCriterion.MaxMomentum = -1; // -1 == disable
+FlavourTaggingAlgorithm.OrderedTaggingTool.KaonTagger.ParticleFilter.ParticleTaggerCriterion.MinVeloZ = -2000;
+FlavourTaggingAlgorithm.OrderedTaggingTool.KaonTagger.ParticleFilter.ParticleTaggerCriterion.MaxVeloZ = 1000;
