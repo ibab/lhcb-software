@@ -1,6 +1,18 @@
 Package Event/GenEvent
-package coordinator: W.Pokorski
+package coordinator: W.Pokorski, G.Corti
 
+!================= GenEvent v3r2 2004-04-07 ===========================
+! 2004-04-07 - Gloria CORTI
+ - Introduce xml for new classes:
+   . GenMCLink.xml - holds info to connect signal MCParticle to corresponding
+                     GenParticle in HepMC (pointer to HepMC event and barcode)
+   . HardInfo.xml  - holds info relative to hard process for each pp-collision
+   . GenCollision.xml - extend class Collision to add refernce to HardInfo
+ - Add new class declaration to
+   . GenEvent_load.cpp
+ - Add creation of header file and dictionary in requirements and increase
+   version number
+                   
 !================= GenEvent v3r1 2004-04-01 ===========================
 ! 2004-04-01 - Gloria CORTI
  - Remove transient declaration from GenEvent.xml to persistify with POOL

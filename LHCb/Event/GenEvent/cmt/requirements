@@ -1,17 +1,20 @@
 package GenEvent
-version v3r1
+version v3r2
 
 branches cmt dict doc src xml Event
 
 use HepMC        v*	Sim
 use LHCbKernel   v4r*	Kernel
+use Event        v4*    Event
 
 include_dirs $(GENEVENTROOT)
 
 # Produce Header-Files & dictionary from XML description
 #============================================================================
-document obj2doth GenEventObj2Doth ../xml/GenEvent.xml
-document obj2dict GenEventObj2Dict ../xml/GenEvent.xml
+document obj2doth GenEventObj2Doth ../xml/GenEvent.xml ../xml/HardInfo.xml \
+                                   ../xml/GenMCLink.xml ../xml/GenCollision.xml
+document obj2dict GenEventObj2Dict ../xml/GenEvent.xml ../xml/HardInfo.xml \
+                                   ../xml/GenMCLink.xml ../xml/GenCollision.xml
 
 # Produce lcg dictionary for HepMC
 apply_pattern lcg_dictionary dictionary=HepMC headerfiles=$(GENEVENTROOT)/src/HepMC_dict.h selectionfile=../xml/HepMC_dict.xml options="--split"
