@@ -1,6 +1,10 @@
 package GaudiConf
 package manager: M.Cattaneo
 
+!======================== GaudiConf v8r3 2004-11-29 ========================
+! 2004-11-29 - Marco Cattaneo
+ - Remove remaining .py options files (obsolete)
+
 !======================== GaudiConf v8r2 2004-11-26 ========================
 ! 2004-11-26 - Marco Cattaneo
  - Remove obsolete options files (Common.opts, Dlls.opts, Services.opts)
