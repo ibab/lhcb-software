@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.31 2002-07-10 17:33:11 gcorti Exp $
+# $Id: requirements,v 1.32 2002-07-18 20:21:14 gcorti Exp $
 # Created    : 07/02/2002
 # Maintainer : Gloria Corti
 #
@@ -23,7 +23,6 @@ branches          cmt doc src job options
 #============================================================================
 #version_strategy first_choice
 
-
 # Used packages. Specify the version, * at the end specifies 'any revision'
 #============================================================================
 #--- CMT and Gaudi policy
@@ -37,20 +36,20 @@ use HTL            v13r10p1
 use NAGC           v5r0
 use XERCES         v16r0p1
 use CERNLIB        v2001
-use ROOT           v2r302p0
+use ROOT           v2r303p0
 
 #--- Gaudi libraries - Gaudi v10r1
 use GaudiKernel        v12r3
-use GaudiSvc           v8r2
+use GaudiSvc           v8r3
 use GaudiAlg           v6r1
 use GaudiAud           v6r0
 use GaudiNagC          v7r0
-use GaudiDb            v8r0
-use GaudiRootDb        v8r1
+use GaudiDb            v8r1
+use GaudiRootDb        v9r0
 
 #--- Histogram persistency ( choose the one you prefer )
 use HbookCnv           v12r0
-use RootHistCnv        v6r0
+use RootHistCnv        v8r0
 
 #---LHCb common libraries
 use GaudiConf      v6r3
@@ -58,32 +57,55 @@ use BookKeeping    v1r1   Tools
 use LHCbKernel     v1r2   Kernel
 
 #--- Subdetector Kernels ( add any other Kernel you need )
+use RichKernel   v1r2   Rich
+use TrKernel     v11r0  Tr
+use CaloKernel   v2r0   Calo
+use MuonKernel   v2r1   Muon
+
 
 #--- Detector description ( add any other Det package you need )
 use DetDesc        v10r3   Det
 use XmlDDDB        v12r1   Det
 use ITDet          v1r0    Det
 use OTDet          v2r0    Det
+use CaloDet        v5r0    Det
 use VeloDet        v6r0    Det
 use Magnet         v1r1    Det
 
 #--- Event Model ( via EventSys the whole Event Model is available )
-use EventSys       v11r1  Event
+#    explicit packages now becuase of DEV development
+use EventKernel  v2r0    Event
+use Event        v2r0    Event
+use VeloEvent    v11r0   Event
+use ITEvent      v11r0   Event
+use OTEvent      v11r0   Event
+use TrEvent      v11r0   Event
+use RichEvent    v3r1    Event
+use CaloEvent    v11r1   Event
+use MuonEvent    v2r0    Event
+use L0Event      v12r0   Event
+use L1Event      v11r0   Event
+use PhysEvent    v6r0    Event
+use DbCnv        v7r0    Event
+#use EventSys       v11r0  Event
 
 #--- Associators
-use  ITAssociators      v2r*    IT
-use  OTAssociators      v2r*    OT
-use  VeloAssociators    v1r*    Velo
-use  CaloAssociators    v2r*    Calo
-use  CaloAssociators    v2r*    Calo
-use  CaloRec   		v2r*    Calo
-use  MuonAssociators    v1r*    Muon
-use  TrAssociators      v2r*    Tr
-use  L0Calo		v6r*	L0
-use  L1VeloTrack 	v1r*	L1
+use  ITAssociators      v2r0    IT
+use  OTAssociators      v2r0    OT
+use  VeloAssociators    v1r0    Velo
+use  CaloAssociators    v2r0    Calo
+use  CaloRec   		v2r1    Calo
+use  MuonAssociators    v1r0    Muon
+use  TrAssociators      v2r0    Tr
+use  L0Calo		v6r0	L0
+use  L1VeloTrack 	v1r0	L1
+
+#--- ProtoParticles 
+use CaloUtils 	    v4r1   Calo
+use CaloInterfaces  v2r2   Calo
+use GlobalReco      v1r0   Rec
 
 #--- DaVinci packages
-use GlobalReco           v1r0   Rec
 use DaVinciTools         v5r0   Phys
 use DaVinciAssociators   v2r0   Phys
 use DaVinciMCTools       v2r0   Phys
