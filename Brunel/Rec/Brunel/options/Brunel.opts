@@ -82,8 +82,8 @@ ApplicationMgr.ExtSvc += { "MagneticFieldSvc" };
 #include "$TRALGORITHMSROOT/options/Brunel.opts"
 #include "$TRSICBCNVROOT/options/Brunel.opts"
 
-// LHCb Light geometry
-#include "$BRUNELOPTS/LHCbLight.opts"
+// Database specific options
+#include "$LHCBDBASE/options/Brunel.opts"
 
 // Leave next two lines as last lines
 #include "$BRUNELOPTS/BrunelUser.opts"

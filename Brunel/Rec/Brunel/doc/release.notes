@@ -3,6 +3,22 @@ Package Coordinator: Marco Cattaneo
 
 Purpose: LHCb reconstruction program
 
+! 20011017 Brunel v8 (MC)
+   Major repackaging, no change in functionality:
+   - all source files have been removed and moved to new Rec/BrunelSicb package
+   - version number is set by a compiler define flag in the requirements file
+   - same Brunel version can read data produced with multiple dbase versions,
+     starting from dbase v240
+
+   In options
+   - Remove LHCbLight.opts (moved to dbase v241)
+   - Brunel.opts: include $LHCBDBASE/options/Brunel.opts
+
+   In cmt/requirements
+   - remove use dbase ($LHCBDBASE to be set externally)
+   - add macro_append fflags
+   - use BrunelSicb v1 Rec
+! =================================================================
 ! 20010913 Brunel v7r1 (MC)
 
    In cmt/requirements

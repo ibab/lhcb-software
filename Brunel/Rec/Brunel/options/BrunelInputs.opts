@@ -8,9 +8,10 @@
 //--------------------------------------------------------------
 // >>> PILEUP now done at generator level, no longer supported in Brunel <<<
 //--------------------------------------------------------------
-// Define the main event data: SICBMC = v248
+// Define the main event data. Examples depending on dbase version
 //--------------------------------------------------------------
-EventSelector.Input = {"JOBID='66511'"};
+EventSelector.Input = {"JOBID='68375'"}; // SICB/dbase v240
+//EventSelector.Input = {"JOBID='66511'"}; // SICB/dbase v241
 ApplicationMgr.EvtMax = 10;
 //EventSelector.FirstEvent = 6;
 //--------------------------------------------------------------

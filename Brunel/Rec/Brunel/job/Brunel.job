@@ -24,31 +24,48 @@
 # in INTERACTIVE output files are written onto $WORKDIR
 # you have to set $WORKDIR to what you want
 #
+if ($#argv == 0 ) then
+  echo "\nUsage: Brunel.job <dbase-version> [<mode>]"
+  echo " where:"
+  echo "  <dbase-version> (mandatory) is SICB/dbase version (e.g. v241)"
+  echo "  <mode>          (optional)  is execution mode (e.g. LinuxStatic)"
+  exit 0
+else
+  echo "using SICB/dbase version $1"
+#  setenv LHCBDBASE $LHCBSOFT/SICB/dbase/$1
+  setenv LHCBDBASE ~/newmycmt/SICB/dbase/$1
+endif
+#   
 set MODE = $CMTCONFIG
 if ($?LS_SUBCWD) then 
-# in BATCH go to the BATCH local directory
-  cd $WORKDIR
+# in BATCH, WORKDIR is already set to local directory
 else
 # in interactive set WORKDIR to your output directory
   setenv WORKDIR /tmp 
-  if ($#argv == 1) set MODE = "$1" 
+  if ($#argv == 2) set MODE = "$2" 
 endif
+
+# Root directory of job is parent directory of script location
 set current = $PWD
+cd `dirname $0` 
+cd ..
+set MYJOBROOT = $PWD
+#
+# Go to working directory
+cd $WORKDIR
 
 #
-# == set the root directory of your job
-setenv MYJOBROOT $W1/CMTv1r8/Rec/Brunel/v7r1
 # == reset the dynamic library search path
 unsetenv LD_LIBRARY_PATH
 # == set the program environment
 source $MYJOBROOT/cmt/setup.csh -tag=$MODE
 
 # == set soft_links to use packages
-if ($MODE != "LinuxStatic") then
-  cd $MYJOBROOT/cmt
-  $CMTROOT/mgr/cmt build library_links
-  cd $current
-endif
+#if ($MODE != "LinuxStatic") then
+#  cd $MYJOBROOT/cmt
+#  $CMTROOT/mgr/cmt build library_links
+#  cd $current
+#endif
 
 # == set the name of the executable
 setenv EXEC Brunel
@@ -76,7 +93,9 @@ else
 endif
 
 # == job is finished: remove temporary files ==========
-rm tmp*
+rm tmpjob.exe
+rm -f *.opts
+rm -f tmpjob.cards
 
 # == job is finished: if in batch copy output files on user directories
 #

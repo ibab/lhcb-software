@@ -1,7 +1,7 @@
 package Brunel
-version v7r1
+version v8
 
-branches doc cmt src job options Brunel
+branches doc cmt job options
 
 ignore_pattern package_stamps
 
@@ -26,6 +26,7 @@ use HbookCnv     v10r1
 
 # Brunel utilities
 use BrunelKernel v2     Rec
+use BrunelSicb   v1     Rec
 
 # Subdetector kernels
 use TrKernel     v5     Tr
@@ -35,7 +36,6 @@ use CaloGen      v2     Calo
 use DetDesc      v7     Det
 use XmlDDDB      v6r1   Det
 use CaloDet      v2r1   Det
-use dbase        v241   SICB
 
 # Event Model
 use LHCbEvent    v11    Event
@@ -92,11 +92,14 @@ use triskel      v4     SICB
 use trit1tr      v3r3   SICB
 use trivert      v5r3   SICB
 use trielec      v5r1   SICB
+
 #
 #===== build Brunel =========================
 application Brunel $(GAUDICONFROOT)/src/GaudiMain.cpp \
-                   ../src/BrunelSicb/*.F ../src/BrunelSicb/*.cpp
-
+                    $(BRUNELSICBROOT)/src/Objs/sicbvers.F \
+                    $(BRUNELSICBROOT)/src/Objs/recinit.F \
+                    $(BRUNELSICBROOT)/src/Objs/udinit.F \
+                    $(BRUNELSICBROOT)/src/Objs/GetZebraSize.F
 # ========================= set macros ============================
 
 macro Brunel_linkopts    "$(application_linkopts)"
@@ -104,5 +107,9 @@ macro Brunel_linkopts    "$(application_linkopts)"
 macro_append Brunel_linkopts " "\
                 Linux        " -g -Wl,--start-group "\
                 Linuxdbx     " -g -Wl,--start-group "
+
+#== Set the Brunel version = v *10000 + r * 100 + p * 100 ==
+macro_append fflags " -DBrunelVersion=80000 " \
+           VisualC  " /DBrunelVersion=80000 "
 
 apply_pattern application_path
