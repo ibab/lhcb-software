@@ -74,8 +74,8 @@ void EvtBtoXsgamma::init(){
   if (getNArg() == 0) {
     
     report(ERROR,"EvtGen") << "EvtBtoXsgamma generator expected "
-                           << " at least 1 argument but found: "<<getNArg()<<endl;
-    report(ERROR,"EvtGen") << "Will terminate execution!"<<endl;
+      << " at least 1 argument but found: "<<getNArg()<<std::endl;
+    report(ERROR,"EvtGen") << "Will terminate execution!"<<std::endl;
     ::abort();
     
   }
@@ -85,8 +85,8 @@ void EvtBtoXsgamma::init(){
   else {
     report(ERROR,"EvtGen") << "No valid EvtBtoXsgamma generator model selected "
                            << "Set arg(0) to 1 for Ali-Greub model or 2 for "
-			   <<" Kagan model"<<endl;
-    report(ERROR,"EvtGen") << "Will terminate execution!"<<endl;
+                           <<" Kagan model"<<std::endl;
+    report(ERROR,"EvtGen") << "Will terminate execution!"<<std::endl;
     ::abort();
 
   }
@@ -103,7 +103,7 @@ void EvtBtoXsgamma::decay( EvtParticle *p ){
 
   if ( p->getNDaug() != 0 ) {
     //Will end up here because maxrate multiplies by 1.2
-    report(DEBUG,"EvtGen") << "In EvtBtoXsgamma: X_s daughters should not be here!"<<endl;
+    report(DEBUG,"EvtGen") << "In EvtBtoXsgamma: X_s daughters should not be here!"<< std::endl;
     return;
   }
 

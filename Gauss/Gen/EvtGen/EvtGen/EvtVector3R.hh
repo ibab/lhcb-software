@@ -49,7 +49,7 @@ public:
   inline void set(double x,double y ,double z);
   void applyRotateEuler(double phi,double theta,double ksi);
   inline double get(int i) const;
-  friend ostream& operator<<(ostream& s,const EvtVector3R& v);
+  friend std::ostream& operator<<(std::ostream& s,const EvtVector3R& v);
   double dot(const EvtVector3R& v2);
   double d3mag() const;
 

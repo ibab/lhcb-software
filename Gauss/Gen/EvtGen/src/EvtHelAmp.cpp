@@ -115,7 +115,7 @@ void EvtHelAmp::init(){
 
   if (verbose()){
     report(INFO,"EvtGen")<<"_nA,_nB,_nC:"
-			 <<_nA<<","<<_nB<<","<<_nC<<endl;
+			 <<_nA<<","<<_nB<<","<<_nC<<std::endl;
   }
 
   //find out what 2 times the spin is
@@ -125,7 +125,7 @@ void EvtHelAmp::init(){
 
   if (verbose()){
     report(INFO,"EvtGen")<<"_JA2,_JB2,_JC2:"
-			 <<_JA2<<","<<_JB2<<","<<_JC2<<endl;
+			 <<_JA2<<","<<_JB2<<","<<_JC2<<std::endl;
   }
 
   //allocate memory
@@ -177,19 +177,19 @@ void EvtHelAmp::init(){
   fillHelicity(_lambdaC2,_nC,_JC2);
 
   if (verbose()){
-    report(INFO,"EvtGen")<<"Helicity states of particle A:"<<endl;
+    report(INFO,"EvtGen")<<"Helicity states of particle A:"<<std::endl;
     for(i=0;i<_nA;i++){
-      report(INFO,"EvtGen")<<_lambdaA2[i]<<endl;
+      report(INFO,"EvtGen")<<_lambdaA2[i]<<std::endl;
     }
 
-    report(INFO,"EvtGen")<<"Helicity states of particle B:"<<endl;
+    report(INFO,"EvtGen")<<"Helicity states of particle B:"<<std::endl;
     for(i=0;i<_nB;i++){
-      report(INFO,"EvtGen")<<_lambdaB2[i]<<endl;
+      report(INFO,"EvtGen")<<_lambdaB2[i]<<std::endl;
     }
 
-    report(INFO,"EvtGen")<<"Helicity states of particle C:"<<endl;
+    report(INFO,"EvtGen")<<"Helicity states of particle C:"<<std::endl;
     for(i=0;i<_nC;i++){
-      report(INFO,"EvtGen")<<_lambdaC2[i]<<endl;
+      report(INFO,"EvtGen")<<_lambdaC2[i]<<std::endl;
     }
   }
 
@@ -215,7 +215,7 @@ void EvtHelAmp::init(){
 	argcounter+=2;
 	if (verbose()){
 	  report(INFO,"EvtGen")<<"_HBC["<<ib<<"]["<<ic<<"]="
-			       <<_HBC[ib][ic]<<endl;
+			       <<_HBC[ib][ic]<<std::endl;
 	}
       }
     }
@@ -259,7 +259,7 @@ void EvtHelAmp::initProbMax(){
     }
   }
 
-  //report(INFO,"EvtGen")<<"Calculated probmax"<<maxprob<<endl;
+  //report(INFO,"EvtGen")<<"Calculated probmax"<<maxprob<<std::endl;
   
   setProbMax(maxprob);
 
@@ -278,10 +278,10 @@ void EvtHelAmp::decay( EvtParticle *p){
   double theta=acos(pB.get(3)/pB.d3mag());
   double phi=atan2(pB.get(2),pB.get(1));
 
-  //cout <<"Theta:"<<theta<<endl;
+  //std::cout <<"Theta:"<<theta<<std::endl;
 
-  //report(INFO,"EvtGen")<<"pB:"<<pB<<endl;
-  //report(INFO,"EvtGen")<<"cos(theta),phi:"<<cos(theta)<<","<<phi<<endl;
+  //report(INFO,"EvtGen")<<"pB:"<<pB<<std::endl;
+  //report(INFO,"EvtGen")<<"cos(theta),phi:"<<cos(theta)<<","<<phi<<std::endl;
 
   double c=sqrt((2*_JA2+1)/(4*EvtConst::pi));
 
@@ -289,7 +289,7 @@ void EvtHelAmp::decay( EvtParticle *p){
 
   double prob1=0.0;
 
-  //cout <<"_nA,_nB,_nC:"<<_nA<<" "<<_nB<<" "<<_nC<<endl;
+  //std::cout <<"_nA,_nB,_nC:"<<_nA<<" "<<_nB<<" "<<_nC<<std::endl;
 
   for(ia=0;ia<_nA;ia++){
     for(ib=0;ib<_nB;ib++){
@@ -303,7 +303,7 @@ void EvtHelAmp::decay( EvtParticle *p){
 	    exp(EvtComplex(0.0,phi*0.5*(_lambdaA2[ia]-_lambdaB2[ib]+
 					_lambdaC2[ic])))*dfun;
 
-	  //cout<<"dfun:"<<dfun<<endl;
+	  //std::cout<<"dfun:"<<dfun<<std::endl;
 
 	}
 	prob1+=real(_amp[ia][ib][ic]*conj(_amp[ia][ib][ic]));
@@ -311,7 +311,7 @@ void EvtHelAmp::decay( EvtParticle *p){
     }
   }
 
-  //cout << "prob1:"<<prob1<<endl;
+  //std::cout << "prob1:"<<prob1<<std::endl;
 		 
   setUpRotationMatrices(p,theta,phi);
 
@@ -363,7 +363,7 @@ void EvtHelAmp::decay( EvtParticle *p){
   }
 
   if (fabs(prob1-prob2)>0.000001*prob1){
-    cout << "prob1,prob2:"<<prob1<<" "<<prob2<<endl;
+    std::cout << "prob1,prob2:"<<prob1<<" "<<prob2<<std::endl;
     ::abort();
   }
     
@@ -423,7 +423,7 @@ void EvtHelAmp::setUpRotationMatrices(EvtParticle* p,double theta, double phi){
     break;
 
   default:
-    report(ERROR,"EvtGen") << "Spin2(_JA2)="<<_JA2<<" not supported!"<<endl;
+    report(ERROR,"EvtGen") << "Spin2(_JA2)="<<_JA2<<" not supported!"<<std::endl;
     ::abort();
   }
   
@@ -455,7 +455,7 @@ void EvtHelAmp::setUpRotationMatrices(EvtParticle* p,double theta, double phi){
     break;
 
   default:
-    report(ERROR,"EvtGen") << "Spin2(_JB2)="<<_JB2<<" not supported!"<<endl;
+    report(ERROR,"EvtGen") << "Spin2(_JB2)="<<_JB2<<" not supported!"<<std::endl;
     ::abort();
   }
   
@@ -484,7 +484,7 @@ void EvtHelAmp::setUpRotationMatrices(EvtParticle* p,double theta, double phi){
     break;
 
   default:
-    report(ERROR,"EvtGen") << "Spin2(_JC2)="<<_JC2<<" not supported!"<<endl;
+    report(ERROR,"EvtGen") << "Spin2(_JC2)="<<_JC2<<" not supported!"<<std::endl;
     ::abort();
   }
   

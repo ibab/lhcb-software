@@ -52,13 +52,13 @@ EvtGammaMatrix operator*(const EvtComplex& c,const EvtGammaMatrix& g){
 }
 
 
-ostream& operator<<(ostream& s, const EvtGammaMatrix& g){
+std::ostream& operator<<(std::ostream& s, const EvtGammaMatrix& g){
 
 
-  s<<"["<<g.gamma[0][0]<<","<<g.gamma[0][1]<<","<<g.gamma[0][2]<<","<<g.gamma[0][3]<<"]"<<endl;
-  s<<"["<<g.gamma[1][0]<<","<<g.gamma[1][1]<<","<<g.gamma[1][2]<<","<<g.gamma[1][3]<<"]"<<endl;
-  s<<"["<<g.gamma[2][0]<<","<<g.gamma[2][1]<<","<<g.gamma[2][2]<<","<<g.gamma[2][3]<<"]"<<endl;
-  s<<"["<<g.gamma[3][0]<<","<<g.gamma[3][1]<<","<<g.gamma[3][2]<<","<<g.gamma[3][3]<<"]"<<endl;
+  s<<"["<<g.gamma[0][0]<<","<<g.gamma[0][1]<<","<<g.gamma[0][2]<<","<<g.gamma[0][3]<<"]"<<std::endl;
+  s<<"["<<g.gamma[1][0]<<","<<g.gamma[1][1]<<","<<g.gamma[1][2]<<","<<g.gamma[1][3]<<"]"<<std::endl;
+  s<<"["<<g.gamma[2][0]<<","<<g.gamma[2][1]<<","<<g.gamma[2][2]<<","<<g.gamma[2][3]<<"]"<<std::endl;
+  s<<"["<<g.gamma[3][0]<<","<<g.gamma[3][1]<<","<<g.gamma[3][2]<<","<<g.gamma[3][3]<<"]"<<std::endl;
 
   return s;
 

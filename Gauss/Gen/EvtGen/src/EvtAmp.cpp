@@ -111,7 +111,7 @@ void EvtAmp::setNState(int parent_states,int *daug_states){
   }
 
   if (_nontrivial>5) {
-    report(ERROR,"EvtGen") << "Too many nontrivial states in EvtAmp!"<<endl;
+    report(ERROR,"EvtGen") << "Too many nontrivial states in EvtAmp!"<<std::endl;
   }
 
 }
@@ -197,7 +197,7 @@ EvtSpinDensity EvtAmp::getSpinDensity(){
 	  temp += _amp[_pstates*kk+i]*conj(_amp[_pstates*kk+j]);}
 
 	//        if (_nontrivial>3){
-	//report(ERROR,"EvtGen") << "Can't handle so many states in EvtAmp!"<<endl;
+	//report(ERROR,"EvtGen") << "Can't handle so many states in EvtAmp!"<<std::endl;
 	//}
         
         rho.Set(i,j,temp);
@@ -292,7 +292,7 @@ EvtAmp EvtAmp::contract(int k,const EvtSpinDensity& rho){
   }
 
   if (_nontrivial==0) {
-    report(ERROR,"EvtGen")<<"Should not be here EvtAmp!"<<endl;
+    report(ERROR,"EvtGen")<<"Should not be here EvtAmp!"<<std::endl;
   }
 
   EvtComplex c;
@@ -362,7 +362,7 @@ EvtSpinDensity EvtAmp::contract(int k,const EvtAmp& amp2){
     for(j=0;j<_nstate[k];j++){
       if (_nontrivial==0) {
 
-	report(ERROR,"EvtGen")<<"Should not be here1 EvtAmp!"<<endl;
+	report(ERROR,"EvtGen")<<"Should not be here1 EvtAmp!"<<std::endl;
          
         rho.Set(0,0,EvtComplex(1.0,0.0)); 
 
@@ -411,28 +411,28 @@ void EvtAmp::dump(){
 
   int i,list[10];
 
-  report(DEBUG,"EvtGen") << "Number of daugthers:"<<_ndaug<<endl;
-  report(DEBUG,"EvtGen") << "Number of states of the parent:"<<_pstates<<endl;
+  report(DEBUG,"EvtGen") << "Number of daugthers:"<<_ndaug<<std::endl;
+  report(DEBUG,"EvtGen") << "Number of states of the parent:"<<_pstates<<std::endl;
   report(DEBUG,"EvtGen") << "Number of states on daughters:";
   for (i=0;i<_ndaug;i++){
     report(DEBUG,"EvtGen") <<dstates[i]<<" ";
   }
-  report(DEBUG,"EvtGen") << endl;
+  report(DEBUG,"EvtGen") << std::endl;
   report(DEBUG,"EvtGen") << "Nontrivial index of  daughters:";
   for (i=0;i<_ndaug;i++){
     report(DEBUG,"EvtGen") <<_dnontrivial[i]<<" ";
   }
-  report(DEBUG,"EvtGen") <<endl;
-  report(DEBUG,"EvtGen") <<"number of nontrivial states:"<<_nontrivial<<endl;
+  report(DEBUG,"EvtGen") <<std::endl;
+  report(DEBUG,"EvtGen") <<"number of nontrivial states:"<<_nontrivial<<std::endl;
   report(DEBUG,"EvtGen") << "Nontrivial particles number of states:";
   for (i=0;i<_nontrivial;i++){
     report(DEBUG,"EvtGen") <<_nstate[i]<<" ";
   }
-  report(DEBUG,"EvtGen") <<endl;
-  report(DEBUG,"EvtGen") <<"Amplitudes:"<<endl;
+  report(DEBUG,"EvtGen") <<std::endl;
+  report(DEBUG,"EvtGen") <<"Amplitudes:"<<std::endl;
   if (_nontrivial==0){
     list[0] = 0;
-    report(DEBUG,"EvtGen") << getAmp(list) << endl;
+    report(DEBUG,"EvtGen") << getAmp(list) << std::endl;
   }
 
   int allloop[10];
@@ -444,11 +444,11 @@ void EvtAmp::dump(){
     report(DEBUG,"EvtGen") << getAmp(list) << " ";
     if ( i==allloop[index]-1 ) {
       index ++;
-      report(DEBUG,"EvtGen") << endl;
+      report(DEBUG,"EvtGen") << std::endl;
     }
   }
 
-  report(DEBUG,"EvtGen") << "-----------------------------------"<<endl;
+  report(DEBUG,"EvtGen") << "-----------------------------------"<<std::endl;
 
 }
 

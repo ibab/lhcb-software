@@ -80,7 +80,7 @@ public:
   EvtRaritaSchwinger& operator-=(const EvtRaritaSchwinger& u2);
 
   EvtComplex get(int i,int j) const; 
-  friend ostream& operator<<(ostream& s, const EvtRaritaSchwinger& rs); 
+  friend std::ostream& operator<<(std::ostream& s, const EvtRaritaSchwinger& rs); 
 
   EvtVector4C getVector(int i) const;
   EvtDiracSpinor getSpinor(int i) const;

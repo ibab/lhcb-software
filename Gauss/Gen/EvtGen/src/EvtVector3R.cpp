@@ -69,7 +69,7 @@ void EvtVector3R::applyRotateEuler(double phi,double theta,double ksi){
   v[2]=temp[2];
 }
 
-ostream& operator<<(ostream& s,const EvtVector3R& v){
+std::ostream& operator<<(std::ostream& s,const EvtVector3R& v){
  
   s<<"("<<v.v[0]<<","<<v.v[1]<<","<<v.v[2]<<")";
 

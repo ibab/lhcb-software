@@ -126,9 +126,9 @@ void EvtParticle::setDiagonalSpinDensity(){
 void EvtParticle::setVectorSpinDensity(){
 
   if (getSpinStates()!=3) {
-    report(ERROR,"EvtGen")<<"Error in EvtParticle::setVectorSpinDensity"<<endl;
-    report(ERROR,"EvtGen")<<"spin_states:"<<getSpinStates()<<endl;
-    report(ERROR,"EvtGen")<<"particle:"<<EvtPDL::name(_id)<<endl;
+    report(ERROR,"EvtGen")<<"Error in EvtParticle::setVectorSpinDensity"<<std::endl;
+    report(ERROR,"EvtGen")<<"spin_states:"<<getSpinStates()<<std::endl;
+    report(ERROR,"EvtGen")<<"particle:"<<EvtPDL::name(_id)<<std::endl;
     ::abort();
   }
 
@@ -167,7 +167,7 @@ void EvtParticle::setSpinDensityForwardHelicityBasis(const EvtSpinDensity& rho){
     }
   }
 
-  //cout << "_rhoForward:"<<_rhoForward<<endl;
+  //std::cout << "_rhoForward:"<<_rhoForward<<std::endl;
 
 }
 
@@ -198,7 +198,7 @@ void EvtParticle::setSpinDensityForwardHelicityBasis(const EvtSpinDensity& rho,
     }
   }
 
-  //cout << "_rhoForward:"<<_rhoForward<<endl;
+  //std::cout << "_rhoForward:"<<_rhoForward<<std::endl;
 
 }
 
@@ -255,7 +255,7 @@ void EvtParticle::decay(){
   decayer = EvtDecayTable::GetDecayFunc(p);
 
   if (p->_ndaug>0) {
-    report(INFO,"EvtGen") <<"Is decaying particle with daughters!!!!!"<<endl;
+    report(INFO,"EvtGen") <<"Is decaying particle with daughters!!!!!"<<std::endl;
     ::abort();
     return;
   }
@@ -288,7 +288,7 @@ EvtVector4C EvtParticle::epsParent(int i) const {
   report(ERROR,"EvtGen") << "and you have asked for the:"<<i
 			 <<"th polarization vector."
 			 <<" I.e. you thought it was a"
-			 <<" vector particle!" << endl;
+			 <<" vector particle!" << std::endl;
   ::abort();
   return temp;
 }
@@ -299,7 +299,7 @@ EvtVector4C EvtParticle::eps(int i) const {
   report(ERROR,"EvtGen") << "and you have asked for the:"<<i
 			 <<"th polarization vector."
 			 <<" I.e. you thought it was a"
-			 <<" vector particle!" << endl;
+			 <<" vector particle!" << std::endl;
   ::abort();
   return temp;
 }
@@ -310,7 +310,7 @@ EvtVector4C EvtParticle::epsParentPhoton(int i){
   report(ERROR,"EvtGen") << "and you have asked for the:"<<i
 			 <<"th polarization vector of photon."
 			 <<" I.e. you thought it was a"
-			 <<" photon particle!" << endl;
+			 <<" photon particle!" << std::endl;
   ::abort();
   return temp;
 }
@@ -321,7 +321,7 @@ EvtVector4C EvtParticle::epsPhoton(int i){
   report(ERROR,"EvtGen") << "and you have asked for the:"<<i
 			 <<"th polarization vector of a photon."
 			 <<" I.e. you thought it was a"
-			 <<" photon particle!" << endl;
+			 <<" photon particle!" << std::endl;
   ::abort();
   return temp;
 }
@@ -334,7 +334,7 @@ EvtDiracSpinor EvtParticle::spParent(int i) const {
   report(ERROR,"EvtGen") << "and you have asked for the:"<<i
 			 <<"th dirac spinor."
 			 <<" I.e. you thought it was a"
-			 <<" Dirac particle!" << endl;
+			 <<" Dirac particle!" << std::endl;
   ::abort();
   return tempD;
 }
@@ -347,7 +347,7 @@ EvtDiracSpinor EvtParticle::sp(int i) const {
   report(ERROR,"EvtGen") << "and you have asked for the:"<<i
 			 <<"th dirac spinor."
 			 <<" I.e. you thought it was a"
-			 <<" Dirac particle!" << endl;
+			 <<" Dirac particle!" << std::endl;
   ::abort();
   return tempD;
 }
@@ -358,7 +358,7 @@ EvtDiracSpinor EvtParticle::spParentNeutrino() const {
   report(ERROR,"EvtGen") << "and you have asked for the "
 			 <<"dirac spinor."
 			 <<" I.e. you thought it was a"
-			 <<" neutrino particle!" << endl;
+			 <<" neutrino particle!" << std::endl;
   ::abort();
   return tempD;
 }
@@ -369,7 +369,7 @@ EvtDiracSpinor EvtParticle::spNeutrino() const {
   report(ERROR,"EvtGen") << "and you have asked for the "
 			 <<"dirac spinor."
 			 <<" I.e. you thought it was a"
-			 <<" neutrino particle!" << endl;
+			 <<" neutrino particle!" << std::endl;
   ::abort();
   return tempD;
 }
@@ -382,7 +382,7 @@ EvtTensor4C EvtParticle::epsTensorParent(int i) const {
   report(ERROR,"EvtGen") << "and you have asked for the:"<<i
 			 <<"th tensor."
 			 <<" I.e. you thought it was a"
-			 <<" Tensor particle!" << endl;
+			 <<" Tensor particle!" << std::endl;
   ::abort();
   return tempC;
 }
@@ -395,7 +395,7 @@ EvtTensor4C EvtParticle::epsTensor(int i) const {
   report(ERROR,"EvtGen") << "and you have asked for the:"<<i
 			 <<"th tensor."
 			 <<" I.e. you thought it was a"
-			 <<" Tensor particle!" << endl;
+			 <<" Tensor particle!" << std::endl;
   ::abort();
   return tempC;
 }
@@ -602,7 +602,7 @@ void EvtParticle::printTreeRec(int level) const {
     for(i=0;i<_ndaug;i++){
       report(INFO,"") << EvtPDL::name(_daug[i]->getId())<<" ";
     }
-    report(INFO,"")<<endl;
+    report(INFO,"")<<std::endl;
     for(i=0;i<_ndaug;i++){
       _daug[i]->printTreeRec(newlevel);
     }
@@ -611,12 +611,12 @@ void EvtParticle::printTreeRec(int level) const {
 
 void EvtParticle::printTree() const {
   
-  report(INFO,"EvtGen") << "This is the current decay chain"<<endl;
+  report(INFO,"EvtGen") << "This is the current decay chain"<<std::endl;
   report(INFO,"") << "This top particle is "<<
-    EvtPDL::name(_id)<<endl;  
+    EvtPDL::name(_id)<<std::endl;  
 
   this->printTreeRec(0);
-  report(INFO,"EvtGen") << "End of decay chain."<<endl;
+  report(INFO,"EvtGen") << "End of decay chain."<<std::endl;
 
 }
 
@@ -645,7 +645,7 @@ void EvtParticle::printParticle() const {
     report(INFO,"EvtGen") << "This is a string:"<<EvtPDL::name(_id)<<"\n";
     break;
   default:
-    report(INFO,"EvtGen") <<"Unknown particle type in EvtParticle::printParticle()"<<endl;
+    report(INFO,"EvtGen") <<"Unknown particle type in EvtParticle::printParticle()"<<std::endl;
     break;
   }
   report(INFO,"EvtGen") << "Number of daughters:"<<_ndaug<<"\n";
@@ -717,7 +717,7 @@ void EvtParticle::makeDaughters( int ndaugstore, EvtId *id){
     if (_ndaug!=ndaugstore){
       report(ERROR,"EvtGen") << "Asking to make a different number of "
 			     << "daughters than what was previously created."
-			     << endl<<"Will terminate."<<endl;
+			     << std::endl<<"Will terminate."<<std::endl;
       ::abort();
     }
   } 

@@ -136,7 +136,7 @@ void EvtDDalitz::init(){
   }
   
   if ( _flag==0) {
-    report(ERROR,"EvtGen") << "EvtDDaltiz: Invalid mode."<<endl;
+    report(ERROR,"EvtGen") << "EvtDDaltiz: Invalid mode."<<std::endl;
     assert(0);
   }
 }

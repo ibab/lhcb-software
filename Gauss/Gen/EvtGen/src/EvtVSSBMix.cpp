@@ -47,14 +47,14 @@ void EvtVSSBMix::init(){
   // check that there we are provided exactly one parameter
   if (getNArg()>3) {
     report(ERROR,"EvtGen") << "EvtVSSBMix generator expected "
-                           << " no more than 3 arguments but found:"<<getNArg()<<endl;
-    report(ERROR,"EvtGen") << "Will terminate execution!"<<endl;
+                           << " no more than 3 arguments but found:"<<getNArg()<<std::endl;
+    report(ERROR,"EvtGen") << "Will terminate execution!"<<std::endl;
     ::abort();
   }
   if (getNArg()<1) {
     report(ERROR,"EvtGen") << "EvtVSSBMix generator expected "
-                           << " at least 1 argument (deltam) but found:"<<getNArg()<<endl;
-    report(ERROR,"EvtGen") << "Will terminate execution!"<<endl;
+                           << " at least 1 argument (deltam) but found:"<<getNArg()<<std::endl;
+    report(ERROR,"EvtGen") << "Will terminate execution!"<<std::endl;
     ::abort();
   }
   // check that we are asked to produced exactly 2 daughters
@@ -65,8 +65,8 @@ void EvtVSSBMix::init(){
     if ( getDaug(0)!=getDaug(2)||getDaug(1)!=getDaug(3)){
       report(ERROR,"EvtGen") << "EvtVSSBMix generator allows "
 			     << " 4 daughters only if 1=3 and 2=4"
-			     << " (but 3 and 4 are aliased "<<endl;
-      report(ERROR,"EvtGen") << "Will terminate execution!"<<endl;
+			     << " (but 3 and 4 are aliased "<<std::endl;
+      report(ERROR,"EvtGen") << "Will terminate execution!"<<std::endl;
       ::abort();
     }
   }
@@ -81,20 +81,20 @@ void EvtVSSBMix::init(){
   // check that our daughter particles are charge conjugates of each other
   if(!(EvtPDL::chargeConj(getDaug(0)) == getDaug(1))) {
     report(ERROR,"EvtGen") << "EvtVSSBMix generator expected daughters "
-			   << "to be charge conjugate." << endl
+			   << "to be charge conjugate." << std::endl
 			   << "  Found " << EvtPDL::name(getDaug(0)) << " and "
-			   << EvtPDL::name(getDaug(1)) << endl;
-    report(ERROR,"EvtGen") << "Will terminate execution!"<<endl;
+			   << EvtPDL::name(getDaug(1)) << std::endl;
+    report(ERROR,"EvtGen") << "Will terminate execution!"<<std::endl;
     ::abort();
   }
   // check that both daughter particles have the same lifetime
   if(EvtPDL::getctau(getDaug(0)) != EvtPDL::getctau(getDaug(1))) {
     report(ERROR,"EvtGen") << "EvtVSSBMix generator expected daughters "
-			   << "to have the same lifetime." << endl
+			   << "to have the same lifetime." << std::endl
 			   << "  Found ctau = "
 			   << EvtPDL::getctau(getDaug(0)) << " mm and "
-			   << EvtPDL::getctau(getDaug(1)) << " mm" << endl;
-    report(ERROR,"EvtGen") << "Will terminate execution!"<<endl;
+			   << EvtPDL::getctau(getDaug(1)) << " mm" << std::endl;
+    report(ERROR,"EvtGen") << "Will terminate execution!"<<std::endl;
     ::abort();
   }
   // precompute quantities that will be used to generate events
@@ -113,17 +113,17 @@ void EvtVSSBMix::init(){
   double x= dm*tau;
   double chi= 0.5*x*x/(1.0+x*x); // time-averaged probability of mixing
   report(INFO,"EvtGen") << "VSS_BMIX will generate mixing in the decay:"
-			<< endl << endl
+			<< std::endl << std::endl
 			<< "    " << EvtPDL::name(getParentId()) << " --> "
 			<< EvtPDL::name(getDaug(0)) << " + "
-			<< EvtPDL::name(getDaug(1)) << endl << endl
-			<< "using parameters:" << endl << endl
-			<< "  delta(m)  = " << dm << " hbar/ps" << endl
-                        << "dGamma      = "  << _dGamma <<" ps-1" <<endl
-                        << "       q/p  = " << _qoverp << endl  
-			<< "       tau  = " << tau << " ps" << endl
-			<< "         x  = " << x << endl
-			<< "       chi  = " << chi << endl << endl;
+			<< EvtPDL::name(getDaug(1)) << std::endl << std::endl
+			<< "using parameters:" << std::endl << std::endl
+			<< "  delta(m)  = " << dm << " hbar/ps" << std::endl
+                        << "dGamma      = "  << _dGamma <<" ps-1" <<std::endl
+                        << "       q/p  = " << _qoverp << std::endl  
+			<< "       tau  = " << tau << " ps" << std::endl
+			<< "         x  = " << x << std::endl
+			<< "       chi  = " << chi << std::endl << std::endl;
 }
 
 void EvtVSSBMix::initProbMax(){

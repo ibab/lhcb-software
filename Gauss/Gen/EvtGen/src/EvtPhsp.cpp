@@ -59,7 +59,7 @@ void EvtPhsp::decay( EvtParticle *p ){
   if ( p->getNDaug() != 0 ) {
     //Will end up here because maxrate multiplies by 1.2
     report(DEBUG,"EvtGen") << "In EvtPhsp: has "
-			   <<" daugthers should not be here!"<<endl;
+			   <<" daugthers should not be here!"<<std::endl;
     return;
   }
 

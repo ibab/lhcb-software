@@ -36,7 +36,7 @@
 //
 
 
-ostream& report( Severity severity ,
+std::ostream& report( Severity severity ,
                  const char* facility )
 {
    int printNoFacility=1;
@@ -44,19 +44,19 @@ ostream& report( Severity severity ,
    if ( ( facility == 0 ) &&
         ( printNoFacility ==1) ) {
       report( WARNING ) << "There is no `facility' implemented in `report'"
-                        << endl ;
+                        << std::endl ;
       printNoFacility = 0 ;
    }
    if ( severity < WARNING ) {
      if (facility[0]!=0){
-       cerr<<facility<<":";
+       std::cerr<<facility<<":";
      }
-     return ( cerr ) ;
+     return ( std::cerr ) ;
    }
    if (facility[0]!=0){
-     cout<<facility<<":";
+     std::cout<<facility<<":";
    }    
-   return cout ;
+   return std::cout ;
 }
 
 

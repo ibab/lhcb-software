@@ -186,7 +186,7 @@ void EvtCPUtil::OtherB( EvtParticle *p,double &t, EvtId &otherb, double probB0){
     
   }
   else {
-    report(INFO,"EvtGen") << "We have an error here!!!!"<<endl;
+    report(INFO,"EvtGen") << "We have an error here!!!!"<<std::endl;
     otherb = EvtId(-1,-1); 
   }
   

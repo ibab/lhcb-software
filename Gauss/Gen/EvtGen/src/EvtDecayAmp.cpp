@@ -49,34 +49,34 @@ void EvtDecayAmp::makeDecay(EvtParticle* p){
     if (prob<0.0) {
 
       report(ERROR,"EvtGen")<<"Negative prob:"<<p->getId().getId()
-			    <<" "<<p->getChannel()<<endl;
+			    <<" "<<p->getChannel()<<std::endl;
 
-      report(ERROR,"EvtGen") << "rho_forward:"<<endl;
+      report(ERROR,"EvtGen") << "rho_forward:"<<std::endl;
       report(ERROR,"EvtGen") << p->getSpinDensityForward();
-      report(ERROR,"EvtGen") << "rho decay:"<<endl;
-      report(ERROR,"EvtGen") << rho <<endl;
+      report(ERROR,"EvtGen") << "rho decay:"<<std::endl;
+      report(ERROR,"EvtGen") << rho <<std::endl;
     }
 
     if (prob!=prob) {
 
-      report(DEBUG,"EvtGen") << "Forward density matrix:"<<endl;
+      report(DEBUG,"EvtGen") << "Forward density matrix:"<<std::endl;
       report(ERROR,"EvtGen") << p->getSpinDensityForward();
 
-      report(DEBUG,"EvtGen") << "Decay density matrix:"<<endl;
+      report(DEBUG,"EvtGen") << "Decay density matrix:"<<std::endl;
       report(ERROR,"EvtGen") << rho;
 
-      report(DEBUG,"EvtGen") << "prob:"<<prob<<endl;
+      report(DEBUG,"EvtGen") << "prob:"<<prob<<std::endl;
       
       report(DEBUG,"EvtGen") << "Particle:"
-			     <<EvtPDL::name(p->getId())<<endl;
-      report(DEBUG,"EvtGen") << "channel        :"<<p->getChannel()<<endl;
+			     <<EvtPDL::name(p->getId())<<std::endl;
+      report(DEBUG,"EvtGen") << "channel        :"<<p->getChannel()<<std::endl;
 
       if( p->getParent()!=0){
 	report(DEBUG,"EvtGen") << "parent:"
 			       <<EvtPDL::name(
-				p->getParent()->getId())<<endl;
+				p->getParent()->getId())<<std::endl;
 	report(DEBUG,"EvtGen") << "parent channel        :"
-			       <<p->getParent()->getChannel()<<endl;
+			       <<p->getParent()->getChannel()<<std::endl;
 
         int i;
 	report(DEBUG,"EvtGen") << "parent daughters  :";
@@ -85,7 +85,7 @@ void EvtDecayAmp::makeDecay(EvtParticle* p){
 			    p->getParent()->getDaug(i)->getId())
 				 << " ";
         }
-	report(DEBUG,"") << endl;
+	report(DEBUG,"") << std::endl;
 
       }
     }
@@ -96,7 +96,7 @@ void EvtDecayAmp::makeDecay(EvtParticle* p){
 
     prob_max = getProbMax(prob);
 
-    //cout << "Prob,prob_max,weight:"<<prob<<" "<<prob_max<<" "<<_weight<<endl;
+    //cout << "Prob,prob_max,weight:"<<prob<<" "<<prob_max<<" "<<_weight<<std::endl;
 
     more=prob<EvtRandom::Flat(prob_max);
 
@@ -107,18 +107,18 @@ void EvtDecayAmp::makeDecay(EvtParticle* p){
 
   if (ntimes==0){
     report(DEBUG,"EvtGen") << "Tried accept/reject:10000"
-			   <<" times, and rejected all the times!"<<endl;
-    report(DEBUG,"")<<p->getSpinDensityForward()<<endl;
-    report(DEBUG,"EvtGen") << "Is therefore accepting the last event!"<<endl;
+			   <<" times, and rejected all the times!"<<std::endl;
+    report(DEBUG,"")<<p->getSpinDensityForward()<<std::endl;
+    report(DEBUG,"EvtGen") << "Is therefore accepting the last event!"<<std::endl;
     report(DEBUG,"EvtGen") << "Decay of particle:"<<
       EvtPDL::name(p->getId())<<"(channel:"<<
-      p->getChannel()<<") with mass "<<p->mass()<<endl;
+      p->getChannel()<<") with mass "<<p->mass()<<std::endl;
     
     int ii;
     for(ii=0;ii<p->getNDaug();ii++){
       report(DEBUG,"EvtGen") <<"Daughter "<<ii<<":"<<
 	EvtPDL::name(p->getDaug(ii)->getId())<<" with mass "<<
-	p->getDaug(ii)->mass()<<endl;
+	p->getDaug(ii)->mass()<<std::endl;
     }				   
   }
 
@@ -149,9 +149,9 @@ void EvtDecayAmp::makeDecay(EvtParticle* p){
     
     if (!rho.Check()) {
       
-      report(ERROR,"EvtGen") << "-------start error-------"<<endl;
+      report(ERROR,"EvtGen") << "-------start error-------"<<std::endl;
       report(ERROR,"EvtGen")<<"forward rho failed Check"<<
-	p->getId().getId()<<" "<<p->getChannel()<<" "<<i<<endl;
+	p->getId().getId()<<" "<<p->getChannel()<<" "<<i<<std::endl;
       
       report(ERROR,"EvtGen") << rho;
       int ii; 
@@ -159,7 +159,7 @@ void EvtDecayAmp::makeDecay(EvtParticle* p){
       for(ii=0;ii<i+1;ii++){
 	report(ERROR,"EvtGen") << rho_list[ii];
       }
-      report(ERROR,"EvtGen") << "-------Done with error-------"<<endl;  
+      report(ERROR,"EvtGen") << "-------Done with error-------"<<std::endl;  
     }
 
     p->getDaug(i)->setSpinDensityForward(rho);
@@ -180,7 +180,7 @@ void EvtDecayAmp::makeDecay(EvtParticle* p){
   if (!p->getSpinDensityBackward().Check()) {
 
     report(ERROR,"EvtGen")<<"rho_backward failed Check"<<
-      p->getId().getId()<<" "<<p->getChannel()<<endl;
+      p->getId().getId()<<" "<<p->getChannel()<<std::endl;
 
     report(ERROR,"EvtGen") << p->getSpinDensityBackward();
 

@@ -72,11 +72,11 @@ void EvtSVSCPLH::init(){
   _Abarf=getArg(6)*exp(EvtComplex(0.0,getArg(7)));
   
   if (verbose()){
-    report(INFO,"EvtGen")<<":EvtSVSCPLH:dm="<<_dm<<endl;
-    report(INFO,"EvtGen")<<":EvtSVSCPLH:dGamma="<<_dgamma<<endl;
-    report(INFO,"EvtGen")<<":EvtSVSCPLH:q/p="<<_qop<<endl;
-    report(INFO,"EvtGen")<<":EvtSVSCPLH:Af="<<_Af<<endl;
-    report(INFO,"EvtGen")<<":EvtSVSCPLH:Abarf="<<_Abarf<<endl;
+    report(INFO,"EvtGen")<<":EvtSVSCPLH:dm="<<_dm<<std::endl;
+    report(INFO,"EvtGen")<<":EvtSVSCPLH:dGamma="<<_dgamma<<std::endl;
+    report(INFO,"EvtGen")<<":EvtSVSCPLH:q/p="<<_qop<<std::endl;
+    report(INFO,"EvtGen")<<":EvtSVSCPLH:Af="<<_Af<<std::endl;
+    report(INFO,"EvtGen")<<":EvtSVSCPLH:Abarf="<<_Abarf<<std::endl;
   }
 
 
@@ -121,7 +121,7 @@ void EvtSVSCPLH::decay( EvtParticle *p){
     amp=gp*_Abarf+_poq*gm*_Af;
   }
   else{
-    report(ERROR,"EvtGen") << "other_b was not B0 or B0B!"<<endl;
+    report(ERROR,"EvtGen") << "other_b was not B0 or B0B!"<<std::endl;
     ::abort();
   }
 

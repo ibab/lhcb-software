@@ -118,7 +118,7 @@ void EvtPi0Dalitz::decay( EvtParticle *p){
   prob *=(1.0/( (0.768*0.768-m2)*(0.768*0.768-m2)
            +0.768*0.768*0.151*0.151));
 
-  //  report(INFO,"EvtGen") << "prob is "<<prob<<endl;
+  //  report(INFO,"EvtGen") << "prob is "<<prob<<std::endl;
   setProb(prob);
 
   return;

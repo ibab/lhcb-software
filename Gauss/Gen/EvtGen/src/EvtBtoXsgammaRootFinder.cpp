@@ -56,7 +56,7 @@ EvtBtoXsgammaRootFinder::GetRootSingleFunc(const EvtItgAbsFunction* theFunc, dou
   double f2 = theFunc->value(upperValue) - functionValue;
 
   if ( f1*f2 > 0.0 ) {
-    report(WARNING,"EvtGen") << "EvtBtoXsgammaRootFinder: No root in specified range !"<<endl;  
+    report(WARNING,"EvtGen") << "EvtBtoXsgammaRootFinder: No root in specified range !"<< std::endl;  
     return 0;
   }
 
@@ -109,7 +109,7 @@ EvtBtoXsgammaRootFinder::GetRootSingleFunc(const EvtItgAbsFunction* theFunc, dou
   
   report(WARNING,"EvtGen") << "EvtBtoXsgammaRootFinder: Maximum number of iterations "
 			   <<"in EvtBtoXsgammaRootFinder::foundRoot exceeded!" 
-			   <<" Returning false."<<endl;
+         <<" Returning false."<< std::endl;
   return 0;
   
 }
@@ -139,7 +139,7 @@ EvtBtoXsgammaRootFinder::GetGaussIntegFcnRoot(EvtItgAbsFunction *theFunc1, EvtIt
   double root=0;
 
   if ( f1*f2 > 0.0 ) {
-    report(WARNING,"EvtGen") << "EvtBtoXsgammaRootFinder: No root in specified range !"<<endl;  
+    report(WARNING,"EvtGen") << "EvtBtoXsgammaRootFinder: No root in specified range !"<< std::endl;  
     return false;
   }
 
@@ -196,7 +196,7 @@ EvtBtoXsgammaRootFinder::GetGaussIntegFcnRoot(EvtItgAbsFunction *theFunc1, EvtIt
   
   report(WARNING,"EvtGen") << "EvtBtoXsgammaRootFinder: Maximum number of iterations "
 			   <<"in EvtBtoXsgammaRootFinder::foundRoot exceeded!" 
-			   <<" Returning false."<<endl;
+         <<" Returning false."<<std::endl;
   return 0;
   
 }

@@ -23,7 +23,7 @@
 #include "EvtGen/EvtComplex.hh"
 
 
-ostream& operator<<(ostream& s, const EvtComplex& c){
+std::ostream& operator<<(std::ostream& s, const EvtComplex& c){
 
   s<<"("<<c._rpart<<","<<c._ipart<<")";
   return s;

@@ -34,7 +34,7 @@ EvtComplex operator*(const EvtDiracSpinor& d,const EvtDiracSpinor& dp);
 inline EvtGammaMatrix operator+(const EvtGammaMatrix& g1,const EvtGammaMatrix& g2);
 inline EvtGammaMatrix operator-(const EvtGammaMatrix& g1,const EvtGammaMatrix& g2);
 inline EvtGammaMatrix operator*(const EvtGammaMatrix& g1,const EvtGammaMatrix& g2);
-ostream& operator<<(ostream& s, const EvtGammaMatrix& v);  
+std::ostream& operator<<(std::ostream& s, const EvtGammaMatrix& v);  
 
 //=====================
 class EvtGammaMatrix {
@@ -45,7 +45,7 @@ class EvtGammaMatrix {
   friend EvtGammaMatrix operator+(const EvtGammaMatrix& g1,const EvtGammaMatrix& g2);
   friend EvtGammaMatrix operator-(const EvtGammaMatrix& g1,const EvtGammaMatrix& g2);
   friend EvtGammaMatrix operator*(const EvtGammaMatrix& g1,const EvtGammaMatrix& g2);
-  friend ostream& operator<<(ostream& s, const EvtGammaMatrix& v);  
+  friend std::ostream& operator<<(std::ostream& s, const EvtGammaMatrix& v);  
 
 public:
 

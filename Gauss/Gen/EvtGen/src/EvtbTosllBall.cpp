@@ -113,8 +113,8 @@ void EvtbTosllBall::init(){
 	mesontype == EvtSpinType::SCALAR)) {
     report(ERROR,"EvtGen") << "EvtbTosllBall generator expected "
                            << " a SCALAR or VECTOR 1st daughter, found:"<<
-                           EvtPDL::name(getDaug(0))<<endl;
-    report(ERROR,"EvtGen") << "Will terminate execution!"<<endl;
+                           EvtPDL::name(getDaug(0))<<std::endl;
+    report(ERROR,"EvtGen") << "Will terminate execution!"<<std::endl;
     ::abort();
   }
 

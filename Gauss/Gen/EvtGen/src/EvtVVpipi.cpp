@@ -63,8 +63,8 @@ void EvtVVpipi::init(){
       (!(getDaug(1)==PI0&&getDaug(2)==PI0))) {
     report(ERROR,"EvtGen") << "EvtVVpipi generator expected "
                            << " pi+ and pi- (or pi0 and pi0) "
-			   << "as 2nd and 3rd daughter. "<<endl;
-    report(ERROR,"EvtGen") << "Will terminate execution!"<<endl;
+			   << "as 2nd and 3rd daughter. "<<std::endl;
+    report(ERROR,"EvtGen") << "Will terminate execution!"<<std::endl;
     ::abort();
   }
 

@@ -855,7 +855,7 @@ void EvtISGW2FF::EvtISGW2FF1S0 (EvtId parent,EvtId daugt,
     
       else{
 	report(ERROR,"EvtGen") << "Not implemented parent in get_isgw_ff_1S0.\n";
-	report(ERROR,"EvtGen") << "Parent:"<<parent.getId()<<endl;
+	report(ERROR,"EvtGen") << "Parent:"<<parent.getId()<<std::endl;
       }
     }
     }

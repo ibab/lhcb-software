@@ -233,7 +233,7 @@ void EvtBHadronic::decay( EvtParticle *p){
     jb[0]=fp*(p4b+p4[0])+fm*q;
     break;
   default:
-    report(ERROR,"EvtGen")<<"In EvtBHadronic, unknown hadronic current."<<endl;
+    report(ERROR,"EvtGen")<<"In EvtBHadronic, unknown hadronic current."<<std::endl;
     
   }  
 
@@ -257,7 +257,7 @@ void EvtBHadronic::decay( EvtParticle *p){
 
 
   default:
-    report(ERROR,"EvtGen")<<"In EvtBHadronic, unknown W current."<<endl;
+    report(ERROR,"EvtGen")<<"In EvtBHadronic, unknown W current."<<std::endl;
 
   }  
 
@@ -274,7 +274,7 @@ void EvtBHadronic::decay( EvtParticle *p){
       //a+=(jb[0]*jw[j]*jb[0]*jw[j]);
       vertex(j,jb[0]*jw[j]);
     }
-    //report(INFO,"EvtGen") << " prob:"<<a<<" mass:"<<p4[1].mass()<< endl;
+    //report(INFO,"EvtGen") << " prob:"<<a<<" mass:"<<p4[1].mass()<< std::endl;
     return;
   }
 

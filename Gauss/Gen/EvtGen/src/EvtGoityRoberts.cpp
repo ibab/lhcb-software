@@ -190,7 +190,7 @@ void EvtGoityRoberts::DecayBDstarpilnuGR(EvtParticle *pb,EvtId ndstar,
                pow((2*betas*betad/(betasd)),3.5)*
                exp(lambdabar*lambdabar*(1.0-w*w)/(2*betasd));
 
-  //report(INFO,"EvtGen") <<"rho's:"<<rho1<<rho2<<endl;
+  //report(INFO,"EvtGen") <<"rho's:"<<rho1<<rho2<<std::endl;
 
   EvtComplex h1nr,h2nr,h3nr,f1nr,f2nr;
   EvtComplex f3nr,f4nr,f5nr,f6nr,knr,g1nr,g2nr,g3nr,g4nr,g5nr;

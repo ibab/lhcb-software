@@ -70,7 +70,7 @@ EvtVector4C EvtVectorParticle::epsParent(int i) const  {
     break;
   default:
     report(ERROR,"EvtGen") <<"Error invalid vector number"
-			   <<i<<endl;
+			   <<i<<std::endl;
     ::abort();
   }
 
@@ -88,7 +88,7 @@ EvtVector4C EvtVectorParticle::eps(int i) const {
     return eps3;
   default:
     report(ERROR,"EvtGen") << "Error invalid number vector number:"
-			   <<i<<endl;
+			   <<i<<std::endl;
     ::abort();
   }
 

@@ -132,7 +132,7 @@ void EvtBtoXsll::init(){
   _dGdsProbMax = probMax;
 
   if ( verbose() ) {
-    report(INFO,"EvtGen") << "dGdsProbMax = " << probMax << " for s = "  << sProbMax << endl;
+    report(INFO,"EvtGen") << "dGdsProbMax = " << probMax << " for s = "  << sProbMax << std::endl;
   }
 
   // determine the maximum probability density from dGdsdupProb
@@ -161,7 +161,7 @@ void EvtBtoXsll::init(){
 
   if ( verbose() ) {
    report(INFO,"EvtGen") << "dGdsdupProbMax = " << probMax << " for s = "  << sProbMax
-			  << " and u = " << uProbMax << endl;
+			  << " and u = " << uProbMax << std::endl;
   }
 
 }
@@ -291,7 +291,7 @@ void EvtBtoXsll::decay( EvtParticle *p ){
       {
         report(INFO,"EvtGen") << "d2gdsdup GT d2gdsdup_max:" << prob
              << " " << _dGdsdupProbMax
-             << " for s = " << s << " u = " << u << " mb = " << mb << endl;
+             << " for s = " << s << " u = " << u << " mb = " << mb << std::endl;
         nmsg++;
       }
       if (ybox < prob)

@@ -184,7 +184,7 @@ double EvtGenKine::PhaseSpace( int ndaug, double mass[10], EvtVector4R p4[10],
        }
        if (wt>wtmax) {
 	 report(ERROR,"EvtGen") << "wtmax to small in EvtPhaseSpace with "
-				<< ndaug <<" daughters"<<endl;;
+				<< ndaug <<" daughters"<<std::endl;;
        }
      } while (wt<EvtRandom::Flat(wtmax));
      
@@ -264,7 +264,7 @@ double EvtGenKine::PhaseSpacePole(double M, double m1, double m2, double m3,
 
   double r=v1/(v1+v2);
 
-  //report(INFO,"EvtGen") << "v1,v2:"<<v1<<","<<v2<<endl;
+  //report(INFO,"EvtGen") << "v1,v2:"<<v1<<","<<v2<<std::endl;
 
   double m13min,m13max;
 
@@ -299,21 +299,21 @@ double EvtGenKine::PhaseSpacePole(double M, double m1, double m2, double m3,
   double p3mom=sqrt(E3*E3-m3*m3);
   double cost13=(2.0*E1*E3+m1*m1+m3*m3-m13sq)/(2.0*p1mom*p3mom);
 
-  //report(INFO,"EvtGen") << m13sq << endl;
-  //report(INFO,"EvtGen") << m12sq << endl;
-  //report(INFO,"EvtGen") << E1 << endl;
-  //report(INFO,"EvtGen") << E2 << endl;
-  //report(INFO,"EvtGen") << E3 << endl;
-  //report(INFO,"EvtGen") << p1mom << endl;
-  //report(INFO,"EvtGen") << p3mom << endl;
-  //report(INFO,"EvtGen") << cost13 << endl;
+  //report(INFO,"EvtGen") << m13sq << std::endl;
+  //report(INFO,"EvtGen") << m12sq << std::endl;
+  //report(INFO,"EvtGen") << E1 << std::endl;
+  //report(INFO,"EvtGen") << E2 << std::endl;
+  //report(INFO,"EvtGen") << E3 << std::endl;
+  //report(INFO,"EvtGen") << p1mom << std::endl;
+  //report(INFO,"EvtGen") << p3mom << std::endl;
+  //report(INFO,"EvtGen") << cost13 << std::endl;
   
 
   p4[2].set(E3,0.0,0.0,p3mom);
   p4[0].set(E1,p1mom*sqrt(1.0-cost13*cost13),0.0,p1mom*cost13);
   p4[1].set(E2,-p1mom*sqrt(1.0-cost13*cost13),0.0,-p1mom*cost13-p3mom);
 
-  //report(INFO,"EvtGen") << "p4:"<<p4[0]<<p4[1]<<p4[2]<<endl;
+  //report(INFO,"EvtGen") << "p4:"<<p4[0]<<p4[1]<<p4[2]<<std::endl;
 
   double alpha = EvtRandom::Flat( EvtConst::twoPi );
   double beta = acos(EvtRandom::Flat( -1.0, 1.0 ));

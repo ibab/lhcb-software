@@ -28,7 +28,7 @@
 
 double EvtdFunction::d(int j,int m1,int m2, double theta){
 
-  //cout << "j,m1,m2:"<<j<<","<<m1<<","<<m2<<endl;
+  //cout << "j,m1,m2:"<<j<<","<<m1<<","<<m2<<std::endl;
 
   double c=cos(theta);
   double c2=cos(0.5*theta);
@@ -38,7 +38,7 @@ double EvtdFunction::d(int j,int m1,int m2, double theta){
   int m1p=m1;
   int m2p=m2;
 
-  //cout << "here10"<<endl;
+  //cout << "here10"<<std::endl;
 
   int signp=1;
   //make |m2p|>|m1p|
@@ -49,7 +49,7 @@ double EvtdFunction::d(int j,int m1,int m2, double theta){
     if ((m1p-m2p)%4!=0) signp=-signp;
   } 
 
-  //cout << "here11"<<endl;
+  //cout << "here11"<<std::endl;
 
   //make m2p non-negative
   if (m2p<0) {
@@ -58,19 +58,19 @@ double EvtdFunction::d(int j,int m1,int m2, double theta){
     if ((m1p-m2p)%4!=0) signp=-signp;
   }
 
-  //cout << "here1"<<endl;
+  //cout << "here1"<<std::endl;
 
   EvtdFunctionSingle df;
 
-  //cout << "here2"<<endl;
+  //cout << "here2"<<std::endl;
 
   df.init(j,m1p,m2p);
 
-  //cout << "here3"<<endl;
+  //cout << "here3"<<std::endl;
   
 
   double dtmp=df.d(j,m1p,m2p,theta)*signp;
-  //cout << "new:"<<dtmp<<endl;
+  //cout << "new:"<<dtmp<<std::endl;
 
 
   int sign=1;
@@ -243,7 +243,7 @@ double EvtdFunction::d(int j,int m1,int m2, double theta){
 
   if (sign==-1) d=-d;
 
-  //cout << "old:"<<d<<endl<<endl;
+  //cout << "old:"<<d<<std::endl<<std::endl;
 
   assert(fabs(dtmp-d)<0.0001);
 

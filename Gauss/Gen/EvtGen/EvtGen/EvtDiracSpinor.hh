@@ -40,7 +40,7 @@ EvtComplex  EvtLeptonPCurrent(const EvtDiracSpinor& d,const EvtDiracSpinor& dp);
 EvtTensor4C  EvtLeptonTCurrent(const EvtDiracSpinor& d,const EvtDiracSpinor& dp);
 inline EvtDiracSpinor operator+(const EvtDiracSpinor& u1, const EvtDiracSpinor& u2); 
 inline EvtDiracSpinor operator-(const EvtDiracSpinor& u1, const EvtDiracSpinor& u2); 
-ostream& operator<<(ostream& s, const EvtDiracSpinor& c);  
+std::ostream& operator<<(std::ostream& s, const EvtDiracSpinor& c);  
 
 //=====================
 class EvtDiracSpinor {
@@ -67,7 +67,7 @@ class EvtDiracSpinor {
 				  const EvtDiracSpinor& u2); 
   friend EvtDiracSpinor operator-(const EvtDiracSpinor& u1,
 				  const EvtDiracSpinor& u2); 
-  friend ostream& operator<<(ostream& s, const EvtDiracSpinor& c);  
+  friend std::ostream& operator<<(std::ostream& s, const EvtDiracSpinor& c);  
 
 public:
 

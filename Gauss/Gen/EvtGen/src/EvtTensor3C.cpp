@@ -332,11 +332,11 @@ const EvtTensor3C& EvtTensor3C::id(){
 
 }
 
-ostream& operator<<(ostream& s,const EvtTensor3C& v){
+std::ostream& operator<<(std::ostream& s,const EvtTensor3C& v){
 
-  s<<endl<<"("<<v.t[0][0]<<","<<v.t[0][1]<<","<<v.t[0][2]<<")";
-  s<<endl<<"("<<v.t[1][0]<<","<<v.t[1][1]<<","<<v.t[1][2]<<")";
-  s<<endl<<"("<<v.t[2][0]<<","<<v.t[2][1]<<","<<v.t[2][2]<<")"<<endl;
+  s<<std::endl<<"("<<v.t[0][0]<<","<<v.t[0][1]<<","<<v.t[0][2]<<")";
+  s<<std::endl<<"("<<v.t[1][0]<<","<<v.t[1][1]<<","<<v.t[1][2]<<")";
+  s<<std::endl<<"("<<v.t[2][0]<<","<<v.t[2][1]<<","<<v.t[2][2]<<")"<<std::endl;
   
   return s;
 }

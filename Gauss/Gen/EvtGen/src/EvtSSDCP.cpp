@@ -60,22 +60,22 @@ void EvtSSDCP::init(){
     report(ERROR, "EvtGen") << "EvtSSDCP cannot decay "
 			    << EvtPDL::name(getParentId()) 
 			    << ". Must be specified to decay"
-			    << " only B0 or a B0B ." << endl;
-    report(ERROR,"EvtGen") << "Will terminate execution!"<<endl;
+			    << " only B0 or a B0B ." << std::endl;
+    report(ERROR,"EvtGen") << "Will terminate execution!"<<std::endl;
     ::abort();
   }
   if ( d1type != EvtSpinType::SCALAR ) {
     report(ERROR,"EvtGen") << "EvtSSDCP generator expected "
                            << " a SCALAR 1st daughter, found:"<<
-                           EvtPDL::name(getDaug(0))<<endl;
-    report(ERROR,"EvtGen") << "Will terminate execution!"<<endl;
+                           EvtPDL::name(getDaug(0))<<std::endl;
+    report(ERROR,"EvtGen") << "Will terminate execution!"<<std::endl;
     ::abort();
   }
   if ( (d2type != EvtSpinType::SCALAR)&&(d2type != EvtSpinType::VECTOR)&&(d2type != EvtSpinType::TENSOR) ) {
     report(ERROR,"EvtGen") << "EvtSSDCP generator expected "
                            << " a SCALAR, VECTOR, or TENSOR as 2nd daughter, found:"<<
-                           EvtPDL::name(getDaug(1))<<endl;
-    report(ERROR,"EvtGen") << "Will terminate execution!"<<endl;
+                           EvtPDL::name(getDaug(1))<<std::endl;
+    report(ERROR,"EvtGen") << "Will terminate execution!"<<std::endl;
     ::abort();
   }
 

@@ -48,17 +48,17 @@ void EvtDecayProb::makeDecay(EvtParticle* p){
   //report(INFO,"EvtGen") << ntimes <<endl;
   if (ntimes==0){
     report(DEBUG,"EvtGen") << "Tried accept/reject:10000"
-			   <<" times, and rejected all the times!"<<endl;
-    report(DEBUG,"EvtGen") << "Is therefore accepting the last event!"<<endl;
+			   <<" times, and rejected all the times!"<<std::endl;
+    report(DEBUG,"EvtGen") << "Is therefore accepting the last event!"<<std::endl;
     report(DEBUG,"EvtGen") << "Decay of particle:"<<
       EvtPDL::name(p->getId())<<"(channel:"<<
-      p->getChannel()<<") with mass "<<p->mass()<<endl;
+      p->getChannel()<<") with mass "<<p->mass()<<std::endl;
     
     int ii;
     for(ii=0;ii<p->getNDaug();ii++){
       report(DEBUG,"EvtGen") <<"Daughter "<<ii<<":"<<
 	EvtPDL::name(p->getDaug(ii)->getId())<<" with mass "<<
-	p->getDaug(ii)->mass()<<endl;
+	p->getDaug(ii)->mass()<<std::endl;
     }				   
   }
 

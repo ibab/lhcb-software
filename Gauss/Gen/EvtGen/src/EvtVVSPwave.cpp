@@ -71,8 +71,8 @@ void EvtVVSPwave::decay( EvtParticle *p){
   EvtComplex ad(getArg(4)*cos(getArg(5)),getArg(4)*sin(getArg(5)));
 
   if (ap!=EvtComplex(0.0,0.0)) {
-    report(ERROR,"EvtGen") << "In EvtVectorToVectorScalar.cc"<<endl;
-    report(ERROR,"EvtGen") << "P wave not yet implemented!!"<<endl;
+    report(ERROR,"EvtGen") << "In EvtVectorToVectorScalar.cc"<<std::endl;
+    report(ERROR,"EvtGen") << "P wave not yet implemented!!"<<std::endl;
     ::abort();
   }
     

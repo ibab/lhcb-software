@@ -90,7 +90,7 @@ EvtItgSimpsonIntegrator::evaluateIt(double lower, double higher) const{
   }
   
   report(ERROR,"EvtGen") << "Severe error in EvtItgSimpsonIntegrator.  Failed to converge after loop with 2**"
-		 << _maxLoop << " calls to the integrand in." << endl;
+		 << _maxLoop << " calls to the integrand in." << std::endl;
   
   return 0.0;
     

@@ -122,7 +122,7 @@ void EvtSemiLeptonicVectorAmp::CalcAmp( EvtParticle *parent,
 			    parent->getDaug(1)->spParent(1));
     }
     else{
-      report(ERROR,"EvtGen") << "Wrong lepton number"<<endl;
+      report(ERROR,"EvtGen") << "Wrong lepton number"<<std::endl;
     }
   }
   EvtVector4C et0=tds.cont1( parent->getDaug(0)->epsParent(0).conj() );

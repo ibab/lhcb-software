@@ -48,7 +48,7 @@ void EvtNeutrinoParticle::init(EvtId part_n,const EvtVector4R& p4){
 
   if (EvtPDL::getStdHep(part_n)==0){
     report(ERROR,"EvtGen") << "Error in EvtNeutrinoParticle::init, part_n="
-			   << part_n.getId()<<endl;
+			   << part_n.getId()<<std::endl;
   }
 
   if (EvtPDL::getStdHep(part_n)>0){  

@@ -66,7 +66,7 @@ public:
   void applyRotateEuler(double alpha,double beta,double gamma);
   void applyBoostTo(const EvtVector4R& p4);
   void applyBoostTo(const EvtVector3R& boost);
-  friend ostream& operator<<(ostream& s, const EvtVector4C& v);
+  friend std::ostream& operator<<(std::ostream& s, const EvtVector4C& v);
   double dot( const EvtVector4C& p2 );  
 private:
 

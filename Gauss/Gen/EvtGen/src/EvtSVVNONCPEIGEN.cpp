@@ -68,8 +68,8 @@ void EvtSVVNONCPEIGEN::init(){
     report(ERROR,"EvtGen") << "EvtSVVNONCPEIGEN decay "
                            << EvtPDL::name(getParentId())
 			   << ".  Must be specified to decay "
-			   << "only B0 or a B0 alias. " << endl;
-    report(ERROR,"EvtGen") << "Will terminate execution!"<<endl;
+			   << "only B0 or a B0 alias. " << std::endl;
+    report(ERROR,"EvtGen") << "Will terminate execution!"<<std::endl;
     ::abort();
   }
 

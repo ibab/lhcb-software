@@ -133,15 +133,15 @@ void EvtRaritaSchwinger::applyBoostTo(const EvtVector3R boost){
 }
 
 
-ostream& operator<<(ostream& s, const EvtRaritaSchwinger& rs){
+std::ostream& operator<<(std::ostream& s, const EvtRaritaSchwinger& rs){
 
   int i,j;
-  s<< endl;
+  s<< std::endl;
   for(i=0;i<4;i++){
     for(j=0;j<4;j++){
       s << rs._rs[i][j];
     }
-    s << endl;
+    s << std::endl;
   }
   return s;
   

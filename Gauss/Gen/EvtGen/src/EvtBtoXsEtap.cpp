@@ -63,7 +63,7 @@ void EvtBtoXsEtap::decay( EvtParticle *p ){
 
   if ( p->getNDaug() != 0 ) {
     //Will end up here because maxrate multiplies by 1.2
-    report(DEBUG,"EvtGen") << "In EvtBtoXsEtap: X_s daughters should not be here!"<<endl;
+    report(DEBUG,"EvtGen") << "In EvtBtoXsEtap: X_s daughters should not be here!"<<std::endl;
     return;
   }
 
@@ -125,7 +125,7 @@ void EvtBtoXsEtap::decay( EvtParticle *p ){
     //    par[16]=1000.8093261719;
     //    par[17]=-53.834449768066;
   } else {
-    report(DEBUG,"EvtGen") << "In EvtBtoXsEtap: Particle with id " << Xscode << " is not a Xsd/u particle"<<endl;
+    report(DEBUG,"EvtGen") << "In EvtBtoXsEtap: Particle with id " << Xscode << " is not a Xsd/u particle"<<std::endl;
     return;
   }
 

@@ -210,15 +210,15 @@ EvtTensor4C::EvtTensor4C(){
 
 }
 
-ostream& operator<<(ostream& s,const EvtTensor4C& t){
+std::ostream& operator<<(std::ostream& s,const EvtTensor4C& t){
 
   int i,j;
-  s<< endl;
+  s<< std::endl;
   for(i=0;i<4;i++){
     for(j=0;j<4;j++){
       s << t.t[i][j];
     }
-   s << endl;
+   s << std::endl;
   }
   return s;
 }

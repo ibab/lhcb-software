@@ -36,14 +36,14 @@ EvtString::EvtString(const EvtString& string){
 
 }
 
-ostream& operator<<(ostream& s, const EvtString& str){
+std::ostream& operator<<(std::ostream& s, const EvtString& str){
 
   s << str._ptr;
   return s;
 
 }  
 
-istream& operator>>(istream& s, EvtString& str){
+std::istream& operator>>(std::istream& s, EvtString& str){
 
   char buf[1024];
   s >> buf;

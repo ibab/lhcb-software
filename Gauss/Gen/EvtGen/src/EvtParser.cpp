@@ -69,7 +69,7 @@ void EvtParser::Read(const EvtString filename){
   
   fin.open(filename.value());
   if (!fin) {
-    report(ERROR,"EvtGen") << "Could not open "<<filename<<endl;
+    report(ERROR,"EvtGen") << "Could not open "<<filename<<std::endl;
   }
 
   char buf[MAXBUF];
@@ -89,7 +89,7 @@ void EvtParser::Read(const EvtString filename){
     }
     if(i==MAXBUF) {
       report(ERROR,"EvtGen") << "Error in EvtParser: line:"
-			     <<line<<" to long"<<endl;
+			     <<line<<" to long"<<std::endl;
     }
     else {
       buf[i] = '\0';
@@ -127,7 +127,7 @@ void EvtParser::Read(const EvtString filename){
 
 void EvtParser::addToken(int line,const EvtString& string){
 
-  //report(INFO,"EvtGen") <<_ntoken<<" "<<line<<" "<<string<<endl;  
+  //report(INFO,"EvtGen") <<_ntoken<<" "<<line<<" "<<string<<std::endl;  
 
   if (_ntoken==_lengthoftokenlist) {
 
@@ -162,7 +162,7 @@ void EvtParser::addToken(int line,const EvtString& string){
  
   _ntoken++;  
 
-  //report(INFO,"EvtGen") << "First:"<<_tokenlist[0]<<" last:"<<_tokenlist[_ntoken-1]<<endl;
+  //report(INFO,"EvtGen") << "First:"<<_tokenlist[0]<<" last:"<<_tokenlist[_ntoken-1]<<std::endl;
 
 }
    

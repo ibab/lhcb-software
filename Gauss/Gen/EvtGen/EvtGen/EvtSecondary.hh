@@ -45,7 +45,7 @@ public:
   int getNPart();
   void createSecondary(int stdhepindex,EvtParticle* prnt);
 
-  friend ostream& operator<<(ostream& s, const EvtSecondary& secondary);  
+  friend std::ostream& operator<<(std::ostream& s, const EvtSecondary& secondary);  
 
 private:
 

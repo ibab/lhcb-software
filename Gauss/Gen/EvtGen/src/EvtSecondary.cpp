@@ -66,16 +66,16 @@ void EvtSecondary::createSecondary(int stdhepindex,EvtParticle* prnt){
   }
   
   report(ERROR,"EvtGen") << 
-    "More than 3 decay products in a secondary particle!"<<endl;
+    "More than 3 decay products in a secondary particle!"<<std::endl;
 
 
 }
  
 
-ostream& operator<<(ostream& s, const EvtSecondary& secondary){
+std::ostream& operator<<(std::ostream& s, const EvtSecondary& secondary){
 
-  s <<endl;
-  s << "Secondary decays:"<<endl;
+  s <<std::endl;
+  s << "Secondary decays:"<<std::endl;
 
   int i;
   for(i=0;i<secondary._npart;i++){
@@ -84,11 +84,11 @@ ostream& operator<<(ostream& s, const EvtSecondary& secondary){
 	 <<secondary._stdhepindex[i]<<" "
 	 <<secondary._id1[i]<<" "
 	 <<secondary._id2[i]<<" "
-	 <<secondary._id3[i]<<endl;
+	 <<secondary._id3[i]<<std::endl;
 
   }
   
-  s<<endl;
+  s<<std::endl;
   
   return s;
 

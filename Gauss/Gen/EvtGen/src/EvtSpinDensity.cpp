@@ -124,7 +124,7 @@ double EvtSpinDensity::NormalizedProb(const EvtSpinDensity& d){
   double norm=0.0;
 
   if (dim!=d.dim) {
-    report(ERROR,"EvtGen")<<"Not matching dimensions in NormalizedProb"<<endl;
+    report(ERROR,"EvtGen")<<"Not matching dimensions in NormalizedProb"<<std::endl;
     ::abort();
   }
 
@@ -136,10 +136,10 @@ double EvtSpinDensity::NormalizedProb(const EvtSpinDensity& d){
   }
 
   if (imag(prob)>0.00000001*real(prob)) {
-    report(ERROR,"EvtGen")<<"Imaginary probability:"<<prob<<" "<<norm<<endl;
+    report(ERROR,"EvtGen")<<"Imaginary probability:"<<prob<<" "<<norm<<std::endl;
   }
   if (real(prob)<0.0) {
-    report(ERROR,"EvtGen")<<"Negative probability:"<<prob<<" "<<norm<<endl;
+    report(ERROR,"EvtGen")<<"Negative probability:"<<prob<<" "<<norm<<std::endl;
   }
 
   return real(prob)/norm;
@@ -149,7 +149,7 @@ double EvtSpinDensity::NormalizedProb(const EvtSpinDensity& d){
 int EvtSpinDensity::Check(){
 
   if (dim<1) {
-    report(ERROR,"EvtGen")<<"dim="<<dim<<"in SpinDensity::Check"<<endl;
+    report(ERROR,"EvtGen")<<"dim="<<dim<<"in SpinDensity::Check"<<std::endl;
   }
 
   int i,j;
@@ -158,7 +158,7 @@ int EvtSpinDensity::Check(){
 
     if (real(rho[i][i])<0.0) return 0;
     if (imag(rho[i][i])*1000000.0>abs(rho[i][i])) {
-      report(INFO,"EvtGen") << "Failing 1"<<endl;
+      report(INFO,"EvtGen") << "Failing 1"<<std::endl;
       return 0;
     }
   }
@@ -167,12 +167,12 @@ int EvtSpinDensity::Check(){
     for(j=i+1;j<dim;j++){
       if (fabs(real(rho[i][j]-rho[j][i]))>
 	  0.00000001*(abs(rho[i][i])+abs(rho[j][j]))) {
-	report(INFO,"EvtGen") << "Failing 2"<<endl;
+	report(INFO,"EvtGen") << "Failing 2"<<std::endl;
 	return 0;
       }
       if (fabs(imag(rho[i][j]+rho[j][i]))>
 	  0.00000001*(abs(rho[i][i])+abs(rho[j][j]))) {
-	report(INFO,"EvtGen") << "Failing 3"<<endl;
+	report(INFO,"EvtGen") << "Failing 3"<<std::endl;
 	return 0;
       }
     }
@@ -181,18 +181,18 @@ int EvtSpinDensity::Check(){
   return 1;
 }
 
-ostream& operator<<(ostream& s,const EvtSpinDensity& d){
+std::ostream& operator<<(std::ostream& s,const EvtSpinDensity& d){
 
   int i,j;
 
-  s << endl;
-  s << "Dimension:"<<d.dim<<endl;
+  s << std::endl;
+  s << "Dimension:"<<d.dim<<std::endl;
 
   for (i=0;i<d.dim;i++){
     for (j=0;j<d.dim;j++){
      s << d.rho[i][j]<<" ";
     }
-    s <<endl;
+    s <<std::endl;
   }
 
   return s;

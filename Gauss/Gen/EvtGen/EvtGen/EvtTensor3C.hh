@@ -45,7 +45,7 @@ EvtTensor3C cont22(const EvtTensor3C& t1,const EvtTensor3C& t2);
 EvtTensor3C cont11(const EvtTensor3C& t1,const EvtTensor3C& t2);
 //Contract the last index of eps_{ijk} with w
 EvtTensor3C eps(const EvtVector3R& v);
-ostream& operator<<(ostream& c,const EvtTensor3C& v); 
+std::ostream& operator<<(std::ostream& c,const EvtTensor3C& v); 
 
 //==================
 class EvtTensor3C {
@@ -72,7 +72,7 @@ class EvtTensor3C {
   friend EvtTensor3C cont11(const EvtTensor3C& t1,const EvtTensor3C& t2);
 //Contract the last index of eps_{ijk} with w
   friend EvtTensor3C eps(const EvtVector3R& v);
-  friend ostream& operator<<(ostream& c,const EvtTensor3C& v); 
+  friend std::ostream& operator<<(std::ostream& c,const EvtTensor3C& v); 
 
 public:
   EvtTensor3C();

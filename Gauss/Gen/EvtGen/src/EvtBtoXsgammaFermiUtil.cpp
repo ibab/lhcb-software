@@ -37,7 +37,7 @@
 double EvtBtoXsgammaFermiUtil::FermiExpFunc(double y, const HepVector &coeffs) {
 
   //coeffs: 1 = lambdabar, 2 = a, 3 = lam1, 4 = norm
-  // cout<<coeffs[4]<<endl;
+  // std::cout<<coeffs[4]<<endl;
   return (pow(1. - (y/coeffs[1]),coeffs[2])*exp((-3.*pow(coeffs[1],2.)/coeffs[3])*y/coeffs[1]))/coeffs[4];
 
 }
@@ -120,7 +120,7 @@ double EvtBtoXsgammaFermiUtil::BesselK1(double x) {
 
   //Lifted from Numerical Recipies in C : Returns the modified Bessel
   //function K_1(x) for positive real x
-  if (x<0.0) cout<<"x is negative !"<<endl;
+  if (x<0.0) std::cout<<"x is negative !"<<std::endl;
   
   double y, ans;
 
@@ -166,9 +166,9 @@ double EvtBtoXsgammaFermiUtil::FermiRomanFuncRoot(double lambdabar, double lam1)
 
   double rho = rootFinder->GetRootSingleFunc(lhFunc, rhSide, 0.1, 0.4, 1.0e-6);
   //rho=0.250353;
-  cout<<"rho/2 "<<rho/2.<<" bessel "<<BesselK1(rho/2.)<<endl;
+  std::cout<<"rho/2 "<<rho/2.<<" bessel "<<BesselK1(rho/2.)<<std::endl;
   double pF = lambdabar*sqrt(EvtConst::pi)/(rho*exp(rho/2.)*BesselK1(rho/2.));
-  cout<<"rho "<<rho<<" pf "<<pF<<endl;
+  std::cout<<"rho "<<rho<<" pf "<<pF<<std::endl;
   
   delete lhFunc; lhFunc=0;
   delete rootFinder; rootFinder=0;

@@ -76,7 +76,7 @@ void EvtKLL::decay( EvtParticle *pb){
   leptonp = pb->getDaug(1);
   leptonn = pb->getDaug(2);
   
-  //report(INFO,"EvtGen")<<"ERvt Gen: inizio !!!!!!!"<<endl;
+  //report(INFO,"EvtGen")<<"ERvt Gen: inizio !!!!!!!"<<std::endl;
   
   double m_b = pb->mass();
   

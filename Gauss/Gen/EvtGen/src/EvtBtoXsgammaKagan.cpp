@@ -67,8 +67,8 @@ void EvtBtoXsgammaKagan::init(int nArg, double* args){
   
   report(ERROR,"EvtGen") << "EvtBtoXsgamma generator model "
 			 << "EvtBtoXsgammaKagan expected " 
-			 << "either 1(default config) or ten arguments but found: "<<nArg<<endl;
-  report(ERROR,"EvtGen") << "Will terminate execution!"<<endl;
+       << "either 1(default config) or ten arguments but found: "<<nArg<<std::endl;
+  report(ERROR,"EvtGen") << "Will terminate execution!"<<std::endl;
     ::abort();  
   }
   

@@ -57,7 +57,7 @@ public:
   inline const EvtComplex& get(int) const;
   inline EvtVector3C conj() const;
   EvtVector3C cross(const EvtVector3C& v2);
-  friend ostream& operator<<(ostream& c,const EvtVector3C& v); 
+  friend std::ostream& operator<<(std::ostream& c,const EvtVector3C& v); 
   double dot( const EvtVector3C& p2 );  
 private:
 

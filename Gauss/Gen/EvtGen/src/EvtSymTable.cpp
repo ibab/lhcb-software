@@ -40,7 +40,7 @@ void EvtSymTable::Define(const EvtString& symname,double d) {
   for(i=0;i<nsym;i++){
     if (name[i]==symname){
       report(INFO,"EvtGen") << "Symbol:"<<symname<<
-	" redefined, old value:"<<value[i]<<" new value:"<<d<<endl;
+	" redefined, old value:"<<value[i]<<" new value:"<<d<<std::endl;
       name[i]=symname;
       value[i]=d;
       return;
@@ -49,7 +49,7 @@ void EvtSymTable::Define(const EvtString& symname,double d) {
 
   if (nsym>=MAXSYM) {
     report(ERROR,"EvtGen") << "Out of space for symbols; can not store:"
-			   << symname<<endl;
+			   << symname<<std::endl;
     return;
   }
 

@@ -23,7 +23,7 @@
 #include <iostream>
 
 
-ostream& operator<<(ostream& s, const EvtId& id){
+std::ostream& operator<<(std::ostream& s, const EvtId& id){
 
   s<<"(Id="<<id._id<<" Alias="<<id._alias<<")";
 

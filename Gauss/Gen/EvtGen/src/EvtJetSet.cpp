@@ -92,7 +92,7 @@ EvtJetSet::~EvtJetSet(){
     }
   }
 
-  report(ERROR,"EvtGen") << "Error in destroying JetSet model!"<<endl;
+  report(ERROR,"EvtGen") << "Error in destroying JetSet model!"<<std::endl;
  
 }
 
@@ -124,13 +124,13 @@ void EvtJetSet::init(){
 
   if (getParentId().isAlias()){
 
-    report(ERROR,"EvtGen") << "EvtJetSet finds that you are decaying the"<<endl
+    report(ERROR,"EvtGen") << "EvtJetSet finds that you are decaying the"<<std::endl
                            << " aliased particle "
 			   << EvtPDL::name(getParentId())
-			   << " with the JetSet model"<<endl
+			   << " with the JetSet model"<<std::endl
 			   << " this does not work, please modify decay table."
-			   << endl;
-    report(ERROR,"EvtGen") << "Will terminate execution!"<<endl;
+			   << std::endl;
+    report(ERROR,"EvtGen") << "Will terminate execution!"<<std::endl;
     ::abort();
 
   }
@@ -189,7 +189,7 @@ void EvtJetSet::decay( EvtParticle *p){
   if (lucomp_(&istdheppar)==0){
 #endif
     report(ERROR,"EvtGen") << "Jetset can not decay:"
-      <<EvtPDL::name(p->getId())<<endl;
+      <<EvtPDL::name(p->getId())<<std::endl;
     return;
   }
 
@@ -231,10 +231,10 @@ void EvtJetSet::decay( EvtParticle *p){
     for(i=0;i<ndaugjs;i++){
 
       if (EvtPDL::evtIdFromStdHep(kf[i])==EvtId(-1,-1)) {
-	report(ERROR,"EvtGen") << "JetSet returned particle:"<<kf[i]<<endl;
-	report(ERROR,"EvtGen") << "This can not be translated to evt number"<<endl;
-	report(ERROR,"EvtGen") << "and the decay will be rejected!"<<endl;
-	report(ERROR,"EvtGen") << "The decay was of particle:"<<ip<<endl;
+	report(ERROR,"EvtGen") << "JetSet returned particle:"<<kf[i]<<std::endl;
+	report(ERROR,"EvtGen") << "This can not be translated to evt number"<<std::endl;
+	report(ERROR,"EvtGen") << "and the decay will be rejected!"<<std::endl;
+	report(ERROR,"EvtGen") << "The decay was of particle:"<<ip<<std::endl;
 
       }
 
@@ -279,10 +279,10 @@ void EvtJetSet::decay( EvtParticle *p){
   }while( more && (count<10000) );
 
   if (count>9999) {
-    report(INFO,"EvtGen") << "Too many loops in EvtJetSet!!!"<<endl;
-    report(INFO,"EvtGen") << "Parent:"<<EvtPDL::name(getParentId())<<endl;
+    report(INFO,"EvtGen") << "Too many loops in EvtJetSet!!!"<<std::endl;
+    report(INFO,"EvtGen") << "Parent:"<<EvtPDL::name(getParentId())<<std::endl;
     for(i=0;i<numstable;i++){
-      report(INFO,"EvtGen") << "Daug("<<i<<")"<<EvtPDL::name(evtnumstable[i])<<endl;
+      report(INFO,"EvtGen") << "Daug("<<i<<")"<<EvtPDL::name(evtnumstable[i])<<std::endl;
     }
 
   }
@@ -628,7 +628,7 @@ void EvtJetSet::WriteJetSetParticle(ofstream &outdec,EvtId ipar,
 	    unknown=1;
 	    report(ERROR,"EvtGen") << "JetSet (lucomp) does not "
 				  << "know the particle:"<<
-	      EvtPDL::name(jetsetdecays[ijetset]->getDaugs()[i])<<endl;
+	      EvtPDL::name(jetsetdecays[ijetset]->getDaugs()[i])<<std::endl;
 	  }
 	}
 
@@ -642,32 +642,32 @@ void EvtJetSet::WriteJetSetParticle(ofstream &outdec,EvtId ipar,
 	  unknown=1;
 	  report(ERROR,"EvtGen") << "JetSet (lucomp) does not "
 	          << "know the particle:"<<
-	      EvtPDL::name(ipar)<<endl;
+	      EvtPDL::name(ipar)<<std::endl;
 	}
 
 
 
 	if (unknown){
-	  report(ERROR,"EvtGen") << "Therfore the decay:"<<endl;
+	  report(ERROR,"EvtGen") << "Therfore the decay:"<<std::endl;
 	  report(ERROR,"EvtGen") << EvtPDL::name(jetsetdecays[ijetset]->getParentId())<<" -> ";
 	  for(i=0;i<jetsetdecays[ijetset]->getNDaug();i++){
 	    report(ERROR,"") << EvtPDL::name(jetsetdecays[ijetset]->getDaugs()[i])<<" ";
 	  }
-	  report(ERROR,"")<<endl;
-	  report(ERROR,"EvtGen")<<"Will not be generated."<<endl;
+	  report(ERROR,"")<<std::endl;
+	  report(ERROR,"EvtGen")<<"Will not be generated."<<std::endl;
 	  return;
 	}
 
 
 	if (EvtPDL::chargeConj(ipar)==ipar) {
 	  dflag=1;
-	  //report(INFO,"EvtGen") << EvtPDL::name(iparname) << " dflag=1 because C(ipar)=ipar!"<<endl;
+	  //report(INFO,"EvtGen") << EvtPDL::name(iparname) << " dflag=1 because C(ipar)=ipar!"<<std::endl;
 	}
 
 
 	//if (channel>=0) {
 	//  dflag=1;
-	  //report(INFO,"EvtGen") << EvtPDL::name(iparname) << " dflag=1 because channel>=0"<<endl;
+	  //report(INFO,"EvtGen") << EvtPDL::name(iparname) << " dflag=1 because channel>=0"<<std::endl;
 	//}
  
 	//	if (!(EvtPDL::getStdHep(ipar)<0&&channel>=0)){
@@ -714,10 +714,10 @@ void EvtJetSet::MakeJetSetFile(char* fname){
  
   outdec.open(fname);
   
-  //outdec << ";"<<endl;
-  //outdec << ";This decayfile has been automatically created by"<<endl;
-  //outdec << ";EvtGen from the DECAY.DEC file"<<endl;
-  //outdec << ";"<<endl;
+  //outdec << ";"<<std::endl;
+  //outdec << ";This decayfile has been automatically created by"<<std::endl;
+  //outdec << ";EvtGen from the DECAY.DEC file"<<std::endl;
+  //outdec << ";"<<std::endl;
 
   int nokcentry;
 
@@ -781,7 +781,7 @@ void EvtJetSet::jetSetInit(){
 
     first=0;
 
-    report(INFO,"EvtGen") << "Will initialize JetSet."<<endl;
+    report(INFO,"EvtGen") << "Will initialize JetSet."<<std::endl;
 
     char fname[200];
 
@@ -789,7 +789,7 @@ void EvtJetSet::jetSetInit(){
     
 #ifndef WIN32
     if ( gethostname( hostBuffer, 100 ) != 0 ){
-      report(ERROR,"EvtGen") << " couldn't get hostname." << endl;
+      report(ERROR,"EvtGen") << " couldn't get hostname." << std::endl;
       strncpy( hostBuffer, "hostnameNotFound", 100 );
     }
 #else
@@ -801,7 +801,7 @@ void EvtJetSet::jetSetInit(){
     int thePid=getpid();
   
     if ( sprintf( pid, "%d", thePid ) == 0 ){
-      report(ERROR,"EvtGen") << " couldn't get process ID." << endl;
+      report(ERROR,"EvtGen") << " couldn't get process ID." << std::endl;
       strncpy( pid, "666", 100 );
     }
 #else
@@ -839,7 +839,7 @@ void EvtJetSet::jetSetInit(){
 
     }
 
-    report(INFO,"EvtGen") << "Done initializing JetSet."<<endl;
+    report(INFO,"EvtGen") << "Done initializing JetSet."<<std::endl;
 
 
   }

@@ -92,7 +92,7 @@ void EvtVector4R::applyRotateEuler(double phi,double theta,double ksi){
   
 }
 
-ostream& operator<<(ostream& s, const EvtVector4R& v){
+std::ostream& operator<<(std::ostream& s, const EvtVector4R& v){
 
   s<<"("<<v.v[0]<<","<<v.v[1]<<","<<v.v[2]<<","<<v.v[3]<<")";
 

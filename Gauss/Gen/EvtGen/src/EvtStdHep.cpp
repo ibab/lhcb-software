@@ -19,7 +19,7 @@
 //------------------------------------------------------------------------
 
 #include <iostream>
-#include <iomanip.h>
+#include <iomanip>
 #include "EvtGen/EvtVector4R.hh"
 #include "EvtGen/EvtStdHep.hh"
 
@@ -71,15 +71,15 @@ void EvtStdHep::translate(EvtVector4R d){
 
  
 
-ostream& operator<<(ostream& s, const EvtStdHep& stdhep){
+std::ostream& operator<<(std::ostream& s, const EvtStdHep& stdhep){
 
   int w=s.width();
   int p=s.precision();
   long f=s.flags();
 
 
-  s <<endl;
-  s << "  N      Id Ist   M1   M2   DF   DL      px      py      pz       E       t       x       y       z"<<endl;
+  s <<std::endl;
+  s << "  N      Id Ist   M1   M2   DF   DL      px      py      pz       E       t       x       y       z"<<std::endl;
   int i;
   for(i=0;i<stdhep._npart;i++){
     
@@ -99,40 +99,40 @@ ostream& operator<<(ostream& s, const EvtStdHep& stdhep){
     s<<stdhep._dauglast[i]<<" ";
     s.width(7);
     s.precision(4);
-    s<<setiosflags( ios::right|ios::fixed );
+    s<<std::setiosflags( std::ios::right|std::ios::fixed );
     s<<stdhep._p4[i].get(1)<<" ";
     s.width(7);
     s.precision(4);
-    s<<setiosflags( ios::right|ios::fixed );
+    s<<std::setiosflags( std::ios::right|std::ios::fixed );
     s<<stdhep._p4[i].get(2)<<" ";
     s.width(7);
     s.precision(4);
-    s<<setiosflags( ios::right|ios::fixed );
+    s<<std::setiosflags( std::ios::right|std::ios::fixed );
     s<<stdhep._p4[i].get(3)<<" ";
     s.width(7);
     s.precision(4);
-    s<<setiosflags( ios::right|ios::fixed );
+    s<<std::setiosflags( std::ios::right|std::ios::fixed );
     s<<stdhep._p4[i].get(0)<<" ";
     s.width(7);
     s.precision(4);
-    s<<setiosflags( ios::right|ios::fixed );
+    s<<std::setiosflags( std::ios::right|std::ios::fixed );
     s<<stdhep._x[i].get(0)<<" ";
     s.width(7);
     s.precision(4);
-    s<<setiosflags( ios::right|ios::fixed );
+    s<<std::setiosflags( std::ios::right|std::ios::fixed );
     s<<stdhep._x[i].get(1)<<" ";
     s.width(7);
     s.precision(4);
-    s<<setiosflags( ios::right|ios::fixed );
+    s<<std::setiosflags( std::ios::right|std::ios::fixed );
     s<<stdhep._x[i].get(2)<<" ";
     s.width(7);
     s.precision(4);
-    s<<setiosflags( ios::right|ios::fixed );
-    s<<stdhep._x[i].get(3)<<endl;
+    s<< std::setiosflags( std::ios::right|std::ios::fixed );
+    s<<stdhep._x[i].get(3)<<std::endl;
     s.width(0);
   }
   
-  s<<endl;
+  s<<std::endl;
 
   s.width(w);
   s.precision(p);

@@ -90,8 +90,8 @@ void EvtUPS4S::decay( EvtParticle *p){
 
   if (mups4s<2*bmass_max) {
     report(ERROR,"EvtGen") << "VPHO mass to low="<<mups4s
-			 <<" to low, modified to UPS(4S) mass!"<<endl<<
-                         " this will violate 4-momnetum conservation"<<endl;
+			 <<" to low, modified to UPS(4S) mass!"<<std::endl<<
+                         " this will violate 4-momnetum conservation"<<std::endl;
     p4[0].set(0,EvtPDL::getMass(UPS4));
   }
 

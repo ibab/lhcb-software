@@ -179,7 +179,7 @@ void EvtPHOTOS::PHOTOS( EvtParticle *p){
 #endif
     
 
-  //report(INFO,"EvtGen") << "numparticlephotos:"<<numparticlephotos<<endl;
+  //report(INFO,"EvtGen") << "numparticlephotos:"<<numparticlephotos<<std::endl;
   
   if (numparticle==numparticlephotos) return;
 

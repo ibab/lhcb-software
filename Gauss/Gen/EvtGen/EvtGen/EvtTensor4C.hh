@@ -89,7 +89,7 @@ public:
   void applyRotateEuler(double alpha,double beta,double gamma);
   void applyBoostTo(const EvtVector4R& p4);
   void applyBoostTo(const EvtVector3R& boost);
-  friend ostream& operator<<(ostream& s, const EvtTensor4C& t); 
+  friend std::ostream& operator<<(std::ostream& s, const EvtTensor4C& t); 
   EvtTensor4C& operator+=(const EvtTensor4C& t2);
   EvtTensor4C& operator-=(const EvtTensor4C& t2);
   EvtTensor4C conj() const;

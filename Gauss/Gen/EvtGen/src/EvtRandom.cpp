@@ -40,7 +40,7 @@ double EvtRandom::random(){
 
   if (_randomEngine==0){
     report(ERROR,"EvtGen") <<"No random engine available in "
-			   <<"EvtRandom::random()."<<endl;
+			   <<"EvtRandom::random()."<<std::endl;
     ::abort();
   }
 
@@ -54,7 +54,7 @@ double EvtRandom::random(){
 double EvtRandom::Flat( double min, double max){
 
   if ( min > max ) {
-    report(ERROR,"EvtGen") << "min>max in EvtRandomm:;Flat(min,max)"<<endl;
+    report(ERROR,"EvtGen") << "min>max in EvtRandomm:;Flat(min,max)"<<std::endl;
     ::abort();
   }
 

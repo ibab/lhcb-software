@@ -99,7 +99,7 @@ void EvtKsLLLC::decay( EvtParticle *pb){
 
   EvtParticle *kstar, *leptonp, *leptonn;
   
-  //report(INFO,"EvtGen")<<"ERvt Gen: inizio !!!!!!!"<<endl;
+  //report(INFO,"EvtGen")<<"ERvt Gen: inizio !!!!!!!"<<std::endl;
   
   pb->makeDaughters(getNDaug(),getDaugs());
   kstar=pb->getDaug(0);

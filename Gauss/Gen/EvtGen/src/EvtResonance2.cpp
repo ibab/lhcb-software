@@ -97,8 +97,8 @@ EvtComplex EvtResonance2::resAmpl() {
 		   mAB*mAB*mC*mC)/(mD*mD));
 
 
-  //    cout << mAB<<" "<< mBC<<" "<< mAC<<" "<< mA<<" "<< mB<<" "<< mC<<" "
-  //     << mD<<" "<< mR<<" "<< gammaR<<" "<< pAB<<" "<< pR<<" "<< pD<<" "<<pDAB<<endl;
+  //    std::cout << mAB<<" "<< mBC<<" "<< mAC<<" "<< mA<<" "<< mB<<" "<< mC<<" "
+  //     << mD<<" "<< mR<<" "<< gammaR<<" "<< pAB<<" "<< pR<<" "<< pD<<" "<<pDAB<<std::endl;
 
   double fR=1;
   double fD=1;
@@ -108,20 +108,20 @@ EvtComplex EvtResonance2::resAmpl() {
     fR=1.0;
     fD=1.0;
     power=1;
-    //cout << "fR="<<fR<<" fD="<<fD<<endl;
+    //std::cout << "fR="<<fR<<" fD="<<fD<<std::endl;
     break;
   case 1:
     fR=sqrt(1.0+1.5*1.5*pR*pR)/sqrt(1.0+1.5*1.5*pAB*pAB);
     fD=sqrt(1.0+5.0*5.0*pD*pD)/sqrt(1.0+5.0*5.0*pDAB*pDAB);
-    //cout << "fR="<<fR<<" fD="<<fD<<endl;
+    //std::cout << "fR="<<fR<<" fD="<<fD<<std::endl;
     power=3;
     break;
   default:
-    cout << "Incorrect spin in EvtResonance22.cc\n";
+    std::cout << "Incorrect spin in EvtResonance22.cc\n";
   }
   
   double gammaAB= gammaR*pow(pAB/pR,power)*(mR/mAB)*fR*fR;
-  //cout << gammaAB<<endl;
+  //std::cout << gammaAB<<std::endl;
   switch (_spin) {
   case 0:
     ampl=_ampl*EvtComplex(cos(_theta*pi180inv),sin(_theta*pi180inv))*
@@ -133,10 +133,10 @@ EvtComplex EvtResonance2::resAmpl() {
        (mR*mR-mAB*mAB-EvtComplex(0.0,mR*gammaAB)));
     break;
   default:
-    cout << "Incorrect spin in EvtResonance22.cc\n";
+    std::cout << "Incorrect spin in EvtResonance22.cc\n";
   }
 
-  //cout <<"The amplitude is "<<ampl<<endl;
+  //std::cout <<"The amplitude is "<<ampl<<std::endl;
   return ampl;
 }
 

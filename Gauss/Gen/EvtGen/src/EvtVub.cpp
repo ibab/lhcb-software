@@ -60,8 +60,8 @@ void EvtVub::init(){
 
     report(ERROR,"EvtGen") << "EvtVub generator expected "
                            << " at least 6 arguments (mb,a,alpha_s,Nbins,m1,w1,...) but found: "
-			   <<getNArg()<<endl;
-    report(ERROR,"EvtGen") << "Will terminate execution!"<<endl;
+			   <<getNArg()<<std::endl;
+    report(ERROR,"EvtGen") << "Will terminate execution!"<<std::endl;
     ::abort();
 
   }
@@ -77,8 +77,8 @@ void EvtVub::init(){
   if (getNArg()-4 != 2*_nbins) {
     report(ERROR,"EvtGen") << "EvtVub generator expected " 
                            << _nbins << " masses and weights but found: "
-			   <<(getNArg()-4)/2 <<endl;
-    report(ERROR,"EvtGen") << "Will terminate execution!"<<endl;
+			   <<(getNArg()-4)/2 <<std::endl;
+    report(ERROR,"EvtGen") << "Will terminate execution!"<<std::endl;
     ::abort();
   }
   int i,j = 4;
@@ -88,15 +88,15 @@ void EvtVub::init(){
     if (i>0 && _masses[i] <= _masses[i-1]) {
       report(ERROR,"EvtGen") << "EvtVub generator expected " 
 			     << " mass bins in ascending order!"
-			     << "Will terminate execution!"<<endl;
+			     << "Will terminate execution!"<<std::endl;
       ::abort();
     }
     _weights[i] = getArg(j++);
     if (_weights[i] < 0) {
       report(ERROR,"EvtGen") << "EvtVub generator expected " 
 			     << " weights >= 0, but found: " 
-			     <<_weights[i] <<endl;
-      report(ERROR,"EvtGen") << "Will terminate execution!"<<endl;
+			     <<_weights[i] <<std::endl;
+      report(ERROR,"EvtGen") << "Will terminate execution!"<<std::endl;
       ::abort();
     }
     if ( _weights[i] > maxw ) maxw = _weights[i];
@@ -104,7 +104,7 @@ void EvtVub::init(){
   if (maxw == 0) {
     report(ERROR,"EvtGen") << "EvtVub generator expected at least one " 
 			   << " weight > 0, but found none! " 
-			   << "Will terminate execution!"<<endl;
+			   << "Will terminate execution!"<<std::endl;
     ::abort();
   }
   for (i=0;i<_nbins;i++) _weights[i]/=maxw;
@@ -223,7 +223,7 @@ void EvtVub::decay( EvtParticle *p ){
 	  while ( j < _nbins && m > _masses[j] ) j++; 
 	  double w = _weights[j-1];
 	  y *= w;
-	  if ( y > 1 ) report(WARNING,"EvtGen")<<"EvtVub decay probability > 1 found: " << y << endl;
+	  if ( y > 1 ) report(WARNING,"EvtGen")<<"EvtVub decay probability > 1 found: " << y << std::endl;
 	  if ( y >= xran ) tryit = 0;
 	}
       }

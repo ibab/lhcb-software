@@ -54,7 +54,7 @@ public:
   void createParticle(EvtVector4R p4,EvtVector4R x,int prntfirst,
 		     int prntlast, int id);
 
-  friend ostream& operator<<(ostream& s, const EvtStdHep& stdhep);  
+  friend std::ostream& operator<<(std::ostream& s, const EvtStdHep& stdhep);  
 
 private:
 

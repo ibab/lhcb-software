@@ -160,9 +160,9 @@ void EvtBsquark::decay(EvtParticle *p){
   EvtComplex f1=-(g*g*V11*vcsb)/((p4b-p4c).mass2()-mchi1*mchi1);
   EvtComplex f2=-(g*g*V21*vcsb)/((p4b-p4c).mass2()-mchi1*mchi2);
 
-  //cout <<g<<" "<<V11<<" "<<FL<<" "<<vcsb<<" "<<mchi1<<endl;
-  //cout << "f1:"<<f1<<" "<<(p4b-p4c).mass2()<<endl;
-  //cout << "f2:"<<f2<<" "<<(p4b-p4c).mass2()<<endl;
+  //cout <<g<<" "<<V11<<" "<<FL<<" "<<vcsb<<" "<<mchi1<<std::endl;
+  //cout << "f1:"<<f1<<" "<<(p4b-p4c).mass2()<<std::endl;
+  //cout << "f2:"<<f2<<" "<<(p4b-p4c).mass2()<<std::endl;
 
   //cout << "p4sn:"<<p4sn<<endl;
 

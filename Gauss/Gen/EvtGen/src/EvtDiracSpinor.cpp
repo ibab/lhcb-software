@@ -40,7 +40,7 @@ void EvtDiracSpinor::set_spinor(int i,const EvtComplex& sp){
   spinor[i]=sp;
 }
 
-ostream& operator<<(ostream& s, const EvtDiracSpinor& sp){
+std::ostream& operator<<(std::ostream& s, const EvtDiracSpinor& sp){
 
   s <<"["<<sp.spinor[0]<<","<<sp.spinor[1]<<","
     <<sp.spinor[2]<<","<<sp.spinor[3]<<"]";

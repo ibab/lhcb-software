@@ -45,7 +45,7 @@ void EvtDiracParticle::init(EvtId part_n,const EvtVector4R& p4){
 
   if (EvtPDL::getStdHep(part_n)==0){
     report(ERROR,"EvtGen") << "Error in EvtDiracParticle::init, part_n="
-                           << part_n.getId()<<endl;
+                           << part_n.getId()<<std::endl;
     ::abort();
   }
 
@@ -91,7 +91,7 @@ EvtDiracSpinor EvtDiracParticle::spParent(int i) const {
     return spinor2_parent;
   default:
     report(ERROR,"EvtGen") <<"Error invalid spinor number "
-			   <<i<<endl;
+			   <<i<<std::endl;
     ::abort();
   }
 
@@ -110,7 +110,7 @@ EvtDiracSpinor EvtDiracParticle::sp(int i) const {
     return spinor2_rest;
   default:
     report(ERROR,"EvtGen") <<"Error invalid spinor number "
-			   <<i<<endl;
+			   <<i<<std::endl;
     ::abort();
   }
   

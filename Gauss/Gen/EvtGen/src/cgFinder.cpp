@@ -33,18 +33,18 @@
 int main(int argc, char* argv[]){
 
 
-  cout << "First test the Vector..." << endl;
+  std::cout << "First test the Vector..." << std::endl;
   EvtVectorT<double> tempT;
   tempT.append(1.0);
-  cout << tempT[0] << endl;
+  std::cout << tempT[0] << std::endl;
   tempT.append(2.2);
-  cout << tempT[0] << " " << tempT[1]  << endl;
+  std::cout << tempT[0] << " " << tempT[1]  << std::endl;
   tempT.append(3.0);
-  cout << tempT[0] << " " << tempT[1] << " "<< tempT[2] << endl;
+  std::cout << tempT[0] << " " << tempT[1] << " "<< tempT[2] << std::endl;
 
-  cout << "EvtdFunction:"<<EvtdFunction::d(6,2,0,acos(0.9999))<<endl;
-  cout << "EvtdFunction:"<<EvtdFunction::d(6,2,0,acos(0.5))<<endl;
-  cout << "EvtdFunction:"<<EvtdFunction::d(6,2,0,acos(0.0))<<endl;
+  std::cout << "EvtdFunction:"<<EvtdFunction::d(6,2,0,acos(0.9999))<<std::endl;
+  std::cout << "EvtdFunction:"<<EvtdFunction::d(6,2,0,acos(0.5))<<std::endl;
+  std::cout << "EvtdFunction:"<<EvtdFunction::d(6,2,0,acos(0.0))<<std::endl;
 
 
   double temp[5];
@@ -64,40 +64,40 @@ int main(int argc, char* argv[]){
   EvtOrthogVector getOrth(dim,vectors);
 
   EvtVectorT<double> orth=getOrth.getOrthogVector();
-  cout << "orth 0="<<orth[0]<<endl;
-  cout << "orth 1="<<orth[1]<<endl;
-  cout << "orth 2="<<orth[2]<<endl;
-  cout << "orth 3="<<orth[3]<<endl;
-  cout << "orth 4="<<orth[4]<<endl;
+  std::cout << "orth 0="<<orth[0]<<std::endl;
+  std::cout << "orth 1="<<orth[1]<<std::endl;
+  std::cout << "orth 2="<<orth[2]<<std::endl;
+  std::cout << "orth 3="<<orth[3]<<std::endl;
+  std::cout << "orth 4="<<orth[4]<<std::endl;
 
   EvtCGCoefSingle cg1,cg2,cg3,cg4,cg5;
   
   cg1.init(4,4);
-  cout <<"cg1.coef(6,6,4,4,4,2):"<<cg1.coef(6,6,4,4,4,2)<<endl;
-  cout <<"cg1.coef(6,6,4,4,2,4):"<<cg1.coef(6,6,4,4,2,4)<<endl<<endl;
+  std::cout <<"cg1.coef(6,6,4,4,4,2):"<<cg1.coef(6,6,4,4,4,2)<<std::endl;
+  std::cout <<"cg1.coef(6,6,4,4,2,4):"<<cg1.coef(6,6,4,4,2,4)<<std::endl<<std::endl;
 
-  cout <<"cg1.coef(4,4,4,4,4,0):"<<cg1.coef(4,4,4,4,4,0)<<endl;
-  cout <<"cg1.coef(4,4,4,4,2,2):"<<cg1.coef(4,4,4,4,2,2)<<endl;
-  cout <<"cg1.coef(4,4,4,4,0,4):"<<cg1.coef(4,4,4,4,0,4)<<endl<<endl<<endl;
+  std::cout <<"cg1.coef(4,4,4,4,4,0):"<<cg1.coef(4,4,4,4,4,0)<<std::endl;
+  std::cout <<"cg1.coef(4,4,4,4,2,2):"<<cg1.coef(4,4,4,4,2,2)<<std::endl;
+  std::cout <<"cg1.coef(4,4,4,4,0,4):"<<cg1.coef(4,4,4,4,0,4)<<std::endl<<std::endl<<std::endl;
 
 
   cg2.init(2,2);
-  cout <<"cg2.coef(2,2,2,2,2,0):"<<cg2.coef(2,2,2,2,2,0)<<endl;
-  cout <<"cg2.coef(2,2,2,2,0,2):"<<cg2.coef(2,2,2,2,0,2)<<endl<<endl<<endl;
+  std::cout <<"cg2.coef(2,2,2,2,2,0):"<<cg2.coef(2,2,2,2,2,0)<<std::endl;
+  std::cout <<"cg2.coef(2,2,2,2,0,2):"<<cg2.coef(2,2,2,2,0,2)<<std::endl<<std::endl<<std::endl;
 
 
   cg3.init(1,1);
-  cout <<"cg3.coef(0,0,1,1,1,-1):"<<cg3.coef(0,0,1,1,1,-1)<<endl;
-  cout <<"cg3.coef(0,0,1,1,-1,1):"<<cg3.coef(0,0,1,1,-1,1)<<endl<<endl<<endl;
+  std::cout <<"cg3.coef(0,0,1,1,1,-1):"<<cg3.coef(0,0,1,1,1,-1)<<std::endl;
+  std::cout <<"cg3.coef(0,0,1,1,-1,1):"<<cg3.coef(0,0,1,1,-1,1)<<std::endl<<std::endl<<std::endl;
 
   cg4.init(4,3);
-  cout <<"cg4.coef(1,1,4,3,4,-3):"<<cg4.coef(1,1,4,3,4,-3)<<endl;
-  cout <<"cg4.coef(1,1,4,3,2,-1):"<<cg4.coef(1,1,4,3,2,-1)<<endl;
-  cout <<"cg4.coef(1,1,4,3,0,1):"<<cg4.coef(1,1,4,3,0,1)<<endl;
-  cout <<"cg4.coef(1,1,4,3,-2,3):"<<cg4.coef(1,1,4,3,-2,3)<<endl<<endl<<endl;
+  std::cout <<"cg4.coef(1,1,4,3,4,-3):"<<cg4.coef(1,1,4,3,4,-3)<<std::endl;
+  std::cout <<"cg4.coef(1,1,4,3,2,-1):"<<cg4.coef(1,1,4,3,2,-1)<<std::endl;
+  std::cout <<"cg4.coef(1,1,4,3,0,1):"<<cg4.coef(1,1,4,3,0,1)<<std::endl;
+  std::cout <<"cg4.coef(1,1,4,3,-2,3):"<<cg4.coef(1,1,4,3,-2,3)<<std::endl<<std::endl<<std::endl;
 
   cg5.init(8,9);
-  cout <<"cg5.coef(1,1,8,9,4,-3):"<<cg5.coef(1,1,8,9,4,-3)<<endl;
+  std::cout <<"cg5.coef(1,1,8,9,4,-3):"<<cg5.coef(1,1,8,9,4,-3)<<std::endl;
 
   return 1;
 }

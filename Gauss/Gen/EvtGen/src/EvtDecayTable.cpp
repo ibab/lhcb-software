@@ -78,13 +78,13 @@ void EvtDecayTable::readDecayFile(const EvtString dec_name){
   int noPhotos=0;
   int yesPhotos=0;
 
-  report(INFO,"EvtGen") << "In readDecayFile, reading:"<<dec_name<<endl;
+  report(INFO,"EvtGen") << "In readDecayFile, reading:"<<dec_name<<std::endl;
   
   ifstream fin;
   
   fin.open(dec_name.value());
   if (!fin) {
-    report(ERROR,"EvtGen") << "Could not open "<<dec_name<<endl;
+    report(ERROR,"EvtGen") << "Could not open "<<dec_name<<std::endl;
   }
   fin.close();
 
@@ -106,8 +106,8 @@ void EvtDecayTable::readDecayFile(const EvtString dec_name){
   }
 
   if (!hasend){
-    report(ERROR,"EvtGen") << "Could not find an 'End' in "<<dec_name<<endl;
-    report(ERROR,"EvtGen") << "Will terminate execution."<<endl;
+    report(ERROR,"EvtGen") << "Could not find an 'End' in "<<dec_name<<std::endl;
+    report(ERROR,"EvtGen") << "Will terminate execution."<<std::endl;
     ::abort();
   }
 
@@ -139,13 +139,13 @@ void EvtDecayTable::readDecayFile(const EvtString dec_name){
       noPhotos=1; 
       yesPhotos=0;
       report(INFO,"EvtGen") 
-	<< "As requested, PHOTOS will be turned off."<<endl; 
+	<< "As requested, PHOTOS will be turned off."<<std::endl; 
     }
     else if (token=="yesPhotos"){ 
       yesPhotos=1;
       noPhotos=0;
       report(INFO,"EvtGen") 
-	<< "As requested, PHOTOS will be turned on."<<endl; 
+	<< "As requested, PHOTOS will be turned on."<<std::endl; 
     }
     else if (token=="Alias"){
 
@@ -159,8 +159,8 @@ void EvtDecayTable::readDecayFile(const EvtString dec_name){
 
       if (id==EvtId(-1,-1)) {
 	report(ERROR,"EvtGen") <<"Unknown particle name:"<<oldname
-			       <<" on line "<<parser.getLineofToken(itoken)<<endl;
-	report(ERROR,"EvtGen") <<"Will terminate execution!"<<endl;
+			       <<" on line "<<parser.getLineofToken(itoken)<<std::endl;
+	report(ERROR,"EvtGen") <<"Will terminate execution!"<<std::endl;
 	::abort();
       }
 
@@ -178,15 +178,15 @@ void EvtDecayTable::readDecayFile(const EvtString dec_name){
 
       if (a==EvtId(-1,-1)) {
 	report(ERROR,"EvtGen") <<"Unknown particle name:"<<aname
-			       <<" on line "<<parser.getLineofToken(itoken)<<endl;
-	report(ERROR,"EvtGen") <<"Will terminate execution!"<<endl;
+			       <<" on line "<<parser.getLineofToken(itoken)<<std::endl;
+	report(ERROR,"EvtGen") <<"Will terminate execution!"<<std::endl;
 	::abort();
       }
 
       if (abar==EvtId(-1,-1)) {
 	report(ERROR,"EvtGen") <<"Unknown particle name:"<<abarname
-			       <<" on line "<<parser.getLineofToken(itoken)<<endl;
-	report(ERROR,"EvtGen") <<"Will terminate execution!"<<endl;
+			       <<" on line "<<parser.getLineofToken(itoken)<<std::endl;
+	report(ERROR,"EvtGen") <<"Will terminate execution!"<<std::endl;
 	::abort();
       }
 
@@ -212,8 +212,8 @@ void EvtDecayTable::readDecayFile(const EvtString dec_name){
       if (ipar==EvtId(-1,-1)) {
 	report(ERROR,"EvtGen") <<"Unknown particle name:"<<name
 			       <<" on line "
-			       <<parser.getLineofToken(itoken-1)<<endl;
-	report(ERROR,"EvtGen") <<"Will terminate execution!"<<endl;
+			       <<parser.getLineofToken(itoken-1)<<std::endl;
+	report(ERROR,"EvtGen") <<"Will terminate execution!"<<std::endl;
 	::abort();
       }
 
@@ -222,7 +222,7 @@ void EvtDecayTable::readDecayFile(const EvtString dec_name){
       if (decaytable[ipar.getAlias()].getNMode()!=0) {
 
 	report(DEBUG,"EvtGen") << 
-	  "Redefined decay of "<<name<<" in CDecay"<<endl;
+	  "Redefined decay of "<<name<<" in CDecay"<<std::endl;
 
 	decaytable[ipar.getAlias()].removeDecay();
       }
@@ -247,7 +247,7 @@ void EvtDecayTable::readDecayFile(const EvtString dec_name){
 
       EvtString pname;
       pname=parser.getToken(itoken++);
-      cout << pname << endl;
+      std::cout << pname << std::endl;
       //There should be at least the mass 
       double newMass=atof(parser.getToken(itoken++).value());
       EvtId thisPart = EvtPDL::getId(pname);
@@ -259,7 +259,7 @@ void EvtDecayTable::readDecayFile(const EvtString dec_name){
       EvtPDL::reSetWidth(thisPart, newWidth);
 
       report(INFO,"EvtGen") << "Changing particle properties of " <<
-	pname << " Mass=" << newMass << " Width="<<newWidth<<endl;
+	pname << " Mass=" << newMass << " Width="<<newWidth<<std::endl;
 
       
 
@@ -285,14 +285,14 @@ void EvtDecayTable::readDecayFile(const EvtString dec_name){
       if (ipar==EvtId(-1,-1)) {
 	report(ERROR,"EvtGen") <<"Unknown particle name:"<<parent
 			       <<" on line "
-			       <<parser.getLineofToken(itoken-1)<<endl;
-	report(ERROR,"EvtGen") <<"Will terminate execution!"<<endl;
+			       <<parser.getLineofToken(itoken-1)<<std::endl;
+	report(ERROR,"EvtGen") <<"Will terminate execution!"<<std::endl;
 	::abort();
       }
 
       if (decaytable[ipar.getAlias()].getNMode()!=0) {
 	report(DEBUG,"EvtGen") <<"Redefined decay of "
-			       <<parent<<endl;
+			       <<parent<<std::endl;
 	decaytable[ipar.getAlias()].removeDecay();
       }
 
@@ -309,10 +309,10 @@ void EvtDecayTable::readDecayFile(const EvtString dec_name){
 	      report(ERROR,"EvtGen") << 
 		"Expected to find a branching fraction or Enddecay "<<
 		"but found:"<<token<<" on line "<<
-		parser.getLineofToken(itoken-1)<<endl;
+		parser.getLineofToken(itoken-1)<<std::endl;
 	      report(ERROR,"EvtGen") << "Possibly to few arguments to model "<<
-		"on previous line!"<<endl;
-	      report(ERROR,"EvtGen") << "Will terminate execution!"<<endl;
+		"on previous line!"<<std::endl;
+	      report(ERROR,"EvtGen") << "Will terminate execution!"<<std::endl;
 	      ::abort();
 	    }
 	  }
@@ -326,10 +326,10 @@ void EvtDecayTable::readDecayFile(const EvtString dec_name){
 
 	    report(INFO,"EvtGen") << parser.getToken(itoken)
 	     << " is neither a particle name nor "
-	     << "the name of a model. "<<endl;
+	     << "the name of a model. "<<std::endl;
 	    report(INFO,"EvtGen") << "It was encountered on line "<<
-	      parser.getLineofToken(itoken)<<" of the decay file."<<endl;
-	    report(INFO,"EvtGen") << "Please fix it. Thank you."<<endl;
+	      parser.getLineofToken(itoken)<<" of the decay file."<<std::endl;
+	    report(INFO,"EvtGen") << "Please fix it. Thank you."<<std::endl;
 	    report(INFO,"EvtGen") << "Be sure to check that the "
 	     << "correct case has been used. \n";
 	    report(INFO,"EvtGen") << "Terminating execution. \n";
@@ -345,8 +345,8 @@ void EvtDecayTable::readDecayFile(const EvtString dec_name){
             daught[n_daugh++]=EvtPDL::getId(sdaug);
 	    if (daught[n_daugh-1]==EvtId(-1,-1)) {
 	      report(ERROR,"EvtGen") <<"Unknown particle name:"<<sdaug
-				     <<" on line "<<parser.getLineofToken(itoken)<<endl;
-	      report(ERROR,"EvtGen") <<"Will terminate execution!"<<endl;
+				     <<" on line "<<parser.getLineofToken(itoken)<<std::endl;
+	      report(ERROR,"EvtGen") <<"Will terminate execution!"<<std::endl;
 	      ::abort();
 	    }
           }
@@ -383,8 +383,8 @@ void EvtDecayTable::readDecayFile(const EvtString dec_name){
 	    report(ERROR,"EvtGen") << 
 	      "Expected to find a particle or model name,"<<
 	      "found:"<<model<<" on line "<<
-	      parser.getLineofToken(itoken)<<endl;
-	    report(ERROR,"EvtGen") << "Will terminate execution!"<<endl;
+	      parser.getLineofToken(itoken)<<std::endl;
+	    report(ERROR,"EvtGen") << "Will terminate execution!"<<std::endl;
 	    ::abort();
 
 	  }
@@ -415,9 +415,9 @@ void EvtDecayTable::readDecayFile(const EvtString dec_name){
 		report(ERROR,"EvtGen")
 		  <<"Reading arguments and found:"<<
 		  name<<" on line:"<<
-		  parser.getLineofToken(itoken-1)<<endl;
+		  parser.getLineofToken(itoken-1)<<std::endl;
 		report(ERROR,"EvtGen") 
-		  << "Will terminate execution!"<<endl;
+		  << "Will terminate execution!"<<std::endl;
 		::abort();
 	      }
 	    }
@@ -427,11 +427,11 @@ void EvtDecayTable::readDecayFile(const EvtString dec_name){
 	      report(ERROR,"EvtGen")
 		<<"Expected ';' but found:"<<
 		name<<" on line:"<<
-		parser.getLineofToken(itoken-1)<<endl;
+		parser.getLineofToken(itoken-1)<<std::endl;
 	      report(ERROR,"EvtGen") 
-		<< "Most probable error is omitted ';'."<<endl;
+		<< "Most probable error is omitted ';'."<<std::endl;
 	      report(ERROR,"EvtGen") 
-		<< "Will terminate execution!"<<endl;
+		<< "Will terminate execution!"<<std::endl;
 	      ::abort();
 	    }
           }while(name!=";");
@@ -470,8 +470,8 @@ void EvtDecayTable::readDecayFile(const EvtString dec_name){
     else if (token!="End"){
 
       report(ERROR,"EvtGen") << "Found unknown command:'"<<token<<"' on line "
-			     <<parser.getLineofToken(itoken)<<endl;
-      report(ERROR,"EvtGen") << "Will terminate execution!"<<endl;
+			     <<parser.getLineofToken(itoken)<<std::endl;
+      report(ERROR,"EvtGen") << "Will terminate execution!"<<std::endl;
       ::abort();
 
     }

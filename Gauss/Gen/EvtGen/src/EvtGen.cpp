@@ -77,10 +77,10 @@ EvtGen::EvtGen(const char* const decayName,
 	       EvtRandomEngine* randomEngine){
 
 
-  report(INFO,"EvtGen") << "Initializiting EvtGen"<<endl;
+  report(INFO,"EvtGen") << "Initializiting EvtGen"<<std::endl;
 
-  report(INFO,"EvtGen") << "Main decay file name  :"<<decayName<<endl;
-  report(INFO,"EvtGen") << "PDT table file name   :"<<pdtTableName<<endl;
+  report(INFO,"EvtGen") << "Main decay file name  :"<<decayName<<std::endl;
+  report(INFO,"EvtGen") << "PDT table file name   :"<<pdtTableName<<std::endl;
   
 
 
@@ -96,13 +96,13 @@ EvtGen::EvtGen(const char* const decayName,
     EvtRandom::setRandomEngine(&defaultRandomEngine);
     report(INFO,"EvtGen") <<"No random engine given in "
 			  <<"EvtGen::EvtGen constructor, "
-			  <<"will use default EvtRandomEngine."<<endl;
+			  <<"will use default EvtRandomEngine."<<std::endl;
   }
   else{
     EvtRandom::setRandomEngine(randomEngine);    
   }
 
-  report(INFO,"EvtGen") << "Done initializing EvtGen"<<endl;
+  report(INFO,"EvtGen") << "Done initializing EvtGen"<<std::endl;
 
 }
 
@@ -112,7 +112,7 @@ void EvtGen::readUDecay(const char* const uDecayName){
   ifstream indec;
 
   if ( uDecayName[0] == 0) {
-    report(INFO,"EvtGen") << "Is not reading a user decay file!"<<endl;
+    report(INFO,"EvtGen") << "Is not reading a user decay file!"<<std::endl;
   }
   else{  
     indec.open(uDecayName);
@@ -120,12 +120,12 @@ void EvtGen::readUDecay(const char* const uDecayName){
       EvtDecayTable::readDecayFile(uDecayName);
       
       report(INFO,"EvtGen") << "Reading "<<uDecayName
-			    <<" to override decay table."<<endl;
+			    <<" to override decay table."<<std::endl;
     }    
     else{
       
       report(INFO,"EvtGen") << "Can not find UDECAY file '"
-			    <<uDecayName<<"'.  Stopping"<<endl;
+			    <<uDecayName<<"'.  Stopping"<<std::endl;
       ::abort();
     }
   }
@@ -191,8 +191,8 @@ void EvtGen::generateDecay(EvtParticle *p){
     }
 
     if ( times==10000) {
-      report(ERROR,"EvtGen") << "Your event has been rejected 10000 times!"<<endl;
-      report(ERROR,"EvtGen") << "Will now abort."<<endl;
+      report(ERROR,"EvtGen") << "Your event has been rejected 10000 times!"<<std::endl;
+      report(ERROR,"EvtGen") << "Will now abort."<<std::endl;
       ::abort();
       times=0;
     }
