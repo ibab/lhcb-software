@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/L0/L0Muon/src/Lib/L0mCrate.cpp,v 1.2 2001-06-08 13:43:47 cattaneb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/L0/L0Muon/src/Lib/L0mCrate.cpp,v 1.3 2001-06-11 06:45:11 atsareg Exp $
 
 #include <vector>
 #include <algorithm>
@@ -53,14 +53,16 @@ L0Muon::StatusCode L0mCrate::execute(MsgStream& log) {
       m_status = L0Muon::OK;
     }
   }
-
+  // cout << "Crate: PU execution done" << m_status << endl;
   // Sort candidates if the status is OK
   if(m_status == L0Muon::OK) {
-    if (m_candidates.size() > 2) {
+    if (m_candidates.size() > 2) {    
+      //cout << " # of candidate " << m_candidates.size() << endl;
       // Now sort the candidates in the Pt descending order
       std::sort(m_candidates.begin(),m_candidates.end(),ComparePt());
+      //cout << "After sort " << endl;
       // Erase candidates with smaller Pt
-      for (ilmc = m_candidates.begin()+2;ilmc != m_candidates.end(); ilmc++) {
+      for (ilmc = m_candidates.end()-1;ilmc != m_candidates.begin()+1; ilmc--) {
         delete *ilmc;
 	m_candidates.erase(ilmc);
       }
@@ -73,6 +75,8 @@ L0Muon::StatusCode L0mCrate::execute(MsgStream& log) {
       m_candidates.push_back(new L0MuonCandidate(L0Muon::EMPTY));
     }	
   }  
+  
+  // cout << "Crate execution done" << endl;
   return L0Muon::StatusCode(m_status);
 }
 
