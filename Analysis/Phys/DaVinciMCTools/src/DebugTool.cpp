@@ -1,4 +1,4 @@
-// $Id: DebugTool.cpp,v 1.5 2003-03-07 11:01:55 odie Exp $
+// $Id: DebugTool.cpp,v 1.6 2004-09-15 16:18:23 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
@@ -767,8 +767,7 @@ void DebugTool::printTree( const Particle *mother,
 void DebugTool::printDecayTree( const Particle *mother, 
                                 Particle2MCAsct::IAsct *assoc,
                                 const std::string &prefix,
-                                int depth, MsgStream &log )
-{
+                                int depth, MsgStream &log ){
   printInfo( prefix, mother, assoc, log );
 
   if( depth ) {
