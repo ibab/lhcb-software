@@ -1,4 +1,4 @@
-// $Id: RichTrackCreatorFromTrStoredTracks.h,v 1.9 2004-05-30 16:28:38 jonesc Exp $
+// $Id: RichTrackCreatorFromTrStoredTracks.h,v 1.10 2004-05-30 16:48:13 jonrob Exp $
 #ifndef RICHRECTOOLS_RichTrackCreatorFromTrStoredTracks_H
 #define RICHRECTOOLS_RichTrackCreatorFromTrStoredTracks_H 1
 
@@ -14,6 +14,7 @@
 // interfaces
 #include "RichRecBase/IRichTrackCreator.h"
 #include "RichRecBase/IRichExpectedTrackSignal.h"
+#include "RichRecBase/IRichRecRingCreator.h"
 #include "RichDetTools/IRichRayTracing.h"
 #include "RichDetTools/IRichSmartIDTool.h"
 #include "RichDetTools/IRichTrSegMaker.h"
@@ -94,6 +95,9 @@ private: // data
   /// Pointer to RichSmartID tool
   IRichSmartIDTool * m_smartIDTool;
 
+  /// Pointer to ring creator
+  IRichRecRingCreator * m_ringCreator;
+
   /// Pointer to track segment maker
   IRichTrSegMaker * m_segMaker;
 
@@ -117,6 +121,9 @@ private: // data
 
   // Momentum cut values for each track type
   std::vector<double> m_tkPcut;
+
+  /// Flag to turn on the creation of the RichRecRings for the segment mass hypotheses
+  bool m_buildHypoRings;
 
   // Track count
   typedef std::vector< std::pair<unsigned,unsigned> > TrackTypeCount;

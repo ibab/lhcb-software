@@ -4,6 +4,9 @@
 ! Purpose     : Utility tools for RICH reconstruction algorithms
 !------------------------------------------------------------------------------
 
+! 2004-05-30 - Chris Jones
+ - Add creator tool for RichRecRings
+
 !====================== RichRecTools v2r9 2004-04-21 ======================
 ! 2004-04-07 - Chris Jones
  - Add new cherenkov resolutions tools specific to TrStoredTracks and which

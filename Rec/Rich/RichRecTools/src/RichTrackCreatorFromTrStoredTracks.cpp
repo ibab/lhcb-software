@@ -1,4 +1,4 @@
-// $Id: RichTrackCreatorFromTrStoredTracks.cpp,v 1.11 2004-04-20 13:34:15 jonesc Exp $
+// $Id: RichTrackCreatorFromTrStoredTracks.cpp,v 1.12 2004-05-30 16:48:13 jonrob Exp $
 
 // local
 #include "RichTrackCreatorFromTrStoredTracks.h"
@@ -17,17 +17,19 @@ const        IToolFactory& RichTrackCreatorFromTrStoredTracksFactory = s_factory
 RichTrackCreatorFromTrStoredTracks::RichTrackCreatorFromTrStoredTracks( const std::string& type,
                                                                         const std::string& name,
                                                                         const IInterface* parent )
-  : RichRecToolBase ( type, name, parent ),
-    m_tracks        ( 0 ),
-    m_trTracks      ( 0 ),
-    m_rayTrace      ( 0 ),
-    m_smartIDTool   ( 0 ),
-    m_segMaker      ( 0 ),
-    m_signal        ( 0 ),
-    m_skipNonUnique ( true ),
-    m_allDone       ( false ),
-    m_tkPcut        ( Rich::Track::NTrTypes, 0 ),
-    m_nTracks       ( Rich::Track::NTrTypes, std::pair<unsigned,unsigned>(0,0) )
+  : RichRecToolBase  ( type, name, parent ),
+    m_tracks         ( 0 ),
+    m_trTracks       ( 0 ),
+    m_rayTrace       ( 0 ),
+    m_smartIDTool    ( 0 ),
+    m_ringCreator    ( 0 ),
+    m_segMaker       ( 0 ),
+    m_signal         ( 0 ),
+    m_skipNonUnique  ( true ),
+    m_allDone        ( false ),
+    m_tkPcut         ( Rich::Track::NTrTypes, 0 ),
+    m_buildHypoRings ( false ),
+    m_nTracks        ( Rich::Track::NTrTypes, std::pair<unsigned,unsigned>(0,0) )
 {
 
   // declare interface for this tool
@@ -38,8 +40,9 @@ RichTrackCreatorFromTrStoredTracks::RichTrackCreatorFromTrStoredTracks( const st
                    m_trTracksLocation = TrStoredTrackLocation::Default );
   declareProperty( "RichRecTrackLocation",
                    m_richRecTrackLocation = RichRecTrackLocation::Default );
-  declareProperty( "SkipNonUniqueTracks", m_skipNonUnique = true );
+  declareProperty( "SkipNonUniqueTracks", m_skipNonUnique );
   declareProperty( "TrackMinPtotPerClass", m_tkPcut );
+  declareProperty( "BuildMassHypothesisRings", m_buildHypoRings );
 
 }
 
@@ -54,6 +57,7 @@ StatusCode RichTrackCreatorFromTrStoredTracks::initialize()
   acquireTool( "RichExpectedTrackSignal", m_signal      );
   acquireTool( "RichSmartIDTool",         m_smartIDTool );
   acquireTool( "RichDetTrSegMaker",       m_segMaker    );
+  if ( m_buildHypoRings ) acquireTool( "RichMassHypothesisRingCreator", m_ringCreator );
 
   // Setup incident services
   IIncidentSvc * incSvc = svc<IIncidentSvc>( "IncidentSvc", true );
@@ -225,6 +229,9 @@ RichTrackCreatorFromTrStoredTracks::newTrack ( const ContainedObject * obj ) con
 
             // Set the average photon energy (for Pion hypothesis)
             newSegment->trackSegment().setAvPhotonEnergy( m_signal->avgSignalPhotEnergy(newSegment,Rich::Pion) );
+
+            // make RichRecRings for the mass hypotheses
+            if ( m_buildHypoRings ) m_ringCreator->newRings( newSegment );
 
           } else {
             if ( msgLevel(MSG::VERBOSE) ) 
