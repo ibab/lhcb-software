@@ -1,7 +1,8 @@
-! $Id: release.notes,v 1.16 2003-06-10 09:04:15 jvantilb Exp $
+! $Id: release.notes,v 1.17 2003-06-17 09:16:31 cattanem Exp $
 ! Package     : OTAssociators
 ! Responsible : J. van Tilburg
 
+!====================== OTAssociators v2r5 2003-06-17 ======================
 ! 2003-06-09 - Jeroen van Tilburg
  - Added associators: OTDigits to MCOTDeposits, to MCHits and to MCParticles.
 
