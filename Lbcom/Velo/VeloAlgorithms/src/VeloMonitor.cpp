@@ -2,7 +2,7 @@
 #include "VeloMonitor.h"
 
 //STL
-#include "vector.h"
+#include <vector>
 // CLHEP
 #include "CLHEP/Units/SystemOfUnits.h"
 #include "CLHEP/Geometry/Point3D.h"
@@ -27,6 +27,7 @@
 #include "Kernel/VeloChannelID.h"
 #include "VeloDet/DeVelo.h"
 #include "VeloKernel/VeloSimParams.h"
+#include "VeloKernel/VeloRound.h"
 #include "VeloDet/DeVelo.h"
 //--------------------------------------------------------------------
 
@@ -729,7 +730,7 @@ StatusCode VeloMonitor::testVeloCluster() {
    }
    centre /= total;
    centre -= 100;
-   iDiff=int(round(centre));
+   iDiff=int(VeloRound::round(centre));
    fraction=centre-iDiff;
    //   cout << "fraction" << fraction << endl;
    return m_velo->neighbour(cluster->channelID(0),iDiff,valid);
