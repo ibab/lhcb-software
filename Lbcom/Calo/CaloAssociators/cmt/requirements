@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.12 2002-12-04 18:20:59 ranjard Exp $
+# $Id: requirements,v 1.13 2003-01-17 14:15:25 sponce Exp $
 # =============================================================================
 # Package which contains the essential ingredients to build/store/retrieve 
 # basic relations/associations between calorimter objects 
@@ -6,7 +6,7 @@
 # Package manager: Vanya Belyaev Ivan.Belyaev@itep.ru 
 # =============================================================================
 package           CaloAssociators
-version           v3r2
+version           v3r3
         
 # =============== structure =================================================== 
 branches          src cmt doc options 

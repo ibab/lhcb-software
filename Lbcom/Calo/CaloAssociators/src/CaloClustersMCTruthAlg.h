@@ -1,8 +1,11 @@
-// $Id: CaloClustersMCTruthAlg.h,v 1.2 2002-06-13 12:28:48 ibelyaev Exp $
+// $Id: CaloClustersMCTruthAlg.h,v 1.3 2003-01-17 14:15:25 sponce Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2002/06/13 12:28:48  ibelyaev
+//  new options and new algorithm
+//
 // ============================================================================
 #ifndef CALOASSOCIATORS_CALOCLUSTERSMCTRUTHALG_H 
 #define CALOASSOCIATORS_CALOCLUSTERSMCTRUTHALG_H 1
@@ -33,7 +36,7 @@ class CaloClustersMCTruthAlg
   : public CaloAlgorithm
 {
   // friend factory for instantiation 
-  friend AlgFactory<CaloClustersMCTruthAlg>; 
+  friend class AlgFactory<CaloClustersMCTruthAlg>; 
 public:
 
   /** standard initialization of the algorithm
