@@ -13,6 +13,8 @@ use Boole		v1r0	Digi
 # Brunel utilities
 use BrunelSicb          v4r1    Rec
 use BrunelAlgs          v2r2	Rec
+# MCTools used by BrunelAlgs, but not needed by Boole...
+use MCTools		v1r1p1	Rec
 
 # LHC background
 use DigiAlg		v1r1	Digi
