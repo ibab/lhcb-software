@@ -1,4 +1,4 @@
-// $Id: PuVetoAlg.cpp,v 1.5 2002-07-11 18:10:57 ocallot Exp $
+// $Id: PuVetoAlg.cpp,v 1.6 2002-07-13 10:44:11 ocallot Exp $
 // Include files 
 
 // from Gaudi
@@ -228,7 +228,12 @@ StatusCode PuVetoAlg::execute() {
   pileUp->setHeightPeak2( height2 );
   pileUp->setSumPeak2( sum2 );
   pileUp->setZPosPeak2( pos2 );
-  pileUp->setSTot( integral );
+  //pileUp->setSTot( integral );
+  int totMult = 0;
+  for ( ks=0 ; m_velo->nbPuSensor() > ks ; ks++ ) {
+    totMult += m_input[ks].strips()->size();
+  }
+  pileUp->setSTot( totMult );
   
   StatusCode sc = eventSvc()->registerObject( m_outputContainer, pileUp );
   if ( sc.isFailure() ) {
