@@ -6,7 +6,7 @@
 
 !======================== LHCbSys v13r3 2003-11-03 ========================
 ! 2003-11-03 - Marco Cattaneo
- - Modified packages: 
+ - Modified packages: GaudiConf v7r2,
                    KernelSys v1r7, RichKernel v4r0,
                    EventSys v15r0, RichEvent v6r0, DAQEvent v2r0, PhysEvent v7r8,
                    DetSys v3r1, RichDet v6r1,
