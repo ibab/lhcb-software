@@ -1,12 +1,15 @@
-! $Id: release.notes,v 1.5 2002-05-17 13:13:44 dhcroft Exp $
+! $Id: release.notes,v 1.6 2002-06-10 16:19:04 cattanem Exp $
 ! Package     : MuonID
 ! Responsible : David Hutchcroft
 
+! 2002-06-10 - Marco Cattaneo
+ - Change version to v2r0, to use EventKernel v2r*
+
+!=========================== MuonID v1r0 2002-05-17 ===========================
 ! 20020517 - David Hutchcroft
   Added algorithm MuonDSTPrepare that removes MuonCoords from TES that are not
   refenced by MuonID objects
 
-<<<<<<<<<<<<<<<<<<<<<<<<<< v1r0 >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 ! 20020514 - David Hutchcroft
   Modified requirements file to point at Event/MuonEvent not (now removed) 
   Event/MuonIdentification
