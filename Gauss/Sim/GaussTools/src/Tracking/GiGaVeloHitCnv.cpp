@@ -55,7 +55,7 @@ GiGaVeloHitCnv::GiGaVeloHitCnv( ISvcLocator* Locator )
   declareObject(GiGaLeaf(MCVeloHitLocation::Default, objType(),pars1));
 
   GiGaLeaf::Pars pars2;
-  pars2.push_back("VeloSDet/PuHits");
+  pars2.push_back("VeloPuSDet/PuHits");
   declareObject(GiGaLeaf(MCVeloHitLocation::PuVeto, objType(),pars2));
 
   ///

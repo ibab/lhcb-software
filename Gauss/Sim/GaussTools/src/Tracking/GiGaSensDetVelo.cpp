@@ -99,12 +99,17 @@ bool GiGaSensDetVelo::ProcessHits( G4Step* step ,
       int numsens;      
       int puornot=0;
       
-      if(stname.substr(25,1)=="P") puornot=1;
+      // mod for new xml
+
+      if(SensitiveDetectorName=="VeloPuSDet") puornot=1;
+
+      // old version:
+      //      if(stname.substr(25,1)=="P") puornot=1;
 
       if(puornot==0)
         {
           // normal sensor
-          std::string stnumb=stname.substr(33+puornot,2-puornot);
+          std::string stnumb=stname.substr(33,2);
           std::string lorr=stname.substr(35,1);
           std::string phiorr=pvname.substr(36,2);
           
