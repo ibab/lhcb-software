@@ -1,4 +1,4 @@
-// $Id: Gauss.opts,v 1.55 2004-11-22 16:24:49 ranjard Exp $ 
+// $Id: Gauss.opts,v 1.56 2004-12-14 15:57:59 gcorti Exp $ 
 
 // =========== necessary setup and steps for any Gauss executable =========== 
 #include "$GAUSSOPTS/Common.opts"
@@ -17,6 +17,8 @@ ApplicationMgr.TopAlg += { "Sequencer/Simulation"};
 
 // to run full monitors
 //ApplicationMgr.TopAlg += { "Sequencer/Monitor" };
+//Monitor.Members       += { "Sequencer/GenMonitor" };
+//Monitor.Members       += { "Sequencer/SimMonitor" };     
 #include "$GAUSSOPTS/Monitor.opts"
 
 // write an output file
@@ -31,7 +33,7 @@ Gauss.RunNumber           = 1;
 MessageSvc.OutputLevel    = 3;
 
 // Lenght of message to have longer Algorihtm/Tool identifier in printout
-//MessageSvc.Format = "% F%40W%S%7W%R%T %0W%M";
+//MessageSvc.Format = "% F%30W%S%7W%R%T %0W%M";
  
 // to simulate <evttype> put a line similar to the following
 #include "$DECFILESROOT/options/13296200.opts"  // Bd_JpsiKS,mm

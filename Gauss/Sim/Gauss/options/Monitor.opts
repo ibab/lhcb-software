@@ -1,17 +1,27 @@
 // Options to monitor/study the production
 //=========================================================================
 
-ApplicationMgr.DLLs += { "MCTools", "GaussMonitor" };
+// Load the DLLs for histogram persistency
+ApplicationMgr.DLLs += { "HbookCnv" };
+ApplicationMgr.HistogramPersistency = "HBOOK";
+ApplicationMgr.ExtSvc += { "NTupleSvc" };
+NTupleSvc.Output={"FILE1 DATAFILE='GaussMonitor.hbook' TYP='HBOOK' OPT='NEW'"};
+HistogramPersistencySvc.OutputFile = "GaussHistos.hbook";
 
+// Switch on filling of summary info in a set of histograms from HepMC
+// Note that if you are running GenStandAlone you will also need to 
+// switch on the algorithm:
+//GenMonitor.Members += {"GenMonitorAlg"};
+GenMonitorAlg.HistoPath   = "GEN/MONITOR/";
 // Algorithm filling detailed info in an ntuple from HepMC
-Monitor.Members     = { "GeneratorFullMonitor" };
+GenMonitor.Members       += { "GeneratorFullMonitor" };
+// Dump on screen content of generator full info
+//GenMonitor.Members += {"DumpMC"};
 
 // Algorithm filling detailed info in an ntuple from MCParticle
-// When running in GenStandAlone mode comment the following two members
-Monitor.Members    += { "MCTruthFullMonitor" };
-
-// Dump on screen content of generator full info
-//Monitor.Members += {"DumpMC"};
+// When running in GenStandAlone mode comment the following two members 
+ApplicationMgr.DLLs      += { "MCTools", "GaussMonitor" };
+SimMonitor.Members       += { "MCTruthFullMonitor" };
 
 // Check MCSignal info (only for complete production)
 //Monitor.Members    += { "MCDecayCounter" };
@@ -21,11 +31,10 @@ MCDecayCounter.MCDecayFinder.OutputLevel = 3;
 //MCDecayCounter.EvtCodeFromData = true;
 //MCDecayCounter.EvtCode = 0;
 
-// Load the DLLs for histogram persistency
-ApplicationMgr.DLLs += { "HbookCnv" };
-ApplicationMgr.HistogramPersistency = "HBOOK";
-
-ApplicationMgr.ExtSvc += { "NTupleSvc" };
-NTupleSvc.Output={"FILE1 DATAFILE='GaussMonitor.hbook' TYP='HBOOK' OPT='NEW'"};
-HistogramPersistencySvc.OutputFile = "GaussHistos.hbook";
+// Check MC Calo Hits
+SimMonitor.Members  += { "MCCaloMonitor/SpdMonitor"  ,
+                         "MCCaloMonitor/PrsMonitor"  , 
+                         "MCCaloMonitor/EcalMonitor" ,
+                         "MCCaloMonitor/HcalMonitor" } ;
+#include "$CALOMONISIMOPTS/MoniSim.opts"
 

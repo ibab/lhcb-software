@@ -44,6 +44,7 @@ SetDecayAlg.OutputLevel        = 4;
 // Geometry setup always necessary
 #include "$STDOPTS/DetDesc.opts"
 DetectorDataSvc.DetDbLocation = "$XMLDDDBROOT/DDDB/lhcb-200402.xml";
+//DetectorDataSvc.DetDbLocation = "$XMLDDDBROOT/DDDB/lhcb-200411.xml";
 MessageSvc.setWarning += { "XmlGenericCnv" };
 
 // Transient store setup
