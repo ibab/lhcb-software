@@ -1,6 +1,10 @@
-! $Id: release.notes,v 1.67 2005-03-04 16:57:05 cattanem Exp $
+! $Id: release.notes,v 1.68 2005-03-23 16:47:36 cattanem Exp $
 package VeloDet
 package manager : Velo Group
+!========================= VeloDet v9r4 2005-03-22 =========================
+! 2005-03-22 - Juan Palacios
+ - Enable DeVelo to cope with an arbitrary number of detector element 
+   hierarchies between Velo and individual sensors.
 
 !========================= VeloDet v9r3 2005-03-04 =========================
 ! 2005-03-03 - Mark Tobin

@@ -1,4 +1,4 @@
-// $Id: DeVelo.cpp,v 1.44 2004-12-03 17:48:37 dhcroft Exp $
+// $Id: DeVelo.cpp,v 1.45 2005-03-23 16:47:37 cattanem Exp $
 //
 // ============================================================================
 #define  VELODET_DEVELO_CPP 1
@@ -77,24 +77,12 @@ StatusCode DeVelo::initialize() {
   unsigned int nextPileUp=this->userParameterAsInt("FirstPileUp");
 
   // get all of the pointers to the child detector elements
-  // Children of DeVelo (this) are the sensors
-  std::vector<IDetectorElement*> veloSensors =
-    this->childIDetectorElements();
+  std::vector<DeVeloSensor*> veloSensors = this->getVeloSensors();
+  
   msg << MSG::DEBUG << "Found " << veloSensors.size() 
       << " sensors in the XML" << endreq;
-  
-  IDetectorElement* testDetElem= veloSensors[1];
-  DeVeloSensor* testVeloSensor = dynamic_cast<DeVeloSensor*>(testDetElem);
 
-  if (!testDetElem) {
-    msg << MSG::ERROR << "Dodgy IDetectorElement"<< endreq;
-  }
-  if (!testVeloSensor) {
-    msg << MSG::ERROR << "Cannot cast DeVeloSensor* onto IDetectorElement*" 
-	<< endreq;
-  }
-
-  std::vector<IDetectorElement*>::iterator iDESensor;
+  std::vector<DeVeloSensor*>::iterator iDESensor;
   int detElemCount=0;
   m_sensorZ.clear();
   m_vpSensor.clear();
@@ -105,35 +93,28 @@ StatusCode DeVelo::initialize() {
   
   for(iDESensor = veloSensors.begin() ; iDESensor != veloSensors.end() ; 
       ++iDESensor){
-    //    IDetectorElement myDetElem=*iDESensor;
-    DeVeloSensor * pSensor = dynamic_cast<DeVeloSensor*>(*iDESensor);
-    if(!pSensor){
-      msg << MSG::ERROR 
-          << "Could not cast children of DeVelo to DeVeloSensors" << endreq;
-      return StatusCode::FAILURE;
-    }
-    // Build vectors of pointers to sensors.
     // Sensors are pre-sorted in XML such that they increase with z position
-    m_vpSensor.push_back(pSensor);
+    m_vpSensor.push_back(*iDESensor);
     unsigned int index=m_vpSensor.size()-1;
-    msg << MSG::DEBUG << "type " << pSensor->type() << " R " << pSensor->isR() 
-        << " PHI " << pSensor->isPhi()
-        << " PU " << pSensor->isPileUp() << endmsg;
-    if(pSensor->isR()){
+    msg << MSG::DEBUG << "type " << (*iDESensor)->type() 
+        << " R " << (*iDESensor)->isR() 
+        << " PHI " << (*iDESensor)->isPhi()
+        << " PU " << (*iDESensor)->isPileUp() << endmsg;
+    if((*iDESensor)->isR()){
       m_vpSensor[index]->sensorNumber(nextR);
-      m_vpRSensor.push_back(dynamic_cast<DeVeloRType*>(pSensor));
+      m_vpRSensor.push_back(dynamic_cast<DeVeloRType*>((*iDESensor)));
       m_nRSensors++;
       m_RIndex.push_back(index);
       nextR++;
-    } else if(pSensor->isPhi()){
+    } else if((*iDESensor)->isPhi()){
       m_vpSensor[index]->sensorNumber(nextPhi);
-      m_vpPhiSensor.push_back(dynamic_cast<DeVeloPhiType*>(pSensor));
+      m_vpPhiSensor.push_back(dynamic_cast<DeVeloPhiType*>((*iDESensor)));
       m_nPhiSensors++;
       m_PhiIndex.push_back(index);
       nextPhi++;
-    } else if(pSensor->isPileUp()){
+    } else if((*iDESensor)->isPileUp()){
       m_vpSensor[index]->sensorNumber(nextPileUp);
-      m_vpPUSensor.push_back(dynamic_cast<DeVeloRType*>(pSensor));
+      m_vpPUSensor.push_back(dynamic_cast<DeVeloRType*>((*iDESensor)));
       m_nPileUpSensors++;
       m_PUIndex.push_back(index);
       nextPileUp++;
@@ -141,7 +122,7 @@ StatusCode DeVelo::initialize() {
       msg << MSG::ERROR << "Sensor type is unknown\n";
     }
     msg << MSG::DEBUG << "Sensor number " << m_vpSensor[index]->sensorNumber()
-        << " pSensor " << pSensor->sensorNumber() << endreq;
+        << " pSensor " << (*iDESensor)->sensorNumber() << endreq;
     msg << MSG::DEBUG << " Sensor number " << m_vpSensor[index]->sensorNumber()
         << " is type " << m_vpSensor[index]->type() 
         << " at z = " << m_vpSensor[index]->z()
@@ -921,4 +902,40 @@ double DeVelo::trgPhiDirectionOfStrip( VeloChannelID channel,
     return StatusCode::FAILURE;
   }
 }
+//=============================================================================
+std::vector<DeVeloSensor*> DeVelo::getVeloSensors() 
+{
 
+  std::vector<DeVeloSensor*> mySensors;
+  
+  scanDetectorElement(this, mySensors);
+  return mySensors;
+  
+}
+//=============================================================================
+void DeVelo::scanDetectorElement(IDetectorElement* detElem, 
+                                 std::vector<DeVeloSensor*>& sensors) 
+{
+  MsgStream msg( msgSvc(), "DeVelo" );  
+  std::vector<IDetectorElement*> veloSensors =
+    detElem->childIDetectorElements();
+
+  msg << MSG::DEBUG << "scanDetectorElement" << endreq;
+  
+  std::vector<IDetectorElement*>::iterator iVeloSensors=veloSensors.begin();
+
+  for (;iVeloSensors!=veloSensors.end(); ++iVeloSensors ) {
+    msg << MSG::DEBUG << std::setw(12) << std::setiosflags(std::ios::left)
+        << (*iVeloSensors)->name() << endreq;
+    DeVeloSensor* pSensor = dynamic_cast<DeVeloSensor*>((*iVeloSensors));
+    if (pSensor) {
+      sensors.push_back(pSensor);
+      msg << MSG::DEBUG << "Storing detector " <<   (*iVeloSensors)->name()
+          << endreq;
+      
+    }
+    
+    scanDetectorElement(*iVeloSensors, sensors);
+  }
+}
+//=============================================================================

@@ -1,4 +1,4 @@
-// $Id: DeVelo.h,v 1.24 2005-03-04 16:57:05 cattanem Exp $
+// $Id: DeVelo.h,v 1.25 2005-03-23 16:47:36 cattanem Exp $
 #ifndef       VELODET_DEVELO_H
 #define       VELODET_DEVELO_H 1
 // ============================================================================
@@ -358,6 +358,14 @@ protected:
 
 private:
 
+  /// Find DeVeloSensors inside DeVelo detector element tree.
+  std::vector<DeVeloSensor*> getVeloSensors();
+
+  /// Navigate DeVelo detector element tree recursively.
+  /// Store DeVeloSensors in "sensors" wherever they might be found.
+  void scanDetectorElement(IDetectorElement* detElem, 
+                           std::vector<DeVeloSensor*>& sensors);
+  
   /// pointers to all sensors sorted by increasing z
   std::vector<DeVeloSensor*> m_vpSensor;
 
