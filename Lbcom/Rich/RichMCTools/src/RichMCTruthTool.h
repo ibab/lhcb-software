@@ -4,8 +4,10 @@
  *  Header file for tool : RichMCTruthTool
  *
  *  CVS Log :-
- *  $Id: RichMCTruthTool.h,v 1.8 2004-07-26 17:56:09 jonrob Exp $
+ *  $Id: RichMCTruthTool.h,v 1.9 2004-08-19 14:00:29 jonrob Exp $
  *  $Log: not supported by cvs2svn $
+ *  Revision 1.8  2004/07/26 17:56:09  jonrob
+ *  Various improvements to the doxygen comments
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -89,7 +91,10 @@ public: // methods (and doxygen comments) inherited from interface
   // Find best MCParticle association for a given TrStoredTrack
   const MCParticle * mcParticle( const TrStoredTrack * track ) const;
 
-  // Determines the particle mass hpyothesis for a given MCParticle
+  // Determines the particle mass hypothesis for a given TrStoredTrack
+  Rich::ParticleIDType mcParticleType( const TrStoredTrack * track ) const;
+
+  // Determines the particle mass hypothesis for a given MCParticle
   Rich::ParticleIDType mcParticleType( const MCParticle * mcPart ) const;
 
   // Finds the MCRichDigit association for a given RichDigit

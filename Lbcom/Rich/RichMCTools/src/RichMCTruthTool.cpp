@@ -5,8 +5,11 @@
  * Implementation file for class : RichMCTruthTool
  *
  * CVS Log :-
- * $Id: RichMCTruthTool.cpp,v 1.6 2004-07-26 17:56:09 jonrob Exp $
+ * $Id: RichMCTruthTool.cpp,v 1.7 2004-08-19 14:00:29 jonrob Exp $
  * $Log: not supported by cvs2svn $
+ * Revision 1.6  2004/07/26 17:56:09  jonrob
+ * Various improvements to the doxygen comments
+ *
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 14/01/2002
@@ -66,9 +69,7 @@ StatusCode RichMCTruthTool::initialize()
   release(ppSvc);
 
   // Setup incident services
-  IIncidentSvc * incSvc = svc<IIncidentSvc>( "IncidentSvc", true );
-  incSvc->addListener( this, IncidentType::BeginEvent );
-  release(incSvc);
+  incSvc()->addListener( this, IncidentType::BeginEvent );
 
   // Make sure we are ready for a new event
   InitNewEvent();
@@ -134,6 +135,12 @@ const MCRichDigit * RichMCTruthTool::mcRichDigit( const RichDigit * digit ) cons
   if ( !mcDigit ) Warning("Failed to find MCRichDigit for RichDigit");
 
   return mcDigit;
+}
+
+Rich::ParticleIDType 
+RichMCTruthTool::mcParticleType( const TrStoredTrack * track ) const
+{
+  return mcParticleType( mcParticle(track) );
 }
 
 Rich::ParticleIDType
