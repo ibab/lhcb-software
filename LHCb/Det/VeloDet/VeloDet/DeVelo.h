@@ -1,4 +1,4 @@
-// $Id: DeVelo.h,v 1.17 2004-02-13 16:32:51 mtobin Exp $
+// $Id: DeVelo.h,v 1.18 2004-02-13 16:49:38 mtobin Exp $
 #ifndef       VELODET_DEVELO_H
 #define       VELODET_DEVELO_H 1
 // ============================================================================
@@ -116,6 +116,18 @@ public:
   /// Return the number of Velo sensors (no pile-up)
   unsigned int nbSensor()  const { return m_nRType+m_nPhiType; };
 
+  /// Return pointer to DeVeloRType for a given sensor
+  inline DeVeloRType* pRSensor(VeloChannelID channel) {
+   unsigned int index=sensorIndex(channel.sensor());
+   return dynamic_cast<DeVeloRType*>(m_vpSensor[index]);
+  }
+  
+  /// Return pointer to Phi sensor
+  inline DeVeloPhiType* pPhiSensor(VeloChannelID channel) {
+   unsigned int index=sensorIndex(channel.sensor());
+   return dynamic_cast<DeVeloPhiType*>(m_vpSensor[index]);
+  }
+  
   /** Gives the VeloChannelID and offset (in fraction of a pitch width) 
       associated to a 3D position. with pitch width in mm
       Sign convention is offset is +- 0.5 
