@@ -1,4 +1,4 @@
-// $Id: Generator.opts,v 1.22 2003-08-14 15:08:45 ranjard Exp $ 
+// $Id: Generator.opts,v 1.23 2003-08-18 14:26:47 witoldp Exp $ 
 
 ApplicationMgr.DLLs += { "GeneratorModules" } ;
 
@@ -7,7 +7,7 @@ ApplicationMgr.DLLs += { "GeneratorModules" } ;
 Generator.Members += {"PythiaAlg"};
 Generator.Members += {"SetDecayAlg","EvtDecayAlg"};
 Generator.Members += {"SmearVertexAlg"};
-Generator.Members += {"DumpMC"};
+//Generator.Members += {"DumpMC"};
 
 // Particle Gun's options
 //ParticleGun.xVertex = 6.15949;	
@@ -27,9 +27,6 @@ ParticleGun.Mode=0;
 // in case you don't want to use the default decay file, uncomment the line below
 // and specify the alternative file name (not to be confused with the user decay file)
 //EvtDecayAlg.DecayFile = "$GAUSSROOT/data/decay.dec";
-
-EvtDecayAlg.EvtPdlFile = "$PARAMFILESROOT/data/evt.pdl";
-PythiaAlg.MDCYFile="$PARAMFILESROOT/data/PythiaStablePart.cdf";
 
 //PythiaAlg.PythiaCommand = {"pyinit pylisti 11", "pyinit dumpr 1 100", "pyinit pylistf 1"};
 
