@@ -1,10 +1,13 @@
-! $Id: release.notes,v 1.32 2002-09-06 07:12:17 cattanem Exp $
+! $Id: release.notes,v 1.33 2002-10-03 10:29:43 cattanem Exp $
 ! =============================================================================
 ! CVS tag $Name: not supported by cvs2svn $
 ! =============================================================================
 ! Package     : CaloTools
 ! Responsible : Vanya Belyaev Ivan.Belyaev@itep.ru
 ! =============================================================================
+
+! 2002-10-03 - Marco Cattaneo
+ - Use fabs() instead of abs() for floats
 
 !======================== CaloTools v4r3 2002-09-06 ========================
 ! 2002-09-04 - Ivan Belyaev

@@ -1,8 +1,11 @@
-// $Id: CaloExtraDigits.cpp,v 1.4 2002-07-09 10:55:36 ibelyaev Exp $
+// $Id: CaloExtraDigits.cpp,v 1.5 2002-10-03 10:29:44 cattanem Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.4  2002/07/09 10:55:36  ibelyaev
+//  few changes to make Bill Gates happy
+//
 // Revision 1.3  2002/06/13 12:32:38  ibelyaev
 //  version update
 //
@@ -297,8 +300,8 @@ StatusCode CaloExtraDigits::operator() ( CaloHypo* hypo  ) const
           const double      cellHalf   = 0.5 * det() -> cellSize   ( *nei ) ;
           if( 0 >= cellHalf ) { continue ; }               // CONTINUE ! 
           const HepPoint3D& cellCenter =       det() -> cellCenter ( *nei ) ;
-          if( ( abs( cellCenter.x() - newPoint.x() ) < cellHalf + m_xTol ) && 
-              ( abs( cellCenter.y() - newPoint.y() ) < cellHalf + m_yTol )  ) 
+          if( ( fabs( cellCenter.x() - newPoint.x() ) < cellHalf + m_xTol ) && 
+              ( fabs( cellCenter.y() - newPoint.y() ) < cellHalf + m_yTol )  ) 
             {
               CaloDigit* digit = m_digits->object( *nei );
               if( 0 != digit ) { hypo->addToDigits( digit ); }
