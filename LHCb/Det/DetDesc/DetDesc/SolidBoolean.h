@@ -1,8 +1,11 @@
-// $Id: SolidBoolean.h,v 1.13 2003-09-20 13:25:40 ibelyaev Exp $ 
+// $Id: SolidBoolean.h,v 1.14 2003-12-09 15:50:52 cattanem Exp $ 
 // ===========================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ===========================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.13  2003/09/20 13:25:40  ibelyaev
+//  few fixes to solve Gauss problems
+//
 // Revision 1.12  2002/05/26 10:47:12  ibelyaev
 //  remove checks/tests and update requiements
 //
@@ -170,7 +173,7 @@ protected:
   /** constructor - "main"("first") solid is mandatory! 
    *  @param name name of the solid 
    */
-  SolidBoolean ( const std::string& name );
+  SolidBoolean ( const std::string& name="Undefined" );
   
   /** add child to daughter container 
    *  @param chidl pointer to solid 
@@ -206,7 +209,7 @@ protected:
 private:
 
   // default constructor is disabled 
-  SolidBoolean() ;
+  // SolidBoolean() ;
   // assignement operator is disabled 
   SolidBoolean& operator=(SolidBoolean & ) ;
   
