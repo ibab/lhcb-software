@@ -1,4 +1,4 @@
-// $Id: Generator.opts,v 1.31 2004-01-26 12:27:20 ranjard Exp $ 
+// $Id: Generator.opts,v 1.32 2004-01-26 16:44:46 ranjard Exp $ 
 
 ApplicationMgr.DLLs += { "GeneratorModules" } ;
 
@@ -9,7 +9,7 @@ Generator.Members += {"SignalDecayAlg", "PythiaAlg", "SetDecayAlg", "EvtDecayAlg
 Generator.Members += {"SmearVertexAlg"};
 
 // limit output of EvtGen and SetDecayAlg
-ToolSvc.EventGenTool.OutputLevel = 4;
+ToolSvc.EvtGenTool.OutputLevel = 4;
 SetDecayAlg.OutputLevel = 4;
 
 //Generator.Members += {"DumpMC"};

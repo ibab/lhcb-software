@@ -1,4 +1,4 @@
-// $Id: Gauss.opts,v 1.37 2004-01-26 12:27:20 ranjard Exp $ 
+// $Id: Gauss.opts,v 1.38 2004-01-26 16:44:46 ranjard Exp $ 
 
 #units "$STDOPTS/units.opts"
 
@@ -29,6 +29,9 @@ ApplicationMgr.TopAlg          =
   "Sequencer/Simulation"
 };
 
+// General global options  
+MessageSvc.OutputLevel    = 3; 
+
 // read job options for various steps
 #include "$GAUSSOPTS/Generator.opts"
 #include "$GAUSSOPTS/Simulation.opts"
@@ -43,8 +46,6 @@ GaussTape.Output = "DATAFILE='PFN:$W1/GaussPool.sim' TYP='POOL_ROOTTREE' OPT='RE
 PoolDbCacheSvc.OutputCatalog = "xmlcatalog_file:$W1/GaussPool_catalog.xml";
 PoolDbCacheSvc.OutputLevel = 0; // full debug of PoolIO
 
-// General global options  
-MessageSvc.OutputLevel    = 3; 
 
 // skip some messages from Xml 
 MessageSvc.setWarning += { "XmlGenericCnv" };
