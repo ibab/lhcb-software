@@ -1,4 +1,4 @@
-// $Id: FlavourTaggingAlgorithm.cpp,v 1.11 2003-06-13 08:40:18 odie Exp $
+// $Id: FlavourTaggingAlgorithm.cpp,v 1.12 2003-06-16 07:11:18 odie Exp $
 // Include files 
 
 // from Gaudi
@@ -181,11 +181,15 @@ StatusCode FlavourTaggingAlgorithm::execute() {
     switch( theTag->decision() ) {
     case FlavourTag::b:
       m_n_b_tags++;
-      log << "'b'" << theTag->tagger()->particleID().pid();
+      log << "'b'";
+      if( theTag->type() == FlavourTag::singleParticle )
+        log << theTag->tagger()->particleID().pid();
       break;
     case FlavourTag::bbar:
       m_n_bbar_tags++;
-      log << "'bbar'" << theTag->tagger()->particleID().pid();
+      log << "'bbar'";
+      if( theTag->type() == FlavourTag::singleParticle )
+        log << theTag->tagger()->particleID().pid();
       break;
     case FlavourTag::none:
       log << "'none'";
@@ -201,7 +205,7 @@ StatusCode FlavourTaggingAlgorithm::execute() {
       std::list<Particle *>::iterator pi = parts.begin();
       while( pi != parts.end() ) {
         if( *pi == theTag->tagger() ) {
-          log << MSG::WARNING 
+          log << MSG::ERROR 
               << "***** The tagger is a member of the B decay! *****" << endreq;
           break;
         }
