@@ -1,5 +1,5 @@
 package SimSvc
-version v1r0
+version v1r1
 
 branches SimSvc doc cmt src
 
