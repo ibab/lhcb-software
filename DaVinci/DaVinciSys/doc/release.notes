@@ -5,6 +5,42 @@
 ! See Phys/DaVinci/v*/doc/release.notes for details of modifications
 !-----------------------------------------------------------------------------
 
+!===================  DaVinciSys v12r5 2004-12-01 ============================
+New packages:
+RichHLTSys                  v1r0     Rich
+RichRecQC                   v1r10    Rich
+RichDAQ           v1r6   Rich
+RichRecBase       v1r14  Rich
+RichRecTools      v2r12  Rich
+RichRecCommon     v1r10  Rich
+RichTrgTools      v1r0   Rich
+RichTrgLocalPID   v1r0   Rich
+RichTrgGlobalPID  v1r0   Rich
+RichRecMCTools    v1r7   Rich
+HltGeneric                v2r0     Hlt
+
+Modified packages:
+L0Checker                 v3r0     L0
+L0MuonKernel              v2r2     L0
+L0MuonTrigger             v2r3     L0
+TrgSys                    v1r1     Trg
+TrExtrapolator            v2r14    Tr
+LoKi                      v3r6     Tools
+LoKiHlt                   v2r0     Tools
+Utilities                 v1r12    Tools
+DaVinciFilter             v1r3     Phys
+DaVinciKernel             v2r1     Phys
+DaVinciTools              v11r3    Phys
+DaVinciTransporter        v1r2     Phys
+VertexFit                 v1r2     Phys
+DaVinciAssociators        v5r2p1   Phys
+DaVinciEff                v3r2     Phys
+DaVinciMCTools            v5r7     Phys
+DaVinciTest               v5r4     Phys
+PhysSelSys                v7r13    PhysSel
+Bd2a1Dstar                v2r4     PhysSel
+Bs2MuMu                   v2r4p3   PhysSel
+ 
 !===================  DaVinciSys v12r4 2004-11-12 ============================
 New packages:
 TrgSys              v1r0    Trg
