@@ -4,6 +4,22 @@
 ! Purpose     : Provide tools and algorithm for tagging Bs
 !-----------------------------------------------------------------------------
 
+! 2003-06-16 - Olivier Dormond
+ - src/CategoryTaggingTool.h, src/CategoryTaggingTool.cpp
+   . Activated the vertex charge code path.
+ - src/VertexChargeTaggingTool.h, src/VertexChargeTaggingTool.cpp
+   . Added this new IFlavourTaggingTool subclass.
+ - src/FlavourTaggingAlgorithm.cpp
+   . Fixed a bug when dumping info for a vertexCharge tag.
+ - src/FlavourTagging_load.cpp
+   . Added the VertexChargeTaggingTool tool.
+ - src/SingleParticleTaggingTool.cpp, src/KaonSameSideTaggingTool.cpp
+   . Added a debug print out on entry of the active block.
+ - options/CombinedFlavourTagging.opts
+   . Updated the cuts including the CombinedParticleMaker tuning.
+ - doc/release.notes
+   . These lines.
+
 ! 2003-06-13 - Olivier Dormond
  - cmt/requirement
    . Added deps for L1 trigger and the visible collision tool.
