@@ -1,7 +1,8 @@
-! $Id: release.notes,v 1.115 2004-07-22 09:47:40 pkoppenb Exp $
+! $Id: release.notes,v 1.116 2004-07-22 17:23:41 pkoppenb Exp $
 ! Package     : DaVinciTools
 ! Responsible : P. Koppenburg
 
+!========================== DaVinciTools v10r0 2004-07-22 ===================
 ! 2004-07-22 - P. Koppenburg for Yuehong Xie
  - src/NsctVeloTransporter.cpp
  - src/TrTransporter.cpp
