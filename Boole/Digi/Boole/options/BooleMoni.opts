@@ -36,7 +36,7 @@ MoniOTSeq.Members += { "OTTimeMonitor" };
 MoniOTSeq.Members += { "OTTimeChecker" };
 
 // Rich
-ApplicationMgr.DLLs += { "RichDigiQC" };
+ApplicationMgr.DLLs += { "RichDigiQC", "RichMCTools" };
 #include "$RICHDIGIQCOPTS/DigiQC_Boole.opts"    // standard monitoring
 //#include "$RICHREADOUTOPTS/BooleDigiMoni.opts" // detailed monitoring
 

@@ -1,9 +1,9 @@
 ///////////////////////////////////////////////////////////////////////////////
-//  Job options for Boole, for data produced by Gauss v19r0 or greater and   //
+//  Job options for Boole, for data produced by Gauss v19r2 or greater and   //
 //  geometry lhcb-200412 (Rich1 EDR, Rotated Rich2, TT KLM layout, new Velo) //
 ///////////////////////////////////////////////////////////////////////////////
 #pragma print off
-//InitDataSeq.Members += { "MergeEventAlg/SpilloverAlg" }; // Adds Spillover
+InitDataSeq.Members += { "MergeEventAlg/SpilloverAlg" }; // Adds Spillover
 #include "$BOOLEOPTS/Boole.opts"          // Generic options for all jobs
 #include "$BOOLEOPTS/BooleMoniProd.opts"  // Default monitoring for production
 ApplicationMgr.OutStream += { "DigiWriter" };  // Comment to switch off output
@@ -42,17 +42,17 @@ PoolDbCacheSvc.Catalog = {
 // Spillover
 //---------------------------------------------------------------------------
 SpilloverSelector.Input = { 
-  //   "DATAFILE='PFN:$LHCBDEV/GAUSS/GAUSS_v18r3/Sim/Gauss/v18r3/job/30000000_2.sim' TYP='POOL_ROOT' OPT='READ'" 
-  //,  "DATAFILE='PFN:$LHCBDEV/GAUSS/GAUSS_v18r3/Sim/Gauss/v18r3/job/30000000_3.sim' TYP='POOL_ROOT' OPT='READ'" 
-};  // Input data not yet available
+   "DATAFILE='PFN:castor:/castor/cern.ch/user/g/gcorti/Gauss/v19r2/30000000.500ev.3.sim' TYP='POOL_ROOT' OPT='READ'" 
+,  "DATAFILE='PFN:castor:/castor/cern.ch/user/g/gcorti/Gauss/v19r2/30000000.500ev.4.sim' TYP='POOL_ROOT' OPT='READ'" 
+};  // Minimum bias events, with Gauss v19r2
 
 
 //---------------------------------------------------------------------------
 // Main event input
 //---------------------------------------------------------------------------
 EventSelector.Input = {
-   "DATAFILE='PFN:/afs/cern.ch/user/r/ranjard/w1/data/Gauss_v19r0_0412_500.sim' TYP='POOL_ROOT' OPT='READ'" 
-};  // Test data produced by Florence with Gauss v19r0 pre-release
+   "DATAFILE='PFN:castor:/castor/cern.ch/user/g/gcorti/Gauss/v19r2/11144100.500ev.sim' TYP='POOL_ROOT' OPT='READ'" 
+};  // 500 events B->J/Psi(mumu)Ks with Gauss v19r2 
 
 //---------------------------------------------------------------------------
 // Output file
