@@ -1,4 +1,4 @@
-// $Id: DaDiCppHeader.cpp,v 1.19 2001-11-28 15:56:21 mato Exp $
+// $Id: DaDiCppHeader.cpp,v 1.20 2001-11-30 12:53:41 mato Exp $
 
 #include "GaudiKernel/Kernel.h"
 
@@ -915,9 +915,17 @@ void DDBEcpp::printCppHeader(DaDiPackage* gddPackage,
 
     if (gddRelation->getMeth())
     {
-      xmlOut << "/// Retrieve " << gddRelation->desc().transcode() << std::endl
-        << "const " << get_ret << gddRelation->type().transcode() << ">& " 
-                << gddRelation->name().transcode() << "() const;" << std::endl;
+      xmlOut << "/// Retrieve " << gddRelation->desc().transcode() << std::endl;
+      if( gddRelation->ratio().equals("1"))
+      {
+        xmlOut << "const " << gddRelation->type().transcode() << "* " 
+               << gddRelation->name().transcode() << "() const;" << std::endl;
+        xmlOut << gddRelation->type().transcode() << "* "
+               << gddRelation->name().transcode() << "();" << std::endl;
+      } else {
+        xmlOut << "const " << get_ret << gddRelation->type().transcode() << ">& " 
+               << gddRelation->name().transcode() << "() const;" << std::endl;
+      }
     }
     if (gddRelation->setMeth())
     {
@@ -1362,12 +1370,28 @@ void DDBEcpp::printCppHeader(DaDiPackage* gddPackage,
 
     if (gddRelation->getMeth())
     {
-      xmlOut << "inline const " << get_ret << gddRelation->type().transcode()
-        << ">& " << gddClass->className().transcode() << "::"
-        << gddRelation->name().transcode()
-        << "() const" << std::endl << "{" << std::endl
-        << "   return m_" << gddRelation->name().transcode() << ";" 
-        << std::endl << "}" << std::endl << std::endl;
+      if (gddRelation->ratio().equals("1"))
+      {
+        xmlOut << "inline const " << gddRelation->type().transcode() << "* "
+          << gddClass->className().transcode() << "::"
+          << gddRelation->name().transcode()
+          << "() const" << std::endl << "{" << std::endl
+          << "   return m_" << gddRelation->name().transcode() << ";" 
+          << std::endl << "}" << std::endl;
+        xmlOut << "inline " << gddRelation->type().transcode() << "* "
+          << gddClass->className().transcode() << "::"
+          << gddRelation->name().transcode()
+          << "() " << std::endl << "{" << std::endl
+          << "   return m_" << gddRelation->name().transcode() << ";" 
+          << std::endl << "}" << std::endl << std::endl;
+      } else {
+        xmlOut << "inline const " << get_ret << gddRelation->type().transcode() << ">& "
+          << gddClass->className().transcode() << "::"
+          << gddRelation->name().transcode()
+          << "() const" << std::endl << "{" << std::endl
+          << "   return m_" << gddRelation->name().transcode() << ";" 
+          << std::endl << "}" << std::endl;
+      }
     }
     if (gddRelation->setMeth())
     { 
