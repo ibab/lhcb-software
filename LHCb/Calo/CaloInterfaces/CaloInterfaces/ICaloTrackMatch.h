@@ -1,8 +1,11 @@
-// $Id: ICaloTrackMatch.h,v 1.3 2001-11-29 17:11:17 ibelyaev Exp $
+// $Id: ICaloTrackMatch.h,v 1.4 2002-04-27 19:22:31 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $  
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.3  2001/11/29 17:11:17  ibelyaev
+//  improvement in CaloMatch interface
+//
 // Revision 1.2  2001/11/09 14:30:04  ibelyaev
 //  update in ICaloTrackMatch interface
 //
@@ -21,8 +24,8 @@
 // local 
 #include "CaloInterfaces/IIDICaloTrackMatch.h"
 
-class CaloPosition ; ///< from CaloEvent package 
-class TrTrack      ; ///< from TrKernel  package
+class CaloPosition  ; ///< from CaloEvent package 
+class TrStoredTrack ; ///< from TrEvent  package
 
 /** @class ICaloTrackMatch ICaloTrackMatch.h CaloInterfaces/ICaloTrackMatch.h
  *  
@@ -49,9 +52,8 @@ class TrTrack      ; ///< from TrKernel  package
 
 class ICaloTrackMatch: 
   public  virtual IAlgTool ,
-  public  std::binary_function<const CaloPosition*,
-                               const TrTrack*,
-                               std::pair<StatusCode,double> >
+  public  std::binary_function<const CaloPosition*,const TrStoredTrack*,
+  std::pair<StatusCode,double> >
 {
  public:
   
@@ -65,16 +67,6 @@ class ICaloTrackMatch:
    */
   static const InterfaceID& interfaceID() { return IID_ICaloTrackMatch ; }
   
-  /** standard initialization
-   *  @return status code
-   */
-  virtual StatusCode initialize () = 0 ;
-  
-  /** standard finalization 
-   *  @return status code
-   */
-  virtual StatusCode finalize   () = 0 ;
-  
   /** the main matching method  
    *
    *  @param caloObj  pointer to "calorimeter" object (position)
@@ -84,7 +76,7 @@ class ICaloTrackMatch:
    */
   virtual StatusCode match 
     ( const CaloPosition*   caloObj  , 
-      const TrTrack*        trObj    ,
+      const TrStoredTrack*  trObj    ,
       double&               chi2     ) = 0 ;
   
   /** The main matching method (Stl interface) 
@@ -94,10 +86,11 @@ class ICaloTrackMatch:
    */
   virtual MatchingPair    operator() 
     ( const CaloPosition*   caloObj  , 
-      const TrTrack*        trObj    ) = 0 ;
+      const TrStoredTrack*  trObj    ) = 0 ;
   
-  /** destructor
-   */
+ protected:
+  
+  /// destructor
   virtual ~ICaloTrackMatch(){}; 
   
 };
