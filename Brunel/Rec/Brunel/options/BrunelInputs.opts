@@ -4,16 +4,17 @@
 // SPILLOVER: Uncomment next two lines to add spillover events.
 //--------------------------------------------------------------
 // #include "$SICBCNVROOT/options/Brunel.opts"
-// SpillOverSelector.Input = {"FILE='SICBMC_v244_mbias_1.rawh'"};
+// SpillOverSelector.Input = {"FILE='SICBMC_v245_mbias_1.rawh'"};
 //--------------------------------------------------------------
 // >>> PILEUP now done at generator level, no longer supported in Brunel <<<
 //--------------------------------------------------------------
-// Define the main event data: SICBMC >= v243 (new CALO, TRAC RAWH format)
+// Define the main event data: SICBMC >= v245
 //--------------------------------------------------------------
-//EventSelector.Input = {"JOBID='44814'"};
-EventSelector.Input = {"FILE='/castor/cern.ch/lhcb/mc/L221553'"};
-//EventSelector.Input = {"FILE='/shift/shd18/data29/z5/stage/L221553.282724'"};
+//EventSelector.Input = {"FILE='/shift/shd18/data26/z5/stage/L229156.362817'"};
+//EventSelector.Input = {"FILE='/castor/cern.ch/lhcb/mc/L229156'"};
+EventSelector.Input = {"JOBID='52310'"};
 ApplicationMgr.EvtMax = 10;
 //EventSelector.FirstEvent = 6;
-
-
+//--------------------------------------------------------------
+// Uncomment next line to keep all SICB banks on DST output
+//BrunelFinish.DropDSTBanks = false;

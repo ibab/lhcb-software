@@ -38,7 +38,7 @@ use LHCbEvent    v10    Event
 use VeloEvent    v4     Event
 use ITEvent      v4     Event
 use OTEvent      v4     Event
-use TrEvent      v4r1*     Event
+use TrEvent      v4r1   Event
 use CaloEvent    v5     Event
 
 # Calorimeter digitisation
@@ -47,9 +47,9 @@ use CaloAlgs     v2     Calo
 
 # Tracking
 use TrKernel     v4     Tr
-use ITAlgorithms v4*	IT
+use ITAlgorithms v4	IT
 use OTAlgorithms v4	OT
-use TrAlgorithms v4r1*	Tr
+use TrAlgorithms v4r1	Tr
 
 # SicB event data persistency
 use SicbCnv      v12    SICB
