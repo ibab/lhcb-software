@@ -4,6 +4,12 @@
 ! Purpose     : Holds final reconstruction code
 !-----------------------------------------------------------------------------
 
+! 2004-04-8 - Yuehong Xie
+ - src/ChargedProtoPAlg.cpp ChargedProtoPAlg.h
+   . remove the  member function ProjectSeed2TT since it is already done 
+     in TrKShort
+   . change Chi2NdFofUps to Chi2NdFofDown, m_chiSqUps to  m_chiSqDowns
+
 ! 2004-03-17 - Vanya BELYAEV
  - src/NeutralPPsFromCPsAlg.cpp
    1) add the usage of Frederic's Machefert CaloPhotonEstimatorTool/'PhotonPID'

@@ -70,7 +70,6 @@ protected:
                       CombinedDLL* combDLL );
   StatusCode caloPIDTools();
   StatusCode muonProbDLL( ProtoParticle* proto, CombinedDLL* combDLL );
-  void ProjectSeed2TT(const TrStoredTrack* ttt, double& xAtTT, double& yAtTT);
   
 private:
 
@@ -102,9 +101,7 @@ private:
   double m_chiSqITracks;   ///< Max Chi2/NoF to make ProtoP from IT Tracks
   double m_chiSqOTracks;   ///< Max Chi2/NoF to make ProtoP from IT Tracks
   double m_chiSqVTT   ;    ///< Max Chi2/NoF to make ProtoP from VTT Tracks
-  double m_chiSqUps;   ///< Max Chi2/NoF to make ProtoP from upstream Tracks
-  double m_minTTx;    ///<  TT hole x cut
-  double m_minTTy;    ///<  TT hole y cut
+  double m_chiSqDowns;   ///< Max Chi2/NoF to make ProtoP from upstream Tracks
  
   int m_idElectron;           ///< PDG id of e+/-
   int m_idMuon;               ///< PDG id of mu+/mu-

@@ -53,9 +53,7 @@ ChargedProtoPAlg::ChargedProtoPAlg( const std::string& name,
   , m_chiSqITracks( 500.0 )
   , m_chiSqOTracks( 100.0 )
   , m_chiSqVTT( 5.0 )
-  , m_chiSqUps( 5.0 )
-  , m_minTTx( 40. * mm )
-  , m_minTTy( 40. * mm )
+  , m_chiSqDowns( 5.0 )
   , m_photonMatch(0)
   , m_electronMatch(0)
   , m_bremMatch(0)
@@ -98,10 +96,7 @@ ChargedProtoPAlg::ChargedProtoPAlg( const std::string& name,
   declareProperty("Chi2NdFofITracks", m_chiSqITracks );
   declareProperty("Chi2NdFofOTracks", m_chiSqOTracks );
   declareProperty("Chi2NdFofVTT",     m_chiSqVTT );
-  declareProperty("Chi2NdFofUps",     m_chiSqUps );
-  declareProperty( "minTTx",          m_minTTx );
-  declareProperty( "minTTy",          m_minTTy );
-  
+  declareProperty("Chi2NdFofDowns",     m_chiSqDowns );  
 
   // Monitor
   declareProperty("Monitor", m_monitor );
@@ -615,11 +610,7 @@ int ChargedProtoPAlg::rejectTrack( const TrStoredTrack* track ) {
   if( track->isDownstream() ) {
     int nTotMeas = track->measurements().size();
     double chi2NoF = (track->lastChiSq())/((double)nTotMeas - 5);
-    if( chi2NoF >= m_chiSqUps )  return Chi2Cut;
-    double xAtTT=9999.;
-    double yAtTT=9999.;
-    ProjectSeed2TT(track,xAtTT,yAtTT);
-    if(fabs(xAtTT)<m_minTTx && fabs(yAtTT)<m_minTTy) return Other;
+    if( chi2NoF >= m_chiSqDowns )  return Chi2Cut;
   }
 
 
@@ -956,38 +947,3 @@ StatusCode ChargedProtoPAlg::muonProbDLL( ProtoParticle* proto,
 
 }  
 
-//=============================================================================
-// Project Seed to TT plane to reject ghost upstream tracks
-//=============================================================================
-void ChargedProtoPAlg::ProjectSeed2TT(const TrStoredTrack* ttt, 
-				      double& xAtTT, double& yAtTT)
-{
-  double zTT=2450;
-
-  double mag_par0=5454.55;
-  double mag_par1=-2209.30;
-  double mag_par2=542.057 ;
-  double mag_par3=  -12.1427e-6;
-
-  TrState* state = const_cast<TrState*>( ttt->closestState( 10000. ));
-  TrStateP *statep = dynamic_cast<TrStateP*>( state );
-
-  double zXRef  = 9500.;
-  double xSeed = statep->x() + (zXRef-statep->z()) * statep->tx();
-  double zMag =
-    mag_par0 +
-    mag_par1 * pow( statep->ty(), 2 ) +
-    mag_par2 * pow( statep->tx(), 2 ) +
-    mag_par3 * pow( xSeed, 2 );
-
-  double xMag = statep->x() + (zMag - statep->z()) * statep->tx();
-  double slopeX = xMag / zMag;
-  xAtTT= xMag+ (zTT-zMag ) * slopeX;
-
-  double zYRef  = 8000.;
-  double yAtRef = statep->y() + (zYRef-statep->z()) * statep->ty();
-  yAtTT= zTT/zYRef * yAtRef;
-
-}
-
-//=============================================================================
