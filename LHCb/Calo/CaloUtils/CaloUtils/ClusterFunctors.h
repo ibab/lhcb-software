@@ -1,4 +1,4 @@
-// $Id: ClusterFunctors.h,v 1.6 2004-05-27 13:40:03 cattanem Exp $ 
+// $Id: ClusterFunctors.h,v 1.7 2004-10-26 13:31:41 cattanem Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
@@ -31,7 +31,7 @@ namespace ClusterFunctors
   typedef std::pair<iterator,iterator>              iterator_pair       ;
   typedef std::pair<const_iterator,const_iterator>  const_iterator_pair ;
   
-  /** @fn throwException 
+  /** @fn StatusCode throwException( const std::string& message ) 
    *  throw the exception
    *  @exception CaloException
    *  @param message exception message
@@ -557,7 +557,7 @@ namespace ClusterFunctors
    *    
    *
    *  @param cluster pointer to CaloCluster object 
-   *  @param matrix  subcluster selector object 
+   *  @param evaluator  evaluator object
    *  @param modify  flag for modification of energy fractions
    *  @param tag     tag to be set for cells with modified fractions 
    *
@@ -625,7 +625,7 @@ namespace ClusterFunctors
    *    
    *
    *  @param cluster pointer to CaloCluster object 
-   *  @param matrix  subcluster selector object 
+   *  @param evaluator  evaluator object
    *  @param tag     tag to be set for cells with modified fractions 
    *
    *  @see CaloCuster

@@ -1,8 +1,11 @@
-// $Id: histoHbookName.h,v 1.4 2002-04-07 18:05:40 ibelyaev Exp $ 
+// $Id: histoHbookName.h,v 1.5 2004-10-26 13:31:41 cattanem Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.4  2002/04/07 18:05:40  ibelyaev
+//  bug fix
+//
 // Revision 1.3  2002/04/05 09:32:18  ibelyaev
 //  split histoHbookName.h into histoHbookName.h and dirHbookName.h
 //
@@ -42,7 +45,7 @@
  *  @date 04/04/2002
  */
 
-/** @fn histoHbookName
+/** @fn std::string histoHbookName
  *  
  *  simple function to convert any valid Gaudi address(name in Transient Store)
  *  to address, which is simultaneously valid for Hbook histogram
