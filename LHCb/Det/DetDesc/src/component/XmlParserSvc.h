@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/DetDesc/XmlParserSvc.h,v 1.1 2001-05-14 15:13:37 sponce Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/component/XmlParserSvc.h,v 1.1 2001-05-18 16:48:47 sponce Exp $
 #ifndef DETDESC_XMLPARSERSVC_H
 #define DETDESC_XMLPARSERSVC_H
 
@@ -9,6 +9,9 @@
 #include <GaudiKernel/Service.h> 
 
 #include "DetDesc/IXmlParserSvc.h"
+
+// Forward and external declarations
+template <class TYPE> class SvcFactory;
 
 
 /** @class XmlParserSvc XmlParserSvc.h DetDesc/XmlParserSvc.h
@@ -21,6 +24,9 @@
 class XmlParserSvc : public Service,
                      virtual public IXmlParserSvc,
                      virtual public ErrorHandler {
+  
+  /// Friend needed
+  friend class SvcFactory<XmlParserSvc>;
   
 public:
 
@@ -35,6 +41,14 @@ public:
    * default destructor
    */
   virtual ~XmlParserSvc();
+
+  /**
+   * Queries interfaces of Interface.
+   * @param riid ID of Interface to be retrieved
+   * @param ppvInterface Pointer to Location for interface pointer
+   * @return status depending on the completion of the call
+   */
+  virtual StatusCode queryInterface (const IID& riid, void** ppvInterface);
 
   ///////////////////////////////////////////////////
   // implementation of the IXmlParserSvc interface //

@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/component/XmlCnvSvc.cpp,v 1.3 2001-05-17 16:34:04 sponce Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/component/XmlCnvSvc.cpp,v 1.4 2001-05-18 16:48:46 sponce Exp $
 
 // Include Files
 #include <util/PlatformUtils.hpp>
@@ -13,6 +13,7 @@
 #include "GaudiKernel/MsgStream.h"
 
 #include "XmlCnvSvc.h"
+#include "XmlParserSvc.h"
 
 // Forward and external declarations
 extern const IAddrFactory& XmlAddressFactory;
@@ -22,7 +23,7 @@ extern const IAddrFactory& XmlAddressFactory;
 // Instantiation of a static factory class used by clients to create
 // instances of this service
 // -----------------------------------------------------------------------
-static SvcFactory<XmlCnvSvc>          xmlcnvsvc_factory;
+static SvcFactory<XmlCnvSvc> xmlcnvsvc_factory;
 const ISvcFactory& XmlCnvSvcFactory = xmlcnvsvc_factory;
 
 
@@ -31,11 +32,10 @@ const ISvcFactory& XmlCnvSvcFactory = xmlcnvsvc_factory;
 // -----------------------------------------------------------------------
 XmlCnvSvc::XmlCnvSvc (const std::string& name, ISvcLocator* svc) :
   ConversionSvc(name, svc, XML_StorageType) {
-  // creation of a parser service
-  m_parserSvc = new XmlParserSvc("XmlParserSvc", serviceLocator());
   setAddressFactory(&XmlAddressFactory);
+  
   // gets the AllowGenericConversion property value
-  declareProperty( "AllowGenericConversion", m_genericConversion = false );
+  declareProperty ("AllowGenericConversion", m_genericConversion = false);
 }
 
 
@@ -43,7 +43,6 @@ XmlCnvSvc::XmlCnvSvc (const std::string& name, ISvcLocator* svc) :
 // Standard Destructor
 // -----------------------------------------------------------------------
 XmlCnvSvc::~XmlCnvSvc() {
-  m_parserSvc->release();
 }
 
 
@@ -54,8 +53,9 @@ StatusCode XmlCnvSvc::initialize() {
   // Before anything we have to initialize grand mother
   StatusCode status = ConversionSvc::initialize();
 
+  // Service MUST be initialized BEFORE!
   MsgStream log (msgSvc(), "XmlCnvSvc");
-  
+
   if (status.isSuccess()) {
     
     // Set detector data store
@@ -74,6 +74,8 @@ StatusCode XmlCnvSvc::initialize() {
     if (!status.isSuccess()) {
       return StatusCode::FAILURE;
     }
+  } else {
+    return status;  
   }
 
   // Initialize the XML4C2 system
@@ -87,7 +89,13 @@ StatusCode XmlCnvSvc::initialize() {
     delete [] message;
   } 
   
-  setProperties();
+  // creation of a parser service
+  status = serviceLocator()->service("XmlParserSvc", m_parserSvc, true);
+  if (status.isFailure()) {
+    return status;
+  }
+  
+  //setProperties();
 
   // Initialize numerical expressions parser with the standard math functions
   // and the system of units used by Gaudi (Geant4)
@@ -107,6 +115,8 @@ StatusCode XmlCnvSvc::initialize() {
 // Stop the service.
 // -----------------------------------------------------------------------
 StatusCode XmlCnvSvc::finalize() {
+  m_parserSvc->release();
+  m_parserSvc = 0;
   return ConversionSvc::finalize();
 }
 

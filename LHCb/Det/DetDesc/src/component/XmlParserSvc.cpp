@@ -1,6 +1,7 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/Lib/XmlParserSvc.cpp,v 1.1 2001-05-14 15:13:42 sponce Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/component/XmlParserSvc.cpp,v 1.1 2001-05-18 16:48:47 sponce Exp $
 
 // Include Files
+#include "GaudiKernel/SvcFactory.h"
 #include <parsers/DOMParser.hpp>
 #include <util/PlatformUtils.hpp>
 #include <dom/DOM_DOMException.hpp>
@@ -8,7 +9,15 @@
 #include "GaudiKernel/IConverter.h"
 #include "GaudiKernel/MsgStream.h"
 
-#include "DetDesc/XmlParserSvc.h"
+#include "XmlParserSvc.h"
+
+
+// -----------------------------------------------------------------------
+// Instantiation of a static factory class used by clients to create
+// instances of this service
+// -----------------------------------------------------------------------
+static SvcFactory<XmlParserSvc> xmlparsersvc_factory;
+const ISvcFactory& XmlParserSvcFactory = xmlparsersvc_factory;
 
 
 // -----------------------------------------------------------------------
@@ -139,3 +148,16 @@ void XmlParserSvc::fatalError (const SAXParseException& exception){
 void XmlParserSvc::resetErrors () {}
 
 
+// -----------------------------------------------------------------------
+// Query interface
+// -----------------------------------------------------------------------
+StatusCode XmlParserSvc::queryInterface(const IID& riid, void** ppvInterface) {
+  if (IID_IXmlParserSvc.versionMatch(riid))  {
+    *ppvInterface = (IXmlParserSvc*)this;
+  } else {
+    // Interface is not directly availible: try out a base class
+    return Service::queryInterface(riid, ppvInterface);
+  }
+  addRef();
+  return StatusCode::SUCCESS;
+}

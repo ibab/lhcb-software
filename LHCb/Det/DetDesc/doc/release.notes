@@ -2,13 +2,18 @@ package DetDesc
 package manager : N.N 
 
 !===========================================================================
-! 20010510 - Sebastien Ponce
+! 20010518 - Sebastien Ponce
+ - made a true service of XmlParserSvc - use it as a service in XmlCnvSvc
+ - as a consequence, moved it in the component library
+
+!===========================================================================
+! 20010516 - Sebastien Ponce
  - changed the version of the IXmlSvc interface
  - added the allowGenericCnv feature there
  - moved the XmlCnvSvc back to the component library
 
 !===========================================================================
-! 20010510 - Sebastien Ponce
+! 20010514 - Sebastien Ponce
  - Created XmlBaseDetElem in order to distinguish between the base class of
  all detector elements converters and the converter for basic detector elements.
  - As a consequence, moved back XmlDetectorElementCnv to the component library.

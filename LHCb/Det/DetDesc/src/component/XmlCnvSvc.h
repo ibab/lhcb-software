@@ -1,11 +1,11 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/component/XmlCnvSvc.h,v 1.1 2001-05-17 16:34:04 sponce Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/component/XmlCnvSvc.h,v 1.2 2001-05-18 16:48:46 sponce Exp $
 
 #ifndef DETDESC_XMLCNVSVC_H
 #define DETDESC_XMLCNVSVC_H
 
 // Include files
 #include "DetDesc/IXmlSvc.h"
-#include "DetDesc/XmlParserSvc.h"
+#include "DetDesc/IXmlParserSvc.h"
 #include "GaudiKernel/IOpaqueAddress.h"
 #include "GaudiKernel/ConversionSvc.h"
 #include "GaudiKernel/ICnvManager.h"
@@ -156,7 +156,7 @@ protected:
 private:
 
   /// XmlParserSvc used to parse xmlfiles
-  XmlParserSvc* m_parserSvc;
+  IXmlParserSvc* m_parserSvc;
 
   /// Numerical expressions parser
   HepTool::Evaluator m_xp;
@@ -171,16 +171,3 @@ private:
 };
 
 #endif    // DETDESC_XMLCNVSVC_H
-
-
-
-
-
-
-
-
-
-
-
-
-
