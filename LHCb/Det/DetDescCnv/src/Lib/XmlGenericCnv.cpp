@@ -1,4 +1,4 @@
-// $Id: XmlGenericCnv.cpp,v 1.3 2003-04-25 08:53:08 sponce Exp $
+// $Id: XmlGenericCnv.cpp,v 1.4 2003-06-16 13:44:13 sponce Exp $
 
 // Include files
 #include "DetDescCnv/XmlGenericCnv.h"
@@ -42,17 +42,17 @@ XmlGenericCnv::XmlGenericCnv( ISvcLocator* svc, const CLID& clid) :
 // Destructor
 // ------------------------------------------------------------------------
 XmlGenericCnv::~XmlGenericCnv() {
-  xercesc::XMLString::release(&(XMLCh*)DDDBString);
-  xercesc::XMLString::release(&(XMLCh*)materialsString);
-  xercesc::XMLString::release(&(XMLCh*)versionString);
-  xercesc::XMLString::release(&(XMLCh*)DTD_VersionString);
-  xercesc::XMLString::release(&(XMLCh*)macroString);
-  xercesc::XMLString::release(&(XMLCh*)nameString);
-  xercesc::XMLString::release(&(XMLCh*)valueString);
-  xercesc::XMLString::release(&(XMLCh*)parameterString);
-  xercesc::XMLString::release(&(XMLCh*)detelemString);
-  xercesc::XMLString::release(&(XMLCh*)conditionString);
-  xercesc::XMLString::release(&(XMLCh*)classIDString);
+  xercesc::XMLString::release((XMLCh**)&DDDBString);
+  xercesc::XMLString::release((XMLCh**)&materialsString);
+  xercesc::XMLString::release((XMLCh**)&versionString);
+  xercesc::XMLString::release((XMLCh**)&DTD_VersionString);
+  xercesc::XMLString::release((XMLCh**)&macroString);
+  xercesc::XMLString::release((XMLCh**)&nameString);
+  xercesc::XMLString::release((XMLCh**)&valueString);
+  xercesc::XMLString::release((XMLCh**)&parameterString);
+  xercesc::XMLString::release((XMLCh**)&detelemString);
+  xercesc::XMLString::release((XMLCh**)&conditionString);
+  xercesc::XMLString::release((XMLCh**)&classIDString);
 }
 
 

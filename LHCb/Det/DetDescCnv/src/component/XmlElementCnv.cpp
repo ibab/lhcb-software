@@ -1,4 +1,4 @@
-// $Id: XmlElementCnv.cpp,v 1.3 2003-04-25 08:53:08 sponce Exp $ 
+// $Id: XmlElementCnv.cpp,v 1.4 2003-06-16 13:44:16 sponce Exp $ 
 #include "GaudiKernel/CnvFactory.h"
 #include "GaudiKernel/DataObject.h"
 #include "GaudiKernel/ICnvManager.h"
@@ -78,22 +78,22 @@ XmlElementCnv::XmlElementCnv (ISvcLocator* svc) :
 // Destructor
 // -----------------------------------------------------------------------
 XmlElementCnv::~XmlElementCnv () {
-  xercesc::XMLString::release(&(XMLCh*)nameString);
-  xercesc::XMLString::release(&(XMLCh*)temperatureString);
-  xercesc::XMLString::release(&(XMLCh*)pressureString);
-  xercesc::XMLString::release(&(XMLCh*)stateString);
-  xercesc::XMLString::release(&(XMLCh*)densityString);
-  xercesc::XMLString::release(&(XMLCh*)radlenString);
-  xercesc::XMLString::release(&(XMLCh*)lambdaString);
-  xercesc::XMLString::release(&(XMLCh*)symbolString);
-  xercesc::XMLString::release(&(XMLCh*)AString);
-  xercesc::XMLString::release(&(XMLCh*)ZeffString);
-  xercesc::XMLString::release(&(XMLCh*)hrefString);
-  xercesc::XMLString::release(&(XMLCh*)fractionmassString);
-  xercesc::XMLString::release(&(XMLCh*)tabpropsString);
-  xercesc::XMLString::release(&(XMLCh*)addressString);
-  xercesc::XMLString::release(&(XMLCh*)isotoperefString);
-  xercesc::XMLString::release(&(XMLCh*)atomString);
+  xercesc::XMLString::release((XMLCh**)&nameString);
+  xercesc::XMLString::release((XMLCh**)&temperatureString);
+  xercesc::XMLString::release((XMLCh**)&pressureString);
+  xercesc::XMLString::release((XMLCh**)&stateString);
+  xercesc::XMLString::release((XMLCh**)&densityString);
+  xercesc::XMLString::release((XMLCh**)&radlenString);
+  xercesc::XMLString::release((XMLCh**)&lambdaString);
+  xercesc::XMLString::release((XMLCh**)&symbolString);
+  xercesc::XMLString::release((XMLCh**)&AString);
+  xercesc::XMLString::release((XMLCh**)&ZeffString);
+  xercesc::XMLString::release((XMLCh**)&hrefString);
+  xercesc::XMLString::release((XMLCh**)&fractionmassString);
+  xercesc::XMLString::release((XMLCh**)&tabpropsString);
+  xercesc::XMLString::release((XMLCh**)&addressString);
+  xercesc::XMLString::release((XMLCh**)&isotoperefString);
+  xercesc::XMLString::release((XMLCh**)&atomString);
 }
 
 

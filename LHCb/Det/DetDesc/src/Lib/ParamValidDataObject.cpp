@@ -1,4 +1,4 @@
-//$Id: ParamValidDataObject.cpp,v 1.1 2003-04-23 10:06:50 sponce Exp $
+//$Id: ParamValidDataObject.cpp,v 1.2 2003-06-16 13:42:36 sponce Exp $
 #include <string> 
 
 #include "DetDesc/ParamValidDataObject.h"
@@ -8,7 +8,7 @@
 
 /// Default constructor
 ParamValidDataObject::ParamValidDataObject()
-  : ValidDataObject()
+  : IParamSetEditor(), ValidDataObject()
 {
   m_paramSet = new ParamSet();
 }; 
@@ -18,7 +18,7 @@ ParamValidDataObject::ParamValidDataObject()
 /// Constructor
 ParamValidDataObject::ParamValidDataObject (const ITime& since, 
                                             const ITime& till)
-  : ValidDataObject( since, till )
+  : IParamSetEditor(), ValidDataObject( since, till )
 {
   m_paramSet = new ParamSet();
 }; 
@@ -27,7 +27,8 @@ ParamValidDataObject::ParamValidDataObject (const ITime& since,
 
 /// Copy constructor
 ParamValidDataObject::ParamValidDataObject (ParamValidDataObject& obj)
-  : ValidDataObject ((ValidDataObject&)obj)
+  : IParamSetEditor ((IParamSetEditor&)obj),
+    ValidDataObject ((ValidDataObject&)obj)
 {
   m_paramSet = new ParamSet ((IParamSet&)obj);
 }; 

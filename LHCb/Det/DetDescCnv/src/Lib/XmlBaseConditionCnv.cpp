@@ -1,4 +1,4 @@
-// $Id: XmlBaseConditionCnv.cpp,v 1.3 2003-04-25 08:53:08 sponce Exp $
+// $Id: XmlBaseConditionCnv.cpp,v 1.4 2003-06-16 13:44:11 sponce Exp $
 
 // include files
 #include "GaudiKernel/CnvFactory.h"
@@ -55,12 +55,12 @@ XmlBaseConditionCnv::XmlBaseConditionCnv (ISvcLocator* svc,
 // Destructor
 // ------------------------------------------------------------------------
 XmlBaseConditionCnv::~XmlBaseConditionCnv () {
-  xercesc::XMLString::release(&(XMLCh*)specificString);
-  xercesc::XMLString::release(&(XMLCh*)paramString);
-  xercesc::XMLString::release(&(XMLCh*)paramVectorString);
-  xercesc::XMLString::release(&(XMLCh*)typeString);
-  xercesc::XMLString::release(&(XMLCh*)nameString);
-  xercesc::XMLString::release(&(XMLCh*)commentString);
+  xercesc::XMLString::release((XMLCh**)&specificString);
+  xercesc::XMLString::release((XMLCh**)&paramString);
+  xercesc::XMLString::release((XMLCh**)&paramVectorString);
+  xercesc::XMLString::release((XMLCh**)&typeString);
+  xercesc::XMLString::release((XMLCh**)&nameString);
+  xercesc::XMLString::release((XMLCh**)&commentString);
 }
 
 

@@ -1,4 +1,4 @@
-// $Id: GeometryInfo.h,v 1.9 2002-11-21 15:40:03 sponce Exp $ 
+// $Id: GeometryInfo.h,v 1.10 2003-06-16 13:42:36 sponce Exp $ 
 #ifndef     DETDESC_GEOMETRYINFO_H
 #define     DETDESC_GEOMETRYINFO_H 1 
 /** STD and STL includes */ 
@@ -292,14 +292,14 @@ public:
 
   inline StatusCode        reset            ( const int Level );         
 
-  inline IGeometryInfo* geoByName ( const std::string& name ) const ;    
+  IGeometryInfo* geoByName ( const std::string& name ) const ;    
 
-  inline ILVolume*         findLogical      () const ;          
+  ILVolume*         findLogical      () const ;          
 
-  inline HepTransform3D*   calculateMatrix  () const ;       
+  HepTransform3D*   calculateMatrix  () const ;       
 
   /// could throw GeometryInfoException
-  inline StatusCode loadChildren     () const ; 
+  StatusCode loadChildren     () const ; 
 
   /// retrive the replica path (mistrerious "rpath")
   inline        ILVolume::ReplicaPath& supportPath     () const ; 

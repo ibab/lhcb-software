@@ -1,4 +1,4 @@
-// $Id: XmlIsotopeCnv.cpp,v 1.3 2003-04-25 08:53:08 sponce Exp $
+// $Id: XmlIsotopeCnv.cpp,v 1.4 2003-06-16 13:44:17 sponce Exp $
 // include files
 #include "GaudiKernel/CnvFactory.h"
 #include "GaudiKernel/GenericAddress.h"
@@ -80,18 +80,18 @@ XmlIsotopeCnv::XmlIsotopeCnv (ISvcLocator* svc) :
 // Desctructor
 // ------------------------------------------------------------------------
 XmlIsotopeCnv::~XmlIsotopeCnv () {
-  xercesc::XMLString::release(&(XMLCh*)nameString);
-  xercesc::XMLString::release(&(XMLCh*)temperatureString);
-  xercesc::XMLString::release(&(XMLCh*)pressureString);
-  xercesc::XMLString::release(&(XMLCh*)stateString);
-  xercesc::XMLString::release(&(XMLCh*)AString);
-  xercesc::XMLString::release(&(XMLCh*)ZString);
-  xercesc::XMLString::release(&(XMLCh*)NString);
-  xercesc::XMLString::release(&(XMLCh*)densityString);
-  xercesc::XMLString::release(&(XMLCh*)radlenString);
-  xercesc::XMLString::release(&(XMLCh*)lambdaString);
-  xercesc::XMLString::release(&(XMLCh*)tabpropsString);
-  xercesc::XMLString::release(&(XMLCh*)addressString);  
+  xercesc::XMLString::release((XMLCh**)&nameString);
+  xercesc::XMLString::release((XMLCh**)&temperatureString);
+  xercesc::XMLString::release((XMLCh**)&pressureString);
+  xercesc::XMLString::release((XMLCh**)&stateString);
+  xercesc::XMLString::release((XMLCh**)&AString);
+  xercesc::XMLString::release((XMLCh**)&ZString);
+  xercesc::XMLString::release((XMLCh**)&NString);
+  xercesc::XMLString::release((XMLCh**)&densityString);
+  xercesc::XMLString::release((XMLCh**)&radlenString);
+  xercesc::XMLString::release((XMLCh**)&lambdaString);
+  xercesc::XMLString::release((XMLCh**)&tabpropsString);
+  xercesc::XMLString::release((XMLCh**)&addressString);  
 }
 
 

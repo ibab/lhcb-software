@@ -1,4 +1,4 @@
-// $Id: XmlTabulatedPropertyCnv.cpp,v 1.3 2003-04-25 08:53:09 sponce Exp $
+// $Id: XmlTabulatedPropertyCnv.cpp,v 1.4 2003-06-16 13:44:21 sponce Exp $
 
 // Include files
 #include "GaudiKernel/CnvFactory.h"
@@ -60,15 +60,15 @@ XmlTabulatedPropertyCnv::XmlTabulatedPropertyCnv (ISvcLocator* svcs) :
 // Destructor
 // ------------------------------------------------------------------------
 XmlTabulatedPropertyCnv::~XmlTabulatedPropertyCnv () {
-  xercesc::XMLString::release(&(XMLCh*)nameString);
-  xercesc::XMLString::release(&(XMLCh*)typeString);
-  xercesc::XMLString::release(&(XMLCh*)xaxisString);
-  xercesc::XMLString::release(&(XMLCh*)yaxisString);
-  xercesc::XMLString::release(&(XMLCh*)xunitString);
-  xercesc::XMLString::release(&(XMLCh*)yunitString);
-  xercesc::XMLString::release(&(XMLCh*)entryString);
-  xercesc::XMLString::release(&(XMLCh*)xString);
-  xercesc::XMLString::release(&(XMLCh*)yString);
+  xercesc::XMLString::release((XMLCh**)&nameString);
+  xercesc::XMLString::release((XMLCh**)&typeString);
+  xercesc::XMLString::release((XMLCh**)&xaxisString);
+  xercesc::XMLString::release((XMLCh**)&yaxisString);
+  xercesc::XMLString::release((XMLCh**)&xunitString);
+  xercesc::XMLString::release((XMLCh**)&yunitString);
+  xercesc::XMLString::release((XMLCh**)&entryString);
+  xercesc::XMLString::release((XMLCh**)&xString);
+  xercesc::XMLString::release((XMLCh**)&yString);
 }
 
 

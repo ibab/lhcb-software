@@ -1,4 +1,4 @@
-// $Id: SolidTrap.cpp,v 1.12 2003-05-16 13:59:14 ibelyaev Exp $
+// $Id: SolidTrap.cpp,v 1.13 2003-06-16 13:42:36 sponce Exp $
 // ===========================================================================
 ///@{
 /**  GaudiKernel package */  
@@ -55,7 +55,6 @@ SolidTrap::SolidTrap( const std::string&  Name             ,
                       const double        DxAtPlusZPlusY   ,
                       const double        AlphaAtPlusZ    )
   : SolidPolyHedronHelper   ( Name             ) 
-  , SolidBase               ( Name             ) 
   , m_trap_zHalfLength      ( ZHalfLength      ) 
   , m_trap_theta            ( Theta            ) 
   , m_trap_phi              ( Phi              ) 
@@ -96,7 +95,6 @@ SolidTrap::SolidTrap( const std::string&  Name             ,
 // ============================================================================
 SolidTrap::SolidTrap( const std::string& Name )
   : SolidPolyHedronHelper   ( Name ) 
-  , SolidBase               ( Name )  
   , m_trap_zHalfLength      ( 100  ) 
   , m_trap_theta            ( 0    ) 
   , m_trap_phi              ( 0    ) 

@@ -1,4 +1,4 @@
-// $Id: DetectorElement.h,v 1.21 2003-04-23 10:06:41 sponce Exp $ 
+// $Id: DetectorElement.h,v 1.22 2003-06-16 13:42:35 sponce Exp $ 
 #ifndef  DETDESC_DETECTORELEMENT_H
 #define  DETDESC_DETECTORELEMENT_H 1
 
@@ -216,7 +216,7 @@ public:
   virtual IDetectorElement*  parentIDetectorElement() const;
 
   // (reference to) container of pointers to child detector elements 
-  inline virtual IDetectorElement::IDEContainer& childIDetectorElements() const;
+  virtual IDetectorElement::IDEContainer& childIDetectorElements() const;
 
   // iterators for manipulation of daughter elements 
   inline virtual IDetectorElement::IDEContainer::iterator childBegin() {

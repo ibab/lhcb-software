@@ -1,4 +1,4 @@
-// $Id: XmlSurfaceCnv.cpp,v 1.3 2003-04-25 08:53:09 sponce Exp $
+// $Id: XmlSurfaceCnv.cpp,v 1.4 2003-06-16 13:44:20 sponce Exp $
 
 // Include files
 #include <cstdlib>
@@ -53,15 +53,15 @@ XmlSurfaceCnv::XmlSurfaceCnv (ISvcLocator* svc) :
 // Destructor
 // ------------------------------------------------------------------------
 XmlSurfaceCnv::~XmlSurfaceCnv () {
-  xercesc::XMLString::release(&(XMLCh*)nameString);
-  xercesc::XMLString::release(&(XMLCh*)modelString);
-  xercesc::XMLString::release(&(XMLCh*)finishString);
-  xercesc::XMLString::release(&(XMLCh*)typeString);
-  xercesc::XMLString::release(&(XMLCh*)valueString);
-  xercesc::XMLString::release(&(XMLCh*)volfirstString);
-  xercesc::XMLString::release(&(XMLCh*)volsecondString);
-  xercesc::XMLString::release(&(XMLCh*)tabpropsString);
-  xercesc::XMLString::release(&(XMLCh*)addressString);
+  xercesc::XMLString::release((XMLCh**)&nameString);
+  xercesc::XMLString::release((XMLCh**)&modelString);
+  xercesc::XMLString::release((XMLCh**)&finishString);
+  xercesc::XMLString::release((XMLCh**)&typeString);
+  xercesc::XMLString::release((XMLCh**)&valueString);
+  xercesc::XMLString::release((XMLCh**)&volfirstString);
+  xercesc::XMLString::release((XMLCh**)&volsecondString);
+  xercesc::XMLString::release((XMLCh**)&tabpropsString);
+  xercesc::XMLString::release((XMLCh**)&addressString);
 }
 
 

@@ -1,8 +1,11 @@
-// $Id: SolidIntersection.cpp,v 1.7 2003-05-16 13:59:14 ibelyaev Exp $
+// $Id: SolidIntersection.cpp,v 1.8 2003-06-16 13:42:36 sponce Exp $
 // ===========================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ===========================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.7  2003/05/16 13:59:14  ibelyaev
+//  fix of ancient saga with 'double deletion of solids'
+//
 // Revision 1.6  2002/05/11 18:25:47  ibelyaev
 //  see $DETDESCROOT/doc/release.notes 11 May 2002
 //
@@ -32,7 +35,6 @@
 SolidIntersection::SolidIntersection( const std::string& name  , 
                                       ISolid*            first )
   : SolidBoolean( name , first )
-  , SolidBase   ( name         )
 {};
 // ============================================================================
 
@@ -43,7 +45,6 @@ SolidIntersection::SolidIntersection( const std::string& name  ,
 // ============================================================================
 SolidIntersection::SolidIntersection( const std::string& name )
   : SolidBoolean( name )
-  , SolidBase   ( name )
 {};
 // ============================================================================
 

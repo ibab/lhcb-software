@@ -1,8 +1,11 @@
-// $Id: SimpleValidity.cpp,v 1.2 2002-01-21 14:46:46 sponce Exp $
+// $Id: SimpleValidity.cpp,v 1.3 2003-06-16 13:42:36 sponce Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2002/01/21 14:46:46  sponce
+// Remove all warnings + some bug fixes
+//
 // Revision 1.1  2001/11/18 15:32:45  ibelyaev
 //  update for Logical Assemblies
 // 
@@ -72,7 +75,8 @@ SimpleValidity::SimpleValidity( const IValidity& copy )
  */
 // ============================================================================
 SimpleValidity::SimpleValidity( const SimpleValidity& copy )
-  : m_since ( new TimePoint( *(copy.m_since) ) )
+  : IValidity(),
+    m_since ( new TimePoint( *(copy.m_since) ) )
   , m_till  ( new TimePoint( *(copy.m_till)  ) )
 {};
 

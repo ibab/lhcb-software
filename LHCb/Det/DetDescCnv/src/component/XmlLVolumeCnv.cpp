@@ -1,4 +1,4 @@
-// $Id: XmlLVolumeCnv.cpp,v 1.3 2003-04-25 08:53:08 sponce Exp $ 
+// $Id: XmlLVolumeCnv.cpp,v 1.4 2003-06-16 13:44:18 sponce Exp $ 
 // Include files
 #include "GaudiKernel/CnvFactory.h"
 #include "GaudiKernel/GenericAddress.h"
@@ -124,68 +124,68 @@ XmlLVolumeCnv::XmlLVolumeCnv (ISvcLocator* svc) :
 // Destructor
 // ------------------------------------------------------------------------
 XmlLVolumeCnv::~XmlLVolumeCnv () {
-  xercesc::XMLString::release(&(XMLCh*)unionString);
-  xercesc::XMLString::release(&(XMLCh*)subtractionString);
-  xercesc::XMLString::release(&(XMLCh*)intersectionString);
-  xercesc::XMLString::release(&(XMLCh*)boxString);
-  xercesc::XMLString::release(&(XMLCh*)trdString);
-  xercesc::XMLString::release(&(XMLCh*)trapString);
-  xercesc::XMLString::release(&(XMLCh*)consString);
-  xercesc::XMLString::release(&(XMLCh*)polyconeString);
-  xercesc::XMLString::release(&(XMLCh*)tubsString);
-  xercesc::XMLString::release(&(XMLCh*)sphereString);
-  xercesc::XMLString::release(&(XMLCh*)transformationString);
-  xercesc::XMLString::release(&(XMLCh*)posXYZString);
-  xercesc::XMLString::release(&(XMLCh*)posRPhiZString);
-  xercesc::XMLString::release(&(XMLCh*)posRThPhiString);
-  xercesc::XMLString::release(&(XMLCh*)rotXYZString);
-  xercesc::XMLString::release(&(XMLCh*)rotAxisString);
-  xercesc::XMLString::release(&(XMLCh*)paramphysvolString);
-  xercesc::XMLString::release(&(XMLCh*)paramphysvol2DString);
-  xercesc::XMLString::release(&(XMLCh*)paramphysvol3DString);
-  xercesc::XMLString::release(&(XMLCh*)materialString);
-  xercesc::XMLString::release(&(XMLCh*)magfieldString);
-  xercesc::XMLString::release(&(XMLCh*)sensdetString);
-  xercesc::XMLString::release(&(XMLCh*)nameString);
-  xercesc::XMLString::release(&(XMLCh*)physvolString);
-  xercesc::XMLString::release(&(XMLCh*)surfString);
-  xercesc::XMLString::release(&(XMLCh*)logvolString);
-  xercesc::XMLString::release(&(XMLCh*)numberString);
-  xercesc::XMLString::release(&(XMLCh*)addressString);
-  xercesc::XMLString::release(&(XMLCh*)outerRadiusMZString);
-  xercesc::XMLString::release(&(XMLCh*)outerRadiusPZString);
-  xercesc::XMLString::release(&(XMLCh*)innerRadiusMZString);
-  xercesc::XMLString::release(&(XMLCh*)innerRadiusPZString);
-  xercesc::XMLString::release(&(XMLCh*)outerRadiusString);
-  xercesc::XMLString::release(&(XMLCh*)innerRadiusString);
-  xercesc::XMLString::release(&(XMLCh*)sizeXString);
-  xercesc::XMLString::release(&(XMLCh*)sizeX1String);
-  xercesc::XMLString::release(&(XMLCh*)sizeX2String);
-  xercesc::XMLString::release(&(XMLCh*)sizeX3String);
-  xercesc::XMLString::release(&(XMLCh*)sizeX4String);
-  xercesc::XMLString::release(&(XMLCh*)sizeYString);
-  xercesc::XMLString::release(&(XMLCh*)sizeY1String);
-  xercesc::XMLString::release(&(XMLCh*)sizeY2String);
-  xercesc::XMLString::release(&(XMLCh*)sizeZString);
-  xercesc::XMLString::release(&(XMLCh*)thetaString);
-  xercesc::XMLString::release(&(XMLCh*)phiString);
-  xercesc::XMLString::release(&(XMLCh*)alp1String);
-  xercesc::XMLString::release(&(XMLCh*)alp2String);
-  xercesc::XMLString::release(&(XMLCh*)xString);
-  xercesc::XMLString::release(&(XMLCh*)yString);
-  xercesc::XMLString::release(&(XMLCh*)zString);
-  xercesc::XMLString::release(&(XMLCh*)rString);
-  xercesc::XMLString::release(&(XMLCh*)axThetaString);
-  xercesc::XMLString::release(&(XMLCh*)axPhiString);
-  xercesc::XMLString::release(&(XMLCh*)angleString);
-  xercesc::XMLString::release(&(XMLCh*)zplaneString);
-  xercesc::XMLString::release(&(XMLCh*)startThetaAngleString);
-  xercesc::XMLString::release(&(XMLCh*)deltaThetaAngleString);
-  xercesc::XMLString::release(&(XMLCh*)startPhiAngleString);
-  xercesc::XMLString::release(&(XMLCh*)deltaPhiAngleString);
-  xercesc::XMLString::release(&(XMLCh*)rotXString);
-  xercesc::XMLString::release(&(XMLCh*)rotYString);
-  xercesc::XMLString::release(&(XMLCh*)rotZString);
+  xercesc::XMLString::release((XMLCh**)&unionString);
+  xercesc::XMLString::release((XMLCh**)&subtractionString);
+  xercesc::XMLString::release((XMLCh**)&intersectionString);
+  xercesc::XMLString::release((XMLCh**)&boxString);
+  xercesc::XMLString::release((XMLCh**)&trdString);
+  xercesc::XMLString::release((XMLCh**)&trapString);
+  xercesc::XMLString::release((XMLCh**)&consString);
+  xercesc::XMLString::release((XMLCh**)&polyconeString);
+  xercesc::XMLString::release((XMLCh**)&tubsString);
+  xercesc::XMLString::release((XMLCh**)&sphereString);
+  xercesc::XMLString::release((XMLCh**)&transformationString);
+  xercesc::XMLString::release((XMLCh**)&posXYZString);
+  xercesc::XMLString::release((XMLCh**)&posRPhiZString);
+  xercesc::XMLString::release((XMLCh**)&posRThPhiString);
+  xercesc::XMLString::release((XMLCh**)&rotXYZString);
+  xercesc::XMLString::release((XMLCh**)&rotAxisString);
+  xercesc::XMLString::release((XMLCh**)&paramphysvolString);
+  xercesc::XMLString::release((XMLCh**)&paramphysvol2DString);
+  xercesc::XMLString::release((XMLCh**)&paramphysvol3DString);
+  xercesc::XMLString::release((XMLCh**)&materialString);
+  xercesc::XMLString::release((XMLCh**)&magfieldString);
+  xercesc::XMLString::release((XMLCh**)&sensdetString);
+  xercesc::XMLString::release((XMLCh**)&nameString);
+  xercesc::XMLString::release((XMLCh**)&physvolString);
+  xercesc::XMLString::release((XMLCh**)&surfString);
+  xercesc::XMLString::release((XMLCh**)&logvolString);
+  xercesc::XMLString::release((XMLCh**)&numberString);
+  xercesc::XMLString::release((XMLCh**)&addressString);
+  xercesc::XMLString::release((XMLCh**)&outerRadiusMZString);
+  xercesc::XMLString::release((XMLCh**)&outerRadiusPZString);
+  xercesc::XMLString::release((XMLCh**)&innerRadiusMZString);
+  xercesc::XMLString::release((XMLCh**)&innerRadiusPZString);
+  xercesc::XMLString::release((XMLCh**)&outerRadiusString);
+  xercesc::XMLString::release((XMLCh**)&innerRadiusString);
+  xercesc::XMLString::release((XMLCh**)&sizeXString);
+  xercesc::XMLString::release((XMLCh**)&sizeX1String);
+  xercesc::XMLString::release((XMLCh**)&sizeX2String);
+  xercesc::XMLString::release((XMLCh**)&sizeX3String);
+  xercesc::XMLString::release((XMLCh**)&sizeX4String);
+  xercesc::XMLString::release((XMLCh**)&sizeYString);
+  xercesc::XMLString::release((XMLCh**)&sizeY1String);
+  xercesc::XMLString::release((XMLCh**)&sizeY2String);
+  xercesc::XMLString::release((XMLCh**)&sizeZString);
+  xercesc::XMLString::release((XMLCh**)&thetaString);
+  xercesc::XMLString::release((XMLCh**)&phiString);
+  xercesc::XMLString::release((XMLCh**)&alp1String);
+  xercesc::XMLString::release((XMLCh**)&alp2String);
+  xercesc::XMLString::release((XMLCh**)&xString);
+  xercesc::XMLString::release((XMLCh**)&yString);
+  xercesc::XMLString::release((XMLCh**)&zString);
+  xercesc::XMLString::release((XMLCh**)&rString);
+  xercesc::XMLString::release((XMLCh**)&axThetaString);
+  xercesc::XMLString::release((XMLCh**)&axPhiString);
+  xercesc::XMLString::release((XMLCh**)&angleString);
+  xercesc::XMLString::release((XMLCh**)&zplaneString);
+  xercesc::XMLString::release((XMLCh**)&startThetaAngleString);
+  xercesc::XMLString::release((XMLCh**)&deltaThetaAngleString);
+  xercesc::XMLString::release((XMLCh**)&startPhiAngleString);
+  xercesc::XMLString::release((XMLCh**)&deltaPhiAngleString);
+  xercesc::XMLString::release((XMLCh**)&rotXString);
+  xercesc::XMLString::release((XMLCh**)&rotYString);
+  xercesc::XMLString::release((XMLCh**)&rotZString);
 }
 
 
@@ -687,7 +687,7 @@ XmlLVolumeCnv::dealWithParamphysvol (xercesc::DOMElement* element,
       delete [] resstr;
 #endif
       numberAttributes[i] = dom2Std (element->getAttribute (attrName));
-      xercesc::XMLString::release(&(XMLCh*)attrName);
+      xercesc::XMLString::release((XMLCh**)&attrName);
     }
   }
 

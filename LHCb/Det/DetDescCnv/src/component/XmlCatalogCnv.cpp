@@ -1,4 +1,4 @@
-// $Id: XmlCatalogCnv.cpp,v 1.3 2003-04-25 08:53:08 sponce Exp $
+// $Id: XmlCatalogCnv.cpp,v 1.4 2003-06-16 13:44:15 sponce Exp $
 
 // include files
 #include <stdlib.h>
@@ -84,29 +84,29 @@ XmlCatalogCnv::XmlCatalogCnv (ISvcLocator* svc) :
 // Constructor
 // ------------------------------------------------------------------------
 XmlCatalogCnv::~XmlCatalogCnv () {
-  xercesc::XMLString::release(&(XMLCh*)isotopeString);
-  xercesc::XMLString::release(&(XMLCh*)materialString);
-  xercesc::XMLString::release(&(XMLCh*)catalogString);
-  xercesc::XMLString::release(&(XMLCh*)tabpropertyString);
-  xercesc::XMLString::release(&(XMLCh*)surfaceString);
-  xercesc::XMLString::release(&(XMLCh*)logvolString);
-  xercesc::XMLString::release(&(XMLCh*)detelemString);
-  xercesc::XMLString::release(&(XMLCh*)elementString);
-  xercesc::XMLString::release(&(XMLCh*)conditionString);
+  xercesc::XMLString::release((XMLCh**)&isotopeString);
+  xercesc::XMLString::release((XMLCh**)&materialString);
+  xercesc::XMLString::release((XMLCh**)&catalogString);
+  xercesc::XMLString::release((XMLCh**)&tabpropertyString);
+  xercesc::XMLString::release((XMLCh**)&surfaceString);
+  xercesc::XMLString::release((XMLCh**)&logvolString);
+  xercesc::XMLString::release((XMLCh**)&detelemString);
+  xercesc::XMLString::release((XMLCh**)&elementString);
+  xercesc::XMLString::release((XMLCh**)&conditionString);
 
-  xercesc::XMLString::release(&(XMLCh*)isotoperefString);
-  xercesc::XMLString::release(&(XMLCh*)materialrefString);
-  xercesc::XMLString::release(&(XMLCh*)catalogrefString);
-  xercesc::XMLString::release(&(XMLCh*)tabpropertyrefString);
-  xercesc::XMLString::release(&(XMLCh*)surfacerefString);
-  xercesc::XMLString::release(&(XMLCh*)logvolrefString);
-  xercesc::XMLString::release(&(XMLCh*)detelemrefString);
-  xercesc::XMLString::release(&(XMLCh*)elementrefString);
-  xercesc::XMLString::release(&(XMLCh*)conditionrefString);
+  xercesc::XMLString::release((XMLCh**)&isotoperefString);
+  xercesc::XMLString::release((XMLCh**)&materialrefString);
+  xercesc::XMLString::release((XMLCh**)&catalogrefString);
+  xercesc::XMLString::release((XMLCh**)&tabpropertyrefString);
+  xercesc::XMLString::release((XMLCh**)&surfacerefString);
+  xercesc::XMLString::release((XMLCh**)&logvolrefString);
+  xercesc::XMLString::release((XMLCh**)&detelemrefString);
+  xercesc::XMLString::release((XMLCh**)&elementrefString);
+  xercesc::XMLString::release((XMLCh**)&conditionrefString);
 
-  xercesc::XMLString::release(&(XMLCh*)refString);
-  xercesc::XMLString::release(&(XMLCh*)hrefString);
-  xercesc::XMLString::release(&(XMLCh*)nameString);
+  xercesc::XMLString::release((XMLCh**)&refString);
+  xercesc::XMLString::release((XMLCh**)&hrefString);
+  xercesc::XMLString::release((XMLCh**)&nameString);
 }
 
 

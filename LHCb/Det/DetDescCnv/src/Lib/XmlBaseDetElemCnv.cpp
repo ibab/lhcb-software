@@ -1,4 +1,4 @@
-// $Id: XmlBaseDetElemCnv.cpp,v 1.3 2003-04-25 08:53:08 sponce Exp $
+// $Id: XmlBaseDetElemCnv.cpp,v 1.4 2003-06-16 13:44:12 sponce Exp $
 
 // include files
 
@@ -85,31 +85,31 @@ XmlBaseDetElemCnv::XmlBaseDetElemCnv (ISvcLocator* svc,
 // Destructor
 // ------------------------------------------------------------------------
 XmlBaseDetElemCnv::~XmlBaseDetElemCnv () {
-  xercesc::XMLString::release(&(XMLCh*)specificString);
-  xercesc::XMLString::release(&(XMLCh*)detelemString);
-  xercesc::XMLString::release(&(XMLCh*)detelemrefString);
-  xercesc::XMLString::release(&(XMLCh*)versionString);
-  xercesc::XMLString::release(&(XMLCh*)authorString);
-  xercesc::XMLString::release(&(XMLCh*)geometryinfoString);
-  xercesc::XMLString::release(&(XMLCh*)alignmentinfoString);
-  xercesc::XMLString::release(&(XMLCh*)calibrationinfoString);
-  xercesc::XMLString::release(&(XMLCh*)readoutinfoString);
-  xercesc::XMLString::release(&(XMLCh*)slowcontrolinfoString);
-  xercesc::XMLString::release(&(XMLCh*)fastcontrolinfoString);
-  xercesc::XMLString::release(&(XMLCh*)paramString);
-  xercesc::XMLString::release(&(XMLCh*)paramVectorString);
-  xercesc::XMLString::release(&(XMLCh*)userParameterString);
-  xercesc::XMLString::release(&(XMLCh*)userParameterVectorString);
+  xercesc::XMLString::release((XMLCh**)&specificString);
+  xercesc::XMLString::release((XMLCh**)&detelemString);
+  xercesc::XMLString::release((XMLCh**)&detelemrefString);
+  xercesc::XMLString::release((XMLCh**)&versionString);
+  xercesc::XMLString::release((XMLCh**)&authorString);
+  xercesc::XMLString::release((XMLCh**)&geometryinfoString);
+  xercesc::XMLString::release((XMLCh**)&alignmentinfoString);
+  xercesc::XMLString::release((XMLCh**)&calibrationinfoString);
+  xercesc::XMLString::release((XMLCh**)&readoutinfoString);
+  xercesc::XMLString::release((XMLCh**)&slowcontrolinfoString);
+  xercesc::XMLString::release((XMLCh**)&fastcontrolinfoString);
+  xercesc::XMLString::release((XMLCh**)&paramString);
+  xercesc::XMLString::release((XMLCh**)&paramVectorString);
+  xercesc::XMLString::release((XMLCh**)&userParameterString);
+  xercesc::XMLString::release((XMLCh**)&userParameterVectorString);
 
-  xercesc::XMLString::release(&(XMLCh*)typeString);
-  xercesc::XMLString::release(&(XMLCh*)nameString);
-  xercesc::XMLString::release(&(XMLCh*)commentString);
-  xercesc::XMLString::release(&(XMLCh*)hrefString);
-  xercesc::XMLString::release(&(XMLCh*)lvnameString);
-  xercesc::XMLString::release(&(XMLCh*)supportString);
-  xercesc::XMLString::release(&(XMLCh*)rpathString);
-  xercesc::XMLString::release(&(XMLCh*)npathString);
-  xercesc::XMLString::release(&(XMLCh*)conditionString);
+  xercesc::XMLString::release((XMLCh**)&typeString);
+  xercesc::XMLString::release((XMLCh**)&nameString);
+  xercesc::XMLString::release((XMLCh**)&commentString);
+  xercesc::XMLString::release((XMLCh**)&hrefString);
+  xercesc::XMLString::release((XMLCh**)&lvnameString);
+  xercesc::XMLString::release((XMLCh**)&supportString);
+  xercesc::XMLString::release((XMLCh**)&rpathString);
+  xercesc::XMLString::release((XMLCh**)&npathString);
+  xercesc::XMLString::release((XMLCh**)&conditionString);
 }
 
 

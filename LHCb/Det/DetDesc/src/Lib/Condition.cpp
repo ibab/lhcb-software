@@ -1,4 +1,4 @@
-//$Id: Condition.cpp,v 1.4 2003-04-23 10:06:48 sponce Exp $
+//$Id: Condition.cpp,v 1.5 2003-06-16 13:42:36 sponce Exp $
 #include <string> 
 
 #include "DetDesc/Condition.h"
@@ -21,7 +21,7 @@ Condition::Condition (const ITime& since, const ITime& till)
 
 /// Copy constructor
 Condition::Condition (Condition& obj)
-  : ParamValidDataObject ((ParamValidDataObject&)obj), ICondition() {}; 
+  : ICondition(), ParamValidDataObject ((ParamValidDataObject&)obj) {}; 
 
 //---------------------------------------------------------------------------
 

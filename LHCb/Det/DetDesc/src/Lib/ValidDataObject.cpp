@@ -1,4 +1,4 @@
-//$Id: ValidDataObject.cpp,v 1.4 2003-04-23 10:06:50 sponce Exp $
+//$Id: ValidDataObject.cpp,v 1.5 2003-06-16 13:42:36 sponce Exp $
 #include <string> 
 
 #include "DetDesc/ValidDataObject.h"
@@ -10,7 +10,7 @@
 
 /// Default constructor 
 ValidDataObject::ValidDataObject()
-  : DataObject()
+  : IValidity(), DataObject()
   , m_validSince ( 0 ) 
   , m_validTill  ( 0 ) 
 {
@@ -23,7 +23,7 @@ ValidDataObject::ValidDataObject()
 /// Constructor
 ValidDataObject::ValidDataObject( const ITime& since, 
 				  const ITime& till  )
-  : DataObject()
+  : IValidity(), DataObject()
   , m_validSince ( 0 ) 
   , m_validTill  ( 0 ) 
 {
@@ -35,7 +35,7 @@ ValidDataObject::ValidDataObject( const ITime& since,
 
 /// Copy constructor
 ValidDataObject::ValidDataObject( ValidDataObject& obj )
-  : DataObject( (DataObject&)obj )
+  : IValidity(), DataObject( (DataObject&)obj )
   , m_validSince ( 0 ) 
   , m_validTill  ( 0 ) 
 {
