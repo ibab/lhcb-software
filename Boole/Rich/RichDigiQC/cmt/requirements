@@ -2,15 +2,11 @@
 # Created    : 2002-06-13
 # Maintainer : Chris Jones
 #============================================================================
-# $Id: requirements,v 1.13 2005-01-07 12:38:09 jonrob Exp $
-# $Log: not supported by cvs2svn $
-# Revision 1.12  2004/10/27 14:20:26  jonrob
-# Update RichEvent usage
-#
+# $Id: requirements,v 1.14 2005-03-03 10:44:46 jonrob Exp $
 #============================================================================
 
 package           RichDigiQC
-version           v2r0
+version           v2r1
 
 # Structure, i.e. directories to process. 
 #============================================================================

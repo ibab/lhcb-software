@@ -132,7 +132,6 @@ StatusCode RichDetailedFrontEndResponse::Analog()
 
           // Shift time ( Rich2 value correlated to -40 in RichSignal algorithm.... )
           const double shiftTime = ( Rich::Rich1 == (*iDep)->parentHit()->rich() ? 18 : 7 );
-          //const double shiftTime = ( Rich::Rich1 == (*iDep)->parentHit()->rich() ? 25 : 25 );
 
           // locked into peakTime - hardwired hack
           double binTime = shiftTime - binZero; 
