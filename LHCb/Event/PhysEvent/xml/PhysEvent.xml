@@ -10,6 +10,7 @@
 <!ENTITY PhysSel.xml          SYSTEM "PhysSel.xml"         >
 
 <!ENTITY AxPartCandidate.xml  SYSTEM "AxPartCandidate.xml" >
+<!ENTITY ProtoParticle.xml    SYSTEM "ProtoParticle.xml" >
 
 <!ENTITY FlavourTag.xml       SYSTEM "FlavourTag.xml"      >
 
@@ -36,6 +37,7 @@
     
     <!-- Input class, needed until ProtoParticles input from DST -->
     &AxPartCandidate.xml;
+    &ProtoParticle.xml;
 
   </package>
 

@@ -1,0 +1,143 @@
+<!-- ****************************************************************
+     * ProtoParticle                                                *
+     ****************************************************************-->
+
+     <class
+      author="Gloria Corti"
+      desc="ProtoParticle, precursor of Particles. It holds information relative to final/global reconstruction, mostly pointers to all elements used to make it"
+      name="ProtoParticle"
+      id="803"
+     >
+       <typedef
+        type="std::vector&lt;std::pair&lt;int,double&gt; &gt;"
+        def="PIDInfoVector"
+        desc="Vector of information for combined pIDs"
+        access="PUBLIC"
+       />
+       <typedef
+        type="std::vector&lt;std::pair&lt;int,double&gt; &gt;"
+        def="PIDDetVector"
+        desc="Vector of information for separate detectors pIDs"
+        access="PUBLIC"
+       />
+       <base name="KeyedObject&lt;int&gt;"/>
+       <import name="CLHEP/Vector/LorentzVector"/>
+       <import name="CLHEP/Geometry/Point3D"/>       
+       <import name="Event/ParticleID" soft="TRUE"/>
+       <import name="Event/CaloHypo" soft="TRUE"/>
+       <import name="Event/TrStoredTrack" soft="TRUE"/>
+       <import name="Event/RichPID" soft="TRUE"/>
+       <import name="Event/MuonID" soft="TRUE"/>
+       <enum
+        desc="Store a detector specific particleID type or technique for which the likelyhood or discriminating value is then stored"
+        name="detectorPID"
+        value="Unknown=-1, RichElectron, RichMuon, RichPion, RichKaon, RichProton, MuonYes, MuonNo, CaloTrackMatch, CaloEMatch"
+        access="PUBLIC"
+       />
+       <location
+        name="Default"
+        place="Rec/ProtoP/Final"
+       />
+       <location
+        name="Charged"
+        place="Rec/ProtoP/Charged"
+       />
+       <location
+        name="Neutrals"
+        place="Rec/ProtoP/Neutrals"
+       />
+       <relation
+        name="calo"
+        desc="Reference to possible calorimeters result"
+        multiplicity="N"
+        type="CaloHypo"       
+       />
+       <relation
+        name="track"
+        desc="Reference to possible track used"
+        type="TrStoredTrack"
+       />
+       <relation
+        name="richPID"
+        desc="Reference to possible Rich pID results"
+        type="RichPID"
+       />
+       <relation
+        name="muonPID"
+        desc="Reference to possible Muon pID results"
+        type="MuonID"
+       />
+       <attribute
+        name="pIDDetectors"
+        desc="List of separate detectors pID info: technique and value"
+        type="std::vector&lt; std::pair&lt;int,double&gt; &gt;"
+       />
+       <attribute
+        name="pIDInfo"
+        desc="List of particleIDs and their Probability value after corresponding merging stage"
+        type="std::vector&lt; std::pair&lt;int,double&gt; &gt;"
+       />
+       <attribute
+        name="pIDhistory"
+        desc="Bit packing to store combination of which info (if any) is stored in pIDInfo"
+        type="bitfield"
+       >
+         <bitfield name="richBit" length='1' desc="Rich combined flag"/>
+         <bitfield name="muonBit" length='1' desc="Muon combined flag"/>
+         <bitfield name="caloeBit" length='1' desc="Calo Electron combined flag"/>
+       </attribute>
+       <method
+        name="pIDList"
+        const="TRUE"
+        desc="List of compatible particleIDs"
+        type="std::vector&lt;int&gt;"
+       />
+       <method
+        name="probOfPID"
+        const="TRUE"
+	desc="Probability for specified PDG id code"
+        argList="int pid"
+        type="double"
+       />
+       <method
+        name="bestPID"
+        const="TRUE"
+        desc="PDG code of most likely particleID"
+        type="int"
+       />       
+       <method
+        name="ProbOfBestPID"
+        const="TRUE"
+        desc="Probability of the most probable particleID"
+        type="double"
+       /> 
+       <attribute
+        name="charge"
+        desc="measured charge"
+        type="double"
+       />
+       <!--method
+        name="momentum"
+        desc="Measured three momentum components"
+        type="Hep3Vector"
+        const="TRUE"
+       /-->
+       <!--method
+        name="pointOnTrack"
+        desc="Point at which the momentum is given in LHCb reference frame"
+        type="HepPoint3D"
+        const="TRUE"
+       /-->
+       <!--method
+        name="trStateAtFirstPoint"
+        desc="Track state at measured point closedt to IP"
+        type="TrState"
+        const="TRUE"
+       /-->
+       <!--method
+        name="energy"
+        desc="Measured energy"
+        type="double"
+       /-->
+
+    </class>

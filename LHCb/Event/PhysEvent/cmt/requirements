@@ -1,9 +1,9 @@
-# $Id: requirements,v 1.20 2002-07-04 10:05:28 mato Exp $
+# $Id: requirements,v 1.21 2002-07-10 15:38:06 gcorti Exp $
 # Created      : 20/06/2001
 # Maintainer   : Gloria Corti
 #
 package           PhysEvent
-version           v5r0
+version           v5r1
 
 # Structure, i.e. directories to process. 
 #============================================================================
@@ -16,6 +16,9 @@ include_dirs $(PHYSEVENTROOT)
 # Used packages. 
 #============================================================================
 use TrEvent      v11r* Event
+use RichEvent    v3r*  Event
+use CaloEvent    v11r* Event
+use MuonEvent    v2r*  Event
 use GaudiObjDesc v4r4  -no_auto_imports
 
 # Produce Header-Files & dictionary from XML description

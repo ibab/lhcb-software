@@ -1,6 +1,10 @@
-! $Id: release.notes,v 1.17 2002-07-09 18:28:34 cattanem Exp $
+! $Id: release.notes,v 1.18 2002-07-10 15:37:56 gcorti Exp $
 ! Package     : PhysEvent 
 ! Responsible : Gloria Corti
+
+! 2002-07-10 - Gloria Corti
+ - Add ProtoParticles and hence uses RichEvent v3r*, CaloEvent v11r*,
+   MuonEvent v2r* 
 
 !========================= PhysEvent v5r0 2002-07-09 =========================
 ! 2002-07-04 - Pere Mato
