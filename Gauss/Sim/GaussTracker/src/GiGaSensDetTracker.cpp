@@ -103,6 +103,7 @@ bool GiGaSensDetTracker::ProcessHits( G4Step* step ,
           // end of temp
           
           ///
+
           TrackerHit* newHit = new TrackerHit();
           newHit->SetEdep( edep );
           newHit->SetEntryPos( prepos );

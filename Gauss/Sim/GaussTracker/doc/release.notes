@@ -5,7 +5,7 @@
 !                    tracker like detectors (Velo, OT, IT, Muon)
 !-----------------------------------------------------------------------------
 
-
+!========================== GaussTracker v2r3 2003-06-18 =======================
 ! 2003-05-29 - VanyaBELYAEV
  - src/GiGaMuonHitCnv.cpp  
    src/GiGaTrackerHitCnv.cpp  

@@ -153,7 +153,7 @@ StatusCode GiGaTrackerHitCnv::updateObj
                                         GiGaUtil::ObjTypeName(object) + 
                                         "*') is not 'MCHits*'! "   );}  
   // clear the object 
-  hits->clear();  
+  hits->clear();
   
   // retrieve the hits container from GiGa Service
 
