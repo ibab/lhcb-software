@@ -1,11 +1,11 @@
 package L0Event
-version v2
+version v3
 
 branches L0Event src cmt doc
 
 include_dirs $(L0EVENTROOT)
 
-use LHCbEvent v10* Event
+use LHCbEvent v11* Event
 
 # component library
 

@@ -1,8 +1,12 @@
-$Id: release.notes,v 1.4 2001-06-27 10:07:06 ocallot Exp $
+$Id: release.notes,v 1.5 2001-07-10 07:53:13 ranjard Exp $
 Package : L0Event
 Package manager : Olivier Callot
 
 !=============================================================================
+! 20010626 - L0Event v3 (Flr)
+  requirements -  use LHCbEvent v11*
+                  adapted to GaudiPolicy v5 and CMT v1r8
+
 ! 27/06/2001 - Olivier Callot
   - Removed all but the PileUpVeto class. New L0 code for calorimeter and muon
     is now available in C++, with dedicated classes in L0Calo, L0Muon and L0DU
