@@ -1,4 +1,4 @@
-// $Id: MuonBackground.cpp,v 1.6 2003-04-11 06:56:01 cattanem Exp $
+// $Id: MuonBackground.cpp,v 1.7 2003-04-11 15:54:13 cattanem Exp $
 // Include files 
 
 // from Gaudi
@@ -779,6 +779,7 @@ MuonBackground::initializeRNDDistribution2D(IHistogram2D* histoPointer,
                                 pointerToFlags,ymin, ymax);
     // msg<<MSG::INFO<<"slicing "<<xbin<<" "<<ymax<<endreq;
     histoSvc()->unregisterObject( ySlice );
+    delete ySlice;
   }
   
   return StatusCode::SUCCESS;
