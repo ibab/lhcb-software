@@ -85,7 +85,8 @@
 {
   rfio3
   Param
-  msg
+  socketcall.send(msg)
+  obj:/lib/i686/libc-2.2.5.so
   fun:netwrite_timeout
 }
   
@@ -94,7 +95,8 @@
 {
   GaudiKernel/v13r2/Timing.cpp
   Param
-  buf
+  times(buf)
+  obj:/lib/i686/libc-2.2.5.so
   fun:userTime__6SystemQ26System8TimeTypeQ26System8InfoTypel
 }
 
@@ -124,30 +126,23 @@
 }
 
 
-# Random number SmartIF  release problems
+# Strange tracking problems (Brunel v16r4)
 #{
-#  SmartIF/SicbLumiTool
-#  Addr4
-#  fun:*
-#  fun:*
-#  fun:*
-#  fun:getInteractions__12SicbLumiToolRi
+#  Tr/TrFirstCleverExtrapolator/TrParapolicExtrapolator
+#  Value4
+#  fun:release__7AlgTool
+#  fun:releaseTool__7ToolSvcP8IAlgTool
+#  fun:finalize__25TrFirstCleverExtrapolator
 #}
 
 #{
-#  SmartIF/release_RndmGen
-#  Addr4
-#  fun:release__7RndmGen
+#  Tr/TrFitAtAllPoints/TrFirstCleverExtrapolator
+#  Value4
+#  fun:finalize__25TrFirstCleverExtrapolator
+#  fun:releaseTool__7ToolSvcP8IAlgTool
+#  fun:finalize__16TrFitAtAllPoints
 #}
 
-# Strange tracking problem (Brunel v16r4)
-{
-  Tr/TrFirstCleverExtrapolator/TrParapolicExtrapolator
-  Value4
-  fun:release__7AlgTool
-  fun:releaseTool__7ToolSvcP8IAlgTool
-  fun:finalize__25TrFirstCleverExtrapolator
-}   
 
 # Calo problems (Brunel v16r4)
 {
