@@ -1,10 +1,12 @@
-! $Id: release.notes,v 1.13 2002-11-19 09:51:07 cattanem Exp $
-! =============================================================================
-! CVS tag $Name: not supported by cvs2svn $
+! $Id: release.notes,v 1.14 2002-12-05 14:44:50 ranjard Exp $
 ! =============================================================================
 ! Package     : CaloInterfaces
 ! Responsible : Vanya Belyaev Ivan.Belyaev@itep.ru
 ! =============================================================================
+
+!======================= CaloInterfaces v2r4 2002-12-05 =====================
+! 2002-11-22 - Florence Ranjard
+ - requirements - use new versions
 
 !===================== CaloInterfaces v2r3 2002-11-19 =====================
 ! 2002-11-10 - Ivan Belyaev   

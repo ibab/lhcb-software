@@ -1,14 +1,7 @@
-# $Id: requirements,v 1.12 2002-11-13 20:32:31 ibelyaev Exp $
-# =============================================================================
-# CVS tag $Name: not supported by cvs2svn $ 
-# =============================================================================
-# $Log: not supported by cvs2svn $
-# =============================================================================
-# Created    : 29/10/2001
-# Maintainer : Vanya Belyaev Ivan.Belyaev@itep.ru
+# $Id: requirements,v 1.13 2002-12-05 14:44:49 ranjard Exp $
 # =============================================================================
 package           CaloInterfaces
-version           v2r3
+version           v2r4
 
 # =============== structure ===================================================
 branches          cmt doc src CaloInterfaces
@@ -17,10 +10,6 @@ branches          cmt doc src CaloInterfaces
 include_dirs      $(CALOINTERFACESROOT)
 
 # =============== dependencies ================================================
-use GaudiKernel   v12r* 
+use GaudiKernel   v13r* 
 
 # =============== no constituents! ============================================
-
-# =============================================================================
-# The End 
-# =============================================================================
