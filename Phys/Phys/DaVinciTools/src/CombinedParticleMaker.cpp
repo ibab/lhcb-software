@@ -1,4 +1,4 @@
-// $Id: CombinedParticleMaker.cpp,v 1.5 2004-03-11 13:02:14 pkoppenb Exp $
+// $Id: CombinedParticleMaker.cpp,v 1.6 2004-05-14 12:00:28 pkoppenb Exp $
 // Include files 
 #include <algorithm>
 
@@ -397,7 +397,7 @@ StatusCode CombinedParticleMaker::makeParticles( ParticleVector& parts ) {
     return StatusCode::FAILURE;
   }
   if( 0 == protos->size() ) { 
-    msg << MSG::INFO << "Charged ProtoParticles container is empty at"
+    msg << MSG::INFO << "Charged ProtoParticles container is empty at "
         << m_input << endreq;
     return StatusCode::SUCCESS;
   }
