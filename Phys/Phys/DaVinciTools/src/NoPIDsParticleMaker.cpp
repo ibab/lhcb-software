@@ -1,8 +1,11 @@
-// $Id: NoPIDsParticleMaker.cpp,v 1.3 2004-03-11 13:02:14 pkoppenb Exp $
+// $Id: NoPIDsParticleMaker.cpp,v 1.4 2004-04-22 02:55:13 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.3  2004/03/11 13:02:14  pkoppenb
+// Split DaVinciTools into DaVinciTools and DaVinciKernel
+//
 // Revision 1.2  2004/01/14 19:00:06  gcorti
 // compatible with LHCb v15r0
 //
@@ -70,7 +73,6 @@ NoPIDsParticleMaker::NoPIDsParticleMaker
   const std::string& name   ,
   const IInterface*  parent )
   : CaloTool ( type, name , parent ) 
-  , m_evtSvc ( 0 )
   , m_ppSvc  ( 0 ) 
   , m_pid    ( "UNDEFINED" ) 
   , m_apid   (   ) 
@@ -114,19 +116,13 @@ StatusCode NoPIDsParticleMaker::initialize    ()
   
   // locate services 
   
-  if( 0 != m_evtSvc   ) { m_evtSvc -> release() ; m_evtSvc = 0 ; }
-  sc = service( "EventDataSvc" , m_evtSvc ) ;
-  if( sc.isFailure () ) 
-    { return Error ( "'EventDataSvc' is not located " , sc  ) ; }
   if( 0 == evtSvc  () )
     { return Error ( " IDataProviderSvc* points to NULL "   ) ; }
   
-  if( 0 != m_ppSvc    ) { m_ppSvc  -> release() ; m_ppSvc  = 0 ; }
-  sc = service( "ParticlePropertySvc" , m_ppSvc ) ;
-  if( sc.isFailure () ) 
-    { return Error ( "'ParticlePropertySvc' is not located " , sc ) ; }
+  if( 0 != m_ppSvc    ) { m_ppSvc  = 0 ; }
+  m_ppSvc = svc<IParticlePropertySvc>( "ParticlePropertySvc" , true ) ;
   if( 0 == ppSvc   () )
-    { return Error ( " IParticlePropertySvc* points to NULL "     ) ; }
+  { return Error ( " IParticlePropertySvc* points to NULL "     ) ; }
   
   // remove the duplicates from list of input containers 
   std::sort( m_inputs.begin () , m_inputs.end () ) ;
@@ -205,8 +201,7 @@ StatusCode NoPIDsParticleMaker::finalize      ()
   const std::string stars ( 80 , '*' );
   log << MSG::INFO << stars << endreq ;
   
-  if( 0 != m_evtSvc   ) { m_evtSvc -> release() ; m_evtSvc = 0 ; }
-  if( 0 != m_ppSvc    ) { m_ppSvc  -> release() ; m_ppSvc  = 0 ; }
+  if( 0 != m_ppSvc    ) { m_ppSvc  = 0 ; }
   
   double mean  = m_sum ;
   if ( 0 != m_calls  ) { mean  = m_sum  / m_calls                ; }

@@ -1,8 +1,8 @@
-// $Id: PhotonFromMergedParticleMaker.cpp,v 1.2 2004-03-11 13:02:14 pkoppenb Exp $
+// $Id: PhotonFromMergedParticleMaker.cpp,v 1.3 2004-04-22 02:55:13 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
-// 
+// $Log: not supported by cvs2svn $
 // ============================================================================
 // Include files
 // from Gaudi
@@ -53,8 +53,6 @@ PhotonFromMergedParticleMaker::PhotonFromMergedParticleMaker
   : CaloTool           ( type, name , parent ) 
   //
   , m_input            ( ProtoParticleLocation::Neutrals )
-  //
-  , m_evtSvc           ( 0     ) 
   //
   , m_photParsName     ( "PhotonFromMergedParameters/PhotPars" )
   , m_photPars         ( 0     ) 
@@ -116,13 +114,10 @@ StatusCode PhotonFromMergedParticleMaker::initialize    ()
   if( sc.isFailure() ) { return Error(" Unable to initialize CaloTool",sc);}
   
   // locate event data provider
-  if( 0 != m_evtSvc   ) { m_evtSvc   -> release () ; m_evtSvc   = 0 ; }
-  sc = service( "EventDataSvc", m_evtSvc , true ) ;
-  if( sc.isFailure()  ) { return Error(" Unable to locate EventDataSvc",sc);}
   if( 0 == evtSvc()   ) { return Error(" Unable to locate EventDataSvc",sc);}
   
   // locate photon parameters evaluator 
-  if( 0 != m_photPars ) { m_photPars -> release () ; m_photPars = 0 ; }
+  if( 0 != m_photPars ) { m_photPars = 0 ; }
   m_photPars = tool<IPhotonFromMergedParams>( m_photParsName , this );
   if( 0 == photPars() ) { return StatusCode::FAILURE ; }           // RETURN
   
@@ -209,8 +204,7 @@ StatusCode PhotonFromMergedParticleMaker::initialize    ()
 StatusCode PhotonFromMergedParticleMaker::finalize      () 
 {
   // release services and tools 
-  if( 0 != m_evtSvc   ) { m_evtSvc   -> release () ; m_evtSvc   = 0 ; }
-  if( 0 != m_photPars ) { m_photPars -> release () ; m_photPars = 0 ; }
+  m_photPars = 0 ; 
   
   // finalize the base class 
   return CaloTool::finalize ();

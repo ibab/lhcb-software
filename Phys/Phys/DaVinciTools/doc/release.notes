@@ -1,7 +1,17 @@
-! $Id: release.notes,v 1.78 2004-04-21 07:01:55 pkoppenb Exp $
+! $Id: release.notes,v 1.79 2004-04-22 02:55:13 ibelyaev Exp $
 ! Package     : DaVinciTools
 ! Responsible : P. Koppenburg, Sandra Amato
 
+! 2004-04-22 - Vanya BELYAEV
+
+ - src/PhotonFromMergedParticleMaker.cpp
+ - src/PhotonFromMergedParticleMaker.h
+	     fix a problem with inproper release of PhotonParam tool 
+ - src/NoPIDsParticleMaker.cpp
+ - src/NoPIDsParticleMaker.h
+       remove unnesessary location fo services and their release 
+
+  
 ! 2004-04-21 - P. Koppenburg
   - src/MergedPi0Alg.*, src/ResolvedPi0Alg.*
     Moved from PhysSel/Bd2Rho0Rho0 as it is shared by several analyses.

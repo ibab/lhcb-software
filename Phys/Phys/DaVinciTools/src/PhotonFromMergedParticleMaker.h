@@ -1,8 +1,11 @@
-// $Id: PhotonFromMergedParticleMaker.h,v 1.2 2004-03-11 13:02:14 pkoppenb Exp $
+// $Id: PhotonFromMergedParticleMaker.h,v 1.3 2004-04-22 02:55:13 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2004/03/11 13:02:14  pkoppenb
+// Split DaVinciTools into DaVinciTools and DaVinciKernel
+//
 // Revision 1.1  2003/04/25 18:17:34  gcorti
 // tools for merged pi0
 //
@@ -82,9 +85,6 @@ protected:
    */
   const IPhotonFromMergedParams* photPars  () const { return m_photPars ; }
   
-  /// acessor to event data provider service 
-  IDataProviderSvc*    evtSvc    () const { return m_evtSvc   ; }
-  
   /// input data location 
   const std::string&   inputData () const { return m_input    ; }
   
@@ -106,9 +106,6 @@ private:
 
   // input data (ProtoParticles)  
   std::string                        m_input            ;
-  
-  // event data service 
-  IDataProviderSvc*                  m_evtSvc           ;
   
   // evaluator of photon parameters at some nominal vertex 
   std::string                        m_photParsName     ;

@@ -1,8 +1,11 @@
-// $Id: NoPIDsParticleMaker.h,v 1.2 2004-03-11 13:02:14 pkoppenb Exp $
+// $Id: NoPIDsParticleMaker.h,v 1.3 2004-04-22 02:55:13 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2004/03/11 13:02:14  pkoppenb
+// Split DaVinciTools into DaVinciTools and DaVinciKernel
+//
 // Revision 1.1  2003/04/30 13:41:25  gcorti
 // new particlemaker for HLT studies
 //
@@ -66,9 +69,6 @@ public:
 
 protected:
   
-  /// accessor to event data sevice 
-  inline IDataProviderSvc*     evtSvc () const { return m_evtSvc ; }
-  
   /// accessor to Particle properties service 
   inline IParticlePropertySvc* ppSvc  () const { return m_ppSvc  ; }
   
@@ -112,9 +112,6 @@ private:
   NoPIDsParticleMaker& operator=( const NoPIDsParticleMaker& ) ;
  
 private:
-  
-  // evend data service 
-  IDataProviderSvc*     m_evtSvc  ;
   
   // particle property service 
   IParticlePropertySvc* m_ppSvc   ;  
