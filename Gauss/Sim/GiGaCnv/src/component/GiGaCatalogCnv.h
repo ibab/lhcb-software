@@ -1,8 +1,11 @@
-// $Id: GiGaCatalogCnv.h,v 1.2 2002-01-22 18:24:43 ibelyaev Exp $ 
+// $Id: GiGaCatalogCnv.h,v 1.3 2003-12-10 14:04:24 ranjard Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2002/01/22 18:24:43  ibelyaev
+//  Vanya: update for newer versions of Geant4 and Gaudi
+//
 // Revision 1.1  2001/11/19 18:27:00  ibelyaev
 //  bux fix and the new converter for catalogs
 //
@@ -81,7 +84,8 @@ public:
   /** retrieve the storage type for created object 
    *  @return storage type  for created object 
    */
-  static const unsigned char storageType() ; 
+  //static const unsigned char storageType() ; 
+  static const long storageType() ; 
   
 private:
 

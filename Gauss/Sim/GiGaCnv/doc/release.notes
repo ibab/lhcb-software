@@ -1,7 +1,14 @@
-! $Id: release.notes,v 1.62 2003-12-08 16:16:00 ranjard Exp $
+! $Id: release.notes,v 1.63 2003-12-10 14:04:24 ranjard Exp $
 ! =============================================================================
 Package         : GiGaCnv
 Package Manager : Vanya Belyaev Ivan.Belyaev@itep.ru
+
+!========================= GiGaCnv v14r0 ============================
+! 2003-12-10 - Grigori Rybkine
+ - GiGaCnv/GiGaCnvBase.h              |
+   src/Lib/GiGaCnvBase.cpp            |  fix for use with Gaudi v13r0
+   src/component/GiGaCatalogCnv.cpp   |
+   src/component/GiGaCatalogCnv.h     |
 
 !========================== GiGaCnv v13r6 ===========================
 ! 2003-12-08 - Witek Pokorski

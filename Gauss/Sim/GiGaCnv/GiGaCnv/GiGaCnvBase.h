@@ -1,8 +1,11 @@
-// $Id: GiGaCnvBase.h,v 1.11 2003-04-06 18:55:31 ibelyaev Exp $ 
+// $Id: GiGaCnvBase.h,v 1.12 2003-12-10 14:04:24 ranjard Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.11  2003/04/06 18:55:31  ibelyaev
+//  remove unnesessary dependencies and adapt for newer GiGa
+//
 // Revision 1.10  2002/12/07 21:13:48  ibelyaev
 //  bug fix and small CPU performace optimization
 //
@@ -69,7 +72,8 @@ protected:
    *  @param Locatopr       pointer to service locator 
    */
   GiGaCnvBase
-  ( const unsigned char  StorageType , 
+  //( const unsigned char  StorageType , 
+  ( const long  StorageType , 
     const CLID&          ClassType   , 
     ISvcLocator*         Locator     );
 
@@ -77,6 +81,10 @@ protected:
   virtual ~GiGaCnvBase();
   ///
 public: 
+  long repSvcType() const
+  { return i_repSvcType(); }
+  
+  ///
   
   /** initialization
    *  @see  Converter 

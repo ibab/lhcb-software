@@ -1,8 +1,11 @@
-// $Id: GiGaCatalogCnv.cpp,v 1.4 2003-01-23 09:20:37 ibelyaev Exp $
+// $Id: GiGaCatalogCnv.cpp,v 1.5 2003-12-10 14:04:24 ranjard Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.4  2003/01/23 09:20:37  ibelyaev
+//  few fixes for Win2K platform
+//
 // Revision 1.3  2002/12/07 14:36:25  ibelyaev
 //  see $GIGACNVROOT/doc/release.notes
 //
@@ -77,7 +80,8 @@ const CLID&  GiGaCatalogCnv::classID () { return DataObject::classID() ; }
 // ============================================================================
 // StorageType
 // ============================================================================
-const unsigned char GiGaCatalogCnv::storageType () 
+//const unsigned char GiGaCatalogCnv::storageType () 
+const long GiGaCatalogCnv::storageType () 
 { return GiGaGeom_StorageType; } 
 
 //=============================================================================

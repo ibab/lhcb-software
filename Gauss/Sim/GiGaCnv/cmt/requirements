@@ -1,7 +1,7 @@
-# $Id: requirements,v 1.47 2003-11-25 14:01:28 witoldp Exp $ 
+# $Id: requirements,v 1.48 2003-12-10 14:04:24 ranjard Exp $ 
 # =============================================================================
 package  GiGaCnv 
-version  v13r6
+version  v14r0
 
 # ============== package structure ============================================
 branches         cmt src doc GiGaCnv 
@@ -12,7 +12,7 @@ use DetDesc      v*     Det
 use HepMC        v*     Sim
 use GenEvent     v*     Event
 
-use GiGa         v14r*  Sim 
+use GiGa         v*     Sim 
 use Event        v*     Event
 
 # ============== standard includes ============================================

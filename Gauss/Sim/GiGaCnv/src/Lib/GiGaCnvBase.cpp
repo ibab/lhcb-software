@@ -1,8 +1,11 @@
-// $Id: GiGaCnvBase.cpp,v 1.11 2002-12-13 14:25:21 ibelyaev Exp $ 
+// $Id: GiGaCnvBase.cpp,v 1.12 2003-12-10 14:04:24 ranjard Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.11  2002/12/13 14:25:21  ibelyaev
+//  few trivial bug fixes
+//
 // Revision 1.10  2002/12/07 14:36:25  ibelyaev
 //  see $GIGACNVROOT/doc/release.notes
 //
@@ -63,7 +66,8 @@ namespace GiGaCnvBaseLocal
 /// constructor 
 // ============================================================================
 GiGaCnvBase::GiGaCnvBase
-( const unsigned char  StorageType , 
+//( const unsigned char  StorageType , 
+( const long StorageType , 
   const CLID&          ClassType   , 
   ISvcLocator*         Locator     )  
   : Converter( StorageType ,  ClassType , Locator     ) 
