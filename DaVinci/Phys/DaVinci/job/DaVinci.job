@@ -93,7 +93,7 @@ else
 endif
 
 # == job is finished: remove temporary files ==========
-rm tmp*
+rm -f tmp*
 
 # == job is finished: if in batch copy output files on user directories
 #
