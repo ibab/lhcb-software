@@ -1,6 +1,9 @@
-!  $Id: release.notes,v 1.13 2002-06-10 16:18:26 cattanem Exp $
+!  $Id: release.notes,v 1.14 2002-06-28 15:20:32 cattanem Exp $
 Package L0Muon
 Package manager: A.Tsaregorodtsev
+
+! 2002-06-28 - A.Tsaregorodtsev
+ - Fix to L0mTrigger to be compatible with new digitization
 
 ! 2002-06-10 - Marco Cattaneo
  - Change version to v6r0 to use EventKernel v2r*
