@@ -1,4 +1,4 @@
-// $Id: RichDelegatedTrackCreatorFromTrStoredTracks.cpp,v 1.2 2004-06-29 19:53:37 jonesc Exp $
+// $Id: RichDelegatedTrackCreatorFromTrStoredTracks.cpp,v 1.3 2004-07-12 14:32:06 jonrob Exp $
 
 // local
 #include "RichDelegatedTrackCreatorFromTrStoredTracks.h"
@@ -40,12 +40,11 @@ RichDelegatedTrackCreatorFromTrStoredTracks( const std::string& type,
 StatusCode RichDelegatedTrackCreatorFromTrStoredTracks::initialize()
 {
   // Sets up various tools and services
-  StatusCode sc = RichRecToolBase::initialize();
+  const StatusCode sc = RichRecToolBase::initialize();
   if ( sc.isFailure() ) { return sc; }
 
   // Setup incident services
-  IIncidentSvc * incSvc = svc<IIncidentSvc>( "IncidentSvc", true );
-  incSvc->addListener( this, IncidentType::BeginEvent );
+  incSvc()->addListener( this, IncidentType::BeginEvent );
 
   // setup mapping between track type and tool pointer
   m_nameToPnt.clear();

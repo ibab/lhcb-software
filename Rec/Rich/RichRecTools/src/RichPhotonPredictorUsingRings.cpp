@@ -1,4 +1,4 @@
-// $Id: RichPhotonPredictorUsingRings.cpp,v 1.2 2004-07-02 14:30:31 jonrob Exp $
+// $Id: RichPhotonPredictorUsingRings.cpp,v 1.3 2004-07-12 14:32:07 jonrob Exp $
 
 // local
 #include "RichPhotonPredictorUsingRings.h"
@@ -42,7 +42,6 @@ RichPhotonPredictorUsingRings::RichPhotonPredictorUsingRings( const std::string&
 
 StatusCode RichPhotonPredictorUsingRings::initialize()
 {
-
   // Sets up various tools and services
   const StatusCode sc = RichRecToolBase::initialize();
   if ( sc.isFailure() ) { return sc; }
@@ -59,8 +58,7 @@ StatusCode RichPhotonPredictorUsingRings::initialize()
   m_maxROI2.push_back( m_maxROI[2]*m_maxROI[2] );
 
   // Setup incident services
-  IIncidentSvc * incSvc = svc<IIncidentSvc>( "IncidentSvc", true );
-  incSvc->addListener( this, IncidentType::BeginEvent );
+  incSvc()->addListener( this, IncidentType::BeginEvent );
 
   // Make sure we are ready for a new event
   InitNewEvent();

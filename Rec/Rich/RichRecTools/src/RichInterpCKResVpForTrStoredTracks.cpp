@@ -1,4 +1,4 @@
-// $Id: RichInterpCKResVpForTrStoredTracks.cpp,v 1.2 2004-06-29 19:53:37 jonesc Exp $
+// $Id: RichInterpCKResVpForTrStoredTracks.cpp,v 1.3 2004-07-12 14:32:06 jonrob Exp $
 
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h"
@@ -84,8 +84,6 @@ StatusCode RichInterpCKResVpForTrStoredTracks::initialize()
 
 StatusCode RichInterpCKResVpForTrStoredTracks::finalize()
 {
-  debug() << "Finalize" << endreq;
-
   // clean up interpolators
   for ( int iR = 0; iR < Rich::NRadiatorTypes; ++iR ) {
     for ( unsigned iT = 0; iT < Rich::Track::NTrTypes; ++iT ) {

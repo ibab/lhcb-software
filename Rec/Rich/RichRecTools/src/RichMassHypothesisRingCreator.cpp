@@ -1,4 +1,4 @@
-// $Id: RichMassHypothesisRingCreator.cpp,v 1.4 2004-06-18 11:21:30 jonesc Exp $
+// $Id: RichMassHypothesisRingCreator.cpp,v 1.5 2004-07-12 14:32:06 jonrob Exp $
 
 // local
 #include "RichMassHypothesisRingCreator.h"
@@ -31,10 +31,10 @@ RichMassHypothesisRingCreator::RichMassHypothesisRingCreator( const std::string&
 
 }
 
-StatusCode RichMassHypothesisRingCreator::initialize() {
-
+StatusCode RichMassHypothesisRingCreator::initialize() 
+{
   // Sets up various tools and services
-  StatusCode sc = RichRecToolBase::initialize();
+  const StatusCode sc = RichRecToolBase::initialize();
   if ( sc.isFailure() ) { return sc; }
 
   // Acquire instances of tools
@@ -42,8 +42,7 @@ StatusCode RichMassHypothesisRingCreator::initialize() {
   acquireTool( "RichRayTraceCKCone", m_rayTrace );
 
   // Setup incident services
-  IIncidentSvc * incSvc = svc<IIncidentSvc>( "IncidentSvc", true );
-  incSvc->addListener( this, IncidentType::BeginEvent );
+  incSvc()->addListener( this, IncidentType::BeginEvent );
 
   // Make sure we are ready for a new event
   InitNewEvent();

@@ -4,6 +4,10 @@
 ! Purpose     : Utility tools for RICH reconstruction algorithms
 !------------------------------------------------------------------------------
 
+! 2004-07-12 - Chris Jones
+ - Minor changes to debug printout (now done from base class)
+ - Use base class methods for incident service access.
+
 ! 2004-07-02 - Chris Jones
  - Update to new IRichRayTracing interface
  - Update to new RichDet detector locations

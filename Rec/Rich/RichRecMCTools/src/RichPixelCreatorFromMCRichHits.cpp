@@ -1,4 +1,4 @@
-// $Id: RichPixelCreatorFromMCRichHits.cpp,v 1.8 2004-06-29 19:45:38 jonesc Exp $
+// $Id: RichPixelCreatorFromMCRichHits.cpp,v 1.9 2004-07-12 14:31:33 jonrob Exp $
 
 // local
 #include "RichPixelCreatorFromMCRichHits.h"
@@ -36,9 +36,8 @@ RichPixelCreatorFromMCRichHits::RichPixelCreatorFromMCRichHits( const std::strin
 
 StatusCode RichPixelCreatorFromMCRichHits::initialize()
 {
-
   // Sets up various tools and services
-  StatusCode sc = RichRecToolBase::initialize();
+  const StatusCode sc = RichRecToolBase::initialize();
   if ( sc.isFailure() ) { return sc; }
 
   // Acquire instances of tools
@@ -46,8 +45,7 @@ StatusCode RichPixelCreatorFromMCRichHits::initialize()
   acquireTool( "RichMCTruthTool", m_mcTool      );
 
   // Setup incident services
-  IIncidentSvc * incSvc = svc<IIncidentSvc>( "IncidentSvc", true );
-  incSvc->addListener( this, IncidentType::BeginEvent );
+  incSvc()->addListener( this, IncidentType::BeginEvent );
 
   // Make sure we are ready for a new event
   InitNewEvent();

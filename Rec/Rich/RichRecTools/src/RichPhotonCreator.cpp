@@ -1,4 +1,4 @@
-// $Id: RichPhotonCreator.cpp,v 1.17 2004-06-29 19:53:38 jonesc Exp $
+// $Id: RichPhotonCreator.cpp,v 1.18 2004-07-12 14:32:06 jonrob Exp $
 
 // local
 #include "RichPhotonCreator.h"
@@ -46,8 +46,8 @@ RichPhotonCreator::RichPhotonCreator( const std::string& type,
 
 }
 
-StatusCode RichPhotonCreator::initialize() {
-
+StatusCode RichPhotonCreator::initialize() 
+{
   // Sets up various tools and services
   const StatusCode sc = RichRecToolBase::initialize();
   if ( sc.isFailure() ) { return sc; }
@@ -58,9 +58,8 @@ StatusCode RichPhotonCreator::initialize() {
   acquireTool( "RichPhotonPredictor",   m_photonPredictor );
 
   // Setup incident services
-  IIncidentSvc * incSvc = svc<IIncidentSvc>( "IncidentSvc", true );
-  incSvc->addListener( this, IncidentType::BeginEvent );
-  if (msgLevel(MSG::DEBUG)) incSvc->addListener( this, IncidentType::EndEvent );
+  incSvc()->addListener( this, IncidentType::BeginEvent );
+  if (msgLevel(MSG::DEBUG)) incSvc()->addListener( this, IncidentType::EndEvent );
 
   // Make sure we are ready for a new event
   InitNewEvent();

@@ -1,4 +1,4 @@
-// $Id: RichPixelCreatorFromSignalRichDigits.cpp,v 1.2 2004-06-29 19:45:38 jonesc Exp $
+// $Id: RichPixelCreatorFromSignalRichDigits.cpp,v 1.3 2004-07-12 14:31:34 jonrob Exp $
 
 // local
 #include "RichPixelCreatorFromSignalRichDigits.h"
@@ -39,9 +39,8 @@ RichPixelCreatorFromSignalRichDigits( const std::string& type,
 
 StatusCode RichPixelCreatorFromSignalRichDigits::initialize()
 {
-
   // Sets up various tools and services
-  StatusCode sc = RichRecToolBase::initialize();
+  const StatusCode sc = RichRecToolBase::initialize();
   if ( sc.isFailure() ) { return sc; }
 
   // Acquire instances of tools
@@ -49,9 +48,8 @@ StatusCode RichPixelCreatorFromSignalRichDigits::initialize()
   acquireTool( m_subPixelCreatorName, m_pixMaker );
 
   // Setup incident services
-  IIncidentSvc * incSvc = svc<IIncidentSvc>( "IncidentSvc", true );
-  incSvc->addListener( this, IncidentType::BeginEvent );
-  if (msgLevel(MSG::DEBUG)) incSvc->addListener( this, IncidentType::EndEvent );
+  incSvc()->addListener( this, IncidentType::BeginEvent );
+  if (msgLevel(MSG::DEBUG)) incSvc()->addListener( this, IncidentType::EndEvent );
 
   // Make sure we are ready for a new event
   InitNewEvent();

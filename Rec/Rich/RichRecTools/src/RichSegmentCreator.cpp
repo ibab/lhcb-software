@@ -1,4 +1,4 @@
-// $Id: RichSegmentCreator.cpp,v 1.9 2004-06-29 19:53:39 jonesc Exp $
+// $Id: RichSegmentCreator.cpp,v 1.10 2004-07-12 14:32:07 jonrob Exp $
 
 // local
 #include "RichSegmentCreator.h"
@@ -39,15 +39,13 @@ RichSegmentCreator::RichSegmentCreator ( const std::string& type,
 
 StatusCode RichSegmentCreator::initialize() 
 {
-
   // Sets up various tools and services
   const StatusCode sc = RichRecToolBase::initialize();
   if ( sc.isFailure() ) { return sc; }
 
   // Setup incident services
-  IIncidentSvc * incSvc = svc<IIncidentSvc>( "IncidentSvc", true );
-  incSvc->addListener( this, IncidentType::BeginEvent );
-  if (msgLevel(MSG::DEBUG)) incSvc->addListener( this, IncidentType::EndEvent );
+  incSvc()->addListener( this, IncidentType::BeginEvent );
+  if (msgLevel(MSG::DEBUG)) incSvc()->addListener( this, IncidentType::EndEvent );
 
   // Get the max/min photon energies
   IRichDetParameters * detParams;

@@ -1,4 +1,4 @@
-// $Id: RichPixelCreatorFromRichDigits.cpp,v 1.11 2004-06-29 19:53:38 jonesc Exp $
+// $Id: RichPixelCreatorFromRichDigits.cpp,v 1.12 2004-07-12 14:32:07 jonrob Exp $
 
 // local
 #include "RichPixelCreatorFromRichDigits.h"
@@ -33,8 +33,8 @@ RichPixelCreatorFromRichDigits::RichPixelCreatorFromRichDigits( const std::strin
 
 }
 
-StatusCode RichPixelCreatorFromRichDigits::initialize() {
-
+StatusCode RichPixelCreatorFromRichDigits::initialize() 
+{
   // Sets up various tools and services
   const StatusCode sc = RichRecToolBase::initialize();
   if ( sc.isFailure() ) { return sc; }
@@ -43,9 +43,8 @@ StatusCode RichPixelCreatorFromRichDigits::initialize() {
   acquireTool( "RichSmartIDTool", m_smartIDTool );
 
   // Setup incident services
-  IIncidentSvc * incSvc = svc<IIncidentSvc>( "IncidentSvc", true );
-  incSvc->addListener( this, IncidentType::BeginEvent );
-  if (msgLevel(MSG::DEBUG)) incSvc->addListener( this, IncidentType::EndEvent );
+  incSvc()->addListener( this, IncidentType::BeginEvent );
+  if (msgLevel(MSG::DEBUG)) incSvc()->addListener( this, IncidentType::EndEvent );
 
   // Make sure we are ready for a new event
   InitNewEvent();
@@ -73,8 +72,8 @@ void RichPixelCreatorFromRichDigits::handle ( const Incident& incident )
 
 // Forms a new RichRecPixel object from a RichDigit
 RichRecPixel *
-RichPixelCreatorFromRichDigits::newPixel( const ContainedObject * obj ) const {
-
+RichPixelCreatorFromRichDigits::newPixel( const ContainedObject * obj ) const 
+{
   // Try to cast to RichDigit
   const RichDigit * digit = dynamic_cast<const RichDigit*>(obj);
   if ( !digit ) {
@@ -123,8 +122,8 @@ RichPixelCreatorFromRichDigits::newPixel( const ContainedObject * obj ) const {
 
 }
 
-StatusCode RichPixelCreatorFromRichDigits::newPixels() const {
-
+StatusCode RichPixelCreatorFromRichDigits::newPixels() const 
+{
   if ( m_allDone ) return StatusCode::SUCCESS;
   m_allDone = true;
 

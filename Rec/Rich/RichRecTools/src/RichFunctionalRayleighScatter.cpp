@@ -1,4 +1,4 @@
-// $Id: RichFunctionalRayleighScatter.cpp,v 1.7 2004-07-02 14:30:31 jonrob Exp $
+// $Id: RichFunctionalRayleighScatter.cpp,v 1.8 2004-07-12 14:32:06 jonrob Exp $
 
 // local
 #include "RichFunctionalRayleighScatter.h"
@@ -25,8 +25,8 @@ RichFunctionalRayleighScatter::RichFunctionalRayleighScatter ( const std::string
 
 }
 
-StatusCode RichFunctionalRayleighScatter::initialize() {
-
+StatusCode RichFunctionalRayleighScatter::initialize() 
+{
   // Sets up various tools and services
   const StatusCode sc = RichRecToolBase::initialize();
   if ( sc.isFailure() ) { return sc; }
@@ -39,11 +39,10 @@ StatusCode RichFunctionalRayleighScatter::initialize() {
   m_AeroClarity = Rich1DE->userParameterAsDouble( "AerogelClarity" )/cm;
 
   // Informational Printout
-  debug() << "Initialize" << endreq
-          << " Using analytic implementation" << endreq
+  debug() << " Using analytic implementation"   << endreq
           << " eV to mm conversion factor   = " << m_eVToMicron << endreq
           << " Aerogel clarity              = " << m_AeroClarity << endreq;
-
+  
   return StatusCode::SUCCESS;
 }
 

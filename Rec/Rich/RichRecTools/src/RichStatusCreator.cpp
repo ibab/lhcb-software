@@ -1,4 +1,4 @@
-// $Id: RichStatusCreator.cpp,v 1.5 2004-04-19 23:06:15 jonesc Exp $
+// $Id: RichStatusCreator.cpp,v 1.6 2004-07-12 14:32:07 jonrob Exp $
 
 // local
 #include "RichStatusCreator.h"
@@ -28,15 +28,14 @@ RichStatusCreator::RichStatusCreator( const std::string& type,
 
 }
 
-StatusCode RichStatusCreator::initialize() {
-
+StatusCode RichStatusCreator::initialize() 
+{
   // Sets up various tools and services
-  StatusCode sc = RichRecToolBase::initialize();
+  const StatusCode sc = RichRecToolBase::initialize();
   if ( sc.isFailure() ) { return sc; }
 
   // Setup incident services
-  IIncidentSvc * incSvc = svc<IIncidentSvc>( "IncidentSvc", true );
-  incSvc->addListener( this, IncidentType::BeginEvent );
+  incSvc()->addListener( this, IncidentType::BeginEvent );
 
   // Make sure we are ready for a new event
   InitNewEvent();
@@ -44,10 +43,8 @@ StatusCode RichStatusCreator::initialize() {
   return StatusCode::SUCCESS;
 }
 
-StatusCode RichStatusCreator::finalize() {
-
-  debug() << "Finalize" << endreq;
-
+StatusCode RichStatusCreator::finalize() 
+{
   // Execute base class method
   return RichRecToolBase::finalize();
 }

@@ -1,4 +1,4 @@
-// $Id: RichRecoQC.cpp,v 1.9 2004-03-16 13:41:11 jonesc Exp $
+// $Id: RichRecoQC.cpp,v 1.10 2004-07-12 14:32:43 jonrob Exp $
 
 // local
 #include "RichRecoQC.h"
@@ -30,10 +30,10 @@ RichRecoQC::RichRecoQC( const std::string& name,
 RichRecoQC::~RichRecoQC() {};
 
 // Initialisation
-StatusCode RichRecoQC::initialize() {
-
+StatusCode RichRecoQC::initialize() 
+{
   // Sets up various tools and services
-  StatusCode sc = RichRecAlgBase::initialize();
+  const StatusCode sc = RichRecAlgBase::initialize();
   if ( sc.isFailure() ) { return sc; }
 
   // acquire tools
@@ -43,10 +43,6 @@ StatusCode RichRecoQC::initialize() {
 
   // Book histograms
   if ( !bookHistograms() || !bookMCHistograms() ) return StatusCode::FAILURE;
-
-  debug() << "Initialize :-" << endreq
-          << " Histogram location     = " << m_histPth << endreq
-          << " MC Histogram location  = " << m_mcHistPth << endreq;
 
   return StatusCode::SUCCESS;
 };
@@ -136,10 +132,8 @@ StatusCode RichRecoQC::execute() {
 };
 
 //  Finalize
-StatusCode RichRecoQC::finalize() {
-
-  debug() << "Finalize" << endreq;
-
+StatusCode RichRecoQC::finalize() 
+{
   // Execute base class method
   return RichRecAlgBase::finalize();
 }

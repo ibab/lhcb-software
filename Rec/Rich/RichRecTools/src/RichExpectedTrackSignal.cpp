@@ -1,4 +1,4 @@
-// $Id: RichExpectedTrackSignal.cpp,v 1.7 2004-04-19 23:06:08 jonesc Exp $
+// $Id: RichExpectedTrackSignal.cpp,v 1.8 2004-07-12 14:32:06 jonrob Exp $
 
 // local
 #include "RichExpectedTrackSignal.h"
@@ -58,7 +58,7 @@ double RichExpectedTrackSignal::nEmittedPhotons ( RichRecSegment * segment,
 
     // loop over energy bins
     double signal = 0;
-    RichPhotonSpectra & spectra = segment->emittedPhotonSpectra();
+    RichPhotonSpectra<RichRecSegment::FloatType> & spectra = segment->emittedPhotonSpectra();
     for ( unsigned int iEnBin = 0; iEnBin < spectra.energyBins(); ++iEnBin ) {
 
       double phots =
@@ -87,8 +87,8 @@ double RichExpectedTrackSignal::nDetectablePhotons ( RichRecSegment * segment,
 
     // loop over energy bins
     double signal = 0;
-    RichPhotonSpectra & emitSpectra = segment->emittedPhotonSpectra();
-    RichPhotonSpectra & detSpectra  = segment->detectablePhotonSpectra();
+    RichPhotonSpectra<RichRecSegment::FloatType> & emitSpectra = segment->emittedPhotonSpectra();
+    RichPhotonSpectra<RichRecSegment::FloatType> & detSpectra  = segment->detectablePhotonSpectra();
     for ( unsigned int iEnBin = 0; iEnBin < emitSpectra.energyBins(); ++iEnBin ) {
       const double sig = (emitSpectra.energyDist(id))[iEnBin] *
         m_sigDetEff->photonDetEfficiency( segment, emitSpectra.binEnergy(iEnBin) );
@@ -119,8 +119,8 @@ RichExpectedTrackSignal::nSignalPhotons ( RichRecSegment * segment,
       const Rich::RadiatorType rad = segment->trackSegment().radiator();
 
       // loop over energy bins
-      RichPhotonSpectra & sigSpectra = segment->signalPhotonSpectra();
-      const RichPhotonSpectra & detSpectra = segment->detectablePhotonSpectra();
+      RichPhotonSpectra<RichRecSegment::FloatType> & sigSpectra = segment->signalPhotonSpectra();
+      const RichPhotonSpectra<RichRecSegment::FloatType> & detSpectra = segment->detectablePhotonSpectra();
       for ( unsigned int iEnBin = 0; iEnBin < detSpectra.energyBins(); ++iEnBin ) {
 
         const double scattProb =
@@ -159,7 +159,7 @@ RichExpectedTrackSignal::avgSignalPhotEnergy( RichRecSegment * segment,
   if ( nSig> 0 ) {
 
     // loop over energy bins
-    const RichPhotonSpectra & spectra = segment->signalPhotonSpectra();
+    const RichPhotonSpectra<RichRecSegment::FloatType> & spectra = segment->signalPhotonSpectra();
     double totalEnergy = 0;
     for ( unsigned int iEnBin = 0; iEnBin < spectra.energyBins(); ++iEnBin ) {
       avgEnergy   += (spectra.energyDist(id))[iEnBin] * spectra.binEnergy(iEnBin);
@@ -185,7 +185,7 @@ RichExpectedTrackSignal::avgEmitPhotEnergy( RichRecSegment * segment,
   if ( nSig> 0 ) {
 
     // loop over energy bins
-    RichPhotonSpectra & spectra = segment->emittedPhotonSpectra();
+    RichPhotonSpectra<RichRecSegment::FloatType> & spectra = segment->emittedPhotonSpectra();
     double totalEnergy = 0;
     for ( unsigned int iEnBin = 0; iEnBin < spectra.energyBins(); ++iEnBin ) {
       avgEnergy   += (spectra.energyDist(id))[iEnBin] * spectra.binEnergy(iEnBin);

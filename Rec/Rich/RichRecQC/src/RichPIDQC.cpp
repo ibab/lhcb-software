@@ -1,4 +1,4 @@
-// $Id: RichPIDQC.cpp,v 1.21 2004-06-29 19:39:54 jonesc Exp $
+// $Id: RichPIDQC.cpp,v 1.22 2004-07-12 14:32:43 jonrob Exp $
 // Include files
 
 // from Gaudi
@@ -48,10 +48,8 @@ RichPIDQC::~RichPIDQC() {};
 // Initialisation
 StatusCode RichPIDQC::initialize() 
 {
-  debug() << "Initialize" << endreq;
-
   // Initialize base class
-  StatusCode sc = RichAlgBase::initialize();
+  const StatusCode sc = RichAlgBase::initialize();
   if ( sc.isFailure() ) { return sc; }
 
   // Check momentum cuts make sense
@@ -339,8 +337,6 @@ StatusCode RichPIDQC::execute()
 //  Finalize
 StatusCode RichPIDQC::finalize() 
 {
-  debug() << "Finalize" << endreq;
-
   if ( m_truth && m_finalPrintOut ) {
 
     // index variables

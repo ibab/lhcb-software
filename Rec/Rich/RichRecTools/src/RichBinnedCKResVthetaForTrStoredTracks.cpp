@@ -1,4 +1,4 @@
-// $Id: RichBinnedCKResVthetaForTrStoredTracks.cpp,v 1.2 2004-06-29 19:53:37 jonesc Exp $
+// $Id: RichBinnedCKResVthetaForTrStoredTracks.cpp,v 1.3 2004-07-12 14:32:06 jonrob Exp $
 
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h"
@@ -130,8 +130,6 @@ RichBinnedCKResVthetaForTrStoredTracks::RichBinnedCKResVthetaForTrStoredTracks (
 
 StatusCode RichBinnedCKResVthetaForTrStoredTracks::initialize() 
 {
-  debug() << "Initialize" << endreq;
-
   // Sets up various tools and services
   const StatusCode sc = RichRecToolBase::initialize();
   if ( sc.isFailure() ) { return sc; }
@@ -154,8 +152,6 @@ StatusCode RichBinnedCKResVthetaForTrStoredTracks::initialize()
 
 StatusCode RichBinnedCKResVthetaForTrStoredTracks::finalize()
 {
-  debug() << "Finalize" << endreq;
-
   // Execute base class method
   return RichRecToolBase::finalize();
 }

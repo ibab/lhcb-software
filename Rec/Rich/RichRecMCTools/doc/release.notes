@@ -4,6 +4,10 @@
 ! Purpose     : Monte Carlo Utility tools for RICH reconstruction algorithms
 !------------------------------------------------------------------------------
 
+! 2004-07-12 - Chris Jones
+ - Minor changes to debug printout (now done from base class)
+ - Use base class methods for incident service access.
+
 ! 2004-06-29 - Chris Jones
  - Various minor updates (requires new RichSmartID)
 
