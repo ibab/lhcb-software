@@ -1,8 +1,11 @@
-// $Id: DeCalorimeter.cpp,v 1.19 2002-10-03 10:21:42 cattanem Exp $ 
+// $Id: DeCalorimeter.cpp,v 1.20 2002-12-17 15:39:53 ocallot Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.19  2002/10/03 10:21:42  cattanem
+// fix buggy usage of abs()
+//
 // Revision 1.18  2002/06/15 06:25:25  ocallot
 // new user parameters for x/y cell size and central hole
 //
@@ -450,6 +453,9 @@ StatusCode DeCalorimeter::buildCards( )  {
     // ** A cards starts at the first row/column
     // ** For the columns, this is always starting at 0 (or 8).
 
+    int validationCard;
+    int prevValidation = -1;
+
     int firstRow = -1;
     for ( int iRow = 0; (maxRowCol >= iRow ) && (firstRow < 0); ++iRow ) {
       CaloCellID anID( m_caloIndex, iArea , iRow , firstRowUp );
@@ -484,18 +490,6 @@ StatusCode DeCalorimeter::buildCards( )  {
                   CaloCellID testID( m_caloIndex, iArea , iRow-1 , iCol+cc );
                   if ( cardNumber(testID) >= 0 ) {
                     downCard = cardNumber(testID);
-
-                    // ** Define the 'previous' card (ECAL only), 
-                    // ** the previous (down) card in the
-                    // ** same validation card.
-                    // ** This is the down card, except if the card 
-                    // ** is just over the horizontal
-                    // ** line
-
-                    if ( (iRow < firstRowUp) ||
-                         (iRow > firstRowUp + nRowCaloCard) ) {
-                      previousCard = downCard;
-                    }
                   }
                 }
   
@@ -521,9 +515,67 @@ StatusCode DeCalorimeter::buildCards( )  {
           }  // ** Column in card
  
           if ( nchan > 0 ) {
+
+            //== Hardcoded validation card number...
+            
+            if (                   6 >= m_cards ) validationCard = 0 ;
+            if (  7 <= m_cards && 12 >= m_cards ) validationCard = 1 ;
+            if ( 13 <= m_cards && 19 >= m_cards ) validationCard = 2 ;
+            if ( 20 <= m_cards && 25 >= m_cards ) validationCard = 3 ;
+            if ( 26 <= m_cards && 29 >= m_cards ) validationCard = 4 ;
+            if ( 30 <= m_cards && 33 >= m_cards ) validationCard = 5 ;
+            if ( 34 <= m_cards && 37 >= m_cards ) validationCard = 4 ;
+            if ( 38 <= m_cards && 41 >= m_cards ) validationCard = 5 ;
+            if ( 42 <= m_cards && 45 >= m_cards ) validationCard = 6 ;
+            if ( 46 <= m_cards && 49 >= m_cards ) validationCard = 7 ;
+            if ( 50 <= m_cards && 53 >= m_cards ) validationCard = 6 ;
+            if ( 54 <= m_cards && 57 >= m_cards ) validationCard = 7 ;
+            if ( 58 <= m_cards && 64 >= m_cards ) validationCard = 8 ;
+            if ( 65 <= m_cards && 70 >= m_cards ) validationCard = 9 ;
+            if ( 71 <= m_cards && 77 >= m_cards ) validationCard = 10 ;
+            if ( 78 <= m_cards && 83 >= m_cards ) validationCard = 11 ;
+
+            if ( 84 <= m_cards &&  89 >= m_cards ) validationCard = 12 ;
+            if ( 90 <= m_cards &&  93 >= m_cards ) validationCard = 13 ;
+            if ( 94 <= m_cards &&  99 >= m_cards ) validationCard = 14 ;
+            if (100 <= m_cards && 103 >= m_cards ) validationCard = 15 ;
+            if (104 <= m_cards && 105 >= m_cards ) validationCard = 13 ;
+            if (106 <= m_cards && 107 >= m_cards ) validationCard = 15 ;
+            if (108 <= m_cards && 109 >= m_cards ) validationCard = 13 ;
+            if (110 <= m_cards && 111 >= m_cards ) validationCard = 15 ;
+            if (112 <= m_cards && 113 >= m_cards ) validationCard = 16 ;
+            if (114 <= m_cards && 115 >= m_cards ) validationCard = 17 ;
+            if (116 <= m_cards && 117 >= m_cards ) validationCard = 16 ;
+            if (118 <= m_cards && 119 >= m_cards ) validationCard = 17 ;
+            if (120 <= m_cards && 123 >= m_cards ) validationCard = 16 ;
+            if (124 <= m_cards && 129 >= m_cards ) validationCard = 18 ;
+            if (130 <= m_cards && 133 >= m_cards ) validationCard = 17 ;
+            if (134 <= m_cards && 139 >= m_cards ) validationCard = 19 ;
+    
+            if (140 <= m_cards && 142 >= m_cards ) validationCard = 20 ;
+            if (143 <= m_cards && 148 >= m_cards ) validationCard = 21 ;
+            if (149 <= m_cards && 154 >= m_cards ) validationCard = 22 ;
+            if (155 <= m_cards && 157 >= m_cards ) validationCard = 23 ;
+            if (158 <= m_cards && 160 >= m_cards ) validationCard = 20 ;
+            if (161 <= m_cards && 163 >= m_cards ) validationCard = 23 ;
+            if (164 <= m_cards && 166 >= m_cards ) validationCard = 24 ;
+            if (167 <= m_cards && 169 >= m_cards ) validationCard = 25 ;
+            if (170 <= m_cards && 175 >= m_cards ) validationCard = 26 ;
+            if (176 <= m_cards && 178 >= m_cards ) validationCard = 25 ;
+            if (179 <= m_cards && 181 >= m_cards ) validationCard = 24 ;
+            if (182 <= m_cards && 187 >= m_cards ) validationCard = 27 ;
+
+            if ( prevValidation == validationCard ) {
+              previousCard = downCard;
+            }
+            else {
+              prevValidation = validationCard;
+            }
+
             feCards.push_back( CardParam( iArea, iRow, iCol ) ); // add card
             feCards[m_cards].setNeighboringCards( downCard,    leftCard,
                                                   cornerCard , previousCard);
+            feCards[m_cards].setValidationNumber( validationCard );
             m_cards = m_cards + 1;
           } // ** Finished creating a new card with its cells.
         } // ** Row

@@ -1,8 +1,11 @@
-// $Id: DeCalorimeter.h,v 1.11 2002-06-15 06:25:25 ocallot Exp $ 
+// $Id: DeCalorimeter.h,v 1.12 2002-12-17 15:39:53 ocallot Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.11  2002/06/15 06:25:25  ocallot
+// new user parameters for x/y cell size and central hole
+//
 // Revision 1.10  2002/04/02 14:55:16  ibelyaev
 //  add 'const' qualifier to DeCalorimeter::Cell method
 //
@@ -180,6 +183,8 @@ public:
                                   int&      down   , 
                                   int&      left   ,  
                                   int&      corner )  const ;
+  ///  Validation card number
+  inline int validationNumber   ( const int card   )  const ;
   ///  card area 
   inline int cardArea           ( const int card   )  const ;
   ///  card first row 
@@ -439,6 +444,12 @@ inline int DeCalorimeter::cornerCardNumber( const int card )  const
 // ============================================================================
 inline int DeCalorimeter::previousCardNumber(const int card ) const
 {  return feCards[card].previousNumber();}
+
+// ============================================================================
+//  validation card number 
+// ============================================================================
+inline int DeCalorimeter::validationNumber(const int card ) const
+{  return feCards[card].validationNumber();}
 
 // ============================================================================
 //  card neighbours

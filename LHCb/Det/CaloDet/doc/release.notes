@@ -1,8 +1,19 @@
-! $Id: release.notes,v 1.29 2002-12-01 14:19:02 ibelyaev Exp $ 
+! $Id: release.notes,v 1.30 2002-12-17 15:39:53 ocallot Exp $ 
 ! =============================================================================
 Package         : CaloDet   
 Package manager : Vanya Belyaev Ivan.Belyaev@itep.ru
 
+! 2002-12-15 - Olivier Callot
+ - Added the concept of Validation Card, new method to retrieve the validation
+   card for a given card, valid and useful only for Ecal cards.
+ - Fixed a 'previousCard' problem for Ecal cards having a boundary just on the 
+   horizontal central line. They had no previous card. This affects only the
+   pi0 global trigger. 
+
+!========================= CaloDet v6r2 2002-11-19 =========================
+                              built on v5r2b branch
+! 2002-11-19 - Florence Ranjard
+ - cmt/requirements - move to new versions 
 ! 2002-11-29 - Ivan Belyaev
  - cmt/requirements           version update 
 
