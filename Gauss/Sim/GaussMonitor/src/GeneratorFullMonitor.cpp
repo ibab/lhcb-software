@@ -1,4 +1,4 @@
-// $Id: GeneratorFullMonitor.cpp,v 1.1.1.1 2004-04-07 15:03:36 gcorti Exp $
+// $Id: GeneratorFullMonitor.cpp,v 1.2 2004-04-29 17:19:13 gcorti Exp $
 // Include files 
 
 // from Gaudi
@@ -67,7 +67,9 @@ GeneratorFullMonitor::GeneratorFullMonitor( const std::string& name,
     , m_isBB( ) 
     , m_nPartMax( 2000 ) 
     , m_nInterMax( 20 ) 
+    , m_inputData( HepMCEventLocation::Default )
 {
+  declareProperty( "Input", m_inputData );
 }
 
 //=============================================================================
@@ -230,12 +232,12 @@ StatusCode GeneratorFullMonitor::execute() {
 
 
   // Get HepMCEvents
-  SmartDataPtr< HepMCEvents > hepVect ( eventSvc() ,
-                                        "/Event/Gen/HepMCEvents" ) ;
+  SmartDataPtr< HepMCEvents > hepVect ( eventSvc() , m_inputData ) ;
   
   if ( ! hepVect ) {
-    msg << MSG::INFO << "This event has no HepMCEvent" 
+    msg << MSG::WARNING << "This event has no HepMCEvent" 
         << endreq ;
+    return StatusCode::FAILURE;
   } else {
     // Loop over events
     HepMCEvents::iterator it ;
@@ -247,7 +249,7 @@ StatusCode GeneratorFullMonitor::execute() {
           it != hepVect -> end  () ;
           it++ ) {
       m_isBB[ m_nInter ] = 0 ;
-      msg << MSG::INFO << "generator type " 
+      msg << MSG::DEBUG << "Generator process = " 
           << (*it)->pGenEvt()->signal_process_id()
           << endreq;
       // loop over all vertices in event

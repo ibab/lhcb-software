@@ -4,6 +4,22 @@
 ! Purpose     : Hold monitoring algorithms for Gauss
 !-----------------------------------------------------------------------------
 
+!======================= GaussMonitor v1r1 2004-04-29 ========================
+! 2004-04-29 - Gloria CORTI
+ - src/GeneratorFullMonitor.{h,cpp}
+   . introduce location where to read data from as option (Input). Default
+     set to HepMCEventLocation::Default
+ - src/MCTruthFullMonitor.cpp
+   . some clean up
+ - src/src/MCDecayCounter.{h,cpp}
+   . new algorithm that provided an asci decay descriptor (via option
+     ) will count the number of decays of this type. If printout level
+     in DEBUG it also print the signal info as found in "/Event/MC/Signal"
+     for HepMC and the pointer to MCParticle and what found by the 
+     MCDecayFinder in the whole "/Event/MC/Particles".
+ - cmt/requirements
+   . use MCTools
+
 !========================= GaussMonitor v1r0 2004-04-07 =======================
 ! 2004-04-07 - Gloria CORTI
  - New package to hold generic monitors for Gauss. This first import

@@ -1,4 +1,4 @@
-// $Id: MCTruthFullMonitor.cpp,v 1.1.1.1 2004-04-07 15:03:36 gcorti Exp $
+// $Id: MCTruthFullMonitor.cpp,v 1.2 2004-04-29 17:19:13 gcorti Exp $
 // Include files 
 
 // from Gaudi
@@ -83,34 +83,6 @@ StatusCode MCTruthFullMonitor::initialize() {
       }
     }
   }
-
-  msg << MSG::INFO << "Retrieving Detector element" << endreq;
-  SmartDataPtr<DetectorElement> detLHCb ( detSvc(),"/dd/Structure/LHCb" );
-  if( 0 == detLHCb ) {
-    msg << MSG::ERROR << "Unable to retrieve Detector Element = "
-        << "/dd/Structure/LHCb" << endreq;
-    return StatusCode::FAILURE ;
-  }
-
-  // Check in which volume this z position is
-//   IGeometryInfo* ginfo = detLHCb->geometry();
-//   double zScan = m_zVolMin;
-//   int level = 10;
-//   std::string path = "";
-//   ILVolume::PVolumePath pvol;
-//   StatusCode sc = StatusCode::SUCCESS;
-//   while( zScan <= m_zVolMax ) {
-//     HepPoint3D pos(500.0,500.0,zScan);
-//     sc = ginfo->fullGeoInfoForPoint(pos,level,path,pvol);
-//     if( !sc.isSuccess() ) {
-//       msg << MSG::INFO << "Geomtry info not found" << endreq;
-//     } else {
-//       msg << MSG::INFO << "Path and DetName at z = " << zScan 
-//           << ": " << path << endreq;
-//       //<< ", " << pvol.name()     }
-//     }
-//     zScan += 1.0;  
-//   }
   
   return StatusCode::SUCCESS;
 };
@@ -122,42 +94,6 @@ StatusCode MCTruthFullMonitor::execute() {
 
   MsgStream  msg( msgSvc(), name() );
 
-  SmartDataPtr<GenMCLinks> sigLinks(evtSvc(), GenMCLinkLocation::Default);
-  if( !sigLinks ) {
-    msg << MSG::DEBUG << "GenMCLinks not found at"
-        << GenMCLinkLocation::Default
-        << endreq;
-  }
-  else if( sigLinks->size() != 1 ) {
-    msg << MSG::DEBUG << "More than one signal found"
-        << endreq;
-  }
-  else {
-    for( GenMCLinks::iterator aLink = sigLinks->begin();
-         sigLinks->end() != aLink; ++aLink ) {
-      
-      msg << MSG::DEBUG << "Signal info from MCParticle id = "
-          << (*aLink)->signal()->particleID().pid()
-          << " , momentum = (" << (*aLink)->signal()->momentum().px() 
-          << " ," << (*aLink)->signal()->momentum().py() 
-          << " ," << (*aLink)->signal()->momentum().pz() 
-          << " ," << (*aLink)->signal()->momentum().e() 
-          << " )" << endreq;
-      HepMC::GenEvent* genEvt = (*aLink)->hepMCEvent()->pGenEvt();
-      HepMC::GenParticle* genP = genEvt->barcode_to_particle((*aLink)->genBarCode() );
-      msg << MSG::DEBUG << "Signal info from HepMC id = " 
-          << genP->pdg_id() 
-          << " , momentum = (" << genP->momentum().px()
-          << " ," << genP->momentum().py()
-          << " ," << genP->momentum().pz()
-          << " ," << genP->momentum().e()
-          << " )" << endreq;
-      msg << MSG::DEBUG << "Signal Process type = "
-          << (*aLink)->hepMCEvent()->pGenEvt()->signal_process_id()
-          << endreq;
-      }
-  }
-  
   SmartDataPtr<Collisions> colls(evtSvc(), CollisionLocation::Default);
   if( !colls ) {
     msg << MSG::ERROR << "Collisions not found at" 
