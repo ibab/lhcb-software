@@ -1,9 +1,12 @@
-$ Header: $
+$Id: release.notes,v 1.11 2001-12-11 00:48:53 mato Exp $
 Package: DetDescExample
 Package Manager: I.Belyaev
 
 Purpose: Demonstrate how to access detector elements, their geometry 
          parameters and materials from detector description XML database.
+
+! 20011211 - DetDescExample v3 (Pere)
+  Adapted to Gaudi v9r0
 
 !20011123 v3 Sebastien Ponce
  - new version number

@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.12 2001-11-23 17:35:12 sponce Exp $
+# $Id: requirements,v 1.13 2001-12-11 00:48:53 mato Exp $
 package DetDescExample
 version v3
 
@@ -8,11 +8,11 @@ branches doc src options cmt
 use GaudiConf     v5*     
 
 # GAUDI framework
-use GaudiSys      v9*
+use GaudiSys      v9r*
 
 # Detector Description package and database
 use DetDesc       v9*   Det
-use XmlDDDB       v6*   Det
+use XmlDDDB       v7*   Det
 
 #==> DetDesc example
 application DetDescExample *.cpp \
