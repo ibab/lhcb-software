@@ -1,13 +1,12 @@
 !Package         : STDet
 !Package manager : M. Needham
 
-! 2004-03-02 
+!========================= STDet v1r1 2004-03-02 ========================
+! 2004-03-02 - M.needham
+ - Bug fixs in TTLayer
 
-  Bug fixs in TTLayer
-
-!========================= STDet v1r1 2004-02-25 ========================
 ! 2004-02-18 - M Needham
-  Add functions to return all z positions of ladders
+ - Add functions to return all z positions of ladders
 
 !========================= STDet v1r0 2004-02-02 ========================
 ! 2004-01-29 - M Needham
