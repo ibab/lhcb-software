@@ -1,4 +1,4 @@
-# $Id: README,v 1.17 2002-03-28 17:25:42 andreav Exp $
+# $Id: README,v 1.18 2002-04-05 16:39:10 andreav Exp $
 
 Two examples are distributed in this package: a test of condition data 
 stored in flat XML files, and a test of condition data stored in the CondDB.
@@ -48,14 +48,14 @@ Check the result with
 
 To run the detector condition example, you need the following packages:
         cd ~/newmycmt
-        getpack Det/DetCond        v2r1
-        getpack Ex/DetCondExample  v2r1
+        getpack Det/DetCond        v2r1     head
+        getpack Ex/DetCondExample  v2r1     head
 Under Linux (RedHat6.1)
-        getpack CONDDB             v3r02
+        getpack CONDDB             v3r02p1
 Under Windows:
-        getpack Det/CondDBOracle   v3r10 
+        getpack Det/CondDBOracle   v3r10    head
 Under Linux (RedHat7.2)
-        getpack Det/CondDBOracle   v3r10 
+        getpack Det/CondDBOracle   v3r10    head
 	
 Under Linux (RedHat7.2) many more packages need to be getpack'ed and MODIFIED.
 Refer to the doc/README.RedHat72 for more details.
