@@ -7,5 +7,5 @@ VeloMonitor.TestMCVeloFE        = true; // default true
 VeloMonitor.TestVeloFullDigit   = true; // default true
 VeloMonitor.TestVeloCluster     = true; // default true
 VeloMonitor.Resolution          = true;  // default false
-VeloMonitor.Printout            = 5;    // default 0
+VeloMonitor.Printout            = 0;    // default 0
 VeloMonitor.OutputLevel = 3;
