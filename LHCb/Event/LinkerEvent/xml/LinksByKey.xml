@@ -11,7 +11,8 @@
       name     = "LinkReference"
       author   = "Olivier Callot"
       desc     = "Entry to get a reference to a keyed object" >
-      
+      &StlVector;
+
       <constructor 
         desc   = "Constructor with arguments" 
         argList= "int srcLinkID, int linkID, int key, int nextIndex, double weight">
@@ -84,7 +85,7 @@ m_increasing = false;
         desc      = "List of linked objects" />
 
       <attribute
-	type      = "std::vector&lt;LinkReference &gt;"
+	type      = "std::vector&lt;LinkReference&gt;"
         name      = "linkReference"
 	setMeth   = "FALSE"
 	getMeth   = "FALSE"

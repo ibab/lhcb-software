@@ -5,6 +5,9 @@
 !-----------------------------------------------------------------------------
 
 !====================== LinkerEvent v1r1 2004-01-27 ==========================
+! 2004-01-27 - Marco Cattaneo
+ - Add magic lines to the xml to produce lcg dictionary
+
 ! 2004-01-26 - Olivier Callot
  - Replace the std::map<int,int> by a std::vector<std::pair<int,int> > to
    access more efficiently the data. Insertion is done in such way to keep
