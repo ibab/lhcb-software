@@ -1,6 +1,11 @@
 package EventSys
 package manager: Marco Cattaneo
 
+!========================= EventSys v13r0 2002-10-01 =========================
+! 2002-10-01 - Florence Ranjard
+ - Use new versions based on new Gaudi
+
+!========================= EventSys v12r4 2002-09-24 ========================
 ! 2002-09-24 - Marco Cattaneo
  - Use TrEvent v11r2
 
