@@ -8,9 +8,10 @@ ApplicationMgr.DLLs   += { "DetDesc" };
 // Location of detector description XML database is a URL
 // so never use "\" (Use only "/")
 //--------------------------------------------------------------
-DetDescSvc.DetDbLocation  = "$DDDB/dddb.xml";
-DetDescSvc.DetDbRootName  = "dd";
-DetDescSvc.DetStorageType = 7;
+DetectorDataSvc.UsePersistency = true;
+DetectorDataSvc.DetDbLocation  = "$DDDB/dddb.xml";
+DetectorDataSvc.DetDbRootName  = "dd";
+DetectorDataSvc.DetStorageType = 7;
 
 // Detector Persistency service setup: 
 DetectorPersistencySvc.CnvServices = { "XmlCnvSvc" };
