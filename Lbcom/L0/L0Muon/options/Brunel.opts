@@ -27,4 +27,4 @@ L0mTriggerProc.M1Extrapolation = {0,4,7,11,14,18,21,25};
 // Bin width for storing the Pt value
 L0mTriggerProc.PtPrecision = 40.;
 // Max number of bins to encode abs of Pt value
-L0mTriggerProc.PtMaxBits = 128;
+L0mTriggerProc.PtMaxBins = 128;
