@@ -1,6 +1,6 @@
 #ifndef   L0CALO_L0CALOALG_H
 #define   L0CALO_L0CALOALG_H  1
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/L0/L0Calo/src/L0CaloAlg.h,v 1.6 2002-04-15 11:16:19 ocallot Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/L0/L0Calo/src/L0CaloAlg.h,v 1.7 2002-11-21 17:14:22 ocallot Exp $
 
 // from STL 
 #include <cmath>
@@ -118,7 +118,7 @@ public:
    *  @param card Integer card number
    *  @param ID ClaoCellID location of the candidate 
    */
-  void        setCandidate( int et, int card, CaloCellID ID ) ;
+  void        setCandidate( int et, CaloCellID ID ) ;
 
   /** Save the candidate in the output container as L0CaloCandidate
    *  @param type : Type of candidate, from L0::L0Type
@@ -131,11 +131,9 @@ public:
   HepPoint3D  center( )    const { return m_center ; };
   double      tolerance( ) const { return m_tol    ; };
   CaloCellID  ID( )        const { return m_ID     ; };
-  int         card( )      const { return m_card   ; };
 
  private:
   int            m_et     ;
-  int            m_card   ;
   double         m_etScale;
   CaloCellID     m_ID     ;
   DeCalorimeter* m_det    ;

@@ -1,6 +1,22 @@
-! $Id: release.notes,v 1.23 2002-11-14 15:55:54 cattanem Exp $
+! $Id: release.notes,v 1.24 2002-11-21 17:14:22 ocallot Exp $
 Package		: L0/L0Calo
 Package Manager : Olivier Callot
+
+! 2002-11-21 - Olivier Callot
+ - For global pi0, perform ghost cleaning, i.e. don't add the two clusters
+   if they share a cell.
+ - Do global Pi0 also if the card is empty: The next may be not, and the total
+   may be a good candidate, as the next may have no neighbour. Small effect !
+ - Technical changes: log->msg, use 'format' instead of msg.width().
+ - Photon trigger was and is EXCLUSIVE from electron trigger, i.e. when the Prs
+   is ON, the candidate is either an electron (SPD ok) or a photon. As the 
+   electron trigger has a lower threshold, this doesn't change the trigger 
+   rate. But do not select photon trigger exclusively for photon physics !
+
+! 2002-11-19 - Olivier Callot
+ - Use the full calorimeter containers to start from the complete digits.
+ - Add a Prs validation for the local pi0: At least one of the 4 cells.
+ - Some obsolete code has been cleaned up.
 
 !========================= L0Calo v6r2 2002-11-14 =======================
 ! 2002-11-14 - Marco Cattaneo

@@ -1,4 +1,4 @@
-// $Id: L0CaloDigit.cpp,v 1.5 2002-04-05 15:15:49 ocallot Exp $
+// $Id: L0CaloDigit.cpp,v 1.6 2002-11-21 17:14:22 ocallot Exp $
 // Include files
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -32,10 +32,10 @@ const        IAlgFactory& L0CaloDigitFactory = Factory ;
 L0CaloDigit::L0CaloDigit( const std::string& name,
                           ISvcLocator* pSvcLocator)
   : Algorithm ( name , pSvcLocator )
-  , m_nameOfEcalDataContainer   ( CaloDigitLocation::Ecal )
-  , m_nameOfHcalDataContainer   ( CaloDigitLocation::Hcal )
-  , m_nameOfPrsDataContainer    ( CaloDigitLocation::Prs  )
-  , m_nameOfSpdDataContainer    ( CaloDigitLocation::Spd  )
+  , m_nameOfEcalDataContainer   ( CaloDigitLocation::FullEcal )
+  , m_nameOfHcalDataContainer   ( CaloDigitLocation::FullHcal )
+  , m_nameOfPrsDataContainer    ( CaloDigitLocation::FullPrs  )
+  , m_nameOfSpdDataContainer    ( CaloDigitLocation::FullSpd  )
   , m_nameOfEcalOutput          ( L0CaloAdcLocation::Ecal     )
   , m_nameOfHcalOutput          ( L0CaloAdcLocation::Hcal     )
   , m_nameOfPrsOutput           ( L0PrsSpdHitLocation::Prs    )
@@ -180,19 +180,6 @@ StatusCode L0CaloDigit::execute() {
     double eT     = energy * m_hcal->cellSine(ID) ;
     int    digEt  = (int) floor( eT/m_etScale + .5 ) ; // Round to nearest int.
     if ( 255 < digEt ) { digEt = 255 ; }
-
-    //================================================================
-    //  Special test: Remove the first/last 6 row of HCAL....
-    //  HCAL will now be from row 9 to 22 instead of 3 to 28
-    //================================================================
-    //int area = ID.area();
-    //int row  = ID.row();
-    //if ( 0 == area ) {
-    //  if ( ( 9 > row) || ( 22 < row ) ) {
-    //    digEt = 0;
-    //  }
-    //}
-    //================================================================
 
     if ( 0 < digEt ) {
       L0CaloAdc* anAdc = new L0CaloAdc( ID, digEt);
