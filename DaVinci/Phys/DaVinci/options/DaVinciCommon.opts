@@ -27,13 +27,14 @@ ApplicationMgr.DLLs   += { "CaloDet", "CaloDetXmlCnv" };
 // Particle Properties
 ParticlePropertySvc.ParticlePropertiesFile = "$PARAMFILESROOT/data/particle.cdf";
 
-// Persistency setup
+// Pool Persistency
+//#include "$GAUDIPOOLDBROOT/options/GaudiPoolDbRoot.opts"
+//#include "$EVENTSYSROOT/options/PoolDicts.opts"
+
+// GaudiDb Persistency
+#include "$STDOPTS/RootDb.opts"
 EventDataSvc.ForceLeaves = true;
 EventDataSvc.RootCLID    =    1;
-ApplicationMgr.DLLs      += { "GaudiDb", "GaudiRootDb", "DbCnv" };
-ApplicationMgr.ExtSvc    += { "DbEventCnvSvc/RootEvtCnvSvc" };
-EventPersistencySvc.CnvServices = { "RootEvtCnvSvc" };
-RootEvtCnvSvc.DbType  = "ROOT";
 
 // Associators
 ApplicationMgr.DLLs += { "ITAssociators", "OTAssociators" };

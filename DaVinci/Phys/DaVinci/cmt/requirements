@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.81 2004-02-06 16:59:21 gcorti Exp $
+# $Id: requirements,v 1.82 2004-02-06 21:45:43 gcorti Exp $
 # Created    : 07/02/2002
 # Maintainer : Gloria Corti
 #
@@ -6,7 +6,7 @@
 # Allows reading of OO-DST data
 #============================================================================
 package           DaVinci
-version           v10r0
+version           v11r0
 
 # Structure, i.e. directories to process. 
 #============================================================================
@@ -23,59 +23,66 @@ apply_pattern DaVinciVersion
 #--- CMT and GaudiPolicy
 use  GaudiPolicy 	v5r14
  
-#--- External libraries (as defined in GAUDI_v13r0)
+#--- External libraries (as defined in GAUDI_v14r0)
 use  ExternalLibs	v4r4
 use  AIDA		v3r300		-no_auto_imports
 use  BOOST		v2r1302p0	-no_auto_imports
 use  CLHEP		v2r1810p0
 use  XERCES		v2r230p0
 use  CERNLIB 		v2r2002p0
-use  ROOT 		v2r31001p1
+use  ROOT 		v2r31002p0
 use  GSL		v2r14p0
-use  PI			v1r100
+use  PI			v1r112
+use  PCRE		v1r44
+use  UUID		v1r32
+use  SEAL		v1r133p0
+use  POOL		v1r150p0
 
-#--- Gaudi libraries (from GAUDI_v13r0)
-use  GaudiKernel	v14r2
-use  GaudiSvc 		v11r0
-use  GaudiAlg 		v6r4
-use  GaudiAud 		v6r3
-use  GaudiDb 		v9r0
-use  GaudiRootDb 	v9r3
-use  GaudiIntrospection v4r7
-use  GaudiObjDesc       v5r2
+
+#--- Gaudi libraries (from GAUDI_v14r0)
+use  GaudiKernel	v15r0
+use  GaudiSvc 		v11r1
+use  GaudiAlg 		v6r5
+use  GaudiAud 		v6r4
+use  GaudiDb 		v9r1
+use  GaudiRootDb 	v9r4
+use  GaudiPoolDb	v1r2
+use  GaudiObjDesc       v6r2p1
+use  GaudiGSL           v5r0
+use  GaudiPython        v6r0
 
 #--- Histogram persistency
-use  HbookCnv           v14r0
-use  RootHistCnv    	v9r0
+use  HbookCnv           v14r1
+use  RootHistCnv    	v9r1
 
 #--- Geometry Database
-use  XmlDDDB		v20r0	 Det
+use  XmlDDDB		v20r1	 Det
 use  ParamFiles		v2r1	 $(LHCb_release_area)/PARAM -no_auto_imports
 use  FieldMap           v4r3
 
-#--- LHCb libraries (from LHCB_v14r0)
-use  LHCb               v14r0	
+#--- LHCb libraries (from LHCB_v15r0)
+use  LHCb               v15r0	
 
-#--- DaVinciSys v10r0 packages 
+#--- DaVinciSys v11r0 packages 
 
 #    Enable neutral ProtoParticles production and CaloPIDs
-use  CaloInterfaces     v3r0     Calo
-use  CaloUtils 	        v4r5     Calo
+use  CaloInterfaces     v3r1     Calo
+use  CaloUtils 	        v4r6     Calo
 use  CaloReco           v1r7     Calo
 use  CaloPIDs           v1r2     Calo 
 
 #    Muon PID
-use  MuonID             v3r6     Muon
+use  MuonID             v3r7     Muon
 
 #    Final Reconstruction
 use  GlobalReco         v4r2     Rec
 use  PrimVtx            v2r1     Rec
 
 #    Utility tools
-use  TrExtrapolator     v2r9     Tr
+use  TrExtrapolator     v2r10    Tr
 
 #    Monte Carlo tools
-use  MCTools            v1r1p1   Phys
+use  MCTools            v1r2     Phys
 
 #    Reconstruction tools 
 use  RecoTools          v1r1     Rec

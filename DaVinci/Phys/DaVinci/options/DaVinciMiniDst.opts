@@ -1,9 +1,10 @@
 // This file sets up the Writing of Mini DST content
 // ----------------------------------------------------------
 
-ApplicationMgr.OutStream = { "DaVinciDstWriter" };
-DaVinciDstWriter.Output = "DATAFILE='MiniDst.root' TYP='ROOT' OPT='NEW'";
-DaVinciDstWriter.ItemList =  {
+ApplicationMgr.OutStream = { "MiniDstWriter" };
+MiniDstWriter.PreLoad = false;
+
+MiniDstWriter.ItemList = {
   "/Event#1"
   , "/Event/Header#1"
   , "/Event/Gen#1"
@@ -14,22 +15,21 @@ DaVinciDstWriter.ItemList =  {
   , "/Event/MC/Vertices#1"
   , "/Event/Trig#1"
   , "/Event/Trig/AlgUsedTimes#1"
-  , "/Event/Trig/L0#1"
-  , "/Event/Trig/L0/Calo#1"
-  , "/Event/Trig/L0/Muon#1"
-  , "/Event/Trig/L0/PuVeto#1"
   , "/Event/Trig/L0/Decision#1" 
   , "/Event/Trig/L1#1"
-  , "/Event/Trig/L1/Tracks2d#1"
-  , "/Event/Trig/L1/Tracks3d#1"
-  , "/Event/Trig/L1/Vertices2d#1"
-//    , "/Event/Trig/L1/Clusters#1" // For L1 trigger studies
   , "/Event/Trig/L1/Summary#1"
-//    , "/Event/Trig/L1/Decision#1"  // This exist only for OODST >= v16r4 
   , "/Event/Rec#1"
   , "/Event/Rec/ProtoP#*"
-//    , "/Event/Rec/Relations#*"
-//    , "/Event/Rec/ProtoParticle2MC#1"
-//    , "/Event/Rec/NeutralPPs2MCParticles#1"
+  , "/Event/Rec/Relations#*"
+  , "/Event/Rec/ProtoParticle2MC#1"
+  , "/Event/Rec/NeutralPPs2MCParticles#1"
   , "/Event/Phys#*"
 };
+
+// GaudiDb output (not possible with POOL input). 
+// Comment next two lines if using POOL.
+MiniDstWriter.Output = "DATAFILE='412400.oomdst' TYP='ROOT' OPT='NEW'";
+#include "$DAVINCIROOT/options/L1Truth.opts" // Classes not yet working with POOL
+
+// POOL output. Comment next line if GaudiDb output
+//MiniDstWriter.Output = "DATAFILE='PFN:412400.mdst' TYP='POOL_ROOTTREE' OPT='REC'";

@@ -3,7 +3,30 @@ Package     : Phys/DaVinci
 Package Coordinator : Gloria Corti
 Purpose     : LHCb analysis program 
 
-</PRE><H1><A NAME=v10r0>2004-01-29 DaVinci v10r0 - Development Version</A></H1><PRE>
+</PRE><H1><A NAME=v10r1>2004-02-06 DaVinci v11r0 - Development Version</A></H1><PRE>
+
+ This version is mostly for developement and the main focus is for new data.
+ TDR data can be read but not all features are supported beside decay channel
+ selections. See details for DaVinci v10r0.
+
+ - Version based on Gaudi v14r0 and LHCb v15r0
+
+ - Integrate reading POOL files. For the moment the default is GaudiDb 
+   files. Pool files can be switched on uncommenting specific lines in
+   DaVinciCommon.opts to load the necessart dll and services.
+   The GaudiDb persistency is set up via new $STDOPTS/RootDb.opts
+
+ - To read a Pool file it is also necessary to specify the file type 
+   in the EventSelector.Input. An example of how to do it is provided in 
+   DaVinciTestData.opts. A file catalogue where the file is
+   listed also need to be provided.  
+   By default DaVinciTestData.opts reads Brunel v23r0 file written with
+   GaudiDb. 
+
+ - Adapt DstContent.opts to what written by Brunel v23r0
+ 
+
+</PRE><H1><A NAME=v10r0>2004-02-05 DaVinci v10r0 - Development Version</A></H1><PRE>
 
  This version is mostly for developement and the main focus is for new data.
  TDR data can be read but not all features are supported beside decay channel

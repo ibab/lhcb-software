@@ -1,6 +1,6 @@
-// Define DST content for Brunel
+// Define DST content for stripped events, identical to Brunel
 
-// ApplicationMgr.OutStream += { "DstWriter" };
+DstWriter.PreLoad     = false;
 DstWriter.OptItemList =
 {
   "/Event/Prev#1"
@@ -11,6 +11,7 @@ DstWriter.OptItemList =
 , "/Event/Next/Header#1"
 , "/Event/LHCBackground#1"
 , "/Event/LHCBackground/Header#1"
+, "/Event/Gen/HepMCEvents#1"
 }; 
 DstWriter.ItemList = 
 {
@@ -25,8 +26,6 @@ DstWriter.ItemList =
 , "/Event/Trig#1"
 , "/Event/Trig/AlgUsedTimes#1"
 , "/Event/Trig/L0#1"
-, "/Event/Trig/L0/Calo#1"
-, "/Event/Trig/L0/FullCalo#1"
 , "/Event/Trig/L0/Muon#1"
 , "/Event/Trig/L0/PuVeto#1"
 , "/Event/Trig/L0/Decision#1" 
@@ -66,9 +65,9 @@ DstWriter.ItemList =
 , "/Event/Rec/Calo/Electrons#1"
 , "/Event/Rec/Calo/MergedPi0s#1"
 , "/Event/Rec/Calo/SplitPhotons#1"
-, "/Event/Rec/Calo/PhotonMatch#1"
-, "/Event/Rec/Calo/ElectronMatch#1"
-, "/Event/Rec/Calo/BremMatch#1"
+, "/Event/Rec/Calo/PhotonMatch#1"   // Comment out for POOL dst
+, "/Event/Rec/Calo/ElectronMatch#1" // Comment out for POOL dst
+, "/Event/Rec/Calo/BremMatch#1"     // Comment out for POOL dst
 , "/Event/Rec/Calo/HcalE#1"
 , "/Event/Rec/Calo/PrsE#1"
 , "/Event/Rec/Calo/EcalE#1"
@@ -87,8 +86,8 @@ DstWriter.ItemList =
 , "/Event/Rec/Relations#1"
 , "/Event/Rec/Relations/ITClusters2MCParticles#1"
 , "/Event/Rec/Relations/OTClusters2MCParticles#1"
-, "/Event/Rec/Relations/VeloClusters2MCParticles#1"
-, "/Event/Rec/Relations/EcalClusters2MCParticles#1"
+, "/Event/Rec/Relations/VeloClusters2MCParticles#1" // Comment out for POOL dst
+, "/Event/Rec/Relations/EcalClusters2MCParticles#1" // Comment out for POOL dst
 , "/Event/Rec/Relations/MuonCoords2MCParticles#1"
 , "/Event/Rec/Relations/Tr2MCP#1"
 , "/Event/Rec/Relations/L0CaloCandidates#1"
