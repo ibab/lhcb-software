@@ -12,7 +12,7 @@ use Gauss		v14r0	Sim
 
 # Generator stuff ...
 use EvtGen              v5r0    Gen
-use GeneratorModules    v10r3   Gen
+use GeneratorModules    v10r4   Gen
 
 # GiGa stuff...
 use GiGa        	v15r0	Sim        
