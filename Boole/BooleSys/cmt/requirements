@@ -51,8 +51,8 @@ use MuonBackground	v1r6	Muon
 use MuonDAQ             v1r1    Muon
 
 # Rich
-use RichDigiQC		v1r5	Rich
-use RichUtils		v3r8	Rich
-use RichDetTools	v4r0	Rich
-use RichReadout		v1r7	Rich
-use RichDAQ		v1r3	Rich
+use RichDigiQC		v1r6	Rich
+use RichUtils		v3r9	Rich
+use RichDetTools	v4r1	Rich
+use RichReadout		v1r8	Rich
+use RichDAQ		v1r4	Rich
