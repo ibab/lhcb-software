@@ -1,4 +1,4 @@
-// $Id: DeVelo.h,v 1.22 2004-10-26 14:58:31 dhcroft Exp $
+// $Id: DeVelo.h,v 1.23 2004-12-03 17:48:37 dhcroft Exp $
 #ifndef       VELODET_DEVELO_H
 #define       VELODET_DEVELO_H 1
 // ============================================================================
@@ -43,6 +43,11 @@ public:
     return m_vpSensor.size(); 
   }
 
+  /// Return the number of Velo sensors (no pile-up)
+  inline unsigned int numberNonPUSensors()  const { 
+    return m_nRSensors+m_nPhiSensors; 
+  }
+
   /// return the number of PileUp sensors
   inline unsigned int numberPileUpSensors()  const{
     return m_nPileUpSensors;
@@ -80,7 +85,7 @@ public:
   }
 
   /// return true if phi sensor is second stereo (Downstream)
-  inline bool isDownstream(unsigned int sensor) {
+  inline bool isDownstreamSensor(unsigned int sensor) {
     return m_vpSensor[sensorIndex(sensor)]->isDownstream();
   }
 
@@ -95,21 +100,11 @@ public:
   /// return the index of the sensor (assumes sensors are stored 
   unsigned int sensorIndex(unsigned int sensor);
 
-  /// Return the number of Pile Up sensors
-  unsigned int nbPuSensor()  const { 
-    return m_nPileUpSensors; 
-  }
-
-  /// Return the number of Velo sensors (no pile-up)
-  unsigned int nbSensor()  const { 
-    return m_nRSensors+m_nPhiSensors; 
-  }
-
   /// Return vector of pointers to all sensors sorted by increasing z
   inline std::vector<DeVeloSensor*> vpSensors() {
     return m_vpSensor;
   }
-  
+
   /// Return vector of pointers to the R sensors sorted by increasing z
   inline std::vector<DeVeloRType*> vpRSensors() {
     return m_vpRSensor;
@@ -205,60 +200,48 @@ public:
   unsigned int stripsInZone( unsigned int sensor, unsigned int zone ) ;
 
   /// returns the local radius of the strip
-  StatusCode rOfStrip( VeloChannelID channel, 
-                              double &radius ) ;
+  double rOfStrip( VeloChannelID channel );
 
   /// returns the local radius of the strip+fractional distance to strip
-  StatusCode rOfStrip(VeloChannelID channel, double fraction, 
-                      double & radius) ;
+  double rOfStrip(VeloChannelID channel, double fraction);
 
   /// returns the R pitch at the given channelID
-  StatusCode rPitch( VeloChannelID channel, double &rPitch ) ;
+  double rPitch( VeloChannelID channel);
 
   /// returns the R pitch at the given channelID +/- fraction of channel
-  StatusCode rPitch( VeloChannelID channel, double fraction, double &rPitch ) ;
+  double rPitch( VeloChannelID channel, double fraction);
 
   /// returns the R pitch at a given radius
-  StatusCode rPitchAtR( VeloChannelID channel, double radius, double &rPitch);
+  double rPitchAtLocalR( VeloChannelID channel, double radius);
 
   /// returns the phi of the strip at the specified radius 
   /// in the local frame of the sensor.
-  StatusCode phiOfStrip( VeloChannelID channel,
-                                double radius, double &phiOfStrip ) ;
+  double phiOfStrip( VeloChannelID channel, double radius);
 
   /// returns the phi of the strip+fractional distance to strip
   /// at the specified radius in the local frame of sensor.
-  StatusCode phiOfStrip( VeloChannelID channel, double fraction,
-                                double radius, double &phiOfStrip ) ;
+  double phiOfStrip( VeloChannelID channel, double fraction, double radius);
 
   /// returns the angle of the strip wrt the x axis in the local frame
   /// for the strip
-  StatusCode angleOfStrip( VeloChannelID channel, double &angleOfStrip ) ;
+  double angleOfStrip( VeloChannelID channel);
                                
   /// returns the angle of the strip wrt the x axis in the local frame for
   /// the strip+fractional distance to strip
-  StatusCode angleOfStrip( VeloChannelID channel, double fraction,
-                           double &angleOfStrip ) ;
+  double angleOfStrip( VeloChannelID channel, double fraction);
 
   /** The stereo angle of the phi strips in radians,
       signed so that positive indicates phi increases with radius */
-  StatusCode phiStereo( VeloChannelID channel, double radius,
-                               double &phiStereo ) ;
+  double phiStereo( VeloChannelID channel, double radius);
 
   /// returns the Phi pitch (in mm) at the given radius (sensor local)
-  StatusCode phiPitch( VeloChannelID channel, double radius, 
-                       double &phiPitch) ;
+  double phiPitch( VeloChannelID channel, double radius );
 
   /// returns the Phi pitch (in mm) at the given radius (sensor local)
-  StatusCode phiPitch( VeloChannelID channel, 
-                       double &phiPitch) ;
-
-  // returns tilt in radians (how is this defined?)
-  StatusCode phiTilt( VeloChannelID channel, 
-                       double &phiTilt) ;
+  double phiPitch( VeloChannelID channel );
 
   /// Return the distance to the origin for a phi strip
-  StatusCode distToOrigin(VeloChannelID channel, double &distance) ;
+  double distToOrigin(VeloChannelID channel);
 
   /// return the minimum sensitive radius of an R wafer, local frame
   double rMin(unsigned int sensor) ;
@@ -277,20 +260,16 @@ public:
   double rMax(unsigned int sensor, unsigned int zone) ;
 
   /// Smallest Phi at R (local frame) of the R strips in a zone
-  StatusCode phiMin(unsigned int sensor, unsigned int zone, 
-                    double &phiMin) ;
+  double phiMin(unsigned int sensor, unsigned int zone);
   
   /// Largest Phi (local frame) of the R strips in a zone
-  StatusCode phiMax(unsigned int sensor, unsigned int zone, 
-                    double &phiMax) ;
+  double phiMax(unsigned int sensor, unsigned int zone);
 
   // minimum phi at R (overlap in x) for a given zone
-  StatusCode phiMin(unsigned int sensor, unsigned int zone,
-                    double radius, double &phiMin) ;
+  double phiMin(unsigned int sensor, unsigned int zone, double radius);
   
   // maximum phi at R (overlap in x) for a given zone
-  StatusCode phiMax(unsigned int sensor, unsigned int zone,
-                    double radius, double &phiMax) ;
+  double phiMax(unsigned int sensor, unsigned int zone, double radius);
   
   /// returns the silicon thickness
   double siliconThickness ( unsigned int sensor ) ;
@@ -320,7 +299,7 @@ public:
   }
   
   /// Returns true if sensor is in right side (-ve x) of detector
-  inline bool isRight(unsigned int sensor) 
+  inline bool isRightSensor(unsigned int sensor) 
   {
     return m_vpSensor[sensorIndex(sensor)]->isRight();
   }
@@ -367,17 +346,13 @@ public:
                              double& pitch, 
                              double& offset );
   /// returns the phi of the strip at the specified radius 
-  StatusCode trgPhiOfStrip( VeloChannelID channel,
-                                double radius, double &phiOfStrip ) ;
+  double trgPhiOfStrip( VeloChannelID channel,double radius ) ;
   /// returns the phi of the strip+fractional distance to strip
-  StatusCode trgPhiOfStrip( VeloChannelID channel, double fraction,
-                                double radius, double &phiOfStrip ) ;
+  double trgPhiOfStrip( VeloChannelID channel, double fraction, double radius );
   /// returns the angle of the strip wrt the x axis 
-  StatusCode trgPhiDirectionOfStrip( VeloChannelID channel, 
-                                     double &angleOfStrip ) ;
+  double trgPhiDirectionOfStrip( VeloChannelID channel ) ;
   /// returns the angle of the strip+frac. distance to strip wrt the x axis 
-  StatusCode trgPhiDirectionOfStrip( VeloChannelID channel, double fraction,
-                           double &angleOfStrip ) ;
+  double trgPhiDirectionOfStrip( VeloChannelID channel, double fraction ) ;
   ///========================================================================
 protected: 
 
