@@ -1,4 +1,4 @@
-// $Id: DaDiFrontEnd.cpp,v 1.6 2001-10-29 11:16:18 mato Exp $
+// $Id: DaDiFrontEnd.cpp,v 1.7 2001-10-29 16:24:05 mato Exp $
 
 #include "GaudiKernel/Kernel.h"
 
@@ -298,7 +298,7 @@ void DDFE::parseClass(DOM_Node node,
   }
   else
   {
-    gddClass->setClassDesc(NULL);
+    gddClass->setClassDesc(0);
   }
   
   gddClass->setClassAuthor(node.getAttributes().
@@ -329,10 +329,10 @@ void DDFE::parseClass(DOM_Node node,
   }
   else
   {
-    gddClass->setClassID(NULL);
+    gddClass->setClassID(0);
   }
 
-  gddClass->setLongDesc(NULL);
+  gddClass->setLongDesc(0);
 
   node = node.getFirstChild();
 
@@ -406,7 +406,7 @@ void DDFE::parseClass(DOM_Node node,
           }
           else
           {
-            gddMethod->setDesc(NULL);
+            gddMethod->setDesc(0);
           }
             
           gddMethod->setAccess(node.getAttributes().
@@ -455,7 +455,7 @@ void DDFE::parseClass(DOM_Node node,
           }
           else
           {
-            gddMethReturn->setType(NULL);
+            gddMethReturn->setType(0);
           }
 
           std::string argList, argInOut;
@@ -539,7 +539,7 @@ void DDFE::parseClass(DOM_Node node,
           }
 
           
-          gddMethod->setCode(NULL);
+          gddMethod->setCode(0);
           
           DOM_Node met_child;
           met_child = node.getFirstChild();
@@ -597,7 +597,7 @@ void DDFE::parseClass(DOM_Node node,
                 }
                 else
                 {
-                  gddMethArgument->setName(NULL);
+                  gddMethArgument->setName(0);
                 }
                 gddMethArgument->setConst_(met_child.getAttributes().
                   getNamedItem(DOMString::transcode("const")).
@@ -633,7 +633,7 @@ void DDFE::parseClass(DOM_Node node,
           }
           else
           {
-            gddConstructor->setDesc(NULL);
+            gddConstructor->setDesc(0);
           }
             
           std::string argList, argInOut;
@@ -692,7 +692,7 @@ void DDFE::parseClass(DOM_Node node,
           }
 
           
-          gddConstructor->setCode(NULL);
+          gddConstructor->setCode(0);
           
           DOM_Node met_child;
           met_child = node.getFirstChild();
@@ -724,7 +724,7 @@ void DDFE::parseClass(DOM_Node node,
                 }
                 else
                 {
-                  gddMethArgument->setName(NULL);
+                  gddMethArgument->setName(0);
                 }
                 gddMethArgument->setConst_(met_child.getAttributes().
                   getNamedItem(DOMString::transcode("const")).
@@ -760,7 +760,7 @@ void DDFE::parseClass(DOM_Node node,
           }
           else
           {
-            gddDestructor->setDesc(NULL);
+            gddDestructor->setDesc(0);
           }
             
           std::string argList, argInOut;
@@ -819,7 +819,7 @@ void DDFE::parseClass(DOM_Node node,
           }
 
           
-          gddDestructor->setCode(NULL);
+          gddDestructor->setCode(0);
           
           DOM_Node met_child;
           met_child = node.getFirstChild();
@@ -851,7 +851,7 @@ void DDFE::parseClass(DOM_Node node,
                 }
                 else
                 {
-                  gddMethArgument->setName(NULL);
+                  gddMethArgument->setName(0);
                 }
                 gddMethArgument->setConst_(met_child.getAttributes().
                   getNamedItem(DOMString::transcode("const")).
@@ -896,7 +896,7 @@ void DDFE::parseClass(DOM_Node node,
           }
           else
           {
-            gddAttribute->setDesc(NULL);
+            gddAttribute->setDesc(0);
           }
             
           gddAttribute->setAccess(node.getAttributes().
@@ -920,7 +920,7 @@ void DDFE::parseClass(DOM_Node node,
           }
           else
           {
-            gddAttribute->setInit(NULL);
+            gddAttribute->setInit(0);
           }            
         }
 
@@ -953,7 +953,7 @@ void DDFE::parseClass(DOM_Node node,
           }
           else
           {
-            gddRelation->setDesc(NULL);
+            gddRelation->setDesc(0);
           }
             
           gddRelation->setAccess(node.getAttributes().
