@@ -1,0 +1,23 @@
+! $Id: release.notes,v 1.1 2003-12-07 16:14:29 ibelyaev Exp $
+! -----------------------------------------------------------------------------
+! CVS tag $Name: not supported by cvs2svn $
+! -----------------------------------------------------------------------------
+! Package     : Ex/BenderExample
+! Responsible : Vanya  BELYAEV Ivan.Belyaev@itep.ru
+! Purpose     : collection of exampel to run Bender - 
+!             :                    -Python based physic sanalysis 
+! -----------------------------------------------------------------------------
+
+! 2003-12-07 - Vanya BELYAEV
+ -  The package contains 2 examples 
+   1) the simples   example  for phi -> K+ K- 'analysis' 
+       It shows the primitive selection of particles, 
+       simple loop, book and fill the histogram 
+   2) the "typical" examples  for D*+ -> (D0 -> K- pi+) pi+ selection 
+   3) the advanced example of B0 -> phi K0S selections
+
+To run examples one need to issue commands 
+
+  bender $BENDEREXAMPLEPYTHON/<XXXX>.py $BENDEREXAMPLEOPTS/<XXXX>.opts
+
+where <XXXX> = Phi , Dstar or B2PhiK0S for selected examples  

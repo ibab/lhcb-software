@@ -1,0 +1,53 @@
+// $Id: Dstar.opts,v 1.1 2003-12-07 16:14:30 ibelyaev Exp $ 
+// ============================================================================
+// CVS tag $Name: not supported by cvs2svn $
+// ============================================================================
+
+/** @file 
+ *  The job-options/configuration file to run Demo Bender application 
+ *  for Python based  D*+ -> (D0 -> K- pi+) pi+  selection
+ *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+ */
+
+#pragma print on
+// load "standard" DaVinci option file 
+#pragma print off 
+#include "$DAVINCIROOT/options/DaVinci.opts"
+
+#pragma print on
+// use B -> D*+ pi- data sample (D*+ enriched data)
+#pragma print off 
+#include "/afs/cern.ch/lhcb/project/web/cards/415000.opts"
+
+#pragma print on
+// preload algorthm 
+ApplicationMgr.TopAlg += { "LoKiPreLoad/Charged"} ;
+Charged.PhysDesktop.ParticleMakerType    = "CombinedParticleMaker" ;
+Charged.PhysDesktop.OutputLocation       = "/Event/Phys/Charged"   ;
+Charged.PhysDesktop.CombinedParticleMaker.ExclusiveSelection = false ;
+Charged.PhysDesktop.CombinedParticleMaker.Particles =
+  { "kaon" , "pion" } ;
+Charged.PhysDesktop.CombinedParticleMaker.KaonSelection  =
+  {"det='RICH' k-pi='-5.0'   k-p='-5.0'" } ;
+Charged.PhysDesktop.CombinedParticleMaker.PionSelection  =
+  {"det='RICH' pi-k='-5.0' "            } ;
+
+// reduce the printout warnings (we do not use neutral particles!)
+NeutralPP2MC.InputData = {}; 
+
+// suppress printout: "Failed to retrieve any RichPIDs at Rec/Rich/PIDs" 
+ChargedProtoPAlg.OutputLevel = 4 ;
+// suppress printout: "     +++ Give up fitting, because only ... "
+PrimVtxFinder.OutputLevel = 4 ;
+
+// my histograms 
+HistogramPersistencySvc.OutputFile = "dstar_his.hbook";
+
+// N-tuples
+NTupleSvc.Output += {"DSTAR DATAFILE='dstar_tup.hbook' TYP='HBOOK' OPT='NEW'"};
+
+// ============================================================================
+// The END 
+// ============================================================================
+// $Log: not supported by cvs2svn $
+// ============================================================================

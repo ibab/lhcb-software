@@ -1,37 +1,38 @@
-# $Id: requirements,v 1.1.1.1 2003-09-10 13:02:00 ibelyaev Exp $ 
+# $Id: requirements,v 1.2 2003-12-07 16:14:29 ibelyaev Exp $ 
 # ============================================================================
 # CVS tag $Name: not supported by cvs2svn $ 
 # ============================================================================
 # Created    : 2003-09-10
-# Maintainer : Ivan BELYAEV
+# Maintainer : Vanya BELYAEV Ivan.Belyaev@itep.ru
 # ============================================================================
-package           BenderExample
-version           v1r0
+package          BenderExample
+author           Vanya BELYAEV
+version          v1r0
 
-# ============================================================================
-# Structure, i.e. directories to process. 
-# ============================================================================
-branches          cmt doc src options
+# ============== structure ===================================================
+branches         cmt doc src python options scripts 
 
-# ============================================================================
-# environment
-# ============================================================================
-set BENDEREXAMPLEOPTS $(BENDEREXAMPLEROOT)/options 
+# ============== environment =================================================
+set              BENDEREXAMPLEOPTS    $(BENDEREXAMPLEROOT)/options 
+set              BENDEREXAMPLESRC     $(BENDEREXAMPLEROOT)/src 
+set              BENDEREXAMPLEPYTHON  $(BENDEREXAMPLEROOT)/python
 
-# ============================================================================
-# Used packages
-# ============================================================================
-use  Bender      v*    Tools
-use  PYTHON      v*    
+# ============== dependencies ================================================
+use              Bender      v*    Tools
 
-# ============================================================================
-# Python paths 
-# ============================================================================
+# ============== nesessary paths =============================================
 path_remove      PYTHONPATH "/BenderExample/"  WIN32  "\BenderExample\"
 path_prepend     PYTHONPATH "$(BENDEREXAMPLEROOT)/src"
+path_prepend     PYTHONPATH "$(BENDEREXAMPLEROOT)/python"
+
+path_remove      PATH       "/BenderExample/"  WIN32  "\BenderExample\"
+path_prepend     PATH       "$(BENDEREXAMPLEROOT)/scripts"
 
 # ============================================================================
 # The END 
 # ============================================================================
 # $Log: not supported by cvs2svn $
+# Revision 1.1.1.1  2003/09/10 13:02:00  ibelyaev
+# New package
+#
 # ============================================================================
