@@ -1,4 +1,4 @@
-// $Id: MuonCoord2MCParticleAsct.h,v 1.1.1.1 2002-06-28 09:59:33 dhcroft Exp $
+// $Id: MuonCoord2MCParticleAsct.h,v 1.2 2002-07-03 09:32:02 dhcroft Exp $
 #ifndef ASSOCIATORS_MuonCoord2MCParticleASCT_H 
 #define ASSOCIATORS_MuonCoord2MCParticleASCT_H 1
 
@@ -25,8 +25,6 @@ static const std::string& MuonCoord2MCParticleLocation =
  */
 
 
-class MuonCoord;
-class MCParticle;
 
 class MuonCoord2MCParticleAsct: public Associator<MuonCoord,MCParticle>
 {
@@ -41,7 +39,7 @@ public:
   typedef ToRange                                   MCParticles;
   typedef ToIterator                                MCParticlesIterator;
     
-private:
+protected:
 
   /// Standard constructor
   MuonCoord2MCParticleAsct(const std::string& type,
@@ -56,6 +54,7 @@ private:
   /// Destructor
   virtual ~MuonCoord2MCParticleAsct() {}; ///< Destructor
 
+private:
 
 };
 #endif // ASSOCIATORS_MuonCoord2MCParticleASCT_H
