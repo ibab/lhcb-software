@@ -53,6 +53,7 @@ Complete OO-Dst output.
        FwtFitParams (FwTrack v4r0)
        Calo Event classes (CaloEvent v11r1)
        CellularAutomaton, CaloDigitsFilterAlg (CaloAlgs v7r1)
+   . Fix for "looping" in upstream tracking (TrIntraPR v2r0) 
    . Fix compilation on Windows (TrIntraPR v2r0)
    . Fix crash when printing statistics for zero events (FwTrack v4r0) 
    . Fix Velo numbering scheme (VeloDet v7r0, VeloTrack v4r0, L1VeloTrack v2r0)
