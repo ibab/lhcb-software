@@ -4,8 +4,40 @@ Package manager : Witek Pokorski
 </PRE>
 
 !========================================================================
-<H1><A NAME="v12r6">2003-10-15 - Gauss v12r6</A></H1><PRE>
+<H1><A NAME="v12r6">2003-10-18 - Gauss v12r6</A></H1><PRE>
  use GEANT4_v52r4 (geant4.5.2.ref04)
+ mods in GiGa, GaussPhysics, GaussCalo, GaussRICH, GaussTracker
+
+!========================== GiGa v14r6 2003-10-17 =======================
+! 2003-10-17 - Florence RANJARD
+ - GiGaRunManager.cpp, GiGaRunManagerInterface.cpp - remove all references
+   to "cutoffInitialize" which has been removed from geant4.5.2.ref04.
+
+!===================== GaussPhysics v2r4 2003-10-17 ========================
+! 2003-10-17 - Florence RANJARD
+ - G4HadronQEDBuilder.cc - include G4Proton.hh and G4AntiProton.hh to please
+   geant4.5.2.ref04
+
+!=========================== GaussCalo v4r2 ===============================
+! 2003-10-17 - Florence RANJARD
+ - src/CaloSensDet.cpp, src/SprPrsSensDet.cpp - fix code for geant4.5.2.ref04
+
+! 2003-10-16 - Witek Pokorski
+ - src/GaussSensPlaneDet.cpp - changed output level of some messages
+
+!========================= GaussRICH v4r4 2003-10-17 ======================
+! 2003-10-17 - Florence RANJARD
+ - PhysProcess/RichHpdPhotoElectricEffect.cpp, SensDet/RichSensDet.cpp -
+   fix for geant4.5.2.ref04
+
+!=========================== GaussTracker v3r0 ================================
+! 2003-10-17 - Witek Pokorski
+ - GiGaSensDetVelo, GiGaSensDetMuon - got rid of 'GetMother' method
+
+! 2003-10-14 - Witek Pokorski
+ - GiGaSensDetVelo - now uses copy numbers to determine the sensor number 
+                     (to be used with the Xml velo description containing 
+	              the copy numbers - XmlDDDB version > v18r2)
 
 !=========================================================================
 <H1><A NAME="v12r5">2003-10-02 - Gauss v12r5</A></H1><PRE>
