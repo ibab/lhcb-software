@@ -24,6 +24,9 @@
        <base name="KeyedObject&lt;int&gt;"/>
        &KeyedObject;
        <import name="CLHEP/Units/SystemOfUnits"/>
+       <!-- The following line forces inclusion before HepPoint3D
+            to get round CLHEP 1.9 bug with HEP_CC_NEED_SUB_WITHOUT_CONST -->
+       <import name="CLHEP/Matrix/SymMatrix"/>
        <location
         name="User"
         place="/Event/Phys/User/Vertices"

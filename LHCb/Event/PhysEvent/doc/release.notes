@@ -1,12 +1,13 @@
-! $Id: release.notes,v 1.57 2005-02-01 16:33:35 cattanem Exp $
+! $Id: release.notes,v 1.58 2005-02-02 07:33:46 cattanem Exp $
 ! Package     : PhysEvent 
 ! Responsible : P. Koppenburg
 
-!======================== PhysEvent v8r8 2005-02-01 ========================
-! 2005-02-01 - Marco Cattaneo
+!======================== PhysEvent v8r8 2005-02-02 ========================
+! 2005-02-02 - Marco Cattaneo
  - Add attribute to produce KeyedContainers typedefs in PrimVertex.xml, needed
    by GaudiObjDesc v7r*
- - Fix Particle.xml to bypass CLHEP 1.9 HEP_CC_NEED_SUB_WITHOUT_CONST problem
+ - Put ad hoc fix Particle.xml and Vertex.xml to bypass CLHEP 1.9 
+   HEP_CC_NEED_SUB_WITHOUT_CONST problem
  - Make .xml files standalone, and remove PhysEvent.xml
  - Clean up obsolete includes from xml
 
