@@ -1,14 +1,6 @@
-// $Id: CaloHypo2TrackAlg.h,v 1.3 2004-02-17 12:08:07 ibelyaev Exp $
+// $Id: CaloHypo2TrackAlg.h,v 1.4 2004-03-08 13:45:25 cattanem Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
-// ============================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.2  2002/11/17 17:09:26  ibelyaev
-//  new set of options and tools
-//
-// Revision 1.1.1.1  2002/11/13 20:46:40  ibelyaev
-// new package 
-//
 // ============================================================================
 #ifndef CALOREC_CALOHypo2TrackAlg_H 
 #define CALOREC_CALOHypo2TrackAlg_H 1
@@ -116,8 +108,8 @@ private:
   bool               m_veloTT       ;
   // use  'veloBack' tracks
   bool               m_veloBack     ;
-  // use  'upstream' tracks
-  bool               m_upstream     ;
+  // use  'downstream' tracks (new naming convention!)
+  bool               m_downstream   ;
   
   // matching tool 
   std::string        m_matchType    ;

@@ -1,20 +1,6 @@
-// $Id: CaloTrackMatchElectron.cpp,v 1.2 2004-02-17 12:08:11 ibelyaev Exp $
+// $Id: CaloTrackMatchElectron.cpp,v 1.3 2004-03-08 13:45:25 cattanem Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
-// ============================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.1.1.1  2002/11/13 20:46:43  ibelyaev
-// new package 
-//
-// Revision 1.11  2002/07/17 15:55:15  ibelyaev
-//  improved printout
-//
-// Revision 1.10  2002/07/08 17:02:01  ibelyaev
-//  play a little bit with the output level
-//
-// Revision 1.9  2002/07/08 15:40:08  ibelyaev
-//  update dealing with track flags
-//
 // ============================================================================
 // Include files
 // GaudiKernel
@@ -127,7 +113,7 @@ StatusCode CaloTrackMatchElectron::match
             << " m: " << trObj -> match     () 
             << " v: " << trObj -> velo      () 
             << " s: " << trObj -> seed      () 
-            << " u: " << trObj -> upstream  ()
+            << " d: " << trObj -> isDownstream  ()
             << " h: " << trObj -> history   ()
             << " k: " << trObj -> key       ()
             << " \n" 

@@ -1,8 +1,6 @@
-// $Id: CaloCluster2TrackAlg.h,v 1.1.1.1 2002-11-13 20:46:39 ibelyaev Exp $
+// $Id: CaloCluster2TrackAlg.h,v 1.2 2004-03-08 13:45:25 cattanem Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
-// ============================================================================
-// $Log: not supported by cvs2svn $
 // ============================================================================
 #ifndef CALOREC_CALOCluster2TrackAlg_H 
 #define CALOREC_CALOCluster2TrackAlg_H 1
@@ -119,8 +117,8 @@ private:
   bool               m_veloTT    ;
   // use  'veloBack' tracks
   bool               m_veloBack  ;
-  // use  'upstream' tracks
-  bool               m_upstream  ;
+  // use  'downstream' tracks (new naming convention!)
+  bool               m_downstream  ;
   
   // matching tool 
   std::string        m_matchType ;

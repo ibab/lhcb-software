@@ -1,11 +1,6 @@
-// $Id: CaloCluster2TrackAlg.cpp,v 1.2 2004-02-17 12:08:05 ibelyaev Exp $
+// $Id: CaloCluster2TrackAlg.cpp,v 1.3 2004-03-08 13:45:24 cattanem Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
-// ============================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.1.1.1  2002/11/13 20:46:39  ibelyaev
-// new package 
-//
 // ============================================================================
 // Include files
 #include "Relations/RelationWeighted2D.h"
@@ -61,7 +56,7 @@ CaloCluster2TrackAlg::CaloCluster2TrackAlg
   , m_velo        ( false      )  // skip velo     tracks 
   , m_veloTT      ( false      )  // skip veloTT   tracks 
   , m_veloBack    ( false      )  // skip veloBack tracks 
-  , m_upstream    ( true       )
+  , m_downstream  ( true       )
   //
   , m_matchType   ( "CaloTrackMatchPhoton" ) 
   , m_matchName   ( ""         ) 
@@ -80,7 +75,7 @@ CaloCluster2TrackAlg::CaloCluster2TrackAlg
   declareProperty ( "UseVeloTT"   , m_veloTT    ) ;
   declareProperty ( "UseVeloBack" , m_veloBack  ) ;
   declareProperty ( "UseSeed"     , m_seed      ) ;
-  declareProperty ( "UseUpstream" , m_upstream  ) ;
+  declareProperty ( "UseDownstream" , m_downstream  ) ;
   //
   // set the approproate default value for input  data 
   setInputData    ( CaloClusterLocation::  Ecal ) ;
@@ -204,8 +199,8 @@ StatusCode CaloCluster2TrackAlg::execute()
       // use 'veloBack'    tracks ?
       if( !m_veloBack && 1 == (*track)->veloBack () ) { continue ; }      
       
-      // use 'upstream'  tracks ?
-      if( !m_upstream && 1 == (*track)->upstream () ) { continue ; }
+      // use 'downstream'  tracks ? (new naming convention!)
+      if( !m_downstream && 1 == (*track)->isDownstream () ) { continue ; }
       
       // loop over all clusters 
       for( Clusters::const_iterator cluster = clusters->begin() ; 

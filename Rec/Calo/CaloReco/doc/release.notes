@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.37 2004-02-17 12:08:05 ibelyaev Exp $
+! $Id: release.notes,v 1.38 2004-03-08 13:45:24 cattanem Exp $
 ! -----------------------------------------------------------------------------
 ! CVS tag $Name: not supported by cvs2svn $
 ! -----------------------------------------------------------------------------
@@ -7,10 +7,22 @@
 ! Purpose     : Main Package for Calorimeter Reconstruction Software 
 ! -----------------------------------------------------------------------------
 
+!======================== CaloReco v2r0 2004-03-08 =======================
+! 2004-03-08 - Marco Cattaneo
+ - In CaloCluster2TrackAlg.h/cpp, CaloHypo2TrackAlg.h/cpp:
+   . rename m_upstream to m_downstream
+   . rename UseUpstream property to UseDownstream 
+   . use new isDownstream() method of TrStoredTrack instead of upstream()
+
+ - In CaloTrackMatchBase.cpp, CaloTrackMatchBremm.cpp, CaloTrackMatchElectron.cpp
+   . use new isDownstream() method of TrStoredTrack instead of upstream()
+
+ - In BremMatch.opts, ElectronMatch.opts, HcalPIDe.opts, PhotonMatch.opts
+   . rename UseUpstream property to UseDownstream 
+
 ! 2004-02-17 - Ivan BELYAEV
  - update for new Calo/CaloKernel and Calo/CaloInterface  
  - increase teh *MAJOR* version to v2r0 
-
 
 !======================== CaloReco v1r8 2004-01-13 =======================
 ! 2004-01-13 - Vanya BELYAEV

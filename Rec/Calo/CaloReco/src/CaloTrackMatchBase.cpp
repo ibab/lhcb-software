@@ -1,12 +1,6 @@
-// $Id: CaloTrackMatchBase.cpp,v 1.2 2004-02-17 12:08:10 ibelyaev Exp $
+// $Id: CaloTrackMatchBase.cpp,v 1.3 2004-03-08 13:45:25 cattanem Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
-// ============================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.1.1.1  2002/11/13 20:46:43  ibelyaev
-// new package 
-//
-// Revision 1.12  2002/07/17 15:55:15  ibelyaev
 // ============================================================================
 // Include files
 #include <functional>
@@ -195,7 +189,7 @@ StatusCode CaloTrackMatchBase::findState
           msg += "/t:" + print( (int) trObj -> veloTT    () ) ;
           msg += "/b:" + print( (int) trObj -> veloBack  () ) ;
           msg += "/s:" + print( (int) trObj -> seed      () ) ;
-          msg += "/u:" + print( (int) trObj -> upstream  () ) ;
+          msg += "/d:" + print( (int) trObj -> isDownstream  () ) ;
           log << msg 
               << "/k:" << (int) trObj -> key () 
               << endreq ;
