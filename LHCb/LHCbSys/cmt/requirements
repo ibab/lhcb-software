@@ -19,10 +19,13 @@ use KernelSys   	v4r9	Kernel
 use LHCbKernel  	v5r8	Kernel
 use Relations		v2r4	Kernel
 use CaloKernel  	v3r2	Calo
-use MuonKernel  	v2r6	Muon
+use MuonKernel  	v2r7	Muon
 use TrKernel    	v11r4	Tr
 use RichKernel  	v5r4	Rich
 use VeloKernel  	v1r5p1  Velo
+use L0mConf		v2r2p3	L0
+use L0MuonKernel	v3r0	L0
+use ProcessoKernel	v1r0	L0
 
 # Detector description
 use DetSys		v6r4	Det
@@ -49,7 +52,7 @@ use TrEvent      	v14r2	Event
 use RichEvent    	v8r3	Event
 use CaloEvent    	v13r9	Event
 use MuonEvent    	v4r0	Event
-use L0Event      	v14r2	Event
+use L0Event      	v14r3	Event
 use PhysEvent    	v8r9	Event
 use DAQEvent		v5r0	Event
 use GenEvent    	v3r3p1	Event
@@ -68,14 +71,15 @@ use CaloAssociators    	v4r4	Calo
 use MuonAssociators    	v1r5p1	Muon
 use AsctToLinker	v1r4	Rec
 
-# Raw buffer encoding and decoding
-use DAQSys		v1r1p2	DAQ
+# L1/Raw buffer encoding and decoding
+use DAQSys		v1r2	DAQ
 use MuonDAQ		v1r2p2	Muon
 use STDAQ		v1r4p1	IT
 use OTDAQ		v3r2p1	OT
 use VeloDAQ		v2r3p1	Velo
 use RichDAQ		v2r1p1	Rich
 use CaloDAQ		v1r0p2	Calo
+use L0MuonDAQ		v1r0	L0
 
 # Other stuff
 use LHCbInterfaces	v1r1	Kernel
@@ -84,8 +88,6 @@ use MCTools		v1r12p1	Phys
 use CaloInterfaces	v4r3	Calo
 use CaloUtils		v4r8	Calo
 use RichRecBase		v1r15   Rich
-use L0mConf		v2r2p3	L0
-use L0MuonKernel	v2r3	L0
 
 # LHCb  Examples
 use DetDescChecks	v2r2	Det
