@@ -3,6 +3,9 @@ Desccription: This package contains a set of tools used to generate code from th
 Package manager : Stefan Roiser
 
 ===============================GaudiObjDesc v6r2p3============================
+!20040614 - Stefan
+- removed include for RelationsDict.h for general dictionary files (only for <assoc> left)
+
 !20040604 - Stefan
 - bugfix: getters in dictionaries sometimes returned by value instead ref
           params for relation setters are now refs in the dictionary

@@ -1,4 +1,4 @@
-// $Id: DaDiCppDict.cpp,v 1.45 2004-06-04 09:07:21 mato Exp $
+// $Id: DaDiCppDict.cpp,v 1.46 2004-06-14 16:12:06 mato Exp $
 
 #include "DaDiTools.h"
 #include "DaDiCppDict.h"
@@ -697,8 +697,8 @@ void printCppDictionary(DaDiPackage* gddPackage,
     //
     metaOut << "//Include files" << std::endl
       //<< "#include \"GaudiKernel/Kernel.h\"" << std::endl
-            << "#include \"GaudiObjDesc/KeyedDictionary.h\"" << std::endl
-            << "#include \"GaudiObjDesc/RelationsDict.h\"" << std::endl; 
+            << "#include \"GaudiObjDesc/KeyedDictionary.h\"" << std::endl;
+      //<< "#include \"GaudiObjDesc/RelationsDict.h\"" << std::endl; 
       //<< "#include \"GaudiObjDesc/SealDictionary.h\"" << std::endl;
     metaOut << std::endl
             << "#include <string>" << std::endl
