@@ -1,8 +1,11 @@
-// $Id: CaloTrack2IdAlg.cpp,v 1.1.1.1 2003-03-13 18:52:02 ibelyaev Exp $
+// $Id: CaloTrack2IdAlg.cpp,v 1.2 2003-07-17 12:45:16 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.1.1.1  2003/03/13 18:52:02  ibelyaev
+// The first import of new package 
+//
 // Revision 1.1  2002/11/17 17:09:26  ibelyaev
 //  new set of options and tools
 // 
@@ -275,17 +278,19 @@ StatusCode CaloTrack2IdAlg::execute()
   typedef Table::Range                    Range ;
   typedef Relation1D<TrStoredTrack,float> Output ;
   
-  /// create and register in the store the output tables 
-  Output* output     = new Output () ;
-  StatusCode sc      = put( output , outputData() ) ;
-  if( sc.isFailure() )             { return StatusCode::FAILURE ; } // RETURN
-
   // get the table from Associator 
   const Table* input = m_associator->direct() ;
   if( 0 == input     )             { return StatusCode::FAILURE ; } // RETURN 
   
   // "convert" "input" to "output"
   Range range = input->relations();
+  
+  /// create and register in the store the output tables 
+  Output* output     = new Output ( range.size() ) ;
+  StatusCode sc      = put( output , outputData() ) ;
+  if( sc.isFailure() )             { return StatusCode::FAILURE ; } // RETURN
+  
+  /// convert the old table into the new table 
   for( Range::const_iterator rel = range.begin() ; 
        range.end() != rel ; ++rel ) 
     {

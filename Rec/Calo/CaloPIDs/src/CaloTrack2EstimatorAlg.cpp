@@ -1,8 +1,11 @@
-// $Id: CaloTrack2EstimatorAlg.cpp,v 1.1.1.1 2003-03-13 18:52:02 ibelyaev Exp $
+// $Id: CaloTrack2EstimatorAlg.cpp,v 1.2 2003-07-17 12:45:16 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.1.1.1  2003/03/13 18:52:02  ibelyaev
+// The first import of new package 
+//
 // Revision 1.2  2002/12/01 14:22:57  ibelyaev
 //  Hcal stuff and updated S-coprrections
 //
@@ -83,6 +86,9 @@ CaloTrack2EstimatorAlg::CaloTrack2EstimatorAlg
   declareProperty ( "UseVeloBack"   , m_veloBack    ) ;
   declareProperty ( "UseSeed"       , m_seed        ) ;
   declareProperty ( "UseUpstream"   , m_upstream    ) ;
+  //
+  declareProperty ( "LowLimit"      , m_low         ) ;
+  declareProperty ( "HighLimit"     , m_high        ) ;
   // define the default appropriate input data
   setInputData    ( TrStoredTrackLocation:: Default ) ;
 };
@@ -157,14 +163,14 @@ StatusCode CaloTrack2EstimatorAlg::execute()
   typedef const TrStoredTracks             Tracks  ;
   typedef Relation1D<TrStoredTrack,float>  Table   ;
   
-  // create and register new relation object 
-  Table*     table = new Table();
-  StatusCode sc    = put( table , outputData() );
-  if( sc.isFailure()   ) { return StatusCode::FAILURE ; }            // RETURN 
-  
   // get the tracks from the store 
   const Tracks* tracks = get( eventSvc() , inputData() , tracks );
   if( 0 == tracks      ) { return StatusCode::FAILURE ; }           // RETURN
+
+  // create and register new relation object 
+  Table*     table = new Table( tracks->size() );
+  StatusCode sc    = put( table , outputData() );
+  if( sc.isFailure()   ) { return StatusCode::FAILURE ; }            // RETURN
   
   // loop over all tracks 
   for( Tracks::const_iterator itrack = tracks->begin() ; 

@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.3 2003-04-17 11:42:01 cattanem Exp $ 
+! $Id: release.notes,v 1.4 2003-07-17 12:45:14 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
 ! CVS tag   $Name: not supported by cvs2svn $
 ! -----------------------------------------------------------------------------
@@ -6,6 +6,12 @@
 ! Responsible : Vanya BELYAEV Ivan.Belyaev@itep.ru
 ! Purpose     : Calorimeter PIDs 
 ! -----------------------------------------------------------------------------
+
+! 2003-07-17 - Ivan BELYAEV
+ - minor change if algorithms to speed-up a code a little bit 
+ - options introduce a low/high limits for estimators to skip 
+   'bad' records 
+
 
 !======================== CaloPIDs v1r0 2003-04-17 ======================
 ! 2003-04-17 - Marco Cattaneo
