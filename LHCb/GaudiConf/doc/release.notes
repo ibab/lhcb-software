@@ -1,6 +1,9 @@
 package GaudiConf
 package manager: M.Cattaneo
 
+! 2004-12-17 - Marco Cattaneo
+ - Gaudi.supp updated for LHCb v17r2
+
 !======================== GaudiConf v8r3 2004-11-29 ========================
 ! 2004-11-29 - Marco Cattaneo
  - Remove remaining .py options files (obsolete)
