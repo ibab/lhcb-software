@@ -1,26 +1,27 @@
-// $Id: CaloClustersMCTruthAlg.h,v 1.2 2002-06-13 12:28:48 ibelyaev Exp $
+// $Id: CaloClustersMCTruth2Alg.h,v 1.1 2002-06-13 12:28:48 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
 // ============================================================================
-#ifndef CALOASSOCIATORS_CALOCLUSTERSMCTRUTHALG_H 
-#define CALOASSOCIATORS_CALOCLUSTERSMCTRUTHALG_H 1
+#ifndef CALOASSOCIATORS_CALOCLUSTERSMCTruth2Alg_H 
+#define CALOASSOCIATORS_CALOCLUSTERSMCTruth2Alg_H 1
 // Include files
 // from STL
 #include <string>
 // from Gaudi
 #include "CaloKernel/CaloAlgorithm.h"
 
-/** @class CaloClustersMCTruthAlg CaloClustersMCTruthAlg.h
+/** @class CaloClustersMCTruth2Alg CaloClustersMCTruth2Alg.h
  *  
  *  The algorithm for building the relations
  *  between CaloClusters and MCParticles
  *
- *  This implementation is "primitive" - it relate
- *  CaloCluster object with MCParticle, which HAS a deposition 
- *  of active energy with exceed of some threshold.
- *  the deposited energy is the "weight" of the relation
+ *  This implementation is "primitive" - it relates
+ *  CaloCluster object with MCParticles which has the 
+ *  largest active energy deposition into the cluster
+ *  The value of deposited active energy is the "weight" 
+ *  of the relation
  * 
  *  @see CaloCluster
  *  @see MCParticle
@@ -29,11 +30,12 @@
  *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
  *  @date   08/04/2002
  */
-class CaloClustersMCTruthAlg
+
+class CaloClustersMCTruth2Alg
   : public CaloAlgorithm
 {
   // friend factory for instantiation 
-  friend AlgFactory<CaloClustersMCTruthAlg>; 
+  friend AlgFactory<CaloClustersMCTruth2Alg>; 
 public:
 
   /** standard initialization of the algorithm
@@ -66,33 +68,30 @@ protected:
    *  @param name name of the algorithm
    *  @param svc  service locator
    */
-  CaloClustersMCTruthAlg
+  CaloClustersMCTruth2Alg
   ( const std::string& name , 
     ISvcLocator*       svc  );
   
   /// destructor (virtual and protected)
-  virtual ~CaloClustersMCTruthAlg();
+  virtual ~CaloClustersMCTruth2Alg();
   
 private:
   
   /// default  constructor is private
-  CaloClustersMCTruthAlg();
+  CaloClustersMCTruth2Alg();
   /// copy     constructor is private
-  CaloClustersMCTruthAlg
-  ( const CaloClustersMCTruthAlg& );
+  CaloClustersMCTruth2Alg
+  ( const CaloClustersMCTruth2Alg& );
   /// assignement operator is private
-  CaloClustersMCTruthAlg& operator=
-  ( const CaloClustersMCTruthAlg& );
+  CaloClustersMCTruth2Alg& operator=
+  ( const CaloClustersMCTruth2Alg& );
   
 private:
-
-  double      m_threshold ;
-  std::string m_particles ;
   
 };
 
 // ============================================================================
 // The END 
 // ============================================================================
-#endif // CALOCLUSTERSMCTRUTHALG_H
+#endif // CALOCLUSTERSMCTruth2Alg_H
 // ============================================================================

@@ -1,25 +1,22 @@
-# $Id: requirements,v 1.2 2002-04-09 10:47:44 ibelyaev Exp $
+# $Id: requirements,v 1.3 2002-06-13 12:28:47 ibelyaev Exp $
 # =============================================================================
 # CVS  tag $Name: not supported by cvs2svn $
 # =============================================================================
 # $Log: not supported by cvs2svn $
-# Revision 1.1.1.1  2002/04/08 14:27:28  ibelyaev
-# CaloAssociators: New package
-#
 # =============================================================================
-# Peckage wich contains tehessential ingredients to build/store/retrieve 
+# Package which contains the essential ingredients to build/store/retrieve 
 # basic relations/associations between calorimter objects 
 # =============================================================================
 # Package manager: Vanya Belyaev Ivan.Belyaev@itep.ru 
 # =============================================================================
 package           CaloAssociators
-version           v1r0
+version           v1r1
         
 # =============== structure =================================================== 
 branches          src cmt doc options 
 
 # =============== used packages ===============================================
-use CaloEvent     v10r*  Event 
+use CaloEvent     v11r*  Event 
 use CaloDet       v4r*   Det 
 
 # =============== own options =================================================
@@ -29,15 +26,5 @@ set CALOASSOCIATORSOPTS  ${CALOASSOCIATORSROOT}/options
 library           CaloAssociators  *.cpp
 
 # =============== patterns ====================================================
+apply_pattern     component_library library=CaloAssociators 
 
-apply_pattern     package_Clinkopts 
-apply_pattern     package_Cstamps
-apply_pattern     packageShr 
-
-# =============== private stuff ===============================================
-private
-apply_pattern     package_Cshlibflags
-macro CaloAssociatorslinkopts  " $(LHCbKernel_linkopts) "
-# =============================================================================
-# The end 
-# =============================================================================

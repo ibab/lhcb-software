@@ -1,14 +1,8 @@
-// $Id: CaloAssociators_load.cpp,v 1.3 2002-04-25 17:29:52 ibelyaev Exp $
+// $Id: CaloAssociators_load.cpp,v 1.4 2002-06-13 12:28:47 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
-// Revision 1.2  2002/04/08 15:53:07  ibelyaev
-//  add trivial/primitive relation builder algorithm as an example
-//
-// Revision 1.1.1.1  2002/04/08 14:27:28  ibelyaev
-// CaloAssociators: New package
-// 
 // ============================================================================
 // Include files
 // GaudiKernel 
@@ -26,6 +20,7 @@
 #include "Relations/AssociatorMACROs.h"
 
 IMPLEMENT_RelationW2D( CaloCluster , MCParticle , float );
+IMPLEMENT_RelationW1D( CaloCluster , MCParticle , float );
 IMPLEMENT_WAssociator( CaloCluster , MCParticle , float );
 
 /** @file CaloAssociators_load.cpp 
@@ -46,10 +41,12 @@ IMPLEMENT_WAssociator( CaloCluster , MCParticle , float );
 
 DECLARE_FACTORY_ENTRIES(CaloAssociators) {
 
+  DECLARE_RelationW1D( CaloCluster , MCParticle , float );
   DECLARE_RelationW2D( CaloCluster , MCParticle , float );
   DECLARE_WAssociator( CaloCluster , MCParticle , float );
 
   DECLARE_ALGORITHM  ( CaloClustersMCTruthAlg           );
+  DECLARE_ALGORITHM  ( CaloClustersMCTruth2Alg          );
   
 };
 

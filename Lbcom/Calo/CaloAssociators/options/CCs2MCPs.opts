@@ -1,28 +1,37 @@
-// $Id: CCs2MCPs.opts,v 1.1 2002-04-09 10:47:44 ibelyaev Exp $ 
+// $Id: CCs2MCPs.opts,v 1.2 2002-06-13 12:28:47 ibelyaev Exp $ 
 // ============================================================================
 // CVS tag $Nam:$
 // ============================================================================
-// $Log: not supported by cvs2svn $ 
+// $Log: not supported by cvs2svn $
+// Revision 1.1  2002/04/09 10:47:44  ibelyaev
+//  add options for Tool and Algorithm
+// 
 // ============================================================================
 
 // ============================================================================
 /** @file CCs2MCPs.opts
  *
- *  options for associator 
+ *  options for associator.
+ * 
+ *  2 algorithms coudl be used: 
+ *  <ul>
+ *  <li> 
+ *  ToolSvc.CCs2MCPs.AlgorithmType = "CaloClustersMCTruth2Alg" </li>
+ *  <li> 
+ *  ToolSvc.CCs2MCPs.AlgorithmType = "CaloClustersMCTruthAlg"  </li>
+ *  </ul>
  *
  *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
  *  @date 08 Apr 2002 
  */
 // ============================================================================
 
-ToolSvc.CCs2MCPs.Location      = "Rec/Calo/CCs2MCPs"           ;
-ToolSvc.CCs2MCPs.AlgorithmType = "CaloClustersMCTruthAlg"      ;
-ToolSvc.CCs2MCPs.AlgorithmName = "CCs2MCPs"                    ; 
+ToolSvc.CCs2MCPs.Location      = "Rec/Relations/CaloClusters2MCParticles" ;
+ToolSvc.CCs2MCPs.AlgorithmType = "CaloClustersMCTruth2Alg"                ;
+ToolSvc.CCs2MCPs.AlgorithmName = "CCs2MCPs"                               ; 
 
-CCs2MCPs.Input                 = "Rec/Calo/EcalLocMaxClusters" ; 
-CCs2MCPs.Output                = "Rec/Calo/CCs2MCPs"           ;
-CCs2MCPs.Detector              = "/dd/Structure/LHCb/Ecal"     ;
+CCs2MCPs.Input                 = "Rec/Calo/EcalCelAutoClusters"           ; 
+CCs2MCPs.Output                = "Rec/Relations/CaloClusters2MCParticles" ;
+CCs2MCPs.Detector              = "/dd/Structure/LHCb/Ecal"                ;
 
-// ============================================================================
-// The END of file $CALOASSOCIATORSOPTS/CCs2MCPs.opts
 // ============================================================================
