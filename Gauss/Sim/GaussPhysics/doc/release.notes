@@ -4,6 +4,7 @@
 ! Purpose          : collection of physics constructors for Gauss
 !-----------------------------------------------------------------------------
 
+!====================== GaussPhysics v3r0 ===============================
 ! 2004-02-18 - Vanya BELYAEV
  - remove old stuff
  - make use of new package G4hadlists 

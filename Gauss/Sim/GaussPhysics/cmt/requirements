@@ -1,7 +1,3 @@
-# #Id:$ 
-# =============================================================================
-# CVS tag $Name: not supported by cvs2svn $ 
-# =============================================================================
 package GaussPhysics
 version v3r0
 
@@ -9,8 +5,8 @@ version v3r0
 branches          cmt src doc
 
 # =============== explicit dependencies =======================================  
-use GaussTools    v*     Sim
-use G4hadlists    v* Geant4 
+use GaussTools    v*	Sim
+use G4hadlists    v*	Geant4 
 
 # ============== component library ============================================
 library          GaussPhysics      *.cpp  
