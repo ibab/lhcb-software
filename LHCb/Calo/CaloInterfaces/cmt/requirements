@@ -1,8 +1,11 @@
-# $Id: requirements,v 1.6 2001-12-15 18:25:58 ibelyaev Exp $
+# $Id: requirements,v 1.7 2002-03-19 17:31:27 ibelyaev Exp $
 # =============================================================================
 # CVS tag $Name: not supported by cvs2svn $ 
 # =============================================================================
 # $Log: not supported by cvs2svn $
+# Revision 1.6  2001/12/15 18:25:58  ibelyaev
+#  update for new policy of versions
+#
 # Revision 1.5  2001/12/09 14:09:14  ibelyaev
 #  update for newer version of Gaudi
 #
@@ -27,7 +30,7 @@
 # =============================================================================
 
 package           CaloInterfaces
-version           v1r0
+version           v1r1
 
 # =============== structure ===================================================
 branches          cmt doc src CaloInterfaces
