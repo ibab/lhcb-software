@@ -1,6 +1,11 @@
 ! Package     : VeloDAQ
 ! Responsible : ChrisParkes
 
+!=========================  VeloDAQ v2r3p1 2005-03-07 =====================
+! 2005-03-07 - Marco Cattaneo
+ - Fix requirements to use DAQEvent v*
+
+!==========================  VeloDAQ v2r3 2005-02-10 ======================
 ! 2005-02-10 - David Hutchcroft
  - Modified the code to produce banks for all of the sensors.
 
