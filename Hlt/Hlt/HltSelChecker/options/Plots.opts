@@ -57,19 +57,19 @@ HLTSingleMuons.OutputPlotsPath = "MuonOut";
 HLTDimuons.MakePlots = true ;
 HLTDimuons.DaughterPlots.Variables = { "P", "Pt", "IPs" } ;
 HLTDimuons.MotherPlots.Variables =   { "WM",     "M", "Chi2", "Vz", "P", "Pt", "IPs", "FS" } ;
-HLTDimuons.MotherPlots.Minima    = { -3000.*MeV, -1., 0., -150*mm, 0., 0., 0., 0. };
-HLTDimuons.MotherPlots.Maxima    = { 10000.*MeV, -1., 20., 150*mm, 100., 20., 10., 20. };
+HLTDimuons.MotherPlots.Minima    = { -3000.*MeV, -1., 0., -150*mm, 0.*GeV, 0.*GeV, 0., 0. };
+HLTDimuons.MotherPlots.Maxima    = { 10000.*MeV, -1., 20., 150*mm, 100.*GeV, 20.*GeV, 10., 20. };
 HLTDimuons.DaughterPlotsPath = "MuMuIn" ;
 HLTDimuons.MotherPlotsPath   = "MuMuOut";
 
 // unbiased J/psis
 HLTUnbiasedJpsis.MakePlots = true ;
 HLTUnbiasedJpsis.InputPlots.Variables =  { "WM",     "M", "Chi2", "Vz", "P", "Pt", "IPs", "FS" } ;
-HLTUnbiasedJpsis.InputPlots.Minima    = { -3000.*MeV, -1., 0., -150*mm, 0.,   0., 0., 0. };
-HLTUnbiasedJpsis.InputPlots.Maxima    = { 10000.*MeV, -1., 20., 150*mm, 100., 20., 10., 20. };
+HLTUnbiasedJpsis.InputPlots.Minima    = { -3000.*MeV, -1., 0., -150*mm, 0.*GeV,   0.*GeV, 0., 0. };
+HLTUnbiasedJpsis.InputPlots.Maxima    = { 10000.*MeV, -1., 20., 150*mm, 100.*GeV, 20.*GeV, 10., 20. };
 HLTUnbiasedJpsis.OutputPlots.Variables = { "WM",     "M", "Chi2", "Vz", "P", "Pt", "IPs", "FS" } ;
-HLTUnbiasedJpsis.OutputPlots.Minima    = { -600.*MeV, -1., 0., -150*mm, 0., 0., 0., 0. };
-HLTUnbiasedJpsis.OutputPlots.Maxima     = { 10000.*MeV, -1., 20., 150*mm, 100., 20., 10., 20. };
+HLTUnbiasedJpsis.OutputPlots.Minima    = { -600.*MeV, -1., 0., -150*mm, 0.*GeV, 0.*GeV, 0., 0. };
+HLTUnbiasedJpsis.OutputPlots.Maxima     = { 10000.*MeV, -1., 20., 150*mm, 100.*GeV, 20.*GeV, 10., 20. };
 HLTUnbiasedJpsis.InputPlotsPath  = "JpsiIn" ;
 HLTUnbiasedJpsis.OutputPlotsPath = "JpsiOut";
 
@@ -150,8 +150,8 @@ HLTFilterBd2DstarPi.MotherPlotsPath   = "Bd2DstarPiOut";
 HLTFilterBd2MuMuKstar.MakePlots = true ;
 HLTFilterBd2MuMuKstar.DaughterPlots.Variables = { "M", "Chi2", "Vz", "P", "Pt", "IPs" } ;
 HLTFilterBd2MuMuKstar.MotherPlots.Variables =   { "WM", "M", "Chi2", "Vz", "P", "Pt", "IPs", "FS" } ;
-HLTFilterBd2MuMuKstar.MotherPlots.Minima    = { -3000.*MeV, -1., 0., -150*mm, 0., 0., 0., 0. };
-HLTFilterBd2MuMuKstar.MotherPlots.Maxima    = {  2500.*MeV, -1., 20., 150*mm, 100., 20., 10., 20. };
+HLTFilterBd2MuMuKstar.MotherPlots.Minima    = { -3000.*MeV, -1., 0., -150*mm, 0.*GeV, 0.*GeV, 0., 0. };
+HLTFilterBd2MuMuKstar.MotherPlots.Maxima    = {  2500.*MeV, -1., 20., 150*mm, 100.*GeV, 20.*GeV, 10., 20. };
 HLTFilterBd2MuMuKstar.DaughterPlotsPath = "Bd2MuMuKstarIn" ;
 HLTFilterBd2MuMuKstar.MotherPlotsPath   = "Bd2MuMuKstarOut";
 
