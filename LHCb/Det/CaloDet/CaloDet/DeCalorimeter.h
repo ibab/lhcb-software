@@ -9,6 +9,7 @@
 ///
 #include "CLHEP/Geometry/Point3D.h"
 #include "CLHEP/Units/SystemOfUnits.h"
+#include "CLHEP/Units/PhysicalConstants.h"
 
 /// from Det/DetDesc
 ///
@@ -89,6 +90,7 @@ public:
   double cellSize ( const CaloCellID& ID ) const { return cells[ID].size (); }
   double cellSine ( const CaloCellID& ID ) const { return cells[ID].sine (); }
   double cellGain ( const CaloCellID& ID ) const { return cells[ID].gain (); }
+  double cellTime ( const CaloCellID& ID ) const { return cells[ID].time (); }
 
   const HepPoint3D&    cellCenter       ( const CaloCellID& ID ) const { 
                                           return cells[ID].center       (); }
@@ -208,6 +210,7 @@ protected:
     double               size          () const { return m_Size          ; }
     double               sine          () const { return m_Sine          ; }
     double               gain          () const { return m_Gain          ; }
+    double               time          () const { return m_Time          ; }
     int                  cardNumber    () const { return m_CardNumber    ; }
     int                  cardRow       () const { return m_CardRow       ; }
     int                  cardColumn    () const { return m_CardColumn    ; }
@@ -222,6 +225,7 @@ protected:
       m_Size   = S; 
       m_Sine   = sqrt( (point.x()*point.x() + point.y()*point.y()) / 
 		       point.mag2() ); 
+      m_Time   = point.mag() /c_light *ns;
     }
 
     void addZsupNeighbor( const CaloCellID& ID) { 
@@ -244,6 +248,7 @@ protected:
     HepPoint3D    m_Center         ; // Cell centre
     double        m_Sine           ; // To transform E to Et
     double        m_Gain           ; // MeV per ADC count
+    double        m_Time           ; // Nominal time of flight from Vertex (ns)
     int           m_CardNumber     ; // Front-end card number 
     int           m_CardRow        ; // card row and column
     int           m_CardColumn     ;

@@ -187,10 +187,10 @@ StatusCode DeCalorimeter::buildCells( ) {
 // ** We limit to +-4, i.e. the size ratio should be less than 4
 
 	for( int  iRow = rc - 4 ; iRow <= rc + 4 ; ++iRow    ) {
-	  if( (iRow >= 0) && (iRow <= maxRowCol)    ) { 
+	  if( (0 <= iRow ) && (maxRowCol >= iRow )    ) { 
 
 	    for( int  iColumn = cc - 4 ; iColumn <= cc + 4 ; ++iColumn ) {
-	      if( ( iColumn >= 0 ) && ( iColumn <= maxRowCol)   ) { 
+	      if( ( 0 <= iColumn ) && ( maxRowCol >= iColumn )   ) { 
 
 		CaloCellID id2( m_caloIndex, iArea , iRow , iColumn ) ;
 	      
@@ -208,6 +208,15 @@ StatusCode DeCalorimeter::buildCells( ) {
 	
       } /// end of loop over all areas 
     }
+
+    log << MSG::VERBOSE << "Cell " << id << " Neighbors ";
+    CaloNeighbors::const_iterator neighbor = neighborCells( id ).begin() ; 
+    while ( neighbor != neighborCells( id ).end() ) {   
+      log << (*neighbor) ;
+      ++neighbor;
+    }
+    log << endreq;
+
   } // end of loop ovel all cells 
 
   m_initialized = true ; 
@@ -301,7 +310,7 @@ StatusCode DeCalorimeter::buildCards( )  {
 	for ( int iRow = firstRow; 
 	      maxRowCol-firstRow >= iRow; iRow+=nRowCaloCard ) {
 	  
-// ** for each possible card, check if any of the 32 channels of the card exist.
+// ** for each possible card, check if any of the 32 channels of the card exist
 	  
 	  int nchan        =  0;
 	  int downCard     = -1;
@@ -325,7 +334,8 @@ StatusCode DeCalorimeter::buildCards( )  {
 
 // ** Define the 'previous' card (ECAL only), the previous (down) card in the
 // ** same validation card.
-// ** This is the down card, except if the card is just over the horizontal line
+// ** This is the down card, except if the card is just over the horizontal 
+// ** line
 
 		    if ( (iRow < firstRowUp) || 
 			 (iRow > firstRowUp + nRowCaloCard) ) {

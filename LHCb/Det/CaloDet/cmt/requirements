@@ -10,7 +10,6 @@ include_dirs      $(CALODETROOT)
 # =============== used packages ===========================================
 use DetDesc      v6*  Det 
 use CaloGen      v1*  Calo 
-#use CaloSicbCnv	 v1*  SICB
 
 # =============== link library (base classes) =============================
 library          CaloDetLib        Lib/*.cpp 
