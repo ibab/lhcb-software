@@ -1,6 +1,14 @@
 package DetDesc
 package manager : R Chytracek
 
+! 20010116 - DetDesc 
+ Vanya Belyaev 
+  DetDesc/LVolume.h 
+  DetDesc/LVolume.create.... 
+  Add new functionality - a possibility of 2 and even 3 loops in creation on parametrized volumes.
+!===========================================================================
+
+
 ! 20001108 - DetDesc v5
 
 ! 20001102 - DetDesc pre v5
