@@ -1,5 +1,5 @@
 package Gauss
-version v11r0
+version v11r1
 
 # =============================================================================
 # structure 
@@ -46,7 +46,7 @@ use GeneratorModules    v7r0    Gen
 #use EvGen              v4r0    Sim 
 
 #geometry source 
-use XmlDDDB             v16r0   Det 
+use XmlDDDB             v16r1   Det 
 
 # =============================================================================
 # Essential environment variables 
