@@ -1,6 +1,6 @@
-# $Id: requirements,v 1.19 2004-12-08 17:21:27 marcocle Exp $
+# $Id: requirements,v 1.20 2005-02-09 13:24:43 marcocle Exp $
 package DetCondExample
-version v5r0
+version v6r1
 
 branches doc src job options cmt XMLDDDB sql
 ignore_pattern package_stamps 
@@ -19,7 +19,26 @@ use DetDescCnv v* Det
 use XmlDDDB v* Det
 
 # Detector Conditions
-use DetCond v* Det
+use DetCond v6* Det
+
+# library path needed for mysql backend
+use myodbc   v* LCG_Interfaces
+use mysql    v* LCG_Interfaces
+use unixodbc v* LCG_Interfaces
+
+# library path needed for sqlite backend
+#path_remove LD_LIBRARY_PATH "/sqlite/"
+#path_append LD_LIBRARY_PATH "$(LCG_external)/sqlite/3.0.8/$(CMTCONFIG)/lib" WIN32 ""
+#### sqlite is not working
+
+# library path needed for oracle backend
+path_remove LD_LIBRARY_PATH "/oracle/"
+path_append LD_LIBRARY_PATH "/afs/cern.ch/project/oracle/instantclient/10.1.0.2/$(CMTCONFIG)/lib" WIN32 "" \
+            slc3_ia32_gcc323 "/afs/cern.ch/project/oracle/instantclient/10.1.0.2/cel3-i386_gcc323/lib" \
+	    rh73_gcc323_dbg "/afs/cern.ch/project/oracle/instantclient/10.1.0.2/rh73_gcc323/lib" \
+            slc3_ia32_gcc323_dbg "/afs/cern.ch/project/oracle/instantclient/10.1.0.2/cel3-i386_gcc323/lib"
+set TNS_ADMIN "/afs/cern.ch/project/oracle/admin"
+
 
 # Xml Parsing services (XmlCnvSvc)
 use XmlTools v* Tools
@@ -30,10 +49,12 @@ set DETCONDEXAMPLE_XMLDDDB ${DETCONDEXAMPLEROOT}/XMLDDDB
 # DAQ test parameters (number of events, folder name and record size in bytes)
 set DETCONDEXAMPLE_DAQEVTMAX 10
 set DETCONDEXAMPLE_DAQFOLDERNAME DAQ
-set DETCONDEXAMPLE_DAQRECORDSIZE 100000
+#set DETCONDEXAMPLE_DAQRECORDSIZE 100000
+# currently COOL can store only strings <~ 4000 chars
+set DETCONDEXAMPLE_DAQRECORDSIZE 4000
 
 # Setup for the test CondDB used in the example
-setup_script setupDB
+#setup_script setupDB
 
 # Path to some useful scripts using sql
 path_append PATH ${DETCONDEXAMPLEROOT}/sql
@@ -42,25 +63,18 @@ path_append PATH ${DETCONDEXAMPLEROOT}/sql
 path_remove LD_LIBRARY_PATH ${DETCONDEXAMPLEROOT}
 path_append LD_LIBRARY_PATH ${DETCONDEXAMPLEROOT}/${BINDIR}
 
-# Set the debug level for the CONDDB libraries. 
-# Possible debug levels are:
-#    none: no message is printed (default)
-#    prof: only print messages which do not disturb profiling measurements
-#    user: only print messages of "general" interest
-#    devl: also print messages of interest only for the package developer
-#    more: more paranoid messages are printed 
-#    all:  any debug message will be printed
-# Objy debug level (no default set in package CONDDB)
-# MySQL debug level (override values set in package CondDBMYSQL)
-set COND_DB_DEBUG none
-# Oracle debug level (override values set in package CondDBOracle)
-set CONDDBORACLE_DEBUG none
-
 #==================================================================
 private
 
 #==> Detector Conditions example
 application DetCondExample *.cpp $(GAUDICONFROOT)/src/GaudiMain.cpp
-macro DetCondExample_linkopts "$(application_linkopts)"
+macro DetCondExample_linkopts "$(application_linkopts) -L$(DETCONDROOT)/$(CMTCONFIG) -lDetCond "
+
+# macro_append DetCondExample_linkopts "" \
+#         slc3_ia32_gcc323_dbg " -L$DETDESCROOT/slc3_ia32_gcc323 -L$DETDESCCNVROOT/slc3_ia32_gcc323"
+# path_append LD_LIBRARY_PATH "" \
+#         slc3_ia32_gcc323_dbg "$DETDESCROOT/slc3_ia32_gcc323"
+# path_append LD_LIBRARY_PATH "" \
+#         slc3_ia32_gcc323_dbg "$DETDESCCNVROOT/slc3_ia32_gcc323"
 
 path JOBOPTSEARCHPATH ../options
