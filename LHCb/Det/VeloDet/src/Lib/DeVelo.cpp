@@ -1,4 +1,4 @@
-// $Id: DeVelo.cpp,v 1.28 2003-01-07 07:33:10 ocallot Exp $
+// $Id: DeVelo.cpp,v 1.29 2003-01-08 06:47:47 ocallot Exp $
 //
 // ============================================================================
 #define  VELODET_DEVELO_CPP 1
@@ -146,7 +146,7 @@ StatusCode DeVelo::initialize() {
   switch (m_design){
   case 1:
     m_fixPitchRadius = m_innerRadius;
-    m_outerPitch     = .10263*mm;
+    m_outerPitch     = .1030*mm;
     m_nbRInner       = 512;
     break;
   case 2:
@@ -379,6 +379,8 @@ StatusCode DeVelo::initialize() {
     radius += rPitch( radius );
     m_rStrip.push_back( radius );
   }
+  radius += rPitch( radius );
+  m_rStrip.push_back( radius );
 
   msg << MSG::DEBUG 
       << "RStrip buffer size " << m_rStrip.size()
