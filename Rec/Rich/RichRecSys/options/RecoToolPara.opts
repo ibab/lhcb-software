@@ -17,7 +17,7 @@
 // Pixel creator using full reconstructed information from RawBuffer (Default)
 // Same functionality as the one below, but skips the creation of the RichDigits for speed
 // Some MC associations may fail with this option, in which case use the one below
-#include "$RICHHLTSYSOPTS/tools/RichPixelsFromRawBuffer.opts"
+#include "$RICHRECSYSOPTS/tools/RichPixelsFromRawBuffer.opts"
 
 // Pixel creator using full reconstructed information from RichDigits
 //#include "$RICHRECSYSOPTS/tools/RichPixelsFromRichDigits.opts"
