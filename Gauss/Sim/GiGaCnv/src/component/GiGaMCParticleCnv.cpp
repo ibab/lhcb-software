@@ -1,8 +1,11 @@
-// $Id: GiGaMCParticleCnv.cpp,v 1.16 2002-07-02 15:15:44 ibelyaev Exp $ 
+// $Id: GiGaMCParticleCnv.cpp,v 1.17 2002-07-17 08:29:49 ranjard Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.16  2002/07/02 15:15:44  ibelyaev
+//  fix the bugs
+//
 // Revision 1.15  2002/05/20 13:36:16  ibelyaev
 //  add conversion of primary vertices
 //
@@ -215,9 +218,10 @@ StatusCode GiGaMCParticleCnv::updateObj
       table.resize( 4 * trajectories->size() );
       // create the conversion functor 
       GiGaCnvFunctors::Trajectory2Particle Cnv( ppSvc() );
-      // perform the conversion itself  
-      for( G4TrajectoryContainer::const_iterator iTr = trajectories->begin() ;
-           trajectories->end() != iTr ; ++iTr ) 
+      // perform the conversion itself
+      TrajectoryVector* tv = trajectories->GetVector();
+      for(TrajectoryVector::const_iterator iTr = tv->begin(); tv->end() != iTr;
+          ++iTr ) 
         {
           const GiGaTrajectory* trajectory = 
             ( 0 == *iTr ) ? (const GiGaTrajectory*) 0 : 
@@ -298,15 +302,15 @@ StatusCode GiGaMCParticleCnv::updateObjRefs
                   particles->begin                     () , 
                   GiGaCnvFunctors::MCParticleResetRefs () ) ;
   //
-  typedef SmartRef<MCVertex>                    Ref ;
-  typedef GiGaTrajectory::const_iterator        ITG ;
-  typedef G4TrajectoryContainer::const_iterator ITC ;
+  typedef SmartRef<MCVertex>               Ref;
+  typedef GiGaTrajectory::const_iterator   ITG;
+  typedef TrajectoryVector::const_iterator ITC;
   MCVertex miscVertex; /// misc 
   GiGaCnvFunctors::MCVerticesLess  Less  ; 
   GiGaCnvFunctors::MCVerticesEqual Equal ;
-  MCVertices::iterator iVertex     = vertices     -> begin() ;
-  for( ITC iTrajectory = trajectories->begin() ; 
-       trajectories->end() != iTrajectory ; ++iTrajectory )
+  MCVertices::iterator iVertex     = vertices     -> begin();
+  TrajectoryVector* tv = trajectories->GetVector();
+  for( ITC iTrajectory = tv->begin(); tv->end() != iTrajectory ; ++iTrajectory )
     {
       const G4VTrajectory* vt = *iTrajectory ;
       if( 0 == vt       ) { return Error("G4VTrajectory* points to NULL" ) ; } 

@@ -1,19 +1,20 @@
-# $Id: requirements,v 1.24 2002-07-09 16:35:05 witoldp Exp $ 
+# $Id: requirements,v 1.25 2002-07-17 08:29:46 ranjard Exp $ 
 # =============================================================================
 
 package  GiGaCnv 
-version  v6r0
+version  v7r0
 
 branches cmt src doc GiGaCnv 
 
 include_dirs     $(GIGACNVROOT)
+
+use DetDesc       v11r*	Det
         
-use HepMC         v1r2*  Sim
+use HepMC         v3r121p0  Sim
 use GenEvent      v2r*   Event
 
-use GiGa          v8r*  Sim 
-use Event         v2r*	Event
-use DetDesc       v10r*	Det
+use GiGa          v9r*  Sim 
+use Event         v3r*	Event
 
 # ============== linker library (base classes) ================================
 library          GiGaCnvLib            Lib/*.cpp

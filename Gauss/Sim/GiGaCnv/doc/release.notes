@@ -1,7 +1,13 @@
-! $Id: release.notes,v 1.25 2002-07-09 20:33:54 ibelyaev Exp $
+! $Id: release.notes,v 1.26 2002-07-17 08:29:49 ranjard Exp $
 ! =============================================================================
 Package         : GiGaCnv
 Package Manager : Vanya Belyaev Ivan.Belyaev@itep.ru
+
+
+!========================= GiGaCnv v7r0 =================================
+! 2002-07-15 - F.Ranjard
+  requirements - use DetDesc v11r*, Event v3r* to use LHCbKernel v2r*
+  GiGaMCParticleCnv.cpp, GiGaMCVertexCnv.cpp - adapted to geant4 4.1
 
 ! 2002-07-09 - Ivan Belyaev
   Move namespace GiGaVolumeUtils into public area of the package 

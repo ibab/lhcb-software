@@ -1,8 +1,11 @@
-// $Id: GiGaMCVertexCnv.cpp,v 1.16 2002-07-02 15:15:44 ibelyaev Exp $ 
+// $Id: GiGaMCVertexCnv.cpp,v 1.17 2002-07-17 08:29:49 ranjard Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.16  2002/07/02 15:15:44  ibelyaev
+//  fix the bugs
+//
 // Revision 1.15  2002/07/02 14:38:59  witoldp
 // comment lines that were creating infinite loop (primary vtx converstion)
 //
@@ -235,9 +238,9 @@ StatusCode GiGaMCVertexCnv::updateObj
     // create "converter"
     GiGaCnvFunctors::Point2Vertex Cnv;
     // convert points into vertices 
-    typedef G4TrajectoryContainer::const_iterator IT;
-    for( IT iTr = trajectories->begin() ; 
-         trajectories->end() != iTr ; ++iTr ) 
+    typedef TrajectoryVector::const_iterator IT;
+    for( IT iTr = trajectories->GetVector()->begin() ; 
+         trajectories->GetVector()->end() != iTr ; ++iTr ) 
       {
         //
         const G4VTrajectory* vt = *iTr ;
@@ -345,7 +348,7 @@ StatusCode GiGaMCVertexCnv::updateObjRefs
   // fill relations
   {
     typedef SmartRef<MCParticle> Ref;
-    typedef G4TrajectoryContainer::const_iterator ITT ;
+    typedef TrajectoryVector::const_iterator ITT ;
     typedef GiGaTrajectory::const_iterator        ITG ;
     typedef MCParticles::iterator                 ITP ;
     typedef MCVertices::iterator                  ITV ;
@@ -355,10 +358,9 @@ StatusCode GiGaMCVertexCnv::updateObjRefs
     GiGaCnvFunctors::MCVerticesEqual Equal ;
     // get the references between MCParticles and Geant4 TrackIDs
     GiGaKineRefTable& table = kineSvc()->table();
-    
+    TrajectoryVector* tv = trajectories->GetVector();
     ITV iVertex     = vertices     -> begin() ;
-    for(  ITT iTrajectory = trajectories->begin() ; 
-          trajectories -> end() != iTrajectory ; ++iTrajectory )
+    for(ITT iTrajectory = tv->begin(); tv->end() != iTrajectory; ++iTrajectory )
       {
         const G4VTrajectory* vt = *iTrajectory ;
         if( 0 == vt  ) { return Error("G4VTrajectory* points to NULL" ) ; } 
