@@ -1,4 +1,4 @@
-// $Id: DeVelo.cpp,v 1.25 2002-11-08 10:56:09 ocallot Exp $
+// $Id: DeVelo.cpp,v 1.26 2002-12-03 06:24:12 ocallot Exp $
 //
 // ============================================================================
 #define  VELODET_DEVELO_CPP 1
@@ -73,14 +73,14 @@ StatusCode DeVelo::initialize() {
   delete pmgr;
   //====================================================================
 
-  MsgStream loging( msgSvc(), "DeVelo" );
-  loging << MSG::INFO << "Using VELO R Detector design " << m_design << endreq;
+  MsgStream msg( msgSvc(), "DeVelo" );
+  msg << MSG::INFO << "Using VELO R Detector design " << m_design << endreq;
 
 
   sc = DetectorElement::initialize();
   ///
   if( sc.isFailure() ) { 
-    loging << MSG::ERROR << "Failure to initialize DetectorElement" << endreq;
+    msg << MSG::ERROR << "Failure to initialize DetectorElement" << endreq;
     return sc ; 
   }
   ///
@@ -136,7 +136,7 @@ StatusCode DeVelo::initialize() {
   switch (m_design){
   case 1:
     m_fixPitchRadius = m_innerRadius;
-    m_outerPitch     = .1028*mm;
+    m_outerPitch     = .1030*mm;
     m_nbRInner       = 512;
     break;
   case 2:
@@ -197,11 +197,11 @@ StatusCode DeVelo::initialize() {
   }
   ///
 
-  loging << MSG::DEBUG 
-         << "Velo : Radius from " << m_innerRadius/mm 
-         << " to " << m_outerRadius/mm 
-         << " thick " << m_siliconThickness / micrometer << " microns"
-         << endreq;
+  msg << MSG::DEBUG 
+      << "Velo : Radius from " << m_innerRadius/mm 
+      << " to " << m_outerRadius/mm 
+      << " thick " << m_siliconThickness / micrometer << " microns"
+      << endreq;
  
   // Auxilliary variables for R strip computation
 
@@ -239,7 +239,7 @@ StatusCode DeVelo::initialize() {
 
   double phi = m_phiOuterTilt - asin( m_outerTiltRadius / m_outerRadius );
 
-  loging << "Phi (degree) inner "    << m_phiOrigin / degree
+  msg << "Phi (degree) inner "    << m_phiOrigin / degree
          << " at boundary " << m_phiAtBoundary / degree
          << " and outside " << phi / degree
          << endreq;
@@ -259,7 +259,7 @@ StatusCode DeVelo::initialize() {
   IDetectorElement* stations = this;
   unsigned int firstInStation = 0 ;
 
-  loging << "PuVeto " ;
+  msg << "PuVeto " ;
 
   for( IDetectorElement::IDEContainer::iterator child = stations->childBegin();
        stations->childEnd() != child ; ++child ) {
@@ -289,7 +289,7 @@ StatusCode DeVelo::initialize() {
           } else {
             if ( inVeto ) {
               inVeto = false;
-              loging << endreq;
+              msg << endreq;
               index  = 0;
             }
             if ( typeStr == "RRigh" ) {
@@ -309,7 +309,7 @@ StatusCode DeVelo::initialize() {
         }
 
         if ( 0 > type ) {
-          loging << MSG::ERROR << "Unknown type " << typeStr
+          msg << MSG::ERROR << "Unknown type " << typeStr
                  << " for sensor " << index
                  << " at z = " << z
                  << endreq;
@@ -328,12 +328,12 @@ StatusCode DeVelo::initialize() {
         }
 
         sprintf( line, "S%2d ", sensor->number() );
-        loging << line << typeStr;
+        msg << line << typeStr;
         sprintf( line, "(%d) z=%7.2f ", sensor->type(), sensor->z() );
-        loging << line;
+        msg << line;
 
       } else {
-        loging << " no geometry !" << endreq;
+        msg << " no geometry !" << endreq;
       }
     }
 
@@ -344,16 +344,16 @@ StatusCode DeVelo::initialize() {
 
       for ( unsigned int sR = firstInStation ; m_sensor.size() > sR ; sR++ ) {
         if ( isRSensor( sR )  ) {
-          loging << " R:" << sR << "-Phi";
+          msg << " R:" << sR << "-Phi";
           for ( unsigned int sP = firstInStation; m_sensor.size() > sP; sP++) {
             if ( !isRSensor( sP )  ) {
               m_sensor[sR]->associate( sP );
-              loging << sP << " ";
+              msg << sP << " ";
             }
           }
         }
       }
-      loging << endreq;
+      msg << endreq;
     }
 
   }
@@ -369,6 +369,12 @@ StatusCode DeVelo::initialize() {
     radius += rPitch( radius );
     m_rStrip.push_back( radius );
   }
+
+  msg << MSG::DEBUG 
+      << "RStrip buffer size " << m_rStrip.size()
+      << " last two R " << m_rStrip[ m_rStrip.size()-2 ] << " "
+      << m_rStrip[ m_rStrip.size()-1 ] << endreq;
+
   m_zVertex = 0;   // default value.
 
   return sc;
@@ -457,9 +463,8 @@ double DeVelo::stripNumberByType( int type,
           }
           pitch = m_rStrip[ilst]- m_rStrip[ifst];
           strip = ifst + ( radius - m_rStrip[ifst] ) / pitch;
- 
          
-          if ( m_nbRInner < strip ) {
+          if ( m_nbRInner <= strip ) {
             strip += m_nbRInner;            // get space for second inner part
           } else {
             if ( 1 == (zone%2) ) { 
@@ -612,12 +617,6 @@ bool DeVelo::getSpacePoint( unsigned int RSensorNumber,
   // check some matching in the detector region.
   double rAtPhi = localR * ( zPhi - m_zVertex ) / ( zR - m_zVertex );
   double tolPhiBoundary = 5. * m_innerPitch;
-
-  // If the local computed slope is too big, keep R constant...
-  //if ( 0.4 < localR / fabs( zR - m_zVertex ) ) { 
-  //  rAtPhi = localR; 
-  //  tolPhiBoundary = .5 * fabs( zPhi-zR );  // Don't know the angle -> 45 deg
-  //}
 
   if ( m_innerRadius - tolPhiBoundary > rAtPhi ) { return false; }
   if ( m_outerRadius + tolPhiBoundary < rAtPhi ) { return false; }
@@ -957,10 +956,6 @@ void DeVelo:: phiMatchingStrips( int sensor, double radius,
   if ( 2 > phiType ) return;    // R sensor
   int rType   = m_sensor[rSensor]->type();
 
-  //== tolerance in phi angle to match R and Phi...
-  double deltaPhi =  angularTol * 
-    fabs(m_sensor[sensor]->z() - m_sensor[rSensor]->z()) / radius;
-
   if ( m_innerRadius > radius ) return;
   if ( m_outerRadius < radius ) return;
   bool isInner = m_phiBoundRadius > radius;
@@ -975,17 +970,24 @@ void DeVelo:: phiMatchingStrips( int sensor, double radius,
     pitch  = -pitch;
     offset = -offset;
   }
-  // For unusual pairing, rotate Phi ranges to match the R zone...
+  //== tolerance in phi angle to match R and Phi...
+  double absDz =  fabs(m_sensor[sensor]->z() - m_sensor[rSensor]->z());
+  double deltaPhi = angularTol * absDz / radius;
+  
   double phiMin = m_phiMin[zone]-deltaPhi - offset;
   double phiMax = m_phiMax[zone]+deltaPhi - offset;
   
+  // For unusual pairing, rotate Phi ranges to match the R zone...
+  // But only in the appropriate zones...
   if ( ( phiType + rType )%2 != 0 ) {
-    if ( phiMin < 0 ) {
+    if ( 0 == zone || 2 == zone ) {
       phiMin += pi;
       phiMax += pi;
-    } else {
+    } else if ( 4 == zone || 5 == zone ) {
       phiMin -= pi;
       phiMax -= pi;
+    } else {
+      return;
     }
   }
 
