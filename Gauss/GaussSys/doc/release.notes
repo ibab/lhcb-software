@@ -4,6 +4,10 @@
 ! Purpose     : Gauss system
 !-----------------------------------------------------------------------------
 
+!======================== GaussSys v15r9 2004-05-10 ================
+! 2004-05-10 - Florence RANJARD
+ - Gauss v15r9 uses geant4 6.1.ref01
+
 !======================== GaussSys v15r8 2004-05-07 =================
 ! 2004-05-07 - Florence RANJARD
  - Gauss v15r8 uses PHOTOS202 and LHCb v15r9
