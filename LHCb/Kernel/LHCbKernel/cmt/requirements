@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.6 2002-03-27 19:26:00 cattanem Exp $
+# $Id: requirements,v 1.7 2002-03-28 09:34:27 cattanem Exp $
 # =============================================================================
 # CVS tag $Name: not supported by cvs2svn $
 # =============================================================================
@@ -17,17 +17,20 @@ use GaudiObjDesc       v3r*
 
 # Produce Header-Files from XML description, overriding default destination
 #============================================================================
+# Override of default destination has unwanted side-effects on other packages
+# To be fixed in next version of GaudiObjDesc. 
+# Copy generated .h file by hand for now, from ../Event to ../Kernel
 #macro GODflags " -o "
 #set GODDOTHOUT "../Kernel/" \
 #    WIN32      "..\Kernel\"
 
 document obj2doth LHCbKernelObj2Doth ../xml/*.xml
 
-# Dictionary not working on ITChannelID
-document obj2dict LHCbKernelObj2Dict ../xml/*.xml
+# Dictionary not yet working on ITChannelID due to int() cast operator
+# document obj2dict LHCbKernelObj2Dict ../xml/*.xml
 
-library LHCbKernel *.cpp \
-                   ../dict/*.cpp
+library LHCbKernel *.cpp
+#                   ../dict/*.cpp
 
 apply_pattern package_linkopts
 apply_pattern package_stamps
