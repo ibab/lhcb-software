@@ -1,7 +1,11 @@
-! $Id: release.notes,v 1.43 2003-02-17 09:22:29 witoldp Exp $
+! $Id: release.notes,v 1.44 2003-03-05 15:19:19 ranjard Exp $
 ! =============================================================================
 Package         : GiGaCnv
 Package Manager : Vanya Belyaev Ivan.Belyaev@itep.ru
+
+!======================== GiGaCnv v11r2 ===============================
+! 2003-03-05 - Florence Ranjard
+  various fixes for Win32
 
 !======================== GiGaCnv v11r1 ===============================
 

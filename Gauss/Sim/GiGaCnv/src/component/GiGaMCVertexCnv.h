@@ -1,8 +1,11 @@
-// $Id: GiGaMCVertexCnv.h,v 1.7 2003-01-23 10:06:30 witoldp Exp $ 
+// $Id: GiGaMCVertexCnv.h,v 1.8 2003-03-05 15:19:20 ranjard Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.7  2003/01/23 10:06:30  witoldp
+// added handling of shortlived particles
+//
 // Revision 1.6  2002/05/02 11:57:03  ibelyaev
 //  cleanup of header files
 //
@@ -137,7 +140,7 @@ private:
   // map containing IDs of problematic trajectories with only one point
 
   //  std::vector<int> m_onepointIDs;
-  std::map<int, GiGaTrajectoryPoint*, less<int> > m_onepointIDs;
+  std::map<int, GiGaTrajectoryPoint*, std::less<int> > m_onepointIDs;
 
   
 };

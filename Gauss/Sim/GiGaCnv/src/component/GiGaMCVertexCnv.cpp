@@ -1,8 +1,11 @@
-// $Id: GiGaMCVertexCnv.cpp,v 1.21 2003-02-24 10:22:48 witoldp Exp $ 
+// $Id: GiGaMCVertexCnv.cpp,v 1.22 2003-03-05 15:19:20 ranjard Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.21  2003/02/24 10:22:48  witoldp
+// cout commented out
+//
 // Revision 1.20  2003/01/23 10:06:30  witoldp
 // added handling of shortlived particles
 //
@@ -456,7 +459,7 @@ StatusCode GiGaMCVertexCnv::updateObjRefs
     // now loop through the trajectories which were attached to problematic 
     // particles (i.e. to trajectories with one point only)
     
-    for (  std::map<int, GiGaTrajectoryPoint*, less<int> >::iterator 
+    for (  std::map<int, GiGaTrajectoryPoint*, std::less<int> >::iterator 
              miter=m_onepointIDs.begin(); 
            m_onepointIDs.end()!=miter; ++miter)
       {

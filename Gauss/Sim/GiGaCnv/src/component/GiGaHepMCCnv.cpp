@@ -1,8 +1,11 @@
-// $Id: GiGaHepMCCnv.cpp,v 1.9 2003-01-30 11:10:36 witoldp Exp $
+// $Id: GiGaHepMCCnv.cpp,v 1.10 2003-03-05 15:19:19 ranjard Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.9  2003/01/30 11:10:36  witoldp
+// fixes to GiGaHepMCCnv
+//
 // Revision 1.8  2002/12/07 14:36:26  ibelyaev
 //  see $GIGACNVROOT/doc/release.notes
 // 
@@ -199,7 +202,7 @@ StatusCode GiGaHepMCCnv::updateRep
           }
         
         // sort the vector, so we always put them in the same order into G4
-        sort(outpart.begin(), outpart.end(), comp_bar());
+        std::sort(outpart.begin(), outpart.end(), comp_bar());
         
         for(std::vector<HepMC::GenParticle*>::iterator ioutpart=outpart.begin();
             outpart.end()!=ioutpart;ioutpart++)
@@ -257,7 +260,7 @@ G4PrimaryParticle* GiGaHepMCCnv::GenPartG4Part(HepMC::GenParticle* particle)
         }
 
         // sort the vector, so we always put them in the same order into G4
-        sort(outp.begin(), outp.end(), comp_bar());
+        std::sort(outp.begin(), outp.end(), comp_bar());
         
         for(std::vector<HepMC::GenParticle*>::iterator ioutpart=outp.begin();
             outp.end()!=ioutpart;ioutpart++)
