@@ -1,5 +1,5 @@
 
-pythonexe     = $(Python_home)\bin\python
+pythonexe     = $(Python_home)\python.exe
 parsetool     = $(GAUDIOBJDESCROOT)\scripts\godII.py
 dtdfile       = ..\$(xmlsrc)\gdd.dtd 
 srcDest       = "../Event"

@@ -2,5 +2,5 @@ $(dest)${NAME}.obj2dict : ${FULLNAME}
 	@echo Producing Dictionary files from ${FULLNAME}
 	@if not exist $(dest) mkdir $(dest)
 	@cd $(dest)
-	@$(pythonexe) $(parsetool) $(GODflags) $(${CONSTITUENT}_GODflags) -g dct -r $(GAUDIOBJDESCROOT) ${FULLNAME}
+	@"$(pythonexe)" $(parsetool) $(GODflags) $(${CONSTITUENT}_GODflags) -g dct -r $(GAUDIOBJDESCROOT) ${FULLNAME}
 	@echo "" > ${NAME}.obj2dict
