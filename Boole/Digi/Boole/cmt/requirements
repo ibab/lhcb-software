@@ -45,15 +45,10 @@ use FieldMap	v4r3
 #-- LHCb libraries (from LHCB_v14r0)
 use LHCb	v14r0
 
-#-> SICB basic libraries (from SICBOO_v1r0)
-#use SICBSys	v1r6	SICB
+#-> SICB libraries included to avoid dependency on SICBOO package
 use RiSicbGeom	v3r4	SICB
 
 #-- BooleSys v2r0 packages
-
-# Brunel utilities
-#use BrunelSicb          v4r1    Rec
-#use BrunelAlgs          v2r2	Rec
 
 # LHC background
 use DigiAlg		v2r0	Digi
@@ -95,14 +90,9 @@ use RichUtils		v3r3  	Rich
 use RichDetTools	v3r0  	Rich
 use RichReadout		v1r0	Rich
 
-# SICBDST packages
-#use recevt              v3r5  	SICB
-#use recrich             v7r4  	SICB
-
 #
 #===== build Boole =========================
 application Boole $(GAUDICONFROOT)/src/GaudiMain.cpp
-#                   $(BRUNELSICBROOT)/src/Objs/*.F
 # ========================= set macros ============================
 
 macro Boole_linkopts    "$(application_linkopts)"
@@ -112,6 +102,4 @@ macro_append Boole_linkopts " "\
                 Linuxdbx     " -g -Wl,--start-group "
 
 apply_pattern application_path
-
-#set SICBCARDS  ${BOOLEOPTS}/Boole.cards
 
