@@ -1,10 +1,10 @@
-! $Id: release.notes,v 1.39 2004-12-06 12:01:34 asatta Exp $
+! $Id: release.notes,v 1.40 2005-01-18 17:17:37 pkoppenb Exp $
 ! =============================================================================
 ! Package     : MuonTools
 ! Responsible : David Hutchcroft David.Hutchcroft@cern.ch
 ! =============================================================================
 
-!======================== MuonTools v3r8 2004-12-06 ========================
+!======================== MuonTools v3r8 2004-01-18 ========================
 ! 2004-11-06 - Alessia Satta
  - Add a new tool to be used only for trigger pad DO NOT USE FOR STRIP!!!!!
 
