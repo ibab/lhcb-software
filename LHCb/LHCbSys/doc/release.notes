@@ -19,7 +19,7 @@
                         TrEvent v13r0, RichEvent v7r0, MuonEvent v3r0,
                         PhysEvent v8r0, HltEvent v5r0
                       DetSys v4r1, DetDesc v14r1, DetDescCnv v2r3, ITDet v1r9,
-                        OTDet v5r2, VeloDet v8r8
+                        OTDet v5r2, VeloDet v8r8, Magnet v2r4
                       AssociatorsSys v1r9, TrFitEvent v4r2, ITAssociators v2r6,
                         OTAssociators v2r7, TrAssociators v3r8, Associators v2r2,
                         VeloAssociators v1r7, CaloAssociators v3r5
