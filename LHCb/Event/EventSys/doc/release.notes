@@ -1,6 +1,10 @@
 package EventSys
 package manager: Marco Cattaneo
 
+!======================== EventSys v15r2 2003-11-25 ========================
+! 2003-11-25 - Marco Cattaneo
+ - Use DAQEvent v3r0, TrEvent v12r2, CaloEvent v12r1, RichEvent v6r1,DbCnv v7r2p1
+
 !======================== EventSys v15r1 2003-11-10 ========================
 ! 2003-11-10 - Marco Cattaneo
  Bug fix release to allow serialisation of L1Buffer and HLTBuffer
