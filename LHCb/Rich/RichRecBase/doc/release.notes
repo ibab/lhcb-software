@@ -4,6 +4,9 @@
 ! Purpose     : Base package for RICH Reconstruction Packages
 !-----------------------------------------------------------------------------
 
+! 2004-04-20 - Chris Jones
+ - Improvements to RichTrackSelector
+
 ! 2004-04-18 - Chris Jones
  - Improvements to reconstruction event model
 

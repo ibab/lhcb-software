@@ -72,6 +72,7 @@
             </method>
             <method desc="Reset information to force recalculation" name="reset" type="void"/>
             <attribute array="FALSE" compression="FALSE" desc="Reconstructed momentum at vertex" init="0" name="vertexMomentum" type="double"/>
+            <attribute array="FALSE" compression="FALSE" desc="Track charge" init="0" name="charge" type="float"/>
             <attribute array="FALSE" compression="TRUE" desc="The number of emitted photons expected for each particle hypothesis" name="nEmittedPhotons" type="RichHypoData&lt;double&gt;"/>
             <attribute array="FALSE" compression="TRUE" desc="The number of detectable emitted photons expected for each particle hypothesis" name="nDetectablePhotons" type="RichHypoData&lt;double&gt;"/>
             <attribute array="FALSE" compression="TRUE" desc="The number of signal photons expected for each particle hypothesis" name="nSignalPhotons" type="RichHypoData&lt;double&gt;"/>
@@ -170,11 +171,11 @@
             <typedef access="PUBLIC" def="PDGeomEffs" desc="Data containers for each hypothesis" type="RichMap&lt;RichSmartID::KeyType,double&gt;"/>
             <typedef access="PUBLIC" def="PDGeomEffsVector" desc="Data containers for each hypothesis" type="std::vector&lt; PDGeomEffs &gt;"/>
             <constructor desc="Constructor from a RichTrackSegment" initList="m_emittedPhotonSpectra(enBins,minEn,maxEn), m_detectablePhotonSpectra(enBins,minEn,maxEn), m_signalPhotonSpectra(enBins,minEn,maxEn), m_geomEfficiencyPerPD(Rich::NParticleTypes, PDGeomEffs() ), m_trackSegment(segment), m_hitDetectorRegions(0), m_richRecTrack(pTrk), m_allPhotonsDone(false)">
-                <arg name="segment" type="RichTrackSegment"/>
-                <arg inout="BYVALUE" name="pTrk" type="RichRecTrack*"/>
-                <arg inout="BYVALUE" name="enBins" type="unsigned int"/>
-                <arg inout="BYVALUE" name="minEn" type="double"/>
-                <arg inout="BYVALUE" name="maxEn" type="double"/>
+                <arg const="TRUE" name="segment" type="RichTrackSegment"/>
+                <arg const="FALSE" inout="BYVALUE" name="pTrk" type="RichRecTrack*"/>
+                <arg const="TRUE" inout="BYVALUE" name="enBins" type="unsigned int"/>
+                <arg const="TRUE" inout="BYVALUE" name="minEn" type="double"/>
+                <arg const="TRUE" inout="BYVALUE" name="maxEn" type="double"/>
                 <code/>
             </constructor>
             <method const="FALSE" desc="Set the geometrical efficiency for a given particle type" name="setGeomEfficiency">
