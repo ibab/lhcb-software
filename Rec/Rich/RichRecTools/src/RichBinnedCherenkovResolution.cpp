@@ -1,4 +1,4 @@
-// $Id: RichBinnedCherenkovResolution.cpp,v 1.1 2003-08-06 11:08:12 jonrob Exp $
+// $Id: RichBinnedCherenkovResolution.cpp,v 1.2 2003-08-12 13:35:42 jonrob Exp $
 
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h"
@@ -132,7 +132,7 @@ StatusCode RichBinnedCherenkovResolution::initialize() {
   // Sets up various tools and services
   if ( !RichRecToolBase::initialize() ) return StatusCode::FAILURE;
 
- // Acquire instances of tools
+  // Acquire instances of tools
   acquireTool( "RichCherenkovAngle", m_ckAngle );
 
   // Informational Printout
@@ -144,7 +144,7 @@ StatusCode RichBinnedCherenkovResolution::initialize() {
           << " Cherenkov Resolution = " << m_theerr[iR][iT] << endreq;
     }
   }
-
+  
   return StatusCode::SUCCESS;
 }
 

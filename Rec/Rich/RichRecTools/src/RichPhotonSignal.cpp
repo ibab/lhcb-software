@@ -1,4 +1,4 @@
-// $Id: RichPhotonSignal.cpp,v 1.4 2003-08-08 10:40:44 jonrob Exp $
+// $Id: RichPhotonSignal.cpp,v 1.5 2003-08-12 13:35:43 jonrob Exp $
 
 // local
 #include "RichPhotonSignal.h"
@@ -30,22 +30,32 @@ StatusCode RichPhotonSignal::initialize() {
 
   // Sets up various tools and services
   if ( !RichRecToolBase::initialize() ) return StatusCode::FAILURE;
-  
+
   // Acquire instances of tools
   acquireTool( "RichExpectedTrackSignal", m_signal  );
   acquireTool( "RichCherenkovAngle",      m_ckAngle );
   acquireTool( "RichCherenkovResolution", m_ckRes   );
 
-  // Temporary variables - should be got from XML eventually
-  m_radiusCurv[ Rich::Rich1 ] = 240.0;
-  m_radiusCurv[ Rich::Rich2 ] = 860.0;
-  m_pixelArea = 0.24*0.24;
+  // Get Rich Detector elements
+  SmartDataPtr<IDetectorElement> Rich1DE( detSvc(), "/dd/Structure/LHCb/Rich1" );
+  SmartDataPtr<IDetectorElement> Rich2DE( detSvc(), "/dd/Structure/LHCb/Rich2" );
 
+  // Detector parameters
+  // Rich1 radius of curvature in mm
+  m_radiusCurv[Rich::Rich1] = Rich1DE->userParameterAsDouble("Rich1Mirror1RadiusQ1");
+  // Rich2 radius of curvature in mm
+  m_radiusCurv[Rich::Rich2] = Rich2DE->userParameterAsDouble("Rich2SphMirrorRadius");
+  // area of pixel in mm^2
+  m_pixelArea = 2.4*2.4;
+  // XML number needs understanding w.r.t CDF above
+  // m_pixelArea = ( Rich1DE->userParameterAsDouble("RichHpdPixelXsize")/cm *
+  //                 Rich1DE->userParameterAsDouble("RichHpdPixelYsize")/cm );
+  
   // Informational Printout
   msg << MSG::DEBUG
-      << " Mirror radia of curvature   = " 
+      << " Mirror radii of curvature    = "
       << m_radiusCurv[Rich::Rich1] << " " << m_radiusCurv[Rich::Rich2] << endreq
-      << " Pixel area                  = " << m_pixelArea << endreq;
+      << " Pixel area                   = " << m_pixelArea << endreq;
 
   return StatusCode::SUCCESS;
 }
@@ -56,9 +66,9 @@ StatusCode RichPhotonSignal::finalize() {
   msg << MSG::DEBUG << "Finalize" << endreq;
 
   // release tools
-  releaseTool( m_signal );
+  releaseTool( m_signal  );
   releaseTool( m_ckAngle );
-  releaseTool( m_ckRes );
+  releaseTool( m_ckRes   );
 
   // Execute base class method
   return RichRecToolBase::finalize();
@@ -69,13 +79,22 @@ double RichPhotonSignal::predictedPixelSignal( RichRecPhoton * photon,
 
   if ( !photon->expPixelSignalPhots().dataIsValid(id) ) {
 
-    double prob = photon->geomPhoton().activeSegmentFraction() *
+    // Which detector
+    Rich::DetectorType det = photon->richRecSegment()->trackSegment().rich();
+
+    // Reconstructed Cherenkov theta angle
+    double thetaReco = photon->geomPhoton().CherenkovTheta();
+
+    // Compute the expected pixel contribution
+    double pixelSignal = photon->geomPhoton().activeSegmentFraction() *
       ( ( signalProb(photon, id) *
           m_signal->nSignalPhotons(photon->richRecSegment(),id) ) +
         ( scatterProb(photon, id) *
-          m_signal->nScatteredPhotons(photon->richRecSegment(),id) ) );
+          m_signal->nScatteredPhotons(photon->richRecSegment(),id) ) ) *
+      4.0 * m_pixelArea / ( m_radiusCurv[det] * m_radiusCurv[det] *
+                            (thetaReco>1e-10 ? thetaReco : 1e-10) );
 
-    photon->setExpPixelSignalPhots( id, prob );
+    photon->setExpPixelSignalPhots( id, pixelSignal );
 
   }
 
@@ -99,14 +118,10 @@ double RichPhotonSignal::signalProb( RichRecPhoton * photon,
   double thetaDiff = thetaReco-thetaExp;
   if ( fabs(thetaDiff) > 30.0*thetaExpRes ) return 0;
 
-  // Which detector
-  Rich::DetectorType det = photon->richRecSegment()->trackSegment().rich();
-
+  // return the probability
   double expArg = 0.5*thetaDiff*thetaDiff/(thetaExpRes*thetaExpRes);
-  expArg = ( expArg>650 ? 650 : expArg );
-  return ( exp(-expArg) / ( sqrt(2.*M_PI)*M_PI*thetaExpRes ) ) *
-    (2.*m_pixelArea / ( m_radiusCurv[det]*m_radiusCurv[det] *
-                        (thetaReco>0.0001 ? thetaReco : 0.0001) ) );
+  return ( exp( -(expArg>650 ? 650 : expArg) ) /
+           ( sqrt(2.*M_PI)*2.*M_PI*thetaExpRes ) );
 }
 
 double RichPhotonSignal::scatterProb( RichRecPhoton * photon,
@@ -123,7 +138,7 @@ double RichPhotonSignal::scatterProb( RichRecPhoton * photon,
     // Reconstructed Cherenkov theta angle
     double thetaRec = photon->geomPhoton().CherenkovTheta();
 
-    // Compute the scattering  
+    // Compute the scattering
     double fbkg = 0.0;
     if ( thetaRec < thetaExp ) {
       fbkg = ( exp(17.0*thetaRec) - 1.0 ) / ( exp(17.0*thetaExp) - 1.0 );
@@ -134,13 +149,8 @@ double RichPhotonSignal::scatterProb( RichRecPhoton * photon,
       return 0.0;
     }
 
-    // Which detector
-    Rich::DetectorType det = photon->richRecSegment()->trackSegment().rich();
-
-    // return prob
-    return 8.*m_pixelArea*fbkg /
-      (M_PI*M_PI*m_radiusCurv[det]*m_radiusCurv[det]*thetaRec);
-
+    // return the probability
+    return 2.0 * fbkg / (M_PI*M_PI);
   }
 
   return 0.;

@@ -1,15 +1,19 @@
-// $Id: RichPhotonSignal.h,v 1.3 2003-08-08 10:40:44 jonrob Exp $
+// $Id: RichPhotonSignal.h,v 1.4 2003-08-12 13:35:44 jonrob Exp $
 #ifndef RICHRECTOOLS_RICHPHOTONSIGNAL_H
 #define RICHRECTOOLS_RICHPHOTONSIGNAL_H 1
 
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h"
+#include "GaudiKernel/SmartDataPtr.h"
 
 // base class
 #include "RichRecBase/RichRecToolBase.h"
 
 // Event
 #include "Event/RichRecPhoton.h"
+
+// Detector Description
+#include "DetDesc/DetectorElement.h"
 
 // Interfaces
 #include "RichRecBase/IRichPhotonSignal.h"
@@ -20,10 +24,14 @@
 // Rich Kernel
 #include "RichKernel/MessageSvcStl.h"
 
+// CLHEP
+#include "CLHEP/Units/PhysicalConstants.h"
+
 /** @class RichPhotonSignal RichPhotonSignal.h
  *
- *  Tool which performs the association between RichRecTracks and
- *  RichRecPixels to form RichRecPhotons
+ *  Tool to calculate for a given photon the probabilities of it 
+ *  being a signal or scattered photon, and its predicted contribution
+ *  to its associated RichRecPixel, under a certain mass hypothesis
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -51,11 +59,11 @@ public:
   /// Predicted pixel signal for a given reconstructed photon under a given mass hypothesis
   double predictedPixelSignal( RichRecPhoton * photon,
                                const Rich::ParticleIDType id );
-  /// Signal Probability
+  /// Signal Probability for a given reconstructed photon under a given mass hypothesis
   double signalProb( RichRecPhoton * photon,
                      const Rich::ParticleIDType id );
 
-  /// Scatter Probability
+  /// Scatter Probability for a given reconstructed photon under a given mass hypothesis
   double scatterProb( RichRecPhoton * photon,
                       const Rich::ParticleIDType id );
 

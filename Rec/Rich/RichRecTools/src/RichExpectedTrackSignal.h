@@ -1,9 +1,10 @@
-// $Id: RichExpectedTrackSignal.h,v 1.1 2003-08-06 11:08:12 jonrob Exp $
+// $Id: RichExpectedTrackSignal.h,v 1.2 2003-08-12 13:35:43 jonrob Exp $
 #ifndef RICHRECTOOLS_RICHEXPECTEDTRACKSIGNAL_H
 #define RICHRECTOOLS_RICHEXPECTEDTRACKSIGNAL_H 1
 
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h"
+#include "GaudiKernel/SmartDataPtr.h"
 
 // CLHEP
 #include "CLHEP/Units/PhysicalConstants.h"
@@ -16,6 +17,7 @@
 
 // Event model
 #include "Event/RichRecSegment.h"
+#include "Event/RichRecTrack.h"
 #include "Event/RichPID.h"
 
 // interfaces
@@ -24,6 +26,7 @@
 #include "RichRecBase/IRichSellmeirFunc.h"
 #include "RichRecBase/IRichSignalDetectionEff.h"
 #include "RichRecBase/IRichParticleProperties.h"
+#include "RichRecBase/IRichRayleighScatter.h"
 
 /** @class RichExpectedTrackSignal RichExpectedTrackSignal.h
  *
@@ -142,11 +145,6 @@ public:
                          const Rich::RadiatorType rad,
                          const Rich::ParticleIDType id = Rich::Electron );
 
-private:  // Private methods
-
-  /// Photon Rayleigh scattering probability in aerogel
-  double photonUnscatteredProb( const double energy, const double path );
-
 private:  // Private data
 
   /// Pointers to tool instances
@@ -154,9 +152,7 @@ private:  // Private data
   IRichSellmeirFunc * m_sellmeir;
   IRichSignalDetectionEff * m_sigDetEff;
   IRichParticleProperties * m_richPartProp;
-
-  /// Rayleigh sattering parameters
-  double m_rayleighPara[2];
+  IRichRayleighScatter * m_rayScat;
 
 };
 

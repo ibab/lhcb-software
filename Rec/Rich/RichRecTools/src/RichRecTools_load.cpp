@@ -1,4 +1,4 @@
-// $Id: RichRecTools_load.cpp,v 1.5 2003-08-06 11:08:13 jonrob Exp $
+// $Id: RichRecTools_load.cpp,v 1.6 2003-08-12 13:35:44 jonrob Exp $
 
 #include "GaudiKernel/DeclareFactoryEntries.h"
 
@@ -24,5 +24,6 @@ DECLARE_FACTORY_ENTRIES( RichRecTools ) {
   DECLARE_TOOL( RichBinnedCherenkovResolution );
   DECLARE_TOOL( RichSignalDetectionEff );
   DECLARE_TOOL( RichParticleProperties );
+  DECLARE_TOOL( RichRayleighScatter );
 
 };

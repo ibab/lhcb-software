@@ -1,4 +1,4 @@
-// $Id: RichParticleProperties.cpp,v 1.1 2003-08-06 11:08:12 jonrob Exp $
+// $Id: RichParticleProperties.cpp,v 1.2 2003-08-12 13:35:43 jonrob Exp $
 
 // local
 #include "RichParticleProperties.h"
@@ -41,40 +41,31 @@ StatusCode RichParticleProperties::initialize() {
     return StatusCode::FAILURE;
   }
 
-  // Rayleigh scattering parameters
-  m_rayleighPara[0] = 1.24; // Transform from eV to microns
-  m_rayleighPara[1] = 0.0008;
-
   // Retrieve particle masses
-  m_particleMass.push_back( ppSvc->find("e+" )->mass()/MeV );
-  m_particleMass.push_back( ppSvc->find("mu+")->mass()/MeV );
-  m_particleMass.push_back( ppSvc->find("pi+")->mass()/MeV );
-  m_particleMass.push_back( ppSvc->find("K+" )->mass()/MeV );
-  m_particleMass.push_back( ppSvc->find("p+" )->mass()/MeV );
+  m_particleMass[Rich::Electron] = ppSvc->find("e+" )->mass()/MeV;
+  m_particleMass[Rich::Muon]     = ppSvc->find("mu+")->mass()/MeV;
+  m_particleMass[Rich::Pion]     = ppSvc->find("pi+")->mass()/MeV;
+  m_particleMass[Rich::Kaon]     = ppSvc->find("K+" )->mass()/MeV;
+  m_particleMass[Rich::Proton]   = ppSvc->find("p+" )->mass()/MeV;
   ppSvc->release();
   // cache squares of masses
-  m_particleMassSq.push_back( m_particleMass[ Rich::Electron ] *
-                              m_particleMass[ Rich::Electron ] );
-  m_particleMassSq.push_back( m_particleMass[ Rich::Muon ] *
-                              m_particleMass[ Rich::Muon ] );
-  m_particleMassSq.push_back( m_particleMass[ Rich::Pion ] *
-                              m_particleMass[ Rich::Pion ] );
-  m_particleMassSq.push_back( m_particleMass[ Rich::Kaon ] *
-                              m_particleMass[ Rich::Kaon ] );
-  m_particleMassSq.push_back( m_particleMass[ Rich::Proton ] *
-                              m_particleMass[ Rich::Proton ] );
+  m_particleMassSq[Rich::Electron] = pow( m_particleMass[Rich::Electron], 2 );
+  m_particleMassSq[Rich::Muon]     = pow( m_particleMass[Rich::Muon], 2 );
+  m_particleMassSq[Rich::Pion]     = pow( m_particleMass[Rich::Pion], 2 );
+  m_particleMassSq[Rich::Kaon]     = pow( m_particleMass[Rich::Kaon], 2 );
+  m_particleMassSq[Rich::Proton]   = pow( m_particleMass[Rich::Proton], 2 );
 
   // Setup momentum thresholds
-  {for ( int iRad = 0; iRad < Rich::NRadiatorTypes; ++iRad ) {
+  for ( int iRad = 0; iRad < Rich::NRadiatorTypes; ++iRad ) {
     for ( int iHypo = 0; iHypo < Rich::NParticleTypes; ++iHypo ) {
       double refIndex = m_refIndex->refractiveIndex((Rich::RadiatorType)iRad);
       m_momThres[iRad][iHypo] = m_particleMass[iHypo]/sqrt(refIndex*refIndex - 1.0);
     }
-  }}
-
+  }
+  
   // Informational Printout
   msg << MSG::DEBUG
-      << " Particle masses (MeV)      = " << m_particleMass << endreq;
+      << " Particle masses (MeV/c^2)      = " << m_particleMass << endreq;
 
   return StatusCode::SUCCESS;
 }

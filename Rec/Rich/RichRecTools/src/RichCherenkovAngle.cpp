@@ -1,4 +1,4 @@
-// $Id: RichCherenkovAngle.cpp,v 1.1 2003-08-06 11:08:12 jonrob Exp $
+// $Id: RichCherenkovAngle.cpp,v 1.2 2003-08-12 13:35:43 jonrob Exp $
 
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h"
@@ -47,9 +47,6 @@ StatusCode RichCherenkovAngle::initialize() {
   acquireTool( "RichExpectedTrackSignal", m_signal       );
   acquireTool( "RichRefractiveIndex",     m_refIndex     );
   acquireTool( "RichParticleProperties",  m_richPartProp );
-
-  // Informational Printout
-  // msg << MSG::DEBUG;
 
   return StatusCode::SUCCESS;
 }

@@ -1,4 +1,4 @@
-// $Id: RichExpectedTrackSignal.cpp,v 1.1 2003-08-06 11:08:12 jonrob Exp $
+// $Id: RichExpectedTrackSignal.cpp,v 1.2 2003-08-12 13:35:43 jonrob Exp $
 
 // local
 #include "RichExpectedTrackSignal.h"
@@ -17,7 +17,12 @@ const        IToolFactory& RichExpectedTrackSignalFactory = s_factory ;
 RichExpectedTrackSignal::RichExpectedTrackSignal ( const std::string& type,
                                                    const std::string& name,
                                                    const IInterface* parent )
-  : RichRecToolBase( type, name, parent ) {
+  : RichRecToolBase( type, name, parent ),
+    m_geomEff      ( 0 ),
+    m_sellmeir     ( 0 ),
+    m_sigDetEff    ( 0 ),
+    m_richPartProp ( 0 ),
+    m_rayScat      ( 0 ) {
 
   declareInterface<IRichExpectedTrackSignal>(this);
 
@@ -35,11 +40,8 @@ StatusCode RichExpectedTrackSignal::initialize() {
   acquireTool( "RichGeomEff",            m_geomEff      );
   acquireTool( "RichSellmeirFunc",       m_sellmeir     );
   acquireTool( "RichSignalDetectionEff", m_sigDetEff    );
-  acquireTool( "RichParticleProperties", m_richPartProp );
-
-  // Rayleigh scattering parameters
-  m_rayleighPara[0] = 1.24; // Transform from eV to microns
-  m_rayleighPara[1] = 0.0008;
+  acquireTool( "RichParticleProperties", m_richPartProp ); 
+  acquireTool( "RichRayleighScatter",    m_rayScat      );
 
   // Informational Printout
   //msg << MSG::DEBUG
@@ -57,6 +59,7 @@ StatusCode RichExpectedTrackSignal::finalize() {
   releaseTool( m_sellmeir );
   releaseTool( m_sigDetEff );
   releaseTool( m_richPartProp );
+  releaseTool( m_rayScat );
 
   // Execute base class method
   return RichRecToolBase::finalize();
@@ -124,6 +127,7 @@ RichExpectedTrackSignal::nSignalPhotons ( RichRecSegment * segment,
     double detectablePhots = nDetectablePhotons( segment, id );
     if ( detectablePhots> 0 ) {
 
+      // which radiator
       Rich::RadiatorType rad = segment->trackSegment().radiator();
 
       // loop over energy bins
@@ -131,17 +135,16 @@ RichExpectedTrackSignal::nSignalPhotons ( RichRecSegment * segment,
       RichPhotonSpectra & detSpectra = segment->detectablePhotonSpectra();
       for ( unsigned int iEnBin = 0; iEnBin < detSpectra.energyBins(); ++iEnBin ) {
 
-        double unscattProb = 1;
-        if ( rad == Rich::Aerogel ) {
-          unscattProb = photonUnscatteredProb( detSpectra.binEnergy(iEnBin),
-                                               segment->trackSegment().pathLength() );
-        }
+        double scattProb = 
+          ( rad != Rich::Aerogel ? 0 :
+            m_rayScat->photonScatteredProb( segment,
+                                            detSpectra.binEnergy(iEnBin) ) );
 
         // observable photons * signal/scatter prob
         (sigSpectra.energyDist(id))[iEnBin] =
-          (detSpectra.energyDist(id))[iEnBin] * unscattProb;
+          (detSpectra.energyDist(id))[iEnBin] * (1.-scattProb);
         signal  += (sigSpectra.energyDist(id))[iEnBin];
-        scatter += (detSpectra.energyDist(id))[iEnBin] * (1-unscattProb);
+        scatter += (detSpectra.energyDist(id))[iEnBin] * scattProb;
 
       } // energy bin loop
 
@@ -164,14 +167,6 @@ RichExpectedTrackSignal::nScatteredPhotons ( RichRecSegment * segment,
   }
 
   return segment->nScatteredPhotons( id );
-}
-
-double RichExpectedTrackSignal::photonUnscatteredProb( const double energy,
-                                                       const double path ) {
-  if ( energy <= 0 || path <= 0 ) return 0;
-  double lambda = m_rayleighPara[0]/energy;
-  double scatLeng = lambda*lambda*lambda*lambda/m_rayleighPara[1];
-  return (scatLeng/path)*(1-exp(-1*path/scatLeng));
 }
 
 bool RichExpectedTrackSignal::hasRichInfo( RichRecSegment * segment ) {

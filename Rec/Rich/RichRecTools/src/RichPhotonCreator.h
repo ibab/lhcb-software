@@ -1,4 +1,4 @@
-// $Id: RichPhotonCreator.h,v 1.4 2003-08-06 11:08:13 jonrob Exp $
+// $Id: RichPhotonCreator.h,v 1.5 2003-08-12 13:35:43 jonrob Exp $
 #ifndef RICHRECTOOLS_RICHPHOTONCREATOR_H
 #define RICHRECTOOLS_RICHPHOTONCREATOR_H 1
 
@@ -21,6 +21,7 @@
 
 // Rich Kernel
 #include "RichKernel/MessageSvcStl.h"
+#include "RichKernel/BoostArray.h"
 
 /** @class RichPhotonCreator RichPhotonCreator.h
  *
@@ -106,7 +107,8 @@ private: // private data
   std::map<int, bool> m_photonDone;
 
   /// Max Cherenkov theta angle
-  std::vector<double> m_maxCKtheta;
+  //std::vector<double> m_maxCKtheta;
+  boost::array<double,Rich::NRadiatorTypes> m_maxCKtheta;
 
   /// Max Cherenkov theta angle
   std::vector<double> m_minCKtheta;

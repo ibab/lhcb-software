@@ -1,4 +1,4 @@
-// $Id: RichSignalDetectionEff.h,v 1.1 2003-08-06 11:08:14 jonrob Exp $
+// $Id: RichSignalDetectionEff.h,v 1.2 2003-08-12 13:35:44 jonrob Exp $
 #ifndef RICHRECTOOLS_RICHSIGNALDETECTIONEFF_H
 #define RICHRECTOOLS_RICHSIGNALDETECTIONEFF_H 1
 
@@ -13,7 +13,7 @@
 #include "RichDetTools/IRichDetInterface.h"
 
 // RichUtils
-#include "RichUtils/IRich1DProperty.h"
+//#include "RichUtils/IRich1DProperty.h"
 #include "RichUtils/Rich1DTabProperty.h"
 
 // CLHEP

@@ -1,4 +1,4 @@
-// $Id: RichGeomEffDetailed.cpp,v 1.3 2003-08-06 11:08:12 jonrob Exp $
+// $Id: RichGeomEffDetailed.cpp,v 1.4 2003-08-12 13:35:43 jonrob Exp $
 
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h"
@@ -50,8 +50,8 @@ StatusCode RichGeomEffDetailed::initialize() {
   if ( !RichRecToolBase::initialize() ) return StatusCode::FAILURE;
 
   // Acquire instances of tools
-  acquireTool("RichDetInterface", m_richDetInt);
-  acquireTool("RichCherenkovAngle", m_ckAngle);
+  acquireTool( "RichDetInterface",   m_richDetInt );
+  acquireTool( "RichCherenkovAngle", m_ckAngle    );
   
   // randomn number service
   IRndmGenSvc * randSvc;
@@ -65,7 +65,6 @@ StatusCode RichGeomEffDetailed::initialize() {
   // Set up cached parameters for geometrical efficiency calculation
   m_hpdInc = 1.0 / ( (double)m_nGeomEff );
   m_incPhi = M_PI/2.0 + M_2PI/( (double)m_nGeomEff );
-  //m_incPhi = M_2PI/( (double)m_nGeomEff );
   double ckPhi = 0.0;
   m_sinCkPhi.clear();
   m_cosCkPhi.clear();
@@ -90,7 +89,7 @@ StatusCode RichGeomEffDetailed::finalize() {
   // Release tools and services
   m_uniDist.finalize();
   releaseTool( m_richDetInt );
-  releaseTool( m_ckAngle );
+  releaseTool( m_ckAngle    );
 
   // Execute base class method
   return RichRecToolBase::finalize();

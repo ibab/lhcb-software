@@ -1,4 +1,4 @@
-// $Id: RichParticleProperties.h,v 1.1 2003-08-06 11:08:13 jonrob Exp $
+// $Id: RichParticleProperties.h,v 1.2 2003-08-12 13:35:43 jonrob Exp $
 #ifndef RICHRECTOOLS_RICHPARTICLEPROPERTIES_H
 #define RICHRECTOOLS_RICHPARTICLEPROPERTIES_H 1
 
@@ -12,6 +12,7 @@
 
 // Rich Kernel
 #include "RichKernel/MessageSvcStl.h"
+#include "RichKernel/BoostArray.h"
 
 // base class
 #include "RichRecBase/RichRecToolBase.h"
@@ -70,16 +71,13 @@ private:  // Private data
   IRichRefractiveIndex * m_refIndex;
 
   /// Array containing particle masses
-  std::vector<double> m_particleMass;
+  boost::array<double,Rich::NParticleTypes> m_particleMass;
 
-  /// Array containing particle masses
-  std::vector<double> m_particleMassSq;
+  /// Array containing square of particle masses
+  boost::array<double,Rich::NParticleTypes> m_particleMassSq;
 
   /// Momentum thresholds
   double m_momThres[Rich::NRadiatorTypes][Rich::NParticleTypes];
-
-  /// Rayleigh sattering parameters
-  double m_rayleighPara[2];
 
 };
 
