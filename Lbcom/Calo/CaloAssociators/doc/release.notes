@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.7 2002-06-16 10:48:02 ibelyaev Exp $
+! $Id: release.notes,v 1.8 2002-06-26 19:03:54 ibelyaev Exp $
 ! =============================================================================
 ! CVS tag $Name: not supported by cvs2svn $
 ! =============================================================================
@@ -6,6 +6,10 @@
 ! =============================================================================
 ! Responsible : Ivan Belyaev
 ! =============================================================================
+
+! 2002-06-26 - Ivan Belyaev
+ - Add one more MC truth algorithms. Probably it is the most general
+  and the most useful. Unfortunately it is quite slow.
 
 ! 2002-06-16 - Ivan Belyaev
  - update the options file to make "complex" MC links algoritm default 
