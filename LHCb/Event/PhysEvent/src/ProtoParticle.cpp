@@ -1,4 +1,4 @@
-// $Id: ProtoParticle.cpp,v 1.8 2004-03-03 17:50:48 pkoppenb Exp $
+// $Id: ProtoParticle.cpp,v 1.9 2004-03-05 13:08:13 cattanem Exp $
 // Include files 
 
 // STD and STL
@@ -207,9 +207,9 @@ const int ProtoParticle::minimalStates() const {
   // states per track.
 
   // forward and match have 5 (1%) or 6 (99%).
-  if (( track()->forward() ) || (track()->match() ) || 
-  // upstream have always 5 states (no extrapolation)
-      ( track()->upstream() ) ){
+  if ( track()->isLong() || 
+  // downstream have always 5 states (no extrapolation)
+       track()->isDownstream() ){
     return 5 ;
   // veloTT have 3 (5%) or 4 (95%).
   } else if ( track()->veloTT() ){ 
