@@ -1,6 +1,9 @@
-! $Id: release.notes,v 1.18 2002-06-19 13:30:38 roiser Exp $
+! $Id: release.notes,v 1.19 2002-07-04 09:20:54 mato Exp $
 package Event/VeloEvent
 package manager: C.Parkes
+
+! 2002-07-04 - Pere Mato
+ - Added /include:_<package>_loadRef in <package>_linkopts for Windows
 
 ! 2002-06-18 - Stefan Roiser
  - changed use-statement of GaudiObjDesc to v4r4

@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.20 2002-06-19 15:47:10 roiser Exp $
+# $Id: requirements,v 1.21 2002-07-04 09:20:53 mato Exp $
 package VeloEvent
 version v11r0
 
@@ -21,6 +21,8 @@ library          VeloEventDict  ../dict/*.cpp -import=GaudiIntrospection
 apply_pattern package_linkopts
 apply_pattern linker_path
 apply_pattern package_stamps
+macro_append VeloEvent_linkopts "" WIN32 "/include:_VeloEvent_loadRef"
+
 
 apply_pattern package_shlibflags
 #============================================================================
