@@ -37,7 +37,15 @@
         type="int"
         const="TRUE"
         >
-        <code> return int(m_data[2]&amp;65535); </code>
+        <code> return int(m_data[2]&amp;0xFF); </code>
+       </method>     
+       <method
+        desc="Return version of this bank "
+        name="version"
+        type="int"
+        const="TRUE"
+        >
+        <code> return int((m_data[2]&amp;0xFF00)&gt;&gt;8); </code>
        </method>     
        <method
         desc="Return SourceID of this bank "

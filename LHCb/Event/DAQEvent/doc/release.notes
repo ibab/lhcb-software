@@ -3,6 +3,15 @@ Author: Jose' Helder Lopes
 Purpose: Define the L1Buffer,  L1Event, L1Bank, RawBuffer, RawEvent and 
          RawBank classes.
 
+!=============== DAQEvent v4r5 2004-10-26 =============================
+! 2004-10-26 - Marco Cattaneo
+ - Change meaning of "BankType" field in RawBank header. Now top 8 bits are
+   interpreted as a bank version number, bottom 8 bits retain original bank type
+   meaning, taken from RawBuffer::BankType enum.
+   Change is backwards compatible with DC04 data (all version numbers are zero),
+   RawBuffer::addBank methods take additional version argument.
+ - Add EventHeaderFromRaw algorithm to decode EventHeader from RawBuffer
+
 !============== DAQEvent v4r4p1 2004-07-20 ============================
 ! 2004-07-29 - Marco Cattaneo
  - Fix a typo in L1Buffer banktype enum, L0DU was called LODU

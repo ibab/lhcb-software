@@ -1,4 +1,4 @@
-// $Id: CreateRawBuffer.cpp,v 1.1 2004-06-28 11:41:03 cattanem Exp $
+// $Id: CreateRawBuffer.cpp,v 1.2 2004-10-26 13:10:15 cattanem Exp $
 // Include files 
 
 // from Gaudi
@@ -57,7 +57,7 @@ StatusCode CreateRawBuffer::execute() {
   head[3] = 0;  // reserved for event time
 
   // Add this block to RawBuffer:
-  rawBuffer->addBank( 1, RawBuffer::Header, head, 2 );
+  rawBuffer->addBank( 1, RawBuffer::Header, head, 2, 0 );
 
   return StatusCode::SUCCESS;
 };

@@ -89,9 +89,14 @@
        <arg type="int" name="bankType"  />
        <arg type="raw_int *" name="data"    />
        <arg type="long" name="dataSize"  />
+       <arg type="int" name="version"  />
          <code> 
-  if( raw_int(sourceID)&gt;65535 ) { // Maximum value for 16 bit field
+  if( raw_int(sourceID)&gt;0xFFFF ) { // Maximum value for 16 bit field
       throw GaudiException( "sourceID value exceeds maximum (65535).",
+                            "RawBufferException", StatusCode::FAILURE ); 
+  }
+  if( raw_int(version)&gt;0xFF ) { // Maximum value for 8 bit field
+      throw GaudiException( "version value exceeds maximum (255).",
                             "RawBufferException", StatusCode::FAILURE ); 
   }
   long bankSize = 3 + dataSize ;
@@ -100,11 +105,25 @@
   long size=m_currentSize;
   m_buffer[size++]=raw_int(bankSize);
   m_buffer[size++]=m_magic;
-  m_buffer[size++]=(raw_int(sourceID)&lt;&lt;16)+raw_int(bankType);
+  m_buffer[size++]= (raw_int(sourceID)&lt;&lt;16) +
+                    (raw_int(version)&lt;&lt;8)   + raw_int(bankType);
 
   for( long i =0; i&lt;dataSize;++i) m_buffer[size++] = *(data++);
   m_currentSize+=bankSize;
          </code>
+       </method>
+       <method
+        desc="Method kept for backwards compatibility"
+        name="addBank"
+        type="void"
+       >
+       <arg type="int" name="sourceID" />
+       <arg type="int" name="bankType"  />
+       <arg type="raw_int *" name="data"    />
+       <arg type="long" name="dataSize"  />
+         <code>
+  return addBank( sourceID, bankType, data, dataSize, 0 );
+         </code> 
        </method>
        <method
         desc="Add a new bank of data to the buffer"
@@ -114,10 +133,15 @@
        <arg type="int" name="sourceID" />
        <arg type="int" name="bankType"  />
        <arg type="std::vector &lt;raw_int&gt;" name="data"    />
+       <arg type="int" name="version"  />
          <code> 
-  if( raw_int(sourceID)&gt;65535 ) { // Maximum value for 16 bit field
+  if( raw_int(sourceID)&gt;0xFFFF ) { // Maximum value for 16 bit field
       throw GaudiException( "sourceID value exceeds maximum (65535).",
                             "RawBufferException", StatusCode::FAILURE );
+  }
+  if( raw_int(version)&gt;0xFF ) { // Maximum value for 8 bit field
+      throw GaudiException( "version value exceeds maximum (255).",
+                            "RawBufferException", StatusCode::FAILURE ); 
   }
   long bankSize = 3 + data.size() ;
   long evtSize=m_currentSize+bankSize;
@@ -125,11 +149,24 @@
   long size=m_currentSize;
   m_buffer[size++]=raw_int(bankSize);
   m_buffer[size++]=m_magic;
-  m_buffer[size++]=(raw_int(sourceID)&lt;&lt;16)+raw_int(bankType);
+  m_buffer[size++]= (raw_int(sourceID)&lt;&lt;16) +
+                    (raw_int(version)&lt;&lt;8)   + raw_int(bankType);
 
   for( std::vector&lt;raw_int&gt;::iterator i =data.begin(); i!=data.end();++i) m_buffer[size++] = *i;
   m_currentSize+=bankSize;
          </code>
+       </method>
+       <method
+        desc="Method kept for backwards compatibility"
+        name="addBank"
+        type="void"
+       >
+       <arg type="int" name="sourceID" />
+       <arg type="int" name="bankType"  />
+       <arg type="std::vector &lt;raw_int&gt;" name="data"    />
+         <code>
+  return addBank( sourceID, bankType, data, 0 );
+         </code> 
        </method>
        <method
         desc="Reallocate buffer if more space is necessary"

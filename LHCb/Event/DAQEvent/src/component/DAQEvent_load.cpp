@@ -1,4 +1,4 @@
-// $Id: DAQEvent_load.cpp,v 1.1 2004-06-28 11:41:03 cattanem Exp $
+// $Id: DAQEvent_load.cpp,v 1.2 2004-10-26 13:10:15 cattanem Exp $
 
 // Include files 
 #include "GaudiKernel/DeclareFactoryEntries.h"
@@ -37,4 +37,5 @@ DECLARE_FACTORY_ENTRIES(DAQEvent) {
   DECLARE_ALGORITHM( CreateL1Event );
   DECLARE_ALGORITHM( CreateRawBuffer );
   DECLARE_ALGORITHM( CreateRawEvent );
+  DECLARE_ALGORITHM( EventHeaderFromRaw );
 }

@@ -1,4 +1,4 @@
-// $Id: RawEvent.cpp,v 1.1 2003-11-24 16:06:06 cattanem Exp $
+// $Id: RawEvent.cpp,v 1.2 2004-10-26 13:10:15 cattanem Exp $
 // Include files 
 
 // from Gaudi
@@ -31,8 +31,7 @@ RawEvent::RawEvent( RawBuffer& rawBuffer ) {
                             StatusCode::FAILURE );
     }
     // Determine bank type
-    // int sourceID =(buffer[i+2]>>16);
-    int bankType  = buffer[i+2]&65535;
+    int bankType  = buffer[i+2]&0xFF;
 
     // Add this bank address to Event Map
     (m_eventMap[bankType]).push_back(RawBank(buffer+i));
