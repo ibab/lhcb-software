@@ -80,6 +80,8 @@ std::ostream& str::trackFields(const Track& track, std::ostream& os) {
   
   if (track.checkFlag(Track::Valid)) os <<"F:Valid, ";
   if (track.checkFlag(Track::Unique)) os <<"F:Unique, ";
+  if (track.checkFlag(Track::IPSelected)) os <<"F:IPSelected, ";
+  if (track.checkFlag(Track::MuSelected)) os <<"F:MuSelected, ";
   
   return os;
 }

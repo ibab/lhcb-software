@@ -42,7 +42,7 @@
 
       <enum
         name    = 'Flag'
-        value   = 'Valid=1,Unique=2'
+        value   = 'Valid=1,Unique=2,IPSelected=4,MuSelected=8'
         desc    = 'enumeration for the track flags'
         access  = 'PUBLIC' />
 
@@ -80,7 +80,7 @@
          checkMeth = 'FALSE' />
        <bitfield
          name      = 'flag'
-         length    = '2'
+         length    = '4'
          type      = 'Flag'
          desc      = 'track flags'
          setMeth   = 'TRUE'
@@ -250,7 +250,7 @@
         argList = 'const State::Location value'
         desc    = 'check the existence of a state at a certain predefined location. See State class.'
         const   = 'TRUE'
-        virtual = 'TRUE' />
+        virtual = 'FALSE' />
 
       <method
         type    = 'State*'
