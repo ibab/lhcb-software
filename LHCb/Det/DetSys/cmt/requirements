@@ -3,7 +3,7 @@ version v1r0
 
 branches cmt doc
 
-use DetDesc	   v11r5	Det
+use DetDesc	   v11r6	Det
 use VeloDet        v8r0p1	Det     
 use ITDet          v1r2p1	Det     
 use OTDet          v3r2p1	Det
