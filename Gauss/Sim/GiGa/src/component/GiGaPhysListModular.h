@@ -44,12 +44,10 @@ protected:
 public:
   StatusCode initialize();
   
-  virtual void SetCuts();
+  void SetCuts();
   ///
 private:
   std::vector<std::string> m_physconstr;
-  ///
-private:
   ///
   GiGaPhysListModular();
   GiGaPhysListModular           ( const GiGaPhysListModular& );

@@ -72,23 +72,25 @@ StatusCode GiGaPhysListModular::initialize()
     {
       log << MSG::ERROR << "Could not find ToolSvc..." << endreq;
     }
-  
-  std::vector<std::string>::iterator i;  
-  for( i=m_physconstr.begin(); i!= m_physconstr.end(); i++)
+  else
     {
-      log << MSG::INFO << "Registering physics list: " << (*i) << endreq;
-      StatusCode scc= toolSvc->retrieveTool(*i,theconstr);
-      if(!scc) {
-        log << MSG::WARNING << "Could not find: " << (*i) << endreq;
-      }
-      else
+      std::vector<std::string>::iterator i;  
+      for( i=m_physconstr.begin(); i!= m_physconstr.end(); i++)
         {
-          RegisterPhysics(theconstr);
-        }
-    }  
+          log << MSG::INFO << "Registering physics list: " << (*i) << endreq;
+          StatusCode scc= toolSvc->retrieveTool(*i,theconstr);
+          if(!scc) {
+            log << MSG::WARNING << "Could not find: " << (*i) << endreq;
+          }
+          else
+            {
+              RegisterPhysics(theconstr);
+            }
+        }  
+    }
   return StatusCode::SUCCESS;
-  
 };
+
 // ============================================================================
 void GiGaPhysListModular::SetCuts()
 {
@@ -98,7 +100,7 @@ void GiGaPhysListModular::SetCuts()
 
   SetCutsWithDefault();
 
-  if (verboseLevel>0) { DumpCutValuesTable(); } 
+  if (verboseLevel>0) { DumpCutValuesTable(); }
 
 };
 

@@ -9,7 +9,7 @@
 /** @file 
  *  implementation of class GiGaPhysConstructorBase
  *
- *  @author Vanya Belyaev 
+ *  @author Witek Pokorski   Witold.Pokorski@cern.ch 
  */
 // ============================================================================
 
@@ -27,10 +27,8 @@ GiGaPhysConstructorBase::GiGaPhysConstructorBase
   const std::string& name   , 
   const IInterface*  parent ) 
   : GiGaBase          ( type , name , parent  )
-  , m_DefaultCutValue ( 2.0 * mm    )
 { 
   declareInterface<IGiGaPhysConstructor> (this);
-  declareProperty( "Cut" , m_DefaultCutValue ); 
 };
 // ============================================================================
 
@@ -55,16 +53,6 @@ StatusCode GiGaPhysConstructorBase::initialize ()
   if( sc.isFailure() )
     { return Error("Could not initialize GiGaBase class!", sc); }
   MsgStream log( msgSvc() , name() ); 
-//    if( defCut() != GetDefaultCutValue() )
-//      {
-//        log << MSG::DEBUG                
-//            << " Value of Default Cut is changed from " 
-//            << GetDefaultCutValue() / mm << " [mm] to " 
-//            << defCut()             / mm << " [mm] " << endreq; 
-//        SetDefaultCutValue( defCut() );        
-//      } 
-//    log << MSG::INFO << " Default Cut Value is set to be " 
-//        << GetDefaultCutValue() / mm << " [mm]" << endreq; 
   ///
   return Print("GiGaPhysConstructorBase initialized succesfully" ,
                StatusCode::SUCCESS                        , MSG::VERBOSE );
