@@ -8,6 +8,9 @@
   - options/DVBTagging_example.opts
     . Correct location of L1.opts. 
     . Do not run Hlt.opts it does nothing useful (yet).
+    . Define BTagging TopAlg here
+  - options/BTagging.opts
+    . Define BTagging TopAlg in DVBTagging_example.opts
 !========================== FlavourTagging v5r3 2004-10-04 ===================
 ! 2004-09-13 - P. Koppenburg for Thomas Ruf
   - src/BTagging.cpp

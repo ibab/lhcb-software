@@ -19,6 +19,9 @@ ChargedProtoPAlg.VeloTTTracks = true ; //(not mandatory)
 ///---------------------------------------------------------------
 ///               BTagging
 ///---------------------------------------------------------------
+ApplicationMgr.DLLs   += { "VeloDAQ" };
+ApplicationMgr.TopAlg += { "DecodeVeloRawBuffer" };
+ApplicationMgr.TopAlg += { "BTagging" };
 #include "$FLAVOURTAGGINGROOT/options/BTagging.opts"
 
 //*************************************************************** Monitor

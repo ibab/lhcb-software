@@ -1,9 +1,5 @@
 //----------------------------------------------------------------------
 //BTagging algorithm option file
-ApplicationMgr.DLLs   += { "VeloDAQ" };
-ApplicationMgr.TopAlg += { "DecodeVeloRawBuffer" };
-
-ApplicationMgr.TopAlg += { "BTagging" };
 BTagging.WriteToTES    =  true ;
 BTagging.OutputLevel   = 3;
 
@@ -11,12 +7,9 @@ BTagging.OutputLevel   = 3;
 BTagging.PhysDesktop.CombinedParticleMaker.UseVTTTracks  = true;
 BTagging.PhysDesktop.CombinedParticleMaker.AddBremPhoton = false;
 BTagging.PhysDesktop.ParticleMakerType = "CombinedParticleMaker";
-BTagging.PhysDesktop.CombinedParticleMaker.MuonSelection = {
-    "det='MUON' mu-pi='-9.0'" };
-BTagging.PhysDesktop.CombinedParticleMaker.ElectronSelection = {
-    "det='CALO' e-pi='2.0'" };
-BTagging.PhysDesktop.CombinedParticleMaker.KaonSelection = {
-    "det='RICH' k-pi='2.0' k-p='3.0'" };
+BTagging.PhysDesktop.CombinedParticleMaker.MuonSelection = {"det='MUON' mu-pi='-9.0'" };
+BTagging.PhysDesktop.CombinedParticleMaker.ElectronSelection = {"det='CALO' e-pi='2.0'" };
+BTagging.PhysDesktop.CombinedParticleMaker.KaonSelection = {"det='RICH' k-pi='2.0' k-p='3.0'" };
 BTagging.TrVeloChargeName = "TrVeloCharge";
 BTagging.TrVeloCharge.Normalisation = 1.;
 BTagging.TrVeloCharge.Ratio = 0.7;
