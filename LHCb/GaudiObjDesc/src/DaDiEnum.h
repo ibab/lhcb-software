@@ -1,4 +1,4 @@
-// $Id: DaDiEnum.h,v 1.3 2003-04-30 12:04:17 mato Exp $
+// $Id: DaDiEnum.h,v 1.4 2003-12-11 15:03:09 mato Exp $
 #ifndef DADIENUM_H 
 #define DADIENUM_H 1
 
@@ -46,10 +46,10 @@ private:
 
 inline DaDiEnum::~DaDiEnum()
 {
-  xercesc::XMLString::release(&m_name);
-  xercesc::XMLString::release(&m_desc);
-  xercesc::XMLString::release(&m_value);
-  xercesc::XMLString::release(&m_access);
+  delete [] m_name;
+  delete [] m_desc;
+  delete [] m_value;
+  delete [] m_access;
 }
 
 inline const XMLCh* DaDiEnum::name()

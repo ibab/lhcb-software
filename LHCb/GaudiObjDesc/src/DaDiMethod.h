@@ -1,4 +1,4 @@
-// $Id: DaDiMethod.h,v 1.8 2003-04-30 12:04:19 mato Exp $
+// $Id: DaDiMethod.h,v 1.9 2003-12-11 15:03:10 mato Exp $
 #ifndef DADIMETHOD_H
 #define DADIMETHOD_H 1
 
@@ -101,14 +101,14 @@ private:
 
 inline DaDiMethod::~DaDiMethod()
 {
-  xercesc::XMLString::release(&m_name);
-  xercesc::XMLString::release(&m_desc);
-  xercesc::XMLString::release(&m_template);
-  xercesc::XMLString::release(&m_access);
-  //  xercesc::XMLString::release(&m_argList);
-  //  xercesc::XMLString::release(&m_argInOut);
-  xercesc::XMLString::release(&m_virtual);
-  xercesc::XMLString::release(&m_code);
+  delete [] m_name;
+  delete [] m_desc;
+  delete [] m_template;
+  delete [] m_access;
+  //  delete [] m_argList;
+  //  delete [] m_argInOut;
+  delete [] m_virtual;
+  delete [] m_code;
   delete m_daDiMethReturn;
   std::list<DaDiMethArgument*>::iterator aIter;
   for (aIter = m_daDiMethArgument.begin(); 

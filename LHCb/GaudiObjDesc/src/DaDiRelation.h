@@ -1,4 +1,4 @@
-// $Id: DaDiRelation.h,v 1.5 2003-04-30 12:04:19 mato Exp $
+// $Id: DaDiRelation.h,v 1.6 2003-12-11 15:03:10 mato Exp $
 #ifndef DADIRELATION_H
 #define DADIRELATION_H 1
 
@@ -82,16 +82,16 @@ private:
 
 inline DaDiRelation::~DaDiRelation()
 {
-  xercesc::XMLString::release(&m_name);
-  xercesc::XMLString::release(&m_type);
-  xercesc::XMLString::release(&m_desc);
-  xercesc::XMLString::release(&m_access);
-  xercesc::XMLString::release(&m_ratio);
-  xercesc::XMLString::release(&m_setMeth);
-  xercesc::XMLString::release(&m_getMeth);
-  xercesc::XMLString::release(&m_addMeth);
-  xercesc::XMLString::release(&m_remMeth);
-  xercesc::XMLString::release(&m_clrMeth);
+  delete [] m_name;
+  delete [] m_type;
+  delete [] m_desc;
+  delete [] m_access;
+  delete [] m_ratio;
+  delete [] m_setMeth;
+  delete [] m_getMeth;
+  delete [] m_addMeth;
+  delete [] m_remMeth;
+  delete [] m_clrMeth;
 }
 
 inline const XMLCh* DaDiRelation::name()

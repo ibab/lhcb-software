@@ -1,4 +1,4 @@
-// $Id: DaDiLocation.h,v 1.3 2003-04-30 12:04:19 mato Exp $
+// $Id: DaDiLocation.h,v 1.4 2003-12-11 15:03:10 mato Exp $
 #ifndef DADILOCATION_H
 #define DADILOCATION_H 1
 
@@ -41,8 +41,8 @@ private:
 
 inline DaDiLocation::~DaDiLocation()
 {
-  xercesc::XMLString::release(&m_name);
-  xercesc::XMLString::release(&m_place);
+  delete [] m_name;
+  delete [] m_place;
 }
 
 inline const XMLCh* DaDiLocation::name()

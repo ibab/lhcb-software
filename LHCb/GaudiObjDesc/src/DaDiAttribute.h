@@ -1,4 +1,4 @@
-// $Id: DaDiAttribute.h,v 1.9 2003-04-30 12:04:15 mato Exp $
+// $Id: DaDiAttribute.h,v 1.10 2003-12-11 15:03:09 mato Exp $
 #ifndef DADIATTRIBUTE_H
 #define DADIATTRIBUTE_H 1
 
@@ -95,14 +95,14 @@ private:
 
 inline DaDiAttribute::~DaDiAttribute()
 {
-  xercesc::XMLString::release(&m_name);
-  xercesc::XMLString::release(&m_type);
-  xercesc::XMLString::release(&m_desc);
-  xercesc::XMLString::release(&m_array);
-  xercesc::XMLString::release(&m_access);
-  xercesc::XMLString::release(&m_init);
-  xercesc::XMLString::release(&m_setMeth);
-  xercesc::XMLString::release(&m_getMeth);
+  delete [] m_name;
+  delete [] m_type;
+  delete [] m_desc;
+  delete [] m_array;
+  delete [] m_access;
+  delete [] m_init;
+  delete [] m_setMeth;
+  delete [] m_getMeth;
   std::list<DaDiBitfield*>::iterator bIter;
   for (bIter = m_daDiBitfield.begin(); bIter != m_daDiBitfield.end(); ++bIter)
   { delete *bIter; }

@@ -1,4 +1,4 @@
-// $Id: DaDiPackage.h,v 1.10 2003-04-30 12:04:19 mato Exp $
+// $Id: DaDiPackage.h,v 1.11 2003-12-11 15:03:10 mato Exp $
 #ifndef DADIPACKAGE_H
 #define DADIPACKAGE_H 1
 
@@ -79,7 +79,7 @@ private:
 
 inline DaDiPackage::~DaDiPackage()
 {
-  xercesc::XMLString::release(&m_packageName);
+  delete [] m_packageName;
   std::list<DaDiClass*>::iterator cIter;
   for (cIter = m_daDiClass.begin(); cIter != m_daDiClass.end(); ++cIter)
   {

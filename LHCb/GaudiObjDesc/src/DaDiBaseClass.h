@@ -1,4 +1,4 @@
-// $Id: DaDiBaseClass.h,v 1.3 2003-04-30 12:04:16 mato Exp $
+// $Id: DaDiBaseClass.h,v 1.4 2003-12-11 15:03:09 mato Exp $
 #ifndef DADIBASECLASS_H
 #define DADIBASECLASS_H 1
 
@@ -42,8 +42,8 @@ private:
 
 inline DaDiBaseClass::~DaDiBaseClass()
 {
-  xercesc::XMLString::release(&m_name);
-  xercesc::XMLString::release(&m_access);
+  delete [] m_name;
+  delete [] m_access;
 }
 
 inline const XMLCh* DaDiBaseClass::name()

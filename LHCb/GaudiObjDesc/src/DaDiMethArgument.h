@@ -1,4 +1,4 @@
-// $Id: DaDiMethArgument.h,v 1.5 2003-04-30 12:04:19 mato Exp $
+// $Id: DaDiMethArgument.h,v 1.6 2003-12-11 15:03:10 mato Exp $
 #ifndef DADIMETHARGUMENT_H
 #define DADIMETHARGUMENT_H 1
 
@@ -52,9 +52,9 @@ private:
 
 inline DaDiMethArgument::~DaDiMethArgument()
 {
-  xercesc::XMLString::release(&m_type);
-  xercesc::XMLString::release(&m_name);
-  xercesc::XMLString::release(&m_inout);
+  delete [] m_type;
+  delete [] m_name;
+  delete [] m_inout;
 }
 
 inline const XMLCh* DaDiMethArgument::type()

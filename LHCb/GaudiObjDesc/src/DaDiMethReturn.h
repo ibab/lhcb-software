@@ -1,4 +1,4 @@
-// $Id: DaDiMethReturn.h,v 1.3 2003-04-30 12:04:19 mato Exp $
+// $Id: DaDiMethReturn.h,v 1.4 2003-12-11 15:03:10 mato Exp $
 #ifndef DADIMETHRETURN_H
 #define DADIMETHRETURN_H 1
 
@@ -37,7 +37,7 @@ private:
 
 inline DaDiMethReturn::~DaDiMethReturn()
 {
-  xercesc::XMLString::release(&m_type);
+  delete [] m_type;
 }
 
 inline const XMLCh* DaDiMethReturn::type()

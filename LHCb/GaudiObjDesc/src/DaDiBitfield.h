@@ -1,4 +1,4 @@
-// $Id: DaDiBitfield.h,v 1.2 2003-04-30 12:04:16 mato Exp $
+// $Id: DaDiBitfield.h,v 1.3 2003-12-11 15:03:09 mato Exp $
 #ifndef DADIBITFIELD_H
 #define DADIBITFIELD_H 1
 
@@ -70,10 +70,10 @@ private:
 
 inline DaDiBitfield::~DaDiBitfield()
 {
-  xercesc::XMLString::release(&m_name);
-  xercesc::XMLString::release(&m_desc);
-  xercesc::XMLString::release(&m_setMeth);
-  xercesc::XMLString::release(&m_getMeth);
+  delete [] m_name;
+  delete [] m_desc;
+  delete [] m_setMeth;
+  delete [] m_getMeth;
 }
 
 inline const XMLCh* DaDiBitfield::name()

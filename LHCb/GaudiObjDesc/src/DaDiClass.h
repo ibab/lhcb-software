@@ -1,4 +1,4 @@
-// $Id: DaDiClass.h,v 1.26 2003-04-30 12:04:16 mato Exp $
+// $Id: DaDiClass.h,v 1.27 2003-12-11 15:03:09 mato Exp $
 #ifndef DADICLASS_H
 #define DADICLASS_H 1
 
@@ -200,13 +200,13 @@ private:
 
 inline DaDiClass::~DaDiClass()
 {
-  xercesc::XMLString::release(&m_name);
-  xercesc::XMLString::release(&m_desc);
-  xercesc::XMLString::release(&m_author);
-  //  xercesc::XMLString::release(&m_derived);
-  xercesc::XMLString::release(&m_ID);
-  xercesc::XMLString::release(&m_longDesc);
-  xercesc::XMLString::release(&m_location);
+  delete [] m_name;
+  delete [] m_desc;
+  delete [] m_author;
+  //  delete [] m_derived;
+  delete [] m_ID;
+  delete [] m_longDesc;
+  delete [] m_location;
   std::list<DaDiBaseClass*>::iterator bIter;
   for (bIter = m_daDiBaseClass.begin(); bIter != m_daDiBaseClass.end(); ++bIter)
   { delete *bIter; }

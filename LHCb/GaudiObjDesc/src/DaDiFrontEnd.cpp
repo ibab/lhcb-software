@@ -1,4 +1,4 @@
-// $Id: DaDiFrontEnd.cpp,v 1.41 2003-04-30 12:04:17 mato Exp $
+// $Id: DaDiFrontEnd.cpp,v 1.42 2003-12-11 15:03:09 mato Exp $
 
 //#include "GaudiKernel/Kernel.h"
 #include "DaDiTools.h"
@@ -214,7 +214,7 @@ void parseBaseClass(DOMNode* node,
   char* cBaseClassName = XMLString::transcode(baseClassName);
   gddClass->pushImportList(cBaseClassName);
   XMLString::release(&cBaseClassName);
-  XMLString::release(&baseClassName);
+  delete [] baseClassName;
 
   itemStr = XMLString::transcode("virtual");
   XMLCh* boolStr = XMLString::transcode("TRUE");
@@ -255,7 +255,7 @@ template<class T> void parseEnum(DOMNode* node,
   char* cGddName = XMLString::transcode(gddName);
   gdd->pushNoImports(cGddName);
   XMLString::release(&cGddName);
-  XMLString::release(&gddName);
+  delete [] gddName;
 
   itemStr = XMLString::transcode("desc");
   gddEnum->setDesc(nodeMap->getNamedItem(itemStr)->getNodeValue());
@@ -297,7 +297,7 @@ template<class T> void parseTypeDef(DOMNode* node,
   char* cGddDef = XMLString::transcode(gddDef);
   gdd->pushNoImports(cGddDef);
   XMLString::release(&cGddDef);
-  XMLString::release(&gddDef);
+  delete [] gddDef;
 
   itemStr = XMLString::transcode("access");
   gddTypeDef->setAccess(nodeMap->getNamedItem(itemStr)->getNodeValue());
@@ -357,7 +357,7 @@ void parseArg(DOMNode* node,
     XMLCh* tmpStr = new XMLCh[XMLString::stringLen(argType)+1];
     XMLString::subString(tmpStr, argType, 0, XMLString::stringLen(argType)-1);
     gddArg->setType(tmpStr);
-    XMLString::release(&tmpStr);
+    delete [] tmpStr;
     //    gddArg->setType(argType.substringData(0,argType.length()-1));
   }
   else
@@ -366,7 +366,7 @@ void parseArg(DOMNode* node,
     gddArg->setType(argType);
   }
 
-  XMLString::release(&argType);
+  delete [] argType;
 
   itemStr = XMLString::transcode("name");
   if (nodeMap->getNamedItem(itemStr) != 0)
@@ -443,13 +443,13 @@ template <class T> void parseArgList(DOMNode* node,
       XMLCh* tmpCh = argWords[argWords.size()-1];
       gddArg->setName(tmpCh);
       argWords.pop_back();
-      XMLString::release(&tmpCh);
+      delete [] tmpCh;
 
       tmpCh = argWords[argWords.size()-1];
       XMLString::release(&argType);
       argType = XMLString::replicate(tmpCh);
       argWords.pop_back();
-      XMLString::release(&tmpCh);
+      delete [] tmpCh;
 
       if (isPointer(argType))
       {
@@ -475,8 +475,9 @@ template <class T> void parseArgList(DOMNode* node,
         {
           XMLCh* space2 = XMLString::transcode(" ");
           XMLString::release(&argEType);
-          argEType = new XMLCh[XMLString::stringLen(*iterW)+2];
-          XMLString::copyString(argEType,*iterW);
+		  argEType = XMLString::replicate(*iterW);
+          //argEType = new XMLCh[XMLString::stringLen(*iterW)+2];
+          //XMLString::copyString(argEType,*iterW);
           //    argEType = (XMLCh*)realloc(argEType,(
           //        xercesc::XMLString::stringLen(*iterW)+10)*sizeof(XMLCh));
           //   XMLString::catString(argEType,*iterW);
@@ -493,8 +494,8 @@ template <class T> void parseArgList(DOMNode* node,
       XMLString::copyString(argSType, argEType);
       XMLString::catString(argSType, argType);
       gddArg->setType(argSType);
-      XMLString::release(&argSType);
-      XMLString::release(&argEType);
+      delete [] argSType;
+	  XMLString::release(&argEType);
 
       char* cArgType = XMLString::transcode(argType);
       if (!DaDiTools::isSimple(cArgType) && !gddArg->isPointer())
@@ -511,12 +512,12 @@ template <class T> void parseArgList(DOMNode* node,
       XMLString::release(&cStr);
       for (xmlchIter=argWords.begin(); xmlchIter!=argWords.end(); ++xmlchIter)
       {
-        XMLString::release(&(*xmlchIter));
+        delete [] *xmlchIter;
       }
     }
     for (xmlchIter = argList.begin(); xmlchIter != argList.end(); ++xmlchIter)
     {
-      XMLString::release(&(*xmlchIter));
+      delete [] *xmlchIter;
     }
 
   }
@@ -961,7 +962,7 @@ template<class T> void parseAttribute(DOMNode* node,
     {
       gddAttribute->setStatic_(true);
     }
-    XMLString::release(&(*iter));
+    delete [] *iter;
   }
   XMLString::release(&cmpStr);
 
@@ -982,7 +983,7 @@ template<class T> void parseAttribute(DOMNode* node,
     XMLString::release(&cGddAttType);
   }
   XMLString::release(&cmpStr);
-  XMLString::release(&gddAttType);
+  delete [] gddAttType;
 
   /*
     gddAttribute->setType(node.getAttributes().
@@ -1123,7 +1124,7 @@ void parseRelation(DOMNode* node,
   char* cType = XMLString::transcode(type);
   gddClass->pushImpSoftList(cType);
   XMLString::release(&cType);
-  XMLString::release(&type);
+  delete [] type;
 
   XMLCh* cmpStr = XMLString::transcode("serialize");
   XMLCh* trueStr = XMLString::transcode("TRUE");
@@ -1232,7 +1233,7 @@ void parseRelation(DOMNode* node,
       gddClass->pushImpStdList("algorithm");
     }
     XMLString::release(&cmpStr2);
-    XMLString::release(&relRemMeth);
+    delete [] relRemMeth;
   }
   else
   {
@@ -1261,8 +1262,8 @@ void parseRelation(DOMNode* node,
     gddClass->pushImportList("SmartRefVector");
   }
   XMLString::release(&cmpStr);
-  XMLString::release(&gddXMLRelationRatio);
-  XMLString::release(&gddRelationRatio);
+  delete [] gddXMLRelationRatio;
+  delete [] gddRelationRatio;
 }
 
 

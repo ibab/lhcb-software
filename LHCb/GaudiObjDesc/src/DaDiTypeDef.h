@@ -1,4 +1,4 @@
-// $Id: DaDiTypeDef.h,v 1.2 2003-04-30 12:04:19 mato Exp $
+// $Id: DaDiTypeDef.h,v 1.3 2003-12-11 15:03:10 mato Exp $
 #ifndef DADITYPEDEF_H
 #define DADITYPEDEF_H 1
 
@@ -48,10 +48,10 @@ private:
 
 inline DaDiTypeDef::~DaDiTypeDef()
 {
-  xercesc::XMLString::release(&m_desc);
-  xercesc::XMLString::release(&m_type);
-  xercesc::XMLString::release(&m_def);
-  xercesc::XMLString::release(&m_access);
+  delete [] m_desc;
+  delete [] m_type;
+  delete [] m_def;
+  delete [] m_access;
 }
 
 inline const XMLCh* DaDiTypeDef::desc()

@@ -1,4 +1,4 @@
-// $Id: DaDiNamespace.h,v 1.9 2003-04-30 12:04:19 mato Exp $
+// $Id: DaDiNamespace.h,v 1.10 2003-12-11 15:03:10 mato Exp $
 #ifndef DADINAMESPACE_H
 #define DADINAMESPACE_H 1
 
@@ -114,10 +114,10 @@ private:
 
 inline DaDiNamespace::~DaDiNamespace()
 {
-  xercesc::XMLString::release(&m_name);
-  xercesc::XMLString::release(&m_author);
-  xercesc::XMLString::release(&m_desc);
-  xercesc::XMLString::release(&m_longDesc);
+  delete [] m_name;
+  delete [] m_author;
+  delete [] m_desc;
+  delete [] m_longDesc;
   std::list<DaDiEnum*>::iterator eIter;
   for (eIter = m_daDiEnum.begin(); eIter != m_daDiEnum.end(); ++eIter)
   { delete *eIter; }
