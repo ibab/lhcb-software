@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Ex/DetDescExample/src/SimpleAlgorithm.cpp,v 1.8 2001-06-22 12:45:42 sponce Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Ex/DetDescExample/src/SimpleAlgorithm.cpp,v 1.9 2001-06-25 08:59:30 sponce Exp $
 #define DDEXAMPLE_SIMPLEALGORITHM_CPP
 
 /// Include files
@@ -141,7 +141,7 @@ StatusCode SimpleAlgorithm::initialize() {
   //---------------------------------------------------------------------------
 
   ILVolume* ecalo_vol = ecalouter->geometry()->lvolume();
-  if( !ecalo_vol ) {
+  if (ecalo_vol) {
     std::string ecalo_mat = ecalo_vol->materialName();
     log << MSG::INFO << "EcalOuter has volume "
         << ecalouter->geometry()->lvolumeName() << endreq;
