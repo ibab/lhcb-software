@@ -1,0 +1,48 @@
+##----------------------------------------------------------------------##
+
+# Errors to suppress by default with Brunel v13r2
+
+# Format of this file is:
+# {
+#     name_of_suppression
+#     kind: one of Param Value1 Value2 Value4 Value8
+#                   Free Addr1 Addr2 Addr4 Addr8
+#                   Cond (previously known as Value0)
+#     (if Param: name of system call param, if Free: name of free-ing fn)
+#     caller0 name, or /name/of/so/file.so
+#     caller1 name, or ditto
+#     (optionally: caller2 name)
+#     (optionally: caller3 name)
+# }
+
+# Pthread bugs
+{
+  pthread_error/__pthread_mutex_destroy
+  PThread
+  fun:pthread_error
+  fun:__pthread_mutex_destroy
+}
+
+# CLHEP errors. 
+{
+  HepTool::Evaluator/__builtin_vec_new
+  Free 
+  fun:__builtin_delete
+  obj:*libCLHEP*.so
+}
+
+# Following CLHEP error reported to Tcherniaev, fixed in CVS head
+#{
+#  HepTool::Evaluator/__builtin_vec_new
+#  Free 
+#  fun:__builtin_delete
+#  fun:HepTool::Evaluator::evaluate
+#}
+
+# Xerces errors
+{
+  libxerces/__builtin_vec_new
+  Free
+  fun:__builtin_delete
+  obj:*libxerces*.so
+}

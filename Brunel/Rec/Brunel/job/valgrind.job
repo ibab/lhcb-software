@@ -24,23 +24,23 @@
 # in INTERACTIVE output files are written to the current directory
 #
 if ($#argv == 0 ) then
-  echo "\nUsage: Brunel.job <dbase-version> [<mode>]"
+  echo "\nUsage: valgrind.job <dbase-version>"
   echo " where:"
   echo "  <dbase-version> (mandatory) is SICB/dbase version (e.g. v241)"
-  echo "  <mode>          (optional)  is execution mode (e.g. LinuxStatic)"
   exit 0
 else
   echo "using SICB/dbase version $1"
   setenv LHCBDBASE $LHCBSOFT/SICB/dbase/$1
 endif
 #   
+setenv PATH ${PATH}:/afs/cern.ch/user/l/lat/dev/utils/bin
 
 set MODE = $CMTCONFIG
 if ($?LS_SUBCWD) then 
 # in BATCH, WORKDIR is set by the system
 # in BATCH, location of executable has to be given explicitly
-  setenv MYJOBROOT $LHCBSOFT/Rec/Brunel/v13r2
-#  setenv MYJOBROOT ~/newmycmt/Rec/Brunel/v13r2
+#  setenv MYJOBROOT $LHCBSOFT/Rec/Brunel/v13r2
+  setenv MYJOBROOT ~/newmycmt/Rec/Brunel/v13r2
 else
 # in interactive set WORKDIR to submission directory
   set WORKDIR = $PWD
@@ -52,29 +52,26 @@ else
 endif
 
 # == set the program environment
-source $MYJOBROOT/cmt/setup.csh -tag=$MODE
+source $MYJOBROOT/cmt/setup.csh -tag=$CMTDEB
 
 # Go to working directory
 cd $WORKDIR
 
 if ($?LS_SUBCWD) then
 # == in batch copy the executable and options files to $WORKDIR
-  cp $MYJOBROOT/$MODE/Brunel.exe tmpjob_$1.exe
+  cp $MYJOBROOT/$CMTDEB/Brunel.exe tmpjob_$1.exe
   cp $MYJOBROOT/options/*.opts .
   cp $MYJOBROOT/options/Brunel.cards tmpjob.cards
+  cp $MYJOBROOT/job/Brunel.supp Brunel.supp
   setenv BRUNELOPTS .
   setenv SICBCARDS tmpjob.cards
 else
 # == in interactive create a link to the executable
-  ln -fs $MYJOBROOT/$MODE/Brunel.exe tmpjob_$1.exe
+  ln -fs $MYJOBROOT/$CMTDEB/Brunel.exe tmpjob_$1.exe
 endif
 
 # == run the excutable ================================
-if ($MODE == "Linuxdbx") then
-  ddd tmpjob_$1.exe $BRUNELOPTS/Brunel$1.opts
-else
-  time tmpjob_$1.exe $BRUNELOPTS/Brunel$1.opts
-endif
+valgrind --error-limit=no --leak-check=yes --suppressions=./Brunel.supp tmpjob_$1.exe >& t.log
 
 # == job is finished: remove temporary files ==========
 rm tmpjob_$1.exe
