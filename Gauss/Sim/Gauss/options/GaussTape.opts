@@ -1,72 +1,52 @@
-// $Id: GaussTape.opts,v 1.9 2003-05-26 14:18:32 witoldp Exp $ 
+// $Id: GaussTape.opts,v 1.10 2003-06-06 16:23:26 witoldp Exp $ 
 
 /// create and add the output stream 
 ApplicationMgr.OutStream +=  { "GaussTape" };
 
 /// content of CaloDstTape
 GaussTape.ItemList = 
-{  
-  // event Header
-  "/Event#1",      
-  "/Event/Header#1"
-  // Generator information
-  ,"/Event/Gen#1"
-  ,"/Event/Gen/HepMCEvents#1"
-};
+  {  
+    // event Header
+    "/Event#1",      
+    "/Event/Header#1"
+    // Generated event
+    ,"/Event/Gen#1"
+    ,"/Event/Gen/HepMCEvents#1"
+  };
 
 GaussTape.OptItemList =
-{
-  // MC Truth  
-  "/Event/MC#1"                     
-  ,"/Event/MC/Particles#1"         
-  ,"/Event/MC/Vertices#1"          
-  // MCHits
-  ,"/Event/MC/OT#1"
-  ,"/Event/MC/OT/Hits#1"
-  ,"/Event/MC/IT#1"
-  ,"/Event/MC/IT/Hits#1"
-  ,"/Event/MC/Velo#1"
-  ,"/Event/MC/Velo/Hits#1"
-  ,"/Event/MC/Velo/PuHits#1"
-  ,"/Event/MC/Rich#1"
-  ,"/Event/MC/Rich/PhotodetectorHits#1"
-  ,"/Event/MC/Muon#1"
-  ,"/Event/MC/Muon/M1#1"
-  ,"/Event/MC/Muon/M2#1"
-  ,"/Event/MC/Muon/M3#1"
-  ,"/Event/MC/Muon/M4#1"
-  ,"/Event/MC/Muon/M5#1"
-  ,"/Event/MC/Muon/M1/R1#1"
-  ,"/Event/MC/Muon/M1/R2#1"
-  ,"/Event/MC/Muon/M1/R34#1"
-  ,"/Event/MC/Muon/M2/R1#1"
-  ,"/Event/MC/Muon/M2/R2#1"
-  ,"/Event/MC/Muon/M2/R34#1"
-  ,"/Event/MC/Muon/M3/R1#1"
-  ,"/Event/MC/Muon/M3/R2#1"
-  ,"/Event/MC/Muon/M3/R34#1"
-  ,"/Event/MC/Muon/M4/R1#1"
-  ,"/Event/MC/Muon/M4/R2#1"
-  ,"/Event/MC/Muon/M4/R34#1"
-  ,"/Event/MC/Muon/M5/R1#1"
-  ,"/Event/MC/Muon/M5/R2#1"
-  ,"/Event/MC/Muon/M5/R34#1"
-  ,"/Event/MC/Muon/M1/R1/Hits#1"
-  ,"/Event/MC/Muon/M1/R2/Hits#1"
-  ,"/Event/MC/Muon/M1/R34/Hits#1"
-  ,"/Event/MC/Muon/M2/R1/Hits#1"
-  ,"/Event/MC/Muon/M2/R2/Hits#1"
-  ,"/Event/MC/Muon/M2/R34/Hits#1"
-  ,"/Event/MC/Muon/M3/R1/Hits#1"
-  ,"/Event/MC/Muon/M3/R2/Hits#1"
-  ,"/Event/MC/Muon/M3/R34/Hits#1"
-  ,"/Event/MC/Muon/M4/R1/Hits#1"
-  ,"/Event/MC/Muon/M4/R2/Hits#1"
-  ,"/Event/MC/Muon/M4/R34/Hits#1"
-  ,"/Event/MC/Muon/M5/R1/Hits#1"
-  ,"/Event/MC/Muon/M5/R2/Hits#1"
-  ,"/Event/MC/Muon/M5/R34/Hits#1"
-};
+  {
+    // MC Truth  
+     "/Event/MC#1"                     
+    ,"/Event/MC/Particles#1"         
+    ,"/Event/MC/Vertices#1"          
+    // MCHits
+    ,"/Event/MC/Velo#1"
+    ,"/Event/MC/Velo/Hits#1"
+    ,"/Event/MC/Velo/PuHits#1"
+    ,"/Event/MC/Rich#1"
+    ,"/Event/MC/Rich/Hits#1"
+    ,"/Event/MC/Rich/OpticalPhotons#1"
+    ,"/Event/MC/OT#1"
+    ,"/Event/MC/OT/Hits#1"
+    ,"/Event/MC/IT#1"
+    ,"/Event/MC/IT/Hits#1"
+    ,"/Event/MC/Spd#1"
+    ,"/Event/MC/Spd/Hits#1"
+    ,"/Event/MC/Prs#1"
+    ,"/Event/MC/Prs/Hits#1"
+    ,"/Event/MC/Ecal#1"
+    ,"/Event/MC/Ecal/Hits#1"
+    ,"/Event/MC/Hcal#1"
+    ,"/Event/MC/Hcal/Hits#1"
+    ,"/Event/MC/Muon#1"
+    ,"/Event/MC/Muon/M1#3"
+    ,"/Event/MC/Muon/M2#3"
+    ,"/Event/MC/Muon/M3#3"
+    ,"/Event/MC/Muon/M4#3"
+    ,"/Event/MC/Muon/M5#3"
+  };
+
 GaussTape.PreLoad     = false ; // ATTENTION ! it MUST be FALSE for GiGa! 
 GaussTape.OutputLevel = 3;
 
