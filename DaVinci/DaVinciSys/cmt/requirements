@@ -54,6 +54,6 @@ use  TrExtrapolator      v2r5   Tr
 #--- TriggerFilter
 use  Associators         v2r0   Associators
 use  Utilities           v1r0   Tools
-use  TriggerFilter       v1r0   Tools
+use  TriggerFilter       v1r1   Tools
 use  GaudiConf           v6r6   
 
