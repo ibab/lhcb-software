@@ -1,5 +1,5 @@
 package		L0DU
-version 	v6r1
+version 	v6r2
 
 # ================ structure =============================================
 branches	src cmt doc options
@@ -11,8 +11,8 @@ include_dirs	$(L0DUROOT)
 set L0DUOPTS	$(L0DUROOT)/options
 
 # ================ used packages =========================================
-use L0Event     v12r*   Event
-use Event       v2r*   Event
+use L0Event     v13r*   Event
+use Event       v3r*   Event
 
 # ================ component library =====================================
 library		L0DU	../src/*.cpp

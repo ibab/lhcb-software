@@ -1,6 +1,10 @@
-$Id: release.notes,v 1.18 2002-10-04 11:37:31 cattanem Exp $
+$Id: release.notes,v 1.19 2002-12-05 15:51:08 ranjard Exp $
 Package		: L0/L0DU
 Package Manager : Pascal Perret
+
+!========================== L0DU v6r2 2002-12-05 =======================
+! 2002-10-17 - Florence Ranjard
+ - requirements - use new versions
 
 !========================== L0DU v6r1 2002-10-04 ==========================
 ! 2002-10-03 - Richard Beneyton
