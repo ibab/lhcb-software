@@ -1,4 +1,4 @@
-// $Id: RichDigiDataObjVerifier.h,v 1.3 2003-11-25 15:02:32 jonrob Exp $
+// $Id: RichDigiDataObjVerifier.h,v 1.4 2004-04-13 14:43:08 jonesc Exp $
 #ifndef RICHDIGIQC_RICHDIGIDATOBJVERIFIER_H
 #define RICHDIGIQC_RICHDIGIDATOBJVERIFIER_H 1
 
@@ -50,15 +50,13 @@ public:
   virtual StatusCode execute   ();    ///< Algorithm execution
   virtual StatusCode finalize  ();    ///< Algorithm finalization
 
-private:
+private: // methods
+
+  void printHitsAt( const std::string & location ) const;
+
+private: // data
 
   // job options
-  std::string m_digitTES;        ///< Location of RichDigits in TES
-  std::string m_mcdigitTES;      ///< Location of MCRichDigits in TES
-  std::string m_mcdepTES;        ///< Location of MCRichDeposits in TES
-  std::string m_mcsumdepTES;     ///< Location of MCRichSummedDeposits in TES
-  std::string m_mchitTES;        ///< Location of MCRichHits in TES
-
   bool m_bdDigits;        ///< Flag to turn on/off the printing of RichDigits
   bool m_bdMcDigits;      ///< Flag to turn on/off the printing of MCRichDigits
   bool m_bdMCDeposits;    ///< Flag to turn on/off the printing of MCRichDeposits
