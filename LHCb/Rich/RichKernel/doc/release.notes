@@ -1,7 +1,10 @@
-! $Id: release.notes,v 1.51 2004-07-29 09:30:33 jonrob Exp $
+! $Id: release.notes,v 1.52 2004-08-17 11:04:04 jonrob Exp $
 ! Package     : Rich/RichKernel
 ! Responsible : Chris Jones
 ! Purpose     : General purpose RICH classes
+
+! 2004-08-17 - Chris Jones
+ - Update enumeration documentation
 
 ! 2004-07-27 - Chris Jones
  - Fix typo in class name + minor updates
