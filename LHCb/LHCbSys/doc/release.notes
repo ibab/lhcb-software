@@ -4,11 +4,11 @@
 ! Purpose     : LHCb OO kernel packages
 !-----------------------------------------------------------------------------
 
-!======================= LHCbSys v15r5 2004-03-26 =======================
-! 2004-03-26 - Marco Cattaneo
+!======================= LHCbSys v15r5 2004-04-01 =======================
+! 2004-04-01 - Marco Cattaneo
  - Modified packages: KernelSys v3r5, LHCbKernel v4r5,
                       DetSys v5r3, VeloDet v8r8p2, MCTools v1r5,
-                      EventSys v17r5, CaloEvent v13r2, Event v4r2
+                      EventSys v17r5, CaloEvent v13r2, Event v4r2, GenEvent v3r1
 
  - In LHCbKernel v4r5:
    . Moved ITDataFunctor.h from ITAlgorithms
@@ -24,6 +24,9 @@
 
  - In CaloEvent v13r2:
    . Add protection to CaloDigitsFromRaw in case RawBuffer is missing 
+
+ - In GenEvent v3r1:
+   . Remove transient flag from xml to make HepMC persistent 
 
  - In MCTools v1r5:
    . Changed VisPrimVertTool to use MCTrackInfo instead of TrReconstructible tool
