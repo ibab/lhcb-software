@@ -1,6 +1,10 @@
-! $Id: release.notes,v 1.14 2002-12-05 15:58:24 ranjard Exp $
+! $Id: release.notes,v 1.15 2002-12-20 12:39:49 mzupan Exp $
 ! Package     : L0/PuVeto
 ! Responsible : Olivier Callot
+
+!========================= PuVeto v5r3 2002-12-20 =======================
+! 2002-12-20 - Marko Zupan
+ - Default strip threshold now at 7000e (0 previously) 
 
 !======================== PuVeto v5r2 2002-12-05 ======================
 ! 2002-12-05 - Florence Ranjard
