@@ -3,6 +3,19 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
+</PRE><H1><A NAME=v17r0>2003-01-?? Brunel v17r0</A></H1><PRE>
+ - New features:
+   . Add support for dbase v253r1
+
+ - Bug fixes:
+   . Fix many minor problems flagged by valgrind (SicbCnv v17r5,
+     OTAssociators v2r4, OTAlgorithms v12r3, ITAlgorithms v12r7, TrTools v2r3,
+     TrCleanEx v2r4, TrAssociators v3r4, TrCheck v1r3, MuonID v3r5,
+     MuonAlgs v3r2, RichRecInterfaces v2r0, RichRecTools v1r4, RiSicbCnv v5r4,
+     KsReco v1r4, TrIntraPR v2r3, UpstreamPR v2r6, RichRecAlgs v1r4,
+     RichMonitor v2r4)
+
+
 </PRE><H1><A NAME=v16r4>2002-12-11 Brunel v16r4</A></H1><PRE>
  Essentially identical to v15r4, but using Gaudi v11 and DetDesc v11
    >> Introduces CMT projects

@@ -1,5 +1,5 @@
 package Brunel
-version v16r4
+version v17r0
 
 branches doc cmt job options
 
@@ -32,12 +32,12 @@ use HbookCnv 		v13r2p1
 #-- Database
 use XmlDDDB	v14r4	Det
 
-#-- LHCb libraries (from LHCB_v11r4)
-use LHCb	v11r4
+#-- LHCb libraries (from LHCB_v11r6)
+use LHCb	v11r6
 use MuonTools	v3r2	Muon
 
-#-> SICB basic libraries (from LHCB_v11r4)
-use SICBSys	v1r0	SICB
+#-> SICB basic libraries (from LHCB_v11r6)
+use SICBSys	v1r1	SICB
 
 #-- BrunelSys v16r4 packages
 
@@ -45,7 +45,7 @@ use SICBSys	v1r0	SICB
 use BrunelKernel        v5r3	Rec
 use BrunelSicb          v4r0    Rec
 use BrunelAlgs          v1r7    Rec
-use KsReco              v1r3    Rec
+use KsReco              v1r4    Rec
 
 # L0 trigger
 use L0Calo              v6r4    L0
@@ -68,40 +68,40 @@ use CaloDigit           v1r1  	Calo
 use VeloAlgorithms      v2r5  	Velo
 
 # Inner Tracker
-use ITAlgorithms        v12r6 	IT
+use ITAlgorithms        v12r7 	IT
 use ITCheckers          v1r2  	IT
 
 # Outer Tracker
-use OTAlgorithms        v12r2 	OT
+use OTAlgorithms        v12r3 	OT
 
 # Tracking
 use VeloTrack           v4r4  	Velo
-use TrCheck             v1r2  	Tr
+use TrCheck             v1r3  	Tr
 use LongTrack           v1r4  	Tr
 use TrFitter            v3r5  	Tr
 use TrExtrapolator      v2r4  	Tr
-use TrTools             v2r2  	Tr
+use TrTools             v2r3  	Tr
 use Seeding             v2r4  	Tr 
 use TrMatching          v2r5  	Tr
-use TrCleanEx           v2r3  	Tr
-use TrIntraPR           v2r2  	Tr
-use UpstreamPR          v2r5  	Tr
+use TrCleanEx           v2r4  	Tr
+use TrIntraPR           v2r3  	Tr
+use UpstreamPR          v2r6  	Tr
 use VeloTT              v1r4  	Tr
 
 # Muon
-use MuonAlgs            v3r1    Muon
+use MuonAlgs            v3r2    Muon
 use MuonRec             v2r3    Muon
-use MuonID              v3r4    Muon
+use MuonID              v3r5    Muon
 
 # Rich
-use RichMonitor         v2r3  	Rich
-use RichRecAlgs		v1r3  	Rich
-use RichRecTools	v1r3  	Rich
+use RichMonitor         v2r4  	Rich
+use RichRecAlgs		v1r4  	Rich
+use RichRecTools	v1r4  	Rich
 use RichRecKernel	v1r1  	Rich
 use RichUtils		v2r1  	Rich
 use RichDetTools	v1r2  	Rich
 use RichRecEvent        v1r3  	Rich
-use RichRecInterfaces	v1r1  	Rich
+use RichRecInterfaces	v2r0  	Rich
 
 # SICBDST packages
 use recevt              v3r5  	SICB
@@ -120,8 +120,8 @@ macro_append Brunel_linkopts " "\
                 Linuxdbx     " -g -Wl,--start-group "
 
 #== Set the Brunel version = v*10000 + r*100 + p  ==
-macro_append fflags " -DBrunelVersion=160400 " \
-           VisualC  " /DBrunelVersion=160400 "
+macro_append fflags " -DBrunelVersion=170000 " \
+           VisualC  " /DBrunelVersion=170000 "
 
 apply_pattern application_path
 
