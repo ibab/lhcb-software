@@ -1,6 +1,10 @@
-! $Id: release.notes,v 1.5 2002-07-03 09:32:11 dhcroft Exp $
+! $Id: release.notes,v 1.6 2002-07-04 16:45:48 dhcroft Exp $
 ! Package     : MuonAssociators
 ! Responsible : David Hutchcroft
+
+! 2002-07-04 - David Hutchcroft
+ - Added a test that the MCParticle is in the nominal event (not spillover)
+ - removed now unnesscary test on the Origin vertex of the MCParticle
 
 ! 2002-07-03 - David Hutchcroft
  - Modified the code a little to make some scoping explicit. 
