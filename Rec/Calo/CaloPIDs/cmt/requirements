@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.4 2004-02-17 12:06:06 ibelyaev Exp $ 
+# $Id: requirements,v 1.5 2004-03-08 14:03:22 cattanem Exp $ 
 # =============================================================================
 package            CaloPIDs
 version            v2r0
@@ -8,7 +8,6 @@ branches           cmt doc src options
 
 # ================ dependencies ===============================================
 use CaloInterfaces v4r*  Calo 
-use CaloKernel     v3r*  Calo 
 use CaloUtils      v4r*  Calo 
 use AIDA           v*     
  

@@ -1,8 +1,11 @@
-// $Id: EcalChi2.opts,v 1.3 2003-07-17 14:45:34 ibelyaev Exp $
+// $Id: EcalChi2.opts,v 1.4 2004-03-08 14:03:22 cattanem Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.3  2003/07/17 14:45:34  ibelyaev
+//  fix for HcalE estimator and new options
+//
 // Revision 1.2  2003/07/17 12:45:15  ibelyaev
 //  minor fix to speed-up the execution
 //
@@ -44,7 +47,7 @@ EcalChi2.UseVelo       = false ;
 EcalChi2.UseVeloTT     = false ;
 EcalChi2.UseVeloBack   = false ;
 EcalChi2.UseSeed       = true  ; 
-EcalChi2.UseUpstream   = true  ;
+EcalChi2.UseDownstream = true  ;
 /// low limit 
 // EcalChi2.LowLimit      = -50.  ;
 

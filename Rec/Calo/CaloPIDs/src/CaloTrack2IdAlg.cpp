@@ -1,8 +1,6 @@
-// $Id: CaloTrack2IdAlg.cpp,v 1.4 2004-02-17 12:06:14 ibelyaev Exp $
+// $Id: CaloTrack2IdAlg.cpp,v 1.5 2004-03-08 14:03:23 cattanem Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
-// ============================================================================
-// $Log: not supported by cvs2svn $
 // ============================================================================
 // Include files
 // from LHcbKernel
@@ -66,7 +64,7 @@ CaloTrack2IdAlg::CaloTrack2IdAlg
   , m_velo        ( false  ) // DO NOT use forward tracks 
   , m_veloTT      ( false  ) // DO NOT use forward tracks 
   , m_veloBack    ( false  ) // DO NOT use veloback tracks 
-  , m_upstream    ( true   ) // Use upstream tracks 
+  , m_downstream  ( true   ) // Use downstream tracks (new naming convention!) 
   /// 
   , m_vNorm       ( 0 ) 
   , m_pNorm       ( 0 )
@@ -90,7 +88,7 @@ CaloTrack2IdAlg::CaloTrack2IdAlg
   declareProperty ( "UseVeloTT"       , m_veloTT         ) ;
   declareProperty ( "UseVeloBack"     , m_veloBack       ) ;
   declareProperty ( "UseSeed"         , m_seed           ) ;
-  declareProperty ( "UseUpstream"     , m_upstream       ) ;
+  declareProperty ( "UseDownstream"   , m_downstream     ) ;
   //
   declareProperty ( "ValueNorm"       , m_vNorm          ) ;
   declareProperty ( "MomentumNorm"    , m_pNorm          ) ;
@@ -208,8 +206,8 @@ StatusCode CaloTrack2IdAlg::execute()
     // use 'veloBack'    tracks ?
     if( !m_veloBack && 1 == track->veloBack  () ) { continue ; }      
     
-    // use 'upstream'  tracks ?
-    if( !m_upstream && 1 == track->upstream  () ) { continue ; }
+    // use 'downstream'  tracks ? (new naming convention!)
+    if( !m_downstream && 1 == track->isDownstream  () ) { continue ; }
     
     // get the momentum from the state nearest to 0,0,0
     const TrState* state   = track->closestState( 0.0 ) ;

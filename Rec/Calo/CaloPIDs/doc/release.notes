@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.8 2004-02-17 12:06:06 ibelyaev Exp $ 
+! $Id: release.notes,v 1.9 2004-03-08 14:03:22 cattanem Exp $ 
 ! -----------------------------------------------------------------------------
 ! CVS tag   $Name: not supported by cvs2svn $
 ! -----------------------------------------------------------------------------
@@ -6,6 +6,16 @@
 ! Responsible : Vanya BELYAEV Ivan.Belyaev@itep.ru
 ! Purpose     : Calorimeter PIDs 
 ! -----------------------------------------------------------------------------
+
+!======================== CaloPIDs v2r0 2004-03-08 ======================
+! 2004-03-08 - Marco Cattaneo
+ - In CaloTrack2Estimator.h/.cpp, CaloTrack2Idalg.h/.cpp
+   . rename m_upstream to m_downstream
+   . rename UseUpstream property to UseDownstream 
+   . use new isDownstream() method of TrStoredTrack instead of upstream()
+
+ - In *.opts
+   . rename UseUpstream property to UseDownstream 
 
 ! 2004-02-17 - Vanya BELYAEV
 

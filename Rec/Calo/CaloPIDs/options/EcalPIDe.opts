@@ -1,8 +1,11 @@
-// $Id: EcalPIDe.opts,v 1.3 2004-02-17 12:06:08 ibelyaev Exp $
+// $Id: EcalPIDe.opts,v 1.4 2004-03-08 14:03:23 cattanem Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.3  2004/02/17 12:06:08  ibelyaev
+//  update for rrading of histograms from the file
+//
 // ============================================================================
 
 /** @file 
@@ -33,7 +36,7 @@ EcalPIDe.UseVelo        = false ;
 EcalPIDe.UseVeloTT      = false ;
 EcalPIDe.UseVeloBack    = false ;
 EcalPIDe.UseSeed        = true  ; 
-EcalPIDe.UseUpstream    = true  ;
+EcalPIDe.UseDownstream  = true  ;
 
 EcalPIDe.ValueNorm      =  100       ; // "cut" for tanh 
 EcalPIDe.MomentumNorm   =  50. * GeV ; // "cut" for tanh 

@@ -1,20 +1,6 @@
-// $Id: CaloTrack2EstimatorAlg.cpp,v 1.3 2004-02-17 12:06:14 ibelyaev Exp $
+// $Id: CaloTrack2EstimatorAlg.cpp,v 1.4 2004-03-08 14:03:23 cattanem Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
-// ============================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.2  2003/07/17 12:45:16  ibelyaev
-//  minor fix to speed-up the execution
-//
-// Revision 1.1.1.1  2003/03/13 18:52:02  ibelyaev
-// The first import of new package 
-//
-// Revision 1.2  2002/12/01 14:22:57  ibelyaev
-//  Hcal stuff and updated S-coprrections
-//
-// Revision 1.1  2002/11/17 17:09:26  ibelyaev
-//  new set of options and tools
-// 
 // ============================================================================
 // Include files
 // from LHcbKernel
@@ -75,7 +61,7 @@ CaloTrack2EstimatorAlg::CaloTrack2EstimatorAlg
   , m_velo        ( false  ) // DO NOT use forward tracks 
   , m_veloTT      ( false  ) // DO NOT use forward tracks 
   , m_veloBack    ( false  ) // DO NOT use veloback tracks 
-  , m_upstream    ( true   ) // Use upstream tracks 
+  , m_downstream  ( true   ) // Use dowstream tracks (new naming convention!)
 {
   declareProperty ( "EvaluatorType" , m_evalType    ) ;
   declareProperty ( "EvaluatorName" , m_evalName    ) ;
@@ -88,7 +74,7 @@ CaloTrack2EstimatorAlg::CaloTrack2EstimatorAlg
   declareProperty ( "UseVeloTT"     , m_veloTT      ) ;
   declareProperty ( "UseVeloBack"   , m_veloBack    ) ;
   declareProperty ( "UseSeed"       , m_seed        ) ;
-  declareProperty ( "UseUpstream"   , m_upstream    ) ;
+  declareProperty ( "UseDownstream" , m_downstream  ) ;
   //
   declareProperty ( "LowLimit"      , m_low         ) ;
   declareProperty ( "HighLimit"     , m_high        ) ;
@@ -202,8 +188,8 @@ StatusCode CaloTrack2EstimatorAlg::execute()
     // use 'veloBack'    tracks ?
     if( !m_veloBack && 1 == track->veloBack  () ) { continue ; }      
     
-    // use 'upstream'  tracks ?
-    if( !m_upstream && 1 == track->upstream  () ) { continue ; }
+    // use 'downstream'  tracks ? (New naming convention!)
+    if( !m_downstream && 1 == track->isDownstream  () ) { continue ; }
     
     // perform the actual evaluation 
     const double value = (*m_eval)( track );

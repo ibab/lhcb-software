@@ -1,8 +1,11 @@
-// $Id: EcalPIDmu.opts,v 1.2 2004-02-17 12:06:09 ibelyaev Exp $
+// $Id: EcalPIDmu.opts,v 1.3 2004-03-08 14:03:23 cattanem Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2004/02/17 12:06:09  ibelyaev
+//  update for rrading of histograms from the file
+//
 // ============================================================================
 
 /** @file 
@@ -33,7 +36,7 @@ EcalPIDmu.UseVelo        = false ;
 EcalPIDmu.UseVeloTT      = false ;
 EcalPIDmu.UseVeloBack    = false ;
 EcalPIDmu.UseSeed        = true  ; 
-EcalPIDmu.UseUpstream    = true  ;
+EcalPIDmu.UseDownstream  = true  ;
 
 EcalPIDmu.ValueNorm      =   5. * GeV ; // "cut" for tanh 
 EcalPIDmu.MomentumNorm   =  25. * GeV ; // "cut" for tanh 

@@ -1,11 +1,6 @@
-// $Id: CaloTrack2EstimatorAlg.h,v 1.1.1.1 2003-03-13 18:52:02 ibelyaev Exp $
+// $Id: CaloTrack2EstimatorAlg.h,v 1.2 2004-03-08 14:03:23 cattanem Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
-// ============================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.1  2002/11/17 17:09:26  ibelyaev
-//  new set of options and tools
-// 
 // ============================================================================
 #ifndef CALOTRACK2ESTIMATORALG_H 
 #define CALOTRACK2ESTIMATORALG_H 1
@@ -102,8 +97,8 @@ private:
   bool               m_veloTT    ;
   // use  'veloBack' tracks
   bool               m_veloBack  ;
-  // use  'upstream' tracks
-  bool               m_upstream  ;
+  // use  'downstream' tracks (new naming convention!)
+  bool               m_downstream  ;
 
 };
 
