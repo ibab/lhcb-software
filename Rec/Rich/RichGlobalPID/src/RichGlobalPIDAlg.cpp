@@ -1,4 +1,4 @@
-// $Id: RichGlobalPIDAlg.cpp,v 1.6 2003-07-08 07:50:45 cattanem Exp $
+// $Id: RichGlobalPIDAlg.cpp,v 1.7 2003-07-08 11:39:53 cattanem Exp $
 // Include files
 
 // local
@@ -179,6 +179,9 @@ StatusCode RichGlobalPIDAlg::initMinLogLikelihood() {
       // calculate delta logLikelihood for event with new track hypothesis
       double deltaLogL = deltaLogLikelihood( rRTrack, hypo );
 
+      // Set the value for deltaLL for this hypothesis
+      (*track)->globalPID()->setParticleDeltaLL( hypo, deltaLogL );
+
       // Set new minimum if lower logLikelihood is achieved
       if ( deltaLogL < mindeltaLL )  {
         if ( 0 != deltaLogL ) mindeltaLL = deltaLogL;
@@ -206,7 +209,7 @@ StatusCode RichGlobalPIDAlg::initMinLogLikelihood() {
     }
 
     // Add this track / deltaLL to the track list
-    m_trackList.push_back( TrackPair(mindeltaLL , *track) );
+    m_trackList.push_back( TrackPair(mindeltaLL, *track) );
 
   }} // end track for loop
 
@@ -282,7 +285,8 @@ void RichGlobalPIDAlg::findMinLogLikelihood( minTrList & minTracks ) {
             (m_inR2 && rRTrack->inRICH2()) ) ) continue;
 
     // skip frozen tracks
-    if ( 0 != m_trackIteration && (*iP).first > m_freezeOutDll ) break;
+    //if ( m_trackIteration != 0 && (*iP).first > m_freezeOutDll ) break;
+    if ( (*iP).first > m_freezeOutDll ) break;
 
     // Set best hypothesis deltaLL to zero
     gTrack->globalPID()->setParticleDeltaLL( rRTrack->currentHypothesis(),
