@@ -1,7 +1,7 @@
 TrueSignals.Members += {"RefineSelection/SelectB2HH"};
-SelectB2HH.PhysDesktop.InputLocations = { "Phys/HLTPions" } ;
-SelectB2HH.ParticleNames =  { "pi-", "pi+"  } ;                           // select pi-, pi+
-SelectB2HH.FilterNames = { "TrueMC", "TrueMC" };                         // filter by TrueMC
+SelectB2HH.PhysDesktop.InputLocations = { "Phys/HLTPions", "Phys/HLTKaons" } ;
+SelectB2HH.ParticleNames =  { "pi-", "pi+", "K+", "K-"  } ;                           // select pi-, pi+
+SelectB2HH.FilterNames = { "TrueMC", "TrueMC", "TrueMC", "TrueMC" };                         // filter by TrueMC
 SelectB2HH.TrueMC.CriteriaNames =  { "BooleanFilterCriterion/B2HH" } ;   // 
 SelectB2HH.TrueMC.B2HH.OrList =  { "TrueMCFilterCriterion/Bd2PiPi",
                                    "TrueMCFilterCriterion/Bd2KPi", 
@@ -11,10 +11,10 @@ SelectB2HH.TrueMC.B2HH.Bd2PiPi.MCDecayFinder.Decay =  "[B0 -> ^pi- ^pi+]cc" ;
 SelectB2HH.TrueMC.B2HH.Bd2KPi.MCDecayFinder.Decay =  "{[[B0]nos -> ^K+ ^pi-]cc, [[B0]os -> ^K- ^pi+]cc}" ;
 SelectB2HH.TrueMC.B2HH.Bs2PiK.MCDecayFinder.Decay = "{[[B_s0]nos -> ^K- ^pi+]cc, [[B_s0]os -> ^K+ ^pi-]cc}"  ;
 SelectB2HH.TrueMC.B2HH.Bs2KK.MCDecayFinder.Decay =  "[B_s0 -> ^K- ^K+]cc" ;
-SelectB2HH.TrueMC.B2HH.Bd2PiPi.Particle2MCLinks.Location = "Phys/Relations/Particle2MCLinks" ;
-SelectB2HH.TrueMC.B2HH.Bd2KPi.Particle2MCLinks.Location = "Phys/Relations/Particle2MCLinks" ;
-SelectB2HH.TrueMC.B2HH.Bs2PiK.Particle2MCLinks.Location = "Phys/Relations/Particle2MCLinks" ;
-SelectB2HH.TrueMC.B2HH.Bs2KK.Particle2MCLinks.Location = "Phys/Relations/Particle2MCLinks" ;
+SelectB2HH.TrueMC.B2HH.Bd2PiPi.Particle2MCLinksAsct.Location = "Phys/Relations/Particle2MCLinks" ;
+SelectB2HH.TrueMC.B2HH.Bd2KPi.Particle2MCLinksAsct.Location = "Phys/Relations/Particle2MCLinks" ;
+SelectB2HH.TrueMC.B2HH.Bs2PiK.Particle2MCLinksAsct.Location = "Phys/Relations/Particle2MCLinks" ;
+SelectB2HH.TrueMC.B2HH.Bs2KK.Particle2MCLinksAsct.Location = "Phys/Relations/Particle2MCLinks" ;
 
 // check that all 2 tracks are there
 TrueSignals.Members += {"CombineParticles/AllB2HHTracks"};
@@ -23,3 +23,4 @@ AllB2HHTracks.DecayDescriptor = "B0 -> pi+ pi-" ;
 AllB2HHTracks.Selections = {   "B0 : BooleanFilterCriterion", 
                                "pi+ : BooleanFilterCriterion", 
                                "pi- : BooleanFilterCriterion"} ;
+// will not work properly

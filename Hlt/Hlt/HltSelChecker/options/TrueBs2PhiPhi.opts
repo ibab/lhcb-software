@@ -1,15 +1,15 @@
 TrueSignals.Members += {"RefineSelection/SelectBs2PhiPhi"};
-SelectBs2PhiPhi.PhysDesktop.InputLocations = { "Phys/HLTPions" } ;
-SelectBs2PhiPhi.ParticleNames =  { "pi-", "pi+"  } ;                           // select pi-, pi+
+SelectBs2PhiPhi.PhysDesktop.InputLocations = { "Phys/HLTKaons" } ;
+SelectBs2PhiPhi.ParticleNames =  { "K+", "K-"  } ;                           // select pi-, pi+
 SelectBs2PhiPhi.FilterNames = { "TrueMC", "TrueMC" };                         // filter by TrueMC
 SelectBs2PhiPhi.TrueMC.CriteriaNames =  { "TrueMCFilterCriterion/Bs2PhiPhi" } ;   // 
 SelectBs2PhiPhi.TrueMC.Bs2PhiPhi.MCDecayFinder.Decay =  "[B_s0 -> (phi(1020) -> ^K- ^K+) (phi(1020) -> ^K- ^K+)]cc" ;
-SelectBs2PhiPhi.TrueMC.Bs2PhiPhi.Particle2MCLinks.Location = "Phys/Relations/Particle2MCLinks" ;
+SelectBs2PhiPhi.TrueMC.Bs2PhiPhi.Particle2MCLinksAsct.Location = "Phys/Relations/Particle2MCLinks" ;
 
 // check that all 4 tracks are there
 TrueSignals.Members += {"CombineParticles/AllBs2PhiPhiTracks"};
 AllBs2PhiPhiTracks.PhysDesktop.InputLocations = {"Phys/SelectBs2PhiPhi"};
-AllBs2PhiPhiTracks.DecayDescriptor = "B_s0 -> pi+ pi+ pi- pi-" ;
+AllBs2PhiPhiTracks.DecayDescriptor = "B_s0 -> K+ K+ K- K-" ;
 AllBs2PhiPhiTracks.Selections = {   "B_s0 : BooleanFilterCriterion", 
-                                    "pi+ : BooleanFilterCriterion", 
-                                    "pi- : BooleanFilterCriterion"} ;
+                                    "K+ : BooleanFilterCriterion", 
+                                    "K- : BooleanFilterCriterion"} ;

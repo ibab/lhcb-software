@@ -9,10 +9,6 @@
 HLTSelections.Members += { "ResetPVLocation/SetOfflinePV" };
 SetOfflinePV.ResetToOffline = true ;
 
-//#include "$B2HHROOT/options/DoTDRselBd2PiPi.opts"
-//#include "$B2HHROOT/options/DoTDRselBd2KPi.opts"
-//#include "$B2HHROOT/options/DoTDRselBs2KK.opts"
-//#include "$B2HHROOT/options/DoTDRselBs2PiK.opts" 
 ApplicationMgr.TopAlg += { "PreLoadParticles/Combined" } ;
 #include "$B2HHROOT/options/DoTDRselB2HH.opts" 
 #include "$BS2PHIPHIROOT/options/DoTDRselBs2PhiPhi.opts"
@@ -20,7 +16,7 @@ ApplicationMgr.TopAlg += { "PreLoadParticles/Combined" } ;
 #include "$BD2DSTARPIROOT/options/DoTDRselBd2DstarPi.opts"
 //#include "$BS2DSHROOT/options/DoTDRselBs2DsPi.opts"
 //#include "$BS2DSHROOT/options/DoTDRselBs2DsK.opts"
-#include "$BS2DSHROOT/options/DoTDRselBs2DsH.opts"
+#include "$BS2DSHROOT/options/DoTDRselBs2DsH.opts" // exclusive with two above
 #include "$BS2MUMUROOT/options/DoTDRselBs2MuMu.opts"
 #include "$B2XGAMMAROOT/options/DoTDRselBs2PhiGamma.opts"
 #include "$BS2JPSIPHIROOT/options/DoTDRselBs2Jpsi2MuMu_Phi2KK.opts"
@@ -69,7 +65,7 @@ ApplicationMgr.TopAlg += { "PreLoadParticles/Combined" } ;
 //#include "$HLTSELECTIONSROOT/options/DC04_L0L1_Bs_DsH.opts"
 //
 
-ApplicationMgr.EvtMax    = 100 ;
+ApplicationMgr.EvtMax    = -1 ;
 //EventSelector.FirstEvent = 91 ;
 MessageSvc.Format = "% F%60W%S%7W%R%T %0W%M";
 ChronoStatSvc.ChronoPrintLevel = 4 ; // forces printout even with 4
@@ -89,3 +85,5 @@ PrintTrueB.OutputLevel = 4;
 PrintTrueD.OutputLevel = 4;
 PrintBTracks.OutputLevel = 4;
 PrintDstarTracks.OutputLevel = 4;
+
+PrintFoundDstar.OutputLevel = 4;

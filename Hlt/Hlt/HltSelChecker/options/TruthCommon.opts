@@ -1,5 +1,5 @@
 // links
-Particle2MCLinks.InputData = { "Phys/HLTPions/Particles" };
+Particle2MCLinks.InputData = { "Phys/HLTPions/Particles",  "Phys/HLTKaons/Particles",  "Phys/HLTMuons/Particles"};
 
 ApplicationMgr.DLLs += {"DaVinciMCTools"}; 
 TrueSignals.Members += {"PrintMCTree/PrintTrueB"};

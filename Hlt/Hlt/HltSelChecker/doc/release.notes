@@ -4,6 +4,8 @@
 ! Purpose     : High-Level Trigger Exclusive Selections 
 !-----------------------------------------------------------------------------
 
+! 2004-11-19 - P. Koppenburg
+  Updated version to incorporate the RICH
 !========================== HltSelChecker v1r0 2004-11-18 ====================
 ! 2004-11-18 - P. Koppenburg
   New package Hlt/HltSelChecker that contains all monitors and checkers
