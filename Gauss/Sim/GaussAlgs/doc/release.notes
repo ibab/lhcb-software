@@ -3,6 +3,16 @@
 ! Purpose     : 
 ! -----------------------------------------------------------------------------
 
+!===================== GaussAlgs v1r2 2004-11-16 =============================
+! 2004-11-16 - Gloria CORTI
+ - src/GaussInitialization.{h,cpp}
+   . introduce code provided by Marco Cattaneo to set three seeds in random
+     number generator to be able to use more then 24 bits
+     It is also possible to throw a certain number of random numbers before
+     beginning the generation (control by option SkipFactor, default=0).
+     It is possible to use previous behaviour by setting only one seed (i.e.
+     using 24 bits) via options (SingleSeed, default=false)
+
 !===================== GaussAlgs v1r1 2004-04-29 =============================
 ! 2004-04-29 - Gloria CORTI
  - src/GiGaGetHitsAlg.{h,cpp}

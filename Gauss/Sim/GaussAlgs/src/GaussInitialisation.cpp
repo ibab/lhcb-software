@@ -5,12 +5,15 @@
 #include "GaudiKernel/SmartDataPtr.h"
 #include "GaudiKernel/IRndmEngine.h"
 #include "GaudiKernel/IRndmGenSvc.h"
+#include "GaudiKernel/RndmGenerators.h"
 #include "GaudiKernel/IDataProviderSvc.h"
 #include "GaudiKernel/DataObject.h"
 #include "Event/EventHeader.h"
 #include "Event/ProcStatus.h"
 #include <vector>
 #include <ctime>
+
+#include "boost/format.hpp"
 
 //----------------------------------------------------------------------------
 // Implementation of class :  GaussInitialisation
@@ -24,10 +27,12 @@ GaussInitialisation::GaussInitialisation( const std::string& name,
                                             ISvcLocator* pSvcLocator )
                      : Algorithm( name, pSvcLocator ) { 
   m_engine = 0;
-  declareProperty( "InitRndmOnce",    m_initRndm = false );
-  declareProperty( "RndmNumberSeed",  m_theSeed  = -1 );
-  declareProperty( "RunNumber", m_runNumb = 1 );
+  declareProperty( "InitRndmOnce",     m_initRndm = false );
+  declareProperty( "RndmNumberSeed",   m_theSeed  = -1 );
+  declareProperty( "RunNumber",        m_runNumb  = 1 );
   declareProperty( "FirstEventNumber", m_firstEvent = 1);
+  declareProperty( "SkipFactor",       m_skipFactor = 0     );
+  declareProperty( "SingleSeed",       m_singleSeed = false );
 }
 //-----------------------------------------------------------------------------
 
@@ -64,8 +69,7 @@ StatusCode GaussInitialisation::initialize() {
   m_engine = randSvc()->engine();
   if( 0 == m_engine ) 
     {
-      MsgStream log( msgSvc(), name() );
-      log << MSG::ERROR << "Random number engine not found!" << endmsg;
+      msg << MSG::ERROR << "Random number engine not found!" << endmsg;
       return StatusCode::FAILURE;
     } 
   else 
@@ -74,6 +78,14 @@ StatusCode GaussInitialisation::initialize() {
       seeds.push_back( 12345678 );
       m_engine->setSeeds( seeds );
       
+      if( m_singleSeed ) {
+        msg << MSG::WARNING << "Using only one 24 bit random number seed" << endmsg;
+      }
+      
+      if( 0 != m_skipFactor ) {
+        msg << MSG::INFO << "Skipping " << m_skipFactor 
+            << " random numbers before each event" << endmsg;
+      }
       return StatusCode::SUCCESS;
     }
 }
@@ -118,6 +130,7 @@ StatusCode GaussInitialisation::execute() {
 
   // Set the random number seed either once per event or once per job
   std::vector<long> seeds;
+
   if( m_initRndm ) {
     if( m_firstEvent==m_eventNumb ){
       if( -1 == m_theSeed ) { m_theSeed = m_runNumb; }
@@ -129,22 +142,43 @@ StatusCode GaussInitialisation::execute() {
     }
   }  
   else {
-    // Get random number seed by hashing string containing event & run nos.
-    char seedTxt[32];
-    sprintf( seedTxt, "Gauss_evt_%.8lx_run_%.8lx", m_eventNumb, m_runNumb);
+    unsigned long run = m_runNumb;
+    unsigned long evt = m_eventNumb;
+    if( !m_singleSeed ) {
+      seeds.push_back( run );
+      seeds.push_back( evt );
+    }
+    
+    // Get last seed by hashing string containing event & run nos.
+    std::string s = "Gauss" + boost::io::str( boost::format( "_evt_%1%_run_%2%" )
+      % boost::io::group( std::setfill('0'), std::hex, std::setw(8), evt )
+      % boost::io::group( std::setfill('0'), std::hex, std::setw(8), run ) );
     
     //--> Hash32 algorithm from Pere Mato
-    const char* k;
-    long hash;
-    for (hash = 0, k = seedTxt; *k; k++) {
-      hash += *k; hash += (hash << 10); hash ^= (hash >> 6);
+    long hash = 0;
+    for( std::string::const_iterator iC = s.begin(); s.end() != iC; ++iC ) {
+      hash += *iC; hash += (hash << 10); hash ^= (hash >> 6);
     }
     hash += (hash << 3); hash ^= (hash >> 11); hash += (hash << 15);
     //<--
-    m_theSeed = abs(hash); // CLHEP cannot cope with -ve seeds
     
+    // CLHEP uses the last seed as a seed (only 24 bits used) but also to generate
+    // more pseudorandom seeds to populate the "seeds" vector to its capacity of 24
+    // seeds. For this generation, 31 bits are used
+    m_theSeed = abs(hash); // CLHEP cannot cope with -ve seeds
     seeds.push_back( m_theSeed );
+    seeds.push_back( 0 );
     m_engine->setSeeds( seeds );
+
+    // Optionally skip some random numbers
+    if( 0 < m_skipFactor ) {
+      int shots  = m_skipFactor;
+      double sum = 0.;
+      Rndm::Numbers gauss;
+      gauss.initialize( randSvc() , Rndm::Gauss(0.,1.0) );
+      while( 0 < --shots ) { sum += gauss() * sum ; }
+    }
+
     log << MSG::INFO 
         << "Random number sequence initialised for this event with seed "
         << m_theSeed << endmsg;

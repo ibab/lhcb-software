@@ -38,6 +38,10 @@ private:
   long m_eventNumb;      ///> Counter for events
   long m_runNumb;        ///> Run number 
   long m_firstEvent;     ///> First event number
+  /// Property to skip some random numbers (default is zero)
+  int  m_skipFactor;
+  /// Property to use only one seed (default is false)
+  bool m_singleSeed;
 };
 
 #endif    // GAUSS_GAUSSITIALISATION_H
