@@ -1,8 +1,11 @@
-// $Id: SubClusterSelectorNeighbors.h,v 1.1 2001-11-12 19:04:28 ibelyaev Exp $
+// $Id: SubClusterSelectorNeighbors.h,v 1.2 2001-11-12 21:16:14 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
-// $Log: not supported by cvs2svn $ 
+// $Log: not supported by cvs2svn $
+// Revision 1.1  2001/11/12 19:04:28  ibelyaev
+//  update
+// 
 // ============================================================================
 #ifndef CALOTOOLS_SUBCLUSTERSELECTORNEIGHBORS_H 
 #define CALOTOOLS_SUBCLUSTERSELECTORNEIGHBORS_H 1
@@ -29,9 +32,14 @@ class SubClusterSelectorNeighbors
   
 public:
   
+  /** standard initiliazation 
+   *  @return status code 
+   */
+  virtual StatusCode initialize() ;
+  
   /** The main processing method (functor interface) 
    *
-   *  Error codes:  
+   *  Error codes: 
    *    - 225   cluster points to NULL
    *    - 226   empty cell/digit container for given cluster 
    *    - 227   SeedCell is not found 
@@ -51,7 +59,7 @@ protected:
    */
   SubClusterSelectorNeighbors( const std::string& Type   ,
                                const std::string& Name   ,
-                               const IIntrerface* Parent ); 
+                               const IInterface*  Parent ); 
   
   /** destructor, virtual and protected 
    */
