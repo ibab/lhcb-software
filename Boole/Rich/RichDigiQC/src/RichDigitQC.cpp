@@ -1,24 +1,4 @@
-// $Id: RichDigitQC.cpp,v 1.1 2003-09-20 15:45:18 jonrob Exp $
-
-// from Gaudi
-#include "GaudiKernel/AlgFactory.h"
-#include "GaudiKernel/MsgStream.h"
-#include "GaudiKernel/IHistogramSvc.h"
-#include "GaudiKernel/SmartDataPtr.h"
-
-// Event model
-#include "Event/RichDigit.h"
-
-// RichKernel
-#include "RichKernel/RichSmartID.h"
-#include "RichKernel/RichDetectorType.h"
-
-// Histogramming
-#include "AIDA/IHistogram1D.h"
-#include "AIDA/IHistogram2D.h"
-
-// CLHEP
-#include "CLHEP/Units/PhysicalConstants.h"
+// $Id: RichDigitQC.cpp,v 1.2 2003-11-02 21:55:00 jonrob Exp $
 
 // local
 #include "RichDigitQC.h"
@@ -36,7 +16,7 @@ const        IAlgFactory& RichDigitQCFactory = s_factory ;
 // Standard constructor, initializes variables
 RichDigitQC::RichDigitQC( const std::string& name,
                           ISvcLocator* pSvcLocator)
-  : Algorithm ( name, pSvcLocator ) {
+  : RichAlgBase ( name, pSvcLocator ) {
 
   // Declare job options
   declareProperty( "InputDigits", m_digitTDS = RichDigitLocation::Default );
@@ -52,6 +32,9 @@ StatusCode RichDigitQC::initialize() {
 
   MsgStream msg(msgSvc(), name());
   msg << MSG::DEBUG << "Initialize" << endreq;
+
+  // Initialize base class
+  if ( !RichAlgBase::initialize() ) return StatusCode::FAILURE;
 
   // Book histograms
   if ( !bookHistograms() ) return StatusCode::FAILURE;
@@ -120,7 +103,8 @@ StatusCode RichDigitQC::finalize() {
       << "RICH1 digit multiplicity = " << avR1 <<" +- " << avR1Err << endreq
       << "RICH2 digit multiplicity = " << avR2 <<" +- " << avR2Err << endreq;
 
-  return StatusCode::SUCCESS;
+  // finalize base class
+  return RichAlgBase::finalize();
 }
 
 

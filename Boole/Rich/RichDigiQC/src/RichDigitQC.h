@@ -1,13 +1,27 @@
-// $Id: RichDigitQC.h,v 1.1 2003-09-20 15:45:18 jonrob Exp $
+// $Id: RichDigitQC.h,v 1.2 2003-11-02 21:55:00 jonrob Exp $
 #ifndef RICHMONITOR_RICHDIGITQC_H
 #define RICHMONITOR_RICHDIGITQC_H 1
 
-// from Gaudi
-#include "GaudiKernel/Algorithm.h"
+// base class
+#include "RichUtils/RichAlgBase.h"
 
-// Forward Declarations
-class IHistogram1D;
-class IHistogram2D;
+// from Gaudi
+#include "GaudiKernel/IHistogramSvc.h"
+#include "GaudiKernel/SmartDataPtr.h"
+
+// Event model
+#include "Event/RichDigit.h"
+
+// RichKernel
+#include "RichKernel/RichSmartID.h"
+#include "RichKernel/RichDetectorType.h"
+
+// Histogramming
+#include "AIDA/IHistogram1D.h"
+#include "AIDA/IHistogram2D.h"
+
+// CLHEP
+#include "CLHEP/Units/PhysicalConstants.h"
 
 /** @class RichDigitQC RichDigitQC.h RichDigiQC/RichDigitQC.h
  *
@@ -17,7 +31,7 @@ class IHistogram2D;
  *  @date   2003-09-08
  */
 
-class RichDigitQC : public Algorithm {
+class RichDigitQC : public RichAlgBase {
 
 public:
 

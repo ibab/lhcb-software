@@ -3,7 +3,7 @@
 # Maintainer : Chris Jones
 #============================================================================
 package           RichDigiQC
-version           v1r1
+version           v1r2
 
 # Structure, i.e. directories to process. 
 #============================================================================
@@ -14,8 +14,9 @@ set RICHDIGIQCOPTS $(RICHDIGIQCROOT)/options
 
 # Used packages. Specify the version, * at the end specifies 'any revision'
 #============================================================================
-use AIDA                v*   -no_auto_imports
-use RichEvent           v5r* Event
+use AIDA              v*    -no_auto_imports
+use RichEvent         v5r*  Event
+use RichUtils         v3r*  Rich
 
 # Component library building rule
 #============================================================================

@@ -1,9 +1,33 @@
-// $Id: RichDigiDataObjVerifier.h,v 1.1 2003-09-20 15:45:18 jonrob Exp $
+// $Id: RichDigiDataObjVerifier.h,v 1.2 2003-11-02 21:55:00 jonrob Exp $
 #ifndef RICHDIGIQC_RICHDIGIDATOBJVERIFIER_H
 #define RICHDIGIQC_RICHDIGIDATOBJVERIFIER_H 1
 
+// base class
+#include "RichUtils/RichAlgBase.h"
+
 // from Gaudi
-#include "GaudiKernel/Algorithm.h"
+#include "GaudiKernel/AlgFactory.h"
+#include "GaudiKernel/IHistogramSvc.h"
+#include "GaudiKernel/SmartDataPtr.h"
+
+// Event model
+#include "Event/RichDigit.h"
+#include "Event/MCRichDigit.h"
+#include "Event/MCRichDeposit.h"
+#include "Event/MCRichSummedDeposit.h"
+#include "Event/MCRichHit.h"
+
+// RichKernel
+#include "RichKernel/RichSmartID.h"
+#include "RichKernel/RichDetectorType.h"
+
+// Histogramming
+#include "AIDA/IHistogram1D.h"
+#include "AIDA/IHistogram2D.h"
+
+// CLHEP
+#include "CLHEP/Units/PhysicalConstants.h"
+
 
 /** @class RichDigiDataObjVerifier RichDigiDataObjVerifier.h RichDigiQC/RichDigiDataObjVerifier.h
  *
@@ -13,7 +37,7 @@
  *  @date   2003-09-08
  */
 
-class RichDigiDataObjVerifier : public Algorithm {
+class RichDigiDataObjVerifier : public RichAlgBase {
 
 public:
 

@@ -1,28 +1,4 @@
-// $Id: RichDigiDataObjVerifier.cpp,v 1.1 2003-09-20 15:45:18 jonrob Exp $
-
-// from Gaudi
-#include "GaudiKernel/AlgFactory.h"
-#include "GaudiKernel/MsgStream.h"
-#include "GaudiKernel/IHistogramSvc.h"
-#include "GaudiKernel/SmartDataPtr.h"
-
-// Event model
-#include "Event/RichDigit.h"
-#include "Event/MCRichDigit.h"
-#include "Event/MCRichDeposit.h"
-#include "Event/MCRichSummedDeposit.h"
-#include "Event/MCRichHit.h"
-
-// RichKernel
-#include "RichKernel/RichSmartID.h"
-#include "RichKernel/RichDetectorType.h"
-
-// Histogramming
-#include "AIDA/IHistogram1D.h"
-#include "AIDA/IHistogram2D.h"
-
-// CLHEP
-#include "CLHEP/Units/PhysicalConstants.h"
+// $Id: RichDigiDataObjVerifier.cpp,v 1.2 2003-11-02 21:55:00 jonrob Exp $
 
 // local
 #include "RichDigiDataObjVerifier.h"
@@ -40,7 +16,7 @@ const        IAlgFactory& RichDigiDataObjVerifierFactory = s_factory ;
 // Standard constructor, initializes variables
 RichDigiDataObjVerifier::RichDigiDataObjVerifier( const std::string& name,
                                                   ISvcLocator* pSvcLocator)
-  : Algorithm ( name, pSvcLocator ) {
+  : RichAlgBase ( name, pSvcLocator ) {
 
   // Declare job options
   declareProperty( "RichDigits", m_digitTES = RichDigitLocation::Default );
@@ -65,6 +41,9 @@ StatusCode RichDigiDataObjVerifier::initialize() {
 
   MsgStream msg(msgSvc(), name());
   msg << MSG::DEBUG << "Initialize" << endreq;
+
+  // Initialize base class
+  if ( !RichAlgBase::initialize() ) return StatusCode::FAILURE;
 
   return StatusCode::SUCCESS;
 };
@@ -186,5 +165,6 @@ StatusCode RichDigiDataObjVerifier::finalize() {
   MsgStream msg(msgSvc(), name());
   msg << MSG::DEBUG << "Finalize" << endreq;
 
-  return StatusCode::SUCCESS;
+  // finalize base class
+  return RichAlgBase::finalize();
 }
