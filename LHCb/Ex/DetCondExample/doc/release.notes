@@ -1,6 +1,14 @@
-#$Id: release.notes,v 1.17 2002-07-12 15:13:19 andreav Exp $
+#$Id: release.notes,v 1.18 2002-07-17 13:59:44 andreav Exp $
 Package Ex/DetCondExample
 Package manager : Andrea Valassi 
+
+==============================================================================
+!20020717 - Andrea Valassi
+Fix an ambiguity in the requirements file
+- Specify the full path to the setup and cleanup scripts in cmt/
+  > If you source setup from a directory other than cmt/, CMT looks
+    for the setup/cleanup scripts in mgr/ rather than cmt/ otherwise.
+    This had never been observed before: has something changed in CMT/LHCb?  
 
 ==============================================================================
 !20020712 - Andrea Valassi

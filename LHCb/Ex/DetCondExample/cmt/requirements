@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.10 2002-04-17 16:09:02 andreav Exp $
+# $Id: requirements,v 1.11 2002-07-17 13:59:44 andreav Exp $
 package DetCondExample
 version v3r0
 
@@ -23,10 +23,10 @@ use DetCond v3r0* Det
 set DETCONDEXAMPLE_XMLDDDB ${DETCONDEXAMPLEROOT}/XMLDDDB
 
 # Setup for the test CondDB used in the example
-setup_script setupDB
+setup_script ${DETCONDEXAMPLEROOT}/cmt/setupDB
 
 # Remove the test CondDB used in the example
-cleanup_script cleanupDB
+cleanup_script ${DETCONDEXAMPLEROOT}/cmt/cleanupDB
 
 # Path to some useful scripts using sql
 path_append PATH ${DETCONDEXAMPLEROOT}/sql
