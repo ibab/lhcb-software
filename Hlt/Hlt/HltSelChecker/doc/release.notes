@@ -4,6 +4,10 @@
 ! Purpose     : High-Level Trigger Exclusive Selections - Checking 
 !-----------------------------------------------------------------------------
 
+! 2005-03-17 - Luis Fernandez
+ - src/DecayChainNTuple.{h, cpp}
+   . Added useful variables to the ntuple
+
 !========================== HltSelChecker v2r3 2005-03-16 ===================
 ! 2005-03-13 - Luis Fernandez
  - src/DecayChainNTuple.{h, cpp}

@@ -169,6 +169,10 @@ private:
   // NTuple global variables
   NTuple::Item<long> m_eventNumber,m_runNumber;
   NTuple::Item<long> m_nRecoPV;
+  // All reconstructed primary vertices coordinates
+  NTuple::Array<float> m_RecoPVx;
+  NTuple::Array<float> m_RecoPVy;
+  NTuple::Array<float> m_RecoPVz;
   NTuple::Item<long> m_L0Decision;
   NTuple::Item<long> m_L1Decision;
   NTuple::Item<long> m_L1Gen;
@@ -181,6 +185,10 @@ private:
 
 #ifdef MCCheck
   NTuple::Item<long> m_nMCPV;
+  // All MC primary vertices coordinates
+  NTuple::Array<float> m_MCPVx;
+  NTuple::Array<float> m_MCPVy;
+  NTuple::Array<float> m_MCPVz;
 #endif
 
   //-----------------------------------------------------------------------------
@@ -255,16 +263,21 @@ private:
 
     // 3-momentum
     NTuple::Array<float> m_px, m_py, m_pz;
-    // NTuple::Array<float> m_pxvar, m_pyvar, m_pzvar;
-    
+    NTuple::Array<float> m_pxvar, m_pyvar, m_pzvar;
+
+    // LUIS
+    // Point at which the momentum is given in LHCb reference frame
+    NTuple::Array<float> m_onTrx, m_onTry, m_onTrz;
+    NTuple::Array<float> m_onTrxvar, m_onTryvar, m_onTrzvar;
+
     // Decay vtx if any; otherwise set to -100000
     NTuple::Array<float> m_vchitwo;
     NTuple::Array<float> m_vnDoF;
     NTuple::Array<float> m_vx;
     NTuple::Array<float> m_vy;
     NTuple::Array<float> m_vz;
-    // NTuple::Array<float> m_vxvar;
-    // NTuple::Array<float> m_vyvar;
+    NTuple::Array<float> m_vxvar;
+    NTuple::Array<float> m_vyvar;
     NTuple::Array<float> m_vzvar;
 
     // Primary vertices
@@ -274,8 +287,8 @@ private:
     NTuple::Array<float> m_sIPSPVx;
     NTuple::Array<float> m_sIPSPVy;
     NTuple::Array<float> m_sIPSPVz;
-    // NTuple::Array<float> m_sIPSPVxvar;
-    // NTuple::Array<float> m_sIPSPVyvar;
+    NTuple::Array<float> m_sIPSPVxvar;
+    NTuple::Array<float> m_sIPSPVyvar;
     NTuple::Array<float> m_sIPSPVzvar;
     // Minimum (smallest) IP, IPe and IPS
     NTuple::Array<float> m_sIP;

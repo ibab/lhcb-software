@@ -107,14 +107,14 @@ StatusCode DecayChainNTuple::initialize() {
     return sc;
   }
 
-  m_PVLocator = tool<IPVLocator>("PVLocator", m_PVLocator, this);
-  if(!m_PVLocator){
+  // Do not use interface here
+  sc = toolSvc()->retrieveTool("PVLocator", m_PVLocator, this);
+  if(sc.isFailure()){
     err() << " Unable to retrieve PV Locator tool" << endreq;
     return sc;
   }
 
   m_PVContainer = m_PVLocator->getPVLocation() ;
-   
   info() << "Getting PV from " << m_PVContainer << endreq ;
 
   // Retrieve the data service
@@ -356,9 +356,16 @@ DecayChainNTuple::HandleNTuple::HandleNTuple(NTuplePtr& nt, unsigned int& number
   sc = nt->addIndexedItem("px_lab"+label,m_n,m_px);
   sc = nt->addIndexedItem("py_lab"+label,m_n,m_py);
   sc = nt->addIndexedItem("pz_lab"+label,m_n,m_pz);
-  // sc = nt->addIndexedItem("pxvar_lab"+label,m_n,m_pxvar);
-  // sc = nt->addIndexedItem("pyvar_lab"+label,m_n,m_pyvar);
-  // sc = nt->addIndexedItem("pzvar_lab"+label,m_n,m_pzvar);
+  sc = nt->addIndexedItem("pxvar_lab"+label,m_n,m_pxvar);
+  sc = nt->addIndexedItem("pyvar_lab"+label,m_n,m_pyvar);
+  sc = nt->addIndexedItem("pzvar_lab"+label,m_n,m_pzvar);
+  // Point at which the momentum is given in LHCb reference frame
+  sc = nt->addIndexedItem("onTrx_lab"+label,m_n,m_onTrx);
+  sc = nt->addIndexedItem("onTry_lab"+label,m_n,m_onTry);
+  sc = nt->addIndexedItem("onTrz_lab"+label,m_n,m_onTrz);
+  sc = nt->addIndexedItem("onTrxvar_lab"+label,m_n,m_onTrxvar);
+  sc = nt->addIndexedItem("onTryvar_lab"+label,m_n,m_onTryvar);
+  sc = nt->addIndexedItem("onTrzvar_lab"+label,m_n,m_onTrzvar);
 
   // Decay vtx (and variances) if any; otherwise set to -100000
   sc = nt->addIndexedItem("vchitwo_lab"+label,m_n,m_vchitwo);
@@ -366,8 +373,8 @@ DecayChainNTuple::HandleNTuple::HandleNTuple(NTuplePtr& nt, unsigned int& number
   sc = nt->addIndexedItem("vx_lab"+label,m_n,m_vx);
   sc = nt->addIndexedItem("vy_lab"+label,m_n,m_vy);
   sc = nt->addIndexedItem("vz_lab"+label,m_n,m_vz);
-  // sc = nt->addIndexedItem("vxvar_lab"+label,m_n,m_vxvar);
-  // sc = nt->addIndexedItem("vyvar_lab"+label,m_n,m_vyvar);
+  sc = nt->addIndexedItem("vxvar_lab"+label,m_n,m_vxvar);
+  sc = nt->addIndexedItem("vyvar_lab"+label,m_n,m_vyvar);
   sc = nt->addIndexedItem("vzvar_lab"+label,m_n,m_vzvar);
 
   // Primary vertices
@@ -377,8 +384,8 @@ DecayChainNTuple::HandleNTuple::HandleNTuple(NTuplePtr& nt, unsigned int& number
   sc = nt->addIndexedItem("sIPSPVx_lab"+label,m_n,m_sIPSPVx);
   sc = nt->addIndexedItem("sIPSPVy_lab"+label,m_n,m_sIPSPVy);
   sc = nt->addIndexedItem("sIPSPVz_lab"+label,m_n,m_sIPSPVz);
-  // sc = nt->addIndexedItem("sIPSPVxvar_lab"+label,m_n,m_sIPSPVxvar);
-  // sc = nt->addIndexedItem("sIPSPVyvar_lab"+label,m_n,m_sIPSPVyvar);
+  sc = nt->addIndexedItem("sIPSPVxvar_lab"+label,m_n,m_sIPSPVxvar);
+  sc = nt->addIndexedItem("sIPSPVyvar_lab"+label,m_n,m_sIPSPVyvar);
   sc = nt->addIndexedItem("sIPSPVzvar_lab"+label,m_n,m_sIPSPVzvar);
   // Minimum (smallest) IP, IPe and IPS
   sc = nt->addIndexedItem("sIP_lab"+label,m_n,m_sIP);
@@ -678,9 +685,17 @@ void DecayChainNTuple::HandleNTuple::FillNTuple(Particle& part, VertexVector& pv
   m_px[m_n]= part.momentum().px();
   m_py[m_n]= part.momentum().py();
   m_pz[m_n]= part.momentum().pz();
-  // m_pxvar[m_n]= part.momentumErr()(1,1);
-  // m_pyvar[m_n]= part.momentumErr()(2,2);
-  // m_pzvar[m_n]= part.momentumErr()(3,3);
+  m_pxvar[m_n]= part.momentumErr()(1,1);
+  m_pyvar[m_n]= part.momentumErr()(2,2);
+  m_pzvar[m_n]= part.momentumErr()(3,3);
+
+  // Point at which the momentum is given in LHCb reference frame
+  m_onTrx[m_n] = part.pointOnTrack().x();
+  m_onTry[m_n] = part.pointOnTrack().y();
+  m_onTrz[m_n] = part.pointOnTrack().z();
+  m_onTrxvar[m_n] = part.pointOnTrackErr()(1,1);
+  m_onTryvar[m_n] = part.pointOnTrackErr()(2,2);
+  m_onTrzvar[m_n] = part.pointOnTrackErr()(3,3);
   
   // Decay vtx if any; otherwise set to -100000
   Vertex* v = part.endVertex();
@@ -690,8 +705,8 @@ void DecayChainNTuple::HandleNTuple::FillNTuple(Particle& part, VertexVector& pv
     m_vx[m_n] = -100000.;
     m_vy[m_n] = -100000.;
     m_vz[m_n] = -100000.;
-    // m_vxvar[m_n] = -1.;
-    // m_vyvar[m_n] = -1.;
+    m_vxvar[m_n] = -1.;
+    m_vyvar[m_n] = -1.;
     m_vzvar[m_n] = -1.;
   } 
   else{
@@ -700,8 +715,8 @@ void DecayChainNTuple::HandleNTuple::FillNTuple(Particle& part, VertexVector& pv
     m_vx[m_n] = v->position().x();
     m_vy[m_n] = v->position().y();
     m_vz[m_n] = v->position().z();
-    // m_vxvar[m_n] = v->positionErr()(1,1);
-    // m_vyvar[m_n] = v->positionErr()(2,2);
+    m_vxvar[m_n] = v->positionErr()(1,1);
+    m_vyvar[m_n] = v->positionErr()(2,2);
     m_vzvar[m_n] = v->positionErr()(3,3);
   }
 
@@ -755,8 +770,8 @@ void DecayChainNTuple::HandleNTuple::FillNTuple(Particle& part, VertexVector& pv
   m_sIPSPVx[m_n] = sPV.x();
   m_sIPSPVy[m_n] = sPV.y();
   m_sIPSPVz[m_n] = sPV.z();
-  // m_sIPSPVxvar[m_n] = sIPSPV->positionErr()(1,1);
-  // m_sIPSPVyvar[m_n] = sIPSPV->positionErr()(2,2);
+  m_sIPSPVxvar[m_n] = sIPSPV->positionErr()(1,1);
+  m_sIPSPVyvar[m_n] = sIPSPV->positionErr()(2,2);
   m_sIPSPVzvar[m_n] = sIPSPV->positionErr()(3,3);
 
   m_iptool->calcImpactPar(part,*sIPSPV,ipcheck,ipecheck);
@@ -878,9 +893,15 @@ StatusCode DecayChainNTuple::BookNTuple(std::vector<Particle*>& mothervec) {
         // NTuple global variables
         sc = nt->addItem("Event", m_eventNumber);
         sc = nt->addItem("Run", m_runNumber);
-        sc = nt->addItem("nRecoPV", m_nRecoPV);
+        sc = nt->addItem("nRecoPV", m_nRecoPV, 0, 20);
+        sc = nt->addIndexedItem("RecoPVx", m_nRecoPV, m_RecoPVx);
+        sc = nt->addIndexedItem("RecoPVy", m_nRecoPV, m_RecoPVy);
+        sc = nt->addIndexedItem("RecoPVz", m_nRecoPV, m_RecoPVz);
 #ifdef MCCheck
-        sc = nt->addItem("nMCPV", m_nMCPV);
+        sc = nt->addItem("nMCPV", m_nMCPV, 0, 20); // 20 MC collisions large enough
+        sc = nt->addIndexedItem("MCPVx", m_nMCPV, m_MCPVx);
+        sc = nt->addIndexedItem("MCPVy", m_nMCPV, m_MCPVy);
+        sc = nt->addIndexedItem("MCPVz", m_nMCPV, m_MCPVz);
 #endif
         sc = nt->addItem("L0Decision", m_L0Decision);
         sc = nt->addItem("L1Decision", m_L1Decision);
@@ -982,6 +1003,23 @@ StatusCode DecayChainNTuple::WriteNTuple(std::vector<Particle*>& mothervec) {
   if (PVs.empty()) return StatusCode::SUCCESS; // don't continue, but not an error
   int nRecoPV = PVs.size();
   debug() << "Number of reconstructed primaries " << nRecoPV << endreq;
+
+  // Reset index
+  m_nRecoPV = 0;
+  Vertices::iterator ivert;
+  for( ivert = PVs.begin(); ivert != PVs.end(); ivert++){
+    debug() << "Primary vertex coordinates = ( "
+            << (*ivert)->position().x()
+            << " , " << (*ivert)->position().y()
+            << " , " << (*ivert)->position().z() << " ) and chi2 = " 
+            << (*ivert)->chi2() << " with nDoF " << (*ivert)->nDoF() << endreq;
+    // Fill NTuple global variables, here the reconstructed PV is indexed by m_nRecoPV
+    m_RecoPVx[m_nRecoPV] = (*ivert)->position().x();
+    m_RecoPVy[m_nRecoPV] = (*ivert)->position().y();
+    m_RecoPVz[m_nRecoPV] = (*ivert)->position().z();
+    // Increment index
+    m_nRecoPV++;
+  }
   //---------------------------------------------
 
 #ifdef MCCheck
@@ -993,6 +1031,24 @@ StatusCode DecayChainNTuple::WriteNTuple(std::vector<Particle*>& mothervec) {
   }
   int nMCPV = collisions->size();
   debug() << "Number of MC primaries " << nMCPV << endreq;
+
+  // Reset index
+  m_nMCPV = 0;
+  // Loop over all collisions in event
+  for(Collisions::const_iterator icollision = collisions->begin();
+      icollision != collisions->end();
+      icollision++){
+    debug() << "MC Primary Vertex coordinates [mm] =  "
+            << (*icollision)->primVtxPosition().x()
+            << " , " << (*icollision)->primVtxPosition().y()
+            << " , " << (*icollision)->primVtxPosition().z() << endreq;
+    // Fill NTuple global variables, here the MC PV is indexed by m_nMCPV
+    m_MCPVx[m_nMCPV] = (*icollision)->primVtxPosition().x();
+    m_MCPVy[m_nMCPV] = (*icollision)->primVtxPosition().y();
+    m_MCPVz[m_nMCPV] = (*icollision)->primVtxPosition().z();
+    // Increment index
+    m_nMCPV++;
+  } // end loop over collisions
   //---------------------------------------------
 
   //---------------------------------------------
@@ -1047,7 +1103,7 @@ StatusCode DecayChainNTuple::WriteNTuple(std::vector<Particle*>& mothervec) {
   bool L1Phot     = false;
   
   if(m_dataProvider != NULL){
-    // L1Score* score = m_dataProvider->l1Score(); // this is buggy
+    // L1Score* score = m_dataProvider->l1Score(); // this does not work outside trigger sequence
     L1Score* score = get<L1Score>( L1ScoreLocation::Default );
     if(score != NULL){
 
@@ -1083,9 +1139,9 @@ StatusCode DecayChainNTuple::WriteNTuple(std::vector<Particle*>& mothervec) {
   // Fill NTuple global variables
   m_eventNumber = m_event;
   m_runNumber = m_run;
-  m_nRecoPV = long(nRecoPV);
+  // m_nRecoPV = long(nRecoPV);
 #ifdef MCCheck
-  m_nMCPV = long(nMCPV);
+  // m_nMCPV = long(nMCPV);
 #endif
   m_L0Decision = long(L0Decision);
   m_L1Decision = long(L1Decision);
@@ -1234,11 +1290,11 @@ StatusCode DecayChainNTuple::getPV(VertexVector& PVs) {
   
   Vertices::iterator ivert;
   for( ivert = vertices->begin(); ivert != vertices->end(); ivert++){
-    debug() << "Primary vertex coordinates = ( "
-           << (*ivert)->position().x()
-           << " , " << (*ivert)->position().y()
-           << " , " << (*ivert)->position().z() << " ) and chi2 = " 
-            << (*ivert)->chi2() << " with nDoF " << (*ivert)->nDoF() << endreq;
+//     verbose() << "Primary vertex coordinates = ( "
+//               << (*ivert)->position().x()
+//               << " , " << (*ivert)->position().y()
+//               << " , " << (*ivert)->position().z() << " ) and chi2 = " 
+//               << (*ivert)->chi2() << " with nDoF " << (*ivert)->nDoF() << endreq;
     PVs.push_back((*ivert));
   }
 
