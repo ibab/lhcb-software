@@ -1,4 +1,4 @@
-// $Id: RichGeomEffPhotonTracing.cpp,v 1.1 2003-11-25 14:06:40 jonrob Exp $
+// $Id: RichGeomEffPhotonTracing.cpp,v 1.2 2003-12-01 09:52:54 jonesc Exp $
 
 // local
 #include "RichGeomEffPhotonTracing.h"
@@ -122,12 +122,14 @@ RichGeomEffPhotonTracing::geomEfficiency ( RichRecSegment * segment,
                                                     sinCkTheta*m_sinCkPhi[iPhot],
                                                     cosCkTheta );
 
-        // Ray trace through detector
+        // Ray trace through detector, using fast circle modelling of HPDs
         RichGeomPhoton photon;
         if ( 0 != m_richDetInt->traceToDetector( trackSeg.rich(),
                                                  emissionPt,
                                                  photDir,
-                                                 photon ) ) {
+                                                 photon,
+                                                 DeRichPDPanel::circle ) ) {
+
           ++nDetect;
           segment->addToGeomEfficiencyPerPD( id,
                                              photon.smartID().pdID(),

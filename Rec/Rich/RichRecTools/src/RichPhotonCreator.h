@@ -1,4 +1,4 @@
-// $Id: RichPhotonCreator.h,v 1.7 2003-11-25 14:06:40 jonrob Exp $
+// $Id: RichPhotonCreator.h,v 1.8 2003-12-01 09:52:54 jonesc Exp $
 #ifndef RICHRECTOOLS_RICHPHOTONCREATOR_H
 #define RICHRECTOOLS_RICHPHOTONCREATOR_H 1
 
@@ -64,7 +64,7 @@ public:
 
   /// Form all photon candidates for a given track and pixel
   RichRecTrack::Photons reconstructPhotons( RichRecTrack * track,
-                                             RichRecPixel * pixel );
+                                            RichRecPixel * pixel );
 
   /// Form all photon candidates for a given track, with all possible pixels.
   RichRecTrack::Photons& reconstructPhotons( RichRecTrack * track );

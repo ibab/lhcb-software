@@ -4,6 +4,9 @@
 ! Purpose     : Utility tools for RICH reconstruction algorithms
 !------------------------------------------------------------------------------
 
+! 2003-12-01 - Chris Jones
+ - Minor updates for new RichDetTool interface
+
 !====================== RichRecTools v2r4 2003-11-27 ======================
 ! 2003-11-25 - Chris Jones
  - Remove MaPMT code
