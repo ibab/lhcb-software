@@ -1,6 +1,6 @@
 //-----------------------------------------------------------------------
 // File and Version Information: 
-//      $Id: EvtPto3P.cpp,v 1.1 2003-10-02 17:33:14 robbep Exp $
+//      $Id: EvtPto3P.cpp,v 1.2 2004-01-12 13:48:49 robbep Exp $
 // 
 // Environment:
 //      This software is part of the EvtGen package developed jointly
@@ -74,6 +74,18 @@ std::vector<EvtVector4R> EvtPto3P::initDaughters(const EvtDalitzPoint& x) const
   EvtVector4R vA(eA,0,0,pA);                                                                                           
   EvtVector4R vB(eB,0,0,-pA); 
   EvtVector4R vC(eC,0,pC*sin,pC*cos);
+
+  // Boost from rest frame of AB to rest-frame of decaying particle
+  // vboost is the 4-momentum of frame being boosted from in the frame
+  // being boosted into.
+ 
+  EvtVector4R vboost = vA + vB + vC;
+  vboost.set(1,-vboost.get(1));
+  vboost.set(2,-vboost.get(2));
+  vboost.set(3,-vboost.get(3));
+  vA.applyBoostTo(vboost);
+  vB.applyBoostTo(vboost);
+  vC.applyBoostTo(vboost);
   
   // Rotate
                                                                                               

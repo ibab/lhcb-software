@@ -35,6 +35,7 @@
 #include "EvtGenBase/EvtId.hh"
 #include "EvtGenBase/EvtIdSet.hh"
 #include "EvtGenBase/EvtAmp.hh"
+#include "EvtGenModels/EvtbTosllAmp.hh"
 #include "EvtGenModels/EvtbTosllFF.hh"
 
 void EvtbTosllVectorAmp::CalcAmp( EvtParticle *parent,
@@ -59,6 +60,17 @@ void EvtbTosllVectorAmp::CalcAmp( EvtParticle *parent,
                            mesonmass,
                            a1,a2,a0,v,t1,t2,t3);
 
+  EvtId daught = parent->getDaug(0)->getId();
+  bool btod = false;
+  bool nnlo = true;
+  if 
+    (
+     daught == EvtPDL::getId(std::string("rho+")) ||
+     daught == EvtPDL::getId(std::string("rho-")) ||
+     daught == EvtPDL::getId(std::string("rho0")) ||
+     daught == EvtPDL::getId(std::string("omega"))
+     ) 
+    btod = true;
 
   EvtVector4R p4b;
   p4b.set(parent->mass(),0.0,0.0,0.0);
@@ -79,26 +91,36 @@ void EvtbTosllVectorAmp::CalcAmp( EvtParticle *parent,
   EvtVector4R pkstarhat=p4meson/parentmass;
   EvtVector4R phat=pbhat+pkstarhat;
 
-      //values of the Wilson coefficients are given on p. 5
-  //double c9=4.344;
-  //double c7=-0.313;
-  //double c10=-4.669;
+  EvtComplex c7eff = EvtbTosllAmp::GetC7Eff(q2,nnlo);
+  EvtComplex c9eff = EvtbTosllAmp::GetC9Eff(q2,nnlo,btod);
+  EvtComplex c10eff = EvtbTosllAmp::GetC10Eff(q2,nnlo);
+  EvtComplex uniti(0.0,1.0);
+
   double mhatb=4.4/(parentmass); 
   double mhatkstar=mesonmass/(parentmass);
   double shat=q2/(parentmass*parentmass);
 
 
-  double a=_c9*v*2/(1+mhatkstar)+4*mhatb*_c7*t1/shat;
-  double b=(1+mhatkstar)*(_c9*a1+2*mhatb*(1-mhatkstar)*_c7*t2/shat);
-  double c=((1-mhatkstar)*_c9*a2+
-	    2*mhatb*_c7*(t3+(1-mhatkstar*mhatkstar)*t2/shat))/
+  EvtComplex a;
+  a=c9eff*v*2/(1+mhatkstar)+4*mhatb*c7eff*t1/shat;
+  EvtComplex b;
+  b=(1+mhatkstar)*(c9eff*a1+2*mhatb*(1-mhatkstar)*c7eff*t2/shat);
+  EvtComplex c;
+  c=((1-mhatkstar)*c9eff*a2+
+     2*mhatb*c7eff*(t3+(1-mhatkstar*mhatkstar)*t2/shat))/
     (1-mhatkstar*mhatkstar);
-  double d=(_c9*((1+mhatkstar)*a1-(1-mhatkstar)*a2-2*mhatkstar*a0)
-	    -2*mhatb*_c7*t3)/shat;
-  double e=2*_c10*v/(1+mhatkstar);
-  double f=(1+mhatkstar)*_c10*a1;
-  double g=_c10*a2/(1+mhatkstar);
-  double h=_c10*((1+mhatkstar)*a1-(1-mhatkstar)*a2-2*mhatkstar*a0)/shat;
+  EvtComplex d;
+  d=(c9eff*((1+mhatkstar)*a1-(1-mhatkstar)*a2-2*mhatkstar*a0)
+     -2*mhatb*c7eff*t3)/shat;
+  EvtComplex e;
+  e=2*c10eff*v/(1+mhatkstar);
+  EvtComplex f;
+  f=(1+mhatkstar)*c10eff*a1;
+  EvtComplex g;
+  g=c10eff*a2/(1+mhatkstar);
+  EvtComplex h;
+  h=c10eff*((1+mhatkstar)*a1-(1-mhatkstar)*a2-2*mhatkstar*a0)/shat;
+  
   
   EvtTensor4C T1,T2;
   
@@ -121,14 +143,14 @@ void EvtbTosllVectorAmp::CalcAmp( EvtParticle *parent,
   if (bmesons.contains(parentID)) {
 
     T1=a*dual(directProd(pbhat,pkstarhat))
-       -EvtComplex(0,b)*EvtTensor4C::g()
-       +EvtComplex(0,c)*directProd(pbhat,phat)
-       +EvtComplex(0,d)*directProd(pbhat,qhat);
+      -b*uniti*EvtTensor4C::g()
+      +c*uniti*directProd(pbhat,phat)
+      +d*uniti*directProd(pbhat,qhat);
     
     T2=e*dual(directProd(pbhat,pkstarhat))
-       -EvtComplex(0,f)*EvtTensor4C::g()
-       +EvtComplex(0,g)*directProd(pbhat,phat)
-       +EvtComplex(0,h)*directProd(pbhat,qhat);
+      -f*uniti*EvtTensor4C::g()
+      +g*uniti*directProd(pbhat,phat)
+      +h*uniti*directProd(pbhat,qhat);
     
     l11=EvtLeptonVCurrent(lepPlus->spParent(0),
                           lepMinus->spParent(0));
@@ -153,14 +175,14 @@ void EvtbTosllVectorAmp::CalcAmp( EvtParticle *parent,
     if (bbarmesons.contains(parentID)) {
 
       T1=-a*dual(directProd(pbhat,pkstarhat))
-         -EvtComplex(0,b)*EvtTensor4C::g()
-         +EvtComplex(0,c)*directProd(pbhat,phat)
-         +EvtComplex(0,d)*directProd(pbhat,qhat);
+        -b*uniti*EvtTensor4C::g()
+        +c*uniti*directProd(pbhat,phat)
+        +d*uniti*directProd(pbhat,qhat);
       
       T2=-e*dual(directProd(pbhat,pkstarhat))
-         -EvtComplex(0,f)*EvtTensor4C::g()
-         +EvtComplex(0,g)*directProd(pbhat,phat)
-         +EvtComplex(0,h)*directProd(pbhat,qhat);
+        -f*uniti*EvtTensor4C::g()
+        +g*uniti*directProd(pbhat,phat)
+        +h*uniti*directProd(pbhat,qhat);
       
       l11=EvtLeptonVCurrent(lepPlus->spParent(1),
                             lepMinus->spParent(1));

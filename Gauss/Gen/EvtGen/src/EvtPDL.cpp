@@ -285,6 +285,8 @@ void EvtPDL::alias(EvtId num,const std::string& newname){
 	 _particleNameLookup.end());
   _particleNameLookup[std::string(newname)]=entry;
   _partlist[entry].setId(EvtId(num.getId(),entry));
+  //Lange - Dec7, 2003. Unset the charge conjugate.
+  _partlist[entry].setIdChgConj(EvtId(-1,-1));
 
 }
 

@@ -35,7 +35,6 @@ EvtAmpIndex::EvtAmpIndex(std::vector<int> ind):
 {
   int i;
   
-  // initial version not correct ?  for(i=0;i++;i<_size) {
   for (i=0 ; i<_size ; i++) {
     _state[i]=0;
     if (i==0){
@@ -65,7 +64,6 @@ bool EvtAmpIndex::next(){
       return true;
     }
     else{
-      // initial version not correct ?      _state[i]==0;
       _state[i]=0 ;
     }
   }

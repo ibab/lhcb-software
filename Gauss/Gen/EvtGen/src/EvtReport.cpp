@@ -19,21 +19,12 @@
 //------------------------------------------------------------------------
 //
 
-#if !defined(FILENAME_ONLY) /* relative path includes */
-
 // system include files
 #ifdef WIN32 
   #pragma warning( disable : 4786 ) 
   // Disable anoying warning about symbol size 
 #endif 
 #include "EvtGenBase/EvtReport.hh"
-
-// user include files
-
-#else /* filename-only includes */
-#include "functions.h"
-#endif /* filename-only includes */
-// user include files
 
 //
 // constants, enums and typedefs

@@ -145,22 +145,37 @@ double EvtRelBreitWignerBarrierFact::getRandMass(EvtId *parId,int nDaug, EvtId *
   int t2=EvtSpinType::getSpin2(spinD2);
   int t3=EvtSpinType::getSpin2(_spin);
 
-  //There are some things I don't know how to deal with
-  if ( t3>4) return EvtAbsLineShape::getRandMass(parId,nDaug,dauId,othDaugId,maxMass,dauMasses);
-  if ( t1>4) return EvtAbsLineShape::getRandMass(parId,nDaug,dauId,othDaugId,maxMass,dauMasses);
-  if ( t2>4) return EvtAbsLineShape::getRandMass(parId,nDaug,dauId,othDaugId,maxMass,dauMasses);
+  int Lmin=-10;
 
-  //figure the min and max allowwed "spins" for the daughters state
+
+  // the user has overridden the partial wave to use.
+  for ( int vC=0; vC<_userSetPW.size(); vC++) {
+    if ( dauId[0]==_userSetPWD1[vC] &&  dauId[1]==_userSetPWD2[vC] ) 
+      Lmin=2*_userSetPW[vC]; 
+    if ( dauId[0]==_userSetPWD2[vC] &&  dauId[1]==_userSetPWD1[vC] ) 
+      Lmin=2*_userSetPW[vC]; 
+  }
+  
+  // allow for special cases.
+  if (Lmin<-1 ) {
+    
+    //There are some things I don't know how to deal with
+    if ( t3>4) return EvtAbsLineShape::getRandMass(parId,nDaug,dauId,othDaugId,maxMass,dauMasses);
+    if ( t1>4) return EvtAbsLineShape::getRandMass(parId,nDaug,dauId,othDaugId,maxMass,dauMasses);
+    if ( t2>4) return EvtAbsLineShape::getRandMass(parId,nDaug,dauId,othDaugId,maxMass,dauMasses);
+    
+    //figure the min and max allowwed "spins" for the daughters state
 #ifdef WIN32
-  int Lmin=__max(t3-t2-t1,__max(t2-t3-t1,t1-t3-t2));
+    Lmin=__max(t3-t2-t1,__max(t2-t3-t1,t1-t3-t2));
 #else
-  int Lmin=std::max(t3-t2-t1,std::max(t2-t3-t1,t1-t3-t2));
+    Lmin=std::max(t3-t2-t1,std::max(t2-t3-t1,t1-t3-t2));
 #endif
-
-  if (Lmin<0) Lmin=0;
-
-  assert(Lmin==0||Lmin==2||Lmin==4);
-
+    
+    if (Lmin<0) Lmin=0;
+    
+    assert(Lmin==0||Lmin==2||Lmin==4);
+  }
+  
   //double massD1=EvtPDL::getMeanMass(dauId[0]);
   //double massD2=EvtPDL::getMeanMass(dauId[1]);
   double massD1=dauMasses[0];

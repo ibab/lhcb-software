@@ -24,11 +24,13 @@
 #endif 
 #include <iostream>
 #include <math.h>
+#include <assert.h>
 #include "EvtGenBase/EvtComplex.hh"
 #include "EvtGenBase/EvtGammaMatrix.hh"
 #include "EvtGenBase/EvtDiracSpinor.hh"
 #include "EvtGenBase/EvtReport.hh"
-
+#include "EvtGenBase/EvtTensor4C.hh"
+#include "EvtGenBase/EvtVector4C.hh"
 
 EvtGammaMatrix::EvtGammaMatrix(){
   int i,j;
@@ -38,6 +40,11 @@ EvtGammaMatrix::EvtGammaMatrix(){
       gamma[i][j]=EvtComplex(0.0,0.0);
     }
   }
+}
+
+EvtGammaMatrix operator*(const EvtGammaMatrix& g, const EvtComplex& c)
+{
+    return c*g;
 }
 
 EvtGammaMatrix operator*(const EvtComplex& c,const EvtGammaMatrix& g){
@@ -591,3 +598,83 @@ EvtComplex operator*(const EvtDiracSpinor& d,const EvtDiracSpinor& dp){
   return temp;
 }  
 
+
+// upper index
+const EvtGammaMatrix& EvtGammaMatrix::sigmaUpper(unsigned int mu, 
+                                                 unsigned int nu)
+{
+    EvtGammaMatrix a, b;
+    static const EvtTensor4C eta = EvtTensor4C::g(); //metric
+    static EvtGammaMatrix sigma[4][4];
+    static bool hasBeenCalled = false;
+    if (!hasBeenCalled)
+    {
+        EvtComplex I(0, 1);
+        for (int i=0; i<4; ++i)
+            sigma[i][i].init(); // set to 0
+        
+        EvtGammaMatrix s01 = I/2 * (g0()*g1() - g1()*g0());
+        EvtGammaMatrix s02 = I/2 * (g0()*g2() - g2()*g0());
+        EvtGammaMatrix s03 = I/2 * (g0()*g3() - g3()*g0());
+        EvtGammaMatrix s12 = I/2 * (g1()*g2() - g2()*g1());
+        EvtGammaMatrix s13 = I/2 * (g1()*g3() - g3()*g1());
+        EvtGammaMatrix s23 = I/2 * (g2()*g3() - g3()*g2());
+        sigma[0][1] = s01;
+        sigma[1][0] = -1*s01;
+        sigma[0][2] = s02;
+        sigma[2][0] = -1*s02;
+        sigma[0][3] = s03;
+        sigma[3][0] = -1*s03;
+        sigma[1][2] = s12;
+        sigma[2][1] = -1*s12;
+        sigma[1][3] = s13;
+        sigma[3][1] = -1*s13;
+        sigma[2][3] = s23;
+        sigma[3][2] = -1*s23;
+    }
+    hasBeenCalled = true;
+        
+    if (mu > 3 || nu > 3)
+    {
+        report(ERROR, "EvtSigmaTensor") 
+          << "Expected index between 0 and 3, but found " << nu << "!" 
+          << std::endl;
+        assert(0);
+    }
+    return sigma[mu][nu];
+    
+}
+
+const EvtGammaMatrix& EvtGammaMatrix::sigmaLower(unsigned int mu, 
+                                                 unsigned int nu)
+{
+    const EvtComplex I(0, 1);
+    EvtGammaMatrix a, b;
+    static EvtGammaMatrix sigma[4][4];
+    static bool hasBeenCalled = false;
+    static const EvtTensor4C eta = EvtTensor4C::g();
+    
+    if (!hasBeenCalled) // has to be initialized only at the first call
+    {
+        // lower index
+        for (int i=0; i<4; ++i)
+        {
+            a = eta.get(i, 0)*g0() + eta.get(i, 1)*g1() + eta.get(i, 2)*g2() 
+              + eta.get(i, 3)*g3();
+            for (int j=0; j<4; ++j)
+            {
+                b = eta.get(j, 0)*g0() + eta.get(j, 1)*g1() 
+                  + eta.get(j, 2)*g2() + eta.get(j, 3)*g3();
+                sigma[i][j] = I/2 * (a*b - b*a);
+            }
+        }
+    }
+    return sigma[mu][nu];    
+}
+
+
+EvtGammaMatrix slash(const EvtVector4C& p)
+{
+    return EvtGammaMatrix::g0()*p.get(0) + EvtGammaMatrix::g1()*p.get(1) 
+      + EvtGammaMatrix::g2()*p.get(2) + EvtGammaMatrix::g3()*p.get(3);
+}

@@ -122,7 +122,7 @@ void EvtDDalitz::init(){
 
     if ( d1==K0 && d2==PIP && d3==PIM ) { _flag=3; _d1=0; _d2=1; _d3=2;}
     if ( d1==K0 && d3==PIP && d2==PIM ) { _flag=3; _d1=0; _d2=2; _d3=1;}
-    if ( d2==K0 && d1==PIP && d3==PIM ) { _flag=3; _d1=2; _d2=0; _d3=1;}
+    if ( d2==K0 && d1==PIP && d3==PIM ) { _flag=3; _d1=1; _d2=0; _d3=2;}
     if ( d2==K0 && d3==PIP && d1==PIM ) { _flag=3; _d1=1; _d2=2; _d3=0;}
     if ( d3==K0 && d1==PIP && d2==PIM ) { _flag=3; _d1=2; _d2=0; _d3=1;}
     if ( d3==K0 && d2==PIP && d1==PIM ) { _flag=3; _d1=2; _d2=1; _d3=0;}

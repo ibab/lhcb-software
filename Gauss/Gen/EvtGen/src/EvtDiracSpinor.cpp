@@ -327,4 +327,27 @@ EvtTensor4C EvtLeptonTCurrent(const EvtDiracSpinor& d,const EvtDiracSpinor& dp){
   return temp;
 }
 
+EvtDiracSpinor operator*(const EvtComplex& c, const EvtDiracSpinor& d) {
+  EvtDiracSpinor result;
+  result.spinor[0] = c*d.spinor[0];
+  result.spinor[1] = c*d.spinor[1];
+  result.spinor[2] = c*d.spinor[2];
+  result.spinor[3] = c*d.spinor[3];
+  return result;
+}
+
+EvtDiracSpinor EvtDiracSpinor::adjoint() const
+{
+  EvtDiracSpinor d = this->conj(); 
+  // first conjugate, then multiply with gamma0
+  EvtGammaMatrix g0 = EvtGammaMatrix::g0();
+  EvtDiracSpinor result; // automatically initialized to 0
+  
+  for (int i=0; i<4; ++i)
+    for (int j=0; j<4; ++j)
+      result.spinor[i] += d.spinor[j] * g0.gamma[i][j];
+  
+  return result;
+}
+
 

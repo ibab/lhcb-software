@@ -132,6 +132,10 @@ void EvtPartProp::reSetWidth(double width){
   _lineShape->reSetWidth(width);
 }
 
+void EvtPartProp::setPWForDecay( int spin, EvtId d1, EvtId d2) { 
+  if (!_lineShape) ::abort();
+  _lineShape->setPWForDecay(spin,d1,d2);
+}
 
 void EvtPartProp::reSetMassMin(double mass){
   if (!_lineShape) ::abort();

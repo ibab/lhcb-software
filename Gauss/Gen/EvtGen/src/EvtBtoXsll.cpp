@@ -18,6 +18,7 @@
 // Modification history:
 //
 //    Stephane Willocq        Jan  17, 2001       Module created
+//    Stephane Willocq        Jul  15, 2003       Input model parameters
 //------------------------------------------------------------------------
 //
 
@@ -31,9 +32,9 @@
 #include "EvtGenBase/EvtGenKine.hh"
 #include "EvtGenBase/EvtPDL.hh"
 #include "EvtGenBase/EvtReport.hh"
+#include "EvtGenModels/EvtbTosllAmp.hh"
 #include "EvtGenModels/EvtBtoXsll.hh"
 #include "EvtGenModels/EvtBtoXsllUtil.hh"
-#include <string>
 #include "EvtGenBase/EvtConst.hh"
 #include "EvtGenBase/EvtId.hh"
 
@@ -54,10 +55,22 @@ EvtDecayBase* EvtBtoXsll::clone(){
 
 void EvtBtoXsll::init(){
 
-  // check that there are no arguments
-  checkNArg(0);
-  // Make sure that the correct number of decay particles is provided
-  checkNDaug(3);
+  if (getNArg()!=4) {
+    
+    report(ERROR,"EvtGen") << "EvBtoXsll generator expected "
+                           << " 4 arguments but found:"<<getNArg()<<std::endl;
+    report(ERROR,"EvtGen") << "Will terminate execution!"<<std::endl;
+    ::abort();
+  }
+
+
+// Make sure that the correct number of decay particles is provided
+
+  if ( getNDaug()!=3 ) {
+
+     report(ERROR,"EvtGen") << "Wrong number of daughters in EvtBtoXsll.cc\n";
+     ::abort();
+  }
 
   // Check that the two leptons are the same type
 
@@ -105,10 +118,17 @@ void EvtBtoXsll::init(){
      ::abort();
   }
 
+  // b-quark mass
+  _mb = getArg(0);
+  // s-quark mass
+  _ms = getArg(1);
+  // spectator quark mass
+  _mq = getArg(2);
+  // Fermi motion parameter
+  _pf = getArg(3);
+
   _calcprob = new EvtBtoXsllUtil;
 
-  double mb = 4.8;
-  double ms = 0.2;
   double ml = EvtPDL::getMeanMass(getDaug(1));
 
   // determine the maximum probability density from dGdsProb
@@ -117,7 +137,7 @@ void EvtBtoXsll::init(){
   int nsteps  = 100;
   double s    = 0.0;
   double smin = 4.0 * ml * ml;
-  double smax = (mb - ms)*(mb - ms);
+  double smax = (_mb - _ms)*(_mb - _ms);
   double probMax  = -10000.0;
   double sProbMax = -10.0;
   double uProbMax = -10.0;
@@ -125,7 +145,7 @@ void EvtBtoXsll::init(){
   for (i=0;i<nsteps;i++)
   {
     s = smin + (i+0.0005)*(smax - smin)/(double)nsteps;
-    double prob = _calcprob->dGdsProb(mb, ms, ml, s);
+    double prob = _calcprob->dGdsProb(_mb, _ms, ml, s);
     if (prob > probMax)
     {
       sProbMax = s;
@@ -147,11 +167,12 @@ void EvtBtoXsll::init(){
   for (i=0;i<nsteps;i++)
   {
     s = smin + (i+0.0005)*(smax - smin)/(double)nsteps;
-    double umax = sqrt((s - (mb + ms)*(mb + ms)) * (s - (mb - ms)*(mb - ms)));
+    double umax = sqrt((s - (_mb + _ms)*(_mb + _ms)) * 
+                       (s - (_mb - _ms)*(_mb - _ms)));
     for (j=0;j<nsteps;j++)
     {
       double u = -umax + (j+0.0005)*(2.0*umax)/(double)nsteps;
-      double prob = _calcprob->dGdsdupProb(mb, ms, ml, s, u);
+      double prob = _calcprob->dGdsdupProb(_mb, _ms, ml, s, u);
       if (prob > probMax)
       {
         sProbMax = s;
@@ -215,19 +236,20 @@ void EvtBtoXsll::decay( EvtParticle *p ){
 
     // Apply Fermi motion and determine effective b-quark mass
 
-    double pf = 0.25;
-    double ms = 0.2;
-    double mq = 0.3;
+    // Old BaBar MC parameters
+    //double pf = 0.25;
+    //double ms = 0.2;
+    //double mq = 0.3;
     double mb = 0.0;
 
     double xbox, ybox;
 
     while (mb <= 0.0)
     {
-      pb = _calcprob->FermiMomentum(pf);
+      pb = _calcprob->FermiMomentum(_pf);
 
       // effective b-quark mass
-      mb = mB*mB + mq*mq - 2.0*mB*sqrt(pb*pb + mq*mq);
+      mb = mB*mB + _mq*_mq - 2.0*mB*sqrt(pb*pb + _mq*_mq);
     }
     mb = sqrt(mb);
   
@@ -237,13 +259,13 @@ void EvtBtoXsll::decay( EvtParticle *p ){
 
     double s    = 0.0;
     double smin = 4.0 * ml * ml;
-    double smax = (mb - ms)*(mb - ms);
+    double smax = (mb - _ms)*(mb - _ms);
 
     while (s == 0.0)
     {
       xbox = EvtRandom::Flat(smin, smax);
       ybox = EvtRandom::Flat(_dGdsProbMax);
-      if (ybox < _calcprob->dGdsProb(mb, ms, ml, xbox)) { s = xbox;}
+      if (ybox < _calcprob->dGdsProb(mb, _ms, ml, xbox)) { s = xbox;}
     }
 
     //    report(INFO,"EvtGen") << "dGdsProb(s) = " << _calcprob->dGdsProb(mb, ms, ml, s)
@@ -255,7 +277,7 @@ void EvtBtoXsll::decay( EvtParticle *p ){
     EvtVector4R p4sdilep[2];
 
     double msdilep[2];
-    msdilep[0] = ms;
+    msdilep[0] = _ms;
     msdilep[1] = sqrt(s);
 
     EvtGenKine::PhaseSpace(2, msdilep, p4sdilep, mb);
@@ -290,7 +312,7 @@ void EvtBtoXsll::decay( EvtParticle *p ){
 
       ybox = EvtRandom::Flat(_dGdsdupProbMax);
 
-      double prob = _calcprob->dGdsdupProb(mb, ms, ml, s, u);
+      double prob = _calcprob->dGdsdupProb(mb, _ms, ml, s, u);
       if (prob > _dGdsdupProbMax && nmsg < 20)
       {
         report(INFO,"EvtGen") << "d2gdsdup GT d2gdsdup_max:" << prob
@@ -341,7 +363,7 @@ void EvtBtoXsll::decay( EvtParticle *p ){
 
     // spectator quark in B meson rest frame
 
-    EvtVector4R p4q( sqrt(pb*pb + mq*mq), -p4b.get(1), -p4b.get(2), -p4b.get(3) );
+    EvtVector4R p4q( sqrt(pb*pb + _mq*_mq), -p4b.get(1), -p4b.get(2), -p4b.get(3) );
 
     // hadron system in B meson rest frame
 

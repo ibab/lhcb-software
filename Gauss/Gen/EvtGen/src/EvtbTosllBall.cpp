@@ -106,10 +106,10 @@ void EvtbTosllBall::init(){
 
   _ballffmodel = new EvtbTosllBallFF();
   if (mesontype == EvtSpinType::SCALAR){
-    _calcamp = new EvtbTosllScalarAmp(-0313,4.344,-4.669); 
+    _calcamp = new EvtbTosllScalarAmp(-0.313,4.344,-4.669); 
   }
   if (mesontype == EvtSpinType::VECTOR){
-    _calcamp = new EvtbTosllVectorAmp(-0313,4.344,-4.669); 
+    _calcamp = new EvtbTosllVectorAmp(-0.313,4.344,-4.669); 
   }
 
 }

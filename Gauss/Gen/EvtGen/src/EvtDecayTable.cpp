@@ -54,6 +54,11 @@ int EvtDecayTable::getNMode(int ipar){
    return decaytable[ipar].getNMode();
 } 
 
+EvtDecayBase* getDecay(int ipar, int imode)
+{
+  return decaytable[ipar].getDecayModel(imode);
+}
+
 
 void EvtDecayTable::printSummary(){
 
@@ -426,6 +431,19 @@ void EvtDecayTable::readDecayFile(const std::string dec_name){
       report(DEBUG,"EvtGen") <<"Redefined Blatt-Weisskopf factor " 
                              << EvtPDL::name(thisPart).c_str() << " to be " 
                              << tnum << std::endl;
+    } else if ( token=="SetLineshapePW") {
+      std::string pname;
+      pname=parser.getToken(itoken++);
+      EvtId thisPart = EvtPDL::getId(pname);
+      std::string pnameD1=parser.getToken(itoken++);
+      EvtId thisD1 = EvtPDL::getId(pnameD1);
+      std::string pnameD2=parser.getToken(itoken++);
+      EvtId thisD2 = EvtPDL::getId(pnameD2);
+      int pw=atoi(parser.getToken(itoken++).c_str());
+      report(DEBUG,"EvtGen") <<"Redefined Partial wave for " << pname.c_str() 
+                             << " to " << pnameD1.c_str() << " " 
+                             << pnameD2.c_str() << " ("<<pw<<")"<<std::endl;
+      EvtPDL::setPWForDecay(thisPart,pw,thisD1,thisD2);
 
     } else if (token=="Decay") {
 

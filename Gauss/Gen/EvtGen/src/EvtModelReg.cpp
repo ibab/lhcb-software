@@ -48,6 +48,7 @@
 #include "EvtGenModels/EvtTVSPwave.hh"
 #include "EvtGenModels/EvtSVVHelAmp.hh"
 #include "EvtGenModels/EvtSVPHelAmp.hh"
+#include "EvtGenModels/EvtSVPCP.hh"
 #include "EvtGenModels/EvtVVSPwave.hh"
 #include "EvtGenModels/EvtDDalitz.hh"
 #include "EvtGenModels/EvtOmegaDalitz.hh"
@@ -104,6 +105,8 @@
 #include "EvtGenModels/EvtVub.hh"
 #include "EvtGenModels/EvtPto3P.hh"
 #include "EvtGenModels/EvtKstarstargamma.hh"
+#include "EvtGenModels/EvtFlatQ2.hh"
+#include "EvtGenModels/EvtLambdaP_BarGamma.hh"
 
 #include "EvtGenModels/EvtBToDDalitzCPK.hh"
 
@@ -123,7 +126,8 @@ EvtModelReg::EvtModelReg() {
 
   EvtModel &modelist=EvtModel::instance();
 
-
+  modelist.Register(new EvtLambdaP_BarGamma);
+  modelist.Register(new EvtFlatQ2);
   modelist.Register(new EvtTauHadnu);
   modelist.Register(new EvtTauVectornu);
   modelist.Register(new EvtVVP);
@@ -145,6 +149,7 @@ EvtModelReg::EvtModelReg() {
   modelist.Register(new EvtTVSPwave);
   modelist.Register(new EvtSVVHelAmp);
   modelist.Register(new EvtSVPHelAmp);
+  modelist.Register(new EvtSVPCP);
   modelist.Register(new EvtVVSPwave);
   modelist.Register(new EvtDDalitz);
   modelist.Register(new EvtOmegaDalitz);

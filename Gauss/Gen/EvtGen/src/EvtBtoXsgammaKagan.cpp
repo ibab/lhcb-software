@@ -890,7 +890,7 @@ double EvtBtoXsgammaKagan::diLogMathematica(double y) {
 
   double li2(0);
   for(int i=1; i<1000; i++){ //the value 1000 should actually be Infinite...
-    li2+=pow(y,i)/pow(i,2);
+    li2+=pow(y,i)/(i*i);
   }
   return li2;
 }

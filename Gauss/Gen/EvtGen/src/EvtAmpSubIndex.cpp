@@ -53,7 +53,6 @@ int EvtAmpSubIndex::index(){
   int i;
   int ind=0;
 
-  // initial version not correct ?  for(i=0;i++;i<_size) {
   for (i=0 ; i<_size ; i++ ) {
     ind+=_ind->_state[_ind->_ind[i]]*_nstate[i];
   }
