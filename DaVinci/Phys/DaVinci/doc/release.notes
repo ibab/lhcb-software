@@ -1,9 +1,15 @@
-! $Id: release.notes,v 1.16 2002-06-17 07:38:46 gcorti Exp $
+! $Id: release.notes,v 1.17 2002-07-10 16:58:11 gcorti Exp $
 <PRE>
 ! Package     : DaVinci 
 ! Responsible : Gloria Corti
 ! Purpose     : LHCb analysis program 
 
+! 2002-07-10 - Gloria Corti
+ - Prepare requirements file for OODST version
+
+<H1><A NAME=v4r1p1> 
+!======================== DaVinci v4r2 2002-06-12 =================
+</A></H1>
 ! 2002-06-12 - Gloria Corti
  - Use PhysSelections v4r1 with new Bs->Ds(KKpi)K algorithms
 
