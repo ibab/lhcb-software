@@ -15,13 +15,13 @@
 
       <constructor 
         desc   = "Constructor with arguments" 
-        argList= "int srcLinkID, int linkID, int key, int nextIndex, float weight">
+        argList= "int srcLinkID, int linkID, int key, int nextIndex, double weight">
         <code> 
 m_srcLinkID = srcLinkID;
 m_linkID    = linkID;
 m_objectKey = key;
 m_nextIndex = nextIndex;
-m_weight    = weight;
+m_weight    = float(weight);
         </code>
       </constructor>
 
