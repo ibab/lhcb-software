@@ -1,4 +1,4 @@
-// $Id: HLTBuffToRichDigitsAlg.cpp,v 1.5 2003-11-08 16:00:45 jonrob Exp $
+// $Id: HLTBuffToRichDigitsAlg.cpp,v 1.6 2003-11-09 12:39:28 jonrob Exp $
 
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -67,7 +67,7 @@ StatusCode HLTBuffToRichDigitsAlg::execute() {
   }
 
   // Get the banks for the RichDigits
-  const RichHltBanks & richBanks = hltEvent->banks( RichDigit::classID() );
+  const Rich::HLTBanks & richBanks = hltEvent->banks( RichDigit::classID() );
   if ( msgLevel(MSG::DEBUG) ) {
     msg << MSG::DEBUG
         << "Found " << richBanks.size() << " Rich banks in HltEvent" << endreq;
@@ -77,7 +77,7 @@ StatusCode HLTBuffToRichDigitsAlg::execute() {
   m_digits = new RichDigits();
 
   // Loop over data banks
-  for ( RichHltBanks::const_iterator iBank = richBanks.begin();
+  for ( Rich::HLTBanks::const_iterator iBank = richBanks.begin();
         iBank != richBanks.end(); ++iBank ) {
 
     // Get the bank header
@@ -119,7 +119,7 @@ HLTBuffToRichDigitsAlg::decodeZeroSuppressedBank( const HltBank & bank ) {
   RichDAQHeaderPD bankHeader( bank.data()[0] );
 
   // How many digits do we expect to make
-  RichDAQHeaderPD::ShortType digitCount = bankHeader.hitCount();
+  Rich::ShortType digitCount = bankHeader.hitCount();
 
   if ( msgLevel(MSG::VERBOSE) ) {
     MsgStream  msg( msgSvc(), name() );
@@ -185,7 +185,7 @@ HLTBuffToRichDigitsAlg::decodeNonZeroSuppressedBank( const HltBank & bank ) {
   RichDAQHeaderPD bankHeader( bank.data()[0] );
 
   // How many digits do we expect to make
-  RichDAQHeaderPD::ShortType digitCount = bankHeader.hitCount();
+  Rich::ShortType digitCount = bankHeader.hitCount();
 
   if ( msgLevel(MSG::VERBOSE) ) {
     MsgStream  msg( msgSvc(), name() );

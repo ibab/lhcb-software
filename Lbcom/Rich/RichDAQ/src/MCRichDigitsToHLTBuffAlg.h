@@ -1,4 +1,4 @@
-// $Id: MCRichDigitsToHLTBuffAlg.h,v 1.1.1.1 2003-11-08 14:26:19 jonesc Exp $
+// $Id: MCRichDigitsToHLTBuffAlg.h,v 1.2 2003-11-09 12:39:28 jonrob Exp $
 #ifndef RICHDAQ_MCRICHDIGITSTOHLTBUFFALG_H
 #define RICHDAQ_MCRICHDIGITSTOHLTBUFFALG_H 1
 
@@ -14,7 +14,6 @@
 // Event Model
 #include "Event/DAQTypes.h"
 #include "Event/HltBuffer.h"
-#include "Event/MCRichDigit.h"
 #include "Event/RichDigit.h"
 
 // RichDAQ utility classes
@@ -30,6 +29,7 @@
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2003-11-06
  */
+
 class MCRichDigitsToHLTBuffAlg : public RichAlgBase {
 
 public:
@@ -45,14 +45,11 @@ public:
 
 private: // methods
 
-  typedef std::map< RichSmartID, MCRichDigitVector > RichPDMap;
-  typedef std::vector< hlt_int >                     RichHLTBank;
-
   void fillZeroSuppressed    ( RichSmartID pdID,
-                               RichHLTBank & dataBank,
+                               Rich::HLTBank & dataBank,
                                const MCRichDigitVector & pdHits );
   void fillNonZeroSuppressed ( RichSmartID pdID,
-                               RichHLTBank & dataBank,
+                               Rich::HLTBank & dataBank,
                                const MCRichDigitVector & pdHits );
 
 private: // data
@@ -63,6 +60,7 @@ private: // data
   /// Location of input MCRichDigits in TES
   std::string m_digitsLoc;
 
+  /// The number of hits marking the transistion between zero and non-zero suppressed data
   unsigned int m_zeroSuppresCut;
 
 };

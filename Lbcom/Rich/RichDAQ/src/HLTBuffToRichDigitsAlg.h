@@ -1,4 +1,4 @@
-// $Id: HLTBuffToRichDigitsAlg.h,v 1.1.1.1 2003-11-08 14:26:20 jonesc Exp $
+// $Id: HLTBuffToRichDigitsAlg.h,v 1.2 2003-11-09 12:39:28 jonrob Exp $
 #ifndef RICHDAQ_HLTBUFFTORICHDIGITSALG_H 
 #define RICHDAQ_HLTBUFFTORICHDIGITSALG_H 1
 
@@ -11,12 +11,8 @@
 // base clase
 #include "RichUtils/RichAlgBase.h"
 
-// Event
-#include "Event/DAQTypes.h"
-#include "Event/HltEvent.h"
-#include "Event/RichDigit.h"
-
 // RichDAQ utility classes
+#include "RichDAQDefinitions.h"
 #include "RichDAQHeaderPD.h"
 #include "RichZSHitTriplet.h"
 #include "RichDAQLinkNumber.h"
@@ -42,10 +38,6 @@ public:
   virtual StatusCode initialize();    ///< Algorithm initialization
   virtual StatusCode execute   ();    ///< Algorithm execution
   virtual StatusCode finalize  ();    ///< Algorithm finalization
-
-private: // definitions
-
-  typedef std::vector<HltBank> RichHltBanks;
 
 private: // methods
 

@@ -1,20 +1,16 @@
-// $Id: RichNonZeroSuppData.h,v 1.5 2003-11-08 16:00:45 jonrob Exp $
-#ifndef RICHDAQ_RICHNONZEROSUPPDATA_H 
+// $Id: RichNonZeroSuppData.h,v 1.6 2003-11-09 12:39:29 jonrob Exp $
+#ifndef RICHDAQ_RICHNONZEROSUPPDATA_H
 #define RICHDAQ_RICHNONZEROSUPPDATA_H 1
 
 // Gaudi
 #include "GaudiKernel/MsgStream.h"
 
-// Include files
-#include "Event/MCRichDigit.h"
-#include "RichKernel/RichSmartID.h"
-
-// Event
-#include "Event/DAQTypes.h"
-#include "Event/HltEvent.h"
+// local
+#include "RichDAQDefinitions.h"
 
 /** @class RichNonZeroSuppData RichNonZeroSuppData.h
- *  
+ *
+ *  The non zero-suppressed data format
  *
  *  @author Chris Jones
  *  @date   2003-11-07
@@ -22,20 +18,15 @@
 
 class RichNonZeroSuppData {
 
-public: // definitions
-
-  typedef hlt_int        LongType;
-  typedef unsigned int   ShortType;
-
 public:
 
   /// Standard constructor
   RichNonZeroSuppData() { initData(); }
 
   /// Constructor from a vector of RichSmartIDs
-  RichNonZeroSuppData( const std::vector<RichSmartID> & digits ) 
-  { 
-    initData(); 
+  RichNonZeroSuppData( const std::vector<RichSmartID> & digits )
+  {
+    initData();
     for ( std::vector<RichSmartID>::const_iterator iDig = digits.begin();
           iDig != digits.end(); ++ iDig ) {
       setPixelActive( (*iDig).pixelRow(), (*iDig).pixelCol() );
@@ -43,8 +34,8 @@ public:
   }
 
   /// Constructor from a vector of MCRichDigits
-  RichNonZeroSuppData( const MCRichDigitVector & digits ) 
-  { 
+  RichNonZeroSuppData( const MCRichDigitVector & digits )
+  {
     initData();
     for ( MCRichDigitVector::const_iterator iDig = digits.begin();
           iDig != digits.end(); ++ iDig ) {
@@ -58,7 +49,7 @@ public:
     initData();
     // Loop over data entries and set data.
     for ( unsigned int iData = 0; iData < dataSize(); ++iData ) {
-      m_data[iData] = bank.data()[iData+1];// NB> Skip 0th row since this is the header...
+      m_data[iData] = bank.data()[iData+1];// NB: Skip 0th row since this is the header...
     }
   }
 
@@ -66,41 +57,43 @@ public:
   virtual ~RichNonZeroSuppData() {}
 
   /// Set a pixel as active
-  inline void setPixelActive( const ShortType row, const ShortType col ) 
+  inline void setPixelActive( const Rich::ShortType row, 
+                              const Rich::ShortType col )
   {
-    setBit( m_data[row], col ); 
+    setBit( m_data[row], col );
   }
 
   /// Is a given pixel active ?
-  inline bool isPixelActive( const ShortType row, const ShortType col ) const
+  inline bool isPixelActive( const Rich::ShortType row, 
+                             const Rich::ShortType col ) const
   {
-    return isBitOn( m_data[row], col ); 
+    return isBitOn( m_data[row], col );
   }
 
   /// Return data size
-  inline ShortType dataSize() const
+  inline Rich::ShortType dataSize() const
   {
     return MaxBits;
   }
 
   /// Read only access to data
-  inline const LongType * data() const
+  inline const Rich::LongType * data() const
   {
     return &m_data[0];
   }
 
   /// Write access to data
-  inline LongType * data()
+  inline Rich::LongType * data()
   {
     return &m_data[0];
   }
 
   /// Fill a vector with RichSmartIDs for hit pixels
-  void fillSmartIDs( const ShortType rich,
-                     const ShortType panel,
-                     const ShortType pdRow,
-                     const ShortType pdCol,
-                     std::vector<RichSmartID> & ids )
+  inline void fillSmartIDs( const Rich::ShortType rich,
+                            const Rich::ShortType panel,
+                            const Rich::ShortType pdRow,
+                            const Rich::ShortType pdCol,
+                            std::vector<RichSmartID> & ids ) const
   {
     for ( unsigned int iRow = 0; iRow < dataSize(); ++iRow ) {
       for ( unsigned int iCol = 0; iCol < dataSize(); ++iCol ) {
@@ -110,10 +103,18 @@ public:
       }
     }
   }
-  
+
+  /// Fill a vector with HLT data words
+  inline void fillHLT( Rich::HLTBank & hltData ) const
+  {
+    for ( unsigned int iData = 0; iData < dataSize(); ++iData ) {
+      hltData.push_back( m_data[iData] );
+    }
+  }
+
 private: // definitions
-  
-  static const ShortType MaxBits = 32;
+
+  static const Rich::ShortType MaxBits = 32;
 
 private: // methods
 
@@ -122,27 +123,27 @@ private: // methods
   {
     for ( unsigned int i = 0; i<MaxBits; ++i ) { m_data[i] = 0; }
   }
-  
+
   /// Test if a given bit in a word is set on
-  inline bool isBitOn( const LongType data, const ShortType pos ) const
+  inline bool isBitOn( const Rich::LongType data, const Rich::ShortType pos ) const
   {
     return 0 != ( data & (1<<pos) );
   }
-  
+
   /// Set a given bit in a data word on
-  inline void setBit( LongType & data, ShortType pos ) 
+  inline void setBit( Rich::LongType & data, Rich::ShortType pos )
   {
     data |= 1<<pos;
   }
-  
+
 private: //data
-  
-  LongType m_data[MaxBits];
-  
+
+  Rich::LongType m_data[MaxBits];
+
 };
 
 /// overloaded output to MsgStream
-inline MsgStream & operator << ( MsgStream & os, 
+inline MsgStream & operator << ( MsgStream & os,
                                  const RichNonZeroSuppData & data )
 {
   for ( unsigned int iRow = 0; iRow < data.dataSize(); ++iRow ) {

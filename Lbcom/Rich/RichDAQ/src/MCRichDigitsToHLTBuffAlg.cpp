@@ -1,4 +1,4 @@
-// $Id: MCRichDigitsToHLTBuffAlg.cpp,v 1.4 2003-11-08 16:00:45 jonrob Exp $
+// $Id: MCRichDigitsToHLTBuffAlg.cpp,v 1.5 2003-11-09 12:39:28 jonrob Exp $
 // Include files
 
 // from Gaudi
@@ -21,7 +21,8 @@ const        IAlgFactory& MCRichDigitsToHLTBuffAlgFactory = s_factory ;
 // Standard constructor
 MCRichDigitsToHLTBuffAlg::MCRichDigitsToHLTBuffAlg( const std::string& name,
                                                     ISvcLocator* pSvcLocator )
-  : RichAlgBase ( name, pSvcLocator ) {
+  : RichAlgBase ( name, pSvcLocator ) 
+{
 
   declareProperty( "HLTBufferLocation",   m_hltBuffLoc = HltBufferLocation::Default );
   declareProperty( "MCRichDigitsLocation", m_digitsLoc = MCRichDigitLocation::Default );
@@ -40,6 +41,10 @@ StatusCode MCRichDigitsToHLTBuffAlg::initialize() {
 
   // intialise base
   if ( !RichAlgBase::initialize() ) return StatusCode::FAILURE;
+
+  msg << MSG::DEBUG
+      << " Max hits for zero-suppressed data   = " << m_zeroSuppresCut
+      << endreq;
 
   return StatusCode::SUCCESS;
 };
@@ -66,7 +71,7 @@ StatusCode MCRichDigitsToHLTBuffAlg::execute() {
     return StatusCode::FAILURE;
   }
 
-  RichPDMap PDDigits;
+  Rich::PDMap PDDigits;
 
   // Loop overdigits and sort according to PD
   for ( MCRichDigits::const_iterator iDigit = digits->begin();
@@ -75,11 +80,11 @@ StatusCode MCRichDigitsToHLTBuffAlg::execute() {
   }
 
   // Loop over each photon detector and produce a digit bank for each
-  for ( RichPDMap::const_iterator iPD = PDDigits.begin();
+  for ( Rich::PDMap::const_iterator iPD = PDDigits.begin();
         iPD != PDDigits.end(); ++iPD ) {
 
     // Make a new data bank
-    RichHLTBank dataBank;
+    Rich::HLTBank dataBank;
 
     // Based on number of hits, decide whether to zero suppress or not
     if ( ((*iPD).second).size() < m_zeroSuppresCut ) {
@@ -89,7 +94,7 @@ StatusCode MCRichDigitsToHLTBuffAlg::execute() {
     }
 
     // Add this bank to the HLT buffer
-    RichDAQHeaderPD header = dataBank[0];
+    RichDAQHeaderPD header ( dataBank[0] );
     hltBuffer->addBank( header.linkNumber(), RichDigit::classID(), dataBank );
 
   } // end photon detector loop
@@ -103,7 +108,7 @@ StatusCode MCRichDigitsToHLTBuffAlg::execute() {
 };
 
 void MCRichDigitsToHLTBuffAlg::fillZeroSuppressed( RichSmartID pdID,
-                                                   RichHLTBank & dataBank,
+                                                   Rich::HLTBank & dataBank,
                                                    const MCRichDigitVector & pdHits ) {
 
   // Make a new header word for this PD and add to data bank
@@ -148,9 +153,9 @@ void MCRichDigitsToHLTBuffAlg::fillZeroSuppressed( RichSmartID pdID,
 
 }
 
-void MCRichDigitsToHLTBuffAlg::fillNonZeroSuppressed ( RichSmartID pdID,
-                                                       RichHLTBank & dataBank,
-                                                       const MCRichDigitVector & pdHits ) {
+void MCRichDigitsToHLTBuffAlg::fillNonZeroSuppressed( RichSmartID pdID,
+                                                      Rich::HLTBank & dataBank,
+                                                      const MCRichDigitVector & pdHits ) {
 
   // Make a new header word for this PD and add to data bank
   RichDAQLinkNumber linkNumber( pdID.rich(), pdID.panel(),
@@ -169,13 +174,9 @@ void MCRichDigitsToHLTBuffAlg::fillNonZeroSuppressed ( RichSmartID pdID,
     }
   }
 
-  // Create the non zero suppressed data block
+  // Create the non zero suppressed data block and update HLTBank
   RichNonZeroSuppData nonZSdata( pdHits );
-
-  // Loop over data entries and add to RichHLTBank
-  for ( unsigned int iData = 0; iData < nonZSdata.dataSize(); ++iData ) {
-    dataBank.push_back( (nonZSdata.data())[iData] );
-  }
+  nonZSdata.fillHLT( dataBank );
 
   // Printout of data array
   if ( msgLevel(MSG::VERBOSE) ) {
@@ -184,7 +185,6 @@ void MCRichDigitsToHLTBuffAlg::fillNonZeroSuppressed ( RichSmartID pdID,
   }
 
 }
-
 
 //  Finalize
 StatusCode MCRichDigitsToHLTBuffAlg::finalize() {

@@ -1,22 +1,22 @@
-// $Id: RichDAQLinkNumber.h,v 1.1.1.1 2003-11-08 14:26:20 jonesc Exp $
-#ifndef RICHDAQLINKNUMBER_H
-#define RICHDAQLINKNUMBER_H 1
+// $Id: RichDAQLinkNumber.h,v 1.2 2003-11-09 12:39:29 jonrob Exp $
+#ifndef RICHDAQ_RICHDAQLINKNUMBER_H
+#define RICHDAQ_RICHDAQLINKNUMBER_H 1
 
-// Include files
+// Gaudi
+#include "GaudiKernel/MsgStream.h"
+
+// local
+#include "RichDAQDefinitions.h"
 
 /** @class RichDAQLinkNumber RichDAQLinkNumber.h
  *
+ *  Representation of the Rich DAQ link identifier
  *
  *  @author Chris Jones
  *  @date   2003-11-07
  */
 
 class RichDAQLinkNumber {
-
-public: // definitions
-
-  typedef hlt_int        LongType;
-  typedef unsigned int   ShortType;
 
 public:
 
@@ -26,14 +26,14 @@ public:
   /// Copy constructor
   RichDAQLinkNumber( const RichDAQLinkNumber & link ) : m_data( link.data() ) {}
 
-  /// Constructor from LongType
-  RichDAQLinkNumber( const LongType data ) : m_data( data ) {}
+  /// Constructor from Rich::LongType
+  RichDAQLinkNumber( const Rich::LongType data ) : m_data( data ) {}
 
   /// Constructor from full data
-  RichDAQLinkNumber( const ShortType rich,
-                     const ShortType panel,
-                     const ShortType pdRow,
-                     const ShortType pdCol ) : m_data(0)
+  RichDAQLinkNumber( const Rich::ShortType rich,
+                     const Rich::ShortType panel,
+                     const Rich::ShortType pdRow,
+                     const Rich::ShortType pdCol ) : m_data(0)
   {
     setRich  ( rich  );
     setPanel ( panel );
@@ -45,22 +45,22 @@ public:
   virtual ~RichDAQLinkNumber() {}
 
   /// Retrieve the full value
-  inline LongType data() const { return m_data; }
+  inline Rich::LongType data() const { return m_data; }
 
   /// Update the internal data
-  inline void setData( LongType data ) { m_data = data; }
+  inline void setData( Rich::LongType data ) { m_data = data; }
 
-  /// operator to convert to LongType
-  inline operator LongType() const { return data(); }
+  /// operator to convert to Rich::LongType
+  inline operator Rich::LongType() const { return data(); }
 
   /// Return the Rich number
-  inline ShortType rich() const
+  inline Rich::ShortType rich() const
   {
     return ( (data() & MaskRich) >> ShiftRich );
   }
 
   /// Set the Rich number
-  inline bool setRich( ShortType rich )
+  inline bool setRich( Rich::ShortType rich )
   {
     if ( !dataInRange(rich,MaxRich) ) {
       std::cout << "RichDAQLinkNumber ERROR : RICH number "
@@ -71,13 +71,13 @@ public:
   }
 
   /// Return the panel number
-  inline ShortType panel() const
+  inline Rich::ShortType panel() const
   {
     return ( (data() & MaskPanel) >> ShiftPanel );
   }
 
   /// Set the panel number
-  inline bool setPanel( ShortType panel )
+  inline bool setPanel( Rich::ShortType panel )
   {
     if ( !dataInRange(panel,MaxPanel) ) {
       std::cout << "RichDAQLinkNumber ERROR : Panel number "
@@ -88,13 +88,13 @@ public:
   }
 
   /// Return the photon detector row number
-  inline ShortType pdRow() const
+  inline Rich::ShortType pdRow() const
   {
     return ( (data() & MaskPDRow) >> ShiftPDRow );
   }
 
   /// Set the photon detector row number
-  inline bool setPDRow( ShortType row )
+  inline bool setPDRow( Rich::ShortType row )
   {
     if ( !dataInRange(row,MaxPDRow) ) {
       std::cout << "RichDAQLinkNumber ERROR : PD row number "
@@ -105,13 +105,13 @@ public:
   }
 
   /// Return the photon detector column number
-  inline ShortType pdCol() const
+  inline Rich::ShortType pdCol() const
   {
     return ( (data() & MaskPDCol) >> ShiftPDCol );
   }
 
   /// Set the photon detector column number
-  inline bool setPDCol( ShortType col )
+  inline bool setPDCol( Rich::ShortType col )
   {
     if ( !dataInRange(col,MaxPDCol) ) {
       std::cout << "RichDAQLinkNumber ERROR : PD column number "
@@ -124,49 +124,50 @@ public:
 private: // definitions
 
   // Define the number of bits for each field
-  static const ShortType BitsRich   = 1;
-  static const ShortType BitsPanel  = 1;
-  static const ShortType BitsPDRow  = 5;
-  static const ShortType BitsPDCol  = 5;
+  static const Rich::ShortType BitsRich   = 1;
+  static const Rich::ShortType BitsPanel  = 1;
+  static const Rich::ShortType BitsPDRow  = 5;
+  static const Rich::ShortType BitsPDCol  = 5;
 
   // Create the shift registers
-  static const ShortType ShiftRich  = 0;
-  static const ShortType ShiftPanel = ShiftRich  + BitsRich;
-  static const ShortType ShiftPDRow = ShiftPanel + BitsPanel;
-  static const ShortType ShiftPDCol = ShiftPDRow + BitsPDRow;
+  static const Rich::ShortType ShiftRich  = 0;
+  static const Rich::ShortType ShiftPanel = ShiftRich  + BitsRich;
+  static const Rich::ShortType ShiftPDRow = ShiftPanel + BitsPanel;
+  static const Rich::ShortType ShiftPDCol = ShiftPDRow + BitsPDRow;
 
   // Create the Masks
-  static const LongType MaskRich    = (((LongType)1 << BitsRich)-1) << ShiftRich;
-  static const LongType MaskPanel   = (((LongType)1 << BitsPanel)-1) << ShiftPanel;
-  static const LongType MaskPDRow   = (((LongType)1 << BitsPDRow)-1) << ShiftPDRow;
-  static const LongType MaskPDCol   = (((LongType)1 << BitsPDCol)-1) << ShiftPDCol;
+  static const Rich::LongType MaskRich    = (((Rich::LongType)1 << BitsRich)-1) << ShiftRich;
+  static const Rich::LongType MaskPanel   = (((Rich::LongType)1 << BitsPanel)-1) << ShiftPanel;
+  static const Rich::LongType MaskPDRow   = (((Rich::LongType)1 << BitsPDRow)-1) << ShiftPDRow;
+  static const Rich::LongType MaskPDCol   = (((Rich::LongType)1 << BitsPDCol)-1) << ShiftPDCol;
 
   // Create the max values that can be stored in each field
-  static const ShortType MaxRich    = ( (ShortType)1 << BitsRich ) - 1;
-  static const ShortType MaxPanel   = ( (ShortType)1 << BitsPanel ) - 1;
-  static const ShortType MaxPDRow   = ( (ShortType)1 << BitsPDRow ) - 1;
-  static const ShortType MaxPDCol   = ( (ShortType)1 << BitsPDCol ) - 1;
+  static const Rich::ShortType MaxRich    = ( (Rich::ShortType)1 << BitsRich ) - 1;
+  static const Rich::ShortType MaxPanel   = ( (Rich::ShortType)1 << BitsPanel ) - 1;
+  static const Rich::ShortType MaxPDRow   = ( (Rich::ShortType)1 << BitsPDRow ) - 1;
+  static const Rich::ShortType MaxPDCol   = ( (Rich::ShortType)1 << BitsPDCol ) - 1;
 
 private: // methods
 
-  inline bool set( const ShortType value,
-                   const ShortType shift,
-                   const LongType  mask )
+  inline bool set( const Rich::ShortType value,
+                   const Rich::ShortType shift,
+                   const Rich::LongType  mask )
   {
     setData( ((value << shift) & mask) | (data() & ~mask) );
     return true;
   }
 
   // tests whether a given value is in range for a given data field
-  inline bool dataInRange( const ShortType value,
-                           const ShortType max ) const
+  inline bool dataInRange( const Rich::ShortType value,
+                           const Rich::ShortType max ) const
   {
     return ( value <= max );
   }
 
 private: // data
 
-  LongType m_data;
+  Rich::LongType m_data;
 
 };
-#endif // RICHDAQLINKNUMBER_H
+
+#endif // RICHDAQ_RICHDAQLINKNUMBER_H
