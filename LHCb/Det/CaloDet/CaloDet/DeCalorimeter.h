@@ -1,8 +1,11 @@
-// $Id: DeCalorimeter.h,v 1.9 2002-03-28 13:47:13 ibelyaev Exp $ 
+// $Id: DeCalorimeter.h,v 1.10 2002-04-02 14:55:16 ibelyaev Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.9  2002/03/28 13:47:13  ibelyaev
+// new version of Kernel packages, move out all XMl-stuff
+//
 // Revision 1.8  2001/11/25 15:08:45  ibelyaev
 //  update for newer CaloKernel Package
 //
@@ -137,7 +140,7 @@ public:
   inline CaloCellID cellIdByIndex( const unsigned int ) const ;
   
   ///  More complex functions
-  CaloCellID  Cell    ( const HepPoint3D& point )             ;
+  CaloCellID  Cell    ( const HepPoint3D& point ) const ;
   
   ///  Front-end card information
   ///  card number 

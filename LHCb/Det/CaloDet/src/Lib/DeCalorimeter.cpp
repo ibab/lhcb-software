@@ -1,8 +1,11 @@
-// $Id: DeCalorimeter.cpp,v 1.16 2002-03-28 13:47:14 ibelyaev Exp $ 
+// $Id: DeCalorimeter.cpp,v 1.17 2002-04-02 14:55:16 ibelyaev Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.16  2002/03/28 13:47:14  ibelyaev
+// new version of Kernel packages, move out all XMl-stuff
+//
 // Revision 1.15  2001/12/09 14:16:17  ibelyaev
 //  update for newer version of Gaudi
 //
@@ -337,28 +340,30 @@ StatusCode DeCalorimeter::buildCells( ) {
 // ** Return the cell at the specified position
 //----------------------------------------------------------------------------
 
-CaloCellID DeCalorimeter::Cell( const HepPoint3D& globalPoint ) {
-
+CaloCellID DeCalorimeter::Cell( const HepPoint3D& globalPoint ) const
+{
+  
   // ** if point is outside calorimeter
 
   Assert( 0 != geometry() , " Unable to extract IGeometryInfo* " );
   if( !geometry()->isInside( globalPoint ) ) { return CaloCellID( ) ; }
 
   // ** find subcalorimeter
-
-  for( IDetectorElement::IDEContainer::iterator child = childBegin() ;
-       childEnd() != child ; ++child ) {
-    DeSubCalorimeter* subCalorimeter = 0 ;
-
-    try       { subCalorimeter = dynamic_cast<DeSubCalorimeter*>(*child); }
+  
+  for( IDetectorElement::IDEContainer::const_iterator child = 
+         childBegin() ; childEnd() != child ; ++child ) {
+    const DeSubCalorimeter* subCalorimeter = 0 ;
+    
+    try       { subCalorimeter = 
+                  dynamic_cast<const DeSubCalorimeter*>(*child); }
     catch(...){ continue ; }
     Assert( 0 != subCalorimeter , " Unable to extract SubCalorimeter");
-
-    IGeometryInfo* subCalGeo = subCalorimeter->geometry() ;
+    
+    const IGeometryInfo* subCalGeo = subCalorimeter->geometry() ;
     Assert( 0 != subCalGeo , " Unable to extract Geometry Info ");
-
+    
     if( subCalGeo->isInside( globalPoint ) ) {
-
+      
       unsigned int Area     = child - childBegin()   ;
       double       CellSize = subCalorimeter->size() ;
 

@@ -1,10 +1,15 @@
-! $Id: release.notes,v 1.19 2002-03-28 13:47:13 ibelyaev Exp $ 
+! $Id: release.notes,v 1.20 2002-04-02 14:55:16 ibelyaev Exp $ 
 ! =============================================================================
 ! CVS tag $Name: not supported by cvs2svn $ 
 ! =============================================================================
 Package         : CaloDet   
 Package manager : Vanya Belyaev Ivan.Belyaev@itep.ru
   
+! =============================================================================
+! 02/04/2002 - v4r0 - Vanya Belyaev
+! - add 'const' qualifier to 'DeCaloriimeter::Cell' method 
+! =============================================================================
+
 ! =============================================================================
 ! 28/03/2002 - v4r0 - Vanya Belyaev
 ! - update for newer CaloKernel and LHCbKernel packages 
