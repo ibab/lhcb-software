@@ -44,14 +44,15 @@ protected:
 
   ///
 public:
-  StatusCode initialize () ;
-  StatusCode finalize   () ;
+  StatusCode initialize();
+  StatusCode finalize();
   
   void SetCuts();
   ///
 private:
-  std::vector<std::string> m_physconstr   ;
-  Constructors             m_constructors ;
+  std::vector<std::string> m_physconstr;
+  Constructors m_constructors;
+  bool m_dumpCutsTable;
   
   ///
   GiGaPhysListModular();

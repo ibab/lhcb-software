@@ -6,6 +6,8 @@
 !-----------------------------------------------------------------------------
 
 !======================== GaussTools v8r8 =================================
+- GiGaPhysListModular - removed obsolete production cuts, added flag for
+                        printing cuts table 
 - GaussInitialization - added printing of version number and exectution time
 - TraCutsRunAction - added cut for neutrinos (not to track them)
 - GaussPostStepAction - added possibility of storing trajectories
