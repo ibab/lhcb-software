@@ -31,12 +31,13 @@ void MuonDetectorResponse::initialize(IRndmGenSvc * randSvc,
   }
   m_partition=basegeometry.getPartitions();    
   
-  for(int i=0;i<m_stationNumber;i++){
+  for(i=0;i<m_stationNumber;i++){
     for (int k=0;k<m_regionNumber;k++){
       regionName[i*4+k]=geoBase+numsta[i]+"/R"+numreg[k];
       log<<MSG::DEBUG<<"region name "<<regionName[i*4+k]<<endreq;
     }
   }
+  
   //	std::vector<Rndm::Numbers*>::iterator iterOnPoisson;
   //	bool found=false;
 	double newMean;
