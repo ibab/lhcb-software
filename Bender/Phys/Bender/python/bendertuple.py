@@ -1,10 +1,13 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: bendertuple.py,v 1.1 2004-07-11 15:47:06 ibelyaev Exp $ 
+# $Id: bendertuple.py,v 1.2 2004-08-26 19:34:36 ibelyaev Exp $ 
 # =============================================================================
 # CVS tag $NAme:$ 
 # =============================================================================
 # $Log: not supported by cvs2svn $
+# Revision 1.1  2004/07/11 15:47:06  ibelyaev
+#  regular incrment
+#
 # =============================================================================
 
 # =============================================================================
@@ -16,13 +19,13 @@
 # @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 # =============================================================================
 
-import PyLCGDict
-
 # import global namespace  
-from gaudimodule import gbl
+import gaudimodule as gaudi 
+
+gbl = gaudi.gbl
 
 # load the 'minimal' set of dictionaries
-PyLCGDict.loadDict('BenderDict')
+gaudi.loaddict('BenderDict')
 
 # load the 'intermediate object 
 BenderTuple   = gbl.Bender.BenderTuple

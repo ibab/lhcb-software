@@ -1,10 +1,13 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: benderstr.py,v 1.2 2004-08-06 12:07:09 ibelyaev Exp $ 
+# $Id: benderstr.py,v 1.3 2004-08-26 19:34:36 ibelyaev Exp $ 
 # =============================================================================
 # CVS tag $Name: not supported by cvs2svn $ 
 # =============================================================================
 # $Log: not supported by cvs2svn $
+# Revision 1.2  2004/08/06 12:07:09  ibelyaev
+#  minor improvements
+#
 # Revision 1.1  2004/07/24 15:03:33  ibelyaev
 #  add benderstr
 #
@@ -23,16 +26,15 @@ import gaudimodule as     gaudi
 from   benderaux   import fillStream
 
 # load modules
-g = gaudi.AppMgr()
-g.loaddict ( 'EventDict'     )
-g.loaddict ( 'PhysEventDict' )
-g.loaddict ( 'TrEventDict'   )
-g.loaddict ( 'OTEventDict'   )
-g.loaddict ( 'ITEventDict'   )
-g.loaddict ( 'VeloEventDict' )
-g.loaddict ( 'RichEventDict' )
-g.loaddict ( 'MuonEventDict' )
-g.loaddict ( 'CaloEventDict' )
+gaudi.loaddict ( 'EventDict'     )
+gaudi.loaddict ( 'PhysEventDict' )
+gaudi.loaddict ( 'TrEventDict'   )
+gaudi.loaddict ( 'OTEventDict'   )
+gaudi.loaddict ( 'ITEventDict'   )
+gaudi.loaddict ( 'VeloEventDict' )
+gaudi.loaddict ( 'RichEventDict' )
+gaudi.loaddict ( 'MuonEventDict' )
+gaudi.loaddict ( 'CaloEventDict' )
 
 def _fillStream_ ( self ) :
     _obj = self 

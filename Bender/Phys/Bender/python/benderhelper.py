@@ -1,7 +1,6 @@
 import gaudimodule as gaudi
 
-g = gaudi.AppMgr()
-g.loaddict('BenderDict')
+gaudi.loaddict('BenderDict')
 
 def _OpsL ( fun , ops  ) :
     " define le & lt operations "

@@ -1,10 +1,13 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: bendercuts.py,v 1.1 2004-07-11 15:47:05 ibelyaev Exp $ 
+# $Id: bendercuts.py,v 1.2 2004-08-26 19:34:36 ibelyaev Exp $ 
 # =============================================================================
 # CVS tag $NAme:$ 
 # =============================================================================
 # $Log: not supported by cvs2svn $
+# Revision 1.1  2004/07/11 15:47:05  ibelyaev
+#  regular incrment
+#
 # =============================================================================
 
 
@@ -17,14 +20,11 @@
 # @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 # =============================================================================
 
-import PyLCGDict
 import gaudimodule    as gaudi
 
-g = gaudi.AppMgr()
-
-g.loaddict( 'EventDict'     )
-g.loaddict( 'PhysEventDict' )
-g.loaddict( 'BenderDict'    )
+gaudi.loaddict( 'EventDict'     )
+gaudi.loaddict( 'PhysEventDict' )
+gaudi.loaddict( 'BenderDict'    )
 
 from benderparticlecuts    import *
 from bendervertexcuts      import *

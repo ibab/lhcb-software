@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: benderloop.py,v 1.1 2004-07-11 15:47:05 ibelyaev Exp $ 
+# $Id: benderloop.py,v 1.2 2004-08-26 19:34:36 ibelyaev Exp $ 
 # =============================================================================
 # CVS tag $NAme:$ 
 # =============================================================================
@@ -16,13 +16,11 @@
 # @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 # =============================================================================
 
-import PyLCGDict 
-
 # import the global namespace 
 from gaudimodule import gbl
 
 # load the minimal set of dictionaries
-PyLCGDict.loadDict('BenderDict')
+gaudi.loaddict('BenderDict')
 
 # load 'intermediate object
 BenderLoop = gbl.Bender.Loop

@@ -1,10 +1,13 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: bendervertexcuts.py,v 1.2 2004-08-06 12:07:10 ibelyaev Exp $ 
+# $Id: bendervertexcuts.py,v 1.3 2004-08-26 19:34:36 ibelyaev Exp $ 
 # =============================================================================
 # CVS tag $NAme:$ 
 # =============================================================================
 # $Log: not supported by cvs2svn $
+# Revision 1.2  2004/08/06 12:07:10  ibelyaev
+#  minor improvements
+#
 # Revision 1.1  2004/07/11 15:47:06  ibelyaev
 #  regular incrment
 #
@@ -20,19 +23,16 @@
 # @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 # =============================================================================
 
-import PyLCGDict 
 import gaudimodule        as      gaudi
 import benderhelper       as      helper
 
 # global namespace  
 gbl = gaudi.gbl 
 
-# application manager         
-g = gaudi.AppMgr()
 # load the minimal set of dictionaries
-g.loaddict('EventDict')
-g.loaddict('PhysEventDict')
-g.loaddict('BenderDict')
+gaudi.loaddict('EventDict')
+gaudi.loaddict('PhysEventDict')
+gaudi.loaddict('BenderDict')
 
 
 # interface functions, load & add the operators!!!

@@ -1,10 +1,13 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: benderparticlecuts.py,v 1.3 2004-08-08 13:41:11 ibelyaev Exp $ 
+# $Id: benderparticlecuts.py,v 1.4 2004-08-26 19:34:36 ibelyaev Exp $ 
 # =============================================================================
 # CVS tag $NAme:$ 
 # =============================================================================
 # $Log: not supported by cvs2svn $
+# Revision 1.3  2004/08/08 13:41:11  ibelyaev
+#  v3r7: update for LoKi v3r2
+#
 # Revision 1.2  2004/08/06 12:07:08  ibelyaev
 #  minor improvements
 #
@@ -23,19 +26,16 @@
 # @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 # =============================================================================
 
-import PyLCGDict 
 import gaudimodule        as      gaudi
 import benderhelper       as      helper
 
 # global namespace  
 gbl = gaudi.gbl 
 
-# application manager         
-g = gaudi.AppMgr()
 # load the minimal set of dictionaries
-g.loaddict('EventDict')
-g.loaddict('PhysEventDict')
-g.loaddict('BenderDict')
+gaudi.loaddict('EventDict')
+gaudi.loaddict('PhysEventDict')
+gaudi.loaddict('BenderDict')
 
 # interface functions, load & add the operators!!!
 Func     = helper.loadFunP ( gbl.LoKi.Function               ( 'const Particle*' ) ) 

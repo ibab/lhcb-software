@@ -1,10 +1,13 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: bendermodule.py,v 1.11 2004-08-06 12:07:07 ibelyaev Exp $ 
+# $Id: bendermodule.py,v 1.12 2004-08-26 19:34:36 ibelyaev Exp $ 
 # =============================================================================
 # CVS tag $NAme:$ 
 # =============================================================================
 # $Log: not supported by cvs2svn $
+# Revision 1.11  2004/08/06 12:07:07  ibelyaev
+#  minor improvements
+#
 # =============================================================================
 
 # =============================================================================
@@ -16,23 +19,20 @@
 # @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 # =============================================================================
 
-import PyLCGDict
-
 import gaudimodule as gaudi
 
-g = gaudi.AppMgr()
-g.loaddict( 'EventDict'     )
-g.loaddict( 'PhysEventDict' )
-g.loaddict( 'TrEventDict'   )
-g.loaddict( 'RichEventDict' )
-g.loaddict( 'MuonEventDict' )
-g.loaddict( 'CaloEventDict' )
-g.loaddict( 'VeloEventDict' )
-g.loaddict( 'ITEventDict'   )
-g.loaddict( 'OTEventDict'   )
-g.loaddict( 'L0EventDict'   )
+gaudi.loaddict( 'EventDict'     )
+gaudi.loaddict( 'PhysEventDict' )
+gaudi.loaddict( 'TrEventDict'   )
+gaudi.loaddict( 'RichEventDict' )
+gaudi.loaddict( 'MuonEventDict' )
+gaudi.loaddict( 'CaloEventDict' )
+gaudi.loaddict( 'VeloEventDict' )
+gaudi.loaddict( 'ITEventDict'   )
+gaudi.loaddict( 'OTEventDict'   )
+gaudi.loaddict( 'L0EventDict'   )
 #g.loaddict( 'L1EventDict'   )
-g.loaddict( 'BenderDict'    )
+gaudi.loaddict( 'BenderDict'    )
 
 from   bendertypes   import *
 from   benderaux     import *

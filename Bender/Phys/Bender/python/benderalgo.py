@@ -1,10 +1,13 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: benderalgo.py,v 1.3 2004-08-06 12:07:06 ibelyaev Exp $ 
+# $Id: benderalgo.py,v 1.4 2004-08-26 19:34:36 ibelyaev Exp $ 
 # =============================================================================
 # CVS tag $NAme:$ 
 # =============================================================================
 # $Log: not supported by cvs2svn $
+# Revision 1.3  2004/08/06 12:07:06  ibelyaev
+#  minor improvements
+#
 # =============================================================================
 
 
@@ -16,8 +19,6 @@
 # @date   2004-07-11
 # @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 # =============================================================================
-
-import PyLCGDict
 
 # import global namespace 
 import gaudimodule  as gaudi
@@ -31,7 +32,7 @@ from   bendertuple  import Tuple
 from   bendermatch  import MCMatch
 
 # load minimal set of obejcts 
-PyLCGDict.loadDict('BenderDict')
+gaudi.loaddict('BenderDict')
 
 # global namespace 
 gbl = gaudi.gbl
