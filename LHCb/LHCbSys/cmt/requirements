@@ -28,7 +28,7 @@ use VeloKernel    v1r3      Velo
 
 # Detector description
 use DetSys		v1r0	Det
-use DetDesc        v11r6       Det
+use DetDesc        v11r7       Det
 use VeloDet        v8r2        Det     
 use ITDet          v1r3	       Det     
 use OTDet          v3r3	       Det
