@@ -20,7 +20,7 @@ Purpose: LHCb reconstruction program
    . Drop tracks with fit failures (TrCleanEx v2r2)
 
  - New features:
-   . Prepare for dbase v249r* support (MuonID v3r3)
+   . Prepare for dbase v249r* support (MuonDet v4r1, MuonTools v3r1, MuonID v3r3)
    . Prepare for VeloTT tracks
      (EventSys v12r6, TrEvent v11r3, TrFitEvent v3r1, TrCleanEx v2r2) 
    . Get OT digitization parameters from Xml

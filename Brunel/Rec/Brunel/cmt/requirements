@@ -49,7 +49,7 @@ use XmlDDDB      v13r1  Det
 use CaloDet       v5r1  Det
 use CaloDetXmlCnv v2r0  Det
 use ITDet         v1r1  Det
-use MuonDet       v4r0  Det
+use MuonDet       v4r1  Det
 use OTDet         v3r0  Det
 use VeloDet       v7r1  Det
 use Magnet        v1r1  Det
@@ -122,7 +122,7 @@ use UpstreamPR		v2r3	Tr
 
 # Muon
 use MuonKernel          v2r1    Muon
-use MuonTools           v3r0    Muon
+use MuonTools           v3r1    Muon
 use MuonAlgs		v2r2	Muon
 use MuonRec     	v2r2	Muon
 use MuonID      	v3r3	Muon
