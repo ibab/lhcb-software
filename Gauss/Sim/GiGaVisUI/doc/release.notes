@@ -4,6 +4,10 @@
 ! Purpose          : GiGa visualisation and UI 
 !-----------------------------------------------------------------------------
 
+!========================== GiGaVisUI v2r1 2003-07-10 ======================
+! 2003-07-10 - Florence Ranjard
+ - fix for gcc32 (S.Ponce)
+
 !========================= GiGaVisUI v2r0 2003-05-01 ========================
 ! 2003-05-01 - Witek Pokorski
  - requirements - move to GiGa v14r0

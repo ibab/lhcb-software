@@ -1,8 +1,11 @@
-// $Id: GiGaSetVisAttributes.cpp,v 1.1 2003-04-06 19:16:38 ibelyaev Exp $
+// $Id: GiGaSetVisAttributes.cpp,v 1.2 2003-07-10 09:29:11 ranjard Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
-// $Log: not supported by cvs2svn $ 
+// $Log: not supported by cvs2svn $
+// Revision 1.1  2003/04/06 19:16:38  ibelyaev
+//  add new tool
+// 
 // ============================================================================
 // GaudiKernel
 #include "GaudiKernel/IDataProviderSvc.h"
@@ -129,16 +132,19 @@ G4LogicalVolume* GiGaSetVisAttributes::g4volume
 {
   const G4LogicalVolumeStore* store = G4LogicalVolumeStore::GetInstance();
   if( 0 == store ) 
-    {
-      Error ( "g4volume('" + address + "'): G4LogicalVolumeStore* is NULL!" ) ;
-      return 0 ;
-    }
+  {
+    Error ( "g4volume('" + address + "'): G4LogicalVolumeStore* is NULL!" ) ;
+    return 0 ;
+  }
   for( G4LogicalVolumeStore::const_iterator ivolume = 
          store -> begin() ; store->end() != ivolume ; ++ivolume ) 
-    {
-      G4LogicalVolume* vol = *ivolume ;
-      if( 0 != vol && vol->GetName() == address ) { return vol ; }
+  {
+    G4LogicalVolume* vol = *ivolume ;
+    if( 0 != vol ) {
+      std::string G4VolName = vol->GetName();
+      if (G4VolName == address ) { return vol ; }
     }
+  }
   Error ( "g4volume('" + address + "'): volume is not found!" ) ;
   return 0 ;
 };
