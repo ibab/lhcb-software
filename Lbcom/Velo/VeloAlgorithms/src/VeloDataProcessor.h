@@ -1,4 +1,4 @@
-// $Id: VeloDataProcessor.h,v 1.1.1.1 2002-06-09 21:41:24 parkesb Exp $
+// $Id: VeloDataProcessor.h,v 1.2 2002-10-16 13:31:42 parkesb Exp $
 #ifndef VELODATAPROC_H 
 #define VELODATAPROC_H 1
 
@@ -37,7 +37,7 @@ protected:
 private:
 
   /// perform digitisation, i.e. convert electrons to ADC counts
-  virtual int digitise(float electrons);
+  virtual float digitise(float electrons);
 
   // data members
   std::string m_inputContainer;       ///< Name of input container

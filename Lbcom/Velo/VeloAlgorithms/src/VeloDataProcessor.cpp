@@ -84,7 +84,7 @@ StatusCode VeloDataProcessor::execute() {
     // take an MCFE make a VeloFullDigit
      VeloChannelID myKey((*MCFEIt)->key());
      VeloFullDigit* mydigit = new VeloFullDigit(myKey);
-     int ADC=digitise((*MCFEIt)->charge()); 
+     int ADC=int(digitise((*MCFEIt)->charge())); 
      mydigit->setRawADCValue(ADC);
 
      // following will come from data processing 
@@ -122,10 +122,10 @@ StatusCode VeloDataProcessor::finalize() {
     return StatusCode::SUCCESS;
 }
 
-int VeloDataProcessor::digitise(float electrons) {
+float VeloDataProcessor::digitise(float electrons) {
   // convert electrons to ADC counts
-  int digi = int(electrons*(VeloDigiParams::ADCFullScale/VeloDigiParams::electronsFullScale));
-  if (digi>(VeloDigiParams::ADCFullScale-1)) digi=int(VeloDigiParams::ADCFullScale-1);
+  float digi = electrons*(VeloDigiParams::ADCFullScale/VeloDigiParams::electronsFullScale);
+  if (digi>(VeloDigiParams::ADCFullScale-1)) digi=VeloDigiParams::ADCFullScale-1.;
 
   return digi;
 }
