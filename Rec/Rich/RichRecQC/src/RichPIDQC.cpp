@@ -1,4 +1,4 @@
-// $Id: RichPIDQC.cpp,v 1.3 2003-07-01 18:44:49 jonrob Exp $
+// $Id: RichPIDQC.cpp,v 1.4 2003-07-01 18:54:35 jonrob Exp $
 // Include files
 
 // local
@@ -511,9 +511,9 @@ StatusCode RichPIDQC::finalize() {
                                      eff[0],eff[1],eff[2],eff[3],eff[4],eff[5] )
         << "     |" << endreq
         << "-----------+-----------------------------------------------+-----------" << endreq;
-    msg << format( "  ID %     |    Ka: %6.2f+-%6.2f    Pi: %6.2f+-%6.2f     |",
+    msg << format( "  %ID      |    Ka: %6.2f+-%6.2f    Pi: %6.2f+-%6.2f     |",
                    kaonIDEff[0], kaonIDEff[1], piIDEff[0], piIDEff[1] ) << endreq;
-    msg << format( "  misID %  |    Ka: %6.2f+-%6.2f    Pi: %6.2f+-%6.2f     |",
+    msg << format( "  %MisID   |    Ka: %6.2f+-%6.2f    Pi: %6.2f+-%6.2f     |",
                    kaonMisIDEff[0], kaonMisIDEff[1], piMisIDEff[0], piMisIDEff[1] ) << endreq;
     msg << "-----------+-----------------------------------------------+-----------"
         << endreq;
