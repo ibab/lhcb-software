@@ -5,7 +5,7 @@
 #include "DetDesc/XmlGenericCnv.h"
 #include "DetDesc/ISax8BitDocHandler.h"
 #include "DetDesc/Mixture.h"
-
+#include <string>
 
 // Forward declarations
 class     ISvcLocator;
@@ -101,6 +101,8 @@ private:
   double                 m_itemFraction;
   bool                   m_byFraction;
   MixMode                m_mixMode;
+
+  std::string compactPath(std::string path);
 };
 
 

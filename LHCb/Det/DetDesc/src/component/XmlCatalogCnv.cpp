@@ -198,7 +198,8 @@ void XmlCatalogCnv::startElement( const char* const name,
   }
   else if( tagName == "catalogref" || tagName == "detelemref"     ||
            tagName == "logvolref"  || tagName == "tabpropertyref" ||
-           tagName == "surfaceref"                                  )
+           tagName == "surfaceref" || tagName == "elementref"     ||
+           tagName == "isotoperef" || tagName == "materialref"    )
   {
     // We have to decode class ID of the referred object
     const CLID clsID = (CLID) atol( attributes.getValue( "classID" ).c_str() );

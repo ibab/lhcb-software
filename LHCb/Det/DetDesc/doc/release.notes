@@ -2,6 +2,15 @@ package DetDesc
 package manager : N.N 
 
 !===========================================================================
+! 20010412 - Gonzalo Gracia
+  Implementation of the conversion procedure for materialref, isotoperef and elementref in catalogs. 
+  Include new tag "component" in mixtures
+  Allow relative paths in components.
+  Changed files:
+   XmlCatalogCnv.cpp
+   XmlMixtureCnv.cpp/.h
+
+!===========================================================================
 ! 20010320 - Vanya Belyaev 
  -  src/component/XmlMixtureCnv.cpp - bug fix 
 !===========================================================================

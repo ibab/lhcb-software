@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/component/XmlMixtureCnv.cpp,v 1.5 2001-03-21 11:00:49 ibelyaev Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/component/XmlMixtureCnv.cpp,v 1.6 2001-04-12 08:15:14 gracia Exp $
 
 // Headers
 #include "GaudiKernel/CnvFactory.h"
@@ -30,6 +30,7 @@
 
 /// local 
 #include "XmlMixtureCnv.h"
+
 
 // Instantiation of a static factory class used by clients to create
 // instances of this service
@@ -246,37 +247,21 @@ void XmlMixtureCnv::startElement( const char* const name,
         SmartRef<TabulatedProperty> ref( m_dataObj, linkID );
         ((Material*) m_dataObj)->tabulatedProperties().push_back(ref); 
     }
-  else if( "materialref" == tagName || "elementref" == tagName  ) {
+  else if( "component" == tagName ) {
     StatusCode        stcod;
-    
-    // Let's decode URI of the object location
-    // We must split the URI into XML file name, container name and object name
-    // General URL is in format:
-    //         protocol://host.domain.name/path/to/file.xml#objectID
-    unsigned int sPos    = attributes.getValue( "href" ).find_last_of('#');
-    std::string location = attributes.getValue( "href" ).substr( 0, sPos );
-    
+        
     /// We need to get directory where the XML files are located
     unsigned int dPos  = m_objRcpt->dbName().find_last_of('/');
     std::string locDir = m_objRcpt->dbName().substr( 0, dPos + 1 );
-    
-    // OK, we got location part which can be in general of a form like:
-    //  protocol://host.domain.name/path/to/file.xml
-    if( location.empty() ) {
-      // This means that "href" has the form "#objectID" and referenced
-      // object resides in the same file we are currently parsing
-      location = m_objRcpt->dbName();
+
+    std::string entryName = m_objRcpt->containerName () + "/" + attributes.getValue( "name" );
+
+    // Check if path is a relative path, if it has ../ 
+    if (-1 != entryName.find_first_of("..")){
+      // get rid of the ".." to get the absolute path
+      entryName = compactPath(entryName);
     }
-    else {
-      dPos = location.find_last_of('/');
-      if( dPos != std::string::npos ) {
-        location = locDir + location.substr( dPos + 1 );
-      }
-      else {
-        location = locDir + location;
-      }
-    }
-    std::string entryName = "/dd/Materials/"+attributes.getValue( "href" ).substr( sPos + 1);
+
     log << MSG::VERBOSE << "Converter for " << m_objRcpt->objectName()
                     << " is gonna retrieve " << entryName << endreq;
     stcod = dataProvider()->retrieveObject( entryName, m_itemObj );
@@ -292,11 +277,10 @@ void XmlMixtureCnv::startElement( const char* const name,
     std::string natom = attributes.getValue( "natoms" );
     std::string fract = attributes.getValue( "fractionmass" );
   
-    if( m_mixMode == MM_undefined ) {
-      if( tagName == "materialref") m_mixMode = MM_byFractionMass;
-      else if ( natom != "-1" )     m_mixMode = MM_byNAtoms;
-      else                          m_mixMode = MM_byFractionMass;
-    }
+//    if( m_mixMode == MM_undefined ) {
+      if ( natom != "-1" )     m_mixMode = MM_byNAtoms;
+      else                     m_mixMode = MM_byFractionMass;
+//    }
     
     if( m_mixMode == MM_byFractionMass && !fract.empty() && fract != "-1" ) {
       m_itemFraction = xmlSvc()->eval(fract, false);
@@ -359,7 +343,7 @@ void XmlMixtureCnv::endElement( const char* const name )
             } 
           else { /* What to do here ? */ }
         } 
-      else if( "materialref" == tagName || "elementref" == tagName ) 
+      else if( "component" == tagName ) 
         {
           // At this point we should have loaded referred material so we need
           // to find out its form either element or mixture and add it
@@ -407,10 +391,18 @@ const char* XmlMixtureCnv::tag() const
 
 
 
-
-
-
-
+std::string XmlMixtureCnv::compactPath(std::string path ){
+  int dotPos = path.find_first_of("..");
+  std::string beforeDots = path.substr(0, dotPos-2);  // get rid of slash
+  std::string afterDots = path.substr(dotPos+2);
+  std::string parent = beforeDots.substr(0, beforeDots.find_last_of("/"));
+  std::string compactPath = parent + afterDots;
+  if(-1 != compactPath.find_first_of("..")){
+      path = compactPath;
+      compactPath = this->compactPath(path);
+  }
+  return compactPath;
+}
 
 
 
