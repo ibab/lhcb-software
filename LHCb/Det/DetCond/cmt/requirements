@@ -1,17 +1,18 @@
-# $Id: requirements,v 1.20 2002-07-23 08:20:04 andreav Exp $
+# $Id: requirements,v 1.21 2002-11-19 13:14:47 andreav Exp $
 package DetCond
-version v4r0
+version v4r1
 
 branches DetCond cmt src doc
 
 # GAUDI framework dependencies
-use GaudiKernel v12r*
-use GaudiSvc    v8r*
+use GaudiKernel v13r*
+use GaudiSvc    v10r*
 
 # ConditionsDB package
 macro CONDDB_use            "CONDDB v3r02p2" \
-      rh72_gcc2952          "CondDBOracle v4r15 Det" \
-      WIN32                 "CondDBOracle v4r15 Det"
+      rh72_gcc2952          "CondDBOracle v4r16 Det" \
+      rh73_gcc2952          "CondDBOracle v4r16 Det" \
+      WIN32                 "CondDBOracle v4r16 Det"
 use $(CONDDB_use)
 
 # Inform the C++ precompiler which ConditionsDB implementation is used
@@ -20,7 +21,7 @@ macro_append cppflags ' -D__$(CONDDB_implementation)__' \
 
 # Detector Description
 # This is only needed because updateObj assumes a Condition (TEMPORARY?)
-use DetDesc v10r* Det
+use DetDesc v11r* Det
 
 include_dirs $(DETCONDROOT)
 
