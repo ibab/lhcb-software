@@ -15,7 +15,7 @@
 #include "$DAVINCIROOT/options/DaVinciCommon.opts"
 #pragma print on
 
-//#include "$DAVINCIROOT/options/DaVinciDDDB.opts"
+//#include "$DAVINCIROOT/options/DaVinciElectrons.opts"
 //#include "$DAVINCIROOT/options/DaVinciReco.opts"
 //#include "$DAVINCIROOT/options/DaVinciNeutrals.opts"
 

@@ -1,4 +1,4 @@
-// $Id: DaVinciNeutrals.opts,v 1.6 2004-05-11 11:46:47 pkoppenb Exp $
+// $Id: DaVinciNeutrals.opts,v 1.7 2004-07-22 15:55:56 pkoppenb Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
@@ -8,7 +8,7 @@
  *  Configuration file to produce Neutral ProtoParticles
  * 
  *  @author G.Corti
- *  @authoir Vanya BELYAEV Ivan.Belyaev@itep.ru 
+ *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru 
  *  @date   2004-06-03
  */
 
@@ -18,8 +18,12 @@ ApplicationMgr.TopAlg += { "Sequencer/Neutrals" };
 // Re-create CaloDigits from raw buffer 
 Neutrals.Members  = { "CaloDigitsFromRaw"    };  
 
-// apply DC04 E/S/L corrections 
-#include "$DAVINCIROOT/options/Calo04Corrections.opts"
+// correct 3x3 matrix 
+Neutrals.Members += {"CaloClusterCorrect3x3Position"};
+// Corrections for SplitPhotons
+Neutrals.Members += { "CaloHypoAlg/PhotonFromMergedCalibration" };
+// Corrections for Single Photons
+Neutrals.Members += { "CaloHypoAlg/PhotonCalibration"   };
 
 // Make neutral ProtoParticles
 Neutrals.Members += { "NeutralPPsFromCPsAlg" };

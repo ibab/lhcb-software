@@ -26,20 +26,30 @@
 
 //--------------------------------------------------------------
 // DaVinci Global Reconstruction Algorithms
-// VERY IMPORTANT:
-//   ChargedProtoPAlg and PrimVtxFinder are executed in
-//   DaVinciReco and MUST not be executed again
+// REMEMBER to make electrons first.
 // REMEMBER to make Neutral ProtoParticles for channels with neutrals
 // REMEMBER to make Kshorts with all type of tracks
 //--------------------------------------------------------------
+//
+//--- Charged ProtoParticles
+//
+// 1. Electrons (MUST be first!) (NO TDR version)
+//#include "$DAVINCIROOT/options/DaVinciElectrons.opts"
+// don't forget to call DaVinciReco too.
+//
+// 2. Charged
+// VERY IMPORTANT:
+//   ChargedProtoPAlg and PrimVtxFinder are executed in
+//   DaVinciReco and MUST not be executed again
 #include "$DAVINCIROOT/options/DaVinciReco.opts"
 // for TDR data:
 //#include "$DAVINCIROOT/options/DaVinciRecoTDR.opts"
 
 //--- Neutral ProtoParticles (gammas and pi0) 
+//
 // Note that this has also to be executed if you need
 // Bremsstrahlung photons (AddBrem option)
-#include "$DAVINCIROOT/options/DaVinciNeutrals.opts"
+// #include "$DAVINCIROOT/options/DaVinciNeutrals.opts"
 // for TDR data (else you crash):
 // #include "$DAVINCIROOT/options/DaVinciNeutralsTDR.opts"
 

@@ -4,6 +4,16 @@
 ! Purpose     : Analaysis program for LHCb
 !-----------------------------------------------------------------------------
 
+! 2004-07-22 - P. Koppenburg for Vanya Belyaev
+  - options/DaVinciNeutrals.opts
+  - options/DaVinciElectrons.opts
+    . Split DaVinciNeutrals in two. DaVinciElectrons *must* be
+      called before DaVinciReco to have any effect.
+  - options/Calo04Correction.opts
+    . Removed
+  - options/DVTriggerFilter.opts, DVWriteMiniDst.opts, DaVinci.opts
+    . Reflect this order 
+
 ! 2004-07-19 - P. Koppenburg for Luisanna Tocco
  - options/L0Muon.opts
    . New options to re-run L0muon. 

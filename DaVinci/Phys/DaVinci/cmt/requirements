@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.142 2004-07-22 15:42:55 pkoppenb Exp $
+# $Id: requirements,v 1.143 2004-07-22 15:55:56 pkoppenb Exp $
 # Created    : 07/02/2002
 # Maintainer : P. Koppenburg
 #
@@ -83,7 +83,7 @@ use  VeloDAQ            v1r0     Velo
 
 # Enable neutral ProtoParticles production and CaloPIDs
 use  CaloPIDs           v2r3     Calo 
-use  CaloReco           v2r3p1   Calo
+use  CaloReco           v2r4     Calo
 
 # Muon PID
 use  MuonID             v3r7p1   Muon
