@@ -5,7 +5,10 @@
 ! Purpose            : collection of sensitive detectors, G4 actions, etc for RICH
 !-----------------------------------------------------------------------------
 
-!========================== GaussRICH v2r0 2003-02-27 =======================
+!=========================== GaussRICH v2r1 2003-03-05 ========================
+! 2003-03-05 - Florence RANJARD
+ - replace PhysicalConstants.h (from Geant4) with 
+           CLHEP/Units/PhysicalConstants.h
 ! 2003-01-23 - Vanya Belyaev
     few fixes for Win2K platform 
 

@@ -1,7 +1,7 @@
 #include "RichHpdPhotoElectricEffect.h"
 
 #include "G4TransportationManager.hh"
-#include "PhysicalConstants.h"
+#include "CLHEP/Units/PhysicalConstants.h"
 #include <math.h>
 
 #include "GaudiKernel/IDataProviderSvc.h"
