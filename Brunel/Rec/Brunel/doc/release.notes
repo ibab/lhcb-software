@@ -17,9 +17,9 @@ Purpose: LHCb reconstruction program
      (TrEvent v13r1, TrFitEvent v4r4, TrFitAssociators v1r1, TrCheck v2r4,
       TrCleanEx v2r9, TrKShort v1r2, RichRecBase v1r9p1, MuonID v3r7p1, 
       CaloReco v2r0, CaloMonitor v2r0)
+   . Decode IT Digits from RawBuffer (ITAlgorithms v14r1, STDAQ v1r0)
 
 >>> Not yet enabled due to bug in creation of ITDigit2MCHit table:
->>> Decode IT Digits from RawBuffer (ITAlgorithms v14r1, STDAQ v1r0)
 
  - New tuning:
    . Recalibration of Ecal ActiveToTotal (XmlDDDB v22r0)
