@@ -1,4 +1,4 @@
-// $Id: GiGaMiscGetEventAlg.h,v 1.4 2002-01-22 18:24:44 ibelyaev Exp $
+// $Id: GiGaMiscGetEventAlg.h,v 1.5 2002-05-24 15:57:59 witoldp Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
@@ -81,6 +81,8 @@ private:
   ///
   std::string    m_particles   ;
   std::string    m_vertices    ;
+  std::string    m_hits    ;
+
   ///
 };
 
