@@ -3,6 +3,647 @@ Package     : Phys/DaVinci
 Package Coordinator : Patrick Koppenburg
 Purpose     : LHCb analysis program 
 
+</PRE><H1><A NAME=v12r7>2005-02-14 DaVinci v12r7 - Hlt development version</A></H1><PRE>
+
+################################################################################
+#                               DAVINCI v12r7                                  #
+################################################################################
+##################################### CALO #####################################
+##################################### EVENT ####################################
+##################################### HLT ######################################
+!========================== HltGeneric v2r2 2005-02-15 ===================
+! 2005-01-27 - P. Koppenburg
+  - options/HltGeneric.opts
+    . Change name of TrgInsertIPErrParam algorithm to TrgInsertTrackErrParam.
+    . Use default values of parameters.
+    
+! 2005-01-24 - J.A. Hernando
+  - src/HltGenericInit and Filter removed:
+  - src/HltGenericDecision: 
+    . it uses particles (the TrgParticleMaker) should make exclusive particles
+    . set the muon line and jpsi line
+    . set the L1Score with the infor of the muon,jpsiline
+	
+! 2005-01-18 - J.A. Hernando
+  - src/HltGenericDecisionInit
+    . create and locate a null L1Score for the generic 
+  - src/HltGenericDecision
+    . computes only if the generic(hadronic) part is true, modify the score
+  - src/HltGenericDecisionFilter
+    . set the filter to true/false from the score: one of the lines of the generic (hadronic,muon-highway, neutrals) is true 
+  - options/HltGeneric.opts
+    . Particles are created from tracks of the generic. Them the HltGenericDecision on muon, hadrons and neutrals is based on particles.
+
+!========================== HltSelChecker v2r1 2005-02-15 ===================
+! 2005-02-11- P. Koppenburg
+  - options/Plots.opts
+    . Plot detachd pions
+  - options/TruthInput.opts
+  - options/DVNtuple.opts
+    . Use detached pions
+    
+  - src/TrackNTuple.*
+    . Yet another ntuple algorithm. This one looks only at the tracks that 
+      make the saved B.
+  - options/DVNtuple.opts
+    . The relevant options.    
+  
+! 2005-02-03 - P. Koppenburg
+  - options/NoCuts.opts
+    . Option file that overrides *all* selection cuts (except VTT screening)
+      To be run only in conjuction with OnlyTruth.opts file.
+
+! 2005-02-02 - P. Koppenburg
+  - options/AllTDRselections.opts
+    . Apply TIGHT mass cuts for TDR selections.
+  - options/CorrBd2D0Kstar.opts
+  - options/CorrBd2DstarPi.opts
+  - options/CorrDstar.opts
+    . Renaming of HLTSharedD02HH into HLTSharedD02KH
+    . No need for HLTLooseD02PiPi
+  - options/CorrBs2PhiPhi.opts
+  - options/NTBs2PhiPhi.opts
+  - options/PlotTDR.opts
+  - options/PrintTDR.opts
+    . Use Tight TDR selection. New small algorithm for PhiPhi.
+
+! 2005-01-27 - P. Koppenburg
+  Correlations: check result of HltGeneric
+  - src/CheckHLTGeneric.{cpp,h}
+    . Algorithm that checks result of HltGeneric. Temporary.
+  - src/HltSelChecker_load.cpp
+    . Added CheckHLTGeneric
+  - options/CorrB2HH.opts
+  - options/CorrB2MuMu.opts
+  - options/CorrBd2D0Kstar.opts
+  - options/CorrBd2DstarPi.opts
+  - options/CorrBd2MuMuKstar.opts
+  - options/CorrBs2DsH.opts
+  - options/CorrBs2JpsiPhi.opts
+  - options/CorrBs2PhiGamma.opts
+  - options/CorrBs2PhiPhi.opts
+  - options/CorrDiMuons.opts
+  - options/CorrDstar.opts
+  - options/CorrHLTsels.opts
+  - options/Correlations.opts
+    . Added CheckHLTGeneric    
+  J/psi: trat all B -> J/psi decays in the same way
+  - options/CorrB2JpsiX.opts
+    . New correlations for all J/psi -> mu mu
+  - options/TrueB2JpsiX.opts
+    . New truth file of all J/Psi-> mu+ mu-
+  - options/TrueBd2JpsiKs.opts
+    . Removed
+  - options/DVHLTCorr.opts
+  - options/Truth.opts
+  - options/TruthInput.opts
+    . Updated accordingly
+  Other minor stuff:
+  - options/Plots.opts
+    . Change some mass boundaries
+  - options/TrueBs2PhiPhi.opts
+    . Check pions for truth association
+  
+!========================== HltSelections v2r1 2005-02-15 ===================
+! 2005-02-14 - P. Koppenburg
+  - options/TrgVertexFitter.opts
+    . Switch off TrgVertexFitter for Bs2PhiPhi. It kills the efficiency.
+
+! 2005-02-11- P. Koppenburg
+  - options/HLTFilterParticles.opts
+    . Apply IP cut at 2 for all tracks. Also for slow pions.
+      -> New algorithm DetachedPions.
+  - options/HLTselBd2DstarPi.opts
+  - options/HLTselDstar.opts
+    . Use detached pions for D*
+  - options/TrgDispCalculator.opts
+  - options/TrgVertexFitter.opts
+    . Use Hugo's fast geometrical calculator
+  - options/HLTSelections.opts
+    . Use them.
+  
+! 2005-02-04 - P. Koppenburg
+  - options/HLTMakeDs.opts
+    . Don't apply PVIP
+  - options/TrgVertxeFitter.opts
+  - options/HLTSelections.opts
+    . Use fast TrgVertexFitter wherever it's possible
+    
+! 2005-02-02 - P. Koppenburg
+  - options/TrgTracks.opts
+    . Make also VTT tracks
+      These tracks will be in HLTPions only and be used only for D* making.
+  - options/HLTFilterParticles.opts
+    . Require long tracks in HLTPreselPions and HLTPreselKaons
+  - options/HLTSelections.opts
+    . Do not use RICH by default
+  - options/HLTSharedD0.opts
+  - options/HLTselBd2D0Kstar.opts
+  - options/HLTselBd2DstarPi.opts
+    . HLTSharedD02HH becomes HLTSharedD02KH.
+    . Exclusive selections use only D0->Kpi and D0->KK, not D0->pipi.
+     
+! 2005-01-27 - P. Koppenburg
+  - options/L0L1-MB.opts
+  - options/L0L1TDR-Bd2KPi.opts
+  - options/L0L1TDR-Bd2PiPi.opts
+  - options/L0L1TDR-Bs2DsK.opts
+  - options/L0L1TDR-Bs2DsPi.opts
+  - options/L0L1TDR-Bs2JpsiPhi.opts
+    . More data!
+
+! 2005-01-27 - P. Koppenburg
+  - options/HLTdecisions.opts
+  - options/HLTSelections.opts
+    . No HLTFilterBs2JpsiPhi anymore. Use HotJpsi instead
+  - options/TrgInsertIPErrParam.opts
+    . New version of the algorithm in TrgTools. Use default parameters.
+   
+! 2005-01-26 - P. Koppenburg
+  - options/HLTselBs2DsH.opts
+    . Make only DsPi, not DsK
+  - options/HLTDecision.opts
+    . Add a HLT2kHzFlag 
+  - src/TrgInsertIPErrParam.*
+    . Moved to TrgTools
+
+###################################### L0 ######################################
+##################################### PHYS #####################################
+!========================== DaVinciAssociators v5r3 2005-02-15 ===================
+! 2005-02-01 - P. Koppenburg
+ - src/Particle2MCLinks.cpp
+   . < myLink = LinkedTo<MCParticle>( evtSvc(), msgSvc(), TrgTrackLocation::Long );
+     > myLink = LinkedTo<MCParticle>( evtSvc(), msgSvc(), TrgTrackLocation::Particle );
+     Allows to use VTT TrgTracks also for association.
+!========================== DaVinciFilter v1r5 2005-02-15 ===================
+! 2005-02-08 - P. Koppenburg
+  - src/Momentum2FlightAngleFilterCriterion.cpp
+    . Backward-compatible modifications for CLHEP 1.9 
+    
+! 2005-02-08 - P. Koppenburg
+  - src/PVIPFilterCriterion.{cpp,h}
+    . Don't calcultate IP if the cut is 0 anyway. Return immediately.
+      From a suggestion by Hugo Ruiz.
+    
+! 2005-02-07 - P. Koppenburg
+  - src/FlightDistanceFilterCriterion.*
+  - src/LifetimeSignificanceCriterion.*
+  - src/Momentum2FlightAngleFilterCriterion.*
+  - src/PVIPFilterCriterion.*
+    . Allow switch between different GeomDisp tools. Option is "GeomTool".
+    . Use tool<> syntax
+    . Remove m_EDS. Use get<>.
+
+! 2005-02-01 - P. Koppenburg
+  - src/TrackTypeFilterCriterion.*
+    . Do not assume that all TrgTracks are long. 
+      Now it also works with TrgTracks.
+
+!========================== DaVinciKernel v3r1 2005-02-15 ===================
+! 2005-02-09 - P. Koppenburg
+  - Kernel/IKFFitTool.h
+  - Kernel/IPhotonParams.h
+  - Kernel/IPhotonFromMergedParams.h
+    . Avoid forward declarations of CLHEP 1.9 stuff. Explicitly include
+      the headers to ensure backward compatibility with CLHEP 1.8
+
+! 2005-02-09 - P. Koppenburg
+  - Kernel/IPhysDesktop.h
+  - src/component/PhysDesktop.h
+  - src/component/PhysDesktop.cpp
+    . New methods
+         const VertexVector& primaryVertices();
+         const VertexVector& secondaryVertices();
+      The method
+         const VertexVector& vertices();
+      is deprecated but still exists.
+  - src/DVAlgorithm.cpp
+    . No printout in debug() mode, all in verbose.
+
+! 2005-01-21 - P. Koppenburg
+  - src/component/PhysDesktop.cpp
+    . StatusCode sc = setProperties();
+      *before* loadtools. Or any change in DVAlgorithm options 
+      affecting the choice of tools would be ignored.
+
+!========================== DaVinciMCTools v5r8p1 2005-02-15 ===================
+! 2005-02-10 - P. Koppenburg
+  - src/MCParticleMaker.{cpp,h}
+    . Adapt to CLHEP 1.9
+    . Modernize
+! 2005-02-08 - P. Koppenburg
+  - src/TrueMCFilterCriterion.cpp
+    . Modernize a litlle bit
+! 2005-02-01 - P. Koppenburg
+  - src/TrueMCFilterCriterion.cpp
+    . Remove redundant debug() information
+!========================== DaVinciTools v11r5 2005-02-15 ===================
+! 2005-02-14 - P. Koppenburg
+  - src/PIDFilter.{h,cpp}
+    . Moved from PhySelections
+!========================== DaVinci v12r7 2005-02-15 ===================
+! 2005-02-15 - P. Koppenburg
+  . Many changes in requirements
+  . Some clean-up in options
+!========================== FlavourTagging v5r4 2005-02-15 ===================
+! 2005-02-02 - P. Koppenburg for Marco Musy
+  - src/BTagging.{h,cpp}
+    . Allow the use without L0 L1 and Tampering.
+    !! WARNING: results will be slightly different !!      
+  - src/ISecondaryVertexTool.h and src/INNetTool.h
+    moved to FlavourTagging/
+  
+! 2005-02-01 - P. Koppenburg
+  - FlavourTagging/IFlavourTaggingTool.h
+    . Removed
+  - options/CheatedSelection.opts
+    . Removed DaVinciCommon and DaVinciReco already included in 
+      DVBTagging.opts
+
+! 2005-01-31 - P. Koppenburg for Marco Musy
+Main changes/upgrades are the following:
+
+- tagging efficiencies and performance calculation are now moved
+to BTaggingMonitor so that no truth information is accessed at any stage.
+
+- BTagging.cpp still needs to rerun the trigger because it 
+makes use of the tampering info
+
+- SecondaryVertex is now a tool, and the user can choose whether
+to use the TDR definition or the revised version of it using
+NeuralNets (default is old tdr)
+
+- I implemented the new definition of tagging categories, obtained
+by using a NNet tuned for each taggers separately. 
+these NNets are accessed via a tool (this was asked for in a meeting).
+the user can still choose to stick to the old TDR categories via 
+BTagging.CombinationTechnique = "TDR";
+
+- summaryof.cpp is an additional standalone program to quickly get 
+useful numbers out of the logfiles. it contains the instructions on
+how to run it.
+
+- DVBTagging.opts is meant as an example option file. 
+
+!========================== ParticleMaker v1r3 2005-02-15 ===================
+! 2005-02-09 - P. Koppenburg
+ - src/PhotonFromMergedParameters.h
+ - src/PhotonParameters.h
+   . CLHEP 1.9 does not allow to forward declare classes in a backward 
+     compatible way.
+ 
+!========================== PhysSelections v6r12 2005-02-15 ===================
+! 2005-02-14 - P. Koppenburg
+ - src/PIDFilter.{h,cpp}
+   . Moved to DaVinciTools
+
+!========================== VertexFit v1r4 2005-02-15 ===================
+! 2005-02-09 - P. Koppenburg
+  - src/GeomDispCalculator.cpp
+  - src/GeomDispCalculator.h
+  - src/KFFitTool.cpp
+  - src/KFFitTool.h
+  - src/LifetimeFitter.cpp
+  - src/LifetimeFitter.h
+  - src/TrgDispCalculator.cpp
+    . Adapt to the plain stupid new structure of CLHEP 1.9, ensuring
+      backward compatibility (hence no forward declarations). One cannot
+      mix Vectors and Points in formulae anymore. One cannot easily convert
+      one to the others. :-(
+    . Make them GaudiTools where not already done.
+    . Fix a few compilation warnings.
+
+! 2005-02-08 - P. Koppenburg for Hugo Ruiz
+  - src/TrgVertexFitter.{cpp,h}
+    . New version that accepts intermediate states. Works fine with
+      short-lived resonances but not yet well with long-lived like D0.
+  - src/TrgDispCalculator.{cpp,h}
+    . New tool that performs the job of the GeomDispCalculator
+      and uses the sames assumptions as the TRgVertexFitter. Gets identical
+      results under these assumptions.
+  
+! 2005-02-04 - P. Koppenburg
+  - src/TrgVertexFitter.{cpp,h}
+    . Fast Unconstrained Vertex Fitter by Hugo Ruiz.
+      Works only with Particles made from TrgTracks. Assumes cylindrical 
+      errors around the trajectory.
+  - src/VertexFitter_load.cpp
+    . Use it.
+  - src/UnconstVertexFitter.{cpp,h}
+    . Make it a little more readable
+
+#################################### PHYSSEL ###################################
+!========================== B2RhoRho v1r7p3 2005-02-15 ===================
+! 2005-02-14 - P. Koppenburg
+ - few minor fixes to allow the compilation of the code with new version 
+ of CLHEP for DaVinci v13r0.
+!========================== B2XGamma v3r1 2005-02-15 ===================
+! 2005-02-11 - Ivan BELYAEV
+ - src/Bd2KstarGamma.cpp
+   src/Bd2OmegaGamma.cpp
+   src/Bs2PhiGamma.cpp
+   src/Bx2nHGamma.cpp
+   src/Bx2HHPi0Gamma.cpp
+ 
+    put few ugly fixes (hopefully temporary) for new CLHEP 
+
+ - cmt/requirements 
+    version increment to v3r1
+!========================== Bd2DstarPi v2r7p2 2005-02-15 ===================
+! 2005-02-14 - P. Koppenburg
+ - few minor fixes to allow the compilation of the code with new version 
+ of CLHEP for DaVinci v13r0.
+ 
+ !========================== Bd2PhiKs v4r2p1 2005-02-15 ===================
+! 2005-02-14 - P. Koppenburg
+ - few minor fixes to allow the compilation of the code with new version 
+ of CLHEP for DaVinci v13r0.
+ 
+!========================== Bs2DsDs v2r1 2005-02-15 ===================
+! 2005-02-14 - Vanya BELYAEV
+ - few minor fixes to adapt to new CLHEP/Gaudi/LHCb
+
+!========================== Bs2DsH v3r3p2 2005-02-15 ===================
+! 2005-02-14 - I. Belyaev
+ - few minor fixes to allow the compilation of the code with new version 
+ of CLHEP for DaVinci v13r0.
+ 
+!========================== Bs2JpsiEta v3r3p2 2005-02-15 ===================
+! 2005-02-14 - P. Koppenburg
+ - few minor fixes to allow the compilation of the code with new version 
+ of CLHEP for DaVinci v13r0.
+ 
+!========================== Bs2PhiEtac v2r3p2 2005-02-15 ===================
+! 2005-02-14 - P. Koppenburg
+ - few minor fixes to allow the compilation of the code with new version 
+ of CLHEP for DaVinci v13r0.
+ 
+!========================== Bs2PhiPhi v2r3p2 2005-02-15 ===================
+! 2005-02-05 - I. Belyaev
+  - small changes for CLHEP 1.9
+!========================== D02MuMu v2r0p1 2005-02-15 ===================
+! 2005-02-14 - I. Belyaev
+ - few minor fixes to allow the compilation of the code with new version 
+ of CLHEP for DaVinci v13r0.
+ 
+!========================== DsSelector v1r1p1 2005-02-15 ===================
+! 2005-02-14 - I. Belyaev
+ - few minor fixes to allow the compilation of the code with new version 
+ of CLHEP for DaVinci v13r0.
+ 
+!========================== PhysSelSys v7r15 2005-02-15 ===================
+use  B2RhoRho                 v1r7p3   PhysSel
+use  B2XGamma                 v3r1     PhysSel
+use  Bd2DstarPi               v2r7p2   PhysSel
+use  Bd2PhiKs                 v4r2p1   PhysSel
+use  Bc2RhoPi                 v1r0     PhysSel
+use  Bs2DsDs                  v2r1     PhysSel
+use  Bs2DsH                   v3r3p2   PhysSel
+use  Bs2JpsiEta               v3r3p2   PhysSel
+use  Bs2PhiEtac               v2r3p2   PhysSel
+use  Bs2PhiPhi                v2r3p2   PhysSel
+use  D02MuMu                  v2r0p1   PhysSel
+use  DsSelector               v1r1p1   PhysSel
+
+#####################################  REC  ####################################
+##################################### RICH #####################################
+##################################### TOOLS ####################################
+!========================== LoKi v3r9 2005-02-15 ===================
+! 2005-02-12 - Ivan BELYAEV
+
+ - LoKi/Math.h
+   move all "functions" (like abs, exp, etc..) from LoKi/Functions.h file 
+
+ - LoKi/Functions.h 
+   add new templated objects
+      - SimpleSwitch
+      - Switch 
+      - Valid
+
+ - LoKi/ParticleCuts.h
+    new functions:  PVALID, PSSWITCH, PSWITCH
+ - LoKi/VertexCuts.h
+    new functions:  VVALID, VSSWITCH, VSWITCH
+ - LoKi/MCParticleCuts.h
+    new functions:  MCVALID, MCSSWITCH, MCSWITCH
+ - LoKi/MCVertexCuts.h
+    new functions:  MCVVALID, MCVSSWITCH, MCVSWITCH
+
+ - cmt/requirement 
+   - add preprocessor flag LOKI_DAVINCI_V12 to indicate "old" CLHEP/Gaudi/LHCb/DaVinci
+
+
+! 2005-02-11 - Vanya BELYAEV
+ - LoKi/CLHEP.h
+
+   new file to collect *ALL* dependencies on CLHEP 
+   many fixes to use this new scheme 
+
+ - cmt/requirement
+   version increment to v3r9 
+
+! 2005-02-02 - Vanya BELYAEV
+ - LoKi/Extract.h 
+   fix a bug 
+
+ - LoKi/Particles.h, 
+   LoKi/ParticleCuts.h
+   src/Particles.cpp, 
+
+   new predicates:
+
+     a) LoKi::Particles::IsContainedObject,   shortcut: ISOBJECT
+     b) LoKi::Particles::IsParticle,          shortcut: ISPARTICLE 
+     c) LoKi::Particles::IsOrigin,            shortcut: ISORIGIN
+     c) LoKi::Particles::IsFromOrigin,        shortcut: ISFROMORIG
+ 
+
+ - LoKi/MCParticles.h, 
+   LoKi/MCParticleCuts.h
+   src/MCParticles.cpp, 
+    
+  new (MC) paredicates:
+     a) LoKi::MCParticles::IsContainedObject,   shortcut: ISMCCO
+     b) LoKi::MCParticles::IsParticle,          shortcut: ISMCPART 
+
+
+! 2005-02-02 - Vanya BELYAEV
+
+ - disable all appearences of IFlavourTaggingTool    :-(((( 
+
+ - LoKi/MCParticleCuts.h
+   LoKi/MCParticles.h 
+   src/MCParticles.cpp 
+
+   new adapter-predicate MCMOTHCUT, similar to MCMOTHER, 
+   (the actual type MCMotherPredicate) 
+   which delegates the evaluation of some predicate to the 
+   mother particle (and not for grandmother!)
+
+   e.g. one can select only muons originating 
+   from B-decays (but not from b->c->mu cascades):
+
+    MCRange mcmu = mcselect( "muFromB" , 
+                             "mu+" == MCABSID && MCMOTHCUT( BEAUTY , false ) ) ;
+
+    /** simple adapter function which delegates the 
+     *  evaluation of 'main' predicate to the mother 
+     *  particle
+     *  
+     *  @code 
+     *
+     *   const MCParticle* p = ... ;
+     *
+     *   // check if mother is a beauty particle 
+     *   MCCut cut = MCMOTHER( BEAUTY , false ) ;
+     *  
+     *   bool fromBeauty  = cut( p ) ;
+     *
+     *  @endcode 
+     * 
+     */
+    typedef LoKi::MCParticles::MCMotherPredicate         MCMOTHCUT ;
+
+ - LoKi/Adder.h
+   add a new namespace with 2 trivial function "addMomenta", which just 
+   evaluates a sum of 4-momenta of (MC)Particels form some sequence of 
+   (MC)Particles.
+   For some testing period the file in *NOT* included into any   
+   LoKi-header files. and must be included explicitely by users 
+   (if needed) #include "LoKi/Adder.h"
+
+    namespace LoKi { namespace Adder { 
+
+   /** the simple function which adds a 4-momenta of all (MC)Particles
+     *  from a sequence [begin,end).
+     *  The actual type of elements is irrelevant, 
+     *  The function relies only on existence of mehtod "momentum()"
+     *  with a return-value convertible to HepLorentzVector
+     *
+     *  e.g. eny sequence of objects, convertibel to "const PArticle*"
+     *  or "const MCParticle*" could be used.
+     *
+     *  const Vertex*             vertex = ... ;
+     *  const MCParticles*        mcps   = ... ; 
+     *  const Particles*          ps     = ... ; 
+     *  const ParticleVector      pv     = ... ; 
+     *  std::vector<MCParticle*>  mcv    = ... ;
+     *  Range                     pr     = ... ;
+     *  MCRange                   mcr    = ... ;
+     *
+     *  // get the 4-mometum of all daughter particle at  vertex:
+     *  HepLorentzVector sum1 = 
+     *     LoKi::Adder::addMomenta( vertex->products().begin() , 
+     *                              vertex->products().end()   ) ;
+     *  
+     *  // get the 4-momentum of all MC particles 
+     *  HepLorentzVector sum2 = 
+     *     LoKi::Adder::addMomenta( mcps->begin() , mcps->end()   ) ;
+     *  
+     *  // get the 4-momentum of all particles 
+     *  HepLorentzVector sum3 = 
+     *     LoKi::Adder::addMomenta( ps->begin() , ps->end()   ) ;
+     *  
+     *  // get the 4-momentum of all particles 
+     *  HepLorentzVector sum4 = 
+     *     LoKi::Adder::addMomenta( pv.begin() , pv.end()   ) ;
+     *
+     *  // get the 4-momentum of all MC particles 
+     *  HepLorentzVector sum5 = 
+     *     LoKi::Adder::addMomenta( mcv.begin() , mcv.end()   ) ;
+     *
+     *  // get the 4-momentum of all particles 
+     *  HepLorentzVector sum6 = 
+     *     LoKi::Adder::addMomenta( pr.begin() , pr.end()   ) ;
+     *
+     *  // get the 4-momentum of all MC particles 
+     *  HepLorentzVector sum7 = 
+     *     LoKi::Adder::addMomenta( mcr.begin() , mcr.end()   ) ;
+     *
+     *  @endcode 
+     *
+     *  @param  begin "begin"-iterator for the sequence of (MC)Particle
+     *  @param  end   "end"-iterator for the sequence of (MC)Particle
+     *  @return sum of 4-momenta of all particles 
+     */
+    template <class PARTICLE>
+    inline HepLorentzVector addMomenta
+    ( PARTICLE begin , 
+      PARTICLE end   ) ;
+
+
+    /** the simple function which adds a 4-momenta of all (MC)Particles
+     *  fron "container/sequence/range"
+     *  The actual type of container is irrelevant it could be, e.g. 
+     *    - std::vector<Particle*>
+     *    - std::vector<const Particle*>
+     *    - std::vector<MCParticle*>
+     *    - std::vector<const MCParticle*>
+     *    - Particles
+     *    - MCParticles
+     *    - SmartRefVectro<Particle>
+     *    - SmartRefVectro<MCParticle>
+     *    - Range 
+     *    - MCRange 
+     *
+     *  @code
+     *  
+     *  const Vertex* vertex = ... ;
+     *  
+     *  // get the 4-momentum of all daughter particle at  vertex:
+     *  const HepLorentzVector sum = 
+     *     LoKi::Adder::addMomenta( vertex->products() ) ;
+     *
+     *  @endcode 
+     *
+     *  @param seq a container of input (MC)Particles 
+     *  @return sum of 4-momenta of all particles 
+     */
+    template <class PARTICLES>
+    inline HepLorentzVector addMomenta
+    ( const PARTICLES& seq ) ;
+
+     } ; } ;
+
+ - cmt/requirements     
+     a) uncomment LOKI_DEBUG options 
+     b) increment version to v3r8 
+
+
+###################################### TR ######################################
+###################################### TRG #####################################
+!========================== L1Decision v4r2 2005-02-15 ===================
+! 2005-02-14 - Thomas Martin Schietinger
+ - Update of L1SigAnalyser provided by Federica Legger (adaptation of tool
+   to new trigger scheme)
+
+! 2005-02-11 - P. Koppenburg
+ - Remove all forward declarations of CLHEP classes, as it does not compile
+   with CLHEP 1.9.
+
+! 2005-01-28 - Thomas Martin Schietinger
+ - New threshold calibration. (Revert to v3r1 thresholds after Mariusz has
+   adapted L1Reco to the fix of the L1Buffer corruption problem.)
+
+! 2005-01-23 - Luis Fernandez
+ - src/L1DecisionTrackSorter.cpp
+   . Guard against software Ip (require MCIp > 0.0001)
+ - doc/L1Sorter.C
+   . Guard against software Ip (require MCIp > 0.0001)
+
+!========================== TrgCalo v1r0p2 2005-02-15 ===================
+! 2005-01-10 - P. Koppenburg
+ - src/TrgCaloUtils.{cpp,h}
+   . Forward declarations of CLHEP calsses don't work anymore with CLHEP 1.9
+     in a backward-compatible way.
+     -> move headers
+!========================== TrgSys v1r3 2005-02-15 ===================
+! 2005-02-15 - P. Koppenburg
+  - Small changes in requirements
+
+
+
+
 </PRE><H1><A NAME=v12r6>2005-01-19 DaVinci v12r6 - Hlt development version</A></H1><PRE>
 
   Major Modifications:
