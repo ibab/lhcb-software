@@ -1,8 +1,11 @@
-// $Id: Simulation.opts,v 1.7 2002-05-07 12:28:31 ibelyaev Exp $ 
+// $Id: Simulation.opts,v 1.8 2002-05-10 10:22:32 witoldp Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.7  2002/05/07 12:28:31  ibelyaev
+//  change ALL joboptions for newer GiGa
+//
 // ============================================================================
 //  jobOptions to run Gauss program in 3 steps 
 // ============================================================================
@@ -53,7 +56,8 @@ Kine.DataProviderSvcName       = "EventDataSvc"   ;
 Kine.StreamItems              += 
 { 
   "/Event/Gen/HepMCEvents" 
-  ,"/Event/Gen/Vertices"   
+// uncomment the line below if you want to use EvGen
+//  ,"/Event/Gen/Vertices"   
 };
 
 // ============================================================================
