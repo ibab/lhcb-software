@@ -1,6 +1,11 @@
-! $Id: release.notes,v 1.38 2002-11-13 16:21:13 gcorti Exp $
+! $Id: release.notes,v 1.39 2002-11-14 12:35:26 graven Exp $
 ! Package     : DaVinciTools
 ! Responsible : Gloria Corti, Sandra Amato
+
+! 2002-11-14 - Gerhard Raven
+ - Add new selection criterion MassDifferenceFilterCriterion
+   which allows to cut on the mass difference between a particle
+   and one of its daughters. 
 
 !=========================== DaVinciTools v7r0 2002-11-13 ===================
 ! 2002-11-13 - Gloria Corti
