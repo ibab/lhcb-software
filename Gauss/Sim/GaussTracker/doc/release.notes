@@ -5,6 +5,10 @@
 !                    tracker like detectors (Velo, OT, IT, Muon)
 !-----------------------------------------------------------------------------
 
+! 2005-02-21 - Gloria Corti
+ - src/GiGaSensDetMuon.cpp
+   . modify Error message to have less redandat prinout at end of job
+
 !=========================== GaussTracker v3r2 ================================
 ! 2005-02-11 - Gloria Corti
  - src/GiGaSensDetMuon.cpp

@@ -99,7 +99,7 @@ bool GiGaSensDetMuon::ProcessHits( G4Step* step ,
           // Check if the depth is allowed or not
           if( depth <= 3 ) {
             MsgStream msg( msgSvc() , name() );
-            Error( "Non correct depth in sensitive volume "+pvName);
+            Error( "Non correct depth in sensitive volume ");
             msg << MSG::WARNING << pvName 
                 << ": incorrect Depth = " << depth << std::endl
                 << " Entry - " << prepos << std::endl
@@ -107,6 +107,9 @@ bool GiGaSensDetMuon::ProcessHits( G4Step* step ,
                 << " dE/dx = " << edep
                 << " Tof = " << timeof  
                 << " TrackID = " << trid 
+                << " particleID = " 
+                << track->GetDefinition()->GetParticleName()
+                << " ParentID = " << track->GetParentID()
                 << endmsg;
           } else {
             TT -> MoveUpHistory(1);
@@ -137,7 +140,7 @@ bool GiGaSensDetMuon::ProcessHits( G4Step* step ,
             if( ChamNumber <= 0 || ChamNumber > m_chamLimit ) {
               MsgStream msg( msgSvc() , name() );
               std::string colname = TT->GetVolume()->GetName();
-                Error( "Chamber out of limits in "+colname);
+              Error( "Chamber out of limits in "+colname);
               msg << MSG::WARNING << colname
                   << ": hit out of limit. Entry - " << prepos 
                   << " Exit - " << postpos << " dE/dx = " << edep
