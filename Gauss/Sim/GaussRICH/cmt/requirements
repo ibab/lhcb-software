@@ -21,7 +21,8 @@ library          GaussRICH    *.cpp             \
                               srcG4/*.cc       \
                               RichAction/*.cpp \
                               Misc/*.cpp   \
-                              RichAnalysis/*.cpp      
+                              RichAnalysis/*.cpp \
+                              RichAnalysis/*.icpp    
 
 # ============== standard includes ============================================
 include_dirs     $(GAUSSRICHROOT) \
