@@ -1,10 +1,10 @@
-! $Id: release.notes,v 1.4 2002-02-08 16:59:30 gcorti Exp $
+! $Id: release.notes,v 1.5 2002-02-12 16:30:25 gcorti Exp $
 ! Package     : PhysEvent 
 ! Responsible : Gloria Corti
 
 ! ======================================================================
 
-! 20020208 - Gloria Corti
+! 20020208 - PhysEvent v2r0 (Gloria Corti)
   - modify requirements to set version v2r0 to use Gaudi v9 and
     disable generation of dictionary
   - xml/PhysEvent.xml consistent with GaudiObjDesc
