@@ -4,12 +4,12 @@ version v1r0
 branches cmt doc
 
 use DetDesc	   v11r6	Det
-use VeloDet        v8r0p1	Det     
-use ITDet          v1r2p1	Det     
-use OTDet          v3r2p1	Det
+use VeloDet        v8r2 	Det     
+use ITDet          v1r3		Det     
+use OTDet          v3r3		Det
 use CaloDet	   v6r2		Det
-use CaloDetXmlCnv  v2r1p1	Det
-use MuonDet        v4r2p1	Det
-use Magnet         v2r0p1	Det
-use MuonTools	   v3r1p1	Muon
-use RichDet	   v3r1p1	Det
+use CaloDetXmlCnv  v2r2		Det
+use MuonDet        v4r3		Det
+use Magnet         v2r1		Det
+use MuonTools	   v3r2		Muon
+use RichDet	   v3r2		Det
