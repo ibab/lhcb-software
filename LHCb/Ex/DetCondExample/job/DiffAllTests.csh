@@ -1,38 +1,77 @@
 #!/usr/local/bin/tcsh -f 
-# $Id: DiffAllTests.csh,v 1.2 2002-12-04 10:17:01 andreav Exp $
+# $Id: DiffAllTests.csh,v 1.3 2002-12-04 14:07:49 andreav Exp $
 if ( 1 != ${?DETCONDEXAMPLEROOT} ) then
   echo "ERROR! You must 'source ../cmt/setup.csh -tag=$CMTDEB' first"
   exit 1
 endif
-cd ${DETCONDEXAMPLEROOT}/options
-dos2unix log.*.Win32Debug >& /dev/null
+cd ${DETCONDEXAMPLEROOT}/job
+dos2unix NEWlog.Win32Debug.*/log.* >& /dev/null
 
-set theDiff = diff.${CMTCONFIG}
-rm -f $theDiff 
-touch $theDiff
-diff log.testXml.${CMTCONFIG} ../job/Xml/ >> $theDiff
-diff log.fillCondDB_1.${CMTCONFIG} ../job/${CONDDB_implementation}/ >> $theDiff
-diff log.fillCondDB_2.${CMTCONFIG} ../job/${CONDDB_implementation}/ >> $theDiff
-diff log.testCondDB.${CMTCONFIG} ../job/${CONDDB_implementation}/ >> $theDiff
-diff log.daqCondDB.${CMTCONFIG} ../job/${CONDDB_implementation}/ >> $theDiff
-unset theDiff
+# New versus old logfile
+foreach theConfig ( \
+    Win32Debug.CondDBMySQL \
+    Win32Debug.CondDBMySQL.dbLINUX \
+    Win32Debug.CondDBOracle \
+    Win32Debug.CondDBOracle.dbLINUX \
+    rh61_gcc2952.CondDBObjy \
+    rh73_gcc2952.CondDBMySQL \
+    rh73_gcc2952.CondDBMySQL.dbWIN32 \
+    rh73_gcc2952.CondDBOracle \
+    rh73_gcc2952.CondDBOracle.dbWIN32 )
+  set theDiff = diff.$theConfig
+  set theOldDir = ../job/log.$theConfig
+  set theNewDir = ../job/NEWlog.$theConfig
+  if ( -d $theOldDir && -d $theNewDir ) then
+    rm -f $theDiff 
+    touch $theDiff
+    diff $theNewDir $theOldDir >> $theDiff
+  endif
+  unset theNewDir
+  unset theOldDir
+  unset theDiff
+end
 
-set theDiff = diff.Win32Debug
-rm -f $theDiff 
-touch $theDiff
-diff log.testXml.Win32Debug ../job/Xml/ >> $theDiff
-diff log.fillCondDB_1.Win32Debug ../job/${CONDDB_implementation}/ >> $theDiff
-diff log.fillCondDB_2.Win32Debug ../job/${CONDDB_implementation}/ >> $theDiff
-diff log.testCondDB.Win32Debug ../job/${CONDDB_implementation}/ >> $theDiff
-diff log.daqCondDB.Win32Debug ../job/${CONDDB_implementation}/ >> $theDiff
-unset theDiff
+# Linux versus Windows on the new logfiles
+foreach theImpl ( CondDBMySQL CondDBOracle )
+  set theDiff = diff.Lin-vs-Win.$theImpl
+  set theLinDir = ../job/NEWlog.rh73_gcc2952.$theImpl
+  set theWinDir = ../job/NEWlog.Win32Debug.$theImpl
+  if ( -d $theLinDir && -d $theWinDir ) then
+    rm -f $theDiff 
+    touch $theDiff
+    diff $theLinDir $theWinDir >> $theDiff
+  endif
+  unset theWinDir
+  unset theLinDir
+  unset theDiff
+end
 
-set theDiff = diff.Lin-vs-Win
-rm -f $theDiff 
-touch $theDiff
-diff log.testXml.${CMTCONFIG} log.testXml.Win32Debug >> $theDiff
-diff log.fillCondDB_1.${CMTCONFIG} log.fillCondDB_1.Win32Debug >> $theDiff
-diff log.fillCondDB_2.${CMTCONFIG} log.fillCondDB_2.Win32Debug >> $theDiff
-diff log.testCondDB.${CMTCONFIG} log.testCondDB.Win32Debug >> $theDiff
-diff log.daqCondDB.${CMTCONFIG} log.daqCondDB.Win32Debug >> $theDiff
-unset theDiff
+# (Linux on Win32 DB) versus (Win32) on the new logfiles
+foreach theImpl ( CondDBMySQL CondDBOracle )
+  set theDiff = diff.mixDbWIN32.$theImpl
+  set theLinDir = ../job/NEWlog.rh73_gcc2952.$theImpl.dbWIN32
+  set theWinDir = ../job/NEWlog.Win32Debug.$theImpl
+  if ( -d $theLinDir && -d $theWinDir ) then
+    rm -f $theDiff 
+    touch $theDiff
+    diff $theLinDir $theWinDir >> $theDiff
+  endif
+  unset theWinDir
+  unset theLinDir
+  unset theDiff
+end
+
+# (Win32 on Linux DB) versus (Linux) on the new logfiles
+foreach theImpl ( CondDBMySQL CondDBOracle )
+  set theDiff = diff.mixDbLINUX.$theImpl
+  set theLinDir = ../job/NEWlog.rh73_gcc2952.$theImpl
+  set theWinDir = ../job/NEWlog.Win32Debug.$theImpl.dbLINUX
+  if ( -d $theLinDir && -d $theWinDir ) then
+    rm -f $theDiff 
+    touch $theDiff
+    diff $theLinDir $theWinDir >> $theDiff
+  endif
+  unset theWinDir
+  unset theLinDir
+  unset theDiff
+end
