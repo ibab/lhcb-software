@@ -5,7 +5,7 @@
  *  Header file for tool : RichTrackCreatorFromTrStoredTracks
  *
  *  CVS Log :-
- *  $Id: RichTrackCreatorFromTrStoredTracks.h,v 1.20 2005-02-02 10:10:10 jonrob Exp $
+ *  $Id: RichTrackCreatorFromTrStoredTracks.h,v 1.21 2005-02-24 15:34:18 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -36,6 +36,8 @@
 // RichKernel
 #include "RichKernel/RichMap.h"
 #include "RichKernel/RichHashMap.h"
+#include "RichKernel/RichStatDivFunctor.h"
+#include "RichKernel/RichPoissonEffFunctor.h"
 
 // Event
 #include "Event/TrStoredTrack.h"
@@ -145,16 +147,20 @@ private: // data
   /// Track Selector
   RichTrackSelector m_trSelector;
 
-  // Track count
+  // Track counts
   typedef RichMap< Rich::Track::Type, std::pair< unsigned int, unsigned int > > TrackTypeCount;
   mutable TrackTypeCount m_nTracksUnique;
   mutable TrackTypeCount m_nTracksNonUnique;
+  mutable TrackTypeCount m_nTracksAll;
 
   /// Flag to turn on or off the book keeping features to save cpu time.
   bool m_bookKeep;
 
   /// Ray-tracing configuration object
   RichTraceMode m_traceMode;
+
+  /// Number of events processed tally
+  unsigned int m_Nevts;
 
 };
 
@@ -164,7 +170,9 @@ inline void RichTrackCreatorFromTrStoredTracks::InitNewEvent()
   m_allDone  = false;
   m_trTracks = 0;
   m_tracks   = 0;
-  if ( msgLevel(MSG::DEBUG) ) {
+  ++m_Nevts;
+  if ( msgLevel(MSG::DEBUG) ) 
+  {
     m_nTracksUnique.clear();
     m_nTracksNonUnique.clear();
   }

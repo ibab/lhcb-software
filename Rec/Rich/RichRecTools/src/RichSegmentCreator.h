@@ -5,7 +5,7 @@
  *  Header file for tool : RichSegmentCreator
  *
  *  CVS Log :-
- *  $Id: RichSegmentCreator.h,v 1.12 2005-02-17 09:54:45 jonrob Exp $
+ *  $Id: RichSegmentCreator.h,v 1.13 2005-02-24 15:34:10 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -26,6 +26,9 @@
 
 // Event model
 #include "Event/RichRecSegment.h"
+
+// Rich Kernel
+#include "RichKernel/RichStatDivFunctor.h"
 
 // interfaces
 #include "RichRecBase/IRichSegmentCreator.h"
@@ -94,8 +97,8 @@ private:  // Private data
   /// Location of RichRecSegments in TES
   std::string m_richRecSegmentLocation;
 
-  // parameters
-  std::vector<int> m_binsEn;
+  /// Number of energy bins for each radiator
+  std::vector<unsigned int> m_binsEn;
 
   /// Maximum photon energy for each radiator medium
   double m_maxPhotEn[Rich::NRadiatorTypes];
@@ -104,18 +107,19 @@ private:  // Private data
   double m_minPhotEn[Rich::NRadiatorTypes];
 
   // debug segment counting
-  mutable unsigned m_segCount[Rich::NRadiatorTypes];
+  mutable std::vector<unsigned int> m_segCount;
+  mutable std::vector<unsigned int> m_segCountLast;
+
+  /// Number of events processed tally
+  unsigned int m_Nevts;
 
 };
 
 inline void RichSegmentCreator::InitNewEvent()
 {
   m_segments = 0;
-  if ( msgLevel(MSG::DEBUG) ) {
-    m_segCount[Rich::Aerogel] = 0;
-    m_segCount[Rich::C4F10]   = 0;
-    m_segCount[Rich::CF4]     = 0;
-  }
+  m_segCountLast = m_segCount;
+  ++m_Nevts;
 }
 
 #endif // RICHRECTOOLS_RICHRECSEGMENTTOOL_H

@@ -5,7 +5,7 @@
  *  Implementation file for tool : RichTrackCreatorFromTrStoredTracks
  *
  *  CVS Log :-
- *  $Id: RichTrackCreatorFromTrStoredTracks.cpp,v 1.23 2005-02-02 10:10:10 jonrob Exp $
+ *  $Id: RichTrackCreatorFromTrStoredTracks.cpp,v 1.24 2005-02-24 15:34:18 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -39,7 +39,8 @@ RichTrackCreatorFromTrStoredTracks( const std::string& type,
     m_trSegToolNickName    ( "RichDetTrSegMaker"            ),
     m_allDone              ( false ),
     m_buildHypoRings       ( false ),
-    m_bookKeep             ( false )
+    m_bookKeep             ( false ),
+    m_Nevts                ( 0     )
 {
 
   // declare interface for this tool
@@ -88,14 +89,30 @@ StatusCode RichTrackCreatorFromTrStoredTracks::initialize()
   incSvc()->addListener( this, IncidentType::BeginEvent );
   if (msgLevel(MSG::DEBUG)) incSvc()->addListener( this, IncidentType::EndEvent );
 
-  // Make sure we are ready for a new event
-  InitNewEvent();
-
   return sc;
 }
 
 StatusCode RichTrackCreatorFromTrStoredTracks::finalize()
 {
+
+  // Statistical tools
+  RichPoissonEffFunctor eff("%5.2f +-%5.2f");
+  RichStatDivFunctor occ("%8.2f +-%5.2f");
+
+  // Print out track stats
+  info() << "------------------------------------------------------------------------------" << endreq
+         << "Track type selection statistics :-" << endreq;
+  for ( TrackTypeCount::iterator i = m_nTracksAll.begin();
+        i != m_nTracksAll.end(); ++i ) 
+  {
+    std::string name = Rich::text((*i).first);
+    name.resize(9,' ');
+    info() << " " << name << " tracks : " << occ((*i).second.second,m_Nevts) 
+           << " tracks/event : RICH Eff. " << eff((*i).second.second,(*i).second.first) 
+           << " % " << endreq;
+  }
+  info() << "------------------------------------------------------------------------------" << endreq;
+
   // Execute base class method
   return RichRecToolBase::finalize();
 }
@@ -200,7 +217,14 @@ RichTrackCreatorFromTrStoredTracks::newTrack ( const ContainedObject * obj ) con
               << endreq;
   }
 
+  // Is track a usable type
+  if ( !Rich::Track::isUsable(trType) ) return NULL;
+
+  // Track selection
+  if ( !m_trSelector.trackSelected(trTrack) ) return NULL;
+
   // count tried tracks
+  ++m_nTracksAll[trType].first;
   if ( msgLevel(MSG::DEBUG) ) {
     if ( trTrack->unique() ) {
       ++(m_nTracksUnique[trType].first);
@@ -209,16 +233,12 @@ RichTrackCreatorFromTrStoredTracks::newTrack ( const ContainedObject * obj ) con
     }
   }
 
-  // Is track a usable type
-  if ( !Rich::Track::isUsable(trType) ) return NULL;
-
-  // Track selection
-  if ( !m_trSelector.trackSelected(trTrack) ) return NULL;
-
   // See if this RichRecTrack already exists
-  if ( m_bookKeep && m_trackDone[trTrack->key()] ) {
+  if ( m_bookKeep && m_trackDone[trTrack->key()] ) 
+  {
     return richTracks()->object(trTrack->key());
-  } else {
+  } 
+  else {
 
     RichRecTrack * newTrack = NULL;
 
@@ -326,6 +346,7 @@ RichTrackCreatorFromTrStoredTracks::newTrack ( const ContainedObject * obj ) con
           newTrack->setParentTrack( trTrack );
 
           // Count selected tracks
+          ++m_nTracksAll[trType].second;
           if ( msgLevel(MSG::DEBUG) ) {
             if ( trTrack->unique() ) {
               ++(m_nTracksUnique[trType].second);

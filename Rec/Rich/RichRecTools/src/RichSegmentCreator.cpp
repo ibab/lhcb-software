@@ -5,7 +5,7 @@
  *  Implementation file for tool : RichSegmentCreator
  *
  *  CVS Log :-
- *  $Id: RichSegmentCreator.cpp,v 1.12 2005-02-02 10:09:40 jonrob Exp $
+ *  $Id: RichSegmentCreator.cpp,v 1.13 2005-02-24 15:34:10 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -25,9 +25,12 @@ const        IToolFactory& RichSegmentCreatorFactory = s_factory ;
 RichSegmentCreator::RichSegmentCreator ( const std::string& type,
                                          const std::string& name,
                                          const IInterface* parent )
-  : RichRecToolBase ( type, name, parent   ),
-    m_segments      ( 0 ),
-    m_binsEn        ( Rich::NRadiatorTypes )
+  : RichRecToolBase ( type, name, parent      ),
+    m_segments      ( 0                       ),
+    m_binsEn        ( Rich::NRadiatorTypes, 5 ),
+    m_segCount      ( Rich::NRadiatorTypes, 0 ),
+    m_segCountLast  ( Rich::NRadiatorTypes, 0 ),
+    m_Nevts         ( 0                       )
 {
 
   declareInterface<IRichSegmentCreator>(this);
@@ -36,10 +39,6 @@ RichSegmentCreator::RichSegmentCreator ( const std::string& type,
 
   declareProperty( "RichRecSegmentLocation",
                    m_richRecSegmentLocation = RichRecSegmentLocation::Default );
-
-  m_binsEn[Rich::Aerogel] = 5;
-  m_binsEn[Rich::C4F10]   = 5;
-  m_binsEn[Rich::CF4]     = 5;
   declareProperty( "EnergyBins", m_binsEn );
 
 }
@@ -65,14 +64,21 @@ StatusCode RichSegmentCreator::initialize()
   m_minPhotEn[Rich::CF4]     = detParams->minPhotonEnergy( Rich::CF4     );
   releaseTool(detParams);
 
-  // Make sure we are ready for a new event
-  InitNewEvent();
-
   return sc;
 }
 
 StatusCode RichSegmentCreator::finalize() 
 {
+
+  RichStatDivFunctor occ("%7.2f +-%6.2f");
+
+  // Print out final stats
+  info() << "------------------------------------------------------------------------------" << endreq
+         << "Created " << occ(m_segCount[Rich::Aerogel],m_Nevts) << " Aerogel segments / event" << endreq
+         << "Created " << occ(m_segCount[Rich::C4F10],m_Nevts)   << " C4F10   segments / event" << endreq
+         << "Created " << occ(m_segCount[Rich::CF4],m_Nevts)     << " CF4     segments / event" << endreq
+         << "------------------------------------------------------------------------------" << endreq;
+
   // Execute base class method
   return RichRecToolBase::finalize();
 }
@@ -86,9 +92,10 @@ void RichSegmentCreator::handle ( const Incident& incident )
   else if ( msgLevel(MSG::DEBUG) && IncidentType::EndEvent == incident.type() ) 
   {
     debug() << "Saved " << richSegments()->size() 
-            << " RichRecSegments : Aerogel=" << m_segCount[Rich::Aerogel] 
-            << " C4F10=" << m_segCount[Rich::C4F10] 
-            << " CF4=" << m_segCount[Rich::CF4] << endreq;
+            << " RichRecSegments : Aerogel=" 
+            << m_segCount[Rich::Aerogel]-m_segCountLast[Rich::Aerogel]
+            << " C4F10=" << m_segCount[Rich::C4F10]-m_segCountLast[Rich::C4F10]
+            << " CF4=" << m_segCount[Rich::CF4]-m_segCount[Rich::CF4] << endreq;
   }
 }
 
@@ -107,7 +114,7 @@ RichRecSegment * RichSegmentCreator::newSegment( const RichTrackSegment& segment
 void RichSegmentCreator::saveSegment ( RichRecSegment * segment ) const
 {
   // count
-  if ( msgLevel(MSG::DEBUG) ) ++m_segCount[segment->trackSegment().radiator()];
+  ++m_segCount[segment->trackSegment().radiator()];
   // save segment
   richSegments()->insert( segment );
 }
