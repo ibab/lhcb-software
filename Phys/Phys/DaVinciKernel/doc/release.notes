@@ -1,7 +1,17 @@
-! $Id: release.notes,v 1.40 2005-02-24 09:13:16 pkoppenb Exp $
+! $Id: release.notes,v 1.41 2005-02-25 13:30:25 pkoppenb Exp $
 ! Package     : DaVinciKernel
 ! Responsible : P. Koppenburg
 
+! 2005-02-25 - P. Koppenburg
+  - Kernel/IKFFitTool.h
+  - Kernel/IParticleTransporter.h
+    . Because of yet another bug of the new CLHEP 1.9, whenever one includes
+      HepSymMatrix.h *after* *Point*.h, one does not get the method     
+           HepSymMatrix sub(int min_row, int max_row);     
+      which results in the run-trime error      
+           relocation error: .../slc3_ia32_gcc323/lib*.so: undefined symbol: _ZN5CLHEP12HepSymMatrix3subEii
+      -> Include SymMatrix at the very beginning of the file.
+    
 ! 2005-02-24 - P. Koppenburg
   - Kernel/ICheckOverlap.h
     . New method (was missing)

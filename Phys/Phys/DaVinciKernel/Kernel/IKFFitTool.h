@@ -2,15 +2,15 @@
 #ifndef DAVINCIKERNEL_IKFFITTOOL_H
 #define DAVINCIKERNEL_IKFFITTOOL_H 1
 
-// Include files
-#include "GaudiKernel/IAlgTool.h"
-#include "Event/Particle.h"
-#include "Event/Vertex.h"
-
 #include "CLHEP/Matrix/Vector.h"
 #include "CLHEP/Matrix/Matrix.h"
 #include "CLHEP/Matrix/SymMatrix.h"
 #include "CLHEP/Matrix/DiagMatrix.h"
+
+// Include files
+#include "GaudiKernel/IAlgTool.h"
+#include "Event/Particle.h"
+#include "Event/Vertex.h"
 
 static const InterfaceID IID_IKFFitTool("IKFFitTool", 1 , 2 ); 
 
