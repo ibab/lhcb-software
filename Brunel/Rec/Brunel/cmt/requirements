@@ -111,6 +111,7 @@ use FwTrack       v2r0   Tr
 
 # Muon
 use MuonRec       v1r0   Muon
+use MuonID        v1r0   Muon
 
 # SICBDST packages
 use Futil        v10r3  SICB

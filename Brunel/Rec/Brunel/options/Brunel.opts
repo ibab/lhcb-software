@@ -31,7 +31,7 @@ ApplicationMgr.TopAlg += { "BrunelSicbInit",
                            "BrunelPhase/BrunelDigi",
                            "BrunelPhase/BrunelTrigger",
                            "BrunelPhase/BrunelReco",
-                           "BrunelPhase/BrunelFinalFit",
+//                           "BrunelPhase/BrunelFinalFit",
                            "BrunelFinalisation/BrunelFinish" };
 #pragma print off
 #include "$BRUNELOPTS/BrunelMoni.opts"
@@ -42,7 +42,6 @@ ApplicationMgr.TopAlg += { "BrunelSicbInit",
 BrunelDigi.DetectorList = { "VELO" , "IT", "OT" , "RICH" , "CALO", "MUON" };
 BrunelTrigger.DetectorList = { "TRIGGER" };
 BrunelReco.DetectorList = {"VELO","OT","IT","Tr","TRACK","RICH","CALO","MUON"};
-BrunelFinalFit.DetectorList = { "TRAC" };
 
 //--------------------------------------------------------------
 // Subdetector algorithms
@@ -84,7 +83,8 @@ BrunelRecoTRACKSeq.Members = { "FwtFind", "StoreTracks" };
 //#include "$TRALGORITHMSROOT/options/Brunel.opts"
 //#include "$TRSICBCNVROOT/options/Brunel.opts"
 
-// Muon Fortran digitisation and C++ reconstruction
-ApplicationMgr.DLLs += { "MuonSicbCnv", "MuonDet", "MuonRec" };
+// Muon Fortran digitisation, coordinate reconstruction, MuonID
+ApplicationMgr.DLLs += { "MuonSicbCnv", "MuonDet", "MuonRec", "MuonID" };
 BrunelDigiMUONSeq.Members = { "BrunelDigiMUON" };
-BrunelRecoMUONSeq.Members = { "MuonRec" };
+BrunelRecoMUONSeq.Members = { "MuonRec", "MuonIDFOI" };
+#include "$MUONIDROOT/options/MuonIDFOI.opts"
