@@ -1,4 +1,4 @@
-/// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/XmlLVolumeCnv.h,v 1.1 2001-01-29 13:59:52 ibelyaev Exp $
+/// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/component/XmlLVolumeCnv.h,v 1.1 2001-02-05 12:45:54 ranjard Exp $
 #ifndef DETDESC_XMLCNVSVC_XMLLVOLUMECNV_H
 #define DETDESC_XMLCNVSVC_XMLLVOLUMECNV_H
 

@@ -1,4 +1,4 @@
-/// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/XmlGenericCnv.cpp,v 1.4 2001-01-25 16:28:49 mato Exp $
+/// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/component/XmlGenericCnv.cpp,v 1.1 2001-02-05 12:45:53 ranjard Exp $
 
 /// Include files
 #include "DetDesc/XmlGenericCnv.h"

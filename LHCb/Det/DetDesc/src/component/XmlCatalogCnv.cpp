@@ -1,4 +1,4 @@
-///	$Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/XmlCatalogCnv.cpp,v 1.6 2001-01-29 13:59:50 ibelyaev Exp $
+///	$Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/component/XmlCatalogCnv.cpp,v 1.1 2001-02-05 12:45:52 ranjard Exp $
 
 /// Include files
 

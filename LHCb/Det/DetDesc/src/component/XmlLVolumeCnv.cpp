@@ -1,4 +1,4 @@
-/// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/XmlLVolumeCnv.cpp,v 1.6 2001-01-29 13:59:52 ibelyaev Exp $
+/// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/component/XmlLVolumeCnv.cpp,v 1.1 2001-02-05 12:45:54 ranjard Exp $
 
 /// Include files
 #include <cstdlib>
@@ -35,7 +35,7 @@
 
 
 /// RCS Id for identification of object version
-///static const char* rcsid = "$Id: XmlLVolumeCnv.cpp,v 1.6 2001-01-29 13:59:52 ibelyaev Exp $";
+///static const char* rcsid = "$Id: XmlLVolumeCnv.cpp,v 1.1 2001-02-05 12:45:54 ranjard Exp $";
 
 // Instantiation of a static factory class used by clients to create
 // instances of this service

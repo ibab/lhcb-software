@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/XmlCnvSvc.cpp,v 1.4 2001-01-25 14:19:55 ibelyaev Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/component/XmlCnvSvc.cpp,v 1.1 2001-02-05 12:45:53 ranjard Exp $
 
 // Include Files
 #include <util/PlatformUtils.hpp>

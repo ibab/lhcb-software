@@ -10,16 +10,17 @@ use CLHEP v*
 use XML v*
 
 
-# build a component
-
+# build a Linker library
 library DetDescLib   Lib/*.cpp
-library DetDesc      *.cpp
 
-macro   DetDesc_stamps "${DETDESCROOT}/${BINDIR}/DetDescLib.stamp"
+# build a component library
+library DetDesc      component/*.cpp
+
+ignore_pattern package_stamps
+macro DetDesc_stamps "${DETDESCROOT}/${BINDIR}/DetDescLib.stamp"
 
 apply_pattern package_Llinkopts
 
-apply_pattern packageShr
 apply_pattern ld_library_path
 
 #==================================================================
@@ -30,6 +31,5 @@ apply_pattern package_Lshlibflags
 macro_append DetDescLib_shlibflags "$(GaudiKernel_linkopts) $(CLHEP_linkopts)"
 
 
-apply_pattern package_stamps
 
 

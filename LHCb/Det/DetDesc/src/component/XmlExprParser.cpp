@@ -1,4 +1,4 @@
-/// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/XmlExprParser.cpp,v 1.2 2001-01-25 12:12:30 mato Exp $
+/// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/component/XmlExprParser.cpp,v 1.1 2001-02-05 12:45:53 ranjard Exp $
 
 // Include files
 #include "DetDesc/XmlExprParser.h"

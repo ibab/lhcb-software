@@ -1,4 +1,4 @@
-///	$Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/XmlDetectorElementCnv.cpp,v 1.5 2001-01-29 13:59:51 ibelyaev Exp $
+///	$Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/component/XmlDetectorElementCnv.cpp,v 1.1 2001-02-05 12:45:53 ranjard Exp $
 
 
 #include <cstdlib>
@@ -27,7 +27,7 @@
 #include "XmlDetectorElementCnv.h"
 
 /// RCS Id for identification of object version
-///static const char* rcsid = "$Id: XmlDetectorElementCnv.cpp,v 1.5 2001-01-29 13:59:51 ibelyaev Exp $";
+///static const char* rcsid = "$Id: XmlDetectorElementCnv.cpp,v 1.1 2001-02-05 12:45:53 ranjard Exp $";
 
 /// Instantiation of a static factory class used by clients to create
 /// instances of this service
