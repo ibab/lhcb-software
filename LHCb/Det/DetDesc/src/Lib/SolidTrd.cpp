@@ -1,9 +1,10 @@
-/// DetDesc
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/Lib/SolidTrd.cpp,v 1.5 2001-03-13 11:58:08 mato Exp $
+
+// DetDesc
 #include "DetDesc/SolidTrd.h" 
 #include "DetDesc/SolidBox.h" 
 #include "DetDesc/SolidTicks.h" 
 #include "DetDesc/SolidException.h" 
-//
 
 
 ///////////////////////////////////////////////////////////////////////////////////////////

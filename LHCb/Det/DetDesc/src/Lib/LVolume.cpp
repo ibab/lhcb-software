@@ -1,9 +1,4 @@
-
-
-#include <iostream> 
-#include <string> 
-#include <functional> 
-#include <algorithm> 
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/Lib/LVolume.cpp,v 1.8 2001-03-13 11:58:07 mato Exp $
 
 #include "GaudiKernel/StatusCode.h"
 #include "GaudiKernel/DataObject.h"
@@ -37,6 +32,10 @@
 #include "CLHEP/Geometry/Vector3D.h"
 #include "CLHEP/Geometry/Transform3D.h"
 
+#include <iostream> 
+#include <string> 
+#include <functional> 
+#include <algorithm> 
 
 /// local 
 #include "PVolume.h"

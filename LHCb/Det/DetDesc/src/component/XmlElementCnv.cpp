@@ -1,11 +1,6 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/component/XmlElementCnv.cpp,v 1.3 2001-03-07 13:06:17 ibelyaev Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/component/XmlElementCnv.cpp,v 1.4 2001-03-13 11:58:09 mato Exp $
 
-// STD & STL Headers
-#include <cstdlib>
-#include <iostream>
-#include <string>
-#include <vector>
-#include <map>
+// Include Files
 
 #include "GaudiKernel/CnvFactory.h"
 #include "GaudiKernel/GenericAddress.h"
@@ -26,6 +21,13 @@
 #include "DetDesc/Element.h"
 #include "DetDesc/Mixture.h"
 #include "DetDesc/XmlCnvException.h"
+
+// STD & STL Headers
+#include <cstdlib>
+#include <iostream>
+#include <string>
+#include <vector>
+#include <map>
 
 /// local 
 #include "XmlElementCnv.h"

@@ -1,4 +1,4 @@
-/// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/DetDesc/Element.h,v 1.7 2001-03-07 13:06:10 ibelyaev Exp $
+/// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/DetDesc/Element.h,v 1.8 2001-03-13 11:58:06 mato Exp $
 #ifndef DETDESC_ELEMENT_H
 #define DETDESC_ELEMENT_H 1 
 /// STL
@@ -49,13 +49,13 @@ public:
   inline const std::string &      symbol  () const { return m_symb ; }
   inline void                  setSymbol (const std::string& S ) { m_symb = S; } 
   /// Number of isotopes in the material
-  inline const int                nOfIsotopes() const;
+  const int                nOfIsotopes() const;
   /// Return an isotope by index
-  inline const SmartRef<Isotope>& isotope        ( unsigned int i ) const;
-  inline       SmartRef<Isotope>& isotope        ( unsigned int i )      ;
+  const SmartRef<Isotope>& isotope        ( unsigned int i ) const;
+        SmartRef<Isotope>& isotope        ( unsigned int i )      ;
   /// return vector of isotopes
-  inline const Isotopes&          isotopes       () const ;
-  inline       Isotopes&          isotopes       ()       ;
+  const Isotopes&          isotopes       () const ;
+        Isotopes&          isotopes       ()       ;
   /// Return a fraction of an isotope by index
   inline const double             isotopeFraction( unsigned int i ) const;
   
@@ -65,13 +65,13 @@ public:
       do its job automatically, otherwise the user must call compute()
       method explicitly
   */
-  inline void addIsotope ( const SmartRef<Isotope>& iPtr , const double Fract, const bool comp = false );
-  inline void addIsotope ( const Entry&             iPtr                     , const bool comp = false );
+  void addIsotope ( const SmartRef<Isotope>& iPtr , const double Fract, const bool comp = false );
+  void addIsotope ( const Entry&             iPtr                     , const bool comp = false );
   
   /** Remove an isotope from the vector of isotopes
       compute() method invocation is done as described above
   */
-  inline void removeIsotope ( const SmartRef<Isotope>& iPtr , const bool comp = false );
+  void removeIsotope ( const SmartRef<Isotope>& iPtr , const bool comp = false );
 
   ///        Atomic mass [g/mole]
   virtual inline const double    A() const                ;

@@ -1,3 +1,5 @@
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/Lib/SolidChild.cpp,v 1.5 2001-03-13 11:58:08 mato Exp $
+
 #include "GaudiKernel/IInspector.h" 
 #include "GaudiKernel/StreamBuffer.h"
 

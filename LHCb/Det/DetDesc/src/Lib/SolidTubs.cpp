@@ -1,10 +1,8 @@
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/Lib/SolidTubs.cpp,v 1.4 2001-03-13 11:58:08 mato Exp $
+
 #include "DetDesc/SolidTubs.h"
 #include "DetDesc/SolidBox.h"
-
-
 #include "DetDesc/SolidTicks.h"
-
-
 #include "DetDesc/SolidException.h"
 
 #include "CLHEP/Units/PhysicalConstants.h"

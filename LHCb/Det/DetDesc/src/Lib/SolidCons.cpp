@@ -1,10 +1,12 @@
-/// CLHEP
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/Lib/SolidCons.cpp,v 1.4 2001-03-13 11:58:08 mato Exp $
+
+// CLHEP
 #include "CLHEP/Units/PhysicalConstants.h"
-/// GaudiKernel
+// GaudiKernel
 #include "GaudiKernel/StreamBuffer.h"
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/IInspector.h"
-/// DetDesc
+// DetDesc
 #include "DetDesc/SolidCons.h"
 #include "DetDesc/SolidTubs.h"
 #include "DetDesc/SolidTrd.h"

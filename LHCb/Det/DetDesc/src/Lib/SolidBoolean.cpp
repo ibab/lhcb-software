@@ -1,3 +1,5 @@
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/Lib/SolidBoolean.cpp,v 1.4 2001-03-13 11:58:08 mato Exp $
+
 #include   "GaudiKernel/StatusCode.h" 
 #include   "GaudiKernel/IInspector.h" 
 #include   "DetDesc/SolidBoolean.h" 

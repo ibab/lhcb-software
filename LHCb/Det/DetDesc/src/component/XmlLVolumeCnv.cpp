@@ -1,11 +1,6 @@
-/// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/component/XmlLVolumeCnv.cpp,v 1.4 2001-03-07 13:06:17 ibelyaev Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/component/XmlLVolumeCnv.cpp,v 1.5 2001-03-13 11:58:09 mato Exp $
 
-/// Include files
-#include <cstdlib>
-#include <iostream>
-#include <string>
-#include <vector>
-#include <map>
+// Include files
 
 #include "GaudiKernel/CnvFactory.h"
 #include "GaudiKernel/GenericAddress.h"
@@ -30,12 +25,15 @@
 #include "DetDesc/Surface.h"
 #include "DetDesc/XmlCnvException.h"
 
-///local
+#include <cstdlib>
+#include <iostream>
+#include <string>
+#include <vector>
+#include <map>
+
+//local
 #include "XmlLVolumeCnv.h"
 
-
-/// RCS Id for identification of object version
-///static const char* rcsid = "$Id: XmlLVolumeCnv.cpp,v 1.4 2001-03-07 13:06:17 ibelyaev Exp $";
 
 // Instantiation of a static factory class used by clients to create
 // instances of this service

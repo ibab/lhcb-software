@@ -1,6 +1,12 @@
 package DetDesc
 package manager : N.N 
 
+
+===========================================================================
+! 20010313 - Pere Mato
+     Remove some inline specifiers in Element.h that caused problems with windows
+     Changed order of include files to avoid warnings
+
 ===========================================================================
 ! 20010304 - Vanya Belyaev
      remove all tabulations from all files

@@ -1,8 +1,10 @@
-#include <iostream> 
-#include <string> 
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/Lib/SolidIntersection.cpp,v 1.3 2001-03-13 11:58:08 mato Exp $
 
 #include "DetDesc/SolidIntersection.h"
 #include "DetDesc/SolidException.h"
+
+#include <iostream> 
+#include <string> 
 
 //
 // constructor

@@ -1,10 +1,11 @@
-#include <iostream> 
-#include <string> 
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/Lib/SolidSubtraction.cpp,v 1.3 2001-03-13 11:58:08 mato Exp $
 
 
 #include "DetDesc/SolidSubtraction.h"
 #include "DetDesc/SolidException.h"
 
+#include <iostream> 
+#include <string> 
 
 //
 //

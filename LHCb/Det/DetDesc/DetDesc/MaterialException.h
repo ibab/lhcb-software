@@ -1,11 +1,12 @@
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/DetDesc/MaterialException.h,v 1.3 2001-03-13 11:58:07 mato Exp $
 #ifndef    DETDESC_MATERIALEXCEPTION_H
-#define    DETDESC_MATERIALEXCEPTION_H 1 
-/// STL
-#include <iostream>
-#include <exception>
+#define    DETDESC_MATERIALEXCEPTION_H
 /// GaudiKernel
 #include "GaudiKernel/GaudiException.h"
-///
+//// STL
+#include <iostream>
+#include <exception>
+//
 class Material;
 class MSgStream;
 ///

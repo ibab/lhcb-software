@@ -1,15 +1,16 @@
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/DetDesc/SolidBox.h,v 1.6 2001-03-13 11:58:07 mato Exp $
 #ifndef     DETDESC_SOLIDBOX_H
-#define     DETDESC_SOLIDBOX_H 1 
-/// STD and STL 
-#include <cmath> 
-#include <iostream> 
-/// CLHEP 
+#define     DETDESC_SOLIDBOX_H
+// CLHEP 
 #include "CLHEP/Geometry/Point3D.h"
 #include "CLHEP/Geometry/Vector3D.h"
 #include "CLHEP/Units/SystemOfUnits.h"
-/// GAUDI Kernel 
+// GAUDI Kernel 
 #include "GaudiKernel/ISolid.h" 
 #include "GaudiKernel/StreamBuffer.h" 
+// STD and STL 
+#include <cmath> 
+#include <iostream> 
 
 class MsgStream;
 class ISolidFromStream;

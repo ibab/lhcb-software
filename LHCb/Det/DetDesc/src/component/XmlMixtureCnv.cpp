@@ -1,10 +1,4 @@
-
-// STD & STL Headers
-#include <cstdlib>
-#include <iostream>
-#include <string>
-#include <vector>
-#include <map>
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/component/XmlMixtureCnv.cpp,v 1.4 2001-03-13 11:58:09 mato Exp $
 
 // Headers
 #include "GaudiKernel/CnvFactory.h"
@@ -26,6 +20,13 @@
 #include "DetDesc/Element.h"
 #include "DetDesc/Mixture.h"
 #include "DetDesc/XmlCnvException.h"
+
+// STD & STL Headers
+#include <cstdlib>
+#include <iostream>
+#include <string>
+#include <vector>
+#include <map>
 
 /// local 
 #include "XmlMixtureCnv.h"

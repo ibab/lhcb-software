@@ -1,13 +1,9 @@
-#ifndef      __DETDESC_VOLUMES_LVOLUMEINTERSECTLINE_H__ 
-#define      __DETDESC_VOLUMES_LVOLUMEINTERSECTLINE_H__  1
-
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/Lib/LVolumeIntersectLine.cpp,v 1.3 2001-03-13 11:58:07 mato Exp $
 
 #include "DetDesc/LVolume.h"
 #include "DetDesc/VolumeIntersectionIntervals.h"
 
-///  inmplementation of LVolume::intersectLine methods 
-
-
+///  implementation of LVolume::intersectLine methods 
 
 ///
 /// intersection of the logical volume with the line.
@@ -304,5 +300,3 @@ unsigned int  LVolume::intersectDaughters( const HepPoint3D&        Point       
   ///
 };
 /// 
-
-#endif   //  __DETDESC_VOLUMES_LVOLUMEINTERSECTLINE_H__ 

@@ -1,9 +1,6 @@
-#ifndef       __DETDESC_VOLUMES_VOLUMEINTERSECTIONIINTERVALS_H__
-#define       __DETDESC_VOLUMES_VOLUMEINTERSECTIONIINTERVALS_H__ 1 
-
-#include <algorithm>
-#include <functional>
-#include <numeric>
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/DetDesc/VolumeIntersectionIntervals.h,v 1.3 2001-03-13 11:58:07 mato Exp $
+#ifndef       DETDESC_VOLUMEINTERSECTIONIINTERVALS_H
+#define       DETDESC_VOLUMEINTERSECTIONIINTERVALS_H 
 
 #include "GaudiKernel/Kernel.h"
 #include "GaudiKernel/StatusCode.h"
@@ -11,6 +8,10 @@
 #include "GaudiKernel/ISolid.h"
 #include "GaudiKernel/ILVolume.h"
 #include "GaudiKernel/IPVolume.h"
+
+#include <algorithm>
+#include <functional>
+#include <numeric>
 
 class Material;
 

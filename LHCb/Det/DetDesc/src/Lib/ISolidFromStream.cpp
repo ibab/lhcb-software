@@ -1,10 +1,9 @@
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/Lib/ISolidFromStream.cpp,v 1.2 2001-03-13 11:58:07 mato Exp $
 
-
-#include "DetDesc/ISolidFromStream.h"
 #include "DetDesc/Solids.h" 
 #include "DetDesc/SolidException.h" 
- 
 #include "GaudiKernel/StreamBuffer.h" 
+#include "DetDesc/ISolidFromStream.h"
 
 
 ISolid* ISolidFromStream::operator() ( StreamBuffer& s ) const 

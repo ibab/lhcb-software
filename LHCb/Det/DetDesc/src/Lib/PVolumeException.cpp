@@ -1,9 +1,11 @@
-/// GaudiKernel
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/Lib/PVolumeException.cpp,v 1.3 2001-03-13 11:58:08 mato Exp $
+
+// GaudiKernel
 #include "GaudiKernel/MsgStream.h"
-/// local
+// local
 #include "PVolume.h"
 #include "PVolumeException.h"
-/// 
+ 
 
 
 /////////////////////////////////////////////////////////////////////////////////////////

@@ -1,12 +1,12 @@
-/// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/DetDesc/Mixture.h,v 1.6 2001-03-07 13:06:11 ibelyaev Exp $
+/// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/DetDesc/Mixture.h,v 1.7 2001-03-13 11:58:07 mato Exp $
 #ifndef DETDESC_MIXTURE_H
 #define DETDESC_MIXTURE_H
-/// Include files
-#include <vector>
 /// detDesc
 #include "DetDesc/Material.h"
 #include "DetDesc/Element.h"
 #include "DetDesc/CLIDMixture.h"
+/// Include files
+#include <vector>
 
 
 /** @class Mixture Mixture.h DetDesc/Mixture.h

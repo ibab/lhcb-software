@@ -1,13 +1,8 @@
-/// STD and STL 
-#include <iostream>
-#include <string>
-#include <functional>
-#include <algorithm> 
-#include <numeric> 
-/// CLHEP 
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/Lib/GeometryInfo.cpp,v 1.5 2001-03-13 11:58:07 mato Exp $
+// CLHEP 
 #include "CLHEP/Geometry/Point3D.h"
 #include "CLHEP/Geometry/Transform3D.h"
-/// GaudiKernel
+// GaudiKernel
 #include "GaudiKernel/IInspector.h"
 #include "GaudiKernel/ISvcLocator.h"
 #include "GaudiKernel/Kernel.h"
@@ -17,9 +12,15 @@
 #include "GaudiKernel/StreamBuffer.h" 
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/Bootstrap.h"
-/// DetDesc 
+// DetDesc 
 #include "DetDesc/IPVolume_predicates.h"
-/// local 
+// STD and STL 
+#include <iostream>
+#include <string>
+#include <functional>
+#include <algorithm> 
+#include <numeric> 
+// local 
 #include "GeometryInfo.h" 
 #include "GeometryInfoException.h" 
 

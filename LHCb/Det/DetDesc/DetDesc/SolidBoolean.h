@@ -1,10 +1,11 @@
-#ifndef      __DETDESC_SOLID_SOLIDBOOLEAN_H__ 
-#define      __DETDESC_SOLID_SOLIDBOOLEAN_H__ 
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/DetDesc/SolidBoolean.h,v 1.7 2001-03-13 11:58:07 mato Exp $
+#ifndef      DETDESC_SOLIDBOOLEAN_H 
+#define      DETDESC_SOLIDBOOLEAN_H 
+/// GaudiKernel 
+#include "GaudiKernel/ISolid.h" 
 /// STL 
 #include <string> 
 #include <vector> 
-/// GaudiKernel 
-#include "GaudiKernel/ISolid.h" 
 
 class StatusCode;
 class SolidChild;

@@ -1,9 +1,5 @@
-// STD & STL Headers
-#include <cstdlib>
-#include <iostream>
-#include <string>
-#include <vector>
-#include <algorithm>
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/component/XmlTabulatedPropertyCnv.cpp,v 1.3 2001-03-13 11:58:09 mato Exp $
+
 // GaudiKernel
 #include "GaudiKernel/CnvFactory.h"
 #include "GaudiKernel/GenericAddress.h"
@@ -21,7 +17,13 @@
 #include "DetDesc/XmlCnvSvc.h"
 #include "DetDesc/TabulatedProperty.h"
 #include "DetDesc/XmlCnvException.h"
-/// local 
+// STD & STL Headers
+#include <cstdlib>
+#include <iostream>
+#include <string>
+#include <vector>
+#include <algorithm>
+// local 
 #include "XmlTabulatedPropertyCnv.h"
 
 

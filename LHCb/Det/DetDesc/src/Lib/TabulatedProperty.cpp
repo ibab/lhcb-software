@@ -1,12 +1,11 @@
-/// STL
-#include <string>
-#include <vector>
-/// GaudiKernel
-#include "GaudiKernel/IAxis.h"
-#include "GaudiKernel/IHistogram1D.h"
-/// DetDesc 
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/Lib/TabulatedProperty.cpp,v 1.3 2001-03-13 11:58:08 mato Exp $
+
+// DetDesc 
 #include "DetDesc/TabulatedProperty.h"
 
+// STL
+#include <string>
+#include <vector>
 
 /////////////////////////////////////////////////////////////////////////////////
 TabulatedProperty::TabulatedProperty( const std::string& Name )

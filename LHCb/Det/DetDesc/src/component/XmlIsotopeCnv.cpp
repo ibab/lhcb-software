@@ -1,10 +1,5 @@
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/component/XmlIsotopeCnv.cpp,v 1.4 2001-03-13 11:58:09 mato Exp $
 
-// STD & STL Headers
-#include <cstdlib>
-#include <iostream>
-#include <string>
-#include <vector>
-#include <map>
 
 // Headers
 #include "GaudiKernel/CnvFactory.h"
@@ -29,6 +24,12 @@
 #include "DetDesc/TabulatedProperty.h"
 #include "DetDesc/XmlCnvException.h"
 
+// STD & STL Headers
+#include <cstdlib>
+#include <iostream>
+#include <string>
+#include <vector>
+#include <map>
 
 
 /// local 

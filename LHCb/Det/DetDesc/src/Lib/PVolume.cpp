@@ -1,8 +1,4 @@
-
-#include <cassert>
-#include <iostream>
-#include <string> 
-#include <vector>
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/Lib/PVolume.cpp,v 1.6 2001-03-13 11:58:08 mato Exp $
 
 #include "GaudiKernel/IInspector.h"
 #include "GaudiKernel/ISvcLocator.h"
@@ -17,6 +13,11 @@
 
 #include "CLHEP/Geometry/Point3D.h"
 #include "CLHEP/Geometry/Transform3D.h"
+
+#include <cassert>
+#include <iostream>
+#include <string> 
+#include <vector>
 
 /// local 
 #include "PVolume.h"
