@@ -1,4 +1,4 @@
-// $Id: IRichMirrorSegFinder.h,v 1.2 2004-06-18 09:39:02 jonrob Exp $
+// $Id: IRichMirrorSegFinder.h,v 1.3 2004-06-29 19:27:30 jonrob Exp $
 #ifndef RICHKERNEL_IRICHMIRRORSEGFINDER_H
 #define RICHKERNEL_IRICHMIRRORSEGFINDER_H 1
 
@@ -17,10 +17,9 @@ class DeRichFlatMirror;
 class HepPoint3D;
 class HepVector3D;
 
-/** @class IRichMirrorSegFinder IRichMirrorSegFinder.h RichDetTools/IRichMirrorSegFinder.h
+/** @class IRichMirrorSegFinder IRichMirrorSegFinder.h RichKernel/IRichMirrorSegFinder.h
  *
- *  Interface to a tool to trace photons (or similar) from a point all the way to
- *  the photo detectors.
+ *  Interface to a tool to find the appropriate mirror segment for a given reflection point
  *
  *  @author Antonis Papanestis
  *  @date   2003-11-04

@@ -1,4 +1,4 @@
-// $Id: Rich1DTabFunc.h,v 1.1 2004-06-17 12:00:47 cattanem Exp $
+// $Id: Rich1DTabFunc.h,v 1.2 2004-06-29 19:27:30 jonrob Exp $
 #ifndef RICHUTILS_RICH1DTABFUNC_H
 #define RICHUTILS_RICH1DTABFUNC_H 1
 
@@ -14,11 +14,11 @@
  *
  *  A class describing a function based on the interpolation of data points
  *  The interpolation is based on the GSL library, with the default interpolation
- *  type based on a cubic spline algorithm 'gsl_interp_cspline'. For other 
+ *  type based on a cubic spline algorithm 'gsl_interp_cspline'. For other
  *  possibilities see
  *  http://www.gnu.org/software/gsl/manual/gsl-ref_26.html#SEC389
  *
- *  @author Chris Jones          Christopher.Rob.Jones@cern.ch
+ *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   2003-08-13
  */
 
@@ -123,7 +123,7 @@ inline double Rich1DTabFunc::operator [] ( const double x ) const
 
 //============================================================================
 
-inline double Rich1DTabFunc::integral ( const double from, 
+inline double Rich1DTabFunc::integral ( const double from,
                                         const double to ) const
 {
   return gsl_spline_eval_integ( m_mainDistSpline, from, to, m_mainDistAcc );
@@ -131,13 +131,13 @@ inline double Rich1DTabFunc::integral ( const double from,
 
 //============================================================================
 
-inline double Rich1DTabFunc::meanX ( const double from, 
+inline double Rich1DTabFunc::meanX ( const double from,
                                      const double to ) const
 {
   const double bot = integral( from, to );
-  return ( 0 == bot ? 0 :
+  return ( fabs(bot) > 0 ?
            gsl_spline_eval_integ( m_weightedDistSpline,
-                                  from, to, m_weightedDistAcc )/bot );
+                                  from, to, m_weightedDistAcc )/bot : 0 );
 }
 
 //============================================================================

@@ -1,7 +1,8 @@
-// $Id: Rich1DTabFunc.cpp,v 1.1 2004-06-17 12:00:48 cattanem Exp $
+// $Id: Rich1DTabFunc.cpp,v 1.2 2004-06-29 19:27:30 jonrob Exp $
 
-// Suppress "debug information truncated" warnings on Windows
-#include "GaudiKernel/Kernel.h"
+// GaudiKernel
+#include "GaudiKernel/Kernel.h" // Suppress "debug information truncated" warnings on Windows
+#include "GaudiKernel/GaudiException.h"
 
 // local
 #include "RichKernel/Rich1DTabFunc.h"
@@ -9,7 +10,7 @@
 //-----------------------------------------------------------------------------
 // Implementation file for class : Rich1DTabFunc
 //
-// 2003-08-13 : C. Jones
+// 2003-08-13 : C. Jones       Christopher.Rob.Jones@cern.ch
 //-----------------------------------------------------------------------------
 
 //============================================================================
@@ -98,9 +99,11 @@ bool Rich1DTabFunc::initInterpolator( const gsl_interp_type * interType )
   // clean up first
   clearInterpolator();
 
-  // Copy data to temporary initialisation arrays
+  // Needs at least 2 points to work...
   const int size = m_data.size();
   if ( size < 2 ) return false;
+
+  // Copy data to temporary initialisation arrays
   double * x  = new double[size];
   double * y  = new double[size];
   double * xy = new double[size];
@@ -117,13 +120,19 @@ bool Rich1DTabFunc::initInterpolator( const gsl_interp_type * interType )
   m_weightedDistAcc    = gsl_interp_accel_alloc();
   m_mainDistSpline     = gsl_spline_alloc ( interType, size );
   m_weightedDistSpline = gsl_spline_alloc ( interType, size );
-  gsl_spline_init ( m_mainDistSpline,     x, y,  size );
-  gsl_spline_init ( m_weightedDistSpline, x, xy, size );
+  const int err1 = gsl_spline_init ( m_mainDistSpline,     x, y,  size );
+  const int err2 = gsl_spline_init ( m_weightedDistSpline, x, xy, size );
 
   // delete temporary arrays
   delete[] x;
   delete[] y;
   delete[] xy;
+
+  if ( err1 || err2 ) {
+    throw GaudiException( "Error whilst initialising GSL interpolators",
+                          "*Rich1DTabFunc*", StatusCode::FAILURE );
+    return false;
+  }
 
   return true;
 }

@@ -1,7 +1,11 @@
-! $Id: release.notes,v 1.41 2004-06-18 09:39:03 jonrob Exp $
+! $Id: release.notes,v 1.42 2004-06-29 19:27:30 jonrob Exp $
 ! Package     : Rich/RichKernel
 ! Responsible : Chris Jones
 ! Purpose     : General purpose RICH classes
+
+! 2004-06-29 - Chris Jones
+ - Add initialisation status test to GSL interpolators
+ - Correct comment in IRichMirrorSegFinder.h
 
 !======================= RichKernel v5r0 2004-06-16 =======================
 
