@@ -101,8 +101,10 @@ private:
   double m_chiSqITracks;   ///< Max Chi2/NoF to make ProtoP from IT Tracks
   double m_chiSqOTracks;   ///< Max Chi2/NoF to make ProtoP from IT Tracks
   double m_chiSqVTT   ;    ///< Max Chi2/NoF to make ProtoP from VTT Tracks
-  double m_chiSqDowns;   ///< Max Chi2/NoF to make ProtoP from upstream Tracks
+  double m_chiSqDowns;   ///< Max Chi2/NoF to make ProtoP from downstream Tracks
+  double m_ptVTT;   ///< Minimu pt to make ProtoP from upstream Tracks
  
+
   int m_idElectron;           ///< PDG id of e+/-
   int m_idMuon;               ///< PDG id of mu+/mu-
   int m_idPion;               ///< PDG id of pi+/pi-

@@ -3,6 +3,9 @@
 ! Responsible : P. Koppenburg
 ! Purpose     : Holds final reconstruction code
 !-----------------------------------------------------------------------------
+! 2004-04-11 - Yuehong Xie
+ - src/ChargedProtoPAlg.cpp ChargedProtoPAlg.h
+   apply a pt>50MeV cut to upstream tracks to remove ghosts
 
 !===================== GlobalReco v4r6 2004-04-27 ===========================
 ! 2004-04-11 - Ivan Belyaev

@@ -54,6 +54,7 @@ ChargedProtoPAlg::ChargedProtoPAlg( const std::string& name,
   , m_chiSqOTracks( 100.0 )
   , m_chiSqVTT( 5.0 )
   , m_chiSqDowns( 3.0 )
+  , m_ptVTT( 50.0 )
   , m_photonMatch(0)
   , m_electronMatch(0)
   , m_bremMatch(0)
@@ -97,6 +98,7 @@ ChargedProtoPAlg::ChargedProtoPAlg( const std::string& name,
   declareProperty("Chi2NdFofOTracks", m_chiSqOTracks );
   declareProperty("Chi2NdFofVTT",     m_chiSqVTT );
   declareProperty("Chi2NdFofDowns",     m_chiSqDowns );  
+  declareProperty("ptVTT",     m_ptVTT );
 
   // Monitor
   declareProperty("Monitor", m_monitor );
@@ -604,6 +606,20 @@ int ChargedProtoPAlg::rejectTrack( const TrStoredTrack* track ) {
     if( chi2NoF >= m_chiSqVTT ) {
       reject = Chi2Cut;
     }
+    const TrState* trackState=track->closestState(0.0);
+    TrState* trackStateClone = trackState->clone();
+    TrStateP* firstStateP=dynamic_cast<TrStateP*>(trackStateClone);
+    if(firstStateP) {
+      double  p=1./fabs(firstStateP->qDivP());
+      double  slopeX=firstStateP->tx();
+      double  slopeY=firstStateP->ty();
+      double  pt=fabs(p)*
+        sqrt(1.-1./(1.+slopeX*slopeX+slopeY*slopeY));
+      if( pt < m_ptVTT ) {
+        reject = Other;
+      }
+    }
+    delete trackStateClone;
     return reject;
   }  
 
