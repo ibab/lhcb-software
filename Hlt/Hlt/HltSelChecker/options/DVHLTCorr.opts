@@ -1,13 +1,22 @@
 ApplicationMgr.DLLs += {"HltSelChecker"};
 #include "$HLTSELECTIONSROOT/options/DVHLTExSelections.opts"
 
-//------------------------------------------------------------------------------
+//==============================================================================
 // The offline selections
-//------------------------------------------------------------------------------
-#include "$HLTSELCHECKERROOT/options/AllTDRselections.opts"
-//------------------------------------------------------------------------------
+//==============================================================================
+//#include "$HLTSELCHECKERROOT/options/AllTDRselections.opts"
+
+//==============================================================================
+// MC truth
+//==============================================================================
+// Include this to overwrite input to take *only* MC truth particles into account
+//#include "$HLTSELCHECKERROOT/options/Truth.opts"
+// Include this to overwrite input to take *only* MC truth particles into account
+//#include "$HLTSELCHECKERROOT/options/TruthInput.opts" // !!! ONLY MCTRUTH
+
+//==============================================================================
 // correlations
-//------------------------------------------------------------------------------
+//==============================================================================
 ApplicationMgr.TopAlg += { "GaudiSequencer/HLTCorrelations" };
 HLTCorrelations.IgnoreFilterPassed = true ;
 #include "$HLTSELCHECKERROOT/options/CorrB2HH.opts"
@@ -24,15 +33,15 @@ HLTCorrelations.IgnoreFilterPassed = true ;
 #include "$HLTSELCHECKERROOT/options/CorrDiMuons.opts"
 #include "$HLTSELCHECKERROOT/options/CorrHLTsels.opts"
 // plots
-#include "$HLTSELCHECKERROOT/options/Plots.opts"
+//#include "$HLTSELCHECKERROOT/options/Plots.opts"
 
-//------------------------------------------------------------------------------
+//==============================================================================
 // PK's stripping of MB passing L0 and L1:
 #include "$HLTSELECTIONSROOT/options/L0L1-MB.opts"
-//------------------------------------------------------------------------------
+//==============================================================================
 // PK's stripping of signal passing L0, L1 and TDR:
 // #include "$HLTSELECTIONSROOT/options/L0L1TDR-AllSignals.opts"
-//------------------------------------------------------------------------------
+//==============================================================================
 // some sepcial signal!
 // Warning: Files are added up to EventSelector
 // in these options
@@ -40,10 +49,9 @@ HLTCorrelations.IgnoreFilterPassed = true ;
 //EventSelector.Input   = {};
 //#include "$HLTSELECTIONSROOT/options/L0L1TDR-Bd2D0Kstar.opts"
 
-ApplicationMgr.EvtMax    = 100 ;
+ApplicationMgr.EvtMax    = 10000 ;
 MessageSvc.Format = "% F%50W%S%7W%R%T %0W%M";
 ChronoStatSvc.ChronoPrintLevel = 4 ; // forces printout even with 4
-
 
 ApplicationMgr.HistogramPersistency = "HBOOK";
 HistogramPersistencySvc.OutputFile = "test.hbook"; 

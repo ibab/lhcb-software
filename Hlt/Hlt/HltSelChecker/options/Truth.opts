@@ -1,6 +1,3 @@
-HLTSelections.Members += {"GaudiSequencer/TrueSignals"};
-TrueSignals.IgnoreFilterPassed = true ;
-
 // from TrgChecking
 TrueSignals.Members += {"TrgL1Filter/TrueTrgL1Filter","TrgTrackToContainer","TrgTrack2MCParticle"};
 

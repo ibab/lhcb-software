@@ -6,6 +6,9 @@
 
 ! 2005-01-10 - P. Koppenburg
   - options/Corr*.opts
+  - options/Truth.opts
+    . Control all truth options from here.
+  - options/Corr*.opts
     . Restore MC-truth check in XXXAndTDR algorithms. They are OK if
       the TDR selection is happy and all tracks are found by HLT.
   - options/True*.opts
