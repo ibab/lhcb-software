@@ -1,59 +1,41 @@
 ApplicationMgr.TopAlg += { "FlavourTaggingAlgorithm/ElectronTagging" };
-//TopSequence.Members += { "FlavourTaggingAlgorithm/ElectronTagging" };
-//
+
 ElectronTagging.TagLocation = "/Event/Phys/User/Tags/Electron";
 //ElectronTagging.HypothesisLocations = { "/Event/Phys/B0" };
 //ElectronTagging.PrimaryVerticesLocation = "";
-//ElectronTagging.DesktopName = "PhysDesktop";
-//ElectronTagging.FirstOnly = false;
 ElectronTagging.CheckL0 = false;
 
-ElectronTagging.PhysDesktop.ParticleMakerType = "ChargedParticleMaker";
-//ElectronTagging.PhysDesktop.ElectronParticleMaker.CutOnChi2CaloTrMatch = 10;
-//ElectronTagging.PhysDesktop.ElectronParticleMaker.CutOnChi2CaloEMatch = 20;
-//ElectronTagging.PhysDesktop.ElectronParticleMaker.CutOnChi2BremMatch = 20;
-//ElectronTagging.PhysDesktop.ElectronParticleMaker.CutOnRichProb = 0;
-//ElectronTagging.PhysDesktop.ElectronParticleMaker.TypeOfIdentification = 6; // Combined PID
-//ElectronTagging.PhysDesktop.ElectronParticleMaker.ChoiceOnBremPhot = 0; // No photon added
-//ElectronTagging.PhysDesktop.ElectronParticleMaker.CutOnClusterDist = 100;
-//ElectronTagging.PhysDesktop.ElectronParticleMaker.CutOndeOfCombinedPID = 0; // Nominal
-//ElectronTagging.PhysDesktop.ElectronParticleMaker.ChoiceForFlag = 3; // Both RICH and CALO
-ElectronTagging.PhysDesktop.ChargedParticleMaker.ParticleNames = {"All"};
-//ElectronTagging.PhysDesktop.InputLocations = { "/Event/Phys/Prod" };
-//ElectronTagging.PhysDesktop.OutputLocation = "/Event/Phys/Prod/Particles";
+ElectronTagging.PhysDesktop.ParticleMakerType = "FTCombinedParticleMaker";
+ElectronTagging.PhysDesktop.FTCombinedParticleMaker.TypeOfIdentification = 6;
+ElectronTagging.PhysDesktop.FTCombinedParticleMaker.ChoiceOnBremPhot     = 1;
+ElectronTagging.PhysDesktop.FTCombinedParticleMaker.CutOnClusterDist     = 200;
+ElectronTagging.PhysDesktop.FTCombinedParticleMaker.CutOnChi2CaloTrMatch = 10;
+ElectronTagging.PhysDesktop.FTCombinedParticleMaker.CutOnChi2CaloEMatch  = 100;
+ElectronTagging.PhysDesktop.FTCombinedParticleMaker.CutOnChi2BremMatch   = 50;
+ElectronTagging.PhysDesktop.FTCombinedParticleMaker.CutOnRichProb        = 0.01;
+ElectronTagging.PhysDesktop.FTCombinedParticleMaker.CutOndeOfCombinedPID = 0;
+ElectronTagging.PhysDesktop.FTCombinedParticleMaker.ChoiceForFlag        = 3;
+ElectronTagging.PhysDesktop.OutputLevel = 4;
 
 ElectronTagging.TaggingTool = "SingleParticleTaggingTool";
 
 // --- Electron tags
-
+// In the following cuts, -1 means disable.
 ElectronTagging.SingleParticleTaggingTool.FilterName = "ParticleFilter";
 //ElectronTagging.SingleParticleTaggingTool.GeomDispCalculator = "GeomDispCalculator";
 //ElectronTagging.SingleParticleTaggingTool.PrimaryVertices = "";
 //ElectronTagging.SingleParticleTaggingTool.InverseCharge = true;
 ElectronTagging.SingleParticleTaggingTool.AllVertices = true;
-ElectronTagging.SingleParticleTaggingTool.MinImpactSignificance = -1; // -1 == disable
-ElectronTagging.SingleParticleTaggingTool.MaxImpactSignificance = -1; // -1 == disable
+ElectronTagging.SingleParticleTaggingTool.MinImpactSignificance = 2.;
+ElectronTagging.SingleParticleTaggingTool.MaxImpactSignificance = -1;
 
 ElectronTagging.SingleParticleTaggingTool.ParticleFilter.CriteriaNames = { "ParticleTaggerCriterion" };
 ElectronTagging.SingleParticleTaggingTool.ParticleFilter.ParticleTaggerCriterion.ParticleName = "e+";
-ElectronTagging.SingleParticleTaggingTool.ParticleFilter.ParticleTaggerCriterion.MinConfLevel = 0.7;
-ElectronTagging.SingleParticleTaggingTool.ParticleFilter.ParticleTaggerCriterion.MaxConfLevel = -1; // -1 == disable
-ElectronTagging.SingleParticleTaggingTool.ParticleFilter.ParticleTaggerCriterion.MinTransverseMomentum = 1000; // -1 == disable
-ElectronTagging.SingleParticleTaggingTool.ParticleFilter.ParticleTaggerCriterion.MaxTransverseMomentum = -1; // -1 == disable
-ElectronTagging.SingleParticleTaggingTool.ParticleFilter.ParticleTaggerCriterion.MinMomentum = 8000; // -1 == disable
-ElectronTagging.SingleParticleTaggingTool.ParticleFilter.ParticleTaggerCriterion.MaxMomentum = -1; // -1 == disable
+ElectronTagging.SingleParticleTaggingTool.ParticleFilter.ParticleTaggerCriterion.MinConfLevel = -1;
+ElectronTagging.SingleParticleTaggingTool.ParticleFilter.ParticleTaggerCriterion.MaxConfLevel = -1;
+ElectronTagging.SingleParticleTaggingTool.ParticleFilter.ParticleTaggerCriterion.MinTransverseMomentum = 2000;
+ElectronTagging.SingleParticleTaggingTool.ParticleFilter.ParticleTaggerCriterion.MaxTransverseMomentum = -1;
+ElectronTagging.SingleParticleTaggingTool.ParticleFilter.ParticleTaggerCriterion.MinMomentum = 5000;
+ElectronTagging.SingleParticleTaggingTool.ParticleFilter.ParticleTaggerCriterion.MaxMomentum = -1;
 ElectronTagging.SingleParticleTaggingTool.ParticleFilter.ParticleTaggerCriterion.MinVeloZ = -315;
 ElectronTagging.SingleParticleTaggingTool.ParticleFilter.ParticleTaggerCriterion.MaxVeloZ = 750;
-// --- Monitoring
-
-//ApplicationMgr.TopAlg += { "SingleParticleTaggingMonitor/ElectronTaggingMonitor" };
-TopSequence.Members += { "SingleParticleTaggingMonitor/ElectronTaggingMonitor" };
-ElectronTaggingMonitor.BeAFilter = true;
-ElectronTaggingMonitor.TaggerName = "e-";
-ElectronTaggingMonitor.TagsLocations = { "/Event/Phys/User/Tags/Electron" };
-
-// --- Debuging
-
-FlavourTaggingDebug.PhysDesktop.InputLocations = { "/Event/Phys/B0" };
-FlavourTaggingDebug.PhysDesktop.ParticleMakerType = "ChargedParticleMaker";
-FlavourTaggingDebug.PhysDesktop.ChargedParticleMaker.ParticleNames = {"All"};

@@ -22,4 +22,5 @@ DECLARE_FACTORY_ENTRIES(FlavourTagging) {
   DECLARE_TOOL(ParticleTaggerCriterion);
   DECLARE_TOOL(SingleParticleTaggingTool);
   DECLARE_TOOL(OrderedTaggingTool);
+  DECLARE_TOOL(FTCombinedParticleMaker);
 }

@@ -1,4 +1,4 @@
-// $Id: FlavourTaggingAlgorithm.cpp,v 1.9 2002-11-20 08:24:45 odie Exp $
+// $Id: FlavourTaggingAlgorithm.cpp,v 1.10 2003-03-25 09:58:52 odie Exp $
 // Include files 
 
 // from Gaudi
@@ -8,6 +8,7 @@
 #include "GaudiKernel/IToolSvc.h"
 #include "GaudiKernel/SmartDataPtr.h"
 
+#include "Event/EventHeader.h"
 #include "Event/Particle.h"
 #include "Event/L0DUReport.h"
 #include "DaVinciTools/IPhysDesktop.h"
@@ -97,10 +98,14 @@ StatusCode FlavourTaggingAlgorithm::execute() {
   MsgStream  log( msgSvc(), name() );
   log << MSG::DEBUG << "==> Execute" << endreq;
 
-  SmartDataPtr<L0DUReport> l0(eventSvc(), L0DUReportLocation::Default);
+  SmartDataPtr<EventHeader> evt_head(eventSvc(), EventHeaderLocation::Default );
+  if( !evt_head ) {
+    log << MSG::ERROR << "Couldn't retrieve the event head!" << endreq;
+    return StatusCode::SUCCESS;
+  }
 
-  if( l0 && m_checkL0 && (l0->decision() == false) )
-  {
+  SmartDataPtr<L0DUReport> l0(eventSvc(), L0DUReportLocation::Default);
+  if( l0 && m_checkL0 && (l0->decision() == false) ) {
     log << MSG::DEBUG << "Event rejected by L0" << endreq;
     return StatusCode::SUCCESS;
   }
@@ -111,39 +116,33 @@ StatusCode FlavourTaggingAlgorithm::execute() {
        loc_iter != m_hypothesis_locations.end(); loc_iter++ )
   {
     SmartDataPtr<Particles> keyed_hypothesis(eventSvc(),*loc_iter);
-    if( !keyed_hypothesis )
-    {
-      log << MSG::ERROR << "Unable to find the B hypothesis at '"
+    if( !keyed_hypothesis ) {
+      log << MSG::DEBUG << "Unable to find the B hypothesis at '"
           << *loc_iter << "'. Skipping it!" << endreq;
       continue;
     }
     Particles::const_iterator pi;
     bool include_it = true;
-    for( pi = keyed_hypothesis->begin(); pi != keyed_hypothesis->end(); pi++ )
-    {
-      if( !(*pi)->particleID().hasBottom() )
-      {
+    for( pi = keyed_hypothesis->begin(); pi != keyed_hypothesis->end(); pi++ ) {
+      if( !(*pi)->particleID().hasBottom() ) {
         log << MSG::VERBOSE << "Skipping a " << (*pi)->particleID().pid()
             << endreq;
         continue;
       }
-      if( include_it )
-      {
+      if( include_it ) {
         hypothesis.push_back( *pi );
         if( m_only_one )
           include_it = false;
       }
     }
   }
-  if( hypothesis.size() == 0 )
-  {
+  if( hypothesis.size() == 0 ) {
     log << MSG::DEBUG << "No hypothesis found. Giving up!" << endreq;
     return StatusCode::SUCCESS;
   }
 
   SmartDataPtr<Vertices> primvtxs(eventSvc(),m_primVertices_location);
-  if( !primvtxs )
-  {
+  if( !primvtxs ) {
     log << MSG::ERROR << "Unable to find the primary vertices at '"
         << m_primVertices_location << "'" << endreq;
     return StatusCode::SUCCESS;
@@ -170,16 +169,14 @@ StatusCode FlavourTaggingAlgorithm::execute() {
 
   log << MSG::DEBUG << "About to tag " << hypothesis.size() << " B s" << endreq;
   ParticleVector::const_iterator hi;
-  for( hi=hypothesis.begin(); hi!=hypothesis.end(); hi++ )
-  {
+  for( hi=hypothesis.begin(); hi!=hypothesis.end(); hi++ ) {
     m_n_B++;
     log << MSG::DEBUG << "About to tag a " << (*hi)->particleID().pid()
         << endreq;
     FlavourTag *theTag = new FlavourTag;
     m_taggingTool->tagThisB( *(*hi), parts, *thePrimVtx, *theTag );
     log << MSG::DEBUG << "Result is ";
-    switch( theTag->decision() )
-    {
+    switch( theTag->decision() ) {
     case FlavourTag::b:
       m_n_b_tags++;
       log << "'b'" << theTag->tagger()->particleID().pid();
@@ -196,22 +193,18 @@ StatusCode FlavourTaggingAlgorithm::execute() {
     }
     log << endreq;
     tags->insert(theTag);
-    if( theTag->decision() != FlavourTag::none )
-    {
+    if( theTag->decision() != FlavourTag::none ) {
       std::list<Particle *> parts(0);
       parts.push_back(theTag->taggedB());
       std::list<Particle *>::iterator pi = parts.begin();
-      while( pi != parts.end() )
-      {
-        if( *pi == theTag->tagger() )
-        {
+      while( pi != parts.end() ) {
+        if( *pi == theTag->tagger() ) {
           log << MSG::WARNING 
               << "***** The tagger is a member of the B decay! *****" << endreq;
           break;
         }
         Vertex *vtx = (*pi)->endVertex();
-        if( vtx != 0 )
-        {
+        if( vtx != 0 ) {
           SmartRefVector<Particle>::const_iterator d_i;
           for( d_i=vtx->products().begin(); d_i!=vtx->products().end(); d_i++ )
             parts.push_back(const_cast<Particle*>(d_i->target()));
@@ -220,6 +213,24 @@ StatusCode FlavourTaggingAlgorithm::execute() {
       }
     }
   }
+  FlavourTags::const_iterator tagi;
+  for( tagi = tags->begin(); tagi != tags->end(); tagi++ ) {
+    log << MSG::INFO << "TAGGING "
+        << evt_head->runNum() << ' ' << evt_head->evtNum() << ' ';
+    switch( (*tagi)->decision() ) {
+    case FlavourTag::none:
+      log << 0;
+      break;
+    case FlavourTag::b:
+      log << -1;
+      break;
+    case FlavourTag::bbar:
+      log << +1;
+      break;
+    }
+    log << endreq;
+  }
+
   sc = eventSvc()->registerObject(m_tags_location,tags);
   if (sc.isFailure())
     log << MSG::ERROR << "Unable to register the tags under '"
@@ -243,8 +254,20 @@ StatusCode FlavourTaggingAlgorithm::finalize() {
   log << MSG::INFO << "Number of B:                " << m_n_B << endreq;
   log << MSG::INFO << "Number of b tag:            " << m_n_b_tags << endreq;
   log << MSG::INFO << "Number of bbar tag:         " << m_n_bbar_tags << endreq;
+
+  double e    = double(m_n_b_tags+m_n_bbar_tags)/double(m_n_B);
+  double w    = double(m_n_b_tags)/double(m_n_b_tags+m_n_bbar_tags);
+  double eff  = e*pow(1-2*w,2);
+  double se   = sqrt(e*(1-e)/double(m_n_B));
+  double sw   = sqrt(w*(1-w)/double(m_n_b_tags+m_n_bbar_tags));
+  double seff = sqrt(eff/double(m_n_B)*(4-eff*(1+3/eff)));
+
   log << MSG::INFO << "Efficency:                  "
-      << float(m_n_b_tags+m_n_bbar_tags)/m_n_B << endreq;
+      << e << " +/- " << se << endreq;
+  log << MSG::INFO << "Wrong-tag fraction:         "
+      << w << " +/- " << sw << endreq;
+  log << MSG::INFO << "Effective efficiency:       "
+      << eff << " +/- " << seff << endreq;
 
   return StatusCode::SUCCESS;
 }

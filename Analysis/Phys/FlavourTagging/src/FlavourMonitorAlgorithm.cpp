@@ -1,4 +1,4 @@
-// $Id: FlavourMonitorAlgorithm.cpp,v 1.7 2002-11-20 08:24:45 odie Exp $
+// $Id: FlavourMonitorAlgorithm.cpp,v 1.8 2003-03-25 09:58:52 odie Exp $
 // Include files 
 #include <algorithm>
 
@@ -139,6 +139,7 @@ StatusCode FlavourMonitorAlgorithm::execute() {
   for( l=0, loc_i=m_tags_locations.begin(); loc_i!=m_tags_locations.end();
        loc_i++, l++ )
   {
+    log << MSG::DEBUG << "Monitoring location: " << *loc_i << endreq;
     SmartDataPtr<FlavourTags> tags(eventSvc(), *loc_i);
     if( tags == 0 )
       continue;
@@ -179,31 +180,26 @@ StatusCode FlavourMonitorAlgorithm::execute() {
           << mothers.size() << endreq;
       log << MSG::DEBUG << "prods.size() = " << prods.size() << endreq;
 
-      // Associate them to MC particles.
+      // Associate them to MC particles and find the B it comes from.
+      std::list<const MCParticle *> mcBs(0);
       std::list<Particle*>::const_iterator p_i;
-      std::list<MCParticle *> mcprods(0);
-      for( p_i = prods.begin(); p_i != prods.end(); p_i++ )
-      {
+      for( p_i = prods.begin(); p_i != prods.end(); p_i++ ) {
         MCsFromParticleLinks mcPartsLinks = m_pAsctLinks->rangeFrom( *p_i );
         if( mcPartsLinks.empty() )
           continue;
-        log << MSG::DEBUG << "No link(s) to MCParticle." << endreq;
+        bool has_b = false;
         MCsFromParticleLinksIterator l_i;
-        for( l_i=mcPartsLinks.begin(); l_i!=mcPartsLinks.end(); l_i++ )
-          mcprods.push_back(l_i->to());
-      }
-      log << MSG::DEBUG << "mcprods.size() = " << mcprods.size() << endreq;
-
-      // Find the B it comes from.
-      std::list<const MCParticle *> mcBs(0);
-      std::list<MCParticle *>::const_iterator a_i;
-      for( a_i = mcprods.begin(); a_i != mcprods.end(); a_i++ )
-      {
-        const MCParticle *mother = *a_i;
-        while( (mother = mother->mother()) != 0 )
-        {
-          if( mother->particleID().hasBottom() )
-            mcBs.push_back(mother);
+        for( l_i = mcPartsLinks.begin();
+             (l_i != mcPartsLinks.end()) && (!has_b);
+             l_i++ ) {
+          const MCParticle *mother = l_i->to();
+          while( (mother = mother->mother()) != 0 ) {
+            if( mother->particleID().hasBottom() ) {
+              mcBs.push_back(mother);
+              has_b = true;
+              break;
+            }
+          }
         }
       }
       log << MSG::DEBUG << "mcBs.size() = " << mcBs.size() << endreq;
@@ -213,11 +209,9 @@ StatusCode FlavourMonitorAlgorithm::execute() {
       // Find the most frequent B in the list.
       const MCParticle *mcB = 0;
       unsigned int max_n = 0, n_tot = 0;
-      while( !mcBs.empty() )
-      {
+      while( !mcBs.empty() ) {
         unsigned int n = std::count(mcBs.begin(), mcBs.end(), mcBs.front());
-        if( n>max_n )
-        {
+        if( n>max_n ) {
           max_n = n;
           mcB = mcBs.front();
         }
@@ -225,8 +219,7 @@ StatusCode FlavourMonitorAlgorithm::execute() {
         n_tot++;
       }
 
-      if( mcB == 0 )
-      {
+      if( mcB == 0 ) {
         log << MSG::DEBUG << "No B found." << endreq;
         m_n_noB[n_col][l]++;
         continue;

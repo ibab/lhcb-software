@@ -1,51 +1,41 @@
 ApplicationMgr.TopAlg += { "FlavourTaggingAlgorithm/KaonTagging" };
-//TopSequence.Members += { "FlavourTaggingAlgorithm/KaonTagging" };
-//
+
 KaonTagging.TagLocation = "/Event/Phys/User/Tags/Kaon";
 //KaonTagging.HypothesisLocations = { "/Event/Phys/B0" };
 //KaonTagging.PrimaryVerticesLocation = "";
-//KaonTagging.DesktopName = "PhysDesktop";
-//KaonTagging.FirstOnly = false;
 KaonTagging.CheckL0 = false;
 
-KaonTagging.PhysDesktop.ParticleMakerType = "ChargedParticleMaker";
-KaonTagging.PhysDesktop.ChargedParticleMaker.ParticleNames = {"All"};
-//KaonTagging.PhysDesktop.InputLocations = { "/Event/Phys/Prod" };
-//KaonTagging.PhysDesktop.OutputLocation = "/Event/Phys/Prod/Particles";
+KaonTagging.PhysDesktop.ParticleMakerType = "FTCombinedParticleMaker";
+KaonTagging.PhysDesktop.FTCombinedParticleMaker.TypeOfIdentification = 6;
+KaonTagging.PhysDesktop.FTCombinedParticleMaker.ChoiceOnBremPhot     = 1;
+KaonTagging.PhysDesktop.FTCombinedParticleMaker.CutOnClusterDist     = 200;
+KaonTagging.PhysDesktop.FTCombinedParticleMaker.CutOnChi2CaloTrMatch = 10;
+KaonTagging.PhysDesktop.FTCombinedParticleMaker.CutOnChi2CaloEMatch  = 100;
+KaonTagging.PhysDesktop.FTCombinedParticleMaker.CutOnChi2BremMatch   = 50;
+KaonTagging.PhysDesktop.FTCombinedParticleMaker.CutOnRichProb        = 0.01;
+KaonTagging.PhysDesktop.FTCombinedParticleMaker.CutOndeOfCombinedPID = 0;
+KaonTagging.PhysDesktop.FTCombinedParticleMaker.ChoiceForFlag        = 3;
+KaonTagging.PhysDesktop.OutputLevel = 4;
 
 KaonTagging.TaggingTool = "SingleParticleTaggingTool";
 
 // --- Kaon tags
-
+// In the following cuts, -1 means disable.
 KaonTagging.SingleParticleTaggingTool.FilterName = "ParticleFilter";
 //KaonTagging.SingleParticleTaggingTool.GeomDispCalculator = "GeomDispCalculator";
 //KaonTagging.SingleParticleTaggingTool.PrimaryVertices = "";
 //KaonTagging.SingleParticleTaggingTool.InverseCharge = true;
 KaonTagging.SingleParticleTaggingTool.AllVertices = true;
-KaonTagging.SingleParticleTaggingTool.MinImpactSignificance = 4.2; // -1 == disable
-KaonTagging.SingleParticleTaggingTool.MaxImpactSignificance = -1; // -1 == disable
+KaonTagging.SingleParticleTaggingTool.MinImpactSignificance = 3.7;
+KaonTagging.SingleParticleTaggingTool.MaxImpactSignificance = -1;
 
 KaonTagging.SingleParticleTaggingTool.ParticleFilter.CriteriaNames = { "ParticleTaggerCriterion" };
 KaonTagging.SingleParticleTaggingTool.ParticleFilter.ParticleTaggerCriterion.ParticleName = "K+";
-KaonTagging.SingleParticleTaggingTool.ParticleFilter.ParticleTaggerCriterion.MinConfLevel = 0.95;
-KaonTagging.SingleParticleTaggingTool.ParticleFilter.ParticleTaggerCriterion.MaxConfLevel = -1; // -1 == disable
-KaonTagging.SingleParticleTaggingTool.ParticleFilter.ParticleTaggerCriterion.MinTransverseMomentum = 400; // -1 == disable
-KaonTagging.SingleParticleTaggingTool.ParticleFilter.ParticleTaggerCriterion.MaxTransverseMomentum = -1; // -1 == disable
-KaonTagging.SingleParticleTaggingTool.ParticleFilter.ParticleTaggerCriterion.MinMomentum = 2000; // -1 == disable
-KaonTagging.SingleParticleTaggingTool.ParticleFilter.ParticleTaggerCriterion.MaxMomentum = -1; // -1 == disable
+KaonTagging.SingleParticleTaggingTool.ParticleFilter.ParticleTaggerCriterion.MinConfLevel = -1;
+KaonTagging.SingleParticleTaggingTool.ParticleFilter.ParticleTaggerCriterion.MaxConfLevel = -1;
+KaonTagging.SingleParticleTaggingTool.ParticleFilter.ParticleTaggerCriterion.MinTransverseMomentum = 400;
+KaonTagging.SingleParticleTaggingTool.ParticleFilter.ParticleTaggerCriterion.MaxTransverseMomentum = -1;
+KaonTagging.SingleParticleTaggingTool.ParticleFilter.ParticleTaggerCriterion.MinMomentum = 3000;
+KaonTagging.SingleParticleTaggingTool.ParticleFilter.ParticleTaggerCriterion.MaxMomentum = -1;
 KaonTagging.SingleParticleTaggingTool.ParticleFilter.ParticleTaggerCriterion.MinVeloZ = -315;
 KaonTagging.SingleParticleTaggingTool.ParticleFilter.ParticleTaggerCriterion.MaxVeloZ = 750;
-
-// --- Monitoring
-
-//ApplicationMgr.TopAlg += { "SingleParticleTaggingMonitor/KaonTaggingMonitor" };
-TopSequence.Members += { "SingleParticleTaggingMonitor/KaonTaggingMonitor" };
-KaonTaggingMonitor.BeAFilter = true;
-KaonTaggingMonitor.TaggerName = "K+";
-KaonTaggingMonitor.TagsLocations = { "/Event/Phys/User/Tags/Kaon" };
-
-// --- Debuging
-
-FlavourTaggingDebug.PhysDesktop.InputLocations = { "/Event/Phys/B0" };
-FlavourTaggingDebug.PhysDesktop.ParticleMakerType = "ChargedParticleMaker";
-FlavourTaggingDebug.PhysDesktop.ChargedParticleMaker.ParticleNames = {"All"};
