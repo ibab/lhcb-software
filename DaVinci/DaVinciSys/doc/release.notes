@@ -1,8 +1,13 @@
 !-----------------------------------------------------------------------------
 ! Package     : DaVinciSys
-! Responsible : Gloria CORTI
+! Responsible : P. Koppenburg
 ! Purpose     : 
 !-----------------------------------------------------------------------------
+
+!====================  DaVinciSys v11r2 2004-02-23 ============================
+! 2004-02-23 -P. Koppenburg
+ - remove packages from project because now in LHCb v15r2
+   .  L1Decision          v2r4   L1
 
 !====================  DaVinciSys v11r1 2004-02-11 ============================
 ! 2004-02-11 - Gloria CORTI

@@ -8,7 +8,7 @@ branches doc cmt
 #=======================================================
 
 # DaVinci application
-use  DaVinci             v11r1  Phys
+use  DaVinci             v11r2  Phys
 
 #--- DaVinci packages
 #    General Use
@@ -57,7 +57,7 @@ use  Bs2PhiPhi           v1r2   PhysSel
 
 #--- Trigger
 use  L0DU                v6r7	L0
-use  L1Decision          v2r4   L1
+# use  L1Decision          v2r4   L1
 
 #--- ProtoParticles 
 use  CaloReco	         v1r8   Calo
