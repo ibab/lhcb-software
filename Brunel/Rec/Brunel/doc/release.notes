@@ -12,6 +12,9 @@ Purpose: LHCb reconstruction program
    . The SICB initialization is removed. A reduced ZEBRA common block is still
      present for HBOOK.
 
+- New functionality
+   . use also Seed and Upstream tracks for Calo PID matching (CaloPID v1r1)
+
 - New tuning
    . Modify IT, OT, Velo Associators to work with Digit2MCHit relations stored
      on oodigi tape. Identical behaviour as previously except for tiny 
@@ -22,7 +25,8 @@ Purpose: LHCb reconstruction program
      on the oodigi tape if required for special studies) (GaudiConf v7r0)
 
 - Bug fixes
-   . Correct a bug with rotation of TT stereo layers (ITDet v1r5) 
+   . Correct a bug with rotation of TT stereo layers (ITDet v1r5)
+   . Fix for HCalE estimator (CaloPID v1r1)
 
 </PRE><H1><A NAME=v19r1>2003-07-08 Brunel v19r1</A></H1><PRE>
 - New tuning:

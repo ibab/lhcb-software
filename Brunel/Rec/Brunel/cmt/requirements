@@ -47,7 +47,7 @@ use CaloInterfaces      v2r4  	Calo
 use CaloUtils           v4r5  	Calo
 use CaloMonitor         v1r4  	Calo
 use CaloReco            v1r6 	Calo
-use CaloPIDs		v1r0	Calo
+use CaloPIDs		v1r1	Calo
 
 # Velo
 use VeloAlgorithms      v2r7  	Velo
