@@ -1,5 +1,5 @@
 package Brunel
-version v8
+version v9r0
 
 branches doc cmt job options
 
@@ -18,58 +18,58 @@ ignore_pattern   package_tag
 version_strategy first_choice
 
 # Gaudi Configuration options
-use GaudiConf    v5
+use GaudiConf    v6
 
 # External libraries not in GaudiSys
 use CERNLIB      v2001
 
 # Gaudi Framework 
-use GaudiSys     v8
-use HbookCnv     v10r1
+use GaudiSys     v9r0
+use HbookCnv     v11r0
 
 # Brunel utilities
-use BrunelKernel v2     Rec
-use BrunelSicb   v1     Rec
+use BrunelKernel v3r0   Rec
+use BrunelSicb   v2r0   Rec
 
 # Subdetector kernels
-use TrKernel     v5r1   Tr
-use CaloGen      v2     Calo
+use TrKernel     v6r0   Tr
+use CaloKernel   v1r0   Calo
 
 # Detector description
-use DetDesc      v7     Det
-use XmlDDDB      v6r1   Det
-use CaloDet      v2r1   Det
+use DetDesc      v9r0   Det
+use XmlDDDB      v7r0   Det
+use CaloDet      v3r0   Det
 
 # Event Model
-use LHCbEvent    v11    Event
-use L0Event      v3     Event
-use VeloEvent    v5     Event
-use ITEvent      v6r1   Event
-use OTEvent      v6r1   Event
-use TrEvent      v6r1   Event
-use CaloEvent    v6     Event
+use LHCbEvent    v12r1  Event
+use L0Event      v4r0   Event
+use VeloEvent    v6r0   Event
+use ITEvent      v7r0   Event
+use OTEvent      v7r0   Event
+use TrEvent      v7r0   Event
+use CaloEvent    v7r0   Event
 
 # SicB event data persistency
 use Futio        v11    SICB
-use SicbCnv      v13r1  SICB
-use CaloSicbCnv  v4     SICB
-use L0SicbCnv    v3     SICB
-use MuonSicbCnv  v3     SICB
-use TrSicbCnv    v3     SICB
-use VSicbCnv     v5	SICB
+use SicbCnv      v15r0  SICB
+use CaloSicbCnv  v5r1   SICB
+use L0SicbCnv    v4r0   SICB
+use MuonSicbCnv  v4r0   SICB
+use TrSicbCnv    v4r0   SICB
+use VSicbCnv     v6r0   SICB
 
 # L0 trigger
-use L0Calo       v2     L0
-use L0Muon       v3r1   L0
-use L0DU         v2r1   L0
+use L0Calo       v3r0   L0
+use L0Muon       v4r0   L0
+use L0DU         v3r0   L0
 
 # Calorimeter digitisation
-use CaloAlgs     v3     Calo
+use CaloAlgs     v4r*   Calo
 
 # Tracking
-use ITAlgorithms v6	IT
-use OTAlgorithms v6	OT
-use TrAlgorithms v6r2   Tr
+use ITAlgorithms v7r0   IT
+use OTAlgorithms v7r0	OT
+use TrAlgorithms v7r0   Tr
 
 # SICBDST packages
 use Futil        v10r3  SICB
@@ -112,7 +112,7 @@ macro_append Brunel_linkopts " "\
                 Linuxdbx     " -g -Wl,--start-group "
 
 #== Set the Brunel version = v *10000 + r * 100 + p * 100 ==
-macro_append fflags " -DBrunelVersion=80000 " \
-           VisualC  " /DBrunelVersion=80000 "
+macro_append fflags " -DBrunelVersion=90000 " \
+           VisualC  " /DBrunelVersion=90000 "
 
 apply_pattern application_path

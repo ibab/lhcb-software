@@ -65,6 +65,7 @@ BrunelDigiMUON.addBkg = false;
 //--------------------------------------------------------------
 // C++ subdetector algorithms
 //--------------------------------------------------------------
+#pragma print off
 // L0 trigger
 #include "$L0CALOROOT/options/Brunel.opts"
 #include "$L0MUONROOT/options/Brunel.opts"
@@ -81,6 +82,7 @@ ApplicationMgr.ExtSvc += { "MagneticFieldSvc" };
 #include "$ITALGORITHMSROOT/options/Brunel.opts"
 #include "$TRALGORITHMSROOT/options/Brunel.opts"
 #include "$TRSICBCNVROOT/options/Brunel.opts"
+#pragma print on
 
 // Database specific options
 #include "$LHCBDBASE/options/Brunel.opts"
