@@ -3,18 +3,12 @@
  *
  *  @author O.Deschamps
  *  @date 2003-04-10
- *
- * Revision 2004-05-10 :
- *
- * Pi0 mass rescaling as function of pi0 energy (DC04 setting)
- *
  */
 
 // ApplicationMgr.TopAlg += { "MergedPi0Alg" };
 
 // Configure PhysDesktop Tool with necessary values
 MergedPi0Alg.PhysDesktop.ParticleMakerType = "PhotonFromMergedParticleMaker";
-
 MergedPi0Alg.PhysDesktop.PhotonFromMergedParticleMaker.OutputLevel = 4;
 
 ////////////////////////////////////////
@@ -22,7 +16,7 @@ MergedPi0Alg.Pi0MassWindow = 60.;    // MeV
 MergedPi0Alg.GammaPtCut    = 0.;     // MeV 
 MergedPi0Alg.Pi0PtCut    =     0.;     // MeV 
 MergedPi0Alg.GammaGammaDistCut= 1.8 ;  // Ecal CellSize Unit
-MergedPi0Alg.ParMas={ 1.0000 , 0.0653E-03 , 0.1267E-04 }; 
+MergedPi0Alg.ParMas={ 1.008 , 0.0658E-03 , 0.1276E-04 }; 
 ////////////////////////////////////////
 
 MergedPi0Alg.OutputLevel = 4;
