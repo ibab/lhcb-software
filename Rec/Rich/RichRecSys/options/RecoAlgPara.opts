@@ -7,7 +7,8 @@ RichLocPID.MaxInputTracks                    = 700;
 ToolSvc.RichLocPIDTool.MinProbThresholdHighP = { 0.03,  0.01, 0.02, 0.02 };
 ToolSvc.RichLocPIDTool.MinProbThresholdLowP  = { 0.1,   0.1,  0.1,  0.09 };
 ToolSvc.RichLocPIDTool.CherenkovThetaRes     = { 0.002, 0.0014, 0.0007   };
-ToolSvc.RichToolRegistry.Tools += { "RichLocalPIDTool/RichLocPIDTool" };
+ToolSvc.RichToolRegistry.Tools += { "RichLocalPIDToolAngleSpace/RichLocPIDTool" };
+//ToolSvc.RichToolRegistry.Tools += { "RichLocalPIDToolLocalXYSpace/RichLocPIDTool" };
 
 // Global PID digit selection
 RichGloPIDDigSel.MaxUsedPixels            = 8000;

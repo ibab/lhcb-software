@@ -1,4 +1,4 @@
-// $Id: RichTabulatedGasQuartzWindowAbs.h,v 1.1 2004-04-19 23:06:16 jonesc Exp $
+// $Id: RichTabulatedGasQuartzWindowAbs.h,v 1.2 2004-06-18 11:21:32 jonesc Exp $
 #ifndef RICHRECTOOLS_RICHGASQUARTZWINDOWABS_H
 #define RICHRECTOOLS_RICHGASQUARTZWINDOWABS_H 1
 
@@ -15,8 +15,8 @@
 // Detector Description
 #include "DetDesc/DetectorElement.h"
 
-// RichUtils
-#include "RichUtils/Rich1DTabProperty.h"
+// RichKernel
+#include "RichKernel/Rich1DTabProperty.h"
 
 // Event model
 #include "Event/RichRecSegment.h"

@@ -1,8 +1,6 @@
-// $Id: RichInterpCKResVpForTrStoredTracks.h,v 1.1 2004-04-19 23:06:11 jonesc Exp $
+// $Id: RichInterpCKResVpForTrStoredTracks.h,v 1.2 2004-06-18 11:21:30 jonesc Exp $
 #ifndef RICHRECTOOLS_RICHINTERPCKRESVPFORTRSTOREDTRACKS_H
 #define RICHRECTOOLS_RICHINTERPCKRESVPFORTRSTOREDTRACKS_H 1
-
-#include <cmath>
 
 // base class
 #include "RichRecBase/RichRecToolBase.h"
@@ -10,8 +8,8 @@
 // Event model
 #include "Event/RichRecSegment.h"
 
-// RichUtils
-#include "RichUtils/Rich1DTabFunc.h"
+// RichKernel
+#include "RichKernel/Rich1DTabFunc.h"
 
 // CLHEP
 #include "CLHEP/Units/PhysicalConstants.h"

@@ -161,5 +161,4 @@ ToolSvc.RichDetParameters.MaxPhotonEnergy = { 3.75,    7.00,   7.00 };
 ToolSvc.RichToolRegistry.Tools += { "RichSmartIDTool/RichSmartIDTool" };
 
 // Detector ray-tracing
-//ToolSvc.RichToolRegistry.Tools += { "CdfRayTracing/RichRayTracing" };
 ToolSvc.RichToolRegistry.Tools += { "RichRayTracing/RichRayTracing" };

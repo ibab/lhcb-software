@@ -1,4 +1,4 @@
-// $Id: RichMassHypothesisRingCreator.cpp,v 1.3 2004-06-10 14:39:22 jonesc Exp $
+// $Id: RichMassHypothesisRingCreator.cpp,v 1.4 2004-06-18 11:21:30 jonesc Exp $
 
 // local
 #include "RichMassHypothesisRingCreator.h"
@@ -17,10 +17,10 @@ const        IToolFactory& RichMassHypothesisRingCreatorFactory = s_factory ;
 RichMassHypothesisRingCreator::RichMassHypothesisRingCreator( const std::string& type,
                                                               const std::string& name,
                                                               const IInterface* parent )
-  : RichRecToolBase( type, name, parent ),
-    m_rayTrace     ( 0 ),
-    m_ckAngle      ( 0 ),
-    m_rings        ( 0 )
+  : RichRecToolBase ( type, name, parent ),
+    m_rayTrace      ( 0 ),
+    m_ckAngle       ( 0 ),
+    m_rings         ( 0 )
 {
 
   declareInterface<IRichMassHypothesisRingCreator>(this);

@@ -1,4 +1,4 @@
-// $Id: RichInterpCKResVthetaForTrStoredTracks.h,v 1.1 2004-04-19 23:06:11 jonesc Exp $
+// $Id: RichInterpCKResVthetaForTrStoredTracks.h,v 1.2 2004-06-18 11:21:30 jonesc Exp $
 #ifndef RICHRECTOOLS_RICHINTERPCKRESVTHETAFORTRSTOREDTRACKS_H
 #define RICHRECTOOLS_RICHINTERPCKRESVTHETAFORTRSTOREDTRACKS_H 1
 
@@ -8,8 +8,8 @@
 // Event model
 #include "Event/RichRecSegment.h"
 
-// RichUtils
-#include "RichUtils/Rich1DTabFunc.h"
+// Kernel
+#include "RichKernel/Rich1DTabFunc.h"
 
 // CLHEP
 #include "CLHEP/Units/PhysicalConstants.h"

@@ -1,4 +1,4 @@
-// $Id: RichTabulatedRayleighScatter.h,v 1.3 2004-02-02 14:27:05 jonesc Exp $
+// $Id: RichTabulatedRayleighScatter.h,v 1.4 2004-06-18 11:21:32 jonesc Exp $
 #ifndef RICHRECTOOLS_RICHTABULATEDRAYLEIGHSCATTER_H
 #define RICHRECTOOLS_RICHTABULATEDRAYLEIGHSCATTER_H 1
 
@@ -15,8 +15,8 @@
 // Detector Description
 #include "DetDesc/DetectorElement.h"
 
-// RichUtils
-#include "RichUtils/Rich1DTabProperty.h"
+// RichKernel
+#include "RichKernel/Rich1DTabProperty.h"
 
 // Event model
 #include "Event/RichRecSegment.h"

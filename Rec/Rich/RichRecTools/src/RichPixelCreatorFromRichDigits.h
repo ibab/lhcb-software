@@ -1,4 +1,4 @@
-// $Id: RichPixelCreatorFromRichDigits.h,v 1.6 2004-06-10 14:39:23 jonesc Exp $
+// $Id: RichPixelCreatorFromRichDigits.h,v 1.7 2004-06-18 11:21:31 jonesc Exp $
 #ifndef RICHRECTOOLS_RICHPIXELCREATORFROMRICHDIGITS_H
 #define RICHRECTOOLS_RICHPIXELCREATORFROMRICHDIGITS_H 1
 
@@ -13,7 +13,7 @@
 
 // interfaces
 #include "RichRecBase/IRichPixelCreator.h"
-#include "RichDetTools/IRichSmartIDTool.h"
+#include "RichKernel/IRichSmartIDTool.h"
 
 // Event
 #include "Event/RichDigit.h"

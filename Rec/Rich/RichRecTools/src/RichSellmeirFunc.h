@@ -1,12 +1,12 @@
-// $Id: RichSellmeirFunc.h,v 1.6 2004-04-19 23:06:15 jonesc Exp $
+// $Id: RichSellmeirFunc.h,v 1.7 2004-06-18 11:21:31 jonesc Exp $
 #ifndef RICHRECTOOLS_RICHSELLMEIRFUNC_H
 #define RICHRECTOOLS_RICHSELLMEIRFUNC_H 1
 
 // base class
 #include "RichRecBase/RichRecToolBase.h"
 
-// RichKernel
-#include "RichKernel/RichRadiatorType.h"
+// Kernel
+#include "Kernel/RichRadiatorType.h"
 #include "RichKernel/RichParticleIDType.h"
 #include "RichKernel/BoostArray.h"
 

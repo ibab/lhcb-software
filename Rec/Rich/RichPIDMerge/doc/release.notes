@@ -4,6 +4,9 @@
 ! Purpose     : Contains the merging algorithms for final RICH PID results
 !-----------------------------------------------------------------------------
 
+! 2004-06-18 - Chris Jones
+ - Update includes for new package structure
+
 !======================= RichPIDMerge v1r3 2004-03-18 =======================
 ! 2004-03-14 - Chris Jones
  - Adapt to new Gaudi base classes

@@ -14,3 +14,4 @@ ToolSvc.RichTrackCreator.TrackSegmentTool = "RichDetTrSegMaker";
 ToolSvc.RichToolRegistry.Tools += { "RichTrSegMakerFromTrStoredTracks/RichDetTrSegMaker" };
 ToolSvc.RichDetTrSegMaker.PrimaryTrackExtrapolator = "TrHerabExtrapolator";
 ToolSvc.RichDetTrSegMaker.BackupTrackExtrapolator  = "TrParabolicExtrapolator";
+

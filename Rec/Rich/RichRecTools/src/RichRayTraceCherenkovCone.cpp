@@ -1,4 +1,4 @@
-// $Id: RichRayTraceCherenkovCone.cpp,v 1.3 2004-06-10 14:39:23 jonesc Exp $
+// $Id: RichRayTraceCherenkovCone.cpp,v 1.4 2004-06-18 11:21:31 jonesc Exp $
 
 // local
 #include "RichRayTraceCherenkovCone.h"
@@ -20,6 +20,7 @@ RichRayTraceCherenkovCone::RichRayTraceCherenkovCone( const std::string& type,
   : RichRecToolBase( type, name, parent ),
     m_rayTrace     ( 0 ),
     m_ckAngle      ( 0 ),
+    m_smartIDTool  ( 0 ),
     m_nRayTrace    ( 0 )
 {
 
@@ -39,6 +40,7 @@ StatusCode RichRayTraceCherenkovCone::initialize() {
   // Acquire instances of tools
   acquireTool( "RichRayTracing",     m_rayTrace );
   acquireTool( "RichCherenkovAngle", m_ckAngle  );
+  acquireTool( "RichSmartIDTool", m_smartIDTool );
 
   // Set up cached parameters for photon tracing
   m_incPhi = M_2PI/( static_cast<double>(m_nRayTrace) );
@@ -59,7 +61,29 @@ StatusCode RichRayTraceCherenkovCone::finalize()
   return RichRecToolBase::finalize();
 }
 
-std::vector<HepPoint3D> &
+const std::vector<HepPoint3D> &
+RichRayTraceCherenkovCone::rayTraceLocal ( RichRecRing * ring,
+                                           const DeRichHPDPanel::traceMode mode ) const
+{
+  if ( !ring ) Exception( "Null RichRecRing pointer!" );
+
+  if ( ring->ringPointsLocal().empty() ) {
+
+    // Check global points have been computed
+    if ( ring->ringPoints().empty() ) rayTrace ( ring, mode );
+    
+    // convert global to local points
+    for ( std::vector<HepPoint3D>::const_iterator iP = ring->ringPoints().begin();
+          iP != ring->ringPoints().end(); ++iP ) {
+      ring->ringPointsLocal().push_back( m_smartIDTool->globalToPDPanel(*iP) );
+    }
+    
+  }
+
+  return ring->ringPointsLocal();
+}
+
+const std::vector<HepPoint3D> &
 RichRayTraceCherenkovCone::rayTrace ( RichRecRing * ring,
                                       const DeRichHPDPanel::traceMode mode ) const
 {

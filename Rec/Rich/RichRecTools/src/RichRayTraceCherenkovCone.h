@@ -1,4 +1,4 @@
-// $Id: RichRayTraceCherenkovCone.h,v 1.2 2004-06-10 14:39:24 jonesc Exp $
+// $Id: RichRayTraceCherenkovCone.h,v 1.3 2004-06-18 11:21:31 jonesc Exp $
 #ifndef RICHRECBASE_RICHRAYTRACECHERENKOVCONE_H
 #define RICHRECBASE_RICHRAYTRACECHERENKOVCONE_H 1
 
@@ -12,7 +12,8 @@
 // interfaces
 #include "RichRecBase/IRichRayTraceCherenkovCone.h"
 #include "RichRecBase/IRichCherenkovAngle.h"
-#include "RichDetTools/IRichRayTracing.h"
+#include "RichKernel/IRichRayTracing.h"
+#include "RichKernel/IRichSmartIDTool.h"
 
 // Event
 #include "Event/RichRecRing.h"
@@ -65,9 +66,13 @@ public:
                         std::vector<HepPoint3D> & points,
                         const DeRichHPDPanel::traceMode mode = DeRichHPDPanel::loose ) const;
 
-  /// Ray trace the Cherenkov cone for the given ring to the detector plane
-  std::vector<HepPoint3D> & rayTrace ( RichRecRing * ring,
-                                       const DeRichHPDPanel::traceMode mode = DeRichHPDPanel::loose ) const;
+  /// Ray trace the Cherenkov cone for the given ring to the detector plane, in Global coordinates
+  const std::vector<HepPoint3D> & rayTrace ( RichRecRing * ring,
+                                             const DeRichHPDPanel::traceMode mode = DeRichHPDPanel::loose ) const;
+
+  /// Ray trace the Cherenkov cone for the given ring to the detector plane, in Local coordinates
+  const std::vector<HepPoint3D> & rayTraceLocal ( RichRecRing * ring,
+                                                  const DeRichHPDPanel::traceMode mode = DeRichHPDPanel::loose ) const;
 
 private: // methods
 
@@ -77,6 +82,7 @@ private: // data
   // Pointers to tool instances
   IRichRayTracing * m_rayTrace;
   IRichCherenkovAngle * m_ckAngle;
+  IRichSmartIDTool * m_smartIDTool;
 
   // Number of photons to use in ray tracing
   int m_nRayTrace;

@@ -4,6 +4,9 @@
 ! Purpose     : Co-ordinates the RICH reconstruction packages
 !-----------------------------------------------------------------------------
 
+! 2004-06-18 - Chris Jones
+ - New version for RichPIDMerge due to package restructuring
+
 ! 2004-06-10 - Chris Jones
  - New version for new reconstruction packages :-
    RichDAQ, RichRecBase, RichRecCommon, RichGlobalPID,

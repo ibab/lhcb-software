@@ -1,4 +1,4 @@
-// $Id: RichTrackCreatorFromTrStoredTracks.h,v 1.12 2004-06-10 14:39:26 jonesc Exp $
+// $Id: RichTrackCreatorFromTrStoredTracks.h,v 1.13 2004-06-18 11:21:32 jonesc Exp $
 #ifndef RICHRECTOOLS_RichTrackCreatorFromTrStoredTracks_H
 #define RICHRECTOOLS_RichTrackCreatorFromTrStoredTracks_H 1
 
@@ -15,9 +15,9 @@
 #include "RichRecBase/IRichTrackCreator.h"
 #include "RichRecBase/IRichExpectedTrackSignal.h"
 #include "RichRecBase/IRichMassHypothesisRingCreator.h"
-#include "RichDetTools/IRichRayTracing.h"
-#include "RichDetTools/IRichSmartIDTool.h"
-#include "RichDetTools/IRichTrSegMaker.h"
+#include "RichKernel/IRichRayTracing.h"
+#include "RichKernel/IRichSmartIDTool.h"
+#include "RichKernel/IRichTrSegMaker.h"
 
 // Event
 #include "Event/TrStoredTrack.h"

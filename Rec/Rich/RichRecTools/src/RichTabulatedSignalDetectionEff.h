@@ -1,4 +1,4 @@
-// $Id: RichTabulatedSignalDetectionEff.h,v 1.4 2004-03-16 13:45:06 jonesc Exp $
+// $Id: RichTabulatedSignalDetectionEff.h,v 1.5 2004-06-18 11:21:32 jonesc Exp $
 #ifndef RICHRECTOOLS_RICHTABULATEDSIGNALDETECTIONEFF_H
 #define RICHRECTOOLS_RICHTABULATEDSIGNALDETECTIONEFF_H 1
 
@@ -11,8 +11,10 @@
 // interfaces
 #include "RichRecBase/IRichSignalDetectionEff.h"
 
-// RichUtils
-#include "RichUtils/Rich1DTabProperty.h"
+// Kernel
+#include "Kernel/RichDetectorType.h"
+#include "RichKernel/Rich1DTabProperty.h"
+#include "RichKernel/BoostArray.h"
 
 // Event model
 #include "Event/RichRecSegment.h"
@@ -22,10 +24,6 @@
 
 // RichDet
 #include "RichDet/DeRich1.h"
-
-// Rich Kernel
-#include "RichKernel/RichDetectorType.h"
-#include "RichKernel/BoostArray.h"
 
 /** @class RichTabulatedSignalDetectionEff RichTabulatedSignalDetectionEff.h
  *

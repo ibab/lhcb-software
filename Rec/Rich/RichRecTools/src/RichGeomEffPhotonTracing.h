@@ -1,4 +1,4 @@
-// $Id: RichGeomEffPhotonTracing.h,v 1.3 2004-02-02 14:26:59 jonesc Exp $
+// $Id: RichGeomEffPhotonTracing.h,v 1.4 2004-06-18 11:21:29 jonesc Exp $
 #ifndef RICHRECTOOLS_RICHGEOMEFFPHOTONTRACING_H
 #define RICHRECTOOLS_RICHGEOMEFFPHOTONTRACING_H 1
 
@@ -19,7 +19,7 @@
 // interfaces
 #include "RichRecBase/IRichCherenkovAngle.h"
 #include "RichRecBase/IRichGeomEff.h"
-#include "RichDetTools/IRichRayTracing.h"
+#include "RichKernel/IRichRayTracing.h"
 
 // GSL
 #include "gsl/gsl_math.h"

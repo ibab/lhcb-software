@@ -27,7 +27,7 @@ use RichLocalPID    v1r8   Rich
 use RichRingRefit   v1r7   Rich
 
 # Result merging algorithms
-use RichPIDMerge    v1r3   Rich
+use RichPIDMerge    v1r4   Rich
 
 # MC packages
 use RichRecMCTools  v1r5   Rich

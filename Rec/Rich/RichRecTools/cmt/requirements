@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.23 2004-06-10 14:39:21 jonesc Exp $
+# $Id: requirements,v 1.24 2004-06-18 11:21:28 jonesc Exp $
 # Created    : 11/03/2002
 # Maintainer : Christopher Rob Jones   Christopher.Rob.Jones@cern.ch
 
@@ -8,9 +8,6 @@ version v2r10
 # ================ structure ================================================
 branches src cmt doc
 include_path none
-
-# ================ environment ==============================================
-set RICHRECTOOLSOPTS $(RICHRECTOOLSROOT)/options
 
 # ================ dependencies =============================================
 use RichRecBase        v1r*   Rich
