@@ -6,8 +6,8 @@ branches DetDesc doc cmt src
 include_dirs $(DETDESCROOT)
 
 use GaudiKernel v10*
-use CLHEP v*
-use XML v*
+use CLHEP v1*
+use XML v3*
 
 
 # build a Linker library
