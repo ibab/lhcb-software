@@ -1,12 +1,13 @@
 package GaudiObjDesc
 
-version v5r2
+version v6r1
 
-branches doc cmt src
+branches doc cmt src GaudiObjDesc
 
 use XERCES v* -no_auto_imports
+use GaudiPolicy v*
 
-use GaudiIntrospection v*
+include_dirs $(GAUDIOBJDESCROOT)
 
 # Macro defintion used by both fragments below
 macro xmlsrc "xml"
@@ -20,4 +21,3 @@ make_fragment obj2dict -header=obj2dict_header -trailer=obj2dict_trailer
 application GODWriteCppHeader -import=XERCES ../src/DaDiFrontEnd.cpp ../src/DaDiTools.cpp ../src/DaDiCppHeader.cpp
 application GODWriteCppDict   -import=XERCES ../src/DaDiFrontEnd.cpp ../src/DaDiTools.cpp ../src/DaDiCppDict.cpp
 
-# setup_script setDTD

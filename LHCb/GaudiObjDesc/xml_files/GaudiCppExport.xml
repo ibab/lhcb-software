@@ -734,6 +734,7 @@
     <class name="CaloCluster" author="__UNKNOWN__" desc="__NODESC__"/>
     <class name="CaloHypo" author="__UNKNOWN__" desc="__NODESC__"/>
     <class name="CaloParticle" author="__UNKNOWN__" desc="__NODESC__"/>
+    <class name="TrStoredTrack" author="__UNKNOWN__" desc="__NODESC__"/>
   </package>
 
   <package name="Event">
@@ -747,7 +748,7 @@
     <class name="AlgUsedTime" author="__UNKNOWN__" desc="__NODESC__"/>
   </package>
 
-  <package name="Event">
+  <package name="GaudiKernel">
     <class name="EventFactoryDefs" author="__UNKNOWN__" desc="__NODESC__"/>
     <class name="Kernel" author="__UNKNOWN__" desc="__NODESC__"/>
     <class name="KeyedContainer" author="__UNKNOWN__" desc="__NODESC__"/>
@@ -810,6 +811,7 @@
     <class name="MCMuonHitHistory" author="__UNKNOWN__" desc="__NODESC__"/>
     <class name="MCMuonDigitInfo" author="__UNKNOWN__" desc="__NODESC__"/>
     <class name="MuonID" author="__UNKNOWN__" desc="__NODESC__"/>
+    <class name="MCVeloHit" author="__UNKNOWN__" desc="__NODESC__"/>
   </package>
 
   <package name="OTEvent">
@@ -874,7 +876,6 @@
   <package name="VeloEvent">
     <class name="MCVeloCluster" author="__UNKNOWN__" desc="__NODESC__"/>
     <class name="MCVeloDigit" author="__UNKNOWN__" desc="__NODESC__"/>
-    <class name="MCVeloHit" author="__UNKNOWN__" desc="__NODESC__"/>
     <class name="MCVeloPhiCluster" author="__UNKNOWN__" desc="__NODESC__"/>
     <class name="MCVeloPhiDigit" author="__UNKNOWN__" desc="__NODESC__"/>
     <class name="MCVeloRCluster" author="__UNKNOWN__" desc="__NODESC__"/>

@@ -2,6 +2,27 @@ Package: GaudiObjDesc
 Desccription: This package contains a set of tools used to generate code from the XML description of the data object classes.
 Package manager : Stefan Roiser
 
+===============================GaudiObjDesc v6r0==============================
+!200312 - Stefan
+- new element <assoc> to specify associations between event objects
+  - attributes "to" for the associated object
+               "weight" to specify the type of weight (e.g. int)
+               "type" to specify the type of association (either "1D" or "2D")
+- new attribte "transient" for <attribute>-element (values "TRUE" or "FALSE")
+
+===============================GaudiObjDesc v6r0==============================
+
+!20031004 - Stefan
+- changes to DaDiCppDict to produce output which complies to SEAL dictionaries
+
+!20030701 - Stefan
+- changes to bitfields
+  - setters of bitfields with length 1 accept bool as argument
+  - getters of bitfields with length 1 return bool
+  - new sizes for bitfields 'bitfield8', 'bitfield16', 'bitfield32' and 
+    'bitfield64'. Old type 'bitfield' is equal 'bitfield32'
+  - bitfield-attribute 'startAtOne' removed
+
 ===============================GaudiObjDesc v5r2==============================
 !20031211 - Stefan
 - bugfix: replaced XMLString::release with delete[] for XMLCh[] in some cases

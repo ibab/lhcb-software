@@ -16,7 +16,7 @@
 	name CDATA #REQUIRED
 >
 <!-- ELEMENT class ((class?, .... -->
-<!ELEMENT class ((desc?, base?, import?, location?, enum?, typedef?, constructor?, destructor?, method?, attribute?, relation?)*)>
+<!ELEMENT class ((desc?, base?, import?, location?, enum?, typedef?, constructor?, destructor?, method?, attribute?, relation?, template?, assoc?)*)>
 <!ATTLIST class
 	name CDATA #REQUIRED
 	author CDATA #REQUIRED
@@ -116,12 +116,14 @@
 	name CDATA #REQUIRED
 	desc CDATA #REQUIRED
 	init CDATA #IMPLIED
+	dictalias CDATA #IMPLIED
 	array CDATA "FALSE"
 	access (PUBLIC | PROTECTED | PRIVATE) "PRIVATE"
 	compression (TRUE | FALSE) "TRUE"
 	serialize (TRUE | FALSE) "TRUE"
 	setMeth (TRUE | FALSE) "TRUE"
 	getMeth (TRUE | FALSE) "TRUE"
+        transient (TRUE | FALSE) "FALSE"
 >
 <!ELEMENT relation EMPTY>
 <!ATTLIST relation
@@ -143,7 +145,51 @@
 	length CDATA #REQUIRED
 	desc CDATA #REQUIRED
 	startBit CDATA #IMPLIED
-	startAtOne (TRUE | FALSE) "FALSE"
 	setMeth (TRUE | FALSE) "TRUE"
 	getMeth (TRUE | FALSE) "TRUE"
+>
+<!ELEMENT template EMPTY>
+<!ATTLIST template
+        name CDATA #REQUIRED
+	t1 CDATA "THIS"
+	t2 CDATA #IMPLIED
+	t3 CDATA #IMPLIED
+	t4 CDATA #IMPLIED
+>
+
+<!ELEMENT assoc EMPTY>
+<!ATTLIST assoc
+        type (1D | 2D) "1D"
+        weight CDATA "NONE"
+        to CDATA #REQUIRED
+>
+
+<!ENTITY KeyedObjectKey 'int'>
+<!ENTITY Reference '<template name="SmartRefDict"/>
+        <template name="SmartRefVectorDict"/>'
+>
+<!ENTITY StlVector '<template name="VectorDict" t1="THIS"/>'
+>
+<!ENTITY StlPtrVector '<template name="VectorDict" t1="THIS*"/>'
+>
+<!ENTITY DataObject '<template name="SmartRefDict"/>
+        <template name="SmartRefVectorDict"/>'
+>
+<!ENTITY ContainedObject '<template name="SmartRefDict"/>
+        <template name="SmartRefVectorDict"/>
+        <template name="VectorDict" t1="THIS*"/>
+        <template name="ObjectVectorDict"/>'
+>
+<!ENTITY KeyedContainer '<template name="SmartRefDict"/>
+        <template name="SmartRefVectorDict"/>
+        <template name="VectorDict" t1="THIS*"/>
+        <template name="ObjectVectorDict"/>
+        <template name="KeyedContainerDict"/>'
+>
+<!ENTITY KeyedObject '<template name="KeyedObjectDict" t1="int"/>
+        <template name="SmartRefDict"/>
+        <template name="SmartRefVectorDict"/>
+        <template name="VectorDict" t1="THIS*"/>
+        <template name="ObjectVectorDict"/>
+        <template name="KeyedContainerDict"/>'
 >

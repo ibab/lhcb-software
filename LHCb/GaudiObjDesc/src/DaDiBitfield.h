@@ -1,4 +1,4 @@
-// $Id: DaDiBitfield.h,v 1.3 2003-12-11 15:03:09 mato Exp $
+// $Id: DaDiBitfield.h,v 1.4 2003-12-17 17:31:17 mato Exp $
 #ifndef DADIBITFIELD_H
 #define DADIBITFIELD_H 1
 
@@ -26,7 +26,6 @@ public:
     m_setMeth(0),
     m_getMeth(0),
     m_length(0),
-    m_startAtOne(false),
     m_mask(std::vector<std::string>()) {};
 
   virtual ~DaDiBitfield();
@@ -46,12 +45,9 @@ public:
   const XMLCh* getMeth();
   void setGetMeth(const XMLCh* value);
 
-  bool startAtOne();
-  void setStartAtOne(bool value);
-
   void setMask(std::vector<std::string> value);
   const std::vector<std::string>& mask();
-  int sizeOfMaks();
+  int sizeOfMask();
 
 protected:
 
@@ -62,7 +58,6 @@ private:
   XMLCh                    *m_setMeth;
   XMLCh                    *m_getMeth;
   int                       m_length;
-  bool                      m_startAtOne;
   std::vector<std::string>  m_mask;
 
 };
@@ -139,16 +134,6 @@ inline void DaDiBitfield::setGetMeth(const XMLCh* value)
   xercesc::XMLString::copyString(m_getMeth, value);
 }
 
-inline bool DaDiBitfield::startAtOne()
-{
-  return m_startAtOne;
-}
-
-inline void DaDiBitfield::setStartAtOne(bool value)
-{
-  m_startAtOne = value;
-}
-
 inline void DaDiBitfield::setMask(std::vector<std::string> value)
 {
   m_mask = value;
@@ -159,7 +144,7 @@ inline const std::vector<std::string>& DaDiBitfield::mask()
   return m_mask;
 }
 
-inline int DaDiBitfield::sizeOfMaks()
+inline int DaDiBitfield::sizeOfMask()
 {
   return m_mask.size();
 }

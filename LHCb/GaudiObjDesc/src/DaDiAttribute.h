@@ -1,4 +1,4 @@
-// $Id: DaDiAttribute.h,v 1.10 2003-12-11 15:03:09 mato Exp $
+// $Id: DaDiAttribute.h,v 1.11 2003-12-17 17:31:17 mato Exp $
 #ifndef DADIATTRIBUTE_H
 #define DADIATTRIBUTE_H 1
 
@@ -23,12 +23,14 @@ public:
     m_array(0),
     m_access(0),
     m_init(0),
+    m_dictalias(0),
     m_setMeth(0),
     m_getMeth(0),
     m_static(false),
     m_compression(false),
     m_serialize(false),
-    m_bitset(false),
+    m_transient(false),
+    m_bitset(0),
     m_daDiBitfield(std::list<DaDiBitfield*>()) {};
 
   virtual ~DaDiAttribute();
@@ -51,6 +53,9 @@ public:
   const XMLCh* init();
   void setInit(const XMLCh* value);
 
+  const XMLCh* dictalias();
+  void setDictalias(const XMLCh* value);
+
   const XMLCh* setMeth();
   void setSetMeth(const XMLCh* value);
 
@@ -66,8 +71,11 @@ public:
   bool serialize();
   void setSerialize(bool value);
 
-  bool bitset();
-  void setBitset(bool value);
+  bool transient();
+  void setTransient(bool value);  
+
+  int bitset();
+  void setBitset(int value);
 
   DaDiBitfield* popDaDiBitfield();
   void pushDaDiBitfield(DaDiBitfield* value);
@@ -83,12 +91,14 @@ private:
   XMLCh                    *m_array;
   XMLCh                    *m_access;
   XMLCh                    *m_init;
+  XMLCh                    *m_dictalias;
   XMLCh                    *m_setMeth;
   XMLCh                    *m_getMeth;
   bool                      m_static;
   bool                      m_compression;
   bool                      m_serialize;
-  bool                      m_bitset;
+  bool                      m_transient;
+  int                       m_bitset;
   std::list<DaDiBitfield*>  m_daDiBitfield;
 
 };
@@ -103,6 +113,7 @@ inline DaDiAttribute::~DaDiAttribute()
   delete [] m_init;
   delete [] m_setMeth;
   delete [] m_getMeth;
+  delete [] m_dictalias;
   std::list<DaDiBitfield*>::iterator bIter;
   for (bIter = m_daDiBitfield.begin(); bIter != m_daDiBitfield.end(); ++bIter)
   { delete *bIter; }
@@ -174,6 +185,17 @@ inline void DaDiAttribute::setInit(const XMLCh* value)
   xercesc::XMLString::copyString(m_init, value);
 }
 
+inline const XMLCh* DaDiAttribute::dictalias()
+{
+  return m_dictalias;
+}
+
+inline void DaDiAttribute::setDictalias(const XMLCh* value)
+{
+  m_dictalias = new XMLCh[xercesc::XMLString::stringLen(value)+1];
+  xercesc::XMLString::copyString(m_dictalias, value);
+}
+
 inline const XMLCh* DaDiAttribute::setMeth()
 {
   return m_setMeth;
@@ -226,12 +248,22 @@ inline void DaDiAttribute::setSerialize(bool value)
   m_serialize = value;
 }
 
-inline bool DaDiAttribute::bitset()
+inline bool DaDiAttribute::transient()
+{
+  return m_transient;
+}
+
+inline void DaDiAttribute::setTransient(bool value)
+{
+  m_transient = value;
+}
+
+inline int DaDiAttribute::bitset()
 {
   return m_bitset;
 }
 
-inline void DaDiAttribute::setBitset(bool value)
+inline void DaDiAttribute::setBitset(int value)
 {
   m_bitset = value;
 }

@@ -1,4 +1,4 @@
-// $Id: DaDiCppHeader.cpp,v 1.70 2003-11-27 10:22:54 mato Exp $
+// $Id: DaDiCppHeader.cpp,v 1.71 2003-12-17 17:31:18 mato Exp $
 
 //#include "GaudiKernel/Kernel.h"
 
@@ -462,18 +462,28 @@ void printSetGetAttDecl(std::ofstream& xmlOut,
           *gddBfDesc = XMLString::transcode(gddBitfield->desc()),
           *gddBfSetMeth = XMLString::transcode(gddBitfield->setMeth()),
           *gddBfGetMeth = XMLString::transcode(gddBitfield->getMeth());
+        std::string argType = "";
+        if (gddBitfield->length() == 1)
+        {
+          argType = "bool";
+        }
+        else
+        {
+          argType = gddAttType;
+        }
 
         if (strcmp(gddBfSetMeth,accessor) == 0)
         {
           xmlOut << "  /// Update " << gddBfDesc << std::endl
                  << "  void set" << DaDiTools::firstUp(gddBfName)
-                 << "(unsigned long value);" << std::endl
+                 << "(" << argType << " value);" << std::endl
                  << std::endl;
         }
         if (strcmp(gddBfGetMeth,accessor) == 0)
         {
           xmlOut << "  /// Retrieve " << gddBfDesc << std::endl
-                 << "  unsigned long " << gddBfName << "() const;" << std::endl
+                 << "  " << argType << " " << gddBfName << "() const;" 
+                 << std::endl 
                  << std::endl;
         }
         XMLString::release(&gddBfName);
@@ -507,7 +517,7 @@ void printSetGetAttImpl(std::ofstream& xmlOut,
       *gddAttType = XMLString::transcode(gddAttribute->type()),
       *gddAttName = XMLString::transcode(gddAttribute->name()),
       *gddClassName = XMLString::transcode(gddClass->name());
-    bool gddAttIsBitset = gddAttribute->bitset();
+    int gddAttBitsetLength = gddAttribute->bitset();
 
     if(gddAttGetMeth == accessor)
     {
@@ -566,7 +576,7 @@ void printSetGetAttImpl(std::ofstream& xmlOut,
              << std::endl;
     }
 
-    if (gddAttIsBitset)
+    if (gddAttBitsetLength > 0)
     {
       std::vector<std::string> bFields;
       std::vector<std::string>::iterator bfIter;
@@ -578,7 +588,19 @@ void printSetGetAttImpl(std::ofstream& xmlOut,
           *gddBfGetMeth = XMLString::transcode(gddBitfield->getMeth());
         std::string gddShiftBits = "";
         int gddBfLength = gddBitfield->length();
-        bool gddBfStartAtOne = gddBitfield->startAtOne();
+
+        std::string argType = "";
+        std::string intArgName = "";
+        if (gddBfLength == 1)
+        {
+          argType = "bool";
+          intArgName = "val";
+        }
+        else 
+        {
+          argType = gddAttType;
+          intArgName = "value";
+        }
 
         std::vector<std::string> gddBfMasks = gddBitfield->mask();
         bFields.push_back(gddBfName);
@@ -609,10 +631,15 @@ void printSetGetAttImpl(std::ofstream& xmlOut,
         if (gddBfSetMeth == accessor)
         {
           xmlOut << "inline void " << gddClassName << "::set"
-                 << DaDiTools::firstUp(gddBfName) << "(unsigned long value)"
+                 << DaDiTools::firstUp(gddBfName) << "(" << argType << " value)"
                  << std::endl
-                 << "{" << std::endl
-                 << "  m_" << gddAttName << " &= ~" << gddBfName << "Mask;"
+                 << "{" << std::endl;
+          if (gddBfLength == 1)
+          {
+            xmlOut << "  " << gddAttType << " " << intArgName << "  = ("
+                   << gddAttType << ")value;" << std::endl;
+          } 
+          xmlOut << "  m_" << gddAttName << " &= ~" << gddBfName << "Mask;"
                  << std::endl;
           /*            << "  m_" << gddAttName << " &= (";
 
@@ -636,33 +663,34 @@ void printSetGetAttImpl(std::ofstream& xmlOut,
           xmlOut << ");" << std::endl;*/
 
           xmlOut << "  m_" << gddAttName << " |= ((";
-          if (gddBfStartAtOne)
+          if (gddBfLength == 1)
           {
-            xmlOut << "(";
+            xmlOut << "((" << gddAttType << ")";
           }
-          xmlOut << "value";
-          if (gddBfStartAtOne)
+          xmlOut << intArgName;
+          if (gddBfLength == 1)
           {
-            xmlOut << " - 1)";
+            xmlOut << ")";
           }
           xmlOut << " << " << gddShiftBits
-                 << "Bits) & " << gddBfName << "Mask);" << std::endl;
-
-          xmlOut << "}" << std::endl
+                 << "Bits) & " << gddBfName << "Mask);";
+          xmlOut << std::endl
+                 << "}" << std::endl
                  << std::endl;
         }
         if (gddBfGetMeth == accessor)
         {
-          xmlOut << "inline unsigned long " << gddClassName << "::" << gddBfName
-                 << "() const" << std::endl
+          xmlOut << "inline " << argType << " " << gddClassName << "::" 
+                 << gddBfName << "() const" << std::endl
                  << "{" << std::endl
-                 << "  return ((m_" << gddAttName << " & " << gddBfName
-                 << "Mask) >> " << gddShiftBits << "Bits)";
-          if (gddBfStartAtOne)
+                 << "  return ";
+          if (gddBfLength == 1)
           {
-            xmlOut << " + 1";
+            xmlOut << "(" << argType << ")";
           }
-          xmlOut << ";" << std::endl
+          xmlOut << "((m_" << gddAttName << " & " << gddBfName
+                 << "Mask) >> " << gddShiftBits << "Bits);";
+          xmlOut << std::endl
                  << "}" << std::endl
                  << std::endl;
         }
@@ -1141,9 +1169,9 @@ void printMembers(std::ofstream& xmlOut,
       *gddAttName = XMLString::transcode(gddAttribute->name()),
       *gddAttType = XMLString::transcode(gddAttribute->type()),
       *gddAttDesc = XMLString::transcode(gddAttribute->desc());
-    bool gddAttIsBitset = gddAttribute->bitset();
+    int gddAttBitsetLength = gddAttribute->bitset();
 
-    if (gddAttIsBitset && (gddAttAccess == accessor))
+    if ((gddAttBitsetLength > 0) && (gddAttAccess == accessor))
     {
       xmlOut << "  enum " << gddAttName << "Bits {";
       int offset = 0;
@@ -1161,11 +1189,11 @@ void printMembers(std::ofstream& xmlOut,
         XMLString::release(&gddBfName);
       }
       xmlOut << "}; ///< Offsets of bitfield " << gddAttName << std::endl;
-      if (offset > (signed)(sizeof(unsigned int)*8))
+      if (offset > (gddAttBitsetLength*8))
       {
         std::cerr << std::endl << "GOD says: WARNING: Bitset "
                   << gddAttName << " has more than "
-                  << (sizeof(unsigned long)*8) << " bits";
+                  << (gddAttBitsetLength*8) << " bits";
       }
 
       xmlOut << "  enum " << gddAttName << "Masks {";
@@ -1185,7 +1213,7 @@ void printMembers(std::ofstream& xmlOut,
           mask = mask << offset;
           xmlOut << "0x";
           xmlOut.setf(std::ios::hex, std::ios::basefield);
-          xmlOut.width(8);
+          xmlOut.width(gddAttBitsetLength/4);
           xmlOut.fill('0');
           xmlOut << mask;
           xmlOut.fill(' ');

@@ -1,4 +1,4 @@
-// $Id: DaDiFrontEnd.cpp,v 1.42 2003-12-11 15:03:09 mato Exp $
+// $Id: DaDiFrontEnd.cpp,v 1.43 2003-12-17 17:31:19 mato Exp $
 
 //#include "GaudiKernel/Kernel.h"
 #include "DaDiTools.h"
@@ -87,6 +87,7 @@ std::vector<XMLCh*> findWords(const XMLCh* value,
   {
     XMLCh* tmpStr = new XMLCh [j-i+1];
     XMLString::subString(tmpStr, value, i, j);
+    //std::cout << "." << XMLString::transcode(tmpStr) << "." << j-i+1 << std::endl;
     XMLString::trim(tmpStr);
     words.push_back(tmpStr);
     i = j+1;
@@ -272,6 +273,57 @@ template<class T> void parseEnum(DOMNode* node,
 
 
 //-----------------------------------------------------------------------------
+void parseTemplate(DOMNode* node,
+		   DaDiTemplate* gddTemplate)
+//-----------------------------------------------------------------------------
+{
+  DOMNamedNodeMap* nodeMap = node->getAttributes();
+
+  XMLCh* itemStr = XMLString::transcode("name");
+  gddTemplate->setName(nodeMap->getNamedItem(itemStr)->getNodeValue());
+  XMLString::release(&itemStr);
+
+  itemStr = XMLString::transcode("t1");
+  gddTemplate->setT1(nodeMap->getNamedItem(itemStr)->getNodeValue());
+  XMLString::release(&itemStr);
+
+  itemStr = XMLString::transcode("t2");
+  if (nodeMap->getNamedItem(itemStr))
+  {
+    gddTemplate->setT2(nodeMap->getNamedItem(itemStr)->getNodeValue());
+  }
+  else
+  {
+    gddTemplate->setT2(0);
+  }
+  XMLString::release(&itemStr);
+
+  itemStr = XMLString::transcode("t3");
+  if (nodeMap->getNamedItem(itemStr))
+  {
+    gddTemplate->setT3(nodeMap->getNamedItem(itemStr)->getNodeValue());
+  }
+  else
+  {
+    gddTemplate->setT3(0);
+  }
+  XMLString::release(&itemStr);
+
+  itemStr = XMLString::transcode("t4");
+  if (nodeMap->getNamedItem(itemStr))
+  {
+    gddTemplate->setT4(nodeMap->getNamedItem(itemStr)->getNodeValue());
+  }
+  else
+  {
+    gddTemplate->setT4(0);
+  }
+  XMLString::release(&itemStr);
+
+}
+
+
+//-----------------------------------------------------------------------------
 template<class T> void parseTypeDef(DOMNode* node,
                                     DaDiTypeDef* gddTypeDef,
                                     T* gdd)
@@ -450,6 +502,7 @@ template <class T> void parseArgList(DOMNode* node,
       argType = XMLString::replicate(tmpCh);
       argWords.pop_back();
       delete [] tmpCh;
+
 
       if (isPointer(argType))
       {
@@ -907,20 +960,26 @@ void parseBitfield(DOMNode* node,
   itemStr = XMLString::transcode("setMeth");
   gddBitfield->setSetMeth(nodeMap->getNamedItem(itemStr)->getNodeValue());
   XMLString::release(&itemStr);
+}
 
-  XMLCh* cmpStr = XMLString::transcode("startAtOne");
-  XMLCh* boolStr = XMLString::transcode("TRUE");
-  if (XMLString::compareString(nodeMap->getNamedItem(cmpStr)->
-                               getNodeValue(), boolStr) == 0)
-  {
-    gddBitfield->setStartAtOne(true);
-  }
-  else
-  {
-    gddBitfield->setStartAtOne(false);
-  }
-  XMLString::release(&cmpStr);
-  XMLString::release(&boolStr);
+//-----------------------------------------------------------------------------
+void parseAssociation(DOMNode* node,
+                      DaDiAssociation* gddAssociation)
+//-----------------------------------------------------------------------------
+{
+  DOMNamedNodeMap* nodeMap = node->getAttributes();
+
+  XMLCh* itemStr = XMLString::transcode("to");
+  gddAssociation->setDestination(nodeMap->getNamedItem(itemStr)->getNodeValue());
+  XMLString::release(&itemStr);
+
+  itemStr = XMLString::transcode("type");
+  gddAssociation->setType(nodeMap->getNamedItem(itemStr)->getNodeValue());
+  XMLString::release(&itemStr);
+
+  itemStr = XMLString::transcode("weight");
+  gddAssociation->setWeight(nodeMap->getNamedItem(itemStr)->getNodeValue());
+  XMLString::release(&itemStr);
 }
 
 //-----------------------------------------------------------------------------
@@ -967,11 +1026,37 @@ template<class T> void parseAttribute(DOMNode* node,
   XMLString::release(&cmpStr);
 
   cmpStr = XMLString::transcode("bitfield");
-  if (XMLString::compareString(gddAttType, cmpStr) == 0)
+  XMLCh* cmpStr8  = XMLString::transcode("bitfield8");
+  XMLCh* cmpStr16 = XMLString::transcode("bitfield16");
+  XMLCh* cmpStr32 = XMLString::transcode("bitfield32");
+  XMLCh* cmpStr64 = XMLString::transcode("bitfield64");
+  if (XMLString::compareString(gddAttType, cmpStr8) == 0)
   {
-    XMLCh* typeStr = XMLString::transcode("unsigned long");
+    XMLCh* typeStr = XMLString::transcode("unsigned char");
     gddAttribute->setType(typeStr);
-    gddAttribute->setBitset(true);
+    gddAttribute->setBitset(8);
+    XMLString::release(&typeStr);
+  }
+  else if (XMLString::compareString(gddAttType, cmpStr16) == 0)
+  {
+    XMLCh* typeStr = XMLString::transcode("unsigned short");
+    gddAttribute->setType(typeStr);
+    gddAttribute->setBitset(16);
+    XMLString::release(&typeStr);
+  }
+  else if ((XMLString::compareString(gddAttType, cmpStr32) == 0) ||
+           (XMLString::compareString(gddAttType, cmpStr) == 0))
+  {
+    XMLCh* typeStr = XMLString::transcode("unsigned");
+    gddAttribute->setType(typeStr);
+    gddAttribute->setBitset(32);
+    XMLString::release(&typeStr);
+  }
+  else if (XMLString::compareString(gddAttType, cmpStr64) == 0)
+  {
+    XMLCh* typeStr = XMLString::transcode("unsigned longlong");
+    gddAttribute->setType(typeStr);
+    gddAttribute->setBitset(64);
     XMLString::release(&typeStr);
   }
   else
@@ -979,10 +1064,14 @@ template<class T> void parseAttribute(DOMNode* node,
     gddAttribute->setType(gddAttType);
     char* cGddAttType = XMLString::transcode(gddAttType);
     gdd->pushImportList(cGddAttType);
-    gddAttribute->setBitset(false);
+    gddAttribute->setBitset(0);
     XMLString::release(&cGddAttType);
   }
   XMLString::release(&cmpStr);
+  XMLString::release(&cmpStr8);
+  XMLString::release(&cmpStr16);
+  XMLString::release(&cmpStr32);
+  XMLString::release(&cmpStr64);
   delete [] gddAttType;
 
   /*
@@ -1040,6 +1129,17 @@ template<class T> void parseAttribute(DOMNode* node,
   }
   XMLString::release(&itemStr);
 
+  itemStr = XMLString::transcode("dictalias");
+  if(nodeMap->getNamedItem(itemStr) != 0)
+  {
+    gddAttribute->setDictalias(nodeMap->getNamedItem(itemStr)->getNodeValue());
+  }
+  else
+  {
+    gddAttribute->setDictalias(0);
+  }
+  XMLString::release(&itemStr);
+
   cmpStr = XMLString::transcode("compression");
   XMLCh* trueStr = XMLString::transcode("TRUE");
   if (XMLString::compareString(nodeMap->getNamedItem(cmpStr)->getNodeValue(),
@@ -1062,6 +1162,18 @@ template<class T> void parseAttribute(DOMNode* node,
   else
   {
     gddAttribute->setSerialize(false);
+  }
+  XMLString::release(&cmpStr);
+
+  cmpStr = XMLString::transcode("transient");
+  if (XMLString::compareString(nodeMap->getNamedItem(cmpStr)->getNodeValue(),
+                               trueStr) == 0)
+  {
+    gddAttribute->setTransient(true);
+  }
+  else
+  {
+    gddAttribute->setTransient(false);
   }
   XMLString::release(&cmpStr);
 
@@ -1404,7 +1516,9 @@ void parseClass(DOMNode* node,
     *constructorStr = XMLString::transcode("constructor"),
     *destructorStr = XMLString::transcode("destructor"),
     *attributeStr = XMLString::transcode("attribute"),
-    *relationStr = XMLString::transcode("relation");
+    *relationStr = XMLString::transcode("relation"),
+    *associationStr = XMLString::transcode("assoc"),
+    *templateStr = XMLString::transcode("template");
 
   bool longDescSet = false;
   while(node != 0)
@@ -1543,6 +1657,27 @@ void parseClass(DOMNode* node,
           gddClass->pushDaDiRelation(gddRelation);
           parseRelation(node, gddRelation);
         }
+
+        //
+        // Parse associations
+        //
+        if(XMLString::compareString(node->getNodeName(), associationStr) == 0)
+        {
+          DaDiAssociation* gddAssociation = new DaDiAssociation();
+          gddClass->pushDaDiAssociation(gddAssociation);
+          parseAssociation(node, gddAssociation);
+        }
+
+        //
+        // Parse templates
+        //
+        if(XMLString::compareString(node->getNodeName(), templateStr) == 0)
+        {
+          DaDiTemplate* gddTemplate = new DaDiTemplate();
+          gddClass->pushDaDiTemplate(gddTemplate);
+          parseTemplate(node, gddTemplate);
+        }
+	
         else
         {
           node = node->getNextSibling();
@@ -1568,6 +1703,8 @@ void parseClass(DOMNode* node,
   XMLString::release(&destructorStr);
   XMLString::release(&attributeStr);
   XMLString::release(&relationStr);
+  XMLString::release(&associationStr);
+  XMLString::release(&templateStr);
 
   if (!classHasDesc)
   {

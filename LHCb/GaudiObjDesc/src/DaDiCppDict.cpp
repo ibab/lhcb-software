@@ -1,4 +1,4 @@
-// $Id: DaDiCppDict.cpp,v 1.37 2003-11-27 10:22:53 mato Exp $
+// $Id: DaDiCppDict.cpp,v 1.38 2003-12-17 17:31:17 mato Exp $
 
 #include "DaDiTools.h"
 #include "DaDiCppDict.h"
@@ -108,6 +108,60 @@ std::string checkType(std::string type, std::string prefix)
   }
 }
 
+
+//-----------------------------------------------------------------------------
+char* checkForReplacement(char* arg)
+//-----------------------------------------------------------------------------
+{
+  unsigned int i = 0;
+  unsigned int j = 0;
+
+  char str[] =  "std::string";
+  unsigned int lstr = strlen(str);
+  char bstr[] = "std::basic_string<char>";
+  unsigned int lbstr = strlen(bstr);
+  unsigned int maxstr = lbstr + 1;  // 1 because of possible space added between ">>"
+
+  unsigned int mult = 1;
+  unsigned int clen = 32;
+  char* newstr = new char[clen];
+  memset(newstr,0,clen);
+
+  for (i=0,j=0; i<XMLString::stringLen(arg); ++i,++j)
+  {
+    if ((strlen(newstr) + 1 + maxstr) >= (clen*mult))
+    {
+      ++mult;
+      char* tmpstr = new char[clen*mult];
+      memset(tmpstr,0,(clen*mult));
+      memcpy(tmpstr,newstr,(clen*(mult-1)));
+      delete [] newstr;
+      newstr = tmpstr;
+    }
+    if (!strncmp(&arg[i],str,lstr))
+    {
+      strcat(newstr,bstr);
+      if (arg[i+lstr] == '>')
+      {
+        strcat(newstr," ");
+        j += lbstr;
+      }
+      else
+      {
+        j += lbstr-1;
+      }
+      i += lstr-1;
+    }
+    else
+    {
+      newstr[j] = arg[i];
+    }
+  }
+  XMLString::release(&arg);
+  return newstr;
+  //delete [] newstr;
+}
+
 /*/-----------------------------------------------------------------------------
   std::string stripString(std::string value)
   //----------------------------------------------------------------------------
@@ -121,9 +175,9 @@ std::string checkType(std::string type, std::string prefix)
 std::string printAccessor(std::string access)
 //-----------------------------------------------------------------------------
 {
-  if (access == "PRIVATE") { return "MetaModifier::setPrivate()"; }
-  else if (access == "PROTECTED") { return "MetaModifier::setProtected()"; }
-  else if (access == "PUBLIC") {return "MetaModifier::setPublic()"; }
+  if (access == "PRIVATE") { return "PRIVATE"; }
+  else if (access == "PROTECTED") { return "PROTECTED"; }
+  else if (access == "PUBLIC") {return "PUBLIC"; }
   else { return ""; }
 }
 
@@ -142,6 +196,7 @@ std::string checkSymb(std::string word)
     else if ((c == '[') || (c == ']')) { retStr += "EBr"; }
     else if (c == '<') { retStr += "Lt"; }
     else if (c == '>') { retStr += "Gt"; }
+    else if (c == '!') { retStr =+ "Nt"; }
     else { retStr += c; }
   }
   return retStr;
@@ -151,6 +206,16 @@ std::string checkSymb(std::string word)
 std::string constructTypes(std::string type)
 //-----------------------------------------------------------------------------
 {
+  std::string str = type;
+  /*
+  if (DaDiTools::isArray(type) || DaDiTools::isStdContainer(type))
+  {
+    return "ANYClass<" + type + " >(\"" + type + "\");";
+  }*/
+
+  return "";
+    
+  /*
   std::string constrType;
 
   if (DaDiTools::isArray(type))
@@ -181,6 +246,8 @@ std::string constructTypes(std::string type)
     }
   }
   return constrType;
+  */
+
 }
 
 
@@ -358,6 +425,7 @@ void printCppDictionary(DaDiPackage* gddPackage,
 
   for(k=0; k<gddPackage->sizeDaDiClass(); ++k)
   {
+    std::vector<char*> enumTypes;
 
     DaDiClass* gddClass = gddPackage->popDaDiClass();
     methodCounter = 0;
@@ -368,13 +436,15 @@ void printCppDictionary(DaDiPackage* gddPackage,
       *gddClassID = XMLString::transcode(gddClass->ID()),
       *gddPackageName = XMLString::transcode(gddPackage->packageName());
 
+    //bool keyedContTypeDef = gddClass->keyedContTypeDef();
 
-    dbExportClass[std::string(gddClassName)] =
-      std::string(gddPackageName) + "/"  + std::string(gddClassName);
+    //dbExportClass[std::string(gddClassName)] =
+    //  std::string(gddPackageName) + "/"  + std::string(gddClassName);
 
     for (i=0; i<gddClass->sizeDaDiEnum(); ++i)
     {
       char *gddEnum = XMLString::transcode(gddClass->popDaDiEnum()->name());
+      enumTypes.push_back(XMLString::replicate(gddEnum));
       classTypes.push_back(gddEnum);
       XMLString::release(&gddEnum);
     }
@@ -426,9 +496,10 @@ void printCppDictionary(DaDiPackage* gddPackage,
     // Include files
     //
     metaOut << "//Include files" << std::endl
-            << "#include \"GaudiKernel/Kernel.h\"" << std::endl
-            << "#include \"GaudiKernel/SmartRef.h\"" << std::endl
-            << "#include \"GaudiKernel/SmartRefVector.h\"" << std::endl;
+      //<< "#include \"GaudiKernel/Kernel.h\"" << std::endl
+            << "#include \"GaudiObjDesc/KeyedDictionary.h\"" << std::endl
+            << "#include \"GaudiObjDesc/RelationsDict.h\"" << std::endl; 
+      //<< "#include \"GaudiObjDesc/SealDictionary.h\"" << std::endl;
     metaOut << std::endl
             << "#include <string>" << std::endl
             << std::endl;
@@ -443,9 +514,33 @@ void printCppDictionary(DaDiPackage* gddPackage,
 
     metaOut //<< "#undef protected" << std::endl
       //<< "#undef private" << std::endl
-      << std::endl
-      << "#include \"GaudiIntrospection/Introspection.h\"" << std::endl
-      << std::endl
+      << std::endl;
+
+    for (i=0; i<gddClass->sizeDaDiAssociation(); ++i)
+    {
+      char* impcName = XMLString::transcode(gddClass->popDaDiAssociation()->destination());
+      std::string impName = impcName;
+      XMLString::release(&impcName);
+
+      if (impName != "float" && impName != "int" && impName != "char")
+      {
+        if (dbExportClass[impName] != "") 
+        {
+          impName = dbExportClass[impName];
+        }
+        else
+        {
+          std::cerr << std::endl
+                    << argV0 << ": No information found for type: " << impName
+                    << std::endl
+                    << argV0 << ": Line written: #include \"" << impName << ".h\""
+                    << std::endl;
+        }
+        metaOut << "#include \"" << impName << ".h\"" << std::endl;
+      }
+    }
+      
+    metaOut << "using namespace seal::reflect;" << std::endl
       << std::endl;
 
 
@@ -529,7 +624,7 @@ void printCppDictionary(DaDiPackage* gddPackage,
         }
         if (gddMethod->sizeDaDiMethArgument())
         {
-          metaOut << "(void* v, std::vector<void*> argList)" << std::endl;
+          metaOut << "(void* v, const std::vector<void*>& argList)" << std::endl;
         }
         else
         {
@@ -541,10 +636,6 @@ void printCppDictionary(DaDiPackage* gddPackage,
             && !DaDiTools::isPointer(gddMethRetType))
         {
           metaOut << "  static ";
-          if (gddMethod->daDiMethReturn()->const_())
-          {
-            metaOut << "const ";
-          }
           metaOut << checkType(gddMethRetType,gddClassName) << " ret;"
                   << std::endl;
         }
@@ -652,7 +743,7 @@ void printCppDictionary(DaDiPackage* gddPackage,
         metaOut << remLine << std::endl
                 << "static void " << gddClassName << "_set"
                 << DaDiTools::firstUp(gddAttName) << "_" << methodCounter++
-                << "(void* v, std::vector<void*> argList)" << std::endl
+                << "(void* v, const std::vector<void*>& argList)" << std::endl
                 << remLine << std::endl
                 << "{" << std::endl
                 << "  ((" << gddClassName << "*)v)->set"
@@ -717,7 +808,7 @@ void printCppDictionary(DaDiPackage* gddPackage,
         metaOut << remLine << std::endl
                 << "static void " << gddClassName << "_set"
                 << DaDiTools::firstUp(gddRelName) << "_" << methodCounter++
-                << "(void* v, std::vector<void*> argList)" << std::endl
+                << "(void* v, const std::vector<void*>& argList)" << std::endl
                 << remLine << std::endl
                 << "{" << std::endl
                 << "  ((" << gddClassName << "*)v)->set"
@@ -749,7 +840,7 @@ void printCppDictionary(DaDiPackage* gddPackage,
           metaOut << remLine << std::endl
                   << "static void " << gddClassName << "_addTo"
                   << DaDiTools::firstUp(gddRelName) << "_" << methodCounter++
-                  << "(void* v, std::vector<void*> argList)" << std::endl
+                  << "(void* v, const std::vector<void*>& argList)" << std::endl
                   << remLine << std::endl
                   << "{" << std::endl
                   << "  ((" << gddClassName << "*)v)->addTo"
@@ -764,7 +855,7 @@ void printCppDictionary(DaDiPackage* gddPackage,
           metaOut << remLine << std::endl
                   << "static void " << gddClassName << "_removeFrom"
                   << DaDiTools::firstUp(gddRelName) << "_" << methodCounter++
-                  << "(void* v, std::vector<void*> argList)" << std::endl
+                  << "(void* v, const std::vector<void*>& argList)" << std::endl
                   << remLine << std::endl
                   << "{" << std::endl
                   << "  ((" << gddClassName << "*)v)->removeFrom"
@@ -791,11 +882,11 @@ void printCppDictionary(DaDiPackage* gddPackage,
 
         metaOut << remLine << std::endl
                 << "static void* " << gddClassName << "_constructor_" << i
-                << "(";
+                << "(void* mem";
 
         if (gddConstructor->sizeDaDiMethArgument())
         {
-          metaOut << "std::vector<void*> argList";
+          metaOut << ", const std::vector<void*>& argList";
         }
         else
         {
@@ -805,8 +896,7 @@ void printCppDictionary(DaDiPackage* gddPackage,
         metaOut << ")" << std::endl
                 << remLine << std::endl
                 << "{" << std::endl
-                << "  static " << gddClassName << "* ret = new " << gddClassName
-                << "(";
+                << "  return new(mem) " << gddClassName << "(";
 
         for (j=0; j<gddConstructor->sizeDaDiMethArgument(); ++j)
         {
@@ -829,7 +919,6 @@ void printCppDictionary(DaDiPackage* gddPackage,
         }
 
         metaOut << ");" << std::endl
-                << "  return ret;" << std::endl
                 << "}" << std::endl
                 << std::endl;
       }
@@ -838,18 +927,44 @@ void printCppDictionary(DaDiPackage* gddPackage,
       {
         metaOut << remLine << std::endl
                 << "static void* " << gddClassName << "_constructor_" << ++i
-                << "()" << std::endl
+                << "(void* mem)" << std::endl
                 << remLine << std::endl
                 << "{" << std::endl
-                << "  static " << gddClassName << "* ret = new " << gddClassName
-                << "();" << std::endl
-                << "  return ret;" << std::endl
+                << "  return new(mem) " << gddClassName << "();" << std::endl
                 << "}" << std::endl
                 << std::endl;
       }
     }
 
 
+    // stub function for destructor 
+    // (only default destructor for the time being) !!! fixme !!!
+    metaOut << remLine << std::endl
+            << "static void " << gddClassName << "_destructor(void* mem)" << std::endl
+            << remLine << std::endl
+            << "{" << std::endl
+            << "  ((" << gddClassName << "*)mem)->~" << gddClassName << "();" << std::endl
+            << "}" << std::endl
+            << std::endl;
+
+    // methods calculating offsets to baseclasses
+    for (i=0; i<gddClass->sizeDaDiBaseClass(); ++i)
+    {
+      DaDiBaseClass* gddBaseClass = gddClass->popDaDiBaseClass();
+      char* gddBCName = XMLString::transcode(gddBaseClass->name());
+      std::string gddBCNameNorm = checkSymb(gddBCName);
+      
+      metaOut << remLine << std::endl
+        << "int " << gddClassName << "_to_" << gddBCNameNorm << "(void* mem)" << std::endl
+	      << "{" << std::endl
+	      << remLine << std::endl
+	      << "  return (int)(" << gddBCName << "*)(" << gddClassName << "*)mem - (int)(" 
+        << gddClassName << "*)mem;" << std::endl 
+	      << "}" << std::endl
+	      << std::endl;
+
+      XMLString::release(&gddBCName);
+    }
 
     methodCounter = 0;
 
@@ -871,24 +986,36 @@ void printCppDictionary(DaDiPackage* gddPackage,
             << remLine << std::endl
             << "{" << std::endl;
 
-    if (gddClass->sizeDaDiMethod() || gddClass->sizeDaDiAttribute() ||
-        gddClass->sizeDaDiRelation())
-    {
-      metaOut
-        << "  std::vector<std::string> argTypes = std::vector<std::string>();"
-        << std::endl;
-    }
 
 
     //
-    // Creation of Metaclass
+    // Creation of meta class
     //
-    metaOut << "  MetaClass* metaC = new MetaClass(\"" << gddClassName << "\","
+    metaOut << "  ClassBuilder metaC(\"" << gddClassName << "\","
             << std::endl
             << indent << "\"" << gddClassDesc << "\"," << std::endl
-            << indent << "0);" << std::endl
+            << indent << "typeid(" << gddClassName << ")," << std::endl
+            << indent << "sizeof(" << gddClassName << ")," << std::endl
+            << indent << "std::vector<const std::type_info*>()," << std::endl
+            << indent << "false," << std::endl
+            << indent << "NOCONTAINER," << std::endl
+            << indent << "0," << std::endl
+            << indent << "PUBLIC | VIRTUAL";
+    if (classIsAbstract) metaOut << " | ABSTRACT";
+    metaOut << ");" << std::endl
             << std::endl;
 
+    //
+    // Properties
+    //
+    if (XMLString::stringLen(gddClassID))
+    {
+       metaOut << "  static char clid_txt[64];" << std::endl
+               << "  sprintf(clid_txt,\"%08X-0000-0000-0000-000000000000\"," 
+               << gddClassID << ");" << std::endl
+               << "  metaC.addProperty(\"ClassID\", (char*)clid_txt);" << std::endl;
+    }
+    metaOut << "  metaC.addProperty(\"Author\", " << "\"" << gddClassAuthor << "\");" << std::endl;
 
     //
     // Creation of Superclasses
@@ -902,20 +1029,18 @@ void printCppDictionary(DaDiPackage* gddPackage,
         {
           char *gddBaseClassName =
             XMLString::transcode(gddClass->popDaDiBaseClass()->name());
+          std::string gddBaseClassNameNorm = checkSymb(gddBaseClassName);	  
 
-          //
-          // This is a hack (problems when abstract interface is derived
-          // from another-one)
-          //
-          metaOut << "metaC->addSuperClass(\"" << gddBaseClassName << "\",0);"
-                  << "// this will not work !!!! " << std::endl;
+          metaOut << "  metaC.addSuperClass(\"" << gddBaseClassName << "\", 0, " 
+                  << gddClassName << "_to_" << gddBaseClassNameNorm << ");" 
+                  << std::endl;
 
           //
           //  metaOut << "  " << gddBaseClassName << "* bc = new "
           //  << gddBaseClassName << "();" << std::endl
           //  << "  " << gddClassName << "* cl = (" << gddClassName << "*)bc;"
           //  << std::endl
-          //  << "  metaC->addSuperClass(\"" << gddBaseClassName << "\","
+          //  << "  metaC.addSuperClass(\"" << gddBaseClassName << "\","
           //  << std::endl
           //  << indent << "(int)cl-(int)bc);" << std::endl
           //  << "  delete bc;" << std::endl
@@ -926,25 +1051,29 @@ void printCppDictionary(DaDiPackage* gddPackage,
       }
       else
       {
+
         metaOut << "  " << gddClassName << "* cl = new " << gddClassName
                 << "();" << std::endl;
 
         for (i=0; i<gddClass->sizeDaDiBaseClass(); ++i)
         {
-          char *gddBaseClass =
+          char *gddBaseClassName =
             XMLString::transcode(gddClass->popDaDiBaseClass()->name());
+          std::string gddBaseClassNameNorm = checkSymb(gddBaseClassName);	  
 
-          metaOut << "  metaC->addSuperClass(\"" << gddBaseClass << "\","
-                  << std::endl
-                  << indent << "(((int)cl)-((int)((" << gddBaseClass
-                  << "*)cl))));" << std::endl;
-          XMLString::release(&gddBaseClass);
+          metaOut << "  metaC.addSuperClass(\"" << gddBaseClassName << "\", 0, " 
+                  << gddClassName << "_to_" << gddBaseClassNameNorm << ");" 
+                  << std::endl;
+
+          XMLString::release(&gddBaseClassName);
         }
 
         metaOut << "  delete cl;" << std::endl
                 << std::endl;
+
       }
     }
+
 
 
     //
@@ -957,10 +1086,14 @@ void printCppDictionary(DaDiPackage* gddPackage,
         DaDiConstructor* gddConstructor = gddClass->popDaDiConstructor();
         char *gddConstDesc = XMLString::transcode(gddConstructor->desc());
 
+        metaOut << "  metaC.addMethod(\"" << gddClassName << "\"," << std::endl
+                << indent << "\"" << gddConstDesc << "\"," << std::endl
+                << indent << "\"" << gddClassName << "\"," << std::endl;
+
         if (gddConstructor->sizeDaDiMethArgument())
         {
-          metaOut << "  argTypes.clear();" << std::endl;
-
+          metaOut << indent << "\"";
+	  
           for (j=0; j<gddConstructor->sizeDaDiMethArgument(); ++j)
           {
             DaDiMethArgument* gddConstArgument =
@@ -968,20 +1101,19 @@ void printCppDictionary(DaDiPackage* gddPackage,
             char *gddConstArgType =
               XMLString::transcode(gddConstArgument->type());
 
-            metaOut << constructTypes(gddConstArgType);
-            metaOut << "  argTypes.push_back(\"" << gddConstArgType << "\");"
-                    << std::endl;
+            gddConstArgType = checkForReplacement(gddConstArgType);
+
+            metaOut << gddConstArgType;
+	    
+            if (j < (gddConstructor->sizeDaDiMethArgument()-1)) 
+            {
+              metaOut << "; ";
+            }
 
             XMLString::release(&gddConstArgType);
           }
-        }
 
-        metaOut << "  metaC->addConstructor(\"" << gddConstDesc << "\","
-                << std::endl;
-
-        if (gddConstructor->sizeDaDiMethArgument())
-        {
-          metaOut << indent << "argTypes," << std::endl;
+	  metaOut << "\"," << std::endl;
         }
 
         metaOut << indent << gddClassName << "_constructor_" << i << ");"
@@ -991,13 +1123,25 @@ void printCppDictionary(DaDiPackage* gddPackage,
 
       if (!constWithZeroArgs)
       {
-        metaOut << "  metaC->addConstructor(\"default constructor\","
-                << std::endl
+        metaOut << "  metaC.addMethod(\"" << gddClassName << "\"," << std::endl
+                << indent << "\"default constructor\"," << std::endl
+                << indent << "\"" << gddClassName << "\"," << std::endl
                 << indent << gddClassName << "_constructor_" << ++i << ");"
                 << std::endl << std::endl;
       }
     }
 
+
+    //
+    // Creation of destructors
+    //
+    // only creating standard destructor for the time being !!! fix me !!!
+    metaOut << "  metaC.addMethod(\"~" << gddClassName << "\"," << std::endl
+            << indent << "\"default destructor\"," << std::endl
+            << indent << gddClassName << "_destructor, " << std::endl
+            << indent << "PUBLIC | VIRTUAL);" << std::endl
+            << std::endl;
+    
 
     //
     // Creation of fields for attributes and relations
@@ -1009,23 +1153,49 @@ void printCppDictionary(DaDiPackage* gddPackage,
       char *gddAttName = XMLString::transcode(gddAttribute->name()),
         *gddAttType = XMLString::transcode(gddAttribute->type()),
         *gddAttDesc = XMLString::transcode(gddAttribute->desc()),
-        *gddAttAccess = XMLString::transcode(gddAttribute->access());
+        *gddAttAccess = XMLString::transcode(gddAttribute->access()),
+        *gddAttDictalias = XMLString::transcode(gddAttribute->dictalias());
+
+      std::string gddAttTransient = gddAttribute->transient() ? " | TRANSIENT" : "";
+
+     gddAttType = checkForReplacement(gddAttType);
 
       metaOut << constructTypes(gddAttType);
 
-      metaOut << "  metaC->addField(\"" << gddAttName << "\"," << std::endl
+      std::vector<char*>::const_iterator eIter;
+      for (eIter = enumTypes.begin(); eIter != enumTypes.end(); ++eIter)
+      {
+        if (XMLString::compareString(*eIter, gddAttType) == 0)
+        {
+          XMLString::release(&gddAttType);
+          gddAttType = new char[4];
+          strcpy(gddAttType,"int");
+        }
+      }
+
+      if (XMLString::stringLen(gddAttDictalias))
+      {
+        XMLString::release(&gddAttType);
+        gddAttType = new char[XMLString::stringLen(gddAttDictalias)+1];
+        strcpy(gddAttType,gddAttDictalias); 
+      }
+            
+
+      metaOut << "  metaC.addField(\"" << gddAttName << "\"," << std::endl
               << indent << "\"" << gddAttType << "\"," << std::endl
               << indent << "\"" << gddAttDesc << "\"," << std::endl
               << indent << "OffsetOf(" << gddClassName << ", m_"
               << gddAttName << ")," << std::endl
         //       << indent << "&((" << gddClassName << "*)0)->m_" << gddAttName
         //       << "," << std::endl
-              << indent << printAccessor(gddAttAccess) << ");" << std::endl
+              << indent << printAccessor(gddAttAccess) << gddAttTransient << ");" 
+              << std::endl
               << std::endl;
       XMLString::release(&gddAttName);
       XMLString::release(&gddAttType);
       XMLString::release(&gddAttDesc);
       XMLString::release(&gddAttAccess);
+      XMLString::release(&gddAttDictalias);
     }
 
     for(i=0; i<gddClass->sizeDaDiRelation(); ++i)
@@ -1054,7 +1224,7 @@ void printCppDictionary(DaDiPackage* gddPackage,
         strcat(gddRelType,">");
       }
 
-      metaOut << "  metaC->addField(\"" << gddRelName << "\"," << std::endl
+      metaOut << "  metaC.addField(\"" << gddRelName << "\"," << std::endl
               << indent << "\"" << gddRelType << "\"," << std::endl
               << indent << "\"" << gddRelDesc << "\"," << std::endl
               << indent << "OffsetOf(" << gddClassName << ", m_" << gddRelName
@@ -1105,20 +1275,7 @@ void printCppDictionary(DaDiPackage* gddPackage,
       {
         metaOut << constructTypes(gddMethRetType);
 
-        metaOut << "  argTypes.clear();" << std::endl;
-
-        for (j=0; j<gddMethod->sizeDaDiMethArgument(); ++j)
-        {
-          DaDiMethArgument* gddMethArgument = gddMethod->popDaDiMethArgument();
-          char *gddMethArgType = XMLString::transcode(gddMethArgument->type());
-
-          metaOut << constructTypes(gddMethArgType);
-          metaOut << "  argTypes.push_back(\"" << gddMethArgType << "\");"
-                  << std::endl;
-          XMLString::release(&gddMethArgType);
-        }
-
-        metaOut << "  metaC->addMethod(\"" << gddMethName << "\"," << std::endl
+        metaOut << "  metaC.addMethod(\"" << gddMethName << "\"," << std::endl
                 << indent << "\"" << gddMethDesc << "\"," << std::endl;
         if (strcmp(gddMethRetType,"void") != 0)
         {
@@ -1126,7 +1283,25 @@ void printCppDictionary(DaDiPackage* gddPackage,
         }
         if (gddMethod->sizeDaDiMethArgument())
         {
-          metaOut << indent << "argTypes," << std::endl;
+          metaOut << indent << "\"";
+          for (j=0; j<gddMethod->sizeDaDiMethArgument(); ++j)
+          {
+            DaDiMethArgument* gddMethArgument = gddMethod->popDaDiMethArgument();
+            char *gddMethArgType = XMLString::transcode(gddMethArgument->type());
+
+            gddMethArgType = checkForReplacement(gddMethArgType);
+
+            //	    metaOut << constructTypes(gddMethArgType);
+            metaOut << gddMethArgType;
+            
+            if (j < (gddMethod->sizeDaDiMethArgument()-1))
+            {
+              metaOut << "; ";
+            }
+            XMLString::release(&gddMethArgType);
+          }
+          
+          metaOut << "\"," << std::endl;
         }
         metaOut << indent << gddClassName << "_" << checkSymb(gddMethName)
                 << "_" << methodCounter++ ;
@@ -1160,10 +1335,12 @@ void printCppDictionary(DaDiPackage* gddPackage,
                    (gddAttribute->setMeth(), falseStr) == 0) ? false : true;
       XMLString::release(&falseStr);
 
+      gddAttType = checkForReplacement(gddAttType);
+
       if (getMeth)
       {
         metaOut << constructTypes(gddAttType)
-                << "  metaC->addMethod(\"" << gddAttName << "\"," << std::endl
+                << "  metaC.addMethod(\"" << gddAttName << "\"," << std::endl
                 << indent << "\"" << gddAttDesc << "\"," << std::endl
                 << indent << "\"" << gddAttType << "\"," << std::endl
                 << indent << gddClassName << "_" << gddAttName <<  "_"
@@ -1173,13 +1350,10 @@ void printCppDictionary(DaDiPackage* gddPackage,
 
       if (setMeth)
       {
-        metaOut << "  argTypes.clear();" << std::endl
-                << "  argTypes.push_back(\"" << gddAttType << "\");"
-                << std::endl
-                << "  metaC->addMethod(\"set" << DaDiTools::firstUp(gddAttName)
+        metaOut << "  metaC.addMethod(\"set" << DaDiTools::firstUp(gddAttName)
                 << "\"," << std::endl
                 << indent << "\"" << gddAttDesc << "\"," << std::endl
-                << indent << "argTypes," << std::endl
+                << indent << "\"" << gddAttType <<"\"," << std::endl
                 << indent << gddClassName << "_set"
                 << DaDiTools::firstUp(gddAttName) << "_" << methodCounter++
                 << ");" << std::endl
@@ -1214,42 +1388,64 @@ void printCppDictionary(DaDiPackage* gddPackage,
                    (gddRelation->remMeth(), falseStr) == 0) ? false : true,
         multRel = (XMLString::compareString
                    (gddRelation->ratio(), oneStr) == 0) ? false : true;
-      std::string gddRealRelType = (multRel) ?
-        "SmartRefVector<" + std::string(gddRelType) + ">" :
-        std::string(gddRelType);
+      //std::string gddRealRelType = (multRel) ?
+      //  "SmartRefVector<" + std::string(gddRelType) + ">" :
+      //  std::string(gddRelType);
       XMLString::release(&falseStr);
       XMLString::release(&oneStr);
 
-      if (getMeth)
+      if (!multRel)
       {
-        metaOut << "  metaC->addMethod(\"" << gddRelName << "\"," << std::endl
+        if (getMeth)
+        {
+          metaOut << "  metaC.addMethod(\"" << gddRelName << "\"," << std::endl
                 << indent << "\"" << gddRelDesc << "\"," << std::endl
-                << indent << "\"" << gddRealRelType << "\"," << std::endl
-                << indent << gddClassName << "_" << gddRelName  << "_"
-                << methodCounter++ << ");" << std::endl
-                << std::endl;
-      }
+                  << indent << "\"" << gddRelType << "*\"," << std::endl
+                  << indent << gddClassName << "_" << gddRelName  << "_"
+                  << methodCounter++ << ");" << std::endl
+                  << std::endl;
+        }
 
-      if (setMeth)
+        if (setMeth)
+        {
+          metaOut << "  metaC.addMethod(\"set" << DaDiTools::firstUp(gddRelName)
+                  << "\"," << std::endl
+                  << indent << "\"" << gddRelDesc << "\"," << std::endl
+                  << indent << "\"SmartRef<" << gddRelType << ">\"," << std::endl
+                  << indent << gddClassName << "_set"
+                  << DaDiTools::firstUp(gddRelName) << "_" << methodCounter++
+                  << ");" << std::endl
+                  << std::endl;
+        }
+      }
+      else
       {
-        metaOut << "  argTypes.clear();" << std::endl
-                << "  argTypes.push_back(\"" << gddRelType << "\");"
-                << std::endl
-                << "  metaC->addMethod(\"set" << DaDiTools::firstUp(gddRelName)
-                << "\"," << std::endl
+        if (getMeth)
+        {
+          metaOut << "  metaC.addMethod(\"" << gddRelName << "\"," << std::endl
                 << indent << "\"" << gddRelDesc << "\"," << std::endl
-                << indent << "argTypes," << std::endl
-                << indent << gddClassName << "_set"
-                << DaDiTools::firstUp(gddRelName) << "_" << methodCounter++
-                << ");" << std::endl
-                << std::endl;
-      }
+                  << indent << "\"SmartRefVector<" << gddRelType << ">\"," 
+                  << std::endl
+                  << indent << gddClassName << "_" << gddRelName  << "_"
+                  << methodCounter++ << ");" << std::endl
+                  << std::endl;
+        }
 
-      if (multRel)
-      {
+        if (setMeth)
+        {
+          metaOut << "  metaC.addMethod(\"set" << DaDiTools::firstUp(gddRelName)
+                  << "\"," << std::endl
+                  << indent << "\"" << gddRelDesc << "\"," << std::endl
+                  << indent << "\"SmartRefVector<" << gddRelType << ">\"," << std::endl
+                  << indent << gddClassName << "_set"
+                  << DaDiTools::firstUp(gddRelName) << "_" << methodCounter++
+                  << ");" << std::endl
+                  << std::endl;
+        }
+
         if (clrMeth)
         {
-          metaOut << "  metaC->addMethod(\"clear"
+          metaOut << "  metaC.addMethod(\"clear"
                   << DaDiTools::firstUp(gddRelName) << "\"," << std::endl
                   << indent << "\"" << gddRelDesc << "\"," << std::endl
                   << indent << gddClassName << "_clear"
@@ -1260,13 +1456,10 @@ void printCppDictionary(DaDiPackage* gddPackage,
 
         if (addMeth)
         {
-          metaOut << "  argTypes.clear();" << std::endl
-                  << "  argTypes.push_back(\"" << gddRelType << "\");"
-                  << std::endl
-                  << "  metaC->addMethod(\"addTo"
+          metaOut << "  metaC.addMethod(\"addTo"
                   << DaDiTools::firstUp(gddRelName) << "\"," << std::endl
                   << indent << "\"" << gddRelDesc << "\"," << std::endl
-                  << indent << "argTypes," << std::endl
+                  << indent << "\"SmartRef<" << gddRelType << ">\"," << std::endl
                   << indent << gddClassName << "_addTo"
                   << DaDiTools::firstUp(gddRelName) << "_" << methodCounter++
                   << ");" << std::endl
@@ -1275,13 +1468,10 @@ void printCppDictionary(DaDiPackage* gddPackage,
 
         if (remMeth)
         {
-          metaOut << "  argTypes.clear();" << std::endl
-                  << "  argTypes.push_back(\"" << gddRelType << "\");"
-                  << std::endl
-                  << "  metaC->addMethod(\"removeFrom"
+          metaOut << "  metaC.addMethod(\"removeFrom"
                   << DaDiTools::firstUp(gddRelName) << "\"," << std::endl
                   << indent << "\"" << gddRelDesc << "\"," << std::endl
-                  << indent << "argTypes," << std::endl
+                  << indent << "\"SmartRef<" << gddRelType << ">\"," << std::endl
                   << indent << gddClassName << "_removeFrom"
                   << DaDiTools::firstUp(gddRelName) << "_" << methodCounter++
                   << ");" << std::endl
@@ -1293,23 +1483,160 @@ void printCppDictionary(DaDiPackage* gddPackage,
       XMLString::release(&gddRelDesc);
     }
 
-
-    //
-    // Properties
-    //
-    metaOut << "  MetaPropertyList* pl = new MetaPropertyList();" << std::endl
-            << "  pl->setProperty(\"Author\", " << "\"" << gddClassAuthor
-            << "\");" << std::endl
-            << "  pl->setProperty(\"ClassID\", " << "\"" << gddClassID << "\");"
-            << std::endl;
-
-    metaOut << "  metaC->setPropertyList(pl);" << std::endl;
-
-
     //
     // End of constructor
     //
-    metaOut << "}" << std::endl << std::endl << std::endl;
+    metaOut << "  metaC.build();" << std::endl 
+            << "}" << std::endl << std::endl;
+
+
+    std::vector<std::string> tmplvec;
+    for (i=0; i<gddClass->sizeDaDiTemplate(); ++i)
+    {
+      std::string tmpl = "GaudiDict::"; 
+      DaDiTemplate *gddTemplate = gddClass->popDaDiTemplate();
+      char *gddTemplName = XMLString::transcode(gddTemplate->name());
+      tmpl += gddTemplName;
+      tmpl += "<";
+      char* gddTemplT1 = XMLString::transcode(gddTemplate->t1());
+      if (strcmp (gddTemplT1,"THIS") == 0)
+      {
+        tmpl += gddClassName;
+      }
+      else if (strcmp (gddTemplT1,"THIS*") == 0)
+      {
+        tmpl += gddClassName;
+        tmpl += "*";
+      }
+      else
+      {
+        tmpl += gddTemplT1;
+      }
+      XMLString::release(&gddTemplT1);
+      char *gddTemplT2 = XMLString::transcode(gddTemplate->t2());
+      if (strcmp(gddTemplT2,"") != 0)
+      {
+        tmpl += ",";
+        tmpl += gddTemplT2;
+        char *gddTemplT3 = XMLString::transcode(gddTemplate->t3());
+        if (strcmp(gddTemplT3,"") != 0)
+        {
+          tmpl += ",";
+          tmpl += gddTemplT3;
+          char *gddTemplT4 = XMLString::transcode(gddTemplate->t4());
+          if (strcmp(gddTemplT4,"") != 0)
+          {
+            tmpl += ",";
+            tmpl += gddTemplT4;
+          }
+          XMLString::release(&gddTemplT4);
+        }
+        XMLString::release(&gddTemplT3);
+      }
+      XMLString::release(&gddTemplT2);
+      tmpl += ">";
+      if (tmpl != "GaudiDict::KeyedObjectDict<int>") tmplvec.push_back(tmpl);
+      XMLString::release(&gddTemplName);
+    }
+
+    for (i=0; i<gddClass->sizeDaDiAssociation(); ++i)
+    {
+      std::string tmpl = "GaudiDict::Relation";
+      DaDiAssociation* gddAssociation = gddClass->popDaDiAssociation();
+      char* gddAssocWeight = XMLString::transcode(gddAssociation->weight());
+      char* gddAssocDestination = XMLString::transcode(gddAssociation->destination());
+      bool isWeighted = strcmp("NONE",gddAssocWeight) ? true : false;
+      if (isWeighted)
+      {
+        tmpl += "Weighted";
+      }
+      XMLCh* oned = XMLString::transcode("1D");
+      XMLCh* twod = XMLString::transcode("2D");
+      if (XMLString::equals(gddAssociation->type(), oned))
+      {
+        tmpl += "1D";
+      }
+      else if (XMLString::equals(gddAssociation->type(), twod))
+      {
+        tmpl += "2D";
+      }
+      XMLString::release(&oned);
+      XMLString::release(&twod);
+      tmpl += "Dict<";
+      tmpl += gddClassName;
+      tmpl += ", ";
+      tmpl += gddAssocDestination;
+      if (isWeighted)
+      {
+        tmpl += ", ";
+        tmpl += gddAssocWeight;
+      }
+      tmpl += ">";
+      
+      tmplvec.push_back(tmpl);
+
+      XMLString::release(&gddAssocDestination);
+    }
+    
+
+    /*    
+    std::string inhStr = "";
+    XMLCh* contStr = XMLString::transcode("ContainedObject");
+    XMLCh* dataStr = XMLString::transcode("DataObject");
+    XMLCh* keydStr = XMLString::transcode("KeyedObject");
+    for (i=0; i<gddClass->sizeDaDiBaseClass(); ++i)
+    {
+      DaDiBaseClass* gddBaseClass = gddClass->popDaDiBaseClass();
+      XMLCh* name = new XMLCh[XMLString::stringLen(gddBaseClass->name())+1];
+      XMLString::copyString(name,gddBaseClass->name());
+      
+      if (XMLString::startsWith(name,contStr))
+      {
+	inhStr = "Contained";
+	break;
+      }
+      else if (XMLString::startsWith(name,dataStr))
+      {
+	inhStr = "Data";
+	break;
+      }
+      else if (XMLString::startsWith(name,keydStr) || keyedContTypeDef)
+      {
+	inhStr = "Keyed";
+	break;
+      }
+    }
+    XMLString::release(&contStr);
+    XMLString::release(&dataStr);  
+    XMLString::release(&keydStr);
+    */
+
+    if (gddClass->sizeDaDiTemplate() || gddClass->sizeDaDiAssociation())
+    {
+      metaOut << "namespace" << std::endl
+              << "{" << std::endl
+              << "  struct _InitDict" << std::endl
+              << "  {" << std::endl
+              << "    _InitDict()" << std::endl
+              << "    {" << std::endl;
+      std::vector<std::string>::const_iterator strIter;
+      for (strIter = tmplvec.begin(); strIter != tmplvec.end(); ++strIter)
+      {
+        metaOut << "      " << *strIter << "();" << std::endl;
+      }
+      metaOut << "    }" << std::endl
+              << "  };" << std::endl
+              << std::endl
+              << "  static _InitDict __init;" << std::endl
+              << "}" << std::endl
+              << std::endl
+              << "void* __init_InitDict(" << gddClassName << "* /* dummy */ )" << std::endl
+              << "{" << std::endl
+              << "  return &__init;" << std::endl
+              << "}" << std::endl
+              << std::endl << std::endl;
+    }
+    tmplvec.clear();
 
     metaOut.close();
     delete [] cppFileName;
@@ -1320,6 +1647,11 @@ void printCppDictionary(DaDiPackage* gddPackage,
     XMLString::release(&gddClassAuthor);
     XMLString::release(&gddClassID);
     XMLString::release(&gddPackageName);
+    for (std::vector<char*>::iterator eIter = enumTypes.begin(); 
+         eIter != enumTypes.end(); ++eIter)
+    {
+      XMLString::release(&*eIter);
+    }
   }
 }
 
@@ -1328,7 +1660,7 @@ int main(int argC, char* argV[])
 //-----------------------------------------------------------------------------
 {
 
-#ifdef _WIN32
+#ifdef WIN32
   const char* sep = "\\";
 #else
   const char* sep = "/";
