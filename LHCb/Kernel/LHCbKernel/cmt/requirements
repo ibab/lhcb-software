@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.47 2004-01-27 07:21:38 cattanem Exp $
+# $Id: requirements,v 1.48 2004-01-28 09:19:43 cattanem Exp $
 # =============================================================================
 package LHCbKernel
 author  M.Frank    CERN/LHCb
@@ -31,7 +31,7 @@ apply_pattern lcg_dictionary dictionary=LHCbKernel                  \
 # Build libraries (including dictionary)
 #============================================================================
 library LHCbKernel     *.cpp
-library LHCbKernelDict ../dict/*.cpp dict/*.cpp
+library LHCbKernelDict ../dict/*.cpp
         
 # Standard patterns (order is essential)
 #============================================================================
