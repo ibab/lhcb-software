@@ -1,6 +1,10 @@
-$Id: release.notes,v 1.23 2002-09-12 13:11:45 cattanem Exp $
+$Id: release.notes,v 1.24 2002-10-01 14:04:41 ranjard Exp $
 Package : L0Event
 Package manager : Olivier Callot
+
+!======================= L0Event v13r0 2002-09-25 ==========================
+! 2002-09-26 - Florence Ranjard
+ - requirements - use LHCbKernel v2r* 
 
 !======================== L0Event v12r2 2002-09-12 ========================
 ! 2002-09-12 - Andrei Tsaregorodtsev
