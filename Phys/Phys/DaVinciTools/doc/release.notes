@@ -1,6 +1,12 @@
-! $Id: release.notes,v 1.34 2002-10-28 10:17:00 gcorti Exp $
+! $Id: release.notes,v 1.35 2002-10-29 10:55:53 gcorti Exp $
 ! Package     : DaVinciTools
 ! Responsible : Gloria Corti, Sandra Amato
+
+! 2002-10-29 - Gloria Corti
+ - Comment temporarly the use of setIsResonance(true) in ParticleStuffer
+   and LagrangeMassVertexFitter because of consequent missing step of
+   intermediate particle when creating a new vertex in vertex fitters when
+   daughters of resonaces are used.
 
 ! 2002-10-28 - Gloria Corti
  - Modify misleading comment in initialize of NeutralParticleMaker 
