@@ -1,7 +1,7 @@
-// $Id: PhysEvent_load.cpp,v 1.9 2002-12-03 17:16:38 gcorti Exp $
+// $Id: PhysEvent_load.cpp,v 1.10 2003-12-18 15:33:29 cattanem Exp $
 
 // Include files
-#include "Event/EventFactoryDefs.h"
+#include "GaudiKernel/ContainerFactoryDefs.h"
 
 //-----------------------------------------------------------------------------
 // Implementation file for classes in PhysEvent

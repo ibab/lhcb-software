@@ -10,6 +10,7 @@
       location="Gen/HepMCEvents"
       id="202" >
       <base name="KeyedObject&lt;int&gt;"/>
+      &KeyedObject;
       <import name="HepMC" ignore="TRUE"/>
       <import name="CLHEPStreams" ignore="TRUE"/>
       <constructor
@@ -33,11 +34,13 @@
       <attribute
         desc="Generator Name"
         name="generatorName" init='"Unknown"'
-        type="std::string" />
+        type="std::string"
+        transient="TRUE" />
       <attribute
         desc="HepMC generator event"
         name="pGenEvt" init="0"
-        type="HepMC::GenEvent*" />        
+        type="HepMC::GenEvent*"
+        transient="TRUE" />
       <method
         desc="Assignment operator"
         name="operator="

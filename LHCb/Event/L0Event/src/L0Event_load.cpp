@@ -1,7 +1,7 @@
-// $Id: L0Event_load.cpp,v 1.3 2002-04-30 14:22:57 cattanem Exp $
+// $Id: L0Event_load.cpp,v 1.4 2003-12-18 15:33:25 cattanem Exp $
 // Include files 
 
-#include "Event/EventFactoryDefs.h"
+#include "GaudiKernel/ContainerFactoryDefs.h"
 
 //-----------------------------------------------------------------------------
 // Implementation file for classes in Event

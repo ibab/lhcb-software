@@ -10,6 +10,7 @@
       location="Rec/V0/V0"
      >
        <base name="KeyedObject&lt;int&gt;"/>
+       &KeyedObject;
        <attribute
         desc="ParticleID of positive track"
         name="pIDPos"

@@ -13,7 +13,8 @@
 
     <class name='L0MuonCandidate' id='6002' author='A. Tsaregorodtsev' location="/Event/Trig/L0/Muon" desc='L0Muon trigger candidate'>
       <desc> *  representing the output of the L0Muon trigger processor.</desc>
-      <base name='KeyedObject&lt;long&gt;'/>
+      <base name='KeyedObject&lt;int&gt;'/>
+      &KeyedObject;
       <constructor argList="int status" desc="Constructor with just a status info"/>
       <constructor argList="double pt, double theta, double phi, 
                             std::vector&lt;MuonTileID&gt; pads, 

@@ -16,6 +16,7 @@
         access="PUBLIC"
        />
        <base name="KeyedObject&lt;int&gt;"/>
+       &KeyedObject;
        <import name="CLHEP/Units/SystemOfUnits"/>
        <location
         name="User"

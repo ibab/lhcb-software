@@ -15,6 +15,7 @@
         access="PUBLIC"
        />
        <base name="DataObject"/>
+       &DataObject;
        <import name="Event/DAQTypes" soft="FALSE"/>
        <import name="GaudiKernel/GaudiException" soft="FALSE"/>
        <import name="raw_int" ignore="TRUE"/>
@@ -41,7 +42,8 @@
        <attribute
         desc="Pointer to beggining of Raw buffer"
         name="buffer"
-        type="raw_int *"
+        type="raw_int*"
+        dictalias="RawBufferPtr"
         setMeth="FALSE"
         getMeth="FALSE"
        />
@@ -50,6 +52,7 @@
         name="magic"
         type="raw_int"
 	init="12345"
+        dictalias="int"
         setMeth="FALSE"
        />
        <constructor
@@ -59,6 +62,11 @@
          <code> m_buffer = new raw_int[m_initialSize];
 	        m_allocatedSize = m_initialSize;
 	 </code>
+       </constructor>
+       <constructor argList="long siz, raw_int* buff"
+        desc="Constructor: Initialize with predefined storage"
+	initList="m_initialSize(siz),m_allocatedSize(siz),m_currentSize(siz),m_buffer(buff),m_magic(12345)"
+       >
        </constructor>
        <destructor
         desc="destructor: Deallocate memory"

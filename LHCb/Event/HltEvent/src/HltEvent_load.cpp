@@ -1,7 +1,7 @@
-// $Id: HltEvent_load.cpp,v 1.3 2003-09-25 12:28:33 cattanem Exp $
+// $Id: HltEvent_load.cpp,v 1.4 2003-12-18 15:33:31 cattanem Exp $
 // Include files 
 
-#include "Event/EventFactoryDefs.h"
+#include "GaudiKernel/ContainerFactoryDefs.h"
 
 /// ====================================================================
 #include "Event/HltTrack.h"

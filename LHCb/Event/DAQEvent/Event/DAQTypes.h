@@ -23,4 +23,8 @@ typedef int32_t raw_int ;
 typedef int16_t l1_int ;
 #endif   // WIN32
 
+typedef raw_int* RawBufferPtr;
+typedef l1_int*  L1BufferPtr;
+#include <map>
+
 #endif  // DAQTypes_H

@@ -1,4 +1,4 @@
-#include "Event/EventFactoryDefs.h"
+#include "GaudiKernel/ContainerFactoryDefs.h"
 
 #include "Event/HepMCEvent.h"
 _ImplementContainedObjectFactory( HepMCEvent  ) ;

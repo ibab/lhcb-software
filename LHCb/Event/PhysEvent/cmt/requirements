@@ -1,9 +1,9 @@
-# $Id: requirements,v 1.38 2003-11-03 08:44:24 cattanem Exp $
+# $Id: requirements,v 1.39 2003-12-18 15:32:00 cattanem Exp $
 # Created      : 20/06/2001
 # Maintainer   : Gloria Corti
 #
 package           PhysEvent
-version           v7r8
+version           v8r0
 
 # Structure, i.e. directories to process. 
 #============================================================================
@@ -15,10 +15,9 @@ include_dirs $(PHYSEVENTROOT)
 
 # Used packages. 
 #============================================================================
-use RichEvent    v6r*  Event
-use CaloEvent    v12r* Event
-use MuonEvent    v2r*  Event
-use GaudiObjDesc v5r*  -no_auto_imports
+use RichEvent    v7r*  Event
+use CaloEvent    v13r* Event
+use MuonEvent    v3r*  Event
 
 # Produce Header-Files & dictionary from XML description
 #============================================================================
@@ -28,18 +27,10 @@ document obj2dict PhysEventObj2Dict ../xml/PhysEvent.xml
 # Build libraries (including dictionary)
 #============================================================================
 library     PhysEvent     *.cpp
-library     PhysEventDict ../dict/*.cpp -import=GaudiIntrospection
+library     PhysEventDict ../dict/*.cpp
 
 # Define link options
 #============================================================================
-apply_pattern    package_linkopts
-apply_pattern    package_stamps
-apply_pattern    linker_path
+apply_pattern component_library library=PhysEventDict
+apply_pattern linker_library    library=PhysEvent
 macro_append PhysEvent_linkopts "" WIN32 "/include:_PhysEvent_loadRef"
-
-
-apply_pattern    package_shlibflags
-#============================================================================
-private
-macro PhysEventDict_shlibflags  "$(PhysEvent_linkopts) $(GaudiIntrospection_linkopts) $(use_linkopts) $(libraryshr_linkopts)"
-#============================================================================

@@ -10,11 +10,12 @@
       id="801"
      >
        <base name="KeyedObject&lt;int&gt;"/>
+       &KeyedObject;
        <import name="CLHEP/Units/SystemOfUnits"/>
        <!-- the following line is necessary until using LHCbKernel-->
        <!-- import name="Event/HepMatrixStream"/-->
        <!-- the following line is necessary to not use LHCbEvent -->
-       <import name="Event/ParticleID"/>
+       <import name="Kernel/ParticleID"/>
        <import name="Event/Vertex" soft="TRUE"/>
        <location
         name="User"

@@ -13,7 +13,7 @@
       templateList   = "FALSE" 
       templateVector = "TRUE" >
       <base name="KeyedObject&lt;int&gt;"/>
-
+      &KeyedObject;
       <location name="Velo2d" place="Rec/Hlt/TrVelo2d"/>
       <location name="Velo3d" place="Rec/Hlt/TrVelo3d"/>
       <location name="VeloTT" place="Rec/Hlt/TrVeloTT"/>
@@ -175,6 +175,7 @@ m_OTCluster.reserve( 20 );
       keyedContTypeDef = "TRUE" >
 
       <base name="Vertex"/>
+      &KeyedObject;
 
       <import name='Event/Vertex'/>
 

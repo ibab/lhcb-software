@@ -6,7 +6,7 @@
 # http://cern.ch/lhcb-comp/Support/html/new_structure.pdf
 #============================================================================
 package           HltEvent
-version           v4r0
+version           v5r0
 
 #============================================================================
 # This template is an example for a standard Algorithm package
@@ -21,12 +21,7 @@ include_dirs $(HLTEVENTROOT)
 # Used packages. Specify the version, * at the end specifies 'any revision'
 #    Put as many lines as needed, with all packages, without the '#'
 #============================================================================
-use     VeloEvent       v12r*   Event
-use     ITEvent         v12r*   Event
-use     OTEvent         v12r*   Event
-use     PhysEvent	v7r*	Event
-
-use 	GaudiObjDesc	v5r*    -no_auto_imports
+use     PhysEvent	v8r*	Event
 
 #============================================================================
 # Component library building rule
@@ -38,17 +33,11 @@ document obj2dict HltEventObj2Dict ../xml/*.xml
 
 public
 library          HltEvent    ../src/*.cpp
-library          HltEventDict     ../dict/*.cpp -import=GaudiIntrospection
+library          HltEventDict     ../dict/*.cpp
 
 #============================================================================
 # define component library link options
 #============================================================================
-apply_pattern      package_linkopts
-apply_pattern      package_stamps
-apply_pattern      linker_path
+apply_pattern component_library library=HltEventDict
+apply_pattern linker_library    library=HltEvent
 macro_append HltEvent_linkopts "" WIN32 "/include:_HltEvent_loadRef"
-
-apply_pattern      package_shlibflags
-#===============================================================
-private
-macro HltEventDict_shlibflags  "$(GaudiIntrospection_linkopts) $(HltEvent_linkopts) $(use_linkopts) $(libraryshr_linkopts)"

@@ -1,8 +1,8 @@
-# $Id: requirements,v 1.14 2003-12-09 10:14:32 cattanem Exp $
+# $Id: requirements,v 1.15 2003-12-18 15:31:44 cattanem Exp $
 # =========================================================================
 
 package  OTDet 
-version  v5r1
+version  v5r2
 
 # =============== structure ===============================================	
 branches         src cmt doc OTDet 
@@ -12,7 +12,7 @@ include_dirs      $(OTDETROOT)
 
 # =============== used packages ===========================================
 use DetDescCnv   v2r*   Det 
-use LHCbKernel	v3r*	Kernel
+use LHCbKernel	v4r*	Kernel
 
 # =============== own options ==========================================
 set OTDETOPTS  ${OTDETROOT}/options

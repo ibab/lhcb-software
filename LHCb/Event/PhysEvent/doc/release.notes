@@ -1,6 +1,10 @@
-! $Id: release.notes,v 1.41 2003-11-03 08:44:24 cattanem Exp $
+! $Id: release.notes,v 1.42 2003-12-18 15:33:29 cattanem Exp $
 ! Package     : PhysEvent 
 ! Responsible : Gloria Corti
+
+!======================== PhysEvent v8r0 2003-12-16 ========================
+! 2003-12-16 - Marco Cattaneo
+ - Changes for POOL persistency (Gaudi v14)
 
 !======================== PhysEvent v7r8 2003-11-03 ========================
 ! 2003-11-03 - Marco Cattaneo

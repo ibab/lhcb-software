@@ -1,6 +1,18 @@
 package EventSys
 package manager: Marco Cattaneo
 
+!======================== EventSys v17r0 2003-12-16 ========================
+! 2003-12-15 - Marco Cattaneo
+ - Changes for Gaudi v14 (deployment of POOL)
+   . Remove EventKernel (Keyed containers now in GaudiKernel)
+   . Remove DbCnv (Keyed containers converters now in GaudiDb)
+   . Modify Event v4r0, VeloEvent v13r0, ITEvent v13r0, OTEvent v13r0,
+            TrEvent v13r0, RichEvent v7r0, CaloEvent v13r0, MuonEvent v3r0, 
+            L0Event v14r0, L1Event v12r0, PhysEvent v8r0, HltEvent v5r0,
+            DAQEvent v4r0
+ - Added GenEvent v3r0 (previously not part of EventSys)
+ - Added options/PoolDicts.opts to load all Event dictionaries for POOL
+
 !======================== EventSys v16r0 2003-12-08 ========================
 ! 2003-12-08 - Marco Cattaneo
  - Use EventKernel v4r0, Event v3r7, DAQEvent v3r2, L0Event v13r4

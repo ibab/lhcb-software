@@ -1,6 +1,10 @@
-$Id: release.notes,v 1.30 2003-12-09 10:14:30 cattanem Exp $
+$Id: release.notes,v 1.31 2003-12-18 15:33:25 cattanem Exp $
 Package : L0Event
 Package manager : Olivier Callot
+
+!======================== L0Event v14r0 2003-12-16 ========================
+! 2003-12-16 - Marco Cattaneo
+ - Changes for POOL persistency (Gaudi v14)
 
 !======================== L0Event v13r4 2003-12-08 ========================
 ! 2003-12-08 - Marco Cattaneo

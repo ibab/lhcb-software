@@ -9,6 +9,7 @@
       id="804"
      >
        <base name="Vertex"/>
+       &KeyedObject;
        <import name="Event/TrStoredTrack" soft="TRUE"/>
        <relation
         name="tracks"

@@ -11,6 +11,7 @@
      templateVector="FALSE"
     >
       <base name="DataObject"/>
+      &DataObject;
       <location
        name="Default"
        place="/Event/Phys/Selection"

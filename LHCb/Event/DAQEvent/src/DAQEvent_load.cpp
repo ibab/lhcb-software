@@ -1,7 +1,7 @@
-// $Id: DAQEvent_load.cpp,v 1.4 2003-11-24 16:06:06 cattanem Exp $
+// $Id: DAQEvent_load.cpp,v 1.5 2003-12-18 15:33:01 cattanem Exp $
 // Include files 
 
-#include "Event/EventFactoryDefs.h"
+#include "GaudiKernel/ContainerFactoryDefs.h"
 
 /// ====================================================================
 #include "Event/RawBuffer.h"

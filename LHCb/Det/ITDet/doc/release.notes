@@ -1,6 +1,10 @@
 !Package         : ITDet
 !Package manager : M. Needham
 
+!========================== ITDet v1r9 2003-12-16 ==========================
+! 2003-12-16 - Marco Cattaneo
+ - Move to Gaudi v14 (use LHCbKernel v4r* in requirements)
+
 !========================== ITDet v1r8 2003-12-08 ==========================
 ! 2003-12-08 - Marco Cattaneo
  - Move to Gaudi v13 (use LHCbKernel v3r* in requirements)

@@ -1,15 +1,13 @@
-# $Id: requirements,v 1.31 2003-12-12 12:19:27 cattanem Exp $
+# $Id: requirements,v 1.32 2003-12-18 15:31:56 cattanem Exp $
 package L0Event
-version v13r4
+version v14r0
 
 branches Event cmt doc xml src
 
 include_dirs $(L0EVENTROOT)
 
-use 	LHCbKernel	v3r*	Kernel
-use     EventKernel     v4r*	Event
 use 	MuonKernel 	v2r* 	Muon
-use 	GaudiObjDesc	v5r*    -no_auto_imports
+use	Event		v4r*	Event
 
 #---- Produce Header-Files and from XML description
 private
@@ -19,11 +17,10 @@ document obj2dict L0EventObj2Dict ../xml/*.xml
 # ================ build library (including dictionary) ==================
 public
 library           L0Event         ../src/*.cpp
-library           L0EventDict     ../dict/*.cpp -import=GaudiIntrospection
+library           L0EventDict     ../dict/*.cpp
 
 # Standard patterns (order is important!)
 #===============================================================
 apply_pattern component_library library=L0EventDict
 apply_pattern linker_library    library=L0Event
-macro_append L0Event_linkopts " " \
-             WIN32 "/include:_L0Event_loadRef"
+macro_append L0Event_linkopts "" WIN32 "/include:_L0Event_loadRef"

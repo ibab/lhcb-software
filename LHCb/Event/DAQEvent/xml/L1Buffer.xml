@@ -15,6 +15,7 @@
         access="PUBLIC"
        />
        <base name="DataObject"/>
+       &DataObject;
        <import name="Event/DAQTypes" soft="FALSE"/>
        <import name="GaudiKernel/GaudiException" soft="FALSE"/>
        <import name="l1_int" ignore="TRUE"/>
@@ -41,7 +42,8 @@
        <attribute
         desc="Pointer to beggining of L1 buffer"
         name="buffer"
-        type="l1_int *"
+        type="l1_int*"
+        dictalias="RawBufferPtr"
         setMeth="FALSE"
         getMeth="FALSE"
        />

@@ -12,6 +12,7 @@
       templateList="FALSE" 
       templateVector="FALSE">
       <base name="DataObject"/>
+      &DataObject;
       <attribute 
 	desc="Pile-Up decision" 
 	name="decision" 

@@ -33,9 +33,10 @@
         access="PUBLIC"
        />
       <base name="KeyedObject&lt;int&gt;"/>
+      &KeyedObject;
        <import name="CLHEP/Vector/LorentzVector"/>
        <import name="CLHEP/Geometry/Point3D"/>       
-       <import name="Event/ParticleID" soft="TRUE"/>
+       <import name="Kernel/ParticleID" soft="TRUE"/>
        <import name="Event/CaloHypo" soft="TRUE"/>
        <import name="Event/TrStoredTrack" soft="TRUE"/>
        <import name="Event/TrStateP" soft="TRUE"/>

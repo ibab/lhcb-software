@@ -1,12 +1,12 @@
 package ITDet
-version v1r7
+version v1r9
 
 branches cmt doc src options
 
 include_dirs $(ITDETROOT)
 
 use DetDescCnv	v2r*	Det
-use LHCbKernel	v3r*	Kernel
+use LHCbKernel	v4r*	Kernel
 
 #---- link library
 library ITDetLib ../src/Lib/*.cpp 
@@ -17,13 +17,3 @@ library ITDet ../src/Component/*.cpp
 # =========== standard patterns (the order is essential!) ======================
 apply_pattern component_library library=ITDet
 apply_pattern linker_library    library=ITDetLib
-
-
-
-
-
-
-
-
-
-

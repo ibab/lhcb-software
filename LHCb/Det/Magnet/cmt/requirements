@@ -1,11 +1,11 @@
-# $Id: requirements,v 1.6 2003-12-09 10:09:24 cattanem Exp $
+# $Id: requirements,v 1.7 2003-12-18 15:31:32 cattanem Exp $
 #============================================================================
 package           Magnet
-version           v2r3
+version           v2r4
 
 branches          cmt doc src 
 
-use GaudiKernel v14r*
+use GaudiKernel v15r*
 use CLHEP       v*
 use FieldMap    v*
 

@@ -4,6 +4,10 @@
 ! Purpose     : Event model for HLT tracks
 !-----------------------------------------------------------------------------
 
+!======================== HltEvent v5r0 2003-12-16 ========================
+! 2003-12-16 - Marco Cattaneo
+ - Changes for POOL persistency (Gaudi v14)
+
 !======================== HltEvent v4r0 2003-10-03 ========================
 ! 2003-10-03 - Olivier Callot
  - Fix the default location for HltVertices, to be comaptible with tracks and

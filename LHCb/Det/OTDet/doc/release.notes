@@ -1,7 +1,12 @@
-! $Id: release.notes,v 1.26 2003-12-09 10:14:32 cattanem Exp $
+! $Id: release.notes,v 1.27 2003-12-18 15:33:10 cattanem Exp $
 ! Package     : OTDet
 ! Responsible : J. van Tilburg
 
+!========================== OTDet v5r2 2003-12-16 ==========================
+! 2003-12-16 - Marco Cattaneo
+ - Move to Gaudi v14 (use LHCbKernel v4r* in requirements)
+
+!========================== OTDet v5r1 2003-12-08 ==========================
 ! 2003-12-08 - Marco Cattaneo
  - Move to Gaudi v13 (use LHCbKernel v3r* in requirements)
 

@@ -8,10 +8,12 @@
     </namespace>
     <class author="Olivier Callot" desc="This class represents the input from the calorimeter to the L0 trigger" id="6001" name="L0CaloCandidate">
       <base name="KeyedObject&lt;int&gt;"/>
+      &KeyedObject;
       <import name="stdio.h" std="TRUE"/>
       <import name="CLHEP/Units/SystemOfUnits"/>
       <import name="Kernel/CaloCellID"/>
       <import name="Event/L0Calo"/>
+      <import name="Event/MCParticle"/>
       <location name="Default" place="/Event/Trig/L0/Calo"/>
       <location name="Full" place="/Event/Trig/L0/FullCalo"/>
       <constructor argList="int type, CaloCellID ID, int etCode, double et, HepPoint3D cellCenter, double cellSize" desc="special constructor" initList="m_type(type), m_ID(ID), m_etCode(etCode), m_et(et), m_position(cellCenter), m_posTol(cellSize)">
@@ -40,9 +42,13 @@
 	<arg name="ms" type="MsgStream" />
 	<arg name="cand" type="L0CaloCandidate*" const="TRUE" />
       </method>
+      <assoc
+        weight = "double"
+        to     = "MCParticle" />
     </class>
     <class author="Olivier Callot" desc="Information for L0 Calo Trigger: CellID + 8-bit Et" id="6006" name="L0CaloAdc">
       <base name="KeyedObject&lt;int&gt;"/>
+      &KeyedObject;
       <import name="Kernel/CaloCellID"/>
       <location name="Ecal" place="/Event/Trig/L0/EcalRaw"/>
       <location name="Hcal" place="/Event/Trig/L0/HcalRaw"/>
@@ -57,6 +63,7 @@
       <location name="Prs" place="/Event/Trig/L0/PrsRaw"/>
       <location name="Spd" place="/Event/Trig/L0/SpdRaw"/>
       <base name="ContainedObject"/>
+      &ContainedObject;
       <import name="Kernel/CaloCellID"/>
       <attribute desc="Fired cells" name="cellID" setMeth="FALSE" type="CaloCellID"/>
       <constructor argList="CaloCellID ID" desc="Usual constructor, specifies the CellID" initList="m_cellID( ID )">
