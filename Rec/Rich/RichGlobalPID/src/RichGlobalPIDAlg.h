@@ -1,4 +1,4 @@
-// $Id: RichGlobalPIDAlg.h,v 1.2 2003-07-06 09:23:06 jonesc Exp $
+// $Id: RichGlobalPIDAlg.h,v 1.3 2003-07-06 16:52:48 jonesc Exp $
 #ifndef RICHRECALGS_RICHGLOBALPIDALG_H
 #define RICHRECALGS_RICHGLOBALPIDALG_H 1
 
@@ -104,8 +104,9 @@ private:  // Private data members
   /// List of tracks ordered by change in likelihood
   TrackList m_trackList;
 
-  // working flags
+  // working flags and variables
   bool m_tryAgain, m_lastChance, m_inR1, m_inR2;
+  int m_trackIteration;
 
 };
 

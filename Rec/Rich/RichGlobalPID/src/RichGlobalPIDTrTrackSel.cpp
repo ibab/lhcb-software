@@ -1,4 +1,4 @@
-// $Id: RichGlobalPIDTrTrackSel.cpp,v 1.3 2003-07-03 14:47:44 jonesc Exp $
+// $Id: RichGlobalPIDTrTrackSel.cpp,v 1.4 2003-07-06 16:52:49 jonesc Exp $
 // Include files
 
 // local
@@ -206,7 +206,7 @@ StatusCode RichGlobalPIDTrTrackSel::execute() {
         << ", NonUniq " << m_nNonUniqueTk[0] << "/" << m_nNonUniqueTk[1]
         << endreq;
   }
-
+  
   if ( m_GPIDtracks->empty() ) {
     msg << MSG::INFO << "No tracks selected -> RICH Global PID aborted" << endreq;
     procStat->addAlgorithmStatus( m_richGPIDName, Rich::Rec::NoRichTracks );
