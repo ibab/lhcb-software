@@ -1,0 +1,35 @@
+// Options to create RichRecTracks from cheated TrStoredTrack reconstructed information
+// The TrStoredTrack is used as a starting point, but the gemoetrical and momentum 
+// information is then extracted from the associated MCRichTrack
+
+// Define the primary RichTrackCreatorm to be the delegator tool
+// This tool sends the real work to other tools depending on the configuration
+ToolSvc.RichToolRegistry.Tools += { "RichDelegatedTrackCreatorFromTrStoredTracks/RichTrackCreator" };
+
+// Example configuration
+ToolSvc.RichTrackCreator.ToolsByTrackType = { "forward/RichTrackCreatorMC",
+                                              "match/RichTrackCreatorMC",
+                                              "veloTT/RichTrackCreatorMC",
+                                              "seed/RichTrackCreatorMC",
+                                              "KsTrack/RichTrackCreatorMC",
+                                              "velo/RichTrackCreatorMC" };
+
+// The delegated RichTrackCreator that uses full reco information
+ToolSvc.RichToolRegistry.Tools += { "RichTrackCreatorFromTrStoredTracks/RichTrackCreatorReco" };
+ToolSvc.RichTrackCreatorReco.TrackSegmentTool = "RichDetTrSegMakerReco";
+//                                                   Forward  Match  Follow    Seed  VTT   KsTrack  Velo
+ToolSvc.RichTrackCreatorReco.TrackMinPtotPerClass = { 0,       0,     0,        0,    1.0,  0.0,     999 };
+
+// Configure the RichTrackSegment maker for reconstructed tracks
+ToolSvc.RichToolRegistry.Tools += { "RichTrSegMakerFromTrStoredTracks/RichDetTrSegMakerReco" };
+ToolSvc.RichDetTrSegMakerReco.PrimaryTrackExtrapolator = "TrHerabExtrapolator";
+ToolSvc.RichDetTrSegMakerReco.BackupTrackExtrapolator  = "TrParabolicExtrapolator";
+
+// The delegated RichTrackCreator that uses MC information
+ToolSvc.RichToolRegistry.Tools += { "RichTrackCreatorFromTrStoredTracks/RichTrackCreatorMC" };
+ToolSvc.RichTrackCreatorMC.TrackSegmentTool = "RichDetTrSegMakerMC";
+//                                                   Forward  Match  Follow    Seed  VTT   KsTrack  Velo
+ToolSvc.RichTrackCreatorMC.TrackMinPtotPerClass   = { 0,       0,     0,        0,    1.0,  0.0,     999 };
+
+// Configure the RichTrackSegment maker for MC tracks
+ToolSvc.RichToolRegistry.Tools += { "RichTrSegMakerFromMCRichTracks/RichDetTrSegMakerMC" };

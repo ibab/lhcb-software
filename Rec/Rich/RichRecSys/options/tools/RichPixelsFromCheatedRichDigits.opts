@@ -1,0 +1,5 @@
+
+// Uses RichDigits as the base object but cheats to the true hit position on the
+// HPD entrance window - obtained from the associated MCRichOpticalPhoton object
+
+ToolSvc.RichToolRegistry.Tools += { "RichPixelCreatorFromCheatedRichDigits/RichPixelCreator" };

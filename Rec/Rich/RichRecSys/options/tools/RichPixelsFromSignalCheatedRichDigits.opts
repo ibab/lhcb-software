@@ -1,0 +1,14 @@
+
+// Uses RichDigits as the base object but firstly selects only those hits that are
+// true cherenkov hits and also cheats to the true hit position on the
+// HPD entrance window, obtained from the associated MCRichOpticalPhoton object
+
+// use the tool that uses RichDigits
+ToolSvc.RichToolRegistry.Tools += { "RichPixelCreatorFromSignalRichDigits/RichPixelCreator" };
+
+// Tool to pass the the work to once signal hits are selected
+ToolSvc.RichPixelCreator.DelegatedPixelCreator = "RichPixelCreatorMC";
+
+// Configure which tool to use to actually make the digits. 
+// Here, use the normal reconstruction tool
+ToolSvc.RichToolRegistry.Tools += { "RichPixelCreatorFromCheatedRichDigits/RichPixelCreatorMC" };

@@ -1,0 +1,18 @@
+
+// Perform the full reconstruction of photons
+
+// RichRecPhoton predictor (quick test if a given pixel/segment combination
+// is likely to yield a good photon)
+ToolSvc.RichToolRegistry.Tools += { "RichPhotonPredictor/RichPhotonPredictor" };
+ToolSvc.RichPhotonPredictor.MinTrackROI          = { 130.0,   0.0,    0.0  };
+ToolSvc.RichPhotonPredictor.MaxTrackROI          = { 350.0,  90.0,  250.0  };
+
+// RichRecPhoton Creator
+ToolSvc.RichToolRegistry.Tools += { "RichPhotonCreator/RichPhotonCreator" };
+ToolSvc.RichPhotonCreator.MinCherenkovTheta      = { 0.1,   0.005,  0.005  };
+ToolSvc.RichPhotonCreator.MaxCherenkovTheta      = { 0.29,  0.075,  0.045  };
+ToolSvc.RichPhotonCreator.MinPhotonProbability   = { 1e-15,  1e-15,  1e-15 };
+
+// geometrical photon reconstruction
+ToolSvc.RichToolRegistry.Tools += { "CdfPhotonReco/RichDetPhotonReco" };
+//ToolSvc.RichToolRegistry.Tools += { "RichPhotonReco/RichDetPhotonReco" };

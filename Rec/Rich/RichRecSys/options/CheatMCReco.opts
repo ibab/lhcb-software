@@ -1,9 +1,0 @@
-
-// Include this file last to override previous setup and cheat !
-
-// Cheat tracks
-ToolSvc.RichToolRegistry.Tools += { "RichTrackCreatorFromCheatedTrStoredTracks/RichTrackCreator" };
-ToolSvc.RichToolRegistry.Tools += { "CdfRichTrSegMakerFromMCRichTracks/RichDetTrSegMaker" };
-
-// Cheat pixels
-//ToolSvc.RichToolRegistry.Tools += { "RichPixelCreatorFromCheatedRichDigits/RichPixelCreator" };

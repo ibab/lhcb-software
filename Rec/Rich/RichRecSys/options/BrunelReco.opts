@@ -24,7 +24,7 @@ BrunelRecoRICHSeq.Members += { "RichGlobalPIDAlg/RichGloPIDIt2" };
 
 // Ring refit - uses working PIDs to identify good photons and refit angles
 // Results as yet not used in formation of final PID
-//BrunelRecoRICHSeq.Members += { "RichRingRefitAlg/RichRingRefit" };
+BrunelRecoRICHSeq.Members += { "RichRingRefitAlg/RichRingRefit" };
 
 // Finalise Global PID algorithm each event
 BrunelRecoRICHSeq.Members += { "RichGlobalPIDFinalize/RichGloPIDFin" };
@@ -42,8 +42,8 @@ BrunelRecoRICHSeq.Members += {
   "Rich1MarkovRingFinderAlg/Rich1P0RingFinder",
   "Rich1MarkovRingFinderAlg/Rich1P1RingFinder"
 */
-// Markov chain ring finder : RICH2
 /*
+// Markov chain ring finder : RICH2
 BrunelRecoRICHSeq.Members += {
   "Rich2LMarkovRingFinderAlg/Rich2P0RingFinder",
   "Rich2RMarkovRingFinderAlg/Rich2P1RingFinder"

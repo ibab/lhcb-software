@@ -1,12 +1,47 @@
+//=============================================================================================
+// Rich Reconstruction Tools
+//=============================================================================================
 
-// Rich Reconstruction tools
-//===================================================================================================
+// ================================== Track Creators ==========================================
 
-// Track creator
-ToolSvc.RichToolRegistry.Tools += { "RichTrackCreatorFromTrStoredTracks/RichTrackCreator" };
-//                                                Forward  Match  Follow    Seed  VTT   KsTrack  Velo
-ToolSvc.RichTrackCreator.TrackMinPtotPerClass = { 0,       0,     0,        0,    1.0,  0.0,     999 };
-ToolSvc.RichTrackCreator.BuildMassHypothesisRings = false;
+// RichTrackCreator using full reconstructed information (Default)
+#include "$RICHRECSYSOPTS/tools/RichTracksFromTrStoredTracks.opts"
+
+// RichTrackCreator using TrStoredTracks but cheating the tracking information by
+// using the associated MCRichTrack. In the include file below the cheating can be tuned
+// at the level of the tracking algorithm.
+//#include "$RICHRECSYSOPTS/tools/RichTracksFromCheatedTrStoredTracks.opts"
+
+// ================================== Pixel Creators ==========================================
+
+// Pixel creator using full reconstructed information from RichDigits (Default)
+#include "$RICHRECSYSOPTS/tools/RichPixelsFromRichDigits.opts"
+
+// Pixel creator using all RichDigits but cheating the hit position on the HPD 
+// window using MCRichOpticalPhotons
+//#include "$RICHRECSYSOPTS/tools/RichPixelsFromCheatedRichDigits.opts"
+
+// Pixel creator using RichDigits but selects only true Cherenkov Hits
+//#include "$RICHRECSYSOPTS/tools/RichPixelsFromSignalRichDigits.opts"
+
+// Pixel creator using RichDigits but selects only true Cherenkov Hits
+// and then cheats the hit position using MCRichOpticalPhotons
+//#include "$RICHRECSYSOPTS/tools/RichPixelsFromSignalCheatedRichDigits.opts"
+
+// ================================== Photon Creators ==========================================
+
+// Photon reconstruction using full reconstructed information (Default)
+#include "$RICHRECSYSOPTS/tools/RichPhotonsFromReco.opts"
+
+// Photon reconstruction using full reconstructed information, but selecting only true cherenkov
+// photons using MC information
+//#include "$RICHRECSYSOPTS/tools/RichPhotonsFromCheatedReco.opts"
+
+// Photon reconstruction that uses only true Cherenkov information from the MCRichOpticalPhotons
+// I.e cheat the emission, detection and mirror reflection points, and the cherenkov angles
+//#include "$RICHRECSYSOPTS/tools/RichPhotonsFromMCRichOpticalPhotons.opts"
+
+// =================================== Miscellaneous ===========================================
 
 // RichRecRing creator for mass hypothesis rings
 ToolSvc.RichToolRegistry.Tools += { "RichMassHypothesisRingCreator/RichMassHypoRings" };
@@ -21,18 +56,6 @@ ToolSvc.RichSegmentCreator.EnergyBins      = { 10,      10,     10   };
 
 // Status Creator
 ToolSvc.RichToolRegistry.Tools += { "RichStatusCreator/RichStatusCreator" };
-
-// Pixel creator
-ToolSvc.RichToolRegistry.Tools += { "RichPixelCreatorFromRichDigits/RichPixelCreator" };
-
-// Photon Creator
-ToolSvc.RichToolRegistry.Tools += { "RichPhotonCreator/RichPhotonCreator",
-                                    "RichPhotonPredictor/RichPhotonPredictor" };
-ToolSvc.RichPhotonPredictor.MinTrackROI          = { 130.0,   0.0,    0.0  };
-ToolSvc.RichPhotonPredictor.MaxTrackROI          = { 350.0,  90.0,  250.0  };
-ToolSvc.RichPhotonCreator.MinCherenkovTheta      = { 0.1,   0.005,  0.005  };
-ToolSvc.RichPhotonCreator.MaxCherenkovTheta      = { 0.29,  0.075,  0.045  };
-ToolSvc.RichPhotonCreator.MinPhotonProbability   = { 1e-15,  1e-15,  1e-15 };
 
 // Geometrical efficiency from full ray tracing
 ToolSvc.RichToolRegistry.Tools += { "RichGeomEffPhotonTracing/RichGeomEff" };
@@ -126,36 +149,17 @@ ToolSvc.RichToolRegistry.Tools += { "RichParticleProperties/RichParticleProperti
 ToolSvc.RichToolRegistry.Tools += { "RichTabulatedGasQuartzWindowAbs/RichGasQuartzWindow" };
 ToolSvc.RichGasQuartzWindow.GasQuartzWindowLocation =
   "/dd/Materials/RichMaterialTabProperties/GasWindowQuartzIdealAbsLengthPT";
-//ToolSvc.RichGasQuartzWindow.GasQuartzWindowLocation =
 //  "/dd/Materials/RichMaterialTabProperties/GasWindowQuartzAbsLengthPT";
 
-// Rich Detector tools
-//=================================================================================
-
-// Detector Paramters
+// Detector Parameters
 ToolSvc.RichToolRegistry.Tools += { "RichDetParameters/RichDetParameters" };
 //                                            Aerogel  C4F10   CF4
 ToolSvc.RichDetParameters.MinPhotonEnergy = { 1.75,    1.75,   1.75 };
 ToolSvc.RichDetParameters.MaxPhotonEnergy = { 3.75,    7.00,   7.00 };
 
-// SmartIDs
+// SmartID manipulation
 ToolSvc.RichToolRegistry.Tools += { "RichSmartIDTool/RichSmartIDTool" };
 
-// Ray tracing
-ToolSvc.RichToolRegistry.Tools += { "CdfRayTracing/RichRayTracing" };
-//ToolSvc.RichToolRegistry.Tools += { "RichRayTracing/RichRayTracing" };
-
-// Rich segment maker. Uses implicit linear extrapolation
-//ToolSvc.RichToolRegistry.Tools += { "CdfRichTrSegMakerFromTrStoredTracks/RichDetTrSegMaker" };
-// Rich segment maker. Uses track extrapolation tools
-ToolSvc.RichToolRegistry.Tools += { "RichTrSegMakerFromTrStoredTracks/RichDetTrSegMaker" };
-ToolSvc.RichDetTrSegMaker.PrimaryTrackExtrapolator = "TrHerabExtrapolator";
-//ToolSvc.RichDetTrSegMaker.PrimaryTrackExtrapolator = "TrParabolicExtrapolator";
-ToolSvc.RichDetTrSegMaker.BackupTrackExtrapolator  = "TrParabolicExtrapolator";
-//ToolSvc.RichDetTrSegMaker.BackupTrackExtrapolator  = "TrLinearExtrapolator";
-
-// photon reconstruction
-ToolSvc.RichToolRegistry.Tools += { "CdfPhotonReco/RichDetPhotonReco" };
-//ToolSvc.RichToolRegistry.Tools += { "RichPhotonReco/RichDetPhotonReco" };
-
-
+// Detector ray-tracing
+//ToolSvc.RichToolRegistry.Tools += { "CdfRayTracing/RichRayTracing" };
+ToolSvc.RichToolRegistry.Tools += { "RichRayTracing/RichRayTracing" };

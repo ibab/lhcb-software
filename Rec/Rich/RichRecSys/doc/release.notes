@@ -4,6 +4,16 @@
 ! Purpose     : Co-ordinates the RICH reconstruction packages
 !-----------------------------------------------------------------------------
 
+! 2004-06-10 - Chris Jones
+ - New version for new reconstruction packages :-
+   RichDAQ, RichRecBase, RichRecCommon, RichGlobalPID,
+   RichLocalPID, RichRecMCTools, RichRecQC and RichRecTools
+
+! 2004-06-07 - Chris Jones
+ - Add new MC reconstruction options to allow reconstruction to use MC 
+   information for development, debugging etc.
+   Available options are listed in options/RecoTooPara.opts
+
 ! 2004-05-30 - Chris Jones
  - Add RichRecRing creator to options files
  - Add new tool for ray tracing

@@ -1,0 +1,16 @@
+// Options to create RichRecTracks from TrStoredTrack reconstructed information
+
+// Define the RichRecTrack creator
+ToolSvc.RichToolRegistry.Tools += { "RichTrackCreatorFromTrStoredTracks/RichTrackCreator" };
+
+// selection cuts by tracking algorithm
+//                                                Forward  Match  Follow    Seed  VTT   KsTrack  Velo
+ToolSvc.RichTrackCreator.TrackMinPtotPerClass = { 0,       0,     0,        0,    1.0,  0.0,     999 };
+
+// define the RichTrackSegment nickname to use
+ToolSvc.RichTrackCreator.TrackSegmentTool = "RichDetTrSegMaker";
+
+// Configure the RichTrackSegment maker
+ToolSvc.RichToolRegistry.Tools += { "RichTrSegMakerFromTrStoredTracks/RichDetTrSegMaker" };
+ToolSvc.RichDetTrSegMaker.PrimaryTrackExtrapolator = "TrHerabExtrapolator";
+ToolSvc.RichDetTrSegMaker.BackupTrackExtrapolator  = "TrParabolicExtrapolator";

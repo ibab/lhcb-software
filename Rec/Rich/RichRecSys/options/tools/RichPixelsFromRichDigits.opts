@@ -1,0 +1,3 @@
+
+// use the tool that uses RichDigits
+ToolSvc.RichToolRegistry.Tools += { "RichPixelCreatorFromRichDigits/RichPixelCreator" };
