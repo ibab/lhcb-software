@@ -1,4 +1,4 @@
-// $Id: DeOTDetector.cpp,v 1.11 2004-06-24 09:48:34 jnardull Exp $
+// $Id: DeOTDetector.cpp,v 1.12 2004-06-24 12:49:11 jnardull Exp $
 
 // CLHEP
 #include "CLHEP/Geometry/Point3D.h"
@@ -162,39 +162,17 @@ DeOTLayer* DeOTDetector::layer(OTChannelID aChannel) const
 DeOTModule* DeOTDetector::module(OTChannelID aChannel) const
 {
   // Find the module
-
-  MsgStream msg(msgSvc(), name());
-
-  int station = (aChannel.station());
-  int layer = (aChannel.layer());
-  int quarter = (aChannel.quarter());
-  int module = (aChannel.module());
-  int straw = (aChannel.straw());
-  int tdcTime = (aChannel.tdcTime());
-
-  msg << MSG::DEBUG 
-      << "WE GET: " << format(" Station %d, Layer %d, Quarter %d, " 
-                              " Module %d, First Straw %d, First Tdc Time %d ", 
-                              station, layer, quarter, module, straw, 
-                              tdcTime) << endreq;
-
   DeOTModule* otModule = 0;
   std::vector<DeOTStation*>::const_iterator iterStation = m_stations.begin();
   
-  msg << MSG::DEBUG << " Hallo " << endreq;
- 
   while ( iterStation != m_stations.end() &&
           !( (*iterStation)->stationID() == aChannel.station() ) )
     ++iterStation;
 
   if ( iterStation != m_stations.end() ) {
 
-    msg << MSG::DEBUG << " Hallo1 " << endreq;
-
-    DeOTLayer* otLayer = (*iterStation)->layer( aChannel.layer() ); 
+     DeOTLayer* otLayer = (*iterStation)->layer( aChannel.layer() ); 
     if (otLayer != 0) {
-
-      msg << MSG::DEBUG << " Hallo2 " << endreq;
 
       DeOTQuarter* otQuarter = otLayer->quarter( aChannel.quarter() );
       if (otQuarter != 0) otModule = otQuarter->module( aChannel.module() );
