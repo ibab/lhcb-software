@@ -12,9 +12,14 @@
      VeloKernel v1r4, DetSys v6r0, VeloDet v9r0, STDet v8r1, CaloDet v6r8, 
      EventSys v18r0, VeloEvent v14r0,ITEvent v13r2,TrEvent v13r1,CaloEvent v13r1,
      AssociatorsSys v1r11, VeloAssociators v1r8, Associators v2r3, 
-     TrAssociators v4r0, CaloAssociators v4r0, MCTools v1r4, IOExample v1r1
+     TrAssociators v4r0, CaloAssociators v4r0, MCTools v1r4, IOExample v1r1,
+     GaudiConf v7r6
 
  - Removed packages: TrFitEvent (to be moved to BRUNEL project)
+
+ - In GaudiConf v7r6:
+   . Remove obsolete SicbTestDataFile options
+   . Add $STDOPTS/Gaudi.supp valgrind error suppression file
 
  - In LHCbKernel v4r3:
    . Change in bit assignment of VeloChannelID
