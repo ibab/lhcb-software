@@ -1,6 +1,11 @@
 Package MuonKernel
 Package manager: A.Tsaregorodtsev
 
+!======================= MuonKernel v2r6 2005-04-04 =======================
+! 2004-04-04 - Andrei Tsaregorodtsev
+ - Added toString() method and constructor taking a string to MuonTileID
+   class ( MuonTileID.xml ) 
+
 !======================= MuonKernel v2r6 2004-07-19 =======================
 ! 2004-07-19 - Marco Cattaneo
  - Move to Gaudi v15 (use LHCbKernel v5r* in requirements)
