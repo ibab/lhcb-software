@@ -1,12 +1,15 @@
 # =========================================================================	
 # $Log: not supported by cvs2svn $
+# Revision 1.11  2001/07/12 21:53:38  ibelyaev
+# adaptation for Win2K
+#
 # Revision 1.10  2001/06/29 10:26:18  ibelyaev
 # update to use new features of DetDesc v7 package
 #
 # =========================================================================	
 
 package  CaloDet 
-version  v2
+version  v3
 
 # =============== structure ===============================================	
 branches         src cmt doc options CaloDet 
@@ -15,7 +18,7 @@ branches         src cmt doc options CaloDet
 include_dirs      $(CALODETROOT)
 
 # =============== used packages ===========================================
-use DetDesc      v7*  Det 
+use DetDesc      v8*  Det 
 use CaloGen      v2*  Calo 
 
 # =============== own options ==========================================
