@@ -2,12 +2,15 @@
 # Created    : 2003-11-06
 # Maintainer : Chris Jones
 #============================================================================
-# $Id: requirements,v 1.12 2004-07-30 11:07:04 jonrob Exp $
+# $Id: requirements,v 1.13 2004-10-20 16:19:23 jonrob Exp $
 # $Log: not supported by cvs2svn $
+# Revision 1.12  2004/07/30 11:07:04  jonrob
+# Add CVS log to requirements file
+#
 #============================================================================
 
 package           RichDAQ
-version           v1r5
+version           v1r6
 
 # Structure, i.e. directories to process. 
 #============================================================================
@@ -18,7 +21,7 @@ include_path none
 # Used packages. Specify the version, * at the end specifies 'any revision'
 #    Put as many lines as needed, with all packages, without the '#'
 #============================================================================
-use   RichEvent      v7r*    Event
+use   RichEvent      v8r*    Event
 use   DAQEvent       v4r*    Event
 
 #============================================================================

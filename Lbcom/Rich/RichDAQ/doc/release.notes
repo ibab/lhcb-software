@@ -4,6 +4,9 @@
 ! Purpose     : Package simulating the RICH DAQ system and data format
 !-----------------------------------------------------------------------------
 
+! 2004-10-19 - Chris Jones
+ - Update usage to RichEvent v8r*
+
 ! 2004-10-13 - Chris Jones
  - Use Data on Demand Service
  - Various small speed improvements
