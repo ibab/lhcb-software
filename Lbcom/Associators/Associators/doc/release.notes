@@ -1,6 +1,10 @@
 ! Package     : Associators
 ! Responsible : Rutger Hierck
 
+!====================== Associators v2r4p1 2005-01-20 ======================
+! 2005-01-20 - Marco Cattaneo
+ - Add explicit use of TrEvent, no longer inherited from CaloEvent
+
 !======================= Associators v2r4 2004-11-22 =======================
 ! 2004-11-22 - Marco Cattaneo
  - Convert to GaudiAlgorithm
