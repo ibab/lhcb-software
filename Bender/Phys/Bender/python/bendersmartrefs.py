@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: bendersmartrefs.py,v 1.7 2005-02-08 20:31:51 ibelyaev Exp $ 
+# $Id: bendersmartrefs.py,v 1.8 2005-02-10 12:26:12 ibelyaev Exp $ 
 # =============================================================================
 # CVS tag $Name: not supported by cvs2svn $ version $Revison:$
 # =============================================================================
@@ -13,7 +13,7 @@ Helper module  to (re)define few sipmple methods for few useful event classes
 """
 # =============================================================================
 __author__  = "Vanya BELYAEV Ivan.Belyaev@itep.ru"
-__version__ = "CVS tag $Name: not supported by cvs2svn $ version: $Revision: 1.7 $ "
+__version__ = "CVS tag $Name: not supported by cvs2svn $ version: $Revision: 1.8 $ "
 # =============================================================================
 
 import gaudimodule
@@ -163,15 +163,11 @@ class KeyedContainerIterator(object) :
         self._vector_ = container.containedObjects()
         self._index_  = 0
         self._size_   = self._vector_.size()
-        print ' I am iterator: size=' , self._size_
     def next     ( self ) :
-        #print ' I am iterator: index/size=' , self._index_ , self._size_         
-        index = self._index_ 
-        if index < self._size_ :
-            obj  = self._vector_[ index ]
-            self._index_ += 1
-            return obj
-        raise StopIteration
+        if not index.__index_ < self._size_ : raise StopIteration   # exception! 
+        obj  = self._vector_[ self._index_ ]
+        self._index_ += 1
+        return obj
 
 def _create_iterator_( self ) :
     return KeyedContainerIterator( self )
