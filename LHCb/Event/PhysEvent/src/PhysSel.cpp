@@ -37,7 +37,7 @@ void PhysSel::removePhysSelDecays() {
 // Either the Algorithm or the Converter need to create the
 // PhysSelDecay object but afterward it belong to the PhysSel class
 //=======================================================================
-void PhysSel::addPhysSelDecay( std::string& decayName, PhysSelDecay*& value ) {
+void PhysSel::addPhysSelDecay( std::string& decayName, PhysSelDecay* value ) {
   typedef std::map<std::string,PhysSelDecay*> SelTable ;  
   m_table.insert( SelTable::value_type( decayName, value ) );
 }
@@ -62,7 +62,7 @@ void PhysSel::removePhysSelDecay( std::string& decayName ) {
 void PhysSel::results( std::string& name, bool& mc, bool& tkr, bool& pqual, 
                        bool& sel, bool& agr, bool& tag ) {
 
-  const PhysSelDecay* pSelDecay = 0;
+  PhysSelDecay* pSelDecay = 0;
   retrievePhysSelDecay( name, pSelDecay );
   if( 0 != pSelDecay ) {
     pSelDecay->results( mc, tkr, pqual, sel, agr, tag );
@@ -86,7 +86,7 @@ void PhysSel::results( std::string& name, bool& mc, bool& tkr, bool& pqual,
 bool PhysSel::decayIsInMCTree( std::string& name ) {
 
   bool mc = false;
-  const PhysSelDecay* pSelDecay = 0;
+  PhysSelDecay* pSelDecay = 0;
   retrievePhysSelDecay( name, pSelDecay );
   if( 0 != pSelDecay ) {
     mc = pSelDecay->decayIsInMCTree();
@@ -102,7 +102,7 @@ bool PhysSel::decayIsInMCTree( std::string& name ) {
 bool PhysSel::decayHasTrkRecon( std::string& name ) {
 
   bool tkr = false;
-  const PhysSelDecay* pSelDecay = 0;
+  PhysSelDecay* pSelDecay = 0;
   retrievePhysSelDecay( name, pSelDecay );
   if( 0 != pSelDecay ) {
     tkr = pSelDecay->decayHasTrkRecon();
@@ -118,7 +118,7 @@ bool PhysSel::decayHasTrkRecon( std::string& name ) {
 bool PhysSel::decayHasTrkPQual( std::string& name ) {
   
   bool pqual = false;
-  const PhysSelDecay* pSelDecay = 0;
+  PhysSelDecay* pSelDecay = 0;
   retrievePhysSelDecay( name, pSelDecay );
   if( 0 != pSelDecay ) {
     pqual = pSelDecay->decayHasTrkPQual();
@@ -134,7 +134,7 @@ bool PhysSel::decayHasTrkPQual( std::string& name ) {
 bool PhysSel::decayIsSelected( std::string& name ) {
   
   bool sel = false;
-  const PhysSelDecay* pSelDecay = 0;
+  PhysSelDecay* pSelDecay = 0;
   retrievePhysSelDecay( name, pSelDecay );
   if( 0 != pSelDecay ) {
     sel = pSelDecay->decayIsSelected();
@@ -150,7 +150,7 @@ bool PhysSel::decayIsSelected( std::string& name ) {
 bool PhysSel::decaySelectedIsMC( std::string& name ) {
   
   bool agr = false;
-  const PhysSelDecay* pSelDecay = 0;
+  PhysSelDecay* pSelDecay = 0;
   retrievePhysSelDecay( name, pSelDecay );
   if( 0 != pSelDecay ) {
     agr = pSelDecay->decaySelectedIsMC();
@@ -166,7 +166,7 @@ bool PhysSel::decaySelectedIsMC( std::string& name ) {
 bool PhysSel::decayIsFlavourTagged( std::string& name ) {
   
   bool ftag = false;
-  const PhysSelDecay* pSelDecay = 0;
+  PhysSelDecay* pSelDecay = 0;
   retrievePhysSelDecay( name, pSelDecay );
   if( 0 != pSelDecay ) {
     ftag = pSelDecay->decayIsFlavourTagged();
@@ -180,7 +180,7 @@ bool PhysSel::decayIsFlavourTagged( std::string& name ) {
 // Retrieve PhysSelDecay, specifying the stringID
 //=======================================================================
 void PhysSel::retrievePhysSelDecay( std::string& name, 
-                                    const PhysSelDecay*& value) {
+                                    PhysSelDecay*& value) {
 
   // value = m_table[decayName];
   std::map<std::string,PhysSelDecay*>::iterator isel = m_table.find( name );
@@ -265,3 +265,4 @@ std::ostream& PhysSel::fillStream( std::ostream& s ) const {
   }
   return s;
 }
+
