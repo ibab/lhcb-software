@@ -1,4 +1,4 @@
-// $Id: RichMirrorSegFinder.cpp,v 1.1.1.1 2004-06-17 12:04:08 cattanem Exp $
+// $Id: RichMirrorSegFinder.cpp,v 1.2 2004-06-18 09:43:22 jonesc Exp $
 // Include files
 
 // from Gaudi
@@ -8,6 +8,8 @@
 // RichDet
 #include "RichDet/DeRich1.h"
 #include "RichDet/DeRich2.h"
+#include "RichDet/DeRichSphMirror.h"
+#include "RichDet/DeRichFlatMirror.h"
 
 // local
 #include "RichMirrorSegFinder.h"

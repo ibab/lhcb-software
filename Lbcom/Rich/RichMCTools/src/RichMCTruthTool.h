@@ -1,4 +1,4 @@
-// $Id: RichMCTruthTool.h,v 1.5 2004-06-17 12:01:43 cattanem Exp $
+// $Id: RichMCTruthTool.h,v 1.6 2004-06-18 09:42:22 jonesc Exp $
 #ifndef RICHMCTOOLS_RICHMCTRUTHTOOL_H
 #define RICHMCTOOLS_RICHMCTRUTHTOOL_H 1
 
@@ -78,9 +78,6 @@ public:
   /// Find parent MCRichDigit association for a given RichDigit
   const MCRichDigit * mcRichDigit( const RichDigit * digit ) const;
 
-  /// Finds parent MCRichHits for given MCRichDigit
-  const SmartRefVector<MCRichHit> & mcRichHits( const MCRichDigit * mcDigit ) const;
-
   /// Returns the MCRichTrack associated to a given TrStoredTrack
   const MCRichTrack * mcRichTrack( const TrStoredTrack * track ) const;
 
@@ -141,9 +138,6 @@ private: // private data
   std::string m_trAsctName;
   std::string m_trAsctType;
   TrackAsct* m_trackToMCP;
-
-  // Empty container for missing links
-  SmartRefVector<MCRichHit> m_emptyContainer;
 
 };
 

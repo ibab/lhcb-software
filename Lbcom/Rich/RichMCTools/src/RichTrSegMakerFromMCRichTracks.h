@@ -1,6 +1,13 @@
-// $Id: RichTrSegMakerFromMCRichTracks.h,v 1.1 2004-06-17 12:01:43 cattanem Exp $
+// $Id: RichTrSegMakerFromMCRichTracks.h,v 1.2 2004-06-18 09:42:22 jonesc Exp $
 #ifndef RICHDETTOOLS_RICHTRSEGMAKERFROMMCRICHTRACKS_H
 #define RICHDETTOOLS_RICHTRSEGMAKERFROMMCRICHTRACKS_H 1
+
+// from Gaudi
+#include "GaudiKernel/ToolFactory.h"
+#include "GaudiKernel/MsgStream.h"
+#include "GaudiKernel/IToolSvc.h"
+#include "GaudiKernel/IDataProviderSvc.h"
+#include "GaudiKernel/GaudiException.h"
 
 // LHCbKernel
 #include "Kernel/RichSmartID.h"
@@ -20,10 +27,15 @@
 #include "Event/TrStoredTrack.h"
 #include "Event/MCParticle.h"
 #include "Event/MCRichTrack.h"
+#include "Event/MCRichHit.h"
 
 // RichDet
 #include "RichDet/DeRich.h"
 #include "RichDet/DeRichRadiator.h"
+
+// CLHEP
+#include "CLHEP/Random/RandFlat.h"
+#include "CLHEP/Units/PhysicalConstants.h"
 
 /** @class RichTrSegMakerFromMCRichTracks RichTrSegMakerFromMCRichTracks.h RichDetTools/RichTrSegMakerFromMCRichTracks.h
  *

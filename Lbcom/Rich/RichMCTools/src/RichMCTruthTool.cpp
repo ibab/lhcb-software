@@ -1,4 +1,4 @@
-// $Id: RichMCTruthTool.cpp,v 1.4 2004-06-10 14:12:00 jonesc Exp $
+// $Id: RichMCTruthTool.cpp,v 1.5 2004-06-18 09:42:21 jonesc Exp $
 
 // local
 #include "RichMCTruthTool.h"
@@ -115,12 +115,6 @@ RichMCTruthTool::mcParticle( const TrStoredTrack * track ) const
   } else { return NULL; }
 }
 
-const SmartRefVector<MCRichHit> &
-RichMCTruthTool::mcRichHits( const MCRichDigit * mcDigit ) const
-{
-  return ( mcDigit ? mcDigit->hits() : m_emptyContainer );
-}
-
 const MCRichDigit * RichMCTruthTool::mcRichDigit( const RichDigit * digit ) const
 {
   // Try fast method
@@ -161,7 +155,8 @@ RichMCTruthTool::mcOpticalPhoton( const MCRichHit * mcHit ) const
 
 bool RichMCTruthTool::isBackground( const MCRichDigit * digit ) const
 {
-  const SmartRefVector<MCRichHit> & hits = mcRichHits(digit);
+  if ( !digit ) return true;
+  const SmartRefVector<MCRichHit> & hits = digit->hits();
   for ( SmartRefVector<MCRichHit>::const_iterator iHit = hits.begin();
         iHit != hits.end(); ++iHit ) {
     if ( *iHit && !isBackground(*iHit) ) return false;

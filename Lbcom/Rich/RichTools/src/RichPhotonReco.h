@@ -1,24 +1,25 @@
-// $Id: RichPhotonReco.h,v 1.1.1.1 2004-06-17 12:04:08 cattanem Exp $
+// $Id: RichPhotonReco.h,v 1.2 2004-06-18 09:43:23 jonesc Exp $
 #ifndef RICHDETTOOLS_RICHPHOTONRECO_H
 #define RICHDETTOOLS_RICHPHOTONRECO_H 1
 
-// Include files
-// from STL
-#include <string>
-
 // from Gaudi
+#include "GaudiKernel/IToolSvc.h"
+#include "GaudiKernel/GaudiException.h"
 #include "GaudiKernel/ToolFactory.h"
 
-// Base class and interface
+// Base class and interfaces
 #include "RichKernel/RichToolBase.h"
 #include "RichKernel/IRichPhotonReconstruction.h"
-
-// RichKernel
 #include "RichKernel/IRichMirrorSegFinder.h"
 #include "RichKernel/IRichRayTracing.h"
 #include "RichKernel/IRichSmartIDTool.h"
+#include "RichKernel/IRichRefractiveIndex.h"
+
+// RichKernel
 #include "RichKernel/BoostArray.h"
 #include "RichKernel/Rich1DTabProperty.h"
+#include "Kernel/RichSide.h"
+#include "Kernel/RichSmartID.h"
 
 // RichEvent
 #include "RichEvent/RichTrackSegment.h"
@@ -27,14 +28,14 @@
 //CLHEP
 #include "CLHEP/Geometry/Point3D.h"
 #include "CLHEP/Geometry/Vector3D.h"
-
-// LHCbKernel
-#include "Kernel/RichSmartID.h"
+#include "CLHEP/Units/PhysicalConstants.h"
 
 // RichDet
 #include "RichDet/DeRichHPDPanel.h"
 #include "RichDet/DeRichSphMirror.h"
 #include "RichDet/DeRichFlatMirror.h"
+#include "RichDet/DeRich1.h"
+#include "RichDet/DeRich2.h"
 
 // from GSL
 #include "gsl/gsl_math.h"

@@ -1,21 +1,4 @@
-// $Id: RichPhotonReco.cpp,v 1.1.1.1 2004-06-17 12:04:09 cattanem Exp $
-// Include files
-
-// from Gaudi
-#include "GaudiKernel/IToolSvc.h"
-#include "GaudiKernel/GaudiException.h"
-
-// LHCbKernel
-#include "Kernel/RichSide.h"
-
-// CLHEP
-#include "CLHEP/Units/PhysicalConstants.h"
-
-// RichDet
-#include "RichDet/DeRich1.h"
-#include "RichDet/DeRich2.h"
-
-#include "RichKernel/IRichRefractiveIndex.h"
+// $Id: RichPhotonReco.cpp,v 1.2 2004-06-18 09:43:22 jonesc Exp $
 
 // local
 #include "RichPhotonReco.h"
