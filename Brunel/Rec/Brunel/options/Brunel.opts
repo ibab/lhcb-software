@@ -67,6 +67,7 @@ ApplicationMgr.DLLs += { "RiSicbGeom", "RiSicbCnv" };
 BrunelDigiRICHSeq.Members = { "BrunelDigiRICH", "RichMCDigitToDigitAlg" };
 
 // Inner tracker digitisation and reconstruction (clustering)
+ApplicationMgr.DLLs += { "ITSicbGeom" };
 #include "$ITALGORITHMSROOT/options/Brunel.opts"
 
 // Outer tracker digitisation and reconstruction (clustering)
