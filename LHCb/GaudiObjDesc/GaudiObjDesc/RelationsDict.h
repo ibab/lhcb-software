@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/GaudiObjDesc/GaudiObjDesc/RelationsDict.h,v 1.2 2004-06-16 07:19:10 mato Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/GaudiObjDesc/GaudiObjDesc/RelationsDict.h,v 1.3 2004-06-16 13:33:08 mato Exp $
 //====================================================================
 //	RelationsDict.h
 //--------------------------------------------------------------------
@@ -532,7 +532,7 @@ namespace GaudiDict {
 template <class FROM, class TO>
 GaudiDict::Relation2DDict<FROM,TO>::Relation2DDict() {
   std::string _me_ = templateName2("Relation2D", typeid(FROM),typeid(TO));
-  RelationDict<FROM,TO>();
+  Relation2Dict<FROM,TO>();
   if ( 0 == seal::reflect::Class::forName(_me_) )  {
     std::string  _p_ = templateName2("Relations::Relation2", typeid(FROM),typeid(TO));
     seal::reflect::ClassBuilder _c_(_me_.c_str(), "", typeid(_Me_), sizeof(_Me_),
