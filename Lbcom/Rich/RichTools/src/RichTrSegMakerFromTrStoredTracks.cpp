@@ -5,30 +5,21 @@
  * Implementation file for class : RichTrSegMakerFromTrStoredTracks
  *
  * CVS Log :-
- * $Id: RichTrSegMakerFromTrStoredTracks.cpp,v 1.5 2004-07-27 17:01:02 jonesc Exp $
+ * $Id: RichTrSegMakerFromTrStoredTracks.cpp,v 1.6 2004-10-13 09:54:04 jonrob Exp $
  * $Log: not supported by cvs2svn $
+ * Revision 1.5  2004/07/27 17:01:02  jonesc
+ * Add option to turn off individual radiators in RichTrackSegment maker tool
+ *
  * Revision 1.4  2004/07/26 18:03:05  jonrob
  * Various improvements to the doxygen comments
- *
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 14/01/2002
  */
 //-----------------------------------------------------------------------------
 
-// from Gaudi
-#include "GaudiKernel/ToolFactory.h"
-#include "GaudiKernel/MsgStream.h"
-#include "GaudiKernel/IToolSvc.h"
-#include "GaudiKernel/IDataProviderSvc.h"
-#include "GaudiKernel/GaudiException.h"
-
 // local
 #include "RichTrSegMakerFromTrStoredTracks.h"
-
-// CLHEP
-#include "CLHEP/Random/RandFlat.h"
-#include "CLHEP/Units/PhysicalConstants.h"
 
 // Declaration of the Algorithm Factory
 static const  ToolFactory<RichTrSegMakerFromTrStoredTracks>          Factory ;
@@ -41,20 +32,15 @@ RichTrSegMakerFromTrStoredTracks::RichTrSegMakerFromTrStoredTracks( const std::s
                                                                     const std::string& name,
                                                                     const IInterface* parent)
   : RichToolBase ( type, name, parent ),
-    m_trExt1   ( 0 ),
-    m_trExt2   ( 0 ),
-    m_Ext1     ( "TrHerabExtrapolator"      ),
-    m_Ext2     ( "TrParabolicExtrapolator"  ),
-    m_usedRads ( Rich::NRadiatorTypes, true )
+    m_rayTracing ( 0 ),
+    m_trExt1     ( 0 ),
+    m_trExt2     ( 0 ),
+    m_Ext1       ( "TrHerabExtrapolator"      ),
+    m_Ext2       ( "TrParabolicExtrapolator"  ),
+    m_usedRads   ( Rich::NRadiatorTypes, true )
 {
 
   declareInterface<IRichTrSegMaker>(this);
-
-  // tolerances on z positions
-  m_zTolerance.push_back( 800*mm );
-  m_zTolerance.push_back( 800*mm );
-  m_zTolerance.push_back( 2000*mm );
-  declareProperty( "StateZTolerance", m_zTolerance );
 
   declareProperty( "PrimaryTrackExtrapolator", m_Ext1 );
   declareProperty( "BackupTrackExtrapolator",  m_Ext2 );
@@ -82,27 +68,26 @@ StatusCode RichTrSegMakerFromTrStoredTracks::initialize()
   m_trExt1 = tool<ITrExtrapolator>( m_Ext1 );
   m_trExt2 = tool<ITrExtrapolator>( m_Ext2 );
 
-  m_rayTracing = tool<IRichRayTracing>( "RichRayTracing" );
+  // Get the ray tracing tool
+  acquireTool( "RichRayTracing", m_rayTracing );
   
-  DeRich* rich1 = getDet<DeRich>( DeRichLocation::Rich1 );
-  DeRich* rich2 = getDet<DeRich>( DeRichLocation::Rich2 );
-
-  m_rich[Rich::Rich1] = rich1;
-  m_rich[Rich::Rich2] = rich2;
+  // get Detector elements for RICH1 and RICH2
+  m_rich[Rich::Rich1] = getDet<DeRich>( DeRichLocation::Rich1 );
+  m_rich[Rich::Rich2] = getDet<DeRich>( DeRichLocation::Rich2 );
 
   // load the nominal centre of curvature and radius
-  m_nominalCoC[Rich::Rich1][Rich::top] = rich1->
+  m_nominalCoC[Rich::Rich1][Rich::top] = m_rich[Rich::Rich1]->
     nominalCentreOfCurvature(Rich::top);
-  m_nominalCoC[Rich::Rich1][Rich::bottom] = rich1->
+  m_nominalCoC[Rich::Rich1][Rich::bottom] = m_rich[Rich::Rich1]->
     nominalCentreOfCurvature(Rich::bottom);
 
-  m_nominalCoC[Rich::Rich2][Rich::left] = rich2->
+  m_nominalCoC[Rich::Rich2][Rich::left] = m_rich[Rich::Rich2]->
     nominalCentreOfCurvature(Rich::left);
-  m_nominalCoC[Rich::Rich2][Rich::right] = rich2->
+  m_nominalCoC[Rich::Rich2][Rich::right] = m_rich[Rich::Rich2]->
     nominalCentreOfCurvature(Rich::right);
 
-  m_nomSphMirrorRadius[Rich::Rich1] = rich1->sphMirrorRadius();
-  m_nomSphMirrorRadius[Rich::Rich2] = rich2->sphMirrorRadius();
+  m_nomSphMirrorRadius[Rich::Rich1] = m_rich[Rich::Rich1]->sphMirrorRadius();
+  m_nomSphMirrorRadius[Rich::Rich2] = m_rich[Rich::Rich2]->sphMirrorRadius();
 
   // get the radiators
   std::string aeroDefault = "/dd/Structure/LHCb/Rich1/Aerogel";
@@ -110,8 +95,14 @@ StatusCode RichTrSegMakerFromTrStoredTracks::initialize()
   m_radiators[Rich::C4F10] = getDet<DeRichRadiator>( DeRichRadiatorLocation::C4F10 );
   m_radiators[Rich::CF4] = getDet<DeRichRadiator>( DeRichRadiatorLocation::CF4 );
 
+  // Should get the following from XML instead of hardcode ?
+
+  // tolerances on z positions
+  m_zTolerance[Rich::Aerogel] = 800*mm;
+  m_zTolerance[Rich::C4F10]   = 800*mm;
+  m_zTolerance[Rich::CF4]     = 2000*mm;
+
   // Nominal z positions of states at RICHes
-  // Should get from XML instead of hardcode ?
   m_nomZstates[0] = 99.0*cm;
   m_nomZstates[1] = 216.5*cm;
   m_nomZstates[2] = 945.0*cm;
@@ -149,13 +140,17 @@ int RichTrSegMakerFromTrStoredTracks::constructSegments( const ContainedObject *
   // Try to cast input data to required type for this implementation
   const TrStoredTrack * track = dynamic_cast<const TrStoredTrack *>(obj);
   if ( !track ) {
-    Warning("Input data object is not of type TrStoredTrack");
+    Warning("::constructSegments : Input data object is not of type TrStoredTrack");
     return 0;
   }
   if ( msgLevel(MSG::VERBOSE) ) {
     verbose() << "Analysing TrStoredTrack " << track->key() << endreq;
   }
 
+  // make sure vector is empty
+  segments.clear();
+
+  // Loop over all radiators
   for ( Radiators::const_iterator radiator = m_radiators.begin();
         radiator != m_radiators.end();
         ++radiator ) {    
@@ -299,7 +294,7 @@ int RichTrSegMakerFromTrStoredTracks::constructSegments( const ContainedObject *
     // Final check that info is reaonable
     if ( (entryPState->z() > exitPState->z()) ||
          (exitPState->z()-entryPState->z()) < m_minStateDiff[rad] ) {
-      if (msgLevel(MSG::VERBOSE)) verbose() << "    --> Final states are unreasonable. Quitting." << endreq;
+      Warning( "Track states for " + Rich::text(rad) + " are unphysical -> rejecting segment" );
       continue;
     }
 
@@ -364,9 +359,9 @@ int RichTrSegMakerFromTrStoredTracks::constructSegments( const ContainedObject *
 
     }
     catch ( const std::exception & excpt ) {
-      Warning("std::exception whilst creating RichTrackSegment '"+std::string(excpt.what())+"'");
+      Warning( "Exception whilst creating RichTrackSegment '"+std::string(excpt.what())+"'" );
     }
-
+    
     // Clean up cloned states
     delete entryPState;
     delete exitPState;

@@ -4,11 +4,13 @@
  *  Header file for tool : RichTrSegMakerFromTrStoredTracks
  *
  *  CVS Log :-
- *  $Id: RichTrSegMakerFromTrStoredTracks.h,v 1.4 2004-07-27 17:01:02 jonesc Exp $
+ *  $Id: RichTrSegMakerFromTrStoredTracks.h,v 1.5 2004-10-13 09:54:04 jonrob Exp $
  *  $Log: not supported by cvs2svn $
+ *  Revision 1.4  2004/07/27 17:01:02  jonesc
+ *  Add option to turn off individual radiators in RichTrackSegment maker tool
+ *
  *  Revision 1.3  2004/07/26 18:03:05  jonrob
  *  Various improvements to the doxygen comments
- *
  *
  *  @author Chris Jones         Christopher.Rob.Jones@cern.ch
  *  @author Antonis Papanestis  a.papanestis@rl.ac.uk
@@ -17,6 +19,13 @@
 
 #ifndef RICHTOOLS_RICHTRSEGMAKERFROMTRSTOREDTRACKS_H
 #define RICHTOOLS_RICHTRSEGMAKERFROMTRSTOREDTRACKS_H 1
+
+// from Gaudi
+#include "GaudiKernel/ToolFactory.h"
+#include "GaudiKernel/MsgStream.h"
+#include "GaudiKernel/IToolSvc.h"
+#include "GaudiKernel/IDataProviderSvc.h"
+#include "GaudiKernel/GaudiException.h"
 
 // base class and interface
 #include "RichKernel/RichToolBase.h"
@@ -43,6 +52,10 @@
 
 // Tr Extrapolator
 #include "TrKernel/ITrExtrapolator.h"
+
+// CLHEP
+#include "CLHEP/Random/RandFlat.h"
+#include "CLHEP/Units/PhysicalConstants.h"
 
 /** @class RichTrSegMakerFromTrStoredTracks RichTrSegMakerFromTrStoredTracks.h RichDetTools/RichTrSegMakerFromTrStoredTracks.h
  *
@@ -127,7 +140,7 @@ private: // data
   Radiators m_radiators;
 
   /// Allowable tolerance on state z positions
-  std::vector<double> m_zTolerance;
+  double m_zTolerance[Rich::NRadiatorTypes];
 
   /// Nominal z positions of states at RICHes
   double m_nomZstates[4];

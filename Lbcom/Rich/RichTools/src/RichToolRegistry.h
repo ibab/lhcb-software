@@ -4,8 +4,11 @@
  *  Header file for tool : RichToolRegistry
  *
  *  CVS Log :-
- *  $Id: RichToolRegistry.h,v 1.4 2004-07-26 18:03:05 jonrob Exp $
+ *  $Id: RichToolRegistry.h,v 1.5 2004-10-13 09:54:04 jonrob Exp $
  *  $Log: not supported by cvs2svn $
+ *  Revision 1.4  2004/07/26 18:03:05  jonrob
+ *  Various improvements to the doxygen comments
+ *
  *
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -49,7 +52,7 @@ public: // for Gaudi framework
   StatusCode initialize();
 
   // Finalization of the tool before deletion
-  StatusCode finalize();
+  //StatusCode finalize();
 
 public: // methods (and doxygen comments) inherited from interface
 
@@ -81,7 +84,7 @@ private: // data
 inline void RichToolRegistry::addEntry( const std::string & nickname,
                                         const std::string & type ) const
 {
-  debug() << " Tool name '" << nickname 
+  debug() << " Tool nickname '" << nickname 
           << "' maps to type '" << type << "'" << endreq;
   m_myTools[nickname] = type;
 }
