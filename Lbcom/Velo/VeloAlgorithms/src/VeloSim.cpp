@@ -1,4 +1,4 @@
-// $Id: VeloSim.cpp,v 1.17 2002-07-17 20:25:50 parkesb Exp $
+// $Id: VeloSim.cpp,v 1.18 2002-07-23 15:03:35 parkesb Exp $
 // Include files
 // STL
 #include <string>
@@ -236,12 +236,12 @@ StatusCode VeloSim::getInputData() {
     }
     log << MSG::DEBUG << m_pileUpHits->size()
         << " pile-up hits retrieved" << endreq;
-    for (MCVeloHits::const_iterator hitIt=m_pileUpHits->begin(); 
-         hitIt < m_pileUpHits->end(); hitIt++){
-      // add 100 to pileup sensors number
-      (*hitIt)->setSensor((*hitIt)->sensor()+100);
-      log << MSG::DEBUG << " pileup sensors " << (*hitIt)->sensor() << endreq;
-    }
+ //     for (MCVeloHits::const_iterator hitIt=m_pileUpHits->begin(); 
+//           hitIt < m_pileUpHits->end(); hitIt++){
+//        // add 100 to pileup sensors number
+//        (*hitIt)->setSensor((*hitIt)->sensor()+100);
+//        log << MSG::DEBUG << " pileup sensors " << (*hitIt)->sensor() << endreq;
+//      }
 
   }
 
@@ -278,13 +278,13 @@ StatusCode VeloSim::getInputData() {
     } else {
       log << MSG::DEBUG << m_pileUpSpillOverHits->size()
           << " PileUp Spill over hits retrieved" << endreq;
-      for (MCVeloHits::const_iterator hitIt=m_pileUpSpillOverHits->begin(); 
-           hitIt < m_pileUpSpillOverHits->end(); hitIt++){
-        // add 100 to pileup sensors number
-        (*hitIt)->setSensor((*hitIt)->sensor()+100);
-        log << MSG::DEBUG << " pileup sensors " << (*hitIt)->sensor() 
-            << endreq;
-      }
+//       for (MCVeloHits::const_iterator hitIt=m_pileUpSpillOverHits->begin(); 
+//             hitIt < m_pileUpSpillOverHits->end(); hitIt++){
+//          // add 100 to pileup sensors number
+//          (*hitIt)->setSensor((*hitIt)->sensor()+100);
+//          log << MSG::DEBUG << " pileup sensors " << (*hitIt)->sensor() 
+//              << endreq;
+//        }
     }
   }
 
@@ -447,7 +447,11 @@ void VeloSim::chargePerPoint(MCVeloHit* hit, int Npoints,
   if (m_inhomogeneousCharge){
     // some of charge allocated by delta ray algorithm
     chargeEqual=VeloSimParams::chargeUniform*
-      m_velo->siliconThickness(hit->sensor())/micron;
+      m_velo->siliconThickness(1)/micron;
+      //      m_velo->siliconThickness(hit->sensor())/micron;
+      // sensor numbers for hits currently incorrect (7/02) 
+      // nasty fudge - use one hardcoded number
+
     if (spillOver) chargeEqual*=VeloSimParams::spillOverChargeFraction;
     if (chargeEqual>charge)  chargeEqual=charge;
   }
@@ -525,7 +529,10 @@ void VeloSim::diffusion(MCVeloHit* hit,int Npoints,
   HepVector3D path = (hit->exit())-(hit->entry());
   path/=(Npoints*2); // distance between steps on path
   HepPoint3D point= (hit)->entry()+path;
-  double thickness=m_velo->siliconThickness(hit->sensor())/micron;
+// double thickness=m_velo->siliconThickness(hit->sensor())/micron;
+      // sensor numbers for hits currently incorrect (7/02) 
+      // nasty fudge - use one hardcoded number
+  double thickness=m_velo->siliconThickness(1)/micron;
   double ZDiffuse=thickness;
   // assume strips are at opposite side of Si to entry point
   double dz=ZDiffuse/ (double(Npoints)*2.); // distance between steps on path
