@@ -4,6 +4,12 @@
 ! Purpose       : G4 actions and some miscellaneous algs for Gauss
 !-----------------------------------------------------------------------------
 
+!=========================== GaussTools v10r8 =============================
+! 2005-02-28 - Gloria Corti
+ - src/Lib/GDMLRunAction.{h,cpp}
+   . introduce name of file where to write GDML geometry and schema to
+     use as properties ( names are "Output" and "Schema" )
+
 ! 2005-01-19 - Patrick Robbe
  - src/Components/TrCutsRunAction.h/cpp
    . do not apply MinEkine cuts to short lived particles
@@ -21,6 +27,7 @@
  - requirements 
    . add use of GDMLWriter
 
+!======================== GaussTools v10r7 ================================
 ! 2004-12-14 - Gloria CORTI
  - src/Components/SpecialCuts.cpp
    . adapt to use with geant4.7.0 by replacing obsolete methods names with

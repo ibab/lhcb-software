@@ -34,8 +34,10 @@ GDMLRunAction::GDMLRunAction
   : GiGaRunActionBase( type , name , parent )
 {  
   m_test=false;
+  declareProperty("Schema", m_schema = "$GDML_home/schema/gdml_2.0.xsd");
+  declareProperty("Output", m_outFile = "LHCb.gdml");
+
 };
-// ============================================================================
 
 // ============================================================================
 /// destructor 
@@ -64,7 +66,8 @@ void GDMLRunAction::BeginOfRunAction( const G4Run* run )
     
     if(g4wv)
     {
-      G4GDMLWriter g4writer("/afs/cern.ch/sw/lcg/app/releases/GDML/pro/schema/gdml_2.0.xsd", "lhcbtest.gdml");
+      //      G4GDMLWriter g4writer("/afs/cern.ch/sw/lcg/app/releases/GDML/pro/schema/gdml_2.0.xsd", "lhcbtest.gdml");
+      G4GDMLWriter g4writer(m_schema, m_outFile);
       
       try
       {

@@ -56,6 +56,8 @@ private:
 private:
 
   bool m_test;
+  std::string m_schema;           ///< Schema to be used for GDML
+  std::string m_outFile;          ///< Name of the files to write geometry
 
 };
 // ============================================================================
