@@ -27,6 +27,7 @@ void G4LEADPiKBuilder::
 Build(G4PionMinusInelasticProcess & aP)
 {
   aP.RegisterMe(theModel);
+  aP.GetCrossSectionDataStore()->AddDataSet(&thePiData);
   theModel->SetMinEnergy(theMin);
 }
 
@@ -34,6 +35,7 @@ void G4LEADPiKBuilder::
 Build(G4KaonPlusInelasticProcess & aP)
 {
   aP.RegisterMe(theModel);
+  aP.GetCrossSectionDataStore()->AddDataSet(&thePiData);
   theModel->SetMinEnergy(theMin);
 }
 

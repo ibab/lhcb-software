@@ -9,6 +9,8 @@
 #include "G4NeutronInelasticProcess.hh"
 #include "G4VPiKBuilder.hh"
 
+#include "G4PiNuclearCrossSection.hh"
+
 #include "G4TheoFSGenerator.hh"
 #include "G4StringChipsParticleLevelInterface.hh"
 #include "G4QGSModel.hh"
@@ -34,6 +36,8 @@ class G4QGSCPiKBuilder : public G4VPiKBuilder
     void SetMinEnergy(G4double aM) {theMin = aM;}
 
   private:
+    G4PiNuclearCrossSection thePiCross; 
+    
     G4TheoFSGenerator * theModel;
     G4StringChipsParticleLevelInterface * theCascade;
     G4QGSModel< G4QGSParticipants > theStringModel;

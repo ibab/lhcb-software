@@ -9,6 +9,7 @@
 #include "G4NeutronInelasticProcess.hh"
 #include "G4VPiKBuilder.hh"
 
+#include "G4PiNuclearCrossSection.hh"
 #include "G4Mars5GeV.hh"   
 
 class G4LEADPiKBuilder : public G4VPiKBuilder
@@ -29,6 +30,7 @@ class G4LEADPiKBuilder : public G4VPiKBuilder
     void SetMinEnergy(G4double aM) {theMin = aM;}
 
   private:
+    G4PiNuclearCrossSection thePiData;
     G4Mars5GeV * theModel;    
     G4double theMin;
 

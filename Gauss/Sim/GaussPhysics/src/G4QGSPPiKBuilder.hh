@@ -18,6 +18,8 @@
 #include "G4QGSMFragmentation.hh"
 #include "G4ExcitedStringDecay.hh"
 
+#include "G4PiNuclearCrossSection.hh"
+
 class G4QGSPPiKBuilder : public G4VPiKBuilder
 {
   public: 
@@ -36,6 +38,7 @@ class G4QGSPPiKBuilder : public G4VPiKBuilder
     void SetMinEnergy(G4double aM) {theMin = aM;}
 
   private:
+    G4PiNuclearCrossSection thePiData;
     G4TheoFSGenerator * theModel;
     G4ExcitationHandler theHandler;
     G4PreCompoundModel * thePreEquilib;

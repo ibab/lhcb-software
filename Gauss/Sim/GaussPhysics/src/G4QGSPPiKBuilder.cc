@@ -31,6 +31,7 @@ Build(G4PionPlusInelasticProcess & aP)
 {
   theModel->SetMinEnergy(theMin);
   theModel->SetMaxEnergy(100*TeV);
+  aP.GetCrossSectionDataStore()->AddDataSet(&thePiData);
   aP.RegisterMe(theModel);
 }
 
@@ -39,6 +40,7 @@ Build(G4PionMinusInelasticProcess & aP)
 {
   theModel->SetMinEnergy(theMin);
   theModel->SetMaxEnergy(100*TeV);
+  aP.GetCrossSectionDataStore()->AddDataSet(&thePiData);
   aP.RegisterMe(theModel);
 }
 

@@ -33,6 +33,11 @@ class G4LEPPiKBuilder : public G4VPiKBuilder
     void SetMinEnergy(G4double aM) 
     {
       theMin=aM;
+      theMinPion=theMin;
+    }
+    void SetMinPionEnergy(G4double aM) 
+    {
+      theMinPion=aM;
     }
     void SetMaxEnergy(G4double aM) 
     {
@@ -41,6 +46,7 @@ class G4LEPPiKBuilder : public G4VPiKBuilder
     
   private:
     G4double theMin;
+    G4double theMinPion;
     G4double theMax;
     
     G4LElastic * theElasticModel;

@@ -44,7 +44,3 @@ class G4ElectroNuclearBuilder
 
 #endif
 
-
-
-
-

@@ -14,6 +14,7 @@ G4LHEPPiKBuilder()
 {
   theElasticModel = new G4LElastic();
   theM = 0;
+  theMinPion = theM;
 }
 
 G4LHEPPiKBuilder::
@@ -30,7 +31,7 @@ Build(G4PionPlusInelasticProcess & aP)
 {
   theLEPionPlusModel = new G4LEPionPlusInelastic();
   theHEPionPlusModel = new G4HEPionPlusInelastic();
-  theLEPionPlusModel->SetMinEnergy(theM);
+  theLEPionPlusModel->SetMinEnergy(theMinPion);
   theLEPionPlusModel->SetMaxEnergy(55*GeV);
   theHEPionPlusModel->SetMinEnergy(25*GeV);
   aP.RegisterMe(theLEPionPlusModel);
@@ -42,7 +43,7 @@ Build(G4PionMinusInelasticProcess & aP)
 {
   theLEPionMinusModel = new G4LEPionMinusInelastic();
   theHEPionMinusModel = new G4HEPionMinusInelastic();
-  theLEPionMinusModel->SetMinEnergy(theM);
+  theLEPionMinusModel->SetMinEnergy(theMinPion);
   theLEPionMinusModel->SetMaxEnergy(55*GeV);
   theHEPionMinusModel->SetMinEnergy(25*GeV);
   aP.RegisterMe(theLEPionMinusModel);

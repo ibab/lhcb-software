@@ -39,10 +39,16 @@ class G4LHEPPiKBuilder : public G4VPiKBuilder
     void SetMinEnergy(G4double aM) 
     {
       theM=aM;
+      theMinPion=theM;
+    }
+    void SetMinPionEnergy(G4double aM)
+    {
+      theMinPion = aM;
     }
     
   private:
     G4double theM;
+    G4double theMinPion;
     
     G4LElastic * theElasticModel;
     

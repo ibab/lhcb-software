@@ -15,6 +15,7 @@ G4LEPPiKBuilder()
   theElasticModel = new G4LElastic();
   theMin = 0;
   theMax = 55*GeV;
+  theMinPion = theMin;
 }
 
 G4LEPPiKBuilder::
@@ -30,7 +31,7 @@ void G4LEPPiKBuilder::
 Build(G4PionPlusInelasticProcess & aP)
 {
   theLEPionPlusModel = new G4LEPionPlusInelastic();
-  theLEPionPlusModel->SetMinEnergy(theMin);
+  theLEPionPlusModel->SetMinEnergy(theMinPion);
   theLEPionPlusModel->SetMaxEnergy(theMax);
   aP.RegisterMe(theLEPionPlusModel);
 }
@@ -39,7 +40,7 @@ void G4LEPPiKBuilder::
 Build(G4PionMinusInelasticProcess & aP)
 {
   theLEPionMinusModel = new G4LEPionMinusInelastic();
-  theLEPionMinusModel->SetMinEnergy(theMin);
+  theLEPionMinusModel->SetMinEnergy(theMinPion);
   theLEPionMinusModel->SetMaxEnergy(theMax);
   aP.RegisterMe(theLEPionMinusModel);
 }
