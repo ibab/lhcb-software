@@ -5,8 +5,10 @@
  *  Implementation file for class : RichRawDataFormatTool
  *
  *  CVS Log :-
- *  $Id: RichRawDataFormatTool.cpp,v 1.1 2005-01-07 12:35:59 jonrob Exp $
+ *  $Id: RichRawDataFormatTool.cpp,v 1.2 2005-01-13 13:11:57 jonrob Exp $
  *  $Log: not supported by cvs2svn $
+ *  Revision 1.1  2005/01/07 12:35:59  jonrob
+ *  Complete rewrite
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date 2004-12-18
@@ -95,38 +97,39 @@ RichRawDataFormatTool::printL1Stats( const L1TypeCount & count,
   // See if any decoding has occured
   if ( !count.empty() ) {
 
-    // Hack for DC04 - Printout makes no sense so abort if this version has been used
-    bool print = false;
+    // Statistical calculators
+    const RichStatDivFunctor occ1("%7.2f +-%5.2f"), occ2("%8.2f +-%5.2f");
+
+    // Printout
+    info() << "=========================================================================================================" << endreq
+           << "                                      " << title << endreq
+           << "---------------------------------------------------------------------------------------------------------" << endreq;
+
+    unsigned long totWordSize(0), totBanks(0), totHits(0);
     for ( L1TypeCount::const_iterator iL1C = count.begin(); iL1C != count.end(); ++iL1C )
     {
-      if ( RichDAQ::LHCb0 != (*iL1C).first.first ) { print = true; break; }
-    }
-    if ( print ) {
-
-      // Statistical calculators
-      const RichStatDivFunctor occ1("%6.2f +-%5.2f"), occ2("%7.2f +-%5.2f");
-
-      // Printout
-      info() << "========================================================================================================" << endreq
-             << "                                      " << title << endreq
-             << "--------------------------------------------------------------------------------------------------------" << endreq;
-
-      for ( L1TypeCount::const_iterator iL1C = count.begin(); iL1C != count.end(); ++iL1C )
-      {
-        const RichDAQ::HPDHardwareID L1ID   = (*iL1C).first.second;
-        const RichDAQ::BankVersion version  = (*iL1C).first.first;
-        const unsigned long nBanks          = (*iL1C).second.first;
-        const unsigned long totSize         = (*iL1C).second.second.first;
-        const unsigned long totHits         = (*iL1C).second.second.second;
-        info() << "  Board" << format("%3i",L1ID) << " Ver" << version << " | L1 size = "
-               << occ1(nBanks,m_evtCount) << " hpds : "
-               << occ2(totSize,m_evtCount) << " words : "
-               << occ2(totHits,m_evtCount) << " hits / event" << endreq;
+      const RichDAQ::HPDHardwareID L1ID   = (*iL1C).first.second;
+      const RichDAQ::BankVersion version  = (*iL1C).first.first;
+      const unsigned long nBanks          = (*iL1C).second.first;
+      totBanks                           += nBanks;
+      const unsigned long words           = (*iL1C).second.second.first;
+      totWordSize                        += words;
+      const unsigned long hits            = (*iL1C).second.second.second;
+      totHits                            += hits;
+      // Hack for DC04 - Printout makes no sense so abort if this version has been used
+      if ( version != RichDAQ::LHCb0 ) {
+        info() << "  Board " << format("%3i",L1ID) << " Ver" << version << " | L1 size ="
+               << occ1(nBanks,m_evtCount) << " hpds :"
+               << occ2(words,m_evtCount) << " words :"
+               << occ2(hits,m_evtCount) << " hits / event" << endreq;
       }
-
-      info() << "========================================================================================================" << endreq;
-
     }
+    info() << "---------------------------------------------------------------------------------------------------------" << endreq;
+    info() << "  Av. Overall    | L1 size =" << occ1(totBanks,m_evtCount) << " hpds :"
+           << occ2(totWordSize,m_evtCount) << " words :"
+           << occ2(totHits,m_evtCount) << " hits / event" << endreq;
+
+    info() << "=========================================================================================================" << endreq;
 
   }
 
@@ -147,17 +150,23 @@ RichRawDataFormatTool::createDataBank( const RichSmartID::Collection & smartIDs,
     return dataBank;
   }
 
-  if ( RichDAQ::LHCb0 == version ) {
-    // Version 0 of data banks (DC04 compatibility)
+  if ( RichDAQ::LHCb2 == version ) {
+    // Third iteration of bank format
 
-    // HPD software ID
-    const RichSmartID pdID = smartIDs.front().pdID();
+    // Hardware HPD ID
+    const RichDAQ::HPDHardwareID hID = m_hpdID->hardwareID( smartIDs.front().pdID() );
 
-    // Decide to zero suppress or not depending on number of hits
-    if ( smartIDs.size() < m_zeroSuppresCut ) {
-      dataBank = (RichHPDDataBank*) new RichZeroSuppDataV0::RichZeroSuppData( pdID, smartIDs );
-    } else {
-      dataBank = (RichHPDDataBank*) new RichNonZeroSuppDataV0::RichNonZeroSuppData( pdID, smartIDs );
+    // First try the ZS format
+    RichZeroSuppDataV2::RichZeroSuppData * zsData = new RichZeroSuppDataV2::RichZeroSuppData( hID, smartIDs );
+
+    // If too big, use non ZS instead
+    if ( zsData->tooBig() )
+    {
+      delete zsData;
+      dataBank = (RichHPDDataBank*) new RichNonZeroSuppDataV1::RichNonZeroSuppData( hID, smartIDs );
+    } else
+    {
+      dataBank = (RichHPDDataBank*)zsData;
     }
 
   } else if ( RichDAQ::LHCb1 == version ) {
@@ -173,6 +182,19 @@ RichRawDataFormatTool::createDataBank( const RichSmartID::Collection & smartIDs,
       dataBank = (RichHPDDataBank*) new RichNonZeroSuppDataV1::RichNonZeroSuppData( hID, smartIDs );
     }
 
+  } else if ( RichDAQ::LHCb0 == version ) {
+    // Version 0 of data banks (DC04 compatibility)
+
+    // HPD software ID
+    const RichSmartID pdID = smartIDs.front().pdID();
+
+    // Decide to zero suppress or not depending on number of hits
+    if ( smartIDs.size() < m_zeroSuppresCut ) {
+      dataBank = (RichHPDDataBank*) new RichZeroSuppDataV0::RichZeroSuppData( pdID, smartIDs );
+    } else {
+      dataBank = (RichHPDDataBank*) new RichNonZeroSuppDataV0::RichNonZeroSuppData( pdID, smartIDs );
+    }
+
   } else {
 
     Warning ( "Unknown RICH Raw Buffer version " +
@@ -183,7 +205,7 @@ RichRawDataFormatTool::createDataBank( const RichSmartID::Collection & smartIDs,
 
   if ( msgLevel(MSG::VERBOSE) ) {
     // Print out SmartIDs to encode
-    verbose() << " Creating data bank from RichSmartIDs :-" << endreq;
+    verbose() << " Creating data bank from " << smartIDs.size() << " RichSmartIDs :-" << endreq;
     for ( RichSmartID::Collection::const_iterator iID = smartIDs.begin();
           iID != smartIDs.end(); ++iID )
     {
@@ -212,17 +234,17 @@ RichRawDataFormatTool::createDataBank( const RichDAQ::LongType * dataStart,
     Exception( "Invalid HPD data block size : " + boost::lexical_cast<std::string>(dataSize) );
   }
 
-  if ( RichDAQ::LHCb0 == version ) {
-    // Version 0 of data banks (DC04 compatibility)
+  if ( RichDAQ::LHCb2 == version ) {
+    // Third iteration of bank format
 
     // Header word
-    const RichDAQHeaderV0::RichDAQHeaderPD header( *dataStart );
+    const RichDAQHeaderPDBase header( *dataStart );
 
     // Decide to zero suppress or not depending on number of hits
     if ( header.zeroSuppressed() ) {
-      dataBank = (RichHPDDataBank*) new RichZeroSuppDataV0::RichZeroSuppData( dataStart, dataSize );
+      dataBank = (RichHPDDataBank*) new RichZeroSuppDataV2::RichZeroSuppData( dataStart, dataSize );
     } else {
-      dataBank = (RichHPDDataBank*) new RichNonZeroSuppDataV0::RichNonZeroSuppData( dataStart );
+      dataBank = (RichHPDDataBank*) new RichNonZeroSuppDataV1::RichNonZeroSuppData( dataStart );
     }
 
   } else if ( RichDAQ::LHCb1 == version ) {
@@ -236,6 +258,19 @@ RichRawDataFormatTool::createDataBank( const RichDAQ::LongType * dataStart,
       dataBank = (RichHPDDataBank*) new RichZeroSuppDataV1::RichZeroSuppData( dataStart, dataSize );
     } else {
       dataBank = (RichHPDDataBank*) new RichNonZeroSuppDataV1::RichNonZeroSuppData( dataStart );
+    }
+
+  } else if ( RichDAQ::LHCb0 == version ) {
+    // Version 0 of data banks (DC04 compatibility)
+
+    // Header word
+    const RichDAQHeaderV0::RichDAQHeaderPD header( *dataStart );
+
+    // Decide to zero suppress or not depending on number of hits
+    if ( header.zeroSuppressed() ) {
+      dataBank = (RichHPDDataBank*) new RichZeroSuppDataV0::RichZeroSuppData( dataStart, dataSize );
+    } else {
+      dataBank = (RichHPDDataBank*) new RichNonZeroSuppDataV0::RichNonZeroSuppData( dataStart );
     }
 
   } else {
@@ -288,11 +323,6 @@ void RichRawDataFormatTool::createDataBank( const RichDAQ::L1Map & L1Data,
       // Make a new data bank
       RichDAQ::RAWBank dataBank;
 
-      if ( msgLevel(MSG::VERBOSE) ) {
-        verbose() << "Creating RAWBank for L1 " << (*iL1).first << " with "
-                  << (*iL1).second.size() << " active HPDs" << endreq;
-      }
-
       // Loop over each active HPD for this Level1 board and fill RAWBank
       unsigned nHits(0);
       for ( RichDAQ::PDMap::const_iterator iHPD = (*iL1).second.begin();
@@ -310,11 +340,18 @@ void RichRawDataFormatTool::createDataBank( const RichDAQ::L1Map & L1Data,
         // Count the number of banks and size
         L1CountAndSize & cands = m_l1encodeSummary[ L1IDandV(version,(*iL1).first) ];
         // Increment bank size
-        cands.second.first += dataBank.size();
+        cands.second.first += 1+dataBank.size(); // header + data words
         // Increment hit occupancy
         cands.second.second += nHits;
         // Count number of HPD banks
         cands.first += (*iL1).second.size();
+      }
+
+      if ( msgLevel(MSG::DEBUG) )
+      {
+        debug() << "Encoded " << format("%2i",(*iL1).second.size()) << " HPDs into Level1 Bank "
+                << format("%2i",(*iL1).first) << " : Size " << format("%4i",dataBank.size())
+                << " words : Version " << version << endreq;
       }
 
       // Add this bank to the Raw buffer
@@ -344,14 +381,8 @@ void RichRawDataFormatTool::decodeToSmartIDs( const RawBank & bank,
   }
 
   // Get bank version and ID
-  const RichDAQ::HPDHardwareID L1ID  = static_cast< RichDAQ::HPDHardwareID > ( bank.bankSourceID() );
-  const RichDAQ::BankVersion version = static_cast< RichDAQ::BankVersion >   ( bank.version()      );
-
-  if ( msgLevel(MSG::DEBUG) )
-  {
-    debug() << "Decoding RICH Level1 Bank " << format("%3i",L1ID)
-            << " : Size " << format("%4i",bank.dataSize()) << " words : Version " << version << endreq;
-  }
+  const RichDAQ::Level1ID L1ID       = static_cast< RichDAQ::Level1ID >    ( bank.bankSourceID() );
+  const RichDAQ::BankVersion version = static_cast< RichDAQ::BankVersion > ( bank.version()      );
 
   // HPD count
   unsigned int nHPDbanks(0), startSize(smartIDs.size());
@@ -440,11 +471,17 @@ void RichRawDataFormatTool::decodeToSmartIDs( const RawBank & bank,
     // Count the number of banks and size
     L1CountAndSize & cands = m_l1decodeSummary[ L1IDandV(version,L1ID) ];
     // Increment bank size
-    cands.second.first += bank.dataSize();
+    cands.second.first += 1+bank.dataSize(); // header + data words
     // Increment hit occupancy
     cands.second.second += smartIDs.size()-startSize;
     // Count number of HPD banks
     cands.first += nHPDbanks;
+  }
+
+  if ( msgLevel(MSG::DEBUG) )
+  {
+    debug() << "Decoded " << format("%2i",nHPDbanks) << " HPDs from Level1 Bank " << format("%2i",L1ID)
+            << " : Size " << format("%4i",bank.dataSize()) << " words : Version " << version << endreq;
   }
 
   // Print out decoded smartIDs
@@ -470,7 +507,7 @@ RichRawDataFormatTool::decodeToSmartIDs( RichSmartID::Collection & smartIDs ) co
   smartIDs.clear();
 
   // make a guess at a reserved size
-  smartIDs.reserve( richBanks.size() * 5 );
+  smartIDs.reserve( richBanks.size() * 250 );
 
   // Loop over data banks
   for ( RichDAQ::RAWBanks::const_iterator iBank = richBanks.begin();

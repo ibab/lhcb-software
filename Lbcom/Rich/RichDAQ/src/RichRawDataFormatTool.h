@@ -5,8 +5,10 @@
  *  Header file for tool : RichRawDataFormatTool
  *
  *  CVS Log :-
- *  $Id: RichRawDataFormatTool.h,v 1.1 2005-01-07 12:35:59 jonrob Exp $
+ *  $Id: RichRawDataFormatTool.h,v 1.2 2005-01-13 13:11:57 jonrob Exp $
  *  $Log: not supported by cvs2svn $
+ *  Revision 1.1  2005/01/07 12:35:59  jonrob
+ *  Complete rewrite
  *
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   2004-12-18
@@ -38,6 +40,9 @@
 // local
 #include "RichNonZeroSuppData.h"
 #include "RichZeroSuppData.h"
+
+// RichKernel
+#include "RichKernel/RichMap.h"
 
 // Event model
 #include "Event/RawEvent.h"
@@ -113,9 +118,9 @@ public: // methods (and doxygen comments) inherited from interface
 private: // definitions
 
   // Summary data
-  typedef std::pair< const RichDAQ::BankVersion, RichDAQ::HPDHardwareID >       L1IDandV;
+  typedef std::pair< const RichDAQ::BankVersion, RichDAQ::Level1ID >            L1IDandV;
   typedef std::pair< unsigned long, std::pair< unsigned long, unsigned long > > L1CountAndSize;
-  typedef std::map< const L1IDandV, L1CountAndSize > L1TypeCount;
+  typedef RichMap< const L1IDandV, L1CountAndSize > L1TypeCount;
 
 private: // methods
 
