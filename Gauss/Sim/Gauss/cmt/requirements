@@ -22,7 +22,7 @@ use ParamFiles          v3r8          -no_auto_imports
 
 #========================================================================
 #generator
-use GeneratorModules    v12r0   Gen
+use GeneratorModules    v13r0   Gen
 
 #GiGa staff...
 use GiGaCnv             v15r8   Sim
@@ -82,7 +82,7 @@ application Gauss GaussMain.cpp
 # ========================= set macros ========================================
 apply_pattern application_path 
 macro Gauss_linkopts  "$(application_linkopts)"
-macro_append " -Wl,-Map,Linux.map " WIN32 ""
+macro_append Gauss_linkopts " -Wl,-Map,Linux.map " WIN32 ""
 
 # =============== just make executable "visible" ==============================
 path_remove    PATH  "/Gauss/"
