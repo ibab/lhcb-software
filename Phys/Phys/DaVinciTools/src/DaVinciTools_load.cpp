@@ -1,4 +1,4 @@
-// $Id: DaVinciTools_load.cpp,v 1.11 2002-10-21 17:58:29 gcorti Exp $
+// $Id: DaVinciTools_load.cpp,v 1.12 2002-10-21 19:12:01 gcorti Exp $
 // Include files 
 
 
@@ -16,6 +16,7 @@ DECLARE_FACTORY_ENTRIES( DaVinciTools ) {
 
   DECLARE_TOOL( PhysDesktop );
   DECLARE_TOOL( ChargedParticleMaker );
+  DECLARE_TOOL( ElectronParticleMaker );
   DECLARE_TOOL( MuonParticleMaker );
   DECLARE_TOOL( NeutralParticleMaker );
   DECLARE_TOOL( RichParticleMaker );
@@ -31,7 +32,7 @@ DECLARE_FACTORY_ENTRIES( DaVinciTools ) {
   DECLARE_TOOL( NsctVeloTransporter );
   DECLARE_TOOL( ParabolicTransporter );
   DECLARE_TOOL( DecayFinder );
-  DECLARE_TOOL( CheckOverlap );
+  DECLARE_TOOL( CheckOverlap );  
 
   DECLARE_ALGORITHM( PreLoadParticles );
   

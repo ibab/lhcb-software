@@ -1,8 +1,10 @@
-! $Id: release.notes,v 1.29 2002-10-21 18:24:38 gcorti Exp $
+! $Id: release.notes,v 1.30 2002-10-21 19:12:10 gcorti Exp $
 ! Package     : DaVinciTools
 ! Responsible : Gloria Corti, Sandra Amato
 
 ! 2002-10-21 - Gloria Corti
+ - New ElectronParticleMaker that makes electron using Calorimeter, or Rich
+   or Rich and Calorimeters to make eletrons and can add brem (H.Terrier)
  - New tool CheckOverlap (and interface ICheckOverlap) that verify if
    a set of particle are common at the level of the ProtoParticles (J.H.Lopes)
  - NeutralParticleMaker modified to set error matrices for poin, momentum
