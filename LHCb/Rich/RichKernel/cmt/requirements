@@ -3,14 +3,17 @@
 # Created    : 2003-11-06
 # Maintainer : Chris Jones
 #============================================================================
-# $Id: requirements,v 1.28 2004-07-30 11:07:52 jonrob Exp $
+# $Id: requirements,v 1.29 2004-10-20 16:18:24 jonrob Exp $
 # $Log: not supported by cvs2svn $
+# Revision 1.28  2004/07/30 11:07:52  jonrob
+# Add CVS log to requirements file
+#
 #============================================================================
 
 # Maintainer : Christopher Rob Jones
 
 package RichKernel
-version v5r0
+version v5r1
 
 # ================ structure =================================================
 branches RichKernel cmt doc src
