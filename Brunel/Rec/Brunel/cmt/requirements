@@ -59,7 +59,7 @@ use EventSys     v12r0  Event
 
 # SicB event data persistency
 use SicbCnv      v17r1  SICB
-use RiSicbGeom   v2r1   SICB
+use RiSicbGeom   v2r2   SICB
 use CaloSicbCnv  v7r1   SICB
 use MuonSicbCnv  v6r1   SICB
 use RiSicbCnv    v4r2   SICB

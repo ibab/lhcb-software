@@ -18,11 +18,13 @@ Purpose: LHCb reconstruction program
  - Fix pi0 mass (CaloTools v4r2, CaloRec v2r2)
  - Fix Rich2 position (XmlDDDB v12r3)
  - Fix units for crosstalk region in Muon (XmlDDDB v12r3)
- - Latest Gaudi bug fixes (GaudiSvc v8r3) 
+ - Latest Gaudi bug fixes (GaudiSvc v8r3)
+ - Fix memory leak (RiSicbCnv v4r2)
  - Fixes to run on Windows
    (CaloTools v4r2, UpstreamPR v2r1, MuonID v2r1, RiSicbCnv v4r2, FwTrack v4r1)
  - Fix problem of inconsistent Velo numbering between SICBMC and Brunel
    (VeloSim v2r1)
+ - Fix multiple tool initialisations (RiSicbCnv v4r2, RiSicbGeom v4r2)
  - Write all MuonCoords to DST (remove filtering), do not write MuonDigits
    (BrunelAlgs v1r2, BrunelDst.opts)
 
