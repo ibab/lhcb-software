@@ -1,4 +1,4 @@
-// $Id: RichRecPhotonTool.h,v 1.5 2002-12-20 09:33:08 cattanem Exp $
+// $Id: RichRecPhotonTool.h,v 1.1 2003-04-01 14:33:21 jonrob Exp $
 #ifndef RICHRECTOOLS_RICHRECPHOTONTOOL_H
 #define RICHRECTOOLS_RICHRECPHOTONTOOL_H 1
 
@@ -13,7 +13,7 @@
 #include "RichDetTools/IRichDetInterface.h"
 
 // Interface
-#include "RichRecInterfaces/IRichRecPhotonTool.h"
+#include "RichRecBase/IRichRecPhotonTool.h"
 
 // Forward declarations
 class IDataProviderSvc;
@@ -41,8 +41,10 @@ public:
   /// Destructor
   virtual ~RichRecPhotonTool(){}
 
-  /// Initialize and finalize methods
+  /// Initialize method
   StatusCode initialize();
+
+  /// Finalize method
   StatusCode finalize();
 
   /// Implement the handle method for the Incident service.
@@ -72,13 +74,9 @@ public:
   /// Method to perform the asssociation of all tracks and pixels
   void reconstructPhotons();
 
-  /// Probability of observing a signal in associated pixel for given id
-  double pixelSignalProb( RichRecPhoton * photon,
-                          const Rich::ParticleIDType id );
-
-  /// Photon resolution
-  double photonResolution( RichRecPhoton * photon,
-                           const Rich::ParticleIDType id );
+  /// Predicted pixel signal for a given reconstructed photon under a given mass hypothesis
+  double predictedPixelSignal( RichRecPhoton * photon,
+                               const Rich::ParticleIDType& id );
 
   /// Returns square of distance seperating pixel and track hits on HPDs
   double trackPixelHitSep2( const RichRecSegment * segment,
@@ -111,11 +109,11 @@ private:
 
   /// Signal Probability
   double signalProb( RichRecPhoton * photon,
-                     const Rich::ParticleIDType id );
+                     const Rich::ParticleIDType& id );
 
   /// Scatter Probability
   double scatterProb( RichRecPhoton * photon,
-                      const Rich::ParticleIDType id );
+                      const Rich::ParticleIDType& id );
 
 private:
 
@@ -127,12 +125,6 @@ private:
 
   /// Location of RichRecPhotons in TES
   std::string m_richRecPhotonLocation;
-
-  /// Flag for code profiling using ChronoStatSvc
-  bool m_timing;
-
-  /// Pointer to ChronoStat Service
-  IChronoStatSvc * m_chrono;
 
   /// photon done map
   std::map< int, bool > m_photonDone;
@@ -149,23 +141,14 @@ private:
   /// Max Cherenkov theta angle
   std::vector<double> m_minCKtheta;
 
-  /// minimum cut value for pixel probability
-  double m_minPixelProb;
+  /// minimum cut value for photon probability
+  double m_minPhotonProb;
 
   /// Temporary local value for Radii of curvature
-  std::map< Rich::Detector, double > m_radiusCurv;
+  double m_radiusCurv[Rich::NRiches];
 
   /// Temporary local value pixel area
   double m_pixelArea;
-
-  /// Variables for photon resolution
-  std::map< Rich::RadiatorType, double > m_sigmaMin;
-  std::map< Rich::RadiatorType, double > m_sigmaMax;
-  double m_theerr[3][3];
-  double m_thebin[2][3];
-
-  /// Flag to say if all photons have been built or not
-  bool m_allBuilt;
 
 };
 

@@ -1,10 +1,6 @@
-// $Id: RichRecMCTruthTool.h,v 1.4 2002-12-20 09:33:08 cattanem Exp $
+// $Id: RichRecMCTruthTool.h,v 1.1 2003-04-01 14:33:20 jonrob Exp $
 #ifndef RICHRECTOOLS_RICHRECMCTRUTHTOOL_H
 #define RICHRECTOOLS_RICHRECMCTRUTHTOOL_H 1
-
-#include <string>
-#include <cmath>
-#include <map>
 
 // from Gaudi
 #include "GaudiKernel/AlgTool.h"
@@ -28,11 +24,11 @@
 #include "Event/RichRecPhoton.h"
 #include "Event/MCRichDigit.h"
 
-// interfaces
-#include "RichRecInterfaces/IRichRecMCTruthTool.h"
-#include "RichRecInterfaces/IRichRecTrackTool.h"
-#include "RichRecInterfaces/IRichRecPixelTool.h"
-#include "RichRecInterfaces/IRichRecSegmentTool.h"
+// Interfaces
+#include "RichRecBase/IRichRecMCTruthTool.h"
+#include "RichRecBase/IRichRecTrackTool.h"
+#include "RichRecBase/IRichRecPixelTool.h"
+#include "RichRecBase/IRichRecSegmentTool.h"
 
 // Forward declarations
 class IDataProviderSvc;
@@ -59,8 +55,10 @@ public:
                       const std::string& name,
                       const IInterface* parent );
 
-  /// Initialize and finalize methods
+  /// Initialize method
   StatusCode initialize();
+
+  /// Finalize method
   StatusCode finalize();
 
   /// Implement the handle method for the Incident service.

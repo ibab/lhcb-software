@@ -1,19 +1,17 @@
-// $Id: RichRecPixelTool.h,v 1.3 2002-12-20 09:33:08 cattanem Exp $
+// $Id: RichRecPixelTool.h,v 1.1 2003-04-01 14:33:22 jonrob Exp $
 #ifndef RICHRECTOOLS_RICHRECPIXELTOOL_H
 #define RICHRECTOOLS_RICHRECPIXELTOOL_H 1
-
-#include <string>
-#include <map>
 
 // from Gaudi
 #include "GaudiKernel/AlgTool.h"
 #include "GaudiKernel/IIncidentListener.h"
 #include "GaudiKernel/IIncidentSvc.h"
-#include "GaudiKernel/IToolSvc.h"
-#include "GaudiKernel/IChronoStatSvc.h"
 
 // interface
-#include "RichRecInterfaces/IRichRecPixelTool.h"
+#include "RichRecBase/IRichRecPixelTool.h"
+
+// Detector
+#include "RichDetTools/IRichDetInterface.h"
 
 // Temporary SICB geometry package
 #include "RiSicbGeom/PixelFinder.h"
@@ -43,8 +41,10 @@ public:
   /// Destructor
   virtual ~RichRecPixelTool(){}
 
-  /// Initialize and finalize methods
+  /// Initialize method
   StatusCode initialize();
+
+  /// Finalize method
   StatusCode finalize();
 
   /// Implement the handle method for the Incident service.
@@ -74,17 +74,17 @@ private:
   /// Pointer to PixelFinder tool (temporary for SICB pixels)
   IPixelFinder* m_pixelFinder;
 
+  /// Pointer to RichDetInterface tool
+  IRichDetInterface * m_richDetInterface;
+
   /// String containing input RichDigits location in TES
   std::string m_recoDigitsLocation;
 
   /// Location of RichRecPixels in TES
   std::string m_richRecPixelLocation;
 
-  /// Flag for code profiling using ChronoStatSvc
-  bool m_timing;
-
-  /// Pointer to ChronoStat Service
-  IChronoStatSvc * m_chrono;
+  /// Flag for indicating digits are from SICB processing
+  bool m_sicbDigits;
 
   /// Flag to signify all pixels have been formed
   bool m_allDone;

@@ -4,6 +4,9 @@
 ! Purpose     : Utility algorithms and tools for RICH reconstruction algorithms
 !------------------------------------------------------------------------------
 
+! 2003-04-01 - Chris Jones
+ - Various updates for improved OO performance
+
 !====================== RichRecTools v1r4 2003-01-08 ======================
 ! 2002-12-20 - Marco Cattaneo
  - RichRecSegmentTool.cpp: release tools at finalize

@@ -1,14 +1,14 @@
-// $Id: RichRecMCTruthTool.cpp,v 1.4 2002-12-20 09:33:08 cattanem Exp $
+// $Id: RichRecMCTruthTool.cpp,v 1.5 2003-04-01 14:33:19 jonrob Exp $
 
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h"
 #include "GaudiKernel/MsgStream.h"
-#include "GaudiKernel/SmartDataPtr.h"
-#include "GaudiKernel/IDataProviderSvc.h"
-#include "GaudiKernel/GaudiException.h"
+//#include "GaudiKernel/SmartDataPtr.h"
+//#include "GaudiKernel/IDataProviderSvc.h"
+//#include "GaudiKernel/GaudiException.h"
 
 // local
-#include "RichRecTools/RichRecMCTruthTool.h"
+#include "RichRecMCTruthTool.h"
 
 // CLHEP
 #include "CLHEP/Units/PhysicalConstants.h"
@@ -106,11 +106,14 @@ StatusCode RichRecMCTruthTool::initialize() {
 
 StatusCode RichRecMCTruthTool::finalize() {
 
+  MsgStream msg( msgSvc(), name() );
+  msg << MSG::DEBUG << "Finalize" << endreq;
+
   // Release all tools
-  if( m_trackToMCP )         toolSvc()->releaseTool( m_trackToMCP );
-  if( m_richRecTrackTool )   toolSvc()->releaseTool( m_richRecTrackTool );
-  if( m_richRecSegmentTool ) toolSvc()->releaseTool( m_richRecSegmentTool );
-  if( m_richRecPixelTool )   toolSvc()->releaseTool( m_richRecPixelTool );
+  if ( m_trackToMCP )         toolSvc()->releaseTool( m_trackToMCP );
+  if ( m_richRecTrackTool )   toolSvc()->releaseTool( m_richRecTrackTool );
+  if ( m_richRecPixelTool )   toolSvc()->releaseTool( m_richRecPixelTool );
+  if ( m_richRecSegmentTool ) toolSvc()->releaseTool( m_richRecSegmentTool );
   
   return StatusCode::SUCCESS;
 }
@@ -211,9 +214,8 @@ MCRichDigit * RichRecMCTruthTool::mcRichDigit( const RichRecPixel * richPixel )
   MCRichDigit * mcDigit = MCTruth<MCRichDigit>(digit);
 
   // If failed, try accessing MCRichDigit container directly
-  if ( !mcDigit && mcRichDigits() ) {
-    mcDigit = m_mcRichDigits->object( digit->key() );
-  }
+  if ( !mcDigit && 
+       mcRichDigits() ) mcDigit = m_mcRichDigits->object( digit->key() );
 
   // Return MCRichDigit
   return mcDigit;
@@ -231,13 +233,13 @@ MCParticle * RichRecMCTruthTool::mcParticle( const RichRecPixel * richPixel )
 
 MCParticle * RichRecMCTruthTool::trueRecPhoton( const RichRecPhoton * photon ) {
 
-  RichRecTrack * track= (RichRecTrack*)photon->richRecSegment()->richRecTrack();
+  RichRecTrack * track = (RichRecTrack*)photon->richRecTrack();
   RichRecPixel * pixel = (RichRecPixel*)photon->richRecPixel();
 
   MCParticle * mcTrack = ( track ? mcParticle(track) : NULL );
   MCParticle * mcPixel = ( pixel ? mcParticle(pixel) : NULL );
 
-  return ( mcTrack == mcPixel ? mcTrack : NULL);
+  return ( mcTrack == mcPixel ? mcTrack : NULL );
 }
 
 Rich::ParticleIDType
@@ -298,14 +300,14 @@ RichRecMCTruthTool::trueCkPixels( const RichRecSegment * segment ) {
     // Loop over all pixel/segment combinations
     for ( RichRecSegments::iterator seg = allSegments->begin();
           seg != allSegments->end();
-          seg++ ) {
+          ++seg ) {
       Rich::RadiatorType rad = (*seg)->trackSegment().radiator();
       MCParticle * tkMCPart = mcParticle( (*seg)->richRecTrack() );
       std::vector<RichRecPixel*> & vec = m_mcPixelMap[ *seg ];
 
       for ( RichRecPixels::iterator pix = allPixels->begin();
             pix != allPixels->end();
-            pix++ ) {
+            ++pix ) {
 
         if ( (*seg)->trackSegment().rich() != (*pix)->detector() ) continue;
 

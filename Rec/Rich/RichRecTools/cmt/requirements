@@ -1,24 +1,23 @@
-# $Id: requirements,v 1.10 2002-12-20 11:02:44 cattanem Exp $
+# $Id: requirements,v 1.11 2003-04-01 14:33:19 jonrob Exp $
 # Created    : 11/03/2002
 # Maintainer : Christopher Rob Jones
 #
 
 package RichRecTools
-version v1r4
+version v2r0
 
 # ================ structure ================================================
-branches src cmt RichRecTools doc
+branches src cmt doc
 
 # ================ environment ==============================================
 set RICHRECTOOLSOPTS $(RICHRECTOOLSROOT)/options
-include_dirs $(RICHRECTOOLSROOT)
 
 # ================ dependencies =============================================
-use RichDetTools       v1r*   Rich
-use RichRecInterfaces  v2r*   Rich
-use TrEvent            v12r*  Event
+use RichDetTools       v2r*   Rich
+use RichRecBase        v1r*   Rich
 # Temporary usage while SICB pixels used
 use RiSicbGeom         v3r*   SICB
+use RiSicbCnv          v5r*   SICB
 
 # ================ component library=========================================
 library          RichRecTools  ../src/*.cpp
