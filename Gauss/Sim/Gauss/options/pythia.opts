@@ -26,11 +26,6 @@ ApplicationMgr.DLLs       += {"GaudiRootDb"};
 
 
 // ============================================================================
-//  apply "event generator" options 
-// ============================================================================
-#include "$EVGENOPTS/EvGen.opts"
-
-// ============================================================================
 // declare external services needed for GiGa 
 // ============================================================================
 ApplicationMgr.ExtSvc += 
@@ -77,16 +72,6 @@ ApplicationMgr.TopAlg          =
   "GiGaInputStream/Geo"              ,
   "GiGaInputStream/Kine" ,	 
   "GiGaMiscGetEventAlg/GetEvent"     } ;
-
-// ============================================================================
-// configuration of particle gun algorithm (generator) 
-// ============================================================================
-//Gun.Momentum                   = { 0.0 , 7000.0 , 50000.0          } ;
-//Gun.Vertex                     = { 0.0 ,    0.0 ,     0.0          } ;
-//Gun.Particle                   = "e+"                                ;
-//Gun.OutputLevel                = 1                                   ;
-//Gun.Vertices                   = "/Event/Gen/Vertices"               ;
-//Gun.Particles                  = "/Event/Gen/Particles"              ;
 
 // ============================================================================
 // configuration of GiGa Data Store 
@@ -150,7 +135,6 @@ SimpleTrack.OwnEnergyThreshold = 1000.0                                  ;
 // ============================================================================
 GiGaSvc.SteppingAction            =   "GiGaStepActionSequence/StepSeq"  ;
 StepSeq.Members                   = { "GiGaStepActionDraw/DrawStep"   } ;
-//StepSeq.Members                   += { "SajanAction/MyAction"   } ;
 DrawStep.OutputLevel              = 6;
 
 
@@ -221,18 +205,12 @@ GiGaSvc.UIsessions           =  { "tcsh" };
 // ============================================================================
 GiGaSvc.UseVisManager          = true;
 
-// ============================================================================
-// (temporary!) configuration of 'GetEvent' algorithm
-// ============================================================================
-//GetEvent.Particles = "/Event/MC/MCParticles" ;
-//GetEvent.Vertices  = "/Event/MC/MCVertices"  ;
-
 //--------------------------------------------------------------
 // Algorithms Private Options
 //--------------------------------------------------------------
 ParticlePropertySvc.ParticlePropertiesFile = "particle.cdf";
 
-PythiaModule.PythiaCommand = {"pysubs msel 5","pysubs ckin 3 18.","pypars mstp 43 2", "pyinit dumpr 1 15", "pyinit pylistf 1"};
+PythiaModule.PythiaCommand = {"pysubs msel 5", "pyinit dumpr 1 15", "pyinit pylistf 1"};
 
 
 // ============================================================================
