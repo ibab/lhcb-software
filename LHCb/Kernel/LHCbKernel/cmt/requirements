@@ -1,10 +1,10 @@
-# $Id: requirements,v 1.58 2004-07-26 13:47:02 cattanem Exp $
+# $Id: requirements,v 1.59 2004-07-28 14:37:25 cattanem Exp $
 # =============================================================================
 package LHCbKernel
 author  M.Frank    CERN/LHCb
 manager M.Cattaneo CERN/LHCb
 
-version v5r0p1
+version v5r1
 
 include_dirs $(LHCBKERNELROOT)
 
@@ -40,4 +40,3 @@ apply_pattern linker_library    library=LHCbKernel
 
 private
 use GaudiObjDesc v6r*
-
