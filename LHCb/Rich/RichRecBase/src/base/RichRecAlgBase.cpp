@@ -1,4 +1,4 @@
-// $Id: RichRecAlgBase.cpp,v 1.1.1.1 2003-04-01 13:21:55 jonesc Exp $
+// $Id: RichRecAlgBase.cpp,v 1.2 2003-04-16 11:39:50 cattanem Exp $
 // Include files
 
 // from Gaudi
@@ -91,7 +91,7 @@ StatusCode RichRecAlgBase::initialize() {
   // Initialise track bit selection
   m_trBits = 0;
   m_uniqueTrOnly = false;
-  for ( std::vector<string>::const_iterator iName = m_trNames.begin();
+  for ( std::vector<std::string>::const_iterator iName = m_trNames.begin();
         iName != m_trNames.end();
         iName++ ) {
     if      ( *iName == "unique"   ) { m_uniqueTrOnly = true; }
