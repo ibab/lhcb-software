@@ -1,4 +1,4 @@
-// $Id: MuonTileIDXYZ.cpp,v 1.3 2002-03-21 16:50:06 dhcroft Exp $
+// $Id: MuonTileIDXYZ.cpp,v 1.4 2002-04-02 13:05:45 dhcroft Exp $
 // Include files 
 #include <cstdio>
 #include <cmath>
@@ -245,19 +245,20 @@ StatusCode MuonTileIDXYZ::locateChamberTileAndGap(const double& x,
   // first estimate the chamber tile: this is prone to error and so hunting 
   // around the tile may be required.
   //
-  // quarter gets a 1 mm possible overlap due to in front chambers 
+  // quarter gets a 2 mm possible overlap due to in front chambers 
+  // (from 20cm fore/aft shift at 10mr projection)
   // projecting into the next quarter, I said this would be painful
   std::vector<int> tryQuarter;
-  if( x >= -1. && y >= -1. ) {
+  if( x >= -2. && y >= -2. ) {
     tryQuarter.push_back(0);
   }
-  if( x >= -1. && y <= 1.){
+  if( x >= -2. && y <= 2.){
     tryQuarter.push_back(1);
   }
-  if( x <= 1. && y <= 1.){
+  if( x <= 2. && y <= 2.){
     tryQuarter.push_back(2);
   }
-  if( x <= 1. && y >= -1.) {
+  if( x <= 2. && y >= -2.) {
     tryQuarter.push_back(3);
   }
   
