@@ -5,8 +5,10 @@
 ! Purpose     : LHCb OO kernel packages
 !-----------------------------------------------------------------------------
 
-!======================= LHCbSys v16r0 2004-07-09 =======================
-! 2004-07-09 - Marco Cattaneo
+!======================= LHCbSys v16r0 2004-07-19 =======================
+This version is built against Gaudi v15
+
+! 2004-07-19 - Marco Cattaneo
  - New packages: LHCbInterfaces v1r0 (for public interfaces of tools etc.)
                  LHCbAlgs v1r0 (for general purpose algorithms and tools)
                  RichTools v1r0 (previously RichDetTools, 
@@ -14,24 +16,32 @@
                  RichMCTools v2r0 (moved here from applications projects)
                  RichDAQ v1r5 (moved here from applications projects)
                  DetDescChecks v2r1 (checks of XmlDDDB geometry)
+                 Relations v1r0 (split from LHCbKernel)
 
  - Removed  packages: L1Event. Obsolete, completely superseded by TrgEvent
                       PYTHIA. No longer needed to compile HepMC - removes last
                               Fortran dependency from LHCbSys
                       DumpEventExample. Obsolete, functionality in IOExample
 
- - Modified packages: KernelSys v3r7, LHCbKernel v4r7, RichKernel v5r0
-                      EventSys v18r0, EventAssoc v1r2, RichEvent v7r4,
-                      DAQEvent v5r0, HepMC v4r121p0, DetSys v5r7,
-                      DetDesc v14r1p1, STDet v1r2, RichDet v7r2, OTDet v5r3, 
-                      Magnet v2r1, AssociatorsSys v1r14, ITAssociators v2r9, 
-                      Associators v2r2p1, IOExample v1r2, MCTools v1r7, 
-                      GaudiConf v8r0, DetDescExample v6r2p1
+ - Modified packages: GaudiConf v8r0,
+     KernelSys v4r0, LHCbKernel v5r0, RichKernel v5r0, CaloKernel v3r1, 
+                     MuonKernel v2r6, TrKernel v11r4, VeloKernel v1r5,
+     EventSys v18r0, EventAssoc v1r2, RichEvent v7r4, DAQEvent v5r0, Event v4r5,
+                     L0Event v14r1p1, HepMC v4r121p0, GenEvent v3r3, 
+                     LinkerEvent v1r4, CaloEvent v13r2p1
+     DetSys v5r7, DetDesc v14r2, STDet v1r2, RichDet v7r2, OTDet v5r3, 
+                  Magnet v2r1, VeloDet v8r8p3, XmlTools v3r3,
+     AssociatorsSys v1r14, ITAssociators v2r9, Associators v2r2p1,
+                           VeloAssociators v1r11, CaloAssociators v4r2,
+                           MuonAssociators v1r4, OTAssociators v2r9,
+     MCTools v1r7, RichMCTools v2r0, CaloInterfaces v4r1,
+     IOExample v1r2, DetDescExample v6r2p1
 
  - In GaudiConf v8r0:
    . Remove RootDb.opts, which is obsolete with Gaudi v15
 
- - In LHCbKernel v4r7:
+ - In LHCbKernel v5r0:
+   . Move Relations to separate package (requirements of many packages affected)
    . Remove ProcessPhase (moved to LHCbAlgs)
    . Added "Invalid" to the RichDetectorType, RichRadiatorType and 
      RichSide enumerations.
@@ -43,6 +53,20 @@
  - In STDet v1r2:
    . Add new members to layer and wafer. Make GSL dependency no_auto_imports
 
+ - In RichKernel v5r0, RichEvent v7r4, RichDet v7r2, RichTools v1r0,
+      RichMCTools v2r0, RichDAQ v1r5
+   . Repackaging to remove RichUtils package
+
+ - In RichEvent v7r4
+   . Re-organise the xml files to improved human readability
+   . Removed exception throwing from RichGeomPhoton set methods
+
+ - In RichDet v8r0:
+   . Added RichMirrorSegPosition
+
+ - In RichKernel v5r0, RichDet v8r0, RichTools v1r0, RichMCTools v2r0
+   . Improvements to RichRayTracing
+
  - In Magnet v2r1:
    . Speed up, by avoiding unneccessary array copies and re-initialisations 
 
@@ -51,14 +75,6 @@
 
  - In EventSys v18r0, EventAssoc v1r2, Associators v2r2p1
    . Remove relations, factories, dictionaries involving obsolete L1Event objects
-
- - In RichKernel v5r0, RichEvent v7r4, RichDet v7r2, RichTools v1r0,
-      RichMCTools v2r0, RichDAQ v1r5
-   . Repackaging to remove RichUtils package
-
- - In RichEvent v7r4
-   . Re-organise the xml files to improved human readability
-   . Removed exception throwing from RichGeomPhoton set methods
 
  - In DAQEvent v4r4
    . Changed to a component library. Added algorithms to create empty L1Buffer,

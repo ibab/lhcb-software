@@ -1,4 +1,4 @@
-$Id: release.notes,v 1.6 2004-07-14 16:00:52 cattanem Exp $
+$Id: release.notes,v 1.7 2004-07-21 08:09:37 cattanem Exp $
 Package: IOExample
 Package Manager: M.Frank
 Purpose: Demonstrate how to write and read back event data using POOL I/O.
@@ -9,13 +9,10 @@ Purpose: Demonstrate how to write and read back event data using POOL I/O.
  - Add DumpMCEventAlg to ReadMin (similar to obsolete DumpEventExample)
  - Update WriteMin input files to files produced in DC04
  - Update Dst,Digi,Sim contents to DC04 versions
+ - Take StoreBrowserAlg from GaudiSvc. Example now consists only of job options
 
 ! 2004-06-28 - Marco Cattaneo
  - Adapted job options for DAQEvent change to component library
-
-! 2004-06-17 - Marco Cattaneo
- - Moved the StoreBrowser algorithm to LHCbAlgs package. Example now 
-   consists only of job options
 
 !======================= IOExample v1r1 2004-02-12 ========================
 ! 2004-02-12 - Marco Cattaneo
