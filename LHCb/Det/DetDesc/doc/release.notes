@@ -1,5 +1,5 @@
 ! =============================================================================
-! $Id: release.notes,v 1.108 2002-07-03 08:15:37 ocallot Exp $ 
+! $Id: release.notes,v 1.109 2002-07-03 12:35:08 ocallot Exp $ 
 ! =============================================================================
 ! package DetDesc
 ! package manager : N.N 
@@ -9,6 +9,8 @@
  - Added a 'cover' box to the Assembly volumes, to decide faster in the 
    Transport Service if we are outside the assembly. Gains 1/3 of the time...
  - Clean-up of the 'FindLocalGI' function of the Transport Service.
+ - Fix a few minor problems with error printing in the Transport Service, 
+   thanks to Witold Pokorski.
 
 ! 2002-06-22 - Olivier Callot
  - Replace all prints by calls to MsgStream with "TransportSvc" as name.
