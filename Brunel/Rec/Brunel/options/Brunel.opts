@@ -171,16 +171,13 @@ BrunelRecoV0Seq.Members += { "UpstreamProtoPAlg", "SelectKs2pipi", "V0Reco" };
 ApplicationMgr.DLLs += { "BrunelAlgs" };
 BrunelRecoTimingSeq.Members += { "TimingAlg" };
 #include "$BRUNELALGSROOT/options/Timing.opts"
+// Algorithms to be timed not yet (BrunelAlgs v1r7) in Timing.opts
+TimingAlg.AlgoList += { "SelectKs2pipi" };
+TimingAlg.AlgoList += { "RichLocPID" };
+TimingAlg.AlgoList += { "RichGloPID" };
 
 // Modify printout defaults
 #include "$BRUNELOPTS/BrunelMessage.opts"
 
 // Intialise random number at every event
 BrunelInit.InitRndmOnce = false;
-
-// Use a spillover container for Muon that also works without M1
-// (this option can be removed when we move to SicbCnv > v17r3)
-SpillOverAlg.SpillOverData = { 
-  "IT/Hits", "OT/Hits" , "Velo/Hits", 
-  "Rich/RadiatorHits", "Rich/PhotodetectorHits",
-  "Spd/Hits", "Prs/Hits", "Ecal/Hits", "Hcal/Hits", "Muon/M3/R1/Hits" };

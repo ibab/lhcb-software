@@ -9,7 +9,6 @@ use GaudiPolicy v5r9
 #-- External libraries (as defined in GAUDI_v11r4)
 use ExternalLibs	v4r0p1
 use AIDA		v3r22p0
-use BOOST 		v2r1280p0
 use CLHEP		v2r1800p0
 use HTL			v2r1321p0
 use NAGC		v2r50p0		

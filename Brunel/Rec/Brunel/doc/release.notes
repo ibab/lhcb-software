@@ -3,8 +3,8 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
-</PRE><H1><A NAME=v16r4>2002-12-09 Brunel v16r4</A></H1><PRE>
- Functionally identical to v15r4, but using Gaudi v11 and DetDesc v11
+</PRE><H1><A NAME=v16r4>2002-12-11 Brunel v16r4</A></H1><PRE>
+ Essentially identical to v15r4, but using Gaudi v11 and DetDesc v11
    >> Introduces CMT projects
    >> Introduces support for RedHat 7.3
    >> Fixes many memory leaks
@@ -18,6 +18,9 @@ Purpose: LHCb reconstruction program
  - New features:
    . Re-enable OO-Rich by default (Brunel.opts)
    . Add support for dbase v253
+
+ - DST changes:
+   . Add SelectKs2pipi, RichLocPID, RichGloPID to timed algorithms
 
  - Bug fixes:
    . Do not abort job if no track are found for K0 search (KsReco v1r3)
