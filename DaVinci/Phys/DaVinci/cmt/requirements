@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.29 2002-07-08 19:47:53 gcorti Exp $
+# $Id: requirements,v 1.30 2002-07-10 16:58:31 gcorti Exp $
 # Created    : 07/02/2002
 # Maintainer : Gloria Corti
 #
@@ -83,7 +83,7 @@ use  L0Calo		v6r*	L0
 use  L1VeloTrack 	v1r*	L1
 
 #--- DaVinci packages
-#use GlobalReco           v1r0   Phys
+use GlobalReco           v1r0   Rec
 use DaVinciTools         v5r0   Phys
 use DaVinciAssociators   v2r0   Phys
 use DaVinciMCTools       v2r0   Phys
