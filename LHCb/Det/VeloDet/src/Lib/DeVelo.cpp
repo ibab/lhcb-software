@@ -1,4 +1,4 @@
-// $Id: DeVelo.cpp,v 1.24 2002-11-08 09:51:28 ocallot Exp $
+// $Id: DeVelo.cpp,v 1.25 2002-11-08 10:56:09 ocallot Exp $
 //
 // ============================================================================
 #define  VELODET_DEVELO_CPP 1
@@ -154,6 +154,8 @@ StatusCode DeVelo::initialize() {
     // std TDR design - no change
     break;
   }
+  m_nbL1Sectors    = 4;
+  if ( 512 == m_nbRInner ) m_nbL1Sectors = 8;
      
   // Phi Detector Parameters
 

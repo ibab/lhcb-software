@@ -1,6 +1,9 @@
-! $Id: release.notes,v 1.28 2002-11-08 09:51:28 ocallot Exp $
+! $Id: release.notes,v 1.29 2002-11-08 10:56:09 ocallot Exp $
 package VeloDet
 package manager : Velo Group
+
+! 2002-11-08 - Olivier Callot
+ - New method nbL1Sectors() to return 8 (45 degree design) or 4 (TDR design).
 
 ! 2002-11-08 - Olivier Callot
  - Change the matchingZones method to allow also phi neighbors.

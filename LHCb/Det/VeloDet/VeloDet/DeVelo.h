@@ -1,4 +1,4 @@
-// $Id: DeVelo.h,v 1.12 2002-11-08 09:51:27 ocallot Exp $
+// $Id: DeVelo.h,v 1.13 2002-11-08 10:56:08 ocallot Exp $
 #ifndef       VELODET_DEVELO_H
 #define       VELODET_DEVELO_H 1
 // ============================================================================
@@ -301,6 +301,10 @@ public:
                           double angularTol,
                           double& stripMin, double& stripMax, 
                           double& pitch, double& offset );
+
+  /// Returns the number of L1 tracking sectors, according to the design
+  int nbL1Sectors()  const   { return m_nbL1Sectors; }
+  
   
 protected: 
 
@@ -353,6 +357,8 @@ private:
   double m_phiPitchOuter;
   double m_phiInnerTilt;
   double m_phiOuterTilt;
+
+  int    m_nbL1Sectors;
 
   double m_zVertex;
   // Local storage for geometry computation
