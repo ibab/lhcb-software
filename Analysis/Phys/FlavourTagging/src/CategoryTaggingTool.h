@@ -1,4 +1,4 @@
-// $Id: CategoryTaggingTool.h,v 1.3 2003-06-16 11:38:16 odie Exp $
+// $Id: CategoryTaggingTool.h,v 1.4 2003-06-30 12:04:02 odie Exp $
 #ifndef CATEGORYTAGGINGTOOL_H 
 #define CATEGORYTAGGINGTOOL_H 1
 
@@ -59,45 +59,45 @@ public:
                                      const Vertex &thePrimVtx,
                                      FlavourTag &theTag );
 private:
-	IFlavourTaggingTool *getTT(std::string name);
-	void combine( const FlavourTag &mu_tag,
-		 						const FlavourTag &e_tag,
-								const FlavourTag &kos_tag,
-								const FlavourTag &kss_tag,
-								const	FlavourTag &vtx_tag,
-								FlavourTag &theTag );
-	void fillCategory(std::string categ, const FlavourTag &theTag);
-	
-	class Category {
-		public:
-			Category( void )
-			{
-			 	counts[FlavourTag::b]    = 0;
-				counts[FlavourTag::bbar] = 0;
-				counts[FlavourTag::none] = 0;
-			};
-			void add( FlavourTag::TagResult tag ) { counts[tag]++; };
-			unsigned int count( FlavourTag::TagResult tag ) { return counts[tag]; };
-			void results( unsigned int nevents, double &epsilon, double &sepsilon,
-									    									  double &omega,   double &somega,
-											    							  double &ed2,     double &sed2 )
-			{
-				double b    = double(counts[FlavourTag::b]);
-				double bbar = double(counts[FlavourTag::bbar]);
-				epsilon = (b+bbar)/nevents;
-				omega = b/(b+bbar);
-				ed2 = epsilon*pow(1-2*omega, 2);
-				sepsilon = sqrt(epsilon*(1-epsilon)/nevents);
-				somega = sqrt(omega*(1-omega)/(b+bbar));
-				sed2 = sqrt(ed2/nevents*(4-ed2*(1+3/ed2)));
-			};
-		private:
-			std::map<FlavourTag::TagResult,unsigned int> counts;
-	};
-	
-	IDataProviderSvc *m_eventSvc;
+  IFlavourTaggingTool *getTT(std::string name);
+  void combine( const FlavourTag &mu_tag,
+                const FlavourTag &e_tag,
+                const FlavourTag &kos_tag,
+                const FlavourTag &kss_tag,
+                const FlavourTag &vtx_tag,
+                FlavourTag &theTag );
+  void fillCategory(std::string categ, const FlavourTag &theTag);
+  
+  class Category {
+    public:
+      Category( void )
+      {
+        counts[FlavourTag::b]    = 0;
+        counts[FlavourTag::bbar] = 0;
+        counts[FlavourTag::none] = 0;
+      };
+      void add( FlavourTag::TagResult tag ) { counts[tag]++; };
+      unsigned int count( FlavourTag::TagResult tag ) { return counts[tag]; };
+      void results( unsigned int nevents, double &epsilon, double &sepsilon,
+                                          double &omega,   double &somega,
+                                          double &ed2,     double &sed2 )
+      {
+        double b    = double(counts[FlavourTag::b]);
+        double bbar = double(counts[FlavourTag::bbar]);
+        epsilon = (b+bbar)/nevents;
+        omega = b/(b+bbar);
+        ed2 = epsilon*pow(1-2*omega, 2);
+        sepsilon = sqrt(epsilon*(1-epsilon)/nevents);
+        somega = sqrt(omega*(1-omega)/(b+bbar));
+        sed2 = sqrt(ed2/nevents*(4-ed2*(1+3/e)));
+      };
+    private:
+      std::map<FlavourTag::TagResult,unsigned int> counts;
+  };
+  
+  IDataProviderSvc *m_eventSvc;
   IVisPrimVertTool *m_visTool;
-	unsigned int m_nUntrigEvents;
+  unsigned int m_nUntrigEvents;
   unsigned int m_nL0Events;
   unsigned int m_nL0L1Events;
   std::string m_muonTTN;
@@ -110,8 +110,8 @@ private:
   IFlavourTaggingTool *m_kaonOSTT;
   IFlavourTaggingTool *m_kaonSSTT;
   IFlavourTaggingTool *m_vtxChargeTT;
-	std::map<std::string,Category> m_untrigCateg;
-	std::map<std::string,Category> m_L0Categ;
-	std::map<std::string,Category> m_L0L1Categ;
+  std::map<std::string,Category> m_untrigCateg;
+  std::map<std::string,Category> m_L0Categ;
+  std::map<std::string,Category> m_L0L1Categ;
 };
 #endif // CATEGORYTAGGINGTOOL_H

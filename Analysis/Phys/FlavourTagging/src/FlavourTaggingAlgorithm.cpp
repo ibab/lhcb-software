@@ -1,4 +1,4 @@
-// $Id: FlavourTaggingAlgorithm.cpp,v 1.12 2003-06-16 07:11:18 odie Exp $
+// $Id: FlavourTaggingAlgorithm.cpp,v 1.13 2003-06-30 12:04:02 odie Exp $
 // Include files 
 
 // from Gaudi
@@ -263,7 +263,7 @@ StatusCode FlavourTaggingAlgorithm::finalize() {
   double eff  = e*pow(1-2*w,2);
   double se   = sqrt(e*(1-e)/double(m_n_B));
   double sw   = sqrt(w*(1-w)/double(m_n_b_tags+m_n_bbar_tags));
-  double seff = sqrt(eff/double(m_n_B)*(4-eff*(1+3/eff)));
+  double seff = sqrt(eff/double(m_n_B)*(4-eff*(1+3/e)));
 
   log << MSG::INFO << "Efficency:                  "
       << e << " +/- " << se << endreq;
