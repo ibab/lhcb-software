@@ -1,38 +1,40 @@
-# $Header: /afs/cern.ch/project/cvs/reps/lhcb/Sim/GiGaCnv/cmt/requirements,v 1.1.1.1 2001-04-23 08:34:14 ibelyaev Exp $ 
-package  GiGaCnv 
+# $Header: /afs/cern.ch/project/cvs/reps/lhcb/Sim/GiGaCnv/cmt/requirements,v 1.2 2001-04-23 17:21:38 ibelyaev Exp $ 
 
+package  GiGaCnv 
 version v1
 
-set GIGACNVOPTIONS "${GIGACNVROOT}/options/GiGaCnvOptions.txt"
-
+################ structure ################################################
 branches cmt src doc GiGaCnv 
 
-# GiGa
-use GiGa          v5*   Sim 
-
-# Event object library
-use LHCbEvent     v9*	Event
-
-# Detector Description package
-use DetDesc       v6*	Det
-
-
+################ own includes #############################################
 include_dirs                     $(GIGACNVROOT)
 
-# linker    library
-library     GiGaCnvLib Lib/*.cpp
+################ own options ##############################################
+set GIGACNVOPTIONS  "${GIGACNVROOT}/options/GiGaCnvOptions.txt"
+
+################ GiGa #####################################################
+use GiGa          v5*   Sim 
+
+################ Event ####################################################
+use LHCbEvent     v9*	Event
+
+################ Detector #################################################
+use DetDesc       v6*	Det
+
+################ linker library ###########################################
+library GiGaCnvLib  Lib/*.cpp
   
-# component library
-library     GiGaCnv    component/*.cpp 	        
+################ component library ########################################
+library GiGaCnv     component/*.cpp 	        
 
 apply_pattern package_Llinkopts
-
 apply_pattern ld_library_path 
-#=====================================================================
-	
+
+################ private stuff ############################################	
 private	
+
 apply_pattern package_Cshlibflags
-macro_append GiGaCnvLib_shlibflags "$(GaudiKernel_linkopts) $(GiGa_linkopts) $(GEANT4_linkopts)"
+macro_append GiGaCnvLib_shlibflags "$(GaudiKernel_linkopts) $(GiGa_linkopts) $(GEANT4_linkopts) $(CLHEP_linkopts)"
 
 
 
