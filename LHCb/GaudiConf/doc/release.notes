@@ -1,6 +1,7 @@
 package GaudiConf
 package manager: M.Cattaneo
 
+!======================== GaudiConf v7r8 2004-05-03 ========================
 ! 2004-04-29 - Marco Cattaneo
  - Updated Gaudi.supp file for Gaudi v14r5, and added suppressions also for
    Memcheck:Leak
