@@ -4,6 +4,9 @@
 ! Purpose     : Base package for RICH Reconstruction Packages
 !-----------------------------------------------------------------------------
 
+! 2003-12-03 - Chris Jones
+ - Minor additions to XML file
+
 !======================= RichRecBase v1r5 2003-11-27 =======================
 ! 2003-11-25 - Chris Jones
  - Updates for RichSmartID

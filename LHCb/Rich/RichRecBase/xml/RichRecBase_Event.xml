@@ -110,6 +110,7 @@
                 <arg const="FALSE" name="photon" type="RichRecPhoton*"/>
                 <code>m_richRecPhotons.push_back(photon);</code>
             </method>
+            <attribute desc="Flag to say if all possible photon candidates have been mad for this segment" init="false" name="allPhotonsDone" type="bool"/>
         </class>
         <class author="Chris Jones   (Christopher.Rob.Jones@cern.ch)" desc="Rich reconstruction working pixel object" id="12422" keyedContTypeDef="TRUE" location="Rec/Rich/Rec/Pixels" name="RichRecPixel" stdVectorTypeDef="TRUE">
             <base name="KeyedObject&lt;int&gt;"/>
@@ -167,7 +168,7 @@
             <import name="Kernel/RichSmartID"/>
             <typedef access="PUBLIC" def="PDGeomEffs" desc="Data containers for each hypothesis" type="RichMap&lt;RichSmartID::KeyType,double&gt;"/>
             <typedef access="PUBLIC" def="PDGeomEffsVector" desc="Data containers for each hypothesis" type="std::vector&lt; PDGeomEffs &gt;"/>
-            <constructor desc="Constructor from a RichTrackSegment" initList="m_emittedPhotonSpectra(enBins,minEn,maxEn), m_detectablePhotonSpectra(enBins,minEn,maxEn), m_signalPhotonSpectra(enBins,minEn,maxEn), m_geomEfficiencyPerPD(Rich::NParticleTypes, PDGeomEffs() ), m_trackSegment(segment), m_hitDetectorRegions(0), m_richRecTrack(pTrk)">
+            <constructor desc="Constructor from a RichTrackSegment" initList="m_emittedPhotonSpectra(enBins,minEn,maxEn), m_detectablePhotonSpectra(enBins,minEn,maxEn), m_signalPhotonSpectra(enBins,minEn,maxEn), m_geomEfficiencyPerPD(Rich::NParticleTypes, PDGeomEffs() ), m_trackSegment(segment), m_hitDetectorRegions(0), m_richRecTrack(pTrk), m_allPhotonsDone(false)">
                 <arg name="segment" type="RichTrackSegment"/>
                 <arg inout="BYVALUE" name="pTrk" type="RichRecTrack*"/>
                 <arg inout="BYVALUE" name="enBins" type="unsigned int"/>
@@ -288,6 +289,7 @@
                 <arg const="FALSE" name="photon" type="RichRecPhoton*"/>
                 <code>m_richRecPhotons.push_back(photon);</code>
             </method>
+            <attribute desc="Flag to say if all possible photon candidates have been mad for this segment" init="false" name="allPhotonsDone" type="bool"/>
         </class>
         <class author="Chris Jones   (Christopher.Rob.Jones@cern.ch)" desc="Rich reconstruction photon candidate. The result of an association between a RichRecTrack and a RichRecPixel." id="12424" keyedContTypeDef="TRUE" location="Rec/Rich/RecBase/Photons" name="RichRecPhoton" stdVectorTypeDef="TRUE">
             <base name="KeyedObject&lt;RichRecPhotonKey&gt;"/>
