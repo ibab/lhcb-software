@@ -10,10 +10,12 @@ Purpose: LHCb specific Kernel classes
      int LHCbMath::round( const float x );
    (Taken from ITAlgorithms/ITGeneral.h, can also replace VeloKernel::VeloRound)
 
-!====================== LHCbKernel v4r3 2004-02-12 ========================
 ! 2004-02-03 - Mark Tobin
  - Modified bit structure of VeloChannelID.  Added type(), but kept same
-   constructor for backward compatibility.  
+   constructor for backward compatibility. 
+   >> N.B. The new constructor and the type() method should not be used when
+   >> using VeloDet v8r* (old geometry) because of an inconsistency in sensor
+   >> numbering with the backwards compatible VeloChannelID constructor
 
 !====================== LHCbKernel v4r2 2004-02-02 ========================
 ! 2004-01-29 - Chris Jones
