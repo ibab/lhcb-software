@@ -3,7 +3,6 @@
 
 <gdd>
   <package name='OTDAQ'> 
-  <import name="Kernel/CLHEPStreams"/>
   <import name="Event/RawBuffer"/>
   <import name="Event/RawBank"/>
   <import name="Event/RawEvent"/>

@@ -1,6 +1,10 @@
 Package         : OTDAQ
 Package manager : J. Nardulli
 
+!===================== OTDAQ v3r2p1 2005-03-07 =====================
+! 2005-03-07 - Marco Cattaneo
+ - Fix requirements to use DAQEvent v*
+
 !====================== OTDAQ v3r2 2004-12-10 ======================
 ! 2004-12-06 - Jacopo Nardulli
 - Complete move to new base classes

@@ -1,12 +1,12 @@
 package OTDAQ
-version v3r2
+version v3r2p1
 
 branches OTDAQ cmt doc src options xml Event
 
 include_dirs $(OTDAQROOT)
 
 use GaudiAlg    v*
-use DAQEvent	v4r*    Event
+use DAQEvent	v*      Event
 use OTEvent	v14r*	Event
 use OTDet	v5r*	Det
 
