@@ -1,4 +1,4 @@
-// $Id: PhysDesktop.cpp,v 1.13 2004-05-18 15:32:45 pkoppenb Exp $
+// $Id: PhysDesktop.cpp,v 1.14 2004-06-28 14:22:45 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
@@ -255,7 +255,7 @@ Particle* PhysDesktop::createParticle( Particle* partToSave ){
         << partToSave->momentum().px() << " ," 
         << partToSave->momentum().py() << " ," 
         << partToSave->momentum().pz() << endreq;
-    msg << MSG::DEBUG << "Particle address " << partToSave << endreq;
+    msg << MSG::VERBOSE << "Particle address " << partToSave << endreq;
     return partToSave;
   }
   
@@ -291,7 +291,7 @@ Particle* PhysDesktop::createParticle( Particle* partToSave ){
       << saveP->momentum().px() << " ," 
       << saveP->momentum().py() << " ," 
       << saveP->momentum().pz() << endreq;
-  msg << MSG::DEBUG << "Address of new particle in desktop = "
+  msg << MSG::VERBOSE << "Address of new particle in desktop = "
       << saveP << endreq;
   m_parts.push_back(saveP);     
   return saveP;
@@ -311,7 +311,7 @@ Vertex* PhysDesktop::createVertex( Vertex* vtxToSave ){
         << vtxToSave->position().x() << " ," 
         << vtxToSave->position().y() << " ," 
         << vtxToSave->position().z() << endreq;
-    msg << MSG::DEBUG << "Vertex address " << vtxToSave << endreq;
+    msg << MSG::VERBOSE << "Vertex address " << vtxToSave << endreq;
     return vtxToSave;
   }
   
@@ -347,7 +347,7 @@ Vertex* PhysDesktop::createVertex( Vertex* vtxToSave ){
       << saveV->position().x() << " ," 
       << saveV->position().y() << " ," 
       << saveV->position().z() << endreq;
-  msg << MSG::DEBUG << "Address of new vertex in desktop = "
+  msg << MSG::VERBOSE << "Address of new vertex in desktop = "
       << saveV << endreq;
   m_verts.push_back(saveV);     
   return saveV;

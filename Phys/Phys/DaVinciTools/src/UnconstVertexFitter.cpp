@@ -1,4 +1,4 @@
-// $Id: UnconstVertexFitter.cpp,v 1.8 2004-06-02 11:20:54 pkoppenb Exp $
+// $Id: UnconstVertexFitter.cpp,v 1.9 2004-06-28 14:22:45 pkoppenb Exp $
 // Include files
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h"
@@ -162,15 +162,18 @@ StatusCode UnconstVertexFitter::doFitVertex( const ParticleVector& particleList,
   if (particleList.size() < 2) {
    log << MSG::INFO << "Particle Vector size is less than 2" << endreq;   
    return StatusCode::FAILURE;
-  } 
+  } else {
+    log << MSG::DEBUG << "Particle Vector size is " << 
+      particleList.size()<< endreq;    
+  }
+  
     
   // NOTE use of 1..n style indexing in () type brackets.
   
   // get zestimate (The formula is in the LHC-B/TN/95-01
   double zEstimate = getZEstimate (particleList);
   
-  log << MSG::DEBUG << "   zestimate " << zEstimate << endreq;  
-
+  log << MSG::DEBUG << "   zestimate " << zEstimate << endreq;
   
   HepSymMatrix cov(2,0); // 2x2 empty  symmetic matrix
   HepSymMatrix hessian(3,0); // 3x3 empty  symmetic matrix
