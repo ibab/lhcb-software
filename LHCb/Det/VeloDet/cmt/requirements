@@ -1,10 +1,38 @@
-package VeloDet
-version v2
+# $Id: requirements,v 1.4 2001-10-25 06:13:26 ocallot Exp $
+# =========================================================================
 
-branches doc cmt src VeloDet
+package  VeloDet 
+version  v2r1
 
-include_dirs $(VELODETROOT)
+# =============== structure ===============================================	
+branches         src cmt doc options VeloDet 
 
-ignore_pattern package_stamps
+# =============== own includes ============================================
+include_dirs      $(VELODETROOT)
 
+# =============== used packages ===========================================
+use DetDesc      v7*  Det 
+
+# =============== own options ==========================================
+set VELODETOPTS  ${VELODETROOT}/options
+
+# =============== link library (base classes) =============================
+library          VeloDetLib        Lib/*.cpp 
+
+# =============== component library =======================================
+library          VeloDet           component/*.cpp
+
+#================ patterns ================================================
+
+apply_pattern    package_Lstamps
+apply_pattern    package_Llinkopts 
+apply_pattern    linker_path
+
+#================ private stuff ===========================================
+private
+apply_pattern    package_Cshlibflags
+apply_pattern    package_Lshlibflags
+macro_append     VeloDetLib_shlibflags " $(DetDesc_linkopts) "
+macro_append     VeloDetLib_shlibflags  " $(GaudiKernel_linkopts) "
+macro_append     VeloDetLib_shlibflags  " $(CLHEP_linkopts) "
 
