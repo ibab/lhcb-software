@@ -12,6 +12,7 @@
    . Introduction of OT modules description (OTDet v4r0)
    . Additional associators from OTDigit to MC truth (OTAssociators v2r5)
    . Support for Flat Spillover (MuonSicbCnv v5r6)
+   . Add detInfo attribute to MCHit (Event v3r3)
 
 !====================== LHCbSys v11r12 2003-06-02 ============================
 ! 2003-05-28 - Marco Cattaneo
