@@ -1,10 +1,11 @@
 ! =============================================================================
-! $Id: release.notes,v 1.109 2002-07-03 12:35:08 ocallot Exp $ 
+! $Id: release.notes,v 1.110 2002-07-09 18:18:39 cattanem Exp $ 
 ! =============================================================================
 ! package DetDesc
 ! package manager : N.N 
 ! =============================================================================
 
+!====================== DetDesc v10r3 2002-07-09 ==============================
 ! 2002-07-03 - Olivier Callot
  - Added a 'cover' box to the Assembly volumes, to decide faster in the 
    Transport Service if we are outside the assembly. Gains 1/3 of the time...
@@ -26,7 +27,7 @@
  - bugfix on the unit checker : function sqrt is considered as returning a
    unit if its argument has one
 
-!====================== DetDesc v10r2 update 2002-06-03 =======================
+!====================== DetDesc v10r2 2002-06-03 =============================
 
 ! 2002-06-03 - Olivier Callot
  - Fix the TransportSvc initial step, where a good local geometry has to be
