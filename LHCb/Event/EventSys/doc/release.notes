@@ -1,6 +1,9 @@
 package EventSys
 package manager: Marco Cattaneo
 
+! 2002-06-19 - Marco Cattaneo
+ - Use RichEvent v3r1
+
 ! 2002-06-10 - Marco Cattaneo
  - Increase versions of all packages (changes to EventKernel)
 
