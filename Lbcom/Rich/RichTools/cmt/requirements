@@ -2,18 +2,11 @@
 # Created    : 17/06/2004
 # Maintainer : Antonis Papanestis, Chris Jones
 #============================================================================
-# $Id: requirements,v 1.9 2005-01-13 13:24:03 jonrob Exp $
-# $Log: not supported by cvs2svn $
-# Revision 1.8  2004/10/27 14:41:03  jonrob
-# Various updates
-#
-# Revision 1.7  2004/07/30 11:17:04  jonrob
-# Add CVS log to requirements file
-#
+# $Id: requirements,v 1.10 2005-02-09 09:48:43 cattanem Exp $
 #============================================================================
 
 package RichTools
-version v1r3
+version v1r4
 
 # ================ structure ================================================
 branches src cmt doc
