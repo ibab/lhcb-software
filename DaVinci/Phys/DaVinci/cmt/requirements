@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.92 2004-03-23 11:54:00 pkoppenb Exp $
+# $Id: requirements,v 1.93 2004-03-23 17:40:42 pkoppenb Exp $
 # Created    : 07/02/2002
 # Maintainer : P. Koppenburg
 #
@@ -72,7 +72,7 @@ use  CaloReco           v2r1     Calo
 use  MuonID             v3r7p1   Muon
 
 #    Final Reconstruction
-use  GlobalReco         v4r4     Rec
+use  GlobalReco         v4r5     Rec
 use  PrimVtx            v2r1     Rec
 
 #    Utility tools

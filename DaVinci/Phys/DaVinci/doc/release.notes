@@ -3,6 +3,24 @@ Package     : Phys/DaVinci
 Package Coordinator : Patrick Koppenburg
 Purpose     : LHCb analysis program 
 
+</PRE><H1><A NAME=v11r2>2004-03-11 DaVinci v11r4 - Development Version</A></H1><PRE>
+ This version is mostly for developement and the main focus is for new data.
+ TDR data can be read but not all features are supported beside decay channel
+ selections. See details for DaVinci v11r0 and v10r0.
+
+ - Correction of PreLoadParticles which is now a DV algorithm
+ 
+ - New BooleanFilterCriterion
+ 
+ - Many changes in Calo software
+ 
+ - Use LoKi v2r1
+ 
+ - New selection package B2XGamma replacing all other *Gamma
+
+ - Version based on LHCb v15r4, refer to release notes of
+   LHCb for details regarding those packages.
+
 </PRE><H1><A NAME=v11r2>2004-03-11 DaVinci v11r3 - Development Version</A></H1><PRE>
  This version is mostly for developement and the main focus is for new data.
  TDR data can be read but not all features are supported beside decay channel
