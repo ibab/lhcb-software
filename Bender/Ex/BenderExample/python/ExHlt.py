@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: ExHlt.py,v 1.1 2004-11-25 14:55:05 ibelyaev Exp $
+# $Id: ExHlt.py,v 1.2 2004-11-25 15:21:02 ibelyaev Exp $
 # =============================================================================
 # CVS tag $Name: not supported by cvs2svn $
 # =============================================================================
@@ -26,7 +26,7 @@ class ExHlt(Algo):
     def analyse ( self ) :
         # get kaons
         
-        pions  = self.select( tag="pi+" , cuts = 'pi+' == ABSID )
+        pions  = self.select( tag="pi+" , cuts = ( 'pi+' == ABSID ) & HASTRGTR )
         
         if pions.empty() : return SUCCESS
         
@@ -43,11 +43,21 @@ class ExHlt(Algo):
         trueE   = MCTRUTH( mc , mcE  )
         trueMu  = MCTRUTH( mc , mcMu )
         
-        pi1  = self.select( tag="pimc1+" , cuts = ( 'pi+' == ABSID ) & truePi )
-        pi2  = self.select( tag="pimc2+" , cuts = ( 'pi+' == ABSID ) & trueK  )
-        pi3  = self.select( tag="pimc3+" , cuts = ( 'pi+' == ABSID ) & trueP  )
-        pi4  = self.select( tag="pimc4+" , cuts = ( 'pi+' == ABSID ) & trueE  )
-        pi5  = self.select( tag="pimc5+" , cuts = ( 'pi+' == ABSID ) & trueMu )
+        pi1  = self.select( tag    = "pimc1+" ,
+                            source = pions    ,
+                            cuts   = truePi   )
+        pi2  = self.select( tag    = "pimc2+" ,
+                            source = pions    ,
+                            cuts   = trueK    )
+        pi3  = self.select( tag    = "pimc3+" ,
+                            source = pions    ,
+                            cuts   = trueP    )
+        pi4  = self.select( tag    = "pimc4+" ,
+                            source = pions    ,
+                            cuts   = trueE    )
+        pi5  = self.select( tag    = "pimc5+" ,
+                            source = pions    ,
+                            cuts   = trueMu   )
         
         
         print " #pions = %3d [ MC: 'pi+'=%3d 'K+'=%3d 'p+'=%3d 'e+'=%3d 'mu+'=%3d ]" % ( pions.size () ,
@@ -91,7 +101,7 @@ def configure() :
     # specific job configuration 
 
     gaudi.addAlgorithm ( 'TrgTrack2MCParticle' )
-    gaudi.addAlgorithm ( 'TrgLinks2TrgTables/TrgMC' ) 
+    gaudi.addAlgorithm ( 'TrgLinks2TrgTables/Trg2MCTables' ) 
         
     # create analysis algorithm and add it to the list of
     ex = ExHlt('ExHlt')
@@ -121,6 +131,9 @@ if __name__ == '__main__' :
     
 # =============================================================================
 # $Log: not supported by cvs2svn $
+# Revision 1.1  2004/11/25 14:55:05  ibelyaev
+#  add Trg -> MC example
+#
 # =============================================================================
 # The END 
 # =============================================================================
