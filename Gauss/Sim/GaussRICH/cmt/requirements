@@ -1,12 +1,12 @@
 # =============================================================================
 package GaussRICH
-version v1r0
+version v2r0
 
 # =============== package structure ===========================================
 branches          cmt src doc
 
 # =============== explicit dependencies =======================================  
-use GaussTools    v5r*     Sim
+use GaussTools    v6r*     Sim
 use AIDA          v*
 # =============== Event =======================================================
 use RichEvent     v4r*      Event
