@@ -1,32 +1,15 @@
 
+//----------------------------------------------------------------------------
 /** @file DeRich1HPDPanel.cpp
  *
  *  Implementation file for detector description class : DeRich1HPDPanel
  *
  *  CVS Log :-
- *  $Id: DeRich1HPDPanel.cpp,v 1.20 2004-10-27 14:18:04 jonrob Exp $
- *  $Log: not supported by cvs2svn $
- *  Revision 1.19  2004/10/21 08:55:42  jonrob
- *  minor update
- *
- *  Revision 1.18  2004/10/20 22:41:55  jonrob
- *  Tidy up inline and virtual functions (whilst solving a windows problem)
- *
- *  Revision 1.17  2004/10/20 17:02:44  jonrob
- *  Updates for windows
- *
- *  Revision 1.16  2004/10/20 16:16:36  jonrob
- *  More minor updates to functions (adding const etc.)
- *
- *  Revision 1.15  2004/10/18 09:21:49  jonrob
- *  Minor updates to functions (adding const etc.)
- *
- *  Revision 1.14  2004/07/27 08:55:23  jonrob
- *  Add doxygen file documentation and CVS information
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2004-06-18
  */
+//----------------------------------------------------------------------------
 
 #define DERICH1HPDPANEL_CPP
 
@@ -58,14 +41,12 @@ DeRich1HPDPanel::~DeRich1HPDPanel() {}
 // Retrieve Pointer to class defininition structure
 const CLID& DeRich1HPDPanel::classID() { return CLID_DeRich1HPDPanel; }
 
-StatusCode DeRich1HPDPanel::initialize() {
-
-  StatusCode sc = StatusCode::SUCCESS;
-
+StatusCode DeRich1HPDPanel::initialize()
+{
   if ( !DeRichHPDPanel::initialize() ) return StatusCode::FAILURE;
 
   MsgStream log(msgSvc(), myName() );
-  log << MSG::VERBOSE <<"Starting initialisation of " << myName() << endreq;
+  log << MSG::DEBUG << "Initializing " << myName() << endreq;
   this->printOut(log);
 
   // specific initialization for Rich1HPDPanel
@@ -97,15 +78,15 @@ StatusCode DeRich1HPDPanel::initialize() {
 
   m_detPlaneVertEdge = fabs(m_panelVerticalEdge);
 
-  log << MSG::DEBUG <<"panelHorizEdgeEven:"<< m_panelHorizEdgeEven
+  log << MSG::DEBUG << "panelHorizEdgeEven:" << m_panelHorizEdgeEven
       << " panelHorizEdgeOdd:" << m_panelHorizEdgeOdd
       << " panelVerticalEdge:" << m_panelVerticalEdge
       << " m_detPlaneHorizEdge:" << m_detPlaneHorizEdge
       << endreq;
 
-  log << MSG::DEBUG << "Finished initialisation" << endreq;
+  log << MSG::INFO << "Initialized Successfully" << endreq;
 
-  return sc;
+  return StatusCode::SUCCESS;
 }
 
 // ===========================================================================
@@ -162,7 +143,7 @@ unsigned int DeRich1HPDPanel::PDMax() const
   return  m_HPDColumns * m_HPDRows;
 }
 
-unsigned int DeRich1HPDPanel::PDRow(const unsigned int PD) const 
+unsigned int DeRich1HPDPanel::PDRow(const unsigned int PD) const
 {
   return PD/m_HPDColumns;
 }
@@ -172,23 +153,23 @@ unsigned int DeRich1HPDPanel::PDCol(const unsigned int PD) const
   return PD%m_HPDColumns;
 }
 
-unsigned int DeRich1HPDPanel::HPDForNS() const 
+unsigned int DeRich1HPDPanel::HPDForNS() const
 {
   return m_HPDColumns;
 }
 
-unsigned int DeRich1HPDPanel::HPDForB() const 
+unsigned int DeRich1HPDPanel::HPDForB() const
 {
   return m_HPDColumns -1;
 }
 
-unsigned int DeRich1HPDPanel::HPDForC() const 
+unsigned int DeRich1HPDPanel::HPDForC() const
 {
   return m_HPDRows*m_HPDColumns - static_cast<unsigned int>(0.5*m_HPDRows);
 }
 
 unsigned int DeRich1HPDPanel::HPDRowColToNum(const unsigned int HPDRow,
-                                             const unsigned int HPDCol ) const 
+                                             const unsigned int HPDCol ) const
 {
   return HPDRow * m_HPDColumns + HPDCol;
 }

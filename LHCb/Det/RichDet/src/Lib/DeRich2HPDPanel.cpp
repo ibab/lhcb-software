@@ -1,32 +1,16 @@
 
+//----------------------------------------------------------------------------
 /** @file DeRich2HPDPanel.cpp
  *
  *  Implementation file for detector description class : DeRich2HPDPanel
  *
  *  CVS Log :-
- *  $Id: DeRich2HPDPanel.cpp,v 1.19 2004-10-27 14:18:04 jonrob Exp $
- *  $Log: not supported by cvs2svn $
- *  Revision 1.18  2004/10/21 08:55:42  jonrob
- *  minor update
- *
- *  Revision 1.17  2004/10/20 22:41:55  jonrob
- *  Tidy up inline and virtual functions (whilst solving a windows problem)
- *
- *  Revision 1.16  2004/10/20 17:02:44  jonrob
- *  Updates for windows
- *
- *  Revision 1.15  2004/10/20 16:16:36  jonrob
- *  More minor updates to functions (adding const etc.)
- *
- *  Revision 1.14  2004/10/18 09:21:49  jonrob
- *  Minor updates to functions (adding const etc.)
- *
- *  Revision 1.13  2004/07/27 08:55:23  jonrob
- *  Add doxygen file documentation and CVS information
+ *  $Id: DeRich2HPDPanel.cpp,v 1.20 2005-02-22 13:53:50 jonrob Exp $
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2004-06-18
  */
+//----------------------------------------------------------------------------
 
 #define DERICH2HPDPANEL_CPP
 
@@ -64,14 +48,12 @@ const CLID& DeRich2HPDPanel::classID() {
 }
 
 
-StatusCode DeRich2HPDPanel::initialize() {
-
-  StatusCode sc = StatusCode::FAILURE;
-
-  if ( !DeRichHPDPanel::initialize() ) return sc;
+StatusCode DeRich2HPDPanel::initialize()
+{
+  if ( !DeRichHPDPanel::initialize() ) return StatusCode::FAILURE;
 
   MsgStream log(msgSvc(), myName() );
-  log << MSG::VERBOSE <<"Starting initialisation of " << myName() << endreq;
+  log << MSG::DEBUG << "Initializing " << myName() << endreq;
   this->printOut(log);
 
   // specific initialization for Rich2HPDPanel
@@ -101,13 +83,13 @@ StatusCode DeRich2HPDPanel::initialize() {
   if (fabs(m_panelVerticalEdgeOdd) > m_detPlaneVertEdge)
     m_detPlaneVertEdge = fabs(m_panelVerticalEdgeOdd);
 
-  log << MSG::DEBUG <<"m_panelHorizEdge:"<< m_panelHorizEdge
+  log << MSG::DEBUG << "m_panelHorizEdge:" << m_panelHorizEdge
       << " m_panelVerticalEdgeEven:" << m_panelVerticalEdgeEven
       << " m_panelVerticalEdgeOdd:" << m_panelVerticalEdgeOdd
       << "  m_detPlaneVertEdge:" <<  m_detPlaneVertEdge
       << endreq;
 
-  log << MSG::DEBUG <<"Finished initialisation" << endreq;
+  log << MSG::INFO << "Initialized Successfully" << endreq;
 
   return StatusCode::SUCCESS;
 }

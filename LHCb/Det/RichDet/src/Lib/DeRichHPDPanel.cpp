@@ -4,7 +4,7 @@
  *
  *  Implementation file for detector description class : DeRichHPDPanel
  *
- *  $Id: DeRichHPDPanel.cpp,v 1.23 2005-02-22 12:35:17 jonrob Exp $
+ *  $Id: DeRichHPDPanel.cpp,v 1.24 2005-02-22 13:53:51 jonrob Exp $
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2004-06-18
@@ -49,7 +49,7 @@ StatusCode DeRichHPDPanel::initialize() {
   } else { m_name = "DeRichHPDPanel_NO_NAME"; }
 
   MsgStream log ( msgSvc(), myName() );
-  log << MSG::DEBUG << "Initializing base class" << endreq;
+  log << MSG::DEBUG << "Initializing base class for " << myName() << endreq;
 
   SmartDataPtr<DetectorElement> deRich1(dataSvc(), DeRichLocation::Rich1);
   m_pixelSize = deRich1->userParameterAsDouble("RichHpdPixelXsize");
@@ -194,8 +194,7 @@ StatusCode DeRichHPDPanel::initialize() {
     m_trans1.push_back( geometry()->matrixInv() * pvHPDMaster->matrixInv() * pvHPDSMaster->matrixInv() * pvWindow->matrixInv() );
     m_trans2.push_back( pvSilicon->matrix() * pvHPDSMaster->matrix() * pvHPDMaster->matrix() );
   }
-
-  log << MSG::DEBUG << "Finished initialization" << endreq;
+ 
   return StatusCode::SUCCESS;
 }
 

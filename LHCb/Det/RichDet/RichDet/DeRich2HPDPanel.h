@@ -1,26 +1,16 @@
 
+//----------------------------------------------------------------------------
 /** @file DeRich2HPDPanel.h
  *
  *  Header file for detector description class : DeRich2HPDPanel
  *
  *  CVS Log :-
- *  $Id: DeRich2HPDPanel.h,v 1.15 2004-10-20 22:41:54 jonrob Exp $
- *  $Log: not supported by cvs2svn $
- *  Revision 1.14  2004/10/20 17:02:44  jonrob
- *  Updates for windows
- *
- *  Revision 1.13  2004/10/20 16:16:36  jonrob
- *  More minor updates to functions (adding const etc.)
- *
- *  Revision 1.12  2004/10/18 09:21:49  jonrob
- *  Minor updates to functions (adding const etc.)
- *
- *  Revision 1.11  2004/07/27 08:55:22  jonrob
- *  Add doxygen file documentation and CVS information
+ *  $Id: DeRich2HPDPanel.h,v 1.16 2005-02-22 13:53:50 jonrob Exp $
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2004-06-18
  */
+//----------------------------------------------------------------------------
 
 #ifndef RICHDET_RICHDET_DERICH2HPDPANEL_H
 #define RICHDET_RICHDET_DERICH2HPDPANEL_H 1
