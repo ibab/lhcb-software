@@ -1,7 +1,14 @@
 ! Package     : VeloAlgoithms
 ! Responsible : Chris Parkes
 
+! 2002-07-23 - Chris Parkes
+ - solve bug due to sensor number problems
+ - sensor number in MCHits is different from sensor number in Detector Element
+ - this will eventually be solved when we move to GAUSS
+ - make nasty fudge for function requiring hit sensor number (SiThickness).
+
 !========================  VeloAlgorithms v2r0 2002-07-18 =====================
+
 ! 2002-07-17 - Chris Parkes
  - fix memory leak problem for case m_pileUp=false 
 
