@@ -4,7 +4,7 @@
 ! Purpose     : High-Level Trigger Exclusive Selections - Checking 
 !-----------------------------------------------------------------------------
 
-!========================== HltSelChecker v2r2 2005-03-03 ===================
+!========================== HltSelChecker v2r2 2005-03-08 ===================
 ! 2005-03-08 - P. Koppenburg
   - options/Correlations.opts
     . Apply L1 filter 

@@ -27,15 +27,6 @@ HltGenericDecision.Filter = false ; // false is default
 //EventSelector.Input   = {};
 //#include "$HLTSELECTIONSROOT/options/L0L1TDR-Bd2D0Kstar.opts"
 
-//==============================================================================
-// Use TrgVertexFitter (needs VertexFit v1r4)
-//==============================================================================
-#include "$HLTSELECTIONSROOT/options/TrgVertexFitter.opts"
-//==============================================================================
-// Use TrgDispCalculator (needs VertexFit v1r4)
-//==============================================================================
-#include "$HLTSELECTIONSROOT/options/TrgDispCalculator.opts"
-
 ApplicationMgr.TopAlg += { "GaudiSequencer/TupleSeq" }; 
 ApplicationMgr.DLLs += { "PrimVtx" };
 #include "$PRIMVTXROOT/options/PrimVtx.opts"
@@ -68,4 +59,4 @@ TrackNTuple.OutputLevel = 4 ;
 
 NTupleSvc.Output={"FILE1 DATAFILE='${NTUPLEFILE}' TYP='HBOOK' OPT='NEW'"};
 
-ApplicationMgr.EvtMax    = -1 ;
+ApplicationMgr.EvtMax    = 34000 ;
