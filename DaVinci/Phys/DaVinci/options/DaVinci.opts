@@ -3,10 +3,6 @@
  *  Example file to run a DaVinci job.
  *  This file defines, sequences and configures the algorithms 
  *  to be executed
- *  The algorithms to produce common final reconstruction objects
- *  are executed (primary vertices, charged and neutral protoparticles) 
- *  while example on how to run additional algorithm
- *  of general interest are provided commented.
  *
  *  @author G.Corti
  *  @date 2004-01-26
@@ -19,28 +15,24 @@
 #include "$DAVINCIROOT/options/DaVinciCommon.opts"
 #pragma print on
 
-// Default Database dependent configurations. The latest
-// compatible database is included from here.
-// If you need something different choose from vXXXX.opts when
-// more than one is available
-#include "$DAVINCIROOT/options/DaVinciDDDB.opts"
-
 //--------------------------------------------------------------
 // DaVinci Global Reconstruction Algorithms
 // VERY IMPORTANT:
 //   ChargedProtoPAlg and PrimVtxFinder are executed in
 //   DaVinciReco and MUST not be executed again
-// REMEMBER:
-//   to make Neutral ProtoParticles for channels with neutrals
-// REMEMBER:
-//   to make Kshorts with all type of tracks
+// REMEMBER to make Neutral ProtoParticles for channels with neutrals
+// REMEMBER to make Kshorts with all type of tracks
 //--------------------------------------------------------------
 #include "$DAVINCIROOT/options/DaVinciReco.opts"
+// for TDR data:
+//#include "$DAVINCIROOT/options/DaVinciRecoTDR.opts"
 
 //--- Neutral ProtoParticles (gammas and pi0) 
 // NOTE:: Not enough information in new GaudiRootDB files at the moment to 
 //        produce neutral protoparticles -> only works with POOL input
 #include "$DAVINCIROOT/options/DaVinciNeutrals.opts"
+// for TDR data (else you crash):
+// #include "$DAVINCIROOT/options/DaVinciNeutralsTDR.opts"
 
 //--- For merged and resolved pi0 the corresponding selection algorithm
 //    need to be executed. 

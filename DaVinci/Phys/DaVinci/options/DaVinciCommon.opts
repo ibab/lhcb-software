@@ -107,3 +107,7 @@ ApplicationMgr.HistogramPersistency = "ROOT";
 // Pre DaVinci algorithm. MUST BE FIRST.
 ApplicationMgr.TopAlg += { "PreDV" };
 
+// Default Database dependent configurations. The latest
+// compatible database is included from here.
+#include "$DAVINCIROOT/options/DaVinciDDDB.opts"
+
