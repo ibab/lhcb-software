@@ -1,4 +1,4 @@
-// $Id: RichGlobalPIDAlg.cpp,v 1.7 2003-07-08 11:39:53 cattanem Exp $
+// $Id: RichGlobalPIDAlg.cpp,v 1.8 2003-07-11 18:03:28 jonrob Exp $
 // Include files
 
 // local
@@ -79,6 +79,9 @@ StatusCode RichGlobalPIDAlg::execute() {
 
   // update pointers to global PID working objects
   if ( !gpidSummary() || !gpidTracks() ) return StatusCode::FAILURE;
+
+  // how many tracks ?
+  if ( m_GPIDtracks->empty() ) return StatusCode::SUCCESS;
 
   // Reconstruct all photons
   if ( !richPhotons() ) return StatusCode::FAILURE;
