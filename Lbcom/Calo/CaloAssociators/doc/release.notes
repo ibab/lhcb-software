@@ -1,16 +1,35 @@
-! $Id: release.notes,v 1.21 2003-01-17 14:15:25 sponce Exp $
+! $Id: release.notes,v 1.22 2003-04-02 14:46:53 ibelyaev Exp $
 ! =============================================================================
 ! Package     : CaloAssociators
 ! =============================================================================
-! Responsible : Ivan Belyaev
+! Responsible : Vanya BELYAEV Ivan.Belyaev@itep.ru
 ! =============================================================================
+
+! 2003-04-02 - Ivan BELYAEV
+ - src/CaloClustersMCTruth5Alg.h,.cpp   new *VERY* EFFECTIVE algorithms 
+                                        based on MCCaloHistory<CaloCluster> 
+                                        evaluator
+   src/CaloMCTools.h                    now it is empty 
+                                        the contents is moved to 
+                                        Event/CaloEvent package 
+
+
+! 2003-03-28 - Vanya BELYAEV
+ - src/CaloClustersMCTruth4Alg.h,.cpp   new algorithm for building the
+                                        relation table for CaloClusters.
+                                        new features:
+                                        1) the relations for
+                                        split clusters built
+                                        2) Allthresholds are lowered.
+ - src/CaloAssociators_load.cpp         add new algorithm
+ - cmt/requeirements                    increase the version
 
 ! 2003-01-17 - Sebastien Ponce
  - support for gcc 3.2
 
 !================== CaloAssociators v3r2 2002-12-04 =====================
 ! 2002-11-29 - Ivan Belyaev
- - cmt/requirements      version update 
+ - cmt/requirements      version update
 
 ! 2002-11-19 - Florence Ranjard
  - requirements - use new versions
@@ -24,7 +43,7 @@
  - move NPPs2MCPs and NeutralPPMCTrughAlg to DaVinciAssociators
 
 ! 2002-09-07 - Ivan Belyaev
- - options/NPPs2MCPs.opts      - fix the bug, kindly found by Gloria and Galina 
+ - options/NPPs2MCPs.opts      - fix the bug, kindly found by Gloria and Galina
  - src/NeutralPPMCTruthAlh.cpp - fix the bug, kindly found by Gloria and Galina
 
 !=================== CaloAssociators v2r3 2002-09-06 ==========================

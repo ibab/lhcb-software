@@ -1,17 +1,8 @@
-// $Id: CaloAssociators_load.cpp,v 1.7 2002-09-12 12:11:12 gcorti Exp $
+// $Id: CaloAssociators_load.cpp,v 1.8 2003-04-02 14:46:54 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
-// Revision 1.6  2002/09/04 15:16:14  ibelyaev
-//  add new associator and it's algorithm
-//
-// Revision 1.5  2002/06/26 19:03:56  ibelyaev
-//  add one more new algorithm for MCTruth
-//
-// Revision 1.4  2002/06/13 12:28:47  ibelyaev
-//  new options and new algorithm
-//
 // ============================================================================
 // Include files
 // GaudiKernel 
@@ -49,15 +40,18 @@ IMPLEMENT_WAssociator( CaloCluster   , MCParticle , float );
  *  @date   08 Apr 2002 
  */
 
-DECLARE_FACTORY_ENTRIES(CaloAssociators) {
+DECLARE_FACTORY_ENTRIES(CaloAssociators) 
+{
   
-  DECLARE_RelationW1D( CaloCluster   , MCParticle , float ) ;
-  DECLARE_RelationW2D( CaloCluster   , MCParticle , float ) ;
-  DECLARE_WAssociator( CaloCluster   , MCParticle , float ) ;
+  DECLARE_RelationW1D ( CaloCluster   , MCParticle , float ) ;
+  DECLARE_RelationW2D ( CaloCluster   , MCParticle , float ) ;
+  DECLARE_WAssociator ( CaloCluster   , MCParticle , float ) ;
 
-  DECLARE_ALGORITHM  ( CaloClustersMCTruthAlg             ) ;
-  DECLARE_ALGORITHM  ( CaloClustersMCTruth2Alg            ) ;
-  DECLARE_ALGORITHM  ( CaloClustersMCTruth3Alg            ) ;
+  DECLARE_ALGORITHM   ( CaloClustersMCTruthAlg             ) ;
+  DECLARE_ALGORITHM   ( CaloClustersMCTruth2Alg            ) ;
+  DECLARE_ALGORITHM   ( CaloClustersMCTruth3Alg            ) ;
+  DECLARE_ALGORITHM   ( CaloClustersMCTruth4Alg            ) ;
+  DECLARE_ALGORITHM   ( CaloClustersMCTruth5Alg            ) ;
   
 };
 

@@ -1,4 +1,4 @@
-// $Id: CaloAssociators.opts,v 1.5 2003-04-02 14:46:53 ibelyaev Exp $ 
+// $Id: CCs2MCPs_Alg1.opts,v 1.1 2003-04-02 14:46:53 ibelyaev Exp $ 
 // ============================================================================
 // CVS tag $Nam:$
 // ============================================================================
@@ -6,21 +6,18 @@
 // ============================================================================
 
 // ============================================================================
-/** @file CaloAssociators.cpp
- * 
- *  Job-options file to run CaloAssociators 
+/** @file
+ *  options for CaloCluster <--> MCParticle association algorithm  
  *
  *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
  *  @date 08 Apr 2002 
  */
 // ============================================================================
 
-ApplicationMgr.DLLs += { "CaloAssociators" };
-
-/// load options 
-
-#include "$CALOASSOCIATORSOPTS/CCs2MCPs.opts"
+ToolSvc.CCs2MCPs.Location      = "Rec/Relations/EcalClusters2MCParticles" ;
+ToolSvc.CCs2MCPs.AlgorithmType = "CaloClustersMCTruthAlg"                 ;
+ToolSvc.CCs2MCPs.AlgorithmName = "CCs2MCPs"                               ; 
 
 // ============================================================================
-// The END of file $CALOASSOCIATORSOPTS/CaloAssociators.opts
+// The END 
 // ============================================================================
