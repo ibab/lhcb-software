@@ -62,7 +62,12 @@ CaloSCorrectionLinear::~CaloSCorrectionLinear() {}
 // ============================================================================
 StatusCode CaloSCorrectionLinear::initialize()
 {
-  MsgStream log(msgSvc(), name());
+   StatusCode sc = CaloTool::initialize();
+  if( sc.isFailure() ) {
+    Error("Could not initialize the base class ",sc);
+    return StatusCode::FAILURE;
+  }
+   MsgStream log(msgSvc(), name());
   log << MSG::VERBOSE << "intialize() has been called" << endreq;
   /// initialize the base class
   if (1!=m_Coeff.size()) {
@@ -70,16 +75,11 @@ StatusCode CaloSCorrectionLinear::initialize()
         << "!!!" << endreq;
     return StatusCode::FAILURE;
   }
-  uint i=0;
+  unsigned int i=0;
   for (i=0;i<m_Coeff.size();i++) {
     log << MSG::INFO << "coeff[" << i << "]=" << m_Coeff[i] << endreq;
   }
-  StatusCode sc = CaloTool::initialize();
-  if( sc.isFailure() ) {
-    Error("Could not initialize the base class ",sc);
-    return StatusCode::FAILURE;
-  }
-  return StatusCode::SUCCESS;
+return StatusCode::SUCCESS;
 }
 // ============================================================================
 

@@ -258,7 +258,7 @@ StatusCode CaloSCorrectionSequence::operator() ( CaloHypo* hypo ) const {
   logmsg << MSG::VERBOSE << "seed cell raw: " << rowseed << endreq;
   int colseed=seed->cellID().col();
   logmsg << MSG::VERBOSE << "seed cell col: " << colseed << endreq;
-  uint areaseed=seed->cellID().area();
+  unsigned int areaseed=seed->cellID().area();
   logmsg << MSG::VERBOSE << "seed cell area: " << areaseed << endreq;
   if (areaseed>2) {
     return StatusCode::FAILURE;
@@ -280,10 +280,12 @@ StatusCode CaloSCorrectionSequence::operator() ( CaloHypo* hypo ) const {
   if (numberofneighbor!=8) {border=true;}
 
   double E[3][3];
+  {
   for (int i=0;i<3;i++) {
     for (int j=0;j<3;j++) {E[i][j]=0.0;}
   }
-  for (CaloClusterEntry* i=sac.begin();i!=sac.end();++i) {
+  }
+  { for (CaloClusterEntry* i=sac.begin();i!=sac.end();++i) {
     if (i==0) {continue;}
     SmartRef<CaloDigit> j=i->digit();
     if (j==0) {continue;}
@@ -292,15 +294,15 @@ StatusCode CaloSCorrectionSequence::operator() ( CaloHypo* hypo ) const {
     if ((row>=0)&&(row<=2)&&(col>=0)&&(col<=2)) {
       E[col][row]=j->e()*i->fraction();
     }
-  }
-  for (int i=0;i<3;i++) {
+  }}
+  {for (int i=0;i<3;i++) {
     logmsg << MSG::DEBUG << "|" << E[2][i]
         << "|" << E[1][i] << "|" << E[0][i] << endreq;
-  }
+  }}
   double energy=0.;
   double eleft=0.,evert=0.,eright=0.;
   double ebottom=0.,ehori=0.,etop=0.;
-  for (int i=0;i<3;i++) {
+  {for (int i=0;i<3;i++) {
     for (int j=0;j<3;j++) {
       if (i==0) {eleft+=E[i][j];}
       if (i==1) {evert+=E[i][j];}
@@ -310,7 +312,7 @@ StatusCode CaloSCorrectionSequence::operator() ( CaloHypo* hypo ) const {
       if (j==2) {etop+=E[i][j];}
       energy+=E[i][j];
     }
-  }
+  }}
   logmsg << MSG::VERBOSE << "energy: " << energy << endreq;
 
   double x=0.,y=0.;

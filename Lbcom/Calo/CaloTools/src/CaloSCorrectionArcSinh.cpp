@@ -64,22 +64,23 @@ CaloSCorrectionArcSinh::~CaloSCorrectionArcSinh() {}
 // ============================================================================
 StatusCode CaloSCorrectionArcSinh::initialize()
 {
-  MsgStream log(msgSvc(), name());
+   /// initialize the base class
+  StatusCode sc = CaloTool::initialize();
+  if( sc.isFailure() ) {
+    Error("Could not initialize the base class ",sc);
+    return StatusCode::FAILURE;
+  }
+
+ MsgStream log(msgSvc(), name());
   log << MSG::VERBOSE << "intialize() has been called" << endreq;
   if (1!=m_Coeff.size()) {
     log << MSG::INFO << "number of coeff=" << m_Coeff.size() 
         << "!!!" << endreq;
     return StatusCode::FAILURE;
   }
-  uint i=0;
+  unsigned int i=0;
   for (i=0;i<m_Coeff.size();i++) {
     log << MSG::INFO << "coeff[" << i << "]=" << m_Coeff[i] << endreq;
-  }
-  /// initialize the base class
-  StatusCode sc = CaloTool::initialize();
-  if( sc.isFailure() ) {
-    Error("Could not initialize the base class ",sc);
-    return StatusCode::FAILURE;
   }
   return StatusCode::SUCCESS;
 }
@@ -102,6 +103,16 @@ StatusCode CaloSCorrectionArcSinh::finalize()
 }
 // ============================================================================
 
+
+inline long double Asinh( const long double x ) 
+{ 
+#ifdef WIN32 
+	 return log( x + sqrt( x * x  + 1.0 ) );
+#else 
+	 return asinh( x ) ;
+#endif 
+};
+
 // ============================================================================
 /** The main processing method
  *  @see ICaloSCorrectionFunction
@@ -119,7 +130,7 @@ StatusCode CaloSCorrectionArcSinh::calculate(double min,
                                              double y,
                                              double& result) {
   double bary = (max-min)/(min+middle+max);
-  result = m_Coeff[0]*asinh(2.*bary*sinh(1./m_Coeff[0]))/2.;
+  result = m_Coeff[0]*Asinh(2.*bary*sinh(1./m_Coeff[0]))/2.;
   MsgStream log(msgSvc(),name());
   log << MSG::VERBOSE << "calculate() has been called"
       << " arg:" << " min:" << min 

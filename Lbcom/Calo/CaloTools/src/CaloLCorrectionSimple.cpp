@@ -79,12 +79,17 @@ StatusCode CaloLCorrectionSimple::initialize()
   MsgStream logmsg(msgSvc(), name());
   logmsg << MSG::VERBOSE << "intialize() has been called" << endreq;
   /// initialize the base class
+  StatusCode sc = CaloTool::initialize();
+  if( sc.isFailure() ) {
+    Error("Could not initialize the base class ",sc);
+    return StatusCode::FAILURE;
+  }
   if (2!=m_Coeff.size()) {
     logmsg << MSG::INFO << "number of coeff=" << m_Coeff.size() 
            << "!!!" << endreq;
     return StatusCode::FAILURE;
   }
-  uint i=0;
+  unsigned int i=0;
   for (i=0;i<m_Coeff.size();i++) {
     logmsg << MSG::INFO << "coeff[" << i << "]=" << m_Coeff[i] << endreq;
   }
@@ -92,11 +97,7 @@ StatusCode CaloLCorrectionSimple::initialize()
          << " X0=" << m_X0
          << " Zecal=" << m_Zecal
          << " LogCste=" << m_LogCste << endreq;
-  StatusCode sc = CaloTool::initialize();
-  if( sc.isFailure() ) {
-    Error("Could not initialize the base class ",sc);
-    return StatusCode::FAILURE;
-  }
+
   return StatusCode::SUCCESS;
 }
 

@@ -1,8 +1,11 @@
-// $Id: CaloExtraDigits.cpp,v 1.3 2002-06-13 12:32:38 ibelyaev Exp $
+// $Id: CaloExtraDigits.cpp,v 1.4 2002-07-09 10:55:36 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.3  2002/06/13 12:32:38  ibelyaev
+//  version update
+//
 // Revision 1.2  2002/04/23 10:49:03  ibelyaev
 //  fix compiler problems on Win2K
 //
@@ -22,6 +25,7 @@
 #include "GaudiKernel/IIncidentSvc.h" 
 #include "GaudiKernel/Stat.h" 
 #include "GaudiKernel/IChronoStatSvc.h" 
+#include "GaudiKernel/SmartRef.h"
 // DetDesc 
 #include "DetDesc/IGeometryInfo.h" 
 // CaloDet 
@@ -34,6 +38,21 @@
 #include "CaloUtils/ClusterFunctors.h"
 // local
 #include "CaloExtraDigits.h"
+
+#ifdef WIN32
+
+template<>
+bool std::less<SmartRef<CaloDigit>       >::operator() 
+ ( const SmartRef<CaloDigit>& ref1 , 
+   const SmartRef<CaloDigit>& ref2 ) const 
+{ return (const CaloDigit*) ref1 < (const CaloDigit*) ref2 ; };
+
+template<>
+bool std::less<const SmartRef<CaloDigit> >::operator() 
+ ( const SmartRef<CaloDigit>& ref1 , 
+   const SmartRef<CaloDigit>& ref2 ) const 
+{  return (const CaloDigit*) ref1 < (const CaloDigit*) ref2 ; };
+#endif 
 
 // ============================================================================
 /** @file CaloExtraDigits.cpp
