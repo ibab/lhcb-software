@@ -4,8 +4,11 @@
  *  Header file for GiGa converter : GiGaMCRichHitCnv
  *
  *  CVS History :
- *  $Id: GiGaMCRichHitCnv.h,v 1.2 2004-07-30 13:42:13 jonrob Exp $
+ *  $Id: GiGaMCRichHitCnv.h,v 1.3 2005-01-19 10:38:52 jonrob Exp $
  *  $Log: not supported by cvs2svn $
+ *  Revision 1.2  2004/07/30 13:42:13  jonrob
+ *  Add doxygen file documentation and CVS information
+ *
  *
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   2004-03-29
@@ -128,8 +131,15 @@ private: // methods
 
 private: // data
 
+  /// Data to convert
   RichG4HitCollName* m_RichG4HitCollectionName;
 
+  /// Count number of events processed
+  unsigned long int m_nEvts;
+
+  /// Count hits in each detector
+  std::vector< unsigned long int > m_hitTally;
+  
 };
 
 // ============================================================================

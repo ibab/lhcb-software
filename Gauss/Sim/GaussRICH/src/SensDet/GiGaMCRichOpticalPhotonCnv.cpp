@@ -4,8 +4,10 @@
  *  Implementation file for GiGa converter : GiGaMCRichOpticalPhotonCnv
  *
  *  CVS History :
- *  $Id: GiGaMCRichOpticalPhotonCnv.cpp,v 1.8 2004-07-30 13:42:13 jonrob Exp $
+ *  $Id: GiGaMCRichOpticalPhotonCnv.cpp,v 1.9 2005-01-19 10:38:52 jonrob Exp $
  *  $Log: not supported by cvs2svn $
+ *  Revision 1.8  2004/07/30 13:42:13  jonrob
+ *  Add doxygen file documentation and CVS information
  *
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   2004-03-29
@@ -14,27 +16,27 @@
 //  ===========================================================================
 #define GIGACNV_GiGaMCRichOpticalPhotonCnv_CPP 1
 // ============================================================================
+// CLHEP
 #include "CLHEP/Geometry/Point3D.h"
 // STL
-#include <string>
-#include <vector>
+//#include <string>
+//#include <vector>
 #include <algorithm>
 #include <numeric>
+#include <set>
 // GaudiKernel
 #include "GaudiKernel/CnvFactory.h"
 #include "GaudiKernel/IAddressCreator.h"
 #include "GaudiKernel/IOpaqueAddress.h"
 #include "GaudiKernel/IParticlePropertySvc.h"
+#include "GaudiKernel/ParticleProperty.h"
 #include "GaudiKernel/IDataProviderSvc.h"
-// GaudiKernel
 #include "GaudiKernel/SmartDataPtr.h"
-#include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/LinkManager.h"
 #include "GaudiKernel/ParticleProperty.h"
 #include "GaudiKernel/GaudiException.h"
 // GiGa
 #include "GiGa/IGiGaSvc.h"
-#include "GiGaCnv/IGiGaHitsCnvSvc.h"
 #include "GiGa/GiGaTrajectory.h"
 #include "GiGa/GiGaUtil.h"
 #include "GiGa/GiGaHitsByID.h"
@@ -45,6 +47,10 @@
 #include "GiGaCnv/IGiGaHitsCnvSvc.h"
 #include "GiGaCnv/IGiGaKineCnvSvc.h"
 #include "GiGaCnv/GiGaKineRefTable.h"
+// RichKernel
+//#include "RichKernel/RichStatDivFunctor.h"
+// Use local file until using RichKernel version with this included
+#include "RichStatDivFunctor.h"
 // Rich Event
 #include "Event/MCRichOpticalPhoton.h"
 // Geant4 includes
@@ -65,7 +71,10 @@ const        ICnvFactory&GiGaMCRichOpticalPhotonCnvFactory = s_Factory ;
 
 GiGaMCRichOpticalPhotonCnv::GiGaMCRichOpticalPhotonCnv( ISvcLocator* Locator )
   : GiGaCnvBase( storageType() , classID() , Locator ),
-    m_RichG4HitCollectionName(0) {
+    m_RichG4HitCollectionName ( 0 ),
+    m_nEvts                   ( 0 ),
+    m_hitTally                ( 2, 0 )
+{
 
   setNameOfGiGaConversionService( IGiGaCnvSvcLocation::Hits    ) ;
   setConverterName              ( "GiGaMCRichOpticalPhotonCnv" ) ;
@@ -106,7 +115,7 @@ const unsigned char GiGaMCRichOpticalPhotonCnv::storageType()
 StatusCode GiGaMCRichOpticalPhotonCnv::initialize() {
 
   // initialize the base class
-  StatusCode sc = GiGaCnvBase::initialize();
+  const StatusCode sc = GiGaCnvBase::initialize();
   if ( sc.isFailure() ) return Error("Could not initialize the base class!",sc);
 
   // check for necessary services
@@ -119,6 +128,15 @@ StatusCode GiGaMCRichOpticalPhotonCnv::initialize() {
 
 StatusCode GiGaMCRichOpticalPhotonCnv::finalize()
 {
+
+  // Printout final numbers
+  const RichStatDivFunctor occ;
+  MsgStream msg( msgSvc(), name() );
+  msg << MSG::ALWAYS << "Av. # MCRichOpticalPhotons : Rich1 = " 
+      << occ(m_hitTally[Rich::Rich1],m_nEvts) 
+      << " Rich2 = " << occ(m_hitTally[Rich::Rich2],m_nEvts)
+      << endreq;
+
   return GiGaCnvBase::finalize();
 }
 
@@ -131,7 +149,7 @@ StatusCode GiGaMCRichOpticalPhotonCnv::createObj( IOpaqueAddress*  address ,
   if ( 0 == address ) return Error("IOpaqueAddress* points to NULL!" );
 
   object = new MCRichOpticalPhotons();
-  StatusCode sc = updateObj( address, object );
+  const StatusCode sc = updateObj( address, object );
   if ( !sc ) {
     if ( 0 != object ) { delete object; object = 0; }
     return Warning( "Could not create and update Object", sc );
@@ -191,6 +209,7 @@ StatusCode GiGaMCRichOpticalPhotonCnv::updateObj ( IOpaqueAddress*  address ,
 
       // note this key is need for consistency with MCRichHit converter
       int globalKey = 0;
+      ++m_nEvts; // Count events
       for ( int iii=0; iii<m_RichG4HitCollectionName->RichHCSize(); ++iii ) {
         std::string colName = m_RichG4HitCollectionName->RichHCName(iii);
 
@@ -290,6 +309,10 @@ StatusCode GiGaMCRichOpticalPhotonCnv::updateObj ( IOpaqueAddress*  address ,
 
           // SmartRef to associated MCRichHit
           mcPhoton->setMcRichHit( mcHits->object(globalKey) );
+
+          // Count photons
+          if      ( Rich::Rich1 == mcPhoton->rich() ) ++m_hitTally[Rich::Rich1];
+          else if ( Rich::Rich2 == mcPhoton->rich() ) ++m_hitTally[Rich::Rich2];
 
           // finally, increment the key
           ++globalKey;

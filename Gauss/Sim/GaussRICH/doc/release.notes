@@ -5,6 +5,9 @@
 ! Purpose          : collection of sensitive detectors, G4 actions, etc for RICH
 !-----------------------------------------------------------------------------
 
+! 2005-01-19 - Chris Jones
+ - Add simple statistical end-of-job printout to GiGa converters
+
 !======================== GaussRICH v4r10 ==================================
 ! 2004-12-16 - Gloria CORTI, Sajan EASO
  - src/PhysProcess/RichHpdSiEnergyLoss.cpp

@@ -3,8 +3,11 @@
  *  Header file for GiGa converter : GiGaMCRichOpticalPhotonCnv
  *
  *  CVS History :
- *  $Id: GiGaMCRichOpticalPhotonCnv.h,v 1.2 2004-07-30 13:42:14 jonrob Exp $
+ *  $Id: GiGaMCRichOpticalPhotonCnv.h,v 1.3 2005-01-19 10:38:52 jonrob Exp $
  *  $Log: not supported by cvs2svn $
+ *  Revision 1.2  2004/07/30 13:42:14  jonrob
+ *  Add doxygen file documentation and CVS information
+ *
  *
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   2004-03-29
@@ -15,16 +18,10 @@
 #define GIGACNV_GiGaMCRichOpticalPhotonCnv_H  1
 // ============================================================================
 
-// STL
-#include <set>
-// GaudiKernel
-#include "GaudiKernel/IParticlePropertySvc.h"
-#include "GaudiKernel/ParticleProperty.h"
 // LHCbEvent
 #include "Event/MCParticle.h"
 #include "Event/MCVertex.h"
-// GiGa
-#include "GiGa/GiGaTrajectory.h"
+
 // GiGaCnv
 #include "GiGaCnv/GiGaCnvBase.h"
 // G4
@@ -111,6 +108,12 @@ private: // data
 
   /// Pointer to RichG4Hits
   RichG4HitCollName* m_RichG4HitCollectionName;
+
+  /// Count number of events processed
+  unsigned long int m_nEvts;
+
+  /// Count hits in each detector
+  std::vector< unsigned long int > m_hitTally;
 
 };
 

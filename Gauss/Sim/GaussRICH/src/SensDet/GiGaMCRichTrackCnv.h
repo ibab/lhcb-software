@@ -4,8 +4,11 @@
  *  Header file for GiGa converter : GiGaRichTrackCnv
  *
  *  CVS History :
- *  $Id: GiGaMCRichTrackCnv.h,v 1.2 2004-07-30 13:42:14 jonrob Exp $
+ *  $Id: GiGaMCRichTrackCnv.h,v 1.3 2005-01-19 10:38:52 jonrob Exp $
  *  $Log: not supported by cvs2svn $
+ *  Revision 1.2  2004/07/30 13:42:14  jonrob
+ *  Add doxygen file documentation and CVS information
+ *
  *
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   2004-03-29
@@ -34,7 +37,6 @@
 #include "GaudiKernel/IOpaqueAddress.h"
 #include "GaudiKernel/IDataProviderSvc.h"
 #include "GaudiKernel/SmartDataPtr.h"
-//#include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/LinkManager.h"
 #include "GaudiKernel/GaudiException.h"
 
@@ -64,6 +66,11 @@
 #include "G4VHitsCollection.hh"
 #include "G4HCofThisEvent.hh"
 #include "G4SDManager.hh"
+
+// RichKernel
+//#include "RichKernel/RichStatDivFunctor.h"
+// Use local file until using RichKernel version with this included
+#include "RichStatDivFunctor.h"
 
 // Rich Event
 #include "Event/MCRichTrack.h"
@@ -146,6 +153,12 @@ private: // methods
   GiGaRichTrackCnv& operator=( const GiGaRichTrackCnv& ) ; ///< assignment operator
 
 private: // data
+
+  /// Count number of events processed
+  unsigned long int m_nEvts;
+  
+  /// Count tracks
+  unsigned long int m_hitTally;
 
 };
 

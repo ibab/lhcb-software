@@ -4,8 +4,11 @@
  *  Implementation file for GiGa converter : GiGaRichSegmentCnv
  *
  *  CVS History :
- *  $Id: GiGaMCRichSegmentCnv.cpp,v 1.4 2004-07-30 13:42:14 jonrob Exp $
+ *  $Id: GiGaMCRichSegmentCnv.cpp,v 1.5 2005-01-19 10:38:52 jonrob Exp $
  *  $Log: not supported by cvs2svn $
+ *  Revision 1.4  2004/07/30 13:42:14  jonrob
+ *  Add doxygen file documentation and CVS information
+ *
  *
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   2004-03-29
@@ -53,7 +56,10 @@ namespace GiGaRich {
 
 GiGaRichSegmentCnv::GiGaRichSegmentCnv( ISvcLocator* Locator )
   : GiGaCnvBase( storageType() , classID() , Locator ),
-    m_RichG4HitCollectionName(0) {
+    m_RichG4HitCollectionName ( 0 ),
+    m_nEvts                   ( 0 ),
+    m_hitTally                ( 2, 0 )
+{
 
   setNameOfGiGaConversionService( IGiGaCnvSvcLocation::Hits ) ;
   setConverterName              ( "GiGaMCRichSegmentCnv" ) ;
@@ -92,7 +98,7 @@ const unsigned char GiGaRichSegmentCnv::storageType()
 StatusCode GiGaRichSegmentCnv::initialize() {
 
   // initialize the base class
-  StatusCode sc = GiGaCnvBase::initialize();
+  const StatusCode sc = GiGaCnvBase::initialize();
   if ( sc.isFailure() ) return Error("Could not initialize the base class!",sc);
 
   // check for necessary services
@@ -105,6 +111,15 @@ StatusCode GiGaRichSegmentCnv::initialize() {
 
 StatusCode GiGaRichSegmentCnv::finalize()
 {
+
+  // Printout final numbers
+  const RichStatDivFunctor occ;
+  MsgStream msg( msgSvc(), name() );
+  msg << MSG::ALWAYS << "Av. # MCRichSegments       : Rich1 = " 
+      << occ(m_hitTally[Rich::Rich1],m_nEvts) 
+      << " Rich2 = " << occ(m_hitTally[Rich::Rich2],m_nEvts)
+      << endreq;
+
   return GiGaCnvBase::finalize();
 }
 
@@ -117,7 +132,7 @@ StatusCode GiGaRichSegmentCnv::createObj( IOpaqueAddress*  address ,
   if ( 0 == address ) return Error("IOpaqueAddress* points to NULL!" );
 
   object = new MCRichSegments();
-  StatusCode sc = updateObj( address, object );
+  const StatusCode sc = updateObj( address, object );
   if ( !sc ) {
     if ( 0 != object ) { delete object; object = 0; }
     return Warning( "Could not create and update Object", sc );
@@ -186,6 +201,7 @@ StatusCode GiGaRichSegmentCnv::updateObj ( IOpaqueAddress*  address ,
 
       // note this key is needed for consistency with MCRichHit converter
       int globalKey = 0;
+      ++m_nEvts; // Count events
       for ( int iii=0; iii<m_RichG4HitCollectionName->RichHCSize(); ++iii ) {
         std::string colName = m_RichG4HitCollectionName->RichHCName(iii);
 
@@ -258,6 +274,10 @@ StatusCode GiGaRichSegmentCnv::updateObj ( IOpaqueAddress*  address ,
             << "Creating MCRichSegment " << mcSeg->key()
             << " for MCParticle " << mcPart->key()
             << " in " << rad << endreq;
+
+        // Count segments
+        if      ( Rich::Rich1 == mcSeg->rich() ) ++m_hitTally[Rich::Rich1];
+        else if ( Rich::Rich2 == mcSeg->rich() ) ++m_hitTally[Rich::Rich2];
 
         // loop over hits
         GiGaRich::TrajPoints trajPoints;

@@ -4,8 +4,11 @@
  *  Header file for GiGa converter : GiGaRichSegmentCnv
  *
  *  CVS History :
- *  $Id: GiGaMCRichSegmentCnv.h,v 1.3 2004-07-30 14:18:23 jonrob Exp $
+ *  $Id: GiGaMCRichSegmentCnv.h,v 1.4 2005-01-19 10:38:52 jonrob Exp $
  *  $Log: not supported by cvs2svn $
+ *  Revision 1.3  2004/07/30 14:18:23  jonrob
+ *  Add doxygen file documentation and CVS information
+ *
  *  Revision 1.2  2004/07/30 13:42:14  jonrob
  *  Add doxygen file documentation and CVS information
  *
@@ -32,7 +35,6 @@
 #include "GaudiKernel/IOpaqueAddress.h"
 #include "GaudiKernel/IDataProviderSvc.h"
 #include "GaudiKernel/SmartDataPtr.h"
-#include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/LinkManager.h"
 #include "GaudiKernel/GaudiException.h"
 
@@ -43,7 +45,6 @@
 
 // GiGa
 #include "GiGa/IGiGaSvc.h"
-#include "GiGaCnv/IGiGaHitsCnvSvc.h"
 #include "GiGa/GiGaTrajectory.h"
 #include "GiGa/GiGaUtil.h"
 #include "GiGa/GiGaHitsByID.h"
@@ -62,6 +63,11 @@
 #include "G4VHitsCollection.hh"
 #include "G4HCofThisEvent.hh"
 #include "G4SDManager.hh"
+
+// RichKernel
+//#include "RichKernel/RichStatDivFunctor.h"
+// Use local file until using RichKernel version with this included
+#include "RichStatDivFunctor.h"
 
 // CLHEP
 #include "CLHEP/Geometry/Point3D.h"
@@ -150,6 +156,12 @@ private: // data
 
   /// Pointer to RichG4Hits
   RichG4HitCollName* m_RichG4HitCollectionName;
+
+  /// Count number of events processed
+  unsigned long int m_nEvts;
+
+  /// Count hits in each detector
+  std::vector< unsigned long int > m_hitTally;
 
 };
 

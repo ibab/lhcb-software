@@ -4,8 +4,10 @@
  *  Implementation file for GiGa converter : GiGaMCRichHitCnv
  *
  *  CVS History :
- *  $Id: GiGaMCRichHitCnv.cpp,v 1.10 2004-07-30 13:42:13 jonrob Exp $
+ *  $Id: GiGaMCRichHitCnv.cpp,v 1.11 2005-01-19 10:38:52 jonrob Exp $
  *  $Log: not supported by cvs2svn $
+ *  Revision 1.10  2004/07/30 13:42:13  jonrob
+ *  Add doxygen file documentation and CVS information
  *
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   2004-03-29
@@ -14,27 +16,23 @@
 //  ===========================================================================
 #define GIGACNV_GiGaMCRichHitCnv_CPP 1
 // ============================================================================
+
+// CLHEP
 #include "CLHEP/Geometry/Point3D.h"
-// STL
-#include <string>
-#include <vector>
-#include <algorithm>
-#include <numeric>
+
 // GaudiKernel
 #include "GaudiKernel/CnvFactory.h"
 #include "GaudiKernel/IAddressCreator.h"
 #include "GaudiKernel/IOpaqueAddress.h"
 #include "GaudiKernel/IParticlePropertySvc.h"
 #include "GaudiKernel/IDataProviderSvc.h"
-// GaudiKernel
 #include "GaudiKernel/SmartDataPtr.h"
-#include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/LinkManager.h"
 #include "GaudiKernel/ParticleProperty.h"
 #include "GaudiKernel/GaudiException.h"
+
 // GiGa
 #include "GiGa/IGiGaSvc.h"
-#include "GiGaCnv/IGiGaHitsCnvSvc.h"
 #include "GiGa/GiGaTrajectory.h"
 #include "GiGa/GiGaUtil.h"
 #include "GiGa/GiGaHitsByID.h"
@@ -49,10 +47,17 @@
 
 // LHCbEvent
 #include "Event/MCRichHit.h"
+
+// RichKernel
+//#include "RichKernel/RichStatDivFunctor.h"
+// Use local file until using RichKernel version with this included
+#include "RichStatDivFunctor.h"
+
 // Geant4 includes
 #include "G4VHitsCollection.hh"
 #include "G4HCofThisEvent.hh"
 #include "G4SDManager.hh"
+
 // local
 #include "GiGaMCRichHitCnv.h"
 #include "RichG4HitCollName.h"
@@ -67,7 +72,10 @@ const        ICnvFactory&GiGaMCRichHitCnvFactory = s_Factory ;
 
 GiGaMCRichHitCnv::GiGaMCRichHitCnv( ISvcLocator* Locator )
   : GiGaCnvBase( storageType() , classID() , Locator ),
-    m_RichG4HitCollectionName(0) {
+    m_RichG4HitCollectionName ( 0 ),
+    m_nEvts                   ( 0 ),
+    m_hitTally                ( 2, 0 )
+{
 
   setNameOfGiGaConversionService( IGiGaCnvSvcLocation::Hits ) ;
   setConverterName              ( "GiGaMCRichHitCnv"        ) ;
@@ -82,27 +90,31 @@ GiGaMCRichHitCnv::GiGaMCRichHitCnv( ISvcLocator* Locator )
 
 // ======================================================================
 
-GiGaMCRichHitCnv::~GiGaMCRichHitCnv(){
-
+GiGaMCRichHitCnv::~GiGaMCRichHitCnv()
+{
   delete m_RichG4HitCollectionName;
-
 };
 
 // ======================================================================
 
-const CLID& GiGaMCRichHitCnv::classID() { return MCRichHit::classID(); }
+const CLID& GiGaMCRichHitCnv::classID()
+{
+  return MCRichHit::classID();
+}
 
 // ======================================================================
 
-const unsigned char GiGaMCRichHitCnv::storageType() {
-  return GiGaHits_StorageType; }
+const unsigned char GiGaMCRichHitCnv::storageType()
+{
+  return GiGaHits_StorageType;
+}
 
 // ======================================================================
 
-StatusCode GiGaMCRichHitCnv::initialize() {
-
+StatusCode GiGaMCRichHitCnv::initialize()
+{
   // initialize the base class
-  StatusCode sc = GiGaCnvBase::initialize();
+  const StatusCode sc = GiGaCnvBase::initialize();
   if ( sc.isFailure() ) return Error("Could not initialize the base class!",sc);
   // check for necessary services
   if ( 0 == hitsSvc() ) return Error("IGiGaHitsCnvSvc* points to NULL!");
@@ -112,38 +124,48 @@ StatusCode GiGaMCRichHitCnv::initialize() {
 
 // ======================================================================
 
-StatusCode GiGaMCRichHitCnv::finalize() { return GiGaCnvBase::finalize(); }
+StatusCode GiGaMCRichHitCnv::finalize()
+{
+  // Printout final numbers
+  const RichStatDivFunctor occ;
+  MsgStream msg( msgSvc(), name() );
+  msg << MSG::ALWAYS << "Av. # MCRichHits           : Rich1 = "
+      << occ(m_hitTally[Rich::Rich1],m_nEvts)
+      << " Rich2 = " << occ(m_hitTally[Rich::Rich2],m_nEvts)
+      << endreq;
+
+  return GiGaCnvBase::finalize();
+}
 
 // ======================================================================
 
 StatusCode GiGaMCRichHitCnv::createObj( IOpaqueAddress*  address ,
-                                        DataObject*&     object  ) {
-
+                                        DataObject*&     object  )
+{
   object = 0;
   if ( 0 == address ) return Error("IOpaqueAddress* points to NULL!" );
 
   object = new MCRichHits();
-  StatusCode sc = updateObj(address,object);
+  const StatusCode sc = updateObj(address,object);
 
   if ( sc.isFailure() ) {
     if ( 0 != object ) { delete object; object = 0; }
     return Error( "Could not create and update Object", sc );
   };
 
-
   return StatusCode::SUCCESS;
 };
 
 // ============================================================================
 
-StatusCode GiGaMCRichHitCnv::fillObjRefs
-( IOpaqueAddress*  address ,
-  DataObject*      object  )
+StatusCode GiGaMCRichHitCnv::fillObjRefs( IOpaqueAddress*  address ,
+                                          DataObject*      object  )
 {
   // This is completely dummy at the moment since the updateObjREf is
   //  dummy. But for now kept for future if the UpdateObjref becomes not
   // dummy. If in the final version it is dummy, this can be removed.
   //
+
   if( 0 ==   address   ) { return Error(" IOpaqueAddress* points to NULL" );}
   if( 0 ==   object    ) { return Error(" DataObject* points to NULL"     );}
 
@@ -154,12 +176,13 @@ StatusCode GiGaMCRichHitCnv::fillObjRefs
                   GiGaUtil::ObjTypeName(object) +
                   "*') is not 'MCRichHits*'! "   );
   }
+
   return updateObjRefs( address , object );
 };
 
-
 StatusCode GiGaMCRichHitCnv::updateObj ( IOpaqueAddress*  address ,
-                                         DataObject*      object  ) {
+                                         DataObject*      object  )
+{
 
   if ( 0 == address ) { return Error(" IOpaqueAddress* points to NULL"); }
   if ( 0 == object  ) { return Error(" DataObject* points to NULL"    ); }
@@ -200,7 +223,8 @@ StatusCode GiGaMCRichHitCnv::updateObj ( IOpaqueAddress*  address ,
     if ( 0 != hitscollections ) {
 
       // note this key is need for consistency with MCRichOpticalPhoton converter
-      int globalKey = 0;
+      int globalKey( 0 ), totalSize( 0 );
+      ++m_nEvts; // Count events
       for ( int iii=0; iii<m_RichG4HitCollectionName->RichHCSize(); ++iii ) {
 
         std::string colName = m_RichG4HitCollectionName->RichHCName(iii);
@@ -208,12 +232,16 @@ StatusCode GiGaMCRichHitCnv::updateObj ( IOpaqueAddress*  address ,
         G4SDManager * fSDM = G4SDManager::GetSDMpointer();
         if ( !fSDM ) return Error( "GiGaMCRichHitCnv : NULL G4SDManager pointer !!" );
         int collectionID = fSDM->GetCollectionID(colName);
-        if ( -1 == collectionID ) return StatusCode::SUCCESS;
-
+        if ( -1 == collectionID ) 
+        {
+          return Warning( "RICH CollectionID = -1", StatusCode::SUCCESS );
+        }
         RichG4HitsCollection* myCollection =
           dynamic_cast<RichG4HitsCollection*>(hitscollections->GetHC(collectionID));
-
-        if ( 0 == myCollection ) return StatusCode::SUCCESS;
+        if ( 0 == myCollection ) 
+        {
+          return Warning( "Null RICH hit collection", StatusCode::SUCCESS );
+        }
 
         const int numberofhits = myCollection->entries();
 
@@ -224,6 +252,7 @@ StatusCode GiGaMCRichHitCnv::updateObj ( IOpaqueAddress*  address ,
         const GiGaKineRefTable & table = hitsSvc()->table() ;
 
         //convert hits
+        totalSize += numberofhits;
         for ( int ihit = 0; ihit < numberofhits; ++ihit ) {
 
           // Pointer to G4 hit
@@ -299,10 +328,21 @@ StatusCode GiGaMCRichHitCnv::updateObj ( IOpaqueAddress*  address ,
             Warning( "Found RichG4Hit with no MCParticle parent !" );
           }
 
+          // Count hits
+          if      ( Rich::Rich1 == mchit->rich() ) ++m_hitTally[Rich::Rich1];
+          else if ( Rich::Rich2 == mchit->rich() ) ++m_hitTally[Rich::Rich2];
+
           // finally increment key
           ++globalKey;
 
-        }
+        } // loop over hits
+
+      } // loop over collections
+
+      // Double check all G4 hits where convertered
+      if ( totalSize != hits->size() )
+      {
+        return Warning( "Problem converting RichG4Hits" );
       }
 
     } else {
@@ -310,6 +350,7 @@ StatusCode GiGaMCRichHitCnv::updateObj ( IOpaqueAddress*  address ,
           << endreq;
       return StatusCode::SUCCESS;
     }
+
   } // end try
 
   catch( const GaudiException& Excp ) {

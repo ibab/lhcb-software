@@ -4,11 +4,13 @@
  *  Implementation file for GiGa converter : GiGaRichTrackCnv
  *
  *  CVS History :
- *  $Id: GiGaMCRichTrackCnv.cpp,v 1.4 2004-07-30 14:18:23 jonrob Exp $
+ *  $Id: GiGaMCRichTrackCnv.cpp,v 1.5 2005-01-19 10:38:52 jonrob Exp $
  *  $Log: not supported by cvs2svn $
- *  Revision 1.3  2004/07/30 13:42:14  jonrob
+ *  Revision 1.4  2004/07/30 14:18:23  jonrob
  *  Add doxygen file documentation and CVS information
  *
+ *  Revision 1.3  2004/07/30 13:42:14  jonrob
+ *  Add doxygen file documentation and CVS information
  *
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   2004-03-29
@@ -29,7 +31,10 @@ const        ICnvFactory&GiGaRichTrackCnvFactory = s_Factory ;
 // ========================================================================
 
 GiGaRichTrackCnv::GiGaRichTrackCnv( ISvcLocator* Locator )
-  : GiGaCnvBase( storageType() , classID() , Locator ) {
+  : GiGaCnvBase( storageType() , classID() , Locator ),
+    m_nEvts                   ( 0 ),
+    m_hitTally                ( 0 )
+{
 
   setNameOfGiGaConversionService( IGiGaCnvSvcLocation::Kine );
   setConverterName              ( "GiGaMCRichTrackCnv"      );
@@ -76,6 +81,13 @@ StatusCode GiGaRichTrackCnv::initialize() {
 
 StatusCode GiGaRichTrackCnv::finalize()
 {
+
+  // Printout final numbers
+  const RichStatDivFunctor occ;
+  MsgStream msg( msgSvc(), name() );
+  msg << MSG::ALWAYS << "Av. # MCRichTracks         : Overall = " 
+      << occ(m_hitTally,m_nEvts) << endreq;
+
   return GiGaCnvBase::finalize();
 }
 
@@ -88,7 +100,7 @@ StatusCode GiGaRichTrackCnv::createObj( IOpaqueAddress*  address ,
   if ( 0 == address ) return Error("IOpaqueAddress* points to NULL!" );
 
   object = new MCRichTracks();
-  StatusCode sc = updateObj( address, object );
+  const StatusCode sc = updateObj( address, object );
   if ( !sc ) {
     if ( 0 != object ) { delete object; object = 0; }
     return Warning( "Could not create and update Object", sc );
@@ -124,6 +136,8 @@ StatusCode GiGaRichTrackCnv::updateObj ( IOpaqueAddress*  address ,
 
   // get the references between MCParticles and Geant4 TrackIDs
   const GiGaKineRefTable & table = kineSvc()->table();
+
+  ++m_nEvts; // Count events
 
   // retrieve the  trajectory container from GiGa Service
   G4TrajectoryContainer* trajectories = 0 ;
@@ -215,6 +229,9 @@ StatusCode GiGaRichTrackCnv::updateObj ( IOpaqueAddress*  address ,
       }
 
     }
+
+    // count tracks
+    m_hitTally += richTracks->size();
 
   } // end try block
 
