@@ -1,9 +1,10 @@
 package     EvtGen
-version     v6r1
+version     v7r0
  
 branches    cmt src doc EvtGen EvtGenModels EvtGenBase photos
 
 use         CLHEP        v*  LCG_Interfaces
+use         GENSER       v*  Gen
 use         PYTHIA       v*  Gen
 use         GaudiPolicy  v*
 
@@ -18,8 +19,8 @@ apply_pattern package_linkopts
 
 macro_append EvtGen_pp_fflags "" WIN32 "/DWIN32"
 
-macro_prepend EvtGen_linkopts " -Wl,-u,phoene_ " \
-              WIN32           " /include:_PHOENE "
+macro_prepend EvtGen_linkopts " -Wl,-u,phocin_,-u,phoinf_,-u,photos_get__,-u,photos_set__,-u,hepevt_,-u,phoqed_ " \
+              WIN32           " /include:_PHOCIN /include:_PHOINF /include:_PHOTOS_GET /include:_PHOTOS_SET /include:_HEPEVT /include:_PHOQED "
 
-macro_append EvtGen_linkopts " -L$(GENSER_home)/lib -lphotos202" \
-             WIN32            " /libpath:$(GENSER_home)/lib photos202.lib"
+macro_append EvtGen_linkopts " -L$(GENSER_home)/lib -lphotos207" \
+             WIN32            " /libpath:$(GENSER_home)/lib photos207.lib"
