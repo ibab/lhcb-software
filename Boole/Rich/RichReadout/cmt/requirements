@@ -1,12 +1,10 @@
 package RichReadout
-version v1r2
+version v1r2p1
 
 # ================ structure =================================================
 branches cmt doc src
 
 # ================ environment ===============================================
-#include_dirs $(RICHREADOUTROOT)
-
 set RICHREADOUTOPTS $(RICHREADOUTROOT)/options
 
 # ================ dependencies ==============================================
@@ -19,8 +17,4 @@ use RichDetTools     v3r*    Rich
 # ================ component library =========================================
 library RichReadout ../src/*.cpp  -import=AIDA
 
-apply_pattern package_Clinkopts
-apply_pattern packageShr
-
-private
-apply_pattern package_Cshlibflags
+apply_pattern component_library library=RichReadout
