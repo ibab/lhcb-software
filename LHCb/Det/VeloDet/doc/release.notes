@@ -1,9 +1,13 @@
-! $Id: release.notes,v 1.8 2002-01-28 18:41:41 ocallot Exp $
+! $Id: release.notes,v 1.9 2002-01-29 09:19:37 ocallot Exp $
 package VeloDet
 package manager : Velo Group
 
 !=============================================================================
-! 28/01/2002 - Olivier Callot  v3r0
+! 29/01/2002 - Olivier Callot  v3r0
+  - Put the R wafer in front of the Phi wafer (was the reverse)
+
+!=============================================================================
+! 28/01/2002 - Olivier Callot
   - Modified the initialize() method to use the child detector elements, to get
     the individual wafer positions from XML. The type of wafer is still 
 	  hardcoded, as is the detection of PuVeto / Normal Velo boundary.

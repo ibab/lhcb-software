@@ -1,4 +1,4 @@
-// $Id: DeVelo.cpp,v 1.7 2002-01-29 08:30:31 ocallot Exp $
+// $Id: DeVelo.cpp,v 1.8 2002-01-29 09:19:37 ocallot Exp $
 //
 // ============================================================================
 #define  VELODET_DEVELO_CPP 1
@@ -206,7 +206,7 @@ StatusCode DeVelo::initialize() {
         VeloWafer* wafer = new VeloWafer();
         wafer->setNumber( index++ );
         wafer->setZ( z );
-        if ( 1 == j%2 ) {
+        if ( !inVeto && (1 == j%2) ) {
           if ( 0 == number%2 ) {
             wafer->setType( j );    // Negative X
           } else {
@@ -231,6 +231,9 @@ StatusCode DeVelo::initialize() {
     }
     loging << endreq;
   }
+
+  m_zVertex = 0;   // default value.
+
   return sc;
 };
 
@@ -244,8 +247,6 @@ int DeVelo::waferNumber( const HepPoint3D& point ) {
       return (*it)->number();
     }
   }
-
-  m_zVertex = 0;   // default value.
   
   return -1;
 };
