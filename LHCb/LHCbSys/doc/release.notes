@@ -4,16 +4,19 @@
 ! Purpose     : LHCb OO kernel packages
 !-----------------------------------------------------------------------------
 
-!======================= LHCbSys v15r9 2004-05-03 =======================
-! 2004-05-03 - Marco Cattaneo
+!======================= LHCbSys v15r9 2004-05-04 =======================
+! 2004-05-04 - Marco Cattaneo
  - Modified packages: GaudiConf v7r8, KernelSys v3r6, LHCbKernel v4r6,
-                      EventSys v17r9, PhysEvent v8r3, EventAssoc v1r1
+                      EventSys v17r9, PhysEvent v8r3, EventAssoc v1r1, Event v4r3
 
  - In GaudiConf v7r8:
    . Update Gaudi.supp for Gaudi v4r5, adding also known Memcheck:Leak
 
  - In LHCbKernel v4r6, PhysEvent v8r3, EventAssoc v1r1
    . Fixes to POOL dictionaries for DaVinci miniDST
+
+ - In Event v4r3
+   . Add Cerenkov to MCVertexType enum
 
 !======================= LHCbSys v15r8 2004-04-23 =======================
 ! 2004-04-23 - Marco Cattaneo
