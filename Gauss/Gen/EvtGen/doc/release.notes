@@ -1,6 +1,10 @@
 Package :EvtGen 
 Package manager : Patrick Robbe and Witek Pokorski
 
+! 2004-06-08 - Patrick Robbe
+ - EvtDDalitz.cpp : correct Complex amplitude for D0 -> Ks pi pi
+   decays from B.
+
 ! 2004-05-26 - Patrick Robbe
  - EvtDDalitz.cpp : check that the mother particle is a B before
    asking for the decay model name.
