@@ -2,6 +2,7 @@
      * RawEvent                                                    *
      ****************************************************************-->
      <import name="Event/RawBuffer"/>
+     <import name="Kernel/CaloMap"/>
      <class 
       author="Helder Lopes"
       desc="Raw event"
@@ -14,14 +15,14 @@
        <attribute
         desc="Map with RawBanks (values) for each bank type"
         name="eventMap"
-        type="std::map &lt;int, std::vector&lt;RawBank&gt; &gt;"
+        type="CaloMap &lt;int, std::vector&lt;RawBank&gt; &gt;"
         getMeth="FALSE"
         setMeth="FALSE"
      />
        <constructor
         desc="Constructor from a map"
        >
-         <arg name="eventMap" type="std::map &lt;int, std::vector&lt;RawBank&gt; &gt;"/>
+         <arg name="eventMap" type="CaloMap &lt;int, std::vector&lt;RawBank&gt; &gt;"/>
          <code>m_eventMap=eventMap ; </code>
        </constructor>
        <constructor desc="Constructor from RawBuffer">

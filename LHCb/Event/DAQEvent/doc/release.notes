@@ -8,6 +8,8 @@ Purpose: Define the L1Buffer,  L1Event, L1Bank, HLTBuffer, HLTEvent and
  - Rename HltBank, HltBuffer and HltEvent to RawBank, RawBuffer and RawEvent
  - Change data-type hlt_int to raw_int
  - Only one Velo Raw bank type (instead of VeloR and VeloPhi)
+ - Use a "CaloMap" instead of std::map in L1Event and RawEvent, to fix 
+   Win VC6 map problem (to be removed when we go to VC7)
 
 !=============== DAQEvent v2r1 2003-11-10 =============================
 ! 2003-11-10 - Marco Cattaneo
