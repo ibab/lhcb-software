@@ -1,4 +1,4 @@
-// $Id: MuonCoord2MCParticleAsct.h,v 1.2 2002-07-03 09:32:02 dhcroft Exp $
+// $Id: MuonCoord2MCParticleAsct.h,v 1.3 2003-01-17 14:14:54 sponce Exp $
 #ifndef ASSOCIATORS_MuonCoord2MCParticleASCT_H 
 #define ASSOCIATORS_MuonCoord2MCParticleASCT_H 1
 
@@ -28,7 +28,8 @@ static const std::string& MuonCoord2MCParticleLocation =
 
 class MuonCoord2MCParticleAsct: public Associator<MuonCoord,MCParticle>
 {
-  friend ToolFactory<MuonCoord2MCParticleAsct>;
+
+  friend class ToolFactory<MuonCoord2MCParticleAsct>;
   
 public:
   // Define data types

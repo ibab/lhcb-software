@@ -1,4 +1,4 @@
-// $Id: MuonDigit2MCParticleAlg.h,v 1.2 2002-07-03 09:32:12 dhcroft Exp $
+// $Id: MuonDigit2MCParticleAlg.h,v 1.3 2003-01-17 14:14:55 sponce Exp $
 #ifndef MUONDIGIT2MCPARTICLEALG_H
 #define MUONDIGIT2MCPARTICLEALG_H 1
 
@@ -17,7 +17,8 @@
 class MuonDigit;
 
 class MuonDigit2MCParticleAlg : public Algorithm {
-    friend AlgFactory<MuonDigit2MCParticleAlg>;
+
+  friend class AlgFactory<MuonDigit2MCParticleAlg>;
   
 public:
 
