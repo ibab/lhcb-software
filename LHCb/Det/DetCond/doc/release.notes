@@ -1,8 +1,13 @@
-# $Id: release.notes,v 1.11 2001-12-20 15:04:41 andreav Exp $
+# $Id: release.notes,v 1.12 2002-01-10 11:29:15 ranjard Exp $
 Package Det/DetCond
 Package manager : Andrea Valassi 
 
 ==============================================================================
+!20020110 - Flr
+ requirements - apply packageShr instead of ld_library_path pattern because 
+                it is a component library.
+                do not apply package_Lshlibflags, there is no linker library.
+ 
 !20011220 - Andrea Valassi
 Simplify dependencies on the Gaudi framework.
 

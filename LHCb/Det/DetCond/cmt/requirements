@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.12 2001-12-20 14:56:00 andreav Exp $
+# $Id: requirements,v 1.13 2002-01-10 11:29:15 ranjard Exp $
 package DetCond
 version v2r0
 
@@ -14,24 +14,23 @@ use $(CONDDB_use)
 
 # Detector Description
 # This is only needed because updateObj assumes a Condition (TEMPORARY?)
-use DetDesc v9* Det
+use DetDesc v9r* Det
 
 include_dirs $(DETCONDROOT)
 
 # Build a component library (only on Linux)
 macro DetCond_sources "component/*.cpp" \
       WIN32 "component/ConditionsDBCnvSvc.cpp"
+
 library DetCond $(DetCond_sources)
 
-ignore_pattern package_stamps
-
-apply_pattern ld_library_path
+apply_pattern package_Clinkopts
+apply_pattern packageShr
 
 #==================================================================
 private
 
 apply_pattern package_Cshlibflags
-apply_pattern package_Lshlibflags
 macro_append DetCond_shlibflags " $(GaudiKernel_linkopts)"
 macro_append DetCond_shlibflags " $(CONDDB_linkopts)" \
   WIN32 ""
