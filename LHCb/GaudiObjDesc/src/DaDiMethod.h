@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/GaudiObjDesc/src/DaDiMethod.h,v 1.1.1.1 2001-10-03 16:39:17 mato Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/GaudiObjDesc/src/DaDiMethod.h,v 1.2 2001-10-09 17:01:04 mato Exp $
 #ifndef DADIMETHOD_H 
 #define DADIMETHOD_H 1
 
@@ -41,6 +41,9 @@ public:
   DOMString static_();
   void setStatic_(DOMString value);
 
+  DOMString inline_();
+  void setInline_(DOMString value);
+
   DOMString code();
   void setCode(DOMString value);
 
@@ -61,6 +64,7 @@ private:
                                m_const, 
                                m_virtual, 
                                m_static, 
+							   m_inline,
                                m_code;
   DaDiMethReturn*              m_daDiMethReturn;
   std::list<DaDiMethArgument*> m_daDiMethArgument;
@@ -127,6 +131,16 @@ inline void DaDiMethod::setStatic_(DOMString value)
   m_static = value;
 }
 
+inline DOMString DaDiMethod::inline_()
+{
+  return m_inline;
+}
+
+inline void DaDiMethod::setInline_(DOMString value)
+{
+  m_inline = value;
+}
+
 inline DOMString DaDiMethod::code()
 {
   return m_code;
@@ -150,13 +164,14 @@ inline void DaDiMethod::setDaDiMethReturn(DaDiMethReturn* value)
 inline DaDiMethArgument* DaDiMethod::popDaDiMethArgument()
 {
   DaDiMethArgument* pt = m_daDiMethArgument.front();
+  m_daDiMethArgument.push_back(pt);
   m_daDiMethArgument.pop_front();
   return pt;
 }
 
 inline void DaDiMethod::pushDaDiMethArgument(DaDiMethArgument* value)
 {
-  m_daDiMethArgument.push_front(value);
+  m_daDiMethArgument.push_back(value);
 }
 
 inline int DaDiMethod::sizeDaDiMethArgument()

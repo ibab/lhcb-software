@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/GaudiObjDesc/src/DaDiClass.h,v 1.1.1.1 2001-10-03 16:39:17 mato Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/GaudiObjDesc/src/DaDiClass.h,v 1.2 2001-10-09 17:01:04 mato Exp $
 #ifndef DADICLASS_H 
 #define DADICLASS_H 1
 
@@ -44,6 +44,9 @@ public:
 	DOMString classTemplateList();
 	void setClassTemplateList(DOMString value);
 
+	DOMString classID();
+	void setClassID(DOMString value);
+
 	std::string popImpSoftList();
 	void pushImpSoftList(std::string value);
 	int sizeImpSoftList();
@@ -82,7 +85,8 @@ private:
 							    m_classAuthor, 
 								m_classDerived,
 								m_classTemplateVector,
-								m_classTemplateList;
+								m_classTemplateList,
+								m_classID;
 	std::list<std::string>		m_impSoftList,
 								m_impStdList,
 								m_importList;
@@ -152,6 +156,16 @@ inline void DaDiClass::setClassTemplateList(DOMString value)
 	m_classTemplateList = value;
 }
 
+inline DOMString DaDiClass::classID()
+{
+	return m_classID;
+}
+
+inline void DaDiClass::setClassID(DOMString value)
+{
+	m_classID = value;
+}
+
 inline std::string DaDiClass::popImpSoftList()
 {
 	std::string pt = m_impSoftList.front();
@@ -162,7 +176,7 @@ inline std::string DaDiClass::popImpSoftList()
 
 inline void DaDiClass::pushImpSoftList(std::string value)
 {
-	m_impSoftList.push_front(value);
+	m_impSoftList.push_back(value);
 }
 
 inline int DaDiClass::sizeImpSoftList()
@@ -181,7 +195,7 @@ inline std::string DaDiClass::popImpStdList()
 
 inline void DaDiClass::pushImpStdList(std::string value)
 {
-	m_impStdList.push_front(value);
+	m_impStdList.push_back(value);
 }
 
 inline int DaDiClass::sizeImpStdList()
@@ -230,11 +244,11 @@ inline void DaDiClass::pushImportList(std::string value)
 				(import == "stack")  || (import == "map")    ||
 				(import == "set")    || (import == "bitset"))
 			{
-				m_impStdList.push_front(import);
+				m_impStdList.push_back(import);
 			}
 			else
 			{
-				m_importList.push_front(import);
+				m_importList.push_back(import);
 			}
 		}
 	}
@@ -262,16 +276,13 @@ inline DaDiBaseClass* DaDiClass::popDaDiBaseClass()
 
 inline void DaDiClass::pushDaDiBaseClass(DaDiBaseClass* value)
 {
-	m_daDiBaseClass.push_front(value);
+	m_daDiBaseClass.push_back(value);
 }
 
 inline int DaDiClass::sizeDaDiBaseClass()
 {
 	return m_daDiBaseClass.size();
 }
-
-
-
 
 inline DaDiAttribute* DaDiClass::popDaDiAttribute()
 {
@@ -283,7 +294,7 @@ inline DaDiAttribute* DaDiClass::popDaDiAttribute()
 
 inline void DaDiClass::pushDaDiAttribute(DaDiAttribute* value)
 {
-	m_daDiAttribute.push_front(value);
+	m_daDiAttribute.push_back(value);
 }
 
 inline int DaDiClass::sizeDaDiAttribute()
@@ -301,7 +312,7 @@ inline DaDiRelation* DaDiClass::popDaDiRelation()
 
 inline void DaDiClass::pushDaDiRelation(DaDiRelation* value)
 {
-	m_daDiRelation.push_front(value);
+	m_daDiRelation.push_back(value);
 }
 
 inline int DaDiClass::sizeDaDiRelation()
@@ -319,7 +330,7 @@ inline DaDiMethod* DaDiClass::popDaDiMethod()
 
 inline void DaDiClass::pushDaDiMethod(DaDiMethod* value)
 {
-	m_daDiMethod.push_front(value);
+	m_daDiMethod.push_back(value);
 }
 
 inline int DaDiClass::sizeDaDiMethod()

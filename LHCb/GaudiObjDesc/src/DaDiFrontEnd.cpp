@@ -1,4 +1,4 @@
-// $Id: DaDiFrontEnd.cpp,v 1.1.1.1 2001-10-03 16:39:17 mato Exp $
+// $Id: DaDiFrontEnd.cpp,v 1.2 2001-10-09 17:01:04 mato Exp $
 
 #include "GaudiKernel/Kernel.h"
 
@@ -27,6 +27,7 @@
 // 18/05/2001 : 
 //-----------------------------------------------------------------------------
 
+extern std::string argV0;
 
 DaDiPackage* DDFE::DaDiFrontEnd(char* filename)
 {
@@ -250,10 +251,29 @@ void DDFE::parseClass(DOM_Node node, DaDiClass* gddClass)
 	gddClass->setClassTemplateVector(node.getAttributes().
 		getNamedItem(DOMString::transcode("templateVector")).
 		getNodeValue());
+	if (strcmp(gddClass->classTemplateVector().transcode(), "TRUE") == 0)
+	{
+		gddClass->pushImportList("ObjectVector");
+	}
   
 	gddClass->setClassTemplateList(node.getAttributes().
 		getNamedItem(DOMString::transcode("templateList")).
 		getNodeValue());
+	if (strcmp(gddClass->classTemplateList().transcode(), "TRUE") == 0)
+	{
+		gddClass->pushImportList("ObjectList");
+	}
+  
+	if(!node.getAttributes().getNamedItem(DOMString::transcode("id")).isNull())
+	{
+		gddClass->setClassID(node.getAttributes().
+			getNamedItem(DOMString::transcode("id")).
+			getNodeValue());
+	}
+	else
+	{
+		gddClass->setClassID(NULL);
+	}
 
 	node = node.getFirstChild();
 
@@ -287,6 +307,13 @@ void DDFE::parseClass(DOM_Node node, DaDiClass* gddClass)
 
 					gddBaseClass->setAccess(node.getAttributes().getNamedItem(DOMString::transcode("access")).getNodeValue().transcode());
 				}
+///
+/// Parse friends
+///
+				
+
+
+
 //
 // Parse methods
 //
@@ -318,6 +345,10 @@ void DDFE::parseClass(DOM_Node node, DaDiClass* gddClass)
             
 		            gddMethod->setStatic_(node.getAttributes().
 						getNamedItem(DOMString::transcode("static")).
+                        getNodeValue().transcode());            
+
+		            gddMethod->setInline_(node.getAttributes().
+						getNamedItem(DOMString::transcode("inline")).
                         getNodeValue().transcode());            
 
 		            DOM_Node met_child;
