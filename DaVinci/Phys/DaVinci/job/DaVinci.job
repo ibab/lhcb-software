@@ -48,7 +48,7 @@ set current = $PWD
 #
 if ($?LS_SUBCWD) then 
 # in BATCH, location of executable has to be given explicitly
-  setenv MYJOBROOT $HOME/newmycmt/Phys/DaVinci/v4r0
+  setenv MYJOBROOT $HOME/newmycmt/Phys/DaVinci/v5r0
 else
 # in interactive, executable is under same root directory as this job
   cd `dirname $0` 
