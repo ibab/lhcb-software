@@ -5,10 +5,14 @@
 // to be executed
 //==============================================================
 // Standard Gaudi configuration and additional DLLs are in 
-// DaVinciCommon.opts
+// DaVinciCommon.opts while database dependent configurations are in
+// DaVinciXXX.opts. Choose the appropriate one.
 //--------------------------------------------------------------
 #include "$DAVINCIROOT/options/DaVinciCommon.opts"
-#include "$DAVINCIROOT/options/DaVinciv248r2.opts"
+// For data produced with Brunel v13r1 or v14r2
+#include "$DAVINCIROOT/options/DaVinciv248r4.opts"
+// For data produced with Brunel v16r4
+//  #include "$DAVINCIROOT/options/DaVinciv253r0.opts"
 
 //--------------------------------------------------------------
 // Histogram persistency 
@@ -16,19 +20,26 @@
 // Keep in mind that the hbook file referred to here contains 
 // all the C++ generated histograms, not those filled in Fortran
 //--------------------------------------------------------------
-#include "$STDOPTS/Hbook.opts"
-HistogramPersistencySvc.OutputFile = "DVEffHistos.hbook";
+//#include "$STDOPTS/Hbook.opts"
+//HistogramPersistencySvc.OutputFile = "DVEffHistos.hbook";
+#include "$STDOPTS/RootHist.opts"
+HistogramPersistencySvc.OutputFile = "DVHistos.root";
 
 //--------------------------------------------------------------
 // Ntuples available by default. Comment to switch off
 //--------------------------------------------------------------
 ApplicationMgr.ExtSvc += { "NTupleSvc" };
-NTupleSvc.Output={"FILE1 DATAFILE='Ntuples.hbook' TYP='HBOOK' OPT='NEW'"};
+//NTupleSvc.Output={"FILE1 DATAFILE='Ntuples.hbook' TYP='HBOOK' OPT='NEW'"};
+NTupleSvc.Output={"FILE1 DATAFILE='DVNtuples.root' TYP='ROOT' OPT='NEW'"};
 
 //--------------------------------------------------------------
 // DaVinci Algorithms to be always executed at the beginning
 //--------------------------------------------------------------
-#include "$DAVINCIROOT/options/L0.opts"
+// Redo L0 trigger decision (August 2002 tuning, only for Brunel v13r1 data)
+//  #include "$DAVINCIROOT/options/L0.opts"
+// Run L1 trigger decisions (only for Brunel v14r2 data, does not work for)
+//  #include "$DAVINCIROOT/options/L1Decision.opts"
+
 ApplicationMgr.TopAlg += { "ChargedProtoPAlg" };
 ApplicationMgr.TopAlg += { "PrimaryVertexFinderAlg" };
 
@@ -46,19 +57,17 @@ ApplicationMgr.TopAlg += { "PrimaryVertexFinderAlg" };
 //  #include "$DAVINCIEFFROOT/options/EffJpsi2mumu.opts"
 
 // Bs -> J/Psi(mu+mu-) phi(KK)
-ApplicationMgr.TopAlg += { 
-  "Select2ParticleDecay/SelectJpsi2mumuForBs2Jpsiphi",
-  "Select2ParticleDecay/Selectphi2KKForBs2Jpsiphi",
-  "Select2ParticleDecay/SelectBs2Jpsi2mumu_phi2KK"
-};
-ApplicationMgr.TopAlg += { "PhysSelEff/EffJpsi2mumu" };             
-ApplicationMgr.TopAlg += { "PhysSelEff/Effphi2KK" }; 
-ApplicationMgr.TopAlg += { "PhysSelEff/EffBs2Jpsi2mumu_phi2KK" };
-#include "$PHYSSELECTIONSOPTS/SelectJpsi2mumuForBs2Jpsiphi.opts"
-#include "$PHYSSELECTIONSOPTS/Selectphi2KKForBs2Jpsiphi.opts"
-#include "$PHYSSELECTIONSOPTS/SelectBs2Jpsi2mumu_phi2KK.opts"
-#include "$DAVINCIEFFOPTS/EffBs2Jpsi2mumu_phi2KK.opts"
-#include "$LHCBHOME/project/web/cards/611300_4.opts"  // Brunel v14r2p1
+//  ApplicationMgr.TopAlg += { 
+//    "Select2ParticleDecay/SelectJpsi2mumuForBs2Jpsiphi",
+//    "Select2ParticleDecay/Selectphi2KKForBs2Jpsiphi",
+//    "Select2ParticleDecay/SelectBs2Jpsi2mumu_phi2KK"
+//  };
+//  ApplicationMgr.TopAlg += { "PhysSelEff/EffBs2Jpsi2mumu_phi2KK" };
+//  #include "$PHYSSELECTIONSOPTS/SelectJpsi2mumuForBs2Jpsiphi.opts"
+//  #include "$PHYSSELECTIONSOPTS/Selectphi2KKForBs2Jpsiphi.opts"
+//  #include "$PHYSSELECTIONSOPTS/SelectBs2Jpsi2mumu_phi2KK.opts"
+//  #include "$DAVINCIEFFOPTS/EffBs2Jpsi2mumu_phi2KK.opts"
+//  #include "$LHCBHOME/project/web/cards/611300_4.opts"  // Brunel v14r2p1
 
 // B0 -> J/psi(mu+mu-) Ks(pi+pi-)
 //  ApplicationMgr.TopAlg += { "SelectJpsi2mumu",
@@ -84,6 +93,17 @@ ApplicationMgr.TopAlg += { "PhysSelEff/EffBs2Jpsi2mumu_phi2KK" };
 //  #include "$PHYSSELECTIONSROOT/options/SelectBd2pipi.opts"
 //  #include "$DAVINCIEFFROOT/options/EffBd2pipi.opts"
 //  #include "$LHCBHOME/project/web/cards/412100_4.opts"   // Brunel v14r2p1
+
+// Bs ->Ds(KKpi) K
+ApplicationMgr.TopAlg += {
+  "SelectDs2KKpi",
+  "SelectBs2DsK"
+};
+ApplicationMgr.TopAlg += { "PhysSelEff/EffBs2DsK" };   
+#include "$PHYSSELECTIONSOPTS/SelectDs2KKpi.opts"
+#include "$PHYSSELECTIONSOPTS/SelectBs2Ds2KKpi_K.opts"
+#include "$DAVINCIEFFOPTS/EffBs2Ds2KKpi_K.opts"
+#include "$LHCBHOME/project/web/cards/613400_4.opts"  // Brunel v14r2p1
 
 //-----------------------------------------------------------------
 // Options for algorithms and tools in DaVinciTools library

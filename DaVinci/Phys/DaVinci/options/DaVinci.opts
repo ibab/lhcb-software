@@ -19,17 +19,17 @@
 // Keep in mind that the hbook file referred to here contains 
 // all the C++ generated histograms, not those filled in Fortran
 //--------------------------------------------------------------
-//  #include "$STDOPTS/Hbook.opts"
-//  HistogramPersistencySvc.OutputFile = "DVHistos.hbook";
-#include "$STDOPTS/RootHist.opts"
-HistogramPersistencySvc.OutputFile = "DVHistos.root";
+#include "$STDOPTS/Hbook.opts"
+HistogramPersistencySvc.OutputFile = "DVHistos.hbook";
+//  #include "$STDOPTS/RootHist.opts"
+//  HistogramPersistencySvc.OutputFile = "DVHistos.root";
 
 //--------------------------------------------------------------
 // Ntuples available by default. Comment to switch off
 //--------------------------------------------------------------
 ApplicationMgr.ExtSvc += { "NTupleSvc" };
-//  NTupleSvc.Output={"FILE1 DATAFILE='DVNtuples.hbook' TYP='HBOOK' OPT='NEW'"};
-NTupleSvc.Output={"FILE1 DATAFILE='DVNtuples.root' TYP='ROOT' OPT='NEW'"};
+NTupleSvc.Output={"FILE1 DATAFILE='DVNtuples.hbook' TYP='HBOOK' OPT='NEW'"};
+//  NTupleSvc.Output={"FILE1 DATAFILE='DVNtuples.root' TYP='ROOT' OPT='NEW'"};
 
 //--------------------------------------------------------------
 // DaVinci Algorithms
@@ -46,7 +46,7 @@ NTupleSvc.Output={"FILE1 DATAFILE='DVNtuples.root' TYP='ROOT' OPT='NEW'"};
 ApplicationMgr.TopAlg += { "ChargedProtoPAlg" };
 
 // Recalibration for gammas (only for Brunel v13r1 data)
-// does not work... #include "$DAVINCIROOT/options/CaloReCalibration.opts"
+//  #include "$DAVINCIROOT/options/CaloReCalibration.opts"
 
 // Neutral ProtoParticles
 // (when reading data produced with Brunel v13r1 or v14r2)
@@ -214,9 +214,9 @@ ApplicationMgr.TopAlg += { "PrimaryVertexFinderAlg" };
 //  };
 //  #include "$PHYSSELECTIONSOPTS/PreLoadBd2Kstar2Kpi_gamma.opts"
 //  #include "$PHYSSELECTIONSOPTS/SelectBd2Kstar2Kpi_gamma.opts"
-//  // Data sets for this channel (Brunel v14r2)
-//  #include "$LHCBHOME/project/web/cards/412500_4.opts"
-//  //  #include "$LHCBHOME/project/web/cards/summer_412500.opts"
+//  //  // Data sets for this channel (Brunel v14r2)
+//  //  #include "$LHCBHOME/project/web/cards/412500_4.opts"
+//  #include "$LHCBHOME/project/web/cards/summer_412500.opts"
 
 // Uncomment the following line to run the example UserAlgorithm
 //  ApplicationMgr.TopAlg += { "UserAlgorithm" }; 
