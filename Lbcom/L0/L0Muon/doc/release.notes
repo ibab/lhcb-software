@@ -1,6 +1,15 @@
 Package L0Muon
 Package manager: A.Tsaregorodtsev
 
+! 20010503 L0Muon v1r1 A.T.
+
+  Same functionality.
+  Revision of the code to bring it to conformance with conventions.
+  Extra checks of container pointers validity. Reimplementation of
+  several methods to optimize efficiency:
+  
+    MuonLayout.tiles(), L0mTriggerProc.createTower()
+
 ! 20010418 M.Cattaneo
   requirements - replace {} with () in macro to please nmake, 
                  use LHCbEvent v10*
@@ -8,4 +17,4 @@ Package manager: A.Tsaregorodtsev
 ! 20010406 L0Muon v1
 
   Initial version of the L0Muon - L0 Muon trigger simulation.
-  The package builds L0MuonCandidates objects as the output.
+  The package builds L0MuonCandidate objects as the output.
