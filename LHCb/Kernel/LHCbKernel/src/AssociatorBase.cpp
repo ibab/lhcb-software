@@ -1,8 +1,11 @@
-// $Id: AssociatorBase.cpp,v 1.1 2002-04-08 14:26:02 ibelyaev Exp $
+// $Id: AssociatorBase.cpp,v 1.2 2002-04-08 21:03:08 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.1  2002/04/08 14:26:02  ibelyaev
+//  new version of 'Relations'-subpackage
+//
 // ============================================================================
 // Include files
 // from Gaudi
@@ -118,7 +121,7 @@ StatusCode Relations::AssociatorBase::initialize ()
     { return Error("Could not locate IIncidentSvc='IncidentSvc'"        ); }
   // subscribe to the incident 
   incSvc()->addListener( this , "EndEvent"   , 50  );
-  incSvc()->addListener( this , "BeginEvent" , 50  );
+  // incSvc()->addListener( this , "BeginEvent" , 50  );
   //  
   /// print ALL properties 
   MsgStream log ( msgSvc () , name () );
