@@ -74,6 +74,13 @@ class VeloMonitor : public Algorithm {
   IHistogram1D*         m_MCVHTOF;
   IHistogram1D*         m_MCVHNHits;
 
+  IHistogram2D*         m_MCVHRRighXY;
+  IHistogram2D*         m_MCVHRLeftXY;
+  IHistogram2D*         m_MCVHPhiULXY;
+  IHistogram2D*         m_MCVHPhiDLXY;
+  IHistogram2D*         m_MCVHPhiURXY;
+  IHistogram2D*         m_MCVHPhiDRXY;
+
   IHistogram1D*         m_MCPEnergy;
 
   IHistogram1D*         m_MCVHPEnergy;
@@ -115,6 +122,12 @@ class VeloMonitor : public Algorithm {
   IHistogram1D*         m_MCVFEMCHitsTotalSignal_n;
   IHistogram1D*         m_MCVFEMCHitsTotalSignal_o;
   IHistogram1D*         m_MCVFEMCHits;
+  IHistogram2D*         m_MCVFEZR0;
+  IHistogram2D*         m_MCVFEZR1;
+  IHistogram2D*         m_MCVFEZR2;
+  IHistogram2D*         m_MCVFEZR3;
+  IHistogram2D*         m_MCVFEZPhiInner;
+  IHistogram2D*         m_MCVFEZPhiOuter;
 
   IHistogram2D*         m_VDSensorStrip;
   IHistogram1D*         m_VDNHits; 
@@ -138,8 +151,12 @@ class VeloMonitor : public Algorithm {
   IHistogram1D*         m_VCSize_s;
   IHistogram1D*         m_VCSize_n;
   IHistogram1D*         m_VCSize_o;
-  IHistogram2D*         m_VCZR;
-  IHistogram2D*         m_VCZPhi;
+  IHistogram2D*         m_VCZR0;
+  IHistogram2D*         m_VCZR1;
+  IHistogram2D*         m_VCZR2;
+  IHistogram2D*         m_VCZR3;
+  IHistogram2D*         m_VCZPhiInner;
+  IHistogram2D*         m_VCZPhiOuter;
 
   IHistogram1D*         m_RRes;
   IHistogram1D*         m_RRes1s;
@@ -168,6 +185,14 @@ class VeloMonitor : public Algorithm {
   IHistogram2D* m_detPhiDL;
   IHistogram2D* m_detPhiUR;
   IHistogram2D* m_detPhiDR;
+  // plot strip number
+  IHistogram1D* m_stripRRigh;
+  IHistogram1D* m_stripRLeft;
+  IHistogram1D* m_stripPhiUL;
+  IHistogram1D* m_stripPhiDL;
+  IHistogram1D* m_stripPhiUR;
+  IHistogram1D* m_stripPhiDR;
+
   // plot residuals
   IHistogram1D* m_resRRigh;
   IHistogram1D* m_resRLeft;
@@ -198,6 +223,7 @@ class VeloMonitor : public Algorithm {
   bool m_testVeloCluster;
   bool m_resolution;
   bool m_detElement;
+  bool m_2DHist;
  
   double m_nMCVH2;
   double m_nMCPH;
