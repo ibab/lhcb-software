@@ -5,8 +5,8 @@
 ! Purpose     : LHCb OO kernel packages
 !-----------------------------------------------------------------------------
 
-!======================= LHCbSys v16r0 2004-06-23 =======================
-! 2004-06-17 - Marco Cattaneo
+!======================= LHCbSys v16r0 2004-06-28 =======================
+! 2004-06-14 - Marco Cattaneo
  - New packages: LHCbTools v1r1 (moved here from applications projects)
                  LHCbAlgs v1r0 (for general purpose algorithms)
                  RichTools v1r0 (previously RichDetTools, 
@@ -20,7 +20,8 @@
 
  - Modified packages: KernelSys v3r7, LHCbKernel v4r7, RichKernel v5r0
                       EventSys v18r0, EventAssoc v1r2, RichEvent v7r4,
-                      HepMC v4r121p0, DetSys v5r7, STDet v1r2, RichDet v7r2
+                      DAQEvent v5r0, HepMC v4r121p0, 
+                      DetSys v5r7, STDet v1r2, RichDet v7r2, OTDet v5r3, 
                       AssociatorsSys v1r14, ITAssociators v2r9, 
                       Associators v2r2p1, IOExample v1r2
 
@@ -49,14 +50,21 @@
  - In RichEvent v7r4
    . Fix bugs in MCRichSegment::bestMomentum and MCRichSegment::bestPoint
 
+ - In DAQEvent v4r4
+   . Changed to a component library. Added algorithms to create empty L1Buffer,
+     RawBuffer, and to create L1Event, RawEvent from corresponding Buffer 
+
  - In HepMC v4r121p0
    . Remove files for managing HepEvt converters (moved to Gen/HepEvt package)
      Removed dependency on PYTHIA and Fortran compiler
 
+ - in OTDet v5r3
+   . Improved definition of isInside()
+
  - In IOExample v1r2
    . StoreBrowser Algorithm moved to LHCbAlgs, example is now just job options
 
-!====================== LHCbSys v15r12 2004-06-23 =======================
+!====================== LHCbSys v15r12 2004-06-28 =======================
 Built against Gaudi v14r6
 
 ! 2004-06-18 - Marco Cattaneo
@@ -82,7 +90,7 @@ Built against Gaudi v14r6
    . Add new class L1Score to store L1Decision result and monitoring info
 
  - In PhysEvent v8r4:
-   . Add new class EffCheckEvent to access MCParticle info from efficiency algs.
+   . Add new class EffCheckResult to access MCParticle info from efficiency algs
 
  - In EventAssoc v1r1p1:
    . Add missing dictionaries for relations instantiated in LoKi
