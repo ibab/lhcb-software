@@ -44,10 +44,7 @@ Requires data produced with XmlDDDB v21r0 or greater.
     until LHC background events can be generated in Gauss with latest geometry
   - OTDigits are still on Digi output, due to bug in Gaudi that breaks 
     OTDigits2MCHits relations if OTDigits are not saved
-  - MuonDigits are still on Digi output, due to a problem rebuilding the 
-    MuonTileID from the RawBuffer
   - L1Decision not available, waiting for new code working in Trg framework
-  - TrgVeloTT algorithm disabled due to core dump in event 62 of default file
 
 </PRE><H1><A NAME=v5r1>2004-01-23 Boole v5r1</A></H1><PRE>
 
