@@ -1,8 +1,11 @@
-// $Id: CaloTool.h,v 1.7 2002-04-05 17:52:52 ibelyaev Exp $
+// $Id: CaloTool.h,v 1.8 2002-04-23 10:48:39 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.7  2002/04/05 17:52:52  ibelyaev
+//  add 'tool->addRef()' to 'tool()' methods
+//
 // Revision 1.6  2002/04/05 17:05:44  ibelyaev
 //  improve teh MSG::DEBUG printout for CaloTool/CaloAlgorithm classes
 //
@@ -68,7 +71,7 @@ public:
    */
   virtual StatusCode    finalize   ();
   
-  /** query interafce method  
+  /** query interface method  
    *  @param  id  unique interface ID 
    *  @param  pI  placeholder for interface 
    *  @return status code 
@@ -97,25 +100,32 @@ protected:
    *  Usage:
    *
    *  - 
-   *  MCCaloDigits* digits = get<MCCaloDigits>( evtSvc() , inputData() );
+   *  MCCaloDigits* digits     = 
+   *     get( evtSvc() , inputData() , digits   );
    *  if( 0 == digits ) { return StatusCode::FAILURE ;}
    *
    *  -
    *  const DeCalorimeter* det = 
-   *      get<const DeCalorimeter>( detSvc() , detData() );
+   *     get( detSvc() , detData()   , det      );
    *  if( 0 == det ) { return StatusCode::FAILURE ;}
+   *  
+   *  @warning the third argument is due to stupid MicroSoft compiler, 
+   *           only the type of the third argument is used
    *
    *  @param svc pointer to data service (data provider)
-   *  @param location data location/address in Gaudi Transient Store 
+   *  @param location data location/address in Gaudi Transient Store
+   *  @param type artificial argument (due to stupid MicroSoft compiler)
    */
   template<class TYPE>
-  TYPE* get( IDataProviderSvc* svc , const std::string& location ) const
+  TYPE* get( IDataProviderSvc*  svc        , 
+             const std::string& location   , 
+			 const TYPE*        /* type */ ) const
   {
-    Assert( 0 != svc , " get<>():: IDataProvider* points to NULL!"       );
+	Assert( 0 != svc    , " get():: IDataProvider* points to NULL!"      );
     SmartDataPtr<TYPE> object( svc, location ) ;
-    Assert(  object  ,  " get<>():: No valid data at '" + location + "'" );
+	Assert( !(!object)  , " get():: No Valid data at '" + location + "'" );
     TYPE* aux = object ;
-    Assert(  aux     ,  " get<>():: No valid data at '" + location + "'" );
+    Assert( 0 != aux    , " get():: No valid data at '" + location + "'" ); 
     const std::string type( System::typeinfoName( typeid( *aux ) ) );
     // debug printout 
     Print( " The data of type '"      + type                + 
