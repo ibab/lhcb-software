@@ -1,4 +1,19 @@
-# $Id: HISTORY,v 1.2 2001-09-17 13:46:12 andreav Exp $
+# $Id: HISTORY,v 1.3 2001-10-29 12:43:17 andreav Exp $
+
+------------------------------------------------
+23.10.2001 Ex/DetCondExample v1 (LINUX only)
+------------------------------------------------
+Review CVS HEAD version under CVS.
+Main new feature: support for gcc2.95.2 (with Objectivity 6.1).
+- Modify CONDDB requirements to support both the old and new compiler
+- Few changes to the code under more robust checks by the new compiler
+- Make sure that you do not need to setup the LHCXX scripts in advance
+- Minor changes to the cleanup script machinery
+- Document CONDBDB debug levels
+
+NB: DetCond dependency is now on GaudiKernel and GaudiSvc directly. 
+The old dependency on GaudiSys does not work because GaudiNagC does not 
+exist for the new compiler.
 
 ------------------------------------------------
 17.09.2001 Ex/DetCondExample v1 (LINUX only)

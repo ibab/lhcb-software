@@ -1,5 +1,5 @@
 #!/usr/local/bin/tcsh
-# $Header: /afs/cern.ch/project/cvs/reps/lhcb/Ex/DetCondExample/cmt/setupDB.csh,v 1.1.1.1 2001-09-14 15:45:03 andreav Exp $
+# $Header: /afs/cern.ch/project/cvs/reps/lhcb/Ex/DetCondExample/cmt/setupDB.csh,v 1.2 2001-10-29 12:43:17 andreav Exp $
 
 #set out = /dev/stdout
 set out  = /dev/null
@@ -19,7 +19,7 @@ else
   echo Install Federated Database > $out
   echo Import schema from \
     ${CONDDB_BOOTDIR}/${CONDDB_BOOTFILE} > $out
-  ${HEP_ODBMS_DIR}/etc/getdb \
+  ${HEPODBMS_DIR}/etc/getdb \
     ${CONDDB_BOOTDIR}/${CONDDB_BOOTFILE} \
     ${DETCONDEXAMPLE_BOOTDIR}/${DETCONDEXAMPLE_BOOTFILE} \
     ${DETCONDEXAMPLE_FDID} > $out

@@ -1,4 +1,4 @@
-//$Header: /afs/cern.ch/project/cvs/reps/lhcb/Ex/DetCondExample/src/PopulateDB.cpp,v 1.1.1.1 2001-09-14 15:45:03 andreav Exp $
+//$Id: PopulateDB.cpp,v 1.2 2001-10-29 12:43:17 andreav Exp $
 #include <stdio.h>
 
 #include "PopulateDB.h"
@@ -34,7 +34,7 @@ PopulateDB::PopulateDB( const std::string&  name,
 
 /// Initialization of the algorithm. 
 /// It creates the environment needed for processing the events. 
-/// In this example this is the main method, where we play with the CondDB.
+/// For this class this is the main method, where we store data in the CondDB.
 
 StatusCode PopulateDB::initialize() {
 

@@ -1,4 +1,4 @@
-# $Id: README,v 1.4 2001-09-17 14:22:36 andreav Exp $
+# $Id: README,v 1.5 2001-10-29 12:43:17 andreav Exp $
 
 ------------------------------------------------------------------------------
 Packages needed to run DetCondExample v1
@@ -27,20 +27,42 @@ a GaudiSvc source file:
         cp /afs/cern.ch/user/a/andreav/public/ApplicationMgr.cpp \
            ~/newmycmt/GaudiSvc/v6/src/ApplicationMgr/ApplicationMgr.cpp
 
-For the moment (until a bug in CMT is fixed), you also need to replace 
-the CMT cleanup files.
-        cp CONDDB/v3r01/cmt/myCleanup.csh \
-           CONDDB/v3r01/cmt/cleanup.csh
-        cp Ex/DetCondExample/v1/cmt/myCleanup.csh \
-           Ex/DetCondExample/v1/cmt/cleanup.csh
+------------------------------------------------------------------------------
+How to configure CMT
+------------------------------------------------------------------------------
+
+# CMT should already be configured for you at logon time
+# Type the following to switch to the old C++ compiler if you had changed it
+source $LHCBHOME/scripts/CMT.csh
+# Check that the following commands give meaningful results
+# Check the CMTSITE              (Linux default at CERN: "CERN")
+# Check the CMTCONFIG            (Linux default at CERN: "i386_linux22")
+# Check the CMTDEB               (Linux default at CERN: "Linuxdbx")
+# Check the C++ compiler version (Linux default at CERN: "egcs-2.91.66")
+echo $CMTSITE
+echo $CMTCONFIG
+echo $CMTDEB
+g++ --version
+
+# Type the following to switch to the new C++ compiler
+source $LHCBHOME/scripts/CMT.csh new
+# Check the CMTCONFIG  (new Linux compiler at CERN: "rh61_gcc2952")
+# Check the CMTDEB     (new Linux compiler at CERN: "rh61_gcc2952dbx")
+# C++ compiler version (new Linux compiler at CERN: "2.95.2")
+echo $CMTCONFIG
+echo $CMTDEB
+g++ --version
 
 ------------------------------------------------------------------------------
 How to setup the environment and run DetCondExample on lxplus
 ------------------------------------------------------------------------------
 
-# I suggest to build all packages in debug mode, i.e. using tag Linuxdbx.
-# Specify the tag by 'source setup.csh -tag=Linuxdbx' and 'gmake tag=Linuxdbx'.
-# [NB Changing CMTCONFIG to Linuxdbx would reset LHCXX_DIR and cause troubles]
+# NB: Do NOT source LHCXX setup scripts in your .cshrc!
+# The configuration of LHCXX stuff is handled for you by CMT scripts!
+
+# I suggest to build all packages in debug mode, i.e. using tag $CMTDEB.
+# Specify the tag by 'source setup.csh -tag=$CMTDEB' and 'gmake tag=$CMTDEB'.
+# [NB Do not change CMTCONFIG to $CMTDEB! This would cause many troubles!]
 
 # Go to your release directory
 cd ~/newmycmt
@@ -52,20 +74,29 @@ cd Ex/DetCondExample/v1/cmt
 # This also starts the lockserver and AMSserver and installs the databases
 # [NB The schema for the example's DB will be updated after compiling CONDDB]
 # [NB Type 'unsetenv LD_LIBRARY_PATH' first if you try various CMTCONFIG's  ]
-source ../cmt/setup.csh -tag=Linuxdbx
+source ../cmt/setup.csh -tag=$CMTDEB
 
 # Remove old makefiles and dependencies
 cmt broadcast -select=newmycmt '/bin/rm -f *make*'
 
 # Compile and link
-cmt broadcast -select=newmycmt gmake tag=Linuxdbx
+cmt broadcast -select=newmycmt gmake tag=$CMTDEB
 
 # Go to the working directory
 cd ../options
 
+# Set the debug level for the CONDDB library. Possible debug levels are:
+#    none: no message is printed (default)
+#    prof: only print messages which do not disturb profiling measurements
+#    user: only print messages of "general" interest
+#    devl: also print messages of interest only for the package developer
+#    more: more paranoid messages are printed 
+#    all:  any debug message will be printed
+setenv COND_DB_DEBUG none
+
 # Run the application a first time and then a second time with no debugger
-/bin/rm -f job_first.log; ../Linuxdbx/DetCondExample.exe >& job_first.log 
-/bin/rm -f job_next.log;  ../Linuxdbx/DetCondExample.exe >& job_next.log
+/bin/rm -f job_first.log; ../$CMTDEB/DetCondExample.exe >& job_first.log 
+/bin/rm -f job_next.log;  ../$CMTDEB/DetCondExample.exe >& job_next.log
 
 # Compare the output files to the standard ones
 diff job_first.log ../job; /bin/rm -f job_first.log 
@@ -73,17 +104,100 @@ diff job_next.log  ../job; /bin/rm -f job_next.log
 
 # Debug the application using gdb
 # DetCondExample.gdb sets a breakpoint in SimpleAlgorithm::initialize
-gdb ../Linuxdbx/DetCondExample.exe
+gdb ../$CMTDEB/DetCondExample.exe
 (gdb) source DetCondExample.gdb
 # The same can be achieved by typying the following
-gdb ../Linuxdbx/DetCondExample.exe -x DetCondExample.gdb
+gdb ../$CMTDEB/DetCondExample.exe -x DetCondExample.gdb
 
 # Debug the application using gdb inside ddd (recommended!)
-ddd --tty --debugger "gdb ../Linuxdbx/DetCondExample.exe -x DetCondExample.gdb"
+ddd --tty --debugger "gdb ../$CMTDEB/DetCondExample.exe -x DetCondExample.gdb"
 
 # To start again with an empty database:
 source ../cmt/cleanupDB.csh
 source ../cmt/setupDB.csh
+
+------------------------------------------------------------------------------
+How to browse the database using the GUIbrowser on lxplus
+------------------------------------------------------------------------------
+
+# NB The GUIbrowser only works with the new compiler and Objectivity 6.1!
+
+# If you want to check that Java is correctly installed:
+###cd /afs/cern.ch/sw/java/i386_redhat61/jdk/sun-1.3.0/demo/jfc/Java2D
+###java -jar Java2Demo.jar
+
+# Give the path to your database
+setenv OO_FD_BOOT "${DETCONDEXAMPLE_BOOTDIR}/${DETCONDEXAMPLE_BOOTFILE}"
+
+# Execute the browser
+# For instance, open ConditionsDB->LHCb->Slow->temperature, then go to Graph,
+# select the folder again, give -20 and +80 as boundaries and look at the data!
+java -jar  $LHCXX_DIR/ConditionsDB/GUIbrowser_0.3.0.2/interface1.jar
+
+# Show the browser line options
+java -jar  $LHCXX_DIR/ConditionsDB/GUIbrowser_0.3.0.2/interface1.jar -help
+
+------------------------------------------------------------------------------
+How to cleanup the environment on lxplus
+------------------------------------------------------------------------------
+
+# Go to your release directory
+cd ~/newmycmt
+
+# Go to the cmt directory
+cd Ex/DetCondExample/v1/cmt
+
+# Remove old makefiles and dependencies
+cmt broadcast -select=newmycmt '/bin/rm -f *make*'
+
+# Remove all objects and binaries if needed
+cmt broadcast -select=newmycmt '/bin/rm -rf ../$CMTDEB'
+
+# Remove the documentation:
+cmt broadcast -select=newmycmt -exclude='Gaudi' '/bin/rm -rf ../doc/html'
+cmt broadcast -select=newmycmt -exclude='Gaudi' '/bin/rm -rf ../doc/tex'
+
+# Cleanup the environment (recommended before logout)
+# This also deletes the databases and kills the AMSserver and lockserver
+# [NB If AMS and lock servers are still running, you will be stuck at logout]
+source ../cmt/cleanup.csh -tag=$CMTDEB
+
+# NB The setup files replace three files to bypass a bug in CMT
+#       cp ${CONDDBROOT}/cmt/myCleanup.csh \
+#          ${CONDDBROOT}/cmt/cleanup.csh
+#       cp ${DETCONDROOT}/cmt/myCleanup.csh \
+#          ${DETCONDROOT}/cmt/cleanup.csh
+#       cp ${DETCONDEXAMPLEROOT}/cmt/myCleanup.csh \
+#          ${DETCONDEXAMPLEROOT}/cmt/cleanup.csh
+# However "cmt config" replaces them by the old (bugged) versions
+# Hence: if you cmt config, be sure to source setup before you source cleanup!
+
+------------------------------------------------------------------------------
+How to check compliance to LHCb rules
+------------------------------------------------------------------------------
+
+# NB This is only possible using the old compiler for the moment
+# The rule checker analyses .i files created by the compiler
+# and these are different for the old and new compilers
+
+# Go to your release directory
+cd ~/newmycmt
+
+# Go to the cmt directory
+cd Ex/DetCondExample/v1/cmt
+
+# Setup the environment variables if you have not done so yet
+source ../cmt/setup.csh -tag=$CMTDEB
+
+# Create the documentation
+# The -i option allows to proceed even when the rule checker crashes
+cmt broadcast -select=Det/DetCond     gmake -i RuleChecker tag=$CMTDEB
+cmt broadcast -select=DetCondExample  gmake -i RuleChecker tag=$CMTDEB
+
+# This will create a ../Check directory in the checked package
+# You may then browse the documentation (under ~/newmycmt) in
+# 	Det/DetCond/v1/Check/DetCondChk.html
+# 	Ex/DetCondExample/v1/Check/DetCondExampleChk.html
 
 ------------------------------------------------------------------------------
 How to create the dOxygen documentation on lxplus
@@ -100,36 +214,11 @@ cd ~/newmycmt
 cd Ex/DetCondExample/v1/cmt
 
 # Setup the environment variables if you have not done so yet
-source ../cmt/setup.csh -tag=Linuxdbx
+source ../cmt/setup.csh -tag=$CMTDEB
 
 # Create the documentation
 cmt broadcast -select=newmycmt/Det/DetCond        ../doc/makedoc.csh
 cmt broadcast -select=newmycmt/Ex/DetCondExample  ../doc/makedoc.csh
-
-------------------------------------------------------------------------------
-How to cleanup the environment on lxplus
-------------------------------------------------------------------------------
-
-# Go to your release directory
-cd ~/newmycmt
-
-# Go to the cmt directory
-cd Ex/DetCondExample/v1/cmt
-
-# Remove old makefiles and dependencies
-cmt broadcast -select=newmycmt '/bin/rm -f *make*'
-
-# Remove all objects and binaries if needed
-cmt broadcast -select=newmycmt '/bin/rm -rf ../Linuxdbx'
-
-# Remove the documentation:
-cmt broadcast -select=newmycmt -exclude='Gaudi' '/bin/rm -rf ../doc/html'
-cmt broadcast -select=newmycmt -exclude='Gaudi' '/bin/rm -rf ../doc/tex'
-
-# Cleanup the environment (recommended before logout)
-# This also deletes the databases and kills the AMSserver and lockserver
-# [NB If AMS and lock servers are still running, you will be stuck at logout]
-source ../cmt/cleanup.csh -tag=Linuxdbx
 
 ------------------------------------------------------------------------------
 A useful bunch of CVS commands
@@ -140,6 +229,8 @@ cvs import directory vendortag releasetag
 
 # To compare the local directory to the HEAD repository:
 cvs diff
+# To print only a brief report
+cvs diff --brief
 
 # To commit changes to a single file:
 # [NB cvs update -A is needed because getpack does not perform a cvs checkout]
@@ -149,3 +240,8 @@ cvs update -A; cvs commit -m "" file
 # [NB cvs update -A is needed because getpack does not perform a cvs checkout]
 cvs update -A; cvs add file/directory; cvs commit -m "" file/directory
 
+# To tag the HEAD files with a private tag (use private tags starting by "h")
+# [For instance, tag the HEADversions of 2001 September 17 by h20010917]
+cvs rtag h20010917 CONDDB
+cvs rtag h20010917 Det/DetCond
+cvs rtag h20010917 Ex/DetCondExample

@@ -1,4 +1,4 @@
-//$Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetCond/src/component/ConditionsDBCnvSvc.cpp,v 1.1.1.1 2001-09-14 15:07:21 andreav Exp $
+//$Id: ConditionsDBCnvSvc.cpp,v 1.2 2001-10-29 12:41:51 andreav Exp $
 #include <string>
 #include <stdio.h>
 #include <unistd.h>
@@ -174,7 +174,7 @@ StatusCode ConditionsDBCnvSvc::createObj ( IOpaqueAddress* pAddress,
   /// FIRST: decode the opaque address 
   std::string   folderName;
   std::string   tagName;
-  ITime*        evtTime;
+  const ITime*  evtTime;
   CLID          classID;
   unsigned char type;
   StatusCode status = i_decodeAddress 
@@ -220,7 +220,7 @@ StatusCode ConditionsDBCnvSvc::updateObj ( IOpaqueAddress* pAddress,
   /// Decode the opaque address 
   std::string   folderName;
   std::string   tagName;
-  ITime*        evtTime;
+  const ITime*  evtTime;
   CLID          classID;
   unsigned char type;
   StatusCode status = i_decodeAddress 

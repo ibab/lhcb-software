@@ -1,4 +1,7 @@
-# $Id: myCleanup.csh,v 1.2 2001-09-14 16:53:13 andreav Exp $
-set tempfile=/tmp/setup$$
-${CMTROOT}/mgr/cmt -quiet cleanup -csh -pack=DetCondExample -version=v1 -path=/afs/cern.ch/user/a/andreav/newmycmt $* | sed "s/setup/cleanup/g" >$tempfile; source $tempfile; /bin/rm -f $tempfile
+# $Id: myCleanup.csh,v 1.3 2001-10-29 12:43:16 andreav Exp $
+set tempfile=`${CMTROOT}/mgr/cmt build temporary_name -quiet`
+if $status != 0 then
+  set tempfile=/tmp/cmt.$$
+endif
+${CMTROOT}/mgr/cmt -quiet cleanup -csh -pack=DetCondExample -version=v1 -path=${HOME}/newmycmt/Ex $* | sed "s/setup/cleanup/g" >$tempfile; source $tempfile; /bin/rm -f $tempfile
 

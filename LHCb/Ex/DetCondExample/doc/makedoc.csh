@@ -1,5 +1,5 @@
 #! /bin/csh -f
-# $Header: /afs/cern.ch/project/cvs/reps/lhcb/Ex/DetCondExample/doc/makedoc.csh,v 1.1.1.1 2001-09-14 15:45:03 andreav Exp $
+# $Id: makedoc.csh,v 1.2 2001-10-29 12:43:17 andreav Exp $
 
 #------------------------------
 # Make Doxygen documentation
@@ -38,7 +38,8 @@ cat DoxyheaderSchema.html \
   | sed "s|GAUDI_DOXYURL|${GAUDI_DOXYURL}|g" \
   > Doxyheader.html
 
-${GAUDISOFT}/../extsoft/doxygen-1.2.5/bin/doxygen DoxyFile.cfg
+/afs/cern.ch/user/a/andreav/public/doxygen-1.2.11.1/bin/doxygen DoxyFile.cfg
+#${GAUDISOFT}/../extsoft/doxygen-1.2.5/bin/doxygen DoxyFile.cfg
 cp gaudiSF.gif ${DETCONDEXAMPLE_DOXYGEN}
 
 /bin/rm -f Doxyfooter.html
@@ -48,6 +49,11 @@ ${DETCONDEXAMPLE_DOXYGEN}/installdox \
   -l Gaudi.tag@${GAUDI_DOXYURL} \
   -l ConditionsDB.tag@${CONDDB_DOXYURL} \
   -l DetCond.tag@${DETCOND_DOXYURL}
+
+cp README ${DETCONDEXAMPLE_DOXYGEN}
+cp simpleDOC.txt ${DETCONDEXAMPLE_DOXYGEN}
+cp -dr ${DETCONDEXAMPLEROOT}/Check \
+       ${DETCONDEXAMPLE_DOXYGEN}/DetCondExampleCheck
 
 if ( ${?GAUDI_DOXY_UNDEFINED} ) then
   unsetenv GAUDI_DOXY_UNDEFINED
