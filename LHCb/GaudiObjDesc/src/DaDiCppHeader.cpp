@@ -1,4 +1,4 @@
-// $Id: DaDiCppHeader.cpp,v 1.11 2001-11-05 19:51:58 mato Exp $
+// $Id: DaDiCppHeader.cpp,v 1.12 2001-11-06 09:56:44 mato Exp $
 
 #include "GaudiKernel/Kernel.h"
 
@@ -887,10 +887,13 @@ void DDBEcpp::printCppHeader(DaDiPackage* gddPackage,
     }
     if (gddRelation->setMeth().equals("TRUE"))
     {
-      xmlOut << "/// Update " << gddRelation->desc().transcode() << std::endl
-        /* << "void " << "set" << firstUp(gddRelation->name()).transcode()
-        << "(const " << gddRelation->type().transcode() << "* value); "
-        << std::endl */ << "void " << "set"
+      xmlOut << "/// Update " << gddRelation->desc().transcode() << std::endl;
+      if (gddRelation->ratio().equals("1") ) {
+        xmlOut << "void " << "set" << firstUp(gddRelation->name()).transcode()
+          << "(const " << gddRelation->type().transcode() << "* value); "
+          << std::endl;
+      }
+      xmlOut  << "void " << "set"
         << firstUp(gddRelation->name()).transcode() << "(const "
         << set_arg << gddRelation->type().transcode() << ">& value);"
         << std::endl;
@@ -1529,13 +1532,15 @@ void DDBEcpp::printCppHeader(DaDiPackage* gddPackage,
         << std::endl << "}" << std::endl << std::endl;
     }
     if (gddRelation->setMeth().equals("TRUE"))
-    {  
-      xmlOut /* << "inline void " << gddClass->className().transcode() << "::" 
-        << "set" << firstUp(gddRelation->name()).transcode() << "(const " 
-        << gddRelation->type().transcode() << "* value)" << std::endl << "{" 
-        << std::endl << "   m_" << gddRelation->name().transcode() 
-        << " = value;" << std::endl << "}" << std::endl << std::endl */
-        << "inline void " << gddClass->className().transcode() << "::" << "set"
+    { 
+      if (gddRelation->ratio().equals("1") ) { 
+        xmlOut << "inline void " << gddClass->className().transcode() << "::" 
+          << "set" << firstUp(gddRelation->name()).transcode() << "(const " 
+          << gddRelation->type().transcode() << "* value)" << std::endl << "{" 
+          << std::endl << "   m_" << gddRelation->name().transcode() 
+          << " = value;" << std::endl << "}" << std::endl << std::endl;
+      }
+      xmlOut  << "inline void " << gddClass->className().transcode() << "::" << "set"
         << firstUp(gddRelation->name()).transcode() << "(const "
         << set_arg << gddRelation->type().transcode() << ">& value)" 
         << std::endl << "{" << std::endl << "   m_"
