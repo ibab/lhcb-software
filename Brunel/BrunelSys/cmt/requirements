@@ -1,5 +1,5 @@
 package BrunelSys
-version v23r3
+version v23r4
 
 branches cmt doc
  
@@ -8,7 +8,7 @@ branches cmt doc
 #=======================================================
 
 # Brunel application
-use Brunel              v23r3	Rec
+use Brunel              v23r4	Rec
 
 # Brunel utilities
 use BrunelAlgs          v3r4	Rec
@@ -21,7 +21,6 @@ use CaloReco            v2r1	Calo
 use CaloPIDs		v2r1	Calo
 
 # Velo
-use VeloAlgorithms      v2r9p1	Velo
 use VeloDAQ		v1r0	Velo
 
 # Inner Tracker
