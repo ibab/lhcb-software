@@ -4,22 +4,11 @@
 <package name="RichRecBase">
 
 <!-- **************************************************************************
-  * $Id: RichRecPixel.xml,v 1.6 2004-11-02 13:00:52 jonrob Exp $
+  * $Id: RichRecPixel.xml,v 1.7 2005-03-04 16:52:56 cattanem Exp $
   *****************************************************************************
   * XML-description of RichRecPixel class                                     *
   * author: Chris Jones   Christopher.Rob.Jones@cern.ch                       *
   * date:   2004-06-23                                                        *
-  *****************************************************************************
-  * $Log: not supported by cvs2svn $
-  * Revision 1.5  2004/10/27 14:34:16  jonrob
-  * Various updates
-  *
-  * Revision 1.4  2004/10/13 09:29:43  jonrob
-  * Improvements to RichTrackID and RichTrackSelector
-  *
-  * Revision 1.3  2004/07/29 09:03:12  jonesc
-  * Add CVS Log history information to XML files
-  *
   ************************************************************************* -->
 
 
@@ -35,8 +24,6 @@
         <base name="KeyedObject&lt;int&gt;"/>
         &KeyedObject;
             
-        <import name="Kernel/CLHEPStreams"/>
-        <import name="Kernel/SerializeStl"/>
         <import name="RichRecBase/RichRecPixelParentType"/>
         <import name="Kernel/RichDetectorType"/>
 

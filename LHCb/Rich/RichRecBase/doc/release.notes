@@ -7,6 +7,7 @@
 !====================== RichRecBase v1r15 2005-03-04 =======================
 ! 2005-03-04 - Marco Cattaneo
  - Fix some doxygen warnings
+ - Remove obsolete include of CLHEPStreams.h
 
 ! 2005-01-13 - Chris Jones
  - Very minor fix to RichTrackID

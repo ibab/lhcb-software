@@ -4,7 +4,7 @@
  *
  *  Header file for utility class : RichPhotonSpectra
  *
- *  $Id: RichPhotonSpectra.h,v 1.11 2005-03-04 16:22:49 cattanem Exp $
+ *  $Id: RichPhotonSpectra.h,v 1.12 2005-03-04 16:52:56 cattanem Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2003-07-12
@@ -19,7 +19,6 @@
 
 // from Gaudi
 #include "GaudiKernel/StreamBuffer.h"
-#include "Kernel/CLHEPStreams.h"
 
 // Kernel
 #include "RichKernel/RichParticleIDType.h"

@@ -4,12 +4,7 @@
  *
  * Header file for utility class : RichRecPhotonKey
  *
- * CVS Log :-
- * $Id: RichRecPhotonKey.h,v 1.6 2004-07-28 11:53:25 jonesc Exp $
- * $Log: not supported by cvs2svn $
- * Revision 1.5  2004/07/26 18:00:58  jonrob
- * Various improvements to the doxygen comments
- *
+ * $Id: RichRecPhotonKey.h,v 1.7 2005-03-04 16:52:56 cattanem Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date   2003-06-20
@@ -19,8 +14,8 @@
 #ifndef RichRecEvent_RichRecPhotonKey_H
 #define RichRecEvent_RichRecPhotonKey_H 1
 
-// LHCb
-#include "Kernel/CLHEPStreams.h"
+// Gaudi
+#include "GaudiKernel/StreamBuffer.h"
 
 /** @class RichRecPhotonKey RichRecPhotonKey.h RichRecBase/RichRecPhotonKey.h
  *
