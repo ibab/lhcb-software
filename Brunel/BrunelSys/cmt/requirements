@@ -1,5 +1,5 @@
 package BrunelSys
-version v16r2
+version v16r3
 
 branches cmt doc
  
@@ -8,10 +8,10 @@ branches cmt doc
 #=======================================================
 
 # Brunel application
-use Brunel              v16r2    Rec
+use Brunel              v16r3   Rec
 
 # Brunel utilities
-use BrunelKernel        v5r1p1   Rec
+use BrunelKernel        v5r2p1   Rec
 use BrunelSicb          v4r0     Rec
 use BrunelAlgs          v1r6p1   Rec
 
@@ -23,7 +23,7 @@ use L0DU                v6r1p1    L0
 
 # L1 trigger
 use L1VeloTrack         v3r3p1    L1
-use L1Decision		v1r1p1	  L1
+use L1Decision		v1r2	  L1
 
 # Calorimeter
 use CaloInterfaces      v2r3p1  Calo
@@ -54,7 +54,7 @@ use TrMatching          v2r4p1  Tr
 use TrCleanEx           v2r3    Tr
 use TrIntraPR           v2r2    Tr
 use UpstreamPR          v2r4p1  Tr
-use VeloTT              v1r2    Tr
+use VeloTT              v1r3    Tr
 
 # Muon
 use MuonAlgs            v3r0p1  Muon
