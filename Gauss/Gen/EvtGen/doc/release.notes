@@ -1,11 +1,10 @@
 Package :EvtGen 
 Package manager : Patrick Robbe and Witek Pokorski
 
+!======================== EvtGen v4r3 =================================
 ! 2003-12-12 - Patrick Robbe
  - bug fix in EvtDDalitz.cpp
- - increment to v4r4
 
-!======================== EvtGen v4r3 =================================
 ! 2003-12-10 - Patrick Robbe
  - modify EvtSVVCPLH.cpp to be able to define the parameter deltaGamma
    in decay files.
