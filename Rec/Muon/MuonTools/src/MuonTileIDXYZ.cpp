@@ -1,4 +1,4 @@
-// $Id: MuonTileIDXYZ.cpp,v 1.17 2002-10-21 20:43:53 asatta Exp $
+// $Id: MuonTileIDXYZ.cpp,v 1.18 2003-01-07 15:03:05 cattanem Exp $
 // Include files 
 #include <cstdio>
 #include <cmath>
@@ -54,15 +54,15 @@ MuonTileIDXYZ::MuonTileIDXYZ( const std::string& type,
 
   MsgStream log(msgSvc(), "MuonTileIDXYZ");
   log << MSG::DEBUG << "Initialising the MuonTile to position tool" << endreq;  
+
   // Locate the detector service needed by the this tool
   m_DDS = 0;
-  if( serviceLocator() ) {
-    StatusCode sc=StatusCode::FAILURE;
-    sc = serviceLocator()->service( "DetectorDataSvc", m_DDS, true );
+  StatusCode sc = service( "DetectorDataSvc", m_DDS, true );
+  if( sc.isFailure() ) {
+    log << MSG::FATAL << "    Unable to locate DetectorDataSvc" << endreq;
   }
-
+  
   // make the chamber layout 
-
   MuonLayout R1Layout(MuonGeometry::chamberGridX[0],
                       MuonGeometry::chamberGridY[0]);
 
@@ -95,6 +95,7 @@ MuonTileIDXYZ::MuonTileIDXYZ( const std::string& type,
 
 MuonTileIDXYZ::~MuonTileIDXYZ(){
   delete m_chamberSystemLayout;
+  if( m_DDS ) m_DDS->release();
 }
 
 StatusCode MuonTileIDXYZ::calcTilePos(const MuonTileID& tile, 
@@ -667,8 +668,8 @@ StatusCode MuonTileIDXYZ::fillGridSizes(){
 
     }
   }
+  toolSvc()->releaseTool( m_geomTool );
   return StatusCode::SUCCESS;
-  
 }
  
 

@@ -1,4 +1,4 @@
-// $Id: MuonGeometryTool.h,v 1.2 2002-08-05 12:53:04 dhcroft Exp $
+// $Id: MuonGeometryTool.h,v 1.3 2003-01-07 15:03:05 cattanem Exp $
 #ifndef MUONGEOMETRYTOOL_H 
 #define MUONGEOMETRYTOOL_H 1
 
@@ -31,7 +31,7 @@ public:
                     const std::string& name,
                     const IInterface* parent);
 
-  virtual ~MuonGeometryTool() {}; ///< Destructor
+  virtual ~MuonGeometryTool(); ///< Destructor
 
   /// return the number of stations
   virtual StatusCode nStation(int &NStation);

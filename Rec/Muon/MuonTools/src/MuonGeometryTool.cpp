@@ -1,4 +1,4 @@
-// $Id: MuonGeometryTool.cpp,v 1.4 2002-08-05 12:53:04 dhcroft Exp $
+// $Id: MuonGeometryTool.cpp,v 1.5 2003-01-07 15:03:05 cattanem Exp $
 // Include files
 #include <cmath>
 
@@ -51,18 +51,25 @@ MuonGeometryTool::MuonGeometryTool( const std::string& type,
 
   // Locate the detector service needed by the this tool
   m_DDS = 0;
-  if( serviceLocator() ) {
-    StatusCode sc=StatusCode::FAILURE;
-    sc = serviceLocator()->service( "DetectorDataSvc", m_DDS, true );
+  sc = service( "DetectorDataSvc", m_DDS, true );
+  if( sc.isFailure() ) {
+    log << MSG::FATAL << "    Unable to locate DetectorDataSvc" << endreq;
   }
-
+  
   // set station and region size to 0 until read from XML
   m_NStation = 0;
   m_NRegion = 0;
 
 }
-//=============================================================================
 
+  
+//=============================================================================
+MuonGeometryTool::~MuonGeometryTool() {
+  if( m_DDS )      m_DDS->release();
+  if( m_tileTool ) toolSvc()->releaseTool( m_tileTool );
+}
+
+//=============================================================================
 StatusCode MuonGeometryTool::nStation(int &NStation){
 
   if(0 == m_NStation){
