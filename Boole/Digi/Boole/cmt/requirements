@@ -1,5 +1,5 @@
 package Boole
-version v7r1
+version v7r2
 
 branches doc cmt job options
 
@@ -19,46 +19,46 @@ use GaudiPolicy v5r19
 use GaudiKernel		v17r0
 use GaudiSvc 		v12r6
 use GaudiAlg 		v8r2
-use GaudiPoolDb		v1r10
-use GaudiObjDesc 	v6r3p1
+use GaudiPoolDb		v1r10p1
 use HbookCnv 		v14r2p1
 
 #-- Databases
-use XmlDDDB	v23r0	Det
+use XmlDDDB	v23r1	Det
 use ParamFiles	v3r8	-no_auto_imports
 use FieldMap	v4r5
 use BooleDQ	v1r0	DQ
 
-#-- LHCb libraries (from LHCB_v17r1)
-use LHCb	v17r1
+#-- LHCb libraries (from LHCB_v17r2)
+use LHCb	v17r2
+use GaudiObjDesc 	v7r0
 
-#-- BooleSys v7r1 packages
+#-- BooleSys v7r2 packages
 
 use DigiAlg		v3r0	Digi
 use AsctToLinker        v1r3    Rec
 
 # L0 trigger
 use L0Calo              v7r6	L0
-use PuVeto              v5r7	L0
+use PuVeto              v6r0	L0
 use L0DU                v6r7p2	L0
 use L0mConf		v2r2p3	L0
-use L0MuonKernel	v2r2	L0
-use L0MuonTrigger	v2r3	L0
+use L0MuonKernel	v2r3	L0
+use L0MuonTrigger	v2r3p1	L0
 
 # Calorimeter
 use CaloMoniDigi        v1r0	Calo
 use CaloDigit           v1r7	Calo
 
 # Velo
-use VeloAlgorithms      v2r9p3	Velo
+use VeloAlgorithms      v3r2	Velo
 
 # Inner Tracker
 use ITAlgorithms        v14r4	IT
 use ITCheckers          v2r3	IT
 
 # Outer Tracker
-use OTSimulation	v1r1	OT
-use OTMonitor		v1r0	OT
+use OTSimulation	v1r2	OT
+use OTMonitor		v1r1	OT
 
 # Muon
 use MuonAlgs            v5r6	Muon

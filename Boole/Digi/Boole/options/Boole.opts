@@ -48,8 +48,6 @@ ApplicationMgr.DLLs += { "STDet" };
 ApplicationMgr.DLLs += { "OTDet" };
 ApplicationMgr.DLLs += { "VeloDet" };
 ApplicationMgr.DLLs += { "Magnet" };
-// 45 degree Velo sectors
-DeVelo.Design = 1;
 
 //--------------------------------------------------------------
 // Spillover, LHC background, Initialization

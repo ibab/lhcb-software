@@ -23,7 +23,7 @@ MoniL0Seq.Members += { "L0Monitor" };
 
 // Velo
 MoniVELOSeq.Members += { "VeloMonitor" };
-#include "$VELOALGORITHMSROOT/options/VeloMonitor.opts"
+//#include "$VELOALGORITHMSROOT/options/VeloMonitor.opts"
 
 // IT digitisation
 ApplicationMgr.DLLs += {"ITCheckers"};

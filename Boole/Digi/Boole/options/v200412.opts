@@ -1,6 +1,6 @@
 ///////////////////////////////////////////////////////////////////////////////
-//  Job options for Boole, for data produced by Gauss v15r4 or greater and   //
-//      geometry lhcb-200411 (Rich1 EDR, Rotated Rich2, TT KLM layout)       //
+//  Job options for Boole, for data produced by Gauss v18r3 or greater and   //
+//  geometry lhcb-200412 (Rich1 EDR, Rotated Rich2, TT KLM layout, new Velo) //
 ///////////////////////////////////////////////////////////////////////////////
 #pragma print off
 InitDataSeq.Members += { "MergeEventAlg/SpilloverAlg" }; // Adds Spillover
@@ -12,7 +12,7 @@ ApplicationMgr.OutStream += { "DigiWriter" };  // Comment to switch off output
 //--------------------------------------------------------------------------- 
 #include "$STDAQROOT/options/stDAQ-v2.opts"
 #pragma print on
-DetectorDataSvc.DetDbLocation = "$XMLDDDBROOT/DDDB/lhcb-200411.xml";
+DetectorDataSvc.DetDbLocation = "$XMLDDDBROOT/DDDB/lhcb-200412.xml";
 
 //---------------------------------------------------------------------------
 // Add here any job specific options, to over-ride previously defined options

@@ -3,9 +3,37 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
+</PRE><H1><A NAME=v7r2>2004-12-10 Boole v7r2</A></H1><PRE>
+This version uses Gaudi v15r3, LHCb v17r2. Can process DC04 Gauss output.
+Output data incompatible with DC04 versions, needs Brunel v25r2 or greater
+
+- New functionality:
+  . Support for v200412 geometry (Rich1 EDR, Rotated Rich2, TT KLM layout,
+                                  new Velo numbering)
+    Not yet tested, needs new Gauss data (v200412.opts, XmlDDDB v23r1)
+
+- Modified functionality
+  . Uses new Velo detector element and geometry. Sensor numbering incompatible
+    with DC04 version. (LHCbKernel v5r5, VeloEvent v13r2, VeloDet v9r1,
+    VeloDAQ v2r1, VeloAlgorithms v3r2, PuVeto v6r0)
+
+- Removed functionality
+  . Support for v200411 geometry (Rich1 EDR, Rotated Rich2, TT KLM layout)
+
+- Persistency changes
+  . New velo sensor numbering in RawBuffer, requires VeloDet v9r1, VeloDAQ v2r1
+    to decode
+
+- Bug fixes
+  . Fix to allow L0 studies with no M1 (L0MuonKernel v2r3, L0MuonTrigger v2r3p1)
+
+- Packaging changes
+  . Move to new GaudiAlgorithm base classes
+    (OTDAQ v3r2, OTSimulation v1r2, OTMonitor v1r1)
+
 </PRE><H1><A NAME=v7r1>2004-11-25 Boole v7r1</A></H1><PRE>
 This version uses Gaudi v15r3, LHCb v17r1. Can process DC04 Gauss output.
-Output data incompatible with DC04 versions, needs Brunel v25r0 or greater
+Output data incompatible with DC04 versions, needs Brunel v25r0 or v25r1
 
 - New functionality:
   . Support for v200411 geometry (Rich1 EDR, Rotated Rich2, TT KLM layout)

@@ -14,7 +14,7 @@ ApplicationMgr.OutStream += { "DigiWriter" };  // Comment to switch off output
 //--------------------------------------------------------------------------- 
 #include "$STDAQROOT/options/stDAQ-v1.opts"
 #pragma print on
-DetectorDataSvc.DetDbLocation = "$XMLDDDBROOT/DDDB/lhcb-200402.xml";
+DetectorDataSvc.DetDbLocation = "$XMLDDDBROOT/DDDB/lhcb-200402-NewVelo.xml";
 
 //---------------------------------------------------------------------------
 // Add here any job specific options, to over-ride previously defined options
