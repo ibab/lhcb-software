@@ -1,7 +1,7 @@
 // check for TDR and MC truth
 HLTCorrelations.Members += { "CheckSelResult/Bs2PhiPhiAndTDR" };
 Bs2PhiPhiAndTDR.ANDmode = true ;
-Bs2PhiPhiAndTDR.Algorithms = { "TDRselBs2PhiPhi" , "AllBs2PhiPhiTracks" } ;
+Bs2PhiPhiAndTDR.Algorithms = { "TightTDRselBs2PhiPhi" , "AllBs2PhiPhiTracks" } ;
 Bs2PhiPhiAndTDR.AvoidSelResult = false ;
 
 // correlation of HLT and TDR
@@ -11,6 +11,7 @@ CorrBs2PhiPhi.Algorithms = { "CheckHLTGeneric"
 			      "HLTSharedPhi", 
 			      "HLTFilterBs2PhiPhi", 
 			      "TDRselBs2PhiPhi",
+			      "TightTDRselBs2PhiPhi",
 			      "Bs2PhiPhiAndTDR" } ;
 
 // check for TDR and MC truth

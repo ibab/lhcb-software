@@ -31,11 +31,11 @@ HLTSharedPhi.DaughterPlotsPath = "PhiIn" ;
 HLTSharedPhi.MotherPlotsPath   = "PhiOut";
 
 // D0
-HLTSharedD02HH.MakePlots = true ;
-HLTSharedD02HH.DaughterPlots.Variables =  {"Pt", "IPs" } ;
-HLTSharedD02HH.MotherPlots.Variables = { "M", "Chi2", "Vz", "P", "Pt", "IPs", "FS" } ;
-HLTSharedD02HH.DaughterPlotsPath  = "D0In" ;
-HLTSharedD02HH.MotherPlotsPath = "D0Out";
+HLTSharedD02KH.MakePlots = true ;
+HLTSharedD02KH.DaughterPlots.Variables =  {"Pt", "IPs" } ;
+HLTSharedD02KH.MotherPlots.Variables = { "M", "Chi2", "Vz", "P", "Pt", "IPs", "FS" } ;
+HLTSharedD02KH.DaughterPlotsPath  = "D0In" ;
+HLTSharedD02KH.MotherPlotsPath = "D0Out";
 
 // D0
 HLTLooseD02PiPi.MakePlots = true ;

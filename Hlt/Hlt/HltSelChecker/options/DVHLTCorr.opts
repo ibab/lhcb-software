@@ -4,8 +4,8 @@ ApplicationMgr.DLLs += {"HltSelChecker"};
 //==============================================================================
 // The offline selections
 //==============================================================================
-// #include "$HLTSELCHECKERROOT/options/AllTDRselections.opts"
-// #include "$HLTSELCHECKERROOT/options/PlotTDR.opts"
+//#include "$HLTSELCHECKERROOT/options/AllTDRselections.opts"
+//#include "$HLTSELCHECKERROOT/options/PlotTDR.opts"
 
 //==============================================================================
 // MC truth
@@ -22,7 +22,12 @@ ApplicationMgr.DLLs += {"HltSelChecker"};
 //==============================================================================
 // plots
 //==============================================================================
-// #include "$HLTSELCHECKERROOT/options/Plots.opts"
+#include "$HLTSELCHECKERROOT/options/Plots.opts"
+
+//==============================================================================
+// nice timing
+//==============================================================================
+#include "$HLTSELCHECKERROOT/options/MeasureTimes.opts"
 
 //==============================================================================
 // PK's stripping of MB passing L0 and L1:
@@ -36,9 +41,9 @@ ApplicationMgr.DLLs += {"HltSelChecker"};
 // in these options
 // Hence: re-initalize event selector
 // EventSelector.Input   = {};
-// #include "$HLTSELECTIONSROOT/options/L0L1TDR-Bs2JpsiPhi.opts"
+// #include "$HLTSELECTIONSROOT/options/L0L1TDR-Bd2DstarPi.opts"
 
-ApplicationMgr.EvtMax    = 50 ;
+ApplicationMgr.EvtMax    = -1 ;
 EventSelector.FirstEvent = 1 ;
 MessageSvc.Format = "% F%50W%S%7W%R%T %0W%M";
 ChronoStatSvc.ChronoPrintLevel = 4 ; // forces printout even with 4
@@ -60,23 +65,18 @@ PrintTrueD.OutputLevel = 4;
 PrintBTracks.OutputLevel = 4;
 PrintDstarTracks.OutputLevel = 4;
 PrintFoundDstar.OutputLevel = 4;
+PrintFoundBd2DstarPi.OutputLevel = 4;
 PrintTDR.OutputLevel = 4;
-
-#include "$HLTSELCHECKERROOT/options/MeasureTimes.opts"
 
 DaVinci.OutputLevel = 2 ;
 
-/*
-HLTFilterDs2KKPi.OutputLevel = 2;
-HLTFilterBs2DsH.OutputLevel = 1;
-HLTPions.OutputLevel = 2;
-HLTKaons.OutputLevel = 2;
-HLTPreselPions.OutputLevel = 2;
-HLTPreselKaons.OutputLevel = 2;
-*/
+//----------------------------------------------------------
+// uncomment to get Kaon-ID
 // K-ID
-TrgParticleMaker.KaonDLLCut = 15 ; // default
+//#include "$HLTSELECTIONSROOT/options/UseRich.opts"
+//TrgParticleMaker.KaonDLLCut = 15 ; // default
 
+//----------------------------------------------------------
+// uncomment to get HLT generic
 #include "$HLTGENERICROOT/options/HltGeneric.opts"
-HltGenericDecision.Filter = true ; // false is default
-
+HltGenericDecision.Filter = false ; // true: really filter events

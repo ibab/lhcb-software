@@ -3,7 +3,7 @@
 HLTCorrelations.Members += { "SelResultCorrelations/CorrDstar" };
 CorrDstar.Algorithms = { "CheckHLTGeneric"	
                         , "AllDstar2DpiTracks"
-                        ,"HLTSharedD02HH"
+//                        ,"HLTSharedD02KH"
                         ,"HLTLooseD02PiPi"
 			,"HLTFilterDstar" } ;
 
@@ -17,5 +17,5 @@ DstarIsFound.AvoidSelResult = false ;
 
 PrintFoundDstar.DebugTool.Informations = "Name E M P Px Py Pz Pt phi Vz" ;
 PrintFoundDstar.PhysDesktop.InputLocations = { "Phys/HLTFilterDstar" } ;
-PrintFoundDstar.OutputLevel = 3 ;
+PrintFoundDstar.OutputLevel = 4 ;
 

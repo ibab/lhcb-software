@@ -4,6 +4,20 @@
 ! Purpose     : High-Level Trigger Exclusive Selections - Checking 
 !-----------------------------------------------------------------------------
 
+! 2005-02-02 - P. Koppenburg
+  - options/AllTDRselections.opts
+    . Apply TIGHT mass cuts for TDR selections.
+  - options/CorrBd2D0Kstar.opts
+  - options/CorrBd2DstarPi.opts
+  - options/CorrDstar.opts
+    . Renaming of HLTSharedD02HH into HLTSharedD02KH
+    . No need for HLTLooseD02PiPi
+  - options/CorrBs2PhiPhi.opts
+  - options/NTBs2PhiPhi.opts
+  - options/PlotTDR.opts
+  - options/PrintTDR.opts
+    . Use Tight TDR selection. New small algorithm for PhiPhi.
+
 ! 2005-01-27 - P. Koppenburg
   Correlations: check result of HltGeneric
   - src/CheckHLTGeneric.{cpp,h}

@@ -9,14 +9,46 @@ SetOfflinePV.ResetToOffline = true ;
 #include "$DAVINCIROOT/options/DaVinciNeutrals.opts"
 //------------------------------------------------------------------------------
 ApplicationMgr.TopAlg += { "PreLoadParticles/Combined" } ;
+//------------------------------------------------------------------------------
 #include "$BD2DSTARPIROOT/options/DoTDRselBd2DstarPi.opts"
+TDRselBd2DstarPi.BdMassWindowTight        = 50*MeV ;         // 200 MeV
+//------------------------------------------------------------------------------
 #include "$B2HHROOT/options/DoTDRselB2HH.opts" 
+TDRselBd2PiPi.deltaMassCut = 50.0*MeV; // 600 MeV/c2
+TDRselBd2KPi.deltaMassCut  = 50.0*MeV; // 600 MeV/c2
+TDRselBs2PiK.deltaMassCut  = 50.0*MeV; // 600 MeV/c2
+TDRselBs2KK.deltaMassCut   = 50.0*MeV; // 1200 MeV/c2
+//------------------------------------------------------------------------------
 #include "$BS2PHIPHIROOT/options/DoTDRselBs2PhiPhi.opts"
+ApplicationMgr.TopAlg += { "FilterDesktop/TightTDRselBs2PhiPhi" };
+TightTDRselBs2PhiPhi.PhysDesktop.InputLocations = {"Phys/TDRselBs2PhiPhi"} ;
+TightTDRselBs2PhiPhi.Filter.Selections = {"B_s0 : MassFilterCriterion"} ;
+TightTDRselBs2PhiPhi.Filter.MassFilterCriterion.Window = 24*MeV ; // 1.5 GeV
+TightTDRselBs2PhiPhi.Filter.ExclusiveSelection = true ; // only Bs, not phi!
+//------------------------------------------------------------------------------
 #include "$BD2D0KSTARROOT/options/DoTDRselBd2D02KpiKstar.opts"
+TDRselBd2D02KpiKstar.B0MassWindowTight  = 50*MeV ;
+//------------------------------------------------------------------------------
 #include "$BS2DSHROOT/options/DoTDRselBs2DsH.opts" // exclusive with two above
+TDRselBs2DsK.massWindowBs = 50*MeV ;
+TDRselBs2DsPi.massWindowBs = 50*MeV ;
+//------------------------------------------------------------------------------
 #include "$BS2MUMUROOT/options/DoTDRselBs2MuMu.opts"
+TDRselBs2MuMu.MassWindow = 60*MeV ;
+//------------------------------------------------------------------------------
 #include "$B2XGAMMAROOT/options/DoTDRselBs2PhiGamma.opts"
+TDRselBs2PhiGamma.Cuts = 4 ; // "Final" cuts (TDR) with 200 MeV window
+//------------------------------------------------------------------------------
 #include "$BS2JPSIPHIROOT/options/DoTDRselBs2Jpsi2MuMu_Phi2KK.opts"
+TDRSelBs2Jpsi2MuMu_Phi2KK.BsFilter.MassFilterCriterion.Window  = 50*MeV ; //600 MeV
+//------------------------------------------------------------------------------
 #include "$BD2MUMUKSTARROOT/options/DoTDRselBd2MuMuKstar.opts"
+TDRselBd2MuMuKstar.B0MassWindow = 50*MeV ;// 1000.0;
+//------------------------------------------------------------------------------
 #include "$BD2JPSIKSROOT/options/DoTDRselBd2Jpsi2MuMu_Ks2PiPi.opts"
+TDRselBd2Jpsi2MuMuKsLong.B0MassWindowTight = 60.0*MeV; // 600 MeV;
+TDRselBd2Jpsi2MuMuKsTTT.B0MassWindowTight = 60.0*MeV; // 600 MeV;
+TDRselBd2Jpsi2MuMuKsVTT.B0MassWindowTight = 60.0*MeV; // 600 MeV;
+//------------------------------------------------------------------------------
 #include "$HLTSELCHECKERROOT/options/PrintTDR.opts"
+//------------------------------------------------------------------------------

@@ -4,7 +4,7 @@
 // Author: Luis Fernandez, 10/12/2004
 
 // The offline selection
-#include "$BS2PHIPHIROOT/options/DoTDRselBs2PhiPhi.opts"
+#include "$BS2PHIPHIROOT/options/DoTightTDRselBs2PhiPhi.opts"
 
 ApplicationMgr.TopAlg += {"GaudiSequencer/CheckHLTBs2PhiPhi"};
 
@@ -21,7 +21,7 @@ CheckHLTBs2PhiPhi.Members ={ "TrgL0Filter", "PrintHeader/PassedL0",
 PassedL0.OutputLevel = 3;
 PassedL1.OutputLevel = 3;
  
-MergeOffBs2PhiPhi.Algorithms = {"TDRselBs2PhiPhi"};
+MergeOffBs2PhiPhi.Algorithms = {"TightTDRselBs2PhiPhi"};
 MergeHLTBs2PhiPhi.Algorithms = {"HLTFilterBs2PhiPhi"};
 
 MergeOffBs2PhiPhi.OutputLevel = 4;
@@ -29,7 +29,7 @@ MergeHLTBs2PhiPhi.OutputLevel = 4;
 
 //------------------------------------------------------------------------------
 // Write Tree for Off selection
-OffBs2PhiPhiTree.PhysDesktop.InputLocations = {"Phys/TDRselBs2PhiPhi"};
+OffBs2PhiPhiTree.PhysDesktop.InputLocations = {"Phys/TightTDRselBs2PhiPhi"};
 
 OffBs2PhiPhiTree.LinkAsct.Location      = "Phys/Relations/Particle2MCLinksOffBs2PhiPhi";
 OffBs2PhiPhiTree.LinkAsct.AlgorithmType = "Particle2MCLinks";

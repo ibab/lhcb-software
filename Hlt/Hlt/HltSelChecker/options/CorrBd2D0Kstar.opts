@@ -9,8 +9,8 @@ HLTCorrelations.Members += { "SelResultCorrelations/CorrBd2D0Kstar" };
 CorrBd2D0Kstar.Algorithms = { "CheckHLTGeneric"	
                         ,"AllBd2D0KstarTracks", 
                                "HLTSharedKstar",
-                               "HLTSharedD02HH",
-                               "HLTLooseD02PiPi",
+                               "HLTSharedD02KH",
+//                               "HLTLooseD02PiPi",
                               "FilterD0ForHLTBd2D0Kstar",
                               "FilterKstarForHLTBd2D0Kstar",
 			      "HLTFilterBd2D0Kstar", 
