@@ -1,8 +1,11 @@
-// $Id: CaloAlgorithm.cpp,v 1.2 2002-03-18 18:16:22 ibelyaev Exp $ 
+// $Id: CaloAlgorithm.cpp,v 1.3 2002-04-01 11:00:36 ibelyaev Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2002/03/18 18:16:22  ibelyaev
+//  small update for LHCbKernel package
+//
 // Revision 1.1.1.1  2001/11/25 14:07:38  ibelyaev
 // New Package: substitution of the  previous CaloGen package
 //
@@ -181,6 +184,43 @@ StatusCode CaloAlgorithm::Exception ( const std::string    & msg ,
   throw CaloException( msg , sc );
   return  sc ;
 };
+
+// ============================================================================
+/** @brief put results into Gaudi Event Transient Store 
+ * 
+ * 'Output' results: 
+ *  register the output object in Gaudi Event Transient Store 
+ *  @param object object to be registered 
+ *  @param address address in Gaudi Event Transient Store 
+ *           ("/Event" could be omitted )
+ *  @exception CaloException for invalid event data service 
+ *  @exception CaloException for invalid object 
+ *  @exception CaloException for error result from event data service 
+ *  @return status code 
+ */
+// ============================================================================
+StatusCode CaloAlgorithm::put
+( DataObject*        object  , 
+  const std::string& address ) const 
+{
+  // check arguments 
+  Assert( 0 != eventSvc() , " put(): Invalid 'eventSvc()'!" );
+  Assert( 0 != object     , " put(): Invalid 'Object'!"     );
+  Assert( !address.empty(), " put(): Invalid 'address'!"    );
+  // register the object!
+  StatusCode sc = 
+    eventSvc()->
+    registerObject( ( '/' == address[0] ) ? 
+                    address : "/Event/" + address , object );
+  // check the result!
+  Assert( sc.isSuccess() , " put(): could not register '"
+          + System::typeinfoName( typeid( *object ) ) + "' at address '"
+          + address + "'" , sc );
+  // 
+  return sc ;
+};
+
+
 
 // ============================================================================
 /** standard initialization method

@@ -1,8 +1,11 @@
-// $Id: CaloTool.h,v 1.1.1.1 2001-11-25 14:07:38 ibelyaev Exp $
+// $Id: CaloTool.h,v 1.2 2002-04-01 11:00:36 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.1.1.1  2001/11/25 14:07:38  ibelyaev
+// New Package: substitution of the  previous CaloGen package
+//
 // Revision 1.4  2001/11/12 19:01:02  ibelyaev
 //  minor  reorganization of header files
 //
@@ -13,6 +16,8 @@
 // GaudiKernel
 #include "GaudiKernel/AlgTool.h"
 #include "GaudiKernel/IMessageSvc.h"
+#include "GaudiKernel/IDataProviderSvc.h"
+#include "GaudiKernel/SmartDataPtr.h"
 #include "GaudiKernel/GaudiException.h"
 // CaloKernel 
 #include "CaloKernel/CaloException.h"
@@ -68,6 +73,36 @@ protected:
   /** destructor, virtual and protected 
    */
   virtual ~CaloTool();
+  
+protected:
+  
+  /** templated  access to the data in Gaudi transient store 
+   *  
+   *  Usage:
+   *
+   *  - 
+   *  MCCaloDigits* digits = get<MCCaloDigits>( evtSvc() , inputData() );
+   *  if( 0 == digits ) { return StatusCode::FAILURE ;}
+   *
+   *  -
+   *  const DeCalorimeter* det = 
+   *      get<const DeCalorimeter>( detSvc() , detData() );
+   *  if( 0 == det ) { return StatusCode::FAILURE ;}
+   *
+   *  @param svc pointer to data service (data provider)
+   *  @param location data location/address in Gaudi Transient Store 
+   */
+  template<class TYPE>
+  TYPE* get( IDataProviderSvc* svc , const std::string& location )
+  {
+    if( 0 == svc ) 
+      { Error("get<>(): IDataProviderSvc* points to NULL!"   ) ; return 0 ; }
+    SmartDataPtr<TYPE> object( svc, location ) ;
+    if( !object )
+      { Error("get<>(): No valid data at '" + location + "'" ) ; return 0 ; }
+    ///
+    return object ;
+  };
 
   /** accessor to service locator 
    *  @return pointer to service locator 
@@ -146,19 +181,25 @@ protected:
   
   /** Assertion - throw exception, if condition is not fulfilled 
    *  @param ok            condition which should be "true"
-   *  @param mesage       message to eb associated with the exception 
+   *  @param mesage       message to be associated with the exception 
+   *  @param sc           status code to be returned 
    *  @return             status code        
    */
   inline StatusCode 
-  Assert ( bool ok , const std::string& message = " ") const;
+  Assert ( const bool         ok                            , 
+           const std::string& message = " "                 ,
+           const StatusCode&  sc      = StatusCode::FAILURE ) const;
   
   /** Assertion - throw exception, if condition is not fulfilled 
    *  @param ok            condition which shoudl be "true"
-   *  @param mesage       message to eb associated with the exception 
+   *  @param mesage       message to be associated with the exception 
+   *  @param sc           status code to be returned 
    *  @return             status code        
   */
   inline StatusCode
-  Assert ( bool ok , const char*        message  ) const ;
+  Assert ( const bool         ok                            , 
+           const char*        message                       ,
+           const StatusCode&  sc      = StatusCode::FAILURE ) const;
   
   /** Create and (re)-throw the exception  
    *  @param msg    exception message 
@@ -197,8 +238,6 @@ protected:
               const MSG::Level & lvl = MSG::FATAL          ,
               const StatusCode & sc  = StatusCode::FAILURE ) const ;
   
-protected:
-
 private:
   
   /** default constructor is private!
@@ -230,29 +269,35 @@ private:
 // ============================================================================
 /** Assertion - throw exception, if condition is not fulfilled 
  *  @param OK           condition which should be "true"
- *  @param mesage       message to eb associated with the exception 
+ *  @param mesage       message to be associated with the exception 
+ *  @param sc           status code to be returned 
  *  @return             status code        
  */ 
 // ============================================================================
 inline StatusCode 
-CaloTool::Assert ( bool OK , const std::string& msg ) const
+CaloTool::Assert ( const bool OK          , 
+                   const std::string& msg ,
+                   const StatusCode&  sc  ) const
 {
   StatusCode ok ( StatusCode::SUCCESS );
-  return OK ? ok : Exception( msg , MSG::ERROR ) ; 
+  return OK ? ok : Exception( msg , MSG::FATAL , sc ) ; 
 };
 
 // ============================================================================
 /** Assertion - throw exception, if condition is not fulfilled 
  *  @param OK           condition which should be "true"
- *  @param mesage       message to eb associated with the exception 
+ *  @param mesage       message to be associated with the exception 
+ *  @param sc           status code to be returned 
  *  @return             status code        
  */ 
 // ============================================================================
 inline StatusCode
-CaloTool::Assert ( bool OK , const char*        msg  ) const
+CaloTool::Assert ( const bool OK          , 
+                   const char*        msg ,
+                   const StatusCode&  sc  ) const
 { 
   StatusCode ok ( StatusCode::SUCCESS ) ;
-  return OK ? ok : Exception( msg , MSG::ERROR ) ; 
+  return OK ? ok : Exception( msg , MSG::FATAL , sc  ) ; 
 };
 
 // ============================================================================

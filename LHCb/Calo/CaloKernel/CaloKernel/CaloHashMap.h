@@ -1,14 +1,18 @@
-// $Id: CaloHashMap.h,v 1.1 2002-03-26 18:37:05 ibelyaev Exp $
+// $Id: CaloHashMap.h,v 1.2 2002-04-01 11:00:35 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.1  2002/03/26 18:37:05  ibelyaev
+//  some restructurisation and map wrappers
+//
 // ============================================================================
 #ifndef CALOKERNEL_CALOHASHMAP_H 
 #define CALOKERNEL_CALOHASHMAP_H 1
 // Include files
 #ifdef WIN32
 #include "GaudiKernel/HashTable.h" // GaudiKernel (only for Visual-C Win32)
+#include <vector>            
 #else 
 #include <hash_map>                // STD & STL   (except for Visual-C Win32)
 #endif 
@@ -42,6 +46,7 @@ public:
    *  @warning the actual type is platform-dependent!
    */
   typedef  HashTable<Key,Value>     Map      ; 
+  typedef  std::vector<Key>         Keys     ;
 #else 
   /** the  map itself
    *  @warning the actual type is platform-dependent!
@@ -62,7 +67,12 @@ public:
 public:
   
   /// Standard constructor
-  CaloHashMap() : m_map() {}
+  CaloHashMap () 
+    : m_map   () 
+#ifdef WIN32 
+    , m_keys  () 
+#endif 
+  {}
   
   /// destructor (virtual)
   virtual ~CaloHashMap() { clear() ; };
@@ -93,6 +103,54 @@ public:
   { return m_map[key]; };
 #endif
   
+  /** erase the sequence from the map
+   *  @warning implementation  is platform-dependent
+   *  @param first the "begin" iterator for the sequence 
+   *  @param last  the "end"   iterator for the sequence 
+   */
+  void erase( iterator first , 
+              iterator last  )
+  {
+#ifndef WIN32 
+    m_map.erase( first , last ); 
+#else 
+    if( !m_keys.empty() ) { m_keys.clear() ; }
+    for( ; first != last ; ++first ) 
+      { m_keys.push_back( first->first ); }
+    for( Keys::const_iterator ikey = m_keys.begin() ; 
+         m_keys.end() != ikey ; ++ikey ) { m_map.remove( *ikey  ) ; }
+    m_keys.clear();
+#endif;
+  };
+  
+  /** erase the sequence from the map
+   *  @warning implementation  is platform-dependent
+   *  @param it the "begin" iterator for the sequence 
+   *  @param last  the "end"   iterator for the sequence 
+   */
+  void erase( iterator it )
+  {
+#ifndef WIN32 
+    m_map.erase  ( it        ); 
+#else 
+    m_map.remove ( it->first );
+#endif;
+  };
+  
+  /** remove/erase element from the map (by key) 
+   *  @warning implementation  is platform-dependent
+   *  @param key key of element to be removed 
+   *  @return true if element is removed
+   */
+  void erase( const Key& key ) 
+  { 
+#ifndef WIN32
+    m_map.erase ( key ) ;
+#else
+    m_map.remove( key ) ;
+#endif 
+  };
+
   /// clear the content of all containers 
   void clear() { m_map.clear() ; }
   
@@ -100,7 +158,6 @@ public:
    *  @return number of elements 
    */
   unsigned int size() const { return m_map.size() ; }
-  
 
   /** iterator for sequential access to the content of the "map"
    *  @return begin-iterator (non-const version) 
@@ -124,7 +181,13 @@ public:
 
 private:
 
-  Map m_map;
+  // the map iteself 
+  Map  m_map  ; ///< the map itself 
+
+#ifdef WIN32
+  // helper container of keys to be removed, see "erase" method 
+  Keys m_keys ; ///< helper conatiner to keep the keys to be removed 
+#endif 
   
 };
 

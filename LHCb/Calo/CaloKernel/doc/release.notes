@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.7 2002-03-27 15:06:41 ibelyaev Exp $
+! $Id: release.notes,v 1.8 2002-04-01 11:00:36 ibelyaev Exp $
 ! =============================================================================
 ! CVS tag $Name: not supported by cvs2svn $
 ! =============================================================================
@@ -7,6 +7,20 @@
 ! =============================================================================
 ! The package contains the general Calo Kernel classes and utilities, 
 ! which are essentially independent from Detector and Event models 
+! =============================================================================
+
+!==============================================================================
+! 1/04/2002 - v2r0 Ivan Belyaev
+! - add 'tempalte<DATA> get<DATA>()' and 'put()' methods to CaloAlgorithm 
+!   base class to perform easier access to dta registered into Gaudi 
+!   Transient store. In the case of errors printout is persormed and 
+!   exception thrown
+! - add 'tempalte<DATA> get<DATA>()' method to CaloTool 
+!   base class to perform easier access to dta registered into Gaudi 
+!   Transient store. In the case of errors printout is persormed and 
+!   exception thrown
+! - enrich a little bit interface for CaloMap and CaloHashMap classes 
+!   by "erase" & "clear" methods,
 ! =============================================================================
 
 !==============================================================================
