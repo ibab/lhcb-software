@@ -32,3 +32,4 @@ MoniTrgSeq.Members        = { "TrgChecker"
                             };
 
 TrgVertexMonit.Vertices3D = false;
+TrgVertexMonit.HistogramFlag = false;

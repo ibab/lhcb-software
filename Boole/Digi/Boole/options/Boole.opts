@@ -68,11 +68,10 @@ InitBooleSeq.Members += { "BooleInit" };
 // Subdetector algorithms
 //--------------------------------------------------------------
 // L0 trigger
-ApplicationMgr.DLLs += { "L0Calo", "L0Muon", "PuVeto", "L0DU" };
-ApplicationMgr.DLLs += { "MuonTools" };
+ApplicationMgr.DLLs += { "L0Calo", "L0MuonTrigger", "PuVeto", "L0DU" };
 TriggerL0Seq.Members += { "L0CaloAlg/L0Calo" };
-TriggerL0Seq.Members += { "L0mTrigger/L0Muon" };
-#include "$L0MUONROOT/options/Boole.opts"
+#include "$L0MUONTRIGGERROOT/options/Boole.opts"
+TriggerL0Seq.Members += { "L0mTriggerAlgorithm/L0MuonTrigger" };
 TriggerL0Seq.Members += { "PuVetoAlg" };
 TriggerL0Seq.Members += { "DecisionUnit" };
 TriggerL0Seq.Members += { "PrepareL0DUL1Buffer" };
@@ -105,7 +104,7 @@ ApplicationMgr.DLLs += { "RichDetTools", "RichUtils", "RichReadout", "RichDAQ"};
 #include "$RICHDAQROOT/options/Boole_FillRawBuffer.opts"
 
 // Muon digitisation
-ApplicationMgr.DLLs += { "MuonAlgs", "MuonBackground", "MuonDAQ" };
+ApplicationMgr.DLLs += { "MuonTools", "MuonAlgs", "MuonBackground", "MuonDAQ" };
 DigiMUONSeq.Members += { "MuonBackground/MuonLowEnergy" };
 #include "$MUONBACKGROUNDROOT/options/MuonLowEnergy.opts"
 DigiMUONSeq.Members += { "MuonBackground/MuonFlatSpillover" };
