@@ -1,5 +1,5 @@
 package Brunel
-version v5
+version v5r1
 
 branches doc cmt src job options Brunel
 
@@ -30,8 +30,9 @@ use BrunelKernel v2     Rec
 
 # Detector description
 use DetDesc      v7     Det
-use XmlDDDB      v6     Det
+use XmlDDDB      v6r1   Det
 use CaloDet      v2r1   Det
+use dbase        v239   SICB
 
 # Event Model
 use LHCbEvent    v11    Event
@@ -41,6 +42,16 @@ use OTEvent      v5     Event
 use TrEvent      v5     Event
 use CaloEvent    v6     Event
 use VeloEvent    v5     Event
+
+# SicB event data persistency
+use SicbCnv      v13r1  SICB
+use CaloSicbCnv  v4     SICB
+use L0SicbCnv    v3     SICB
+use MuonSicbCnv  v3     SICB
+use TrSicbCnv    v2     SICB
+use VSicbCnv     v5	SICB
+use Futio        v11    SICB
+use GDUMMY       v1r5   SICB
 
 # L0 trigger
 use L0Calo       v2     L0
@@ -56,18 +67,6 @@ use TrKernel     v5     Tr
 use ITAlgorithms v5	IT
 use OTAlgorithms v5	OT
 use TrAlgorithms v5	Tr
-
-# SicB event data persistency
-use SicbCnv      v13    SICB
-use CaloSicbCnv  v4     SICB
-use L0SicbCnv    v3     SICB
-use MuonSicbCnv  v3     SICB
-use TrSicbCnv    v2     SICB
-use VSicbCnv     v5	SICB
-
-use dbase        v239   SICB
-use Futio        v11    SICB
-use GDUMMY       v1r5   SICB
 
 # SICBDST packages
 use Futil        v10r3  SICB

@@ -3,6 +3,16 @@ Package Coordinator: Marco Cattaneo
 
 Purupose: LHCb reconstruction program
 
+! 20010824 Brunel v5r1 (MC)
+
+   In cmt/requirements
+     use XmlDDDB v6r1
+     - Fix the SPD Et slope: Was 2 GeV, should be 2 MeV !!!!
+
+     use SicbCnv v13r1
+     - Protections in book-keeping database queries
+
+
 ! 20010821 Brunel v5 (MC)
 
    In src/BrunelSicb/
