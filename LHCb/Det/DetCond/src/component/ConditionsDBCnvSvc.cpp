@@ -1,4 +1,4 @@
-//$Id: ConditionsDBCnvSvc.cpp,v 1.9 2001-12-17 21:23:13 andreav Exp $
+//$Id: ConditionsDBCnvSvc.cpp,v 1.10 2002-03-01 11:29:16 andreav Exp $
 #include <string>
 #include <stdio.h>
 
@@ -56,7 +56,6 @@ StatusCode ConditionsDBCnvSvc::initialize()
   MsgStream log(msgSvc(), "ConditionsDBCnvSvc" );
   log << MSG::INFO << "Specific initialization starting" << endreq;
 
-#ifdef __linux__
   // Create the ConditionsDBGate as a private service of ConditionsDBCnvSvc
   log << MSG::DEBUG << "Creating ConditionsDBGate" << endreq;
   m_conditionsDBGate = new ConditionsDBGate( "ConditionsDBGate",
@@ -69,7 +68,6 @@ StatusCode ConditionsDBCnvSvc::initialize()
     log << MSG::ERROR << "Could not initialize ConditionsDBGate" << endreq;
     return sc;
   }
-#endif
 
   // Locate the Detector Data Service
   IDataProviderSvc* pDDS = 0;
@@ -166,11 +164,9 @@ StatusCode ConditionsDBCnvSvc::finalize()
 {
   MsgStream log(msgSvc(), "ConditionsDBCnvSvc" );
   log << MSG::DEBUG << "Finalizing" << endreq;
-#ifdef __linux__
   m_conditionsDBGate->finalize();
   delete m_conditionsDBGate;
   m_conditionsDBGate = 0;
-#endif
   return ConversionSvc::finalize();
 }
 
@@ -211,11 +207,7 @@ StatusCode ConditionsDBCnvSvc::createObj ( IOpaqueAddress* pAddress,
   } else {
     ITime::AbsoluteTime absTime;
     absTime = m_detDataSvc->eventTime().absoluteTime();
-    log << MSG::DEBUG
-	<< "Event time: " << absTime
-	<< " (msb:" << (long)(   absTime         >> 32 )
-	<< ", lsb:" << (long)( ( absTime << 32 ) >> 32 )
-	<< ")" << endreq; 
+    log << MSG::DEBUG << endreq; 
   }
 
   // Create the object according to folder, tag, time, clid, string type
@@ -275,10 +267,7 @@ StatusCode ConditionsDBCnvSvc::updateObj ( IOpaqueAddress* pAddress,
     ITime::AbsoluteTime absTime;
     absTime = m_detDataSvc->eventTime().absoluteTime();
     log << MSG::DEBUG
-	<< "Event time: " << absTime
-	<< " (msb:" << (long)(   absTime         >> 32 )
-	<< ", lsb:" << (long)( ( absTime << 32 ) >> 32 )
-	<< ")" << endreq; 
+	<< "Event time: " << absTime << endreq; 
   }
 
   // Update the object according to folder, tag, time, clid, string type
@@ -451,12 +440,8 @@ ConditionsDBCnvSvc::createConditionData( DataObject*&         refpObject,
   std::string stringData;
   TimePoint since;
   TimePoint till;
-#ifdef __linux__
   StatusCode status = m_conditionsDBGate->readCondDBObject
     ( since, till, stringData, folderName, tagName, time );
-#else
-  StatusCode status = StatusCode::FAILURE;
-#endif
   if ( !status.isSuccess() ) {
     log << MSG::ERROR << "Could not read CondDBObject data" << endreq;
     return status;
@@ -468,12 +453,8 @@ ConditionsDBCnvSvc::createConditionData( DataObject*&         refpObject,
   log << MSG::DEBUG 
       << "Read string storage type in the folder description" << endreq;
   std::string description;
-#ifdef __linux__
   status = m_conditionsDBGate->readCondDBFolder( description, 
 						 folderName );
-#else
-  status = StatusCode::FAILURE;
-#endif
   if ( !status.isSuccess() ) {
     log << MSG::ERROR 
 	<< "Could not read folder description in the CondDB" << endreq;
@@ -570,12 +551,8 @@ ConditionsDBCnvSvc::updateConditionData( DataObject*          pObject,
   log << MSG::DEBUG 
       << "Read string storage type in the folder description" << endreq;
   std::string description;
-#ifdef __linux__
   status = m_conditionsDBGate->readCondDBFolder( description, 
 						 folderName );
-#else
-  status = StatusCode::FAILURE;
-#endif
   if ( !status.isSuccess() ) {
     log << MSG::ERROR 
 	<< "Could not read folder description in the CondDB" << endreq;
@@ -599,12 +576,8 @@ ConditionsDBCnvSvc::updateConditionData( DataObject*          pObject,
   std::string stringData;
   TimePoint since;
   TimePoint till;
-#ifdef __linux__
   status = m_conditionsDBGate->readCondDBObject
     ( since, till, stringData, folderName, tagName, time );
-#else
-  status = StatusCode::FAILURE;
-#endif
   if ( !status.isSuccess() ) {
     log << MSG::ERROR << "Could not read CondDBObject data" << endreq;
     return status;

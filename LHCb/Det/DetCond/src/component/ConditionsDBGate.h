@@ -1,4 +1,4 @@
-//$Id: ConditionsDBGate.h,v 1.2 2001-12-17 21:23:13 andreav Exp $
+//$Id: ConditionsDBGate.h,v 1.3 2002-03-01 11:27:15 andreav Exp $
 #ifndef DETCOND_CONDITIONSDBGATE_H
 #define DETCOND_CONDITIONSDBGATE_H 1
 
@@ -7,7 +7,7 @@
 #include "GaudiKernel/Service.h"
 
 // Type definition
-#include "DetCond/CondDBKey.h"
+#include "ConditionsDB/CondDBKey.h"
 
 // Forward and external declarations
 class ConditionsDBCnvSvc;
@@ -82,13 +82,13 @@ class ConditionsDBGate : public Service,
   // Private internal methods
 
   /// Find a CondDB object in the CondDB by folder name, tag and key
-  StatusCode i_findCondDBObject       ( ICondDBObject*&     oblock,
-					const std::string&  folderName,
-					const std::string&  tagName,
-					const CondDBKey&    key);
+  StatusCode i_findCondDBObject    ( ICondDBObject*&     oblock,
+				     const std::string&  folderName,
+				     const std::string&  tagName,
+				     const CondDBKey&    key);
   
-  /// Build the full path to the Objy boot file for the Federation
-  StatusCode i_buildCondDBBootPath    ( std::string& condDBBootPath );
+  /// Build the technology-specific init string to access the database
+  StatusCode i_buildCondDBInfo ( std::string& condDBInfo );
 
   /// Convert CondDBKey to ITime
   StatusCode i_convertToITime ( ITime& refTime, const CondDBKey& key );
@@ -109,17 +109,20 @@ class ConditionsDBGate : public Service,
   /// CondDB Folder Manager
   ICondDBFolderMgr*  m_condDBFolderMgr;
 
-  // Private data members: CERN-IT CondDB Objectivity implementation.
-  // Full path to the Objy database (can be set using the JobOptionsSvc).
+  // Private data members specific to the ConditionsDB implementation:
+  // full path to the database, which can be set using the JobOptionsSvc.
 
-  /// Federation boot-file hostname
-  std::string        m_condDBBootHost;
+  /// Database user name
+  std::string        m_condDBUser;
 
-  /// Federation boot-file directory
-  std::string        m_condDBBootDir;
+  /// Database user password
+  std::string        m_condDBPswd;
 
-  /// Federation boot-file name
-  std::string        m_condDBBootFile;
+  /// Database host name
+  std::string        m_condDBHost;
+
+  /// Database ConditionsDB name
+  std::string        m_condDBName;
 
 };
 

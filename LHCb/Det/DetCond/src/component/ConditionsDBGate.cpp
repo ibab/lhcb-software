@@ -1,7 +1,21 @@
-//$Id: ConditionsDBGate.cpp,v 1.5 2001-12-17 21:23:13 andreav Exp $
+//$Id: ConditionsDBGate.cpp,v 1.6 2002-03-01 11:28:15 andreav Exp $
 #include <string>
-#include <unistd.h>
-#include <sys/param.h>
+
+#ifdef __CondDBObjy__
+#  include "ConditionsDB/CondDBObjyDBMgrFactory.h"
+#  ifdef __linux__
+#    include <unistd.h>    /* Use gethostname on Linux    */
+#    include <sys/param.h> /* Use MAXHOSTNAMELEN on Linux */
+#  else
+#    error __CondDBObjy__ implementation only exists for linux
+#  endif
+#else
+#  ifdef __CondDBOracle__
+#    include "ConditionsDB/CondDBOracleDBMgrFactory.h"
+#  else
+#    error Either __CondDBObjy__ or __CondDBOracle__ must be defined
+#  endif
+#endif
 
 #include "ConditionsDBGate.h"
 
@@ -10,7 +24,6 @@
 #include "GaudiKernel/TimePoint.h"
 
 #include "ConditionsDB/CondDBObjFactory.h"
-#include "ConditionsDB/CondDBObjyDBMgrFactory.h"
 #include "ConditionsDB/ICondDBFolder.h"
 #include "ConditionsDB/ICondDBFolderMgr.h"
 
@@ -24,9 +37,10 @@ ConditionsDBGate::ConditionsDBGate( const std::string& name,
   , m_condDBDataAccess   ( 0     )
   , m_condDBFolderMgr    ( 0     )
 {
-  declareProperty( "condDBBootHost",   m_condDBBootHost  = ""     );
-  declareProperty( "condDBBootDir",    m_condDBBootDir   = ""     );
-  declareProperty( "condDBBootFile",   m_condDBBootFile  = ""     );
+  declareProperty( "condDBUser", m_condDBUser = "" );
+  declareProperty( "condDBPswd", m_condDBPswd = "" );
+  declareProperty( "condDBHost", m_condDBHost = "" );
+  declareProperty( "condDBName", m_condDBName = "" );
 }
 
 //----------------------------------------------------------------------------
@@ -57,26 +71,30 @@ StatusCode ConditionsDBGate::initialize()
     return status;
   }
   log << MSG::DEBUG << "Properties were read from jobOptions" << endreq;
-  log << MSG::DEBUG << "CondDB boot host:       " << endreq;
-  log << MSG::DEBUG << m_condDBBootHost  << endreq;
-  log << MSG::DEBUG << "CondDB boot directory:  " << endreq;
-  log << MSG::DEBUG << m_condDBBootDir   << endreq;
-  log << MSG::DEBUG << "CondDB boot file:       " << endreq;
-  log << MSG::DEBUG << m_condDBBootFile  << endreq;
+  log << MSG::DEBUG << "CondDB user:     " << endreq;
+  log << MSG::DEBUG << m_condDBUser << endreq;
+  log << MSG::DEBUG << "CondDB password: " << endreq;
+  log << MSG::DEBUG << "********" << endreq;
+  log << MSG::DEBUG << "CondDB host:     " << endreq;
+  log << MSG::DEBUG << m_condDBHost << endreq;
+  log << MSG::DEBUG << "CondDB name:     " << endreq;
+  log << MSG::DEBUG << m_condDBName << endreq;
 
   // Now initialize CERN-IT CondDB
   try  {
 
-    m_condDBmgr = CondDBObjyDBMgrFactory::createCondDBMgr();
+#ifdef __CondDBObjy__
 
     //--- Begin of Objy implementation-specific code    
 
+    m_condDBmgr = CondDBObjyDBMgrFactory::createCondDBMgr();
+
     // Initialise the database
-    std::string condDBBootPath;
-    status = i_buildCondDBBootPath( condDBBootPath );
+    std::string condDBInfo;
+    status = i_buildCondDBInfo( condDBInfo );
     if ( !status.isSuccess() ) return status;
-    log << MSG::INFO << "CondDB boot path is " << condDBBootPath << endreq;
-    m_condDBmgr->init( condDBBootPath );
+    log << MSG::INFO << "CondDB Objy boot path is " << condDBInfo << endreq;
+    m_condDBmgr->init( condDBInfo );
 
     // Create the database 
     // Use the default path (normally the database is created elsewhere)
@@ -91,6 +109,45 @@ StatusCode ConditionsDBGate::initialize()
     m_condDBmgr->commit();
 
     //--- End of Objy implementation-specific code
+
+#else
+#ifdef __CondDBOracle__
+
+    //--- Begin of Oracle implementation-specific code    
+
+    m_condDBmgr = CondDBOracleDBMgrFactory::createCondDBMgr();
+
+    // Initialise the database
+    std::string condDBInfo;
+    status = i_buildCondDBInfo( condDBInfo );
+    if ( !status.isSuccess() ) return status;
+    log << MSG::INFO << "CondDB Oracle path is " << condDBInfo << endreq;
+    m_condDBmgr->init( condDBInfo );
+    log << MSG::VERBOSE << "Database successfully initialized" << endreq;
+
+    // Create the database if one does not exist yet 
+    // Use the default path (normally the database is created elsewhere)
+    // If the database exists already, you cannot create a new one
+    if ( m_condDBmgr->isCondDBcreated() ) {
+      log << MSG::INFO 
+	  << "Database already exists: no need to create a new one" << endreq;
+    } else {
+      log << MSG::INFO 
+	  << "Database does not exist yet: create a new one" << endreq;
+      m_condDBmgr->createCondDB(); 
+      log << MSG::VERBOSE << "Database successfully created" << endreq;
+    }
+
+    // Open the database
+    m_condDBmgr->openDatabase(); 
+    log << MSG::VERBOSE << "Database successfully opened" << endreq;
+
+    //--- End of Oracle implementation-specific code
+
+#else
+#error Either __CondDBObjy__ or __CondDBOracle__ must be defined
+#endif
+#endif
 
     // Get dataAccess and folderMgr handles
     m_condDBDataAccess = m_condDBmgr->getCondDBDataAccess();
@@ -118,7 +175,15 @@ StatusCode ConditionsDBGate::finalize()
   MsgStream log(msgSvc(), "ConditionsDBGate" );
   log << MSG::DEBUG << "Finalizing" << endreq;
   if( m_condDBmgr != 0 )  {
+#ifdef __CondDBObjy__
     CondDBObjyDBMgrFactory::destroyCondDBMgr( m_condDBmgr );
+#else
+#ifdef __CondDBOracle__
+    CondDBOracleDBMgrFactory::destroyCondDBMgr( m_condDBmgr );
+#else
+#error Either __CondDBObjy__ or __CondDBOracle__ must be defined
+#endif
+#endif
   }
   return Service::finalize();
 }
@@ -274,10 +339,14 @@ ConditionsDBGate::i_findCondDBObject ( ICondDBObject*&     refpCobject,
 
 //----------------------------------------------------------------------------
 
-/// Build the full path to the Objy boot file for the Federation
+/// Build the technology-specific init string to access the database
 StatusCode 
-ConditionsDBGate::i_buildCondDBBootPath( std::string& condDBBootPath )
+ConditionsDBGate::i_buildCondDBInfo( std::string& condDBInfo )
 {  
+
+#ifdef __CondDBObjy__
+
+  /// Build the init string to access the Objy database
 
   MsgStream log(msgSvc(), "ConditionsDBGate" );
   log << MSG::DEBUG 
@@ -286,51 +355,105 @@ ConditionsDBGate::i_buildCondDBBootPath( std::string& condDBBootPath )
   // Try to retrieve the host for the boot file from the jobOptions
   // Assume it is on current host if no host is specified:
   // retrieve it via gethostname (MAXHOSTNAMELEN is defined in sys/param.h)
-  if ( m_condDBBootHost != "" ) {
+  if ( m_condDBHost != "" ) {
     log << MSG::DEBUG
-	<< "Using condDBBootHost from jobOptions:" << endreq; 
-    log << MSG::DEBUG << m_condDBBootHost << endreq;    
+	<< "Using condDBHost from jobOptions:" << endreq; 
+    log << MSG::DEBUG << m_condDBHost << endreq;    
   } else {
-    log << MSG::DEBUG << "Using current host as condDBBootHost:" << endreq; 
+    log << MSG::DEBUG << "Using current host as condDBHost:" << endreq; 
     char* hostname = new char[MAXHOSTNAMELEN];
     if ( gethostname(hostname, MAXHOSTNAMELEN) != 0 ) {
       log << MSG::ERROR << "System method gethostname failed" << endreq;
       return StatusCode::FAILURE;
     }
-    m_condDBBootHost = hostname;
-    log << MSG::DEBUG << m_condDBBootHost << endreq;    
+    m_condDBHost = hostname;
+    log << MSG::DEBUG << m_condDBHost << endreq;    
     delete[] hostname;
   }
   
-  // Try to retrieve the boot file directory from the jobOptions
-  if ( m_condDBBootDir != "" ) {
-    log << MSG::DEBUG 
-	<< "Using condDBBootDir from jobOptions:" << endreq; 
-    log << MSG::DEBUG << m_condDBBootDir << endreq;    
-  } else {
-    log << MSG::ERROR 
-	<< "Property condDBBootDir not set in jobOptions" << endreq; 
-    return StatusCode::FAILURE;
-  }
-
   // Try to retrieve the boot file name from the jobOptions
-  if ( m_condDBBootFile != "" ) {
+  if ( m_condDBName != "" ) {
     log << MSG::DEBUG 
-	<< "Using condDBBootFile from jobOptions:" << endreq; 
-    log << MSG::DEBUG << m_condDBBootFile << endreq;    
+	<< "Using condDBName from jobOptions:" << endreq; 
+    log << MSG::DEBUG << m_condDBName << endreq;    
   } else {
     log << MSG::ERROR 
-	<< "Property condDBBootFile not set in jobOptions" << endreq; 
+	<< "Property condDBName not set in jobOptions" << endreq; 
     return StatusCode::FAILURE;
   }
 
   // Create the full path to the boot file
-  condDBBootPath =
-    m_condDBBootHost + "::" + 
-    m_condDBBootDir + "/" +
-    m_condDBBootFile;
+  condDBInfo = m_condDBHost + "::" + m_condDBName;
 
   return StatusCode::SUCCESS;
+
+#else
+#ifdef __CondDBOracle__
+
+  /// Build the init string to access the Oracle CondDB
+
+  MsgStream log(msgSvc(), "ConditionsDBGate" );
+  log << MSG::DEBUG 
+      << "Building the Oracle init string for the ConditionsDB" << endreq;
+
+  // Try to retrieve the user for the Oracle database from the jobOptions
+  if ( m_condDBUser != "" ) {
+    log << MSG::DEBUG
+	<< "Using condDBUser from jobOptions:" << endreq; 
+    log << MSG::DEBUG << m_condDBUser << endreq;    
+  } else {
+    log << MSG::ERROR 
+	<< "Property condDBUser not set in jobOptions" << endreq; 
+    return StatusCode::FAILURE;
+  }
+  
+  // Try to retrieve the password for the Oracle database from the jobOptions
+  if ( m_condDBPswd != "" ) {
+    log << MSG::DEBUG
+	<< "Using condDBPswd from jobOptions:" << endreq; 
+    log << MSG::DEBUG << m_condDBPswd << endreq;    
+  } else {
+    log << MSG::ERROR 
+	<< "Property condDBPswd not set in jobOptions" << endreq; 
+    return StatusCode::FAILURE;
+  }
+  
+  // Try to retrieve the host for the Oracle database from the jobOptions
+  if ( m_condDBHost != "" ) {
+    log << MSG::DEBUG
+	<< "Using condDBHost from jobOptions:" << endreq; 
+    log << MSG::DEBUG << m_condDBHost << endreq;    
+  } else {
+    log << MSG::ERROR 
+	<< "Property condDBHost not set in jobOptions" << endreq; 
+    return StatusCode::FAILURE;
+  }
+  
+  // Try to retrieve the ConditionsDB name from the jobOptions
+  if ( m_condDBName != "" ) {
+    log << MSG::DEBUG 
+	<< "Using condDBName from jobOptions:" << endreq; 
+    log << MSG::DEBUG << m_condDBName << endreq;    
+  } else {
+    log << MSG::ERROR 
+	<< "Property condDBName not set in jobOptions" << endreq; 
+    return StatusCode::FAILURE;
+  }
+
+  // Create the full path to the boot file
+  condDBInfo  = "user="     + m_condDBUser; // Oracle user
+  condDBInfo += ",passwd="  + m_condDBPswd; // Oracle password
+  condDBInfo += ",db="      + m_condDBHost; // Oracle DB (look in tnsnames.ora)
+  condDBInfo += ",cond_db=" + m_condDBName; // User-defined CondDB name
+
+  return StatusCode::SUCCESS;
+
+#else
+
+#error Either __CondDBObjy__ or __CondDBOracle__ must be defined
+
+#endif
+#endif
 
 }
 
