@@ -1,8 +1,11 @@
-// $Id: ICaloTrackMatch.h,v 1.1.1.2 2001-11-02 16:53:13 ibelyaev Exp $
+// $Id: ICaloTrackMatch.h,v 1.2 2001-11-09 14:30:04 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $  
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.1.1.2  2001/11/02 16:53:13  ibelyaev
+// New Package: the first release
+//
 // ============================================================================
 #ifndef CALOINTERFACES_ICALOTRACKMATCH_H 
 #define CALOINTERFACES_ICALOTRACKMATCH_H 1
@@ -13,7 +16,7 @@
 #include "CaloInterfaces/IIDICaloTrackMatch.h"
 
 class CaloPosition ; ///< from CaloEvent package 
-class TrState      ; ///< from TrKernel  package
+class TrTrack      ; ///< from TrKernel  package
 
 /** @class ICaloTrackMatch ICaloTrackMatch.h CaloInterfaces/ICaloTrackMatch.h
  *  
@@ -60,12 +63,12 @@ public:
   /** the main matching method  
    *
    *  @param caloObj  pointer to "calorimeter" object (position)
-   *  @param trObj    pointer to tracking object (state)
+   *  @param trObj    pointer to tracking object (track)
    *  @param chi2     returned value of chi2 of the matching
    *  @return status code for matching procedure 
    */
   virtual StatusCode match ( const CaloPosition* caloObj  , 
-                             const TrState*      trObj    ,
+                             const TrTrack*      trObj    ,
                              double&             chi2     ) = 0 ;
 
   /** destructor
