@@ -5,7 +5,13 @@ Purpose     : LHCb analysis program
 
 </PRE><H1><A NAME=v8r3>2003-06-27 DaVinci v8r4</A></H1><PRE>
  - New features:
-   . 
+   . New and modified (pre)selections 
+     .. Bd->Dstar Pi inclusive
+        Bd->Pi0 Pi0
+        Bs->Phi Etac        
+     .. use PhysSelSys v5r4 (refers to its release notes for details)
+   . New code and options for preselections
+     .. use PhysSelSys
 
  - Bug fixes or clean up:
    . Fix memory leak when using the same associator twice as done for
@@ -16,6 +22,8 @@ Purpose     : LHCb analysis program
      .. use PrimVtx v2r0p1
      .. use DaVinciTools v8r1p
      .. use PhysSelelection v6r0p1   
+   . Fix bug in DaVinci.job that was removing executable before examining
+     core
 
 </PRE><H1><A NAME=v8r2>2003-06-18 DaVinci v8r2</A></H1><PRE>
  - New features:
@@ -34,7 +42,7 @@ Purpose     : LHCb analysis program
     .. new algorithm and options using CombinedParticleMaker
     .. remove old algorithm
     .. use PhysSelections v6r0
-  . New and modified (pre)selection in PhysSelSys v6r3 (refer to the
+  . New and modified (pre)selection in PhysSelSys v5r3 (refer to the
     package release notes)  
   . Modify DaVinci.job to have explicit $current paths for temporary files
     to make it work at Cambridge (Andy Buckley)
