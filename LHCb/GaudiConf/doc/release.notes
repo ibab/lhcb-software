@@ -1,6 +1,10 @@
 package GaudiConf
 package manager: M.Cattaneo
 
+!======================== GaudiConf v7r7 2004-04-16 ========================
+! 2004-04-16 - Marco Cattaneo
+ - Updated Gaudi.supp file for Gaudi v14r4
+
 !======================== GaudiConf v7r6 2004-03-02 ========================
 ! 2004-03-02 - Marco Cattaneo
  - Remove SicbTestDataFile.opts, .py
