@@ -1,11 +1,13 @@
-! $Id: release.notes,v 1.117 2004-07-28 14:15:24 pkoppenb Exp $
+! $Id: release.notes,v 1.118 2004-07-29 06:39:37 pkoppenb Exp $
 ! Package     : DaVinciTools
 ! Responsible : P. Koppenburg
 
+! 2004-07-29 - P. Koppenburg
+ - cmt/requirements
+   . Boost link options for v11r12. Remove them for v12r0.
 ! 2004-07-23 - P. Koppenburg
  - */*.h
    . GaudiTools -> GaudiAlg
-! 2004-07-23 - P. Koppenburg
  - cmt/requirements
    . Don't use but import AIDA
 !========================== DaVinciTools v10r0 2004-07-22 ===================
