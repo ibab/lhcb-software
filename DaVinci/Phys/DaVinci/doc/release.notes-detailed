@@ -4,6 +4,10 @@
 ! Purpose     : Analaysis program for LHCb
 !-----------------------------------------------------------------------------
 
+! 2004-10-04 - P. Koppenburg
+  - options/L0Muon.opts
+    . Removed temporary patch to overwrite change in Pt kick from 
+      1.12 to 1.39 GeV, since now L0DU is fixed.
 !========================== DaVinci v12r1 2004-09-16 ===================
 ! 2004-09-17 - P. Koppenburg
   - options/Hlt.opts
