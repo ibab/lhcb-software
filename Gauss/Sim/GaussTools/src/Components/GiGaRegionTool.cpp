@@ -1,8 +1,11 @@
-// $Id: GiGaRegionTool.cpp,v 1.1 2003-05-30 17:55:52 ibelyaev Exp $
+// $Id: GiGaRegionTool.cpp,v 1.2 2003-06-03 17:45:06 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
-// $Log: not supported by cvs2svn $ 
+// $Log: not supported by cvs2svn $
+// Revision 1.1  2003/05/30 17:55:52  ibelyaev
+//  add GiGaRegionTool - 'Cuts per Region'
+// 
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -99,13 +102,15 @@ StatusCode GiGaRegionTool::process ( const std::string& /* region */ ) const
       if      ( 0 != volume->GetRegion() && !m_overwrite )
         {
           Warning ( " G4LogicalVolume '" + (*ivolume) + 
-                    "' already belongs to some region, skip " ) ;
+                    "' already belongs to region '"   + 
+                    volume->GetRegion()->GetName()    + "' , skip "    );
           continue ;
         } 
       else if ( 0 != volume->GetRegion() &&  m_overwrite )
         {
           Warning ( " G4LogicalVolume '" + (*ivolume) + 
-                    "' already belongs to some region, overwrite " );          
+                    "' already belongs to region '"   + 
+                    volume->GetRegion()->GetName()    +"', overwrite " );
         }
       // set region 
       volume -> SetRegion            ( region ) ;

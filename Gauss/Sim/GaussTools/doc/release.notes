@@ -4,6 +4,13 @@
 ! Purpose       : G4 actions, and some miscealenous algs for Gauss
 !-----------------------------------------------------------------------------
 
+! 2003-06-03 - Vanya BELYAEV
+ - src/Components/GaussG4UserLimits.cpp    Add comparison operator 
+ - src/Components/GaussG4UserLimits.h      Add comparison operator 
+ - src/Components/GiGaRegionTool.cpp       Improve the printout 
+ - src/Components/GiGaSetSimAttributes.cpp Fix the problem reported by Patrick Robbe 
+ - cmt/requirements                        Increase the version 
+
 ! 2003-05-30 - Vanya BELYAEV
  - src/Components/GiGaRegionTool.h 
    src/Components/GiGaRegionTool.cpp  new tool to create the "region"

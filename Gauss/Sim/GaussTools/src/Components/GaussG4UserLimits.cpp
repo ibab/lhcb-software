@@ -150,3 +150,22 @@ string GetULName( ULtype ulType )
   }
   return ulName; 
 }
+
+/** comparison operator for GaussG4UserLimits class 
+ *  @param ul1 the first UL to be compared 
+ *  @param ul2 the second UL to be compared 
+ *  @return the result of coomaprison operation
+ */
+bool operator== ( const GaussG4UserLimits& ul1 , 
+                  const GaussG4UserLimits& ul2 )
+{       
+  // the same object 
+  if ( &ul1                == &ul2                ) { return true  ; } 
+  if (  ul1.fMaxStepLength !=  ul2.fMaxStepLength ) { return false ; }
+  if (  ul1.fMaxTime       !=  ul2.fMaxTime       ) { return false ; }
+  if (  ul1.fMinEkine      !=  ul2.fMinEkine      ) { return false ; }
+  if (  ul1.fMinRange      !=  ul2.fMinRange      ) { return false ; }
+  if (  ul1.fUserLimitSet  !=  ul2.fUserLimitSet  ) { return false ; }
+  if (  ul1.fType          !=  ul2.fType          ) { return false ; }
+  return true ;
+};

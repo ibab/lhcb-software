@@ -1,8 +1,11 @@
-// $Id: GiGaSetSimAttributes.cpp,v 1.5 2003-05-30 14:30:41 ibelyaev Exp $
+// $Id: GiGaSetSimAttributes.cpp,v 1.6 2003-06-03 17:45:06 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.5  2003/05/30 14:30:41  ibelyaev
+//  add the propagation of UserLimits along the geoemtry tree
+//
 // Revision 1.4  2003/05/05 13:51:27  witoldp
 // fix for G4.5.1, cuts per particle implemented
 //
@@ -16,6 +19,8 @@
 //  update foe newer GiGa, add new tools
 // 
 // ============================================================================
+// STD & STL 
+#include <set>
 // GiGa
 #include "GiGa/GiGaMACROs.h"
 // SimSvc 
@@ -231,7 +236,7 @@ StatusCode GiGaSetSimAttributes::process ( const std::string& vol ) const
 // ============================================================================
 /** set user Limits for the given logical volume 
  *  and propagate it to all daughetr volumes 
- *  @param lv logicla volume 
+ *  @param lv logical volume 
  *  @param ul user limits 
  *  @return status code 
  */
@@ -244,30 +249,41 @@ StatusCode GiGaSetSimAttributes::setUserLimits
   
   const std::string& volume = lv->GetName() ;
   
+  // check the existing limits 
   if ( 0 != lv->GetUserLimits() ) 
     {
-      Warning ( " setUserLimits ('" + 
-                volume + "') : G4LogicalVolume has user limits " ) ;
-      // keep the existing limits 
-      if( !overwrite() ) { return StatusCode::SUCCESS ; } // ATTENTNION 
-      Warning ( " setUserLimits ('" + 
-                volume + "') : Existig limits are to be replaced ") ;
-      // overwrite existing limits! 
-      G4UserLimits* aux = lv->GetUserLimits() ;
-      delete aux ;  aux = 0 ;                             // ATTENTION 
-      lv -> SetUserLimits( aux );                         // ATTENTION 
+      GaussG4UserLimits* aux = 
+        dynamic_cast<GaussG4UserLimits*> ( lv->GetUserLimits() ) ;
+      // keep the identical limits 
+      if( 0 == aux || ( ul != *aux ) ) 
+        {
+          Warning ( " setUserLimits ('" + 
+                    volume + "') : G4LogicalVolume has user limits " ) ;
+          // keep the existing limits 
+          if( !overwrite() ) { return StatusCode::SUCCESS ; } // ATTENTNION 
+          Warning ( " setUserLimits ('" + 
+                    volume + "') : Existing limits are to be replaced ") ;
+          // overwrite existing limits! 
+          G4UserLimits* tmp = lv->GetUserLimits() ;
+          if( 0 != tmp ) { delete tmp ;  tmp = 0 ; }          // ATTENTION 
+          lv -> SetUserLimits( tmp );                         // ATTENTION 
+        }
     }
   
   // set new user limits 
-  lv -> SetUserLimits( new GaussG4UserLimits( ul ) ) ;
+  if( 0 == lv->GetUserLimits() ) 
+    { lv -> SetUserLimits( new GaussG4UserLimits( ul ) ) ; }
   
   Print ( " setUserLimts ('" + volume + ") : \t new user limits are set " , 
           StatusCode::SUCCESS , MSG::DEBUG ) ;
   
+  
+  typedef std::set<G4LogicalVolume*> LVs;
+  LVs daughters ;
+  
   // propagate the attributes to the daughter volumes 
   const size_t nPV = lv -> GetNoDaughters() ;
-  StatusCode sc  = StatusCode::SUCCESS ;
-  for ( size_t iPV = 0 ; iPV < nPV && sc.isSuccess () ; ++iPV ) 
+  for ( size_t iPV = 0 ; iPV < nPV ; ++iPV ) 
     {
       G4VPhysicalVolume* pv = lv -> GetDaughter ( iPV ) ;
       if( 0 == pv ) 
@@ -277,12 +293,19 @@ StatusCode GiGaSetSimAttributes::setUserLimits
       if( 0 == dlv ) 
         { return Error(" setUserLimits ('" + 
                        volume +"') : daughter G4LogicalVolume is invalid" ) ; }
-      // start the recursion 
-      sc = setUserLimits( dlv , ul ) ;                        // RECURSION 
+      daughters.insert( dlv ) ;
     }
-  if( sc.isFailure() ) 
-    { return Error(" setUserLimits ('" + 
-                   volume + "') : cannot process daughter " , sc ) ; }
+  
+  for( LVs::const_iterator ilv = daughters.begin() ; 
+       daughters.end() != ilv ; ++ilv )
+    {
+      G4LogicalVolume* dlv = *ilv ;
+      StatusCode sc = setUserLimits( dlv , ul ) ;
+      if( sc.isFailure() ) 
+        { return Error(" setUserLimits ('" + 
+                       volume + "') : cannot process daughter " , sc ) ; }
+    }
+  
   
   return StatusCode::SUCCESS ;
 };

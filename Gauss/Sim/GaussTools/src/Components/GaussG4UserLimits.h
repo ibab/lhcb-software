@@ -17,6 +17,10 @@ typedef std::multimap<int, ULtype> mmiul;
 
 class GaussG4UserLimits : public G4UserLimits
 {
+  friend bool operator==( const GaussG4UserLimits& , 
+                          const GaussG4UserLimits& );
+  friend bool operator!=( const GaussG4UserLimits& , 
+                          const GaussG4UserLimits& );
 public:  // with description
 
   GaussG4UserLimits(const G4String& type );
@@ -42,9 +46,9 @@ public:  // with description
 
   bool GetUserLimitSet( const G4int particleCode, ULtype ultype ) const;
 
- private:
+private:
   G4double GetCut(const G4Track& aTrack, const mid& partCutMap, const bool cutBelow );
- 
+  
 protected:  // with description
 
   mid fMaxStepLength;     // max allowed Step size in this volume per particle
@@ -61,6 +65,23 @@ protected:  // with description
 string GetULName( ULtype ulType );
 
 #include "GaussG4UserLimits.icc"
+
+/** comparison operator for GaussG4UserLimits class 
+ *  @param ul1 the first UL to be compared 
+ *  @param ul2 the second UL to be compared 
+ *  @return the result of coomaprison operation
+ */
+bool        operator== ( const GaussG4UserLimits& ul1 , 
+                         const GaussG4UserLimits& ul2 ) ;
+
+/** comparison operator for GaussG4UserLimits class 
+ *  @param ul1 the first UL to be compared 
+ *  @param ul2 the second UL to be compared 
+ *  @return the result of coomaprison operation
+ */
+inline bool operator!= ( const GaussG4UserLimits& ul1 , 
+                         const GaussG4UserLimits& ul2 ) 
+{ return !(ul1 == ul2) ; }
 
 
 #endif
