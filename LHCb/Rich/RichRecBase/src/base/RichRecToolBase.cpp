@@ -1,4 +1,4 @@
-// $Id: RichRecToolBase.cpp,v 1.3 2003-06-30 15:11:58 jonrob Exp $
+// $Id: RichRecToolBase.cpp,v 1.4 2003-07-03 13:08:36 jonesc Exp $
 // Include files
 
 // from Gaudi
@@ -24,6 +24,8 @@ RichRecToolBase::RichRecToolBase( const std::string& type,
     m_msgLevel(0),
     m_toolList() {
   
+  declareProperty( "ToolRegistryName", m_regName = "RichToolRegistry" );
+
 }
 
 StatusCode RichRecToolBase::initialize() {
@@ -37,7 +39,7 @@ StatusCode RichRecToolBase::initialize() {
   algIProp->release();
 
   // Get pointer to Rich Tool Registry
-  if ( !toolSvc()->retrieveTool( "RichToolRegistry", m_toolReg) ) {
+  if ( !toolSvc()->retrieveTool( "RichToolRegistry",  m_regName, m_toolReg) ) {
     MsgStream msg( msgSvc(), name() );
     msg << MSG::ERROR << "RichToolRegistry not found" << endreq;
     return StatusCode::FAILURE;
@@ -51,9 +53,9 @@ StatusCode RichRecToolBase::finalize() {
   // Release all tools
   for ( ToolList::iterator it = m_toolList.begin();
         it != m_toolList.end(); ++it ) {
-    if ( (*it).second ) { releaseTool((*it).first); }
+    if ( *it ) { toolSvc()->releaseTool(*it); (*it) = NULL; }
   }
   if ( m_toolReg ) { toolSvc()->releaseTool( m_toolReg ); m_toolReg = NULL; }
-
+  
   return StatusCode::SUCCESS;
 }

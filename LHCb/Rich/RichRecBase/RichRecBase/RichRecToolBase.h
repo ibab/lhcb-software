@@ -1,12 +1,10 @@
-// $Id: RichRecToolBase.h,v 1.2 2003-06-30 15:11:57 jonrob Exp $
+// $Id: RichRecToolBase.h,v 1.3 2003-07-03 13:08:35 jonesc Exp $
 #ifndef RICHRECALGS_RICHRECTOOLBASE_H
 #define RICHRECALGS_RICHRECTOOLBASE_H 1
 
-#include <map>
-#include <string>
-
 // from Gaudi
 #include "GaudiKernel/AlgTool.h"
+#include "GaudiKernel/GaudiException.h"
 
 // Interfaces
 #include "RichRecBase/IRichToolRegistry.h"
@@ -41,21 +39,28 @@ public:
 protected:   // Protected methods
 
   /// Test printout level
-  bool msgLevel( int mLevel ); 
+  bool msgLevel( int mLevel );
 
   /// Return message level setting
   int msgLevel();
 
-  /// Acquire a tool from the RichToolRegistry
+   /// Acquire type for given tool name from registry
   template <typename TOOL> inline
-  TOOL* acquireTool( std::string name, TOOL*& pTool) {
-    m_toolList[name] = true;
-    return (pTool=dynamic_cast<TOOL*>(m_toolReg->acquireTool(name)));
+  TOOL* acquireTool( std::string tName, TOOL*& pTool) {
+    if ( toolSvc()->retrieveTool(m_toolReg->toolType(tName),tName,pTool) ) {
+      m_toolList.push_back(pTool);
+    } else {
+      pTool = NULL;
+      throw GaudiException( "Unable to retrieve tool '" + tName +
+                            "' of type '" + m_toolReg->toolType(tName) + "'" ,
+                            name(), StatusCode::FAILURE );
+    }
+    return pTool;
   }
-  
+
   /// Release a tool
-  void releaseTool( std::string name );
-  
+  void releaseTool( IAlgTool *& pTool );
+
 private:   // Private data
 
   /// Pointer to tool registry
@@ -64,9 +69,12 @@ private:   // Private data
   /// Message service printout level
   int m_msgLevel;
 
-  /// Vector of tool names currently in use
-  typedef std::map<std::string,bool> ToolList;
+  /// list of tool names currently in use
+  typedef std::list<IAlgTool*> ToolList;
   ToolList m_toolList;
+
+  /// Runtime name for RichToolRegistry
+  std::string m_regName;
 
 };
 
@@ -75,14 +83,17 @@ inline int RichRecToolBase::msgLevel()
   return m_msgLevel;
 }
 
-inline bool RichRecToolBase::msgLevel( int mLevel ) 
-{ 
-  return ( m_msgLevel && m_msgLevel <= mLevel ); 
+inline bool RichRecToolBase::msgLevel( int mLevel )
+{
+  return ( m_msgLevel && m_msgLevel <= mLevel );
 }
 
-inline void RichRecToolBase::releaseTool( std::string name ) {
-  m_toolList[name] = false;
-  m_toolReg->releaseTool(name);
+inline void RichRecToolBase::releaseTool( IAlgTool *& pTool ) {
+  if ( pTool ) {
+    m_toolList.remove(pTool);
+    toolSvc()->releaseTool(pTool);
+    pTool = NULL;
+  }
 }
 
 #endif // RICHRECALGS_RICHRECTOOLBASE_H

@@ -1,14 +1,12 @@
-// $Id: RichRecAlgBase.h,v 1.4 2003-07-02 09:02:26 jonrob Exp $
+// $Id: RichRecAlgBase.h,v 1.5 2003-07-03 13:08:35 jonesc Exp $
 #ifndef RICHRECALGS_RICHRECALGBASE_H
 #define RICHRECALGS_RICHRECALGBASE_H 1
 
-// from GaudiAlg
+// from Gaudi
 //#include "GaudiAlg/GaudiAlgorithm.h"
 #include "GaudiKernel/Algorithm.h"
 #include "GaudiKernel/IAlgTool.h"
-
-// Interfaces
-#include "RichRecBase/IRichToolRegistry.h"
+#include "GaudiKernel/GaudiException.h"
 
 // Event
 class ProcStatus;
@@ -17,6 +15,14 @@ class RichRecStatus;
 #include "Event/RichRecSegment.h"
 #include "Event/RichRecPixel.h"
 #include "Event/RichRecPhoton.h"
+
+// Interfaces
+#include "RichRecBase/IRichToolRegistry.h"
+#include "RichRecBase/IRichSegmentCreator.h"
+#include "RichRecBase/IRichTrackCreator.h"
+#include "RichRecBase/IRichPhotonCreator.h"
+#include "RichRecBase/IRichPixelCreator.h"
+#include "RichRecBase/IRichStatusCreator.h"
 
 /** @class RichRecAlgBase RichRecAlgBase.h RichRecBase/RichRecAlgBase.h
  *
@@ -55,45 +61,62 @@ protected:  // Protected methods
   /// Return message level setting
   int msgLevel();
 
-  /// Acquire a tool from the RichToolRegistry
+  /// Acquire type for given tool name from registry
   template <typename TOOL> inline
-  TOOL* acquireTool( std::string name, TOOL*& pTool) {
-    m_toolList[name] = true;
-    return (pTool=dynamic_cast<TOOL*>(m_toolReg->acquireTool(name)));
+  TOOL* acquireTool( std::string tName, TOOL*& pTool) {
+    if ( toolSvc()->retrieveTool(m_toolReg->toolType(tName),tName,pTool) ) {
+      m_toolList.push_back(pTool);
+    } else {
+      pTool = NULL;
+      throw GaudiException( "Unable to retrieve tool '" + tName +
+                            "' of type '" + m_toolReg->toolType(tName) + "'" ,
+                            name(), StatusCode::FAILURE );
+    }
+    return pTool;
   }
-  
+
   /// Release a tool
-  void releaseTool( std::string name );
+  void releaseTool( IAlgTool *& pTool );
 
 private:   // Private data
 
   /// Pointer to tool registry
   IRichToolRegistry * m_toolReg;
-  
+
   /// Pointer to RichRecTracks
   RichRecTracks ** m_richTracks;
-  
+
   /// Pointer to RichRecPixels
   RichRecPixels ** m_richPixels;
-  
+
   /// Pointer to RichRecSegments
   RichRecSegments ** m_richSegments;
-  
+
   /// Pointer to RichRecPhotons
   RichRecPhotons ** m_richPhotons;
-  
+
   /// Pointer to RichRecStatus
   RichRecStatus ** m_richStatus;
 
   /// Location of RichRecStatus in TES
   std::string m_richRecStatusLocation;
 
+  /// Runtime name for RichToolRegistry
+  std::string m_regName;
+
   /// Message service printout level
   int m_msgLevel;
 
-  /// Vector of tool names currently in use
-  typedef std::map<std::string,bool> ToolList;
+  /// list of tool names currently in use
+  typedef std::list<IAlgTool*> ToolList;
   ToolList m_toolList;
+
+  // Internal tool pointers
+  IRichSegmentCreator * m_segTool;
+  IRichPhotonCreator * m_photTool;
+  IRichPixelCreator * m_pixTool;
+  IRichTrackCreator * m_tkTool;
+  IRichStatusCreator * m_statTool;
 
 };
 
@@ -132,9 +155,12 @@ inline int RichRecAlgBase::msgLevel()
   return m_msgLevel;
 }
 
-inline void RichRecAlgBase::releaseTool( std::string name ) {
-  m_toolList[name] = false;
-  m_toolReg->releaseTool(name);
+inline void RichRecAlgBase::releaseTool( IAlgTool *& pTool ) {
+  if ( pTool ) {
+    m_toolList.remove(pTool);
+    toolSvc()->releaseTool(pTool);
+    pTool = NULL;
+  }
 }
 
 #endif // RICHRECALGS_RICHRECALGBASE_H
