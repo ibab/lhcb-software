@@ -46,11 +46,13 @@ CaloLCorrectionSimple::CaloLCorrectionSimple(const std::string& type,
                                              const std::string& name, 
                                              const IInterface* parent) 
   : CaloTool( type, name, parent )
-  , m_Zref(12625.6)
-  , m_Zfactor(18.553) {
+  , m_Zref     (12638.2     )
+  , m_Zfactor  (    5.83    )
+  , m_Zfactor2 (    2.76    ) {
   declareInterface<ICaloHypoTool>(this);
-  declareProperty("Zref",m_Zref);
-  declareProperty("Zfactor",m_Zfactor);
+  declareProperty("Zref"    ,m_Zref    );
+  declareProperty("Zfactor" ,m_Zfactor );
+  declareProperty("Zfactor2",m_Zfactor2);
 }
 // ============================================================================
 
@@ -81,6 +83,7 @@ StatusCode CaloLCorrectionSimple::initialize()
   logmsg << MSG::INFO 
          << " Zref=" << m_Zref
          << " Zfactor=" << m_Zfactor
+         << " Zfactor2=" << m_Zfactor2
          << endreq;
 
   return StatusCode::SUCCESS;
@@ -137,7 +140,7 @@ StatusCode CaloLCorrectionSimple::operator() ( CaloHypo* hypo  ) const
   double result = m_Zref+
     cos(atan(sqrt(x*x+y*y)
              /(m_Zref+m_Zfactor*log(e))))
-    *m_Zfactor*log(e);
+    *log(e)*(m_Zfactor+m_Zfactor2*log(e));
   // talk to user
   MsgStream logmsg(msgSvc(),name());
   logmsg << MSG::VERBOSE << "calculate() has been called"

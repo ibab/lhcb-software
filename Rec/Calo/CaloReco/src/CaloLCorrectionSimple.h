@@ -70,7 +70,10 @@ protected:
   virtual ~CaloLCorrectionSimple() ;
   
 private:
-  double m_Zref,m_Zfactor;
+  double m_Zref; // z position for maximum deposit fo 1 GeV gamma
+  double m_Zfactor; // factor in mm/log(GeV) for shower size
+  double m_Zfactor2; // factor in mm/(log(GeV))^2 for shower size
+
 };
 // ============================================================================
 
