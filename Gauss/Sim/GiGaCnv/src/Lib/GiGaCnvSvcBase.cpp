@@ -1,7 +1,10 @@
-/// ===========================================================================
+// ============================================================================
 /// CVS tag $Name: not supported by cvs2svn $ 
-/// ===========================================================================
+// ============================================================================
 /// $Log: not supported by cvs2svn $
+/// Revision 1.4  2001/07/25 17:19:31  ibelyaev
+/// all conversions now are moved from GiGa to GiGaCnv
+///
 /// Revision 1.3  2001/07/24 11:13:54  ibelyaev
 /// package restructurization(III) and update for newer GiGa
 ///
@@ -10,7 +13,7 @@
 /// 
 // ===========================================================================
 #define GIGACNV_GIGACNVSVCBASE_CPP 1  
-/// ===========================================================================
+// ============================================================================
 // STL & STL 
 #include <string> 
 #include <vector> 
@@ -40,13 +43,13 @@
 #include "GiGaCnv/IGiGaCnvSvc.h" 
 #include "GiGaCnv/GiGaCnvSvcBase.h"
 
-/// ===========================================================================
+// ============================================================================
 /** standard constructor
  *  @param ServiceName     service name 
  *  @param ServiceLocator  pointer to Service Locator 
  *  @param StorageType     storage type identifier
  */
-/// ===========================================================================
+// ============================================================================
 GiGaCnvSvcBase::GiGaCnvSvcBase( const std::string&   ServiceName       , 
                                 ISvcLocator*         ServiceLocator    ,
                                 const unsigned int   StorageType       )
@@ -86,16 +89,16 @@ GiGaCnvSvcBase::GiGaCnvSvcBase( const std::string&   ServiceName       ,
   declareProperty   ( "IncidentService"                 , m_inName      );
 };
 
-/// ===========================================================================
+// ============================================================================
 /// virtual destructor 
-/// ===========================================================================
+// ============================================================================
 GiGaCnvSvcBase::~GiGaCnvSvcBase(){};
 
-/// ===========================================================================
+// ============================================================================
 /** service initialization 
  *  @return status code 
  */
-/// ===========================================================================
+// ============================================================================
 StatusCode GiGaCnvSvcBase::initialize()
 {
   ///
@@ -229,11 +232,11 @@ StatusCode GiGaCnvSvcBase::initialize()
   ///
 };
 
-/// ===========================================================================
+// ============================================================================
 /** locate all own converters 
  *  @return status code 
  */
-/// ===========================================================================
+// ============================================================================
 StatusCode GiGaCnvSvcBase::locateOwnCnvs() 
 {  
   /// here we need to locate all converter factories and converters 
@@ -252,11 +255,11 @@ StatusCode GiGaCnvSvcBase::locateOwnCnvs()
   return StatusCode::SUCCESS;
 };
 
-/// ===========================================================================
+// ============================================================================
 /** service initialization 
  *  @return status code 
  */
-/// ===========================================================================
+// ============================================================================
 StatusCode GiGaCnvSvcBase::finalize()
 {
   ///
@@ -273,13 +276,13 @@ StatusCode GiGaCnvSvcBase::finalize()
   return ConversionSvc::finalize() ;
 };
 
-/// ===========================================================================
+// ============================================================================
 /** Retrieve the interface
  *  @param IID   unique interface identifier 
  *  @param ppI   placeholder for returned interface 
  *  @return status code 
  */
-/// ===========================================================================
+// ============================================================================
 StatusCode GiGaCnvSvcBase::queryInterface( const IID& iid , void** ppI )
 { 
   ///
@@ -305,23 +308,23 @@ StatusCode GiGaCnvSvcBase::queryInterface( const IID& iid , void** ppI )
   return StatusCode::SUCCESS;  
 };
 
-/// ===========================================================================
+// ============================================================================
 /** declare the object 
  *  @param Leaf object description 
  *  @return status code 
  */
-/// ===========================================================================
+// ============================================================================
 StatusCode GiGaCnvSvcBase::declareObject( const IGiGaCnvSvc::Leaf& leaf )
 {
   m_leaves.push_back( leaf );
   return StatusCode::SUCCESS ;
 };
 
-/// ===========================================================================
+// ============================================================================
 /** handle the incident
  *  @param reference to incident 
  */
-/// ===========================================================================
+// ============================================================================
 void       GiGaCnvSvcBase::handle         ( const Incident& inc )
 {
   ///
@@ -376,13 +379,13 @@ void       GiGaCnvSvcBase::handle         ( const Incident& inc )
   ///  
 };
 
-/// ===========================================================================
+// ============================================================================
 /** print error message and return status code
  *  @param msg error message 
  *  @param sc  status code
  *  @return statsu code 
  */
-/// ===========================================================================
+// ============================================================================
 StatusCode GiGaCnvSvcBase::Error( const std::string& Message , 
                                   const StatusCode & Status )
 {  
@@ -390,13 +393,13 @@ StatusCode GiGaCnvSvcBase::Error( const std::string& Message ,
   return  Print( Message , MSG::ERROR  , Status  ) ; 
 };  
 
-/// ===========================================================================
+// ============================================================================
 /** print warning message and return status code
  *  @param msg warning message 
  *  @param sc  status code
  *  @return statsu code 
    */
-/// ===========================================================================
+// ============================================================================
 StatusCode GiGaCnvSvcBase::Warning( const std::string& Message , 
                                     const StatusCode & Status )
 {
@@ -404,14 +407,14 @@ StatusCode GiGaCnvSvcBase::Warning( const std::string& Message ,
   return  Print( Message , MSG::WARNING , Status ) ; 
 };
 
-/// ===========================================================================
+// ============================================================================
 /** print the  message and return status code
  *  @param msg error message 
  *  @param lvl print level 
  *  @param sc  status code
  *  @return statsu code 
  */
-/// ===========================================================================
+// ============================================================================
 StatusCode GiGaCnvSvcBase::Print( const std::string& Message , 
                                   const MSG::Level & level   , 
                                   const StatusCode & Status )
@@ -419,14 +422,14 @@ StatusCode GiGaCnvSvcBase::Print( const std::string& Message ,
  log << level << Message << endreq ; return  Status; };
 
 
-/// ===========================================================================
+// ============================================================================
 /** re-throw the exception 
  *  @param msg  message 
  *  @param exc  previous exception 
  *  @param lvl  print level 
  *  @param sc   status code 
  */
-/// ===========================================================================
+// ============================================================================
 StatusCode GiGaCnvSvcBase::Exception( const std::string    & Message , 
                                       const GaudiException & Excp    ,
                                       const MSG::Level     & level   , 
@@ -438,14 +441,14 @@ StatusCode GiGaCnvSvcBase::Exception( const std::string    & Message ,
   return  Status;
 };
 
-/// ===========================================================================
+// ============================================================================
 /** re-throw the exception 
  *  @param msg  message 
  *  @param exc  previous exception 
  *  @param lvl  print level 
  *  @param sc   status code 
  */
-/// ===========================================================================
+// ============================================================================
 StatusCode GiGaCnvSvcBase::Exception( const std::string    & Message , 
                                       const std::exception & Excp    ,
                                       const MSG::Level     & level   , 
@@ -458,13 +461,13 @@ StatusCode GiGaCnvSvcBase::Exception( const std::string    & Message ,
   return  Status;
 };
 
-/// ===========================================================================
+// ============================================================================
 /** throw the exception 
  *  @param msg  message 
  *  @param lvl  print level 
  *  @param sc   status code 
  */
-/// ===========================================================================
+// ============================================================================
 StatusCode GiGaCnvSvcBase::Exception( const std::string    & Message , 
                                       const MSG::Level     & level   , 
                                       const StatusCode     & Status )
@@ -476,7 +479,7 @@ StatusCode GiGaCnvSvcBase::Exception( const std::string    & Message ,
   return  Status;
 };
 
-/// ===========================================================================
+// ============================================================================
 
 
 

@@ -1,8 +1,11 @@
-/// ===========================================================================
+// ============================================================================
 /// CVS tag $Name: not supported by cvs2svn $ 
-/// ===========================================================================
-/// $Log: not supported by cvs2svn $ 
-/// ===========================================================================
+// ============================================================================
+/// $Log: not supported by cvs2svn $
+/// Revision 1.1  2001/07/24 11:13:56  ibelyaev
+/// package restructurization(III) and update for newer GiGa
+/// 
+// ============================================================================
 // Include files
 /// STD and STL 
 #include <string>
@@ -27,30 +30,30 @@
  *  @date   22/07/2001 
  */
 
-/// ===========================================================================
+// ============================================================================
 /** standard constructor
  *  @param  Svc   pointer to Particle Property Service 
  */
-/// ===========================================================================
+// ============================================================================
 Trajectory2Particle::Trajectory2Particle( IParticlePropertySvc* Svc )
   : m_ppSvc ( Svc   )
 {
   if( 0 != ppSvc() ) { ppSvc()->addRef() ; }
 };
 
-/// ===========================================================================
+// ============================================================================
 /// destructor 
-/// ===========================================================================
+// ============================================================================
 Trajectory2Particle::~Trajectory2Particle()
 {
   if( 0 != ppSvc() ) { ppSvc()->release(); m_ppSvc = 0 ;}
 };
 
-/// ===========================================================================
+// ============================================================================
 /** copy constructor 
  *  @param right const reference to object 
  */
-/// ===========================================================================
+// ============================================================================
 Trajectory2Particle::
 Trajectory2Particle( const Trajectory2Particle& right )
   : m_ppSvc( right.ppSvc() )
@@ -58,13 +61,13 @@ Trajectory2Particle( const Trajectory2Particle& right )
   if( 0 != ppSvc() ) { ppSvc()->addRef() ; }
 };
 
-/// ===========================================================================
+// ============================================================================
 /** perform the conversion of G4VTrajectory object to 
  *  MCParticle object. 
  *  @param trajectory pointer to G4VTrajectory object 
  *  @return pointer to converted MCParticle object
  */
-/// ===========================================================================
+// ============================================================================
 static const std::string 
 ErrMsg1("GiGaCnv::Trajectory2Particle::IParticlePropertySvc* points to NULL!");
 static const std::string 
@@ -73,7 +76,7 @@ static const std::string
 ErrMsg3("GiGaCnv::Trajectory2Particle::G4ParticleDefinition* points to NULL!");
 static const std::string 
 ErrMsg4("GiGaCnv::Trajectory2Particle::ParticleProperty* points to NULL for ");
-/// ===========================================================================
+// ============================================================================
 MCParticle* 
 Trajectory2Particle::operator() ( const GiGaTrajectory* trajectory ) const
 {
@@ -96,4 +99,4 @@ Trajectory2Particle::operator() ( const GiGaTrajectory* trajectory ) const
   ///
 };
 
-/// ===========================================================================
+// ============================================================================

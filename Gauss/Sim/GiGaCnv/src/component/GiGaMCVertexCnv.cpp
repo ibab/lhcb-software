@@ -1,7 +1,10 @@
-/// ===========================================================================
+// ============================================================================
 /// CVS tag $Name: not supported by cvs2svn $ 
-/// ===========================================================================
+// ============================================================================
 /// $Log: not supported by cvs2svn $
+/// Revision 1.7  2001/07/30 14:13:36  ibelyaev
+/// update in GiGaCnvFunctors
+///
 /// Revision 1.6  2001/07/27 11:24:57  ibelyaev
 /// bug fix in MCParticles<->MCVertices relations
 ///
@@ -16,7 +19,7 @@
 /// 
 //  ===========================================================================
 #define GIGACNV_GIGAMCVERTEXCNV_CPP 1 
-/// ===========================================================================
+// ============================================================================
 /// STL 
 #include <string>
 #include <vector>
@@ -58,17 +61,17 @@
 ///
 #include "GiGaMCVertexCnv.h" 
 
-/// ===========================================================================
+// ============================================================================
 /// factories 
-/// ===========================================================================
+// ============================================================================
 static const  CnvFactory<GiGaMCVertexCnv>         s_Factory ;
 const        ICnvFactory&GiGaMCVertexCnvFactory = s_Factory ;
 
-/// ===========================================================================
+// ============================================================================
 /** standard constructor
  *  @param Loc pointer to service locator 
  */ 
-/// ===========================================================================
+// ============================================================================
 GiGaMCVertexCnv::GiGaMCVertexCnv( ISvcLocator* Locator ) 
   : GiGaCnvBase( storageType() , classID() , Locator ) 
 {
@@ -81,28 +84,28 @@ GiGaMCVertexCnv::GiGaMCVertexCnv( ISvcLocator* Locator )
   ///
 }; 
 
-/// ===========================================================================
+// ============================================================================
 /// destructor 
-/// ===========================================================================
+// ============================================================================
 GiGaMCVertexCnv::~GiGaMCVertexCnv(){}; 
 
-/// ===========================================================================
+// ============================================================================
 /// Class ID 
-/// ===========================================================================
+// ============================================================================
 const CLID&         GiGaMCVertexCnv::classID     () 
 { return ObjectVector<MCVertex>::classID(); }
 
-/// ===========================================================================
+// ============================================================================
 /// StorageType 
-/// ===========================================================================
+// ============================================================================
 const unsigned char GiGaMCVertexCnv::storageType ()
  { return GiGaKine_StorageType; }
 
-/// ===========================================================================
+// ============================================================================
 /** initialize the converter
  *  @return status code 
  */
-/// ===========================================================================
+// ============================================================================
 StatusCode GiGaMCVertexCnv::initialize()
 {
   StatusCode sc = GiGaCnvBase::initialize();
@@ -116,21 +119,21 @@ StatusCode GiGaMCVertexCnv::initialize()
   return StatusCode::SUCCESS;
 };
 
-/// ===========================================================================
+// ============================================================================
 /** finalize  the converter
  *  @return status code 
  */
-/// ===========================================================================
+// ============================================================================
 StatusCode GiGaMCVertexCnv::finalize() 
 { return GiGaCnvBase::finalize() ; };
 
-/// ===========================================================================
+// ============================================================================
 /** create the Object
  *  @param  Address address of the object 
  *  @param  Object  reference to created object 
  *  @return status code
  */ 
-/// ===========================================================================
+// ============================================================================
 StatusCode GiGaMCVertexCnv::createObj( IOpaqueAddress*  Address , 
                                        DataObject*&  Object )
 {
@@ -157,13 +160,13 @@ StatusCode GiGaMCVertexCnv::createObj( IOpaqueAddress*  Address ,
   return StatusCode::SUCCESS;
 };
 
-/// ===========================================================================
+// ============================================================================
 /** fill the object references 
  *  @param  Address address of the object 
  *  @param  Object  reference to the object 
  *  @return status code
  */ 
-/// ===========================================================================
+// ============================================================================
 StatusCode GiGaMCVertexCnv::fillObjRefs( IOpaqueAddress*  Address , 
                                          DataObject*   Object  )
 {
@@ -187,13 +190,13 @@ StatusCode GiGaMCVertexCnv::fillObjRefs( IOpaqueAddress*  Address ,
   return updateObjRefs( Address , Object ); 
 }; 
 
-/// ===========================================================================
+// ============================================================================
 /** update the Object
  *  @param  Address address of the object 
  *  @param  Object  reference to updated object 
  *  @return status code
  */ 
-/// ===========================================================================
+// ============================================================================
 StatusCode GiGaMCVertexCnv::updateObj( IOpaqueAddress*  Address , 
                                        DataObject*     Object  ) 
 {
@@ -279,13 +282,13 @@ StatusCode GiGaMCVertexCnv::updateObj( IOpaqueAddress*  Address ,
   return StatusCode::SUCCESS;
 };
 
-/// ===========================================================================
+// ============================================================================
 /** update the object references 
  *  @param  Address address of the object 
  *  @param  Object  reference to the object 
  *  @return status code
  */ 
-/// ===========================================================================
+// ============================================================================
 StatusCode GiGaMCVertexCnv::updateObjRefs( IOpaqueAddress*  Address , 
                                            DataObject*   Object  )
 {
@@ -421,13 +424,13 @@ StatusCode GiGaMCVertexCnv::updateObjRefs( IOpaqueAddress*  Address ,
   return StatusCode::SUCCESS; 
 };
 
-/// ===========================================================================
+// ============================================================================
 /** create the representation of the object 
  *  @param  Object  reference to the object 
  *  @param  Address address of the object 
  *  @return status code
  */ 
-/// ===========================================================================
+// ============================================================================
 StatusCode GiGaMCVertexCnv::createRep( DataObject*     Object  , 
                                        IOpaqueAddress*& Address ) 
 {
@@ -460,13 +463,13 @@ StatusCode GiGaMCVertexCnv::createRep( DataObject*     Object  ,
   /// 
 }; 
 
-/// ===========================================================================
+// ============================================================================
 /** update the representation of the object 
  *  @param  Object  reference to the object 
  *  @param  Address address of the object 
  *  @return status code
  */ 
-/// ===========================================================================
+// ============================================================================
 StatusCode GiGaMCVertexCnv::updateRep( DataObject*     Object  , 
                                        IOpaqueAddress*  Address ) 
 { 
@@ -519,7 +522,7 @@ StatusCode GiGaMCVertexCnv::updateRep( DataObject*     Object  ,
   ///
 }; 
 
-/// ===========================================================================
+// ============================================================================
 
 
 

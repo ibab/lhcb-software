@@ -1,7 +1,10 @@
-/// ===========================================================================
+// ============================================================================
 /// CVS tag $Name: not supported by cvs2svn $ 
-/// ===========================================================================
+// ============================================================================
 /// $Log: not supported by cvs2svn $
+/// Revision 1.6  2001/07/27 11:24:57  ibelyaev
+/// bug fix in MCParticles<->MCVertices relations
+///
 /// Revision 1.5  2001/07/25 17:19:32  ibelyaev
 /// all conversions now are moved from GiGa to GiGaCnv
 ///
@@ -13,7 +16,7 @@
 /// 
 //  ===========================================================================
 #define GIGACNV_GIGAMCPARTICLECNV_CPP 1 
-/// ===========================================================================
+// ============================================================================
 /// STL 
 #include <string>
 #include <vector>
@@ -52,17 +55,17 @@
  *  @author Vanya Belyaev 
  */
 
-/// =====================================================================
+// ======================================================================
 /// Factory stuff 
-/// =====================================================================
+// ======================================================================
 static const  CnvFactory<GiGaMCParticleCnv>         s_Factory ;
 const        ICnvFactory&GiGaMCParticleCnvFactory = s_Factory ;
 
-/// =====================================================================
+// ======================================================================
 /** Standard Constructor
  *  @param loc pointer to service locator 
  */
-/// =====================================================================
+// ======================================================================
 GiGaMCParticleCnv::GiGaMCParticleCnv( ISvcLocator* Locator ) 
   : GiGaCnvBase( storageType() , classID() , Locator ) 
 {
@@ -74,28 +77,28 @@ GiGaMCParticleCnv::GiGaMCParticleCnv( ISvcLocator* Locator )
   ///
 }; 
 
-/// =====================================================================
+// ======================================================================
 /// destructor 
-/// =====================================================================
+// ======================================================================
 GiGaMCParticleCnv::~GiGaMCParticleCnv(){}; 
 
-/// =====================================================================
+// ======================================================================
 /// Class ID
-/// =====================================================================
+// ======================================================================
 const CLID&         GiGaMCParticleCnv::classID     () 
 { return ObjectVector<MCParticle>::classID(); }
 
-/// =====================================================================
+// ======================================================================
 /// StorageType 
-/// =====================================================================
+// ======================================================================
 const unsigned char GiGaMCParticleCnv::storageType () 
 { return GiGaKine_StorageType; }  
 
-/// =====================================================================
+// ======================================================================
 /** initialize the converter 
  *  @return status code
  */
-/// =====================================================================
+// ======================================================================
 StatusCode GiGaMCParticleCnv::initialize()
 {
   /// initialize the base class 
@@ -110,11 +113,11 @@ StatusCode GiGaMCParticleCnv::initialize()
   ///
 };
 
-/// =====================================================================
+// ======================================================================
 /** finalize  the converter 
  *  @return status code
  */
-/// =====================================================================
+// ======================================================================
 StatusCode GiGaMCParticleCnv::finalize  () 
 {
   /// clear the reference table 
@@ -123,13 +126,13 @@ StatusCode GiGaMCParticleCnv::finalize  ()
   return GiGaCnvBase::finalize();
 };
 
-/// =====================================================================
+// ======================================================================
 /** create the Object 
  *  @param Address address 
  *  @param Object object itself 
  *  @return status code 
  */
-/// =====================================================================
+// ======================================================================
 StatusCode GiGaMCParticleCnv::createObj( IOpaqueAddress*  Address ,
                                          DataObject*&  Object )
 {
@@ -156,13 +159,13 @@ StatusCode GiGaMCParticleCnv::createObj( IOpaqueAddress*  Address ,
   return StatusCode::SUCCESS;
 };
 
-/// =====================================================================
+// ======================================================================
 /** fill the object references 
  *  @param Address address 
  *  @param Object object itself 
  *  @return status code 
  */
-/// =====================================================================
+// ======================================================================
 StatusCode GiGaMCParticleCnv::fillObjRefs( IOpaqueAddress*  Address , 
                                            DataObject*     Object  ) 
 {
@@ -186,13 +189,13 @@ StatusCode GiGaMCParticleCnv::fillObjRefs( IOpaqueAddress*  Address ,
   ///
 };
 
-/// =====================================================================
+// ======================================================================
 /** update the Object 
  *  @param Address address 
  *  @param Object object itself 
  *  @return status code 
  */
-/// =====================================================================
+// ======================================================================
 StatusCode GiGaMCParticleCnv::updateObj( IOpaqueAddress*  Address , 
                                          DataObject*     Object  ) 
 {
@@ -268,13 +271,13 @@ StatusCode GiGaMCParticleCnv::updateObj( IOpaqueAddress*  Address ,
   return StatusCode::SUCCESS;
 };
 
-/// =====================================================================
+// ======================================================================
 /** update the object references 
  *  @param Address address 
  *  @param Object object itself 
  *  @return status code 
  */
-/// =====================================================================
+// ======================================================================
 StatusCode GiGaMCParticleCnv::updateObjRefs( IOpaqueAddress*  Address , 
                                              DataObject*     Object  ) 
 {
@@ -380,7 +383,7 @@ StatusCode GiGaMCParticleCnv::updateObjRefs( IOpaqueAddress*  Address ,
   ///
 };
 
-/// =====================================================================
+// ======================================================================
 
 
 
