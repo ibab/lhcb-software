@@ -5,7 +5,7 @@
  *  Implementation file for RICH Digitisation Quality Control algorithm : RichDigitQC
  *
  *  CVS Log :-
- *  $Id: RichDigitQC.cpp,v 1.15 2005-03-05 12:27:53 jonrob Exp $
+ *  $Id: RichDigitQC.cpp,v 1.16 2005-03-05 16:49:04 jonrob Exp $
  *
  *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
  *  @date   2003-09-08
@@ -103,7 +103,7 @@ StatusCode RichDigitQC::execute()
 
   // Get total number of hits in each event
   //------------------------------------------------------------------------------
-  for ( RichHashMap<std::string,bool>::const_iterator iC = m_evtLocs.begin(); 
+  for ( EventLocations::const_iterator iC = m_evtLocs.begin(); 
         iC != m_evtLocs.end(); ++iC )
   {
     if ( exist<MCRichHits>(iC->first) )
@@ -245,13 +245,13 @@ StatusCode RichDigitQC::finalize()
     info() << " RICH1 : Av. overall hit occupancy   " << occ(totDet[Rich::Rich1],m_evtC) << " hits/event" << endreq
            << "       : Av. HPD hit occupancy       "
            << occ(totDet[Rich::Rich1],m_evtC*m_nHPD[Rich::Rich1].size()) << " hits/event" << endreq;
-    for ( SpillCount::iterator iC = m_spillDigits[Rich::Rich1].begin(); iC != m_spillDigits[Rich::Rich1].end(); ++iC )
+    {for ( SpillCount::iterator iC = m_spillDigits[Rich::Rich1].begin(); iC != m_spillDigits[Rich::Rich1].end(); ++iC )
     {
       std::string loc = iC->first;
       loc.resize(28,' ');
       info() << "       :   " << loc << " " << eff(iC->second,totDet[Rich::Rich1]) << " % of total, "
              << eff(iC->second,(m_totalSpills[Rich::Rich1])[iC->first]) << " % event eff." << endreq;
-    }
+    }}
     info() << "       : % background hits              "
            << eff(m_bkgHits[Rich::Rich1],totDet[Rich::Rich1]) << " % " << endreq;
 
@@ -295,13 +295,13 @@ StatusCode RichDigitQC::finalize()
     info() << " RICH2 : Av. overall hit occupancy   " << occ(totDet[Rich::Rich2],m_evtC) << " hits/event" << endreq
            << "       : Av. HPD hit occupancy       "
            << occ(totDet[Rich::Rich2],m_evtC*m_nHPD[Rich::Rich2].size()) << " hits/event" << endreq;
-    for ( SpillCount::iterator iC = m_spillDigits[Rich::Rich2].begin(); iC != m_spillDigits[Rich::Rich2].end(); ++iC )
+    {for ( SpillCount::iterator iC = m_spillDigits[Rich::Rich2].begin(); iC != m_spillDigits[Rich::Rich2].end(); ++iC )
     {
       std::string loc = iC->first;
       loc.resize(28,' ');
       info() << "       :   " << loc << " " << eff(iC->second,totDet[Rich::Rich2]) << " % of total, "
              << eff(iC->second,(m_totalSpills[Rich::Rich2])[iC->first]) << " % event eff." << endreq;
-    }
+    }}
     info() << "       : % background hits              "
            << eff(m_bkgHits[Rich::Rich2],totDet[Rich::Rich2]) << " % " << endreq;
 

@@ -5,7 +5,7 @@
  *  Header file for RICH Digitisation Quality Control algorithm : RichDigitQC
  *
  *  CVS Log :-
- *  $Id: RichDigitQC.h,v 1.9 2005-03-05 12:26:29 jonrob Exp $
+ *  $Id: RichDigitQC.h,v 1.10 2005-03-05 16:49:04 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2003-09-08
@@ -117,7 +117,8 @@ private: // data
   std::vector< unsigned int > m_bkgHits;
 
   /// List of event locations to look for MCRichHits in
-  RichHashMap< std::string, bool > m_evtLocs;
+  typedef RichHashMap< std::string, bool > EventLocations;
+  EventLocations m_evtLocs;
 
 };
 
