@@ -1,8 +1,14 @@
-! $Id: release.notes,v 1.1.1.1 2001-07-09 09:30:15 gcorti Exp $
+! $Id: release.notes,v 1.2 2001-07-16 15:25:31 gcorti Exp $
 ! Package     : DaVinci 
 ! Responsible : Gloria Corti
 
 ! ========================================================================
+
+! 16072001 - DaVinci v1r1 (GCorti)
+  use PhysEvent v1r1 and DaVinciTools v1r1
+
+! 11072001 - DaVinci (GCorti)
+  introduce apply_pattern application_path 
 
 ! 09072001 - DaVinci v1 (GCorti)
 
