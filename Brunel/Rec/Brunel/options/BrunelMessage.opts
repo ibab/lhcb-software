@@ -21,7 +21,7 @@ MessageSvc.OutputLevel = 3;
 
 // Suppress excessive messages from some algorithms/components
 ApplicationMgr.OutputLevel = 4;
-TransportSvc.OutputLevel = 6;
+//TransportSvc.OutputLevel = 6;
 RootEventCnvSvc.OutputLevel = 4;
 MCParticleFilter.OutputLevel = 4;
 

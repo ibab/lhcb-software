@@ -3,6 +3,10 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
+! 2002-07-10 - Marco Cattaneo
+ - Change version to v11r1, to use XmlDDDB v12r2 (fixes to Muon+Rich2 overlaps)
+ - Set TransportSvc.OutputLevel back to 3.
+
 </PRE><H1><A NAME=v11r0>2002-07-09 Brunel v11r0</A></H1><PRE>
 Release of Brunel for summer 2002 pre-production.
 
