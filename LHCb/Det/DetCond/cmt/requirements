@@ -1,6 +1,6 @@
-# $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetCond/cmt/requirements,v 1.1.1.1 2001-09-14 15:07:22 andreav Exp $
+# $Id: requirements,v 1.2 2001-09-14 15:10:26 mato Exp $
 package DetCond
-version v3r03
+version v1
 
 branches DetCond cmt src doc
 
@@ -8,7 +8,7 @@ branches DetCond cmt src doc
 use GaudiSys    v8*
 
 # ConditionsDB package
-use CONDDB      v3r01p01
+use CONDDB      v3r01*
 
 include_dirs $(DETCONDROOT)
 
