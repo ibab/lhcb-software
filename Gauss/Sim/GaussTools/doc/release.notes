@@ -4,6 +4,11 @@
 ! Purpose       : G4 actions, and some miscealenous algs for Gauss
 !-----------------------------------------------------------------------------
 
+! 2003-05-30 - Ivan BELYAEV
+ - GiGaSetSimAttributes. add the recursive propagation of simulation attributes 
+                         from mother to daughter volumes. 
+ - cmt/requirements      increase the version 
+
 !======================= GaussTools v7r1 2003-05-05 ========================
 
 ! 2003-05-05 - Witek Pokorski

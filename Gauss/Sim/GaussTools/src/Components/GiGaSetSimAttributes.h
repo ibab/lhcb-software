@@ -1,8 +1,11 @@
-// $Id: GiGaSetSimAttributes.h,v 1.1 2003-04-06 19:07:33 ibelyaev Exp $
+// $Id: GiGaSetSimAttributes.h,v 1.2 2003-05-30 14:30:41 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
-// $Log: not supported by cvs2svn $ 
+// $Log: not supported by cvs2svn $
+// Revision 1.1  2003/04/06 19:07:33  ibelyaev
+//  update foe newer GiGa, add new tools
+// 
 // ============================================================================
 #ifndef GAUSSTOOLS_GIGASETSIMATTRIBUTES_H 
 #define GAUSSTOOLS_GIGASETSIMATTRIBUTES_H 1
@@ -10,8 +13,9 @@
 // Include files
 #include "GiGa/GiGaToolBase.h"
 // SimSvc
-class ISimulationSvc  ;
-class G4LogicalVolume ;
+class ISimulationSvc    ;
+class G4LogicalVolume   ;
+class GaussG4USerLimits ;
 // ============================================================================
 
 /** @class GiGaSetSimAttributes GiGaSetSimAttributes.h
@@ -84,11 +88,26 @@ protected:
   G4LogicalVolume* g4volume         
   ( const std::string& adddress ) const ;
 
+  /** set user Limits for the given logical volume 
+   *  and propagate it to all daughetr volumes 
+   *  @param lv logicla volume 
+   *  @param ul user limits 
+   *  @return status code 
+   */
+  StatusCode setUserLimits 
+  ( G4LogicalVolume*         lv , 
+    const GaussG4UserLimits& ul ) const ;
+  
+  // policy for overwtiting the existing limits 
+  inline const bool overwrite() const { return m_overwrite ; }
+
 private:
   
   std::string     m_simSvcName ;
   ISimulationSvc* m_simSvc     ;
   
+  // flag to overwrite the existing limits 
+  bool            m_overwrite  ;
 };
 // ============================================================================
 
