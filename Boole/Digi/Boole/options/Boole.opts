@@ -6,7 +6,7 @@
 //==============================================================
 #units "$STDOPTS/units.opts"
 
-ApplicationMgr.DLLs += { "GaudiAlg", "DigiAlg", "LHCbTools" };
+ApplicationMgr.DLLs += { "GaudiAlg", "LHCbTools", "LHCbAlgs", "DigiAlg" };
 
 // GaudiDb persistency - can be removed if only using POOL
 #include "$STDOPTS/RootDb.opts"

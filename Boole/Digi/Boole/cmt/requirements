@@ -13,6 +13,8 @@ apply_pattern BooleVersion
 #-- CMT and GaudiPolicy
 use GaudiPolicy v5r15
 
+use LHCbAlgs v1r0 Kernel
+
 #-- External libraries (as defined in GAUDI_v14r6)
 use ExternalLibs	v4r5
 use AIDA		v3r300		-no_auto_imports

@@ -16,7 +16,7 @@ Development version
     ~10 events (MuonTools v3r7)
 
 - New packaging
-  . Use new GaudiSequencer base class for ProcessPhase (LHCbKernel v4r7)
+  . Use new GaudiSequencer base class for ProcessPhase (LHCbAlgs v1r0)
   . Use new GaudiAlg and GaudiTools base classes
     (STDet v1r2, ITAssociators v2r9, STDAQ v1r2, ITAlgorithms v14r3,
      ITCheckers v2r3)
