@@ -52,7 +52,7 @@ use ITDet         	v1r1  	Det
 use MuonDet       	v4r1  	Det
 use OTDet         	v3r0  	Det
 use RichDet		v3r0	Det
-use VeloDet       	v7r1  	Det
+use VeloDet       	v7r2  	Det
 use Magnet        	v1r1  	Det
 
 # Event Model
@@ -93,7 +93,7 @@ use CaloTrackTools	v1r4	Calo
 
 # Velo
 use VeloKernel		v1r2	Velo
-use VeloAlgorithms	v2r3	Velo
+use VeloAlgorithms	v2r4	Velo
 use VeloAssociators	v1r2	Velo
 
 # Inner Tracker
@@ -106,19 +106,19 @@ use OTAlgorithms  	v12r0  	OT
 use OTAssociators  	v2r2  	OT
 
 # Tracking
-use TrKernel            v11r0   Tr
+use TrKernel            v11r1   Tr
 use TrFitEvent          v3r2    Tr
 use VeloTrack           v4r1    Velo
 use TrAssociators       v3r2    Tr
 use LongTrack           v1r2    Tr
-use TrFitter            v3r4    Tr
+use TrFitter            v3r5    Tr
 use TrExtrapolator      v2r3    Tr
 use TrTools             v2r2    Tr
 use Seeding	        v2r2    Tr
-use TrMatching          v2r2    Tr
+use TrMatching          v2r3    Tr
 use TrCleanEx           v2r2    Tr
 use TrIntraPR		v2r1	Tr
-use UpstreamPR		v2r3	Tr
+use UpstreamPR		v2r4	Tr
 use VeloTT		v1r1	Tr
 use TrCheck             v1r0    Tr
 

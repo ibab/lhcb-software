@@ -22,13 +22,17 @@ Purpose: LHCb reconstruction program
    . Add support for dbase v249r0 and v249r1
    . Restructure options files to simplify switching on/off of monitoring and/or
      DST output. Monitoring histograms off by default (*.opts, BrunelAlgs v1r5)
+   . Implement 45 degree Velo sectors. Currently hardwired for strip layout "1"
+	   (VeloDet v7r2, Brunel.opts)
 
  - Bug fixes:
    . Small fixes in TrFirstCleverExtrapolator (TrExtrapolator v2r3)
+   . Small fixes in Velo geometry (VeloDet v7r2)
 
  - Code cleanup:
    . Release all tools (ITAlgorithms v12r3)
    . Remove obsolete code and unneccessary calls to msgSvc (TrExtrapolator v2r3)
+   . Fix some valgrind warnings (VeloAlgorithms v2r4)
 
 </PRE><H1><A NAME=v14r2>2002-10-31 Brunel v14r2</A></H1><PRE>
  - New tuning:
@@ -57,6 +61,8 @@ Purpose: LHCb reconstruction program
  - Code cleanup:
    . Fix a mismatched new[]/delete reported by valgrind (VeloTT v1r1)
    . Remove creation and deletion of an obsolete unused state (TrFitter v3r4)
+   . Remove unneccessary TrExtrapolator base class (TrKernel v11r1, 
+     TrExtrapolator v2r3, TrFitter v3r5, TrMatching v2r3, UpstreamPR v2r4)
 
 </PRE><H1><A NAME=v14r1p2>2002-10-25 Brunel v14r1p2</A></H1><PRE>
  - Bug fix:

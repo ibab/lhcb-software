@@ -106,6 +106,8 @@ BrunelDigiVELOSeq.Members += { "VeloSim" };
 BrunelDigiVELOSeq.Members += { "VeloDataProcessor" };
 BrunelDigiVELOSeq.Members += { "VeloClusterMaker" };
 BrunelDigiVELOSeq.Members += { "VeloFEToL1" };
+// 45 degree sectors
+DeVelo.Design = 1;
 
 // Velo Tracking
 ApplicationMgr.DLLs += { "VeloTrack" };
