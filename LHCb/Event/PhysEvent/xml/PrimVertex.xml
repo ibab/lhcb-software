@@ -1,3 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE gdd SYSTEM "gdd.dtd" >
+
+<gdd>
+
+  <package name="PhysEvent">
 <!-- ****************************************************************
      * PrimVertex                                                   *
      ****************************************************************-->
@@ -19,3 +25,5 @@
         type="TrStoredTrack"
        />
      </class>
+  </package>
+</gdd>

@@ -1,8 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE gdd SYSTEM "gdd.dtd" >
+
+<gdd>
+
+  <package name="PhysEvent">
 <!-- ****************************************************************
      *  EffCheckResult                                                   *
      ****************************************************************-->
 
-    <import name="Kernel/LHCbStreams" />
+    <!-- import name="Kernel/LHCbStreams" /-->
     <import name="Event/MCEffTree" />
     <import name="Event/MCEffParticle" />
     <import name="Event/SelResult" />
@@ -59,3 +65,5 @@
        type="Particle"
       />
     </class>
+  </package>
+</gdd>

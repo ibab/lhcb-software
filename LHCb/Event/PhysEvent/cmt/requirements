@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.47 2005-01-26 07:25:52 cattanem Exp $
+# $Id: requirements,v 1.48 2005-02-01 16:33:35 cattanem Exp $
 # Created      : 20/06/2001
 # Maintainer   : P. Koppenburg
 #
@@ -16,13 +16,12 @@ include_dirs $(PHYSEVENTROOT)
 # Used packages. 
 #============================================================================
 use RichEvent    v8r*  Event
-use CaloEvent    v13r* Event
 use MuonEvent    v3r*  Event
 
 # Produce Header-Files & dictionary from XML description
 #============================================================================
-document obj2doth PhysEventObj2Doth ../xml/PhysEvent.xml
-document obj2dict PhysEventObj2Dict ../xml/PhysEvent.xml
+document obj2doth PhysEventObj2Doth ../xml/*.xml
+document obj2dict PhysEventObj2Dict ../xml/*.xml
 
 # Build libraries (including dictionary)
 #============================================================================

@@ -1,3 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE gdd SYSTEM "gdd.dtd" >
+
+<gdd>
+
+  <package name="PhysEvent">
 <!-- ****************************************************************
      * Particle                                                     *
      ****************************************************************-->
@@ -12,11 +18,10 @@
        <base name="KeyedObject&lt;int&gt;"/>
        &KeyedObject;
        <import name="CLHEP/Units/SystemOfUnits"/>
-       <!-- the following line is necessary until using LHCbKernel-->
-       <!-- import name="Event/HepMatrixStream"/-->
-       <!-- the following line is necessary to not use LHCbEvent -->
-       <import name="Kernel/ParticleID"/>
        <import name="Event/Vertex" soft="TRUE"/>
+       <!-- The following line forces inclusion before HepPoint3D
+            to get round CLHEP 1.9 bug with HEP_CC_NEED_SUB_WITHOUT_CONST -->
+       <import name="CLHEP/Matrix/SymMatrix"/>
        <location
         name="User"
         place="/Event/Phys/User/Particles"
@@ -210,3 +215,6 @@ else {
         type="int"
        />
     </class>
+  </package>
+
+</gdd>

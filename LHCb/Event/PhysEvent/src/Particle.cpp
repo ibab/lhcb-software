@@ -1,4 +1,4 @@
-// $Id: Particle.cpp,v 1.12 2005-01-26 07:25:52 cattanem Exp $
+// $Id: Particle.cpp,v 1.13 2005-02-01 16:33:35 cattanem Exp $
 // Include files 
 
 // STD and STL
@@ -111,8 +111,7 @@ void Particle::setMomentumErr(const HepSymMatrix& value)
   trMomToSlopes(3,3) = pz/p;           ///< dP/dPz  
    
   // Now obtain the new covariance matrix C(P) = transpose(T) x C(S) x T
-  const HepSymMatrix temp = m_momentumErr; // CLHEP 1.9 hack, needs to be const
-  m_slopesMomErr = (temp.sub(1,3)).similarity(trMomToSlopes);
+  m_slopesMomErr = (m_momentumErr.sub(1,3)).similarity(trMomToSlopes);
 }
 
 //=============================================================================

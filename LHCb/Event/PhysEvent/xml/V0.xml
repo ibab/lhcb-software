@@ -1,3 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE gdd SYSTEM "gdd.dtd" >
+
+<gdd>
+
+  <package name="PhysEvent">
 <!-- ****************************************************************
      * V0                                                           *
      ****************************************************************-->
@@ -52,3 +58,5 @@
         type="TrStateP"
        />
      </class>
+  </package>
+</gdd>
