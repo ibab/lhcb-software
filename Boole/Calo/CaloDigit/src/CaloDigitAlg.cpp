@@ -1,4 +1,4 @@
-// $Id: CaloDigitAlg.cpp,v 1.5 2003-03-20 08:22:15 ocallot Exp $
+// $Id: CaloDigitAlg.cpp,v 1.6 2004-02-23 09:17:54 ibelyaev Exp $
 // STL
 #include <string>
 #include <stdio.h>
@@ -117,7 +117,7 @@ StatusCode CaloDigitAlg::initialize() {
   } 
 
   // Retrieve the calorimeter we are working with.
-  m_calo = get( detSvc() , detData() , (DeCalorimeter*) 0 );
+  m_calo = getDet<DeCalorimeter>( detData() );
   if( 0 == m_calo ) { return StatusCode::FAILURE ; }
 
   //*** Initialize the random number service
@@ -169,9 +169,9 @@ StatusCode CaloDigitAlg::execute() {
   bool debug = (msg.level() <= MSG::DEBUG );
 
   //*** get the input data
-
-  MCCaloDigits* mcDigits = get( eventSvc(), inputData(), mcDigits );
-
+  
+  MCCaloDigits* mcDigits = get<MCCaloDigits>( inputData() );
+  
   //=== Get the previous BX's data if needed
   MCCaloDigits* prevDigits = 0;
   if ( "" != m_inputPrevData ) {

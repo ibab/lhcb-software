@@ -1,4 +1,4 @@
-// $Id: CaloZSupAlg.cpp,v 1.7 2003-12-02 13:27:43 cattanem Exp $
+// $Id: CaloZSupAlg.cpp,v 1.8 2004-02-23 09:17:54 ibelyaev Exp $
 // STL
 #include <string>
 #include <stdio.h>
@@ -149,7 +149,7 @@ StatusCode CaloZSupAlg::initialize() {
   } 
 
   // Retrieve the calorimeter we are working with.
-  m_calo = get( detSvc() , detData() , (DeCalorimeter*) 0 );
+  m_calo = getDet<DeCalorimeter>( detData() );
   m_numberOfCells = m_calo->numberOfCells();
 
   //*** A few check of the parameters
@@ -211,10 +211,10 @@ StatusCode CaloZSupAlg::execute() {
 
   //*** get the input data
 
-  CaloDigits* allDigits = get( eventSvc(), inputData(), allDigits );
+  CaloDigits* allDigits = get<CaloDigits>( inputData() );
   CaloDigits* spdDigits = NULL;
   if ( "" != m_spdInputData ) {
-    spdDigits = get( eventSvc(), m_spdInputData, spdDigits );
+    spdDigits = get<CaloDigits>( m_spdInputData );
   }
   
   //***  prepare the output container
@@ -234,8 +234,8 @@ StatusCode CaloZSupAlg::execute() {
   if( sc.isFailure() ) { return sc ; } 
 
   //== Get the RawBuffer
-  RawBuffer* rawBuffer = get( eventSvc(), RawBufferLocation::Default, 
-                              rawBuffer );
+  RawBuffer* rawBuffer = 
+    get<RawBuffer>( RawBufferLocation::Default );
   std::vector< std::vector<raw_int> > banks;
   std::vector< std::vector<raw_int> > trigBanks;
   if ( 0 < m_numberOfBanks ) {

@@ -1,4 +1,4 @@
-// $Id: CaloSignalAlg.cpp,v 1.3 2003-11-26 13:17:02 cattanem Exp $
+// $Id: CaloSignalAlg.cpp,v 1.4 2004-02-23 09:17:54 ibelyaev Exp $
 // STL
 #include <string>
 #include <algorithm>
@@ -109,7 +109,7 @@ StatusCode CaloSignalAlg::initialize() {
   
   
   // Retrieve the calorimeter we are working with.
-  m_calo = get( detSvc() , detData() , (DeCalorimeter*) 0 );
+  m_calo = getDet<DeCalorimeter>( detData() );
   if( 0 == m_calo ) { return StatusCode::FAILURE ; }
   
   // Initialize the random number service
@@ -162,7 +162,7 @@ StatusCode CaloSignalAlg::execute() {
   }
   
   // get the input data
-  MCCaloHits* hits = get( eventSvc() , inputData() , hits );
+  MCCaloHits* hits = get<MCCaloHits>( inputData() );
   if( 0 == hits      ) { return StatusCode::FAILURE ; }
 
   // initialize the background random number

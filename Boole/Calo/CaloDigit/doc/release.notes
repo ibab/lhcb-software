@@ -4,6 +4,17 @@
 ! Purpose     : Digitisation and Zero-suppression of the Calorimeters
 !-----------------------------------------------------------------------------
 
+! 2004-02-23 - Vanya BELYAEV
+ - src/CaloDigitAlg.cpp
+     adaptation for new signature of "get" methods 
+ - src/CaloSignalAlg.cpp
+     adaptation for new signature of "get" methods
+ - src/CaloSZSupAlg.cpp
+     adaptation for new signature of "get" methods
+ - cmt/requirements
+     1) add the explicit dependence on CaloKernel
+     2) incrementr the MINOTR version 
+
 !======================== CaloDigit v1r5 2004-01-07 ========================
 ! 2004-01-07 - Marco Cattaneo
  - Move to Gaudi v14 (use CaloEvent v13r* in requirements)
