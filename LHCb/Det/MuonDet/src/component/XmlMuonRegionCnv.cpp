@@ -1,8 +1,11 @@
-// $Id: XmlMuonRegionCnv.cpp,v 1.6 2002-04-08 14:55:00 dhcroft Exp $
+// $Id: XmlMuonRegionCnv.cpp,v 1.7 2002-04-22 07:42:15 dhcroft Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.6  2002/04/08 14:55:00  dhcroft
+// Changed code to calculate Gaps per FE channel rather than read from XML
+//
 // Revision 1.5  2002/03/20 16:43:40  dhcroft
 // Added the size of the Front end channels to the XML and the mapping from FE to logical channels
 //
@@ -231,23 +234,23 @@ StatusCode XmlMuonRegionCnv::i_fillSpecificObj (DOM_Element childElement,
       dataObj->setFEAnodeX( atol(NFEChamberX.c_str()) );
       dataObj->setFEAnodeY( atol(NFEChamberY.c_str()) );
       dataObj->addLogicalMap(MuonParameters::Anode, 
-                                atol(MergeLogicalX1.c_str()),
-                                atol(MergeLogicalY1.c_str()));
+                             atol(MergeLogicalX1.c_str()),
+                             atol(MergeLogicalY1.c_str()));
       if( 0 < atol(MergeLogicalX2.c_str()) ){
         dataObj->addLogicalMap(MuonParameters::Anode, 
-                                atol(MergeLogicalX2.c_str()),
-                                atol(MergeLogicalY2.c_str()));
+                               atol(MergeLogicalX2.c_str()),
+                               atol(MergeLogicalY2.c_str()));
       }
     }else{
-      dataObj->setFEAnodeX( atol(NFEChamberX.c_str()) );
-      dataObj->setFEAnodeY( atol(NFEChamberY.c_str()) );
+      dataObj->setFECathodeX( atol(NFEChamberX.c_str()) );
+      dataObj->setFECathodeY( atol(NFEChamberY.c_str()) );
       dataObj->addLogicalMap(MuonParameters::Cathode, 
-                                atol(MergeLogicalX1.c_str()),
-                                atol(MergeLogicalY1.c_str()));
+                             atol(MergeLogicalX1.c_str()),
+                             atol(MergeLogicalY1.c_str()));
       if( 0 < atol(MergeLogicalX2.c_str()) ){
         dataObj->addLogicalMap(MuonParameters::Cathode, 
-                                atol(MergeLogicalX2.c_str()),
-                                atol(MergeLogicalY2.c_str()));
+                               atol(MergeLogicalX2.c_str()),
+                               atol(MergeLogicalY2.c_str()));
       }
     }      
 

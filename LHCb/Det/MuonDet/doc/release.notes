@@ -1,8 +1,13 @@
-! $Id: release.notes,v 1.9 2002-04-08 14:55:00 dhcroft Exp $
+! $Id: release.notes,v 1.10 2002-04-22 07:42:12 dhcroft Exp $
 ! CVS tag $Name: not supported by cvs2svn $
 !
 ! Package     : MuonDet
 ! Responsible : David Hutchcroft
+
+!!>>>>>>>>>>>>>>>> MuonDet v2r2 <<<<<<<<<<<<<<<<<<<<<
+! 21/04/2022 David Hutchcroft
+  - Bug fix in XmlMuonRegionCnv: set FE channel size of Anode and cathode 
+  correctly
 
 ! ============================================================================
 ! 20020406 - David Hutchcroft
