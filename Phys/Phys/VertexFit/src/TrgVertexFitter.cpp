@@ -1,4 +1,4 @@
-// $Id: TrgVertexFitter.cpp,v 1.3 2005-02-21 09:58:22 pkoppenb Exp $
+// $Id: TrgVertexFitter.cpp,v 1.4 2005-02-22 12:34:26 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
@@ -14,19 +14,6 @@
 //-----------------------------------------------------------------------------
 // Implementation file for class : TrgVertexFitter
 //
-//  THIS TOOL IS MEANT FOR HLT, WHERE TRACKS ARE ASSUMED TO HAVE A
-//  'CYLINDRICAL' ERROR, THAT IS, THE COVARIANCE MATRIX HAS
-//  COV(1,1)=COV(2,2)!=0 AND ZERO IN ANY OTHER ELEMENT
-//
-//  The tool should work for other tracks, but correlations 
-//  will be neglected
-//  
-//  The fact that COV(1,1)=COV(2,2) is not assumed anywhere, allowing the
-//  two elements to be different, useful for instance for composites
-//
-//  Some documentation available in a talk at
-//  http://agenda.cern.ch/fullAgenda.php?ida=a05940#2005-02-07
-//
 // 2005-01-31 : Hugo Ruiz Perez
 //-----------------------------------------------------------------------------
 
@@ -41,10 +28,9 @@ TrgVertexFitter::TrgVertexFitter( const std::string& type,
                                   const std::string& name,
                                   const IInterface* parent )
   : GaudiTool ( type, name , parent )
-  , m_photonID(22)
 {
   declareInterface<IVertexFitter>(this);
-  declareProperty("useDaughters", m_useDaughters = true);
+
 }
 //=============================================================================
 // Destructor
@@ -59,12 +45,6 @@ TrgVertexFitter::~TrgVertexFitter() {};
 
 StatusCode TrgVertexFitter::fitVertex(Particle& iPart, Particle& jPart,  Vertex& V)
 {
-
-  // ==============================================================
-  // HAVING THE EXPLICIT IMPLEMENTATION FOR TWO AND THREE PARTICLES
-  // SEEMS TO SAVE A FACTOR OF TWO IN TIMING!!!
-  // ==============================================================
-
   // Track point and error on point
   const Hep3Vector& iPoint = iPart.pointOnTrack();
   const Hep3Vector& jPoint = jPart.pointOnTrack();
@@ -130,12 +110,8 @@ StatusCode TrgVertexFitter::fitVertex(Particle& iPart, Particle& jPart,  Vertex&
 
 //=============================================================================
 // Method to fit the vertex between three given Particles
+// Just finds the the three corresponding TrgTracks and does the vertex
 //=============================================================================
-
-  // ==============================================================
-  // HAVING THE EXPLICIT IMPLEMENTATION FOR TWO AND THREE PARTICLES
-  // SEEMS TO SAVE A FACTOR OF TWO IN TIMING!!!
-  // ==============================================================
 
   StatusCode TrgVertexFitter::fitVertex(Particle& iPart, Particle& jPart, Particle& kPart,  Vertex& V)
 {
@@ -208,6 +184,125 @@ StatusCode TrgVertexFitter::fitVertex(Particle& iPart, Particle& jPart,  Vertex&
   return StatusCode::SUCCESS;
 }
 
+/*
+//=============================================================================
+// Fit the vertex from a vector of Particles
+//=============================================================================
+
+StatusCode TrgVertexFitter::fitVertex( const  ParticleVector& parts,  Vertex& V)
+{
+
+  StatusCode status;
+
+  // Number of particles used for the vertexing, can be different from size of particlevector!!
+  int nParts = 0;
+
+  // Vects of track data
+  std::vector<double> MXVect, MYVect, X0Vect, Y0Vect, InvSig2XVect, InvSig2YVect;
+
+
+  // Main loop on particles
+
+  for ( ParticleVector::const_iterator iPart=parts.begin(); iPart!=parts.end(); ++iPart ) {
+    const Particle* parPointer = *iPart;
+    if ( !parPointer) {
+      fatal() << "Pointer to mother particle failed!" << endreq;
+      return StatusCode::FAILURE;
+    }
+    const Particle& par = *(parPointer);
+    const Vertex* endVertexPointer = par.endVertex();
+    
+    if ( ( endVertexPointer ) && par.isResonance() ){
+      const Vertex& endvert =  *(endVertexPointer);
+      const SmartRefVector<Particle>& daughters= endvert.products();
+      for ( SmartRefVector<Particle>::const_iterator iDaught=daughters.begin();iDaught!=daughters.end();++iDaught) {
+        const Particle* daughtPointer = *iDaught;
+        if ( !daughtPointer) {
+          fatal() << "Pointer to daughter particle failed!" << endreq;
+          return StatusCode::FAILURE;
+        }
+        const Particle& daught = *(daughtPointer);
+        const Hep3Vector& pointDaught = daught.pointOnTrack();
+        const HepSymMatrix& cov = daught.pointOnTrackErr();
+        MXVect.push_back(daught.slopeX());
+        MYVect.push_back(daught.slopeY());
+        X0Vect.push_back(pointDaught.x() - daught.slopeX() * pointDaught.z());
+        Y0Vect.push_back(pointDaught.y() - daught.slopeY() * pointDaught.z());
+        InvSig2XVect.push_back(1/cov(1,1));
+        InvSig2YVect.push_back(1/cov(2,2));
+        nParts+=1;
+        debug() << "Added one doughter" << endreq;
+        
+      }
+      
+    }
+    else{    // Elementary particles
+      const Hep3Vector& point = par.pointOnTrack();
+      const HepSymMatrix& cov = par.pointOnTrackErr();
+      MXVect.push_back(par.slopeX());
+      MYVect.push_back(par.slopeY());
+      X0Vect.push_back(point.x() - par.slopeX() * point.z());
+      Y0Vect.push_back(point.y() - par.slopeY() * point.z());
+      InvSig2XVect.push_back(1/cov(1,1));
+      InvSig2YVect.push_back(1/cov(2,2));
+      nParts+=1;
+      debug() << "Added one mother" << endreq;
+    }
+  }
+
+  debug() << "Particles used for the fit:" << nParts << endreq;
+
+  int ndof = (2*nParts) - 3;
+
+  // Initialize relevant terms
+  double AX = 0, BX = 0, CX = 0, DX = 0, EX = 0 , AY = 0, BY = 0, CY = 0, DY = 0, EY = 0;
+
+  for (int i = 0; i != nParts; i++ ){
+    // Terms needed
+    AX += X0Vect[i] * InvSig2XVect[i];
+    BX += InvSig2XVect[i];
+    CX += MXVect[i]*InvSig2XVect[i];
+    DX += MXVect[i]*MXVect[i]*InvSig2XVect[i];
+    EX += X0Vect[i]*MXVect[i]*InvSig2XVect[i];
+    
+    AY += Y0Vect[i] * InvSig2YVect[i];
+    BY += InvSig2YVect[i];
+    CY += MYVect[i]*InvSig2YVect[i];
+    DY += MYVect[i]*MYVect[i]*InvSig2YVect[i];
+    EY += Y0Vect[i]*MYVect[i]*InvSig2YVect[i];
+  }
+    
+  double vX,vY,vZ;
+
+  status = vertexPositionAndError( AX, BX, CX, DX, EX, AY, BY, CY, DY, EY, vX, vY, vZ, V);
+  if (!status){
+    fatal() << "vertexPositionAndError failed" << endreq;
+    return StatusCode::FAILURE;
+    };
+
+  // Chi2
+  double chi2 = 0;
+  for (int i=0; i!=nParts; i++){
+    chi2 += pow( (X0Vect[i]+MXVect[i]*vZ-vX), 2)*InvSig2XVect[i];
+    chi2 += pow( (Y0Vect[i]+MYVect[i]*vZ-vY), 2)*InvSig2YVect[i];
+  }
+
+  V.setChi2(chi2);
+  V.setNDoF(ndof);
+
+  // Define daugthers
+  for(ParticleVector::const_iterator iterP = parts.begin(); iterP != parts.end(); iterP++) {
+    V.addToProducts(*iterP);
+  }
+
+  debug() << "Returning vertex " << V.position() << " with error " 
+          <<  V.positionErr() << " size: " << V.products().size() << endmsg ;  
+
+  return StatusCode::SUCCESS;
+}
+
+*/
+
 //=============================================================================
 // Fit the vertex from a vector of Particles
 //=============================================================================
@@ -215,120 +310,55 @@ StatusCode TrgVertexFitter::fitVertex(Particle& iPart, Particle& jPart,  Vertex&
 StatusCode TrgVertexFitter::fitVertex( const  ParticleVector& parts,  Vertex& V)
 {
   
-  // Vector of particles to use in fit, can contain daughters of input particles
+  StatusCode status;
+  
+  // Vector of particles to use in fit
   std::vector<const Particle*> partsToFit;
-
-  // Vector of input photons
-  ParticleVector inputPhotons;
-
-  // Main loop on input particles
+  
+  // Main loop on particles
   for ( ParticleVector::const_iterator iPart=parts.begin(); iPart!=parts.end(); ++iPart ) {
     
-    Particle* parPointer = *iPart;
+    const Particle* parPointer = *iPart;
     if ( !parPointer) {
-      fatal() << "Pointer to particle failed: " << parPointer->particleID() << endreq;
+      fatal() << "Pointer to mother particle failed!" << endreq;
       return StatusCode::FAILURE;
     }
     const Particle& par = *(parPointer);
     const Vertex* endVertexPointer = par.endVertex();
-
-
-    // Take actions 1) 2) or 3) according to particle type
-
-    // 1) Photons are not used for vertexing, just added to the vertex at the end
-    if ( par.origin() && m_photonID == par.particleID().pid() ) { 
-      inputPhotons.push_back(parPointer);
-      debug() << "Input particle is a photon. Not added to list for fit" << endreq;
-    }
- 
-    // 2) For resonances, use daughter particles for fit if m_useDaughters is set to true
-    else if ( m_useDaughters && endVertexPointer && par.isResonance() ){
+    
+    if ( ( endVertexPointer ) && par.isResonance() ){
       const Vertex& endvert =  *(endVertexPointer);
       const SmartRefVector<Particle>& daughters= endvert.products();
       for ( SmartRefVector<Particle>::const_iterator iDaught=daughters.begin();iDaught!=daughters.end();++iDaught) {
         const Particle* daughtPointer = *iDaught;
         if ( !daughtPointer) {
-          fatal() << "Pointer to daughter particle failed: " << daughtPointer->particleID() << endreq;
+          fatal() << "Pointer to daughter particle failed!" << endreq;
           return StatusCode::FAILURE;
         }
-        debug() << "Daughter particle added to list for fit: " << daughtPointer->particleID() << endreq;
+        debug() << "Added one doughter" << endreq;
         partsToFit.push_back(daughtPointer);
       }
       
     }
-
-    // 3) In any other case, particle will be used directly in the fit
-    else {
+    else{    // Non-composite particles
       partsToFit.push_back(parPointer);
-      debug() << "Input particle added to list for fit: " << parPointer->particleID() << endreq;
-      verbose() << "Point on particle: " << parPointer->pointOnTrack() << endreq;
-      verbose() << "Error on point on particle: " << parPointer->pointOnTrackErr() << endreq;
+      debug() << "Added one mother" << endreq;
     }
   }
 
-  // Number of particles to be used for the fit
-  // Can be different than # of input particles!
-  int nPartsToFit = partsToFit.size();
-  debug() << "Number of particles that will be used for the fit: " << nPartsToFit << endreq;
-  
-  // Number of photons to be added at the end
-  debug() << "Number of photons that will be added to the vertex: " << inputPhotons.size() << endreq;
-  
-  // Check wether enough particles
-  if ( nPartsToFit == 0 or nPartsToFit == 1){
-    fatal() << "Not enough particles to fit!" << endreq;
-    return StatusCode::FAILURE;
-  }
+  // Number of particles used for the vertexing, can be different from size of particlevector!!
+  const int nParts = partsToFit.size();
+  debug() << "Particles used for the fit:" << nParts << endreq;
+  int ndof = (2*nParts) - 3;
 
-  // Do the fit!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-  StatusCode scFit = doFit( partsToFit, V );
-  if ( !scFit) {
-    fatal() << "doFit failed" << endreq;
-    return StatusCode::FAILURE;
-  }
-  
-  // Update "pointOnTrack" for photons
-  for ( ParticleVector::const_iterator iPhotIt=inputPhotons.begin(); iPhotIt!=inputPhotons.end(); ++iPhotIt ) {
-    Particle* photPointer = *iPhotIt;
-    Particle& phot = *(photPointer);
-    phot.setPointOnTrack(V.position());
-    phot.setPointOnTrackErr(V.positionErr());
-    debug() << "Photon origin updated" << endreq;
-  }
-
-  // Add daugthers
-  for(ParticleVector::const_iterator iterP = parts.begin(); iterP != parts.end(); iterP++) {
-    V.addToProducts(*iterP);
-    debug() << "Particle added to vertex products: " << (*iterP)->particleID() << endreq;
-  }
-
-  debug() << "Returning vertex " << V.position() << " with error " 
-          <<  V.positionErr() << " Size: " << V.products().size() << endmsg ;  
-
-  return StatusCode::SUCCESS;
-}
-
-
-//=============================================================================
-// Fit a vertex from a vector of particles
-//=============================================================================
-
-StatusCode TrgVertexFitter::doFit(std::vector<const Particle*>& partsToFit, Vertex &V)
-{
-
-  int nPartsToFit = partsToFit.size();
-  int ndof = (2*nPartsToFit) - 3;
-
-  // Initialize summatories and arrays
+  // Initialize relevant terms
   double iMX, iMY, iX0, iY0, iInvSig2X, iInvSig2Y;
-  double X0Array [nPartsToFit],  Y0Array [nPartsToFit], MXArray [nPartsToFit];
-  double MYArray [nPartsToFit], InvSig2XArray [nPartsToFit], InvSig2YArray [nPartsToFit];
+  std::vector<double> X0Array(nParts),  Y0Array(nParts), MXArray(nParts) ;
+  std::vector<double> MYArray(nParts), InvSig2XArray(nParts), InvSig2YArray(nParts);
   double AX = 0, BX = 0, CX = 0, DX = 0, EX = 0 , AY = 0, BY = 0, CY = 0, DY = 0, EY = 0;
-
-  // Compute relevant summatories
   int i=0;
-  for ( std::vector<const Particle*>::const_iterator iPartIt=partsToFit.begin(); iPartIt!=partsToFit.end(); ++iPartIt ) {
-    const Particle* parPointer = *iPartIt;
+  for ( ParticleVector::const_iterator iPart=parts.begin(); iPart!=parts.end(); ++iPart ) {
+    const Particle* parPointer = *iPart;
     const Particle& par = *(parPointer);
     const Hep3Vector& point = par.pointOnTrack();
     const HepSymMatrix& cov = par.pointOnTrackErr();
@@ -351,35 +381,43 @@ StatusCode TrgVertexFitter::doFit(std::vector<const Particle*>& partsToFit, Vert
     DY += iMY*iMY*iInvSig2Y;
     EY += iY0*iMY*iInvSig2Y;
   
-    X0Array[i] = iX0;
-    MXArray[i] = iMX;
-    InvSig2XArray[i] = iInvSig2X;
+    X0Array.push_back(iX0);
+    MXArray.push_back(iMX);
+    InvSig2XArray.push_back(iInvSig2X);
     
-    Y0Array[i] = iY0;
-    MYArray[i] = iMY;
-    InvSig2YArray[i] = iInvSig2Y;
+    Y0Array.push_back(iY0);
+    MYArray.push_back(iMY);
+    InvSig2YArray.push_back(iInvSig2Y);
     i++;
   }
     
-  // Compute vertex position and error from the summatories
   double vX,vY,vZ;
-  StatusCode stPosAndErr = vertexPositionAndError( AX, BX, CX, DX, EX, AY, BY, CY, DY, EY, vX, vY, vZ, V);
-  if (!stPosAndErr){
+  status = vertexPositionAndError( AX, BX, CX, DX, EX, AY, BY, CY, DY, EY, vX, vY, vZ, V);
+  if (!status){
     fatal() << "vertexPositionAndError failed" << endreq;
     return StatusCode::FAILURE;
     };
 
   // Chi2
   double chi2 = 0;
-  for (int i=0; i!=nPartsToFit; i++){
+  for (int i=0; i!=nParts; i++){
     chi2 += pow( (X0Array[i]+MXArray[i]*vZ-vX), 2)*InvSig2XArray[i];
     chi2 += pow( (Y0Array[i]+MYArray[i]*vZ-vY), 2)*InvSig2YArray[i];
   }
+
   V.setChi2(chi2);
   V.setNDoF(ndof);
+
+  // Define daugthers
+  for(ParticleVector::const_iterator iterP = parts.begin(); iterP != parts.end(); iterP++) {
+    V.addToProducts(*iterP);
+  }
+
+  debug() << "Returning vertex " << V.position() << " with error " 
+          <<  V.positionErr() << " size: " << V.products().size() << endmsg ;  
+
   return StatusCode::SUCCESS;
 }
-
 
 
 //=============================================================================
