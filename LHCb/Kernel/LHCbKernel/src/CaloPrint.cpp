@@ -1,22 +1,12 @@
-// $Id: CaloPrint.cpp,v 1.1 2002-04-22 16:49:52 ibelyaev Exp $
+// $Id: CaloPrint.cpp,v 1.2 2005-01-26 07:15:08 cattanem Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
-// $Log: not supported by cvs2svn $
-// ============================================================================
 // Include files
-// CLHEP
-#include "CLHEP/Vector/ThreeVector.h"
-#include "CLHEP/Vector/LorentzVector.h"
-#include "CLHEP/Vector/Rotation.h"
-#include "CLHEP/Geometry/Transform3D.h"
+#include "Kernel/CaloPrint.h"
 #include "CLHEP/Matrix/Vector.h"
 #include "CLHEP/Matrix/DiagMatrix.h"
 #include "CLHEP/Matrix/SymMatrix.h"
-#include "CLHEP/Matrix/GenMatrix.h"
-#include "CLHEP/Matrix/Matrix.h"
-// local
-#include "Kernel/CaloPrint.h"
 
 // ============================================================================
 /** @file CaloPrint.cpp

@@ -1,4 +1,4 @@
-// $Id: CaloPrint.h,v 1.2 2003-11-24 10:54:52 cattanem Exp $
+// $Id: CaloPrint.h,v 1.3 2005-01-26 07:15:08 cattanem Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
@@ -9,15 +9,10 @@
 #include <stdio.h>
 #include <string>
 
-class Hep3Vector       ;  ///< CLHEP/Vector
-class HepTransform3D   ;  ///< CLHEP/Geometry
-class HepRotation      ;  ///< CLHEP/Vector
-class HepLorentzVector ;  ///< CLHEP/Vector
-class HepVector        ;  ///< CLHEP/Matrix 
-class HepGenMatrix     ;  ///< CLHEP/Matrix
-class HepSymMatrix     ;  ///< CLHEP/Matrix
-class HepDiagMatrix    ;  ///< CLHEP/Matrix
-
+// CLHEP includes, needed for compilation in 1.9
+#include "CLHEP/Vector/LorentzVector.h"
+#include "CLHEP/Matrix/Matrix.h"
+#include "CLHEP/Geometry/Transform3D.h"
 
 /** @class CaloPrint CaloPrint.h Kernel/CaloPrint.h
  *

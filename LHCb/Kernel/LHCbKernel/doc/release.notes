@@ -2,6 +2,12 @@ Package LHCbKernel
 Package manager: M.Cattaneo
 Purpose: LHCb specific Kernel classes
 
+!====================== LHCbKernel v5r7 2005-01-20 ========================
+! 2005-01-20 - Marco Cattaneo
+ - Changes for Gaudi v16 and CLHEP 1.9
+   . Remove CLHEPStreams.h, .cpp as Gaudi MsgStream can now handle any class
+   . Use namespaces in CLHEP forward declarations (CaloPrint.h)
+
 !====================== LHCbKernel v5r6 2005-01-17 ========================
 ! 2005-01-17 - Marco Cattaneo
  - Fix some doxygen warnings
