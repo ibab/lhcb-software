@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/GaudiObjDesc/src/DaDiMethod.h,v 1.4 2001-11-09 08:37:11 mato Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/GaudiObjDesc/src/DaDiMethod.h,v 1.5 2002-01-30 20:29:05 mato Exp $
 #ifndef DADIMETHOD_H 
 #define DADIMETHOD_H 1
 
@@ -38,14 +38,14 @@ public:
   DOMString argInOut();
   void setArgInOut(DOMString value);
 
+  DOMString virtual_();
+  void setVirtual_(DOMString value);
+
   DOMString code();
   void setCode(DOMString value);
 
   bool const_();
   void setConst_(bool value);
-
-  bool virtual_();
-  void setVirtual_(bool value);
 
   bool static_();
   void setStatic_(bool value);
@@ -72,9 +72,9 @@ private:
                                m_access, 
                                m_argList,
                                m_argInOut,
+                               m_virtual, 
                                m_code;
   bool                         m_const, 
-                               m_virtual, 
                                m_static, 
 							                 m_inline,
                                m_friend;
@@ -133,6 +133,16 @@ inline void DaDiMethod::setArgInOut(DOMString value)
   m_argInOut = value;
 }
 
+inline DOMString DaDiMethod::virtual_()
+{
+  return m_virtual;
+}
+
+inline void DaDiMethod::setVirtual_(DOMString value)
+{
+  m_virtual = value;
+}
+
 inline DOMString DaDiMethod::code()
 {
   return m_code;
@@ -151,16 +161,6 @@ inline bool DaDiMethod::const_()
 inline void DaDiMethod::setConst_(bool value)
 {
   m_const = value;
-}
-
-inline bool DaDiMethod::virtual_()
-{
-  return m_virtual;
-}
-
-inline void DaDiMethod::setVirtual_(bool value)
-{
-  m_virtual = value;
 }
 
 inline bool DaDiMethod::static_()

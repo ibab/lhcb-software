@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/GaudiObjDesc/src/DaDiClass.h,v 1.12 2002-01-29 12:01:37 mato Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/GaudiObjDesc/src/DaDiClass.h,v 1.13 2002-01-30 20:29:04 mato Exp $
 #ifndef DADICLASS_H 
 #define DADICLASS_H 1
 
@@ -15,6 +15,7 @@
 #include "DaDiConstructor.h"
 #include "DaDiDestructor.h"
 #include "DaDiEnum.h"
+#include "DaDiLocation.h"
 
 /** @class DaDiClass DaDiClass.h
  *  
@@ -46,6 +47,9 @@ public:
 
 	DOMString longDesc();
 	void setLongDesc(DOMString value);
+
+	DOMString location();
+	void setLocation(DOMString value);
 
 	bool classTemplateVector();
 	void setClassTemplateVector(bool value);
@@ -96,6 +100,10 @@ public:
 	void pushDaDiEnum(DaDiEnum* value);
 	int sizeDaDiEnum();
   
+  DaDiLocation* popDaDiLocation();
+	void pushDaDiLocation(DaDiLocation* value);
+	int sizeDaDiLocation();
+  
 protected:
 
 private:
@@ -105,7 +113,8 @@ private:
                               m_classAuthor, 
                               m_classDerived,
                               m_classID,
-                              m_longDesc;
+                              m_longDesc,
+                              m_location;
   bool                        m_classTemplateVector,
                               m_classTemplateList;
 	std::list<std::string>      m_impSoftList,
@@ -118,6 +127,7 @@ private:
   std::list<DaDiConstructor*> m_daDiConstructor;
   std::list<DaDiDestructor*>  m_daDiDestructor;
   std::list<DaDiEnum*>        m_daDiEnum;
+  std::list<DaDiLocation*>    m_daDiLocation;
 };
 
 inline DOMString DaDiClass::className()
@@ -178,6 +188,16 @@ inline DOMString DaDiClass::longDesc()
 inline void DaDiClass::setLongDesc(DOMString value)
 {
 	m_longDesc = value;
+}
+
+inline DOMString DaDiClass::location()
+{
+	return m_location;
+}
+
+inline void DaDiClass::setLocation(DOMString value)
+{
+	m_location = value;
 }
 
 inline bool DaDiClass::classTemplateVector()
@@ -493,6 +513,24 @@ inline void DaDiClass::pushDaDiEnum(DaDiEnum* value)
 inline int DaDiClass::sizeDaDiEnum()
 {
 	return m_daDiEnum.size();
+}
+
+inline DaDiLocation* DaDiClass::popDaDiLocation()
+{
+	DaDiLocation* pt = m_daDiLocation.front();
+	m_daDiLocation.push_back(pt);
+	m_daDiLocation.pop_front();
+	return pt;
+}
+
+inline void DaDiClass::pushDaDiLocation(DaDiLocation* value)
+{
+	m_daDiLocation.push_back(value);
+}
+
+inline int DaDiClass::sizeDaDiLocation()
+{
+	return m_daDiLocation.size();
 }
 
 

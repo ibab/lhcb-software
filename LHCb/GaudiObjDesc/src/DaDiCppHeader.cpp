@@ -1,4 +1,4 @@
-// $Id: DaDiCppHeader.cpp,v 1.31 2002-01-30 09:29:30 mato Exp $
+// $Id: DaDiCppHeader.cpp,v 1.32 2002-01-30 20:29:04 mato Exp $
 
 #include "GaudiKernel/Kernel.h"
 
@@ -29,6 +29,24 @@
 //----------------------------------------------------------------------------
 
 std::vector<std::string> ContainedObjectClasses, KeyedObjectClasses;
+
+
+std::string printPlural(const std::string& singular)
+{
+  std::map<std::string,std::string> exceptions;
+  std::map<std::string,std::string>::iterator iter;
+  exceptions["Vertex"] = "Vertices";
+
+  for (iter = exceptions.begin(); iter != exceptions.end(); ++iter)
+  {
+    if ((singular.rfind((*iter).first) + ((*iter).first).length()) == singular.length())
+    {
+      return singular.substr(0,singular.rfind((*iter).first))  + exceptions[(*iter).first];
+    }
+  }
+  return singular + "s";
+}
+
 
 //-----------------------------------------------------------------------------
 DOMString firstUp(const DOMString s)
@@ -101,7 +119,8 @@ void printMethodDecl(std::ofstream& xmlOut,
     {
       xmlOut << "friend ";
     }
-    if (gddMethod->virtual_())
+    if (gddMethod->virtual_().equals("TRUE") ||
+        gddMethod->virtual_().equals("PURE"))
     {
       xmlOut << "virtual ";
     }
@@ -156,6 +175,10 @@ void printMethodDecl(std::ofstream& xmlOut,
     {
       xmlOut << " const";
     }
+    if (gddMethod->virtual_().equals("PURE"))
+    {
+      xmlOut << " = 0";
+    }
     if (gddMethod->friend_())
     {
       xmlOut << std::endl << "  {" << std::endl << gddMethod->code().transcode()
@@ -184,7 +207,8 @@ void printMethodImpl(std::ofstream& xmlOut,
         gddMethod->code() != NULL && !gddMethod->friend_())
     {
       xmlOut << "inline ";
-      if(gddMethod->virtual_())
+      if(gddMethod->virtual_().equals("TRUE") || 
+         gddMethod->virtual_().equals("PURE"))
       {
         xmlOut << "virtual ";
       }
@@ -246,8 +270,8 @@ void printMethodImpl(std::ofstream& xmlOut,
 
 //-----------------------------------------------------------------------------
 void printSetGetAttDecl(std::ofstream& xmlOut,
-                     DaDiClass* gddClass,
-                     char* accessor)
+                        DaDiClass* gddClass,
+                        char* accessor)
 //-----------------------------------------------------------------------------
 {
   int i;
@@ -741,9 +765,33 @@ void printClass(std::ofstream& xmlOut,
   if (isEventClass)
   {
     xmlOut << "// Class ID definition" << std::endl 
-      << "static const CLID& CLID_" << gddClass->className().transcode()
+      << "  static const CLID& CLID_" << gddClass->className().transcode()
       << " = " << gddClass->classID().transcode() << ";" << std::endl 
       << std::endl;
+  }
+
+
+//
+// create namespace for locations
+//
+  if ((gddClass->location() != NULL) || gddClass->sizeDaDiLocation())
+  {
+    bool def = false;
+    xmlOut << "// Namespace for locations in TDS" << std::endl
+      << "namespace " << gddClass->className().transcode() << "Location {"
+      << std::endl << "  enum {";
+    if (gddClass->location() != NULL)
+    {
+      xmlOut << "Default";
+      def = true;
+    }
+    for (i = 0; i < gddClass->sizeDaDiLocation(); ++i)
+    {
+      DaDiLocation* gddLocation = gddClass->popDaDiLocation();
+      if (def || i!=0) { xmlOut << ", "; }
+      xmlOut << gddLocation->name().transcode();
+    }
+    xmlOut << "};" << std::endl << "}" << std::endl << std::endl << std::endl;
   }
 
   time(&ltime);
@@ -1013,9 +1061,21 @@ void printClass(std::ofstream& xmlOut,
     xmlOut << "  /// Retrieve pointer to class definition structure" 
       << std::endl << "  virtual const CLID& clID() const; " << std::endl;
 
-    xmlOut << "  static const CLID& classID(); " << std::endl << std::endl;
+    xmlOut << "static const CLID& classID(); " << std::endl << std::endl;
   }
 
+
+//
+// Return locations of class in TDS
+//
+  if ((gddClass->location() != NULL) || gddClass->sizeDaDiLocation())
+  {
+    xmlOut << "  /// Retrieve location of class in TES " << std::endl
+      << "  static const std::string location(int loc);" << std::endl
+      << std::endl;
+  }
+
+  
 // 
 // Declaration of selfdefined methods
 //
@@ -1224,6 +1284,35 @@ void printClass(std::ofstream& xmlOut,
       << "  return CLID_" << gddClass->className().transcode() 
       << ";" << std::endl << "}" << std::endl << std::endl;
   }
+
+
+  //
+  // return location in TES
+  //
+  if ((gddClass->location() != NULL) || gddClass->sizeDaDiLocation())
+  {
+    std::string namesp = gddClass->className().transcode();
+    namesp += "Location::";
+    xmlOut << "inline static const std::string location(int loc)" << std::endl
+      << "{" << std::endl << "  switch(loc) {";
+    if (gddClass->location() != NULL)
+    {
+      xmlOut << std::endl << "  case " << namesp << "Default: " << std::endl 
+        << "    return \"" << gddClass->location().transcode() << "\";";
+    }
+    for (i=0; i<gddClass->sizeDaDiLocation(); ++i)
+    {
+      DaDiLocation* gddLocation = gddClass->popDaDiLocation();
+      xmlOut << std::endl << "  case " << namesp << gddLocation->name().transcode()
+        << ":" << std::endl << "    return \"" << gddLocation->place().transcode()
+        << "\";";
+    }
+    xmlOut << std::endl << "  default: " << std::endl
+      << "    return \"\";" << std::endl << "  }" << std::endl 
+      << "}" << std::endl << std::endl;
+  }
+
+
 
 
 
@@ -1564,7 +1653,7 @@ void printClass(std::ofstream& xmlOut,
 //      << "namespace Containers { class HashMap; };" << std::endl
 //      << "template <class TYPE, class MAPPING> class KeyedContainer;" << std::endl
       << "typedef KeyedContainer<" << gddClass->className().transcode()
-      << ", Containers::HashMap> " << gddClass->className().transcode() << "s;"
+      << ", Containers::HashMap> " << printPlural(gddClass->className().transcode()) << ";"
       << std::endl;
   }
 

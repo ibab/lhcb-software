@@ -2,6 +2,11 @@ Package: GaudiObjDesc
 Desccription: This package contains a set of tools used to generate code from the XML description of the data object classes.
 Package manager : Stefan Roiser
 
+! 20020130 - Stefan Roiser
+ - added function to locate the place in the TDS
+ - added possibility to make pure virtual functions
+ - added 'translator' for unregular plurals
+
 ! 20021028 - Stefan Roiser
  - <namespace>-element introduced
  - fragments will now write the output to sub-dir "Event"

@@ -1,4 +1,4 @@
-// $Id: DaDiFrontEnd.cpp,v 1.19 2002-01-30 10:24:07 mato Exp $
+// $Id: DaDiFrontEnd.cpp,v 1.20 2002-01-30 20:29:05 mato Exp $
 
 #include "GaudiKernel/Kernel.h"
 
@@ -195,6 +195,23 @@ void parseEnum(DOM_Node node,
 
 
 //-----------------------------------------------------------------------------
+void parseLocation(DOM_Node node,
+                   DaDiLocation* gddLocation)
+//-----------------------------------------------------------------------------
+{
+
+  gddLocation->setName(node.getAttributes().
+    getNamedItem(DOMString::transcode("name")).getNodeValue().
+    transcode());
+
+  gddLocation->setPlace(node.getAttributes().
+    getNamedItem(DOMString::transcode("place")).getNodeValue().
+    transcode());
+
+}
+
+
+//-----------------------------------------------------------------------------
 void parseMethod(DOM_Node node,
                  DaDiMethod* gddMethod)
 //-----------------------------------------------------------------------------
@@ -231,16 +248,9 @@ void parseMethod(DOM_Node node,
     gddMethod->setConst_(false);
   }
             
-  if (node.getAttributes().
+  gddMethod->setVirtual_(node.getAttributes().
       getNamedItem(DOMString::transcode("virtual")).
-      getNodeValue().equals("TRUE"))
-  {
-    gddMethod->setVirtual_(true);
-  }
-  else
-  {
-    gddMethod->setVirtual_(false);
-  }
+      getNodeValue());
             
   if (node.getAttributes().
       getNamedItem(DOMString::transcode("static")).
@@ -984,6 +994,17 @@ void parseClass(DOM_Node node,
     gddClass->setClassDesc(0);
   }
   
+  if (!node.getAttributes().getNamedItem(DOMString::transcode("location")).isNull())
+  {
+    gddClass->setLocation(node.getAttributes().
+      getNamedItem(DOMString::transcode("location")).
+      getNodeValue());
+  }
+  else
+  {
+    gddClass->setLocation(0);
+  }
+
   gddClass->setClassAuthor(node.getAttributes().
     getNamedItem(DOMString::transcode("author")).
     getNodeValue());
@@ -1069,6 +1090,16 @@ void parseClass(DOM_Node node,
           DaDiBaseClass* gddBaseClass = new DaDiBaseClass();
           gddClass->pushDaDiBaseClass(gddBaseClass);
           parseBaseClass(node, gddBaseClass);
+        }
+
+//
+// Parse locations (of classes in the TES)
+//
+        else if(node.getNodeName().equals("location"))
+        {
+          DaDiLocation* gddLocation = new DaDiLocation();
+          gddClass->pushDaDiLocation(gddLocation);
+          parseLocation(node, gddLocation);
         }
 
 //

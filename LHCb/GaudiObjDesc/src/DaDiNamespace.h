@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/GaudiObjDesc/src/DaDiNamespace.h,v 1.1 2002-01-28 18:58:10 mato Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/GaudiObjDesc/src/DaDiNamespace.h,v 1.2 2002-01-30 20:29:05 mato Exp $
 #ifndef DADINAMESPACE_H 
 #define DADINAMESPACE_H 1
 
@@ -43,10 +43,10 @@ protected:
 
 private:
 
-	DOMString                   m_name, 
-                              m_desc;
-	std::list<DaDiEnum*>	      m_daDiEnum;
-	std::list<DaDiClass*>	      m_daDiClass;
+	DOMString             m_name, 
+                            m_desc;
+	std::list<DaDiEnum*>  m_daDiEnum;
+	std::list<DaDiClass*> m_daDiClass;
 };
 
 

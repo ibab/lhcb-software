@@ -14,19 +14,25 @@
 <!ATTLIST package
 	name CDATA #REQUIRED
 >
-<!ELEMENT class ((desc?, base?, import?, enum?, constructor?, destructor?, method?, attribute?, relation?)*)>
+<!ELEMENT class ((desc?, base?, import?, location?, enum?, constructor?, destructor?, method?, attribute?, relation?)*)>
 <!ATTLIST class
 	name CDATA #REQUIRED
 	author CDATA #REQUIRED
 	desc CDATA #REQUIRED
 	filename CDATA #IMPLIED
 	id CDATA #IMPLIED
+	location CDATA #IMPLIED
 	templateVector (TRUE | FALSE) "TRUE"
 	templateList (TRUE | FALSE) "TRUE"
 >
 <!ELEMENT desc (#PCDATA)>
 <!ATTLIST desc
 	xml:space (default | preserve) #FIXED "preserve"
+>
+<!ELEMENT location EMPTY>
+<!ATTLIST location
+   name CDATA #REQUIRED
+   place CDATA #REQUIRED
 >
 <!ELEMENT namespace ((enum?, class?)*)>
 <!ATTLIST namespace
@@ -65,7 +71,7 @@
 	desc CDATA #REQUIRED
 	access (PUBLIC | PROTECTED | PRIVATE) "PUBLIC"
 	const (TRUE | FALSE) "FALSE"
-	virtual (TRUE | FALSE) "FALSE"
+	virtual (TRUE | FALSE | PURE) "FALSE"
 	static (TRUE | FALSE) "FALSE"
 	inline (TRUE | FALSE) "FALSE"
 	friend (TRUE | FALSE) "FALSE"
