@@ -1,8 +1,11 @@
-// $Id: RelationWeightedTypeTraits.h,v 1.13 2003-05-15 15:22:11 ibelyaev Exp $
+// $Id: RelationWeightedTypeTraits.h,v 1.14 2003-05-15 17:21:33 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.13  2003/05/15 15:22:11  ibelyaev
+//  few modification to conform SLT interface for 'Range' types
+//
 // Revision 1.12  2003/01/17 14:07:02  sponce
 // support for gcc 3.2
 //
@@ -230,7 +233,7 @@ namespace Relations
       inline const_reference  operator() ( const size_t index ) const
       {
         if ( index < size() ) { return *( begin() + index ) ; }
-        static const_reference s_default = value_type() ;
+        static const value_type s_default = value_type() ;
         return s_default ;
       };
       /** the access to the items by index 
