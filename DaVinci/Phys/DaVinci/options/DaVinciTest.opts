@@ -1,0 +1,51 @@
+//##############################################################
+// job Options for DaVinci Testing suite
+//==============================================================
+#include "$DAVINCIROOT/options/DaVinciCommon.opts"
+
+//--------------------------------------------------------------
+// Histograms are filled in some of the testing algorithms
+//--------------------------------------------------------------
+#include "$STDOPTS/Hbook.opts"
+HistogramPersistencySvc.OutputFile = "DaVinciTest.hbook";
+
+//--------------------------------------------------------------
+// Set up some profiling. Enable/Disable setting lines below to true/false
+//--------------------------------------------------------------
+AuditorSvc.Auditors  = { "NameAuditor", "ChronoAuditor", "MemoryAuditor" };
+NameAuditor.Enable   = false;
+ChronoAuditor.Enable = true;
+MemoryAuditor.Enable = false;
+
+//--------------------------------------------------------------
+// Default tools options
+//--------------------------------------------------------------
+#include "$DAVINCITOOLSROOT/options/DaVinciTools.opts"
+
+//--------------------------------------------------------------
+// List of test options for algorithms: each should be executed 
+// independently, they also have the other necessary algorithms to 
+// run in order to perform the tests. They also have a "default"
+// set of outputLevel to print the reference log files
+//--------------------------------------------------------------
+//#include "$DAVINCITESTROOT/options/TestAssociators.opts"
+#include "$DAVINCITESTROOT/options/TestParticleFilter.opts"
+//#include "$DAVINCITESTROOT/options/TestUnconsVertexFitter.opts"
+//#include "$DAVINCITESTROOT/options/TestParticleStuffer.opts"
+//#include "$DAVINCITESTROOT/options/TestGeomDispCalculator.opts"
+//#include "$DAVINCITESTROOT/options/TestMassVertexFitter.opts"
+//#include "$DAVINCITESTROOT/options/TestPhysDesktop.opts" 
+
+//---------------------------------------------------------------
+// Number of events to process, skip and printing frequency
+//---------------------------------------------------------------
+ApplicationMgr.EvtMax = 1;
+EventSelector.FirstEvent = 1;
+   
+//---------------------------------------------------------------
+// Input data for test
+//---------------------------------------------------------------
+// B->J/PsiKs, Brunel v5r1
+EventSelector.Input = {"JOBID='64042'"};
+//################################################################
+
