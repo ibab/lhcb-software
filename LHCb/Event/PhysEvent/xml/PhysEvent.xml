@@ -6,9 +6,6 @@
 
 <!ENTITY PrimVertex.xml       SYSTEM "PrimVertex.xml"      >
 
-<!ENTITY PhysSelDecay.xml     SYSTEM "PhysSelDecay.xml"    >
-<!ENTITY PhysSel.xml          SYSTEM "PhysSel.xml"         >
-
 <!ENTITY ProtoParticle.xml    SYSTEM "ProtoParticle.xml"   >
 <!ENTITY V0.xml               SYSTEM "V0.xml"              >
 
@@ -32,8 +29,6 @@
     &PrimVertex.xml;
     
     <!-- High Level classes -->
-    &PhysSelDecay.xml;
-    &PhysSel.xml;
     &SelResult.xml;
     
     &FlavourTag.xml;
