@@ -4,6 +4,11 @@
 ! Purpose     : Gauss system
 !-----------------------------------------------------------------------------
 
+!========================== GaussSys v14r3 2004-02-17 ====================
+! 2004-02-17 - Florence RANJARD
+ - Gauss v14r3 uses Geant4 6.0.p01
+ - changes in GiGa, GiGaCnv, GaussTools, GaussRICH
+
 !========================== GaussSys v14r2 2004-02-03 ====================
 ! 2004-02-03 - Florence RANJARD
  - Gauss v14r2 uses Geant4 6.0.ref01

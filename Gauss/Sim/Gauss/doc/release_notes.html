@@ -4,6 +4,40 @@ Package manager : Witek Pokorski
 </PRE>
 
 !========================================================================
+<H1><A NAME="v14r3">2004-02-17 - Gauss v14r3</A></H1><PRE>
+uses Geant4 6.0.p01
+
+!======================== GaussRICH v4r6 =================================
+! 2004-02-09 - Chris Jones
+ - Added two new converters for MCRichTracks and MCRichSegments
+ - General minor improvements to the code
+
+!======================= GaussTools v9r1 ================================
+! 2004-02-14 - Patrick Robbe
+ - GaussPostTrackAction.cpp : propagate mixing information from G4Tracks
+   to GiGaTrajectories for each track which is a B0 or a B0s which has
+   oscillated.
+
+! 2004-01-29 - Chris Jones
+ - Minor additions to GetGiGaHitsAlg for RICH debug objects
+
+!========================== GiGa v15r2 =================================
+! 2004-02-14 - Patrick Robbe
+ - GiGaTrajectory : add a boolean member function (hasOscillated() )to
+  indicate that the particle corresponding to the track has oscillated 
+  to be able to propagate the information to the MCParticle.
+
+!======================== GiGaCnv v14r2 ==============================
+! 2004-02-14 - Patrick Robbe
+ - GiGaPrimaryParticleInformation : class deriving from 
+   G4VUserPrimaryParticleInformation to pass the information on mixing
+   to a G4PrimaryParticle.
+ - GiGaHepMCCnv : create a G4PrimaryParticle with mixing information
+   when the HepMC particle has oscillated.
+ - Trajectory2Particle : set MCParticle mixing flag when the GiGaTrajectory
+   is associated to a B0/B0s which has oscillated.
+
+!========================================================================
 <H1><A NAME="v14r2">2004-02-03 - Gauss v14r2</A></H1><PRE>
 uses Geant4 6.0.ref01
 
