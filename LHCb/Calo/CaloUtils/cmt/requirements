@@ -1,8 +1,4 @@
-# $Id: requirements,v 1.16 2002-12-01 14:21:21 ibelyaev Exp $
-# =============================================================================
-# CVS tag $Name: not supported by cvs2svn $
-# =============================================================================
-# $Log: not supported by cvs2svn $
+# $Id: requirements,v 1.17 2002-12-05 15:32:42 ranjard Exp $
 # =============================================================================
 # Created    : 02/11/2001
 # Maintainer : Vanya Belyaev Ivan.Belyaev@itep.ru
@@ -18,7 +14,7 @@ include_dirs        $(CALOUTILSROOT)
 
 # ================= dependencies ==============================================
 use CaloEvent       v11r*   Event
-use CaloDet         v5r*    Det 
+use CaloDet         v6r*    Det 
 
 # ================= constituens: linker library ===============================
 library             CaloUtils    *.cpp

@@ -1,7 +1,11 @@
-! $Id: release.notes,v 1.23 2002-12-01 14:21:21 ibelyaev Exp $
+! $Id: release.notes,v 1.24 2002-12-05 15:32:42 ranjard Exp $
 ! Package     : CaloUtils
 ! Responsible : Vanya Belyaev Ivan.Belyaev@itep.ru
 ! =============================================================================
+
+!========================= CaloUtils v4r4 2002-12-06 =====================
+! 2002-11-22 - Florence Ranjard
+ - requirements - use new versions
 
 ! 2002-11-29 - Ivan Belyaev
  - cmt/requirements                       version update 
