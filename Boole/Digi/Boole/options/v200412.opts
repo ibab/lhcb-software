@@ -51,7 +51,7 @@ SpilloverSelector.Input = {
 // Main event input
 //---------------------------------------------------------------------------
 EventSelector.Input = {
-   "DATAFILE='PFN:/afs/cern.ch/user/r/ranjard/w1/data/Gauss_v19r0_0412.sim' TYP='POOL_ROOT' OPT='READ'" 
+   "DATAFILE='PFN:/afs/cern.ch/user/r/ranjard/w1/data/Gauss_v19r0_0412_500.sim' TYP='POOL_ROOT' OPT='READ'" 
 };  // Test data produced by Florence with Gauss v19r0 pre-release
 
 //---------------------------------------------------------------------------
