@@ -1,4 +1,4 @@
-// $Id: DebugTool.cpp,v 1.7 2004-11-24 14:08:54 pkoppenb Exp $
+// $Id: DebugTool.cpp,v 1.8 2004-11-24 16:13:57 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
@@ -26,8 +26,8 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the AlgTool Factory
-static ToolFactory<DebugTool>          Factory;
-const IToolFactory& DebugToolFactory = Factory;
+static ToolFactory<DebugTool>          s_factory;
+const IToolFactory& DebugToolFactory = s_factory;
 
 //=============================================================================
 // Standard creator, initializes variables

@@ -1,4 +1,4 @@
-// $Id: DebugTool.h,v 1.4 2004-11-24 14:08:54 pkoppenb Exp $
+// $Id: DebugTool.h,v 1.5 2004-11-24 16:13:57 pkoppenb Exp $
 #ifndef DEBUGTOOL_H 
 #define DEBUGTOOL_H 1
 
@@ -29,7 +29,7 @@ public:
              const IInterface* parent );
 
   /// Destructor 
-  virtual ~DebugTool( ); ///< Destructor
+  virtual ~DebugTool( ){}; ///< Destructor
 
   StatusCode initialize( void );
 
