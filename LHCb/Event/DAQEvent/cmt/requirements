@@ -1,0 +1,46 @@
+#============================================================================
+# Created    : 2003-07-22
+# Maintainer : Helder Lopes
+#
+# Documentation on the requirement file can be found at
+# http://cern.ch/lhcb-comp/Support/html/new_structure.pdf
+#============================================================================
+package           DAQEvent
+version           v1r0
+
+# Structure, i.e. directories to process. 
+#============================================================================
+branches          cmt dict doc src xml Event 
+
+# Include directories
+#============================================================================
+include_dirs $(DAQEVENTROOT)
+
+# Used packages.
+#============================================================================
+use LHCbKernel   v2r*    Kernel
+use EventKernel  v2r*    Event
+use GaudiObjDesc v5r* -no_auto_imports
+
+# Produce Header-Files & dictionary from XML description
+#============================================================================
+document obj2doth DAQEventObj2Doth ../xml/DAQEvent.xml
+document obj2dict DAQEventObj2Dict ../xml/DAQEvent.xml
+
+# Build libraries (including dictionary)
+#============================================================================
+library          DAQEvent      *.cpp
+library          DAQEventDict  ../dict/*.cpp -import=GaudiIntrospection
+
+# Define link options
+#============================================================================
+apply_pattern    package_linkopts
+apply_pattern    package_stamps
+apply_pattern    linker_path
+macro_append DAQEvent_linkopts "" WIN32 "/include:_DAQEvent_loadRef"
+
+apply_pattern package_shlibflags
+#============================================================================
+private
+macro DAQEventDict_shlibflags  "$(DAQEvent_linkopts) $(GaudiIntrospection_linkopts) $(use_linkopts) $(libraryshr_linkopts)"
+

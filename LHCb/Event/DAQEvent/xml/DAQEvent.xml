@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE gdd SYSTEM "gdd.dtd"[
+
+<!ENTITY HLTBuffer.xml         SYSTEM "HLTBuffer.xml"        >
+<!ENTITY HLTEvent.xml          SYSTEM "HLTEvent.xml"         >
+<!ENTITY HLTBank.xml            SYSTEM "HLTBank.xml"         >
+
+]>
+ 
+<gdd>
+
+  <package name="DAQEvent">
+    <!-- next line needed until GOD knows not to look in LHCbEvent /-->
+    <import name="Kernel/CLHEPStreams"/>
+
+    <!-- Event Header class -->
+    &HLTBuffer.xml; 
+
+    <!-- DAQ Event class -->
+    &HLTBank.xml;
+    &HLTEvent.xml;
+
+  </package>
+
+</gdd>

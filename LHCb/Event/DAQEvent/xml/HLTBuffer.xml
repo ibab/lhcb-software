@@ -1,0 +1,130 @@
+<!-- ****************************************************************
+     * HltBuffer                                                    *
+     ****************************************************************-->
+     <class 
+      author="Helder Lopes"
+      desc="Raw event buffer"
+      name="HLTBuffer"
+      location="DAQ/HLTBuffer"
+      id="1001"
+      serializers="FALSE"
+     >
+       <base name="DataObject"/>
+       <import name="Event/DAQTypes" soft="FALSE"/>
+       <import name="hlt_int" ignore="TRUE"/>
+       <attribute
+        desc="Initial amount of memory allocated in words(32 bit)"
+        name="initialSize"
+        type="long"
+        init="10000"
+        getMeth="FALSE"
+        setMeth="FALSE"
+       />
+       <attribute
+        desc="Current amount of memory allocated in words(32 bit)"
+        name="allocatedSize"
+        type="long"
+        setMeth="FALSE"
+       />
+       <attribute
+        desc="Current amount of memory filled with data in words(32 bit)"
+        name="currentSize"
+        type="long"
+        setMeth="FALSE"
+       />
+       <attribute
+        desc="Pointer to beggining of HLT buffer"
+        name="buffer"
+        type="hlt_int *"
+        setMeth="FALSE"
+        getMeth="FALSE"
+       />
+       <attribute
+        desc="Magic pattern to check integrity of data buffer"
+        name="magic"
+        type="hlt_int"
+	init="12345"
+        setMeth="FALSE"
+       />
+       <constructor
+        desc="Constructor: Allocate inital amount of memory"
+	initList="m_initialSize(100),m_currentSize(0),m_magic(12345)"
+	>
+         <code> m_buffer = new hlt_int[m_initialSize];
+	        m_allocatedSize = m_initialSize;
+	 </code>
+       </constructor>
+       <destructor
+        desc="destructor: Deallocate memory"
+	>
+         <code> delete [] m_buffer; </code>
+       </destructor>  
+       <method
+        desc="accessor method to retrieve pointer to beginning of buffer"
+        name="buffer"
+        type="hlt_int *"
+       >
+         <code> return m_buffer; </code>
+       </method>
+       <method
+        desc="Add a new bank of data to the buffer"
+        name="addBank"
+        type="void"
+       >
+       <arg type="int" name="source_ID" />
+       <arg type="int" name="class_ID"  />
+       <arg type="hlt_int *" name="data"    />
+       <arg type="long" name="dataSize"  />
+         <code> 
+  long bankSize = 3 + dataSize ;
+  long evtSize=m_currentSize+bankSize;
+  if(evtSize &gt; m_allocatedSize ) reallocate( evtSize );
+  long size=m_currentSize;
+  m_buffer[size++]=hlt_int(bankSize);
+  m_buffer[size++]=m_magic;
+  m_buffer[size++]=(hlt_int(source_ID)&lt;&lt;16)+hlt_int(class_ID);
+
+  for( long i =0; i&lt;dataSize;++i) m_buffer[size++] = *(data++);
+  m_currentSize+=bankSize;
+ </code>
+       </method>
+       <method
+        desc="Add a new bank of data to the buffer"
+        name="addBank"
+        type="void"
+       >
+       <arg type="int" name="source_ID" />
+       <arg type="int" name="class_ID"  />
+       <arg type="std::vector &lt;hlt_int&gt;" name="data"    />
+         <code> 
+  long bankSize = 3 + data.size() ;
+  long evtSize=m_currentSize+bankSize;
+  if(evtSize &gt; m_allocatedSize ) reallocate( evtSize );
+  long size=m_currentSize;
+  m_buffer[size++]=hlt_int(bankSize);
+  m_buffer[size++]=m_magic;
+  m_buffer[size++]=(hlt_int(source_ID)&lt;&lt;16)+hlt_int(class_ID);
+
+  for( std::vector&lt;hlt_int&gt;::iterator i =data.begin(); i!=data.end();++i) m_buffer[size++] = *i;
+  m_currentSize+=bankSize;
+ </code>
+       </method>
+       <method
+        desc="Reallocate buffer if more space is necessary"
+        name="reallocate"
+        type="void"
+	access="PRIVATE"
+       >
+       <arg type="long" name="evtSize" />
+         <code>
+// cout &lt;&lt; " Using reallocate method" &lt;&lt; endl;
+// To avoid many reallocations we are giving at least m_initialSize extra space
+  long newSize = evtSize+m_initialSize;
+  hlt_int * newBuffer = new hlt_int[newSize];
+  for( long i =0; i&lt;m_currentSize;++i) newBuffer[i] = m_buffer[i];
+  m_allocatedSize=newSize;
+  delete [] m_buffer;
+  m_buffer = newBuffer;
+	  </code>
+       </method>
+     </class>
