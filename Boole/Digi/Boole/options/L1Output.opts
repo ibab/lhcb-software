@@ -1,0 +1,23 @@
+//== Output of new L1 tracking. Disable if using POOL
+
+DigiWriter.ItemList += {
+  "/Event/Trig/L1/Vertices2dnew#1"
+  ,"/Event/Rec/Trg#1"                      // tracks from Trg
+  ,"/Event/Rec/Trg/VeloRTracks#1"
+  ,"/Event/Rec/Trg/VeloSpaceTracks#1"
+  ,"/Event/Rec/Trg/VttTracks#1"
+  ,"/Event/Link#1"
+  ,"/Event/Link/Raw#1"
+  ,"/Event/Link/Raw/Velo#1"
+  ,"/Event/Link/Raw/Velo/Clusters#1"
+  ,"/Event/Link/Raw/IT#1"
+  ,"/Event/Link/Raw/IT/Digits#1"
+  ,"/Event/Link/Raw/OT#1"
+  ,"/Event/Link/Raw/OT/Digits#1"
+  ,"/Event/Link/Rec#1"
+  ,"/Event/Link/Rec/Trg#1"
+  ,"/Event/Link/Rec/Trg/VeloRTracks#1"
+  ,"/Event/Link/Rec/Trg/VeloSpaceTracks#1"
+  ,"/Event/Link/Rec/Trg/VttTracks#1"
+  ,"/Event/MC/MCTrackInfo#1"
+};

@@ -3,7 +3,7 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
-</PRE><H1><A NAME=v5r0>2004-01-15 Boole v5r0</A></H1><PRE>
+</PRE><H1><A NAME=v5r0>2004-01-22 Boole v5r0</A></H1><PRE>
 
  Built against GAUDI_v14r0, LHCB_v15r0.
 
@@ -11,15 +11,26 @@ Purpose: LHCb Digitization program
   - New Ecal and Hcal calibration for "ActiveToTotal" parameter (XmlDDDB v20r1)
 
 - New features
+  - Possibility to use POOL persistency. Disabled by default. 
+    To be used with care (tests by experts)
   - Populate RawBuffer and L1Buffer with L0Calo (full) clusters. L0CaloDigit
     algorithm removed (L0Calo v7r2)
-  - Possibility to use POOL persistency. **For tests, experts only! **
+  - Populate RawBuffer and L1Buffer with Velo clusters (TrgTools v2r0)
+  - Populate L1Buffer with TT clusters (TrgTools v2r0)
+  - Execute new Trg (L1) tracking starting from L1Buffer
+    (TrgTools v2r0, TrgVelo v2r0, TrgVeloTT v1r0, L1Reco v2r0, TrgChecker v2r0)
+  - Create MCTrackInfo (acceptance and reconstructible info for MCParticle)
+    Currently only stores reconstructible info for Trg tracking (MCTools v1r2)
 
 - oodigi changes
   - Options file DigiContent.opts moved to Boole from GaudiConf. 
     File BooleOutput.opts is obsolete and has been removed.
   - L0/Calo and L0/FullCalo removed (can be rebuilt from RawBuffer)
   - Gen/HepMCEvents added as optional (will be written if present on Gauss o/p)
+  - Trg tracks added (result of L1 tracking)
+  - Link objects added (MC truth for tracking digits and L1 tracks)
+  - MCTrackInfo added
+
 
 </PRE><H1><A NAME=v4r0>2003-12-12 Boole v4r0</A></H1><PRE>
 

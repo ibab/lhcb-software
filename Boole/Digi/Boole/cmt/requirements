@@ -65,6 +65,14 @@ use L0DU                v6r6	L0
 use L1VeloTrack         v5r6	L1
 use L1Decision		v2r4	L1
 
+# New L1 + Hlt
+use MCTools		v1r2	Phys
+use TrgTools		v2r0	Trg
+use TrgChecker		v2r0	Trg
+use TrgVelo		v2r0	Trg
+use TrgVeloTT		v1r0	Trg
+use L1Reco		v2r0	Trg
+
 # Calorimeter
 use CaloInterfaces      v3r1	Calo
 use CaloUtils           v4r6	Calo

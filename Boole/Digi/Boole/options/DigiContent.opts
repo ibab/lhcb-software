@@ -50,12 +50,12 @@ DigiWriter.ItemList =
 , "/Event/Trig/L0/PuVeto#1"
 , "/Event/Trig/L0/Decision#1" 
 , "/Event/Trig/L1#1"
-, "/Event/Trig/L1/Tracks2d#1"
-, "/Event/Trig/L1/Tracks3d#1"
-, "/Event/Trig/L1/Vertices2d#1"
-, "/Event/Trig/L1/Clusters#1"
-, "/Event/Trig/L1/ITClusters#1"
-, "/Event/Trig/L1/TTClusters#1"
+, "/Event/Trig/L1/Tracks2d#1"   // To be replaced by Rec/Trg/VeloRTracks
+, "/Event/Trig/L1/Tracks3d#1"   // To be replaced by Rec/Trg/VeloSpaceTracks
+, "/Event/Trig/L1/Vertices2d#1" // To be replaced by Trig/L1/Vertices2dnew
+, "/Event/Trig/L1/Clusters#1"   // To be replaced by L1Buffer/RawBuffer
+, "/Event/Trig/L1/ITClusters#1" // To be replaced by RawBuffer
+, "/Event/Trig/L1/TTClusters#1" // To be replaced by L1Buffer
 , "/Event/Trig/L1/Summary#1"
 , "/Event/Trig/L1/Decision#1" 
 , "/Event/Raw#1"
@@ -71,7 +71,7 @@ DigiWriter.ItemList =
 , "/Event/Rec/Relations#1"
 , "/Event/Rec/Relations/ITDigits2MCHits#1"
 , "/Event/Rec/Relations/OTDigits2MCHits#1"
-, "/Event/Rec/Relations/VeloClusters2MCHits#1" // Comment out if using POOL
+, "/Event/Rec/Relations/VeloClusters2MCHits#1"
 , "/Event/MC/Rich/Digits#1" // Single hop to MCHit, instead of relations
 , "/Event/MC/Prs/Digits#1"  // Single hop to MCHit, instead of relations
 , "/Event/MC/Spd/Digits#1"  // Single hop to MCHit, instead of relations
@@ -80,6 +80,6 @@ DigiWriter.ItemList =
 , "/Event/MC/Muon/Digits#1" // Single hop to MCHit, instead of relations
 , "/Event/Rec/Relations/L0CaloCandidates#1"
 , "/Event/Rec/Relations/L0CaloFullCandidates#1"
-, "/Event/Rec/Relations/L1Track2d2MCP#1"
-, "/Event/Rec/Relations/L1Track3d2MCP#1"
+, "/Event/Rec/Relations/L1Track2d2MCP#1" // To be replaced by new Link objects
+, "/Event/Rec/Relations/L1Track3d2MCP#1" // To be replaced by new Link objects
 };

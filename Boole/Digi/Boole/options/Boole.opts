@@ -33,8 +33,8 @@ ApplicationMgr.TopAlg += { "ProcessPhase/Init",
 //--------------------------------------------------------------
 Init.DetectorList += { "Data", "Boole" };
 Digi.DetectorList += { "VELO" , "IT", "OT" , "RICH" , "CALO", "MUON" };
-Trigger.DetectorList = { "L0", "L1" };
-Relations.DetectorList = { "VELO", "IT", "OT", "L0", "L1" };
+Trigger.DetectorList = { "L0", "L1", "Trg" };
+Relations.DetectorList = { "VELO", "IT", "OT", "L0", "L1", "Trg" };
 
 //--------------------------------------------------------------
 // Geometry and magnetic field
@@ -71,12 +71,16 @@ TriggerL0Seq.Members += { "L0mTrigger/L0Muon" };
 TriggerL0Seq.Members += { "PuVetoAlg" };
 TriggerL0Seq.Members += { "DecisionUnit" };
 
-// L1 trigger
-TriggerL1Seq.Members = { "CreateL1Event" };
+// Old L1 trigger (Obsolete)
+//TriggerL1Seq.Members = { "CreateL1Event" };
 ApplicationMgr.DLLs += { "L1VeloTrack" };
 ApplicationMgr.DLLs += { "L1Decision" };
 TriggerL1Seq.Members += { "Level1" };
 Level1.minimizeL1ExeTime = false;
+
+// New L1 + Hlt trigger
+ApplicationMgr.DLLs += { "TrgTools" };
+#include "$BOOLEOPTS/L1WithTrg.opts"
 
 // Calorimeter digitisation and reconstruction
 ApplicationMgr.DLLs += { "CaloDigit", "CaloEvent" };
@@ -109,11 +113,12 @@ DigiMUONSeq.Members += { "MuonBackground/MuonFlatSpillover" };
 #include "$MUONBACKGROUNDROOT/options/MuonFlatSpillover.opts"
 DigiMUONSeq.Members += { "MuonDigitization" };
 
-// Inner tracker digitisation
+// Silicon Tracker digitisation
 ApplicationMgr.DLLs   += { "ITAlgorithms" };
 DigiITSeq.Members += { "MCITDepositCreator", "MCITDigitCreator" };
 DigiITSeq.Members += { "ITDigitCreator" };
-DigiITSeq.Members += { "ITDigitToL1" };
+DigiITSeq.Members += { "ITDigitToL1" }; // Obsolete (for old L1)
+DigiITSeq.Members += { "PrepareTTL1Buffer" };
 #include "$ITALGORITHMSROOT/options/itDigi.opts"
 
 // Outer tracker digitisation
@@ -128,7 +133,9 @@ ApplicationMgr.DLLs += { "VeloAlgorithms" };
 DigiVELOSeq.Members += { "VeloSim" };
 DigiVELOSeq.Members += { "VeloDataProcessor" };
 DigiVELOSeq.Members += { "VeloClusterMaker" };
-DigiVELOSeq.Members += { "VeloFEToL1" };
+DigiVELOSeq.Members += { "VeloFEToL1" }; // Obsolete (for old L1)
+DigiVELOSeq.Members += { "PrepareVeloL1BufferFPGA" };
+DigiVELOSeq.Members += { "PrepareVeloRawBuffer" };
 
 // Modify printout defaults
 #include "$BOOLEOPTS/BooleMessage.opts"
