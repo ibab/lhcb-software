@@ -4,7 +4,7 @@
 // Include files
 #include "GaudiKernel/Kernel.h"
 #include "DetDesc/DetectorElement.h"
-#include "GaudiKernel/IGeometryInfo.h"
+#include "DetDesc/IGeometryInfo.h"
 
 // CLHEP files
 #include "CLHEP/Geometry/Transform3D.h"

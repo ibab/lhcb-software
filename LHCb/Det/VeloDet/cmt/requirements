@@ -1,5 +1,5 @@
 package VeloDet
-version v1
+version v2
 
 branches doc cmt src VeloDet
 

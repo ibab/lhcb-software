@@ -1,6 +1,9 @@
 package VeloDet
 package manager : Velo Group
 
+! 20010711 - v2 Flr
+  VeloDetectorElement.h - include IGeometryInfo.h from DetDesc/
+
 ! 20010205 - Bruce Hay, Pere Mato
 
 - This is a new package for the Velo detector description.
