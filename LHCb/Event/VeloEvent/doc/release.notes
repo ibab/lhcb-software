@@ -1,6 +1,9 @@
-! $Id: release.notes,v 1.17 2002-06-10 16:15:20 cattanem Exp $
+! $Id: release.notes,v 1.18 2002-06-19 13:30:38 roiser Exp $
 package Event/VeloEvent
 package manager: C.Parkes
+
+! 2002-06-18 - Stefan Roiser
+ - changed use-statement of GaudiObjDesc to v4r4
 
 ! 2002-06-10 - Marco Cattaneo
  - Increase version to v11r0, to use Event v2r*
