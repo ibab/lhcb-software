@@ -780,7 +780,7 @@ StatusCode LagrangeDirectionFitter::fitWithDirection(Particle& particle,Vertex& 
     
   HepMatrix alpcov( jacob*alpcovinitMjacobT ) ; 
 
-  log << MSG::DEBUG << "COV of observables alpcov "<< alpcov  << endreq;
+  //log << MSG::DEBUG << "COV of observables alpcov "<< alpcov  << endreq;
 
 
   HepMatrix alpcovinitia = alpcov ;  

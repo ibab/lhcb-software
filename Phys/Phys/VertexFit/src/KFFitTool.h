@@ -123,8 +123,17 @@ public:
   /// method to reset charged track parameters
   StatusCode resetTrackParameters(Particle&);
 
+  /// method to set state at first measurement
+  StatusCode setStateAtFirstM(Particle&);
+
   /// Method to return the z of the most upstream measurement
   double zFirstMeasurement(Particle* part);
+
+  /// get the first estimate for the z position
+  double getZEstimate (Particle & part1, Particle & part2);
+
+  /// Method to determine if a particle is made from a Downstream track
+  bool isDownstreamTrack(Particle* part);
 
 private:
 

@@ -74,7 +74,7 @@ KFFitTool::KFFitTool(const std::string& type,
   : AlgTool( type, name, parent )
   , m_ppSvc(0)
   , m_pTransporter(0)
-  , m_transporterType("CombinedTransporter")
+  , m_transporterType("TrTransporter")
 {
   declareInterface<IKFFitTool>(this);
   declareProperty( "MaxIter", m_maxIter = 10);
@@ -121,20 +121,14 @@ StatusCode KFFitTool::reFit( Particle& part ) {
   if(!isComposite(part)) {
     StatusCode sc=StatusCode::SUCCESS;
     if(part.charge()!=0) {
+      if(fabs(part.particleID().pid())!=11) sc=setStateAtFirstM(part);
       sc=resetTrackParameters(part);
       HepVector para(7,0);
       HepSymMatrix cov(7,0);
       sc=getMParameter(part, para, cov);
-      log << MSG::VERBOSE << "get cov  "<< cov << endmsg;
     }
     return sc;
   }
-
-  //comment next line to keep phi(1020) untouched
-  //if(part.particleID().pid()==333) return StatusCode::SUCCESS;
-
-  //this version does nothing to Ks 
-  if(part.particleID().pid()==310) return StatusCode::SUCCESS;
 
   //should not do anything here to particles which only decay to photons
   if(isPurePhotonDecay(part)) return StatusCode::SUCCESS;
@@ -149,7 +143,11 @@ StatusCode KFFitTool::reFit( Particle& part ) {
      Particle* daughter = *iProd;
      int pidDau = daughter->particleID().pid();
 
-     reFit(*daughter);
+     StatusCode okFit=reFit(*daughter);
+     if(okFit.isFailure()) {
+         log << MSG::DEBUG << "rFit fails!"<<endreq;
+          return okFit;
+     }
 
      double dauWidth = ParticleWidth(*daughter);
      bool isDauComp= isComposite(*daughter);
@@ -289,12 +287,9 @@ StatusCode KFFitTool::massConstrain( Particle& part, double& chi2) {
   double olderrm2=Cm(7,7);                    
                                    
   // mass constraint
-  log << MSG::VERBOSE << " 1111 mass before "<< Vm[6] << endmsg;
-  log << MSG::VERBOSE << "Cm   "<< Cm << endmsg;
+  log << MSG::VERBOSE << " mass before constraint "<< Vm[6] << endmsg;
+  //log << MSG::VERBOSE << "Cm   "<< Cm << endmsg;
   log << MSG::VERBOSE << "Vm   "<< Vm << endmsg;
-
-  getEParameter(part, Ve, Ce);
-  log << MSG::VERBOSE << " direct Ce   "<< Ce << endmsg;
 
   if(Cm(7,7)!=0.0) {
     HepMatrix DD(1,7,0);
@@ -321,13 +316,10 @@ StatusCode KFFitTool::massConstrain( Particle& part, double& chi2) {
   for(int i=1;i<=7;i++) Cm(7,i)=0.0;
 
   log << MSG::VERBOSE << " 2222 mass after "<< Vm[6] << endmsg;
-  log << MSG::VERBOSE << "Cm   "<< Cm << endmsg;
+  //log << MSG::VERBOSE << "Cm   "<< Cm << endmsg;
   log << MSG::VERBOSE << "Vm   "<< Vm << endmsg;
 
   sc=setMParameter(part, Vm, Cm);
-
-  Vm2Ve(Vm,Ve);
-  log << MSG::VERBOSE << "Ve   "<< Ve << endmsg;
 
   return sc;
 }
@@ -490,20 +482,41 @@ StatusCode KFFitTool::fitWithTwoTrajectories(Particle& part1,
   HepSymMatrix cov1(7,0);
   StatusCode sc=getMParameter(part1, para1, cov1);
   if(sc.isFailure ()) return sc;
-  log << MSG::VERBOSE <<"cov1 "<<cov1<<endreq;
+  log << MSG::VERBOSE <<"para1 "<<para1<<endreq;
+  //log << MSG::VERBOSE <<"cov1 "<<cov1<<endreq;
 
   HepVector para2(7,0);
   HepSymMatrix cov2(7,0);
   sc=getMParameter(part2, para2, cov2);
   if(sc.isFailure ()) return sc;
-  log << MSG::VERBOSE <<"cov2 "<<cov2<<endreq;
+  log << MSG::VERBOSE <<"para2 "<<para2<<endreq;
+  //log << MSG::VERBOSE <<"cov2 "<<cov2<<endreq;
 
-  double zfit=(para1(2)-para2(2)+para2(5)*para2(3)-para1(5)*para1(3))/(para2(5)-para1(5));
+  double zfirstm1=zFirstMeasurement(& part1);
+  double zfirstm2=zFirstMeasurement(& part2);
+
+  log << MSG::VERBOSE <<"zFirstMeasurement1 "<< zfirstm1<<endreq;
+  log << MSG::VERBOSE <<"zFirstMeasurement2 "<< zfirstm2<<endreq;
+
+  double zbyY=(para1(2)-para2(2)+para2(5)*para2(3)-para1(5)*para1(3))/(para2(5)-para1(5));
+  log << MSG::VERBOSE <<"z estimate using y projection "<< zbyY<<endreq;
+
+  double zbyX=(para1(1)-para2(1)+para2(4)*para2(3)-para1(4)*para1(3))/(para2(4)-para1(4));
+  log << MSG::VERBOSE <<"z estimate using x projection "<< zbyX<<endreq;
+  
+  double zbyXY=getZEstimate(part1,part2);
+  log << MSG::VERBOSE <<"z estimate using x,y projection "<< zbyXY<<endreq;
+  
+  double zfit=zbyXY;
+
   double zestimate=-999999.;
 
   int iterTransport=0;
-//  while(fabs(zestimate-zfit)>10. && iterTransport< m_maxIter) {   
+
+  //1mm to make sure linear parameterization is only used for short distance
+  while(fabs(zestimate-zfit)>1. && iterTransport< m_maxIter)
   {
+
      iterTransport++;
      zestimate=zfit;
      Particle transParticle1;
@@ -512,6 +525,7 @@ StatusCode KFFitTool::fitWithTwoTrajectories(Particle& part1,
        log << MSG::ERROR << "transport of part1 failed in fitWithTwoTrajectories!" << endreq;
        return sc;
      }
+
      sc=resetTrackParameters(transParticle1);
 
      Particle transParticle2;
@@ -526,12 +540,12 @@ StatusCode KFFitTool::fitWithTwoTrajectories(Particle& part1,
      if(sc.isFailure ()) return sc;
      log << MSG::VERBOSE <<"After transport ... "<<endreq;
      log << MSG::VERBOSE <<"para1= "<< para1<<endreq;
-     log << MSG::VERBOSE <<"cov1 "<<cov1<<endreq;
+     //log << MSG::VERBOSE <<"cov1 "<<cov1<<endreq;
 
      sc=getMParameter(transParticle2, para2, cov2);
      if(sc.isFailure ()) return sc;
      log << MSG::VERBOSE <<"para2= "<< para2<<endreq;
-     log << MSG::VERBOSE <<"cov2 "<<cov2<<endreq;
+     //log << MSG::VERBOSE <<"cov2 "<<cov2<<endreq;
 
      HepVector X(12);
      X(1)=para1(1);
@@ -557,7 +571,7 @@ StatusCode KFFitTool::fitWithTwoTrajectories(Particle& part1,
      mom2slope1(5,6)=1.;
      mom2slope1(6,7)=1.;
      HepSymMatrix newcov1=cov1.similarity(mom2slope1);
-     log << MSG::VERBOSE <<"newcov1 "<<newcov1<<endreq;
+     //log << MSG::VERBOSE <<"newcov1 "<<newcov1<<endreq;
 
      HepMatrix mom2slope2(6,7,0);
      mom2slope2(1,1)=1.;
@@ -569,7 +583,7 @@ StatusCode KFFitTool::fitWithTwoTrajectories(Particle& part1,
      mom2slope2(5,6)=1.;
      mom2slope2(6,7)=1.;
      HepSymMatrix newcov2=cov2.similarity(mom2slope2);
-     log << MSG::VERBOSE <<"newcov2 "<<newcov2<<endreq;
+     //log << MSG::VERBOSE <<"newcov2 "<<newcov2<<endreq;
 
      HepSymMatrix Cx(12,0);
      Cx*=0.;
@@ -577,7 +591,7 @@ StatusCode KFFitTool::fitWithTwoTrajectories(Particle& part1,
      Cx.sub(7,newcov2);
 
      log << MSG::VERBOSE << "X=  " << X << endreq;
-     log << MSG::VERBOSE << "Cx=  " << Cx << endreq;
+     //log << MSG::VERBOSE << "Cx=  " << Cx << endreq;
 
      HepVector  vfit=X;
      HepSymMatrix cfit=Cx;
@@ -613,11 +627,11 @@ StatusCode KFFitTool::fitWithTwoTrajectories(Particle& part1,
      while(!converged && iter< m_maxIter)  {
        iter++;
        log << MSG::VERBOSE << ":-) Iteration   " << iter << endreq;
-       log << MSG::VERBOSE << "D=  " << D << endreq;
+       //log << MSG::VERBOSE << "D=  " << D << endreq;
 
        int ier=0;
        HepSymMatrix VD=Cx.similarity(D);
-       log << MSG::VERBOSE << "VD before inversion  " << VD << endreq;
+       //log << MSG::VERBOSE << "VD before inversion  " << VD << endreq;
        log << MSG::VERBOSE << "VD determinant before inversion  "
            << VD.determinant() <<endreq;
        VD.invert(ier);
@@ -627,7 +641,7 @@ StatusCode KFFitTool::fitWithTwoTrajectories(Particle& part1,
          return StatusCode::FAILURE;
        }
 
-       log << MSG::VERBOSE << "VD after inversion  " << VD << endreq;
+       //log << MSG::VERBOSE << "VD after inversion  " << VD << endreq;
 
        HepVector alpha=D*X+d;
        HepVector lamda=VD*alpha;
@@ -650,11 +664,13 @@ StatusCode KFFitTool::fitWithTwoTrajectories(Particle& part1,
        log << MSG::VERBOSE << "constraint values   " << f << endreq;
        HepVector S=lamda.T()*f;
        chi2=Q(1,1)+2.*S(1);
+       //chi2=Q(1,1); 
 
-       log << MSG::VERBOSE << "New chi2=  " << chi2 << endreq;
-       log << MSG::VERBOSE << "Previous chi2=  " << chi2Previous << endreq;
+       log << MSG::VERBOSE << "New fitWithTwoTrajectories chi2=  " << chi2 << endreq;
+       log << MSG::VERBOSE << "Previous fitWithTwoTrajectories chi2=  " << chi2Previous << endreq;
 
        log << MSG::VERBOSE << "vfit= "<<vfit << endreq;
+       log << MSG::VERBOSE << "z vertex "<< zestimate - (vfit(7)-vfit(1))/(vfit(9)-vfit(3)) << endreq;
 
        if(fabs(chi2-chi2Previous)<m_maxDeltaChiSq) {
          converged=true;
@@ -663,7 +679,10 @@ StatusCode KFFitTool::fitWithTwoTrajectories(Particle& part1,
        }
 
      }
-     log << MSG::VERBOSE <<"vfit= "<< vfit<<endreq;
+
+     if(!converged)  return StatusCode::FAILURE;
+
+     log << MSG::VERBOSE <<"final vfit= "<< vfit<<endreq;
    
      m1=vfit(6);
      m2=vfit(12);
@@ -721,7 +740,7 @@ StatusCode KFFitTool::fitWithTwoTrajectories(Particle& part1,
 
      Ce=cfit.similarity(JA);
 
-     log << MSG::VERBOSE <<"Ce= "<< Ce<<endreq;     
+     //log << MSG::VERBOSE <<"Ce= "<< Ce<<endreq;     
 
      zfit=zestimate - (vfit(7)-vfit(1))/(vfit(9)-vfit(3));
      log << MSG::VERBOSE <<"zestimate= "<< zestimate<<endreq;
@@ -729,6 +748,28 @@ StatusCode KFFitTool::fitWithTwoTrajectories(Particle& part1,
 
   }
 
+  if(fabs(zestimate-zfit)>1.) {
+    log << MSG::DEBUG << "vertex z fails to converge !!!" <<endreq;
+    return StatusCode::FAILURE;
+  } 
+
+  if(Ce(3,3)<0) {
+    log << MSG::DEBUG << "square of vertex error is  negative!!!" <<endreq;
+    return StatusCode::FAILURE;
+  }
+  double errvz=sqrt(Ce(3,3));
+  log << MSG::DEBUG <<"err zfit "<<errvz<<endreq;
+
+  //make sure zfit is not downstream of first measurements of tracks
+  //note zfirstm is set to 999999. for composite particles like Ds, ks
+  if(zfit>zfirstm1 + 3.*errvz  ||zfit>zfirstm2+3.*errvz) {
+    log << MSG::DEBUG << "vertex z is downstream of track first measurements by 3sigma "<<endreq;
+    log << MSG::DEBUG << "zfit "<<zfit<<endreq;
+    log << MSG::DEBUG << "err zfit "<<errvz<<endreq;
+    log << MSG::DEBUG << "zfirstm1 "<<zfirstm1<<endreq;
+    log << MSG::DEBUG << "zfirstm2 "<<zfirstm2<<endreq;
+    return StatusCode::FAILURE; 
+  } 
 
   return StatusCode::SUCCESS;
 }
@@ -767,7 +808,7 @@ StatusCode KFFitTool::mergeTwoVertices(Particle& part1, Particle& part2,
   Cx*=0.;
   Cx.sub(1,cov1);
   Cx.sub(8,cov2);
-  log << MSG::VERBOSE <<"Cx= "<< Cx<<endreq;
+  //log << MSG::VERBOSE <<"Cx= "<< Cx<<endreq;
 
   HepMatrix D(3,14,0);
   D(1,1)=1.;
@@ -824,7 +865,7 @@ StatusCode KFFitTool::mergeTwoVertices(Particle& part1, Particle& part2,
 
   Ce=cfit.similarity(JA);
 
-  log << MSG::VERBOSE <<"Ce= "<< Ce<<endreq;
+  //log << MSG::VERBOSE <<"Ce= "<< Ce<<endreq;
 
   return StatusCode::SUCCESS;
 }
@@ -849,7 +890,7 @@ StatusCode KFFitTool::addParticle(Particle& part1, Particle& part2,
   double z1=para1(3);
 
   log << MSG::VERBOSE <<"para1 : " <<para1<<endreq;
-  log << MSG::VERBOSE <<"cov1 : " <<cov1<<endreq;
+  //log << MSG::VERBOSE <<"cov1 : " <<cov1<<endreq;
 
   HepVector para2(7,0);
   HepSymMatrix cov2(7,0);
@@ -860,7 +901,7 @@ StatusCode KFFitTool::addParticle(Particle& part1, Particle& part2,
     return sc;
   }
   log << MSG::VERBOSE <<"para2 : " <<para2<<endreq;
-  log << MSG::VERBOSE <<"cov2 : " <<cov2<<endreq;
+  //log << MSG::VERBOSE <<"cov2 : " <<cov2<<endreq;
 
 
   log << MSG::VERBOSE <<"!!!! z2 : " <<para2(3)<<endreq;
@@ -883,7 +924,7 @@ StatusCode KFFitTool::addParticle(Particle& part1, Particle& part2,
   double z2=para2(3);
 
   log << MSG::VERBOSE <<"After transport para2 : " <<para2<<endreq;
-  log << MSG::VERBOSE <<"cov2 : " <<cov2<<endreq;
+  //log << MSG::VERBOSE <<"cov2 : " <<cov2<<endreq;
 
   HepVector X(13);
   for(int i=1;i<=7;i++) {
@@ -908,7 +949,7 @@ StatusCode KFFitTool::addParticle(Particle& part1, Particle& part2,
 
 
   HepSymMatrix newcov2=cov2.similarity(mom2slope);
-  log << MSG::VERBOSE <<"newcov2 : " <<newcov2<<endreq;
+  //log << MSG::VERBOSE <<"newcov2 : " <<newcov2<<endreq;
 
   HepSymMatrix Cx(13,0);
   Cx*=0.;
@@ -916,7 +957,7 @@ StatusCode KFFitTool::addParticle(Particle& part1, Particle& part2,
   Cx.sub(8,newcov2);
 
   log << MSG::VERBOSE << "X=  " << X << endreq;
-  log << MSG::VERBOSE << "Cx=  " << Cx << endreq;
+  //log << MSG::VERBOSE << "Cx=  " << Cx << endreq;
 
   HepVector  vfit=X;
   HepSymMatrix cfit=Cx;
@@ -952,11 +993,11 @@ StatusCode KFFitTool::addParticle(Particle& part1, Particle& part2,
     iter++;
     log << MSG::VERBOSE << ":-) Iteration   " << iter << endreq;
 
-    log << MSG::VERBOSE << "D=  " << D << endreq;
+    //log << MSG::VERBOSE << "D=  " << D << endreq;
 
     int ier=0;
     HepSymMatrix VD=Cx.similarity(D);
-    log << MSG::VERBOSE << "VD before inversion  " << VD << endreq;
+    //log << MSG::VERBOSE << "VD before inversion  " << VD << endreq;
     log << MSG::VERBOSE << "VD determinant before inversion  "
         << VD.determinant() <<endreq;
     VD.invert(ier);
@@ -966,7 +1007,7 @@ StatusCode KFFitTool::addParticle(Particle& part1, Particle& part2,
       return StatusCode::FAILURE;
     }
 
-    log << MSG::VERBOSE << "VD after inversion  " << VD << endreq;
+    //log << MSG::VERBOSE << "VD after inversion  " << VD << endreq;
 
     HepVector alpha=D*X+d;
     HepVector lamda=VD*alpha;
@@ -1007,6 +1048,8 @@ StatusCode KFFitTool::addParticle(Particle& part1, Particle& part2,
       chi2Previous=chi2;
     } 
   }
+
+  if(!converged)  return StatusCode::FAILURE;
 
   log << MSG::VERBOSE <<"vfit= "<< vfit<<endreq;
   m2=vfit(13);;
@@ -1134,7 +1177,7 @@ StatusCode KFFitTool::addPhoton(Particle& part1, Particle& photon,
   JA(7,10)=1.;
 
   Ce=Cold.similarity(JA);
-  log << MSG::VERBOSE <<"Ce after addPhoton"<< Ce<<endreq;
+  //log << MSG::VERBOSE <<"Ce after addPhoton"<< Ce<<endreq;
   log << MSG::VERBOSE <<"Ve after addPhoton"<< Ve<<endreq;
  
   return StatusCode::SUCCESS;
@@ -1358,11 +1401,11 @@ StatusCode KFFitTool::addPhotonPair(Particle& part1, Particle& pair,
   JA(8,12)=-(pxg1+pxg2)/mpi0*dpxg2_dyg2 -(pyg1+pyg2)/mpi0*dpyg2_dyg2 -(pzg1+pzg2)/mpi0*dpzg2_dyg2;
   JA(8,13)=(eg1+eg2)/mpi0-(pxg1+pxg2)/mpi0*dx2/r2-(pyg1+pyg2)/mpi0*dy2/r2-(pzg1+pzg2)/mpi0*dz2/r2;
 
-  log << MSG::VERBOSE << "JA   "<< JA<< endmsg;
+  //log << MSG::VERBOSE << "JA   "<< JA<< endmsg;
 
   covNew=covOld.similarity(JA);
 
-  log << MSG::VERBOSE << "covNew   "<< covNew << endmsg;
+  //log << MSG::VERBOSE << "covNew   "<< covNew << endmsg;
   log << MSG::VERBOSE << "paraNew   "<< paraNew << endmsg;
 
   double pairWid = ParticleWidth(pair);
@@ -1392,7 +1435,7 @@ StatusCode KFFitTool::addPhotonPair(Particle& part1, Particle& pair,
                                                                                                                                      
     covNew-= delatC2;
     log << MSG::VERBOSE << "after PhotonPair mass constraint!!!"<<endreq; 
-    log << MSG::VERBOSE << "covNew   "<< covNew << endmsg;
+    //log << MSG::VERBOSE << "covNew   "<< covNew << endmsg;
     log << MSG::VERBOSE << "paraNew   "<< paraNew << endmsg;
 
     for(int i=1;i<=8;i++) covNew(8,i)=0.0;
@@ -1584,8 +1627,8 @@ StatusCode KFFitTool::resetTrackParameters(Particle& part)
   HepVector para(7,0);
   HepSymMatrix cov(7,0);
   StatusCode sc=getMParameter(part, para, cov);
-  log << MSG::VERBOSE << "para before reset "<< para << endmsg;
-  log << MSG::VERBOSE << "cov before reset "<< cov << endmsg;
+  //log << MSG::VERBOSE << "para before reset "<< para << endmsg;
+  //log << MSG::VERBOSE << "cov before reset "<< cov << endmsg;
 
   ParticleID pid=part.particleID();
   int stdHepID = pid.pid();
@@ -1595,12 +1638,12 @@ StatusCode KFFitTool::resetTrackParameters(Particle& part)
 
   para(7)=nominalMass;
   for(int i=1;i<=7;i++) cov(7,i)=0.;
-  log << MSG::VERBOSE << "new cov " << cov << endreq;
+  //log << MSG::VERBOSE << "new cov " << cov << endreq;
   
   sc=setMParameter(part, para, cov);
 
-  log << MSG::VERBOSE << "para after reset "<< para << endmsg;
-  log << MSG::VERBOSE << "cov after reset "<< cov << endmsg;
+  //log << MSG::VERBOSE << "para after reset "<< para << endmsg;
+  //log << MSG::VERBOSE << "cov after reset "<< cov << endmsg;
 
   return StatusCode::SUCCESS;
 }
@@ -1633,5 +1676,141 @@ double KFFitTool::zFirstMeasurement(Particle* part)
 }
 
 //==================================================================
-                                                                                                                                                          
+
+double KFFitTool::getZEstimate (Particle & part1, Particle & part2) {
+  MsgStream log(msgSvc(), name());
+
+  double xPosition = 0;
+  double yPosition = 0;
+
+  double tx1=part1.slopeX();
+  double ty1=part1.slopeY();
+  double tx2=part2.slopeX();
+  double ty2=part2.slopeY();
+
+  double x1= part1.pointOnTrack().x();
+  double y1= part1.pointOnTrack().y();
+  double z1= part1.pointOnTrack().z();
+
+  double x2= part2.pointOnTrack().x();
+  double y2= part2.pointOnTrack().y();
+  double z2= part2.pointOnTrack().z();
+
+  double  sumSquaredSlopes = tx1*tx1 + ty1*ty1+ tx2*tx2 + ty2*ty2;
+  double  sumCrossedProduct = tx1*(x1-tx1*z1) + ty1*(y1-ty1*z1) +
+                              tx2*(x2-tx2*z2) + ty2*(y2-ty2*z2);
+
+  double sumX=x1-tx1*z1 + x2-tx2*z2;
+  double sumY=y1-ty1*z1 + y2-ty2*z2;
+
+  double sumSlopeX= tx1+tx2;
+  double sumSlopeY= ty1+ty2;
+
+  double det = sumSquaredSlopes - ((sumSlopeX*sumSlopeX + sumSlopeY*sumSlopeY))/2.;
+
+  double zEstimate = 0;
+  if (det != 0) {
+    return zEstimate = (((sumX*sumSlopeX + sumY*sumSlopeY)/2.)
+                        - sumCrossedProduct) /det;
+  }
+  else {
+    log << MSG::ERROR << "Unable to make z estimate " << endreq;
+    if(z1<z2) return z1-.001;
+    else return z2-0.001;
+  }
+
+}
+
+//==================================================================
+                                                                                                                                                                 
+bool KFFitTool::isDownstreamTrack(Particle* part)
+{
+  bool isDT=false;
+  ContainedObject* orig = part->origin();
+  ProtoParticle* pporig = 0;
+  if( orig ) {
+    pporig = dynamic_cast<ProtoParticle*>(orig);
+    if( pporig ) {
+      TrStoredTrack* thetrack = pporig->track();
+        if( thetrack ) isDT= thetrack->isDownstream();
+    }
+  }
+  return isDT;
+}
+                                                                                                                                                                 
+//==================================================================
+StatusCode KFFitTool::setStateAtFirstM(Particle& part)
+{
+   MsgStream log(msgSvc(), name());
+
+  ContainedObject* obj = part.origin();
+  ProtoParticle* pporig = 0;
+  if( obj ) {
+    pporig = dynamic_cast<ProtoParticle*>(obj);
+    if( pporig ) {
+      TrStateP* firstMState=pporig->firstMeasured();
+      if(firstMState) {
+        HepVector Vm(7,0);
+        HepSymMatrix Cm(7,0);
+
+        Vm(1)=firstMState->x();
+        Vm(2)=firstMState->y();
+        Vm(3)=firstMState->z();
+        double tx=firstMState->tx();
+        double ty=firstMState->ty();
+        // qDivP is 0. a bug?
+        double qDivP=fabs(firstMState->qDivP());
+        //double p=1./qDivP;
+        double q=part.charge();
+        double p=firstMState->p();
+        double a=sqrt(1. + tx*tx + ty*ty);
+        double pz=p/a;
+        log << MSG::VERBOSE << "tx="<<tx << endreq;
+        log << MSG::VERBOSE << "ty="<<ty << endreq;
+        log << MSG::VERBOSE << "a="<<a << endreq;
+        log << MSG::VERBOSE << "qDivP="<<qDivP << endreq;
+        log << MSG::VERBOSE << "q="<<q << endreq;
+        log << MSG::VERBOSE << "p="<<p << endreq;
+        log << MSG::VERBOSE << "pz="<<pz << endreq;
+
+
+        Vm(4)=pz*tx;
+        Vm(5)=pz*ty;
+        Vm(6)=pz;
+        Vm(7)=part.mass();
+
+        double Dpz_Dtx=-p*tx/a/a/a;
+        double Dpz_Dty=-p*ty/a/a/a;        
+        double Dpz_DqDivP=-q*p*p/a;
+
+        HepMatrix JA(7,5,0);
+        JA(1,1)=1.;
+        JA(2,2)=1.;
+
+        JA(4,3)=pz+tx*Dpz_Dtx;
+        JA(4,4)=tx*Dpz_Dty;
+        JA(4,5)=tx*Dpz_DqDivP;
+
+        JA(5,3)=ty*Dpz_Dtx;
+        JA(5,4)=pz+ty*Dpz_Dty;
+        JA(5,5)=ty*Dpz_DqDivP;
+
+        JA(6,3)=Dpz_Dtx;
+        JA(6,4)=Dpz_Dty;
+        JA(6,5)=Dpz_DqDivP;
+
+        HepSymMatrix covTrStateP=firstMState->stateCov();        
+
+        Cm=covTrStateP.similarity(JA);
+
+        StatusCode sc=setMParameter(part, Vm, Cm);
+        return sc;
+      }      
+    }
+  }
+
+  return StatusCode::FAILURE;
+}
+
+//==================================================================
 
