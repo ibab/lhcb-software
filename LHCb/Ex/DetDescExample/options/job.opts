@@ -1,5 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Ex/DetDescExample/options/job.opts,v 1.3 2003-04-23 14:23:18 sponce Exp $
-
+// $Id: job.opts,v 1.4 2003-07-01 07:37:54 cattanem Exp $
 // Do not use standard options, as we do not need event input
 
 // Define the other standard DLLs and services
@@ -8,7 +7,6 @@ AuditorSvc.Auditors   = { "ChronoAuditor" };
 
 // Set up the detector description service
 #include "$STDOPTS/DetDesc.opts"
-ApplicationMgr.DLLs   += { "DetDescCnv", "XmlTools" };
 
 //--------------------------------------------------------------
 // Private Application Configuration options
