@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.12 2002-06-28 12:56:52 gcorti Exp $
+# $Id: requirements,v 1.13 2002-07-18 18:17:30 gcorti Exp $
 # Created    : 05/02/2002
 # Maintainer : Gloria Corti
 #
@@ -18,7 +18,7 @@ include_dirs     $(DAVINCITOOLSROOT)
 
 # Used packages. 
 #============================================================================
-use  PhysEvent     v5r*   Event
+use  PhysEvent     v6r*   Event
 use  DetDesc       v10r*  Det
 
 # Extra language for translating yacc to c++
