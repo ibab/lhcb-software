@@ -1,4 +1,4 @@
-// $Id: SelectKsPiPi.cpp,v 1.2 2002-03-28 18:57:19 gcorti Exp $
+// $Id: SelectKsPiPi.cpp,v 1.3 2002-04-03 17:31:38 gcorti Exp $
 // Include files 
 
 // from STL
@@ -298,8 +298,8 @@ StatusCode SelectKsPiPi::execute() {
   // Start of Paul's ParticleFilter code (and debug)
   ParticleVector vPions, vPiPlus, vPiMinus;
   StatusCode scFilter = m_pFilter->filter( parts, vPions );
-  StatusCode scFilPos = m_pFilter->filterPositive( parts, vPiPlus );
-  StatusCode scFilNeg = m_pFilter->filterNegative( parts, vPiMinus );
+  StatusCode scFilPos = m_pFilter->filterPositive( vPions, vPiPlus );
+  StatusCode scFilNeg = m_pFilter->filterNegative( vPions, vPiMinus );
   if ( scFilter && scFilPos && scFilNeg ) {
     log << MSG::DEBUG << ">>> Particle filtration successfull  "  << endreq;
   }
