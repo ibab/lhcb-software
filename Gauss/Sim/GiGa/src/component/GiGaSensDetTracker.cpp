@@ -58,46 +58,53 @@ bool GiGaSensDetTracker::ProcessHits( G4Step* step ,
   HepPoint3D postpos  = step->GetPostStepPoint()->GetPosition();
   HepPoint3D prepos  = step->GetPreStepPoint()->GetPosition();
   int trid = step->GetTrack()->GetTrackID();
-  
-  G4TouchableHistory* TT =  
-    (G4TouchableHistory*)(step->GetPreStepPoint()->GetTouchable());
-  G4VPhysicalVolume*  PV =   TT->GetVolume();
-  G4LogicalVolume*    LV =   PV->GetLogicalVolume();
+  G4double charge = step->GetTrack()->GetDefinition()->GetPDGCharge();
 
-  G4TouchableHistory* postTT =  
-    (G4TouchableHistory*)(step->GetPostStepPoint()->GetTouchable());
-  G4VPhysicalVolume*  postPV =   postTT->GetVolume();
-  G4LogicalVolume*    postLV =   postPV->GetLogicalVolume();
+  if(charge!=0.0)
+    {
+      // temp  
+      G4TouchableHistory* TT =  
+      (G4TouchableHistory*)(step->GetPreStepPoint()->GetTouchable());
+      G4VPhysicalVolume*  PV =   TT->GetVolume();
+      G4LogicalVolume*    LV =   PV->GetLogicalVolume();
 
-  MsgStream log( msgSvc() , name() );
+      G4TouchableHistory* postTT =  
+      (G4TouchableHistory*)(step->GetPostStepPoint()->GetTouchable());
+      G4VPhysicalVolume*  postPV =   postTT->GetVolume();
+      G4LogicalVolume*    postLV =   postPV->GetLogicalVolume();
 
-  log << MSG::INFO << "Processing TrackerHit:" << " edep="  << edep << endreq;
-  
-  log << MSG::INFO 
+      MsgStream log( msgSvc() , name() );
+      
+      log << MSG::INFO << "Processing TrackerHit:" << " edep="  
+      << edep << endreq;
+      
+      log << MSG::INFO 
       << " PrePos=("  << prepos.x() << "," << prepos.y() << "," << prepos.z() 
       << ")" 
       << " PrePV="    << PV->GetName()  
       << " PreLV="    << LV->GetName() << endreq;
 
-  log << MSG::INFO 
+      log << MSG::INFO 
       << " PostPos=("
       << postpos.x() << "," << postpos.y() << "," << postpos.z() << ")" 
       << " PostPV="    << postPV->GetName()  
       << " PostLV="    << postLV->GetName() << endreq;
+      // end of temp
   
-  
-  ///
-  TrackerHit* newHit = new TrackerHit();
-  newHit->SetEdep( edep );
-  newHit->SetEntryPos( prepos );
-  newHit->SetExitPos( postpos );
-  newHit->SetTimeOfFlight( timeof );  
-  newHit->SetTrackID( trid );
-  ///
-  newHit->Print();
-  trackerCollection->insert( newHit );
+      ///
+      TrackerHit* newHit = new TrackerHit();
+      newHit->SetEdep( edep );
+      newHit->SetEntryPos( prepos );
+      newHit->SetExitPos( postpos );
+      newHit->SetTimeOfFlight( timeof );  
+      newHit->SetTrackID( trid );
+      ///
 
-  return false;
+      //  newHit->Print();
+      trackerCollection->insert( newHit );
+    }
+     return false;
+     
 };
 // ============================================================================
 
