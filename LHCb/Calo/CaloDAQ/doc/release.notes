@@ -17,6 +17,8 @@
    re-create the CaloDigits
  - Algorithm CompareCaloDigits (was in CaloEvent) to test two codings of the 
    CaloDigits. 
+ - Algorithm CaloReCreateMCLinks (was in CaloEvent) to re-create the MCLink for
+   the CaloDigit containers. 
 
 ! 2004-12-17 - Olivier Callot
  - Creation of CaloFillRawBuffer from CaloZSup in CaloDigit package, to code 
