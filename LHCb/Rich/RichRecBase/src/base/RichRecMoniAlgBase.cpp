@@ -6,7 +6,7 @@
  *  algorithm base class : RichRecMoniAlgBase
  *
  *  CVS Log :-
- *  $Id: RichRecMoniAlgBase.cpp,v 1.2 2005-02-02 10:01:20 jonrob Exp $
+ *  $Id: RichRecMoniAlgBase.cpp,v 1.3 2005-04-06 20:33:49 jonrob Exp $
  *
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   2005/01/13
@@ -40,11 +40,11 @@ StatusCode RichRecMoniAlgBase::initialize()
   if ( sc.isFailure() ) return sc;
 
   // Cache creator tools
-  acquireTool( "RichPixelCreator",   m_pixTool  );
-  acquireTool( "RichTrackCreator",   m_tkTool   );
-  acquireTool( "RichSegmentCreator", m_segTool  );
-  acquireTool( "RichPhotonCreator",  m_photTool );
-  acquireTool( "RichStatusCreator",  m_statTool );
+  //acquireTool( "RichPixelCreator",   m_pixTool  );
+  //acquireTool( "RichTrackCreator",   m_tkTool   );
+  //acquireTool( "RichSegmentCreator", m_segTool  );
+  //acquireTool( "RichPhotonCreator",  m_photTool );
+  //acquireTool( "RichStatusCreator",  m_statTool );
 
   return sc;
 }

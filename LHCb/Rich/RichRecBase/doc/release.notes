@@ -4,6 +4,11 @@
 ! Purpose     : Base package for RICH Reconstruction Packages
 !-----------------------------------------------------------------------------
 
+! 2005-04-06 - Chris Jones
+ - Only load the creator tools "on-demand" for the algorithm base classes
+   Avoids the loading of unused tools (for HLT for example). Has the side 
+   that some tools are only created during the first event...
+
 !====================== RichRecBase v1r15 2005-03-04 =======================
 ! 2005-03-04 - Marco Cattaneo
  - Fix some doxygen warnings

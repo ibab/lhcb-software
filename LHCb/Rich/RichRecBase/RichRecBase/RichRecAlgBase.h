@@ -5,7 +5,7 @@
  *  Header file for reconstruction algorithm base class : RichRecAlgBase
  *
  *  CVS Log :-
- *  $Id: RichRecAlgBase.h,v 1.18 2005-02-02 10:01:20 jonrob Exp $
+ *  $Id: RichRecAlgBase.h,v 1.19 2005-04-06 20:33:48 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
@@ -33,6 +33,7 @@ class RichRecStatus;
 #include "RichRecBase/IRichPixelCreator.h"
 #include "RichRecBase/IRichStatusCreator.h"
 
+//-----------------------------------------------------------------------------
 /** @class RichRecAlgBase RichRecAlgBase.h RichRecBase/RichRecAlgBase.h
  *
  *  Abstract base class for RICH reconstruction algorithms providing
@@ -41,6 +42,7 @@ class RichRecStatus;
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
  */
+//-----------------------------------------------------------------------------
 
 class RichRecAlgBase : public RichAlgBase {
 
@@ -183,23 +185,13 @@ protected:  // Protected methods
     return statusCreator()->richStatus();
   }
 
-  // Pointers to data object creator tools
-
-  /** Access to the RichRecPixel creator tool
-   *
-   *  @return Pointer to the RichRecPixel creator interface
-   */
-  inline const IRichPixelCreator * pixelCreator() const
-  {
-    return m_pixTool;
-  }
-
   /** Access to the RichRecTrack creator tool
    *
    *  @return Pointer to the RichRecTrack creator interface
    */
   inline const IRichTrackCreator * trackCreator() const
   {
+    if ( !m_tkTool ) acquireTool("RichTrackCreator", m_tkTool);
     return m_tkTool;
   }
 
@@ -209,7 +201,18 @@ protected:  // Protected methods
    */
   inline const IRichSegmentCreator * segmentCreator() const
   {
+    if ( !m_segTool ) acquireTool("RichSegmentCreator", m_segTool);
     return m_segTool;
+  }
+
+  /** Access to the RichRecPixel creator tool
+   *
+   *  @return Pointer to the RichRecPixel creator interface
+   */
+  inline const IRichPixelCreator * pixelCreator() const
+  {
+    if ( !m_pixTool ) acquireTool("RichPixelCreator", m_pixTool);
+    return m_pixTool;
   }
 
   /** Access to the RichRecPhoton creator tool
@@ -218,6 +221,7 @@ protected:  // Protected methods
    */
   inline const IRichPhotonCreator * photonCreator() const
   {
+    if ( !m_photTool ) acquireTool("RichPhotonCreator", m_photTool);
     return m_photTool;
   }
 
@@ -227,6 +231,7 @@ protected:  // Protected methods
    */
   inline const IRichStatusCreator * statusCreator() const
   {
+    if ( !m_statTool ) acquireTool("RichStatusCreator", m_statTool);
     return m_statTool;
   }
 
