@@ -16,25 +16,20 @@ BrunelMoni.DetectorList = { "IT","OT","Tr","RICH","CALO" };
 //--------------------------------------------------------------
 // Monitoring algorithms
 //--------------------------------------------------------------
-ApplicationMgr.DLLs += { "Associators" };
-#include "$ASSOCIATORSROOT/options/Brunel.opts"
 
 // IT clustering and efficiency
-ApplicationMgr.DLLs += {"ITCheckers","ITAssociators"};
+ApplicationMgr.DLLs     += { "ITCheckers" };
 BrunelMoniITSeq.Members += { "ITClusterChecker" };
 BrunelMoniITSeq.Members += { "ITEffMonitor" };
 //ITEffMonitor.fullDetail = true;
 //ITEffMonitor.OutputLevel = 2;
 
 // OT reconstruction
-ApplicationMgr.DLLs += { "OTAssociators" };
 BrunelMoniOTSeq.Members += { "OTClusterMonitor" };
 BrunelMoniOTSeq.Members += { "OTClusterChecker" };
 //OTClusterChecker.fullDetail = true;
 
 // Tracking
-#include "$TRASSOCIATORSROOT/options/Brunel.opts"
-ApplicationMgr.DLLs += { "VeloAssociators" };
 ApplicationMgr.DLLs += { "TrCheck" };
 BrunelMoniTrSeq.Members += { "TrAnalyse" };
 BrunelMoniTrSeq.Members += { "KShortMonitor" };
@@ -42,15 +37,13 @@ BrunelMoniTrSeq.Members += { "TrChecker" };
 // MC-free track monitoring (contains 2D histos)
 // BrunelMoniTrSeq.Members += { "TrMonitor" };
 
-// Create Tr2MCP unconditionally, in case Rich aborts monitoring
-BrunelMoniRichSeq.Members += { "TrStoredTrackMCTruthAlg/Tr2MCP" };
-
 // Rich reconstruction
-ApplicationMgr.DLLs += { "RichRecQC", "RichRecMCTools" };
+ApplicationMgr.DLLs += { "RichRecQC", "RichMCTools", "RichRecMCTools" };
 BrunelMoniRICHSeq.Members += { "BuildMCRichDigitLinks" };
 #include "$RICHRECQCOPTS/RecQC_Brunel.opts"
 
 // detailed RICH reconstruction monitors
+//#include "$RICHRECQCOPTS/RecQC_Brunel_Detailed.opts"
 //#include "$RICHRECCOMMONOPTS/RecoMoni_Brunel.opts"
 //#include "$RICHGLOBALPIDOPTS/RecoMoni_Brunel.opts"
 //#include "$RICHLOCALPIDOPTS/RecoMoni_Brunel.opts"

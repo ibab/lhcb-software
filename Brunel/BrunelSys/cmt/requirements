@@ -1,5 +1,5 @@
 package BrunelSys
-version v23r1
+version v23r2
 
 branches cmt doc
  
@@ -8,11 +8,12 @@ branches cmt doc
 #=======================================================
 
 # Brunel application
-use Brunel              v23r1	Rec
+use Brunel              v23r2	Rec
 
 # Brunel utilities
 use BrunelAlgs          v3r4	Rec
 use LHCbTools           v1r0    Kernel
+use AsctToLinker        v1r0    Rec
 
 # Calorimeter
 use CaloMonitor         v1r6  	Calo
@@ -23,41 +24,44 @@ use CaloPIDs		v1r2	Calo
 use VeloAlgorithms      v2r9	Velo
 
 # Inner Tracker
-use ITAlgorithms        v13r2	IT
-use ITCheckers          v1r4	IT
+use ITAlgorithms        v14r0	IT
+use ITCheckers          v2r0	IT
 
 # Outer Tracker
 use OTAlgorithms        v13r4	OT
+use OTDAQ               v1r0    OT
 
 # Tracking
 use VeloTrack           v5r1  	Velo
-use TrCheck             v2r2	Tr
-use LongTrack           v1r9	Tr
+use TrCheck             v2r3	Tr
+use LongTrack           v1r10	Tr
 use TrFitter            v3r7  	Tr
 use TrExtrapolator      v2r10	Tr
 use TrTools             v2r5	Tr
-use Seeding             v2r7	Tr 
-use TrMatching          v2r8	Tr
-use TrCleanEx           v2r7p2	Tr
-use VeloTT              v1r6p1	Tr
-use TrKShort		v1r0	Tr
+use Seeding             v2r8	Tr 
+use TrMatching          v2r9	Tr
+use TrCleanEx           v2r8	Tr
+use VeloTT              v1r7	Tr
+use TrKShort		v1r1	Tr
 
 # Muon
 use MuonUtils		v1r0	Muon
 use MuonRec             v2r4	Muon
 use MuonID              v3r7	Muon
+use MuonDAQ             v1r0    Muon
 
 # Rich
-use RichRecSys		v1r6	Rich
-use RichRecBase		v1r8	Rich
-use RichRecTools	v2r6	Rich
-use RichRecCommon	v1r3	Rich
-use RichRingRefit	v1r4	Rich
-use RichLocalPID	v1r4	Rich
-use RichGlobalPID	v1r3	Rich
+use RichRecSys		v1r7	Rich
+use RichRecBase		v1r9	Rich
+use RichRecTools	v2r7	Rich
+use RichRecCommon	v1r4	Rich
+use RichRingRefit	v1r5	Rich
+use RichLocalPID	v1r5	Rich
+use RichGlobalPID	v1r4	Rich
 use RichPIDMerge	v1r2	Rich
-use RichUtils		v3r6	Rich
-use RichDetTools	v3r5	Rich
-use RichRecQC		v1r4	Rich
-use RichRecMCTools	v1r1	Rich
-use RichDAQ		v1r1	Rich
+use RichUtils		v3r7	Rich
+use RichDetTools	v3r6	Rich
+use RichRecQC		v1r5	Rich
+use RichRecMCTools	v1r2	Rich
+use RichDAQ		v1r2	Rich
+use RichMCTools		v1r0	Rich

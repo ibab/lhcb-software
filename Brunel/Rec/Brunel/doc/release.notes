@@ -3,6 +3,35 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
+</PRE><H1><A NAME=v23r2>2004-02-06 Brunel v23r2</A></H1><PRE>
+
+>>> XmlDDDB change
+>>> LHCb changes
+>>> ITAlgorithms/ITCheckers
+
+- New functionality
+  . Support for new Rich features (switched off by default)
+    (RichRecSys v1r7, RichDetTools v3r6, RichUtils v3r7)
+  . OT digits are rebuilt from RawBuffer (OTDAQ v1r0)
+  . Muon digits are rebuilt from RawBuffer (MuonDAQ v1r0)
+
+- DST changes
+  . Replace old style "relations" with new style "links" for MC truth of 
+    ITClusters, OTClusters, VeloClusters, MuonCoords. Relations can be
+    rebuilt from links when reading the DST. (AsctToLinker v1r0)
+  . Removed filtering of MCParticles/MCVertices (should be done in Gauss)
+
+- New tuning
+  . Adapt to changes in ST geometry 
+    (ITAlgorithms v14r0, ITCheckers v2r0, LongTrack v1r10, Seeding v2r8,
+     TrCheck v2r3, TrCleanEx v2r3, TrKShort v1r1, TrMatching v2r9, VeloTT v1r7)
+
+- Dropped functionality
+  . Dropped support for pre-2004 geometries (removed v200311,opts, RiSicbGeom)
+  . Dropped valgrind support for gcc 2.95.2 
+    (Brunel.supp.gcc32 renamed Brunel.supp)
+
+
 </PRE><H1><A NAME=v23r1>2004-01-28 Brunel v23r1</A></H1><PRE>
 
 - New functionality

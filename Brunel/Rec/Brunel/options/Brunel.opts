@@ -8,14 +8,22 @@
 //==============================================================
 
 // Allow units to be used in jobOptions
-#units "$GAUDICONFROOT/options/units.opts"
+#units "$STDOPTS/units.opts"
 
 // Framework
 ApplicationMgr.DLLs += { "BrunelAlgs", "GaudiAlg", "LHCbTools" };
 
+// POOL Persistency
+#include "$GAUDIPOOLDBROOT/options/GaudiPoolDbRoot.opts"
+#include "$EVENTSYSROOT/options/PoolDicts.opts"
+
 // ROOT Persistency
 #include "$STDOPTS/RootDb.opts"
 
+// Define DST content
+#include "$BRUNELOPTS/DstContent.opts"
+
+// Set up the transient data store
 EventDataSvc.ForceLeaves = true;
 EventDataSvc.RootCLID    =    1;
 
@@ -23,7 +31,8 @@ EventDataSvc.RootCLID    =    1;
 // Brunel Phases to be executed
 //--------------------------------------------------------------
 ApplicationMgr.TopAlg += { "BrunelInitialisation",
-                           "ProcessPhase/BrunelReco" };
+                           "ProcessPhase/BrunelReco",
+                           "ProcessPhase/Relations" };
 ApplicationMgr.TopAlg += { "ProcessPhase/BrunelMoni" }; 
 #include "$BRUNELOPTS/BrunelMoni.opts"
 //--------------------------------------------------------------
@@ -31,6 +40,7 @@ ApplicationMgr.TopAlg += { "ProcessPhase/BrunelMoni" };
 //--------------------------------------------------------------
 BrunelReco.DetectorList  = {"VELO","OT","IT","Tr","RICH","CALO","MUON" };
 BrunelReco.DetectorList += { "Timing" };
+Relations.DetectorList   = { "Tr", "Calo", "Links" };
 
 //--------------------------------------------------------------
 // Geometry, magnetic field, particle properties
@@ -38,9 +48,8 @@ BrunelReco.DetectorList += { "Timing" };
 #include "$STDOPTS/DetDesc.opts"
 ApplicationMgr.DLLs += { "CaloDetXmlCnv" };
 ApplicationMgr.DLLs += { "RichDet" };
-ApplicationMgr.DLLs += { "RiSicbGeom" }; // for pixel tool
 ApplicationMgr.DLLs += { "MuonDet" };
-ApplicationMgr.DLLs += { "ITDet" };
+ApplicationMgr.DLLs += { "STDet" };
 ApplicationMgr.DLLs += { "OTDet" };
 ApplicationMgr.DLLs += { "VeloDet" };
 DeVelo.Design = 1;  // 45 degree Velo sectors
@@ -62,7 +71,6 @@ BrunelRecoCALOSeq.Members += { "CaloDigitsFromRaw" };
 #include "$CALORECOOPTS/Reco.opts"
 #include "$CALORECOOPTS/Filters.opts"
 #include "$CALOPIDSOPTS/Brunel.opts"
-#include "$CALOASSOCIATORSOPTS/Brunel.opts"
 
 // Inner tracker reconstruction (clustering)
 ApplicationMgr.DLLs   += { "ITAlgorithms" };
@@ -71,7 +79,8 @@ BrunelRecoITSeq.Members +={"ITClusterCreator","ITSummaryCreator"};
 ITClusterCreator.clusterSignal2Noise = {3.2,3.2,3.2,3.2,3.2};
 
 // Outer tracker reconstruction (clustering)
-ApplicationMgr.DLLs   += { "OTAlgorithms" };
+ApplicationMgr.DLLs     += { "OTAlgorithms", "OTDAQ" };
+BrunelRecoOTSeq.Members  = { "OTRetrieveBuffer" };
 #include "$OTALGORITHMSROOT/options/otRec.opts"
 BrunelRecoOTSeq.Members += { "OTClusterCreator" };
 
@@ -129,13 +138,13 @@ TrTrackCloneKiller.flagMode = true;
 ApplicationMgr.DLLs += { "RichDetTools", "RichRecTools", "RichRecCommon",
                          "RichUtils", "RichGlobalPID", "RichLocalPID", 
                          "RichRingRefit", "RichPIDMerge", "RichDAQ" };
-
-BrunelRecoRICHSeq.Members += { "RawBufferToRichDigitsAlg" };
+#include "$RICHDAQROOT/options/Brunel_DecodeRawEvent.opts"
 #include "$RICHRECSYSOPTS/BrunelReco.opts"
 
 // Muon coordinate reconstruction, MuonID, cleaning
-ApplicationMgr.DLLs += { "MuonTools", "MuonRec", "MuonID" };
-BrunelRecoMUONSeq.Members = { "MuonRec", "MuonIDFOI" };
+ApplicationMgr.DLLs += { "MuonTools", "MuonRec", "MuonID", "MuonDAQ" };
+BrunelRecoMUONSeq.Members  = { "MuonRawBuffer2Digit" };
+BrunelRecoMUONSeq.Members += { "MuonRec", "MuonIDFOI" };
 #include "$MUONIDROOT/options/MuonIDFOI.opts"
 
 // Algorithm timing
@@ -144,3 +153,22 @@ BrunelRecoTimingSeq.Members += { "TimingAlg" };
 
 // Modify printout defaults
 #include "$BRUNELOPTS/BrunelMessage.opts"
+
+//----------------------------------------------------------------------
+// Relations to MC truth, built unconditionally regardless of monitoring
+//----------------------------------------------------------------------
+ApplicationMgr.DLLs += { "Associators" };
+#include "$ASSOCIATORSROOT/options/Brunel.opts"
+ApplicationMgr.DLLs += { "ITAssociators" };
+ApplicationMgr.DLLs += { "OTAssociators" };
+ApplicationMgr.DLLs += { "VeloAssociators" };
+#include "$TRASSOCIATORSROOT/options/Brunel.opts"
+ApplicationMgr.DLLs += { "CaloAssociators" };
+RelationsCaloSeq.Members += { "CaloClustersMCTruth5Alg/CCs2MCPs" };
+ApplicationMgr.DLLs += { "MuonAssociators" };
+ApplicationMgr.DLLs += { "AsctToLinker" };
+RelationsTrSeq.Members   += { "TrStoredTrackMCTruthAlg/Tr2MCP" };
+Tr2MCP.MakeLinker = true;
+// New style links. Also creates Relations to MCP for Velo, IT, OT, Muon
+RelationsLinksSeq.Members += { "ConvertToLinker" };
+ConvertToLinker.OutputLevel = 1;

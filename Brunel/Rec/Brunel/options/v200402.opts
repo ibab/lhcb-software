@@ -1,18 +1,17 @@
 ///////////////////////////////////////////////////////////////////////////////
-///   Job options for Brunel for data produced with Boole v5r1 or greater   ///
-/// and with XmlDDDB v19r0 or greater, geometry compatible with lhcb-200311 ///
+///   Job options for Brunel for data produced with Boole v5r2 or greater   ///
+/// and with XmlDDDB v21r0 or greater, geometry compatible with lhcb-200402 ///
 ///////////////////////////////////////////////////////////////////////////////
 #pragma print off
-#include "$BRUNELOPTS/Brunel.opts"          // Generic options for all jobs
-#include "$BRUNELOPTS/BrunelMoniProd.opts"  // Comment to switch on all histos
-#include "$BRUNELOPTS/BrunelDst.opts"       // Comment to switch off DST output
+#include "$BRUNELOPTS/Brunel.opts"           // Generic options for all jobs
+#include "$BRUNELOPTS/BrunelMoniProd.opts"   // Comment to switch on all histos
+ApplicationMgr.OutStream += { "DstWriter" }; // Comment to switch off DST output
+#pragma print on
 
 //---------------------------------------------------------------------------
 // Database specific options
 //---------------------------------------------------------------------------
-DetectorDataSvc.DetDbLocation = "$XMLDDDBROOT/DDDB/lhcb-200311.xml";
-#include "$RICHRECSYSOPTS/RecoParam.opts"
-#pragma print on
+DetectorDataSvc.DetDbLocation = "$XMLDDDBROOT/DDDB/lhcb-200402.xml";
 
 //---------------------------------------------------------------------------
 // Add here any job specific options, to over-ride previously defined options
@@ -24,12 +23,8 @@ DetectorDataSvc.DetDbLocation = "$XMLDDDBROOT/DDDB/lhcb-200311.xml";
 HistogramPersistencySvc.OutputFile = "412400.root";  // Monitoring histos
 ApplicationMgr.EvtMax = 100;
 
-// Uncomment next two lines for POOL input or output
-//#include "$GAUDIPOOLDBROOT/options/GaudiPoolDbRoot.opts"
-//#include "$EVENTSYSROOT/options/PoolDicts.opts"
-
 // GaudiDb input. Comment next line if POOL input
-EventSelector.Input = { "DATAFILE='rfio:/castor/cern.ch/user/c/cattanem/Boole/v5r1/412400.oodigi' TYP='ROOT' opt='READ'" }; // evtype 412400
+EventSelector.Input = { "DATAFILE='rfio:/castor/cern.ch/user/c/cattanem/Boole/v5r2/61.oodigi' TYP='ROOT' opt='READ'" }; // evtype 412400
 
 // Uncomment next 2 lines for POOL input. Input file must exist in MyCatalog.xml.
 //EventSelector.Input = { "DATAFILE='rfio:/castor/cern.ch/user/c/cattanem/Boole/v5r1/Pool412400.digi' TYP='POOL_ROOT' OPT='READ'" }; // evtype 412400

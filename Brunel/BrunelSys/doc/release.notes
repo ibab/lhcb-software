@@ -4,6 +4,20 @@
 ! Purpose     : List of packages in Brunel project
 !-----------------------------------------------------------------------------
 
+!======================= BrunelSys v23r2 2004-02-09 =======================
+! 2004-02-06 - Marco Cattaneo
+ - Modified requirements for Brunel v23r2
+
+   Packages added: RichMCTools v1r0, OTDAQ v1r0, MuonDAQ v1r0, AsctToLinker v1r0
+
+   Packages modified: ITAlgorithms v14r0, ITCheckers v2r0, LongTrack v1r10,
+                      Seeding v2r8, TrCheck v2r3, TrCleanEx v2r8, TrKShort v1r1,
+                      TrMatching v2r9, VeloTT v1r7, RichUtils v3r7, 
+                      RichDetTools v3r6, RichRecBase v1r9, RichRecQC v1r5, 
+                      RichRichRefit v1r5, RichLocalPID v1r5, RichGlobalPID v1r4,
+                      RichRecCommon v1r4, RichRecTools v2r7, RichDAQ v1r2,
+                      RichRecSys v1r7
+
 !======================= BrunelSys v23r1 2004-01-27 =======================
 ! 2004-01-27 - Marco Cattaneo
  - Modified requirements for Brunel v23r1

@@ -34,7 +34,7 @@ else
   shift
 endif
 #   
-set Bversion = "v23r1"
+set Bversion = "v23r2"
 echo "Executing valgrind for Brunel $Bversion using options file $Dver.opts"
 #
 
@@ -74,11 +74,7 @@ else
 endif
 
 # == run the excutable ================================
-if( $CMTCONFIG == "rh73_gcc32" ) then
-  set SuppFile = "./Brunel.supp.gcc32"
-else
-  set SuppFile = "./Brunel.supp"
-endif
+set SuppFile = "./Brunel.supp"
 
 valgrind --demangle=no --error-limit=no --leak-check=yes --num-callers=20 --suppressions=$SuppFile tmpjob_$Dver.exe $BRUNELOPTS/$Dver.opts >& mem_errors.log
 
