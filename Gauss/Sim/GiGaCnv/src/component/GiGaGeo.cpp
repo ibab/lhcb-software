@@ -1,8 +1,11 @@
-// $Id: GiGaGeo.cpp,v 1.5 2003-01-23 09:20:37 ibelyaev Exp $ 
+// $Id: GiGaGeo.cpp,v 1.6 2003-01-30 20:08:31 witoldp Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.5  2003/01/23 09:20:37  ibelyaev
+//  few fixes for Win2K platform
+//
 // Revision 1.4  2002/12/16 18:09:36  ibelyaev
 //  update for new release of Geant4 (5.0)
 //
@@ -56,6 +59,7 @@
 #include "G4LogicalVolumeStore.hh"
 #include "G4PhysicalVolumeStore.hh"
 //
+#include "G4UserLimits.hh"
 #include "G4VisAttributes.hh"
 #include "G4FieldManager.hh"
 #include "G4TransportationManager.hh"
@@ -475,6 +479,13 @@ StatusCode GiGaGeo::initialize()
   // we explicitely need detSvc(), check it! 
   if( 0 == detSvc() ) 
     { return Error(" DetectorProviderSvc is not located! "     ) ; }
+
+  /// locate SimSvc
+  StatusCode status = serviceLocator()
+    ->service("SimulationSvc", m_simSvc, true);
+  if (status.isFailure()) {
+    return Error("Cannot locate SimulationSvc!");} 
+  
   // check for special run with  material budget counters:
   if( !m_budget.empty() )
     { Warning(" Special run for material budget calculation! " ) ; }
@@ -880,6 +891,49 @@ G4LogicalVolume* GiGaGeo::createG4LV
   // create 
   G4LogicalVolume* G4LV = 
     new G4LogicalVolume( solid , material , Name , 0 , 0 , 0 );
+
+  // user limits
+  if(m_simSvc->hasSimAttribute(Name))
+  {
+    SimAttribute attr = m_simSvc->simAttribute(Name);
+
+    // instanciate G4UserLimits
+    G4UserLimits* ulimit=new G4UserLimits();
+
+    // set max allowed step
+    if(attr.maxAllowedStep() != -1.0) 
+      {
+        ulimit->SetMaxAllowedStep(attr.maxAllowedStep ());
+      }
+    
+    // set max track length
+    if(attr.maxTrackLength() != -1.0)
+      {
+        ulimit->SetUserMaxTrackLength(attr.maxTrackLength());
+      }
+    
+    // set max time
+    if(attr.maxTime() != -1.0)
+      {
+        ulimit->SetUserMaxTime(attr.maxTime());
+      }    
+    
+    // set minimum kinetic energy
+    if(attr.minEkine() != -1.0)
+      {
+        ulimit->SetUserMinEkine(attr.minEkine());
+      }
+    
+    // set minimum range
+    if(attr.minRange() != -1.0)
+      {
+        ulimit->SetUserMinRange(attr.minRange());    
+      }
+    
+    // attach user limits to the given G4 volume
+    G4LV->SetUserLimits(ulimit);
+  }
+
   // look for global material budget counter 
   if( !m_budget.empty() )
     {

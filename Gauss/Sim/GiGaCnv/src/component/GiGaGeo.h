@@ -1,8 +1,11 @@
-// $Id: GiGaGeo.h,v 1.2 2002-12-15 17:17:45 ibelyaev Exp $ 
+// $Id: GiGaGeo.h,v 1.3 2003-01-30 20:08:31 witoldp Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2002/12/15 17:17:45  ibelyaev
+//  clear static G4 geoemtry stores / temporary fix
+//
 // Revision 1.1  2002/12/07 14:36:26  ibelyaev
 //  see $GIGACNVROOT/doc/release.notes
 //
@@ -16,6 +19,9 @@
 /// GiGa 
 #include "GiGaCnv/GiGaCnvSvcBase.h" 
 #include "GiGaCnv/IGiGaGeomCnvSvc.h" 
+// SimulationSvc
+#include "SimSvc/ISimulationSvc.h"
+
 ///
 class G4VPhysicalVolume; 
 class G4VSolid;
@@ -27,6 +33,8 @@ class SolidBoolean;
 class IGiGaSensDet;
 ///
 class IGiGaMagField;
+///
+class ISimulationSvc       ;
 ///
 template <class SERVICE> 
 class SvcFactory;
@@ -307,6 +315,10 @@ private:
   SDobjects                        m_SDs  ; ///< created sensitive detectors 
   // list of all magnetic fields
   MFobjects                        m_MFs  ; ///< created magnetic field objects 
+
+  // SimulationSvc
+  ISimulationSvc* m_simSvc;
+  
 
 };        
 
