@@ -1,4 +1,4 @@
-// $Id: IDecayFinder.h,v 1.4 2002-11-13 16:21:13 gcorti Exp $
+// $Id: IDecayFinder.h,v 1.5 2003-03-07 11:04:51 odie Exp $
 #ifndef TOOLS_IDECAYFINDER_H 
 #define TOOLS_IDECAYFINDER_H 1
 
@@ -14,7 +14,7 @@
 //class Particle;
 
 // Declaration of the interface ID (interface id, major version, minor version)
-static const InterfaceID IID_IDecayFinder("IDecayFinder", 2, 0);
+static const InterfaceID IID_IDecayFinder("IDecayFinder", 3, 0);
 
 /** @class IDecayFinder IDecayFinder.h DaVinciTools/IDecayFinder.h
  *  
@@ -33,6 +33,8 @@ public:
   virtual std::string decay( void ) = 0;
   virtual StatusCode setDecay( std::string decay ) = 0;
 
+  virtual std::string revert( void ) = 0;
+
   /// Does the described decay exists in the event?
   virtual bool hasDecay( const ParticleVector &event ) = 0;
   virtual bool findDecay( const ParticleVector &event,
@@ -41,5 +43,14 @@ public:
   virtual bool hasDecay( const Particles &event ) = 0;
   virtual bool findDecay( const Particles &event,
                           const Particle *&previous_result ) = 0;
+
+  virtual bool hasDecay( void ) = 0;
+  virtual bool findDecay( const Particle*&previous_result ) = 0;
+
+  virtual void descendants( const Particle *head,
+                            std::vector<Particle *>&result,
+                            bool leaf=false ) = 0;
+  virtual void decayMembers( const Particle *head,
+                             std::vector<Particle*>&members ) = 0;
 };
 #endif // TOOLS_IDECAYFINDER_H
