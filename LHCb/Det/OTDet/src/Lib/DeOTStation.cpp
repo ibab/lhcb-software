@@ -1,4 +1,4 @@
-// $Id: DeOTStation.cpp,v 1.1 2003-06-11 11:49:36 cattanem Exp $
+// $Id: DeOTStation.cpp,v 1.2 2004-06-24 09:48:34 jnardull Exp $
 
 // DetDesc
 #include "DetDesc/IGeometryInfo.h"
@@ -17,8 +17,6 @@
 DeOTStation::DeOTStation( const std::string& name ) :
   DetectorElement( name ),
   m_stationID(),
-  m_z(0.0),
-  m_zSize(0.0),
   m_layers()
 { }
 
@@ -34,15 +32,6 @@ const CLID& DeOTStation::clID () const
 StatusCode DeOTStation::initialize() 
 {
   m_stationID = (unsigned int) this->userParameterAsInt("stationID");
-
-  const IGeometryInfo* gi = this->geometry();
-  HepPoint3D middlePoint(0,0,0);
-  HepPoint3D globalPoint = gi->toGlobal(middlePoint);
-  m_z = globalPoint.z();
-
-  const ISolid* solid = gi->lvolume()->solid();
-  const SolidBox* mainBox = dynamic_cast<const SolidBox*>( solid->cover() );
-  if ( mainBox ) m_zSize = mainBox->zsize();
 
   //loop over layers
   IDetectorElement::IDEContainer::const_iterator iLayer;

@@ -1,4 +1,4 @@
-// $Id: DeOTStation.h,v 1.2 2003-06-16 08:52:07 cattanem Exp $
+// $Id: DeOTStation.h,v 1.3 2004-06-24 09:48:34 jnardull Exp $
 #ifndef OTDET_DEOTSTATION_H
 #define OTDET_DEOTSTATION_H 1
 
@@ -60,8 +60,6 @@ public:
 private:
 
   unsigned int m_stationID;         ///< station ID number
-  double m_z;                       ///< z of the station
-  double m_zSize;                   ///< size in z of the station
   std::vector<DeOTLayer*> m_layers; ///< vector of layers
 
 };
@@ -72,7 +70,7 @@ private:
 
 inline bool DeOTStation::isInside(const HepPoint3D& point) const
 {
-  return fabs(point.z()-m_z) < 0.5 * m_zSize;
+  return this->geometry()->isInside(point);
 }
 
 #endif  // OTDET_DEOTSTATION_H

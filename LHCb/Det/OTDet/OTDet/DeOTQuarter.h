@@ -1,4 +1,4 @@
-// $Id: DeOTQuarter.h,v 1.1 2003-12-04 10:22:09 jnardull Exp $
+// $Id: DeOTQuarter.h,v 1.2 2004-06-24 09:48:34 jnardull Exp $
 #ifndef OTDET_DEOTQUARTER_H
 #define OTDET_DEOTQUARTER_H 1
 
@@ -82,7 +82,8 @@ inline bool DeOTQuarter::isInside(const HepPoint3D& point) const
 {
   // only check x and y (z should have been checked before in layer)
   if ( point.x() > m_xMin && point.x() < m_xMax &&
-       point.y() > m_yMin && point.y() < m_yMax ) return true;
+       point.y() > m_yMin && point.y() < m_yMax && 
+       point.z() > m_zMin && point.z() < m_zMax) return true;
   return false;
 }
 

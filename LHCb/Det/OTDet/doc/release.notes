@@ -1,6 +1,9 @@
-! $Id: release.notes,v 1.27 2003-12-18 15:33:10 cattanem Exp $
+! $Id: release.notes,v 1.28 2004-06-24 09:48:34 jnardull Exp $
 ! Package     : OTDet
 ! Responsible : J. van Tilburg
+
+! 2004-06-22 - Jacopo Nardulli 
+ - Fixing a bug related to the implementation of the isInside function.
 
 !========================== OTDet v5r2 2003-12-16 ==========================
 ! 2003-12-16 - Marco Cattaneo

@@ -1,4 +1,4 @@
-// $Id: DeOTLayer.cpp,v 1.2 2003-12-04 10:22:09 jnardull Exp $
+// $Id: DeOTLayer.cpp,v 1.3 2004-06-24 09:48:34 jnardull Exp $
 
 // DetDesc
 #include "DetDesc/IGeometryInfo.h"
@@ -18,8 +18,6 @@ DeOTLayer::DeOTLayer( const std::string& name ) :
   DetectorElement( name ),
   m_layerID(0),
   m_stereoAngle(0.0),
-  m_z(0.0),
-  m_zSize(0.0),
   m_quarters()
 { }
 
@@ -36,15 +34,6 @@ StatusCode DeOTLayer::initialize()
 {
   m_layerID = (unsigned int) this->userParameterAsInt("layerID");
   m_stereoAngle = this->userParameterAsDouble("stereoAngle");
-
-  const IGeometryInfo* gi = this->geometry();
-  HepPoint3D middlePoint(0,0,0);
-  HepPoint3D globalPoint = gi->toGlobal(middlePoint);
-  m_z = globalPoint.z();
-
-  const ISolid* solid = gi->lvolume()->solid();
-  const SolidBox* mainBox = dynamic_cast<const SolidBox*>( solid->cover() );
-  if ( mainBox ) m_zSize = mainBox->zsize();  
 
   //loop over quarters
   IDetectorElement::IDEContainer::const_iterator iQuarter;
