@@ -1,0 +1,44 @@
+! $Id: release.notes,v 1.1.1.1 2001-07-09 09:28:42 gcorti Exp $
+! Package     : DaVinciTools
+! Responsible : Gloria Corti
+
+! ====================================================================
+
+! 09072001 - DaVinciTools v1 (GCorti)
+  First release of the package.
+  It contains some purely C++ Algorithms/AlgTools and some that wraps
+  Fortran routines.
+  Default options for tools and algorithms are in options/DaVinciTools.opts
+  In particular it contains:
+   - AxPart2MCParticleAsct,  an associator between AxPartCandidates and
+                             MCParticles 
+   - MCDecayFinderAlgorithm, a sample algorithm to look at one step decays
+   - ImpactPar, an algtool to calculate Impact Parameter between 
+                AxPartCandidate and VtxCandidate 
+   - AddFourMom, an algtool to make a new AxPartCandidate by summing 
+                 the 4-momentum 
+   - AxPrimVertexAlgorithm, an algorithm that calculates the primary vertex
+                            in the event via the Fortran AXPV routine (in
+                            axreclib) and stores the results in the transient
+                            event as "/Event/Phys/PrimaryVertices"
+   - PhysSelectAlgorithm, an algorithm steering the physics selection 
+                          algorithms. At the moment it interfaces to the 
+                          Fortran AXSEL package. The results are stored in
+                          the transient store "/Event/Phys/Selection".
+                          One can retrieve the different decays info specifying
+                          the 4-character control.
+                          The following Fortran routines are helper to the
+                          algorithms: axselconfig, axselidcode, fhfileend,
+                          fhfileopen, setcdffname
+   - DaVinciInitialisation, the DaVinci program initialization. It does the
+                            necessary Fortran initializations, per job and 
+                            per event. It also create the "Event/Phys" tree
+                            were to put all Physics new objects created in
+                            the job. The following codes are helpers
+                            to the algorithm: DaVinciInit.F, sicbvers.F, 
+                            DaVinciZebra.inc, DaVinciVersion.h
+   - DaVinciFinalisation, the last DaVinci algorithm to be executed, it
+                          interfaces to the Fortran user routine suanal.
+
+! ===========================================================================
+  

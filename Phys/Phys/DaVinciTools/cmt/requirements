@@ -1,0 +1,47 @@
+package DaVinciTools
+version v1
+
+branches DaVinciTools cmt doc options src 
+
+# C++ necessary packages
+use PhysEvent     v1*	   Event
+use GaudiTools    v4*
+
+
+# Fortran necessary packages
+use axsellib 	v6*	SICB
+
+include_dirs $(DAVINCITOOLSROOT)
+
+# build a static library
+library DaVinciTools -no_share ../src/component/*.cpp \
+                               ../src/static/*.cpp \
+                               ../src/static/*.F
+
+apply_pattern package_linkopts
+
+macro_append application_linkopts " -u DaVinciTools_loadRef "\
+             WIN32                " /include:_DaVinciTools_loadRef"
+
+
+# ============================================================
+#private
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
