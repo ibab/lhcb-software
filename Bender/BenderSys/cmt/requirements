@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.5 2004-02-10 12:43:39 ibelyaev Exp $ 
+# $Id: requirements,v 1.6 2004-03-16 09:48:20 ibelyaev Exp $ 
 # =============================================================================
 # CVS tag $Name: not supported by cvs2svn $
 # =============================================================================
@@ -6,25 +6,43 @@
 #     Interactive LHCb Physics Analysis with Python  
 # =============================================================================
 package       BenderSys
-version       v2r0
+version       v3r0
 author        Vanya BELYAEV
 
+use PI          v1r112p1 
+use HIPPODRAW   v1r133 
+use GaudiPython v6r4 
+
 # =========== Bender Application itself =======================================
-use           Bender         v2r0 Phys 
+use           Bender         v3r0 Phys 
 # =========== Bender Libraries ================================================
-use           BenderLibs     v2r0 Tools 
+use           BenderLibs     v3r0 Tools 
 # =========== dictionaries for LoKi/Bender classes ============================
-use           BenderDict     v2r0 Tools 
-# =========== examples of usage of Bender "in practice" =======================
-use           BenderExample  v2r0 Ex  
+use           BenderDet      v1r0 Det 
+# =========== Detector Geometry Checks ========================================
+use           DetDescChecks  v2r0 Det 
+# =========== dictionaries for LoKi/Bender classes ============================
+use           BenderDict     v3r0 Tools 
+# =========== Bender & LoKi documentation =====================================
+use           BenderDoc      v3r0 Doc 
+use           LoKiDoc        v2r0 Doc 
 # =========== Test suit for Bender ============================================
-use           BenderTest     v2r0 Tests  
-# =========== put your first Bender-based algorithms here =====================
-use           BenderUser     v2r0 Phys  
+use           BenderTest     v3r0 Tests 
+# =========== examples of usage of Bender "in practice" =======================
+use           BenderExample  v3r0 Ex  
+use           LoKiExample    v2r0 Ex 
+# =========== Test suit for Bender ============================================
+use           BenderVis      v1r0 Vis 
+# =========== Detector description related stuff ==============================
+use           BenderUser     v3r0 Phys  
 # =============================================================================
+
 
 # =============================================================================
 # The END 
 # =============================================================================
 # $Log: not supported by cvs2svn $
+# Revision 1.5  2004/02/10 12:43:39  ibelyaev
+#  update
+#
 # =============================================================================
