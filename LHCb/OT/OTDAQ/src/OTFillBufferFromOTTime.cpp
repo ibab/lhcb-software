@@ -1,8 +1,9 @@
-// $Id: OTFillBufferFromOTTime.cpp,v 1.4 2004-11-10 13:02:08 jnardull Exp $
+// $Id: OTFillBufferFromOTTime.cpp,v 1.5 2004-11-19 16:41:44 cattanem Exp $
 // Include files
 
 // local
 #include "OTFillBufferFromOTTime.h"
+#include "Event/OTBankVersion.h"
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : OTFillBufferFromOTTime
@@ -113,7 +114,7 @@ StatusCode OTFillBufferFromOTTime::execute()
 
     int bankID = (*iBank).first;
     dataBank& bBank = (*aBank);
-    m_rawBuffer->addBank( bankID , RawBuffer::OT, bBank );  
+    m_rawBuffer->addBank( bankID , RawBuffer::OT, bBank, OTBankVersion::v1 );  
     aBank->erase( aBank->begin(),aBank->end() );
   }
   

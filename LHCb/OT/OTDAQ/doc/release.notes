@@ -4,6 +4,11 @@ Package manager : J. Nardulli
 ! 2004-11-09 - Jacopo Nardulli
  - Move to the New Gaudi Base Classes  
 
+!====================== OTDAQ v3r1 2004-10-26 ======================
+! 2004-10-26 - Marco Cattaneo
+ - Add OTBankVersion.h to define a version number of the OT RawBuffer banks.
+ - Use this version number when building and decoding the bank
+
 !====================== OTDAQ v3r0 2004-09-10 ======================
 ! 2004-09-10 - Marco Cattaneo
  - Add OTReadoutWindow tool (moved here to remove circular dependency on 
