@@ -1,4 +1,4 @@
-# $Header: /afs/cern.ch/project/cvs/reps/lhcb/Ex/DetDescExample/cmt/requirements,v 1.5 2001-05-30 12:46:22 cattaneb Exp $
+# $Header: /afs/cern.ch/project/cvs/reps/lhcb/Ex/DetDescExample/cmt/requirements,v 1.6 2001-06-25 08:59:05 sponce Exp $
 package DetDescExample
 version v2
 
@@ -8,17 +8,17 @@ branches doc src job options cmt
 use GaudiConf     v4*     
 
 # GAUDI framework
-use GaudiSys      v7*
+use GaudiSys      v8*
 
 # SicB event data persistency and database
-use SicbCnv       v12*  SICB
-use dbase         v238* SICB
+#use SicbCnv       v12*  SICB
+#use dbase         v238* SICB
 
 # LHCb event model
-use LHCbEvent     v10*  Event
+#use LHCbEvent     v10*   Event
 
 # Detector Description package and database
-use DetDesc       v7*   Det
+use DetDesc       v8*   Det
 use XmlDDDB       v6*   Det
 
 #==> DetDesc example
