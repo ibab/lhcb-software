@@ -1,4 +1,4 @@
-// $Id: CaloProduceRaw.cpp,v 1.1 2003-04-04 05:16:33 ocallot Exp $
+// $Id: CaloProduceRaw.cpp,v 1.2 2003-04-17 07:55:21 ocallot Exp $
 // Include files 
  // CLHEP
 #include "CLHEP/Units/SystemOfUnits.h"
@@ -50,7 +50,8 @@ StatusCode CaloProduceRaw::initialize() {
 
   m_nEvents = 0.;
   for ( unsigned int kk = 0 ; 22 > kk ; kk++ ) {
-    m_buffers.push_back();
+    std::vector<int> dum;
+    m_buffers.push_back( dum );
     m_buffers[kk].reserve(1000);
     m_size.push_back( 0. );
     m_startOfBank.push_back( 0 );

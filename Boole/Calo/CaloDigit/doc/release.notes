@@ -5,6 +5,10 @@
 !-----------------------------------------------------------------------------
 
 !======================== CaloDigit v1r2 2003-04-15 ========================
+! 2003-04-17 - Olivier Callot
+ - Fix a stupid incompatibility of the Windows compiler: push_back in a vector
+   requires an argument, and doesn't accept no argument = default creator.
+
 ! 2003-03-23 - Olivier Callot
  - New algorithm CaloProduceRaw to create the DAQEvent from CaloDigit,
    L0CaloAdc and L0PrsSpdHit using trhe DAQ bank structure. This is a first 
