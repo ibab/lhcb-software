@@ -1,14 +1,18 @@
-// $Id: GiGaGetEventAlg.cpp,v 1.1.1.1 2004-02-20 19:43:29 ibelyaev Exp $ 
+// $Id: GiGaGetEventAlg.cpp,v 1.2 2005-02-02 15:05:54 gcorti Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.1.1.1  2004/02/20 19:43:29  ibelyaev
+// New package 
+//
 //  ===========================================================================
 #define GIGACNV_GIGAMISCGETEVENTALG_CPP
 // ============================================================================
 // GaudiKernel
 // ============================================================================
 #include "GaudiKernel/AlgFactory.h"
+#include "GaudiKernel/Stat.h"
 // ============================================================================
 // Event 
 // ============================================================================
@@ -74,6 +78,7 @@ StatusCode GiGaGetEventAlg::execute()
            << m_particles << "' \t"
            << particles -> size() 
            << endreq ;
+    Stat stat( chronoSvc(), "#MCParticles", particles->size() );
   }
   
   if( !m_vertices.empty() )
@@ -83,6 +88,7 @@ StatusCode GiGaGetEventAlg::execute()
            << m_vertices << "'  \t" 
            << vertices -> size() 
            << endreq ;
+    Stat stat( chronoSvc(), "#MCVertices", vertices->size() );
   }
   
   return StatusCode::SUCCESS;

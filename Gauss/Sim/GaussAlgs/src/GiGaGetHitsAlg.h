@@ -1,13 +1,10 @@
-// $Id: GiGaGetHitsAlg.h,v 1.2 2004-04-29 15:12:57 gcorti Exp $
-#ifndef GETGIGAHITSALG_H 
-#define GETGIGAHITSALG_H 1
+// $Id: GiGaGetHitsAlg.h,v 1.3 2005-02-02 15:05:54 gcorti Exp $
+#ifndef GIGAGETHITSALG_H 
+#define GIGAGETHITSALG_H 1
 
 // Include files
-// from STL
-#include <string>
-
 // from Gaudi
-#include "GaudiKernel/Algorithm.h"
+#include "GaudiAlg/GaudiAlgorithm.h"
 
 /** @class GiGaGetHitsAlg GiGaGetHitsAlg.h
  *  
@@ -16,10 +13,8 @@
  *  @date   2002-08-13
  */
 
-class GiGaGetHitsAlg : public Algorithm {
-
+class GiGaGetHitsAlg : public GaudiAlgorithm {
 public:
-
   /// Standard constructor
   GiGaGetHitsAlg( const std::string& name, ISvcLocator* pSvcLocator );
 
@@ -30,23 +25,36 @@ public:
   virtual StatusCode finalize  ();    ///< Algorithm finalization
 
 protected:
+  
+  // Print info for Velo or Velo PileUp MCVeloHits
+  virtual void hitsVelo( const std::string det, const std::string location );
+  
+  // Print info for Silicon or Outer Tracker MCHits
+  virtual void hitsTracker( const std::string det, const std::string location );
+
+  // Print info for RICH detector: MCRichHits, Optical photons, segments and
+  // tracks
+  virtual void infoRICH( );  
+
+  // Print info for Muon detector
+  virtual void infoMuon( );
 
 private:
 
-  std::string    m_othits      ;
-  std::string    m_ithits      ;
-  std::string    m_velohits    ;
-  std::string    m_puvelohits  ;
-  std::string    m_muonhits    ;
-  std::string    m_richhits    ;
-  std::string    m_richop      ;
-  std::string    m_richsegments  ;
-  std::string    m_richtracks    ;
+  std::string    m_othits      ;      ///< TES path where to look for OT hits 
+  std::string    m_sthits      ;      ///< TES path where to look for ST hits
+  std::string    m_velohits    ;      ///< TES path where to look for Velo hits
+  std::string    m_puvelohits  ;      ///< TES path where to look for PileUp Veto hits
+  std::string    m_muonhits    ;      ///< TES path where to look for Muon hits
+  std::string    m_richhits    ;      ///< TES path where to look for RICH hits
+  std::string    m_richop      ;      ///< TES path where to look for Optical photons
+  std::string    m_richsegments;      ///< TES path where to look for Rich segments
+  std::string    m_richtracks  ;      ///< TES path where to look for Rich tracks
   
   typedef std::vector<std::string> Addresses ;
-  Addresses      m_caloHits    ;
-  
-  bool           m_muonSummary;
+  Addresses      m_caloHits;          ///< TES pathes where to look for Calo hits
+
+  std::vector<std::string> m_caloDet; ///< List of calorimeters detecotors
 
 };
-#endif // GETGIGAHITSALG_H
+#endif // GIGAGETHITSALG_H

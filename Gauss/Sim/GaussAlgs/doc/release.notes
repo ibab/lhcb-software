@@ -3,6 +3,14 @@
 ! Purpose     : 
 ! -----------------------------------------------------------------------------
 
+! 2005-02-02 - Gloria Corti
+ - src/GiGaGetEventAlg.cpp
+   . introduce statistical count of particles and vertices multiplicity
+ - src/GiGaGetHitsAlg.{h,cpp}
+   . adapt to GaudiAlgorithm
+   . introduce statistical counts of hits separately for each detector
+   . have more details in verbose mode for hits
+
 !===================== GaussAlgs v1r3 2004-11-22 =============================
 ! 2004-11-22 - Gloria CORTI
  - src/GiGaFlushAlgorithm.cpp
