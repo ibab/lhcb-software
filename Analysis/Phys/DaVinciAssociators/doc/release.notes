@@ -1,7 +1,8 @@
-! $Id: release.notes,v 1.39 2004-05-18 06:34:45 pkoppenb Exp $
+! $Id: release.notes,v 1.40 2004-06-02 11:19:39 pkoppenb Exp $
 ! Package     : DaVinciAssociators
 ! Responsible : Philippe Charpentier
 
+!================ DaVinciAssociators v4r5p2 2004-06-02 =====================
 ! 2004-05-18 - P. Koppenburg
  - src/CompositeParticle2MCLinks.cpp
    . Change MSG::FATAL to INFO for "Could not retrieve particles"
