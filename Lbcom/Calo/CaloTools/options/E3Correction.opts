@@ -1,0 +1,24 @@
+// $Id: E3Correction.opts,v 1.1 2002-09-04 14:46:15 ibelyaev Exp $ 
+// ============================================================================
+// CVS tag $Name: not supported by cvs2svn $
+// ============================================================================
+// $Log: not supported by cvs2svn $
+// Revision 1.2  2002/07/21 19:21:46  ibelyaev
+//  remove misprint
+//
+// Revision 1.1  2002/07/21 18:56:17  ibelyaev
+//  add new energy correction
+// 
+// ============================================================================
+
+
+/** @file 
+ *  job-options to run E2Correction tool
+ *  (corrections atop of "incorrect" E1 corrections 
+ *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
+ *  @date 2002-07-21 
+ */
+
+ToolSvc.E3Correction.Calibrations0 = { 1.0795  , -0.55639  ,  0.0877 } ;
+ToolSvc.E3Correction.Calibrations1 = { 1.0795  , -0.55639  ,  0.0877 } ;
+ToolSvc.E3Correction.Calibrations2 = { 1.0795  , -0.55639  ,  0.0877 } ;

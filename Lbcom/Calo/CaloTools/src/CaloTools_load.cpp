@@ -1,8 +1,11 @@
-// $Id: CaloTools_load.cpp,v 1.14 2002-07-21 18:56:18 ibelyaev Exp $
+// $Id: CaloTools_load.cpp,v 1.15 2002-09-04 14:46:16 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.14  2002/07/21 18:56:18  ibelyaev
+//  add new energy correction
+//
 // ============================================================================
 #include "GaudiKernel/DeclareFactoryEntries.h"
 
@@ -35,6 +38,9 @@ DECLARE_FACTORY_ENTRIES(CaloTools) {
   DECLARE_TOOL( CaloLCorrection              ) ;
   DECLARE_TOOL( CaloECorrection              ) ;
   DECLARE_TOOL( CaloE1Correction             ) ;
+
+  DECLARE_TOOL( CaloPrsCorrection            ) ;
+  DECLARE_TOOL( CaloRemoveMomentum           ) ;
 
   DECLARE_TOOL( CaloPhotonMomentumTool       ) ;
 

@@ -1,98 +1,110 @@
-! $Id: release.notes,v 1.30 2002-07-25 14:13:13 cattanem Exp $
+! $Id: release.notes,v 1.31 2002-09-04 14:46:15 ibelyaev Exp $
 ! =============================================================================
-! CVS tag $Name: not supported by cvs2svn $ 
+! CVS tag $Name: not supported by cvs2svn $
 ! =============================================================================
 ! Package     : CaloTools
 ! Responsible : Vanya Belyaev Ivan.Belyaev@itep.ru
 ! =============================================================================
 
+! 2002-09-04 - Ivan Belyaev
+ - options/E2Corrections.opts 
+ - options/E3Corrections.opts 
+ - options/PrsCorrections.opts 
+ - options/EPrsCorrections.opts   - new option files for recalibration of Ecal
+ - options/CaloTools.opts         - updated to include previouse files 
+ - src/CaloPRsCorrection.h,.cpp   - new tool to apply Calo Prs correction 
+ - src/CaloRemoveMomentum.h,.cpp  - new tool to remove evaluated momentum  
+                                    (needed for recalibration of existing data)
+ - src/CaloTools_load.cpp         - updated to include new tools 
+ 
+
 !========================= CaloTools v4r2 2002-07-25 ==========================
 ! 2002-07-22 - Ivan Belyaev
- - src/CaloE1Correction.h,.cpp   fix trivial bug 
+ - src/CaloE1Correction.h,.cpp   fix trivial bug
 
 ! 2002-07-21 - Ivan Belyaev
  - src/CaloE1Correction.h,.cpp   new energy correction
- - opts/E1Correction.oprts       new file with cliabrations 
- - opts/CaloTools.opts           include new file 
+ - opts/E1Correction.oprts       new file with cliabrations
+ - opts/CaloTools.opts           include new file
 
 ! 2002-07-19 - Marco Cattaneo
  - Add CaloECorrection tool to CaloTools_dll
 
 !========================= CaloTools v4r1 2002-07-18 ==========================
 ! 2002-07-16 - Ivan Belyaev
- - options/SpdPrsID.opts   - add missing options file 
+ - options/SpdPrsID.opts   - add missing options file
 
 ! 2002-07-15 - Ivan Belyaev
- - src/CaloSingleGammaTool.h,.cpp  new tool for combined SPD/PRS ID 
-                                   by Frederic Machefert 
+ - src/CaloSingleGammaTool.h,.cpp  new tool for combined SPD/PRS ID
+                                   by Frederic Machefert
 
 !========================= CaloTools v2r0 2002-07-09 ==========================
-! 2002-07-09 - vanya belyaev 
-   changes to make Bill Gates happy 
+! 2002-07-09 - vanya belyaev
+   changes to make Bill Gates happy
 
 ! 2002-06-21 - Ivan Belyaev
  - suppress debug warning messages
- - suppress printout level via options-files  
+ - suppress printout level via options-files
 
 ! 2002-06-21 - Ivan Belyaev
- - src/CaloCorrection2TANH.cpp   The parametrization of the 
-                                 function is modified according 
-                                 to K.Beloous's study 
- - oiptions/                     change in the option files 
+ - src/CaloCorrection2TANH.cpp   The parametrization of the
+                                 function is modified according
+                                 to K.Beloous's study
+ - oiptions/                     change in the option files
 
 ! 2002-06-19 - Ivan Belyaev
- - src/CaloLCorrection.h,.cpp   rewrite a little bit to make it identical to 
-                                Frederic Machefert's LongitudCorr tool 
+ - src/CaloLCorrection.h,.cpp   rewrite a little bit to make it identical to
+                                Frederic Machefert's LongitudCorr tool
 
 ! 2002-06-18 - Ivan Belyaev
  - options/CaloTools.opts    bug/typo fix (observed by Richard)
 
 
 ! 2002-06-17 - Vanya Belyaev
- - src/CaloLCorrection.cpp - remove the stupid bug/misprint 
+ - src/CaloLCorrection.cpp - remove the stupid bug/misprint
                              in the SIGN of L-correction ('-' instead of '+')
 
 ! 2002-06-15 - v4r0 Vanya Belyaev
- - version update for newer CaloDet/CaloUtils 
+ - version update for newer CaloDet/CaloUtils
 
 
 ! 2002-06-14 - Ivan Belyaev
  - src/CaloLCorrection.h,.cpp  new Longitudinal correction
- - src/CaloTools_load.cpp      update 
- - cmt/requirements            version update (v3r3) 
+ - src/CaloTools_load.cpp      update
+ - cmt/requirements            version update (v3r3)
 
 ! 2002-06-13 - Ivan Belyaev
  - new tools, new options and update in CaloTools_load.cpp
-   CaloClusterSOMSelector.h,.cpp - new tool ("cluster selector") 
-   to "select" isolated electromagnetic clusters using 
-   the relations between Second Order Moments and Energy for 
-   Em-showers 
+   CaloClusterSOMSelector.h,.cpp - new tool ("cluster selector")
+   to "select" isolated electromagnetic clusters using
+   the relations between Second Order Moments and Energy for
+   Em-showers
 
 ! 2002-06-10 - Marco Cattaneo
  - Change version to v3r0 to use EventKernel v2r*
 
 !========================== CaloTools v2r0 ===================================
 ! 20020508 - Marco Cattaneo
-  - CaloSShape.cpp: fix for compilation on Windows 
+  - CaloSShape.cpp: fix for compilation on Windows
 
 ! =============================================================================
 ! 30/04/2002 - Vanya Belyaev
-!  - better DoxyGen documentation and several new job-option files 
+!  - better DoxyGen documentation and several new job-option files
 ! =============================================================================
 
 ! =============================================================================
 ! 27/04/2002 - Vanya Belyaev
-!  - several trivial pure technical tools are added 
+!  - several trivial pure technical tools are added
 ! =============================================================================
 
 ! =============================================================================
 ! 25/04/2002 - Vanya Belyaev
-!  - update for bug fix in CaloInterfaces/ICaloLikelyhood.h 
+!  - update for bug fix in CaloInterfaces/ICaloLikelyhood.h
 ! =============================================================================
 
 ! =============================================================================
 ! 01/02/2002 - Vanya Belyaev
-!  - add options directory and Brunel.opts file 
+!  - add options directory and Brunel.opts file
 ! =============================================================================
 
 ! =============================================================================
@@ -102,35 +114,35 @@
 
 !=============================================================================
 ! 25/11/2001 - Ivan Belyaev
-  - update for newer version of CaloKernel package 
+  - update for newer version of CaloKernel package
 
 ! =============================================================================
-! 2001/11/12  v1 Vanya Belyaev 
+! 2001/11/12  v1 Vanya Belyaev
   Concrete tool is added:
   SubclusterSelectorNeighbor.h/.cpp
-  The concrete subcluster selector tags the cells which are 
+  The concrete subcluster selector tags the cells which are
   "neighbors" for the seed cell
 
 ! =============================================================================
-! 2001/11/08  v1 Vanya Belyaev 
+! 2001/11/08  v1 Vanya Belyaev
   Several concrete tools are added:
 
-  ClusterCovarinaceEstimator - for evaluation of cluster E,X,Y 
+  ClusterCovarinaceEstimator - for evaluation of cluster E,X,Y
                                and their covarinace matrix
-  SubClusterSelectorAll  
-  SubClusterSelector3x3  
-  SubClusterSelectorMax2x2  
-  SubClusterSelectorSwissCross - three concrete tools for selection 
-                                 of sub-clusters with different topologies 
+  SubClusterSelectorAll
+  SubClusterSelector3x3
+  SubClusterSelectorMax2x2
+  SubClusterSelectorSwissCross - three concrete tools for selection
+                                 of sub-clusters with different topologies
                                  around of seed cell.
-    
+
   Ca loClusterResetFractions    - the tool which performs "inverse"
-                                 operation for Cell Shareing algorithm - 
-                                 it resets all "fractions" to 1 
+                                 operation for Cell Shareing algorithm -
+                                 it resets all "fractions" to 1
 ! =============================================================================
 
 ! =============================================================================
-! 2001/11/01  v1 Vanya Belyaev 
-  new package 
+! 2001/11/01  v1 Vanya Belyaev
+  new package
 ! =============================================================================
 
