@@ -1,10 +1,10 @@
-// $Id: IBestParticles.h,v 1.1 2004-07-16 11:20:48 pkoppenb Exp $
+// $Id: IBestParticles.h,v 1.2 2004-07-28 14:15:23 pkoppenb Exp $
 #ifndef DAVINCITOOLS_IBESTPARTICLES_H 
 #define DAVINCITOOLS_IBESTPARTICLES_H 1
 
 // Include files
 // from Gaudi
-#include "GaudiTools/GaudiTool.h"
+#include "GaudiKernel/IAlgTool.h"
 #include "Event/Particle.h"
 
 static const InterfaceID IID_IBestParticles ( "IBestParticles", 1, 0 );

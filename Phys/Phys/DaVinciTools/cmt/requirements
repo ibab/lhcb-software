@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.45 2004-07-16 11:20:48 pkoppenb Exp $
+# $Id: requirements,v 1.46 2004-07-28 14:15:24 pkoppenb Exp $
 # Created    : 05/02/2002
 # Maintainer : P. Koppenburg
 #
@@ -6,7 +6,7 @@
 # http://cern.ch/lhcb-comp/Support/html/new_structure.pdf
 
 package           DaVinciTools
-version           v10r0
+version           v10r1
 
 # Structure, i.e. directories to process. 
 #============================================================================
@@ -19,9 +19,9 @@ include_dirs     $(DAVINCITOOLSROOT)
 # Used packages. 
 #============================================================================
 use  PhysEvent      v*     Event
-use  AIDA           v*
 use  CaloUtils      v*     Calo
 use  CaloInterfaces v*     Calo
+# use  Boost          v* LCG_Interfaces
 
 # Extra language for translating yacc to c++
 # This is used to generate once the necessary files on Linux that are
@@ -45,13 +45,11 @@ library          DaVinciToolsLib    ../Lib/*.cpp
 
 # Component library building rule
 #============================================================================
-library          DaVinciTools    ../src/*.cpp
+library          DaVinciTools    ../src/*.cpp -import=AIDA
 # define link options
 #============================================================================
 #
-macro_append BOOST_linkopts " -lboost_regex"\
-             Linux&debug " -lboost_regex_debug"\
-	     WIN32 " boost_regex_debug.lib" 
+macro_append Boost_linkopts $(Boost_linkopts_regex)
 
 # standard patterns (order is essential!)
 #============================================================================

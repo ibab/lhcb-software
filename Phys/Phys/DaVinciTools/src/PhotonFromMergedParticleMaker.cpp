@@ -1,8 +1,11 @@
-// $Id: PhotonFromMergedParticleMaker.cpp,v 1.4 2004-05-11 16:01:25 pkoppenb Exp $
+// $Id: PhotonFromMergedParticleMaker.cpp,v 1.5 2004-07-28 14:15:24 pkoppenb Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.4  2004/05/11 16:01:25  pkoppenb
+// DVAlgorithm.cpp
+//
 // Revision 1.3  2004/04/22 02:55:13  ibelyaev
 //  fix a problem with release of some tools/services
 //
