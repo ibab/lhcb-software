@@ -1,6 +1,6 @@
 #ifndef   L0CALO_L0CALOALG_H
 #define   L0CALO_L0CALOALG_H  1
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/L0/L0Calo/src/L0CaloAlg.h,v 1.3 2001-04-19 08:56:05 ocallot Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/L0/L0Calo/src/L0CaloAlg.h,v 1.4 2001-05-10 14:44:33 ocallot Exp $
 
 // from STL 
 #include <cmath>
@@ -43,10 +43,10 @@ protected:
 
 private:   
 
-  void sumEcalData( MsgStream );  ///< Sum the candidate on Ecal FE card.
-  void sumHcalData( MsgStream );  ///< Sum the candidate on Hcal FE card.
-  void addPrsData( MsgStream );   ///< Produce the Prs information 
-  void addSpdData( MsgStream );   ///< Produce the Spd data
+  void sumEcalData( MsgStream& );  ///< Sum the candidate on Ecal FE card.
+  void sumHcalData( MsgStream& );  ///< Sum the candidate on Hcal FE card.
+  void addPrsData(  MsgStream& );  ///< Produce the Prs information 
+  void addSpdData(  MsgStream& );  ///< Produce the Spd data
 
 
 /// Name in the Transient store of the containers of CaloDigit* objects  

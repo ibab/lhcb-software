@@ -1,6 +1,6 @@
 #ifndef L0CALO_L0CALOCANDIDATE_H
 #define L0CALO_L0CALOCANDIDATE_H 1
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/L0/L0Calo/L0Calo/L0CaloCandidate.h,v 1.3 2001-04-19 08:56:04 ocallot Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/L0/L0Calo/L0Calo/L0CaloCandidate.h,v 1.4 2001-05-10 14:44:32 ocallot Exp $
 
 // Include files
 #include <iostream>
@@ -25,7 +25,6 @@ namespace L0 {
     SumEt,
     Pi0Local,
     Pi0Global,
-    HcalCluster
   };
 };
 
@@ -83,7 +82,6 @@ public:
     if ( L0::Pi0Local    == m_type ) { return "Pi0 loc "; }
     if ( L0::Pi0Global   == m_type ) { return "Pi0 glob"; }
     if ( L0::SumEt       == m_type ) { return "Sum Et  "; }
-    if ( L0::HcalCluster == m_type ) { return "HcalClus"; }
     return "unknown";
   }
 
@@ -95,9 +93,14 @@ public:
   const HepPoint3D& position() const { return m_position; } ///< Position
   double            posTol()   const { return m_posTol;   } ///< cell size
 
-/// Serialize the object, for read/write
-  virtual StreamBuffer& serialize( StreamBuffer& s ) const ;
+/// Serialize the object, for reading
   virtual StreamBuffer& serialize( StreamBuffer& s );
+
+/// Serialize the object, for write
+  virtual StreamBuffer& serialize( StreamBuffer& s ) const ;
+
+/// Print the object on the MsgStream
+  virtual MsgStream&    fillStream( MsgStream&   s ) const ;
 
 private:
   int         m_type;          ///< Type of trigger, from L0:L0Type
@@ -138,6 +141,38 @@ inline StreamBuffer& L0CaloCandidate::serialize(StreamBuffer& s) const {
 				<< m_posTol;
   return s;
 }
+
+inline MsgStream& operator<<( MsgStream& ms, const L0CaloCandidate& cand) {
+  return cand.fillStream( ms );
+}
+
+inline MsgStream& operator<<( MsgStream& ms, const L0CaloCandidate* cand) {
+  if ( 0 != cand ) {
+    ms << *cand;
+  } else {
+    ms << "L0CaloCandidate* points to null";
+  }
+  return ms;
+}
+
+// Object printing on MsgStream
+inline MsgStream& L0CaloCandidate::fillStream( MsgStream& os ) const {
+    os << "L0Calo " << typeName() << " Et(GeV)";
+    char line[80];
+    sprintf( line, "%4d %6.2f ",  m_etCode,  m_et/GeV );
+    os << line;
+    if ( L0::SumEt != m_type ) {
+      os << " ID " << m_ID << " x,y,z(cm)";
+      sprintf( line, "%7.1f %7.1f %7.1f Error(cm) %5.2f",
+	       m_position.x()/centimeter,
+	       m_position.y()/centimeter,
+	       m_position.z()/centimeter,
+	       m_posTol/centimeter         );
+      os << line;
+    }
+    return os ;
+}
+
 
 template <class TYPE> class ObjectVector;
 typedef  ObjectVector<L0CaloCandidate> L0CaloCandidateVector;

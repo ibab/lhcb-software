@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/L0/L0Calo/src/L0CaloAlg.cpp,v 1.4 2001-04-25 13:22:14 ocallot Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/L0/L0Calo/src/L0CaloAlg.cpp,v 1.5 2001-05-10 14:44:33 ocallot Exp $
 
 /// STL 
 #include <string> 
@@ -198,34 +198,41 @@ StatusCode L0CaloAlg::initialize() {
 // Debug the cards
 
   for ( eCard=0 ;  m_ecal->nCards() > eCard; ++eCard ) {
+    char line[80];
     log << MSG::VERBOSE << "Ecal card " ;
-    log.width(3); log 	<< eCard      << " Area, Row, Col" ;
-    log.width(2); log 	<< m_ecal->cardArea(eCard)         ;
-    log.width(3); log 	<< m_ecal->cardFirstRow(eCard)     ;
-    log.width(3); log 	<< m_ecal->cardFirstColumn(eCard)  
-			<< " left, corner, down, prev" ;
-    log.width(4); log 	<< m_ecal->leftCardNumber(eCard)   ;
-    log.width(4); log 	<< m_ecal->cornerCardNumber(eCard) ;
-    log.width(4); log 	<< m_ecal->downCardNumber(eCard)   ;
-    log.width(4); log 	<< m_ecal->previousCardNumber(eCard) << " HCAL card";
-    log.width(4); log 	<< ecalFe[eCard].hcalCard()        
-			<< " Mag. " << ecalFe[eCard].hcalMag() 
-			<< " Offset row ";
-    log.width(2); log   << ecalFe[eCard].hcalOffsetRow() << " col " ;
-    log.width(2); log   << ecalFe[eCard].hcalOffsetCol() << endreq;
+    sprintf( line, "%3d Area %1d Row %2d Col %2d ", eCard,
+             m_ecal->cardArea(eCard),
+             m_ecal->cardFirstRow(eCard),
+             m_ecal->cardFirstColumn(eCard)  );
+    log << line << " left, corner, down, prev" ;
+    sprintf( line, 
+             "%3d %3d %3d %3d HCAL card %3d Mag. %1d Offset row %2d col %2d",
+             m_ecal->leftCardNumber(eCard)   ,
+             m_ecal->cornerCardNumber(eCard) ,
+             m_ecal->downCardNumber(eCard)   ,
+             m_ecal->previousCardNumber(eCard),
+             ecalFe[eCard].hcalCard(),         
+             ecalFe[eCard].hcalMag(),
+             ecalFe[eCard].hcalOffsetRow(),
+             ecalFe[eCard].hcalOffsetCol());
+    log << line << endreq;
   }
   for ( hCard=0 ;  m_hcal->nCards() > hCard; ++hCard ) {
+    char line[80];
     log << MSG::VERBOSE << "Hcal card " ;
-    log.width(3); log 	<< hCard      << " Area, Row, Col" ;
-    log.width(2); log 	<< m_hcal->cardArea(hCard)         ;
-    log.width(3); log 	<< m_hcal->cardFirstRow(hCard)     ;
-    log.width(3); log 	<< m_hcal->cardFirstColumn(hCard)  
-			<< " left, corner, down" ;
-    log.width(4); log 	<< m_hcal->leftCardNumber(hCard)   ;
-    log.width(4); log 	<< m_hcal->cornerCardNumber(hCard) ;
-    log.width(4); log 	<< m_hcal->downCardNumber(hCard)   << " to " 
-			<< hcalFe[hCard].numberOfEcalCards() 
-			<< " Ecal cards : "; 
+    sprintf( line, "%3d Area %1d Row %2d Col %2d ",
+             hCard,
+             m_hcal->cardArea(hCard),
+             m_hcal->cardFirstRow(hCard),
+             m_hcal->cardFirstColumn(hCard) );
+    log << line << " left, corner, down" ;
+    sprintf( line, 
+             "%3d %3d %3d to %2d ECAL cards: ",
+             m_hcal->leftCardNumber(hCard)    ,
+             m_hcal->cornerCardNumber(hCard)  ,
+             m_hcal->downCardNumber(hCard)    ,
+             hcalFe[hCard].numberOfEcalCards() );
+    log << line ;
     for ( eCard = 0; hcalFe[hCard].numberOfEcalCards() > eCard; ++eCard ) {
       log.width(4); log << hcalFe[hCard].ecalCardNumber( eCard ) ;
     }
@@ -506,12 +513,7 @@ StatusCode L0CaloAlg::execute() {
 // Prepare the output container, register it and then fill it.
 //=============================================================================
 
-  L0CaloCandidateVector* L0Calo = new(std::nothrow) L0CaloCandidateVector();
-  if( 0 == L0Calo ) { 
-    log << MSG::ERROR << "Unable to create the output container=" 
-	<< m_nameOfOutputDataContainer << endreq; 
-    return StatusCode::FAILURE ;
-  }
+  L0CaloCandidateVector* L0Calo = new L0CaloCandidateVector();
 
 // register the output container it into the Transient Store! 
 // Search first if the directory exists
@@ -552,40 +554,14 @@ StatusCode L0CaloAlg::execute() {
     L0Calo->push_back( hsum );
   }
 
-// Add the HCAL card candidates to the container, for Super-L1 use
-
-  for ( hCard = 0; hCard < m_hcal->nCards(); ++hCard ) {
-    if ( !hcalFe[hCard].empty() ) {
-      L0Candidate hclus( m_hcal, m_etScale );
-      hclus.setCandidate( hcalFe[hCard].etMax() , hCard, 
-			  hcalFe[hCard].cellIdMax() );
-      hclus.saveCandidate(  L0::HcalCluster, L0Calo );
-    }
-  }
- 
 // Debug now the L0 candidates
 
   log << MSG::DEBUG << "L0CaloCandidate Summary: " << endreq;
   for( L0CaloCandidateVector::const_iterator item = L0Calo->begin() ;  
        L0Calo->end() != item ; ++item ) {
     L0CaloCandidate* cand = (*item);
-    log << MSG::DEBUG << "Type " << cand->type() << " " 
-	<< cand->typeName() << " Et(GeV)";
-    char line[132];
-    sprintf( line, "%4d %6.2f ",  cand->etCode(),  cand->et()/GeV );
-    log << line;
-    if ( L0::SumEt != cand->type() ) {
-      log << " ID " << cand->ID() << " x,y,z(cm)";
-      sprintf( line, "%7.1f %7.1f %7.1f Error(cm) %5.2f",
-	       cand->position().x()/centimeter,
-	       cand->position().y()/centimeter,
-	       cand->position().z()/centimeter,
-	       cand->posTol()/centimeter         );
-      log << line;
-    }
-    log << endreq;
+    log << MSG::DEBUG << cand << endreq;
   }
-
 
   return StatusCode::SUCCESS; 
 }
@@ -604,7 +580,7 @@ StatusCode L0CaloAlg::finalize() {
 // Sum the Ecal digits into the Fe cards
 //=============================================================================
 
-void L0CaloAlg::sumEcalData( MsgStream log ) {
+void L0CaloAlg::sumEcalData( MsgStream& log ) {
 
 // Reset the cards collection
 
@@ -656,7 +632,7 @@ void L0CaloAlg::sumEcalData( MsgStream log ) {
 // Sum the Hcal digits into the Fe cards
 //=============================================================================
 
-void L0CaloAlg::sumHcalData( MsgStream log ) {
+void L0CaloAlg::sumHcalData( MsgStream& log ) {
 
   for( int hCard = 0; m_hcal->nCards() > hCard;  ++hCard ) { 
     hcalFe[hCard].reset( );  
@@ -707,7 +683,7 @@ void L0CaloAlg::sumHcalData( MsgStream log ) {
 // Add the Prs information to the ECAL Front-end card
 //=============================================================================
 
-void L0CaloAlg::addPrsData( MsgStream log ) {
+void L0CaloAlg::addPrsData( MsgStream& log ) {
 
   SmartDataPtr<CaloDigitVector> prsDigit ( eventDataService() , 
 				    m_nameOfPrsDataContainer ); 
@@ -745,7 +721,7 @@ void L0CaloAlg::addPrsData( MsgStream log ) {
 // Add the Spd information to the ECAL Front-end card
 //=============================================================================
 
-void L0CaloAlg::addSpdData( MsgStream log ) {
+void L0CaloAlg::addSpdData( MsgStream& log ) {
 
   SmartDataPtr<CaloDigitVector> spdDigit ( eventDataService() , 
 				    m_nameOfSpdDataContainer ); 
