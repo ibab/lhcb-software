@@ -1,47 +1,36 @@
-package DaVinciTools
-version v1r2
+# $Id: requirements,v 1.4 2002-02-08 18:06:59 gcorti Exp $
+# Created    : 05/02/2002
+# Maintainer : Gloria Corti
+#
+# Documentation on the requirement file can be found at
+# http://cern.ch/lhcb-comp/Support/html/new_structure.pdf
 
-branches DaVinciTools cmt doc options src 
+package           DaVinciTools
+version           v2r0
 
-# C++ necessary packages
-use PhysEvent     v1*	   Event
-use GaudiTools    v4*
+# Structure, i.e. directories to process. 
+#============================================================================
+branches          cmt doc options src DaVinciTools
 
+# Exported header files
+#============================================================================
+include_dirs     ${DAVINCITOOLSROOT}
 
-# Fortran necessary packages
-use axsellib 	v6*	SICB
+# Used packages. Specify the version, * at the end specifies 'any revision'
+#    Put as many lines as needed, with all packages, without the '#'
+#============================================================================
+use  PhysEvent     v2r*   Event
+use  GaudiTools    v5r*
 
-include_dirs $(DAVINCITOOLSROOT)
+# Component library building rule
+#============================================================================
+library          DaVinciTools    ../src/*.cpp
 
-# build a static library
-library DaVinciTools -no_share ../src/component/*.cpp \
-                               ../src/static/*.cpp \
-                               ../src/static/*.F
+# define component library link options
+#============================================================================
+apply_pattern    package_Clinkopts
+apply_pattern    packageShr
 
-apply_pattern package_linkopts
-
-macro_append application_linkopts " -u DaVinciTools_loadRef "\
-             WIN32                " /include:_DaVinciTools_loadRef"
-
-
-# ============================================================
-#private
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+#============================================================================
+private
+apply_pattern    package_Cshlibflags
