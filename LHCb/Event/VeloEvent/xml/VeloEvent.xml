@@ -6,30 +6,38 @@
     <class name="MCVeloHit" 
            id="4001"
            author="Chris Parkes" 
-           desc="Raw GEANT hit information for VELO silicon sensors. It is populated by a Sicb converter (SicbMCVeloHitCnv) from the VRPR (VELO) and VPRW (pile-up) classes."
+           desc="Raw GEANT hit information for VELO silicon sensors. 
+It is populated by a Sicb converter (SicbMCVeloHitCnv) from the VRPR (VELO) 
+and VPRW (pile-up) classes."
 	   location="/Event/MC/Velo/Hit">
-           <base name="MCHit"/>
-          <import name="Event/MCHit"/>
-           <attribute name="sensor" type="long" desc="Sensor Number"/>
+      <location name="PuVeto" place="/Event/MC/Velo/PuHit" />
+      <base name="MCHit"/>
+      <import name="Event/MCHit"/>
+      <attribute name="sensor" type="long" desc="Sensor Number"/>
     </class>
 
     <class name="MCVeloFE" 
            id="4002"
            author="Chris Parkes" 
-           desc="This class represents the output of the front-end chip and contains information about the simulation of the silicon and FE chip response stored for a single silicon/output channel. Constructed from MCVeloHits (i.e. GEANT deposits), MCVeloFE of previous events (spill over), noise (above a threshold)"
+           desc="This class represents the output of the front-end chip and
+contains information about the simulation of the silicon and FE chip response 
+stored for a single silicon/output channel. Constructed from MCVeloHits 
+(i.e. GEANT deposits), MCVeloFE of previous events (spill over), noise 
+(above a threshold)"
            location="/Event/MC/Velo/FE">
-           <base name="KeyedObject&lt;VeloChannelID&gt;"/>
-           <import name="Kernel/VeloChannelID"/>
-           <constructor desc="Constructor with key" 
-                        initList="KeyedObject&lt;VeloChannelID&gt;(key),
-                                  m_addedSignal(0.0),
-                                  m_addedPedestal(0.0),
-                                  m_addedNoise(0.0),
-                                  m_addedCMNoise(0.0)" >
-             <arg type="VeloChannelID" name="key" const="TRUE"/>
-             <code/>                 
-           </constructor> 
-           <method name="channelID" type="VeloChannelID" desc="combined sensor and strip number ID" const="TRUE">
+      <location name="PuVeto" place="/Event/MC/Velo/FE" />
+      <base name="KeyedObject&lt;VeloChannelID&gt;"/>
+      <import name="Kernel/VeloChannelID"/>
+      <constructor desc="Constructor with key" 
+	initList="KeyedObject&lt;VeloChannelID&gt;(key),
+	m_addedSignal(0.0),
+	m_addedPedestal(0.0),
+	m_addedNoise(0.0),
+	m_addedCMNoise(0.0)" >
+	<arg type="VeloChannelID" name="key" const="TRUE"/>
+	<code/>                 
+      </constructor> 
+      <method name="channelID" type="VeloChannelID" desc="combined sensor and strip number ID" const="TRUE">
                    <code>return key();</code>
            </method>
            <method name="sensor" type="long" desc="Sensor Number" const="TRUE">
@@ -54,8 +62,11 @@
     <class name="VeloFullDigit" 
            id="4003"
            author="Chris Parkes" 
-           desc="Full information on a reconstructed single digitised velo channel. This info. is available inside the data processor but is not normally output on DAQ stream for all channels. It does not contain any simulation information"
-	   location="/Event/Rec/Velo/FullDigit">
+           desc="Full information on a reconstructed single digitised velo 
+channel. This info. is available inside the data processor but is not normally 
+output on DAQ stream for all channels. It does not contain any simulation 
+information"
+	   location="/Event/Raw/Velo/FullDigit">
            <base name="KeyedObject&lt;VeloChannelID&gt;"/>
            <constructor desc="Constructor with key" 
                         initList="KeyedObject&lt;VeloChannelID&gt;(key),
@@ -92,8 +103,9 @@
     <class name="VeloCluster" 
            id="4004"
            author="Chris Parkes" 
-           desc="A cluster as on the DAQ output, after the data processor and without applying any additional processing. It contains no simulation info."
-	   location="/Event/Rec/Velo/Cluster">
+           desc="A cluster as on the DAQ output, after the data processor and 
+without applying any additional processing. It contains no simulation info."
+	   location="/Event/Raw/Velo/Cluster">
            <import name="Kernel/SerializeStl"/>
            <base name="KeyedObject&lt;int&gt;"/>
            <attribute name="sensor" type="long" desc="Sensor Number"/>
@@ -106,8 +118,3 @@
   </package>
 
 </gdd>
-
-
-
-
-

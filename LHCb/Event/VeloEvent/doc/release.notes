@@ -1,5 +1,11 @@
+! $Id: release.notes,v 1.11 2002-04-23 07:40:01 ocallot Exp $
 package Event/VeloEvent
 package manager: C.Parkes
+
+!=============================================================================
+! 23/04/2002 - Olivier Callot
+  - Changed the location of FullDigit and Cluster to /Raw from /Rec
+  - Added specific location for PuVeto Hit and FE
 
 ! >>>>>>>>>>>>>>>>>>>> VeloEvent v10r0 <<<<<<<<<<<<<<<<<<
 ! 20020418 (M.Cattaneo)
