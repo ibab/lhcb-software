@@ -69,7 +69,7 @@ use TrgVeloTT		v2r0	Trg
 use L1Reco		v2r1	Trg
 
 # Calorimeter
-use CaloMonitor         v2r0	Calo
+use CaloMonitor         v2r1	Calo
 use CaloDigit           v1r6	Calo
 
 # Velo
