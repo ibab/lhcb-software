@@ -3,6 +3,18 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
+</PRE><H1><A NAME=v15r4>2002-12-04 Brunel v15r4</A></H1><PRE>
+ - New tuning:
+   . Add material to central OT modules (XmlDDDB v14r3, v252r0 geometry)
+   . New velo clustering for L1. Includes common mode noise simulation and
+     corection (L1VeloTrack v3r4)
+
+ - New features:
+   . Add support for dbase v252r0 (Brunelv252r0.opts)
+
+ - Bug fixes:
+   . Fix loop index range (found by valgrind) (PuVeto v5r1)
+
 </PRE><H1><A NAME=v15r3>2002-11-28 Brunel v15r3</A></H1><PRE>
  - New tuning:
    . Tighten cut on signal/noise of TT clusters (>4) to reduce ghost rate

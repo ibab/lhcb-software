@@ -1,5 +1,5 @@
 package Brunel
-version v15r3
+version v15r4
 
 branches doc cmt job options
 
@@ -45,7 +45,7 @@ use Futio        v12r0  SICB
 
 # Detector description
 use DetDesc		v10r5	Det
-use XmlDDDB      	v14r2  	Det
+use XmlDDDB      	v14r3  	Det
 use CaloDet       	v5r2  	Det
 use CaloDetXmlCnv	v2r1  	Det
 use ITDet         	v1r2  	Det
@@ -74,11 +74,11 @@ use BrunelAlgs   v1r6   Rec
 # L0 trigger
 use L0Calo              v6r3    L0
 use L0Muon              v6r2    L0
-use PuVeto              v5r0    L0
+use PuVeto              v5r1    L0
 use L0DU                v6r1    L0
 
 # L1 trigger
-use L1VeloTrack         v3r3    L1
+use L1VeloTrack         v3r4    L1
 use L1Decision          v1r2    L1
 
 # Calorimeter
@@ -158,7 +158,7 @@ macro_append Brunel_linkopts " "\
                 Linuxdbx     " -g -Wl,--start-group "
 
 #== Set the Brunel version = v*10000 + r*100 + p  ==
-macro_append fflags " -DBrunelVersion=150300 " \
-           VisualC  " /DBrunelVersion=150300 "
+macro_append fflags " -DBrunelVersion=150400 " \
+           VisualC  " /DBrunelVersion=150400 "
 
 apply_pattern application_path
