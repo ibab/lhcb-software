@@ -1,8 +1,11 @@
-// $Id: GaussTrackInformation.h,v 1.2 2002-12-07 21:19:13 ibelyaev Exp $ 
+// $Id: GaussTrackInformation.h,v 1.3 2003-04-09 12:07:37 witoldp Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2002/12/07 21:19:13  ibelyaev
+//  few optimization updates
+//
 // ============================================================================
 #ifndef      GaussTools_GaussTrackInformation_H 
 #define      GaussTools_GaussTrackInformation_H 1 
@@ -17,14 +20,14 @@
 /// GaussTools
 #include "GaussTools/GaussHitBase.h"
 
+// forward declaration
+class RICHInfo;
+
 /** @class GaussTrackInformation GaussTrackInformation.h 
  *
- *  Class which is used to strore auxiallry information about G4Track,
- *  could be used to control storage of track 
- *   fromm G4Track objects into G4VTrajectory objects. 
- *   
- *  Class to be extenden in the future to take into account hit patterns. 
- *   
+ *  Class which is used to store auxilliary information about G4Track,
+ *      
+ *  @author  Witek Pokorski Witold.Pokorski@cern.ch
  *  @author  Vanya Belyaev Ivan.Belyaev@itep.ru
  *  @date    23/02/2001
  */
@@ -119,11 +122,14 @@ private:
   bool m_toBeStored ;
   /// flag indicating that track created a hit
   bool m_createdHit ;
-  
-  typedef std::vector<GaussHitBase*> Hits;
+
   /// vector of pointers to hits created by that track
-  Hits m_hits       ;
-  ///
+  typedef std::vector<GaussHitBase*> Hits;
+  Hits  m_hits;
+
+  /// pointer to a specialised RICHInfo object containing RICH-specific
+  /// track information
+  RICHInfo* m_richInfo;
   
 };
 // ===========================================================================

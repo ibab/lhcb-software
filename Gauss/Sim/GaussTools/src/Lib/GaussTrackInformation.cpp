@@ -1,8 +1,11 @@
-// $Id: GaussTrackInformation.cpp,v 1.1 2002-12-07 21:19:14 ibelyaev Exp $
+// $Id: GaussTrackInformation.cpp,v 1.2 2003-04-09 12:07:37 witoldp Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
-// $Log: not supported by cvs2svn $ 
+// $Log: not supported by cvs2svn $
+// Revision 1.1  2002/12/07 21:19:14  ibelyaev
+//  few optimization updates
+// 
 // ============================================================================
 // Include files
 // GiGa 
@@ -15,6 +18,7 @@
 // ============================================================================
 /** @file 
  *  Implementation file for class : GaussTrackInformation
+ *  @author  Witek Pokorski Witold.Pokorski@cern.ch
  *  @author  Vanya Belyaev Ivan.Belyaev@itep.ru
  *  @date    23/02/2001
  */
@@ -45,10 +49,11 @@ namespace GaussTrackInformationLocal
 /// default (empty) constructor 
 // ============================================================================
 GaussTrackInformation::GaussTrackInformation()
-  : m_appendStep ( false )
-  , m_toBeStored ( false )
-  , m_createdHit ( false )
-  , m_hits       ()  
+  : m_appendStep(false)
+  , m_toBeStored(false)
+  , m_createdHit(false)
+  , m_hits()
+  , m_richInfo(0)
 {
 #ifdef GIGA_DEBUG
   GaussTrackInformationLocal::s_Counter.increment() ;
@@ -61,12 +66,13 @@ GaussTrackInformation::GaussTrackInformation()
 /// copy constructor 
 // ============================================================================
 GaussTrackInformation:: GaussTrackInformation 
-( const GaussTrackInformation& right              )
-  : G4VUserTrackInformation (  right              ) 
-  , m_appendStep            (  right.m_appendStep )
-  , m_toBeStored            (  right.m_toBeStored )
-  , m_createdHit            (  right.m_createdHit )
-  , m_hits                  (  right.m_hits       )  
+( const GaussTrackInformation& right)
+  : G4VUserTrackInformation(right) 
+  , m_appendStep(right.m_appendStep)
+  , m_toBeStored(right.m_toBeStored)
+  , m_createdHit(right.m_createdHit)
+  , m_hits(right.m_hits)
+  , m_richInfo(right.m_richInfo) 
 {
 #ifdef GIGA_DEBUG
   GaussTrackInformationLocal::s_Counter.increment() ;
