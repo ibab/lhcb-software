@@ -3,13 +3,12 @@
 #   Initialize LSF queue parameters
 #
 # "-q" gives the queue (1nh by default)
-# "-c" gives the CPU time in minutes
 #
-# -q 8nm  = about 30 min HP735     express
-# -q 1nh           3 hours         short
-# -q 8nh           1 day           medium
-# -q 1nd           3 days          long
-# -q 1nw          10 days HP K260  verylong
+# -q 8nm     express
+# -q 1nh     short
+# -q 8nh     medium
+# -q 1nd     long
+# -q 1nw     verylong
 #
 #
 #  define the job name
@@ -46,24 +45,11 @@ else
 endif
 set current = $PWD
 #
-#if ($?LS_SUBCWD) then 
-# in BATCH, location of executable has to be given explicitly
-setenv MYJOBROOT $HOME/newmycmt/Phys/DaVinci/v6r0
-#else
-# in interactive, executable is under same root directory as this job
-#  cd `dirname $0` 
-#  set MYJOBROOT = $PWD
-#endif
+# set location of DaVinci executable
+setenv MYJOBROOT $HOME/newmycmt/Phys/DaVinci/v6r1
 
 # == set the program environment
 source $MYJOBROOT/cmt/setup.csh -tag=$MODE
-
-# == if not linked in Static mode set soft_links to use packages
-#if ($MODE != "LinuxStatic") then
-#  cd $MYJOBROOT/cmt
-#  $CMTROOT/mgr/cmt build library_links
-#  cd $current
-#endif
 
 # == set executable name
 setenv EXEC DaVinci
@@ -78,11 +64,8 @@ else
 endif
 #
 #==  create temporary joboptions file ==================
-#
-#
 cp $MYJOBROOT/options/DaVinci.opts tmpjob.opts
 
-#
 # == run $EXEC.exe ============================================
 #
 if ($MODE == "rh61_gcc2952dbx") then
@@ -96,7 +79,6 @@ endif
 rm -f tmp*
 
 # == job is finished: if in batch copy output files on user directories
-#
 if ($?LS_SUBCWD) then 
   ls *.* >! RETURN
 endif

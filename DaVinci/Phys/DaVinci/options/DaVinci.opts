@@ -58,14 +58,14 @@ ApplicationMgr.TopAlg += { "PrimaryVertexFinderAlg" };
 //
 
 // Bd->J/Psi(mu+mu-)Ks(pi+pi-)
-ApplicationMgr.TopAlg += { "SelectJpsi2mumu",
-                           "SelectKs2pipi",
-                           "SelectBd2JpsiKs" };
-#include "$PHYSSELECTIONSOPTS/SelectJpsi2mumuForBd2JpsiKs.opts"
-#include "$PHYSSELECTIONSOPTS/SelectKs2pipiForBd2JpsiKs.opts"
-#include "$PHYSSELECTIONSOPTS/SelectBd2Jpsi2mumu_Ks2pipi.opts"
-// Data sets for this channel (Brunel v13r1)
-#include "$LHCBHOME/project/web/cards/411300.opts"
+//  ApplicationMgr.TopAlg += { "SelectJpsi2mumu",
+//                             "SelectKs2pipi",
+//                             "SelectBd2JpsiKs" };
+//  #include "$PHYSSELECTIONSOPTS/SelectJpsi2mumuForBd2JpsiKs.opts"
+//  #include "$PHYSSELECTIONSOPTS/SelectKs2pipiForBd2JpsiKs.opts"
+//  #include "$PHYSSELECTIONSOPTS/SelectBd2Jpsi2mumu_Ks2pipi.opts"
+//  // Data sets for this channel (Brunel v14r2p1)
+//  #include "$LHCBHOME/project/web/cards/411300_4.opts"
 
 // Bs -> J/Psi(mu+mu-) phi(KK)
 //  ApplicationMgr.TopAlg += { 
@@ -76,8 +76,8 @@ ApplicationMgr.TopAlg += { "SelectJpsi2mumu",
 //  #include "$PHYSSELECTIONSOPTS/SelectJpsi2mumuForBs2Jpsiphi.opts"
 //  #include "$PHYSSELECTIONSOPTS/Selectphi2KKForBs2Jpsiphi.opts"
 //  #include "$PHYSSELECTIONSOPTS/SelectBs2Jpsi2mumu_phi2KK.opts"
-//  // Data sets for this channel (Brunel v13r1)
-//  #include "$LHCBHOME/project/web/cards/611300.opts"
+//  // Data sets for this channel (Brunel v14r2p1)
+//  #include "$LHCBHOME/project/web/cards/611300_4.opts"
 
 // Bs ->Ds(KKpi) K
 //  ApplicationMgr.TopAlg += {
@@ -86,8 +86,8 @@ ApplicationMgr.TopAlg += { "SelectJpsi2mumu",
 //  };
 //  #include "$PHYSSELECTIONSOPTS/SelectDs2KKpi.opts"
 //  #include "$PHYSSELECTIONSOPTS/SelectBs2Ds2KKpi_K.opts"
-//  // Data sets for this channel (Brunel v13r1)
-//  #include "$LHCBHOME/project/web/cards/613400.opts"
+//  // Data sets for this channel (Brunel v14r2p1)
+//  #include "$LHCBHOME/project/web/cards/613400_4.opts"
 
 // Bs ->Ds(KKpi) pi
 //  ApplicationMgr.TopAlg += {
@@ -96,8 +96,8 @@ ApplicationMgr.TopAlg += { "SelectJpsi2mumu",
 //  };
 //  #include "$PHYSSELECTIONSOPTS/SelectDs2KKpiForBs2Dspi.opts"
 //  #include "$PHYSSELECTIONSOPTS/SelectBs2Ds2KKpi_pi.opts"
-//  // Data sets for this channel (Brunel v13r1)
-//  #include "$LHCBHOME/project/web/cards/613300.opts"
+//  // Data sets for this channel (Brunel v14r2p1)
+//  #include "$LHCBHOME/project/web/cards/613300_4.opts"
 
 // Bd -> mu mu Kstar(Kpi)
 //  ApplicationMgr.TopAlg += {
@@ -146,14 +146,27 @@ ApplicationMgr.TopAlg += { "SelectJpsi2mumu",
 //    "SelectBd2pipi"
 //  };
 //  #include "$PHYSSELECTIONSOPTS/SelectBd2pipi.opts"
-//  // Data sets for this channel (Brunel v13r1)
-//  #include "$LHCBHOME/project/web/cards/412100.opts"
+//  // Data sets for this channel (Brunel v14r2p1)
+//  #include "$LHCBHOME/project/web/cards/412100_4.opts"
 
 // Resolved pi0
 //  ApplicationMgr.TopAlg += { "ResolvedPi0Alg" };
 //  #include "$PHYSSELECTIONSOPTS/ResolvedPi0Alg.opts"
 //  // Data sets for this channel (Brunel v13r1)
 //  #include "$LHCBHOME/project/web/cards/412800.opts"
+
+// Bd -> phi(KK) Ks(pipi)
+//  ApplicationMgr.TopAlg += {
+//    "Selectphi2KKForBd2phiKs",
+//    "SelectKs2pipiForBd2phiKs",
+//    "SelectBd2phiKs"
+//  };
+//  #include "$PHYSSELECTIONSOPTS/Selectphi2KKForBd2phiKs.opts"
+//  #include "$PHYSSELECTIONSOPTS/SelectKs2pipiForBd2phiKs.opts"
+//  #include "$PHYSSELECTIONSOPTS/SelectBd2phi2KK_Ks2pipi.opts"
+//  // Data sets for this channel (Brunel v13r1)
+//  #include "$LHCBHOME/project/web/cards/412000.opts"
+
 
 // Uncomment the following line to run the example UserAlgorithm
 //  ApplicationMgr.TopAlg += { "UserAlgorithm" }; 

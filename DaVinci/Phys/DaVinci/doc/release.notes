@@ -3,9 +3,26 @@ Package     : DaVinci
 Responsible : Gloria Corti
 Purpose     : LHCb analysis program 
 
+</PRE><H1><A NAME=v6r1>2002-11-13 DaVinci v6r1</A></H1><PRE>
+ 2002-11-13 - Gloria Corti
+ - New version v6r1 with changes in packages GlobalReco v2r1, 
+   DaVinciTools v7r0, DaVinciMCTools v4r0, PhysSelections v4r0 and
+   DaVinciEff v2r0, DaVinciTest v4r0
+   The other packages have only changes in requirements files:
+    DaVinciUser v4r0, FlavourTagging v4r0.
+ - Update DaVinci.job
+ - Add to DaVinci.opts the Bd->phiKs now compatible with OODST input
+ - Change OODST input to that produced with Brunel v14r2p1 for signals
+   for which it is available.
+ - Update DaVinciEff.opts to include channels for which options exist.
+ - Include all used packages in Doxygen
+
  2002-11-07 - Gloria Corti
  - Fix problem with += for first algorithm executed when introducing
    L0 rerun or Recalibration (G.Pakhlova)
+
+ 2002-11-04 - Gloria Corti
+ - Use TrAssociator v3r2
 
 </PRE><H1><A NAME=v6r0>2002-10-30 DaVinci v6r0</A></H1><PRE>
  2002-10-30 - Gloria Corti

@@ -38,29 +38,52 @@ ApplicationMgr.TopAlg += { "PrimaryVertexFinderAlg" };
 // >>>>>>>>>>>> To be customized for a specific job <<<<<<<<<<<<
 //--------------------------------------------------------------
 // J/Psi(mu+mu-)
-ApplicationMgr.TopAlg += { 
-  "Select2ParticleDecay/SelectJpsi2mumuForBs2Jpsiphi"  
-};
-ApplicationMgr.TopAlg += { "PhysSelEff/EffJpsi2mumu" };
-#include "$PHYSSELECTIONSROOT/options/SelectJpsi2mumuForBs2Jpsiphi.opts"
-#include "$DAVINCIEFFROOT/options/EffJpsi2mumu.opts"
+//  ApplicationMgr.TopAlg += { 
+//    "Select2ParticleDecay/SelectJpsi2mumuForBs2Jpsiphi"  
+//  };
+//  ApplicationMgr.TopAlg += { "PhysSelEff/EffJpsi2mumu" };
+//  #include "$PHYSSELECTIONSROOT/options/SelectJpsi2mumuForBs2Jpsiphi.opts"
+//  #include "$DAVINCIEFFROOT/options/EffJpsi2mumu.opts"
 
 // Bs -> J/Psi(mu+mu-) phi(KK)
-//  ApplicationMgr.TopAlg += { 
-//    "Select2ParticleDecay/SelectJpsi2mumuForBs2Jpsiphi",
-//    "Select2ParticleDecay/Selectphi2KKForBs2Jpsiphi",
-//    "Select2ParticleDecay/SelectBs2Jpsi2mumu_phi2KK"
-//  };
-//  ApplicationMgr.TopAlg += { "PhysSelEff/EffBs2Jpsi2mumu_phi2KK" };
-//  #include "$PHYSSELECTIONSOPTS/SelectJpsi2mumuForBs2Jpsiphi.opts"
-//  #include "$PHYSSELECTIONSOPTS/Selectphi2KKForBs2Jpsiphi.opts"
-//  #include "$PHYSSELECTIONSOPTS/SelectBs2Jpsi2mumu_phi2KK.opts"
-//  #include "$DAVINCIEFFOPTS/EffBs2Jpsi2mumu_phi2KK.opts"
+ApplicationMgr.TopAlg += { 
+  "Select2ParticleDecay/SelectJpsi2mumuForBs2Jpsiphi",
+  "Select2ParticleDecay/Selectphi2KKForBs2Jpsiphi",
+  "Select2ParticleDecay/SelectBs2Jpsi2mumu_phi2KK"
+};
+ApplicationMgr.TopAlg += { "PhysSelEff/EffJpsi2mumu" };             
+ApplicationMgr.TopAlg += { "PhysSelEff/Effphi2KK" }; 
+ApplicationMgr.TopAlg += { "PhysSelEff/EffBs2Jpsi2mumu_phi2KK" };
+#include "$PHYSSELECTIONSOPTS/SelectJpsi2mumuForBs2Jpsiphi.opts"
+#include "$PHYSSELECTIONSOPTS/Selectphi2KKForBs2Jpsiphi.opts"
+#include "$PHYSSELECTIONSOPTS/SelectBs2Jpsi2mumu_phi2KK.opts"
+#include "$DAVINCIEFFOPTS/EffBs2Jpsi2mumu_phi2KK.opts"
+#include "$LHCBHOME/project/web/cards/611300_4.opts"  // Brunel v14r2p1
 
-//-----------------------------------------------------------------
-// Input data
-//-----------------------------------------------------------------
-#include "$LHCBHOME/project/web/cards/611300.opts"
+// B0 -> J/psi(mu+mu-) Ks(pi+pi-)
+//  ApplicationMgr.TopAlg += { "SelectJpsi2mumu",
+//                             "SelectKs2pipi",                          
+//                             "SelectBd2JpsiKs" };                         
+//  ApplicationMgr.TopAlg += { "PhysSelEff/EffBd2Jpsi2mumu_Ks2pipi" };   
+//  #include "$PHYSSELECTIONSROOT/options/SelectJpsi2mumuForBd2JpsiKs.opts"
+//  #include "$PHYSSELECTIONSROOT/options/SelectKs2pipiForBd2JpsiKs.opts"  
+//  #include "$PHYSSELECTIONSROOT/options/SelectBd2Jpsi2mumu_Ks2pipi.opts" 
+//  #include "$DAVINCIEFFROOT/options/EffBd2Jpsi2mumu_Ks2pipi.opts"        
+//  #include "$LHCBHOME/project/web/cards/411300_4.opts"   // Brunel v14r2p1
+
+// B_s0 -> mu+ mu- 
+//  ApplicationMgr.TopAlg += { "SelectBs2mumu" };
+//  ApplicationMgr.TopAlg += { "PhysSelEff/EffBs2mumu" };             
+//  #include "$PHYSSELECTIONSOPTS/SelectBs2mumu.opts"
+//  #include "$DAVINCIEFFOPTS/EffBs2mumu.opts"
+//  #include "$LHCBHOME/project/web/cards/612200.opts"   // Brunel v13r1 
+
+// B0 -> pi+ pi- 
+//  ApplicationMgr.TopAlg += { "SelectBd2pipi" };
+//  ApplicationMgr.TopAlg += { "PhysSelEff/EffBd2pipi" };             
+//  #include "$PHYSSELECTIONSROOT/options/SelectBd2pipi.opts"
+//  #include "$DAVINCIEFFROOT/options/EffBd2pipi.opts"
+//  #include "$LHCBHOME/project/web/cards/412100_4.opts"   // Brunel v14r2p1
 
 //-----------------------------------------------------------------
 // Options for algorithms and tools in DaVinciTools library
@@ -76,8 +99,6 @@ MessageSvc.OutputLevel                  = 3;
 ToolSvc.OutputLevel                     = 3;
 XmlParserSvc.OutputLevel                = 4;
 PrimaryVertexFinderAlg.OutputLevel      = 4;
-EffJpsi2mumu.OutputLevel                = 3;
-EffBs2Jpsi2mumu_phi2KK.OutputLevel      = 2;
 
 //---------------------------------------------------------------
 // Number of events to process, skip and printing frequency

@@ -21,7 +21,7 @@ DaVinciDstWriter.ItemList =  {
   , "/Event/Trig/L0/Decision#1" 
   , "/Event/Rec#1"
   , "/Event/Rec/ProtoP#*"
-//    , "/Event/Rec/Relations#1"
+//    , "/Event/Rec/Relations#*"
 //    , "/Event/Rec/ProtoParticle2MC#1"
 //    , "/Event/Rec/NeutralPPs2MCParticles#1"
   , "/Event/Phys#*"
