@@ -1,6 +1,12 @@
-! $Id: release.notes,v 1.77 2004-04-21 02:29:29 ibelyaev Exp $
+! $Id: release.notes,v 1.78 2004-04-21 07:01:55 pkoppenb Exp $
 ! Package     : DaVinciTools
 ! Responsible : P. Koppenburg, Sandra Amato
+
+! 2004-04-21 - P. Koppenburg
+  - src/MergedPi0Alg.*, src/ResolvedPi0Alg.*
+    Moved from PhysSel/Bd2Rho0Rho0 as it is shared by several analyses.
+  - options/*Pi0Alg.opts
+    Recommended options for these algorithms.
 
 ! 2004-04-21 - Vanya Belyaev
   - src/PhotonParticleMaker.h,(.cpp)
