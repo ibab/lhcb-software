@@ -1,4 +1,4 @@
-// $Id: Gauss.opts,v 1.10 2002-05-24 10:04:15 witoldp Exp $ 
+// $Id: Gauss.opts,v 1.11 2002-05-24 10:07:39 witoldp Exp $ 
 
 AuditorSvc.Auditors = { "ChronoAuditor" };
 
@@ -52,7 +52,7 @@ MessageSvc.OutputLevel    = 3 ;
 //MCParticleGun.OutputLevel = 1;
 
 ApplicationMgr.EvtSel     = "NONE" ;
-ApplicationMgr.EvtMax     = 2 ;
+ApplicationMgr.EvtMax     = 1 ;
 
 
 

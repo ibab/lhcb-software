@@ -1,4 +1,4 @@
-// $Id: Simulation.opts,v 1.10 2002-05-22 14:01:57 witoldp Exp $ 
+// $Id: Simulation.opts,v 1.11 2002-05-24 10:07:39 witoldp Exp $ 
 // ============================================================================
 
 ApplicationMgr.DLLs += 
@@ -43,8 +43,8 @@ Kine.StreamItems              +=
 Geo.ExecuteOnce          = true ;  
 Geo.ConversionSvcName    = "GiGaGeomCnvSvc"  ; 
 Geo.DataProviderSvcName  = "DetectorDataSvc" ; 
-Geo.StreamItems         += { "/dd/Structure/LHCb/Pipe"   } ; 
-Geo.StreamItems         += { "/dd/Structure/LHCb/Magnet" } ; 
+//Geo.StreamItems         += { "/dd/Structure/LHCb/Pipe"   } ; 
+//Geo.StreamItems         += { "/dd/Structure/LHCb/Magnet" } ; 
 Geo.StreamItems         += { "/dd/Structure/LHCb/Velo"  } ; 
 
 // Physics List  to be used and its configuration  
