@@ -1,4 +1,5 @@
-// $Id: Gauss.opts,v 1.59 2005-02-21 19:22:35 gcorti Exp $ 
+#printOptions
+// $Id: Gauss.opts,v 1.60 2005-03-09 16:43:36 gcorti Exp $ 
 
 // =========== necessary setup and steps for any Gauss executable =========== 
 #include "$GAUSSOPTS/Common.opts"
@@ -27,7 +28,7 @@ GaussTape.Output = "DATAFILE='PFN:Gauss.sim' TYP='POOL_ROOTTREE' OPT='RECREATE'"
 PoolDbCacheSvc.Catalog = { "xmlcatalog_file:NewCatalog.xml" };
 
 // initialize run, event, max event, output level
-ApplicationMgr.EvtMax     = 5;
+ApplicationMgr.EvtMax     = 500;
 Gauss.FirstEventNumber    = 1;
 Gauss.RunNumber           = 1;
 MessageSvc.OutputLevel    = 3;

@@ -4,6 +4,11 @@
 ! Purpose     : LHCb Simulation Application with Geant4
 !-----------------------------------------------------------------------------
 
+!========================== Gauss v19r2 ==================================
+! 2005-03-09 - Gloria Corti
+ - introduce summary printout in log file with new #printOptions available
+   in Gaudi v16r2
+
 !========================== Gauss v19r1 ==================================
 ! 2005-02-28 - Gloria Corti
  - Use new versions of GeneratorModules (v14r2), GaussTools (v10r8), 
