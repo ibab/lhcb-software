@@ -1,11 +1,11 @@
-# $Id: requirements,v 1.23 2003-10-06 09:23:50 cattanem Exp $
+# $Id: requirements,v 1.24 2004-07-14 16:52:08 cattanem Exp $
 package DetDescExample
-version v6r1
+version v6r2p1
 
 branches doc src options cmt
 
 # Main program and standard job options
-use GaudiConf     v7*     
+use GaudiConf     v*     
 
 # GAUDI framework
 use GaudiSys      v*
