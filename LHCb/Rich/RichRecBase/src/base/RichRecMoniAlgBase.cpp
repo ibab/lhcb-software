@@ -1,0 +1,62 @@
+
+//-----------------------------------------------------------------------------
+/** @file RichRecMoniAlgBase.cpp
+ *
+ *  Implementation file for RICH reconstruction monitor
+ *  algorithm base class : RichRecMoniAlgBase
+ *
+ *  CVS Log :-
+ *  $Id: RichRecMoniAlgBase.cpp,v 1.1 2005-01-13 15:57:53 jonrob Exp $
+ *  $Log: not supported by cvs2svn $
+ *
+ *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
+ *  @date   2005/01/13
+ */
+//-----------------------------------------------------------------------------
+
+// from Gaudi
+#include "GaudiKernel/AlgFactory.h"
+
+// local
+#include "RichRecBase/RichRecMoniAlgBase.h"
+
+// Standard constructor
+RichRecMoniAlgBase::RichRecMoniAlgBase( const std::string& name,
+                                        ISvcLocator* pSvcLocator )
+  : RichMoniAlgBase ( name, pSvcLocator ),
+    m_pixTool      ( 0 ),
+    m_tkTool       ( 0 ),
+    m_segTool      ( 0 ),
+    m_photTool     ( 0 ),
+    m_statTool     ( 0 ) { }
+
+// Destructor
+RichRecMoniAlgBase::~RichRecMoniAlgBase() {};
+
+// Initialise
+StatusCode RichRecMoniAlgBase::initialize()
+{
+  // Initialise base class
+  const StatusCode sc = RichMoniAlgBase::initialize();
+  if ( sc.isFailure() ) return sc;
+
+  // Cache creator tools
+  acquireTool( "RichPixelCreator",   m_pixTool  );
+  acquireTool( "RichTrackCreator",   m_tkTool   );
+  acquireTool( "RichSegmentCreator", m_segTool  );
+  acquireTool( "RichPhotonCreator",  m_photTool );
+  acquireTool( "RichStatusCreator",  m_statTool );
+
+  return sc;
+};
+
+// Finalize
+StatusCode RichRecMoniAlgBase::finalize()
+{
+  //
+  // Leave space to do something here later on if needed
+  //
+
+  // Finalize base class
+  return RichMoniAlgBase::finalize();
+}

@@ -6,6 +6,7 @@
 
 ! 2005-01-13 - Chris Jones
  - Very minor fix to RichTrackID
+ - Add monitor algorithm and tool base classes
 
 !===================== RichRecBase v1r14p1 2004-12-09 ======================
 ! 2004-12-09 - Marco Cattaneo
