@@ -1,4 +1,4 @@
-// $Id: CreateRawBuffer.cpp,v 1.3 2005-03-07 13:07:40 cattanem Exp $
+// $Id: CreateRawBuffer.cpp,v 1.4 2005-03-08 13:16:48 cattanem Exp $
 // Include files 
 
 // from Gaudi
@@ -49,8 +49,8 @@ StatusCode CreateRawBuffer::execute() {
 
   // Add a DAQ bank, with zero missing sources. Assume SourceID is 1
   raw_int head[4];
-  head[1] = raw_int(evt->evtNum());
-  head[0] = raw_int(evt->runNum());
+  head[0] = raw_int(evt->evtNum());
+  head[1] = raw_int(evt->runNum());
   head[2] = 0;  // Queuing time in SFC
   head[3] = 0;  // Number of missing sources
 
