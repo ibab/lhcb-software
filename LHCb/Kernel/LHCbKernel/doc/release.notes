@@ -2,6 +2,14 @@ Package LHCbKernel
 Package manager: M.Cattaneo
 Purpose: LHCb specific Kernel classes
 
+!====================== LHCbKernel v4r3 2004-03-02 ========================
+! 2004-03-02 - Marco Cattaneo
+ - Add new file Kernel/LHCbMath.h which implements math related functions for
+   general LHCb use. Currently contains:
+     int LHCbMath::round( const double x );
+     int LHCbMath::round( const float x );
+   (Taken from ITAlgorithms/ITGeneral.h, can also replace VeloKernel::VeloRound)
+
 !====================== LHCbKernel v4r3 2004-02-12 ========================
 ! 2004-02-03 - Mark Tobin
  - Modified bit structure of VeloChannelID.  Added type(), but kept same

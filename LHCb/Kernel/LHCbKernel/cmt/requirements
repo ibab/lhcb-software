@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.50 2004-02-13 07:05:40 cattanem Exp $
+# $Id: requirements,v 1.51 2004-03-02 10:33:18 cattanem Exp $
 # =============================================================================
 package LHCbKernel
 author  M.Frank    CERN/LHCb
@@ -23,15 +23,15 @@ document obj2dict LHCbKernelObj2Dict ../xml/LHCbKernel.xml
 
 # Produce lcg dictionary for stl containers used in LHCb
 apply_pattern lcg_dictionary dictionary=LHCbKernel                  \
-                             headerfiles=../Kernel/lcgStl.h     \
-                             selectionfile=../xml/lcg_selection.xml \
-                             options="-o ../dict/lcgStl_dict.cpp --split"
+                             headerfiles=$(LHCBKERNELROOT)/Kernel/lcgStl.h     \
+                             selectionfile=$(LHCBKERNELROOT)/xml/lcg_selection.xml \
+                             options="--split"
 
 
 # Build libraries (including dictionary)
 #============================================================================
 library LHCbKernel     *.cpp
-library LHCbKernelDict ../dict/*.cpp
+library LHCbKernelDict ../dict/*.cpp ../$(tag)/dict/LHCbKernel/*.cpp
         
 # Standard patterns (order is essential)
 #============================================================================
