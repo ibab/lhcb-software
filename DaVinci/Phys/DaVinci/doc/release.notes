@@ -3,6 +3,13 @@ Package     : Phys/DaVinci
 Package Coordinator : Gloria Corti
 Purpose     : LHCb analysis program 
 
+</PRE><H1><A NAME=v9r1p3>2003-11-20 DaVinci v9r1p3</A></H1><PRE>
+ "Patch" version for a preselection production
+ 
+  - Modifications in (Pre)Selections ( PhysSelSys v5r13 )
+    . Bd -> Omega Gamma  - NEW CHANNEL
+    . Bu -> Ks Pi       
+
 </PRE><H1><A NAME=v9r1p2>2003-10-24 DaVinci v9r1p2</A></H1><PRE>
  "Patch" version for a preselection production
 
@@ -160,7 +167,7 @@ Purpose     : LHCb analysis program
    . Release tools in finalization to please valgrind
      .. use GlobalReco v4r0p2
      .. use PrimVtx v2r0p1
-     .. use DaVinciTools v8r1p
+     .. use DaVinciTools v8r1p1
      .. use PhysSelelection v6r0p1   
    . Fix bug in DaVinci.job that was removing executable before examining
      core
