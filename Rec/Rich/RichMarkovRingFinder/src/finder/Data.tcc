@@ -53,8 +53,8 @@ void Lester::Data<Mode, mode>::confirmHitLiesInAcceptance(const Hit & h) {
   if (!(RichPriorsT::hitLiesInAcceptanceCrude(h))) {
     std::ostringstream mess;
     mess << "Hit out of acceptance. Position = (" 
-         << h.x()/Constants::realXYDataInputScaleFactor << ", " 
-         << h.y()/Constants::realXYDataInputScaleFactor << ")";
+         << h.x()/mode.realXYDataInputScaleFactor() << ", " 
+         << h.y()/mode.realXYDataInputScaleFactor() << ")";
     throw SuppliedHitWasNotInAcceptance(mess.str());
   };
 };

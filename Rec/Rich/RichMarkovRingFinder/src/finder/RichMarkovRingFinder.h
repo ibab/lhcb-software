@@ -32,6 +32,8 @@ namespace Lester {
     typedef RichParams<Mode, mode> RichParamsT;
     typedef Inferrer<Mode, mode> InferrerT;
 
+    const Mode & getmode() const { return mode; }
+
   public:
 
     class FitFailed : public FinderExternalException {};
@@ -55,15 +57,11 @@ namespace Lester {
 
     public:
 
-      RunForFiniteNumberOfSteps(const unsigned int iterations = Constants::numberOfFrames * Constants::numberOfIterationsPerFrame,
-                                const unsigned int iterationsPerFrame = Constants::numberOfIterationsPerFrame )
-        : m_iterations(iterations),
-          m_iterationsPerFrame(iterationsPerFrame) {
+      RunForFiniteNumberOfSteps(const unsigned int iterations = Constants::DefaultNumberOfIterations)
+        : m_iterations(iterations) {
       };
 
       inline const unsigned int iterations() const { return m_iterations; };
-
-      inline const unsigned int iterationsPerFrame() const { return m_iterationsPerFrame; };
 
     };
 
@@ -91,11 +89,11 @@ namespace Lester {
         m_stoppingCondition = new StopCondition(stoppingCondition);
       };
 
-      inline Canvas * globalCanvas1() const { return m_globalCanvas1; };
+      //inline Canvas * globalCanvas1() const { return m_globalCanvas1; };
 
-      inline Canvas * globalCanvas2() const { return m_globalCanvas2; };
+      //inline Canvas * globalCanvas2() const { return m_globalCanvas2; };
 
-      inline Canvas * globalCanvas3() const { return m_globalCanvas3; };
+      //inline Canvas * globalCanvas3() const { return m_globalCanvas3; };
 
       inline const StoppingCondition * const stoppingCondition() const { return m_stoppingCondition; };
 
@@ -111,6 +109,8 @@ namespace Lester {
       EventInitialisationObject();
 
       ~EventInitialisationObject();
+
+      inline double realXYScaleFactor() const;
 
       void addHit(const Hit & h);
 
@@ -160,6 +160,8 @@ namespace Lester {
     void internalDoFit(); // PRIVATE: for internal use only!
     RichMarkovRingFinder(); // deliberately not implemented
     PointType suggestInitialPoint(unsigned int & numberOfSuggestedPoints) ;
+
+    /// continue Internal Do Fit Post Successful Test Initialisation
     void continueInternalDoFitPostSuccessfulTestInitialisation(MySampler & m);
 
   public:

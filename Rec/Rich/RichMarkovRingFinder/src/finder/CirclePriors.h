@@ -30,47 +30,51 @@ namespace Lester {
 
     class SampleIsImpossible : public FinderExternalException {};
     class BadScenario : public FinderExternalException {};
+    
     static inline double sampleFromCircleRadiusDistribution() {
       if (Constants::scenario == Constants::simpleModel) {
         return RandExponential::shoot(Constants::circleMeanRadiusParameter);
       } else if (Constants::scenario == Constants::rich2A) {
         //std::cerr<<"about to ... " << std::flush;
-        const double ans = rich2AThetaSampler.sampleAnIndex();
+        const double ans = mode.thetaSampler().sampleAnIndex();
         //std::cerr<<"... done" << std::endl;
         return ans;
       } else {
         throw BadScenario();
       };
     };
+
     static inline double priorProbabilityOfRadius(const double r) {
       if (Constants::scenario == Constants::simpleModel) {
-        return exponentialProb(r,Constants::circleMeanRadiusParameter);
+        return exponentialProb(r, Constants::circleMeanRadiusParameter);
       } else if (Constants::scenario == Constants::rich2A) {
-        return rich2AThetaDistribution(r);
+        return mode.thetaDistribution(r);
       } else {
         throw BadScenario();
       };
     };
+
     static inline double sampleFromCircleRadiusDistributionAbove(const double r) {
       if (Constants::scenario == Constants::simpleModel) {
-        return r+RandExponential::shoot(Constants::circleMeanRadiusParameter);
+        return r + RandExponential::shoot(Constants::circleMeanRadiusParameter);
       } else if (Constants::scenario == Constants::rich2A) {
         try {
-          const double ans = rich2AThetaSampler.sampleAnIndexAbove(r);
+          const double ans = mode.thetaSampler().sampleAnIndexAbove(r);
           return ans;
-        } catch (Rich2AThetaSampler::NoSamplesPossible) {
+        } catch (const RichThetaSampler::NoSamplesPossible & expt ) {
           throw SampleIsImpossible();
         };
       } else {
         throw BadScenario();
       };
     };
+
     static inline double priorProbabilityOfRadiusAbove(const double r) {
       if (Constants::scenario == Constants::simpleModel) {
         return exponentialProbAbove(r,Constants::circleMeanRadiusParameter);
       } else if (Constants::scenario == Constants::rich2A) {
         // was return 1 in "not-so-bad" version of program!
-        return rich2AProbabilityThetaAbove(r);
+        return mode.probabilityThetaAbove(r);
       } else {
         throw BadScenario();
       };
@@ -184,9 +188,9 @@ namespace Lester {
 
       {
         int tindex=-1;
-        if (possibilities.size()==1) {
+        if (1 == possibilities.size()) {
           tindex=0;
-        } else if (possibilities.size()==2) {
+        } else if (2 == possibilities.size()) {
           if (fabs(possibilities[0]->first-deltaOnTwo)<fabs(possibilities[1]->first-deltaOnTwo)) {
             tindex=0;
           } else {
@@ -276,12 +280,12 @@ namespace Lester {
         = CircleParamsT::calculateMeanNumberOfHitsPerUnitLengthBasedOnRadius(r);
       const double muCubed = mu*mu*mu;
 
-      const double aAll = Constants::areaScaleForEverything;
-      const double aSig = Constants::areaScaleForSignal;
+      const double aAll = mode.areaScaleForEverything();
+      const double aSig = mode.areaScaleForSignal();
       const double aAllCubed = aAll*aAll*aAll;
-      const double two=2;
+      const double two= 2;
       //const double three=3;
-      const double rSq=r*r;
+      const double rSq= r * r;
 
       const double rProb = priorProbabilityOfRadius(r);
 
@@ -331,9 +335,8 @@ namespace Lester {
         otherFirst=false;
       };
 
-      const double muSq = mu*mu;
-
-      const double averageAreaScale = Constants::areaScaleForEverything*Constants::areaScaleForEverything / Constants::areaScaleForSignal;
+      const double muSq( mu * mu );
+      const double averageAreaScale( mode.areaScaleForEverything() * mode.areaScaleForEverything() / mode.areaScaleForSignal() );
 
       static bool first = true;
       if (first) {
@@ -354,9 +357,8 @@ namespace Lester {
 
       const double extraTerm = averageHitsTotal*(averageHitsTotal-one);
 
-      const double sepFun=approxCoPointSepFunctionPart1(deltaOnTwo);
-      const double ans
-        = one/(one+(one-PS)*extraTerm/(PS * averageAreaScale * muSq * sepFun));
+      const double sepFun = approxCoPointSepFunctionPart1(deltaOnTwo);
+      const double ans = one/(one+(one-PS)*extraTerm/(PS * averageAreaScale * muSq * sepFun));
       //std::cerr << "jjj " << ans << " "<<(one-PS)/PS << " " << averageAreaScale * muSq << " " <<extraTerm<<" " <<sepFun << std::endl;
 
       return ans;
@@ -364,14 +366,14 @@ namespace Lester {
 
 
     static inline Hep2Vector sampleFromCircleCentreDistribution() {
-      return Hep2Vector(RandGauss::shoot(Constants::circleCenXMean,Constants::circleCenXSig),
-                        RandGauss::shoot(Constants::circleCenYMean,Constants::circleCenYSig));
+      return Hep2Vector(RandGauss::shoot(mode.circleCenXMean(), mode.circleCenXSig()),
+                        RandGauss::shoot(mode.circleCenYMean(), mode.circleCenYSig()));
     };
 
     static inline double priorProbabilityOfCentre(const Hep2Vector & cent) {
       return
-        gaussianProb(cent.x(), Constants::circleCenXMean, Constants::circleCenXSig)*
-        gaussianProb(cent.y(), Constants::circleCenYMean, Constants::circleCenYSig);
+        gaussianProb(cent.x(), mode.circleCenXMean(), mode.circleCenXSig()) *
+        gaussianProb(cent.y(), mode.circleCenYMean(), mode.circleCenYSig());
     };
 
   };

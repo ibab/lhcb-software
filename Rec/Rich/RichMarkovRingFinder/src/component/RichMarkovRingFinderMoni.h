@@ -1,4 +1,4 @@
-// $Id: RichMarkovRingFinderMoni.h,v 1.6 2004-08-17 13:33:49 jonrob Exp $
+// $Id: RichMarkovRingFinderMoni.h,v 1.7 2004-08-20 09:59:24 abuckley Exp $
 #ifndef COMPONENT_RICHMARKOVRINGFINDERMONI_H 
 #define COMPONENT_RICHMARKOVRINGFINDERMONI_H 1
 
@@ -30,8 +30,6 @@ using std::map;
 using std::pair;
 using std::for_each;
 using std::mem_fun_ref;
-
-void printMap(pair<string,double> element);
 
 ///////////////////////////////////////////////////////////////////////////////
 /// @class RichMarkovRingFinderMoni
@@ -75,6 +73,10 @@ private: // data
   string m_histPth;   ///< Output histogram path
 
   // Histograms
+  map<string, IHistogram1D*> m_RingTrackMCType;
+  map<string, IHistogram1D*> m_RingTrackOriginInVeloVertexType;
+  map<string, IHistogram1D*> m_RingTrackOriginInVeloElectronVertexType;
+
   map<string, IHistogram1D*> m_RingTrackOriginZ;
   map<string, IHistogram1D*> m_RingTrackOriginZ1;
   map<string, IHistogram2D*> m_RingTrackOriginXY1;
@@ -89,8 +91,13 @@ private: // data
   map<string, IHistogram3D*> m_RingTrackOrigin1Zoom;
 
   map<string, IHistogram1D*> m_RingTrackDecayZ;
+  map<string, IHistogram1D*> m_RingTrackEndDecayZ;
+  map<string, IHistogram1D*> m_RingTrackEndNotDecayZ;
+  map<string, IHistogram1D*> m_RingTrackDecaysWithVeloOriginZ;
   map<string, IHistogram2D*> m_RingTrackDecayRZ;
+  map<string, IHistogram2D*> m_RingTrackDecaysWithVeloOriginRZ;
   map<string, IHistogram3D*> m_RingTrackDecay;
+  map<string, IHistogram3D*> m_RingTrackDecaysWithVeloOrigin;
 
 };
 #endif // COMPONENT_RICHMARKOVRINGFINDERMONI_H

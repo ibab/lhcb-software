@@ -1,4 +1,4 @@
-// $Id: RichMarkovRingFinderAlg.cpp,v 1.7 2004-07-12 14:52:31 jonrob Exp $
+// $Id: RichMarkovRingFinderAlg.cpp,v 1.8 2004-08-20 09:59:24 abuckley Exp $
 // Include files
 
 // local
@@ -76,7 +76,7 @@ StatusCode RichMarkovRingFinderAlg<MyFinder>::initialize()
       MyFinder::theRunInitialisationObjectFor(InitType(m_rich, m_panel));
 
     const unsigned int myFavNumOfIts = 2000;
-    rio.setStoppingCondition( typename MyFinder::RunForFiniteNumberOfSteps(myFavNumOfIts,3) );
+    rio.setStoppingCondition( typename MyFinder::RunForFiniteNumberOfSteps(myFavNumOfIts) );
 
     // Make a new finder for this algorithm
     m_finder = new MyFinder( rio );
@@ -194,7 +194,7 @@ const StatusCode RichMarkovRingFinderAlg<MyFinder>::processEvent() {
   const typename MyFinder::DataT & myData = eio.data();
   typedef typename MyFinder::InferrerT MyInferrer;
   const MyInferrer inf(myData, bestRPSoFar);
-  const double scale = Constants::realXYDataInputScaleFactor;
+  const double scale = m_finder->getmode().realXYDataInputScaleFactor();
 
   for ( typename MyFinder::RichParamsT::Circs::const_iterator iCircle = bestRPSoFar.getCircles().begin();
         iCircle != bestRPSoFar.getCircles().end(); ++iCircle ) {
@@ -308,8 +308,8 @@ RichMarkovRingFinderAlg<MyFinder>::addCircleSuggestions( AnInitialisationObject 
       const double radius = m_ckAngle->avgCherenkovTheta(*iSeg);
       if ( radius > 1e-10 ) {
         const HepVector3D & hitPnt = (*iSeg)->pdPanelHitPointLocal();
-        const Hep2Vector centre( Constants::realXYDataInputScaleFactor*hitPnt.x(),
-                                 Constants::realXYDataInputScaleFactor*hitPnt.y() );
+        const Hep2Vector centre( m_finder->getmode().realXYDataInputScaleFactor() * hitPnt.x(),
+                                 m_finder->getmode().realXYDataInputScaleFactor() * hitPnt.y() );
         debug() << "Starting circle (" << centre.x() << "," << centre.y()
                 << ") r=" << radius << endreq;
         eio.addCircleSuggestion( typename MyFinder::CircleParamsT(centre, radius) );
@@ -330,7 +330,7 @@ RichMarkovRingFinderAlg<MyFinder>::addDataPoints( AnInitialisationObject & eio )
 {
 
   // Iterate over pixels
-  const double scale = Constants::realXYDataInputScaleFactor;
+  const double scale = m_finder->getmode().realXYDataInputScaleFactor();
   for ( RichRecPixels::const_iterator iPix = richPixels()->begin();
         iPix != richPixels()->end(); ++iPix ) {
     if ( inCorrectArea(*iPix) ) {

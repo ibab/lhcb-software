@@ -98,7 +98,7 @@ namespace Lester {
           const double logsq   = logg*logg;
           const double two     = 2;
           const double substituteForPow = ( alpha == 2 ? 1 : pow(rOnR0Sq,0.5*(alpha-two)) );
-          return ( 1./(MathsConstants::twopi)/sqrt(MathsConstants::twopi*epsSq)*
+          return ( 1.0/(MathsConstants::twopi)/sqrt(MathsConstants::twopi*epsSq)*
                    substituteForPow*exp(-0.5*(logsq/epsSq + alphaSq*epsSq )) / (rSq) );
         };
 
@@ -107,7 +107,7 @@ namespace Lester {
         const double r0  = cp.radius();
         const double r   = (p-cp.centre()).mag();
         const double dr  = r-r0;
-        const double eps = 4. * ( Constants::characteristicCircleRadius *
+        const double eps = 4. * ( mode.characteristicCircleRadius() *
                                   Constants::circleProbabilityDistributionEpsilonParameter );
         // full
         //const double ep1 = (1./6.)*(3.*eps + 3.*r0 - sqrt( 3.*(3.*r0*r0-eps*eps) ));
@@ -118,7 +118,7 @@ namespace Lester {
 
       } else if ( Constants::power1 == Constants::probFuncType ) {
 
-        const double eps = 10. *( Constants::characteristicCircleRadius *
+        const double eps = 10. *( mode.characteristicCircleRadius() *
                                  Constants::circleProbabilityDistributionEpsilonParameter );
         const double norm = 2.*eps*eps/3.;
         const double r0  = cp.radius();

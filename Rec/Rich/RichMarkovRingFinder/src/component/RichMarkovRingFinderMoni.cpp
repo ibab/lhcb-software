@@ -1,4 +1,4 @@
-// $Id: RichMarkovRingFinderMoni.cpp,v 1.6 2004-07-12 14:52:31 jonrob Exp $
+// $Id: RichMarkovRingFinderMoni.cpp,v 1.7 2004-08-20 09:59:24 abuckley Exp $
 // Include files
 
 // from Gaudi
@@ -21,13 +21,6 @@ using namespace std;
 // Declaration of the Algorithm Factory
 static const  AlgFactory<RichMarkovRingFinderMoni>          s_factory ;
 const        IAlgFactory& RichMarkovRingFinderMoniFactory = s_factory ;
-
-
-void printMap(pair<string,double> element)
-{
-  //info() << element.first << ": " << element.second << endreq;
-  cout << element.first << ": " << element.second << endl;
-}
 
 
 //=============================================================================
@@ -175,6 +168,15 @@ StatusCode RichMarkovRingFinderMoni::execute()
       }
 
 
+      // Histogram the MC particle type
+      m_RingTrackMCType[recOrNot]->fill(mcType);
+
+
+      //SmartDataPtr<MCParticles> mcEvt(eventSvc(), MCParticleLocation::Default);
+      //sc = toolSvc()->retrieveTool( "DebugTool", m_pDebugTool, this );
+      //m_pDebugTool->printEventAsTree(mcEvt);
+
+
       {
         const HepPoint3D& startPoint = mcpart->originVertex()->position();
         debug() << "Start vtx position = ("
@@ -196,6 +198,10 @@ StatusCode RichMarkovRingFinderMoni::execute()
           m_RingTrackOriginXY1[recOrNot]->fill( startPoint.x()/m, startPoint.y()/m );
           m_RingTrackOriginRZ1[recOrNot]->fill( startPoint.z()/m, rho/m );
           m_RingTrackOriginRZ1Zoom[recOrNot]->fill( startPoint.z()/m, rho/m );
+
+          m_RingTrackOriginInVeloVertexType[recOrNot]->fill( mcpart->originVertex()->type() );
+          m_RingTrackOriginInVeloElectronVertexType[recOrNot]->fill( mcpart->originVertex()->type() );
+
         } else if (startPoint.z()/m > 1.9  && startPoint.z()/m < 3.5 ) { // in TT
           m_RingTrackOriginXY2[recOrNot]->fill( startPoint.x()/m, startPoint.y()/m );
           m_RingTrackOriginRZ2[recOrNot]->fill( startPoint.z()/m, rho/m );
@@ -228,54 +234,39 @@ StatusCode RichMarkovRingFinderMoni::execute()
           // Get azimuthal distance
           double rho = sqrt( endPoint.x() * endPoint.x() + endPoint.y() * endPoint.y() );
           
-          // Fill origin vertex position histos
+          // Fill decay vertex position histos
           m_RingTrackDecayZ[recOrNot]->fill( endPoint.z()/m );
           m_RingTrackDecayRZ[recOrNot]->fill( endPoint.z()/m, rho/m );
           m_RingTrackDecay[recOrNot]->fill( endPoint.z()/m, endPoint.x()/m, endPoint.y()/m );
+
+          if ( 	MCVertex::Decay == (*vtx)->type() ) {
+            m_RingTrackEndDecayZ[recOrNot]->fill( endPoint.z()/m );
+          } else {
+            m_RingTrackEndNotDecayZ[recOrNot]->fill( endPoint.z()/m );
+          }
+
+          /*
+          if (fabs(startPoint.z()/m) < 1) { // in VELO
+            m_RingTrackOrigin1Zoom[recOrNot]->fill( startPoint.z()/m, startPoint.x()/m, startPoint.y()/m );
+            m_RingTrackOriginZ1[recOrNot]->fill( startPoint.z()/m );
+            m_RingTrackOriginXY1[recOrNot]->fill( startPoint.x()/m, startPoint.y()/m );
+            m_RingTrackOriginRZ1[recOrNot]->fill( startPoint.z()/m, rho/m );
+            m_RingTrackOriginRZ1Zoom[recOrNot]->fill( startPoint.z()/m, rho/m );
+          } else if (startPoint.z()/m > 1.9  && startPoint.z()/m < 3.5 ) { // in TT
+            m_RingTrackOriginXY2[recOrNot]->fill( startPoint.x()/m, startPoint.y()/m );
+            m_RingTrackOriginRZ2[recOrNot]->fill( startPoint.z()/m, rho/m );
+          } else if (startPoint.z()/m > 7  && startPoint.z()/m < 10 ) { // in T1-T3
+            m_RingTrackOriginXY3[recOrNot]->fill( startPoint.x()/m, startPoint.y()/m );
+            m_RingTrackOriginRZ3[recOrNot]->fill( startPoint.z()/m, rho/m );
+          }
+          */
+
         }
       }
       
     } else {
-      info() << "More than one associated track" << endreq;
+      debug() << "More than one associated track" << endreq;
     }
-
-
-    /*
-    // loop over reco segments
-    for ( RichRecSegments::const_iterator iSeg = richSegments()->begin(); iSeg != richSegments()->end(); ++iSeg ) {
-    
-      // NB. contains spillover
-      if (*iSeg) {
-        const HepPoint3D & segPoint = (*iSeg)->pdPanelHitPointLocal();
-
-        // Skip if ring and segment RICH types don't match
-        if ( (*iRing)->rich() != (*iSeg)->trackSegment().rich() ) continue;
-
-        // Do some ring-segment matching...
-        double normSeparation = segPoint.distance(ringPoint)/ringRadius;
-        //inf() << static_cast<unsigned short>(normSeparation) << " ";
-        if (normSeparation < 1.0) {
-          // If the projected segment lies within the ring radius...
-          // ***
-        }
-      } else {
-        warning() << "Segment pointer isn't valid" << endreq;
-      }
-
-    } // end reco segments
-    */
-    
-    // MC Segments
-    /*
-    SmartDataPtr<MCRichSegments> mcSegments( eventSvc(), MCRichSegmentLocation::Default );
-    if ( mcSegments ) {
-      for ( MCRichSegments::iterator iMcSeg = mcSegments->begin(); iMcSeg != mcSegments->end(); ++iMcSeg ) {
-        // NB. no spillover
-        HepPoint3D pdPoint;
-        m_mcTrackInfo->panelIntersectLocal( *iMcSeg, pdPoint );
-      }
-    } // if MC segments exist
-    */
 
   } // end ring loop
 
@@ -312,18 +303,44 @@ StatusCode RichMarkovRingFinderMoni::bookHistograms() {
     // 1D plots
     title = "Z origins of " + subtitle;
     id = "RingTrackOriginZ-" + index;
-    m_RingTrackOriginZ[index] = histoSvc()->book(m_histPth, id, title, nbins1D, -1, 12);
-
-
+    m_RingTrackOriginZ[index] = histoSvc()->book(m_histPth, id, title, nbins1D, -1, 15);
 
     title = "Z origins of " + subtitle;
     id = "RingTrackOriginZ1-" + index;
     m_RingTrackOriginZ1[index] = histoSvc()->book(m_histPth, id, title, nbins1D, -0.5, 0.5);
    
-    title = "Z decay points of " + subtitle;
+    title = "Z end points of " + subtitle;
     id = "RingTrackDecayZ-" + index;
-    m_RingTrackDecayZ[index] = histoSvc()->book(m_histPth, id, title, nbins1D, -1, 12);
+    m_RingTrackDecayZ[index] = histoSvc()->book(m_histPth, id, title, nbins1D, -1, 15);
 
+    title = "Z end (decay) points of " + subtitle;
+    id = "RingTrackEndDecayZ-" + index;
+    m_RingTrackEndDecayZ[index] = histoSvc()->book(m_histPth, id, title, nbins1D, -1, 15);
+
+    title = "Z end (not decay) points of " + subtitle;
+    id = "RingTrackNotEndDecayZ-" + index;
+    m_RingTrackEndNotDecayZ[index] = histoSvc()->book(m_histPth, id, title, nbins1D, -1, 15);
+
+    title = "Z decay points of " + subtitle + " with VELO origins";
+    id = "RingTrackDecaysFromVeloZ-" + index;
+    m_RingTrackDecaysWithVeloOriginZ[index] = histoSvc()->book(m_histPth, id, title, nbins1D, -1, 20);
+
+    // MC type IDs
+    title = "MC type IDs of " + subtitle;
+    id = "RingTrackMCType-" + index;
+    m_RingTrackMCType[index] = histoSvc()->book(m_histPth, id, title, 6, -1.5, 4.5);
+
+    // Origin vertex types
+    title = "Origin vertex type for origin vertices of " + subtitle + " in the VELO";
+    id = "RingTrackOriginInVeloVtxType-" + index;
+    m_RingTrackOriginInVeloVertexType[index] = histoSvc()->book(m_histPth, id, title, 15, -0.5, 14.5);
+
+    title = "Origin vertex type for origin vertices of " + subtitle + " in the VELO (electrons)";
+    id = "RingTrackOriginInVeloElectronVtxType-" + index;
+    m_RingTrackOriginInVeloElectronVertexType[index] = histoSvc()->book(m_histPth, id, title, 15, -0.5, 14.5);
+
+
+    // ----------------
    
     // 2D plots
     title = "X-Y origins of VELO " + subtitle;
@@ -351,6 +368,11 @@ StatusCode RichMarkovRingFinderMoni::bookHistograms() {
     rmax = 1.8;
     m_RingTrackDecayRZ[index] = histoSvc()->book(m_histPth, id, title, nbins2D, -1, 12, nbins2D, 0, rmax);
    
+    title = "rho-Z decay points of " + subtitle + " with VELO origins";
+    id = "RingTrackDecaysFromVeloRZ-" + index;
+    rmax = 3.0;
+    m_RingTrackDecaysWithVeloOriginRZ[index] = histoSvc()->book(m_histPth, id, title, nbins2D, -1, 20, nbins2D, 0, rmax);
+
     title = "rho-Z origins of VELO " + subtitle;
     id = "RingTrackOriginRZ1-" + index;
     rmax = 0.02;
@@ -387,6 +409,11 @@ StatusCode RichMarkovRingFinderMoni::bookHistograms() {
     id = "RingTrackDecay-" + index;
     rmax = 1.8;
     m_RingTrackDecay[index] = histoSvc()->book(m_histPth, id, title, nbins3D, -1, 12, nbins3D, -rmax, rmax, nbins3D, -rmax, rmax);
+
+    title = "Track decay points of " + subtitle + " with VELO origins";
+    id = "RingTrackDecaysFromVelo-" + index;
+    rmax = 3.0;
+    m_RingTrackDecaysWithVeloOrigin[index] = histoSvc()->book(m_histPth, id, title, nbins3D, -1, 20, nbins3D, -rmax, rmax, nbins3D, -rmax, rmax);
    
   }
 

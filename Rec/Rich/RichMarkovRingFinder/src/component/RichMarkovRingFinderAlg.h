@@ -1,4 +1,4 @@
-// $Id: RichMarkovRingFinderAlg.h,v 1.7 2004-08-17 13:33:49 jonrob Exp $
+// $Id: RichMarkovRingFinderAlg.h,v 1.8 2004-08-20 09:59:24 abuckley Exp $
 #ifndef RICHMARKOVRINGFINDER_RICHMARKOVRINGFINDERALG_H
 #define RICHMARKOVRINGFINDER_RICHMARKOVRINGFINDERALG_H 1
 
@@ -39,7 +39,8 @@
 /// @class  RichMarkovRingFinderAlg
 /// @brief  Templated base class for concrete Markov Ring Finder Algorithms
 /// @author Chris Lester  lester@hep.phy.cam.ac.uk
-/// @author Chris Jones   Christopher.Rob.Jones@cern.ch
+/// @author Chris Jones   Christoper.Rob.Jones@cern.ch
+/// @author Andy Buckley  Andrew.Buckley@cern.ch
 /// @date   2003-12-02
 ///////////////////////////////////////////////////////////////////////////
 
@@ -158,7 +159,7 @@ public:
 
   Rich1UMarkovRingFinderAlg( const std::string& name,
                              ISvcLocator* pSvcLocator )
-    : RichMarkovRingFinderAlg<Rich1UMarkovRingFinder>(name,pSvcLocator,
+    : RichMarkovRingFinderAlg<Rich1UMarkovRingFinder>(name, pSvcLocator,
                                                       Rich::Rich1,Rich::top) { }
 
 };
@@ -178,9 +179,9 @@ class Rich2LMarkovRingFinderAlg : public RichMarkovRingFinderAlg<Rich2LMarkovRin
 
 public:
 
-  Rich2LMarkovRingFinderAlg( const std::string& name,
+  Rich2LMarkovRingFinderAlg( const std::string& name, 
                              ISvcLocator* pSvcLocator )
-    : RichMarkovRingFinderAlg<Rich2LMarkovRingFinder>(name,pSvcLocator,
+    : RichMarkovRingFinderAlg<Rich2LMarkovRingFinder>(name, pSvcLocator,
                                                       Rich::Rich2,Rich::left) { }
 
 };
@@ -200,9 +201,9 @@ class Rich2RMarkovRingFinderAlg : public RichMarkovRingFinderAlg<Rich2RMarkovRin
 
 public:
 
-  Rich2RMarkovRingFinderAlg( const std::string& name,
+  Rich2RMarkovRingFinderAlg( const std::string& name, 
                              ISvcLocator* pSvcLocator )
-    : RichMarkovRingFinderAlg<Rich2RMarkovRingFinder>(name,pSvcLocator,
+    : RichMarkovRingFinderAlg<Rich2RMarkovRingFinder>(name, pSvcLocator,
                                                       Rich::Rich2,Rich::right) { }
 
 };

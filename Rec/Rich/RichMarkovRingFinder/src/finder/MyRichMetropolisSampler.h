@@ -238,11 +238,12 @@ namespace Lester {
 
 
             const CircleParamsT cp(flatCentre,rrr);
-            if (false && Constants::showSomeIdeas && RandFlat::shootInt(Constants::numberOfFramesBetweenIdeas)==1) {
+            //if (false && Constants::showSomeIdeas && RandFlat::shootInt(Constants::numberOfFramesBetweenIdeas)==1) {
               //Colour::kMagenta().issue();
               //cp.draw(*globalCanvas2);
               //globalCanvas2->update();
-            };
+            //};
+
             newrp.circs.push_back(cp);
             alterations.createdAtBack();
             return newrp;
@@ -371,6 +372,7 @@ namespace Lester {
       } else {
 
 
+        /*
         if (Constants::useOldNewPointMethod) {
           while(true) {
             throw UnsupportedOption("CHRIS HASN'T PUT alterations SUPPORT IN Constants::useOldNewPointMethod YET!!");
@@ -420,13 +422,17 @@ namespace Lester {
             //std::cerr << "X" << (**this).circs.size()<<"-"<<newrp.circs.size()<<" "<<std::flush;
 
             return newrp;
-          };
-        } else {
-          // New method!!
-          return addOrRemoveCircle();
-        };
-      };
-    };
+          }
+        } 
+        */
+        //else {
+
+        // New method!!
+        return addOrRemoveCircle();
+        //}
+      }
+    }
+
   private:
 
     // Here we override a pair of base class virtual methods:

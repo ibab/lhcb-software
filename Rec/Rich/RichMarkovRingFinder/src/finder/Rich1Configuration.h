@@ -5,7 +5,6 @@
 #include <string>
 
 #include "RichConfiguration.h"
-#include "FinderExternalException.h"
 
 namespace Lester {
   
@@ -15,17 +14,29 @@ namespace Lester {
 
   typedef enum { upperPane, lowerPane } Pane;
 
-    Rich1Configuration( const Pane pane ) :
-      m_pane(pane) {
-    }
+    Rich1Configuration( const Pane pane );
 
-    double geometricXYAcceptanceBottomBound() const { return m_pane != upperPane ? -600 :  -30 ; };
-    double geometricXYAcceptanceTopBound   () const { return m_pane != upperPane ?  30  :   600 ; };
-    double geometricXYAcceptanceLeftBound  () const { return -730; };
-    double geometricXYAcceptanceRightBound () const { return  730; };
+    inline double geometricXYAcceptanceBottomBound() const { return m_pane != upperPane ? -600 :  -30 ; }
+    inline double geometricXYAcceptanceTopBound   () const { return m_pane != upperPane ?  30  :   600 ; }
+    inline double geometricXYAcceptanceLeftBound  () const { return -730; }
+    inline double geometricXYAcceptanceRightBound () const { return  730; }
+
+    inline const double saturatedCircleTheta()       const { return Constants::saturatedCircleThetaRich1; }
+    inline const double characteristicCircleRadius() const { return Constants::characteristicCircleRadiusRich1; }
+    inline const double viewRangeParameter()         const { return Constants::viewRangeParameterRich1; }
+    inline const double realXYScaleFactor()          const { return Constants::realXYDataInputScaleFactorRich1; }
+    inline double realXYDataInputScaleFactor() const { return realXYScaleFactor(); }
+    inline const double saturatedCircleRadiusInXYExternalData() const { return Constants::saturatedCircleRadiusInXYExternalDataRich1; }
+
+    inline const double circleCenXMean()             const { return Constants::circleCenXMean; }
+    inline const double circleCenYMean()             const { return Constants::circleCenYMean; }
+    inline const double circleCenXSig()              const { return Constants::circleCenXSigRich1; }
+    inline const double circleCenYSig()              const { return Constants::circleCenYSigRich1; }
+
+    inline const double areaScaleForSignal()         const { return Constants::areaScaleForSignalRich1; }
+    inline const double areaScaleForEverything()     const { return Constants::areaScaleForEverythingRich1; }
 
   private:
-
     const Pane m_pane;
 
   };

@@ -35,64 +35,75 @@ namespace Lester {
 
     //std::cout << *m << std::endl;
 
-    typename MySampler::PointType last = *m;
-    bool first=true;
+    //typename MySampler::PointType last = *m;
+    //bool first=true;
     double bestPSoFar=m.logProbabilityOfLastAcceptedPoint();
 
-    m_bestRPSoFar = last;
+    m_bestRPSoFar = *m; //last;
 
-    unsigned int itsPerFrame = 0;
+    //unsigned int itsPerFrame = 0;
 
     const StoppingCondition * const stopCon = m_internalRunInitObject.stoppingCondition();
     const bool runForever =
       ( 0 != dynamic_cast<const RunForever * const>(stopCon) );
-
-    unsigned int maxFrames = 0;
-
-    if (runForever) {
-      itsPerFrame = Constants::numberOfIterationsPerFrame;
-    };
-
+    unsigned int numberOfItsIfNotInfinite(0);
     if (!runForever) {
-
-      const RichMarkovRingFinder<Mode,mode>::RunForFiniteNumberOfSteps * const runForFiniteNumberOfSteps =
-        dynamic_cast<const RichMarkovRingFinder<Mode,mode>::RunForFiniteNumberOfSteps * const>(m_internalRunInitObject.stoppingCondition());
-      if (runForFiniteNumberOfSteps) {
-        const unsigned int its = runForFiniteNumberOfSteps->iterations();
-        itsPerFrame = runForFiniteNumberOfSteps->iterationsPerFrame();
-        const double approxFrames = static_cast<double>(its)/static_cast<double>(itsPerFrame);
-        const unsigned int minFrames = 1;
-        if (finite(approxFrames)) {
-          maxFrames = static_cast<unsigned int>(approxFrames);
-          if (maxFrames<minFrames) {
-            maxFrames = minFrames;
-          };
-        } else {
-          maxFrames = minFrames;
-        };
-      };
+      // we must be a run for finite number of steps, so
+      const RichMarkovRingFinder<Mode,mode>::RunForFiniteNumberOfSteps * const runForFiniteNumberOfStepsStoppingCondition =
+        dynamic_cast<const RichMarkovRingFinder<Mode,mode>::RunForFiniteNumberOfSteps * const>(stopCon);
+      assert(runForFiniteNumberOfStepsStoppingCondition); // If this fails, then we forgot to update this routine when we invented more types of stopping condition!!
+      numberOfItsIfNotInfinite = runForFiniteNumberOfStepsStoppingCondition->iterations();
     };
+    
+
+    //unsigned int maxFrames = 0;
+
+    //if (runForever) {
+    //  itsPerFrame = Constants::numberOfIterationsPerFrame;
+    //};
+
+    //if (!runForever) {
+
+      //const RichMarkovRingFinder<Mode,mode>::RunForFiniteNumberOfSteps * const runForFiniteNumberOfSteps =
+      //dynamic_cast<const RichMarkovRingFinder<Mode,mode>::RunForFiniteNumberOfSteps * const>(m_internalRunInitObject.stoppingCondition());
+      //if (runForFiniteNumberOfSteps) {
+        //const unsigned int its = runForFiniteNumberOfSteps->iterations();
+        //itsPerFrame = runForFiniteNumberOfSteps->iterationsPerFrame();
+        //const double approxFrames = static_cast<double>(its)/static_cast<double>(itsPerFrame);
+        //const unsigned int minFrames = 1;
+        //if (finite(approxFrames)) {
+        //  maxFrames = static_cast<unsigned int>(approxFrames);
+        //  if (maxFrames<minFrames) {
+        //    maxFrames = minFrames;
+        //  };
+        ///} else {
+        //  maxFrames = minFrames;
+        //};
+    //};
+  //}//;
 
     // Now do some frames!
-    for (unsigned int frames=0; runForever || frames<maxFrames; ++frames) {
+    for (unsigned int its=0; runForever || its<numberOfItsIfNotInfinite; ++its ) {
 
-      if ((!(*m == last)) || first) {
-        first=false;
-      };
-      last=*m;
+      //if ((!(*m == last)) || first) {
+      //  first=false;
+      //};
 
-      for (unsigned int i=0; i<itsPerFrame; ++i) {
-        {
-          const double p = m.logProbabilityOfLastAcceptedPoint();
-          if ( p > bestPSoFar ) {
-            bestPSoFar = p;
-            m_bestRPSoFar = (*m);
-          };
+      //last=*m;
+
+      //for (unsigned int i=0; i<itsPerFrame; ++i) {
+      {
+        const double p = m.logProbabilityOfLastAcceptedPoint();
+        if ( p > bestPSoFar ) {
+          bestPSoFar = p;
+          m_bestRPSoFar = (*m);
         };
-        ++m;
       };
-
-    }; // for frames = 1 to 3 etc
+      
+      /// Increment the sampler. This is the most important 3 characters in the whole thing.
+      ++m;        
+        
+    };
 
   };
 
@@ -171,27 +182,32 @@ namespace Lester {
   };
 
   template<class Mode, const Mode & mode>
-  void RichMarkovRingFinder<Mode, mode>::EventInitialisationObject::addHit(const Hit & h) {
+  inline void RichMarkovRingFinder<Mode, mode>::EventInitialisationObject::addHit(const Hit & h) {
     m_dataPtr->addHit(h);
   };
 
   template<class Mode, const Mode & mode>
-  void RichMarkovRingFinder<Mode, mode>::EventInitialisationObject::addHitsFrom(std::istream & f) {
+  inline void RichMarkovRingFinder<Mode, mode>::EventInitialisationObject::addHitsFrom(std::istream & f) {
     double x,y;
-    while (f>>x) {
-      f>>y;
+    while (f >> x) {
+      f >> y;
 
-      x*=Constants::realXYDataInputScaleFactor;
-      y*=Constants::realXYDataInputScaleFactor;
+      x *= Constants::realXYDataInputScaleFactor;
+      y *= Constants::realXYDataInputScaleFactor;
       Hit h(x,y);
       addHit(h);
-    };
-  };
+    }
+  }
 
   template<class Mode, const Mode & mode>
-  void RichMarkovRingFinder<Mode, mode>::EventInitialisationObject::addCircleSuggestion(const CircleParamsT & c) {
+  inline void RichMarkovRingFinder<Mode, mode>::EventInitialisationObject::addCircleSuggestion(const CircleParamsT & c) {
     m_dataPtr->secretCircles().push_back(c);
-  };
+  }
+
+  template<class Mode, const Mode & mode>
+  inline double RichMarkovRingFinder<Mode, mode>::EventInitialisationObject::realXYScaleFactor() const {
+    return mode.realXYScaleFactor();
+  }
 
 };
 

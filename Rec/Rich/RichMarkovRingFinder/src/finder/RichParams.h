@@ -48,7 +48,7 @@ namespace Lester {
 
     inline double priorProbability() const {
       double ans = 1;
-
+      
       // in principle I should have
       //        ans *= Lester::poissonProb(rp.circs.size(),meanNumberOfRings);
       // followed by
@@ -57,55 +57,46 @@ namespace Lester {
       // however this involves a needless double (cancelling) evaluation of n!,
       // where n=rp.circs.size(), so instead I write the following faster combination
       // of the two:
-
+      
       // actually I have just realised that contrary to the comments above, since in my case the order DOES count, as I don't always sort my circles into some order, I should NOT multiply by the factorial factor mentioned above, so I should just stick  to using the poisson factor.  As a result, I comment out the three lines below and replace them by the one four below!
       //const double n = static_cast<double>(rp.circs.size());
       //const double mu = meanNumberOfRings;
       //ans *= exp(n*log(mu)-mu);  /* times n! divided by n! */
       // SUPERSEDED BY NEXT LINE      ans *= poissonProb(circs.size(),meanNumberOfRings);
       ans *= RichPriorsT::priorProbabilityOfNumberOfCircles(circs.size());
-
+      
       for (typename Circs::const_iterator it = circs.begin();
            it!=circs.end();
            it++) {
         const CircleParamsT & c = *it;
         const double contribution = c.priorProbability();
         ans *= contribution;
-      };
-
+      }
+      
       // and now the part I left out for ages (by accident!) which ensures that we compare hypotheses with different numbers of circles on an equivalent footing.  This insertion is somewhat guessed, so would be a good idea to get a statistician to confirm what I am doing.
 
       // Basically, for every circle I multiply the prior by one over the expectation (under the circles prior) of the circles prior itself!
 
       const double two = 2;
-      const double strangeFactor = (two*MathsConstants::sqrtPi);
-
-      const double oneOnCharacteristicAreaForCentresWandering =
-        strangeFactor*strangeFactor*(Constants::circleCenXSig*Constants::circleCenYSig);
-      const double oneOnCharacteristicLengthForRadiiWandering =
-        strangeFactor*(Constants::circleRadiusSigmaAboutMean);
-      const double characteristicThingForOneCircle =
-        oneOnCharacteristicAreaForCentresWandering
-        * oneOnCharacteristicLengthForRadiiWandering;
-
-      const double characteristicThingForAllCircles =
-        pow(characteristicThingForOneCircle,static_cast<double>(circs.size()));
+      const double strangeFactor = (two * MathsConstants::sqrtPi);
+      const double oneOnCharacteristicAreaForCentresWandering( strangeFactor * strangeFactor * mode.circleCenXSig() * mode.circleCenYSig() );
+      const double oneOnCharacteristicLengthForRadiiWandering( strangeFactor * Constants::circleRadiusSigmaAboutMean );
+      const double characteristicThingForOneCircle( oneOnCharacteristicAreaForCentresWandering * oneOnCharacteristicLengthForRadiiWandering );
+      const double characteristicThingForAllCircles( pow(characteristicThingForOneCircle, static_cast<double>(circs.size())) );
 
       ans *= characteristicThingForAllCircles;
 
       return ans;
-    };
+    }
 
     bool operator==(const RichParams & other) const {
-      return
-        circs==other.circs &&
-        meanBackground == other.meanBackground;
-    };
+      return ( circs==other.circs && meanBackground == other.meanBackground );
+    }
 
     RichParams() : meanBackground(Constants::backgroundMeanParameter) {
       // Beware! Variables are randomized!
       //jokeSetRandom();
-    };
+    }
 
     std::ostream & printMeTo(std::ostream & os) const;
 

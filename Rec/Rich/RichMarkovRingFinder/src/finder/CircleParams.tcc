@@ -38,11 +38,13 @@ void Lester::CircleParams<Mode,mode>::jokeSetRandom() {
 
 template<class Mode,const Mode & mode>
 Lester::CircleParams<Mode,mode> Lester::CircleParams<Mode,mode>::jitterSymm1() const {
-  const Hep2Vector newcen = centre()+Hep2Vector(0.1*Constants::characteristicCircleRadius*RandGauss::shoot(),0.1*Constants::characteristicCircleRadius*RandGauss::shoot());
-  const double trialnewrad = (radius()+0.1*Constants::characteristicCircleRadius*RandGauss::shoot());
-  const double newrad = ((trialnewrad>0)?trialnewrad:radius());
+  const Hep2Vector newcen = centre() + Hep2Vector(0.1 * mode.characteristicCircleRadius() * RandGauss::shoot(), 
+                                                  0.1 * mode.characteristicCircleRadius() * RandGauss::shoot());
+  const double trialnewrad( radius() + 0.1 * mode.characteristicCircleRadius() * RandGauss::shoot());
+  const double newrad( (trialnewrad > 0) ? trialnewrad : radius() );
   //const double newmu = fabs(mu+0.1*RandGauss::shoot());
-  return CircleParams(newcen,newrad);
+
+  return CircleParams(newcen, newrad);
 };
 
 
