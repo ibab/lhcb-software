@@ -1,6 +1,7 @@
 Package :EvtGen 
 Package manager : Patrick Robbe and Witek Pokorski
 
+!=================== EvtGen v5r2 ====================================
 ! 2004-03-22 - Patrick Robbe
  - Fix bug in EvtParticleTable
 
