@@ -1,4 +1,4 @@
-// $Id: RichMarkovRingFinderAlg.cpp,v 1.1.1.1 2004-05-31 21:24:48 jonesc Exp $
+// $Id: RichMarkovRingFinderAlg.cpp,v 1.2 2004-06-01 12:14:01 jonesc Exp $
 // Include files
 
 // local
@@ -99,8 +99,8 @@ StatusCode RichMarkovRingFinderAlg<MyFinder>::initialize() {
   }
 
   // Some warning messages about things to do...
-  warning() << " Remove private use of CLHEP random number engine." << endreq
-            << " Remove assertions and cout/cerr statements" << endreq;
+  warning() << "Remove private use of CLHEP random number engine." << endreq
+            << "Remove assertions and cout/cerr statements" << endreq;
 
   return StatusCode::SUCCESS;
 };

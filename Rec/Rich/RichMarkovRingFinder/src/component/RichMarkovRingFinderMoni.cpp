@@ -1,4 +1,4 @@
-// $Id: RichMarkovRingFinderMoni.cpp,v 1.1.1.1 2004-05-31 21:24:49 jonesc Exp $
+// $Id: RichMarkovRingFinderMoni.cpp,v 1.2 2004-06-01 12:14:01 jonesc Exp $
 // Include files
 
 // from Gaudi

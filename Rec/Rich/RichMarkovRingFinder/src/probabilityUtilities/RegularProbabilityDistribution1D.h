@@ -49,12 +49,19 @@ namespace Lester {
 
     RegularProbabilityDistribution1D() : totProb(0) {};
 
-    RegularProbabilityDistribution1D(std::string fileName, std::string dirName="") : totProb(0)
+    RegularProbabilityDistribution1D(const std::string fileName,
+                                     const std::string dirName = "" ) : totProb(0)
     {
-      const std::string s = dirName+fileName;
-      //std::cout << "Attempting to read a RPD1D from " << s << std::endl;
-      std::ifstream f(s.c_str());
-      readFromStream(f);
+      const std::string s = dirName + fileName;
+      try {
+        std::ifstream f(s.c_str());
+        readFromStream(f);
+      }
+      catch ( const FinderExternalException & excp ) {
+        std::cerr << "Exception in RegularProbabilityDistribution1D whilst reading from " 
+                  << s << " '" << excp.message() << "'" << std::endl;
+        throw excp;
+      }
     };
 
     RegularProbabilityDistribution1D(std::istream & is) : totProb(0)
@@ -67,35 +74,37 @@ namespace Lester {
     void readFromStream(std::istream & is) {
       Index index;
       double probability;
-      while (is>>index) {
-        is>>probability;
+      while ( is >> index ) {
+        is >> probability;
         addIndexAndProbability(index,probability);
       };
       finishInitialisation();
     };
 
     void finishInitialisation() {
+
       assert(xVals.size()==pVals.size());
-      if (xVals.size()<2) {
-        throw NotEnoughData("Not enough frigging data....");
+      if ( xVals.size() < 2 ) {
+        throw NotEnoughData( "Not enough data ...." );
       };
       //Check that the data really is "regular"
-      minX=xVals[0];
-      maxX=(*(xVals.end()-1));
+      minX = xVals[0];
+      maxX = (*(xVals.end()-1));
       delta = maxX-minX;
       const double nGaps = static_cast<double>(xVals.size()-1);
       assert(nGaps>=1);
       deltaX = delta/nGaps;
       checkRegularity();
       start = minX - deltaX*0.5;
-      stop = maxX + deltaX*0.5;
-      sda = static_cast<double>(xVals.size())/(stop-start);
+      stop  = maxX + deltaX*0.5;
+      sda   = static_cast<double>(xVals.size())/(stop-start);
       normalise();
+
     };
 
     void checkRegularity() const {
       if (xVals.size()<2) {
-        throw NotEnoughData("Not enough frigging data....");
+        throw NotEnoughData( "Not enough data ...." );
       };
       const double tol = 0.0001;
       for (typename XVals::const_iterator xit = xVals.begin();
@@ -112,7 +121,7 @@ namespace Lester {
       };
     };
 
-    void normalise() 
+    void normalise()
     {
       const double totArea = totProb * deltaX;
       for (PVals::iterator pit = pVals.begin(); pit != pVals.end(); ++pit) {

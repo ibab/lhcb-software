@@ -1,4 +1,4 @@
-// $Id: RichMarkovRingFinderMoni.h,v 1.1.1.1 2004-05-31 21:24:48 jonesc Exp $
+// $Id: RichMarkovRingFinderMoni.h,v 1.2 2004-06-01 12:14:02 jonesc Exp $
 #ifndef COMPONENT_RICHMARKOVRINGFINDERMONI_H 
 #define COMPONENT_RICHMARKOVRINGFINDERMONI_H 1
 

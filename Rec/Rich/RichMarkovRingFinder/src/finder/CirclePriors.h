@@ -21,9 +21,13 @@ namespace Lester {
 
   template <class Mode, const Mode & mode>
   class CirclePriors {
+
   public:
+
     typedef CircleParams<Mode,mode> CircleParamsT;
+
   public:
+
     class SampleIsImpossible : public FinderExternalException {};
     class BadScenario : public FinderExternalException {};
     static inline double sampleFromCircleRadiusDistribution() {
@@ -111,8 +115,11 @@ namespace Lester {
       const double rho = r*sqrt(two-two*cos(theta));
       return rho;
     };
+
   private:
+
     static inline double approxCoPointSepFunctionPart2(const double deltaOnTwo, const double rSq) {
+
       const double deltaOnTwoSq = deltaOnTwo*deltaOnTwo;
       const double inner = rSq - deltaOnTwoSq;
       if (inner<=0) {
@@ -121,7 +128,9 @@ namespace Lester {
       const double ans = rSq/(deltaOnTwo*sqrt(inner));
       return ans;
     };
+
   private:
+
     static inline double approxCoPointSepFunctionPart1(const double deltaOnTwo) {
       // montecarlo answer and cache ...
       typedef std::map<double,double> Map;
@@ -133,6 +142,7 @@ namespace Lester {
         first = false;
 
         std::ifstream f(CacheHandler::approxCoPointSepCacheFileName().c_str());
+
         if (true/*FIX*/) {
           double key,ans;
           while (f>>key) {

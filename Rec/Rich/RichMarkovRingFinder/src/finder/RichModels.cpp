@@ -6,6 +6,7 @@ namespace Lester {
   
   //const std::string thetaFileDeJour = "/usera/lester/proj/c++/rich/DATA/rich2_thetaDist_20030812a.txt";
   //const std::string thetaFileDeJour = "/data/Rich2_MarkovRingFinder_thetaDist.txt" ;
+
   const std::string thetaDirDeJour = getenv("PARAMFILESROOT");
   const std::string thetaFileR2DeJour = "/data/Rich2_MarkovRingFinder_thetaDist.txt";
 
