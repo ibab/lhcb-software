@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.34 2004-09-05 20:21:40 ibelyaev Exp $
+! $Id: release.notes,v 1.35 2004-09-06 15:02:06 cattanem Exp $
 ! =============================================================================
 ! Package     : CaloKernel
 ! Responsible : Vanya Belyaev Ivan.Belyaev@itep.ru
@@ -7,6 +7,7 @@
 ! which are essentially independent from Detector and Event models
 ! =============================================================================
 
+!======================= CaloKernel v3r2 2004-09-06 =======================
 ! 2004-09-05 - Vanya BELYAEV
  - CaloKernel/CaloVector.h
    tiny fixes for optimisation 
