@@ -1,4 +1,4 @@
-// $Id: MagneticFieldSvc.cpp,v 1.6 2002-05-31 13:47:13 ecorread Exp $
+// $Id: MagneticFieldSvc.cpp,v 1.7 2002-07-17 08:21:26 ranjard Exp $
 
 // Include files
 #include "GaudiKernel/AlgFactory.h"
@@ -37,10 +37,10 @@ MagneticFieldSvc::MagneticFieldSvc( const std::string& name,
 {
   if(getenv("LHCBDBASE") != NULL) {
     m_filename = std::string(getenv( "LHCBDBASE" )) + 
-      std::string( "/cdf/field043.cdf");
+      std::string( "/cdf/field044.cdf");
   }
   else {
-    m_filename = std::string( "field043.cdf" );
+    m_filename = std::string( "field044.cdf" );
   }
   declareProperty( "FieldMapFile", m_filename ); 
 }

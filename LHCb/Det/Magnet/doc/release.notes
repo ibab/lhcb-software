@@ -4,6 +4,11 @@
 ! Purpose     : Provides magnetic field map
 !-----------------------------------------------------------------------------
 
+!======================= Magnet v2r0 2002-07-16 =============================
+! 2002-07-16 - Florence Ranjard
+ - requirements - use CLHEP 1.8.0.0
+ - MagneticFieldSvc.cpp - read field044.cdf by default
+
 !======================== Magnet v1r1 update 2002-05-31 ======================
 ! 2002-05-31 - Edgar De Oliveira
  - Fix a Bug pointed by Rutger Hierck: When position y was set to zero
