@@ -9,14 +9,14 @@
 
 ////////////////////////////////////////////////////////////////////////////////////////
 MaterialException::MaterialException( const std::string& message      , 
-				      const Material*    mat    =  0  ) 
+				      const Material*    mat          ) 
   : GaudiException( message , "*MaterialException*" , StatusCode::FAILURE ) 
   , m_me_mat      ( mat      ) 
 { };
 ////////////////////////////////////////////////////////////////////////////////////////
 MaterialException::MaterialException( const std::string   &  message      ,
 				      const GaudiException&  Exception    ,  
-				      const Material*        mat    =  0  ) 
+				      const Material*        mat          ) 
   : GaudiException( message , "*MaterialException*" , StatusCode::FAILURE , Exception ) 
   , m_me_mat      ( mat     ) 
 {};
