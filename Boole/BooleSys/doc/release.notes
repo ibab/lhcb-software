@@ -3,12 +3,13 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
-</PRE><H1><A NAME=v8r2>2005-03-24 Boole v8r2</A></H1><PRE>
+</PRE><H1><A NAME=v8r2>2005-04-01 Boole v8r2</A></H1><PRE>
 This version uses Gaudi v16r2, LHCb v18r2, Lbcom v1r2 (also CLHEP 1.9, ROOT 4.0) 
 Requires input from Gauss v19r3 or greater. Cannot process DC04 Gauss output.
 Output data incompatible with DC04 versions, needs Brunel v26r2 or greater
 
-- Packages added: TrgTools v7r2
+- Packages added:    TrgTools v7r2
+- Packages modified: MuonAlgs v5r7
 
 - New features:
   . New Boole.PreloadGeometry option to preload geometry tree at initialize
@@ -35,6 +36,9 @@ Output data incompatible with DC04 versions, needs Brunel v26r2 or greater
   (DigiContent.opts,ITAssociators v2r11,OTAssociators v3r2,VeloAssociators v1r14)
   . Backwards incompatible changes to internals of MCHit and MCParticle
     (Event v4r7)
+  . Removed from MCRichHit unneccessary inheritance from MCHit (RichEvent v8r3)
+  . Added to MCMuonHit inheritance from MCHit, for consistency (MuonEvent v4r0)
+    (and adapted MuonAlgs v5r7, MuonBackground v1r10 accordingly) 
 
 - Bug fixes:
   . Fix memory leak in XmlDDDB parser tool (XmlTools v3r4)

@@ -54,8 +54,8 @@ use ITCheckers          v2r4p1	IT
 use OTSimulation	v1r3	OT
 
 # Muon
-use MuonAlgs            v5r6	Muon
-use MuonBackground	v1r9	Muon
+use MuonAlgs            v5r7	Muon
+use MuonBackground	v1r10	Muon
 
 # Rich
 use RichDigiQC	        v2r1  	Rich
