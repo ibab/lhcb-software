@@ -4,6 +4,12 @@
 ! Purpose       : G4 actions, and some miscealenous algs for Gauss
 !-----------------------------------------------------------------------------
 
+! 2003-01008 - Witek Pokorski
+ - GaussInitialisation - added new jobOption to specify the number of the 
+                         first event to be processed
+                         changed the default behavior to the initialization
+                         of the random number engine before each event
+
 !============================ GaussTools v6r0 2002-12-17 =====================
 	
 ! 2002-12-17 - Witek Pokorski

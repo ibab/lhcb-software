@@ -23,9 +23,10 @@ GaussInitialisation::GaussInitialisation( const std::string& name,
                                             ISvcLocator* pSvcLocator )
                      : Algorithm( name, pSvcLocator ) { 
   m_engine = 0;
-  declareProperty( "initRndmOnce",    m_initRndm = true );
-  declareProperty( "rndmNumberSeed",  m_theSeed  = -1 );
+  declareProperty( "InitRndmOnce",    m_initRndm = false );
+  declareProperty( "RndmNumberSeed",  m_theSeed  = -1 );
   declareProperty( "RunNumber", m_runNumb = 1 );
+  declareProperty( "FirstEventNumber", m_firstEvent = 1);
 }
 //-----------------------------------------------------------------------------
 
@@ -37,8 +38,8 @@ GaussInitialisation::~GaussInitialisation() { }
 StatusCode GaussInitialisation::initialize() { 
 //-----------------------------------------------------------------------------
 
-  // Set event number to 1
-  m_eventNumb=1;
+  // Set event number to the first event
+  m_eventNumb=m_firstEvent;
   
   // Get the random number engine
   m_engine = randSvc()->engine();
@@ -75,6 +76,8 @@ StatusCode GaussInitialisation::execute() {
     }
   else 
     {
+      log << MSG::INFO << ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"<< endmsg;
+
       log << MSG::INFO << "Processing event " << m_eventNumb <<
         ",     Run "         << m_runNumb << endmsg;
     }
@@ -87,15 +90,16 @@ StatusCode GaussInitialisation::execute() {
     procStat = new ProcStatus();
     eventSvc()->registerObject( ProcStatusLocation::Default, procStat );
   }
-  
+
   // Set the random number seed either once per event or once per job
   std::vector<long> seeds;
   if( m_initRndm ) {
-    if( 1==m_eventNumb ){
+    if( m_firstEvent==m_eventNumb ){
       if( -1 == m_theSeed ) { m_theSeed = m_runNumb; }
       seeds.push_back( m_theSeed );
       m_engine->setSeeds( seeds );
-      log << MSG::INFO << "Random number sequence initialised with seed "
+      log << MSG::INFO 
+          << "Random number sequence initialised for this run with seed "
           << m_theSeed << endmsg; 
     }
   }  
@@ -103,6 +107,9 @@ StatusCode GaussInitialisation::execute() {
     m_theSeed = 100000 * (m_eventNumb % 20000) + (m_runNumb % 100000);
     seeds.push_back( m_theSeed );
     m_engine->setSeeds( seeds );
+    log << MSG::INFO 
+        << "Random number sequence initialised for this event with seed "
+        << m_theSeed << endmsg;
   }
 
   // Increase the event number
