@@ -1,4 +1,4 @@
-// $Id: CompositeParticle2MCLinks.h,v 1.6 2003-07-29 17:48:12 gcorti Exp $
+// $Id: CompositeParticle2MCLinks.h,v 1.7 2004-01-22 10:47:50 jvantilb Exp $
 #ifndef CompositeParticle2MCLinks_H 
 #define CompositeParticle2MCLinks_H 1
 
@@ -8,7 +8,7 @@
 
 // from Gaudi
 #include "GaudiKernel/Algorithm.h"
-
+#include "GaudiKernel/IParticlePropertySvc.h"
 
 // local
 #include "DaVinciAssociators/Particle2MCLinksAsct.h"
@@ -25,7 +25,7 @@ class CompositeParticle2MCLinks : public AsctAlgorithm {
   
 public:
   /// Standard constructor
-  CompositeParticle2MCLinks( const std::string& name, ISvcLocator* pSvcLocator );
+  CompositeParticle2MCLinks(const std::string& name, ISvcLocator* pSvcLocator );
 
   virtual ~CompositeParticle2MCLinks( ); ///< Destructor
 
@@ -36,7 +36,11 @@ public:
 
 private:
   Particle2MCLinksAsct::IAsct* m_pAsct;
+  IParticlePropertySvc* m_ppSvc;
   bool m_allowExtraMCPhotons;
+  bool m_inclusiveMode;
+  bool m_skipResonances;
+  double m_maxResonanceLifeTime;
   int  m_gamma;
 
   bool associate1(const Particle *p, const MCParticle *m, 
@@ -44,10 +48,16 @@ private:
   // This can be removed when the Relations package is updated...
   MCParticle* myAssociatedFrom(const Particle* p) const;
   bool isAssociatedFrom( const Particle* p, const MCParticle* m) const;
+  bool addDaughters( const Particle* m,
+                     std::vector<const Particle*>& daughters) const;
+  bool addMCDaughters( const MCParticle* m,
+                       std::vector<const MCParticle*>& daughters) const;
+  
 
   class associator : public std::unary_function<MCParticle*,bool> {
   public:
-    associator(CompositeParticle2MCLinks* t,Particle* p,Particle2MCAsct::Table* table) 
+    associator(CompositeParticle2MCLinks* t,Particle* p,
+               Particle2MCAsct::Table* table) 
       : m_t(t),m_p(p),m_table(table) {};
     bool operator()(const MCParticle* m) const {
       return m_t->associate1(m_p,m,m_table);

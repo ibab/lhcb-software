@@ -1,6 +1,15 @@
-! $Id: release.notes,v 1.32 2004-01-14 18:31:33 gcorti Exp $
+! $Id: release.notes,v 1.33 2004-01-22 10:47:50 jvantilb Exp $
 ! Package     : DaVinciAssociators
 ! Responsible : Philippe Charpentier
+
+! 2004-01-07 - Jeroen van Tilburg
+ - CompositeParticle2MCLinks.h/.cpp - Added options to ignore decays 
+   through resonances and to allow associations with inclusive decay mode:
+      - inclusiveMode: if true not all particles need to be reconstructed.
+      - skipResonances: Resonances are ignored in MC as well as 
+                        reconstructed decay.
+      - maxResonanceLifeTime: Boundary to determine whether MCParticle 
+                              should be considered as resonance.
 
 !================= DaVinciAssociators v4r3 2004-01-14 ======================
 ! 2004-01-14 - Gloria CORTI

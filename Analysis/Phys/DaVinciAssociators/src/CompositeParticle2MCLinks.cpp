@@ -1,11 +1,11 @@
-// $Id: CompositeParticle2MCLinks.cpp,v 1.5 2003-05-26 11:38:38 phicharp Exp $
+// $Id: CompositeParticle2MCLinks.cpp,v 1.6 2004-01-22 10:47:50 jvantilb Exp $
 // Include files 
 
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h"
-#include "GaudiKernel/MsgStream.h" 
-#include "GaudiKernel/IDataProviderSvc.h"
+#include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/SmartDataPtr.h"
+#include "GaudiKernel/ParticleProperty.h"
 
 // from Event
 #include "Event/MCParticle.h"
@@ -15,7 +15,6 @@
 
 // local
 #include "CompositeParticle2MCLinks.h"
-
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : CompositeParticle2MCLinks
@@ -34,11 +33,16 @@ const        IAlgFactory& CompositeParticle2MCLinksFactory = s_factory ;
 CompositeParticle2MCLinks::CompositeParticle2MCLinks( const std::string& name,
                                         ISvcLocator* pSvcLocator)
   : AsctAlgorithm ( name , pSvcLocator )
+  , m_ppSvc( 0 )
   , m_gamma( 22 )
 {
   m_outputTable = "Phys/Relations/CompPart2MCfromLinks" ;
   m_inputData.push_back( ParticleLocation::Production );
   declareProperty( "AllowExtraMCPhotons", m_allowExtraMCPhotons = false );
+  declareProperty( "inclusiveMode", m_inclusiveMode = false );
+  declareProperty( "skipResonances", m_skipResonances = false );
+  declareProperty( "maxResonanceLifeTime", m_maxResonanceLifeTime = 1.e-18*s );
+
 }
 
 //=============================================================================
@@ -57,6 +61,12 @@ StatusCode CompositeParticle2MCLinks::initialize() {
   StatusCode sc = retrievePrivateAsct("Particle2MCLinksAsct", true, m_pAsct);
   if(sc.isFailure()){
     msg << MSG::FATAL << " Unable to retrieve Associator tool" << endreq;
+    return sc;
+  }
+
+  sc = service("ParticlePropertySvc", m_ppSvc);
+  if( sc.isFailure() ) {
+    msg << MSG::FATAL << "Unable to locate Particle Property Service" << endmsg;
     return sc;
   }
 
@@ -100,10 +110,11 @@ StatusCode CompositeParticle2MCLinks::execute() {
         if ( 0 != table->relations(*pIt).size() ) continue; // already in table
         MCParticle *mcp =  myAssociatedFrom( *pIt );
         if ( 0 != mcp) { // copy from underlying associator
-          msg << MSG::DEBUG << "Direct association found between " <<  (*pIt)->key()
-            << " (" << (*pIt)->particleID().pid() << ") "
-            << " and MC Particle " << mcp->key() << " (" << mcp->particleID().pid() << ") "
-            << endreq;
+          msg << MSG::DEBUG << "Direct association found between " 
+              <<  (*pIt)->key()
+              << " (" << (*pIt)->particleID().pid() << ") "
+              << " and MC Particle " << mcp->key() << " (" 
+              << mcp->particleID().pid() << ") " << endreq;
           table->relate(*pIt,mcp);
         } else {
           SmartDataPtr<MCParticles> mcParts( eventSvc(),
@@ -175,25 +186,21 @@ CompositeParticle2MCLinks::associate1(const Particle *p,
       msg <<  " no daughter, check underlying particle associator" ;
       s = isAssociatedFrom(p, m); 
     } else {
-      const SmartRefVector<Particle>& dau = v->products();
-      const SmartRefVector<MCVertex>& vMC = m->endVertices(); 
-      if (!vMC.empty()) {
-        std::vector<const MCParticle*> mcdau;
-        // Get a vector of products of the first vertex
-        // check the sum of all endVertices???
-        if (vMC[0]!=0) {
-          const SmartRefVector<MCParticle>& d = vMC[0]->products();
-          for (SmartRefVector<MCParticle>::const_iterator k=d.begin();
-               k!=d.end();++k)
-            mcdau.push_back(*k);
-        }
-        SmartRefVector<Particle>::const_iterator i;
+      std::vector<const Particle*> dau;
+      addDaughters ( p , dau );
+
+      // Get a vector of products of the MCParticle
+      // check the sum of all endVertices???
+      std::vector<const MCParticle*> mcdau;
+      if ( addMCDaughters ( m, mcdau ) ) {
+
+        std::vector<const Particle*>::const_iterator i;
         // Loop on the Particle's daughters
         for (i = dau.begin();i != dau.end();++i) {
           // Loop on MCParticles daughters and check if they are associated
           std::vector<const MCParticle*>::iterator j = mcdau.begin();
           while (j != mcdau.end() && !associate1(*i,*j,table)) ++j;
-          if (mcdau.end() == j) break; // doesn't match any MCParticle -- give up
+          if (mcdau.end() == j) break; //doesn't match any MCParticle -- give up
           // Match found, remove it from the MC daughters
           mcdau.erase(j);
         }
@@ -201,12 +208,13 @@ CompositeParticle2MCLinks::associate1(const Particle *p,
         if (m_allowExtraMCPhotons) { // maybe add an energy threshold
                                      // for extraneous photons?
           while (!mcdau.empty() &&
-                 mcdau.back()->particleID().pid() == m_gamma ) 
+                  mcdau.back()->particleID().pid() == m_gamma ) 
             mcdau.pop_back();
         }
 
-        s = ( i == dau.end() && mcdau.empty() ) ; // all matched up, 
-                                                  // nothing left
+        // all matched up, nothing left
+        s = ( i == dau.end() && ( m_inclusiveMode || mcdau.empty() ) ) ; 
+        
       }
     }
   }
@@ -232,7 +240,8 @@ CompositeParticle2MCLinks::myAssociatedFrom(const Particle* p) const
   if( !mcRange.empty() ) {
     if( msg.level() <= MSG::DEBUG ) {
       if( mcRange.begin()->to() != mcRange.rbegin()->to() ) {
-        msg << MSG::DEBUG << "Particle " << p->key() << " has more than one associated MCParticle" << endreq;
+        msg << MSG::DEBUG << "Particle " << p->key() 
+            << " has more than one associated MCParticle" << endreq;
       }
     }
     return mcRange.rbegin()->to();
@@ -240,15 +249,62 @@ CompositeParticle2MCLinks::myAssociatedFrom(const Particle* p) const
   return NULL;
 }
 
-bool CompositeParticle2MCLinks::isAssociatedFrom( const Particle* p, const MCParticle* m) const
+bool CompositeParticle2MCLinks::isAssociatedFrom( const Particle* p, 
+                                                  const MCParticle* m) const
 {
   MsgStream  msg( msgSvc(), name() );
   MCsFromParticleLinks mcRange = m_pAsct->rangeFrom(p);
   if( !mcRange.empty() ) {
-    for( MCsFromParticleLinksIterator mcIt = mcRange.begin(); mcRange.end() != mcIt; mcIt++) {
+    for( MCsFromParticleLinksIterator mcIt = mcRange.begin(); 
+         mcRange.end() != mcIt; mcIt++) {
       const MCParticle* mp = mcIt->to();
       if( m == mp ) return true;
     }
+  }
+  return false;
+}
+
+bool CompositeParticle2MCLinks::addDaughters( const Particle* p,
+                                std::vector<const Particle*>& daughters) const
+{
+  const Vertex* v = p->endVertex();
+  if ( v != 0 ) {
+    const SmartRefVector<Particle>& dau = v->products();
+    for (SmartRefVector<Particle>::const_iterator k = dau.begin();
+         k != dau.end(); ++k ) {
+
+      // if resonances should be skipped add daughters instead
+      if ( (*k)->isResonance() && 
+           m_skipResonances && addDaughters ( *k, daughters ) );
+      else daughters.push_back( *k );
+    }
+    return true;
+  }
+  return false;
+}
+
+bool CompositeParticle2MCLinks::addMCDaughters( const MCParticle* m,
+                                std::vector<const MCParticle*>& daughters) const
+{
+  const SmartRefVector<MCVertex>& vMC = m->endVertices();
+  if ( !vMC.empty() && vMC[0] != 0 ) {
+    const SmartRefVector<MCParticle>& d = vMC[0]->products();
+    for (SmartRefVector<MCParticle>::const_iterator k = d.begin();
+         k != d.end(); ++k ) {
+
+      // Use lifetime to determine if MCParticle is a resonance
+      ParticleProperty* partProp = m_ppSvc ->
+        findByStdHepID( (*k)->particleID().abspid() );
+      bool resonance = false;
+      if ( partProp != 0 && partProp->lifetime() < m_maxResonanceLifeTime ) {
+        resonance = true;
+      }      
+
+      // if resonances should be skipped add daughters instead
+      if ( resonance && m_skipResonances && addMCDaughters ( *k, daughters ) );
+      else daughters.push_back( *k );
+    }
+    return true;
   }
   return false;
 }
