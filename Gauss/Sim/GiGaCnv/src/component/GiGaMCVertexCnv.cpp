@@ -2,6 +2,9 @@
 /// CVS tag $Name: not supported by cvs2svn $ 
 /// ===========================================================================
 /// $Log: not supported by cvs2svn $
+/// Revision 1.6  2001/07/27 11:24:57  ibelyaev
+/// bug fix in MCParticles<->MCVertices relations
+///
 /// Revision 1.5  2001/07/25 17:19:32  ibelyaev
 /// all conversions now are moved from GiGa to GiGaCnv
 ///
@@ -227,13 +230,14 @@ StatusCode GiGaMCVertexCnv::updateObj( IOpaqueAddress*  Address ,
   if( 0 == trajectories ) 
     { return Error("No G4TrajectoryContainer* object is found!"); } 
   /// convert all trajectory points into MCVertex  objects
+  object->reserve( trajectories->size() );
   {  
     /// create "converter"
     Point2Vertex Cnv;
     /// convert points into vertices 
     typedef G4TrajectoryContainer::const_iterator IT;
     for( IT iTr = trajectories->begin() ; 
-       trajectories->end() != iTr ; ++iTr ) 
+         trajectories->end() != iTr ; ++iTr ) 
       {
         ///
         const G4VTrajectory* vt = *iTr ;
@@ -253,16 +257,23 @@ StatusCode GiGaMCVertexCnv::updateObj( IOpaqueAddress*  Address ,
   {
     GiGaCnvFunctors::MCVerticesLess  Less ;
     std::stable_sort( object->begin() , object->end() , Less );
+    
+    /** due to close relations between ContainedObject 
+     *  and its parent Container we could not use standard 
+     *  algorithm std::unique. 
+     *  Therefore the following ugly lines are used.  
+     */
     typedef ObjectVector<MCVertex>::iterator IT;
-    IT      end = object->end () ; /// unsorted garbage iterator 
-    for( IT it = object->begin() ;  end != it ; ++it )
+    IT     end = object->end   () ; /// unsorted garbage iterator
+    for( IT it = object->begin () ;  end != it ; ++it )
       { 
         /// find the first element which is "bigger" - should be fast!
         IT iL = it + 1; 
         IT iU = std::find_if( iL , end , std::bind1st( Less , *it ) ) ;
-        if( end != iU ) { std::rotate( iL, iU , end ); end -= (iU-iL) ; }
+        if( end == iU ) { end = iL ; }
+        else  { std::rotate( iL, iU , end ); end -= (iU-iL) ; }
       }
-    object->erase( end , object->end() ) ; ///  remove unsorted garbage
+    object->erase( end , object->end() ) ; ///<  remove unsorted garbage 
   }
   ///
   return StatusCode::SUCCESS;

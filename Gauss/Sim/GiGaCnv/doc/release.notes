@@ -1,15 +1,19 @@
 ! =============================================================================
 ! CVS tag $Name: not supported by cvs2svn $
 ! =============================================================================
-! $Id: release.notes,v 1.6 2001-07-24 11:13:54 ibelyaev Exp $
+! $Id: release.notes,v 1.7 2001-07-30 14:13:35 ibelyaev Exp $
 ! =============================================================================
 Package         : GiGaCnv
 Package Manager : Vanya Belyaev
 ! =============================================================================
 
 !==============================================================================
+! 20010730  Vanya Belyaev 
+    GiGaMCVertexCnv.cpp  -  bug fix 
+    GiGaCnvFunctors.h     - rewrite comparison functors to make them easier 
+!==============================================================================
 ! 20010724  Vanya Belyaev 
-    restructurisation and teh update due to changes in GiGa 
+    restructurisation and the update due to changes in GiGa 
 
 !==============================================================================
 ! 20010717 v2  Vanya Belyaev 
