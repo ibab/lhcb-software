@@ -27,8 +27,7 @@ Purpose: LHCb Digitization program
     File BooleOutput.opts is obsolete and has been removed.
   - L0/Calo and L0/FullCalo removed (can be rebuilt from RawBuffer)
   - Gen/HepMCEvents added as optional (will be written if present on Gauss o/p)
-  - Trg tracks added (result of L1 tracking)
-  - Link objects added (MC truth for tracking digits and L1 tracks)
+  - Link objects added (MC truth for tracking digits)
   - MCTrackInfo added
 
 
