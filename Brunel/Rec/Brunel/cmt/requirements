@@ -111,14 +111,14 @@ use VeloTrack           v4r1    Velo
 use TrAssociators       v3r1    Tr
 use FwTrack             v4r2    Tr
 use LongTrack           v1r1    Tr
-use TrFitter            v3r1    Tr
-use TrExtrapolator      v2r1    Tr
+use TrFitter            v3r2    Tr
+use TrExtrapolator      v2r2    Tr
 use TrTools             v2r1    Tr
 use Seeding	        v2r1    Tr
-use TrMatching          v2r0    Tr
-use TrCleanEx           v2r1    Tr
+use TrMatching          v2r1    Tr
+use TrCleanEx           v2r2    Tr
 use TrIntraPR		v2r1	Tr
-use UpstreamPR		v2r2	Tr
+use UpstreamPR		v2r3	Tr
 
 # Muon
 use MuonKernel          v2r1    Muon
