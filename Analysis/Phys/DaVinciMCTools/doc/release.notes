@@ -1,6 +1,13 @@
-! $Id: release.notes,v 1.37 2004-10-13 08:03:41 pkoppenb Exp $
+! $Id: release.notes,v 1.38 2004-11-16 16:15:40 pkoppenb Exp $
 ! Package     : DaVinciMCTools
 ! Responsible : P. Koppenburg
+
+! 2004-11-16 - P. Koppenburg
+ - src/FilterGoodDecay.*
+   . New algorithm that checks if a given decay is present in the MC truth
+     Example options:
+        ApplicationMgr.TopAlg += { "FilterGoodDecay" } ;
+        FilterGoodDecay.MCDecayFinder.Decay =  "[D*(2010)- -> ^pi- (D~0 => ^K+ ^pi-)]cc" ;
 
 !========================== DaVinciMCTools v5r6 2004-10-13 ===================
 ! 2004-09-26 - Luis Fernandez
