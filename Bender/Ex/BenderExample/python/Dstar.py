@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-# $Id: Dstar.py,v 1.9 2004-03-17 10:18:18 ibelyaev Exp $
+# $Id: Dstar.py,v 1.10 2004-06-29 06:41:52 ibelyaev Exp $
 # =============================================================================
 # CVS tag $Name: not supported by cvs2svn $ 
 # =============================================================================
@@ -24,7 +24,7 @@ global h1
 class Dstar(Algo):
     " My own analysis algorithm for selection of D*+ -> D0(K- pi+) pi+ "
     def analyse ( self ) :
-
+        
         # select all primary vertices 
         PVs    = self.vselect( tag = "PVs" , cuts = VTYPE == VertexType.Primary )
         if PVs.empty() : return SUCCESS
@@ -146,7 +146,7 @@ nsvc.Output =[ "DSTAR DATAFILE='dstar_tup.hbook' TYP='HBOOK' OPT='NEW'" ]
 # job execution 
 # =============================================================================
 
-g.run(500) 
+g.run(20) 
 
 g.exit()
 
@@ -154,4 +154,7 @@ g.exit()
 # The END 
 # =============================================================================
 # $Log: not supported by cvs2svn $
+# Revision 1.9  2004/03/17 10:18:18  ibelyaev
+#  add usage of benderPreLoad module
+#
 # =============================================================================

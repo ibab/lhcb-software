@@ -1,44 +1,61 @@
 #!/usr/bin/env python
-# $Id: MCJPsiKstar.py,v 1.2 2004-06-29 06:41:52 ibelyaev Exp $
+# $Id: Decays.py,v 1.1 2004-06-29 06:41:52 ibelyaev Exp $
 # =============================================================================
 # CVS tag $Name: not supported by cvs2svn $ 
 # =============================================================================
 # @file
-# Simple script to check MC for B -> J/psi K* channel 
+# Simple script to run D*+ -> ( D0 -> K- pi+ ) pi+ selection with Bender
 # =============================================================================
 # @author Vanya BELYAEV Ivan.Belyaev@itep.ru
-# @date   2004-03-16 
+# @date   2003-12-04 
 # =============================================================================
 
 # import the Bender itself  
 from   bendermodule import *
-import benderconfig as bender 
+import benderconfig  as bender 
 
-g.JobOptionsType = 'NONE'
-g.OutputLevel = 3
-g.config()
-
-global h1 
 # =============================================================================
 # Specific physics analysis algorithm 
 # =============================================================================
 
 # create my own algorithm  
-class MCJPsiKstar(Algo):
-    " My own analysis algorithm for MC checks for B0 -> J/psi K* channel "
+class Decays(Algo):
+    " My own analysis algorithm for selection members of D0->(K- pi+) decay "
     def analyse ( self ) :
         
         mc  = self.mctruth()
-        Bmc = mc.find ( decay = "[B0 -> J/psi(1S) K*(892)0]cc" )
-        print Bmc.size()
-        
-        lst = Seq2List  ( Bmc )
-        print lst 
-        tup = Seq2Tuple ( Bmc )
-        print tup 
-        
+        trees = mc.find ( decay = "[D0 -> K- pi+]cc" )
+        print " # of found decay trees          " , trees.size()
+        for p in trees :
+            print " MCID of the particle " , MCID( p )
+            
+        n1 = mc.find ( decay = "[D0 -> ^K- ^pi+]cc" )
+        print " # of found decay members (all)    " , n1.size()
+        for p in n1 :
+            print " MCID of the particle " , MCID( p )
+            
+        n2 = mc.find ( decay = "[D0 -> ^K- pi+]cc" )
+        print " # of found decay members (first)  " , n2.size()
+        for p in n2 :
+            print " MCID of the particle " , MCID( p )
+            
+        n3 = mc.find ( decay = "[D0 -> K- ^pi+]cc" )
+        print " # of found decay members (second) " , n3.size()
+        for p in n3 :
+            print " MCID of the particle " , MCID( p )            
+
+        n4 = mc.find ( decay = " K- : [D0 -> K- pi+]cc" )
+        print " # of found decay members (K-) "     , n4.size()
+        for p in n4 :
+            print " MCID of the particle " , MCID( p )
+
+        n5 = mc.find ( decay = " K+ : [D0 -> K- pi+]cc" )
+        print " # of found decay members (K+) "     , n5.size()
+        for p in n5 :
+            print " MCID of the particle " , MCID( p )
+
         return SUCCESS 
-    
+
 # =============================================================================
 # Generic job configuration 
 # =============================================================================
@@ -50,11 +67,10 @@ bender.config( files   = [ '$BENDEREXAMPLEOPTS/BenderExample.opts' ] ,
                            'HcalPIDe.OutputLevel      =   5  ' ,
                            'BremPIDe.OutputLevel      =   5  ' ,
                            'PrsPIDe.OutputLevel       =   5  ' ,
-                           'NeutralPP2MC.OutputLevel  =   5  ' ,
                            'EventSelector.PrintFreq   =  50  ' ] )
 
-# define input data channel B0 -> J/Psi K*  
-g.readOptions('/afs/cern.ch/lhcb/project/web/cards/411500.opts')
+# define input data channel B0 -> ( D*- -> D0bar(K+ pi-) pi- ) pi+  
+g.readOptions('/afs/cern.ch/lhcb/project/web/cards/415000.opts')
 
 g.HistogramPersistency = "HBOOK" ;
 
@@ -62,35 +78,27 @@ g.HistogramPersistency = "HBOOK" ;
 # specific job configuration 
 # =============================================================================
 
+
 # create analysis algorithm and add it to the list of
-alg = MCJPsiKstar('MC')
-
-g.topAlg += [ 'MC' ]
-
-alg = gaudi.iProperty('MC')
+alg = Decays('Decays')
+g.topAlg += [ 'Decays' ]
+alg = gaudi.iProperty('Decays')
 alg.OutputLevel = 5
-alg.NTupleLUN    = 'MC'
 
-desktop                 = g.property('Dstar.PhysDesktop')
-desktop.InputLocations  = [ "/Event/Phys/Charged"]
+# add 'similar' C++ algorithm from LoKiExample package
+g.DLLs   += [ "LoKiExample"            ]
+g.topAlg += [ 'LoKi_MCDecays/MCDecays' ]
 
 # output histogram file 
 hsvc = g.property( 'HistogramPersistencySvc' )
-hsvc.OutputFile = 'mc.hbook'
+hsvc.OutputFile = 'Decays.hbook'
 
-nsvc = gaudi.iProperty( 'NTupleSvc' )
-nsvc.Output =[ "DSTAR DATAFILE='mc_tup.hbook' TYP='HBOOK' OPT='NEW'" ]
 
 # =============================================================================
 # job execution 
 # =============================================================================
 
-
-g.initialize()
-
-
-## g.run(100)  ## crash !!
-g._evtpro.executeRun(10)
+g.run(20) 
 
 g.exit()
 
@@ -98,7 +106,4 @@ g.exit()
 # The END 
 # =============================================================================
 # $Log: not supported by cvs2svn $
-# Revision 1.1  2004/03/16 12:06:28  ibelyaev
-#  add new script
-#
 # =============================================================================

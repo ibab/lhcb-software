@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.8 2004-03-16 09:42:22 ibelyaev Exp $ 
+# $Id: requirements,v 1.9 2004-06-29 06:41:52 ibelyaev Exp $ 
 # ============================================================================
 # CVS tag $Name: not supported by cvs2svn $ 
 # ============================================================================
@@ -7,7 +7,7 @@
 # ============================================================================
 package          BenderExample
 author           Vanya BELYAEV
-version          v3r0
+version          v3r3
 
 # ============== structure ===================================================
 branches         cmt doc src python options
@@ -19,6 +19,7 @@ set              BENDEREXAMPLEOPTS    $(BENDEREXAMPLEROOT)/options
 # ============== dependencies ================================================
 use              Bender      v*   Phys 
 use              BenderVis   v*   Vis  
+use              LoKiExample v*   Ex 
 
 # ============== nesessary paths =============================================
 path_remove      PYTHONPATH "/BenderExample/"  WIN32  "\BenderExample\"
@@ -31,4 +32,7 @@ apply_pattern    application_path
 # The END 
 # ============================================================================
 # $Log: not supported by cvs2svn $
+# Revision 1.8  2004/03/16 09:42:22  ibelyaev
+#  remove Vis stuff
+#
 # ============================================================================
