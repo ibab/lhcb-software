@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Ex/IOExample/options/ReadMin.opts,v 1.1 2003-12-16 15:40:14 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Ex/IOExample/options/ReadMin.opts,v 1.2 2003-12-16 15:45:05 frankb Exp $
 ApplicationMgr.ExtSvc = { "EventSelector" };
 //--------------------------------------------------------------
 // Private Application Configuration options
@@ -10,12 +10,15 @@ EventSelector.OutputLevel  = 2;
 EventSelector.PrintFreq    = 1;
 EventSelector.FirstEvent   = 1;
 ApplicationMgr.ExtSvc    += { "PoolDbCacheSvc", 
+                              "PoolDbCnvSvc/RootEvtCnvSvc", 
                               "PoolDbCnvSvc/RootKeyEvtCnvSvc", 
                               "PoolDbCnvSvc/RootTreeEvtCnvSvc" 
                             };
 ApplicationMgr.DLLs             += { "GaudiPoolDb" };
 EventPersistencySvc.CnvServices += { "RootTreeEvtCnvSvc" };
 EventPersistencySvc.CnvServices += { "RootKeyEvtCnvSvc" };
+EventPersistencySvc.CnvServices += { "RootEvtCnvSvc" };
+RootEvtCnvSvc.DbType             = "POOL_ROOT";
 RootKeyEvtCnvSvc.DbType          = "POOL_ROOTKEY";
 RootTreeEvtCnvSvc.DbType         = "POOL_ROOTTREE";
 PoolDbCacheSvc.Dlls              = {"lcg_RootStorageSvc", "lcg_XMLCatalog" };
@@ -32,9 +35,9 @@ ApplicationMgr.DLLs       += { "OTAssociators", "ITAssociators", "MuonAssociator
 //
 //
 // Brunel file
-//EventSelector.Input  = {"DATAFILE='PFN:PoolDst.root' TYP='POOL_ROOTTREE' OPT='READ'" };
+//EventSelector.Input  = {"DATAFILE='PFN:PoolDst.root' TYP='POOL_ROOT' OPT='READ'" };
 // Boole file
-EventSelector.Input  = {"DATAFILE='PFN:PoolSim.root' TYP='POOL_ROOTTREE' OPT='READ'" };
+EventSelector.Input  = {"DATAFILE='PFN:PoolSim.root' TYP='POOL_ROOT' OPT='READ'" };
 // Gauss file
-EventSelector.Input  = {"DATAFILE='PFN:PoolGen.root' TYP='POOL_ROOTTREE' OPT='READ'" };
+EventSelector.Input  = {"DATAFILE='PFN:PoolGen.root' TYP='POOL_ROOT' OPT='READ'" };
 
