@@ -12,7 +12,7 @@ include_dirs $(VELOALGORITHMSROOT)
 
 # Used packages. Specify the version, * at the end specifies 'any revision'
 #============================================================================
-use  VeloEvent  v14r*   Event
+use  VeloEvent  v13r*   Event
 use  VeloDet    v9r*   	Det
 use  VeloKernel v1r*	Velo -no_auto_imports
 use  GSL 	v*
