@@ -230,20 +230,18 @@ void EvtPythia::pythiacont(double *energy, int *ndaugjs, int *kf,
 
 
 void EvtPythia::decay( EvtParticle *p){
-  
-  
   //added by Lange Jan4,2000
   static EvtId STRNG=EvtPDL::getId("string");
   
-  int istdheppar=EvtPDL::getStdHep(p->getId());
-
+  int ipythiaIDpar=EvtPDL::getLundKC(p->getId());
+  
 #ifdef WIN32
-  if (PYCOMP(&istdheppar)==0) {
-#else    
-  if (pycomp_(&istdheppar)==0){
+  if (PYCOMP(&ipythiaIDpar)==0) {
+#else
+  if (pycomp_(&ipythiaIDpar)==0){
 #endif
     report(ERROR,"EvtGen") << "Pythia can not decay:"
-      <<EvtPDL::name(p->getId()).c_str()<<std::endl;
+                           <<EvtPDL::name(p->getId()).c_str()<<std::endl;
     return;
   }
   
@@ -252,7 +250,7 @@ void EvtPythia::decay( EvtParticle *p){
   EvtVector4R p4[20];
   
   int i,more;
-  int ip=EvtPDL::getStdHep(p->getId());
+  int ip=EvtPDL::getLundKC(p->getId());
   int ndaugjs;
   int kf[100];
   EvtId evtnumstable[100],evtnumparton[100];
@@ -282,7 +280,7 @@ void EvtPythia::decay( EvtParticle *p){
     
     for(i=0;i<ndaugjs;i++){
       
-      if (EvtPDL::evtIdFromStdHep(kf[i])==EvtId(-1,-1)) {
+      if (EvtPDL::evtIdFromLundKC(kf[i])==EvtId(-1,-1)) {
         report(ERROR,"EvtGen") << "Pythia returned particle:"
                                <<kf[i]<<std::endl;
         report(ERROR,"EvtGen") << "This can not be translated to evt number"
@@ -296,16 +294,16 @@ void EvtPythia::decay( EvtParticle *p){
         pylist_(i);
 #endif
       }
-
+      
       //sort out the partons
       if (abs(kf[i])<=6||kf[i]==21){
         partonindex[numparton]=i;
-        evtnumparton[numparton]=EvtPDL::evtIdFromStdHep(kf[i]);
+        evtnumparton[numparton]=EvtPDL::evtIdFromLundKC(kf[i]);
         numparton++;
       }
       else{
         stableindex[numstable]=i;
-        evtnumstable[numstable]=EvtPDL::evtIdFromStdHep(kf[i]); 
+        evtnumstable[numstable]=EvtPDL::evtIdFromLundKC(kf[i]); 
         numstable++;
       }
       
@@ -360,9 +358,8 @@ void EvtPythia::decay( EvtParticle *p){
     }
     
     fixPolarizations(p);
-    
     return ;
-   
+    
   }
   else{
     
@@ -378,7 +375,7 @@ void EvtPythia::decay( EvtParticle *p){
     type[0]=STRNG;
     for(i=0;i<numstable;i++){
       if (km[stableindex[i]]==0){
-	type[nprimary++]=evtnumstable[i];
+        type[nprimary++]=evtnumstable[i];
       }
     }
     
@@ -402,7 +399,7 @@ void EvtPythia::decay( EvtParticle *p){
     for(i=0;i<numstable;i++){
       
       if (km[stableindex[i]]==0){
-	p->getDaug(nprimary++)->init(evtnumstable[i],p4[stableindex[i]]);
+        p->getDaug(nprimary++)->init(evtnumstable[i],p4[stableindex[i]]);
       }
     }
     
@@ -410,7 +407,7 @@ void EvtPythia::decay( EvtParticle *p){
     int nsecond=0;
     for(i=0;i<numstable;i++){
       if (km[stableindex[i]]!=0){
-	type[nsecond++]=evtnumstable[i];
+        type[nsecond++]=evtnumstable[i];
       }
     }
     
@@ -420,11 +417,12 @@ void EvtPythia::decay( EvtParticle *p){
     nsecond=0;
     for(i=0;i<numstable;i++){
       if (km[stableindex[i]]!=0){
-	p4[stableindex[i]]=boostTo(p4[stableindex[i]],p4string);
-	p->getDaug(0)->getDaug(nsecond)->init(evtnumstable[i],p4[stableindex[i]]);
-	p->getDaug(0)->getDaug(nsecond)->setDiagonalSpinDensity();
-	p->getDaug(0)->getDaug(nsecond)->decay();
-	nsecond++;
+        p4[stableindex[i]]=boostTo(p4[stableindex[i]],p4string);
+        p->getDaug(0)->getDaug(nsecond)
+          ->init(evtnumstable[i],p4[stableindex[i]]);
+        p->getDaug(0)->getDaug(nsecond)->setDiagonalSpinDensity();
+        p->getDaug(0)->getDaug(nsecond)->decay();
+        nsecond++;
       }
     }
     
@@ -433,7 +431,7 @@ void EvtPythia::decay( EvtParticle *p){
     return ;
     
   }
-
+  
 }
 
 void EvtPythia::fixPolarizations(EvtParticle *p){
@@ -658,11 +656,11 @@ void EvtPythia::WritePythiaEntryHeader(std::ofstream &outdec, int lundkc,
   //cchg=0;
   
   if(evtnum.getId()>=0) {
-    if (abs(EvtPDL::getStdHep(evtnum))==21) cchg=2;
+    if (abs(EvtPDL::getLundKC(evtnum))==21) cchg=2;
     //    if (abs(EvtPDL::getStdHep(evtnum))==90) cchg=-1;
     // diquark does not exist anymore in evt.pdl
-    if ((abs(EvtPDL::getStdHep(evtnum))<=8)&&
-	(abs(EvtPDL::getStdHep(evtnum))!=0)) cchg=1;
+    if ((abs(EvtPDL::getLundKC(evtnum))<=8)&&
+	(abs(EvtPDL::getLundKC(evtnum))!=0)) cchg=1;
 
   }
   
@@ -768,7 +766,7 @@ void EvtPythia::WritePythiaParticle(std::ofstream &outdec,EvtId ipar,
       for(i=0;i<5;i++){
 	
 	if(i<jetsetdecays[ijetset]->getNDaug()){
-	  daugs[i]=EvtPDL::getStdHep(
+	  daugs[i]=EvtPDL::getLundKC(
 			 jetsetdecays[ijetset]->getDaugs()[i]);
 	  cdaugs[i]=EvtPDL::chargeConj(jetsetdecays[ijetset]->getDaugs()[i]);
 	}
@@ -791,23 +789,23 @@ void EvtPythia::WritePythiaParticle(std::ofstream &outdec,EvtId ipar,
 	if (first) {
 	  first=0;      
 	  WritePythiaEntryHeader(outdec,
-				 //EvtPDL::getLundKC(iparname),
-				 EvtPDL::getStdHep(iparname),
-				 iparname,
-				 EvtPDL::name(iparname), 
-				 EvtPDL::chg3(iparname),
-				 0,0,EvtPDL::getMeanMass(ipar),
-				 EvtPDL::getWidth(ipar),
-				 EvtPDL::getMeanMass(ipar)-EvtPDL::getMinMass(ipar),
-				 EvtPDL::getctau(ipar),1,br_sum_true);
+                           EvtPDL::getLundKC(iparname),
+                           //				 EvtPDL::getStdHep(iparname),
+                           iparname,
+                           EvtPDL::name(iparname), 
+                           EvtPDL::chg3(iparname),
+                           0,0,EvtPDL::getMeanMass(ipar),
+                           EvtPDL::getWidth(ipar),
+                           EvtPDL::getMeanMass(ipar)-EvtPDL::getMinMass(ipar),
+                           EvtPDL::getctau(ipar),1,br_sum_true);
 	}
 	
 	int dflag=2;
 	
-	if (EvtPDL::getStdHep(ipar)<0) {
+	if (EvtPDL::getLundKC(ipar)<0) {
 	  dflag=3;
 	  for(i=0;i<jetsetdecays[ijetset]->getNDaug();i++){
-	    daugs[i]=EvtPDL::getStdHep(cdaugs[i]);
+	    daugs[i]=EvtPDL::getLundKC(cdaugs[i]);
 	  }
 	  
 	}
@@ -1129,75 +1127,53 @@ NominalCharge(int ID)
     }
 }
 
-void EvtPythia::MakePythiaFile(char* fname){
-  
+void EvtPythia::MakePythiaFile(char* fname){  
   EvtId ipar;
-  int lundkc;
-  
+  int lundkc;  
   //int part_list[MAX_PART];
-  
   std::ofstream outdec;
-  
   outdec.open(fname);
-  
   //outdec << "ERROR;"<<std::endl;
   //outdec << ";"<<std::endl;
   //outdec << ";This decayfile has been automatically created by"<<std::endl;
   //outdec << ";EvtGen from the DECAY.DEC file"<<std::endl;
   //outdec << ";"<<std::endl;
-  
   int nokcentry;
-  
   for(lundkc=1;lundkc<500;lundkc++){
-    
     nokcentry=1;
-    
     int iipar;
-    
     for(iipar=0;iipar<EvtPDL::entries();iipar++){
-      
       ipar=EvtId(iipar,iipar);
-
       if ( EvtDecayTable::isJetSet( ipar ) ) {
-
         //no aliased particles!
         std::string tempStr = EvtPDL::name(ipar);
         EvtId realId = EvtPDL::getId(tempStr);
         if ( realId.isAlias() != 0 ) continue;
-        
         if(!(
-             EvtPDL::getStdHep(ipar)==21 ||
-             EvtPDL::getStdHep(ipar)==22 ||
-             EvtPDL::getStdHep(ipar)==23))
+             EvtPDL::getLundKC(ipar)==21 ||
+             EvtPDL::getLundKC(ipar)==22 ||
+             EvtPDL::getLundKC(ipar)==23))
           {
-            int istdhep = EvtPDL::getStdHep( ipar ) ;
+            int ipythiaID = EvtPDL::getLundKC( ipar ) ;
 #ifdef WIN32
-            int pythiakc = PYCOMP( &istdhep ) ;
+            int pythiakc = PYCOMP( &ipythiaID ) ;
 #else
-            int pythiakc = pycomp_( &istdhep ) ;
+            int pythiakc = pycomp_( &ipythiaID ) ;
 #endif            
             // do not take anti-particles
-            if ( istdhep < 0 ) pythiakc = 0 ;
+            if ( ipythiaID < 0 ) pythiakc = 0 ;
             if ( lundkc == pythiakc ) {
-              nokcentry=0;
-              
+              nokcentry=0;         
               int first=1;
-              
               WritePythiaParticle(outdec,ipar,ipar,first);
-              
-              
               EvtId ipar2=EvtPDL::chargeConj(ipar);
-              
-              
               if (ipar2!=ipar){
                 WritePythiaParticle(outdec,ipar2,ipar,first);
               }
-              
-	    
               if (first){
                 WritePythiaEntryHeader(outdec, 
-                                       //EvtPDL::getLundKC(ipar),
-                                       EvtPDL::getStdHep(ipar),
+                                       EvtPDL::getLundKC(ipar),
+                                       //EvtPDL::getStdHep(ipar),
                                        ipar,
                                        EvtPDL::name(ipar),
                                        EvtPDL::chg3(ipar),
@@ -1206,49 +1182,34 @@ void EvtPythia::MakePythiaFile(char* fname){
                                        EvtPDL::getMeanMass(ipar)-
                                        EvtPDL::getMinMass(ipar),
                                        EvtPDL::getctau(ipar),0,0.0);
-                
               }
-              
             }
-            
           }
       }
     }
-  
-    
+
     if (lundkc==99999) // Write out diquarks after quarks, but only once
-      for(iipar=0;iipar<EvtPDL::entries();iipar++){
-	
-	ipar=EvtId(iipar,iipar);
-	
-	if (diquark(EvtPDL::getStdHep(ipar))){
-	  
-	  nokcentry=0;
-	  
-	  int first=1;
-	  
-	  WritePythiaParticle(outdec,ipar,ipar,first);
-	  
-	  
-	  EvtId ipar2=EvtPDL::chargeConj(ipar);
-	  
-	  
-	  if (ipar2!=ipar){
-	    WritePythiaParticle(outdec,ipar2,ipar,first);
-	  }
-	  
-	  if (first){
-	    WritePythiaEntryHeader(outdec, 
-				   EvtPDL::getStdHep(ipar),
-				   ipar,
-				   EvtPDL::name(ipar),
-				   NominalCharge(EvtPDL::getStdHep(ipar)),
-				   -1,0,
-				   NominalMass(EvtPDL::getStdHep(ipar)),
-				   0, 0, 0, 0,0.0);
-	    
-	  }
-	}
+      for(iipar=0;iipar<EvtPDL::entries();iipar++){        
+        ipar=EvtId(iipar,iipar);
+        if (diquark(EvtPDL::getLundKC(ipar))){
+          nokcentry=0;
+          int first=1;
+          WritePythiaParticle(outdec,ipar,ipar,first);
+          EvtId ipar2=EvtPDL::chargeConj(ipar);
+          if (ipar2!=ipar){
+            WritePythiaParticle(outdec,ipar2,ipar,first);
+          }
+          if (first){
+            WritePythiaEntryHeader(outdec, 
+                                   EvtPDL::getLundKC(ipar),
+                                   ipar,
+                                   EvtPDL::name(ipar),
+                                   NominalCharge(EvtPDL::getLundKC(ipar)),
+                                   -1,0,
+                                   NominalMass(EvtPDL::getLundKC(ipar)),
+                                   0, 0, 0, 0,0.0);       
+          }
+        }
       }
     /* if (nokcentry){
        
@@ -1259,6 +1220,59 @@ void EvtPythia::MakePythiaFile(char* fname){
        
        } */
   }
+
+  // Write now new Pythia particles
+
+  int iiparNew;
+  for(iiparNew=0;iiparNew<EvtPDL::entries();iiparNew++){
+    ipar = EvtId(iiparNew,iiparNew);
+    if ( EvtDecayTable::isJetSet( ipar ) ) {
+      //no aliased particles!
+      std::string tempStrNew = EvtPDL::name(ipar);
+      EvtId realIdNew = EvtPDL::getId(tempStrNew);
+      if ( realIdNew.isAlias() != 0 ) continue;
+      if(!(
+           EvtPDL::getLundKC(ipar)==21 ||
+           EvtPDL::getLundKC(ipar)==22 ||
+           EvtPDL::getLundKC(ipar)==23))
+        {
+          int ipythiaIDNew = EvtPDL::getLundKC( ipar ) ;
+#ifdef WIN32
+          int pythiakcNew = PYCOMP( &ipythiaIDNew ) ;
+#else
+          int pythiakcNew = pycomp_( &ipythiaIDNew ) ;
+#endif            
+          // do not take anti-particles (negative Id)
+          // and particles which are not to be used in Pythia
+          // (0 id)
+          if ( ipythiaIDNew <= 0 ) pythiakcNew = -1 ;
+          // The particle is not known to Pythia yet so it has to be
+          // added to the Pythia particle list now
+          if ( 0 == pythiakcNew ) {
+            int firstNew=1;
+            WritePythiaParticle(outdec,ipar,ipar,firstNew);
+            EvtId ipar2New=EvtPDL::chargeConj(ipar);
+            if (ipar2New!=ipar){
+              WritePythiaParticle(outdec,ipar2New,ipar,firstNew);
+            }
+            if (firstNew){
+              WritePythiaEntryHeader(outdec, 
+                                     EvtPDL::getLundKC(ipar),
+                                     //EvtPDL::getStdHep(ipar),
+                                     ipar,
+                                     EvtPDL::name(ipar),
+                                     EvtPDL::chg3(ipar),
+                                     0,0,EvtPDL::getMeanMass(ipar),
+                                     EvtPDL::getWidth(ipar),
+                                     EvtPDL::getMeanMass(ipar)-
+                                     EvtPDL::getMinMass(ipar),
+                                     EvtPDL::getctau(ipar),0,0.0);
+            }
+          }
+        }
+    }
+  } 
+
   outdec.close();
 }
 
@@ -1284,15 +1298,16 @@ void EvtPythia::pythiaInit(int dummy){
           iipar < EvtPDL::entries() ;
           iipar++ ) {
       ipar = EvtId( iipar , iipar ) ;
-      int istdhep = EvtPDL::getStdHep( ipar ) ;
+      int ipythiaID = EvtPDL::getLundKC( ipar ) ;
 
-      if ( ( ! diquark( abs( istdhep ) ) )
-           && ( ! isPythiaSpecial( abs (istdhep ) ) ) ) {
+      if ( ( ! diquark( abs( ipythiaID ) ) )
+           && ( ! isPythiaSpecial( abs (ipythiaID ) ) ) 
+           && ( 0 != ipythiaID ) ) {
 
 #ifdef WIN32
-        lundkc = PYCOMP( &istdhep ) ;
+        lundkc = PYCOMP( &ipythiaID ) ;
 #else
-        lundkc = pycomp_( &istdhep ) ;
+        lundkc = pycomp_( &ipythiaID ) ;
 #endif
         if ( 0 != lundkc ) {
           mass  = EvtPDL::getMeanMass( ipar ) ;
