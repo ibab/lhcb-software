@@ -1,7 +1,7 @@
-# $Id: requirements,v 1.4 2003-12-09 10:09:25 cattanem Exp $ 
+# $Id: requirements,v 1.5 2003-12-18 15:31:33 cattanem Exp $ 
 # =============================================================================
 package       XmlTools
-version       v3r0
+version       v3r1
 
 # =========== structure =======================================================
 branches      XmlTools doc cmt src
@@ -10,7 +10,7 @@ branches      XmlTools doc cmt src
 include_dirs  $(XMLTOOLSROOT)
 
 # =========== dependencies ====================================================
-use           GaudiKernel       v14r*
+use           GaudiKernel       v*
 use           CLHEP             v2r1810*
 use           XERCES            v2r230*
 

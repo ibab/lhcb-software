@@ -10,6 +10,7 @@ SimWriter.ItemList =
   , "/Event/Gen#1"
   , "/Event/Gen/Header#1"
   , "/Event/Gen/Collisions#1"
+  , "/Event/Gen/HepMCEvents#1"
   , "/Event/MC#1"
   , "/Event/MC/Particles#1"
   , "/Event/MC/Vertices#1"
@@ -19,7 +20,7 @@ SimWriter.ItemList =
   , "/Event/MC/OT/Hits#1"
   , "/Event/MC/Rich#1"
   , "/Event/MC/Rich/Hits#1"
-  //  , "/Event/MC/Rich/OpticalPhotons#1" // Only for special studies
+  , "/Event/MC/Rich/OpticalPhotons#1" // Only for special studies
   , "/Event/MC/Spd#1"
   , "/Event/MC/Spd/Hits#1"
   , "/Event/MC/Prs#1"

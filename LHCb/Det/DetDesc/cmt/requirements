@@ -1,7 +1,7 @@
-# $Id: requirements,v 1.57 2003-12-09 10:09:26 cattanem Exp $ 
+# $Id: requirements,v 1.58 2003-12-18 15:32:24 cattanem Exp $ 
 # =============================================================================
 package       DetDesc
-version       v14r0
+version       v14r1
 
 # =========== structure =======================================================
 branches      DetDesc doc cmt src
@@ -10,7 +10,7 @@ branches      DetDesc doc cmt src
 include_dirs  $(DETDESCROOT)
 
 # =========== dependencies ====================================================
-use           GaudiKernel       v14r*
+use           GaudiKernel       v*
 use           CLHEP             v*
 
 # =========== constituents =====================================================

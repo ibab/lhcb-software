@@ -4,6 +4,10 @@
 ! Purpose     : Interface to XML Xerces Parser plus some extra services
 !-----------------------------------------------------------------------------
 
+!================= XmlTools v3r1 2003-12-15 ==========================
+! 2003-12-15 - Marco Cattaneo
+ - In requirements, use GaudiKernel v*
+
 !================= XmlTools v3r0 2003-12-08 ==========================
 ! 2003-12-08 - Marco Cattaneo
  - Move to Gaudi v13

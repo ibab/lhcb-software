@@ -4,6 +4,11 @@
 ! Purpose     : standard converters for the LHCb Detector Description
 !-----------------------------------------------------------------------------
 
+!================= DetDescCnv v2r3 2003-12-15 ==========================
+! 2003-12-15 - Marco Cattaneo
+ - Move to Gaudi v14
+   . In XmlElementCnv.cpp: include TabulatedProperty.h 
+
 !================= DetDescCnv v2r2 2003-12-08 ==========================
 ! 2003-12-08 - Marco Cattaneo
  - Move to Gaudi v13

@@ -1,4 +1,4 @@
-// $Id: XmlElementCnv.cpp,v 1.4 2003-06-16 13:44:16 sponce Exp $ 
+// $Id: XmlElementCnv.cpp,v 1.5 2003-12-18 15:34:28 cattanem Exp $ 
 #include "GaudiKernel/CnvFactory.h"
 #include "GaudiKernel/DataObject.h"
 #include "GaudiKernel/ICnvManager.h"
@@ -12,6 +12,7 @@
 #include "DetDesc/Isotope.h"
 #include "DetDesc/Element.h"
 #include "DetDesc/Mixture.h"
+#include "DetDesc/TabulatedProperty.h"
 
 #include "XmlTools/IXmlSvc.h"
 #include "DetDescCnv/XmlCnvException.h"
