@@ -6,7 +6,7 @@
 # http://cern.ch/lhcb-comp/Support/html/new_structure.pdf
 #============================================================================
 package           RichDAQ
-version           v1r0p1
+version           v1r1
 
 # Structure, i.e. directories to process. 
 #============================================================================
@@ -17,20 +17,12 @@ branches          cmt doc src
 #    Put as many lines as needed, with all packages, without the '#'
 #============================================================================
 use   RichUtils      v3r*    Rich
-use   RichEvent      v6r*    Event
-use   DAQEvent       v3r*    Event
+use   RichEvent      v7r*    Event
+use   DAQEvent       v4r*    Event
 
 #============================================================================
 # Component library building rule
 #============================================================================
 library          RichDAQ    ../src/*.cpp
 
-#============================================================================
-# define component library link options
-#============================================================================
-apply_pattern    package_Clinkopts
-apply_pattern    packageShr
-
-#============================================================================
-private
-apply_pattern    package_Cshlibflags
+apply_pattern component_library library=RichDAQ
