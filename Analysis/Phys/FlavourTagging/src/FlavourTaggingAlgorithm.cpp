@@ -1,4 +1,4 @@
-// $Id: FlavourTaggingAlgorithm.cpp,v 1.3 2002-09-03 16:06:01 odie Exp $
+// $Id: FlavourTaggingAlgorithm.cpp,v 1.4 2002-09-05 08:16:48 odie Exp $
 // Include files 
 
 // from Gaudi
@@ -78,7 +78,7 @@ StatusCode FlavourTaggingAlgorithm::initialize() {
     if( hi->rfind("/Particles") == string::npos )
       hi->append("/Particles");
 
-  m_n_B_events = 0;
+  m_n_events = 0;
   m_n_B = 0;
   m_n_b_tags = 0;
   m_n_bbar_tags = 0;
@@ -173,7 +173,7 @@ StatusCode FlavourTaggingAlgorithm::execute() {
     tags->insert(theTag);
   }
   if( parts.size() )
-    m_n_B_events++;
+    m_n_events++;
   sc = eventSvc()->registerObject(m_tags_location,tags);
   if (sc.isFailure())
     log << MSG::ERROR << "Unable to register the tags under '"
@@ -193,11 +193,11 @@ StatusCode FlavourTaggingAlgorithm::finalize() {
   MsgStream log(msgSvc(), name());
   log << MSG::DEBUG << "==> Finalize" << endreq;
 
-  log << MSG::INFO << "Number of events with a B: " << m_n_B_events << endreq;
-  log << MSG::INFO << "Number of B:               " << m_n_B << endreq;
-  log << MSG::INFO << "Number of b tag:           " << m_n_b_tags << endreq;
-  log << MSG::INFO << "Number of bbar tag:        " << m_n_bbar_tags << endreq;
-  log << MSG::INFO << "Efficency:                 "
+  log << MSG::INFO << "Number of events processed: " << m_n_events << endreq;
+  log << MSG::INFO << "Number of B:                " << m_n_B << endreq;
+  log << MSG::INFO << "Number of b tag:            " << m_n_b_tags << endreq;
+  log << MSG::INFO << "Number of bbar tag:         " << m_n_bbar_tags << endreq;
+  log << MSG::INFO << "Efficency:                  "
       << float(m_n_b_tags+m_n_bbar_tags)/m_n_B << endreq;
 
   return StatusCode::SUCCESS;

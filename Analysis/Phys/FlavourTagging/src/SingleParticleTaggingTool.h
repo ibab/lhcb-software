@@ -1,4 +1,4 @@
-// $Id: SingleParticleTaggingTool.h,v 1.2 2002-09-03 08:22:07 odie Exp $
+// $Id: SingleParticleTaggingTool.h,v 1.3 2002-09-05 08:16:48 odie Exp $
 #ifndef SINGLEPARTICLETAGGINGTOOL_H 
 #define SINGLEPARTICLETAGGINGTOOL_H 1
 
@@ -83,7 +83,7 @@ private:
   IDataProviderSvc *m_EventSvc;
   INTupleSvc *m_NTupleSvc;
   std::string m_NTupleName;
-  bool m_NoNTuple;
+  bool m_DoNTuple;
   std::string m_MonitorLocation;
   bool m_Monitor;
 };

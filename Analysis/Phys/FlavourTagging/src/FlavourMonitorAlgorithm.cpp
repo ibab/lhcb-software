@@ -1,4 +1,4 @@
-// $Id: FlavourMonitorAlgorithm.cpp,v 1.1 2002-09-03 08:22:07 odie Exp $
+// $Id: FlavourMonitorAlgorithm.cpp,v 1.2 2002-09-05 08:16:48 odie Exp $
 // Include files 
 #include <algorithm>
 
@@ -159,13 +159,13 @@ StatusCode FlavourMonitorAlgorithm::execute() {
       unsigned int max_n = 0;
       while( !mcBs.empty() )
       {
-        unsigned int n = std::count(mcBs.begin(), mcBs.end(), *(mcBs.begin()));
+        unsigned int n = std::count(mcBs.begin(), mcBs.end(), mcBs.front());
         if( n>max_n )
         {
           max_n = n;
-          mcB = *(mcBs.begin());
+          mcB = mcBs.front();
         }
-        std::remove( mcBs.begin(), mcBs.end(), *(mcBs.begin()) );
+        mcBs.remove( mcBs.front() );
       }
       
       if( mcB == 0 )
@@ -206,26 +206,27 @@ StatusCode FlavourMonitorAlgorithm::execute() {
 StatusCode FlavourMonitorAlgorithm::finalize()
 {
   MsgStream log(msgSvc(), name());
-  log << MSG::INFO << "==> Finalize" << endreq;
+  log << MSG::INFO << "==> Finalize" << endl;
 
   std::vector<std::string>::const_iterator loc_i;
   unsigned int i;
   for( i=0, loc_i=m_tags_locations.begin(); loc_i!=m_tags_locations.end();
        loc_i++, i++ )
   {
-    log << "Statistics for tags in : " << *loc_i << endreq;
-    log << "----------------------------------------------------------"
-        << endreq;
-    double e, w;
-    log << "Event without associated B : " << m_n_noB[i] << endreq;
-    log << "Efficency           : "
-        << (e = double(m_n_good[i]+m_n_wrong[i])/double(m_n_untagged[i]))
-        << endreq;
-    log << "Wrong-tag fraction  : "
-        << (w = double(m_n_wrong[i])/double(m_n_good[i]+m_n_wrong[i]))
-        << endreq;
-    log << "Effective efficency : "
-        << e*pow(1-2*w,2) << endl;
+    double e   = double(m_n_good[i]+m_n_wrong[i])
+      /double(m_n_good[i]+m_n_wrong[i]+m_n_untagged[i]);
+    double w   = double(m_n_wrong[i])/double(m_n_good[i]+m_n_wrong[i]);
+    double eff = e*pow(1-2*w,2);
+    double se   = sqrt(e*(1-e)/(m_n_good[i]+m_n_wrong[i]+m_n_untagged[i]));
+    double sw   = sqrt(w*(1-w)/(m_n_good[i]+m_n_wrong[i]));
+    double seff = sqrt(eff/(m_n_good[i]+m_n_wrong[i]+m_n_untagged[i])
+                       *(4-eff*(1*3/eff)));
+    log << "Statistics for tags in : " << *loc_i << endl;
+    log << "----------------------------------------------------------\n";
+    log << "Event without associated B : " << m_n_noB[i] << endl;
+    log << "Efficency           : " << e << " ±" << se << endl;
+    log << "Wrong-tag fraction  : " << w << " ±" << sw << endl;
+    log << "Effective efficency : " << eff << " ±" << seff << endreq;
   }
   return StatusCode::SUCCESS;
 }

@@ -4,6 +4,12 @@
 ! Purpose     : Provide tools and algorithm for tagging Bs
 !-----------------------------------------------------------------------------
 
+! 2002-09-05 - Olivier Dormond
+ - Fixed computation and report of the statistics for tagging and monitoring
+ - Added the missing writeRecord so the ntuples are realy filled in!
+ - Stripped down the generated name for the ntuple by only using the last
+   part of the tool name (the one after the rightmost dot).
+
 ! 2002-09-03 - Olivier Dormond
  - The "/Particles" part of the hypothesis locations is now added
    automatically if not present.

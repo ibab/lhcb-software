@@ -1,4 +1,4 @@
-// $Id: SingleParticleTaggingTool.cpp,v 1.2 2002-09-03 08:22:07 odie Exp $
+// $Id: SingleParticleTaggingTool.cpp,v 1.3 2002-09-05 08:16:48 odie Exp $
 #include <algorithm>
 #include <iomanip>
 
@@ -93,15 +93,20 @@ StatusCode SingleParticleTaggingTool::initialize()
     return StatusCode::FAILURE;
   }
 
+  std::string name_tail =
+    (name().rfind('.') == string::npos) ? name()
+                                        : name().substr(name().rfind('.')+1); 
+
   if( m_Monitor && ( m_MonitorLocation == "auto" || m_MonitorLocation == "Auto"
                      || m_MonitorLocation == "AUTO" ) )
-    m_MonitorLocation = "/Event/Phys/Monitor/"+name()+"/Tags";
+    m_MonitorLocation = "/Event/Phys/Monitor/"+name_tail+"/Tags";
 
   if(m_NTupleName == "none" || m_NTupleName == "None" || m_NTupleName == "NONE")
   {
-    m_NoNTuple = true;
+    m_DoNTuple = false;
     return StatusCode::SUCCESS;
   }
+  m_DoNTuple = true;
 
   serviceLocator()->service("NTupleSvc", m_NTupleSvc);
   if( !m_NTupleSvc )
@@ -111,7 +116,9 @@ StatusCode SingleParticleTaggingTool::initialize()
   }
 
   if(m_NTupleName == "auto" || m_NTupleName == "Auto" || m_NTupleName == "AUTO")
-    m_NTupleName = "FILE1/FlavourTagging/"+name();
+    m_NTupleName = "FILE1/FlavourTagging/"+name_tail;
+
+  log << MSG::DEBUG << "Booking an ntuple named: " << m_NTupleName << endreq;
 
   StatusCode status;
   NTuplePtr nt(m_NTupleSvc, m_NTupleName);
@@ -276,6 +283,7 @@ void SingleParticleTaggingTool::tagFromList( const Particle &theB,
   int size = 0;
   if( m_AllVertices )
   {
+    log << MSG::DEBUG << "Using all vertices (";
     std::vector<std::string>::const_iterator loc;
     for( loc = m_PrimVerticesLocations.begin();
          loc != m_PrimVerticesLocations.end();
@@ -285,6 +293,7 @@ void SingleParticleTaggingTool::tagFromList( const Particle &theB,
       if( prim_vtxs )
         size += prim_vtxs->size();
     }
+    log << size << ")." << endreq;
   }
   else
     size = 1;
@@ -308,7 +317,7 @@ void SingleParticleTaggingTool::tagFromList( const Particle &theB,
   else
     vtxs.push_back(&thePrimVtx);
 
-  if( !m_NoNTuple )
+  if( m_DoNTuple )
   {
     m_n_cands = 0;
     m_n_vtxs = vtxs.size();
@@ -332,7 +341,7 @@ void SingleParticleTaggingTool::tagFromList( const Particle &theB,
     {
       double impact, error;
       m_GeomDisp->calcImpactPar( **c, **v, impact, error );
-      if( !m_NoNTuple )
+      if( m_DoNTuple )
       {
         m_ip[i][vi] = impact;
         m_iperr[i][vi] = error;
@@ -346,12 +355,12 @@ void SingleParticleTaggingTool::tagFromList( const Particle &theB,
     }
     if( !bad && ((*c)->pt() > max_pt) )
     {
-      if( !m_NoNTuple )
+      if( m_DoNTuple )
         m_i_selected = i;
       theTag.setTagger(*c);
       max_pt = (*c)->pt();
     }
-    if( !bad && !m_NoNTuple )
+    if( !bad && m_DoNTuple )
     {
       m_px[i] = (*c)->momentum().x();
       m_py[i] = (*c)->momentum().y();
@@ -377,7 +386,8 @@ void SingleParticleTaggingTool::tagFromList( const Particle &theB,
       theTag.setDecision( FlavourTag::b );
   else
     theTag.setDecision( FlavourTag::none );
-  if( !m_NoNTuple )
+  if( m_DoNTuple )
+  {
     switch( theTag.decision() )
     {
     case FlavourTag::b:
@@ -390,6 +400,8 @@ void SingleParticleTaggingTool::tagFromList( const Particle &theB,
       m_tag = 0;
       break;
     }
+    m_NTupleSvc->writeRecord( m_NTupleName );
+  }
   theTag.setTaggedB( &theB );
   theTag.setType( FlavourTag::singleParticle );
   if( m_Monitor )

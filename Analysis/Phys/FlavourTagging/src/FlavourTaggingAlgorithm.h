@@ -1,4 +1,4 @@
-// $Id: FlavourTaggingAlgorithm.h,v 1.2 2002-09-03 08:22:07 odie Exp $
+// $Id: FlavourTaggingAlgorithm.h,v 1.3 2002-09-05 08:16:48 odie Exp $
 #ifndef FLAVOURTAGGINGALGORITHM_H 
 #define FLAVOURTAGGINGALGORITHM_H 1
 
@@ -32,7 +32,7 @@ public:
 protected:
 
 private:
-  int m_n_B_events;
+  int m_n_events;
   int m_n_B;
   int m_n_b_tags;
   int m_n_bbar_tags;
