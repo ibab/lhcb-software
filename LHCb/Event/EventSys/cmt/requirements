@@ -18,5 +18,5 @@ use L0Event      v13r0   Event
 use L1Event      v11r0p1 Event
 use PhysEvent    v7r0p1  Event
 use DbCnv        v7r0    Event
-use GenEvent     v2r1p1  Event
+use GenEvent     v2r3    Event
 
