@@ -52,17 +52,21 @@ use  LoKi               v2r5p1   Tools
 
 # Physics packages
 use  CommonParticles    v1r5     Phys
-use  DaVinciAssociators v5r0     Phys
-use  DaVinciChecks      v2r3p2   Phys
-use  DaVinciEff         v3r0     Phys
-use  DaVinciMCTools     v5r4     Phys
-use  DaVinciTest        v4r4     Phys
 use  DaVinciTools       v9r5     Phys
 use  DaVinciUser        v5r1     Phys
 use  FlavourTagging     v5r0     Phys
 use  Ks2PiPiSel         v1r4     Phys
 use  PhysSelections	v6r7     Phys
 
+# Physics MC packages
+use  DaVinciChecks      v2r3p2   Phys
+use  DaVinciAssociators v5r0     Phys
+use  DaVinciEff         v3r0     Phys
+use  MCEffReconstructed v1r0     Phys
+use  DaVinciMCTools     v5r4     Phys
+use  DaVinciTest        v4r4     Phys
+
+# Physics selections
 use  PhysSelSys		v7r3     PhysSel
 
 use  B2DstarX2D02hh  v2r1    PhysSel
