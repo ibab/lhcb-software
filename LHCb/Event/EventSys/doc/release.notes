@@ -1,6 +1,7 @@
 package EventSys
 package manager: Marco Cattaneo
 
+!======================== EventSys v12r3 2002-09-12 ========================
 ! 2002-09-12 - Marco Cattaneo
  - Use L0Event v12r2
 
