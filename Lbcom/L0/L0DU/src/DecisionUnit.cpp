@@ -1,4 +1,4 @@
-// $Id: DecisionUnit.cpp,v 1.17 2004-09-20 11:39:04 ooleroy Exp $
+// $Id: DecisionUnit.cpp,v 1.18 2005-03-14 16:46:17 erodrigu Exp $
 //#define L0DU_DECISIONUNIT_CPP
 
 #include <math.h>
@@ -49,13 +49,13 @@ DecisionUnit::DecisionUnit( const std::string& name,
   , m_nameOfOutputDecisionUnit    ( L0DUReportLocation::Default      ) 
 { 
   //=== Define the parameters
-  // Tuning by Eduardo Rodrigues and Massi Ferro-Luzzi, 28/05/2003
-  double thrElectron   = 2.80 * GeV;
-  double thrPhoton     = 2.60 * GeV;
-  double thrHadron     = 3.60 * GeV;
+  // Tuning for DC'04 data (Eduardo Rodrigues, 14/03/2005)
+  double thrElectron   = 2.60 * GeV;
+  double thrPhoton     = 2.30 * GeV;
+  double thrHadron     = 3.50 * GeV;
   double thrSumHadron  = 5.00 * GeV;
-  double thrPi0Local   = 4.50 * GeV;
-  double thrPi0Global  = 4.00 * GeV;
+  double thrPi0Local   = 4.30 * GeV;
+  double thrPi0Global  = 3.70 * GeV;
   double thrMuon       = 1.30 * GeV;
   double thrSumMuon    = 1.50 * GeV;
   double thrSumPeak2   = 3.0;

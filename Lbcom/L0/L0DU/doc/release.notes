@@ -1,6 +1,10 @@
-$Id: release.notes,v 1.34 2005-03-07 16:30:49 cattanem Exp $
+$Id: release.notes,v 1.35 2005-03-14 16:46:17 erodrigu Exp $
 Package		: L0/L0DU
 Package Manager : Pascal Perret
+
+
+! 2005-03-14 - Eduardo Rodrigues
+ - Thresholds retuned for analysis of the DC'04 data
 
 !========================== L0DU v6r8 2005-03-07 ==========================
 ! 2005-03-07 - Marco Cattaneo
@@ -39,7 +43,7 @@ Package Manager : Pascal Perret
 ! 2003-02-03 - Olivier Callot
  - L0Monitor get the PuVeto peak2 threshold from DecisionUnit, to allow 
    consistent monitoring.
- - Peak2 threshold printed in th einitialisation of DecisionUnit.cpp
+ - Peak2 threshold printed in the initialisation of DecisionUnit.cpp
 
 !========================== L0DU v6r3 2003-01-30 ==========================
 ! 2003-01-28 - Olivier Callot

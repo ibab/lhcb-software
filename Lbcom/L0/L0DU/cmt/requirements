@@ -1,5 +1,5 @@
 package		L0DU
-version 	v6r8
+version 	v6r9
 
 # ================ structure =============================================
 branches	src cmt doc options
