@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/component/XmlCnvSvc.cpp,v 1.10 2001-12-13 19:21:29 andreav Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/component/XmlCnvSvc.cpp,v 1.11 2002-05-02 12:05:50 sponce Exp $
 
 // Include Files
 #include <util/PlatformUtils.hpp>
@@ -279,6 +279,8 @@ double XmlCnvSvc::eval (const char* expr, bool check) {
     std::string unit = ( pos == std::string::npos ) ? e : e.substr(pos + 1);
     // remove leading blanks
     pos = unit.find_first_not_of(' ');
+    // remove leading '-' if one
+    if (unit[pos] == '-') pos += 1;
     unit = unit.substr(pos);
     // check if what is left is not empty and alphabetic character
     if (unit.size() == 0 || !isalpha(unit[0])) {
