@@ -40,7 +40,6 @@ use GaussTracker        v3r1    Sim
 use GaussRICH           v4r4    Sim
 use GaussCalo           v4r3    Sim
 use GaussPhysics        v2r5    Sim
-use CaloDetXmlCnv       v2r3    Det 
 
 #optional visualisation and UI
 #use GiGaVisUI           v2r2    Sim
@@ -52,7 +51,7 @@ use GeneratorModules    v10r1    Gen
 use XmlDDDB             v20r0   Det   -no_auto_imports
 use FieldMap            v4r3          -no_auto_imports
 use DecFiles            v3r0    Gen   -no_auto_imports
-use ParamFiles          v2r1    $(LHCb_release_area)/PARAM   -no_auto_imports
+use ParamFiles          v2r1          -no_auto_imports
 
 # =============================================================================
 # Essential environment variables 
