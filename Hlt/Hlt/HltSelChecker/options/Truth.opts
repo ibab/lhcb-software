@@ -23,7 +23,8 @@ PrintTrueD.Depth = 2;
 #include "$HLTSELCHECKERROOT/options/TrueBs2JpsiPhi.opts"
 #include "$HLTSELCHECKERROOT/options/TrueBd2JpsiKs.opts"
 //==============================================================================
-#include "$HLTSELCHECKERROOT/options/TrueDstar.opts"                // special case
+#include "$HLTSELCHECKERROOT/options/TrueDstar.opts"   
+#include "$HLTSELCHECKERROOT/options/TrueJpsi.opts"  
 //==============================================================================
 // all tracks!
 TrueSignals.Members += {"PrintTree/PrintTracks"};
@@ -45,5 +46,7 @@ PrintBTracks.PhysDesktop.InputLocations = { "Phys/AllBd2D0KstarTracks"
 					     } ;
 
 // links
-Particle2MCLinks.InputData = { "Phys/HLTPions/Particles",  "Phys/HLTKaons/Particles",  "Phys/HLTMuons/Particles"};
+Particle2MCLinks.InputData = { "Phys/HLTPions/Particles",  
+                               "Phys/HLTKaons/Particles",  
+			       "Phys/HLTMuons/Particles"};
 

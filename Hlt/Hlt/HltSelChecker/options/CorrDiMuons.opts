@@ -1,6 +1,7 @@
 // correlation of HLT and TDR
 HLTCorrelations.Members += { "SelResultCorrelations/CorrDimuons" };
-CorrDimuons.Algorithms = { "HLTMuons" 
+CorrDimuons.Algorithms = { "AllJpsi2MuMuTracks"
+                          , "HLTMuons" 
                           , "HLTSingleMuons"
                           , "HLTDimuons"
                           , "HLTUnbiasedJpsis"

@@ -4,7 +4,16 @@
 ! Purpose     : High-Level Trigger Exclusive Selections - Checking 
 !-----------------------------------------------------------------------------
 
-!========================== HltSelChecker v2r0 2005-01-18 ===========================
+!========================== HltSelChecker v2r0 2005-01-19 ===========================
+! 2005-01-19 - P. Koppenburg
+  - options/TrueJpsi.opts
+    . New truth file looking for J/psi->mumu
+  - options/Truth.opts
+  - options/CorrDiMuons.opts
+    . Use this new truth information
+  - options/TrueBs2JpsiPhi.opts
+    . Bug fix: also look for association of pions
+    
 ! 2005-01-18 - P. Koppenburg
   - options/Plots.opts
     . Add more wide-mass plots 

@@ -1,6 +1,6 @@
 TrueSignals.Members += {"FilterDesktop/SelectBs2JpsiPhi"};
-SelectBs2JpsiPhi.PhysDesktop.InputLocations = { "Phys/HLTKaons", "Phys/HLTMuons" } ;
-SelectBs2JpsiPhi.Filter.Selections =  { "K+ : TrueMCFilterCriterion",  "mu+ : TrueMCFilterCriterion" } ;                           // select pi-, pi+
+SelectBs2JpsiPhi.PhysDesktop.InputLocations = { "Phys/HLTPions", "Phys/HLTKaons", "Phys/HLTMuons" } ;
+SelectBs2JpsiPhi.Filter.Selections =  { "pi+ : TrueMCFilterCriterion",  "K+ : TrueMCFilterCriterion",  "mu+ : TrueMCFilterCriterion" } ;                           // select pi-, pi+
 SelectBs2JpsiPhi.Filter.TrueMCFilterCriterion.MCDecayFinder.Decay =  "[B_s0 -> (J/psi(1S) -> ^mu+ ^mu- {,gamma} {,gamma}) (phi(1020) -> ^K+ ^K-)]cc" ;
 SelectBs2JpsiPhi.Filter.TrueMCFilterCriterion.Particle2MCLinksAsct.Location = "Phys/Relations/Particle2MCLinks" ;
 
