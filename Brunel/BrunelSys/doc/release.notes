@@ -4,14 +4,19 @@
 ! Purpose     : List of packages in Brunel project
 !-----------------------------------------------------------------------------
 
-!======================= BrunelSys v24r0 2004-06-14 =======================
-! 2004-06-14 - Marco Cattaneo
+!======================= BrunelSys v24r0 2004-06-18 =======================
+! 2004-06-18 - Marco Cattaneo
  - Modified requirements for Brunel v24r0
  
-   Packages removed:  LHCbTools (moved to LHCbSys)
-   Packages modified: TrTools v2r5p1, RichRecSys v1r10, RichRecCommon v1r7,
-                      TrFitEvent v4r6, TrFitter v4r0, TrCheck v2r5,
-                      TrCleanEx v2r0, VeloTT v1r10, TrExtrapolator v2r12,
+   Packages removed:  LHCbTools, RichDAQ (moved to LHCbSys)
+ - Packages removed : LHCbTools, RichDAQ (moved to LHCb)
+                      RichDetTools (renamed RichTools, moved to LHCbSys)
+   Packages modified: RichRecSys v1r11, RichRecBase v1r12, RichRecMCTools v1r5,
+                      RichLocalPID v1r8, RichGlobalPID v1r7, RichPIDMerge v1r4,
+                      RichRecCommon v1r8, RichRecTools v2r10, RichRecQC v1r8,
+                      TrTools v2r5p1, TrFitEvent v4r6, TrFitter v4r0, 
+                      TrCheck v2r5, TrCleanEx v2r0, VeloTT v1r10,
+                      TrExtrapolator v2r12,
                       ITAlgorithms v14r3, ITCheckers v2r3, STDAQ v1r2,
                       CaloReco v2r2, AsctToLinker v1r2, BrunelAlgs v3r5
 
