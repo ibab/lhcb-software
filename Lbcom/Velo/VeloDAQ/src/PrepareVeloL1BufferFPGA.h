@@ -1,4 +1,4 @@
-// $Id: PrepareVeloL1BufferFPGA.h,v 1.2 2004-03-19 12:44:05 parkesb Exp $
+// $Id: PrepareVeloL1BufferFPGA.h,v 1.3 2004-10-26 15:10:51 dhcroft Exp $
 #ifndef PREPAREVELOL1BUFFERFPGA_H 
 #define PREPAREVELOL1BUFFERFPGA_H 1
 
@@ -34,24 +34,32 @@ public:
 
   Rndm::Numbers m_gaussDist;
 
-  class sortClustersByID {
-  public:
+  class sortClustersByPosition {
+      DeVelo* m_velo;	  
+     public :  
+    explicit sortClustersByPosition(DeVelo* de) : m_velo(de) {}
     bool operator () ( const L1VeloFPGACluster* first, 
                        const L1VeloFPGACluster* second ) const {
       if ( 0==first  ) return true;
       if ( 0==second ) return false;
 
+      // sort by station
       if ( first->sensor() != second->sensor() ) {
-        return first->sensor() < second->sensor();
+          return ( 
+	  m_velo->sensorIndex(first->sensor()) < 
+          m_velo->sensorIndex(second->sensor()) );
       }
-      int type = first->sensor() % 8;
-
-      //== Reversed Phi sensors: Increasing phi is decreasing strip number
-      if ( 4 == type || 6 == type ) {
-        return first->strip() > second->strip() ;
+      // sort by strip
+      if (m_velo->isPhiSensor(first->sensor())){
+	  if (m_velo->isDownstream(first->sensor())){ 
+      //== Flipped Phi sensors: Increasing phi is decreasing strip number
+              return first->strip() > second->strip() ;
+	  }
       }
+      // else a non-flipped phi or an R sesnor
       return first->strip() < second->strip() ;
-    }
+    }        
+
   };
 
 protected:
@@ -63,6 +71,6 @@ private:
   double      m_relthreshold_neig;  ///< Relative signal of neighbouring strip
   double      m_chargeThreshold; ///< bit 13 set for high charge clusters
 
-  DeVelo*          m_velo;          ///< Detector element 
-};
+  DeVelo*          m_velo;          ///< Detector element
+  };
 #endif // PREPAREVELOL1BUFFERFPGA_H

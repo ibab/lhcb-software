@@ -1,4 +1,4 @@
-// $Id: PrepareVeloL1BufferFPGA.cpp,v 1.3 2004-03-19 14:22:25 ocallot Exp $
+// $Id: PrepareVeloL1BufferFPGA.cpp,v 1.4 2004-10-26 15:10:51 dhcroft Exp $
 // Include files 
 
 // from Gaudi
@@ -266,16 +266,16 @@ StatusCode PrepareVeloL1BufferFPGA::execute() {
 
 
 
-  //== Then sort the clusters by position
+  //== Then sort the clusters by z position and strip number
   
   std::sort( myClus.begin(), myClus.end(), 
-             PrepareVeloL1BufferFPGA::sortClustersByID() );
+             PrepareVeloL1BufferFPGA::sortClustersByPosition(m_velo) );
   
   //== Then build the L1 Event
 
   int nbOk = 0;
 
-  int lastSensor  = 0;
+  int lastSensor  = 0; // start with Sensor 0, first non-pile-up sensor 
   int sourceID = 0;
   int numberOfR = 0;
   int numberOfPhi = 0;
@@ -283,39 +283,66 @@ StatusCode PrepareVeloL1BufferFPGA::execute() {
   int nClusterInSensor = 0;
   int bankType = 0;
   std::vector<l1_int> data;
+  
+  std::vector<DeVeloSensor*> vpSensors = m_velo->vpSensors();
+  
 
-  if ( m_velo->isRSensor(lastSensor) ) {
+  // setup bank parameters for first sensor
+  if ( m_velo->isRSensor(lastSensor)) {
     sourceID = numberOfR++;
     bankType = L1Buffer::VeloR;
   } else {
-    sourceID = numberOfPhi++;
-    bankType = L1Buffer::VeloPhi;
+    msg << MSG::ERROR << "First Sensor is not an R sensor " << endreq; 
   }
 
   for( unsigned int iclus = 0 ; iclus < myClus.size()  ; iclus++ ) {
+    // loop over clusters
     L1VeloFPGACluster* clu = myClus[iclus];    
-    int sensor   = clu->sensor();
+    int sensor   = clu->sensor(); // get sensor number
     msg << MSG::DEBUG 
         << " NT L1VeloFPGACluster " << iclus 
         << " " <<  sensor << " " << clu->strip() << endreq;    
     if ( lastSensor != sensor ) {
+      // cluster is on a different sensor so store bank
       msg << MSG::DEBUG 
           << format( "Sensor %3d size %4d words %5d ID %2d type %2d", 
                      lastSensor, nClusterInSensor, 
                      data.size(), sourceID, bankType ) 
           << endreq;
       buffer->addBank( sourceID, bankType, data );
+      msg << MSG::VERBOSE<<"added Bank for sensor " << lastSensor 
+	  << " of type " << bankType << endreq;
       data.clear();
-      while ( ++lastSensor != sensor ) {
-        if ( m_velo->isRSensor( lastSensor )  ){
-          sourceID = numberOfR++;
+
+      // store empty banks for any sensors  between last one and 
+      // new cluster's sensor
+      int lastSensorIndex=m_velo->sensorIndex(lastSensor);
+      int sensorIndex=m_velo->sensorIndex(sensor);
+      msg << MSG::DEBUG << "lastsensor " << lastSensor << " lastSensorIndex " 
+	  << lastSensorIndex << " sensor " << sensor 
+	  << " sensor index " << sensorIndex << endreq; 
+      while (  ++lastSensorIndex != sensorIndex ) {
+	 lastSensor=vpSensors[lastSensorIndex]->sensorNumber();
+         if ( m_velo->isRSensor( lastSensor )  ){
+	  sourceID = numberOfR++;
           bankType = L1Buffer::VeloR;
+	  buffer->addBank( sourceID, bankType, data );
+	  msg << MSG::VERBOSE<<"added empty Bank for sensor " << lastSensor 
+	      << " of type " << bankType << endreq;
         } else {
+         if ( m_velo->isPhiSensor( lastSensor )  ){
           sourceID = numberOfPhi++;
           bankType = L1Buffer::VeloPhi;
-        }        
-        buffer->addBank( sourceID, bankType, data );
+	  buffer->addBank( sourceID, bankType, data );
+	  msg << MSG::VERBOSE<<"added empty Bank for sensor " << lastSensor 
+	      << " of type " << bankType << endreq;
+	 }
+	 // Unused sensor number. Do not store bank.
+        }              
       }
+      lastSensor=vpSensors[lastSensorIndex]->sensorNumber();
+
+      // setup bank parmaeters for new cluster's sensor
       nClusterInSensor = 0;
       if ( m_velo->isRSensor(lastSensor) ) {
         sourceID = numberOfR++;
@@ -325,18 +352,22 @@ StatusCode PrepareVeloL1BufferFPGA::execute() {
         bankType = L1Buffer::VeloPhi;
       }
     }
+    // max number of clusters in a bank
     if ( 126 <= nClusterInSensor ) continue;
 
+    // max cluster size
     int size       = clu->nStrips();
     if ( 3 < size ) continue;
     
+    // multiple strips in cluster 
     l1_int word    = clu->strip();
     if ( clu->nStrips() > 1 ) { 
       word += 1 << 14;
     }
 
+    // High signal threshold
     if ( m_chargeThreshold < clu->charge() ) {
-      word += 1 << 13; //== High signal threshold
+      word += 1 << 13; 
     }
 
     nClusterInSensor ++;
@@ -352,19 +383,36 @@ StatusCode PrepareVeloL1BufferFPGA::execute() {
                    sourceID, bankType ) 
         << endreq;
   }
+  // add last cluster bank
   buffer->addBank( sourceID, bankType, data );
-  data.clear();
-  
-  while ( m_velo->nbSensor() > ++lastSensor ) {
-    if ( m_velo->isRSensor(lastSensor) ) {
-      sourceID = numberOfR++;
-      bankType = L1Buffer::VeloR;
-    } else {
-      sourceID = numberOfPhi++;
-      bankType = L1Buffer::VeloPhi;
-    }
-    buffer->addBank( sourceID, bankType, data );
-  }  
+  msg << MSG::VERBOSE<<"added Bank for last sensor with data " << lastSensor 
+      << " of type " << bankType << endreq;
+
+  // fill empty banks for any remaining sensors 
+  data.clear(); 
+  int lastSensorIndex = m_velo->sensorIndex(lastSensor);
+  int finalSensorIndex = vpSensors.size(); finalSensorIndex--;
+  if (finalSensorIndex!=lastSensorIndex){
+    while (  ++lastSensorIndex != finalSensorIndex ) {
+      lastSensor=vpSensors[lastSensorIndex]->sensorNumber();
+      if ( m_velo->isRSensor( lastSensor )  ){
+	sourceID = numberOfR++;
+	bankType = L1Buffer::VeloR;
+	buffer->addBank( sourceID, bankType, data );
+	msg << MSG::VERBOSE<<"added empty Bank for remaining sensor " 
+	    << lastSensor << " of type " << bankType << endreq;
+      } else {
+	if ( m_velo->isPhiSensor( lastSensor )  ){
+	  sourceID =  numberOfPhi++;
+	  bankType = L1Buffer::VeloPhi;
+	  buffer->addBank( sourceID, bankType, data );
+	  msg << MSG::VERBOSE<<"added empty Bank for remaining sensor " 
+	      << lastSensor << " of type " << bankType << endreq;
+	}
+	// Unused sensor number. Do not store bank.
+      }
+    }           
+  }
 
   msg << MSG::DEBUG << "--- NbOK = " << nbOk << endreq;
   

@@ -1,6 +1,9 @@
 ! Package     : VeloDAQ
 ! Responsible : ChrisParkes
 
+! 2004-10-26 - David Hutchcroft
+ - Changed to sort by VeloChannelID not position (CP's modification)
+
 !==========================  VeloDAQ v1r0 2004-03-15 ======================
 ! 2004-03-19 - Chris Parkes
  - added a high threshold bit for Olivier

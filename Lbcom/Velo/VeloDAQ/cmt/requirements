@@ -2,7 +2,7 @@
 # Maintainer : Chris Parkes
 #
 package VeloDAQ
-version v1r0
+version v2r0
 
 # Structure, i.e. directories to process. 
 #===========================================================================
@@ -13,7 +13,7 @@ include_path none
 # Used packages. Specify the version, * at the end specifies 'any revision'
 #============================================================================
 use  VeloEvent  v13r*   Event
-use  VeloDet    v8r*    Det
+use  VeloDet    v9r*    Det
 use  VeloKernel v1r*	Velo -no_auto_imports
 use  DAQEvent   v4r*    Event
 
