@@ -1,4 +1,4 @@
-// $Id: IRichRayTracing.h,v 1.2 2004-06-18 09:39:02 jonrob Exp $
+// $Id: IRichRayTracing.h,v 1.3 2004-07-01 11:12:09 papanest Exp $
 #ifndef RICHKERNEL_IRICHRAYTRACING_H
 #define RICHKERNEL_IRICHRAYTRACING_H 1
 
@@ -7,16 +7,19 @@
 
 // from LHCbKernel
 #include "Kernel/RichDetectorType.h"
+#include "Kernel/RichSide.h"
 
-// from RichDet
-#include "RichDet/DeRichHPDPanel.h"
+//local
+#include "RichKernel/RichTraceMode.h"
 
 // CLHEP
 class HepPoint3D;
 class HepVector3D;
+class HepPlane3D;
 
-// Rich Utils
+// RichEvent
 class RichGeomPhoton;
+
 
 /** @class IRichRayTracing IRichRayTracing.h RichDetTools/IRichRayTracing.h
  *  A tool to trace photons (or similar) from a point all the way to
@@ -36,23 +39,25 @@ public:
 
   /// For a given detector, raytraces a given direction from a given point to
   /// the photo detectors. Returns the result in the form of a RichGeomPhoton
-  virtual StatusCode traceToDetector ( Rich::DetectorType,
-                                       const HepPoint3D&,
-                                       const HepVector3D&,
-                                       RichGeomPhoton&,
-                                       DeRichHPDPanel::traceMode mode =
-                                       DeRichHPDPanel::circle ) const = 0;
+  virtual StatusCode traceToDetector ( Rich::DetectorType rich,
+                                       const HepPoint3D& startPoint,
+                                       const HepVector3D& startDir,
+                                       RichGeomPhoton& photon, 
+                                       RichTraceMode mode = RichTraceMode(),
+                                       Rich::Side forcedSide = Rich::top
+                                       ) const = 0;
 
   /// For a given detector, raytraces a given direction from a given point to
   /// the average photon detector plane (no HPD acceptance). Result is a HepPoint3D
-  virtual StatusCode traceToDetectorWithoutEff( Rich::DetectorType,
-                                                const HepPoint3D&,
-                                                const HepVector3D&,
-                                                HepPoint3D&,
-                                                DeRichHPDPanel::traceMode =
-                                                DeRichHPDPanel::loose ) const=0;
+  virtual StatusCode traceToDetectorWithoutEff( Rich::DetectorType rich,
+                                                const HepPoint3D& startPoint,
+                                                const HepVector3D& startDir,
+                                                HepPoint3D& hitPosition,
+                                                RichTraceMode mode = RichTraceMode(),
+                                                Rich::Side forcedSide = Rich::top
+                                                ) const = 0;
 
-  /// For a given detector, raytraces a given direction from a given point
+  /// For a given detector, ray traces a given direction from a given point
   /// to the average photo detector plane. Returns the result in the form
   /// of a RichGeomPhoton
   virtual StatusCode intersectPDPanel ( Rich::DetectorType,
@@ -71,7 +76,8 @@ public:
   virtual StatusCode reflectSpherical ( HepPoint3D& position,
                                         HepVector3D& direction,
                                         const HepPoint3D& CoC,
-                                        double radius ) const = 0;
+                                        double radius,
+                                        RichTraceMode mode = RichTraceMode() ) const = 0;
 };
 
 #endif // RICHKERNEL_IRICHRAYTRACING_H

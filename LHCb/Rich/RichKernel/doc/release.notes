@@ -1,7 +1,10 @@
-! $Id: release.notes,v 1.42 2004-06-29 19:27:30 jonrob Exp $
+! $Id: release.notes,v 1.43 2004-07-01 11:16:42 papanest Exp $
 ! Package     : Rich/RichKernel
 ! Responsible : Chris Jones
 ! Purpose     : General purpose RICH classes
+
+! 2004-07-01 - Antonis Papanestis
+ - added RichTraceMode and updated IRichRayTracing to use it
 
 ! 2004-06-29 - Chris Jones
  - Add initialisation status test to GSL interpolators
