@@ -13,6 +13,7 @@ use  DaVinci                 	v12r6    Phys
 #=======================================================
 use RichTools                   v1r2p2 Rich
 use TrgEvent		        v5r3	Event
+use MuonTools                   v3r8    Muon
 
 #=======================================================
 # packages included in the DAVINCI tree
