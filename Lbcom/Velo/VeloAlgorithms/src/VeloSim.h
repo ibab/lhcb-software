@@ -1,4 +1,4 @@
-#// $Id: VeloSim.h,v 1.7 2002-09-24 18:43:52 parkesb Exp $
+#// $Id: VeloSim.h,v 1.8 2003-01-28 19:50:43 parkesb Exp $
 #ifndef VELOSIM_H
 #define VELOSIM_H 1
 
@@ -71,6 +71,7 @@ private:
   double noiseValue(double stripCapacitance);
   double noiseValueTail(double stripCapacitance);
   StatusCode CMSim();
+  StatusCode deadStrips();
   StatusCode finalProcess();
   StatusCode storeOutputData();
   MCVeloFE* findOrInsertFE(VeloChannelID& stripKey);
@@ -106,6 +107,8 @@ private:
   bool m_noiseSim;
   bool m_pedestalSim;
   bool m_CMSim;
+  double m_stripInefficiency; 
+  // if strip Ineff. > 0 then that fraction of strips have charge removed.
   bool m_spillOver;
   bool m_pileUp;
   bool m_testSim;

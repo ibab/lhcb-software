@@ -1,4 +1,4 @@
-// $Id: VeloSim.cpp,v 1.23 2003-01-17 08:44:29 cattanem Exp $
+// $Id: VeloSim.cpp,v 1.24 2003-01-28 19:50:42 parkesb Exp $
 // Include files
 // STL
 #include <string>
@@ -83,6 +83,7 @@ VeloSim::VeloSim( const std::string& name,
   , m_noiseSim             ( true )
   , m_pedestalSim          ( true )
   , m_CMSim                ( true )
+  , m_stripInefficiency    ( 0.0 )
   , m_spillOver            ( true )
   , m_pileUp               ( true )
   , m_testSim              ( false )
@@ -99,6 +100,7 @@ VeloSim::VeloSim( const std::string& name,
   declareProperty( "NoiseSim"            ,m_noiseSim );
   declareProperty( "PedestalSim"         ,m_pedestalSim );
   declareProperty( "CMSim"               ,m_CMSim );
+  declareProperty( "StripInefficiency"   ,m_stripInefficiency );
   declareProperty( "SpillOver"           ,m_spillOver );
   declareProperty( "PileUp"              ,m_pileUp );
   declareProperty( "TestSimulation"      ,m_testSim );
@@ -195,6 +197,8 @@ StatusCode VeloSim::simulation() {
   if (sc&&m_pedestalSim) sc= pedestalSim(); 
   // common mode - not yet implemented
   if (sc&&m_CMSim) sc=CMSim(); 
+  // dead strips / channels
+  if (sc&&(m_stripInefficiency>0.)) sc=deadStrips(); 
   // remove any unwanted elements and sort
   if (sc) sc=finalProcess(); 
 
@@ -1046,7 +1050,25 @@ StatusCode VeloSim::CMSim(){
   return StatusCode::SUCCESS;
 }
 
-
+//=========================================================================
+// dead strips
+//=========================================================================
+StatusCode VeloSim::deadStrips(){
+  MsgStream  log( msgSvc(), name() );
+ 
+ // Add some strip inefficiency
+ // channels are given zero signal, and hence will be removed by the 
+ // threshold cut in final process.
+ // e.g. set stripInefficiency to 0.01 for 1% dead channels
+ for ( MCVeloFEs::iterator itF1 = m_FEs->begin(); m_FEs->end() != itF1;
+       itF1++) {
+   double cut =  m_uniformDist();
+   if ( m_stripInefficiency > cut ) {
+     (*itF1)->setAddedSignal( 0. );
+   }
+ }
+ return StatusCode::SUCCESS;
+}
 
 //=========================================================================
 // find a strip in list of FEs, or if it does not currently exist create it
