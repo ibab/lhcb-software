@@ -5,8 +5,8 @@
 ! Purpose     : LHCb OO kernel packages
 !-----------------------------------------------------------------------------
 
-!======================= LHCbSys v16r2 2004-09-06 =======================
-! 2004-09-06 - Marco Cattaneo
+!======================= LHCbSys v16r2 2004-09-17 =======================
+! 2004-09-17 - Marco Cattaneo
  - New packages: MuonDAQ v1r2, VeloDAQ v1r0, STDAQ v1r3
                  (Moved here from application projects)
 
@@ -24,6 +24,7 @@
  - In LHCbAlgs v1r1:
    . LbAppInit - Protect against undefined APPVERSION environment variable
    . LbAppInit - Print memory usage at each event, if debug() OutputLevel
+   . TESCheck  - New algorithm, preload and/or check existence of objects in TES
 
  - In CaloEvent v13r5:
    . Changes to allow RawBuffer decoding using data-on-demand service
