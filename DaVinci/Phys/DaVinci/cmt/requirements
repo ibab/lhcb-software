@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.58 2003-04-30 19:09:16 gcorti Exp $
+# $Id: requirements,v 1.59 2003-05-28 12:52:45 gcorti Exp $
 # Created    : 07/02/2002
 # Maintainer : Gloria Corti
 #
@@ -6,7 +6,7 @@
 # Allows reading of OO-DST data
 #============================================================================
 package           DaVinci
-version           v8r0
+version           v8r1
 
 # Structure, i.e. directories to process. 
 #============================================================================
@@ -25,17 +25,22 @@ use  GaudiRootDb        v*
 use  HbookCnv           v*
 use  RootHistCnv    	v*
 
-#--- LHCb libraries (from LHCB_v11r11)
-use  LHCb               v11r11	
+#--- LHCb libraries (from LHCB_v11r12)
+use  LHCb               v11r12	
 
 #--- Geometry description (from DBASE)
 use  XmlDDDB		v15r3	 Det
 
 #--- DaVinciSys v8r0 packages 
 
-#    Enable Trigger reprocessing
+#    Enable L0 and L1 Trigger reprocessing and HLT 
 use  L0DU          	v6r4	 L0
 use  L1Decision         v1r7     L1
+use  HltTools           v2r0     Hlt
+use  HltVelo            v2r0     Hlt
+use  HltVeloTT          v2r0     Hlt
+use  HltLongTrack       v2r0     Hlt
+use  HltChecker         v2r0     Hlt
 
 #    Enable neutral ProtoParticles production and CaloPIDs
 use  CaloInterfaces     v2r4     Calo
@@ -43,8 +48,11 @@ use  CaloUtils 	        v4r4     Calo
 use  CaloReco           v1r5     Calo
 use  CaloPIDs           v1r0     Calo 
 
+#    Muon PID
+use  MuonID             v3r6     Muon
+
 #    Final Reconstruction
-use  GlobalReco         v3r1     Rec
+use  GlobalReco         v4r0     Rec
 use  KsReco		v1r4p1	 Rec
 use  PrimVtx            v2r0     Rec
 
@@ -55,15 +63,15 @@ use  TrExtrapolator     v2r5     Tr
 use  MCTools            v1r1     Phys
 
 #    Physics packages
-use  DaVinciTools       v8r0     Phys
-use  DaVinciAssociators v4r0     Phys
+use  DaVinciTools       v8r1     Phys
+use  DaVinciAssociators v4r1     Phys
 use  DaVinciMCTools     v5r0     Phys
 use  DaVinciTest        v4r1     Phys
 use  PhysSelections	v5r0     Phys
-use  FlavourTagging     v4r4     Phys
-use  DaVinciEff         v2r4     Phys
+use  FlavourTagging     v4r5     Phys
+use  DaVinciEff         v2r5     Phys
 use  DaVinciUser        v4r1     Phys
-use  PhysSelSys		v5r1     PhysSel
+use  PhysSelSys		v5r2     PhysSel
 
 # Generic utilities
 use  Utilities          v1r0     Tools
