@@ -1,8 +1,16 @@
-! $Id: release.notes,v 1.70 2004-03-16 18:49:45 pkoppenb Exp $
+! $Id: release.notes,v 1.71 2004-03-23 17:30:39 pkoppenb Exp $
 ! Package     : DaVinciTools
 ! Responsible : P. Koppenburg, Sandra Amato
 
-!========================== DaVinciTools v9r1 2004-03-16 ==================
+!========================== DaVinciTools v9r1 2004-03-23 ==================
+! 2004-03-23 - P. Koppenburg for Gerhard Raven
+ - src/BooleanFilterCriterion.*
+  It makes logical 'and' and 'or' combinations of other IFilterCriterion 
+  which can be specified in the options. The difference with ParticleFilter 
+  is that both 'and' and 'or' are supported, and it satisfies the 
+  IFilterCriterion interface -- which makes it much easier/more elegant 
+  to use from eg. LoKi. 
+  
 ! 2004-03-16 - P. Koppenburg for Hugo Ruiz
  - src/DecayFinder.cpp
    . K0L is NOT the antiparticle of K0S!
