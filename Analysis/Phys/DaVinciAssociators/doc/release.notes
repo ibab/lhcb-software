@@ -1,6 +1,15 @@
-! $Id: release.notes,v 1.41 2004-06-11 15:26:15 phicharp Exp $
+! $Id: release.notes,v 1.42 2004-06-16 16:16:26 pkoppenb Exp $
 ! Package     : DaVinciAssociators
 ! Responsible : Philippe Charpentier
+
+! 2004-06-16 - P. Koppenburg
+  - DaVinciAssociators/Particle2MCAsct.h
+  - DaVinciAssociators/Particle2MCLink.h
+  - DaVinciAssociators/Particle2MCWithChi2Asct.h
+    . Replace forward declarations by proper header file. This caused
+      compilation problems depending on the order of includes.
+    . locateAlgorithm( const std::string& algType, const std::string& algType,...
+      in declaration compiles on linux, but not on windows.
 
 ! 2004-05-18 - Ph.Charpentier
  - New files DaVinciAssociators/Particle2MCLink.h src/Particle2MCLink.cpp

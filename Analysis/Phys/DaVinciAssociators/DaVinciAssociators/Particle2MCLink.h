@@ -1,4 +1,4 @@
-// $Id: Particle2MCLink.h,v 1.1 2004-06-11 15:26:13 phicharp Exp $
+// $Id: Particle2MCLink.h,v 1.2 2004-06-16 16:16:25 pkoppenb Exp $
 #ifndef DAVINCIASSOCIATORS_PARTICLE2MCLINK_H 
 #define DAVINCIASSOCIATORS_PARTICLE2MCLINK_H 1
 
@@ -19,9 +19,10 @@
  *  @date   2004-04-29
  */
 
-class MCParticle;
-class Particle;
-class ProtoParticle;
+#include "Event/Particle.h"
+#include "Event/MCParticle.h"
+#include "Event/ProtoParticle.h"
+//class ProtoParticle;
 
 
 namespace Particle2MCMethod {
@@ -183,7 +184,7 @@ class Object2MCLink
   getLink( const std::string& contName ) ;
   StatusCode 
   locateAlgorithm( const std::string& algType,
-                   const std::string& algType,
+                   const std::string& algName,
                    IAlgorithm*& alg,
                    const std::vector<std::string>& inputData);
   StatusCode

@@ -1,4 +1,4 @@
-// $Id: Particle2MCAsct.h,v 1.5 2004-06-11 15:26:12 phicharp Exp $
+// $Id: Particle2MCAsct.h,v 1.6 2004-06-16 16:16:25 pkoppenb Exp $
 #ifndef ASSOCIATORS_Particle2MCASCT_H 
 #define ASSOCIATORS_Particle2MCASCT_H 1
 
@@ -18,8 +18,10 @@ Particle2MCAsctLocation = "Phys/Relations/Particle2MC";
  *  @date   05/04/2002
  */
 
-class MCParticle;
-class Particle;
+//class MCParticle;
+//class Particle;
+#include "Event/Particle.h"
+#include "Event/MCParticle.h"
 
 class Particle2MCAsct : public Associator<Particle,MCParticle>
 {

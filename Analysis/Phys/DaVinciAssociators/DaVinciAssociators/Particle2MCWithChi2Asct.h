@@ -1,4 +1,4 @@
-// $Id: Particle2MCWithChi2Asct.h,v 1.6 2004-06-11 15:26:14 phicharp Exp $
+// $Id: Particle2MCWithChi2Asct.h,v 1.7 2004-06-16 16:16:25 pkoppenb Exp $
 #ifndef Particle2MCWithChi2ASCT_H 
 #define Particle2MCWithChi2ASCT_H 1
 
@@ -18,8 +18,8 @@ Particle2MCWithChi2AsctLocation = "Phys/Relations/Particle2MCWithChi2";
  *  @date   17/05/2002
  */
 
-class MCParticle;
-class Particle;
+#include "Event/Particle.h"
+#include "Event/MCParticle.h"
 
 class Particle2MCWithChi2Asct : 
   public AssociatorWeighted<Particle,MCParticle,double>
