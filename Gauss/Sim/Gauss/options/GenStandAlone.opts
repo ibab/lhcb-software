@@ -11,9 +11,10 @@ ApplicationMgr.ExtSvc            =
 
 EventPersistencySvc.CnvServices  = {};  
 
-ApplicationMgr.DLLs  = { "GaudiAud"};
-ApplicationMgr.DLLs += { "GaudiAlg"} ;
-ApplicationMgr.DLLs += { "GaussTools"} ;
+ApplicationMgr.DLLs  = { "GaudiAud" };
+ApplicationMgr.DLLs += { "GaudiAlg" } ;
+ApplicationMgr.DLLs += { "GaussTools" } ;
+ApplicationMgr.DLLs += { "GaussAlgs" } ;
 
 RndmGenSvc.Engine.SetSingleton = true;
 
@@ -21,7 +22,7 @@ ApplicationMgr.HistogramPersistency = "NONE";
 
 EventDataSvc.ForceLeaves = true ;
 
-ParticlePropertySvc.ParticlePropertiesFile="$PARAMFILESROOT/data/particle.cdf";
+ParticlePropertySvc.ParticlePropertiesFile="$PARAMFILESROOT/data/ParticleTable.txt";
 
 ApplicationMgr.TopAlg          =  
 { "GaussInitialisation/GaussInit",
