@@ -1,10 +1,15 @@
-! $Id: release.notes,v 1.7 2002-04-10 12:38:34 dhcroft Exp $
+! $Id: release.notes,v 1.8 2002-04-11 08:06:48 dhcroft Exp $
 ! =============================================================================
 ! CVS tag $Name: not supported by cvs2svn $ 
 ! =============================================================================
 ! Package     : MuonTools
 ! Responsible : David Hutchcroft David.Hutchcroft@cern.ch
 ! =============================================================================
+
+! ===========================================================================
+! 11/04/2002 David Hutchcroft
+  Bug fix in MuonGeometry.h in region four I had misread (and so mistyped) 
+  101 as 107 so chamber 107 was in region 4 twice and 101 not at all.
 
 ! ===========================================================================
 ! 10/04/2002 David Hutchcroft
