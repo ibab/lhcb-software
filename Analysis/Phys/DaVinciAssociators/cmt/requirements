@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.20 2004-06-11 15:26:14 phicharp Exp $
+# $Id: requirements,v 1.21 2004-06-15 15:54:56 phicharp Exp $
 # Created    : 24/04/2002
 # Maintainer : Philippe Charpentier
 #
@@ -27,15 +27,20 @@ use CaloAssociators v4r*   Calo
 use LinkerEvent     v*     Event
 use MCTools         v1r*   Phys
 
+# Linker library building rule
+library          DaVinciAssociatorsLib   ../src/Lib/*.cpp
+
 # Component library building rule
 #============================================================================
-library          DaVinciAssociators    ../src/*.cpp
+library          DaVinciAssociators      ../src/*.cpp
 
 # define component library link options
 #============================================================================
-apply_pattern    package_Clinkopts
-apply_pattern    packageShr
+#apply_pattern    package_Clinkopts
+#apply_pattern    packageShr
+apply_pattern    component_library  library=DaVinciAssociators
+apply_pattern    linker_library     library=DaVinciAssociatorsLib
 
 #============================================================================
 private
-apply_pattern    package_Cshlibflags
+#apply_pattern    package_Cshlibflags
