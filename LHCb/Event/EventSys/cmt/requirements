@@ -1,17 +1,20 @@
 package EventSys
-version v4r0
+version v10r0
 
 branches doc cmt 
 
 # LHCb Event libraries
-use LHCbEvent  v12r1  Event
-use CaloEvent  v7r0   Event
-use ITEvent    v7r0   Event
-use OTEvent    v7r0   Event
-use TrEvent    v7r0   Event
-use L0Event    v4r0   Event
-use L1Event    v6r0   Event
-use VeloEvent  v6r0   Event
-
+use EventKernel  v1r1    Event
+use Event        v1r0    Event
+use VeloEvent    v10r0   Event
+use ITEvent      v10r0   Event
+use OTEvent      v10r0   Event
+use TrEvent      v10r0   Event
+use RichEvent    v2r0    Event
+use CaloEvent    v10r0   Event
+use MuonEvent    v1r3    Event
+use L0Event      v11r0   Event
+use L1Event      v10r0   Event
+use PhysEvent    v4r0    Event
 
 

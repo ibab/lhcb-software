@@ -1,8 +1,12 @@
-! $Id: release.notes,v 1.8 2002-04-15 11:39:09 gcorti Exp $
+! $Id: release.notes,v 1.9 2002-04-22 07:53:23 cattanem Exp $
 ! Package     : PhysEvent 
 ! Responsible : Gloria Corti
 
-! 20020415 - PhysEvent v4r0 (G.Corti)
+! >>>>>>>>>>>>>>>>>>>>>>> PhysEvent v4r0 <<<<<<<<<<<<<<<<<<<<<
+! 20020419 (M.Cattaneo)
+  - Separate library for dictionaries
+
+! 20020415 (G.Corti)
   Adapt to new Event Model
   New files:
    xml/AxPartCandidates.xml - moved and clean from LHCbEvent
@@ -19,6 +23,7 @@
    src/PhysSel.cpp          - adapt serializer dropping LHCbEvent dependecie
    src/PhysEvent_load.cpp   - declare AxPartCandidate(s) factories
    
+! ======================================================================
 
 ! 20020402 - PhysEvent v3r0 (G.Corti)
 	New event model for Physics Event part.

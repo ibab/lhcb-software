@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.14 2002-04-04 07:04:24 cattanem Exp $
+# $Id: requirements,v 1.15 2002-04-22 07:49:17 cattanem Exp $
 package L0Event
 version v11r0
 
@@ -6,17 +6,19 @@ branches Event cmt doc xml src
 
 include_dirs $(L0EVENTROOT)
 
-use 	GaudiObjDesc	v3r*
-use 	LHCbKernel	v1r*
+use 	LHCbKernel	v1r*    Kernel
 use     EventKernel     v1r*    Event
-use 	MuonKernel 	v1r* 	Muon
+use 	MuonKernel 	v2r* 	Muon
 
 #---- Produce Header-Files and from XML description
+private
+use 	GaudiObjDesc	v4r*
 document obj2doth L0EventObj2Doth ../xml/*.xml
-# Dictionary does not work with many input files
+# Dictionary does not work (problem with MsgStream stuff)
 #document obj2dict L0EventObj2Dict ../xml/*.xml    
 
 # ================ build library (including dictionary) ==================
+public
 library           L0Event         ../src/*.cpp
 #                                  ../dict/*.cpp
 

@@ -1,22 +1,24 @@
-$Id: release.notes,v 1.12 2002-04-15 11:13:50 ocallot Exp $
+$Id: release.notes,v 1.13 2002-04-22 07:49:17 cattanem Exp $
 Package : L0Event
 Package manager : Olivier Callot
 
-!=============================================================================
-! 15/04/2002 - Olivier Callot  ** v11r0 **
+>>>>>>>>>>>>>>>> L0Event v11r0 <<<<<<<<<<<<<<<<<<<<<<<<
+! 20020418 (M.Cattaneo)
+  - Move to Gaudi v10
+
+! 15/04/2002 - Olivier Callot
   - Add a new L0Calo type SpdMult for SPD multiplicity counter. Add the 
     corresponding print values in L0Calo.cpp
   - Fix the declaration of the MSgStream operators in xml.
 
-!=============================================================================
 ! 05/04/2002 - Olivier Callot
   - Add a correct print routine for L0CaloCandidate.
   - Move the code of L0CaloCandidate to src/L0Calo.cpp
 
-!=============================================================================
 ! 04/04/2002 - Marco Cattaneo
   - Remove dependency on LHCbEvent. Take CLHEPStreams from /Kernel
 
+!=============================================================================
 ! 04/04/2002 - Olivier Callot   ** v10r0 **
   - New L0Muon event model, with xml, from Andrei Tsaregorodtsev
   - L0 namespace renamed to L0Calo, it defines the type of L0Calo candidates

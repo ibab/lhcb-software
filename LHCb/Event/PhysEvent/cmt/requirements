@@ -1,15 +1,13 @@
-# $Id: requirements,v 1.10 2002-04-15 11:38:52 gcorti Exp $
+# $Id: requirements,v 1.11 2002-04-22 07:53:23 cattanem Exp $
 # Created      : 20/06/2001
 # Maintainer   : Gloria Corti
 #
-# Documentation on the requirement file can be found at
-
 package           PhysEvent
 version           v4r0
 
 # Structure, i.e. directories to process. 
 #============================================================================
-branches          cmt doc src xml Event
+branches          cmt doc dict src xml Event
 
 # Include directories
 #============================================================================
@@ -17,21 +15,20 @@ include_dirs $(PHYSEVENTROOT)
 
 # Used packages. 
 #============================================================================
-use GaudiObjDesc v3r*
-# For next release with Full new Event Model uncomment following lines
-use LHCbKernel   v1r*
-use EventKernel  v1r*    Event
 use Event        v1r*  Event
 
 # Produce Header-Files & dictionary from XML description
 #============================================================================
+private
+use GaudiObjDesc v4r*
 document obj2doth PhysEventObj2Doth ../xml/PhysEvent.xml
 document obj2dict PhysEventObj2Dict ../xml/PhysEvent.xml
 
-# Build library (including dictionary)
+# Build libraries (including dictionary)
 #============================================================================
-library     PhysEvent    *.cpp        \ 
-                         ../dict/*.cpp
+public
+library     PhysEvent     *.cpp
+library     PhysEventDict ../dict/*.cpp
 
 # Define link options
 #============================================================================
@@ -39,7 +36,8 @@ apply_pattern    package_linkopts
 apply_pattern    package_stamps
 apply_pattern    linker_path
 
+apply_pattern    package_shlibflags
 #============================================================================
 private
-macro_remove use_linkopts $(PhysEvent_linkopts)
-macro PhysEvent_shlibflags "$(use_linkopts) $(libraryshr_linkopts)"
+macro PhysEventDict_shlibflags  "$(use_linkopts) $(libraryshr_linkopts)"
+#============================================================================
