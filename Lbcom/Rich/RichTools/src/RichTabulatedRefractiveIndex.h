@@ -1,18 +1,22 @@
 
+//-----------------------------------------------------------------------------
 /** @file RichTabulatedRefractiveIndex.h
  *
  *  Header file for tool : RichTabulatedRefractiveIndex
  *
  *  CVS Log :-
- *  $Id: RichTabulatedRefractiveIndex.h,v 1.4 2004-10-27 14:41:03 jonrob Exp $
+ *  $Id: RichTabulatedRefractiveIndex.h,v 1.5 2005-01-07 13:26:17 jonrob Exp $
  *  $Log: not supported by cvs2svn $
+ *  Revision 1.4  2004/10/27 14:41:03  jonrob
+ *  Various updates
+ *
  *  Revision 1.3  2004/07/26 18:03:05  jonrob
  *  Various improvements to the doxygen comments
- *
  *
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
  */
+//-----------------------------------------------------------------------------
 
 #ifndef RICHTOOLS_RICHTABULATEDREFRACTIVEINDEX_H
 #define RICHTOOLS_RICHTABULATEDREFRACTIVEINDEX_H 1
