@@ -1,4 +1,4 @@
-// $Id: Monitor.opts,v 1.5 2005-02-21 19:22:35 gcorti Exp $ 
+// $Id: Monitor.opts,v 1.6 2005-02-28 16:19:04 gcorti Exp $ 
 #pragma print off
 
 /** @file 
@@ -43,6 +43,17 @@ MCDecayCounter.MCDecayFinder.OutputLevel = 3;
 //MCDecayCounter.EvtCode = 0;
 
 #pragma print on
+// Check MC Velo Hits
+ApplicationMgr.DLLs += { "VeloAlgorithms", "VeloDet" } ;
+SimMonitor.Members  += { "VeloMonitor" };
+// Switch off histogram not relevant for Gauss, see full list in
+//#include "$VELOALGORITHMSROOT/options/VeloMonitor.opts"
+VeloMonitor.DetailedMonitor     = true;  // default false
+VeloMonitor.TestMCVeloFE        = false; // default true
+VeloMonitor.TestVeloFullDigit   = false; // default true
+VeloMonitor.TestVeloCluster     = false; // default true
+
+
 // Check MCHits for Silicon tracker
 SimMonitor.Members  += { "MCHitMonitor/STHitMonitor" };
 STHitMonitor.mcPathString = "/Event/MC/IT/Hits";
@@ -53,7 +64,8 @@ SimMonitor.Members  += { "MCHitMonitor/OTHitMonitor" };
 OTHitMonitor.mcPathString = "/Event/MC/OT/Hits";
 OTHitMonitor.zStations    = { 7938.0, 8625.0, 9315.0 };
 
-// Check MC info for RICH
+// Check MC info for RICH, because of the way it is setup it needs to
+// be explicitely set up
 #pragma print off
 #include "$GAUSSRICHROOT/options/RichAnalysis.opts"
 #pragma print on
