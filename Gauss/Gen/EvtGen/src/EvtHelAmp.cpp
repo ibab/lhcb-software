@@ -39,7 +39,6 @@
 EvtHelAmp::~EvtHelAmp() {
 
   delete _evalHelAmp;
-
 }
 
 void EvtHelAmp::getName(std::string& model_name){
@@ -151,7 +150,19 @@ void EvtHelAmp::init(){
 				EvtPDL::getSpinType(getDaug(0)),
 				EvtPDL::getSpinType(getDaug(1)),
 				_HBC);
+
+  // Delete all created pointers
+  delete [] _lambdaA2 ;
+  delete [] _lambdaB2 ;
+  delete [] _lambdaC2 ;
   
+  for ( int ib = 0 ;
+        ib < _nB ;
+        ib++ ) {
+    delete [] _HBC[ib] ;
+  }
+  
+  delete [] _HBC ;
 
 }
 

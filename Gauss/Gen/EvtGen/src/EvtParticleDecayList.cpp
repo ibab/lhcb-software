@@ -161,7 +161,9 @@ EvtDecayBase* EvtParticleDecayList::getDecayModel(EvtParticle *p){
 	} 
 
 	if ( p->hasValidP4() ) {
-	  //report(INFO,"EvtGen") << "amazing " << EvtPDL::name(p->getId()) << " " << getDecay(i).getMassMin() << " "<<p->mass() << " " << i << std::endl;
+	  //report(INFO,"EvtGen") << "amazing " << EvtPDL::name(p->getId()) 
+    // << " " << getDecay(i).getMassMin() << " "<<p->mass() << " " << i 
+    // << std::endl;
 	  if (getDecay(i).getMassMin() < p->mass() ) {
 	    p->setChannel(i);
 	    return getDecay(i).getDecayModel(); 
@@ -210,8 +212,8 @@ void EvtParticleDecayList::setNMode(int nmode){
   if (_nmode!=0){
     report(ERROR,"EvtGen") << "Error _nmode not equal to zero!!!"<<std::endl;
     ::abort();
-    delete [] _decaylist;
   }
+  if ( _decaylist != 0 ) delete [] _decaylist ;
   _decaylist=_decaylist_new;
   _nmode=nmode;
 
@@ -265,6 +267,8 @@ void EvtParticleDecayList::addMode(EvtDecayBase* decay, double brfrsum,
     delete [] _decaylist;
   }
 
+  if ( ( _nmode == 0 ) && ( _decaylist != 0 ) ) delete [] _decaylist ;
+
   _nmode++;
 
   _decaylist=newlist;
@@ -282,7 +286,8 @@ void EvtParticleDecayList::finalize(){
     }
     if (fabs(_rawbrfrsum-1.0)>0.0001) {
       report(INFO,"EvtGen") <<"Warning, sum of branching fractions for "
-      			    <<EvtPDL::name(_decaylist[0]->getDecayModel()->getParentId()).c_str()
+                            <<EvtPDL::name
+        (_decaylist[0]->getDecayModel()->getParentId()).c_str()
       			    <<" is "<<_rawbrfrsum<<std::endl;
       report(INFO,"EvtGen") << "rescaled to one! "<<std::endl;
       

@@ -35,7 +35,10 @@
 
 #include <string>
 
-EvtbTosllBall::~EvtbTosllBall() {}
+EvtbTosllBall::~EvtbTosllBall() {
+  delete _ballffmodel ;
+  if ( _calcamp ) delete _calcamp ;
+}
 
 void EvtbTosllBall::getName(std::string& model_name){
 
