@@ -5,8 +5,11 @@
  * Implementation file for class : RichSmartIDTool
  *
  * CVS Log :-
- * $Id: RichSmartIDTool.cpp,v 1.8 2005-01-13 13:19:22 jonrob Exp $
+ * $Id: RichSmartIDTool.cpp,v 1.9 2005-01-13 17:44:49 jonrob Exp $
  * $Log: not supported by cvs2svn $
+ * Revision 1.8  2005/01/13 13:19:22  jonrob
+ * Update the way the active readout list is created and accessed
+ *
  * Revision 1.7  2005/01/07 13:24:31  jonrob
  * Changes to interface methods
  *
@@ -243,7 +246,7 @@ const RichSmartID::Collection & RichSmartIDTool::readoutChannelList( ) const
     const unsigned int nRich2 = m_readoutChannels.size() - nRich1;
 
     // Sort the list
-    RichSmartIDSorter sorter;
+    const RichSmartIDSorter sorter;
     sorter.sortByRegion(m_readoutChannels);
 
     info() << "Created active HPD channel list : # channels RICH(1/2) = "
