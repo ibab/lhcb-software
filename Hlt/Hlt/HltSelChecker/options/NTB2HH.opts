@@ -48,6 +48,7 @@ OffB2HHTree.MCDecay = "{B0 -> ^pi+ ^pi-, B~0 -> ^pi+ ^pi-, B0 -> ^K+ ^pi-, B0 ->
 OffB2HHTree.NtupleName = "FILE1/OffB2HH";
 OffB2HHTree.MCNtupleName = "FILE1/MCOffB2HH";
 OffB2HHTree.PVLocator.PVLocation = "/Event/Phys/PrimaryVertices";
+OffB2HHTree.UseRichPID = false;
 OffB2HHTree.OutputLevel = 3;
 //------------------------------------------------------------------------------
 
@@ -71,5 +72,6 @@ HLTBd2HHTree.MCDecay = "{B0 -> ^pi+ ^pi-, B~0 -> ^pi+ ^pi-, B0 -> ^K+ ^pi-, B0 -
 HLTBd2HHTree.NtupleName = "FILE1/HLTBd2HH";
 HLTBd2HHTree.MCNtupleName = "FILE1/MCHLTBd2HH";
 HLTBd2HHTree.PVLocator.PVLocation = "/Event/Phys/Trg/Vertices";
+HLTBd2HHTree.UseRichPID = true;
 HLTBd2HHTree.OutputLevel = 3;
 //------------------------------------------------------------------------------

@@ -44,6 +44,7 @@ OffBs2PhiPhiTree.MCDecay = "{B_s0 -> (^phi(1020) -> ^K- ^K+) (^phi(1020) -> ^K- 
 OffBs2PhiPhiTree.NtupleName = "FILE1/OffBs2PhiPhi";
 OffBs2PhiPhiTree.MCNtupleName = "FILE1/MCOffBs2PhiPhi";
 OffBs2PhiPhiTree.PVLocator.PVLocation = "/Event/Phys/PrimaryVertices";
+OffBs2PhiPhiTree.UseRichPID = false;
 OffBs2PhiPhiTree.OutputLevel = 3;
 //------------------------------------------------------------------------------
 
@@ -68,5 +69,6 @@ HLTBs2PhiPhiTree.MCDecay = "{B_s0 -> (^phi(1020) -> ^K- ^K+) (^phi(1020) -> ^K- 
 HLTBs2PhiPhiTree.NtupleName = "FILE1/HLTBs2PhiPhi";
 HLTBs2PhiPhiTree.MCNtupleName = "FILE1/MCHLTBs2PhiPhi";
 HLTBs2PhiPhiTree.PVLocator.PVLocation = "/Event/Phys/Trg/Vertices";
+HLTBs2PhiPhiTree.UseRichPID = true;
 HLTBs2PhiPhiTree.OutputLevel = 3;
 //------------------------------------------------------------------------------

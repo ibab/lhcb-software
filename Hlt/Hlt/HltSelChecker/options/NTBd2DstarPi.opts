@@ -45,6 +45,7 @@ OffBd2DstarPiTree.MCDecay = "{B0 -> (^D*(2010)- -> (^D~0 -> ^K+ ^pi-)  ^pi-) ^pi
 OffBd2DstarPiTree.NtupleName = "FILE1/OffBd2DstarPi";
 OffBd2DstarPiTree.MCNtupleName = "FILE1/MCOffBd2DstarPi";
 OffBd2DstarPiTree.PVLocator.PVLocation = "/Event/Phys/PrimaryVertices";
+OffBd2DstarPiTree.UseRichPID = false;
 OffBd2DstarPiTree.OutputLevel = 3;
 //------------------------------------------------------------------------------
 
@@ -72,5 +73,6 @@ HLTBd2DstarPiTree.MCDecay = "{B0 -> (^D*(2010)- -> (^D~0 -> ^K+ ^pi-)  ^pi-) ^pi
 HLTBd2DstarPiTree.NtupleName = "FILE1/HLTBd2DstarPi";
 HLTBd2DstarPiTree.MCNtupleName = "FILE1/MCHLTBd2DstarPi";
 HLTBd2DstarPiTree.PVLocator.PVLocation = "/Event/Phys/Trg/Vertices";
+HLTBd2DstarPiTree.UseRichPID = true;
 HLTBd2DstarPiTree.OutputLevel = 3;
 //------------------------------------------------------------------------------
