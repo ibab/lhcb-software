@@ -3,6 +3,9 @@
 // Define the RichRecTrack creator
 ToolSvc.RichToolRegistry.Tools += { "RichTrackCreatorFromTrStoredTracks/RichTrackCreator" };
 
+// Track location
+//ToolSvc.RichTrackCreator.TrStoredTracksLocation = "Rec/Tr/BestTest";
+
 // Momentum cuts ( in the for tracktype/minP/maxP )
 ToolSvc.RichTrackCreator.TrackMomentumCuts = { "forward/0/9999999",
                                                "match/0/9999999",
