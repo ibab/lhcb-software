@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/L0/L0Muon/src/component/L0mTriggerProc.cpp,v 1.1 2001-06-07 16:34:19 atsareg Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/L0/L0Muon/src/component/L0mTriggerProc.cpp,v 1.2 2001-06-11 20:16:52 atsareg Exp $
 
 /// Include files
 /// Gaudi interfaces
@@ -216,7 +216,7 @@ L0mTower* L0mTriggerProc::createTower(L0mPad* pad, ObjectVector<L0mPad>* pads) {
     if(st !=2 ) {   // for all the pads except those in M3
       // Check if the pad coinsides with some tile
       for (ivmt = vtiles[st].begin(); ivmt != vtiles[st].end(); ivmt++ ) {
-	if (**ind == *ivmt  ) {
+	if ( MuonTile(**ind) == *ivmt  ) {
 	  // Check how many M3 pads covers the touched pad in other station
 	  vmt3 = m_layout[2].tiles( *ivmt );
 	  
