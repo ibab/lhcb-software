@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.203 2004-11-17 16:58:20 pkoppenb Exp $
+# $Id: requirements,v 1.204 2004-11-17 17:43:37 pkoppenb Exp $
 # Created    : 07/02/2002
 # Maintainer : P. Koppenburg
 #
@@ -50,8 +50,8 @@ use LHCb                v16r4
 use  L0DU               	v6r7p2   L0
 use  L0Calo             	v7r6     L0
 use  L0Checker          	v3r0     L0
-use  L0MuonKernel 		v2r2     L0
-use  L0MuonTrigger 		v2r3     L0
+use  L0MuonKernel 		v2r1p1   L0
+use  L0MuonTrigger 		v2r2     L0
 use  L0mConf            	v2r2p3   L0
 
 # Enable neutral ProtoParticles production and CaloPIDs
