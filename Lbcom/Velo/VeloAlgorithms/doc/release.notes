@@ -1,6 +1,7 @@
 ! Package     : VeloAlgoithms
 ! Responsible : Chris Parkes
 
+!========================  VeloAlgorithms v2r1 2002-07-25 =====================
 ! 2002-07-23 - Chris Parkes
  - solve bug due to sensor number problems
  - sensor number in MCHits is different from sensor number in Detector Element
