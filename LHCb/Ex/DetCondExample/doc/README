@@ -1,4 +1,4 @@
-# $Id: README,v 1.21 2002-05-06 16:35:26 andreav Exp $
+# $Id: README,v 1.22 2002-07-12 15:13:18 andreav Exp $
 
 Two examples are distributed in this package: a test of condition data 
 stored in flat XML files, and a test of condition data stored in the CondDB.
@@ -308,6 +308,7 @@ setenv COND_DB_DEBUG none
 # Even better, you can also modify and execute the setupDB_Oracle.bat script
 # You can set your password in the private/setupDBPSWD_Oracle.bat
 # The host (here db9) must correspond to an entry in the tnsnames.ora file
+# Environment variable TNS_ADMIN defines the search path for tnsnames.ora
 # The name of the DB can be anything: a DB with that name is created and used
 # For instance, this is what I use... except the password :-)
 set DETCONDEXAMPLE_DBHOST=DB9

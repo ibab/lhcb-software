@@ -1,6 +1,10 @@
-#$Id: release.notes,v 1.16 2002-05-06 16:35:26 andreav Exp $
+#$Id: release.notes,v 1.17 2002-07-12 15:13:19 andreav Exp $
 Package Ex/DetCondExample
 Package manager : Andrea Valassi 
+
+==============================================================================
+!20020712 - Andrea Valassi
+Minor modifications to the documentation
 
 ==============================================================================
 !20020506 - Andrea Valassi
