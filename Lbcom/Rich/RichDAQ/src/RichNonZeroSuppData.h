@@ -1,17 +1,22 @@
 
+//-----------------------------------------------------------------------------
 /** @file RichNonZeroSuppData.h
  *
  *  Header file for RICH DAQ utility class : RichNonZeroSuppData
  *
  *  CVS Log :-
- *  $Id: RichNonZeroSuppData.h,v 1.12 2005-01-07 12:35:59 jonrob Exp $
+ *  $Id: RichNonZeroSuppData.h,v 1.13 2005-01-13 13:10:41 jonrob Exp $
  *  $Log: not supported by cvs2svn $
+ *  Revision 1.12  2005/01/07 12:35:59  jonrob
+ *  Complete rewrite
+ *
  *  Revision 1.11  2004/07/27 13:46:07  jonrob
  *  Add doxygen file documentation and CVS information
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2003-11-07
  */
+//-----------------------------------------------------------------------------
 
 #ifndef RICHDAQ_RICHNONZEROSUPPDATA_H
 #define RICHDAQ_RICHNONZEROSUPPDATA_H 1
@@ -38,13 +43,11 @@ namespace RichNonZeroSuppDataV0 {
 
   /** @class RichNonZeroSuppData RichNonZeroSuppData.h
    *
-   *  The non zero-suppressed data format.
-   *  First version, compatible with DC04
+   *  The RICH HPD non zero suppressed data format.
+   *  First version, compatible with DC04 data.
    *
    *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
    *  @date   2003-11-07
-   *
-   *  @todo See if decoding can be speeded up by removing need for data copying
    */
   class RichNonZeroSuppData : public RichHPDDataBank {
 
@@ -92,9 +95,6 @@ namespace RichNonZeroSuppDataV0 {
     virtual void fillRichSmartIDs( RichSmartID::Collection & ids,
                                    const IRichHPDIDTool * hpdTool ) const;
 
-    // Fill a vector with Raw data words
-    virtual void fillRAWBank( RichDAQ::RAWBank & rawData ) const;
-
     // Print data bank to Gaudi MsgStream
     virtual void fillMsgStream( MsgStream & os ) const;
 
@@ -114,26 +114,9 @@ namespace RichNonZeroSuppDataV0 {
       return isBitOn( m_data[row], col );
     }
 
-    /// Test if a given bit in a word is set on
-    inline bool
-    isBitOn( const RichDAQ::LongType data, const RichDAQ::ShortType pos ) const
-    {
-      return ( 0 != (data & (1<<pos)) );
-    }
-
-    /// Set a given bit in a data word on
-    inline void setBit( RichDAQ::LongType & data, const RichDAQ::ShortType pos )
-    {
-      data |= 1<<pos;
-    }
-
   };
 
 } // RichNonZeroSuppDataV0 namespace
-
-/// overloaded output to MsgStream
-MsgStream & operator << ( MsgStream & os,
-                          const RichNonZeroSuppDataV0::RichNonZeroSuppData & data );
 
 //===================================================================================
 
@@ -148,13 +131,12 @@ namespace RichNonZeroSuppDataV1 {
 
   /** @class RichNonZeroSuppData RichNonZeroSuppData.h
    *
-   *  The non zero-suppressed data format.
-   *  Second iteration of the format. New header word w.r.t version 0
+   *  The RICH HPD non zero suppressed data format.
+   *  Second iteration of the format. Identical to version 0
+   *  apart from a new header word format.
    *
    *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
    *  @date   2003-11-07
-   *
-   *  @todo See if decoding can be speeded up by removing need for data copying
    */
   class RichNonZeroSuppData : public RichHPDDataBank {
 
@@ -198,10 +180,7 @@ namespace RichNonZeroSuppDataV1 {
     virtual void fillRichSmartIDs( RichSmartID::Collection & ids,
                                    const IRichHPDIDTool * hpdTool ) const;
 
-    // Fill a vector with Raw data words
-    virtual void fillRAWBank( RichDAQ::RAWBank & rawData ) const;
-
-    // Print data bank to Gaudi MsgStream
+    // Print data bank to messager stream
     virtual void fillMsgStream( MsgStream & os ) const;
 
   private: // methods
@@ -220,25 +199,8 @@ namespace RichNonZeroSuppDataV1 {
       return isBitOn( m_data[row], col );
     }
 
-    /// Test if a given bit in a word is set on
-    inline bool
-    isBitOn( const RichDAQ::LongType data, const RichDAQ::ShortType pos ) const
-    {
-      return ( 0 != (data & (1<<pos)) );
-    }
-
-    /// Set a given bit in a data word on
-    inline void setBit( RichDAQ::LongType & data, const RichDAQ::ShortType pos )
-    {
-      data |= 1<<pos;
-    }
-
   };
 
 } // RichNonZeroSuppDataV1 namespace
-
-/// overloaded output to MsgStream
-MsgStream & operator << ( MsgStream & os,
-                          const RichNonZeroSuppDataV1::RichNonZeroSuppData & data );
 
 #endif // RICHDAQ_RICHNONZEROSUPPDATA_H

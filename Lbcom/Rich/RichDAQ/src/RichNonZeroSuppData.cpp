@@ -1,15 +1,19 @@
 
+//-----------------------------------------------------------------------------
 /** @file RichNonZeroSuppData.cpp
  *
  *  Implementation file for RICH DAQ helper class : RichNonZeroSuppData
  *
  *  CVS Log :-
- *  $Id: RichNonZeroSuppData.cpp,v 1.1 2005-01-07 12:35:59 jonrob Exp $
+ *  $Id: RichNonZeroSuppData.cpp,v 1.2 2005-01-13 13:10:41 jonrob Exp $
  *  $Log: not supported by cvs2svn $
+ *  Revision 1.1  2005/01/07 12:35:59  jonrob
+ *  Complete rewrite
  *
  *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
  *  @date   2004-12-17
  */
+//-----------------------------------------------------------------------------
 
 // local
 #include "RichNonZeroSuppData.h"
@@ -37,20 +41,6 @@ namespace RichNonZeroSuppDataV0 {
 
   }
 
-  void RichNonZeroSuppData::fillRAWBank( RichDAQ::RAWBank & rawData ) const
-  {
-
-    // fill with header word
-    rawData.push_back( header() );
-
-    // ... then data words
-    for ( RichDAQ::ShortType iData = 0; iData < dataSize(); ++iData )
-    {
-      rawData.push_back( m_data[iData] );
-    }
-
-  }
-
   void RichNonZeroSuppData::fillMsgStream( MsgStream & os ) const
   {
 
@@ -58,7 +48,7 @@ namespace RichNonZeroSuppDataV0 {
        << endreq;
 
     // Header
-    os << RichNonZeroSuppDataV0::RichNonZeroSuppData::Header( header() ) << endreq;
+    os << Header( header() ) << endreq;
 
     // Raw print out of data block
     os << endreq;
@@ -100,20 +90,6 @@ namespace RichNonZeroSuppDataV1 {
 
   }
 
-  void RichNonZeroSuppData::fillRAWBank( RichDAQ::RAWBank & rawData ) const
-  {
-
-    // fill with header word
-    rawData.push_back( header() );
-
-    // ... then data words
-    for ( RichDAQ::ShortType iData = 0; iData < dataSize(); ++iData )
-    {
-      rawData.push_back( m_data[iData] );
-    }
-
-  }
-
   void RichNonZeroSuppData::fillMsgStream( MsgStream & os ) const
   {
 
@@ -121,7 +97,7 @@ namespace RichNonZeroSuppDataV1 {
        << endreq;
 
     // Header
-    os << RichNonZeroSuppDataV1::RichNonZeroSuppData::Header( header() ) << endreq;
+    os << Header( header() ) << endreq;
 
     // Raw print out of data block
     os << endreq;
