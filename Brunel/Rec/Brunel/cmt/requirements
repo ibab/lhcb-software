@@ -70,10 +70,10 @@ use EventSys     v10r0  Event
 use SicbCnv      v16r0  SICB
 use ITSicbGeom   v1r0   SICB
 use OTSicbGeom   v1r0   SICB
-use RiSicbGeom   v1r0   SICB
+#use RiSicbGeom   v1r0   SICB
 use CaloSicbCnv  v6r0   SICB
 use MuonSicbCnv  v5r0   SICB
-use RiSicbCnv    v2r0   SICB
+#use RiSicbCnv    v2r0   SICB
 use VSicbCnv     v7r0   SICB
 
 # Brunel utilities
