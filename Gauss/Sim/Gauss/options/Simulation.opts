@@ -1,8 +1,11 @@
-// $Id: Simulation.opts,v 1.1 2002-03-13 12:56:11 ibelyaev Exp $ 
+// $Id: Simulation.opts,v 1.2 2002-04-05 16:41:29 witoldp Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
-// $Log: not supported by cvs2svn $ 
+// $Log: not supported by cvs2svn $
+// Revision 1.1  2002/03/13 12:56:11  ibelyaev
+//  small restructurusation of job-options
+// 
 // ============================================================================
 //  jobOptions to run Gauss program in 3 steps 
 // ============================================================================
@@ -47,7 +50,7 @@ GiGaStore.ConversionServices   =
 Kine.ConversionSvcName         = "GiGaKineCnvSvc" ; 
 Kine.DataProviderSvcName       = "EventDataSvc"   ; 
 Kine.StreamItems               = 
-{ "/Event/McEventCollection" } ;
+{ "/Event/Gen/HepMCEvents" } ;
 
 // ============================================================================
 // configuration of geometry data stream 
@@ -77,7 +80,7 @@ GiGaSvc.TrackingAction         =   "GiGaTrackActionSequence/TrackSeq"    ;
 TrackSeq.Members               = { "GiGaTrackActionSimple/SimpleTrack" } ;
 SimpleTrack.StoreAll           = true                                    ; 
 SimpleTrack.StoreByOwnEnergy   = true                                    ; 
-SimpleTrack.OwnEnergyThreshold = 1000.0                                  ; 
+//SimpleTrack.OwnEnergyThreshold = 1000.0                                  ; 
 // SimpleTrack.StoreByChildEnergy   = true ; 
 // SimpleTrack.ChildEnergyThreshold = 50.0 ; 
 // SimpleTrack.StoreByOwnType       = true; 

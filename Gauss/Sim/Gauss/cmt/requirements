@@ -1,12 +1,15 @@
-# $Id: requirements,v 1.5 2002-03-13 12:56:11 ibelyaev Exp $ 
+# $Id: requirements,v 1.6 2002-04-05 16:38:36 witoldp Exp $ 
 # =============================================================================
 # CVS tag $Name: not supported by cvs2svn $ 
 # =============================================================================
-# $Log: not supported by cvs2svn $ 
+# $Log: not supported by cvs2svn $
+# Revision 1.5  2002/03/13 12:56:11  ibelyaev
+#  small restructurusation of job-options
+# 
 # =============================================================================
 
 package Gauss
-version v1r0
+version v2r0
 
 # =============================================================================
 # structure 
@@ -17,13 +20,13 @@ branches doc options cmt job
 # dependencies 
 # =============================================================================
 # generator
-use GeneratorModules v1r0 Gen
+use GeneratorModules v2r0 Gen
 
 # Main program and standard job options
 use GaudiConf     v6*     
 
 # GAUDI framework
-use GaudiSys      v9*
+use GaudiSys      v9r0
 
 # ROOT event persistency
 use GaudiRootDb   v5*
@@ -36,7 +39,7 @@ use dbase         v240 SICB
 use SicbCnv       v15r* SICB
 
 #GiGa staff...
-use GiGaCnv       v4r*  Sim
+use GiGaCnv       v4r2  Sim
 use EvGen         v2r*   Sim
 
 #geometry source 

@@ -22,6 +22,8 @@ EventDataSvc.ForceLeaves = true ;
 ApplicationMgr.DLLs       += { "GeneratorModules" };
 ApplicationMgr.DLLs       += { "GaudiDb" };
 ApplicationMgr.DLLs   += { "GiGa" , "GiGaCnv" } ;
+ApplicationMgr.DLLs       += {"GaudiRootDb"};
+
 
 // ============================================================================
 //  apply "event generator" options 
@@ -52,10 +54,18 @@ EventPersistencySvc.CnvServices =
 { "GiGaKineCnvSvc" , 
   "GiGaHitsCnvSvc" } ;
 
+//ApplicationMgr.ExtSvc     += {"DbEventCnvSvc/RootEvtCnvSvc"};
+//ApplicationMgr.OutStream   = {"GenDst"};
+//EventPersistencySvc.CnvServices += { "RootEvtCnvSvc" };
+//RootEvtCnvSvc.DbType = "ROOT";
+//GenDst.ItemList      = {"/Event#999"};
+//GenDst.Output        = "DATAFILE='G4Dst.root' TYP='ROOT'";
+
+
 // ============================================================================
 // Number of events to be processed
 // ============================================================================
-ApplicationMgr.EvtMax    = 3      ;
+ApplicationMgr.EvtMax    = 1      ;
 ApplicationMgr.EvtSel    = "NONE" ;
 
 // ============================================================================
@@ -91,7 +101,7 @@ GiGaStore.ConversionServices   =
 Kine.ConversionSvcName         = "GiGaKineCnvSvc"                 ; 
 Kine.DataProviderSvcName       = "EventDataSvc"                   ; 
 Kine.StreamItems               = 
-{ "/Event/McEventCollection" } ;
+{ "/Event/Gen/HepMCEvents" } ;
 
 // ============================================================================
 // configuration of geometry data stream 
@@ -222,8 +232,7 @@ GiGaSvc.UseVisManager          = true;
 //--------------------------------------------------------------
 ParticlePropertySvc.ParticlePropertiesFile = "particle.cdf";
 
-PythiaModule.PythiaCommand = {"pysubs msel 13","pysubs ckin 3 18.","pypars mstp 43 2", "pyin
-it dumpr 1 15", "pyinit pylistf 1"};
+PythiaModule.PythiaCommand = {"pysubs msel 5","pysubs ckin 3 18.","pypars mstp 43 2", "pyinit dumpr 1 15", "pyinit pylistf 1"};
 
 
 // ============================================================================

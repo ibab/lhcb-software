@@ -29,7 +29,7 @@ ApplicationMgr.EvtSel      ="NONE";
 // Number of events to be processed (default is 10)
 ApplicationMgr.EvtMax = 5;
 
-
+EventDataSvc.ForceLeaves = 1;
 
 //--------------------------------------------------------------
 // Algorithms Private Options

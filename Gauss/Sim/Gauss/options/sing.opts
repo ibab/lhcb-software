@@ -1,8 +1,11 @@
-// $Id: sing.opts,v 1.2 2002-03-13 12:56:11 ibelyaev Exp $ 
+// $Id: sing.opts,v 1.3 2002-04-05 16:41:29 witoldp Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
-// $Log: not supported by cvs2svn $ 
+// $Log: not supported by cvs2svn $
+// Revision 1.2  2002/03/13 12:56:11  ibelyaev
+//  small restructurusation of job-options
+// 
 // ============================================================================
 //  jobOptions to run SingleParticleGun and then feed the output into G4
 // ===========================================================================
@@ -27,6 +30,7 @@ ApplicationMgr.DLLs += { "GeneratorModules" } ;
 ApplicationMgr.DLLs += { "GaudiDb"          } ;
 ApplicationMgr.DLLs += { "GaudiAlg"         } ;
 ApplicationMgr.DLLs += { "GiGa" , "GiGaCnv" } ;
+ApplicationMgr.DLLs       += {"GaudiRootDb"};
 
 // ============================================================================
 //  apply "event generator" options 
@@ -44,6 +48,7 @@ ApplicationMgr.ExtSvc +=
   "GiGaGeomCnvSvc"      ,   
   "GiGaHitsCnvSvc"      } ;
 
+
 // ============================================================================
 // Set output level threshold (2=DEBUG, 3=INFO, 4=WARNING, 5=ERROR, 6=FATAL )
 // ============================================================================
@@ -56,6 +61,13 @@ XmlPartserSvc.OutputLevel  = 5 ;
 EventPersistencySvc.CnvServices += 
 { "GiGaKineCnvSvc" ,  
   "GiGaHitsCnvSvc" } ;
+ApplicationMgr.ExtSvc     += {"DbEventCnvSvc/RootEvtCnvSvc"};
+ApplicationMgr.OutStream   = {"GenDst"};
+EventPersistencySvc.CnvServices += { "RootEvtCnvSvc" };
+RootEvtCnvSvc.DbType = "ROOT";
+GenDst.ItemList      = {"/Event#999"};
+GenDst.Output        = "DATAFILE='G4Dst.root' TYP='ROOT'";
+
 
 ApplicationMgr.EvtSel    = "NONE" ;
 
@@ -87,7 +99,7 @@ Simulation.Members +=
 {	"GiGaDataStoreAlgorithm/GiGaStore" ,   // data store configuration
   "GiGaInputStream/Geo"              ,   // load the geometry 
   "GiGaInputStream/Kine"             ,   // load the kinematics 
-  "GiGaFlushAlgorithm/GiGaFlush"     ,   // flush the event 
+//  "GiGaFlushAlgorithm/GiGaFlush"        // flush the event 
   "GiGaMiscGetEventAlg/GetEvent"     } ; // convert MCPartcile/MCVertices
 
 // ============================================================================
@@ -103,7 +115,7 @@ GiGaStore.ConversionServices   =
 Kine.ConversionSvcName         = "GiGaKineCnvSvc"                 ; 
 Kine.DataProviderSvcName       = "EventDataSvc"                   ; 
 Kine.StreamItems               = 
-{ "/Event/McEventCollection" } ;
+{ "/Event/Gen/HepMCEvents" } ;
 
 // ============================================================================
 // configuration of geometry data stream 
@@ -112,6 +124,8 @@ Geo.ExecuteOnce                = true                           ;
 Geo.ConversionSvcName          = "GiGaGeomCnvSvc"               ; 
 Geo.DataProviderSvcName        = "DetectorDataSvc"              ; 
 Geo.StreamItems               +=  { "/dd/Structure/LHCb/Pipe" } ; 
+//Geo.StreamItems               +=  { "/dd/Structure/LHCb/Rich1" } ;
+//Geo.StreamItems               +=  { "/dd/Structure/LHCb/Hcal" } ;
 
 // ============================================================================
 // Physics List  to be used and its configuration  
@@ -132,7 +146,7 @@ GiGaSvc.TrackingAction         =   "GiGaTrackActionSequence/TrackSeq"    ;
 TrackSeq.Members               = { "GiGaTrackActionSimple/SimpleTrack" } ;
 SimpleTrack.StoreAll           = true                                    ; 
 SimpleTrack.StoreByOwnEnergy   = true                                    ; 
-SimpleTrack.OwnEnergyThreshold = 1000.0                                  ; 
+//SimpleTrack.OwnEnergyThreshold = 1000.0                                  ; 
 // SimpleTrack.StoreByChildEnergy   = true ; 
 // SimpleTrack.ChildEnergyThreshold = 50.0 ; 
 // SimpleTrack.StoreByOwnType       = true; 
@@ -145,7 +159,7 @@ SimpleTrack.OwnEnergyThreshold = 1000.0                                  ;
 // Stepping action to be used and its configuration  
 // ============================================================================
 GiGaSvc.SteppingAction            =   "GiGaStepActionSequence/StepSeq"  ;
-// StepSeq.Members                   = { "GiGaStepActionDraw/DrawStep"   } ;
+StepSeq.Members                   = { "GiGaStepActionDraw/DrawStep"   } ;
 DrawStep.OutputLevel              = 6;
 
 
@@ -193,7 +207,8 @@ RunCommand.OutputLevel            = 2                                     ;
 RunCommand.BeginOfRunCommands     = 
 { "/control/saveHistory "           ,
   "/run/verbose 0 "                 ,
-  "/tracking/storeTrajectory  1"    } ;
+  "/tracking/storeTrajectory  1"    ,
+  "/tracking/verbose 0" } ;
 
 // ============================================================================
 // List of user interface sessions 
@@ -205,7 +220,7 @@ GiGaSvc.UIsessions           =  { "tcsh" };
 // ============================================================================
 // Global(world) magnetic field 
 // ============================================================================
-// GiGaGeomCnvSvc.WorldMagneticField = "GiGaMagFieldGlobal/GlobalField";
+//GiGaGeomCnvSvc.WorldMagneticField = "GiGaMagFieldGlobal/GlobalField";
 GlobalField.MagneticFieldService = "MagneticFieldSvc" ;
 
 // ============================================================================
@@ -233,8 +248,8 @@ SingleParticleGun.Eta =3.;
 SingleParticleGun.ModePt = 1;
 SingleParticleGun.ModeEta =1; 
 SingleParticleGun.ModePhi =1;
-//SingleParticleGun.PdgCode=2212;
-SingleParticleGun.PdgCode=211;
+SingleParticleGun.PdgCode=2212;
+//SingleParticleGun.PdgCode=211;
 
 //==============================================================
 //

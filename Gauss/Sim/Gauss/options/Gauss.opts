@@ -1,8 +1,11 @@
-// $Id: Gauss.opts,v 1.1 2002-03-13 12:56:11 ibelyaev Exp $ 
+// $Id: Gauss.opts,v 1.2 2002-04-05 16:41:28 witoldp Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
-// $Log: not supported by cvs2svn $ 
+// $Log: not supported by cvs2svn $
+// Revision 1.1  2002/03/13 12:56:11  ibelyaev
+//  small restructurusation of job-options
+// 
 // ============================================================================
 //  The main job-options file to run Gauss application in 3 steps 
 // ============================================================================
@@ -68,11 +71,12 @@ MessageSvc.OutputLevel    = 3 ;
 XmlParserSvc.OutputLevel  = 5 ;
 
 ApplicationMgr.EvtSel    = "NONE" ;
+EventDataSvc.ForceLeaves = 1;
 
 // ============================================================================
 // Event related parameters
 // ============================================================================
-ApplicationMgr.EvtMax = 10 ;
+ApplicationMgr.EvtMax = 3 ;
 
 // ============================================================================
 // The end of main Gauss's job-options file 

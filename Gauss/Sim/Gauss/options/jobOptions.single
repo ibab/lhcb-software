@@ -11,6 +11,8 @@ ApplicationMgr.DLLs       += { "GaudiDb" };
 ApplicationMgr.TopAlg     += {"SingleParticleGun","DumpMC"};
 ApplicationMgr.EvtSel      ="NONE";
 
+EventDataSvc.ForceLeaves = 1;
+
 ApplicationMgr.EvtMax      =100;
 
 SingleParticleGun.Pt = 50000.;
