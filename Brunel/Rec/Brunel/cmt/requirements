@@ -51,7 +51,7 @@ use CaloDetXmlCnv v2r0  Det
 use ITDet         v1r1  Det
 use MuonDet       v4r0  Det
 use OTDet         v2r2  Det
-use VeloDet       v7r0  Det
+use VeloDet       v7r1  Det
 use Magnet        v1r1  Det
 
 # Event Model

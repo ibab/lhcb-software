@@ -33,6 +33,7 @@ Purpose: LHCb reconstruction program
    . Fix a bug in debug printout (MuonID v3r2) 
    . Use same track state for Fortran back conversion and subsequent comparison 
      (RiSicbCnv v4r5)
+   . Remove some wrong consistency checks (VeloDet v7r1)
 
 </PRE><H1><A NAME=v13r2>2002-10-08 Brunel v13r2</A></H1><PRE>
 Bug fix release for reprocessing of summer production
