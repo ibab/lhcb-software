@@ -1,12 +1,11 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/DetDesc/ISolid.h,v 1.2 2001-03-15 12:43:38 ibelyaev Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/DetDesc/ISolid.h,v 1.3 2001-03-20 23:45:38 mato Exp $
 #ifndef DETDESC_ISOLID_H
 #define DETDESC_ISOLID_H 1 
 // STL
 #include  <iostream>
 #include  <string> 
 #include  <vector>
-
-#if defined(__GNUC__) &&  ( __GNUC__ == 2 ||  ___GNUC_MINOR__ == 91 )
+#if defined(__GNUC__) &&  ( __GNUC__ == 2 &&  __GNUC_MINOR__ == 91 )
 #include  <vector> 
 #else
 #include  <deque> 
