@@ -1,4 +1,4 @@
-// $Id: DaDiCppDict.cpp,v 1.39 2003-12-18 14:05:33 mato Exp $
+// $Id: DaDiCppDict.cpp,v 1.40 2003-12-19 14:41:49 mato Exp $
 
 #include "DaDiTools.h"
 #include "DaDiCppDict.h"
@@ -157,7 +157,7 @@ char* checkForReplacement(char* arg)
       newstr[j] = arg[i];
     }
   }
-  XMLString::release(&arg);
+  delete [] arg;
   return newstr;
   //delete [] newstr;
 }
@@ -1253,8 +1253,12 @@ void printCppDictionary(DaDiPackage* gddPackage,
           {
             DaDiMethArgument* gddConstArgument =
               gddConstructor->popDaDiMethArgument();
-            char *gddConstArgType =
+            char *gddConstArgTType =
               XMLString::transcode(gddConstArgument->type());
+
+			char *gddConstArgType = new char[XMLString::stringLen(gddConstArgTType)+1];
+			strcpy(gddConstArgType,gddConstArgTType);
+			XMLString::release(&gddConstArgTType);
 
             gddConstArgType = checkForReplacement(gddConstArgType);
 
@@ -1265,10 +1269,10 @@ void printCppDictionary(DaDiPackage* gddPackage,
               metaOut << "; ";
             }
 
-            XMLString::release(&gddConstArgType);
+            delete [] gddConstArgType;
           }
 
-	  metaOut << "\"," << std::endl;
+		  metaOut << "\"," << std::endl;
         }
 
         metaOut << indent << gddClassName << "_constructor_" << i << ");"
@@ -1306,10 +1310,14 @@ void printCppDictionary(DaDiPackage* gddPackage,
       DaDiAttribute* gddAttribute = gddClass->popDaDiAttribute();
 
       char *gddAttName = XMLString::transcode(gddAttribute->name()),
-        *gddAttType = XMLString::transcode(gddAttribute->type()),
+        *gddAttTType = XMLString::transcode(gddAttribute->type()),
         *gddAttDesc = XMLString::transcode(gddAttribute->desc()),
         *gddAttAccess = XMLString::transcode(gddAttribute->access()),
         *gddAttDictalias = XMLString::transcode(gddAttribute->dictalias());
+		
+	  char* gddAttType = new char[XMLString::stringLen(gddAttTType)+1];
+	  strcpy(gddAttType, gddAttTType);
+	  XMLString::release(&gddAttTType);
 
       std::string gddAttTransient = gddAttribute->transient() ? " | TRANSIENT" : "";
 
@@ -1322,7 +1330,7 @@ void printCppDictionary(DaDiPackage* gddPackage,
       {
         if (XMLString::compareString(*eIter, gddAttType) == 0)
         {
-          XMLString::release(&gddAttType);
+          delete [] gddAttType;
           gddAttType = new char[4];
           strcpy(gddAttType,"int");
         }
@@ -1330,7 +1338,7 @@ void printCppDictionary(DaDiPackage* gddPackage,
 
       if (XMLString::stringLen(gddAttDictalias))
       {
-        XMLString::release(&gddAttType);
+        delete [] gddAttType;
         gddAttType = new char[XMLString::stringLen(gddAttDictalias)+1];
         strcpy(gddAttType,gddAttDictalias); 
       }
@@ -1347,7 +1355,7 @@ void printCppDictionary(DaDiPackage* gddPackage,
               << std::endl
               << std::endl;
       XMLString::release(&gddAttName);
-      XMLString::release(&gddAttType);
+      delete [] gddAttType;
       XMLString::release(&gddAttDesc);
       XMLString::release(&gddAttAccess);
       XMLString::release(&gddAttDictalias);
@@ -1442,8 +1450,10 @@ void printCppDictionary(DaDiPackage* gddPackage,
           for (j=0; j<gddMethod->sizeDaDiMethArgument(); ++j)
           {
             DaDiMethArgument* gddMethArgument = gddMethod->popDaDiMethArgument();
-            char *gddMethArgType = XMLString::transcode(gddMethArgument->type());
-
+            char *gddMethArgTType = XMLString::transcode(gddMethArgument->type());
+			char *gddMethArgType = new char[XMLString::stringLen(gddMethArgTType)+1];
+			strcpy(gddMethArgType,gddMethArgTType);
+			XMLString::release(&gddMethArgTType);
             gddMethArgType = checkForReplacement(gddMethArgType);
 
             //	    metaOut << constructTypes(gddMethArgType);
@@ -1453,7 +1463,7 @@ void printCppDictionary(DaDiPackage* gddPackage,
             {
               metaOut << "; ";
             }
-            XMLString::release(&gddMethArgType);
+            delete [] gddMethArgType;
           }
           
           metaOut << "\"," << std::endl;
@@ -1481,7 +1491,7 @@ void printCppDictionary(DaDiPackage* gddPackage,
     {
       DaDiAttribute* gddAttribute = gddClass->popDaDiAttribute();
       char *gddAttName = XMLString::transcode(gddAttribute->name()),
-        *gddAttType = XMLString::transcode(gddAttribute->type()),
+        *gddAttTType = XMLString::transcode(gddAttribute->type()),
         *gddAttDesc = XMLString::transcode(gddAttribute->desc());
       XMLCh *falseStr = XMLString::transcode("FALSE");
       bool getMeth = (XMLString::compareString
@@ -1489,6 +1499,10 @@ void printCppDictionary(DaDiPackage* gddPackage,
         setMeth = (XMLString::compareString
                    (gddAttribute->setMeth(), falseStr) == 0) ? false : true;
       XMLString::release(&falseStr);
+
+	  char* gddAttType = new char[XMLString::stringLen(gddAttTType)+1];
+	  strcpy(gddAttType,gddAttTType);
+	  XMLString::release(&gddAttTType);
 
       gddAttType = checkForReplacement(gddAttType);
 
@@ -1515,7 +1529,7 @@ void printCppDictionary(DaDiPackage* gddPackage,
                 << std::endl;
       }
       XMLString::release(&gddAttName);
-      XMLString::release(&gddAttType);
+      delete [] gddAttType;
       XMLString::release(&gddAttDesc);
     }
 

@@ -2,6 +2,9 @@ Package: GaudiObjDesc
 Desccription: This package contains a set of tools used to generate code from the XML description of the data object classes.
 Package manager : Stefan Roiser
 
+!20031219 - Stefan
+- bugfix: converting XMLCh* to char* when using string with possible replacement
+
 !20031217 - Stefan
 - <assoc> is now a sub-element of <package> 
 - new attribute "from" for element <assoc>
