@@ -4,6 +4,9 @@
 ! Purpose     : Event model for HLT tracks
 !-----------------------------------------------------------------------------
 
+! 2003-06-16 - Sebastien Ponce
+ - use more recent GaudiObjDesc
+
 ! 2003-06-13 - Olivier Callot
  - Add two new members, chargeInVelo and particleID to store the relevant 
 	information.  

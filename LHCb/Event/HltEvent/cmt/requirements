@@ -29,7 +29,7 @@ use     OTEvent         v12r*   Event
 
 use     CLHEP           v*
 
-use 	GaudiObjDesc	v4r*    -no_auto_imports
+use 	GaudiObjDesc	v5r*    -no_auto_imports
 
 #============================================================================
 # Component library building rule

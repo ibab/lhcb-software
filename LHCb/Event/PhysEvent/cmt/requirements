@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.32 2003-06-02 14:52:32 gcorti Exp $
+# $Id: requirements,v 1.33 2003-06-16 13:03:31 sponce Exp $
 # Created      : 20/06/2001
 # Maintainer   : Gloria Corti
 #
@@ -18,7 +18,7 @@ include_dirs $(PHYSEVENTROOT)
 use RichEvent    v4r*  Event
 use CaloEvent    v11r* Event
 use MuonEvent    v2r*  Event
-use GaudiObjDesc v*  -no_auto_imports
+use GaudiObjDesc v5r*  -no_auto_imports
 
 # Produce Header-Files & dictionary from XML description
 #============================================================================

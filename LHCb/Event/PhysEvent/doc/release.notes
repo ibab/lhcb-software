@@ -1,6 +1,9 @@
-! $Id: release.notes,v 1.36 2003-06-02 14:52:33 gcorti Exp $
+! $Id: release.notes,v 1.37 2003-06-16 13:03:31 sponce Exp $
 ! Package     : PhysEvent 
 ! Responsible : Gloria Corti
+
+! 2003-06-16 - Sebastien Ponce
+ - use more recent GaudiObjDesc
 
 !========================= PhysEvent v7r4p1 2003-06-02 ===================
 ! 2003-06-02 - Gloria CORTI
