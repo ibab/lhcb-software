@@ -10,7 +10,7 @@ include_dirs      $(CALODETROOT)
 # =============== used packages ===========================================
 use DetDesc      v6*  Det 
 use CaloGen      v1*  Calo 
-use CaloSicbCnv	 v1*  SICB
+#use CaloSicbCnv	 v1*  SICB
 
 # =============== link library (base classes) =============================
 library          CaloDetLib        Lib/*.cpp 
@@ -27,5 +27,5 @@ private
 ignore_pattern   package_stamps 
 apply_pattern    package_Cshlibflags
 apply_pattern    package_Lshlibflags
-macro_append CaloAlgLib_shlibflags " $(GaudiKernel_linkopts) $(CLHEP_linkopts)"
+macro_append CaloDetLib_shlibflags " $(DetDesc_linkopts) $(GaudiKernel_linkopts) $(CLHEP_linkopts)"
 
