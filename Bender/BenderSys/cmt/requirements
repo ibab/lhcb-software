@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.52 2005-02-17 10:23:55 ibelyaev Exp $ 
+# $Id: requirements,v 1.53 2005-03-04 19:34:08 ibelyaev Exp $ 
 # =============================================================================
 # CVS tag $Name: not supported by cvs2svn $
 # =============================================================================
@@ -6,20 +6,20 @@
 #                 LHCb Physics Analysis with Python  
 # =============================================================================
 package       BenderSys
-version       v4r6
+version       v4r7
 author        Vanya BELYAEV
 
 use           GaudiPython    v6r11
 
 # =========== Bender Application itself =======================================
-use           Bender         v4r6   Phys 
+use           Bender         v4r7   Phys 
 use           BenderGCC      v1r1   Tools 
 # =========== Bender Libraries ================================================
-use           BenderLibs     v4r6   Tools 
+use           BenderLibs     v4r7   Tools 
 # =========== dictionaries for LoKi/Bender classes ============================
 use           BenderDet      v4r5   Det 
 # =========== dictionaries for LoKi/Bender classes ============================
-use           BenderDict     v4r6   Tools 
+use           BenderDict     v4r7   Tools 
 # =========== dictionaries for Relations ======================================
 use           BenderRels     v4r6   Tools 
 # =========== Bender & LoKi documentation =====================================
@@ -31,7 +31,7 @@ use           BenderTutor    v4r5   Tutorial
 use           BenderTest     v4r6   Tests 
 use           LoKiTest       v3r9   Tests 
 # =========== examples of usage of Bender "in practice" =======================
-use           BenderExample  v4r6   Ex  
+use           BenderExample  v4r7   Ex  
 use           LoKiExample    v3r9p1 Ex 
 # =========== Test suit for Bender ============================================
 use           BenderVis      v4r5   Vis 
@@ -44,12 +44,6 @@ use           LoKiHybrid     v4r5   Tools
 
 # =============================================================================
 # $Log: not supported by cvs2svn $
-# Revision 1.51  2005/02/16 11:20:38  ibelyaev
-#  LoKiExample: v3r8 -> v3r9
-#
-# Revision 1.50  2005/02/08 11:30:47  ibelyaev
-#  v4r6
-#
 # =============================================================================
 # The END 
 # =============================================================================

@@ -1,21 +1,12 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: benderalgo.py,v 1.12 2005-02-08 20:31:51 ibelyaev Exp $ 
+# $Id: benderalgo.py,v 1.13 2005-03-04 19:30:43 ibelyaev Exp $ 
 # =============================================================================
-# CVS version $Revision: 1.12 $ 
+# CVS version $Revision: 1.13 $ 
 # =============================================================================
 # CVS tag     $Name: not supported by cvs2svn $ 
 # =============================================================================
 # $Log: not supported by cvs2svn $
-# Revision 1.11  2005/02/08 12:37:36  ibelyaev
-#  minor polishing with geo/point
-#
-# Revision 1.10  2005/02/05 12:58:32  ibelyaev
-#  add Tools/BenderRels package
-#
-# Revision 1.9  2005/01/24 17:44:39  ibelyaev
-#  v4r5
-#
 # =============================================================================
 """
 The definition and implemenation of basic Bender' algorithm:
@@ -42,6 +33,8 @@ from   bendercuts   import *
 from   benderloop   import Loop
 from   bendertuple  import Tuple
 from   bendermatch  import MCMatch
+
+import bendertools
 
 # load minimal set of obejcts 
 gaudimodule.loaddict('BenderDict')
@@ -435,8 +428,42 @@ class Algo(BenderAlgo):
         if level <= MSG.NIL        : level = MSG.VERBOSE  
         return BenderAlgo.Print( self  , message , code , level  )     # RETURN 
 
+    def tool         ( self             ,
+                       interface        ,
+                       typename         ,
+                       name     = None  ,
+                       parent   = None  ,
+                       create   = True  ) :
+        """
+        Useful method to locate the tool a certail tool
 
+        Usage:
 
+        # locate public tool
+        t1 = self.tool(ITrExtrapolator,'TrParabolicExtrapolator')
+        # locate private tool
+        t2 = self.tool(ITrExtrapolator,'TrParabolicExtrapolator',parent=self)
+        # locate public tool with defined name 
+        t3 = self.tool(ITrExtrapolator,'TrParabolicExtrapolator/MyExt1')
+        # locate private tool with defined name 
+        t4 = self.tool(ITrExtrapolator,'TrParabolicExtrapolator/MyExt2',parent=self)
+        # locate public tool with defined name 
+        t5 = self.tool(ITrExtrapolator,'TrParabolicExtrapolator','MyExt3')
+        # locate private tool with defined name 
+        t6 = self.tool(ITrExtrapolator,'TrParabolicExtrapolator','MyExt4',parent=self)
+        
+        """
+        if not interface : interface = bendertools.IAlgTool 
+        if not parent    : parent    = self
+        if name          : typename  += '/' + name 
+        _tool = self.tool_( typename , parent , create )
+        if not _tool : return None
+        _tool = bendertools.Interface(interface).cast(_tool)
+        if not _tool :
+            self.Warning('Invalid cast to interface %s' % interface )
+            return None 
+        return _tool 
+    
 # =============================================================================
 # The END 
 # =============================================================================

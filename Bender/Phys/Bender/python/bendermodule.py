@@ -1,9 +1,12 @@
 # =============================================================================
-# $Id: bendermodule.py,v 1.22 2005-02-10 18:37:01 ibelyaev Exp $ 
+# $Id: bendermodule.py,v 1.23 2005-03-04 19:30:43 ibelyaev Exp $ 
 # =============================================================================
 # CVS tag $NAme:$ 
 # =============================================================================
 # $Log: not supported by cvs2svn $
+# Revision 1.22  2005/02/10 18:37:01  ibelyaev
+#  add new moduel bendermatrix
+#
 # Revision 1.21  2005/02/08 11:29:30  ibelyaev
 #  add startup file
 #
@@ -53,6 +56,7 @@ from   benderloop      import *
 from   bendertuple     import *
 from   bendermatch     import *
 from   benderalgo      import *
+from   bendertools     import *
 
 AppMgr = gaudimodule.AppMgr 
 

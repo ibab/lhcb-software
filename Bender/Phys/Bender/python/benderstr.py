@@ -1,12 +1,15 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: benderstr.py,v 1.5 2005-01-24 17:44:39 ibelyaev Exp $ 
+# $Id: benderstr.py,v 1.6 2005-03-04 19:30:43 ibelyaev Exp $ 
 # =============================================================================
-# CVS version $Revision: 1.5 $ 
+# CVS version $Revision: 1.6 $ 
 # =============================================================================
 # CVS tag     $Name: not supported by cvs2svn $ 
 # =============================================================================
 # $Log: not supported by cvs2svn $
+# Revision 1.5  2005/01/24 17:44:39  ibelyaev
+#  v4r5
+#
 # =============================================================================
 
 
@@ -23,7 +26,6 @@ from   benderaux   import fillStream
 
 # load modules
 _dicts_ = [ 'EventDict'     ,
-            'EventDict'     ,
             'PhysEventDict' ,
             'TrEventDict'   ,
             'OTEventDict'   ,
@@ -50,6 +52,9 @@ _types = [ 'MCParticle'    ,
            'MuonID'        ,
            'CaloParticle'  ,
            'CaloHypo'      ,
+           'TrState'       ,
+           'TrStateP'      ,
+           'TrStateL'      ,
            'CaloCluster'   ,
            'CaloDigit'     ]
 

@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: bendersmartrefs.py,v 1.8 2005-02-10 12:26:12 ibelyaev Exp $ 
+# $Id: bendersmartrefs.py,v 1.9 2005-03-04 19:30:43 ibelyaev Exp $ 
 # =============================================================================
 # CVS tag $Name: not supported by cvs2svn $ version $Revison:$
 # =============================================================================
@@ -13,7 +13,7 @@ Helper module  to (re)define few sipmple methods for few useful event classes
 """
 # =============================================================================
 __author__  = "Vanya BELYAEV Ivan.Belyaev@itep.ru"
-__version__ = "CVS tag $Name: not supported by cvs2svn $ version: $Revision: 1.8 $ "
+__version__ = "CVS tag $Name: not supported by cvs2svn $ version: $Revision: 1.9 $ "
 # =============================================================================
 
 import gaudimodule
@@ -153,6 +153,7 @@ _list_ = [ 'MCVertex'      ,
            'CaloCluster'   ,
            'VeloCluster'   ,
            'TrStoredTrack' ,
+           'TrState'       ,
            'MCCaloHit'     ]
 
 for klass in _list_ : indexSmartRefVector( klass )
@@ -164,9 +165,10 @@ class KeyedContainerIterator(object) :
         self._index_  = 0
         self._size_   = self._vector_.size()
     def next     ( self ) :
-        if not index.__index_ < self._size_ : raise StopIteration   # exception! 
-        obj  = self._vector_[ self._index_ ]
-        self._index_ += 1
+        index = self._index_ 
+        if not index < self._size_ : raise StopIteration   # exception! 
+        obj  = self._vector_[ index ]
+        self._index_ = index + 1 
         return obj
 
 def _create_iterator_( self ) :

@@ -1,13 +1,13 @@
-# $Id: requirements,v 1.21 2005-02-05 13:47:40 ibelyaev Exp $ 
+# $Id: requirements,v 1.22 2005-03-04 19:31:51 ibelyaev Exp $ 
 # ============================================================================
-# CVS tag $Name: not supported by cvs2svn $; version $Revision: 1.21 $
+# CVS tag $Name: not supported by cvs2svn $; version $Revision: 1.22 $
 # ============================================================================
 # Created    : 2003-09-10
 # Maintainer : Vanya BELYAEV Ivan.Belyaev@itep.ru
 # ============================================================================
 package          BenderExample
 author           Vanya BELYAEV
-version          v4r6
+version          v4r7
 
 # ============== structure ===================================================
 branches         cmt doc src test python options jobs 
@@ -37,6 +37,9 @@ apply_pattern    application_path
 
 # ============================================================================
 # $Log: not supported by cvs2svn $
+# Revision 1.21  2005/02/05 13:47:40  ibelyaev
+#  add new examples for Relation tables
+#
 # ============================================================================
 # The END 
 # ============================================================================
