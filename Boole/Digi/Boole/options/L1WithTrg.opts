@@ -10,9 +10,13 @@ TriggerTrgSeq.Members  = { "DecodeL1VeloR"
                            ,"VeloRTracking"
                            ,"L1PrimaryVtx2d"
                            ,"L1Select2dIP"
+                           ,"DecodeL0MuonCand"
+                           ,"L1Match2dL0"
                            ,"DecodeL1VeloPhi"
                            ,"VeloSpaceTracking"
-//                           ,"TrgVeloTT"
+                           ,"L1Match3dL0"
+                           ,"TrgVeloTT"
+                           ,"PrepareL1Tracks"
                          };
 
 RelationsTrgSeq.Members  = { "VeloTruthFromCluster",
@@ -23,5 +27,5 @@ RelationsTrgSeq.Members  = { "VeloTruthFromCluster",
                              "TrgTrack2MCParticle" };
 
 MoniTrgSeq.Members        = { "TrgChecker"
-//                              ,"L1RecoCheck"
+                             ,"L1RecoCheck"
                             };

@@ -3,7 +3,7 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
-</PRE><H1><A NAME=v5r2>2004-02-05 Boole v5r2</A></H1><PRE>
+</PRE><H1><A NAME=v5r2>2004-02-10 Boole v5r2</A></H1><PRE>
 
 Backwards incompatible changes to TT geometry.
 Requires data produced with XmlDDDB v21r0 or greater.
@@ -11,24 +11,24 @@ Requires data produced with XmlDDDB v21r0 or greater.
 - New functionality
   - Support for new TT layouts (4-3-3-4: v200402.opts, 4-2-1-1-2-4: TT-alt.opts) 
     (XmlDDDB v21r0, STDet v1r0, ITAlgorithms v14r0, ITCheckers v2r0)
-  - First adaptation of Trg software to new TT geometry, to be reviewed
-    (TrgVeloTT v2r0)
   - Possibility to use LHC background events in Rich digitization
     (RichReadout v1r5)
   - Support for mirror segmentation in Rich geometry (switched off by default)
     (RichReadout v1r5, RichDetTools v3r6)
   - Add Muon digits to Raw buffer (MuonDAQ v1r0, MuonDet v4r5, XmlDDDB v21r0)
   - Add OT digits to Raw buffer (OTDAQ v1r0)
+  - Add Vertexing and use of L0Muon to Trg tracking
+    (PhysEvent v8r1, TrgEvent v2r1, TrgTools v2r1, L1Reco v2r1)
 
 - New tuning
   - Updated TT detector geometry (beam pipe hole, guard ring size etc.)
     (XmlDDDB v21r0)
+  - Adaptation of Trg software to new TT geometry (TrgVeloTT v2r0, L1Reco v2r1)
   - Fix physical pad size in M1R1 (XmlDDDB v21r0)
 
 - Disabled features
   - Usage of LHC background in Rich and ST is switched off in job options
     until LHC background events can be generated in Gauss with latest geometry
-  - TrgVeloTT and L1RecoCheck algorithms disabled, to be adapted to new STDet
 
 - Event model / persistency changes
   - Add depositedCharge() to ITCluster (ITEvent v13r1, ITAlgorithms v14r0)
