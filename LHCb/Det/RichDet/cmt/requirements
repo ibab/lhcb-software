@@ -1,24 +1,28 @@
 package RichDet
-version v2
+version v3r0
 
 branches src RichDet doc cmt
 
 include_dirs $(RICHDETROOT)
 
-# CRJ: Added RichRec here
-use SicbCnv    v13* SICB
-use CLHEP v1r6*
 
-use RichEvent v1 Event
+use RichKernel v1r* Rich
 
-library RichDet ../src/*.cpp
-
-apply_pattern package_linkopts
-
-apply_pattern ld_library_path
-
-apply_pattern package_shlibflags
+use DetDesc   v10*   Det
 
 
+library RichDetLib Lib/*.cpp 
+
+library RichDet component/*.cpp
+
+apply_pattern package_Lstamps 
+apply_pattern package_Llinkopts  
+apply_pattern linker_path   
+
+private
+apply_pattern package_Cshlibflags
+apply_pattern package_Lshlibflags   
+
+macro_append  RichDetLib_shlibflags "$(GaudiKernel_linkopts)  $(CLHEP_linkopts) $(XML_linkopts) $(DetDesc_linkopts)"
 
 
