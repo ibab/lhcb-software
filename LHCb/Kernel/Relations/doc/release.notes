@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.2 2004-11-19 15:01:22 ibelyaev Exp $ 
+! $Id: release.notes,v 1.3 2004-11-19 15:09:57 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
 ! CVS tag $Name: not supported by cvs2svn $ 
 ! -----------------------------------------------------------------------------
@@ -8,7 +8,7 @@
 !-----------------------------------------------------------------------------
 
 ! 2004-11-19 - Vanya BELYAEV
- - put few *SERIOUSE* modification into Associators
+ - put few *SERIOUS* modification into Associators
 
   
   The purpose is to eliminate the algorithm 
@@ -17,23 +17,23 @@
   handling of algorithms. 
 
   To allow a management of relational tables by Data-On-Demand Service
-  one needs to achive teh proper configuration of the Service: 
+  one needs to achieve the proper configuration of the Service: 
 
      Assuming that the relation table at location "MyTableLocation", 
-              to be created with some algorihm of type "MyAlgorithmType" 
-              with algorihtm instance name "MyAlgInstanceName".
+              to be created with some algorithm of type "MyAlgorithmType" 
+              with algorithm instance name "MyAlgInstanceName".
 
   The corresponding configuration lines are:  
 
-  DataOnDemansSvc.Algorithms 
+  DataOnDemandSvc.Algorithms 
      += { "DATA='MyTableLocation' , TYPE='MyAlgorithmType/MyAlgInstanceName'" } ;
 
   e.g. for concrete examples with MC association for CaloClusters:
 
-    DataOnDemansSvc.Algorithms 
+    DataOnDemandSvc.Algorithms 
       += { "DATA='Rec/Relations/EcalClusters2MCParticles' , TYPE='CaloClustersMCTruth5Alg/CCs2MCPs'" } ;
 
-  With such configuration one *DOES NOT* need teh associators at all, 
+  With such configuration one *DOES NOT* need the associators at all, 
   the relation table can be retrieved and use inside the 
   algorithms and tools "locally", e.g. 
   
@@ -50,9 +50,9 @@
         const double      weight = it->weight() ;
       };
    
-  The associators are still *in the game*, is someone wnats to use them.
-  *BUT* from now teh usage of properties "AlgorithmType" and "AlgorithmName"
-  becomed obsolete and deprecates. Being used these properties will trigger 
+  The associators are still *in the game*, if someone wants to use them.
+  *BUT* from now the usage of properties "AlgorithmType" and "AlgorithmName"
+  becomes obsolete and deprecates. Being used these properties will trigger 
   the WARNING messages , e.g. 
 
   --------------------------------
@@ -79,7 +79,7 @@
   need to be substituted by lines:
 
     The.Full.Name.Of.My.Associator.Location      = "MyTableLocation"   ; // THE LINE 
-    DataOnDemansSvc.Algorithms 
+    DataOnDemandSvc.Algorithms 
          += { "DATA='MyTableLocation' , TYPE='MyAlgorithmType/MyAlgInstanceName'" } ;
 	
   (NB: do not forget the "The.Full.Name.Of.My.Associator" is really *FULL" name
