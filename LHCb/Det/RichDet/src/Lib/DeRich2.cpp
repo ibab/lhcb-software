@@ -1,4 +1,4 @@
-// $Id: DeRich2.cpp,v 1.2 2002-10-30 11:36:56 papanest Exp $
+// $Id: DeRich2.cpp,v 1.3 2002-11-04 11:50:47 papanest Exp $
 #define DERICH2_CPP
 
 // Include files
@@ -34,24 +34,24 @@ StatusCode DeRich2::initialize() {
   MsgStream log(msgSvc(), "DeRich2" );
   log << MSG::DEBUG <<"Starting initialisation for DeRich2"<< endreq;
   
-  double nominalCoCX = userParameterAsDouble("NominalCoCX");
-  double nominalCoCY = userParameterAsDouble("NominalCoCY");
-  double nominalCoCZ = userParameterAsDouble("NominalCoCZ");
+  double nominalCoCX = userParameterAsDouble("Rich2NominalCoCX");
+  double nominalCoCY = userParameterAsDouble("Rich2NominalCoCY");
+  double nominalCoCZ = userParameterAsDouble("Rich2NominalCoCZ");
 
   m_nominalCentreOfCurvature = 
     HepPoint3D(nominalCoCX, nominalCoCY, nominalCoCZ);
 
-  double nominalNorX = userParameterAsDouble("NominalNorX");
-  double nominalNorY = userParameterAsDouble("NominalNorY");
-  double nominalNorZ = userParameterAsDouble("NominalNorZ");
+  double nominalNorX = userParameterAsDouble("Rich2NominalNorX");
+  double nominalNorY = userParameterAsDouble("Rich2NominalNorY");
+  double nominalNorZ = userParameterAsDouble("Rich2NominalNorZ");
   
   m_nominalNormal = HepVector3D(nominalNorX, nominalNorY, nominalNorZ);
 
-  m_sphMirrorRadius = userParameterAsDouble("SphMirrorRadius");
-  m_sphMirrorMaxX = userParameterAsDouble("SphMirrorMaxX");
-  m_sphMirrorMaxY = userParameterAsDouble("SphMirrorMaxY");
+  m_sphMirrorRadius = userParameterAsDouble("Rich2SphMirrorRadius");
+  m_sphMirrorMaxX = userParameterAsDouble("Rich2SphMirrorMaxX");
+  m_sphMirrorMaxY = userParameterAsDouble("Rich2SphMirrorMaxY");
 
-  double d = userParameterAsDouble("D");
+  double d = userParameterAsDouble("Rich2DParam");
   
   m_nominalPlaneLeft = HepPlane3D(nominalNorX, nominalNorY, nominalNorZ, d);
   m_nominalPlaneRight = HepPlane3D(-nominalNorX, nominalNorY, nominalNorZ, d);
