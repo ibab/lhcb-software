@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/component/XmlLVolumeCnv.h,v 1.7 2001-11-20 15:22:24 sponce Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/component/XmlLVolumeCnv.h,v 1.8 2001-12-11 10:02:29 sponce Exp $
 
 #ifndef DETDESC_XMLCNVSVC_XMLLVOLUMECNV_H
 #define DETDESC_XMLCNVSVC_XMLLVOLUMECNV_H
@@ -60,10 +60,12 @@ class XmlLVolumeCnv : public XmlGenericCnv {
    * Overrides the default method in XmlGenericCnv
    * @param element the DOM_Element to be used to builds the object
    * @param refpObject the object to be built
+   * @param address the address for this object
    * @return status depending on the completion of the call
    */
   virtual StatusCode internalCreateObj (DOM_Element element,
-                                        DataObject*& refpObject);
+                                        DataObject*& refpObject,
+                                        IOpaqueAddress* address);
 
 
  private:

@@ -4,22 +4,22 @@
 #include "GaudiKernel/CnvFactory.h"
 #include "GaudiKernel/ISvcLocator.h"
 
-#include "XmlDetectorElementCnv.h"
+#include "XmlConditionCnv.h"
 
 
 // -----------------------------------------------------------------------
 // Instantiation of a static factory class used by clients to create
 // instances of this service
 // -----------------------------------------------------------------------
-static CnvFactory<XmlDetectorElementCnv> s_factory;
-const ICnvFactory& XmlDetectorElementCnvFactory = s_factory;
+static CnvFactory<XmlConditionCnv> s_factory;
+const ICnvFactory& XmlConditionCnvFactory = s_factory;
 
 
 // -----------------------------------------------------------------------
 // Constructor
 // ------------------------------------------------------------------------
-XmlDetectorElementCnv::XmlDetectorElementCnv (ISvcLocator* svc) :
-  XmlBaseDetElemCnv (svc) {
+XmlConditionCnv::XmlConditionCnv (ISvcLocator* svc) :
+  XmlBaseConditionCnv (svc) {
 }
 
 
@@ -27,8 +27,8 @@ XmlDetectorElementCnv::XmlDetectorElementCnv (ISvcLocator* svc) :
 // Fill an object with a new specific child
 // -----------------------------------------------------------------------
 StatusCode
-XmlDetectorElementCnv::i_fillSpecificObj (DOM_Element childElement,
-                                          DetectorElement* refpObject) {
+XmlConditionCnv::i_fillSpecificObj (DOM_Element childElement,
+                                    Condition* refpObject) {
   // default implementation : ignore child
   return StatusCode::SUCCESS;
 } // end i_fillObj

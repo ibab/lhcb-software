@@ -2,6 +2,22 @@
 /// CVS tag $Name: not supported by cvs2svn $ 
 /// ===========================================================================
 /// $Log: not supported by cvs2svn $
+/// Revision 1.11  2001/11/20 15:22:23  sponce
+/// Lots of changes here :
+///    - make use of the new version of GaudiKernel and GaudiSvc. One consequence
+///    is the removal of the class XmlAddress
+///    - centralization of address creations in conversion services, as suggested
+///    by the new architecture
+///    - add a parseString method on the XMLParserSvc. This allows to parse XML
+///    directly from a string
+///    - use of the new Assembly objects in the XML converters
+///    - update of the converters to handle the definition of detelem inside
+///    detelems, without using detelemrefs
+///    - take care of a possible indexing of detelems and parametrized detelems.
+///    The numbering is given by adding :<digits> to the name of the element.
+///    - add support for polycones in the converters
+///    - add code convention compliance to many files
+///
 /// Revision 1.10  2001/08/10 16:41:29  ibelyaev
 /// modifitcations in IDetectorElement and related classes
 ///
@@ -259,6 +275,27 @@ DetectorElement::createGeometryInfo( const std::string           & LogVol   ,
                                                 rPath   );
   return geometry();
 };
+
+const ISlowControl*
+DetectorElement::createSlowControl (const std::string& condition) {
+  return 0;
+}
+
+const IFastControl*
+DetectorElement::createFastControl (const std::string& condition) {
+  return 0;
+}
+
+const ICalibration*
+DetectorElement::createCalibration (const std::string& condition) {
+  return 0;
+}
+
+const IAlignment*
+DetectorElement::createAlignment (const std::string& condition) {
+  return 0;
+}
+
 /// functions from IValidity /
 const ITime&  DetectorElement::validSince ()
 {

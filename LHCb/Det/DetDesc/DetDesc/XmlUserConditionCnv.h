@@ -1,10 +1,10 @@
 // $ID: $
 
-#ifndef DDEXAMPLE_XMLUSERDETELEMCNV_H
-#define DDEXAMPLE_XMLUSERDETELEMCNV_H 1
+#ifndef DDEXAMPLE_XMLUSERCONDITIONCNV_H
+#define DDEXAMPLE_XMLUSERCONDITIONCNV_H 1
 
 // Include files
-#include "DetDesc/XmlBaseDetElemCnv.h"
+#include "DetDesc/XmlBaseConditionCnv.h"
 #include "GaudiKernel/MsgStream.h"
 
 // These two includes are not needed here but are needed inside children
@@ -14,10 +14,10 @@
 #include "DetDesc/IXmlSvc.h"
 
 
-/** @class XmlUserDetElemCnv XmlLVolumeCnv.h DetDesc/XmlUserDetElemCnv.h
+/** @class XmlUserConditionCnv XmlLVolumeCnv.h DetDesc/XmlUserConditionCnv.h
  *
- * This is an empty, abstract, user specific, converter for DetectorElements.
- * Every actual specific convertor for DetectorElement should inherit from this
+ * This is an empty, abstract, user specific, converter for Conditions.
+ * Every actual specific convertor for Condition should inherit from this
  * one. It basically provides the i_createObj, classID methods plus a
  * constructor and a destructor. The only thing to do in order to implement
  * an actual specific converter is thus to implement the second
@@ -25,10 +25,10 @@
  *
  * @author Sebastien Ponce
  */
-template <class DeType> class XmlUserDetElemCnv : public XmlBaseDetElemCnv {
+template <class DeType> class XmlUserConditionCnv : public XmlBaseConditionCnv {
   
   /// The type of this object
-  typedef XmlUserDetElemCnv<DeType> MyType;
+  typedef XmlUserConditionCnv<DeType> MyType;
   /// Friend needed for instantiation
   friend class CnvFactory<MyType>;
   
@@ -39,12 +39,12 @@ template <class DeType> class XmlUserDetElemCnv : public XmlBaseDetElemCnv {
    * Constructor for this converter
    * @param svc a ISvcLocator interface to find services
    */
-  XmlUserDetElemCnv (ISvcLocator* svc);
+  XmlUserConditionCnv (ISvcLocator* svc);
   
   /**
    * Default destructor
    */
-  virtual ~XmlUserDetElemCnv() {};
+  virtual ~XmlUserConditionCnv() {};
   
   /**
    * accessor to the type of elements that this converter converts
@@ -65,7 +65,7 @@ template <class DeType> class XmlUserDetElemCnv : public XmlBaseDetElemCnv {
                                   DataObject*& refpObject);  
 
   /** This fills the current object for specific child.
-   * This is a very general method reimplemented from XmlBaseDetElemCnv.
+   * This is a very general method reimplemented from XmlBaseConditionCnv.
    * It basically calls the other i_fillSpecificObj after casting the
    * current object to its real type.
    * @param childElement the specific child processed here
@@ -73,12 +73,12 @@ template <class DeType> class XmlUserDetElemCnv : public XmlBaseDetElemCnv {
    * @return status depending on the completion of the call
    */
   virtual StatusCode i_fillSpecificObj (DOM_Element childElement,
-                                        DetectorElement* refpObject);
+                                        Condition* refpObject);
 
   /** This fills the current object for specific child.
    * This should never be called directly but always through the other
    * i_fillSpecificObj. This actually only exist to avoid the user to
-   * implement a dynamic cast from DetectorElement into DeType.
+   * implement a dynamic cast from Condition into DeType.
    * @param childElement the specific child processed here
    * @param refpObject the object to be filled
    * @return status depending on the completion of the call
@@ -92,8 +92,8 @@ template <class DeType> class XmlUserDetElemCnv : public XmlBaseDetElemCnv {
 // Constructor
 // ------------------------------------------------------------------------
 template <class DeType>
-XmlUserDetElemCnv<DeType>::XmlUserDetElemCnv (ISvcLocator* svc)
-  : XmlBaseDetElemCnv (svc, DeType::classID()) {
+XmlUserConditionCnv<DeType>::XmlUserConditionCnv (ISvcLocator* svc)
+  : XmlBaseConditionCnv (svc, DeType::classID()) {
 } // end constructor
 
 
@@ -101,9 +101,9 @@ XmlUserDetElemCnv<DeType>::XmlUserDetElemCnv (ISvcLocator* svc)
 // Create an object corresponding to a DOM element
 // -----------------------------------------------------------------------
 template <class DeType>
-StatusCode XmlUserDetElemCnv<DeType>::i_createObj(DOM_Element /*element*/,
-                                                  DataObject*& refpObject) {
-  MsgStream log(msgSvc(), "XmlUserDetElemCnv" );
+StatusCode XmlUserConditionCnv<DeType>::i_createObj(DOM_Element /*element*/,
+                                                    DataObject*& refpObject) {
+  MsgStream log(msgSvc(), "XmlUserConditionCnv" );
   log << MSG::DEBUG << "entering i_createObj" << endreq;
   
   // creates an object for the node found
@@ -119,8 +119,8 @@ StatusCode XmlUserDetElemCnv<DeType>::i_createObj(DOM_Element /*element*/,
 // ------------------------------------------------------------------------
 template <class DeType>
 StatusCode
-XmlUserDetElemCnv<DeType>::i_fillSpecificObj (DOM_Element childElement,
-                                              DetectorElement* refpObject) {
+XmlUserConditionCnv<DeType>::i_fillSpecificObj (DOM_Element childElement,
+                                                Condition* refpObject) {
   DeType* dataObj = dynamic_cast<DeType*> (refpObject);
   return i_fillSpecificObj (childElement, dataObj);
 }
@@ -130,9 +130,9 @@ XmlUserDetElemCnv<DeType>::i_fillSpecificObj (DOM_Element childElement,
 // ------------------------------------------------------------------------
 template <class DeType>
 StatusCode
-XmlUserDetElemCnv<DeType>::i_fillSpecificObj (DOM_Element /*childElement*/,
+XmlUserConditionCnv<DeType>::i_fillSpecificObj (DOM_Element /*childElement*/,
                                               DeType* /*dataObj*/) {
   return StatusCode::SUCCESS;
 }
 
-#endif // DDEXAMPLE_XMLUSERDETELEMCNV_H
+#endif // DDEXAMPLE_XMLUSERCONDITIONCNV_H

@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/component/XmlCnvSvc.cpp,v 1.8 2001-11-26 10:31:47 sponce Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/component/XmlCnvSvc.cpp,v 1.9 2001-12-11 10:02:28 sponce Exp $
 
 // Include Files
 #include <util/PlatformUtils.hpp>
@@ -33,6 +33,9 @@ XmlCnvSvc::XmlCnvSvc (const std::string& name, ISvcLocator* svc) :
   
   // gets the AllowGenericConversion property value
   declareProperty ("AllowGenericConversion", m_genericConversion = false);
+
+  // gets the DtdLocation property value
+  declareProperty ("DtdLocation", m_dtdLocation = "");
 }
 
 
@@ -116,23 +119,73 @@ StatusCode XmlCnvSvc::queryInterface(const IID& riid, void** ppvInterface) {
 
 
 // -----------------------------------------------------------------------
-// Create an XML address
+// Create an XML address.
+// Converters interpret XML addresses according to the following rules:
+// par[0] is an XML file name or an XML string;
+// par[1] is the name of the requested element in the XML data;
+// ipar[0] is 0 or 1 for files and strings respectively.
 // -----------------------------------------------------------------------
 StatusCode XmlCnvSvc::createAddress(unsigned char svc_type,
                                     const CLID& clid,
                                     const std::string* par, 
-                                    const unsigned long* /*ip*/,
-                                    IOpaqueAddress*& refpAddress) {
-  if (svc_type == repSvcType()) {
-    refpAddress = new GenericAddress (XML_StorageType,
-                                      clid,
-                                      par[0],
-                                      par[1]);
-    if (0 != refpAddress) {
-      return StatusCode::SUCCESS;
+                                    const unsigned long* ipar,
+                                    IOpaqueAddress*& refpAddress) 
+{
+  // First check that requested address is of type XML_StorageType
+  MsgStream log( msgSvc(), name() );
+  log << MSG::VERBOSE << "Create an XML address" << endreq;
+  if( XML_StorageType != svc_type ) {
+    log << MSG::ERROR 
+	<< "Cannot create addresses of type " << (int)svc_type 
+	<< " which is different from " << (int)XML_StorageType 
+	<< endreq;
+    return StatusCode::FAILURE;
+  }
+
+  // Par[0] is an XML file name or an XML string.
+  std::string source = par[0];
+
+  // Par[1] is the name of the requested XML element.
+  std::string entryName = par[1];
+
+  // Ipar[0] is 0 for XML files and 1 for XML strings.
+  unsigned int isString;
+
+  // To avoid the need of two separate address creators with two different
+  // storage types for files and strings, this method also creates XML string 
+  // addresses when par[0] begins by "<?xml": in this case ipar[0] is ignored.
+  unsigned int pos = source.find_first_not_of(" ");
+  if( 0 < pos && pos < source.length() ) source.erase( 0, pos );
+  if( source.find("<?xml") == 0 ) {
+    isString = 1;
+    log << MSG::VERBOSE 
+	<< "XML source beginning by \"<?xml\" is interpreted"
+	<< " as an XML string" << endreq;
+  } else {
+    isString = ipar[0];
+    if( isString == 0 ) {
+      log << MSG::VERBOSE 
+	  << "XML source is interpreted as an XML file name " 
+	  << "(input: ipar[0] = 0)" << endreq;
+    } else if( isString == 1 ) { 
+      log << MSG::VERBOSE 
+	  << "XML source is interpreted as an XML string " 
+	  << "(input: ipar[0] = 1)" << endreq;
+    } else {
+      log << MSG::ERROR 
+	  << "Cannot create address: invalid ipar[0] value = "
+	  << ipar[0] << endreq;
+      return StatusCode::FAILURE;
     }
   }
-  return StatusCode :: FAILURE;
+  
+  // Now create the address
+  refpAddress = new GenericAddress( XML_StorageType,
+				    clid,
+				    source,
+				    entryName,
+				    isString );
+  return StatusCode::SUCCESS;
 }
 
 
@@ -154,13 +207,44 @@ DOM_Document XmlCnvSvc::parse (const char* fileName) {
 // Parses an Xml file and provides the DOM tree representing it
 // -----------------------------------------------------------------------
 DOM_Document XmlCnvSvc::parseString (std::string source) {
+  MsgStream log (msgSvc(), "XmlCnvSvc");
+
+  // First prepend the proper DTD path where appropriate
+  // Only one "relpath/file.dtd" or 'relpath/file.dtd' is expected in string
+  if( m_dtdLocation != "" ) {
+    unsigned int dtdPos = source.find( ".dtd" );
+    if( dtdPos < source.length() ) {
+      log << MSG::VERBOSE 
+          << "Set correct DTD location in the string to be parsed" << endreq;
+      unsigned int quotePos;
+      if( source[dtdPos+4] == '\'' ) {
+        quotePos = source.substr(0,dtdPos).rfind("\'");
+        source.insert( quotePos+1, m_dtdLocation+"/" );
+        log << MSG::VERBOSE << "DTD literal is now: " 
+            << source.substr(quotePos,dtdPos+6-quotePos+m_dtdLocation.length())
+            << endreq;
+      } else if ( source[dtdPos+4] == '\"' ) {
+        quotePos = source.substr(0,dtdPos).rfind("\"");
+        source.insert( quotePos+1, m_dtdLocation+"/" );
+        log << MSG::VERBOSE << "DTD literal is now: " 
+            << source.substr(quotePos,dtdPos+6-quotePos+m_dtdLocation.length())
+            << endreq;
+      } else {
+        log << MSG::VERBOSE
+            << "Bad DTD literal in the string to be parsed: do nothing" 
+            << endreq;
+      }
+    }
+  }
+
+  // Then feed the string to the XML parser
   if (0 != m_parserSvc) {
     return m_parserSvc->parseString (source);
   }
   DOM_Document null_result;
-  MsgStream log (msgSvc(), "XmlCnvSvc");
   log << MSG::DEBUG << "null result returned in parseString" << endreq;
   return null_result;
+
 }
 
 

@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/DetDesc/XmlGenericCnv.h,v 1.5 2001-06-14 13:26:58 sponce Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/DetDesc/XmlGenericCnv.h,v 1.6 2001-12-11 10:02:21 sponce Exp $
 
 #ifndef DETDESC_XMLGENERICCNV_H
 #define DETDESC_XMLGENERICCNV_H
@@ -47,26 +47,25 @@ class XmlGenericCnv : public Converter {
   
   /**
    * Creates the transient representation of an object.
-   * @param pAddress the address of the object representation
+   * @param addr the address of the object representation
    * @param refpObject the object created
-   *  @return status depending on the completion of the call
+   * @return status depending on the completion of the call
    */
-  virtual StatusCode createObj (IOpaqueAddress* pAddress,
+  virtual StatusCode createObj (IOpaqueAddress* addr,
                                 DataObject*& refpObject);
-  
   /**
    * Updates the transient object from the other representation.
    * @param pAddress the address of the object representation
-   * @param refpObject the object updated
+   * @param pObject the object updated
    *  @return status depending on the completion of the call
    */
   virtual StatusCode updateObj (IOpaqueAddress* pAddress,
-                                DataObject* refpObject);
+                                DataObject* pObject);
   
   /**
    * Converts the transient object to the requested representation.
-   * @param pAddress the address of the object representation
-   * @param refpObject the object to convert
+   * @param refpAddress the address of the object representation
+   * @param pObject the object to convert
    *  @return status depending on the completion of the call
    */
   virtual StatusCode createRep (DataObject* pObject,
@@ -75,7 +74,7 @@ class XmlGenericCnv : public Converter {
   /**
    * Updates the converted representation of a transient object.
    * @param pAddress the address of the object representation
-   * @param refpObject the object whose representation has to be updated
+   * @param pObject the object whose representation has to be updated
    *  @return status depending on the completion of the call
    */
   virtual StatusCode updateRep (IOpaqueAddress* pAddress,
@@ -120,11 +119,13 @@ protected:
    *  override/implement some of the i_* methods.
    *  @param element the DOM_Element to be used to builds the object
    *  @param refpObject the object to be built
+   *  @param address the address for this object
+   *  @return status depending on the completion of the call
    */
   virtual StatusCode internalCreateObj (DOM_Element element,
-                                        DataObject*& refpObject);
+                                        DataObject*& refpObject,
+                                        IOpaqueAddress* address);
   
-
   /** This creates the transient representation of an object from the
    *  DOM_Element representing it. This actually does the "new" operation
    *  and deals with the attributes of the node. This should not deal with
@@ -139,27 +140,71 @@ protected:
   /** This fills the current object for its child element childElement.
    *  This will be called for each element child of the current object
    *  @param element the child processed here
-   *  @param refpObject the object to be filled
+   *  @param pObject the object to be filled
+   *  @param address the address for this object
    *  @return status depending on the completion of the call
    */
   virtual StatusCode i_fillObj (DOM_Element childElement,
-                                DataObject* refpObject);
+                                DataObject* pObject,
+                                IOpaqueAddress* address);
 
   /** This fills the current object for its child text node childText.
    *  This will be called for each text child of the current object
    *  @param childText the child processed here
-   *  @param refpObject the object to be filled
+   *  @param pObject the object to be filled
+   *  @param address the address for this object
    *  @return status depending on the completion of the call
    */
   virtual StatusCode i_fillObj (DOM_Text childText,
-                                DataObject* refpObject);
+                                DataObject* pObject,
+                                IOpaqueAddress* address);
 
   /** This is called after the current object was filled. This is were
    *  some computation based on the object content could be done
-   *  @param refpObject the object to be processed
+   *  @param pObject the object to be processed
+   *  @param address the address for this object
    *  @return status depending on the completion of the call
    */
-  virtual StatusCode i_processObj (DataObject* refpObject);
+  virtual StatusCode i_processObj (DataObject* pObject,
+                                   IOpaqueAddress* address);
+
+  /**
+   * This parses a href attribute string and creates an address out of it
+   * Currently, two types of references are understood : regular URLs and
+   * references starting with "conddb:/". The former create addresses with
+   * storage type XML_StorageType, the later addresses with storage type
+   * CONDDB_StorageType.
+   * @param href the string contained in the href attribute
+   * @param clid the clid of the address to create
+   * @param parent the address of the dataObject that will contain the
+   * new object.
+   * @return the new Address
+   */
+  IOpaqueAddress* createAddressForHref (std::string href,
+                                        CLID clid,
+                                        IOpaqueAddress* parent) const;
+  
+  /**
+   * This creates an XmlAddress using the location, entryName and clid
+   * @param location the location string for this address
+   * @param entryName the entryName string for this address
+   * @param clid the clidof the address to create
+   * @return the new Address
+   */
+  IOpaqueAddress* createXmlAddress (std::string location,
+                                    std::string entryName,
+                                    CLID clid) const;
+
+  /**
+   * This creates a ConddbAddress using the location, entryName and clid
+   * @param path the path string for this address
+   * @param entryName the entryName string for this address
+   * @param clid the clidof the address to create
+   * @return the new Address
+   */
+  IOpaqueAddress* createCondDBAddress (std::string path,
+                                       std::string entryName,
+                                       CLID clid) const;
 
   /**
    * builds a standard string from a DOMString
@@ -167,9 +212,6 @@ protected:
    * @return a standard string with the same characters
    */
   static const std::string dom2Std (DOMString domString);
-
-  /// The receipt for us that we need to store for the object
-  GenericAddress*  m_objRcpt;
 
   /// the IXmlSvc interface of this object
   IXmlSvc* m_xmlSvc;

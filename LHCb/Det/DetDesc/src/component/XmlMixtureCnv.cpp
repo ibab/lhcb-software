@@ -1,8 +1,8 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/component/XmlMixtureCnv.cpp,v 1.11 2001-11-20 15:22:25 sponce Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/component/XmlMixtureCnv.cpp,v 1.12 2001-12-11 10:02:29 sponce Exp $
 
 // Include files
 #include "GaudiKernel/CnvFactory.h"
-#include "GaudiKernel/GenericAddress.h"
+#include "GaudiKernel/IOpaqueAddress.h"
 #include "GaudiKernel/DataObject.h"
 #include "GaudiKernel/ICnvManager.h"
 #include "GaudiKernel/IConversionSvc.h"
@@ -120,7 +120,8 @@ StatusCode XmlMixtureCnv::i_createObj (DOM_Element element,
 // Fill an object with a new child element
 // -----------------------------------------------------------------------
 StatusCode XmlMixtureCnv::i_fillObj (DOM_Element childElement,
-                                     DataObject* refpObject) {
+                                     DataObject* refpObject,
+                                     IOpaqueAddress* address) {
   MsgStream log(msgSvc(), "XmlMixtureCnv" );
   
   // gets the object
@@ -141,8 +142,8 @@ StatusCode XmlMixtureCnv::i_fillObj (DOM_Element childElement,
     StatusCode stcod;
         
     // We need to get directory where the XML files are located
-    unsigned int slashPosition = m_objRcpt->par()[0].find_last_of('/');
-    std::string locDir = m_objRcpt->par()[0].substr( 0, slashPosition + 1 );
+    unsigned int slashPosition = address->par()[0].find_last_of('/');
+    std::string locDir = address->par()[0].substr( 0, slashPosition + 1 );
     
     // builds the entry name
     std::string nameAttribute = dom2Std (childElement.getAttribute ("name"));
@@ -155,7 +156,7 @@ StatusCode XmlMixtureCnv::i_fillObj (DOM_Element childElement,
       entryName = compactPath(entryName);
     }
     
-    log << MSG::VERBOSE << "Converter for " << m_objRcpt->par()[1]
+    log << MSG::VERBOSE << "Converter for " << address->par()[1]
         << " is gonna retrieve " << entryName << endreq;
 
     DataObject *itemObj = 0;
@@ -167,7 +168,7 @@ StatusCode XmlMixtureCnv::i_fillObj (DOM_Element childElement,
       log << MSG::ERROR << "Error retrieving material: " << entryName << endreq;
       return StatusCode::FAILURE;
     }
-    log << MSG::VERBOSE << "Converter for " << m_objRcpt->par()[1]
+    log << MSG::VERBOSE << "Converter for " << address->par()[1]
         << " retrieved successfully " << ((Material *)itemObj)->name()
         << endreq;
     
@@ -198,7 +199,7 @@ StatusCode XmlMixtureCnv::i_fillObj (DOM_Element childElement,
           << "XmlCnvException due to natoms/fractionmass inconsistency"
           << endreq;
       std::string msg = "Material references for material ";
-      msg += m_objRcpt->par()[1];
+      msg += address->par()[1];
       msg += " are not consistent.";
       StatusCode st = CORRUPTED_DATA;
       throw XmlCnvException(msg.c_str(),st);
@@ -246,12 +247,13 @@ StatusCode XmlMixtureCnv::i_fillObj (DOM_Element childElement,
 // -----------------------------------------------------------------------
 // Process an object
 // -----------------------------------------------------------------------
-StatusCode XmlMixtureCnv::i_processObj (DataObject* refpObject) {
+StatusCode XmlMixtureCnv::i_processObj (DataObject* refpObject,
+                                        IOpaqueAddress* address) {
   // gets the object
   Mixture* dataObj = dynamic_cast<Mixture*> (refpObject);
   // Material is (hopefully) converted so
   // in case of mixture we have to compute some stuff    
-  if (CLID_Mixture == m_objRcpt->clID()) {
+  if (CLID_Mixture == address->clID()) {
     dataObj->compute() ; 
     m_mixMode = MM_undefined;
   }

@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/component/XmlLVolumeCnv.cpp,v 1.20 2001-12-03 15:18:36 mato Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/component/XmlLVolumeCnv.cpp,v 1.21 2001-12-11 10:02:29 sponce Exp $
 
 // Include files
 #include "GaudiKernel/CnvFactory.h"
@@ -210,7 +210,8 @@ std::string XmlLVolumeCnv::createPvName (PVolumeItem* pv) {
 // Create an object corresponding to a DOM element
 // -----------------------------------------------------------------------
 StatusCode XmlLVolumeCnv::internalCreateObj (DOM_Element element,
-                                             DataObject*& refpObject) {
+                                             DataObject*& refpObject,
+                                             IOpaqueAddress* address) {
   // gets the attributes
   std::string materialName = dom2Std (element.getAttribute ("material"));
   std::string magFieldName = dom2Std (element.getAttribute ("magfield"));

@@ -2,6 +2,9 @@
 /// CVS tag $Name: not supported by cvs2svn $
 /// ===========================================================================
 /// $Log: not supported by cvs2svn $
+/// Revision 1.17  2001/12/03 15:18:29  mato
+/// Small changes to compile without warnings in Windows
+///
 /// Revision 1.16  2001/11/20 15:22:19  sponce
 /// Lots of changes here :
 ///    - make use of the new version of GaudiKernel and GaudiSvc. One consequence
@@ -284,6 +287,14 @@ public:
          (const std::string& logVol, 
           const std::string& support,
           const std::string& namePath);
+
+  const ISlowControl* createSlowControl (const std::string& condition);
+
+  const IFastControl* createFastControl (const std::string& condition);
+
+  const ICalibration* createCalibration (const std::string& condition);
+
+  const IAlignment* createAlignment (const std::string& condition);
 
   /**
    * This method initializes the detector element. It should be overridden

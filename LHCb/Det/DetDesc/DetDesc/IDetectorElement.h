@@ -2,6 +2,22 @@
 /// CVS tag $Name: not supported by cvs2svn $ 
 /// ===========================================================================
 /// $Log: not supported by cvs2svn $
+/// Revision 1.10  2001/11/20 15:22:20  sponce
+/// Lots of changes here :
+///    - make use of the new version of GaudiKernel and GaudiSvc. One consequence
+///    is the removal of the class XmlAddress
+///    - centralization of address creations in conversion services, as suggested
+///    by the new architecture
+///    - add a parseString method on the XMLParserSvc. This allows to parse XML
+///    directly from a string
+///    - use of the new Assembly objects in the XML converters
+///    - update of the converters to handle the definition of detelem inside
+///    detelems, without using detelemrefs
+///    - take care of a possible indexing of detelems and parametrized detelems.
+///    The numbering is given by adding :<digits> to the name of the element.
+///    - add support for polycones in the converters
+///    - add code convention compliance to many files
+///
 /// Revision 1.9  2001/08/10 16:41:28  ibelyaev
 /// modifitcations in IDetectorElement and related classes
 /// 
@@ -108,7 +124,7 @@ class IDetectorElement: virtual public IInterface ,
   /// cast to const IFastControl*
   virtual operator const IFastControl* ()               const = 0; 
   
-  /// more convinient set of conversion operators:
+  /// more convenient set of conversion operators:
 
   /// cast to       IGeometryInfo&
   virtual operator       IGeometryInfo&()                     = 0; 

@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/component/XmlCnvSvc.h,v 1.5 2001-11-26 10:31:47 sponce Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/component/XmlCnvSvc.h,v 1.6 2001-12-11 10:02:28 sponce Exp $
 
 #ifndef DETDESC_XMLCNVSVC_H
 #define DETDESC_XMLCNVSVC_H
@@ -197,6 +197,12 @@ private:
    * available
    */
   bool  m_genericConversion;
+
+  /**
+   * Property specifying the directory containing standard DTD files.
+   * This is necessary when parsing XML strings rather than XML files.
+   */
+  std::string m_dtdLocation;
 
 };
 

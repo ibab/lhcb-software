@@ -1,8 +1,11 @@
-# $Id: requirements,v 1.24 2001-11-26 10:31:46 sponce Exp $ 
+# $Id: requirements,v 1.25 2001-12-11 10:02:27 sponce Exp $ 
 # =============================================================================
 # CVS tag $Name: not supported by cvs2svn $ 
 # =============================================================================
 # $Log: not supported by cvs2svn $
+# Revision 1.24  2001/11/26 10:31:46  sponce
+# use new version of CLHEP (1.7.0.0)
+#
 # Revision 1.23  2001/11/20 15:22:23  sponce
 # Lots of changes here :
 #    - make use of the new version of GaudiKernel and GaudiSvc. One consequence
@@ -47,7 +50,7 @@ branches DetDesc doc cmt src
 
 include_dirs $(DETDESCROOT)
 
-use GaudiKernel v11*
+use GaudiKernel v11r*
 use CLHEP v17r*
 use XERCES v1*
 

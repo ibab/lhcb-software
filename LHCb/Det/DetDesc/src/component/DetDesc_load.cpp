@@ -2,6 +2,9 @@
 /// CVS tag $Name: not supported by cvs2svn $ 
 /// ===========================================================================
 /// $Log: not supported by cvs2svn $
+/// Revision 1.7  2001/11/18 15:32:45  ibelyaev
+///  update for Logical Assemblies
+///
 /// Revision 1.6  2001/10/25 14:04:05  ibelyaev
 /// New shape: SolidPolycone is added
 ///
@@ -78,6 +81,7 @@ void DetDesc_load()
   ///@{
   /** converters */
   DLL_DECL_CONVERTER( XmlCatalogCnv           );
+  DLL_DECL_CONVERTER( XmlConditionCnv         );
   DLL_DECL_CONVERTER( XmlDetectorElementCnv   );
   DLL_DECL_CONVERTER( XmlLVolumeCnv           );
   DLL_DECL_CONVERTER( XmlIsotopeCnv           );

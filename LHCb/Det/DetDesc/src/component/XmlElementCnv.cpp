@@ -1,8 +1,7 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/component/XmlElementCnv.cpp,v 1.8 2001-11-20 15:22:24 sponce Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/component/XmlElementCnv.cpp,v 1.9 2001-12-11 10:02:29 sponce Exp $
 
 // Include Files
 #include "GaudiKernel/CnvFactory.h"
-#include "GaudiKernel/GenericAddress.h"
 #include "GaudiKernel/DataObject.h"
 #include "GaudiKernel/ICnvManager.h"
 #include "GaudiKernel/IConversionSvc.h"

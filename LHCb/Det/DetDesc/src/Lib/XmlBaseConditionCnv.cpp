@@ -1,20 +1,16 @@
-//  $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/Lib/XmlBaseDetElemCnv.cpp,v 1.12 2001-12-11 10:02:28 sponce Exp $
+//  $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/Lib/XmlBaseConditionCnv.cpp,v 1.1 2001-12-11 10:02:28 sponce Exp $
 
 // include files
-#include <cstdlib>
-#include <iostream>
 #include <string>
 #include <vector>
-#include <cctype>
 
-#include "GaudiKernel/IOpaqueAddress.h"
-#include "GaudiKernel/IDataProviderSvc.h"
-#include "GaudiKernel/IDataManagerSvc.h"
+#include <dom/DOM_NodeList.hpp>
+
+#include "GaudiKernel/CnvFactory.h"
 #include "GaudiKernel/MsgStream.h"
 
-#include "DetDesc/DetectorElement.h"
-#include "DetDesc/XmlCnvException.h"
-#include "DetDesc/XmlBaseDetElemCnv.h"
+#include "DetDesc/Condition.h"
+#include "DetDesc/XmlBaseConditionCnv.h"
 #include "DetDesc/IXmlSvc.h"
 
 class ISvcLocator;
@@ -22,8 +18,8 @@ class ISvcLocator;
 // -----------------------------------------------------------------------
 // Constructor
 // ------------------------------------------------------------------------
-XmlBaseDetElemCnv::XmlBaseDetElemCnv (ISvcLocator* svc) :
-  XmlGenericCnv (svc, XmlBaseDetElemCnv::classID()) {
+XmlBaseConditionCnv::XmlBaseConditionCnv (ISvcLocator* svc) :
+  XmlGenericCnv (svc, XmlBaseConditionCnv::classID()) {
   m_doGenericCnv = false;
 }
 
@@ -31,8 +27,8 @@ XmlBaseDetElemCnv::XmlBaseDetElemCnv (ISvcLocator* svc) :
 // -----------------------------------------------------------------------
 // Constructor
 // ------------------------------------------------------------------------
-XmlBaseDetElemCnv::XmlBaseDetElemCnv (ISvcLocator* svc,
-                                      const CLID& clsID ) :
+XmlBaseConditionCnv::XmlBaseConditionCnv (ISvcLocator* svc,
+                                          const CLID& clsID ) :
   XmlGenericCnv (svc, clsID) {
   m_doGenericCnv = false;
 }
@@ -41,10 +37,10 @@ XmlBaseDetElemCnv::XmlBaseDetElemCnv (ISvcLocator* svc,
 // -----------------------------------------------------------------------
 // Initialize the converter
 // -----------------------------------------------------------------------
-StatusCode XmlBaseDetElemCnv::initialize() {
+StatusCode XmlBaseConditionCnv::initialize() {
   StatusCode sc = XmlGenericCnv::initialize();
   if (sc.isSuccess()) {
-    MsgStream log (msgSvc(), "XmlDetElemCnv");
+    MsgStream log (msgSvc(), "XmlBaseConditionCnv");
     log << MSG::VERBOSE << "Initializing" << endreq;
     if (0 != m_xmlSvc) {
       m_doGenericCnv = m_xmlSvc->allowGenericCnv();
@@ -59,22 +55,13 @@ StatusCode XmlBaseDetElemCnv::initialize() {
 // -----------------------------------------------------------------------
 // Resolve the references of the created transient object.
 // -----------------------------------------------------------------------
-StatusCode XmlBaseDetElemCnv::fillObjRefs (IOpaqueAddress* childElement,
-                                           DataObject* refpObject) {
-  MsgStream log( msgSvc(), "XmlBaseDetElemCnv" );
-  log << MSG::VERBOSE << "Method fillObjRefs() starting" << endreq;
-  // processes the base class
-  StatusCode sc = XmlGenericCnv::fillObjRefs ( childElement, refpObject );
-  if ( !sc.isSuccess() ) {
-    log << MSG::ERROR << "Could not fill object references" << endreq;
-    return sc;
-  }
+StatusCode XmlBaseConditionCnv::fillObjRefs (IOpaqueAddress* childElement,
+                                             DataObject* refpObject) {
   // gets the object
-  DetectorElement* dataObj = dynamic_cast<DetectorElement*> (refpObject);
+  Condition* dataObj = dynamic_cast<Condition*> (refpObject);
   // initializes it
   dataObj->initialize();
   // returns
-  log << MSG::VERBOSE << "Method fillObjRefs() ending" << endreq;
   return StatusCode::SUCCESS;
 }
 
@@ -82,14 +69,16 @@ StatusCode XmlBaseDetElemCnv::fillObjRefs (IOpaqueAddress* childElement,
 // -----------------------------------------------------------------------
 // Create an object corresponding to a DOM element
 // -----------------------------------------------------------------------
-StatusCode XmlBaseDetElemCnv::i_createObj (DOM_Element element,
-                                           DataObject*& refpObject) {
-  MsgStream log(msgSvc(), "XmlDetElemCnv" );
+StatusCode XmlBaseConditionCnv::i_createObj (DOM_Element element,
+                                             DataObject*& refpObject) {
+  MsgStream log(msgSvc(), "XmlBaseConditionCnv" );
   
   // creates an object for the node found
-  log << MSG::DEBUG << "Normal generic detector element conversion" << endreq;
-  std::string elementName = dom2Std (element.getAttribute("name"));
-  refpObject = new DetectorElement (elementName);
+  log << MSG::DEBUG << "Normal generic condition conversion" << endreq;
+  // std::string elementName = dom2Std (element.getAttribute("name"));
+  // Since the name is never used afterwars, we just don't pass it to
+  // the condition object
+  refpObject = new Condition (/*elementName*/);
   
   // returns
   return StatusCode::SUCCESS;
@@ -99,114 +88,18 @@ StatusCode XmlBaseDetElemCnv::i_createObj (DOM_Element element,
 // -----------------------------------------------------------------------
 // Fill an object with a new child element
 // -----------------------------------------------------------------------
-StatusCode XmlBaseDetElemCnv::i_fillObj (DOM_Element childElement,
-                                         DataObject* refpObject,
-                                         IOpaqueAddress* address) {
-  MsgStream log(msgSvc(), "XmlDetElemCnv" );
+StatusCode XmlBaseConditionCnv::i_fillObj (DOM_Element childElement,
+                                           DataObject* refpObject) {
+  MsgStream log(msgSvc(), "XmlBaseConditionCnv" );
 
   // gets the object
-  DetectorElement* dataObj = dynamic_cast<DetectorElement*> (refpObject);
+  Condition* dataObj = dynamic_cast<Condition*> (refpObject);
   // gets the element's name
   std::string tagName = dom2Std (childElement.getNodeName());
   // dispatches, based on the name
-  if (("detelemref" == tagName) || ("detelem" == tagName)) {
-    IOpaqueAddress* addr;
-    if ("detelemref" == tagName) {
-      // gets the reference value and the position of the '#' in it
-      std::string referenceValue = dom2Std (childElement.getAttribute("href"));
-      // creates the address
-      addr = createAddressForHref
-        (referenceValue, CLID_DetectorElement, address);
-    } else { // here "detelem" == tagName
-      std::string entryName = "/" + dom2Std (childElement.getAttribute("name"));
-      std::string location = address->par()[0];
-      addr = createXmlAddress (location, entryName, CLID_DetectorElement);
-    }
-    // Registers the address to current data object we're converting now
-    IDataProviderSvc* dsvc = dataProvider();
-    IDataManagerSvc* mgr = 0;
-    StatusCode sc = dsvc->queryInterface(IID_IDataManagerSvc,(void**)&mgr);
-    if (sc.isSuccess()) {
-      sc = mgr->registerAddress(address->registry(), addr->par()[1], addr);
-      mgr->release();        
-    }
-    if (!sc.isSuccess()) {
-      throw GaudiException ("Unable to register new Address",
-                            "XmlBaseDetElemCnv",
-                            sc);
-    }
-  } else if ("version" == tagName || "author" == tagName) {
-    // currently ignored
-  } else if ("geometryinfo" == tagName) {
-    // Everything is in the attributes
-    std::string logVolName = dom2Std (childElement.getAttribute ("lvname"));
-    std::string support = dom2Std (childElement.getAttribute ("support"));
-    std::string replicaPath = dom2Std (childElement.getAttribute ("rpath"));
-    std::string namePath = dom2Std (childElement.getAttribute ("npath"));
-    log << MSG::DEBUG << "GI volume : " << logVolName  << endreq;
-    log << MSG::DEBUG << "GI support: " << support     << endreq;
-    log << MSG::DEBUG << "GI rpath  : " << replicaPath << endreq;
-    log << MSG::DEBUG << "GI npath  : " << namePath    << endreq;
-
-    // creates a geometryInfo child
-    if (logVolName.empty()) {
-      dataObj->createGeometryInfo();
-    } else if (support.empty()) {
-      dataObj->createGeometryInfo (logVolName);
-    } else if (!namePath.empty()) {
-      dataObj->createGeometryInfo (logVolName, support, namePath);
-    } else if (!replicaPath.empty()) {
-      ILVolume::ReplicaPath repPath;            
-      // Replica path has the format "1/3/7/2"
-      const char *rp = replicaPath.c_str();
-      char buf[512];
-      char *replica = buf;
-      bool wasColon = false;
-      unsigned int i = 0;
-      do {
-        wasColon = false;
-        if (*rp == '/') {
-          wasColon = true;
-        } else if (isdigit(*rp)) {
-          *replica = *rp;
-          replica++;
-          i++;
-        }
-        if (true == wasColon || *(rp + 1) == '\0') {
-          if (i > 0) {
-            *replica = '\0';
-            i = (unsigned int)atol (buf);
-            repPath.push_back (i);
-            log << MSG::DEBUG << "Found replica number "
-                << repPath.back() << endreq;
-            replica = buf;
-            i = 0;
-          }
-        }
-        rp++;
-      } while (*rp != 0);
-      dataObj->createGeometryInfo (logVolName,support,repPath);
-    } else {
-      log << MSG::ERROR << "File " << address->par()[0] << ": "
-          << tagName
-          << " Missing \"rpath\" or \"npath\" element, "
-          << "please correct XML data\n"
-          << " Either remove support element or provide proper rpath or npath"
-          << endreq;
-      StatusCode st( CORRUPTED_DATA );
-      throw XmlCnvException( " Corrupted XML data", st );            
-    }
-  } else if (("slowcontrolinfo" == tagName) || ("fastcontrolinfo" == tagName) ||
-             ("calibrationinfo" == tagName) || ("alignmentinfo" == tagName)) {
-    // Everything is in the attributes
-    std::string condition = dom2Std (childElement.getAttribute ("condition"));
-    log << MSG::DEBUG << "condition : " << condition  << endreq;
-    //dataObj->createGeometryInfo(condition);
-    log << MSG::INFO << tagName << " tag found. No supported yet"
-        << endreq;
-  } else if (tagName == "specific") {
+  if (tagName == "specific") {
     // this is the place where the user will put new elements he wants
-    // to add to the default detector element
+    // to add to the default condition
     // So we just go through the children of this element and call
     // i_fillSpecificObj on them
     DOM_NodeList specificChildren = childElement.getChildNodes();
@@ -226,8 +119,7 @@ StatusCode XmlBaseDetElemCnv::i_fillObj (DOM_Element childElement,
         }
       }
     }
-  } else if ("param" == tagName || "paramVector" == tagName ||
-             "userParameter" == tagName || "userParameterVector" == tagName) {
+  } else if ("param" == tagName || "paramVector" == tagName) {
     // get the attributes
     std::string type = dom2Std (childElement.getAttribute ("type"));
     std::string name = dom2Std (childElement.getAttribute ("name"));
@@ -255,7 +147,7 @@ StatusCode XmlBaseDetElemCnv::i_fillObj (DOM_Element childElement,
       }
     }
 
-    if ("userParameter" == tagName || "param" == tagName) {
+    if ("param" == tagName) {
       // adds the new parameter to the detectorElement
       log << MSG::DEBUG << "Adding user parameter " << name << " with value "
           << value << ", type " << type << " and comment \"" << comment
@@ -280,7 +172,7 @@ StatusCode XmlBaseDetElemCnv::i_fillObj (DOM_Element childElement,
                                    comment,
                                    value);
       }
-    } else if ("userParameterVector" == tagName || "paramVector" == tagName) {
+    } else if ("paramVector" == tagName) {
       // parses the value
       std::vector<std::string> vect;
       const char *textValue = value.c_str();
@@ -289,11 +181,11 @@ StatusCode XmlBaseDetElemCnv::i_fillObj (DOM_Element childElement,
       while (cstr >> val) {
         vect.push_back (val);
       }
-
+      
       // depending on the type, evaluates the value
       std::vector<double> d_vect;
       std::vector<int> i_vect;
-	  std::vector<std::string>::iterator it;
+      std::vector<std::string>::iterator it;
       for (it = vect.begin();
            vect.end() != it;
            ++it) {
@@ -309,7 +201,7 @@ StatusCode XmlBaseDetElemCnv::i_fillObj (DOM_Element childElement,
       log << MSG::DEBUG << "Adding user parameter vector " << name
           << " with values ";
       std::vector<std::string>::iterator it2;
-	  for (it2 = vect.begin();
+      for (it2 = vect.begin();
            vect.end() != it2;
            ++it2) {
         log << *it2 << " ";
@@ -340,7 +232,7 @@ StatusCode XmlBaseDetElemCnv::i_fillObj (DOM_Element childElement,
 // -----------------------------------------------------------------------
 // Accessor to the classID
 // -----------------------------------------------------------------------
-const CLID& XmlBaseDetElemCnv::classID() {
-  return CLID_DetectorElement;
+const CLID& XmlBaseConditionCnv::classID() {
+  return CLID_Condition;
 }
 

@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/component/XmlCatalogCnv.h,v 1.3 2001-05-14 15:13:42 sponce Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/component/XmlCatalogCnv.h,v 1.4 2001-12-11 10:02:28 sponce Exp $
 
 #ifndef DETDESC_XMLCATALOGCNV_H
 #define DETDESC_XMLCATALOGCNV_H
@@ -64,10 +64,12 @@ protected:
    * Overrides the default method in XmlGenericCnv
    * @param element the child processed here
    * @param refpObject the object to be filled
+   * @param address the address for this object
    * @return status depending on the completion of the call
    */
   virtual StatusCode i_fillObj (DOM_Element childElement,
-                                DataObject* refpObject);
+                                DataObject* refpObject,
+                                IOpaqueAddress* address);
 
   /**
    * This method checks that a converter exists for a given clID.
@@ -76,6 +78,16 @@ protected:
    * @param clsID the clID to check
    */
   void checkConverterExistence(const CLID& clsID);
+
+private:
+  /**
+   * This gets the CLID of a given element depending on its tag name or
+   * its classID attribute in case of detelems. In case the element is
+   * not known as a possible child of the tag catalog, it returns -1
+   * @param element the DOM_Element of the node concerned
+   * @return the CLID for this element
+   */
+  CLID getCLID (DOM_Element element);
 
 };
 
