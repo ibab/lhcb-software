@@ -16,6 +16,8 @@ MagneticFieldSvc.FieldMapFile = "$LHCBDBASE/cdf/field044.cdf";
 #include "$MUONIDROOT/options/MuonIDFOI-v249r1.opts"
 #include "$L0MUONROOT/options/Brunelv249r1.opts"
 seedEvent.dbaseVersion = 249;
+Level1.MatchVeloL0Tool.M1Exists      = false;   
+Level1Check.MatchVeloL0Tool.M1Exists = false;
 #pragma print on
 
 //---------------------------------------------------------------------------

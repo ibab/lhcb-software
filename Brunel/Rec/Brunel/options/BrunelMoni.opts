@@ -20,6 +20,7 @@ BrunelMoni.DetectorList = { "IT","OT","Tr","RICH","CALO","TRIGGER" };
 // Trigger
 BrunelMoniTRIGGERSeq.Members += { "L0Monitor" };
 BrunelMoniTRIGGERSeq.Members += { "L1TrackMonitor" };
+//BrunelMoniTRIGGERSeq.Members += { "Level1Check" };
 
 // IT digitisation and clustering
 #include "$ITCHECKERSROOT/options/Brunel.opts"

@@ -4,10 +4,22 @@ Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
 </PRE><H1><A NAME=v15r2>2002-11-26 Brunel v15r2</A></H1><PRE>
+ - New tuning:
+   . Modified the PuVeto peakValue method to improve peak finding (PuVeto v5r0)
+   . Enable cluster filtering: Seeding does not use T station clusters already
+     used by Forward tracking (Brunel.opts)
+   . New tuning of Forward tracking (LongTrack v1r4)
+   . Improvements to L0 Pi0 trigger (L0Calo v6r3)
+
  - New features:
    . Add support for dbase v250r0, v250r1 (XmlDDDB v14r1, Seeding v2r3)
+->>>   . Add L1 Decision code (L1Decision v1r1)
    . Fix OORich to also run on Windows 
      (RichRecKernel v1r1, RichRecEvent v1r1, RichRecAlgs v1r1)
+   . Switch off all L1 histograms by default (L1VeloTrack v3r3)
+
+ - DST changes:
+->>>   . Add /Event/Trig/L1/Decision
 
  - Code cleanup:
    . Minimize printout of job options (*.opts)

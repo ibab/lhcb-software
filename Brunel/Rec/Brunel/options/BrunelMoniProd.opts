@@ -2,6 +2,9 @@
 BrunelMoni.DetectorList  = { "Tr","TRIGGER", "RICH" };
 BrunelMoni.DetectorList += { "OORICH" };
 
+// Produce only the summary table
+L1TrackMonitor.Histograms = false;
+
 // Monitor for final combined PIDs
 BrunelMoniRICHSeq.Members = { "RichPIDMonitor" };
 BrunelMoniOORICHSeq.Members = { "RichPIDMonitor/RichOOPIDMoni" };

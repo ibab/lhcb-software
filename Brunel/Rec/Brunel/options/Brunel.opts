@@ -46,7 +46,7 @@ BrunelReco.DetectorList += { "Timing" };
 // L1 trigger
 ApplicationMgr.DLLs += { "L1VeloTrack" };
 BrunelTriggerTRIGGERSeq.Members += { "L1VeloTrackAlg" };
-//ApplicationMgr.DLLs += { "L1Decision" };
+ApplicationMgr.DLLs += { "L1Decision" };
 //BrunelRecoL1Seq.Members += { "Level1" };
 
 // Trigger truth relation tables (used by monitoring and for DST)
@@ -118,6 +118,9 @@ ApplicationMgr.DLLs += { "Seeding" };
 BrunelRecoTrSeq.Members += { "TrSeedEvent/seedEvent",
                              "TrEventTracksFitter/fitSeed" };
 #include "$SEEDINGROOT/options/Brunel.opts"
+
+seedEvent.FilterCluster = true; // Enable filtering of T clusters
+ToolSvc.ClusterFilter.Containers = { "Rec/FitTrack/Forward" };
 
 // Velo Matching
 ApplicationMgr.DLLs += { "TrMatching" }; 
