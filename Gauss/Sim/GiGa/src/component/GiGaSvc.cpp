@@ -1,7 +1,10 @@
 /// ===========================================================================
 /// CVS tag $Name: not supported by cvs2svn $ 
 /// ===========================================================================
-/// $Log: not supported by cvs2svn $ 
+/// $Log: not supported by cvs2svn $
+/// Revision 1.5  2001/07/15 20:54:35  ibelyaev
+/// package restructurisation
+/// 
 /// ===========================================================================
 #define GIGA_GIGASVC_CPP 1 
 /// ===========================================================================
@@ -34,7 +37,7 @@
 #include    "GiGa/IGiGaEventActionFactory.h"
 #include    "GiGa/GiGaException.h"
 #include    "GiGa/GiGaRunManager.h" 
-#include    "GiGa/SplitTypeAndName.h"
+#include    "GiGa/GiGaUtil.h"
 // local 
 #include    "GiGaSvc.h"
 /// visualization stuff I hope that it is temporary!
@@ -502,28 +505,15 @@ StatusCode GiGaSvc::physList( const std::string& TypeName ,
   if( 0 == objMgr()  ) 
     { return Error("RetrievePhysicsList:  IObjManager* points to NULL"); }
   std::string Type , Name ; 
-  StatusCode sc = SplitTypeAndName( TypeName , Type , Name );
+  StatusCode sc = 
+    GiGaUtil::SplitTypeAndName( TypeName , Type , Name );
   if( sc.isFailure() ) 
     { return Error("RetrievePhysicsList: Physics List Type/Name=" + 
-                   TypeName+" is unresolved!",sc);}
-  /// locate the factory
-  const IGiGaPhysListFactory* PLF = 0 ;  
-  {
-    bool exist = objMgr()->existsObjFactory( Type ); 
-    if( !exist   ) 
-      { return Error("RetrievePhysicsList:  Factory  for " + 
-                     Type+" is not located") ; }  
-    const IFactory* fac   = objMgr()->objFactory( Type );
-    if( 0 == fac ) 
-      { return Error("RetrievePhisicsList: IFactory* for " + 
-                     Type+" points to NULL" ); }
-    PLF = dynamic_cast<const IGiGaPhysListFactory*> ( fac ); 
-    if( 0 == PLF ) 
-      { return Error("RetrievePhysicsList: IGiGaPhysListFactory* for " + 
-                     Type+" points to NULL" );}
-  }
-  ///
-  PL = PLF->instantiate( Name , serviceLocator() ) ; 
+                   TypeName+" is unresolved!",sc) ; }
+  /// create the creator 
+  GiGaUtil::PhysListCreator creator( objMgr()  , serviceLocator() );
+  /// create the object 
+  PL = creator( Type , Name );
   if( 0 == PL    ) 
     { return Error(std::string("RetrievePhysicsList: could not instantiate") + 
                    " IGiGaPhysList* Object "+Type+"/"+Name );} 
@@ -552,28 +542,15 @@ StatusCode GiGaSvc::stackAction( const std::string& TypeName ,
   if( 0 == objMgr()  ) 
     { return Error("RetrieveStackAction:  IObjManager* points to NULL"); }
   std::string Type , Name ; 
-  StatusCode sc = SplitTypeAndName( TypeName , Type , Name );
+  StatusCode sc = 
+    GiGaUtil::SplitTypeAndName( TypeName , Type , Name );
   if( sc.isFailure() ) 
     { return Error("RetrieveStackAction: Stack Action Type/Name=" + 
                    TypeName+" is unresolved!",sc);}
-  /// locate the factory
-  const IGiGaStackActionFactory* SAF = 0 ;  
-  {
-    bool exist = objMgr()->existsObjFactory( Type ); 
-    if( !exist   )
-      { return Error("RetrieveStackAction:  Factory  for " + 
-                     Type+" is not located") ; }  
-    const IFactory* fac   = objMgr()->objFactory( Type );
-    if( 0 == fac )
-      { return Error("RetrieveStackAction: IFactory* for " + 
-                     Type + " points to NULL" ); }
-    SAF = dynamic_cast<const IGiGaStackActionFactory*> ( fac ); 
-    if( 0 == SAF )
-      { return Error("RetrieveStackAction: IGiGaStackActionFactory* for " + 
-                     Type+" points to NULL" );}
-  }
-  ///
-  SA = SAF->instantiate( Name , serviceLocator() ) ; 
+  /// Create the creator
+  GiGaUtil::StackActionCreator creator( objMgr() , serviceLocator() );
+  /// creat the object 
+  SA = creator( Type , Name ) ;
   if( 0 == SA    ) 
     { return Error(std::string("RetrieveStackAction: could not instantiate") 
                    + " IGiGaStackAction* Object "+Type+"/"+Name );} 
@@ -602,28 +579,15 @@ StatusCode GiGaSvc::trackAction( const std::string& TypeName ,
   if( 0 == objMgr()  ) 
     { return Error("RetrieveTrackAction:  IObjManager* points to NULL"); }
   std::string Type , Name ; 
-  StatusCode sc = SplitTypeAndName( TypeName , Type , Name );
+  StatusCode sc = 
+    GiGaUtil::SplitTypeAndName( TypeName , Type , Name );
   if( sc.isFailure() ) 
     { return Error("RetrieveTrackAction: Track Action Type/Name=" + 
                    TypeName+" is unresolved!",sc);}
-  /// locate the factory
-  const IGiGaTrackActionFactory* TAF = 0 ;  
-  {
-    bool exist = objMgr()->existsObjFactory( Type ); 
-    if( !exist   ) 
-      { return Error("RetrieveTrackAction:  Factory  for " + 
-                     Type + " is not located") ; }  
-    const IFactory* fac   = objMgr()->objFactory( Type );
-    if( 0 == fac ) 
-      { return Error("RetrieveTrackAction: IFactory* for " + 
-                     Type+" points to NULL" ); }
-    TAF = dynamic_cast<const IGiGaTrackActionFactory*> ( fac ); 
-    if( 0 == TAF ) 
-      { return Error("RetrieveTrackAction: IGiGaTrackActionFactory* for " + 
-                     Type+" points to NULL" );}
-  }
-  ///
-  TA = TAF->instantiate( Name , serviceLocator() ) ; 
+  /// create the creator 
+  GiGaUtil::TrackActionCreator creator( objMgr() , serviceLocator() );
+  /// create the object 
+  TA = creator( Type , Name );
   if( 0 == TA    ) 
     { return Error(std::string("RetrieveTrackAction: could not instantiate ") 
                    + "IGiGaTrackAction* Object "+Type+"/"+Name );} 
@@ -652,28 +616,15 @@ StatusCode GiGaSvc::stepAction( const std::string& TypeName ,
   if( 0 == objMgr()  ) 
     { return Error("RetrieveStepAction:  IObjManager* points to NULL"); }
   std::string Type , Name ; 
-  StatusCode sc = SplitTypeAndName( TypeName , Type , Name );
+  StatusCode sc = 
+    GiGaUtil::SplitTypeAndName( TypeName , Type , Name );
   if( sc.isFailure() ) 
     { return Error("RetrieveStepAction: Stepping Action Type/Name=" + 
                    TypeName+" is unresolved!",sc);}
-  /// locate the factory
-  const IGiGaStepActionFactory* SAF = 0 ;  
-  {
-    bool exist = objMgr()->existsObjFactory( Type ); 
-    if( !exist   ) 
-      { return Error("RetrieveStepAction:  Factory  for " + 
-                     Type+" is not located") ; }  
-    const IFactory* fac   = objMgr()->objFactory( Type );
-    if( 0 == fac )
-      { return Error("RetrieveStepAction: IFactory* for " + 
-                     Type+" points to NULL" ); }
-    SAF = dynamic_cast<const IGiGaStepActionFactory*> ( fac ); 
-    if( 0 == SAF ) 
-      { return Error("RetrieveStepAction: IGiGaStepActionFactory* for " + 
-                     Type+" points to NULL" );}
-  }
-  ///
-  SA = SAF->instantiate( Name , serviceLocator() ) ; 
+  /// create the creator 
+  GiGaUtil::StepActionCreator creator( objMgr() , serviceLocator() );
+  /// create the object
+  SA = creator( Type , Name );
   if( 0 == SA    ) 
     { return Error(std::string("RetrieveStepAction: could not instantiate ") +
                    "IGiGaStepAction* Object "+Type+"/"+Name );} 
@@ -702,29 +653,15 @@ StatusCode GiGaSvc::eventAction( const std::string& TypeName ,
   if( 0 == objMgr()  ) 
     { return Error("RetrieveEventAction:  IObjManager* points to NULL"); }
   std::string Type , Name ; 
-  StatusCode sc = SplitTypeAndName( TypeName , Type , Name );
+  StatusCode sc = 
+    GiGaUtil::SplitTypeAndName( TypeName , Type , Name );
   if( sc.isFailure() ) 
     { return Error("RetrieveEventAction: Stepping Action Type/Name=" + 
                    TypeName+" is unresolved!",sc);}
-  /// locate the factory
-  const IGiGaEventActionFactory* EAF = 0 ;  
-  {
-    bool exist = objMgr()->existsObjFactory( Type ); 
-    if( !exist   )
-      { return Error("RetrieveEventAction:  Factory  for " + 
-                     Type+" is not located") ; }  
-    const IFactory* fac   = objMgr()->objFactory( Type );
-    if( 0 == fac )
-      { return Error("RetrieveEventAction: IFactory* for " + 
-                     Type+" points to NULL" ); }
-    EAF = dynamic_cast<const IGiGaEventActionFactory*> ( fac ); 
-    if( 0 == EAF )
-      { return Error(std::string("RetrieveEventAction:")+
-                     " IGiGaEventActionFactory* for " + 
-                     Type+" points to NULL" );}
-  }
-  ///
-  EA = EAF->instantiate( Name , serviceLocator() ) ; 
+  /// create the creator 
+  GiGaUtil::EventActionCreator creator( objMgr() , serviceLocator() );
+  /// create the object 
+  EA = creator( Type , Name ) ;
   if( 0 == EA    ) 
     { return Error(std::string("RetrieveEventAction: could not instantiate ") + 
                    "IGiGaEventAction* Object "+Type+"/"+Name );} 
