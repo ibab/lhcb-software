@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/L0/L0Muon/src/component/L0mTriggerProc.cpp,v 1.4 2001-07-10 10:23:31 atsareg Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/L0/L0Muon/src/component/L0mTriggerProc.cpp,v 1.5 2001-07-12 15:02:07 atsareg Exp $
 
 /// Include files
 /// Gaudi interfaces
@@ -215,10 +215,10 @@ L0mTower* L0mTriggerProc::createTower(L0mPad* pad, ObjectVector<L0mPad>* pads) {
   ObjectVector<L0mPad>::const_iterator ind;
     
   // Find all the tiles touched by the tower
-  vtiles[0] = m_layout[0].tiles( *pad , 16 );
+  vtiles[0] = m_layout[0].tiles( *pad , 32 );
   vtiles[1] = m_layout[1].tiles( *pad , 8 );
   vtiles[3] = m_layout[3].tiles( *pad , 8, 1);
-  vtiles[4] = m_layout[4].tiles( *pad , 10, 1 );
+  vtiles[4] = m_layout[4].tiles( *pad , 12, 1 );
     
   // look through all the pads
   int nbit = 0;
