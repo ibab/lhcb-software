@@ -1,4 +1,4 @@
-// $Id: XmlLVolumeCnv.cpp,v 1.4 2003-06-16 13:44:18 sponce Exp $ 
+// $Id: XmlLVolumeCnv.cpp,v 1.5 2003-11-24 15:31:39 cattanem Exp $ 
 // Include files
 #include "GaudiKernel/CnvFactory.h"
 #include "GaudiKernel/GenericAddress.h"
@@ -266,7 +266,7 @@ bool XmlLVolumeCnv::isParamphysvol (const XMLCh* tag) {
 std::string XmlLVolumeCnv::locateElement (xercesc::DOMElement* element) {
   // tries to find a parent element with a name
   xercesc::DOMNode* parentNode = element;
-  xercesc::DOMElement* parentElement;
+  xercesc::DOMElement* parentElement = 0;
   std::string parentName;
   bool hasName = false;
   while (!hasName) {
