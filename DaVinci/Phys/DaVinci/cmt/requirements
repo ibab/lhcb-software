@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.178 2004-10-04 12:46:32 pkoppenb Exp $
+# $Id: requirements,v 1.179 2004-10-05 06:21:28 pkoppenb Exp $
 # Created    : 07/02/2002
 # Maintainer : P. Koppenburg
 #
@@ -51,7 +51,7 @@ use  L0MuonKernel 		v2r1p1   L0
 use  L0MuonTrigger 		v2r2     L0
 use  L0mConf            	v2r2p3   L0
 
-use  L1Decision         	v3r0     Trg
+use  L1Decision         	v3r1     Trg
 use  L1Reco             	v5r0     Trg
 use  TrgChecker         	v5r0     Trg
 use  TrgForward         	v3r0     Trg
