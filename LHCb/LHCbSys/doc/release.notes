@@ -5,11 +5,16 @@
 ! Purpose     : LHCb OO kernel packages
 !-----------------------------------------------------------------------------
 
-!======================= LHCbSys v16r0 2004-06-02 =======================
-! 2004-06-02 - Marco Cattaneo
+!======================= LHCbSys v16r0 2004-06-08 =======================
+! 2004-06-08 - Marco Cattaneo
  - New packages: GaudiAlg v7r3 added temporarily, until released with Gaudi
- - Modified packages: DetSys v5r7, STDet v1r2, MuonTools v3r7,
+ - Modified packages: EventSys v17r11, Event v4r4,
+                      DetSys v5r7, STDet v1r2, MuonTools v3r7,
                       AssociatorsSys v1r14, ITAssociators v2r9, MCTools v1r6
+
+ - In Event v4r4:
+   . Fix a bug MCHit::dxdz and MCHit::dydz, slope was only returned if entry
+     and exit points were closer than 0.1 um
 
  - In STDet v1r2:
    . Add new members to layer and wafer. Make GSL dependency no_auto_imports

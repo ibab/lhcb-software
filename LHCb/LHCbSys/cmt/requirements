@@ -43,8 +43,8 @@ use RichDet		v7r1	Det
 use STDet          	v1r2	Det
 
 # Event data model
-use EventSys		v17r10	Event
-use Event        	v4r3	Event
+use EventSys		v17r11	Event
+use Event        	v4r4	Event
 use VeloEvent    	v13r0p1	Event
 use ITEvent      	v13r2	Event
 use OTEvent      	v13r0	Event
