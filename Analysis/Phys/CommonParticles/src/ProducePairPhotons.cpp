@@ -1,4 +1,4 @@
-// $Id: ProducePairPhotons.cpp,v 1.3 2004-04-16 16:58:59 beneyton Exp $
+// $Id: ProducePairPhotons.cpp,v 1.4 2004-04-23 17:20:41 beneyton Exp $
 // Include files
 #include <string>
 
@@ -376,6 +376,7 @@ StatusCode ProducePairPhotons::execute() {
 			status = vertexFitter()->fitVertex(*electron,*positron,gammaVtx);
 			if( !status.isSuccess() ) {continue;}
 			msg << MSG::DEBUG << " VertexFitter OK, chi2:" << format("%6.2f",gammaVtx.chi2()) << endreq;
+			gammaVtx.setType(Vertex::Pair);
 
 			Particle gamma;
 			status = particleStuffer()->fillParticle( gammaVtx, gamma, m_gammaID );
