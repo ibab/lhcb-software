@@ -24,8 +24,10 @@ class     GiGaRunManager      ;
 class     G4UImanager        ; 
 class     G4VisManager       ; 
 
-
 class     IGiGaPhysList;
+class     IGiGaStackAction;
+class     IGiGaTrackAction;
+class     IGiGaStepAction;
 
 ///////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////
@@ -131,20 +133,40 @@ class GiGaSvc: public         Service       ,
                       const char*        msg                       ,            ///                      
 		      const StatusCode&  sc  = StatusCode::FAILURE ) ;          ///
   /////////////////////////////////////////////////////////////////////////////////
-  inline StatusCode Error   ( const std::string & msg ,  
-			      const StatusCode  & sc  = StatusCode::FAILURE );
-  inline StatusCode Warning ( const std::string & msg ,  
-			      const StatusCode  & sc  = StatusCode::FAILURE );
-  inline StatusCode Print   ( const std::string & msg ,  
-                              const MSG::Level  & lvl = MSG::INFO           ,
-			      const StatusCode  & sc  = StatusCode::FAILURE );
+  inline StatusCode Error     ( const std::string    & msg ,  
+				const StatusCode     & sc  = StatusCode::FAILURE );
+  inline StatusCode Warning   ( const std::string    & msg ,  
+				const StatusCode     & sc  = StatusCode::FAILURE );
+  inline StatusCode Print     ( const std::string    & msg ,  
+				const MSG::Level     & lvl = MSG::INFO           ,
+				const StatusCode     & sc  = StatusCode::FAILURE );
+  inline StatusCode Exception ( const std::string    & msg  ,  
+                                const GaudiException & exc  , 
+				const MSG::Level     & lvl = MSG::FATAL           ,
+				const StatusCode     & sc  = StatusCode::FAILURE );
+  inline StatusCode Exception ( const std::string    & msg  ,  
+                                const std::exception & exc  , 
+				const MSG::Level     & lvl = MSG::FATAL           ,
+				const StatusCode     & sc  = StatusCode::FAILURE );
+  inline StatusCode Exception ( const std::string    & msg  ,  
+				const MSG::Level     & lvl = MSG::FATAL           ,
+				const StatusCode     & sc  = StatusCode::FAILURE );
   /////////////////////////////////////////////////////////////////////////////////
   StatusCode physList      ( const std::string& TypeAndName , 
 			     IGiGaPhysList*&    PhisicsList ) ;
   /////////////////////////////////////////////////////////////////////////////////
+  StatusCode stackAction   ( const std::string& TypeAndName , 
+			     IGiGaStackAction*& StackAction ) ;
+  /////////////////////////////////////////////////////////////////////////////////
+  StatusCode trackAction   ( const std::string& TypeAndName , 
+			     IGiGaTrackAction*& TrackAction ) ;
+  /////////////////////////////////////////////////////////////////////////////////
+  StatusCode stepAction    ( const std::string& TypeAndName , 
+			     IGiGaStepAction*&  StepAction  ) ;
+  /////////////////////////////////////////////////////////////////////////////////
   
  private:
-
+  
   /////////////////////////////////////////////////////////////////////////////////
   GiGaRunManager*                  m_GiGaRunManager            ;               
   /////////////////////////////////////////////////////////////////////////////////
@@ -163,6 +185,14 @@ class GiGaSvc: public         Service       ,
   /////////////////////////////////////////////////////////////////////////////////
   /// PhysicsList Object
   std::string                      m_GiGaPhysList                    ;   /// type/name 
+  /// Stacking Action Object 
+  std::string                      m_GiGaStackAction                 ;   /// type/name 
+  /// Tracking Action Object 
+  std::string                      m_GiGaTrackAction                 ;   /// type/name 
+  /// Stepping Action Object 
+  std::string                      m_GiGaStepAction                  ;   /// type/name 
+  /////////////////////////////////////////////////////////////////////////////////
+  bool                             m_UseVisManager                   ; 
   /////////////////////////////////////////////////////////////////////////////////
 };
 ///////////////////////////////////////////////////////////////////////////////////
@@ -189,7 +219,50 @@ inline StatusCode GiGaSvc::Print( const std::string& Message ,
   MsgStream log( msgSvc() , name() ); log << level << Message << endreq ; 
   return  Status;
 };  
+/////////////////////////////////////////////////////////////////////////////////// 
+inline StatusCode GiGaSvc::Exception( const std::string    & Message , 
+                                      const GaudiException & Excp    ,
+				      const MSG::Level     & level   , 
+				      const StatusCode     & Status )
+{
+  Stat stat( chronoSvc() , Excp.tag() );
+  MsgStream log( msgSvc() , name() + ":"+Excp.tag() ); 
+  log << level << Message << ":" << Excp << endreq ; 
+  return  Status;
+};  
+/////////////////////////////////////////////////////////////////////////////////// 
+inline StatusCode GiGaSvc::Exception( const std::string    & Message , 
+                                      const std::exception & Excp    ,
+				      const MSG::Level     & level   , 
+				      const StatusCode     & Status )
+{
+  Stat stat( chronoSvc() , "std::exception" );
+  MsgStream log( msgSvc() , name() + ":std::exception" ); 
+  log << level << Message << ":" << Excp.what() << endreq ; 
+  return  Status;
+};  
+///////////////////////////////////////////////////////////////////////////////////
+inline StatusCode GiGaSvc::Exception( const std::string    & Message , 
+				      const MSG::Level     & level   , 
+				      const StatusCode     & Status )
+{
+  Stat stat( chronoSvc() , "*UNKNOWN* exception" );
+  MsgStream log( msgSvc() , name() + ":UNKNOWN exception" ); 
+  log << level << Message << ": UNKNOWN exception"  << endreq ; 
+  return  Status;
+};  
 ///////////////////////////////////////////////////////////////////////////////////
  
+
 #endif  //  __GIGA_GIGASVC_GIGASVC_H__
+
+
+
+
+
+
+
+
+
+
 

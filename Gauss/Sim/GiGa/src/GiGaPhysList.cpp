@@ -27,14 +27,8 @@ StatusCode GiGaPhysList::queryInterface( const InterfaceID& id , void** ppI)
 StatusCode GiGaPhysList::initialize ()  
 {
   /// initialize base class
-
-  std::cout << " 1misc = " << m_misc << std::endl; 
- 
   StatusCode sc = GiGaBase::initialize (); 
   if( sc.isFailure() ){ return Error("Could not initialize GiGaBase class!", sc); }
-
-  std::cout << " 2misc = " << m_misc << std::endl; 
-
   MsgStream log( msgSvc() , name() ); 
   if( defCut() != GetDefaultCutValue() )
     {

@@ -2,6 +2,36 @@ Package:          GiGa
 Package manager : Vanya Belyaev 
 
 ===========================================================================
+! 20010221 - Vanya Belyaev
+   (1) New "pseudo-interfaces" for "Stacking Action","Tracking Action" and "Stepping Action".
+       Classes inherit from G4UserStackingAction, G4UserTrackingAction and G4UserSteppingAction. 
+       "Pseudo-interfaces":
+       GiGa/IGiGaStackAction.h,GiGa/IGiGaTrackAction.h,GiGa/IGiGaStepAction.h 
+       and corresponding base classes:
+       GiGa/GiGaStackAction.h,GiGa/GiGaTrackAction.h,GiGa/GiGaStepAction.h 
+       GiGaStackAction.cpp,GiGaTrackAction.cpp,GiGaStepAction.cpp 
+       and corresponding "primitive" - just empty implementations:
+       GiGaStackActionEmpty.h,GiGaStackActionEmpty.cpp,
+       GiGaTrackActionEmpty.h,GiGaTrackActionEmpty.cpp,
+       GiGaStepActionEmpty.h,GiGaStepActionEmpty.cpp
+       and corresponding abstract factories:
+       GiGa/IGiGaStackActionFactory.h,GiGa/IGiGaTrackActionFactory.h,GiGa/IGiGaStepActionFactory.h 
+       and corresponding concrete templated factories: 
+       GiGa/GiGaStackActionFactory.h,GiGa/GiGaTrackActionFactory.h,GiGa/GiGaStepActionFactory.h 
+   (2) New options for GiGaSvc 
+        (a) "ObjectManager", with default value "ApplicationMgr" - to locate IObjManager interface 
+        (b) "UseVisManager", with default falue "false"          - flag to instantiate Visualization Manager
+        (c) "StackingAction", with empty default value  - type and name of Stacking Action Object 
+        (d) "TrackingAction", with empty default value  - type and name of Tracking Action Object 
+        (e) "SteppingAction", with empty default value  - type and name of Stepping Action Object 
+        (f) "PhysicsList"   , with empty default value  - type and name of Physics  List   Object 
+   (3) GiGaVisManager.h and GiGaVisManager.cpp 
+        - Visualization Manager itself. It is just a copy of "standard" visualisation manager 
+   (4) GiGaMiscGetEventAlg.h, GiGaMiscGetEventAlg.cpp 
+        - (temporary?)  primitive algorithm to trigger event retrival, or, more correctly 
+          "end of event preparation" 
+   (5) Some miscellaneous new methods in GiGaSvc.cpp to simplify the code 
+===========================================================================
 ! 20010219 - Vanya Belyaev
    remove all *.*.* files to please nmake on NT 
 

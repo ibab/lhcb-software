@@ -1,12 +1,13 @@
 package  GiGa 
 
 version v4
-set GIGAOPTIONS "$(GIGAROOT)/options/GiGaOptions.txt"
+
+set GIGAOPTIONS "${GIGAROOT}/options/GiGaOptions.txt"
 
 branches cmt src doc GiGa 
 
 # GaudiKernel
-use GaudiKernel   v9*
+use GaudiSys   v7*
 
 # Event object library
 use LHCbEvent     v9*	Event
