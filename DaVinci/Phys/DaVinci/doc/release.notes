@@ -8,6 +8,8 @@ Purpose     : LHCb analysis program
  TDR data can be read but not all features are supported beside decay channel
  selections. See details for DaVinci v11r0 and v10r0.
 
+ - based on LHCB v15r8
+ 
  - The Trigger is back!
  
  - Many updated Selections. See PhysSelSys
