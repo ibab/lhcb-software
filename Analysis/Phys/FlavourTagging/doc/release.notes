@@ -4,6 +4,10 @@
 ! Purpose     : Provide tools and algorithm for tagging Bs
 !-----------------------------------------------------------------------------
 
+! 2004-03-25 - P. Koppenburg 
+ - CheatedReco.cpp
+   . Correct location of IMCDecayFinder.h
+     
 !==================== FlavourTagging v4r8 2004-03-11 ===================
 ! 2004-03-11 - P. Koppenburg for Odie and Marco
  - CategoryTaggingTool.cpp (PK/Odie)

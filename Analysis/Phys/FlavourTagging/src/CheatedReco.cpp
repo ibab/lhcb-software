@@ -1,4 +1,4 @@
-// $Id: CheatedReco.cpp,v 1.3 2003-06-20 11:59:49 odie Exp $
+// $Id: CheatedReco.cpp,v 1.4 2004-03-25 16:37:54 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
@@ -12,7 +12,7 @@
 #include "Event/Vertex.h"
 #include "Event/Particle.h"
 
-#include "DaVinciMCTools/IMCDecayFinder.h"
+#include "MCTools/IMCDecayFinder.h"
 #include "DaVinciTools/IDecayFinder.h"
 
 // local
