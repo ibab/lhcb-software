@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.48 2004-07-21 12:10:26 ibelyaev Exp $
+! $Id: release.notes,v 1.49 2004-07-22 09:58:52 cattanem Exp $
 ! -----------------------------------------------------------------------------
 ! CVS tag $Name: not supported by cvs2svn $
 ! -----------------------------------------------------------------------------
@@ -7,8 +7,8 @@
 ! Purpose     : Main Package for Calorimeter Reconstruction Software 
 ! -----------------------------------------------------------------------------
 
+!======================= CaloReco v2r4 2004-07-22 ======================
 ! 2004-07-21 - Vanya BELYAEV
-
 
  - src/CaloClusterCorrect3x3Position.cpp 
     1. fix compilation warnings 
@@ -30,7 +30,6 @@
 
  - cmt/requirements   
     1. increment the version to v2r4 
-
 
 ! 2004-07-20 - Vanya BELYAEV
  - CaloMergedPi0Alg.cpp 
