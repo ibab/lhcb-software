@@ -1,11 +1,24 @@
 #!/usr/local/bin/tcsh
-# $Id: setupDB.csh,v 1.7 2002-12-03 17:33:37 andreav Exp $
+# $Id: setupDB.csh,v 1.8 2002-12-04 14:40:51 andreav Exp $
 if ( ${?CONDDB_implementation} != 1 ) then
-  echo "ERROR: the environment variable CONDDB_implementation is not set"
-  echo "Please 'setenv CONDDB_implementation <value>' and try again"
-  echo "Valid values are {CondDBObjy, CondDBOracle, CondDBMySQL}"
-  exit 1
-else if ( "${CONDDB_implementation}" == "CondDBObjy" ) then
+  echo "WARNING! Environment variable CONDDB_implementation is not set yet"
+  if ( "${CMTCONFIG}" == "rh61_gcc2952" ) then
+    setenv CONDDB_implementation CondDBObjy
+  else
+    setenv CONDDB_implementation CondDBOracle
+  endif
+  echo "The following default value will be set:"
+  echo "  setenv CONDDB_implementation $CONDDB_implementation"
+  echo "Please change it according to your needs if necessary"
+  if ( "${CMTCONFIG}" == "rh61_gcc2952" ) then
+    echo "Valid values are {CondDBObjy}"
+  else
+    echo "Valid values are {CondDBOracle, CondDBMySQL}"
+  endif
+  echo "NB: 'source ../cmt/setup.csh -tag=$CMTDEB' again if you make changes!"
+  echo "---------------------------------------------------------------------"
+endif
+if ( "${CONDDB_implementation}" == "CondDBObjy" ) then
   source ${DETCONDEXAMPLEROOT}/cmt/setupDB_Objy.csh
   exit 0
 else if ( "${CONDDB_implementation}" == "CondDBOracle" ) then
@@ -15,8 +28,8 @@ else if ( "${CONDDB_implementation}" == "CondDBMySQL" ) then
   source ${DETCONDEXAMPLEROOT}/cmt/setupDB_MySQL.csh
   exit 0
 else
-  echo "CONDDB_implementation is set to ${CONDDB_implementation}"
-  echo "ERROR: valid values are {CondDBObjy, CondDBOracle, CondDBMySQL}"
+  echo "ERROR! CONDDB_implementation is set to ${CONDDB_implementation}"
+  echo "Valid values are {CondDBOracle, CondDBObjy, CondDBMySQL}"
   exit 1
 endif
 

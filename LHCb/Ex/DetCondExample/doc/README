@@ -1,4 +1,4 @@
-# $Id: README,v 1.31 2002-12-02 11:37:05 andreav Exp $
+# $Id: README,v 1.32 2002-12-04 14:40:51 andreav Exp $
 
 Three examples are distributed in this package: a test of condition data 
 stored in flat XML files, a test of condition data stored in the CondDB,
@@ -9,14 +9,20 @@ under Windows and under Linux (RedHat6.1 or RedHat7.3).
 
 The CondDB examples require package DetCond. 
 Under Linux RedHat6.1, DetCond uses CONDDB (based on Objectivity).
-Under Windows and Linux RedHat7.3, DetCond uses CondDBOracle (based on Oracle).
+Under Windows and Linux RedHat7.3, DetCond uses CondDBOracle or CondDBMySQL.
 The Oracle implementation is based on Oracle 9i using the OCCI library.
 
+It is possible to choose at runtime which implementation is used on RH73/WIN.
+Both implementations are compiled and linked, then the actual 
+package used to run a job is specified in the job options file.
+This is actually controlled via environment variable CONDDB_implementation
+in the examples in DetCondExample. The default is CondDBOracle.
+
 Four main job options exist in the options directory:
- 1) testXml.opts    -> test of condition data stored in XML files (NO Ora/Objy)
-2a) fillCondDB.opts -> populate the CondDB used in the CondDB test (Ora/Objy)
-2b) testCondDB.opts -> test of condition data stored in the CondDB (Ora/Objy)
- 3) daqCondDB.opts  -> test speed to write data in the CondDB (Ora/Objy)
+ 1) testXml.opts    -> test of condition data stored in XML files (NO DB)
+2a) fillCondDB.opts -> populate the CondDB used in the CondDB test (DB)
+2b) testCondDB.opts -> test of condition data stored in the CondDB (DB)
+ 3) daqCondDB.opts  -> test speed to write data in the CondDB (DB)
 
 By default, the MsgSvc level is set to 3 (VERBOSE) for the first 3 examples.
 To see less verbose comments, set it to 2 (DEBUG) or 1 (INFO).
@@ -29,7 +35,7 @@ The detector elements used in the tests are the following:
 > LHCb is used to test geometry data in the CondDB
 
 ------------------------------------------------------------------------------
-Packages needed to run DetCondExample v4r1
+Packages needed to run DetCondExample v4r2
 ------------------------------------------------------------------------------
 
 For general information on configuring the Gaudi environment, 
@@ -53,13 +59,14 @@ Check the result with
 To run the detector condition example, you need the following packages,
 as well as the standard Gaudi packages from the release area of Gaudi v11.
     cd ~/newmycmt
-    getpack Det/DetCond        v4r1     head
-    getpack Ex/DetCondExample  v4r1     head
+    getpack Det/DetCond        v4r2     head
+    getpack Ex/DetCondExample  v4r2     head
     getpack Det/DetDesc        v11r2
 Under Linux (RedHat6.1)
     getpack CONDDB             v3r02p3  head
 Under Windows and Linux (RedHat7.3)
-    getpack Det/CondDBOracle   v4r16    head
+    getpack Det/CondDBOracle   v4r17    head
+    getpack Det/CondDBMySQL    v0r06    head
 
 It may be that the CONDDB you get is not the latest version yet. Check by
     more CONDDB/v3r02p3/cmt/requirements | grep 'version v'
@@ -88,7 +95,7 @@ How to setup the environment and link DetCondExample on lxplus/lxplus7
 cd ~/newmycmt
 
 # Go to the cmt directory
-cd Ex/DetCondExample/v4r1/cmt
+cd Ex/DetCondExample/v4r2/cmt
 
 # Setup the environment
 # This will setup Gaudi and also execute some implementation-dependent actions
@@ -98,23 +105,39 @@ source ../cmt/setup.csh -tag=$CMTDEB
 # On RH6.1, setup.csh starts the lockserver and AMSserver and installs the db
 # (the schema for the example's DB will be updated after compiling CONDDB)
 
-# On RH7.3 and Windows, setup prompts you to update your password.
-# You should actually set ALL of the db host, user, password and name.
-# For instance, this is what I use... except the password :-)
+# On RH7.3 and Windows, setup prompts you to check your DB host, user, password
+# and db name. For instance, this is what I use... except the password :-)
+# Since both CondDBOracle and CondDBMySQL are used, you have to do this twice!
+#-----------
+# On Oracle:
+#-----------
 # - The host (here db9) must correspond to an entry in the tnsnames.ora file
 #   Environment variable TNS_ADMIN defines the search path for tnsnames.ora
 # - The user and password are your Oracle account user and password
 # - The name of the DB can be anything: a DB with that name is created and used
-#   I suggest you stick to MYCONDDB_LINUX and MYCONDDB_WINDOWS on Linux/Win
-setenv DETCONDEXAMPLE_DBHOST DB9
-setenv DETCONDEXAMPLE_DBUSER AVALASSI
-setenv DETCONDEXAMPLE_DBNAME MYCONDDB_LINUX
-setenv DETCONDEXAMPLE_DBPSWD ********
+#   I suggest you stick to MYCONDDB_LINUX and MYCONDDB_WIN32 on Linux/Win
+setenv CONDDBORACLE_DBHOST DB9 
+setenv CONDDBORACLE_DBUSER AVALASSI
+setenv CONDDBORACLE_DBPSWD PASSWORD
+setenv CONDDBORACLE_DBNAME MYCONDDB_LINUX
+#-----------
+# On MySQL:
+#-----------
+# - The host is a TCP/IP hostname running a MySQL server.
+# - The user and password are your MySQL account user and password
+# - The name of the DB is a MySQL 'database' on the server (as seen in the
+#   'show databases' or 'use <database>' commands). I suggest you stick 
+#   to test_conddb_linux and test_conddb_win32.
+setenv CONDDBMYSQL_DBHOST lxshare070d
+setenv CONDDBMYSQL_DBUSER avalassi
+setenv CONDDBMYSQL_DBPSWD password
+setenv CONDDBMYSQL_DBNAME test_conddb_linux
 
 # Remove old makefiles and dependencies
 cmt broadcast -select=mycmt '/bin/rm -f *make*'
 
 # Compile and link
+# This compiles and links both implementations (Oracle and MySQL)
 cmt broadcast -select=mycmt gmake tag=$CMTDEB
 
 ------------------------------------------------------------------------------
@@ -125,7 +148,7 @@ How to run DetCondExample on lxplus/lxplus7 (without debugger)
 cd ~/newmycmt
 
 # Go to the working directory
-cd Ex/DetCondExample/v4r1/options
+cd Ex/DetCondExample/v4r2/options
 
 ============
 (1) testXml
@@ -134,47 +157,32 @@ cd Ex/DetCondExample/v4r1/options
 # Run the application
 ../$CMTDEB/DetCondExample.exe testXml.opts
 
-# Run the application and compare the output to the standard one
-# I pipe the output to sed to make the comparison easier
-/bin/rm -f log.testXml.${CMTCONFIG}
-../$CMTDEB/DetCondExample.exe testXml.opts \
-  | sed "s|$DETCONDEXAMPLEROOT|DETCONDEXAMPLEROOT|" > log.testXml.${CMTCONFIG}
-tkdiff log.testXml.${CMTCONFIG} ../job/Xml/ &
-
 ================
 (2a) fillCondDB
 ================
 
-# Set the debug level for the CONDDB library. Possible debug levels are:
+# To switch from one of the two CondDB implementations to the other, you must:
+setenv CONDDB_implementation <implementation>
+source ../cmt/setup.csh -tag=$CMTDEB
+
+# You may set the debug level for the CONDDB libraries. 
+# Possible debug levels are:
 #    none: no message is printed (default)
 #    prof: only print messages which do not disturb profiling measurements
 #    user: only print messages of "general" interest
 #    devl: also print messages of interest only for the package developer
 #    more: more paranoid messages are printed 
 #    all:  any debug message will be printed
+# MySQL and Objy debug level (default is none)
 setenv COND_DB_DEBUG none
+# Oracle debug level (default is none)
+setenv CONDDBORACLE_DEBUG none
 
 # Run the application (be sure to start with a new database as you may get 
 # errors if the db was created on a different node)
 source ../cmt/cleanupDB.csh -tag=$CMTDEB
 source ../cmt/setupDB.csh   -tag=$CMTDEB
 ../$CMTDEB/DetCondExample.exe fillCondDB.opts
-
-# Run the application and compare the output to the standard one
-# The database is only filled if empty: the first output is longer
-# Be sure to start with a new database if you want to compare the first output
-source ../cmt/cleanupDB.csh -tag=$CMTDEB
-source ../cmt/setupDB.csh   -tag=$CMTDEB
-/bin/rm -f log.fillCondDB_1.${CMTCONFIG}
-/bin/rm -f log.fillCondDB_2.${CMTCONFIG}
-../$CMTDEB/DetCondExample.exe fillCondDB.opts \
-  | sed "s|$DETCONDEXAMPLEROOT|DETCONDEXAMPLEROOT|" \
-  > log.fillCondDB_1.${CMTCONFIG}
-../$CMTDEB/DetCondExample.exe fillCondDB.opts \
-  | sed "s|$DETCONDEXAMPLEROOT|DETCONDEXAMPLEROOT|" \
-  > log.fillCondDB_2.${CMTCONFIG}
-tkdiff log.fillCondDB_1.${CMTCONFIG} ../job/${CONDDB_implementation}/ &
-tkdiff log.fillCondDB_2.${CMTCONFIG} ../job/${CONDDB_implementation}/ &
 
 ================
 (2b) testCondDB
@@ -184,13 +192,6 @@ tkdiff log.fillCondDB_2.${CMTCONFIG} ../job/${CONDDB_implementation}/ &
 # Be sure to have filled the database using fillCondDB.opts first!
 ../$CMTDEB/DetCondExample.exe testCondDB.opts
 
-# Run the application and compare the output to the standard one
-/bin/rm -f log.testCondDB.${CMTCONFIG}
-../$CMTDEB/DetCondExample.exe testCondDB.opts \
-  | sed "s|$DETCONDEXAMPLEROOT|DETCONDEXAMPLEROOT|" \
-  > log.testCondDB.${CMTCONFIG}
-tkdiff log.testCondDB.${CMTCONFIG} ../job/${CONDDB_implementation}/ &
-
 ================
 (3) daqCondDB
 ================
@@ -198,13 +199,6 @@ tkdiff log.testCondDB.${CMTCONFIG} ../job/${CONDDB_implementation}/ &
 # Run the application
 # You can run this as many times as you like and observe how speed changes
 ../$CMTDEB/DetCondExample.exe daqCondDB.opts
-
-# Run the application and create an output comparable to the standard one
-/bin/rm -f log.daqCondDB.Objy.Linux61
-../$CMTDEB/DetCondExample.exe daqCondDB.opts \
-  | sed "s|$DETCONDEXAMPLEROOT|DETCONDEXAMPLEROOT|" \
-  > log.daqCondDB.${CMTCONFIG}
-tkdiff log.daqCondDB.${CMTCONFIG} ../job/${CONDDB_implementation}/ &
 
 ------------------------------------------------------------------------------
 How to run DetCondExample on lxplus/lxplus7 with the debugger
@@ -214,7 +208,7 @@ How to run DetCondExample on lxplus/lxplus7 with the debugger
 cd ~/newmycmt
 
 # Go to the working directory
-cd Ex/DetCondExample/v4r1/options
+cd Ex/DetCondExample/v4r2/options
 
 # To use the debugger, link one of the three option files to job.opts
 /bin/rm -f job.opts
@@ -244,7 +238,7 @@ How to cleanup the environment on lxplus/lxplus7
 cd ~/newmycmt
 
 # Go to the cmt directory
-cd Ex/DetCondExample/v4r1/cmt
+cd Ex/DetCondExample/v4r2/cmt
 
 # Remove old makefiles and dependencies
 cmt broadcast -select=mycmt '/bin/rm -f *make*'
@@ -265,7 +259,7 @@ How to browse the Oracle DB using SQL commands on lxplus7 (RedHat7.3)
 cd ~/newmycmt
 
 # Go to the cmt directory
-cd Ex/DetCondExample/v4r1/cmt
+cd Ex/DetCondExample/v4r2/cmt
 
 # Setup the environment
 # Remember to also set the four environment variables to access the DB
@@ -306,16 +300,44 @@ on debugging (COND_DB_DEBUG=all), you are likely to get an error like
 How to setup the environment and link DetCondExample under Windows
 ------------------------------------------------------------------------------
 
-# I assume in the following that your release directory is H:\newmycmt
+# I assume in the following that your release directory is I:\newmycmt
 # The following describes how to build and run the example from the DOS prompt
 # Go to your release directory
-cd H:\newmycmt
+cd I:\newmycmt
 
 # Go to the cmt directory
-cd Ex\DetCondExample\v4r1\cmt
+cd Ex\DetCondExample\v4r2\cmt
 
 # Setup the environment
 setup
+
+# On RH7.3 and Windows, setup prompts you to check your DB host, user, password
+# and db name. For instance, this is what I use... except the password :-)
+# Since both CondDBOracle and CondDBMySQL are used, you have to do this twice!
+#-----------
+# On Oracle:
+#-----------
+# - The host (here db9) must correspond to an entry in the tnsnames.ora file
+#   Environment variable TNS_ADMIN defines the search path for tnsnames.ora
+# - The user and password are your Oracle account user and password
+# - The name of the DB can be anything: a DB with that name is created and used
+#   I suggest you stick to MYCONDDB_LINUX and MYCONDDB_WIN32 on Linux/Win
+set CONDDBORACLE_DBHOST=DB9 
+set CONDDBORACLE_DBUSER=AVALASSI
+set CONDDBORACLE_DBPSWD=PASSWORD
+set CONDDBORACLE_DBNAME=MYCONDDB_LINUX
+#-----------
+# On MySQL:
+#-----------
+# - The host is a TCP/IP hostname running a MySQL server.
+# - The user and password are your MySQL account user and password
+# - The name of the DB is a MySQL 'database' on the server (as seen in the
+#   'show databases' or 'use <database>' commands). I suggest you stick 
+#   to test_conddb_linux and test_conddb_win32.
+set CONDDBMYSQL_DBHOST=lxshare070d
+set CONDDBMYSQL_DBUSER=avalassi
+set CONDDBMYSQL_DBPSWD=password
+set CONDDBMYSQL_DBNAME=test_conddb_linux
 
 # Compile and link
 cmt broadcast -select=newmycmt make
@@ -325,10 +347,10 @@ How to run DetCondExample under Windows
 ------------------------------------------------------------------------------
 
 # Go to your release directory
-cd H:\newmycmt
+cd I:\newmycmt
 
 # Go to the working directory
-cd Ex\DetCondExample\v4r1\options
+cd Ex\DetCondExample\v4r2\options
 
 ============
 (1) testXml
@@ -339,16 +361,12 @@ cd Ex\DetCondExample\v4r1\options
 # This sets PATH = %PATH%;%LD_LIBRARY_PATH% to give the path to .dll files
 run DetCondExample testXml.opts
 
-# Run the application and create an output comparable to the standard one
-# NB I use sed302b from http://www.student.northpark.edu/pemente/sed/index.htm
-# NB Use full path rather than %DETCONDEXAMPLEROOT% because sed needs "\\\\"!
-run DetCondExample testXml.opts | sed "s|I:\\\\newmycmt11\\\\Ex\\\\DetCondExample\\\\v4r1\\\\|DETCONDEXAMPLEROOT/|" > log.testXml.%CMTCONFIG%
-
 ================
 (2a) fillCondDB
 ================
 
-# Set the debug level for the CONDDB library. Possible debug levels are:
+# You may set the debug level for the CONDDB libraries. 
+# Possible debug levels are:
 #    none: no message is printed (default)
 #    prof: only print messages which do not disturb profiling measurements
 #    user: only print messages of "general" interest
@@ -356,30 +374,18 @@ run DetCondExample testXml.opts | sed "s|I:\\\\newmycmt11\\\\Ex\\\\DetCondExampl
 #    more: more paranoid messages are printed 
 #    all:  any debug message will be printed
 set COND_DB_DEBUG=none
+set CONDDBORACLE_DEBUG=none
 
-# On RH7.3 and Windows, setup prompts you to update your password.
-# You should actually set ALL of the db host, user, password and name.
-# For instance, this is what I use... except the password :-)
-# - The host (here db9) must correspond to an entry in the tnsnames.ora file
-#   Environment variable TNS_ADMIN defines the search path for tnsnames.ora
-# - The user and password are your Oracle account user and password
-# - The name of the DB can be anything: a DB with that name is created and used
-#   I suggest you stick to MYCONDDB_LINUX and MYCONDDB_WINDOWS on Linux/Win
-set DETCONDEXAMPLE_DBHOST=DB9
-set DETCONDEXAMPLE_DBUSER=AVALASSI
-set DETCONDEXAMPLE_DBNAME=MYCONDDB_WINDOWS
-set DETCONDEXAMPLE_DBPSWD=********
+# To switch from one of the two CondDB implementations to the other, you must:
+set CONDDB_implementation=<implementation>
+..\cmt\setup
 
 # Run the application using the "run" script 
-run DetCondExample fillCondDB.opts
-
-# Run the application and create an output comparable to the standard one
 # The database is only filled if empty: the first output is longer
 # Be sure to start with a new database if you want to compare the first output
 # You do not need to call setupDB.bat again
 ..\cmt\cleanupDB.bat
-run DetCondExample fillCondDB.opts | sed "s|I:\\\\newmycmt11\\\\Ex\\\\DetCondExample\\\\v4r1\\\\|DETCONDEXAMPLEROOT/|" > log.fillCondDB_1.%CMTCONFIG%
-run DetCondExample fillCondDB.opts | sed "s|I:\\\\newmycmt11\\\\Ex\\\\DetCondExample\\\\v4r1\\\\|DETCONDEXAMPLEROOT/|" > log.fillCondDB_2.%CMTCONFIG%
+run DetCondExample fillCondDB.opts
 
 ================
 (2b) testCondDB
@@ -389,9 +395,6 @@ run DetCondExample fillCondDB.opts | sed "s|I:\\\\newmycmt11\\\\Ex\\\\DetCondExa
 # Be sure to have filled the database using fillCondDB.opts first!
 run DetCondExample testCondDB.opts
 
-# Run the application and create an output comparable to the standard one
-run DetCondExample testCondDB.opts | sed "s|I:\\\\newmycmt11\\\\Ex\\\\DetCondExample\\\\v4r1\\\\|DETCONDEXAMPLEROOT/|" > log.testCondDB.%CMTCONFIG%
-
 ================
 (3) daqCondDB
 ================
@@ -400,18 +403,15 @@ run DetCondExample testCondDB.opts | sed "s|I:\\\\newmycmt11\\\\Ex\\\\DetCondExa
 # You can run this as many times as you like and observe how speed changes
 run DetCondExample daqCondDB.opts
 
-# Run the application and create an output comparable to the standard one
-run DetCondExample daqCondDB.opts | sed "s|I:\\\\newmycmt11\\\\Ex\\\\DetCondExample\\\\v4r1\\\\|DETCONDEXAMPLEROOT/|" > log.daqCondDB.%CMTCONFIG%
-
 ------------------------------------------------------------------------------
 How to browse the Oracle database using SQL commands on Windows
 ------------------------------------------------------------------------------
 
 # Go to your release directory
-cd H:\newmycmt
+cd I:\newmycmt
 
 # Go to the cmt directory
-cd Ex\DetCondExample\v4r1\cmt
+cd Ex\DetCondExample\v4r2\cmt
 
 # Setup the environment
 # This sets the path to the DB if you modified the relevant scripts as above
@@ -435,16 +435,16 @@ SQL> alter user <USERNAME> identified by <NEWPASSWORD>;
 SQL> quit;
 
 ------------------------------------------------------------------------------
-How to fill the DB on Windows and read it from RedHat73 (or viceversa)
+How to fill the Oracle DB on Windows and read it from RedHat73 (or viceversa)
 ------------------------------------------------------------------------------
 
 # In the example above, you created a database from Linux, whose name is
 setenv DETCONDEXAMPLE_DBNAME MYCONDDB_LINUX
 # In the Windows example (see README), you created a database whose name is
-set DETCONDEXAMPLE_DBNAME=MYCONDDB_WINDOWS
+set DETCONDEXAMPLE_DBNAME=MYCONDDB_WIN32
 
 # You can run the testCondDB example again on Linux after setting
-setenv DETCONDEXAMPLE_DBNAME MYCONDDB_WINDOWS
+setenv DETCONDEXAMPLE_DBNAME MYCONDDB_WIN32
 # You can compare the output to that in the ../job directory
 ../$CMTDEB/DetCondExample.exe testCondDB.opts \
   | sed "s|$DETCONDEXAMPLEROOT|DETCONDEXAMPLEROOT|" \
@@ -453,11 +453,11 @@ setenv DETCONDEXAMPLE_DBNAME MYCONDDB_WINDOWS
 # You can run the testCondDB example again on Windows after setting
 set DETCONDEXAMPLE_DBNAME=MYCONDDB_LINUX
 # You can compare the output to that in the ..\job directory
-run DetCondExample testCondDB.opts | sed "s|I:\\\\newmycmt11\\\\Ex\\\\DetCondExample\\\\v4r1\\\\|DETCONDEXAMPLEROOT/|" > log.testCondDB.%CMTCONFIG%.%DETCONDEXAMPLE_DBNAME%
+run DetCondExample testCondDB.opts | sed "s|I:\\\\newmycmt11\\\\Ex\\\\DetCondExample\\\\v4r2\\\\|DETCONDEXAMPLEROOT/|" > log.testCondDB.%CMTCONFIG%.%DETCONDEXAMPLE_DBNAME%
 
 # The result of this test is that there are no significant differences
 # between log.testCondDB.Win32Debug.MYCONDDB_LINUX and [...].Win32Debug, or
-# between log.testCondDB.rh73_gcc2952.MYCONDDB_WINDOWS and [...].rh73_gcc2952
+# between log.testCondDB.rh73_gcc2952.MYCONDDB_WIN32 and [...].rh73_gcc2952
 # The only difference is in the standard format to print floats:
 # - on Windows: 1.50000000e+001
 # - on Linux:   1.50000000e+01

@@ -1,4 +1,4 @@
-# $Id: README.nonLHCb,v 1.6 2002-11-26 00:42:10 andreav Exp $
+# $Id: README.nonLHCb,v 1.7 2002-12-04 14:40:51 andreav Exp $
 
 ------------------------------------------------------------------------------
 How to install the code from a non-LHCb account
@@ -8,10 +8,15 @@ The following is a short summary of what you should do from a non-LHCb
 account if you want to use the CondDB example. Mind the order!
 I assume RedHat7.3 Linux (lxplus7) using the csh/tcsh shell.
 
+This may also be useful for anyone in LHCb as it provides a shorter README.
+The only difference is that in LHCb you can use getpack rather than
+get files from ~andreav/public, and you do not need the initial setup.
+
 NB These instructions build everything in a directory I call ${CDBCMT}.
 I assume that this points to ~/newmycmt. If you want to use a different
 area (eg a scratch area for lack of quota...) change the first line!
 
+   # LHCb environment setup
    setenv CDBCMT ${HOME}/newmycmt
    setenv LHCBHOME /afs/cern.ch/lhcb
    setenv LHCBSOFT ${LHCBHOME}/software/NEW
@@ -21,26 +26,50 @@ area (eg a scratch area for lack of quota...) change the first line!
    setenv CMTPATH ${CMTPATH}:${GAUDISOFT}/GAUDI_v11r2
    setenv CMTPATH ${CMTPATH}:${LHCBSOFT}/project/LHCB/LHCB_v11r2
    mkdir ${CDBCMT}
+
+   # Download the code (you can use getpack instead in LHCb!)
    cd ${CDBCMT}
-   tar -xvzf /afs/cern.ch/user/a/andreav/public/DetCondExample_v4r1.tar.gz
-   cd Ex/DetCondExample/v4r1/cmt
+   tar -xvzf /afs/cern.ch/user/a/andreav/public/DetCondExample_v4r2.tar.gz
+   cd Ex/DetCondExample/v4r2/cmt
    cmt broadcast -select=${CDBCMT} cmt config
    cmt config
 
-You may then follow the rest of the instructions in the README file
-(from "How to set the environment and lnk..." onwards). In brief:
+   # Build the code in debug mode
+   cd ${CDBCMT}
    cmt broadcast -select=${CDBCMT} gmake tag=$CMTDEB
    gmake tag=$CMTDEB
+
+   # Setup the example environment
+   # Enter your preferred connection parameters
+   # Enter your prefered implementation
    source setup.csh -tag=$CMTDEB
-   setenv DETCONDEXAMPLE_DBHOST <host> (e.g., DB9)
-   setenv DETCONDEXAMPLE_DBUSER <user>
-   setenv DETCONDEXAMPLE_DBNAME <name> (e.g., MYCONDDB)
-   setenv DETCONDEXAMPLE_DBPSWD <password>
+   setenv CONDDBORACLE_DBHOST DB9 
+   setenv CONDDBORACLE_DBUSER <USER>
+   setenv CONDDBORACLE_DBPSWD <PASSWORD>
+   setenv CONDDBORACLE_DBNAME MYCONDDB_LINUX
+   setenv CONDDBMYSQL_DBHOST lxshare070d
+   setenv CONDDBMYSQL_DBUSER <user>
+   setenv CONDDBMYSQL_DBPSWD <password>
+   setenv CONDDBMYSQL_DBNAME test_conddb_linux
+   setenv CONDDB_implementation <implementation>
+   source setup.csh -tag=$CMTDEB
+
+   # Run the examples once
    cd ../options
    ../$CMTDEB/DetCondExample.exe testXml.opts
    ../$CMTDEB/DetCondExample.exe fillCondDB.opts
    ../$CMTDEB/DetCondExample.exe testCondDB.opts
    ../$CMTDEB/DetCondExample.exe daqCondDB.opts
+
+   # If you want to create output comparable to that released just do
+   cd ../job
+   ./RunTests.csh
+   ./DiffAllTests.csh
+
+   # If you have also created databases on Windows you may also
+   cd ../job
+   ./RunMixedTest.csh
+   ./DiffAllTests.csh
   
 ==============================================================================
 

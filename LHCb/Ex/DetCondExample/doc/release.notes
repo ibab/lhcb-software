@@ -1,6 +1,29 @@
-#$Id: release.notes,v 1.24 2002-12-02 11:37:05 andreav Exp $
+#$Id: release.notes,v 1.25 2002-12-04 14:40:51 andreav Exp $
 Package Ex/DetCondExample
 Package manager : Andrea Valassi 
+
+==============================================================================
+!20021203 - Andrea Valassi
+Include the MySQL implementation for both RH73 and WIN32.
+- DetCond v4r2 on RH73/WIN32 depends on both Oracle and MySQL implementations
+- Implementation is read at runtime from the job options (condDB.opts)
+  > ConditionsDBGate.condDBImpl = one of CondDBObjy, CondDBOracle, CondDBMySQL
+  > in this package it is an environment variable that must be set by hand
+    - except for Objy where it is still inherited (no ambiguities on RH61)
+- Move DB connection setup for Oracle/MySQL to base packages
+- Rename cleanupDB as dropDB scripts and remove them from requirements
+  > it only makes sense for Objy that will soon be discontinued
+- SQL scripts for Oracle are still here, those for MySQL are in base package
+  > those for CondDBOracle should also be moved in the base package
+- Distribute new sample output logfiles
+  > repackaged by platform and by technology
+  > distribute twice the Xml examples even if technology-independent
+  > update all scripts so that they are easier to run
+- Updated documentation
+  > README (but there may still be bits and pieces missing)
+  > README.nonLHCb provides non-LHCb info in a short form
+    It may be useful also for anyone in LHCb to get started in brief
+Requirements v4r2, private tag h20021203
 
 ==============================================================================
 !20021201 - Andrea Valassi

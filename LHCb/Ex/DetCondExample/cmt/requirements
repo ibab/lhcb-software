@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.16 2002-12-03 17:34:21 andreav Exp $
+# $Id: requirements,v 1.17 2002-12-04 14:40:51 andreav Exp $
 package DetCondExample
 version v4r2
 
@@ -36,14 +36,19 @@ path_append PATH ${DETCONDEXAMPLEROOT}/sql
 # Path to the shared libraries in the bin directory
 path_append LD_LIBRARY_PATH ${DETCONDEXAMPLEROOT}/${BINDIR}
 
-# Set the debug level for the CONDDB library. Possible debug levels are:
+# Set the debug level for the CONDDB libraries. 
+# Possible debug levels are:
 #    none: no message is printed (default)
 #    prof: only print messages which do not disturb profiling measurements
 #    user: only print messages of "general" interest
 #    devl: also print messages of interest only for the package developer
 #    more: more paranoid messages are printed 
 #    all:  any debug message will be printed
+# Objy debug level (no default set in package CONDDB)
+# MySQL debug level (override values set in package CondDBMYSQL)
 set COND_DB_DEBUG none
+# Oracle debug level (override values set in package CondDBOracle)
+set CONDDBORACLE_DEBUG none
 
 #==================================================================
 private
