@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.209 2004-11-19 17:03:03 pkoppenb Exp $
+# $Id: requirements,v 1.210 2004-11-23 07:36:34 pkoppenb Exp $
 # Created    : 07/02/2002
 # Maintainer : P. Koppenburg
 #
@@ -43,6 +43,8 @@ use LHCb                v16r4
 # DaVinciSys v12r5
 #=======================================================
 
+use  Tampering                  v0r5     Phys
+
 # L0 Trigger packages
 use  L0DU               	v6r7p2   L0
 use  L0Calo             	v7r6     L0
@@ -78,7 +80,7 @@ use  RecoTools          	v1r1     Rec
 use  TrExtrapolator     	v2r14    Tr
 
 use  LoKi               	v3r6     Tools  
-use  LoKiHlt             	v1r1p1   Tools  
+use  LoKiHlt             	v2r0     Tools  
 
 # Reconstruction tools 
 use  Utilities          	v1r12    Tools
