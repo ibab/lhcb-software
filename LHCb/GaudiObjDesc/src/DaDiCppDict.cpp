@@ -1,4 +1,4 @@
-// $Id: DaDiCppDict.cpp,v 1.7 2001-10-18 11:47:23 mato Exp $
+// $Id: DaDiCppDict.cpp,v 1.8 2001-10-18 13:36:33 mato Exp $
 
 #include "GaudiKernel/Kernel.h"
 
@@ -401,6 +401,32 @@ void DDBEdict::printCppDictionary(DaDiPackage* gddPackage, char* envXmlDB, char*
     << gddClass->className().transcode() << "_dict();" << std::endl << "};" << std::endl
     << std::endl;
 
+
+//
+// static methods for invocation (Workaround)
+//
+  for (int i=0; i<gddClass->sizeDaDiMethod(); ++i)
+  {
+    DaDiMethod* gddMethod = gddClass->popDaDiMethod();
+
+    std::string ret_att = gddMethod->daDiMethReturn()->type().transcode();
+
+    if ( ((ret_att == "bool") || (ret_att == "double")) && (gddMethod->sizeDaDiMethArgument() == 0))
+    {
+      metaOut << "static bool MetaC_" << gddMethod->name().transcode() 
+        << "(void* v) { return ((" << gddClass->className().transcode() 
+        << "*)v)->" << gddMethod->name().transcode() << "(); }" << std::endl;
+    }
+
+    if ((ret_att == "bool") && (gddMethod->sizeDaDiMethArgument() == 1) &&
+      (strcmp(gddMethod->popDaDiMethArgument()->type().transcode(),"std::string") == 0))
+    {
+      metaOut << "static bool MetaC_" << gddMethod->name().transcode() 
+        << "(void* v, std::string s) { return ((" << gddClass->className().transcode() 
+        << "*)v)->" << gddMethod->name().transcode() << "(s); }" << std::endl;
+    }   
+  }
+
 //
 // Instance of class
 //
@@ -456,6 +482,26 @@ void DDBEdict::printCppDictionary(DaDiPackage* gddPackage, char* envXmlDB, char*
       << "\", \"" << gddRelation->desc().transcode() << "\", &(("
       << gddClass->className().transcode() << "*)0)->m_" << gddRelation->name().transcode()
       << ", metaC);" << std::endl << std::endl;
+  }
+
+
+//
+// Add methods to MetaModel (Workaround)
+//
+  for (int j=0; j<gddClass->sizeDaDiMethod(); ++j)
+  {
+    DaDiMethod* gddMethod = gddClass->popDaDiMethod();
+
+    std::string ret_att = gddMethod->daDiMethReturn()->type().transcode();
+
+    if ( ((ret_att == "bool") || (ret_att == "double")) && (gddMethod->sizeDaDiMethArgument() == 0) ||
+      ((ret_att == "bool") && (gddMethod->sizeDaDiMethArgument() == 1) &&
+      (strcmp(gddMethod->popDaDiMethArgument()->type().transcode(),"std::string") == 0)) )
+    {
+      metaOut << "    metaC->addMethod(\"" << gddMethod->name().transcode() 
+        << "\", \"" << gddMethod->desc().transcode() << "\", MetaC_" 
+        << gddMethod->name().transcode() << ");" << std::endl;
+    }
   }
 
 
