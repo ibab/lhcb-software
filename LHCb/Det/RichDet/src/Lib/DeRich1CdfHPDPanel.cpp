@@ -7,8 +7,11 @@
  *  one less HPD than even columns
  *
  *  CVS Log :-
- *  $Id: DeRich1CdfHPDPanel.cpp,v 1.21 2004-10-21 08:55:42 jonrob Exp $
+ *  $Id: DeRich1CdfHPDPanel.cpp,v 1.22 2004-10-27 14:18:04 jonrob Exp $
  *  $Log: not supported by cvs2svn $
+ *  Revision 1.21  2004/10/21 08:55:42  jonrob
+ *  minor update
+ *
  *  Revision 1.20  2004/10/20 22:41:55  jonrob
  *  Tidy up inline and virtual functions (whilst solving a windows problem)
  *
@@ -66,12 +69,11 @@ StatusCode DeRich1CdfHPDPanel::initialize() {
 
   StatusCode sc = StatusCode::FAILURE;
 
-  MsgStream log(msgSvc(), "DeRich1CdfHPDPanel" );
-  log << MSG::VERBOSE <<"Starting initialisation of DeRich1CdfHPDPanel"
-      << endreq;
-  this->printOut(log);
-
   if ( !DeRichHPDPanel::initialize() ) return sc;
+
+  MsgStream log(msgSvc(), myName() );
+  log << MSG::VERBOSE <<"Starting initialisation of " << myName() << endreq;
+  this->printOut(log);
 
   // specific initialization for Rich1CdfHPDPanel
   // the number of rows (m_HPDRows) in this panel is 2*rows-1
@@ -114,8 +116,7 @@ StatusCode DeRich1CdfHPDPanel::initialize() {
       << "  m_detPlaneVertEdge:" <<  m_detPlaneVertEdge
       << endreq;
 
-  log << MSG::DEBUG <<"Finished initialisation for DeRich1CdfHPDPanel "
-      << m_name <<endreq;
+  log << MSG::DEBUG << "Finished initialisation" << endreq;
   return StatusCode::SUCCESS;
 }
 

@@ -4,6 +4,9 @@
 ! Purpose     : interface to the xml description
 !-----------------------------------------------------------------------------
 
+! 2004-10-27 - Chris Jones
+ - Some additions minor changes to functions
+
 ! 2004-10-20 - Chris Jones
  - Tidy up inline and virtual functions (whilst solving a windows problem)
 

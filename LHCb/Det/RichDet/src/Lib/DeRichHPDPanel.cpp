@@ -4,8 +4,11 @@
  *  Implementation file for detector description class : DeRichHPDPanel
  *
  *  CVS Log :-
- *  $Id: DeRichHPDPanel.cpp,v 1.20 2004-10-21 14:52:53 jonrob Exp $
+ *  $Id: DeRichHPDPanel.cpp,v 1.21 2004-10-27 14:18:04 jonrob Exp $
  *  $Log: not supported by cvs2svn $
+ *  Revision 1.20  2004/10/21 14:52:53  jonrob
+ *  minor update
+ *
  *  Revision 1.19  2004/10/20 22:41:55  jonrob
  *  Tidy up inline and virtual functions (whilst solving a windows problem)
  *
@@ -47,17 +50,14 @@ DeRichHPDPanel::~DeRichHPDPanel() {}
 //=========================================================================
 StatusCode DeRichHPDPanel::initialize() {
 
-  MsgStream log(msgSvc(), "DeRichHPDPanel" );
-
   // store the name of the panel, without the /dd/Structure part
   const std::string::size_type pos = name().find("Rich");
   if ( std::string::npos != pos ) {
     m_name = name().substr(pos);
-  }
-  else
-    m_name = "NO_NAME";
+  } else { m_name = "DeRichHPDPanel_NO_NAME"; }
 
-  log << MSG::DEBUG <<"Initializing " << m_name << endreq;
+  MsgStream log ( msgSvc(), myName() );
+  log << MSG::DEBUG << "Initializing base class" << endreq;
 
   SmartDataPtr<DetectorElement> deRich1(dataSvc(), DeRichLocation::Rich1);
   m_pixelSize = deRich1->userParameterAsDouble("RichHpdPixelXsize");
@@ -176,15 +176,33 @@ StatusCode DeRichHPDPanel::initialize() {
   m_detPlaneZdiff = m_winR - sqrt( m_winRsq - m_activeRadiusSq );
   m_localPlane2.transform(HepTranslateZ3D(m_detPlaneZdiff));
   m_localPlaneNormal2 = m_localPlane2.normal();
-  //  std::cout << "m_localPlane2" << m_localPlane2 << std::endl;
 
   // Cache information for PDWindowPoint method
   m_vectorTransf = geometry()->matrix();
   m_HPDPanelSolid = geometry()->lvolume()->solid();
 
+  // Cache HPD information
+  m_pvHPDMaster.clear();
+  m_pvHPDSMaster.clear();
+  m_pvSilicon.clear();
+  m_pvWindow.clear();
+  m_HPDCentres.clear();
   for ( unsigned int HPD = 0; HPD < PDMax(); ++HPD ) {
     const IPVolume* pvHPDMaster = geometry()->lvolume()->pvolume(HPD);
+    if ( !pvHPDMaster ) { log << MSG::ERROR << "Failed to access HPDMaster" << endreq; return  StatusCode::FAILURE; }
+    const IPVolume* pvHPDSMaster = pvHPDMaster->lvolume()->pvolume(0);
+    if ( !pvHPDSMaster ) { log << MSG::ERROR << "Failed to access HPDSMaster" << endreq; return  StatusCode::FAILURE; }
+    const IPVolume* pvWindow = pvHPDSMaster->lvolume()->pvolume(2);
+    if ( !pvWindow ) { log << MSG::ERROR << "Failed to access HPDWindow" << endreq; return  StatusCode::FAILURE; }
+    const IPVolume* pvSilicon = pvHPDSMaster->lvolume()->pvolume(4);
+    if ( !pvSilicon ) { log << MSG::ERROR << "Failed to access HPDSilicon" << endreq; return  StatusCode::FAILURE; }
+    m_pvHPDMaster.push_back( pvHPDMaster );
+    m_pvHPDSMaster.push_back( pvHPDSMaster );
+    m_pvSilicon.push_back( pvSilicon );
+    m_pvWindow.push_back( pvWindow );
     m_HPDCentres.push_back( pvHPDMaster->toMother(zero) );
+    m_trans1.push_back( geometry()->matrixInv() * pvHPDMaster->matrixInv() * pvHPDSMaster->matrixInv() * pvWindow->matrixInv() );
+    m_trans2.push_back( pvSilicon->matrix() * pvHPDSMaster->matrix() * pvHPDMaster->matrix() );
   }
 
   log << MSG::DEBUG << "Finished initialization" << endreq;
@@ -204,12 +222,10 @@ StatusCode DeRichHPDPanel::smartID ( const HepPoint3D& globalPoint,
   if ( !findHPDRowCol(inPanel, id) ) return StatusCode::FAILURE;
 
   const unsigned int HPDNumber = HPDRowColToNum(id.PDRow(), id.PDCol());
-  const IPVolume* pvHPDMaster = geometry()->lvolume()->pvolume(HPDNumber);
-  const IPVolume* pvHPDSMaster = pvHPDMaster->lvolume()->pvolume(0);
-  const IPVolume* pvSilicon = pvHPDSMaster->lvolume()->pvolume(4);
 
-  const HepPoint3D inSilicon =
-    pvSilicon->toLocal(pvHPDSMaster->toLocal(pvHPDMaster->toLocal(inPanel)));
+  //const HepPoint3D inSilicon =
+  //  m_pvSilicon[HPDNumber]->toLocal(m_pvHPDSMaster[HPDNumber]->toLocal(m_pvHPDMaster[HPDNumber]->toLocal(inPanel)));
+  const HepPoint3D inSilicon = m_trans2[HPDNumber] * inPanel;
 
   double inSiliconX = inSilicon.x();
   double inSiliconY = inSilicon.y();
@@ -226,9 +242,9 @@ StatusCode DeRichHPDPanel::smartID ( const HepPoint3D& globalPoint,
 
   if ( (fabs(inSiliconX) > m_siliconHalfLengthX) ||
        (fabs(inSiliconY) > m_siliconHalfLengthY)    ) {
-    MsgStream log(msgSvc(), m_name );
+    MsgStream log ( msgSvc(), myName() );
     log << MSG::ERROR << "Point " << inSilicon << " is outside the silicon box "
-        << pvHPDMaster->name() << endreq;
+        << m_pvHPDMaster[HPDNumber]->name() << endreq;
     return StatusCode::FAILURE;
   }
 
@@ -253,16 +269,10 @@ StatusCode DeRichHPDPanel::smartID ( const HepPoint3D& globalPoint,
 //=========================================================================
 //  convert a smartID to a point on the inside of the HPD window
 //=========================================================================
-StatusCode DeRichHPDPanel::detectionPoint ( const RichSmartID& smartID,
-                                            HepPoint3D& windowHitGlobal ) const
+HepPoint3D DeRichHPDPanel::detectionPoint ( const RichSmartID& smartID ) const
 {
 
   const unsigned int HPDNumber = HPDRowColToNum(smartID.PDRow(),smartID.PDCol());
-
-  // find the correct HPD and silicon block inside it
-  const IPVolume* pvHPDMaster = geometry()->lvolume()->pvolume(HPDNumber);
-  const IPVolume* pvHPDSMaster = pvHPDMaster->lvolume()->pvolume(0);
-  const IPVolume* pvWindow = pvHPDSMaster->lvolume()->pvolume(2);
 
   // convert pixel number to silicon coordinates
   const double inSiliconX = smartID.pixelCol() * m_pixelSize+m_pixelSize/2.0 -
@@ -274,15 +284,15 @@ StatusCode DeRichHPDPanel::detectionPoint ( const RichSmartID& smartID,
   const double inWindowY = -inSiliconY / m_deMagFactor[0];
   const double inWindowZ = sqrt(m_winRsq-inWindowX*inWindowX-inWindowY*inWindowY);
 
-  windowHitGlobal =
-    geometry()->toGlobal(pvHPDMaster->
-                         toMother(pvHPDSMaster->
-                                  toMother(pvWindow->
-                                           toMother(HepPoint3D(inWindowX, 
-                                                               inWindowY, 
-                                                               inWindowZ)))));
+  //return
+  //  geometry()->toGlobal(m_pvHPDMaster[HPDNumber]->
+  //                       toMother(m_pvHPDSMaster[HPDNumber]->
+  //                                toMother(m_pvWindow[HPDNumber]->
+  //                                         toMother(HepPoint3D(inWindowX,
+  //                                                             inWindowY,
+  //                                                             inWindowZ)))));
+  return m_trans1[HPDNumber] * HepPoint3D(inWindowX,inWindowY,inWindowZ);
 
-  return StatusCode::SUCCESS;
 }
 
 
@@ -365,10 +375,12 @@ StatusCode DeRichHPDPanel::PDWindowPoint( const HepVector3D& vGlobal,
     HPDNumber = HPDRowColToNum(HPDRow, HPDColumn);
 
     // find the correct HPD and quartz window inside it
-    pvHPDMaster = geometry()->lvolume()->pvolume(HPDNumber);
+    //pvHPDMaster = geometry()->lvolume()->pvolume(HPDNumber);
+    pvHPDMaster = m_pvHPDMaster[HPDNumber];
+
     // just in case
     if ( !pvHPDMaster ) {
-      MsgStream log(msgSvc(), m_name );
+      MsgStream log(msgSvc(), myName() );
       log << MSG::ERROR << "Inappropriate HPDNumber:" << HPDNumber
           << " from HPDRow:" << id.PDRow() << " and HPDColumn:" << id.PDCol()
           << " please notify Antonis" << endreq
@@ -377,13 +389,15 @@ StatusCode DeRichHPDPanel::PDWindowPoint( const HepVector3D& vGlobal,
       return StatusCode::FAILURE;
     }
 
-    pvHPDSMaster = pvHPDMaster->lvolume()->pvolume(0);
-    pvWindow = pvHPDSMaster->lvolume()->pvolume(2);
+    //pvHPDSMaster = pvHPDMaster->lvolume()->pvolume(0);
+    pvHPDSMaster = m_pvHPDSMaster[HPDNumber];
+    //pvWindow = pvHPDSMaster->lvolume()->pvolume(2);
+    pvWindow = m_pvWindow[HPDNumber];
     windowSolid = pvWindow->lvolume()->solid();
 
     // convert point to local coordinate systems
-    pInWindow = pvWindow->toLocal(pvHPDSMaster->toLocal(pvHPDMaster->
-                                                        toLocal(pLocal)));
+    pInWindow = pvWindow->toLocal(pvHPDSMaster->toLocal(pvHPDMaster->toLocal(pLocal)));
+
     // convert local vector assuming that only the HPD can be rotated
     const HepTransform3D & vectorTransfHPD = pvHPDMaster->matrix();
     vInHPDMaster = vLocal;
@@ -414,7 +428,6 @@ StatusCode DeRichHPDPanel::PDWindowPoint( const HepVector3D& vGlobal,
   smartID.setPDCol( HPDColumn );
 
   return StatusCode::SUCCESS;
-
 }
 
 

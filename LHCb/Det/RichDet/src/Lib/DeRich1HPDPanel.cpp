@@ -4,8 +4,11 @@
  *  Implementation file for detector description class : DeRich1HPDPanel
  *
  *  CVS Log :-
- *  $Id: DeRich1HPDPanel.cpp,v 1.19 2004-10-21 08:55:42 jonrob Exp $
+ *  $Id: DeRich1HPDPanel.cpp,v 1.20 2004-10-27 14:18:04 jonrob Exp $
  *  $Log: not supported by cvs2svn $
+ *  Revision 1.19  2004/10/21 08:55:42  jonrob
+ *  minor update
+ *
  *  Revision 1.18  2004/10/20 22:41:55  jonrob
  *  Tidy up inline and virtual functions (whilst solving a windows problem)
  *
@@ -59,11 +62,11 @@ StatusCode DeRich1HPDPanel::initialize() {
 
   StatusCode sc = StatusCode::SUCCESS;
 
-  MsgStream log(msgSvc(), "DeRich1HPDPanel" );
-  log << MSG::VERBOSE <<"Starting initialisation of DeRich1HPDPanel" << endreq;
-  this->printOut(log);
-
   if ( !DeRichHPDPanel::initialize() ) return StatusCode::FAILURE;
+
+  MsgStream log(msgSvc(), myName() );
+  log << MSG::VERBOSE <<"Starting initialisation of " << myName() << endreq;
+  this->printOut(log);
 
   // specific initialization for Rich1HPDPanel
   m_columnPitch = m_HPD1Centre.x() - m_HPD0Centre.x();
@@ -100,7 +103,7 @@ StatusCode DeRich1HPDPanel::initialize() {
       << " m_detPlaneHorizEdge:" << m_detPlaneHorizEdge
       << endreq;
 
-  log << MSG::DEBUG <<"Finished initialisation for DeRich1HPDPanel"<< endreq;
+  log << MSG::DEBUG << "Finished initialisation" << endreq;
 
   return sc;
 }

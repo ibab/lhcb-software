@@ -4,8 +4,11 @@
  *  Header file for detector description class : DeRichHPDPanel
  *
  *  CVS Log :-
- *  $Id: DeRichHPDPanel.h,v 1.20 2004-10-20 22:41:54 jonrob Exp $
+ *  $Id: DeRichHPDPanel.h,v 1.21 2004-10-27 14:18:04 jonrob Exp $
  *  $Log: not supported by cvs2svn $
+ *  Revision 1.20  2004/10/20 22:41:54  jonrob
+ *  Tidy up inline and virtual functions (whilst solving a windows problem)
+ *
  *  Revision 1.19  2004/10/20 17:02:44  jonrob
  *  Updates for windows
  *
@@ -90,6 +93,7 @@ public:
 
   /**
    * This is where most of the geometry is read and variables initialised
+   *
    * @return Status of initialisation
    * @retval StatusCode::FAILURE Initialisation failed, program should
    * terminate
@@ -101,6 +105,7 @@ public:
    * Retrieves the detection plane of the HPD panel. The plane is defined
    * at the top of the HPDs (a plane resting on the HPDs "touching" the
    * INSIDE surface of the window).
+   *
    * @return The detection plane
    */
   inline const HepPlane3D & detectionPlane() const
@@ -111,6 +116,7 @@ public:
   /**
    * Returns the offset (y in Rich1, x in Rich2) so that the two panels of
    * each detector appear side-by-side using the globalToPanel method.
+   *
    * @return The offset for the globalToPanel method
    */
   virtual const double localOffset() const = 0;
@@ -120,6 +126,9 @@ public:
    * Converts a HepPoint3D in global coordinates to a RichSmartID.
    * The point is assumed to be on the actual detection volume
    * (silicon pixel sensor).
+   *
+   * @param globalPoint The point in global coordinates
+   * @param id          The RichSmartID for the given point
    *
    * @return Status of conversion
    * @retval StatusCode::FAILURE Point outside silicon pixel sensor
@@ -131,26 +140,24 @@ public:
    * Converts a RichSmartID to a point in global coordinates. The point is
    * given on the inside of the HPD window, on the photocathode.
    *
-   * @return Status of conversion
+   * @return The detection point in global coordinates
    */
-  virtual StatusCode detectionPoint( const RichSmartID& smartID,
-                                     HepPoint3D& windowHitGlobal ) const;
+  virtual HepPoint3D detectionPoint( const RichSmartID& smartID ) const;
+
   /**
    * Returns the intersection point with an HPD window given a vector
    * and a point. With the "circle" option a quick check is performed
    * to test if there would be an intersection with a flat circle instead
    * of the HPD window.
    *
-   * @param vGlobal  A vector in global coordinates used for direction
-   * @param pGlobal  A point in global coordinates
-   * @param windowPointGlobal The returned intersection point
+   * @param vGlobal  The intersection direction
+   * @param pGlobal  The intersection start point
+   * @param windowPointGlobal The return point on the HPD window
    * @param smartID  The returned smartID with hit HPD info
-   * @param mode     The ray tracing mode configuration
+   * @param mode The ray-tracing configuration mode
    *
    * @return Status of intersection
-   * @retval StatusCode::FAILURE Intersection failed, as defined by mode
    */
-
   virtual StatusCode PDWindowPoint( const HepVector3D& vGlobal,
                                     const HepPoint3D& pGlobal,
                                     HepPoint3D& windowPointGlobal, // return
@@ -161,6 +168,11 @@ public:
    * Returns the intersection point with the detector plane given a vector
    * and a point. If mode is tight, returns true only if point is within
    * the detector coverage.
+   *
+   * @param vGlobal  The intersection direction
+   * @param pGlobal  The intersection start point
+   * @param hitPosition The intersection point on the HPD plane
+   * @param mode The ray-tracing configuration mode
    *
    * @return Intersection status
    * @retval false Intersection fell outside acceptance, as defined by mode
@@ -175,6 +187,8 @@ public:
    * photodetector panel. The local coordinate system is shifted to allow
    * placing panels side by side
    *
+   * @param globalPoint The point in global coordinates
+   *
    * @return Local (panel) point
    */
   virtual HepPoint3D globalToPDPanel( const HepPoint3D& globalPoint ) const;
@@ -183,6 +197,9 @@ public:
   /**
    * Returns the global position given a local position and panel number.
    * Assumes a shifted panel as previous method
+   *
+   * @param localPoint The point in local coordinates
+   * @param side The detector side
    *
    * @return Global point.
    */
@@ -194,11 +211,11 @@ public:
    * Returns a list with all the available readout channels, in form of
    * RichSmartIDs.
    *
-   * @return Status
+   * @param readoutChannels Vector of valid pixel IDs
+   *
+   * @return Status code
    */
-  virtual StatusCode readoutChannelList( std::vector<RichSmartID>&
-                                         readoutChannels ) const;
-
+  virtual StatusCode readoutChannelList( std::vector<RichSmartID>& readoutChannels ) const;
 
 protected:
 
@@ -245,11 +262,17 @@ protected:
    * Finds the HPD row and column that corresponds to the x,y coordinates
    * of a point in the panel. The row and column are retuned in the smartID.
    *
-   * @returns Status
+   * @return Status of request
    * @retval true   HPD is found
    * @retval false  The point is outside the coverage of the HPDs.
    */
   virtual bool findHPDRowCol(const HepPoint3D& inPanel, RichSmartID& id) const = 0;
+
+  /** Returns the name of this particular HPD panel
+   *  @return HPD panel name
+   */
+  inline const std::string & myName() const { return m_name; }
+
 
   // data
 
@@ -318,6 +341,16 @@ protected:
   double m_detPlaneVertEdge;      ///< Vertical (y) edge of HPD coverage in the panel
 
   HepTransform3D m_vectorTransf;  ///< Transform from global to panel coordinates
+
+private:
+
+  std::vector<const IPVolume*> m_pvHPDMaster;
+  std::vector<const IPVolume*> m_pvHPDSMaster;
+  std::vector<const IPVolume*> m_pvSilicon;
+  std::vector<const IPVolume*> m_pvWindow;
+  std::vector<HepTransform3D> m_trans1;
+  std::vector<HepTransform3D> m_trans2;
+
 
 };
 
