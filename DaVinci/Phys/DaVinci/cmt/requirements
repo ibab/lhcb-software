@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.199 2004-11-09 15:38:11 pkoppenb Exp $
+# $Id: requirements,v 1.200 2004-11-12 16:35:24 pkoppenb Exp $
 # Created    : 07/02/2002
 # Maintainer : P. Koppenburg
 #
@@ -21,9 +21,6 @@ apply_pattern DaVinciVersion
 #============================================================================
 
 #-- External libraries now taken from LCG, version defined by GaudiEnv
-
-macro_remove ROOT_native_version "3.10.02"
-macro_append ROOT_native_version "3.10.02_0411"
 
 #-- Gaudi libraries
 use GaudiSys            v*
@@ -57,8 +54,6 @@ use  L0MuonKernel 		v2r1p1   L0
 use  L0MuonTrigger 		v2r2     L0
 use  L0mConf            	v2r2p3   L0
 
-use  HltGeneric                 v2r0     Hlt
-
 # Enable neutral ProtoParticles production and CaloPIDs
 use  CaloPIDs           	v2r4     Calo 
 use  CaloReco           	v2r6     Calo
@@ -71,7 +66,7 @@ use  PrimVtx            	v2r1p1   Rec
 use  RecoTools          	v1r1     Rec
 
 # Utility tools
-use  TrExtrapolator     	v2r13p1  Tr
+use  TrExtrapolator     	v2r13    Tr
 
 use  LoKi               	v3r5p1   Tools  
 use  LoKiHlt             	v1r1p1   Tools  
@@ -81,10 +76,9 @@ use  Utilities          	v1r11p1  Tools
 
 # Physics packages
 use  CommonParticles    	v1r5p3   Phys
-use  DaVinciFilter      	v1r3     Phys
-use  DaVinciKernel      	v2r1     Phys
-use  DaVinciTools       	v11r2    Phys
-use  DaVinciUser        	v5r1p2   Phys
+use  DaVinciFilter      	v1r2     Phys
+use  DaVinciKernel      	v2r0     Phys
+use  DaVinciTools       	v11r1    Phys
 use  FlavourTagging     	v5r3     Phys
 use  Ks2PiPiSel         	v1r4p1   Phys
 use  ParticleMaker      	v1r1     Phys
@@ -96,7 +90,8 @@ use  VertexFit			v1r1     Phys
 use  DaVinciAssociators 	v5r2     Phys
 use  DaVinciEff         	v3r1     Phys
 use  DaVinciMCTools     	v5r6     Phys
-use  DaVinciTest        	v5r2     Phys
+use  DaVinciTest        	v5r3     Phys
+use  DaVinciUser        	v5r2     Phys
 
 # Stripping
 use  Stripping          	v1r5p2   Tools

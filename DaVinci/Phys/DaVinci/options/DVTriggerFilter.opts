@@ -35,7 +35,7 @@ PassedL1.OutputLevel = 2 ;
 //#include "$TRGSYSROOT/options/TrgChecking.opts"  
 //--------------------------------------------------------------
 #include "$DAVINCIROOT/options/DstContent.opts"
-DstWriter.RequireAlgs  = { "L0L1Seq", "HltGenericDecision" } ;
+DstWriter.RequireAlgs  = { "L0L1Seq" } ;
 DstWriter.Preload  = false ;
 DstWriter.Output = "DATAFILE='L0L1Accepted.dst' TYP='POOL_ROOTTREE' OPT='RECREATE'" ;
 //DstWriter.OutputLevel = 1 ;

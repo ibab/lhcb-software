@@ -9,6 +9,7 @@
 New packages:
 TrgSys              v1r0
 TrgEvent            v5r0    Event
+TrgCalo             v1r0    Trg
 
 Modified packages:
 DaVinci             v12r4   Phys   
@@ -24,7 +25,6 @@ TrgForward          v4r0    Trg
 TrgMonitor          v4r0    Trg
 TrgMuonID           v3r0    Trg
 TrgPrimVertex       v4r0    Trg
-TrgCalo             v1r0    Trg
 Stripping           v1r5p2  Tools
 PhysSelSys          v7r12   PhysSel
 B2HH                v2r4p2  PhysSel

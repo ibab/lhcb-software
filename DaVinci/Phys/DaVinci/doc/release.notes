@@ -3,6 +3,269 @@ Package     : Phys/DaVinci
 Package Coordinator : Patrick Koppenburg
 Purpose     : LHCb analysis program 
 
+</PRE><H1><A NAME=v12r4>2004-11-12 DaVinci v12r4 - updated version for DC04 stripping</A></H1><PRE>
+
+ Release for stripping production with updated trigger
+
+
+################################################################################
+#                               DAVINCI v12r4                                  #
+################################################################################
+##################################### CALO #####################################
+##################################### EVENT ####################################
+!========================== TrgEvent v5r0 2004-11-12 ===================
+! 2004-10-20 - Olivier Callot
+ - Remove the inheritance from TrgVertex to (PhysEvent) Vertex. 
+ - Add new bitfields to TrgTrack to hold 'backward', 'RSector' and 
+   'vertexNumber' information, used in pattern recognition
+ - The type of the TrgTrack is defined in an enum.
+
+! 2004-10-20 - Cristina Carloganu
+ - New class TrgCaloCluster.
+
+! 2004-10-18 - Olivier Callot
+ - Add new TrgTrack container names to separate L1 and Hlt tracks.
+###################################### L0 ######################################
+##################################### PHYS #####################################
+!========================== DaVinciTest v5r3 2004-11-12 ===================
+! 2004-11-11 - P. Koppenburg
+  - options/DVTestPhysDesktop.opts
+  - options/GammaAnalysis.opts
+  - src/GammaCheck.cpp
+  - src/GammaCheck.h
+  - src/TestPhysDesktop.cpp
+  - src/TestPhysDesktop.h
+    . Removed as they irremediably obsolete
+  - src/TestDebugTool.cpp
+  - src/TestDebugTool.h
+  - src/TestDecayFinder.cpp
+  - src/TestDecayFinder.h
+  - src/TestGeomDispCalculator.cpp
+  - src/TestMassVertexFitter.cpp
+  - src/TestOverlap.cpp
+  - src/TestParticleStuffer.cpp
+  - src/TestTransporter.cpp
+  - src/TestUnconsVertexFitter.cpp
+    . Make DVAlgorithms or GaudiAlgorithms    
+    . Adapt to get<> tool<> methods
+    . Use info(), debug()
+!========================== DaVinciUser v5r2 2004-11-12 ===================
+! 2004-11-08- P. Koppenburg
+ - UserAlgorithm.cpp
+   . Small changes.
+! 2004-11-04- P. Koppenburg
+ - src/UserAlgorithm.cpp
+   . Adapt to GaudiAlgorithm. But not yet to GaudiTupleAlg...
+! 2004-11-04- P. Koppenburg
+ - */LoopOnCharged.*
+   . Rename to LoopOnParticles.*
+   . Adapt names accordingly
+ - src/LoopOnParticles.{h,cpp}
+   . Adapt to use the new features of DVAlgorithm inherited from
+     GaudiAlgorithm and GaudiTupleAlg.
+#################################### PHYSSEL ###################################
+!========================== B2HH v2r4p2 2004-11-12 ===================
+! 2004-10-29 - P. Koppenburg
+  - options/{Do,DV}???sel*.opts
+    . Move "PreLoadParticles/Combined" from Do* file to DV* file so
+      that it is not executed several times in HLT tests.
+!========================== B2RhoRho v1r7p2 2004-11-12 ===================
+! 2004-11-12 - P. Koppenburg for O. Deschamps
+ - src/PreselBd2Rho0Rho0.cpp
+   . Replace B0 by B+. Bug noticed by Krzysztof.
+! 2004-11-11 - P. Koppenburg
+ - src/Bu2RhoRho0.cpp
+   . Removed loadTools() method.
+!========================== Bd2D0Kstar v4r3p1 2004-11-12 ===================
+! 2004-11-11 - P. Koppenburg
+ - src/D02HHPresel.cpp
+   . Removed loadTools() method.
+!========================== Bd2JpsiKs v2r6p1 2004-11-12 ===================
+! 2004-10-29 - P. Koppenburg
+  - options/{Do,DV}???sel*.opts
+    . Put everything in sequencers so that one knows what is done when
+! 2004-10-29 - P. Koppenburg
+  - options/{Do,DV}???sel*.opts
+    . Move "PreLoadParticles/Combined" from DO* file to DV* file so
+      that it is not executed several times in HLT tests.
+!========================== Bd2MuMuKstar v2r3p1 2004-11-12 ===================
+! 2004-10-29 - P. Koppenburg
+  - options/{Do,DV}???sel*.opts
+    . Move "PreLoadParticles/Combined" from DO* file to DV* file so
+      that it is not executed several times in HLT tests.
+!========================== Bs2MuMu v2r4p2 2004-11-12 ===================
+! 2004-10-29 - P. Koppenburg
+  - options/{Do,DV}???sel*.opts
+    . Move "PreLoadParticles/Combined" from DO* file to DV* file so
+      that it is not executed several times in HLT tests.
+!========================== Gamma2ee v1r4p1 2004-11-12 ===================
+! 2004-11-03 - P. Koppenburg for R. Beneyton
+  - update PreselB2Pi0Pi02GammaGamma2ee.opts to have a rejection factor of 
+    5100 (DC04 data)
+!========================== PhysSelSys v7r12 2004-11-12 ===================
+use  B2HH                      v2r4p2   PhysSel
+use  B2RhoRho                  v1r7p2   PhysSel
+use  Bd2D0Kstar                v4r3p1   PhysSel
+use  Bd2JpsiKs                 v2r6p1   PhysSel
+use  Bd2MuMuKstar              v2r3p1   PhysSel
+use  Bs2MuMu                   v2r4p2   PhysSel
+use  Gamma2ee                  v1r4p1   PhysSel
+#####################################  REC  ####################################
+##################################### TOOLS ####################################
+!========================== Stripping v1r5p2 2004-11-12 ===================
+! 2004-11-12 - P. Koppenburg
+  - New option file
+###################################### TR ######################################
+###################################### TRG #####################################
+!========================== L1Decision v4r0 2004-11-12 ===================
+! 2004-11-05 - Thomas Martin Schietinger
+ - New threshold calibration (needed after fix of VeloTT bug).
+   Adapted option files and ROOT macros.
+
+! 2004-11-04 - Olivier Callot
+ - Add PhysEvent in the requirements, needed by L1Check.
+
+! 2004-11-03 - Thomas Martin Schietinger
+ - L1Muon: Use L1Tracks instead of L1MuonMatched.
+ - Improved L1Eff ROOT macros.
+
+! 2004-10-25 - Olivier Callot
+ - Adapt to new container names, separated for L1 and HLT
+!========================== L1Reco v6r0 2004-11-12 ===================
+! 2004-11-03 - Thomas Martin Schietinger
+ - Adapt muon matching parameters to DC'04 (as determined by S. Amato).
+
+! 2004-10-18 - Olivier Callot
+ - Modify the name of the input containers to match the new naming scheme.
+ - Use the new TrgTrack information 'backward' and 'RSector' for 2d processing
+   i.e. vertexing and muon matching.
+!========================== TrgCalo v1r0 2004-11-12 ===================
+! 2004-11-08 - C Carloganu
+ - options/TrgCalo.opts
+   remove bad location for input tracks
+ - src/TrgTrClusterMatch.h, .cpp
+   use TrgDataProvider
+   do not tag track as electron if already tracked as muon
+
+! 2004-11-05 - C Carloganu
+ - options/TrgCalo.opts 
+   remove monitoring sequence 
+ - cmt/requirements
+   remove requirement of specific versions
+
+! 2004-11-01 - P. Koppenburg
+ - options/TrgCalo.opts
+ - options/TrgCaloChecking.opts (new)
+   . Moved checking part from TrgCalo.opts to TrgCaloChecking.opts
+!========================== TrgChecker v6r0 2004-11-12 ===================
+! 2004-10-25 - Olivier Callot
+ - TrgChecker knows if running L1 or HLT using its name, or option Level1. 
+   It monitors only the appropriate containers.
+ - TrgTrack2MCParticle split a bit, to compute teh truth for all containers
+   plus the special container made for building Particle in Trg/TrgTools.
+
+! 2004-10-18 - Olivier Callot
+ - Adapt to the new names of the L1 and HLT containers. Remove the prefixes.
+!========================== TrgForward v4r0 2004-11-12 ===================
+! 2004-10-25 - Olivier Callot
+ - Change momentum error to 0.8 %
+ - Adapt to new container names
+ - Remove TT correction parameters, put in place the x-slope correction
+ - First attemp to a downstream tracking (using same data provider), not to be 
+   used for any production...
+
+! 2004-10-18 - Olivier Callot
+ - Change requirements
+!========================== TrgMonitor v4r0 2004-11-12 ===================
+! 2004-10-18 - Olivier Callot
+ - Change requirements
+!========================== TrgMuonID v3r0 2004-11-12 ===================
+! 2004-10-18 - Olivier Callot
+ - Change requirements
+!========================== TrgPrimVertex v4r0 2004-11-12 ===================
+! 2004-10-18 - Olivier Callot
+ - Replace the use of the track type by a dedicated member "vertexNumber" on
+   the TrgTrack. 0 = no vertex assigned...
+!========================== TrgTools v6r0 2004-11-12 ===================
+! 2004-11-12 - Olivier Callot
+ - Fix the TrgParticleMaker: 
+    - Option 'MakeNEutrals', default false
+    - Produces electrons if any particle is tagges as such
+    - the conversion was not done properly, only long tracks
+      were made as particle in all cases...
+    - Default is NOT to convert non-prolongated VeloTT.
+ - Sort VeloCoord during the decoding (L1R, L1Phi, Raw) to insure
+   that data are properly sorted. In principle done by the TELL1
+   board and then by th efilling of the buffer, but just in case...
+
+! 2004-11-05 - C Carloganu
+ - src/TrgParticleMaker.h
+ - src/TrgParticleMaker.cpp
+   add conversion of TrgCaloParticles into DaVinci Particles
+
+! 2004-11-01 - P. Koppenburg
+ - src/TrgParticleMaker.cpp
+   . Printout PV location on debug() mode
+ 
+! 2004-10-25 - Olivier Callot
+ - TrgInitEvent doesn't clear the containers. This is taken care of by the 
+   algorithms.
+ - TrgVertices are converted in TrgParticleMaker, this was in TrgTrackToContainer
+
+! 2004-10-18 - Olivier Callot
+ - In TrgMCReconstructed, the container checked is now a jobOption.
+ - L1InitEvent doesn't register L1Event in TES. L1Score is also not needed
+   by the L1Processing sequence, just for monitoring.
+ - TrgParticleMaker creates a TES container from the Long tracks, and the non
+   prolongated Velo-TT. The name of these two containers are job options. 
+   The second name can be empty. The key of the tracks from the second container
+   are shifted by 10000.
+!========================== TrgVelo v6r0 2004-11-12 ===================
+! 2004-10-25 - Olivier Callot
+ - Use the RSector and backward track method, instead of playing with type.
+
+! 2004-10-18 - Olivier Callot
+ - Detect if in L1 or HLT, to change the container names
+ - Compute the average Velo charge in HLT context (VeloSpaceTracking)
+   and store it in pidQuality.
+ - In the space track fit, use a multiple scattering term constant with
+   P, assumming all tracks have the same Pt.
+!========================== TrgVeloTT v6r0 2004-11-12 ===================
+! 2004-11-12 - Olivier Callot
+ - New option 'NotUsed' (true) to ask that hits used (when only 3) are not
+   used. This was the default. If false, we still ask at least one of the
+   two half-TT station to be unused. Increases efficiency (.5%) and 
+   ghosts (2%), no turned on by default.
+ - New option finalMatchTolSlope, default 0, studies in progress.
+
+! 2004-11-09 - Olivier Callot
+ - Split TrgVeloTT in 3 algorithms, and an imporved tool
+    DecodeTTFromRaw
+    DecodeTTFromL1
+    TrgTTHitHolder
+   The first two are the decoding from Raw or L1 Buffer, and the TrgTTHitHolder
+   has now the structure by TTPlane of the hits. This makes TrgVeloTT lighter
+   and will allow to have different versions in an easier way.
+
+! 2004-11-09 J.A. Hernando
+  - TrgVeloTT: Posibility of selecting the input and output container 
+	of tracks (when no the algorihtms is not named "L1")
+    option: InputTracksName and OutputTracksName
+
+! 2004-10-25 - Olivier Callot
+ - Do not track backward tracks.
+
+! 2004-10-22 - Olivier Callot
+ - Introduce the protection and fix for the faulty TT coding in L1Buffer as
+   reported by Matt in a mail today: Protect if data = -1, exchange 2<->1 for 
+   cluster size and increase strip number if size is now 1.
+ - Detect L1/HLT context from name, can be changed by option 'Level1'.
+   Remove option InputFromRawBuffer.
+
+! 2004-10-18 - Olivier Callot
+ - Adapt to the new names of the containers, differing for L1 and HLT
+################################################################################
+
 </PRE><H1><A NAME=v12r3>2004-09-16 DaVinci v12r3 - version for DC04 stripping</A></H1><PRE>
 
  Release for stripping production
