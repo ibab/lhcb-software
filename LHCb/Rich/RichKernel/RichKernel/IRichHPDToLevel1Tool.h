@@ -5,8 +5,11 @@
  *  Header file for tool interface : IRichHPDToLevel1Tool
  *
  *  CVS Log :-
- *  $Id: IRichHPDToLevel1Tool.h,v 1.2 2005-01-13 12:15:18 jonrob Exp $
+ *  $Id: IRichHPDToLevel1Tool.h,v 1.3 2005-01-18 08:59:20 jonrob Exp $
  *  $Log: not supported by cvs2svn $
+ *  Revision 1.2  2005/01/13 12:15:18  jonrob
+ *  Add methods to access the various maps
+ *
  *  Revision 1.1  2005/01/07 12:41:57  jonrob
  *  Add new interfaces
  *
@@ -87,6 +90,12 @@ public:
    *  @return Mapping between L1 and RichSmartIDs
    */
   virtual const RichDAQ::L1ToHardIDs & l1HPDHardIDs() const = 0;
+
+  /** Return which RICH detector a given Level 1 is used with
+   *
+   *  @return Rich identifier
+   */
+  virtual const Rich::DetectorType richDetector( const RichDAQ::Level1ID l1ID ) const = 0;
 
 };
 
