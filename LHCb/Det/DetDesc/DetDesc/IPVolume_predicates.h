@@ -1,113 +1,137 @@
-#ifndef      __DETDESC_VOLUMES_IPVOLUME_PREDICATES_H__
-#define      __DETDESC_VOLUMES_IPVOLUME_PREDICATES_H__
-
+// ============================================================================
+// CVS tag $Name: not supported by cvs2svn $ 
+// ============================================================================
+// $Log: not supported by cvs2svn $ 
+// ============================================================================
+#ifndef     DETDESC_IPVOLUME_PREDICATES_H
+#define     DETDESC_IPVOLUME_PREDICATES_H
+// STD & STL 
 #include <iostream>
 #include <functional>
-
-
+// CLHEP 
 #include "CLHEP/Geometry/Point3D.h"
 #include "CLHEP/Geometry/Transform3D.h"
-
+// DetDesc 
 #include "DetDesc/IPVolume.h"
 #include "DetDesc/ILVolume.h"
 
-//
-//
-//   define useful predicate to deal with IPVolume and ILVolume 
-//
+/** @file IPVolume_predicates.h
+ *  define useful predicate to deal with IPVolume and ILVolume 
+ *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
+ */
 
-// 
-// This predicate allows search from a sequence of IPVolume for a IPVolume, 
-// which contains the given point 
-//   (container)<IPVolume*> volumes = ...
-//   (container)<IPvolume*>::const_ietartor ci = 
-//         std::find_if( volumes.begin() , volumes.end() , IPVolume_isInside(Point) );
-//
-class IPVolume_isInside: public std::unary_function<IPVolume*,bool>
+/** @class IPVolume_isInside IPVolume_predicates.h 
+ *  
+ * This predicate allows search from a sequence of IPVolume for a IPVolume, 
+ * which contains the given point 
+ * (container)<IPVolume*> volumes = ...
+ * (container)<IPvolume*>::const_ietartor ci = 
+ * std::find_if( volumes.begin() , volumes.end() , 
+ *  IPVolume_isInside(Point) );
+ *  @author Vanya Belyaev Ivan.Belyaev@itep.ru 
+ */
+class IPVolume_isInside: public std::unary_function<const IPVolume*,bool>
 {
-  //
- public:
-  //
-  explicit IPVolume_isInside( const HepPoint3D& PointInMotherFrame ) : m_point( PointInMotherFrame ){};
-  //
-  inline bool operator() (  IPVolume*&  pv ) { return ( ( 0 == pv ) ? false : pv->isInside( m_point ) ) ; }
-  //
+public:
+  /** explict constructor
+   *  @param PointInMotherFrame point in mother reference system 
+   */
+  explicit IPVolume_isInside( const HepPoint3D& PointInMotherFrame ) 
+    : m_point( PointInMotherFrame ){};
+  /** check for the point
+   *  @param pv pointer to Physical volume 
+   *  @return true if point is inside the physical volume 
+   */
+  inline bool operator() (  const IPVolume*  pv ) const 
+  { return ( ( 0 == pv ) ? false : pv->isInside( m_point ) ) ; }
  private:
-  //
+  /// point to be checked 
   const HepPoint3D m_point;
-  //
 };
 
 
-// 
-// This predicate allows search from a sequence of IPVolume for a IPVolume by name 
-//   (container)<IPVolume*> volumes = ...
-//   (container)<IPvolume*>::const_ietartor ci = 
-//         std::find_if( volumes.begin() , volumes.end() , IPVolume_byName(name) );
-//
+/** @class  IPVolume_byName IPVolume_predicates.h
+ *  This predicate allows search from a sequence of 
+ *  IPVolume for a IPVolume by name 
+ *    (container)<IPVolume*> volumes = ...
+ *  (container)<IPvolume*>::const_ietartor ci = 
+ * std::find_if( volumes.begin() , volumes.end() , 
+ *  IPVolume_byName(name) );
+ *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
+ */
 class IPVolume_byName: std::unary_function<IPVolume*,bool>
 {
-  //
  public:
-  //
-  explicit IPVolume_byName( const std::string& Name ) : m_name( Name ){};
-  //
-  inline bool operator() (  const IPVolume*  pv )  { return ( ( 0 == pv ) ? false : (pv->name() == m_name) ) ; }
-  //
- private:
-  //
+  /** explicit constructor 
+   *  @param Name name of physical volume 
+   */
+  explicit IPVolume_byName( const std::string& Name ) 
+    : m_name( Name ){};
+  /** find physical volume by name
+   *  @param pv pointer to physical volume 
+   *  @return true if name matches the given name 
+   */
+  inline bool operator() (  const IPVolume*  pv )  const 
+  { return ( ( 0 == pv ) ? false : (pv->name() == m_name) ) ; }
+private:
+  /// name 
   std::string m_name;  
-  //
 };
 
-//
-// 
-//   used for std::accumulate algorithm  
-//   (container)<IPVolume*> volumes = ...
-//  std::accumulate(...)
-//
-class IPVolume_accumulateMatrix: public std::unary_function<IPVolume*,HepTransform3D&>
+/** @class IPVolume_accumulateMatrix IPVolume_predicates.h
+ * 
+ * used for std::accumulate algorithm  
+ * (container)<IPVolume*> volumes = ...
+ * std::accumulate(...)
+ *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
+ */
+class IPVolume_accumulateMatrix: 
+  public std::unary_function<const IPVolume*,HepTransform3D&>
 {
-  //
- public: 
+public: 
   //
   inline HepTransform3D& operator() ( HepTransform3D&  mtrx , 
                                       const  IPVolume* pv   ) 
-{ mtrx = pv->matrix()*mtrx; return mtrx; }
+  { mtrx = pv->matrix()*mtrx; return mtrx; }
   //
 }; 
 
 
-//
-//  used for transformation of ILVolume::ReplicaPath into 
-//  ILVolume::PVolumePath
-//  used for "std::transform" algorithm
-//
-class IPVolume_fromReplica:  public std::unary_function<ILVolume::ReplicaType,IPVolume*>
+/** @class IPVolume_fromReplica IPVolume_predicates.h 
+ * 
+ * used for transformation of ILVolume::ReplicaPath into 
+ * ILVolume::PVolumePath
+ * used for "std::transform" algorithm
+ * @author Vanya Belyaev Ivan.Belyaev@itep.ru 
+ */
+class IPVolume_fromReplica:  
+  public std::unary_function<ILVolume::ReplicaType,IPVolume*>
 {
-  //
- public: 
-  //
-  IPVolume_fromReplica( const ILVolume* LV ): lv ( LV ) {};
-  // 
-  inline IPVolume* operator() ( const ILVolume::ReplicaType& replica ) 
-    {
-      if( 0 == lv ) {          return 0 ; }  
-      IPVolume* pv = (*lv)[replica]; 
-      if( 0 == pv ) { lv = 0 ; return 0 ; } 
-      lv = pv->lvolume(); 
-      return pv; 
-    }
+public: 
+  /** constructor 
+   *  @param LV pointer to Logical Volume 
+   */
+  IPVolume_fromReplica( const ILVolume* LV ) 
+    : m_lv ( LV ) {};
   
- private:
-  
-  const ILVolume* lv;
-  
+  /** get pointer to physical volume by replica number 
+   *  @param replica replica number 
+   *  @return pointer to physical volume 
+   */
+  inline IPVolume* operator() ( const ILVolume::ReplicaType& replica ) const  
+  {
+    if( 0 == m_lv ) {          return 0 ; }  
+    IPVolume* pv = (*m_lv)[replica]; 
+    if( 0 == pv ) { m_lv = 0 ; return 0 ; } 
+    m_lv = pv->lvolume(); 
+    return pv; 
+  }
+private:
+
+  mutable const ILVolume* m_lv;
+
 }; 
 
-//
-//
-//
-
-
-#endif  //   __DETDESC_VOLUMES_IPVOLUME_PREDICATES_H__
+// ============================================================================
+#endif  ///<  DETDESC_IPVOLUME_PREDICATES_H
+// ============================================================================

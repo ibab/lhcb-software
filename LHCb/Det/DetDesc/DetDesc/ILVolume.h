@@ -2,6 +2,9 @@
 /// CVS tag $Name: not supported by cvs2svn $ 
 /// ===========================================================================
 /// $Log: not supported by cvs2svn $
+/// Revision 1.4  2001/08/13 09:51:35  ibelyaev
+/// bug fix in 'reset' method
+///
 /// Revision 1.3  2001/08/09 16:47:56  ibelyaev
 /// update in interfaces and redesign of solids
 /// 
@@ -88,6 +91,16 @@ public:
    */
   virtual const   std::string& name () const = 0;
   
+  /** is this volume "Assembly" of other volumes?
+   *  
+   *  notion of Assembly Volume is imported from Geant4.
+   *  "Assembly Volume" has no associated material and shape, 
+   *  thus material name shoudl me empty, pointer to solid
+   *  and pointer to material should be both nulls
+   *  @return true if volume is Assembly
+   */ 
+  virtual bool    isAssembly() const = 0 ;
+  
   /**  return the solid, associated with the Logical Volume  
    *  @return the solid, associated with the Logical Volume  
    */
@@ -98,12 +111,14 @@ public:
    */
   virtual const std::string& materialName() const = 0;
   
-  /**  return the material, associated with the Logical Volume  
+  /**  return the material, associated with the Logical Volume
+   *   for Assembly volumes material name is useless 
    *  @return the material, associated with the Logical Volume  
    */
   virtual const Material* material () const = 0; 
   
   /**  return vector of physical volumes 
+   *   for Assembly volumes material is useless 
    *  @return vector of physical volumes 
    */
   virtual       PVolumes& pvolumes ()       = 0 ;
@@ -187,10 +202,15 @@ public:
              ILVolume::PVolumePath&        volumePath ) = 0; 
   
   /** check for the given 3D-point. 
+   *
    *  Point coordinated are in the local reference 
-   *  frame of the solid.   
-   *  @param LocalPoint point (in local reference system of the solid)
-   *  @return true if the point is inside the solid
+   *  frame of the logical volume.
+   *
+   *  For Assembly Volumes "inside" means 
+   *  inside of at least one daughter volume 
+   * 
+   *  @param LocalPoint point (in local reference system of the volume)
+   *  @return true if the point is inside the logical volume 
    */
   virtual bool isInside ( const HepPoint3D& LocalPoint ) const = 0; 
   

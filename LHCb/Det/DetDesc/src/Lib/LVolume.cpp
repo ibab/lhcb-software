@@ -1,11 +1,14 @@
-/// ===========================================================================
-/// CVS tag $Name: not supported by cvs2svn $ 
-/// ===========================================================================
-/// $Log: not supported by cvs2svn $
-/// Revision 1.11  2001/08/09 16:48:01  ibelyaev
-/// update in interfaces and redesign of solids
-/// 
-/// ===========================================================================
+// ===========================================================================
+// CVS tag $Name: not supported by cvs2svn $ 
+// ===========================================================================
+// $Log: not supported by cvs2svn $
+// Revision 1.12  2001/08/10 16:41:29  ibelyaev
+// modifitcations in IDetectorElement and related classes
+//
+// Revision 1.11  2001/08/09 16:48:01  ibelyaev
+// update in interfaces and redesign of solids
+// 
+// ===========================================================================
 ///@{
 /** STD & STL includes */ 
 #include <iostream> 

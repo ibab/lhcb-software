@@ -1,10 +1,16 @@
 ! =============================================================================
 ! CVS tag $Name: not supported by cvs2svn $ 
 ! =============================================================================
-! $Id: release.notes,v 1.49 2001-08-22 11:45:44 sponce Exp $ 
+! $Id: release.notes,v 1.50 2001-08-24 12:07:36 ibelyaev Exp $ 
 ! =============================================================================
 package DetDesc
 package manager : N.N 
+
+
+! =============================================================================
+! 20010824  - Vanya Belyaev
+  put some modification to Logical Volume to take into account 
+  the notion of Assembly Volumes
 
 ! =============================================================================
 ! 20010822  - Sebastien Ponce

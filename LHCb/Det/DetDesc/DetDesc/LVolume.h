@@ -1,11 +1,14 @@
-/// ===========================================================================
-/// CVS tag $Name: not supported by cvs2svn $ 
-/// ===========================================================================
-/// $Log: not supported by cvs2svn $
-/// Revision 1.13  2001/08/09 16:47:57  ibelyaev
-/// update in interfaces and redesign of solids
-/// 
-/// ===========================================================================
+// ===========================================================================
+// CVS tag $Name: not supported by cvs2svn $ 
+// ===========================================================================
+// $Log: not supported by cvs2svn $
+// Revision 1.14  2001/08/13 09:51:35  ibelyaev
+// bug fix in 'reset' method
+//
+// Revision 1.13  2001/08/09 16:47:57  ibelyaev
+// update in interfaces and redesign of solids
+// 
+// ===========================================================================
 #ifndef     DETDESC_VOLUMES_LVOLUME_H
 #define     DETDESC_VOLUMES_LVOLUME_H
 ///@{
@@ -48,7 +51,11 @@ class ITime;
 
 /** @class LVolume LVolume.h DetDesc/LVolume.h
  *
- *  A simple implementation of ILVolume interface 
+ *  A simple implementation of ILVolume interface
+ * 
+ *  @attention Never try to inherit from this class!!!
+ *             For performance reasons almost all virtual methods 
+ *             are declared as "non-virtual" and inline! 
  *
  *  @author  Vanya Belyaev
  */
@@ -119,70 +126,93 @@ public:
   
   /** @defgroup ILVolume 
    *  Implementation of ILVolume interface 
+   *  @see ILVolume 
    * @{
    */
   
   /**  retrieve  the name(identification)  of Logical Volume  
+   *  @see ILVolume 
    *  @return    the name(identification)  of Logical Volume  
    */
-  virtual const std::string&  name () const 
+  inline const std::string&  name () const 
   { return DataObject::fullpath();}
-
+  
+  /** is this volume "Assembly" of other volumes?
+   *  @see ILVolume 
+   *  notion of Assembly Volume is imported from Geant4.
+   *  "Assembly Volume" has no associated material and shape, 
+   *  thus material name shoudl me empty, pointer to solid
+   *  and pointer to material should be both nulls
+   *  @return true if volume is Assembly
+   */ 
+  inline  bool    isAssembly() const
+  { return 0 == m_lv_solid ; }; 
+  
   /**  return the solid, associated with the Logical Volume  
+   *  @see ILVolume 
    *  @return the solid, associated with the Logical Volume  
    */
-  virtual const ISolid*       solid        () const 
+  inline const ISolid*       solid        () const 
   { return m_lv_solid ; }
   
   /**  return the material, associated with the Logical Volume  
+   *  For Assembly Volumes material pointes to NULL!
+   *  @see ILVolume 
    *  @exception LVolumeException no material
    *  @return the material, associated with the Logical Volume  
    */
-  virtual const Material*     material     () const 
+  inline  const Material*     material     () const 
   { 
-    return m_lv_material = 
-      0 != m_lv_material ? m_lv_material : findMaterial() ;
+    return m_lv_material =
+      0 != m_lv_material    ? m_lv_material : 
+      LVolume::isAssembly() ?  0            : findMaterial() ;
   };
   
   /**  return the material(by name), associated with the Logical Volume  
+   *  @see ILVolume 
    *  @return the material(by name), associated with the Logical Volume  
    */
-  virtual const std::string&  materialName () const 
+  inline  const std::string&  materialName () const 
   { return m_lv_materialName; }
   
   /**  return vector of physical volumes 
+   *  @see ILVolume 
    *  @return vector of physical volumes 
    */
-  virtual       PVolumes& pvolumes ()       
+  inline        PVolumes& pvolumes ()       
   { return m_lv_pvolumes ; } 
-
+  
   /**  return vector of physical volumes (const version)
+   *  @see ILVolume 
    *  @return vector of physical volumes 
    */
-  virtual const PVolumes& pvolumes () const 
+  inline const PVolumes& pvolumes () const 
   { return m_lv_pvolumes ; }
   
   /**  return number of Physical(positioned) Volumes 
+   *  @see ILVolume 
    *  @return number of Physical(positioned) Volumes
    */
-  virtual ILVolume::ReplicaType noPVolumes () const
+  inline ILVolume::ReplicaType noPVolumes () const
   { return m_lv_pvolumes.size() ; }
   
   /** get daughter (Physical Volume) by index
+   *  @see ILVolume 
    *  @param  index    physical volume index 
    *  @return pointer to daughter (Physical Volume) 
    */
-  virtual IPVolume* operator[]( const ILVolume::ReplicaType& index ) const
+  inline  IPVolume* operator[]( const ILVolume::ReplicaType& index ) const
   {
     return m_lv_pvolumes.size() > index ? 
       *(m_lv_pvolumes.begin()+index) : 0 ;
   };
   
   /** get daughter (Physical Volume) by name 
+   *  @see ILVolume 
    *  @param  name    physical volume name 
    *  @return pointer to daughter (Physical Volume) 
    */
-  virtual IPVolume* operator[]( const std::string&           name  ) const
+  inline  IPVolume* operator[]( const std::string&           name  ) const
   { 
     ILVolume::PVolumes::const_iterator pvi = 
       std::find_if( m_lv_pvolumes.begin  () , 
@@ -192,20 +222,22 @@ public:
   };
 
   /** get daughter (Physical Volume) by index
+   *  @see ILVolume 
    *  @param  index    physical volume index 
    *  @return pointer to daughter (Physical Volume) 
    */
-  virtual IPVolume* pvolume   ( const ILVolume::ReplicaType& index ) const
+  inline IPVolume* pvolume   ( const ILVolume::ReplicaType& index ) const
   {
     return m_lv_pvolumes.size() > index ? 
       *(m_lv_pvolumes.begin()+index) : 0 ;
   };
   
   /** get daughter (Physical Volume) by name 
+   *  @see ILVolume 
    *  @param  name    physical volume name 
    *  @return pointer to daughter (Physical Volume) 
    */
-  virtual IPVolume* pvolume   ( const std::string&           name  ) const  
+  inline IPVolume* pvolume   ( const std::string&           name  ) const  
   { 
     ILVolume::PVolumes::const_iterator pvi = 
       std::find_if( m_lv_pvolumes.begin  () , 
@@ -215,34 +247,39 @@ public:
   };
   
   /**  retrieve begin iterator  for manipulation with daughters
+   *  @see ILVolume 
    *   @return begin iterator  for manipulation with daughters
    */
-  virtual ILVolume::PVolumes::iterator       pvBegin     ()
+  inline  ILVolume::PVolumes::iterator       pvBegin     ()
   { return m_lv_pvolumes.begin () ;}
   
   
   /**  retrieve begin iterator  for manipulation with daughters
+   *  @see ILVolume 
    *   (const version)
    *   @return begin iterator  for manipulation with daughters
    */
-  virtual ILVolume::PVolumes::const_iterator pvBegin     () const
+  inline ILVolume::PVolumes::const_iterator pvBegin     () const
   { return m_lv_pvolumes.begin () ;}
   
   /**  retrieve end iterator  for manipulation with daughters
+   *  @see ILVolume 
    *   @return end iterator  for manipulation with daughters
    */
-  virtual ILVolume::PVolumes::iterator       pvEnd       ()
+  inline ILVolume::PVolumes::iterator       pvEnd       ()
   { return m_lv_pvolumes.end ()  ;}
   
   /**  retrieve end iterator  for manipulation with daughters
    *   (const version)
+   *  @see ILVolume 
    *   @return end iterator  for manipulation with daughters
    */
-  virtual ILVolume::PVolumes::const_iterator pvEnd       () const 
+  inline ILVolume::PVolumes::const_iterator pvEnd       () const 
   { return m_lv_pvolumes.end () ;}
   
   /** traverse the sequence of paths  \n 
    *  transform the sequence of replicas to sequence of  physical volumes 
+   *  @see ILVolume 
    *  @param replicaPath replica-Path 
    *  @param volumePath  vector of physical volumes 
    *  @return status code 
@@ -254,11 +291,12 @@ public:
   
   /** traverse the sequence of paths  \n 
    *  transform the sequence of replicas to sequence of  physical volumes 
+   *  @see ILVolume 
    *  @param replicaPath replica-Path 
    *  @param volumePath  vector of physical volumes 
    *  @return status code 
    */
-  virtual StatusCode 
+  inline  StatusCode 
   traverse ( const ILVolume::ReplicaPath&  path,
              ILVolume::PVolumePath&        pVolumePath )
   { return traverse( path.begin() , path.end() , pVolumePath ); }
@@ -266,15 +304,26 @@ public:
   /** check for the given 3D-point. 
    *  Point coordinated are in the local reference 
    *  frame of the solid.   
+   *
+   *  For Assembly Volumes "inside" means 
+   *  inside of at least one daughter volume 
+   * 
+   *  @see ILVolume 
    *  @param LocalPoint point (in local reference system of the solid)
    *  @return true if the point is inside the solid
    */
-  virtual bool isInside ( const HepPoint3D& LocalPoint ) const
-  { return m_lv_solid->isInside( LocalPoint ); }
+  inline bool isInside ( const HepPoint3D& LocalPoint ) const
+  { 
+    return 
+      isAssembly()                       ? 
+      isInsideDaughter    ( LocalPoint ) :
+      m_lv_solid->isInside( LocalPoint ) ;
+  };
   
   /** calculate the daughter path containing the Point in Local frame , 
    *  can be VERY slow for complex geometry, 
    *  therefore use the appropriate Level for usage 
+   *  @see ILVolume 
    *  @param  localPoint point in local reference system of logical volume 
    *  @param  level depth level
    *  @param  volumePath  vector of physical volumes
@@ -288,6 +337,7 @@ public:
   /** calculate the daughter path containing the Point in Local frame , 
    *  can be VERY slow for complex geometry, 
    *  therefore use the appropriate Level for usage 
+   *  @see ILVolume 
    *  @param  localPoint point in local reference system of logical volume 
    *  @param  level depth level
    *  @param  volumePath  vector of physical volumes
@@ -299,7 +349,7 @@ public:
              ILVolume::ReplicaPath&   replicaPath );
   
   /** intersection of the logical volume with with the line \n
-   *  Theine is parametrized in the local reference system 
+   *  The line is parametrized in the local reference system 
    *  of the logical volume by initial Point and direction Vector \n 
    *  @f$ \vec{x}(t) = \vec{p} + t\times \vec{v} @f$  \n 
    * 
@@ -310,6 +360,7 @@ public:
    *   Method throws LVolumeException in the case, then 
    *   solid is not defined or material is not accessible.
    *
+   *  @see ILVolume 
    *  @exception LVolumeException solid or/and matherial problems 
    *  @param Point initial point at the line
    *  @param Vector direction vector of the line
@@ -335,6 +386,7 @@ public:
    *   Method throws LVolumeException in the case, then 
    *   solid is not defined or material is not accessible.
    *
+   *  @see ILVolume 
    *  @exception LVolumeException solid or/and matherial problems 
    *  @param Point initial point at the line
    *  @param Vector direction vector of the line
@@ -354,36 +406,42 @@ public:
   
   
   /**         name of sensitive "detector" - needed for simulation 
+   *  @see ILVolume 
    *  @return name of sensitive "detector"
    */
-  virtual const std::string& sdName () const 
+  inline const std::string& sdName () const 
   { return m_lv_sdName; } ;
   
   /** magnetic properties  (if needed for simulation)  
+   *  @see ILVolume 
    *  @return name of magnetic field  object
    */
-  virtual const std::string& mfName () const 
+  inline const std::string& mfName () const 
   { return m_lv_mfName; } ;
   
   /** accessors to surfaces 
+   *  @see ILVolume 
    *  @return vector of surfaces 
    */  
-  virtual       Surfaces& surfaces()       
+  inline        Surfaces& surfaces()       
   { return m_lv_surfaces ; }
   
   /** accessors to surfaces  (const version) 
+   *  @see ILVolume 
    *  @return vector of surfaces 
    */  
-  virtual const Surfaces& surfaces() const  
+  inline  const Surfaces& surfaces() const  
   { return m_lv_surfaces ; }
 
   /** printout to STD/STL stream
+   *  @see ILVolume 
    *  @param os STD/STL stream
    *  @return reference to the stream
    */
   virtual std::ostream& printOut( std::ostream & os = std::cout) const ;
   
   /** printout to Gaudi MsgStream stream
+   *  @see ILVolume 
    *  @param os Gaudi MsgStream  stream
    *  @return reference to the stream
    */
@@ -391,9 +449,10 @@ public:
 
   /** reset to initila state, 
    *  clear chaches, etc...
+   *  @see ILVolume 
    *  @return self reference
    */
-  virtual ILVolume* reset () 
+  inline  ILVolume* reset () 
   {
     /// reset solid 
     if( 0 != m_lv_solid ) { m_lv_solid->reset() ; }
@@ -645,21 +704,90 @@ private:
       { throw LVolumeException( name, Exception , this , sc ); }
   };
   /** @} end of group Assertions */ 
+  
+  /** Auxillary method  to calculate own intersections
+   *  @exception LVolumeException wrong parameters or geometry error
+   *  @param Point initial point at the line
+   *  @param Vector direction vector of the line
+   *  @param intersections output container
+   *  @param tickMin minimum value of possible Tick
+   *  @param tickMax maximum value of possible Tick
+   *  @param threshold threshold value 
+   *  @return number of intersections  
+   */
+  unsigned int  
+  intersectBody( const HepPoint3D&         Point         , 
+                 const HepVector3D&        Vector        , 
+                 ILVolume::Intersections & intersections , 
+                 ISolid::Tick            & tickMin       , 
+                 ISolid::Tick            & tickMax       , 
+                 const double              Threshold     );  
+  
+  /** Auxillary method  to calculate own intersections
+   *  @exception LVolumeException wrong parameters or geometry error
+   *  @param Point initial point at the line
+   *  @param Vector direction vector of the line
+   *  @param intersections output container
+   *  @param threshold threshold value 
+   *  @return number of intersections  
+   */
+  unsigned int  
+  intersectBody( const HepPoint3D&        Point         , 
+                 const HepVector3D&       Vector        , 
+                 ILVolume::Intersections& intersections , 
+                 const double             Threshold     );
+  
+  /** Auxillary method  to calculate intersections with daughters
+   *  @exception LVolumeException wrong parameters or geometry error
+   *  @param Point initial point at the line
+   *  @param Vector direction vector of the line
+   *  @param intersections output container
+   *  @param tickMin minimum value of possible Tick
+   *  @param tickMax maximum value of possible Tick
+   *  @param threshold threshold value 
+   *  @return number of intersections  
+   */
+  unsigned int  
+  intersectDaughters( const HepPoint3D&        Point              , 
+                      const HepVector3D&       Vector             , 
+                      ILVolume::Intersections& childIntersections , 
+                      const ISolid::Tick     & tickMin            , 
+                      const ISolid::Tick     & tickMax            , 
+                      const double             Threshold          );  
 
-  /// Auxillary method  to calculate intersections with daughter volumes  
+  /** Auxillary method  to calculate intersection with daughters
+   *  @exception LVolumeException wrong parameters or geometry error
+   *  @param Point initial point at the line
+   *  @param Vector direction vector of the line
+   *  @param intersections output container
+   *  @param threshold threshold value 
+   *  @return number of intersections  
+   */
   unsigned int  
   intersectDaughters( const HepPoint3D&        Point              , 
                       const HepVector3D&       Vector             , 
                       ILVolume::Intersections& childIntersections , 
-                      const ISolid::Tick       tickMin            , 
-                      const ISolid::Tick       tickMax            , 
-                      const double             Threshold          );  
-  /// Auxillary method  to calculate intersections with daughter volumes  
-  unsigned int  
-  intersectDaughters( const HepPoint3D&        Point              , 
-                      const HepVector3D&       Vector             , 
-                      ILVolume::Intersections& childIntersections , 
-                      const double             Threshold          );  
+                      const double             Threshold          );
+
+  /** check for the given 3D-point insiode daughter volume
+   *
+   *  Point coordinated are in the local reference 
+   *  frame of the solid.   
+   *
+   *  For Assembly Volumes "inside" means 
+   *  inside of at least one daughter volume 
+   * 
+   *  @param LocalPoint point (in local reference system of the solid)
+   *  @return true if the point is inside the solid
+   */
+  inline bool isInsideDaughter( const HepPoint3D& LocalPoint ) const
+  { 
+    return  
+      m_lv_pvolumes.end() != 
+      std::find_if( m_lv_pvolumes.begin () , 
+                    m_lv_pvolumes.end   () , 
+                    IPVolume_isInside( LocalPoint ) ) ;
+  };
   
 protected:
   
