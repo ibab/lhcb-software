@@ -1,14 +1,10 @@
-// $Id: L0CaloToMCParticleAsct.h,v 1.2 2003-06-23 11:52:26 ocallot Exp $
+// $Id: L0CaloToMCParticleAsct.h,v 1.3 2004-02-05 12:07:33 ocallot Exp $
 #ifndef L0CALOTOMCPARTICLEASCT_H 
 #define L0CALOTOMCPARTICLEASCT_H 1
 
 // Include files
 // from STL
 #include <string>
-
-// LHCbKernel
-#include "Relations/IAssociator.h" 
-#include "Relations/IRelation.h" 
 
 // from Gaudi
 #include "GaudiKernel/Algorithm.h"
@@ -39,7 +35,6 @@ protected:
 
 private:
   std::string m_inputContainer;
-  std::string m_outputTable;
   double      m_minimalFraction;
 };
 #endif // L0CALOTOMCPARTICLEASCT_H

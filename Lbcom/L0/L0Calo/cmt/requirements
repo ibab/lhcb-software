@@ -15,6 +15,7 @@ use L0Event     v14r*   Event
 use CaloEvent	v13r*	Event
 use CaloDet	v6r*	Det
 use AIDA        v* -no_auto_imports
+use LinkerEvent	v1r*	Event
 
 # ================ component library =====================================
 library		L0Calo	../src/*.cpp -import=AIDA

@@ -1,6 +1,10 @@
 Package		: L0/L0Calo
 Package Manager : Olivier Callot
 
+! 2004-02-05 - Olivier Callot
+ - Replace the old Associator/Relations by the new Linker representation of the
+   relation between L0CaloCandidates and MCParticles.
+
 !========================= L0Calo v7r2 2004-01-07 =========================
 ! 2004-01-06 - Marco Cattaneo
  - Move to Gaudi v14 (use CaloEvent v13r* and L0Event v14r* in requirements)

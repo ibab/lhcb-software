@@ -1,8 +1,5 @@
-// $Id: L0CaloToMCParticleAsct.cpp,v 1.2 2002-12-17 15:43:02 ocallot Exp $
+// $Id: L0CaloToMCParticleAsct.cpp,v 1.3 2004-02-05 12:07:33 ocallot Exp $
 // Include files 
-
-// LHCb Kernel
-#include "Relations/RelationWeighted1D.h"
 
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -17,6 +14,7 @@
 #include "Event/MCCaloDigit.h"
 #include "Event/L0CaloCandidate.h"
 
+#include "Linker/LinkerWithKey.h"
 // local
 #include "L0CaloToMCParticleAsct.h"
 
@@ -38,11 +36,9 @@ L0CaloToMCParticleAsct::L0CaloToMCParticleAsct( const std::string& name,
                                                 ISvcLocator* pSvcLocator)
   : Algorithm ( name , pSvcLocator ) 
   , m_inputContainer       ( L0CaloCandidateLocation::Default )
-  , m_outputTable          ( "Rec/Relations/L0CaloCandidates" )
   , m_minimalFraction      ( 0.10 )
 {
   declareProperty( "InputContainer"   , m_inputContainer  );
-  declareProperty( "OutputTable"      , m_outputTable     );
   declareProperty( "MinimalFraction"  , m_minimalFraction );  
 }
 
@@ -76,21 +72,12 @@ StatusCode L0CaloToMCParticleAsct::execute() {
     return StatusCode::SUCCESS;
   }   
 
+  LinkerWithKey< MCParticle > myLink( eventSvc(), msgSvc(), m_inputContainer );
+
   SmartDataPtr<MCCaloDigits > mcEcalDigs ( eventSvc(), 
                                            MCCaloDigitLocation::Ecal );
   SmartDataPtr<MCCaloDigits > mcHcalDigs ( eventSvc(), 
                                            MCCaloDigitLocation::Hcal );
-
-  typedef RelationWeighted1D<L0CaloCandidate,MCParticle,double>  Table;
-  // create relation table and register it in the event transient store
-  Table* table = new Table();
-  StatusCode sc = eventSvc()->registerObject( m_outputTable, table );
-  if( sc.isFailure() ) {
-    log << MSG::ERROR << "Unable to register the relation container="
-        << m_outputTable << endreq;
-    log << MSG::ERROR << "Status is " << sc << endreq;
-    return sc ;
-  }
 
   MCCaloDigits* mcDigs = 0;
 
@@ -147,7 +134,7 @@ StatusCode L0CaloToMCParticleAsct::execute() {
       if ( 0 < eTot ) {
         for ( unsigned int ll = 0; parts.size() > ll; ll++ ) {
           if ( energies[ll] > m_minimalFraction * eTot ) {
-            table->relate( *cand, parts[ll], energies[ll] / eTot );
+            myLink.link( *cand, parts[ll], energies[ll] / eTot );
             log << MSG::DEBUG << " .. Relate MC " << parts[ll]->key()
                 << " with fraction " << energies[ll] / eTot << endreq;
           }
