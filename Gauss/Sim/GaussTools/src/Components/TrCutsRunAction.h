@@ -62,7 +62,8 @@ private:
   
   double m_ecut;
   double m_phcut;
-  double m_hcut;
+  double m_pKpicut ;
+  double m_ocut;
   double m_ncut;
   double m_nucut;
   double m_mcut;
