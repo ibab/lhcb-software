@@ -1,6 +1,6 @@
 ##----------------------------------------------------------------------##
 
-# Error suppression file Boole v1r0, gcc 3.2, valgrind 1.9.6
+# Error suppression file Boole v3r2, gcc 3.2, valgrind 1.9.6
 
 # Format of this file is:
 # {
@@ -15,6 +15,14 @@
 #     (optionally: caller3 name) - according to doc. But valgrind dies...
 # }
 
+# Savanna bug 1973 (Boole v3r1)
+{
+  FPGA.cpp/bug-1973
+  MemCheck:Value8
+  fun:_ZN4FPGA13makeITClusterESt6vectorIiSaIiEE
+  fun:_ZN4FPGA10clusteringEddi
+  fun:_ZN4FPGA10clusteringEdd
+}  
 
 # glibc/Gaudi problems (gcc 2.95.2 on rh7.3, Gaudi v11r4-v12r0) 
 {
@@ -101,9 +109,9 @@
   Root/uninitilized
   MemCheck:Param
   write(buf)
-  obj:/lib/i686/libc-2.2.5.so
   fun:_ZN5TFile8SysWriteEiPKvi
 }
+#  obj:/lib/i686/libc-2.2.5.so
 
 # Root 3.05.04 errors (reported, known to Fons...)
 {

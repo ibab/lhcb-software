@@ -1,5 +1,5 @@
 package BooleSys
-version v3r1
+version v3r2
 
 branches cmt doc
  
@@ -8,7 +8,7 @@ branches cmt doc
 #=======================================================
 
 # Boole application
-use Boole		v3r1	Digi
+use Boole		v3r2	Digi
 use DigiAlg		v2r2	Digi
 use LHCbTools		v1r0	Kernel
 
@@ -19,21 +19,21 @@ use PuVeto              v5r4    L0
 use L0DU                v6r5    L0
 
 # L1 trigger
-use L1VeloTrack         v5r3	L1
+use L1VeloTrack         v5r3p1	L1
 use L1Decision		v2r2	L1
 
 # Calorimeter
 use CaloInterfaces      v2r4  	Calo
 use CaloUtils           v4r5	Calo
 use CaloMonitor         v1r4  	Calo
-use CaloDigit           v1r4	Calo
+use CaloDigit           v1r4p1	Calo
 
 # Velo
 use VeloAlgorithms      v2r8  	Velo
 
 # Inner Tracker
-use ITAlgorithms        v12r10	IT
-use ITCheckers          v1r3p1	IT
+use ITAlgorithms        v13r0	IT
+use ITCheckers          v1r4	IT
 
 # Outer Tracker
 use OTAlgorithms        v13r3	OT
@@ -45,8 +45,8 @@ use MuonBackground	v1r4	Muon
 # Rich
 use RichDigiQC		v1r3	Rich
 use RichUtils		v3r5  	Rich
-use RichDetTools	v3r2	Rich
-use RichReadout		v1r2	Rich
+use RichDetTools	v3r3	Rich
+use RichReadout		v1r2p1	Rich
 use RichDAQ		v1r0	Rich
 
 # SICB packages - included to avoid dependency on SICBOO project

@@ -3,6 +3,27 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
+</PRE><H1><A NAME=v3r2>2003-12-03 Boole v3r2</A></H1><PRE>
+
+- New features
+  - Many changes in IT digitization. (ITAlgorithms v13r0) 
+    See talk at Amsterdam tracking workshop 20/11/2003
+      * New model for energy deposition in Silicon
+      * Convert to adc counts/simulate saturation
+      * Noise levels tuned to testbeam
+      * Remainders --> retuned to laser/testbeam. Spline parameterization
+      * Different noise/remainders in IT L/R T/B boxes
+      * Pick up machine background if it is there
+  - More IT checking histograms (ITCheckers v1r4)
+
+- New packaging
+  - Modified i/face IITsignalToNoiseTool (ITAlgorithms v13r0, L1VeloTrack v5r3p1)
+  - Rename some Rich tools (RichDetTools v3r3, RichReadout v1r2p1)
+
+- Bug fixes
+  - Fix an unitialized variable (bug #1963) (CaloDigit v1r4p1)
+
+
 </PRE><H1><A NAME=v3r1>2003-11-28 Boole v3r1</A></H1><PRE>
 ** Input data must be produced with:                               **
 **   SICBMC v264r2 or greater + SicbToOORAWH v3r0, v256r0 geometry **
