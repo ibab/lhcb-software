@@ -4,8 +4,11 @@
  *  Implementation file for RICH DAQ algorithm : RawBufferToRichDigitsAlg
  *
  *  CVS Log :-
- *  $Id: RawBufferToRichDigitsAlg.cpp,v 1.9 2004-10-30 19:13:05 jonrob Exp $
+ *  $Id: RawBufferToRichDigitsAlg.cpp,v 1.10 2004-11-02 13:13:49 jonrob Exp $
  *  $Log: not supported by cvs2svn $
+ *  Revision 1.9  2004/10/30 19:13:05  jonrob
+ *  Reworking RawBuffer decoding as a tool, to allow reconstruction to skip RichDigit creation
+ *
  *  Revision 1.8  2004/10/13 09:16:27  jonrob
  *  Use Data on Demand Service + various speed improvements
  *
@@ -62,8 +65,9 @@ StatusCode RawBufferToRichDigitsAlg::execute()
 {
   debug() << "Execute" << endreq;
 
-  // Make new container for RichDigits
+  // Make new container for RichDigits and give to Gaudi
   RichDigits * digits = new RichDigits();
+  put( digits, m_richDigitsLoc );
 
   // Get RichSmartIDs decoded from RawEvent
   const RichSmartID::Vector & smartIDs = m_decoder->allRichSmartIDs();
@@ -74,8 +78,7 @@ StatusCode RawBufferToRichDigitsAlg::execute()
     digits->insert( new RichDigit(), *iID );
   }
 
-  // Register new container of RichDigits to Gaudi data store
-  put( digits, m_richDigitsLoc );
+  // Final printout
   if ( msgLevel(MSG::DEBUG) ) {
     debug() << "Successfully registered " << digits->size()
             << " RichDigits at " << m_richDigitsLoc << endreq;
