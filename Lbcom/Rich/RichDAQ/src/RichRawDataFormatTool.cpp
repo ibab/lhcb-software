@@ -5,7 +5,7 @@
  *  Implementation file for class : RichRawDataFormatTool
  *
  *  CVS Log :-
- *  $Id: RichRawDataFormatTool.cpp,v 1.9 2005-03-06 14:08:33 jonrob Exp $
+ *  $Id: RichRawDataFormatTool.cpp,v 1.10 2005-03-08 10:34:59 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date 2004-12-18
@@ -327,7 +327,7 @@ void RichRawDataFormatTool::createDataBank( const RichDAQ::L1Map & L1Data,
           // Count the number of banks and size
           L1CountAndSize & cands = m_l1encodeSummary[ L1IDandV(version,(*iL1).first) ];
           // Increment bank size
-          cands.second.first += 3+dataBank.size(); // 3 L1 headers + data words
+          cands.second.first += 2+dataBank.size(); // 2 L1 headers + data words
           // Increment hit occupancy
           cands.second.second += (*iHPD).second.size();
         }
@@ -367,7 +367,7 @@ void RichRawDataFormatTool::createDataBank( const RichDAQ::L1Map & L1Data,
         // Count the number of banks and size
         L1CountAndSize & cands = m_l1encodeSummary[ L1IDandV(version,(*iL1).first) ];
         // Increment bank size
-        cands.second.first += 3+dataBank.size(); // 3 L1 headers + data words
+        cands.second.first += 2+dataBank.size(); // 2 L1 headers + data words
         // Increment hit occupancy
         cands.second.second += nHits;
         // Count number of HPD banks
@@ -491,7 +491,8 @@ void RichRawDataFormatTool::decodeToSmartIDs( const RawBank & bank,
         ++nHPDbanks;
         delete hpdBank;
 
-      } else {
+      } else 
+      {
         ++lineC;
       }
 
@@ -504,7 +505,7 @@ void RichRawDataFormatTool::decodeToSmartIDs( const RawBank & bank,
     // Count the number of banks and size
     L1CountAndSize & cands = m_l1decodeSummary[ L1IDandV(version,L1ID) ];
     // Increment bank size
-    cands.second.first += 3+bank.dataSize(); // 3 L1 headers + data words
+    cands.second.first += 2+bank.dataSize(); // 2 L1 headers + data words
     // Increment hit occupancy
     cands.second.second += smartIDs.size()-startSize;
     // Count number of HPD banks
@@ -547,7 +548,8 @@ RichRawDataFormatTool::decodeToSmartIDs( RichSmartID::Collection & smartIDs ) co
 
   // Loop over data banks
   for ( RichDAQ::RAWBanks::const_iterator iBank = richBanks.begin();
-        iBank != richBanks.end(); ++iBank ) {
+        iBank != richBanks.end(); ++iBank ) 
+  {
 
     // Decode this bank to RichSmartIDs
     decodeToSmartIDs( *iBank, smartIDs );
