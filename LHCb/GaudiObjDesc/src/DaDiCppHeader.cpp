@@ -1,4 +1,4 @@
-// $Id: DaDiCppHeader.cpp,v 1.62 2002-05-14 07:41:11 mato Exp $
+// $Id: DaDiCppHeader.cpp,v 1.63 2002-05-14 08:27:48 mato Exp $
 
 //#include "GaudiKernel/Kernel.h"
 
@@ -1594,7 +1594,7 @@ void printClass(std::ofstream& xmlOut,
     {
 	  xmlOut << "  /// Operator overloading for serializing (writing)"  << std::endl 
 	    << "  friend StreamBuffer& operator<< (StreamBuffer& s, const "
-	      << gddClassName << "& obj);" << std::endl 
+	      << gddClassName << "& obj)" << std::endl 
       << "  {" << std::endl 
       << "    return obj.serialize(s);" << std::endl 
       << "  }" << std::endl 
@@ -1602,7 +1602,7 @@ void printClass(std::ofstream& xmlOut,
 
 	  xmlOut << "  /// Operator overloading for serializing (reading)" << std::endl
 	    << "  friend StreamBuffer& operator>> (StreamBuffer& s, "
-      << gddClassName << "& obj);" << std::endl 
+      << gddClassName << "& obj)" << std::endl 
       << "  {" << std::endl
 	    << "    return obj.serialize(s);" << std::endl 
       << "  }" << std::endl
@@ -1610,7 +1610,7 @@ void printClass(std::ofstream& xmlOut,
 
 	  xmlOut << "  /// Operator overloading for stringoutput" << std::endl
 	    << "  friend std::ostream& operator<< (std::ostream& s, const "
-	    << gddClass->name().transcode() << "& obj);" << std::endl 
+	    << gddClass->name().transcode() << "& obj)" << std::endl 
       << "  {" << std::endl 
       << "    return obj.fillStream(s);" << std::endl 
       << "  }" << std::endl
