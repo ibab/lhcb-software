@@ -1,8 +1,10 @@
-! $Id: release.notes,v 1.28 2003-06-05 17:42:22 phicharp Exp $
+! $Id: release.notes,v 1.29 2003-06-17 17:45:15 gcorti Exp $
 ! Package     : DaVinciAssociators
 ! Responsible : Philippe Charpentier
 
-
+!================= DaVinciAssociators v4r2 2003-06-16 ======================
+! 2003-06-15 - Gloria CORTI
+ - change version number in requirements file
 ! 2003-06-06 - Philippe Charpentier
  - Particle2MCLinks : do not retrieve private versions of the ProtoParticle2MC
    associators, as there is only one possible table
