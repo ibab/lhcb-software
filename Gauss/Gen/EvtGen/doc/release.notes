@@ -1,6 +1,12 @@
 Package :EvtGen 
 Package manager : Patrick Robbe and Witek Pokorski
 
+! 2004-07-29 - Patrick Robbe
+ - add photos subdirectory to contain PHOTOS fixes.
+ - photos/phoene.F: temporary fix to deal with Bs0 -> phi e+ e- decays
+   in PHOTOS
+ - requirements: remove phoene symbol from PHOTOS link statement
+
 ! 2004-07-15 - Patrick Robbe
  - requirements: fix for PHOTOS link for windows
 

@@ -1,7 +1,7 @@
 package     EvtGen
 version     v5r5
  
-branches    cmt src doc EvtGen EvtGenModels EvtGenBase 
+branches    cmt src doc EvtGen EvtGenModels EvtGenBase photos
 
 use         CLHEP        v*
 use         PYTHIA       v*  Gen
@@ -9,7 +9,7 @@ use         GaudiPolicy  v*
 
 include_dirs  $(EVTGENROOT) 
 
-library       EvtGen -no_share *.cpp *.F 
+library       EvtGen -no_share *.cpp *.F ../photos/*.F
 
 
 macro_append EvtGen_cppflags "-DEVTSTANDALONE"
@@ -17,6 +17,9 @@ macro_append EvtGen_cppflags "-DEVTSTANDALONE"
 apply_pattern package_linkopts
 
 macro_append EvtGen_pp_fflags "" WIN32 "/DWIN32"
+
+macro_prepend EvtGen_linkopts " -Wl,-u,phoene_ " \
+              WIN32           " /include:_PHOENE "
 
 macro_append EvtGen_linkopts " -L$(CERNLIB_path)/lib -lphotos202" \
              WIN32            " /libpath:$(CERNLIB_path)/lib photos202.lib"
