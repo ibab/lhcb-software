@@ -9,6 +9,8 @@ ApplicationMgr.DLLs       += { "GeneratorModules" };
 ApplicationMgr.DLLs       += { "GaudiDb" };
 
 ApplicationMgr.TopAlg     += {"SingleParticleGun","DumpMC"};
+ApplicationMgr.ExtSvc     += {"ParticlePropertySvc"};
+
 ApplicationMgr.EvtSel      ="NONE";
 
 EventDataSvc.ForceLeaves = 1;
