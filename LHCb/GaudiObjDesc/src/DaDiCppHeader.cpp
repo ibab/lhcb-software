@@ -1,4 +1,4 @@
-// $Id: DaDiCppHeader.cpp,v 1.55 2002-03-19 20:50:39 mato Exp $
+// $Id: DaDiCppHeader.cpp,v 1.56 2002-03-27 16:56:36 mato Exp $
 
 //#include "GaudiKernel/Kernel.h"
 
@@ -328,7 +328,7 @@ template <class T> void printMethodImpl(std::ofstream& xmlOut,
 //-----------------------------------------------------------------------------
 void printSetGetAttDecl(std::ofstream& xmlOut,
                         DaDiClass* gddClass,
-                        char* accessor)
+                        const char* accessor)
 //-----------------------------------------------------------------------------
 {
   int i;
@@ -474,7 +474,7 @@ void printSetGetRelDecl(std::ofstream& xmlOut,
   int i;
   for(i=0; i < gddClass->sizeDaDiRelation(); i++)
   {
-    char *get_ret, *set_arg, *add_arg;      
+    const char *get_ret, *set_arg, *add_arg;      
     DaDiRelation* gddRelation = gddClass->popDaDiRelation();
     std::string gddRelRatio = gddRelation->ratio().transcode(),
                 gddRelGetMeth = gddRelation->getMeth().transcode(),
@@ -581,7 +581,7 @@ void printSetGetRelImpl(std::ofstream& xmlOut,
   int i;
   for(i=0; i<gddClass->sizeDaDiRelation(); i++)
   {
-    char *get_ret, *set_arg, *add_arg;
+    const char *get_ret, *set_arg, *add_arg;
     DaDiRelation* gddRelation = gddClass->popDaDiRelation();
     std::string gddRelGetMeth = gddRelation->getMeth().transcode(),
                 gddRelSetMeth = gddRelation->setMeth().transcode(),
@@ -2085,7 +2085,7 @@ void printNamespace(std::ofstream& xmlOut,
 //-----------------------------------------------------------------------------
 void printCppHeader(DaDiPackage* gddPackage, 
                     char* envXmlDB, 
-                    char* envOut, 
+                    const char* envOut, 
                     bool additionalImports)
 //-----------------------------------------------------------------------------
 {
@@ -2214,7 +2214,7 @@ void printCppHeader(DaDiPackage* gddPackage,
 ///
   if (additionalImports)
   {
-    char* addImportsFile = "AddImports.txt";
+    const char* addImportsFile = "AddImports.txt";
     std::ifstream addXml(addImportsFile);
     std::string aline, first, second;
 
@@ -2234,7 +2234,6 @@ void printCppHeader(DaDiPackage* gddPackage,
     }
 
     addXml.close();
-    delete addImportsFile;
   }
 
 
@@ -2558,13 +2557,14 @@ int main(int argC,
 {
 
   #ifdef WIN32
-    char* sep = "\\";
-  #elif defined(__linux)
-    char* sep = "/";
+    const char* sep = "\\";
+  #else
+    const char* sep = "/";
   #endif
 
   std::vector<char*> files;
-  char *envOut = "", *envXmlDB;
+  const char *envOut = "";
+  char* envXmlDB;
   std::string nextArg;
   bool additionalImports = false;
 

@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/GaudiObjDesc/src/DaDiCppDict.h,v 1.3 2002-03-13 18:35:46 mato Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/GaudiObjDesc/src/DaDiCppDict.h,v 1.4 2002-03-27 16:56:36 mato Exp $
 #ifndef DADICPPDICT_H 
 #define DADICPPDICT_H 1
 
@@ -22,7 +22,7 @@ public:
   
   static void printCppDictionary(DaDiPackage* gddPackage, 
                                  char* envXmlDB, 
-                                 char* envOut, 
+                                 const char* envOut, 
                                  bool additionalImports,
                                  std::string dothDir);
 

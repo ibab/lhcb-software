@@ -1,4 +1,4 @@
-// $Id: DaDiCppDict.cpp,v 1.21 2002-03-18 08:22:24 mato Exp $
+// $Id: DaDiCppDict.cpp,v 1.22 2002-03-27 16:56:36 mato Exp $
 
 //#include "GaudiKernel/Kernel.h"
 #include "DaDiTools.h"
@@ -167,13 +167,14 @@ int main(int argC, char* argV[])
 {
 
   #ifdef WIN32
-    char* sep = "\\";
-  #elif defined(__linux)
-    char* sep = "/";
+    const char* sep = "\\";
+  #else
+    const char* sep = "/";
   #endif
 
   std::vector<char*> files;
-  char *envOut = "", *envXmlDB;
+  const char *envOut = "";
+  char *envXmlDB;
   std::string nextArg;
   bool additionalImports = false;
   std::string dothDir = "Event";
@@ -291,7 +292,7 @@ int main(int argC, char* argV[])
 //-----------------------------------------------------------------------------
 void DDBEdict::printCppDictionary(DaDiPackage* gddPackage, 
                                   char* envXmlDB, 
-                                  char* envOut, 
+                                  const char* envOut, 
                                   bool additionalImports,
                                   std::string dothDir)
 //-----------------------------------------------------------------------------
@@ -411,7 +412,7 @@ void DDBEdict::printCppDictionary(DaDiPackage* gddPackage,
 
   if (additionalImports)
   {
-    char* addImportsFile = "AddImports.txt";
+    const char* addImportsFile = "AddImports.txt";
     std::ifstream addXml(addImportsFile);
     std::string aline, first, second;
 
@@ -431,7 +432,6 @@ void DDBEdict::printCppDictionary(DaDiPackage* gddPackage,
     }
 
     addXml.close();
-    delete addImportsFile;
   }
 
 
