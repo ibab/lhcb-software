@@ -1,9 +1,9 @@
-// $Id: L0MuonCandidate.cpp,v 1.6 2002-09-12 09:43:24 atsareg Exp $
+// $Id: L0MuonCandidate.cpp,v 1.7 2004-01-26 15:12:38 odescham Exp $
 
 #include <cmath>
 #include <vector>
 #include "Event/L0MuonCandidate.h"
-#include "L0MuonBase.h"
+#include "Event/L0MuonBase.h"
 
 L0MuonCandidate::L0MuonCandidate(int status) : m_bitcode(0),
 					       m_theta(0.0),
