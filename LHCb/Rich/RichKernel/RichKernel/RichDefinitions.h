@@ -1,21 +1,10 @@
-// $Id: RichDefinitions.h,v 1.4 2002-04-18 11:43:46 cattanem Exp $
+// $Id: RichDefinitions.h,v 1.5 2002-04-18 12:02:50 cattanem Exp $
 #ifndef RICHKERNEL_RICHDEFINITIONS_H
 #define RICHKERNEL_RICHDEFINITIONS_H 1
 
 #include "GaudiKernel/StreamBuffer.h"
 #include <vector>
 #include <list>
-
-/// Output ASCII a vector of items
-/// Not this is a private hack to get fillStream working with std::vector<T>
-/// Some common LHCb solution to this problem needs to be found
-template <class T> inline
-std::ostream& operator << (std::ostream& s, const std::vector<T>& v)  {
-  for ( std::vector<T>::const_iterator i = v.begin(); i != v.end(); i++ )  {
-    s << (*i) << " " ;
-  }
-  return s;
-}
 
 namespace Rich {
 
