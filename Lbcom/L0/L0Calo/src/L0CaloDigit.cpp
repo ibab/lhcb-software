@@ -1,4 +1,4 @@
-// $Id: L0CaloDigit.cpp,v 1.3 2002-02-06 08:38:15 cattanem Exp $
+// $Id: L0CaloDigit.cpp,v 1.4 2002-04-04 06:04:13 ocallot Exp $
 // Include files
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -7,7 +7,7 @@
 #include "GaudiKernel/ObjectVector.h"
 
 /// CaloEvent
-#include "CaloEvent/CaloDigit.h"
+#include "Event/CaloDigit.h"
 
 /// Event/L0Event
 #include "Event/L0CaloAdc.h"
@@ -32,10 +32,10 @@ const        IAlgFactory& L0CaloDigitFactory = Factory ;
 L0CaloDigit::L0CaloDigit( const std::string& name,
                           ISvcLocator* pSvcLocator)
   : Algorithm ( name , pSvcLocator )
-  , m_nameOfEcalDataContainer   ( "/Event/Raw/Ecal/Digits"    )
-  , m_nameOfHcalDataContainer   ( "/Event/Raw/Hcal/Digits"    )
-  , m_nameOfPrsDataContainer    ( "/Event/Raw/Prs/Digits"     )
-  , m_nameOfSpdDataContainer    ( "/Event/Raw/Spd/Digits"     )
+  , m_nameOfEcalDataContainer   ( CaloDigitLocation::Ecal )
+  , m_nameOfHcalDataContainer   ( CaloDigitLocation::Hcal )
+  , m_nameOfPrsDataContainer    ( CaloDigitLocation::Prs  )
+  , m_nameOfSpdDataContainer    ( CaloDigitLocation::Spd  )
   , m_nameOfEcalOutput          ( L0CaloAdcLocation::Ecal     )
   , m_nameOfHcalOutput          ( L0CaloAdcLocation::Hcal     )
   , m_nameOfPrsOutput           ( L0PrsSpdHitLocation::Prs    )

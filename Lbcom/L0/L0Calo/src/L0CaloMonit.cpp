@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/L0/L0Calo/src/L0CaloMonit.cpp,v 1.2 2002-01-30 15:58:20 ocallot Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/L0/L0Calo/src/L0CaloMonit.cpp,v 1.3 2002-04-04 06:04:13 ocallot Exp $
 
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -86,19 +86,19 @@ StatusCode L0CaloMonit::execute() {
 
   L0CaloCandidates::const_iterator cand;
   for ( cand = candidates->begin() ; candidates->end() != cand ; ++cand ) {
-    if ( L0::Electron == (*cand)->type()  ) {
+    if ( L0Calo::Electron == (*cand)->type()  ) {
       m_histElectron  -> fill( (*cand)->et()/GeV, 1. );
-    } else if ( L0::Photon == (*cand)->type()  ) {
+    } else if ( L0Calo::Photon == (*cand)->type()  ) {
       m_histPhoton    -> fill( (*cand)->et()/GeV, 1. );
-    } else if ( L0::Hadron == (*cand)->type()  ) {
+    } else if ( L0Calo::Hadron == (*cand)->type()  ) {
       m_histHadron    -> fill( (*cand)->et()/GeV, 1. );
-    } else if ( L0::Hadron2 == (*cand)->type()  ) {
+    } else if ( L0Calo::Hadron2 == (*cand)->type()  ) {
       m_histHadron2   -> fill( (*cand)->et()/GeV, 1. );
-    } else if ( L0::Pi0Local == (*cand)->type()  ) {
+    } else if ( L0Calo::Pi0Local == (*cand)->type()  ) {
       m_histPi0Local  -> fill( (*cand)->et()/GeV, 1. );
-    } else if ( L0::Pi0Global == (*cand)->type()  ) {
+    } else if ( L0Calo::Pi0Global == (*cand)->type()  ) {
       m_histPi0Global -> fill( (*cand)->et()/GeV, 1. );
-    } else if ( L0::SumEt == (*cand)->type()  ) {
+    } else if ( L0Calo::SumEt == (*cand)->type()  ) {
       m_histSumEt     -> fill( (*cand)->et()/GeV, 1. );
     }
   }

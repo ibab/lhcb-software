@@ -1,4 +1,4 @@
-// $Id: L0CaloAlg.cpp,v 1.11 2002-02-01 15:08:16 ocallot Exp $
+// $Id: L0CaloAlg.cpp,v 1.12 2002-04-04 06:04:12 ocallot Exp $
 
 /// STL
 #include <stdio.h>
@@ -531,16 +531,16 @@ StatusCode L0CaloAlg::execute() {
 
   // Store the various candidates
 
-  electron.saveCandidate(  L0::Electron,  L0Calo );
-  photon.saveCandidate(    L0::Photon,    L0Calo );
-  hadron.saveCandidate(    L0::Hadron,    L0Calo );
-  hadron2.saveCandidate(   L0::Hadron2,   L0Calo );
-  pi0Local.saveCandidate(  L0::Pi0Local,  L0Calo );
-  pi0Global.saveCandidate( L0::Pi0Global, L0Calo );
+  electron.saveCandidate(  L0Calo::Electron,  L0Calo );
+  photon.saveCandidate(    L0Calo::Photon,    L0Calo );
+  hadron.saveCandidate(    L0Calo::Hadron,    L0Calo );
+  hadron2.saveCandidate(   L0Calo::Hadron2,   L0Calo );
+  pi0Local.saveCandidate(  L0Calo::Pi0Local,  L0Calo );
+  pi0Global.saveCandidate( L0Calo::Pi0Global, L0Calo );
 
   if ( 0 < sumEt ) {
     HepPoint3D dummy( 0., 0., 0.);
-    L0CaloCandidate* hsum = new L0CaloCandidate ( L0::SumEt, CaloCellID(),
+    L0CaloCandidate* hsum = new L0CaloCandidate ( L0Calo::SumEt, CaloCellID(),
                                                   sumEt,
                                                   sumEt * m_etScale,
                                                   dummy,

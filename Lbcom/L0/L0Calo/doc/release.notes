@@ -1,6 +1,11 @@
-! $Id: release.notes,v 1.13 2002-02-01 15:08:16 ocallot Exp $
+! $Id: release.notes,v 1.14 2002-04-04 06:04:12 ocallot Exp $
 Package		: L0/L0Calo
 Package Manager : Olivier Callot
+
+!=============================================================================
+! 04/04/2002 - Olivier Callot
+  - Modified to adapt to L0Event v11r0, i.e. changed namespace L0:: to L0Calo::
+  - Adapted for the new Calo Event model v10r0
 
 !=============================================================================
 ! 01/02/2002 - Olivier Callot  ** v4r0 **
