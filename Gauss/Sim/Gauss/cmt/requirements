@@ -1,5 +1,5 @@
 package Gauss
-version v12r1
+version v12r2
 
 # =============================================================================
 # structure 
@@ -26,9 +26,9 @@ use Magnet              v2r*    Det
 
 #GiGa staff...
 use GiGaCnv             v13r0   Sim
-use GaussTools          v8r3    Sim
+use GaussTools          v8r4    Sim
 use GaussTracker        v2r6    Sim
-use GaussRICH           v4r1    Sim
+use GaussRICH           v4r2    Sim
 use GaussCalo           v4r0    Sim
 use GaussPhysics        v2r3    Sim
 use CaloDetXmlCnv       v2r3    Det 
@@ -37,19 +37,18 @@ use CaloDetXmlCnv       v2r3    Det
 #use GiGaVisUI           v2r1    Sim
 
 # generator
-use GeneratorModules    v8r1    Gen
+use GeneratorModules    v8r2    Gen
 
 #get information from DBASE and PARAM 
 use XmlDDDB             v17r1   Det   -no_auto_imports
 use FieldMap            v4r3          -no_auto_imports
 use DecFiles            v1r0    Gen   -no_auto_imports
-use ParamFiles          v1r1    $(LHCb_release_area)/PARAM   -no_auto_imports
+use ParamFiles          v1r2    $(LHCb_release_area)/PARAM   -no_auto_imports
 
 # =============================================================================
 # Essential environment variables 
 # =============================================================================
 set  GAUSSOPTS "${GAUSSROOT}/options"
-set  GAUSSDATA "${GAUSSROOT}/data"
 
 # =============== visualization  ==============================================
 set  G4DAWNFILE_DEST_DIR       "../job/"
