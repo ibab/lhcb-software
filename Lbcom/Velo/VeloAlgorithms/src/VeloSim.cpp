@@ -1,4 +1,4 @@
-// $Id: VeloSim.cpp,v 1.13 2002-07-09 20:30:15 parkesb Exp $
+// $Id: VeloSim.cpp,v 1.14 2002-07-10 20:00:03 parkesb Exp $
 // Include files
 // STL
 #include <string>
@@ -445,6 +445,7 @@ void VeloSim::chargePerPoint(MCVeloHit* hit, int Npoints,
     // gaussian fluctuations
     if (m_inhomogeneousCharge) fluctuate=m_gaussDist()*sqrt(chargeEqualN);
     Spoints[i]=chargeEqualN+fluctuate;
+    log << MSG::VERBOSE << "charge for pt" << i << " is " << Spoints[i] << endreq;
   }
 
   // inhomogeneous charge dist from delta rays
@@ -500,22 +501,23 @@ void VeloSim::diffusion(MCVeloHit* hit,int Npoints,
       << endreq;
 
   HepVector3D path = (hit->exit())-(hit->entry());
-  path/=(Npoints-1); // distance between steps on path
-  HepPoint3D point= (hit)->entry();
+  path/=(Npoints*2); // distance between steps on path
+  HepPoint3D point= (hit)->entry()+path;
   double thickness=m_velo->siliconThickness(hit->sensor())/micron;
   double ZDiffuse=thickness;
   // assume strips are at opposite side of Si to entry point
-  double dz=ZDiffuse/ (Npoints-1); // distance between steps on path
+  double dz=ZDiffuse/ (double(Npoints)*2.); // distance between steps on path
+  ZDiffuse-=dz;
 
   for (int ipt=0; ipt<Npoints; ipt++){ //loop over points on path
     double fraction,pitch;
     bool valid;
-    //      log << MSG::DEBUG << " ipt " << ipt << "point " << point << endreq;
+          log << MSG::VERBOSE << " ipt " << ipt << " point " << point << endreq;
     //calculate point on path
     VeloChannelID entryChan=m_velo->channelID(point,fraction,pitch,valid); 
-    //      log << MSG::DEBUG << "chan " << entryChan.strip() << " fraction " 
-    //          << fraction << " pitch " << pitch << " valid " << valid 
-    //          << endreq;
+          log << MSG::VERBOSE << "chan " << entryChan.strip() << " fraction " 
+              << fraction << " pitch " << pitch << " valid " << valid 
+              << endreq;
     const int neighbs=1; // only consider =/- this many neighbours
     double chargeFraction[2*neighbs+1];
     double totalFraction=0.;
@@ -527,21 +529,21 @@ void VeloSim::diffusion(MCVeloHit* hit,int Npoints,
       //      double diffuseDist1=((iNg)-fraction)*pitch/micron;
       //      double diffuseDist2=((iNg+1.)-fraction)*pitch/micron;
       double diffuseSigma=m_baseDiffuseSigma*sqrt(thickness*ZDiffuse);
-      //  log << MSG::DEBUG << "diffuseDist1 " << diffuseDist1 
-      // <<   " diffuseDist2 " << diffuseDist2 << " diffuseSigma " 
-      // << diffuseSigma << " base " << m_baseDiffuseSigma 
-      // << " zdiff " << ZDiffuse << endreq;
+        log << MSG::VERBOSE << "diffuseDist1 " << diffuseDist1 
+       <<   " diffuseDist2 " << diffuseDist2 << " diffuseSigma " 
+       << diffuseSigma << " base " << m_baseDiffuseSigma 
+       << " zdiff " << ZDiffuse << endreq;
 
       double prob1= g01eac(Nag_UpperTail,diffuseDist1/diffuseSigma , 
                            NAGERR_DEFAULT);
       double prob2= g01eac(Nag_UpperTail,diffuseDist2/diffuseSigma , 
                            NAGERR_DEFAULT);
-      //  log << MSG::DEBUG << " prob1+2 " <<  prob1 << " " << prob2 << endreq;
+        log << MSG::VERBOSE << " prob1+2 " <<  prob1 << " " << prob2 << endreq;
       int i= (iNg<0) ? neighbs+abs(iNg) : iNg;
       chargeFraction[i]=fabs(prob1-prob2);
       totalFraction+= fabs(prob1-prob2);
-      // log << MSG::DEBUG << i << " iNg " << iNg << " cfrac " 
-      //     << chargeFraction[i]  << " tot " << totalFraction << endreq;
+       log << MSG::VERBOSE << i << " iNg " << iNg << " cfrac " 
+           << chargeFraction[i]  << " tot " << totalFraction << endreq;
     }
 
     // renormalise allocated fractions to 1., and update strip signals
@@ -566,8 +568,8 @@ void VeloSim::diffusion(MCVeloHit* hit,int Npoints,
       }
     } // neighbours loop
 
-    point+=path; // update to look at next point on path
-    ZDiffuse-=dz;
+    point+=2*path; // update to look at next point on path
+    ZDiffuse-=2.*dz;
   } // loop over points
 
   return;
@@ -957,10 +959,13 @@ StatusCode VeloSim::finalProcess(){
   // instead sort whole container and erase. 
     std::sort(m_FEs->begin(), m_FEs->end(), VeloEventFunctor::Less_by_charge<const MCVeloFE*>());
     std::reverse(m_FEs->begin(),m_FEs->end());
-    MCVeloFEs::iterator it = std::find_if(m_FEs->begin(), 
+    MCVeloFEs::iterator it1 = std::find_if(m_FEs->begin(), 
                      m_FEs->end(), 
                      chargeThreshold());
-    m_FEs->erase(it, m_FEs->end());
+    MCVeloFEs::iterator it2 = std::find_if(it1, 
+                     m_FEs->end(), 
+                     chargeThreshold());
+    m_FEs->erase(it1, it2);
 
 // sort FEs into order of ascending sensor + strip
     std::sort(m_FEs->begin(),m_FEs->end(),VeloEventFunctor::Less_by_key<const MCVeloFE*>());
