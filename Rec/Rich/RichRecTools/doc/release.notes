@@ -4,5 +4,9 @@
 ! Purpose     : Utility algorithms and tools for RICH reconstruction algorithms
 !------------------------------------------------------------------------------
 
+!========================== RichRecTools v1r0 2002-11-15 ======================
+! 2002-11-15 - Marco Cattaneo
+ - Release all tools in RichRecAlgBase::finalize
+
 ! 2002-07-27 - Chris Jones
  - first version v1r0 in CVS

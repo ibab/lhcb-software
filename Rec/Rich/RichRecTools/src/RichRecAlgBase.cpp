@@ -1,4 +1,4 @@
-// $Id: RichRecAlgBase.cpp,v 1.1 2002-11-14 13:54:23 jonrob Exp $
+// $Id: RichRecAlgBase.cpp,v 1.2 2002-11-15 15:28:04 cattanem Exp $
 // Include files
 
 // from Gaudi
@@ -176,6 +176,13 @@ StatusCode RichRecAlgBase::trTracks() {
 
 //  Finalize
 StatusCode RichRecAlgBase::finalize() {
+
+  // Release all tools
+  if( 0 != m_richRecPixelTool )  toolSvc()->releaseTool( m_richRecPixelTool );
+  if( 0 != m_richRecTrackTool )  toolSvc()->releaseTool( m_richRecTrackTool );
+  if( 0 != m_richRecPhotonTool ) toolSvc()->releaseTool( m_richRecPhotonTool );
+  if( 0 != m_richRecSegmentTool) toolSvc()->releaseTool( m_richRecSegmentTool );
+  if( 0 != m_richDetInterface )  toolSvc()->releaseTool( m_richDetInterface );
 
   return StatusCode::SUCCESS;
 }
