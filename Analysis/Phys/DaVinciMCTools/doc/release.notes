@@ -1,8 +1,9 @@
-! $Id: release.notes,v 1.42 2005-01-12 09:26:55 pkoppenb Exp $
+! $Id: release.notes,v 1.43 2005-01-18 08:31:09 pkoppenb Exp $
 ! Package     : DaVinciMCTools
 ! Responsible : P. Koppenburg
 !=============================================================================
 
+!========================== DaVinciMCTools v5r8 2005-01-18 ===================
 ! 2005-01-12 - P. Koppenburg
   - src/IsBEvent.{cpp,h}
     . New GaudiAlgorithm that checke is given particles are in the Event and
