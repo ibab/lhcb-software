@@ -20,19 +20,24 @@
 #include "$DAVINCIROOT/options/L0.opts"  
 //#include "$DAVINCIROOT/options/L0Checking.opts"  
 #include "$TRGSYSROOT/options/L1.opts"
-//#include "$TRGSYSROOT/options/Hlt.opts"
-//#include "$HLTGENERICROOT/options/HltGeneric.opts"
-// Checking of L1 and HLT:
-//#include "$TRGSYSROOT/options/TrgChecking.opts"  
-
 ApplicationMgr.TopAlg += { "GaudiSequencer/L0L1Seq" };
 L0L1Seq.Members = { "TrgL1Filter", "PrintHeader/PassedL1" };
 PassedL1.OutputLevel = 2 ;
 
+//--------------------------------------------------------------
+// HLT generic filtering. Uncomment three lines:
+//#include "$HLTGENERICROOT/options/HltGeneric.opts"
+//HltGenericSeq.Members += { "PrintHeader/PassedHlt" };
+//PassedHlt.OutputLevel = 2 ;
+
+//--------------------------------------------------------------
+// Checking of L1 and/or HLT:
+//#include "$TRGSYSROOT/options/TrgChecking.opts"  
+//--------------------------------------------------------------
 #include "$DAVINCIROOT/options/DstContent.opts"
-DstWriter.RequireAlgs  = { "L0L1Seq" } ;
+DstWriter.RequireAlgs  = { "L0L1Seq", "HltGenericDecision" } ;
 DstWriter.Preload  = false ;
-DstWriter.Output = "DATAFILE='L0L1Accepted.dst' TYP='POOL_ROOTTREE' OPT='CREATE'" ;
+DstWriter.Output = "DATAFILE='L0L1Accepted.dst' TYP='POOL_ROOTTREE' OPT='RECREATE'" ;
 //DstWriter.OutputLevel = 1 ;
 ApplicationMgr.OutStream += { "DstWriter" } ;
 //--------------------------------------------------------------
@@ -48,5 +53,5 @@ MessageSvc.Format = "% F%40W%S%7W%R%T %0W%M";
 EventSelector.FirstEvent = 1;
 
 #include "$DAVINCIROOT/options/DaVinciTestData.opts"
-ApplicationMgr.EvtMax    = 100 ;
+ApplicationMgr.EvtMax    = 1000 ;
 EventSelector.PrintFreq  = 1;
