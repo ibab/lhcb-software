@@ -1,5 +1,5 @@
 package GaussSys
-version v17r0
+version v18r0
 
 branches cmt doc
 
@@ -8,12 +8,12 @@ branches cmt doc
 #==================================================================
 
 # Gauss application
-use Gauss		v17r0	  Sim
+use Gauss		v18r0	  Sim
 
 # Generator stuff ...
-use PYTHIA              v2r6205p4 Gen    
+use PYTHIA              v1r6224p0 Gen    
 use HepEvt              v1r121p0  Gen
-use EvtGen              v5r6      Gen
+use EvtGen              v6r0      Gen
 use GeneratorModules    v12r0     Gen
 
 # GiGa stuff...

@@ -4,6 +4,11 @@
 ! Purpose     : Gauss system
 !-----------------------------------------------------------------------------
 
+!======================= GaussSys v18r0 2004-09-03 ==============
+! 2004-09-03 - Florence RANJARD
+ - requirements - uses PYTHIA, pdflib and Photos from GENSER_0_1_2
+                  uses pythia 6.224.2 pdflib804 and photos 202
+
 !======================= GaussSys v17r0 2004-08-11 ===============
 ! 2004-08-11 - Florence Ranjard
  - uses geant4 6.2.p01
