@@ -1,4 +1,4 @@
-// $Id: Gauss.opts,v 1.49 2004-04-29 17:36:41 gcorti Exp $ 
+// $Id: Gauss.opts,v 1.50 2004-05-03 14:49:15 ranjard Exp $ 
 
 #include "$GAUSSOPTS/Common.opts"
 
@@ -20,7 +20,7 @@ ApplicationMgr.TopAlg += { "Sequencer/Simulation"};
 // in ROOT format
 //GaussTape.Output = "DATAFILE='GaussRoot.oosim' TYP='ROOT' OPT='RECREATE'";
 // in POOL format
-GaussTape.Output = "DATAFILE='PFN:GaussPool.sim' TYP='POOL_ROOTTREE' OPT='REC'";
+GaussTape.Output = "DATAFILE='PFN:GaussPool_11144100.sim' TYP='POOL_ROOTTREE' OPT='REC'";
 PoolDbCacheSvc.Catalog = { "xmlcatalog_file:NewCatalog.xml" };
 
 ApplicationMgr.EvtMax      = 10;
@@ -29,5 +29,6 @@ GaussInit.RunNumber = 1;
 MessageSvc.OutputLevel    = 3;
  
 // to simulate <evttype> put a line similar to the following 
+#include "$DECFILESROOT/options/11144100.opts"  // Bd_JpsiKS,mm
 //#include "$DECFILESROOT/options/30000000.opts"  // Min Bias
 
