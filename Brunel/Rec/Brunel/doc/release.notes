@@ -17,13 +17,14 @@ Purpose: LHCb reconstruction program
  - 'err' on 2d tracks now means 45 degree subsector (L1VeloTrack v2r1) 
  - Fix pi0 mass (CaloTools v4r2, CaloRec v2r2)
  - Fix Rich2 position (XmlDDDB v12r3)
+ - Fix units for crosstalk region in Muon (XmlDDDB v12r3)
  - Latest Gaudi bug fixes (GaudiSvc v8r3) 
  - Fixes to run on Windows
    (CaloTools v4r2, UpstreamPR v2r1, MuonID v2r1, RiSicbCnv v4r2)
  - Fix problem of inconsistent Velo numbering between SICBMC and Brunel
    (VeloSim v2r1)
  - Write all MuonCoords to DST (remove filtering), do not write MuonDigits
-   (BrunelDst.opts)
+   (BrunelAlgs v1r2, BrunelDst.opts)
 
 </PRE><H1><A NAME=v12r0>2002-07-19 Brunel v12r0</A></H1><PRE>
 Second release of Brunel for summer 2002 pre-production.
