@@ -3,9 +3,11 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
-</PRE><H1><A NAME=v5r9>2004-05-13 Boole v5r9</A></H1><PRE>
+</PRE><H1><A NAME=v5r9>2004-05-24 Boole v5r9</A></H1><PRE>
 
 - Bug fixes
+  . Protect size of L1 output bank to not exceed 126 words, so as not to 
+    trigger exception and job abort in this rare case (L0Calo v7r6)
   . Release DOM tree after use, in L0MXmlReader (L0mConf v2r2p1)
 
 </PRE><H1><A NAME=v5r8>2004-04-29 Boole v5r8</A></H1><PRE>
