@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/component/XmlCnvSvc.h,v 1.8 2002-05-29 07:43:55 sponce Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/component/XmlCnvSvc.h,v 1.9 2002-06-03 17:12:59 sponce Exp $
 
 #ifndef DETDESC_XMLCNVSVC_H
 #define DETDESC_XMLCNVSVC_H
@@ -220,8 +220,8 @@ private:
 //  starts with a letter. This statement makes the assumption that this
 //  token is either describing a unit or is a variable that has a unit
 //  itself, which may be wrong
-//         o it is of the form '-'? abs '(' sum ')' (which is a call to
-//  the function "abs") and sum has a unit
+//         o it is of the form '-'? function_name '(' sum ')' and the function
+//  is "sqrt" or "abs" and sum has a unit
 //    - note that the result of a function is supposed to have no unit
 //  in general
 

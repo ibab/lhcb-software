@@ -1,9 +1,13 @@
 ! =============================================================================
-! $Id: release.notes,v 1.103 2002-06-03 12:26:53 cattanem Exp $ 
+! $Id: release.notes,v 1.104 2002-06-03 17:12:59 sponce Exp $ 
 ! =============================================================================
 ! package DetDesc
 ! package manager : N.N 
 ! =============================================================================
+
+! 2002-06-03 - Sebastien Ponce
+ - bugfix on the unit checker : function sqrt is considered as returning a
+   unit if its argument has one
 
 !====================== DetDesc v10r2 update 2002-06-03 =======================
 ! 2002-06-03 - Olivier Callot

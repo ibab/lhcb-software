@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/component/XmlCnvSvc.cpp,v 1.15 2002-05-30 17:03:13 sponce Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/component/XmlCnvSvc.cpp,v 1.16 2002-06-03 17:12:59 sponce Exp $
 
 // Include Files
 #include <util/PlatformUtils.hpp>
@@ -593,7 +593,8 @@ bool XmlCnvSvc::exprHasUnit (std::string s,
       // else we are calling a function, the result has no unit except
       // if the function abs is called.
       int findex = s.find_last_not_of(' ', index-1);
-      if (s.substr(realBaseIndex, findex+1-realBaseIndex) == "abs") {
+      std::string function = s.substr(realBaseIndex, findex+1-realBaseIndex);
+      if ((function == "abs") || (function == "sqrt")) {
         return sumHasUnit(s, index+1, s.find_last_of(')', lastIndex));
       } else {
         return false;
