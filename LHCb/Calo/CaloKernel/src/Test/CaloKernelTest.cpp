@@ -1,8 +1,11 @@
-// $Id: CaloKernelTest.cpp,v 1.6 2002-04-22 16:56:05 ibelyaev Exp $ 
+// $Id: CaloKernelTest.cpp,v 1.7 2003-12-09 10:14:42 cattanem Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.6  2002/04/22 16:56:05  ibelyaev
+//  move several files to Kernel/LHCbKernel package
+//
 // Revision 1.5  2002/03/28 12:10:11  ibelyaev
 //  minor fix in OS_iterator class
 //
@@ -36,7 +39,7 @@
 #include "Kernel/CaloHashMap.h"
 
 // ============================================================================
-/**  @file CaloGenTest.cpp 
+/**  @file CaloKernelTest.cpp 
  * 
  * small test program to test some includes from CaloGen package 
  *  

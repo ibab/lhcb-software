@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.28 2003-10-14 09:04:35 cattanem Exp $
+! $Id: release.notes,v 1.29 2003-12-09 10:14:42 cattanem Exp $
 ! =============================================================================
 ! Package     : CaloKernel
 ! Responsible : Vanya Belyaev Ivan.Belyaev@itep.ru
@@ -6,6 +6,11 @@
 ! The package contains the general Calo Kernel classes and utilities,
 ! which are essentially independent from Detector and Event models
 ! =============================================================================
+
+!======================= CaloKernel v2r4 2003-12-08 =======================
+! 2003-12-08 - Marco Cattaneo
+ - Move to Gaudi v13 (use LHCbKernel v3r* in requirements)
+ - Fix some doxygen warnings
 
 !====================== CaloKernel v2r3p1 2003-10-14 ======================
 ! 2003-06-26 - Ivan Belyaev

@@ -1,8 +1,11 @@
-// $Id: CaloCollection.h,v 1.2 2002-03-18 18:16:21 ibelyaev Exp $
+// $Id: CaloCollection.h,v 1.3 2003-12-09 10:14:42 cattanem Exp $
 // ============================================================================ 
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================ 
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2002/03/18 18:16:21  ibelyaev
+//  small update for LHCbKernel package
+//
 // Revision 1.1.1.1  2001/11/25 14:07:38  ibelyaev
 // New Package: substitution of the  previous CaloGen package
 //
@@ -50,16 +53,16 @@ template <class CONTENT                          ,  /// type of content
    std::unary_function<const CaloCellID&,RETTYPE&> >  /// functor
 class CaloCollection :  public CONTAINER ,  public FUNCTOR 
 {
-  ///
+  //
   public: 
-  ///
+  //
   typedef    CONTENT                        Content    ;   
   typedef    RETTYPE                        ReturnType ; 
   typedef    const CaloCellID&              Index      ; 
   typedef    typename CONTAINER::size_type  size_type  ; 
-  ///
+  //
 public:
-  ///
+  //
   /** constructor
       @param def   the default return value 
       @param num   initial size 
@@ -74,7 +77,7 @@ public:
   { };
   /// (virtual) destructor 
   virtual ~CaloCollection() { clear(); };
-  ///
+  //
   public: 
   
   // CONTAINER

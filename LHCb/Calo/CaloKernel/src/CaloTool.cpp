@@ -1,8 +1,11 @@
-// $Id: CaloTool.cpp,v 1.14 2003-01-17 14:15:19 sponce Exp $
+// $Id: CaloTool.cpp,v 1.15 2003-12-09 10:14:42 cattanem Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.14  2003/01/17 14:15:19  sponce
+// support for gcc 3.2
+//
 // Revision 1.13  2002/12/01 14:17:38  ibelyaev
 //  minor changes
 //
@@ -34,31 +37,17 @@
  */
 // ============================================================================
 
-// ============================================================================
-/** @var  s_detSvcName 
- *  name of Detector Data Service 
- */
-// ============================================================================
+///  name of Detector Data Service 
 static const std::string s_detSvcName    ( "DetectorDataSvc" );
-// ============================================================================
-/** @var  s_evtSvcName 
- *  name of Event Data  Service 
- */
-// ============================================================================
+
+/// name of Event Data  Service 
 static const std::string s_evtSvcName    ( "EventDataSvc"    );
-// ============================================================================
-/** @var  s_chronoSvcName 
- *  name of Chrono & Stat Service 
- */
-// ============================================================================
+
+///  name of Chrono & Stat Service 
 static const std::string s_chronoSvcName ( "ChronoStatSvc"   );
-// ============================================================================
-/** @var  s_toolSvcName 
- *  name of Tool Service 
- */
-// ============================================================================
+
+///  name of Tool Service 
 static const std::string s_toolSvcName   ( "ToolSvc"         );
-// ============================================================================
 
 // ============================================================================
 /** Standard constructor
