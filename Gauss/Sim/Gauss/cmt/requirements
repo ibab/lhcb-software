@@ -1,5 +1,5 @@
 package Gauss
-version v16r0
+version v17r0
 
 # =============================================================================
 # structure 
@@ -7,34 +7,36 @@ version v16r0
 branches src doc options cmt job
 
 #== Set the Gauss version environment variable, read by GaussInit ==
-pattern GaussVersion set GAUSSVERS <version>
+pattern GaussVersion path_append APPVERSION <version>
 apply_pattern GaussVersion
 
 #=========================================================================
 #get information from DBASE and PARAM 
 use XmlDDDB             v22r2   Det   -no_auto_imports
 use FieldMap            v4r5          -no_auto_imports
-use DecFiles            v6r1    Gen   -no_auto_imports
-use ParamFiles          v3r7          -no_auto_imports
+use DecFiles            v6r2    Gen   -no_auto_imports
+use ParamFiles          v3r8          -no_auto_imports
 
 #========================================================================
-# generator
-use GeneratorModules    v11r7   Gen
+#generator
+use GeneratorModules    v12r0   Gen
 
 #GiGa staff...
-use GiGaCnv             v15r7   Sim
+use GiGaCnv             v15r8   Sim
+
 use GaussTools          v10r6 	Sim
 use GaussTracker        v3r1    Sim
-use GaussRICH           v4r7    Sim
-use GaussCalo           v7r0    Sim
+use GaussRICH           v4r8    Sim
+use GaussCalo           v7r1    Sim
 use GaussPhysics        v3r1    Sim
+use LHCbAlgs            v1r0    Kernel
 use GaussAlgs		v1r1    Sim
 
 #optional visualisation and UI
 #use GiGaVisUI           v3r0    Sim
 
 #Monitoring
-use GaussMonitor        v1r1    Sim
+use GaussMonitor        v1r2    Sim
 
 #======================================================================
 # Main program and standard job options
@@ -45,8 +47,7 @@ use GaudiAlg            v*
 use GaudiAud            v*
 use GaudiSvc            v*
 
-# ROOT event persistency
-use GaudiRootDb         v*
+# Event persistency
 use GaudiPoolDb         v*
 
 # Histogram persistency 

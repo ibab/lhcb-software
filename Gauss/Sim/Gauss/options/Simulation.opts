@@ -1,12 +1,9 @@
-// $Id: Simulation.opts,v 1.54 2004-05-04 16:11:08 gcorti Exp $ 
+// $Id: Simulation.opts,v 1.55 2004-08-02 14:18:35 gcorti Exp $ 
 
 ////////////////////////////////////////////////////////////////////
 // configuration of services
 
 ApplicationMgr.DLLs  += { "SimSvc" };
-
-#include "$STDOPTS/DetDesc.opts"
-DetectorDataSvc.DetDbLocation = "$XMLDDDBROOT/DDDB/lhcb-200402.xml";
 
 // declare external services needed MAGNETIC FIELD 
 ApplicationMgr.ExtSvc +=  { "MagneticFieldSvc"  };  

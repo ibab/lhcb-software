@@ -1,7 +1,4 @@
-// $Id: GaussTape.opts,v 1.16 2004-04-29 17:36:41 gcorti Exp $ 
-
-/// create and add the output stream 
-ApplicationMgr.OutStream +=  { "GaussTape" };
+// $Id: GaussTape.opts,v 1.17 2004-08-02 14:18:34 gcorti Exp $ 
 
 /// content of Gauss.oosim 
 GaussTape.ItemList = 

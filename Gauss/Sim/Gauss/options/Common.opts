@@ -8,39 +8,54 @@
 
 AuditorSvc.Auditors = { "ChronoAuditor" };
 
-ApplicationMgr.ExtSvc = { "ToolSvc" ,"ParticlePropertySvc" ,"EventSelector" };
+// External services that will be always used
+ApplicationMgr.ExtSvc = { 
+  "ToolSvc" ,
+  "ParticlePropertySvc" ,
+  "EventSelector" 
+};
 
-EventPersistencySvc.CnvServices  = {};  
+// Configuration of various services that are used
+RndmGenSvc.Engine.SetSingleton   = true;
+ParticlePropertySvc.ParticlePropertiesFile = "$PARAMFILESROOT/data/ParticleTable.txt" ;
 
+// Load necessary DLLs
 ApplicationMgr.DLLs  = { "GaudiAud"};
-ApplicationMgr.DLLs += { "GaudiAlg"} ;
+ApplicationMgr.DLLs += { "GaudiAlg" } ;
+ApplicationMgr.DLLs += { "LHCbAlgs" } ;
 ApplicationMgr.DLLs += { "GaussTools"} ;
 ApplicationMgr.DLLs += { "GaussAlgs"  } ;
 ApplicationMgr.DLLs += { "GeneratorModules" } ;
-RndmGenSvc.Engine.SetSingleton = true;
 
-ApplicationMgr.HistogramPersistency = "NONE";
+// Initialization of Gauss applications
+ApplicationMgr.TopAlg  = {
+  "LbAppInit/Gauss"
+};
 
-EventDataSvc.ForceLeaves = true ;
-
-ParticlePropertySvc.ParticlePropertiesFile = "$PARAMFILESROOT/data/ParticleTable.txt" ;
-
-MessageSvc.setWarning += { "XmlGenericCnv" };
-// MessageSvc.Format = "% F%40W%S%7W%R%T %0W%M";
-
+// No events are read as input
 ApplicationMgr.EvtSel  = "NONE" ;
 
-ApplicationMgr.TopAlg  = 
-{ "GaussInitialisation/GaussInit" };
-
+// Generators settings, necessary for various generators configurations
 #include "$GAUSSOPTS/PythiaSettings.opts"
-
+// To prevent writing too much in production
 ToolSvc.EvtGenTool.OutputLevel = 4;
-SetDecayAlg.OutputLevel = 4;
+SetDecayAlg.OutputLevel        = 4;
 
-// to write an output file
+// Geometry setup always necessary
+#include "$STDOPTS/DetDesc.opts"
+DetectorDataSvc.DetDbLocation = "$XMLDDDBROOT/DDDB/lhcb-200402.xml";
+MessageSvc.setWarning += { "XmlGenericCnv" };
+
+// Transient store setup
+EventDataSvc.ForceLeaves         = true ;
+
+// Objects to be written to output file
 #include "$GAUSSOPTS/GaussTape.opts"
-// in ROOT format
-#include "$GAUSSOPTS/GaussRootIO.opts"
-// in POOL format
+// POOL persistency 
+EventPersistencySvc.CnvServices  = {};  
 #include "$GAUSSOPTS/GaussPoolIO.opts"
+
+// Other outputs
+ApplicationMgr.HistogramPersistency = "NONE";
+// MessageSvc.Format = "% F%40W%S%7W%R%T %0W%M";
+

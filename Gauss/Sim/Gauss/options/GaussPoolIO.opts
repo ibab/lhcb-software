@@ -15,6 +15,6 @@ PoolDbCacheSvc.Dlls += {"RichEventDict" };
 PoolDbCacheSvc.Dlls += {"CaloEventDict" };
 PoolDbCacheSvc.Dlls += {"VeloEventDict" };
 PoolDbCacheSvc.Dlls += {"MuonEventDict" };
-PoolDbCacheSvc.Dlls += {"SealSTLDict" };
+PoolDbCacheSvc.Dlls += {"SealSTLDict", "SealCLHEPDict" };
 
 

@@ -10,11 +10,16 @@ Monitor.Members     = { "GeneratorFullMonitor" };
 // When running in GenStandAlone mode comment the following two members
 Monitor.Members    += { "MCTruthFullMonitor" };
 
+// Dump on screen content of generator full info
+//Monitor.Members += {"DumpMC"};
+
 // Check MCSignal info (only for complete production)
 //Monitor.Members    += { "MCDecayCounter" };
-//MCDecayCounter.DetailedPrintOut = true;
-//MCDecayCounter.OutputLevel               = 2;
-//MCDecayCounter.MCDecayFinder.OutputLevel = 3;
+MCDecayCounter.DetailedPrintOut = true;
+MCDecayCounter.OutputLevel               = 2;
+MCDecayCounter.MCDecayFinder.OutputLevel = 3;
+//MCDecayCounter.EvtCodeFromData = true;
+//MCDecayCounter.EvtCode = 0;
 
 // Load the DLLs for histogram persistency
 ApplicationMgr.DLLs += { "HbookCnv" };

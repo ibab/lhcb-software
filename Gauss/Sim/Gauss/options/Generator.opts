@@ -1,20 +1,26 @@
-// Pythia Generator jobOptions
+// Generator jobOptions: Pythia and EvtGen
 //===========================================================================
-// That is the default options to generate Pythia events
+// That is the default options to generate Pythia events that will be
+// decayed by EvtGen
 // this file is included in Gauss.opts
 // this file should be replaced in Gauss.opts with GenStandAlone.opts or
 // ParticleGun.opts
 //==========================================================================
 
-Generator.Members = {"SignalDecayAlg", "PythiaAlg", "SetDecayAlg", "EvtDecayAlg"};
+Generator.Members = {
+  "SignalDecayAlg", 
+  "PythiaAlg", 
+  "SetDecayAlg", 
+  "EvtDecayAlg"
+};
+
 Generator.Members += {"SmearVertexAlg"};
 
 Generator.Members += {"GenMonitorAlg"};
+
 // the following is to prevent filling of histograms in production
 // to produce histogram comment the following line or reset it later
 GenMonitorAlg.HistoPath   = "";
-
-//Generator.Members += {"DumpMC"};
 
 // any Pythia commands (flags) should be specified in the following form:
 // PythiaAlg.PythiaUserCommand = {"pyinit pylisti 11", "pyinit dumpr 1 100", "pyinit pylistf 1"};
