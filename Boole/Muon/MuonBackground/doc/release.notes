@@ -5,10 +5,10 @@
 !               low energy components, flatspillover
 !-----------------------------------------------------------------------------
 
-!======================= MuonBckground v1r0 2003-05-16 =======================
-! 2003-04-16 - Alessia Satta
- - Rounding problem fix
+! 2003-05-16 - Alessia Satta
+ - Rounding problem fix. Fixes Brunel bug 424
 
+!======================= MuonBackground v1r1 2003-04-15 =======================
 ! 2003-04-04 - Marco Cattaneo
  - Brunel.opts: Take histograms from standard place ($LHCBHOME/sim/data)
  - Fix some memory leaks
