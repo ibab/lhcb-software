@@ -1,4 +1,4 @@
-// $Id: RichPhotonSpectra.h,v 1.7 2004-07-12 14:28:40 jonrob Exp $
+// $Id: RichPhotonSpectra.h,v 1.8 2004-07-23 08:47:39 cattanem Exp $
 #ifndef RICHRECBASE_RICHPHOTONSPECTRA_H
 #define RICHRECBASE_RICHPHOTONSPECTRA_H 1
 
@@ -64,23 +64,23 @@ public:
   TYPE binEnergy( const unsigned int bin ) const;   ///< The average bin energy
 
   /// Returns the energy distribution for a given mass hypothesis
-  RichPhotonSpectra::PhotonData & energyDist( const Rich::ParticleIDType id );
+  typename RichPhotonSpectra::PhotonData & energyDist( const Rich::ParticleIDType id );
 
   /// Returns the energy distribution for a given mass hypothesis
-  const RichPhotonSpectra::PhotonData & energyDist( const Rich::ParticleIDType id ) const;
+  const typename RichPhotonSpectra::PhotonData & energyDist( const Rich::ParticleIDType id ) const;
 
   /// Returns the energy distribution for a given mass hypothesis
-  RichPhotonSpectra::HypoPhotonData & hypoData( );
+  typename RichPhotonSpectra::HypoPhotonData & hypoData( );
 
   /// Returns the energy distribution for a given mass hypothesis
-  const RichPhotonSpectra::HypoPhotonData & hypoData( ) const;
+  const typename RichPhotonSpectra::HypoPhotonData & hypoData( ) const;
 
   /// Returns the integral of the distribution
   TYPE integral( const Rich::ParticleIDType id ) const;
 
   /// multiply by another distribution
   bool multiply(  const Rich::ParticleIDType id,
-                  const RichPhotonSpectra::PhotonData & data );
+                  const typename RichPhotonSpectra::PhotonData & data );
 
   /// Reset the data
   void reset();

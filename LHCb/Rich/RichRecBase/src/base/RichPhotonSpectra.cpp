@@ -1,4 +1,4 @@
-// $Id: RichPhotonSpectra.cpp,v 1.3 2004-07-12 14:28:40 jonrob Exp $
+// $Id: RichPhotonSpectra.cpp,v 1.4 2004-07-23 08:47:39 cattanem Exp $
 // Include files 
 
 // local
@@ -21,7 +21,7 @@ TYPE RichPhotonSpectra<TYPE>::integral( const Rich::ParticleIDType id ) const
 
 template <class TYPE>
 bool RichPhotonSpectra<TYPE>::multiply( const Rich::ParticleIDType id,
-                                        const RichPhotonSpectra<TYPE>::PhotonData & data ) 
+                                        const typename RichPhotonSpectra<TYPE>::PhotonData & data ) 
 {  
   if ( this->energyBins() != data.size() ) return false;
   typename RichPhotonSpectra<TYPE>::PhotonData::const_iterator j = data.begin();

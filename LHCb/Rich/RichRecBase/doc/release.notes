@@ -7,6 +7,7 @@
 !====================== RichRecBase v1r13 2004-07-22 =======================
 ! 2004-07-22 - Marco Cattaneo
  - Fix requirements to use RichDet v8r*
+ - Add fixes for windows
 
 ! 2004-07-11 - Chris Jones
  - Template the RichPhotonSpectra class
