@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/L0/L0Muon/src/component/L0mTriggerProc.cpp,v 1.5 2001-07-12 15:02:07 atsareg Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/L0/L0Muon/src/component/L0mTriggerProc.cpp,v 1.6 2001-07-12 20:21:32 atsareg Exp $
 
 /// Include files
 /// Gaudi interfaces
@@ -74,6 +74,13 @@ StatusCode L0mTriggerProc::initialize()   {
 			     
     
     log << MSG::INFO << "Initialized in " << m_mode << " mode" << endreq;
+    
+//     std::vector<MuonTile> vmt = 
+//              m_layout[0].tiles(MuonTile(1,1,49,1,m_layout[2]),32);
+//     std::vector<MuonTile>::iterator im;
+//     for (im=vmt.begin(); im!=vmt.end(); im++) {
+//       log << MSG::INFO << *im << endreq;
+//     }	     
     
     return StatusCode::SUCCESS;
 }
@@ -197,6 +204,7 @@ L0mTower* L0mTriggerProc::createTower(L0mPad* pad, ObjectVector<L0mPad>* pads) {
   MsgStream log(msgSvc(), name());
           
   int st = pad->station();
+  int nr = pad->region();
   if ( st != 2 ) {
       log << MSG::DEBUG << "!!! Wrong station in createTower " 
 	                << st << endreq;
@@ -229,7 +237,8 @@ L0mTower* L0mTriggerProc::createTower(L0mPad* pad, ObjectVector<L0mPad>* pads) {
       for (ivmt = vtiles[st].begin(); ivmt != vtiles[st].end(); ivmt++ ) {
 	if ( MuonTile(**ind) == *ivmt  ) {
 	  // Check how many M3 pads covers the touched pad in other station
-	  vmt3 = m_layout[2].tiles( *ivmt );
+	  // These the M3 pads defined in terms of nr region 
+	  vmt3 = m_layout[2].tilesInRegion( *ivmt, nr);
 	  
 	  // cout << " After vmt3 " << endl;
 	  
