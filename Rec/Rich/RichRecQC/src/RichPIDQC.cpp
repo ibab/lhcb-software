@@ -1,4 +1,4 @@
-// $Id: RichPIDQC.cpp,v 1.18 2004-03-16 13:41:10 jonesc Exp $
+// $Id: RichPIDQC.cpp,v 1.19 2004-04-19 23:00:57 jonesc Exp $
 // Include files
 
 // from Gaudi
@@ -227,7 +227,7 @@ StatusCode RichPIDQC::execute() {
       // Get TrStoredTrack SmartRef and perform track selection
       TrStoredTrack * trTrack = iPID->recTrack();
       if ( !trTrack ) {
-        warning() << "Null TrStoredTrack reference for PID " << iPID->key() << endreq;
+        Warning("Null TrStoredTrack reference for RichPID");
         continue;
       }
 

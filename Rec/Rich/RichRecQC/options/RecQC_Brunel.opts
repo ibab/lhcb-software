@@ -1,6 +1,6 @@
 
 // Reco QC
-BrunelMoniRICHSeq.Members += { "RichRecoQC" };
+//BrunelMoniRICHSeq.Members += { "RichRecoQC" };
 
 // PID Monitors for all tracks combined
 #include "$RICHRECQCOPTS/pid/BrunelMoni_AllTracks.opts"
