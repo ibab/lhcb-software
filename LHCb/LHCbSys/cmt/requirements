@@ -21,7 +21,7 @@ use LHCbKernel  	v4r7	Kernel
 use CaloKernel  	v3r0	Calo
 use MuonKernel  	v2r5	Muon
 use TrKernel    	v11r3	Tr
-use RichKernel  	v4r5	Rich
+use RichKernel  	v5r0	Rich
 use VeloKernel  	v1r4    Velo
 
 # Detector description
@@ -36,7 +36,7 @@ use CaloDetXmlCnv	v2r3p1	Det
 use MuonDet        	v4r6	Det
 use Magnet         	v2r6	Det
 use MuonTools      	v3r7	Muon
-use RichDet		v7r1	Det
+use RichDet		v7r2	Det
 use STDet          	v1r2	Det
 
 # Event data model
@@ -46,7 +46,7 @@ use VeloEvent    	v13r0p1	Event
 use ITEvent      	v13r2	Event
 use OTEvent      	v13r0	Event
 use TrEvent      	v13r1	Event
-use RichEvent    	v7r3	Event
+use RichEvent    	v7r4	Event
 use CaloEvent    	v13r2	Event
 use MuonEvent    	v3r1	Event
 use L0Event      	v14r1	Event
@@ -74,6 +74,9 @@ use LHCbTools		v1r1	Kernel
 use MCTools		v1r6	Phys
 use CaloInterfaces	v4r0	Calo
 use CaloUtils		v4r7	Calo
+use RichTools		v1r0	Rich
+use RichMCTools		v2r0	Rich
+use RichDAQ		v1r5	Rich
 
 # LHCb  Examples
 use DetDescExample      v6r2	Ex

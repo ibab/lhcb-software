@@ -5,14 +5,20 @@
 ! Purpose     : LHCb OO kernel packages
 !-----------------------------------------------------------------------------
 
-!======================= LHCbSys v16r0 2004-06-14 =======================
-! 2004-06-14 - Marco Cattaneo
- - New      packages: LHCbTools v1r1 (moved here from BooleSys, BrunelSys)
-                      LHCbAlgs v1r0 (for general purpose algorithms)
+!======================= LHCbSys v16r0 2004-06-17 =======================
+! 2004-06-17 - Marco Cattaneo
+ - New packages: LHCbTools v1r1 (moved here from applications projects)
+                 LHCbAlgs v1r0 (for general purpose algorithms)
+                 RichTools v1r0 (previously RichDetTools, 
+                                 moved here from applications projects)
+                 RichMCTools v2r0 (moved here from applications projects)
+                 RichDAQ v1r5 (moved here from applications projects)
+
  - Removed  packages: L1Event. Obsolete, completely superseded by TrgEvent
 
- - Modified packages: KernelSys v3r7, LHCbKernel v4r7, 
-                      EventSys v18r0, EventAssoc v1r2, DetSys v5r7, STDet v1r2,
+ - Modified packages: KernelSys v3r7, LHCbKernel v4r7, RichKernel v5r0
+                      EventSys v18r0, EventAssoc v1r2, RichEvent v7r4,
+                      DetSys v5r7, STDet v1r2, RichDet v7r2
                       AssociatorsSys v1r14, ITAssociators v2r9, 
                       Associators v2r2p1, MCTools v1r6
 
@@ -34,13 +40,22 @@
  - In EventSys v18r0, EventAssoc v1r2, Associators v2r2p1
    . Remove relations, factories, dictionaries involving obsolete L1Event objects
 
-!====================== LHCbSys v15r12 2004-06-11 =======================
-Built on branch v15r11b
+ - In RichKernel v5r0, RichEvent v7r4, RichDet v7r2, RichTools v1r0,
+      RichMCTools v2r0, RichDAQ v1r5
+   . Repackaging to remove RichUtils package
+
+ - In RichKernel v5r0
+   . Remove default initialization value for RichHypoData, to fix Windows problem
+
+ - In RichEvent v7r4
+   . Fix bugs in MCRichSegment::bestMomentum and MCRichSegment::bestPoint
+
+!====================== LHCbSys v15r12 2004-06-16 =======================
 Built against Gaudi v14r6
 
-! 2004-06-11 - Marco Cattaneo
+! 2004-06-16 - Marco Cattaneo
  - Modified packages: EventSys v17r11, Event v4r4, DAQEvent v4r3, TrgEvent v3r0,
-                      DetSys v5r6p2, MuonTools v3r7
+                      EventAssoc v1r1p1, DetSys v5r6p2, MuonTools v3r7
 
  - In EventSys v17r11:
    . Add check on completeness of LCG dictionaries, executed when building
@@ -55,6 +70,9 @@ Built against Gaudi v14r6
 
  - In TrgEvent v3r0:
    . Add new class L1Score to store L1Decision result and monitoring info
+
+ - In EventAssoc v1r1p1:
+   . Add missing dictionaries for relations instantiated in LoKi
 
  - In MuonTools v3r7:
    . Initialize MuonTileIDXYZ completely before first event
