@@ -1,6 +1,6 @@
-// $Id: RichGlobalPIDTkQuality.h,v 1.1.1.1 2003-06-30 16:10:55 jonesc Exp $
-#ifndef RICHRECKERNEL_RICHGLOBALPIDTKQUALITY_H 
-#define RICHRECKERNEL_RICHGLOBALPIDTKQUALITY_H 1
+// $Id: RichGlobalPIDTkQuality.h,v 1.2 2003-07-08 14:22:16 cattanem Exp $
+#ifndef RICHGLOBALPID_RICHGLOBALPIDTKQUALITY_H 
+#define RICHGLOBALPID_RICHGLOBALPIDTKQUALITY_H 1
 
 // Include files
 #include <string>
@@ -10,7 +10,7 @@
 #include "GaudiKernel/StreamBuffer.h"
 #include "GaudiKernel/MsgStream.h"
 
-/** @class RichGlobalPIDTkQuality RichGlobalPIDTkQuality.h RichRecKernel/RichGlobalPIDTkQuality.h
+/** @class RichGlobalPIDTkQuality RichGlobalPIDTkQuality.h RichGlobalPID/RichGlobalPIDTkQuality.h
  *  
  *  Enumeration for Global PID track quality
  *
@@ -29,10 +29,20 @@ namespace Rich {
     };
   }
 
-  /// Text conversion for Rich2Side enumeration
-  std::string text( const Rich::GlobalPID::TkQuality& side ) ;
+/// Text conversion for Global PID track quality enumeration
+  inline  std::string text( const Rich::GlobalPID::TkQuality& track ) {
+    switch( track ) {
+    case Rich::GlobalPID::Unknown:         return "unknown";
+    case Rich::GlobalPID::Unusable:        return "unusable";
+    case Rich::GlobalPID::LikelihoodOnly:  return "likelihood only";
+    case Rich::GlobalPID::Physics:         return "physics";
+    default:                               return "?"; // should never happen
+	}
+  }
 
 }
+  
+/// Implement text conversion for Global PID track quality enumeration
 
 /// Implement StreamBuffer >> method for Rich::GlobalPID::TkQuality enumeration
 inline StreamBuffer& operator >> ( StreamBuffer& s,
@@ -57,11 +67,11 @@ inline std::ostream& operator << ( std::ostream& s,
   return s;
 }
 
-/// Implement textual MsgStream << method for Rich::Rich2Side enumeration
+/// Implement textual MsgStream << method for Rich::GlobalPID::TkQuality enumeration
 inline MsgStream& operator << ( MsgStream& s,
                                 const Rich::GlobalPID::TkQuality& qual ) {
   s << Rich::text( qual );
   return s;
 }
 
-#endif // RICHRECKERNEL_RICHGLOBALPIDTKQUALITY_H 
+#endif // RICHGLOBALPID_RICHGLOBALPIDTKQUALITY_H 

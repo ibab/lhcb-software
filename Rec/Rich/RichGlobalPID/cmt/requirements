@@ -14,7 +14,6 @@ branches src cmt doc options xml Event RichGlobalPID
 #============================================================================
 use AIDA              v*   -no_auto_imports
 use RichRecBase       v1r*  Rich
-use CERNLIB           v*
 
 #============================================================================
 # Environment
@@ -31,9 +30,8 @@ document obj2doth RichGlobalPID_Event_Obj2Doth ../xml/RichGlobalPID_Event.xml
 document obj2dict RichGlobalPID_Event_Obj2Dict ../xml/RichGlobalPID_Event.xml
 
 # ================ component library=========================================
-library   RichGlobalPID           ../src/alg/*.cpp ../src/event/*.cpp -import=AIDA
+library   RichGlobalPID           ../src/*.cpp  -import=AIDA
 library   RichGlobalPIDEventDict  ../dict/*.cpp -import=GaudiIntrospection
-macro_append   RichGlobalPID_linkopts "" WIN32 " /include:_RichGlobalPIDEvent_loadRef"
 
 # define component library link options
 #============================================================================
@@ -44,6 +42,4 @@ apply_pattern     packageShr
 private
 apply_pattern     package_Cshlibflags
 include_dirs $(RICHGLOBALPIDROOT)/Event
-macro_append  RichGlobalPID_shlibflags " `cernlib kernlib` " \
-                                 WIN32 " $(CERNLIB_linkopts) kernlib.lib "
 macro RichGlobalPIDEventDict_shlibflags  "$(GaudiIntrospection_linkopts) $(RichGlobalPID_linkopts) $(use_linkopts) $(libraryshr_linkopts)
