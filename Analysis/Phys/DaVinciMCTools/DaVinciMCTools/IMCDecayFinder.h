@@ -1,4 +1,4 @@
-// $Id: IMCDecayFinder.h,v 1.1.1.1 2002-05-21 07:32:02 gcorti Exp $
+// $Id: IMCDecayFinder.h,v 1.2 2002-07-12 09:28:28 odie Exp $
 #ifndef TOOLS_IMCDECAYFINDER_H 
 #define TOOLS_IMCDECAYFINDER_H 1
 
@@ -10,7 +10,8 @@
 // from Gaudi
 #include "GaudiKernel/IAlgTool.h"
 
-class MCParticle;
+#include "Event/MCParticle.h"
+//class MCParticle;
 
 // Declaration of the interface ID (interface id, major version, minor version)
 static const InterfaceID IID_IMCDecayFinder("IMCDecayFinder", 1, 0);
@@ -31,6 +32,10 @@ public:
   /// Does the described decay exists in the event?
   virtual bool hasDecay( const std::vector<MCParticle*> &event ) = 0;
   virtual bool findDecay( const std::vector<MCParticle*> &event,
+                          const MCParticle *&previous_result ) = 0;
+
+  virtual bool hasDecay( const MCParticles &event ) = 0;
+  virtual bool findDecay( const MCParticles &event,
                           const MCParticle *&previous_result ) = 0;
 };
 #endif // TOOLS_IMCDECAYFINDER_H
