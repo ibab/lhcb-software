@@ -1,43 +1,98 @@
-#$Id: release.notes,v 1.8 2001-11-30 09:38:58 andreav Exp $
+#$Id: release.notes,v 1.9 2001-12-17 20:12:40 andreav Exp $
 Package Ex/DetCondExample
 Package manager : Andrea Valassi 
 
-!20011130 - Andrea Valassi
-- Use the new DeteDataSvc in GaudiSvc
+==============================================================================
+!20011216 - Andrea Valassi
+Major changes due to tighter coordination with DetDesc and XmlDDDB packages.
+- There are now two examples (with three separate job option files)
+  > an Xml example that works both under Windows and under Linux
+  > a CondDB exmple that works only under Linux
+- A simple DDDB based on Xml files is released in directory XMLDDDB
+- Conditions stored in the CondDB are now proper XML documents
+  > read conversion from XML strings is handled by the XmlCnvSvc
+  > write conversion into XML strings is still done by hand in PopulateDB
+- The basic DataObject stored in the CondDB is now called Condition
+  > class ConditionData is removed
+- There is not an example of a derived condition
+  > previously Temperature was used
+  > is Condition generic enough that one should not derive another class?
+  > writing derived condition is some work in overloading Cnv and update()
+- Changes in folder description
+  > classID are removed from all XML refs: remove it from folder description
+  > assume that secondary storage type is always read from folder description
+- Various changes in which detector elements are used for tests
+  > Ecal is used to test all kinds of conditions in XML files
+  > LHCb and Hcal are used to test slow control data in the CondDB
+    - using XML strings created ad hoc by PopulateDB
+  > LHCb is used to test geometry data in the CondDB
+    - transferring an XML file into the CondDB
+    - taking care that the DTD location must be internally reinterpreted
+- Different notation for the condition folders:
+  > folder /SlowControl/Ecal corresponds to TDS path /dd/SlowControl/Ecal
+  > this and all other links are set in the XML files
+  > no need to use BootDetectorStore anymore
+- Remove ConditionsDBAddress (a GenericAddress of type CONDDB is enough)
+  > also XMLSTRING storage type is not needed anymore
+  > if the "file name" begins by "<xml?" it is reinterpreted as an XML string
+- An improved DetDataAgent is used (specifying which DataObjects are loaded)
+  > while DumpDetectorStore is removed
+- Algorithm names are not changed in the job options anymore
+- Various changes in messaging
+  > simpler code using private methods in PopulateDB
+  > test also the browseInTag iterator from the CondDB package
+  > take INFO as default, use DEBUG only for more information, consistently
+  > use VERBOSE tag for very verbose comments
+  > use hex notation for all long long times
+  > use more intuitive time intervals and temperature values for the example
+Requirements v2r0, private tag h20011216.
 
+==============================================================================
+!20011130 - Andrea Valassi
+Use the new DetectorDataSvc in GaudiSvc.
+- Contains main features of ConditionDataSvc and ConditionsDBDataSvc
+- Remove ConditionDataSvc and ConditionsDBDataSvc
+
+==============================================================================
 !20011129 - Andrea Valassi
 - Remove the IConditionsDBDataSvc special interface
--> BootDetectorStore bootstraps the detector data store 
-   > the association between folder names and path names is done here
-   > objects are registered using standard methods (need ForceLeaves=true)
--> TestSmartDataPtr needs not call the IConditionsDBDataSvc to boot the store
-   > only TDS path names are used
--> TestConditionsDBDataSvc has internal methods to test a normal data service
-   > only TDS path names are used
+- BootDetectorStore bootstraps the detector data store 
+  > the association between folder names and path names is done here
+  > objects are registered using standard methods (need ForceLeaves=true)
+- TestSmartDataPtr needs not call the IConditionsDBDataSvc to boot the store
+  > only TDS path names are used
+- TestConditionsDBDataSvc has internal methods to test a normal data service
+  > only TDS path names are used
 
+==============================================================================
 !20011128 - Andrea Valassi
--> move the global tag from the ConditionsDBDataSvc to the ConditionsDBCnvSvc
+- Move the global tag from the ConditionsDBDataSvc to the ConditionsDBCnvSvc
 
+==============================================================================
 !20011127 - Andrea Valassi
--> move interface IDetDataSvc (formerly IConditionDataSvc) to GaudiKernel 
+- Move interface IDetDataSvc (formerly IConditionDataSvc) to GaudiKernel 
 
+==============================================================================
 !20011126 - Andrea Valassi
--> moved here ConditionData from DetCond/src/Lib
--> manipulate ITime and TimePoint objects rather than ITime pointers
+- Moved here ConditionData from DetCond/src/Lib
+- Manipulate ITime and TimePoint objects rather than ITime pointers
 
-!20011123 - Andrea Valassi (v2)
-- Upgrade to Gaudi v9
--> addresses now inherit from GenericAddress (which has been simplified a lot)
--> there are no address factories any more
--> add method createAddress in XmlStringCnvSvc
--> adapt to changes in RegistryEntry (which now implements IRegistry)
--> do not overload methods createObj and updateObj in XmlStringCnvSvc
--> add dummy methods fillObjRefs and updateObjRefs in ConditionsDBCnvSvc
--> notify (by flag "true") ServiceLocator to create services not existing yet
+==============================================================================
+!20011123 - Andrea Valassi
+Upgrade to Gaudi v9
+- Addresses now inherit from GenericAddress (which has been simplified a lot)
+- There are no address factories any more
+- Add method createAddress in XmlStringCnvSvc
+- Adapt to changes in RegistryEntry (which now implements IRegistry)
+- Do not overload methods createObj and updateObj in XmlStringCnvSvc
+- Add dummy methods fillObjRefs and updateObjRefs in ConditionsDBCnvSvc
+- Notify (by flag "true") ServiceLocator to create services not existing yet
+Requirements v2, private tag h20011123.
 
-!20010914 - Andrea Valassi (v1)
-- New package: example using detector condition services from Det/DetCond
-- README file explains how to run the example
-- HISTORY file contains the release notes for previous versions outside CVS
-- simpleDoc.txt file briefly describes the software architecture
-
+==============================================================================
+!20010914 - Andrea Valassi
+New package: example using detector condition services from Det/DetCond
+- File README explains how to run the example
+- File HISTORY contains the release notes for previous versions outside CVS
+- File simpleDoc.txt briefly describes the software architecture
+Requirements v1, private tag v1.

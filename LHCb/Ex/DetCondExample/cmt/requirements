@@ -1,8 +1,8 @@
-# $Id: requirements,v 1.6 2001-12-17 19:44:45 andreav Exp $
+# $Id: requirements,v 1.7 2001-12-17 20:14:40 andreav Exp $
 package DetCondExample
 version v2r0
 
-branches doc src job options cmt DB
+branches doc src job options cmt XMLDDDB
 ignore_pattern package_stamps 
 
 # Main program and standard job options

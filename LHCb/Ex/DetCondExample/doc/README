@@ -1,53 +1,50 @@
-# $Id: README,v 1.11 2001-11-29 11:08:33 andreav Exp $
+# $Id: README,v 1.12 2001-12-17 20:12:16 andreav Exp $
+
+Two examples are distributed in this package: a test of condition data 
+stored in flat XML files, and a test of condition data stored in the CondDB.
+
+The CondDB example requires package DetCond, which depends on Objectivity
+and only works under Linux, as HepODBMS is not supported under Windows.
+The XML example does not require DetCond and works also under Windows.
+
+Three main job options exist in the options directory:
+ 1) testXml.opts    -> test of condition data stored in XML files  (Linux/Win)
+2a) fillCondDB.opts -> populate the CondDB used in the CondDB test (Linux only)
+2b) testCondDB.opts -> test of condition data stored in the CondDB (Linux only)
+
+By default, the MsgSvc level is set to 1 (INFO) in all three job options files.
+To see more verbose comments, set it to 2 (DEBUG) or 3 (VERBOSE).
+Standard outputs for INFO and VERBOSE modes are included in the release.
+
+The detector elements used in the tests are the following:
+> Ecal is used to test all kinds of conditions in XML files
+> LHCb and Hcal are used to test slow control data in the CondDB
+> LHCb is used to test geometry data in the CondDB
 
 ------------------------------------------------------------------------------
-Packages needed to run DetCondExample v2
+Packages needed to run DetCondExample v2r0
 ------------------------------------------------------------------------------
 
-For general information on configuring the Gaudi environment, please refer 
-to the Gaudi Web pages. The example only works under LINUX for the moment, 
-as HepODBMS is not supported under Windows NT. I assume in the following 
-that your CMTPATH points to your release directory in ${HOME}/newmycmt, 
-i.e. ~/newmycmt. Put the following line in your .cshrc to achieve this:
+For general information on configuring the Gaudi environment, 
+please refer to the Gaudi Web pages. 
+Most of the following refers to the Linux environment. 
+Only at the end a few words about Windows are given.
+Version v1r10p20011126 or higher of CMT is needed for a proper setup.
+
+It is assumed that CMTPATH contains the release directory in ${HOME}/newmycmt,
+i.e. ~/newmycmt. Put the following line in .cshrc to achieve this:
         setenv CMTPATH ${HOME}/newmycmt
 Check the result with
         printenv CMTPATH
 
-To run the detector condition example, you need to getpack the HEAD versions 
-of three new packages:
+To run the detector condition example, you need the following three packages:
         cd ~/newmycmt
-        getpack CONDDB             v3r01  HEAD
-        getpack Det/DetCond        v2     HEAD
-        getpack Ex/DetCondExample  v2     HEAD
+        getpack CONDDB             v3r02p1 
+        getpack Det/DetCond        v2r0
+        getpack Ex/DetCondExample  v2r0
 
 ------------------------------------------------------------------------------
-How to configure CMT
-------------------------------------------------------------------------------
-
-# CMT should already be configured for you at logon time
-# Type the following to switch to the old C++ compiler if you had changed it
-source $LHCBHOME/scripts/CMT.csh
-# Check that the following commands give meaningful results
-# Check the CMTSITE              (Linux default at CERN: "CERN")
-# Check the CMTCONFIG            (Linux default at CERN: "i386_linux22")
-# Check the CMTDEB               (Linux default at CERN: "Linuxdbx")
-# Check the C++ compiler version (Linux default at CERN: "egcs-2.91.66")
-echo $CMTSITE
-echo $CMTCONFIG
-echo $CMTDEB
-g++ --version
-
-# Type the following to switch to the new C++ compiler
-source $LHCBHOME/scripts/CMT.csh new
-# Check the CMTCONFIG  (new Linux compiler at CERN: "rh61_gcc2952")
-# Check the CMTDEB     (new Linux compiler at CERN: "rh61_gcc2952dbx")
-# C++ compiler version (new Linux compiler at CERN: "2.95.2")
-echo $CMTCONFIG
-echo $CMTDEB
-g++ --version
-
-------------------------------------------------------------------------------
-How to setup the environment and run DetCondExample on lxplus
+How to setup the environment and link DetCondExample on lxplus
 ------------------------------------------------------------------------------
 
 # NB: Do NOT source LHCXX setup scripts in your .cshrc!
@@ -61,7 +58,7 @@ How to setup the environment and run DetCondExample on lxplus
 cd ~/newmycmt
 
 # Go to the cmt directory
-cd Ex/DetCondExample/v2/cmt
+cd Ex/DetCondExample/v2r0/cmt
 
 # Setup the environment
 # This also starts the lockserver and AMSserver and installs the databases
@@ -70,13 +67,39 @@ cd Ex/DetCondExample/v2/cmt
 source ../cmt/setup.csh -tag=$CMTDEB
 
 # Remove old makefiles and dependencies
-cmt broadcast -select=newmycmt '/bin/rm -f *make*'
+cmt broadcast -select=mycmt '/bin/rm -f *make*'
 
 # Compile and link
-cmt broadcast -select=newmycmt gmake tag=$CMTDEB
+cmt broadcast -select=mycmt gmake tag=$CMTDEB
+
+------------------------------------------------------------------------------
+How to run DetCondExample on lxplus (without debugger)
+------------------------------------------------------------------------------
+
+# Go to your release directory
+cd ~/newmycmt
 
 # Go to the working directory
-cd ../options
+cd Ex/DetCondExample/v2r0/options
+
+============
+(1) testXml
+============
+
+# Run the application
+../$CMTDEB/DetCondExample.exe testXml.opts
+
+# Run the application and compare the output to the standard one
+/bin/rm -f log.testXml
+../$CMTDEB/DetCondExample.exe testXml.opts >& log.testXml
+diff log.testXml ../job
+
+# If you used the VERBOSE mode:
+diff log.testXml ../job/log.testXml.verbose
+
+================
+(2a) fillCondDB
+================
 
 # Set the debug level for the CONDDB library. Possible debug levels are:
 #    none: no message is printed (default)
@@ -87,30 +110,79 @@ cd ../options
 #    all:  any debug message will be printed
 setenv COND_DB_DEBUG none
 
-# Run the application a first time and then a second time with no debugger
-/bin/rm -f job_first.log; ../$CMTDEB/DetCondExample.exe >& job_first.log 
-/bin/rm -f job_next.log;  ../$CMTDEB/DetCondExample.exe >& job_next.log
+# Run the application
+../$CMTDEB/DetCondExample.exe fillCondDB.opts
 
-# Compare the output files to the standard ones
-diff job_first.log ../job/job_first.log
-diff job_next.log  ../job/job_next.log 
+# Run the application and compare the output to the standard one
+# The database is only filled if empty: the first output is longer
+# Be sure to start with a new database if you want to compare the first output
+source ../cmt/cleanupDB.csh
+source ../cmt/setupDB.csh -tag=$CMTDEB
+/bin/rm -f log.fillCondDB_1
+/bin/rm -f log.fillCondDB_2
+../$CMTDEB/DetCondExample.exe fillCondDB.opts >& log.fillCondDB_1
+../$CMTDEB/DetCondExample.exe fillCondDB.opts >& log.fillCondDB_2
+diff log.fillCondDB_1 ../job
+diff log.fillCondDB_2 ../job
 
-# To start again with an empty database:
-source ../cmt/cleanupDB.csh; source ../cmt/setupDB.csh
+# If you used the VERBOSE mode:
+diff log.fillCondDB_1 ../job/log.fillCondDB_1.verbose
+diff log.fillCondDB_2 ../job/log.fillCondDB_2.verbose
+
+================
+(2b) testCondDB
+================
+
+# Set the debug level for the CONDDB library. Possible debug levels are:
+#    none: no message is printed (default)
+#    prof: only print messages which do not disturb profiling measurements
+#    user: only print messages of "general" interest
+#    devl: also print messages of interest only for the package developer
+#    more: more paranoid messages are printed 
+#    all:  any debug message will be printed
+setenv COND_DB_DEBUG none
+
+# Run the application
+../$CMTDEB/DetCondExample.exe testCondDB.opts
+
+# Run the application and compare the output to the standard one
+# Be sure to have filled the database ueing fillCondDB.opts first!
+/bin/rm -f log.testCondDB
+../$CMTDEB/DetCondExample.exe testCondDB.opts >& log.testCondDB
+diff log.testCondDB ../job
+
+# If you used the VERBOSE mode:
+diff log.testCondDB ../job/log.testCondDB.verbose
+
+------------------------------------------------------------------------------
+How to run DetCondExample on lxplus with the debugger
+------------------------------------------------------------------------------
+
+# Go to your release directory
+cd ~/newmycmt
+
+# Go to the working directory
+cd Ex/DetCondExample/v2r0/options
+
+# To use the debugger, link one of the three option files to job.opts
+/bin/rm -f job.opts
+ln -sf xxx.opts job.opts
 
 # Debug the application using gdb
 # (NB gdb "run" executes .cshrc: you can NOT change LD_LIBRARY_PATH in .cshrc!)
-# DetCondExample.gdb sets a breakpoint in SimpleAlgorithm::initialize
-gdb ../$CMTDEB/DetCondExample.exe
+# (NB you must use /usr/local/bin/gdb if you use DetDesc: see news 
+#     http://home.cern.ch/~majordom/news/gaudi-developers/msg00165.html)
+/usr/local/bin/gdb ../$CMTDEB/DetCondExample.exe
+# DetCondExample.gdb sets a few useful breakpoints
 (gdb) source DetCondExample.gdb
 # The same can be achieved by typying the following
-gdb ../$CMTDEB/DetCondExample.exe -x DetCondExample.gdb
+/usr/local/bin/gdb ../$CMTDEB/DetCondExample.exe -x DetCondExample.gdb
 
 # Debug the application using gdb inside ddd (recommended!)
-ddd --tty --debugger "gdb ../$CMTDEB/DetCondExample.exe"
+ddd --tty --debugger "/usr/local/bin/gdb ../$CMTDEB/DetCondExample.exe"
 (gdb) source DetCondExample.gdb
 # The same can be achieved by typing the following
-ddd --tty --debugger "gdb ../$CMTDEB/DetCondExample.exe -x DetCondExample.gdb"
+ddd --tty --debugger "/usr/local/bin/gdb ../$CMTDEB/DetCondExample.exe -x DetCondExample.gdb"
 
 ------------------------------------------------------------------------------
 How to browse the database using the GUIbrowser on lxplus
@@ -141,17 +213,13 @@ How to cleanup the environment on lxplus
 cd ~/newmycmt
 
 # Go to the cmt directory
-cd Ex/DetCondExample/v2/cmt
+cd Ex/DetCondExample/v2r0/cmt
 
 # Remove old makefiles and dependencies
-cmt broadcast -select=newmycmt '/bin/rm -f *make*'
+cmt broadcast -select=mycmt '/bin/rm -f *make*'
 
 # Remove all objects and binaries if needed
-cmt broadcast -select=newmycmt '/bin/rm -rf ../$CMTDEB'
-
-# Remove the documentation:
-cmt broadcast -select=newmycmt -exclude='Gaudi' '/bin/rm -rf ../doc/html'
-cmt broadcast -select=newmycmt -exclude='Gaudi' '/bin/rm -rf ../doc/tex'
+cmt broadcast -select=mycmt '/bin/rm -rf ../$CMTDEB'
 
 # Cleanup the environment (recommended before logout)
 # This also deletes the databases and kills the AMSserver and lockserver
@@ -159,101 +227,26 @@ cmt broadcast -select=newmycmt -exclude='Gaudi' '/bin/rm -rf ../doc/tex'
 source ../cmt/cleanup.csh -tag=$CMTDEB
 
 ------------------------------------------------------------------------------
-How to check compliance to LHCb rules
+How to setup the environment and run DetCondExample under Windows
 ------------------------------------------------------------------------------
 
-# NB This is only possible using the old compiler for the moment
-# The rule checker analyses .i files created by the compiler
-# and these are different for the old and new compilers
-
+# I assume in the following that your release directory is H:\newmycmt
+# The following describes how to build and run the example from the DOS prompt
 # Go to your release directory
-cd ~/newmycmt
+cd H:\newmycmt
 
 # Go to the cmt directory
-cd Ex/DetCondExample/v2/cmt
+cd Ex\DetCondExample\v2r0\cmt
 
-# Setup the environment variables if you have not done so yet
-source ../cmt/setup.csh -tag=$CMTDEB
+# Setup the environment
+setup
 
-# Create the documentation
-# The -i option allows to proceed even when the rule checker crashes
-cmt broadcast -select=Det/DetCond     gmake -i RuleChecker tag=$CMTDEB
-cmt broadcast -select=DetCondExample  gmake -i RuleChecker tag=$CMTDEB
+# Compile and link
+cmt broadcast -select=newmycmt make
 
-# This will create a ../Check directory in the checked package
-# You may then browse the documentation (under ~/newmycmt) in
-# 	Det/DetCond/v2/Check/DetCondChk.html
-# 	Ex/DetCondExample/v2/Check/DetCondExampleChk.html
+# Run the application using the "run" script
+# This sets PATH = %PATH%;%LD_LIBRARY_PATH% to give the path to .dll files
+run DetCondExample testXml.opts
 
-------------------------------------------------------------------------------
-How to create the dOxygen documentation on lxplus
-------------------------------------------------------------------------------
+==============================================================================
 
-# First, you can edit the requirements of DetCond and DetCondExample
-# to make them point to your www pages; by default, the documentation 
-# produced will point to local URL's, file:....
-
-# Go to your release directory
-cd ~/newmycmt
-
-# Go to the cmt directory
-cd Ex/DetCondExample/v2/cmt
-
-# Setup the environment variables if you have not done so yet
-source ../cmt/setup.csh -tag=$CMTDEB
-
-# Create the documentation
-cmt broadcast -select=newmycmt/Det/DetCond        ../doc/makedoc.csh
-cmt broadcast -select=newmycmt/Ex/DetCondExample  ../doc/makedoc.csh
-
-------------------------------------------------------------------------------
-A useful bunch of CVS commands
-------------------------------------------------------------------------------
-
-# To create a new package in CVS:
-cvs import -m "" directory vendortag releasetag
-
-# To compare the local directory to the HEAD repository:
-cvs diff
-# To print only a brief report
-cvs diff --brief
-
-# To commit changes to a single file:
-# [NB cvs update -A is needed because getpack does not perform a cvs checkout]
-cvs update -A; cvs commit -m "" file
-
-# To add and commit a new file or directory:
-# [NB cvs update -A is needed because getpack does not perform a cvs checkout]
-cvs update -A; cvs add file/directory; cvs commit -m "" file/directory
-
-# To delete and commit an old file or directory:
-# [NB cvs update -A is needed because getpack does not perform a cvs checkout]
-cvs update -A; cvs remove -f file/directory; cvs commit -m "" file/directory
-
-# To tag the HEAD files with a private tag (use private tags starting by "h")
-# [For instance, tag CONDDB v3r01 head version of 2001 Sep 17 by h20011129]
-cvs rtag h20011129 CONDDB
-# To force the tag (e.g. if a previous file version already received that tag):
-cvs rtag -F h20011129 CONDDB
-
-# To view the tags attached to the files contained in the package:
-cvs status -v
-
-# To getpack a privately tagged version:
-# [For instance, get CONDDB v3r01 version tagged h20011129]
-# Either:
-	cd ~/newmycmt
-	getpack CONDDB h20011129
-	mv CONDDB/h20011129 CONDDB/v3r01
-	cd CONDDB/v3r01/cmt
-	cmt config
-# Or:
-	cd ~/newmycmt
-	mkdir CONDDB
-	cd CONDDB
-	cvs co -d v3r01 -r h20011129 CONDDB
-	cd v3r01/cmt
-	cmt config
-
-# To compare a file to that from another version
-cvs diff -r h20011129 file
