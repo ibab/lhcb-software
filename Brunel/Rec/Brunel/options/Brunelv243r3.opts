@@ -15,7 +15,7 @@
 // Database specific options
 //--------------------------------------------------------------
 #include "$BRUNELOPTS/BrunelTrLight.opts"    // Material, standard tracking
-#include "$BRUNELOPTS/BrunelTrItOtTT1.opts"  // dbase v243r3 tracking layout
+#include "$BRUNELOPTS/BrunelTrOtItTT1.opts"  // dbase v243r3 tracking layout
 #include "$FWTRACKROOT/options/Brunelv243r1.opts" // Forward tracking
 
 //--------------------------------------------------------------

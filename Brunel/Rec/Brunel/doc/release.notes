@@ -4,6 +4,10 @@ Package Coordinator: Marco Cattaneo
 
 Purpose: LHCb reconstruction program
 
+</PRE><H1><A NAME=v9r1p1>20020419 Brunel v9r1p1</A></H1><PRE>
+   - Brunelv243r3.opts: fix typo in included filename
+     (#include "$BRUNELOPTS/BrunelTrOtItTT1.opts" was ItOt)
+
 </PRE><H1><A NAME=v9r1>20020320 Brunel v9r1</A></H1><PRE>
    Adds support for dbases v243r3, v243r1p1 (comparative study of TT1 options). 
    Includes several bug fixes (see below)
