@@ -4,6 +4,10 @@
 ! Purpose     : Rich Digitisation
 !-----------------------------------------------------------------------------
 
+!========================= RichReadout v1r3 2003-12-09 =======================
+! 2003-12-09 - Marco Cattaneo
+ - Remove #include RichKernel/MessageSvcStl.h, obsolete with GAUDI v13
+
 !======================== RichReadout v1r2p1 2003-12-03 ======================
 ! 2003-12-03 - Chris Jones
  - Add to options file configuration for refractive index tool

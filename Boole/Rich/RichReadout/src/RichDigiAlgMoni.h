@@ -1,4 +1,4 @@
-// $Id: RichDigiAlgMoni.h,v 1.7 2003-11-25 16:31:39 jonrob Exp $
+// $Id: RichDigiAlgMoni.h,v 1.8 2003-12-10 16:05:44 cattanem Exp $
 #ifndef RICHMONITOR_RICHDIGIALGMONI_H
 #define RICHMONITOR_RICHDIGIALGMONI_H 1
 
@@ -20,7 +20,6 @@
 #include "RichKernel/RichDetectorType.h"
 #include "RichKernel/RichRadiatorType.h"
 #include "RichKernel/RichParticleIDType.h"
-#include "RichKernel/MessageSvcStl.h"
 
 // Histogramming
 #include "AIDA/IHistogram1D.h"
