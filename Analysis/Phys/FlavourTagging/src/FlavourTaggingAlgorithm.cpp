@@ -1,4 +1,4 @@
-// $Id: FlavourTaggingAlgorithm.cpp,v 1.10 2003-03-25 09:58:52 odie Exp $
+// $Id: FlavourTaggingAlgorithm.cpp,v 1.11 2003-06-13 08:40:18 odie Exp $
 // Include files 
 
 // from Gaudi
@@ -11,7 +11,6 @@
 #include "Event/EventHeader.h"
 #include "Event/Particle.h"
 #include "Event/L0DUReport.h"
-#include "DaVinciTools/IPhysDesktop.h"
 #include "FlavourTagging/IFlavourTaggingTool.h"
 
 // local
@@ -33,7 +32,7 @@ const        IAlgFactory& FlavourTaggingAlgorithmFactory = s_factory ;
 //=============================================================================
 FlavourTaggingAlgorithm::FlavourTaggingAlgorithm( const std::string& name,
                                     ISvcLocator* pSvcLocator)
-  : Algorithm ( name , pSvcLocator ), m_hypothesis_locations(0), m_pDesktop(0),
+  : DVAlgorithm ( name , pSvcLocator ), m_hypothesis_locations(0),
     m_taggingTool(0)
 {
   declareProperty("TagLocation", m_tags_location = FlavourTagLocation::User);
@@ -41,10 +40,7 @@ FlavourTaggingAlgorithm::FlavourTaggingAlgorithm( const std::string& name,
   declareProperty("HypothesisLocations", m_hypothesis_locations );
   declareProperty("PrimaryVerticesLocation",
                   m_primVertices_location = VertexLocation::Primary );
-  declareProperty("DesktopName", m_pDesktop_name = "PhysDesktop");
-  declareProperty("TaggingTool", m_taggingTool_name = "OrderedTaggingTool");
-  declareProperty("FirstOnly", m_only_one = false);
-  declareProperty("CheckL0", m_checkL0 = true);
+  declareProperty("TaggingTool", m_taggingTool_name = "CategoryTaggingTool");
 }
 
 //=============================================================================
@@ -60,12 +56,10 @@ StatusCode FlavourTaggingAlgorithm::initialize() {
   MsgStream log(msgSvc(), name());
   log << MSG::DEBUG << "==> Initialize" << endreq;
 
-  StatusCode sc;
-  sc = toolSvc()->retrieveTool(m_pDesktop_name, m_pDesktop, this);
-  if( sc.isFailure() ) {
-    log << MSG::FATAL << "Unable to retrieve Desktop tool '"
-        << m_pDesktop_name << "'" << endreq;
-    return sc;
+  StatusCode sc = loadTools();
+  if( !sc ) {
+    log << MSG::ERROR << "Unable to load tools" << endreq;
+    return StatusCode::FAILURE;
   }
 
   sc = toolSvc()->retrieveTool(m_taggingTool_name, m_taggingTool, this);
@@ -105,10 +99,6 @@ StatusCode FlavourTaggingAlgorithm::execute() {
   }
 
   SmartDataPtr<L0DUReport> l0(eventSvc(), L0DUReportLocation::Default);
-  if( l0 && m_checkL0 && (l0->decision() == false) ) {
-    log << MSG::DEBUG << "Event rejected by L0" << endreq;
-    return StatusCode::SUCCESS;
-  }
 
   ParticleVector hypothesis(0);
   std::vector<std::string>::const_iterator loc_iter;
@@ -129,11 +119,8 @@ StatusCode FlavourTaggingAlgorithm::execute() {
             << endreq;
         continue;
       }
-      if( include_it ) {
+      if( include_it )
         hypothesis.push_back( *pi );
-        if( m_only_one )
-          include_it = false;
-      }
     }
   }
   if( hypothesis.size() == 0 ) {
@@ -147,13 +134,13 @@ StatusCode FlavourTaggingAlgorithm::execute() {
         << m_primVertices_location << "'" << endreq;
     return StatusCode::SUCCESS;
   }
-  Vertex *thePrimVtx = NULL;
-  if( primvtxs->size() )
-    thePrimVtx = *primvtxs->begin();
-  else
-    thePrimVtx = new Vertex;
+  if( primvtxs->size() == 0 ) {
+    log << MSG::WARNING
+        << "No primary vertex reconstructed. Skipping the event." << endreq;
+    return StatusCode::SUCCESS;
+  }
 
-  StatusCode sc = m_pDesktop->getInput();
+  StatusCode sc = desktop()->getInput();
   if (sc.isFailure()) {
     log << MSG::ERROR << "Unable to fill desktop" << endreq;
     return StatusCode::SUCCESS;
@@ -161,7 +148,7 @@ StatusCode FlavourTaggingAlgorithm::execute() {
 
   m_n_events++;
 
-  const ParticleVector& parts = m_pDesktop->particles();
+  const ParticleVector& parts = desktop()->particles();
 
   FlavourTags *tags = new FlavourTags;
 
@@ -171,6 +158,21 @@ StatusCode FlavourTaggingAlgorithm::execute() {
   ParticleVector::const_iterator hi;
   for( hi=hypothesis.begin(); hi!=hypothesis.end(); hi++ ) {
     m_n_B++;
+
+    // Find the primary vertex the B is pointing to.
+    Vertex *thePrimVtx;
+    double sipmin = 1000000.;
+    Vertices::const_iterator vi;
+    for( vi = primvtxs->begin(); vi != primvtxs->end(); vi++ ) {
+      if( (*vi)->type() != Vertex::Primary )
+        continue;
+      double ip, iperr;
+      StatusCode sc = geomDispCalculator()->calcImpactPar(**hi,**vi,ip,iperr);
+      if ( sc.isSuccess() && fabs(ip/iperr) < sipmin ) {
+        sipmin = fabs(ip/iperr);
+        thePrimVtx = *vi;
+      }
+    }
     log << MSG::DEBUG << "About to tag a " << (*hi)->particleID().pid()
         << endreq;
     FlavourTag *theTag = new FlavourTag;
@@ -235,9 +237,6 @@ StatusCode FlavourTaggingAlgorithm::execute() {
   if (sc.isFailure())
     log << MSG::ERROR << "Unable to register the tags under '"
         << m_tags_location << "'" << endreq;
-
-  if( primvtxs->size() == 0 )
-    delete thePrimVtx;
 
   return StatusCode::SUCCESS;
 };
