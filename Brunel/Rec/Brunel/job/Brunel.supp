@@ -84,7 +84,7 @@
 
 {
   rfio3
-  Param
+  Cond
   obj:/lib/i686/libc-2.2.5.so
   fun:netwrite_timeout
 }
@@ -93,7 +93,7 @@
 # Gaudi problems (Gaudi v11r4)
 {
   GaudiKernel/v13r2/Timing.cpp
-  Cond
+  Param
   obj:/lib/i686/libc-2.2.5.so
   fun:userTime__6SystemQ26System8TimeTypeQ26System8InfoTypel
 }
@@ -212,6 +212,14 @@
 #  fun:_._15OTEffCalculator
 #}
 
+# Strange tracking problem (Brunel v16r4)
+{
+  Tr/TrFirstCleverExtrapolator/TrParapolicExtrapolator
+  Value4
+  fun:release__7AlgTool
+  fun:releaseTool__7ToolSvcP8IAlgTool
+  fun:finalize__25TrFirstCleverExtrapolator
+}   
 
 # Calo problems (Brunel v16r4)
 {
@@ -361,6 +369,12 @@
 {
   Seed/newseed.F
   Value8
+  fun:new_fit_parab__
+}
+
+{
+  Seed/newseed.F1
+  Value4
   fun:new_fit_parab__
 }
 

@@ -73,7 +73,7 @@ else
 endif
 
 # == run the excutable ================================
-valgrind --demangle=no --error-limit=no --leak-check=yes --num-callers=8 --suppressions=./Brunel.supp tmpjob_$1.exe >& mem_errors.log
+valgrind --demangle=no --error-limit=no --leak-check=yes --num-callers=12 --suppressions=./Brunel.supp tmpjob_$1.exe >& mem_errors.log
 
 # == job is finished: remove temporary files ==========
 rm tmpjob_$1.exe
