@@ -17,10 +17,27 @@ Purpose: LHCb reconstruction program
    In cmt/requirements
    - remove use dbase ($LHCBDBASE to be set externally)
    - add macro_append fflags
-   - use BrunelSicb v1 Rec
+
+   - use BrunelSicb   v1   Rec
        in src/Lib/BrunelDigiMUON.cpp : default now to not add muon background.
                                        Due to bug in MURMBG if background was 
                                        already added by SICBMC
+   - use TrKernel     v5r1 Tr
+       remove virtual from state getZ member
+   - use ITEvent      v6r1 Event
+       Remove memory leak
+   - use OTEvent      v6r1 Event
+       bug fix - due to inconsistent numbering, wires were skipped at edge
+                 of a module
+   - use TrEvent      v6r1 Event
+       Reserve space in vectors of measurements/states inside track classes
+       Should save time
+   - use TrAlgorithms v6r2 Tr
+       remove obsolete fortran runga kutta routine
+       tidy the code up a bit
+       minor optimizations to speed up the code alittle
+   - use TrSicbCnv    v3   SICB
+       requirements - use TrEvent v6*
 ! =================================================================
 ! 20010913 Brunel v7r1 (MC)
 

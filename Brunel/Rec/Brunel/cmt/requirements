@@ -29,7 +29,7 @@ use BrunelKernel v2     Rec
 use BrunelSicb   v1     Rec
 
 # Subdetector kernels
-use TrKernel     v5     Tr
+use TrKernel     v5r1   Tr
 use CaloGen      v2     Calo
 
 # Detector description
@@ -41,9 +41,9 @@ use CaloDet      v2r1   Det
 use LHCbEvent    v11    Event
 use L0Event      v3     Event
 use VeloEvent    v5     Event
-use ITEvent      v6     Event
-use OTEvent      v6     Event
-use TrEvent      v6     Event
+use ITEvent      v6r1   Event
+use OTEvent      v6r1   Event
+use TrEvent      v6r1   Event
 use CaloEvent    v6     Event
 
 # SicB event data persistency
@@ -52,7 +52,7 @@ use SicbCnv      v13r1  SICB
 use CaloSicbCnv  v4     SICB
 use L0SicbCnv    v3     SICB
 use MuonSicbCnv  v3     SICB
-use TrSicbCnv    v2     SICB
+use TrSicbCnv    v3     SICB
 use VSicbCnv     v5	SICB
 
 # L0 trigger
@@ -66,7 +66,7 @@ use CaloAlgs     v3     Calo
 # Tracking
 use ITAlgorithms v6	IT
 use OTAlgorithms v6	OT
-use TrAlgorithms v6r1   Tr
+use TrAlgorithms v6r2   Tr
 
 # SICBDST packages
 use Futil        v10r3  SICB
