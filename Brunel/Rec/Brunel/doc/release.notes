@@ -3,18 +3,19 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
-</PRE><H1><A NAME=v17r3>2003-01-30 Brunel v17r3</A></H1><PRE>
+</PRE><H1><A NAME=v17r3>2003-01-31 Brunel v17r3</A></H1><PRE>
  - New tuning:
    . Changed logic for treating the L0 Muon PU overflow conditions: now  PU 
      always returns 2 randomly chosen candidates if there are more than 2 
      candidates found. No more the whole quarter of the processor is empty in 
      this case (L0Muon v6r4)
-   . L0 M3 seeds cleaning is done by default as supposed to be in hardware
-     (L0Muon v6r4)
    . Default L0 Muon FoIs are set to reasonable values for the 125 KHz L0Muon
      bandwidth (L0Muon v6r4)
    . PuVeto decision taken on sum of second peak: 3 or more is vetoed (L0DU v6r3)
    . L0 thresholds adjusted (L0DU v6r3)
+
+ - New features:
+   . L0Muon ghosts cleaned in L0Muon rather than L0DU (L0Muon v6r4, L0DU v6r3)
 
  - Bug fixes:
    . Fix a boundary problem in DeVelo (VeloDet v8r4)
