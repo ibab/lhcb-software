@@ -1,4 +1,4 @@
-// $Id: CompositeParticle2MCLinks.cpp,v 1.2 2002-10-10 18:31:06 gcorti Exp $
+// $Id: CompositeParticle2MCLinks.cpp,v 1.3 2003-04-17 09:58:25 phicharp Exp $
 // Include files 
 
 // from Gaudi
@@ -52,7 +52,7 @@ StatusCode CompositeParticle2MCLinks::initialize() {
   MsgStream log(msgSvc(), name());
   log << MSG::DEBUG << "==> Initialise" << endmsg;
 
-  StatusCode sc = toolSvc()->retrieveTool("Particle2MCWeightedAsct", 
+  StatusCode sc = toolSvc()->retrieveTool("Particle2MCLinksAsct", 
                                           "P2MCAsct",m_pAsct, this);
   if(sc.isFailure()){
     log << MSG::FATAL << " Unable to retrieve Associator tool" << endreq;

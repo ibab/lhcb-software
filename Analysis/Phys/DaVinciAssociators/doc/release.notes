@@ -1,6 +1,13 @@
-! $Id: release.notes,v 1.22 2003-01-07 09:29:28 ranjard Exp $
+! $Id: release.notes,v 1.23 2003-04-17 09:58:25 phicharp Exp $
 ! Package     : DaVinciAssociators
 ! Responsible : Philippe Charpentier
+
+!================= DaVinciAssociators v4r0 2003-04-16 ======================
+! 2003-04-16 - Philippe Charpentier
+ - For Links associator, allow not to build a table (declared as "") to get 
+   relations on the flight (reimplementation of the IAsct interface)
+ - Implies removing Particle2MCWeightedAsct.h and creating Particle2MCLinksAsct.h
+   and a .cpp as well
 
 !================= DaVinciAssociators v3r1 2003-01-06 ======================
                     join v3r0b branch

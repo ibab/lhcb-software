@@ -1,4 +1,4 @@
-// $Id: TestAssociators.cpp,v 1.3 2002-10-10 18:55:39 gcorti Exp $
+// $Id: TestAssociators.cpp,v 1.4 2003-04-17 09:58:26 phicharp Exp $
 #define TestAssociators_CPP 
 
 // Include files
@@ -23,7 +23,7 @@
 // local
 #include "TestAssociators.h"
 
-#define ifLog(sev) log << sev; if( log.level() <= (sev) ) log
+#define ifMsg(sev) msg << sev; if( msg.level() <= (sev) ) msg
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : TestAssociators
@@ -78,25 +78,25 @@ TestAssociators::~TestAssociators() { };
 StatusCode TestAssociators::initialize() {
 
   // Use the message service
-  MsgStream log(msgSvc(), name());
-  log << MSG::INFO << ">>> Initialize" << endreq;
+  MsgStream msg(msgSvc(), name());
+  msg << MSG::INFO << ">>> Initialize" << endreq;
   
   // Retrieve the StoredTracks2MC associator
   StatusCode sc = toolSvc()->retrieveTool(
         "AssociatorWeighted<TrStoredTrack,MCParticle,double>", 
         "Track2MCAsct", m_pAsctTrack);
   if( !sc.isSuccess() ) {
-    log << MSG::FATAL << "    Unable to retrieve the Track2MCPart Associator"
+    msg << MSG::FATAL << "    Unable to retrieve the Track2MCPart Associator"
         <<endreq;
     return sc;
   }
 
   // Retrieve the tools used by this algorithm
   // This is the Particle2MCWithChi2 tool
-  sc = toolSvc()->retrieveTool( "Particle2MCWeightedAsct", 
+  sc = toolSvc()->retrieveTool( "Particle2MCWithChi2Asct", 
                                            m_pAsctWithChi2, this);
   if( sc.isFailure() || 0 == m_pAsctWithChi2) {
-    log << MSG::FATAL << "    Unable to retrieve weighted Chi2 Associator tool" 
+    msg << MSG::FATAL << "    Unable to retrieve weighted Chi2 Associator tool" 
         << endreq;
     return sc;
   }  
@@ -104,24 +104,22 @@ StatusCode TestAssociators::initialize() {
   // This is the standard Particle2MC tool
   sc = toolSvc()->retrieveTool( "Particle2MCAsct", m_pAsctChi2, this);
   if( sc.isFailure() || 0 == m_pAsctChi2) {
-    log << MSG::FATAL << "    Unable to retrieve Chi2 Associator tool" 
+    msg << MSG::FATAL << "    Unable to retrieve Chi2 Associator tool" 
         << endreq;
     return sc;
   }
 
-  // This is another type of Particle2MCWeighted tool, 
-  //   differentiated by jobOptions
-  sc = toolSvc()->retrieveTool( "Particle2MCWeightedAsct", 
+  sc = toolSvc()->retrieveTool( "Particle2MCLinksAsct", 
                                 "LinkAsct", m_pAsctLinks, this);
   if( sc.isFailure() || 0 == m_pAsctLinks) {
-    log << MSG::FATAL << "    Unable to retrieve Link Associator tool" 
+    msg << MSG::FATAL << "    Unable to retrieve Links Associator tool" 
         << endreq;
     return sc;
   }
   // This is the standard ChargedPP2MC tool
   sc = toolSvc()->retrieveTool( "ProtoParticle2MCAsct", m_pAsctProto, this);
   if( sc.isFailure() || 0 == m_pAsctProto) {
-    log << MSG::FATAL << "    Unable to retrieve ChargedPP2MC Associator tool" 
+    msg << MSG::FATAL << "    Unable to retrieve ChargedPP2MC Associator tool" 
         << endreq;
     return sc;
   }
@@ -130,7 +128,7 @@ StatusCode TestAssociators::initialize() {
   sc = toolSvc()->retrieveTool( "TrReconstructible", "TrRecons",
                                 m_pTrRecons, this);
   if( sc.isFailure() || 0 == m_pTrRecons) {
-    log << MSG::FATAL << "    Unable to retrieve MCPart reconstructibility tool"
+    msg << MSG::FATAL << "    Unable to retrieve MCPart reconstructibility tool"
         << endreq;
     return sc;
   }
@@ -144,7 +142,7 @@ StatusCode TestAssociators::initialize() {
 //=============================================================================
 StatusCode TestAssociators::execute() {
 
-  MsgStream          log( msgSvc(), name() );
+  MsgStream          msg( msgSvc(), name() );
   int matchLinks=0, matchChi2=0, matchFull=0, nbParts=0;
   int matchLinksNotChi2=0, matchLinksHighChi2=0, 
     matchChi2NotLinks=0, matchDifferent=0;
@@ -155,13 +153,13 @@ StatusCode TestAssociators::execute() {
     // Retrieve Particles
     SmartDataPtr<Particles> parts (eventSvc(), *inp);
     if ( ! parts ) { 
-      ifLog( MSG::DEBUG ) << "    No Particles retrieved from " 
+      ifMsg( MSG::DEBUG ) << "    No Particles retrieved from " 
           << *inp << endreq;
       //      continue;
     }
     else {
-      // Log number of Candidates retrieved
-      ifLog( MSG::VERBOSE ) << "    Number of Particles retrieved from " 
+      // msg number of Candidates retrieved
+      ifMsg( MSG::VERBOSE ) << "    Number of Particles retrieved from " 
           << *inp << "  = " << parts->size() << endreq;
       if( parts->size() == 0 ) skippedEvt = 1;
     }
@@ -171,7 +169,7 @@ StatusCode TestAssociators::execute() {
     //========================================
     
     if( false == m_pAsctChi2->tableExists() ) {
-      ifLog( MSG::DEBUG ) 
+      ifMsg( MSG::DEBUG ) 
           <<"         ** Warning ** The relations table from "
           <<"Chi2 doesn't exist" << endreq;
       // One may return at this stage, but one can also go on and receive
@@ -180,7 +178,7 @@ StatusCode TestAssociators::execute() {
     }
     
     if( false == m_pAsctLinks->tableExists() ) {
-      ifLog( MSG::DEBUG ) 
+      ifMsg( MSG::DEBUG ) 
           <<"         ** Warning ** The relations table from "
           <<"links  doesn't exist" << endreq;
     }
@@ -190,7 +188,7 @@ StatusCode TestAssociators::execute() {
         parts->end() != cand; cand++, nbParts++) {
       Particle* part = *cand;
       
-      ifLog( MSG::VERBOSE ) << "Particle " << part->key() 
+      ifMsg( MSG::VERBOSE ) << "Particle " << part->key() 
                             << " , momentum, slopes "
                             << part->p() << " " 
                             << part->slopeX() << " " 
@@ -211,7 +209,7 @@ StatusCode TestAssociators::execute() {
         
         if( !mcPartLinksRange.empty() ) {
           // An association was obtained from links
-          ifLog( MSG::VERBOSE ) << "   Associated to "
+          ifMsg( MSG::VERBOSE ) << "   Associated to "
               << mcPartLinksRange.end()-mcPartLinksRange.begin()+1
               << " MCParts: " << endreq;
           matchLinks++;        
@@ -220,7 +218,7 @@ StatusCode TestAssociators::execute() {
             mcPartLinks = mcPartLinksIt->to();
             double weight = mcPartLinksIt->weight();
           const HepLorentzVector mc4Mom = mcPartLinks->momentum();
-          ifLog( MSG::VERBOSE ) 
+          ifMsg( MSG::VERBOSE ) 
             << "   MCPart " << mcPartLinks->key() 
             << " (weight "
             << weight << ") from links : momentum, slopes "
@@ -228,25 +226,27 @@ StatusCode TestAssociators::execute() {
             << mc4Mom.px()/mc4Mom.pz() << " "
             << mc4Mom.py()/mc4Mom.pz() << endreq;
           }
+          // Reset the link to the first one to test the "decreasing" feature!...
+          mcPartLinks = m_pAsctLinks->associatedFrom( part );
         } else {
-          ifLog( MSG::VERBOSE ) << "   No MCPart found from links" << endreq;
+          ifMsg( MSG::VERBOSE ) << "   No MCPart found from links" << endreq;
         }
           
         mcPartChi2 = m_pAsctWithChi2->associatedFrom( part, chi2);
         if( mcPartsChi2.empty() ) {
           // No particles found above threshold with CHi2
-          ifLog( MSG::VERBOSE ) 
+          ifMsg( MSG::VERBOSE ) 
               << "       MCPart not found from Chi2 below threshold";
           if( mcPartLinks && (mcPartChi2 == mcPartLinks) ) {
-            ifLog( MSG::VERBOSE ) 
+            ifMsg( MSG::VERBOSE ) 
               << " (Chi2 was " << chi2 << ")";
             matchLinksHighChi2++;
           }
-          ifLog( MSG::VERBOSE ) << endreq;
+          ifMsg( MSG::VERBOSE ) << endreq;
           if( mcPartLinks ) matchLinksNotChi2++;
         } else {
           if( mcPartChi2 == mcPartLinks ) {
-            ifLog( MSG::VERBOSE )
+            ifMsg( MSG::VERBOSE )
                 << "       MCPart found from Chi2 as well (Chi2 = " << chi2
                 << ")" << endreq;
             matchFull++;
@@ -256,19 +256,19 @@ StatusCode TestAssociators::execute() {
         if( mcPartChi2 && (mcPartChi2 != mcPartLinks) ) {
           if( mcPartLinks ) {
             matchDifferent++;
-            ifLog( MSG::VERBOSE ) 
+            ifMsg( MSG::VERBOSE ) 
                 << "       MCPart found from Chi2 is different" << endreq;
           }
           const HepLorentzVector mc4Mom = mcPartChi2->momentum();
-          ifLog( MSG::VERBOSE ) 
+          ifMsg( MSG::VERBOSE ) 
               << "       MCPart from Chi2  : momentum, slope "
               << mc4Mom.v().mag() << " "
               << mc4Mom.px()/mc4Mom.pz() << " "
               << mc4Mom.py()/mc4Mom.pz() << endreq;
-          ifLog( MSG::VERBOSE ) << "       Chi2 was " << chi2 << endreq;
+          ifMsg( MSG::VERBOSE ) << "       Chi2 was " << chi2 << endreq;
           Particle* partLinks = m_pAsctLinks->associatedTo( mcPartChi2 );
           if( partLinks ) {
-            ifLog( MSG::VERBOSE ) << "       It is linked to Particle " 
+            ifMsg( MSG::VERBOSE ) << "       It is linked to Particle " 
                 << partLinks->key() << endreq;
           }
         }
@@ -282,7 +282,7 @@ StatusCode TestAssociators::execute() {
   
   int width = (int)log10(nbParts)+1;
 
-  ifLog(MSG::DEBUG) << "========= On " << std::setw(width) <<  nbParts 
+  ifMsg(MSG::DEBUG) << "========= On " << std::setw(width) <<  nbParts 
         << " Particles =========" 
         <<endreq
         << "   | Matched with Links | " << std::setw(width) << matchLinks 
@@ -403,26 +403,26 @@ StatusCode TestAssociators::execute() {
   }
 
   width = (int)log10(mcPartCount)+1;
-  ifLog( MSG::DEBUG ) 
+  ifMsg( MSG::DEBUG ) 
     << "========= On " << std::setw(width) << mcPartCount
     << " MCParticles ========="
     << endreq
     << "   |                       |  Total  | Forward |  Match  |  Velo   |"
     << "  Seed   | Upstream|  Missed |" << endreq;
   width = 7;
-  ifLog( MSG::DEBUG ) 
+  ifMsg( MSG::DEBUG ) 
     << "   | Reconstructible long  | " << std::setw(width) << mcPartRecons
     <<endreq;
 
-  prTable( log, MSG::DEBUG, 
+  prTable( msg, MSG::DEBUG, 
            "   | Linked to a track     | ", mcPart2Track, width);
-  prTable( log, MSG::DEBUG, 
+  prTable( msg, MSG::DEBUG, 
            "   | Linked to a ProtoPart | ", mcPart2Proto, width);
-  prTable( log, MSG::DEBUG, 
+  prTable( msg, MSG::DEBUG, 
            "   | Linked to a Part/Link | ", mcPart2PartLink, width);
-  prTable( log, MSG::DEBUG, 
+  prTable( msg, MSG::DEBUG, 
            "   | Linked to a Part/Chi2 | ", mcPart2PartChi2, width);
-  prTable( log, MSG::DEBUG, 
+  prTable( msg, MSG::DEBUG, 
            "   | Linked to a Particle  | ", mcPart2Part, width);
   
   // Collect full statistics
@@ -443,16 +443,16 @@ StatusCode TestAssociators::execute() {
   // End of execution for each event
   return StatusCode::SUCCESS;
 }
-void TestAssociators::prTable( MsgStream& log, MSG::Level level,  
+void TestAssociators::prTable( MsgStream& msg, MSG::Level level,  
                                const std::string title, 
                                const std::vector<int>& table, const int width)
 {
-  if( log.level() <= level ) {
-    log << level << title;
+  if( msg.level() <= level ) {
+    msg << level << title;
     for( unsigned int i=0; i < table.size(); i++ ) {
-      log << std::setw(width) << table[i] << " | ";
+      msg << std::setw(width) << table[i] << " | ";
     }
-    log << endreq;
+    msg << endreq;
   }
 }
 
@@ -474,11 +474,11 @@ int TestAssociators::trType( TrStoredTrack* tr )
 //=============================================================================
 StatusCode TestAssociators::finalize() {
 
-  MsgStream log(msgSvc(), name());
-  ifLog( MSG::DEBUG ) << ">>> Finalize" << endreq;
+  MsgStream msg(msgSvc(), name());
+  ifMsg( MSG::DEBUG ) << ">>> Finalize" << endreq;
   int width = (int)log10(m_nbParts)+1;
  
-  ifLog( MSG::INFO ) 
+  ifMsg( MSG::INFO ) 
       << "======== Statistics for Particles to MCParticles association"
       << "========" << endreq
       << "======== On " << std::setw(width) <<  m_nbParts 
@@ -496,7 +496,7 @@ StatusCode TestAssociators::finalize() {
       << endreq;
 
   width = (int)log10(m_mcPartCount)+1;
-  ifLog( MSG::INFO )
+  ifMsg( MSG::INFO )
       << "======== Statistics on MCParticle associations ========"
       << endreq
       << "======== On " << std::setw(width) << m_mcPartCount
@@ -506,21 +506,28 @@ StatusCode TestAssociators::finalize() {
       << "   |                       |  Total  | Forward |  Match  |  Velo   |"
       << "  Seed   | Upstream|  Missed |" << endreq;
   width = 7;
-  ifLog( MSG::INFO ) 
+  ifMsg( MSG::INFO ) 
     << "   | Reconstructible long  | " << std::setw(width) << m_mcPartRecons
     <<endreq;
 
-  prTable( log, MSG::INFO, 
+  prTable( msg, MSG::INFO, 
            "   | Linked to a track     | ", m_mcPart2Track, width);
-  prTable( log, MSG::INFO, 
+  prTable( msg, MSG::INFO, 
            "   | Linked to a ProtoPart | ", m_mcPart2Proto, width);
-  prTable( log, MSG::INFO, 
+  prTable( msg, MSG::INFO, 
            "   | Linked to a Part/Link | ", m_mcPart2PartLink, width);
-  prTable( log, MSG::INFO, 
+  prTable( msg, MSG::INFO, 
            "   | Linked to a Part/Chi2 | ", m_mcPart2PartChi2, width);
-  prTable( log, MSG::INFO, 
+  prTable( msg, MSG::INFO, 
            "   | Linked to a Particle  | ", m_mcPart2Part, width);
 
+  // Release all tools
+  if( m_pAsctTrack) m_pAsctTrack->release();
+  if( m_pAsctWithChi2) m_pAsctWithChi2->release();
+  if( m_pAsctChi2) m_pAsctChi2->release();
+  if( m_pAsctLinks) m_pAsctLinks->release();
+  if( m_pAsctProto) m_pAsctProto->release();
+  if( m_pTrRecons) m_pTrRecons->release();
   // End of finalization step
   return StatusCode::SUCCESS;
 }

@@ -1,4 +1,4 @@
-// $Id: Particle2MCLinks.h,v 1.4 2002-10-02 07:06:29 phicharp Exp $
+// $Id: Particle2MCLinks.h,v 1.5 2003-04-17 09:58:26 phicharp Exp $
 #ifndef Particle2MCLinks_H 
 #define Particle2MCLinks_H 1
 
@@ -11,7 +11,7 @@
 
 
 // local
-#include "DaVinciAssociators/Particle2MCWeightedAsct.h"
+#include "DaVinciAssociators/Particle2MCLinksAsct.h"
 #include "DaVinciAssociators/ProtoParticle2MCAsct.h"
 #include "DaVinciAssociators/AsctAlgorithm.h"
 

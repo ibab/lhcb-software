@@ -1,4 +1,4 @@
-// $Id: TestAssociators.h,v 1.1 2002-10-02 07:06:29 phicharp Exp $
+// $Id: TestAssociators.h,v 1.2 2003-04-17 09:58:26 phicharp Exp $
 #ifndef TestAssociators_H
 #define TestAssociators_H 1
 
@@ -7,7 +7,7 @@
 
 // from Associators
 #include "DaVinciAssociators/Particle2MCAsct.h"
-#include "DaVinciAssociators/Particle2MCWeightedAsct.h"
+#include "DaVinciAssociators/Particle2MCLinksAsct.h"
 #include "DaVinciAssociators/Particle2MCWithChi2Asct.h"
 #include "DaVinciAssociators/ProtoParticle2MCAsct.h"
 #include "TrAssociators/ITrReconstructible.h"
@@ -41,7 +41,7 @@ private:
   // Define the name of the associator to be used, and define a pointer
   std::string m_nameMCAsct;  ///< Name of tool for Part to MCPart Association
   Particle2MCAsct::IAsct* m_pAsctChi2;  ///< Pointer to associator using Chi2
-  Particle2MCWeightedAsct::IAsct* 
+  Particle2MCLinksAsct::IAsct* 
     m_pAsctLinks; ///< Pointer to associator using links
   Particle2MCWithChi2Asct::IAsct* 
     m_pAsctWithChi2; ///< Pointer to associator with chi2 as weight

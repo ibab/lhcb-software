@@ -1,4 +1,4 @@
-// $Id: Particle2MCChi2.cpp,v 1.5 2002-10-02 07:06:28 phicharp Exp $
+// $Id: Particle2MCChi2.cpp,v 1.6 2003-04-17 09:58:26 phicharp Exp $
 // Include files 
 
 // from Gaudi
@@ -50,7 +50,7 @@ StatusCode Particle2MCChi2::initialize() {
 
   // Retrieve a weighted associator on which a threshold will be applied
   // Its InputData must be set identical as this one's (true parameter)
-  StatusCode sc =  retrievePrivateAsct( "Particle2MCWeightedAsct", 
+  StatusCode sc =  retrievePrivateAsct( "Particle2MCWithChi2Asct", 
                                        true, m_pAsctChi2) ;
 
   return sc;

@@ -1,4 +1,4 @@
-// $Id: Particle2MCLinks.cpp,v 1.8 2002-10-02 07:06:29 phicharp Exp $
+// $Id: Particle2MCLinks.cpp,v 1.9 2003-04-17 09:58:26 phicharp Exp $
 // Include files 
 
 // from Gaudi
@@ -63,7 +63,7 @@ StatusCode Particle2MCLinks::execute() {
   log << MSG::VERBOSE << "==> Execute" << endreq;
 
   // create an association table and register it in the TES
-  Particle2MCWeightedAsct::Table* table = new Particle2MCWeightedAsct::Table();
+  Particle2MCLinksAsct::Table* table = new Particle2MCLinksAsct::Table();
   
   //////////////////////////////////
   // Loop on Particles containers //

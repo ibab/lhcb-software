@@ -1,4 +1,4 @@
-// $Id: ProtoParticle2MCAsct.h,v 1.2 2002-10-02 07:06:26 phicharp Exp $
+// $Id: ProtoParticle2MCAsct.h,v 1.3 2003-04-17 09:58:25 phicharp Exp $
 #ifndef ASSOCIATORS_ProtoParticle2MCASCT_H 
 #define ASSOCIATORS_ProtoParticle2MCASCT_H 1
 
@@ -25,13 +25,13 @@ NeutralPP2MCAsctLocation = "Rec/Relations/NeutralPP2MC";
  */
 
 class ProtoParticle2MCAsct : 
-public AssociatorWeighted<ProtoParticle,MCParticle,float>
+public AssociatorWeighted<ProtoParticle,MCParticle,double>
 {
   friend ToolFactory<ProtoParticle2MCAsct>;
   
 public:
   // Define data types
-  typedef RelationWeighted1D<ProtoParticle,MCParticle, float>  Table;
+  typedef RelationWeighted1D<ProtoParticle,MCParticle, double>  Table;
   typedef OwnType                               Asct;
   
 protected:
@@ -44,6 +44,7 @@ protected:
     setProperty( "Location", ChargedPP2MCAsctLocation );
     setProperty( "AlgorithmType", "ChargedPP2MC" );
     setProperty( "AlgorithmName", "ChargedPP2MC" );
+    setDecreasing( true );
   }; 
 
   virtual ~ProtoParticle2MCAsct() { }; ///< Destructor

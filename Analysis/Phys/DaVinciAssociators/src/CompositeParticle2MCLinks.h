@@ -1,4 +1,4 @@
-// $Id: CompositeParticle2MCLinks.h,v 1.2 2002-10-10 18:31:04 gcorti Exp $
+// $Id: CompositeParticle2MCLinks.h,v 1.3 2003-04-17 09:58:25 phicharp Exp $
 #ifndef CompositeParticle2MCLinks_H 
 #define CompositeParticle2MCLinks_H 1
 
@@ -11,7 +11,7 @@
 
 
 // local
-#include "DaVinciAssociators/Particle2MCWeightedAsct.h"
+#include "DaVinciAssociators/Particle2MCLinksAsct.h"
 #include "DaVinciAssociators/Particle2MCAsct.h"
 #include "DaVinciAssociators/AsctAlgorithm.h"
 
@@ -35,7 +35,7 @@ public:
 
 
 private:
-  Particle2MCWeightedAsct::IAsct* m_pAsct;
+  Particle2MCLinksAsct::IAsct* m_pAsct;
 
   bool associate1(const Particle *p, const MCParticle *m, 
                   Particle2MCAsct::Table* table) const;

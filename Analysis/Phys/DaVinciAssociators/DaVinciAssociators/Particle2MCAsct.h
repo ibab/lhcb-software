@@ -1,4 +1,4 @@
-// $Id: Particle2MCAsct.h,v 1.2 2002-07-12 15:24:07 phicharp Exp $
+// $Id: Particle2MCAsct.h,v 1.3 2003-04-17 09:58:25 phicharp Exp $
 #ifndef ASSOCIATORS_Particle2MCASCT_H 
 #define ASSOCIATORS_Particle2MCASCT_H 1
 
@@ -46,7 +46,7 @@ protected:
   virtual ~Particle2MCAsct() { }; ///< Destructor
 
 private:
-
+    bool hasTable;
 };
 
 typedef Particle2MCAsct::FromRange                 ParticlesToMC;

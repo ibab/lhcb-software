@@ -1,10 +1,18 @@
-// $Id: Particle2MCWithChi2Asct.h,v 1.3 2002-10-02 07:06:26 phicharp Exp $
+// $Id: Particle2MCWithChi2Asct.h,v 1.4 2003-04-17 09:58:25 phicharp Exp $
 #ifndef Particle2MCWithChi2ASCT_H 
 #define Particle2MCWithChi2ASCT_H 1
 
+// Include files
+#include "GaudiKernel/MsgStream.h"
+#include "GaudiKernel/DeclareFactoryEntries.h"
+// Event
+#include "Event/MCParticle.h"
+#include "Event/Particle.h"
 // Associators
-#include "Particle2MCWeightedAsct.h"
+#include "Relations/AssociatorWeighted.h"
 
+static const std::string& 
+Particle2MCWithChi2AsctLocation = "Phys/Relations/Particle2MCWithChi2";
 
 /** @class Particle2MCWithChi2Asct Particle2MCWithChi2Asct.h
  *  
@@ -12,8 +20,34 @@
  *  @author Philippe Charpentier
  *  @date   17/05/2002
  */
+class Particle2MCWithChi2Asct : 
+  public AssociatorWeighted<Particle,MCParticle,double>
+{
+  friend ToolFactory<Particle2MCWithChi2Asct>;
+public:
+  // Define data types
+  typedef RelationWeighted1D<Particle,MCParticle,double>       Table;
+  typedef OwnType                               Asct;
 
-typedef Particle2MCWeightedAsct Particle2MCWithChi2Asct;
+  /// Standard constructor
+  Particle2MCWithChi2Asct(const std::string& type,
+                  const std::string& name,
+                  const IInterface* parent )
+    : Asct( type, name, parent) {
+
+    setProperty( "Location", Particle2MCWithChi2AsctLocation );
+    setProperty( "AlgorithmType", "Particle2MCWithChi2" );
+    setProperty( "AlgorithmName", "Particle2MCWithChi2" );
+    
+  }; 
+
+  virtual ~Particle2MCWithChi2Asct( ){}; ///< Destructor
+
+protected:
+
+private:
+
+};
 
 typedef Particle2MCWithChi2Asct::FromRange      ParticlesToMCChi2;
 typedef Particle2MCWithChi2Asct::FromIterator   ParticlesToMCChi2Iterator;

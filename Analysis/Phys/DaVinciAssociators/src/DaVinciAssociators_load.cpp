@@ -1,4 +1,4 @@
-// $Id: DaVinciAssociators_load.cpp,v 1.8 2003-01-07 09:29:29 ranjard Exp $
+// $Id: DaVinciAssociators_load.cpp,v 1.9 2003-04-17 09:58:25 phicharp Exp $
 // Include files 
 
 
@@ -7,6 +7,7 @@
 
 // local
 #include "DaVinciAssociators/Particle2MCAsct.h"
+#include "DaVinciAssociators/Particle2MCLinksAsct.h"
 #include "DaVinciAssociators/Particle2MCWithChi2Asct.h"
 #include "DaVinciAssociators/ProtoParticle2MCAsct.h"
 
@@ -14,11 +15,13 @@
 #include "Relations/RelationMACROs.h"
 #include "Relations/AssociatorMACROs.h"
 
-DECLARE_TOOL_FACTORY( Particle2MCWeightedAsct);
+DECLARE_TOOL_FACTORY( Particle2MCLinksAsct);
+DECLARE_TOOL_FACTORY( Particle2MCWithChi2Asct);
 DECLARE_TOOL_FACTORY( Particle2MCAsct);
 DECLARE_TOOL_FACTORY( ProtoParticle2MCAsct);
 
-DECLARE_DATAOBJECT_FACTORY( Particle2MCWeightedTable);
+DECLARE_DATAOBJECT_FACTORY( Particle2MCLinksTable);
+//DECLARE_DATAOBJECT_FACTORY( Particle2MCWithChi2Table);
 DECLARE_DATAOBJECT_FACTORY( Particle2MCTable);
 DECLARE_DATAOBJECT_FACTORY( ProtoParticle2MCTable);
 
@@ -31,13 +34,16 @@ DECLARE_DATAOBJECT_FACTORY( ProtoParticle2MCTable);
 //
 // They should be inside the 'DECLARE_FACTORY_ENTRIES' body.
 
-DECLARE_FACTORY_ENTRIES( PhysAssociators ) {
+DECLARE_FACTORY_ENTRIES( DaVinciAssociators ) {
 
-  DECLARE_TOOL( Particle2MCWeightedAsct );
+  DECLARE_TOOL( Particle2MCLinksAsct );
+  DECLARE_TOOL( Particle2MCWithChi2Asct );
   DECLARE_TOOL( Particle2MCAsct );
   DECLARE_TOOL( ProtoParticle2MCAsct );
  
-  DECLARE_DATAOBJECT( Particle2MCWeightedTable );
+  DECLARE_DATAOBJECT( Particle2MCLinksTable );
+  // The next one is not necessary as it is of the same type as for Links
+//  DECLARE_DATAOBJECT( Particle2MCWithChi2Table );
   DECLARE_DATAOBJECT( Particle2MCTable );
   DECLARE_DATAOBJECT( ProtoParticle2MCTable );
  
