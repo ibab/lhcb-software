@@ -1,6 +1,13 @@
-! $Id: release.notes,v 1.13 2002-06-10 15:56:32 cattanem Exp $
+! $Id: release.notes,v 1.14 2002-06-14 11:38:07 ibelyaev Exp $
 ! Package     : CaloTools
 ! Responsible : Vanya Belyaev Ivan.Belyaev@itep.ru
+
+! 2002-06-13 - Ivan Belyaev
+ - new tools, new options and update in CaloTools_load.cpp
+   CaloClusterSOMSelector.h,.cpp - new tool ("cluster selector") 
+   to "select" isolated electromagnetic clusters using 
+   the relations between Second Order Moments and Energy for 
+   Em-showers 
 
 ! 2002-06-10 - Marco Cattaneo
  - Change version to v3r0 to use EventKernel v2r*

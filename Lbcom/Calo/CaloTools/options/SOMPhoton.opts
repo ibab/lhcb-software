@@ -1,0 +1,26 @@
+// $Id: SOMPhoton.opts,v 1.1 2002-06-14 11:38:08 ibelyaev Exp $ 
+// ============================================================================
+// CVS tag $Name: not supported by cvs2svn $
+// ============================================================================
+// $Log: not supported by cvs2svn $
+// ============================================================================
+
+/** @file 
+ *  options file to run CaloClusterSOMSelector tool 
+ *  @see CaloClusterSOMSelector 
+ *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
+ *  @date 13 June 2002 
+ */
+
+ToolSvc.SOMPhoton.OutputLevel = 1;
+
+ToolSvc.SOMPhoton.Es0   = {     0.  ,     0.   ,     0.   } ;
+ToolSvc.SOMPhoton.Es1   = { 20000.  , 40000.   , 40000.   } ;
+ToolSvc.SOMPhoton.Es2   = { 90000.  , 90000.   , 90000.   } ;
+
+ToolSvc.SOMPhoton.SOMs0 = { 0.00010 , 0.000025 , 0.000010 } ;
+ToolSvc.SOMPhoton.SOMs1 = { 0.00004 , 0.000010 , 0.000008 } ;
+ToolSvc.SOMPhoton.SOMs2 = { 0.00001 , 0.000005 , 0.000003 } ;
+
+ToolSvc.SOMPhoton.aTolerance = 0.0 ;
+ToolSvc.SOMPhoton.bTolerance = 1.0 ;

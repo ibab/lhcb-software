@@ -1,14 +1,12 @@
-# $Id: requirements,v 1.8 2002-06-13 12:32:38 ibelyaev Exp $
+# $Id: requirements,v 1.9 2002-06-14 11:38:07 ibelyaev Exp $
+# =============================================================================
+# CVS tag $Name: not supported by cvs2svn $
 # =============================================================================
 # Created    : 29/10/2001
 # Maintainer : Vanya Belyaev Ivan.Belyaev@itep.ru
 # =============================================================================
-# Documentation on the requirement file can be found at
-# http://cern.ch/lhcb-comp/Support/html/new_structure.pdf
-# =============================================================================
-
 package            CaloTools
-version            v3r1
+version            v3r2
 
 # ================ structure =================================================
 branches           cmt doc src options 
@@ -23,8 +21,7 @@ use CaloUtils      v3r*   Calo
 # ================ component library =========================================
 library            CaloTools    *.cpp
 
+# ================ standard pattern ==========================================
 apply_pattern      component_library library=CaloTools
 
-# ============================================================================
-# The End 
-# ============================================================================
+# ================ The End ===================================================
