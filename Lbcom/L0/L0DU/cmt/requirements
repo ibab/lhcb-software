@@ -5,14 +5,14 @@ version 	v1
 branches	L0DU src cmt doc options
 
 # ================ own includes ==========================================
-include_dirs	${L0DUROOT}
+include_dirs	$(L0DUROOT)
 
 # ================ options ===============================================
-set L0DUOPTS	${L0DUROOT}/options
+set L0DUOPTS	$(L0DUROOT)/options
 
 # ================ used packages =========================================
 use L0Calo	v1*	L0
-use L0Muon      v1*     L0
+use L0Muon      v2*     L0
 
 # ================ component library =====================================
 library		L0DU	../src/*.cpp
