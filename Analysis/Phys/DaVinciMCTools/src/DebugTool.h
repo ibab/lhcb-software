@@ -1,10 +1,10 @@
-// $Id: DebugTool.h,v 1.3 2003-03-07 11:01:55 odie Exp $
+// $Id: DebugTool.h,v 1.4 2004-11-24 14:08:54 pkoppenb Exp $
 #ifndef DEBUGTOOL_H 
 #define DEBUGTOOL_H 1
 
 // Include files
 // from Gaudi
-#include "GaudiKernel/AlgTool.h"
+#include "GaudiAlg/GaudiTool.h"
 
 // from DaVinciTools
 #include "DaVinciMCTools/IDebugTool.h"
@@ -20,7 +20,7 @@ class MsgStream;
  *  @author Olivier Dormond
  *  @date   29/03/2001
  */
-class DebugTool : public AlgTool,
+class DebugTool : public GaudiTool,
                   virtual public IDebugTool {
 public:  
   /// Standard Constructor
@@ -105,5 +105,10 @@ private:
   std::string m_arrow; ///< arrow drawing
   std::string m_informations; ///< The specification of the values to print
   std::vector<InfoKeys> m_keys; ///< The list of information to print
+  double m_energyUnit ; /// Unit for energies, momenta and masses
+  double m_lengthUnit ; /// Unit for distances
+  std::string m_energyUnitName; ///< Unit for energies, momenta and masses
+  std::string m_lengthUnitName; ///< Unit for distances
+   
 };
 #endif // DEBUGTOOL_H

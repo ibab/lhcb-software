@@ -1,4 +1,4 @@
-// $Id: DebugTool.cpp,v 1.6 2004-09-15 16:18:23 pkoppenb Exp $
+// $Id: DebugTool.cpp,v 1.7 2004-11-24 14:08:54 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
@@ -35,11 +35,31 @@ const IToolFactory& DebugToolFactory = Factory;
 DebugTool::DebugTool( const std::string& type,
                       const std::string& name,
                       const IInterface* parent )
-  : AlgTool( type, name, parent ), m_ppSvc(0), m_keys(0)
+  : GaudiTool( type, name, parent ), m_ppSvc(0), m_keys(0), 
+    m_energyUnitName("MeV"), m_lengthUnitName("mm")
 {
 
+  declareInterface<IDebugTool>(this);
+
+  declareProperty( "PrintDepth", m_depth = 999 );
+  declareProperty( "TreeWidth", m_treeWidth = 20 );
+  declareProperty( "FieldWidth", m_fWidth = 10 );
+  declareProperty( "FieldPrecision", m_fPrecision = 2 );
+  declareProperty( "Arrow", m_arrow = "+-->" );
+  declareProperty( "Informations", m_informations = "Name E M P Pt phi Vz" );
+  declareProperty( "EnergyUnit", m_energyUnit = MeV );
+  declareProperty( "LengthUnit", m_lengthUnit = mm );
+}
+
+//=============================================================================
+// initialise
+//=============================================================================
+StatusCode DebugTool::initialize( void )
+{
+  StatusCode sc = GaudiTool::initialize();
+  if (!sc) return sc;
+
   if( serviceLocator() ) {
-    StatusCode sc = StatusCode::FAILURE;
     sc = service("ParticlePropertySvc",m_ppSvc);
   }
   if( !m_ppSvc ) {
@@ -47,26 +67,6 @@ DebugTool::DebugTool( const std::string& type,
                           "DebugException",
                           StatusCode::FAILURE );
   }
-
-  declareInterface<IDebugTool>(this);
-
-  declareProperty( "PrintDepth", m_depth = 999 );
-  declareProperty( "TreeWidth", m_treeWidth = 20 );
-  declareProperty( "FieldWidth", m_fWidth = 10 );
-  declareProperty( "FieldPrecision", m_fPrecision = 3 );
-  declareProperty( "Arrow", m_arrow = "+-->" );
-  declareProperty( "Informations", m_informations = "Name E M P Pt phi Vz" );
-}
-
-//=============================================================================
-// Standard destructor
-//=============================================================================
-
-DebugTool::~DebugTool( ) { }
-
-StatusCode DebugTool::initialize( void )
-{
-  MsgStream log(msgSvc(), name());
 
   std::size_t oldpos = 0, pos;
   do {
@@ -88,12 +88,41 @@ StatusCode DebugTool::initialize( void )
     else if( tok=="eta" )   m_keys.push_back(eta);
     else if( tok=="IDCL" )  m_keys.push_back(idcl);
     else
-      log << MSG::ERROR << "Unknown output key '" << tok << "'. Ignoring it."
+      err() << "Unknown output key '" << tok << "'. Ignoring it."
           << endreq;
     if( pos != std::string::npos ) oldpos = pos+1;
     else                           oldpos = pos;
   }
   while( pos != std::string::npos );
+
+  if (m_energyUnit == TeV) m_energyUnitName = "TeV" ;
+  else if (m_energyUnit == GeV) m_energyUnitName = "GeV" ;
+  else if (m_energyUnit == MeV) m_energyUnitName = "MeV" ;
+  else if (m_energyUnit <= 0) {
+    err() << "You have chosen a unit for energies: " 
+        << m_energyUnit << endreq;
+    return StatusCode::FAILURE ;
+  } 
+  else {
+    warning() << "You have chosen a non-standard unit for energies: " 
+        << m_energyUnit << endreq;
+    m_energyUnitName = "???" ;
+  }
+  if (m_lengthUnit == mm) m_lengthUnitName = "mm" ;
+  else if (m_lengthUnit == cm) m_lengthUnitName = "cm" ;
+  else if (m_lengthUnit == m) m_lengthUnitName = "m" ;
+  else if (m_lengthUnit <= 0) {
+    err() << "You have chosen a unit for lengths: " 
+        << m_lengthUnit << endreq;
+    return StatusCode::FAILURE ;
+  } 
+  else {
+    warning() << "You have chosen a non-standard unit for lengths: " 
+        << m_lengthUnit << endreq;
+    m_lengthUnitName = "??" ;
+    
+  }
+
   return StatusCode::SUCCESS;
 }
 
@@ -183,16 +212,16 @@ void DebugTool::printHeader( MsgStream &log, bool mcfirst, bool associated )
   for( i = m_keys.begin(); i!= m_keys.end(); i++ )
     switch( *i ) {
     case Name:      log << std::setw(m_treeWidth) << " ";      break;
-    case E:         log << std::setw(m_fWidth) << "GeV";       break;
-    case M:         log << std::setw(m_fWidth) << "GeV";       break;
-    case P:         log << std::setw(m_fWidth) << "GeV";       break;
-    case Pt:        log << std::setw(m_fWidth) << "GeV";       break;
-    case Px:        log << std::setw(m_fWidth) << "GeV";       break;
-    case Py:        log << std::setw(m_fWidth) << "GeV";       break;
-    case Pz:        log << std::setw(m_fWidth) << "GeV";       break;
-    case Vx:        log << std::setw(m_fWidth) << "cm";        break;
-    case Vy:        log << std::setw(m_fWidth) << "cm";        break;
-    case Vz:        log << std::setw(m_fWidth) << "cm";        break;
+    case E:         log << std::setw(m_fWidth) << m_energyUnitName;       break;
+    case M:         log << std::setw(m_fWidth) << m_energyUnitName;       break;
+    case P:         log << std::setw(m_fWidth) << m_energyUnitName;       break;
+    case Pt:        log << std::setw(m_fWidth) << m_energyUnitName;       break;
+    case Px:        log << std::setw(m_fWidth) << m_energyUnitName;       break;
+    case Py:        log << std::setw(m_fWidth) << m_energyUnitName;       break;
+    case Pz:        log << std::setw(m_fWidth) << m_energyUnitName;       break;
+    case Vx:        log << std::setw(m_fWidth) << m_lengthUnitName;        break;
+    case Vy:        log << std::setw(m_fWidth) << m_lengthUnitName;        break;
+    case Vz:        log << std::setw(m_fWidth) << m_lengthUnitName;        break;
     case theta:     log << std::setw(m_fWidth) << "mrad";      break;
     case phi:       log << std::setw(m_fWidth) << "mrad";      break;
     case eta:       log << std::setw(m_fWidth) << "prap";      break;
@@ -202,16 +231,16 @@ void DebugTool::printHeader( MsgStream &log, bool mcfirst, bool associated )
     for( i = m_keys.begin(); i!= m_keys.end(); i++ )
       switch( *i ) {
       case Name:    log << std::setw(m_fWidth) << " ";         break;
-      case E:       log << std::setw(m_fWidth) << "GeV";       break;
-      case M:       log << std::setw(m_fWidth) << "GeV";       break;
-      case P:       log << std::setw(m_fWidth) << "GeV";       break;
-      case Pt:      log << std::setw(m_fWidth) << "GeV";       break;
-      case Px:      log << std::setw(m_fWidth) << "GeV";       break;
-      case Py:      log << std::setw(m_fWidth) << "GeV";       break;
-      case Pz:      log << std::setw(m_fWidth) << "GeV";       break;
-      case Vx:      log << std::setw(m_fWidth) << "cm";        break;
-      case Vy:      log << std::setw(m_fWidth) << "cm";        break;
-      case Vz:      log << std::setw(m_fWidth) << "cm";        break;
+      case E:       log << std::setw(m_fWidth) << m_energyUnitName;       break;
+      case M:       log << std::setw(m_fWidth) << m_energyUnitName;       break;
+      case P:       log << std::setw(m_fWidth) << m_energyUnitName;       break;
+      case Pt:      log << std::setw(m_fWidth) << m_energyUnitName;       break;
+      case Px:      log << std::setw(m_fWidth) << m_energyUnitName;       break;
+      case Py:      log << std::setw(m_fWidth) << m_energyUnitName;       break;
+      case Pz:      log << std::setw(m_fWidth) << m_energyUnitName;       break;
+      case Vx:      log << std::setw(m_fWidth) << m_lengthUnitName;        break;
+      case Vy:      log << std::setw(m_fWidth) << m_lengthUnitName;        break;
+      case Vz:      log << std::setw(m_fWidth) << m_lengthUnitName;        break;
       case theta:   log << std::setw(m_fWidth) << "mrad";      break;
       case phi:     log << std::setw(m_fWidth) << "mrad";      break;
       case eta:     log << std::setw(m_fWidth) << "prap";      break;
@@ -251,50 +280,50 @@ void DebugTool::printInfo( const std::string &prefix, const MCParticle *part,
       break;
     case E:
       log << std::setw(m_fWidth) << std::setprecision(m_fPrecision)
-          << part->momentum().e()/GeV;
+          << part->momentum().e()/m_energyUnit;
       break;
     case M:
       log << std::setw(m_fWidth) << std::setprecision(m_fPrecision)
-          << part->momentum().m()/GeV;
+          << part->momentum().m()/m_energyUnit;
       break;
     case P:
       log << std::setw(m_fWidth) << std::setprecision(m_fPrecision)
-          << part->momentum().vect().mag()/GeV;
+          << part->momentum().vect().mag()/m_energyUnit;
       break;
     case Pt:
       log << std::setw(m_fWidth) << std::setprecision(m_fPrecision)
-          << part->momentum().perp()/GeV;
+          << part->momentum().perp()/m_energyUnit;
       break;
     case Px:
       log << std::setw(m_fWidth) << std::setprecision(m_fPrecision)
-          << part->momentum().px()/GeV;
+          << part->momentum().px()/m_energyUnit;
       break;
     case Py:
       log << std::setw(m_fWidth) << std::setprecision(m_fPrecision)
-          << part->momentum().py()/GeV;
+          << part->momentum().py()/m_energyUnit;
       break;
     case Pz:
       log << std::setw(m_fWidth) << std::setprecision(m_fPrecision)
-          << part->momentum().pz()/GeV;
+          << part->momentum().pz()/m_energyUnit;
       break;
     case Vx:
       if( origin )
         log << std::setw(m_fWidth) << std::setprecision(m_fPrecision)
-            << origin->position().x()/cm;
+            << origin->position().x()/m_lengthUnit;
       else
         log << std::setw(m_fWidth) << " N/A ";
       break;
     case Vy:
       if( origin )
         log << std::setw(m_fWidth) << std::setprecision(m_fPrecision)
-            << origin->position().y()/cm;
+            << origin->position().y()/m_lengthUnit;
       else
         log << std::setw(m_fWidth) << " N/A ";
       break;
     case Vz:
       if( origin )
         log << std::setw(m_fWidth) << std::setprecision(m_fPrecision)
-            << origin->position().z()/cm;
+            << origin->position().z()/m_lengthUnit;
       else
         log << std::setw(m_fWidth) << " N/A ";
       break;
@@ -343,50 +372,50 @@ void DebugTool::printInfo( const std::string &prefix, const MCParticle *part,
           break;
         case E:
           log << std::setw(m_fWidth) << std::setprecision(m_fPrecision)
-              << reco->momentum().e()/GeV;
+              << reco->momentum().e()/m_energyUnit;
           break;
         case M:
           log << std::setw(m_fWidth) << std::setprecision(m_fPrecision)
-              << reco->momentum().m()/GeV;
+              << reco->momentum().m()/m_energyUnit;
           break;
         case P:
           log << std::setw(m_fWidth) << std::setprecision(m_fPrecision)
-              << reco->momentum().vect().mag()/GeV;
+              << reco->momentum().vect().mag()/m_energyUnit;
           break;
         case Pt:
           log << std::setw(m_fWidth) << std::setprecision(m_fPrecision)
-              << reco->momentum().perp()/GeV;
+              << reco->momentum().perp()/m_energyUnit;
           break;
         case Px:
           log << std::setw(m_fWidth) << std::setprecision(m_fPrecision)
-              << reco->momentum().px()/GeV;
+              << reco->momentum().px()/m_energyUnit;
           break;
         case Py:
           log << std::setw(m_fWidth) << std::setprecision(m_fPrecision)
-              << reco->momentum().py()/GeV;
+              << reco->momentum().py()/m_energyUnit;
           break;
         case Pz:
           log << std::setw(m_fWidth) << std::setprecision(m_fPrecision)
-              << reco->momentum().pz()/GeV;
+              << reco->momentum().pz()/m_energyUnit;
           break;
         case Vx:
           if( origin )
             log << std::setw(m_fWidth) << std::setprecision(m_fPrecision)
-                << reco->pointOnTrack().x()/cm;
+                << reco->pointOnTrack().x()/m_lengthUnit;
           else
             log << std::setw(m_fWidth) << " N/A ";
           break;
         case Vy:
           if( origin )
             log << std::setw(m_fWidth) << std::setprecision(m_fPrecision)
-                << reco->pointOnTrack().y()/cm;
+                << reco->pointOnTrack().y()/m_lengthUnit;
           else
             log << std::setw(m_fWidth) << " N/A ";
           break;
         case Vz:
           if( origin )
             log << std::setw(m_fWidth) << std::setprecision(m_fPrecision)
-                << reco->pointOnTrack().z()/cm;
+                << reco->pointOnTrack().z()/m_lengthUnit;
           else
             log << std::setw(m_fWidth) << " N/A ";
           break;
@@ -444,43 +473,43 @@ void DebugTool::printInfo( const std::string &prefix, const Particle *reco,
       break;
     case E:
       log << std::setw(m_fWidth) << std::setprecision(m_fPrecision)
-          << reco->momentum().e()/GeV;
+          << reco->momentum().e()/m_energyUnit;
       break;
     case M:
       log << std::setw(m_fWidth) << std::setprecision(m_fPrecision)
-          << reco->momentum().m()/GeV;
+          << reco->momentum().m()/m_energyUnit;
       break;
     case P:
       log << std::setw(m_fWidth) << std::setprecision(m_fPrecision)
-          << reco->momentum().vect().mag()/GeV;
+          << reco->momentum().vect().mag()/m_energyUnit;
       break;
     case Pt:
       log << std::setw(m_fWidth) << std::setprecision(m_fPrecision)
-          << reco->momentum().perp()/GeV;
+          << reco->momentum().perp()/m_energyUnit;
       break;
     case Px:
       log << std::setw(m_fWidth) << std::setprecision(m_fPrecision)
-          << reco->momentum().px()/GeV;
+          << reco->momentum().px()/m_energyUnit;
       break;
     case Py:
       log << std::setw(m_fWidth) << std::setprecision(m_fPrecision)
-          << reco->momentum().py()/GeV;
+          << reco->momentum().py()/m_energyUnit;
       break;
     case Pz:
       log << std::setw(m_fWidth) << std::setprecision(m_fPrecision)
-          << reco->momentum().pz()/GeV;
+          << reco->momentum().pz()/m_energyUnit;
       break;
     case Vx:
       log << std::setw(m_fWidth) << std::setprecision(m_fPrecision)
-          << reco->pointOnTrack().x()/cm;
+          << reco->pointOnTrack().x()/m_lengthUnit;
       break;
     case Vy:
       log << std::setw(m_fWidth) << std::setprecision(m_fPrecision)
-          << reco->pointOnTrack().y()/cm;
+          << reco->pointOnTrack().y()/m_lengthUnit;
       break;
     case Vz:
       log << std::setw(m_fWidth) << std::setprecision(m_fPrecision)
-          << reco->pointOnTrack().z()/cm;
+          << reco->pointOnTrack().z()/m_lengthUnit;
       break;
     case theta:
       log << std::setw(m_fWidth) << std::setprecision(m_fPrecision)
@@ -527,38 +556,38 @@ void DebugTool::printInfo( const std::string &prefix, const Particle *reco,
           break;
         case E:
           log << std::setw(m_fWidth) << std::setprecision(m_fPrecision)
-              << part->momentum().e()/GeV;
+              << part->momentum().e()/m_energyUnit;
           break;
         case M:
           log << std::setw(m_fWidth) << std::setprecision(m_fPrecision)
-              << part->momentum().m()/GeV;
+              << part->momentum().m()/m_energyUnit;
           break;
         case P:
           log << std::setw(m_fWidth) << std::setprecision(m_fPrecision)
-              << part->momentum().vect().mag()/GeV;
+              << part->momentum().vect().mag()/m_energyUnit;
           break;
         case Pt:
           log << std::setw(m_fWidth) << std::setprecision(m_fPrecision)
-              << part->momentum().perp()/GeV;
+              << part->momentum().perp()/m_energyUnit;
           break;
         case Px:
           log << std::setw(m_fWidth) << std::setprecision(m_fPrecision)
-              << part->momentum().px()/GeV;
+              << part->momentum().px()/m_energyUnit;
           break;
         case Py:
           log << std::setw(m_fWidth) << std::setprecision(m_fPrecision)
-              << part->momentum().py()/GeV;
+              << part->momentum().py()/m_energyUnit;
           break;
         case Pz:
           log << std::setw(m_fWidth) << std::setprecision(m_fPrecision)
-              << part->momentum().pz()/GeV;
+              << part->momentum().pz()/m_energyUnit;
           break;
         case Vx:
           {
             const MCVertex *origin = part->originVertex();
             if( origin )
               log << std::setw(m_fWidth) << std::setprecision(m_fPrecision)
-                  << origin->position().x()/cm;
+                  << origin->position().x()/m_lengthUnit;
             else
               log << std::setw(m_fWidth) << " N/A ";
           }
@@ -569,7 +598,7 @@ void DebugTool::printInfo( const std::string &prefix, const Particle *reco,
             if( origin )
               if( origin )
                 log << std::setw(m_fWidth) << std::setprecision(m_fPrecision)
-                    << origin->position().y()/cm;
+                    << origin->position().y()/m_lengthUnit;
               else
                 log << std::setw(m_fWidth) << " N/A ";
           }
@@ -580,7 +609,7 @@ void DebugTool::printInfo( const std::string &prefix, const Particle *reco,
             if( origin )
               if( origin )
                 log << std::setw(m_fWidth) << std::setprecision(m_fPrecision)
-                    << origin->position().z()/cm;
+                    << origin->position().z()/m_lengthUnit;
               else
                 log << std::setw(m_fWidth) << " N/A ";
           }
@@ -631,11 +660,11 @@ void DebugTool::printTree( const MCParticle *mother,
   MsgStream log(msgSvc(), name());
 
   if( !mother ) {
-    log << MSG::ERROR << "printTree called with NULL MCParticle" << endreq;
+    err() << "printTree called with NULL MCParticle" << endreq;
     return;
   }
 
-  log << MSG::INFO << std::endl;
+  info() << std::endl;
   printHeader( log, true, assoc != NULL );
 
   log.setf(std::ios::fixed,std::ios::floatfield);
@@ -749,7 +778,7 @@ void DebugTool::printTree( const Particle *mother,
   MsgStream log(msgSvc(), name());
 
   if( !mother ) {
-    log << MSG::ERROR << "printTree called with NULL Particle" << endreq;
+    err() << "printTree called with NULL Particle" << endreq;
     return;
   }
 

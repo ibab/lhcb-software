@@ -1,7 +1,15 @@
-! $Id: release.notes,v 1.38 2004-11-16 16:15:40 pkoppenb Exp $
+! $Id: release.notes,v 1.39 2004-11-24 14:08:54 pkoppenb Exp $
 ! Package     : DaVinciMCTools
 ! Responsible : P. Koppenburg
 
+! 2004-11-24 - P. Koppenburg
+ - src/DebugTool.cpp
+   . Use MeV, mm as default units, not GeV, cm
+   . Allow the user to change that with 
+     MyAlg.DebugTool.EnergyUnit = 1*GeV ;
+     MyAlg.DebugTool.LengthUnit = 1*cm ;
+   . Make it a GaudiTool
+   
 ! 2004-11-16 - P. Koppenburg
  - src/FilterGoodDecay.*
    . New algorithm that checks if a given decay is present in the MC truth
