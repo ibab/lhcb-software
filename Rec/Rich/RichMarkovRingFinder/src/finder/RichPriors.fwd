@@ -1,0 +1,6 @@
+namespace Lester {
+
+  template <class Mode, const Mode & mode>
+  class RichPriors;
+
+}
