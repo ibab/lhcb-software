@@ -1,4 +1,4 @@
-// $Id: L0CaloAlg.cpp,v 1.21 2004-01-07 16:58:25 cattanem Exp $
+// $Id: L0CaloAlg.cpp,v 1.22 2004-04-28 06:10:04 ocallot Exp $
 
 /// STL
 #include <stdio.h>
@@ -22,6 +22,7 @@
 /// local
 #include "L0CaloAlg.h"
 
+#include "Event/L1Event.h"
 //
 //  Level-0 calorimeter trigger
 //
@@ -565,7 +566,8 @@ StatusCode L0CaloAlg::execute() {
                                                   0. );
     L0Calo->add( hsum );
     int word = ( L0Calo::SumEt << 24 ) + sumEt;
-    m_l1Output.push_back( word );
+    m_l1Output.push_back( (word >> 16) & 0xFFFF );
+    m_l1Output.push_back( word & 0xFFFF );
 
   }
 
@@ -578,7 +580,8 @@ StatusCode L0CaloAlg::execute() {
                                                    0. );
   L0Calo->add( spdMult);
   int word = ( L0Calo::SpdMult << 24 ) + m_spdMult;
-  m_l1Output.push_back( word );
+  m_l1Output.push_back( (word >> 16) & 0xFFFF );
+  m_l1Output.push_back( word & 0xFFFF );
 
   // Debug now the L0 candidates
 
@@ -646,13 +649,13 @@ StatusCode L0CaloAlg::execute() {
       << " Raw Output size = " << m_rawOutput.size()
       << endreq;
 
-  m_nbEvents++;
-  m_totL1Size  += m_l1Output.size();
-  m_totRawSize += m_rawOutput.size();
 
   //== Store in the L1 and RAW buffer if required.
 
   if ( m_storeFlag ) {
+    m_nbEvents++;
+    m_totL1Size  += m_l1Output.size();
+    m_totRawSize += m_rawOutput.size();
     SmartDataPtr<L1Buffer> l1Buf( eventSvc(), L1BufferLocation::Default );
     if ( 0 != l1Buf ) {
       l1Buf->addBank( 0, L1Buffer::L0Calo, m_l1Output );
@@ -919,7 +922,10 @@ void L0CaloAlg::saveCandidate ( int type, L0Candidate& cand, int thr ) {
 
   int word = ( type << 24 ) + (cand.ID().raw() << 8 ) + cand.et();
   m_rawOutput.push_back( word );
-  if ( thr < cand.et() ) m_l1Output.push_back( word );
+  if ( thr < cand.et() ) {
+    m_l1Output.push_back( (word >> 16) & 0xFFFF );
+    m_l1Output.push_back( word & 0xFFFF );
+  }
 }
 
 //=============================================================================

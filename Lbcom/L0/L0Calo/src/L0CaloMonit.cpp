@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/L0/L0Calo/src/L0CaloMonit.cpp,v 1.4 2002-07-01 08:17:12 ocallot Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/L0/L0Calo/src/L0CaloMonit.cpp,v 1.5 2004-04-28 06:10:05 ocallot Exp $
 
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -8,6 +8,7 @@
 
 // Event/L0Event
 #include "Event/L0CaloCandidate.h"
+#include "Event/L1Event.h"
 
 // local
 #include "L0CaloMonit.h"
@@ -38,8 +39,8 @@ L0CaloMonit::~L0CaloMonit() {};
 // Initialisation. Check parameters
 //=============================================================================
 StatusCode L0CaloMonit::initialize() {
-  MsgStream log(messageService(), name());
-  log << MSG::DEBUG << " >>> Initialize" << endreq;
+  MsgStream msg(messageService(), name());
+  msg << MSG::DEBUG << " >>> Initialize" << endreq;
 
   std::string histoDir = "/stat/L0" ;
   std::string hName   ;
@@ -72,14 +73,14 @@ StatusCode L0CaloMonit::initialize() {
 // Main execution
 //=============================================================================
 StatusCode L0CaloMonit::execute() {
-  MsgStream log(messageService(), name());
-  log << MSG::DEBUG << " >>> Execute" << endreq;
+  MsgStream msg(messageService(), name());
+  msg << MSG::DEBUG << " >>> Execute" << endreq;
 
   std::string containerName = L0CaloCandidateLocation::Default;
   
   SmartDataPtr< L0CaloCandidates > candidates ( eventSvc(), containerName );
   if( 0 == candidates ) { 
-    log << MSG::ERROR << "Unable to retrieve " << containerName << endreq; 
+    msg << MSG::ERROR << "Unable to retrieve " << containerName << endreq; 
     return StatusCode::SUCCESS;
   }   
 
@@ -101,7 +102,39 @@ StatusCode L0CaloMonit::execute() {
       m_histSumEt     -> fill( (*cand)->et()/GeV, 1. );
     }
   }
-  
+
+  if (  msg.level() <= MSG::DEBUG  ) {
+    // Get the L1 buffer
+    L1Event* event;
+    SmartDataPtr<L1Event> myEvent ( eventSvc(), L1EventLocation::Default );
+    if ( 0 == myEvent ) {
+      msg << MSG::DEBUG << "Access L1Buffer for decoding" << endreq;
+      SmartDataPtr<L1Buffer> buffer ( eventSvc(), L1BufferLocation::Default );
+      if ( 0 == buffer ) {
+        msg << MSG::ERROR << "== Unable to find L1Buffer. Abort." << endreq;
+        return StatusCode::SUCCESS;
+      }
+      event = new L1Event( buffer );
+      eventSvc()->registerObject( L1EventLocation::Default, event );
+    } else {
+      event = myEvent;
+    }
+    std::vector<L1Bank> banks = event->banks( L1Buffer::L0Calo );
+    std::vector<L1Bank>::const_iterator itBank;
+    for ( itBank = banks.begin() ; banks.end() != itBank ; itBank++ ) {
+      l1_int* ptData = (*itBank).data();
+      int length     = (*itBank).dataSize();
+      while ( 0 < length ) {
+        int w1 = (*ptData++);
+        int w2 = (*ptData++) & 0xFFFF;
+        length -= 2;
+        int word = ( w1 << 16) | w2;
+        msg << MSG::DEBUG << format( "  cand %8x  w1%4x w2%4x", word, w1, w2)
+            << endreq;
+      }
+    }
+  }
+ 
   return StatusCode::SUCCESS; 
 };
 //=============================================================================
@@ -109,7 +142,7 @@ StatusCode L0CaloMonit::execute() {
 //=============================================================================
 StatusCode L0CaloMonit::finalize() {
   
-  MsgStream log(messageService(), name());
-  log << MSG::DEBUG << " >>> Finalize" << endreq;
+  MsgStream msg(messageService(), name());
+  msg << MSG::DEBUG << " >>> Finalize" << endreq;
   return StatusCode::SUCCESS;
 }
