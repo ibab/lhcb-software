@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.238 2005-02-15 07:51:14 pkoppenb Exp $
+# $Id: requirements,v 1.239 2005-02-21 12:10:36 pkoppenb Exp $
 # Created    : 07/02/2002
 # Maintainer : P. Koppenburg
 #
@@ -55,10 +55,10 @@ use  L0MuonTrigger 		v2r3p1   L0
 use  L0mConf            	v2r2p3   L0
 
 #-- L1 Trigger libraries 
-use TrgSys                      v1r3     Trg
+use TrgSys                      v1r4     Trg
 
 #-- RICH Trigger libraries 
-use RichHLTSys                  v1r0     Rich
+use RichHLTSys                  v1r0p1   Rich
 use RichRecQC                   v1r10    Rich
 
 #-- HLT trigger
@@ -89,25 +89,25 @@ use  Utilities          	v1r13    Tools
 # Physics packages
 use  CommonParticles    	v1r5p3   Phys
 use  DaVinciFilter      	v1r5     Phys
-use  DaVinciKernel      	v3r1     Phys
-use  DaVinciTools       	v11r5    Phys
+use  DaVinciKernel      	v3r2     Phys
+use  DaVinciTools       	v11r6    Phys
 use  FlavourTagging     	v5r4     Phys
 use  Ks2PiPiSel         	v1r4p1   Phys
 use  ParticleMaker      	v1r3     Phys
 use  PhysSelections		v6r12    Phys
 use  DaVinciTransporter 	v2r0     Phys
-use  VertexFit			v1r4     Phys
+use  VertexFit			v1r5     Phys
 use  Tampering                  v1r0     Phys
 
 # Physics MC packages
 use  DaVinciAssociators 	v5r3     Phys
 use  DaVinciEff         	v3r2     Phys
 use  DaVinciMCTools     	v5r8p1   Phys
-use  DaVinciTest        	v5r5     Phys
+use  DaVinciTest        	v5r6     Phys
 use  DaVinciUser        	v5r2     Phys
 
 # Stripping
-use  Stripping          	v1r6     Tools
+use  Stripping          	v1r7     Tools
 
 # Physics selections
 use  PhysSelSys			v7r15    PhysSel
