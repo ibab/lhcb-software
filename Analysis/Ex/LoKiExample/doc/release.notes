@@ -1,11 +1,20 @@
-! $Id: release.notes,v 1.12 2005-03-05 14:06:44 ibelyaev Exp $ 
+! $Id: release.notes,v 1.13 2005-03-24 11:18:28 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
-! CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.12 $
+! CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.13 $
 ! -----------------------------------------------------------------------------
 ! Package     :  LoKiExamples
 ! Responsible :  Vanya BELYAEV  belyaev@lapp.in2p3.fr 
 ! Purpose     :  Collection of examples for LoKi package 
 ! -----------------------------------------------------------------------------
+
+! 2005-03-24 - Vanya BELYAEV
+ - src/LoKi_Higgs1.cpp 
+   add N-Tuples for Jets 
+ - options/DV_LoKi_Higgs1.cpp 
+   add Jets from KtJet algorithm 
+ - cmt/requirements 
+   1) add Tools/LoKiJets 
+   2) increment the version to v3r10 
 
 ! 2005-03-05 - Vanya BELYAEV
  - src/LoKi_Higgs1.cpp

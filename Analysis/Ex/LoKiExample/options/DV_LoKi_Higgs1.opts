@@ -1,6 +1,6 @@
-// $Id: DV_LoKi_Higgs1.opts,v 1.3 2005-03-05 14:06:45 ibelyaev Exp $ 
+// $Id: DV_LoKi_Higgs1.opts,v 1.4 2005-03-24 11:18:28 ibelyaev Exp $ 
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $; version $Revision: 1.3 $ 
+// CVS tag $Name: not supported by cvs2svn $; version $Revision: 1.4 $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
 // ============================================================================
@@ -29,12 +29,13 @@ L0.MeasureTime = true ;
 L1.MeasureTime = true ;
 
 
-ApplicationMgr.DLLs   += {"LoKi" , "LoKiExample"     } ;
+ApplicationMgr.DLLs   += {"LoKi" , "LoKiExample" , "LoKiJets" } ;
 
 ApplicationMgr.TopAlg += { "GaudiSequencer/HiggsSeq" } ;
 
 HiggsSeq.Members       = {  "LoKiPreLoad/Charged"    , 
                             "LoKiPreLoad/Photons"    , 
+                            "LoKiKtJetMaker/KtJets"  ,
                             "LoKi_Higgs1/Higgs1"     } ;
 HiggsSeq.MeasureTime   = true ;
 
@@ -47,8 +48,12 @@ Charged.PhysDesktop.CombinedParticleMaker.PionSelection      = {} ;
 Photons.PhysDesktop.ParticleMakerType   = "PhotonParticleMaker" ;
 Photons.PhysDesktop.PhotonParticleMaker.UseAllPhotons = true ; 
 
-Higgs1.PhysDesktop.InputLocations = { "/Event/Phys/Charged" ,
-                                      "/Event/Phys/Photons" } ;
+KtJets.PhysDesktop.InputLocations   = { "/Event/Phys/Charged" ,
+                                        "/Event/Phys/Photons" } ;
+
+Higgs1.PhysDesktop.InputLocations   = { "/Event/Phys/Charged" ,
+                                        "/Event/Phys/Photons" , 
+                                        "/Event/Phys/KtJets"  } ;
 Higgs1.NTupleLUN = "HIGGS" ;
 
 // N-Tuples

@@ -1,6 +1,6 @@
-// $Id: LoKi_Higgs1.cpp,v 1.3 2005-03-05 14:06:45 ibelyaev Exp $
+// $Id: LoKi_Higgs1.cpp,v 1.4 2005-03-24 11:18:28 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.3 $
+// CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.4 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
 // ============================================================================
@@ -17,102 +17,56 @@
 #include "Event/TrgDecision.h"
 // ============================================================================
 
-namespace LoKi
+namespace LoKi 
 {
-  namespace MCParticles
+  namespace Particles 
   {
-    /** @struct PseudoRapidity
-     *  evaluator of the pseudirapidity 
-     *  @author Vanya BELYAEV belyaev@lapp.in2p3.fr 
-     *  @date   2005-03-04
+    /** @struct NumberOfDaughters 
+     *  The trivial evaluator of number of daughter particles 
+     *  @author Vanya BELYAEV belyaev@lapp.in2p3.fr
+     *  @date 2005-03-23 
      */
-    struct PseudoRapidity : public LoKi::Function<const MCParticle*>
-    {      
-      /// clone method (mandatory!)
-      virtual PseudoRapidity* clone() const 
-      { return new PseudoRapidity(*this) ; };      
+    struct NumberOfDaughters : public LoKi::Function<const Particle*> 
+    {
+    public:
+      /// MANDATORY: clone method ("virtual constructor")
+      virtual NumberOfDaughters* clone() const 
+      { return new NumberOfDaughters( *this ) ; }
       /// the only one essential method 
-      result_type operator() ( argument p ) const 
+      virtual result_type operator() ( argument p ) const 
       {
-        if ( 0 == p ) 
-        {
-          Warning( "MCParticle* points to NULL!" ) ;
-          return -1000 ;
-        }
-        return p->momentum().pseudoRapidity() ;
+        if ( 0 == p ) { return 0 ; }
+        const Vertex* v = p->endVertex() ;
+        if ( 0 == v ) { return 0 ; }
+        return v->products().size() ;
       };
     };
-    /** @struct Phi
-     *  trivial evaluator of Phi
-     *  @author Vanya BELYAEV belyaev@lapp.in2p3.fr 
-     *  @date   2005-03-04
-     */
-    struct Phi : public LoKi::Function<const MCParticle*>
-    {      
-      /// clone method (mandatory!)
-      virtual Phi* clone() const { return new Phi(*this) ; };      
-      /// the only one essential method 
-      result_type operator() ( argument p ) const 
-      {
-        if ( 0 == p ) 
-        {
-          Warning( "MCParticle* points to NULL!" ) ;
-          return -1000 ;
-        }
-        return p->momentum().phi() ;
-      };
-    };
-    
-  }; // end of namespace MCParticles 
-  
-  namespace Particles
-  {
-    /** @struct PseudoRapidity
-     *  evaluator of the pseudirapidity 
-     *  @author Vanya BELYAEV belyaev@lapp.in2p3.fr 
-     *  @date   2005-03-04
-     */
-    struct PseudoRapidity : public LoKi::Function<const Particle*>
-    {      
-      /// clone method (mandatory!)
-      virtual PseudoRapidity* clone() const 
-      { return new PseudoRapidity(*this) ; };      
-      /// the only one essential method 
-      result_type operator() ( argument p ) const 
-      {
-        if ( 0 == p ) 
-        {
-          Warning( "Particle* points to NULL!" ) ;
-          return -1000 ;
-        }
-        return p->momentum().pseudoRapidity() ;
-      };
-    };
-    /** @struct Phi
-     *  trivial evaluator of Phi
-     *  @author Vanya BELYAEV belyaev@lapp.in2p3.fr 
-     *  @date   2005-03-04
-     */
-    struct Phi : public LoKi::Function<const Particle*>
-    {      
-      /// clone method (mandatory!)
-      virtual Phi* clone() const { return new Phi(*this) ; };      
-      /// the only one essential method 
-      result_type operator() ( argument p ) const 
-      {
-        if ( 0 == p ) 
-        {
-          Warning( "Particle* points to NULL!" ) ;
-          return -1000 ;
-        }
-        return p->momentum().phi() ;
-      };
-    };
-    
+
   }; // end of namespace Particles 
   
-}; //end of namespace LoKi
-  
+  namespace Cuts 
+  {
+    
+    /** @var NDAU
+     *  The trivial evaluator of number of daughter particles 
+     *
+     *  @code
+     *
+     *   const Particle* jet = ... ; 
+     *   
+     *   int nConstituents = (int) NDAUG( jet ) ;
+     *
+     *  @endcode 
+     *
+     *  @author Vanya BELYAEV belyaev@lapp.in2p3.fr
+     *  @date 2005-03-23 
+     */
+    const LoKi::Particles::NumberOfDaughters   NDAUG ;
+    
+  }; // end of namespace Cuts 
+
+}; // end of namespace LoKi 
+
 
 LOKI_ALGORITHM( LoKi_Higgs1 )
 {
@@ -145,8 +99,6 @@ LOKI_ALGORITHM( LoKi_Higgs1 )
   // # book N-Tuple for MC 
   Tuple tup1 = nTuple( "MC-tuple" ) ;
   
-  LoKi::MCParticles::PseudoRapidity MCETA ;
-  LoKi::MCParticles::Phi            MCPHI ;
   // W or Z ? 
   MCCut MCPRIM = MCMOTHCUT( !MCVALID , true ) ;
   
@@ -217,9 +169,44 @@ LOKI_ALGORITHM( LoKi_Higgs1 )
                    all   .end   ()   ,
                    "nRC" , 500       ) ;
   
-  
   tup2 -> write() ;
+  
+  // # jets 
+  Range jets = select( "jet" , "CELLjet" == ABSID && 5 <= NDAUG ) ;
 
+  always () 
+    << "# of jets " << jets.size() << endreq ;
+  
+  // # retrieve the tuple for reconstructed jets 
+  Tuple tup3 = nTuple( "JET-tuple" ) ;
+  
+  for ( Loop JJ = loop ( "jet jet" , "CELLjet" , FitNone ) ; JJ ; ++JJ ) 
+  {
+    // tup3 << Tuples::Column ( "" , evtHdr         ) ;
+    // tup3 << Tuples::Column ( "" , L0             ) ;
+    // tup3 << Tuples::Column ( "" , L1             ) ;
+    // tup3 << Tuples::Column ( "" , TRG            ) ;
+    
+    const Particle* jet1 = JJ(1) ;
+    const Particle* jet2 = JJ(2) ;
+    
+    if ( 0 == jet1 || 0 == jet2 ) { continue ; }
+    
+    tup3 -> column ( "pt1"  , PT  ( jet1 )   / GeV ) ;
+    tup3 -> column ( "pt2"  , PT  ( jet2 )   / GeV ) ;
+    tup3 -> column ( "eta1" , ETA ( jet1 )         ) ;
+    tup3 -> column ( "eta2" , ETA ( jet2 )         ) ;
+    tup3 -> column ( "phi1" , PHI ( jet1 )         ) ;
+    tup3 -> column ( "phi2" , PHI ( jet2 )         ) ;
+    tup3 -> column ( "e1"   , E   ( jet1 )   / GeV ) ;
+    tup3 -> column ( "e2"   , E   ( jet2 )   / GeV ) ;
+    tup3 -> column ( "mjj"  , JJ->mass(1,2)  / GeV ) ;
+
+    tup3 -> write() ;
+    
+  };
+  
+  
   return StatusCode::SUCCESS ;
 };
 
