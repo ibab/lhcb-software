@@ -6,8 +6,11 @@
   <class name="std::pair<long int,double>"/>
   <class name="std::pair<int,double>"/>
   <class name="std::pair<int,int>"/>
+  <class name="std::vector<std::pair<VeloChannelID,int> >"/>
   <class name="std::pair<VeloChannelID,int>"/>
+  <class name="std::vector<std::pair<ITChannelID,int> >"/>
   <class name="std::pair<ITChannelID,int>"/>
+  <class name="std::vector<std::pair<OTChannelID,int> >"/>
   <class name="std::pair<OTChannelID,int>"/>
   <class name="SmartRef<ContainedObject>">
     <field name="m_target" transient="true"/>  

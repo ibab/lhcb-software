@@ -1,4 +1,4 @@
-// $Id: lcgStl.h,v 1.4 2004-05-04 06:14:37 cattanem Exp $
+// $Id: lcgStl.h,v 1.5 2004-05-05 14:14:01 cattanem Exp $
 #ifndef KERNEL_LCGSTL_H 
 #define KERNEL_LCGSTL_H 1
 
@@ -16,13 +16,19 @@
 #include "Kernel/OTChannelID.h"
 
 namespace {
-  std::vector<std::pair<int,int> > a;
-  std::pair<VeloChannelID,int>     b;
-  std::pair<ITChannelID,int>       c;
-  std::pair<OTChannelID,int>       d;
-  std::map<int,int>                e;
-  std::vector<std::pair<long,double> > f;
-  std::vector<std::pair<int,double> >  g;
-  SmartRefVector<ContainedObject>      h;
+  std::vector<std::pair<VeloChannelID,int> > a;
+  std::pair<VeloChannelID,int>               b;
+  std::vector<std::pair<ITChannelID,int> >   c;
+  std::pair<ITChannelID,int>                 d;
+  std::vector<std::pair<OTChannelID,int> >   e;
+  std::pair<OTChannelID,int>                 f;
+  std::vector<std::pair<int,int> >           g;
+  std::pair<int,int>                         h;
+  std::vector<std::pair<long,double> >       i;
+  std::pair<long,double>                     j;
+  std::vector<std::pair<int,double> >        k;
+  std::pair<int,double>                      l;
+  std::map<int,int>                          m;
+  SmartRefVector<ContainedObject>            n;
 }
 #endif // KERNEL_LCGSTL_H
