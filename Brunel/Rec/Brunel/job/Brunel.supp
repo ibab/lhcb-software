@@ -84,8 +84,8 @@
 
 {
   rfio3
-  Cond
-  obj:/lib/i686/libc-2.2.5.so
+  Param
+  msg
   fun:netwrite_timeout
 }
   
@@ -94,7 +94,7 @@
 {
   GaudiKernel/v13r2/Timing.cpp
   Param
-  obj:/lib/i686/libc-2.2.5.so
+  buf
   fun:userTime__6SystemQ26System8TimeTypeQ26System8InfoTypel
 }
 
@@ -138,78 +138,6 @@
 #  SmartIF/release_RndmGen
 #  Addr4
 #  fun:release__7RndmGen
-#}
-
-#{
-#  SmartIF/ITDigitCreator
-#  Addr4
-#  fun:*
-#  fun:*
-#  fun:*
-#  fun:_._14ITDigitCreator
-#}
-
-#{
-#  SmartIF/ITCrossTalk
-#  Addr4
-#  fun:*
-#  fun:*
-#  fun:*
-#  fun:_._11ITCrossTalk
-#}
-
-#{
-#  SmartIF/ITEffcalculator
-#  Addr4
-#  fun:*
-#  fun:*
-#  fun:*
-#  fun:_._15ITEffCalculator
-#}
-
-#{
-#  SmartIF/ITNoiseTailTool
-#  Addr4
-#  fun:*
-#  fun:*
-#  fun:*
-#  fun:_._15ITNoiseTailTool
-#}
-
-#{
-#  SmartIF/ITNoiseTool
-#  Addr4
-#  fun:*
-#  fun:*
-#  fun:*
-#  fun:_._11ITNoiseTool
-#}
-
-#{
-#  SmartIF/ITDepositedCharge
-#  Addr4
-#  fun:*
-#  fun:*
-#  fun:*
-#  fun:_._17ITDepositedCharge
-#}
-
-#{
-#  SmartIF/OTSmearer
-#  Addr4
-#  fun:*
-#  fun:*
-#  fun:*
-#  fun:_._9OTSmearer
-#}
-
-#{
-#  SmartIF/OTEffCalculator
-#  Addr4
-#  fun:*
-#  fun:*
-#  fun:*
-#  fun:_._15OTEffCalculator
 #}
 
 # Strange tracking problem (Brunel v16r4)
@@ -384,6 +312,12 @@
   fun:new_fit_line__
 }
 
+{
+  Seed/newseed.F2
+  Value4
+  fun:new_fit_line__
+}
+
 # Muon bugs - call stack to deep to suppress...
 #{
 #  MuonAlgs/v3r1
@@ -422,34 +356,6 @@
   Cond
   fun:getWideCharLength__FPCUs
 }
-
-
-# GaudiDb errors
-#{
-#  DbObject
-#  Free
-#  fun:__builtin_delete
-#  fun:delete
-#  fun:~DbObject
-#}
-
-# SicbRefTracker error fixed in SicbCnv v17r2, requires recompilations of:
-# RiSicbCnv, VSicbCnv, CaloSicbCnv, MuonSicbCnv
-#{
-#  SicbCnv/SicbRefTracker
-#  Free
-#  fun:track__14SicbRefTrackerRCt6vector2Z10SicbRefHopZt9allocator1Z10SicbRefHopRt6vector2ZQ211SicbTracker4StubZt9allocator1ZQ211SicbTracker4StubT2
-#}
-
-# Mismatched delete in DbObject.cpp line 80. - reported to Markus
-#{
-#  DbObject/delete
-#  Free
-#  fun:__builtin_delete
-#  fun:__dl__8DbObjectPv
-#  fun:_._8DbObject
-#  fun:release__8DbObject
-#}
 
 
 # Root 3.03.09 errors
