@@ -1,10 +1,17 @@
-! $Id: release.notes,v 1.13 2002-04-25 12:07:37 dhcroft Exp $
+! $Id: release.notes,v 1.14 2002-05-10 12:47:08 dhcroft Exp $
 ! =============================================================================
 ! CVS tag $Name: not supported by cvs2svn $ 
 ! =============================================================================
 ! Package     : MuonTools
 ! Responsible : David Hutchcroft David.Hutchcroft@cern.ch
 ! =============================================================================
+
+! >>>>>>>>>>>>>>>>>>>>>>> MuonTools v2r1 <<<<<<<<<<<<<<<<<<<<<<<<<<
+! 20020510 David Hutchcroft
+  - Added new interface for MuonGeometryTool that gives pad and region size 
+   (uses MuonTileXYZTool to do it).
+  - Modified MuonTileXYZTool to return "12ths" of a region if requested
+  - Changes are fully backward compatable
 
 ! 20020425 David Hutchcroft
   - fixed misspelling of variable name

@@ -1,4 +1,4 @@
-// $Id: MuonTileIDXYZ.h,v 1.3 2002-04-10 12:38:39 dhcroft Exp $
+// $Id: MuonTileIDXYZ.h,v 1.4 2002-05-10 12:47:09 dhcroft Exp $
 #ifndef MUONTILEIDXYZ_H 
 #define MUONTILEIDXYZ_H 1
 
@@ -122,6 +122,12 @@ private:
                        double& x, double& deltax,
                        double& y, double& deltay,
                        double& z, double& deltaz);
+
+  /// get xyz of twelfth (useful for defining regions)
+  StatusCode getXYZTwelfth(const MuonTileID& tile, 
+                           double& x, double& deltax,
+                           double& y, double& deltay,
+                           double& z, double& deltaz);
 
   /// locate the GasGap given the station, region and quater  
   /// and return the gas gap pointer

@@ -1,4 +1,4 @@
-// $Id: MuonTileIDXYZ.cpp,v 1.10 2002-04-25 12:07:40 dhcroft Exp $
+// $Id: MuonTileIDXYZ.cpp,v 1.11 2002-05-10 12:47:09 dhcroft Exp $
 // Include files 
 #include <cstdio>
 #include <cmath>
@@ -185,6 +185,17 @@ StatusCode MuonTileIDXYZ::calcTilePos(const MuonTileID& tile,
         log << MSG::ERROR << "Failed to get xyz from chamber" << endreq;
         return sc;
     }
+  } else if( 1 == tile.layout().xGrid() && 1 == tile.layout().yGrid() ) {
+
+    log << MSG::DEBUG 
+        << "Found a tile laying out Twelfths" << endreq;
+    
+    StatusCode sc = getXYZTwelfth(tile,x,deltax,y,deltay,z,deltaz);
+    if(!sc.isSuccess()){
+        log << MSG::ERROR << "Failed to get xyz from twelfth" << endreq;
+        return sc;
+    }
+
   } else {
     log << MSG::ERROR 
         << "Did not understand the MuonTileID encoding" 
@@ -625,7 +636,7 @@ StatusCode MuonTileIDXYZ::fillTwelfthsExtent(){
   // So get the TDS representations of the stations
   // to fill twelfthsExtent and quaterExtent with the outer 
   // edges of the chambers in the
-  // corners of the twelvths
+  // corners of the twelfths
   
   int station;
   for(station = 0 ; station < 5 ; station++){
@@ -914,6 +925,72 @@ StatusCode MuonTileIDXYZ::getXYZPad(const MuonTileID& tile,
   x = x + deltax;
   y = y + deltay;
 
+  return StatusCode::SUCCESS;
+}  
+
+StatusCode MuonTileIDXYZ::getXYZTwelfth(const MuonTileID& tile, 
+                                        double& x, double& deltax,
+                                        double& y, double& deltay,
+                                        double& z, double& deltaz){
+  MsgStream log(msgSvc(), name());
+
+  // This uses the twelfths to get the size of the station
+  if( 0>= m_twelfthExtent[0][0][0].z ){
+    //need to fill twelfthExtent
+    StatusCode sc = fillTwelfthsExtent();
+     if(!sc.isSuccess()){
+      log << MSG::ERROR << "Something went wrong getting Twelfths positions"
+          << endreq;
+      return sc;
+    }
+  }
+
+  unsigned int station = tile.station();
+  unsigned int region  = tile.region();
+  unsigned int quarter = tile.quarter();
+
+  unsigned int twelfth;
+  if(0 == quarter){
+    if(1 == tile.nX() && 0 == tile.nY()){
+      twelfth = 0;
+    }else if(1 == tile.nX() && 1 == tile.nY()){
+      twelfth = 1;
+    }else{
+      twelfth = 2;
+    }
+  }else if(1 == quarter){
+    if(0 == tile.nX() && 1 == tile.nY()){
+      twelfth = 3;
+    }else if(1 == tile.nX() && 1 == tile.nY()){
+      twelfth = 4;
+    }else{
+      twelfth = 5;
+    }
+  }else if(2 == quarter){
+    if(1 == tile.nX() && 0 == tile.nY()){
+      twelfth = 6;
+    }else if(1 == tile.nX() && 1 == tile.nY()){
+      twelfth = 7;
+    }else{
+      twelfth = 8;
+    }
+  }else{
+    if(0 == tile.nX() && 1 == tile.nY()){
+      twelfth = 9;
+    }else if(1 == tile.nX() && 1 == tile.nY()){
+      twelfth = 10;
+    }else{
+      twelfth = 11;
+    }
+  }
+
+  x = m_twelfthExtent[station][region][twelfth].x;
+  deltax = m_twelfthExtent[station][region][twelfth].dx;
+  y = m_twelfthExtent[station][region][twelfth].y;
+  deltay = m_twelfthExtent[station][region][twelfth].dy;
+  z = m_twelfthExtent[station][region][twelfth].z;
+  deltaz = m_twelfthExtent[station][region][twelfth].dz;
+  
   return StatusCode::SUCCESS;
 }  
 
