@@ -35,7 +35,7 @@ apply_pattern package_Clinkopts
 
 # link GiGa statically on NT
 #macro_append  GiGa_linkopts ""\
-#              WIN32         '$(GiGaDir)/libGiGa.lib /include:"_GiGa_loadRef"'
+#              WIN32         '$(GiGaDir)/GiGa.arc /include:"_GiGa_loadRef"'
 
 apply_pattern packageShr
 #=====================================================================
