@@ -1,6 +1,10 @@
 package GaudiConf
 package manager: F.Ranjard
 
+! 20001212 - GaudiConf v3r1 -Flr
+  DetDesc.txt - remove DetDbLocation, use the default location instead.
+
+!============================================================================= 
 ! 20001117 - Pere Mato
   options/ - Changed Dlls.txt and Services.txt to add the ChronoAuditor as default
     

@@ -7,7 +7,6 @@ ApplicationMgr.DLLs   += { "DetDesc" };
 //--------------------------------------------------------------
 // Location of detector description XML database
 //--------------------------------------------------------------
-ApplicationMgr.DetDbLocation = $(XMLDDDBROOT)/DDDB/dddb.xml
 ApplicationMgr.DetDbRootName  = "dd";
 ApplicationMgr.DetStorageType = 7;
 
