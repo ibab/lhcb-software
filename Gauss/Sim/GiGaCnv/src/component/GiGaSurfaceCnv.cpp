@@ -1,6 +1,9 @@
-// $Id: GiGaSurfaceCnv.cpp,v 1.10 2003-07-07 16:45:30 ranjard Exp $
+// $Id: GiGaSurfaceCnv.cpp,v 1.11 2003-07-08 17:00:48 ranjard Exp $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.10  2003/07/07 16:45:30  ranjard
+// v12r3 - fix for gcc3.2
+//
 // Revision 1.9  2002/12/07 14:36:27  ibelyaev
 //  see $GIGACNVROOT/doc/release.notes
 //
@@ -197,9 +200,13 @@ StatusCode GiGaSurfaceCnv::createSkinSurface
                    surface->firstVol()+"'" ); }
   /// look through existing LogicalSkinSurfaces
   G4LogicalSkinSurface* surf = G4LogicalSkinSurface::GetSurface( lv ); 
-  std::string G4surfName = surf->GetName();
-  if( 0 != surf &&  ( G4surfName != surface->registry()->identifier() ) )
-    { return Error("UpdateRep: surface with this logvol exists!") ; }
+  if ( 0 != surf ) {
+    std::string G4surfName = surf->GetName();
+    if( G4surfName != surface->registry()->identifier() ) {
+      return Error("UpdateRep: surface with this logvol exists!");
+    }
+  }
+  
   /// create new surface 
   if( 0 == surf ) 
     { logsurf = new G4LogicalSkinSurface( surface->registry()->identifier() , 
@@ -231,9 +238,13 @@ StatusCode GiGaSurfaceCnv::createBorderSurface
   /// locate Logical Border Surface
   G4LogicalBorderSurface* surf = 
     G4LogicalBorderSurface::GetSurface( pv1 , pv2 );
-  std::string G4surfName = surf->GetName();
-  if( 0 != surf && ( G4surfName != surface->registry()->identifier() ) )
-    { return Error("UpdateRep: surface with this pv1/pv2 lready exists!") ; }
+  if ( 0 != surf ) {
+    std::string G4surfName = surf->GetName();
+    if( G4surfName != surface->registry()->identifier() ) {
+      return Error("UpdateRep: surface with this pv1/pv2 lready exists!") ;
+    }
+  }
+  
   ///
   if( 0 == surf ) 
     { logsurf = new G4LogicalBorderSurface( surface->registry()->identifier() , 
