@@ -1,8 +1,11 @@
-// $Id: LoKi_Bs2PhiPhi.cpp,v 1.3 2005-02-17 10:22:43 ibelyaev Exp $
+// $Id: LoKi_Bs2PhiPhi.cpp,v 1.4 2005-02-18 11:40:40 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.3  2005/02/17 10:22:43  ibelyaev
+//  update Bs-> Phi Phi example
+//
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -31,6 +34,10 @@ LOKI_ALGORITHM( LoKi_Bs2PhiPhi )
   
   const StatusCode ok    ( StatusCode::SUCCESS ) ;
 
+  // get the event header 
+  const EventHeader* evtHdr = 
+    get<EventHeader>( EventHeaderLocation::Default ) ;
+  
   // get MC truth information 
   MCMatch mc    = mctruth() ;
   MCRange mcBs  = 
@@ -76,6 +83,8 @@ LOKI_ALGORITHM( LoKi_Bs2PhiPhi )
 
       if ( 0 == K1 || 0 == K2 ) { continue ; }
 
+      // event header
+      tuple_1 << Tuples::Column( "" , evtHdr ) ;
       // K+ K- invariant mass 
       tuple_1 -> column ( "mass"  , M        ( phi ) / GeV  ) ;
       // chi2 of vertex fit for common K+ K- vertex   
@@ -162,6 +171,8 @@ LOKI_ALGORITHM( LoKi_Bs2PhiPhi )
     if ( 0 ==  primary )  
     { Warning ( "Could not find the approproate primary vertex" ) ; continue ; }
     
+    // event header
+    tuple_2 << Tuples::Column( "" , evtHdr ) ;
     // invariant mass of 2 phi candidates 
     tuple_2 -> column ( "mass"   , M      ( Bs   ) / GeV ) ;
     // invariant mass of the first  phi candidate 

@@ -1,8 +1,11 @@
-// $Id: LoKi_Higgs1.cpp,v 1.1 2005-02-16 11:16:58 ibelyaev Exp $
+// $Id: LoKi_Higgs1.cpp,v 1.2 2005-02-18 11:40:40 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ ; version $Release:$
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.1  2005/02/16 11:16:58  ibelyaev
+//  add new exmaples: H->bb and Bs -> phi mu+ mu-
+//
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -28,16 +31,16 @@ LOKI_ALGORITHM( LoKi_Higgs1 )
   // # select all stable MC particles, produced near collision point
   MCCut   mccut = MCVXFUN( MCVZ ) < (  30 *  cm )  ;
   MCRange mcall = 
-    mcselect( "mcall" , mccut && ( ( "e+"    == MCABSID ) |
-                                   ( "mu+"   == MCABSID ) |
-                                   ( "K+"    == MCABSID ) |
-                                   ( "p+"    == MCABSID ) |
-                                   ( "pi+"   == MCABSID ) |
-                                   ( "gamma" == MCABSID ) ) ) ;
+    mcselect ( "mcall" , mccut && ( ( "e+"    == MCABSID ) ||
+                                    ( "mu+"   == MCABSID ) ||
+                                    ( "K+"    == MCABSID ) ||
+                                    ( "p+"    == MCABSID ) ||
+                                    ( "pi+"   == MCABSID ) ||
+                                    ( "gamma" == MCABSID ) ) ) ;
   
-  // # book N-tuple for MC 
+  // # book N-Tuple for MC 
   Tuple tup1 = nTuple( "MC-tuple" ) ;
-  
+
   // # fill energy flow ntuple for MC particles   
   for ( MCRange::iterator imcp = mcall.begin() ; mcall.end() != imcp ; ++imcp ) 
   {
@@ -51,14 +54,15 @@ LOKI_ALGORITHM( LoKi_Higgs1 )
     // from W or Z ? 
     const bool prim = 0 == mcp->mother() ;
     
+    tup1 << Tuples::Column ( "" , evtHdr         ) ;
     tup1 -> column ( "pid"  , MCID ( mcp )       ) ;
     tup1 -> column ( "pt"   , MCPT ( mcp ) / GeV ) ;
     tup1 -> column ( "e"    , MCE  ( mcp ) / GeV ) ;
     tup1 -> column ( "phi"  , phi                ) ;
     tup1 -> column ( "eta"  , eta                ) ;
-    tup1 -> column ( ""     , evtHdr             ) ;
     tup1 -> column ( "prim" , prim               ) ;
 
+    tup1 -> write  () ;
   };
   
   // # get only MC leptons 
@@ -92,12 +96,12 @@ LOKI_ALGORITHM( LoKi_Higgs1 )
     const double eta = p->momentum().pseudoRapidity () ;
     const double phi = p->momentum().phi            () ;
     
+    tup2 << Tuples::Column ( "" , evtHdr     ) ;
     tup2 -> column ( "pid"  , ID ( p )       ) ;
     tup2 -> column ( "pt"   , PT ( p ) / GeV ) ;
     tup2 -> column ( "e"    , E  ( p ) / GeV ) ;
     tup2 -> column ( "phi"  , phi            ) ;
     tup2 -> column ( "eta"  , eta            ) ;
-    tup2 -> column ( ""     , evtHdr         ) ;
     tup2 -> column ( "mcm"  , mcCutLep( p )  ) ;
     tup2 -> column ( "pidm" , PIDmu   ( p )  ) ;
     

@@ -1,8 +1,11 @@
-// $Id: DV_LoKi_Higgs1.opts,v 1.1 2005-02-16 11:16:58 ibelyaev Exp $ 
+// $Id: DV_LoKi_Higgs1.opts,v 1.2 2005-02-18 11:40:39 ibelyaev Exp $ 
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $; version $Revision: 1.1 $ 
+// CVS tag $Name: not supported by cvs2svn $; version $Revision: 1.2 $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.1  2005/02/16 11:16:58  ibelyaev
+//  add new exmaples: H->bb and Bs -> phi mu+ mu-
+//
 // ============================================================================
 
 /** @file 
@@ -63,7 +66,7 @@ PoolDbCacheSvc.Catalog =
   };
 
 // Number of events to process, skip and printing frequency
-ApplicationMgr.EvtMax    =   500 ;
+ApplicationMgr.EvtMax    =    50 ;
 EventSelector.FirstEvent =     1 ;
 EventSelector.PrintFreq  =    10 ;
 

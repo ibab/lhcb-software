@@ -1,8 +1,11 @@
-// $Id: LoKi_Bs2PhiMM.cpp,v 1.1 2005-02-16 11:16:58 ibelyaev Exp $
+// $Id: LoKi_Bs2PhiMM.cpp,v 1.2 2005-02-18 11:40:40 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ ; version $Release:$
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.1  2005/02/16 11:16:58  ibelyaev
+//  add new exmaples: H->bb and Bs -> phi mu+ mu-
+//
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -20,7 +23,10 @@ LOKI_ALGORITHM( LoKi_Bs2PhiMM )
   
   const StatusCode ok = StatusCode::SUCCESS ;
 
-  
+  // get the event header 
+  const EventHeader* evtHdr = 
+    get<EventHeader>( EventHeaderLocation::Default ) ;
+
   // get MC truth 
   MCMatch mc = mctruth() ;
   
@@ -99,6 +105,9 @@ LOKI_ALGORITHM( LoKi_Bs2PhiMM )
     { Warning ( "Could not find the approproate primary vertex" ) ; continue ; }
 
     // # fill N-Tuple
+    // event header 
+    tup << Tuples::Column ( "" , evtHdr ) ;
+    //
     tup -> column ( "mass" , M        ( Bs ) / GeV ) ; // KKmm invariant mass
     tup -> column ( "chi2" , VCHI2    ( Bs )       ) ; // chi2 of vertex fit 
     tup -> column ( "m12"  , M12      ( Bs ) / GeV ) ; // KK invariant mass 
