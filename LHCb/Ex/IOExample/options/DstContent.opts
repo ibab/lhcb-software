@@ -1,12 +1,4 @@
-// Define DST content. This file is a temporary copy of the file in GaudiConf,
-// to disable classes that cannot currently be read/written by POOL
-
-// Currently unavailable:
-
-//  CaloClusters and related classes: new version (Class ID=2007) incompatible 
-//        with old version (Class ID=2003). No data available with new version
-
-//  RelationsWeighted2D: cannot be written by current POOL version
+// Define DST content. This file is a copy of the file in Rec/Brunel
 
 DstWriter.OptItemList =
 {
@@ -73,9 +65,9 @@ DstWriter.ItemList =
 , "/Event/Rec/Calo/Electrons#1"
 , "/Event/Rec/Calo/MergedPi0s#1"
 , "/Event/Rec/Calo/SplitPhotons#1"
-  //, "/Event/Rec/Calo/PhotonMatch#1"
-  //, "/Event/Rec/Calo/ElectronMatch#1"
-  //, "/Event/Rec/Calo/BremMatch#1"
+, "/Event/Rec/Calo/PhotonMatch#1"
+, "/Event/Rec/Calo/ElectronMatch#1"
+, "/Event/Rec/Calo/BremMatch#1"
 , "/Event/Rec/Calo/HcalE#1"
 , "/Event/Rec/Calo/PrsE#1"
 , "/Event/Rec/Calo/EcalE#1"
@@ -94,8 +86,8 @@ DstWriter.ItemList =
 , "/Event/Rec/Relations#1"
 , "/Event/Rec/Relations/ITClusters2MCParticles#1"
 , "/Event/Rec/Relations/OTClusters2MCParticles#1"
-  //, "/Event/Rec/Relations/VeloClusters2MCParticles#1"
-  //, "/Event/Rec/Relations/EcalClusters2MCParticles#1"
+, "/Event/Rec/Relations/VeloClusters2MCParticles#1"
+, "/Event/Rec/Relations/EcalClusters2MCParticles#1"
 , "/Event/Rec/Relations/MuonCoords2MCParticles#1"
 , "/Event/Rec/Relations/Tr2MCP#1"
 , "/Event/Rec/Relations/L0CaloCandidates#1"

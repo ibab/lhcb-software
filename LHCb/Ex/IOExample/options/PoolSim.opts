@@ -4,7 +4,7 @@ EventSelector.Input   = {
 "DATAFILE='rfio:/castor/cern.ch/user/l/lhcbprod/test/00005247_00000001_3.oosim' TYP='ROOT' OPT='READ'"
 };
 
-#include "$GAUDICONFROOT/options/SimContent.opts"
+#include "$IOEXAMPLEROOT/options/GaussTape.opts"
 
 SimWriter.Output = "DATAFILE='PFN:PoolSim.root' TYP='POOL_ROOTTREE' OPT='REC'";
 ApplicationMgr.OutStream += {"SimWriter"};

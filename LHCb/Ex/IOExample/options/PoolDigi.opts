@@ -2,7 +2,7 @@
 #include "$ASSOCIATORSSYSROOT/options/DLLs.opts"
 
 EventSelector.Input   = {
-  "DATAFILE='rfio:/castor/cern.ch/user/c/cattanem/Boole/v4r0/412400.oodigi' TYP='ROOT' OPT='READ'"
+  "DATAFILE='rfio:/castor/cern.ch/user/c/cattanem/Boole/v5r0/412400.oodigi' TYP='ROOT' OPT='READ'"
 };
 
 // Define the OODIGI content to copy
