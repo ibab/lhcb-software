@@ -1,4 +1,4 @@
-// $Id: EvtIncoherentMixing.cpp,v 1.4 2003-10-29 09:25:33 robbep Exp $
+// $Id: EvtIncoherentMixing.cpp,v 1.5 2003-10-30 16:54:00 robbep Exp $
 // Include files 
 
 
@@ -71,11 +71,11 @@ void EvtIncoherentMixing::incoherentB0Mix( const EvtId id, double &t ,
   double prob ;
   
   do {
-    t = -log( EvtRandom::Flat() ) * EvtPDL::getctau( B0 ) ;
-    prob = 1. + exp( y * t / EvtPDL::getctau( B0 ) ) +
-      mixsign * 2. * exp( 0.5 * y * t / EvtPDL::getctau( B0 ) ) * 
-      cos( getdeltamd() * t / EvtConst::c ) ;
-  } while ( prob < 4. * EvtRandom::Flat() ) ;
+    t = -log( EvtRandom::Flat() ) * EvtPDL::getctau( B0 ) / ( 1. - y ) ;
+    prob = ( 1. + exp( -2. * y * t / EvtPDL::getctau( B0 ) ) +
+      mixsign * 2. * exp( -y * t / EvtPDL::getctau( B0 ) ) * 
+      cos( getdeltamd() * t / EvtConst::c ) ) / 2. ;
+  } while ( prob < 2. * EvtRandom::Flat() ) ;
  
   mix = 0 ;
   if ( mixsign == -1 ) mix = 1 ;
@@ -112,11 +112,11 @@ void EvtIncoherentMixing::incoherentBsMix( const EvtId id, double &t ,
   double prob ;
   
   do {
-    t = -log( EvtRandom::Flat() ) * EvtPDL::getctau( BS ) ;
-    prob = 1. + exp( y * t / EvtPDL::getctau( BS ) ) +
-      mixsign * 2. * exp( 0.5 * y * t / EvtPDL::getctau( BS ) ) * 
-      cos( getdeltams() * t / EvtConst::c ) ;
-  } while ( prob < 4. * EvtRandom::Flat() ) ;
+    t = -log( EvtRandom::Flat() ) * EvtPDL::getctau( BS ) / ( 1. - y ) ;
+    prob = ( 1. + exp( -2. * y * t / EvtPDL::getctau( BS ) ) +
+      mixsign * 2. * exp( -y * t / EvtPDL::getctau( BS ) ) * 
+      cos( getdeltams() * t / EvtConst::c ) ) / 2. ;
+  } while ( prob < 2. * EvtRandom::Flat() ) ;
  
   mix = 0 ;
   if ( mixsign == -1 ) mix = 1 ;

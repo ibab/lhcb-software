@@ -3,6 +3,9 @@ Package manager : Patrick Robbe and Witek Pokorski
 
 
 !===================== EvtGen v4r1 =====================================
+! 2003-10-30 - Patrick Robbe
+ - EvtIncoherentMixing : fix the t distribution for mixed events
+
 ! 2003-10-29 - Patrick Robbe
  - EvtIncoherentMixing : fix B_s0 name
 
