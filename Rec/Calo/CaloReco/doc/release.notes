@@ -1,8 +1,17 @@
-! $Id: release.notes,v 1.18 2003-01-31 14:53:23 beneyton Exp $
+! $Id: release.notes,v 1.19 2003-02-04 14:24:39 ibelyaev Exp $
 ! Package     : Calo/CaloReco
 ! Responsible : Ivan Belyaev
 ! Purpose     : Main Package for Calorimeter Reconstruction Software 
 !-----------------------------------------------------------------------------
+
+
+! 2003-02-04 - Ivan BELYAEV
+  - src/CaloSingleGammaTool.h,.cpp - updated version of the tool by Frederic MACHEFERT
+  - src/CaloPrsCorrection.h        - improve calibration formula 
+  - options/PrsCorrE.opts          - new calibration constants for electrons 
+  - options/PrsCorrG.opts          - new calibration constants for photons
+  - options/Brunel.opts            - reshuffling of "PIDs" algorithms 
+  - cmt/requirements               - increase the version 
 
 ! 2003-01-31 - Richard Beneyton
  - src/CaloSCorrectionFinal    - update function, add border and covariance

@@ -41,12 +41,10 @@ CaloSingleGammaTool::CaloSingleGammaTool(const std::string& type,
   , m_nameOfSPD("/dd/Structure/LHCb/Spd")
   , m_nameOfPRS("/dd/Structure/LHCb/Prs")
   , m_vertex    (          )
-  , m_selectionCut  ( 0 )
   , m_extrapolation ( true )
 {
   declareInterface<ICaloHypoLikelyhood>( this );
   declareInterface<IIncidentListener> (this);  
-  declareProperty("SelectionType",m_selectionCut);
   declareProperty("Extrapolation",m_extrapolation);
   declareProperty("DetEcal",m_nameOfECAL);
   declareProperty("DetSpd",m_nameOfSPD);
@@ -210,12 +208,12 @@ double CaloSingleGammaTool::likelyhood(const CaloHypo* hypo )  const
       { return Exception( " The Seed Digit points to NULL! ");}
     //
     
-    const CaloPosition pos = cluster->position() ;
-    const  HepPoint3D position (pos.x(),pos.y(),pos.z());
+    const CaloPosition *pos = hypo->position() ;
+    const  HepPoint3D position (pos->x(),pos->y(),pos->z());
     logbk<<MSG::DEBUG<<"cluster position: "
-	 <<pos.x()<<" "
-	 <<pos.y()<<" "
-	 <<pos.z()<<endreq;
+	 <<pos->x()<<" "
+	 <<pos->y()<<" "
+	 <<pos->z()<<endreq;
     logbk<<"m_Ecalz:"<<m_z<<endreq;
     
     double eSpd=0.;
@@ -227,7 +225,8 @@ double CaloSingleGammaTool::likelyhood(const CaloHypo* hypo )  const
       HepPoint3D newPoint; 
       
       newPoint  =  ( position - m_vertex );
-      newPoint *=  ( m_zSpd + m_shiftSpd - m_vertex.z() ) / ( position.z() - m_vertex.z() );
+      newPoint *=  ( m_zSpd + m_shiftSpd - m_vertex.z() ) /
+	( position.z() - m_vertex.z() );
       newPoint +=  m_vertex ;
       logbk<<MSG::DEBUG<<"Spd point: "
            <<newPoint.x()<<" "
@@ -238,7 +237,8 @@ double CaloSingleGammaTool::likelyhood(const CaloHypo* hypo )  const
       logbk<<MSG::DEBUG<<cellSpd<<endreq;
       
       newPoint  = ( position - m_vertex );
-      newPoint *=  ( m_zPrs - m_vertex.z() ) / ( position.z() - m_vertex.z() );
+      newPoint *=  ( m_zPrs - m_vertex.z() ) /
+	( position.z() - m_vertex.z() );
       newPoint +=  m_vertex ;
       logbk<<MSG::DEBUG<<"Prs point: "
            <<newPoint.x()<<" "
@@ -251,7 +251,8 @@ double CaloSingleGammaTool::likelyhood(const CaloHypo* hypo )  const
       
       if( CaloCellID() != cellSpd )  // valid cell! 
 	{          
-	  for (SmartRefVector<CaloDigit>::const_iterator digit=hypo->digits().begin() ;
+	  for (SmartRefVector<CaloDigit>::const_iterator
+		 digit=hypo->digits().begin() ;
 	       digit != hypo->digits().end() ; digit++ ) {
 	    if ( (*digit)->cellID() == cellSpd ) {
 	      eSpd=(*digit)->e();
@@ -262,7 +263,8 @@ double CaloSingleGammaTool::likelyhood(const CaloHypo* hypo )  const
       
       if( CaloCellID() != cellPrs )  // valid cell! 
 	{    
-	  for (SmartRefVector<CaloDigit>::const_iterator digit=hypo->digits().begin() ;
+	  for (SmartRefVector<CaloDigit>::const_iterator 
+		 digit=hypo->digits().begin() ;
 	       digit != hypo->digits().end() ; digit++ ) {
 	    if ( (*digit)->cellID() == cellPrs ) {
 	      ePrs=(*digit)->e();
@@ -277,8 +279,8 @@ double CaloSingleGammaTool::likelyhood(const CaloHypo* hypo )  const
 	// point in the detector   
 	HepPoint3D newPoint;  
 	
-	newPoint.setX(pos.x());
-	newPoint.setY(pos.y());
+	newPoint.setX(pos->x());
+	newPoint.setY(pos->y());
 	newPoint.setZ( m_zSpd + m_shiftSpd );
 	logbk<<MSG::DEBUG<<"Spd point: "
 	     <<newPoint.x()<<" "
@@ -288,8 +290,8 @@ double CaloSingleGammaTool::likelyhood(const CaloHypo* hypo )  const
 	const CaloCellID cellSpd = m_detSpd->Cell( newPoint );
 	logbk<<MSG::DEBUG<<cellSpd<<endreq;
 	
-	newPoint.setX(pos.x());
-	newPoint.setY(pos.y());
+	newPoint.setX(pos->x());
+	newPoint.setY(pos->y());
 	newPoint.setZ(m_zPrs);
 	logbk<<MSG::DEBUG<<"Prs point: "
 	     <<newPoint.x()<<" "
@@ -300,7 +302,8 @@ double CaloSingleGammaTool::likelyhood(const CaloHypo* hypo )  const
 	logbk<<MSG::DEBUG<<cellPrs<<endreq;  
 	if( CaloCellID() != cellSpd )  // valid cell! 
 	  {          
-	    for (SmartRefVector<CaloDigit>::const_iterator digit=hypo->digits().begin() ;
+	    for (SmartRefVector<CaloDigit>::const_iterator 
+		   digit=hypo->digits().begin() ;
 		 digit != hypo->digits().end() ; digit++ ) {
 	      if ( (*digit)->cellID() == cellSpd ) {
 		eSpd=(*digit)->e();
@@ -311,7 +314,8 @@ double CaloSingleGammaTool::likelyhood(const CaloHypo* hypo )  const
 	
 	if( CaloCellID() != cellPrs )  // valid cell! 
 	  {    
-	    for (SmartRefVector<CaloDigit>::const_iterator digit=hypo->digits().begin() ;
+	    for (SmartRefVector<CaloDigit>::const_iterator 
+		   digit=hypo->digits().begin() ;
 		 digit != hypo->digits().end() ; digit++ ) {
 	      if ( (*digit)->cellID() == cellPrs ) {
 		ePrs=(*digit)->e();
@@ -326,41 +330,9 @@ double CaloSingleGammaTool::likelyhood(const CaloHypo* hypo )  const
 	 <<" E[Prs]="<<ePrs
 	 <<endreq;
     
-    // apply desired selection cut
-    
-    if (m_selectionCut>5) {
-      logbk<<MSG::ERROR<<"Preselection cut not correct("
-	   <<m_selectionCut<<")"<<endreq;
-      return 0.;
-    }
-    
-    if ( m_selectionCut==1 && ( (eSpd<1.) || (eSpd>1. && ePrs>10.) ) ) {
-      lhood = 1.;
-    }
-    else if ( m_selectionCut==2 && eSpd<1.) {
-      lhood = 1.;
-    }
-    else if ( m_selectionCut==3 && ePrs>0. ) {
-      lhood = 1.;
-    }
-    else if ( m_selectionCut==4 && eSpd<1. && ePrs>0. ) {
-      lhood = 1.;
-    }
-    else if ( m_selectionCut==5 && eSpd<1. && ePrs>4. ) {
-      lhood = 1.;
-    }
-    else if (m_selectionCut==0){
-      if ( (eSpd<1.) || (ePrs>10.) ) lhood+=10000.;
-      if ( eSpd<1. )                 lhood+=1000.;
-      if ( ePrs>0. )                 lhood+=100.;
-      if ( eSpd<1. && ePrs>0. )      lhood+=10.;
-      if ( eSpd<1. && ePrs>4. )      lhood+=1.;
-    }
-  }
-  else {
-    logbk<<MSG::DEBUG<<"CaloHypo linked to several clusters"<<endreq;
+    if (eSpd<1.) lhood=ePrs ;
+    if (eSpd>1.) lhood=-ePrs; 
 
-    lhood=0.;
   }
 
   logbk<<MSG::DEBUG<<"PhotonId Likelyhood="

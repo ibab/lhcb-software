@@ -1,8 +1,11 @@
-// $Id: CaloPrsCorrection.h,v 1.1.1.1 2002-11-13 20:46:41 ibelyaev Exp $
+// $Id: CaloPrsCorrection.h,v 1.2 2003-02-04 14:24:39 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.1.1.1  2002/11/13 20:46:41  ibelyaev
+// new package 
+//
 // Revision 1.1  2002/09/04 14:46:16  ibelyaev
 //  add new tools and options for recalibration of Ecal
 //
@@ -149,11 +152,18 @@ protected:
     const Params& pars   ) const 
   {
     if( energy <= 0 ) { return 0 ; }
-    const double e1 = energy + pars[0] ;
-    return  ( e1 + pars[1] ) * pars[2] + prs * pars[3] ;
+    // convert the energy in GeV 
+    const double esc = energy / GeV ;
+    
+    double e   =        pars[0] * energy        ;
+    e         *= (1.0 + pars[3] * esc )         ;
+    e         *= (1.0 + pars[4] / sqrt( esc ) ) ;
+    e         += pars[1] * prs + pars[2]        ;
+    
+    return e ;  
   };
   
-  /** derivative of the correction function
+  /** derivative of the correction function (approximate)
    *  @param energy energy in Ecal 
    *  @param prs    energy in Prs 
    *  @param pars   parameters 
@@ -164,8 +174,14 @@ protected:
     const double     /* prs */ , 
     const Params&    pars      ) const 
   {
-    if( energy <= 0 ) { return 1. ; } 
-    return pars[2];
+    if( energy <= 0 ) { return 1. ; }
+    const double e   = energy / GeV ;
+    const double sqe = sqrt( e ) ;
+    double dif = pars[0]      ;
+    dif += 2.0 * pars[0] * pars[3] *           e         ;
+    dif += 0.5 * pars[0] *           pars[4]       / sqe ;
+    dif += 1.5 * pars[0] * pars[3] * pars[4]       * sqe ;
+    return dif ;
   };
   
 private:

@@ -1,8 +1,11 @@
-// $Id: CaloPrsCorrection.cpp,v 1.2 2002-11-14 14:28:38 ibelyaev Exp $
+// $Id: CaloPrsCorrection.cpp,v 1.3 2003-02-04 14:24:39 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2002/11/14 14:28:38  ibelyaev
+//  bug fix for Win2K
+//
 // Revision 1.1.1.1  2002/11/13 20:46:41  ibelyaev
 // new package 
 //
@@ -124,12 +127,12 @@ StatusCode CaloPrsCorrection::initialize ()
   if( sc.isFailure() ) 
     { return Error( "Could not initialize the base class CaloTool" , sc ) ; }
   // 
-  if( 4 != m_const0     .size() ) { return Error("Wrong vector size 0"   ); }
-  if( 4 != m_const1     .size() ) { return Error("Wrong vector size 1"   ); }
-  if( 4 != m_const2     .size() ) { return Error("Wrong vector size 2"   ); }
-  if( 4 != m_const0_cnv .size() ) { return Error("Wrong vector size 0Cnv"); }
-  if( 4 != m_const1_cnv .size() ) { return Error("Wrong vector size 1Cnv"); }
-  if( 4 != m_const2_cnv .size() ) { return Error("Wrong vector size 2Cnv"); }
+  if( 5 != m_const0     .size() ) { return Error("Wrong vector size 0"   ); }
+  if( 5 != m_const1     .size() ) { return Error("Wrong vector size 1"   ); }
+  if( 5 != m_const2     .size() ) { return Error("Wrong vector size 2"   ); }
+  if( 5 != m_const0_cnv .size() ) { return Error("Wrong vector size 0Cnv"); }
+  if( 5 != m_const1_cnv .size() ) { return Error("Wrong vector size 1Cnv"); }
+  if( 5 != m_const2_cnv .size() ) { return Error("Wrong vector size 2Cnv"); }
   // 
   return StatusCode::SUCCESS ;
 };

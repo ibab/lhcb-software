@@ -1,4 +1,4 @@
-// $Id: Brunel.opts,v 1.4 2002-12-01 14:22:56 ibelyaev Exp $ 
+// $Id: Brunel.opts,v 1.5 2003-02-04 14:24:39 ibelyaev Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
@@ -13,36 +13,35 @@
 
 /// The first pass of CALOrimeter reconstruction - track independent 
 BrunelRecoCALOSeq.Members += 
-{ 
-  "CellularAutomaton/EcalClust"        , /// Cellular Automaton clusterisation 
-  "CaloSharedCellAlg/EcalShare"        , /// Shared energy redistribution 
-  "CaloClusterCovarianceAlg/EcalCovar"   /// Evaluation of covariances 
-};
+  { 
+    "CellularAutomaton/EcalClust"        , /// Cellular Automaton clusterisation 
+    "CaloSharedCellAlg/EcalShare"        , /// Shared energy redistribution 
+    "CaloClusterCovarianceAlg/EcalCovar"   /// Evaluation of covariances 
+  };
 
 /// The second pass of CALOrimeter reconstruction: track dependent 
 BrunelRecoCALOSeq.Members += 
-{
-  "CaloCluster2TrackAlg/PhotonMatch"   , /// Cluster/Track matching 
-  "CaloMergedPi0Alg/Pi0Rec"            , /// Reconstruction of merged pi0s
-  "CaloSinglePhotonAlg/PhotonRec"      , /// Reconstruction of single photons  
-  "CaloElectronAlg/ElectronRec"        , /// Reconstruction of electrons  
-  "CaloHypo2TrackAlg/ElectronMatch"    , /// 3D     track-hypo match (e+/e- ID) 
-  "CaloHypo2TrackAlg/BremMatch"        , /// 'Brem' track-hypo match (e+/e- ID)
-  "CaloHyposMerge/CaloMerge"             /// Merge CaloHypos to CaloParticle
-};
+  {
+    "CaloCluster2TrackAlg/PhotonMatch"   , /// Cluster/Track matching 
+    "CaloMergedPi0Alg/Pi0Rec"            , /// Reconstruction of merged pi0s
+    "CaloSinglePhotonAlg/PhotonRec"      , /// Reconstruction of single photons  
+    "CaloElectronAlg/ElectronRec"        , /// Reconstruction of electrons  
+    "CaloHypo2TrackAlg/ElectronMatch"    , /// 3D     track-hypo match (e+/e- ID) 
+    "CaloHypo2TrackAlg/BremMatch"        , /// 'Brem' track-hypo match (e+/e- ID)
+    "CaloHyposMerge/CaloMerge"             /// Merge CaloHypos to CaloParticle
+  };
 
 /// Variouse identification techniques 
 BrunelRecoCALOSeq.Members += 
-{
-  /// must be done in Brunel
-  "CaloTrack2EstimatorAlg/HcalE"         /// estimator for Hcal energy
-  ,"CaloTrack2EstimatorAlg/PrsE"         /// estimator for Prs ebnergy 
-  /// optional, could be (re)done later in DaVinci
-  ,"CaloTrack2EstimatorAlg/EcalE"        /// estimator for Ecal energy 
-  /// ,"CaloTrack2IdAlg/HcalPIDe"        /// estimator for Hcal e+/e-   PID 
-  /// ,"CaloTrack2IdAlg/HcalPIDmu"       /// estimator for Hcal mu+/mu- PID 
-  /// ,"CaloTrack2IdAlg/PrsPIDe"         /// estimator for Prs  e+/e-   PID 
-};
+  {
+    /// must be done in Brunel
+    "CaloTrack2EstimatorAlg/HcalE"         /// estimator for Hcal energy
+    ,"CaloTrack2EstimatorAlg/PrsE"         /// estimator for Prs energy 
+    ,"CaloTrack2EstimatorAlg/EcalE"        /// estimator for Ecal energy 
+    /// ,"CaloTrack2IdAlg/HcalPIDe"        /// estimator for Hcal e+/e-   PID 
+    /// ,"CaloTrack2IdAlg/HcalPIDmu"       /// estimator for Hcal mu+/mu- PID 
+    /// ,"CaloTrack2IdAlg/PrsPIDe"         /// estimator for Prs  e+/e-   PID 
+  };
 
 
 // ============================================================================

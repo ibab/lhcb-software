@@ -1,8 +1,11 @@
-// $Id: PrsCorrG.opts,v 1.1.1.1 2002-11-13 20:46:44 ibelyaev Exp $
+// $Id: PrsCorrG.opts,v 1.2 2003-02-04 14:24:39 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.1.1.1  2002/11/13 20:46:44  ibelyaev
+// new package 
+//
 // ============================================================================
 
 /** @file 
@@ -11,20 +14,20 @@
  *  @date 2002-10-31
  */
 
-// Non-converted photons in outer area 
-ToolSvc.PrsCorrG.Param0    = { 50.   MeV ,   0.   MeV , 0.959 ,  5.74 } ;
-// Coonverted    photons in outer area 
-ToolSvc.PrsCorrG.Param0Cnv = { 50. * MeV , 140. * MeV , 0.940 ,  8.30 } ;
+// Non-converted photons in inner area 
+ToolSvc.PrsCorrG.Param2    = { 0.9628 , 8.1766 , 0.018 * GeV , 0.91358*e-4 , 0.0 } ;
+// Coonverted    photons in inner area 
+ToolSvc.PrsCorrG.Param2Cnv = { 0.9493 , 13.037 , 0.181 * GeV , 0.91358*e-4 , 0.0 } ;
 
 // Non-converted photons in middle area 
-ToolSvc.PrsCorrG.Param1    = { 50. * MeV ,   0. * MeV , 0.985 ,  7.77 } ;
+ToolSvc.PrsCorrG.Param1    = { 0.9206 , 9.9481 , 0.069 * GeV , 0.21767*e-3 , 0.0 } ;
 // Coonverted    photons in middle area 
-ToolSvc.PrsCorrG.Param1Cnv = { 50. * MeV , 140. * MeV , 0.967 , 10.00 } ;
+ToolSvc.PrsCorrG.Param1Cnv = { 0.9112 , 12.040 , 0.239 * GeV , 0.21767*e-3 , 0.0 } ;
 
-// Non-converted photons in inner area 
-ToolSvc.PrsCorrG.Param2    = { 70. * MeV ,   0. * MeV , 1.014 ,  8.48 } ;
-// Coonverted    photons in inner area 
-ToolSvc.PrsCorrG.Param2Cnv = { 70. * MeV , 140. * MeV , 1.000 , 10.80 } ;
+// Non-converted photons in outer area 
+ToolSvc.PrsCorrG.Param0    = { 0.8944 , 8.8231 , 0.086 * GeV , 0.53426*e-3 , 0.0 } ;
+// Coonverted    photons in outer area 
+ToolSvc.PrsCorrG.Param0Cnv = { 0.8899 , 10.388 , 0.191 * GeV , 0.53426*e-3 , 0.0 } ;
 
 // ============================================================================
 // The END

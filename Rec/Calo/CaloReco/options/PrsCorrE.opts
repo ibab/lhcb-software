@@ -1,8 +1,11 @@
-// $Id: PrsCorrE.opts,v 1.1.1.1 2002-11-13 20:46:44 ibelyaev Exp $
+// $Id: PrsCorrE.opts,v 1.2 2003-02-04 14:24:39 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.1.1.1  2002/11/13 20:46:44  ibelyaev
+// new package 
+//
 // ============================================================================
 
 /** @file 
@@ -11,20 +14,20 @@
  *  @date 2002-10-31
  */
 
-// outer area 
-ToolSvc.PrsCorrE.Param0    = {  50. * MeV ,  140. * MeV , 0.945 ,  9.05 } ;
-// outer area 
-ToolSvc.PrsCorrE.Param0Cnv = {  50. * MeV ,  140. * MeV , 0.945 ,  9.05 } ;
+// inner area 
+ToolSvc.PrsCorrE.Param2    = { 0.93311 , 9.4949 , 0.318 * GeV , 0.0 , 0.19474 } ;
+// inner  area 
+ToolSvc.PrsCorrE.Param2Cnv = { 0.93311 , 9.4949 , 0.318 * GeV , 0.0 , 0.19474 } ;
 
 // middle area 
-ToolSvc.PrsCorrE.Param1    = {  25. * MeV ,  140. * MeV , 0.982 ,  9.70 } ;
+ToolSvc.PrsCorrE.Param1    = { 0.91975 , 8.2070 , 0.474 * GeV , 0.0 , 0.05622 } ;
 // middle area 
-ToolSvc.PrsCorrE.Param1Cnv = {  25. * MeV ,  140. * MeV , 0.982 ,  9.70 } ;
+ToolSvc.PrsCorrE.Param1Cnv = { 0.91975 , 8.2070 , 0.474 * GeV , 0.0 , 0.05622 } ;
 
-// inner area 
-ToolSvc.PrsCorrE.Param2    = { 100. * MeV ,  140. * MeV , 1.004 , 11.32 } ;
-// inner area 
-ToolSvc.PrsCorrE.Param2Cnv = { 100. * MeV ,  140. * MeV , 1.004 , 11.32 } ;
+// outer area 
+ToolSvc.PrsCorrE.Param0    = { 0.89879 , 7.1737 , 0.416 * GeV , 0.0 , 0.04866 } ;
+// outer area 
+ToolSvc.PrsCorrE.Param0Cnv = { 0.89879 , 7.1737 , 0.416 * GeV , 0.0 , 0.04866 } ;
 
 // ============================================================================
 // The END

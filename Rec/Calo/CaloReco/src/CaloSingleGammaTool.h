@@ -73,7 +73,6 @@ protected:
   CaloHypotheses::Hypothesis m_hypothesis;
 
   HepPoint3D                       m_vertex    ;
-  unsigned int m_selectionCut ;
   bool m_extrapolation;
   
   double m_shiftSpd;
