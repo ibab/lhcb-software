@@ -24,8 +24,8 @@ DetectorDataSvc.DetDbLocation = "$XMLDDDBROOT/DDDB/lhcb-200309-hpd.xml";
 // Finally, define input and output files, first event, number of events
 //---------------------------------------------------------------------------
 EventSelector.Input = {
-  "DATAFILE='/afs/cern.ch/user/w/witoldp/w0/Gaussjobs/0910_411300.oosim' TYP='ROOT' OPT='READ'"
-}; // Gauss, evtype 411300
+  "DATAFILE='/afs/cern.ch/user/w/witoldp/w0/Gaussjobs/360000_1310.oosim' TYP='ROOT' OPT='READ'"
+}; // Gauss, evtype 360000
 //EventSelector.FirstEvent = 7;
 SpilloverSelector.Input = {
   "DATAFILE='/afs/cern.ch/user/w/witoldp/w0/Gaussjobs/0810.oosim' TYP='ROOT' OPT='READ'"
@@ -34,7 +34,7 @@ SpilloverSelector.Input = {
 LHCBkgSelector.Input = { 
   "DATAFILE='rfio:/castor/cern.ch/lhcb/background/LHC/oosim/00000310_00000004_5.oosim' TYP='ROOT' OPT='READ'" }; // Test file, "Maximal" LHC background 
 //LHCBkgSelector.FirstEvent = 7; // Skip corresponding background events 
-DigiWriter.Output = "DATAFILE='v200309-hpd.oodigi' TYP='ROOT' OPT='NEW'";
-HistogramPersistencySvc.OutputFile = "v200309-hpd.hbook";  // Monitoring histos
+DigiWriter.Output = "DATAFILE='360000_1310.oodigi' TYP='ROOT' OPT='NEW'";
+HistogramPersistencySvc.OutputFile = "360000_1310.hbook";  // Monitoring histos
 ApplicationMgr.EvtMax = 200;
 //////////////////////////////////////////////////////////////////////////////

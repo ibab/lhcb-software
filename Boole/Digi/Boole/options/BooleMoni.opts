@@ -43,6 +43,9 @@ MoniOTSeq.Members += { "OTDigitMonitor" };
 // Rich
 ApplicationMgr.DLLs += { "RichDigiQC" };
 #include "$RICHDIGIQCOPTS/DigiQC_Boole.opts"    // standard monitoring
+// Particle properties service needed by Rich detailed monitoring
+ApplicationMgr.ExtSvc += { "ParticlePropertySvc" };
+ParticlePropertySvc.ParticlePropertiesFile = "$PARAMFILESROOT/data/particle.cdf";
 #include "$RICHREADOUTOPTS/BooleDigiMoni.opts" // detailed monitoring
 
 // Calorimeters
@@ -52,9 +55,6 @@ MoniCALOSeq.Members += { "CaloDigitMonitor/PrsMoni" };
 MoniCALOSeq.Members += { "CaloDigitMonitor/EcalMoni" };
 MoniCALOSeq.Members += { "CaloDigitMonitor/HcalMoni" };
 #include "$CALOMONITOROPTS/Moni.opts"
-
-// Framework monitoring
-//EventSelector_1.doHistos = true;
 
 //--------------------------------------------------------------
 // Set up some profiling. Enable/Disable setting lines below to true/false

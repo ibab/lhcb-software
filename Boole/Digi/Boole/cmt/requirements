@@ -1,5 +1,5 @@
 package Boole
-version v2r0
+version v2r1
 
 branches doc cmt job options
 
@@ -38,16 +38,15 @@ use XmlDDDB	v18r1	Det
 use ParamFiles	v2r1	$(LHCb_release_area)/PARAM -no_auto_imports
 use FieldMap	v4r3
 
-#-- LHCb libraries (from LHCB_v13r1)
-use LHCb	v13r1
+#-- LHCb libraries (from LHCB_v13r2)
+use LHCb	v13r2
 
 #-> SICB libraries included to avoid dependency on SICBOO package
 use RiSicbGeom	v3r4	SICB
 
-#-- BooleSys v2r0 packages
+#-- BooleSys v2r1 packages
 
-# LHC background
-use DigiAlg		v2r0	Digi
+use DigiAlg		v2r0p1	Digi
 
 # L0 trigger
 use L0Calo              v7r1	L0
@@ -77,8 +76,7 @@ use OTAlgorithms        v13r2 	OT
 
 # Muon
 use MuonAlgs            v5r0    Muon
-use MuonBackground	v1r3	Muon
-use MuonUtils		v1r0	Muon
+use MuonBackground	v1r4	Muon
 
 # Rich
 use RichDigiQC	        v1r1  	Rich
