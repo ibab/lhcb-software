@@ -1,4 +1,4 @@
-// $Id: Gauss.opts,v 1.22 2003-02-17 15:19:12 witoldp Exp $ 
+// $Id: Gauss.opts,v 1.23 2003-05-20 12:20:07 ranjard Exp $ 
 
 #units "$STDOPTS/units.opts"
 
@@ -48,7 +48,7 @@ MessageSvc.setWarning += { "XmlGenericCnv" };
 ApplicationMgr.EvtSel     = "NONE" ;
 ApplicationMgr.EvtMax     = 100;
 
-GaussInit.FirstEventNumber =9113;
+GaussInit.FirstEventNumber =1;
 
 // Modify Message Format to print algorithm name with 40 characters
 // MessageSvc.Format = "% F%40W%S%7W%R%T %0W%M";

@@ -1,5 +1,5 @@
 package Gauss
-version v10r0
+version v10r1
 
 # =============================================================================
 # structure 
@@ -26,7 +26,7 @@ use Magnet              v2r*    Det
 
 #GiGa staff...
 use GiGaCnv             v12r0   Sim
-use GaussTools          v7r0    Sim
+use GaussTools          v7r1    Sim
 use GaussTracker        v2r2    Sim
 use GaussRICH           v2r2    Sim
 use GaussCalo           v2r1    Sim
