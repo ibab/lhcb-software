@@ -1,8 +1,11 @@
-// $Id: sing.opts,v 1.3 2002-04-05 16:41:29 witoldp Exp $ 
+// $Id: sing.opts,v 1.4 2002-04-28 19:06:30 witoldp Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.3  2002/04/05 16:41:29  witoldp
+// uses restructured GeneratorModules
+//
 // Revision 1.2  2002/03/13 12:56:11  ibelyaev
 //  small restructurusation of job-options
 // 
@@ -31,11 +34,6 @@ ApplicationMgr.DLLs += { "GaudiDb"          } ;
 ApplicationMgr.DLLs += { "GaudiAlg"         } ;
 ApplicationMgr.DLLs += { "GiGa" , "GiGaCnv" } ;
 ApplicationMgr.DLLs       += {"GaudiRootDb"};
-
-// ============================================================================
-//  apply "event generator" options 
-// ============================================================================
-#include "$EVGENOPTS/EvGen.opts"
 
 // ============================================================================
 // declare external services needed for GiGa 
@@ -89,7 +87,7 @@ ApplicationMgr.TopAlg          =
 // Event generator phase 
 // ============================================================================
 Generator.Members += 
-{ "SingleParticleGun" ,
+{ "SingleParticleGun" , 
   "DumpMC"            };
 
 // ============================================================================
@@ -99,8 +97,8 @@ Simulation.Members +=
 {	"GiGaDataStoreAlgorithm/GiGaStore" ,   // data store configuration
   "GiGaInputStream/Geo"              ,   // load the geometry 
   "GiGaInputStream/Kine"             ,   // load the kinematics 
-//  "GiGaFlushAlgorithm/GiGaFlush"        // flush the event 
-  "GiGaMiscGetEventAlg/GetEvent"     } ; // convert MCPartcile/MCVertices
+  "GiGaFlushAlgorithm/GiGaFlush"     };   // flush the event 
+//  "GiGaMiscGetEventAlg/GetEvent"     } ; // convert MCPartcile/MCVertices
 
 // ============================================================================
 // configuration of GiGa Data Store 
@@ -168,7 +166,7 @@ DrawStep.OutputLevel              = 6;
 // ============================================================================
 GiGaSvc.EventAction               =   "GiGaEventActionSequence/EventSeq"      ;
 EventSeq.Members                  = { "GiGaEventActionCommand/EventCommand" } ;
-//EventSeq.Members                 += { "GiGaEventActionDraw/EventDraw" } ;
+EventSeq.Members                 += { "GiGaEventActionDraw/EventDraw" } ;
 EventCommand.OutputLevel          = 1                                         ;
 EventCommand.EndOfEventCommands   = 
 { "/vis/scene/add/volume"               , 
@@ -221,7 +219,13 @@ GiGaSvc.UIsessions           =  { "tcsh" };
 // Global(world) magnetic field 
 // ============================================================================
 //GiGaGeomCnvSvc.WorldMagneticField = "GiGaMagFieldGlobal/GlobalField";
-GlobalField.MagneticFieldService = "MagneticFieldSvc" ;
+//GlobalField.MagneticFieldService = "MagneticFieldSvc" ;
+GiGaGeomCnvSvc.WorldMagneticField = "GiGaMagFieldUniform/UniformField";
+UniformField.Bx =   0.01 ; 
+UniformField.By =   0.0  ; 
+UniformField.Bz =   0.     ; 
+UniformField.OutputLevel = 1 ;
+
 
 // ============================================================================
 // flag for instantiation and usage of visual manager 
@@ -248,21 +252,11 @@ SingleParticleGun.Eta =3.;
 SingleParticleGun.ModePt = 1;
 SingleParticleGun.ModeEta =1; 
 SingleParticleGun.ModePhi =1;
-SingleParticleGun.PdgCode=2212;
-//SingleParticleGun.PdgCode=211;
+SingleParticleGun.PdgCode=211;
 
 //==============================================================
 //
 // End of job options file
 //
 //##############################################################
-
-
-
-
-
-
-
-
-
 
