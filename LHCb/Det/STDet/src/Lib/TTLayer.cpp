@@ -200,8 +200,8 @@ TTLayer::TTLayer(int stationID, int layerID, double z,
   double step2 = (waferWidth-waferOverlap2)/cosAngle();
 
   std::vector<double> xSideLad; 
-  for (iLad2=0;iLad2<=nOverlap1;iLad2++){
-     xSideLad.push_back(xStart+(iLad2*step1));
+  for (iLad2=1;iLad2<=nOverlap1;iLad2++){
+     xSideLad.push_back(xStart+((iLad2-1)*step1));
   } // iLad2
 
   xStart = xSideLad.back();

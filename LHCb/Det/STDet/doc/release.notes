@@ -1,6 +1,9 @@
 !Package         : STDet
 !Package manager : M. Needham
 
+! 2005-06-04  M. Needham
+  - bug fix in TTLayer.cpp (not backwards compatible)
+
 !======================== STDet v1r2p1 2005-03-29 =======================
 ! 2005-03-29 - M. Needham
  - correct typo in STDetectionStation header
