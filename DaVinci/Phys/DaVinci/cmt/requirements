@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.34 2002-07-23 16:55:12 gcorti Exp $
+# $Id: requirements,v 1.35 2002-07-24 18:57:28 gcorti Exp $
 # Created    : 07/02/2002
 # Maintainer : Gloria Corti
 #
@@ -79,13 +79,13 @@ use EventSys       v12r0  Event
 #--- Associators
 use  ITAssociators      v2r0    IT
 use  OTAssociators      v2r0    OT
-use  VeloAssociators    v1r0    Velo
+use  VeloAssociators    v1r1    Velo
 use  CaloAssociators    v2r1    Calo
 use  CaloRec   		v2r1    Calo
 use  MuonAssociators    v1r0    Muon
 use  TrAssociators      v3r0    Tr
-use  L0Calo		v6r0	L0
-use  L1VeloTrack 	v1r0	L1
+use  L0Calo		v6r1	L0
+use  L1VeloTrack 	v2r0	L1
 
 #--- ProtoParticles 
 use CaloUtils 	    v4r1   Calo
