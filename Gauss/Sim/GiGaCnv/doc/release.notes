@@ -1,10 +1,11 @@
-! $Id: release.notes,v 1.86 2004-06-15 12:05:20 gcorti Exp $ 
+! $Id: release.notes,v 1.87 2004-06-16 08:04:41 ranjard Exp $ 
 ! =============================================================================
 ! CVS tag $Name: not supported by cvs2svn $ 
 ! =============================================================================
 Package         : GiGaCnv
 Package Manager : Vanya Belyaev Ivan.Belyaev@itep.ru
 
+!====================== GiGaCnv v15r6 2004-06-15 ===========================
 ! 2004-06-15 - Gloria CORTI
  - src/component/GiGaMCVertexCnv.cpp
    . temporarly issue a warning instead of an exception when a mother particle
