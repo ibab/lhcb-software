@@ -252,6 +252,8 @@ class tools:
       for i in range(0,lname):
         if i != (lname-1) and metName[i].isupper() and metName[i+1].isupper():
           metName = metName[:i] + metName[i].lower() + metName[i+1:]
+        elif i == (lname-1) and metName[i].isupper():
+          metName = metName[:i] + metName[i].lower()
         else:
           break
     return metName
