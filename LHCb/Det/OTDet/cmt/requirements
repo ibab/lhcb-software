@@ -1,0 +1,39 @@
+# $Id: requirements,v 1.1.1.1 2002-05-26 22:36:33 jvantilb Exp $
+# =========================================================================
+
+package  OTDet 
+version  v1r0
+
+# =============== structure ===============================================	
+branches         src cmt doc OTDet 
+
+# =============== own includes ============================================
+include_dirs      $(OTDETROOT)
+
+# =============== used packages ===========================================
+use LHCbKernel   v1r*   Kernel
+use DetDesc      v10r*  Det 
+
+# =============== own options ==========================================
+set OTDETOPTS  ${OTDETROOT}/options
+
+# =============== link library (base classes) =============================
+library          OTDetLib        Lib/*.cpp 
+
+# =============== component library =======================================
+library          OTDet           component/*.cpp
+
+#================ patterns ================================================
+
+apply_pattern    package_Lstamps
+apply_pattern    package_Llinkopts 
+apply_pattern    linker_path
+
+#================ private stuff ===========================================
+private
+apply_pattern    package_Cshlibflags
+apply_pattern    package_Lshlibflags
+macro_append     OTDetLib_shlibflags " $(DetDesc_linkopts) "
+macro_append     OTDetLib_shlibflags  " $(GaudiKernel_linkopts) "
+macro_append     OTDetLib_shlibflags  " $(CLHEP_linkopts) "
+
