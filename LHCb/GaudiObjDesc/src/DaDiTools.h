@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/GaudiObjDesc/src/DaDiTools.h,v 1.4 2002-02-01 18:01:52 mato Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/GaudiObjDesc/src/DaDiTools.h,v 1.5 2002-02-13 15:34:02 mato Exp $
 #ifndef DADITOOLS_H 
 #define DADITOOLS_H 1
 
@@ -38,6 +38,7 @@ public:
     
   static std::string chooseAccess(const std::string& str);
   static bool isSimple(std::string value);
+  static bool isPointer(std::string value);
 
   static void pushAddImport(std::string value);
   static const std::vector<std::string>& addImport();

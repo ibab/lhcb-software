@@ -1,4 +1,4 @@
-// $Id: DaDiTools.cpp,v 1.6 2002-02-01 18:01:52 mato Exp $
+// $Id: DaDiTools.cpp,v 1.7 2002-02-13 15:34:02 mato Exp $
 
 
 // Include files
@@ -31,13 +31,17 @@ std::string DaDiTools::chooseAccess(const std::string& str)
   else {return "";}
 }
 
-
 //-----------------------------------------------------------------------------
 bool DaDiTools::isSimple(std::string value)
 //-----------------------------------------------------------------------------
 {
   int i = value.find_last_of(" ");
   value = value.substr(i+1, value.size()-i);
+  if (value.substr(value.size()-1, value.size()).compare("*") == 0)
+  {
+    return true;
+//    value = value.substr(0, value.size()-1);
+  }
   if ((value == "bool")   || (value == "short")   ||
       (value == "long")   || (value == "int")     || 
       (value == "float")  || (value == "double")  || 
@@ -52,6 +56,18 @@ bool DaDiTools::isSimple(std::string value)
   }
 }
 
+//-----------------------------------------------------------------------------
+bool DaDiTools::isPointer(std::string value)
+//-----------------------------------------------------------------------------
+{
+  int i = value.find_last_of(" ");
+  value = value.substr(i+1, value.size()-i);
+  if (value.substr(value.size()-1, value.size()).compare("*") == 0)
+  {
+    return true;
+  }
+  return false;
+}
 
 //-----------------------------------------------------------------------------
 void DaDiTools::warning(const SAXParseException&)
