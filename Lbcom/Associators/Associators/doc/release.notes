@@ -1,0 +1,13 @@
+! Package     : Associators
+! Responsible : Rutger Hierck
+
+! 20010912 - Associators v1
+! ====================================================================
+  - A new package where some general purpose associators are put
+    In the future this package can centralise all the associators(IT/OT/Tr)
+  - For now the only two which are in this package Associators/Asscociators :
+	MCParticle2MCHitAlg.cpp/h
+	MCParticle2MCVeloHitAlg.cpp/h 
+    * These create a table between the MCParticle <==> MC(Velo)Hit
+      Eventhough MCVeloHit is derived from MCHit there has to be a separate
+      algorithm. This is not so nice, but that's the way it is.
