@@ -1,8 +1,11 @@
-// $Id: Reco.opts,v 1.3 2002-12-01 14:22:56 ibelyaev Exp $
+// $Id: Reco.opts,v 1.4 2003-03-13 18:47:49 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.3  2002/12/01 14:22:56  ibelyaev
+//  Hcal stuff and updated S-coprrections
+//
 // ============================================================================
 
 /** @file 
@@ -23,15 +26,6 @@
 #include "$CALORECOOPTS/ElectronMatch.opts"
 #include "$CALORECOOPTS/BremMatch.opts"
 #include "$CALORECOOPTS/CaloMerge.opts"
-
-// estimators and ID's algorithms 
-#include "$CALORECOOPTS/HcalE.opts"
-#include "$CALORECOOPTS/PrsE.opts"
-#include "$CALORECOOPTS/EcalE.opts"
-#include "$CALORECOOPTS/PrsPIDe.opts"
-#include "$CALORECOOPTS/EcalPIDe.opts"
-#include "$CALORECOOPTS/HcalPIDe.opts"
-#include "$CALORECOOPTS/HcalPIDmu.opts"
 
 // configuration of different tools 
 #include "$CALORECOOPTS/NeutralCluster.opts"

@@ -1,20 +1,8 @@
-// $Id: CaloReco_load.cpp,v 1.5 2002-12-01 14:22:57 ibelyaev Exp $
+// $Id: CaloReco_load.cpp,v 1.6 2003-03-13 18:47:50 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
-// Revision 1.4  2002/11/18 15:35:48  cattanem
-// another missing factory
-//
-// Revision 1.3  2002/11/18 15:19:05  cattanem
-// add missing factory
-//
-// Revision 1.2  2002/11/17 17:09:26  ibelyaev
-//  new set of options and tools
-//
-// Revision 1.1.1.1  2002/11/13 20:46:39  ibelyaev
-// new package 
-//
 // ============================================================================
 // Include files
 // LHCbKernel
@@ -40,8 +28,6 @@
 IMPLEMENT_WAssociator( CaloCluster , TrStoredTrack , float ) ;
 /// implement the relation associator 
 IMPLEMENT_WAssociator( CaloHypo    , TrStoredTrack , float ) ;
-/// implement the relation associator 
-IMPLEMENT_Associator (               TrStoredTrack , float ) ;
 
 DECLARE_FACTORY_ENTRIES(CaloReco) 
 {
@@ -69,17 +55,8 @@ DECLARE_FACTORY_ENTRIES(CaloReco)
   
   DECLARE_WAssociator ( CaloCluster , TrStoredTrack , float ) ;  
   DECLARE_WAssociator ( CaloHypo    , TrStoredTrack , float ) ;
-  DECLARE_Associator  (               TrStoredTrack , float ) ;
   
   DECLARE_TOOL        ( CaloSelectNeutralCluster            ) ;
-
-  // Native 
-  DECLARE_ALGORITHM   ( CaloTrack2EstimatorAlg              ) ;
-  DECLARE_ALGORITHM   ( CaloTrack2IdAlg                     ) ;
-  DECLARE_TOOL        ( CaloTrackPrsEval                    ) ;
-  DECLARE_TOOL        ( CaloTrackHcalEval                   ) ;
-  DECLARE_TOOL        ( CaloTrackEcalEval                   ) ;
-  DECLARE_TOOL        ( CaloTrackEval                       ) ;
 
   // from CaloTools package 
   DECLARE_TOOL        ( CaloClusterResetFractions           ) ;
@@ -133,6 +110,7 @@ DECLARE_FACTORY_ENTRIES(CaloReco)
   DECLARE_TOOL        ( CaloTrackMatchElectron              ) ;
   DECLARE_TOOL        ( CaloTrackMatchBremm                 ) ;
 
+  DECLARE_ALGORITHM   ( CaloHypoReShuffleAlg                ) ;
 
 };
 

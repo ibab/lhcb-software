@@ -1,8 +1,11 @@
-// $Id: CaloMergedPi0Alg.cpp,v 1.2 2002-12-01 14:22:57 ibelyaev Exp $
+// $Id: CaloMergedPi0Alg.cpp,v 1.3 2003-03-13 18:47:50 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2002/12/01 14:22:57  ibelyaev
+//  Hcal stuff and updated S-coprrections
+//
 // Revision 1.1.1.1  2002/11/13 20:46:40  ibelyaev
 // new package 
 //
@@ -975,7 +978,7 @@ StatusCode CaloMergedPi0Alg::execute()
         CaloHypo* g2   = new CaloHypo() ;
         g2 -> setHypothesis( CaloHypotheses::PhotonFromMergedPi0 ) ;
         g2 -> addToClusters( *icluster )                ;
-        g1 -> addToClusters( cl2       )                ;
+        g2 -> addToClusters( cl2       )                ;
         CaloMomentum* m2 = new CaloMomentum();
         g2 -> setMomentum ( m2 )                        ;
         m2 -> setMomentum ( HepLorentzVector( xp2 , 
