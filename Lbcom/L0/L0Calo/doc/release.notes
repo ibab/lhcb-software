@@ -1,6 +1,7 @@
 Package		: L0/L0Calo
 Package Manager : Olivier Callot
 
+!========================= L0Calo v8r0 2005-01-14 =========================
 ! 2005-01-12 - Olivier Callot
  - Remove obsolete option files and directory
 
