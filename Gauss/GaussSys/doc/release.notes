@@ -4,6 +4,10 @@
 ! Purpose     : Gauss system
 !-----------------------------------------------------------------------------
 
+!========================== GaussSys v12r3 2003-09-03 ===============
+! 2003-09-04 - Witek Pokorski
+ - use GiGaCnv v13r1 which fixes a part of the geometrical problem 
+
 !========================== GaussSys v12r2 2003-08=19 ===============
 ! 2003-08-19 - Florence RANJARD
  - several fixes to v12r1 following 1st test production.

@@ -1,5 +1,5 @@
 package GaussSys
-version v12r2
+version v12r3
 
 branches cmt doc
 
@@ -8,7 +8,7 @@ branches cmt doc
 #==================================================================
 
 # Gauss application
-use Gauss		v12r2	Sim
+use Gauss		v12r3	Sim
 
 # GEANT4 libraries
 use GEANT4	        v5r2p1  Sim
@@ -20,7 +20,7 @@ use GeneratorModules    v8r2    Gen
 
 # GiGa stuff...
 use GiGa        	v14r3	Sim        
-use GiGaCnv     	v13r0   Sim
+use GiGaCnv     	v13r1   Sim
 use GiGaVisUI		v2r1	Sim
 
 use VisSvc              v3r0    Vis
