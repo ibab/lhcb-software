@@ -267,8 +267,8 @@ StatusCode RichFrontEndResponse::Digital(){
   for (tsc_it = tscache.begin(); tsc_it != tscache.end(); tsc_it++) {
 
     PixelProperties* props = actual_base->DecodeUniqueID( (*tsc_it).first  );
-    //const PixelReadout* readOut = new PixelReadout;
-    const PixelReadout* readOut = props->Readout();
+    const PixelReadout* readOut = new PixelReadout;
+    readOut = props->Readout();
     if(readOut) {
 
       const RichFrontEndDigitiser* ADC = readOut->ADC();

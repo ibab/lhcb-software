@@ -19,7 +19,6 @@ RichBase& RichBase::operator=(const RichBase&b)
 void RichBase::upDate( std::vector<unsigned int> pixelList )
 {
 
-  if ( activePixels ) delete activePixels;
   activePixels = new activemap();
 
   for ( std::vector<unsigned int>::iterator intIndex = pixelList.begin();
