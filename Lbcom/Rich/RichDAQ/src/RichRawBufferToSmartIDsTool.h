@@ -4,11 +4,13 @@
  *  Header file for tool : RichRawBufferToSmartIDsTool
  *
  *  CVS Log :-
- *  $Id: RichRawBufferToSmartIDsTool.h,v 1.2 2004-11-03 09:30:16 jonrob Exp $
+ *  $Id: RichRawBufferToSmartIDsTool.h,v 1.3 2005-01-07 12:35:59 jonrob Exp $
  *  $Log: not supported by cvs2svn $
+ *  Revision 1.2  2004/11/03 09:30:16  jonrob
+ *  Update RichSmartID + add functionality to sort the data
+ *
  *  Revision 1.1  2004/10/30 19:13:05  jonrob
  *  Reworking RawBuffer decoding as a tool, to allow reconstruction to skip RichDigit creation
- *
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -21,33 +23,28 @@
 #include "GaudiKernel/IToolSvc.h"
 #include "GaudiKernel/IIncidentListener.h"
 #include "GaudiKernel/IIncidentSvc.h"
-#include "GaudiKernel/IParticlePropertySvc.h"
-#include "GaudiKernel/ParticleProperty.h"
 #include "GaudiKernel/ToolFactory.h"
-#include "GaudiKernel/SmartDataPtr.h"
 
 // base class
 #include "RichKernel/RichToolBase.h"
 
 // RichDAQ utility classes
-#include "RichDAQDefinitions.h"
-#include "RichDAQHeaderPD.h"
-#include "RichZSHitTriplet.h"
-#include "RichDAQLinkNumber.h"
-#include "RichNonZeroSuppData.h"
+#include "RichHPDDataBank.h"
 
 // Interfaces
 #include "RichKernel/IRichRawBufferToSmartIDsTool.h"
-
-// CLHEP
-//#include "CLHEP/Units/PhysicalConstants.h"
+#include "RichKernel/IRichRawDataFormatTool.h"
 
 /** @class RichRawBufferToSmartIDsTool RichRawBufferToSmartIDsTool.h
  *
- *  Tool performing MC truth associations
+ *  Tool to create RichSmartIDs from the raw buffer.
+ *  Uses the raw decoding tool abd performs verious post processing tasks,
+ *  such as sorting.
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
+ *
+ *  @todo Add missing sorting and partitioning functionality for reconstruction
  */
 
 class RichRawBufferToSmartIDsTool : public RichToolBase,
@@ -79,30 +76,18 @@ public: // methods (and doxygen comments) inherited from interface
   // Access all RichSmartIDs for the current Event
   const RichSmartID::Collection & allRichSmartIDs() const;
 
-private: // definitions
-
-
 private: // private methods
 
   /// Initialise for a new event
   void InitNewEvent();
 
-  /// Retrieves the raw event. If not available tries to build one from RawBuffer
-  RawEvent * rawEvent() const;
-
   /// Fill the RichSmartID container
   void fillRichSmartIDs() const;
 
-  /// Decode a zero suppress data block
-  void decodeZeroSuppressedBank( const RawBank & bank ) const;
-
-  /// Decode a non-zero suppress data block
-  void decodeNonZeroSuppressedBank( const RawBank & bank ) const;
-
 private: // private data
 
-  /// Input location for RawEvent in TES
-  std::string m_rawEventLoc;
+  /// Pointer to RICH raw data format tool
+  IRichRawDataFormatTool * m_rawFormatT;
 
   /// Flag to turn on the sorting of the RichSmartIDs
   bool m_sortIDs;
@@ -113,15 +98,12 @@ private: // private data
   /// New event flag
   mutable bool m_newEvent;
 
-  /// Pointer to Raw Event
-  mutable RawEvent * m_rawEvent;
-
 };
 
 inline void RichRawBufferToSmartIDsTool::InitNewEvent()
 {
   m_newEvent = true;
-  m_rawEvent = 0;
+  m_smartIDs.clear();
 }
 
 #endif // RICHDAQ_RICHRAWBUFFERTOSMARTIDSTOOL_H

@@ -1,3 +1,9 @@
 
 // Fill RawBuffer with RICH info
 DigiRICHSeq.Members += { "MCRichDigitsToRawBufferAlg/RichFillRawBuffer" };
+
+// Bank version to write
+RichFillRawBuffer.DataVersion = 1;
+
+ToolSvc.RichToolRegistry.Tools += { "RichHPDIDTool/RichHPDIDTool" };
+ToolSvc.RichToolRegistry.Tools += { "RichHPDToLevel1Tool/RichHPDToLevel1Tool" };

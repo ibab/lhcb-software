@@ -4,8 +4,10 @@
  *  Header file for RICH DAQ utility class : RichZSHitTriplet
  *
  *  CVS Log :-
- *  $Id: RichZSHitTriplet.h,v 1.6 2004-07-27 13:46:07 jonrob Exp $
+ *  $Id: RichZSHitTriplet.h,v 1.7 2005-01-07 12:35:59 jonrob Exp $
  *  $Log: not supported by cvs2svn $
+ *  Revision 1.6  2004/07/27 13:46:07  jonrob
+ *  Add doxygen file documentation and CVS information
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   2003-11-06
@@ -17,11 +19,8 @@
 // Gaudi
 #include "GaudiKernel/MsgStream.h"
 
-// Event model
-#include "Event/MCRichDigit.h"
-
-// local
-#include "RichDAQDefinitions.h"
+// Kernel
+#include "RichKernel/RichDAQDefinitions.h"
 
 /** @namespace RichZSHitTripletCode
  *
@@ -68,9 +67,6 @@ class RichZSHitTriplet {
 
 public: // methods
 
-  /// Standard constructor
-  RichZSHitTriplet() : m_data(0) {}
-
   /// Copy Constructor
   RichZSHitTriplet( const RichZSHitTriplet & hits ) : m_data( hits.data() ) {}
 
@@ -78,23 +74,23 @@ public: // methods
   RichZSHitTriplet( const RichDAQ::LongType data ) : m_data( data ) { }
 
   /// Constructor from three MCRichDigits
-  RichZSHitTriplet( const MCRichDigit * digOne,  ///< Pointer to first MCRichDigit to store
-                    const MCRichDigit * digTwo,  ///< Pointer to second MCRichDigit to store
-                    const MCRichDigit * digThree ///< Pointer to third MCRichDigit to store
+  RichZSHitTriplet( const RichSmartID * digOne   = 0,  ///< Pointer to first RichSmartID to store
+                    const RichSmartID * digTwo   = 0,  ///< Pointer to second RichSmartID to store
+                    const RichSmartID * digThree = 0   ///< Pointer to third RichSmartID to store
                     )
     : m_data ( 0 )
   {
     if ( digOne ) {
-      setRow0 ( digOne->key().pixelRow() );
-      setCol0 ( digOne->key().pixelCol() );
+      setRow0 ( digOne->pixelRow() );
+      setCol0 ( digOne->pixelCol() );
     }
     if ( digTwo ) {
-      setRow1 ( digTwo->key().pixelRow() );
-      setCol1 ( digTwo->key().pixelCol() );
+      setRow1 ( digTwo->pixelRow() );
+      setCol1 ( digTwo->pixelCol() );
     }
     if ( digThree ) {
-      setRow2 ( digThree->key().pixelRow() );
-      setCol2 ( digThree->key().pixelCol() );
+      setRow2 ( digThree->pixelRow() );
+      setCol2 ( digThree->pixelCol() );
     }
   }
 

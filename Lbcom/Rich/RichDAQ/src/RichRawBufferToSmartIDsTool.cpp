@@ -5,8 +5,11 @@
  * Implementation file for class : RichRawBufferToSmartIDsTool
  *
  * CVS Log :-
- * $Id: RichRawBufferToSmartIDsTool.cpp,v 1.5 2004-11-05 20:05:00 jonrob Exp $
+ * $Id: RichRawBufferToSmartIDsTool.cpp,v 1.6 2005-01-07 12:35:59 jonrob Exp $
  * $Log: not supported by cvs2svn $
+ * Revision 1.5  2004/11/05 20:05:00  jonrob
+ * update functor
+ *
  * Revision 1.4  2004/11/03 09:30:16  jonrob
  * Update RichSmartID + add functionality to sort the data
  *
@@ -38,7 +41,8 @@ namespace SmartIDFuncs {
   /// Functor to sort RichSmartIDs by Rich then panel numbers
   class SortByRichAndPanel {
   public:    
-    bool operator() ( const RichSmartID & p1, const RichSmartID & p2 ) const
+    /// Sort operator
+    bool operator() ( const RichSmartID p1, const RichSmartID p2 ) const
     {
       return ( 10*p1.rich() + p1.panel() < 10*p2.rich() + p2.panel() );
     }
@@ -50,15 +54,13 @@ RichRawBufferToSmartIDsTool::RichRawBufferToSmartIDsTool( const std::string& typ
                                                           const std::string& name,
                                                           const IInterface* parent )
   : RichToolBase       ( type, name, parent ),
+    m_rawFormatT       ( 0     ),
     m_sortIDs          ( false ),
-    m_newEvent         ( true  ),
-    m_rawEvent         ( 0     )
+    m_newEvent         ( true  )
 {
 
   declareInterface<IRichRawBufferToSmartIDsTool>(this);
 
-  declareProperty( "RawEventLocation",
-                   m_rawEventLoc = RawEventLocation::Default );
   declareProperty( "SortRichSmartIDs", m_sortIDs = false );
 
 }
@@ -68,6 +70,9 @@ StatusCode RichRawBufferToSmartIDsTool::initialize()
   // Sets up various tools and services
   const StatusCode sc = RichToolBase::initialize();
   if ( sc.isFailure() ) return sc;
+
+  // acquire tools
+  acquireTool( "RichRawDataFormatTool", m_rawFormatT );
 
   // Setup incident services
   incSvc()->addListener( this, IncidentType::BeginEvent );
@@ -90,34 +95,6 @@ void RichRawBufferToSmartIDsTool::handle ( const Incident& incident )
   if ( IncidentType::BeginEvent == incident.type() ) { InitNewEvent(); }
 }
 
-RawEvent * RichRawBufferToSmartIDsTool::rawEvent() const
-{
-  if ( !m_rawEvent ) {
-
-    // Try and load from TES. If it exists return, overwise try to create one
-    SmartDataPtr<RawEvent> rawEventTES( evtSvc(), m_rawEventLoc );
-    if ( rawEventTES ) { m_rawEvent = rawEventTES; }
-    else {
-      debug() << "Creating RawEvent from RawBuffer" << endreq;
-
-      // Retrieve the RawBuffer
-      SmartDataPtr<RawBuffer> rawBuffer( evtSvc(), RawBufferLocation::Default );
-      if ( !rawBuffer ) { m_rawEvent = 0; Exception("Unable to locate RawBuffer"); }
-
-      // make new RawEvent and put into TES
-      m_rawEvent = new RawEvent( rawBuffer );
-      if ( !m_rawEvent ) {
-        m_rawEvent = 0;
-        Exception("Unable to allocate memory to RawEvent");
-      }
-      put( m_rawEvent, RawEventLocation::Default );
-    }
-
-  }
-
-  return m_rawEvent;
-}
-
 const RichSmartID::Collection & RichRawBufferToSmartIDsTool::allRichSmartIDs() const
 {
   if ( m_newEvent ) {
@@ -130,126 +107,14 @@ const RichSmartID::Collection & RichRawBufferToSmartIDsTool::allRichSmartIDs() c
 void RichRawBufferToSmartIDsTool::fillRichSmartIDs() const
 {
 
-  // Get the banks for the RichDigits
-  const RichDAQ::RAWBanks & richBanks = rawEvent()->banks( RawBuffer::Rich );
+  // Use raw format tool to decode event
+  m_rawFormatT->decodeToSmartIDs( m_smartIDs );
 
-  // Purge SmartID container
-  m_smartIDs.clear();
-
-  // make a guess at a reserved size
-  m_smartIDs.reserve( richBanks.size() * 5 );
-
-  // Loop over data banks
-  for ( RichDAQ::RAWBanks::const_iterator iBank = richBanks.begin();
-        iBank != richBanks.end(); ++iBank ) {
-
-    // Get the bank header
-    const RichDAQHeaderPD bankHeader( (*iBank).data()[0] );
-
-    // Is this a zero suppressed bank or not ?
-    if ( bankHeader.zeroSuppressed() ) {
-      decodeZeroSuppressedBank(*iBank);
-    } else {
-      decodeNonZeroSuppressedBank(*iBank);
-    }
-
-  } // end loop over data banks
-
-  // Finally, sort into order of Rich and Panel
+  // Sort into order of Rich and Panel
   // This can be removed when RichSmartIDs have their bit fields ordered so that the most
   // significant bit is RICH, then panel etc. 
   if ( m_sortIDs ) std::sort( m_smartIDs.begin(), 
                               m_smartIDs.end(), 
                               SmartIDFuncs::SortByRichAndPanel() );
-  
-  if ( msgLevel(MSG::DEBUG) ) {
-    debug() << "Decoded " << m_smartIDs.size()
-            << " RichSmartIDs from " << richBanks.size() << " Raw banks" << endreq;
-  }
-
-}
-
-void
-RichRawBufferToSmartIDsTool::decodeZeroSuppressedBank( const RawBank & bank ) const
-{
-
-  // Get the link identifier
-  const RichDAQLinkNumber linkN( bank.bankSourceID() );
-
-  // Get the bank header
-  const RichDAQHeaderPD bankHeader( bank.data()[0] );
-
-  // How many digits do we expect to make
-  const RichDAQ::ShortType digitCount = bankHeader.hitCount();
-
-  if ( msgLevel(MSG::VERBOSE) ) {
-    const RichSmartID pdID(linkN.rich(),linkN.panel(),linkN.pdRow(),linkN.pdCol(),0,0);
-    verbose()  << "Decoding " << digitCount << " zero suppressed hits for PD "
-               << pdID << endreq
-               << " Header : " << bankHeader << endreq;
-  }
-
-  if ( digitCount > 0 ) {
-
-    // Loop over data fields (Skip first header field)
-    RichDAQ::ShortType nDigitsMade = 0;
-    for ( int iEntry = 1; iEntry < bank.dataSize(); ++iEntry ) {
-
-      // Get triplet data
-      const RichZSHitTriplet triplet( bank.data()[iEntry] );
-      if ( msgLevel(MSG::VERBOSE) ) verbose() << " Decoding triplet " << triplet << endreq;
-
-      // Make first smartid from triplet
-      m_smartIDs.push_back( RichSmartID( linkN.rich(), linkN.panel(),
-                                         linkN.pdRow(), linkN.pdCol(),
-                                         triplet.row0(), triplet.col0() ) );
-      ++nDigitsMade;
-      if ( nDigitsMade == digitCount ) break;
-
-      // Make second smartid from triplet
-      m_smartIDs.push_back( RichSmartID( linkN.rich(), linkN.panel(),
-                                         linkN.pdRow(), linkN.pdCol(),
-                                         triplet.row1(), triplet.col1() ) );
-      ++nDigitsMade;
-      if ( nDigitsMade == digitCount ) break;
-
-      // Make third smartid from triplet
-      m_smartIDs.push_back( RichSmartID( linkN.rich(), linkN.panel(),
-                                         linkN.pdRow(), linkN.pdCol(),
-                                         triplet.row2(), triplet.col2() ) );
-      ++nDigitsMade;
-      if ( nDigitsMade == digitCount ) break;
-
-    }
-
-  }
-
-}
-
-void
-RichRawBufferToSmartIDsTool::decodeNonZeroSuppressedBank( const RawBank & bank ) const
-{
-
-  // Get the link identifier
-  const RichDAQLinkNumber linkN( bank.bankSourceID() );
-
-  if ( msgLevel(MSG::VERBOSE) ) {
-
-    // Get the bank header
-    const RichDAQHeaderPD bankHeader( bank.data()[0] );
-
-    const RichSmartID pdID(linkN.rich(),linkN.panel(),linkN.pdRow(),linkN.pdCol(),0,0);
-    verbose() << "Decoding " << bankHeader.hitCount() << " non-zero suppressed hits for PD "
-              << pdID << endreq
-              << " Header : " << bankHeader << endreq;
-
-  }
-
-  // Create a block of non-zero suppressed data from RawBank
-  const RichNonZeroSuppData nonZSdata( bank );
-
-  // Put smart IDs into container
-  nonZSdata.fillSmartIDs( linkN.rich(),linkN.panel(),
-                          linkN.pdRow(),linkN.pdCol(), m_smartIDs );
 
 }

@@ -4,6 +4,14 @@
 ! Purpose     : Package simulating the RICH DAQ system and data format
 !-----------------------------------------------------------------------------
 
+! 2004-12-22 - Chris Jones
+ - Complete rewrite. 
+   + Add new version of data format
+   + More flexible to make it easier to add new formats in the future
+   + Remove all MC dependencies (moved to RichReadout and RichMCTools)
+   + Add tools to deal with mappings between HPD numbering schemes
+   + Add Level 1 numbering tool
+
 !========================== RichDAQ v1r6 2004-11-16 =========================
 ! 2004-11-03 - Chris Jones
  - Add the ability to sort the RichSmartIDs in the Raw buffer decoding tool
