@@ -1,4 +1,4 @@
-// $Id: RichTrackSelector.h,v 1.3 2004-03-16 13:39:58 jonesc Exp $
+// $Id: RichTrackSelector.h,v 1.4 2004-04-19 22:59:45 jonesc Exp $
 #ifndef RICHRECBASE_RICHTRACKSELECTOR_H
 #define RICHRECBASE_RICHTRACKSELECTOR_H 1
 
@@ -33,10 +33,13 @@ public:
   bool trackSelected( const RichRecTrack * track ) const;
 
   /// Returns vector of selected track types
-  std::vector<std::string> & selectedTrackTypes() { return m_trNames; }
+  inline std::vector<std::string> & selectedTrackTypes() { return m_trNames; }
 
   /// Returns vector of selected track types
-  const std::vector<std::string> & selectedTrackTypes() const { return m_trNames; }
+  inline const std::vector<std::string> & selectedTrackTypes() const { return m_trNames; }
+
+  /// Returns selected track types as a single string
+  const std::string selectedTracksAsString() const;
 
   /// Configure the track selection
   bool configureTrackTypes();

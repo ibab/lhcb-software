@@ -1,4 +1,4 @@
-// $Id: RichTrackSelector.cpp,v 1.2 2004-03-16 13:40:00 jonesc Exp $
+// $Id: RichTrackSelector.cpp,v 1.3 2004-04-19 22:59:46 jonesc Exp $
 // Include files
 
 // local
@@ -48,4 +48,12 @@ bool RichTrackSelector::configureTrackTypes() {
   }
 
   return true;
+}
+
+const std::string RichTrackSelector::selectedTracksAsString() const 
+{ 
+  std::vector<std::string>::const_iterator iT = selectedTrackTypes().begin();
+  std::string names = *iT; ++iT;
+  for ( ; iT != selectedTrackTypes().end(); ++iT ) { names += " " + *iT; }
+  return names;
 }
