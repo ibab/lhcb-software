@@ -4,16 +4,15 @@ Package Coordinator: Marco Cattaneo
 
 Purpose: LHCb reconstruction program
 
-</PRE><H1><A NAME=v10r0>20020522 Brunel v10r0</A></H1><PRE>
+</PRE><H1><A NAME=v10r0>2002-05-27 Brunel v10r0</A></H1><PRE>
    >>>>>> Beware - rapidly changing functionality on head revision <<<<<<<
 
    >>>>>> Supported geometries:
      - LHCb-Light detector with split TT1:
            dbase v243r1p1 (Silicon only split TT1)
            dbase v243r3   (IT+OT split TT1)
-         Job options for other dbases from v240 to v242r1 are provided as is,
-         with no guarantee that they will work. Support will be provided if
-         requested 
+       Previous databases are not supported.
+       Support for later databases will be added as data becomes available
 
    >>>>>> Current functionality:
      - Inner Tracker digitisation and clustering
@@ -26,15 +25,13 @@ Purpose: LHCb reconstruction program
      - MUON Digitisation (old SICB Fortran version), reconstruction, MuonID
      - L0 trigger simulation
      - OO-DST output
-     - Complete DST output (except L1 trigger, Rich PID, Calo PID)
-         including coordinate cleaning for Muon
 
    >>>>>> Missing functionality:
      - L1 trigger simulation
      - Upstream tracking
      - Rich reconstruction and PID
      - Calo PID
-     - Correct XML geometry for Rich1, IT, OT
+     - Correct XML geometry for Rich1, Rich2
 
    >>>>>> Existing DST content:
      EventHeader, GenHeader
@@ -42,7 +39,7 @@ Purpose: LHCb reconstruction program
      L0CaloCandidates, L0MuonCandidates, L0PuVeto, L0DUReport
      VeloClusters
      RichDigits
-     ITSummary, ITClusters
+     ITSummary, ITClusters, ITClusters2MCParticles relation
      OTClusters
      TrStoredTracks and corresponding TrStates and TrMeasurements
      EcalCelAutoClusters,EcalLocMaxClusters
@@ -62,7 +59,6 @@ Purpose: LHCb reconstruction program
         RICH digitisation and reconstruction.
         MUON digitisation.
 
-   Use DDDB/dbase.xml detector description by default
    Suppressed BrunelFinalFit phase for the time being
 
    In job/Brunel.job
@@ -71,6 +67,7 @@ Purpose: LHCb reconstruction program
    In options
    - All files touched to support new event model algorithms
    - New file BrunelDst.opts to set up DST output
+   - All files corresponfin to unsupported dbases removed
 
    In cmt/requirements
    - use Gaudi    v10 and corresponding external packages
@@ -78,9 +75,12 @@ Purpose: LHCb reconstruction program
    - remove all SICB dig*, tr*, rec* packages, except digmuon, recrich
 
    - use ITAlgorithms  v10r0 IT
+   - use ITAssociators  v1r0 IT
    - use OTAlgorithms  v10r0 OT
+   - use OTAssociators  v1r0 OT
    - use VeloDigit      v2r0 Velo
-   - use VeloTrack      v2r0 Velo 
+   - use VeloTrack      v2r0 Velo
+   - use TrFitEvent     v1r1 Tr 
    - use TrAssociators  v1r0 Tr
    - use FwTrack        v2r0 Tr
    - use TrFitter       v1r0 Tr
@@ -88,11 +88,10 @@ Purpose: LHCb reconstruction program
    - use MuonTools      v2r0 Muon
    - use MuonRec        v1r0 Muon
    - use MuonID         v1r0 Muon
-   - use CaloInterfaces v2r0 Calo
-   - use CaloUtils      v2r0 Calo
+   - use CaloInterfaces v2r1 Calo
+   - use CaloUtils      v2r1 Calo
    - use CaloTools      v2r0 Calo
-   - use CaloAlgs       v5r0 Calo
-   - use CaloCA         v4r0 Calo
+   - use CaloAlgs       v5r1 Calo
    - use L0Calo         v5r0 L0
    - use L0Muon         v5r0 L0
    - use PuVeto         v2r0 L0

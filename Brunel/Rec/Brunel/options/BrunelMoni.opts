@@ -27,10 +27,17 @@ BrunelMoniITSeq.Members =
 // IT reconstruction
 BrunelMoniITSeq.Members += { "ITClusterChecker" };
 
+// OT digitisation
+BrunelMoniOTSeq.Members += { "MCOTDepositMonitor", "OTDigitMonitor" };
+
+// OT reconstruction
+ApplicationMgr.DLLs += { "OTAssociators" };
+BrunelMoniOTSeq.Members += { "OTClusterMonitor" };
+BrunelMoniOTSeq.Members += { "OTClusterChecker" };
+
 // Forward tracking
 #include "$FWTRACKROOT/options/BrunelMoni.opts"
 
-//BrunelMoniOTSeq.Members   = { "OTDigitChecker" };
 //BrunelMoniTrSeq.Members   = { "TrMonitor" };
 #pragma print off
 

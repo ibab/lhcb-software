@@ -6,19 +6,8 @@
 // You only need to modify it if you want to add or remove algorithms
 // !! Do not modify position or order of included files !!
 //==============================================================
-
-//--------------------------------------------------------------
-//BrunelFinish.DropDSTBanks = false; // Uncomment to keep all SICB banks on DST
-//--------------------------------------------------------------
-
-#include "$BRUNELOPTS/BrunelMessage.opts"
-
-//--------------------------------------------------------------
-// Standard Gaudi configuration and additional DLLs
-//--------------------------------------------------------------
 #include "$STDOPTIONS"
 #include "$STDOPTS/DetDesc.opts"
-DetectorDataSvc.DetDbLocation = "$XMLDDDBROOT/DDDB/dbase.xml";
 
 ApplicationMgr.DLLs += { "BrunelKernel", "GaudiAlg" };
 EventDataSvc.ForceLeaves = true;
@@ -33,7 +22,7 @@ ApplicationMgr.TopAlg += { "BrunelSicbInit",
                            "BrunelPhase/BrunelDigi",
                            "BrunelPhase/BrunelTrigger",
                            "BrunelPhase/BrunelReco",
-//                           "BrunelPhase/BrunelFinalFit",
+//                           "BrunelPhase/BrunelTruth",
                            "BrunelFinalisation/BrunelFinish" };
 #pragma print off
 #include "$BRUNELOPTS/BrunelMoni.opts"
@@ -44,6 +33,7 @@ ApplicationMgr.TopAlg += { "BrunelSicbInit",
 BrunelDigi.DetectorList = { "VELO" , "IT", "OT" , "RICH" , "CALO", "MUON" };
 BrunelTrigger.DetectorList = { "TRIGGER" };
 BrunelReco.DetectorList = {"VELO","OT","IT","Tr","TRACK","RICH","CALO","MUON"};
+BrunelTruth.DetectorList = { "Relations" };
 
 //--------------------------------------------------------------
 // Subdetector algorithms
@@ -61,7 +51,6 @@ BrunelReco.DetectorList = {"VELO","OT","IT","Tr","TRACK","RICH","CALO","MUON"};
 // Calorimeter digitisation and reconstruction (clustering)
 ApplicationMgr.DLLs += { "CaloSicbCnv", "CaloDetXmlCnv" };
 #include "$CALOTOOLSOPTS/Brunel.opts"
-#include "$CALOCAOPTS/Brunel.opts"
 #include "$CALOALGSOPTS/Brunel.opts"
 
 // Rich Fortran digitisation and OO digits creator 
@@ -73,8 +62,16 @@ ApplicationMgr.DLLs += { "ITSicbGeom" };
 #include "$ITALGORITHMSROOT/options/Brunel.opts"
 
 // Outer tracker digitisation and reconstruction (clustering)
-ApplicationMgr.DLLs += { "Magnet" };
-#include "$OTALGORITHMSROOT/options/Brunel.opts"
+ApplicationMgr.DLLs   += { "Magnet", "OTDet", "OTAlgorithms" };
+ApplicationMgr.ExtSvc += { "MagneticFieldSvc" };
+#include "$OTALGORITHMSROOT/options/otDigi.opts"
+BrunelDigiOTSeq.Members += { "OTInitialization",
+                             "MCOTDepositCreator",
+                             "MCOTDigitCreator",
+                             "OTDigitCreator" };
+#include "$OTALGORITHMSROOT/options/otRec.opts"
+BrunelRecoOTSeq.Members += { "OTClusterCreator" };
+
 
 // Velo digitisation and tracking
 ApplicationMgr.DLLs += { "VSicbCnv", "VeloDet", "VeloTrack" };
@@ -106,3 +103,15 @@ ApplicationMgr.DLLs += { "MuonSicbCnv", "MuonDet", "MuonRec", "MuonID" };
 BrunelDigiMUONSeq.Members = { "BrunelDigiMUON" };
 BrunelRecoMUONSeq.Members = { "MuonRec", "MuonIDFOI", "MuonDSTPrepare" };
 #include "$MUONIDROOT/options/MuonIDFOI.opts"
+
+// Relations for the DST
+
+// ITCluster2MCParticle already created by MoniTrSeq
+//ApplicationMgr.DLLs += { "ITAssociators" };
+//BrunelTruthRelationsSeq.Members += { "ITCluster2MCParticleAlg" };
+
+// OTCluster2MCParticle table causes core dump on writing
+//BrunelTruthRelationsSeq.Members += { "OTCluster2MCParticleAlg" };
+
+// Modify printout defaults
+#include "$BRUNELOPTS/BrunelMessage.opts"

@@ -1,5 +1,0 @@
-//--------------------------------------------------------------
-// Job options for Brunel when using $LHCBDBASE version v243r1
-// ------- "Realistic LHCb light, split TT1" detector ----------
-// Do not use for production, use v243r1p1 instead
-#include "$BRUNELOPTS/Brunelv243r1p1.opts"

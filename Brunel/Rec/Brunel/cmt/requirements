@@ -42,7 +42,7 @@ use HbookCnv           v12r0
 #---LHCb common libraries
 use GaudiConf    v6r3
 use BookKeeping  v1r1   Tools
-use LHCbKernel   v1r0   Kernel
+use LHCbKernel   v1r1   Kernel
 use Finclude     v12r2  SICB
 use Futio        v11    SICB
 
@@ -53,11 +53,12 @@ use RichKernel   v1r0   Rich
 use TrKernel     v10r0  Tr
 
 # Detector description
-use DetDesc      v10r1  Det
-use XmlDDDB      v11r0  Det
+use DetDesc      v10r2  Det
+use XmlDDDB      v12r0  Det
 use CaloDet       v4r0  Det
 use CaloDetXmlCnv v1r0  Det
 use MuonDet       v3r0  Det
+use OTDet         v1r0  Det
 use VeloDet       v5r0  Det
 use Magnet        v1r0  Det
 
@@ -92,19 +93,20 @@ use CaloInterfaces v2r1 Calo
 use CaloUtils      v2r1 Calo
 use CaloTools      v2r0 Calo
 use CaloAlgs       v5r1 Calo
-use CaloCA         v4r1 Calo
 
 # Velo
 use VeloDigit     v2r0   Velo
 
 # Inner Tracker
 use ITAlgorithms  v10r0  IT
+use ITAssociators  v1r0  IT
 
 # Outer Tracker
 use OTAlgorithms  v10r0  OT
+use OTAssociators  v1r0  OT
 
 # Tracking
-use TrFitEvent     v1r0  Tr
+use TrFitEvent     v1r1  Tr
 #use TrAlgorithms  v7r1  Tr
 
 use VeloTrack      v2r0  Velo

@@ -11,14 +11,16 @@ EventSelector.Input = {"JOBID='86160'"}; // Signal, evtype 412100
 
 // Define outputs
 HistogramPersistencySvc.OutputFile = "brunel_v243r1p1.hbook";  // Monit. hists
+#include "$BRUNELOPTS/BrunelDst.opts" // Enable DST output and define DST content
+BrunelDstWriter.Output = "DATAFILE='dst_86160.root' TYP='ROOT' OPT='NEW'";
 
 //--------------------------------------------------------------
 #include "$BRUNELOPTS/Brunel.opts"  // Generic options for all jobs
 //--------------------------------------------------------------
 // Database specific options
 //--------------------------------------------------------------
-#include "$BRUNELOPTS/BrunelTrLight.opts" // Material and cuts, standard tracking
 #include "$BRUNELOPTS/BrunelTrSiTT12.opts"  // dbase v243r1 tracking layout
+DetectorDataSvc.DetDbLocation = "$XMLDDDBROOT/DDDB/v243r1p1.xml";
 
 //--------------------------------------------------------------
 // Add here your specific options. These over-ride previously defined options

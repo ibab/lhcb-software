@@ -62,4 +62,7 @@ BrunelDstWriter.ItemList =
 , "/Event/Rec/Muon/M4/Coords#1" // Filtered (only if used by MuonID)
 , "/Event/Rec/Muon/M5/Coords#1" // Filtered (only if used by MuonID)
 , "/Event/Rec/Muon/MuonID#1"
+  // Relations
+, "/Event/Rec/Relations/ITClusters2MCParticles#1"
+  //, "/Event/Rec/Relations/OTClusters2MCParticles#1" core dumps on writing!
 };

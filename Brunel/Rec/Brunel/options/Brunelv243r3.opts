@@ -15,14 +15,14 @@ EventSelector.Input = {"JOBID='92119'"}; // evtype 412100 RAWH3 signal
 
 // Define outputs
 HistogramPersistencySvc.OutputFile = "brunel_v243r3.hbook";  // Monitoring histos
-#include "$BRUNELOPTS/BrunelDst.opts"  // Define DST content
+#include "$BRUNELOPTS/BrunelDst.opts" // Enable DST output and define DST content
 BrunelDstWriter.Output = "DATAFILE='dst_92119.root' TYP='ROOT' OPT='NEW'";
 
 //--------------------------------------------------------------
 // Database specific options
 //--------------------------------------------------------------
-#include "$BRUNELOPTS/BrunelTrLight.opts"    // Material, standard tracking
 #include "$BRUNELOPTS/BrunelTrOtItTT1.opts"  // dbase v243r3 tracking layout
+DetectorDataSvc.DetDbLocation = "$XMLDDDBROOT/DDDB/v243r3.xml";
 
 //--------------------------------------------------------------
 // Add here your specific options. These over-ride previously defined options
