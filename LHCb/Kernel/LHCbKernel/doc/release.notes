@@ -3,6 +3,16 @@ Package manager: M.Cattaneo
 Purpose: LHCb specific Kernel classes 
 
 ! =============================================================================
+! 9 Apr 2002:  Vanya Belyaev Ivan.Belyaev@itep.ru 
+! - AssociatorBase.cpp: AssociatorBase::locateAlgorithm() 
+!                       replace few clear and VALID lines with 
+!                       smaller number of less clear and potentially 
+!                       dangerouse lines to avoid misteriouse segmentation 
+!                       faults. The solution is temporary. One need to 
+!                       investigate it in detail later. 
+! =============================================================================
+
+! =============================================================================
 ! 9 Apr 2002:  Vanya BElyaev Ivan.Belyaev@itep.ru 
 !   add "virtual" qualifier for public inheritance from "Relation*" - bases
 !   to following following classes:

@@ -1,8 +1,11 @@
-// $Id: AssociatorBase.cpp,v 1.2 2002-04-08 21:03:08 ibelyaev Exp $
+// $Id: AssociatorBase.cpp,v 1.3 2002-04-09 08:52:05 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2002/04/08 21:03:08  ibelyaev
+//  bug fix in constructors (non-initialized pointers)
+//
 // Revision 1.1  2002/04/08 14:26:02  ibelyaev
 //  new version of 'Relations'-subpackage
 //
@@ -290,9 +293,18 @@ StatusCode Relations::AssociatorBase::Exception
 // ============================================================================
 
 // ============================================================================
-/** locate relation table in Gaudi Event Transient Store 
- *  or call for Relation builder to build and register 
- *  the relation table in Gaudi Event Transient Store 
+/** The "base" method for access the relation data 
+ *
+ *  @attention it is virtual method ! One coudl 
+ *  redefine it for "specific" behaviour 
+ *
+ *  'Default' behaviour:
+ *  
+ *   - locate relation table in Gaudi Event Transient Store 
+ *   - call for Relation builder algorithm to build and 
+ *     register  the relation table in Gaudi Event Transient Store
+ *   - again locate relation table in Gaudi Event Transient Store 
+ *
  *  @return status code 
  */
 // ============================================================================
@@ -306,13 +318,13 @@ StatusCode Relations::AssociatorBase::locateOrBuild () const
   // (2) get the builder 
   if( 0 == algorithm () ) { return Error("'Builder' is invalid!"        ) ; }
   // (3) use builder to build relation tables
-  StatusCode sc = algorithm()->sysExecute() ;
+  StatusCode sc = algorithm() -> sysExecute() ;
   if( sc.isFailure   () ) { return Error("Error form 'Builder'!"  ,  sc ) ; }
   // (4) locate data in ETS again
   SmartDataPtr<IInterface> object2( evtSvc() , location () );
   if( !object2 ) { return Error("Data after builder are not available!" ) ; }
-  m_object = object2 ;
-  m_object->addRef() ;
+  m_object =  object2 ;
+  m_object -> addRef() ;
   return StatusCode::SUCCESS ;
 };
 // ============================================================================
@@ -340,12 +352,10 @@ StatusCode Relations::AssociatorBase::locateAlgorithm() const
   if( m_builderType.empty() ) { return StatusCode::FAILURE     ; }
   if( m_builderName.empty() ) { m_builderName = m_builderType  ; }
   // Get the algorithm's manager 
-  IInterface* tmp = 0 ;
-  StatusCode sc = 
-    serviceLocator()->getService( "" , IAlgManager::interfaceID() , tmp );
+  IAlgManager* algMgr = 0 ;
+  StatusCode sc = serviceLocator()->
+    getService( "" , IAlgManager::interfaceID() , (IInterface*&) algMgr );
   if( sc.isFailure() ) { return Error("Could not locate IAlgManager 1", sc );}
-  if( 0 == tmp       ) { return Error("Could not locate IAlgManager 2"     );}
-  IAlgManager* algMgr = dynamic_cast<IAlgManager*> ( tmp );
   if( 0 == algMgr    ) { return Error("Could not locate IAlgManager 3"     );}
   // check the existence of the algorithm
   typedef std::list<IAlgorithm*> Algs;
@@ -354,18 +364,18 @@ StatusCode Relations::AssociatorBase::locateAlgorithm() const
     {
       if( 0 == *ia                       ) { continue ; }
       if( (*ia)->name() != m_builderName ) { continue ; }
-      /// algorithm is found ! 
+      // algorithm is found ! 
       m_algorithm = *ia ;
       m_algorithm -> addRef() ;
       return StatusCode::SUCCESS ;                         // RETURN ! 
     }
-  // algorithm is nor foundt create it! 
+  // algorithm is nor found: try to create it! 
   sc = algMgr->createAlgorithm( m_builderType , m_builderName , m_algorithm );
   if( sc.isFailure()   ) { return Error("Could not create algorithm!", sc ) ; }
   if( 0 == m_algorithm ) { return Error("Could not create algorithm!"     ) ; }
-  // add the reference to the algorithm 
-  m_algorithm->addRef() ;
-  // execute the initializatin of the algorithm
+  // add the reference to the new algorithm 
+  m_algorithm -> addRef() ;
+  // initialize the new algorithm
   sc = m_algorithm->sysInitialize() ;
   if( sc.isFailure() ) { return Error( "Error from algorithm initialization!");}
   //
