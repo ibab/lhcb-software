@@ -49,8 +49,11 @@ Purpose: LHCb reconstruction program
      the FIELDMAPROOT environment variable, to choose another field map
    . Removed VeloRound, round() function now implemented in Kernel/LHCbMath.h
      (LHCbKernel v4r3, VeloKernel v1r4, VeloDet v8r8p1, VeloAlgorithms v2r9p1)
-   . Adapted to new base classes for algorithms and tools
-     (CaloMonitor v2r0, CaloReco v2r0, CaloPIDs v2r0)
+   . Adapted to new base classes for algorithms and tools. 
+     Adds printout of tools not finalised
+     (GaudiAlg v7r0, GaudiTools v8r1, LHCbKernel v4r4, CaloMonitor v2r0, 
+      CaloReco v2r0, CaloPIDs v2r0, RichMCTools v1r1, RichRecMCTools v1r3, 
+      RichRecQC v1r6, RichRecSys v1r8)
    . Valgrind error suppression file for Gaudi and external package errors moved
      to $STDOPTS/Gaudi.supp (GaudiConf v7r6, valgrind.job)
 
