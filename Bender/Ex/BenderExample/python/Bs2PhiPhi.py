@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: Bs2PhiPhi.py,v 1.1 2004-08-06 12:12:03 ibelyaev Exp $
+# $Id: Bs2PhiPhi.py,v 1.2 2004-11-12 14:24:42 ibelyaev Exp $
 # =============================================================================
 # CVS tag $Name: not supported by cvs2svn $
 # =============================================================================
@@ -13,7 +13,7 @@
 
 # import the Bender itself  
 from   bendermodule  import *
-import benderconfig  as bender 
+
 import benderPreLoad as preload
 
 # =============================================================================
@@ -76,41 +76,42 @@ class Bs2PhiPhi(Algo):
 # =============================================================================
 def configure () :
     # Generic job configuration & input data 
-    bender.config( files   =
-                   [ '$BENDEREXAMPLEOPTS/BenderExample.opts' ,   # general options 
-                     '$BENDEREXAMPLEOPTS/PoolCatalogs.opts'  ,   # pool catalogs
-                     '$LOKIEXAMPLEOPTS/Bs_phiphi_DC04.opts'  ] , # input data 
-                   options =
-                   [ 'EcalPIDmu.OutputLevel     =   5  ' ,
-                     'HcalPIDmu.OutputLevel     =   5  ' ,
-                     'EcalPIDe.OutputLevel      =   5  ' ,
-                     'HcalPIDe.OutputLevel      =   5  ' ,
+    gaudi.config( files   =
+                  [ '$BENDEREXAMPLEOPTS/BenderExample.opts' ,   # general options 
+                    '$BENDEREXAMPLEOPTS/PoolCatalogs.opts'  ,   # pool catalogs
+                    '$LOKIEXAMPLEOPTS/Bs_phiphi_DC04.opts'  ] , # input data 
+                  options =
+                  [ 'EcalPIDmu.OutputLevel     =   5  ' ,
+                    'HcalPIDmu.OutputLevel     =   5  ' ,
+                    'EcalPIDe.OutputLevel      =   5  ' ,
+                    'HcalPIDe.OutputLevel      =   5  ' ,
                      'BremPIDe.OutputLevel      =   5  ' ,
-                     'PrsPIDe.OutputLevel       =   5  ' ,
-                     'NeutralPP2MC.OutputLevel  =   5  ' ,
-                     'Hadrons.OutputLevel       =   5  ' ,
-                     'EventSelector.PrintFreq   = 100  ' ] )
+                    'PrsPIDe.OutputLevel       =   5  ' ,
+                    'NeutralPP2MC.OutputLevel  =   5  ' ,
+                    'Hadrons.OutputLevel       =   5  ' ,
+                    'EventSelector.PrintFreq   = 100  ' ] )
     
     # specific job configuration 
     # preload algorithm(s)
-    g.topAlg += ['LoKiPreLoad/Hadrons']
+    gaudi.addAlgorithm( 'LoKiPreLoad/Hadrons' ) 
     preload.Hadrons( Particles = [ 'kaon' , 'pion'] )
     
     # create analysis algorithm and add it to the list of
     bs = Bs2PhiPhi('Bs2PhiPhi')
+    gaudi.addAlgorithm( bs ) 
     
-    g.topAlg += [ 'Bs2PhiPhi' ]
-    
-    bs = gaudi.iProperty('Bs2PhiPhi')
+    bs = gaudi.algorithm('Bs2PhiPhi')
     bs.OutputLevel = 5
     bs.NTupleLUN  = "PHIPHI"
-    desktop                 = g.property('Bs2PhiPhi.PhysDesktop')
+    
+    desktop = gaudi.tool('Bs2PhiPhi.PhysDesktop')
     desktop.InputLocations  = [ "/Event/Phys/Hadrons"]
     
     # output histogram file 
-    hsvc = g.property( 'HistogramPersistencySvc' )
+    hsvc = gaudi.service( 'HistogramPersistencySvc' )
     hsvc.OutputFile = 'phi.hbook'
-    nsvc = gaudi.iProperty( 'NTupleSvc' )
+    
+    nsvc = gaudimodule.iProperty( 'NTupleSvc' )
     nsvc.Output += [ "PHIPHI DATAFILE='bs2phiphi_tup.hbook' TYP='HBOOK' OPT='NEW'" ]
 
     return SUCCESS
@@ -120,15 +121,12 @@ def configure () :
 # =============================================================================
 if __name__ == '__main__' :
     import sys 
-    # analyse the options
-    nEvents = bender.getNEvents( sys.argv[1:] )
-    if not nEvents : nEvents = 1000 
     # configure the job 
     configure()
     # execute 
-    g.run( nEvents )
+    gaudi.run( 100  )
     # terminate 
-    g.exit()
+    gaudi.exit()
   
 # =============================================================================
 # $Log: not supported by cvs2svn $

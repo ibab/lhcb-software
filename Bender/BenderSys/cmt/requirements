@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.36 2004-11-08 17:27:29 ibelyaev Exp $ 
+# $Id: requirements,v 1.37 2004-11-12 14:27:04 ibelyaev Exp $ 
 # =============================================================================
 # CVS tag $Name: not supported by cvs2svn $
 # =============================================================================
@@ -6,7 +6,7 @@
 #                 LHCb Physics Analysis with Python  
 # =============================================================================
 package       BenderSys
-version       v4r2p1
+version       v4r2
 author        Vanya BELYAEV
 
 # =========== Bender Application itself =======================================
@@ -26,7 +26,7 @@ use           BenderTutor    v4r2   Tutorial
 use           BenderTest     v4r0   Tests 
 use           LoKiTest       v3r3   Tests 
 # =========== examples of usage of Bender "in practice" =======================
-use           BenderExample  v4r0   Ex  
+use           BenderExample  v4r2   Ex  
 use           LoKiExample    v3r3p2 Ex 
 # =========== Test suit for Bender ============================================
 use           BenderVis      v4r2   Vis 
@@ -39,6 +39,9 @@ use           LoKiHybrid     v1r0p1 Tools
 
 # =============================================================================
 # $Log: not supported by cvs2svn $
+# Revision 1.36  2004/11/08 17:27:29  ibelyaev
+#  v4r2p1
+#
 # =============================================================================
 # The END 
 # =============================================================================

@@ -1,5 +1,6 @@
 #!/usr/bin/env python
-# $Id: MCJPsiKstar.py,v 1.3 2004-08-06 12:12:03 ibelyaev Exp $
+# =============================================================================
+# $Id: MCJPsiKstar.py,v 1.4 2004-11-12 14:24:42 ibelyaev Exp $
 # =============================================================================
 # CVS tag $Name: not supported by cvs2svn $ 
 # =============================================================================
@@ -12,7 +13,6 @@
 
 # import the Bender itself  
 from   bendermodule import *
-import benderconfig as bender 
 
 # =============================================================================
 # Specific physics analysis algorithm 
@@ -36,60 +36,58 @@ class MCJPsiKstar(Algo):
 # job configuration 
 # =============================================================================
 def configure() :
-    bender.config( files   =
-                   [ '$BENDEREXAMPLEOPTS/BenderExample.opts' ,   # general options 
-                     '$BENDEREXAMPLEOPTS/PoolCatalogs.opts'  ,   # pool catalogs
-                     '$BENDEREXAMPLEOPTS/Bd_JpsiKst.opts'    ] , # input data 
-                   options =
-                   [ 'EcalPIDmu.OutputLevel     =   5  ' ,
-                     'HcalPIDmu.OutputLevel     =   5  ' ,
-                     'EcalPIDe.OutputLevel      =   5  ' ,
-                     'HcalPIDe.OutputLevel      =   5  ' ,
-                     'BremPIDe.OutputLevel      =   5  ' ,
-                     'PrsPIDe.OutputLevel       =   5  ' ,
-                     'NeutralPP2MC.OutputLevel  =   5  ' ,
-                     'EventSelector.PrintFreq   =  50  ' ] )
+    gaudi.config( files   =
+                  [ '$BENDEREXAMPLEOPTS/BenderExample.opts' ,   # general options 
+                    '$BENDEREXAMPLEOPTS/PoolCatalogs.opts'  ,   # pool catalogs
+                    '$BENDEREXAMPLEOPTS/Bd_JpsiKst.opts'    ] , # input data 
+                  options =
+                  [ 'EcalPIDmu.OutputLevel     =   5  ' ,
+                    'HcalPIDmu.OutputLevel     =   5  ' ,
+                    'EcalPIDe.OutputLevel      =   5  ' ,
+                    'HcalPIDe.OutputLevel      =   5  ' ,
+                    'BremPIDe.OutputLevel      =   5  ' ,
+                    'PrsPIDe.OutputLevel       =   5  ' ,
+                    'NeutralPP2MC.OutputLevel  =   5  ' ,
+                    'EventSelector.PrintFreq   =  50  ' ] )
     
     # specific job configuration 
     # create analysis algorithm and add it to the list of
     alg = MCJPsiKstar('MC')
     
-    g.topAlg = [ 'MC' ]
+    gaudi.setAlgorithms( [ alg ] ) 
     
-    alg = gaudi.iProperty('MC')
+    alg = gaudi.algorithm('MC')
     alg.OutputLevel = 5
     alg.NTupleLUN    = 'MC'
     
-    desktop                 = g.property('Dstar.PhysDesktop')
+    desktop = gaudi.tool('Dstar.PhysDesktop')
     desktop.InputLocations  = [ "/Event/Phys/Charged"]
     
     # output histogram file 
-    hsvc = g.property( 'HistogramPersistencySvc' )
+    hsvc = gaudi.service( 'HistogramPersistencySvc' )
     hsvc.OutputFile = 'mc.hbook'
     
-    nsvc = gaudi.iProperty( 'NTupleSvc' )
+    nsvc = gaudi.service( 'NTupleSvc' )
     nsvc.Output =[ "DSTAR DATAFILE='mc_tup.hbook' TYP='HBOOK' OPT='NEW'" ]
 
     return SUCCESS
-
-# =============================================================================
-# job execution 
 # =============================================================================
 
+# =============================================================================
+# job steering
+# =============================================================================
 if __name__ == '__main__' :
     import sys 
-    # analyse the options
-    nEvents = bender.getNEvents( sys.argv[1:] )
-    if not nEvents : nEvents = 100 
     # configure the job
     configure() 
     # run job 
-    g.run  ( nEvents )
+    gaudi.run  ( 100 )
     # terminate the Application Manager 
-    g.exit ()
+    gaudi.exit ()
+# =============================================================================
 
 # =============================================================================
-# The END 
-# =============================================================================
 # $Log: not supported by cvs2svn $
+# =============================================================================
+# The END 
 # =============================================================================

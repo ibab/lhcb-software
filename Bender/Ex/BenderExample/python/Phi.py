@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: Phi.py,v 1.8 2004-08-06 12:12:03 ibelyaev Exp $
+# $Id: Phi.py,v 1.9 2004-11-12 14:24:42 ibelyaev Exp $
 # =============================================================================
 # CVS tag $Name: not supported by cvs2svn $
 # =============================================================================
@@ -13,7 +13,6 @@
 
 # import the Bender itself  
 from   bendermodule  import *
-import benderconfig  as bender 
 import benderPreLoad as preload
 
 global h1 
@@ -46,40 +45,40 @@ class Phi(Algo):
 # Generic job configuration 
 # =============================================================================
 def configure() :
-    bender.config( files   =
-                   [ '$BENDEREXAMPLEOPTS/BenderExample.opts' ,   # general options 
-                     '$BENDEREXAMPLEOPTS/PoolCatalogs.opts'  ,   # pool catalogs
-                     '$LOKIEXAMPLEOPTS/Bs_phiphi_DC04.opts'  ] , # input data 
-                   options =
-                   [ 'EcalPIDmu.OutputLevel     =   5  ' ,
-                     'HcalPIDmu.OutputLevel     =   5  ' ,
-                     'EcalPIDe.OutputLevel      =   5  ' ,
-                     'HcalPIDe.OutputLevel      =   5  ' ,
-                     'BremPIDe.OutputLevel      =   5  ' ,
-                     'PrsPIDe.OutputLevel       =   5  ' ,
-                     'NeutralPP2MC.OutputLevel  =   5  ' ,
-                     'Hadrons.OutputLevel       =   5  ' ,
-                     'EventSelector.PrintFreq   = 100  ' ] )
+    gaudi.config( files   =
+                  [ '$BENDEREXAMPLEOPTS/BenderExample.opts' ,   # general options 
+                    '$BENDEREXAMPLEOPTS/PoolCatalogs.opts'  ,   # pool catalogs
+                    '$LOKIEXAMPLEOPTS/Bs_phiphi_DC04.opts'  ] , # input data 
+                  options =
+                  [ 'EcalPIDmu.OutputLevel     =   5  ' ,
+                    'HcalPIDmu.OutputLevel     =   5  ' ,
+                    'EcalPIDe.OutputLevel      =   5  ' ,
+                    'HcalPIDe.OutputLevel      =   5  ' ,
+                    'BremPIDe.OutputLevel      =   5  ' ,
+                    'PrsPIDe.OutputLevel       =   5  ' ,
+                    'NeutralPP2MC.OutputLevel  =   5  ' ,
+                    'Hadrons.OutputLevel       =   5  ' ,
+                    'EventSelector.PrintFreq   = 100  ' ] )
     
     # specific job configuration 
     
     # preload algorithm(s)
-    g.topAlg += ['LoKiPreLoad/Hadrons']
+    gaudi.addAlgorithm ( 'LoKiPreLoad/Hadrons' ) 
     preload.Hadrons( Particles = [ 'kaon' , 'pion'] )
     
     # create analysis algorithm and add it to the list of
     phi = Phi('Phi')
     
-    g.topAlg += [ 'Phi' ]
+    gaudi.addAlgorithm ( phi ) 
     
-    phi = gaudi.iProperty('Phi')
+    phi = gaudi.algorithm('Phi')
     phi.OutputLevel = 5
     
-    desktop                 = g.property('Phi.PhysDesktop')
+    desktop = gaudi.tool('Phi.PhysDesktop')
     desktop.InputLocations  = [ "/Event/Phys/Hadrons"]
     
     # output histogram file 
-    hsvc = g.property( 'HistogramPersistencySvc' )
+    hsvc = gaudi.service( 'HistogramPersistencySvc' )
     hsvc.OutputFile = 'phi.hbook'
 
     return SUCCESS
@@ -90,15 +89,12 @@ def configure() :
 
 if __name__ == '__main__' :
     import sys 
-    # analyse the options
-    nEvents = bender.getNEvents( sys.argv[1:] )
-    if not nEvents : nEvents = 1000
     # configure the job
     configure() 
     # run job 
-    g.run  ( nEvents )
+    gaudi.run  ( 100  )
     # terminate the Application Manager 
-    g.exit ()
+    gaudi.exit ()
     
 # =============================================================================
 # $Log: not supported by cvs2svn $

@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: TES.py,v 1.3 2004-08-06 12:12:03 ibelyaev Exp $
+# $Id: TES.py,v 1.4 2004-11-12 14:24:42 ibelyaev Exp $
 # =============================================================================
 # CVS tag $Name: not supported by cvs2svn $ 
 # =============================================================================
@@ -68,7 +68,7 @@ def configure() :
     # create analysis algorithm and add it to the list of
     alg = TES('TES')
     alg = TES('TES1')
-    g.topAlg = [ 'TES' , 'TES1' ]
+    gaudi.setAlgorithms ( [ 'TES' , 'TES1' ] ) 
 
     return SUCCESS 
 
@@ -78,15 +78,12 @@ def configure() :
 
 if __name__ == '__main__' :
     import sys 
-    # analyse the options
-    nEvents = bender.getNEvents( sys.argv[1:] )
-    if not nEvents : nEvents = 10 
     # configure the job
     configure() 
     # run job
-    g.run  ( nEvents )
+    gaudi.run  ( 5 )
     # terminate the Application Manager 
-    g.exit ()
+    gaudi.exit ()
     
 # =============================================================================
 # $Log: not supported by cvs2svn $

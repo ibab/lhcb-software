@@ -1,4 +1,4 @@
-// $Id: BenderExample.opts,v 1.2 2004-08-06 12:12:02 ibelyaev Exp $ 
+// $Id: BenderExample.opts,v 1.3 2004-11-12 14:24:42 ibelyaev Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
@@ -18,6 +18,7 @@
 #include "$DAVINCIROOT/options/DaVinciCommon.opts"
 #include "$DAVINCIROOT/options/DaVinciReco.opts"
 #include "$DAVINCIROOT/options/DaVinciNeutrals.opts"
+#include "$EVENTSYSROOT/options/PoolDicts.opts"
 #pragma print on
 
 // Histogram persistency 
@@ -25,7 +26,7 @@ ApplicationMgr.HistogramPersistency = "HBOOK";
 HistogramPersistencySvc.OutputFile = "DVHistos.hbook";
 
 // Ntuples available by default. Comment to switch off
-ApplicationMgr.ExtSvc += { "NTupleSvc" };
+ApplicationMgr.ExtSvc += { "NTupleSvc" } ;
 NTupleSvc.Output={"FILE1 DATAFILE='DVNtuples.hbook' TYP='HBOOK' OPT='NEW'"};
 // NTupleSvc.Output={"FILE1 DATAFILE='DVNtuples.root' TYP='ROOT' OPT='NEW'"};
 
@@ -47,7 +48,6 @@ MessageSvc.Format = "% F%60W%S%7W%R%T %0W%M";
 ApplicationMgr.EvtMax    = 500;
 EventSelector.FirstEvent = 1;
 EventSelector.PrintFreq  = 1;
-
 
 // ============================================================================
 // The END 

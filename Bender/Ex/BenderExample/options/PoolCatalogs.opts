@@ -1,11 +1,16 @@
+// $Id: PoolCatalogs.opts,v 1.2 2004-11-12 14:24:42 ibelyaev Exp $ 
+// ============================================================================
+// CVS tag $Name: not supported by cvs2svn $ 
+// ============================================================================
+
 PoolDbCacheSvc.Catalog = 
   {
     // Ex/BenderExample
-    "xmlcatalog_file:$BENDEREXAMPLEOPTS/BenderExampleMutableCatalog.xml"  ,
+    "xmlcatalog_file:$HOME/BenderExampleMutableCatalog.xml"  ,
     "xmlcatalog_file:$BENDEREXAMPLEOPTS/Bd_DstA1.xml"        ,
     "xmlcatalog_file:$BENDEREXAMPLEOPTS/Bd_JpsiKst.xml"      ,       
     "xmlcatalog_file:$BENDEREXAMPLEOPTS/Bd_JpsiKst.xml"      ,       
-    "xmlcatalog_file:$BENDEREXAMPLEOPTS/BBinclusive.xml"      ,       
+    "xmlcatalog_file:$BENDEREXAMPLEOPTS/BBinclusive.xml"     ,       
     // Ex/LoKiExample
     "xmlcatalog_file:$LOKIEXAMPLEOPTS/Bd_Kstgamma_DC04.xml"  ,
     "xmlcatalog_file:$LOKIEXAMPLEOPTS/Bs_Jpsiphimm_DC04.xml" ,
@@ -13,3 +18,7 @@ PoolDbCacheSvc.Catalog =
     "xmlcatalog_file:$LOKIEXAMPLEOPTS/Bs_phiphi_DC04.xml"    ,
     "xmlcatalog_file:$LOKIEXAMPLEOPTS/Mixture_DC04.xml"
   };
+
+// ============================================================================
+// The END 
+// ============================================================================
