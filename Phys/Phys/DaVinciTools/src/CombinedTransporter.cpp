@@ -1,4 +1,4 @@
-// $Id: CombinedTransporter.cpp,v 1.3 2002-07-24 18:20:37 gcorti Exp $
+// $Id: CombinedTransporter.cpp,v 1.4 2002-10-21 21:31:22 gcorti Exp $
 // Include files 
 
 // Utility Classes
@@ -103,9 +103,11 @@ StatusCode CombinedTransporter::transport(ParticleVector::const_iterator& iterP,
   }
   
   if ( zl < -500.0 || zr > 21000.0 ){
-    log << MSG::DEBUG << " z is out of range, z < -500.0 or z > 21000.0" 
+    log << MSG::WARNING << " z is out of range, z < -500.0 or z > 21000.0" 
         << endreq;    
+    return StatusCode::FAILURE;
   }
+
   
   // ipz = 1 upstream tracks; ipz = -1 downstream tracks
   
@@ -167,9 +169,11 @@ StatusCode CombinedTransporter::transport(const Particle& iterP,
   }
   
   if ( zl < -500.0 || zr > 21000.0 ){
-    log << MSG::DEBUG << " z is out of range, z < -500.0 or z > 21000.0" 
+    log << MSG::WARNING << " z is out of range, z < -500.0 or z > 21000.0" 
         << endreq;    
+    return StatusCode::FAILURE;
   }
+
   
   // ipz = 1 upstream tracks; ipz = -1 downstream tracks
   
@@ -232,9 +236,11 @@ StatusCode CombinedTransporter::transport(Particle& iterP,
   }
   
   if ( zl < -500.0 || zr > 21000.0 ){
-    log << MSG::DEBUG << " z is out of range, z < -500.0 or z > 21000.0" 
+    log << MSG::WARNING << " z is out of range, z < -500.0 or z > 21000.0" 
         << endreq;    
+    return StatusCode::FAILURE;
   }
+
   
   // ipz = 1 upstream tracks; ipz = -1 downstream tracks
   
