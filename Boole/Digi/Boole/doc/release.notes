@@ -26,6 +26,7 @@ Requires data produced by Gauss v14r3 or greater
 
 - Bug fixes
   . Fix large memory leak (Savannah bug 2821) (L0mConf v2r2)
+  . Fix a rounding problem (Savannah bug 2914) (MuonAlgs v5r3)
   . Fix a compiler warning (L0MuonKernel v1r1)
   . Use public instead of private tool (L0MuonTrigger v1r1)
   . Add protection for dead regions on Velo sensor (VeloAlgorithms v2r9p2)
