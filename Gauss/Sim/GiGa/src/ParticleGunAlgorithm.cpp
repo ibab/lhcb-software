@@ -43,7 +43,7 @@ const        IAlgFactory&                      ParticleGunAlgorithmFactory = s_P
 /// 
 
 ParticleGunAlgorithm::ParticleGunAlgorithm( const std::string& AlgorithmName  , 
-					    ISvcLocator*       ServiceLocator )
+                                            ISvcLocator*       ServiceLocator )
   : Algorithm( AlgorithmName , ServiceLocator ) 
   ///
   , m_NameParticlePropertySvc          ( "ParticlePropertySvc" ) 
@@ -97,15 +97,15 @@ StatusCode ParticleGunAlgorithm::initialize()
   ///
 
   status = serviceLocator()->getService( m_NameParticlePropertySvc            , 
-					 IID_IParticlePropertySvc             , 
-					 (IInterface*&) m_ParticlePropertySvc ); 
+                                         IID_IParticlePropertySvc             , 
+                                         (IInterface*&) m_ParticlePropertySvc ); 
   if ( status.isFailure() || 0 == m_ParticlePropertySvc ) 
     { return status.isFailure() ? status : status = StatusCode::FAILURE ; }  
   ///
   if( 0 == ppSvc()             ) 
     {
       log << MSG::ERROR << "Particle Property Service with name="  
-	  << m_NameParticlePropertySvc << "\tcould not be located!" << endreq; 
+          << m_NameParticlePropertySvc << "\tcould not be located!" << endreq; 
       return StatusCode::FAILURE; 
     }
   ///
@@ -118,7 +118,7 @@ StatusCode ParticleGunAlgorithm::initialize()
   if( 0 == m_ParticleProperty ) 
     { 
       log << MSG::ERROR 
-	  << "Could not find properties for particle, named\t" << m_ParticleName << endreq ; 
+          << "Could not find properties for particle, named\t" << m_ParticleName << endreq ; 
       return StatusCode::FAILURE; 
     } 
   
@@ -129,8 +129,8 @@ StatusCode ParticleGunAlgorithm::initialize()
   while( m_AuxVertexPosition.size() < 3 ){ m_AuxVertexPosition.push_back( 0 ) ; } 
   
   m_PrimaryVertexPosition = HepPoint3D( m_AuxVertexPosition[0] , 
-					m_AuxVertexPosition[1] , 
-					m_AuxVertexPosition[2] ) ;  
+                                        m_AuxVertexPosition[1] , 
+                                        m_AuxVertexPosition[2] ) ;  
   ///
   /// Extract Particle Momentum 
   /// 
@@ -138,8 +138,8 @@ StatusCode ParticleGunAlgorithm::initialize()
     { m_AuxParticleMomentum.insert( m_AuxParticleMomentum.begin() , 0 ) ; } 
 
   m_ParticleMomentum      = HepVector3D( m_AuxParticleMomentum[0] , 
-					 m_AuxParticleMomentum[1] , 
-					 m_AuxParticleMomentum[2] ) ;
+                                         m_AuxParticleMomentum[1] , 
+                                         m_AuxParticleMomentum[2] ) ;
   ///
   
   log << MSG::INFO 
@@ -202,14 +202,14 @@ StatusCode ParticleGunAlgorithm::execute()
     
     std::string::size_type pos = 0 ; 
     while( std::string::npos != pos )
-      {	
-	pos = dir.find_first_of('/', ++pos ); 
-	std::string dir1( dir , 0 , pos ); 
-	SmartDataPtr<IDataDirectory> d1( eventDataService() , dir1 );  
-	if( 0 != d1 ) { continue ; } 
-	DataObject* Obj = new DataObject; 
-	StatusCode   sc = eventDataService()->registerObject( dir1 , Obj ) ; 
-	if( sc.isFailure() ) { log << MSG::ERROR <<" could not create directory " << dir1 << endreq; return sc; } 
+      {        
+        pos = dir.find_first_of('/', ++pos ); 
+        std::string dir1( dir , 0 , pos ); 
+        SmartDataPtr<IDataDirectory> d1( eventDataService() , dir1 );  
+        if( 0 != d1 ) { continue ; } 
+        DataObject* Obj = new DataObject; 
+        StatusCode   sc = eventDataService()->registerObject( dir1 , Obj ) ; 
+        if( sc.isFailure() ) { log << MSG::ERROR <<" could not create directory " << dir1 << endreq; return sc; } 
       }
   }
   
@@ -221,13 +221,13 @@ StatusCode ParticleGunAlgorithm::execute()
     std::string::size_type pos = 0 ; 
     while( std::string::npos != pos ) 
       {
-	pos = dir.find_first_of('/',++pos); 
-	std::string dir1( dir , 0 , pos ); 
-	SmartDataPtr<IDataDirectory> d1( eventDataService() , dir1 );  
-	if( 0 != d1 ) { continue ; }  
-	DataObject* Obj = new DataObject; 
-	StatusCode   sc = eventDataService()->registerObject( dir1 , Obj ) ; 
-	if( sc.isFailure() ) { log << MSG::ERROR <<" could not create directory " << dir1 << endreq; return sc; } 
+        pos = dir.find_first_of('/',++pos); 
+        std::string dir1( dir , 0 , pos ); 
+        SmartDataPtr<IDataDirectory> d1( eventDataService() , dir1 );  
+        if( 0 != d1 ) { continue ; }  
+        DataObject* Obj = new DataObject; 
+        StatusCode   sc = eventDataService()->registerObject( dir1 , Obj ) ; 
+        if( sc.isFailure() ) { log << MSG::ERROR <<" could not create directory " << dir1 << endreq; return sc; } 
       } 
   }
   
@@ -239,9 +239,9 @@ StatusCode ParticleGunAlgorithm::execute()
     StatusCode sc = eventDataService()->registerObject( m_NameOfOutputMCVertexContainer , vertices) ; 
     if( sc.isFailure() ) 
       { 
-	if( 0 != vertices ) { delete vertices ; vertices = 0 ; } /// delete the container 
-	log << MSG::ERROR << "Unable to register the output container=" << m_NameOfOutputMCVertexContainer << endreq; 
-	return sc ;
+        if( 0 != vertices ) { delete vertices ; vertices = 0 ; } /// delete the container 
+        log << MSG::ERROR << "Unable to register the output container=" << m_NameOfOutputMCVertexContainer << endreq; 
+        return sc ;
       }
   }
   ///
@@ -252,7 +252,7 @@ StatusCode ParticleGunAlgorithm::execute()
     StatusCode sc = eventDataService()->registerObject( m_NameOfOutputMCParticleContainer , particles ) ; 
     if( sc.isFailure() ) 
       { 
-	if( 0 != particles ) { delete particles ; particles = 0 ; } /// delete the container 
+        if( 0 != particles ) { delete particles ; particles = 0 ; } /// delete the container 
       log << MSG::ERROR << "Unable to register the output container=" << m_NameOfOutputMCParticleContainer << endreq; 
       return sc ;
       }

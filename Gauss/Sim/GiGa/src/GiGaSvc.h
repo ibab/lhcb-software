@@ -43,7 +43,7 @@ class     IGiGaStepAction;
 
 
 class GiGaSvc: public         Service       , 
-	       virtual public IGiGaSvc      ,
+               virtual public IGiGaSvc      ,
                virtual public IGiGaSetUpSvc 
 {
   /////////////////////////////////////////////////////////////////////////////////
@@ -127,42 +127,42 @@ class GiGaSvc: public         Service       ,
   /////////////////////////////////////////////////////////////////////////////////
   inline void Assert( bool  assertion                              ,            /// 
                       const std::string& msg = "GiGaSvc::unknown"  ,            ///                      
-		      const StatusCode&  sc = StatusCode::FAILURE  ) ;          ///
+                      const StatusCode&  sc = StatusCode::FAILURE  ) ;          ///
   /////////////////////////////////////////////////////////////////////////////////
   inline void Assert( bool  assertion                              ,            /// 
                       const char*        msg                       ,            ///                      
-		      const StatusCode&  sc  = StatusCode::FAILURE ) ;          ///
+                      const StatusCode&  sc  = StatusCode::FAILURE ) ;          ///
   /////////////////////////////////////////////////////////////////////////////////
   inline StatusCode Error     ( const std::string    & msg ,  
-				const StatusCode     & sc  = StatusCode::FAILURE );
+                                const StatusCode     & sc  = StatusCode::FAILURE );
   inline StatusCode Warning   ( const std::string    & msg ,  
-				const StatusCode     & sc  = StatusCode::FAILURE );
+                                const StatusCode     & sc  = StatusCode::FAILURE );
   inline StatusCode Print     ( const std::string    & msg ,  
-				const MSG::Level     & lvl = MSG::INFO           ,
-				const StatusCode     & sc  = StatusCode::FAILURE );
+                                const MSG::Level     & lvl = MSG::INFO           ,
+                                const StatusCode     & sc  = StatusCode::FAILURE );
   inline StatusCode Exception ( const std::string    & msg  ,  
                                 const GaudiException & exc  , 
-				const MSG::Level     & lvl = MSG::FATAL           ,
-				const StatusCode     & sc  = StatusCode::FAILURE );
+                                const MSG::Level     & lvl = MSG::FATAL           ,
+                                const StatusCode     & sc  = StatusCode::FAILURE );
   inline StatusCode Exception ( const std::string    & msg  ,  
                                 const std::exception & exc  , 
-				const MSG::Level     & lvl = MSG::FATAL           ,
-				const StatusCode     & sc  = StatusCode::FAILURE );
+                                const MSG::Level     & lvl = MSG::FATAL           ,
+                                const StatusCode     & sc  = StatusCode::FAILURE );
   inline StatusCode Exception ( const std::string    & msg  ,  
-				const MSG::Level     & lvl = MSG::FATAL           ,
-				const StatusCode     & sc  = StatusCode::FAILURE );
+                                const MSG::Level     & lvl = MSG::FATAL           ,
+                                const StatusCode     & sc  = StatusCode::FAILURE );
   /////////////////////////////////////////////////////////////////////////////////
   StatusCode physList      ( const std::string& TypeAndName , 
-			     IGiGaPhysList*&    PhisicsList ) ;
+                             IGiGaPhysList*&    PhisicsList ) ;
   /////////////////////////////////////////////////////////////////////////////////
   StatusCode stackAction   ( const std::string& TypeAndName , 
-			     IGiGaStackAction*& StackAction ) ;
+                             IGiGaStackAction*& StackAction ) ;
   /////////////////////////////////////////////////////////////////////////////////
   StatusCode trackAction   ( const std::string& TypeAndName , 
-			     IGiGaTrackAction*& TrackAction ) ;
+                             IGiGaTrackAction*& TrackAction ) ;
   /////////////////////////////////////////////////////////////////////////////////
   StatusCode stepAction    ( const std::string& TypeAndName , 
-			     IGiGaStepAction*&  StepAction  ) ;
+                             IGiGaStepAction*&  StepAction  ) ;
   /////////////////////////////////////////////////////////////////////////////////
   
  private:
@@ -197,13 +197,13 @@ class GiGaSvc: public         Service       ,
 };
 ///////////////////////////////////////////////////////////////////////////////////
 inline void GiGaSvc::Assert( bool               assertion , 
-			     const std::string& msg       , 
-			     const StatusCode&  sc        ) 
+                             const std::string& msg       , 
+                             const StatusCode&  sc        ) 
 { if( !assertion ) { throw GiGaException( name() + msg , sc ) ; } };
 ///
 inline void GiGaSvc::Assert( bool               assertion , 
-			     const char*        msg       , 
-			     const StatusCode&  sc        ) 
+                             const char*        msg       , 
+                             const StatusCode&  sc        ) 
 { if( !assertion ) { throw GiGaException( name() + msg , sc ) ; } };
 ///////////////////////////////////////////////////////////////////////////////////
 inline StatusCode GiGaSvc::Error( const std::string& Message , const StatusCode & Status )
@@ -219,14 +219,14 @@ inline StatusCode GiGaSvc::Warning( const std::string& Message , const StatusCod
 };  
 ///////////////////////////////////////////////////////////////////////////////////
 inline StatusCode GiGaSvc::Print( const std::string& Message , 
-				  const MSG::Level & level   , 
-				  const StatusCode & Status )
+                                  const MSG::Level & level   , 
+                                  const StatusCode & Status )
 { MsgStream log( msgSvc() , name() ); log << level << Message << endreq ; return  Status; };  
 /////////////////////////////////////////////////////////////////////////////////// 
 inline StatusCode GiGaSvc::Exception( const std::string    & Message , 
                                       const GaudiException & Excp    ,
-				      const MSG::Level     & level   , 
-				      const StatusCode     & Status )
+                                      const MSG::Level     & level   , 
+                                      const StatusCode     & Status )
 {
   Stat stat( chronoSvc() , Excp.tag() );
   MsgStream log( msgSvc() , name() + ":"+Excp.tag() ); 
@@ -236,8 +236,8 @@ inline StatusCode GiGaSvc::Exception( const std::string    & Message ,
 /////////////////////////////////////////////////////////////////////////////////// 
 inline StatusCode GiGaSvc::Exception( const std::string    & Message , 
                                       const std::exception & Excp    ,
-				      const MSG::Level     & level   , 
-				      const StatusCode     & Status )
+                                      const MSG::Level     & level   , 
+                                      const StatusCode     & Status )
 {
   Stat stat( chronoSvc() , ":std::exception" );
   MsgStream log( msgSvc() , name() + ":std::exception" ); 
@@ -246,8 +246,8 @@ inline StatusCode GiGaSvc::Exception( const std::string    & Message ,
 };  
 ///////////////////////////////////////////////////////////////////////////////////
 inline StatusCode GiGaSvc::Exception( const std::string    & Message , 
-				      const MSG::Level     & level   , 
-				      const StatusCode     & Status )
+                                      const MSG::Level     & level   , 
+                                      const StatusCode     & Status )
 {
   Stat stat( chronoSvc() , ":*UNKNOWN* exception" );
   MsgStream log( msgSvc() , name() + ":UNKNOWN exception" ); 

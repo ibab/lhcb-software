@@ -32,7 +32,7 @@ class GiGaHitsCnvSvc:  public          GiGaCnvSvcBase   ,
 protected: 
   ///
   GiGaHitsCnvSvc( const std::string&  ServiceName          , 
-		  ISvcLocator*        ServiceLocator       );
+                  ISvcLocator*        ServiceLocator       );
   ///
   virtual ~GiGaHitsCnvSvc(){};
   ///

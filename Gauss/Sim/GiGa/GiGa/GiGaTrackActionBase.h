@@ -17,7 +17,7 @@
 */
 
 class GiGaTrackActionBase: virtual public IGiGaTrackAction   ,
-			   public  GiGaBase
+                           public  GiGaBase
 {
   ///
 protected:

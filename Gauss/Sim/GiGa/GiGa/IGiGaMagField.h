@@ -22,7 +22,7 @@
 */
 
 class IGiGaMagField: virtual public G4MagneticField , 
-		     virtual public IInterface 
+                     virtual public IInterface 
 {
   ///
  public:

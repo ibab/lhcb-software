@@ -2,10 +2,12 @@
 #include "GaudiKernel/ILVolume.h"
 #include "GaudiKernel/IPVolume.h"
 #include "GaudiKernel/IAddressCreator.h"
+#include "GaudiKernel/IDataSelector.h"
 #include "GaudiKernel/CnvFactory.h"
 #include "GaudiKernel/DataObject.h"
 /// DetDesc
 #include "DetDesc/CLIDLVolume.h"
+#include "DetDesc/LVolume.h"
 /// Geant4
 #include "G4LogicalVolume.hh"
 #include "G4LogicalVolumeStore.hh"
@@ -96,9 +98,19 @@ StatusCode GiGaLVolumeCnv::updateRep( DataObject*     Object  , IOpaqueAddress* 
       G4LogicalVolume*    LV = geoSvc()->g4LVolume( pv->lvolumeName() ); 
       if( 0 == LV ) { return Error("updateRep:: Could not convert daughter LVolume for "+lv->name() );}
       G4VPhysicalVolume*  PV = 
-	///	new G4PVPlacement( pv->matrix() , LV , lv->name()+"#"+pv->name() , G4LV , false , 0 );
-	new G4PVPlacement( pv->matrix().inverse() , LV , lv->name()+"#"+pv->name() , G4LV , false , iPV - lv->pvBegin() );
+        ///        new G4PVPlacement( pv->matrix() , LV , lv->name()+"#"+pv->name() , G4LV , false , 0 );
+        new G4PVPlacement( pv->matrix().inverse() , LV , lv->name()+"#"+pv->name() , G4LV , false , iPV - lv->pvBegin() );
     }
+  /// convert surfaces (if any) 
+  { 
+    IDataSelector ds; 
+    LVolume* doLV = dynamic_cast<LVolume*>(lv); 
+    if( 0 == doLV ) { return Error("Base clas LVolume is not available!") ; }
+    for( LVolume::Surfaces::iterator it = doLV->surfaces().begin() ; doLV->surfaces().end() != it ; ++it )
+      { ds.push_back( *it ); }
+    StatusCode sc = cnvSvc()->createReps( &ds );
+    if( sc.isFailure() ) { return Error("Could not convert surfaces!"); }
+  }
   /// look again at the G4 static store
   {
     G4LogicalVolumeStore& store = *G4LogicalVolumeStore::GetInstance();

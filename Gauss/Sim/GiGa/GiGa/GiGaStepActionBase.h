@@ -16,7 +16,7 @@
 */
 
 class GiGaStepActionBase: virtual public IGiGaStepAction   ,
-			  public  GiGaBase
+                          public  GiGaBase
 {
   ///
 protected:

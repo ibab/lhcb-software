@@ -1,5 +1,13 @@
 Package:          GiGa
-Package manager : Vanya Belyaev 
+Package manager : N.N. 
+
+!===========================================================================
+! 20010307 - Vanya Belyaev
+    (1) new converters for Surfaces 
+    (2) all material converters are updated to convert tabulated properties 
+    of materials 
+    (3) LVolume converters ar eupdated to convert the surfaces 
+    (4) remove "tab"s form all files 
 
 !===========================================================================
 ! 20010226 - Vanya Belyaev

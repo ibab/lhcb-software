@@ -44,7 +44,7 @@ class GiGaStream: public Algorithm
   ///
 
   GiGaStream( const std::string& StreamName    , 
-	      ISvcLocator*       SericeLocator ) ;
+              ISvcLocator*       SericeLocator ) ;
 
  
   ///

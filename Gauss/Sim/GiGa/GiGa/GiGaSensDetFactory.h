@@ -52,8 +52,8 @@ class GiGaSensDetFactory: public IGiGaSensDetFactory
   virtual IInterface* instantiate( IInterface* parent                          ) const 
     {
       ISvcLocator* loc = 
-	0 == parent                              ? Gaudi::svcLocator() : 
-	0 == dynamic_cast<ISvcLocator*> (parent) ? Gaudi::svcLocator() : dynamic_cast<ISvcLocator*>(parent);
+        0 == parent                              ? Gaudi::svcLocator() : 
+        0 == dynamic_cast<ISvcLocator*> (parent) ? Gaudi::svcLocator() : dynamic_cast<ISvcLocator*>(parent);
       return new ConcreteSD( sensDetType() , loc ); 
     }
   ///

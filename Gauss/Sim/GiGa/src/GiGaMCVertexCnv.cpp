@@ -119,14 +119,14 @@ StatusCode GiGaMCVertexCnv::updateObj( IOpaqueAddress*  Address , DataObject*   
       GiGaTrajectory*  gt = dynamic_cast<GiGaTrajectory*> ( tr ) ; 
       if( 0 == gt ) { return Error("G4VTrajectory*(of type '"+ObjTypeName(tr)+"*') could not be cast to GiGaTrajectory*"  ) ; }
       for( GiGaTrajectory::const_iterator it = gt->begin() ; gt->end() != it ; ++it )
-	{
-	  GiGaTrajectoryPoint* gp = *it ; 
+        {
+          GiGaTrajectoryPoint* gp = *it ; 
           if( 0 == gp ) { return Error("GiGaTrajectoryPoint* points to null!") ; } 
-	  MCVertex* mcv = new MCVertex() ; 
+          MCVertex* mcv = new MCVertex() ; 
           mcv->setPosition    ( gp->GetPosition() ) ;
           mcv->setTimeOfFlight( gp->GetTime    () ) ; 
           object->push_back( mcv );
-	} 
+        } 
     } 
   ///
   {
@@ -138,8 +138,8 @@ StatusCode GiGaMCVertexCnv::updateObj( IOpaqueAddress*  Address , DataObject*   
     for( IT it = object->begin() ;  end != it ; ++it )
       { 
         IT iL = it + 1; /// find the first element which is "bigger" - should be fast!
-	IT iU = std::find_if( iL , end , std::bind1st( Less , *it ) ) ;
-	if( end != iU ) { std::rotate( iL, iU , end ); end -= (iU-iL) ; }
+        IT iU = std::find_if( iL , end , std::bind1st( Less , *it ) ) ;
+        if( end != iU ) { std::rotate( iL, iU , end ); end -= (iU-iL) ; }
       }
     object->erase( end , object->end() ) ; ///  unsorted remove garbage
   }
@@ -193,22 +193,22 @@ StatusCode GiGaMCVertexCnv::updateObjRefs( IOpaqueAddress*  Address , DataObject
       MCParticle* mcp = (*particles)[it];
       if( 0 == mcp ) { return Error("MCParticle* points to NULL!"   ) ; } 
       for( GiGaTrajectory::const_iterator ip = gt->begin() ; gt->end() != ip ; ++ip )
-	{
-	  if( 0 == *ip  ) { return Error("GiGaTrajectoryPoint* points to null!" ) ; }  
-	  /// auxillary vertex        	
+        {
+          if( 0 == *ip  ) { return Error("GiGaTrajectoryPoint* points to null!" ) ; }  
+          /// auxillary vertex                
           mV.setPosition    ( (*ip)->GetPosition() );
           mV.setTimeOfFlight( (*ip)->GetTime    () );
-	  /// look for vertex, special treatment for "first" vertex. should be fast 
+          /// look for vertex, special treatment for "first" vertex. should be fast 
           if( gt->begin() != ip ) { iv = std::find_if ( iv , object->end() , std::bind2nd( Equal , &mV ) ) ; } 
-	  else                    { iv = std::lower_bound( object->begin() , object->end() , &mV , Less  ) ; }
-	  if ( object->end() == iv || !Equal(&mV,*iv) ) 
-	    { return Error("appropriate MCVertex is not found!") ; }   
-	  else if ( gt->begin  () == ip        )  /// first vertex of the trajectory
-	    {  (*iv)->addDaughterMCParticle( SmartRef<MCParticle> ( *iv  ,  refID , it , mcp ) ) ; }
-	  else if ( !(*iv)->motherMCParticle() )  /// "decay" vertices 
-	    { (*iv)->setMotherMCParticle   ( SmartRef<MCParticle> ( *iv  ,  refID , it , mcp ) ) ; }
+          else                    { iv = std::lower_bound( object->begin() , object->end() , &mV , Less  ) ; }
+          if ( object->end() == iv || !Equal(&mV,*iv) ) 
+            { return Error("appropriate MCVertex is not found!") ; }   
+          else if ( gt->begin  () == ip        )  /// first vertex of the trajectory
+            {  (*iv)->addDaughterMCParticle( SmartRef<MCParticle> ( *iv  ,  refID , it , mcp ) ) ; }
+          else if ( !(*iv)->motherMCParticle() )  /// "decay" vertices 
+            { (*iv)->setMotherMCParticle   ( SmartRef<MCParticle> ( *iv  ,  refID , it , mcp ) ) ; }
           else { return Error("MotherMCParticle is already set!") ; }
-	}
+        }
     } 
   ///
   return StatusCode::SUCCESS; 
@@ -282,7 +282,7 @@ StatusCode GiGaMCVertexCnv::updateRep( DataObject*     Object  , IOpaqueAddress*
     }
   ///
   { MsgStream log( msgSvc(),  name() ) ; log << MSG::VERBOSE << "UpdateRep::end " << 
-					   nVertex << " primary vertices converted " << endreq; }
+                                           nVertex << " primary vertices converted " << endreq; }
   ///
   return StatusCode::SUCCESS; 
   ///
@@ -297,9 +297,9 @@ G4PrimaryVertex* GiGaMCVertexCnv::VertexFromMCVertex( const MCVertex*   vertex  
   ///
   G4PrimaryVertex* Vertex = 
     new G4PrimaryVertex( vertex->position().x() , 
-			 vertex->position().y() , 
-			 vertex->position().z() , 
-			 vertex->timeOfFlight() ) ; 
+                         vertex->position().y() , 
+                         vertex->position().z() , 
+                         vertex->timeOfFlight() ) ; 
   ///
   SmartRefVector<MCParticle>::const_iterator pParticle = 
     vertex->daughterMCParticles().begin(); 
@@ -324,9 +324,9 @@ G4PrimaryParticle* GiGaMCVertexCnv::ParticleFromMCParticle( const MCParticle* pa
   ///  
   G4PrimaryParticle* Particle = 
     new G4PrimaryParticle( pid                           , 
-			   particle->fourMomentum().px() , 
-			   particle->fourMomentum().py() , 
-			   particle->fourMomentum().pz() ); 
+                           particle->fourMomentum().px() , 
+                           particle->fourMomentum().py() , 
+                           particle->fourMomentum().pz() ); 
   ///
   /// for Decay vertices one CURRENTLY should follow a little bit incorrect way
   /// NB - one loose the information about proper decay time!
@@ -339,12 +339,12 @@ G4PrimaryParticle* GiGaMCVertexCnv::ParticleFromMCParticle( const MCParticle* pa
       const MCVertex* vertex = *pVertex++ ; 
       if( 0 == vertex )             { continue; }
       SmartRefVector<MCParticle>::const_iterator pParticle = 
-	vertex->daughterMCParticles().begin(); 
+        vertex->daughterMCParticles().begin(); 
       while( vertex->daughterMCParticles().end() != pParticle ) 
-	{
-	  G4PrimaryParticle* p = ParticleFromMCParticle( *pParticle++ ) ;  /// recursion !!!
-	  if( 0 != p ) { Particle->SetDaughter( p ); } 
-	} 
+        {
+          G4PrimaryParticle* p = ParticleFromMCParticle( *pParticle++ ) ;  /// recursion !!!
+          if( 0 != p ) { Particle->SetDaughter( p ); } 
+        } 
     }  
   ///
   return Particle;

@@ -59,19 +59,19 @@ StatusCode GiGaDetectorElementCnv::createRep( DataObject*     Object  , IOpaqueA
     { 
       MsgStream log( msgSvc() , name() ); 
       log << MSG::WARNING 
-	  << " IGeometryInfo*/ILVolume* is not available for DE="       << de->name()    
-	  << " Consider it just as a holder of daughter DEs"  << endreq; 
+          << " IGeometryInfo*/ILVolume* is not available for DE="       << de->name()    
+          << " Consider it just as a holder of daughter DEs"  << endreq; 
       /// geometry information is not available, consider DE just as a collection of DetectorElements
       IDataSelector dS; 
       for( IDetectorElement::IDEContainer::iterator ic = de->childBegin() ; de->childEnd() != ic ; ++ic )
-	{
-	  /// retrieve objects from the store
+        {
+          /// retrieve objects from the store
           DataObject* obj = 0 ; 
           SmartDataPtr<DataObject> so( detSvc() , (*ic)->name() ); 
           obj = (DataObject*)(so.operator->()) ; 
           if( 0 == obj ) { return Error("createRep:: DataObject is not availablel for "+(*ic)->name() ) ;}
           dS.push_back( obj ); 
-	} 
+        } 
       StatusCode sc = geoSvc()->createReps( &dS );
       if( sc.isFailure() ) { return Error("createRep:: could not convert daughter elements") ; }
       ///
@@ -115,18 +115,18 @@ StatusCode GiGaDetectorElementCnv::updateRep( DataObject*     Object  , IOpaqueA
     std::string path ( de->name() );
     do
       {
-	G4VPhysicalVolume* pv = 0; 
-	G4PhysicalVolumeStore& store = *G4PhysicalVolumeStore::GetInstance();
-	for( int indx = 0 ; indx < store.entries() ; ++indx )
-	  { if( path == store[indx]->GetName() ) { pv = store[indx] ; break; } }
-	/// it was converted EXPLICITELY or IMPLICITELY !!!
-	if( 0 != pv ) 
-	  {
+        G4VPhysicalVolume* pv = 0; 
+        G4PhysicalVolumeStore& store = *G4PhysicalVolumeStore::GetInstance();
+        for( int indx = 0 ; indx < store.entries() ; ++indx )
+          { if( path == store[indx]->GetName() ) { pv = store[indx] ; break; } }
+        /// it was converted EXPLICITELY or IMPLICITELY !!!
+        if( 0 != pv ) 
+          {
             MsgStream log( msgSvc() , name() ) ; 
             log << MSG::INFO << "DE=" << de->name() 
-		<< " was already EXPLICITELY/IMPLICITELY converted for PV=" << pv->GetName() << endreq; 
-	    return StatusCode::SUCCESS; 
-	  }                          /// RETURN !!!
+                << " was already EXPLICITELY/IMPLICITELY converted for PV=" << pv->GetName() << endreq; 
+            return StatusCode::SUCCESS; 
+          }                          /// RETURN !!!
         ///
         path.erase( path.find_last_of('/') ); 
       } 

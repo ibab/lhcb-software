@@ -156,10 +156,10 @@ StatusCode GiGaMCParticleCnv::updateObjRefs( IOpaqueAddress*  Address , DataObje
   {
     for( ObjectVector<MCParticle>::iterator i = object->begin() ; object->end() != i ; ++i )
       { 
-	MCParticle* mcp = *i ; 
-	if( 0 == mcp  ) { continue ; } 
-	mcp->setOriginMCVertex( 0 ); 
-	mcp->removeDecayMCVertices() ; 
+        MCParticle* mcp = *i ; 
+        if( 0 == mcp  ) { continue ; } 
+        mcp->setOriginMCVertex( 0 ); 
+        mcp->removeDecayMCVertices() ; 
       }
   }
   ///
@@ -176,24 +176,24 @@ StatusCode GiGaMCParticleCnv::updateObjRefs( IOpaqueAddress*  Address , DataObje
       MCParticle* mp = *(object->begin()+it);
       if( 0 == mp ) { return Error("MCParticle* points to NULL!"                          ) ; } 
       for( GiGaTrajectory::const_iterator ip = gt->begin() ; gt->end() != ip ; ++ip )
-	{
-	  if( 0 == *ip ) { return Error("GiGaTrajectoryPoint* points to null!" ) ; } 
-	  /// auxillary vertex 
-	  mV.setPosition    ( (*ip)->GetPosition() );
+        {
+          if( 0 == *ip ) { return Error("GiGaTrajectoryPoint* points to null!" ) ; } 
+          /// auxillary vertex 
+          mV.setPosition    ( (*ip)->GetPosition() );
           mV.setTimeOfFlight( (*ip)->GetTime    () );
-	  /// look for vertex 
-	  if( gt->begin() != ip ) 
-	    { iv = std::find_if   ( iv , vertices->end() , std::bind2nd( Equal , &mV ) ) ; } 
-	  else                    
-	    { iv = std::lower_bound( vertices->begin() , vertices->end() , &mV , Less  ) ; }
+          /// look for vertex 
+          if( gt->begin() != ip ) 
+            { iv = std::find_if   ( iv , vertices->end() , std::bind2nd( Equal , &mV ) ) ; } 
+          else                    
+            { iv = std::lower_bound( vertices->begin() , vertices->end() , &mV , Less  ) ; }
           if      ( vertices->end() == iv || !Equal( &mV , *iv ) ) 
-	    {  return Error(" appropriate MCVertex is not found!") ; }   
-	  else if ( gt->begin  () != ip )           ///  it is not first vertex of the trajectory
-	    {  mp->addDecayMCVertex ( SmartRef<MCVertex> ( mp , refID , iv - vertices->begin() , *iv ) ) ; } 
-	  else if ( !mp->originMCVertex() )         /// first vertex and origin is not yet set   
-	    {  mp->setOriginMCVertex( SmartRef<MCVertex> ( mp , refID , iv - vertices->begin() , *iv ) ) ; } 
+            {  return Error(" appropriate MCVertex is not found!") ; }   
+          else if ( gt->begin  () != ip )           ///  it is not first vertex of the trajectory
+            {  mp->addDecayMCVertex ( SmartRef<MCVertex> ( mp , refID , iv - vertices->begin() , *iv ) ) ; } 
+          else if ( !mp->originMCVertex() )         /// first vertex and origin is not yet set   
+            {  mp->setOriginMCVertex( SmartRef<MCVertex> ( mp , refID , iv - vertices->begin() , *iv ) ) ; } 
           else { return Error("OriginMCVertex is already set!") ; }
-	}
+        }
     } 
   ///
   return StatusCode::SUCCESS;

@@ -13,6 +13,7 @@
 #include "G4Element.hh" 
 #include "G4Material.hh" 
 // Local
+#include "AddTabulatedProperties.h" 
 #include "GiGaElementCnv.h" 
 
 
@@ -58,6 +59,8 @@ StatusCode GiGaElementCnv::createRep( DataObject*     Object  , IOpaqueAddress*&
 StatusCode GiGaElementCnv::updateRep( DataObject*     Object  , IOpaqueAddress* Address ) 
 {
   ///
+  typedef Element::Isotopes::iterator Iterator;
+  ///
   { MsgStream log( msgSvc() , name() ); log << MSG::VERBOSE << "UpdateRep::start" << endreq; } 
   ///
   IOpaqueAddress* aux = 0 ; aux = Address ; /// just to please the compiler
@@ -71,12 +74,8 @@ StatusCode GiGaElementCnv::updateRep( DataObject*     Object  , IOpaqueAddress* 
   /// create isotopes first
   {
     IDataSelector ds;
-    for( unsigned int i = 0 ; i < ( unsigned int) element->nOfIsotopes() ; ++i )
-      {
-        Isotope* isotope = element->isotope( i ) ; 
-        if( 0 == isotope ) { return Error("updateRep:: could not extract isitopes for "+element->fullpath() );}
-        ds.push_back( isotope ); 
-      } 
+    for( Iterator it = element->isotopes().begin() ; element->isotopes().end() != it ; ++it )
+      { ds.push_back( it->second ); }
     StatusCode sc = cnvSvc()->createReps( &ds ); 
     if( sc.isFailure()   ) { return Error("updateRep:: could not convert isotopes for "+element->fullpath() );}
   }
@@ -84,20 +83,20 @@ StatusCode GiGaElementCnv::updateRep( DataObject*     Object  , IOpaqueAddress* 
   G4Element*  NewElement = 0 ; 
   if( 0 == element->nOfIsotopes() )                                 /// simple element 
     { NewElement = new G4Element( element->fullpath () , 
-				  element->name     () , 
-				  element->Z        () , 
-				  element->A        () ); } 
+                                  element->name     () , 
+                                  element->Z        () , 
+                                  element->A        () ); } 
   else                                                              /// compound element (from isotopes)
     {                                                               
       /// 
       NewElement = new G4Element( element->fullpath() , element->name() , element->nOfIsotopes() ) ;
-      for( unsigned int index = 0 ; index < (unsigned int) element->nOfIsotopes() ; ++index ) 
-	{
-	  G4Isotope* isotope = G4Isotope::GetIsotope( element->isotope( index )->fullpath() ); 
+      for( Iterator it = element->isotopes().begin() ; element->isotopes().end() != it ; ++it )
+        {
+          G4Isotope* isotope = G4Isotope::GetIsotope( it->second->fullpath() ); 
           if( 0 == isotope ) 
-	    { return Error("UpdateRep::could not extract isotope="+element->isotope( index )->fullpath() ); }
-	  NewElement->AddIsotope( isotope , element->isotopeFraction( index ) ); // 
-	}
+            { return Error("UpdateRep::could not extract isotope="+it->second->fullpath() ); }
+          NewElement->AddIsotope( isotope , it->first ); // 
+        } 
     }
   /// Check if Material is already known to Geant4
   if( 0 != G4Material::GetMaterial( element->fullpath() ) ) { return StatusCode::SUCCESS; } 
@@ -106,30 +105,40 @@ StatusCode GiGaElementCnv::updateRep( DataObject*     Object  , IOpaqueAddress* 
   if( 0 == element->nOfIsotopes() ) 
     { 
       NewMaterial = new G4Material( element->fullpath        () , 
-				    element->Z               () , 
-				    element->A               () , 
-				    element->density         () , 
-				    (G4State) element->state () ,  
-				    element->temperature     () , 
-				    element->pressure        () ); 
+                                    element->Z               () , 
+                                    element->A               () , 
+                                    element->density         () , 
+                                    (G4State) element->state () ,  
+                                    element->temperature     () , 
+                                    element->pressure        () ); 
     } 
   else
     { 
       /// 
       NewMaterial = new G4Material( element->fullpath        () , 
-				    element->density         () , 
-				    element->nOfIsotopes     () ,
-				    (G4State) element->state () ,  
-				    element->temperature     () , 
-				    element->pressure        () ); 
-      for( unsigned int index = 0 ; index < (unsigned int) element->nOfIsotopes() ; ++index ) 
-	{
-	  G4Element* el = G4Element::GetElement(element->isotope( index )->fullpath() ); 
+                                    element->density         () , 
+                                    element->nOfIsotopes     () ,
+                                    (G4State) element->state () ,  
+                                    element->temperature     () , 
+                                    element->pressure        () ); 
+      for( Iterator it = element->isotopes().begin() ; element->isotopes().end() != it ; ++it )
+        {
+          G4Element* el = G4Element::GetElement( it->second->fullpath() ); 
           if( 0 == el ) 
-	    { return Error("UpdateRep::could not extract element="+element->isotope( index )->fullpath() ); }
-	  NewMaterial->AddElement( el , element->isotopeFraction( index )); // 
-	}
+            { return Error("UpdateRep::could not extract element="+it->second->fullpath() ); }
+          NewMaterial->AddElement( el , it->first ); // 
+        } 
     }  
+  /// add tabulated properties
+  if( !element->tabulatedProperties().empty() )
+    {
+      if( 0 == NewMaterial->GetMaterialPropertiesTable() )
+        { NewMaterial->SetMaterialPropertiesTable( new G4MaterialPropertiesTable() ); }
+      StatusCode sc = AddTabulatedProperties ( element->tabulatedProperties()  ,
+                                               NewMaterial->GetMaterialPropertiesTable() ) ;
+      if( sc.isFailure() )
+        { return Error("UpdateRep::could not add TabulatedProperties for "+element->fullpath() , sc  ); } 
+    }
   ///
   { MsgStream log( msgSvc() , name() ); log << MSG::VERBOSE << "UpdateRep::end" << endreq; } 
   ///

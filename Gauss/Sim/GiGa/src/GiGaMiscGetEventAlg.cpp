@@ -52,7 +52,7 @@ StatusCode GiGaMiscGetEventAlg::execute()
     SmartDataPtr<MCParticleVector> obj( eventSvc() , "/Event/G4/MCParticles" ) ;
     if( obj ) 
       { 
-	std::cout <<  *obj << std::endl;  
+        std::cout <<  *obj << std::endl;  
       } 
     else 
       { std::cout << " particles == 0 " << std::endl ; } 

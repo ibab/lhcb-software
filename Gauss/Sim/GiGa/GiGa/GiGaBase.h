@@ -36,7 +36,7 @@ class GaudiException       ;
 */
 
 class  GiGaBase: virtual public IProperty         , 
-		 virtual public ISerialize        , 
+                 virtual public ISerialize        , 
                  virtual public IIncidentListener 
 {
   ///
@@ -66,16 +66,24 @@ public:
   virtual StreamBuffer& serialize( StreamBuffer& S ) const ; 
   /// Set the property by property
   virtual StatusCode                    setProperty   ( const Property& p       )       ;
+  /// Set the property by istream
+  virtual StatusCode                    setProperty   ( std::istream& s         )       ;
+  /// Get the property by std::string
+  virtual StatusCode                    setProperty   ( const std::string&      , 
+                                                        const std::string&      )       ;
   /// Get the property by property
   virtual StatusCode                    getProperty   ( Property* p             ) const ;
   /// Get the property by name
   virtual const Property&               getProperty   ( const std::string& name ) const ; 
+  /// Get the property by std::string
+  virtual StatusCode                    getProperty   ( const std::string&      , 
+                                                        const std::string&      ) const ;
   /// Get list of properties
   virtual const std::vector<Property*>& getProperties ( )                         const ;
   ///  handle the incident 
   virtual void handle( const Incident& ) ;
   /// 
- protected:
+protected:
   ///
   ///  Accesors to needed services and Service Locator 
   inline bool                   init      () const { return m_init      ; };

@@ -2,24 +2,17 @@
 #include "GaudiKernel/IAddressCreator.h" 
 #include "GaudiKernel/IOpaqueAddress.h" 
 #include "GaudiKernel/IGiGaSetUpSvc.h" 
-
 #include "GaudiKernel/MsgStream.h"
-
-
+/// DetDesc 
 #include "DetDesc/Material.h"
 #include "DetDesc/Isotope.h"
-
+/// GiGa 
 #include "GiGa/GiGaException.h" 
-
-///
-/// Geant4 includes
-///
-
-
+/// Geant4
 #include "G4Isotope.hh"
 #include "G4Material.hh"
-
 /// local 
+#include "AddTabulatedProperties.h"
 #include "GiGaIsotopeCnv.h" 
 
 ///
@@ -80,9 +73,9 @@ StatusCode GiGaIsotopeCnv::updateRep( DataObject*     Object  , IOpaqueAddress* 
   /// Here we should create the Isotop
   G4Isotope* NewIsotope = 0 ; 
   NewIsotope = new G4Isotope( isotope->fullpath () , 
-			      (int) isotope->Z  () , 
-			      (int) isotope->N  () , 
-			      isotope->A        () *g/mole);
+                              (int) isotope->Z  () , 
+                              (int) isotope->N  () , 
+                              isotope->A        () *g/mole);
   ///
   if( 0 != G4Material::GetMaterial( isotope->fullpath() ) ) { return StatusCode::SUCCESS; } 
   /// per each Isotope we could create the "simple material" with the same name
@@ -91,10 +84,21 @@ StatusCode GiGaIsotopeCnv::updateRep( DataObject*     Object  , IOpaqueAddress* 
                                 isotope->Z               () , 
                                 isotope->A               () * g/mole , 
                                 isotope->density         () , 
-				(G4State) isotope->state () ,  
-				isotope->temperature     () , 
-				isotope->pressure        () ); 
-  ///  
+                                (G4State) isotope->state () ,  
+                                isotope->temperature     () , 
+                                isotope->pressure        () ); 
+  ///
+  /// add tabulated properties
+  if( !isotope->tabulatedProperties().empty() )
+    {
+      if( 0 == NewMaterial->GetMaterialPropertiesTable() )
+        { NewMaterial->SetMaterialPropertiesTable( new G4MaterialPropertiesTable() ); }
+      StatusCode sc = AddTabulatedProperties ( isotope->tabulatedProperties() ,
+                                               NewMaterial->GetMaterialPropertiesTable() ) ;
+      if( sc.isFailure() )
+        { return Error("UpdateRep::could not add TabulatedProperties for "+isotope->fullpath() , sc  ); } 
+    }
+  ///
   { MsgStream log( msgSvc() , name() ); log << MSG::VERBOSE << "UpdateRep::end" << endreq; } 
   ///
   return StatusCode::SUCCESS; 

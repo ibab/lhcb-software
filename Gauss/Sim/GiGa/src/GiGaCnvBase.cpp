@@ -21,8 +21,8 @@
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
 GiGaCnvBase::GiGaCnvBase( const unsigned char  StorageType , 
-			  const CLID&          ClassType   , 
-			  ISvcLocator*         Locator     )  
+                          const CLID&          ClassType   , 
+                          ISvcLocator*         Locator     )  
   : Converter( StorageType ,  ClassType , Locator     ) 
   ///
   , m_NameOfGiGaConversionService   ( "NotYetDefined" ) 
@@ -43,9 +43,9 @@ GiGaCnvBase::GiGaCnvBase( const unsigned char  StorageType ,
 GiGaCnvBase::~GiGaCnvBase(){};
 ///////////////////////////////////////////////////////////////////////////////////////////////
 StatusCode GiGaCnvBase::Exception( const std::string    & Message , 
-				   const GaudiException & Excp    ,
-				   const MSG::Level     & level   , 
-				   const StatusCode     & Status )
+                                   const GaudiException & Excp    ,
+                                   const MSG::Level     & level   , 
+                                   const StatusCode     & Status )
 {
   Stat stat( chronoSvc() , Excp.tag() );
   MsgStream log( msgSvc() , name() + ":"+Excp.tag() ); 
@@ -54,9 +54,9 @@ StatusCode GiGaCnvBase::Exception( const std::string    & Message ,
 };  
 //////////////////////////////////////////////////////////////////////////////////////////////// 
 StatusCode GiGaCnvBase::Exception( const std::string    & Message , 
-				   const std::exception & Excp    ,
-				   const MSG::Level     & level   , 
-				   const StatusCode     & Status )
+                                   const std::exception & Excp    ,
+                                   const MSG::Level     & level   , 
+                                   const StatusCode     & Status )
 {
   Stat stat( chronoSvc() , "std::exception" );
   MsgStream log( msgSvc() , name() + ":std::exception" ); 
@@ -65,8 +65,8 @@ StatusCode GiGaCnvBase::Exception( const std::string    & Message ,
 };  
 /////////////////////////////////////////////////////////////////////////////////////////////////
 StatusCode GiGaCnvBase::Exception( const std::string    & Message , 
-				   const MSG::Level     & level   , 
-				   const StatusCode     & Status )
+                                   const MSG::Level     & level   , 
+                                   const StatusCode     & Status )
 {
   Stat stat( chronoSvc() , "*UNKNOWN* exception" );
   MsgStream log( msgSvc() , name() + ":UNKNOWN exception" ); 
@@ -152,9 +152,9 @@ StatusCode GiGaCnvBase::finalize ()
 };
 ////////////////////////////////////////////////////////////////////////////////////////
 StatusCode GiGaCnvBase::declareObject( const std::string & Path  ,
-				       const CLID        & Clid  ,
-				       const std::string & Addr1 ,
-				       const std::string & Addr2 )
+                                       const CLID        & Clid  ,
+                                       const std::string & Addr1 ,
+                                       const std::string & Addr2 )
 { 
   m_leaves.push_back( IGiGaCnvSvc::Leaf( Path ,  Clid , Addr1 , Addr2 ) );
   return StatusCode::SUCCESS; 

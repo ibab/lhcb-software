@@ -48,10 +48,10 @@ const        ISvcFactory&                GiGaGeomCnvSvcFactory = s_GiGaGeomCnvSv
 ///
 
 GiGaGeomCnvSvc::GiGaGeomCnvSvc( const std::string&   ServiceName          , 
-  				ISvcLocator*         ServiceLocator       ) 
+                                  ISvcLocator*         ServiceLocator       ) 
   : GiGaCnvSvc(                                      ServiceName          , 
-		                                     ServiceLocator       , 
-						     GiGaGeom_StorageType )
+                                                     ServiceLocator       , 
+                                                     GiGaGeom_StorageType )
   ///
 {
   setAddressFactory(&GiGaGeomAddressFactory) ;

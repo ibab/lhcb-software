@@ -193,8 +193,8 @@ void GiGaPhysListFull::ConstructEM()
       pmanager->SetProcessOrdering(aionIonization, idxPostStep, 2);
       
     } else if ((!particle->IsShortLived()) &&
-	       (particle->GetPDGCharge() != 0.0) && 
-	       (particle->GetParticleName() != "chargedgeantino")) {
+               (particle->GetPDGCharge() != 0.0) && 
+               (particle->GetParticleName() != "chargedgeantino")) {
       // all others charged particles except geantino
       G4VProcess* aMultipleScattering = new G4MultipleScattering();
       G4VProcess* anIonisation = new G4hIonisation();

@@ -34,8 +34,8 @@ class GaudiException       ;
 */
 
 class GiGaCnvSvcBase: virtual public  IGiGaCnvSvc       ,
-		      virtual public  IIncidentListener ,       
-		      public          ConversionSvc
+                      virtual public  IIncidentListener ,       
+                      public          ConversionSvc
 {
   ///
 protected:
@@ -43,8 +43,8 @@ protected:
 public:
   /// constructor 
   GiGaCnvSvcBase( const std::string&   ServiceName       , 
-		  ISvcLocator*         ServiceLocator    ,
-		  const unsigned int   StorageType       ) ;
+                  ISvcLocator*         ServiceLocator    ,
+                  const unsigned int   StorageType       ) ;
   /// virtual destructor
   virtual ~GiGaCnvSvcBase();
   ///
@@ -86,23 +86,23 @@ protected:
   StatusCode    setNameOfDataProviderSvc( const std::string& Name ) { m_dpName = Name ; } 
   ///
   StatusCode Error     ( const std::string & msg                       ,  
-			 const StatusCode  & sc  = StatusCode::FAILURE );
+                         const StatusCode  & sc  = StatusCode::FAILURE );
   StatusCode Warning   ( const std::string & msg                       ,  
-			 const StatusCode  & sc  = StatusCode::FAILURE );
+                         const StatusCode  & sc  = StatusCode::FAILURE );
   StatusCode Print     ( const std::string & msg                       ,  
-			 const MSG::Level  & lvl = MSG::INFO           ,
-			 const StatusCode  & sc  = StatusCode::FAILURE );
+                         const MSG::Level  & lvl = MSG::INFO           ,
+                         const StatusCode  & sc  = StatusCode::FAILURE );
   StatusCode Exception ( const std::string    & msg                        ,  
-			 const GaudiException & exc                        , 
-			 const MSG::Level     & lvl = MSG::FATAL           ,
-			 const StatusCode     & sc  = StatusCode::FAILURE );
+                         const GaudiException & exc                        , 
+                         const MSG::Level     & lvl = MSG::FATAL           ,
+                         const StatusCode     & sc  = StatusCode::FAILURE );
   StatusCode Exception ( const std::string    & msg                        ,  
-			 const std::exception & exc                        , 
-			 const MSG::Level     & lvl = MSG::FATAL           ,
-			 const StatusCode     & sc  = StatusCode::FAILURE );
+                         const std::exception & exc                        , 
+                         const MSG::Level     & lvl = MSG::FATAL           ,
+                         const StatusCode     & sc  = StatusCode::FAILURE );
   StatusCode Exception ( const std::string    & msg                        ,  
-			 const MSG::Level     & lvl = MSG::FATAL           ,
-			 const StatusCode     & sc  = StatusCode::FAILURE );
+                         const MSG::Level     & lvl = MSG::FATAL           ,
+                         const StatusCode     & sc  = StatusCode::FAILURE );
   ///
 private: 
   ///

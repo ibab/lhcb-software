@@ -17,9 +17,9 @@ class  GiGaKineAddress: public GenericAddress
 public:
   ///
   GiGaKineAddress(  const CLID&        Clid          , 
-		    const std::string& FileName      , 
-		    const int          /* SeqInt */  , 
-		    const std::string& ContainerName )
+                    const std::string& FileName      , 
+                    const int          /* SeqInt */  , 
+                    const std::string& ContainerName )
     : GenericAddress( GiGaKine_StorageType, Clid )
   {
     setDbName        ( FileName          );
@@ -28,9 +28,9 @@ public:
   };
   ///
   GiGaKineAddress(  const GenericLink& Link          ,
-		    const std::string& FileName      , 
-		    const std::string& ContainerName , 
-		    const std::string& ObjName       )
+                    const std::string& FileName      , 
+                    const std::string& ContainerName , 
+                    const std::string& ObjName       )
     : GenericAddress( Link )
   {
     setDbName       ( FileName      );

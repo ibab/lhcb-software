@@ -55,8 +55,8 @@ StatusCode GiGaDetElemCnv::initialize()
   IService* pISvc;
   sc = serviceLocator()->getService("GiGaGeomCnvSvc", pISvc);
   //sc = serviceLocator()->getService("GiGaGeomCnvSvc", 
-	//			    IID_IGiGaGeomCnvSvc, 
-	//		    reinterpret_cast<IInterface*&>(m_GiGaGeomCnvSvc));
+        //                            IID_IGiGaGeomCnvSvc, 
+        //                    reinterpret_cast<IInterface*&>(m_GiGaGeomCnvSvc));
   if( sc.isFailure() ) {
     log << MSG::ERROR << "Unable to locate service GiGaGeomCnvSvc" << endreq;
     return sc;

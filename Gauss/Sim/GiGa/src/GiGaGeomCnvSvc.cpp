@@ -70,10 +70,10 @@ const        ISvcFactory&                GiGaGeomCnvSvcFactory = s_GiGaGeomCnvSv
 
 /// constructor
 GiGaGeomCnvSvc::GiGaGeomCnvSvc( const std::string&   ServiceName          , 
-  				ISvcLocator*         ServiceLocator       ) 
+                                  ISvcLocator*         ServiceLocator       ) 
   : GiGaCnvSvcBase(                                  ServiceName          , 
-						     ServiceLocator       , 
-						     GiGaGeom_StorageType )
+                                                     ServiceLocator       , 
+                                                     GiGaGeom_StorageType )
   , m_worldPV       ( 0                   ) 
   , m_worldMaterial ( "/dd/Materials/Air" )
   , m_worldNamePV   ( "Universe"          )
@@ -175,73 +175,73 @@ G4VSolid*    GiGaGeomCnvSvc::g4Solid( const ISolid* Sd )
     const SolidBox* sBox = dynamic_cast<const SolidBox*>(Sd);
     if( solidType == "SolidBox" && 0 != sBox ) 
       { return new G4Box( sBox->name(),
-			  sBox->xHalfLength(),
-			  sBox->yHalfLength(),
-			  sBox->zHalfLength()); } 
+                          sBox->xHalfLength(),
+                          sBox->yHalfLength(),
+                          sBox->zHalfLength()); } 
   }
   /// cons?
   {
     const SolidCons* sCons = dynamic_cast<const SolidCons*>(Sd);
     if( solidType == "SolidCons" && 0 != sCons ) 
       { return new G4Cons( sCons->name(),
-			   sCons->innerRadiusAtMinusZ(),
-			   sCons->outerRadiusAtMinusZ(),
-			   sCons->innerRadiusAtPlusZ(),
-			   sCons->outerRadiusAtPlusZ(),
-			   sCons->zHalfLength(),
-			   sCons->startPhiAngle(),
-			   sCons->deltaPhiAngle() ); }
+                           sCons->innerRadiusAtMinusZ(),
+                           sCons->outerRadiusAtMinusZ(),
+                           sCons->innerRadiusAtPlusZ(),
+                           sCons->outerRadiusAtPlusZ(),
+                           sCons->zHalfLength(),
+                           sCons->startPhiAngle(),
+                           sCons->deltaPhiAngle() ); }
   }
   /// sphere?
   {
     const SolidSphere* sSphere = dynamic_cast<const SolidSphere*>(Sd);
     if ( solidType == "SolidSphere" && 0 != sSphere ) 
       { return new G4Sphere( sSphere->name            (),
-			     sSphere->insideRadius    (),
-			     sSphere->outerRadius     (), 
-			     sSphere->startPhiAngle   (),
-			     sSphere->deltaPhiAngle   (),
-			     sSphere->startThetaAngle (),
-			     sSphere->deltaThetaAngle () ); }
+                             sSphere->insideRadius    (),
+                             sSphere->outerRadius     (), 
+                             sSphere->startPhiAngle   (),
+                             sSphere->deltaPhiAngle   (),
+                             sSphere->startThetaAngle (),
+                             sSphere->deltaThetaAngle () ); }
   }
   /// trd? 
   {
     const SolidTrd* sTrd = dynamic_cast<const SolidTrd*>(Sd);
     if (solidType == "SolidTrd" && 0 != sTrd ) 
       { return new G4Trd( sTrd->name(),
-			  sTrd->xHalfLength1(),
-			  sTrd->xHalfLength2(),
-			  sTrd->yHalfLength1(),
-			  sTrd->yHalfLength2(),
-			  sTrd->zHalfLength()); }
+                          sTrd->xHalfLength1(),
+                          sTrd->xHalfLength2(),
+                          sTrd->yHalfLength1(),
+                          sTrd->yHalfLength2(),
+                          sTrd->zHalfLength()); }
   }
   /// tubs ?   
   { 
     const SolidTubs* sTubs = dynamic_cast<const SolidTubs*>(Sd);
     if (solidType == "SolidTubs" && 0 != sTubs ) 
       { return new G4Tubs( sTubs->name(),
-			   sTubs->innerRadius(),
-			   sTubs->outerRadius(),
-			   sTubs->zHalfLength(),
-			   sTubs->startPhiAngle(),
-			   sTubs->deltaPhiAngle()); }
+                           sTubs->innerRadius(),
+                           sTubs->outerRadius(),
+                           sTubs->zHalfLength(),
+                           sTubs->startPhiAngle(),
+                           sTubs->deltaPhiAngle()); }
   }
   /// trap ?   
   {  
     const SolidTrap* sTrap = dynamic_cast<const SolidTrap*>(Sd);
     if (solidType == "SolidTrap" && 0 != sTrap ) 
       { return new G4Trap( sTrap->name            (),
-			   sTrap->zHalfLength     (),
-			   sTrap->theta           (),
-			   sTrap->phi             (),
-			   sTrap->dyAtMinusZ      (),
-			   sTrap->dxAtMinusZMinusY(),
-			   sTrap->dxAtMinusZPlusY (),
-			   sTrap->alphaAtMinusZ   (),
-			   sTrap->dyAtPlusZ       (),
-			   sTrap->dxAtPlusZMinusY (),
-			   sTrap->dxAtPlusZPlusY  (),
-			   sTrap->alphaAtPlusZ    () ); }
+                           sTrap->zHalfLength     (),
+                           sTrap->theta           (),
+                           sTrap->phi             (),
+                           sTrap->dyAtMinusZ      (),
+                           sTrap->dxAtMinusZMinusY(),
+                           sTrap->dxAtMinusZPlusY (),
+                           sTrap->alphaAtMinusZ   (),
+                           sTrap->dyAtPlusZ       (),
+                           sTrap->dxAtPlusZMinusY (),
+                           sTrap->dxAtPlusZPlusY  (),
+                           sTrap->alphaAtPlusZ    () ); }
   }
   /// boolean ? 
   {
@@ -278,15 +278,15 @@ G4VSolid*  GiGaGeomCnvSvc::g4BoolSolid( const SolidBoolean* Sd )
       const SolidChild* child = *it ; 
       G4VSolid* g4child = g4Solid( child->solid() );
       if( 0 == g4child ) 
-	{ Error("g4BoolSolid, could not convert CHILD solid for Boolean solid="+Sd->name())  ; return 0; }
+        { Error("g4BoolSolid, could not convert CHILD solid for Boolean solid="+Sd->name())  ; return 0; }
       if      ( 0 != sSub    ) 
-	{ g4total = new G4SubtractionSolid  ( Sd->first()->name()+"-"+child->name() , g4total , g4child , child->matrix().inverse() ) ; }
+        { g4total = new G4SubtractionSolid  ( Sd->first()->name()+"-"+child->name() , g4total , g4child , child->matrix().inverse() ) ; }
       else if ( 0 != sInt    )
-	{ g4total = new G4IntersectionSolid ( Sd->first()->name()+"*"+child->name() , g4total , g4child , child->matrix().inverse() ) ; }
+        { g4total = new G4IntersectionSolid ( Sd->first()->name()+"*"+child->name() , g4total , g4child , child->matrix().inverse() ) ; }
       else if ( 0 != sUni    )
-	{ g4total = new G4UnionSolid        ( Sd->first()->name()+"+"+child->name() , g4total , g4child , child->matrix().inverse() ) ; }
+        { g4total = new G4UnionSolid        ( Sd->first()->name()+"+"+child->name() , g4total , g4child , child->matrix().inverse() ) ; }
       else
-	{ Error("g4BoolSolid, Unknown type of Boolean solid="+Sd->typeName())                 ; return 0; }
+        { Error("g4BoolSolid, Unknown type of Boolean solid="+Sd->typeName())                 ; return 0; }
     } 
   ///
   g4total->SetName( Sd->name() ) ;
@@ -338,10 +338,10 @@ G4VPhysicalVolume* GiGaGeomCnvSvc::G4WorldPV()
       ///
       {
         G4TransportationManager* trnspMgr = G4TransportationManager::GetTransportationManager() ;  /// ATTENTION !!!
-	if( 0 == trnspMgr  ) { Error("G4WorldPV:: could not locate G4TranspostationManager* object ") ; return 0 ; }         
-	G4FieldManager*          fieldMgr = trnspMgr->GetFieldManager();                           /// ATTENTION !!!
-	if( 0 == fieldMgr  ) { Error("G4WorldPV:: could not locate G4FieldManager* object "         ) ; return 0 ; }         
-	fieldMgr->SetDetectorField  ( mf );                                                        /// ATTENTION !!! 
+        if( 0 == trnspMgr  ) { Error("G4WorldPV:: could not locate G4TranspostationManager* object ") ; return 0 ; }         
+        G4FieldManager*          fieldMgr = trnspMgr->GetFieldManager();                           /// ATTENTION !!!
+        if( 0 == fieldMgr  ) { Error("G4WorldPV:: could not locate G4FieldManager* object "         ) ; return 0 ; }         
+        fieldMgr->SetDetectorField  ( mf );                                                        /// ATTENTION !!! 
         fieldMgr->CreateChordFinder ( mf );                                                        /// ATTENTION !!!    
       }
       ///
@@ -426,7 +426,7 @@ StatusCode GiGaGeomCnvSvc::sensDet( const std::string& TypeNick , IGiGaSensDet*&
   for( SDobjects::const_iterator it = m_SDs.begin() ; m_SDs.end() != it ; ++it ) 
     {
       if( 0 != *it && (*it)->name() == Nick && System::typeinfoName( typeid( *it ) ) == Type ) 
-	{ (*it)->addRef() ; SD = *it ; return StatusCode::SUCCESS ; }  
+        { (*it)->addRef() ; SD = *it ; return StatusCode::SUCCESS ; }  
     } 
   /// look at local storage of factories: 
   const IGiGaSensDetFactory* SDfac = 0 ; 
@@ -465,7 +465,7 @@ StatusCode GiGaGeomCnvSvc::magField( const std::string& TypeNick , IGiGaMagField
   for( MFobjects::const_iterator it = m_MFs.begin() ; m_MFs.end() != it ; ++it ) 
     {
       if( 0 != *it && (*it)->name() == Nick && System::typeinfoName( typeid( *it ) ) == Type ) 
-	{ (*it)->addRef() ; MF = *it ; return StatusCode::SUCCESS ; }  
+        { (*it)->addRef() ; MF = *it ; return StatusCode::SUCCESS ; }  
     } 
   /// look at local storage of factories: 
   const IGiGaMagFieldFactory* MFfac = 0 ; 

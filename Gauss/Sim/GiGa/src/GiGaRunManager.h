@@ -123,8 +123,8 @@ class GiGaRunManager: private G4RunManager
 
   /////////////////////////////////////////////////////////////////////////////////
   virtual  void BeamOn( int         n_event        ,                            ///
-			const char* macroFile =  0 ,                            /// 
-			int         n_select  = -1 );                           ///
+                        const char* macroFile =  0 ,                            /// 
+                        int         n_select  = -1 );                           ///
   /////////////////////////////////////////////////////////////////////////////////
   void       InitializeGeometry() ;                                             /// 
   void       Initialize()         ;                                             /// 
@@ -166,8 +166,8 @@ class GiGaRunManager: private G4RunManager
   
   /////////////////////////////////////////////////////////////////////////////////
   inline void Assert( bool  assertion                              ,            ///
-		      const std::string& msg = "GiGaSvc::unknown"  ,            ///                  
-		      const StatusCode&  sc = StatusCode::FAILURE  ) ;          ///
+                      const std::string& msg = "GiGaSvc::unknown"  ,            ///                  
+                      const StatusCode&  sc = StatusCode::FAILURE  ) ;          ///
   /////////////////////////////////////////////////////////////////////////////////
   
  private: 
@@ -208,8 +208,8 @@ class GiGaRunManager: private G4RunManager
 }; 
 ///////////////////////////////////////////////////////////////////////////////////
 inline void GiGaRunManager::Assert( bool  assertion        , 
-				    const std::string& msg , 
-				    const StatusCode &  sc ) 
+                                    const std::string& msg , 
+                                    const StatusCode &  sc ) 
 { if( !assertion ) { throw GiGaException("GiGaRunManager::"+msg , sc ) ; } };
 ///////////////////////////////////////////////////////////////////////////////////
 inline IGiGaGeomCnvSvc*   GiGaRunManager::cnvSvc    () const 

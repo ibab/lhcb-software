@@ -277,7 +277,7 @@ StatusCode GiGaSvc::createGiGaRunManager()
   if( 0 != m_GiGaRunManager ) { return StatusCode::SUCCESS; }     /// RETURN !!!
   ///
   Assert( 0 == G4RunManager::GetRunManager() , 
-	  "There exist another instance of G4RunManager!" ) ; 
+          "There exist another instance of G4RunManager!" ) ; 
   ///
   m_GiGaRunManager = new  GiGaRunManager( name()+".Manager" , serviceLocator() ); 
   ///
@@ -308,11 +308,11 @@ StatusCode GiGaSvc::prepareTheEvent( G4PrimaryVertex * vertex )
   ___GIGA_TRY___ 
     {
       if( 0 == m_GiGaRunManager )
-	{ 
-	  sc = createGiGaRunManager() ;   
-	  Assert( sc.isSuccess()        , " prepareTheEvent(): failure from createGiGaRunManager " , sc     ) ; 
-	  Assert( 0 != m_GiGaRunManager , " prepareTheEvent(): unable to create GiGaRunManager   "          ) ; 
-	}
+        { 
+          sc = createGiGaRunManager() ;   
+          Assert( sc.isSuccess()        , " prepareTheEvent(): failure from createGiGaRunManager " , sc     ) ; 
+          Assert( 0 != m_GiGaRunManager , " prepareTheEvent(): unable to create GiGaRunManager   "          ) ; 
+        }
     }
   ___GIGA_CATCH_AND_THROW___(Tag,method1) ; 
   ///
@@ -337,11 +337,11 @@ StatusCode GiGaSvc::retrieveTheEvent( const G4Event*& event)
   ___GIGA_TRY___ 
     { 
       if( 0 == m_GiGaRunManager )
-	{ 
-	  sc = createGiGaRunManager() ;   
-	  Assert( sc.isSuccess()        , " retrieveTheEvent: failure from createGiGaRunManager " , sc     ) ; 
-	  Assert( 0 != m_GiGaRunManager , " retrieveTheEvent: unable to create GiGaRunManager   "          ) ; 
-	}
+        { 
+          sc = createGiGaRunManager() ;   
+          Assert( sc.isSuccess()        , " retrieveTheEvent: failure from createGiGaRunManager " , sc     ) ; 
+          Assert( 0 != m_GiGaRunManager , " retrieveTheEvent: unable to create GiGaRunManager   "          ) ; 
+        }
     }
   ___GIGA_CATCH_AND_THROW___(Tag,method1) ; 
   ///

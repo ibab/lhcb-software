@@ -38,8 +38,8 @@ class GiGaCnvBase: public Converter
 protected: 
   ///
   GiGaCnvBase( const unsigned char  StorageType , 
-		      const CLID&          ClassType   , 
-	       ISvcLocator*         Locator     );
+                      const CLID&          ClassType   , 
+               ISvcLocator*         Locator     );
   virtual ~GiGaCnvBase();
   ///
 public: 
@@ -49,30 +49,30 @@ public:
   ///  
 protected: 
   ///
-  IGiGaCnvSvc*          cnvSvc    () { return m_GiGaCnvSvc                               ; } 
-  IGiGaGeomCnvSvc*      geoSvc    () { return m_GiGaGeomCnvSvc                           ; } 
-  IGiGaKineCnvSvc*      kineSvc   () { return m_GiGaKineCnvSvc                           ; } 
-  IGiGaHitsCnvSvc*      hitsSvc   () { return m_GiGaHitsCnvSvc                           ; } 
-  IDataProviderSvc*     evtSvc    () { return m_evtSvc                                   ; }   
-  IDataProviderSvc*     detSvc    () { return m_detSvc                                   ; }   
-  IChronoStatSvc*       chronoSvc () { return m_chronoSvc                                ; } 
-  IGiGaSvc*             gigaSvc   () { return 0 != cnvSvc () ? cnvSvc ()->gigaSvc () : 0 ; } 
-  IGiGaSetUpSvc*        setupSvc  () { return 0 != cnvSvc () ? cnvSvc ()->setupSvc() : 0 ; } 
-  IParticlePropertySvc* ppSvc     () { return 0 != kineSvc() ? kineSvc()->ppSvc   () : 0 ; } 
+  IGiGaCnvSvc*          cnvSvc    () const { return m_GiGaCnvSvc                               ; } 
+  IGiGaGeomCnvSvc*      geoSvc    () const { return m_GiGaGeomCnvSvc                           ; } 
+  IGiGaKineCnvSvc*      kineSvc   () const { return m_GiGaKineCnvSvc                           ; } 
+  IGiGaHitsCnvSvc*      hitsSvc   () const { return m_GiGaHitsCnvSvc                           ; } 
+  IDataProviderSvc*     evtSvc    () const { return m_evtSvc                                   ; }   
+  IDataProviderSvc*     detSvc    () const { return m_detSvc                                   ; }   
+  IChronoStatSvc*       chronoSvc () const { return m_chronoSvc                                ; } 
+  IGiGaSvc*             gigaSvc   () const { return 0 != cnvSvc () ? cnvSvc ()->gigaSvc () : 0 ; } 
+  IGiGaSetUpSvc*        setupSvc  () const { return 0 != cnvSvc () ? cnvSvc ()->setupSvc() : 0 ; } 
+  IParticlePropertySvc* ppSvc     () const { return 0 != kineSvc() ? kineSvc()->ppSvc   () : 0 ; } 
   ///  
   StatusCode Error     ( const std::string& Message , const StatusCode& status = StatusCode::FAILURE );
   ///
   StatusCode Exception ( const std::string    & msg                        ,   
-			 const GaudiException & exc                        , 
-			 const MSG::Level     & lvl = MSG::FATAL           ,
-			 const StatusCode     & sc  = StatusCode::FAILURE );
+                         const GaudiException & exc                        , 
+                         const MSG::Level     & lvl = MSG::FATAL           ,
+                         const StatusCode     & sc  = StatusCode::FAILURE );
   StatusCode Exception ( const std::string    & msg                        ,  
-			 const std::exception & exc                        , 
-			 const MSG::Level     & lvl = MSG::FATAL           ,
-			 const StatusCode     & sc  = StatusCode::FAILURE );
+                         const std::exception & exc                        , 
+                         const MSG::Level     & lvl = MSG::FATAL           ,
+                         const StatusCode     & sc  = StatusCode::FAILURE );
   StatusCode Exception ( const std::string    & msg                        ,  
-			 const MSG::Level     & lvl = MSG::FATAL           ,
-			 const StatusCode     & sc  = StatusCode::FAILURE );
+                         const MSG::Level     & lvl = MSG::FATAL           ,
+                         const StatusCode     & sc  = StatusCode::FAILURE );
   ///
   inline const std::string&  name     () { return m_ConverterName; } 
   ///
@@ -83,9 +83,9 @@ protected:
 { m_ConverterName  = ConverterName ; } 
   ///
   StatusCode declareObject( const std::string & Path       ,
-			    const CLID        & Clid       ,
-			    const std::string & Addr1 = "" ,
-			    const std::string & Addr2 = "");
+                            const CLID        & Clid       ,
+                            const std::string & Addr1 = "" ,
+                            const std::string & Addr2 = "");
   /// 
 protected: 
   ///

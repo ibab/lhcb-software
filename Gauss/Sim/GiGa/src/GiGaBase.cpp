@@ -117,8 +117,8 @@ StatusCode GiGaBase::initialize()
       if( 0 == msgSvc () ) { return Error("Could not locate IMessageSvc="+ m_msgName      ) ; }    
       msgSvc()->addRef() ; 
       m_output = 
-	m_output < (int) MSG::NIL   ? (int) MSG::NIL   : 
-	m_output > (int) MSG::FATAL ? (int) MSG::FATAL : m_output ; 
+        m_output < (int) MSG::NIL   ? (int) MSG::NIL   : 
+        m_output > (int) MSG::FATAL ? (int) MSG::FATAL : m_output ; 
       msgSvc()->setOutputLevel( name(), m_output );
     }
   else { Warning("Message Service is not requested to be located"); }
@@ -242,7 +242,7 @@ StatusCode GiGaBase::Error( const std::string& Message , const StatusCode & Stat
   log << MSG::ERROR << System::typeinfoName( typeid( *this ) ) << " " << Message << endreq ; 
   return  Status;
 };  
-/// Print message and return status code ///////////////////////////////////////////////////////
+/// Print message and return status code ///////////////////////////////////////////////////
 StatusCode GiGaBase::Warning( const std::string& Message , const StatusCode & Status ) const 
 {
   Stat stat( chronoSvc() , name()+":Warning" ); 
@@ -250,22 +250,37 @@ StatusCode GiGaBase::Warning( const std::string& Message , const StatusCode & St
   log << MSG::WARNING << System::typeinfoName( typeid( *this ) ) << " " << Message << endreq ; 
   return  Status;
 };  
-/// Print message and return status code /////////////////////////////////////////////////////////
+/// Print message and return status code ///////////////////////////////////////////////////
 StatusCode GiGaBase::Print( const std::string& Message , const StatusCode & Status ) const 
 {
   MsgStream log( msgSvc() , name() ); 
   log << MSG::INFO << System::typeinfoName( typeid( *this ) ) << " " <<Message << endreq ; 
   return  Status;
 };  
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-StatusCode                    GiGaBase::setProperty  ( const Property    & p )       { return m_propMgr->setProperty( p ) ; };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-StatusCode                    GiGaBase::getProperty  (       Property    * p ) const { return m_propMgr->getProperty( p ) ; };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-const Property&               GiGaBase::getProperty  ( const std::string & N ) const { return m_propMgr->getProperty( N ) ; };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-const std::vector<Property*>& GiGaBase::getProperties()                        const { return m_propMgr->getProperties()  ; };   
-///////////////////////// serialize object for reading ///////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////
+StatusCode                    GiGaBase::setProperty  ( const Property    & p ) 
+{ return m_propMgr->setProperty( p ) ; };
+/////////////////////////////////////////////////////////////////////////////////////
+StatusCode                    GiGaBase::setProperty  ( std::istream      & s )  
+{ return m_propMgr->setProperty( s ) ; }
+/////////////////////////////////////////////////////////////////////////////////////
+StatusCode                    GiGaBase::setProperty  ( const std::string & n ,
+                                                       const std::string & v )       
+{ return m_propMgr->setProperty( n , v ) ; } ;
+/////////////////////////////////////////////////////////////////////////////////////
+StatusCode                    GiGaBase::getProperty  (       Property    * p ) const 
+{ return m_propMgr->getProperty( p ) ; };
+/////////////////////////////////////////////////////////////////////////////////////
+const Property&               GiGaBase::getProperty  ( const std::string & N ) const 
+{ return m_propMgr->getProperty( N ) ; };
+/////////////////////////////////////////////////////////////////////////////////////
+StatusCode                    GiGaBase::getProperty  ( const std::string & n ,
+                                                       const std::string & v ) const 
+{ return m_propMgr->getProperty( n , v ) ; } ;
+/////////////////////////////////////////////////////////////////////////////////////
+const std::vector<Property*>& GiGaBase::getProperties()                        const 
+{ return m_propMgr->getProperties()  ; };   
+///////////////////////// serialize object for reading //////////////////////////////
 StreamBuffer& GiGaBase::serialize( StreamBuffer& S )       
 { 
   ///
@@ -290,15 +305,15 @@ StreamBuffer& GiGaBase::serialize( StreamBuffer& S )
 StreamBuffer& GiGaBase::serialize( StreamBuffer& S ) const 
 {
   return S << m_name  
-	   << m_gigaName 
-	   << m_setupName
-	   << m_msgName   
-	   << m_evtName   
-	   << m_detName    
-	   << m_incName    
-	   << m_ppName    
-	   << m_mfName    
-	   << m_output ;   
+           << m_gigaName 
+           << m_setupName
+           << m_msgName   
+           << m_evtName   
+           << m_detName    
+           << m_incName    
+           << m_ppName    
+           << m_mfName    
+           << m_output ;   
 }; 
 ///////////////////////////////////////////////////////////////////////////
 void  GiGaBase::handle( const Incident& incident ) 

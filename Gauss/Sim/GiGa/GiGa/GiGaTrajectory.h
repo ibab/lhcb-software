@@ -23,7 +23,7 @@ class G4Step;
 
 
 class GiGaTrajectory: public G4VTrajectory                    , 
-		      public std::vector<GiGaTrajectoryPoint*>
+                      public std::vector<GiGaTrajectoryPoint*>
 {
   ///
 public:
@@ -50,7 +50,7 @@ public:
   inline const G4ParticleDefinition* partDef     () const { return m_partDef ; } 
   ///
   virtual inline void ShowTrajectory  ()                 const ;
-  virtual inline void DrawTrajectory  ( G4int i_mode=0 ) const ;
+  virtual        void DrawTrajectory  ( G4int i_mode=0 ) const ;
   virtual inline void AppendStep      ( const G4Step*  )       ;
   virtual inline void MergeTrajectory ( G4VTrajectory* )       ;
   ///

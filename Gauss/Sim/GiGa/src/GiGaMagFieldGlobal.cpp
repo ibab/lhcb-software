@@ -37,17 +37,17 @@ void GiGaMagFieldGlobal::GetFieldValue ( const double Point[3], double *B  ) con
     StatusCode sc = mfSvc()->fieldVector( point , m_field );
     if( sc.isFailure() ) 
       { 
-	Error("GetFieldValue, error status code from IMagneticFieldSvc", sc ) ; 
-	MsgStream log( msgSvc() , name() ); 
+        Error("GetFieldValue, error status code from IMagneticFieldSvc", sc ) ; 
+        MsgStream log( msgSvc() , name() ); 
         log << MSG::ERROR 
-	    << " Position[cm]=(" 
-	    << point.x() / cm << ","  
-	    << point.y() / cm << ","  
-	    << point.z() / cm << ")"
-	    << " Field[tesla]=(" 
-	    << point.x() / tesla << ","  
-	    << point.y() / tesla << ","  
-	    << point.z() / tesla << ")" << endreq ; 
+            << " Position[cm]=(" 
+            << point.x() / cm << ","  
+            << point.y() / cm << ","  
+            << point.z() / cm << ")"
+            << " Field[tesla]=(" 
+            << point.x() / tesla << ","  
+            << point.y() / tesla << ","  
+            << point.z() / tesla << ")" << endreq ; 
       }
   }
   ///

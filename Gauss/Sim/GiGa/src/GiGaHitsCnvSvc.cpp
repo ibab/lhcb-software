@@ -18,10 +18,10 @@ const        ISvcFactory&                GiGaHitsCnvSvcFactory = s_GiGaHitsCnvSv
 
 ///////////////////////////////////////////////////////////////////////////////////////////
 GiGaHitsCnvSvc::GiGaHitsCnvSvc( const std::string&   ServiceName          , 
-  				ISvcLocator*         ServiceLocator       ) 
+                                  ISvcLocator*         ServiceLocator       ) 
   : GiGaCnvSvcBase(                                  ServiceName          , 
-						     ServiceLocator       , 
-						     GiGaHits_StorageType )
+                                                     ServiceLocator       , 
+                                                     GiGaHits_StorageType )
   ///
 {
   setAddressFactory(&GiGaHitsAddressFactory);

@@ -19,9 +19,9 @@ class  GiGaGeomAddress: public GenericAddress
 public:
   ///
   GiGaGeomAddress(  const CLID&        Clid          , 
-		    const std::string& FileName      , 
-		    const int          /* SeqInt */  , 
-		    const std::string& ContainerName )
+                    const std::string& FileName      , 
+                    const int          /* SeqInt */  , 
+                    const std::string& ContainerName )
     : GenericAddress( GiGaGeom_StorageType, Clid )
   {
     setDbName        ( FileName          );
@@ -30,9 +30,9 @@ public:
   };
   ///
   GiGaGeomAddress(  const GenericLink& Link          ,
-		    const std::string& FileName      , 
-		    const std::string& ContainerName , 
-		    const std::string& ObjName       )
+                    const std::string& FileName      , 
+                    const std::string& ContainerName , 
+                    const std::string& ObjName       )
     : GenericAddress( Link )
   {
     setDbName       ( FileName      );

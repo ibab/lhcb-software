@@ -13,7 +13,7 @@
 */
 
 class GiGaPhysListBase: virtual public IGiGaPhysList   , 
-			public          GiGaBase
+                        public          GiGaBase
 {
   ///
 protected:

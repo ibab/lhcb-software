@@ -39,15 +39,15 @@
 #endif // G4UI_USE_XAW
 ///////////////////////////////////////////////////////////////////////////////////
 #ifdef G4UI_USE_TERMINAL
-#include "G4UIterminal.hh"   	  
-#include "G4UItcsh.hh"   	  
-#include "G4UIcsh.hh"   	  
+#include "G4UIterminal.hh"             
+#include "G4UItcsh.hh"             
+#include "G4UIcsh.hh"             
 #endif // G4UI_USE_TERMINAL 
 ///////////////////////////////////////////////////////////////////////////////////
 #ifdef G4UI_USE
-#include "G4UIterminal.hh"   	  
-#include "G4UItcsh.hh"   	  
-#include "G4UIcsh.hh"   	  
+#include "G4UIterminal.hh"             
+#include "G4UItcsh.hh"             
+#include "G4UIcsh.hh"             
 #endif // G4UI_USE
 ///////////////////////////////////////////////////////////////////////////////////
 //#ifdef G4UI_USE_WIN32
@@ -88,7 +88,7 @@ inline G4UImanager* operator<<( G4UImanager* ui , const std::string& cmd )
 }; 
 ///////////////////////////////////////////////////////////////////////////////////
 inline G4UImanager* operator<<( G4UImanager* ui , 
-				const GiGaRunManager::Strings& cmds ) 
+                                const GiGaRunManager::Strings& cmds ) 
 {
   for( GiGaRunManager::Strings::const_iterator ci = cmds.begin() ; cmds.end() != ci ; ++ci )
     { if( 0 != ui ) { ui << *ci; } }  
@@ -315,9 +315,9 @@ StatusCode  GiGaRunManager::initializeRun()
   G4ApplicationState currentState = G4StateManager::GetStateManager()->GetCurrentState();
   ///
   Assert( ( currentState == PreInit || currentState == Idle ) , 
-	  Tag +  " Wrong Geant4 State (must be PreInit or Idle)" ) ;  
+          Tag +  " Wrong Geant4 State (must be PreInit or Idle)" ) ;  
   Assert( G4RunManager::initializedAtLeastOnce                , 
-	  Tag +  " Geant4 kernel must be initialised"            ) ; 
+          Tag +  " Geant4 kernel must be initialised"            ) ; 
   Assert( G4RunManager::ConfirmBeamOnCondition()              ,            
           Tag + " Geant4 Beam-On conditions are not satisfied!"  ) ; 
   ///
@@ -360,12 +360,12 @@ StatusCode GiGaRunManager::initializeKernel()
   ////
   Assert( ( PreInit == currentState  || Idle ==  currentState ) , Tag + " Wrong curent state (must be PreInit or Idle)" ) ; 
   Assert( ( G4RunManager::geometryInitialized || 
-	    ( 0 != G4RunManager::userDetector ) || ( 0 != m_rootGeo ) || ( 0 != cnvSvc() ) ) , 
-	  Tag + " It is not possible to initialize the Detector!"   ) ; 
+            ( 0 != G4RunManager::userDetector ) || ( 0 != m_rootGeo ) || ( 0 != cnvSvc() ) ) , 
+          Tag + " It is not possible to initialize the Detector!"   ) ; 
   Assert( ( G4RunManager::physicsInitialized  || ( 0 != G4RunManager::physicsList ) ) , 
-	  Tag + " It is not possible to initialize the Physics!"    ) ; 
+          Tag + " It is not possible to initialize the Physics!"    ) ; 
   Assert( ( G4RunManager::cutoffInitialized  || ( 0 != G4RunManager::physicsList ) ) ,   
-	  Tag + " It is not possible to initialize the CutOff!"     ) ; 
+          Tag + " It is not possible to initialize the CutOff!"     ) ; 
   ///
   if( 0 == m_g4UIsession ) { createUIsession() ; } 
   ///
@@ -385,9 +385,9 @@ StatusCode GiGaRunManager::initializeKernel()
       ///
 // GG  On Nt  with session = terminal objType throws an exception!!!
 //      log << MSG::INFO 
-//	  << " Start Geant4 User Session = " 
-//	  << objType(m_g4UIsession) 
-//	  << endreq ; 
+//          << " Start Geant4 User Session = " 
+//          << objType(m_g4UIsession) 
+//          << endreq ; 
       ///
       set_uis_Is_Started( true  ) ; 
       m_g4UIsession->SessionStart() ; 
@@ -424,14 +424,14 @@ StatusCode GiGaRunManager::declare( G4VUserPrimaryGeneratorAction  * obj )
       ///
       MsgStream log( msgSvc() , name() + ".declare(G4VUserPrimaryGeneratorAction)" ); 
       log << MSG::WARNING 
-	  << ( 0 != obj ? " replace " : " remove " )
-	  << " existing G4VUserPrimaryGeneratorAction=" 
-	  << objType( G4RunManager::GetUserPrimaryGeneratorAction() )
-	  << " by " 
-	  << objType( obj ) ;
+          << ( 0 != obj ? " replace " : " remove " )
+          << " existing G4VUserPrimaryGeneratorAction=" 
+          << objType( G4RunManager::GetUserPrimaryGeneratorAction() )
+          << " by " 
+          << objType( obj ) ;
       ///
       if( 0 != G4RunManager::userPrimaryGeneratorAction ) 
-	{ delete G4RunManager::userPrimaryGeneratorAction ; }
+        { delete G4RunManager::userPrimaryGeneratorAction ; }
       ///
       G4RunManager::userPrimaryGeneratorAction = 0 ; 
     } 
@@ -455,16 +455,16 @@ StatusCode GiGaRunManager::declare( G4VUserDetectorConstruction    * obj )
   MsgStream log( msgSvc() , name() + ".declare(G4VUserDetectorconstruction)" ); 
   ///
   Assert ( 0 == m_rootGeo                                    , 
-	   ".declare(G4VUserDetectorConstruction*)::attempt to replace the existing G4VPhysicalVolume=" 
-	   + objType( m_rootGeo ) 
-	   + " by " 
-	   + objType ( obj ) );  
+           ".declare(G4VUserDetectorConstruction*)::attempt to replace the existing G4VPhysicalVolume=" 
+           + objType( m_rootGeo ) 
+           + " by " 
+           + objType ( obj ) );  
   ///
   Assert ( 0 == G4RunManager::GetUserDetectorConstruction() , 
-	   ".declare(G4VUserDetectorConstruction*)::attempt to replace the existing G4VUserDetectorConstruction=" 
-	   + objType( G4RunManager::GetUserDetectorConstruction() ) 
-	   + " by " 
-	   + objType ( obj ) );  
+           ".declare(G4VUserDetectorConstruction*)::attempt to replace the existing G4VUserDetectorConstruction=" 
+           + objType( G4RunManager::GetUserDetectorConstruction() ) 
+           + " by " 
+           + objType ( obj ) );  
   ///
   Assert( 0 != obj , ".declare(G4VUserDetectorconstruction*)::obj  points to NULL!" ); 
   ///
@@ -488,16 +488,16 @@ StatusCode GiGaRunManager::declare( G4VPhysicalVolume              * obj )
   MsgStream log( msgSvc() , name() + ".declare(G4VPhysicalVolume*)" ); 
   ///
   Assert ( 0 == m_rootGeo                                    , 
-	   ".declare(G4VPhysicalVolume*)::attempt to replace the existing G4VPhysicalVolume=" 
-	   + objType( m_rootGeo ) 
-	   + " by " 
-	   + objType ( obj ) );  
+           ".declare(G4VPhysicalVolume*)::attempt to replace the existing G4VPhysicalVolume=" 
+           + objType( m_rootGeo ) 
+           + " by " 
+           + objType ( obj ) );  
   ///
   Assert ( 0 == G4RunManager::GetUserDetectorConstruction() , 
-	   ".declare(G4VPhysicalVolume*)::attempt to replace the existing G4VUserDetectorConstruction=" 
-	   + objType( G4RunManager::GetUserDetectorConstruction() ) 
-	   + " by " 
-	   + objType ( obj ) );  
+           ".declare(G4VPhysicalVolume*)::attempt to replace the existing G4VUserDetectorConstruction=" 
+           + objType( G4RunManager::GetUserDetectorConstruction() ) 
+           + " by " 
+           + objType ( obj ) );  
   ///
   Assert( 0 != obj , ".declare(G4PhysicalVolume*)::obj points to NULL!" ); 
   ///
@@ -520,13 +520,13 @@ StatusCode GiGaRunManager::declare( G4VUserPhysicsList             * obj )
 {
   ///
   Assert ( 0 == G4RunManager::GetUserPhysicsList() , 
-	   ".declare(G4VUserPhysicsList*)::attempt to replace the existing G4VUserPhysicsList=" 
-	   + objType( G4RunManager::GetUserPhysicsList() ) 
-	   + " by " 
-	   + objType( obj )  ) ; 
+           ".declare(G4VUserPhysicsList*)::attempt to replace the existing G4VUserPhysicsList=" 
+           + objType( G4RunManager::GetUserPhysicsList() ) 
+           + " by " 
+           + objType( obj )  ) ; 
   ///
   Assert( 0 != obj , 
-	  ".declare(G4VUserPhysicsList*)::obj points to NULL!" ); 
+          ".declare(G4VUserPhysicsList*)::obj points to NULL!" ); 
   ///
   G4RunManager::physicsInitialized = false ; 
   G4RunManager::cutoffInitialized  = false ; 
@@ -547,10 +547,10 @@ StatusCode GiGaRunManager::declare( G4UserRunAction                * obj )
 {
   ///
   Assert ( 0 == G4RunManager::GetUserRunAction() , 
-	   ".declare(G4UserRunAction*)::attempt to replace the existing G4UserRunAction=" 
-	   + objType( G4RunManager::GetUserRunAction() ) 
-	   + " by " 
-	   + objType( obj ) ) ; 
+           ".declare(G4UserRunAction*)::attempt to replace the existing G4UserRunAction=" 
+           + objType( G4RunManager::GetUserRunAction() ) 
+           + " by " 
+           + objType( obj ) ) ; 
   ///
   G4RunManager::SetUserAction( obj ); 
   return StatusCode::SUCCESS ; 
@@ -560,10 +560,10 @@ StatusCode GiGaRunManager::declare( G4UserEventAction              * obj )
 {
   ///
   Assert ( 0 == G4RunManager::GetUserEventAction() , 
-	   ".declare(G4UserEventAction*)::attempt to replace the existing G4UserEventAction=" 
-	   + objType( G4RunManager::GetUserEventAction() )  
-	   + " by " 
-	   + objType( obj ) ) ; 
+           ".declare(G4UserEventAction*)::attempt to replace the existing G4UserEventAction=" 
+           + objType( G4RunManager::GetUserEventAction() )  
+           + " by " 
+           + objType( obj ) ) ; 
   ///
   G4RunManager::SetUserAction( obj ); 
   ///
@@ -574,10 +574,10 @@ StatusCode GiGaRunManager::declare( G4UserStackingAction           * obj )
 {
   ///
   Assert ( 0 == G4RunManager::GetUserStackingAction() , 
-	   ".declare(G4UserStackingAction*)::attempt to replace the existing G4UserStackingAction=" 
-	   + objType( G4RunManager::GetUserStackingAction() )  
-	   + " by " 
-	   + objType( obj ) );
+           ".declare(G4UserStackingAction*)::attempt to replace the existing G4UserStackingAction=" 
+           + objType( G4RunManager::GetUserStackingAction() )  
+           + " by " 
+           + objType( obj ) );
   ///
   G4RunManager::SetUserAction( obj ); 
   ///
@@ -588,10 +588,10 @@ StatusCode GiGaRunManager::declare( G4UserSteppingAction           * obj )
 {
   ///
   Assert ( 0 == G4RunManager::GetUserSteppingAction() , 
-	   ".declare(G4UserSteppingAction*)::attempt to replace the existing G4UserSteppingAction=" 
-	   + objType( G4RunManager::GetUserSteppingAction() )
-	   + " by " 
-	   + objType( obj ) );
+           ".declare(G4UserSteppingAction*)::attempt to replace the existing G4UserSteppingAction=" 
+           + objType( G4RunManager::GetUserSteppingAction() )
+           + " by " 
+           + objType( obj ) );
   ///
   G4RunManager::SetUserAction( obj ); 
   ///
@@ -602,10 +602,10 @@ StatusCode GiGaRunManager::declare( G4UserTrackingAction           * obj )
 {
   ///
   Assert ( 0 == G4RunManager::GetUserTrackingAction() , 
-	   ".declare(G4UserTrackingAction*)::attempt to replace the existing G4UserTrackingAction=" 
-	   + objType( G4RunManager::GetUserTrackingAction() )
-	   + " by " 
-	   + objType( obj ) );
+           ".declare(G4UserTrackingAction*)::attempt to replace the existing G4UserTrackingAction=" 
+           + objType( G4RunManager::GetUserTrackingAction() )
+           + " by " 
+           + objType( obj ) );
   ///
   G4RunManager::SetUserAction( obj ); 
   ///
@@ -647,24 +647,24 @@ StatusCode  GiGaRunManager::createUIsession()
     Strings::const_iterator ci = UIsessions().begin() ;
     while( UIsessions().end() != ci && 0 == m_g4UIsession )  
       {
-	////
-	const std::string session ( *ci++ ); 
-	///
+        ////
+        const std::string session ( *ci++ ); 
+        ///
         log << MSG::VERBOSE << " Attempt to create UIsession of Type= " << session 
-	    << "\t" << "Argc="    << System::argc()
-	    << "\t" << "argv="    << System::argv()  << endreq; 
-	
+            << "\t" << "Argc="    << System::argc()
+            << "\t" << "argv="    << System::argv()  << endreq; 
+        
         log << MSG::VERBOSE << " Attempt to create UIsession of Type= " << session 
-	    << "\t" << "Argc="    << System::argc()
-	    << "\t" << "argv="    << System::argv()  
-	    << "\t" << "argv[0]=" << System::argv()[0] << endreq;
-	///
-	if(       "Wo"        == session ) 
-	  { 
+            << "\t" << "Argc="    << System::argc()
+            << "\t" << "argv="    << System::argv()  
+            << "\t" << "argv[0]=" << System::argv()[0] << endreq;
+        ///
+        if(       "Wo"        == session ) 
+          { 
 #ifdef G4UI_USE_WO
-	    m_g4UIsession = new G4UIWo  ( System::argc() , System::argv() ) ; 
+            m_g4UIsession = new G4UIWo  ( System::argc() , System::argv() ) ; 
 #endif // G4UI_USE_WO
-	  } 
+          } 
 //  else if ( "G4UIWin32" == session )
 //#ifdef G4UI_USE_WIN32
 //    // GG  !!!!!!!!!
@@ -672,42 +672,42 @@ StatusCode  GiGaRunManager::createUIsession()
 //    m_g4UIsession = new G4UIWin32();
 //#endif
 //  }
-	else if ( "GAG"       == session  )    
-	  {
+        else if ( "GAG"       == session  )    
+          {
 #ifdef G4UI_USE_GAG
-	    m_g4UIsession = new G4UIGAG () ; 
+            m_g4UIsession = new G4UIGAG () ; 
 #endif // G4UI_USE_GAG
-	  }
-	else if ( "Xm"        == session  ) 
-	  {
+          }
+        else if ( "Xm"        == session  ) 
+          {
 #ifdef G4UI_USE_XM
-	    m_g4UIsession = new G4UIXm  ( System::argc() , System::argv() ) ; 
+            m_g4UIsession = new G4UIXm  ( System::argc() , System::argv() ) ; 
 #endif // G4UI_USE_XM 
-	  }
-	else if ( "Xaw"       == session  ) 
-	  {
+          }
+        else if ( "Xaw"       == session  ) 
+          {
 #ifdef G4UI_USE_XAW
-	    m_g4UIsession = new G4UIXaw ( System::argc() , System::argv() ) ; 
+            m_g4UIsession = new G4UIXaw ( System::argc() , System::argv() ) ; 
 #endif // G4UI_USE_XAW
-	  }
-	else if ( "tcsh"  == session  ) 
-	  {
+          }
+        else if ( "tcsh"  == session  ) 
+          {
 #ifdef G4UI_USE_TERMINAL
-	    m_g4UIsession = new G4UIterminal( new G4UIcsh ()  ) ;
+            m_g4UIsession = new G4UIterminal( new G4UIcsh ()  ) ;
 #endif // G4UI_USE_TERMINAL 
-	  }
-	else if ( "csh"  == session  ) 
-	  {
+          }
+        else if ( "csh"  == session  ) 
+          {
 #ifdef G4UI_USE_TERMINAL
-	    m_g4UIsession = new G4UIterminal( new G4UIcsh ()  ) ;
+            m_g4UIsession = new G4UIterminal( new G4UIcsh ()  ) ;
 #endif // G4UI_USE_TERMINAL 
-	  }
-	else if ( "terminal"  == session  ) 
-	  {
+          }
+        else if ( "terminal"  == session  ) 
+          {
 #ifdef G4UI_USE_TERMINAL
-	    m_g4UIsession = new G4UIterminal () ; 	  
+            m_g4UIsession = new G4UIterminal () ;           
 #endif // G4UI_USE_TERMINAL 
-	  }
+          }
       }
   }
   ///
@@ -722,12 +722,12 @@ StatusCode  GiGaRunManager::createUIsession()
     {
 // GG  On Nt  with session = terminal objType throws an exception!!!
 //      log << MSG::DEBUG << "::createUIsessions():: session=" 
-//	  << objType( m_g4UIsession ) << " is created " << endreq; 
+//          << objType( m_g4UIsession ) << " is created " << endreq; 
     }
   else 
     {
       log << MSG::WARNING << "::createUIsessions():: session is not created" 
-	  << endreq; 
+          << endreq; 
     }
   ///
   return ( 0 != m_g4UIsession)  ? StatusCode::SUCCESS : StatusCode::FAILURE ;   
@@ -735,8 +735,8 @@ StatusCode  GiGaRunManager::createUIsession()
 }; 
 ///////////////////////////////////////////////////////////////////////////////////
 void GiGaRunManager::BeamOn( int         n_event       ,                      
-			     const char* macroFile ,                       
-			     int         n_select      )
+                             const char* macroFile ,                       
+                             int         n_select      )
 {
   ///
   const std::string Tag( name()+".beamOn()" ) ; 
@@ -779,7 +779,7 @@ void GiGaRunManager::InitializeGeometry()
   MsgStream log( msgSvc() , name()+"::initializeGeometry()" ) ; 
   ///
   Assert( 0 != G4RunManager::userDetector || 0 != m_rootGeo || 0 != cnvSvc() , 
-	  "::InitializeGeometry(), no any geometry souces are available!" );  
+          "::InitializeGeometry(), no any geometry souces are available!" );  
   ///
   G4VPhysicalVolume* root = 0; 
   if      ( 0 != m_rootGeo                  ) 

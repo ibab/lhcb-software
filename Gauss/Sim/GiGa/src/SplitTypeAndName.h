@@ -11,8 +11,8 @@
 ///
 /// split "Type/Name" into "Type" and "Name"
 static inline StatusCode SplitTypeAndName ( const std::string& TypeAndName ,
-					    std::string      & Type        , 
-					    std::string      & Name        )
+                                            std::string      & Type        , 
+                                            std::string      & Name        )
 {
   /// clear output strings
   Type.erase();
@@ -21,7 +21,7 @@ static inline StatusCode SplitTypeAndName ( const std::string& TypeAndName ,
   if( TypeAndName.empty() ) { return StatusCode::FAILURE ; }
   ///
   std::string::const_iterator it = std::find( TypeAndName.begin() , 
-					      TypeAndName.end  () , '/' );
+                                              TypeAndName.end  () , '/' );
   ///
   if( TypeAndName.end() == it )
     {

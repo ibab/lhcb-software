@@ -31,8 +31,8 @@
 
 ///////////////////////////////////////////////////////////////////////////////////////////
 GiGaCnvSvcBase::GiGaCnvSvcBase( const std::string&   ServiceName       , 
-				ISvcLocator*         ServiceLocator    ,
-				const unsigned int   StorageType       )
+                                ISvcLocator*         ServiceLocator    ,
+                                const unsigned int   StorageType       )
   : ConversionSvc( ServiceName , ServiceLocator , StorageType )  
   ///
   , m_dpName      ( "UndefinedName"       )
@@ -260,7 +260,7 @@ void       GiGaCnvSvcBase::handle         ( const Incident& inc )
       DataObject* tmp = new DataObject();
       sc = dpSvc()->registerObject( root , "/G4" , tmp ); 
       if( sc.isFailure() ) 
-	{ Error("Could not create '/Event/G4' directrory !") ; return ; }
+        { Error("Could not create '/Event/G4' directrory !") ; return ; }
       gtop = dynamic_cast<RegistryEntry*> ( tmp->directory() ) ;
     } 
   if( 0 == gtop ) { Error("Could not cast to RegistryEnytry*! (2)") ; return ; }
@@ -276,16 +276,16 @@ void       GiGaCnvSvcBase::handle         ( const Incident& inc )
 
       sc = createAddress( repSvcType() , it->clid() , it->addr1() , it->addr2() , -1 , Address );   
       if( sc.isFailure() || 0 == Address ) 
-	{ Error("Could not create IOpaqueAddress for "+it->path()+" name="+name ); return ; }
+        { Error("Could not create IOpaqueAddress for "+it->path()+" name="+name ); return ; }
       GenericAddress* GA = dynamic_cast<GenericAddress*> ( Address );
       GA->setObjectName( name );
       std::cout << " name given is " << name << std::endl; 
       long st = gtop->add( name , Address );
       if( st != StatusCode::SUCCESS ) 
-	{ Error("Could not add IOpaqueAddress for "+it->path()+" name="+name ); return ; }
+        { Error("Could not add IOpaqueAddress for "+it->path()+" name="+name ); return ; }
       RegistryEntry* dd = gtop->findLeaf( name ) ; 
       if( 0 == dd ) 
-	{ Error("Could not extarct RegistryEntry by name="+name ); return ; }
+        { Error("Could not extarct RegistryEntry by name="+name ); return ; }
       std::cout << " name extracted is =" << dd->name() << " CLID=" << Address->clID() << std::endl ;   
     }
   ///  
@@ -304,14 +304,14 @@ void       GiGaCnvSvcBase::handle         ( const Incident& inc )
 };  
 ///////////////////////////////////////////////////////////////////////////////////
   StatusCode GiGaCnvSvcBase::Print( const std::string& Message , 
-					 const MSG::Level & level   , 
-					 const StatusCode & Status )
+                                         const MSG::Level & level   , 
+                                         const StatusCode & Status )
 { MsgStream log( msgSvc() , name() ); log << level << Message << endreq ; return  Status; };  
 ///////////////////////////////////////////////////////////////////////////////////
   StatusCode GiGaCnvSvcBase::Exception( const std::string    & Message , 
-					     const GaudiException & Excp    ,
-					     const MSG::Level     & level   , 
-					     const StatusCode     & Status )
+                                             const GaudiException & Excp    ,
+                                             const MSG::Level     & level   , 
+                                             const StatusCode     & Status )
 {
   Stat stat( chronoSvc() , Excp.tag() );
   MsgStream log( msgSvc() , name() + ":"+Excp.tag() ); 
@@ -320,9 +320,9 @@ void       GiGaCnvSvcBase::handle         ( const Incident& inc )
 };  
 /////////////////////////////////////////////////////////////////////////////////// 
   StatusCode GiGaCnvSvcBase::Exception( const std::string    & Message , 
-					     const std::exception & Excp    ,
-					     const MSG::Level     & level   , 
-					     const StatusCode     & Status )
+                                             const std::exception & Excp    ,
+                                             const MSG::Level     & level   , 
+                                             const StatusCode     & Status )
 {
   Stat stat( chronoSvc() , "std::exception" );
   MsgStream log( msgSvc() , name() + ":std::exception" ); 
@@ -331,8 +331,8 @@ void       GiGaCnvSvcBase::handle         ( const Incident& inc )
 };  
 ///////////////////////////////////////////////////////////////////////////////////
 StatusCode GiGaCnvSvcBase::Exception( const std::string    & Message , 
-				      const MSG::Level     & level   , 
-				      const StatusCode     & Status )
+                                      const MSG::Level     & level   , 
+                                      const StatusCode     & Status )
 {
   Stat stat( chronoSvc() , "*UNKNOWN* exception" );
   MsgStream log( msgSvc() , name() + ":UNKNOWN exception" ); 

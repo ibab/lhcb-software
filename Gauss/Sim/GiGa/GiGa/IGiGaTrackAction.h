@@ -23,7 +23,7 @@
 */
 
 class IGiGaTrackAction: virtual public G4UserTrackingAction ,  /* "the main" class from Geant4      */ 
-			virtual public IInterface              /* to allow easy Gaudi instantiation */
+                        virtual public IInterface              /* to allow easy Gaudi instantiation */
 {
   ///
  public:

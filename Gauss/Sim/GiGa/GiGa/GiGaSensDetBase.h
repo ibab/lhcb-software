@@ -15,7 +15,7 @@ class IDetectorElement;
 */
 
 class GiGaSensDetBase: virtual public IGiGaSensDet   ,
-		       public  GiGaBase
+                       public  GiGaBase
 {
   ///
 protected:

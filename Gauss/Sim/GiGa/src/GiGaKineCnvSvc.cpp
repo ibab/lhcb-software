@@ -20,10 +20,10 @@ const        ISvcFactory&                GiGaKineCnvSvcFactory = s_GiGaKineCnvSv
 
 ///////////////////////////////////////////////////////////////////////////////////////////
 GiGaKineCnvSvc::GiGaKineCnvSvc( const std::string&   ServiceName          , 
-  				ISvcLocator*         ServiceLocator       ) 
+                                  ISvcLocator*         ServiceLocator       ) 
   : GiGaCnvSvcBase(                                  ServiceName          , 
-		                                     ServiceLocator       , 
-						     GiGaKine_StorageType )
+                                                     ServiceLocator       , 
+                                                     GiGaKine_StorageType )
   ///
 {
   setAddressFactory(&GiGaKineAddressFactory);

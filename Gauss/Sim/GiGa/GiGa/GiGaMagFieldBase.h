@@ -14,7 +14,7 @@
 
 
 class GiGaMagFieldBase: public virtual IGiGaMagField , 
-			public          GiGaBase 
+                        public          GiGaBase 
 {
   ///
   protected:

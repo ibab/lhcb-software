@@ -33,8 +33,8 @@ StatusCode GiGaPhysListBase::initialize ()
   if( defCut() != GetDefaultCutValue() )
     {
       log << MSG::DEBUG                << " Value of Default Cut is changed from " 
-	  << GetDefaultCutValue() / mm << " [mm] to " 
-	  << defCut()             / mm << " [mm] " << endreq; 
+          << GetDefaultCutValue() / mm << " [mm] to " 
+          << defCut()             / mm << " [mm] " << endreq; 
       SetDefaultCutValue( defCut() );        
     } 
   log << MSG::INFO << " Default Cut Value is set to be " 

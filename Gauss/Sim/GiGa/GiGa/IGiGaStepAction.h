@@ -23,7 +23,7 @@
 */
 
 class IGiGaStepAction: virtual public G4UserSteppingAction ,  /* "the main" class from Geant4      */ 
-		       virtual public IInterface              /* to allow easy Gaudi instantiation */
+                       virtual public IInterface              /* to allow easy Gaudi instantiation */
 {
   ///
  public:

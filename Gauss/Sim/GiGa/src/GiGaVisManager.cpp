@@ -113,8 +113,8 @@ void GiGaVisManager::RegisterGraphicsSystems ()
   if (fVerbose > 0) 
     {
       G4cout <<
-	"\nYou have successfully chosen to use the following graphics systems."
-	     << G4endl;
+        "\nYou have successfully chosen to use the following graphics systems."
+             << G4endl;
       PrintAvailableGraphicsSystems ();
     }
   ///

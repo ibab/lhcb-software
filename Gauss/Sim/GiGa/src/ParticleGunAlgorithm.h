@@ -40,7 +40,7 @@ class ParticleGunAlgorithm: public Algorithm
   /// constructor 
   /// 
   ParticleGunAlgorithm( const std::string&  AlgorithmName  , 
-			ISvcLocator*        ServiceLocator ); 
+                        ISvcLocator*        ServiceLocator ); 
 
   ///
   /// destructor 

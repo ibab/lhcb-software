@@ -71,8 +71,8 @@ StatusCode GiGaStream::initialize()
   ///
   {
     status = serviceLocator()->getService( m_NameOfDataProviderSvc          , 
-					   IID_IDataProviderSvc             , 
-					   (IInterface*&) m_DataProviderSvc ) ;
+                                           IID_IDataProviderSvc             , 
+                                           (IInterface*&) m_DataProviderSvc ) ;
     if( status.isFailure() )  
       { return Error("Initialize::Unable to locate IDataProviderSvc interface with name \t"+m_NameOfDataProviderSvc,status);}
     if( 0 == m_DataProviderSvc )
@@ -81,8 +81,8 @@ StatusCode GiGaStream::initialize()
   ///
   {
     status = serviceLocator()->getService( m_NameOfDataManagerSvc          , 
-					   IID_IDataManagerSvc             , 
-					   (IInterface*&) m_DataManagerSvc ) ;
+                                           IID_IDataManagerSvc             , 
+                                           (IInterface*&) m_DataManagerSvc ) ;
     
     if( status.isFailure() )  
       { return Error("Initialize::Unable to locate IDataManagerSvc interface with name \t"+m_NameOfDataManagerSvc,status);}
@@ -92,8 +92,8 @@ StatusCode GiGaStream::initialize()
   ///
   {
     status = serviceLocator()->getService( m_NameOfConversionSvc            , 
-					   IID_IConversionSvc               , 
-					   (IInterface*&) m_ConversionSvc ) ;
+                                           IID_IConversionSvc               , 
+                                           (IInterface*&) m_ConversionSvc ) ;
     if( status.isFailure() )  
       { return Error("Initialize::Unable to locate IConversionSvc interface with name \t"+m_NameOfConversionSvc,status);}
     if( 0 == m_DataManagerSvc )
@@ -108,12 +108,12 @@ StatusCode GiGaStream::initialize()
       int depth                  = 1      ; 
       std::string::size_type pos = pName->find('#');
       if( std::string::npos != pos ) 
-	{ 
-	  obj.erase(pos);
-	  std::string levels((*pName).c_str(),pos+1);
-	  if( "*" == levels ) { depth = 9999999              ;}
-	  else                { depth = atoi(levels.c_str());}
-	}    
+        { 
+          obj.erase(pos);
+          std::string levels((*pName).c_str(),pos+1);
+          if( "*" == levels ) { depth = 9999999              ;}
+          else                { depth = atoi(levels.c_str());}
+        }    
       DataStoreItem item( obj , depth ); 
       m_StreamItems.push_back(item); 
     }   
