@@ -4,6 +4,10 @@
 ! Purpose     : Common particles
 !-----------------------------------------------------------------------------
 
+! 2004-09-02 - P. Koppenburg
+ - src/<someAlgorithms>.cpp
+   . Remove getInput that is not in physdesktop anymore.
+   
 !========================== CommonParticles v1r5p2 2004-08-03 ===================
 ! 2004-07-23 - P. Koppenburg
  - cmt/requirements

@@ -184,11 +184,13 @@ MergedPi0Alg::execute()
     return StatusCode::FAILURE;
   }
   
+#ifdef DVvnine
   StatusCode scDesktop = desktop()->getInput();
   if (!scDesktop) {
     logbk << MSG::WARNING<< "    not able to fill PhysDesktop " << endreq;
     return StatusCode::SUCCESS;
   }
+#endif
   
   // Retrieve the particles  from PhysDesktop 
   const VertexVector& verts = desktop()->vertices();
@@ -369,7 +371,7 @@ MergedPi0Alg::execute()
   logbk << MSG::INFO << "  Number of particles in desktop = " << parts.size() 
 	<< endreq;
 
-  scDesktop = desktop()->saveDesktop(); // save all new particles
+  StatusCode scDesktop = desktop()->saveDesktop(); // save all new particles
   if (scDesktop) {
     logbk << MSG::INFO << " PhysDeskTop Saved to TES"<<endreq;
   }
