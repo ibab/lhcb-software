@@ -3,8 +3,8 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
-</PRE><H1><A NAME=v24r0>2004-07-14 Brunel v24r0</A></H1><PRE>
-Development version
+</PRE><H1><A NAME=v24r0>2004-07-23 Brunel v24r0</A></H1><PRE>
+This version uses Gaudi v15, needs CMT v1r16. It can process DC04 data
 
 - New or modified functionality
   . GaudiAuditors no longer used for algorithm timing, uses GaudiSequencer
@@ -19,30 +19,35 @@ Development version
 - New tuning
   . Initialize MuonGeometry tool completely at initialisation, not during first
     ~10 events (MuonTools v3r7)
-  . New Calo calibration for DC04 settings (XmlDDDB >= v22r2) (CaloReco v2r2)
-  . New parameterization of the dE/dx loss correction (TrExtrapolator v2r12)
+  . New Calo calibration for DC04 settings (XmlDDDB >= v22r2) (CaloReco v2r4)
+  . New parameterization of the dE/dx loss correction (TrExtrapolator v2r13)
   . Speed improvements in MagneticFieldSvc (Magnet v2r7)
+  . Various minor updates to Rich code
 
 - New packaging and code cleanups
   . Use new GaudiSequencer base class for ProcessPhase (LHCbAlgs v1r0)
   . Use new GaudiAlg and GaudiTools base classes
-    (STDet v1r2, ITAssociators v2r9, STDAQ v1r2, ITAlgorithms v14r3,
-     ITCheckers v2r3, TrExtrapolator v2r12, TrFitter v4r0, RichRecSys v1r11,
-     RichRecQC v1r8)
+    (STDet v1r2, ITAssociators v2r9, STDAQ v1r3, ITAlgorithms v14r3,
+     ITCheckers v2r3, TrExtrapolator v2r13, TrFitter v4r0, RichRecSys v1r12,
+     RichRecQC v1r9)
   . Move ITrFitter interface to TrFitEvent package, thus removing dependencies
     on TrFitter package 
     (TrFitEvent v4r6, TrFitter v4r0, TrCheck v2r5, TrCleanEx v2r10, VeloTT v1r10)
-  . Removed dependency on GaudiAud package
+  . Removed dependency on GaudiAud, GaudiDb, GaudiTools packages
   . Removed dependency on CERNLIB (Seeding v2r9, HepMC v4r121p0)
   . Remove BrunelAlgs package. BrunelInitialisation algorithm replaced by
     common LbAppInit and CreateRawEvent (LHCbAlgs v1r0, DAQEvent v4r4) 
+  . Take external packages from LCG_Interfaces area
 
 - Bug fixes
-  . Fix an unprotected pointer in Richdetailed monitoring (RichRecCommon v1r7)
+  . Fix an unprotected pointer in Rich detailed monitoring (RichRecCommon v1r9)
   . Add a missing job option for detailed Calo monitoring (BrunelMoni.opts)
   . Fix bug in evaluation of overlap of two rectangular areas (CaloUtils v4r7)
   . Add fixes suggested by C.Jones for using Brunel.job in debug mode
   . Fix in MS scattering correction (TrExtrapolator v2r12)
+  . Fix problem with 3-cell cluster at edge of calorimeter, where only one cell
+    has positive energy - was causing rare core dump in CaloMergedPi0Alg
+    (CaloReco v2r4)
 
 </PRE><H1><A NAME=v23r7>2004-04-29 Brunel v23r7</A></H1><PRE>
 Version used for DC04

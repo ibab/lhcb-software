@@ -15,7 +15,7 @@ use AsctToLinker        v1r2    Rec
 
 # Calorimeter
 use CaloMonitor         v2r2 	Calo
-use CaloReco            v2r2	Calo
+use CaloReco            v2r4	Calo
 use CaloPIDs		v2r3	Calo
 
 # Velo
@@ -24,23 +24,23 @@ use VeloDAQ		v1r0	Velo
 # Inner Tracker
 use ITAlgorithms        v14r3	IT
 use ITCheckers          v2r3	IT
-use STDAQ               v1r2    IT
+use STDAQ               v1r3    IT
 
 # Outer Tracker
-use OTAlgorithms        v13r4	OT
+use OTAlgorithms        v13r4p1	OT
 use OTDAQ               v2r0    OT
 
 # Tracking
 use TrFitEvent		v4r6	Tr
 use TrFitAssociators	v1r1	Tr
-use VeloTrack           v5r1  	Velo
+use VeloTrack           v5r2  	Velo
 use TrCheck             v2r5	Tr
-use LongTrack           v1r11	Tr
+use LongTrack           v1r12	Tr
 use TrFitter            v4r0	Tr
-use TrExtrapolator      v2r12	Tr
+use TrExtrapolator      v2r13	Tr
 use TrTools             v2r5p1	Tr
 use Seeding             v2r9	Tr 
-use TrMatching          v2r10	Tr
+use TrMatching          v2r10p1	Tr
 use TrCleanEx           v2r10	Tr
 use VeloTT              v1r10	Tr
 use TrKShort		v1r4	Tr
@@ -52,13 +52,13 @@ use MuonID              v3r7p1	Muon
 use MuonDAQ             v1r1    Muon
 
 # Rich
-use RichRecSys		v1r11	Rich
-use RichRecBase		v1r12	Rich
-use RichRecTools	v2r10	Rich
-use RichRecCommon	v1r8	Rich
-use RichRingRefit	v1r7	Rich
+use RichRecSys		v1r12	Rich
+use RichRecBase		v1r13	Rich
+use RichRecTools	v2r11	Rich
+use RichRecCommon	v1r9	Rich
+use RichRingRefit	v1r8	Rich
 use RichLocalPID	v1r8	Rich
 use RichGlobalPID	v1r7	Rich
 use RichPIDMerge	v1r4	Rich
-use RichRecQC		v1r8	Rich
-use RichRecMCTools	v1r5	Rich
+use RichRecQC		v1r9	Rich
+use RichRecMCTools	v1r6	Rich

@@ -4,21 +4,22 @@
 ! Purpose     : List of packages in Brunel project
 !-----------------------------------------------------------------------------
 
-!======================= BrunelSys v24r0 2004-06-28 =======================
-! 2004-06-28 - Marco Cattaneo
+!======================= BrunelSys v24r0 2004-07-22 =======================
+! 2004-07-22 - Marco Cattaneo
  - Modified requirements for Brunel v24r0
  
    Packages removed:  LHCbTools, RichDAQ (moved to LHCbSys)
                       RichDetTools (renamed RichTools, moved to LHCbSys)
                       BrunelAlgs (moved to LHCbAlgs and DAQEvent)
-   Packages modified: RichRecSys v1r11, RichRecBase v1r12, RichRecMCTools v1r5,
+   Packages modified: RichRecSys v1r12, RichRecBase v1r13, RichRecMCTools v1r6,
                       RichLocalPID v1r8, RichGlobalPID v1r7, RichPIDMerge v1r4,
-                      RichRecCommon v1r8, RichRecTools v2r10, RichRecQC v1r8,
-                      TrTools v2r5p1, TrFitEvent v4r6, TrFitter v4r0, 
-                      TrCheck v2r5, TrCleanEx v2r0, VeloTT v1r10,
-                      TrExtrapolator v2r12, Seeding v3r9
-                      ITAlgorithms v14r3, ITCheckers v2r3, STDAQ v1r2,
-                      CaloReco v2r2, AsctToLinker v1r2
+                      RichRecCommon v1r9, RichRecTools v2r11, RichRecQC v1r9,
+                      RichRingRefit v1r8, TrTools v2r5p1, TrFitEvent v4r6,
+                      TrFitter v4r0, TrCheck v2r5, TrCleanEx v2r0, VeloTT v1r10,
+                      TrExtrapolator v2r13, Seeding v3r9, OTAlgorithms v13r4p1,
+                      ITAlgorithms v14r3, ITCheckers v2r3, STDAQ v1r3,
+                      CaloReco v2r4, AsctToLinker v1r2, VeloTrack v5r2,
+                      TrMatching v2r10p1, LongTrack v1r12
 
 !======================= BrunelSys v23r7 2004-04-23 =======================
 ! 2004-04-28 - Marco Cattaneo
