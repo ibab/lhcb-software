@@ -1,6 +1,10 @@
-! $Id: release.notes,v 1.46 2003-03-07 11:06:06 odie Exp $
+! $Id: release.notes,v 1.47 2003-03-18 16:15:49 odie Exp $
 ! Package     : DaVinciTools
 ! Responsible : Gloria Corti, Sandra Amato
+
+! 2003-03-18 - Olivier Dormond
+ - src/recparser.*:
+   . Added a missing set of decay to the grammar (silly me!).
 
 ! 2003-03-05 - Olivier Dormond
  - DaVinciTools/IDecayFinder.h:

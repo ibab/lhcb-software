@@ -37,7 +37,17 @@
 %%
 
 start: particle_list COLON top_decay_list { m_members = $1; m_decay = $3; }
-     | top_decay_list                     { m_decay = $1; }
+     | particle_list               {{ Descriptor *last = NULL; m_decay = NULL;
+                                      std::vector<ParticleMatcher *>::iterator m;
+                                      for( m=$1->begin(); m!=$1->end(); m++ ) {
+                                        Descriptor *d=new Descriptor(*m,m_ppSvc,m_resThreshold);
+                                        if( m_decay == NULL ) m_decay = d;
+                                        else last->setAlternate(d);
+                                        last = d;
+                                      }
+                                      delete $1;
+                                   }}
+     | top_decay_list              { m_decay = $1; }
 ;
 
 lifted_particle: LBRACK lifted_particle_list CCONJ {{ $$ = $2;
