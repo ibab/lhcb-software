@@ -50,5 +50,5 @@ use MuonDAQ             v1r0    Muon
 use RichDigiQC		v1r4	Rich
 use RichUtils		v3r7	Rich
 use RichDetTools	v3r6	Rich
-use RichReadout		v1r5	Rich
+use RichReadout		v1r6	Rich
 use RichDAQ		v1r2	Rich
