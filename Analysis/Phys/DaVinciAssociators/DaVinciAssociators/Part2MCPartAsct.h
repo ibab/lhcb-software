@@ -1,4 +1,4 @@
-// $Id: Part2MCPartAsct.h,v 1.2 2002-04-26 17:05:10 gcorti Exp $
+// $Id: Part2MCPartAsct.h,v 1.3 2002-04-29 09:08:25 phicharp Exp $
 #ifndef ASSOCIATORS_Part2MCPartASCT_H 
 #define ASSOCIATORS_Part2MCPartASCT_H 1
 
@@ -27,12 +27,12 @@ class Part2MCPartAsct : public Associator<Particle,MCParticle>
   
 public:
   // Define data types
-  typedef Relation2D<Particle,MCParticle>  Table;
+  typedef Relation2D<Particle,MCParticle>       Table;
   typedef OwnType                               Asct;
-  typedef ToRange                               Parts;
-  typedef ToIterator                            PartsIterator;
-  typedef FromRange                             MCParts;
-  typedef FromIterator                          MCPartsIterator;
+  typedef FromRange                             Parts;
+  typedef FromIterator                          PartsIterator;
+  typedef ToRange                               MCParts;
+  typedef ToIterator                            MCPartsIterator;
   
   
 protected:
