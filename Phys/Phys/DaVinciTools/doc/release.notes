@@ -1,8 +1,12 @@
-! $Id: release.notes,v 1.131 2004-08-24 08:17:30 pkoppenb Exp $
+! $Id: release.notes,v 1.132 2004-08-25 13:25:53 pkoppenb Exp $
 ! Package     : DaVinciTools
 ! Responsible : P. Koppenburg
 
-!========================== DaVinciTools v11r0 2004-08-24 ===================
+!========================== DaVinciTools v11r0 2004-08-25 ===================
+! 2004-08-25 - P. Koppenburg
+ - src/DaVinciTools_load.cpp
+   . Remove FilterByBestParticles
+   
 ! 2004-08-23 - P. Koppenburg
  - Split DaVinciTools package into 
    . Phys/DaVinciKernel : DVAlgorithm, PhysDesktop and all Interfaces

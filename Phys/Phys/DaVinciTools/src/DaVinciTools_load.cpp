@@ -1,4 +1,4 @@
-// $Id: DaVinciTools_load.cpp,v 1.39 2004-08-24 07:33:24 pkoppenb Exp $
+// $Id: DaVinciTools_load.cpp,v 1.40 2004-08-25 13:25:53 pkoppenb Exp $
 // Include files 
 
 #include "GaudiKernel/DeclareFactoryEntries.h"
@@ -20,7 +20,6 @@ DECLARE_FACTORY_ENTRIES( DaVinciTools ) {
   DECLARE_TOOL( DecodeSimpleDecayString );
 
   // Algorithms
-  DECLARE_ALGORITHM( FilterByBestParticles );
   DECLARE_ALGORITHM( PreDV );
   
 }
