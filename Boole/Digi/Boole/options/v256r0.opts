@@ -1,5 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////
-///      Job options for Boole when using $LHCBDBASE version v256r0       ///
+///  Job options for Boole, for data produced by SICBMC v264r2 or greater  ///
+///    and with dbase geometry compatible with v256r0 (HPD versions only)  ///
 //////////////////////////////////////////////////////////////////////////////
 #pragma print off
 Digi.DetectorList = { "Spillover" };      // Comment to switch off spillover
@@ -37,5 +38,5 @@ LHCBkgSelector.Input = {
 //LHCBkgSelector.FirstEvent = 7; // Skip corresponding background events 
 DigiWriter.Output = "DATAFILE='v256r0.oodigi' TYP='ROOT' OPT='NEW'";
 HistogramPersistencySvc.OutputFile = "v256r0.hbook";  // Monitoring histos
-ApplicationMgr.EvtMax = 20;
+ApplicationMgr.EvtMax = 200;
 //////////////////////////////////////////////////////////////////////////////

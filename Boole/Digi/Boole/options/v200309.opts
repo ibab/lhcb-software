@@ -1,0 +1,40 @@
+//////////////////////////////////////////////////////////////////////////////
+/// Job options for Boole, for data produced by Gauss v12r5 or greater and ///
+///    with XmlDDDB geometry compatible with lhcb-200309 (MaPMT version)   ///
+//////////////////////////////////////////////////////////////////////////////
+#pragma print off
+Digi.DetectorList = { "Spillover" };      // Comment to switch off spillover
+Digi.DetectorList += { "Bkg" };           // Comment to switch off LHC background
+#include "$BOOLEOPTS/Boole.opts"          // Generic options for all jobs
+#include "$BOOLEOPTS/BooleMoniProd.opts"  // Default monitoring for production
+#include "$BOOLEOPTS/BooleOutput.opts"    // Comment to switch off output
+
+//---------------------------------------------------------------------------
+// Database specific options
+//---------------------------------------------------------------------------
+DetectorDataSvc.DetDbLocation = "$XMLDDDBROOT/DDDB/lhcb-200309.xml";
+#include "$RICHREADOUTOPTS/BooleDigiMaPMT.opts"
+#pragma print on
+
+//---------------------------------------------------------------------------
+// Add here any job specific options, to over-ride previously defined options
+//---------------------------------------------------------------------------
+
+//---------------------------------------------------------------------------
+// Finally, define input and output files, first event, number of events
+//---------------------------------------------------------------------------
+EventSelector.Input = {
+  "DATAFILE='/afs/cern.ch/user/w/witoldp/w0/Gaussjobs/0910_411300.oosim' TYP='ROOT' OPT='READ'"
+}; // Gauss, evtype 411300
+//EventSelector.FirstEvent = 7;
+SpilloverSelector.Input = {
+  "DATAFILE='/afs/cern.ch/user/w/witoldp/w0/Gaussjobs/0810.oosim' TYP='ROOT' OPT='READ'"
+}; // Gauss, evtype 61
+//SpillOverSelector.FirstEvent = 10; // Skip corresponding spillover events
+LHCBkgSelector.Input = { 
+  "DATAFILE='rfio:/castor/cern.ch/lhcb/background/LHC/oosim/00000310_00000004_5.oosim' TYP='ROOT' OPT='READ'" }; // Test file, "Maximal" LHC background 
+//LHCBkgSelector.FirstEvent = 7; // Skip corresponding background events 
+DigiWriter.Output = "DATAFILE='v200309.oodigi' TYP='ROOT' OPT='NEW'";
+HistogramPersistencySvc.OutputFile = "v200309.hbook";  // Monitoring histos
+ApplicationMgr.EvtMax = 200;
+//////////////////////////////////////////////////////////////////////////////

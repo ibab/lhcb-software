@@ -18,8 +18,6 @@ use ExternalLibs	v4r0p1
 use AIDA		v3r22p2
 use CLHEP		v2r1800p0
 use HTL			v2r1321p0
-# NAGC still used by L1Decision
-use NAGC		v2r50p0		
 use XERCES		v2r220p0
 use CERNLIB 		v2r2002p0
 use ROOT 		v2r30504p0
@@ -30,20 +28,18 @@ use GaudiKernel		v13r4p1
 use GaudiSvc 		v10r2
 use GaudiAlg 		v6r4
 use GaudiAud 		v6r2
-# NAGC still used by L1Decision
-use GaudiNagC 		v7r3
 use GaudiDb 		v8r4
 use GaudiRootDb 	v9r2
 use GaudiIntrospection 	v4r6
 use HbookCnv 		v13r4
 
 #-- Databases
-use XmlDDDB	v18r0	Det
+use XmlDDDB	v18r1	Det
 use ParamFiles	v2r1	$(LHCb_release_area)/PARAM -no_auto_imports
 use FieldMap	v4r3
 
-#-- LHCb libraries (from LHCB_v14r0)
-use LHCb	v14r0
+#-- LHCb libraries (from LHCB_v13r1)
+use LHCb	v13r1
 
 #-> SICB libraries included to avoid dependency on SICBOO package
 use RiSicbGeom	v3r4	SICB
@@ -61,7 +57,7 @@ use L0DU                v6r5    L0
 
 # L1 trigger
 use L1VeloTrack         v5r2	L1
-use L1Decision		v2r1	L1
+use L1Decision		v2r2	L1
 
 # Calorimeter
 use CaloInterfaces      v2r4  	Calo
@@ -70,7 +66,7 @@ use CaloMonitor         v1r4  	Calo
 use CaloDigit           v1r3	Calo
 
 # Velo
-use VeloAlgorithms      v2r7  	Velo
+use VeloAlgorithms      v2r8  	Velo
 
 # Inner Tracker
 use ITAlgorithms        v12r10	IT

@@ -3,12 +3,22 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
-To do:
- - Fix Gauss for Muon GapID, ChamberID
- - Fix Boole.job for no lhcbdbase
- - Add options for Gauss data and SICB MaPMT option
- - Check options for v254r1 data
- - Commit changes to L1Decision to remove NAGC dependency
+</PRE><H1><A NAME=v2r0>2003-10-09 Boole v2r0</A></H1><PRE>
+
+First version of Boole completely independent of ZEBRA. To process SICBMC data,
+first convert it to oosim format using SicbToOORawh, version v3r0 or greater 
+
+Can process data produced with:
+  SICBMC v264r2 or greater
+   - for standard cdf geometry,  use v256r0.opts  options file
+   - for Rich MaPMT options,     use v256r0-MaPMT.opts options file
+  Gauss v12r5 or greater
+   - for baseline (MaPMT) September 03 geometry, use v200309.opts options file
+   - for September 03 geometry, HPD option,  use v200309-hpd.opts options file
+
+(Can also process 2003 TDR production data, but with low efficiency due to
+ incompatibilities of the input data with the new Rich digitization) 
+
 
 - New features
   . Reads data (including spillover) in oosim format
@@ -51,7 +61,8 @@ To do:
 - New packaging
   . Include RiSicbGeom package in BOOLE project to remove dependency on SICBOO
     project
-  . Removed dependency on NAGC dependencies.
+  . Removed dependencies on NAGC 
+    (L1Decision v2r2, ITCheckers v1r3p1, VeloAlgorithms v2r8)
 
 
 </PRE><H1><A NAME=v1r0>2003-07-17 Boole v1r0</A></H1><PRE>
