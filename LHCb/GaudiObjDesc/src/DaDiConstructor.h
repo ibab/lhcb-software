@@ -32,6 +32,9 @@ public:
   DOMString argInOut();
   void setArgInOut(DOMString value);
 
+  DOMString initList();
+  void setInitList(DOMString value);
+
   DOMString code();
   void setCode(DOMString value);
 
@@ -46,6 +49,7 @@ private:
   DOMString                    m_desc, 
                                m_argList,
                                m_argInOut,
+                               m_initList,
                                m_code;
   std::list<DaDiMethArgument*> m_daDiMethArgument;
 
@@ -79,6 +83,16 @@ inline DOMString DaDiConstructor::argInOut()
 inline void DaDiConstructor::setArgInOut(DOMString value)
 {
   m_argInOut = value;
+}
+
+inline DOMString DaDiConstructor::initList()
+{
+  return m_initList;
+}
+
+inline void DaDiConstructor::setInitList(DOMString value)
+{
+  m_initList = value;
 }
 
 inline DOMString DaDiConstructor::code()

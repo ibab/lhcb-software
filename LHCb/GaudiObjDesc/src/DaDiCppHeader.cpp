@@ -1,4 +1,4 @@
-// $Id: DaDiCppHeader.cpp,v 1.24 2001-12-18 13:02:00 mato Exp $
+// $Id: DaDiCppHeader.cpp,v 1.25 2002-01-18 17:25:13 mato Exp $
 
 #include "GaudiKernel/Kernel.h"
 
@@ -85,10 +85,11 @@ bool isSimple(std::string value)
 {
   int i = value.find_last_of(" ");
   value = value.substr(i+1, value.size()-i);
-  if ((value == "bool")   || (value == "short")  ||
-      (value == "long")   || (value == "int")    || 
-      (value == "float")  || (value == "double") || 
-      (value == "char"))
+  if ((value == "bool")   || (value == "short")   ||
+      (value == "long")   || (value == "int")     || 
+      (value == "float")  || (value == "double")  || 
+      (value == "char")   || (value == "unsigned") ||
+      (value == "signed"))
   {
     return true;
   }
@@ -630,8 +631,14 @@ void DDBEcpp::printCppHeader(DaDiPackage* gddPackage,
       }
     }
     xmlOut << ")";
+
     if (gddConstructor->code() != NULL)
     {
+      if (gddConstructor->initList() != NULL)
+      {
+        xmlOut << std::endl << "  : " << gddConstructor->initList().transcode();
+      }
+
       xmlOut << std::endl << "{" << std::endl
         << gddConstructor->code().transcode() << std::endl
         << "}" << std::endl << std::endl;
@@ -655,13 +662,15 @@ void DDBEcpp::printCppHeader(DaDiPackage* gddPackage,
     {
       DaDiAttribute* gddAttribute = gddClass->popDaDiAttribute();
       std::string attType = gddAttribute->type().transcode();
+      int lastspace = attType.find_last_of(" ");
+      attType = attType.substr(lastspace+1, attType.size()-lastspace);
       std::string initValue;
       if (gddAttribute->init() != NULL)
       {
         initValue = gddAttribute->init().transcode();
       }
-      else if ((attType == "int") || 
-               (attType == "short") || 
+      else if ((attType == "int") || (attType == "unsigned") ||
+               (attType == "short") || (attType == "signed") ||
                (attType == "long"))
       {
         initValue = "0";
@@ -1066,6 +1075,15 @@ void DDBEcpp::printCppHeader(DaDiPackage* gddPackage,
 //  Private members (attributes)
 //
   xmlOut << "private: " << std::endl << std::endl;
+
+  for (i=0; i<gddClass->sizeDaDiEnum(); ++i)
+  {
+    DaDiEnum* gddEnum = gddClass->popDaDiEnum();
+
+    xmlOut << "enum " << gddEnum->name().transcode() << " {" 
+      << gddEnum->value().transcode() << "};   ///<" 
+      << gddEnum->desc().transcode() << std::endl;
+  }
 
   unsigned int maxLengthName = 0, maxLengthType = 0;
   

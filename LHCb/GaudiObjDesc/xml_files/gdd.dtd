@@ -14,7 +14,7 @@
 <!ATTLIST package
 	name CDATA #REQUIRED
 >
-<!ELEMENT class (desc?, base*, import*, constructor*, destructor*, method*, attribute*, relation*)>
+<!ELEMENT class (desc?, base*, import*, enum*, constructor*, destructor*, method*, attribute*, relation*)>
 <!ATTLIST class
 	name CDATA #REQUIRED
 	author CDATA #REQUIRED
@@ -26,7 +26,7 @@
 >
 <!ELEMENT desc (#PCDATA)>
 <!ATTLIST desc
-	xml:space (default|preserve) #FIXED "preserve"
+	xml:space (default | preserve) #FIXED "preserve"
 >
 <!ELEMENT base EMPTY>
 <!ATTLIST base
@@ -34,11 +34,19 @@
 	virtual (TRUE | FALSE) "FALSE"
 	access (PUBLIC | PROTECTED | PRIVATE) "PUBLIC"
 >
+<!ELEMENT enum EMPTY>
+<!ATTLIST enum
+   name CDATA #REQUIRED
+   desc CDATA #REQUIRED
+   value CDATA #REQUIRED
+	access (PUBLIC | PROTECTED | PRIVATE) "PRIVATE"
+>
 <!ELEMENT constructor (arg*, code?)>
 <!ATTLIST constructor
 	desc CDATA #REQUIRED
 	argList CDATA #IMPLIED
 	argInOut CDATA #IMPLIED
+	initList CDATA #IMPLIED
 >
 <!ELEMENT destructor (arg*, code?)>
 <!ATTLIST destructor
@@ -74,7 +82,7 @@
 >
 <!ELEMENT code (#PCDATA)>
 <!ATTLIST code
-	xml:space (default|preserve) #FIXED "preserve"
+	xml:space (default | preserve) #FIXED "preserve"
 >
 <!ELEMENT attribute EMPTY>
 <!ATTLIST attribute

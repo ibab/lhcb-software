@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/GaudiObjDesc/src/DaDiClass.h,v 1.9 2001-11-27 17:02:22 mato Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/GaudiObjDesc/src/DaDiClass.h,v 1.10 2002-01-18 17:25:13 mato Exp $
 #ifndef DADICLASS_H 
 #define DADICLASS_H 1
 
@@ -14,6 +14,7 @@
 #include "DaDiBaseClass.h"
 #include "DaDiConstructor.h"
 #include "DaDiDestructor.h"
+#include "DaDiEnum.h"
 
 /** @class DaDiClass DaDiClass.h
  *  
@@ -90,6 +91,10 @@ public:
 	DaDiDestructor* popDaDiDestructor();
 	void pushDaDiDestructor(DaDiDestructor* value);
 	int sizeDaDiDestructor();
+
+  DaDiEnum* popDaDiEnum();
+	void pushDaDiEnum(DaDiEnum* value);
+	int sizeDaDiEnum();
   
 protected:
 
@@ -112,6 +117,7 @@ private:
 	std::list<DaDiMethod*>      m_daDiMethod;
   std::list<DaDiConstructor*> m_daDiConstructor;
   std::list<DaDiDestructor*>  m_daDiDestructor;
+  std::list<DaDiEnum*>        m_daDiEnum;
 };
 
 inline DOMString DaDiClass::className()
@@ -284,8 +290,8 @@ inline std::string DaDiClass::popImportList()
 inline void DaDiClass::pushImportList(std::string value)
 {
   unsigned long l;
-  int i;
-	std::string import;
+  int i, lastspace;
+	std::string import, lastword;
 
 	while (value != "")
 	{
@@ -308,19 +314,20 @@ inline void DaDiClass::pushImportList(std::string value)
       import = import.substr(0,import.size()-1);
     }
 
-		if ((import != "")     && (import != "long")     &&
-			(import != "bool")   && (import != "short")    && 
-			(import != "long")   && (import != "string")   &&
-			(import != "int")    && (import != "float")    &&
-			(import != "double") && (import != "unsigned") &&
-			(import != "signed") && (import != "std")      &&
-			(import != "pair")   && (import != "char")     &&
-      (import != "unsigned long"))
+    lastspace = import.find_last_of(" ");
+    lastword = import.substr(lastspace+1, import.size()-lastspace);
+    if ((lastword != "bool")   && (lastword != "short")    &&
+        (lastword != "long")   && (lastword != "int")      && 
+        (lastword != "float")  && (lastword != "double")   &&
+        (lastword != "char")   && (lastword != "unsigned") &&
+        (lastword != "signed") && (lastword != "")         &&
+        (lastword != "std")    && (lastword != "string"))
 		{
 			if ((import == "vector") || (import == "list")   ||
-				(import == "deque")  || (import == "queue")  ||
-				(import == "stack")  || (import == "map")    ||
-				(import == "set")    || (import == "bitset"))
+				(import == "deque")    || (import == "queue")  ||
+				(import == "stack")    || (import == "map")    ||
+				(import == "set")      || (import == "bitset") ||
+        (import == "pair"))
 			{
 				pushImpStdList(import);
 			}
@@ -468,6 +475,24 @@ inline void DaDiClass::pushDaDiDestructor(DaDiDestructor* value)
 inline int DaDiClass::sizeDaDiDestructor()
 {
 	return m_daDiDestructor.size();
+}
+
+inline DaDiEnum* DaDiClass::popDaDiEnum()
+{
+	DaDiEnum* pt = m_daDiEnum.front();
+	m_daDiEnum.push_back(pt);
+	m_daDiEnum.pop_front();
+	return pt;
+}
+
+inline void DaDiClass::pushDaDiEnum(DaDiEnum* value)
+{
+	m_daDiEnum.push_back(value);
+}
+
+inline int DaDiClass::sizeDaDiEnum()
+{
+	return m_daDiEnum.size();
 }
 
 

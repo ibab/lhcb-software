@@ -2,6 +2,12 @@ Package: GaudiObjDesc
 Desccription: This package contains a set of tools used to generate code from the XML description of the data object classes.
 Package manager : Stefan Roiser
 
+! 20020118 - SR
+ - bugfix applied for better handling of fundamental types
+ - <enum>-element introduced
+ - attribute 'initList' for special constructors introduced, which will handle initialization
+   outside the {-paranthesis
+
 ! 20011207 - Stefan Roiser
  - Better formatting standard output streams
 

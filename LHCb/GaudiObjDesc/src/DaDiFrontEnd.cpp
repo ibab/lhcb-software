@@ -1,4 +1,4 @@
-// $Id: DaDiFrontEnd.cpp,v 1.14 2001-12-07 10:01:52 mato Exp $
+// $Id: DaDiFrontEnd.cpp,v 1.15 2002-01-18 17:25:13 mato Exp $
 
 #include "GaudiKernel/Kernel.h"
 
@@ -462,6 +462,32 @@ void DDFE::parseClass(DOM_Node node,
         }
 
 //
+// Parse enums
+//
+        else if(node.getNodeName().equals("enum"))
+        {
+          DaDiEnum* gddEnum = new DaDiEnum();
+
+          gddClass->pushDaDiEnum(gddEnum);
+
+          gddEnum->setName(node.getAttributes().
+            getNamedItem(DOMString::transcode("name")).getNodeValue().
+            transcode());
+
+          gddEnum->setDesc(node.getAttributes().
+            getNamedItem(DOMString::transcode("desc")).getNodeValue().
+            transcode());
+
+          gddEnum->setValue(node.getAttributes().
+            getNamedItem(DOMString::transcode("value")).getNodeValue().
+            transcode());
+
+          gddEnum->setAccess(node.getAttributes().
+            getNamedItem(DOMString::transcode("access")).getNodeValue().
+            transcode());
+        }
+
+//
 // Parse methods
 //
         else if(node.getNodeName().equals("method"))
@@ -767,6 +793,17 @@ void DDFE::parseClass(DOM_Node node,
             gddConstructor->setDesc(0);
           }
 
+          if (!node.getAttributes().
+            getNamedItem(DOMString::transcode("initList")).isNull())
+          {
+            gddConstructor->setInitList(node.getAttributes().
+              getNamedItem(DOMString::transcode("initList")).
+              getNodeValue());
+          }
+          else
+          {
+            gddConstructor->setDesc(0);
+          }
           
           //
           // Handling of argList and argInOut

@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/GaudiObjDesc/src/DaDiPackage.h,v 1.4 2001-11-05 19:51:59 mato Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/GaudiObjDesc/src/DaDiPackage.h,v 1.5 2002-01-18 17:25:14 mato Exp $
 #ifndef DADIPACKAGE_H 
 #define DADIPACKAGE_H 1
 
@@ -135,8 +135,8 @@ inline std::string DaDiPackage::popImportList()
 
 inline void DaDiPackage::pushImportList(std::string value)
 {
-
-	std::string import;
+  int lastspace;
+	std::string import, lastword;
 
 	while (value != "")
 	{
@@ -153,18 +153,20 @@ inline void DaDiPackage::pushImportList(std::string value)
 			value = value.substr(i+1,std::string::npos);
 		}
 
-		if ((import != "")       && (import != "long")     &&
-			(import != "bool")   && (import != "short")    && 
-			(import != "long")   && (import != "string")   &&
-			(import != "int")    && (import != "float")    &&
-			(import != "double") && (import != "unsigned") &&
-			(import != "signed") && (import != "std")      &&
-			(import != "pair")   && (import != "char"))
+    lastspace = import.find_last_of(" ");
+    lastword = import.substr(lastspace+1, import.size()-lastspace);
+    if ((lastword != "bool")   && (lastword != "short")    &&
+        (lastword != "long")   && (lastword != "int")      && 
+        (lastword != "float")  && (lastword != "double")   &&
+        (lastword != "char")   && (lastword != "unsigned") &&
+        (lastword != "signed") && (lastword != "")         &&
+        (lastword != "string") && (lastword != "std"))
 		{
 			if ((import == "vector") || (import == "list")   ||
-				(import == "deque")  || (import == "queue")  ||
-				(import == "stack")  || (import == "map")    ||
-				(import == "set")    || (import == "bitset"))
+				(import == "deque")  || (import == "queue")    ||
+				(import == "stack")  || (import == "map")      ||
+				(import == "set")    || (import == "bitset")   ||
+        (import == "pair"))
 			{
 				m_impStdList.push_back(import);
 			}
