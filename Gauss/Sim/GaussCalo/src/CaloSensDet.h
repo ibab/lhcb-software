@@ -1,22 +1,8 @@
-// $Id: CaloSensDet.h,v 1.10 2004-01-14 13:38:10 ranjard Exp $ 
+// $Id: CaloSensDet.h,v 1.11 2004-10-08 15:06:54 ibelyaev Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
-// Revision 1.9  2003/12/10 13:49:30  ranjard
-// v5r0 - fix code for Gaudi v13r0
-//
-// Revision 1.8  2003/07/08 19:40:57  ibelyaev
-//  Sensitive Plane Detector + improved printout
-//
-// Revision 1.7  2003/07/08 11:12:40  ibelyaev
-//  few fixes in base class CaloSensDet
-//
-// Revision 1.6  2003/07/07 16:27:46  ibelyaev
-//  substitupe G4Material with G4MaterialCutsCouple
-//
-// Revision 1.5  2003/07/07 15:40:26  ibelyaev
-//  inverse the sign of 'DeltaT'
 // ============================================================================
 #ifndef       GAUSSCALO_CaloSensDet_H
 #define       GAUSSCALO_CaloSensDet_H 1 
@@ -206,7 +192,16 @@ protected:
   
   /// accessor to histogram service 
   inline IHistogramSvc*       histoSvc   () const { return m_histoSvc   ; }  
-  
+
+protected:
+
+  /** helper method to locate the Calorimeter cell to which 
+   *  G4 point belongs to 
+   *  @param point G4 point 
+   *  @retuen calorimeter cell identifier 
+   */
+  CaloCellID cell ( const G4StepPoint* point ) const ;
+
 protected:
   
   /** fill the hit with the concrete information about the energy and the time.
@@ -313,7 +308,7 @@ private:
   std::string                                 m_collectionName      ;
   
   // translation table 
-  Table                                       m_table               ;
+  mutable Table                               m_table               ;
   HitMap                                      m_hitmap              ;
   
   std::string                                 m_caloName            ;

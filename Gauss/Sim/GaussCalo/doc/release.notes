@@ -7,6 +7,25 @@
 !                  : G4 actions, etc for LHCb calorimeters
 !-----------------------------------------------------------------------------
 
+! 2004-10-08 - Vanya BELYAEV
+ - fix a bug in mapping G4 space points -> CaloCellID.
+   The problem is due to *DIFERENT* actual size of 
+   scintillate plate and *EFFECTIVE* cell size in DeCalorimeter 
+   description.
+   It results in the fact that 2-5% of single EM-showers has 
+   distorted shape (the energy is prescribed to wrong cell) 
+
+  To restor ethe "old" behaviour one need to UNCOMMENT two lines 
+  in src/CaloSensDet.cpp file 
+  ( method  CaloCellID CaloSensDet::cell ( const G4StepPoint* point ) const ) 
+
+  // current solution! 
+  // CaloCellID id = calo() -> Cell ( point->GetPosition() ) ;
+  // return id ;
+
+ - cmt/requirements 
+   increment the version to v7r2 
+
 !====================== GaussCalo v7r1 ===================================
 ! 2004-08-02 - Gloria CORTI
  - requirements, adapt to LCG interfaces

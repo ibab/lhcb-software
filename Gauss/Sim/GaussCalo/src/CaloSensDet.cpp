@@ -1,31 +1,13 @@
-// $Id: CaloSensDet.cpp,v 1.16 2004-02-22 13:13:42 ibelyaev Exp $ 
+// $Id: CaloSensDet.cpp,v 1.17 2004-10-08 15:06:54 ibelyaev Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
-// Revision 1.15  2004/01/14 13:38:10  ranjard
-// v6r0 - fix to be used with Gaudi v14r0
-//
-// Revision 1.14  2003/10/17 13:59:34  ranjard
-// v4r2 - fix for geant4.5.2.ref04
-//
-// Revision 1.13  2003/10/10 16:17:44  witoldp
-// changed version number
-//
-// Revision 1.12  2003/10/10 14:53:00  robbep
-// Temporary ix in CaloSensDet against bug in copy number. Use
-// directly geometry instead.
-//
-// Revision 1.11  2003/07/08 19:54:48  ibelyaev
-//  minor fix for format printout
-//
-// Revision 1.10  2003/07/08 19:40:57  ibelyaev
-//  Sensitive Plane Detector + improved printout
-//
 // ============================================================================
 /// SRD & STD 
 #include <algorithm>
 #include <vector>
+#include <sstream>
 /// CLHEP 
 #include "CLHEP/Geometry/Point3D.h"
 #include "CLHEP/Units/PhysicalConstants.h"
@@ -71,6 +53,17 @@
  *  @date   23/01/2001 
  */
 // ============================================================================
+
+namespace 
+{
+  std::string toString( const CaloCellID& id ) 
+  {
+    std::ostringstream s ;
+    s << id ;
+    return s.str() ;
+  }
+  
+};
 
 
 // ============================================================================
@@ -418,63 +411,24 @@ bool CaloSensDet::ProcessHits( G4Step* step                      ,
   const G4MaterialCutsCouple* const material = preStep -> 
     GetMaterialCutsCouple () ;
   
-  //  G4TouchableHistory* tHist  = (G4TouchableHistory*)
-  //    ( step->GetPreStepPoint()->GetTouchable() ) ;
-  
-  //  CaloSim::Path path ;
-  //  path.reserve( 16 ) ;
-  
-  //  for( int level = 0 ; level < tHist->GetHistoryDepth() ; ++level ) 
-  //    {
-  //      const G4VPhysicalVolume* pv = tHist -> GetVolume( level ) ;
-  //      if( 0 == pv ) { continue ; }                          // CONTINUE 
-  //      const G4LogicalVolume*   lv = pv    -> GetLogicalVolume();
-  //      if( 0 == lv ) { continue ; }                          // CONTINUE
-      
-      //  start volume ? 
-  //      if      (  m_end == lv  )    { break ; } // BREAK    
-      // "useful" volume 
-  //      else if ( !path.empty() ) 
-  //        { path.push_back( tHist->GetReplicaNumber( level ) ); 
-  //      else if ( m_start .end() != std::find( m_start .begin () , 
-  //                                             m_start .end   () , lv ) )
-  //        { path.push_back( tHist->GetReplicaNumber( level ) ); 
-      // end volume ?
-  //    }
-
-  //  if( path.empty() ) 
-  //    { Error("Replica Path is invalid!")      ; return false ; } // RETURN 
-  
-  // find the cellID 
-  //  CaloCellID  cellID( m_table( path ) ) ;
-
-  CaloCellID cellID = calo() -> Cell ( prePoint ) ;
-  
-  //  if( CaloCellID() == cellID ) 
-  //    {
-  //      cellID          = calo() -> Cell ( prePoint );
-      // skip the invalid cells 
-      if ( !( calo() -> valid( cellID ) ) ) { return false ; }  // RETURN 
-      //      m_table( path ) = cellID ;
-      //    }
-      //  if( CaloCellID() == cellID ) 
-      //    { Error ("Invalid cell is found") ;  return false ; }  // RETURN 
+  CaloCellID cellID = cell ( preStep ) ;
+  if ( !( calo() -> valid ( cellID ) ) ) { return false ; }
   
   // get the existing hit 
   CaloHit*&    hit = m_hitmap( cellID );                        // ATTENTION 
   if( 0 == hit )  // hit does not exists 
-    {
-      // create new hit 
-      hit = new CaloHit      ( cellID ) ; 
-      // add it into collection 
-      m_collection -> insert ( hit    ) ;
-    }
+  {
+    // create new hit 
+    hit = new CaloHit      ( cellID ) ; 
+    // add it into collection 
+    m_collection -> insert ( hit    ) ;
+  }
   
   // check the status of the track
   GaussTrackInformation* info = 
     gaussTrackInformation( track->GetUserInformation() );
   if( 0 == info ) 
-    { Error("Invalid Track information") ; return false ; }     // RETURN
+  { Error("Invalid Track information") ; return false ; }     // RETURN
   
   // ID of the track to be stored 
   int sTrackID     = track -> GetParentID () ;
@@ -482,12 +436,12 @@ bool CaloSensDet::ProcessHits( G4Step* step                      ,
   // already marked to be stored:
   if     ( info -> toBeStored()     ) { sTrackID = trackID ; }  
   else 
-    {
-      // z-position of production vertex 
-      const double z0 = track->GetVertexPosition().z() ;
-      // outside the "forbidden zone" ?  
-      if ( z0 < zMin() || z0 > zMax ()  ) { sTrackID = trackID ; }
-    }
+  {
+    // z-position of production vertex 
+    const double z0 = track->GetVertexPosition().z() ;
+    // outside the "forbidden zone" ?  
+    if ( z0 < zMin() || z0 > zMax ()  ) { sTrackID = trackID ; }
+  }
   
   // Does the hit exist for the given track? 
   CaloSubHit*& sub  = hit->hit( sTrackID ) ;                   // ATTENTION
@@ -635,6 +589,62 @@ double  CaloSensDet::birkCorrection
 };
 // ============================================================================
 
+
+// ============================================================================
+/** helper method to locate the Calorimeter cell to which 
+ *  G4 point belongs to 
+ *  @param point G4 point 
+ *  @retuen calorimeter cell identifier 
+ */
+// ============================================================================
+CaloCellID CaloSensDet::cell ( const G4StepPoint* point ) const 
+{
+  // current solution! 
+  // CaloCellID id = calo() -> Cell ( point->GetPosition() ) ;
+  // return id ;
+  
+  G4TouchableHistory* tHist  = 
+    (G4TouchableHistory*) point->GetTouchable()  ;
+  
+  const int nLevel = tHist->GetHistoryDepth() ;
+  CaloSim::Path path ;
+  path.reserve ( nLevel ) ;
+
+  for ( int  level = 0 ; level < nLevel ; ++level ) 
+  {
+    const G4VPhysicalVolume* pv = tHist->GetVolume ( level ) ;
+    if      (  0     == pv  ) { continue ; }                        // CONTINUE 
+    const G4LogicalVolume*   lv = pv -> GetLogicalVolume() ;
+    if      (  0     == lv  ) { continue ; }                        // CONTINUE 
+    // start volume ??
+    if      (  m_end == lv  ) { break    ; }                        // BREAK 
+    // useful volume ?  
+    if      ( !path.empty() ) { path.push_back( pv ) ; }
+    else if ( m_start.end() != 
+              std::find ( m_start.begin () ,
+                          m_start.end   () , lv ) ) { path.push_back( pv ) ; }  
+  }
+  
+  if ( path.empty() ) 
+  { Error ( "Volume path is invalid(empty) " ) ; return CaloCellID() ; }
+  
+  CaloCellID id2 = m_table ( path ) ;
+  
+  if( CaloCellID() == id2 ) 
+  {
+    HepTransform3D mtrx( *(tHist->GetRotation()) , tHist->GetTranslation() );
+    id2          = calo() -> Cell ( mtrx*HepPoint3D() ) ;
+    // skip the invalid cells 
+    //if ( !( calo() -> valid( id2 ) ) ) { return false ; }  // RETURN 
+    m_table( path ) = id2 ;
+  }
+  
+  if ( CaloCellID() == id2 ) { Error ( "Invalid cell is found" ) ; }
+  
+  return id2 ;
+
+};
+// ============================================================================
 
 // ============================================================================
 // The END 
