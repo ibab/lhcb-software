@@ -28,7 +28,7 @@ use SimSvc              v4r1    Sim
 # Gauss stuff...
 use GaussAlgs		v1r3    Sim
 use GaussTools		v10r6	Sim
-use GaussRICH		v4r8	Sim
+use GaussRICH		v4r9	Sim
 use GaussTracker	v3r1	Sim
 use GaussCalo		v7r1	Sim
 use GaussPhysics	v3r1	Sim

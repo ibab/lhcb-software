@@ -6,6 +6,24 @@ Package manager : Witek Pokorski
 <H1><A NAME="v18r2">2004-11-29 - Gauss v18r3</A></H1><PRE>
     is built with LHCb v17r1, Geant4 v62r5, GENSER_0_3_0, Pythia 6.226.2
     it uses XmlDDDB v23r0
+!========================= GaussRICH v4r9 =================================
+! 2004-12-13 - Gloria CORTI
+ - src/PhysProcess/RichHpdSiEnergyLoss.cpp
+         . temporary fix for BUG seen with geant4.6.2.ref05:
+     "ERROR Inadmisible Rich Det Sector=  1078  Current RichDetNum =   0"
+     due to killing of photoelectron in process not propagated to G4track
+ - src/PhysProcess/RichHpdPhotoElectricEffect.cpp
+   src/PhysProcess/RichHpdSiEnergyLoss.cpp
+         src/srcG4/RichG4Cerenkov.cc
+   src/srcG4/RichG4OpBoundaryProcess.{hh,cc}
+   src/srcG4/RichG4OpRayleigh.cc
+   . replace methods to be retired in Geant4 version 7 to be ready:
+           SetLocalEnergyDeposit -> ProposeLocalEnergyDeposit
+     SetStatusChange       -> ProposeTrackStatus
+     SetMomentumChange     -> ProposeMomentumDirection
+     SetPolarizationChange -> ProposePolarization
+     GetPolarizationChange -> GetPolarization
+     GetMomentumChange     -> GetMomentumDirection
 
 !==========================================================================
 <H1><A NAME="v18r2">2004-11-22 - Gauss v18r2</A></H1><PRE>
