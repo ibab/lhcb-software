@@ -2,6 +2,9 @@
 /// CVS tag $Name: not supported by cvs2svn $ 
 /// ===========================================================================
 /// $Log: not supported by cvs2svn $
+/// Revision 1.4  2001/08/09 16:48:03  ibelyaev
+/// update in interfaces and redesign of solids
+///
 /// ===========================================================================
 ///@{
 /** STD & STL  */
@@ -16,7 +19,7 @@
 #include "DetDesc/Solid.h"
 ///@} 
 
-/// ===========================================================================
+// ============================================================================
 /** @file SolidUnion.cpp
  *
  *  implementation of class SolidUnion
@@ -24,20 +27,14 @@
  *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
  *  @date   xx/xx/xxxx
  */
-/// ===========================================================================
+// ============================================================================
 
-/// ===========================================================================
-/// factory business 
-/// ===========================================================================
-static const SolidFactory<SolidUnion>         s_Factory;
-const       ISolidFactory&SolidUnionFactory = s_Factory;
-
-/// ===========================================================================
+// ============================================================================
 /** constructor 
  *  @param name name of the intersection
  *  @param first pointer to first/main solid 
  */
-/// ===========================================================================
+// ============================================================================
 SolidUnion::SolidUnion( const std::string& name  , 
                         ISolid*            First )
   : SolidBoolean( name , First )
@@ -46,21 +43,21 @@ SolidUnion::SolidUnion( const std::string& name  ,
     { throw SolidException(" SolidUnion:: ISolid* points to NULL!"); }
 };
 
-/// ===========================================================================
+// ============================================================================
 /** constructor 
  *  @param name name of the solid union 
  */
-/// ===========================================================================
+// ============================================================================
 SolidUnion::SolidUnion( const std::string& Name )
   : SolidBoolean( Name )
 {};
 
-/// ===========================================================================
+// ============================================================================
 /// destructor 
-/// ===========================================================================
+// ============================================================================
 SolidUnion::~SolidUnion(){ reset(); }
 
-/// ===========================================================================
+// ============================================================================
   /** - check for the given 3D-point. 
    *    Point coordinates are in the local reference 
    *    frame of the solid.   
@@ -69,7 +66,7 @@ SolidUnion::~SolidUnion(){ reset(); }
    *  @param point point (in local reference system of the solid)
    *  @return true if the point is inside the solid
    */
-/// ===========================================================================
+// ============================================================================
 bool SolidUnion::isInside     ( const HepPoint3D   & point ) const 
 { 
   ///  is point inside the "main" volume?  
@@ -83,28 +80,28 @@ bool SolidUnion::isInside     ( const HepPoint3D   & point ) const
   return ( childEnd() == ci ? false : true );   
 };
 
-/// ===========================================================================
+// ============================================================================
 /** add child solid to the solid union
  *  @param solid pointer to child solid 
  *  @param mtrx  pointer to transformation 
  *  @return status code 
  */
-/// ===========================================================================
+// ============================================================================
 StatusCode  SolidUnion::unite( ISolid*                solid    , 
                                const HepTransform3D*  mtrx     )
 {  return addChild( solid , mtrx ); };
 
-/// ===========================================================================
+// ============================================================================
 /** add child solid to the solid union
  *  @param solid pointer to child solid 
  *  @param position position  
  *  @return status code 
  */
-/// ===========================================================================
+// ============================================================================
 StatusCode  SolidUnion::unite ( ISolid*               solid    , 
                                 const HepPoint3D&     position , 
                                 const HepRotation&    rotation )
 { return addChild( solid , position , rotation ) ; };
 
-/// ===========================================================================
+// ============================================================================
 

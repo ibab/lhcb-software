@@ -1,7 +1,10 @@
 /// ===========================================================================
 /// CVS tag $Name: not supported by cvs2svn $ 
 /// ===========================================================================
-/// $Log: not supported by cvs2svn $ 
+/// $Log: not supported by cvs2svn $
+/// Revision 1.7  2001/08/09 16:48:03  ibelyaev
+/// update in interfaces and redesign of solids
+/// 
 /// ===========================================================================
 ///@{
 /**  GaudiKernel package */  
@@ -15,11 +18,10 @@
 #include "DetDesc/SolidTicks.h" 
 #include "DetDesc/SolidException.h" 
 #include "DetDesc/SolidTrap.h" 
-#include "DetDesc/SolidBase.h" 
-#include "DetDesc/SolidFactory.h" 
+#include "DetDesc/SolidBase.h"
 ///@} 
 
-/// ===========================================================================
+// ============================================================================
 /** @file SolidTrap.cpp 
  * 
  *  implementation of class SolidTrap
@@ -27,15 +29,9 @@
  *  @author Vanya Belyaev Ivan.Belyaev@itep.ru 
  *  @date   xx/xx/xxxx
  */
-/// ===========================================================================
+// ============================================================================
 
-/// ===========================================================================
-/// factory buiness 
-/// ===========================================================================
-static const SolidFactory<SolidTrap>         s_Factory;
-const       ISolidFactory&SolidTrapFactory = s_Factory;
-
-/// ===========================================================================
+// ============================================================================
 /** constructor 
  *  @param name                   name of trap solid 
  *  @param zHalfLength            half length in z 
@@ -51,7 +47,7 @@ const       ISolidFactory&SolidTrapFactory = s_Factory;
  *  @param alphaAtPlusZ           alpha angle at top face 
  *  @exception SolidException wrong parameters range 
  */   
-/// ===========================================================================
+// ============================================================================
 SolidTrap::SolidTrap( const std::string&  Name             ,
                       const double        ZHalfLength      ,
                       const double        Theta            ,
@@ -97,12 +93,12 @@ SolidTrap::SolidTrap( const std::string&  Name             ,
    makeAll();
 }; 
 
-/// ===========================================================================
+// ============================================================================
 /** constructor 
  *  @param name name of general trapezoid 
  */
-/// ===========================================================================
-SolidTrap::SolidTrap( const std::string& Name = "Anonymous Trap")
+// ============================================================================
+SolidTrap::SolidTrap( const std::string& Name )
   : SolidPolyHedronHelper   ( Name ) 
   , SolidBase               ( Name )  
   , m_trap_zHalfLength      ( 100  ) 
@@ -119,16 +115,16 @@ SolidTrap::SolidTrap( const std::string& Name = "Anonymous Trap")
   , m_trap_vertices         (      )
 {};
 
-/// ===========================================================================
+// ============================================================================
 /// destructror 
-/// ===========================================================================
+// ============================================================================
 SolidTrap::~SolidTrap() { reset(); }
 
-/// ===========================================================================
+// ============================================================================
 /** initialize the polihedron base 
  *  @exception SolidException wrong parameters  
  */
-/// ===========================================================================
+// ============================================================================
 void SolidTrap::makeAll()
 {   
   /// clear vertices 
@@ -192,7 +188,7 @@ void SolidTrap::makeAll()
   ///
 };
 
-/// ===========================================================================
+// ============================================================================
 /** - serialization for reading
  *  - implementation of ISerialize abstract interface 
  *  - reimplementation of SolidBase::serialize 
@@ -203,7 +199,7 @@ void SolidTrap::makeAll()
  *  @exception  SolidException  wrong parameters range 
  *  @return reference to stream buffer
  */
-/// ===========================================================================
+// ============================================================================
 StreamBuffer& SolidTrap::serialize( StreamBuffer& s ) 
 {
   /// 
@@ -246,7 +242,7 @@ StreamBuffer& SolidTrap::serialize( StreamBuffer& s )
   ///
 };
 
-/// ===========================================================================
+// ============================================================================
 /** - serialization for writing
  *  - implementation of ISerialize abstract interface 
  *  - reimplementation of SolidBase::serialize 
@@ -256,7 +252,7 @@ StreamBuffer& SolidTrap::serialize( StreamBuffer& s )
  *  @param s reference to stream buffer
  *  @return reference to stream buffer
  */
-/// ===========================================================================
+// ============================================================================
 StreamBuffer& SolidTrap::serialize( StreamBuffer& s ) const 
 {
   /// serialize base class 
@@ -276,14 +272,14 @@ StreamBuffer& SolidTrap::serialize( StreamBuffer& s ) const
       << m_trap_alphaAtPlusZ  ; 
 };
 
-/// ===========================================================================
+// ============================================================================
 /** - retrieve the pointer to "simplified" solid - "cover"
  *    -# the cover for Trap is Trd 
  *  - implementation of ISolid abstract interface 
  *  @see ISolid 
  *  @return pointer to "simplified" solid - "cover"
  */
-/// ===========================================================================
+// ============================================================================
 const ISolid*           SolidTrap::cover         () const 
 {
   /// cover is calculated already 
@@ -313,7 +309,7 @@ const ISolid*           SolidTrap::cover         () const
   return m_cover;
 };
 
-/// ===========================================================================
+// ============================================================================
 /** - printout to STD/STL stream    
  *  - implementation  of ISolid abstract interface 
  *  - reimplementation of SolidBase::printOut( std::ostream& )
@@ -322,7 +318,7 @@ const ISolid*           SolidTrap::cover         () const
  *  @param os STD/STL stream
  *  @return reference to the stream 
  */
-/// ===========================================================================
+// ============================================================================
 std::ostream&  SolidTrap::printOut      ( std::ostream&  os ) const
 {
   SolidBase::printOut( os );
@@ -341,7 +337,7 @@ std::ostream&  SolidTrap::printOut      ( std::ostream&  os ) const
        << " alp2[deg]="   << alphaAtPlusZ     () / degree  << "]";
 };
 
-/// ===========================================================================
+// ============================================================================
 /** - printout to Gaudi MsgStream stream    
  *  - implementation  of ISolid abstract interface 
  *  - reimplementation of SolidBase::printOut( MsgStream& )
@@ -350,7 +346,7 @@ std::ostream&  SolidTrap::printOut      ( std::ostream&  os ) const
  *  @param os Gaudi MsgStream  stream
  *  @return reference to the stream 
  */
-/// ===========================================================================
+// ============================================================================
 MsgStream&     SolidTrap::printOut      ( MsgStream&     os ) const
 {
   SolidBase::printOut( os );
@@ -368,7 +364,7 @@ MsgStream&     SolidTrap::printOut      ( MsgStream&     os ) const
        << " sizeX4[mm]="  << dxAtPlusZPlusY   () / millimeter 
        << " alp2[deg]="   << alphaAtPlusZ     () / degree  << "]";
 };
-/// ===========================================================================
+// ============================================================================
 
 
 

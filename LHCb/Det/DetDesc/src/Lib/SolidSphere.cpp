@@ -1,7 +1,10 @@
 /// ===========================================================================
 /// CVS tag $Name: not supported by cvs2svn $ 
 /// ===========================================================================
-/// $Log: not supported by cvs2svn $ 
+/// $Log: not supported by cvs2svn $
+/// Revision 1.4  2001/08/09 16:48:03  ibelyaev
+/// update in interfaces and redesign of solids
+/// 
 /// ===========================================================================
 /// CLHEP 
 #include "CLHEP/Units/PhysicalConstants.h" 
@@ -14,9 +17,8 @@
 #include "DetDesc/SolidBox.h" 
 #include "DetDesc/SolidTicks.h" 
 #include "DetDesc/SolidException.h" 
-#include "DetDesc/SolidFactory.h" 
 
-/// ===========================================================================
+// ============================================================================
 /** @file SolidSphere.cpp 
  * 
  *  implementation of class SolidSphere 
@@ -24,15 +26,9 @@
  *  @author Vanya Belyaev  Ivan.Belyaev@itep.ru
  *  @date xx/xx/xx  
  */
-/// ===========================================================================
+// ============================================================================
 
-/// =========================================================================== 
-/// factory business 
-/// =========================================================================== 
-static const SolidFactory<SolidSphere>         s_Factory;
-const       ISolidFactory&SolidSphereFactory = s_Factory;
-
-/// =========================================================================== 
+// ============================================================================ 
 /** constructor 
  *  @param name             name of sphere segment 
  *  @param OuterRadius      outer radius of sphere segement        
@@ -43,7 +39,7 @@ const       ISolidFactory&SolidSphereFactory = s_Factory;
  *  @param DeltaThetaAngle  delta theta angle 
  *  @param CoverModel       covering model 
  */
-/// =========================================================================== 
+// ============================================================================ 
 SolidSphere::SolidSphere( const std::string & name             ,
                           const double        OuterRadius      ,
                           const double        InsideRadius     , 
@@ -89,16 +85,16 @@ SolidSphere::SolidSphere( const std::string & name             ,
     { throw SolidException("SolidSphere::StartThetaAngle+DeltaThetaAngle>pi");}
 };  
 
-/// ==========================================================================
+// ===========================================================================
 /// destructor 
-/// ==========================================================================
+// ===========================================================================
 SolidSphere::~SolidSphere() { reset(); };
 
-/// ==========================================================================
+// ===========================================================================
 /** protected constructor 
  *  @param name name of the sphere segment 
  */
-/// ==========================================================================
+// ===========================================================================
 SolidSphere::SolidSphere( const std::string& name )
   : SolidBase                ( name             ) 
   , m_sphere_outerR2         ( 1000000.0        )  
@@ -110,7 +106,7 @@ SolidSphere::SolidSphere( const std::string& name )
   , m_sphere_coverModel      (       0          )  
 {};
 
-/// ==========================================================================
+// ===========================================================================
 /** - check for the given 3D-point. 
  *    Point coordinated are in the local reference 
  *    frame of the solid.   
@@ -119,7 +115,7 @@ SolidSphere::SolidSphere( const std::string& name )
  *  @param point point (in local reference system of the solid)
  *  @return true if the point is inside the solid
  */
-/// ==========================================================================
+// ===========================================================================
 bool  SolidSphere::isInside( const HepPoint3D & point) const
 {
   /// check for radius 
@@ -139,7 +135,7 @@ bool  SolidSphere::isInside( const HepPoint3D & point) const
   return true; 
 };
 
-/// ==========================================================================
+// ===========================================================================
 /** - serialization for reading
  *  - implementation of ISerialize abstract interface 
  *  - reimplementation of SolidBase::serialize 
@@ -149,7 +145,7 @@ bool  SolidSphere::isInside( const HepPoint3D & point) const
  *  @param s reference to stream buffer
  *  @return reference to stream buffer
  */
-/// ==========================================================================
+// ===========================================================================
 StreamBuffer& SolidSphere::serialize( StreamBuffer& s ) 
 {
   /// reset the sphere segment
@@ -191,7 +187,7 @@ StreamBuffer& SolidSphere::serialize( StreamBuffer& s )
   ///
 };
 
-/// ==========================================================================
+// ===========================================================================
 /** - serialization for writing
  *  - implementation of ISerialize abstract interface 
  *  - reimplementation of SolidBase::serialize 
@@ -201,7 +197,7 @@ StreamBuffer& SolidSphere::serialize( StreamBuffer& s )
  *  @param s reference to stream buffer
  *  @return reference to stream buffer
  */
-/// ==========================================================================
+// ===========================================================================
 StreamBuffer& SolidSphere::serialize( StreamBuffer& s ) const
 {
   /// serialialize the base class
@@ -215,7 +211,7 @@ StreamBuffer& SolidSphere::serialize( StreamBuffer& s ) const
            <<  m_sphere_coverModel    ;
 };
 
-/// ==========================================================================
+// ===========================================================================
 /** -# retrieve the pointer to "simplified" solid - "cover"
  *  -# implementation of ISolid abstract interface  
  *    The simplification scheme: 
@@ -241,7 +237,7 @@ StreamBuffer& SolidSphere::serialize( StreamBuffer& s ) const
  *  @see SolidSphere::m_sphere_coverModel  
  *  @return pointer to "simplified" solid - "cover"
  */
-/// ==========================================================================
+// ===========================================================================
 const ISolid* SolidSphere::cover () const 
 {
   /// is cover already calculated? 
@@ -346,7 +342,7 @@ const ISolid* SolidSphere::cover () const
   //
 };
 
-/// ===========================================================================
+// ============================================================================
 /** -# calculate the intersection points("ticks") of the solid objects 
  *    with given line. 
  *  - Line is parametrized with parameter \a t :
@@ -365,7 +361,7 @@ const ISolid* SolidSphere::cover () const
  *  @param ticks output container of "Ticks"
  *  @return the number of intersection points
  */
-/// ===========================================================================
+// ============================================================================
 unsigned int 
 SolidSphere::intersectionTicks ( const HepPoint3D&  point  ,       
                                  const HepVector3D& vect   ,      
@@ -420,7 +416,7 @@ SolidSphere::intersectionTicks ( const HepPoint3D&  point  ,
                                            *this );    
 };
 
-/// ===========================================================================
+// ============================================================================
 /** - printout to STD/STL stream
  *  - implementation of ISolid abstract interface  
  *  - reimplementation of SolidBase::printOut( std::ostream& ) 
@@ -429,7 +425,7 @@ SolidSphere::intersectionTicks ( const HepPoint3D&  point  ,
  *  @param os STD/STL stream
  *  @return reference to the stream
  */
-/// ===========================================================================
+// ============================================================================
 std::ostream&  SolidSphere::printOut      ( std::ostream&  os ) const
 {
   /// serialize the base class
@@ -453,7 +449,7 @@ std::ostream&  SolidSphere::printOut      ( std::ostream&  os ) const
   return os ;
 };
 
-/// ===========================================================================
+// ============================================================================
 /** - printout to Gaudi  stream
  *  - implementation of ISolid abstract interface  
  *  - reimplementation of SolidBase::printOut( MsgStream& ) 
@@ -462,7 +458,7 @@ std::ostream&  SolidSphere::printOut      ( std::ostream&  os ) const
  *  @param os Gaudi stream
  *  @return reference to the stream
  */
-/// ===========================================================================
+// ============================================================================
 MsgStream&     SolidSphere::printOut      ( MsgStream&     os ) const
 {
   /// serialize the base class
@@ -486,7 +482,7 @@ MsgStream&     SolidSphere::printOut      ( MsgStream&     os ) const
   return os ;
 };
 
-/// =========================================================================== 
+// ============================================================================ 
 
 
 

@@ -1,7 +1,10 @@
 // ============================================================================
 /// CVStag $Name: not supported by cvs2svn $ 
 // ============================================================================
-/// $Log: not supported by cvs2svn $ 
+/// $Log: not supported by cvs2svn $
+/// Revision 1.5  2001/08/09 16:48:03  ibelyaev
+/// update in interfaces and redesign of solids
+/// 
 // ============================================================================
 /// CLHEP
 #include "CLHEP/Units/PhysicalConstants.h"
@@ -11,7 +14,6 @@
 #include "DetDesc/SolidBox.h"
 #include "DetDesc/SolidTicks.h"
 #include "DetDesc/SolidException.h"
-#include "DetDesc/SolidFactory.h"
 ///@}
 
 // ============================================================================
@@ -22,14 +24,6 @@
  *  @date xx/xx/xx 
  */
 // ============================================================================
-
-// ============================================================================
-///@{
-/// Factory business 
-// ============================================================================
-static const SolidFactory<SolidTubs>         s_Factory;
-const       ISolidFactory&SolidTubsFactory = s_Factory;
-///@} 
 
 // ============================================================================
 /** constructor

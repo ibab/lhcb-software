@@ -1,8 +1,11 @@
-/// ===========================================================================
+// ============================================================================
 /// CVS tag $Name: not supported by cvs2svn $
-/// ===========================================================================
-/// $Log: not supported by cvs2svn $ 
-/// ===========================================================================
+// ============================================================================
+/// $Log: not supported by cvs2svn $
+/// Revision 1.6  2001/08/09 16:48:02  ibelyaev
+/// update in interfaces and redesign of solids
+/// 
+// ============================================================================
 /// CLHEP
 #include "CLHEP/Geometry/Transform3D.h" 
 #include "CLHEP/Geometry/Point3D.h" 
@@ -12,10 +15,9 @@
 /// DetDesc 
 #include "DetDesc/SolidChild.h" 
 #include "DetDesc/ClhepToStream.h" 
-#include "DetDesc/SolidFactory.h"
 #include "DetDesc/Solid.h"
 
-/// ============================================================================
+// =============================================================================
 /** @file SolidChild.cpp 
  *  
  *  implementation of class SolidChild
@@ -23,19 +25,13 @@
  *  @author Vanya Belyaev Ivan.Belyaev@itep.ru 
  *  @date xx/xx/xxxx
  */
-/// ============================================================================
+// =============================================================================
 
-/// ============================================================================
-/// factory business 
-/// ============================================================================
-static const  SolidFactory<SolidChild>         s_Factory;
-const        ISolidFactory&SolidChildFactory = s_Factory;
-
-/// ============================================================================
+// =============================================================================
 /** constructor
  *  @param Name name of this solid 
  */
-/// ============================================================================
+// =============================================================================
 SolidChild::SolidChild( const std::string& Name )
   : SolidBase      ( Name  )
   , m_sc_solid     (  0    )
@@ -43,13 +39,13 @@ SolidChild::SolidChild( const std::string& Name )
   , m_sc_simple    ( true  )
 {};
 
-/// ============================================================================
+// =============================================================================
 /** constructor    
  *  @param solid pointer to ISolid object
  *  @param mtrx  pointer to transformation 
  *  @param Name name of this solid 
  */ 
-/// ============================================================================
+// =============================================================================
 SolidChild::SolidChild( ISolid*               solid , 
                         const HepTransform3D* mtrx  ,
                         const std::string&    Name  )
@@ -68,14 +64,14 @@ SolidChild::SolidChild( ISolid*               solid ,
     { m_sc_simple = true  ; }
 };
 
-/// ============================================================================
+// =============================================================================
 /** constructor 
  *  @param solid pointer ot ISolid object
  *  @param pos   position
  *  @param rot   rotation
  *  @param Name name of this solid 
  */
-/// ============================================================================
+// =============================================================================
 SolidChild::SolidChild( ISolid*               solid ,
                         const HepPoint3D&     pos   , 
                         const HepRotation&    rot   ,
@@ -101,9 +97,9 @@ SolidChild::SolidChild( ISolid*               solid ,
     }
 };
 
-/// ============================================================================
+// =============================================================================
 /// destructor 
-/// ============================================================================
+// =============================================================================
 SolidChild::~SolidChild()
 { 
   reset(); 
@@ -111,12 +107,12 @@ SolidChild::~SolidChild()
   if( 0 != m_sc_matrix ){ delete m_sc_matrix; m_sc_matrix = 0; } 
 };
 
-/// ============================================================================
+// =============================================================================
 /** serialization for reading
  *  @param sb reference to stream buffer
  *  @return reference to stream buffer
  */
-/// ============================================================================
+// =============================================================================
 StreamBuffer& SolidChild::serialize( StreamBuffer& sb ) 
 {
   ///
@@ -139,12 +135,12 @@ StreamBuffer& SolidChild::serialize( StreamBuffer& sb )
   return sb;
 };
 
-/// ============================================================================
+// =============================================================================
 /** serialization for writing
  *  @param sb reference to stream buffer
  *  @return reference to stream buffer
  */
-/// ============================================================================
+// =============================================================================
 StreamBuffer& SolidChild::serialize( StreamBuffer& sb ) const
 {  
   /// serialise the base class 
@@ -159,31 +155,31 @@ StreamBuffer& SolidChild::serialize( StreamBuffer& sb ) const
   return sb;
 };
 
-/// ============================================================================
+// =============================================================================
 /** printout to STD/STL stream
  *  @param os STD/STL stream
  *  @return reference to the stream
  */
-/// ============================================================================
+// =============================================================================
 std::ostream& SolidChild::printOut     ( std::ostream& os ) const
 {
   SolidBase::printOut( os );
   return os << solid(); 
 };
 
-/// ============================================================================
+// =============================================================================
 /** printout to Gaudi  stream
  *  @param os Gaudi stream
  *  @return reference to the stream
  */
-/// ============================================================================
+// =============================================================================
 MsgStream&    SolidChild::printOut     ( MsgStream&    os ) const
 {
   SolidBase::printOut( os );
   return os << solid(); 
 };
 
-/// ============================================================================
+// =============================================================================
 /** - calculate the intersection points("ticks") of the solid objects 
  *    with given line. 
  *  -# Line is parametrized with parameter \a t :
@@ -202,7 +198,7 @@ MsgStream&    SolidChild::printOut     ( MsgStream&    os ) const
  *  @param ticks output container of "Ticks"
  *  @return the number of intersection points
  */
-/// ============================================================================
+// =============================================================================
 unsigned int 
 SolidChild::intersectionTicks ( const HepPoint3D&  Point  ,
                                 const HepVector3D& Vector ,
@@ -214,10 +210,10 @@ SolidChild::intersectionTicks ( const HepPoint3D&  Point  ,
                         ticks                                 ) ;
 };
 
-/// ============================================================================
+// =============================================================================
 /** reset to the initial ("after constructor") state
  */
-/// ============================================================================
+// =============================================================================
 const ISolid*  SolidChild::reset()
 {
   SolidBase::reset();
@@ -225,7 +221,7 @@ const ISolid*  SolidChild::reset()
   return this ; 
 };
 
-/// ============================================================================
+// =============================================================================
 /** - check for the given 3D-point. 
  *    Point coordinated are in the local reference 
  *    frame of the solid.   
@@ -234,7 +230,7 @@ const ISolid*  SolidChild::reset()
  *  @param point point (in local reference system of the solid)
  *  @return true if the point is inside the solid
  */
-/// ============================================================================
+// =============================================================================
 bool SolidChild::isInside ( const HepPoint3D& point) const 
 { 
   return  
@@ -242,4 +238,4 @@ bool SolidChild::isInside ( const HepPoint3D& point) const
       solid()->isInside( matrix() * point ) ) ; 
 }; 
 
-/// ============================================================================
+// =============================================================================

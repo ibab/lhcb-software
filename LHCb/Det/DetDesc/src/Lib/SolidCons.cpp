@@ -1,7 +1,10 @@
 /// ===========================================================================
 /// CVS tag $Name: not supported by cvs2svn $ 
 /// ===========================================================================
-/// $Log: not supported by cvs2svn $ 
+/// $Log: not supported by cvs2svn $
+/// Revision 1.5  2001/08/09 16:48:02  ibelyaev
+/// update in interfaces and redesign of solids
+/// 
 /// ===========================================================================
 // CLHEP
 #include "CLHEP/Units/PhysicalConstants.h"
@@ -15,9 +18,8 @@
 #include "DetDesc/SolidTrd.h"
 #include "DetDesc/SolidTicks.h" 
 #include "DetDesc/SolidException.h"
-#include "DetDesc/SolidFactory.h"
 
-/// ===========================================================================
+// ============================================================================
 /** @file SolidCons.cpp 
  *
  *  Implementation of class SolidCons 
@@ -25,15 +27,9 @@
  *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
  *  @date xx/xx/xxxx
  */
-/// ===========================================================================
+// ============================================================================
 
-/// ===========================================================================
-/// factory business 
-/// ===========================================================================
-static const SolidFactory<SolidCons>         s_Factory;
-const       ISolidFactory&SolidConsFactory = s_Factory;
-
-/// ===========================================================================
+// ============================================================================
 /** standard constructor
  *  @param name                  name of conical tube segment
  *  @param ZHalfLength           half-length 
@@ -46,7 +42,7 @@ const       ISolidFactory&SolidConsFactory = s_Factory;
  *  @param CoverModel            covering model 
  *  @exception SolidException    wrong parameters range 
  */
-/// ===========================================================================
+// ============================================================================
 SolidCons::SolidCons( const std::string & name  ,
                       double ZHalfLength        , 
                       double OuterRadiusMinusZ  ,
@@ -92,20 +88,20 @@ SolidCons::SolidCons( const std::string & name  ,
   ///
 };
 
-/// ===========================================================================
+// ============================================================================
 /// destructor 
-/// ===========================================================================
+// ============================================================================
 SolidCons::~SolidCons()
 {
   reset();
 };
 
 
-/// ===========================================================================
+// ============================================================================
 /** default protected  coinstructor 
  *  @param Name name of conical tube segment  
  */
-/// ===========================================================================
+// ============================================================================
 SolidCons::SolidCons( const std::string& Name )
   ///
   : SolidBase                ( Name                )
@@ -120,12 +116,12 @@ SolidCons::SolidCons( const std::string& Name )
 {};
 
 
-/// ===========================================================================
+// ============================================================================
 /** check for the given point (local frame)
  *  @param point point (in local reference system)
  *  @return true ifpoint is inside the solid
  */
-/// ===========================================================================
+// ============================================================================
 bool SolidCons::isInside (  const HepPoint3D& point ) const
 {  
   /// check z-planes 
@@ -143,12 +139,12 @@ bool SolidCons::isInside (  const HepPoint3D& point ) const
   return true;
 };
 
-/// ===========================================================================
+// ============================================================================
 /** serialization for reading
  *  @param sb reference to stream buffer
  *  @return reference to stream buffer
  */
-/// ===========================================================================
+// ============================================================================
 StreamBuffer& SolidCons::serialize( StreamBuffer& sb ) 
 {
   /// reset 
@@ -191,12 +187,12 @@ StreamBuffer& SolidCons::serialize( StreamBuffer& sb )
   return sb; 
 };
 
-/// ===========================================================================
+// ============================================================================
 /** serialization for writing
  *  @param sb reference to stream buffer
  *  @return reference to stream buffer
  */
-/// ===========================================================================
+// ============================================================================
 StreamBuffer& SolidCons::serialize( StreamBuffer& sb ) const 
 {
   /// serialize the base class 
@@ -211,7 +207,7 @@ StreamBuffer& SolidCons::serialize( StreamBuffer& sb ) const
               <<  m_cons_coverModel ;   
 };
 
-/// ===========================================================================/
+// ============================================================================/
 /** -# retrieve the pointer to "simplified" solid - "cover"
  *    - for Model = 0 
  *        -# the cover for the general conical tube segment is 
@@ -226,7 +222,7 @@ StreamBuffer& SolidCons::serialize( StreamBuffer& sb ) const
  *  @see ISolid 
  *  @return pointer to "simplified" solid - "cover"
  */
-/// ===========================================================================
+// ============================================================================
 const ISolid* SolidCons::cover () const 
 {
   /// cover is calculated already 
@@ -307,7 +303,7 @@ const ISolid* SolidCons::cover () const
   return m_cover ;
 };
 
-/// ===========================================================================
+// ============================================================================
 /** calculate the intersection points("ticks") with a given line.
  *  Input - line, paramterised by  x_vect = Point + Vector * T
  *  "tick" is just a value of T, at which the intersection occurs
@@ -316,7 +312,7 @@ const ISolid* SolidCons::cover () const
  *  @param ticks output container of "Ticks"
  *  @return the number of intersection points (=size of Ticks container)
  */
-/// ===========================================================================
+// ============================================================================
 unsigned int 
 SolidCons::intersectionTicks ( const HepPoint3D & point  ,      
                                const HepVector3D& vect   ,      
@@ -368,12 +364,12 @@ SolidCons::intersectionTicks ( const HepPoint3D & point  ,
   return SolidTicks::RemoveAdjancentTicks( ticks , point , vect , *this );  
 };
 
-/// ===========================================================================
+// ============================================================================
 /** printout to STD/STL stream
  *  @param os STD/STL stream
  *  @return reference to the stream
  */
-/// ===========================================================================
+// ============================================================================
 std::ostream&  SolidCons::printOut      ( std::ostream&  os ) const
 {
   /// serialize the base class
@@ -396,12 +392,12 @@ std::ostream&  SolidCons::printOut      ( std::ostream&  os ) const
   return os << "]";
 };
 
-/// ===========================================================================
+// ============================================================================
 /** printout to Gaudi  stream
  *  @param os Gaudi stream
  *  @return reference to the stream
  */
-/// ===========================================================================
+// ============================================================================
 MsgStream&     SolidCons::printOut      ( MsgStream&     os ) const
 {
   /// serialize the base class
@@ -424,7 +420,7 @@ MsgStream&     SolidCons::printOut      ( MsgStream&     os ) const
   return os << "]";
 };
 
-/// ===========================================================================
+// ============================================================================
 
 
 

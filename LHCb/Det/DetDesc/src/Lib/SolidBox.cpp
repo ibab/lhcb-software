@@ -1,17 +1,19 @@
 /// ===========================================================================
 /// CVS tag $Name: not supported by cvs2svn $ 
 /// ===========================================================================
-/// $Log: not supported by cvs2svn $ 
+/// $Log: not supported by cvs2svn $
+/// Revision 1.6  2001/08/09 16:48:02  ibelyaev
+/// update in interfaces and redesign of solids
+/// 
 /// ===========================================================================
 /// GaudiKernel
 #include "GaudiKernel/IInspector.h"
 // FDetDesc 
-#include "DetDesc/SolidFactory.h" 
 #include "DetDesc/SolidBox.h" 
 #include "DetDesc/SolidTicks.h" 
 #include "DetDesc/SolidException.h" 
 
-/// ===========================================================================
+// ============================================================================
 /** @file SolidBox.cpp
  *
  *  implementation of class SolidBox 
@@ -19,16 +21,9 @@
  *  @author Vanya Belyaev Ivan.Belyaev@itep.ru  
  *  @date xx/xx/xxxx
  */
-/// ===========================================================================
+// ============================================================================
 
-/// ===========================================================================
-/// Factory busness 
-/// ===========================================================================
-static const  SolidFactory<SolidBox>         s_Factory;
-const        ISolidFactory&SolidBoxFactory = s_Factory;
-/// ===========================================================================
-
-/// ===========================================================================
+// ============================================================================
 /** standard(public)  constructor 
  *  @param      Name           name of this box  
  *  @param      xHalf          half-size of the box in x-direction
@@ -36,7 +31,7 @@ const        ISolidFactory&SolidBoxFactory = s_Factory;
  *  @param      zHalf          half-size of the box in z-direction
  *  @exception  SolidException wrong parameters range 
  */
-/// ===========================================================================
+// ============================================================================
 SolidBox::SolidBox( const std::string& Name  ,
                     const double       xHalf , 
                     const double       yHalf , 
@@ -54,10 +49,10 @@ SolidBox::SolidBox( const std::string& Name  ,
     { throw SolidException("SolidBox(): ZHalfLength is non positive! "); }
 };
 
-/// ===========================================================================
+// ============================================================================
 /** default (protected) constructor 
  */
-/// ===========================================================================
+// ============================================================================
 SolidBox::SolidBox()
   : SolidBase        ("anonymous box")
   , m_box_xHalfLength( 100000.0 ) 
@@ -65,12 +60,12 @@ SolidBox::SolidBox()
   , m_box_zHalfLength( 100000.0 ) 
 {};
 
-/// ===========================================================================
+// ============================================================================
 /// destructor 
-/// ===========================================================================
+// ============================================================================
 SolidBox::~SolidBox(){ reset(); };
 
-/// ===========================================================================
+// ============================================================================
 /** - serialization for reading
  *  - implementation of ISerialize abstract interface 
  *  - reimplementation of SolidBase::serialize 
@@ -81,7 +76,7 @@ SolidBox::~SolidBox(){ reset(); };
  *  @exception  SolidException  wrong parameters range 
  *  @return reference to stream buffer
  */
-/// ===========================================================================
+// ============================================================================
 StreamBuffer& SolidBox::serialize( StreamBuffer& s )       
 {
   /// 
@@ -103,7 +98,7 @@ StreamBuffer& SolidBox::serialize( StreamBuffer& s )
   return s ;
 };
 
-/// ===========================================================================
+// ============================================================================
 /** - serialization for writing
  *  - implementation of ISerialize abstract interface 
  *  - reimplementation of SolidBase::serialize 
@@ -113,7 +108,7 @@ StreamBuffer& SolidBox::serialize( StreamBuffer& s )
  *  @param s reference to stream buffer
  *  @return reference to stream buffer
  */
-/// ===========================================================================
+// ============================================================================
 StreamBuffer& SolidBox::serialize( StreamBuffer& s ) const 
 {
   /// serialize the base class 
@@ -124,7 +119,7 @@ StreamBuffer& SolidBox::serialize( StreamBuffer& s ) const
            << zHalfLength() ; 
 }; 
 
-/// ===========================================================================
+// ============================================================================
 /** calculate the intersection points("ticks") with a given line. 
  *  Input - line, paramterised by  x_vect = Point + Vector * T 
  *  "tick" is just a value of T, at which the intersection occurs
@@ -133,7 +128,7 @@ StreamBuffer& SolidBox::serialize( StreamBuffer& s ) const
  *  @param ticks output container of "Ticks"
  *  @return the number of intersection points (=size of Ticks container)
  */
-/// ===========================================================================
+// ============================================================================
 inline unsigned int 
 SolidBox::intersectionTicks( const HepPoint3D & point  ,
                              const HepVector3D& vect   ,
@@ -160,12 +155,12 @@ SolidBox::intersectionTicks( const HepPoint3D & point  ,
   ///  
 };
 
-/// ===========================================================================
+// ============================================================================
 /** printout to STD/STL stream    
  *  @param os STD/STL stream
  *  @return reference to the stream 
  */ 
-/// ===========================================================================
+// ============================================================================
 std::ostream& SolidBox::printOut  ( std::ostream&  os ) const
 {
   /// serialize the base class 
@@ -177,12 +172,12 @@ std::ostream& SolidBox::printOut  ( std::ostream&  os ) const
        << " zsize[mm]=" << std::setw(12) << zsize() / millimeter << "]" ;
 };
 
-/// ===========================================================================
+// ============================================================================
 /** printout to Gaudi  stream    
  *  @param os Gaudi stream
  *  @return reference to the stream 
  */ 
-/// ===========================================================================
+// ============================================================================
 MsgStream&    SolidBox::printOut  ( MsgStream&     os ) const
 {
   /// serialize the base class 
@@ -194,17 +189,17 @@ MsgStream&    SolidBox::printOut  ( MsgStream&     os ) const
        << " zsize[mm]=" << std::setw(12) << zsize() / millimeter << "]" ;
 };
 
-/// ===========================================================================
+// ============================================================================
 /** - retrieve the pointer to "simplified" solid - "cover"
  *  - implementation of ISolid abstract interface 
  *  The Box is the most simple shape
  *  @see ISolid 
  *  @return pointer to "simplified" solid - "cover"
  */
-/// ===========================================================================
+// ============================================================================
 const ISolid* SolidBox::cover() const { return this; };
 
-/// ===========================================================================
+// ============================================================================
 /** - retrieve the pointer to "the most simplified cover" 
  *  - implementation  of ISolid abstract interface 
  *  - reimplementation of SolidBase::coverTop() 
@@ -213,8 +208,8 @@ const ISolid* SolidBox::cover() const { return this; };
  *  @see SolidBase 
  *  @return pointer to the most simplified cover 
  */
-/// ===========================================================================
+// ============================================================================
 const ISolid* SolidBox::coverTop () const { return this; };
 
 
-/// ===========================================================================
+// ============================================================================

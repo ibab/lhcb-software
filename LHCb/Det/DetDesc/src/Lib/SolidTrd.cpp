@@ -8,9 +8,8 @@
 #include "DetDesc/SolidBox.h" 
 #include "DetDesc/SolidTicks.h" 
 #include "DetDesc/SolidException.h" 
-#include "DetDesc/SolidFactory.h" 
 
-/// ===========================================================================
+// ============================================================================
 /** @file SolidTrd.cpp 
  *  
  *  Implementation of class SolidTrd 
@@ -18,15 +17,10 @@
  *  @author Vanya Belyaev Ivan.Belyaev@itep.ru 
  *  @date xx/xx/xxx 
  */
-/// ===========================================================================
+// ============================================================================
 
-/// ===========================================================================
-/// Factory business 
-/// ===========================================================================
-static const SolidFactory<SolidTrd>         s_Factory;
-const       ISolidFactory&SolidTrdFactory = s_Factory;
 
-/// ===========================================================================
+// ============================================================================
 /** constructor 
  *  @param name name of the solid object
  *  @param zHalfLength half-length in z-direction 
@@ -36,7 +30,7 @@ const       ISolidFactory&SolidTrdFactory = s_Factory;
  *  @param YHalfLength2 half-length in y-direction at z2
  *  @exception SolidException wrong parameter range 
  */ 
-/// ===========================================================================
+// ============================================================================
 SolidTrd::SolidTrd( const std::string& name              ,
                     const double       ZHalfLength       ,
                     const double       XHalfLength1      , 
@@ -71,11 +65,11 @@ SolidTrd::SolidTrd( const std::string& name              ,
   ///
 };
 
-/// ===========================================================================
+// ============================================================================
 /** constructor
  *  @param name name of trd object
  */
-/// ===========================================================================
+// ============================================================================
 SolidTrd::SolidTrd( const std::string& name )
   : SolidPolyHedronHelper ( name          )
   , SolidBase             ( name          )
@@ -90,12 +84,12 @@ SolidTrd::SolidTrd( const std::string& name )
   ///
 };
 
-/// ===========================================================================
+// ============================================================================
 /// destructor 
-/// ===========================================================================
+// ============================================================================
 SolidTrd::~SolidTrd() { reset(); };
 
-/// ===========================================================================
+// ============================================================================
 /** - serialization for reading
  *  - implementation of ISerialize abstract interface 
  *  - reimplementation of SolidBase::serialize 
@@ -106,7 +100,7 @@ SolidTrd::~SolidTrd() { reset(); };
  *  @exception  SolidException  wrong parameters range 
  *  @return reference to stream buffer
  */
-/// ===========================================================================
+// ============================================================================
 StreamBuffer& SolidTrd::serialize( StreamBuffer& s ) 
 {
   /// reset  
@@ -141,7 +135,7 @@ StreamBuffer& SolidTrd::serialize( StreamBuffer& s )
   ///
 };
 
-/// ===========================================================================
+// ============================================================================
 /** - serialization for writing
  *  - implementation of ISerialize abstract interface 
  *  - reimplementation of SolidBase::serialize 
@@ -151,7 +145,7 @@ StreamBuffer& SolidTrd::serialize( StreamBuffer& s )
  *  @param s reference to stream buffer
  *  @return reference to stream buffer
  */
-/// ===========================================================================
+// ============================================================================
 StreamBuffer& SolidTrd::serialize( StreamBuffer& s ) const
 {
   /// serialize the base class 
@@ -163,7 +157,7 @@ StreamBuffer& SolidTrd::serialize( StreamBuffer& s ) const
            << m_trd_yHalfLength2 ;  
 };
 
-/// ===========================================================================
+// ============================================================================
 /** - retrieve the pointer to "simplified" solid - "cover"
  *    -# The cover for general TRD is "symmetric" TRD 
  *    -# the cover for symmetric TRD is BOX 
@@ -171,7 +165,7 @@ StreamBuffer& SolidTrd::serialize( StreamBuffer& s ) const
  *  @see ISolid 
  *  @return pointer to "simplified" solid - "cover"
  */
-/// ===========================================================================
+// ============================================================================
 const ISolid* SolidTrd::cover () const 
 {
   /// cover is calculated already 
@@ -207,11 +201,11 @@ const ISolid* SolidTrd::cover () const
   return m_cover;
 };
 
-/// ===========================================================================
+// ============================================================================
 /** initialize the polihedron base 
  *  @exception SolidException wrong parameters  
  */
-/// ===========================================================================
+// ============================================================================
 void SolidTrd::makeAll()
 {   
   reset() ;
@@ -253,7 +247,7 @@ void SolidTrd::makeAll()
   ///
 };
 
-/// ===========================================================================
+// ============================================================================
 /** - printout to STD/STL stream    
  *  - implementation  of ISolid abstract interface 
  *  - reimplementation of SolidBase::printOut( std::ostream& )
@@ -262,7 +256,7 @@ void SolidTrd::makeAll()
  *  @param os STD/STL stream
  *  @return reference to the stream 
  */
-/// ===========================================================================
+// ============================================================================
 std::ostream&  SolidTrd::printOut      ( std::ostream&  os ) const
 {
   /// serialize the base class 
@@ -276,7 +270,7 @@ std::ostream&  SolidTrd::printOut      ( std::ostream&  os ) const
        << " sizeY2[mm]=" << yLength2 () / millimeter << "]" ;
 };
 
-/// ===========================================================================
+// ============================================================================
 /** - printout to Gaudi MsgStream stream    
  *  - implementation  of ISolid abstract interface 
  *  - reimplementation of SolidBase::printOut( MsgStream& )
@@ -285,7 +279,7 @@ std::ostream&  SolidTrd::printOut      ( std::ostream&  os ) const
  *  @param os  Gaudi MsgStream stream
  *  @return reference to the stream 
  */
-/// ===========================================================================
+// ============================================================================
 MsgStream&     SolidTrd::printOut      ( MsgStream&     os ) const
 {
   /// serialize the base class 
@@ -299,7 +293,7 @@ MsgStream&     SolidTrd::printOut      ( MsgStream&     os ) const
        << " sizeY2[mm]=" << yLength2 () / millimeter << "]" ;
 };
 
-/// ===========================================================================
+// ============================================================================
 
 
 
