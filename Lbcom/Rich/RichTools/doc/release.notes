@@ -4,6 +4,7 @@
 ! Purpose     : General purpose Rich Tools
 !-----------------------------------------------------------------------------
 
+!=========================== RichTools v1r5 2005-03-07 =======================
 ! 2005-02-22 - Chris Jones
  - Add protection in RichSmartIDTool against exceptions during the creation
    of RichSmartIDs from positions, so these errors no longer cause processing
