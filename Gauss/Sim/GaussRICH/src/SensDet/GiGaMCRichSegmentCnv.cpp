@@ -171,7 +171,7 @@ StatusCode GiGaRichSegmentCnv::updateObj ( IOpaqueAddress*  address ,
       typedef std::map< HitDataListKey, G4HitList > HitDataList;
       HitDataList sortedHits;
 
-      // note this key is need for consistency with MCRichHit converter
+      // note this key is needed for consistency with MCRichHit converter
       int globalKey = 0;
       for ( int iii=0; iii<m_RichG4HitCollectionName->RichHCSize(); ++iii ) {
         std::string colName = m_RichG4HitCollectionName->RichHCName(iii);

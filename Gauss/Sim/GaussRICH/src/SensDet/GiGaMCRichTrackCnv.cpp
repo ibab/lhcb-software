@@ -176,6 +176,14 @@ StatusCode GiGaRichTrackCnv::updateObj ( IOpaqueAddress*  address ,
     // Iterate over segments and sort according to MCParticle
     for ( MCRichSegments::iterator iSeg = segments->begin();
           iSeg != segments->end(); ++iSeg ) {
+      if ( !(*iSeg) ) { 
+        msg << MSG::WARNING << "Null RichRecSegment pointer" << endreq;
+        continue;
+      }
+      if ( !(*iSeg)->mcParticle() ) {
+        msg << MSG::WARNING << "RichRecSegment has null MCParticle pointer" << endreq;
+        continue;
+      }
       sortedSegs[(*iSeg)->mcParticle()].push_back( *iSeg );
     }
 
@@ -183,6 +191,7 @@ StatusCode GiGaRichTrackCnv::updateObj ( IOpaqueAddress*  address ,
     for ( SortedSegments::iterator iList = sortedSegs.begin();
           iList != sortedSegs.end(); ++iList ) {
       const MCParticle * mcPart = (*iList).first;
+      if ( !mcPart ) continue;
 
       // new MCRichTrack
       MCRichTrack * mcTrack = new MCRichTrack();
@@ -198,6 +207,7 @@ StatusCode GiGaRichTrackCnv::updateObj ( IOpaqueAddress*  address ,
       // Loop over segments for this track
       for ( SegmentList::iterator iSeg = (*iList).second.begin();
             iSeg != (*iList).second.end(); ++iSeg ) {
+        if ( !(*iSeg) ) continue;
         mcTrack->addToMcSegments( *iSeg );
         (*iSeg)->setMCRichTrack( mcTrack );
         msg << MSG::DEBUG << " Adding " << (*iSeg)->radiator() 
