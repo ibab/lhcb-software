@@ -1,0 +1,240 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE gdd SYSTEM "gdd.dtd">
+<gdd>
+    <package name="RichRecBase">
+        <import name="Kernel/CLHEPStreams"/>
+        <import name="RichKernel/SerializeStl"/>
+        <class author="Chris Jones   (Christopher.Rob.Jones@cern.ch)" desc="Rich reconstruction working track object." id="12421" keyedContTypeDef="TRUE" location="Rec/Rich/RecTracks" name="RichRecTrack" stdVectorTypeDef="TRUE">
+            <base name="KeyedObject&lt;int&gt;"/>
+            <import name="RichKernel/RichParticleIDType"/>
+            <import name="RichRecBase/RichRecTrackParentType"/>
+            <import name="RichRecBase/RichTrackType"/>
+            <import ignore="TRUE" name="Rich"/>
+            <import ignore="TRUE" name="RecTrack"/>
+            <import ignore="TRUE" name="ParentType"/>
+            <import ignore="TRUE" name="ParticleIDType"/>
+            <import ignore="TRUE" name="Track"/>
+            <import ignore="TRUE" name="Type"/>
+            <import name="GaudiKernel/ContainedObject"/>
+            <constructor desc="Default constructor" initList="m_vertexMomentum(0), m_parentType(Rich::RecTrack::Unknown), m_nEmittedPhotons(Rich::NParticleTypes,-1), m_nDetectablePhotons(Rich::NParticleTypes,-1), m_nSignalPhotons(Rich::NParticleTypes,-1), m_nObservableSignalPhotons(Rich::NParticleTypes,-1), m_nScatteredPhotons(Rich::NParticleTypes,-1),  m_nObservableScatteredPhotons(Rich::NParticleTypes,-1), m_currentHypothesis(Rich::Pion), m_inUse(false), m_trackType(Rich::Track::Unknown)">
+              <code/>        
+            </constructor>
+
+            <method argList="Rich::ParticleIDType type, float photons" const="FALSE" desc="Set the number of emitted photons for a given particle type" name="setNEmittedPhotons">
+                <code>m_nEmittedPhotons[(int)type] = photons;</code>
+            </method>
+            <method argList="Rich::ParticleIDType type, float photons" const="FALSE" desc="Set the number of detectable photons for a given particle type" name="setNDetectablePhotons">
+                <code>m_nDetectablePhotons[(int)type] = photons;</code>
+            </method>
+            <method argList="Rich::ParticleIDType type, float photons" const="FALSE" desc="Set the number of signal photons for a given particle type" name="setNSignalPhotons">
+                <code>m_nSignalPhotons[(int)type] = photons;</code>
+            </method>
+            <method argList="Rich::ParticleIDType type, float photons" const="FALSE" desc="Set the number of observable signal photons for a given particle type" name="setNObservableSignalPhotons">
+                <code>m_nObservableSignalPhotons[(int)type] = photons;</code>
+            </method>
+            <method argList="Rich::ParticleIDType type, float photons" const="FALSE" desc="Set the number of scattered photons for a given particle type" name="setNScatteredPhotons">
+                <code>m_nScatteredPhotons[(int)type] = photons;</code>
+            </method>
+            <method argList="Rich::ParticleIDType type, float photons" const="FALSE" desc="Set the number of observable scattered photons for a given particle type" name="setNObservableScatteredPhotons">
+                <code>m_nObservableScatteredPhotons[(int)type] = photons;</code>
+            </method>
+            <method const="TRUE" desc="Returns the number of emitted photons for a given particle type" name="nEmittedPhotons" type="float">
+                <arg const="TRUE" name="type" type="Rich::ParticleIDType"/>
+                <code>return m_nEmittedPhotons[(int)type];</code>
+            </method>
+            <method const="TRUE" desc="Returns the number of detectable photons for a given particle type" name="nDetectablePhotons" type="float">
+                <arg const="TRUE" name="type" type="Rich::ParticleIDType"/>
+                <code>return m_nDetectablePhotons[(int)type];</code>
+            </method>
+            <method const="TRUE" desc="Returns the number of signal photons for a given particle type" name="nSignalPhotons" type="float">
+                <arg const="TRUE" name="type" type="Rich::ParticleIDType"/>
+                <code>return m_nSignalPhotons[(int)type];</code>
+            </method>
+            <method const="TRUE" desc="Returns the number of observable signal photons for a given particle type" name="nObservableSignalPhotons" type="float">
+                <arg const="TRUE" name="type" type="Rich::ParticleIDType"/>
+                <code>return m_nObservableSignalPhotons[(int)type];</code>
+            </method>
+            <method const="TRUE" desc="Returns the number of scattered photons for a given particle type" name="nScatteredPhotons" type="float">
+                <arg const="TRUE" name="type" type="Rich::ParticleIDType"/>
+                <code>return m_nScatteredPhotons[(int)type];</code>
+            </method>
+            <method const="TRUE" desc="Returns the number of observable scattered photons for a given particle type" name="nObservableScatteredPhotons" type="float">
+                <arg const="TRUE" name="type" type="Rich::ParticleIDType"/>
+                <code>return m_nObservableScatteredPhotons[(int)type];</code>
+            </method>
+            <method const="TRUE" desc="Returns the number of photons for a given particle type" name="nTotalObservablePhotons" type="float">
+                <arg const="TRUE" name="type" type="Rich::ParticleIDType"/>
+                <code>return m_nSignalPhotons[(int)type] + m_nScatteredPhotons[(int)type];</code>
+            </method>
+            <attribute array="FALSE" compression="FALSE" desc="Reconstructed momentum at vertex" name="vertexMomentum" type="float"/>
+            <attribute compression="TRUE" desc="Enumeration to Parent type" name="parentType" type="Rich::RecTrack::ParentType"/>
+            <attribute array="FALSE" compression="TRUE" desc="The number of emitted photons expected for each particle hypothesis" name="nEmittedPhotons" type="std::vector&lt;float&gt;"/>
+            <attribute array="FALSE" compression="TRUE" desc="The number of detectable emitted photons expected for each particle hypothesis" name="nDetectablePhotons" type="std::vector&lt;float&gt;"/>
+            <attribute array="FALSE" compression="TRUE" desc="The number of signal photons expected for each particle hypothesis" name="nSignalPhotons" type="std::vector&lt;float&gt;"/>
+            <attribute array="FALSE" compression="TRUE" desc="The number of observable signal photons expected for each particle hypothesis" name="nObservableSignalPhotons" type="std::vector&lt;float&gt;"/>
+            <attribute array="FALSE" compression="TRUE" desc="The number of scattered photons expected for each particle hypothesis" name="nScatteredPhotons" type="std::vector&lt;float&gt;"/>
+            <attribute array="FALSE" compression="TRUE" desc="The number of observable scattered photons expected for each particle hypothesis" name="nObservableScatteredPhotons" type="std::vector&lt;float&gt;"/>
+            <attribute desc="The current working particle hypothesis for this track. Used by specific algorithms" name="currentHypothesis" type="Rich::ParticleIDType"/>
+            <attribute desc="Flag for use by algorithms to tag in this track is in use or not" name="inUse" serialize="FALSE" type="bool"/>
+            <attribute desc="Track Type. Used to define resolutions etc." name="trackType" type="Rich::Track::Type"/>
+            <relation desc="Parent Object this track was produced from" name="parentTrack" type="ContainedObject"/>
+            <relation desc="Smart Reference vector of radiator segments for this track" multiplicity="N" name="richRecSegments" type="RichRecSegment"/>
+            <relation desc="SmartRefVector of RichRecPixels for which this track has valid photon associations" multiplicity="N" name="richRecPixels" type="RichRecPixel"/>
+            <relation desc="SmartRefVector of associated RichRecPhotons" multiplicity="N" name="richRecPhotons" type="RichRecPhoton"/>
+        </class>
+        <class author="Chris Jones   (Christopher.Rob.Jones@cern.ch)" desc="Rich reconstruction working pixel object" id="12422" keyedContTypeDef="TRUE" location="Rec/Rich/RecPixels" name="RichRecPixel" stdVectorTypeDef="TRUE">
+            <base name="KeyedObject&lt;int&gt;"/>
+            <import name="RichRecBase/RichRecPixelParentType"/>
+            <import name="RichKernel/RichDetectorType"/>
+            <import ignore="TRUE" name="Rich"/>
+            <import ignore="TRUE" name="RecPixel"/>
+            <import ignore="TRUE" name="ParentType"/>
+            <import ignore="TRUE" name="DetectorType"/>
+            <import name="GaudiKernel/ContainedObject"/>
+            <import name="RichKernel/RichSmartID"/>
+            <constructor desc="Default constructor" initList="m_parentType(Rich::RecPixel::Unknown)">
+                <code/>
+            </constructor>
+            <method const="TRUE" desc="Returns Rich Detector" name="detector" type="Rich::DetectorType">
+                <code>return (Rich::DetectorType)m_smartID.rich();</code>
+            </method>
+            <method const="TRUE" desc="Returns unique integer hpd identifier" name="hpd" type="int">
+                <code>return (int)m_smartID.hpdID();</code>
+            </method>
+            <method const="TRUE" desc="Returns unique integer Rich panel identifier" name="panel" type="int">
+                <code>return (int)m_smartID.panelID();</code>
+            </method>
+            <attribute desc="RichSmartID" name="smartID" type="RichSmartID"/>
+            <attribute desc="Position in global coordinates" name="globalPosition" type="HepPoint3D"/>
+            <attribute desc="Position in local coordinates" name="localPosition" type="HepPoint3D"/>
+            <attribute desc="Current value for a working estimate of the background in this pixel" name="currentBackground" type="float"/>
+            <attribute desc="Enumeration to Parent type" name="parentType" type="Rich::RecPixel::ParentType"/>
+            <relation desc="SmartRefVector of RichRecTracks for which this pixel has valid photon associations" multiplicity="N" name="richRecTracks" type="RichRecTrack"/>
+            <relation desc="Parent Object this pixel was produced from" name="parentPixel" type="ContainedObject"/>
+            <relation desc="SmartRefVector to associated RichRecPhotons" multiplicity="N" name="richRecPhotons" type="RichRecPhoton"/>
+        </class>
+        <class author="Chris Jones   (Christopher.Rob.Jones@cern.ch)" desc="Rich reconstruction object describing a continuous track segment in a single radiator" id="12423" keyedContTypeDef="TRUE" location="Rec/Rich/RecSegments" name="RichRecSegment" stdVectorTypeDef="TRUE">
+            <base name="KeyedObject&lt;int&gt;"/>
+            <import name="RichKernel/RichParticleIDType"/>
+            <import name="RichUtils/RichTrackSegment"/>
+            <import name="RichRecBase/RichMap"/>
+            <constructor desc="Default Constructor" initList="m_nEmittedPhotons(Rich::NParticleTypes,-1), m_nDetectablePhotons(Rich::NParticleTypes,-1), m_nSignalPhotons(Rich::NParticleTypes,-1), m_nScatteredPhotons(Rich::NParticleTypes,-1), m_nEmitPhotsPerEnBin(Rich::NParticleTypes,std::vector&lt;float&gt;() ), m_geomEfficiencyPerHPD(Rich::NParticleTypes, RichMap&lt;int,float&gt;() ), m_geomEfficiency(Rich::NParticleTypes,-1), m_averageCKTheta(Rich::NParticleTypes,-1), m_hitDetectorRegions(0), m_geomEfficiencyScat(Rich::NParticleTypes,-1)" >
+               <code/>        
+            </constructor>
+            <method argList="Rich::ParticleIDType type, float eff" const="FALSE" desc="Set the geometrical efficiency for a given particle type" name="setGeomEfficiency">
+                <code>m_geomEfficiency[(int)type] = eff;</code>
+            </method>
+            <method argList="Rich::ParticleIDType type, float eff" const="FALSE" desc="Set the scattered geometrical efficiency for a given particle type" name="setGeomEfficiencyScat">
+                <code>m_geomEfficiencyScat[(int)type] = eff;</code>
+            </method>
+            <method argList="Rich::ParticleIDType type, float photons" const="FALSE" desc="Set the number of emitted photons for a given particle type" name="setNEmittedPhotons">
+                <code>m_nEmittedPhotons[(int)type] = photons;</code>
+            </method>
+            <method argList="Rich::ParticleIDType type, float photons" const="FALSE" desc="Set the number of detectable photons for a given particle type" name="setNDetectablePhotons">
+                <code>m_nDetectablePhotons[(int)type] = photons;</code>
+            </method>
+            <method argList="Rich::ParticleIDType type, float photons" const="FALSE" desc="Set the number of signal photons for a given particle type" name="setNSignalPhotons">
+                <code>m_nSignalPhotons[(int)type] = photons;</code>
+            </method>
+            <method argList="Rich::ParticleIDType type, float photons" const="FALSE" desc="Set the number of scattered photons for a given particle type" name="setNScatteredPhotons">
+                <code>m_nScatteredPhotons[(int)type] = photons;</code>
+            </method>
+            <method argList="Rich::ParticleIDType type, float angle" const="FALSE" desc="Set the average Cherenkov angle for a given particle type" name="setAverageCKTheta">
+                <code>m_averageCKTheta[(int)type] = angle;</code>
+            </method>
+            <method argList="Rich::ParticleIDType id, int hpd, float signal" desc="Method to create the geometrical efficiencies per HPD" name="addToGeomEfficiencyPerHPD">
+                <code>(m_geomEfficiencyPerHPD[(int)id])[hpd] += signal;</code>
+            </method>
+            <method const="TRUE" desc="Returns the number of emitted photons for a given particle type" name="nEmittedPhotons" type="float">
+                <arg const="TRUE" name="type" type="Rich::ParticleIDType"/>
+                <code>return m_nEmittedPhotons[(int)type];</code>
+            </method>
+            <method const="TRUE" desc="Returns the number of detectable photons for a given particle type" name="nDetectablePhotons" type="float">
+                <arg const="TRUE" name="type" type="Rich::ParticleIDType"/>
+                <code>return m_nDetectablePhotons[(int)type];</code>
+            </method>
+            <method const="TRUE" desc="Returns the number of signal photons for a given particle type" name="nSignalPhotons" type="float">
+                <arg const="TRUE" name="type" type="Rich::ParticleIDType"/>
+                <code>return m_nSignalPhotons[(int)type];</code>
+            </method>
+            <method const="TRUE" desc="Returns the number of scattered photons for a given particle type" name="nScatteredPhotons" type="float">
+                <arg const="TRUE" name="type" type="Rich::ParticleIDType"/>
+                <code>return m_nScatteredPhotons[(int)type];</code>
+            </method>
+            <method const="TRUE" desc="Returns the number of photons for a given particle type" name="nTotalObservablePhotons" type="float">
+                <arg const="TRUE" name="type" type="Rich::ParticleIDType"/>
+                <code>return m_nSignalPhotons[(int)type] + m_nScatteredPhotons[(int)type];</code>
+            </method>
+            <method const="FALSE" desc="Returns the number of emitted photons for a given particle type" name="nEmitPhotsPerEnBin" static="FALSE" type="std::vector&lt;float&gt;&amp;">
+                <arg const="TRUE" name="type" type="Rich::ParticleIDType"/>
+                <code>return m_nEmitPhotsPerEnBin[(int)type];</code>
+            </method>
+            <method const="TRUE" desc="Get the geometrical efficiency for a given particle type" name="geomEfficiency" type="float">
+                <arg const="TRUE" name="type" type="Rich::ParticleIDType"/>
+                <code>return m_geomEfficiency[(int)type];</code>
+            </method>
+            <method const="TRUE" desc="Get the scattered geometrical efficiency for a given particle type" name="geomEfficiencyScat" type="float">
+                <arg const="TRUE" name="type" type="Rich::ParticleIDType"/>
+                <code>return m_geomEfficiencyScat[(int)type];</code>
+            </method>
+            <method const="TRUE" desc="Get the average Cherenkov angle for a given particle type" name="averageCKTheta" type="float">
+                <arg const="TRUE" name="type" type="Rich::ParticleIDType"/>
+                <code>return m_averageCKTheta[(int)type];</code>
+            </method>
+            <method desc="Returns the geometrical efficiency per HPD for given hypothesis" name="geomEfficiencyPerHPD" type="RichMap&lt;int,float&gt;&amp;">
+                <arg const="TRUE" name="type" type="Rich::ParticleIDType"/>
+                <code>return m_geomEfficiencyPerHPD[(int)type];</code>
+            </method>
+            <attribute array="FALSE" compression="TRUE" desc="The number of emitted photons expected for each particle hypothesis" name="nEmittedPhotons" type="std::vector&lt;float&gt;"/>
+            <attribute array="FALSE" compression="TRUE" desc="The number of detectable emitted photons expected for each particle hypothesis" name="nDetectablePhotons" type="std::vector&lt;float&gt;"/>
+            <attribute array="FALSE" compression="TRUE" desc="The number of signal photons expected for each particle hypothesis" name="nSignalPhotons" type="std::vector&lt;float&gt;"/>
+            <attribute array="FALSE" compression="TRUE" desc="The number of scattered photons expected for each particle hypothesis" name="nScatteredPhotons" type="std::vector&lt;float&gt;"/>
+            <attribute desc="Number of emitted photons per enrgy bin. Internal working object to RichSegmentTool" name="nEmitPhotsPerEnBin" type="std::vector&lt; std::vector&lt;float&gt; &gt;"/>
+            <attribute desc="The geometrical efficiency for a given hypothesis, binned per HPD" name="geomEfficiencyPerHPD" type="std::vector&lt;RichMap&lt;int,float&gt; &gt;"/>
+            <attribute desc="Geometrical efficiencies for the each particle hypothesis" name="geomEfficiency" type="std::vector&lt;float&gt;"/>
+            <attribute desc="The average Cherenkov theta angle for given particle ID type" name="averageCKTheta" type="std::vector&lt;float&gt;"/>
+            <attribute desc="Track segment, the passage of a track through a Rich detector" name="trackSegment" type="RichTrackSegment"/>
+            <attribute desc="Ray traced HPD panel impact point" name="hpdPanelHitPoint" type="HepPoint3D"/>
+            <attribute desc="Detector regions accessible to this segment" name="hitDetectorRegions" type="bitfield">
+                <bitfield desc="Photons observable in x&gt;0 region of detector" length="1" name="photonsInXPlus"/>
+                <bitfield desc="Photons observable in x&lt;0 region of detector" length="1" name="photonsInXMinus"/>
+                <bitfield desc="Photons observable in y&gt;0 region of detector" length="1" name="photonsInYPlus"/>
+                <bitfield desc="Photons observable in y&lt;0 region of detector" length="1" name="photonsInYMinus"/>
+            </attribute>
+            <attribute desc="Geometrical efficiency for scattered component" name="geomEfficiencyScat" type="std::vector&lt;float&gt;"/>
+            <relation desc="Smart Reference to associated RichRecTrack" name="richRecTrack" type="RichRecTrack"/>
+            <relation desc="SmartRefVector of RichRecPixels for which this track has valid photon associations" multiplicity="N" name="richRecPixels" type="RichRecPixel"/>
+            <relation desc="SmartRef to associated RichRecPhotons" multiplicity="N" name="richRecPhotons" type="RichRecPhoton"/>
+        </class>
+        <class author="Chris Jones   (Christopher.Rob.Jones@cern.ch)" desc="Rich reconstruction photon candidate. The result of an association between a RichRecTrack and a RichRecPixel." id="12424" keyedContTypeDef="TRUE" location="Rec/Rich/RecPhotons" name="RichRecPhoton" stdVectorTypeDef="TRUE">
+            <base name="KeyedObject&lt;RichRecPhotonKey&gt;"/>
+            <import name="RichRecBase/RichRecPhotonKey"/>
+            <import name="RichKernel/RichParticleIDType"/>
+            <import name="RichUtils/RichGeomPhoton"/>
+            <constructor desc="Default Constructor" initList="m_expPixelSignalPhots(Rich::NParticleTypes,-1), m_expPixelScattPhots(Rich::NParticleTypes,-1)">
+               <code/>
+            </constructor>
+            <method argList="Rich::ParticleIDType type, float photons" const="FALSE" desc="Set the expected number of signal photons for a given particle hypothesis" name="setExpPixelSignalPhots">
+                <code>m_expPixelSignalPhots[type] = photons;</code>
+            </method>
+            <method argList="Rich::ParticleIDType type, float photons" const="FALSE" desc="Set the expected number of scattered photons for a given particle hypothesis" name="setExpPixelScattPhots">
+                <code>m_expPixelScattPhots[type] = photons;</code>
+            </method>
+            <method const="TRUE" desc="Returns the expected number of signal photons for a given particle type" name="expPixelSignalPhots" type="float">
+                <arg const="TRUE" name="type" type="Rich::ParticleIDType"/>
+                <code>return m_expPixelSignalPhots[type];</code>
+            </method>
+            <method const="TRUE" desc="Returns the expected number of scattered photons for a given particle type" name="expPixelScattPhots" type="float">
+                <arg const="TRUE" name="type" type="Rich::ParticleIDType"/>
+                <code>return m_expPixelScattPhots[type];</code>
+            </method>
+            <attribute compression="FALSE" desc="The result of the Cherenkov angles reconstruction" name="geomPhoton" setMeth="TRUE" type="RichGeomPhoton"/>
+            <attribute desc="Expected number of signal photons for each particle hypothesis" name="expPixelSignalPhots" type="std::vector&lt;float&gt;"/>
+            <attribute desc="Expected number of scattered photons for each particle hypothesis" name="expPixelScattPhots" type="std::vector&lt;float&gt;"/>
+            <attribute compression="FALSE" desc="The fraction of the segment path length associated with this photon" name="sharedRingFract" type="float"/>
+            <relation desc="Smart Reference to associated RichRecSegment" name="richRecSegment" type="RichRecSegment"/>
+            <relation desc="Smart Reference to associated RichRecTrack" name="richRecTrack" type="RichRecTrack"/>
+            <relation desc="Smart Reference to associated RichRecPixel" name="richRecPixel" type="RichRecPixel"/>
+        </class>
+    </package>
+</gdd>

@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE gdd SYSTEM "gdd.dtd">
+<gdd>
+    <package name="RichRecBase">
+        <import name="Kernel/CLHEPStreams"/>
+        <import name="Kernel/SerializeStl"/>
+        <class author="Chris Jones    (Christopher.Rob.Jones@cern.ch)" desc="Summary object for RICH Global PID analysis" id="12431" location="Rec/Rich/GlobalPIDSummary" name="RichGlobalPIDSummary">
+            <base name="DataObject"/>
+            <method desc="Push back this value in event LL vector" name="addToEventLL">
+                <arg name="logL" type="double"/>
+                <code>m_eventLL.push_back( logL );</code>
+            </method>
+            <attribute desc="Total number of used tracks" name="usedTracks" type="int"/>
+            <attribute array="FALSE" desc="Number of velo tracks used in global PID analysis" name="usedVeloTracks" type="int"/>
+            <attribute desc="Number of seed tracks used in global PID analysis" name="usedSeedTracks" type="int"/>
+            <attribute desc="Number of match tracks used in global PID analysis" name="usedMatchTracks" type="int"/>
+            <attribute desc="Number of forward tracks used in global PID analysis" name="usedForwardTracks" type="int"/>
+            <attribute desc="Number of upstream tracks used in global PID analysis" name="usedUpstreamTracks" type="int"/>
+            <!--aComment-->
+            <attribute desc="Number of Velo-TT tracks used in global PID analysis" name="usedVeloTTTracks" type="int"/>
+            <attribute desc="Total number of tracks in the event" name="totalTracks" type="int"/>
+            <attribute array="FALSE" desc="Total number of velo tracks in event" name="totalVeloTracks" type="int"/>
+            <attribute array="FALSE" desc="Total number of seed tracks in event" name="totalSeedTracks" type="int"/>
+            <attribute array="FALSE" desc="Total number of match tracks in event" name="totalMatchTracks" type="int"/>
+            <attribute array="FALSE" desc="Total number of forward tracks in event" name="totalForwardTracks" type="int"/>
+            <attribute array="FALSE" desc="Total number of upstream tracks in event" name="totalUpstreamTracks" type="int"/>
+            <attribute array="FALSE" desc="Total number of velo-TT tracks in event" name="totalVeloTTTracks" type="int"/>
+            <attribute desc="Number of hit pixels in Rich1" name="nRich1HitPixels" type="int"/>
+            <attribute desc="Number of hit pixels in Rich2" name="nRich2HitPixels" type="int"/>
+            <attribute desc="History of overall event LogLikelihood values" name="eventLL" type="std::vector&lt;float&gt;"/>
+            <attribute desc="Boolean to indicate if the event was successfully processed" name="eventProcessedOK" type="bool"/>
+            <attribute desc="Current event iteration" name="eventIteration" type="int"/>
+            <attribute desc="Esitamte of overall background in Rich1" name="rich1BckEstimate" type="double"/>
+            <attribute desc="Esitamte of overall background in Rich2" name="rich2BckEstimate" type="double"/>
+        </class>
+        <class author="Chris Jones    Christopher.Rob.Jones@cern.ch" desc="Working pixel object for Global PID" id="12433" keyedContTypeDef="TRUE" location="Rec/Rich/GlobalPIDPixels" name="RichGlobalPIDPixel" stdVectorTypeDef="TRUE">
+            <base name="KeyedObject&lt;long&gt;"/>
+            <import name="Event/RichRecPixel"/>
+            <relation desc="Associated RichRecPixel" name="richRecPixel" type="RichRecPixel"/>
+            <attribute desc="Background estimate for this pixel, for each event iteration" name="backgroundEstimates" type="std::vector&lt;float&gt;"/>
+        </class>
+        <class author="Chris Jones     Christopher.Rob.Jones@cern.ch" desc="Working track object for Rich Global PID" id="12432" keyedContTypeDef="TRUE" location="Rec/Rich/GlobalPIDTracks" name="RichGlobalPIDTrack" serializers="TRUE" stdVectorTypeDef="TRUE">
+            <import name="Event/RichRecTrack"/>
+            <import name="RichRecBase/RichGlobalPIDTkQuality"/>
+            <import ignore="TRUE" name="Rich"/>
+            <import ignore="TRUE" name="ParticleIDType"/>
+            <import ignore="TRUE" name="TkQuality"/>
+            <import ignore="TRUE" name="GlobalPID"/>
+            <base name="KeyedObject&lt;long&gt;"/>
+            <constructor desc="Default Constructor" initList="m_trQuality(Rich::GlobalPID::Unknown)">
+                <code/>
+            </constructor>
+            <attribute desc="Integer code describing the quality of this track for the Global likelihood method" name="trQuality" type="Rich::GlobalPID::TkQuality"/>
+            <relation desc="SmartRef to RichRecTrack" name="richRecTrack" type="RichRecTrack"/>
+            <relation desc="Associated GlobalPID object" name="globalPID" type="RichGlobalPID"/>
+        </class>
+        <class author="Chris Jones   (Christopher.Rob.Jones@cern.ch)" desc="Rich particle identification object for the global track based algorithm" id="12434" keyedContTypeDef="TRUE" location="Rec/Rich/GlobalPIDs" name="RichGlobalPID" stdVectorTypeDef="TRUE">
+            <base name="RichPID"/>
+            <import name="Event/RichPID"/>
+            <constructor desc="Default constructor">
+                <code>this-&gt;setGlobal(1);</code>
+            </constructor>
+        </class>
+    </package>
+</gdd>

@@ -1,0 +1,9 @@
+!-----------------------------------------------------------------------------
+! Package     : Rich/RichRecBase
+! Responsible : Chris Jones   Christopher.Rob.Jones@cern.ch
+! Purpose     : Base package for RichRec
+!-----------------------------------------------------------------------------
+
+! 2003-03-13 - Chris Jones
+ - First version - Merger of previous RichRecEvent, RichRecKernel and 
+   RichRecInterfaces packages due to increasing commonality

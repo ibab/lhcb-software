@@ -1,0 +1,56 @@
+#============================================================================
+# Created    : 2002-11-19
+# Maintainer : Chris Jones
+#
+# Documentation on the requirement file can be found at
+# http://cern.ch/lhcb-comp/Support/html/new_structure.pdf
+#============================================================================
+
+package   RichRecBase
+version   v1r0
+
+#============================================================================
+# Structure
+#============================================================================
+branches xml doc src cmt Event RichRecBase
+
+#============================================================================
+# Used packages.
+#============================================================================
+use   RichEvent      v4r*  Event
+use   RichKernel     v3r*  Rich
+use   RichUtils      v3r*  Rich
+#use   RichDetTools   v2r*  Rich
+use   GaudiObjDesc   v4r*  -no_auto_imports
+
+#============================================================================
+# Environment
+#============================================================================
+include_dirs $(RICHRECBASEROOT)
+
+#---- Produce Header-Files from XML description
+document obj2doth RichRecBase_CommonObj2Doth    ../xml/RichRecEvent_Common.xml
+document obj2doth RichRecBase_GlobalPIDObj2Doth ../xml/RichRecEvent_GlobalPID.xml
+document obj2doth RichRecBase_LocalPIDObj2Doth  ../xml/RichRecEvent_LocalPID.xml
+
+#---- dictionary
+document obj2dict RichRecBase_CommonObj2Dict    ../xml/RichRecEvent_Common.xml
+document obj2dict RichRecBase_GlobalPIDObj2Dict ../xml/RichRecEvent_GlobalPID.xml
+document obj2dict RichRecBase_LocalPIDObj2Dict  ../xml/RichRecEvent_LocalPID.xml
+
+# Build libraries (including dictionary)
+#============================================================================
+library RichRecBase     ../src/event/*.cpp ../src/base/*.cpp
+library RichRecBaseDict ../dict/*.cpp -import=GaudiIntrospection
+apply_pattern  package_linkopts
+apply_pattern  package_stamps
+apply_pattern  linker_path
+macro_append   RichRecBase_linkopts "" WIN32 " /include:_RichRecBase_loadRef"
+
+#============================================================================
+private
+apply_pattern package_shlibflags
+include_dirs $(RICHRECBASEROOT)/Event
+macro RichRecBaseDict_shlibflags  "$(GaudiIntrospection_linkopts) $(RichRecBase_linkopts) $(use_linkopts) $(libraryshr_linkopts)"
+
+#============================================================================
