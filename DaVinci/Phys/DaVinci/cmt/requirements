@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.225 2005-01-07 14:22:41 pkoppenb Exp $
+# $Id: requirements,v 1.226 2005-01-11 12:37:24 pkoppenb Exp $
 # Created    : 07/02/2002
 # Maintainer : P. Koppenburg
 #
@@ -62,7 +62,7 @@ use RichHLTSys                  v1r0     Rich
 use RichRecQC                   v1r10    Rich
 
 #-- HLT trigger
-use HltGeneric                  v2r0     Hlt
+use HltGeneric                  v2r1     Hlt
 
 # Enable neutral ProtoParticles production and CaloPIDs
 use  CaloPIDs           	v2r4     Calo 
@@ -100,7 +100,7 @@ use  Tampering                  v1r0     Phys
 # Physics MC packages
 use  DaVinciAssociators 	v5r2p1   Phys
 use  DaVinciEff         	v3r2     Phys
-use  DaVinciMCTools     	v5r7     Phys
+use  DaVinciMCTools     	v5r8     Phys
 use  DaVinciTest        	v5r5     Phys
 use  DaVinciUser        	v5r2     Phys
 
