@@ -1,4 +1,4 @@
-// $Id: RichGlobalPIDTrTrackSel.cpp,v 1.7 2003-08-06 10:02:10 jonrob Exp $
+// $Id: RichGlobalPIDTrTrackSel.cpp,v 1.8 2003-09-04 09:17:57 jonrob Exp $
 // Include files
 
 // local
@@ -249,7 +249,7 @@ RichGlobalPIDTrTrackSel::trackStatus( TrStoredTrack * trTrack ) {
     }
     return Rich::GlobalPID::Unusable;
   }
-  float pTot = trackPState->p();
+  double pTot = trackPState->p();
 
   // Set default quality to be good
   Rich::GlobalPID::TkQuality quality = Rich::GlobalPID::Physics;
