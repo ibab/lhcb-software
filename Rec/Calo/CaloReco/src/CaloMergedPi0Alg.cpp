@@ -1,8 +1,11 @@
-// $Id: CaloMergedPi0Alg.cpp,v 1.4 2003-06-23 13:11:54 ibelyaev Exp $
+// $Id: CaloMergedPi0Alg.cpp,v 1.5 2003-06-23 15:00:17 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.4  2003/06/23 13:11:54  ibelyaev
+//  fix for gcc3.2
+//
 // Revision 1.3  2003/03/13 18:47:50  ibelyaev
 //  see ../doc/release.notes file
 //
@@ -56,18 +59,20 @@
 
 #ifdef WIN32
 
-template <class T>
-inline const T& min ( const T& a , const T& b ) 
+namespace std 
 {
-	return b < a ? b : a ;
+  template <class T>
+  inline const T& min ( const T& a , const T& b ) 
+  {
+    return b < a ? b : a ;
+  };
+  
+  template <class T>
+  inline const T& max ( const T& a , const T& b ) 
+  {
+    return a < b ? a : b ;
+  };
 };
-
-template <class T>
-inline const T& max ( const T& a , const T& b ) 
-{
-	return a < b ? a : b ;
-};
-
 #endif 
 
 // ============================================================================
