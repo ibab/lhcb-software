@@ -1,5 +1,5 @@
 package GenEvent
-version v2r0
+version v2r1
 
 branches cmt dict doc src xml Event
 
@@ -18,4 +18,7 @@ document obj2dict GenEventObj2Dict ../xml/GenEvent.xml
 library GenEvent -no_share ../src/*.cpp ../dict/*.cpp
 
 apply_pattern package_linkopts
+
+macro_append GenEvent_linkopts "-u GenEvent_loadRef" \
+ WIN32                         "/include:_GenEvent_loadRef"
 

@@ -1,6 +1,10 @@
 Package Event/GenEvent
 package coordinator: W.Pokorski
 
+!================== GenEvent v2r1 =====================
+! 2002-07-19 - Witek Pokorski
+  HepMCEvent.cpp - fixes for serialization
+
 !================== GenEvent v2r0 =====================
 ! 2002-07-15 - Florence Ranjard
   requirements - use HepMC v3r121p*

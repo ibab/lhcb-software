@@ -7,8 +7,7 @@
 // -------------------------------------------------------------------------
  
 #include "Event/HepMCEvent.h"
-#include "GaudiKernel/ObjectFactory.h"
-#include "HepMC/IO_Ascii.h"
+//#include "HepMC/IO_Ascii.h"
 
 #include <iostream>
 #include <map>
