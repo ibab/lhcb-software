@@ -3,11 +3,13 @@
  *  Header file for tool interface : IRichSmartIDTool
  *
  *  CVS Log :-
- *  $Id: IRichSmartIDTool.h,v 1.5 2004-07-29 09:30:32 jonrob Exp $
+ *  $Id: IRichSmartIDTool.h,v 1.6 2004-10-27 14:29:31 jonrob Exp $
  *  $Log: not supported by cvs2svn $
+ *  Revision 1.5  2004/07/29 09:30:32  jonrob
+ *  Fix various typos + minor updates
+ *
  *  Revision 1.4  2004/07/26 17:53:17  jonrob
  *  Various improvements to the doxygen comments
- *
  * 
  *  @author Antonis Papanestis  a.papanestis@rl.ac.uk
  *  @date   2003-10-28
@@ -59,8 +61,7 @@ public:
    *  @retval StatusCode::SUCCESS Conversion was successful (valid RichSmartID)
    *  @retval StatusCode::FAILURE Conversion was not possible (in-valid RichSmartID)
    */
-  virtual StatusCode globalPosition ( const RichSmartID& smartid,
-                                      HepPoint3D& position ) const = 0;
+  virtual HepPoint3D globalPosition ( const RichSmartID& smartid ) const = 0;
 
   /** Computes the global position coordinate for a given position in local
    *  HPD panel coordinates and RICH detector and panel indentifiers.
