@@ -1,31 +1,29 @@
-// $Id: DeRichHPDPanel.h,v 1.5 2003-06-20 14:34:32 papanest Exp $
+// $Id: DeRichPDPanel.h,v 1.1 2003-06-20 14:34:32 papanest Exp $
 
-#ifndef DERICHHPDPANEL_H
-#define DERICHHPDPANEL_H 1
+#ifndef DERICHPDPANEL_H
+#define DERICHPDPANEL_H 1
 
 
 // Include files
-#include "RichDet/DeRichPDPanel.h"
+#include "CLHEP/Geometry/Point3D.h"
+#include "CLHEP/Geometry/Vector3D.h"
+#include "CLHEP/Geometry/Plane3D.h"
 
-/** @class DeRichHPDPanel DeRichHPDPanel.h
+#include "DetDesc/DetectorElement.h"
+#include "DetDesc/ISolid.h"
+
+#include "RichKernel/RichSmartID.h"
+
+/** @class DeRichPDPanel DeRichPDPanel.h
  *
- * This is the definition of the Rich HPDPanel detector class
+ * This is the definition of the Rich PDPanel detector class. It is used
+ * as an interface for all detector panels
  *
  * @author Antonis Papanestis
  */
-class DeRichHPDPanel: public  DeRichPDPanel {
+class DeRichPDPanel: public DetectorElement {
 
 public:
-  /**
-   * Constructor for this class
-   */
-  DeRichHPDPanel();
-
-  /**
-   * Default destructor
-   */
-  virtual ~DeRichHPDPanel();
-
 
   /**
    * This is where most of the geometry is read
@@ -42,8 +40,8 @@ public:
                               RichSmartID& id ) = 0;
 
   /**
-   * Returns the detection point given a smartID. The point is on the inside
-   * of the HPD window, on the photocathode.
+   * Returns the detection point given a smartID. The detection is 
+   * on the inside of the PD window, on the photocathode. 
    * @return StatusCode
    */
   virtual StatusCode detectionPoint( const RichSmartID& smartID,
@@ -54,10 +52,10 @@ public:
    * @return StatusCode
    */
 
-  virtual StatusCode PDWindowPoint( const HepVector3D& vGlobal, 
-                                    const HepPoint3D& pGlobal, 
-                                    HepPoint3D& windowPointGlobal, // return
-                                    RichSmartID& smartID ) = 0;
+  virtual StatusCode PDWindowPoint( const HepVector3D& vGlobal,
+                                     const HepPoint3D& pGlobal,
+                                     HepPoint3D& windowPointGlobal,
+                                     RichSmartID& smartID ) = 0;
   /**
    * Returns the detection plane of the PD panel, defined at the top of the
    * PDs (a plane resting on the PDs touching the window).
@@ -65,26 +63,14 @@ public:
    */
   virtual HepPlane3D detectionPlane() const = 0;
 
-
   /**
    * Returns a list with all the available readout channels, in form of
    * RichSmartIDs.
    * @return StatusCode
    */
   virtual StatusCode readoutChannelList(std::vector<RichSmartID>&
-                                        readoutChannels);
+                                        readoutChannels) = 0;
 
-
-protected:
-
-  virtual unsigned int PDRow(unsigned int PD) = 0;
-
-  virtual unsigned int PDCol(unsigned int PD) = 0;
-
-  int m_PDMax;
-  double m_winR;
-  double m_winRsq;
-  
 };
 
-#endif    // DERICHHPDPANEL_H
+#endif    // DERICHPDPANEL_H

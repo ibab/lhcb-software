@@ -1,4 +1,4 @@
-// $Id: DeRich2HPDPanel.h,v 1.2 2003-04-01 13:01:49 jonrob Exp $
+// $Id: DeRich2HPDPanel.h,v 1.3 2003-06-20 14:34:32 papanest Exp $
 #ifndef RICHDET_DERICH2HPDPANEL_H
 #define RICHDET_DERICH2HPDPANEL_H 1
 
@@ -66,7 +66,7 @@ public:
    * @return StatusCode
    */
 
-  StatusCode HPDWindowPoint(const HepVector3D& vGlobal, // vector and point
+  StatusCode PDWindowPoint(const HepVector3D& vGlobal, // vector and point
                             const HepPoint3D& pGlobal,  // define direction
                             HepPoint3D& windowPointGlobal, // return point
                             RichSmartID& smartID );
@@ -75,39 +75,49 @@ public:
    * HPDs (a plane resting on the HPDs touching the window).
    * @return HepPlane3D
    */
-  inline HepPlane3D detectionPlane() const { return detectionPlane_m; }
+  inline HepPlane3D detectionPlane() const { return m_detectionPlane; }
   
+protected:
+
+  inline unsigned int PDRow(unsigned int PD) {
+    return PD%m_HPDRows;
+  }
+  
+  inline unsigned int PDCol(unsigned int PD) {
+    return PD/m_HPDRows;
+  }
+
 private:
 
   ///
-  double pixelSize;
-  double siliconHalfLengthX;
-  double siliconHalfLengthY;
+  double m_pixelSize;
+  double m_siliconHalfLengthX;
+  double m_siliconHalfLengthY;
 
   /// the Horizontal Edge of the HPD grid (beggining of numbers).
-  double panelHorizEdge, fabs_panelHorizEdge;
+  double m_panelHorizEdge, m_fabs_panelHorizEdge;
 
   /// the Vertical Edge of the HPD grid. Even columns are
   /// different from odd columns in Rich2
-  double panelVerticalEdgeEven;
-  double panelVerticalEdgeOdd;
+  double m_panelVerticalEdgeEven;
+  double m_panelVerticalEdgeOdd;
 
   /// these are the inner-most points to ensure that a point 
   /// is within HPD covered area 
-  double panelVerticalEdge;
+  double m_panelVerticalEdge;
   
-  double rowPitch;
-  double columnPitch;
+  double m_rowPitch;
+  double m_columnPitch;
 
   /// number of HPD rows and columns
-  int HPDRows;
-  int HPDColumns;
+  int m_HPDRows;
+  int m_HPDColumns;
 
   /// the top of the HPD window in silicon coordinates
-  HepPoint3D HPDTop;
+  HepPoint3D m_HPDTop;
   
   /// detection plane
-  HepPlane3D detectionPlane_m;
+  HepPlane3D m_detectionPlane;
 
   // CRJ : cache variables
   HepTransform3D m_vectorTransf;

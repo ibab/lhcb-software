@@ -1,4 +1,4 @@
-// $Id: DeRich1CdfHPDPanel.cpp,v 1.5 2003-06-16 13:34:30 sponce Exp $
+// $Id: DeRich1CdfHPDPanel.cpp,v 1.6 2003-06-20 14:34:33 papanest Exp $
 #define DERICH1CDFHPDPANEL_CPP
 
 // Include files
@@ -49,6 +49,10 @@ StatusCode DeRich1CdfHPDPanel::initialize() {
   this->printOut(log);
 
   pixelSize = 0.5*mm;
+  m_winR = 56*mm;
+  m_winRsq = m_winR*m_winR;
+  
+
   HepPoint3D zero(0.0, 0.0, 0.0);
   // this is the real number of columns
   HPDColumns = userParameterAsInt("HPDColumns");
@@ -59,13 +63,13 @@ StatusCode DeRich1CdfHPDPanel::initialize() {
   HPDsIn2Cols = 2*HPDsInBigCol - 1;
 
   if (0 == HPDColumns%2) {
-    totalHPDs = halfHPDCols * HPDsIn2Cols;
+    m_PDMax = halfHPDCols * HPDsIn2Cols;
   } else {
-    totalHPDs = halfHPDCols * HPDsIn2Cols + HPDsInBigCol;
+    m_PDMax = halfHPDCols * HPDsIn2Cols + HPDsInBigCol;
   }
 
   log << MSG::DEBUG <<"HPDsInBigCol:" << HPDsInBigCol
-      << " totalHPDs:" << totalHPDs << endreq;
+      << " m_PDMax:" << m_PDMax << endreq;
 
   // get the first HPD and follow down to the silicon block
   const IPVolume* pvHPDMaster0 = geometry()->lvolume()->pvolume(0);
@@ -156,10 +160,10 @@ StatusCode DeRich1CdfHPDPanel::initialize() {
   detectionPlane_m = HepPlane3D(pointA, pointB, pointC);
   //std::cout <<"Detection plane:" << detectionPlane_m << std::endl;
 
-  // Cache information for HPDWindowPoint method
+  // Cache information for PDWindowPoint method
   m_vectorTransf  = geometry()->matrix();
   m_HPDPanelSolid = geometry()->lvolume()->solid();
-  for ( int HPD = 0; HPD < totalHPDs; ++HPD ) {
+  for ( int HPD = 0; HPD < m_PDMax; ++HPD ) {
     m_pvHPDMasters.push_back( geometry()->lvolume()->pvolume(HPD) );
     m_pvHPDSMasters.push_back( m_pvHPDMasters[HPD]->lvolume()->pvolume(0) );
     m_pvWindows.push_back( m_pvHPDSMasters[HPD]->lvolume()->pvolume(2) );
@@ -244,10 +248,10 @@ StatusCode DeRich1CdfHPDPanel::smartID ( const HepPoint3D& globalPoint,
     return StatusCode::FAILURE;
   }
 
-  unsigned int pixelColumn = static_cast<unsigned int>((siliconHalfLengthX +
-                                                        inSilicon.x()) / pixelSize);
-  unsigned int pixelRow    = static_cast<unsigned int>((siliconHalfLengthY +
-                                                        inSilicon.y()) / pixelSize);
+  unsigned int pixelColumn = static_cast<unsigned int>
+                           ((siliconHalfLengthX + inSilicon.x()) / pixelSize);
+  unsigned int pixelRow    = static_cast<unsigned int>
+                           ((siliconHalfLengthY + inSilicon.y()) / pixelSize);
 
   //std::cout << pixelColumn << "  " <<pixelRow << std::endl;
 
@@ -283,10 +287,10 @@ StatusCode DeRich1CdfHPDPanel::detectionPoint ( const RichSmartID& smartID,
   // find the correct HPD and silicon block inside it
   const IPVolume* pvHPDMaster = geometry()->lvolume()->pvolume(HPDNumber);
   const IPVolume* pvHPDSMaster = pvHPDMaster->lvolume()->pvolume(0);
-  const IPVolume* pvSilicon = pvHPDSMaster->lvolume()->pvolume(4);
+  //  const IPVolume* pvSilicon = pvHPDSMaster->lvolume()->pvolume(4);
 
   const IPVolume* pvWindow = pvHPDSMaster->lvolume()->pvolume(2);
-  const ISolid* windowSolid = pvWindow->lvolume()->solid();
+  //  const ISolid* windowSolid = pvWindow->lvolume()->solid();
 
   // convert pixel number to silicon coordinates
   double inSiliconX = smartID.pixelCol() * pixelSize + pixelSize/2.0 -
@@ -294,25 +298,12 @@ StatusCode DeRich1CdfHPDPanel::detectionPoint ( const RichSmartID& smartID,
   double inSiliconY = smartID.pixelRow() * pixelSize + pixelSize/2.0 -
     siliconHalfLengthY;
 
-  HepPoint3D siliconHit( inSiliconX, inSiliconY, 0.0 );
-  // hit at the top of the tube in silicon coordinates
-  HepPoint3D topInSilicon(-inSiliconX*5.0, -inSiliconY*5.0, HPDTop.z());
-
-  HepVector3D toWindow = (HepVector3D(topInSilicon) -
-                          HepVector3D(siliconHit)).unit();
-
-  HepPoint3D siliconHitInHPDS = pvSilicon->toMother(siliconHit);
-  HepPoint3D siliconHitInWin = pvWindow->toLocal(siliconHitInHPDS);
-
-
-  ISolid::Ticks myTicks;
-  unsigned int noTicks = windowSolid->intersectionTicks(siliconHitInWin,
-                                                        toWindow, myTicks);
-
-  if (2 != noTicks) return StatusCode::FAILURE; // No intersection with HPD window
-
-  HepPoint3D windowHit = siliconHitInWin + toWindow * myTicks[1];
-
+  double inWindowX = -5.0 * inSiliconX;
+  double inWindowY = -5.0 * inSiliconY;
+  double inWindowZ = sqrt(m_winRsq-inWindowX*inWindowX-inWindowY*inWindowY);
+  HepPoint3D windowHit(inWindowX, inWindowY, inWindowZ);
+  //  std::cout << windowHit << std::endl;
+  
   HepPoint3D windowHitInHPDS = pvWindow->toMother(windowHit);
   HepPoint3D windowHitInHPD = pvHPDSMaster->toMother(windowHitInHPDS);
   HepPoint3D windowHitInPanel = pvHPDMaster->toMother(windowHitInHPD);
@@ -324,7 +315,7 @@ StatusCode DeRich1CdfHPDPanel::detectionPoint ( const RichSmartID& smartID,
 
 //============================================================================
 
-StatusCode DeRich1CdfHPDPanel::HPDWindowPoint( const HepVector3D& vGlobal,
+StatusCode DeRich1CdfHPDPanel::PDWindowPoint( const HepVector3D& vGlobal,
                                                const HepPoint3D& pGlobal,
                                                HepPoint3D& windowPointGlobal,
                                                RichSmartID& smartID )
@@ -418,7 +409,7 @@ StatusCode DeRich1CdfHPDPanel::HPDWindowPoint( const HepVector3D& vGlobal,
   if ( !HPDFound1 ) {
     // first attempt to find relevant HPD failed.
     // search all HPDs for intersection
-    for ( int HPD=0; HPD<totalHPDs; ++HPD ) {
+    for ( int HPD=0; HPD<m_PDMax; ++HPD ) {
 
       // convert point to local coordinate systems
       pInHPDMaster = m_pvHPDMasters[HPD]->toLocal(pLocal);
@@ -446,7 +437,7 @@ StatusCode DeRich1CdfHPDPanel::HPDWindowPoint( const HepVector3D& vGlobal,
 
   if (!HPDFound1 && !HPDFound2) return StatusCode::FAILURE;
 
-  HepPoint3D windowPoint = pInWindow + HPDWindowTicks[0]*vInHPDMaster;
+  HepPoint3D windowPoint = pInWindow + HPDWindowTicks[1]*vInHPDMaster;
   HepPoint3D windowPointInHPDS = pvWindow->toMother(windowPoint);
   HepPoint3D windowPointInHPD = pvHPDSMaster->toMother(windowPointInHPDS);
   HepPoint3D windowPointInPanel = pvHPDMaster->toMother(windowPointInHPD);
@@ -455,7 +446,7 @@ StatusCode DeRich1CdfHPDPanel::HPDWindowPoint( const HepVector3D& vGlobal,
   if ( !HPDFound1 ) {
     HPDColumn = 2*(HPDNumber/HPDsIn2Cols);
     int HPDsLeft = HPDNumber%HPDsIn2Cols;
-    if (HPDsLeft > HPDsInBigCol) {
+    if (HPDsLeft >= HPDsInBigCol) {
       ++HPDColumn;
       HPDRow = HPDsLeft - HPDsInBigCol;
     } else {

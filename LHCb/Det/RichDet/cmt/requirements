@@ -1,5 +1,5 @@
 package RichDet
-version v4r2
+version v5r0
 
 branches src RichDet doc cmt
 

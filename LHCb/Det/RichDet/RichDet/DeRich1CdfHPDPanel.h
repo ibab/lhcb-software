@@ -1,4 +1,4 @@
-// $Id: DeRich1CdfHPDPanel.h,v 1.3 2003-04-01 13:01:49 jonrob Exp $
+// $Id: DeRich1CdfHPDPanel.h,v 1.4 2003-06-20 14:34:32 papanest Exp $
 #ifndef RICHDET_DERICH1CDFHPDPANEL_H
 #define RICHDET_DERICH1CDFHPDPANEL_H 1
 
@@ -68,7 +68,7 @@ public:
    * @return StatusCode
    */
 
-  StatusCode HPDWindowPoint(const HepVector3D& vGlobal, // vector and point
+  StatusCode PDWindowPoint(const HepVector3D& vGlobal, // vector and point
                             const HepPoint3D& pGlobal,  // define direction
                             HepPoint3D& windowPointGlobal, // return point
                             RichSmartID& smartID );
@@ -80,8 +80,28 @@ public:
   inline HepPlane3D detectionPlane() const  {
     return detectionPlane_m;
   }
+
+protected:
   
+  inline unsigned int PDRow(unsigned int PD) {
+    int HPDsLeft = PD%HPDsIn2Cols;
+    if (HPDsLeft >= HPDsInBigCol){
+      return (HPDsLeft - HPDsInBigCol);
+    } else {
+      return HPDsLeft;
+    }
+  }
   
+  inline unsigned int PDCol(unsigned int PD) {
+    int HPDsLeft = PD%HPDsIn2Cols;
+    if (HPDsLeft >= HPDsInBigCol) {
+      return 2*(PD/HPDsIn2Cols)+1;
+    } else {
+      return 2*(PD/HPDsIn2Cols);
+    }
+    
+    
+  }
   
 private:
 
@@ -112,7 +132,6 @@ private:
   int HPDColumns;
   int HPDsInBigCol;
   int HPDsIn2Cols;
-  int totalHPDs;
 
   /// the top of the HPD window in silicon coordinates
   HepPoint3D HPDTop;

@@ -4,6 +4,14 @@
 ! Purpose     : interface to the xml description
 !-----------------------------------------------------------------------------
 
+!========================= RichDet v5r0 2003-06-20 =========================
+! 2003-06-20 - Antonis Papanestis
+ - added DeRichPDPanel to allow for the introduction of MaPMTs.  All Panels
+   inherit from PDPanel.
+ - added function in DeRich(H)PDPanel to fill a vector with all 
+   possible RichSmartdIDs
+ - bug fixes
+
 !========================= RichDet v4r2 2003-06-17 =========================
 ! 2003-06-16 - Sebastien Ponce
  - use new package DetDescCnv

@@ -1,4 +1,4 @@
-// $Id: DeRich1HPDPanel.h,v 1.1 2003-01-16 17:46:05 papanest Exp $
+// $Id: DeRich1HPDPanel.h,v 1.2 2003-06-20 14:34:32 papanest Exp $
 
 #ifndef DERICH1HPDPANEL_H
 #define DERICH1HPDPANEL_H 1
@@ -70,10 +70,10 @@ public:
    * @return StatusCode
    */
 
-  StatusCode HPDWindowPoint(const HepVector3D& vGlobal, // vector and point
-                            const HepPoint3D& pGlobal,  // define direction
-                            HepPoint3D& windowPointGlobal, // return point
-                            RichSmartID& smartID );
+  StatusCode PDWindowPoint(const HepVector3D& vGlobal, // vector and point
+                           const HepPoint3D& pGlobal,  // define direction
+                           HepPoint3D& windowPointGlobal, // return point
+                           RichSmartID& smartID );
   /**
    * Returns the detection plane of the HPD panel, defined at the top of the 
    * HPDs (a plane resting on the HPDs touching the window).
@@ -83,9 +83,18 @@ public:
     return detectionPlane_m;
   }
   
+protected:
+
+  inline unsigned int PDRow(unsigned int PD) {
+    return PD/HPDRows;
+  }
   
+  inline unsigned int PDCol(unsigned int PD) {
+    return PD%HPDRows;
+  }
   
 private:
+
 
   ///
   double pixelSize;
