@@ -1,0 +1,11 @@
+!-----------------------------------------------------------------------------
+! Package     : Muon/MuonBackground
+! Responsible : Alessia Satta
+! Purpose     : Add varius types of background in the muon system : 
+!               low energy components, flatspillover
+!-----------------------------------------------------------------------------
+
+!======================== MuonBackground v1r0 2003-03-24 =====================
+! 2003-03-24 - Alessia Satta
+  - First release of the package
+

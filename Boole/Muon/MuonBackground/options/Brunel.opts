@@ -1,0 +1,7 @@
+MuonBackground.HistogramsUpCode = 100000;
+MuonBackground.ContainerName = "BackgroundHits";
+MuonBackground.SafetyFactors ={ 0 , 1 ,1, 1, 1};
+MuonBackground.HistogramsNumber = { -1 , 1 , 2 , 3 , 4 , 5, 6, 7};
+MuonBackground.HistogramsDimension = { 2 , 1 , 2 , 2 , 2 , 2 , 2, 1};      
+MuonBackground.HistogramsMeaning =  { "correlation" , "r", "phi", "thetaloc", "philoc", "lintime" , "logtime" , "hitgap"  }; 
+HistogramDataSvc.Input = { "InFile DATAFILE='../options/mubg1.hbook' TYP='HBOOK'" };     

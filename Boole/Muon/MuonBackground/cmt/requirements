@@ -1,0 +1,25 @@
+package MuonBackground 
+version v1r0
+
+# ================ structure ===========================================
+branches src cmt MuonBackground options doc
+
+# ================ own includes ========================================== 
+include_dirs      $(MUONBACKGROUNDROOT)     
+
+# ================ used packages ========================================= 
+use AIDA        v*	 -no_auto_imports
+use MuonSicbCnv v7r* SICB
+use MuonAlgs v4r*   Muon
+use MuonUtils v1r* Muon
+use GaudiSvc            v10r1p2  
+
+# build a component library
+library MuonBackground  *.cpp -import=AIDA
+
+apply_pattern package_Clinkopts
+apply_pattern packageShr
+
+#===============================================================
+private
+apply_pattern package_Cshlibflags    
