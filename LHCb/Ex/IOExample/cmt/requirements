@@ -1,0 +1,61 @@
+# $Id: requirements,v 1.2 2003-12-16 13:51:02 frankb Exp $
+package IOExample
+version v1r0
+
+branches doc src job options cmt
+
+include_dirs $(IOEXAMPLEROOT)/include $(IOEXAMPLEROOT)/src
+
+use ExternalLibs          v*
+#use Gaudi                v*
+use GaudiSvc              v*
+use GaudiRootDb           v*
+use GaudiODBCDb           v*
+use GaudiPoolDb           v*
+
+#use GaudiIntrospection	  v*
+use Event         	  v*  Event
+use GaudiConf             v*
+#use SicbCnv     	  v*  SICB
+#use dbase                v*  SICB
+use AIDA                  v*
+use EventSys              v* Event
+
+#==> IO example
+library IOExample        KeyedObjects/KeyedContainerTest.cpp  \
+                         KeyedObjects/KeyedObjectCreator.cpp  \
+                         KeyedObjects/KeyedObjectFilter.cpp   \
+                         KeyedObjects/KeyedObjectRemover.cpp  \
+                         KeyedObjects/KeyedObjectRemover2.cpp \
+                         KeyedObjects/KeyedObjectInTwoContainers.cpp\
+                         KeyedObjects/MCTruthTest.cpp         \
+                         Statistics/NTuples.cpp               \
+                         Statistics/Histograms.cpp            \
+                         Statistics/RandomSequence.cpp        \
+                         DataSvc/StoreExplorer.cpp            \
+                         DataSvc/LeafCreator.cpp              \
+                         DataSvc/AddressCreator.cpp           \
+                         GaudiKernel/SmartRefTest.cpp         \
+                         GaudiDb/*.cpp                        \
+                         GaudiSvc/EventSwitcherRunable.cpp    \
+                         Common/TestAlgorithm.cpp             \
+                         Common/EvtNumberPrintout.cpp         \
+                         Common/MyTrack.cpp                   \
+                         Common/MyVertex.cpp                  \
+                         Common/RelationsDict.cpp             \
+                         Common/GaudiMain.cpp
+
+#==> IO example
+library IOMin        DataSvc/StoreExplorer.cpp            \
+                         Common/TestAlgorithm.cpp             \
+                         Common/RelationsDict.cpp             \
+                         Common/GaudiMain.cpp
+                         
+# ========================= set macros ============================
+apply_pattern  package_Clinkopts
+apply_pattern  library_Lshlibflags library=IOExample
+apply_pattern  library_Lshlibflags library=IOMin
+apply_pattern  application_path 
+macro_append   IOExample_linkopts " $(GaudiKernel_linkopts) $(GaudiDb_linkopts) "
+macro_append   IOMin_linkopts     " $(GaudiKernel_linkopts) $(GaudiDb_linkopts) "
+set LHCBTESTROOT ${IOEXAMPLEROOT}
