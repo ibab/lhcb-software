@@ -6,6 +6,10 @@ branches doc cmt
 #===============================================================
 # LHCb packages used by all applications
 #===============================================================
+
+# Next package to be removed once it is released with Gaudi
+use GaudiAlg v7r3
+
 use LHCb		v16r0
 
 use GaudiConf		v7r8

@@ -7,6 +7,7 @@
 
 !======================= LHCbSys v16r0 2004-06-02 =======================
 ! 2004-06-02 - Marco Cattaneo
+ - New packages: GaudiAlg v7r3 added temporarily, until released with Gaudi
  - Modified packages: DetSys v5r7, STDet v1r2, MuonTools v3r7,
                       AssociatorsSys v1r14, ITAssociators v2r9, MCTools v1r6
 
