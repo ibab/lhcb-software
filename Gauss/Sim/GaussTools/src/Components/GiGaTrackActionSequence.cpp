@@ -1,8 +1,11 @@
-// $Id: GiGaTrackActionSequence.cpp,v 1.2 2003-01-23 09:36:56 ibelyaev Exp $ 
+// $Id: GiGaTrackActionSequence.cpp,v 1.3 2003-08-15 12:46:11 witoldp Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2003/01/23 09:36:56  ibelyaev
+//  few fixes for Win2K platform
+//
 // Revision 1.1  2002/12/12 15:19:33  witoldp
 // major repackaging
 //
@@ -79,7 +82,7 @@ StatusCode GiGaTrackActionSequence::initialize ()
   StatusCode sc = GiGaTrackActionBase::initialize();
   if( sc.isFailure() ) 
     { return Error("Could not initialize the base class!", sc ); }
-  if( m_members.empty() ) { Warning("The sequence is empty!"); }
+  if( m_members.empty() ) { Print("The sequence is empty."); }
   // instantiate members 
   std::string Type, Name;
   for( MEMBERS::const_iterator member = m_members.begin() ;
