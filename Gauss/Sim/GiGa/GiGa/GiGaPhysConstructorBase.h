@@ -44,9 +44,6 @@ public:
    */
   virtual StatusCode   finalize       () ; 
   
-protected:
-  ///
-  double    defCut() const { return m_DefaultCutValue; } 
   ///
 private:
   ///
@@ -54,9 +51,6 @@ private:
   GiGaPhysConstructorBase           ( const GiGaPhysConstructorBase& ) ; //< no copy
   GiGaPhysConstructorBase& operator=( const GiGaPhysConstructorBase& ) ; //< no assignment  
   ///
-private:
-
-  double    m_DefaultCutValue  ; //default cut value
 
 };
 // ============================================================================

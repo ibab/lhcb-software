@@ -19,7 +19,7 @@ class IGiGaPhysConstructor:
 {
 public:
   
-  /// uniqie interafce identification
+  /// unique interface identification
   static const InterfaceID& interfaceID() { return IID_IGiGaPhysConstructor; }
   
 protected:
