@@ -1,8 +1,11 @@
-// $Id: GaussTape.opts,v 1.1 2002-05-02 11:57:24 ibelyaev Exp $ 
+// $Id: GaussTape.opts,v 1.2 2002-05-07 12:45:57 witoldp Exp $ 
 // ============================================================================
 // CVS  tag $Name: not supported by cvs2svn $
 // ============================================================================
-// $Log: not supported by cvs2svn $ 
+// $Log: not supported by cvs2svn $
+// Revision 1.1  2002/05/02 11:57:24  ibelyaev
+// *** empty log message ***
+// 
 // ============================================================================
 
 // ============================================================================
@@ -24,8 +27,9 @@ GaussTape.ItemList =
   // Generator information
   ,"/Event/Gen#1"
   ,"/Event/Gen/HepMCEvents#1"
-  ,"/Event/Gen/Vertices"
-  ,"/Event/Gen/Particles"
+// optional serialization of EvGen output
+//  ,"/Event/Gen/Vertices"
+//  ,"/Event/Gen/Particles"
   // MC Truth  
   ,"/Event/MC#1"                     
   ,"/Event/MC/Particles#1"         
