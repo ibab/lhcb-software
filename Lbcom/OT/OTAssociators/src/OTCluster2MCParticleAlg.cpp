@@ -1,4 +1,4 @@
-// $Id: OTCluster2MCParticleAlg.cpp,v 1.2 2002-05-27 11:38:35 cattanem Exp $
+// $Id: OTCluster2MCParticleAlg.cpp,v 1.3 2002-07-05 10:11:41 jvantilb Exp $
 // Include files 
 
 #include "Event/OTCluster.h"
@@ -121,7 +121,9 @@ StatusCode OTCluster2MCParticleAlg::associateToTruth(const OTCluster* aCluster,
   if ( !range.empty() ) {
     OTCluster2MCHitAsct::MCHitsIterator iterHit = range.begin();
     aHit = iterHit->to();
-    aParticle = aHit->mcParticle();    
+    if (0 != aHit) {
+      aParticle = aHit->mcParticle();
+    }
   }
 
   return sc;

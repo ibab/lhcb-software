@@ -1,6 +1,11 @@
-! $Id: release.notes,v 1.4 2002-07-04 11:20:44 hierck Exp $
+! $Id: release.notes,v 1.5 2002-07-05 10:11:40 jvantilb Exp $
 ! Package     : OTAssociators
 ! Responsible : J. van Tilburg
+
+! 2002-07-05 - Jeroen van Tilburg
+ - Added flag decide to store the relation of OTClusters with 
+   MCHits/MCParticles from spillover.
+ - This flag is set to false: no relation with spillover is stored.
 
 ! 2002-07-4 - Rutger Hierck
  -  Added a associcator between OTCluster and OTMCDeposit.

@@ -1,4 +1,4 @@
-// $Id: OTCluster2MCHitAlg.cpp,v 1.3 2002-05-29 12:00:07 cattanem Exp $
+// $Id: OTCluster2MCHitAlg.cpp,v 1.4 2002-07-05 10:11:41 jvantilb Exp $
 // Include files 
 
 #include "Event/OTCluster.h"
@@ -36,6 +36,7 @@ OTCluster2MCHitAlg::OTCluster2MCHitAlg( const std::string& name,
 
   // constructor
   declareProperty( "OutputData", m_outputData  = OTCluster2MCHitLocation );
+  declareProperty( "SpillOver", m_spillOver  = false );
 }
 
 OTCluster2MCHitAlg::~OTCluster2MCHitAlg() {
@@ -64,6 +65,17 @@ StatusCode OTCluster2MCHitAlg::execute()
     return StatusCode::FAILURE;
   }
   
+  // get the MCParticles for the event, in case you do not 
+  // want to make links to spillover
+  SmartDataPtr<MCHits> mcHits(eventSvc(), MCHitLocation::OTHits);
+  if( 0 == mcHits){
+    MsgStream log(msgSvc(), name());
+    log << MSG::ERROR << "Could not find MCHits in " 
+        << MCHitLocation::OTHits << endreq;
+    return StatusCode::FAILURE;
+  }
+  m_mcHits = mcHits;
+
   // create an association table 
   Table* aTable = new Table();
 
@@ -99,12 +111,11 @@ StatusCode OTCluster2MCHitAlg::finalize() {
 
 
 StatusCode OTCluster2MCHitAlg::associateToTruth(const OTCluster* aCluster,
-                                                 MCHit*& aHit) {
+                                                MCHit*& aHit) {
   // make link to truth  to MCHit
   StatusCode sc = StatusCode::SUCCESS;
   MsgStream log(msgSvc(), name());
 
-  //SmartRef<OTDigit> aDigit = aCluster->digit();
   const OTDigit* aDigit = aCluster->digit();
 
   if (0 == aDigit) {
@@ -175,17 +186,12 @@ StatusCode OTCluster2MCHitAlg::associateToTruth(const OTCluster* aCluster,
     MCOTDeposit* deposit = depCont[timeNumber];
     if ( 0 == deposit) return StatusCode::FAILURE;
     aHit = deposit->mcHit();
+    if (!m_spillOver && 0 != aHit) {
+      if (m_mcHits != aHit->parent()) aHit = 0;
+    }
   } else {
     return StatusCode::FAILURE;
   }
 
   return sc;
 }
-
-
-
-
-
-
-
-

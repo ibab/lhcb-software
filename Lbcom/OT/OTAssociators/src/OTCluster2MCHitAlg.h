@@ -1,4 +1,4 @@
-// $Id: OTCluster2MCHitAlg.h,v 1.1.1.1 2002-05-26 22:48:42 jvantilb Exp $
+// $Id: OTCluster2MCHitAlg.h,v 1.2 2002-07-05 10:11:41 jvantilb Exp $
 #ifndef OTCLUSTER2MCHITALG_H
 #define OTCLUSTER2MCHITALG_H 1
 
@@ -53,7 +53,10 @@ protected:
 private:
 
   std::string m_outputData;
+  /// Flag to make relations with spillover hits as well
+  bool m_spillOver;
 
+  MCHits* m_mcHits;
 };
 
 inline std::string OTCluster2MCHitAlg::outputData() const {
