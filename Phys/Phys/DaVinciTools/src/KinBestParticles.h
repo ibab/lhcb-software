@@ -1,10 +1,10 @@
-// $Id: KinBestParticles.h,v 1.1 2004-07-16 11:20:48 pkoppenb Exp $
+// $Id: KinBestParticles.h,v 1.2 2004-08-23 13:55:49 pkoppenb Exp $
 #ifndef KINBESTPARTICLES_H 
 #define KINBESTPARTICLES_H 1
 
 // Include files
 // from Gaudi
-#include "GaudiTools/GaudiTool.h"
+#include "GaudiAlg/GaudiTool.h"
 #include "DaVinciTools/IBestParticles.h"            // Interface
 
 
