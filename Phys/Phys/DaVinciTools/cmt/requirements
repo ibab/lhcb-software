@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.15 2002-07-27 20:27:26 gcorti Exp $
+# $Id: requirements,v 1.16 2002-09-11 16:48:02 gcorti Exp $
 # Created    : 05/02/2002
 # Maintainer : Gloria Corti
 #
@@ -6,7 +6,7 @@
 # http://cern.ch/lhcb-comp/Support/html/new_structure.pdf
 
 package           DaVinciTools
-version           v5r0
+version           v6r0
 
 # Structure, i.e. directories to process. 
 #============================================================================
@@ -18,7 +18,7 @@ include_dirs     $(DAVINCITOOLSROOT)
 
 # Used packages. 
 #============================================================================
-use  PhysEvent     v6r*   Event
+use  PhysEvent     v7r*   Event
 use  DetDesc       v10r*  Det
 use  AIDA          v2r*
 

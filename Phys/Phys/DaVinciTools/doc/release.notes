@@ -1,6 +1,18 @@
-! $Id: release.notes,v 1.22 2002-07-29 09:15:44 cattanem Exp $
+! $Id: release.notes,v 1.23 2002-09-11 16:48:08 gcorti Exp $
 ! Package     : DaVinciTools
 ! Responsible : Gloria Corti, Sandra Amato
+
+! 2002-09-11 - Gloria Corti
+ - New tool NeutralParticleMaker from Frederic Machefert
+ - Modification in GeomDispCalculator and ParticleStuffer to take into
+   account different dimension in error correlation matrix in Particle
+ - Changes in PhysDesktop to fix bug noted by Sandra of copying initial
+   particle when daughters of a new particle.
+ - Use PhysEvent v7 and increase version number
+
+! 2002-09-04 - Gloria Corti
+ - Some clean up of message levels in MuonParticleMaker, and set CL default
+   value = 0.0
 
 !=========================== DaVinciTools v5r0 2002-07-29 ===================
 ! 2002-07-28 - Gloria Corti
