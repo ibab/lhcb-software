@@ -1,7 +1,5 @@
 //**************************************************************
-//
 // DaVinci standard services and DLLs
-//
 //==============================================================
 
 ApplicationMgr.ExtSvc = { "ParticlePropertySvc",
@@ -12,23 +10,22 @@ EventPersistencySvc.CnvServices = { "SicbEventCnvSvc" };
 
 EventDataSvc.ForceLeaves = true; 
 
-ApplicationMgr.DLLs = { "SicbCnv", "GaudiAud"};
+ApplicationMgr.DLLs = { "SicbCnv", "GaudiAud", "PhysSicbCnv" };
 ApplicationMgr.DLLs += { "GaudiAlg", "GaudiTools" };
 ApplicationMgr.DLLs += { "DaVinciTools" };
+//ApplicationMgr.DLLs += { "DaVinciAssociators" };
+//ApplicationMgr.DLLs += { "DaVinciTest" };
 
 //-------------------------------------------------------------
 // No Histogram persistency chosen at this point
 //-------------------------------------------------------------
-
 ApplicationMgr.HistogramPersistency = "NONE";
-
 
 //--------------------------------------------------------------
 // Detector description 
 // (see details for varius options in $STDOPTS/DetDesc.opts and
 //  in Gaudi User Guide)
 //--------------------------------------------------------------
-
 ApplicationMgr.ExtSvc += { "XmlCnvSvc" };
 ApplicationMgr.DLLs   += { "DetDesc" };
 
