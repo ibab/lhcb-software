@@ -1,8 +1,11 @@
-// $Id: GiGaMCParticleCnv.cpp,v 1.21 2003-02-21 09:34:18 witoldp Exp $ 
+// $Id: GiGaMCParticleCnv.cpp,v 1.22 2003-07-07 16:45:30 ranjard Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.21  2003/02/21 09:34:18  witoldp
+// some cout`s removed
+//
 // Revision 1.20  2003/01/23 10:06:30  witoldp
 // added handling of shortlived particles
 //
@@ -29,6 +32,7 @@
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/LinkManager.h"
 #include "GaudiKernel/ParticleProperty.h"
+#include "GaudiKernel/GaudiException.h"
 /// GiGa 
 #include "GiGa/IGiGaSvc.h" 
 #include "GiGa/GiGaTrajectory.h" 

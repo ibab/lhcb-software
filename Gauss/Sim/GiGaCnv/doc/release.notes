@@ -1,7 +1,11 @@
-! $Id: release.notes,v 1.50 2003-07-03 07:56:38 ranjard Exp $
+! $Id: release.notes,v 1.51 2003-07-07 16:45:30 ranjard Exp $
 ! =============================================================================
 Package         : GiGaCnv
 Package Manager : Vanya Belyaev Ivan.Belyaev@itep.ru
+
+!======================= GiGaCnv v12r3 ================================
+! 2003-07-07 - Florence RANJARD
+ - fix for gcc3.2 (S.Ponce)
 
 !======================= GiGaCnv v12r2 ================================
 ! 2003-07-03 - Florence RANJARD

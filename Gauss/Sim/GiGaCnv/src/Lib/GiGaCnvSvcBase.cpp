@@ -1,8 +1,11 @@
-// $Id: GiGaCnvSvcBase.cpp,v 1.13 2003-01-23 09:20:37 ibelyaev Exp $ 
+// $Id: GiGaCnvSvcBase.cpp,v 1.14 2003-07-07 16:45:30 ranjard Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.13  2003/01/23 09:20:37  ibelyaev
+//  few fixes for Win2K platform
+//
 // Revision 1.12  2002/12/13 14:25:21  ibelyaev
 //  few trivial bug fixes
 //
@@ -159,16 +162,23 @@ StatusCode GiGaCnvSvcBase::initialize()
         << System::typeinfoName( typeid( *this ) ) << "/" 
         << name ()           << "   #properties = " 
         << properties.size() << endreq ;
+#if defined (__GNUC__) && ( __GNUC__ <= 2 )
     const int   buffer_size  = 256 ;
     char buffer[buffer_size]       ;
+#endif
     for( Properties::const_reverse_iterator property 
            = properties.rbegin() ;
          properties.rend() != property ; ++property )  
       {
+#if defined (__GNUC__) && ( __GNUC__ <= 2 )
         std::fill( buffer , buffer + buffer_size , 0 );
         std::ostrstream ost ( buffer , buffer_size );
         (*property)->nameAndValueAsStream( ost );
         ost.freeze();
+#else
+        std::ostringstream ost;
+        (*property)->nameAndValueAsStream( ost );
+#endif
         log << MSG::DEBUG
             << "Property ['Name': Value] = " 
             << ost.str() << endreq ;
