@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/L0/L0Muon/src/component/L0mTriggerProcD.cpp,v 1.4 2001-06-11 20:18:13 atsareg Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/L0/L0Muon/src/component/L0mTriggerProcD.cpp,v 1.5 2001-07-09 19:36:40 atsareg Exp $
 
 /// Include files
 /// Gaudi interfaces
@@ -45,11 +45,13 @@ StatusCode L0mTriggerProcD::initialize()   {
     log << MSG::INFO << "Initialization of a detailed Processor" << endreq;
     
     L0mTriggerProc::initialize();
-    for( int iq=1; iq<=4; iq++) {
-      m_crates.push_back(L0mCrate(iq));
+    for( int iq=0; iq<4; iq++) {
+      m_crates.push_back(new L0mCrate(iq,*this));
     }  
     
+    //=================================
     // Debug printout
+    //=================================
     std::vector<double>::const_iterator iv;    
     log << MSG::DEBUG << "Pt parameters: " ;
     for (iv = m_ptParameters.begin(); iv != m_ptParameters.end(); iv++) {
@@ -65,6 +67,11 @@ StatusCode L0mTriggerProcD::initialize()   {
     log << endreq;
     log << MSG::DEBUG << "Field of interest Y: " ;
     for (ii = m_foiYSize.begin(); ii != m_foiYSize.end(); ii++) {
+      log << *ii << " ";
+    }
+    log << endreq;
+    log << MSG::DEBUG << "Extrapolation to M1: " ;
+    for (ii = m_extraM1.begin(); ii != m_extraM1.end(); ii++) {
       log << *ii << " ";
     }
     log << endreq;
@@ -118,16 +125,25 @@ StatusCode L0mTriggerProcD::execute() {
   L0mTower* lt; 
   
   for(ip=pads->begin(); ip != pads->end(); ip++ ) {
+  
+//     cout << " L0mTriggerProcD: pads: " << (*ip)->station() << "/"
+//                                        << (*ip)->quarter() << "/"  
+// 				       << (*ip)->region() << "/" 
+// 				       << (*ip)->nX() << "/" 
+// 				       << (*ip)->nY() << "/" << endl;
+  
     if((*ip)->station() == 2) {
+        
       lt = createTower(*ip, pads);
       m_towers->push_back(lt);
-    }       
+    }     
   }
   log << "Done, # of towers "<< m_towers->size() << endreq;
   //=========================================
   // register trigger candidates  
   //=========================================
-
+  
+  ObjectVector<L0mTower>::iterator it;
 
   ObjectVector<L0MuonCandidate>* cand = new ObjectVector<L0MuonCandidate>;
   if( cand == 0 ) {
@@ -147,18 +163,15 @@ StatusCode L0mTriggerProcD::execute() {
   //===================
   // Build crates 
   //=================== 
+  
+
 
   log << MSG::DEBUG << "Building crates "  << endreq;  
 
-  std::vector<L0mCrate>::iterator ic;
+  std::vector<L0mCrate*>::iterator ic;
 
   for(ic=m_crates.begin(); ic!=m_crates.end(); ic++) {
-    (*ic).buildUnits(m_ptParameters,
-                     m_foiXSize,
-		     m_foiYSize,
-		     m_precision,
-		     m_bits,
-		     m_towers);
+    (*ic)->buildUnits(m_towers);
   }
   
   //=====================
@@ -171,15 +184,16 @@ StatusCode L0mTriggerProcD::execute() {
   std::vector<L0MuonCandidate*>::const_iterator ilmc;
   
   for(ic=m_crates.begin(); ic!=m_crates.end(); ic++) {
-    (*ic).execute(log);
-    lmcrate=(*ic).candidates();
+    (*ic)->execute(log);
+    lmcrate=(*ic)->candidates();
+    
     if (lmcrate.size()>0) {
       for(ilmc=lmcrate.begin(); ilmc!=lmcrate.end(); ilmc++) {
         cand->push_back(*ilmc);
       }  	
-    }
+    }    
     // Make cleanup after the work is done
-    (*ic).clear();
+    (*ic)->clear();
   }
   
   //======================================
@@ -206,6 +220,12 @@ StatusCode L0mTriggerProcD::execute() {
 }
 
 StatusCode L0mTriggerProcD::finalize()  {
+
+  std::vector<L0mCrate*>::iterator ip;
+  for( ip=m_crates.begin(); ip != m_crates.end(); ip++) {
+    delete *ip;
+  }
+
   return StatusCode::SUCCESS;
 }
 
