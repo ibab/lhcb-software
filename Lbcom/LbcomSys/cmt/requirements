@@ -29,4 +29,4 @@ use RichRecQC	    v1r10   Rich
 
 # Calo
 use CaloReco        v2r7p1  Calo
-use CaloPIDs	    v2r4    Calo
+use CaloPIDs	    v2r4p1  Calo

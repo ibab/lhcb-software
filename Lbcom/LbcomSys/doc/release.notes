@@ -5,15 +5,18 @@
 ! Purpose     : Package describing contents of Lbcom project.
 !-----------------------------------------------------------------------------
 
-!========================== LbCom v1r1 2005-03-07 ============================
-! 2005-03-07 - Marco Cattaneo
+!========================== LbCom v1r1 2005-03-08 ============================
+! 2005-03-08 - Marco Cattaneo
  - Move to Gaudi v16r2, LHCb v18r1
  - Packages modified: CaloReco v2r7p1, RichTools v1r5, RichMCTools v2r5,
      RichRecTools v2r14, RichRecMCTools v1r8, RichRecCommon v1r12, L0Calo v8r1,
-     L0DU v6r8, PuVeto v6r0p1
+     L0DU v6r8, PuVeto v6r0p1, CaloPIDs v2r4p1
 
  - In CaloReco v2r7p1
    . Fix options for new associators
+
+ - In CaloPIDs v2r4p1
+   . Fix options to remove unmatched "pragma print on"
 
  - In RichTools v1r5, RichMCTools v2r5, RichRecTools v2r14, RichRecMCTools v1r8
    . Various minor improvements
