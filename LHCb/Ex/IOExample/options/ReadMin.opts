@@ -1,0 +1,40 @@
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Ex/IOExample/options/ReadMin.opts,v 1.1 2003-12-16 15:40:14 frankb Exp $
+ApplicationMgr.ExtSvc = { "EventSelector" };
+//--------------------------------------------------------------
+// Private Application Configuration options
+//--------------------------------------------------------------
+// Set output level threshold (2=DEBUG, 3=INFO, 4=WARNING, 5=ERROR, 6=FATAL )
+MessageSvc.OutputLevel     = 3;
+ApplicationMgr.EvtMax      = 500;
+EventSelector.OutputLevel  = 2;
+EventSelector.PrintFreq    = 1;
+EventSelector.FirstEvent   = 1;
+ApplicationMgr.ExtSvc    += { "PoolDbCacheSvc", 
+                              "PoolDbCnvSvc/RootKeyEvtCnvSvc", 
+                              "PoolDbCnvSvc/RootTreeEvtCnvSvc" 
+                            };
+ApplicationMgr.DLLs             += { "GaudiPoolDb" };
+EventPersistencySvc.CnvServices += { "RootTreeEvtCnvSvc" };
+EventPersistencySvc.CnvServices += { "RootKeyEvtCnvSvc" };
+RootKeyEvtCnvSvc.DbType          = "POOL_ROOTKEY";
+RootTreeEvtCnvSvc.DbType         = "POOL_ROOTTREE";
+PoolDbCacheSvc.Dlls              = {"lcg_RootStorageSvc", "lcg_XMLCatalog" };
+#include "$LHCBTESTROOT/options/Dictionaries.opts"
+PoolDbCacheSvc.CatalogConnect    = "xmlcatalog_file:test_catalog.xml";
+PoolDbCacheSvc.OutputLevel = 3;
+
+ApplicationMgr.TopAlg      = { "EvtNumberPrintout/Printout" };
+ApplicationMgr.TopAlg     += { "StoreExplorer" };
+StoreExplorer.PrintEvt  = 0;
+StoreExplorer.PrintFreq = 0.933334;
+StoreExplorer.ExploreRelations  = 1;
+ApplicationMgr.DLLs       += { "OTAssociators", "ITAssociators", "MuonAssociators", "CaloAssociators", "TrAssociators", "VeloAssociators", "Associators" };
+//
+//
+// Brunel file
+//EventSelector.Input  = {"DATAFILE='PFN:PoolDst.root' TYP='POOL_ROOTTREE' OPT='READ'" };
+// Boole file
+EventSelector.Input  = {"DATAFILE='PFN:PoolSim.root' TYP='POOL_ROOTTREE' OPT='READ'" };
+// Gauss file
+EventSelector.Input  = {"DATAFILE='PFN:PoolGen.root' TYP='POOL_ROOTTREE' OPT='READ'" };
+
