@@ -1,4 +1,4 @@
-// $Id: Gauss.opts,v 1.15 2002-09-16 12:17:41 witoldp Exp $ 
+// $Id: Gauss.opts,v 1.16 2002-11-08 11:26:42 witoldp Exp $ 
 
 AuditorSvc.Auditors = { "ChronoAuditor" };
 
@@ -17,11 +17,10 @@ ApplicationMgr.HistogramPersistency = "NONE";
 // allow automatic creation of subdirectories in Event Transient Store 
 EventDataSvc.ForceLeaves = true ;
 
-// declare external services needed MAGNETIC FIELD (optional)
+// declare external services needed MAGNETIC FIELD 
 ApplicationMgr.ExtSvc +=  
 { "MagneticFieldSvc"  };  
 MagneticFieldSvc.FieldMapFile = 
-//"/afs/cern.ch/lhcb/software/NEW/SICB/dbase/v247r0/cdf/field043.cdf";
 "/afs/cern.ch/lhcb/software/NEW/SICB/dbase/v248r2/cdf/field044.cdf";
 
 ParticlePropertySvc.ParticlePropertiesFile = "$GAUSSROOT/data/particle.cdf" ;
@@ -39,23 +38,21 @@ ApplicationMgr.TopAlg          =
 #include "$GAUSSOPTS/Digitisation.opts"
 
 // write an output file
-#include "$GAUSSOPTS/GaussRootIO.opts"
-#include "$GAUSSOPTS/GaussTape.opts"
-GaussTape.Output = "DATAFILE='Gauss.root' TYP='ROOT' OPT='NEW'";
+//#include "$GAUSSOPTS/GaussRootIO.opts"
+//#include "$GAUSSOPTS/GaussTape.opts"
+//GaussTape.Output = "DATAFILE='Gauss.root' TYP='ROOT' OPT='NEW'";
 
 // General global options  
 MessageSvc.OutputLevel    = 3 ;
-//XmlParserSvc.OutputLevel  = 5 ;
-//RootEvtCnvSvc.OutputLevel = 1 ;
-//ROOT.OutputLevel          = 1 ;
-//GiGaSvc.OutputLevel = 1 ;
-//EmptyStack.OutputLevel = 3 ;
-//DrawStep.OutputLevel = 6;
+//GiGaSvc.OutputLevel = 2 ;
+GiGaSvc.EmptyStack.OutputLevel = 2 ;
 //EventDraw.OutputLevel = 1 ;
-//MCParticleGun.OutputLevel = 1;
+GiGaGeomCnvSvc.OutputLevel = 3;
 
 ApplicationMgr.EvtSel     = "NONE" ;
-ApplicationMgr.EvtMax     = 1 ;
+ApplicationMgr.EvtMax     = 1;
+
+
 
 
 

@@ -1,4 +1,4 @@
-// $Id: Generator.opts,v 1.10 2002-09-16 12:17:41 witoldp Exp $ 
+// $Id: Generator.opts,v 1.11 2002-11-08 11:26:42 witoldp Exp $ 
 
 ApplicationMgr.DLLs += { "GeneratorModules" } ;
 
@@ -16,14 +16,20 @@ Generator.Members +={"DumpMC"};
 
 // Generator's options
 
-SingleParticleGun.Pt      = 50.0 ;
-SingleParticleGun.Phi     =  1.0 ;
+SingleParticleGun.Pt      = 30.0 ;
+SingleParticleGun.Phi     =  2.0 ;
 SingleParticleGun.Eta     =  3.0 ;
 
 SingleParticleGun.ModePt  =   1 ;
 SingleParticleGun.ModeEta =   1 ; 
 SingleParticleGun.ModePhi =   1 ;
-SingleParticleGun.PdgCode = 211 ;
+SingleParticleGun.PdgCode =  211 ;
 
+PythiaAlg.MDCYFile="$GAUSSROOT/data/particle.cdf";
+
+PythiaAlg.PythiaCommand = { "pypars mstp 82 3", "pypars parp 82 3.47", 
+                            "pypars parp 89 14000", "pypars parp 90 0.174",
+                            "pypars mstp 2 2", "pypars mstp 33 3",
+                            "pypars mstp 52 2", "pypars mstp 51 4032"};
 
 

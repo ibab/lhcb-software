@@ -3,6 +3,20 @@ Package : Gauss
 Package manager : Witek Pokorski
 </PRE>
 
+</PRE>
+<H1><A NAME="v6r0">20021108 - Gauss v6r0</A></H1><PRE>
+! 2002-11-08 - Witek Pokorski
+  created a new allias gaussvis, which takes over the functionality
+  of "gauss" alias. Old alias "gauss" calls now job options without
+  visualisation
+  options - created a separate Visulation.opts
+  Simulation.opts - use the new physics list (LHEP_GN), 
+                    use GaussStepAction (which deals with storing trajectory
+                    points to be converted into MCVertex)
+ 
+  requirements - use of new GaussTools, GiGaCnv
+
+
 <H1><A NAME="v5r0">20021011 - Gauss v5r0</A></H1><PRE>
                new version installed in $SOFTWARE/releases/GAUSS_v5r0
                it uses LHCB_v11r0 which uses GAUDI_v11r0

@@ -1,10 +1,9 @@
-// $Id: Simulation.opts,v 1.19 2002-10-16 12:21:06 witoldp Exp $ 
+// $Id: Simulation.opts,v 1.20 2002-11-08 11:26:42 witoldp Exp $ 
 // ============================================================================
 
 ApplicationMgr.DLLs += 
 { "GiGa"         , 
   "GiGaCnv"      , 
-  //  "GaussImports" ,
   "GaussTools"   ,
   "Magnet"        } ;
 
@@ -22,7 +21,7 @@ Simulation.Members +=
 {	"GiGaDataStoreAlgorithm/GiGaStore" ,   // data store configuration
   "GiGaInputStream/Geo"              ,   // load the geometry 
   "GiGaInputStream/Kine"             ,   // load the kinematics 
-  "GiGaFlushAlgorithm/GiGaFlush"     ,   // flush the event 
+//  "GiGaFlushAlgorithm/GiGaFlush"     }; //,   // flush the event 
   "GiGaMiscGetEventAlg/GetEvent"     ,   // convert MCParticles/MCVertices
   "GetGiGaHitsAlg/GetHits"           };  // convert MCHits
 
@@ -40,7 +39,6 @@ Kine.StreamItems              +=
 //  ,"/Event/Gen/Vertices"   
 };
 
-
 // configuration of geometry "Geo" data stream
 
 DetectorDataSvc.DetDbLocation = "$XMLDDDBROOT/DDDB/v249r0.xml";
@@ -51,24 +49,29 @@ Geo.DataProviderSvcName  = "DetectorDataSvc" ;
 
 Geo.StreamItems         += { "/dd/Structure/LHCb/Pipe"   } ; 
 Geo.StreamItems         += { "/dd/Structure/LHCb/Velo"  } ; 
-//Geo.StreamItems         += { "/dd/Structure/LHCb/Rich1"   } ; 
-//Geo.StreamItems         += { "/dd/Structure/LHCb/Rich2"   } ; 
-//Geo.StreamItems         += { "/dd/Geometry/Rich1/Rich1Surfaces" };
-//Geo.StreamItems         += { "/dd/Geometry/Rich1/RichHPDSurfaces" };
+//Geo.StreamItems         += { "/dd/Structure/LHCb/Velo2Rich1"};
+Geo.StreamItems         += { "/dd/Structure/LHCb/Rich1"   } ; 
+Geo.StreamItems         += { "/dd/Structure/LHCb/Rich2"   } ; 
+Geo.StreamItems         += { "/dd/Geometry/Rich1/Rich1Surfaces" };
+Geo.StreamItems         += { "/dd/Geometry/Rich1/RichHPDSurfaces" };
 Geo.StreamItems         += { "/dd/Structure/LHCb/Magnet" } ; 
 Geo.StreamItems         += { "/dd/Structure/LHCb/Tracker"   } ; 
 Geo.StreamItems         += { "/dd/Structure/LHCb/Muon"  };
-
+//Geo.StreamItems         += { "/dd/Structure/LHCb/Hcal"  };
+//Geo.StreamItems         += { "/dd/Structure/LHCb/Ecal"  };
+//Geo.StreamItems         += { "/dd/Structure/LHCb/Spd"  };
+//Geo.StreamItems         += { "/dd/Structure/LHCb/Prs"  };
 
 // Physics List  to be used and its configuration  
-GiGaSvc.PhysicsList            = "GiGaPhysListModular/ModularPL" ;
-//GiGaSvc.ModularPL.PhysicsConstructors = {"GiGaPhysConstructorEM"};
-GiGaSvc.ModularPL.PhysicsConstructors += {"GiGaPhysConstructorOp"};
-GiGaSvc.ModularPL.PhysicsConstructors += {"GiGaPhysConstructorGen"};
+GiGaSvc.PhysicsList            = "GiGaPhysListModular/ModularPL";
+GiGaSvc.ModularPL.Cut           = 0.7;
 
-//GiGaSvc.PhysicsList            = "GiGaPhysListEm/EmPhysList" ; 
-//GiGaSvc.PhysicsList = "GiGaExternalPhysList<ExN01PhysicsList>/EmPhysList" ; 
-GiGaSvc.EmPhysList.Cut         = 5.0                        ;
+GiGaSvc.ModularPL.PhysicsConstructors += {"GeneralPhysics"};
+GiGaSvc.ModularPL.PhysicsConstructors += {"EM_GNPhysics"};
+GiGaSvc.ModularPL.PhysicsConstructors += {"MuonPhysics"};
+GiGaSvc.ModularPL.PhysicsConstructors += {"HadronPhysicsLHEP_GN"};
+GiGaSvc.ModularPL.PhysicsConstructors += {"IonPhysics"};
+//GiGaSvc.ModularPL.PhysicsConstructors += {"GiGaPhysConstructorOp"};
 
 // Stacking action to be used and its configuration  
 GiGaSvc.StackingAction         = "GiGaStackActionEmpty/EmptyStack" ;
@@ -76,9 +79,13 @@ GiGaSvc.StackingAction         = "GiGaStackActionEmpty/EmptyStack" ;
 // Tracking action to be used and its configuration  
 GiGaSvc.TrackingAction         =   "GiGaTrackActionSequence/TrackSeq"    ;
 GiGaSvc.TrackSeq.Members      += { "GiGaTrackActionSimple/SimpleTrack" } ;
-GiGaSvc.SimpleTrack.StoreAll  = true                                    ; 
-// GiGaSvc.SimpleTrack.StoreByOwnEnergy   = true       ; 
-// GiGaSvc.SimpleTrack.OwnEnergyThreshold = 1000.0             
+
+GiGaSvc.SimpleTrack.StoreAll  = false; 
+GiGaSvc.SimpleTrack.StorePrimaries = true;
+GiGaSvc.SimpleTrack.StoreMarkedTracks = false;
+GiGaSvc.SimpleTrack.StoreHitTracks = false; 
+GiGaSvc.SimpleTrack.StoreByOwnEnergy   = true; 
+GiGaSvc.SimpleTrack.OwnEnergyThreshold = 1000.0     ;        
 // GiGaSvc.SimpleTrack.StoreByChildEnergy   = true ; 
 // GiGaSvc.SimpleTrack.ChildEnergyThreshold = 50.0 ; 
 // GiGaSvc.SimpleTrack.StoreByOwnType       = true; 
@@ -88,67 +95,43 @@ GiGaSvc.SimpleTrack.StoreAll  = true                                    ;
 
 // Stepping action to be used and its configuration  
 GiGaSvc.SteppingAction               =   "GiGaStepActionSequence/StepSeq"  ;
-//GiGaSvc.StepSeq.Members             += { "GiGaStepActionDraw/DrawStep"   } ;
+GiGaSvc.StepSeq.Members             += { "GaussStepAction/GaussStep" } ;
 
 // Event action to be used and its configuration  
 GiGaSvc.EventAction           =   "GiGaEventActionSequence/EventSeq"      ;
-GiGaSvc.EventSeq.Members     += { "GiGaEventActionDraw/EventDraw" } ;
 GiGaSvc.EventSeq.Members     += { "GiGaEventActionCommand/EventCommand" } ;
-GiGaSvc.EventCommand.EndOfEventCommands = 
-{ "/vis/scene/add/volume"               , 
-  "/vis/scene/add/trajectories"         ,
-  "/vis/viewer/update"                  } ;
-#ifdef WIN32
-GiGaSvc.EventCommand.BeginOfEventCommands = 
-{ "/vis/scene/create"                   , 
-  "/vis/sceneHandler/create OIWIN32"    ,
-  "/vis/viewer/create"                  ,
-  "/vis/scene/add/volume"               , 
-  "/vis/scene/add/trajectories"         ,
-  "/vis/scene/notifyHandlers   "        } ;
-#else 
-GiGaSvc.EventCommand.BeginOfEventCommands = 
-{ "/vis/scene/create"                   , 
-  "/vis/sceneHandler/create DAWNFILE"   ,
-  "/vis/viewer/create"                  ,
-  "/vis/viewer/viewpointThetaPhi -90 -90",
-  "/vis/scene/add/volume"               , 
-  "/vis/scene/add/trajectories"         ,
-  "/vis/scene/notifyHandlers   "        } ;
-#endif 
 
 // Run Action to be used and its configurations  
 GiGaSvc.RunAction                 =   "GiGaRunActionSequence/RunSeq"      ;
 GiGaSvc.RunSeq.Members           += { "GiGaRunActionCommand/RunCommand" } ;
 GiGaSvc.RunCommand.BeginOfRunCommands     = 
 { "/control/saveHistory "           ,
-  "/run/verbose -10 "               ,
+  "/run/verbose 2 "               ,
   "/vis/verbose -10 "               ,
+  "/tracking/verbose 0"            ,
   "/tracking/storeTrajectory  1"    } ;
 
 // List of user interface sessions (with priorities)
 
 // GiGaSvc.UIsessions =  { "tcsh" , "Xm" , "Wo" , "GAG", "Xaw" , "terminal" } ;
 
-// flag for instantiation and usage of visual manager 
-
-GiGaSvc.UseVisManager          = true;
-
 //   "Global Magnetifc field" (usisng Magnetic Field Service)
 GiGaGeomCnvSvc.WorldMagneticField = "GiGaMagFieldGlobal/GlobalField";
 GiGaGeomCnvSvc.GlobalField.MagneticFieldService = "MagneticFieldSvc" ;
 //   "Uniform Magnetifc field" 
-// GiGaGeomCnvSvc.WorldMagneticField = "GiGaMagFieldUniform/UniformField";
-// GiGaGeomCnvSvc.UniformField.Bx          = 0.     ; 
-// GiGaGeomCnvSvc.UniformField.By          = 0.005  ; 
-// GiGaGeomCnvSvc.UniformField.Bz          = 0.     ; 
+//GiGaGeomCnvSvc.WorldMagneticField = "GiGaMagFieldUniform/UniformField";
+//GiGaGeomCnvSvc.UniformField.Bx          = 0.5     ; 
+//GiGaGeomCnvSvc.UniformField.By          = 0.5  ; 
+//GiGaGeomCnvSvc.UniformField.Bz          = 0.5     ; 
 // GiGaGeomCnvSvc.UniformField.OutputLevel = 1      ;
+
+// Material of the World Volume
+// GiGaGeomCnvSvc.WorldMaterial = "/dd/Materials/Vacuum";
 
 // Material Budget  
 
 // GiGaGeomCnvSvc.GlobalSensitivity  = "GiGaSensDetBudget/Budget" ;
 // GiGaGeomCnvSvc.Budget.OutputLevel = 1 ;
-
 
 // sensdet paths
 GiGaGeomCnvSvc.ITSDet.DetectorPath = "/Tracker/IT";

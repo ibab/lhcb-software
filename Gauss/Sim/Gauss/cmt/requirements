@@ -1,5 +1,5 @@
 package Gauss
-version v5r0
+version v6r0
 
 # =============================================================================
 # structure 
@@ -28,14 +28,14 @@ use GaudiRootDb         v9r*
 use DbCnv               v7r*    Event 
 
 # Histogram persistency (optional)
-# use HbookCnv            v13r*
+use HbookCnv            v13r*
 
 # Access to magnetic field service
 use Magnet              v2r*    Det
 
 #GiGa staff...
-use GiGaCnv             v8r*    Sim
-use GaussTools          v2r*    Sim
+use GiGaCnv             v9r*    Sim
+use GaussTools          v3r*    Sim
 #use GaussImports        v2r*    Sim 
 
 # generator
@@ -46,6 +46,13 @@ use GeneratorModules    v4r*    Gen
 
 #geometry source 
 use XmlDDDB             v13r*   Det 
+
+# Outer Tracker
+#use OTDet               v2r2p1  Det  
+#use OTAlgorithms        v11r9   OT
+#use OTAssociators       v2r1    OT
+
+#use GaussChecks          v1r0 Sim
 
 # =============================================================================
 # Essential environment variables 
@@ -77,3 +84,4 @@ path_append    PATH  "${GAUSSROOT}/${BINDIR}"
 
 # =============== alias =======================================================
 alias gauss " ${GAUSSROOT}/${BINDIR}/Gauss.exe ${GAUSSOPTS}/Gauss.opts "
+alias gaussvis " ${GAUSSROOT}/${BINDIR}/Gauss.exe ${GAUSSOPTS}/Gaussvis.opts "
