@@ -1,4 +1,4 @@
-// $Id: DeRich2HPDPanel.h,v 1.7 2003-11-22 18:40:50 jonesc Exp $
+// $Id: DeRich2HPDPanel.h,v 1.8 2004-01-28 16:33:30 papanest Exp $
 #ifndef RICHDET_RICHDET_DERICH2HPDPANEL_H
 #define RICHDET_RICHDET_DERICH2HPDPANEL_H 1
 
@@ -60,8 +60,20 @@ public:
    * HPDs (a plane resting on the HPDs touching the window).
    * @return HepPlane3D
    */
-  inline virtual const HepPlane3D & detectionPlane() const { return m_detectionPlane; }
+  inline virtual const HepPlane3D & detectionPlane() const { 
+    return m_detectionPlane; 
+  }
   
+  /**
+   * Returns the offset for the globalToPanel method.
+   * @return The offset in x so that the two panels
+   * appear side-by-side using the globalToPanel method.
+   */
+  virtual const double localOffset() const {
+    return m_detPlaneHorizEdge;
+  }
+  
+
 protected:
 
   /**  

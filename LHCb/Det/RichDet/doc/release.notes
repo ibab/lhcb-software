@@ -7,6 +7,8 @@
 !========================= RichDet v6r5 2003-12-19 =========================
 ! 2003-12-19 - Antonis Papanestis
  - Added global to local conversion for HPD Panels
+! 2004-01-28 - Antonis Papanestis
+ - Started the process of removing DeRichPDPanel, by removing the .cpp file
 
 !========================= RichDet v6r4 2003-12-08 =========================
 ! 2003-12-08 - Marco Cattaneo

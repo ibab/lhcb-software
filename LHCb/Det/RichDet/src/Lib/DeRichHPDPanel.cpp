@@ -1,4 +1,4 @@
-// $Id: DeRichHPDPanel.cpp,v 1.9 2003-12-19 15:52:43 papanest Exp $
+// $Id: DeRichHPDPanel.cpp,v 1.10 2004-01-28 16:33:30 papanest Exp $
 #define DERICHHPDPANEL_CPP
 
 // Include files
@@ -303,7 +303,7 @@ StatusCode DeRichHPDPanel::PDWindowPoint( const HepVector3D& vGlobal,
   unsigned int  HPDNumber(0), HPDRow(0), HPDColumn(0);
   RichSmartID id;
 
-  if ( mode == circle ) {  // do it quickly
+  if ( mode == DeRichPDPanel::circle ) {  // do it quickly
     if ( findHPDRowCol(panelIntersection, id) ) {
 
       HPDRow = id.PDRow();
@@ -439,5 +439,38 @@ StatusCode DeRichHPDPanel::readoutChannelList(std::vector<RichSmartID>&
   }
 
   return StatusCode::SUCCESS;
+}
+
+
+//=========================================================================
+//  returns the intersection point with the detection plane
+//=========================================================================
+bool DeRichHPDPanel::detPlanePoint( const HepPoint3D& pGlobal,
+                                    const HepVector3D& vGlobal,
+                                    HepPoint3D& hitPosition,
+                                    DeRichPDPanel::traceMode mode) {
+
+  // transform point and vector to the MaPMT Panel coordsystem.
+  HepPoint3D pLocal( geometry()->toLocal(pGlobal) );
+  HepVector3D vLocal( vGlobal );
+  vLocal.transform( m_vectorTransf );
+
+  double scalar1 = vLocal*m_localPlaneNormal;
+  if ( scalar1 == 0.0 ) return false;
+
+  double distance = -(m_localPlane.d() + pLocal*m_localPlaneNormal) / scalar1;
+  HepPoint3D hitInPanel( pLocal + distance*vLocal );
+
+  hitPosition = geometry()->toGlobal( hitInPanel );
+
+  if ( mode == DeRichPDPanel::tight) {
+    if ( fabs(hitInPanel.x()) >= m_detPlaneHorizEdge ||
+         fabs(hitInPanel.y()) >= m_detPlaneVertEdge ) {
+      return false;
+    }
+    
+  }
+  return true;
+  
 }
 

@@ -1,4 +1,4 @@
-// $Id: DeRichPDPanel.h,v 1.7 2003-12-19 15:52:43 papanest Exp $
+// $Id: DeRichPDPanel.h,v 1.8 2004-01-28 16:33:30 papanest Exp $
 
 #ifndef RICHDET_DERICHPDPANEL_H
 #define RICHDET_DERICHPDPANEL_H 1
@@ -84,7 +84,7 @@ public:
   virtual bool detPlanePoint( const HepPoint3D& pGlobal,
                               const HepVector3D& vGlobal,
                               HepPoint3D& hitPosition,
-                              traceMode mode = loose);
+                              traceMode mode = loose) = 0;
 
   /**
    * Returns the detection plane of the PD panel, defined at the top of the
@@ -104,21 +104,6 @@ public:
 
 protected:
 
-  /// detection plane in global coordinates
-  HepPlane3D m_detectionPlane;
-
-  /// detection plane in PDPanel coordinates
-  HepPlane3D m_localPlane;
-  HepVector3D m_localPlaneNormal;
-
-  /// local plane for HPD row/column purposes
-  HepPlane3D m_localPlane2;
-  HepVector3D m_localPlaneNormal2;
-
-  double m_detPlaneHorizEdge;
-  double m_detPlaneVertEdge;
-
-  HepTransform3D m_vectorTransf;
 
 };
 

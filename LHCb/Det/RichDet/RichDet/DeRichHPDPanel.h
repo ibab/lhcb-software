@@ -1,4 +1,4 @@
-// $Id: DeRichHPDPanel.h,v 1.9 2003-12-19 15:52:43 papanest Exp $
+// $Id: DeRichHPDPanel.h,v 1.10 2004-01-28 16:33:30 papanest Exp $
 
 #ifndef RICHDET_DERICHHPDPANEL_H
 #define RICHDET_DERICHHPDPANEL_H 1
@@ -22,6 +22,16 @@
 class DeRichHPDPanel: public DeRichPDPanel {
 
 public:
+
+  /// traceMode is used in the methods detPlanePoint to set boundaries
+  /// and in PDWindow point to set whether the returned point is actualy
+  /// on the window surface, or a simple algorith is used.
+  enum traceMode {
+    loose = 0,
+    tight,
+    window = 0,
+    circle
+  };
 
   /**
    * Constructor for this class
@@ -47,6 +57,14 @@ public:
    * INSIDE surface of the window).
    */
   virtual const HepPlane3D & detectionPlane() const = 0;
+
+  /**
+   * Returns the offset for the globalToPanel method.
+   * @return The offset (y in Rich1, x in Rich2) so that the two panels of
+   * each detector appear side-by-side using the globalToPanel method.
+   */
+  virtual const double localOffset() const = 0;
+
 
   /**
    * Converts a HepPoint3D in global coordinates to a RichSmartID.
@@ -75,7 +93,20 @@ public:
                                     const HepPoint3D& pGlobal, 
                                     HepPoint3D& windowPointGlobal, // return
                                     RichSmartID& smartID,
-                                    DeRichPDPanel::traceMode mode = circle );
+                                    DeRichPDPanel::traceMode mode = 
+                                    DeRichPDPanel::circle );
+
+  /**
+   * Returns the intersection point with the detector plane given a vector
+   * and a point. If mode is tight, returns true only if point is within
+   * the detector coverage.
+   * @return bool
+   */
+  virtual bool detPlanePoint( const HepPoint3D& pGlobal,
+                              const HepVector3D& vGlobal,
+                              HepPoint3D& hitPosition,
+                              DeRichPDPanel::traceMode mode = 
+                              DeRichPDPanel::loose);
 
   /**
    * Converts a global position to the coordinate system of the
@@ -198,6 +229,23 @@ protected:
   const ISolid* m_HPDPanelSolid;
 
   std::vector<HepPoint3D> m_HPDCentres;
+
+  // from PDPanel
+  /// detection plane in global coordinates
+  HepPlane3D m_detectionPlane;
+
+  /// detection plane in PDPanel coordinates
+  HepPlane3D m_localPlane;
+  HepVector3D m_localPlaneNormal;
+
+  /// local plane for HPD row/column purposes
+  HepPlane3D m_localPlane2;
+  HepVector3D m_localPlaneNormal2;
+
+  double m_detPlaneHorizEdge;
+  double m_detPlaneVertEdge;
+
+  HepTransform3D m_vectorTransf;
 
 };
 
