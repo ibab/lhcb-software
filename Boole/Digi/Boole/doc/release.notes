@@ -20,8 +20,8 @@ Development version
   . Use new GaudiAlg and GaudiTools base classes
     (STDet v1r2, ITAssociators v2r9, STDAQ v1r2, ITAlgorithms v14r3,
      ITCheckers v2r3)
-  . Converters of "Relations" to "Linker" MC truth tables moved to AssocToLinker
-    package (from TrgChecker) (AssocToLinker v1r0)
+  . Converters of "Relations" to "Linker" MC truth tables moved to AsctToLinker
+    package (from TrgChecker) (AsctToLinker v1r2)
   . Removed dependency on GaudiAud package
   . Removed dependency on Trg packages
 

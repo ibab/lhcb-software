@@ -147,7 +147,7 @@ DigiVELOSeq.Members += { "PrepareVeloRawBuffer" };
 // Relations to MC truth. Built unconditionally regardless of monitoring
 //--------------------------------------------------------------
 ApplicationMgr.DLLs += { "Associators" };
-ApplicationMgr.DLLs += { "AssocToLinker" };
+ApplicationMgr.DLLs += { "AsctToLinker" };
 ApplicationMgr.DLLs += { "VeloAssociators" };
 ApplicationMgr.DLLs += { "ITAssociators" };
 #include "$ITASSOCIATORSROOT/options/ITAssociators.opts"

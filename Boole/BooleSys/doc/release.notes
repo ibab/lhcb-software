@@ -6,7 +6,7 @@
 
 !======================== BooleSys v6r0 2004-06-14 ========================
 ! 2004-06-14 - Marco Cattaneo
- - Packages added   : AssocToLinker (converts "Relations" to "Linker")
+ - Packages added   : AsctToLinker (converts "Relations" to "Linker")
  - Packages removed : LHCbTools (moved to LHCb)
                       Trg/* (no longer used in Boole)
  - Packages modified: STDAQ v1r2, ITAlgorithms v14r3, ITCheckers v2r3

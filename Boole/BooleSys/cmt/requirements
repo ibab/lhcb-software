@@ -10,7 +10,7 @@ branches cmt doc
 # Boole application
 use Boole		v6r0	Digi
 use DigiAlg		v2r3	Digi
-use AssocToLinker	v1r0	Associators
+use AsctToLinker	v1r2	Rec
 
 # L0 trigger
 use L0Calo              v7r6	L0
