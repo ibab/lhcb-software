@@ -4,6 +4,7 @@
 ! Purpose     : Co-ordinates the RICH reconstruction packages
 !-----------------------------------------------------------------------------
 
+!======================= RichRecSys v1r4 2003-12-04 =======================
 ! 2003-12-03 - Chris Jones
  - New versions of RichRecBase and RichRecTools
 
