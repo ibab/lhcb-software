@@ -1,6 +1,10 @@
-! $Id: release.notes,v 1.14 2002-04-04 06:04:12 ocallot Exp $
+! $Id: release.notes,v 1.15 2002-04-05 15:15:49 ocallot Exp $
 Package		: L0/L0Calo
 Package Manager : Olivier Callot
+
+!=============================================================================
+! 05/04/2002 - Olivier Callot ** v5r0 **
+  - Changes ObjectVector<CaloDigit> to CaloDigits in L0CaloDigit.cpp
 
 !=============================================================================
 ! 04/04/2002 - Olivier Callot

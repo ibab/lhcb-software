@@ -1,4 +1,4 @@
-// $Id: L0CaloDigit.cpp,v 1.4 2002-04-04 06:04:13 ocallot Exp $
+// $Id: L0CaloDigit.cpp,v 1.5 2002-04-05 15:15:49 ocallot Exp $
 // Include files
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -118,8 +118,8 @@ StatusCode L0CaloDigit::execute() {
 
   // Get the ECAL input container
 
-  SmartDataPtr< ObjectVector<CaloDigit> > ecalDigit ( eventSvc(),
-                                          m_nameOfEcalDataContainer );
+  SmartDataPtr<CaloDigits> ecalDigit ( eventSvc(),
+                                       m_nameOfEcalDataContainer );
   if( 0 == ecalDigit ) {
     log << MSG::ERROR << "Unable to retrieve Ecal data container="
         << m_nameOfEcalDataContainer << endreq;
@@ -136,7 +136,7 @@ StatusCode L0CaloDigit::execute() {
     return sc ;
   }
 
-  ObjectVector<CaloDigit>::const_iterator digit;  
+  CaloDigits::const_iterator digit;  
   for( digit = ecalDigit->begin() ; ecalDigit->end() != digit ; ++digit ) {
     CaloCellID ID  = (*digit)->cellID();
     double  energy = (*digit)->e() * m_gainCorrEcal[ID.area()];
@@ -155,8 +155,8 @@ StatusCode L0CaloDigit::execute() {
 
   // Get the HCAL input container
 
-  SmartDataPtr<ObjectVector<CaloDigit> > hcalDigit ( eventSvc() ,
-                                         m_nameOfHcalDataContainer );
+  SmartDataPtr<CaloDigits> hcalDigit ( eventSvc() ,
+                                       m_nameOfHcalDataContainer );
   if( 0 == hcalDigit ) {
     log << MSG::ERROR << "Unable to retrieve Hcal data container="
         << m_nameOfHcalDataContainer << endreq;
@@ -204,8 +204,8 @@ StatusCode L0CaloDigit::execute() {
 
   // PrsShower
 
-  SmartDataPtr<ObjectVector<CaloDigit> > prsDigit ( eventSvc() ,
-                                                    m_nameOfPrsDataContainer );
+  SmartDataPtr<CaloDigits> prsDigit ( eventSvc() ,
+                                      m_nameOfPrsDataContainer );
   if( 0 == prsDigit ) {
     log << MSG::ERROR << "Unable to retrieve Prs data container="
         << m_nameOfPrsDataContainer << endreq;
@@ -238,8 +238,8 @@ StatusCode L0CaloDigit::execute() {
 
   // SPD
 
-  SmartDataPtr<ObjectVector<CaloDigit> > spdDigit ( eventSvc() ,
-                                                    m_nameOfSpdDataContainer );
+  SmartDataPtr<CaloDigits> spdDigit ( eventSvc() ,
+                                      m_nameOfSpdDataContainer );
   if( 0 == spdDigit ) {
     log << MSG::ERROR << "Unable to retrieve Spd data container="
         << m_nameOfSpdDataContainer << endreq;
