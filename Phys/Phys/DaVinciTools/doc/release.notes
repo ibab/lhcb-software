@@ -1,6 +1,21 @@
-! $Id: release.notes,v 1.42 2003-01-07 08:41:52 ranjard Exp $
+! $Id: release.notes,v 1.43 2003-01-22 16:43:22 ibelyaev Exp $
 ! Package     : DaVinciTools
 ! Responsible : Gloria Corti, Sandra Amato
+
+
+! 2003-01-22 - Ivan BELYAEV
+ - DaVinciTools/IPhotonParams.h   new abstract interface for the 
+                                  (re)evaluation of photons parameters 
+                                  at photon production vertex 
+ - src/PhotonParameters.h,.cpp    concrete implementation of IPhotonParams
+                                  abstract interface 
+ - src/PhotonParticleMaker.h,.cpp new particle maker for photons.
+                                  Only "normal" 1-cluster photons are considered.
+                                  Split photons from merged pi0s are ignored 
+                                  in this version
+ - src/DaVinciTools_load.h        add the factories for new tools
+
+ - src/NeutralParticleMaker.cpp   put the guards against Merged pi0s 
 
 !========================== DaVinciTools v7r2 2003-01-06 ====================
 ! 2003-01-06 - Florence Ranjard

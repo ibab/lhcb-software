@@ -1,4 +1,4 @@
-// $Id: DaVinciTools_load.cpp,v 1.15 2002-11-14 12:35:34 graven Exp $
+// $Id: DaVinciTools_load.cpp,v 1.16 2003-01-22 16:43:22 ibelyaev Exp $
 // Include files 
 
 
@@ -36,6 +36,9 @@ DECLARE_FACTORY_ENTRIES( DaVinciTools ) {
   DECLARE_TOOL( TrTransporter );
   DECLARE_TOOL( DecayFinder );
   DECLARE_TOOL( CheckOverlap );  
+
+  DECLARE_TOOL( PhotonParameters    ) ;  
+  DECLARE_TOOL( PhotonParticleMaker ) ;  
 
   DECLARE_ALGORITHM( PreLoadParticles );
   

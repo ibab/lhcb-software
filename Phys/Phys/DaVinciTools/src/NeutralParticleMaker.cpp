@@ -267,6 +267,9 @@ double NeutralParticleMaker::applySelection( SmartRef<ProtoParticle> cand ) {
 
   // get Ecal CaloHypo
   const SmartRef<CaloHypo> hypo = *(cand->calo().begin());
+
+  // V.B. 
+  if( hypo->hypothesis() != CaloHypotheses::Photon ) { return -100; }
   
   // get Ecal cluster
   const CaloHypo::Clusters& clus = hypo->clusters() ;
