@@ -1,13 +1,16 @@
-! $Id: release.notes,v 1.16 2002-06-13 11:39:50 dhcroft Exp $
+! $Id: release.notes,v 1.17 2002-06-21 13:48:38 cattanem Exp $
 ! =============================================================================
 ! Package     : MuonTools
 ! Responsible : David Hutchcroft David.Hutchcroft@cern.ch
 ! =============================================================================
 
-! 20020613 David Hutchcroft
+! 2002-06-21 - Marco Cattaneo
+ - Set output level to DEBUG for standard intialisation messages
+
+! 2002-06-13 David Hutchcroft
   - Added new code to get number of gaps from XML not hardcoded.
 
-! >>>>>>>>>>>>>>>>>>>>>>> MuonTools v2r0 <<<<<<<<<<<<<<<<<<<<<<<<<<
+!======================== MuonTools v2r0 2002-06-13 ===========================
 ! 20020510 David Hutchcroft
   - Added new interface for MuonGeometryTool that gives pad and region size 
    (uses MuonTileXYZTool to do it).

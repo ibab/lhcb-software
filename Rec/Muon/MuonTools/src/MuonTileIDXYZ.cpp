@@ -1,4 +1,4 @@
-// $Id: MuonTileIDXYZ.cpp,v 1.12 2002-06-13 11:39:54 dhcroft Exp $
+// $Id: MuonTileIDXYZ.cpp,v 1.13 2002-06-21 13:48:38 cattanem Exp $
 // Include files 
 #include <cstdio>
 #include <cmath>
@@ -54,7 +54,7 @@ MuonTileIDXYZ::MuonTileIDXYZ( const std::string& type,
   declareInterface<IMuonTileXYZTool>(this);
 
   MsgStream log(msgSvc(), "MuonTileIDXYZ");
-  log << MSG::INFO << "Initialising the MuonTile to position tool" << endreq;  
+  log << MSG::DEBUG << "Initialising the MuonTile to position tool" << endreq;  
 
   // Locate the detector service needed by the this tool
   m_DDS = 0;

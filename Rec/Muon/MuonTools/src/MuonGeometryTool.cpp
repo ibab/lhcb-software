@@ -1,4 +1,4 @@
-// $Id: MuonGeometryTool.cpp,v 1.2 2002-05-15 07:50:24 cattanem Exp $
+// $Id: MuonGeometryTool.cpp,v 1.3 2002-06-21 13:48:38 cattanem Exp $
 // Include files 
 #include <cmath>
 
@@ -35,7 +35,7 @@ MuonGeometryTool::MuonGeometryTool( const std::string& type,
   declareInterface<IMuonGeometryTool>(this);
 
   MsgStream log(msgSvc(), "MuonGeometryTool");
-  log << MSG::INFO << "Initialising the muon geometry tool" << endreq;  
+  log << MSG::DEBUG << "Initialising the muon geometry tool" << endreq;  
 
   /// get tile tool
   StatusCode sc = 
