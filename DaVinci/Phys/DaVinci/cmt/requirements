@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.247 2005-03-22 18:06:44 pkoppenb Exp $
+# $Id: requirements,v 1.248 2005-03-23 12:40:27 pkoppenb Exp $
 # Created    : 07/02/2002
 # Maintainer : P. Koppenburg
 #
@@ -43,7 +43,7 @@ use LHCb                v16r4
 use RichTools           v1r2p2 Rich
 
 #=======================================================
-# DaVinciSys v12r7
+# DaVinciSys v12r9
 #=======================================================
 
 # L0 Trigger packages
