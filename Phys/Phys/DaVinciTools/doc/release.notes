@@ -1,6 +1,66 @@
-! $Id: release.notes,v 1.7 2002-02-28 14:35:24 gcorti Exp $
+! $Id: release.notes,v 1.8 2002-04-03 16:57:12 gcorti Exp $
 ! Package     : DaVinciTools
 ! Responsible : Gloria Corti
+
+
+! 02042002 - DaVinciTools v3r0 (G.Corti)
+  - Remove obsolete tool on AxPartCandidates: interfaces, header and 
+    cpp files (AddFourMom, ImpactPar)
+
+  - src/FillParticleAlgorithm.h&cpp, algorithm to fill Particles starting
+      from AxPartCandidates (Sandra Amato)
+
+  - Introduce new OO tools working with new PhysEvent model
+    The interfaces are in DaVinciTools subdirectory.
+    - DaVinciTools/IGeomDispCalculator.h (interface)
+      src/GeomDispCalculator.h&cpp 
+          Tool to calculate varius geometrical distances between Particles & 
+          Vertices (ex. impact parameter) 
+      author: Miriam Gandelman
+
+    - DaVinciTools/IParticleFilter.h (interface)
+      src/ParticleFilter.h&cpp
+          Tool to filter lists of particles satisfying criteria specified
+          as IFilterCriterion (configured in jobOptions)
+      author: Paul Colrain
+
+    - DaVinciTools/IFilterCriterion.h, interface for tool specifiying a
+          criteria to be satified by a Particle to be filtered
+      src/PIDFilterCriterion.h&cpp, concrete implementation of filtering
+          by ParticleID + Confidence Level
+      src/KinFilterCriterion.h&cpp, concrete implementation of filtering 
+          based on kinematic quantities
+      author: Paul Colrain
+
+    - DaVinciTools/IParticleTransporter.h (interface)
+      src/ParticleTransporter.h&cpp
+          Tool to transport a Particle and its errors at a specified z position
+          Used by vertexing tools.
+      author: Edgar de Oliveira
+
+    - DaVinciTools/IVertexFitter.h, interface for generic vertex fitters
+      src/UnconstVertexFitter.h&cpp, concrete implementation of a vertex fitter
+          based on Fortran axksvrtx.F
+      author: Sandra Amato      
+    - DaVinciTools/IMassVertexFitter.h, interface for mass constrained vertex
+                                       fitters
+      src/LagrangeMassVertexFitter.h&cpp, concrete implementation using
+          Lagrangian Multipliers
+      author: Joao de Mello
+                            
+    - DaVinciTools/IParticleStuffer.h (interface)
+      src/ParticleStuffer.h&cpp 
+          Tool to fill contents of a Particle class starting from info 
+          provided by its end (decay) vertex
+      author: Paul Colrain
+
+    - DaVinciTools/IPhysDesktop.h, interface for tools to provide Particles
+         & Vertices for Physics analysis from various sources in TES and
+         deal with saving in TES
+      src/PhysDesktop.h&cpp, a concrete implementation getting info from
+         various locations in TES for previous processing
+      authors: Sandra Amato, Gloria Corti
+      
 
 ! 28022002 - DaVinciTools v3r0 (GCorti)
   - adapt to new PhysEvent structure
