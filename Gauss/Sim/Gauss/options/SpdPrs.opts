@@ -1,0 +1,39 @@
+// ============================================================================
+
+// ============================================================================
+GiGaGeo.Spd.StartVolumes = 
+{
+  "/dd/Geometry/Spd/Modules/InnCell"  ,
+  "/dd/Geometry/Spd/Modules/MidCell"  ,
+  "/dd/Geometry/Spd/Modules/OutCell"
+};
+
+GiGaGeo.Spd.EndVolume      =  "/dd/Geometry/Spd/Installation/Spd" ;
+GiGaGeo.Spd.CollectionName =  "SpdHits"                            ;
+GiGaGeo.Spd.Detector       =  "/dd/Structure/LHCb/Spd"             ;
+GiGaGeo.Spd.zMin           =  12300. * mm ;
+GiGaGeo.Spd.zMax           =  15000. * mm ;
+
+GiGaGeo.Spd.DetectorPath   =  "/LHCb/Calo"             ;
+
+// ============================================================================
+
+// ============================================================================
+GiGaGeo.Prs.StartVolumes = 
+{
+  "/dd/Geometry/Prs/Modules/InnCell"  ,
+  "/dd/Geometry/Prs/Modules/MidCell"  ,
+  "/dd/Geometry/Prs/Modules/OutCell"
+};
+
+GiGaGeo.Prs.EndVolume      =  "/dd/Geometry/Prs/Installation/Prs" ;
+GiGaGeo.Prs.CollectionName =  "PrsHits"                            ;
+GiGaGeo.Prs.Detector       =  "/dd/Structure/LHCb/Prs"             ;
+GiGaGeo.Prs.zMin           =  12300. * mm ;
+GiGaGeo.Prs.zMax           =  15000. * mm ;
+
+GiGaGeo.Prs.DetectorPath   =  "/LHCb/Calo"             ;
+
+// ============================================================================
+// The END 
+// ============================================================================

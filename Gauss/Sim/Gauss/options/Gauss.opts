@@ -1,4 +1,4 @@
-// $Id: Gauss.opts,v 1.24 2003-06-18 11:39:07 witoldp Exp $ 
+// $Id: Gauss.opts,v 1.25 2003-07-04 11:15:37 ranjard Exp $ 
 
 #units "$STDOPTS/units.opts"
 
@@ -47,7 +47,7 @@ MessageSvc.OutputLevel    = 3;
 MessageSvc.setWarning += { "XmlGenericCnv" };
 
 ApplicationMgr.EvtSel     = "NONE" ;
-ApplicationMgr.EvtMax     = 100;
+ApplicationMgr.EvtMax     = 1;
 
 GaussInit.FirstEventNumber =1;
 
