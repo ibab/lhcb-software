@@ -25,7 +25,7 @@ const std::string MuonDigitization::numsta[5]=
 
 const std::string MuonDigitization::TESPathOfHitsContainer[4]=
            {"Hits","ChamberNoiseHits","FlatSpilloverHits","BackgroundHits"};
-const int MuonDigitization::MuonDigitization::OriginOfHitsContainer[4]=
+const int MuonDigitization::OriginOfHitsContainer[4]=
            {MuonOriginFlag::GEANT,MuonOriginFlag::CHAMBERNOISE,
 					  MuonOriginFlag::FLATSPILLOVER,MuonOriginFlag::BACKGROUND};
 
@@ -70,7 +70,8 @@ StatusCode MuonDigitization::initialize()
   log << MSG::INFO << "number of spillover events read from aux stream "
       << m_numberOfSpilloverEvents << endmsg;
   m_numberOfEvents=m_numberOfSpilloverEvents+1;
-
+  m_numberOfEventsNeed=5;	
+// m_numberOfEvents=5;
  sc = toolSvc()->retrieveTool( "MuonTileIDXYZ", m_pMuonTileXYZ );
  if( !sc.isSuccess() ) {
    log << MSG::ERROR << "Failed to retrieve MuonTileIDXYZ tool" << endmsg;
@@ -136,6 +137,8 @@ StatusCode MuonDigitization::execute()
 	if(sc.isFailure())return StatusCode::FAILURE;	 	
  	sc=addElectronicNoise(PhyChaOutput);
 	if(sc.isFailure())return StatusCode::FAILURE;	
+
+
   sc=applyPhysicalEffects(PhyChaOutput);
 	if(sc.isFailure())return StatusCode::FAILURE;	
  	 		
@@ -190,7 +193,7 @@ MuonDigitization::addChamberNoise(){
   MuonDigitizationParameters::Parameters usefull;
 	MsgStream log(msgSvc(), name()); 
   int container=1;
-	for (int ispill=0;ispill<m_numberOfEvents;ispill++){
+	for (int ispill=0;ispill<m_numberOfEventsNeed;ispill++){
 	  int chamberTillNow=0;
 		double shiftOfTOF=-m_BXTime*ispill;
     for(int k=0;k<5;k++){ 
@@ -225,7 +228,7 @@ MuonDigitization::addChamberNoise(){
 						  MCMuonHit* pHit = new MCMuonHit();
 						  pHit->setEntry(HepPoint3D(x,y,usefull.getStartPositionFirstGapZ(chamber+chamberTillNow)+usefull.getStartGapZ(gap,partitionNumber)));
 						  pHit->setExit(HepPoint3D(x,y,usefull.getStartPositionFirstGapZ(chamber+chamberTillNow)+usefull.getStopGapZ(gap,partitionNumber)));
- 							double tofOfLight=(sqrt(x*x+ y*y+(middlePosZ)*(middlePosZ)))/333.3;
+ 							double tofOfLight=(sqrt(x*x+ y*y+(middlePosZ)*(middlePosZ)))/300.0;
     			    pHit->setTimeOfFlight(time+shiftOfTOF+tofOfLight); 
 							pHit->setVolumeID(chamber+1,gap+1);
 							hitsContainer->insert(pHit);
@@ -259,10 +262,10 @@ MuonDigitization::createInput(
 		 int station=iterRegion/4+1;
 	   int region=iterRegion%4+1;	 
 	   int readoutNumber=usefull.getReadoutNumber(iterRegion);		 
-     for (int ispill=0; ispill<m_numberOfEvents;ispill++){
+     for (int ispill=0; ispill<m_numberOfEventsNeed;ispill++){
         for(int container=0; container<4;container++){				
 		      std::string path="/Event"+spill[ispill]+"/MC/Muon/M"+numsta[station-1]+"/R"+numreg[region-1]+"/"+TESPathOfHitsContainer[container];
-					if(m_verboseDebug) {log<<MSG::DEBUG<<"hit container path "<<path<<endreq;}
+					if(m_verboseDebug) {log<<MSG::INFO<<"hit container path "<<path<<endreq;}
           SmartDataPtr<MCMuonHits> hitPointer(eventSvc(),path);
  	        MCMuonHits::const_iterator iter;	 
 	        if(hitPointer!=0){
@@ -433,13 +436,23 @@ MuonDigitization::createInput(
 
 /// correct for the  tof .... i.e. subtract the tof that a lightparticle impacting the center of the pc. has....
                     double tofOfLight=(sqrt(((Xloop+0.5)*phChSizeX+startPosX)*((Xloop+0.5)*phChSizeX+startPosX)+
-										      ((Yloop+0.5)*phChSizeY+startPosY)*((Yloop+0.5)*phChSizeY+startPosY)+(middlePosZ)*(middlePosZ)))/333.3;
+										      ((Yloop+0.5)*phChSizeY+startPosY)*((Yloop+0.5)*phChSizeY+startPosY)+(middlePosZ)*(middlePosZ)))/300.0;
 																				
 							      inputPointer->getHitTraceBack()->setHitArrivalTime((*iter)->timeOfFlight()-tofOfLight);
 							      inputPointer->getHitTraceBack()->setCordinate(distanceFromBoundary);
 		                inputPointer->getHitTraceBack()->getMCMuonHitOrigin().setBX(ispill);
 										inputPointer->getHitTraceBack()->getMCMuonHitOrigin().setHitNature(OriginOfHitsContainer[container]);										
-    							  inputPointer->getHitTraceBack()->getMCMuonHistory().setBXOfHit(ispill);									
+    							  inputPointer->getHitTraceBack()->getMCMuonHistory().setBXOfHit(ispill);			
+    							  inputPointer->getHitTraceBack()->getMCMuonHistory().setNatureOfHit(OriginOfHitsContainer[container]);			
+/*										if(	OriginOfHitsContainer[container]>1){
+    							    inputPointer->getHitTraceBack()->getMCMuonHistory().setNatureOfHit(OriginOfHitsContainer[container]);			
+										   
+										  log<<MSG::INFO<<"bug  "<<	OriginOfHitsContainer[container]<<"			"
+											    <<inputPointer->getHitTraceBack()->getMCMuonHistory().natureOfHit()<<endreq;
+											}	else{inputPointer->getHitTraceBack()->getMCMuonHistory().setNatureOfHit(OriginOfHitsContainer[container]);			
+											}
+															
+*/
 									  inputPointer->getHitTraceBack()->setCordinate(distanceFromBoundary);
                     if(m_verboseDebug){	
                       log<<MSG::DEBUG<<"hit processing "<<station<<" "<< region<<" " << quarter<<" "<< chamber
@@ -539,7 +552,8 @@ MuonDigitization::createInput(
 	            MuonDigitizationData<MuonPhysicalChannelOutput>& PhysicalChannelOutput){
 		  MuonPhysicalChannels::iterator iterInput;
 //		  MuonPhysicalChannelOutputs::iterator iterOutput;
-   
+ 	   MsgStream log(msgSvc(), name()); 					 
+  
       for (int i=0; i<20;i++){
 	      if(!PhysicalChannel.isEmpty(i)){				
 			    for(iterInput=PhysicalChannel.getPartition(i)->begin();iterInput<PhysicalChannel.getPartition(i)->end();iterInput++){
@@ -577,18 +591,20 @@ MuonDigitization::createInput(
 						  for(iterInHits=objToAdd->hitsTraceBack().begin();iterInHits<objToAdd->hitsTraceBack().end();iterInHits++){
 							  if((*iterInHits).getMCMuonHistory().isHitOriginatedInCurrentEvent()){
 								  interestingHit=true;
-								  if(!(*iterInHits).getMCMuonHitOrigin().getXTalkNature()&&!(*iterInHits).getMCMuonHitOrigin().getElectronicNoiseNature()){
-									     if((*iterInHits).getMCMuonHit()->timeOfFlight()>0&&(*iterInHits).getMCMuonHit()->timeOfFlight()<m_BXTime){
+//								  if(!(*iterInHits).getMCMuonHitOrigin().getXTalkNature()&&!(*iterInHits).getMCMuonHitOrigin().getElectronicNoiseNature()){
+//									     double realTime=(*iterInHits).getMCMuonHit()->timeOfFlight()
+//									     if((*iterInHits).getMCMuonHit()->timeOfFlight()>0&&(*iterInHits).getMCMuonHit()->timeOfFlight()<m_BXTime){
 									
                        if((*iterInHits).getMCMuonHistory().hasTimeJittered()){
-										     if(!((*iterInHits).getMCMuonHistory().isOutForTimeAdjustment())){
+										     if(!((*iterInHits).getMCMuonHistory().isInForTimeAdjustment())){
 // first source of dead time jitter                  
                            objToAdd->phChInfo().setTimeJitteredDigit(1);  									
 											  }else if ((*iterInHits).getMCMuonHistory().isHitInDeadtime()){
 // remember to check that the time adjustment do not put back the hit int he gate....=> only deadtime can kill this digit 											 
 											   objToAdd->phChInfo().setDeadtimeDigit(1);
 											  }	 
-										  }else  if((*iterInHits).getMCMuonHistory().isKilledByChamberInefficiency()){
+										  }
+											if((*iterInHits).getMCMuonHistory().isKilledByChamberInefficiency()){
 // hit is killed by chamber inefficiency
 										    objToAdd->phChInfo().setChamberInefficiencyDigit(1);
 										  }else   if((*iterInHits).getMCMuonHistory().isHitOutGeoAccemtance()){
@@ -601,10 +617,38 @@ MuonDigitization::createInput(
 // hit in deadtime
                        objToAdd->phChInfo().setDeadtimeDigit(1);
 											} 
-                    }  										
-                  }
+//                    }  										
+//                  }
   							}
 						  }
+						}
+
+// debug printout
+
+						bool muon=false;
+						for(iterInHits=objToAdd->hitsTraceBack().begin();iterInHits<objToAdd->hitsTraceBack().end();iterInHits++){						
+ // search the muon first...
+               if((iterInHits)->getMCMuonHit()){
+ 									MCParticle* particle=(iterInHits)->getMCMuonHit()->mcParticle();
+									if(particle){
+										int pid= particle->particleID().abspid();
+										if(pid==13||pid==-13){
+										  log<<MSG::DEBUG<<"moun hit   time   ??????"<<(iterInHits)-> hitArrivalTime()	<<endreq;	
+											muon=true;
+										}
+									}
+								}							 
+            }
+						if(muon){
+						 if(m_verboseDebug)
+						   log<<MSG::INFO<<"**** start new pc****   station  and region "<<i <<" fired "<<fired<<endreq;	
+						  for(iterInHits=objToAdd->hitsTraceBack().begin();iterInHits<objToAdd->hitsTraceBack().end();iterInHits++){	
+							  
+                if(m_verboseDebug)log<<MSG::INFO<<"time"<<(iterInHits)-> hitArrivalTime()	<<" tile "<<objToAdd->phChID()->getFETile()<<endreq;	
+								if(m_verboseDebug)log<<MSG::INFO<<	" deadtime "<<(*iterInHits).getMCMuonHistory().isHitInDeadtime()<<" time jitter "<<
+								  (*iterInHits).getMCMuonHistory().hasTimeJittered() <<" efficiency  "<<
+									 (*iterInHits).getMCMuonHistory().isKilledByChamberInefficiency()<<endreq;
+							}					  
 						}
  				    if(fired||interestingHit){
 						  PhysicalChannelOutput.addMuonObject(i,objToAdd);
@@ -612,7 +656,8 @@ MuonDigitization::createInput(
 						else {
 						  delete 	objToAdd;
 						}
- 		 	    }
+
+   		 	    }
 			  }
 			}	
   return StatusCode::SUCCESS;					   
@@ -708,7 +753,7 @@ StatusCode MuonDigitization::applyPhysicalEffects(MuonDigitizationData<MuonPhysi
 //apply time adjustment	
          (*iter)->applyTimeAdjustment();	
 //apply deadtime
-         (*iter)-> applyDeadtime(m_numberOfEvents) ;  		
+         (*iter)-> applyDeadtime(m_numberOfEventsNeed) ;  		
 			}	 			 			  									 			
 	  }				
   }
@@ -732,8 +777,12 @@ StatusCode MuonDigitization::createLogicalChannel(MuonDigitizationData<MuonPhysi
            if(m_verboseDebug){
 					   log<<MSG::DEBUG<<"FE ID "<<(*iter)->phChID()->getID()<<endreq;}
            MuonTileID phChTileID[2];
-           int numberOfTileID;
+           int numberOfTileID;  
+					 if(m_verboseDebug)log<<MSG::INFO<<"FE ID "<<(*iter)->phChID()->getID()<<endreq;
            (*iter)->calculateTileID(numberOfTileID,phChTileID);
+           if( m_verboseDebug)log<<MSG::INFO<<" after tile calculation " << numberOfTileID<<" "<<endreq;
+           if( m_verboseDebug)log<<MSG::INFO<<" tile  " << phChTileID[0]<< phChTileID[1]<<" "<<endreq;
+					 
 //
 // loop over possible phchtileID (1 or 2 if double mapping)
 //
@@ -752,6 +801,8 @@ StatusCode MuonDigitization::createLogicalChannel(MuonDigitizationData<MuonPhysi
 //                
 
                 if(tile==phChTileID[iTile]){
+								  if( m_verboseDebug)log<<MSG::INFO<<" Loop on mappings found already "<<tile<<" "<<endreq;
+									if( m_verboseDebug) log<<MSG::INFO<<"  "<<(*iterDigit)->DigitInfo().isAlive()<<" "<<(*iter)->phChInfo().isAlive()<<endreq;
                   found=true;
  // Digit already exists, update bits and links
 								  std::vector<MuonHitTraceBack>::iterator iterOnHits;
@@ -775,9 +826,14 @@ StatusCode MuonDigitization::createLogicalChannel(MuonDigitizationData<MuonPhysi
 										  (*iterDigit)->setFiringTime((*iter)->firingTime());
 											(*iterDigit)->DigitInfo().setNatureHit((*iter)->phChInfo().natureOfHit());
 											(*iterDigit)->DigitInfo().setBXIDFlagHit((*iter)->phChInfo().BX());  
-											(*iterDigit)->DigitInfo().setSecondPart(0);                    																											
+											(*iterDigit)->DigitInfo().setSecondPart(0);   
+											(*iterDigit)->DigitInfo().setAliveDigit(1);
+											 if( m_verboseDebug)log<<MSG::INFO<<" importante "<<    (*iterDigit)->DigitInfo().isAlive()  <<endreq;           																											
 									}
                   if(!((*iterDigit)->DigitInfo().isAlive())&&!((*iter)->phChInfo().isAlive())){
+											 if( m_verboseDebug)log<<MSG::INFO<<" molto importante "<<    (*iterDigit)->DigitInfo().isAlive()  <<endreq;           																											
+											 if( m_verboseDebug)log<<MSG::INFO<<" molto importante morte per time jitter prima  "<<(*iterDigit)->DigitInfo().isDeadByTimeJitter()  <<endreq;           																											
+									  
 // both not fired
                       if((*iterDigit)->DigitInfo().isInDeadTime()||	(*iter)->phChInfo().isInDeadTime()){
 											  (*iterDigit)->DigitInfo().setDeadtimeDigit(1);
@@ -796,27 +852,33 @@ StatusCode MuonDigitization::createLogicalChannel(MuonDigitizationData<MuonPhysi
 											}					
                       if((*iterDigit)->DigitInfo().isDeadByGeometry() ||	(*iter)->phChInfo().isDeadByGeometry() ){
 											  (*iterDigit)->DigitInfo().setGeometryInefficiency(1);
-											}					
+											}		
+											 if( m_verboseDebug)log<<MSG::INFO<<" molto importante morte per time jitter "<<    (*iterDigit)->DigitInfo().isDeadByTimeJitter()  <<endreq;           																											
+														
 											
 									}
 // add links to the hits 										
   								for(iterOnHits=(*iter)->hitsTraceBack().begin();iterOnHits<(*iter)->hitsTraceBack().end();iterOnHits++){
-                    (*iterDigit)->HitsHistory().push_back((*iterOnHits).getMCMuonHistory());
- 		  							  (*iterDigit)->addToMCMuonHits((*iterOnHits).getMCMuonHit());
-//			  					  }
+                     (*iterDigit)->HitsHistory().push_back((*iterOnHits).getMCMuonHistory());
+ 		  							 (*iterDigit)->addToMCMuonHits((*iterOnHits).getMCMuonHit());
 									}
+									
                 }
              }
  	           if(!found){
-                log<<MSG::DEBUG<<" create new Digit with tile "<<phChTileID[iTile]<<" "<<iTile<<endreq;
+                if( m_verboseDebug)log<<MSG::INFO<<" create new Digit with tile "<<phChTileID[iTile]<<" "<<iTile<<endreq;
 								std::vector<MuonHitTraceBack>::iterator iterOnHits;
                 MCMuonDigit* newMCDigit=new MCMuonDigit(phChTileID[iTile]);
 								for(iterOnHits=(*iter)->hitsTraceBack().begin();iterOnHits<(*iter)->hitsTraceBack().end();iterOnHits++){
+//								   MuonHitTraceBack hitTraceback=(*iterOnHits).getMCMuonHistory();
+//									 hitTraceback.setNatureOfHit();
 								   newMCDigit->HitsHistory().push_back((*iterOnHits).getMCMuonHistory());
-                      newMCDigit->addToMCMuonHits((*iterOnHits).getMCMuonHit());
+                   newMCDigit->addToMCMuonHits((*iterOnHits).getMCMuonHit());
  								}
 								newMCDigit->setDigitInfo((*iter)->phChInfo());
 								newMCDigit->setFiringTime((*iter)->firingTime());
+							  if( m_verboseDebug)log<<MSG::INFO<<" molto importante morte per time jitter prima  creazione"<<(newMCDigit)->DigitInfo().isDeadByTimeJitter()  <<endreq;           																											
+								
                 mcDigitContainer.insert(newMCDigit); 
                 ++countDigits;
  	           }
@@ -850,7 +912,7 @@ StatusCode MuonDigitization::
   MuonDigitizationParameters::Parameters usefull;
 	MsgStream log(msgSvc(), name()); 
 	MuonPhysicalChannel* pFound;
-  for(int ispill=0;ispill<m_numberOfEvents;ispill++){
+  for(int ispill=0;ispill<m_numberOfEventsNeed;ispill++){
 	   int chamberTillNow=0;
 		 double shiftOfTOF=-m_BXTime*ispill;
 	   for(int i=0;i<5;i++){
@@ -898,6 +960,7 @@ StatusCode MuonDigitization::
                        pointerToHit->getMCMuonHitOrigin().setHitNature(MuonOriginFlag::ELECTRONICNOISE);
 				               pointerToHit->getMCMuonHitOrigin().setBX(ispill);	
 				               pointerToHit->getMCMuonHistory().setBXOfHit(ispill);
+											 pointerToHit->getMCMuonHistory().setNatureOfHit(MuonOriginFlag::ELECTRONICNOISE);
  				               newPhysicalChannel->hitsTraceBack().push_back(*pointerToHit);
 		               		 delete pointerToHit;				
 											 pFound=0;						

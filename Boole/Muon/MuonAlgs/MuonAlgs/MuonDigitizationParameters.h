@@ -24,6 +24,16 @@
 
 
 namespace MuonDigitizationParameters {
+ static const int partition=20;
+  static const int maxReadoutType=2;
+  static const int numberChamber=1380;
+  static const int numberGap=4;
+	static const int nFE=2;
+
+
+
+
+
 class Parameters{
   public:
   Parameters(){};
@@ -76,11 +86,11 @@ class Parameters{
 	int getGapPerFE(int partitionNumber);
 	
   private:
-  static const int partition=20;
+/*  static const int partition=20;
   static const int maxReadoutType=2;
   static const int numberChamber=1380;
   static const int numberGap=4;
-	static const int nFE=2;
+	static const int nFE=2;*/
   static int readoutNumber[partition];
   static unsigned int chamberPerRegion[partition];
   static unsigned int gapPerRegion[partition];

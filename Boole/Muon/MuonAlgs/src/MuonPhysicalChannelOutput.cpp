@@ -20,7 +20,7 @@ for(iterOrigin=orig.hitsTraceBack().begin();iterOrigin<orig.hitsTraceBack().end(
 
   void MuonPhysicalChannelOutput::calculateTileID( int& numberTileOutput, MuonTileID phChTileID[2]){
 
-  MuonDigitizationParameters::Parameters usefull;
+  MuonDigitizationParameters::Parameters usefull ;
   unsigned int station=phChID()->getStation();
   unsigned int region=phChID()->getRegion();
   unsigned int chamber=phChID()->getChamber();

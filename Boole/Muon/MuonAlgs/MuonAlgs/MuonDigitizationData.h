@@ -8,6 +8,9 @@
 #include "Event/KeyedContainer.h"
 //#include "E/KeyedContainer.h"
 
+
+static const int MuonDigitizationData_m_partitionNumber=20;
+
 template<class T> class MuonDigitizationData
 {
 public:
@@ -33,14 +36,14 @@ const std::string & specpath);
 ~MuonDigitizationData();
 
 private:
-// number of partition, 20=5(station)*4(region)
-static const int m_partitionNumber=20;
+
+//static const int m_partitionNumber=20;  !!! windows
  
 std::string endPathInTES;
  
-KeyedContainer<T> muonDataPartition[m_partitionNumber];
+KeyedContainer<T> muonDataPartition[MuonDigitizationData_m_partitionNumber];
 
-static std::string s_endPathInTES[m_partitionNumber];
+static std::string s_endPathInTES[MuonDigitizationData_m_partitionNumber];
 
 std::string s_basePathInTES;
 std::string s_specificPath;

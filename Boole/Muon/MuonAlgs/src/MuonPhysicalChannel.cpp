@@ -7,11 +7,14 @@
 
 	void MuonPhysicalChannel::applyTimeJitter(){
 	  std::vector<MuonHitTraceBack>::iterator iter ;
- 		double deltaT=		response->extractTimeJitter();
+// 		double deltaT=		response->extractTimeJitter();
+//		cout<<" time jitter"<<deltaT<<" "<<phChID()->getStation()<<" "<<phChID()->getRegion()<<endl;
      for (iter= m_Hits.begin();iter< m_Hits.end();iter++){
 		   if((!(*iter).getMCMuonHitOrigin().getXTalkNature())&&
 			    (!(*iter).getMCMuonHitOrigin().getElectronicNoiseNature())){
  			   double originalTime=(*iter).hitArrivalTime();
+		     double deltaT=		response->extractTimeJitter();	
+//				 	cout<<" time jitter"<<deltaT<<" "<<phChID()->getFETile()<<" "<<originalTime<<endl;		 
           (*iter).setHitArrivalTime(originalTime+deltaT);	
           if((*iter).getMCMuonHitOrigin().getBX()==MuonBXFlag::CURRENT){
 			     if(originalTime>0.0&&originalTime<25.0){
@@ -72,6 +75,9 @@
  	               	            setBX((*iter).getMCMuonHitOrigin().getBX());	
 				 pointerToHit->getMCMuonHistory().
 								              setBXOfHit((*iter).getMCMuonHistory().BX());
+				 pointerToHit->getMCMuonHistory().
+				                      setNatureOfHit(MuonOriginFlag::XTALK);
+															
  				 newPhCh->hitsTraceBack().push_back(*pointerToHit);
 				delete pointerToHit;														
 }
@@ -171,6 +177,9 @@
 /// here the XTalk probability is evaluated so numberOfXTalkHits modified
             numberOfXTalkHitsX=response->extractXTalkX(x)-1;
             numberOfXTalkHitsY=response->extractXTalkY(y)-1;
+/*						cout<<" Xtalk X "<<numberOfXTalkHitsX-1<<endl;
+						cout<<" Xtalk Y "<<numberOfXTalkHitsY-1<<endl;*/
+						
             if(numberOfXTalkHitsX)fireXTalkChannels(0,numberOfXTalkHitsX,iter,
 						nx, directionx, phChInX[readoutType],  hitDueToXTalk) ;
             if(numberOfXTalkHitsY)fireXTalkChannels(1,numberOfXTalkHitsY,iter,

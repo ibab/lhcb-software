@@ -72,6 +72,7 @@ public:
 private:
    int m_numberOfSpilloverEvents;
    int m_numberOfEvents;
+   int m_numberOfEventsNeed;
 	 double m_BXTime;
 	 bool m_verboseDebug;
 	 MuonDetectorResponse detectorResponse;

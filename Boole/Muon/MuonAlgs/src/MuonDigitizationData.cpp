@@ -29,7 +29,7 @@ template<class T> MuonDigitizationData<T>::~MuonDigitizationData(){
          <<" the contatiners have not been registed in the TES"
          << " => deleting objects "<<endreq;
     KeyedContainer<T>::iterator it;
-    for(int i=0;i<m_partitionNumber;i++){
+    for(int i=0;i<MuonDigitizationData_m_partitionNumber;i++){
        for(it=muonDataPartition[i].begin();it<muonDataPartition[i].end();it++)
           delete  (*it);
     }
@@ -50,7 +50,7 @@ template<class T> MuonDigitizationData<T>::~MuonDigitizationData(){
 
 template<class T> StatusCode MuonDigitizationData<T>::registerPartitions(){
   std::string path;
-  for(int i=0;i<m_partitionNumber;i++){
+  for(int i=0;i<MuonDigitizationData_m_partitionNumber;i++){
     path=s_basePathInTES+endPathInTES[i]+s_specificPath;
     eventSvc->registerObject(path,& muonDataPartition[i]);
   }
