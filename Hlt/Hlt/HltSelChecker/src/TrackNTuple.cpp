@@ -1,4 +1,4 @@
-// $Id: TrackNTuple.cpp,v 1.2 2005-02-11 14:45:26 pkoppenb Exp $
+// $Id: TrackNTuple.cpp,v 1.3 2005-02-21 12:16:55 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
@@ -138,10 +138,12 @@ StatusCode TrackNTuple::fillStatsTuple(const int& nB,const int& nT){
   return StatusCode::SUCCESS;
 }
 //=============================================================================
-//  Fill Tuple
+//  Fill HLT
 //=============================================================================
 StatusCode TrackNTuple::fillHlt(Tuple& tuple){
-  
+
+  StatusCode sc = fillL1Score(tuple);
+  if (!sc) return sc;
   tuple->column("Generic" ,  Hlt("CheckHLTGeneric"));
   tuple->column("TwoKHz" ,   Hlt("HLT2kHzFlag"));
   tuple->column("Exclusive", Hlt("HLTExclusiveSelectionsFlag"));
@@ -160,6 +162,40 @@ StatusCode TrackNTuple::fillHlt(Tuple& tuple){
   tuple->column("Jpsi" ,     Hlt("HLTHotJpsis"));
   tuple->column("isB" ,      Hlt("IsBEvent"));
   tuple->column("isC" ,      Hlt("IsbcEvent"));
+  return StatusCode::SUCCESS ;
+}
+//=============================================================================
+//  Fill L1Score
+//=============================================================================
+StatusCode TrackNTuple::fillL1Score(Tuple& tuple){
+
+  if (exist<L1Score>(L1ScoreLocation::Default)){
+    L1Score* L1 = get<L1Score>(L1ScoreLocation::Default);
+    tuple->column("L1",L1->decision());
+    tuple->column("L1Gen",L1->decisionGen());
+    tuple->column("L1Mu",L1->decisionMu());
+    tuple->column("L1Jpsi",L1->decisionDiMuJPsi());
+    tuple->column("L1DiMu",L1->decisionDiMu());
+    tuple->column("L1Phot",L1->decisionPhot());
+    tuple->column("L1Elec",L1->decisionElec());
+    tuple->column("L1pt1",L1->pt1());
+    tuple->column("L1pt2",L1->pt2());
+    int npv = 0 ;
+    if (L1->pV1().z()>-990) ++npv;
+    if (L1->pV2().z()>-990) ++npv;
+    tuple->column("L1PV",npv);
+  } else {
+    tuple->column("L1",false);
+    tuple->column("L1Gen",false);
+    tuple->column("L1Mu",false);
+    tuple->column("L1Jpsi",false);
+    tuple->column("L1DiMu",false);
+    tuple->column("L1Phot",false);
+    tuple->column("L1Elec",false);
+    tuple->column("L1pt1",-1.);
+    tuple->column("L1pt2",-1.);
+    tuple->column("L1PV",-1);
+  }
   return StatusCode::SUCCESS ;
 }
 //=============================================================================

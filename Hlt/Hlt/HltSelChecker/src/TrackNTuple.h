@@ -1,4 +1,4 @@
-// $Id: TrackNTuple.h,v 1.1 2005-02-11 13:24:38 pkoppenb Exp $
+// $Id: TrackNTuple.h,v 1.2 2005-02-21 12:16:55 pkoppenb Exp $
 #ifndef TRACKNTUPLE_H 
 #define TRACKNTUPLE_H 1
  
@@ -33,6 +33,7 @@ protected:
   StatusCode fillTuple(const MCParticle*,Tuple&); ///< fill tuple
   StatusCode fillStatsTuple(const int&,const int&); ///< fill tuple
   StatusCode fillHlt(Tuple&); ///< fill tuple
+  StatusCode fillL1Score(Tuple&); ///< fill tuple
   
   double mcIP(const Hep3Vector&,const HepPoint3D&,const HepPoint3D&);
   double getQuark(const MCParticle*) ;

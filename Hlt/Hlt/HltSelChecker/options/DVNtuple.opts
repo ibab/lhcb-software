@@ -1,6 +1,9 @@
 #include "$HLTSELCHECKERROOT/options/DVHLTCorr.opts"
 DaVinci.OutputLevel = 4 ;
 
+HistogramPersistencySvc.OutputFile = "test.hbook"; 
+HltGenericDecision.Filter = false ; // false is default
+
 //==============================================================================
 // The offline selections
 //==============================================================================
@@ -20,14 +23,9 @@ DaVinci.OutputLevel = 4 ;
 // #include "$HLTSELCHECKERROOT/options/NoCuts.opts" // No Cuts
 
 //==============================================================================
-//#include "$HLTSELECTIONSROOT/options/L0L1-MB.opts"
+#include "$HLTSELECTIONSROOT/options/L0L1-MB.opts"
 //EventSelector.Input   = {};
 //#include "$HLTSELECTIONSROOT/options/L0L1TDR-Bd2D0Kstar.opts"
-//ApplicationMgr.EvtMax    = 100 ;
-
-HistogramPersistencySvc.OutputFile = "test.hbook"; 
-
-HltGenericDecision.Filter = false ; // false is default
 
 //==============================================================================
 // Use TrgVertexFitter (needs VertexFit v1r4)
@@ -69,3 +67,5 @@ Particle2MCLinksHLTBd2D0Kstar.InputData  = {"Phys/HLTPions/Particles", "Phys/HLT
 TrackNTuple.OutputLevel = 4 ;
 
 NTupleSvc.Output={"FILE1 DATAFILE='${NTUPLEFILE}' TYP='HBOOK' OPT='NEW'"};
+
+ApplicationMgr.EvtMax    = -1 ;
