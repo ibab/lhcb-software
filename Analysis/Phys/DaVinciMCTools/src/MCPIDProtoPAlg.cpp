@@ -1,4 +1,4 @@
-// $Id: MCPIDProtoPAlg.cpp,v 1.3 2002-07-26 19:44:57 gcorti Exp $
+// $Id: MCPIDProtoPAlg.cpp,v 1.4 2002-07-27 19:38:25 gcorti Exp $
 // Include files 
 #include <memory>
 
@@ -318,7 +318,6 @@ StatusCode MCPIDProtoPAlg::execute() {
     
     // Add CaloElectrons to this ProtoParticle   
     if( caloData ) {  
-      log << MSG::DEBUG << "Processing CaloInfo" << endreq;
       // Add the Electron hypothesis when available (no cuts at the moment)
       ElectronRange erange = etable->relations( *iTrack );
       if( !erange.empty() ) {
@@ -373,6 +372,8 @@ StatusCode MCPIDProtoPAlg::execute() {
       << " ProtoParticle with RichPID " << endreq;
   log << MSG::DEBUG << "Made " << countMuonProto 
       << " ProtoParticle with MuonID " << endreq;
+  log << MSG::DEBUG << "Made " << countElectronProto 
+      << " ProtoParticle with ElectronHypo " << endreq;
   log << MSG::DEBUG << "Number of ProtoParticles in TES is " 
       << chprotos->size() << endreq;
 
