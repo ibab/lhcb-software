@@ -164,7 +164,7 @@ void SimulationSvc::reload () {
 }
 
 // -----------------------------------------------------------------------
-//  hasSimAttribute
+//  hasSimAttribute (ILVolume*)
 // -----------------------------------------------------------------------
 const bool SimulationSvc::hasSimAttribute (const ILVolume* vol) const {
   if (0 != vol) {
@@ -179,7 +179,20 @@ const bool SimulationSvc::hasSimAttribute (const ILVolume* vol) const {
 }
 
 // -----------------------------------------------------------------------
-//  simAttribute
+//  hasSimAttribute (std::string)
+// -----------------------------------------------------------------------
+const bool SimulationSvc::hasSimAttribute (const std::string volname) const {
+
+  // try first to find an attribute associated directly to the logical volume
+  Dictionnary::const_iterator it = m_logvol2Sim.find (volname);
+  if (it != m_logvol2Sim.end()) {
+    return true;
+  }    
+  return false;
+}
+
+// -----------------------------------------------------------------------
+//  simAttribute (ILVolume*)
 // -----------------------------------------------------------------------
 const SimAttribute
 SimulationSvc::simAttribute (const ILVolume* vol) const {
@@ -199,6 +212,28 @@ SimulationSvc::simAttribute (const ILVolume* vol) const {
             << " used for logical volume " << vol->name() << "." << endreq;
       }
     }    
+  }
+  return attr;
+}
+
+// -----------------------------------------------------------------------
+//  simAttribute (std::string)
+// -----------------------------------------------------------------------
+const SimAttribute
+SimulationSvc::simAttribute (std::string volname) const {
+  SimAttribute attr;
+  
+  // try first to find an attribute associated directly to the logical volume
+  Dictionnary::const_iterator it = m_logvol2Sim.find (volname);
+  if (it != m_logvol2Sim.end()) {
+    AttributeSet::const_iterator it2 = m_attributeSet.find (it->second);
+    if (it2 != m_attributeSet.end()) {
+      attr = it2->second;
+    } else {
+      MsgStream log(msgSvc(), name());
+        log << MSG::WARNING << "SimAttribute " << it->second << " unknown but"
+            << " used for logical volume " << volname << "." << endreq;
+    }
   }
   return attr;
 }

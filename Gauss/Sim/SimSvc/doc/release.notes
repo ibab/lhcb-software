@@ -5,6 +5,10 @@
 !               volumes
 !-----------------------------------------------------------------------------
 
+! 2003-01-30 - Witek Pokorski
+ - Added methods simAttribute and hasSimAttribute with name of the logical
+   volume as argument
+
 ! 2003-01-29 - Sebastien Ponce
  - Added method hasSimAttribute to the interface
 
