@@ -1,6 +1,10 @@
-! $Id: release.notes,v 1.19 2003-03-07 11:03:40 odie Exp $
+! $Id: release.notes,v 1.20 2003-03-18 16:14:06 odie Exp $
 ! Package     : DaVinciMCTools
 ! Responsible : Gloria Corti
+
+! 2003-03-18 - Olivier Dormond
+ - src/mcparser.*:
+   . Added a missing set of decay to the grammar (silly me!).
 
 ! 2003-03-05 - Olivier Dormond
  - DaVinciMCTools/IMCDecayFinder.h:

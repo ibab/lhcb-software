@@ -104,160 +104,166 @@ yyrcsid[] = "$FreeBSD: src/usr.bin/yacc/skeleton.c,v 1.28 2000/01/17 02:04:06 bd
 #define AT_Q 308
 #define AB_Q 309
 const short MCDecayFinder::ylhs[] = {                                        -1,
-    0,    0,   19,   19,   19,   19,   19,   19,   20,   20,
-   21,   21,   16,   16,   16,   16,   16,   18,   17,   17,
-   15,   15,   15,   15,   14,   14,   11,   11,   12,   12,
-   12,    1,    1,    1,    1,    1,    1,    1,    1,    1,
-    1,    1,    1,   13,   13,   13,   13,   13,   13,    2,
+    0,    0,    0,   19,   19,   19,   19,   19,   19,   20,
+   20,   21,   21,   16,   16,   16,   16,   16,   18,   17,
+   17,   15,   15,   15,   15,   14,   14,   11,   11,   12,
+   12,   12,    1,    1,    1,    1,    1,    1,    1,    1,
+    1,    1,    1,    1,   13,   13,   13,   13,   13,   13,
     2,    2,    2,    2,    2,    2,    2,    2,    2,    2,
-    2,    2,    2,    2,    6,    6,    6,    5,    5,    5,
-    5,    5,    5,    3,    3,    3,    3,    3,    4,    4,
-   10,   10,    9,    9,    9,    9,    8,    8,    7,    7,
-    7,    7,    7,    7,
+    2,    2,    2,    2,    2,    6,    6,    6,    5,    5,
+    5,    5,    5,    5,    3,    3,    3,    3,    3,    4,
+    4,   10,   10,    9,    9,    9,    9,    8,    8,    7,
+    7,    7,    7,    7,    7,
 };
 const short MCDecayFinder::ylen[] = {                                         2,
-    3,    1,    3,    3,    3,    3,    2,    1,    3,    1,
-    2,    2,    3,    3,    3,    1,    1,    5,    3,    1,
-    3,    2,    1,    1,    3,    1,    2,    1,    3,    2,
+    3,    1,    1,    3,    3,    3,    3,    2,    1,    3,
+    1,    2,    2,    3,    3,    3,    1,    1,    5,    3,
+    1,    3,    2,    1,    1,    3,    1,    2,    1,    3,
+    2,    1,    1,    1,    1,    1,    1,    1,    1,    1,
+    1,    1,    1,    1,    3,    3,    3,    3,    3,    3,
     1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
-    1,    1,    1,    3,    3,    3,    3,    3,    3,    1,
-    1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
-    1,    1,    1,    1,    5,    3,    1,    3,    3,    3,
-    3,    3,    3,    3,    5,    5,    3,    5,    3,    1,
-    3,    3,    2,    1,    2,    1,    3,    1,    2,    1,
-    4,    3,    2,    1,
+    1,    1,    1,    1,    1,    5,    3,    1,    3,    3,
+    3,    3,    3,    3,    3,    5,    5,    3,    5,    3,
+    1,    3,    3,    2,    1,    2,    1,    3,    1,    2,
+    1,    4,    3,    2,    1,
 };
 const short MCDecayFinder::ydefred[] = {                                      0,
-   23,    0,   24,    0,    0,    0,    0,    0,    0,   67,
-    0,   17,    0,    0,   16,   22,    0,    0,    0,    0,
-   50,   51,   52,   53,   54,   55,   56,   57,   58,   59,
-   60,   61,   62,   63,   64,    0,    0,   26,   28,    0,
-    0,    0,    0,    0,    0,    0,    0,    0,    0,   73,
-   13,   14,   15,    0,    0,   32,   33,   34,   35,   36,
-   37,   38,   39,   40,   41,   42,   43,    0,   27,    0,
-    0,    0,    0,    0,    0,    0,   21,   72,    0,    0,
-    0,    0,   90,    0,   68,    0,    8,   94,   69,    0,
-   66,   70,   71,    0,    0,   19,    0,    0,    0,   47,
-   48,   44,   45,   46,   49,   25,    0,    0,    7,    0,
-    0,    0,   88,    0,    0,    0,    0,    0,    0,    0,
-    0,    0,    0,    0,   85,   89,   93,   83,   20,   65,
-   18,   29,   10,    0,    0,   74,    0,   82,    0,    3,
-    4,    5,    0,    0,   81,    0,    6,   92,    0,    0,
-   77,    0,   80,    0,    0,    0,   79,   87,    9,    0,
-    0,    0,   91,   78,   75,   76,
+   24,    0,   25,    0,    0,    0,    0,    0,    0,   68,
+    0,   18,    0,    0,   17,   23,    0,    0,    0,    0,
+   51,   52,   53,   54,   55,   56,   57,   58,   59,   60,
+   61,   62,   63,   64,   65,    0,    0,   27,   29,    0,
+    0,    0,    0,    0,    0,    0,    0,    0,    0,   74,
+   14,   15,   16,    0,    0,   33,   34,   35,   36,   37,
+   38,   39,   40,   41,   42,   43,   44,    0,   28,    0,
+    0,    0,    0,    0,    0,    0,   22,   73,    0,    0,
+    0,    0,   91,    0,   69,    0,    9,   95,   70,    0,
+   67,   71,   72,    0,    0,   20,    0,    0,    0,   48,
+   49,   45,   46,   47,   50,   26,    0,    0,    8,    0,
+    0,    0,   89,    0,    0,    0,    0,    0,    0,    0,
+    0,    0,    0,    0,   86,   90,   94,   84,   21,   66,
+   19,   30,   11,    0,    0,   75,    0,   83,    0,    4,
+    5,    6,    0,    0,   82,    0,    7,   93,    0,    0,
+   78,    0,   81,    0,    0,    0,   80,   88,   10,    0,
+    0,    0,   92,   79,   76,   77,
 };
 const short MCDecayFinder::ydgoto[] = {                                       9,
    68,   37,   83,  117,   10,   11,   84,  112,  113,   86,
    38,   69,   39,   40,   87,   42,   18,   15,   88,  115,
   120,
 };
-const short MCDecayFinder::ysindex[] = {                                   -199,
-    0, -249,    0, -199, -199,  -13, -199, -204,    0,    0,
- -263,    0, -183, -139,    0,    0, -255,    9, -251, -236,
+const short MCDecayFinder::ysindex[] = {                                   -156,
+    0, -240,    0, -156, -156,   37, -156, -178,    0,    0,
+ -246,    0, -129, -260,    0,    0, -197, -163, -238, -227,
     0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
-    0,    0,    0,    0,    0,  -32,  -86,    0,    0, -227,
- -237, -183, -243, -243, -161, -243, -243, -199,  -37,    0,
-    0,    0,    0, -161,  -37,    0,    0,    0,    0,    0,
-    0,    0,    0,    0,    0,    0,    0,  -32,    0, -209,
- -201, -188, -141, -115, -100,  -13,    0,    0,  -46, -243,
- -150,  -46,    0,  -93,    0, -133,    0,    0,    0,  -37,
-    0,    0,    0, -263,  -37,    0, -116, -113,  -32,    0,
-    0,    0,    0,    0,    0,    0,  -46,  -46,    0,    0,
- -213, -191,    0,    0,   14,  -46, -110, -174, -160, -102,
- -138, -234,  -57,  -66,    0,    0,    0,    0,    0,    0,
-    0,    0,    0, -118, -143,    0, -243,    0,  -46,    0,
-    0,    0,  -84, -143,    0,  -46,    0,    0, -243, -243,
-    0,  -57,    0,  -95, -143, -143,    0,    0,    0,  -92,
-  -91,  -90,    0,    0,    0,    0,
+    0,    0,    0,    0,    0,   17, -148,    0,    0, -247,
+ -259, -129,  -35,  -35, -144,  -35,  -35, -156,  -15,    0,
+    0,    0,    0, -144,  -15,    0,    0,    0,    0,    0,
+    0,    0,    0,    0,    0,    0,    0,   17,    0, -206,
+ -174, -165, -164, -154, -151,   37,    0,    0, -221,  -35,
+  -55, -221,    0,  -83,    0, -194,    0,    0,    0,  -15,
+    0,    0,    0, -246,  -15,    0, -173, -159,   17,    0,
+    0,    0,    0,    0,    0,    0, -221, -221,    0,    0,
+ -193, -149,    0,    0, -109, -221, -130, -243, -209, -157,
+ -127, -256,  -26,  -46,    0,    0,    0,    0,    0,    0,
+    0,    0,    0, -201, -134,    0,  -35,    0, -221,    0,
+    0,    0, -128, -134,    0, -221,    0,    0,  -35,  -35,
+    0,  -26,    0, -117, -134, -134,    0,    0,    0, -116,
+ -111, -110,    0,    0,    0,    0,
 };
 const short MCDecayFinder::yrindex[] = {                                      0,
     0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
-  197,    0, -119,    0,    0,    0,    0,    0,    0,    0,
+  173,    0,    9,  180,    0,    0,    0,    0,    0,    0,
     0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
     0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
     0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
     0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
-    0,    0,    0,    0,    0,    0,    0, -189,    0,    0,
+    0,    0,    0,    0,    0,    0,    0, -239,    0,    0,
     0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
     0,    0,    0,    1,    0,    2,    0,    0,    0,    0,
-    0,    0,    0,  201,    0,    0,  -70,  -51, -154,    0,
-    0,    0,    0,    0,    0,    0,    0,    0,    0, -103,
-    0,    0,    0, -134,    0,    0,    0,    0,    0,    0,
- -211,    0,    0,    0,    0,    0,    0,    0,    0,    0,
+    0,    0,    0,  181,    0,    0,  -94,  -77, -212,    0,
+    0,    0,    0,    0,    0,    0,    0,    0,    0,  -93,
+    0,    0,    0, -124,    0,    0,    0,    0,    0,    0,
+ -255,    0,    0,    0,    0,    0,    0,    0,    0,    0,
     0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
-    0,    0,  -59,    0,    0,  -56,    0,    0,    0,    0,
-    0,    0,    0,    0,    0,    0,    0,    0,    0,  -41,
+    0,    0,  -92,    0,    0,  -82,    0,    0,    0,    0,
+    0,    0,    0,    0,    0,    0,    0,    0,    0,  -74,
     0,    0,    0,    0,    0,    0,
 };
 const short MCDecayFinder::ygindex[] = {                                      0,
-  -33,    0,  -50,  -80,  116,   21,    0,  140,  -40,    0,
-  156,    0,    0,    0,    5,   13,   11,    0,  -60,  -36,
-  117,
+  -57,    0,  -56,  -80,   38,   22,    0,  125,  -40,    0,
+  131,    0,    0,    0,    8,   16,    5,    0,  -34,  -44,
+   84,
 };
-#define YYTABLESIZE 300
+#define YYTABLESIZE 326
 const short MCDecayFinder::ytable[] = {                                     111,
-   86,   84,   85,   89,   12,   92,   93,   16,   12,   12,
-   14,   12,   13,    1,   45,   20,   13,   13,  109,  114,
-  114,  121,   45,  127,   17,   19,   54,   41,   50,  110,
-  110,    2,    3,  126,   99,   79,   80,   81,    6,   82,
-   45,   55,  111,  139,  119,  122,  133,  133,  100,   12,
-   76,   78,   12,   12,  151,  133,  101,    1,   12,   12,
-   77,   96,  133,  133,  135,  132,   10,   98,   94,  102,
-  136,  134,  153,  153,  111,    2,    3,   10,  159,  143,
-    4,    5,    6,    7,  157,  159,  137,  119,   31,   43,
-   44,  133,  138,  160,   12,    1,  158,    8,   31,   12,
-   20,  153,  129,  137,  153,  153,    1,  129,  161,  162,
-   46,   47,  145,    2,    3,  134,  103,  146,    4,   90,
-    6,    7,   94,   30,    2,    3,  147,  116,   79,   80,
-   81,    6,   82,   30,   48,    8,  155,  156,   49,   82,
-   94,   94,  104,   10,   94,   94,   94,   94,   94,   10,
-   10,   10,   10,   90,   20,  149,  150,  105,   20,  139,
-   91,   94,  128,    1,   20,   20,   20,  144,  147,   97,
-  130,   90,   90,  131,   80,   90,   90,   90,   90,   90,
-   80,    2,    3,   90,  148,   79,  123,  124,    6,   82,
-    1,  163,   90,  139,  164,   70,    2,  165,  166,    1,
-    1,   71,  125,   72,   73,   74,   75,   66,    2,    3,
-    1,  116,   79,  123,  152,    6,   82,    2,    3,    1,
-  118,   79,  123,  152,    6,   82,   19,   12,    2,    3,
-   11,  106,   79,  107,  108,    6,   79,    2,    3,    0,
-  154,    0,   95,   90,    6,   21,   22,   23,   24,   25,
+   87,   85,   85,   89,   14,   92,   93,   12,   21,   20,
+   99,   12,   12,   48,   12,   13,   16,   49,   45,   13,
+   13,  139,   11,  110,  110,   17,   19,  126,   41,   78,
+   76,   45,  151,   11,  137,    1,  119,  122,   32,   54,
+   77,  132,  111,  145,  109,  114,  114,  121,   32,  127,
+   55,  100,   12,    2,    3,   12,   12,   79,  107,  108,
+    6,   12,   12,  134,   96,   31,  153,  153,  146,   94,
+   98,  143,  133,  133,  111,   31,  139,  147,  157,  119,
+   45,  133,   91,  101,  135,  147,   50,  160,  133,  133,
+  136,   97,  102,  103,   20,  153,  158,   12,  153,  153,
+    1,  128,   12,  104,  159,  129,  105,  134,  161,  162,
+  129,  159,    1,  130,   49,   43,   44,  133,    2,    3,
+   51,   52,   53,    4,    5,    6,    7,  131,  137,  148,
+    2,    3,   95,   70,  138,    4,   90,    6,    7,   71,
+    8,   72,   73,   74,   75,  155,  156,  144,   82,  139,
+   95,   95,    8,   11,   95,   95,   95,   95,   95,   11,
+   11,   11,   11,   91,   46,   47,  149,  150,  139,  163,
+  164,   95,    3,    1,  140,  141,  142,  165,  166,    2,
+    1,   91,   91,   67,   81,   91,   91,   91,   91,   91,
+   81,    2,    3,   91,   13,   79,  123,  124,    6,   82,
+   20,    1,   91,   80,   12,  118,  106,  154,    0,    0,
+    1,    0,  125,    0,    0,    0,    0,    0,    0,    2,
+    3,    1,  116,   79,   80,   81,    6,   82,    2,    3,
+    1,  116,   79,  123,  152,    6,   82,    0,    0,    2,
+    3,    1,    0,   79,   80,   81,    6,   82,    2,    3,
+    0,    0,   79,  123,  152,    6,   82,    0,    0,    2,
+    3,    0,    0,    0,   95,   90,    6,    0,    0,    0,
+    0,    0,    0,    0,    0,    0,    0,    0,   87,   85,
+    0,    0,   21,    0,   87,   85,   21,   87,   85,   87,
+   85,    0,   21,   21,   21,   21,   22,   23,   24,   25,
    26,   27,   28,   29,   30,   31,   32,   33,   34,   35,
-    0,    0,    0,   36,    0,   56,   57,   58,   59,   60,
-   61,   62,   63,   64,   65,   66,   67,    0,   86,   84,
-    0,    0,    0,    0,   86,   84,   49,   86,   84,   86,
-   84,  139,   51,   52,   53,    0,    0,  140,  141,  142,
+    0,    0,    0,   36,   56,   57,   58,   59,   60,   61,
+   62,   63,   64,   65,   66,   67,
 };
 const short MCDecayFinder::ycheck[] = {                                      80,
-    0,    0,   43,   44,    0,   46,   47,  257,    4,    5,
-    0,    7,    0,  257,  278,    5,    4,    5,   79,   80,
-   81,   82,  278,   84,    4,    5,  278,    7,  284,   80,
-   81,  275,  276,   84,   68,  279,  280,  281,  282,  283,
-  278,  278,  123,  278,   81,   82,  107,  108,  258,   45,
-  278,  289,   48,   49,  289,  116,  258,  257,   54,   55,
-  288,   49,  123,  124,  278,   99,  278,   55,   48,  258,
-  284,  108,  123,  124,  155,  275,  276,  289,  139,  116,
-  280,  281,  282,  283,  135,  146,  278,  124,  278,  294,
-  295,  152,  284,  144,   90,  257,  137,  297,  288,   95,
-   90,  152,   90,  278,  155,  156,  257,   95,  149,  150,
-  294,  295,  287,  275,  276,  152,  258,  278,  280,  281,
-  282,  283,  257,  278,  275,  276,  287,  278,  279,  280,
-  281,  282,  283,  288,  274,  297,  280,  281,  278,  283,
-  275,  276,  258,  278,  279,  280,  281,  282,  283,  284,
-  285,  286,  287,  257,  274,  294,  295,  258,  278,  278,
-   45,  296,  296,  257,  284,  285,  286,  278,  287,   54,
-  287,  275,  276,  287,  278,  279,  280,  281,  282,  283,
+    0,    0,   43,   44,    0,   46,   47,    0,    0,    5,
+   68,    4,    5,  274,    7,    0,  257,  278,  278,    4,
+    5,  278,  278,   80,   81,    4,    5,   84,    7,  289,
+  278,  278,  289,  289,  278,  257,   81,   82,  278,  278,
+  288,   99,  123,  287,   79,   80,   81,   82,  288,   84,
+  278,  258,   45,  275,  276,   48,   49,  279,  280,  281,
+  282,   54,   55,  108,   49,  278,  123,  124,  278,   48,
+   55,  116,  107,  108,  155,  288,  278,  287,  135,  124,
+  278,  116,   45,  258,  278,  287,  284,  144,  123,  124,
+  284,   54,  258,  258,   90,  152,  137,   90,  155,  156,
+  257,  296,   95,  258,  139,   90,  258,  152,  149,  150,
+   95,  146,  257,  287,  278,  294,  295,  152,  275,  276,
+  284,  285,  286,  280,  281,  282,  283,  287,  278,  287,
+  275,  276,  257,  282,  284,  280,  281,  282,  283,  288,
+  297,  290,  291,  292,  293,  280,  281,  278,  283,  278,
+  275,  276,  297,  278,  279,  280,  281,  282,  283,  284,
+  285,  286,  287,  257,  294,  295,  294,  295,  278,  287,
+  287,  296,    0,  257,  284,  285,  286,  289,  289,    0,
+    0,  275,  276,  278,  278,  279,  280,  281,  282,  283,
   284,  275,  276,  287,  287,  279,  280,  281,  282,  283,
-  257,  287,  296,  278,  287,  282,    0,  289,  289,  257,
-    0,  288,  296,  290,  291,  292,  293,  278,  275,  276,
-  257,  278,  279,  280,  281,  282,  283,  275,  276,  257,
-   81,  279,  280,  281,  282,  283,  278,  287,  275,  276,
-  287,   76,  279,  280,  281,  282,  278,  275,  276,   -1,
-  124,   -1,  280,  281,  282,  259,  260,  261,  262,  263,
+  278,  257,  296,  278,  287,   81,   76,  124,   -1,   -1,
+  257,   -1,  296,   -1,   -1,   -1,   -1,   -1,   -1,  275,
+  276,  257,  278,  279,  280,  281,  282,  283,  275,  276,
+  257,  278,  279,  280,  281,  282,  283,   -1,   -1,  275,
+  276,  257,   -1,  279,  280,  281,  282,  283,  275,  276,
+   -1,   -1,  279,  280,  281,  282,  283,   -1,   -1,  275,
+  276,   -1,   -1,   -1,  280,  281,  282,   -1,   -1,   -1,
+   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,  278,  278,
+   -1,   -1,  274,   -1,  284,  284,  278,  287,  287,  289,
+  289,   -1,  284,  285,  286,  259,  260,  261,  262,  263,
   264,  265,  266,  267,  268,  269,  270,  271,  272,  273,
-   -1,   -1,   -1,  277,   -1,  298,  299,  300,  301,  302,
-  303,  304,  305,  306,  307,  308,  309,   -1,  278,  278,
-   -1,   -1,   -1,   -1,  284,  284,  278,  287,  287,  289,
-  289,  278,  284,  285,  286,   -1,   -1,  284,  285,  286,
+   -1,   -1,   -1,  277,  298,  299,  300,  301,  302,  303,
+  304,  305,  306,  307,  308,  309,
 };
 #define YYFINAL 9
 #ifndef YYDEBUG
@@ -283,6 +289,7 @@ const char * const MCDecayFinder::yname[] = {
 const char * const MCDecayFinder::yrule[] = {
 "$accept : start",
 "start : particle_list COLON top_decay_list",
+"start : particle_list",
 "start : top_decay_list",
 "lifted_particle : LBRACK lifted_particle_list CCONJ",
 "lifted_particle : LBRACK lifted_particle_list OSCIL",
@@ -603,236 +610,248 @@ case 1:
 { m_members = yyvsp[-2].mvect; m_decay = yyvsp[0].desc; }
 break;
 case 2:
-{ m_decay = yyvsp[0].desc; }
+{{ Descriptor *last = NULL; m_decay = NULL;
+                                      std::vector<ParticleMatcher *>::iterator m;
+                                      for( m=yyvsp[0].mvect->begin(); m!=yyvsp[0].mvect->end(); m++ ) {
+                                        Descriptor *d=new Descriptor(*m,m_ppSvc,m_resThreshold);
+                                        if( m_decay == NULL ) m_decay = d;
+                                        else last->setAlternate(d);
+                                        last = d;
+                                      }
+                                      delete yyvsp[0].mvect;
+                                   }}
 break;
 case 3:
-{{ yyval.mvect = yyvsp[-1].mvect;
-                               std::vector<ParticleMatcher *>::iterator i;
-                               for( i=yyval.mvect->begin(); i!=yyval.mvect->end(); i++ ) (*i)->setConjugate(); }}
+{ m_decay = yyvsp[0].desc; }
 break;
 case 4:
 {{ yyval.mvect = yyvsp[-1].mvect;
                                std::vector<ParticleMatcher *>::iterator i;
-                               for( i=yyval.mvect->begin(); i!=yyval.mvect->end(); i++ ) (*i)->setOscillate(); }}
+                               for( i=yyval.mvect->begin(); i!=yyval.mvect->end(); i++ ) (*i)->setConjugate(); }}
 break;
 case 5:
 {{ yyval.mvect = yyvsp[-1].mvect;
                                std::vector<ParticleMatcher *>::iterator i;
-                               for( i=yyval.mvect->begin(); i!=yyval.mvect->end(); i++ ) (*i)->setNotOscillate(); }}
+                               for( i=yyval.mvect->begin(); i!=yyval.mvect->end(); i++ ) (*i)->setOscillate(); }}
 break;
 case 6:
-{ yyval.mvect = yyvsp[-1].mvect; }
+{{ yyval.mvect = yyvsp[-1].mvect;
+                               std::vector<ParticleMatcher *>::iterator i;
+                               for( i=yyval.mvect->begin(); i!=yyval.mvect->end(); i++ ) (*i)->setNotOscillate(); }}
 break;
 case 7:
+{ yyval.mvect = yyvsp[-1].mvect; }
+break;
+case 8:
 {{ yyval.mvect = yyvsp[0].mvect; std::vector<ParticleMatcher *>::iterator i;
                                    for( i=yyval.mvect->begin(); i!=yyval.mvect->end(); i++ ) (*i)->setLift(); }}
 break;
-case 8:
+case 9:
 { yyval.mvect = yyvsp[0].mvect; }
 break;
-case 9:
+case 10:
 { yyval.mvect=yyvsp[-2].mvect;
                                              yyval.mvect->insert(yyval.mvect->end(),yyvsp[0].mvect->begin(),yyvsp[0].mvect->end());
                                              delete yyvsp[0].mvect; }
 break;
-case 10:
+case 11:
 { yyval.mvect = yyvsp[0].mvect; }
 break;
-case 11:
+case 12:
 {{
                                                  yyval.mvect = yyvsp[-1].mvect;
                                                  ParticleMatcher *e = new ParticleMatcher(m_ppSvc);
                                                  e->setEmpty(); yyval.mvect->push_back(e);
                                                }}
 break;
-case 12:
+case 13:
 {{
                                                  yyval.mvect = yyvsp[0].mvect;
                                                  ParticleMatcher *e = new ParticleMatcher(m_ppSvc);
                                                  e->setEmpty(); yyval.mvect->push_back(e);
                                                }}
 break;
-case 13:
+case 14:
 {{ yyval.mvect = yyvsp[-1].mvect; std::vector<ParticleMatcher *>::iterator i;
                                for( i=yyval.mvect->begin(); i!=yyval.mvect->end(); i++ ) (*i)->setConjugate(); }}
 break;
-case 14:
+case 15:
 {{ yyval.mvect = yyvsp[-1].mvect; std::vector<ParticleMatcher *>::iterator i;
                                for( i=yyval.mvect->begin(); i!=yyval.mvect->end(); i++ ) (*i)->setOscillate(); }}
 break;
-case 15:
+case 16:
 {{ yyval.mvect = yyvsp[-1].mvect; std::vector<ParticleMatcher *>::iterator i;
                             for( i=yyval.mvect->begin(); i!=yyval.mvect->end(); i++ ) (*i)->setNotOscillate(); }}
-break;
-case 16:
-{ yyval.mvect = yyvsp[0].mvect; }
 break;
 case 17:
 { yyval.mvect = yyvsp[0].mvect; }
 break;
 case 18:
-{ yyval.mvect = yyvsp[-3].mvect; }
+{ yyval.mvect = yyvsp[0].mvect; }
 break;
 case 19:
+{ yyval.mvect = yyvsp[-3].mvect; }
+break;
+case 20:
 { yyval.mvect=yyvsp[-2].mvect;
                                              yyval.mvect->insert(yyval.mvect->end(),yyvsp[0].mvect->begin(),yyvsp[0].mvect->end());
                                              delete yyvsp[0].mvect; }
 break;
-case 20:
+case 21:
 { yyval.mvect = yyvsp[0].mvect; }
 break;
-case 21:
-{ yyval.mvect = yyvsp[-1].mvect; }
-break;
 case 22:
-{{ yyval.mvect = new std::vector<ParticleMatcher *>(0);
-                                ParticleMatcher *m = new ParticleMatcher(yyvsp[0].text, m_ppSvc);
-                                m->setInverse(); yyval.mvect->push_back(m); }}
+{ yyval.mvect = yyvsp[-1].mvect; }
 break;
 case 23:
 {{ yyval.mvect = new std::vector<ParticleMatcher *>(0);
                                 ParticleMatcher *m = new ParticleMatcher(yyvsp[0].text, m_ppSvc);
-                                yyval.mvect->push_back(m); }}
+                                m->setInverse(); yyval.mvect->push_back(m); }}
 break;
 case 24:
+{{ yyval.mvect = new std::vector<ParticleMatcher *>(0);
+                                ParticleMatcher *m = new ParticleMatcher(yyvsp[0].text, m_ppSvc);
+                                yyval.mvect->push_back(m); }}
+break;
+case 25:
 {{ yyval.mvect = new std::vector<ParticleMatcher *>(0);
                                 ParticleMatcher *m = new ParticleMatcher(m_ppSvc);
                                 m->setQmark(); yyval.mvect->push_back(m); }}
 break;
-case 25:
+case 26:
 { yyval.mvect = yyvsp[-2].mvect; yyval.mvect->push_back(yyvsp[0].match); }
 break;
-case 26:
-{ yyval.mvect=new std::vector<ParticleMatcher *>(0); yyval.mvect->push_back(yyvsp[0].match); }
-break;
 case 27:
-{ yyval.match = yyvsp[0].match; }
+{ yyval.mvect=new std::vector<ParticleMatcher *>(0); yyval.mvect->push_back(yyvsp[0].match); }
 break;
 case 28:
 { yyval.match = yyvsp[0].match; }
 break;
 case 29:
-{ yyval.match = new ParticleMatcher(yyvsp[-2].quarkval,yyvsp[-1].quarkval,yyvsp[0].quarkval,m_ppSvc); }
+{ yyval.match = yyvsp[0].match; }
 break;
 case 30:
-{ yyval.match = new ParticleMatcher(yyvsp[-1].quarkval,yyvsp[0].quarkval,empty,m_ppSvc); }
+{ yyval.match = new ParticleMatcher(yyvsp[-2].quarkval,yyvsp[-1].quarkval,yyvsp[0].quarkval,m_ppSvc); }
 break;
 case 31:
-{ yyval.match = new ParticleMatcher(yyvsp[0].quarkval,empty,empty,m_ppSvc); }
+{ yyval.match = new ParticleMatcher(yyvsp[-1].quarkval,yyvsp[0].quarkval,empty,m_ppSvc); }
 break;
 case 32:
-{ yyval.quarkval = up; }
+{ yyval.match = new ParticleMatcher(yyvsp[0].quarkval,empty,empty,m_ppSvc); }
 break;
 case 33:
-{ yyval.quarkval = down; }
+{ yyval.quarkval = up; }
 break;
 case 34:
-{ yyval.quarkval = charm; }
+{ yyval.quarkval = down; }
 break;
 case 35:
-{ yyval.quarkval = strange; }
+{ yyval.quarkval = charm; }
 break;
 case 36:
-{ yyval.quarkval = top; }
+{ yyval.quarkval = strange; }
 break;
 case 37:
-{ yyval.quarkval = bottom; }
+{ yyval.quarkval = top; }
 break;
 case 38:
-{ yyval.quarkval = antiup; }
+{ yyval.quarkval = bottom; }
 break;
 case 39:
-{ yyval.quarkval = antidown; }
+{ yyval.quarkval = antiup; }
 break;
 case 40:
-{ yyval.quarkval = anticharm; }
+{ yyval.quarkval = antidown; }
 break;
 case 41:
-{ yyval.quarkval = antistrange; }
+{ yyval.quarkval = anticharm; }
 break;
 case 42:
-{ yyval.quarkval = antitop; }
+{ yyval.quarkval = antistrange; }
 break;
 case 43:
-{ yyval.quarkval = antibottom; }
+{ yyval.quarkval = antitop; }
 break;
 case 44:
-{ yyval.match = new ParticleMatcher(yyvsp[-2].quantumval,eq_rel,yyvsp[0].dval,m_ppSvc); }
+{ yyval.quarkval = antibottom; }
 break;
 case 45:
-{ yyval.match = new ParticleMatcher(yyvsp[-2].quantumval,lesseq_rel,yyvsp[0].dval,m_ppSvc); }
+{ yyval.match = new ParticleMatcher(yyvsp[-2].quantumval,eq_rel,yyvsp[0].dval,m_ppSvc); }
 break;
 case 46:
-{ yyval.match = new ParticleMatcher(yyvsp[-2].quantumval,greatereq_rel,yyvsp[0].dval,m_ppSvc); }
+{ yyval.match = new ParticleMatcher(yyvsp[-2].quantumval,lesseq_rel,yyvsp[0].dval,m_ppSvc); }
 break;
 case 47:
-{ yyval.match = new ParticleMatcher(yyvsp[-2].quantumval,less_rel,yyvsp[0].dval,m_ppSvc); }
+{ yyval.match = new ParticleMatcher(yyvsp[-2].quantumval,greatereq_rel,yyvsp[0].dval,m_ppSvc); }
 break;
 case 48:
-{ yyval.match = new ParticleMatcher(yyvsp[-2].quantumval,greater_rel,yyvsp[0].dval,m_ppSvc); }
+{ yyval.match = new ParticleMatcher(yyvsp[-2].quantumval,less_rel,yyvsp[0].dval,m_ppSvc); }
 break;
 case 49:
-{ yyval.match = new ParticleMatcher(yyvsp[-2].quantumval,noteq_rel,yyvsp[0].dval,m_ppSvc); }
+{ yyval.match = new ParticleMatcher(yyvsp[-2].quantumval,greater_rel,yyvsp[0].dval,m_ppSvc); }
 break;
 case 50:
-{ yyval.quantumval = Q_quantum; }
+{ yyval.match = new ParticleMatcher(yyvsp[-2].quantumval,noteq_rel,yyvsp[0].dval,m_ppSvc); }
 break;
 case 51:
-{ yyval.quantumval = B_quantum; }
+{ yyval.quantumval = Q_quantum; }
 break;
 case 52:
-{ yyval.quantumval = l_quantum; }
+{ yyval.quantumval = B_quantum; }
 break;
 case 53:
-{ yyval.quantumval = I_quantum; }
+{ yyval.quantumval = l_quantum; }
 break;
 case 54:
-{ yyval.quantumval = J_quantum; }
+{ yyval.quantumval = I_quantum; }
 break;
 case 55:
-{ yyval.quantumval = S_quantum; }
+{ yyval.quantumval = J_quantum; }
 break;
 case 56:
-{ yyval.quantumval = L_quantum; }
+{ yyval.quantumval = S_quantum; }
 break;
 case 57:
-{ yyval.quantumval = G_quantum; }
+{ yyval.quantumval = L_quantum; }
 break;
 case 58:
-{ yyval.quantumval = C_quantum; }
+{ yyval.quantumval = G_quantum; }
 break;
 case 59:
-{ yyval.quantumval = P_quantum; }
+{ yyval.quantumval = C_quantum; }
 break;
 case 60:
-{ yyval.quantumval = CP_quantum; }
+{ yyval.quantumval = P_quantum; }
 break;
 case 61:
-{ yyval.quantumval = c_quantum; }
+{ yyval.quantumval = CP_quantum; }
 break;
 case 62:
-{ yyval.quantumval = s_quantum; }
+{ yyval.quantumval = c_quantum; }
 break;
 case 63:
-{ yyval.quantumval = t_quantum; }
+{ yyval.quantumval = s_quantum; }
 break;
 case 64:
-{ yyval.quantumval = b_quantum; }
+{ yyval.quantumval = t_quantum; }
 break;
 case 65:
+{ yyval.quantumval = b_quantum; }
+break;
+case 66:
 {{ yyval.desc = yyvsp[-3].desc; Descriptor *a = yyvsp[-3].desc;
                                                   while( a->getAlternate() ) a = a->getAlternate();
                                                   a->setAlternate(yyvsp[-1].desc); }}
 break;
-case 66:
+case 67:
 {{ yyval.desc = yyvsp[-2].desc; Descriptor *a = yyvsp[-2].desc;
                                                   while( a->getAlternate() ) a = a->getAlternate();
                                                   a->setAlternate(yyvsp[0].desc); }}
 break;
-case 67:
+case 68:
 { yyval.desc = yyvsp[0].desc; }
 break;
-case 68:
+case 69:
 {{ yyval.desc = yyvsp[0].desc; Descriptor *a = yyvsp[0].desc;
                                      while( a ) {
                                        a->setElipsis();
@@ -840,34 +859,13 @@ case 68:
                                      }
                                   }}
 break;
-case 69:
+case 70:
 {{ yyval.desc = yyvsp[0].desc; Descriptor *a = yyvsp[0].desc;
                                       while( a ) {
                                         a->setResonnance();
                                         a->setElipsis();
                                         a = a->getAlternate();
                                       }
-                                   }}
-break;
-case 70:
-{{ Descriptor *a = yyvsp[0].desc, *last = NULL; yyval.desc = NULL;
-                                      while( a ) {
-                                        std::vector<ParticleMatcher *>::iterator m;
-                                        for( m=yyvsp[-2].mvect->begin(); m!=yyvsp[-2].mvect->end(); m++ ) {
-                                          Descriptor *d;
-                                          if( *m == yyvsp[-2].mvect->back() ) d = a;
-                                          else d = new Descriptor( *a );
-                                          if( yyval.desc == NULL ) yyval.desc = d;
-                                          else last->setAlternate(d);
-                                          last = d;
-                                          ParticleMatcher *mother;
-                                          if(a->getAlternate()) mother=new ParticleMatcher(**m);
-                                          else mother = *m;
-                                          d->setMother( mother );
-                                        }
-                                        a = a->getAlternate();
-                                      }
-                                      delete yyvsp[-2].mvect;
                                    }}
 break;
 case 71:
@@ -884,7 +882,7 @@ case 71:
                                           ParticleMatcher *mother;
                                           if(a->getAlternate()) mother=new ParticleMatcher(**m);
                                           else mother = *m;
-                                          d->setMother( mother ); d->setResonnance();
+                                          d->setMother( mother );
                                         }
                                         a = a->getAlternate();
                                       }
@@ -892,9 +890,30 @@ case 71:
                                    }}
 break;
 case 72:
-{ yyval.desc = yyvsp[-1].desc; }
+{{ Descriptor *a = yyvsp[0].desc, *last = NULL; yyval.desc = NULL;
+                                      while( a ) {
+                                        std::vector<ParticleMatcher *>::iterator m;
+                                        for( m=yyvsp[-2].mvect->begin(); m!=yyvsp[-2].mvect->end(); m++ ) {
+                                          Descriptor *d;
+                                          if( *m == yyvsp[-2].mvect->back() ) d = a;
+                                          else d = new Descriptor( *a );
+                                          if( yyval.desc == NULL ) yyval.desc = d;
+                                          else last->setAlternate(d);
+                                          last = d;
+                                          ParticleMatcher *mother;
+                                          if(a->getAlternate()) mother=new ParticleMatcher(**m);
+                                          else mother = *m;
+                                          d->setMother( mother ); d->setResonnance();
+                                        }
+                                        a = a->getAlternate();
+                                      }
+                                      delete yyvsp[-2].mvect;
+                                   }}
 break;
 case 73:
+{ yyval.desc = yyvsp[-1].desc; }
+break;
+case 74:
 {{ Descriptor *a = yyvsp[-1].desc, *last = NULL; yyval.desc = NULL;
                                    while( a ) {
                                       Descriptor *cc = new Descriptor(*a);
@@ -907,7 +926,7 @@ case 73:
                                     }
                                  }}
 break;
-case 74:
+case 75:
 {{ Descriptor *a = yyvsp[-1].desc, *last = NULL;
                                    while( a ) {
                                       Descriptor *cc = new Descriptor(*a);
@@ -920,7 +939,7 @@ case 74:
                                     }
                                  }}
 break;
-case 75:
+case 76:
 {{
                                       Descriptor *a = yyvsp[-1].desc, *last = NULL; yyval.desc = NULL;
                                       while( a ) {
@@ -942,7 +961,7 @@ case 75:
                                       delete yyvsp[-3].mvect;
                                    }}
 break;
-case 76:
+case 77:
 {{
                                       Descriptor *a = yyvsp[-1].desc, *last = NULL; yyval.desc = NULL;
                                       while( a ) {
@@ -964,7 +983,7 @@ case 76:
                                       delete yyvsp[-3].mvect;
                                    }}
 break;
-case 77:
+case 78:
 {{ Descriptor *last = NULL; yyval.desc = NULL;
                                       std::vector<ParticleMatcher *>::iterator m;
                                       for( m=yyvsp[-1].mvect->begin(); m!=yyvsp[-1].mvect->end(); m++ ) {
@@ -977,23 +996,23 @@ case 77:
                                       delete yyvsp[-1].mvect;
                                    }}
 break;
-case 78:
+case 79:
 {{ yyval.desc = yyvsp[-3].desc; Descriptor *a = yyvsp[-3].desc;
                                       while( a ) a = a->getAlternate();
                                       a->setAlternate(yyvsp[-1].desc); }}
 break;
-case 79:
+case 80:
 {{ yyval.desc = yyvsp[-2].desc; Descriptor *a = yyvsp[-2].desc;
                                       while( a ) a = a->getAlternate();
                                       a->setAlternate(yyvsp[0].desc); }}
 break;
-case 80:
+case 81:
 { yyval.desc = yyvsp[0].desc; }
 break;
-case 81:
+case 82:
 { yyval.desc = yyvsp[-1].desc; }
 break;
-case 82:
+case 83:
 {{ Descriptor *a = yyvsp[-1].desc, *last = NULL; yyval.desc = NULL;
                                    while( a ) {
                                       Descriptor *cc = new Descriptor(*a);
@@ -1006,18 +1025,18 @@ case 82:
                                     }
                                  }}
 break;
-case 83:
+case 84:
 {{ yyval.desc = yyvsp[-1].desc; Descriptor *a = yyval.desc;
                                     while( a ) {
                                       a->setElipsis();
                                       a = a->getAlternate();
                                     }
                                  }}
-break;
-case 84:
-{ yyval.desc = yyvsp[0].desc; }
 break;
 case 85:
+{ yyval.desc = yyvsp[0].desc; }
+break;
+case 86:
 {{ yyval.desc = yyvsp[-1].desc; Descriptor *a = yyval.desc;
                                     while( a ) {
                                       a->setElipsis();
@@ -1025,20 +1044,20 @@ case 85:
                                     }
                                  }}
 break;
-case 86:
+case 87:
 { yyval.desc = yyvsp[0].desc; }
 break;
-case 87:
+case 88:
 {{ yyval.desc = yyvsp[-2].desc; Descriptor *a = yyval.desc;
                                                   while( a->getAlternate() )
                                                     a = a->getAlternate();
                                                   a->setAlternate(yyvsp[0].desc);
                                                   }}
 break;
-case 88:
+case 89:
 { yyval.desc = yyvsp[0].desc; }
 break;
-case 89:
+case 90:
 {{ Descriptor *a = yyvsp[-1].desc, *b = yyvsp[0].desc, *last = NULL; yyval.desc = NULL;
                               while( a ) {
                                 while( b ) {
@@ -1060,7 +1079,7 @@ case 89:
                               }
                            }}
 break;
-case 90:
+case 91:
 {{ Descriptor *a = yyvsp[0].desc, *last = NULL; yyval.desc = NULL;
                     while( a ) {
                       Descriptor *d = new Descriptor(m_ppSvc, m_resThreshold);
@@ -1074,7 +1093,7 @@ case 90:
                     }
                  }}
 break;
-case 91:
+case 92:
 {{
                               Descriptor *a = yyvsp[-3].desc, *last = NULL; yyval.desc = NULL;
                               std::vector<ParticleMatcher *>::iterator m;
@@ -1098,7 +1117,7 @@ case 91:
                               }
                            }}
 break;
-case 92:
+case 93:
 {{ Descriptor *last = NULL; yyval.desc = NULL;
                     std::vector<ParticleMatcher *>::iterator m;
                     for( m=yyvsp[-1].mvect->begin(); m!=yyvsp[-1].mvect->end(); m++ ) {
@@ -1114,7 +1133,7 @@ case 92:
                     delete yyvsp[-1].mvect;
                  }}
 break;
-case 93:
+case 94:
 {{
                               Descriptor *a = yyvsp[-1].desc, *last = NULL; yyval.desc = NULL;
                               std::vector<ParticleMatcher *>::iterator m;
@@ -1136,7 +1155,7 @@ case 93:
                               }
                            }}
 break;
-case 94:
+case 95:
 {{
                     Descriptor *last = NULL; yyval.desc = NULL;
                     std::vector<ParticleMatcher *>::iterator m;
