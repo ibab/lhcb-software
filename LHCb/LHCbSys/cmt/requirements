@@ -76,3 +76,7 @@ use Finclude     v14r0   SICB
 use GDUMMY       v2r0    SICB
 use Futil        v12r0   SICB
 use detdes       v20r0   SICB
+
+use DetDescExample      v5r0    Ex
+use DumpEventExample    v6r0    Ex
+
