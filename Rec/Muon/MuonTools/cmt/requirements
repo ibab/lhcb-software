@@ -1,7 +1,7 @@
-# $Id: requirements,v 1.7 2002-06-21 13:48:37 cattanem Exp $
+# $Id: requirements,v 1.8 2002-08-05 12:52:33 dhcroft Exp $
 # =============================================================================
 package            MuonTools
-version            v2r1
+version            v3r0
 
 # ================ structure =================================================
 branches           cmt doc src options MuonTools
@@ -25,3 +25,4 @@ apply_pattern      linker_path
 # ================ private stuff (btw, WHY it is private?)  ==================
 private
 apply_pattern      package_Cshlibflags
+

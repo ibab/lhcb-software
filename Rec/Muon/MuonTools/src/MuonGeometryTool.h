@@ -1,4 +1,4 @@
-// $Id: MuonGeometryTool.h,v 1.1 2002-05-10 12:47:09 dhcroft Exp $
+// $Id: MuonGeometryTool.h,v 1.2 2002-08-05 12:53:04 dhcroft Exp $
 #ifndef MUONGEOMETRYTOOL_H 
 #define MUONGEOMETRYTOOL_H 1
 
@@ -33,6 +33,11 @@ public:
 
   virtual ~MuonGeometryTool() {}; ///< Destructor
 
+  /// return the number of stations
+  virtual StatusCode nStation(int &NStation);
+  /// return the number of stations
+  virtual StatusCode nRegion(int &NRegion);
+
   /// Return the box for a station
   virtual StatusCode getStationBox(const int &station,
                                    double &deltaX,
@@ -52,6 +57,26 @@ public:
   virtual StatusCode getPadSize(const int &station, const int &region,
                                 double &sizeX, double &sizeY);  
 
+  /// return the number of horizonal logical channels in X across a 
+  /// 1/4 of the region (use for MuonTileID grid)
+  virtual int logChanHorizGridX(const int &station, const int &region);
+  /// return the number of horizonal logical channels in Y across a 
+  /// 1/4 of the region (use for MuonTileID grid)
+  virtual int logChanHorizGridY(const int &station, const int &region);
+
+  /// return the number of vertical logical channels in X across a 
+  /// 1/4 of the region (use for MuonTileID grid)
+  virtual int logChanVertGridX(const int &station, const int &region); 
+  /// return the number of vertical logical channels in Y across a 
+  /// 1/4 of the region (use for MuonTileID grid)
+  virtual int logChanVertGridY(const int &station, const int &region);
+
+  /// return the number of pads in X across a 
+  /// 1/4 of the region (use for MuonTileID grid)
+  virtual int padGridX(const int &station, const int &region);
+  /// return the number of pads in Y across a 
+  /// 1/4 of the region (use for MuonTileID grid)
+  virtual int padGridY(const int &station, const int &region);
 
 protected:
 
@@ -59,6 +84,29 @@ private:
 
   /// Fill the local arrays
   StatusCode fillLocals();
+  
+  /// fill system parameters
+  StatusCode fillSystemNumbers();
+
+  /// Number of stations
+  int m_NStation;
+  /// Number of regions
+  int m_NRegion;
+
+  /// Horizontal Logical channel number across 1/4 of a region in x
+  std::vector<int> m_logHorizGridX;
+  /// Horizontal Logical channel number across 1/4 of a region in y
+  std::vector<int> m_logHorizGridY;
+
+  /// Vertical Logical channel number across 1/4 of a region in x
+  std::vector<int> m_logVertGridX;
+  /// Vertical Logical channel number across 1/4 of a region in y
+  std::vector<int> m_logVertGridY;
+
+  /// Pad number across 1/4 of a region in x
+  std::vector<int> m_padGridX;
+  /// Pad number across 1/4 of a region in y
+  std::vector<int> m_padGridY;
 
   class regionExtent_ {
   public:
@@ -76,10 +124,17 @@ private:
     double sizeY;
   };
 
-  regionExtent_ regionExtent[5][4];
-  padExtent_ padExtent[5][4];
+  std::vector<regionExtent_> m_regionExtent;
+  inline regionExtent_ & regionExtent(int station, int region){
+    return m_regionExtent[station*m_NRegion + region];
+  }
+  std::vector<padExtent_> m_padExtent;
+  inline padExtent_ & padExtent(int station, int region){
+    return m_padExtent[station*m_NRegion + region];
+  }
 
 private:
   IMuonTileXYZTool *m_tileTool;
+  IDataProviderSvc* m_DDS;
 };
 #endif // MUONGEOMETRYTOOL_H

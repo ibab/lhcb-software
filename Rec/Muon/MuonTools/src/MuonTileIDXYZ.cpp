@@ -1,4 +1,4 @@
-// $Id: MuonTileIDXYZ.cpp,v 1.14 2002-07-03 14:46:54 dhcroft Exp $
+// $Id: MuonTileIDXYZ.cpp,v 1.15 2002-08-05 12:53:04 dhcroft Exp $
 // Include files 
 #include <cstdio>
 #include <cmath>
@@ -30,6 +30,7 @@
 #include "MuonTileIDXYZ.h"
 #include "MuonTools/MuonChannel.h"
 #include "MuonTools/MuonGeometry.h"
+#include "MuonTools/IMuonGeometryTool.h"
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : MuonTileIDXYZ
@@ -46,53 +47,19 @@ const        IToolFactory& MuonTileIDXYZFactory = s_factory ;
 // Standard constructor, initializes variables
 //=============================================================================
 MuonTileIDXYZ::MuonTileIDXYZ( const std::string& type,
-                                  const std::string& name,
-                                  const IInterface* parent )
-  : AlgTool ( type, name , parent ) ,   
-    m_DDS(0)
-{
+                              const std::string& name,
+                              const IInterface* parent )
+  : AlgTool ( type, name , parent ) {
   declareInterface<IMuonTileXYZTool>(this);
 
   MsgStream log(msgSvc(), "MuonTileIDXYZ");
   log << MSG::DEBUG << "Initialising the MuonTile to position tool" << endreq;  
-
   // Locate the detector service needed by the this tool
   m_DDS = 0;
   if( serviceLocator() ) {
     StatusCode sc=StatusCode::FAILURE;
     sc = serviceLocator()->service( "DetectorDataSvc", m_DDS, true );
   }
-
-  // null the chamber locations: actually only need to null z
-  // Yay! a fully fortran compilant section
-  int i,j;
-  for(i=0;i<5;i++){
-    //R1
-    for(j=0;j<12;j++){
-      m_chamR1[i][j].z = -1000. ;
-    }
-    //R2
-    for(j=0;j<24;j++){
-      m_chamR2[i][j].z = -1000. ;
-    }
-    //R3
-    for(j=0;j<48;j++){
-      m_chamR3[i][j].z = -1000. ;
-    }
-    //R4
-    for(j=0;j<192;j++){
-      m_chamR4[i][j].z = -1000. ;
-    }
-  }
-  // same for station extents
-  for(i=0; i<5; i++){
-    m_stationExtent[i].z = -1000. ;
-    
-  }
-
-  m_twelfthExtent[0][0][0].z = -1000.;
-
-  m_nGap[0][0] = 0;
 
   // make the chamber layout 
 
@@ -111,8 +78,11 @@ MuonTileIDXYZ::MuonTileIDXYZ( const std::string& type,
   MuonStationLayout chamberStationLayout(R1Layout,R2Layout,
                                          R3Layout,R4Layout);
                                          
-
   m_chamberSystemLayout = new MuonSystemLayout(chamberStationLayout);
+
+  m_NStation = 0;
+  m_NRegion = 0;
+
 }
 
 MuonTileIDXYZ::~MuonTileIDXYZ(){
@@ -124,6 +94,13 @@ StatusCode MuonTileIDXYZ::calcTilePos(const MuonTileID& tile,
                                       double& y, double& deltay,
                                       double& z, double& deltaz){
   MsgStream log(msgSvc(), name());
+
+  if( 0 == m_logChanVertGridX.size() ){
+    StatusCode sc = fillGridSizes();
+    if(!sc){
+      return sc;
+    }
+  }
 
   // OK how to make this work.....
   // first locate the station and region from the tile
@@ -142,9 +119,9 @@ StatusCode MuonTileIDXYZ::calcTilePos(const MuonTileID& tile,
       log << MSG::ERROR << "Failed to get xyz from chamber" << endreq;
       return sc;
     }
-  }else if( MuonGeometry::padGridX[station][region] == 
+  }else if( m_padGridX[station*m_NRegion + region] == 
             tile.layout().xGrid() && 
-            MuonGeometry::padGridY[station][region] == 
+            m_padGridY[station*m_NRegion + region] == 
             tile.layout().yGrid() ){
     // muon pads and logical channels with a 1:1 mapping to pads
     
@@ -154,12 +131,12 @@ StatusCode MuonTileIDXYZ::calcTilePos(const MuonTileID& tile,
     
     StatusCode sc = getXYZPad(tile,x,deltax,y,deltay,z,deltaz);
     if(!sc.isSuccess()){
-        log << MSG::ERROR << "Failed to get xyz from chamber" << endreq;
-        return sc;
+      log << MSG::ERROR << "Failed to get xyz from chamber" << endreq;
+      return sc;
     }
-  }else if( MuonGeometry::logChanHorizGridX[station][region] == 
+  }else if( m_logChanHorizGridX[station*m_NRegion + region] == 
             tile.layout().xGrid() && 
-            MuonGeometry::logChanHorizGridY[station][region] == 
+            m_logChanHorizGridY[station*m_NRegion + region] == 
             tile.layout().yGrid() ){
     // horizontal logical channels            
     
@@ -169,12 +146,12 @@ StatusCode MuonTileIDXYZ::calcTilePos(const MuonTileID& tile,
     
     StatusCode sc = getXYZLogical(tile,x,deltax,y,deltay,z,deltaz);
     if(!sc.isSuccess()){
-        log << MSG::ERROR << "Failed to get xyz from chamber" << endreq;
-        return sc;
+      log << MSG::ERROR << "Failed to get xyz from chamber" << endreq;
+      return sc;
     }
-  }else if( MuonGeometry::logChanVertGridX[station][region] == 
+  }else if( m_logChanVertGridX[station*m_NRegion + region] == 
             tile.layout().xGrid() && 
-            MuonGeometry::logChanVertGridY[station][region] == 
+            m_logChanVertGridY[station*m_NRegion + region] == 
             tile.layout().yGrid() ){
     // vertical logical channels            
     
@@ -184,8 +161,8 @@ StatusCode MuonTileIDXYZ::calcTilePos(const MuonTileID& tile,
     
     StatusCode sc = getXYZLogical(tile,x,deltax,y,deltay,z,deltaz);
     if(!sc.isSuccess()){
-        log << MSG::ERROR << "Failed to get xyz from chamber" << endreq;
-        return sc;
+      log << MSG::ERROR << "Failed to get xyz from chamber" << endreq;
+      return sc;
     }
   } else if( 1 == tile.layout().xGrid() && 1 == tile.layout().yGrid() ) {
 
@@ -194,8 +171,8 @@ StatusCode MuonTileIDXYZ::calcTilePos(const MuonTileID& tile,
     
     StatusCode sc = getXYZTwelfth(tile,x,deltax,y,deltay,z,deltaz);
     if(!sc.isSuccess()){
-        log << MSG::ERROR << "Failed to get xyz from twelfth" << endreq;
-        return sc;
+      log << MSG::ERROR << "Failed to get xyz from twelfth" << endreq;
+      return sc;
     }
 
   } else {
@@ -235,7 +212,7 @@ StatusCode MuonTileIDXYZ::locateChamberTileAndGap(const double& x,
   // actually look in box defined by the extent of the active gas gaps
   MsgStream log(msgSvc(), name());
 
-  if( 0 >= m_stationExtent[0].z ){
+  if( m_stationExtent.empty() ){
     // need to fill the stationExtent
     StatusCode sc = fillStationExtent();
     if(!sc.isSuccess()){
@@ -246,27 +223,27 @@ StatusCode MuonTileIDXYZ::locateChamberTileAndGap(const double& x,
 
   int station = 0;
   // add 1 mm for saftey against rounding errors
-  while(station < 5 && 
+  while(station < m_NStation && 
         ( fabs(m_stationExtent[station].z - z) >= 
           1. + m_stationExtent[station].dz )){
     station++;
   }
-  if(station == 5) {
+  if(station == m_NStation) {
     log << MSG::WARNING << "Could not locate z in a station" << endreq;
     return StatusCode::FAILURE;
   }
     
   // loop over regions to see if we can find one or more that matches
   int region;
-  for( region=0; region<4; region++){
+  for( region=0; region < m_NStation ; region++){
     // look in twelfths for this region
     int twelfth;
     for( twelfth=0; twelfth<12; twelfth++){
       // look if x,y is in the box extent +1mm for rounding
-      if( ( fabs(m_twelfthExtent[station][region][twelfth].x - x ) <= 
-            1. + m_twelfthExtent[station][region][twelfth].dx ) &&
-          ( fabs(m_twelfthExtent[station][region][twelfth].y - y ) <= 
-            1. + m_twelfthExtent[station][region][twelfth].dy ) ) {
+      if( ( fabs(twelfthExtent(station,region,twelfth).x - x ) <= 
+            1. + (twelfthExtent(station,region,twelfth).dx ) &&
+            ( fabs(twelfthExtent(station,region,twelfth).y - y ) <= 
+              1. + twelfthExtent(station,region,twelfth).dy ) ) ) {
         // have a twelfth to try
 
         log << MSG::DEBUG << "Trying station:" << station
@@ -288,7 +265,7 @@ StatusCode MuonTileIDXYZ::locateChamberTileAndGap(const double& x,
       }
     }
   }
-
+  
   log << MSG::WARNING 
       << " Tried every estimated combination and could not locate chamber"
       << endreq;
@@ -336,7 +313,7 @@ MuonTileIDXYZ::locateFEFromXYZ(const double& x,
     int yPos = static_cast<int>(floor(localY/padSizeY));
 
     muonChannels.push_back(MuonChannel(xPos,yPos,
-                                        MuonParameters::Anode));
+                                       MuonParameters::Anode));
   }
     
   if(region->FECathodeX() > 0){
@@ -348,7 +325,7 @@ MuonTileIDXYZ::locateFEFromXYZ(const double& x,
     int yPos = static_cast<int>(floor(localY/padSizeY));
 
     muonChannels.push_back(MuonChannel(xPos,yPos,
-                                        MuonParameters::Cathode));
+                                       MuonParameters::Cathode));
   }
   
   return StatusCode::SUCCESS;
@@ -407,45 +384,18 @@ StatusCode MuonTileIDXYZ::getXYZAndCache(const int& station,
                                          double& z, double& deltaz){
   MsgStream log(msgSvc(), name());
 
-  chamberExtent_ *currCham=0;
-  int nGap;
-  gapExtent_ *currGapArray=0;
-
   // Alright I agree this is officially very ugly code
   // I probably should use some stl stuff here somewhere
   // this pointer arimetic is just asking for trouble
 
-  if(m_nGap[0][0] == 0){
+  if( m_NGap.empty() ){
     StatusCode sc = fillNGaps();
     if(!sc){
       return sc;
     }
   }
-
-  nGap = m_nGap[station][region];
-
-  if( 0 == region ){
-    currCham = &(m_chamR1[station][chamberNum-1]);
-    currGapArray = m_gapR1[station][chamberNum-1];
-  }else if( 1 == region ){
-    currCham = &(m_chamR2[station][chamberNum-1]);
-    currGapArray = m_gapR2[station][chamberNum-1];
-  }else if( 2 == region ){
-    currCham = &(m_chamR3[station][chamberNum-1]);
-    if(station < 3){
-      currGapArray = m_gapR3MWPC[station][chamberNum-1];
-    }else{
-      currGapArray = m_gapR3RPC[station-3][chamberNum-1];
-    }
-  }else {
-    currCham = &(m_chamR4[station][chamberNum-1]);
-    if(station < 3){
-      currGapArray = m_gapR4MWPC[station][chamberNum-1];
-    }else{
-      currGapArray = m_gapR4RPC[station-3][chamberNum-1];
-    }
-  }
-
+  int nGap = m_NGap[station*(m_NRegion) + region];
+  chamberExtent_ *currCham = &chamExtent(station,region,chamberNum);
 
   // test if have information already  
   if( 0. >= currCham->z ) {
@@ -480,15 +430,16 @@ StatusCode MuonTileIDXYZ::getXYZAndCache(const int& station,
             << (*itGap)->name() << " from TDS" << endreq;
         return StatusCode::FAILURE;
       }
+      gapExtent_ *currGap = &gapExtent(station,region,chamberNum,gapIndex);
       
-      currGapArray[gapIndex].pGasGap = muGap;
+      currGap->pGasGap = muGap;
 
       HepTransform3D vTransForm = muGap->geometry()->matrixInv();
       Hep3Vector vtrans = vTransForm.getTranslation();
       
-      currGapArray[gapIndex].x = vtrans.x();
-      currGapArray[gapIndex].y = vtrans.y();
-      currGapArray[gapIndex].z = vtrans.z();
+      currGap->x = vtrans.x();
+      currGap->y = vtrans.y();
+      currGap->z = vtrans.z();
 
       // get ILVolume pointer
       const ILVolume *logVol = muGap->geometry()->lvolume();
@@ -502,24 +453,29 @@ StatusCode MuonTileIDXYZ::getXYZAndCache(const int& station,
         return StatusCode::FAILURE;
       }
     
-      currGapArray[gapIndex].dx = box->xHalfLength();
-      currGapArray[gapIndex].dy = box->yHalfLength();
-      currGapArray[gapIndex].dz = box->zHalfLength();
+      currGap->dx = box->xHalfLength();
+      currGap->dy = box->yHalfLength();
+      currGap->dz = box->zHalfLength();
     }    
 
-    currCham->x = ( currGapArray[0].x + currGapArray[nGap-1].x ) / 2.0;
-    currCham->y = ( currGapArray[0].y + currGapArray[nGap-1].y ) / 2.0;
-    currCham->z = ( currGapArray[0].z + currGapArray[nGap-1].z ) / 2.0;
+    currCham->x = ( gapExtent(station,region,chamberNum,0).x + 
+                    gapExtent(station,region,chamberNum,nGap-1).x ) / 2.0;
+    currCham->y = ( gapExtent(station,region,chamberNum,0).y + 
+                    gapExtent(station,region,chamberNum,nGap-1).y ) / 2.0;
+    currCham->z = ( gapExtent(station,region,chamberNum,0).z + 
+                    gapExtent(station,region,chamberNum,nGap-1).z ) / 2.0;
 
     log << MSG::DEBUG 
         << " chamber average of first and last gas gaps reported at x="
         << currCham->x << "mm y= " << currCham->y 
         << "mm z="  << currCham->z << "mm" << endreq;
 
-    currCham->dx = currGapArray[0].dx;
-    currCham->dy = currGapArray[0].dy;
-    currCham->dz = (fabs( currGapArray[0].z - currGapArray[nGap-1].z ) /2.0) +
-      currGapArray[0].dz;
+    currCham->dx = gapExtent(station,region,chamberNum,0).dx;
+    currCham->dy = gapExtent(station,region,chamberNum,0).dy;
+    currCham->dz = 
+      (fabs( gapExtent(station,region,chamberNum,0).z - 
+             gapExtent(station,region,chamberNum,nGap-1).z )/2.0)
+      + gapExtent(station,region,chamberNum,0).dz;
     
     log << MSG::DEBUG 
         << " chamber size x/2=" << currCham->dx << "mm "
@@ -536,12 +492,12 @@ StatusCode MuonTileIDXYZ::getXYZAndCache(const int& station,
     deltay = currCham->dy;
     deltaz = currCham->dz;
   }else{
-    x = currGapArray[gapNum].x;
-    y = currGapArray[gapNum].y;
-    z = currGapArray[gapNum].z;
-    deltax = currGapArray[gapNum].dx;
-    deltay = currGapArray[gapNum].dy;
-    deltaz = currGapArray[gapNum].dz;
+    x = gapExtent(station,region,chamberNum,gapNum).x;
+    y = gapExtent(station,region,chamberNum,gapNum).y;
+    z = gapExtent(station,region,chamberNum,gapNum).z;
+    deltax = gapExtent(station,region,chamberNum,gapNum).dx;
+    deltay = gapExtent(station,region,chamberNum,gapNum).dy;
+    deltaz = gapExtent(station,region,chamberNum,gapNum).dz;
   }
   
   return StatusCode::SUCCESS;
@@ -562,6 +518,8 @@ StatusCode MuonTileIDXYZ::fillNGaps(){
   std::vector<IDetectorElement*> muonStations = 
     muonSystem->childIDetectorElements();
   
+  m_NStation = muonStations.size();
+
   // loop over the stations
   std::vector<IDetectorElement*>::const_iterator iIDE;
   int station;
@@ -572,6 +530,8 @@ StatusCode MuonTileIDXYZ::fillNGaps(){
     // now get the regions for this station
     std::vector<IDetectorElement*> muonRegions = 
       (*iIDE)->childIDetectorElements();
+
+    m_NRegion = muonRegions.size();
     
     // loop over the regions
     std::vector<IDetectorElement*>::const_iterator iIDER;
@@ -591,23 +551,139 @@ StatusCode MuonTileIDXYZ::fillNGaps(){
       log << MSG::DEBUG << "Number of gaps from chamber " 
           << muonChambers[0]->name() << " is " << muonGaps.size() << endreq;
 
-      m_nGap[station][region] = muonGaps.size();
+      // insert order is [station*(m_Region) + region]
+      m_NGap.push_back(muonGaps.size()); 
+    }
+  }
+
+  // null the chamExtent and gapExtent vectors
+  chamberExtent_ nullChamExtent;
+  nullChamExtent.x=0.;
+  nullChamExtent.y=0.;
+  nullChamExtent.z=0.;
+  nullChamExtent.dx=0.;
+  nullChamExtent.dy=0.;
+  nullChamExtent.dz=0.;
+  nullChamExtent.pChamber = 0;
+  
+  // make m_chamExtent the correct length, double vector format here
+  m_chamExtent.clear();
+  m_chamExtent.resize(m_NStation*m_NRegion);
+  for( station = 0 ; station < m_NStation ; station++ ) {
+    int region;
+    for( region = 0 ; region < m_NRegion ; region++ ) {
+      m_chamExtent[station*m_NRegion + region].
+        resize(numberOfChambers(region), nullChamExtent);
+    }
+  }
+  
+
+  // same for m_gapExtent
+  gapExtent_ nullGapExtent;
+  nullGapExtent.x=0.;
+  nullGapExtent.y=0.;
+  nullGapExtent.z=0.;
+  nullGapExtent.dx=0.;
+  nullGapExtent.dy=0.;
+  nullGapExtent.dz=0.;
+  nullGapExtent.pGasGap = 0;
+
+  // same for gas gaps
+  m_gapExtent.clear();
+  m_gapExtent.resize(m_NStation*m_NRegion);
+  for( station = 0 ; station < m_NStation ; station++ ) {
+    int region;
+    for( region = 0 ; region < m_NRegion ; region++ ) {
+      m_gapExtent[station*m_NRegion + region].
+        resize(numberOfChambers(region) * 
+               m_NGap[station*m_NRegion + region], nullGapExtent);
+    }
+  }
+  
+  return StatusCode::SUCCESS;
+}
+ 
+StatusCode MuonTileIDXYZ::fillGridSizes(){
+  
+  MsgStream log(msgSvc(), name());
+
+  IMuonGeometryTool *m_geomTool;
+
+  // get geometry tool for pad and channel sizes
+  StatusCode sc =
+    toolSvc()->retrieveTool("MuonGeometryTool", m_geomTool);
+  if( sc.isFailure() ) {
+    log << MSG::FATAL << "    Unable to create MuonGeometryTool " << endreq;
+    return sc;
+  }
+  
+  // Check m_NStation and m_NRegion are OK
+  if( 0 == m_NStation ){
+    sc = fillNGaps();
+    if(!sc){
+      return sc;
+    }
+  }
+
+  std::cout << "fillGridSizes sizes : " << m_NStation
+            <<" "<< m_NRegion << std::endl;
+
+  // make arrays correct size
+  m_logChanVertGridX.resize(m_NStation*m_NRegion);
+  m_logChanVertGridY.resize(m_NStation*m_NRegion);
+  m_logChanHorizGridX.resize(m_NStation*m_NRegion);
+  m_logChanHorizGridY.resize(m_NStation*m_NRegion);
+  m_padGridX.resize(m_NStation*m_NRegion);
+  m_padGridY.resize(m_NStation*m_NRegion);
+
+  std::cout << " logChanVertGridX : " << m_logChanVertGridX.size()
+            << " logChanVertGridY : " << m_logChanVertGridY.size()
+            << " logChanHorizGridX : " << m_logChanHorizGridX.size()
+            << " logChanHorizGridY : " << m_logChanHorizGridY.size()
+            << " padGridX : " << m_padGridX.size()
+            << " padGridY : " << m_padGridY.size() 
+            << std::endl;
+
+
+  int station,region;
+  for( station = 0 ; station < m_NStation ; station++ ){
+    for( region = 0 ; region < m_NRegion ; region++ ){
+
+      // get sizes from MuonGeometryTool
+      m_logChanVertGridX[station*m_NRegion + region] = 
+        m_geomTool->logChanVertGridX(station,region);
+
+      m_logChanVertGridY[station*m_NRegion + region] = 
+        m_geomTool->logChanVertGridY(station,region);
+
+      m_logChanHorizGridX[station*m_NRegion + region] = 
+        m_geomTool->logChanHorizGridX(station,region);
+
+      m_logChanHorizGridY[station*m_NRegion + region] = 
+        m_geomTool->logChanHorizGridY(station,region);
+
+      m_padGridX[station*m_NRegion + region] = 
+        m_geomTool->padGridX(station,region);
+
+      m_padGridY[station*m_NRegion + region] = 
+        m_geomTool->padGridY(station,region);
+
     }
   }
   return StatusCode::SUCCESS;
+  
 }
-      
-
+ 
 
 StatusCode MuonTileIDXYZ::fillStationExtent(){
-
+  
   MsgStream log(msgSvc(), name());
   
   // This uses the twelfths to get the size of the station
-  if( 0>= m_twelfthExtent[0][0][0].z ){
+  if( m_twelfthExtent.empty() ){
     //need to fill twelfthExtent
     StatusCode sc = fillTwelfthsExtent();
-     if(!sc.isSuccess()){
+    if(!sc.isSuccess()){
       log << MSG::ERROR << "Something went wrong getting Twelfths positions"
           << endreq;
       return sc;
@@ -617,30 +693,32 @@ StatusCode MuonTileIDXYZ::fillStationExtent(){
   // to fill stationExtent with the outer edges of the chambers in the
   // corners of region 4
   
+  m_stationExtent.resize(m_NStation);
+
   int station;
-  for(station = 0 ; station < 5 ; station++){
+  for(station = 0 ; station < m_NStation ; station++){
 
     double xMax,xMin,yMax,yMin,zMax,zMin;
 
     int region;
-    for( region = 0 ; region < 4 ; region++ ){
+    for( region = 0 ; region < m_NRegion ; region++ ){
 
       int twelfth;
       for( twelfth = 0 ; twelfth < 12 ; twelfth++ ){
         
         // fill the local x,y,z mans/min for the twelfth
-        double txMax = m_twelfthExtent[station][region][twelfth].x + 
-          m_twelfthExtent[station][region][twelfth].dx;
-        double txMin = m_twelfthExtent[station][region][twelfth].x -
-          m_twelfthExtent[station][region][twelfth].dx;
-        double tyMax = m_twelfthExtent[station][region][twelfth].y + 
-          m_twelfthExtent[station][region][twelfth].dy;
-        double tyMin = m_twelfthExtent[station][region][twelfth].y -
-          m_twelfthExtent[station][region][twelfth].dy;
-        double tzMax = m_twelfthExtent[station][region][twelfth].z + 
-          m_twelfthExtent[station][region][twelfth].dz;
-        double tzMin = m_twelfthExtent[station][region][twelfth].z -
-          m_twelfthExtent[station][region][twelfth].dz;
+        double txMax = twelfthExtent(station,region,twelfth).x + 
+          twelfthExtent(station,region,twelfth).dx;
+        double txMin = twelfthExtent(station,region,twelfth).x -
+          twelfthExtent(station,region,twelfth).dx;
+        double tyMax = twelfthExtent(station,region,twelfth).y + 
+          twelfthExtent(station,region,twelfth).dy;
+        double tyMin = twelfthExtent(station,region,twelfth).y -
+          twelfthExtent(station,region,twelfth).dy;
+        double tzMax = twelfthExtent(station,region,twelfth).z + 
+          twelfthExtent(station,region,twelfth).dz;
+        double tzMin = twelfthExtent(station,region,twelfth).z -
+          twelfthExtent(station,region,twelfth).dz;
 
         if(0 == twelfth && 0 == region) {
           xMax = txMax;
@@ -690,16 +768,34 @@ StatusCode MuonTileIDXYZ::fillTwelfthsExtent(){
 
   MsgStream log(msgSvc(), name());
   
+  // check station sizes are OK
+  if( m_NGap.empty() ){
+    StatusCode sc = fillNGaps();
+    if(!sc){
+      return sc;
+    }
+  }
+
+  muonExtent_ nullExtent;
+  nullExtent.x = 0.;
+  nullExtent.y = 0.;
+  nullExtent.z = 0.;
+  nullExtent.dx = 0.;
+  nullExtent.dy = 0.;
+  nullExtent.dz = 0.;
+
+  m_twelfthExtent.resize(m_NStation*m_NRegion*12,nullExtent);  
+
   // So get the TDS representations of the stations
   // to fill twelfthsExtent and quaterExtent with the outer 
   // edges of the chambers in the
   // corners of the twelfths
   
   int station;
-  for(station = 0 ; station < 5 ; station++){
+  for(station = 0 ; station < m_NStation ; station++){
 
     int region;
-    for(region = 0 ; region < 4 ; region++){
+    for(region = 0 ; region < m_NRegion ; region++){
 
       int twelfth;
       for(twelfth = 0 ; twelfth < 12 ; twelfth++){
@@ -736,19 +832,19 @@ StatusCode MuonTileIDXYZ::fillTwelfthsExtent(){
           }
         } // end loop over chamCorner
         
-          // strore the extent of the twelfth
-        m_twelfthExtent[station][region][twelfth].x = 
+        // strore the extent of the twelfth
+        twelfthExtent(station,region,twelfth).x = 
           ( xMax + xMin ) / 2.; 
-        m_twelfthExtent[station][region][twelfth].y = 
+        twelfthExtent(station,region,twelfth).y = 
           ( yMax + yMin ) / 2.; 
-        m_twelfthExtent[station][region][twelfth].z = 
+        twelfthExtent(station,region,twelfth).z = 
           ( zMax + zMin ) / 2.; 
           
-        m_twelfthExtent[station][region][twelfth].dx = 
+        twelfthExtent(station,region,twelfth).dx = 
           (( xMax - xMin ) / 2.) + dx;
-        m_twelfthExtent[station][region][twelfth].dy = 
+        twelfthExtent(station,region,twelfth).dy = 
           (( yMax - yMin ) / 2.) + dy;
-        m_twelfthExtent[station][region][twelfth].dz = 
+        twelfthExtent(station,region,twelfth).dz = 
           (( zMax - zMin ) / 2.) + dz;
           
       }// end of loop over twelfths
@@ -909,9 +1005,9 @@ int MuonTileIDXYZ::getChamberNumber(const MuonTileID& tile){
 }
 
 StatusCode MuonTileIDXYZ::getXYZPad(const MuonTileID& tile, 
-                                      double& x, double& deltax,
-                                      double& y, double& deltay,
-                                      double& z, double& deltaz){
+                                    double& x, double& deltax,
+                                    double& y, double& deltay,
+                                    double& z, double& deltaz){
   MsgStream log(msgSvc(), name());
 
   // to find the x,y,z of the pad one must first find the chamber
@@ -992,10 +1088,10 @@ StatusCode MuonTileIDXYZ::getXYZTwelfth(const MuonTileID& tile,
   MsgStream log(msgSvc(), name());
 
   // This uses the twelfths to get the size of the station
-  if( 0>= m_twelfthExtent[0][0][0].z ){
+  if( m_twelfthExtent.empty() ){
     //need to fill twelfthExtent
     StatusCode sc = fillTwelfthsExtent();
-     if(!sc.isSuccess()){
+    if(!sc.isSuccess()){
       log << MSG::ERROR << "Something went wrong getting Twelfths positions"
           << endreq;
       return sc;
@@ -1041,20 +1137,20 @@ StatusCode MuonTileIDXYZ::getXYZTwelfth(const MuonTileID& tile,
     }
   }
 
-  x = m_twelfthExtent[station][region][twelfth].x;
-  deltax = m_twelfthExtent[station][region][twelfth].dx;
-  y = m_twelfthExtent[station][region][twelfth].y;
-  deltay = m_twelfthExtent[station][region][twelfth].dy;
-  z = m_twelfthExtent[station][region][twelfth].z;
-  deltaz = m_twelfthExtent[station][region][twelfth].dz;
+  x = twelfthExtent(station,region,twelfth).x;
+  deltax = twelfthExtent(station,region,twelfth).dx;
+  y = twelfthExtent(station,region,twelfth).y;
+  deltay = twelfthExtent(station,region,twelfth).dy;
+  z = twelfthExtent(station,region,twelfth).z;
+  deltaz = twelfthExtent(station,region,twelfth).dz;
   
   return StatusCode::SUCCESS;
 }  
 
 StatusCode MuonTileIDXYZ::getXYZLogical(const MuonTileID& tile, 
-                                          double& x, double& deltax,
-                                          double& y, double& deltay,
-                                          double& z, double& deltaz){
+                                        double& x, double& deltax,
+                                        double& y, double& deltay,
+                                        double& z, double& deltaz){
   MsgStream log(msgSvc(), name());
 
   // If we get here then the logical strip is potenitally bigger than a chamber
@@ -1096,7 +1192,7 @@ StatusCode MuonTileIDXYZ::getXYZLogical(const MuonTileID& tile,
     for( i=0 ; i<nTile ; i++ ){
       int yTile = ( tile.nY() * nTile ) + i ;
       MuonTileID tTile(station,0,0,tempPadLayout,region,tile.quarter(),
-                     tile.nX(),yTile);
+                       tile.nX(),yTile);
       tempTiles.push_back(tTile);
     }
     
@@ -1227,13 +1323,13 @@ StatusCode MuonTileIDXYZ::locateGasGapFromXYZ( const int& station,
 
         // locate the correct GasGap object
         int nGap;
-        if(m_nGap[0][0] == 0){
+        if(m_NGap.empty()){
           StatusCode sc = fillNGaps();
           if(!sc){
             return sc;
           }
         }
-        nGap = m_nGap[station][region];
+        nGap = m_NGap[station*m_NRegion + region];
         int iGap;
         for(iGap = 0 ; iGap < nGap ; iGap++){
 
@@ -1266,23 +1362,7 @@ StatusCode MuonTileIDXYZ::locateGasGapFromXYZ( const int& station,
                               quarter,
                               xTile,
                               yTile);               
-            if( 0 == region ){
-              pGasGap = m_gapR1[station][nCham-1][iGap].pGasGap;
-            }else if( 1 == region ){
-              pGasGap = m_gapR2[station][nCham-1][iGap].pGasGap;
-            }else if( 2 == region ){
-              if(station < 3){
-                pGasGap = m_gapR3MWPC[station][nCham-1][iGap].pGasGap;
-              }else{
-                pGasGap = m_gapR3RPC[station-3][nCham-1][iGap].pGasGap;
-              }
-            }else {
-              if(station < 3){
-                pGasGap = m_gapR4MWPC[station][nCham-1][iGap].pGasGap;
-              }else{
-                pGasGap = m_gapR4RPC[station-3][nCham-1][iGap].pGasGap;
-              }
-            }
+            pGasGap = gapExtent(station,region,nCham,iGap).pGasGap;
             return StatusCode::SUCCESS;
           }
         }
@@ -1296,5 +1376,16 @@ StatusCode MuonTileIDXYZ::locateGasGapFromXYZ( const int& station,
   return StatusCode::SUCCESS;
 }
     
+int MuonTileIDXYZ::numberOfChambers(const int &region){
+  if(0 == region){ //R1
+    return 12;
+  }else if(1 == region){
+    return 24;
+  }else if(2 == region){
+    return 48;
+  }else{
+    return 192;
+  }
+}
 
 //=============================================================================

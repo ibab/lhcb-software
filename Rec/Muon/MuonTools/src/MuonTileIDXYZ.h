@@ -1,4 +1,4 @@
-// $Id: MuonTileIDXYZ.h,v 1.5 2002-06-13 11:39:54 dhcroft Exp $
+// $Id: MuonTileIDXYZ.h,v 1.6 2002-08-05 12:53:04 dhcroft Exp $
 #ifndef MUONTILEIDXYZ_H 
 #define MUONTILEIDXYZ_H 1
 
@@ -110,6 +110,9 @@ private:
   /// fill the array with the number of gaps per region
   StatusCode fillNGaps();
 
+  /// fill the arrays with the grid size of the chambers, strips and pads
+  StatusCode fillGridSizes();
+
   /// get the chamber number (counts from 1) for the tile
   int getChamberNumber(const MuonTileID& tile);
 
@@ -154,6 +157,22 @@ private:
                              const int& chamberNum,
                              int &xPos, int &yPos);
 
+  int numberOfChambers(const int &region);
+
+  // Number of stations
+  int m_NStation;
+  // Number of regions
+  int m_NRegion;
+
+
+  // size of logical channels
+  std::vector<unsigned int> m_logChanVertGridX;
+  std::vector<unsigned int> m_logChanVertGridY;
+  std::vector<unsigned int> m_logChanHorizGridX;
+  std::vector<unsigned int> m_logChanHorizGridY;
+  // size of pads
+  std::vector<unsigned int> m_padGridX;
+  std::vector<unsigned int> m_padGridY;
 
   // store x,y,z,dx,dy,dz of chambers locally (Cached) to avoid multiple
   // TDS lookups (the other choice is to cache the smartpointers)
@@ -168,7 +187,7 @@ private:
   } ;
 
   // Muon Stations : box containing all points
-  muonExtent_ m_stationExtent[5];
+  std::vector<muonExtent_> m_stationExtent;
 
   // Muon twelfths : box containing all points in a twelfth of a region
   // here the indexing in station, region, quater, twelfth
@@ -186,41 +205,47 @@ private:
   //  +-------+ +-------+
   
 
-  muonExtent_ m_twelfthExtent[5][4][12];
+  std::vector<muonExtent_> m_twelfthExtent; 
+  inline muonExtent_ & twelfthExtent(int station, int region, int twelfth){
+    return m_twelfthExtent[station*(m_NRegion*12) + region*12 + twelfth];
+  }
 
   class chamberExtent_ : public muonExtent_ {
   public:
     DeMuonChamber *pChamber;
   };
 
-  // only split by region to save a little space 
-  //(about 2000 copies of muonExtent)
-  chamberExtent_ m_chamR1[5][12];
-  chamberExtent_ m_chamR2[5][24];
-  chamberExtent_ m_chamR3[5][48];
-  chamberExtent_ m_chamR4[5][192];
+
+  // "outer vector" is the station/region, inner the chambers in the region
+  std::vector<std::vector<chamberExtent_> > m_chamExtent; 
+  inline int numCham(int station, int region){
+    return m_chamExtent[station*(m_NRegion) + region].size();
+  }
+  // note chambers number from 1
+  inline chamberExtent_ & chamExtent(int station, int region, int chamberNum){
+    return m_chamExtent[station*(m_NRegion) + region][chamberNum-1];
+  }
 
   class gapExtent_ : public muonExtent_ {
   public:
     DeMuonGasGap *pGasGap;
   };
 
-  // R1, R2 all 4 gap MWPCs, R3 and R4 in M4 and M5 are 2 gap RPCs
+  // "outer vector" is the station/region, inner the chambers in the region
+  std::vector<std::vector<gapExtent_> > m_gapExtent; 
+  // number of gaps per station/region
+  std::vector<int> m_NGap;
+  // note Chambers number from 1 as 
+  inline gapExtent_ & gapExtent(int station, int region, 
+                              int chamberNum, int gap){
+    return m_gapExtent[station*(m_NRegion) + region]
+      [(chamberNum-1)*m_NGap[station*(m_NRegion) + region] + gap];
+  }
 
-  int m_nGap[5][4];
-
-  gapExtent_ m_gapR1[5][12][4];
-  gapExtent_ m_gapR2[5][24][4]; 
-  gapExtent_ m_gapR3MWPC[3][48][4];
-  gapExtent_ m_gapR3RPC[2][48][2];
-  gapExtent_ m_gapR4MWPC[3][192][4];
-  gapExtent_ m_gapR4RPC[2][192][2];
- 
   // store chamber layout locally
   MuonSystemLayout * m_chamberSystemLayout;
 
 private:
   IDataProviderSvc* m_DDS;
-
 };
 #endif // MUONTILEIDXYZ_H
