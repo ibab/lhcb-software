@@ -3,7 +3,7 @@
 <gdd>
 
 <!-- **************************************************************************
-  * $Id: CaloCellID.xml,v 1.4 2004-11-29 13:59:49 cattanem Exp $
+  * $Id: CaloCellID.xml,v 1.5 2004-12-07 18:21:07 ibelyaev Exp $
   *****************************************************************************
   * XML-description of CaloCellIDclass                                        *
   * author: Vanya BELYAEV Ivan.Belyaev@itep.ru                                *
@@ -221,13 +221,13 @@
     <code>
       os &lt;&lt; "[" ;
       /// corrupted ?!
-      if( 0 != rest() ) { os &lt;&lt; "?" &lt;&lt; std::setw(4) &lt;&lt; rest() &lt;&lt; "?," ; }  
+      if( 0 != rest() ) { os &lt;&lt; "?" &lt;&lt; rest() &lt;&lt; "?," ; }  
       return 
       os 
       &lt;&lt; CaloCellCode::CaloNameFromNum( calo() ) [0] &lt;&lt; "," 
-      &lt;&lt; std::setw(1) &lt;&lt; area () &lt;&lt; "," 
-      &lt;&lt; std::setw(2) &lt;&lt; row  () &lt;&lt; "," 
-      &lt;&lt; std::setw(2) &lt;&lt; col  () &lt;&lt; "]" ;  
+      &lt;&lt; area () &lt;&lt; "," 
+      &lt;&lt; row  () &lt;&lt; "," 
+      &lt;&lt; col  () &lt;&lt; "]" ;  
     </code>
   </method>
   

@@ -2,6 +2,11 @@ Package LHCbKernel
 Package manager: M.Cattaneo
 Purpose: LHCb specific Kernel classes
 
+! 2004-12-07 - Vanya BELYAEV
+ - xml/CaloCellID.xml
+    remove std::setw from MsgStream version of CaloCellID::fillStream 
+    to please some Visual C++ + LCG dictionary interference 
+
 !====================== LHCbKernel v5r5 2004-11-29 ========================
 ! 2004-11-29 - Marco Cattaneo
  - Add std:pair<double,double> to lcgStl.h, lcg_selection.xml
