@@ -12,7 +12,7 @@
      RichUtils v3r6, ITAlgorithms v13r0p1, RichDetTools v3r4, CaloReco v1r7,
      CaloPIDs v1r2, TrExtrapolator v2r9, RichRecSys v1r5, RichRecBase v1r7,
      RichRecQC v1r4, RichRingRefit v1r4, RichRecTools v2r6, RichRecCommon v1r3,
-     RichLocalPID v1r4, RichGlobalPID v1r3, RichDAQ v1r0p1
+     RichLocalPID v1r4, RichGlobalPID v1r3, RichDAQ v1r0p1, TrIntraPR v2r7p1
 
 !======================= BrunelSys v21r2 2003-12-03 =======================
 ! 2003-12-03 - Marco Cattaneo
