@@ -21,7 +21,7 @@ Purpose: LHCb reconstruction program
      TrCleanEx v2r4, TrAssociators v3r4, TrCheck v1r3, MuonID v3r5,
      MuonAlgs v3r2, RichRecInterfaces v2r0, RichRecTools v1r4, RiSicbCnv v5r4,
      KsReco v1r4, TrIntraPR v2r3, UpstreamPR v2r6, RichRecAlgs v1r4,
-     RichMonitor v2r4)
+     RichMonitor v2r4, VeloDet v8r3, LongTrack v1r5)
 
 
 </PRE><H1><A NAME=v16r4>2002-12-11 Brunel v16r4</A></H1><PRE>

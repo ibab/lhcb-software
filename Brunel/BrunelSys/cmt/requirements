@@ -46,7 +46,7 @@ use OTAlgorithms        v12r3 OT
 # Tracking
 use VeloTrack           v4r4  Velo
 use TrCheck             v1r3  Tr
-use LongTrack           v1r4  Tr
+use LongTrack           v1r5  Tr
 use TrFitter            v3r5  Tr
 use TrExtrapolator      v2r4  Tr
 use TrTools             v2r3  Tr
