@@ -1,4 +1,4 @@
-// $Id: CategoryTaggingTool.cpp,v 1.5 2003-06-16 16:30:51 odie Exp $
+// $Id: CategoryTaggingTool.cpp,v 1.6 2003-06-20 13:12:06 odie Exp $
 // Include files 
 
 // from Gaudi
@@ -210,6 +210,14 @@ void CategoryTaggingTool::combine( const FlavourTag &muon_tag,
   SmartDataPtr<L0DUReport> l0(m_eventSvc, L0DUReportLocation::Default);
   SmartDataPtr<L1Report> l1(m_eventSvc, L1ReportLocation::Default);
   SmartDataPtr<Collisions> collisions(m_eventSvc, CollisionLocation::Default);
+  SmartDataPtr<Vertices> primvtxs(m_eventSvc,VertexLocation::Primary);
+
+  int nprim = 0;
+  Vertices::const_iterator vi;
+  if( primvtxs )
+    for( vi=primvtxs->begin(); vi!=primvtxs->end(); vi++ )
+      if( (*vi)->type() == Vertex::Primary )
+        nprim++;
 	
 	msg << MSG::INFO << "TAGGING SUMMARY "
 		  << evtHead->runNum() << ' '
@@ -224,10 +232,7 @@ void CategoryTaggingTool::combine( const FlavourTag &muon_tag,
 	else
 		msg << '-';
 	msg << " : ";
-	if( collisions )
-		msg << collisions->size();
-	else
-		msg << '-';
+	msg << nprim;
   msg << ' ';
   long v;
   if( m_visTool->countVertices(v).isSuccess() )
@@ -283,6 +288,7 @@ void CategoryTaggingTool::combine( const FlavourTag &muon_tag,
       theTag.setType(vtxCharge_tag.type());
       theTag.setTaggedB(vtxCharge_tag.taggedB());
       fillCategory( "vtx charge", theTag );
+      msg << 6;
       break;
 		case 1: // mu only
 			theTag.setDecision(muon_tag.decision());
@@ -290,6 +296,7 @@ void CategoryTaggingTool::combine( const FlavourTag &muon_tag,
 			theTag.setType(muon_tag.type());
 			theTag.setTaggedB(muon_tag.taggedB());
 			fillCategory( "mu only", theTag );
+      msg << 1;
 			break;
 		case 2: // e only
 			theTag.setDecision(electron_tag.decision());
@@ -297,6 +304,7 @@ void CategoryTaggingTool::combine( const FlavourTag &muon_tag,
 			theTag.setType(electron_tag.type());
 			theTag.setTaggedB(electron_tag.taggedB());
 			fillCategory( "e only", theTag );
+      msg << 2;
 			break;
 		case 10: // kos only
 			theTag.setDecision(kaonOS_tag.decision());
@@ -304,6 +312,7 @@ void CategoryTaggingTool::combine( const FlavourTag &muon_tag,
 			theTag.setType(kaonOS_tag.type());
 			theTag.setTaggedB(kaonOS_tag.taggedB());
 			fillCategory( "K OS only", theTag );
+      msg << 3;
 			break;
 		case 100: // kss only
 			theTag.setDecision(kaonSS_tag.decision());
@@ -311,6 +320,7 @@ void CategoryTaggingTool::combine( const FlavourTag &muon_tag,
 			theTag.setType(kaonSS_tag.type());
 			theTag.setTaggedB(kaonSS_tag.taggedB());
 			fillCategory( "K SS only", theTag );
+      msg << 7;
 			break;
 		case 11: // mu + kos
 			comb = int(muon_tag.decision()) + int(kaonOS_tag.decision());
@@ -326,6 +336,7 @@ void CategoryTaggingTool::combine( const FlavourTag &muon_tag,
 				theTag.setTaggedB(muon_tag.taggedB());
 			}	
 			fillCategory( "mu + K OS", theTag );
+      msg << 4;
 			break;
 		case 12: // e + kos
 			comb = int(electron_tag.decision()) + int(kaonOS_tag.decision());
@@ -341,6 +352,7 @@ void CategoryTaggingTool::combine( const FlavourTag &muon_tag,
 				theTag.setTaggedB(electron_tag.taggedB());
 			}	
 			fillCategory( "e + K OS", theTag );
+      msg << 5;
 			break;
 		case 101: // mu + kss
 			comb = int(muon_tag.decision()) + int(kaonSS_tag.decision());
@@ -356,6 +368,7 @@ void CategoryTaggingTool::combine( const FlavourTag &muon_tag,
 				theTag.setTaggedB(muon_tag.taggedB());
 			}	
 			fillCategory( "mu + K SS", theTag );
+      msg << 8;
 			break;
 		case 102: // e + kss
 			comb = int(electron_tag.decision()) + int(kaonOS_tag.decision());
@@ -371,6 +384,7 @@ void CategoryTaggingTool::combine( const FlavourTag &muon_tag,
 				theTag.setTaggedB(electron_tag.taggedB());
 			}	
 			fillCategory( "e + K SS", theTag );
+      msg << 9;
 			break;
 		case 110: // kos + kss
 			comb = int(kaonOS_tag.decision()) + int(kaonSS_tag.decision());
@@ -386,6 +400,7 @@ void CategoryTaggingTool::combine( const FlavourTag &muon_tag,
 				theTag.setTaggedB(kaonOS_tag.taggedB());
 			}	
 			fillCategory( "K OS + K SS", theTag );
+      msg << 10;
 			break;
 		case 111: // mu + kos + kss
 			comb = int(kaonOS_tag.decision()) + int(kaonSS_tag.decision()) +
@@ -403,6 +418,7 @@ void CategoryTaggingTool::combine( const FlavourTag &muon_tag,
 				theTag.setTaggedB(kaonOS_tag.taggedB());
 			}
 			fillCategory( "mu + K OS + K SS", theTag );
+      msg << 11;
 			break;
 		case 112: // e + kos + kss
 			comb = int(kaonOS_tag.decision()) + int(kaonSS_tag.decision()) +
@@ -420,6 +436,7 @@ void CategoryTaggingTool::combine( const FlavourTag &muon_tag,
 				theTag.setTaggedB(kaonOS_tag.taggedB());
 			}
 			fillCategory( "e + K OS + K SS", theTag );
+      msg << 12;
 			break;
 		default: // Unexpected case
 			msg << MSG::WARNING << "An unexpected combination of tag occured!"
@@ -428,9 +445,10 @@ void CategoryTaggingTool::combine( const FlavourTag &muon_tag,
       theTag.setTagger((Particle*)NULL);
       theTag.setType(FlavourTag::singleParticle);
       theTag.setTaggedB(muon_tag.taggedB());
+      msg << 0;
 			break;
 	}
-	msg << std::setw(2) << int(theTag.decision()) << endreq;
+	msg << " : " << std::setw(2) << int(theTag.decision()) << endreq;
 }
 
 void CategoryTaggingTool::fillCategory( std::string categ,
