@@ -1,6 +1,10 @@
-! $Id: release.notes,v 1.17 2002-11-13 15:58:47 cattanem Exp $
+! $Id: release.notes,v 1.18 2002-12-04 18:39:34 ranjard Exp $
 ! Package     : OTDet
 ! Responsible : J. van Tilburg
+
+!========================= OTDet v3r3 2002-12-04 =========================
+! 2002-11-15 - Florence Ranjard
+ - reqquirements - use GAUDI v11r2
 
 !========================= OTDet v3r2 2002-11-13 ===========================
 ! 2002-11-12 - Jeroen van Tilburg
