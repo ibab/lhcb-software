@@ -3,11 +3,38 @@ Package     : Phys/DaVinci
 Package Coordinator : Gloria Corti
 Purpose     : LHCb analysis program 
 
- - Bug fixes:
-  . Modify comment in DaVinciNeutral.opts
-  . Modify reported default output location in PreLoadCombinedParticles.opts
+</PRE><H1><A NAME=v8r2>2003-06-18 DaVinci v8r2</A></H1><PRE>
+ - New features:
+  . New FlavourTagging setup
+    .. use FlavourTagging v4r5 (refer to those release notes for more details)
+    .. Add vertex charge tagging
+    .. Combine all tagging with new tuning
+    .. Possible to have cheated reconstruction for selection in order to
+       have tagging performance
+  . Jpsi->mumu preselection
+    .. modified options using CombinedParticleMaker
+    .. fix minor bug in code for filtering (events without primary being
+       written out)
+    .. use PhysSelections v6r0
+  . Jpsi->ee preselection
+    .. new algorithm and options using CombinedParticleMaker
+    .. remove old algorithm
+    .. use PhysSelections v6r0
+  . New and modified (pre)selection in PhysSelSys v6r3 (refer to the
+    package release notes)  
   . Modify DaVinci.job to have explicit $current paths for temporary files
     to make it work at Cambridge (Andy Buckley)
+
+ - Bug fixes or clean up:
+  . Fix problem with using two link associators at the same time
+    .. use DaVinciAssociators v4r2
+  . Message levels and small bug fixes in DaVinciTools
+    .. use DaVinciTools v8r1p1
+  . Memory leak in ChargedProtoPAlg 
+    .. use GlobalReco v4r0p1
+  . Adapt to coding conventions in RecoTools v1r0p1
+  . Modify comment in DaVinciNeutral.opts
+  . Modify reported default output location in PreLoadCombinedParticles.opts
 
 </PRE><H1><A NAME=v8r1>2003-06-03 DaVinci v8r1</A></H1><PRE>
  - New features:

@@ -1,5 +1,5 @@
 package DaVinciSys
-version v8r1
+version v8r2
 
 branches doc cmt
 
@@ -8,42 +8,44 @@ branches doc cmt
 #=======================================================
 
 # DaVinci application
-use  DaVinci             v8r1   Phys
+use  DaVinci             v8r2   Phys
 
 #--- DaVinci packages
 #    General Use
 use  MCTools             v1r1   Phys
-use  DaVinciTools        v8r1   Phys
-use  DaVinciAssociators  v4r1   Phys
+use  DaVinciTools        v8r1p1 Phys
+use  DaVinciAssociators  v4r2   Phys
 use  DaVinciMCTools      v5r0   Phys
 use  DaVinciTest         v4r1p1 Phys
-use  PhysSelections      v5r0   Phys
-use  FlavourTagging      v4r4p1 Phys
+use  PhysSelections      v6r0   Phys
+use  FlavourTagging      v4r5   Phys
 use  DaVinciEff          v2r5   Phys
 use  DaVinciUser         v4r1   Phys
 
 #    Final Reconstruction
-use  GlobalReco          v4r0   Rec
+use  GlobalReco          v4r0p1 Rec
 use  KsReco		 v1r4p1 Rec
 use  PrimVtx             v2r0   Rec
-use  RecoTools           v1r0   Rec
+use  RecoTools           v1r0p1 Rec
 
 #    Specific Selections
-use  PhysSelSys          v5r2   PhysSel
-use  B2DD                v1r1   PhysSel
+use  PhysSelSys          v5r3   PhysSel
+use  B2DD                v1r2   PhysSel
 use  B2HH                v1r3   PhysSel
-use  Bd2D0Kstar          v1r1   PhysSel
+use  Bd2D0Kstar          v1r2   PhysSel
 use  Bd2DstarPi          v1r0   PhysSel
 use  Bd2JpsiKs           v1r2   PhysSel
 use  Bd2JpsiKstar        v1r1   PhysSel
+use  Bd2KPiPiPi          v1r0   PhysSel
 use  Bd2KstarGamma       v1r1   PhysSel
 use  Bd2MuMuKstar        v1r1   PhysSel
 use  Bd2PhiKs            v1r1   PhysSel
 use  Bd2PiPiPi0          v1r2   PhysSel
-use  Bs2DsH              v1r2   PhysSel
+use  Bs2DsH              v1r3   PhysSel
+use  Bs2JpsiEta          v1r0   PhysSel
 use  Bs2JpsiPhi          v1r2   PhysSel
 use  Bs2MuMu             v1r2   PhysSel
-use  Bs2PhiEtac          v1r1   PhysSel
+use  Bs2PhiEtac          v1r1p1 PhysSel
 use  Bs2PhiGamma         v1r0p1 PhysSel
 use  Bs2PhiPhi           v1r0   PhysSel
 
@@ -73,7 +75,7 @@ use  Utilities           v1r0   Tools
 use  TriggerFilter       v1r3   Tools
 
 #--- DecayPreselections
-use  DecayPresel         v1r3   Tools
+use  DecayPresel         v1r4   Tools
 
 #--- Tools
 use  LoKi                v1r2   Tools
