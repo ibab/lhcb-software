@@ -1,4 +1,4 @@
-// $Id: RichGlobalPIDAlg.h,v 1.3 2003-07-06 16:52:48 jonesc Exp $
+// $Id: RichGlobalPIDAlg.h,v 1.4 2003-08-06 10:02:10 jonrob Exp $
 #ifndef RICHRECALGS_RICHGLOBALPIDALG_H
 #define RICHRECALGS_RICHGLOBALPIDALG_H 1
 
@@ -15,7 +15,10 @@
 // interfaces
 #include "RichRecBase/IRichPhotonCreator.h"
 #include "RichRecBase/IRichPhotonSignal.h"
-#include "RichRecBase/IRichTrackProperties.h"
+#include "RichRecBase/IRichExpectedTrackSignal.h"
+
+// RichKernel
+#include "RichKernel/MessageSvcStl.h"
 
 /** @class RichGlobalPIDAlg RichGlobalPIDAlg.h
  *
@@ -70,12 +73,24 @@ private: // Private methods
   /// Returns log( exp(signal) - 1 ) or an approximation for small signals
   double sigFunc( double s );
 
+  // Returns current freeze out value
+  double freezeOutValue();
+
+  // Update the current freeze out value
+  void updateFreezeOutValue();
+
+  // Returns current freeze out value
+  double dllThres();
+
+  // Update the current freeze out value
+  void updateDllThres();
+
 private:  // Private data members
 
   // tool pointers
+  IRichExpectedTrackSignal * m_tkSignal;
   IRichPhotonCreator * m_photonCr;
   IRichPhotonSignal * m_photonSig;
-  IRichTrackProperties * m_trackProp;
 
   /// Threshold for likelihood maximisation
   double m_epsilon;
@@ -84,10 +99,10 @@ private:  // Private data members
   int m_maxTrackIterations;
 
   /// Threshold for forced hypothesis change in track minimsation
-  double m_trDeltaThres;
+  std::vector<double> m_cP;
 
-  /// Threshold for freezing out tracks from minimisation iteration
-  double m_freezeOutDll;
+  // parameters for freeze out function
+  std::vector<double> m_fP;
 
   /// Current minimum hypothesis
   double m_currentBestLL;
@@ -107,12 +122,24 @@ private:  // Private data members
   // working flags and variables
   bool m_tryAgain, m_lastChance, m_inR1, m_inR2;
   int m_trackIteration;
+  double m_currentFreezeOutValue;
+  double m_currentDllTreshold;
 
 };
+
+inline double RichGlobalPIDAlg::dllThres()
+{
+  return m_currentDllTreshold;
+}
 
 inline double RichGlobalPIDAlg::sigFunc( double s ) 
 {
   return ( s>m_apxSig ? log(exp(s)-1.) : ( s>m_minSig ? log(s) : m_logMinSig ) );
+}
+
+inline double RichGlobalPIDAlg::freezeOutValue() 
+{
+  return m_currentFreezeOutValue;
 }
 
 #endif // RICHRECALGS_RICHGLOBALPIDALG_H

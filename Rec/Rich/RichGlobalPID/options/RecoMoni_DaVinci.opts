@@ -2,53 +2,53 @@
 // Global PID algorithm monitor
 //ApplicationMgr.TopAlg += { "RichGlobalPIDMonitor/RichGlobalAlgMoni" };
 //RichGlobalAlgMoni.GlobalPIDAlgName = "RichGloPID";
-//RichGlobalAlgMoni.MCHistoPath = "RICH/GALG/MC/";
-//RichGlobalAlgMoni.HistoPath = "RICH/GALG/";
+//RichGlobalAlgMoni.MCHistoPath = "RICH/GLOBAL/ALG/MC/";
+//RichGlobalAlgMoni.HistoPath = "RICH/GLOBA/ALG/";
 
 // Monitor for Global PIDs : 2-100 GeV/c
 ApplicationMgr.TopAlg += { "RichPIDQC/RiGloPIDMoni2To100" };
 RiGloPIDMoni2To100.InputPIDs = "Rec/Rich/GlobalPIDs";
-RiGloPIDMoni2To100.MCHistoPath = "RICH/GPID/2TO100/MC/"; 
-RiGloPIDMoni2To100.HistoPath = "RICH/GPID/2TO100/";
+RiGloPIDMoni2To100.MCHistoPath = "RICH/GLOBAL/PID/2TO100/MC/"; 
+RiGloPIDMoni2To100.HistoPath = "RICH/GLOBAL/PID/2TO100/";
 RiGloPIDMoni2To100.MinPCut = 2;
 RiGloPIDMoni2To100.MaxPCut = 100;
 
 // Monitor for Global PIDs : 0-2 GeV/c
 ApplicationMgr.TopAlg += { "RichPIDQC/RiGloPIDMoni0To2" };
 RiGloPIDMoni0To2.InputPIDs = "Rec/Rich/GlobalPIDs";
-RiGloPIDMoni0To2.MCHistoPath = "RICH/GPID/0TO2/MC/"; 
-RiGloPIDMoni0To2.HistoPath = "RICH/GPID/0TO2/";
+RiGloPIDMoni0To2.MCHistoPath = "RICH/GLOBAL/PID/0TO2/MC/"; 
+RiGloPIDMoni0To2.HistoPath = "RICH/GLOBAL/PID/0TO2/";
 RiGloPIDMoni0To2.MinPCut = 0;
 RiGloPIDMoni0To2.MaxPCut = 2;
 
 // Monitor for Global PIDs : 2-10 GeV/c
 ApplicationMgr.TopAlg += { "RichPIDQC/RiGloPIDMoni2To10" };
 RiGloPIDMoni2To10.InputPIDs = "Rec/Rich/GlobalPIDs";
-RiGloPIDMoni2To10.MCHistoPath = "RICH/GPID/2TO10/MC/"; 
-RiGloPIDMoni2To10.HistoPath = "RICH/GPID/2TO10/";
+RiGloPIDMoni2To10.MCHistoPath = "RICH/GLOBAL/PID/2TO10/MC/"; 
+RiGloPIDMoni2To10.HistoPath = "RICH/GLOBAL/PID/2TO10/";
 RiGloPIDMoni2To10.MinPCut = 2;
 RiGloPIDMoni2To10.MaxPCut = 10;
 
 // Monitor for Global PIDs : 10-70 GeV/c
 ApplicationMgr.TopAlg += { "RichPIDQC/RiGloPIDMoni10To70" };
 RiGloPIDMoni10To70.InputPIDs = "Rec/Rich/GlobalPIDs";
-RiGloPIDMoni10To70.MCHistoPath = "RICH/GPID/10TO70/MC/"; 
-RiGloPIDMoni10To70.HistoPath = "RICH/GPID/10TO70/";
+RiGloPIDMoni10To70.MCHistoPath = "RICH/GLOBAL/PID/10TO70/MC/"; 
+RiGloPIDMoni10To70.HistoPath = "RICH/GLOBAL/PID/10TO70/";
 RiGloPIDMoni10To70.MinPCut = 10;
 RiGloPIDMoni10To70.MaxPCut = 70;
 
 // Monitor for Global PIDs : 70-100 GeV/c
 ApplicationMgr.TopAlg += { "RichPIDQC/RiGloPIDMoni70To100" };
 RiGloPIDMoni70To100.InputPIDs = "Rec/Rich/GlobalPIDs";
-RiGloPIDMoni70To100.MCHistoPath = "RICH/GPID/70TO100/MC/"; 
-RiGloPIDMoni70To100.HistoPath = "RICH/GPID/70TO100/";
+RiGloPIDMoni70To100.MCHistoPath = "RICH/GLOBAL/PID/70TO100/MC/"; 
+RiGloPIDMoni70To100.HistoPath = "RICH/GLOBAL/PID/70TO100/";
 RiGloPIDMoni70To100.MinPCut = 70;
 RiGloPIDMoni70To100.MaxPCut = 100;
 
 // Monitor for Global PIDs : 100+ GeV/c
 ApplicationMgr.TopAlg += { "RichPIDQC/RiGloPIDMoni100Plus" };
 RiGloPIDMoni100Plus.InputPIDs = "Rec/Rich/GlobalPIDs";
-RiGloPIDMoni100Plus.MCHistoPath = "RICH/GPID/100PLUS/MC/"; 
-RiGloPIDMoni100Plus.HistoPath = "RICH/GPID/100PLUS/";
+RiGloPIDMoni100Plus.MCHistoPath = "RICH/GLOBAL/PID/100PLUS/MC/"; 
+RiGloPIDMoni100Plus.HistoPath = "RICH/GLOBAL/PID/100PLUS/";
 RiGloPIDMoni100Plus.MinPCut = 100;
 RiGloPIDMoni100Plus.MaxPCut = 200;

@@ -1,4 +1,4 @@
-// $Id: RichGlobalPIDTrTrackSel.cpp,v 1.6 2003-07-23 12:26:25 jonrob Exp $
+// $Id: RichGlobalPIDTrTrackSel.cpp,v 1.7 2003-08-06 10:02:10 jonrob Exp $
 // Include files
 
 // local
@@ -23,7 +23,8 @@ RichGlobalPIDTrTrackSel::RichGlobalPIDTrTrackSel( const std::string& name,
   declareProperty( "MinimumPhysicsMomentum",  m_minPhysPtot = 2.0*GeV );
   declareProperty( "MinimumLikelihoodMomentum", m_minLLPtot = 1.0*GeV );
   declareProperty( "ResetTracksToPion", m_resetToPion = false );
-  declareProperty( "MaxUsedTracks", m_maxUsedTracks = 150 );
+  declareProperty( "MaxUsedTracks", m_maxUsedTracks = 250 );
+  declareProperty( "MaxTrTracks", m_maxTrTracks = 400 );
   declareProperty( "TrackSelection", m_trSelector.selectedTrackTypes() );
   declareProperty( "ProcStatusLocation",
                    m_procStatLocation = ProcStatusLocation::Default );
@@ -44,15 +45,16 @@ StatusCode RichGlobalPIDTrTrackSel::initialize() {
   if ( !RichRecAlgBase::initialize() ) return StatusCode::FAILURE;
 
   // Acquire tools
-  acquireTool( "RichTrackCreator", m_trackCr );
-  acquireTool( "RichTrackProperties", m_trackProp );
+  acquireTool( "RichTrackCreator",        m_trackCr  );
+  acquireTool( "RichExpectedTrackSignal", m_tkSignal );
 
   // Configure track selector
   if ( !m_trSelector.configureTrackTypes() ) return StatusCode::FAILURE;
 
   msg << MSG::DEBUG << "Initialize" << endreq
       << " Track types selected         = " << m_trSelector.selectedTrackTypes() << endreq
-      << " Max Tracks                   = " << m_maxUsedTracks << endreq
+      << " Max total TrStoredTracks     = " << m_maxTrTracks << endreq
+      << " Max RICH selected Tracks     = " << m_maxUsedTracks << endreq
       << " Min Physics Momentum         = " << m_minPhysPtot << " MeV/c" << endreq
       << " Min LogL Momentum            = " << m_minLLPtot << " MeV/c" << endreq;
   if ( m_resetToPion ) msg << " Resetting track hypotheses to Pion" << endreq;
@@ -87,6 +89,22 @@ StatusCode RichGlobalPIDTrTrackSel::execute() {
     return StatusCode::SUCCESS;
   }
 
+  // check number of TrStoredTracks
+  SmartDataPtr<TrStoredTracks> tracks( eventSvc(), m_trTracksLocation );
+  if ( !tracks ) {
+    msg << MSG::ERROR << "Failed to locate TrStoredTracks at "
+        << m_trTracksLocation << endreq;
+    return StatusCode::FAILURE;
+  }
+  if ( tracks->size() > m_maxTrTracks ) {
+    msg << MSG::WARNING
+        << "Found " << tracks->size() << ">" << m_maxTrTracks
+        << " max TrStoredTracks -> RICH Global PID aborted" << endreq;
+    procStat->addAlgorithmStatus( m_richGPIDName, Rich::Rec::ReachedTrTrackLimit ); 
+    deleteEvent();
+    return StatusCode::SUCCESS;
+  }
+
   // Make sure all rich tracks are "turned off" before proceeding
   // should perhaps make a method of the track tool ?
   if ( !RichRecAlgBase::richTracks() ) return StatusCode::FAILURE;
@@ -117,12 +135,6 @@ StatusCode RichGlobalPIDTrTrackSel::execute() {
   m_nVeloTTTk[1] = 0;
 
   // Iterate over all TrStoredTracks and choose those to use
-  SmartDataPtr<TrStoredTracks> tracks( eventSvc(), m_trTracksLocation );
-  if ( !tracks ) {
-    msg << MSG::ERROR << "Failed to locate TrStoredTracks at "
-        << m_trTracksLocation << endreq;
-    return StatusCode::FAILURE;
-  }
   for ( TrStoredTracks::const_iterator iTrack = tracks->begin();
         iTrack != tracks->end();
         ++iTrack) {
@@ -170,7 +182,7 @@ StatusCode RichGlobalPIDTrTrackSel::execute() {
     newPID->setRecTrack( trTrack );
 
     // Store threshold information
-    m_trackProp->setThresholdInfo( track, newPID );
+    m_tkSignal->setThresholdInfo( track, newPID );
 
     // Set quality
     pidTrack->setTrQuality( quality );
@@ -214,7 +226,7 @@ StatusCode RichGlobalPIDTrTrackSel::execute() {
     msg << MSG::WARNING
         << "Found " << m_GPIDtracks->size() << ">" << m_maxUsedTracks
         << " max usable tracks -> RICH Global PID aborted" << endreq;
-    procStat->addAlgorithmStatus( m_richGPIDName, Rich::Rec::ReachedTrackLimit );
+    procStat->addAlgorithmStatus( m_richGPIDName, Rich::Rec::ReachedRichTrackLimit );
     deleteEvent();
   }
 
@@ -272,7 +284,7 @@ StatusCode RichGlobalPIDTrTrackSel::finalize() {
 
   // release tools
   releaseTool( m_trackCr );
-  releaseTool( m_trackProp );
+  releaseTool( m_tkSignal );
 
   // Execute base class method
   return RichRecAlgBase::finalize();

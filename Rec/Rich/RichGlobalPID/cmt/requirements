@@ -2,7 +2,7 @@
 # Maintainer : Christopher Rob Jones
 
 package RichGlobalPID
-version v1r0
+version v1r1
 
 #============================================================================
 # Structure
@@ -14,6 +14,7 @@ branches src cmt doc options xml Event RichGlobalPID
 #============================================================================
 use AIDA              v*   -no_auto_imports
 use RichRecBase       v1r*  Rich
+use GSL               v*
 
 #============================================================================
 # Environment

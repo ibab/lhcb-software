@@ -5,7 +5,8 @@
 !-----------------------------------------------------------------------------
 
 ! 2003-07-11 - Chris Jones
- - "Fudge" to remove peculiar problem with /Event/Rec/Relations/Tr2MCP in oodst
+ - Replace CERNLIB calls with GSL functions
+ - Further speed improvements
 
 !======================= RichGlobalPID v1r0 2003-07-08 =======================
 ! 2003-07-08 - Marco Cattaneo

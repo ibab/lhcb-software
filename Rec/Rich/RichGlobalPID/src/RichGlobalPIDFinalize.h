@@ -1,4 +1,4 @@
-// $Id: RichGlobalPIDFinalize.h,v 1.2 2003-07-02 09:02:59 jonrob Exp $
+// $Id: RichGlobalPIDFinalize.h,v 1.3 2003-08-06 10:02:10 jonrob Exp $
 #ifndef RICHRECALGS_RICHGLOBALPIDFINALIZE_H
 #define RICHRECALGS_RICHGLOBALPIDFINALIZE_H 1
 
@@ -7,6 +7,9 @@
 
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h"
+
+// GSL
+#include "gsl/gsl_sf_erf.h"
 
 // Event
 #include "Event/ProcStatus.h"
@@ -34,7 +37,7 @@ public:
   virtual StatusCode execute   ();    ///< Algorithm execution
   virtual StatusCode finalize  ();    ///< Algorithm finalization
 
-private:
+private: // data
   
   /// Location of processing status object in TES
   std::string m_procStatLocation;

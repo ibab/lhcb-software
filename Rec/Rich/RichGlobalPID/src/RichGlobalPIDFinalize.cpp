@@ -1,4 +1,4 @@
-// $Id: RichGlobalPIDFinalize.cpp,v 1.3 2003-07-02 10:44:04 jonrob Exp $
+// $Id: RichGlobalPIDFinalize.cpp,v 1.4 2003-08-06 10:02:10 jonrob Exp $
 // Include files
 
 // local
@@ -14,21 +14,14 @@
 static const  AlgFactory<RichGlobalPIDFinalize>          s_factory ;
 const        IAlgFactory& RichGlobalPIDFinalizeFactory = s_factory ;
 
-#ifdef WIN32
-extern "C" float __stdcall FREQ( const float& );
-#else
-#define FREQ freq_
-extern "C" float FREQ( const float& );
-#endif
-
 // Standard constructor, initializes variables
 RichGlobalPIDFinalize::RichGlobalPIDFinalize( const std::string& name,
                                               ISvcLocator* pSvcLocator )
   : RichGlobalPIDAlgBase ( name, pSvcLocator ) {
-  
+
   declareProperty( "ProcStatusLocation",
                    m_procStatLocation = ProcStatusLocation::Default );
-  
+
 }
 
 // Destructor
@@ -64,7 +57,7 @@ StatusCode RichGlobalPIDFinalize::execute() {
     RichRecTrack * rRTrack = (*track)->richRecTrack();
 
     if ( msgLevel(MSG::VERBOSE) ) {
-      msg << MSG::VERBOSE << "finaliseEvent : PID'ed Track "
+      msg << MSG::VERBOSE << "PID'ed Track "
           << (*track)->key() << " (" << (*track)->trQuality()
           << "), as " << rRTrack->currentHypothesis() << endreq;
     }
@@ -83,16 +76,18 @@ StatusCode RichGlobalPIDFinalize::execute() {
     // Finalise delta LL and probability values
     std::vector<float> & deltaLLs = pid->particleLLValues();
     if ( deltaLLs[pid->bestParticleID()] > 1e-10 ) {
-      msg << MSG::WARNING << "PID " << pid->key() << " PID " << pid->bestParticleID()
+      msg << MSG::WARNING << "PID " << pid->key() << " best ID " << pid->bestParticleID()
           << " has non-zero deltaLL value! " << deltaLLs[pid->bestParticleID()] << endreq;
     }
     for ( int iHypo = 0; iHypo < Rich::NParticleTypes; ++iHypo ) {
-      double dll =  deltaLLs[iHypo];
-      if ( dll < 0 ) {
-        msg << MSG::WARNING << "Negative deltaLL " << dll << " reset to 0" << endreq;
-        dll = 0.0;
+      if ( deltaLLs[iHypo] < 0 ) {
+        if ( fabs(deltaLLs[iHypo]) > 1e-5 ) {
+          msg << MSG::WARNING << "PID " << pid->key() << " ID " << (Rich::ParticleIDType)iHypo
+              << " negative deltaLL " << deltaLLs[iHypo] << " reset to 0" << endreq;
+        }
+        deltaLLs[iHypo] = 0.0;
       }
-      double prob = 2.0*( 1.0 - FREQ(sqrt(2.0*dll)) );
+      double prob = 1.0 - gsl_sf_erf( sqrt(deltaLLs[iHypo]) );
       pid->setParticleRawProb( (Rich::ParticleIDType)iHypo, prob );
     }
 
@@ -101,7 +96,7 @@ StatusCode RichGlobalPIDFinalize::execute() {
   // All OK - Update ProcStatus with number of PIDs
   SmartDataPtr<ProcStatus> procStat( eventSvc(), m_procStatLocation );
   if ( !procStat ) {
-    msg << MSG::WARNING << "Failed to locate ProcStatus at " 
+    msg << MSG::WARNING << "Failed to locate ProcStatus at "
         << m_procStatLocation << endreq;
     return StatusCode::FAILURE;
   }

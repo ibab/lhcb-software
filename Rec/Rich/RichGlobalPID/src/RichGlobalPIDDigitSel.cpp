@@ -1,4 +1,4 @@
-// $Id: RichGlobalPIDDigitSel.cpp,v 1.5 2003-07-23 12:26:25 jonrob Exp $
+// $Id: RichGlobalPIDDigitSel.cpp,v 1.6 2003-08-06 10:02:10 jonrob Exp $
 // Include files
 
 // local

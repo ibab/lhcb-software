@@ -11,7 +11,7 @@
                 <code>m_eventLL.push_back( logL );</code>
             </method>
             <!--aComment-->
-            <attribute desc="History of overall event LogLikelihood values" name="eventLL" type="std::vector&lt;float&gt;"/>
+            <attribute desc="History of overall event LogLikelihood values" name="eventLL" type="std::vector&lt;double&gt;"/>
         </class>
         <class author="Chris Jones     Christopher.Rob.Jones@cern.ch" desc="Working track object for Rich Global PID" id="12432" keyedContTypeDef="TRUE" location="Rec/Rich/GlobalPID/Tracks" name="RichGlobalPIDTrack" serializers="TRUE" stdVectorTypeDef="TRUE">
             <import name="Event/RichRecTrack"/>

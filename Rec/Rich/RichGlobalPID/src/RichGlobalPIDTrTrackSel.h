@@ -1,4 +1,4 @@
-// $Id: RichGlobalPIDTrTrackSel.h,v 1.2 2003-07-02 09:03:00 jonrob Exp $
+// $Id: RichGlobalPIDTrTrackSel.h,v 1.3 2003-08-06 10:02:10 jonrob Exp $
 #ifndef RICHRECALGS_RICHGLOBALPIDTRTRACKSEL_H
 #define RICHRECALGS_RICHGLOBALPIDTRTRACKSEL_H 1
 
@@ -21,7 +21,7 @@
 
 // interfaces
 #include "RichRecBase/IRichTrackCreator.h"
-#include "RichRecBase/IRichTrackProperties.h"
+#include "RichRecBase/IRichExpectedTrackSignal.h"
 
 // RichKernel
 #include "RichKernel/MessageSvcStl.h"
@@ -67,16 +67,19 @@ private:
   /// Location of TrStoredTracks in TES
   std::string m_trTracksLocation;
 
-  IRichTrackCreator * m_trackCr;      ///< Pointer to RichTrackCreator
-  IRichTrackProperties * m_trackProp; ///< Pointer to RichTrackProperties
+  IRichExpectedTrackSignal * m_tkSignal; ///< Pointer to RichExpectedTrackSignal
+  IRichTrackCreator * m_trackCr;         ///< Pointer to RichTrackCreator
   
   // Selection cuts
   double m_minPhysPtot; ///< Minimum momentum for physics quality tracks
   double m_minLLPtot;   ///< Minimum momentum for use in LL calculation
   bool m_resetToPion;   ///< Reset all track hypotheses to pion, ignoring initial types
 
-  /// Maximum number of usable tracks
+  /// Maximum number of TrStoredTracks with RICH information
   int m_maxUsedTracks;
+
+  /// Maximum number of TrStoredTracks
+  int m_maxTrTracks;
 
   /// TrStoredTrack selector
   TrTrackSelector m_trSelector;
