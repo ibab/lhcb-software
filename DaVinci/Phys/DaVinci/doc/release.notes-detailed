@@ -4,6 +4,11 @@
 ! Purpose     : Analaysis program for LHCb
 !-----------------------------------------------------------------------------
 
+! 2004-07-27 - P. Koppenburg
+  - options/DstContents.opts
+    . Explicitly add Event/Raw/XXX for DVTriggerFilter.opts
+    
+!========================== DaVinci v11r11 2004-07-23 ===================
 ! 2004-07-22 - P. Koppenburg for Vanya Belyaev
   - options/DaVinciNeutrals.opts
   - options/DaVinciElectrons.opts
