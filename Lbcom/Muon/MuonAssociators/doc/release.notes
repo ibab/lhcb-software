@@ -1,10 +1,16 @@
-! $Id: release.notes,v 1.4 2002-07-02 11:21:08 dhcroft Exp $
+! $Id: release.notes,v 1.5 2002-07-03 09:32:11 dhcroft Exp $
 ! Package     : MuonAssociators
 ! Responsible : David Hutchcroft
+
+! 2002-07-03 - David Hutchcroft
+ - Modified the code a little to make some scoping explicit. 
+ - MuonCoord2MCParticleAlg no long uses the MuonDigit2MCParticle table
 
 ! 2002-07-02 - David Hutchcroft
  - Changed the code to clear and refill existing tables if the algorithm 
    has already been run
+ - Removed an unused option from MuonDigit2MCParticleAlg and renamed the option
+   in MuonCoord2MCParticleAlg
 
 ! 2002-06-28 - David Hutchcroft
   - First working version of a MuonCoord and MuonDigit to MCParticle 

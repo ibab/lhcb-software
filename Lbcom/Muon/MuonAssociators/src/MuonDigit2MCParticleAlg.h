@@ -1,12 +1,8 @@
-// $Id: MuonDigit2MCParticleAlg.h,v 1.1.1.1 2002-06-28 09:59:33 dhcroft Exp $
+// $Id: MuonDigit2MCParticleAlg.h,v 1.2 2002-07-03 09:32:12 dhcroft Exp $
 #ifndef MUONDIGIT2MCPARTICLEALG_H
 #define MUONDIGIT2MCPARTICLEALG_H 1
 
 #include <string>
-
-#include "Relations/IAssociator.h" 
-#include "Relations/IRelation.h"
-#include "Relations/Relation1D.h"
 
 #include "GaudiKernel/Algorithm.h"
 #include "MuonAssociators/MuonDigit2MCParticleAsct.h"
@@ -19,7 +15,6 @@
  */
 
 class MuonDigit;
-class MCParticle;
 
 class MuonDigit2MCParticleAlg : public Algorithm {
     friend AlgFactory<MuonDigit2MCParticleAlg>;
@@ -49,12 +44,10 @@ protected:
 private:
 
   std::string m_outputData;
-  std::string m_nameAsct;
 
-  typedef Relation1D<MuonDigit, MCParticle>    Table;
   // associator function
-  virtual StatusCode associateToTruth(const MuonDigit* digit,
-                                      Table * table );
+  StatusCode associateToTruth(const MuonDigit* digit,
+                              MuonDigit2MCParticleAsct::Table * table );
 
 };
 

@@ -1,4 +1,4 @@
-// $Id: MuonDigit2MCParticleAlg.cpp,v 1.4 2002-07-02 11:21:13 dhcroft Exp $
+// $Id: MuonDigit2MCParticleAlg.cpp,v 1.5 2002-07-03 09:32:12 dhcroft Exp $
 // Include files 
 
 #include "Event/MuonDigit.h"
@@ -34,8 +34,6 @@ MuonDigit2MCParticleAlg::MuonDigit2MCParticleAlg( const std::string& name,
   // constructor
   declareProperty( "OutputData", 
                    m_outputData  = MuonDigit2MCParticleLocation );
-  declareProperty("associatorName", 
-                  m_nameAsct = "MuonDigit2MCPartAsct" );
 }
 
 MuonDigit2MCParticleAlg::~MuonDigit2MCParticleAlg() {
@@ -53,10 +51,11 @@ StatusCode MuonDigit2MCParticleAlg::execute() {
   // retrieve any existing table from the store
   DataObject *dObj;
   StatusCode sc = eventSvc()->findObject(outputData(),dObj);
-  Table* aTable = dynamic_cast<Table*>(dObj);    
+  MuonDigit2MCParticleAsct::Table* aTable = 
+    dynamic_cast<MuonDigit2MCParticleAsct::Table*>(dObj);    
   if(0 == aTable){
     // Need a new table to add to the store
-    aTable = new Table();
+    aTable = new MuonDigit2MCParticleAsct::Table();
 
     // register table in store
     sc = eventSvc()->registerObject(outputData(), aTable);
@@ -104,8 +103,10 @@ StatusCode MuonDigit2MCParticleAlg::finalize() {
   return StatusCode::SUCCESS;
 }
 
-StatusCode MuonDigit2MCParticleAlg::associateToTruth(const MuonDigit* digit,
-                                                     Table * table) {
+StatusCode 
+MuonDigit2MCParticleAlg::associateToTruth(const MuonDigit* digit,
+                                          MuonDigit2MCParticleAsct::Table* 
+                                          table) {
 
   // get the MCMuonDigits
   SmartDataPtr<MCMuonDigits> mcDigits(eventSvc(), 
