@@ -1,7 +1,7 @@
-# $Id: requirements,v 1.48 2002-12-03 16:59:22 ranjard Exp $ 
+# $Id: requirements,v 1.49 2002-12-03 17:03:56 ranjard Exp $ 
 # =============================================================================
 package       DetDesc
-version       v11r5
+version       v11r6
 
 # =========== structure =======================================================
 branches      DetDesc doc cmt src
