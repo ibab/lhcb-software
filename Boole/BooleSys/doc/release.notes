@@ -12,7 +12,7 @@ Output data incompatible with DC04 versions, needs Brunel v25r3 or greater
 
 - New functionality:
   . Add support for L1 board mapping and for zero suppressed HPD format in Rich
-    RawBuffer encoding. Default is L1 board mapping, non-zero suppressed
+    RawBuffer encoding. Default is v2: L1 board mapping, zero suppressed
     (RichReadout v1r11, RichDAQ v2r0, RichKernel v5r2)
 
 - Modified functionality:
