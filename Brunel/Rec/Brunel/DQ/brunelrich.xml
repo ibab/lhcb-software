@@ -1,34 +1,35 @@
 <subsystem type="RICH">
-  <unique string="RiPIDMonAll2To100    INFO   %ID" pos='5' parname='Kaon ID Eff{2-100}' varname='var1'/>
-  <unique string="RiPIDMonAll2To100    INFO   %ID" pos='6' errorname='Kaon ID Eff{2-100}' varname='var2'/>  
-  <unique string="RiPIDMonAll2To100    INFO   %MisID" pos='5' parname='Kaon mis-ID rate{2-100}' varname='var3'/>
-  <unique string="RiPIDMonAll2To100    INFO   %MisID" pos='6' errorname='Kaon mis-ID rate{2-100}' varname='var4'/>   
-  <unique string="RiPIDMonAll2To100    INFO   %ID" pos='8' parname='Pion ID Eff{2-100}' varname='var5'/>
-  <unique string="RiPIDMonAll2To100    INFO   %ID" pos='9' errorname='Pion ID Eff{2-100}' varname='var6'/>  
-  <unique string="RiPIDMonAll2To100    INFO   %MisID" pos='8' parname='Pion mis-ID rate{2-100}' varname='var7'/>
-  <unique string="RiPIDMonAll2To100    INFO   %MisID" pos='9' errorname='Pion mis-ID rate{2-100}' varname='var8'/>   
-  <unique string="RiPIDMonAll2To10     INFO   %ID" pos='5' parname='Kaon ID Eff{2-10}' varname='var9'/>
-  <unique string="RiPIDMonAll2To10     INFO   %ID" pos='6' errorname='Kaon ID Eff{2-10}' varname='var10'/>  
-  <unique string="RiPIDMonAll2To10     INFO   %MisID" pos='5' parname='Kaon mis-ID rate{2-10}' varname='var11'/>
-  <unique string="RiPIDMonAll2To10     INFO   %MisID" pos='6' errorname='Kaon mis-ID rate{2-10}' varname='var12'/>   
-  <unique string="RiPIDMonAll2To10     INFO   %ID" pos='8' parname='Pion ID Eff{2-10}' varname='var13'/>
-  <unique string="RiPIDMonAll2To10     INFO   %ID" pos='9' errorname='Pion ID Eff{2-10}' varname='var14'/>  
-  <unique string="RiPIDMonAll2To10     INFO   %MisID" pos='8' parname='Pion mis-ID rate{2-10}' varname='var15'/>
-  <unique string="RiPIDMonAll2To10     INFO   %MisID" pos='9' errorname='Pion mis-ID rate{2-10}' varname='var16'/>
-  <unique string="RiPIDMonAll10To70    INFO   %ID" pos='5' parname='Kaon ID Eff{10-70}' varname='var17'/>
-  <unique string="RiPIDMonAll10To70    INFO   %ID" pos='6' errorname='Kaon ID Eff{10-70}' varname='var18'/>  
-  <unique string="RiPIDMonAll10To70    INFO   %MisID" pos='5' parname='Kaon mis-ID rate{10-70}' varname='var19'/>
-  <unique string="RiPIDMonAll10To70    INFO   %MisID" pos='6' errorname='Kaon mis-ID rate{10-70}' varname='var20'/>   
-  <unique string="RiPIDMonAll10To70    INFO   %ID" pos='8' parname='Pion ID Eff{10-70}' varname='var21'/>
-  <unique string="RiPIDMonAll10To70    INFO   %ID" pos='9' errorname='Pion ID Eff{10-70}' varname='var22'/>  
-  <unique string="RiPIDMonAll10To70    INFO   %MisID" pos='8' parname='Pion mis-ID rate{10-70}' varname='var23'/>
-  <unique string="RiPIDMonAll10To70    INFO   %MisID" pos='9' errorname='Pion mis-ID rate{10-70}' varname='var24'/>
-  <unique string="RiPIDMonAll70To100   INFO   %ID" pos='5' parname='Kaon ID Eff{70-100}' varname='var25'/>
-  <unique string="RiPIDMonAll70To100   INFO   %ID" pos='6' errorname='Kaon ID Eff{70-100}' varname='var26'/>  
-  <unique string="RiPIDMonAll70To100   INFO   %MisID" pos='5' parname='Kaon mis-ID rate{70-100}' varname='var27'/>
-  <unique string="RiPIDMonAll70To100   INFO   %MisID" pos='6' errorname='Kaon mis-ID rate{70-100}' varname='var28'/>   
-  <unique string="RiPIDMonAll70To100   INFO   %ID" pos='8' parname='Pion ID Eff{70-100}' varname='var29'/>
-  <unique string="RiPIDMonAll70To100   INFO   %ID" pos='9' errorname='Pion ID Eff{70-100}' varname='var30'/>  
-  <unique string="RiPIDMonAll70To100   INFO   %MisID" pos='8' parname='Pion mis-ID rate{70-100}' varname='var31'/>
-  <unique string="RiPIDMonAll70To100   INFO   %MisID" pos='9' errorname='Pion mis-ID rate{70-100}' varname='var32'/>
+  <unique string="RiPIDMonAll2To100    INFO  % ID eff" pos='8' parname='Kaon ID Eff{2-100}' varname='var1'/>
+  <unique string="RiPIDMonAll2To100    INFO  % ID eff" pos='10' errorname='Kaon ID Eff{2-100}' varname='var2'/>  
+  <unique string="RiPIDMonAll2To100    INFO  % MisID" pos='8' parname='Kaon mis-ID rate{2-100}' varname='var3'/>
+  <unique string="RiPIDMonAll2To100    INFO  % MisID" pos='10' errorname='Kaon mis-ID rate{2-100}' varname='var4'/>   
+  <unique string="RiPIDMonAll2To100    INFO  % ID eff" pos='13' parname='Pion ID Eff{2-100}' varname='var5'/>
+  <unique string="RiPIDMonAll2To100    INFO  % ID eff" pos='15' errorname='Pion ID Eff{2-100}' varname='var6'/>  
+  <unique string="RiPIDMonAll2To100    INFO  % MisID" pos='13' parname='Pion mis-ID rate{2-100}' varname='var7'/>
+  <unique string="RiPIDMonAll2To100    INFO  % MisID" pos='15' errorname='Pion mis-ID rate{2-100}' varname='var8'/> 
+  <unique string="RiPIDMonAll2To10     INFO  % ID eff" pos='8' parname='Kaon ID Eff{2-10}' varname='var9'/>
+  <unique string="RiPIDMonAll2To10     INFO  % ID eff" pos='10' errorname='Kaon ID Eff{2-10}' varname='var10'/>  
+  <unique string="RiPIDMonAll2To10     INFO  % MisID" pos='8' parname='Kaon mis-ID rate{2-10}' varname='var11'/>
+  <unique string="RiPIDMonAll2To10     INFO  % MisID" pos='10' errorname='Kaon mis-ID rate{2-10}' varname='var12'/>   
+  <unique string="RiPIDMonAll2To10     INFO  % ID eff" pos='13' parname='Pion ID Eff{2-10}' varname='var13'/>
+  <unique string="RiPIDMonAll2To10     INFO  % ID eff" pos='15' errorname='Pion ID Eff{2-10}' varname='var14'/>  
+  <unique string="RiPIDMonAll2To10     INFO  % MisID" pos='13' parname='Pion mis-ID rate{2-10}' varname='var15'/>
+  <unique string="RiPIDMonAll2To10     INFO  % MisID" pos='15' errorname='Pion mis-ID rate{2-10}' varname='var16'/>
+  <unique string="RiPIDMonAll10To70    INFO  % ID eff" pos='8' parname='Kaon ID Eff{10-70}' varname='var17'/>
+  <unique string="RiPIDMonAll10To70    INFO  % ID eff" pos='10' errorname='Kaon ID Eff{10-70}' varname='var18'/>  
+  <unique string="RiPIDMonAll10To70    INFO  % MisID" pos='8' parname='Kaon mis-ID rate{10-70}' varname='var19'/>
+  <unique string="RiPIDMonAll10To70    INFO  % MisID" pos='10' errorname='Kaon mis-ID rate{10-70}' varname='var20'/>   
+  <unique string="RiPIDMonAll10To70    INFO  % ID eff" pos='13' parname='Pion ID Eff{10-70}' varname='var21'/>
+  <unique string="RiPIDMonAll10To70    INFO  % ID eff" pos='15' errorname='Pion ID Eff{10-70}' varname='var22'/>  
+  <unique string="RiPIDMonAll10To70    INFO  % MisID" pos='13' parname='Pion mis-ID rate{10-70}' varname='var23'/>
+  <unique string="RiPIDMonAll10To70    INFO  % MisID" pos='15' errorname='Pion mis-ID rate{10-70}' varname='var24'/>
+  <unique string="RiPIDMonAll70To100   INFO  % ID eff" pos='8' parname='Kaon ID Eff{70-100}' varname='var25'/>
+  <unique string="RiPIDMonAll70To100   INFO  % ID eff" pos='10' errorname='Kaon ID Eff{70-100}' varname='var26'/>  
+  <unique string="RiPIDMonAll70To100   INFO  % MisID" pos='8' parname='Kaon mis-ID rate{70-100}' varname='var27'/>
+  <unique string="RiPIDMonAll70To100   INFO  % MisID" pos='10' errorname='Kaon mis-ID rate{70-100}' varname='var28'/>   
+  <unique string="RiPIDMonAll70To100   INFO  % ID eff" pos='13' parname='Pion ID Eff{70-100}' varname='var29'/>
+  <unique string="RiPIDMonAll70To100   INFO  % ID eff" pos='15' errorname='Pion ID Eff{70-100}' varname='var30'/>  
+  <unique string="RiPIDMonAll70To100   INFO  % MisID" pos='13' parname='Pion mis-ID rate{70-100}' varname='var31'/>
+  <unique string="RiPIDMonAll70To100   INFO  % MisID" pos='15' errorname='Pion mis-ID rate{70-100}' varname='var32'/>
+-->
 </subsystem>
