@@ -1,0 +1,11 @@
+! $Id: release.notes,v 1.1.1.1 2002-06-28 09:59:33 dhcroft Exp $
+! Package     : MuonAssociators
+! Responsible : David Hutchcroft
+
+! 20020628 David Hutchcroft
+  - First working version of a MuonCoord and MuonDigit to MCParticle 
+    associators
+
+! 20020612 David Hutchcroft
+  -First attempt at a MuonDigit to MCParticle associator
+
