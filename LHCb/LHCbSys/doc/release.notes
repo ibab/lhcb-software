@@ -7,13 +7,16 @@
 
 !======================= LHCbSys v16r2 2004-09-06 =======================
 ! 2004-09-06 - Marco Cattaneo
- - Modified packages: KernelSys v4r2, LHCbKernel v5r2,
-                   EventSys v18r2, CaloEvent v13r5,
+ - Modified packages: KernelSys v4r2, LHCbKernel v5r2, CaloKernel v3r2,
+                   EventSys v18r2, CaloEvent v13r5, EventAssoc v1r3,
                    AssociatorsSys v1r15, Associators v2r3, CaloAssociators v4r3,
                    LHCbAlgs v1r1, CaloInterfaces v4r2
 
  - In LHCbKernel v5r2:
    . Fix typo in InstanceCounter.h, affecting LoKi
+
+ - In CaloKernel v3r2:
+   . CaloVector.h: tiny efficiency improvements
 
  - In LHCbAlgs v1r1:
    . LbAppInit - Protect against undefined APPVERSION environment variable
