@@ -1,4 +1,4 @@
-// $Id: ParabolicTransporter.cpp,v 1.1.1.1 2004-08-24 06:19:11 pkoppenb Exp $
+// $
 // Include files 
 
 // Utility Classes
@@ -202,28 +202,22 @@ StatusCode ParabolicTransporter::magfTransport(Particle *& workParticle,
   // initialize and create PointOnTrack vectors  
   HepPoint3D oldPOT(999., 999., 999.);
   oldPOT = workParticle->pointOnTrack();
-  HepPoint3D newPOT = oldPOT;
   
   //initialize and crate Momentum vector
-  HepLorentzVector newMomentum;
   HepLorentzVector oldMomentum = workParticle->momentum();
-  newMomentum = oldMomentum;
   
   // initialize and create PointOnTrack matrix error
   HepSymMatrix oldPOTErr(3, 0);
   oldPOTErr = workParticle->pointOnTrackErr();
-  HepSymMatrix newPOTErr = oldPOTErr;
 
   // initialize and create Slope and Momentum correlation matrix error
   HepSymMatrix oldSlopesMomErr(3, 0);
   oldSlopesMomErr = workParticle->slopesMomErr();
-  HepSymMatrix newSlopesMomErr = oldSlopesMomErr;
 
   // initialize and create Position, Slope and Momentum correlation
   // matrix error
   HepMatrix oldPosSlopesCorr(3, 3, 0);
   oldPosSlopesCorr = workParticle->posSlopesCorr();
-  HepMatrix newPosSlopesCorr = oldPosSlopesCorr;
 
   // transform to the same z with err_z=0
   HepMatrix JA(3,3);
@@ -238,6 +232,15 @@ StatusCode ParabolicTransporter::magfTransport(Particle *& workParticle,
   JA(3,3)=0;
   oldPOTErr=oldPOTErr.similarity(JA);
   oldPosSlopesCorr=oldPosSlopesCorr*JA.T();
+
+  // this is the right place to define new stuff
+  // note newPOTErr(3,3)=0
+  HepLorentzVector newMomentum= oldMomentum;
+  HepPoint3D newPOT = oldPOT;
+  HepSymMatrix newPOTErr = oldPOTErr;
+  HepSymMatrix newSlopesMomErr = oldSlopesMomErr;
+  HepMatrix newPosSlopesCorr = oldPosSlopesCorr;
+
 
   // check current z-position
   double zold = oldPOT.z();

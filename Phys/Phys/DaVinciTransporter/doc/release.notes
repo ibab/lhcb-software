@@ -2,6 +2,13 @@
 ! Package     : DaVinciTransporter
 ! Responsible : P. Koppenburg, Yuehong Xie
 
+! 2004-11-08 - Yuehong Xie
+ - src/ParabolicTransporter.cpp
+   . Fix a bug in computing covariance matrix which affected the transort of Ks from magnetic 
+     field to Velo region using CombinedTransporter due to a mistake in initialization.Note 
+     CombinedTransporter doesn't uses linear transporter for neutral particles. 
+   . The channel affected by this bug is Bd2Jpsiks.
+
 !========================== DaVinciTransporter v1r1 2004-09-16 ===================
 ! 2004-08-25 - P. Koppenburg
  - cmt/requirements
