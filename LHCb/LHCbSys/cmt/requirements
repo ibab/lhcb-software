@@ -85,6 +85,8 @@ use CaloInterfaces	v4r3	Calo
 use CaloUtils		v4r8	Calo
 use RichTools		v1r3	Rich
 use RichMCTools		v2r4	Rich
+use L0mConf		v2r2p3	L0
+use L0MuonKernel	v2r3	L0
 
 # LHCb  Examples
 use DetDescChecks	v2r2	Det
