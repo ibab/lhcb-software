@@ -4,8 +4,11 @@
  *  Implementation file for RICH reconstruction monitoring algorithm : RichPIDQC
  *
  *  CVS Log :-
- *  $Id: RichPIDQC.cpp,v 1.28 2004-10-27 14:36:30 jonrob Exp $
+ *  $Id: RichPIDQC.cpp,v 1.29 2004-10-29 09:35:08 jonrob Exp $
  *  $Log: not supported by cvs2svn $
+ *  Revision 1.28  2004/10/27 14:36:30  jonrob
+ *  Improvements to PID Tables
+ *
  *  Revision 1.27  2004/10/21 09:11:19  jonrob
  *  minor update
  *
@@ -252,7 +255,7 @@ StatusCode RichPIDQC::execute()
       // Count PIDs and tracks
       ++m_trackCount[tkType].first;
       ++pidCount;
-      ++m_pidPerTypeCount[iPID->pidType()];
+      ++m_pidPerTypeCount[iPID->pidType()].first;
 
       // Get best PID
       Rich::ParticleIDType pid = iPID->bestParticleID();
@@ -307,8 +310,11 @@ StatusCode RichPIDQC::execute()
              !iPID->isAboveThreshold(mcpid) ) mcpid = Rich::BelowThreshold;
         if ( msgLevel(MSG::VERBOSE) ) verbose() << ", MCID = " << mcpid << endreq;
 
-        // Count track types
-        if ( Rich::Unknown != mcpid ) ++m_trackCount[tkType].second;
+        // Count track and PID types
+        if ( Rich::Unknown != mcpid ) { 
+          ++m_trackCount[tkType].second;
+          ++m_pidPerTypeCount[iPID->pidType()].second;
+        }
 
         // Fill performance tables
         m_perfTable->fill( mcpid+1, pid+1 );
@@ -466,10 +472,13 @@ StatusCode RichPIDQC::finalize()
       info() << " " << (*iTk).first << "=" << (*iTk).second.first
              << "(" << (*iTk).second.second << ")";
     }
-    info() << endreq << " #RichPIDs  |";
+    tkCount = 0;
+    info() << endreq << " #PIDs(+MC) |";
     for ( PIDsByType::const_iterator iPC = m_pidPerTypeCount.begin();
-          iPC != m_pidPerTypeCount.end(); ++iPC ) {
-      info() << " " << (*iPC).first << "=" << (*iPC).second;
+          iPC != m_pidPerTypeCount.end(); ++iPC, ++tkCount ) {
+      if ( tkCount == 4 ) { tkCount = 0; info() << endreq << "            |"; }
+      info() << " " << (*iPC).first << "=" << (*iPC).second.first
+             << "(" << (*iPC).second.second << ")";
     }
     info() << endreq
            << "------------+-------------------------------------------------+------------"
@@ -495,11 +504,11 @@ StatusCode RichPIDQC::finalize()
                                         eff[0],eff[1],eff[2],eff[3],eff[4],eff[5] )
            << "     |" << endreq
            << "------------+-------------------------------------------------+------------" << endreq;
-    info() << format( " % ID       |  K->K,Pr   : %6.2f +-%6.2f   pi->e,m,pi : %6.2f +-%6.2f ",
+    info() << format( " %ID eff    |  K->K,Pr   : %6.2f +-%6.2f   pi->e,m,pi : %6.2f +-%6.2f ",
                       kaonIDEff[0], kaonIDEff[1], piIDEff[0], piIDEff[1] ) << endreq;
-    info() << format( " % MisID    |  K->e,m,pi : %6.2f +-%6.2f   pi->K,Pr   : %6.2f +-%6.2f ",
+    info() << format( " %misID eff |  K->e,m,pi : %6.2f +-%6.2f   pi->K,Pr   : %6.2f +-%6.2f ",
                       kaonMisIDEff[0], kaonMisIDEff[1], piMisIDEff[0], piMisIDEff[1] ) << endreq;
-    info() << format( " % PID rate |  Events    : %6.2f +-%6.2f   Tracks     : %6.2f +-%6.2f ",
+    info() << format( " %ID rate   |  Events    : %6.2f +-%6.2f   Tracks     : %6.2f +-%6.2f ",
                       evPIDRate[0], evPIDRate[1], trPIDRate[0], trPIDRate[1] ) << endreq
            << "------------+-------------------------------------------------+------------"
            << endreq;
