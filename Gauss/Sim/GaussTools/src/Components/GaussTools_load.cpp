@@ -39,6 +39,7 @@ void GaussTools_load()
   DECLARE_GiGaFactory     (    GiGaSensDetBudget       ) ;
 
   /// tracking action 
+  DECLARE_GiGaFactory     (    CommandTrackAction     );
   DECLARE_GiGaFactory     (    GaussPreTrackAction     );
   DECLARE_GiGaFactory     (    GaussPostTrackAction    );
   DECLARE_GiGaFactory     (    GiGaTrackActionSequence );

@@ -50,20 +50,10 @@ PostStepGetPhysicalInteractionLength(const G4Track& aTrack,
 
   // if UserLimits attached to the volume, use them
   // if not use the default cuts
-  if (pUserLimits)
-    {      
-      eMin = pUserLimits->GetUserMinEkine(aTrack);
-
-//        cout << "User cut in " << aTrack.GetVolume()
-//          ->GetLogicalVolume()->GetName() 
-//             << " for particle " << aParticleDef->GetPDGEncoding()<< " is " 
-//             << eMin << endl;
-    }
+  if (pUserLimits)      
+    eMin = pUserLimits->GetUserMinEkine(aTrack);
   
-  if (eKine < eMin ) 
-    {          
-      proposedStep = 0.;
-    } 
+  if (eKine < eMin ) proposedStep = 0.;
   else if (aParticleDef->GetPDGCharge() != 0.0 
            && G4EnergyLossTables::GetRangeTable(aParticleDef)) 
     {

@@ -1,8 +1,11 @@
-// $Id: GiGaMagFieldGlobal.cpp,v 1.1 2002-09-26 18:10:56 ibelyaev Exp $ 
+// $Id: GiGaMagFieldGlobal.cpp,v 1.2 2003-10-23 08:49:44 witoldp Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.1  2002/09/26 18:10:56  ibelyaev
+//  repackageing: add all concrete implementations from GiGa
+//
 // Revision 1.11  2002/05/07 12:21:35  ibelyaev
 //  see $GIGAROOT/doc/release.notes  7 May 2002
 //
@@ -99,6 +102,7 @@ void GiGaMagFieldGlobal::GetFieldValue
   const HepPoint3D point( Point[0] , Point[1] , Point[2] );
   
   StatusCode sc = mfSvc()->fieldVector( point , m_field );
+
   if( sc.isFailure() ) 
     { 
       Error("GetFieldValue, error status code from IMagneticFieldSvc", sc ) ; 

@@ -7,6 +7,7 @@
 
 !======================== GaussTools v8r7 =================================
 ! 2003-10-13 - Witek Pokorski
+ - CommandTrackAction - tracking action added to facilitate debugging 
  - GaussInitialization - switched to generation of random seed using hashing 
 	                 algorithm as in Boole
 
