@@ -1,5 +1,5 @@
-// $Id: Material.h,v 1.6 2004-12-07 17:49:08 ibelyaev Exp $
-/// $Id: Material.h,v 1.6 2004-12-07 17:49:08 ibelyaev Exp $
+// $Id: Material.h,v 1.7 2004-12-08 15:17:46 ibelyaev Exp $
+/// $Id: Material.h,v 1.7 2004-12-08 15:17:46 ibelyaev Exp $
 #ifndef DETDESC_MATERIAL_H
 #define DETDESC_MATERIAL_H
 /// STL
@@ -101,7 +101,6 @@ public:
   ///
   
 protected:
-public: // just to please LCG Dictionaries with Visual C++ 
   
   /// Constructors of a simple material
   Material( const std::string& name  = "", 
