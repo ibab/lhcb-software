@@ -2,6 +2,7 @@
 <!DOCTYPE gdd SYSTEM "gdd.dtd">
 <gdd>
   <package name="L0Event">
+    <import name="Kernel/CLHEPStreams"/>
     <namespace desc="L0 namespace" name="L0Calo">
       <enum desc="L0Type describes the type of candidate" name="L0Type" value="Electron=1, Photon, Hadron, Hadron2, SumEt, Pi0Local, Pi0Global"/>
     </namespace>

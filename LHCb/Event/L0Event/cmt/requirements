@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.13 2002-04-04 06:22:27 ocallot Exp $
+# $Id: requirements,v 1.14 2002-04-04 07:04:24 cattanem Exp $
 package L0Event
 version v11r0
 
@@ -9,22 +9,23 @@ include_dirs $(L0EVENTROOT)
 use 	GaudiObjDesc	v3r*
 use 	LHCbKernel	v1r*
 use     EventKernel     v1r*    Event
-use 	LHCbEvent 	v12r* 	Event
 use 	MuonKernel 	v1r* 	Muon
 
-# Make header from XML
-
+#---- Produce Header-Files and from XML description
 document obj2doth L0EventObj2Doth ../xml/*.xml
-library L0Event ../src/*.cpp
-macro L0Event_shlibflag "$(use_linkopts) $(libraryshr_linkopts)"
+# Dictionary does not work with many input files
+#document obj2dict L0EventObj2Dict ../xml/*.xml    
 
-apply_pattern package_linkopts
-apply_pattern package_stamps
-apply_pattern linker_path
+# ================ build library (including dictionary) ==================
+library           L0Event         ../src/*.cpp
+#                                  ../dict/*.cpp
 
-# produce dictionary  ** Not Yet ***
+apply_pattern      package_linkopts
+apply_pattern      package_stamps
+apply_pattern      linker_path       
 
-# document obj2dict L0EventObj2Dict ../xml/*.xml
-# library L0EventDict ../dict/*.cpp
-# macro L0EventDict_shlibflag "$(use_linkopts) $(libraryshr_linkopts)"
+#===============================================================
+private
 
+macro_remove use_linkopts $(L0Event_linkopts)
+macro L0Event_shlibflags "$(use_linkopts) $(libraryshr_linkopts)"

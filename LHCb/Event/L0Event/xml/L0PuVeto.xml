@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE gdd SYSTEM "gdd.dtd">
 <gdd>
+  <import name="Kernel/CLHEPStreams"/>
   <package name="L0Event">
     <class 
       author="Olivier Callot" 

@@ -2,6 +2,7 @@
 <!DOCTYPE gdd SYSTEM "gdd.dtd">
 <gdd>
   <package name="L0Event">
+    <import name="Kernel/CLHEPStreams"/>
     <class 
       author="Nicole Brun" 
       desc="L0 Decision" 
