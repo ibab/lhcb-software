@@ -1,10 +1,11 @@
-// $Id: Rich1DTabFunc.h,v 1.3 2004-07-15 15:36:53 jonrob Exp $
+// $Id: Rich1DTabFunc.h,v 1.4 2004-07-22 08:56:49 cattanem Exp $
 #ifndef RICHUTILS_RICH1DTABFUNC_H
 #define RICHUTILS_RICH1DTABFUNC_H 1
 
 #include <vector>
 #include <map>
 #include <iostream>
+#include <math.h>
 
 // GSL interpolation
 #include "gsl/gsl_errno.h"
