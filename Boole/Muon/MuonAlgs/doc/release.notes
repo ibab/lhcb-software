@@ -4,9 +4,14 @@
 ! Purpose     : Muon digitisation algorithms
 !-----------------------------------------------------------------------------
 
-!======================== MuonAlgs v5r3 2004-04-09 ========================
-! 2004-04-09 - Alessia Satta
+!======================== MuonAlgs v5r4 2004-04-14 ========================
+! 2004-04-14 - Marco Cattaneo
+ - Change some floats to double, to fix data truncation warnings on Windows
 
+! 2004-04-09 - Alessia Satta
+ - Fixes for background parameterisation 
+
+!======================== MuonAlgs v5r3 2004-03-31 ========================
 ! 2004-03-31 - Alessia Satta
  - Fix rounding problem
 

@@ -303,15 +303,15 @@ MuonDigitization::addChamberNoise(){
                                           partitionNumber))/2+
               m_pGetInfo->getStartGapZ(frontEnd*gapFE ,partitionNumber);
             //then x&y	
-            float x= m_flatDist()* m_pGetInfo->
+            double x = m_flatDist()* m_pGetInfo->
               getPhChannelSizeX(readout,partitionNumber)*
               m_pGetInfo->getPhChannelNX(readout,partitionNumber)+
               m_pGetInfo-> getStartChamberPositionX(chamber+chamberTillNow);
-            float y= m_flatDist()* 
+            double y = m_flatDist()* 
               m_pGetInfo->getPhChannelSizeY(readout,partitionNumber)*
               m_pGetInfo->getPhChannelNY(readout,partitionNumber)+
               m_pGetInfo-> getStartChamberPositionY(chamber+chamberTillNow);
-            float time=		m_flatDist()*m_BXTime;	
+            double time = m_flatDist()*m_BXTime;	
             MCMuonHit* pHit = new MCMuonHit();
             pHit->setEntry(HepPoint3D(
                                       x,y,m_pGetInfo->
@@ -392,8 +392,8 @@ MuonDigitization::createInput(
               //useful later
               
               bool parallelFlag=false ; 
-              float slopeY=0;
-              float intercept=0;
+              double slopeY = 0;
+              double intercept = 0;
               if(fabs((*iter)->exit().x()-(*iter)->entry().x())>0.001){
                 slopeY=((*iter)->exit().y()-(*iter)->entry().y())/
                   ((*iter)->exit().x()-(*iter)->entry().x());
@@ -474,14 +474,14 @@ MuonDigitization::createInput(
                 }   
                 unsigned int quarter=m_pGetInfo->
                   getQuadrantChamber(chamber);		
-                float xBegin;
-                float xEnd;
                 double distanceFromBoundary[4];
                 unsigned int nyBegin ;
                 unsigned int nyEnd ;					
               
               
                 for (unsigned int Xloop=nxChaEntry;Xloop<=nxChaExit;Xloop++){
+                  double xBegin;
+                  double xEnd;
                   if(Xloop==nxChaEntry){
                     xBegin= xstart;
 							    }else{
@@ -492,8 +492,8 @@ MuonDigitization::createInput(
                   }else{
                     xEnd=(Xloop+1)*phChSizeX+startPosX ;
                   }	
-                  float yBegin;
-                  float yEnd;
+                  double yBegin;
+                  double yEnd;
                   if(parallelFlag){
                     yBegin=(*iter)->entry().y();
                     yEnd= (*iter)->exit().y();

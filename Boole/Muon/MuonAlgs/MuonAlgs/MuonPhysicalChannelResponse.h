@@ -61,10 +61,10 @@ Rndm::Numbers* p_electronicNoise;
 int m_readoutIndex ;
 double m_minOfTimeJitter ;
 double m_maxOfTimeJitter ;
-float m_meadDeadtime ;
-float m_rmsDeadtime ;
-float m_chamberEfficiency ;
-float m_timeAdjustmentImprecision ;
+double m_meadDeadtime ;
+double m_rmsDeadtime ;
+double m_chamberEfficiency ;
+double m_timeAdjustmentImprecision ;
 MuonReadoutCond*  p_detectorResponse ;
  };
 
