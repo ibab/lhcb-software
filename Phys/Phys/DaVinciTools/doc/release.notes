@@ -1,8 +1,12 @@
-! $Id: release.notes,v 1.1.1.1 2001-07-09 09:28:42 gcorti Exp $
+! $Id: release.notes,v 1.2 2001-07-16 15:17:07 gcorti Exp $
 ! Package     : DaVinciTools
 ! Responsible : Gloria Corti
 
 ! ====================================================================
+
+! 16072001 - DaVinciTools v1r1 (GCorti)
+  Change MSG levels in PhysSelAlgorithms
+  Introduce calls to suinit, sulast in DaVinciFinalisation
 
 ! 09072001 - DaVinciTools v1 (GCorti)
   First release of the package.
