@@ -1,4 +1,4 @@
-//  $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/Lib/XmlBaseDetElemCnv.cpp,v 1.15 2002-04-24 12:41:27 mato Exp $
+//  $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/Lib/XmlBaseDetElemCnv.cpp,v 1.16 2002-04-24 13:44:21 sponce Exp $
 
 // include files
 
@@ -252,6 +252,9 @@ StatusCode XmlBaseDetElemCnv::i_fillObj (DOM_Element childElement,
     }
   } else if ("param" == tagName || "paramVector" == tagName ||
              "userParameter" == tagName || "userParameterVector" == tagName) {
+    
+    bool isSingleParam = ("userParameter" == tagName || "param" == tagName);
+
     // get the attributes
     std::string type = dom2Std (childElement.getAttribute ("type"));
     std::string name = dom2Std (childElement.getAttribute ("name"));
@@ -261,6 +264,7 @@ StatusCode XmlBaseDetElemCnv::i_fillObj (DOM_Element childElement,
     std::string value;
     DOM_NodeList nodeChildren = childElement.getChildNodes();
     unsigned int i;
+    bool firstWord = true;
     for (i = 0; i < nodeChildren.getLength(); i++) {
       if (nodeChildren.item(i).getNodeType() == DOM_Node::TEXT_NODE) {
         std::string newVal = dom2Std (nodeChildren.item(i).getNodeValue());
@@ -273,17 +277,18 @@ StatusCode XmlBaseDetElemCnv::i_fillObj (DOM_Element childElement,
           while (isspace(newVal[end])) {
             end--;
           }
-          value += " ";
+          if (firstWord) {
+            firstWord = false;
+          } else {
+            value += " ";
+          }
           value += newVal.substr(begin, end - begin + 1);
         }
       }
     }
 
-    if ("userParameter" == tagName || "param" == tagName) {
+    if (isSingleParam) {
       // adds the new parameter to the detectorElement
-      log << MSG::DEBUG << "Adding user parameter " << name << " with value "
-          << value << ", type " << type << " and comment \"" << comment
-          << "\"" << endreq;
       if (type == "int") {
         double dd = xmlSvc()->eval(value, false);
         dataObj->addUserParameter (name,
@@ -299,12 +304,22 @@ StatusCode XmlBaseDetElemCnv::i_fillObj (DOM_Element childElement,
                                    value,
                                    xmlSvc()->eval(value, false));
       } else {
+        // check whether there are "" around the string. If yes, remove them
+        if ((value.length() > 1) &&
+            (value[0] == '"' && value[value.length()-1] == '"')) {
+          cout << "Reducing size of value" << endl;
+          value = value.substr(1, value.length()-2);
+        }
         dataObj->addUserParameter (name,
                                    type,
                                    comment,
                                    value);
       }
-    } else if ("userParameterVector" == tagName || "paramVector" == tagName) {
+      log << MSG::DEBUG << "Added user parameter " << name << " with value "
+          << value << ", type " << type << " and comment \"" << comment
+          << "\"" << endreq;
+    } else {
+      // we have a vector of parameters here
       // parses the value
       std::vector<std::string> vect;
       const char *textValue = value.c_str();
@@ -317,7 +332,7 @@ StatusCode XmlBaseDetElemCnv::i_fillObj (DOM_Element childElement,
       // depending on the type, evaluates the value
       std::vector<double> d_vect;
       std::vector<int> i_vect;
-	  std::vector<std::string>::iterator it;
+      std::vector<std::string>::iterator it;
       for (it = vect.begin();
            vect.end() != it;
            ++it) {
@@ -333,7 +348,7 @@ StatusCode XmlBaseDetElemCnv::i_fillObj (DOM_Element childElement,
       log << MSG::DEBUG << "Adding user parameter vector " << name
           << " with values ";
       std::vector<std::string>::iterator it2;
-	  for (it2 = vect.begin();
+      for (it2 = vect.begin();
            vect.end() != it2;
            ++it2) {
         log << *it2 << " ";

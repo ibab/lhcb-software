@@ -1,10 +1,16 @@
 ! =============================================================================
 ! CVS tag $Name: not supported by cvs2svn $ 
 ! =============================================================================
-! $Id: release.notes,v 1.82 2002-04-24 12:41:26 mato Exp $ 
+! $Id: release.notes,v 1.83 2002-04-24 13:43:45 sponce Exp $ 
 ! =============================================================================
 package DetDesc
 package manager : N.N 
+
+! 20020424 Sebastien Ponce
+  - Bug fix concerning user parameters of type string (remove the added space
+    in front of them).
+  - Added the possibility to "double quote" strings in the value of a user
+    parameter.
 
 ! 20020424 Pere Mato
   - Removed warnings in Windows (added base class IInterface in IConditionInfo)
