@@ -1,0 +1,31 @@
+# $Id: requirements,v 1.1.1.1 2004-09-03 13:35:47 jnardull Exp $
+package OTSimulation
+
+version v1r0
+
+branches OTSimulation cmt doc src options
+
+include_dirs $(OTSIMULATIONROOT)
+
+
+use OTDAQ         v2r*  OT
+use OTDet         v5r*  Det
+use OTAssociators v2r9  OT
+use AIDA          v*  -no_auto_imports
+
+# ================= component library ====================
+library OTSimulation ../src/*.cpp -import=AIDA
+
+apply_pattern component_library library=OTSimulation
+
+
+
+
+
+
+
+
+
+
+
+
