@@ -5,14 +5,15 @@ Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
 </PRE><H1><A NAME=v9r1>20020320 Brunel v9r1</A></H1><PRE>
-   Adds support for dbase v243r2 (for comparative study of TT1 options). 
+   Adds support for dbases v243r3, v243r1p1 (comparative study of TT1 options). 
    Includes several bug fixes (see below)
  
    In options
-   - Brunelv243r2.opts, BrunelTrItOtTT1.opts: new files to support dbase v243r2
+   - Brunelv243r3.opts, BrunelTrItOtTT1.opts: new files to support dbase v243r3
+   - Brunelv243r1p2.opts: new file to support dbase v243r1p2
    - BrunelTr*.opts all touched to make them consistent with new files above
    - Brunel.opts: enable Calorimeter OO reconstruction (without persistency)
-   - BrunelMoni.opts: disable ITDigitMonitor (crashes for dbase v243r2)
+   - BrunelMoni.opts: disable ITDigitMonitor (crashes for dbase v243r3)
 
    In requirements
    - use LHCbEvent    v12r2 Event

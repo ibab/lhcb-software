@@ -1,0 +1,28 @@
+//--------------------------------------------------------------
+// Job options for Brunel when using $LHCBDBASE version v243r1p1
+// ------- "Realistic LHCb light, split TT1" detector ----------
+#pragma print off
+// --- Define input data. Spillover first (if required), then signal ---
+//#include "$SICBCNVROOT/options/Brunel.opts"  // Uncomment for spillover
+//SpillOverSelector.Input = {"JOBID='86161'"}; // evtype 61 for spillover
+#pragma print on
+EventSelector.Input = {"JOBID='86160'"}; // Signal, evtype 412100
+#pragma print off
+
+//--------------------------------------------------------------
+#include "$BRUNELOPTS/Brunel.opts"  // Generic options for all jobs
+//--------------------------------------------------------------
+// Database specific options
+//--------------------------------------------------------------
+#include "$BRUNELOPTS/BrunelTrLight.opts" // Material and cuts, standard tracking
+#include "$BRUNELOPTS/BrunelTrSiTT12.opts"  // dbase v243r1 tracking layout
+#include "$FWTRACKROOT/options/Brunelv243r1.opts" // Forward tracking
+
+//--------------------------------------------------------------
+// Add here your specific options. These over-ride previously defined options
+//EventSelector.FirstEvent = 6;
+#pragma print on
+ApplicationMgr.EvtMax = 10;
+//--------------------------------------------------------------
+#pragma print off
+//ApplicationMgr.DLLs = {"NONE"}; // Uncomment if static link, must be last line 
