@@ -21,7 +21,7 @@ DetectorDataSvc.DetDbLocation = "$XMLDDDBROOT/DDDB/lhcb-200402.xml";
 //---------------------------------------------------------------------------
 // Finally, define input and output files, first event, number of events
 //---------------------------------------------------------------------------
-HistogramPersistencySvc.OutputFile = "412400.hbook";  // Monitoring histos
+HistogramPersistencySvc.OutputFile = "411300.hbook";  // Monitoring histos
 ApplicationMgr.EvtMax = 500;
 
 // Uncomment next three lines to skip some input events
@@ -30,7 +30,8 @@ ApplicationMgr.EvtMax = 500;
 //LHCBkgSelector.FirstEvent = 7; // Skip corresponding background events 
 
 // GaudiDb input
-EventSelector.Input = { "DATAFILE='/afs/cern.ch/lhcb/group/tracking/vol2/mneedham/new.root' TYP='ROOT' OPT='READ'" }; // Gauss v14r1, XmlDDDB v21r0, evtype 61?
+EventSelector.Input = { "DATAFILE='rfio:/castor/cern.ch/lhcb/prod/00000418_00000002_1.oosim' TYP='ROOT' OPT='READ'" }; // Gauss v14r1, XmlDDDB v21r0, evtype 411300
+//EventSelector.Input = { "DATAFILE='/afs/cern.ch/lhcb/group/tracking/vol2/mneedham/new.root' TYP='ROOT' OPT='READ'" }; // Gauss v14r1, XmlDDDB v21r0, evtype 61?
 //SpilloverSelector.Input = {
 //  "DATAFILE='rfio:/castor/cern.ch/user/l/lhcbprod/test/00000357_00000008_1.oosim' TYP='ROOT' OPT='READ'"
 //, "DATAFILE='rfio:/castor/cern.ch/user/l/lhcbprod/test/00000357_00000008_2.oosim' TYP='ROOT' OPT='READ'"
@@ -39,8 +40,8 @@ LHCBkgSelector.Input = {
   "DATAFILE='rfio:/castor/cern.ch/user/l/lhcbprod/test/00000357_00000008_5.oosim' TYP='ROOT' OPT='READ'" }; // "Maximal" LHC background. SicbToOORawh v3r1 
 
 // GaudiDb output. Comment next line for POOL output
-DigiWriter.Output = "DATAFILE='412400.oodigi' TYP='ROOT' OPT='NEW'";
+DigiWriter.Output = "DATAFILE='411300.oodigi' TYP='ROOT' OPT='NEW'";
 
 // Uncomment next line for POOL output. Mandatory if POOL input
-//DigiWriter.Output = "DATAFILE='PFN:412400.digi' TYP='POOL_ROOTTREE' OPT='REC'";
+//DigiWriter.Output = "DATAFILE='PFN:411300.digi' TYP='POOL_ROOTTREE' OPT='REC'";
 //////////////////////////////////////////////////////////////////////////////
