@@ -1,8 +1,11 @@
-// $Id: PhotonFromMergedParameters.h,v 1.2 2005-01-06 10:46:54 pkoppenb Exp $
+// $Id: PhotonFromMergedParameters.h,v 1.3 2005-02-09 18:00:48 pkoppenb Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2005/01/06 10:46:54  pkoppenb
+// Moved interfaces
+//
 // Revision 1.1.1.1  2004/08/24 06:47:48  pkoppenb
 // ParticleMaker extracted from DaVinciTools
 //
@@ -36,10 +39,6 @@ class CaloHypo          ;
 class Particle          ;
 class Vertex            ;
 class PrimVertex        ;
-class HepPoint3D        ;
-class HepLorentzVector  ;
-class HepMatrix         ;
-class HepSymMatrix      ;
  
 /** @class PhotonFromMergedParameters PhotonFromMergedParameters.h
  *  
