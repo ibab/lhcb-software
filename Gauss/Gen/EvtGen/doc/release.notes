@@ -1,6 +1,7 @@
 Package :EvtGen 
 Package manager : Patrick Robbe and Witek Pokorski
 
+!===================== EvtGen v4r2 ====================================
 ! 2003-11-18 - Patrick Robbe
  - requirements : remove dependancy to GaudiKernel
  - EvtBTo3pi.F, EvtBTo3piMPP.F, EvtBTo3piP00.F, EvtBToKpipi.F : use
