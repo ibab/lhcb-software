@@ -2,6 +2,9 @@ package EventSys
 package manager: Marco Cattaneo
 
 ! >>>>>>>>>>>>>>>>>>>>>>>>> EventSys v10r0 <<<<<<<<<<<<<<<<<<<<<
+! 20020515 - MC
+  Fix DoxyFile.cfg for documentation
+
 ! 20020430 - MC
   requirements - Add DbCnv
 
