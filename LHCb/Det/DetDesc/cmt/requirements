@@ -1,7 +1,7 @@
-# $Id: requirements,v 1.45 2002-10-02 13:24:21 cattanem Exp $ 
+# $Id: requirements,v 1.46 2002-10-11 06:37:47 ranjard Exp $ 
 # =============================================================================
 package       DetDesc
-version       v11r1
+version       v11r1p1
 
 # =========== structure =======================================================
 branches      DetDesc doc cmt src
@@ -10,9 +10,9 @@ branches      DetDesc doc cmt src
 include_dirs  $(DETDESCROOT)
 
 # =========== dependencies ====================================================
-use           GaudiKernel       v12r*
-use           CLHEP             v2r1800p*
-use           XERCES            v2r160p*
+use           GaudiKernel       v13r*
+use           CLHEP             v*
+use           XERCES            v*
 
 # =========== constituents =====================================================
 library       DetDescLib        Lib/*.cpp
