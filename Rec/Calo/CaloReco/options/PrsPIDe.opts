@@ -1,0 +1,65 @@
+// $Id: PrsPIDe.opts,v 1.1 2002-11-17 17:09:26 ibelyaev Exp $
+// ============================================================================
+// CVS tag $Name: not supported by cvs2svn $ 
+// ============================================================================
+// $Log: not supported by cvs2svn $
+// ============================================================================
+
+/** @file 
+ *  Configuration option for CaloTrack2IdAlg "PrsPIDe" algorithm
+ *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
+ *  @date 2002-10-31
+ */
+
+/// Configuration of the Associator
+
+ToolSvc.PrsPIDe.Location          = "Rec/Calo/PrsPIDe"     ;
+ToolSvc.PrsPIDe.AlgorithmType     = "CaloTrack2IdAlg"      ;
+ToolSvc.PrsPIDe.AlgorithmName     = "PrsPIDe"              ;
+
+ToolSvc.PrsPIDe_Eff.Location      = "Rec/Calo/PrsPIDe_Eff" ;
+ToolSvc.PrsPIDe_Eff.AlgorithmType = "CaloTrack2IdAlg"      ;
+ToolSvc.PrsPIDe_Eff.AlgorithmName = "PrsPIDe"              ;
+
+ToolSvc.PrsPIDe_Rej.Location      = "Rec/Calo/PrsPIDe_Rej" ;
+ToolSvc.PrsPIDe_Rej.AlgorithmType = "CaloTrack2IdAlg"      ;
+ToolSvc.PrsPIDe_Rej.AlgorithmName = "PrsPIDe"              ;
+
+/// Configuration of the Algorithm 
+
+// The default value 
+// PrsPIDe.AssociatorType = "Associator<TrStoredTrack,float>";
+PrsPIDe.AssociatorName = "PrsE";
+PrsPIDe.Output         = "Rec/Calo/PrsPIDe" ;
+// use only unique tracks? 
+PrsPIDe.UseUnique      = true  ;
+// use error tracks ? 
+PrsPIDe.UseError       = false ;
+// only tracks "useful" for DaVinci now are listed here 
+PrsPIDe.UseForward     = true  ;
+PrsPIDe.UseMatched     = true  ; 
+PrsPIDe.UseVelo        = false ;
+PrsPIDe.UseVeloTT      = false ;
+PrsPIDe.UseVeloBack    = false ;
+PrsPIDe.UseSeed        = false ; 
+PrsPIDe.UseUpstream    = false ;
+
+PrsPIDe.ValueBins      =  20        ;
+PrsPIDe.MomentumBins   =  25        ;
+PrsPIDe.ValueNorm      = 200. * MeV ; // tanh "cut" 
+PrsPIDe.MomentumNorm   =  30. * GeV ; // tanh "cut"
+
+#pragma print off 
+// 2D signal     pseudo-histogram 
+#include "$CALORECOOPTS/PrsPIDe_Signal.opts" 
+// 2D background pseudo-histogram 
+#include "$CALORECOOPTS/PrsPIDe_Background.opts" 
+#pragma print on
+
+
+
+
+// ============================================================================
+// The END 
+// ============================================================================
+

@@ -4,6 +4,27 @@
 ! Purpose     : Main Package for Calorimeter Reconstruction Software 
 !-----------------------------------------------------------------------------
 
+! 2002-11-17 - Ivan Belyaev
+ - src/CaloTrackIdEval.cpp,.h     - remove these prototypes 
+ - CaloTrack2EstimatorAlg.cpp,.h  - new generic algorithm for building the 
+                                    generic relations of tracks and 
+                                    some caloriemter estimators
+                                    (e.g. energy in Hcal or energy in Prs)
+ - CaloTrack2IdAlg.cpp, .h        - new generic algorithm to build 
+                                    the actual PID estimators from 
+                                    measured values using reference 
+                                    "Signal" and "Background" distributions 
+
+ - CaloTrackEcalEval.cpp,.h      - concrete tool, which frm given chi2 table
+                                    gets Ecal estimator 
+ - CaloTrackHcalEval.cpp,.h      - prototype of concrete tool, which evaluates 
+                                   the energy in Hcal for given track 
+ - CaloTrackPrsEval.cpp,.h       - concrete tool, which evaluates 
+                                   the energy in Prs for given track 
+
+ - options/*.opts                - a lot of new configuration options, 
+                                   need to ne tuned next week 
+ 
 ! 2002-11-14 - Richard Beneyton
  - Update L Correction coeff and calcul in CaloLCorrectionSimple
    with default parameters in code (supressed in option file)
@@ -12,8 +33,7 @@
    rq.: alg not based on CaloSCorrectionSequence due to special 
     energies definition
 
-!======================= CaloRec v1r0 2002-11-14 ============================
 ! 2002-10-31 - Ivan Belyaev
  - New package 
  - All algorithms from CaloAlgs,CaloRec,CaloTools,CaloTrackTools 
-	are grouped togather 
+	are grouped together 

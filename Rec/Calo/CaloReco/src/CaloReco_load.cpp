@@ -1,8 +1,11 @@
-// $Id: CaloReco_load.cpp,v 1.1.1.1 2002-11-13 20:46:39 ibelyaev Exp $
+// $Id: CaloReco_load.cpp,v 1.2 2002-11-17 17:09:26 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.1.1.1  2002/11/13 20:46:39  ibelyaev
+// new package 
+//
 // ============================================================================
 // Include files
 // LHCbKernel
@@ -60,6 +63,13 @@ DECLARE_FACTORY_ENTRIES(CaloReco)
   
   DECLARE_TOOL        ( CaloSelectNeutralCluster            ) ;
 
+  // Native 
+  DECLARE_ALGORITHM   ( CaloTrack2EstimatorAlg              ) ;
+  DECLARE_ALGORITHM   ( CaloTrack2IdAlg                     ) ;
+  DECLARE_TOOL        ( CaloTrackPrsEval                    ) ;
+  DECLARE_TOOL        ( CaloTrackHcalEval                   ) ;
+  DECLARE_TOOL        ( CaloTrackEcalEval                   ) ;
+
   // from CaloTools package 
   DECLARE_TOOL        ( CaloClusterResetFractions           ) ;
   DECLARE_TOOL        ( ClusterCovarianceMatrixTool         ) ;
@@ -110,6 +120,7 @@ DECLARE_FACTORY_ENTRIES(CaloReco)
   DECLARE_TOOL        ( CaloTrackMatchPhoton                ) ;
   DECLARE_TOOL        ( CaloTrackMatchElectron              ) ;
   DECLARE_TOOL        ( CaloTrackMatchBremm                 ) ;
+
 
 };
 

@@ -1,0 +1,55 @@
+// $Id: PrsE.opts,v 1.1 2002-11-17 17:09:26 ibelyaev Exp $
+// ============================================================================
+// CVS tag $Name: not supported by cvs2svn $ 
+// ============================================================================
+// $Log: not supported by cvs2svn $
+// ============================================================================
+
+/** @file 
+ *  Configuration option to run CaloTrack2EstimatorAlg "PrsE"
+ *  
+ *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
+ *  @date 2002-10-31
+ */
+
+/// Configuration of The Associator
+
+ToolSvc.PrsE.Location      = "Rec/Calo/PrsE" ;
+ToolSvc.PrsE.AlgorithmType = "CaloTrack2EstimatorAlg" ;
+ToolSvc.PrsE.AlgorithmName = "PrsE" ;
+
+/// Configuration of The Algorithm
+
+// The defualt value 
+// PrsE.Input = *TrStoredTrackLocation::Default* 
+PrsE.Output        = "Rec/Calo/PrsE"    ;
+PrsE.EvaluatorType = "CaloTrackPrsEval" ;
+PrsE.EvaluatorName = "PrsEvalE"         ;
+
+// use only unique tracks? 
+PrsE.UseUnique     = true  ;
+// use error tracks ? 
+PrsE.UseError      = false ;
+PrsE.UseForward    = true  ;
+PrsE.UseMatched    = true  ; 
+PrsE.UseVelo       = false ;
+PrsE.UseVeloTT     = false ;
+PrsE.UseVeloBack   = false ;
+PrsE.UseSeed       = false ; 
+PrsE.UseUpstream   = false ;
+
+/// configuration of the Evaluator itself 
+
+// The defualt value 
+// ToolSvc.PrsEvalE.Detector = *DecalorimeterLocation::Prs* ;
+// The defualt value 
+// ToolSvc.PrsEvalE.BadValue = -100* GeV                     ;
+// The defualt value 
+// ToolSvc.PrsEvalE.AssociatorType = 
+//  "AssociatorWeighted<CaloHypo,TrStoredTrack,float>" ;
+// The defualt value 
+// ToolSvc.PrsEvalE.AssociatorName = "ElectronMatch"   ;
+
+// ============================================================================
+// The END
+// ============================================================================

@@ -1,8 +1,11 @@
-// $Id: CaloHypo2TrackAlg.h,v 1.1.1.1 2002-11-13 20:46:40 ibelyaev Exp $
+// $Id: CaloHypo2TrackAlg.h,v 1.2 2002-11-17 17:09:26 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.1.1.1  2002/11/13 20:46:40  ibelyaev
+// new package 
+//
 // ============================================================================
 #ifndef CALOREC_CALOHypo2TrackAlg_H 
 #define CALOREC_CALOHypo2TrackAlg_H 1
@@ -16,7 +19,7 @@ class ICaloTrackMatch;   // CaloInterfaces
 
 /** @class CaloHypo2TrackAlg CaloHypo2TrackAlg.h
  *  
- *  Algoriothm which performs the matching of 
+ *  Algorithm which performs the matching of 
  *  CaloHypo objects with reconstructed tracks.
  *  Algorithm produces the relation table between 
  *  Hypos and tracks with weight = chi2 of matching.
@@ -95,36 +98,36 @@ private:
 private:
   
   /// address of Tracks 
-  std::string      m_tracks    ;
+  std::string        m_tracks       ;
   
   /// cut value 
-  double           m_cut       ;
+  double             m_cut          ;
   // track flags to be used
   
   // use *ONLY* 'unique' tracks 
-  bool               m_unique    ;
+  bool               m_unique       ;
   
   // use 'error'   tracks  
-  bool               m_error     ;
+  bool               m_error        ;
   // use 'forward' tracks  
-  bool               m_forward   ;
+  bool               m_forward      ;
   // use  'match'  tracks
-  bool               m_matched   ;
+  bool               m_matched      ;
   // use  'seed'   tracks
-  bool               m_seed      ;
+  bool               m_seed         ;
   // use  'velo'   tracks
-  bool               m_velo      ;
+  bool               m_velo         ;
   // use  'veloTT' tracks
-  bool               m_veloTT    ;
+  bool               m_veloTT       ;
   // use  'veloBack' tracks
-  bool               m_veloBack  ;
+  bool               m_veloBack     ;
   // use  'upstream' tracks
-  bool               m_upstream  ;
+  bool               m_upstream     ;
   
   // matching tool 
-  std::string      m_matchType ;
-  std::string      m_matchName ;
-  ICaloTrackMatch* m_match     ;
+  std::string        m_matchType    ;
+  std::string        m_matchName    ;
+  ICaloTrackMatch*   m_match        ;
   
 };
 
