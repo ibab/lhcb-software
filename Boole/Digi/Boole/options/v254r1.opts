@@ -15,7 +15,7 @@ Digi.DetectorList += { "Bkg" };           // Comment to switch off LHC backgroun
 // Database specific options
 //---------------------------------------------------------------------------
 DetectorDataSvc.DetDbLocation = "$XMLDDDBROOT/DDDB/v254r1.xml";
-#include "$RICHREADOUTOPTS/BooleDigiHPD_SICB.opts"
+#include "$RICHREADOUTOPTS/BooleDigi_SICB.opts"
 #pragma print on
 
 //---------------------------------------------------------------------------

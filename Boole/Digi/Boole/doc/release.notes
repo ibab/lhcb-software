@@ -18,7 +18,9 @@ Purpose: LHCb Digitization program
 
 - DST changes
    - Change to RichSmartID. Data produced with this version of Boole requires
-     Brunel v21r*. (RichKernel v4r0, RichEvent v5r2)
+     Brunel v21r*. (RichKernel v4r0, RichEvent v6r0)
+   - HLTBuffer event class renamed HltBuffer 
+     (DAQEvent v2r0, GaudiConf v7r2, DigiAlgs v2r1)
 
 - Geometry changes
    - Renamed v200309-hpd.opts to v200311.opts
@@ -28,7 +30,6 @@ Purpose: LHCb Digitization program
    - Fix uninitalised variable in RichHPDSignalSICB.cpp (bug 1669)
 
 - Package changes
-   - New name HltBuffer (instead of HLTBuffer) (DAQEvent v2r0, DigiAlgs v2r1)
    - Remove dependency from ParamFiles for beam data in LumiTool: "BeamCrossRate"
      and "TotalCrossSection" taken from job options (DigiAlgs v2r1)
    - Remove dependency from CERNLIB for solution of quartic polynomial. Now done

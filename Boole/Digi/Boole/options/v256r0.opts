@@ -6,7 +6,7 @@
 Digi.DetectorList = { "Spillover" };      // Comment to switch off spillover
 Digi.DetectorList += { "Bkg" };           // Comment to switch off LHC background
 #include "$BOOLEOPTS/Boole.opts"          // Generic options for all jobs
-//#include "$BOOLEOPTS/BooleMoniProd.opts"  // Default monitoring for production
+#include "$BOOLEOPTS/BooleMoniProd.opts"  // Default monitoring for production
 #include "$BOOLEOPTS/BooleOutput.opts"    // Comment to switch off output
 
 //---------------------------------------------------------------------------
