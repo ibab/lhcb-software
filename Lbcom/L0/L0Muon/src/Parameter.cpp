@@ -1,4 +1,9 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/L0/L0Muon/src/Parameter.cpp,v 1.3 2001-05-04 10:22:28 cattaneb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/L0/L0Muon/src/Parameter.cpp,v 1.4 2001-05-04 14:51:30 cattaneb Exp $
+
+#ifdef WIN32
+// Disable warning C4786 identifier truncated to 255 characters in debug info.
+#pragma warning ( disable : 4786 )
+#endif // WIN32
 
 // Include files
 #include "Parameter.h"
@@ -8,11 +13,6 @@
 // Implementation of class :  Parameter
 //
 //-----------------------------------------------------------------------------
-
-#ifdef WIN32
-// Disable warning C4786 identifier truncated to 255 characters in debug info.
-#pragma warning ( disable : 4786 )
-#endif // WIN32
 
 // Standard Constructors
 Parameter::Parameter()
@@ -110,11 +110,6 @@ long Parameter::sizeVector(const std::string& name) const {
     }	
 }   
 
-#ifdef WIN32
-// Re-enable warning C4786
-#pragma warning ( default : 4786 )
-#endif // WIN32
-
 
 void Parameter::addParameter( double x, const std::string& name) {
     m_parameter[name] = x;
@@ -131,14 +126,16 @@ void Parameter::addParameterVector( const std::vector<double>& y,
 
 void Parameter::addParameterVector( const std::vector<long>& y,
                                              const std::string& name) {
-    std::vector<double> tmp(y.begin(),y.end());					     
-    m_parameterVector[name] = tmp;
+  std::vector<double> tmp(y.size());
+  std::copy( y.begin(), y.end(), tmp.begin() );
+  m_parameterVector[name] = tmp;
 }
 
 void Parameter::addParameterVector( const std::vector<int>& y,
                                              const std::string& name) {
-    std::vector<double> tmp(y.begin(),y.end());					     
-    m_parameterVector[name] = tmp;
+  std::vector<double> tmp(y.size());
+  std::copy( y.begin(), y.end(), tmp.begin() );
+  m_parameterVector[name] = tmp;
 }
 
 inline long Parameter::toLong ( double d ) const {
@@ -148,3 +145,8 @@ inline long Parameter::toLong ( double d ) const {
         return (long)(d-0.5);
     }
 } 
+
+#ifdef WIN32
+// Re-enable warning C4786
+#pragma warning ( default : 4786 )
+#endif // WIN32

@@ -1,7 +1,6 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/L0/L0Muon/src/Parameter.h,v 1.2 2001-05-03 09:10:32 atsareg Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/L0/L0Muon/src/Parameter.h,v 1.3 2001-05-04 14:51:31 cattaneb Exp $
 #ifndef PARAMETER_H
 #define PARAMETER_H 1
-
 
 // Include files
 
@@ -10,13 +9,13 @@
 #include <string>
 
 
-//------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 //
 // ClassName:   Parameter
 //  
 // Description: Provide parameters to Detector elements.
 //
-//------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 
 
 class Parameter 
