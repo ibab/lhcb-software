@@ -1,4 +1,4 @@
-// $Id: UnconstVertexFitter.cpp,v 1.5 2002-05-17 22:29:02 gcorti Exp $
+// $Id: UnconstVertexFitter.cpp,v 1.6 2002-10-22 17:46:31 gcorti Exp $
 // Include files
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h"
@@ -46,11 +46,13 @@ UnconstVertexFitter::UnconstVertexFitter(const std::string& type,
                                          const std::string& name, 
                                          const IInterface* parent) 
   : AlgTool( type, name, parent )
-  , m_pTransporter(0) {
+  , m_pTransporter(0)
+  , m_transporterType("CombinedTransporter") {
 
   declareInterface<IVertexFitter>(this);
 
-
+  declareProperty("Transporter", m_transporterType);
+  
 }
 
 
@@ -61,7 +63,7 @@ UnconstVertexFitter::UnconstVertexFitter(const std::string& type,
 StatusCode UnconstVertexFitter::initialize() {
   MsgStream log( msgSvc(), name() );
   
-  StatusCode sc = toolSvc()->retrieveTool("CombinedTransporter", 
+  StatusCode sc = toolSvc()->retrieveTool( m_transporterType,
                                            m_pTransporter, this);
   if(sc.isFailure()) {
     log << MSG::FATAL << "    Unable to retrieve ParticleTransporter  tool" ;
@@ -100,12 +102,56 @@ StatusCode UnconstVertexFitter::fitVertex( Particle& particle1,
   return fitVertex(pList,myVertex);
 
 }
+//==================================================================
+// Perform vertex fit for a vector of particles.
+// If one of them is a resonance, use the daughters to fit
+//==================================================================
+StatusCode UnconstVertexFitter::fitVertex( const ParticleVector& 
+                                                   pList,
+                                                   Vertex& myVertex ) {
+
+  MsgStream log(msgSvc(), name());
+  log << MSG::DEBUG << "Hello From Vertex Fitter With Daughters" << endreq;
+  
+  if (pList.size() < 2) {
+   log << MSG::INFO << "Particle Vector size is less than 2" << endreq;   
+   return StatusCode::FAILURE;
+  } 
+
+  ParticleVector particleList;
+  
+  ParticleVector::const_iterator iterP;
+  SmartRefVector<Particle>::iterator itMother;
+  for(iterP = pList.begin(); iterP != pList.end(); iterP++) {
+    if ((*iterP)->isResonance()){
+      for ( itMother = (*iterP)->endVertex()->products().begin();
+            itMother != (*iterP)->endVertex()->products().end(); itMother++ ){
+        particleList.push_back(*itMother);
+
+      }
+ 
+    }
+    else{
+      particleList.push_back(*iterP);
+      
+
+    }
+    
+    
+  }
+  
+
+
+
+  return doFitVertex(particleList,myVertex);
+
+}
 
  
 //==================================================================
 // Perform a fit between a vector of particles 
 //==================================================================
-StatusCode UnconstVertexFitter::fitVertex( const ParticleVector& particleList,
+StatusCode UnconstVertexFitter::doFitVertex( const ParticleVector& particleList,
                                            Vertex& myVertex ) {
 
   MsgStream log(msgSvc(), name());
@@ -133,6 +179,7 @@ StatusCode UnconstVertexFitter::fitVertex( const ParticleVector& particleList,
   ParticleVector::const_iterator iterP;
   for(iterP = particleList.begin(); iterP != particleList.end(); iterP++) {
     
+
     // transport particle to zEstimate 
 
     Particle transParticle;
@@ -174,16 +221,16 @@ StatusCode UnconstVertexFitter::fitVertex( const ParticleVector& particleList,
     hessian(1,1) += cov(1,1);
     hessian(1,2) += cov(1,2);
     hessian(2,2) += cov(2,2);
-    hessian(1,3) -= (cov(1,1)*(*iterP)->slopeX() +
-                     cov(1,2)*(*iterP)->slopeY());
-    hessian(2,3) -= (cov(2,2)*(*iterP)->slopeY() +
-                     cov(1,2)*(*iterP)->slopeX());
-    hessian(3,3) += (cov(1,1)*(*iterP)->slopeX()*
-                     (*iterP)->slopeX() +
-                     cov(2,2)*(*iterP)->slopeY()*
-                     (*iterP)->slopeY() +
-                     2.*cov(1,2)*(*iterP)->slopeX()*
-                     (*iterP)->slopeY());
+    hessian(1,3) -= (cov(1,1)*transParticle.slopeX() +
+                     cov(1,2)*transParticle.slopeY());
+    hessian(2,3) -= (cov(2,2)*transParticle.slopeY() +
+                     cov(1,2)*transParticle.slopeX());
+    hessian(3,3) += (cov(1,1)*transParticle.slopeX()*
+                     transParticle.slopeX() +
+                     cov(2,2)*transParticle.slopeY()*
+                     transParticle.slopeY() +
+                     2.*cov(1,2)*transParticle.slopeX()*
+                     transParticle.slopeY());
     
     //    HepPoint3D firstp = (*iterP)->pointOnTrack();
     //    log << MSG::DEBUG << " x firstp  " << firstp.x() << endreq;
@@ -191,15 +238,16 @@ StatusCode UnconstVertexFitter::fitVertex( const ParticleVector& particleList,
     
     divChi(1) += (cov(1,1)*newPoint.x() +  cov(1,2)*newPoint.y());
     divChi(2) += (cov(2,2)*newPoint.y() +cov(1,2)*newPoint.x());
-    divChi(3) -= (cov(1,1)*newPoint.x()* (*iterP)->slopeX() +
-                  cov(2,2)*newPoint.y()* (*iterP)->slopeY() +
-                  cov(1,2)*(newPoint.x()*(*iterP)->slopeY() +
-                            newPoint.y()*  (*iterP)->slopeX()));
+    divChi(3) -= (cov(1,1)*newPoint.x()* transParticle.slopeX() +
+                  cov(2,2)*newPoint.y()* transParticle.slopeY() +
+                  cov(1,2)*(newPoint.x()*transParticle.slopeY() +
+                            newPoint.y()*  transParticle.slopeX()));
     
     vertexChi2 += (cov(1,1)*newPoint.x()* newPoint.x() +
                    cov(2,2)*newPoint.y()*newPoint.y() +
                    2.*cov(1,2)*newPoint.x()*newPoint.y() );
   }
+  
   
   
   
@@ -324,6 +372,7 @@ double UnconstVertexFitter::getZEstimate( const ParticleVector& particleList) {
   }
 // **** End Estimate the Vertex Position *****
 }
+
 
 
 
