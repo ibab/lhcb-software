@@ -88,8 +88,8 @@ BrunelRecoTRACKSeq.Members = { "FwtFind", "TrEventTracksFitter/FitFw", "StoreTra
 //#include "$TRALGORITHMSROOT/options/Brunel.opts"
 //#include "$TRSICBCNVROOT/options/Brunel.opts"
 
-// Muon Fortran digitisation, coordinate reconstruction, MuonID
+// Muon Fortran digitisation, coordinate reconstruction, MuonID, cleaning
 ApplicationMgr.DLLs += { "MuonSicbCnv", "MuonDet", "MuonRec", "MuonID" };
 BrunelDigiMUONSeq.Members = { "BrunelDigiMUON" };
-BrunelRecoMUONSeq.Members = { "MuonRec", "MuonIDFOI" };
+BrunelRecoMUONSeq.Members = { "MuonRec", "MuonIDFOI", "MuonDSTPrepare" };
 #include "$MUONIDROOT/options/MuonIDFOI.opts"

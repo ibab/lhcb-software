@@ -21,7 +21,6 @@ MessageSvc.OutputLevel = 3;
 
 // Suppress excessive messages from some algorithms/components
 ApplicationMgr.OutputLevel = 4;
-XmlDetElemCnv.OutputLevel = 4;
 RichMCDigitToDigitAlg.OutputLevel = 4;
 BrunelDigi.OutputLevel = 4;
 BrunelTrigger.OutputLevel = 4;

@@ -56,10 +56,10 @@ BrunelDstWriter.ItemList =
 , "/Event/Rec/Muon/M3#1"
 , "/Event/Rec/Muon/M4#1"
 , "/Event/Rec/Muon/M5#1"
-, "/Event/Rec/Muon/M1/Coords#1" // To be filtered
-, "/Event/Rec/Muon/M2/Coords#1" // To be filtered
-, "/Event/Rec/Muon/M3/Coords#1" // To be filtered
-, "/Event/Rec/Muon/M4/Coords#1" // To be filtered
-, "/Event/Rec/Muon/M5/Coords#1" // To be filtered
+, "/Event/Rec/Muon/M1/Coords#1" // Filtered (only if used by MuonID)
+, "/Event/Rec/Muon/M2/Coords#1" // Filtered (only if used by MuonID)
+, "/Event/Rec/Muon/M3/Coords#1" // Filtered (only if used by MuonID)
+, "/Event/Rec/Muon/M4/Coords#1" // Filtered (only if used by MuonID)
+, "/Event/Rec/Muon/M5/Coords#1" // Filtered (only if used by MuonID)
 , "/Event/Rec/Muon/MuonID#1"
 };

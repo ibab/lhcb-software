@@ -4,7 +4,7 @@ Package Coordinator: Marco Cattaneo
 
 Purpose: LHCb reconstruction program
 
-</PRE><H1><A NAME=v10r0>20020521 Brunel v10r0</A></H1><PRE>
+</PRE><H1><A NAME=v10r0>20020522 Brunel v10r0</A></H1><PRE>
    >>>>>>>>>>>>>>>>>>>>>>>>>>> Beware!!! <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< 
    >>>>>>>>> Current head revision has limited functionality!! <<<<<<<<<<<<
 
@@ -25,6 +25,7 @@ Purpose: LHCb reconstruction program
      - MUON Digitisation (old SICB Fortran version), reconstruction, MuonID
      - L0 trigger simulation
      - Complete DST output (except L1 trigger, Rich PID, Calo PID)
+         including coordinate cleaning for Muon
    >>>>>>
 
    Backwards incompatible version for use with the new event model.
