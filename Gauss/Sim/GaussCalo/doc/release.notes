@@ -7,6 +7,10 @@
 !                  : G4 actions, etc for LHCb calorimeters
 !-----------------------------------------------------------------------------
 
+!========================== GaussCalo v5r0 =================================
+! 2003-12-10 - Patrick Robbe
+ - src/CaloSensDet.h, EHCalSensDet.cpp - fix for new LHCb v14r0, Gaudi v13r0
+
 !========================== GaussCalo v4r3 ===============================
 ! 2003-12-09 - Ivan BELYAEV
  - src/CaloSubHit.h   fix for new LHCbKernel 

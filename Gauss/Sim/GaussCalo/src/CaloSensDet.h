@@ -1,8 +1,11 @@
-// $Id: CaloSensDet.h,v 1.8 2003-07-08 19:40:57 ibelyaev Exp $ 
+// $Id: CaloSensDet.h,v 1.9 2003-12-10 13:49:30 ranjard Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.8  2003/07/08 19:40:57  ibelyaev
+//  Sensitive Plane Detector + improved printout
+//
 // Revision 1.7  2003/07/08 11:12:40  ibelyaev
 //  few fixes in base class CaloSensDet
 //
@@ -23,12 +26,13 @@
 /// GiGa 
 #include "GiGa/GiGaSensDetBase.h"
 #include "GiGa/GiGaHashMap.h"
+/// AIDA
+#include "AIDA/IHistogram1D.h"
 /// local
 #include "CaloSim.h"
 #include "CaloHit.h"
 /// forward declarations 
-class DeCalorimeter ;  // CaloDet 
-class IHistogram1D  ;  // AIDA 
+class DeCalorimeter ;  // CaloDet
 class IHistogramSvc ;  // GaudiKernel 
 
 /** @class CaloSensDet CaloSensDet.h CaloSensDet.h
@@ -50,7 +54,7 @@ public:
   typedef GiGaHashMap<CaloSim::Path,CaloCellID> Table      ;
   typedef GiGaHashMap<CaloCellID,CaloHit*>      HitMap     ;
   /// type for all histograms 
-  typedef std::vector<IHistogram1D*>            Histos     ;
+  typedef std::vector<AIDA::IHistogram1D*>            Histos     ;
   /// the typedef for vector of fractions       
   typedef std::vector<double>                   Fractions  ;
 

@@ -1,8 +1,11 @@
-// $Id: EHCalSensDet.cpp,v 1.1 2003-07-07 08:21:07 ibelyaev Exp $ 
+// $Id: EHCalSensDet.cpp,v 1.2 2003-12-10 13:49:30 ranjard Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.1  2003/07/07 08:21:07  ibelyaev
+//  split the general CaloSensDet class
+//
 // ============================================================================
 /// SRD & STD 
 #include <algorithm>
@@ -102,7 +105,7 @@ StatusCode EHCalSensDet::timing
   for ( Histos::const_iterator ihist = histos().begin() ; 
         histos().end() != ihist ; ++ihist ) 
     {
-      const IHistogram1D* histo = *ihist ;
+      const AIDA::IHistogram1D* histo = *ihist ;
       const int           bin   = histo -> coordToIndex ( dt / ns ) ;
       const double        frac  = histo -> binHeight    ( bin     ) ;
       fractions.push_back( frac ) ;
