@@ -1,14 +1,14 @@
 ! =============================================================================
-! $Id: release.notes,v 1.135 2003-04-15 09:45:50 sponce Exp $ 
+! $Id: release.notes,v 1.136 2003-04-15 10:00:01 cattanem Exp $ 
 ! =============================================================================
 ! package DetDesc
 ! package manager : N.N 
 ! =============================================================================
 
+!======================== DetDesc v11r9 2003-04-15 ========================
 ! 2003-04-15 - Sebastien Ponce
  - fix a memory leak in DetectorElement reported by David Hutchcroft
 
-!======================== DetDesc v11r9 2003-04-15 ========================
 ! 2003-04-04 - Ivan BELYAEV
  - src/SolidSphere.cpp        the next iteration of bug removal from setBP method   
  - src/SolidCons.cpp          the next iteration of bug removal from setBP method   
