@@ -3,6 +3,7 @@ version v1r8
 
 # ================ structure =================================================
 branches cmt doc src
+include_path none
 
 # ================ environment ===============================================
 set RICHREADOUTOPTS $(RICHREADOUTROOT)/options
@@ -10,7 +11,6 @@ set RICHREADOUTOPTS $(RICHREADOUTROOT)/options
 # ================ dependencies ==============================================
 use AIDA             v*                                 -no_auto_imports
 use ParamFiles       v*      $(LHCb_release_area)/PARAM -no_auto_imports
-use RichEvent        v7r*    Event
 use RichDetTools     v4r*    Rich
 
 # ================ component library =========================================
