@@ -2,8 +2,56 @@
 Package : Gauss
 Package manager : Witek Pokorski
 </PRE>
-!=========================================================================
 
+<H1><A NAME="v15r2">2004-03-22 - Gauss v15r2</A></H1><PRE>
+This version fix the vertex process type definition
+uses LHCb v15r4, FieldMap v4r5 (new field map), Geant4 v60r0p2
+
+!======================== GeneratorModules v11r2 ======================
+! 2004-03-22 - Patrick Robbe
+ - EvtGenTool : add methods to obtain the branching fraction of the 
+    signal decay in the generic decay file.
+ - GenBaseAlg/PythiaAlg : reject with ~50% probability events with one
+    B and no Bbar or one Bbar and no B, since the signal decay mode
+    is rare, in order to have correct population of BBbar event.
+
+! 2004-03-18 - Patrick Robbe
+ - EvtGenTool : add alias for J/psi : J/psisig
+ - GenBaseAlg : add counters
+ - PythiaAlg : skip event in repeated hadronization scheme as soon as a
+    B of interest if found. Fix in order not to have two signal decays
+    when two b interactions are present in the same event.
+
+!========================= GiGav16r2 ======================================
+! 2004-03-20 - Ivan BELYAEV
+ - src/Lib/DumpG4Track.cpp
+ - src/Lib/DumpG4Step.cpp   - add few std::flush into printouts + 
+                              static counters for total number of occurance
+ - cmt/requirements         - increment the version
+ 
+!======================= GiGaCnv v15r1 =====================================
+! 2004-03-21 - Vanya BELYAEV
+ - add "AntiSigmaPlusInelastic", "SigmaPlusInelastic" and "XiMinusInelastic"
+   to the list of known hadronic processes to reduce 
+   the amount of MCVertices with the status/type Unknown 
+
+   after this fix on statistics of 250 event at teh end of the job one gets 
+ 
+GiGaMCVCnv SUCCESS #WARNINGS = 782 Message='GiGaMCVertexCnv: VertexType is still unknown'
+GiGaMCVCnv SUCCESS #WARNINGS = 779 Message='GiGaMcVertexCnv: The process is known 'RichG4Cerenkov', but vertex type is still 'Unknown''
+GiGaMCVCnv SUCCESS #WARNINGS =   3 Message='GiGaMcVertexCnv: The process is known 'phot', but vertex type is still 'Unknown''
+
+! 2004-03-20 - Vanya BELYAEV
+ - add "AntiLambdaInelastic" and  "AntiXiZeroInelastic" into the list of known 
+   hadronic processes to reduce the amount of MCVertices with status 'Unknown'
+ - src/component/GiGaMCVertexCnv.h,.cpp - fix with definition of MCVertex type 
+   add a warning printout for MCVertex::Unknown 
+   (hope it helps to fix the problem)
+ - GiGaCnv/GiGaCnvBase.h , src/Lib/GiGaCnvBase.cpp -  improve Error/Warning
+   printout 
+ - cmt/requirements - increase the version 
+
+!==========================================================================
 <H1><A NAME="v15r1">2004-03-17 - Gauss v15r1</A></H1><PRE>
 This version should fix the ToF NaN/infinite problem and the peak seen 
 in front of M1.
