@@ -15,6 +15,15 @@
 #     (optionally: caller3 name) - according to doc. But valgrind dies...
 # }
 
+# Boole errors
+{
+  RichReadout/v1r0/bug-1669
+  Memcheck:Value8
+  fun:_ZN17RichHPDSignalSICB12ProcessEventESsd
+  fun:_ZN17RichHPDSignalSICB7executeEv
+}
+
+
 # glibc/Gaudi problems (gcc 2.95.2 on rh7.3, Gaudi v11r4-v12r0) 
 {
   strlen/ld-2.2.5.so
@@ -109,7 +118,6 @@
   Memcheck:Value4
   fun:R__Deflate
   fun:R__zip
-  fun:_ZN4TKeyC1EP7TObjectPKci
 }
 
 {
