@@ -4,6 +4,6 @@ version v1r0
 
 branches	cmt doc RichKernel
 
-include_dirs 	${RICHKERNELROOT}
+include_dirs 	$(RICHKERNELROOT)
 
 use LHCbKernel	v1r*
