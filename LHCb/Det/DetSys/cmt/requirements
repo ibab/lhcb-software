@@ -13,5 +13,5 @@ use CaloDetXmlCnv  	v2r3p1	Det
 use MuonDet        	v4r6	Det
 use Magnet        	v2r6	Det
 use MuonTools	   	v3r7	Muon
-use RichDet	   	v7r1	Det
+use RichDet	   	v7r2	Det
 use STDet          	v1r2	Det
