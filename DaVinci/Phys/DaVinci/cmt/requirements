@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.16 2002-04-03 17:29:44 gcorti Exp $
+# $Id: requirements,v 1.17 2002-05-15 23:42:20 gcorti Exp $
 # Created    : 07/02/2002
 # Maintainer : Gloria Corti
 #
@@ -8,7 +8,7 @@
 #--- Allows reading of data produced with Brunel >= v5
 #    Reading of files produced with SICBDST is not supported in DaVinci v2r0
 package           DaVinci
-version           v3r0
+version           v4r0
 
 # Structure, i.e. directories to process. 
 #============================================================================
@@ -28,73 +28,65 @@ version_strategy first_choice
 # Used packages. Specify the version, * at the end specifies 'any revision'
 #============================================================================
 #--- CMT and Gaudi policy
-use GaudiPolicy  v5r4
+use GaudiPolicy  v5r5
 
 #--- It is possible to select the appropriate database version in DaVinci.job
 #--- Uncomment and modify next line to select an appropriate database version
 #--- It must be consistent with the file you are reading
 #use dbase v241 SICB
 
-#--- External libraries - Gaudi v9
-use ExternalLibs   v3r4
-use AIDA           v1r0
-use CLHEP          v17r10
-use HTL            v13r10
-use XERCES         v15r2
+#--- External libraries - Gaudi v10r0
+use ExternalLibs   v3r6
+use AIDA           v2r2
+use CLHEP          v17r10p1
+use HTL            v13r10p1
+#use NAGC           v5r0
+#use ROOT           v3r01p1
+use XERCES         v16r0p1
 use CERNLIB        v2001
 
-#--- Gaudi libraries - Gaudi v9r2 + bug fixes
-use GaudiKernel        v11r1
-use GaudiSvc           v7r3
-use GaudiAud           v5r0
-use GaudiAlg           v5r1
-use GaudiTools         v5r0
-use GaudiNagC          v6r0
-use GaudiDb            v5r0
-use GaudiIntrospection v3r0
-use GaudiObjDesc       v3r3   
+#--- Gaudi libraries - Gaudi v10r2
+use GaudiKernel        v12r2
+use GaudiSvc           v8r0
+use GaudiAlg           v6r0
+use GaudiAud           v6r0
+use GaudiTools         v6r0
+use GaudiNagC          v7r0
+use GaudiDb            v7r0
+use GaudiRootDb        v7r0
+# the two following should no longer be necessary (privately used by Events..)
+#use GaudiIntrospection v4r0
+#use GaudiObjDesc       v4r1
 
 #--- Histogram persistency ( choose the one you prefer )
-use HbookCnv           v11r0
-#use RootHistCnv        v5r0
+use HbookCnv           v12r0
+#use RootHistCnv        v6r0
 
 #---LHCb common libraries
-use GaudiConf      v6r2
+use GaudiConf      v6r3
 use BookKeeping    v1r1   Tools
+use LHCbKernel     v1r0   Kernel
 use Finclude       v12r2  SICB
 use Futio          v11    SICB
 
 #--- Subdetector Kernels ( add any other Kernel you need )
-use CaloKernel     v1r*   Calo
+# do we want * here or not?
 
 #--- Detector description ( add any other Det package you need )
-use XmlDDDB        v7r*   Det
-use DetDesc        v9r*   Det
-use CaloDet        v3r*   Det
-use VeloDet        v3r*   Det
+use XmlDDDB        v11r0   Det
+use DetDesc        v10r0   Det
+use VeloDet        v5r0   Det
 
-#--- Event Model ( add any other Event package you need )
-use EventKernel    v1r0   Event
-use LHCbEvent      v12r*  Event
-use CaloEvent      v7r*   Event
-use VeloEvent      v6r*   Event
-use L0Event        v10r*  Event
-use L1Event        v6r*   Event
-use PhysEvent      v3r*   Event
+#--- Event Model ( via EventSys the whole Event Model is available )
+use EventSys       v10r0  Event
+#--- Minimal Event Model for Physics Analysis
+#use EventKernel    v1r0   Event
+#use Event          v1r0   Event
+#use PhysEvent      v4r0   Event
 
 #--- SicB event data persistency
-use SicbCnv        v15r*  SICB
-use CaloSicbCnv    v5r*   SICB
-use MuonSicbCnv    v4r*   SICB
-use VSicbCnv       v6r*   SICB
-use L0SicbCnv      v4r*   SICB
-
-#--- L0 trigger
-use L0Calo         v4r*   L0
-use L0Muon         v4r*   L0
-use VeloDigit      v1r*   Velo
-use PuVeto         v1r*   L0
-use L0DU           v4r*   L0
+use SicbCnv        v16r0  SICB
+use PhysSicbCnv    v1r0   SICB
 
 #--- SICBDST necessary libraries
 #--- Please note that if it is necessary to process event with additional
@@ -108,8 +100,14 @@ use axreclib       v4r*   SICB
 use axsellib       v6r*   SICB
 
 #--- DaVinci packages
-use DaVinciSicb    v2r*   Phys
-use DaVinciTools   v3r*   Phys
+use DaVinciSicb          v3r*   Phys
+use DaVinciTools         v4r*   Phys
+#use DaVinciAssociators   v1r*   Phys
+#use PVertices           v1r*   Phys
+#use Selections          v1r*   Phys
+#use Tagging             v1r*   Phys
+#use DaVinciTest          v1r*   Phys
+#use DaVinciUser         v1r*   Phys
 
 # Build DaVinci Application with standard executable and user example code
 # Note that user code can also be located in a component library (see details
@@ -117,7 +115,8 @@ use DaVinciTools   v3r*   Phys
 #============================================================================
 application      DaVinci    ../src/Main/DaVinciMain.cpp \
                             $(DAVINCISICBROOT)/src/Objs/*.F \
-                            ../src/User/*.cpp \
+# Rememeber no cpp anymore in ../src/User (only the suanal)
+#                            ../src/User/*.cpp \
                             ../src/User/*.F 
 
 # define link options
@@ -133,8 +132,8 @@ macro_append DaVinci_linkopts " "\
 
 # set the DaVinci version = v * 100000 + r * 100 + p * 100
 #============================================================================
-macro_append fflags   " -DDaVinciVersion=300000 " \
-             VisualC  " /DDaVinciVersion=300000 "
+macro_append fflags   " -DDaVinciVersion=400000 " \
+             VisualC  " /DDaVinciVersion=400000 "
 
-macro_append cppflags " -DDaVinciVersion=300000 " \
-             VisualC  " /DDaVinciVersion=300000 "
+macro_append cppflags " -DDaVinciVersion=400000 " \
+             VisualC  " /DDaVinciVersion=400000 "
