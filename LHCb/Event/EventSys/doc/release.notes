@@ -1,6 +1,10 @@
 package EventSys
 package manager: Marco Cattaneo
 
+!========================= EventSys v12r2 2002-07-29 =========================
+! 2002-07-29 - Marco Cattaneo
+ - Use MuonEvent v2r1
+
 !========================= EventSys v12r1 2002-07-29 =========================
 ! 2002-07-26 - Gloria Corti
  - Use PhysEvent v6r1
