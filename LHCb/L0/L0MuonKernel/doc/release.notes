@@ -4,6 +4,10 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+!======================= L0MuonKernel v2r3 2004-12-01 ========================
+! 2004-12-01 - Luisanna Tocco
+ - In CandidateTower, setOrderedBit corrected to include y Foi=0
+
 !======================= L0MuonKernel v2r2 2004-09-28 ========================
 ! 2004-09-28 - Luisanna Tocco
  - bug fixed in getPadIndex for stations 4 and 5

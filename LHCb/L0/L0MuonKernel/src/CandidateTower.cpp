@@ -132,6 +132,7 @@ setBit(int sta, std::vector<boost::dynamic_bitset<> >  table, int maxXFoi,
 
 
 //=========== ordered bits in M4-M5 =========================
+/*
 void  L0Muon::CandidateTower::
 setOrderedBit(int sta, std::vector<boost::dynamic_bitset<> >  table, 
               int maxXFoi, int maxYFoi, int offset){
@@ -146,30 +147,18 @@ setOrderedBit(int sta, std::vector<boost::dynamic_bitset<> >  table,
   int size = (2*m_xFoi[sta]+1)*(2*m_yFoi[sta]+1);
   boost::dynamic_bitset<> tmpbits(size);
   
-  //for (boost::dynamic_bitset<>::size_type k =0; k<tmpbits.size();k++){
-  //tmpbits[k]=1;
-    
-  //}
-  
-
-  //unsigned int maxxfoi = m_xFoi[sta];
   tmpbits[0]= table[y][x];
-  
- 
   tmpbits[1]=table[y][x+1];
-
   tmpbits[2]=table[y][x-1];
-
 
   for (int i=1; i<(2*m_xFoi[sta]+1); i++){
     if ( y< 4+2*m_yFoi[sta] ) {
-      if (tmpbits.size()>1) {
-        
+      if (tmpbits.size()>1) {        
         if ( i< ((2*m_xFoi[sta]+1)-1)/2){
-          
+     
           if ( (x+i+1)< 24+2*xfoi ) {
             tmpbits[2*i+1]=table[y][x+i+1];
-                        
+            
            
           }
           if ( (x-i-1)< 999999){
@@ -179,42 +168,21 @@ setOrderedBit(int sta, std::vector<boost::dynamic_bitset<> >  table,
             tmpbits[2*i+2]=0;
            
           }
-          
-          
-            
-          
+               
         }
         
           
-          
-          
-          
-          
-          
-        
       }
       
-        
-        
-        
-      
+              
     }
-    
-      
-      
-    
-  }
+    }
   
     
-          
-
   tmpbits[2*m_xFoi[sta]+1]= table[y-1][x];
-
   tmpbits[1+2*m_xFoi[sta]+1]=table[y-1][x+1];
- 
   tmpbits[2+2*m_xFoi[sta]+1]=table[y-1][x-1];
- 
-  
+   
   for (int i=1;  i<(2*m_xFoi[sta]+1); i++){
     
     if ( i< ((2*m_xFoi[sta]+1)-1)/2){
@@ -238,14 +206,10 @@ setOrderedBit(int sta, std::vector<boost::dynamic_bitset<> >  table,
   }
   
       
-  tmpbits[2*(2*m_xFoi[sta]+1)]= table[y+1][x];
-    
+  tmpbits[2*(2*m_xFoi[sta]+1)]= table[y+1][x];   
   tmpbits[1+2*(2*m_xFoi[sta]+1)]=table[y+1][x+1];
- 
   tmpbits[2+2*(2*m_xFoi[sta]+1)]=table[y+1][x-1];
  
-  
-        
   for (int i=1; i<(2*m_xFoi[sta]+1); i++){
         
     if ( i< ((2*m_xFoi[sta]+1)-1)/2){
@@ -264,43 +228,179 @@ setOrderedBit(int sta, std::vector<boost::dynamic_bitset<> >  table,
         
       }
     }
-    
-    
-    
+    }
+   
+  m_bits = tmpbits;
+  for (boost::dynamic_bitset<>::size_type j=0; j< tmpbits.size(); j++){
+    m_bits[j]= tmpbits[j];
+   }
+  
+  
+   }
+*/
+//=========== ordered bits in M4-M5 including yFoi 0=========================
+void  L0Muon::CandidateTower::
+setOrderedBit(int sta, std::vector<boost::dynamic_bitset<> >  table, 
+              int maxXFoi, int maxYFoi, int offset){
+  unsigned int x, y;
+
+  unsigned int xfoi = maxXFoi;
+  unsigned int yfoi = maxYFoi;
+  
+  x = m_seed.first + xfoi +offset;
+  y = m_seed.second + yfoi;  
+  
+  int size = (2*m_xFoi[sta]+1)*(2*m_yFoi[sta]+1);
+  boost::dynamic_bitset<> tmpbits(size);
+  
+  tmpbits[0]= table[y][x];
+  
+
+  if (1 < size){
+    tmpbits[1]=table[y][x+1];
+  }
+  
+  if (2 < size){
+    tmpbits[2]=table[y][x-1];
+  }
+  
+
+  for (int i=1; i<(2*m_xFoi[sta]+1); i++){
+    if ( y< 4+2*m_yFoi[sta] ) {
+      if (tmpbits.size()>3) {
+        if ( i< ((2*m_xFoi[sta]+1)-1)/2){
+          
+          if ( (x+i+1)< 24+2*xfoi ) {
+            tmpbits[2*i+1]=table[y][x+i+1];
+          }
+          if ( (x-i-1)< 999999){
+            tmpbits[2*i+2]=table[y][x-i-1];
+            
+          } else if ( (x-i-1)> 999999) {
+            tmpbits[2*i+2]=0;
+            
+          }
+          
+        }
+        
+      }
       
-       
+    }
+    
     
   }
-   
+  
+  
+
+  if ((2*m_xFoi[sta]+1) < size ){
+    tmpbits[2*m_xFoi[sta]+1]= table[y-1][x];
+  }
+    
+    
+
+  if ((1+2*m_xFoi[sta]+1) < size){
+    tmpbits[1+2*m_xFoi[sta]+1]=table[y-1][x+1];
+  }
+  
+
+  if ((2+2*m_xFoi[sta]+1) < size){
+    tmpbits[2+2*m_xFoi[sta]+1]=table[y-1][x-1];
+  }
+  
+
+  
+  for (int i=1;  i<(2*m_xFoi[sta]+1); i++){
+    
+    if ( i< ((2*m_xFoi[sta]+1)-1)/2){
+      if ( (x+i+1) < 24+2*xfoi ) {
+        
+        if ( (2*i+1+2*m_xFoi[sta]+1) < size ){
+          tmpbits[2*i+1+2*m_xFoi[sta]+1]=table[y-1][x+i+1];
+        }
+        
+      }
+            
+      if ( (x-i-1)< 999999){
+        
+        if ( (2*i+2+2*m_xFoi[sta]+1) < size ){ 
+          tmpbits[2*i+2+2*m_xFoi[sta]+1]=table[y-1][x-i-1];
+        }
+        
+      } else  if ( (x-i-1) > 999999) {
+        
+        if ( (2*i+2+2*m_xFoi[sta]+1) < size ){  
+          tmpbits[2*i+2+2*m_xFoi[sta]+1]=0;
+        }
+        
+       
+      }
+      
+      
+      
+    }
+    
+    
+          
+    
+  }
+  
+
+  
+  if ((2*(2*m_xFoi[sta]+1)) < size ){
+    tmpbits[2*(2*m_xFoi[sta]+1)]= table[y+1][x];
+  }
+
+  if ( (1+2*(2*m_xFoi[sta]+1)) < size){
+    tmpbits[1+2*(2*m_xFoi[sta]+1)]=table[y+1][x+1];
+  }
+    
+  if ( (2+2*(2*m_xFoi[sta]+1)) < size )  {
+    tmpbits[2+2*(2*m_xFoi[sta]+1)]=table[y+1][x-1];
+  }
+  
+  
+  
+  for (int i=1; i<(2*m_xFoi[sta]+1); i++){
+        
+    if ( i< ((2*m_xFoi[sta]+1)-1)/2){
+      if ( (x+i+1)< 24+2*xfoi ) {
+        if ( ( 2*i+1+2*(2*m_xFoi[sta]+1) ) < size){
+          tmpbits[2*i+1+2*(2*m_xFoi[sta]+1)]=table[y+1][x+i+1];
+        }
+        
+      }
+      if ( (x-i-1)< 999999){
+        if ( (2*i+2+2*(2*m_xFoi[sta]+1)) < size ){
+          tmpbits[2*i+2+2*(2*m_xFoi[sta]+1)]=table[y+1][x-i-1]; 
+        }
+        
+      } 
+      else if  ( (x-i-1)> 999999) {
+        if ( (2*i+2+2*(2*m_xFoi[sta]+1)) < size ){
+          tmpbits[2*i+2+2*(2*m_xFoi[sta]+1)]=0;
+        }
+        
+        
+      }
+      
+    }
+    
+    
+  }
+  
+  
   
   m_bits = tmpbits;
   for (boost::dynamic_bitset<>::size_type j=0; j< tmpbits.size(); j++){
     m_bits[j]= tmpbits[j];
   }
-  
-  
-
-  
 }
 
 
 
 
-
-
-
-
-
-
-
-
-  
-  
-
-
-  
-  
 //=======================================================
+
 
 //boost::dynamic_bitset<>  L0Muon::CandidateTower::getBit(int sta){
 boost::dynamic_bitset<>  L0Muon::CandidateTower::getBit(){
