@@ -59,9 +59,9 @@ use LinkerEvent         v1r3    Event
 use TrgEvent            v2r3    Event
 
 # Associators
-use AssociatorsSys	v1r13	Associators
+use AssociatorsSys	v1r14	Associators
 use Associators		v2r2	Associators
-use ITAssociators      	v2r8	IT
+use ITAssociators      	v2r9	IT
 use OTAssociators      	v2r8	OT
 use VeloAssociators    	v1r10	Velo
 use TrAssociators      	v4r0	Tr
