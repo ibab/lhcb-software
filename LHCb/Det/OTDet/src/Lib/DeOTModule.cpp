@@ -1,4 +1,4 @@
-// $Id: DeOTModule.cpp,v 1.1 2003-06-11 11:49:36 cattanem Exp $
+// $Id: DeOTModule.cpp,v 1.2 2003-06-16 08:52:07 cattanem Exp $
 
 // CLHEP
 #include "CLHEP/Units/SystemOfUnits.h"
@@ -26,6 +26,8 @@ DeOTModule::DeOTModule( const std::string& name ) :
   m_nStraws(0),
   m_longModule(true),
   m_stereoAngle(0.0),
+  m_sinAngle(0.0),
+  m_cosAngle(0.0),
   m_pitch(0.0),
   m_cellRadius(0.0),
   m_inefficientRegion(0.0),
@@ -55,6 +57,8 @@ StatusCode DeOTModule::initialize()
   m_longModule = 
     ((this->geometry())->lvolumeName() == "/dd/Geometry/OT/Modules/lvLModule");
   m_stereoAngle = layer->userParameterAsDouble("stereoAngle");
+  m_sinAngle = sin(m_stereoAngle);
+  m_cosAngle = cos(m_stereoAngle);  
   OTChannelID aChannel = OTChannelID(m_stationID, m_layerID, m_moduleID, 0);
   m_uniqueModuleID = aChannel.uniqueModule();
 

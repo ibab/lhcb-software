@@ -1,4 +1,4 @@
-// $Id: DeOTModule.h,v 1.1 2003-06-11 11:49:35 cattanem Exp $
+// $Id: DeOTModule.h,v 1.2 2003-06-16 08:52:07 cattanem Exp $
 #ifndef OTDET_DEOTMODULE_H
 #define OTDET_DEOTMODULE_H 1
 
@@ -94,6 +94,12 @@ public:
   /// get the stereo angle
   double stereoAngle() const { return m_stereoAngle; }
 
+  /// get the sine of the stereo angle
+  double sinAngle() const { return m_sinAngle; }
+
+  /// get the cosine of the stereo angle
+  double cosAngle() const { return m_cosAngle; }
+
   /// Check if straw is in monolayer A
   bool monoLayerA(const int straw) const;
   
@@ -178,6 +184,8 @@ private:
   unsigned int m_nStraws;      ///< half the number of straws inside module
   bool m_longModule;           ///< is module a long module?
   double m_stereoAngle;        ///< stereo angle of the layer
+  double m_sinAngle;           ///< sine of stereo angle
+  double m_cosAngle;           ///< cosine of stereo angle
   double m_pitch;              ///< pitch between straws
   double m_cellRadius;         ///< radius of a cell
   double m_inefficientRegion;  ///< size of the inefficient region
