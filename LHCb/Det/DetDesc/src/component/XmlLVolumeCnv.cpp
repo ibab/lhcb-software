@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/component/XmlLVolumeCnv.cpp,v 1.12 2001-06-18 14:32:44 sponce Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/component/XmlLVolumeCnv.cpp,v 1.13 2001-06-20 08:45:15 sponce Exp $
 
 // Include files
 #include "GaudiKernel/CnvFactory.h"
@@ -1412,7 +1412,7 @@ HepTransform3D* XmlLVolumeCnv::dealWithTransformation(DOM_Element element,
     tagName = dom2Std (childElement.getNodeName());
     if ("rotXYZ" == tagName) {
       HepTransform3D* rotation = dealWithRotXYZ(childElement);
-      *result = *rotation * *result;
+      *result = *result * *rotation;
       delete (rotation);
       rotation = 0;
       foundRotation = true;
@@ -1420,7 +1420,7 @@ HepTransform3D* XmlLVolumeCnv::dealWithTransformation(DOM_Element element,
       // catches an exception in case the theta or phi value is out of range
       try {
         HepTransform3D* rotation = dealWithRotAxis(childElement);
-        *result = *rotation * *result;
+        *result = *result * *rotation;
         delete (rotation);
         rotation = 0;
       } catch (XmlCnvException e) { 
