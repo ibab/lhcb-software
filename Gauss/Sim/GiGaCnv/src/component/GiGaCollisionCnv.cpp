@@ -196,9 +196,6 @@ StatusCode GiGaCollisionCnv::updateObj
               for(MCVertices::iterator viter=mcvts->begin();mcvts->end()!=viter;
                   viter++)
                 {
-
-                  cout << (*viter)->position() << "   " << primvtx << endl;
-                  
                   // find the MCVertex (primary) corresponding to this collision
                   if((*viter)->position()==primvtx)
                     {
