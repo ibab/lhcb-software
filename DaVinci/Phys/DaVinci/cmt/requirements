@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.17 2002-05-15 23:42:20 gcorti Exp $
+# $Id: requirements,v 1.18 2002-05-17 22:49:49 gcorti Exp $
 # Created    : 07/02/2002
 # Maintainer : Gloria Corti
 #
@@ -54,9 +54,6 @@ use GaudiTools         v6r0
 use GaudiNagC          v7r0
 use GaudiDb            v7r0
 use GaudiRootDb        v7r0
-# the two following should no longer be necessary (privately used by Events..)
-#use GaudiIntrospection v4r0
-#use GaudiObjDesc       v4r1
 
 #--- Histogram persistency ( choose the one you prefer )
 use HbookCnv           v12r0
@@ -79,10 +76,6 @@ use VeloDet        v5r0   Det
 
 #--- Event Model ( via EventSys the whole Event Model is available )
 use EventSys       v10r0  Event
-#--- Minimal Event Model for Physics Analysis
-#use EventKernel    v1r0   Event
-#use Event          v1r0   Event
-#use PhysEvent      v4r0   Event
 
 #--- SicB event data persistency
 use SicbCnv        v16r0  SICB
@@ -102,11 +95,11 @@ use axsellib       v6r*   SICB
 #--- DaVinci packages
 use DaVinciSicb          v3r*   Phys
 use DaVinciTools         v4r*   Phys
-#use DaVinciAssociators   v1r*   Phys
-#use PVertices           v1r*   Phys
-#use Selections          v1r*   Phys
-#use Tagging             v1r*   Phys
-#use DaVinciTest          v1r*   Phys
+use DaVinciAssociators   v1r*   Phys
+#use PrimaryVertices     v1r*   Phys
+#use PhysSelections      v1r*   Phys
+#use FlavourTagging      v1r*   Phys
+use DaVinciTest          v1r*   Phys
 #use DaVinciUser         v1r*   Phys
 
 # Build DaVinci Application with standard executable and user example code
@@ -116,7 +109,6 @@ use DaVinciTools         v4r*   Phys
 application      DaVinci    ../src/Main/DaVinciMain.cpp \
                             $(DAVINCISICBROOT)/src/Objs/*.F \
 # Rememeber no cpp anymore in ../src/User (only the suanal)
-#                            ../src/User/*.cpp \
                             ../src/User/*.F 
 
 # define link options
