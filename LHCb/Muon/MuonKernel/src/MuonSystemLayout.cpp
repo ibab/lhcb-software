@@ -1,16 +1,8 @@
-// $Id: MuonSystemLayout.cpp,v 1.6 2002-03-21 15:30:45 atsareg Exp $
+// $Id: MuonSystemLayout.cpp,v 1.7 2003-12-18 15:33:23 cattanem Exp $
 // Include files
 #include <iostream>
 #include "MuonKernel/MuonSystemLayout.h"
 #include "MuonKernel/MuonTileID.h"
-
-// Hack to get round usage of max
-#ifdef WIN32
-#include <xutility>
-#else
-#define _MIN min
-#define _MAX max
-#endif // WIN32
 
 //------------------------------------------------------------------------------
 //

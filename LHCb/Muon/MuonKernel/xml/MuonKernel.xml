@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE gdd SYSTEM "gdd.dtd"[
+
+<!ENTITY MuonTileID.xml   SYSTEM "MuonTileID.xml"   >
+
+]>
+
+<gdd>
+  <package name='MuonKernel'>
+    <!-- next line needed until GOD knows not to look in LHCbEvent /-->
+    <import name='Kernel/CLHEPStreams'/>
+
+    &MuonTileID.xml;
+
+  </package>
+</gdd>

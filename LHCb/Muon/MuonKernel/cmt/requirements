@@ -1,17 +1,29 @@
 package MuonKernel
 
-version v2r4
+version v2r5
 
 branches cmt src MuonKernel doc 
 
 include_dirs $(MUONKERNELROOT)
 
-use GaudiKernel v14r* 
+use LHCbKernel		v4r*	Kernel
+
+# Produce Header-Files from XML description, overriding default destination
+#============================================================================
+macro MuonKernelObj2Doth_GODflags " -o ../MuonKernel/ " \
+      WIN32                       " -o ..\MuonKernel\ "
+document obj2doth MuonKernelObj2Doth ../xml/MuonKernel.xml
+
+macro MuonKernelObj2Dict_GODflags " -l MuonKernel/ " \
+      WIN32                       " -l MuonKernel\ "
+document obj2dict MuonKernelObj2Dict ../xml/MuonKernel.xml
 
 #----------------------------------------------
-library MuonKernelLib ../src/*.cpp
+library MuonKernelLib  ../src/*.cpp
+library MuonKernelDict ../dict/*.cpp
 
-apply_pattern linker_library library=MuonKernelLib
+apply_pattern component_library library=MuonKernelDict
+apply_pattern linker_library    library=MuonKernelLib
 
 private
 

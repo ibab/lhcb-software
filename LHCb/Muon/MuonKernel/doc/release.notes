@@ -1,6 +1,11 @@
 Package MuonKernel
 Package manager: A.Tsaregorodtsev
 
+!======================= MuonKernel v2r5 2003-12-16 =======================
+! 2003-12-16 - Marco Cattaneo
+ - Move to Gaudi v14 (use GaudiKernel v15r* in requirements)
+ - MuonTileID.h removed from CVS, now created by MuonTileID.xml
+
 !======================= MuonKernel v2r4 2003-12-09 =======================
 ! 2003-12-09 - Marco Cattaneo
  - Move to Gaudi v13 (use GaudiKernel v14r* in requirements)
