@@ -1,5 +1,10 @@
+$Id: release.notes,v 1.2 2001-09-17 13:45:55 andreav Exp $
 Package Ex/DetCondExample
 Package manager : Andrea Valassi 
 
 !20010914 - Andrea Valassi (v1)
 - New package: example using detector condition services from Det/DetCond
+- README file explains how to run the example
+- HISTORY file contains the release notes for previous versions outside CVS
+- simpleDoc.txt file briefly describes the software architecture
+

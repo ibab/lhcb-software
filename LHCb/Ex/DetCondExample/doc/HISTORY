@@ -1,4 +1,23 @@
-# $Header: /afs/cern.ch/project/cvs/reps/lhcb/Ex/DetCondExample/doc/HISTORY,v 1.1.1.1 2001-09-14 15:45:04 andreav Exp $
+# $Id: HISTORY,v 1.2 2001-09-17 13:46:12 andreav Exp $
+
+------------------------------------------------
+17.09.2001 Ex/DetCondExample v1 (LINUX only)
+------------------------------------------------
+First version of detector condition services and examples released under CVS. 
+This package is released in the LHCb specific area as Ex/DetCondExample v1.
+The full set of released packages are based on Gaudi v8 and include: 
+- DetCondExample/v1         (the example)
+- Det/DetCond/v1            (the services)
+- CONDDB/v3r01
+  > includes ConditionsDB 0.3.0.1 (only as an external library)
+  > includes HepUtilities 0.5.0.0
+  > includes HepODBMS     0.3.1.4
+  > includes Objectivity    5.2.1
+- GaudiKernel v10 HEAD
+- GaudiSvc v6 HEAD
+  > ApplicationMgr.cpp is not yet in CVS and must be taken from ~andreav/public
+
+===============================================================================
 
 ------------------------------------------------
 14.09.2001 DetCondExample v3r03 (LINUX only)

@@ -1,157 +1,67 @@
-# $Header: /afs/cern.ch/project/cvs/reps/lhcb/Ex/DetCondExample/doc/README,v 1.1.1.1 2001-09-14 15:45:03 andreav Exp $
------------------------------------------------
-Packages needed to run DetCondExample v3r03
------------------------------------------------
+# $Id: README,v 1.2 2001-09-17 13:45:47 andreav Exp $
 
-New Gaudi packages:
-- DetCondExample  v3r03
-- Det/DetCond     v3r02
-- CONDDB          v3r01p01
+------------------------------------------------------------------------------
+Packages needed to run DetCondExample v1
+------------------------------------------------------------------------------
 
-You will need to getpack the following packages from release Gaudi v8
-and substitute the following files:
-- GaudiAlg    v4  : Sequencer.cpp
-- GaudiAlg    v4  : requirements
-- GaudiKernel v10 : ClassID.h 	
-- GaudiKernel v10 : DataSvc.cpp
-- GaudiKernel v10 : IValidity.h
-- GaudiKernel v10 : MsgStream.h
-- GaudiSvc    v6  : ApplicationMgr.h
-- GaudiSvc    v6  : ApplicationMgr.cpp
-- GaudiSvc    v6  : PersistencySvc.cpp
+For general information on configuring the Gaudi environment, please refer 
+to the Gaudi Web pages. The example only works under LINUX for the moment, 
+as HepODBMS is not supported under Windows NT. I assume in the following 
+that your CMTPATH points to your release directory in ${HOME}/newmycmt, 
+i.e. ~/newmycmt. Put the following line in your .cshrc to achieve this:
+        setenv CMTPATH ${HOME}/newmycmt
+Check the result with
+        printenv CMTPATH
 
-The environment I use (within LHCb) is obtained by:
-	setenv CMTPATH `echo $CMTPATH`:$LHCBDEV
-This sets my CMTPATH to 
-	~/newmycmt:/afs/cern.ch/lhcb/software/DEV
-where the first directory contains my version of the relevant packages:
-	~/newmycmt/CONDDB
-	~/newmycmt/Det/DetCond
-	~/newmycmt/DetCondExample
-	~/newmycmt/GaudiAlg
-	~/newmycmt/GaudiKernel
-	~/newmycmt/GaudiSvc
+To run the detector condition example, you need to getpack the HEAD versions 
+of three new packages and of two Gaudi packages from release Gaudi v8:
+        cd ~/newmycmt
+        getpack GaudiKernel        v10    HEAD
+        getpack GaudiSvc           v6     HEAD
+        getpack CONDDB             v3r01  HEAD
+        getpack Det/DetCond        v1     HEAD
+        getpack Ex/DetCondExample  v1     HEAD
 
-For the Gaudi environment outside of LHCb, please refer to the Gaudi Web pages.
+For the moment (until it is released in CVS), you also need to substitute 
+a GaudiSvc source file:
+        cp /afs/cern.ch/user/a/andreav/public/ApplicationMgr.cpp \
+           ~/newmycmt/GaudiSvc/v6/src/ApplicationMgr/ApplicationMgr.cpp
 
---------------------------------------------------------------
-How to prepare the environment on lxplus
---------------------------------------------------------------
+For the moment (until a bug in CMT is fixed), you also need to replace 
+the CMT cleanup files.
+        cp CONDDB/v3r01/cmt/myCleanup.csh \
+           CONDDB/v3r01/cmt/cleanup.csh
+        cp Ex/DetCondExample/v1/cmt/myCleanup.csh \
+           Ex/DetCondExample/v1/cmt/cleanup.csh
 
-# Go to your release directory
-# It is assumed in the following that it already contains the relevant packages
-cd ~/newmycmt
+------------------------------------------------------------------------------
+How to setup the environment and run DetCondExample on lxplus
+------------------------------------------------------------------------------
 
-# You need to copy three files to avoid a bug in CMT
-# Beforehand you need to edit them to give the path of your newmycmt directory
-cp CONDDB/v3r01p01/cmt/myCleanup.csh  \
-   CONDDB/v3r01p01/cmt/cleanup.csh
-cp DetCondExample/v3r03/cmt/myCleanup.csh \
-   DetCondExample/v3r03/cmt/cleanup.csh
-
---------------------------------------------------------------
-How to cleanup the environment on lxplus
---------------------------------------------------------------
+# I suggest to build all packages in debug mode, i.e. using tag Linuxdbx.
+# Specify the tag by 'source setup.csh -tag=Linuxdbx' and 'gmake tag=Linuxdbx'.
+# [NB Changing CMTCONFIG to Linuxdbx would reset LHCXX_DIR and cause troubles]
 
 # Go to your release directory
 cd ~/newmycmt
 
 # Go to the cmt directory
-cd DetCondExample/v3r03/cmt
-
-# Remove old makefiles and dependencies
-cmt broadcast -select=newmycmt '/bin/rm -f *make*'
-
-# Remove all objects and binaries if needed
-cmt broadcast -select=newmycmt/Gaudi            gmake clean
-cmt broadcast -select=newmycmt -exclude=Gaudi   gmake clean
-cmt broadcast -select=newmycmt/Gaudi            gmake clean tag=Linuxdbx
-cmt broadcast -select=newmycmt -exclude='Gaudi' gmake clean tag=Linuxdbx
-
-# Remove the documentation:
-cmt broadcast -select=newmycmt -exclude='Gaudi' '\rm -rf ../doc/html'
-cmt broadcast -select=newmycmt -exclude='Gaudi' '\rm -rf ../doc/tex'
-
-# Cleanup the environment
-# This also deletes the databases and kills the AMSserver and lockserver
-source cleanup.csh
-
-------------------------------------------------------------------------------
-How to setup the environment and run DetCondExample on lxplus (without debug)
-------------------------------------------------------------------------------
-
-[# The default configuration in nodebug is by default
-[setenv CMTCONFIG i386_linux22
-
-# Go to your release directory
-cd ~/newmycmt
-
-# Go to the cmt directory
-cd DetCondExample/v3r03/cmt
+cd Ex/DetCondExample/v1/cmt
 
 # Setup the environment
 # This also starts the lockserver and AMSserver and installs the databases
 # [NB The schema for the example's DB will be updated after compiling CONDDB]
-source setup.csh
-
-# Remove old makefiles and dependencies
-cmt broadcast -select=newmycmt '/bin/rm -f *make*'
-
-# Compile and link (nodebug)
-cmt broadcast -select=newmycmt gmake
-
-# IF you compiled CONDDB, be sure to update the schema of DetCondExample's DB:
-source cleanupDB.csh
-source setupDB.csh
-
-# Go to the working directory
-cd ../options
-
-# Run the application a first time and then a second time
-/bin/rm -f job_first.log; ../i386_linux22/DetCondExample.exe >& job_first.log 
-/bin/rm -f job_next.log;  ../i386_linux22/DetCondExample.exe >& job_next.log
-
-# Compare the output files to the standard ones
-diff job_first.log ../job; /bin/rm -f job_first.log 
-diff job_next.log  ../job; /bin/rm -f job_next.log 
-
-# To start again with an empty database:
-source ../cmt/cleanupDB.csh
-source ../cmt/setupDB.csh
-
-------------------------------------------------------------------------------
-How to setup the environment and run DetCondExample on lxplus in DEBUG mode
-------------------------------------------------------------------------------
-
-[# One can change the default configuration to debug mode by:
-[setenv CMTCONFIG Linuxdbx
-
-# Go to your release directory
-cd ~/newmycmt
-
-# Go to the cmt directory
-cd DetCondExample/v3r03/cmt
-
-# Setup the environment
-# If you already executed a setup, be sure to erased LD_LIBRARY_PATH first!
-# In this case you will also need to add the LHC++ shared libraries first
-# This also starts the lockserver and AMSserver and installs the databases
-# [NB The schema for the example's DB will be updated after compiling CONDDB]
-unsetenv LD_LIBRARY_PATH
+# [NB Type 'unsetenv LD_LIBRARY_PATH' first if you try various CMTCONFIG's  ]
 source setup.csh -tag=Linuxdbx
 
 # Remove old makefiles and dependencies
 cmt broadcast -select=newmycmt '/bin/rm -f *make*'
 
-# Compile and link (debug mode)
+# Compile and link
 cmt broadcast -select=newmycmt gmake tag=Linuxdbx
 
 # Go to the working directory
 cd ../options
-
-# IF you compiled CONDDB, be sure to update the schema of DetCondExample's DB:
-source ../cmt/cleanupDB.csh
-source ../cmt/setupDB.csh
 
 # Run the application a first time and then a second time with no debugger
 /bin/rm -f job_first.log; ../Linuxdbx/DetCondExample.exe >& job_first.log 
@@ -175,9 +85,9 @@ ddd --tty --debugger "gdb ../Linuxdbx/DetCondExample.exe -x DetCondExample.gdb"
 source ../cmt/cleanupDB.csh
 source ../cmt/setupDB.csh
 
---------------------------------------------------------------
+------------------------------------------------------------------------------
 How to create the dOxygen documentation on lxplus
---------------------------------------------------------------
+------------------------------------------------------------------------------
 
 # First, you can edit the requirements of DetCond and DetCondExample
 # to make them point to your www pages; by default, the documentation 
@@ -187,18 +97,39 @@ How to create the dOxygen documentation on lxplus
 cd ~/newmycmt
 
 # Go to the cmt directory
-cd DetCondExample/v3r03/cmt
+cd Ex/DetCondExample/v1/cmt
 
 # Setup the environment variables if you have not done so yet
-source setup.csh
+source setup.csh -tag=Linuxdbx
 
 # Create the documentation
-cmt broadcast -select=newmycmt/Det/DetCond     ../doc/makedoc.csh
-cmt broadcast -select=newmycmt/DetCondExample  ../doc/makedoc.csh
+cmt broadcast -select=newmycmt/Det/DetCond        ../doc/makedoc.csh
+cmt broadcast -select=newmycmt/Ex/DetCondExample  ../doc/makedoc.csh
 
-# (Private note) To generate GaudiKernel and CONDDB doc, do (before the above):
-cmt broadcast -select=newmycmt/GaudiSys        ../doc/makedoc.csh
-cmt broadcast -select=newmycmt/CONDDB          ../doc/makedoc.csh
+------------------------------------------------------------------------------
+How to cleanup the environment on lxplus
+------------------------------------------------------------------------------
+
+# Go to your release directory
+cd ~/newmycmt
+
+# Go to the cmt directory
+cd Ex/DetCondExample/v1/cmt
+
+# Remove old makefiles and dependencies
+cmt broadcast -select=newmycmt '/bin/rm -f *make*'
+
+# Remove all objects and binaries if needed
+cmt broadcast -select=newmycmt '/bin/rm -rf ../Linuxdbx'
+
+# Remove the documentation:
+cmt broadcast -select=newmycmt -exclude='Gaudi' '/bin/rm -rf ../doc/html'
+cmt broadcast -select=newmycmt -exclude='Gaudi' '/bin/rm -rf ../doc/tex'
+
+# Cleanup the environment (recommended before logout)
+# This also deletes the databases and kills the AMSserver and lockserver
+# [NB If AMS and lock servers are still running, you will be stuck at logout]
+source cleanup.csh -tag=Linuxdbx
 
 
 
