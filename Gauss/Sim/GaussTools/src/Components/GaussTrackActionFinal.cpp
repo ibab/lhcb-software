@@ -1,8 +1,11 @@
-// $Id: GaussTrackActionFinal.cpp,v 1.2 2004-02-22 16:51:54 ibelyaev Exp $ 
+// $Id: GaussTrackActionFinal.cpp,v 1.3 2004-02-23 08:19:16 ibelyaev Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2004/02/22 16:51:54  ibelyaev
+//  few minor fixes
+//
 // Revision 1.1  2004/02/20 19:35:27  ibelyaev
 //  major update
 // 
@@ -85,18 +88,16 @@ void GaussTrackActionFinal::PreUserTrackingAction
 ( const G4Track* /* track */ ) 
 {
   // get the trajectory 
-  GaussTrajectory* tr = trajectory() ;
-  
+  GaussTrajectory*       tr   = trajectory() ;  
   // check the validity 
-  if( 0 == tr ) { Error ( "Pre...: GaussTrajectory* points to NULL" ) ; }
+  if( 0 == tr   ) 
+  { Error ( "Pre...: GaussTrajectory*       points to NULL" ) ; }
+  // get the trajectory 
+  GaussTrackInformation* info = trackInfo() () ;  
+  // check the validity 
+  if( 0 == into ) 
+  { Error ( "Pre...: GaussTrackInformation* points to NULL" ) ; }
 
-  if( trackMgr() -> GetStoreTrajectory() )
-  {     Warning ( " Pre:  store "     ) ; }
-  else 
-  {     Warning ( " Pre:  not store " ) ; }
-  
-
-  
 };
 // ============================================================================
 
