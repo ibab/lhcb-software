@@ -1,4 +1,4 @@
-// $Id: MuonTileID.cpp,v 1.2 2002-02-28 15:39:53 atsareg Exp $
+// $Id: MuonTileID.cpp,v 1.3 2002-03-04 16:52:09 atsareg Exp $
 // Include files
 
 #include "MuonKernel/MuonTileID.h"
@@ -125,15 +125,3 @@ int MuonTileID::localY(const IMuonLayout& lay) const {
   return nY() % padLayout.yGrid() ;
 
 } 
-
-// MuonTileID MuonTileID::containerID(const MuonStationLayout& lay) const {
-//   
-//   MuonLayout ml = lay.layout(region()) ;  
-//   return containerID(ml);
-// }
-// 
-// MuonTileID MuonTileID::containerID(const MuonSystemLayout& lay) const {
-//   
-//   MuonLayout ml = lay.layout(station(),region()) ;  
-//   return containerID(ml);
-// }
