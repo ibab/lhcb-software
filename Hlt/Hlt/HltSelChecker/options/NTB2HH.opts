@@ -1,0 +1,75 @@
+//==============================================================================
+// Checking B -> H H
+//==============================================================================
+// Author: Luis Fernandez, 10/12/2004
+
+// The offline selection (note that the PreLoadParticles/Combined must be added before)
+#include "$B2HHROOT/options/DoTDRselB2HH.opts"
+
+ApplicationMgr.TopAlg += {"GaudiSequencer/CheckHLTBd2HH"};
+
+CheckHLTBd2HH.IgnoreFilterPassed = false ; // Act as Sequencer
+CheckHLTBd2HH.MeasureTime = false;
+
+CheckHLTBd2HH.Members ={ "TrgL0Filter", "PrintHeader/PassedL0",
+                         "TrgL1Filter", "PrintHeader/PassedL1",
+                         "CheckSelResult/MergeOffB2HH",
+                         "DecayChainNTuple/OffB2HHTree",
+                         "CheckSelResult/MergeHLTBd2HH",
+                         "DecayChainNTuple/HLTBd2HHTree"};
+ 
+PassedL0.OutputLevel = 3;
+PassedL1.OutputLevel = 3;
+ 
+MergeOffB2HH.Algorithms = {"TDRselBd2PiPi", "TDRselBd2KPi", "TDRselBs2KK", "TDRselBs2PiK"};
+MergeOffB2HH.ANDmode = false;
+MergeOffB2HH.AvoidSelResult = false;
+MergeHLTBd2HH.Algorithms = { "HLTFilterB2HH"};
+
+MergeOffB2HH.OutputLevel = 4;
+MergeHLTBd2HH.OutputLevel = 4;
+
+//------------------------------------------------------------------------------
+// Write Tree for Off selection
+OffB2HHTree.PhysDesktop.InputLocations = {"Phys/TDRselBd2PiPi", "Phys/TDRselBd2KPi", "Phys/TDRselBs2KK", "Phys/TDRselBs2PiK"};
+
+OffB2HHTree.LinkAsct.Location      = "Phys/Relations/Particle2MCLinksOffB2HH";
+OffB2HHTree.LinkAsct.AlgorithmType = "Particle2MCLinks";
+OffB2HHTree.LinkAsct.AlgorithmName = "Particle2MCLinksOffB2HH";
+OffB2HHTree.LinkAsct.OutputLevel = 3;
+
+Particle2MCLinksOffB2HH.InputData  = {"Phys/Combined/Particles"};
+Particle2MCLinksOffB2HH.OutputLevel = 3;
+
+// WARNING: The offline does not create B~0 (B_s~0) but always B0 (B_s0)
+OffB2HHTree.Decay = "{B0 -> ^pi+ ^pi-, B0 -> ^K+ ^pi-, B~0 -> ^K- ^pi+, B_s0 -> ^K+ ^K-, B_s0 -> ^pi+ ^K-, B_s0 -> ^pi- ^K+}";
+OffB2HHTree.MCDecay = "{B0 -> ^pi+ ^pi-, B~0 -> ^pi+ ^pi-, B0 -> ^K+ ^pi-, B0 -> ^K- ^pi+, B~0 -> ^K- ^pi+, B~0 -> ^K+ ^pi-
+, B_s0 -> ^K+ ^K-, B_s~0 -> ^K+ ^K-, B_s0 -> ^pi+ ^K-, B_s0 -> ^pi- ^K+, B_s~0 -> ^pi- ^K+, B_s~0 -> ^pi+ ^K-}";
+OffB2HHTree.NtupleName = "FILE1/OffB2HH";
+OffB2HHTree.MCNtupleName = "FILE1/MCOffB2HH";
+OffB2HHTree.PVLocator.PVLocation = "/Event/Phys/PrimaryVertices";
+OffB2HHTree.OutputLevel = 3;
+//------------------------------------------------------------------------------
+
+//------------------------------------------------------------------------------
+// Write Tree for HLT selection
+HLTBd2HHTree.PhysDesktop.InputLocations = {"Phys/HLTFilterB2HH"};
+
+HLTBd2HHTree.LinkAsct.Location      = "Phys/Relations/Particle2MCLinksHLTBd2HH";
+HLTBd2HHTree.LinkAsct.AlgorithmType = "Particle2MCLinks";
+HLTBd2HHTree.LinkAsct.AlgorithmName = "Particle2MCLinksHLTBd2HH";
+HLTBd2HHTree.LinkAsct.OutputLevel = 3;
+
+// The location depends on the way of forming the particles: ChangeDecayChain or ChangePIDByMass!!!
+Particle2MCLinksHLTBd2HH.InputData  = {"Phys/HLTPions/Particles", "Phys/HLTKaons/Particles", "Phys/HLTPreselPions/Particles", "Phys/HLTPreselKaons/Particles"};
+Particle2MCLinksHLTBd2HH.OutputLevel = 3;
+
+// In the HLT we always form B0 -> pi+ pi-
+HLTBd2HHTree.Decay = "B0 -> ^pi+ ^pi-";
+HLTBd2HHTree.MCDecay = "{B0 -> ^pi+ ^pi-, B~0 -> ^pi+ ^pi-, B0 -> ^K+ ^pi-, B0 -> ^K- ^pi+, B~0 -> ^K- ^pi+, B~0 -> ^K+ ^pi-
+, B_s0 -> ^K+ ^K-, B_s~0 -> ^K+ ^K-, B_s0 -> ^pi+ ^K-, B_s0 -> ^pi- ^K+, B_s~0 -> ^pi- ^K+, B_s~0 -> ^pi+ ^K-}";
+HLTBd2HHTree.NtupleName = "FILE1/HLTBd2HH";
+HLTBd2HHTree.MCNtupleName = "FILE1/MCHLTBd2HH";
+HLTBd2HHTree.PVLocator.PVLocation = "/Event/Phys/Trg/Vertices";
+HLTBd2HHTree.OutputLevel = 3;
+//------------------------------------------------------------------------------

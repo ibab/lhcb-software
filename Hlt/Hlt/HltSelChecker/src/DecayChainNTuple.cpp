@@ -7,6 +7,7 @@
 #include "Event/EventHeader.h"
 #include "Event/ProtoParticle.h"
 // #include "DaVinciTools/ILifetimeFitter.h"
+#include "DaVinciTools/IPVLocator.h"
 
 #ifdef MCCheck
 #include "MCTools/IMCDecayFinder.h"
@@ -35,19 +36,20 @@ const        IAlgFactory& DecayChainNTupleFactory = s_factory ;
 DecayChainNTuple::DecayChainNTuple( const std::string& name,
                                     ISvcLocator* pSvcLocator)
   : DVAlgorithm ( name , pSvcLocator )
-  , m_bookedNTuple(false)
-  , m_useTrgPV(false)
+    , m_bookedNTuple(false)
+    , m_PVContainer(VertexLocation::Primary)
+    , m_PVLocator()
 #ifdef MCCheck
-  , m_bookedMCNTuple(false)
+    , m_bookedMCNTuple(false)
 #endif
-  , m_ppSvc(0)
-  , m_pDKFinder(0)
-  , m_IPTool(0)
+    , m_ppSvc(0)
+    , m_pDKFinder(0)
+    , m_IPTool(0)
   //, m_pLifetimeFitter(0)
-  , m_EDS(0)
+    , m_EDS(0)
 #ifdef MCCheck
-  , m_pMCDKFinder(0)
-  , m_pAsctLinks(0)
+    , m_pMCDKFinder(0)
+    , m_pAsctLinks(0)
 #endif
 {
   declareProperty( "Decay",    m_Decay = "");
@@ -56,7 +58,7 @@ DecayChainNTuple::DecayChainNTuple( const std::string& name,
   declareProperty( "MCNtupleName", m_MCntupleName = "FILE1/MyMCSelection" );
 #endif
   declareProperty( "NtupleName", m_ntupleName = "FILE1/MySelection" );
-  declareProperty( "UseTrgPV", m_useTrgPV );
+  // declareProperty( "UseTrgPV", m_useTrgPV );
 }
 //=============================================================================
 // Destructor
@@ -77,7 +79,7 @@ StatusCode DecayChainNTuple::initialize() {
   }
 
   // Retrieve the DecayFinder
-  sc = toolSvc()->retrieveTool("DecayFinder", m_pDKFinder, this);
+  m_pDKFinder = tool<IDecayFinder>("DecayFinder", this);
   if(sc.isFailure()){
     fatal() << "Unable to retrieve DecayFinder" << endmsg;
     return sc;
@@ -101,8 +103,16 @@ StatusCode DecayChainNTuple::initialize() {
     err() << " Unable to retrieve GeomDispCalculator tool" << endmsg;
     return sc;
   }
-  if ( m_useTrgPV ) info() << "Will use Trg PV: "  << endmsg;
-  else  info() << "Will use Offline PV: "  << endmsg;
+
+  sc = toolSvc()->retrieveTool("PVLocator", m_PVLocator, this);
+  if(sc.isFailure()){
+    err() << " Unable to retrieve PV Locator tool" << endreq;
+    return sc;
+  }
+
+  m_PVContainer = m_PVLocator->getPVLocation() ;
+   
+  info() << "Getting PV from " << m_PVContainer << endreq ;
 
   // Retrieve the data service
   sc = service("EventDataSvc", m_EDS, true);
@@ -113,7 +123,7 @@ StatusCode DecayChainNTuple::initialize() {
 
 #ifdef MCCheck
   // Retrieve the MCDecayFinder
-  sc = toolSvc()->retrieveTool("MCDecayFinder", m_pMCDKFinder, this); 
+  m_pMCDKFinder = tool<IMCDecayFinder>("MCDecayFinder",this);
   if(sc.isFailure()){
     fatal() << "Unable to retrieve MCDecayFinder tool" << endreq;
     return sc;
@@ -1146,29 +1156,29 @@ StatusCode DecayChainNTuple::getPV(VertexVector& PVs) {
   verbose() << "Entering getPV" << endmsg;
   StatusCode sc = StatusCode::SUCCESS;
  
-  std::string PVLocation = VertexLocation::Primary;
-  if ( m_useTrgPV ) PVLocation = TrgVertexLocation::Velo3D ;
-
-  SmartDataPtr<Vertices> vertices(eventSvc(), PVLocation);
-  if( ! vertices ) {
-    err() << "Unable to retrieve vertices " << endmsg;
-    return StatusCode::FAILURE ;
-  } else {
-    debug() << "Number of primary vertices  = "
-        << vertices->size() << endmsg;
-    
-    Vertices::iterator ivert;
-    for( ivert = vertices->begin(); ivert != vertices->end(); ivert++){
-      verbose() << "Primary vertex coordinates = ( "
-          << (*ivert)->position().x()
-          << " , " << (*ivert)->position().y()
-          << " , " << (*ivert)->position().z() << " ) and chi2 = " 
-          << (*ivert)->chi2() << endmsg;
-      PVs.push_back((*ivert));
-    }
+  Vertices* vertices = get<Vertices>(m_PVContainer);
+ 
+  if ( !vertices ) {
+    err() << "Could not find primary vertex location " <<  m_PVContainer << endreq;
+    return StatusCode::FAILURE; 
   }
+
+  debug() << "Number of primary vertices  = "
+          << vertices->size() << endmsg;
+  
+  Vertices::iterator ivert;
+  for( ivert = vertices->begin(); ivert != vertices->end(); ivert++){
+    debug() << "Primary vertex coordinates = ( "
+           << (*ivert)->position().x()
+           << " , " << (*ivert)->position().y()
+           << " , " << (*ivert)->position().z() << " ) and chi2 = " 
+           << (*ivert)->chi2() << endmsg;
+    PVs.push_back((*ivert));
+  }
+
   verbose() << "Leaving getPV" << endmsg;
-  if ( PVs.empty()) warning() << "No primary vertex found at " << PVLocation<< endreq ;
+
+  if ( PVs.empty()) warning() << "No primary vertex found at " << m_PVContainer << endreq ;
  
   return sc;
 }

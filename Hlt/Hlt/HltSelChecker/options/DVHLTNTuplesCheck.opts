@@ -1,0 +1,111 @@
+#include "$HLTSELECTIONSROOT/options/DVHLTExSelections.opts"
+
+ApplicationMgr.DLLs += {"HltSelChecker"};
+
+// WARNING: comment the NTuples in DVHLTExSelections.opts when running DVHLTCheck
+// and comment the all the other exclusive channels, excepted the one to check
+
+// Include this if you also need to run on offline particles and if 
+// OfflineTracks.opts not included
+#include "$DAVINCIROOT/options/DaVinciReco.opts"
+#include "$DAVINCIROOT/options/DaVinciNeutrals.opts"
+
+// Define PV
+HLTSelections.Members += { "ResetPVLocation/SetOfflinePV" };
+SetOfflinePV.ResetToOffline = true;
+
+// Several selection have the same instance of PreLoadParticles ... comment in some DoTDRsel*
+// and add it here ... 
+ApplicationMgr.TopAlg += { "PreLoadParticles/Combined" } ;
+
+HLTExclusiveSelectionsFlag.OutputLevel = 4;
+MessageSvc.OutputLevel = 4;
+ToolSvc.OutputLevel    = 4;
+
+//==============================================================================
+// Checking B -> H H
+//==============================================================================
+#include "$HLTSELCHECKERROOT/options/NTB2HH.opts"
+
+//==============================================================================
+// Checking B_s0 -> phi(1020) phi(1020)
+//==============================================================================
+#include "$HLTSELCHECKERROOT/options/NTBs2PhiPhi.opts"
+
+//==============================================================================
+// Checking B0 -> (D~0 -> K+ pi-) (K*(892)0 -> K+ pi-) and cc
+//==============================================================================
+#include "$HLTSELCHECKERROOT/options/NTBd2D02KPiKstar.opts"
+
+//==============================================================================
+// Checking B0 -> (D*(2010)- -> (D~0 -> K+ pi-)  pi-) pi+ and cc
+//==============================================================================
+#include "$HLTSELCHECKERROOT/options/NTBd2DstarPi.opts"
+
+//==============================================================================
+// Checking B_s0 -> (D_s- -> K+ K- pi-) h+ and cc
+//==============================================================================
+#include "$HLTSELCHECKERROOT/options/NTBs2DsH.opts"
+
+//------------------------------------------------------------------------------
+ApplicationMgr.ExtSvc += { "NTupleSvc" };
+NTupleSvc.Output={"FILE1 DATAFILE='DVNtuples.root' TYP='ROOT' OPT='NEW'"};
+NTupleSvc.OutputLevel = 3;
+//------------------------------------------------------------------------------ 
+
+//------------------------------------------------------------------------------
+// PK's stripping of MB passing L0 and L1:
+// #include "$HLTSELECTIONSROOT/options/L0L1-MB.opts"
+//------------------------------------------------------------------------------
+// PK's stripping of signal passing L0, L1 and TDR:
+#include "$HLTSELECTIONSROOT/options/L0L1TDR-AllSignals.opts"
+
+//------------------------------------------------------------------------------ 
+//  re-initalize event selector
+// EventSelector.Input   = {};
+
+//===================================================
+// B-> H H
+// Bd -> Pi Pi
+// #include "$HLTSELECTIONSROOT/options/L0L1TDR-Bd2PiPi.opts"
+// Bd -> K Pi
+// #include "$HLTSELECTIONSROOT/options/L0L1TDR-Bd2KPi.opts"
+// Bs -> K K
+// #include "$HLTSELECTIONSROOT/options/L0L1TDR-Bs2KK.opts"
+// Bs -> Pi K
+// #include "$HLTSELECTIONSROOT/options/L0L1TDR-Bs2PiK.opts"
+//===================================================
+// Bs -> Phi Phi
+// #include "$HLTSELECTIONSROOT/options/L0L1TDR-Bs2PhiPhi.opts"
+//===================================================
+// Bd -> D0 K*
+// #include "$HLTSELECTIONSROOT/options/L0L1TDR-Bd2D0Kstar.opts"
+//===================================================
+// Bd -> D* Pi
+// #include "$HLTSELECTIONSROOT/options/L0L1TDR-Bd2DstarPi.opts"
+//===================================================
+// Bd -> J/Psi(MuMu)Ks
+// #include "$HLTSELECTIONSROOT/options/L0L1TDR-Bd2JpsiKs.opts"
+//===================================================
+// Bs -> Ds(KKPi) K
+// #include "$HLTSELECTIONSROOT/options/L0L1TDR-Bs2DsK.opts"
+//===================================================
+// Bs -> Ds(KKPi) Pi
+// #include "$HLTSELECTIONSROOT/options/L0L1TDR-Bs2DsPi.opts"
+//===================================================
+// Bs -> Mu Mu
+// #include "$HLTSELECTIONSROOT/options/L0L1TDR-Bs2MuMu.opts"
+//===================================================
+// Bs -> J/Psi(MuMu) Phi
+// #include "$HLTSELECTIONSROOT/options/L0L1TDR-Bs2JPsiPhi.opts"
+//===================================================
+// Bs -> Phi Gamma
+// #include "$HLTSELECTIONSROOT/options/L0L1TDR-Bs2PhiGamma.opts"
+//===================================================
+//------------------------------------------------------------------------------ 
+
+MessageSvc.Format = "% F%60W%S%7W%R%T %0W%M";
+ApplicationMgr.EvtMax    = 10; 
+// ApplicationMgr.EvtMax    = -1;
+EventSelector.FirstEvent = 1;
+EventSelector.PrintFreq  = 1;

@@ -4,6 +4,18 @@
 ! Purpose     : High-Level Trigger Exclusive Selections 
 !-----------------------------------------------------------------------------
 
+! 2004-12-10 - Luis Fernandez
+ - src/DecayChainNTuple{h,cpp}
+   . The primaries are retrieved with the PVLocator tool, default is offline
+ - options/DVHLTCheck.opts
+   . Removed
+ - options/NT*.opts
+   . New: Options to produce Trees with all kind of information and MC truth association
+   . The input locations for the Particle2MCLinks depends on the HLT strategy (with/without PID)
+     since HLT algorithms break the links: depends on ChangeDecayChain or ChangePIDByMass
+ - options/DVHLTNTuplesCheck.opts
+   . New: calls all the NT*.opts for offline selection and HLT selection with trigger filters
+
 ! 2004-12-06 - Luis Fernandez
  - options/OfflineTracks.opts
    . Add include of option file to allow the PhotonParticleMaker to produce neutrals
