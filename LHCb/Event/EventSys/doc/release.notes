@@ -1,14 +1,14 @@
 package EventSys
 package manager: Marco Cattaneo
 
-!======================== EventSys v18r0 2004-06-17 ========================
+!======================== EventSys v18r0 2004-06-18 ========================
 ! 2004-06-17 - Marco Cattaneo
  - Use EventAssoc v1r2, RichEvent v7r4
  - Remove L1Event, completely superseded by TrgEvent
 
-!======================= EventSys v17r11 2004-06-16 ========================
-! 2004-06-16 - Marco Cattaneo
- - Use Event v4r4, DAQEvent v4r3, TrgEvent v3r0, EventAssoc v1r1p1
+!======================= EventSys v17r11 2004-06-18 ========================
+! 2004-06-18 - Marco Cattaneo
+ - Use Event v4r4, DAQEvent v4r3, TrgEvent v3r0, EventAssoc v1r1p1, PhysEvent v8r4
  - Add check for completeness of LCG dictionaries, executed when building
    Linux debug version
 
