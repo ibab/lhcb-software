@@ -1,8 +1,11 @@
-// $Id: GiGaTrajectory.h,v 1.21 2004-02-22 19:01:50 ibelyaev Exp $ 
+// $Id: GiGaTrajectory.h,v 1.22 2004-04-07 15:23:08 gcorti Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.21  2004/02/22 19:01:50  ibelyaev
+//  add new data fields to GiGaTrajectoryPoint
+//
 // Revision 1.20  2004/02/20 18:13:34  ibelyaev
 //  major update in GiGaBase and GiGaTrajectory
 //
@@ -21,6 +24,7 @@ class G4ParticleDefinition;
 class G4Track    ;
 class G4Step     ;
 class G4VProcess ;
+class HepMCEvent ;
 
 ///
 
@@ -84,6 +88,12 @@ public:
   /// 
   bool                               hasOscillated() const
   { return m_hasOscillated ; }
+  bool                               isSignal     () const
+  { return m_isSignal      ; }
+  int                                signalBarcode() const
+  { return m_signalBarcode ; }
+  HepMCEvent *                       pHepMCEvent  () const
+  { return m_pHepMCEvent   ; }
   
   /// 
   G4int                              GetTrackID   () const 
@@ -124,6 +134,15 @@ public:
   inline void setHasOscillated( bool flag ) 
   {  m_hasOscillated = flag ;  }
   
+  inline void setIsSignal( bool sig ) 
+  {  m_isSignal = sig ; }
+
+  inline void setSignalBarcode( int code )
+  {  m_signalBarcode = code ; }
+  
+  inline void setHepMCEvent( HepMCEvent * event )
+  {  m_pHepMCEvent = event ;  }
+  
   // get the name of the creator process 
   const std::string& processname() const ;
   
@@ -148,6 +167,9 @@ private:
   HepLorentzVector             m_4vect         ;   
   const G4VProcess*            m_creator       ;
   bool                         m_hasOscillated ;
+  bool                         m_isSignal      ;
+  int                          m_signalBarcode ;
+  HepMCEvent*                  m_pHepMCEvent   ;
   /// 
 };
 // ============================================================================

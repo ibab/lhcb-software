@@ -1,7 +1,14 @@
 Package:          GiGa
 Package manager : Vanya Belyaev
 
-!========================= GiGav16r2 ======================================
+!====================== GiGa v16r3 2004-04-07 ==============================
+! 2004-04-07 - Gloria CORTI
+ - GiGa/GiGaTrajectory.h
+   src/Lib/GiGaTrajectory.cpp
+   . changes proviede by Patrick ROBBE to transfer signal information 
+     including reference to HepMC event and particle
+
+!========================= GiGa v16r2 ======================================
 ! 2004-03-20 - Ivan BELYAEV
  - src/Lib/DumpG4Track.cpp
  - src/Lib/DumpG4Step.cpp   - add few std::flush into printouts + 

@@ -1,8 +1,11 @@
-// $Id: GiGaTrajectory.cpp,v 1.20 2004-03-17 08:54:59 ranjard Exp $ 
+// $Id: GiGaTrajectory.cpp,v 1.21 2004-04-07 15:23:09 gcorti Exp $ 
 // ============================================================================
 /// CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.20  2004/03/17 08:54:59  ranjard
+// v16r1 - fix printout
+//
 // Revision 1.19  2004/02/23 08:12:54  ibelyaev
 //  urgent fix!
 //
@@ -108,6 +111,9 @@ GiGaTrajectory::GiGaTrajectory (   )
   , m_4vect                           (   )
   , m_creator                         ( 0 ) 
   , m_hasOscillated                   ( false )
+  , m_isSignal                        ( false )
+  , m_signalBarcode                   ( -1 )
+  , m_pHepMCEvent                     ( 0 ) 
 {
 #ifdef GIGA_DEBUG
   GiGaTrajectoryLocal::s_Counter.increment () ;
@@ -129,6 +135,9 @@ GiGaTrajectory::GiGaTrajectory   ( const G4Track* aTrack )
     , m_4vect         ( aTrack->GetDynamicParticle()->Get4Momentum() )
     , m_creator       ( aTrack->GetCreatorProcess ()                 ) 
     , m_hasOscillated ( false                                        ) 
+    , m_isSignal      ( false                                        )
+    , m_signalBarcode ( -1                                           )
+    , m_pHepMCEvent   ( 0                                            )
 {
   ///
   double time = aTrack->GetGlobalTime() ;
@@ -171,6 +180,9 @@ GiGaTrajectory::GiGaTrajectory ( const GiGaTrajectory & right )
   , m_4vect                           ( right.fourMomentum  ()       )
   , m_creator                         ( right.creator       ()       )
   , m_hasOscillated                   ( right.hasOscillated ()       )
+  , m_isSignal                        ( right.isSignal      ()       )
+  , m_signalBarcode                   ( right.signalBarcode ()       )
+  , m_pHepMCEvent                     ( right.pHepMCEvent   ()       )
 {
   clear();
   for( const_iterator it = right.begin() ; right.end() != it ; ++it ) 
