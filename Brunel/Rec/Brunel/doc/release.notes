@@ -1,0 +1,78 @@
+Package: Rec/Brunel
+Package Coordinator: Marco Cattaneo
+
+Purupose: LHCb reconstruction program
+
+! 20010314 Brunel v2 (MC)
+  This version has been restructured as two packages. Rec/Brunel contains the
+  statically linked code needed to run SICBDST routines. C++ components of the
+  reconstruction framework have been moved to the package Rec/BrunelKernel
+
+  Other changes, relative to Brunel v1r6 are: 
+
+  requirements      - use SicbCnv v11, SICBDST v250, GaudiSys v7
+  Brunel/*.h, *.cpp - files renamed to remove multiple . in filenames (to please nmake)
+  options/*.txt     - file extension changed to .opts to conform to new convention
+                    - simplify file structure by using ApplicationMgr.DLLs = {"NONE"}; 
+                      option for static execution
+================================================================================
+! 20001219 Brunel v1r6 (MC)
+  requirements     - use SicbCnv v10 (spillover), SICBDST v235r3
+  Brunel.Phase.cpp - fix bug in a log message (reported by O.Callot)
+  BrunelZebra.inc  - increase ZEBRA COMMON block size to 12M words
+
+! 20001120 Brunel v1r5 (MC)
+  Brunel.Phase.cpp - No longer instantiates algorithms, instead it instantiates sequences
+                     This introduces modifications in the BrunelOptions.txt: all algorithms
+                     must now be declared as members of a sequence - see user guide for details
+  requirements     - Use Gaudi release 6, SICBDST v235r2
+  options          - New directory, containing structure of job options files - see user guide
+
+! 20001003 Brunel v1r4 (Flr)
+           to link a Brunel static application: gmake tag=LinuxStatic
+           to run a job in static mode remove the following line from
+           BrunelOptions.txt : ApplicationMgr.DLLs = {...}
+ 
+  requirements      - use the highest version of LHCbCMT (v3r3 to define
+                      package_tag pattern)
+                    - use SICBDST v235 before any Gaudi packages to make sure
+                      that Futio and Finclude version numbers are those set
+                      by SICBDST.
+                    - use SicbCnv v8r1 (to remove a fake main program)
+
+! 20000824 Brunel v1r3 (MC)
+  requirements      - use SICBDST v235
+  jobOptions        - cleaned up
+
+! 20000726 Brunel v1r2 (MC)
+  requirements      - use SICBDST v234r2 and GaudiSys v5
+  BrunelZebra.inc   - increase ZEBRA size to 9000000 (as for SICBDST)
+  *.cpp             - Changes for GaudiSys v5 (compulsory implementation of
+                      initialize(), finalize())
+  BrunelPhase.h,.cpp- Remove private member m_AlgList, now exists in 
+                      Algorithm base class
+
+! 20000626 Brunel v1r1 (MC)
+  requirements      - use SicbCnv v7r3, link directly to $(SICBDSTROOT)/src/sicbvers.F
+  BrunelZebra.inc   - new, to over-ride size of ZEBRA COMMON (set to 8 000 000)
+  GetZebraSize.F    - new, over-rides routine of same name in SicbCnv 
+  Brunel.Trigger.TRIGGER.cpp - call TRLAST in finalise()
+
+! 20000529 Brunel v1
+  requirements      - use GaudiConf v1 and SICBDST v233r2 (Flr)
+  job/              - new directory which contains :      (Flr)
+  Brunel.job        - script to run Brunel, uses Brunel.cards and 
+                      BrunelOptions.txt
+  Brunel_lsf.job    - contains options for Gaudi and SICBDST,
+                      does not use Brunel.cards and BrunelOptions.txt
+  Brunel.cards      - SICBDST data cards file
+  BrunelOptions.txt - Gaudi jobOptions file
+  Brunel/             remove options.txt files (Flr)
+  udinit.F          - stop the job if SICBDST cards file is not found. (Flr)
+  Brunel.Init.F     - add printout of event number if DEBU card (Flr)
+    
+! 20000519 Brunel v1
+  First version of LHCb reconstruction program.
+
+  This version has the same functionality as SICBDST v233, containing only 
+  wrapped FORTRAN code

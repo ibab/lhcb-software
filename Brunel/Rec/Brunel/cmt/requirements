@@ -1,0 +1,43 @@
+package Brunel
+version v2
+
+branches doc cmt src job options Brunel
+
+ignore_pattern package_stamps
+
+# Set the default paths for Brunel and SICBDST data cards.
+set BRUNELOPTS ${BRUNELROOT}/options
+set JOBOPTPATH ${BRUNELOPTS}/Brunel.opts
+set SICBCARDS  ${BRUNELOPTS}/Brunel.cards
+
+# Next line to force static build to go into LinuxStatic directory
+ignore_pattern package_tag
+
+use BrunelKernel  v1* Rec
+
+# Gaudi Configuration options
+use GaudiConf v4*
+
+# Gaudi Framework
+use GaudiSys v7*
+#
+# SicB event data persistency
+use SicbCnv v11*	SICB
+#
+use SICBDST v251*	SICB
+#
+# tracking
+#use TrAlgorithms v2*	Tr
+#use OTAlgorithms v2*	OT
+#use ITAlgorithms v2*	IT
+#use VSicbCnv v2*	SICB
+#
+#===== build Brunel =========================
+application Brunel $(GAUDICONFROOT)/src/GaudiMain.cpp \
+                   ../src/BrunelSicb/*.F ../src/BrunelSicb/*.cpp \
+                   ${SICBDSTROOT}/src/sicbvers.F
+# ${SICBDSTROOT}/dst/*.F
+
+# ========================= set macros ============================
+
+macro Brunel_linkopts    "${application_linkopts}"

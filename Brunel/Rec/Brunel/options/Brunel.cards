@@ -1,0 +1,14 @@
+LIST
+DEBU  1 1000 1
+C IOPA
+C SAVX is event output file 
+C   'SAVX' 'XO' '$LHCBHOME/scratch/Brunel/brunel.dst!'
+C CHCK are standard monitoring histograms
+C    'CHCK' 'HO' '$LHCBHOME/scratch/Brunel/CHCK_brunel.hbook!'
+C T1VE are L1 trigger  monitoring histograms
+C    'T1VE' 'HO' '$LHCBHOME/scratch/Brunel/T1VE_brunel.hbook!'
+C End of IOPA card
+C DEBG 'WDRF' 2
+C PRNT 'MUCH' 2
+STOP
+EOD

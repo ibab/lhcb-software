@@ -1,0 +1,6 @@
+//##############################################################
+// Additional options to execute PileUp in Brunel
+//==============================================================
+ApplicationMgr.ExtSvc += { "SicbEventSelector/PileUpSelector" };
+ApplicationMgr.TopAlg += { "PileUpAlg" };
+

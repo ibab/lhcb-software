@@ -1,0 +1,55 @@
+//##############################################################
+// Options common to all Brunel execution modes.
+//==============================================================
+#include "$STDOPTIONS"
+ApplicationMgr.DLLs += { "BrunelKernel", "GaudiAlg" };
+
+//--------------------------------------------------------------
+// Brunel Phases to be executed
+//--------------------------------------------------------------
+ApplicationMgr.TopAlg += { "BrunelInitialisation/BrunelInit",
+                           "BrunelPhase/BrunelDigi",
+                           "BrunelPhase/BrunelTrigger",
+                           "BrunelPhase/BrunelReco",
+                           "BrunelPhase/BrunelFinalFit",
+                           "BrunelFinalisation/BrunelFinish" };
+
+//--------------------------------------------------------------
+// Detectors to be processed in each phase
+//--------------------------------------------------------------
+BrunelDigi.DetectorList = { "VELO" , "TRAC" , "RICH" , "CALO", "MUON" };
+BrunelTrigger.DetectorList = { "TRIGGER" };
+BrunelReco.DetectorList = { "TRAC" , "RICH" , "CALO" };
+BrunelFinalFit.DetectorList = { "TRAC" };
+
+//--------------------------------------------------------------
+// Sequences
+//--------------------------------------------------------------
+BrunelDigiVELOSeq.Members = { "BrunelDigiVELO" };
+BrunelDigiTRACSeq.Members = { "BrunelDigiTRAC" };
+BrunelDigiRICHSeq.Members = { "BrunelDigiRICH" };
+BrunelDigiCALOSeq.Members = { "BrunelDigiECAL", "BrunelDigiHCAL" };
+BrunelDigiMUONSeq.Members = { "BrunelDigiMUON" };
+
+BrunelTriggerTRIGGERSeq.Members = { "BrunelTriggerTRIGGER" };
+
+BrunelRecoTRACSeq.Members = { "BrunelRecoTRAC" };
+BrunelRecoRICHSeq.Members = { "BrunelRecoRICH" };
+BrunelRecoCALOSeq.Members = { "BrunelRecoECAL", "BrunelRecoHCAL" };
+
+BrunelFinalFitTRACSeq.Members = { "BrunelFinalFitTRAC" };
+
+// Print event number at every event
+EventSelector.PrintFreq = 1;
+
+//--------------------------------------------------------------
+// Set output level threshold (2=DEBUG, 3=INFO, 4=WARNING, 5=ERROR, 6=FATAL )
+//--------------------------------------------------------------
+
+// Global output level
+MessageSvc.OutputLevel     = 3;
+
+//--------------------------------------------------------------
+// Set up some monitoring
+//--------------------------------------------------------------
+AuditorSvc.Auditors = { "NameAuditor", "ChronoAuditor", "MemoryAuditor" };

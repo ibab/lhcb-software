@@ -1,0 +1,55 @@
+//##############################################################
+// Default Brunel job Options
+//
+// You should adapt this file to your needs. 
+// It should not be necessary to modify the included files
+// Do not modify the order of the included files!
+//==============================================================
+
+// >>>>>>>>>>>>>> SPILLOVER <<<<<<<<<<<<<<<<
+// Uncomment next line if you want Brunel to add spillover events.
+// #include "$BRUNELOPTS/BrunelSpillOver.opts"
+// Define input file for spillover events (SICBMC v241 minimum bias)
+// SpillOverSelector.JobInput = "FILE SICBMC_v241_mbias_1.rawh";
+
+// >>>>>>>>>>>>>>>> PILEUP <<<<<<<<<<<<<<<<<
+// Uncomment next line if you want Brunel to merge pileup events.
+// #include "$BRUNELOPTS/BrunelPileUp.opts"
+// Use LUMISIGNAL pileup mode if main event is signal, otherwise LUMIMINBIAS
+// PileUpAlg.PileUpMode = "LUMISIGNAL";
+// PileUpAlg.PileUpMode = "LUMIMINBIAS";
+// Define input file for pileup events (SICBMC v241 minimum bias)
+// PileUpSelector.JobInput = "FILE SICBMC_v241_mbias_2.rawh";
+
+#include "$BRUNELOPTS/BrunelCommon.opts"
+
+// Uncomment next line if you want to run Brunel in static mode.
+// #include "$BRUNELOPTS/BrunelStatic.opts"
+
+//--------------------------------------------------------------
+// Define the main event input data: SICBMC v241 (new CALO RAWH format)
+//--------------------------------------------------------------
+EventSelector.Input = {"FILE='$SITEROOT/lhcb/group/calo/ecal/vol1/SICBMC_v241/events_v241.20'"};
+EventSelector.EvtMax = 10;
+//EventSelector.FirstEvent = 6;
+
+//--------------------------------------------------------------
+// Over-ride global output level for some algorithms
+// (2=DEBUG, 3=INFO, 4=WARNING, 5=ERROR, 6=FATAL )
+//--------------------------------------------------------------
+MessageSvc.OutputLevel = 3;
+// BrunelInit.OutputLevel     = 2;
+// BrunelDigiVELO.OutputLevel = 2;
+// BrunelRecoVELO.OutputLevel = 2;
+
+//--------------------------------------------------------------
+// Enable/Disable some monitoring by setting lines below to true/false
+//--------------------------------------------------------------
+NameAuditor.Enable   = false;
+ChronoAuditor.Enable = true;
+MemoryAuditor.Enable = true;
+
+//--------------------------------------------------------------
+// Output some histograms
+//--------------------------------------------------------------
+// HistogramPersistencySvc.OutputFile  = "histo.hbook";
