@@ -1,23 +1,28 @@
-# $Id: requirements,v 1.18 2003-01-31 20:46:11 andreav Exp $
+# $Id: requirements,v 1.19 2004-12-08 17:21:27 marcocle Exp $
 package DetCondExample
-version v4r3
+version v5r0
 
 branches doc src job options cmt XMLDDDB sql
 ignore_pattern package_stamps 
 
 # Main program and standard job options
-use GaudiConf v6*
+use GaudiConf v*
 
 # GAUDI framework dependencies
-use GaudiKernel v13r*
-use GaudiSvc v10r*
-use GaudiAlg v6r*
+use GaudiKernel v*
+use GaudiSvc v*
+use GaudiAlg v*
 
 # Detector Description
-use DetDesc v11r* Det
+use DetDesc v* Det
+use DetDescCnv v* Det
+use XmlDDDB v* Det
 
 # Detector Conditions
-use DetCond v4r3* Det
+use DetCond v* Det
+
+# Xml Parsing services (XmlCnvSvc)
+use XmlTools v* Tools
 
 # XML detector description database location
 set DETCONDEXAMPLE_XMLDDDB ${DETCONDEXAMPLEROOT}/XMLDDDB
@@ -34,6 +39,7 @@ setup_script setupDB
 path_append PATH ${DETCONDEXAMPLEROOT}/sql
 
 # Path to the shared libraries in the bin directory
+path_remove LD_LIBRARY_PATH ${DETCONDEXAMPLEROOT}
 path_append LD_LIBRARY_PATH ${DETCONDEXAMPLEROOT}/${BINDIR}
 
 # Set the debug level for the CONDDB libraries. 
@@ -57,3 +63,4 @@ private
 application DetCondExample *.cpp $(GAUDICONFROOT)/src/GaudiMain.cpp
 macro DetCondExample_linkopts "$(application_linkopts)"
 
+path JOBOPTSEARCHPATH ../options
