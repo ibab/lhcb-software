@@ -1,7 +1,7 @@
 Package: GaudiObjDesc
 Desccription: This package contains a set of tools used to generate code from the XML description of the data object classes.
 Package manager : Stefan Roiser
-
+ 
 ===============================GaudiObjDesc v6r3p1==========================
 !20041117 - Stefan Roiser
 - fixed char* handling (has to be done through Xerces tools)
