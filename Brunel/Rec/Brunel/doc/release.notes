@@ -19,7 +19,7 @@ Purpose: LHCb reconstruction program
      - Inner Tracker digitisation and clustering
      - Outer Tracker digitisation and clustering
      - Velo digitisation and standalone tracking
-     - Forward track finding (Velo+IT only), fitting, conversion to StoredTracks
+     - Forward track finding, fitting, conversion to StoredTracks
      - Conversion of StoredTracks to AXAT/AXTP banks (for RICH reconstruction) 
      - RICH Digitisation (old SICB Fortran version)
      - Calo digitisation and clustering
@@ -31,7 +31,6 @@ Purpose: LHCb reconstruction program
 
    >>>>>> Missing functionality:
      - L1 trigger simulation
-     - Forward tracking with OT
      - Upstream tracking
      - Rich reconstruction and PID
      - Calo PID
