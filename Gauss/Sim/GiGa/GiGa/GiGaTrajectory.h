@@ -1,8 +1,11 @@
-// $Id: GiGaTrajectory.h,v 1.20 2004-02-20 18:13:34 ibelyaev Exp $ 
+// $Id: GiGaTrajectory.h,v 1.21 2004-02-22 19:01:50 ibelyaev Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.20  2004/02/20 18:13:34  ibelyaev
+//  major update in GiGaBase and GiGaTrajectory
+//
 // ============================================================================
 #ifndef    GIGA_GIGATRAJECTORY_H
 #define    GIGA_GIGATRAJECTORY_H 1 
@@ -91,7 +94,8 @@ public:
   inline const G4ParticleDefinition* partDef      () const 
   { return m_partDef ; } 
   ///
-  virtual void ShowTrajectory  ()                 const ;
+  virtual void ShowTrajectory  ( std::ostream& os = std::cout ) const;
+  
   virtual void DrawTrajectory  ( G4int i_mode=0 ) const ;
   virtual void AppendStep      ( const G4Step*  )       ;
   virtual void MergeTrajectory ( G4VTrajectory* )       ;

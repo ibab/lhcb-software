@@ -1,19 +1,31 @@
-// $Id: GiGaTrajectory.cpp,v 1.17 2004-02-22 13:38:19 ibelyaev Exp $ 
+// $Id: GiGaTrajectory.cpp,v 1.18 2004-02-22 19:01:51 ibelyaev Exp $ 
 // ============================================================================
 /// CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.17  2004/02/22 13:38:19  ibelyaev
+//  relocate DumpG4*.h files
+//
 // Revision 1.16  2004/02/20 18:13:35  ibelyaev
 //  major update in GiGaBase and GiGaTrajectory
 //
 // ============================================================================
 #define  GIGA_GIGATRAJECTORY_CPP 1 
 // ============================================================================
+// GaudiKernel
+// ============================================================================
+#include "GaudiKernel/System.h"
+// ============================================================================
 /// from GiGa
+// ============================================================================
 #include "GiGa/GiGaTrajectory.h"
 #include "GiGa/GiGaUtil.h"
 #include "GiGa/GiGaException.h"
+#include "GiGa/DumpG4Track.h"
+#include "GiGa/DumpG4Step.h"
+// ============================================================================
 /// from Geant4 
+// ============================================================================
 #include "G4Polyline.hh"
 #include "G4Circle.hh"
 #include "G4Colour.hh"
@@ -27,9 +39,6 @@
 #include "G4SteppingManager.hh"
 #include "G4ParticleDefinition.hh"
 
-// local 
-#include "GiGa/DumpG4Track.h"
-#include "GiGa/DumpG4Step.h"
 
 // ============================================================================
 /** @file 
@@ -129,7 +138,10 @@ GiGaTrajectory::GiGaTrajectory   ( const G4Track* aTrack )
   }
   ///
   GiGaTrajectoryPoint* firstPoint =
-    new GiGaTrajectoryPoint( aTrack->GetPosition() , time );
+    new GiGaTrajectoryPoint ( aTrack -> GetPosition() , 
+                              time                    ,
+                              HepLorentzVector()      , //empty! 
+                              m_creator               ) ;
   push_back( firstPoint );
   ///
 #ifdef GIGA_DEBUG
@@ -272,12 +284,19 @@ bool GiGaTrajectory::appendStep ( const G4Step* step )
   }
   
   if ( empty() || 
-       point -> GetGlobalTime () != back() -> GetTime     () ||
-       point -> GetPosition   () != back() -> GetPosition ()  ) 
+       fAlive != step->GetTrack()->GetTrackStatus()                  ||
+       point -> GetProcessDefinedStep () != back() -> GetProcess  () || 
+       point -> GetGlobalTime         () != back() -> GetTime     () ||
+       point -> GetPosition           () != back() -> GetPosition ()  ) 
   {
     GiGaTrajectoryPoint* p = 
-      new GiGaTrajectoryPoint ( point -> GetPosition   () ,
-                                point -> GetGlobalTime () ) ; 
+      new GiGaTrajectoryPoint ( point -> GetPosition           ()   ,
+                                point -> GetGlobalTime         ()   , 
+                                HepLorentzVector 
+                                ( point -> GetMomentum         () , 
+                                  point -> GetTotalEnergy      () ) ,  
+                                point -> GetProcessDefinedStep ()   ) ;
+    
     push_back( p );
   }
   else  { return false ; }                                     // RETURN 
@@ -306,7 +325,46 @@ void GiGaTrajectory::AppendStep      ( const G4Step*  step )
 };
 
 // ============================================================================
-void GiGaTrajectory::ShowTrajectory  () const {};
+void GiGaTrajectory::ShowTrajectory  ( std::ostream& stream ) const
+{
+  stream << " GiGaTrajectory " 
+         << " trackID/ParentID " 
+         << trackID  () << "/"
+         << parentID () 
+         << " #point: "     << size ()      
+         << " Particle: "   << GetParticleName() 
+         << " Momentum: "   << momentum () << std::endl ;
+  const G4VProcess* p = creator() ;
+  if( 0 != p ) 
+  {
+    stream << " CreatorProcess  " 
+           << p -> GetProcessType() << "/"
+           << G4VProcess::GetProcessTypeName ( p->GetProcessType() ) << "/"
+           << p -> GetProcessName() << "/" 
+           << System::typeinfoName( typeid( *p ) ) << std::endl ;
+  }
+  
+  for ( const_iterator it = begin() ; it != end() ; ++it ) 
+  {
+    const GiGaTrajectoryPoint* point = *it ;
+    if( 0 == point ) { continue ; }
+    stream << " \tPoint " 
+           << " #: "      << ( it - begin() ) 
+           << " 3D,T: "   << point -> fourVector  () 
+           << " Mom: "    << point -> momentum    () ;
+    const G4VProcess* p = point -> process() ;
+    if( 0 != p ) 
+    {
+      stream << " Process  " 
+             << p -> GetProcessType() << "/"
+             << G4VProcess::GetProcessTypeName ( p->GetProcessType() ) << "/"
+             << p -> GetProcessName() << "/" 
+             << System::typeinfoName( typeid( *p ) ) ;
+    }
+    stream << std::endl ;
+  }
+  
+};
 // ============================================================================
 
 // ============================================================================
@@ -371,8 +429,8 @@ G4ThreeVector GiGaTrajectory::GetInitialMomentum () const
 // ============================================================================
 const std::string& GiGaTrajectory::processname() const 
 {
-  static const std::string s_unknown = "Unknown";
-  if( 0 == m_creator ) { return s_unknown ; }
+  static const std::string s_unknown = "Unknown/NULL";
+  if ( 0 == m_creator ) { return s_unknown ; }
   return m_creator->GetProcessName() ;
 }
 // ============================================================================

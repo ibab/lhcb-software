@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.95 2004-02-22 16:51:09 ibelyaev Exp $
+! $Id: release.notes,v 1.96 2004-02-22 19:01:51 ibelyaev Exp $
 ! =============================================================================
 Package:          GiGa
 Package manager : Vanya Belyaev
@@ -18,7 +18,16 @@ Package manager : Vanya Belyaev
      2) the method procname is updated in accordance with (1)
      3) remove GiGaException for cane of Nan/Infinite tome-of-fligh
      4) add extensive printout for NaN/Infinite time of flight case 
-     5) redesign the AppendStep mehtod: 
+     5) redesign the AppendStep mehtod  
+     6) implement 'ShowTrajectory' method for trajectory printout 
+ - GiGaTrajectoryPoint.h, src/Lib/GiGaTrajectoryPoint
+     1) add new field m_momentum   (4-momentum if input particle)
+         + new accessors 
+     2) add new filed m_process + new accessors 
+          a) for the first points it is a process which created the particle
+          b) for other points if is a process which defins the step, 
+             or 0 for transportation   
+     3) add 2 new constructors (from G4TrajectoryPoint and G4VTrajectoryPoint)  
  - GiGa/GiGaBase.h src/Lib/GiGaBase.cpp
      make usage of GaudiTool base 
  - GiGaDumpG4Track.h, src/Lib/DumpG4Track.cpp 

@@ -1,8 +1,11 @@
-// $Id: GiGaTrajectoryPoint.h,v 1.12 2002-12-07 21:36:30 ibelyaev Exp $ 
+// $Id: GiGaTrajectoryPoint.h,v 1.13 2004-02-22 19:01:51 ibelyaev Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.12  2002/12/07 21:36:30  ibelyaev
+//  trivial fix
+//
 // Revision 1.11  2002/12/07 21:05:30  ibelyaev
 //  see $GIGAROOT/doc/release.notes 2002-12-07
 //
@@ -21,6 +24,7 @@
 #include "G4TrajectoryPoint.hh" 
 #include "G4VTrajectoryPoint.hh" 
 
+class G4VProcess ;
 
 /** @class GiGaTrajectoryPoint GiGaTrajectoryPoint.h 
  *
@@ -40,23 +44,64 @@ public:
   /// default empty constructor
   GiGaTrajectoryPoint ();
   
-  /** constructor from position and time 
-   *  @param Pos position 
+  /** constructor from position and time, momentum and process  
+   *  @param Pos  position 
    *  @param Time time 
+   *  @param Mom  input momentum 
+   *  @param Proc process 
    */
-  GiGaTrajectoryPoint ( const Hep3Vector&  Pos   , const double&      Time );
-
+  GiGaTrajectoryPoint 
+  ( const Hep3Vector&       Pos                       , 
+    const double            Time                      , 
+    const HepLorentzVector& Mom  = HepLorentzVector() , 
+    const G4VProcess*       Proc = 0                  );
+  
   /** constructor from position and time 
    *  @param Time time 
    *  @param Pos position 
+   *  @param Mom  input momentum 
+   *  @param Proc process 
    */
-  GiGaTrajectoryPoint ( const double&      Time  , const Hep3Vector&  Pos  );
-
+  GiGaTrajectoryPoint 
+  ( const double            Time                      , 
+    const Hep3Vector&       Pos                       , 
+    const HepLorentzVector& Mom  = HepLorentzVector() , 
+    const G4VProcess*       Proc = 0                  );
+  
   /** constructor from 4-vector
    *  @param right 4-vector
+   *  @param Mom  input momentum 
+   *  @param Proc process 
    */
-  GiGaTrajectoryPoint ( const HepLorentzVector&    right );
+  GiGaTrajectoryPoint 
+  ( const HepLorentzVector& right                     ,
+    const HepLorentzVector& Mom  = HepLorentzVector() , 
+    const G4VProcess*       Proc = 0                  );
   
+  /** constructor from G4TrajectoryPoint 
+   *  @param point trajectory point 
+   *  @param Time time 
+   *  @param Mom   input momentum 
+   *  @param Proc  process 
+   */  
+  GiGaTrajectoryPoint 
+  ( const G4TrajectoryPoint& Point                      , 
+    const double             Time                       ,
+    const HepLorentzVector&  Mom   = HepLorentzVector() , 
+    const G4VProcess*        Proc  = 0                  );
+
+  /** constructor from G4VTrajectoryPoint 
+   *  @param point trajectory point 
+   *  @param Time time 
+   *  @param Mom   input momentum 
+   *  @param Proc  process 
+   */  
+  GiGaTrajectoryPoint 
+  ( const G4VTrajectoryPoint& Point                      , 
+    const double              Time                       ,
+    const HepLorentzVector&   Mom   = HepLorentzVector() , 
+    const G4VProcess*         Proc  = 0                  );
+    
   /** copy constructor 
    *  @param right object to be copied 
    */
@@ -68,8 +113,7 @@ public:
   /** clone method (virtual constructor)
    *  @return new trajectory point
    */
-  GiGaTrajectoryPoint*    clone      () const 
-  { return new GiGaTrajectoryPoint( *this ); }
+  GiGaTrajectoryPoint*    clone      () const ;
   
   /// overloaded "new"
   void* operator new    ( size_t );
@@ -81,19 +125,63 @@ public:
   bool operator==( const GiGaTrajectoryPoint& right ) 
   { return (&right) == this ; } /// ?
   
-  ///
-  inline const double&           time       () const        
-  { return m_time                ; } 
-  inline const double&           GetTime    () const        
-  { return time()                ; } 
-  inline GiGaTrajectoryPoint&    setTime    ( double Time ) 
-  { m_time = Time ; return *this ; }  
-  inline const HepLorentzVector  fourVector () const        
-  { return HepLorentzVector( GetPosition() , GetTime() ) ; };  
-  ///
+  /// get the time 
+  const double    time () const { return m_time   ; } 
+  /// get the time
+  const double GetTime () const { return   time() ; }
+  /// set the time
+  void setTime    ( double Time ) { m_time = Time ; }  
+  /// get the 4-position
+  const HepLorentzVector    fourVector () const        
+  { return HepLorentzVector ( GetPosition() , GetTime() ) ; };  
+  
+  /// get the 4-position
+  const HepLorentzVector GetFourVector () const { return fourVector ()  ; };  
+  
+  /// get the actual 'input' 4-momentum of the particle
+  const HepLorentzVector&    momentum() const { return m_momentum    ; }
+  
+  /// get the actual 'input' 4-momentum of the particle
+  const HepLorentzVector& GetMomentum() const { return   momentum () ; }
+  
+  /// set new value for input 4-momentum 
+  void setMomentum ( const HepLorentzVector& value ) {  m_momentum = value   ; }
+  
+  /// set new value for input 4-momentum 
+  void SetMomentum ( const HepLorentzVector& value ) { setMomentum ( value ) ; }
+  
+  /** get the process which depermines the position 
+   *  of the trajectory point(vertex)
+   *  for th efitrst point if th etrajectory it is 
+   *  a "creator" process for the track 
+   *  otherwise it is process whoch determinies the step 
+   */
+  const G4VProcess*    process() const { return m_process    ; }
+  
+  /** get the process which depermines the position 
+   *  of the trajectory point(vertex)
+   *  for th efitrst point if th etrajectory it is 
+   *  a "creator" process for the track 
+   *  otherwise it is process whoch determinies the step 
+   */
+  const G4VProcess* GetProcess() const { return   process () ; }
+  
+  /// set new valeu of the process 
+  void setProcess ( const G4VProcess* value ) {  m_process = value   ; }
+  /// set new valeu of the process 
+  void SetProcess ( const G4VProcess* value ) { setProcess ( value ) ; }
+  
+private:
+  
+  // assigmenet oprator is disabled 
+  GiGaTrajectoryPoint& operator=
+  ( const GiGaTrajectoryPoint& right ) ;
+  
 private:
   ///
   double m_time; 
+  HepLorentzVector  m_momentum ;
+  const G4VProcess* m_process  ;
   ///
 };
 // ============================================================================
