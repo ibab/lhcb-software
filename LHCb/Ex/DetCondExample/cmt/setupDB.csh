@@ -1,7 +1,13 @@
 #!/usr/local/bin/tcsh
-# $Header: /afs/cern.ch/project/cvs/reps/lhcb/Ex/DetCondExample/cmt/setupDB.csh,v 1.2 2001-10-29 12:43:17 andreav Exp $
+# $Id: setupDB.csh,v 1.3 2001-12-17 19:44:45 andreav Exp $
 
-#set out = /dev/stdout
+# Objectivity condition database location
+# Moved here from requirements because OBJY_LS_HOST is undefined on Windows
+setenv DETCONDEXAMPLE_FDID     30997
+setenv DETCONDEXAMPLE_BOOTHOST ${OBJY_LS_HOST}
+setenv DETCONDEXAMPLE_BOOTDIR  ${DETCONDEXAMPLEROOT}/DB
+setenv DETCONDEXAMPLE_BOOTFILE condDBBoot
+
 set out  = /dev/null
 
 echo Setup Objectivity Federated Database for DetCondExample > $out

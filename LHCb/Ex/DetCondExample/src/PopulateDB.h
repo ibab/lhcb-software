@@ -1,4 +1,4 @@
-//$Header: /afs/cern.ch/project/cvs/reps/lhcb/Ex/DetCondExample/src/PopulateDB.h,v 1.1.1.1 2001-09-14 15:45:03 andreav Exp $
+//$Id: PopulateDB.h,v 1.2 2001-12-17 19:50:35 andreav Exp $
 #ifndef DETCONDEXAMPLE_POPULATEDB_H
 #define DETCONDEXAMPLE_POPULATEDB_H 1
 
@@ -33,10 +33,19 @@ class PopulateDB : public Algorithm {
  private:
 
   /// Store sample data
-  StatusCode i_condDBStoreSampleData   ( );
+  StatusCode i_condDBStoreSampleData();
 
   /// Dump sample data
-  StatusCode i_condDBDumpSampleData    ( );
+  StatusCode i_condDBDumpSampleData();
+
+  /// Encode XML temperature data
+  void i_encodeXmlTemperature( const double temperature,
+			       const std::string& objName,
+			       std::string& xmlString );
+  
+  /// Dump the contents of a CondDBFolder
+  StatusCode i_dumpFolder( const std::string& folderName,
+			   const std::string& tagName );
 
  private:
 

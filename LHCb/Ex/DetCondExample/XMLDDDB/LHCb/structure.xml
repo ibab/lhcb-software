@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE DDDB SYSTEM "../DTD/structure.dtd">
-<!-- $Id: structure.xml,v 1.1 2001-12-17 15:46:38 andreav Exp $ -->
+<!-- $Id: structure.xml,v 1.2 2001-12-17 19:47:40 andreav Exp $ -->
 <DDDB>
 
   <detelem name="LHCb" type="passive">
@@ -12,7 +12,8 @@
     <alignmentinfo condition="/dd/Alignment/LHCb/alLHCb"/>
     <slowcontrolinfo condition="/dd/SlowControl/LHCb/scLHCb"/>
 
-    <detelemref href = "../Ecal/structure.xml#Ecal"       />
+    <detelemref href = "../Ecal/structure.xml#Ecal"/>
+    <detelemref href = "../Hcal/structure.xml#Hcal"/>
 
   </detelem>
 

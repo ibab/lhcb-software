@@ -1,45 +1,41 @@
-# $Id: requirements,v 1.5 2001-11-23 17:59:22 andreav Exp $
+# $Id: requirements,v 1.6 2001-12-17 19:44:45 andreav Exp $
 package DetCondExample
-version v2
+version v2r0
 
 branches doc src job options cmt DB
 ignore_pattern package_stamps 
 
 # Main program and standard job options
-use GaudiConf     v5
+use GaudiConf v6*
 
-# Detector Conditions (also inherit dependency on GAUDI framework)
-use DetCond       v2  Det
+# GAUDI framework dependencies
+use GaudiSys v9*
 
-set DETCONDEXAMPLE_FDID     30997
-set DETCONDEXAMPLE_BOOTHOST ${OBJY_LS_HOST}
-set DETCONDEXAMPLE_BOOTDIR  ${DETCONDEXAMPLEROOT}/DB
-set DETCONDEXAMPLE_BOOTFILE condDBBoot
+# Detector Description
+use DetDesc v9* Det
+
+# Detector Conditions (only on Linux)
+macro DetCond_use "DetCond v2r0* Det" \
+      WIN32       ""
+use $(DetCond_use)
+
+# XML detector description database location
+set DETCONDEXAMPLE_XMLDDDB ${DETCONDEXAMPLEROOT}/XMLDDDB
+
+# Build a test CondDB for the example (only on Linux)
 setup_script setupDB
-#Bug in CMT: replace cleanup scripts
-setup_script setupCLEANUP
-#Bug in CMT: keep out to avoid confusion on Linux (should be in for NT though!)
+
+# Remove the test CondDB for the example (only on Linux)
 cleanup_script cleanupDB
-
-# This is the directory where you will build the dOxygen html doc
-# This is also the directory where you will find the dOxygen tagfile
-set DETCONDEXAMPLE_DOXYGEN \
-  /afs/cern.ch/user/v/valassi/www/dOxygen/DetCondExample/html
-# ${DETCONDEXAMPLEROOT}/doc/html
-
-# This is the URL prefix where you will access the dOxygen documentation
-set DETCONDEXAMPLE_DOXYURL \
-  http://www.cern.ch/~valassi/dOxygen/DetCondExample/html
-# file:${DETCONDEXAMPLEROOT}/doc/html
-
-# This is the package version number
-set DETCONDEXAMPLE_DOXYVERSION $(DETCONDEXAMPLEVERSION)
 
 #==================================================================
 private
 
 #==> Detector Conditions example
-application DetCondExample *.cpp "$(GAUDICONFROOT)/src/GaudiMain.cpp"
-macro DetCondExample_linkopts  "$(application_linkopts)"
+macro DetCondExample_sources "*.cpp" \
+      WIN32 "DumpDetectorStore.cpp EvtClock.cpp XmlTestAlgorithm.cpp"
+application DetCondExample \
+	$(DetCondExample_sources) "$(GAUDICONFROOT)/src/GaudiMain.cpp"
+macro DetCondExample_linkopts "$(application_linkopts)"
 
 

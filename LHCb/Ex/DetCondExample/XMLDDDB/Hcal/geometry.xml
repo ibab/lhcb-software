@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE DDDB SYSTEM "../DTD/geometry.dtd">
+<!-- $Id: geometry.xml,v 1.1 2001-12-17 19:47:39 andreav Exp $ -->
+<DDDB>
+
+   <parameter name="InCell"     value="131.3*mm"  />
+   <parameter name="OutCell"    value="2.0*InCell"  />
+
+<!-- 
+  * HCAL has a Z-length of 1655 mm
+  * Active area starts at front, for 1275 mm, 
+  * center shifted by -190 mm
+-->
+   <parameter name="WholeSize"  value="1655*mm" />
+   <parameter name="DetThick"   value="1275*mm" />
+   <parameter name="DetOffset"  value="-190*mm" />
+
+    <!-- ****************************************************************** --> 
+    <!-- * definition of geometry of Hcal detector                        * --> 
+    <!-- ****************************************************************** --> 
+
+
+    <!-- ****************************************************************** --> 
+    <!-- * definition of main catalog of logical lvolumes                 * --> 
+    <!-- ****************************************************************** --> 
+    <catalog name = "Hcal" > 
+            <logvolref href="#lvHcal"            />
+            <logvolref href="#lvHcalOuter"       />
+            <logvolref href="#lvHcalInner"       />
+    </catalog>
+
+
+    <!-- ****************************************************************** --> 
+    <!-- * definition of logical volumes                                  * --> 
+    <!-- ****************************************************************** --> 
+
+
+  <logvol material="Vacuum" name="lvHcal">
+
+     <box    name  =  "Box_For_The_Whole_Hcal"
+             sizeX =  "10000*mm" 
+             sizeY =  "10000*mm" 
+             sizeZ = "WholeSize"  />
+
+     <physvol name   = "pvHcalOuter"  
+              logvol = "/dd/Geometry/Hcal/lvHcalOuter" >
+         <posXYZ   z = "DetOffset" 
+                   x =    "0*mm" 
+                   y =    "0*mm" />
+     </physvol>
+
+     <physvol name   = "pvHcalInner"
+              logvol = "/dd/Geometry/Hcal/lvHcalInner" > 
+          <posXYZ  z = "DetOffset" 
+                   x =    "0*mm" 
+                   y =    "0*mm" />
+     </physvol>
+
+  </logvol>
+
+
+<!-- Outer: 32 * 26 cells - 16 * 14 cells  -->
+
+  <logvol name     = "lvHcalOuter"  material = "Vacuum" > 
+    <subtraction  name = "Composite_Box_for_Outer_Part_of_Hcal" > 
+         <box name  = "Main_Box_for_Outer_Part_of_Hcal"  
+              sizeX = "32*OutCell" 
+              sizeY = "26*OutCell" 
+              sizeZ = "DetThick"        />
+         <box name  = "Hole_for_Outer_Part_of_Hcal" 
+              sizeX = "16*OutCell" 
+              sizeY = "14*OutCell"
+              sizeZ = "DetThick+0.1*mm" /> 
+         <posXYZ  z = "0*mm" 
+                  x = "0*mm" 
+                  y = "0*mm" />
+    </subtraction>
+  </logvol>
+
+<!-- Inner: 32 * 28 cells - 6 * 6 cells  -->
+
+  <logvol name = "lvHcalInner" material="Vacuum" >
+    <subtraction name = "Composite_Box_for_Inner_Part_of_Hcal">
+         <box    name = "Main_Box_for_Inner_Part_of_Hcal" 
+                 sizeX = "32*InCell" 
+                 sizeY = "28*InCell" 
+                 sizeZ = "DetThick"        />
+         <box    name  = "Hole_for_Inner_Part_of_Hcal"
+                 sizeX = "6*InCell"  
+                 sizeY = "6*InCell"
+                 sizeZ = "DetThick+0.1*mm" /> 
+         <posXYZ  z = "0*mm" 
+                  x = "0*mm" 
+                  y = "0*mm" />
+    </subtraction>
+  </logvol>
+
+
+</DDDB> 

@@ -1,4 +1,4 @@
-//$Id: testCondDB.opts,v 1.1 2001-12-16 16:12:05 andreav Exp $
+//$Id: testCondDB.opts,v 1.2 2001-12-17 19:46:38 andreav Exp $
 //==============================================================
 // Job options for DetCondExample test of CondDB
 //==============================================================
@@ -22,17 +22,17 @@ Sequencer.Members  += { "DumpDetectorStore" };
 ApplicationMgr.EvtSel = "NONE";
 
 // Number of events to be processed (default is 10)
-ApplicationMgr.EvtMax = 5;
+ApplicationMgr.EvtMax = 6;
 
 // Event clock attributes
-EvtClock.startTime = 12;
-EvtClock.delayTime = 5;
+EvtClock.startTime = 4;
+EvtClock.delayTime = 8;
 
 //--------------------------------------------------------------
 // Default global tag for the ConditionsDB
 //--------------------------------------------------------------
 
-// Production set of temperatures: Ecal is hot, LHCb is cold
+// Production set of temperatures: Hcal is hot, LHCb is cold
 ConditionsDBCnvSvc.condDBGlobalTag = "PRODUCTION";
 
 // Cold set of temperatures
