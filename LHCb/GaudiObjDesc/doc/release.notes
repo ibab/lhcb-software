@@ -1,6 +1,9 @@
 Package: GaudiObjDesc
 Desccription: This package contains a set of tools used to generate code from the XML description of the data object classes.
 Package manager : Stefan Roiser
+
+!20050103 - Stefan
+- fix: generate unique include line in case of stl includes (generated from forward declarations)
  
 ===============================GaudiObjDesc v7r0============================
 !20041213 - Stefan

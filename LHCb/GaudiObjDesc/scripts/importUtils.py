@@ -93,7 +93,7 @@ class importUtils:
           dec = self.genIncludeLine(type)
           if dec and dec not in self.excludes and dec not in self.forwardIncl :
             if self.tools.isStlT(type) :
-              self.stdIncludes.append(dec)
+              if dec not in self.stdIncludes : self.stdIncludes.append(dec)
             else:
               self.forwardDecl.append(dec)
               self.forwardIncl.append(dec)
