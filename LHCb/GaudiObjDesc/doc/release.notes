@@ -2,6 +2,9 @@ Package: GaudiObjDesc
 Desccription: This package contains a set of tools used to generate code from the XML description of the data object classes.
 Package manager : Stefan Roiser
 
+! 20020318 - Stefan Roiser
+ - applying naming rules for getters with abbreviations also to _dict.cpp-files
+
 ! 20020314 - Stefan Roiser
  - bugfix when using methods inside namespaces
  - bugfix declaring public enums before method-definitions
