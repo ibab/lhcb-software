@@ -1,4 +1,4 @@
-// $Id: RichDAQDefinitions.h,v 1.1 2003-11-09 12:39:29 jonrob Exp $
+// $Id: RichDAQDefinitions.h,v 1.2 2003-11-10 14:59:59 jonrob Exp $
 #ifndef RICHDAQ_RICHDAQDEFINITIONS_H 
 #define RICHDAQ_RICHDAQDEFINITIONS_H 1
 
@@ -28,6 +28,9 @@ namespace Rich {
 
   // Container of Rich HltBanks
   typedef std::vector<HltBank>                       HLTBanks;
+
+  // Container of RichSmartIDs
+  typedef std::vector<RichSmartID>                   SmartIDs;
 
 }
 

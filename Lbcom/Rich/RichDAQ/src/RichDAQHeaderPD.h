@@ -1,4 +1,4 @@
-// $Id: RichDAQHeaderPD.h,v 1.2 2003-11-09 12:39:29 jonrob Exp $
+// $Id: RichDAQHeaderPD.h,v 1.3 2003-11-10 14:59:59 jonrob Exp $
 #ifndef RICHDAQ_RICHDAQHEADERPD_H
 #define RICHDAQ_RICHDAQHEADERPD_H 1
 
@@ -14,7 +14,7 @@
  *
  *  Utility class representing the header word for HPD data
  *
- *  @author Chris Jones
+ *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   2003-11-06
  */
 

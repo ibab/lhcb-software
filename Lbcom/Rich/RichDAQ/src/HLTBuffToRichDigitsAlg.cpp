@@ -1,4 +1,4 @@
-// $Id: HLTBuffToRichDigitsAlg.cpp,v 1.6 2003-11-09 12:39:28 jonrob Exp $
+// $Id: HLTBuffToRichDigitsAlg.cpp,v 1.7 2003-11-10 14:59:58 jonrob Exp $
 
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -36,14 +36,15 @@ HLTBuffToRichDigitsAlg::~HLTBuffToRichDigitsAlg() {};
 // Initialisation.
 StatusCode HLTBuffToRichDigitsAlg::initialize() {
 
-  MsgStream msg(msgSvc(), name());
-  msg << MSG::DEBUG << "Initialise" << endreq;
-
   // intialise base
   if ( !RichAlgBase::initialize() ) return StatusCode::FAILURE;
 
-  msg << MSG::WARNING
-      << "REMEMBER : Remove temporary method to create HltEvent" << endreq;
+  if ( msgLevel(MSG::DEBUG) ) {
+    MsgStream msg(msgSvc(), name());
+    msg << MSG::DEBUG << "Initialise :-" << endreq
+        << " Input HltEvent location    = " << m_hltEventLoc << endreq
+        << " Output RichDigits location = " << m_richDigitsLoc << endreq;
+  }
 
   return StatusCode::SUCCESS;
 };
@@ -52,26 +53,28 @@ StatusCode HLTBuffToRichDigitsAlg::initialize() {
 // Main execution
 StatusCode HLTBuffToRichDigitsAlg::execute() {
 
-  MsgStream  msg( msgSvc(), name() );
-  msg << MSG::DEBUG << "Execute" << endreq;
-
-  // temporary - Make the HltEvent
-  if ( !createHltEvent() ) return StatusCode::FAILURE;
+  if ( msgLevel(MSG::DEBUG) ) {
+    MsgStream  msg( msgSvc(), name() );
+    msg << MSG::DEBUG << "Execute" << endreq;
+  }
 
   // Retrieve the HLTEvent:
-  SmartDataPtr<HltEvent> hltEvent( eventSvc(), m_hltEventLoc );
-  if ( !hltEvent ) {
-    msg << MSG::ERROR
-        << "Unable to retrieve HLTEvent from " << m_hltEventLoc << endreq;
-    return StatusCode::FAILURE;
+  HltEvent * hltEvent = 0;
+  SmartDataPtr<HltEvent> phltEvent( eventSvc(), m_hltEventLoc );
+  if ( !phltEvent ) {
+    hltEvent = createHltEvent();
+    if ( !hltEvent ) {
+      MsgStream  msg( msgSvc(), name() );
+      msg << MSG::ERROR
+          << "Unable to retrieve HLTEvent from " << m_hltEventLoc << endreq;
+      return StatusCode::FAILURE;
+    }
+  } else {
+    hltEvent = phltEvent;
   }
 
   // Get the banks for the RichDigits
-  const Rich::HLTBanks & richBanks = hltEvent->banks( RichDigit::classID() );
-  if ( msgLevel(MSG::DEBUG) ) {
-    msg << MSG::DEBUG
-        << "Found " << richBanks.size() << " Rich banks in HltEvent" << endreq;
-  }
+  const Rich::HLTBanks & richBanks = hltEvent->banks( HltBuffer::Rich );
 
   // Make new container for RichDigits
   m_digits = new RichDigits();
@@ -94,13 +97,17 @@ StatusCode HLTBuffToRichDigitsAlg::execute() {
 
   // Register new container of RichDigits to Gaudi data store
   if ( !eventSvc()->registerObject(m_richDigitsLoc,m_digits) ) {
+    MsgStream  msg( msgSvc(), name() );
     msg << MSG::ERROR << "Failed to register RichDigits at "
         << m_richDigitsLoc << endreq;
     return StatusCode::FAILURE;
   }
+
   if ( msgLevel(MSG::DEBUG) ) {
+    MsgStream  msg( msgSvc(), name() );
     msg << MSG::DEBUG << "Successfully registered " << m_digits->size()
-        << " RichDigits at " << m_richDigitsLoc << endreq;
+        << " RichDigits from " << richBanks.size() << " HLT banks at "
+        << m_richDigitsLoc << endreq;
   }
 
   return StatusCode::SUCCESS;
@@ -199,12 +206,12 @@ HLTBuffToRichDigitsAlg::decodeNonZeroSuppressedBank( const HltBank & bank ) {
   RichNonZeroSuppData nonZSdata( bank );
 
   // Get new SmartIDs
-  std::vector<RichSmartID> IDs;
+  Rich::SmartIDs IDs;
   nonZSdata.fillSmartIDs( linkN.rich(),linkN.panel(),
                           linkN.pdRow(),linkN.pdCol(),IDs );
 
   // Create RichDigits with new RichSmartIDs
-  for ( std::vector<RichSmartID>::const_iterator iID = IDs.begin();
+  for ( Rich::SmartIDs::const_iterator iID = IDs.begin();
         iID != IDs.end(); ++iID ) {
     if ( msgLevel(MSG::VERBOSE) ) {
       MsgStream  msg( msgSvc(), name() );
@@ -220,8 +227,10 @@ HLTBuffToRichDigitsAlg::decodeNonZeroSuppressedBank( const HltBank & bank ) {
 //  Finalize
 StatusCode HLTBuffToRichDigitsAlg::finalize() {
 
-  MsgStream msg(msgSvc(), name());
-  msg << MSG::DEBUG << "Finalise" << endreq;
+  if ( msgLevel(MSG::DEBUG) ) {
+    MsgStream msg(msgSvc(), name());
+    msg << MSG::DEBUG << "Finalise" << endreq;
+  }
 
   // finalise base
   return RichAlgBase::finalize();
@@ -229,7 +238,7 @@ StatusCode HLTBuffToRichDigitsAlg::finalize() {
 
 //=============================================================================
 // temporary whilst testing
-StatusCode HLTBuffToRichDigitsAlg::createHltEvent() {
+HltEvent * HLTBuffToRichDigitsAlg::createHltEvent() {
 
   // Retrieve the HLTBuffer
   SmartDataPtr<HltBuffer> hltBuffer( eventSvc(), HltBufferLocation::Default );
@@ -237,27 +246,25 @@ StatusCode HLTBuffToRichDigitsAlg::createHltEvent() {
   if ( 0 == hltBuffer ) {
     MsgStream msg(msgSvc(), name());
     msg << MSG::ERROR << "Unable to retrieve HltBuffer" << endmsg;
-    return StatusCode::FAILURE;
+    return 0;
   }
 
-  HltEvent* hltEvent = new  HltEvent( hltBuffer );
+  HltEvent * hltEvent = new  HltEvent( hltBuffer );
 
   if ( 0 == hltEvent ) {
     MsgStream msg(msgSvc(), name());
     msg << MSG::ERROR << "Unable to allocate memory to HltEvent" << endmsg;
-    return StatusCode::FAILURE;
+    return 0;
   }
 
-  StatusCode sc = eventSvc()->registerObject( HltEventLocation::Default,
-                                              hltEvent );
-
-  if( sc.isFailure() ) {
+  if ( !eventSvc()->registerObject( HltEventLocation::Default,
+                                    hltEvent ) ) {
     MsgStream msg(msgSvc(), name());
     msg << MSG::ERROR << "Unable to register HltEvent in TES" << endmsg;
     delete hltEvent;
-    return sc;
+    return 0;
   }
 
-  return StatusCode::SUCCESS;
+  return hltEvent;
 };
 

@@ -1,9 +1,6 @@
-// $Id: HLTBuffToRichDigitsAlg.h,v 1.2 2003-11-09 12:39:28 jonrob Exp $
+// $Id: HLTBuffToRichDigitsAlg.h,v 1.3 2003-11-10 14:59:58 jonrob Exp $
 #ifndef RICHDAQ_HLTBUFFTORICHDIGITSALG_H 
 #define RICHDAQ_HLTBUFFTORICHDIGITSALG_H 1
-
-// from STL
-#include <string>
 
 // gaudi
 #include "GaudiKernel/SmartDataPtr.h"
@@ -48,7 +45,7 @@ private: // methods
   unsigned int decodeNonZeroSuppressedBank( const HltBank & bank ); 
 
   // temporary
-  StatusCode createHltEvent();
+  HltEvent * createHltEvent();
 
 private: // data
 
@@ -62,4 +59,5 @@ private: // data
   RichDigits * m_digits;
 
 };
+
 #endif // RICHDAQ_HLTBUFFTORICHDIGITSALG_H

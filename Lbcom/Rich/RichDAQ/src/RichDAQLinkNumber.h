@@ -1,4 +1,4 @@
-// $Id: RichDAQLinkNumber.h,v 1.2 2003-11-09 12:39:29 jonrob Exp $
+// $Id: RichDAQLinkNumber.h,v 1.3 2003-11-10 14:59:59 jonrob Exp $
 #ifndef RICHDAQ_RICHDAQLINKNUMBER_H
 #define RICHDAQ_RICHDAQLINKNUMBER_H 1
 
@@ -12,7 +12,7 @@
  *
  *  Representation of the Rich DAQ link identifier
  *
- *  @author Chris Jones
+ *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   2003-11-07
  */
 

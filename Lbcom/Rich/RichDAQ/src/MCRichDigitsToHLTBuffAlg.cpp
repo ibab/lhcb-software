@@ -1,4 +1,4 @@
-// $Id: MCRichDigitsToHLTBuffAlg.cpp,v 1.5 2003-11-09 12:39:28 jonrob Exp $
+// $Id: MCRichDigitsToHLTBuffAlg.cpp,v 1.6 2003-11-10 14:59:58 jonrob Exp $
 // Include files
 
 // from Gaudi
@@ -21,12 +21,12 @@ const        IAlgFactory& MCRichDigitsToHLTBuffAlgFactory = s_factory ;
 // Standard constructor
 MCRichDigitsToHLTBuffAlg::MCRichDigitsToHLTBuffAlg( const std::string& name,
                                                     ISvcLocator* pSvcLocator )
-  : RichAlgBase ( name, pSvcLocator ) 
+  : RichAlgBase ( name, pSvcLocator )
 {
 
   declareProperty( "HLTBufferLocation",   m_hltBuffLoc = HltBufferLocation::Default );
   declareProperty( "MCRichDigitsLocation", m_digitsLoc = MCRichDigitLocation::Default );
-  declareProperty( "ZeroSuppressHitCut", m_zeroSuppresCut = 50 );
+  declareProperty( "ZeroSuppressHitCut", m_zeroSuppresCut = 96 );
 
 }
 
@@ -36,15 +36,16 @@ MCRichDigitsToHLTBuffAlg::~MCRichDigitsToHLTBuffAlg() {};
 // Initialisation.
 StatusCode MCRichDigitsToHLTBuffAlg::initialize() {
 
-  MsgStream msg(msgSvc(), name());
-  msg << MSG::DEBUG << "Initialise" << endreq;
-
   // intialise base
   if ( !RichAlgBase::initialize() ) return StatusCode::FAILURE;
 
-  msg << MSG::DEBUG
-      << " Max hits for zero-suppressed data   = " << m_zeroSuppresCut
-      << endreq;
+  if ( msgLevel(MSG::DEBUG) ) {
+    MsgStream msg(msgSvc(), name());
+    msg << MSG::DEBUG << "Initialise :-" << endreq
+        << " MCRichDigit location                = " << m_digitsLoc << endreq
+        << " HltBuffer location                  = " << m_hltBuffLoc << endreq
+        << " Max hits for zero-suppressed data   = " << m_zeroSuppresCut << endreq;
+  }
 
   return StatusCode::SUCCESS;
 };
@@ -52,20 +53,24 @@ StatusCode MCRichDigitsToHLTBuffAlg::initialize() {
 // Main execution
 StatusCode MCRichDigitsToHLTBuffAlg::execute() {
 
-  MsgStream  msg( msgSvc(), name() );
-  msg << MSG::DEBUG << "Execute" << endreq;
+  if ( msgLevel(MSG::DEBUG) ) {
+    MsgStream  msg( msgSvc(), name() );
+    msg << MSG::DEBUG << "Execute" << endreq;
+  }
 
   // Retrieve the HLTBuffer
   SmartDataPtr<HltBuffer> hltBuffer( eventSvc(), m_hltBuffLoc );
   if ( !hltBuffer ) {
+    MsgStream  msg( msgSvc(), name() );
     msg << MSG::ERROR
         << "Unable to retrieve HLT buffer from " <<  m_hltBuffLoc << endreq;
     return StatusCode::FAILURE;
   }
 
-  // Retrieve RichDigits
+  // Retrieve MCRichDigits
   SmartDataPtr<MCRichDigits> digits( eventSvc(), m_digitsLoc );
   if ( !digits ) {
+    MsgStream  msg( msgSvc(), name() );
     msg << MSG::ERROR
         << "Unable to retrieve MCRichDigits from " << m_digitsLoc << endreq;
     return StatusCode::FAILURE;
@@ -95,13 +100,15 @@ StatusCode MCRichDigitsToHLTBuffAlg::execute() {
 
     // Add this bank to the HLT buffer
     RichDAQHeaderPD header ( dataBank[0] );
-    hltBuffer->addBank( header.linkNumber(), RichDigit::classID(), dataBank );
+    hltBuffer->addBank( header.linkNumber(), HltBuffer::Rich, dataBank );
 
   } // end photon detector loop
 
   if ( msgLevel(MSG::DEBUG) ) {
+    MsgStream  msg( msgSvc(), name() );
     msg << MSG::DEBUG
-        << "Created " << PDDigits.size() << " Rich banks in HltBuffer" << endreq;
+        << "Created " << PDDigits.size() << " Rich banks for "
+        << digits->size() << " MCRichDigits in HltBuffer" << endreq;
   }
 
   return StatusCode::SUCCESS;
@@ -189,8 +196,10 @@ void MCRichDigitsToHLTBuffAlg::fillNonZeroSuppressed( RichSmartID pdID,
 //  Finalize
 StatusCode MCRichDigitsToHLTBuffAlg::finalize() {
 
-  MsgStream msg(msgSvc(), name());
-  msg << MSG::DEBUG << "Finalise" << endreq;
+  if ( msgLevel(MSG::DEBUG) ) {
+    MsgStream msg(msgSvc(), name());
+    msg << MSG::DEBUG << "Finalise" << endreq;
+  }
 
   // finalise base
   return RichAlgBase::finalize();

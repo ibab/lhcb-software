@@ -1,4 +1,4 @@
-// $Id: RichNonZeroSuppData.h,v 1.6 2003-11-09 12:39:29 jonrob Exp $
+// $Id: RichNonZeroSuppData.h,v 1.7 2003-11-10 14:59:59 jonrob Exp $
 #ifndef RICHDAQ_RICHNONZEROSUPPDATA_H
 #define RICHDAQ_RICHNONZEROSUPPDATA_H 1
 
@@ -12,7 +12,7 @@
  *
  *  The non zero-suppressed data format
  *
- *  @author Chris Jones
+ *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   2003-11-07
  */
 
@@ -24,10 +24,10 @@ public:
   RichNonZeroSuppData() { initData(); }
 
   /// Constructor from a vector of RichSmartIDs
-  RichNonZeroSuppData( const std::vector<RichSmartID> & digits )
+  RichNonZeroSuppData( const Rich::SmartIDs & digits )
   {
     initData();
-    for ( std::vector<RichSmartID>::const_iterator iDig = digits.begin();
+    for ( Rich::SmartIDs::const_iterator iDig = digits.begin();
           iDig != digits.end(); ++ iDig ) {
       setPixelActive( (*iDig).pixelRow(), (*iDig).pixelCol() );
     }
@@ -48,7 +48,7 @@ public:
   {
     initData();
     // Loop over data entries and set data.
-    for ( unsigned int iData = 0; iData < dataSize(); ++iData ) {
+    for ( Rich::ShortType iData = 0; iData < dataSize(); ++iData ) {
       m_data[iData] = bank.data()[iData+1];// NB: Skip 0th row since this is the header...
     }
   }
@@ -93,10 +93,10 @@ public:
                             const Rich::ShortType panel,
                             const Rich::ShortType pdRow,
                             const Rich::ShortType pdCol,
-                            std::vector<RichSmartID> & ids ) const
+                            Rich::SmartIDs & ids ) const
   {
-    for ( unsigned int iRow = 0; iRow < dataSize(); ++iRow ) {
-      for ( unsigned int iCol = 0; iCol < dataSize(); ++iCol ) {
+    for ( Rich::ShortType iRow = 0; iRow < dataSize(); ++iRow ) {
+      for ( Rich::ShortType iCol = 0; iCol < dataSize(); ++iCol ) {
         if ( isPixelActive(iRow,iCol) ) {
           ids.push_back( RichSmartID( rich,panel,pdRow,pdCol,iRow,iCol ) );
         }
@@ -107,7 +107,7 @@ public:
   /// Fill a vector with HLT data words
   inline void fillHLT( Rich::HLTBank & hltData ) const
   {
-    for ( unsigned int iData = 0; iData < dataSize(); ++iData ) {
+    for ( Rich::ShortType iData = 0; iData < dataSize(); ++iData ) {
       hltData.push_back( m_data[iData] );
     }
   }
@@ -121,13 +121,13 @@ private: // methods
   /// Reset all data to zero
   inline void initData()
   {
-    for ( unsigned int i = 0; i<MaxBits; ++i ) { m_data[i] = 0; }
+    for ( Rich::ShortType i = 0; i < dataSize(); ++i ) { m_data[i] = 0; }
   }
 
   /// Test if a given bit in a word is set on
   inline bool isBitOn( const Rich::LongType data, const Rich::ShortType pos ) const
   {
-    return 0 != ( data & (1<<pos) );
+    return ( 0 != (data & (1<<pos)) );
   }
 
   /// Set a given bit in a data word on
@@ -146,9 +146,9 @@ private: //data
 inline MsgStream & operator << ( MsgStream & os,
                                  const RichNonZeroSuppData & data )
 {
-  for ( unsigned int iRow = 0; iRow < data.dataSize(); ++iRow ) {
+  for ( Rich::ShortType iRow = 0; iRow < data.dataSize(); ++iRow ) {
     os << "  ";
-    for ( unsigned int iCol = 0; iCol < data.dataSize(); ++iCol ) {
+    for ( Rich::ShortType iCol = 0; iCol < data.dataSize(); ++iCol ) {
       os << (bool)( data.data()[iRow] & (1<<iCol) ) << " ";
     }
     os << endreq;
