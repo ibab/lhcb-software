@@ -1,6 +1,18 @@
-! $Id: release.notes,v 1.4 2001-11-14 14:59:10 gcorti Exp $
+! $Id: release.notes,v 1.5 2002-02-08 18:07:57 gcorti Exp $
 ! Package     : DaVinciTools
 ! Responsible : Gloria Corti
+
+! ====================================================================
+
+! 08022002 - DaVinciTools v2r0 (GCorti)
+  - make it compatible with Gaudi v9r0 for tools interfaces
+  - modify requirements to use Gaudi v9 packages and make it a
+    component library
+  - remove SICB dependent analysis and put it in DaVinciSicb package
+  - remove subdirectory structure in src
+  - remove MCDecayAlgorithm and replace its functionality with
+    MCUtilityTool
+  - update options to reflect changes in code
 
 ! ====================================================================
 
