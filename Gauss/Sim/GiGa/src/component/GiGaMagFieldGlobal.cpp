@@ -1,8 +1,11 @@
-// $Id: GiGaMagFieldGlobal.cpp,v 1.7 2002-03-13 15:36:25 ibelyaev Exp $ 
+// $Id: GiGaMagFieldGlobal.cpp,v 1.8 2002-03-13 16:22:12 ibelyaev Exp $ 
 // ============================================================================
 /// CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 /// $Log: not supported by cvs2svn $
+/// Revision 1.7  2002/03/13 15:36:25  ibelyaev
+///  update for newer G4 patch
+///
 /// Revision 1.6  2001/08/12 15:42:51  ibelyaev
 /// improvements with Doxygen comments
 ///
@@ -76,6 +79,7 @@ StatusCode GiGaMagFieldGlobal::finalize  ()
   ///
   return GiGaMagFieldBase::finalize();
 };
+
 
 // ============================================================================
 // ============================================================================

@@ -1,7 +1,11 @@
+// $Id: GiGaMagFieldGlobal.h,v 1.7 2002-03-13 16:22:12 ibelyaev Exp $ 
 // ============================================================================
 /// CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 /// $Log: not supported by cvs2svn $
+/// Revision 1.6  2001/08/12 15:42:51  ibelyaev
+/// improvements with Doxygen comments
+///
 /// Revision 1.5  2001/07/27 17:03:19  ibelyaev
 /// improved printout
 ///
@@ -58,7 +62,7 @@ public:
    *  @param  point 
    *  @param   B field 
    */
-  virtual void GetFieldValue ( const double [3], double *B  ) const ;
+  virtual void GetFieldValue ( const double [4], double *B  ) const ;
   ///
 private:
   ///
