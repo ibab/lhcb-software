@@ -1,21 +1,6 @@
-// $Id: CaloClusterCorrect3x3Position.h,v 1.1 2004-06-03 06:04:24 ibelyaev Exp $
+// $Id: CaloClusterCorrect3x3Position.h,v 1.2 2005-03-07 15:37:15 cattanem Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
-// ============================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.2  2004/03/17 16:32:22  ibelyaev
-//  add new (04) Photon calibrations from Olivier Deschamps
-//
-// Revision 1.2 2004/09/02 20:46:40  odescham 
-// - Transv. Shape parameters in option file 
-// - new parameters tuned for DC04
-//
-// Revision 1.1.1.1  2002/11/13 20:46:40  ibelyaev
-// new package 
-//
-// Revision 1.4  2002/07/05 10:03:13  ibelyaev
-//  new version of MergedPi0 algorithm
-//
 // ============================================================================
 #ifndef CALOEX_CaloClusterCorrect3x3Position_H 
 #define CALOEX_CaloClusterCorrect3x3Position_H 1
@@ -34,7 +19,7 @@
 class    CaloCluster   ;
 class   ICaloHypoTool  ;
 
-/** @Class CaloClusterCorrect3x3Position CaloClusterCorrect3x3Position.h
+/** @class CaloClusterCorrect3x3Position CaloClusterCorrect3x3Position.h
  *  
  *  Merged pi0 reconstruction with Iterativ Method
  *

@@ -1,26 +1,6 @@
-// $Id: ClusterisationFunctors.h,v 1.3 2004-12-13 16:32:37 cattanem Exp $ 
+// $Id: ClusterisationFunctors.h,v 1.4 2005-03-07 15:37:15 cattanem Exp $ 
 // ===========================================================================
-// CVS tag $Name:4
-// ===========================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.2  2003/06/23 13:11:54  ibelyaev
-//  fix for gcc3.2
-//
-// Revision 1.1.1.1  2002/11/13 20:46:40  ibelyaev
-// new package 
-//
-// Revision 1.3  2002/04/02 11:06:32  ibelyaev
-// update for new event model
-//
-// Revision 1.2  2001/11/08 20:03:31  ibelyaev
-//  update for new tools
-//
-// Revision 1.1  2001/11/02 14:53:16  ibelyaev
-// major restructurization of the package
-//
-// Revision 1.1  2001/07/07 12:59:00  ibelyaev
-// new clusterisation algorithm
-//
+// CVS tag $Name: not supported by cvs2svn $
 // ===========================================================================
 #ifndef CALOALGS_CLUSTERISATIONFUNCTORS_H 
 #define CALOALGS_CLUSTERISATIONFUNCTORS_H 1
@@ -224,7 +204,7 @@ namespace ClusterisationFunctors
 
 
 // ===========================================================================
-/**  pure technical method
+/*  pure technical method
  * (just a copy of std::transform with
  *   a minor "improvement")
  */

@@ -1,8 +1,11 @@
-// $Id: CaloNewSCorrection.h,v 1.1 2003-04-11 09:33:42 ibelyaev Exp $
+// $Id: CaloNewSCorrection.h,v 1.2 2005-03-07 15:37:15 cattanem Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.1  2003/04/11 09:33:42  ibelyaev
+//  add new E-,S- and L-corrections from Olivier Deschamps
+//
 // ============================================================================
 #ifndef CALOTEST_CALOENEWSCORRECTION_H 
 #define CALOTEST_CALOENEWSCORRECTION_H 1
@@ -32,12 +35,12 @@ namespace CaloNewSCorrection_Local
   { 
   public:
     /** constructor
-     *  @parameter calo  calorimeter name 
+     *  @param calo  calorimeter name 
      */
     explicit DigitFromCalo( const std::string& calo )
       : m_calo( CaloCellCode::CaloNumFromName( calo ) ) {} ;
     /** constructor
-     *  @parameter calo  calorimeter index 
+     *  @param calo  calorimeter index 
      */
     explicit DigitFromCalo( const int  calo )
       : m_calo(                                calo   ) {} ;

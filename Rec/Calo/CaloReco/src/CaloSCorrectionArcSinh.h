@@ -23,9 +23,6 @@ class CaloSCorrectionArcSinh : public CaloTool,
 public:
   /** The main processing method
    *  @see ICaloSCorrectionFunction
-   *  @param  energies to be processed
-   *  @param  seed position as option
-   *  @param  result value
    *  @return status code 
    */  
   virtual StatusCode calculate( double, double , double,
@@ -34,9 +31,6 @@ public:
 
   /** The main error processing method
    *  @see ICaloSCorrectionFunction
-   *  @param  energies to be processed
-   *  @param  seed position as option
-   *  @param  result value
    *  @return status code 
    */  
   virtual StatusCode calculateprime( double, double , double,

@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.65 2005-02-17 13:37:54 ibelyaev Exp $
+! $Id: release.notes,v 1.66 2005-03-07 15:37:14 cattanem Exp $
 ! -----------------------------------------------------------------------------
 ! CVS tag $Name: not supported by cvs2svn $
 ! -----------------------------------------------------------------------------
@@ -7,8 +7,11 @@
 ! Purpose     : Main Package for Calorimeter Reconstruction Software 
 ! -----------------------------------------------------------------------------
 
-! 2005-02-17 - Vanya BELYAEV
+!========================= CaloReco v2r7p1 2005-03-07 ==================
+! 2005-03-07 - Marco Cattaneo
+ - Fix many doxygen warnings
 
+! 2005-02-17 - Vanya BELYAEV
  - options/NeutralCluster.opts 
  - options/ChargedCluster.opts 
            fix for new associators 

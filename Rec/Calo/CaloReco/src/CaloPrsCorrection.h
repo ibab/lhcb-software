@@ -1,23 +1,6 @@
-// $Id: CaloPrsCorrection.h,v 1.2 2003-02-04 14:24:39 ibelyaev Exp $
+// $Id: CaloPrsCorrection.h,v 1.3 2005-03-07 15:37:15 cattanem Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
-// ============================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.1.1.1  2002/11/13 20:46:41  ibelyaev
-// new package 
-//
-// Revision 1.1  2002/09/04 14:46:16  ibelyaev
-//  add new tools and options for recalibration of Ecal
-//
-// Revision 1.2  2002/07/22 08:19:43  ibelyaev
-//  fix trivial bug
-//
-// Revision 1.1  2002/07/21 18:56:18  ibelyaev
-//  add new energy correction
-//
-// Revision 1.1  2002/06/21 11:02:47  ibelyaev
-//  update in S-,L- and E-corrections
-//
 // ============================================================================
 #ifndef CALOEX_CALOPrsCorrection_H 
 #define CALOEX_CALOPrsCorrection_H 1
@@ -45,12 +28,12 @@ namespace Local
   { 
   public:
     /** constructor
-     *  @parameter calo  calorimeter name 
+     *  @param calo  calorimeter name 
      */
     explicit DigitFromCalo( const std::string& calo )
       : m_calo( CaloCellCode::CaloNumFromName( calo ) ) {} ;
     /** constructor
-     *  @parameter calo  calorimeter index 
+     *  @param calo  calorimeter index 
      */
     explicit DigitFromCalo( const int  calo )
       : m_calo(                                calo   ) {} ;
@@ -165,7 +148,7 @@ protected:
   
   /** derivative of the correction function (approximate)
    *  @param energy energy in Ecal 
-   *  @param prs    energy in Prs 
+   *  @param double dummy
    *  @param pars   parameters 
    *  @return corrected energy
    */

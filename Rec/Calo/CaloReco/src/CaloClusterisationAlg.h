@@ -1,17 +1,6 @@
-// $Id: CaloClusterisationAlg.h,v 1.2 2003-06-23 13:11:54 ibelyaev Exp $
+// $Id: CaloClusterisationAlg.h,v 1.3 2005-03-07 15:37:15 cattanem Exp $
 // ===========================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
-// ===========================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.1.1.1  2002/11/13 20:46:40  ibelyaev
-// new package 
-//
-// Revision 1.3  2002/04/04 20:25:16  ibelyaev
-//  update for new Calo Event Model (v10r0)
-//
-// Revision 1.2  2001/11/25 16:25:31  ibelyaev
-//  update for newer CaloKernel package
-//
 // ===========================================================================
 #ifndef CALOCLUSTERISATIONALG_H 
 #define CALOCLUSTERISATIONALG_H 1
@@ -26,8 +15,8 @@
  *  
  *  Simple 'a la FORTRAN' clusterisation Algorithm
  *
- *     - (1) locate local maxima  - "seeds"
- *     - (2) construct "clusters" - "seed"+"neighbours"
+ *  \li (1) locate local maxima  - "seeds"
+ *  \li (2) construct "clusters" - "seed"+"neighbours"
  * 
  *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
  *  @date   06/07/2001

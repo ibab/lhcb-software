@@ -1,17 +1,6 @@
-// $Id: Calo04ECorrection.h,v 1.3 2004-06-03 06:04:24 ibelyaev Exp $
+// $Id: Calo04ECorrection.h,v 1.4 2005-03-07 15:37:15 cattanem Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
-// ============================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.1  2004/03/17 16:32:21  ibelyaev
-//  add new (04) Photon calibrations from Olivier Deschamps
-//
-// Revision 1.2  2004/02/09 09:33:35  odescham
-//  add new E-,S- and L-corrections tuned for DC044
-//
-// Revision 1.1  2003/04/11 09:33:35  ibelyaev
-//  add new E-,S- and L-corrections from Olivier Deschamps
-//
 // ============================================================================
 #ifndef CALOTEST_CALOE04ECORRECTION_H 
 #define CALOTEST_CALOE04ECORRECTION_H 1
@@ -41,12 +30,12 @@ namespace Calo04ECorrection_Local
   { 
   public:
     /** constructor
-     *  @parameter calo  calorimeter name 
+     *  @param calo  calorimeter name 
      */
     explicit DigitFromCalo( const std::string& calo )
       : m_calo( CaloCellCode::CaloNumFromName( calo ) ) {} ;
     /** constructor
-     *  @parameter calo  calorimeter index 
+     *  @param calo  calorimeter index 
      */
     explicit DigitFromCalo( const int  calo )
       : m_calo(                                calo   ) {} ;

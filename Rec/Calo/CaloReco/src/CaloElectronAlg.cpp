@@ -1,8 +1,6 @@
-// $Id: CaloElectronAlg.cpp,v 1.5 2004-02-17 12:08:06 ibelyaev Exp $
+// $Id: CaloElectronAlg.cpp,v 1.6 2005-03-07 15:37:15 cattanem Exp $
 // ============================================================================
-// CVS atg $Name: not supported by cvs2svn $
-// ============================================================================
-// $Log: not supported by cvs2svn $
+// CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // Include files
 // STD & STL 
@@ -158,13 +156,13 @@ class DigitFromCalo
 public:
 
   /** constructor
-   *  @parameter calo  calorimeter name 
+   *  @param calo  calorimeter name 
    */
   explicit DigitFromCalo( const std::string& calo )
     : m_calo( CaloCellCode::CaloNumFromName( calo ) ) {} ;
   
   /** constructor
-   *  @parameter calo  calorimeter index 
+   *  @param calo  calorimeter index 
    */
   explicit DigitFromCalo( const int  calo )
     : m_calo(                                calo   ) {} ;

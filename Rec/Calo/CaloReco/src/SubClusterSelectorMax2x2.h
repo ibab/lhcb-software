@@ -1,14 +1,6 @@
-// $Id: SubClusterSelectorMax2x2.h,v 1.1.1.1 2002-11-13 20:46:43 ibelyaev Exp $
+// $Id: SubClusterSelectorMax2x2.h,v 1.2 2005-03-07 15:37:15 cattanem Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
-// ============================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.2  2002/04/07 18:15:03  ibelyaev
-//  preliminary version ('omega'-release)
-//
-// Revision 1.1  2001/11/08 20:07:06  ibelyaev
-//  new tools are added into  the package
-//
 // ============================================================================
 #ifndef CALOTOOLS_SUBCLUSTERSELECTORMAX2X2_H 
 #define CALOTOOLS_SUBCLUSTERSELECTORMAX2X2_H 1
@@ -89,7 +81,7 @@ private:
   
   /** tag the certain submatrix 
    *  @param  cluster pointer to cluster 
-   *  @param  type    submatrix type 
+   *  @param  Type    submatrix type 
    *  @return status code 
    */
   StatusCode tag2x2
@@ -98,7 +90,7 @@ private:
   
   /** tag the certain submatrix 
    *  @param  cluster pointer to cluster 
-   *  @param  type    submatrix type 
+   *  @param  Type    submatrix type 
    *  @return status code 
    */
   StatusCode untag2x2

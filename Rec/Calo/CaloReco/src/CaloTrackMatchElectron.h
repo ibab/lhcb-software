@@ -1,8 +1,11 @@
-// $Id: CaloTrackMatchElectron.h,v 1.3 2004-10-26 17:51:42 ibelyaev Exp $
+// $Id: CaloTrackMatchElectron.h,v 1.4 2005-03-07 15:37:15 cattanem Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.3  2004/10/26 17:51:42  ibelyaev
+//  add 'photon' matching for Trg Tracks
+//
 // ============================================================================
 #ifndef CALOTRACKTOOLS_CALOTRACKMATCHELECTRON_H
 #define CALOTRACKTOOLS_CALOTRACKMATCHELECTRON_H 1
@@ -102,7 +105,7 @@ private:
   /** Makes struct with vector and covariance
    * with cluster data.
    * Vector looks like (e, x, y), the same as in CaloPosition object
-   * @param Cluster data object
+   * @param  cluster data object
    * @return internal type struct with data
    */
   inline const MatchType1&
@@ -123,7 +126,7 @@ private:
    * Returned format is the same as for Cluster.
    * Input format of Track is quite different: (x, y, tx, ty, e),
    * so the function performs vector and matrix remake
-   * @param Track data object
+   * @param  trState Track data object
    * @return internal type struct with data
    */
   inline const MatchType1&
@@ -166,7 +169,7 @@ private:
    * Returned format is the same as for Cluster.
    * Input format of Track is quite different: (x, y, tx, ty, e),
    * so the function performs vector and matrix remake
-   * @param Track data object
+   * @param  trgState Track data object
    * @return internal type struct with data
    */
   inline const MatchType2&

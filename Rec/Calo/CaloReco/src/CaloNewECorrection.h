@@ -1,8 +1,6 @@
-// $Id: CaloNewECorrection.h,v 1.1 2003-04-11 09:33:35 ibelyaev Exp $
+// $Id: CaloNewECorrection.h,v 1.2 2005-03-07 15:37:15 cattanem Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
-// ============================================================================
-// $Log: not supported by cvs2svn $
 // ============================================================================
 #ifndef CALOTEST_CALOENEWECORRECTION_H 
 #define CALOTEST_CALOENEWECORRECTION_H 1
@@ -32,12 +30,12 @@ namespace CaloNewECorrection_Local
   { 
   public:
     /** constructor
-     *  @parameter calo  calorimeter name 
+     *  @param calo  calorimeter name 
      */
     explicit DigitFromCalo( const std::string& calo )
       : m_calo( CaloCellCode::CaloNumFromName( calo ) ) {} ;
     /** constructor
-     *  @parameter calo  calorimeter index 
+     *  @param calo  calorimeter index 
      */
     explicit DigitFromCalo( const int  calo )
       : m_calo(                                calo   ) {} ;

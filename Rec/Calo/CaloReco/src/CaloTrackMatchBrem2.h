@@ -1,8 +1,6 @@
-// $Id: CaloTrackMatchBrem2.h,v 1.2 2004-10-26 17:51:42 ibelyaev Exp $
+// $Id: CaloTrackMatchBrem2.h,v 1.3 2005-03-07 15:37:15 cattanem Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
-// ============================================================================
-// $Log: not supported by cvs2svn $
 // ============================================================================
 #ifndef CALOTRACKTOOLS_CALOTRACKMATCHBremm_H
 #define CALOTRACKTOOLS_CALOTRACKMATCHBremm_H 1
@@ -106,7 +104,7 @@ private:
   /** Makes struct with vector and covariance
    * with cluster data.
    * Vector looks like (x, y). Energy is not considered.
-   * @param Cluster data object
+   * @param  cluster data object
    * @return internal type struct with data
    */
   inline const MatchType1& 
@@ -132,7 +130,7 @@ private:
    * Returned format is the same as for Cluster.
    * Input format of Track is quite different: (x, y, tx, ty, e),
    * so the function performs vector and matrix remake.
-   * @param Track data object
+   * @param  trState  Track data object
    * @return internal type struct with data
    */
   inline const MatchType1& 
@@ -159,7 +157,7 @@ private:
    *   TrStateP: (x, y, tx, ty, q/p);
    *   TrStateL: (x, y, tx, ty),
    * so the function performs vector and matrix remake.
-   * @param Track data object
+   * @param  trgState Track data object
    * @return internal type struct with data
    */
   inline const MatchType2& 
