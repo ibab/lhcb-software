@@ -1,8 +1,11 @@
-// $Id: CaloSensDet.h,v 1.2 2002-12-13 16:52:57 ibelyaev Exp $ 
+// $Id: CaloSensDet.h,v 1.3 2003-05-14 08:43:42 robbep Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2002/12/13 16:52:57  ibelyaev
+//  put updated versions of the packages
+//
 // Revision 1.1  2002/12/07 14:41:44  ibelyaev
 //  add new Calo stuff
 //
@@ -54,7 +57,7 @@ public :
    *  @see GiGaBase 
    *  @see   AlgTool 
    *  @see  IAlgTool 
-   *  @return statsu code 
+   *  @return status code 
    */
   virtual StatusCode initialize   ();
   
@@ -63,7 +66,7 @@ public :
    *  @see GiGaBase 
    *  @see   AlgTool 
    *  @see  IAlgTool 
-   *  @return statsu code 
+   *  @return status code 
    */
   virtual StatusCode finalize    ();
   
@@ -155,6 +158,41 @@ private:
   double                                      m_zmax                ;
   
   CaloHitsCollection*                         m_collection          ;
+
+  double                                      m_c1                  ;
+  double                                      m_c2                  ;
+  double                                      m_c1correction        ;
+
+  double                                      m_a_local_inner_ecal  ;
+  double                                      m_a_local_middle_ecal ;
+  double                                      m_a_local_outer_ecal  ;
+
+  double                                      m_ecalTimeHisto[2][25] ;
+
+public:
+
+  /** Correction factor from Birk's Law
+   *  Factor = 1/(1+C1*dEdx/rho+C2*(dEdx/rho)^2)
+   *  Where :
+   *      - C1 = 0.013 g/MeV/cm^2 [Ref NIM 80 (1970) 239]
+   *      - C2 = 9.6.10^-6 g^2/MeV^2/cm^4
+   *      - dEdx in MeV/cm
+   *      - rho = density in g/cm^3
+   */
+  double birkCorrection( G4Step* step )                             ;
+
+  /** The energy deposited in the cell by the step contributes 
+   *  - frac1*energy in the time bin timeBin (25 ns bins)
+   *  - frac2*energy in the time bin timeBin+1
+   *  the origin is the time of collision
+   */
+  void timeFraction( G4Step* step , const CaloCellID& cell ,
+                     double& frac1 , double& frac2 , int& timeBin ) ;
+
+  /** Correction due to the local non uniformity due to the light 
+   *  collection efficiency in cell cell
+   */
+  double localNonUniformity( G4Step* step , const CaloCellID& cell ) ;  
   
 };
 // ============================================================================
