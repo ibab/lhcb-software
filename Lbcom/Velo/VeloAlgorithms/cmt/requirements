@@ -2,7 +2,7 @@
 # Maintainer : Chris Parkes
 #
 package           VeloAlgorithms
-version           v2r4
+version           v2r5
 
 # Structure, i.e. directories to process. 
 #============================================================================
@@ -12,9 +12,9 @@ include_dirs $(VELOALGORITHMSROOT)
 
 # Used packages. Specify the version, * at the end specifies 'any revision'
 #============================================================================
-use  VeloEvent  v11r*   Event
+use  VeloEvent  v12r*   Event
 use  VeloDet    v8r*   	Det
-use  NAGC v5r*
+use  NAGC v*
 
 # Component library building rule
 #============================================================================

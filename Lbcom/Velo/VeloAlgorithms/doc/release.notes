@@ -1,6 +1,10 @@
 ! Package     : VeloAlgoithms
 ! Responsible : Chris Parkes
 
+!===================== VeloAlgorithms v2r5 2002-12-06 =====================
+! 2002-12-06 - Marco Cattaneo
+ - Use LHCB_v11r4
+
 !===================== VeloAlgorithms v2r4 2002-11-12 =====================
 ! 2002-11-12 - Marco Cattaneo
  - Use VeloDet v8r*
