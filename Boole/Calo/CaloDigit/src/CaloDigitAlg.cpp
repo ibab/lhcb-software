@@ -1,4 +1,4 @@
-// $Id: CaloDigitAlg.cpp,v 1.4 2002-12-19 14:32:14 ocallot Exp $
+// $Id: CaloDigitAlg.cpp,v 1.5 2003-03-20 08:22:15 ocallot Exp $
 // STL
 #include <string>
 #include <stdio.h>
@@ -54,24 +54,26 @@ CaloDigitAlg::CaloDigitAlg( const std::string& name,
   , m_gainError         ( 0.01  )
   , m_fracPrev          ( 0.20  )
   , m_pedShift          ( 0.00  )
-
+  , m_pePerMeV          ( 0.    )
+  , m_deadCellFraction  ( 0.00  )
 {
   //** Declare the algorithm's properties which can be set at run time and
   //** their default values
-  declareProperty("InputPrevData"      , m_inputPrevData   ) ;
-  declareProperty("CoherentNoise"      , m_coherentNoise   ) ;
-  declareProperty("IncoherentNoise"    , m_incoherentNoise ) ;
-  declareProperty("GainError"          , m_gainError       ) ;
-  declareProperty("FractionPrevious"   , m_fracPrev        ) ;
-  declareProperty("PedestalShift"      , m_pedShift        ) ;
-  declareProperty("PhotoElectronPerMeV", m_pePerMeV        ) ;
+  declareProperty("InputPrevData"      , m_inputPrevData    ) ;
+  declareProperty("CoherentNoise"      , m_coherentNoise    ) ;
+  declareProperty("IncoherentNoise"    , m_incoherentNoise  ) ;
+  declareProperty("GainError"          , m_gainError        ) ;
+  declareProperty("FractionPrevious"   , m_fracPrev         ) ;
+  declareProperty("PedestalShift"      , m_pedShift         ) ;
+  declareProperty("PhotoElectronPerMeV", m_pePerMeV         ) ;
+  declareProperty("DeadCellFraction"   , m_deadCellFraction ) ;
 
   if ( "SpdDigit" == name ) {
     setDetData(       "/dd/Structure/LHCb/Spd"   );
     setInputData(     MCCaloDigitLocation::Spd   );
     setOutputData(    CaloDigitLocation::FullSpd );
     m_inputPrevData   = "Prev/"+MCCaloDigitLocation::Spd;
-    m_pePerMeV        = 30.;
+    m_pePerMeV        = 10.;
     m_coherentNoise   = 0.0;
     m_incoherentNoise = 0.0;
     m_gainError       = 0.0;
@@ -80,20 +82,18 @@ CaloDigitAlg::CaloDigitAlg( const std::string& name,
     setInputData(     MCCaloDigitLocation::Prs   );
     setOutputData(    CaloDigitLocation::FullPrs );
     m_inputPrevData   = "Prev/"+MCCaloDigitLocation::Prs;
-    m_pePerMeV        = 30.;
+    m_pePerMeV        = 10.;
     m_coherentNoise   = 0.0;
     m_incoherentNoise = 1.0;
   } else if ( "EcalDigit" == name ) {
     setDetData(       "/dd/Structure/LHCb/Ecal"   );
     setInputData(     MCCaloDigitLocation::Ecal   );
     setOutputData(    CaloDigitLocation::FullEcal );
-    m_pePerMeV        = 0.;
     m_pedShift        = 0.40;
   } else if ( "HcalDigit" == name ) {
     setDetData(       "/dd/Structure/LHCb/Hcal"   );
     setInputData(     MCCaloDigitLocation::Hcal   );
     setOutputData(    CaloDigitLocation::FullHcal );
-    m_pePerMeV        = 0.;
     m_pedShift        = 0.40;
   }
 
@@ -151,6 +151,9 @@ StatusCode CaloDigitAlg::initialize() {
                    m_gainError * 100., m_pedestalShift );
     if ( "" != m_inputPrevData ) {
       msg << " Subtract " << m_fracPrev << " of previous BX.";
+    }
+    if ( 0 != m_deadCellFraction ) {
+      msg << ", " << m_deadCellFraction << " of the cells as dead (gain=0).";
     }
     msg << endreq;
   }
@@ -221,6 +224,18 @@ StatusCode CaloDigitAlg::execute() {
                    Rndm::Numbers( rndmSvc() ,
                                   Rndm::Gauss( 0.0 , m_incoherentNoise ) ) );
   }
+
+  //== Add dead cells : Set the gain to zero in this cell
+  if ( 0 != m_deadCellFraction ) {
+    std::vector<double> probaDead ( m_numberOfCells, 1. );
+    std::generate( probaDead.begin() , probaDead.end () ,
+                   Rndm::Numbers( rndmSvc() , Rndm::Flat( 0.0, 1.0 ) ) );
+    for ( unsigned int kk = 0; probaDead.size() > kk; kk++ ) {
+      if ( m_deadCellFraction > probaDead[kk] ) {
+        gainErrors[kk] = 0.;
+      }
+    }
+  }  
 
   //== loop over all cells in the detector
 

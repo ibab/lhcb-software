@@ -1,4 +1,4 @@
-// $Id: CaloDigitAlg.h,v 1.1.1.1 2002-11-04 10:29:51 ocallot Exp $ 
+// $Id: CaloDigitAlg.h,v 1.2 2003-03-20 08:22:15 ocallot Exp $ 
 #ifndef   CALODIGIT_CALODIGITALG_H
 #define   CALODIGIT_CALODIGITALG_H 1
 // ============================================================================
@@ -66,6 +66,7 @@ private:
   double      m_pedShift          ; ///< faction of noise giving pedestal shift
   double      m_pedestalShift     ; ///< pedestal shift due to noise
   double      m_pePerMeV          ; ///< Number of photo electrons per MeV
+  double      m_deadCellFraction  ; ///< Fraction of dead cells
 
   int         m_numberOfCells     ; ///< Number of cells of this detector. 
   int         m_saturatedAdc      ; ///< Value to set in case ADC is saturated.

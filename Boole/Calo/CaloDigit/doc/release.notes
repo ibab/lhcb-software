@@ -4,6 +4,18 @@
 ! Purpose     : Digitisation and Zero-suppression of the Calorimeters
 !-----------------------------------------------------------------------------
 
+! 2003-03-20 - Olivier Callot
+ - Changed the default pePerMev from 30 to 10 according to the Calo Soft
+   meeting of the 18/03/2003
+ - Added the option (DeadCellFraction) to have dead cells, whose gain is set
+   to zero. default is NO dead cells at all.
+
+ - New algorithm CaloDigitToMCParticleAsct to associate properly the digits
+   to a MC Particle. The main difference with the naive association, using 
+   MCCaloDigit, is that we ignore particles produced INSIDE the calorimeter
+   and associate to their deposit to their parent. Needed for a proper 
+   L0CaloCandidate association. 
+
 ! 2002-12-19 - Olivier Callot
  - Change the default Prs/Spd fractional correction, 0.15 -> 0.20
 
