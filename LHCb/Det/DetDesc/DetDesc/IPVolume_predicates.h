@@ -8,8 +8,8 @@
 #include "CLHEP/Geometry/Point3D.h"
 #include "CLHEP/Geometry/Transform3D.h"
 
-#include "GaudiKernel/IPVolume.h"
-#include "GaudiKernel/ILVolume.h"
+#include "DetDesc/IPVolume.h"
+#include "DetDesc/ILVolume.h"
 
 //
 //

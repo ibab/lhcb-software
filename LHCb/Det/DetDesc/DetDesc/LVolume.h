@@ -1,17 +1,17 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/DetDesc/LVolume.h,v 1.10 2001-03-13 11:58:06 mato Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/DetDesc/LVolume.h,v 1.11 2001-03-13 21:57:30 mato Exp $
 #ifndef     DETDESC_VOLUMES_LVOLUME_H
 #define     DETDESC_VOLUMES_LVOLUME_H
 /// GaudiKernel 
 #include "GaudiKernel/StatusCode.h"
 #include "GaudiKernel/DataObject.h"
-#include "GaudiKernel/ILVolume.h"
 #include "GaudiKernel/IValidity.h"
-#include "GaudiKernel/IPVolume.h"
-#include "GaudiKernel/ISolid.h" 
 #include "GaudiKernel/ITime.h" 
 #include "GaudiKernel/MsgStream.h" 
 #include "GaudiKernel/SmartRefVector.h" 
 ///
+#include "DetDesc/IPVolume.h"
+#include "DetDesc/ISolid.h" 
+#include "DetDesc/ILVolume.h"
 #include "DetDesc/IPVolume_predicates.h" 
 #include "DetDesc/CLIDLVolume.h"
 /// STD and STL 

@@ -8,7 +8,7 @@
 #include "CLHEP/Geometry/Point3D.h" 
 #include "CLHEP/Geometry/Vector3D.h" 
 /// GaudiKernel 
-#include "GaudiKernel/ISolid.h" 
+#include "DetDesc/ISolid.h" 
 ///
 
 class ISolidFromStream;

@@ -5,7 +5,7 @@
 #include <vector> 
 
 
-#include "GaudiKernel/ISolid.h"
+#include "DetDesc/ISolid.h"
 
 #include "DetDesc/SolidException.h" 
 #include "DetDesc/SolidTicks.h" 

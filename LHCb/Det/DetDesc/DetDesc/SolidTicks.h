@@ -5,7 +5,7 @@
 #include <cmath>
 #include <algorithm>
 
-#include "GaudiKernel/ISolid.h" 
+#include "DetDesc/ISolid.h" 
 
 #include "CLHEP/Geometry/Point3D.h"
 #include "CLHEP/Geometry/Vector3D.h"

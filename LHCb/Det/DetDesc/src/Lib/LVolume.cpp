@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/Lib/LVolume.cpp,v 1.8 2001-03-13 11:58:07 mato Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/Lib/LVolume.cpp,v 1.9 2001-03-13 21:57:32 mato Exp $
 
 #include "GaudiKernel/StatusCode.h"
 #include "GaudiKernel/DataObject.h"
@@ -12,9 +12,9 @@
 #include "GaudiKernel/ISvcLocator.h" 
 #include "GaudiKernel/IDataProviderSvc.h" 
 
-#include "GaudiKernel/ISolid.h"
-#include "GaudiKernel/ILVolume.h"
-#include "GaudiKernel/IPVolume.h"
+#include "DetDesc/ISolid.h"
+#include "DetDesc/ILVolume.h"
+#include "DetDesc/IPVolume.h"
 
 #include "GaudiKernel/MsgStream.h" 
 #include "GaudiKernel/StreamBuffer.h" 

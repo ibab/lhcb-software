@@ -1,7 +1,7 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/Lib/DetectorElement.cpp,v 1.5 2001-03-07 13:06:13 ibelyaev Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/Lib/DetectorElement.cpp,v 1.6 2001-03-13 21:57:32 mato Exp $
 #include "GaudiKernel/Kernel.h"
 
-#include "GaudiKernel/IGeometryInfo.h"
+#include "DetDesc/IGeometryInfo.h"
 #include "GaudiKernel/IDataDirectory.h"
 #include "GaudiKernel/IDataProviderSvc.h"
 #include "GaudiKernel/IMessageSvc.h"

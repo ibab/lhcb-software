@@ -1,7 +1,7 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/Lib/SolidException.cpp,v 1.3 2001-03-13 11:58:08 mato Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/Lib/SolidException.cpp,v 1.4 2001-03-13 21:57:33 mato Exp $
 
 // GaudiKernel
-#include "GaudiKernel/ISolid.h"
+#include "DetDesc/ISolid.h"
 #include "GaudiKernel/MsgStream.h"
 // DetDesc
 #include "DetDesc/SolidException.h"

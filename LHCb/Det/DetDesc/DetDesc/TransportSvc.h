@@ -1,19 +1,17 @@
-#ifndef     __DETDESC_TRANSPORTSVC_TRANSPORTSVC_H__
-#define     __DETDESC_TRANSPORTSVC_TRANSPORTSVC_H__ 1 
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/DetDesc/TransportSvc.h,v 1.4 2001-03-13 21:57:32 mato Exp $
+#ifndef     _DETDESC_TRANSPORTSVC_H
+#define     _DETDESC_TRANSPORTSVC_H
 
-
-#include <iostream> 
-#include <string> 
-
-
+// Include Files
 #include "GaudiKernel/Kernel.h" 
 #include "GaudiKernel/Service.h" 
 #include "GaudiKernel/StatusCode.h"
- 
-#include "GaudiKernel/ITransportSvc.h" 
 
+#include "DetDesc/ITransportSvc.h" 
 #include "DetDesc/TransportSvcException.h" 
 
+#include <iostream> 
+#include <string> 
 
 class IDataProviderSvc;
 class IMagneticFieldSvc;
@@ -21,13 +19,14 @@ class IMessageSvc;
 class IChronoStatSvc; 
 class IDetectorElement; 
 class ISvcLocator;
-
-/// 
 class GaudiException; 
 
-///  class TransportSvc: implementation of abstract interface ITransportSvc 
-/// 
-///  Author: Vanya Belyaev
+/** @class TransportSvc TransportSvc.h DetDesc/TransportSvc.h
+
+    Implementation of abstract interface ITransportSvc 
+
+    @author Vanya Belyaev
+*/
 
 class TransportSvc: public         Service        , 
                     virtual public ITransportSvc
@@ -140,7 +139,7 @@ class TransportSvc: public         Service        ,
 ///
 
 
-#endif  //   __DETDESC__TRANSPORTSVC_TRANSPORTSVC_H__ 
+#endif  //   DETDESC__TRANSPORTSVC_H 
 
 
 

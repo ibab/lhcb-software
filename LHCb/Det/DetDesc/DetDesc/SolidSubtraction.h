@@ -5,7 +5,7 @@
 #include <algorithm>
 #include <functional> 
 
-#include "GaudiKernel/ISolid.h"
+#include "DetDesc/ISolid.h"
 #include "DetDesc/SolidBoolean.h" 
 #include "DetDesc/SolidChild.h" 
 

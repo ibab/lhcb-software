@@ -7,7 +7,7 @@
 #include "CLHEP/Geometry/Vector3D.h"
 #include "CLHEP/Vector/Rotation.h"
 /// GaudiKernel
-#include "GaudiKernel/ISolid.h" 
+#include "DetDesc/ISolid.h" 
 /// Detdesc 
 #include "DetDesc/SolidException.h" 
 

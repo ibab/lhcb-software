@@ -8,7 +8,7 @@
 #include "CLHEP/Geometry/Vector3D.h"
 #include "CLHEP/Units/PhysicalConstants.h" 
 /// GaudiKernel
-#include "GaudiKernel/ISolid.h" 
+#include "DetDesc/ISolid.h" 
 
 class ISolidFromStream;
 class StreamBuffer;

@@ -1,10 +1,6 @@
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/Lib/GeometryInfo.h,v 1.5 2001-03-13 21:57:32 mato Exp $
 #ifndef     DETDESC_GEOMETRYINFO_H
 #define     DETDESC_GEOMETRYINFO_H
-/// STD and STL 
-#include <iostream>
-#include <string>
-#include <functional>
-#include <algorithm> 
 /// CLHEP 
 #include "CLHEP/Geometry/Point3D.h"
 #include "CLHEP/Geometry/Transform3D.h"
@@ -12,17 +8,22 @@
 #include "GaudiKernel/IDataDirectory.h"
 #include "GaudiKernel/IMessageSvc.h"
 #include "GaudiKernel/IDataProviderSvc.h"
-#include "GaudiKernel/ILVolume.h"
-#include "GaudiKernel/IPVolume.h"
-#include "GaudiKernel/IGeometryInfo.h" 
-#include "GaudiKernel/IDetectorElement.h" 
+#include "DetDesc/ILVolume.h"
+#include "DetDesc/IPVolume.h"
+#include "DetDesc/IGeometryInfo.h" 
+#include "DetDesc/IDetectorElement.h" 
 // GaudiKernel
 #include "GaudiKernel/StatusCode.h"
 #include "GaudiKernel/DataObject.h"
+/// STD and STL 
+#include <iostream>
+#include <string>
+#include <functional>
+#include <algorithm> 
 ///
-class MsgStream             ;
-class GaudiException        ;
-class DetectorElement       ;
+class MsgStream;
+class GaudiException;
+class DetectorElement;
 ///
 
 

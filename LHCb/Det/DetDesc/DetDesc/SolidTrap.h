@@ -9,7 +9,7 @@
 #include "CLHEP/Geometry/Plane3D.h" 
 #include "CLHEP/Units/PhysicalConstants.h" 
 /// GaudiKernel
-#include "GaudiKernel/ISolid.h" 
+#include "DetDesc/ISolid.h" 
 /// DetDesc 
 #include "DetDesc/SolidException.h" 
 #include "DetDesc/SolidPolyHedronHelper.h" 

@@ -1,6 +1,10 @@
 package DetDesc
 package manager : N.N 
 
+===========================================================================
+! 20010313 - Pere Mato
+ - Added files ISolid.h, IPVolume.h, ILVolume.h, IDetectorElement.h, IGeometryInfo.h
+   ITransportSvc.h from the GaudiKernel package.
 
 ===========================================================================
 ! 20010313 - Sebastien Ponce

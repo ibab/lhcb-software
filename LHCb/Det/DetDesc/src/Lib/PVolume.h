@@ -17,8 +17,8 @@ class IDataProviderSvc;
 class IMessageSvc;
 class MsgStream;
 
-#include "GaudiKernel/IPVolume.h"
-#include "GaudiKernel/ILVolume.h"
+#include "DetDesc/IPVolume.h"
+#include "DetDesc/ILVolume.h"
 
 class HepRotation;
 class HepTransform3D;

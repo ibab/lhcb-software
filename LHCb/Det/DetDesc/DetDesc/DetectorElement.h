@@ -5,9 +5,6 @@
 /// GaudiKernel
 #include "GaudiKernel/IDataProviderSvc.h"
 #include "GaudiKernel/IDataDirectory.h"
-#include "GaudiKernel/ILVolume.h"
-#include "GaudiKernel/IPVolume.h"
-#include "GaudiKernel/IDetectorElement.h"
 #include "GaudiKernel/IValidity.h"
 #include "GaudiKernel/ITime.h"
 #include "GaudiKernel/ISvcLocator.h"
@@ -16,6 +13,9 @@
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/SmartDataPtr.h"
 /// DetDesc 
+#include "DetDesc/ILVolume.h"
+#include "DetDesc/IPVolume.h"
+#include "DetDesc/IDetectorElement.h"
 #include "DetDesc/CLIDDetectorElement.h"
 ///
 class IDataProviderSvc;

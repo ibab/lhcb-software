@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/DetDesc/SolidBox.h,v 1.6 2001-03-13 11:58:07 mato Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/DetDesc/SolidBox.h,v 1.7 2001-03-13 21:57:30 mato Exp $
 #ifndef     DETDESC_SOLIDBOX_H
 #define     DETDESC_SOLIDBOX_H
 // CLHEP 
@@ -6,7 +6,7 @@
 #include "CLHEP/Geometry/Vector3D.h"
 #include "CLHEP/Units/SystemOfUnits.h"
 // GAUDI Kernel 
-#include "GaudiKernel/ISolid.h" 
+#include "DetDesc/ISolid.h" 
 #include "GaudiKernel/StreamBuffer.h" 
 // STD and STL 
 #include <cmath> 

@@ -9,12 +9,12 @@
 #include "GaudiKernel/IMagneticFieldSvc.h"
 
 
-#include "GaudiKernel/IGeometryInfo.h" 
-#include "GaudiKernel/IDetectorElement.h" 
+#include "DetDesc/IGeometryInfo.h" 
+#include "DetDesc/IDetectorElement.h" 
 
-#include "GaudiKernel/ISolid.h" 
-#include "GaudiKernel/ILVolume.h" 
-#include "GaudiKernel/IPVolume.h" 
+#include "DetDesc/ISolid.h" 
+#include "DetDesc/ILVolume.h" 
+#include "DetDesc/IPVolume.h" 
 
 #include "GaudiKernel/SmartDataPtr.h" 
 #include "GaudiKernel/MsgStream.h" 

@@ -1,8 +1,8 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/DetDesc/SolidBoolean.h,v 1.7 2001-03-13 11:58:07 mato Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/DetDesc/SolidBoolean.h,v 1.8 2001-03-13 21:57:30 mato Exp $
 #ifndef      DETDESC_SOLIDBOOLEAN_H 
 #define      DETDESC_SOLIDBOOLEAN_H 
 /// GaudiKernel 
-#include "GaudiKernel/ISolid.h" 
+#include "DetDesc/ISolid.h" 
 /// STL 
 #include <string> 
 #include <vector> 
