@@ -1,10 +1,10 @@
-# $Id: requirements,v 1.46 2004-01-14 15:13:03 ibelyaev Exp $
+# $Id: requirements,v 1.47 2004-01-27 07:21:38 cattanem Exp $
 # =============================================================================
 package LHCbKernel
 author  M.Frank    CERN/LHCb
 manager M.Cattaneo CERN/LHCb
 
-version v4r0
+version v4r1
 
 include_dirs $(LHCBKERNELROOT)
 
@@ -20,6 +20,13 @@ document obj2doth LHCbKernelObj2Doth ../xml/LHCbKernel.xml
 macro LHCbKernelObj2Dict_GODflags " -l Kernel/ " \
       WIN32                       " -l Kernel\ "
 document obj2dict LHCbKernelObj2Dict ../xml/LHCbKernel.xml
+
+# Produce lcg dictionary for stl containers used in LHCb
+apply_pattern lcg_dictionary dictionary=LHCbKernel                  \
+                             headerfiles=../Kernel/lcgStl.h     \
+                             selectionfile=../xml/lcg_selection.xml \
+                             options="-o ../dict/lcgStl_dict.cpp --split"
+
 
 # Build libraries (including dictionary)
 #============================================================================
