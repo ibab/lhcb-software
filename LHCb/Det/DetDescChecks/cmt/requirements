@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.7 2004-03-01 15:03:43 ibelyaev Exp $
+# $Id: requirements,v 1.8 2004-06-28 07:10:00 mneedham Exp $
 # =============================================================================
 # CVS tag $Name: not supported by cvs2svn $ 
 # =============================================================================
@@ -14,9 +14,11 @@ branches          cmt doc src options
 # =============== dependencies ================================================
 use               DetDesc   v*  Det
 use               GaudiAlg  v*   	
+use               AIDA      v* -no_auto_imports
 	
 # =============== constituents ================================================
-library           DetDescChecks   *.cpp
+library           DetDescChecks   *.cpp -import=AIDA
+
 
 # =============== patterns ====================================================
 apply_pattern     component_library library=DetDescChecks 

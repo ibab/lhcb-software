@@ -1,5 +1,5 @@
 ! ------------------------------------------------------------------------------
-! $Id: release.notes,v 1.5 2004-03-01 15:03:43 ibelyaev Exp $ 
+! $Id: release.notes,v 1.6 2004-06-28 07:10:00 mneedham Exp $ 
 ! ------------------------------------------------------------------------------
 ! CVS tag $Name: not supported by cvs2svn $
 ! ------------------------------------------------------------------------------
@@ -8,6 +8,9 @@
 ! Purpose     : Collection of useful components for checking of 
 !               Detector Description, Material Budget etc 
 ! ------------------------------------------------------------------------------
+
+! 2004-06-28 M Needham
+ - changes to requirements - need to include AIDA  
 
 ! 2004-03-01 - Vanya BELYAEV
  - technical improvements

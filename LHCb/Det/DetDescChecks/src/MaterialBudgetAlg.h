@@ -1,8 +1,11 @@
-// $Id: MaterialBudgetAlg.h,v 1.5 2004-03-01 15:03:44 ibelyaev Exp $
+// $Id: MaterialBudgetAlg.h,v 1.6 2004-06-28 07:10:00 mneedham Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.5  2004/03/01 15:03:44  ibelyaev
+//  update of the package
+//
 // ============================================================================
 #ifndef DETDESCCHECKS_MaterialBudgetALG_H 
 #define DETDESCCHECKS_MaterialBudgetALG_H 1
@@ -13,12 +16,10 @@
 #include "CLHEP/Geometry/Point3D.h"
 // GaudiAlg
 #include "GaudiAlg/GaudiHistoAlg.h"
-// AIDA 
-namespace AIDA 
-{ 
-  class IHistogram1D ; 
-  class IHistogram2D ; 
-};
+
+class AIDA::IHistogram1D;
+class AIDA::IHistogram2D;
+
 
 /** @class MaterialBudgetAlg MaterialBudgetAlg.h
  *  
