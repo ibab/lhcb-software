@@ -68,6 +68,7 @@ private:
   bool m_killloops;
   int m_maxsteps;
   double m_minstep;
+  double m_minx, m_miny, m_minz, m_maxx, m_maxy, m_maxz;
 };
 // ============================================================================
 

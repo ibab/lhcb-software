@@ -1,8 +1,11 @@
-// $Id: GaussTrackInformation.cpp,v 1.2 2003-04-09 12:07:37 witoldp Exp $
+// $Id: GaussTrackInformation.cpp,v 1.3 2003-07-28 10:26:23 witoldp Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2003/04/09 12:07:37  witoldp
+// added pointer to RICHInfo
+//
 // Revision 1.1  2002/12/07 21:19:14  ibelyaev
 //  few optimization updates
 // 
@@ -53,7 +56,7 @@ GaussTrackInformation::GaussTrackInformation()
   , m_toBeStored(false)
   , m_createdHit(false)
   , m_hits()
-  , m_richInfo(0)
+  , m_detInfo(0)
 {
 #ifdef GIGA_DEBUG
   GaussTrackInformationLocal::s_Counter.increment() ;
@@ -72,7 +75,7 @@ GaussTrackInformation:: GaussTrackInformation
   , m_toBeStored(right.m_toBeStored)
   , m_createdHit(right.m_createdHit)
   , m_hits(right.m_hits)
-  , m_richInfo(right.m_richInfo) 
+  , m_detInfo(right.m_detInfo) 
 {
 #ifdef GIGA_DEBUG
   GaussTrackInformationLocal::s_Counter.increment() ;
@@ -92,6 +95,8 @@ GaussTrackInformation* GaussTrackInformation::clone() const
 // ============================================================================
 GaussTrackInformation::~GaussTrackInformation() 
 {
+  delete m_detInfo;
+
 #ifdef GIGA_DEBUG
   GaussTrackInformationLocal::s_Counter.decrement() ;
 #endif

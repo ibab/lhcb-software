@@ -9,6 +9,7 @@
 /// GaussTools
 #include "MinEkineCuts.h"
 #include "LoopCuts.h"
+#include "WorldCuts.h"
 /// Local 
 #include "TrCutsRunAction.h"
 
@@ -51,6 +52,8 @@ TrCutsRunAction::TrCutsRunAction
     , m_killloops(true)
     , m_maxsteps(100)
     , m_minstep(0.001)
+    , m_minx(-10000.0), m_miny(-10000.0), m_minz(-5000.0)
+    , m_maxx(10000.0), m_maxy(10000.0), m_maxz(25000.0)
 {  
   declareProperty("ElectronTrCut", m_ecut);
   declareProperty("GammaTrCut", m_phcut);
@@ -60,6 +63,12 @@ TrCutsRunAction::TrCutsRunAction
   declareProperty("KillLoops", m_killloops);
   declareProperty("MaxNumberSteps", m_maxsteps);
   declareProperty("MininumStep", m_minstep);
+  declareProperty("MinX", m_minx);
+  declareProperty("MinY", m_miny);
+  declareProperty("MinZ", m_minz);
+  declareProperty("MaxX", m_maxx);
+  declareProperty("MaxY", m_maxy);
+  declareProperty("MaxZ", m_maxz);
 };
 // ============================================================================
 
@@ -117,7 +126,10 @@ void TrCutsRunAction::BeginOfRunAction( const G4Run* run )
         {          
           G4ProcessManager* procMgr = particle->GetProcessManager();
           procMgr->AddDiscreteProcess(new MinEkineCuts("MinEkineCut",acut) );
-          //          if (pname=="e-" && m_killloops)  
+          procMgr->AddDiscreteProcess(new WorldCuts("WorldCut",
+                                                    m_minx,m_miny,m_minz,
+                                                    m_maxx,m_maxy,m_maxz));
+          if (pname=="e-" && m_killloops)  
             procMgr->
               AddDiscreteProcess(new LoopCuts("LoopCuts",m_maxsteps,m_minstep));
         }

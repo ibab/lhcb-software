@@ -5,6 +5,13 @@
 ! Purpose       : G4 actions, and some miscealenous algs for Gauss
 !-----------------------------------------------------------------------------
 
+!======================== GaussTools v8r3 2003-07-28 =======================
+! 2003-07-28 - Witek Pokorski
+ - WorldCuts - added new process killing particles going out of "LHCb world"
+ - TrCutsRunAction - added instanciation of WorldCuts
+ - DetTrackInfo - added new base class for detector-specific trajectory
+                  information
+
 !======================== GaussTools v8r2 2003-07-15 =======================
 ! 2003-07-15 - Witek Pokorski
  - GetHitsAlg - changed back to MCRichHits

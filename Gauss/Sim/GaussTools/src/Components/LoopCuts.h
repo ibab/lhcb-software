@@ -13,9 +13,7 @@ class LoopCuts : public SpecialCuts
   public:     
 
      LoopCuts(const G4String& processName ="LoopCuts",
-              int maxs=100, double minstep=0.001, 
-              double xmin=-10000.0, double ymin=-10000.0, double zmin=-5000.0, 
-              double xmax=10000.0, double ymax=10000.0, double zmax=25000.0);
+              int maxs=100, double minstep=0.001);
 
      virtual ~LoopCuts();
 
@@ -32,7 +30,6 @@ class LoopCuts : public SpecialCuts
   int m_counter;
   int m_maxstepnumber;
   double m_minstep;
-  double m_xmin, m_ymin, m_zmin, m_xmax, m_ymax, m_zmax;
   
   // hide assignment operator as private 
       LoopCuts(LoopCuts&);
