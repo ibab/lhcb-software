@@ -1,7 +1,8 @@
-! $Id: release.notes,v 1.16 2002-11-12 12:49:34 jvantilb Exp $
+! $Id: release.notes,v 1.17 2002-11-13 15:58:47 cattanem Exp $
 ! Package     : OTDet
 ! Responsible : J. van Tilburg
 
+!========================= OTDet v3r2 2002-11-13 ===========================
 ! 2002-11-12 - Jeroen van Tilburg
  - Add inefficiency around y=0. Halfway each long module are wire
    terminators which are inefficient. Since the modules are divided into
