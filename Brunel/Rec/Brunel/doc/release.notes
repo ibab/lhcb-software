@@ -8,11 +8,15 @@ Purpose: LHCb reconstruction program
  Requires data produced by Boole v5r4 or later
  Tuned for XmlDDDB v22r0
 
+- New features
+  . Location of XmlDDDB file is printed at start of job (GaudiSvc v11r6)
+
 - Persistency changes
   . Using POOL_1_6_2 (POOL v1r162p0). Fixes problem with Rich PIDs
 
 - Bug fixes
   . All tools correctly released at end of job (GaudiSvc v11r6)
+  . Fix a typo in TimingTool::finalize (LHCbTools v1r1)
 
 </PRE><H1><A NAME=v23r4>2004-04-01 Brunel v23r4</A></H1><PRE>
 

@@ -48,7 +48,7 @@ use LHCb	v15r5
 #-- BrunelSys v23r4 packages
 
 # Tools
-use LHCbTools		v1r0	Kernel
+use LHCbTools		v1r1	Kernel
 use AsctToLinker        v1r1    Rec
 
 # Brunel utilities
