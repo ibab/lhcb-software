@@ -4,8 +4,11 @@
  *  Header file for RICH DAQ utility class : RichDAQHeaderPD
  *
  *  CVS Log :-
- *  $Id: RichDAQHeaderPD.h,v 1.7 2004-07-27 13:46:06 jonrob Exp $
+ *  $Id: RichDAQHeaderPD.h,v 1.8 2004-08-17 13:14:36 jonrob Exp $
  *  $Log: not supported by cvs2svn $
+ *  Revision 1.7  2004/07/27 13:46:06  jonrob
+ *  Add doxygen file documentation and CVS information
+ *
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   2003-11-06
@@ -30,11 +33,11 @@
 namespace RichDAQHeaderPDCode {
 
   // Define the number of bits for each field
-  static const RichDAQ::ShortType BitsHitCount  =  10;
-  static const RichDAQ::ShortType BitsLinkNum   =  12;
-  static const RichDAQ::ShortType BitsUnUsed1   =  7;
-  static const RichDAQ::ShortType BitsZS        =  1;
-  static const RichDAQ::ShortType BitsStartPD   =  1;
+  static const RichDAQ::ShortType BitsHitCount  =  10; ///< Number of bits for number of hits
+  static const RichDAQ::ShortType BitsLinkNum   =  12; ///< Number of bits for link (L1 board) number
+  static const RichDAQ::ShortType BitsUnUsed1   =  7;  ///< Unused bits
+  static const RichDAQ::ShortType BitsZS        =  1;  ///< Bits for the zero suppression flag
+  static const RichDAQ::ShortType BitsStartPD   =  1;  ///< New HPD flag
 
   // Create the shift registers
   static const RichDAQ::ShortType ShiftHitCount  = 0;
