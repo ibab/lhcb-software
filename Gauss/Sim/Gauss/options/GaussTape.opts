@@ -1,4 +1,4 @@
-// $Id: GaussTape.opts,v 1.4 2002-05-24 10:07:39 witoldp Exp $ 
+// $Id: GaussTape.opts,v 1.5 2002-05-24 10:09:58 witoldp Exp $ 
 
 /// create and add the output stream 
 ApplicationMgr.OutStream +=  { "GaussTape" };
@@ -19,8 +19,8 @@ GaussTape.ItemList =
   ,"/Event/MC/Particles#1"         
   ,"/Event/MC/Vertices#1"          
   // MCHits
-  ,"/Event/MC/OT#1"
-  ,"/Event/MC/OT/Hits#1"
+//  ,"/Event/MC/OT#1"
+//  ,"/Event/MC/OT/Hits#1"
 
 };
 GaussTape.PreLoad     = false ; // ATTENTION ! it MUST be FALSE for GiGa! 
