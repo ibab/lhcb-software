@@ -1,20 +1,8 @@
-// $Id: GiGaTrajectory.cpp,v 1.13 2004-01-27 17:56:53 ibelyaev Exp $ 
+// $Id: GiGaTrajectory.cpp,v 1.14 2004-01-29 14:21:42 ibelyaev Exp $ 
 // ============================================================================
 /// CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
-// Revision 1.12  2003/10/09 08:57:28  witoldp
-// added vertex types
-//
-// Revision 1.11  2003/03/11 09:34:55  ibelyaev
-//  remove invalid inline directives
-//
-// Revision 1.10  2002/12/16 16:23:15  ibelyaev
-//  update for newer version of Geant4 (release 5.0)
-//
-// Revision 1.9  2002/12/07 14:27:51  ibelyaev
-//  see $GIGAROOT/cmt/requirements file
-//
 // ============================================================================
 #define  GIGA_GIGATRAJECTORY_CPP 1 
 // ============================================================================
@@ -51,21 +39,19 @@
 extern "C" {
   int isnan  ( double );
   int finite ( double );
-}
+};
 #elif defined (WIN32)
 #include <float.h>
-#endif #endif
+#endif
 // ============================================================================
 
-{
 #if defined (WIN32)
   inline int lfin ( double x ) { return _finite( x ) ; }
   inline int lnan ( double x ) { return _isnan ( x ) ; }
 #else
   inline int lfin ( double x ) { return  finite( x ) ; }
   inline int lnan ( double x ) { return  isnan ( x ) ; }
-#endif  
-};
+#endif
 
 // ============================================================================
 namespace GiGaTrajectoryLocal
@@ -120,7 +106,7 @@ GiGaTrajectory::GiGaTrajectory   ( const G4Track* aTrack )
     , m_processname("undefined")
 {
   ///
-  const double time = aTrack->GlobalTime() ;
+  const double time = aTrack->GetGlobalTime() ;
   if( !lfin( time ) ) 
   { throw GiGaException ( "GiGaTrajectory(): Time is not finite ") ; }
   ///
@@ -270,7 +256,7 @@ void GiGaTrajectory::AppendStep      ( const G4Step*  step )
         step->GetPostStepPoint()->GetPosition() != back()->GetPosition () ) ) 
   {
     { ///
-      const double time = step->GetPostStepPoint()->GlobalTime() ;
+      const double time = step->GetPostStepPoint()->GetGlobalTime() ;
       if( !lfin( time ) ) 
       { throw GiGaException ( "GiGaTrajectory::append: Time is not finite ") ; }
     }
