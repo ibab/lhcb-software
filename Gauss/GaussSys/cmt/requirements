@@ -16,7 +16,7 @@ use GeneratorModules    v10r2   Gen
 
 # GiGa stuff...
 use GiGa        	v15r0	Sim        
-use GiGaCnv     	v14r0   Sim
+use GiGaCnv     	v14r1   Sim
 use GiGaVisUI		v3r0	Sim
 
 use VisSvc              v3r0    Vis
@@ -24,10 +24,10 @@ use SimSvc              v4r0    Sim
 
 # Gauss stuff...
 use GaussTools		v9r0	Sim
-use GaussRICH		v4r4	Sim
+use GaussRICH		v4r5	Sim
 use GaussTracker	v3r1	Sim
 use GaussCalo		v5r0	Sim
-use GaussPhysics	v2r5	Sim
+use GaussPhysics	v2r6	Sim
 
 
 	
