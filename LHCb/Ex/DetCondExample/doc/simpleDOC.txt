@@ -1,0 +1,222 @@
+//$Header: /afs/cern.ch/project/cvs/reps/lhcb/Ex/DetCondExample/doc/simpleDOC.txt,v 1.1.1.1 2001-09-14 15:45:04 andreav Exp $
+
+NB The call sequence of the services and the example chain can be examined 
+by looking at the sample outputs in the job/ directory of DetCondExample.
+
+------
+ Data
+------
+
+Condition data are stored in special DataObjects: ConditionData. This class 
+implements IValidity, i.e. validity ranges are stored in the objects.
+
+If only data objects in the data store were considered, an alternative design 
+could associate DataObject's to validity ranges through the data store 
+registry entries. To ensure the flexibility to easily handle also DataObject's
+not registered in any data store, validity ranges are stored in ConditionData
+and are considered properties of the objects.
+
+In general, a one to one correspondence between CondDBObject's and
+ConditionData is established: the data retrieved from a CondDBObject
+is used to create one and only one ConditionData, and viceversa.
+
+The manipulation of ConditionData in the detector data store is the 
+responsibility of the detector data service. The design of the data
+services is described later on in the following section.
+
+------------------------
+ Services and addresses
+------------------------
+
+The services offered in DetCond have been completely reorganised and renamed.
+Instead of one massive conversion service, many specialised services
+collaborate to retrieve CondDBObjects from the CondDB, convert them
+into Gaudi DataObject's and register them into the Gaudi detector data store.
+
+In general, the lower services ignore what the highe services are doing.
+
+1) The ConditionsDBGate
+------------------------
+
+This service is responsible for the low level manipulation of the CondDB.
+It ignores the existence of converters, of DataObjects and of the data store.
+It is not a locatable service and is owned by ConditionsDBCnvSvc.
+
+This layer isolates Stefano's interfaces from the Gaudi framework:
+- it returns StatusCode's nstead of CondDB exceptions
+- it returns { valid, since, data } instead of ICondDBObjects
+- it talks of ITime to the framework and not of CondDBKey
+
+Presently it is able to read data from the CondDB and:
+- return the { valid, since, data } for the given { time, tag, folder }
+- return the folder description of a given folder
+
+To allow all other manipulations, especially write access to the CondDB:
+- it (temporarely...) returns a handle to the CondDBMgr
+
+2) The ConditionsDBCnvSvc
+--------------------------
+
+This service is responsible to create DataObject's from data retrieved from 
+the CondDB. Only persistent to transient conversion is possible for now.
+It delegates to the IConditionsDBGate the low-level access to the CondDB.
+
+This service ignores the existence of a transient data store.
+=> NB This is not the case in general for a gaudi ConversionSvc, as 
+=> ConversionSvc methods update the data store registry entries of the 
+=> objects they manipulate. Could this be changed in general?
+In practice, a few methods of ConversionSvc are overloaded for now.
+
+Data in the CondDB are stored as strings, which can be of different types
+(XML, Objy, ByteStreams,... ). The service has been designed to be flexible
+for different string types. Internally, the data retrieved from the
+CondDB are packed into a temporary opaque address, which is dispatched
+to the relevant conversion service (XML, Objy,...) and from this
+to the relevant converters. As a consequence, the ConditionsDBCnvSvc
+has NO CONVERTERS of its own.
+
+The ConditionsDBCnvSvc is a slave of the detector data service, to whom
+it communicates through ConditionsDBAddress's. These addresses contain
+all relevant information to retrieve and convert data: the folder,
+tag and time to lookup the data, as well as the classID and the string
+storage type to be used in the secondary conversion. Taking advantage 
+of a nice feature of the CondDB, the ConditionsDBCnvSvc may also discover 
+dynamically the classID and the string technology for the data stored
+in a given folder from the "description" string associated to that
+folder in the CondDB.
+
+Only the ConditionsDBAddress know the tag and time that should be used 
+to convert data from a folder, while these are absent in the secondary
+Xml or Objectivity addresses, It is therefore the ConditionsDBAddresses
+which are associated to the ConditionData in the data store registry entries.
+The secondary addresses are created locally within the ConditionsDBCnvSvc
+and deleted as soon as they are not used anymore.
+
+3) The DetectorPersistencySvc
+------------------------------
+
+No special functionality is required from this service.
+The standard DetectorPersistencyService from GaudiSvc is therefore used.
+
+Notice in particular that the detector persistency service is able to
+handle data objects retrieved through different conversion services.
+An object can be created even directly from Xml files that were
+not stored in the CondDB.
+
+In any case, the ApplicationMgr has been modified to allow to select
+a detector persistency service of a different class in the job options.
+
+4) The DetectorDataSvc
+-----------------------
+
+(a) ConditionDataSvc
+
+The basic assumption which is made about ConditionData stored in the data 
+store is that they may become invalid with respect to the event time, 
+and it is the responsibility of the detector data service to check
+their validity and update them IF requested. More precisely:
+- the detector data service knows a time that is "the event time"
+- ConditionData have a validity range
+- for every path in the data store, there is one and only one ConditionData 
+  which is associated to that path for every given event time, and the
+  detector data service knows the collection of all such ConditionData
+  => in the language of the CondDB, every path in the data store
+     is associated to a folder and a tag.
+- the action of the "update()" method is to load the ConditionData
+  which is valid at the given time
+
+A generic class has been introduced with all these characteristics:
+the ConditionDataSvc class. This class is a DataSvc which:
+- knows an event time
+- expects to handle only ConditionData objects (returning error otherwise)
+- implements update() with respect to this event time
+
+This class has been kept very simple to be generic enough for different
+design choices which can be made.
+- condition data services with or without automatic updates
+- condition data services based or not based on the CondDB
+- condition data services, based on the CondDB, with one default tag or 
+  allowing to register different tags in different paths for the same folder
+
+This class is not likely to evolve very much and could be common for all uses.
+
+(b) ConditionsDBDataSvc
+
+Some specific choices have been made to match LHCb's requirements,
+and another specific data service has been introduced, derived
+from ConditionDataSvc: the ConditionsDBDataSvc. 
+- This data service is based on the ConditionsDB: it knows
+  the concepts of folder names and tag names. 
+- Data from one folder can be stored in one and only one data store path:
+  the service has a global tag to decide which version (for every given time)
+  to read from every folder in the CondDB.
+- For ease of use, it is the data service which knows how to translate
+  folder names into path names and viceversa. As a consequence, the data
+  service is able to load into the data store a valid ConditionData  
+  for which only the folder name has been specified, creating a data
+  store tree to accomodate it and the ConditionsDBAddress associated to it.
+  => A special retrieveValidCondition method exists.
+     This functionality is tested in the example TestConditionsDBDataSvc.
+- There is no automatic update (yet?): if an invalid object is
+  registered in the store, the find() and retrieve() methods (or
+  the smart pointer methods) return this invalid object.
+  => If you want to be sure that the object is valid, you have to update it.
+     This functionality is tested in the example TestSmartDataPtr.
+  
+This class is likely to evolve very much according to each experiment's needs.
+
+In any case, the ApplicationMgr has been modified to allow to select
+a detector data service of a different class in the job options.
+
+----------
+ Examples
+----------
+
+The examples in DetCondExample have been completely reorganised and renamed.
+Instead of one massive algorithm, many specialised algorithms are applied
+sequentially within a Sequencer. 
+
+- PopulateDB: 
+   init     -> Stores sample data in the DB for Ecal and LHCb temperatures
+   execute  -> Dummy 
+   finalize -> Dummy
+
+- ClearDetectorStore: 
+   init     -> Clears the detector data store
+   execute  -> Dummy 
+   finalize -> Dummy
+
+- EvtClock
+   init     -> Initialisation
+   execute  -> Sets the event time of the DetectorDatasvc
+   finalize -> Dummy
+
+- TestConditionsDBDataSvc
+   init     -> Initialisation
+   execute  -> Calls retrieveValidCondition for LHCb temperatures
+               (special of the IConditionsDBDataSvc interface)
+   finalize -> Dummy
+
+- TestSmartDataPtr
+   init     -> Initialisation
+   execute  -> At 1st event initialises registry entries for Ecal temperatures
+               At every event retrieve a smartDataPtr to Ecal temperatures
+               Update the pointer (there is no automatic update!)
+   finalize -> Dummy
+
+- DumpDetectorStore: 
+   init     -> Dummy
+   execute  -> Dummy 
+   finalize -> Dumps the detector data store
+
+----------------
+ Technicalities
+----------------
+
+DetCond services are assembled into a component library and can be loaded
+dynamically. Only their interfaces are visible to the outside world.
+
+DetCond concrete data objects have no interfaces and are fully visible
+to the outside world. They must be linked statically.
+
+

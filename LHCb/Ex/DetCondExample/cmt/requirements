@@ -1,0 +1,54 @@
+# $Header: /afs/cern.ch/project/cvs/reps/lhcb/Ex/DetCondExample/cmt/requirements,v 1.1.1.1 2001-09-14 15:45:03 andreav Exp $
+package DetCondExample
+version v3r03
+
+branches doc src job options cmt DB
+ignore_pattern package_stamps 
+
+# Main program and standard job options
+use GaudiConf     v5
+
+# Detector Conditions (also inherit dependency on GAUDI framework)
+use DetCond       v3r03  Det
+
+set DETCONDEXAMPLE_FDID     30997
+set DETCONDEXAMPLE_BOOTHOST ${OBJY_LS_HOST}
+set DETCONDEXAMPLE_BOOTDIR  ${DETCONDEXAMPLEROOT}/DB
+set DETCONDEXAMPLE_BOOTFILE condDBBoot
+setup_script   setupDB
+cleanup_script cleanupDB
+
+# This is the directory where you will build the dOxygen html doc
+# This is also the directory where you will find the dOxygen tagfile
+set DETCONDEXAMPLE_DOXYGEN \
+  /afs/cern.ch/user/v/valassi/www/dOxygen/DetCondExample/html
+# ${DETCONDEXAMPLEROOT}/doc/html
+# This is the URL prefix where you will access the dOxygen documentation
+set DETCONDEXAMPLE_DOXYURL \
+  http://www.cern.ch/~valassi/dOxygen/DetCondExample/html
+# file:${DETCONDEXAMPLEROOT}/doc/html
+# This is the package version number
+set DETCONDEXAMPLE_DOXYVERSION $(DETCONDEXAMPLEVERSION)
+
+#==================================================================
+private
+
+#==> Detector Conditions example
+application DetCondExample *.cpp "$(GAUDICONFROOT)/src/GaudiMain.cpp"
+macro DetCondExample_linkopts  "$(application_linkopts)"
+
+# Statically link also GaudiAlg component library (to use class Sequencer)
+macro_append GaudiAlg_linkopts "-L${GaudiAlgDir} -lGaudiAlg"
+
+
+
+
+
+
+
+
+
+
+
+
+

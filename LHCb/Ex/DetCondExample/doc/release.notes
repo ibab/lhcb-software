@@ -1,0 +1,5 @@
+Package Ex/DetCondExample
+Package manager : Andrea Valassi 
+
+!20010914 - Andrea Valassi (v1)
+- New package: example using detector condition services from Det/DetCond
