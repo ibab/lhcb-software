@@ -60,7 +60,7 @@ use PuVeto              v5r5	L0
 use L0DU                v6r7	L0
 
 # L1 trigger
-use TrgTools		v2r1	Trg
+use TrgTools		v2r2	Trg
 use TrgChecker		v2r0	Trg
 use TrgVelo		v2r0	Trg
 #use TrgVeloTT		v2r0	Trg

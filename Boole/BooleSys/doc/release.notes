@@ -4,18 +4,16 @@
 ! Purpose     : List of packages in Boole project
 !-----------------------------------------------------------------------------
 
-!======================== BooleSys v5r3 2004-02-26 ========================
-! 2004-02-26 - Marco Cattaneo
+!======================== BooleSys v5r3 2004-03-05 ========================
+! 2004-03-05 - Marco Cattaneo
  - Packages added:    STDAQ v1r0
 
- - Packages modified: OTDAQ v1r1, VeloAlgorithms v3r0, CaloDigit v1r6,
-                      CaloMonitor v2r0, ITAlgorithms v14r1, ITCheckers v2r1
+ - Packages modified: OTDAQ v1r1, VeloAlgorithms v2r9p1, CaloDigit v1r6,
+                      CaloMonitor v2r0, ITAlgorithms v14r1, ITCheckers v2r1,
+                      TrgTools v2r2
 
- - Packages temporarily disabled pending adapation to new VeloDet:
-   PuVeto, TrgTools
-
- - Packages temporarily disabled due to dependency on TrgTools:
-   TrgChecker, TrgVelo, TrgVeloTT, L1Reco
+ - Packages temporarily disabled due to commissioning of STDAQ:
+   TrgVeloTT
 
 !======================== BooleSys v5r2 2004-02-05 ========================
 ! 2004-02-05 - Marco Cattaneo
