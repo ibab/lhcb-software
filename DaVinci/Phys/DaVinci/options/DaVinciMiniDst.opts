@@ -19,6 +19,13 @@ DaVinciDstWriter.ItemList =  {
   , "/Event/Trig/L0/Muon#1"
   , "/Event/Trig/L0/PuVeto#1"
   , "/Event/Trig/L0/Decision#1" 
+  , "/Event/Trig/L1#1"
+  , "/Event/Trig/L1/Tracks2d#1"
+  , "/Event/Trig/L1/Tracks3d#1"
+  , "/Event/Trig/L1/Vertices2d#1"
+//    , "/Event/Trig/L1/Clusters#1" // For L1 trigger studies
+  , "/Event/Trig/L1/Summary#1"
+  , "/Event/Trig/L1/Decision#1" 
   , "/Event/Rec#1"
   , "/Event/Rec/ProtoP#*"
 //    , "/Event/Rec/Relations#*"

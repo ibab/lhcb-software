@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.53 2003-01-10 11:08:23 ranjard Exp $
+# $Id: requirements,v 1.54 2003-01-13 10:39:43 gcorti Exp $
 # Created    : 07/02/2002
 # Maintainer : Gloria Corti
 #
@@ -14,21 +14,45 @@ branches          cmt doc src job options
 
 # Used packages. 
 #============================================================================
+#--- Minimal Gaudi libraries (from GAUDI_v11r4)
+use  GaudiSys           v11r0
 
-#---Gaudi libraries 
-use GaudiSys            v11r0
-use HbookCnv            v*
-use GaudiRootDb         v*
-use  RootHistCnv        v*
+#--- Additional Gaudi libraries (from GAUDI_v11r4)
+use  GaudiNagC      	v*
+use  GaudiRootDb        v*
 
-#---LHCb libraries
-use LHCb                v11r5
+#--- Histogram persistency
+use  HbookCnv           v*
+use  RootHistCnv    	v*
 
-#--- Geometry description
-use XmlDDDB		v14r4	Det
+#--- LHCb libraries (from LHCB_v11r5)
+use  LHCb               v11r5
 
-#--- DaVinci packages
-#use DaVinciSys         v7r2
+#--- Geometry description (from DBASE)
+use  XmlDDDB		v14r4	Det
+
+#--- DaVinciSys v7r2 packages 
+
+#    Enable Trigger reprocessing
+use  L0Calo             v6r4     L0
+use  L0Muon             v6r3     L0
+use  L1VeloTrack        v3r5     L1
+use  L0DU          	v6r2	 L0
+use  L1Decision         v1r4     L1
+
+#    Enable neutral ProtoParticles production  
+use  CaloInterfaces     v2r4     Calo
+use  CaloUtils 	        v4r4     Calo
+use  CaloReco           v1r2     Calo
+
+#    Final Reconstruction
+use  GlobalReco         v2r3     Rec
+use  KsReco		v1r4	 Rec
+
+#    Utility tools
+use  TrExtrapolator     v2r4     Tr
+
+#    Physics packages
 use  DaVinciTools       v7r2     Phys
 use  DaVinciAssociators v3r1     Phys
 use  DaVinciMCTools     v4r1     Phys
@@ -37,22 +61,6 @@ use  PhysSelections     v4r2     Phys
 use  FlavourTagging     v4r2     Phys
 use  DaVinciEff         v2r1     Phys
 use  DaVinciUser        v4r0     Phys
-use  GlobalReco         v2r3     Rec
-use  KsReco		v1r4	 Rec
-
-#--- Trigger
-use  L0Calo             v6r4     L0
-use  L1VeloTrack        v3r5     L1
-use  L0DU          	v6r2	 L0
-
-#--- ProtoParticles 
-use  CaloInterfaces     v2r4     Calo
-use  CaloUtils 	        v4r4     Calo
-use  CaloReco           v1r2     Calo
-
-#--- Necessary tools
-use  TrExtrapolator     v2r4     Tr
-
 
 # Build DaVinci Application with standard executable
 # Note that user code is located in a component library (see details
