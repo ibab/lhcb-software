@@ -8,7 +8,7 @@ branches cmt doc
 #==================================================================
 
 # Gauss application
-use Gauss		v14r1	Sim
+use Gauss		v14r2	Sim
 
 # Generator stuff ...
 use EvtGen              v5r0    Gen
