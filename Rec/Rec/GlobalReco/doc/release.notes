@@ -4,6 +4,7 @@
 ! Purpose     : Holds final reconstruction code
 !-----------------------------------------------------------------------------
 
+!========================== GlobalReco v4r8p1 2004-09-16 ===================
 ! 2004-09-13 -P. Koppenburg
   - cmt/requirements
     . Depend on Kernel/Relations
