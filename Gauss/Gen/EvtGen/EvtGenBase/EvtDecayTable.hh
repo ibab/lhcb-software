@@ -52,6 +52,8 @@ public:
 
   static bool isJetSet( EvtId evtnum ) ;
 
+  static double totalBr(int ipar) ;
+
 private:
 
 };

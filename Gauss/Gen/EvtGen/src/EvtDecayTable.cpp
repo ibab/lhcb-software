@@ -54,11 +54,15 @@ int EvtDecayTable::getNMode(int ipar){
    return decaytable[ipar].getNMode();
 } 
 
-EvtDecayBase* getDecay(int ipar, int imode)
+EvtDecayBase* EvtDecayTable::getDecay(int ipar, int imode)
 {
   return decaytable[ipar].getDecayModel(imode);
 }
 
+double EvtDecayTable::totalBr( int ipar ) 
+{
+  return decaytable[ipar].getRawBrfrSum() ;
+}
 
 void EvtDecayTable::printSummary(){
 
