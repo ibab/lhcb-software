@@ -33,8 +33,7 @@ SpillOverSelector.Input = {
 }; // evtype 61 RAWH2
 //SpillOverSelector.FirstEvent = 10; // Skip corresponding spillover events
 LHCBkgSelector.Input = { 
-  "DATAFILE='rfio:/castor/cern.ch/lhcb/prod/00000310_00000001_5.oosim' TYP='ROOT' OPT='READ'" 
-}; // "Maximal" LHC background 
+  "DATAFILE='rfio:/castor/cern.ch/lhcb/background/LHC/oosim/00000310_00000004_5.oosim' TYP='ROOT' OPT='READ'" }; // Test file, "Maximal" LHC background 
 //LHCBkgSelector.FirstEvent = 7; // Skip corresponding background events 
 DigiWriter.Output = "DATAFILE='v254r1.oodigi' TYP='ROOT' OPT='NEW'";
 HistogramPersistencySvc.OutputFile = "v254r1.hbook";  // Monitoring histos

@@ -31,23 +31,20 @@ use HbookCnv 		v13r4
 #-- Database
 use XmlDDDB	v17r0	Det
 
-#-- LHCb libraries (from LHCB_v12r2)
-use LHCb	v12r2
+#-- LHCb libraries (from LHCB_v13r0)
+use LHCb	v13r0
 
-#-> SICB basic libraries (from LHCB_v12r2)
+#-> SICB basic libraries (from SICBOO_v1r0)
 use SICBSys	v1r6	SICB
 
-#-- BrunelSys v19r1 packages
+#-- BooleSys v1r0 packages (based on BrunelSys v19r1)
 
 # Brunel utilities
 use BrunelSicb          v4r1    Rec
 use BrunelAlgs          v2r2	Rec
 
-# Phys utilities
-use MCTools		v1r1p1	Phys
-
 # LHC background
-use DigiAlg		v1r0p1	Digi
+use DigiAlg		v1r1	Digi
 
 # L0 trigger
 use L0Calo              v7r1	L0
