@@ -1,4 +1,4 @@
-// $Id: ChargedProtoPAlg.cpp,v 1.5 2002-07-26 19:27:35 gcorti Exp $
+// $Id: ChargedProtoPAlg.cpp,v 1.6 2002-07-27 19:19:36 gcorti Exp $
 // Include files 
 #include <memory>
 
@@ -138,7 +138,7 @@ StatusCode ChargedProtoPAlg::execute() {
   // Load stored tracks
   SmartDataPtr<TrStoredTracks> tracks ( eventSvc(), m_tracksPath );
   if( !tracks || 0 == tracks->size() ) {
-    log << MSG::DEBUG << "Unable to retrieve TrStoredTracks at "
+    log << MSG::INFO << "Unable to retrieve TrStoredTracks at "
         << m_tracksPath << endreq;
     return StatusCode::FAILURE;
   }
