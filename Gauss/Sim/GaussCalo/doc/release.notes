@@ -7,6 +7,7 @@
 !                  : G4 actions, etc for LHCb calorimeters
 !-----------------------------------------------------------------------------
 
+!====================== GaussCalo v7r2 ===================================
 ! 2004-12-14 - Gloria CORTI
  - src/GaussSensPlaneHit.cpp
    introduce include of GiGa/GiGaUtil.h to allow compilation
