@@ -2,6 +2,7 @@ Package LHCbKernel
 Package manager: M.Cattaneo
 Purpose: LHCb specific Kernel classes
 
+!====================== LHCbKernel v4r4 2004-03-18 ========================
 ! 2004-03-17 - Vanya BELYAEV
  - Relations/AssociatorBase.h
    src/AssociatorBase.cpp
