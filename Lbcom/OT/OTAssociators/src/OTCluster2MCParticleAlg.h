@@ -1,6 +1,6 @@
-// $Id: OTCluster2MCParticleAlg.h,v 1.1.1.1 2002-05-26 22:48:42 jvantilb Exp $
-#ifndef OTCLUSTER2MCPARTICLEALG_H
-#define OTCLUSTER2MCPARTICLEALG_H 1
+// $Id: OTCluster2MCParticleAlg.h,v 1.2 2002-08-07 15:55:07 jvantilb Exp $
+#ifndef OTASSOCIATORS_OTCLUSTER2MCPARTICLEALG_H
+#define OTASSOCIATORS_OTCLUSTER2MCPARTICLEALG_H 1
 
 #include <string>
 #include <map>
@@ -14,6 +14,9 @@
 
 /** @class OTCluster2MCParticleAlg OTCluster2MCParticleAlg.h
  *  
+ *  Algorithm which makes the association from OTClusters to MCParticles. 
+ *  This is used by the associator tool. This algorithm uses the associator
+ *  with MCHits.
  *
  *  @author Jeroen van Tilburg
  *  @date   14/05/2002
@@ -66,7 +69,7 @@ inline std::string OTCluster2MCParticleAlg::outputData() const {
 }
 
 
-#endif // OTCLUSTER2MCPARTICLEALG_H
+#endif // OTASSOCIATORS_OTCLUSTER2MCPARTICLEALG_H
 
 
 

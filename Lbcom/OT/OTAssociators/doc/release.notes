@@ -1,6 +1,10 @@
-! $Id: release.notes,v 1.6 2002-07-09 19:08:06 cattanem Exp $
+! $Id: release.notes,v 1.7 2002-08-07 15:55:06 jvantilb Exp $
 ! Package     : OTAssociators
 ! Responsible : J. van Tilburg
+
+! 2002-08-07 - Jeroen van Tilburg
+ - Added class descriptions.
+ - removed log messages.
 
 !====================== OTAssociators v2r0 2002-07-09 =======================
 ! 2002-07-05 - Jeroen van Tilburg

@@ -1,6 +1,6 @@
-// $Id: OTCluster2MCParticleAsct.h,v 1.2 2002-05-27 11:38:34 cattanem Exp $
-#ifndef ASSOCIATORS_OTCluster2MCParticleASCT_H 
-#define ASSOCIATORS_OTCluster2MCParticleASCT_H 1
+// $Id: OTCluster2MCParticleAsct.h,v 1.3 2002-08-07 15:55:06 jvantilb Exp $
+#ifndef OTASSOCIATORS_OTCLUSTER2MCPARTICLEASCT_H
+#define OTASSOCIATORS_OTCLUSTER2MCPARTICLEASCT_H 1
 
 // Include files
 #include "GaudiKernel/DeclareFactoryEntries.h"
@@ -16,9 +16,12 @@
 static const std::string& OTCluster2MCParticleLocation = 
                    "Rec/Relations/OTClusters2MCParticles";
 
-/** @class OTCluster2MCParticleAsct OTCluster2MCParticleAsct.h 
- *         Associators/OTCluster2MCParticleAsct.h
+/** @class OTCluster2MCParticleAsct OTCluster2MCParticleAsct.h \
+ *         "OTAssociators/OTCluster2MCParticleAsct.h"
  *  
+ *  Associator for the OTClusters with the corresponding MCParticles. 
+ *  Makes use of the associator with the MCHits. By default OTClusters 
+ *  coming from spillover are not associated.
  *
  *  @author J. van Tilburg
  *  @date   14/05/2002
@@ -58,4 +61,4 @@ private:
 
 
 };
-#endif // ASSOCIATORS_OTCluster2MCParticleASCT_H
+#endif // OTASSOCIATORS_OTCLUSTER2MCPARTICLEASCT_H

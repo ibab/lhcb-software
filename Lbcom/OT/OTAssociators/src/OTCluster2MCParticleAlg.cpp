@@ -1,6 +1,6 @@
-// $Id: OTCluster2MCParticleAlg.cpp,v 1.3 2002-07-05 10:11:41 jvantilb Exp $
-// Include files 
+// $Id: OTCluster2MCParticleAlg.cpp,v 1.4 2002-08-07 15:55:06 jvantilb Exp $
 
+// Event
 #include "Event/OTCluster.h"
 #include "Event/OTDigit.h"
 #include "Event/MCOTDigit.h"
@@ -17,12 +17,13 @@
 #include "OTCluster2MCParticleAlg.h"
 #include "OTAssociators/OTCluster2MCParticleAsct.h"
 
-
-//-----------------------------------------------------------------------------
-// Implementation file for class : OTCluster2MCParticleAlg
-//
-// 23/05/2002 : J. van Tilburg
-//-----------------------------------------------------------------------------
+/** @file OTCluster2MCParticleAlg.cpp 
+ *
+ *  Implementation of the OTCluster2MCParticleAlg class
+ *  
+ *  @author J. van Tilburg
+ *  @date   23/05/2002
+ */
 
 // Declaration of the Algorithm Factory
 static const  AlgFactory<OTCluster2MCParticleAlg>          s_factory ;
@@ -46,7 +47,7 @@ StatusCode OTCluster2MCParticleAlg::initialize() {
 
   MsgStream log(msgSvc(), name());
   StatusCode sc;
-  log << MSG::DEBUG << "==> Initialise" << endreq;
+  log << MSG::DEBUG << "==> Initialize" << endreq;
 
   sc = toolSvc()->retrieveTool(m_nameAsct, m_hAsct);
   if( sc.isFailure() || 0 == m_hAsct) {

@@ -1,10 +1,6 @@
-// $Id: OTCluster2MCDepositAlg.h,v 1.1 2002-07-04 11:20:30 hierck Exp $
-#ifndef OTCLUSTER2MCDepositALG_H
-#define OTCLUSTER2MCDepositALG_H 1
-
-#include <string>
-#include <map>
-
+// $Id: OTCluster2MCDepositAlg.h,v 1.2 2002-08-07 15:55:06 jvantilb Exp $
+#ifndef OTASSOCIATORS_OTCLUSTER2MCDEPOSITALG_H
+#define OTASSOCIATORS_OTCLUSTER2MCDEPOSITALG_H 1
 
 #include "Relations/IAssociator.h" 
 #include "Relations/IRelation.h"
@@ -17,10 +13,14 @@ class MCOTDeposit;
 
 /** @class OTCluster2MCDepositAlg OTCluster2MCDepositAlg.h
  *  
+ *  Algorithm which makes the association from OTClusters to MCOTDeposits. 
+ *  This is used by the associator tool. The relations with deposits from 
+ *  spillover are made as well.
  *
  *  @author Jeroen van Tilburg
  *  @date   14/05/2002
  */
+
 class OTCluster2MCDepositAlg : public Algorithm {
     friend AlgFactory<OTCluster2MCDepositAlg>;
   
@@ -61,11 +61,4 @@ inline std::string OTCluster2MCDepositAlg::outputData() const {
 }
 
 
-#endif // OTCLUSTER2MCDepositALG_H
-
-
-
-
-
-
-
+#endif // OTASSOCIATORS_OTCLUSTER2MCDEPOSITALG_H

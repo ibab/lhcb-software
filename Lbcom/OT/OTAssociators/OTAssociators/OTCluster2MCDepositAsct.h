@@ -1,6 +1,6 @@
-// $Id: OTCluster2MCDepositAsct.h,v 1.1 2002-07-04 11:20:37 hierck Exp $
-#ifndef ASSOCIATORS_OTCluster2MCDepositASCT_H 
-#define ASSOCIATORS_OTCluster2MCDepositASCT_H 1
+// $Id: OTCluster2MCDepositAsct.h,v 1.2 2002-08-07 15:55:05 jvantilb Exp $
+#ifndef OTASSOCIATORS_OTCLUSTER2MCDEPOSITASCT_H 
+#define OTASSOCIATORS_OTCLUSTER2MCDEPOSITASCT_H 1
 
 // Include files
 #include "GaudiKernel/DeclareFactoryEntries.h"
@@ -16,10 +16,12 @@
 static const std::string& OTCluster2MCDepositLocation =
                        "Rec/Relations/OTClusters2MCDeposits";
 
-/** @class OTCluster2MCDepositAsct OTCluster2MCDepositAsct.h 
- *         Associators/OTCluster2MCDepositAsct.h
+/** @class OTCluster2MCDepositAsct OTCluster2MCDepositAsct.h \
+ *         "OTAssociators/OTCluster2MCDepositAsct.h"
  *  
- *
+ *  Associator for the OTClusters with the corresponding MCOTDeposits. 
+ *  By default OTClusters coming from spillover are also associated.
+
  *  @author J. van Tilburg
  *  @date   14/05/2002
  */
@@ -54,7 +56,7 @@ private:
 
 
 };
-#endif // ASSOCIATORS_OTCluster2MCDepositASCT_H
+#endif // OTASSOCIATORS_OTCLUSTER2MCDEPOSITASCT_H
 
 
 

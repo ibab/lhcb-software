@@ -1,6 +1,6 @@
-// $Id: OTCluster2MCHitAlg.cpp,v 1.4 2002-07-05 10:11:41 jvantilb Exp $
-// Include files 
+// $Id: OTCluster2MCHitAlg.cpp,v 1.5 2002-08-07 15:55:06 jvantilb Exp $
 
+// Event
 #include "Event/OTCluster.h"
 #include "Event/OTDigit.h"
 #include "Event/MCOTDigit.h"
@@ -8,8 +8,7 @@
 #include "Event/MCHit.h"
 #include "Event/MCTruth.h"
 
-
-// from Gaudi
+// Gaudi
 #include "GaudiKernel/AlgFactory.h"
 #include "GaudiKernel/MsgStream.h" 
 #include "GaudiKernel/IDataProviderSvc.h"
@@ -19,11 +18,13 @@
 #include "OTCluster2MCHitAlg.h"
 #include "OTAssociators/OTCluster2MCHitAsct.h"
 
-//-----------------------------------------------------------------------------
-// Implementation file for class : OTCluster2MCHitChi2Alg
-//
-// 14/05/2002: J. van Tilburg
-//-----------------------------------------------------------------------------
+/** @file OTCluster2MCHitAlg.cpp 
+ *
+ *  Implementation of the OTCluster2MCHitAlg class
+ *  
+ *  @author J. van Tilburg
+ *  @date   14/05/2002
+ */
 
 // Declaration of the Algorithm Factory
 static const  AlgFactory<OTCluster2MCHitAlg>          s_factory ;
@@ -39,14 +40,15 @@ OTCluster2MCHitAlg::OTCluster2MCHitAlg( const std::string& name,
   declareProperty( "SpillOver", m_spillOver  = false );
 }
 
-OTCluster2MCHitAlg::~OTCluster2MCHitAlg() {
+OTCluster2MCHitAlg::~OTCluster2MCHitAlg() 
+{
   // destructor
 }; 
 
-StatusCode OTCluster2MCHitAlg::initialize() {
-
+StatusCode OTCluster2MCHitAlg::initialize() 
+{
   MsgStream log(msgSvc(), name());
-  log << MSG::DEBUG << "==> Initialise" << endreq;
+  log << MSG::DEBUG << "==> Initialize" << endreq;
  
   return StatusCode::SUCCESS;
 };
@@ -101,8 +103,8 @@ StatusCode OTCluster2MCHitAlg::execute()
   return StatusCode::SUCCESS;
 };
 
-StatusCode OTCluster2MCHitAlg::finalize() {
-
+StatusCode OTCluster2MCHitAlg::finalize() 
+{
   MsgStream log(msgSvc(), name());
   log << MSG::DEBUG << "==> Finalize" << endreq;
 
@@ -111,14 +113,15 @@ StatusCode OTCluster2MCHitAlg::finalize() {
 
 
 StatusCode OTCluster2MCHitAlg::associateToTruth(const OTCluster* aCluster,
-                                                MCHit*& aHit) {
+                                                MCHit*& aHit) 
+{
   // make link to truth  to MCHit
   StatusCode sc = StatusCode::SUCCESS;
-  MsgStream log(msgSvc(), name());
 
   const OTDigit* aDigit = aCluster->digit();
 
   if (0 == aDigit) {
+    MsgStream log(msgSvc(), name());
     log << MSG::WARNING << "No digit associated with cluster!" << endmsg;
     return StatusCode::FAILURE;
   }
@@ -131,11 +134,6 @@ StatusCode OTCluster2MCHitAlg::associateToTruth(const OTCluster* aCluster,
   // When there are more than one tdc-times in a OTDigit
   // do something more elaborate.
   if (times.size() > 1 ) {  
-    log << MSG::VERBOSE  << "More than 1 time in digit: "
-        << "do something more elaborate" << endreq;
-    log << MSG::VERBOSE << "   found " << times.size() << " times in OTDigit " 
-        << aDigit->channel() << " with clusterTime = "<< clusterTime << endreq;
-    
     SmartDataPtr<OTClusters> clusterCont(eventSvc(),
                                          OTClusterLocation::Default);
     OTClusters::const_iterator iterClus;
@@ -149,13 +147,10 @@ StatusCode OTCluster2MCHitAlg::associateToTruth(const OTCluster* aCluster,
           ++iterClus ) {
       if ( (*iterClus)->digit() == aDigit ) {
         timeCorrection -= (*iterClus)->signalTime();
-        log << MSG::VERBOSE << "    clustertime =" 
-            << (*iterClus)->signalTime() << endreq;
       }
     }    
 
     timeCorrection /= (double) (times.size());
-    log << MSG::VERBOSE << "    timeCorrection=" << timeCorrection << endreq;
 
     // compare times and take the closest one
     int thisNumber = -1;
@@ -164,14 +159,11 @@ StatusCode OTCluster2MCHitAlg::associateToTruth(const OTCluster* aCluster,
     for ( iTime = times.begin(); iTime != times.end(); ++iTime ) {
       thisNumber++;
       thisTime = abs( (int) (timeCorrection) + clusterTime - (*iTime));
-      log << MSG::VERBOSE << "     digit " << thisNumber << " time = " 
-          << (*iTime) << endreq;      
       if (thisTime < diffTime) {
         timeNumber = thisNumber;
         diffTime = thisTime;
       }
     }
-    log << MSG::VERBOSE << "found timenumber = " << timeNumber << endreq;
   } else { // Easy: just one time, so nothing special
     timeNumber = 0;
   }
