@@ -1,4 +1,4 @@
-// $Id: CaloSelector.h,v 1.2 2002-04-26 13:36:40 ibelyaev Exp $
+// $Id: CaloSelector.h,v 1.3 2002-04-27 19:21:30 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
@@ -76,10 +76,11 @@ protected:
    *  @param    name   tool name 
    *  @param    paretn tool parent 
    */
-  CaloSelector( const std::string&  type   ,  
-                const std::string&  name   ,
-                const IInterface*   parent );
- 
+  CaloSelector
+  ( const std::string&  type   ,  
+    const std::string&  name   ,
+    const IInterface*   parent );
+  
   /// destructor (virtual and protected)
   virtual ~CaloSelector(); 
 
@@ -88,10 +89,12 @@ private:
   /// default constructor is private
   CaloSelector();
   /// copy constructor is private 
-  CaloSelector( const CaloSelector& );
+  CaloSelector
+  ( const CaloSelector& );
   /// assignement operator is private 
-  CaloSelector& operator=( const CaloSelector& );
-
+  CaloSelector& operator=
+  ( const CaloSelector& );
+  
 private:
   
   // type of Likelyhood tool to be used 

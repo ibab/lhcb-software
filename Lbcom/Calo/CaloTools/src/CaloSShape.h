@@ -1,8 +1,11 @@
-// $Id: CaloSShape.h,v 1.1 2002-04-07 18:15:01 ibelyaev Exp $
+// $Id: CaloSShape.h,v 1.2 2002-04-27 19:21:30 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.1  2002/04/07 18:15:01  ibelyaev
+//  preliminary version ('omega'-release)
+//
 // ============================================================================
 #ifndef CALOSSHAPE_H 
 #define CALOSSHAPE_H 1
@@ -30,30 +33,30 @@ class CaloSShape :
   public virtual ICaloHypoTool ,
   public              CaloTool 
 {
+  /// friend factory for instantiation
+  friend ToolFactory<CaloSShape>;
 public:
   
   /// containter of correction tools
-  typedef  std::vector<ICaloCorrection*> Corrections;
+  typedef  std::vector<ICaloCorrection*> Corrections ;
+  /// containter of names
+  typedef  std::vector<std::string>      Names       ; 
   
-public:
-  
-  /** Standard constructor
-   *  @param  type actual type of the tool (what is it?)
-   *  @param  name the name of the instance
-   *  @parent pointer to parent object 
-   */
-  CaloSShape( const std::string& type   , 
-              const std::string& name   ,
-              const IInterface*  parent );
-  
-  /** destructor (virtual) 
-   */
-  virtual ~CaloSShape(); 
-  
-  /** initialization of the tool 
+  /** initialization of the tool
+   *  @see CaloTool
+   *  @see  AlgTool
+   *  @see IAlgTool
    *  @return status code 
    */
-  virtual StatusCode initialize() ;
+  virtual StatusCode initialize () ;
+  
+  /** finalization of the tool
+   *  @see CaloTool
+   *  @see  AlgTool
+   *  @see IAlgTool
+   *  @return status code 
+   */
+  virtual StatusCode finalize   () ;
   
   /** The main processing method
    * 
@@ -68,20 +71,51 @@ public:
    *  - 206 : Wrong index for calorimeter area 
    *  - 207 : Position was not cretaed by "correction" tool!
    * 
+   *  @see ICaloHypoTool
    *  @param  hypo  pointer to CaloHypo object to be processed
    *  @return status code 
    */  
   virtual StatusCode process    ( CaloHypo* hypo  ) const ;
   
   /** The main processing method (functor interface)
+   *  @see ICaloHypoTool
    *  @param  hypo  pointer to CaloHypo object to be processed
    *  @return status code 
    */  
   virtual StatusCode operator() ( CaloHypo* hypo  ) const ;
   
+protected:
+  
+  /** Standard constructor
+   *  @param  type actual type of the tool (what is it?)
+   *  @param  name the name of the instance
+   *  @parent parent pointer to parent object 
+   */
+  CaloSShape
+  ( const std::string& type   , 
+    const std::string& name   ,
+    const IInterface*  parent );
+  
+  /// destructor (virtual and protected) 
+  virtual ~CaloSShape(); 
+  
 private:
   
-  Corrections m_tools;
+  /// default constructor  is private
+  CaloSShape();
+  /// copy constructor     is private 
+  CaloSShape
+  ( const CaloSShape& );
+  /// assignement operator is pprivate 
+  CaloSShape& operator=
+  ( const CaloSShape& );
+  
+private:
+  
+  /// vector of corrections 
+  Names       m_areaCorrectionTypes ;
+  Names       m_areaCorrectionNames ;  
+  Corrections m_areaCorrections     ;
   
 };
 

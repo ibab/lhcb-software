@@ -1,8 +1,11 @@
-// $Id: CaloSShape.cpp_,v 1.1 2002-04-07 18:15:01 ibelyaev Exp $
+// $Id: CaloSShape.cpp,v 1.1 2002-04-27 19:21:30 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
-// $Log: not supported by cvs2svn $ 
+// $Log: not supported by cvs2svn $
+// Revision 1.1  2002/04/07 18:15:01  ibelyaev
+//  preliminary version ('omega'-release)
+// 
 // ============================================================================
 // Include files
 // from Gaudi
@@ -20,7 +23,7 @@
 #include "CaloSShape.h"
 
 // ============================================================================
-/** @file CaloSShape.cpp
+/** @file
  * 
  * Implementation file for class : CaloSShape
  * 
@@ -30,66 +33,99 @@
 // ============================================================================
 
 // ============================================================================
-// Declaration of the Tool Factory
-// ============================================================================
-static const  ToolFactory<CaloSShape>         s_Factory ;
-const        IToolFactory&CaloSShapeFactory = s_Factory ;
-
-// ============================================================================
-/** Standard constructor
- *  @param  type actual type of the tool (?)
- *  @param  name the name of the instance
- *  @parent pointer to parent object 
+/** @var CaloSShapeFactory 
+ *  mandatory declaration of the Tool Factory
  */
 // ============================================================================
-CaloSShape::CaloSShape( const std::string& type   ,
-                        const std::string& name   ,
-                        const IInterface*  parent )
-  : CaloTool ( type, name , parent ) 
-{  
-  declareInterface<ICaloHypoTool>( this );
-};
+static const ToolFactory<CaloSShape>         s_Factory ;
+const       IToolFactory&CaloSShapeFactory = s_Factory ;
 
 // ============================================================================
 /** destructor (virtual) 
  */
 // ============================================================================
-CaloSShape::~CaloSShape(){};
+CaloSShape::~CaloSShape() {};
+// ============================================================================
+
+// ============================================================================
+/** Standard constructor
+ *  @param  type actual type of the tool 
+ *  @param  name the name of the instance
+ *  @param  parent  pointer to parent object 
+ */
+// ============================================================================
+CaloSShape::CaloSShape
+( const std::string& type   ,
+  const std::string& name   ,
+  const IInterface*  parent ) 
+  : CaloTool ( type , name , parent ) 
+  , m_areaCorrectionTypes ()
+  , m_areaCorrectionNames ()
+{
+  declareInterface<ICaloHypoTool>( this ); 
+  declareProperty ( "AreaCorrectionTypes" , m_areaCorrectionTypes );
+  declareProperty ( "AreaCorrectionNames" , m_areaCorrectionNames );
+};
+// ============================================================================
+
 
 // ============================================================================
 /** initialization of the tool 
+ *  @see CaloTool
+ *  @see  AlgTool
+ *  @see IAlgTool
  *  @return status code 
  */
 // ============================================================================
-StatusCode CaloSShape::initialize()
+StatusCode 
+CaloSShape::initialize  ()
 {
   // initialize the base class
   StatusCode sc = CaloTool::initialize();
-  if( sc.isFailure    () ) 
-    { return Error("Could not initialize the base class CaloTool!", sc ); }
-  if( detName().empty () )
-    { return Error("'Detector' is not specified!"                      ); }
-  if( 0 == detSvc     () ) 
-    { return Error(" detSvc() points to NULL!"                         ); }
-  SmartDataPtr<DeCalorimeter>  calo( detSvc() , detName() );
-  if( !calo ) 
-    { return Error( " Detector '" + detName() + "' could not be located!");}
+  //   locate the detector information
+  const DeCalorimeter* calo = get( detSvc() , detName() , calo ) ;
   setDet( calo );
-  ///
-  if( 0 == det()  ) 
-    { return Error( " Detector information is not avaliable "); }
+  /// locate corrections
+  if( m_areaCorrectionTypes.size() != m_areaCorrectionNames.size() )
+    { return Error("mismatch of type/names containers"); }
+  /// locate all area corrections 
+  for( Names::const_iterator Type = m_areaCorrectionTypes.begin() ;
+       m_areaCorrectionTypes.end() != Type  ; ++Type )
+    {
+      Names::const_iterator Name = m_areaCorrectionNames.begin() 
+        + ( Type - m_areaCorrectionTypes.begin() );
+      ICaloCorrection* corr = (*Name).empty() ? 
+        tool( *Type         , corr ) : tool( *Type , *Name , corr ) ;
+      m_areaCorrections.push_back( corr );
+    };
   ///
   return StatusCode::SUCCESS ;
 };
+// ============================================================================
 
 // ============================================================================
-/** The main processing method (functor interface)
- *  @param  hypo  pointer to CaloHypo object to be processed
+/** finalization of the tool
+ *  @see CaloTool
+ *  @see  AlgTool
+ *  @see IAlgTool
  *  @return status code 
- */  
+ */
 // ============================================================================
-StatusCode CaloSShape::operator() ( CaloHypo* hypo  ) const
-{ return process( hypo ); }
+StatusCode 
+CaloSShape::finalize   ()
+{
+  /// release all used tools 
+  for_each( m_areaCorrections.begin () , 
+            m_areaCorrections.end   () , 
+            std::mem_fun(&IInterface::release) );
+  /// clear containers 
+  m_areaCorrectionTypes .clear();
+  m_areaCorrectionNames .clear();
+  m_areaCorrections     .clear();  
+  /// finalize the base class 
+  return CaloTool::finalize () ;
+};
+// ============================================================================
 
 // ============================================================================
 /** The main processing method 
@@ -97,7 +133,18 @@ StatusCode CaloSShape::operator() ( CaloHypo* hypo  ) const
  *  @return status code 
  */  
 // ============================================================================
-StatusCode CaloSShape::process    ( CaloHypo* hypo  ) const 
+StatusCode 
+CaloSShape::process    ( CaloHypo* hypo  ) const { return (*this)( hypo ); }
+// ============================================================================
+
+// ============================================================================
+/** The main processing method (functor interface)
+ *  @param  hypo  pointer to CaloHypo object to be processed
+ *  @return status code 
+ */  
+// ============================================================================
+StatusCode 
+CaloSShape::operator() ( CaloHypo* hypo  ) const 
 {
   // avoid long names 
   using namespace CaloDataFunctor;
@@ -147,19 +194,19 @@ StatusCode CaloSShape::process    ( CaloHypo* hypo  ) const
   const CaloCluster::Position& clusPos = cluster->position();
   // get seed position 
   const HepPoint3D&            seedPos = det()->cellCenter( digit->cellID() ) ;
-  // get the area 
+  // get the area index  
   const unsigned int area = digit->cellID().area() ;
-  if( area >= m_corres.size() ) { return Error("Wrong area index!", 206 );}
+  if( area >= m_areaCorrections.size() ) 
+    { return Error("Wrong area index!", 206 );}
   // dispatch 
-  CaloPosition* cp = (*(m_scurves[area]))( clusPos , seedPos );
-  if( 0 == cm ) { return Error("Position is not corrected!",207);
+  CaloPosition* cp = (*(m_areaCorrections[area]))( clusPos , seedPos );
+  if( 0 == cp ) { return Error("Position is not corrected!" , 207 ); }
+  // update position
   hypo->setPosition( cp );
   //
   return StatusCode::SUCCESS;
 };
-
-  
-
+// ============================================================================
 
 // ============================================================================
 // The End 
