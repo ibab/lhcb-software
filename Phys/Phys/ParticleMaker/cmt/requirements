@@ -1,0 +1,34 @@
+# Created    : 23/08/2004
+# Maintainer : P. Koppenburg
+#
+# Documentation on the requirement file can be found at
+# http://cern.ch/lhcb-comp/Support/html/new_structure.pdf
+
+package           ParticleMaker
+version           v1r0
+
+# Structure, i.e. directories to process. 
+#============================================================================
+branches          cmt doc options src
+
+# Exported header files
+#============================================================================
+include_dirs     $(PARTICLEMAKERROOT)
+
+# Used packages. 
+#============================================================================
+use  DaVinciKernel  v*     Phys
+use  PhysEvent      v*     Event
+use  TrgEvent       v*     Event
+use  CaloUtils      v*     Calo
+use  CaloInterfaces v*     Calo
+
+# Component library building rule
+#============================================================================
+library          ParticleMaker    ../src/*.cpp
+
+# standard patterns
+#============================================================================
+apply_pattern component_library library=ParticleMaker
+	     
+

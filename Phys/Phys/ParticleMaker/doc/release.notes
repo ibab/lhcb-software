@@ -1,0 +1,325 @@
+! $Id: 
+! Package     : ParticleMaker
+! Responsible : P. Koppenburg
+
+! 2004-08-23 - P. Koppenburg
+ - New package ParticleMaker extracted from DaVinciTools,
+   containing ParticleMaker and associated tools, as well as the 
+   PreLoadParticles algorithm.
+   
+!========================== DaVinciTools v10r3 2004-08-23 ===================
+! 2004-08-23 - Florence RANJARD
+ - replace GaudiTools/ with GaudiAlg
+
+!========================== DaVinciTools v9r8 2004-07-16 ===================
+! 2004-07-08 - P. Koppenburg
+  - src/ChargedParticleMaker.*
+  - src/ElectronParticleMaker.*
+  - src/MuonParticleMaker.*
+  - src/NeutralParticleMaker.*
+  - src/RichParticleMaker.*
+    . Removed obsolete particle makers
+
+! 2004-07-08 - P. Koppenburg
+  - src/NoPIDsParticleMaker.*
+    . Added
+         declareProperty ( "UseLongTracks",     m_longTracks );
+         declareProperty ( "UseDownstreamTracks", m_downstreamTracks );
+         declareProperty ( "UseUpstreamTracks",      m_vttTracks );
+      For HLT      
+
+!========================== DaVinciTools v9r6 2004-06-28 ===================
+! 2004-06-18 - P. Koppenburg for Vanya Belyaev
+  - src/ParticleMakerSeq.cpp
+  - src/ParticleMakerSeq.h
+    . new
+Very simple particle maker which just a sequence of concrete particle
+makers. Being invoked this particle maker just execute all "dependent" 
+particle makers. The dependent particle makers can be either private
+or public. The last case can be used for some "standard" particle makers
+or avoid very long configuration lines, like
+
+LongAlgorithmNameForPreselectionalgorithm.PhysDesktop.ParticleMakerSeq.TheFirstPrivateMaker.OutptuLevel = 2 ;
+
+For "public" makers the configuration can be simple:
+ToolSvc.TheFirstPublicMaker.OutputLevel = 2 ;
+
+LongAlgorithmNameForPreselectionalgorithm.PhysDesktop.ParticleMakerSeq.PrivateMakers
+ = { "CombinedParticleMaker/TheFirstPrivateMaker",
+     "PhotonParticleMaker/TheSecondPrivateMaker",
+     "CnvPhotonParticleMaker/TheThirdPrivateMaker" };
+
+LongAlgorithmNameForPreselectionalgorithm.PhysDesktop.ParticleMakerSeq.PublicMakers
+ = { "CombinedParticleMaker/TheFirstPublicMaker",
+     "NoPIDsParticleMaker/PionMaker" , 
+     "NoPIDsPArticleMaker/MuonMaker" };
+
+The MAIN advantage of this particle maker:
+  - one can remove *SOME* of artificial preload algorithms (both
+    "PreLoadParticles" and "LoKiPreLoad"
+  - few intermediate (long) names for addresses in TES are also not used
+    in this approach.
+
+I guess that in sumamry one can get *SOME* simplification fo job-options
+file. (probably not for all cases) 
+    
+!========================= DaVinciTools v9r4 2004-05-05 ===================
+! 2004-05-03 - P. Koppenburg for Gerhard Raven
+ - */V0MakerAlg.*
+ - src/ElectronParticleMaker_bbincl.*
+   . Obsolete -> removed 
+
+!========================== DaVinciTools v9r3 2004-04-27 ==================
+! 2004-04-22 - Vanya BELYAEV
+ - src/PhotonFromMergedParticleMaker.cpp
+ - src/PhotonFromMergedParticleMaker.h
+	     fix a problem with inproper release of PhotonParam tool 
+ - src/NoPIDsParticleMaker.cpp
+ - src/NoPIDsParticleMaker.h
+       remove unnesessary location fo services and their release 
+
+! 2004-04-21 - Vanya Belyaev
+  - src/PhotonParticleMaker.h,(.cpp)
+    updated version of PhotonParticleMaker from Frederic Machefert 
+    which make use of his new "PhotonID" tool (the combined likelihood
+    for single gammas). For default configuration the "CL" for
+    photons is a result of this estimator, other estimators are not used 
+    in evaluation of CL, but available for analysis.
+     (for future: one need to think how to include other 
+      information into CL and to provide CL normalization, 
+      "similar to charged") 
+
+!========================== DaVinciTools v9r0 2004-03-11 ==================
+! 2004-02-11 - P. Koppenburg for Hugo Ruiz
+ - src/CombinedParticleMaker.*
+   . upstream -> downstream
+ - src/PhotonParticleMaker.cpp
+   . New calo tools 
+ - src/NeutralParticleMaker.cpp
+   . little backward compatible change preventing compilation against
+     LHCb v15r0 ( CaloCellID() != operator does not exist )
+
+!========================== DaVinciTools v9r2 2004-03-31 ==================
+! 2004-03-31 - P. Koppenburg for Sandra Amato and Angelo Carbone
+ - src/ParticleStuffer.*
+   . Go back to previous version. Found bugs in the new Sutuffer.
+
+! 2004-03-25 - P. Koppenburg for Sandra Amato
+ - src/ParticleStuffer.*
+   . If the daughters of the particle to be stuffed is a resonance, do not 
+     transport it's parameters
+   . Calculated the momentum position correlation matrix.
+
+!========================== DaVinciTools v8r4 2004-01-29 ==================
+! 2004-01-14 - Gloria CORTI
+ - ElectronParticleMaker.cpp, ElectronParticleMaker_bbincl.cpp
+       LinearTransporter.cpp, NoPIDsParticleMaker.cpp, 
+       ParabolicTransporter.cpp, ParticleFilter.cpp, TrTransporter.cpp
+   . little fixes to remove warning messages (implicit typename, 
+     passing double instead of int)
+   . little fixes to remove warning messages (passing double instead of
+     int in HepMatrices)       
+
+!========================== DaVinciTools v8r2 2003-08-05 ==================
+! 2003-08-05  - Gloria CORTI
+ - DaVinciTools/DVAlgorithm.h
+   src/V0MakerAlg.cpp
+   . make ParticleStuffer a private tool in order to set its property
+     < Transporter > without affecting other algorithms
+ - src/CombinedParticleMaker.h & cpp
+   . introduce new properties to select the type of tracks to be kept
+     for analysis: < UseLongTracks > , < UseUpstreamTracks > ,
+     < UseVTTTracks > ( each one can be switched on/off independenly )
+
+! 2003-07-23 - Gloria CORTI
+ - src/ChargedParticleMaker.cpp 
+       ElectronParticleMaker.cpp
+       MuonParticleMaker.cpp, 
+       NeutralParticleMaker.cpp
+       PhysDesktop.cpp
+   . remove initialization of iterator = 0 to please gcc32
+ - src/ElectronParticleMaker_bbincl.cpp
+       RichParticleMaker.cpp       
+   . remove initialization of iterator = 0 to please gcc32
+   . set last argument of Hep(Sym)Matrix constructor as int (gcc32 warning)
+
+!========================== DaVinciTools v8r1p1 2003-06-18 ==================
+! 2003-06-18 - Gloria CORTI
+ - src/ChargedParticleMaker.cpp
+   . replace name of MsgStream log with msg and set all message in
+     makeParticles() in DEBUG mode
+
+!========================== DaVinciTools v8r1 2003-06-03 ====================
+! 2003-06-03 - Gloria CORTI
+ - src/CombinedParticleMaker.cpp
+   . set default values for properies as agreed with Roger Forty
+   . delete PMakerSelections in finalize
+
+! 2003-06-02 - Gloria CORTI
+ - src/CombinedParticleMaker.cpp
+   . introduce additional protections in initialize for checking
+     pion condition when pions are not requested
+   . put printing of conditions at end of initialize
+   . fix mistyping bugs
+ - src/PMakerSelection.cpp
+   . introduce method for meanigful printing of enum
+
+! 2003-05-30 - Gloria Corti
+ - src/CombinedParticleMaker.h, CombinedParticleMaker.cpp
+   . new tool to allow making charged particles from ProtoParticles 
+     choosing based on combination of delta log likelihood values 
+     from various detectors techniques for a particular hypothesis
+ - src/PMakerSelection.h 
+   . new class to hold conditions for selection for a particleID 
+     hypothesis.  
+- src/DaVinciTools_load.cpp
+   . add new tool CombinedParticleMaker
+!========================== DaVinciTools v8r0 2003-05-01 ====================
+! 2003-05-01 - Gloria Corti
+ - src/ElectronParticleMaker_bbincl.cpp
+   . remove std from std::log becuase for making it compile on windows
+
+! 2003-04-30 - Gloria Corti
+ - src/NoPIDsParticleMaker.h, NoPIDsParticleMaker.cpp
+   . new tool that allows to assign an arbitrary particle ID when making
+     a charged Particle (Ivan Belyaev)
+ - src/ElectronParticleMaker_bbincl.h, ElectronParticleMaker_bbincl.cpp
+   . new electron particle maker for generic bb filtering
+
+! 2003-04-25 - Gloria Corti
+ - Add code for merged pi0 from Olivier Deschamps
+   . New PhotonFromMergedParticleMaker.h/cpp to be used when
+     making merged pi0 ( see MergedPi0Alg in Bd2PiPiPi0 )
+   . New PhotonFromMergedParamaters.h/cpp and Interface is necessary
+     because the fact that there are 2 CaloHypothesis 
+     ("PhotonFromMergedPi0) for each ProtoParticle does not allow
+     to use the existing PhotonParamaters tool for split photons.
+ - Increase version number to v8r0
+ - src/PhotonParticleMaker.cpp set default value for "UseAllPhotons"
+   property to "true" to have backwards compatible behaviour of the 
+   tool
+
+! 2003-04-08 - Vanya BELYAEV
+ - src/PhotonParticleMaker.h,.cpp   
+      The Particle maker is updated to be able to produce 
+      separately converted and non-converted photons
+      If "UseAllPhotons"  (bbolean)property is activated
+      the tool produces *all* (both converted and non-converted 
+      photons). Otherwise only non-converted photons are produces.
+      The default value of this options is "false". 
+ - src/CnvPhotonParticleMaker.h,.cpp   
+      new particle maker for converted photons (indeed it is just a   
+      special consfiguration of PhotonParticleMaker).
+      It always produces only converted photons, and this behaviour
+      cannot be redefined through job-options.
+ - src/DaVinciTools_load.cpp      
+      Declare CnvPhotonParticleMaker factory.  
+
+!========================== DaVinciTools v7r3 2003-02-13 ====================
+! 2003-02-12 - Gloria Corti
+ - Fix compilation problems for windows
+   . missing std in front of auto_ptr (V0MakerAlg.cpp)
+   . remove std in front of endreq (PhotonParticleMaker.cpp)
+   . change ( a != b ) into !(a == b) for ParticleID class for which
+     != does not exist (PhotonParameters.cpp)
+
+! 2003-01-22 - Ivan BELYAEV
+ - DaVinciTools/IPhotonParams.h   new abstract interface for the 
+                                  (re)evaluation of photons parameters 
+                                  at photon production vertex 
+ - src/PhotonParameters.h,.cpp    concrete implementation of IPhotonParams
+                                  abstract interface 
+ - src/PhotonParticleMaker.h,.cpp new particle maker for photons.
+                                  Only "normal" 1-cluster photons are considered.
+                                  Split photons from merged pi0s are ignored 
+                                  in this version
+ - src/DaVinciTools_load.h        add the factories for new tools
+
+ - src/NeutralParticleMaker.cpp   put the guards against Merged pi0s 
+
+!=========================== DaVinciTools v7r1 2002-12-20 ===================
+! 2002-12-20 - Gloria Corti
+ - Modified ParticleStuffer (S.Amato) to add transporting of daughter 
+   particles to vertex before combining their momentum parameters to
+   obtain that of mother particle.
+
+!=========================== DaVinciTools v7r0 2002-11-13 ===================
+! 2002-11-11 - Gloria Corti
+ - In ParticleStuffer Remove comment for setIsResonace based on lifetime
+   since link to intermediate particles has been fixed in UnconstVertexFitter.
+
+!=========================== DaVinciTools v6r0 2002-10-30 ===================
+! 2002-10-29 - Gloria Corti
+ - Comment temporarly the use of setIsResonance(true) in ParticleStuffer
+   and LagrangeMassVertexFitter because of consequent missing step of
+   intermediate particle when creating a new vertex in vertex fitters when
+   daughters of resonaces are used.
+
+! 2002-10-28 - Gloria Corti
+ - Modify misleading comment in initialize of NeutralParticleMaker 
+   (F.Machefert)
+
+! 2002-10-22 - Gloria Corti
+ - Bug fix reported by M.Musy in ElectronParticleMaker that was setting
+   particleID swapped for e+/e- (H.Terrier)
+
+! 2002-10-21 - Gloria Corti
+ - Changes in ElectronParticleMaker to compile on windows: remove std:: in
+   front of log( logarithm function ) and rename local variable for
+   MessageSvc from log to logbk
+ - NeutralParticleMaker modified to set error matrices for poin, momentum
+   and correlation. Introduce ConfLevel = 0.0 for all neutral clusters,
+   ConfLevel = 0.5 for coverted gammas, ConfLevel = 1.0 for non coverted
+   gammas (F.Machefert)
+ - Use CaloUtils v4r* and CaloInterfaces v2r* for changes in 
+	 NeutralParticleMaker 
+ - Introduce option "AllCompatible" in ChargedParticleMaker.cpp where
+   all type of Particles are made starting from a ProtoParticle when
+   the particleID Confidence Level is above specified value (i.e. if
+   both pi and K id are above the threshold for a ProtoParticle both
+   Particles are made. (J.H.Lopes)
+
+! 2002-10-15 - Gloria Corti
+ - Modify ParticleStuffer to by default setResonance in a new particle
+   when lifetime < e-15 sec (S.Amato)
+ - Add options for PreLoadParticles algorithm
+ - Add RichParticleMaker
+
+! 2002-09-11 - Gloria Corti
+ - New tool NeutralParticleMaker from Frederic Machefert
+ - Modification in GeomDispCalculator and ParticleStuffer to take into
+   account different dimension in error correlation matrix in Particle
+ - Changes in PhysDesktop to fix bug noted by Sandra of copying initial
+   particle when daughters of a new particle.
+ - Use PhysEvent v7r0 and increase version number
+
+! 2002-09-04 - Gloria Corti
+ - Some clean up of message levels in MuonParticleMaker, and set CL default
+   value = 0.0
+
+! 2002-07-27 - Gloria Corti
+ - Always return success in ChargeParticleMaker even if ProtoParticles
+   not found
+ - New MuonParticleMaker to make particles as muon based on only Muon
+   Detector particleID result ( J.H.Lopes )
+
+! 2002-07-18 - Gloria Corti
+ - Remove obsolete AxParticleMaker (Zebra DST)
+ - Introduce ChargedParticleMaker (OO-DST) that make the choice based
+   on combined PID
+
+! >>>>>>>>>>>>>>>>>>>>>>>>>> DaVinciTools v4r0 <<<<<<<<<<<<<<<<<<<<<<<<<
+! 2002-05-10 - Gloria Corti
+  - New tool category of tool IParticleMaker to which PhysDesktop 
+    delegates creations of Particles from different type of objects:
+    one implementation AxParticleMaker making Particles from
+    AxPartCandidates (Helder Lopes)
+
+! ======================================================================
+! 20020402 - DaVinciTools v3r0 (G.Corti)
+    - DaVinciTools/IParticleStuffer.h (interface)
+      src/ParticleStuffer.h&cpp 
+          Tool to fill contents of a Particle class starting from info 
+          provided by its end (decay) vertex
+      author: Paul Colrain
+
