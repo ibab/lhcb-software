@@ -1,4 +1,4 @@
-# $Id: README,v 1.34 2004-12-08 18:09:14 marcocle Exp $
+# $Id: README,v 1.35 2004-12-08 18:33:51 marcocle Exp $
 
 Three examples are distributed in this package: a test of condition data 
 stored in flat XML files, a test of condition data stored in the CondDB,
@@ -90,6 +90,13 @@ cd ~/cmtuser
 # Go to the cmt directory
 cd Ex/DetCondExample/v5r0/cmt
 
+# Setup Oracle or MySQL specific environment
+# -- for Oracle
+source /afs/cern.ch/project/oracle/script/setoraenv.csh -s 10102gcc323
+source $ORACLE_CERN/script/cdevdb9
+# -- for MySQL (with [t]csh)
+set path = ($path /afs/cern.ch/sw/lcg/external/mysql/4.0.13/$CMTCONFIG/bin)
+
 # Setup the environment
 # This will setup Gaudi and also execute some implementation-dependent actions
 source ../cmt/setup.csh -tag=$CMTDEB
@@ -129,6 +136,7 @@ cmt broadcast -select=mycmt '/bin/rm -f *make*'
 # Compile and link
 # This compiles and links both implementations (Oracle and MySQL)
 cmt broadcast -select=mycmt gmake tag=$CMTDEB
+
 
 ------------------------------------------------------------------------------
 How to run DetCondExample on lxplus/lxplus7 (without debugger)
