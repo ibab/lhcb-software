@@ -5,7 +5,7 @@
  *  Implementation file for RICH Digitisation Quality Control algorithm : RichDigitQC
  *
  *  CVS Log :-
- *  $Id: RichDigitQC.cpp,v 1.10 2005-02-20 18:37:54 jonrob Exp $
+ *  $Id: RichDigitQC.cpp,v 1.11 2005-02-20 20:31:36 jonrob Exp $
  *
  *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
  *  @date   2003-09-08
@@ -107,18 +107,19 @@ StatusCode RichDigitQC::execute()
   {
     //if ( exist<MCRichHits>( (*iC).first ) )
     //{
-      MCRichHits * hits = get<MCRichHits>( (*iC).first );
-      for ( MCRichHits::const_iterator iH = hits->begin(); iH != hits->end(); ++iH )
-      {
-        ++(m_totalSpills[(*iH)->rich()])[(*iC).first];
-      }
-      //}
+    MCRichHits * hits = get<MCRichHits>( (*iC).first );
+    for ( MCRichHits::const_iterator iH = hits->begin(); iH != hits->end(); ++iH )
+    {
+      ++(m_totalSpills[(*iH)->rich()])[(*iC).first];
+    }
+    //}
   }
 
   // count events
   ++m_evtC;
 
   // Various tallies and plots
+  //------------------------------------------------------------------------------
   std::vector< unsigned int > totDet(Rich::NRiches,0);
   L1Counter totL1R1, totL1R2;
   {for ( HPDCounter::const_iterator iHPD = nHPD[Rich::Rich1].begin();
@@ -141,17 +142,21 @@ StatusCode RichDigitQC::execute()
   }}
 
   plot1D( totDet[Rich::Rich1], "RICH1 : Detector occupancy", 0, 5000, 50 );
-  for ( SpillCount::iterator iC = spills[Rich::Rich1].begin(); iC != spills[Rich::Rich1].end(); ++iC )
-  {
-    plot1D( iC->second,  "RICH1 : # Spillover hits "+iC->first,  0, 5000, 50 );
-  }
-  plot1D( backs[Rich::Rich1], "RICH1 : # Background hits", 0, 5000, 50 );
   plot1D( totDet[Rich::Rich2], "RICH2 : Detector occupancy", 0, 2000, 50 );
-  for ( SpillCount::iterator iC = spills[Rich::Rich2].begin(); iC != spills[Rich::Rich2].end(); ++iC )
+  if ( m_extraHists )
   {
-    plot1D( iC->second,  "RICH2 : # Spillover hits "+iC->first,  0, 2000, 50 );
+    plot1D( backs[Rich::Rich1], "RICH1 : # Background hits", 0, 5000, 50 );
+    plot1D( backs[Rich::Rich2], "RICH2 : # Background hits", 0, 2000, 50 );
+    for ( SpillCount::iterator iC = spills[Rich::Rich1].begin(); iC != spills[Rich::Rich1].end(); ++iC )
+    {
+      plot1D( iC->second,  "RICH1 : # Spillover hits "+iC->first,  0, 5000, 50 );
+    }
+
+    for ( SpillCount::iterator iC = spills[Rich::Rich2].begin(); iC != spills[Rich::Rich2].end(); ++iC )
+    {
+      plot1D( iC->second,  "RICH2 : # Spillover hits "+iC->first,  0, 2000, 50 );
+    }
   }
-  plot1D( backs[Rich::Rich2], "RICH2 : # Background hits", 0, 2000, 50 );
 
   {for ( L1Counter::const_iterator iL1 = totL1R1.begin(); iL1 != totL1R1.end(); ++iL1 ) {
     std::string l1String =  boost::lexical_cast<std::string>((*iL1).first);
@@ -170,6 +175,8 @@ StatusCode RichDigitQC::execute()
     }
   }}
 
+  // Event printout
+  //------------------------------------------------------------------------------
   if ( msgLevel(MSG::DEBUG) )
   {
     debug() << "RICH1 : Total # digits = " << totDet[Rich::Rich1] << endreq;
@@ -196,7 +203,7 @@ StatusCode RichDigitQC::finalize()
 {
 
   // Statistical calculators
-  RichStatDivFunctor occ;
+  RichStatDivFunctor occ("%8.2f +-%5.2f");
   RichPoissonEffFunctor eff("%5.2f +-%5.2f");
 
   info() << "=============================================================================================" << endreq
@@ -240,7 +247,7 @@ StatusCode RichDigitQC::finalize()
     {
       std::string loc = iC->first;
       loc.resize(28,' ');
-      info() << "       :   " << loc << " " << eff(iC->second,totDet[Rich::Rich1]) << " % of total, " 
+      info() << "       :   " << loc << " " << eff(iC->second,totDet[Rich::Rich1]) << " % of total, "
              << eff(iC->second,(m_totalSpills[Rich::Rich1])[iC->first]) << " % event eff." << endreq;
     }
     info() << "       : % background hits              "
@@ -256,7 +263,7 @@ StatusCode RichDigitQC::finalize()
   }
 
   info() << "---------------------------------------------------------------------------------------------" << endreq;
- 
+
   // RICH2 ----------------------------------------------------------------------------------
   {
     debug() << " RICH2 : Individual HPD info :-" << endreq;
@@ -290,7 +297,7 @@ StatusCode RichDigitQC::finalize()
     {
       std::string loc = iC->first;
       loc.resize(28,' ');
-      info() << "       :   " << loc << " " << eff(iC->second,totDet[Rich::Rich2]) << " % of total, " 
+      info() << "       :   " << loc << " " << eff(iC->second,totDet[Rich::Rich2]) << " % of total, "
              << eff(iC->second,(m_totalSpills[Rich::Rich2])[iC->first]) << " % event eff." << endreq;
     }
     info() << "       : % background hits              "
