@@ -21,7 +21,7 @@ MuonPhysicalChannelOutput::MuonPhysicalChannelOutput
 
 void MuonPhysicalChannelOutput::calculateTileID( int& numberTileOutput, 
                                                  MuonTileID phChTileID[2],
-MuonGeometryStore::Parameters *usefullPointer){  
+IMuonGetInfoTool *usefullPointer){  
   
   unsigned int station=phChID()->getStation();
   unsigned int region=phChID()->getRegion();

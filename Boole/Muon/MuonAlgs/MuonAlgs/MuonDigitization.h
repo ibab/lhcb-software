@@ -24,9 +24,9 @@
 #include "DetDesc/SolidBox.h"  
 #include "DetDesc/IReadOut.h"   
 #include "MuonTools/IMuonTileXYZTool.h"
+#include "MuonTools/IMuonGetInfoTool.h"
 #include "MuonAlgs/MuonPhyChannelInput.h"
 #include "MuonAlgs/MuonPhPreInput.h"
-#include "MuonUtils/MuonGeometryStore.h"
 #include "MuonAlgs/MuonDigitizationData.h"
 #include "MuonAlgs/MuonPhysicalChannel.h"
 #include "MuonKernel/MuonTile.h"
@@ -109,13 +109,15 @@ private:
   static std::string spill[5];
   static std::string numreg[4];
   static std::string numsta[5];
-  static std::string TESPathOfHitsContainer[4];
-  const static int OriginOfHitsContainer[4];
+  static std::string TESPathOfHitsContainer[5];
+  const static int OriginOfHitsContainer[5];
   
   Rndm::Numbers m_flatDist;
   
   //// move them to monitoring
   IMuonTileXYZTool* m_pMuonTileXYZ ;
+  IMuonGetInfoTool* m_pGetInfo ;
+
   IHistogram1D* m_histoTiming14 ;     
   IHistogram1D* m_histoTiming15 ;     
   IHistogram1D* m_histoTiming18 ;     

@@ -23,11 +23,10 @@
 #include "DetDesc/SolidBox.h"  
 #include "DetDesc/IReadOut.h"
 #include "MuonTools/IMuonTileXYZTool.h"
+#include "MuonTools/IMuonGetInfoTool.h"
 #include "MuonAlgs/MuonPhyChannelInput.h"
 #include "MuonAlgs/MuonPhPreInput.h"
-#include "MuonUtils/MuonGeometryStore.h"
-#include "MuonAlgs/MuonDigitizationData.h"
- 
+#include "MuonAlgs/MuonDigitizationData.h" 
 #include "MuonKernel/MuonTile.h"
 #include "Event/MCMuonHit.h"   
 #include "Event/MCMuonDigit.h"   
@@ -39,7 +38,7 @@
 #include "MuonDet/MuonParameters.h"
 #include "MuonDet/DeMuonGasGap.h"
 #include "MuonDet/MuonReadoutCond.h"  
-
+#include "MuonDet/MuonBasicGeometry.h"
 
 #include "Event/MuonOriginFlag.h"
 #include "MuonAlgs/MuonPhysicalChannelResponse.h" 
@@ -53,21 +52,23 @@ public:
 MuonDetectorResponse(){};
  void initialize(IToolSvc* toolSvc,IRndmGenSvc * randSvc,
                       IDataProviderSvc* detSvc, IMessageSvc * msgSvc);
-~MuonDetectorResponse();
-MuonPhysicalChannelResponse* getResponse(MuonPhChID& phChID);
-MuonPhysicalChannelResponse* getResponse(int partition,int readout);
-MuonChamberResponse* getChamberResponse(int partition);
+  ~MuonDetectorResponse();
+  MuonPhysicalChannelResponse* getResponse(MuonPhChID& phChID);
+  MuonPhysicalChannelResponse* getResponse(int partition,int readout);
+  MuonChamberResponse* getChamberResponse(int partition);
 private:	
- Rndm::Numbers m_gaussDist;
- Rndm::Numbers m_flatDist;
- std::vector<Rndm::Numbers*> m_poissonDist;
- std::vector<Rndm::Numbers*> m_electronicNoise;
- std::vector<Rndm::Numbers*> m_timeJitter;
-  MuonGeometryStore::Parameters* usefullPointer;
+  Rndm::Numbers m_gaussDist;
+  Rndm::Numbers m_flatDist;
+  std::vector<Rndm::Numbers*> m_poissonDist;
+  std::vector<Rndm::Numbers*> m_electronicNoise;
+  std::vector<Rndm::Numbers*> m_timeJitter;
   
-//(toolSvc, detSvc,msgSvc);
-MuonPhysicalChannelResponse* responseVector[2][20];
-MuonChamberResponse* responseChamber[20];
+  IMuonGetInfoTool* m_pGetInfo ;
+  IToolSvc* m_toolSvc;
+  
+  //(toolSvc, detSvc,msgSvc);
+  MuonPhysicalChannelResponse* responseVector[2][20];
+  MuonChamberResponse* responseChamber[20];
   int m_stationNumber;
   int m_regionNumber;
   int m_partition;  

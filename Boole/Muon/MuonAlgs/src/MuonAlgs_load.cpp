@@ -18,7 +18,7 @@
 
 DECLARE_FACTORY_ENTRIES(MuonAlgs) {
  DECLARE_ALGORITHM(MuonDigitization)     
-  DECLARE_ALGORITHM(MuonTest)
+//  DECLARE_ALGORITHM(MuonTest)
 //  DECLARE_ALGORITHM(AccessGeoAlgorithm)  
 //  DECLARE_ALGORITHM(AccessMuonGeo) 
 

@@ -22,11 +22,13 @@ std::string MuonDigitization::numreg[4] =
 {"1","2","3","4"};
 std::string MuonDigitization::numsta[5]= 
 {"1","2","3","4","5"};
- std::string MuonDigitization::TESPathOfHitsContainer[4]=
-{"Hits","ChamberNoiseHits","FlatSpilloverHits","BackgroundHits"};
-const int MuonDigitization::OriginOfHitsContainer[4]=
+ std::string MuonDigitization::TESPathOfHitsContainer[5]=
+{"Hits","ChamberNoiseHits","FlatSpilloverHits",
+"BackgroundHits", "LHCBackground"};
+const int MuonDigitization::OriginOfHitsContainer[5]=
 {MuonOriginFlag::GEANT,MuonOriginFlag::CHAMBERNOISE,
- MuonOriginFlag::FLATSPILLOVER,MuonOriginFlag::BACKGROUND};
+ MuonOriginFlag::FLATSPILLOVER,MuonOriginFlag::BACKGROUND, 
+MuonOriginFlag::LHCBACKGROUND};
 
 MuonDigitization::MuonDigitization(const std::string& name,
                                    ISvcLocator* pSvcLocator)
@@ -96,9 +98,14 @@ StatusCode MuonDigitization::initialize()
   }
   m_partition=basegeometry.getPartitions();    
 
-  MuonGeometryStore::Parameters usefull( toolSvc(), 
-                                                  detSvc(), msgSvc());
-  log<<MSG::DEBUG<<usefull.getChamberPerRegion(0)<<endreq;
+
+  sc=toolSvc()->retrieveTool("MuonGetInfoTool",m_pGetInfo);
+  if(sc.isFailure())return StatusCode::FAILURE;
+  
+
+  //  MuonGeometryStore::Parameters usefull( toolSvc(), 
+  //                                                detSvc(), msgSvc());
+  log<<MSG::DEBUG<<m_pGetInfo->getChamberPerRegion(0)<<endreq;
   m_flatDist.initialize( randSvc(), Rndm::Flat(0.0,1.0));	 
   detectorResponse.initialize( toolSvc(),randSvc(), detSvc(), msgSvc());
   return StatusCode::SUCCESS;
@@ -241,14 +248,14 @@ StatusCode MuonDigitization::finalize()
 {
   // Release the tools
   if( m_pMuonTileXYZ ) toolSvc()->releaseTool( m_pMuonTileXYZ );
-
+  if( m_pGetInfo ) toolSvc()->releaseTool( m_pGetInfo );
+ 
   return StatusCode::SUCCESS;
 }
 
 StatusCode
 MuonDigitization::addChamberNoise(){
- MuonGeometryStore::Parameters usefull( toolSvc(), 
-                                                  detSvc(), msgSvc());
+
 	MsgStream log(msgSvc(), name()); 
   int container=1;
 	for (int ispill=0;ispill<m_numberOfEventsNeed;ispill++){
@@ -261,8 +268,8 @@ MuonDigitization::addChamberNoise(){
         std::string path="/Event"+spill[ispill]+"/MC/Muon/"+numsta[k]+
           "/R"+numreg[s]+"/"+TESPathOfHitsContainer[container];
         int partitionNumber=k*m_regionNumber+s;
-        int chamberInRegion=usefull.getChamberPerRegion(partitionNumber);
-        int gapPerChamber=usefull.getGapPerRegion(partitionNumber);
+        int chamberInRegion=m_pGetInfo->getChamberPerRegion(partitionNumber);
+        int gapPerChamber=m_pGetInfo->getGapPerRegion(partitionNumber);
         for (int chamber=0;chamber<chamberInRegion;chamber++){			   
           int numberOfNoiseHit=(detectorResponse.getChamberResponse
                                 (partitionNumber))->extractNoise();
@@ -270,43 +277,43 @@ MuonDigitization::addChamberNoise(){
           // the readout number is essentially meaningless... 
           //it is chamber noise.....					 
           int readout=0;
-          double startPosZ=usefull.getStartPositionFirstGapZ
+          double startPosZ=m_pGetInfo->getStartPositionFirstGapZ
             (chamber+ chamberTillNow);
           for (int hit=1;hit<=numberOfNoiseHit;hit++){
             //define position of hit 
             //first gap number
             int gap=(int)((m_flatDist()*gapPerChamber)); 
             if(gap>3)gap=3;
-            int frontEnd=(int)(gap/usefull.getGapPerFE(partitionNumber));
-            int gapFE=usefull.getGapPerFE(partitionNumber);
-            double middlePosZ=startPosZ+(usefull.getStopGapZ
+            int frontEnd=(int)(gap/m_pGetInfo->getGapPerFE(partitionNumber));
+            int gapFE=m_pGetInfo->getGapPerFE(partitionNumber);
+            double middlePosZ=startPosZ+(m_pGetInfo->getStopGapZ
                                          ((frontEnd+1)*gapFE-1 ,
                                           partitionNumber)-
-                                         usefull.getStartGapZ
+                                         m_pGetInfo->getStartGapZ
                                          (frontEnd*gapFE ,
                                           partitionNumber))/2+
-              usefull.getStartGapZ(frontEnd*gapFE ,partitionNumber);
+              m_pGetInfo->getStartGapZ(frontEnd*gapFE ,partitionNumber);
             //then x&y	
-            float x= m_flatDist()* usefull.
+            float x= m_flatDist()* m_pGetInfo->
               getPhChannelSizeX(readout,partitionNumber)*
-              usefull.getPhChannelNX(readout,partitionNumber)+
-              usefull. getStartChamberPositionX(chamber+chamberTillNow);
+              m_pGetInfo->getPhChannelNX(readout,partitionNumber)+
+              m_pGetInfo-> getStartChamberPositionX(chamber+chamberTillNow);
             float y= m_flatDist()* 
-              usefull.getPhChannelSizeY(readout,partitionNumber)*
-              usefull.getPhChannelNY(readout,partitionNumber)+
-              usefull. getStartChamberPositionY(chamber+chamberTillNow);
+              m_pGetInfo->getPhChannelSizeY(readout,partitionNumber)*
+              m_pGetInfo->getPhChannelNY(readout,partitionNumber)+
+              m_pGetInfo-> getStartChamberPositionY(chamber+chamberTillNow);
             float time=		m_flatDist()*m_BXTime;	
             MCMuonHit* pHit = new MCMuonHit();
             pHit->setEntry(HepPoint3D(
-                                      x,y,usefull.
+                                      x,y,m_pGetInfo->
                                       getStartPositionFirstGapZ
                                       (chamber+chamberTillNow)+
-                                      usefull.getStartGapZ
+                                      m_pGetInfo->getStartGapZ
                                       (gap,partitionNumber)));
-            pHit->setExit(HepPoint3D(x,y,usefull.
+            pHit->setExit(HepPoint3D(x,y,m_pGetInfo->
                                      getStartPositionFirstGapZ
                                      (chamber+chamberTillNow)+
-                                     usefull.
+                                     m_pGetInfo->
                                      getStopGapZ(gap,partitionNumber)));
             double tofOfLight=(sqrt(x*x+ y*y+(middlePosZ)*
                                     (middlePosZ)))/300.0;
@@ -343,18 +350,15 @@ MuonDigitization::createInput(
                               PhyChaInput)
 {
   MsgStream log(msgSvc(), name()); 
- MuonGeometryStore::Parameters usefull( toolSvc(), 
-                                                  detSvc(), msgSvc());
-  
   unsigned int chamberTillNow=0;		
   //loop over the containers
   for(int iterRegion=0;iterRegion<m_partition;iterRegion++){    
     std::vector<MuonPhPreInput> keepTemporary ;		 
     int station=iterRegion/m_regionNumber+1;
     int region=iterRegion%m_regionNumber+1;	 
-    int readoutNumber=usefull.getReadoutNumber(iterRegion);		 
+    int readoutNumber=m_pGetInfo->getReadoutNumber(iterRegion);		 
     for (int ispill=0; ispill<m_numberOfEventsNeed;ispill++){
-      for(int container=0; container<4;container++){				
+      for(int container=0; container<5;container++){				
         std::string path="/Event"+spill[ispill]+"/MC/Muon/"+
           numsta[station-1]+"/R"+numreg[region-1]+"/"+
           TESPathOfHitsContainer[container];
@@ -380,27 +384,29 @@ MuonDigitization::createInput(
                 parallelFlag=true ; 
               }
               for(int ireadout=0;ireadout<=readoutNumber;ireadout++){
-                float phChSizeX= usefull.getPhChannelSizeX( ireadout, 
+                float phChSizeX= m_pGetInfo->getPhChannelSizeX( ireadout, 
                                                             iterRegion);
-                float phChSizeY= usefull.getPhChannelSizeY( ireadout, 
+                float phChSizeY= m_pGetInfo->getPhChannelSizeY( ireadout, 
                                                             iterRegion);
-                unsigned int readoutType=  usefull.getReadoutType(ireadout, 
-                                                                  iterRegion);
+                unsigned int readoutType=  m_pGetInfo->
+                  getReadoutType(ireadout,iterRegion);
                 // how many p.c. are crossed by the hit???
                 
                 int chamber= (int)chamberTillNow + (*iter)->chamberID()-1 ;
                 int gap=(*iter)->gapID()-1 ;
                 
-                int frontEnd = gap/usefull.getGapPerFE(iterRegion);
-                int gapFE=usefull.getGapPerFE(iterRegion);
+                int frontEnd = gap/m_pGetInfo->getGapPerFE(iterRegion);
+                int gapFE=m_pGetInfo->getGapPerFE(iterRegion);
                 
-                double startPosX=usefull.getStartChamberPositionX(chamber) ;
-                double startPosY= usefull.getStartChamberPositionY(chamber)	;	
-                double middlePosZ=usefull.
+                double startPosX=m_pGetInfo->
+                  getStartChamberPositionX(chamber) ;
+                double startPosY= m_pGetInfo->
+                  getStartChamberPositionY(chamber)	;	
+                double middlePosZ=m_pGetInfo->
                   getStartPositionFirstGapZ(chamber)+
-                  (usefull.getStopGapZ((frontEnd+1)*gapFE-1 ,iterRegion)-
-                 usefull.getStartGapZ(frontEnd*gapFE ,iterRegion))/2
-                  +usefull.getStartGapZ(frontEnd*gapFE ,iterRegion);
+                  (m_pGetInfo->getStopGapZ((frontEnd+1)*gapFE-1 ,iterRegion)-
+                 m_pGetInfo->getStartGapZ(frontEnd*gapFE ,iterRegion))/2
+                  +m_pGetInfo->getStartGapZ(frontEnd*gapFE ,iterRegion);
                 unsigned int nxChaEntry ;
                 unsigned int nxChaExit  ;
                 int tmpNxChaEntry=(int) (((*iter)->entry().x()-
@@ -425,9 +431,9 @@ MuonDigitization::createInput(
                 
                 if(tmpNxChaEntry<=tmpNxChaExit){
                   if( tmpNxChaEntry<0)tmpNxChaEntry=0;
-                  if( tmpNxChaExit>=(int)usefull.getPhChannelNX(ireadout, 
+                  if( tmpNxChaExit>=(int)m_pGetInfo->getPhChannelNX(ireadout, 
                                                                 iterRegion))
-                    tmpNxChaExit=(int)usefull.getPhChannelNX(ireadout, 
+                    tmpNxChaExit=(int)m_pGetInfo->getPhChannelNX(ireadout, 
                                                              iterRegion)-1 ;	
 									xstart=	(*iter)->entry().x()			;
 									xstop=	(*iter)->exit().x()			;			
@@ -439,16 +445,17 @@ MuonDigitization::createInput(
                 else{
                   // inverse order					
                   if( tmpNxChaExit<0)tmpNxChaExit=0;
-                  if( tmpNxChaEntry>=(int)usefull.getPhChannelNX(ireadout, 
+                  if( tmpNxChaEntry>=(int)m_pGetInfo->getPhChannelNX(ireadout, 
                                                                  iterRegion))
-                    tmpNxChaEntry=(int)usefull.getPhChannelNX(ireadout, 
+                    tmpNxChaEntry=(int)m_pGetInfo->getPhChannelNX(ireadout, 
                                                               iterRegion)-1 ;	
                   xstop=	(*iter)->entry().x()			;
                 xstart=	(*iter)->exit().x()			;				
                 nxChaEntry = (unsigned int) tmpNxChaExit;
                 nxChaExit  = (unsigned int) tmpNxChaEntry;										
                 }   
-                unsigned int quarter=usefull.getQuadrantChamber(chamber);		
+                unsigned int quarter=m_pGetInfo->
+                  getQuadrantChamber(chamber);		
                 float xBegin;
                 float xEnd;
                 double distanceFromBoundary[4];
@@ -483,9 +490,9 @@ MuonDigitization::createInput(
                   int tmpYEnd=static_cast<int> ((yEnd-startPosY)/(phChSizeY));
                   if(tmpYBegin<=tmpYEnd){
                     if( tmpYBegin<0)tmpYBegin=0;
-                    if( tmpYEnd>=(int)usefull.getPhChannelNY(ireadout, 
+                    if( tmpYEnd>=(int)m_pGetInfo->getPhChannelNY(ireadout, 
                                                              iterRegion))
-                      tmpYEnd=(int)usefull.getPhChannelNY(ireadout, 
+                      tmpYEnd=(int)m_pGetInfo->getPhChannelNY(ireadout, 
                                                           iterRegion)-1 ;	
                     ystart=yBegin;
                     ystop=yEnd;			
@@ -498,9 +505,9 @@ MuonDigitization::createInput(
                     
                   }else{
                   if( tmpYEnd<0)tmpYEnd=0;
-                  if( tmpYBegin>=(int)usefull.getPhChannelNY
+                  if( tmpYBegin>=(int)m_pGetInfo->getPhChannelNY
                       (ireadout, iterRegion))
-                    tmpYBegin=(int)usefull.getPhChannelNY(ireadout, 
+                    tmpYBegin=(int)m_pGetInfo->getPhChannelNY(ireadout, 
                                                           iterRegion)-1 ;
                   ystart=yEnd;
                   ystop=yBegin;	
@@ -628,8 +635,8 @@ MuonDigitization::createInput(
                       region<<" " << quarter<<" "<< chamber
                        <<" "<<gap<<" "<<frontEnd<<" "<<ireadout<<" "<<
                       " "<<Xloop<<" "<<Yloop<<" "<<
-                      usefull.getPhChannelNX(ireadout, iterRegion)<<
-                      " "<<usefull.getPhChannelNY(ireadout, iterRegion)  
+                      m_pGetInfo->getPhChannelNX(ireadout, iterRegion)<<
+                      " "<<m_pGetInfo->getPhChannelNY(ireadout, iterRegion)  
                        <<" "<<tofOfLight<<" "<< 
                       OriginOfHitsContainer[container]<<" "<<
                       ispill<<" "<< code<<endreq;		
@@ -669,7 +676,8 @@ MuonDigitization::createInput(
       keepTemporary.pop_back(); 	
     } 	  
     //!!!!!!!!!!!!!  left it as the last instruction of the for loop    !!!! 	
-    chamberTillNow=chamberTillNow+usefull.getChamberPerRegion(iterRegion);		 
+    chamberTillNow=chamberTillNow+m_pGetInfo->
+      getChamberPerRegion(iterRegion);		 
 	}   
   return StatusCode::SUCCESS;
 }
@@ -900,8 +908,6 @@ StatusCode MuonDigitization::
 applyPhysicalEffects(MuonDigitizationData<MuonPhysicalChannel>&
                      PhysicalChannel){
 	MsgStream log(msgSvc(), name()); 	
-					  MuonGeometryStore::Parameters usefull( toolSvc(), 
-                                                  detSvc(), msgSvc());
   
   
   //loop over the 20 containers 
@@ -916,11 +922,11 @@ applyPhysicalEffects(MuonDigitizationData<MuonPhysicalChannel>&
 			MuonPhysicalChannel* pFound;
 			int phChInX[2] ;
 			int phChInY[2] ;
-      for (int iloop=0; iloop<=usefull.getReadoutNumber(i);iloop++){
-			 	phChInX[(int)usefull.getReadoutType(iloop,i)]	=
-          usefull.getPhChannelNX( iloop, i);
-			 	phChInY[(int)usefull.getReadoutType(iloop,i)]	=
-          usefull.getPhChannelNY( iloop, i);
+      for (int iloop=0; iloop<=m_pGetInfo->getReadoutNumber(i);iloop++){
+			 	phChInX[(int)m_pGetInfo->getReadoutType(iloop,i)]	=
+          m_pGetInfo->getPhChannelNX( iloop, i);
+			 	phChInY[(int)m_pGetInfo->getReadoutType(iloop,i)]	=
+          m_pGetInfo->getPhChannelNY( iloop, i);
       }
       for(iter=PhysicalChannel.getPartition(i)->begin();
 			    iter<PhysicalChannel.getPartition(i)->end();iter++){
@@ -1017,7 +1023,6 @@ StatusCode MuonDigitization::
 createLogicalChannel(MuonDigitizationData<MuonPhysicalChannelOutput>&
                      PhyChaOutput, MCMuonDigits& mcDigitContainer){
 	MsgStream log(msgSvc(), name()); 
- MuonGeometryStore::Parameters usefull( toolSvc(),detSvc(), msgSvc());
   //  int flag=0;
   int countDigits=0;
   for(int i=0; i<m_partition; i++){
@@ -1032,7 +1037,7 @@ createLogicalChannel(MuonDigitizationData<MuonPhysicalChannelOutput>&
       int numberOfTileID;  
       if(m_verboseDebug)log<<MSG::INFO<<"FE ID "<<
                           (*iter)->phChID()->getID()<<endreq;
-      (*iter)->calculateTileID(numberOfTileID,phChTileID,&usefull);
+      (*iter)->calculateTileID(numberOfTileID,phChTileID,m_pGetInfo);
       if( m_verboseDebug)log<<MSG::INFO<<" after tile calculation " 
                             << numberOfTileID<<" "<<endreq;
       if( m_verboseDebug)log<<MSG::INFO<<" tile  " << 
@@ -1208,8 +1213,6 @@ StatusCode MuonDigitization::
 addElectronicNoise(MuonDigitizationData
                    <MuonPhysicalChannel>& PhysicalChannel){
   
- MuonGeometryStore::Parameters usefull( toolSvc(), 
-                                                  detSvc(), msgSvc());
 	MsgStream log(msgSvc(), name()); 
 	MuonPhysicalChannel* pFound;
   for(int ispill=0;ispill<m_numberOfEventsNeed;ispill++){
@@ -1218,21 +1221,23 @@ addElectronicNoise(MuonDigitizationData
     for(int i=0;i<m_stationNumber;i++){
       for(int k=0;k<m_regionNumber;k++){
         int partitionNumber=i*m_regionNumber+k;
-        int chamberInRegion=usefull.getChamberPerRegion(partitionNumber);
-        //					 int gapFE=usefull.getGapPerFE(partitionNumber);
+        int chamberInRegion=m_pGetInfo->getChamberPerRegion(partitionNumber);
+        //					 int gapFE=m_pGetInfo->getGapPerFE(partitionNumber);
         for(int chamber=0;chamber<chamberInRegion;chamber++){		
-          for(int frontEnd=0;frontEnd<(int)(usefull.
+          for(int frontEnd=0;frontEnd<(int)(m_pGetInfo->
                                             getGapPerRegion(partitionNumber)/
-                                            usefull.getGapPerFE
+                                            m_pGetInfo->getGapPerFE
                                             (partitionNumber));frontEnd++){
-            for(int readout=0;readout<=usefull.
+            for(int readout=0;readout<=m_pGetInfo->
                   getReadoutNumber(partitionNumber);readout++){
-              int phChInX=usefull.getPhChannelNX( readout, partitionNumber);
-              int phChInY=usefull.getPhChannelNY( readout, partitionNumber);	
+              int phChInX=m_pGetInfo->
+                getPhChannelNX( readout, partitionNumber);
+              int phChInY=m_pGetInfo->
+                getPhChannelNY( readout, partitionNumber);	
               int noiseChannels=detectorResponse.getResponse
                 (partitionNumber,readout)->
                 electronicNoise();
-              unsigned int readoutType=  usefull.getReadoutType
+              unsigned int readoutType=  m_pGetInfo->getReadoutType
                 (readout,   partitionNumber);
               for(int hitNoise=0;hitNoise<noiseChannels;hitNoise++){
                 int chX=(int)(m_flatDist()*phChInX);
@@ -1244,7 +1249,7 @@ addElectronicNoise(MuonDigitizationData
                 MuonPhChID ID;
                 ID.setStation(i);
                 ID.setRegion(k);
-                ID.setQuadrant(usefull.getQuadrantChamber
+                ID.setQuadrant(m_pGetInfo->getQuadrantChamber
                                (chamber+chamberTillNow));
                 ID.setChamber(chamber);
                 ID.setPhChIDX(chX);

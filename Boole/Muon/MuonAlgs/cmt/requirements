@@ -1,5 +1,5 @@
 package MuonAlgs 
-version v3r3
+version v4r0
 
 # ================ structure ===========================================
 branches src cmt MuonAlgs options doc
@@ -9,7 +9,7 @@ include_dirs      $(MUONALGSROOT)
 
 # ================ used packages ========================================= 
 use AIDA        v*	 -no_auto_imports
-use MuonUtils   v1r* 	Muon
+use MuonTools   v3r* 	Muon
 use MuonEvent	v2r*	Event	
 
 # build a component library

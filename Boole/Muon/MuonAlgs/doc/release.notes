@@ -4,7 +4,10 @@
 ! Purpose     : Muon digitisation algorithms
 !-----------------------------------------------------------------------------
 
-!======================== MuonAlgs v4r0 2003-04-15 ========================
+!======================== MuonAlgs v4r0 2003-04-22 ========================
+! 2003-04-22 - Alessia Satta
+ - Modified to include LHCbackground
+
 ! 2003-04-14 - Marco Cattaneo
  - Set MuonDigitisation timegate default to 20. for consistency with new low
    energy background 
