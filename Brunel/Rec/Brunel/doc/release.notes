@@ -3,6 +3,26 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
+</PRE><H1><A NAME=v17r4>2003-02-06 Brunel v17r4</A></H1><PRE>
+ - New tuning:
+   . L1 minimum bias parameterization (L1Decision v1r7)
+   . Updated version of single gamma tool (CaloReco v1r3)
+   . New calibration constants for electrons and photons (CaloReco v1r3)
+   . Update S and L corrections (CaloReco v1r3)
+
+ - New features:
+   . Repackaging of L1Decision to remove some dependencies (L1Decision v1r7)
+
+ - DST changes:
+   . Remove optional containers Rec/Calo/HcalIDe, HcalIDmu, PrsID, EcalID
+   . Add mandatory container Rec/Calo/EcalE
+   . Previously optional containers Rec/Calo/HcalE, PrsE now mandatory
+
+ - Bug fixes:
+   . BugID 136: fix a Rich1 volume overlap (XmlDDDB v15r2)
+   . Print correct L0 performance values (L0DU v6r4)
+   . Add missing factories for L1OTCluster and L1ITCluster (L1Event v11r6)
+
 </PRE><H1><A NAME=v17r3>2003-01-31 Brunel v17r3</A></H1><PRE>
  - New tuning:
    . Changed logic for treating the L0 Muon PU overflow conditions: now  PU 
@@ -19,7 +39,7 @@ Purpose: LHCb reconstruction program
 
  - Bug fixes:
    . Fix a boundary problem in DeVelo (VeloDet v8r4)
-   . Fix a rare duplicate key problem in VeloFEToL1 (L1VeloTrack v4r1)
+   . BugID 143: fix a rare duplicate key problem in VeloFEToL1 (L1VeloTrack v4r1)
 
 </PRE><H1><A NAME=v17r2>2003-01-23 Brunel v17r2</A></H1><PRE>
  - New tuning:
