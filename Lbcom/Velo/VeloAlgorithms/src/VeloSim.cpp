@@ -1,4 +1,4 @@
-// $Id: VeloSim.cpp,v 1.28 2004-01-29 00:22:50 mtobin Exp $
+// $Id: VeloSim.cpp,v 1.29 2004-02-24 17:48:12 mtobin Exp $
 // Include files
 // STL
 #include <string>
@@ -421,7 +421,7 @@ long VeloSim::simPoints(MCVeloHit* hit){
         << " / " <<  exitChan.sensor()  << " " << exitChan.strip()
         <<  " + " << ExitFraction;
     if (!EntryValid) log << MSG::VERBOSE << " invalid entry point";
-    if (!EntryValid) log << MSG::VERBOSE << " invalid exit point";
+    if (!ExitValid) log << MSG::VERBOSE << " invalid exit point";
     log << MSG::VERBOSE <<endmsg;
   }
   
@@ -584,66 +584,77 @@ void VeloSim::diffusion(MCVeloHit* hit,int Npoints,
     //calculate point on path
     VeloChannelID entryChan;
     StatusCode valid=m_velo->pointToChannel(point,entryChan,fraction,pitch);
-    if( verbose ) {
-      log << MSG::VERBOSE << "chan " << entryChan.strip() << " fraction "
-          << fraction << " pitch " << pitch << " valid " << valid << endmsg;
-    }
-    const int neighbs=1; // only consider =/- this many neighbours
-    double chargeFraction[2*neighbs+1];
-    double totalFraction=0.;
-    // loop over neighbours per point
-    int iNg;
-    for  (iNg=-neighbs; iNg<=+neighbs; iNg++){
-      double diffuseDist1=((iNg-0.5)-fraction)*pitch/micron;
-      double diffuseDist2=((iNg+0.5)-fraction)*pitch/micron;
-      //      double diffuseDist1=((iNg)-fraction)*pitch/micron;
-      //      double diffuseDist2=((iNg+1.)-fraction)*pitch/micron;
-      double diffuseSigma=m_baseDiffuseSigma*sqrt(thickness*ZDiffuse);
-      if( verbose ) {
-        log << MSG::VERBOSE << "diffuseDist1 " << diffuseDist1
-            <<   " diffuseDist2 " << diffuseDist2 << " diffuseSigma "
-            << diffuseSigma << " base " << m_baseDiffuseSigma
-            << " zdiff " << ZDiffuse << endmsg;
-      }
-
-      double prob1= gsl_sf_erf_Q(diffuseDist1/diffuseSigma);
-      double prob2= gsl_sf_erf_Q(diffuseDist2/diffuseSigma);
-      if( verbose ) {
-        log << MSG::VERBOSE << " prob1+2 " <<  prob1 << " " << prob2 << endmsg;
-      }
-      int i= (iNg<0) ? neighbs+abs(iNg) : iNg;
-      chargeFraction[i]=fabs(prob1-prob2);
-      totalFraction+= fabs(prob1-prob2);
-      if( verbose ) {
-        log << MSG::VERBOSE << i << " iNg " << iNg << " cfrac "
-            << chargeFraction[i]  << " tot " << totalFraction << endmsg;
+    if ( !valid){
+      if( verbose ) { 
+      log << MSG::VERBOSE << " point is not in active silicon " << point << 
+	" entry " << hit->entry() << " exit " <<  hit->exit() << endmsg;
       }
     }
 
-    // renormalise allocated fractions to 1., and update strip signals
-    for  (iNg=-neighbs; iNg<=+neighbs; iNg++ ){
-      int i= (iNg<0) ? neighbs+abs(iNg) : iNg;
-      // log << MSG::DEBUG << i << " iNg " << iNg << " ipt " << ipt
-      //      << " " << endmsg;
-      double charge=Spoints[ipt]*(chargeFraction[i]/totalFraction);
-      //  log << MSG::DEBUG << i << " ipt " << ipt << " charge "
-      //      << charge << endmsg;
-      if (charge>VeloSimParams::threshold*0.1){
-        // ignore if below 10% of threshold
-        // calculate index of this strip
-        VeloChannelID stripKey;
-        valid = m_velo->neighbour(entryChan,iNg,stripKey);
-        // log << MSG::DEBUG << " neighbour " << entryChan.strip() << " "
-        //     << stripKey.strip() << " iNg " << iNg << endmsg;
-        // update charge and MCHit list
-        if (valid){
-          MCVeloFE* myFE = findOrInsertFE(stripKey);
-          if (!spillOver) fillFE(myFE,hit,charge); // update and add MC link
-          else fillFE(myFE,charge); // update, no MC link
+    if (valid) {
+      // a point may be invalid, despite entry and exit points being valid, as it lies 
+      // in say a bias rail dead area. charge from this point is considered lost.
+
+      if( verbose ) {
+        log << MSG::VERBOSE << "chan " << entryChan.strip() << " fraction "
+            << fraction << " pitch " << pitch << " valid " << valid << endmsg;
+      }
+      const int neighbs=1; // only consider =/- this many neighbours
+      double chargeFraction[2*neighbs+1];
+      double totalFraction=0.;
+      // loop over neighbours per point
+      int iNg;
+      for  (iNg=-neighbs; iNg<=+neighbs; iNg++){
+        double diffuseDist1=((iNg-0.5)-fraction)*pitch/micron;
+        double diffuseDist2=((iNg+0.5)-fraction)*pitch/micron;
+        //      double diffuseDist1=((iNg)-fraction)*pitch/micron;
+        //      double diffuseDist2=((iNg+1.)-fraction)*pitch/micron;
+        double diffuseSigma=m_baseDiffuseSigma*sqrt(thickness*ZDiffuse);
+        if( verbose ) {
+          log << MSG::VERBOSE << "diffuseDist1 " << diffuseDist1
+              <<   " diffuseDist2 " << diffuseDist2 << " diffuseSigma "
+              << diffuseSigma << " base " << m_baseDiffuseSigma
+              << " zdiff " << ZDiffuse << endmsg;
+        }
+
+        double prob1= gsl_sf_erf_Q(diffuseDist1/diffuseSigma);
+        double prob2= gsl_sf_erf_Q(diffuseDist2/diffuseSigma);
+        if( verbose ) {
+          log << MSG::VERBOSE << " prob1+2 " <<  prob1 << " " << prob2 << endmsg;
+        }
+        int i= (iNg<0) ? neighbs+abs(iNg) : iNg;
+        chargeFraction[i]=fabs(prob1-prob2);
+        totalFraction+= fabs(prob1-prob2);
+        if( verbose ) {
+          log << MSG::VERBOSE << i << " iNg " << iNg << " cfrac "
+              << chargeFraction[i]  << " tot " << totalFraction << endmsg;
         }
       }
-    } // neighbours loop
 
+      // renormalise allocated fractions to 1., and update strip signals
+      for  (iNg=-neighbs; iNg<=+neighbs; iNg++ ){
+        int i= (iNg<0) ? neighbs+abs(iNg) : iNg;
+        // log << MSG::DEBUG << i << " iNg " << iNg << " ipt " << ipt
+        //      << " " << endmsg;
+        double charge=Spoints[ipt]*(chargeFraction[i]/totalFraction);
+        //  log << MSG::DEBUG << i << " ipt " << ipt << " charge "
+        //      << charge << endmsg;
+        if (charge>VeloSimParams::threshold*0.1){
+          // ignore if below 10% of threshold
+          // calculate index of this strip
+          VeloChannelID stripKey;
+          valid = m_velo->neighbour(entryChan,iNg,stripKey);
+          // log << MSG::DEBUG << " neighbour " << entryChan.strip() << " "
+          //     << stripKey.strip() << " iNg " << iNg << endmsg;
+          // update charge and MCHit list
+          if (valid){
+            MCVeloFE* myFE = findOrInsertFE(stripKey);
+            if (!spillOver) fillFE(myFE,hit,charge); // update and add MC link
+            else fillFE(myFE,charge); // update, no MC link
+          }
+        }
+      } // neighbours loop
+    } // valid point
     point+=2*path; // update to look at next point on path
     ZDiffuse-=2.*dz;
   } // loop over points
