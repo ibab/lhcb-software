@@ -1,4 +1,4 @@
-!  $Id: release.notes,v 1.6 2001-07-13 14:44:52 ranjard Exp $
+!  $Id: release.notes,v 1.7 2001-07-17 18:22:19 atsareg Exp $
 Package L0Muon
 Package manager: A.Tsaregorodtsev
 
@@ -6,6 +6,15 @@ Package manager: A.Tsaregorodtsev
 ! 12/07/2001 - Olivier Callot
   - Change the version in the requirements to adapt to the new Gaudi/LHCb 
     release
+    
+! 20010606 L0Muon v2r1 A.T.   
+
+  - Added "Limited Y" search in stations M4 and M5;
+  - All the Processing Units are configured once at the initialisation step;
+  - Fixed bug in the CreateTower procedure for the cases of crossing the
+    boundary between regions;
+  - All the numbering for quarters/regions/indices starts from 0.
+  - many minor code improvements.   
 
 !==============================================================================
 ! 20010606 L0Muon v2 A.T.
