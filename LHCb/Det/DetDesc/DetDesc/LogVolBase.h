@@ -1,8 +1,11 @@
-// $Id: LogVolBase.h,v 1.1 2001-11-18 15:32:44 ibelyaev Exp $ 
+// $Id: LogVolBase.h,v 1.2 2001-11-18 16:08:26 ibelyaev Exp $ 
 // ===========================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ===========================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.1  2001/11/18 15:32:44  ibelyaev
+//  update for Logical Assemblies
+//
 // ===========================================================================
 #ifndef     DETDESC_LOGVOLBASE_H
 #define     DETDESC_LOGVOLBASE_H
@@ -202,11 +205,11 @@ public:
    *  @param volumePath  vector of physical volumes 
    *  @return status code 
    */
-  virtual StatusCode 
-  traverse ( ILVolume::ReplicaPath::const_iterator pathBegin,
-             ILVolume::ReplicaPath::const_iterator pathEnd  ,
-             ILVolume::PVolumePath&                pVolumePath ) const ;
-
+  virtual StatusCode traverse 
+  ( ILVolume::ReplicaPath::const_iterator pathBegin,
+    ILVolume::ReplicaPath::const_iterator pathEnd  ,
+    ILVolume::PVolumePath&                pVolumePath ) const ;
+  
   /** traverse the sequence of paths  \n 
    *  transform the sequence of replicas to sequence of  physical volumes 
    *  @see ILVolume 
@@ -218,34 +221,6 @@ public:
   ( const ILVolume::ReplicaPath&  path,
     ILVolume::PVolumePath&        pVolumePath ) const
   { return traverse( path.begin() , path.end() , pVolumePath ); }
-  
-  /** calculate the daughter path containing the Point in Local frame , 
-   *  can be VERY slow for complex geometry, 
-   *  therefore use the appropriate Level for usage 
-   *  @see ILVolume 
-   *  @param  localPoint point in local reference system of logical volume 
-   *  @param  level depth level
-   *  @param  volumePath  vector of physical volumes
-   *  @return status code 
-   */
-  virtual StatusCode belongsTo
-  ( const HepPoint3D&        LocalPoint  ,
-    const int                Level       , 
-    ILVolume::PVolumePath&   pVolumePath ) const ;
-  
-  /** calculate the daughter path containing the Point in Local frame , 
-   *  can be VERY slow for complex geometry, 
-   *  therefore use the appropriate Level for usage 
-   *  @see ILVolume 
-   *  @param  localPoint point in local reference system of logical volume 
-   *  @param  level depth level
-   *  @param  volumePath  vector of physical volumes
-   *  @return status code 
-   */
-  virtual StatusCode belongsTo
-  ( const HepPoint3D&        LocalPoint ,
-    const int                Level      , 
-    ILVolume::ReplicaPath&   replicaPath ) const ;
   
   /** name of sensitive "detector" - needed for simulation 
    *  @see ILVolume 

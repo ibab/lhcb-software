@@ -1,12 +1,16 @@
-// $Id: LogVolBase.cpp,v 1.1 2001-11-18 15:32:45 ibelyaev Exp $
+// $Id: LogVolBase.cpp,v 1.2 2001-11-18 16:08:26 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
-// $Log: not supported by cvs2svn $ 
+// $Log: not supported by cvs2svn $
+// Revision 1.1  2001/11/18 15:32:45  ibelyaev
+//  update for Logical Assemblies
+// 
 // ============================================================================
 // GaudiKernel
 #include "GaudiKernel/System.h"
 // DetDesc 
+#include "DetDesc/DetDesc.h"
 #include "DetDesc/LogVolBase.h"
 #include "DetDesc/VolumeIntersectionIntervals.h"
 // local 
@@ -120,6 +124,14 @@ LogVolBase::~LogVolBase()
   /// decrease  volume counter 
   --s_volumeCounter ;  
 };
+
+// ============================================================================
+/** static accessor to 
+ *  data service used for retriving of the material 
+ *  @return pointer to data service 
+ */
+// ============================================================================
+IDataProviderSvc* LogVolBase::dataSvc() { return DetDesc::detSvc(); }
 
 // ============================================================================
 /** add the reference
