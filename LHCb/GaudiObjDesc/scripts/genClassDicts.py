@@ -140,8 +140,7 @@ class genClassDicts(importUtils.importUtils):
             if p.find('=') != -1: p = p.split('=')[0]
             p = (' ').join(p.split()[:-1])
             p = self.checkTypedefEnums(p,godClass['attrs']['name'])
-            if self.tools.isPointerT(p) or \
-              (self.tools.isReferenceT(p) and self.tools.isPointerT(p.strip()[:-1])) :
+            if self.tools.isPointerT(p) :
               s += '(%s)argList[%d]' % (p, i)
             else :
               if self.tools.isReferenceT(p) : p = p.strip()[:-1] 
