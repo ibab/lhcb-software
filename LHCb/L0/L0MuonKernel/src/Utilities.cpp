@@ -52,30 +52,50 @@ std::vector<L0MTile>  L0Muon::readTileListFromMap(FILE *mapfile,int max){
   std::vector<L0MTile> ltiles(max);
   while (1)
   {
+//     // Read line
+//     int ibit;
+//     int Q;
+//     int R; 
+//     int sta;
+//     char type[8];
+//     int gridX;
+//     int gridY;
+//     int nX;
+//     int nY;
+
+
+//     if (fscanf(mapfile,"%d %d %d %d %s %d %d %d %d",&ibit,&Q,&R,&sta,type,&gridX,&gridY,&nX,&nY)==EOF) break;
+
+//     L0MBase::L0MTileType tag; 
+//     if      (type == "Pad")     { tag = L0MBase::Pad; }
+//     else if (type == "HS")      { tag = L0MBase::StripH; }
+//     else if (type == "VS")      { tag = L0MBase::StripV; }
+//     else { tag = L0MBase::Unknown; }
+    
+//     // Build the L0MTile
+  
+//     MuonLayout layout(gridX,gridY);
+//     MuonTileID mid(sta,0,0,layout,R,Q,nX,nY);
+//     L0MTile tile(mid,tag);
+//     ltiles[ibit]=tile;
+
+
     // Read line
     int ibit;
-    int Q;
-    int R; 
-    int sta;
     char type[8];
-    int gridX;
-    int gridY;
-    int nX;
-    int nY;
+    char smid[20];
 
-
-    if (fscanf(mapfile,"%d %d %d %d %s %d %d %d %d",&ibit,&Q,&R,&sta,type,&gridX,&gridY,&nX,&nY)==EOF) break;
+    if (fscanf(mapfile,"%d %s %s",&ibit,smid,type)==EOF) break;
 
     L0MBase::L0MTileType tag; 
     if      (type == "Pad")     { tag = L0MBase::Pad; }
     else if (type == "HS")      { tag = L0MBase::StripH; }
     else if (type == "VS")      { tag = L0MBase::StripV; }
     else { tag = L0MBase::Unknown; }
-    
+ 
     // Build the L0MTile
-     
-    MuonLayout layout(gridX,gridY);
-    MuonTileID mid(sta,0,0,layout,R,Q,nX,nY);
+  
+    MuonTileID mid(smid);
     L0MTile tile(mid,tag);
     ltiles[ibit]=tile;
   }

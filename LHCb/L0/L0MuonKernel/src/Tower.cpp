@@ -59,14 +59,7 @@ L0Muon::Tower::Tower() {
   m_ignoreM1=false;
   
   m_debug = false;
-  m_seeded = false; 
- 
-  m_ctower = CandidateTower();
-  // Should be done once at creation time
-  for (int ista =0 ; ista <5 0; ista++){
-    m_ctower.setFoi(ista, m_xfoi[ista], m_yfoi[ista]);
-  }
-                 
+  m_seeded = false;  
 }
 
 L0Muon::Tower::~Tower() {}
@@ -259,6 +252,11 @@ void L0Muon::Tower::processTower(MuonTileID & puID){
         pCs->ignoreM1(m_ignoreM1);
         pCs->resetBits(); // ???? (à peine créer et déjà reseter !)
          
+        // Should be done once at creation time ??? Why here ???
+	for (int ista =4 ; ista >= 0; ista--){
+          m_ctower.setFoi(ista, m_xfoi[ista], m_yfoi[ista]);
+        }
+
         // Loop over stations (M5,M4,M2 and eventually M1)
         int minsta = (m_ignoreM1) ? 1 : 0;
         for (int ista =4 ; ista >= minsta; ista--){
