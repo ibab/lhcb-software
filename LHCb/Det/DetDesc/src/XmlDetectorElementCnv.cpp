@@ -1,4 +1,4 @@
-///	$Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/XmlDetectorElementCnv.cpp,v 1.3 2001-01-22 10:55:35 mato Exp $
+///	$Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/XmlDetectorElementCnv.cpp,v 1.4 2001-01-25 16:28:49 mato Exp $
 
 /// Include files
 #include "DetDesc/XmlDetectorElementCnv.h"
@@ -32,7 +32,7 @@
 #include "DetDesc/GeometryInfo.h"
 
 /// RCS Id for identification of object version
-///static const char* rcsid = "$Id: XmlDetectorElementCnv.cpp,v 1.3 2001-01-22 10:55:35 mato Exp $";
+///static const char* rcsid = "$Id: XmlDetectorElementCnv.cpp,v 1.4 2001-01-25 16:28:49 mato Exp $";
 
 /// Instantiation of a static factory class used by clients to create
 /// instances of this service
@@ -353,18 +353,12 @@ void XmlDetectorElementCnv::startElement( const char* const name,
     // characters(...) 8 bit SAX handler callback
     ;
   } else if( "geometryinfo" == tagName ) {
+    // Everything is in the attributes
+    m_lvname  = attributes.getValue( "lvname" );
+    m_support = attributes.getValue( "support" );
+    m_npath   = attributes.getValue( "npath" );
+    m_rpath   = attributes.getValue( "rpath" );
 
-    // Do nothing here, all the processing is done in endElement() callback
-    ;
-
-  } else if( tagName == "lvname" )                                         {
-    m_lvname  = attributes.getValue( "name" );
-  } else if( tagName == "support" )                                        {
-    m_support = attributes.getValue( "name" );
-  } else if( tagName == "rpath" )                                          {
-    m_rpath   = attributes.getValue( "value" );
-  } else if( tagName == "npath" )                                          {
-    m_npath   = attributes.getValue( "value" );
   } else if( tagName == "specific" )                                       {
     
     try                                                                    {

@@ -1,4 +1,4 @@
-/// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/XmlGenericCnv.cpp,v 1.3 2001-01-25 12:12:30 mato Exp $
+/// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/XmlGenericCnv.cpp,v 1.4 2001-01-25 16:28:49 mato Exp $
 
 /// Include files
 #include "DetDesc/XmlGenericCnv.h"
@@ -217,9 +217,9 @@ void XmlGenericCnv::startElement( const XMLCh* const name, AttributeList& attrib
         log << MSG::DEBUG
             << "Detector Description Markup Language Version " << version
             << endreq;
-        if( version != "3.0" ) {
+        if( version != "3.1" ) {
           StatusCode sc; sc.setCode(WRONG_DTD_VERSION);
-          std::string msg = "DDDB DTD Version 3.0 required, ";
+          std::string msg = "DDDB DTD Version 3.1 required, ";
           msg += "please update your DTD and XML data files\a";
           throw XmlCnvException( msg.c_str(), sc );
         }
@@ -232,6 +232,8 @@ void XmlGenericCnv::startElement( const XMLCh* const name, AttributeList& attrib
         char* name  = XMLString::transcode( attributes.getValue("name") );
         char* value = XMLString::transcode( attributes.getValue("value") );
         xmlSvc()->addParameter(name, value);
+        log << MSG::DEBUG
+            << "Added DDDB Parameter " << name << " = " << value << endreq;
         delete [] name;
         delete [] value;
       }
