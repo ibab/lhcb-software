@@ -1,12 +1,20 @@
 ! =============================================================================
 ! CVS tag $Name: not supported by cvs2svn $ 
 ! =============================================================================
-! $Id: release.notes,v 1.29 2001-07-23 20:56:03 ibelyaev Exp $
+! $Id: release.notes,v 1.30 2001-07-24 07:11:04 ibelyaev Exp $
 ! =============================================================================
 
 Package:          GiGa
 Package manager : Vanya Belyaev 
 
+!===========================================================================
+! 20010723   v Vanya Belyaev 
+     GiGa/GiGaUtil.h 
+     three new useful utilities for deletion of object
+          GiGaUtil::Delete     - class swith templated method  
+          GiGaUtil::Eraser     - templated class 
+          GiGaUtil::Delete_Ptr - templated function
+ 
 !===========================================================================
 ! 20010723   v Vanya Belyaev 
      GiGa/GiGaUtil.h

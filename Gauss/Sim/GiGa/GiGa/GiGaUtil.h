@@ -1,7 +1,10 @@
 /// ===========================================================================
 /// CVS tag $Name: not supported by cvs2svn $ 
 /// ===========================================================================
-/// $Log: not supported by cvs2svn $ 
+/// $Log: not supported by cvs2svn $
+/// Revision 1.1  2001/07/23 20:53:45  ibelyaev
+/// reorganization of GiGaUtil namespace
+/// 
 /// ===========================================================================
 #ifndef GIGA_GIGAUTIL_H 
 #define GIGA_GIGAUTIL_H 1
@@ -77,8 +80,30 @@ namespace GiGaUtil
    *  @author Vanya Belyaev
    *  @date 23/07/2001
    */ 
+  class Delete
+  { 
+  public:
+    /* delete the object 
+     *  @param obj pointer to object to be deleted 
+     *  @return NULL pointer 
+     */
+    template <class TYPE>
+    inline TYPE* operator() ( TYPE* obj ) const 
+    { 
+      if( 0 != obj ) { delete obj ; obj = 0 ; }
+      return obj ;
+    };
+  };
+  
+  /** @class Eraser
+   * 
+   *  useful utility to delete the object 
+   *
+   *  @author Vanya Belyaev
+   *  @date 23/07/2001
+   */ 
   template <class TYPE>
-  class Delete: public std::unary_function<TYPE*,TYPE*>
+  class Eraser: public std::unary_function<TYPE*,TYPE*>
   { 
   public:
     /* delete the object 
@@ -92,6 +117,21 @@ namespace GiGaUtil
     };
   };
   
+  /** useful utility to delete the object through the pointer  
+   *
+   *  @author Vanya Belyaev
+   *  @date 23/07/2001
+   *
+   *  @param obj pointer to object to be deleted 
+   *  @return NULL pointer 
+   */ 
+  template <class TYPE>
+  inline TYPE* Delete_Ptr( TYPE* obj )
+  { 
+    if( 0 != obj ) { delete obj ; obj = 0 ; }
+    return obj ;
+  };
+
   /** @class Creator 
    *  
    *  Helper class to make the instantiation of 

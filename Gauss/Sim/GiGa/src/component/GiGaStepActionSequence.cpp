@@ -1,7 +1,10 @@
 /// ===========================================================================
 /// CVS tag $Name: not supported by cvs2svn $ 
 /// ===========================================================================
-/// $Log: not supported by cvs2svn $ 
+/// $Log: not supported by cvs2svn $
+/// Revision 1.1  2001/07/23 20:53:46  ibelyaev
+/// reorganization of GiGaUtil namespace
+/// 
 /// ===========================================================================
 /// STD & STL 
 #include <functional>
@@ -55,10 +58,10 @@ StatusCode GiGaStepActionSequence::actionsReset()
                    std::mem_fun(&IGiGaStepAction::finalize) );
   /// delete all members
 
-  std::transform ( m_actions.begin () , 
-                   m_actions.end   () ,
-                   m_actions.begin () ,
-                   GiGaUtil::Delete<IGiGaStepAction>() );
+  std::transform ( m_actions.begin  () , 
+                   m_actions.end    () ,
+                   m_actions.begin  () ,
+                   GiGaUtil::Delete () );
   /// clear the coinatiner 
   m_actions.clear() ;
   ///
@@ -74,7 +77,7 @@ GiGaStepActionSequence::~GiGaStepActionSequence()
   std::transform( m_actions.begin () ,  
                   m_actions.end   () , 
                   m_actions.begin () ,  
-                  GiGaUtil::Delete<IGiGaStepAction>() );
+                  GiGaUtil::Delete() );
   ///
   m_actions.clear();
   m_members.clear();
