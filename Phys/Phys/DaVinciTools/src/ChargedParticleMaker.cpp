@@ -1,4 +1,4 @@
-// $Id: ChargedParticleMaker.cpp,v 1.3 2002-10-15 17:55:11 gcorti Exp $
+// $Id: ChargedParticleMaker.cpp,v 1.4 2002-10-21 17:54:44 gcorti Exp $
 // Include files 
 
 // from Gaudi
@@ -88,50 +88,60 @@ StatusCode ChargedParticleMaker::initialize() {
         << "Please, initialize it in your job options file" <<  endreq;
     return StatusCode::FAILURE;
   }
-
+  
   if(m_particleNames[0] != "All" ){
-    
-    // Test the Confidence Level Cuts Vector 
-    if (m_confLevels.size() == 0) {
-      log << MSG::ERROR << "PhysDesktopConfLevelCuts is empty. " 
-          << "Please, initialize it in your job options file " << endreq;
-      return StatusCode::FAILURE;
-    }
-    
-    // Test if the the Confidence Level Cuts Vector and ParticleNames 
-    // have the same size
-    if (m_confLevels.size() != m_particleNames.size() ) {
-      log << MSG::ERROR << "PhysDesktopConfLevelCuts size is  " 
-          << "different from  PhysDesktopParticleNames" << endreq;
-      return StatusCode::FAILURE;
-    }
-    
-    // Everything is OK. So,
-    // Retrieve the PDG Code of required particles, 
-    // separating charged from neutrals. 
-    std::vector<std::string>::const_iterator ipartsName;
-    std::vector<double>::const_iterator iConfLevel=m_confLevels.begin();
-    for ( ipartsName = m_particleNames.begin(); 
-          ipartsName != m_particleNames.end(); ++ipartsName ) {
-      ParticleProperty* partProp = m_ppSvc->find( *ipartsName );
-      if ( 0 == partProp )   {
-        log << MSG::ERROR << "Cannot retrieve properties for particle \"" 
-            << *ipartsName << "\" " << endreq;
+    if(m_particleNames[0] == "AllCompatible" ){ 
+      // Test the Confidence Level Cuts Vector 
+      if (m_confLevels.size() == 0) {
+        log << MSG::ERROR << "PhysDesktopConfLevelCuts is empty. " 
+            << "Option AllCompatible requires this to be set. "
+            << "Please, initialize it in your job options file " << endreq;
         return StatusCode::FAILURE;
       }
-      if( partProp->charge() != 0 ){
-        std::pair<int,double> id(partProp->jetsetID(),(*iConfLevel++));
-        m_ids.push_back(id);
-      }
-      //else{
-      //  m_idsNeutral.push_back( std::pair::makePair(partProp->jetsetID(),
-      //                                                (*iConfLevel++)) );
-      //}
-      // Print Debug message:
-      log << MSG::DEBUG << " Particle Requested: Name = " << (*ipartsName) 
-          << " PID = " << partProp->jetsetID() << endreq;
+      
     }
-    
+    else {  
+      // Test the Confidence Level Cuts Vector 
+      if (m_confLevels.size() == 0) {
+        log << MSG::ERROR << "PhysDesktopConfLevelCuts is empty. " 
+            << "Please, initialize it in your job options file " << endreq;
+        return StatusCode::FAILURE;
+      }
+      
+      // Test if the the Confidence Level Cuts Vector and ParticleNames 
+      // have the same size
+      if (m_confLevels.size() != m_particleNames.size() ) {
+        log << MSG::ERROR << "PhysDesktopConfLevelCuts size is  " 
+            << "different from  PhysDesktopParticleNames" << endreq;
+        return StatusCode::FAILURE;
+      }
+      
+      // Everything is OK. So,
+      // Retrieve the PDG Code of required particles, 
+      // separating charged from neutrals. 
+      std::vector<std::string>::const_iterator ipartsName;
+      std::vector<double>::const_iterator iConfLevel=m_confLevels.begin();
+      for ( ipartsName = m_particleNames.begin(); 
+            ipartsName != m_particleNames.end(); ++ipartsName ) {
+        ParticleProperty* partProp = m_ppSvc->find( *ipartsName );
+        if ( 0 == partProp )   {
+          log << MSG::ERROR << "Cannot retrieve properties for particle \"" 
+              << *ipartsName << "\" " << endreq;
+          return StatusCode::FAILURE;
+        }
+        if( partProp->charge() != 0 ){
+          std::pair<int,double> id(partProp->jetsetID(),(*iConfLevel++));
+          m_ids.push_back(id);
+        }
+        //else{
+        //  m_idsNeutral.push_back( std::pair::makePair(partProp->jetsetID(),
+        //                                                (*iConfLevel++)) );
+        //}
+        // Print Debug message:
+        log << MSG::DEBUG << " Particle Requested: Name = " << (*ipartsName) 
+            << " PID = " << partProp->jetsetID() << endreq;
+      }
+    } // else of "if(m_particleNames[0] != "AllCompatible" )"
   }  //if(m_particleNames[0] != "All")
   return StatusCode::SUCCESS;
   
@@ -163,7 +173,7 @@ StatusCode ChargedParticleMaker::makeParticles( ParticleVector & parts ) {
   
   // make charged particles:
   int nChargedParticles=0;   // Counter of charged particles created.
-
+  
   SmartDataPtr<ProtoParticles> candidates ( eventSvc(),m_input);
   if ( !candidates || (0 == candidates->size()) ) { 
     log << MSG::INFO << "    No Charged ProtoParticles retrieved from"  
@@ -174,12 +184,13 @@ StatusCode ChargedParticleMaker::makeParticles( ParticleVector & parts ) {
   // Log number of ProtoPartCandidates retrieved
   log << MSG::INFO << "    Number of Charged ProtoParticles retrieved   = "
       << candidates->size() << endreq;
-
+  
+  // Make all parrticles using bestPID
   if( "All" == m_particleNames[0] ){
-
+    
     log << MSG::INFO << "Making all particles " << endreq;
     // Loop over all Protoparticles and fill Particle using bestPID :
-      
+    
     ProtoParticles::const_iterator icand = 0;  // Iterator on ProtoParticles.
     for(icand = candidates->begin(); icand != candidates->end(); icand++){
       protoID=(*icand)->bestPID();
@@ -197,38 +208,85 @@ StatusCode ChargedParticleMaker::makeParticles( ParticleVector & parts ) {
       }
       
     }
+    return StatusCode::SUCCESS;
+    
   }
-  else {
-    if( m_ids.size() !=0 ) {
-      
-      // Loop over all ProtoParticles and fill Particle if the ProtoParticle 
-      // satisfies the PID and corresponding CL cut  :
-      ProtoParticles::iterator icand = 0;  // Iterator on ProtoParticles.
-      for(icand = candidates->begin();icand != candidates->end();icand++){  
-        // Iterator on requested PID's
-        std::vector<std::pair<int,double> >::iterator iWantedPID; 
-        ProtoParticle::PIDInfoVector::iterator iProtoID;
-        for ( iWantedPID = m_ids.begin();
-              iWantedPID != m_ids.end(); 
-              ++iWantedPID ) {
-          for (iProtoID=(*icand)->pIDInfo().begin();
-               iProtoID!=(*icand)->pIDInfo().end(); ++iProtoID){
-            protoID = (*iProtoID).first;
-            protoCL = (*iProtoID).second;
-            
-            if ( protoID  == (*iWantedPID).first && 
-                 protoCL >= (*iWantedPID).second  ){ 
-              // We have a good candidate to this iWantedPID:
-              Particle* particle = new Particle();
-              StatusCode sc = fillParticle(*icand, protoID, protoCL, particle);
-              if( sc.isFailure() ) {
-                delete particle;
-              }
-              else {  
-                // Insert particle in particle vector.
-                parts.push_back(particle);
-                nChargedParticles++;
-              }
+  
+  // Make all particles compatible with a given PID for the required 
+  // conf. level cut
+  if( "AllCompatible" == m_particleNames[0] ){
+    
+    log << MSG::INFO << "Making all compatible particles " << endreq;
+    // Loop over all Protoparticles. For each one, create Particle 
+    // with the PID's for which the conf. level is above requested cut
+    
+    ProtoParticles::const_iterator icand = 0;  // Iterator on ProtoParticles.
+    for(icand = candidates->begin(); icand != candidates->end(); icand++){
+      int partPerProto=0;
+      ProtoParticle::PIDInfoVector::iterator iProtoID;
+      for (iProtoID=(*icand)->pIDInfo().begin();
+           iProtoID!=(*icand)->pIDInfo().end(); ++iProtoID){
+        protoID = (*iProtoID).first;
+        protoCL = (*iProtoID).second;
+        
+        if ( protoCL >= m_confLevels[0]  ){ 
+          // We have a candidate compatible with this PID:
+          log << MSG::DEBUG << icand << " ProtoID = " << protoID 
+              << " protoCL = " << protoCL << endreq;
+          
+          partPerProto++;
+          Particle* particle = new Particle();
+          StatusCode sc = fillParticle( *icand, protoID, protoCL, particle);
+          if( sc.isFailure() ) {
+            delete particle;
+          }
+          else {  
+            // Insert particle in particle vector.
+            parts.push_back(particle);
+            nChargedParticles++;
+          }
+          
+        }
+      }
+      log << MSG::DEBUG << "Made " << partPerProto 
+          << " particles with one protoparticle"  << endreq;
+    }
+    return StatusCode::SUCCESS;
+  }
+  
+  // Make only the requested particles with the corresponding conf. level cut  
+  
+  log << MSG::INFO << "Making only the requested particles " << endreq;
+  
+  if( m_ids.size() !=0 ) {
+    
+    // Loop over all ProtoParticles and fill Particle if the ProtoParticle 
+    // satisfies the PID and corresponding CL cut  :
+    ProtoParticles::iterator icand = 0;  // Iterator on ProtoParticles.
+    for(icand = candidates->begin();icand != candidates->end();icand++){  
+      // Iterator on requested PID's
+      std::vector<std::pair<int,double> >::iterator iWantedPID; 
+      ProtoParticle::PIDInfoVector::iterator iProtoID;
+      for ( iWantedPID = m_ids.begin();
+            iWantedPID != m_ids.end(); 
+            ++iWantedPID ) {
+        for (iProtoID=(*icand)->pIDInfo().begin();
+             iProtoID!=(*icand)->pIDInfo().end(); ++iProtoID){
+          protoID = (*iProtoID).first;
+          protoCL = (*iProtoID).second;
+          
+          if ( protoID  == (*iWantedPID).first && 
+               protoCL >= (*iWantedPID).second  ){ 
+            // We have a good candidate to this iWantedPID:
+            Particle* particle = new Particle();
+            StatusCode sc = fillParticle(*icand, protoID, protoCL, particle);
+            if( sc.isFailure() ) {
+              delete particle;
+            }
+            else {  
+              // Insert particle in particle vector.
+              parts.push_back(particle);
+              nChargedParticles++;
             }
           }
         }
@@ -247,7 +305,7 @@ StatusCode ChargedParticleMaker::fillParticle( const ProtoParticle* protoCand,
                                                Particle* particle ) {
   
   MsgStream  log( msgSvc(), name() );
-
+  
   // Start filling the particle:     
   particle->setParticleID( protoID );
   particle->setConfLevel( protoCL );
@@ -268,7 +326,7 @@ StatusCode ChargedParticleMaker::fillParticle( const ProtoParticle* protoCand,
 //        << trackState->x() << ", " << trackState->y() << ", " 
 //        << trackState->z() << endreq;
 //    log << MSG::DEBUG << "position = " << position << endreq;
-
+  
   // Calculate and set four momentum: do this in ProtoParticle... 
   double momentum = trackState->p();
   double slopeX   = trackState->tx();
@@ -284,10 +342,10 @@ StatusCode ChargedParticleMaker::fillParticle( const ProtoParticle* protoCand,
 //        << trackState->tx() << ", " << trackState->ty() << ", " 
 //        << trackState->p() << endreq;
 //    log << MSG::DEBUG << "momentum = " << quadriMomentum << endreq;
-
+  
   // Retrieve track state covariance matrix and set particle error matrices:
   const HepSymMatrix& trkCov = trackState->pCovMatrix();
-    
+  
   // Set pointOnTrackErr: (Error on x and y. No error on z!)
   HepSymMatrix pointOnTrackErr(3, 0);
   pointOnTrackErr = trkCov.sub(1,3);
@@ -300,7 +358,7 @@ StatusCode ChargedParticleMaker::fillParticle( const ProtoParticle* protoCand,
   HepSymMatrix slpMomErr(3, 0);
   slpMomErr = trkCov.sub(3,5);
   particle->setSlopesMomErr(slpMomErr);
-
+  
   // Set position-slopes correlation matrix. 
   // Position X Momentum correlation matrix also automatically set.
   // No correlation with Z
@@ -313,7 +371,7 @@ StatusCode ChargedParticleMaker::fillParticle( const ProtoParticle* protoCand,
     }
   }
   particle->setPosSlopesCorr(posSlopesCorr);
-    
+  
   // Print out informations 
 //    log << MSG::DEBUG << "ProtoParticle error matrix" 
 //        << trkCov << endreq;
@@ -326,22 +384,22 @@ StatusCode ChargedParticleMaker::fillParticle( const ProtoParticle* protoCand,
   
 //    log << MSG::DEBUG << "correlation" << particle->posSlopesCorr() 
 //        << endreq;
-
+  
 //    log << MSG::DEBUG << "momentumErr" << particle->momentumErr()
 //        << endreq;
   
 //    log << MSG::DEBUG << "correlation" << particle->posMomCorr()
 //        << endreq;
-  
+
   particle->setOrigin(protoCand);
   return StatusCode::SUCCESS;
 } 
-  
+
 //==========================================================================
 //  Finalize
 //==========================================================================
 StatusCode ChargedParticleMaker::finalize() {
-    
+  
   MsgStream log(msgSvc(), name());
   log << MSG::DEBUG << "==> ChargedParticleMaker::finalizing" << endreq;
   
