@@ -1,4 +1,4 @@
-// $Id: DaDiFrontEnd.cpp,v 1.22 2002-02-01 18:01:52 mato Exp $
+// $Id: DaDiFrontEnd.cpp,v 1.23 2002-02-04 10:07:00 mato Exp $
 
 #include "GaudiKernel/Kernel.h"
 
@@ -189,6 +189,30 @@ void parseEnum(DOM_Node node,
     transcode());
 
   gddEnum->setAccess(node.getAttributes().
+    getNamedItem(DOMString::transcode("access")).getNodeValue().
+    transcode());
+}
+
+
+//-----------------------------------------------------------------------------
+void parseTypeDef(DOM_Node node,
+                  DaDiTypeDef* gddTypeDef)
+//-----------------------------------------------------------------------------
+{
+
+  gddTypeDef->setDesc(node.getAttributes().
+    getNamedItem(DOMString::transcode("desc")).getNodeValue().
+    transcode());
+
+  gddTypeDef->setType(node.getAttributes().
+    getNamedItem(DOMString::transcode("type")).getNodeValue().
+    transcode());
+
+  gddTypeDef->setDef(node.getAttributes().
+    getNamedItem(DOMString::transcode("def")).getNodeValue().
+    transcode());
+
+  gddTypeDef->setAccess(node.getAttributes().
     getNamedItem(DOMString::transcode("access")).getNodeValue().
     transcode());
 }
@@ -471,8 +495,15 @@ void parseMethod(DOM_Node node,
       }
       if(met_child.getNodeName().equals("code"))
       {
-        gddMethod->setCode(met_child.getFirstChild().
-        getNodeValue());
+        if (!met_child.getFirstChild().isNull())
+        {
+          gddMethod->setCode(met_child.getFirstChild().
+            getNodeValue());
+        }
+        else
+        {
+          gddMethod->setCode(" ");
+        }
       }
       if(met_child.getNodeName().equals("arg"))
       {        
@@ -531,8 +562,15 @@ void parseConstructor(DOM_Node node,
     {
       if(met_child.getNodeName().equals("code"))
       {
-        gddConstructor->setCode(met_child.getFirstChild().
-          getNodeValue());
+        if (!met_child.getFirstChild().isNull())
+        {
+          gddConstructor->setCode(met_child.getFirstChild().
+            getNodeValue());
+        }
+        else
+        {
+          gddConstructor->setCode(" ");
+        }
       }
       if(met_child.getNodeName().equals("arg"))
       {
@@ -585,8 +623,15 @@ void parseDestructor(DOM_Node node,
     {
       if(met_child.getNodeName().equals("code"))
       {
-        gddDestructor->setCode(met_child.getFirstChild().
-          getNodeValue());
+        if (!met_child.getFirstChild().isNull())
+        {
+          gddDestructor->setCode(met_child.getFirstChild().
+            getNodeValue());
+        }
+        else
+        {
+          gddDestructor->setCode(" ");
+        }
       }
       if(met_child.getNodeName().equals("arg"))
       {
@@ -861,13 +906,21 @@ void parseClass(DOM_Node node,
 //
         if(node.getNodeName().equals("desc"))
         {
-          DOMString description = node.getFirstChild().getNodeValue(); 
+          DOMString description;
+          if (!node.getFirstChild().isNull())
+          {
+            description = node.getFirstChild().getNodeValue();
+            classHasDesc = true;
+          }
+          else
+          {
+            description = "";
+          }
           if (gddClass->longDesc() != NULL)
           {
             description = description + gddClass->longDesc();
           }
           gddClass->setLongDesc(description);
-          classHasDesc = true;
         }
 //
 // ParseImport
@@ -904,6 +957,16 @@ void parseClass(DOM_Node node,
           DaDiEnum* gddEnum = new DaDiEnum();
           gddClass->pushDaDiEnum(gddEnum);
           parseEnum(node, gddEnum);
+        }
+
+//
+// Parse typedef
+//
+        else if(node.getNodeName().equals("typedef"))
+        {
+          DaDiTypeDef* gddTypeDef = new DaDiTypeDef();
+          gddClass->pushDaDiTypeDef(gddTypeDef);
+          parseTypeDef(node, gddTypeDef);
         }
 
 //

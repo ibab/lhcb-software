@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/GaudiObjDesc/src/DaDiClass.h,v 1.14 2002-02-01 18:01:51 mato Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/GaudiObjDesc/src/DaDiClass.h,v 1.15 2002-02-04 10:06:59 mato Exp $
 #ifndef DADICLASS_H 
 #define DADICLASS_H 1
 
@@ -16,6 +16,7 @@
 #include "DaDiDestructor.h"
 #include "DaDiEnum.h"
 #include "DaDiLocation.h"
+#include "DaDiTypeDef.h"
 
 /** @class DaDiClass DaDiClass.h
  *  
@@ -104,6 +105,10 @@ public:
 	void pushDaDiLocation(DaDiLocation* value);
 	int sizeDaDiLocation();
   
+  DaDiTypeDef* popDaDiTypeDef();
+	void pushDaDiTypeDef(DaDiTypeDef* value);
+	int sizeDaDiTypeDef();
+  
 protected:
 
 private:
@@ -128,6 +133,7 @@ private:
   std::list<DaDiDestructor*>  m_daDiDestructor;
   std::list<DaDiEnum*>        m_daDiEnum;
   std::list<DaDiLocation*>    m_daDiLocation;
+  std::list<DaDiTypeDef*>     m_daDiTypeDef;
 };
 
 inline DOMString DaDiClass::className()
@@ -531,6 +537,24 @@ inline void DaDiClass::pushDaDiLocation(DaDiLocation* value)
 inline int DaDiClass::sizeDaDiLocation()
 {
 	return m_daDiLocation.size();
+}
+
+inline DaDiTypeDef* DaDiClass::popDaDiTypeDef()
+{
+	DaDiTypeDef* pt = m_daDiTypeDef.front();
+	m_daDiTypeDef.push_back(pt);
+	m_daDiTypeDef.pop_front();
+	return pt;
+}
+
+inline void DaDiClass::pushDaDiTypeDef(DaDiTypeDef* value)
+{
+	m_daDiTypeDef.push_back(value);
+}
+
+inline int DaDiClass::sizeDaDiTypeDef()
+{
+	return m_daDiTypeDef.size();
 }
 
 

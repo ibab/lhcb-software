@@ -14,7 +14,7 @@
 <!ATTLIST package
 	name CDATA #REQUIRED
 >
-<!ELEMENT class ((desc?, base?, import?, location?, enum?, constructor?, destructor?, method?, attribute?, relation?)*)>
+<!ELEMENT class ((desc?, base?, import?, location?, enum?, typedef?, constructor?, destructor?, method?, attribute?, relation?)*)>
 <!ATTLIST class
 	name CDATA #REQUIRED
 	author CDATA #REQUIRED
@@ -51,6 +51,13 @@
 	desc CDATA #REQUIRED
 	value CDATA #REQUIRED
 	access (PUBLIC | PROTECTED | PRIVATE) "PRIVATE"
+>
+<!ELEMENT typedef EMPTY>
+<!ATTLIST typedef 
+  desc CDATA #REQUIRED
+  type CDATA #REQUIRED
+  def CDATA #REQUIRED
+  access (PUBLIC | PROTECTED | PRIVATE) "PRIVATE"
 >
 <!ELEMENT constructor (arg*, code?, arg*)>
 <!ATTLIST constructor

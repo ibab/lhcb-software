@@ -1,4 +1,4 @@
-// $Id: DaDiCppHeader.cpp,v 1.36 2002-02-01 18:01:51 mato Exp $
+// $Id: DaDiCppHeader.cpp,v 1.37 2002-02-04 10:06:59 mato Exp $
 
 #include "GaudiKernel/Kernel.h"
 
@@ -678,6 +678,30 @@ template<class T> void printEnums(std::ofstream& xmlOut,
 
 
 //-----------------------------------------------------------------------------
+void printTypeDefs(std::ofstream& xmlOut,
+                   DaDiClass* gddClass,
+                   const std::string& accessor)
+//-----------------------------------------------------------------------------
+{
+  int i;
+  for (i=0; i<gddClass->sizeDaDiTypeDef(); ++i)
+  {
+    DaDiTypeDef* gddTypeDef = gddClass->popDaDiTypeDef();
+    std::string gddTypeDefDesc = gddTypeDef->desc().transcode(),
+                gddTypeDefType = gddTypeDef->type().transcode(),
+                gddTypeDefDef = gddTypeDef->def().transcode(),
+                gddTypeDefAccess = gddTypeDef->access().transcode();
+
+    if (accessor == "" || gddTypeDefAccess == accessor) 
+    {
+      xmlOut << "  typedef " << gddTypeDefType << " " << gddTypeDefDef << ";   ///<" 
+          << gddTypeDefDesc << std::endl;
+    }
+  }
+}
+
+
+//-----------------------------------------------------------------------------
 void printMembers(std::ofstream& xmlOut,
                   DaDiClass* gddClass,
                   const std::string& accessor)
@@ -1274,6 +1298,7 @@ void printClass(std::ofstream& xmlOut,
 
   // print public members
   printEnums(xmlOut, gddClass, "PUBLIC");
+  printTypeDefs(xmlOut, gddClass, "PUBLIC");
   printMembers(xmlOut, gddClass, "PUBLIC");
 
   //
@@ -1286,6 +1311,7 @@ void printClass(std::ofstream& xmlOut,
 
   printMethodDecl(xmlOut, gddClass, "PROTECTED");
   printEnums(xmlOut, gddClass, "PROTECTED");
+  printTypeDefs(xmlOut, gddClass, "PROTECTED");
   printMembers(xmlOut,gddClass, "PROTECTED");
 
 
@@ -1305,6 +1331,7 @@ void printClass(std::ofstream& xmlOut,
 //  Private members (attributes)
 //
   printEnums(xmlOut, gddClass, "PRIVATE");
+  printTypeDefs(xmlOut, gddClass, "PRIVATE");
   printMembers(xmlOut, gddClass, "PRIVATE");
   
   xmlOut << std::endl 
