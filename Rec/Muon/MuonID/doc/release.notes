@@ -1,6 +1,10 @@
-! $Id: release.notes,v 1.6 2002-06-10 16:19:04 cattanem Exp $
+! $Id: release.notes,v 1.7 2002-07-05 08:58:10 dhcroft Exp $
 ! Package     : MuonID
 ! Responsible : David Hutchcroft
+
+! 2002-07-05 - David Hutchcroft
+ - Added tests to tracks to make MuonID from: now ID tracks with :
+   unqiue && (matched || forward || upstream), needed to run on Rec/Tr/Best
 
 ! 2002-06-10 - Marco Cattaneo
  - Change version to v2r0, to use EventKernel v2r*
