@@ -4,20 +4,24 @@
 
 // Det tool interface
 ToolSvc.RichDetInterface.OutputLevel = 2;
+ToolSvc.SICBPixelGeom.OutputLevel = 2;
 
 // Rich Rec tools
-ToolSvc.RichPhotonCreator.OutputLevel = 2;
 ToolSvc.RichTrackCreator.OutputLevel = 2;
-ToolSvc.RichTrackProperties.OutputLevel = 2;
-ToolSvc.RichSegmentCreator.OutputLevel = 2;
-ToolSvc.RichSegmentProperties.OutputLevel = 2;
 ToolSvc.RichPixelCreator.OutputLevel = 2;
-ToolSvc.RichRecMCTruthTool.OutputLevel = 2;
+ToolSvc.RichPhotonCreator.OutputLevel = 2;
+ToolSvc.RichSegmentCreator.OutputLevel = 2;
+ToolSvc.RichStatusCreator.OutputLevel = 2;
+ToolSvc.RichGeomEff.OutputLevel = 2;
+ToolSvc.RichExpectedTrackSignal.OutputLevel = 2;
 ToolSvc.RichPhotonPredictor.OutputLevel = 2;
 ToolSvc.RichPhotonSignal.OutputLevel = 2;
+ToolSvc.RichSellmeirFunc.OutputLevel = 2;
+ToolSvc.RichCherenkovAngle.OutputLevel = 2;
+ToolSvc.RichCherenkovResolution.OutputLevel = 2;
+ToolSvc.RichSignalDetectionEff.OutputLevel = 2;
+ToolSvc.RichRecMCTruthTool.OutputLevel = 2;
 ToolSvc.RichToolRegistry.OutputLevel = 2;
-ToolSvc.RichGeomEff.OutputLevel = 2;
-ToolSvc.RichStatusCreator.OutputLevel = 2;
 
 // Ring Refit
 RichRingRefit.OutputLevel = 2;
