@@ -1,4 +1,4 @@
-// $Id: RichRecAlgBase.cpp,v 1.3 2003-06-30 15:11:57 jonrob Exp $
+// $Id: RichRecAlgBase.cpp,v 1.4 2003-07-01 16:56:03 jonesc Exp $
 // Include files
 
 // from Gaudi
@@ -60,6 +60,7 @@ StatusCode RichRecAlgBase::initialize() {
   this->queryInterface( IID_IProperty, (void**)&algIProp );
   msgLevel.assign( algIProp->getProperty( "OutputLevel" ) );
   m_msgLevel = msgLevel;
+  algIProp->release();
 
   // Get pointer to Rich Tool Registry
   if ( !toolSvc()->retrieveTool( "RichToolRegistry", m_toolReg) ) {
