@@ -1,4 +1,4 @@
-// $Id: IRichRayTracing.h,v 1.7 2004-07-15 15:47:19 jonrob Exp $
+// $Id: IRichRayTracing.h,v 1.8 2004-07-15 17:07:09 jonrob Exp $
 #ifndef RICHKERNEL_IRICHRAYTRACING_H
 #define RICHKERNEL_IRICHRAYTRACING_H 1
 
@@ -96,7 +96,7 @@ public:
    *
    *  @return Status of the ray tracing
    *  @retval StatusCode::SUCCESS Ray tracing was successful
-   *  @retval StatusCode::FAILURE Ray tracing fell outside acceptance, as defined by mode
+   *  @retval StatusCode::FAILURE Ray tracing fell outside acceptance
    */
   virtual StatusCode 
   intersectPDPanel ( Rich::DetectorType rich,
