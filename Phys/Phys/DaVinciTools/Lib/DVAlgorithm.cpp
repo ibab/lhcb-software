@@ -186,7 +186,9 @@ StatusCode DVAlgorithm::sysExecute () {
     // Create and fill selection result object
     SelResult* myResult = new SelResult();
     myResult->setFound(filterPassed());
-    myResult->setLocation(name());
+    myResult->setLocation( ("/Event/Phys/"+name()));
+    msg << MSG::VERBOSE << "Selresult location set to " << 
+      "/Event/Phys/"+name() << endreq;
     myResult->setDecay(m_decayDescriptor);
     
     if (filterPassed()) m_countFilterPassed++;

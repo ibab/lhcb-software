@@ -1,7 +1,11 @@
-! $Id: release.notes,v 1.95 2004-06-18 11:57:04 pkoppenb Exp $
+! $Id: release.notes,v 1.96 2004-06-22 10:49:20 pkoppenb Exp $
 ! Package     : DaVinciTools
 ! Responsible : P. Koppenburg, Sandra Amato
 
+! 2004-06-22 - P. Koppenburg
+  - Lib/DVAlgorithm.cpp
+    . Correct location is Selresult
+    
 ! 2004-06-18 - P. Koppenburg for Vanya Belyaev
   - src/ParticleMakerSeq.cpp
   - src/ParticleMakerSeq.h
