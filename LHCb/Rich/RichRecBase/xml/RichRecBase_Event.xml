@@ -96,24 +96,24 @@
             <relation desc="SmartRefVector of RichRecPixels for which this track has valid photon associations" multiplicity="N" name="richRecPixelsSmartRefs" type="RichRecPixel"/>
             <relation desc="SmartRefVector of associated RichRecPhotons" multiplicity="N" name="richRecPhotonsSmartRefs" type="RichRecPhoton"/>
             <typedef access="PUBLIC" def="Segments" desc="Container type for RichRecSegments" type="std::vector&lt;RichRecSegment*&gt;"/>
-            <attribute access="PRIVATE" desc=" Associated RichRecSegments" name="richRecSegments" serialize="FALSE" type="Segments"/>
+            <attribute access="PRIVATE" desc="Associated RichRecSegments" name="richRecSegments" serialize="FALSE" type="Segments"/>
             <method desc="Add to associated RichRecSegments" inline="TRUE" name="addToRichRecSegments">
                 <arg const="FALSE" name="segment" type="RichRecSegment*"/>
                 <code>m_richRecSegments.push_back(segment);</code>
             </method>
             <typedef access="PUBLIC" def="Pixels" desc="Container type for RichRecPixels" type="std::vector&lt;RichRecPixel*&gt;"/>
-            <attribute access="PRIVATE" desc=" Associated RichRecPixels" name="richRecPixels" serialize="FALSE" type="Pixels"/>
+            <attribute access="PRIVATE" desc="Associated RichRecPixels" name="richRecPixels" serialize="FALSE" type="Pixels"/>
             <method desc="Add to associated RichRecPixels" inline="TRUE" name="addToRichRecPixels">
                 <arg const="FALSE" name="pixel" type="RichRecPixel*"/>
                 <code>m_richRecPixels.push_back(pixel);</code>
             </method>
             <typedef access="PUBLIC" def="Photons" desc="Container type for RichRecPhotons" type="std::vector&lt;RichRecPhoton*&gt;"/>
-            <attribute access="PRIVATE" desc=" Associated RichRecPhotons" name="richRecPhotons" serialize="FALSE" type="Photons"/>
+            <attribute access="PRIVATE" desc="Associated RichRecPhotons" name="richRecPhotons" serialize="FALSE" type="Photons"/>
             <method desc="Add to associated RichRecPhotons" inline="TRUE" name="addToRichRecPhotons">
                 <arg const="FALSE" name="photon" type="RichRecPhoton*"/>
                 <code>m_richRecPhotons.push_back(photon);</code>
             </method>
-            <attribute desc="Flag to say if all possible photon candidates have been mad for this segment" init="false" name="allPhotonsDone" type="bool"/>
+            <attribute desc="Flag to say if all possible photon candidates have been made for this segment" init="false" name="allPhotonsDone" type="bool"/>
         </class>
 
 
@@ -151,13 +151,13 @@
             <relation desc="SmartRefVector of RichRecTracks for which this pixel has valid photon associations" multiplicity="N" name="richRecTracksSmartRefs" type="RichRecTrack"/>
             <relation desc="SmartRefVector to associated RichRecPhotons" multiplicity="N" name="richRecPhotonsSmartRefs" type="RichRecPhoton"/>
             <typedef access="PUBLIC" def="Tracks" desc="Container type for RichRecTracks" type="std::vector&lt;RichRecTrack*&gt;"/>
-            <attribute access="PRIVATE" desc=" Associated RichRecTracks" name="richRecTracks" serialize="FALSE" type="Tracks"/>
+            <attribute access="PRIVATE" desc="Associated RichRecTracks" name="richRecTracks" serialize="FALSE" type="Tracks"/>
             <method desc="Add to associated RichRecTracks" inline="TRUE" name="addToRichRecTracks">
                 <arg const="FALSE" name="track" type="RichRecTrack*"/>
                 <code>m_richRecTracks.push_back(track);</code>
             </method>
             <typedef access="PUBLIC" def="Photons" desc="Container type for RichRecPhotons" type="std::vector&lt;RichRecPhoton*&gt;"/>
-            <attribute access="PRIVATE" desc=" Associated RichRecPhotons" name="richRecPhotons" serialize="FALSE" type="Photons"/>
+            <attribute access="PRIVATE" desc="Associated RichRecPhotons" name="richRecPhotons" serialize="FALSE" type="Photons"/>
             <method desc="Add to associated RichRecPhotons" inline="TRUE" name="addToRichRecPhotons">
                 <arg const="FALSE" name="photon" type="RichRecPhoton*"/>
                 <code>m_richRecPhotons.push_back(photon);</code>
@@ -174,6 +174,7 @@
             <import name="RichRecBase/RichPhotonSpectra"/>
             <import name="RichKernel/RichHypoData"/>
             <import name="Kernel/RichSmartID"/>
+            <import name="Event/RichRecRing"/>
             <typedef access="PUBLIC" def="PDGeomEffs" desc="Data containers for each hypothesis" type="RichMap&lt;RichSmartID::KeyType,double&gt;"/>
             <typedef access="PUBLIC" def="PDGeomEffsVector" desc="Data containers for each hypothesis" type="std::vector&lt; PDGeomEffs &gt;"/>
             <constructor desc="Constructor from a RichTrackSegment" initList="m_emittedPhotonSpectra(enBins,minEn,maxEn), m_detectablePhotonSpectra(enBins,minEn,maxEn), m_signalPhotonSpectra(enBins,minEn,maxEn), m_geomEfficiencyPerPD(Rich::NParticleTypes, PDGeomEffs() ), m_trackSegment(segment), m_hitDetectorRegions(0), m_hypothesisRings(0), m_richRecTrack(pTrk), m_allPhotonsDone(false)">
@@ -288,18 +289,18 @@
             <relation desc="SmartRef to associated RichRecPhotons" multiplicity="N" name="richRecPhotonsSmartRefs" type="RichRecPhoton"/>
             <attribute compression="FALSE" desc="Associated RichRecTrack" init="0" name="richRecTrack" serialize="FALSE" type="RichRecTrack*"/>
             <typedef access="PUBLIC" def="Pixels" desc="Container type for RichRecPixels" type="std::vector&lt;RichRecPixel*&gt;"/>
-            <attribute access="PRIVATE" desc=" Associated RichRecPixels" name="richRecPixels" serialize="FALSE" type="Pixels"/>
+            <attribute access="PRIVATE" desc="Associated RichRecPixels" name="richRecPixels" serialize="FALSE" type="Pixels"/>
             <method desc="Add to associated RichRecPixels" inline="TRUE" name="addToRichRecPixels">
                 <arg const="FALSE" name="pixel" type="RichRecPixel*"/>
                 <code>m_richRecPixels.push_back(pixel);</code>
             </method>
             <typedef access="PUBLIC" def="Photons" desc="Container type for RichRecPhotons" type="std::vector&lt;RichRecPhoton*&gt;"/>
-            <attribute access="PRIVATE" desc=" Associated RichRecPhotons" name="richRecPhotons" serialize="FALSE" type="Photons"/>
+            <attribute access="PRIVATE" desc="Associated RichRecPhotons" name="richRecPhotons" serialize="FALSE" type="Photons"/>
             <method desc="Add to associated RichRecPhotons" inline="TRUE" name="addToRichRecPhotons">
                 <arg const="FALSE" name="photon" type="RichRecPhoton*"/>
                 <code>m_richRecPhotons.push_back(photon);</code>
             </method>
-            <attribute desc="Flag to say if all possible photon candidates have been mad for this segment" init="false" name="allPhotonsDone" type="bool"/>
+            <attribute desc="Flag to say if all possible photon candidates have been made for this segment" init="false" name="allPhotonsDone" type="bool"/>
         </class>
 
 
@@ -367,7 +368,7 @@
         </class>
 
 
-        <class author="Chris Jones    Christopher.Rob.Jones@cern.ch" desc="A ring candidate. A collection of RichRecPixels associated to a single Cherenkov ring" id="12426" location="Rec/Rich/RecoEvent/Rings" name="RichRecRing">
+        <class author="Chris Jones    Christopher.Rob.Jones@cern.ch" desc="A Cherenkov Ring" id="12426" location="Rec/Rich/RecoEvent/Rings" name="RichRecRing">
             <base name="KeyedObject&lt;long&gt;"/>
             &KeyedObject;
             <import name="Kernel/RichDetectorType"/>
@@ -377,8 +378,9 @@
             <import ignore="TRUE" name="DetectorType"/>
             <import ignore="TRUE" name="Side"/>
             <import ignore="TRUE" name="ParticleIDType"/>
-            <location name="SegmentHypoRings" place="Rec/Rich/RecoEvent/HypoRings"/>
-            <location name="Markov" place="Rec/Rich/Markov/Rings"/>
+
+            <location name="SegmentHypoRings" place="Rec/Rich/RecoEvent/SegmentHypoRings"/>
+            <location name="MarkovRings"      place="Rec/Rich/Markov/Rings"/>
 
             <method const="FALSE" desc="Set the RICH detector identifier. NB: Using custom method until G.O.D. supports specific automatically generated return values." name="setRich" type="void">
                 <code>m_historyCode &amp;= ~richMask;
@@ -396,20 +398,23 @@ m_historyCode |= (( static_cast&lt;unsigned&gt;(panel) &lt;&lt; panelBits ) &amp
             <method const="TRUE" desc="Get the RICH detector identifier. NB: Using custom method until G.O.D. supports specific automatically generated return values." name="panel" type="Rich::Side">
                 <code>return static_cast&lt;Rich::Side&gt;((m_historyCode &amp; panelMask) &gt;&gt; panelBits);</code>
             </method>
-            <enum name='RingType' value='RayTracedPhotons,ReconstructedFromPixels' access='PUBLIC' desc='Describes how this ring was constructed'/>
-            <attribute desc="Bit packed field containing RICH specific information" name="historyCode" type="bitfield">
+
+
+            <attribute desc="Reconstructed centre point on HPD panel (global coordinates)" name="centrePointGlobal" type="HepPoint3D"/>
+            <attribute desc="Reconstructed centre point on HPD panel (local coordinates)"  name="centrePointLocal" type="HepPoint3D"/>
+            <attribute desc="The radius of the reconstructed ring, in radians" init="0" name="radius" type="double"/>
+            <attribute desc="Assumed mass hypothsis for this ring" init="Rich::Unknown" name="massHypo" type="Rich::ParticleIDType"/>
+            <attribute desc="Global coordinates associated to this ring" name="ringPoints" type="std::vector&lt;HepPoint3D&gt;"/>
+
+            <attribute desc="Bit packed field containing history information" name="historyCode" type="bitfield">
                 <bitfield desc="The Rich detector. Either Rich::Rich1 or Rich::Rich2" getMeth="FALSE" length="1" name="rich" setMeth="FALSE"/>
                 <bitfield desc="The Rich panel. For Rich1(Rich2) either Rich::up(Rich::left) or Rich::down(Rich::right)" getMeth="FALSE" length="1" name="panel" setMeth="FALSE"/>
             </attribute>
-            <attribute desc="Reconstructed centre point in global coordinates on HPD panel" name="centrePointGlobal" type="HepPoint3D"/>
-            <attribute desc="Reconstructed centre point in local coordinates on HPD panel" name="centrePointLocal" type="HepPoint3D"/>
-            <attribute desc="The radius of the reconstructed ring, in radians" init="0" name="radius" type="double"/>
-            <relation desc="The RichRecPixels associated to this single ring (if available)" multiplicity="N" name="richRecPixels" type="RichRecPixel"/>
-            <relation desc="Associated RichRecSegment (if available)" name="richRecSegment" type="RichRecSegment"/>
-            <attribute desc="Global coordinates asscoiated to this ring" name="ringPoints" type="std::vector&lt;HepPoint3D&gt;"/>
-            <attribute desc="Assumed mass hypothsis for this ring" init="Rich::Unknown" name="massHypo" type="Rich::ParticleIDType"/>
-        </class>
 
+            <relation desc="Associated RichRecSegment" name="richRecSegment" type="RichRecSegment"/>
+            <relation desc="The RichRecPixels associated to this ring" multiplicity="N" name="richRecPixels" type="RichRecPixel"/>
+
+        </class>
 
     </package>
 </gdd>
