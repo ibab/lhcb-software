@@ -1,0 +1,9 @@
+!-----------------------------------------------------------------------------
+! Package     : Muon/MuonDAQ
+! Responsible : Alessia Satta
+! Purpose     : Muon System Raw Buffer coding and decoding algorithms
+!-----------------------------------------------------------------------------
+
+!========================== MuonDAQ v1r0 2004-02-05 =======================
+! 2004-02-05 - Alessia Satta
+ - First public version
