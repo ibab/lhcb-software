@@ -1,8 +1,11 @@
-// $Id: SShapeAsinh.opts,v 1.3 2002-06-21 11:02:45 ibelyaev Exp $ 
+// $Id: SShapeAsinh.opts,v 1.4 2002-06-21 15:57:12 ibelyaev Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.3  2002/06/21 11:02:45  ibelyaev
+//  update in S-,L- and E-corrections
+//
 // ============================================================================
 
 
@@ -26,9 +29,12 @@ ToolSvc.SShapeAsinh.AreaCorrections =
 ToolSvc.SShapeAsinh.Detector   = "/dd/Structure/LHCb/Ecal" ;
 
 ToolSvc.CaloASINH0.XParameters = {   0.1093 } ; 
+ToolSvc.CaloASINH0.YParameters = {   0.1093 } ; 
 ToolSvc.CaloASINH0.CellSize    =   121.50   ; 
 ToolSvc.CaloASINH1.XParameters = {   0.1326 } ; 
+ToolSvc.CaloASINH1.YParameters = {   0.1326 } ; 
 ToolSvc.CaloASINH1.CellSize    =    60.75     ; 
 ToolSvc.CaloASINH2.XParameters = {   0.1462 } ; 
+ToolSvc.CaloASINH2.YParameters = {   0.1462 } ; 
 ToolSvc.CaloASINH2.CellSize    =    40.5      ; 
 

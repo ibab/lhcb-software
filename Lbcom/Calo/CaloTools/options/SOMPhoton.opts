@@ -1,8 +1,11 @@
-// $Id: SOMPhoton.opts,v 1.1 2002-06-14 11:38:08 ibelyaev Exp $ 
+// $Id: SOMPhoton.opts,v 1.2 2002-06-21 15:57:12 ibelyaev Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.1  2002/06/14 11:38:08  ibelyaev
+//  update and version change
+//
 // ============================================================================
 
 /** @file 
@@ -11,8 +14,6 @@
  *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
  *  @date 13 June 2002 
  */
-
-ToolSvc.SOMPhoton.OutputLevel = 1;
 
 ToolSvc.SOMPhoton.Es0   = {     0.  ,     0.   ,     0.   } ;
 ToolSvc.SOMPhoton.Es1   = { 20000.  , 40000.   , 40000.   } ;
