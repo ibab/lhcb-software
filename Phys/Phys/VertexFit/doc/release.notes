@@ -1,8 +1,9 @@
-! $Id: release.notes,v 1.24 2005-02-28 17:45:56 hruiz Exp $
+! $Id: release.notes,v 1.25 2005-03-03 15:04:43 pkoppenb Exp $
 ! Package     : VertexFit
 ! Responsible : Yuehong Xie, P. Koppenburg, H. Ruiz
 
 
+!========================== VertexFit v1r5 2005-03-03 ===================
 ! 2005-02-28 - Hugo Ruiz
   - src/TrgDispCalculator.cpp
     . Implemented the method calcCloseAppr, that computes the minimum
