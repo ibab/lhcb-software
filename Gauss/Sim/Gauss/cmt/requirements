@@ -25,7 +25,7 @@ use HbookCnv            v13r*
 use Magnet              v2r*    Det
 
 #GiGa staff...
-use GiGaCnv             v11r1   Sim
+use GiGaCnv             v11r2   Sim
 use GaussTools          v6r1    Sim
 use GaussTracker        v2r1    Sim
 use GaussRICH           v2r1    Sim
