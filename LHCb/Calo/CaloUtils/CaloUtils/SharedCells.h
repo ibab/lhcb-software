@@ -1,8 +1,11 @@
-// $Id: SharedCells.h,v 1.2 2001-11-08 20:04:23 ibelyaev Exp $ 
+// $Id: SharedCells.h,v 1.3 2002-04-02 10:59:30 ibelyaev Exp $ 
 // =========================================================================== 
 // CVS tag $Name: not supported by cvs2svn $
 // =========================================================================== 
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2001/11/08 20:04:23  ibelyaev
+//  update and bug fix
+//
 // Revision 1.1.1.1  2001/11/02 14:39:53  ibelyaev
 // New package: The first commit into CVS
 //
@@ -16,23 +19,24 @@
 #include <cmath>
 // Include files
 #include "CLHEP/Geometry/Point3D.h"
-/** 
- *  set of inline functions used for CaloSharedCellalg 
+
+/** @namespace SharedCells SharedCells.h CaloUtils/SharedCells.h
  *
- *  @author Ivan Belyaev
+ *  set of inline functions used for CaloSharedCellAlg 
+ *
+ *  @author Vanya Belyaev Ivan Belyaev
  *  @date   04/07/2001
  */
 
 namespace SharedCells
 {
 
-  /// =========================================================================
+  //  =========================================================================
   /** Redistribute the energy proportional to a given weights 
    *  @param   List    a "list" of clusters for given cell 
    *  @param   Weight  "list"  of weights  
    *  @return  status code 
    */
-  /// =========================================================================
   template <class L, class W>
   inline StatusCode redistribute( L& List , const W& Weight )
   {
@@ -48,13 +52,14 @@ namespace SharedCells
         if( 0 == cluster ) { continue ; }     ///< CONTINUE !!!
         const unsigned index = iC - List.begin() ;
         const double   frac  = Weight[index] / wTot ;
-        iC->second->second.setFraction( frac )   ;
+        iC->second->setFraction( frac )   ;
       }  
     ///
     return StatusCode::SUCCESS;
   };
+  //  =========================================================================
   
-  /// =========================================================================
+  //  =========================================================================
   /** concrete method for redistribution of energy for shared cells. 
    *  It redistributes the energy proportionally to a total(summed)
    *  energy of clusters. 
@@ -65,7 +70,6 @@ namespace SharedCells
    *  @param   NiT   number of iterations 
    *  @return  status code 
    */
-  /// =========================================================================
   template <class L>
   inline StatusCode summedEnergyAlgorithm( L& List , int NiT )
   {
@@ -86,8 +90,8 @@ namespace SharedCells
         const unsigned index = iC - List.begin() ;
         /// calculate the energy of each cluster
         const double   eClu  = 
-          ClusterFunctors::energy( cluster->digits().begin() ,
-                                   cluster->digits().end  () ) ;
+          ClusterFunctors::energy( cluster->entries().begin() ,
+                                   cluster->entries().end  () ) ;
         /// define the weight for this cluster 
         weight[index]  = eClu ;
       }
@@ -96,8 +100,9 @@ namespace SharedCells
     /// make iteration  
     return SharedCells::summedEnergyAlgorithm( List , --NiT  ) ;  
   };
+  //  =========================================================================
   
-  /// =========================================================================
+  //  =========================================================================
   /** concrete method for redistribution of energy for shared cells. 
    *  It redistributes the energy proportionally to energies of seed cells  
    *  the method is artificially templated to avoid 
@@ -111,7 +116,6 @@ namespace SharedCells
    *  @param   type   "type" of seed cell 
    *  @return  status code 
    */
-  /// =========================================================================
   template <class L, class T>
   inline StatusCode seedEnergyAlgorithm( L& List , const T& type )
   {
@@ -127,13 +131,13 @@ namespace SharedCells
         /// ignore artificial zeroes
         if( 0 == cluster ) { continue ; }  
         /// locate (first) seed cell 
-        CaloCluster::Digits::const_iterator iSeed =
-          ClusterFunctors::locateDigit( cluster->digits().begin() ,
-                                        cluster->digits().end  () ,
+        CaloCluster::Entries::const_iterator iSeed =
+          ClusterFunctors::locateDigit( cluster->entries().begin() ,
+                                        cluster->entries().end  () ,
                                         type                      );
         /// success ???
-        if( cluster->digits().end() == iSeed ) { return StatusCode(220) ; }
-        const CaloDigit* seed = iSeed->first;
+        if( cluster->entries().end() == iSeed ) { return StatusCode(220) ; }
+        const CaloDigit* seed = iSeed->digit() ;
         if( 0 == seed )                        { return StatusCode(221) ; }
         /// get the energy of the seed cell 
         const double     e  = seed->e() ;
@@ -144,8 +148,9 @@ namespace SharedCells
     /// redistribute the  energy  
     return SharedCells::redistribute( List , weight );
   };
+  //  =========================================================================
   
-  /// =========================================================================
+  //  =========================================================================
   /** concrete method for redistribution of energy for shared cells. 
    *  It redistributes the energy proportionally to energies of seed cells  
    *  weighted with distance function between center of the seed cell and 
@@ -165,7 +170,6 @@ namespace SharedCells
    *  @param   size   vector of shower size measures 
    *  @return  status code 
    */
-  /// =========================================================================
   template <class L, class DE, class T, class SIZE>
   inline StatusCode seedDistanceAlgorithm( L&                List , 
                                            const DE&         Det  ,
@@ -188,13 +192,13 @@ namespace SharedCells
         /// ignore artificial zeroes
         if( 0 == cluster ) { continue ; }  
         /// locate (first) seed cell 
-        CaloCluster::Digits::const_iterator iSeed =
-          ClusterFunctors::locateDigit( cluster->digits().begin() ,
-                                        cluster->digits().end  () ,
+        CaloCluster::Entries::const_iterator iSeed =
+          ClusterFunctors::locateDigit( cluster->entries().begin() ,
+                                        cluster->entries().end  () ,
                                         type                      );
         /// success ???
-        if( cluster->digits().end() == iSeed ) { return StatusCode(220) ; }
-        const CaloDigit* seed = iSeed->first ;
+        if( cluster->entries().end() == iSeed ) { return StatusCode(220) ; }
+        const CaloDigit* seed = iSeed->digit() ;
         if( 0 == seed                        ) { return StatusCode(221) ; }
         /// get the energy of the seed cell
         const double     e  = seed->e() ;
@@ -210,9 +214,10 @@ namespace SharedCells
     /// redistribute the energies  
     return SharedCells::redistribute( List , weight );
   };
+  //  =========================================================================
 
 
-  /// =========================================================================
+  //  =========================================================================
   /** concrete method for redistribution of energy for shared cells. 
    *  It redistributes the energy proportionally to energies of seed cells  
    *  weighted with distance function between center of gravity of cluster 
@@ -232,7 +237,6 @@ namespace SharedCells
    *  @param   NiT    number of iterations 
    *  @return  status code 
    */
-  /// =========================================================================
   template <class L, class DE, class SIZE>
   inline StatusCode summedDistanceAlgorithm( L&                List , 
                                              const DE&         Det  ,
@@ -258,8 +262,8 @@ namespace SharedCells
         if( 0 == cluster ) { continue ; }
         double x , y , e ;
         StatusCode sc = 
-          ClusterFunctors::calculateEXY( cluster->digits().begin() ,
-                                         cluster->digits().end  () ,
+          ClusterFunctors::calculateEXY( cluster->entries().begin() ,
+                                         cluster->entries().end  () ,
                                          Det , e , x , y           );
         /// success ???
         if( sc.isFailure() ) { return sc ; }
@@ -279,6 +283,7 @@ namespace SharedCells
     return 
       SharedCells::summedDistanceAlgorithm( List, Det , ID , size, --NiT ) ;
   };
+  //  =========================================================================
 
 
 }; ///< end of namespace 

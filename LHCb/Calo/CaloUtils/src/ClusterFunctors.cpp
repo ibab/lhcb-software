@@ -1,6 +1,9 @@
-// $Id: ClusterFunctors.cpp,v 1.2 2001-12-02 14:59:49 ibelyaev Exp $ 
+// $Id: ClusterFunctors.cpp,v 1.3 2002-04-02 10:59:31 ibelyaev Exp $ 
 // ===========================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2001/12/02 14:59:49  ibelyaev
+//  add new functor for z-position of cluster
+//
 // Revision 1.1.1.1  2001/11/02 14:39:53  ibelyaev
 // New package: The first commit into CVS
 //
@@ -21,8 +24,8 @@
 // CaloDEt 
 #include "CaloDet/DeCalorimeter.h"
 // CaloEvent 
-#include "CaloEvent/CaloCluster.h"
-#include "CaloEvent/CaloDigit.h"
+#include "Event/CaloCluster.h"
+#include "Event/CaloDigit.h"
 // CaloUtils
 #include "CaloUtils/ClusterFunctors.h"
 
@@ -38,16 +41,16 @@
 
 /// ===========================================================================
 /**  Calculate the "energy" of the cluster as a sum of 
-     energies of its digits, weighted with energy fractions
-     @param   cl  pointer to cluster 
-     @return      "energy" of cluster
-*/
+ *   energies of its digits, weighted with energy fractions
+ *   @param   cl  pointer to cluster 
+ *   @return      "energy" of cluster
+ */
 /// ===========================================================================
 double  ClusterFunctors::energy( const CaloCluster* cl )
 {
-  if( 0 == cl ||  cl->digits().empty() ) { return 0 ; }
+  if( 0 == cl ||  cl->entries().empty() ) { return 0 ; }
   return 
-	  ClusterFunctors::energy( cl->digits().begin() , cl->digits().end() ) ;
+	  ClusterFunctors::energy( cl->entries().begin() , cl->entries().end() ) ;
 };
 
 // ===========================================================================
@@ -65,16 +68,16 @@ bool ClusterFunctors::overlapped( const CaloCluster* cl1 ,
                                   const CaloCluster* cl2 )
 { 
   if( 0 == cl1              || 0 == cl2              || 
-      cl1->digits().empty() || cl2->digits().empty() ){ return false ; }
+      cl1->entries().empty() || cl2->entries().empty() ){ return false ; }
   ///
   const_iterator_pair p =
-    ClusterFunctors::commonDigit( cl1->digits().begin() , 
-                                  cl1->digits().end  () ,
-                                  cl2->digits().begin() , 
-                                  cl2->digits().end  () ) ;
+    ClusterFunctors::commonDigit( cl1->entries().begin() , 
+                                  cl1->entries().end  () ,
+                                  cl2->entries().begin() , 
+                                  cl2->entries().end  () ) ;
   ///
   return 
-    ( cl1->digits().end() == p.first  ) ? false : true ;
+    ( cl1->entries().end() == p.first  ) ? false : true ;
 };
 
 
@@ -100,10 +103,10 @@ StatusCode  ClusterFunctors::calculateEXY( const CaloCluster*   cl ,
   e = 0 ;
   x = 0 ;
   y = 0 ;
-  if( 0 == cl || cl->digits().empty() ){ return StatusCode::FAILURE; }  
+  if( 0 == cl || cl->entries().empty() ){ return StatusCode::FAILURE; }  
   ///
-  return ClusterFunctors::calculateEXY( cl->digits().begin() , 
-                                        cl->digits().end  () , 
+  return ClusterFunctors::calculateEXY( cl->entries().begin() , 
+                                        cl->entries().end  () , 
                                         de , e , x , y       );
 };
 
@@ -113,16 +116,13 @@ StatusCode  ClusterFunctors::calculateEXY( const CaloCluster*   cl ,
  *  @return status code (fictive)
  */
 // ===========================================================================
-StatusCode ClusterFunctors::ClusterZPosition::Exception
-( const std::string& message ) const 
+StatusCode ClusterFunctors::throwException ( const std::string& message )
 {
-  /// throw the exception
-  if( true  ) 
-    { throw CaloException(" ClusterFunctors::ClusterZPosition: " + message ); }
+  // throw the exception
+  if( true ) { throw CaloException(" ClusterFunctors::" + message ); }
   ///
   return StatusCode::FAILURE ;
 };
-
 
 // ===========================================================================
 // The End 

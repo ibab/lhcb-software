@@ -1,8 +1,11 @@
-// $Id: CovarianceEstimator.cpp,v 1.3 2001-11-22 16:02:34 ibelyaev Exp $ 
+// $Id: CovarianceEstimator.cpp,v 1.4 2002-04-02 10:59:31 ibelyaev Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.3  2001/11/22 16:02:34  ibelyaev
+//  new utilities
+//
 // Revision 1.2  2001/11/08 20:04:23  ibelyaev
 //  update and bug fix
 //
@@ -32,7 +35,7 @@
 /// CaloDet
 #include "CaloDet/DeCalorimeter.h"
 /// CaloEvent
-#include "CaloEvent/CaloCluster.h"
+#include "Event/CaloCluster.h"
 /// local
 #include "CaloUtils/CovarianceEstimator.h"
 
@@ -82,17 +85,17 @@ CovarianceEstimator::~CovarianceEstimator(){}
 StatusCode CovarianceEstimator::operator()( CaloCluster* cluster ) const 
 {
   // ignore trivial cases 
-  if( 0 == cluster              ) { return StatusCode::SUCCESS ; }
-  if( cluster->digits().empty() ) { return StatusCode::SUCCESS ; }
+  if( 0 == cluster               ) { return StatusCode::SUCCESS ; }
+  if( cluster->entries().empty() ) { return StatusCode::SUCCESS ; }
   // the detector information is not available
-  if( 0 == detector()           ) { return StatusCode(221)     ; }
+  if( 0 == detector()            ) { return StatusCode(221)     ; }
   
   ///// avoid long names 
-  typedef CaloCluster::Digits::iterator       iterator;
-  typedef CaloCluster::Digits::const_iterator const_iterator;
+  typedef CaloCluster::Entries::iterator       iterator;
+  typedef CaloCluster::Entries::const_iterator const_iterator;
   
-  CaloCluster::Digits& digits = cluster->digits();
-  const unsigned int size = digits.size() ;
+  CaloCluster::Entries& entries = cluster->entries();
+  const unsigned int size = entries.size() ;
   // auxillary arrays 
   std::vector<bool>   use  ( size , false ); ///< use this cell?
   std::vector<double> x    ( size , 0     ); ///< x-position of cell [i]
@@ -115,24 +118,24 @@ StatusCode CovarianceEstimator::operator()( CaloCluster* cluster ) const
   ///
   for( unsigned int i = 0 ; i < size ; ++i )
     {
-      const CaloDigit* digit = digits[i].first ;
+      CaloClusterEntry& entry = entries[i];
+      const CaloDigit* digit  = entry.digit() ;
       /// get the status 
-      CaloDigitStatus& digitStatus = digits[i].second ;
       if( 0 != digit && 
-          ( digitStatus.status() & DigitStatus::UseForCovariance ) ) 
+          ( entry.status() & CaloDigitStatus::UseForCovariance ) ) 
         {
           use[i] = true ; ///< use this cell!
-          digitStatus.setStatus    ( DigitStatus::UseForEnergy   );
-          digitStatus.setStatus    ( DigitStatus::UseForPosition );
+          entry.setStatus    ( CaloDigitStatus::UseForEnergy   );
+          entry.setStatus    ( CaloDigitStatus::UseForPosition );
         }
       else 
         {    
-          digitStatus.removeStatus ( DigitStatus::UseForEnergy   );
-          digitStatus.removeStatus ( DigitStatus::UseForPosition );
+          entry.removeStatus ( CaloDigitStatus::UseForEnergy   );
+          entry.removeStatus ( CaloDigitStatus::UseForPosition );
         }
       if( !use[i] )                   { continue; } ///< CONTINUE !
       /// 
-      const double       fraction = digitStatus.fraction()  ;
+      const double       fraction = entry.fraction()  ;
       const double       energy   = digit->e() * fraction   ;
       ///
       const double e_i  =   energy  ;
@@ -200,9 +203,10 @@ StatusCode CovarianceEstimator::operator()( CaloCluster* cluster ) const
   // does energy have a reasonable value? 
   if( 0 >= eT ) 
     {
-      cluster->setE( -1 * TeV )  ;
-      cluster->setX( -1 * km  )  ;
-      cluster->setY( -1 * km  )  ;
+      CaloPosition::Parameters parameters = cluster->position().parameters();
+      parameters( 1 ) =  -1 * TeV ;
+      parameters( 2 ) =  -1 * km  ;
+      parameters( 3 ) =  -1 * km  ;
       return StatusCode(223)     ; 
     }
   
@@ -232,17 +236,19 @@ StatusCode CovarianceEstimator::operator()( CaloCluster* cluster ) const
     -                2.0 * Ycl * Sey / eT / eT ;
   
   // update cluster patameters  
-  cluster->setE ( Ecl );
-  cluster->setX ( Xcl );
-  cluster->setY ( Ycl );  
+  CaloPosition::Parameters parameters = cluster->position().parameters();
+  parameters( 1 ) = Ecl ;   // E 
+  parameters( 2 ) = Xcl ;   // X 
+  parameters( 3 ) = Ycl ;   // Y 
 
   // update cluster matrix   
-  cluster->cov().fast( 1 , 1 ) = CovEE ;
-  cluster->cov().fast( 2 , 1 ) = CovEX ;
-  cluster->cov().fast( 2 , 2 ) = CovXX ;
-  cluster->cov().fast( 3 , 1 ) = CovEY ;
-  cluster->cov().fast( 3 , 2 ) = CovXY ;
-  cluster->cov().fast( 3 , 3 ) = CovYY ;
+  CaloPosition::Covariance covariance = cluster->position().covariance();
+  covariance.fast( 1 , 1 ) = CovEE ;
+  covariance.fast( 2 , 1 ) = CovEX ;
+  covariance.fast( 2 , 2 ) = CovXX ;
+  covariance.fast( 3 , 1 ) = CovEY ;
+  covariance.fast( 3 , 2 ) = CovXY ;
+  covariance.fast( 3 , 3 ) = CovYY ;
 
   return StatusCode::SUCCESS;
   

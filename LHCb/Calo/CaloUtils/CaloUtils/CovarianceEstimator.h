@@ -1,8 +1,11 @@
-// $Id: CovarianceEstimator.h,v 1.2 2001-11-08 20:04:23 ibelyaev Exp $ 
+// $Id: CovarianceEstimator.h,v 1.3 2002-04-02 10:59:30 ibelyaev Exp $ 
 // ===========================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ===========================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2001/11/08 20:04:23  ibelyaev
+//  update and bug fix
+//
 // Revision 1.1.1.1  2001/11/02 14:39:53  ibelyaev
 // New package: The first commit into CVS
 //
@@ -271,6 +274,8 @@ private:
 };
 
 
+// ===========================================================================
+// The End 
 // ===========================================================================
 #endif ///< CALOALGS_COVARIANCEESTIMATOR_H
 // ===========================================================================

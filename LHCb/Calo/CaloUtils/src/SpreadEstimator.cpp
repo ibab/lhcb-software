@@ -1,8 +1,11 @@
-// $Id: SpreadEstimator.cpp,v 1.2 2001-11-24 11:43:09 ibelyaev Exp $
+// $Id: SpreadEstimator.cpp,v 1.3 2002-04-02 10:59:31 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2001/11/24 11:43:09  ibelyaev
+//  bug fix
+//
 // Revision 1.1  2001/11/22 16:02:35  ibelyaev
 //  new utilities
 // 
@@ -13,7 +16,7 @@
 // CaloDet 
 #include "CaloDet/DeCalorimeter.h"
 // CaloEvent 
-#include "CaloEvent/CaloCluster.h"
+#include "Event/CaloCluster.h"
 // local
 #include "CaloUtils/SpreadEstimator.h"
 
@@ -47,6 +50,7 @@ SpreadEstimator::~SpreadEstimator() { m_detector = 0 ; };
 /** calculation of cluster spread  
  *
  *  Error codes:
+ *
  *   - 221 - invalid source of detector information  
  *
  *  @param pointer to cluster object 
@@ -57,63 +61,80 @@ StatusCode SpreadEstimator::operator()
   ( CaloCluster* cluster ) const 
 {
   // ignore trivial cases 
-  if( 0 == cluster              ) { return StatusCode::SUCCESS ; }
-  if( cluster->digits().empty() ) { return StatusCode::SUCCESS ; }
+  if( 0 == cluster               ) { return StatusCode::SUCCESS ; }
+  if( cluster->entries().empty() ) { return StatusCode::SUCCESS ; }
   /// detector?
-  if( 0 == detector ()          ) { return StatusCode( 221 )   ; }
+  if( 0 == detector ()           ) { return StatusCode( 221 )   ; }
   
   /// avoid long names 
-  typedef CaloCluster::Digits::const_iterator const_iterator;
+  typedef CaloCluster::Entries::const_iterator const_iterator;
   
   ///
-  const double xmean = cluster->x () ;
-  const double ymean = cluster->y () ;
-  const double etot  = cluster->e () ;
-  
   double covxx = 0 ;
   double covyx = 0 ;
   double covyy = 0 ;
-
+  double xmean = 0 ;
+  double ymean = 0 ;
+  double etot  = 0 ;
+  
   unsigned int n = 0 ;
 
-  for( const_iterator idigit = cluster->digits().begin() ;
-       cluster->digits().end() != idigit ; ++idigit ) 
+  const CaloCluster::Entries& entries = cluster->entries() ;
+  for( const_iterator entry = entries.begin() ;
+       entries.end() != entry ; ++entry ) 
     {
-      const CaloDigit* digit = idigit->first  ;
+      const CaloDigit* digit = entry->digit()  ;
       if( 0 == digit ) { continue ; }
       ///
       ++n ;
       ///
-      const double fraction = 
-        idigit->second.fraction();
+      const double fraction = entry->fraction();
       const double energy   = digit->e() * fraction ;
       ///
-      const HepPoint3D& pos = 
+      const HepPoint3D& pos =
         detector()->cellCenter( digit->cellID() );
       ///
-      const double dx =  pos.x() - xmean ;
-      const double dy =  pos.y() - ymean ;
+      const double x =  pos.x() ;
+      const double y =  pos.y() ;
       ///
-      const double weight = energy / etot ;
+      const double weight = energy ;
       ///
-      covxx += dx * dx * weight ;
-      covyx += dy * dx * weight ;
-      covyy += dy * dy * weight ;
+      etot  +=         weight ;
+      xmean +=     x * weight ;
+      ymean +=     y * weight ;
+      //
+      covxx += x * x * weight ;
+      covyx += y * x * weight ;
+      covyy += y * y * weight ;
       ///
     }
-  /// 
+  ///
   if( 0 != n  ) 
-    {    
-      cluster->position().spread().fast( 1 , 1 ) =  covxx ;
-      cluster->position().spread().fast( 2 , 1 ) =  covyx ;
-      cluster->position().spread().fast( 2 , 2 ) =  covyy ;
+    { 
+      xmean /= etot ;
+      ymean /= etot ;
+      
+      CaloPosition::Parameters& center = cluster->position().center() ;
+      center( CaloPosition::X ) = xmean ;
+      center( CaloPosition::Y ) = ymean ;
+      
+      covxx /= etot ;
+      covyx /= etot ;
+      covyy /= etot ;
+      
+      covxx -= xmean * xmean ;
+      covyx -= ymean * xmean ;
+      covyy -= ymean * ymean ;
+      
+      CaloPosition::Covariance& spread = cluster->position().spread() ;
+      spread( CaloPosition::X , CaloPosition::X ) = covxx ;
+      spread( CaloPosition::Y , CaloPosition::X ) = covyx ;
+      spread( CaloPosition::Y , CaloPosition::Y ) = covyy ;      
     }
+  
   ///
   return StatusCode::SUCCESS ;
 };
-
-
-
 
 // ============================================================================
 // The End 
