@@ -5,8 +5,11 @@
  *  Implementation ile for RichRecPixel enumerations
  *
  *  CVS Log :-
- *  $Id: RichRecPixelParentType.cpp,v 1.2 2004-07-26 18:00:58 jonrob Exp $
+ *  $Id: RichRecPixelParentType.cpp,v 1.3 2004-08-17 11:30:48 jonrob Exp $
  *  $Log: not supported by cvs2svn $
+ *  Revision 1.2  2004/07/26 18:00:58  jonrob
+ *  Various improvements to the doxygen comments
+ *
  *
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   2003-05-10
@@ -23,6 +26,6 @@ std::string Rich::text( const Rich::PixelParent::Type & parent )
     {
     case Rich::PixelParent::Digit:       return "RichDigit";
     case Rich::PixelParent::MCHit:       return "MCRichHit";
-    default:                             return "?"; // should never happen
+    default:                             return "SHOULD NEVER SEE THIS";
     }
 }

@@ -5,8 +5,11 @@
  *  Implementation file for enumeration : Rich::ParticleIDType
  *
  *  CVS Log :-
- *  $Id: RichParticleIDType.cpp,v 1.3 2004-07-26 17:53:17 jonrob Exp $
+ *  $Id: RichParticleIDType.cpp,v 1.4 2004-08-17 11:28:59 jonrob Exp $
  *  $Log: not supported by cvs2svn $
+ *  Revision 1.3  2004/07/26 17:53:17  jonrob
+ *  Various improvements to the doxygen comments
+ *
  *
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   2002-06-19
@@ -27,6 +30,6 @@ std::string Rich::text( const Rich::ParticleIDType& particle )
   case Rich::Proton:         return "proton";
   case Rich::BelowThreshold: return "below threshold";
   case Rich::Unknown:        return "unknown";
-  default:                   return "?"; // should never happen
+  default:                   return "SHOULD NEVER SEE THIS";
   }
 }
