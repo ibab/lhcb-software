@@ -9,5 +9,5 @@ EventSelector.Input   = {
 //#include "$GAUDICONFROOT/options/DigiContent.opts"
 #include "$IOEXAMPLEROOT/options/DigiContent.opts"
 
-DigiWriter.Output = "DATAFILE='PFN:PoolSim.root' TYP='POOL_ROOTTREE' OPT='REC'";
+DigiWriter.Output = "DATAFILE='PFN:PoolDigi.root' TYP='POOL_ROOTTREE' OPT='REC'";
 ApplicationMgr.OutStream += {"DigiWriter"};
