@@ -1,4 +1,4 @@
-// $Id: VeloSim.cpp,v 1.21 2002-10-15 13:45:47 parkesb Exp $
+// $Id: VeloSim.cpp,v 1.22 2002-11-05 10:43:11 parkesb Exp $
 // Include files
 // STL
 #include <string>
@@ -387,9 +387,9 @@ long VeloSim::simPoints(MCVeloHit* hit){
   log << MSG::VERBOSE << "calculate number of points to simulate in Si"
       << endreq;
 
-  double EntryFraction,ExitFraction;
-  double pitch;
-  bool EntryValid, ExitValid;
+  double EntryFraction=0.,ExitFraction=0.;
+  double pitch=0.;
+  bool EntryValid=true, ExitValid=true;
   VeloChannelID entryChan=m_velo->channelID(hit->entry(),EntryFraction,
                                             pitch,EntryValid);
   VeloChannelID exitChan=m_velo->channelID(hit->exit(),ExitFraction,
