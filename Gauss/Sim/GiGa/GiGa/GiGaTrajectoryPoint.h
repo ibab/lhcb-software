@@ -1,8 +1,11 @@
-// $Id: GiGaTrajectoryPoint.h,v 1.11 2002-12-07 21:05:30 ibelyaev Exp $ 
+// $Id: GiGaTrajectoryPoint.h,v 1.12 2002-12-07 21:36:30 ibelyaev Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.11  2002/12/07 21:05:30  ibelyaev
+//  see $GIGAROOT/doc/release.notes 2002-12-07
+//
 // Revision 1.10  2002/12/07 14:27:51  ibelyaev
 //  see $GIGAROOT/cmt/requirements file
 //
@@ -123,6 +126,40 @@ inline GiGaTrajectoryPoint* gigaTrajectoryPoint( G4TrajectoryPoint* g4 )
 inline GiGaTrajectoryPoint* gigaTrajectoryPoint( G4VTrajectoryPoint* g4 )
 {
   GiGaUtil::FastCast<G4VTrajectoryPoint,GiGaTrajectoryPoint> cast ;
+  return cast( g4 );
+};
+// ============================================================================
+
+// ============================================================================
+/** @fn  gigaTrajectoryPoint
+ *  Fast cast of G4TrajectoryPoint interface to concrete Gauss implementation
+ *  @param  g4   pointer to G4TrajectoryPoint interface 
+ *  @return cast (dynamic or static) to GaussTrajectory
+ *  @author  Vanya Belyaev Ivan.Belyaev@itep.ru
+ *  @date    2002-12-07
+ */
+// ============================================================================
+inline const GiGaTrajectoryPoint* gigaTrajectoryPoint
+( const G4TrajectoryPoint* g4 )
+{
+  GiGaUtil::FastCast<const G4TrajectoryPoint,const GiGaTrajectoryPoint> cast ;
+  return cast( g4 );
+};
+// ============================================================================
+
+// ============================================================================
+/** @fn  gigaTrajectoryPoint
+ *  Fast cast of G4VTrajectoryPoint interface to concrete Gauss implementation
+ *  @param  g4   pointer to G4TrajectoryPoint interface 
+ *  @return cast (dynamic or static) to GaussTrajectory
+ *  @author  Vanya Belyaev Ivan.Belyaev@itep.ru
+ *  @date    2002-12-07
+ */
+// ============================================================================
+inline const GiGaTrajectoryPoint* gigaTrajectoryPoint
+( const G4VTrajectoryPoint* g4 )
+{
+  GiGaUtil::FastCast<const G4VTrajectoryPoint,const GiGaTrajectoryPoint> cast ;
   return cast( g4 );
 };
 // ============================================================================
