@@ -20,12 +20,12 @@ include_dirs $(VELOALGORITHMSROOT)
 #============================================================================
 use  VeloEvent  v11r*   Event
 use  VeloDet    v6r*   	Det
-use  VeloKernel v1r*    Velo
+use  VeloKernel v1r*    Velo -no_auto_imports
 use  NAGC v5r*
 
 # Component library building rule
 #============================================================================
-library          VeloAlgorithms    ../src/*.cpp
+library          VeloAlgorithms    ../src/*.cpp -import=VeloKernel
 
 # define component library link options
 #============================================================================
