@@ -1,4 +1,4 @@
-// $Id: ParticleFilter.cpp,v 1.3 2002-07-28 17:29:10 gcorti Exp $
+// $Id: ParticleFilter.cpp,v 1.4 2002-10-15 17:50:43 gcorti Exp $
 // Include files 
 
 // from Gaudi
@@ -82,12 +82,12 @@ StatusCode ParticleFilter::initialize() {
     StatusCode sc = tlSvc->retrieveTool( *it, icrit, this );
     if( sc.isFailure() ) return StatusCode::FAILURE;
     m_criteria.push_back( icrit );
-    log << MSG::INFO << ">>> Criteria " << *it << " set successfully" 
+    log << MSG::DEBUG << ">>> Criteria " << *it << " set successfully" 
         << endreq;
   }
   
   if( m_produceHistogram )   {
-    log << MSG::INFO << "    histograms will be produced" << endreq;
+    log << MSG::DEBUG << "    histograms will be produced" << endreq;
 
     // Create the histograms 
    m_hIndCounter  = histoSvc-> book("/stat/pfilter/1",
@@ -120,8 +120,8 @@ StatusCode ParticleFilter::filter( const ParticleVector& input,
                                    ParticleVector& output ){
 
   MsgStream          log( msgSvc(), name() );
-  log << MSG::INFO << ">>> Criteria size " <<m_criteria.size()    << endreq;
-  log << MSG::INFO << "input size " << input.size()   << endreq;
+  log << MSG::DEBUG << ">>> Criteria size " << m_criteria.size() << endreq;
+  log << MSG::DEBUG << "input size " << input.size()   << endreq;
 
   m_independentCounter.clear();
   m_cumulativeCounter.clear();
@@ -176,11 +176,11 @@ StatusCode ParticleFilter::filter( const ParticleVector& input,
 // Filter positive particles
 //=============================================================================
 StatusCode ParticleFilter::filterPositive( const ParticleVector& input,
-                                   ParticleVector& output ){
+                                           ParticleVector& output ){
 
   MsgStream          log( msgSvc(), name() );
-  log << MSG::INFO << ">>> Criteria size " <<m_criteria.size()    << endreq;
-  log << MSG::INFO << "input size " << input.size()   << endreq;
+  log << MSG::DEBUG << ">>> Criteria size " << m_criteria.size() << endreq;
+  log << MSG::DEBUG << "input size " << input.size()   << endreq;
 
   m_independentCounter.clear();
   m_cumulativeCounter.clear();
@@ -222,7 +222,7 @@ StatusCode ParticleFilter::filterPositive( const ParticleVector& input,
     }
     index_part++;
     
-    //    if ( (*ip)->charge() < 0. ) passed = false;    
+    if ( (*ip)->charge() < 0. ) passed = false;    
     if ( passed ) output.push_back( *ip );
   }
 
@@ -239,8 +239,8 @@ StatusCode ParticleFilter::filterNegative( const ParticleVector& input,
                                    ParticleVector& output ){
 
   MsgStream          log( msgSvc(), name() );
-  log << MSG::INFO << ">>> Criteria size " <<m_criteria.size()    << endreq;
-  log << MSG::INFO << "input size " << input.size()   << endreq;
+  log << MSG::DEBUG << ">>> Criteria size " <<m_criteria.size()    << endreq;
+  log << MSG::DEBUG << "input size " << input.size()   << endreq;
 
   m_independentCounter.clear();
   m_cumulativeCounter.clear();
@@ -282,7 +282,7 @@ StatusCode ParticleFilter::filterNegative( const ParticleVector& input,
     }
     index_part++;
     
-    //    if ( (*ip)->charge() < 0. ) passed = false;    
+    if ( (*ip)->charge() < 0. ) passed = false;    
     if ( passed ) output.push_back( *ip );
   }
 
