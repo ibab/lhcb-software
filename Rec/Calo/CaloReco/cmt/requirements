@@ -1,9 +1,9 @@
-# $Id: requirements,v 1.15 2003-12-11 16:33:40 cattanem Exp $
+# $Id: requirements,v 1.16 2004-01-13 14:33:34 cattanem Exp $
 # =============================================================================
 # CVS tag $Name: not supported by cvs2svn $ 
 # =============================================================================
 package            CaloReco
-version            v1r7
+version            v1r8
 
 # ================ structure ==================================================
 branches           cmt doc src options 
@@ -11,13 +11,13 @@ branches           cmt doc src options
 # ================ dependencies ===============================================
 use CaloInterfaces v3r*	  Calo 
 use CaloUtils      v4r*   Calo 
-use AIDA           v*   
+use AIDA           v*   -no_auto_imports
 
 # ================ environment ================================================
 set CALORECOOPTS   $(CALORECOROOT)/options
 
 # ================ constituents ===============================================
-library            CaloReco    *.cpp
+library            CaloReco    *.cpp -import=AIDA
 
 # ================ standard patterns ==========================================
 apply_pattern      component_library library=CaloReco
