@@ -1,4 +1,4 @@
-// $Id: MCPIDProtoPAlg.cpp,v 1.8 2002-11-13 16:29:36 gcorti Exp $
+// $Id: MCPIDProtoPAlg.cpp,v 1.9 2002-12-19 20:55:56 gcorti Exp $
 // Include files 
 #include <memory>
 
@@ -248,7 +248,7 @@ StatusCode MCPIDProtoPAlg::execute() {
   }
 
   // Load richPid results
-  bool richData;
+  bool richData = false;
   SmartDataPtr<RichPIDs> richpids ( eventSvc(), m_richPath );
   if( !richpids || 0 == richpids->size() ) {
     log << MSG::INFO  << "Failed to locate RichPIDs at "
@@ -262,7 +262,7 @@ StatusCode MCPIDProtoPAlg::execute() {
   }
   
   // Load muonPid results
-  bool muonData;
+  bool muonData = false;
   SmartDataPtr<MuonIDs> muonpids ( eventSvc(), m_muonPath );
   if( !muonpids || 0 == muonpids->size() ) {
     log << MSG::INFO << "Failed to locate MuonIDs at "
@@ -305,7 +305,6 @@ StatusCode MCPIDProtoPAlg::execute() {
   const BremTable* brtable = m_bremMatch->inverse();
   if( 0 == brtable ) { 
     log << MSG::DEBUG << "Table from PhotonMatch points to NULL";
-    caloData = false;
     m_errorCount["7. No brems table       "] += 1;
   }
 

@@ -1,4 +1,4 @@
-// $Id: MCParticleMaker.cpp,v 1.2 2002-12-19 18:32:06 gcorti Exp $
+// $Id: MCParticleMaker.cpp,v 1.3 2002-12-19 20:55:56 gcorti Exp $
 // Include files 
 
 #include <memory>
@@ -202,13 +202,19 @@ StatusCode MCParticleMaker::makeParticles( ParticleVector & parts ) {
       const Particle *measurement = reconstructed(**icand);
       if (measurement == 0)  continue;
       if ( m_useReconstructedCovariance ) {
-//        covariance.reset( fetchCovariance(*measurement) );
-        covariance = std::auto_ptr<HepSymMatrix>( fetchCovariance(*measurement) );
+#ifdef WIN32
+        covariance=std::auto_ptr<HepSymMatrix>(fetchCovariance(*measurement));
+#else
+        covariance.reset( fetchCovariance(*measurement) );
+#endif
       }
     }
     if (covariance.get() == 0)
-//      covariance.reset( generateCovariance((*icand)->momentum()) );
+#ifdef WIN32
       covariance = std::auto_ptr<HepSymMatrix>( generateCovariance((*icand)->momentum()) );
+#else
+      covariance.reset( generateCovariance((*icand)->momentum()) );
+#endif
     std::auto_ptr<Particle> particle( new Particle() );
     StatusCode sc = fillParticle( **icand, *particle, *covariance);
     if(sc.isFailure()) continue;

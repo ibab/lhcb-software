@@ -1,6 +1,12 @@
-! $Id: release.notes,v 1.16 2002-11-13 16:29:36 gcorti Exp $
+! $Id: release.notes,v 1.17 2002-12-19 20:55:56 gcorti Exp $
 ! Package     : DaVinciMCTools
 ! Responsible : Gloria Corti
+
+! 2002-12-19 - Gloria Corti
+ - Fix bug similar to that of ChargedProtoPAlg of uninitilized bools.
+ - In MCParticleMaker cannot use reset method of auto_ptr because does not
+   exist in Win implementation. Substitute with temporary constructor works
+   only on Win: for the moment use ifdef WIN32
 
 !========================== DaVinciMCTools v4r0 2002-11-13 =================
 ! 2002-11-13 - Gloria Corti
