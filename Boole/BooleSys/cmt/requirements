@@ -1,5 +1,5 @@
 package BooleSys
-version v3r0p1
+version v3r1
 
 branches cmt doc
  
@@ -8,8 +8,8 @@ branches cmt doc
 #=======================================================
 
 # Boole application
-use Boole		v3r0p1	Digi
-use DigiAlg		v2r1p1	Digi
+use Boole		v3r1	Digi
+use DigiAlg		v2r2	Digi
 use LHCbTools		v1r0	Kernel
 
 # L0 trigger
@@ -26,7 +26,7 @@ use L1Decision		v2r2	L1
 use CaloInterfaces      v2r4  	Calo
 use CaloUtils           v4r5	Calo
 use CaloMonitor         v1r4  	Calo
-use CaloDigit           v1r3	Calo
+use CaloDigit           v1r4	Calo
 
 # Velo
 use VeloAlgorithms      v2r8  	Velo
@@ -36,17 +36,18 @@ use ITAlgorithms        v12r10	IT
 use ITCheckers          v1r3p1	IT
 
 # Outer Tracker
-use OTAlgorithms        v13r2	OT
+use OTAlgorithms        v13r3	OT
 
 # Muon
 use MuonAlgs            v5r0	Muon
 use MuonBackground	v1r4	Muon
 
 # Rich
-use RichDigiQC		v1r2	Rich
-use RichUtils		v3r4  	Rich
-use RichDetTools	v3r1	Rich
-use RichReadout		v1r1	Rich
+use RichDigiQC		v1r3	Rich
+use RichUtils		v3r5  	Rich
+use RichDetTools	v3r2	Rich
+use RichReadout		v1r2	Rich
+use RichDAQ		v1r0	Rich
 
 # SICB packages - included to avoid dependency on SICBOO project
-use RiSicbGeom		v3r5	SICB
+use RiSicbGeom		v3r6	SICB

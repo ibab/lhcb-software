@@ -4,6 +4,13 @@
 ! Purpose     : List of packages in Boole project
 !-----------------------------------------------------------------------------
 
+!======================== BooleSys v3r1 2003-11-26 ========================
+! 2003-11-26 - Marco Cattaneo
+ - Packages added:    RichDAQ v1r0
+ - Packages modified: CaloDigit v1r4, DigiAlg v2r0, OTAlgorithms v13r3, 
+                      RiScbGeom v3r6, RichDetTools v3r2, RichDigiQC v1r3, 
+                      RichReadout v1r2, RichUtils v3r5
+
 !======================= BooleSys v3r0p1 2003-11-10 =======================
 ! 2003-11-10 - Marco Cattaneo
  - Packages modified: DigiAlg v2r1p1, Boole v3r0p1
