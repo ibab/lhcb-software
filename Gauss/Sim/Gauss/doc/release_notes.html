@@ -2,8 +2,39 @@
 Package : Gauss
 Package manager : Witek Pokorski
 </PRE>
+!=========================================================================
 
-!========================================================================
+<H1><A NAME="v15r1">2004-03-17 - Gauss v15r1</A></H1><PRE>
+This version should fix the ToF NaN/infinite problem and the peak seen 
+in front of M1.
+It uses LHCb v15r3, Gaudi v14r3, XmlDDDB v22r0, ParamFiles v3r4
+It uses GEANT4 v60r0p2 which is a bug fix on geant4.6.0.p01 to use the fix
+in G4decay
+
+!=========================== GiGa v16r1 ===================================
+! 2004-03-16 - Florence RANJARD
+ - DumpG4Track.cpp, DumpG4Step.cpp, GiGaTrajectory.cpp - fix printout in case
+   of tof NaN or infinite
+
+!============================ ParamFiles v3r4 2004-03-10 ===============
+! 2004-03-10 - Patrick Robbe
+ - ParticleTable.txt - use PDG 2004 values for B0,B+,B_s,B_c,Lambda_b
+   lifetimes.
+
+! 2004-03-09 - Luisanna Tocco
+ - add 4 xml files used by the L0 Muon Trigger processor simulation  which
+   describe the configuration of optical links and data flow
+
+!========================= GaussRICH v4r7 =================================
+! 2004-03-17 - Sajan Easo
+ - Modified GiGaPhysConstructorOp.cpp to avoid suspending the
+   tracking of charged track which creates optical photons 
+   until those photons are tracked. This is to get around a 
+   problem in G4 and GiGa whereby the G4trajectory of the 
+   suspended charged track was lost and a new G4trajectory was created
+   when its tracking resumed
+
+!==========================================================================
 <H1><A NAME="v15r0">2004-03-08 - Gauss v15r0</A></H1><PRE>
 uses Geant4 6.0.p01, LHCb v15r3, Gaudi v14r3, XmlDDDB v22r0, ParamFiles v3r3
 

@@ -1,5 +1,5 @@
 package Gauss
-version v15r0
+version v15r1
 
 # =============================================================================
 # structure 
@@ -34,7 +34,7 @@ use Magnet              v2r*    Det
 use GiGaCnv             v15r0   Sim
 use GaussTools          v10r0	Sim
 use GaussTracker        v3r1    Sim
-use GaussRICH           v4r6    Sim
+use GaussRICH           v4r7    Sim
 use GaussCalo           v7r0    Sim
 use GaussPhysics        v3r0    Sim
 use GaussAlgs		v1r0	Sim
@@ -48,8 +48,8 @@ use GeneratorModules    v11r0    Gen
 #get information from DBASE and PARAM 
 use XmlDDDB             v22r0   Det   -no_auto_imports
 use FieldMap            v4r3          -no_auto_imports
-use DecFiles            v4r3    Gen   -no_auto_imports
-use ParamFiles          v3r3          -no_auto_imports
+use DecFiles            v4r4    Gen   -no_auto_imports
+use ParamFiles          v3r4          -no_auto_imports
 
 # =============================================================================
 # Essential environment variables 
