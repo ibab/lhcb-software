@@ -4,6 +4,9 @@ Purpose: LHCb specific Kernel classes
 
 >>>>>>>>>>>>>>> LHCbKernel v1r0 <<<<<<<<<<<<<<<<<<<<<
 
+! 20020427 Vanya Belyaev
+  - add CaloHash.h file for usage in CaloMap.h and CaloHashMaps.h 
+
 ! 20020426 Vanya Belyaev
   - Relations/TypeApply.h, Relations/ObjectTypeTraits.h
     change the order of include files and forward declarations 

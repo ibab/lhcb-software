@@ -1,8 +1,11 @@
-// $Id: CaloHashMap.h,v 1.2 2002-04-22 16:57:18 ibelyaev Exp $
+// $Id: CaloHashMap.h,v 1.3 2002-04-27 15:31:02 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2002/04/22 16:57:18  ibelyaev
+//  new files to eliminate the dependency of 'Event' on 'Calo'
+//
 // Revision 1.1  2002/04/22 16:49:51  ibelyaev
 //  new files to eliminate the dependency of 'Event' on 'Calo'
 //
@@ -12,6 +15,7 @@
 // Include files
 #ifdef WIN32
 #include "GaudiKernel/HashTable.h" // GaudiKernel (only for Visual-C Win32)
+#include "Kernel/CaloHash.h"
 #include <vector>            
 #else 
 #include <hash_map>                // STD & STL   (except for Visual-C Win32)
@@ -45,8 +49,8 @@ public:
   /** the  map itself
    *  @warning the actual type is platform-dependent!
    */
-  typedef  HashTable<Key,Value>     Map      ; 
-  typedef  std::vector<Key>         Keys     ;
+  typedef  HashTable<Key,Value,CaloHash<Key> > Map  ; 
+  typedef  std::vector<Key>                    Keys ;
 #else 
   /** the  map itself
    *  @warning the actual type is platform-dependent!
