@@ -1,4 +1,4 @@
-// $Id: RichRecTrackTool.cpp,v 1.6 2003-04-01 14:33:22 jonrob Exp $
+// $Id: RichRecTrackTool.cpp,v 1.7 2003-04-01 16:05:37 jonrob Exp $
 
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h"
@@ -82,16 +82,6 @@ StatusCode RichRecTrackTool::finalize() {
 
   return StatusCode::SUCCESS;
 }
-
-StatusCode RichRecTrackTool::finalize() {
-
-  // Release the tools
-  if( m_richRecSegmentTool ) toolSvc()->releaseTool( m_richRecSegmentTool );
-  if( m_richDetInterface )   toolSvc()->releaseTool( m_richDetInterface );
-  
-  return StatusCode::SUCCESS;
-}
-
 
 // Method that handles various Gaudi "software events"
 void RichRecTrackTool::handle ( const Incident& incident ) {
