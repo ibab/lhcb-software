@@ -1,4 +1,4 @@
-// $Id: RichGlobalPIDAlg.cpp,v 1.4 2003-07-06 16:52:48 jonesc Exp $
+// $Id: RichGlobalPIDAlg.cpp,v 1.5 2003-07-08 07:12:27 cattanem Exp $
 // Include files
 
 // local
@@ -271,7 +271,7 @@ void RichGlobalPIDAlg::findMinLogLikelihood( minTrList & minTracks ) {
   std::sort( m_trackList.begin(), m_trackList.end() );
 
   // Loop on all tracks
-  double * pCh(0);
+  double * pCh = 0;
   for ( TrackList::iterator iP = m_trackList.begin();
         iP != m_trackList.end(); ++iP ) {
     RichGlobalPIDTrack * gTrack = (*iP).second;
