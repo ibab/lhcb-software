@@ -84,7 +84,8 @@ In particular, it contains the two methods
       When this function is invoked, flavor of the other $B$ is changed,
       such that it becomes of type {\tt otherb}. The lifetime of the
       other $B$ meson is returned in {\tt t}.
-\item {\tt static void OtherB(EvtParticle *p, double \&t, EvtId \&otherb, double probB0)}\\
+\item {\tt static void OtherB(EvtParticle *p, double \&t, EvtId \&otherb,\\
+ double probB0)}\\
       Similar to the function above, except that a probability is supplied
       for how ofthe th other $B$ should be a $B^0$.
 \end{itemize}
@@ -138,7 +139,7 @@ an instance of the decay model class is created.
 \index{EvtDecayProb}
 \index{classes!EvtDecayProb}
 
-There are three classes that are derived from {\tt EvtDecayBase};
+There are three classes that derive from {\tt EvtDecayBase};
 {\tt EvtDecayAmp}, {\tt EvtDecayProb}, 
 and {\tt EvtDecayIncoherent}. These classes proved slightly
 different interfaces for writing decay models, as discussed in 
@@ -203,19 +204,31 @@ member fuctions:
 The EvtDiracSpinor class encapsulates the properties of
 a Dirac spinor. It is used to reperesent spin 1/2 particles.
 EvtDiracSpinor is reperesented as a complex four component 
-spinor. The operations that are available on an EvtDiracSpinor 
+spinor using the standard Pauli-Dirac convention for the
+$\gamma$-matrices. The operations that are available on an EvtDiracSpinor 
 are seting the elements of the spinor, retreving an element
 printing out the spinor, taking the complex conjugate, boosting
-the spinor into another Lorentz frame, and evaluating the
-$V-A$ matrix element. Evaluating the $V-A$ matrix element
-is done with the function {\tt EvtLeptonVACurrent} which evaluates
-the matrix elements
-\begin{equation}
-L^{\mu}=\langle \bar u \vert \gamma^{\mu}(1-\gamma^5) \vert v \rangle.
-\end{equation}
-where $u$ and $v$ are both EvtDiracSpinors and are supplied as the
-two arguments to {\tt EvtLeptonVACurrent} ( $\bar u=u^{\dag}\gamma^0$ is
-evaluted by the routine.)
+the spinor into another Lorentz frame, and evaluating some
+common matrix elements as summarized in Table~\ref{tab:diracspinor_matrix_elements}.
+\begin{table}[htbp]
+\begin{center}
+\begin{tabular}{lll} \hline
+Matrix elemet     &  Function & Return type\\ \hline
+$\langle \bar u \vert \gamma^{\mu}(1-\gamma^5) \vert v \rangle$ & {\tt EvtLeptonVACurrent(u,v)} & {\tt EvtVector4C} \\
+$\langle \bar u \vert \gamma^{\mu} \vert v \rangle$ & {\tt EvtLeptonVCurrent(u,v)} & {\tt EvtVector4C} \\
+$\langle \bar u \vert \gamma^{\mu}\gamma^5 \vert v \rangle$ & {\tt EvtLeptonACurrent(u,v)} & {\tt EvtVector4C} \\
+$\langle \bar u \vert v \rangle$ & {\tt EvtLeptonSCurrent(u,v)} & {\tt EvtComplex} \\
+$\langle \bar u \vert \gamma^5 \vert v \rangle$ & {\tt EvtLeptonPCurrent(u,v)} & {\tt EvtComplex} \\
+$\langle \bar u \vert \sigma^{\mu\nu} \vert v \rangle$ & {\tt EvtLeptonTCurrent(u,v)} & {\tt EvtTensor4C} \\ \hline
+\end{tabular}
+\caption{This table sumarizes the methods in {\tt EvtDiracSpinor} that evaluates special matrix elements.
+\label{tab:diracspinor_matrix_elements}}
+\end{center}
+\end{table}
+
+Also see Section~\ref{sect:EvtGammaMatrix} for operations between Dirac spinors and $\gamma$-matrices.
+
+
 
 
 
@@ -223,6 +236,7 @@ evaluted by the routine.)
 \subsection{EvtGammaMatrix}
 \index{EvtGammaMatrix}
 \index{classes!EvtGammaMatrix}
+\label{sect:EvtGammaMatrix}
 
 EvtGammaMatrix is a class for handling 
 complex $4\times 4$ matrices.
@@ -360,7 +374,7 @@ non-relativistic Breit-Wigner shape.
 
 \begin{itemize}
 \item {\tt static double BreitWigner( double mass,}\\
-      {\tt double width, double min, double max)}\\
+      {\tt double width, double min, double max)}
 \end{itemize}
 
 
@@ -432,7 +446,7 @@ Provides an interface to the PHOTOS package for generation of
 final state radiation.
 
 \begin{itemize}
-\item {\tt static void PHOTOS(EvtParticle *p)}\\
+\item {\tt static void PHOTOS(EvtParticle *p)}
 \end{itemize}
 
 If PHOTOS generates additional photons they are added at the 
@@ -945,8 +959,8 @@ the space components. To set all components at once the
 can be used. {\tt get(int i)} accesses the {\tt i}:th component of
 the vector.
 
-{\tt EvtVector4R boost\_to\_v4(const EvtVector4R\& v2,const EvtVector4R\& vto)}
-returns the four vector {\tt v2} boosted to the frame in which a particle
+The {\tt EvtVector4R boost\_to\_v4(const EvtVector4R\& v2,const EvtVector4R\& vto)}\\ 
+function returns the four vector {\tt v2} boosted to the frame in which a particle
 with momentum {\tt vto} is at rest.
 
 

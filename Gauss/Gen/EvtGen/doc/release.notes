@@ -1,6 +1,15 @@
 Package :EvtGen 
 Package manager : Witek Pokorski
 
+! 2003-10-02 - Patrick Robbe
+ - new version of the package EvtGen, version alpha-00-10-22 (July 3, 2003) 
+   taken from www.slac.stanford.edu/~lange/EvtGen
+ - two new header directories EvtGenModels and EvtGenBase
+ - some changes to compile on Windows
+ - put back the changes by Nick Brook and Witek Pokorski in the Pythia
+   related files
+ - increment version in requirement file to v4r0
+
 !==================== EvtGen v3r4 =======================================
 ! 2003-07-15 - Patrick Robbe
  - cranf.cpp , ranf.F : code to use Gaudi random engine (replace ranf()

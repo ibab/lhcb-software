@@ -2,10 +2,6 @@
 \label{sect:helampconventions}
 \index{helicity amplitudes}
 
-{\it Warning! This section is still not complete, and could
-possibly contain serious errors. But if you read it and have any 
-comments or questions, please send them to ryd@stanford.slac.edu.}
-
 This section will deal with some details related to helicity amplitudes
 and their relations to partial wave amplitudes. In particular 
 the sign conventions are described and
@@ -63,6 +59,17 @@ R(\alpha,\beta,\gamma)=R_{z}(\alpha)R_{y}(\beta)R_{z}(\gamma).
 See e.g. Sakurai~\cite{Sakurai} page 171-174 for illustrations of the
 rotations.
 
+The $D^{J}_{m,m'}(\alpha,\beta,\gamma)$ functions are defined by
+\begin{equation}
+D^{J}_{m,m'}(\alpha,\beta,\gamma)\equiv 
+             \langle Jm|R(\alpha,\beta,\gamma)|Jm'\rangle.
+\end{equation}
+Using $d^{J}_{m,m'}(\beta)\equiv \langle Jm|e^{-i\beta J_y}|Jm'\rangle$\$ we
+can write
+\begin{equation}
+D^{J}_{m,m'}(\alpha,\beta,\gamma)=
+       e^{-im\alpha}d^{J}_{m,m'}(\beta)e^{-im'\gamma}.
+\end{equation}
 
 \subsection{Plane wave states}
 
@@ -148,12 +155,12 @@ The $\tilde d$ function is similar to the standard Wigner $d$ function
 except that it refers to expectation values for rotations around the 
 $x$-axis instead of the $y$-axis. An explicit formula for the 
 $\tilde d$ function is given by
-\begin{equation}
-\tilde d^j_{m'm}(\theta)=
-\sum {\sqrt{(j+m)!(j-m)!(j+m')!(j-m')!}\over (m+m'+k)!(j-m'-k)!k!(j-m-k)!}
-\left(\cos{\beta\over 2}\right)^{m'+m+2k}
-\left(-i\sin{\beta\over 2}\right)^{2j-2k-m'-m}
-\end{equation}
+\begin{eqnarray}
+\tilde d^j_{m'm}(\theta)& = & \nonumber
+\sum {\sqrt{(j+m)!(j-m)!(j+m')!(j-m')!}\over (m+m'+k)!(j-m'-k)!k!(j-m-k)!}\times\\
+& &\left(\cos{\theta\over 2}\right)^{m'+m+2k}
+\left(-i\sin{\theta\over 2}\right)^{2j-2k-m'-m}
+\end{eqnarray}
 from which it is easy to show that
 \begin{equation}
 \tilde d^j_{m'm}(\pi)=(-1)^{2j}\delta_{m',-m}
@@ -276,7 +283,7 @@ state $|J=J_A\quad m=\lambda_A\rangle$. The amplitudes for
 the decay $A\rightarrow B+C$ is now given by
 \begin{equation}
 A^{A\rightarrow B+C}_{\lambda_A\lambda_B\lambda_C}=
-\sqrt{2*J_A+1\over 4\pi} D^{*J_A}_{\lambda_A,\lambda_B-\lambda_C}
+\sqrt{2J_A+1\over 4\pi} D^{*J_A}_{\lambda_A,\lambda_B-\lambda_C}
 (\phi_B,\theta_B,-\phi_B)H^{A}_{\lambda_B\lambda_C}
 \end{equation}
 where $\theta_B$ and $\phi_B$ are the polar angles of particle
@@ -285,7 +292,7 @@ $B$ in the rest frame of particle $A$.
 Similarly, we can write the amplitude for the decay of particle $B$
 \begin{equation}
 A^{B\rightarrow D+E}_{\lambda_B\lambda_D\lambda_E}=
-\sqrt{2*J_B+1\over 4\pi} D^{*J_B}_{\lambda_B,\lambda_D-\lambda_E}
+\sqrt{2J_B+1\over 4\pi} D^{*J_B}_{\lambda_B,\lambda_D-\lambda_E}
 (\phi_D,\theta_D,-\phi_D)H^{B}_{\lambda_D\lambda_E}.
 \end{equation}
 The coordinate system in which the angles $\theta_D$ and $\phi_D$
@@ -300,7 +307,7 @@ In the same way we obtain the amplitude for the decay of particle
 $C$,
 \begin{equation}
 A^{C\rightarrow F+G}_{\lambda_C\lambda_F\lambda_G}=
-\sqrt{2*J_C+1\over 4\pi} D^{*J_C}_{\lambda_C,\lambda_F-\lambda_G}
+\sqrt{2J_C+1\over 4\pi} D^{*J_C}_{\lambda_C,\lambda_F-\lambda_G}
 (\phi_F,\theta_F,-\phi_F)H^{C}_{\lambda_F\lambda_G}.
 \end{equation}
 As discussed above the coordinate system for the second particle,
@@ -684,7 +691,7 @@ H_{\lambda_1\lambda_2}=\sqrt{4\pi\over 2J+1}A_{\lambda_1\lambda_2}.
 This allows us to simply evaluate the helicity amplitudes from the
 invariant amplitudes if we chose the states, $\epsilon^1$ and $\epsilon^2$,
 to correspond to the states in the helicity formalism. 
-For $\epsilon^1$ we take the states given by~\ref{eq:spinonesttates}
+For $\epsilon^1$ we take the states given by~\ref{eq:spinonestates}
 \begin{equation}
 \epsilon^1_+={1\over\sqrt{2}}\left[\begin{array}{r}
           -1  \\
@@ -734,4 +741,62 @@ These equations are easily inverted to give
  b & = & \phantom{-}{i\over2}\sqrt{3\over 4\pi}(H_{++}-H_{--}), \\
  c & = & \phantom{-{1\over2}}\sqrt{3\over 4\pi}(H_{00}+{1\over 2}(H_{++}+H_{--})), \\
 \end{eqnarray}
+
+
+\subsection{Jacob-Wick transformation}
+\index{Jacob-Wick transformation}
+\index{partial wave amplitudes}
+\label{sect:jacobwick}
+
+This section derives the relation between partial wave amplitudes 
+and helicity amplitudes. 
+
+The amplitude for a decay, given the partial wave amplitudes $M_{Ls}$,
+is given by
+$$A(\Omega,m1,m2,m3)=\sum_{L,s}C_{s_2s_3}(s\ m_s;m_2\ m_3)
+                               C_{Ls}(s_1\ m_1;m_L\ m_s)Y^{m_L}_L(\Omega)
+                               M_{Ls}.$$
+
+
+\subsection{{\tt HELAMP} and {\tt PARTWAVE} model implementations}
+\index{HELAMP}
+\index{PARTWAVE}
+
+The two models {\tt HELAMP} and {\tt PARTWAVE} implements generic
+two body decays where the amplitudes are specified by the
+helicity and partial wave amplitudes respectively. The partial
+wave model uses the translation to helicity amplitudes as given in
+Sect.~\ref{sect:jacobwick}. Henceforth, this section will focus
+in the description of the evalution of helicity amplitudes.
+
+ EvtGen uses a set of states, that are not the same as the helicity
+states. In this section it is important to distinguish between these two
+sets of states. The basis states used by EvtGen will be called
+$|n\rangle$ and the helicity states will be denoted $|\lambda, s\rangle$,
+or simply $|\lambda\rangle>$. 
+
+ We consider the decay of the form $A\rightarrow B C$ where the state
+of the initial particle is given by $|n_A\rangle$ and the two particles
+in the final state are labeled by $|n_B\rangle$ and $|n_C\rangle$. 
+For convenience we label the final state $|n_B, n_C\rangle=|n_B\rangle
+\otimes |n_C\rangle$. Given this notation we write the amplitude that
+we need to implement as 
+$$A^{B\rightarrow BC}_{n_A,n_B,n_C}=\langle n_B, n_C|H|n_A\rangle.$$
+Using the completeness of the basis states we write
+\begin{eqnarray}
+A^{B\rightarrow BC}_{n_A,n_B,n_C}&=&\sum_{\lambda_A,\lambda_B,\lambda_C}\langle n_B, n_C|\lambda_B\rangle\langle\lambda_B|\lambda_C\rangle\langle\lambda_C|H|\lambda_A\rangle\langle\lambda_A|n_A\rangle\\
+                                 &=&\sum_{\lambda_A,\lambda_B,\lambda_C}\langle n_B|\lambda_B\rangle \langle n_C|\lambda_C\rangle\langle\lambda_B|\langle\lambda_C|H|\lambda_A\rangle\langle\lambda_A|n_A\rangle\\
+                                 &=&\sum_{\lambda_A,\lambda_B,\lambda_C}R^{*}_{n_B\lambda_B} R^{*}_{n_C\lambda_C}\langle\lambda_B|\langle\lambda_C|H|\lambda_A\rangle R_{\lambda_A n_A}
+\end{eqnarray}
+Where 
+\begin{eqnarray}
+R_{n_A\lambda_A} & = & \langle \lambda_A | n_A \rangle \\ 
+R_{n_B\lambda_B} & = & \langle \lambda_B | n_B \rangle \\
+R_{n_C\lambda_C} & = & \langle \lambda_C | n_C \rangle
+\end{eqnarray}
+
+
+
+
+
 

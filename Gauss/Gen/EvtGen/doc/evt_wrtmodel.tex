@@ -175,7 +175,7 @@ configurations.
 Care should be taken in the implementation
 of decay amplitudes so that this is not the case.  
 
-The maximum probability is set in {\tt initProbMax}
+The maximum probability is set
 by calling {\tt setProbMax(prbmax)} method, which is a 
 member function of {\tt EvtDecayBase}.  
 \begin{footnotesize}
@@ -315,7 +315,7 @@ member function is a pointer to the particle that should be
 decayed. The first thing that is done is to create the
 the daughter particles and to
 link these particles onto the decay tree. 
-These tasks are performed by the {\tt EvtParticle::initializePhaseSpace} 
+This is done by the {\tt EvtParticle::initializePhaseSpace} 
 member function.
 The arguments to this method are the number and list of 
 daughters, as specified in the decay table.

@@ -35,7 +35,7 @@ form factors as
 \end{eqnarray}
 $P$ denotes the parent (pseudoscalar) meson ($B$, $D$ or $B_s$) and 
 $S$ denotes a pseudoscalar daughter ($D$, $K$, or $\pi$).  In this
-form, we have the constraint $f_+(0) = f_0(0)$. \\
+form, we have the constraint $f_+(0) = f_0(0)$. 
 
 \noindent
 For decays to vector mesons, we use the form
@@ -56,7 +56,7 @@ and ${\rm A}_3$ is defined as
 {{m_P- m_V} \over {2 m_V}} {\rm A}_2(q^2) 
 \end{equation}
 where ${\rm A}_0 (0) = {\rm A}_3(0)$. \nonumber
-\\
+
 
 \noindent For semileptonic decays to tensor mesons ($D_2^*$), to
 be denoted as $T$, we use the form
@@ -94,7 +94,7 @@ are three member functions:
 \noindent All form factors models should include a class 
 derived from {\tt EvtSemiLeptonicFF},  which
 will implement the relevant member functions of
-{\tt EvtSemiLeptonicFF}.  \\
+{\tt EvtSemiLeptonicFF}. 
 
 \noindent These form factor implementations are used by classes
 derived from the abstract class {\tt EvtSemiLeptonicAmp},
@@ -106,7 +106,7 @@ which contains the member function:
 \end{verbatim}
 \end{itemize}
 Classes to calculate the amplitude for semileptonic pseudoscalar to
-pseudoscalar decays, pseudoscalar to vector decays, and 
+pseudoscalar, pseudoscalar to vector, and 
 pseudoscalar to tensor decays are 
 {\tt EvtSemiLeptonicScalarAmp},
 {\tt EvtSemiLeptonicVectorAmp}, and
@@ -226,7 +226,7 @@ void EvtHQETFF::getvectorff( int parent, int daught,
 The {\tt getvectorff} routine takes the parent meson,
 daughter vector meson, $q^2$ ({\tt t}), and the daughter meson
 mass.  The form factors $A_1$, $A_2$, $V$ and $A_0$ are
-returned.  \\
+returned.
 
 \noindent The {\tt EvtHQET} class is also quite easy to
 implement.  As with other classes which handle decay
@@ -273,7 +273,7 @@ void EvtHQET::Init(){
 }
 \end{verbatim}
 This class would be virtually unchanged for different
-form factor models.  In {\tt Decay}, after the initialization
+form factor models.  In {\tt Decay}, after initialization
 of the daughter particles, {\tt CalcAmp} (in this case
 from {\tt EvtSemiLeptonicVectorAmp} is called.  If the
 standard form factor parameterizations are used, this
@@ -287,7 +287,7 @@ must be properly initialized such that the amplitude
 is calculated for vector daughter mesons.  For models with form
 factors for daughter mesons of different spins, the meson
 spin ({\tt EvtPDL::spin(daug[0])} should be used to decide 
-how to initialize {\tt calcamp}. \\
+how to initialize {\tt calcamp}.
 
 \noindent With the existing framework, the implementation of
 new form factor models should be quite simple.  The majority of
@@ -295,7 +295,7 @@ the work is in the coding of the form factors themselves
 
 \subsection{Available models}
 \label{sec:models}
-\noindent There several semileptonic form factor models
+\noindent There are several semileptonic form factor models
 implemented within EvtGen and the {\tt EvtSemiLeptonicAmp} 
 framework.  In this section we describe the basic features of
 each, including the modes available in each model and what
