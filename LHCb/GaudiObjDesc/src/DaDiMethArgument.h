@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/GaudiObjDesc/src/DaDiMethArgument.h,v 1.2 2001-10-17 08:32:12 mato Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/GaudiObjDesc/src/DaDiMethArgument.h,v 1.3 2001-10-19 17:28:31 mato Exp $
 #ifndef DADIMETHARGUMENT_H 
 #define DADIMETHARGUMENT_H 1
 
@@ -30,6 +30,9 @@ public:
   DOMString inout();
   void setInout(DOMString value);
 
+  bool isPointer();
+  void setIsPointer(bool value);
+
 protected:
 
 private:
@@ -38,6 +41,7 @@ private:
             m_name,
             m_constant, 
             m_inout;
+  bool      m_isPointer;
   
 };
 
@@ -81,5 +85,14 @@ inline void DaDiMethArgument::setInout(DOMString value)
   m_inout = value;
 }
 
+inline bool DaDiMethArgument::isPointer()
+{
+  return m_isPointer;
+}
+
+inline void DaDiMethArgument::setIsPointer(bool value)
+{
+  m_isPointer = value;
+}
 
 #endif // DADIMETHARGUMENT_H

@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/GaudiObjDesc/src/DaDiPackage.h,v 1.2 2001-10-09 17:01:04 mato Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/GaudiObjDesc/src/DaDiPackage.h,v 1.3 2001-10-19 17:28:31 mato Exp $
 #ifndef DADIPACKAGE_H 
 #define DADIPACKAGE_H 1
 
@@ -28,10 +28,12 @@ public:
   std::string popImpSoftList();
   void pushImpSoftList(std::string value);
   int sizeImpSoftList();
+  void remDblImpSoftList();
   
   std::string popImpStdList();
   void pushImpStdList(std::string value);
   int sizeImpStdList();
+  void remDblImpStdList();
   
   std::string popImportList();
   void pushImportList(std::string value);
@@ -82,6 +84,12 @@ inline int DaDiPackage::sizeImpSoftList()
   return m_impSoftList.size();
 }
 
+inline void DaDiPackage::remDblImpSoftList()
+{
+	m_impSoftList.sort();
+	m_impSoftList.unique();
+}
+
 inline std::string DaDiPackage::popImpStdList()
 {
   std::string pt =  m_impStdList.front();
@@ -98,6 +106,12 @@ inline void DaDiPackage::pushImpStdList(std::string value)
 inline int DaDiPackage::sizeImpStdList()
 {
   return m_impStdList.size();
+}
+
+inline void DaDiPackage::remDblImpStdList()
+{
+	m_impStdList.sort();
+	m_impStdList.unique();
 }
 
 inline std::string DaDiPackage::popImportList()

@@ -1,4 +1,4 @@
-// $Id: DaDiFrontEnd.cpp,v 1.4 2001-10-17 08:32:11 mato Exp $
+// $Id: DaDiFrontEnd.cpp,v 1.5 2001-10-19 17:28:31 mato Exp $
 
 #include "GaudiKernel/Kernel.h"
 
@@ -31,12 +31,12 @@ extern std::string argV0;
 
 
 
-std::vector<std::string> findWords(std::string value)
+std::vector<std::string> findWords(std::string value, std::string delim)
 {
   std::vector<std::string> words;
   int i,j = 0;
 
-  while ((i = value.find(" ")) != std::string::npos)
+  while ((i = value.find(delim)) != std::string::npos)
   {
     while((i = value.find(" ")) == 0)
     {
@@ -52,7 +52,14 @@ std::vector<std::string> findWords(std::string value)
   return words;
 }
 
-
+bool isPointer(DOMString value)
+{
+  while (value.substringData(value.length()-1,1).equals(" "))
+  {
+    value = value.substringData(value.length()-1,1);
+  }
+  return value.substringData(value.length()-1,1).equals("*");
+}
 
 DaDiPackage* DDFE::DaDiFrontEnd(char* filename)
 {
@@ -60,8 +67,6 @@ DaDiPackage* DDFE::DaDiFrontEnd(char* filename)
   DaDiPackage* gddPackage = new DaDiPackage();
 
   static char* gXmlFile = 0;
-
-  std::vector<std::string> abc = findWords("ab cd  ef");
 
 // 
 // Initialization of XML-Parser
@@ -133,7 +138,7 @@ DaDiPackage* DDFE::DaDiFrontEnd(char* filename)
     DOM_Node doc = parser->getDocument();
     DOM_Node top = doc.getFirstChild();
 
-    while (strcmp(top.getNodeName().transcode(), "gdd") != 0)
+    while (!top.getNodeName().equals("gdd"))
         {
       top = top.getNextSibling();
         }
@@ -141,15 +146,15 @@ DaDiPackage* DDFE::DaDiFrontEnd(char* filename)
     DOM_Node gdd_node = top.getNextSibling().getFirstChild();
     while (!gdd_node.isNull())
     {
-      if (strcmp(gdd_node.getNodeName().transcode(), "import")==0)
+      if (gdd_node.getNodeName().equals("import"))
       {
         DDFE::parseImport(gdd_node,gddPackage);
       }
-      if (strcmp(gdd_node.getNodeName().transcode(), "package")==0)
+      if (gdd_node.getNodeName().equals("package"))
       {
         DDFE::parsePackage(gdd_node,gddPackage);
       } 
-      if (strcmp(gdd_node.getNodeName().transcode(), "class")==0)
+      if (gdd_node.getNodeName().equals("class"))
       {
         gddPackage->setPackageName(DOMString::transcode("__NO_PACKAGE__"));
         DaDiClass* gddClass = new DaDiClass();
@@ -236,11 +241,11 @@ void DDFE::parsePackage(DOM_Node node, DaDiPackage* gddPackage)
       {
     case DOM_Node::ELEMENT_NODE:
       {
-        if (strcmp(node.getNodeName().transcode(), "import") == 0)
+        if (node.getNodeName().equals("import"))
               {
           DDFE::parseImport(node,gddPackage);
         }
-        else if (strcmp(node.getNodeName().transcode(), "class") == 0)
+        else if (node.getNodeName().equals("class"))
         {
           DaDiClass* gddClass = new DaDiClass();
           gddPackage->pushDaDiClass(gddClass);
@@ -265,6 +270,8 @@ void DDFE::parsePackage(DOM_Node node, DaDiPackage* gddPackage)
 //
 void DDFE::parseClass(DOM_Node node, DaDiClass* gddClass)
 {
+  bool classHasDesc = false;
+
   gddClass->setClassName(node.getAttributes().
     getNamedItem(DOMString::transcode("name")).
         getNodeValue());
@@ -274,6 +281,7 @@ void DDFE::parseClass(DOM_Node node, DaDiClass* gddClass)
     gddClass->setClassDesc(node.getAttributes().
       getNamedItem(DOMString::transcode("desc")).
       getNodeValue());
+    classHasDesc = true;
   }
   else
   {
@@ -287,7 +295,7 @@ void DDFE::parseClass(DOM_Node node, DaDiClass* gddClass)
   gddClass->setClassTemplateVector(node.getAttributes().
     getNamedItem(DOMString::transcode("templateVector")).
     getNodeValue());
-  if (strcmp(gddClass->classTemplateVector().transcode(), "TRUE") == 0)
+  if (gddClass->classTemplateVector().equals("TRUE"))
   {
     gddClass->pushImportList("ObjectVector");
   }
@@ -295,7 +303,7 @@ void DDFE::parseClass(DOM_Node node, DaDiClass* gddClass)
   gddClass->setClassTemplateList(node.getAttributes().
     getNamedItem(DOMString::transcode("templateList")).
     getNodeValue());
-  if (strcmp(gddClass->classTemplateList().transcode(), "TRUE") == 0)
+  if (gddClass->classTemplateList().equals("TRUE"))
   {
     gddClass->pushImportList("ObjectList");
   }
@@ -311,25 +319,36 @@ void DDFE::parseClass(DOM_Node node, DaDiClass* gddClass)
     gddClass->setClassID(NULL);
   }
 
+  gddClass->setLongDesc(NULL);
+
   node = node.getFirstChild();
 
   while(!node.isNull())
   {
     switch(node.getNodeType())
-       {    
+    {    
     case DOM_Node::ELEMENT_NODE:
       {
 //
+// Parse description
+//
+        if(node.getNodeName().equals("desc"))
+        {
+          gddClass->setLongDesc(node.getFirstChild().
+                  getNodeValue().transcode());
+          classHasDesc = true;
+        }
+//
 // ParseImport
 //
-        if(strcmp(node.getNodeName().transcode(), "import") == 0)
+        if(node.getNodeName().equals("import"))
         {
           DDFE::parseImport(node,gddClass);
-            }
+        }
 //
 // Parse baseclasses
 //
-        else if(strcmp(node.getNodeName().transcode(), "base") == 0)
+        else if(node.getNodeName().equals("base"))
         {
           DaDiBaseClass* gddBaseClass = new DaDiBaseClass();
 
@@ -343,17 +362,11 @@ void DDFE::parseClass(DOM_Node node, DaDiClass* gddClass)
 
           gddBaseClass->setAccess(node.getAttributes().getNamedItem(DOMString::transcode("access")).getNodeValue().transcode());
         }
-///
-/// Parse friends
-///
-        
-
-
 
 //
 // Parse methods
 //
-        else if(strcmp(node.getNodeName().transcode(), "method") == 0)
+        else if(node.getNodeName().equals("method"))
         {
           DaDiMethod* gddMethod = new DaDiMethod();
 
@@ -433,26 +446,46 @@ void DDFE::parseClass(DOM_Node node, DaDiClass* gddClass)
               getNodeValue().transcode();
 
             bool lastElem = false;
+            int valueNo = 0;
             while(!lastElem)
             {
               std::vector<std::string> args;
               int i = argList.find(",");
               if (i != std::string::npos)
               {
-                args = findWords(argList.substr(0,i));
+                args = findWords(argList.substr(0,i)," ");
                 argList = argList.substr(i+1,argList.size()-i);
               }
               else
               {
-                args = findWords(argList);
+                args = findWords(argList," ");
                 lastElem = true;
               }
 
               DaDiMethArgument* gddMethArgument = new DaDiMethArgument();
               gddMethod->pushDaDiMethArgument(gddMethArgument);
-              
+
+              if (args.size() < 2)
+              {
+                std::cerr << argV0 << ": Error in 'argList'-description of method "
+                  << gddMethod->name().transcode() << " (Class: " << gddClass->className().transcode()
+                  << "), you have to provide at least a type-name-pair" << std::endl;
+                exit(1);
+              }
+
               gddMethArgument->setName(DOMString::transcode(args[args.size()-1].data()));
-              gddMethArgument->setType(DOMString::transcode(args[args.size()-2].data()));
+
+              DOMString argType = DOMString::transcode(args[args.size()-2].data());
+              if (isPointer(argType))
+              {
+                gddMethArgument->setIsPointer(true);
+                gddMethArgument->setType(argType.substringData(0,argType.length()-1));
+              }
+              else
+              {
+                gddMethArgument->setIsPointer(false);
+                gddMethArgument->setType(argType);
+              }
               
               for (int j = (args.size()-3); j>=0; --j)
               {
@@ -465,6 +498,7 @@ void DDFE::parseClass(DOM_Node node, DaDiClass* gddClass)
                 std::cerr << argV0 << ": Don't know how to handle modifier: " << args[j] << "." << std::endl;
                 }
               }
+              gddMethArgument->setInout("INPUT");
             }
           }
 
@@ -488,7 +522,7 @@ void DDFE::parseClass(DOM_Node node, DaDiClass* gddClass)
             {      
             case DOM_Node::ELEMENT_NODE:
               {
-              if(strcmp(met_child.getNodeName().transcode(), "return") == 0)
+              if(met_child.getNodeName().equals("return"))
               {
                 DaDiMethReturn* gddMethReturn = new DaDiMethReturn();
               
@@ -502,18 +536,29 @@ void DDFE::parseClass(DOM_Node node, DaDiClass* gddClass)
                   getNodeValue().transcode());
                           
               }
-              if(strcmp(met_child.getNodeName().transcode(), "code") == 0)
+              if(met_child.getNodeName().equals("code"))
               {
                 gddMethod->setCode(met_child.getFirstChild().
                   getNodeValue().transcode());
               }
-              if(strcmp(met_child.getNodeName().transcode(), "arg") == 0)
+              if(met_child.getNodeName().equals("arg"))
               {
                 DaDiMethArgument* gddMethArgument = new DaDiMethArgument();
                 gddMethod->pushDaDiMethArgument(gddMethArgument);
-                gddMethArgument->setType(met_child.getAttributes().
+                DOMString argType = met_child.getAttributes().
                   getNamedItem(DOMString::transcode("type")).
-                  getNodeValue().transcode());
+                  getNodeValue().transcode();
+                if (isPointer(argType))
+                {
+                  gddMethArgument->setIsPointer(true);
+                  gddMethArgument->setType(argType.substringData(0,argType.length()-1));
+                }
+                else
+                {
+                  gddMethArgument->setIsPointer(false);
+                  gddMethArgument->setType(argType);
+                }
+                
                 if (!met_child.getAttributes().
                   getNamedItem(DOMString::transcode("name")).isNull())
                 {
@@ -544,7 +589,7 @@ void DDFE::parseClass(DOM_Node node, DaDiClass* gddClass)
 //
 // Parse constructors
 //
-        else if(strcmp(node.getNodeName().transcode(), "constructor") == 0)
+        else if(node.getNodeName().equals("constructor"))
         {
           DaDiConstructor* gddConstructor = new DaDiConstructor();
 
@@ -577,12 +622,12 @@ void DDFE::parseClass(DOM_Node node, DaDiClass* gddClass)
               int i = argList.find(",");
               if (i != std::string::npos)
               {
-                args = findWords(argList.substr(0,i));
+                args = findWords(argList.substr(0,i)," ");
                 argList = argList.substr(i+1,argList.size()-i);
               }
               else
               {
-                args = findWords(argList);
+                args = findWords(argList," ");
                 lastElem = true;
               }
 
@@ -626,12 +671,12 @@ void DDFE::parseClass(DOM_Node node, DaDiClass* gddClass)
             {      
             case DOM_Node::ELEMENT_NODE:
               {
-              if(strcmp(met_child.getNodeName().transcode(), "code") == 0)
+              if(met_child.getNodeName().equals("code"))
               {
                 gddConstructor->setCode(met_child.getFirstChild().
                   getNodeValue().transcode());
               }
-              if(strcmp(met_child.getNodeName().transcode(), "arg") == 0)
+              if(met_child.getNodeName().equals("arg"))
               {
                 DaDiMethArgument* gddMethArgument = new DaDiMethArgument();
                 gddConstructor->pushDaDiMethArgument(gddMethArgument);
@@ -668,7 +713,7 @@ void DDFE::parseClass(DOM_Node node, DaDiClass* gddClass)
 //
 // Parse destructors
 //
-        else if(strcmp(node.getNodeName().transcode(), "destructor") == 0)
+        else if(node.getNodeName().equals("destructor"))
         {
           DaDiDestructor* gddDestructor = new DaDiDestructor();
 
@@ -701,12 +746,12 @@ void DDFE::parseClass(DOM_Node node, DaDiClass* gddClass)
               int i = argList.find(",");
               if (i != std::string::npos)
               {
-                args = findWords(argList.substr(0,i));
+                args = findWords(argList.substr(0,i)," ");
                 argList = argList.substr(i+1,argList.size()-i);
               }
               else
               {
-                args = findWords(argList);
+                args = findWords(argList," ");
                 lastElem = true;
               }
 
@@ -750,12 +795,12 @@ void DDFE::parseClass(DOM_Node node, DaDiClass* gddClass)
             {      
             case DOM_Node::ELEMENT_NODE:
               {
-              if(strcmp(met_child.getNodeName().transcode(), "code") == 0)
+              if(met_child.getNodeName().equals("code"))
               {
                 gddDestructor->setCode(met_child.getFirstChild().
                   getNodeValue().transcode());
               }
-              if(strcmp(met_child.getNodeName().transcode(), "arg") == 0)
+              if(met_child.getNodeName().equals("arg"))
               {
                 DaDiMethArgument* gddMethArgument = new DaDiMethArgument();
                 gddDestructor->pushDaDiMethArgument(gddMethArgument);
@@ -792,7 +837,7 @@ void DDFE::parseClass(DOM_Node node, DaDiClass* gddClass)
 //
 // Parse attributes
 //
-        else if(strcmp(node.getNodeName().transcode(), "attribute") == 0)
+        else if(node.getNodeName().equals("attribute"))
         {
           DaDiAttribute* gddAttribute = new DaDiAttribute();
           gddClass->pushDaDiAttribute(gddAttribute);
@@ -840,17 +885,15 @@ void DDFE::parseClass(DOM_Node node, DaDiClass* gddClass)
           else
           {
             gddAttribute->setInit(NULL);
-          }
-
-            
+          }            
         }
+
 //
 // Parse relations
 //
-        else if(strcmp(node.getNodeName().transcode(), "relation") == 0)
+        else if(node.getNodeName().equals("relation"))
         {
-
-          char* gddRelationRatio;
+          DOMString gddRelationRatio;
             
           DaDiRelation* gddRelation = new DaDiRelation();
           gddClass->pushDaDiRelation(gddRelation);
@@ -883,10 +926,8 @@ void DDFE::parseClass(DOM_Node node, DaDiClass* gddClass)
             
           gddRelationRatio = node.getAttributes().
             getNamedItem(DOMString::transcode("ratio")).
-            getNodeValue().transcode();
-          gddRelation->setRatio(node.getAttributes().
-            getNamedItem(DOMString::transcode("ratio")).
-            getNodeValue().transcode());
+            getNodeValue();
+          gddRelation->setRatio(gddRelationRatio);
             
           gddRelation->setSetMeth(node.getAttributes().
             getNamedItem(DOMString::transcode("setMeth")).
@@ -908,17 +949,16 @@ void DDFE::parseClass(DOM_Node node, DaDiClass* gddClass)
             getNamedItem(DOMString::transcode("clrMeth")).
             getNodeValue().transcode());
             
-          if (strcmp(gddRelationRatio, "1-1") == 0)
+          if (gddRelationRatio.equals("1-1"))
           {
             gddClass->pushImportList("SmartRef");
           }
-          else if ((strcmp(gddRelationRatio, "1-M") == 0) ||
-            (strcmp(gddRelationRatio, "M-N") == 0))
+          else if (gddRelationRatio.equals("1-M") ||
+                   gddRelationRatio.equals("M-N"))
           {
             gddClass->pushImportList("SmartRef");
             gddClass->pushImportList("SmartRefVector");
           }
-
         }
         else
         {    
@@ -930,6 +970,12 @@ void DDFE::parseClass(DOM_Node node, DaDiClass* gddClass)
         node = node.getNextSibling();
       }
     }
+  }
+  if (!classHasDesc)
+  {
+    std::cerr << "Class " <<  gddClass->className().transcode() 
+      << " has no description, please add one to the xml-file" << std::endl;
+    exit(1);
   }
 }
 

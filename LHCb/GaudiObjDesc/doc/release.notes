@@ -2,7 +2,11 @@ Package: GaudiObjDesc
 Desccription: This package contains a set of tools used to generate code from the XML description of the data object classes.
 Package manager : Stefan Roiser
 
-! 20012018 - Stefan Roiser
+! 20011019 - Stefan Roiser
+ - many small changes: handling of arguments in selfdefined methods, concatenate class descriptions, produce
+   at least one empty constructor, handling and errorhandling of class-attribute 'argList'
+ 
+! 20011018 - Stefan Roiser
  - CppWriter generates an entry (classname - packagename/classname) to the 'Headerdatabase' before writing the cpp 
 
 ! 20011017 - Stefan Roiser

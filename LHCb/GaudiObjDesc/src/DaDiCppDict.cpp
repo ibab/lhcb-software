@@ -1,4 +1,4 @@
-// $Id: DaDiCppDict.cpp,v 1.8 2001-10-18 13:36:33 mato Exp $
+// $Id: DaDiCppDict.cpp,v 1.9 2001-10-19 17:28:30 mato Exp $
 
 #include "GaudiKernel/Kernel.h"
 
@@ -255,7 +255,7 @@ void DDBEdict::printCppDictionary(DaDiPackage* gddPackage, char* envXmlDB, char*
     DOM_Node dbDoc = dbParser->getDocument();
     DOM_Node dbTop = dbDoc.getFirstChild();
       
-    while(strcmp(dbTop.getNodeName().transcode(), "gdd") != 0)
+    while(dbTop.getNodeName().equals("gdd"))
         {
       dbTop = dbTop.getNextSibling();
         }
@@ -264,7 +264,7 @@ void DDBEdict::printCppDictionary(DaDiPackage* gddPackage, char* envXmlDB, char*
       
     while (!dbPackNode.isNull())
         {
-      if (strcmp(dbPackNode.getNodeName().transcode(), "package") == 0)
+      if (dbPackNode.getNodeName().equals("package"))
             {
         DOM_Node dbClassNode = dbPackNode.getFirstChild();
         std::string dbPackName;
@@ -273,8 +273,7 @@ void DDBEdict::printCppDictionary(DaDiPackage* gddPackage, char* envXmlDB, char*
                 getNodeValue().transcode();
         while(!dbClassNode.isNull())
                 {
-          if (strcmp(dbClassNode.getNodeName().transcode(), "class") 
-                      == 0)
+          if (dbClassNode.getNodeName().equals("class"))
                     {
             std::string dbClassName, dbFileName;
             dbClassName = dbClassNode.getAttributes().
@@ -360,10 +359,10 @@ void DDBEdict::printCppDictionary(DaDiPackage* gddPackage, char* envXmlDB, char*
     << "//   *                      ! ! ! A T T E N T I O N ! ! !                     *" << std::endl
     << "//   *                                                                        *" << std::endl
     << "//   *  This file was created automatically by GaudiObjDesc, please do not    *" << std::endl
-    << "//   *  edit or delete it by hand.                                            *" << std::endl
+    << "//   *  delete it or edit it by hand.                                         *" << std::endl
     << "//   *                                                                        *" << std::endl
     << "//   *  If you want to change this file, first change the corresponding       *" << std::endl
-    << "//   *  xml-file and rerun the tools from GaudiObjDesc (or the make if you    *" << std::endl
+    << "//   *  xml-file and rerun the tools from GaudiObjDesc (or run make if you    *" << std::endl
     << "//   *  are using it from inside a Gaudi-package).                            *" << std::endl
     << "//   *                                                                        *" << std::endl
     << "//   **************************************************************************" << std::endl
@@ -419,10 +418,10 @@ void DDBEdict::printCppDictionary(DaDiPackage* gddPackage, char* envXmlDB, char*
     }
 
     if ((ret_att == "bool") && (gddMethod->sizeDaDiMethArgument() == 1) &&
-      (strcmp(gddMethod->popDaDiMethArgument()->type().transcode(),"std::string") == 0))
+         gddMethod->popDaDiMethArgument()->type().equals("std::string"))
     {
       metaOut << "static bool MetaC_" << gddMethod->name().transcode() 
-        << "(void* v, std::string s) { return ((" << gddClass->className().transcode() 
+        << "(void* v, const std::string& s) { return ((" << gddClass->className().transcode() 
         << "*)v)->" << gddMethod->name().transcode() << "(s); }" << std::endl;
     }   
   }
@@ -492,11 +491,12 @@ void DDBEdict::printCppDictionary(DaDiPackage* gddPackage, char* envXmlDB, char*
   {
     DaDiMethod* gddMethod = gddClass->popDaDiMethod();
 
-    std::string ret_att = gddMethod->daDiMethReturn()->type().transcode();
+    DOMString ret_att = gddMethod->daDiMethReturn()->type();
 
-    if ( ((ret_att == "bool") || (ret_att == "double")) && (gddMethod->sizeDaDiMethArgument() == 0) ||
-      ((ret_att == "bool") && (gddMethod->sizeDaDiMethArgument() == 1) &&
-      (strcmp(gddMethod->popDaDiMethArgument()->type().transcode(),"std::string") == 0)) )
+    if ( 
+      ( (ret_att.equals("bool") || ret_att.equals("double")) && (gddMethod->sizeDaDiMethArgument() == 0) ) ||
+      ( ret_att.equals("bool") && (gddMethod->sizeDaDiMethArgument() == 1) &&
+      gddMethod->popDaDiMethArgument()->type().equals("std::string") ) ) 
     {
       metaOut << "    metaC->addMethod(\"" << gddMethod->name().transcode() 
         << "\", \"" << gddMethod->desc().transcode() << "\", MetaC_" 

@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/GaudiObjDesc/src/DaDiClass.h,v 1.4 2001-10-17 08:32:11 mato Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/GaudiObjDesc/src/DaDiClass.h,v 1.5 2001-10-19 17:28:29 mato Exp $
 #ifndef DADICLASS_H 
 #define DADICLASS_H 1
 
@@ -49,13 +49,18 @@ public:
 	DOMString classID();
 	void setClassID(DOMString value);
 
+	DOMString longDesc();
+	void setLongDesc(DOMString value);
+
 	std::string popImpSoftList();
 	void pushImpSoftList(std::string value);
 	int sizeImpSoftList();
+  void remDblImpSoftList();
   
 	std::string popImpStdList();
 	void pushImpStdList(std::string value);
 	int sizeImpStdList();
+  void remDblImpStdList();
   
 	std::string popImportList();
 	void pushImportList(std::string value);
@@ -91,12 +96,13 @@ protected:
 private:
 
 	DOMString                   m_className, 
-                              m_classDesc, 
+                              m_classDesc,
                               m_classAuthor, 
                               m_classDerived,
                               m_classTemplateVector,
                               m_classTemplateList,
-                              m_classID;
+                              m_classID,
+                              m_longDesc;
 	std::list<std::string>      m_impSoftList,
                               m_impStdList,
                               m_importList;
@@ -178,6 +184,16 @@ inline void DaDiClass::setClassID(DOMString value)
 	m_classID = value;
 }
 
+inline DOMString DaDiClass::longDesc()
+{
+	return m_longDesc;
+}
+
+inline void DaDiClass::setLongDesc(DOMString value)
+{
+	m_longDesc = value;
+}
+
 inline std::string DaDiClass::popImpSoftList()
 {
 	std::string pt = m_impSoftList.front();
@@ -196,6 +212,11 @@ inline int DaDiClass::sizeImpSoftList()
 	return m_impSoftList.size();
 }
 
+inline void DaDiClass::remDblImpSoftList()
+{
+	m_impSoftList.sort();
+	m_impSoftList.unique();
+}
 
 inline std::string DaDiClass::popImpStdList()
 {
@@ -213,6 +234,12 @@ inline void DaDiClass::pushImpStdList(std::string value)
 inline int DaDiClass::sizeImpStdList()
 {
 	return m_impStdList.size();
+}
+
+inline void DaDiClass::remDblImpStdList()
+{
+	m_impStdList.sort();
+	m_impStdList.unique();
 }
 
 inline std::string DaDiClass::popImportList()

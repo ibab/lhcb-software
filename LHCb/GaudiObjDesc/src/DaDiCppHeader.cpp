@@ -1,4 +1,4 @@
-// $Id: DaDiCppHeader.cpp,v 1.7 2001-10-18 11:47:09 mato Exp $
+// $Id: DaDiCppHeader.cpp,v 1.8 2001-10-19 17:28:30 mato Exp $
 
 #include "GaudiKernel/Kernel.h"
 
@@ -81,10 +81,10 @@ bool isSimple(std::string value)
 {
   int i = value.find_last_of(" ");
   value = value.substr(i+1, value.size()-i);
-  if ((value == "bool") || (value == "short") ||
-    (value == "long") || (value == "std::string") ||
-    (value == "int") || (value == "float") ||
-    (value == "double") || (value == "char"))
+  if ((value == "bool")   || (value == "short")  ||
+      (value == "long")   || (value == "int")    || 
+      (value == "float")  || (value == "double") || 
+      (value == "char"))
   {
     return true;
   }
@@ -194,15 +194,10 @@ int main(int argC, char* argV[])
       }
       else
       {
-
         files.push_back(argV[i]);
       }
     }
   }
-
-//  std::cout << "envOut: " << envOut << std::endl
-//    << "envXmlDB: " << envXmlDB << std::endl;
-
   
   for (std::vector<char*>::iterator iter = files.begin(); iter != files.end(); ++iter)
   {
@@ -220,8 +215,6 @@ void DDBEcpp::printCppHeader(DaDiPackage* gddPackage, char* envXmlDB, char* envO
   int i=0, j=0;
   time_t ltime;
   std::map<std::string,std::string> dbExportClass;
-
-//  extern DaDiPackage* gddPackage;
 
 //
 // Parser initialization
@@ -282,31 +275,30 @@ void DDBEcpp::printCppHeader(DaDiPackage* gddPackage, char* envXmlDB, char* envO
 // Produce map of classes and files (for later use in #include-statements)
 //
   else
-    {
+  {
     DOM_Node dbDoc = dbParser->getDocument();
     DOM_Node dbTop = dbDoc.getFirstChild();
       
-    while(strcmp(dbTop.getNodeName().transcode(), "gdd") != 0)
-        {
+    while(!dbTop.getNodeName().equals("gdd"))
+    {
       dbTop = dbTop.getNextSibling();
-        }
+    }
       
     DOM_Node dbPackNode = dbTop.getNextSibling().getFirstChild();
       
     while (!dbPackNode.isNull())
-        {
-      if (strcmp(dbPackNode.getNodeName().transcode(), "package") == 0)
-            {
+    {
+      if (dbPackNode.getNodeName().equals("package"))
+      {
         DOM_Node dbClassNode = dbPackNode.getFirstChild();
         std::string dbPackName;
         dbPackName = dbPackNode.getAttributes().
                   getNamedItem(DOMString::transcode("name")).
                 getNodeValue().transcode();
         while(!dbClassNode.isNull())
-                {
-          if (strcmp(dbClassNode.getNodeName().transcode(), "class") 
-                      == 0)
-                    {
+        {
+          if (dbClassNode.getNodeName().equals("class")) 
+          {
             std::string dbClassName, dbFileName;
             dbClassName = dbClassNode.getAttributes().
               getNamedItem(DOMString::transcode("name")).
@@ -409,10 +401,10 @@ void DDBEcpp::printCppHeader(DaDiPackage* gddPackage, char* envXmlDB, char* envO
     << "//   *                      ! ! ! A T T E N T I O N ! ! !                     *" << std::endl
     << "//   *                                                                        *" << std::endl
     << "//   *  This file was created automatically by GaudiObjDesc, please do not    *" << std::endl
-    << "//   *  edit or delete it by hand.                                            *" << std::endl
+    << "//   *  delete it or edit it by hand.                                         *" << std::endl
     << "//   *                                                                        *" << std::endl
     << "//   *  If you want to change this file, first change the corresponding       *" << std::endl
-    << "//   *  xml-file and rerun the tools from GaudiObjDesc (or the make if you    *" << std::endl
+    << "//   *  xml-file and rerun the tools from GaudiObjDesc (or run make if you    *" << std::endl
     << "//   *  are using it from inside a Gaudi-package).                            *" << std::endl
     << "//   *                                                                        *" << std::endl
     << "//   **************************************************************************" << std::endl
@@ -448,56 +440,59 @@ void DDBEcpp::printCppHeader(DaDiPackage* gddPackage, char* envXmlDB, char* envO
   gddPackage->remDblImportList();
 
   for(i=0; i<gddPackage->sizeImportList(); i++)
-    {
+  {
     std::string impName = gddPackage->popImportList();
     if(dbExportClass[impName] != "")
-        {
+    {
       impName = dbExportClass[impName];
-        }
-      else
-        {
+    }
+    else
+    {
       std::cerr << std::endl << argV0 << ": No information found for type: "
         << impName << std::endl << argV0 << ": Line written: #include \""
         << impName << ".h\"" << std::endl;
-        }
-    xmlOut << "#include \"" << impName << ".h\"" << std::endl;
     }
+    xmlOut << "#include \"" << impName << ".h\"" << std::endl;
+  }
 
   gddClass->remDblImportList();
 
   for(i=0; i<gddClass->sizeImportList(); i++)
-    {
+  {
     std::string impName = gddClass->popImportList();
     if(dbExportClass[impName] != "")
-        {
+    {
       impName = dbExportClass[impName];
-        }
+    }
     else
-        {
+    {
       std::cerr << std::endl << argV0 << ": No information found for type: " 
         << impName << std::endl << argV0 << ": Line written: #include \"" 
         << impName << ".h\"" << std::endl;
-        }
-      xmlOut << "#include \"" << impName << ".h\"" << std::endl;
     }
+    xmlOut << "#include \"" << impName << ".h\"" << std::endl;
+  }
 
 
 //
 // Forward declarations
 //  
+  gddPackage->remDblImpSoftList();
+  gddClass->remDblImpSoftList();
+
   if (gddPackage->sizeImpSoftList() || gddClass->sizeImpSoftList())
-    {
+  {
     xmlOut << std::endl << std::endl
       << "// Forward declarations" << std::endl;
     for(i=0; i<gddPackage->sizeImpSoftList(); i++)
-        {
+    {
       xmlOut << "class " << gddPackage->popImpSoftList() << ";" << std::endl;
-        }
-      for(i=0; i<gddClass->sizeImpSoftList(); i++)
-        {
-        xmlOut << "class " << gddClass->popImpSoftList() << ";" << std::endl;
-        }
     }
+    for(i=0; i<gddClass->sizeImpSoftList(); i++)
+    {
+      xmlOut << "class " << gddClass->popImpSoftList() << ";" << std::endl;
+    }
+  }
   
   xmlOut << std::endl << std::endl;
 
@@ -519,17 +514,28 @@ void DDBEcpp::printCppHeader(DaDiPackage* gddPackage, char* envXmlDB, char* envO
   xmlOut << "/** @class " << gddClass->className().transcode() << " "
     << gddClass->className().transcode() << ".h ";
 
-  if (strcmp(gddPackage->packageName().transcode(), "__NO_PACKAGE__") != 0)
-    {
+  if (gddPackage->packageName().equals("__NO_PACKAGE__"))
+  {
     xmlOut << gddPackage->packageName().transcode() << "/" << gddClass->className().transcode() 
       << ".h";
-    }
+  }
+
+  xmlOut << std::endl << std::endl;
+
+  if (gddClass->classDesc() != NULL)
+  {
+    xmlOut << "    " << gddClass->classDesc().transcode();
+  }
+
+  if (gddClass->longDesc() != NULL)
+  {
+    xmlOut << gddClass->longDesc().transcode();
+  }
 
   xmlOut << std::endl << std::endl
-    << "    " << gddClass->classDesc().transcode() << std::endl << std::endl
-        << "    @author " << gddClass->classAuthor().transcode() << std::endl
-        << "    @date   " << ctime(&ltime) << std::endl 
-        << "*/" << std::endl << std::endl;
+         << "    @author " << gddClass->classAuthor().transcode() << std::endl
+         << "    @date   " << ctime(&ltime) << std::endl 
+         << "*/" << std::endl << std::endl;
 
 //
 // class definition
@@ -543,7 +549,7 @@ void DDBEcpp::printCppHeader(DaDiPackage* gddPackage, char* envXmlDB, char* envO
     {
       if (i>0) {xmlOut << ", ";}
       DaDiBaseClass* gddBaseClass = gddClass->popDaDiBaseClass();
-      if (strcmp(gddBaseClass->virtual_().transcode(), "TRUE") == 0)
+      if (gddBaseClass->virtual_().equals("TRUE"))
       {
         xmlOut << "virtual ";
       }
@@ -559,9 +565,61 @@ void DDBEcpp::printCppHeader(DaDiPackage* gddPackage, char* envXmlDB, char* envO
 // (Standard) constructor & destructor
 //
 
-  if (gddClass->sizeDaDiConstructor() == 0)
+  bool constWithZeroArgs = false;
+  //
+  // NonStandard Constructors
+  //
+  for(int h=0; h<gddClass->sizeDaDiConstructor(); ++h)
   {
-    xmlOut << "/// Constructor " << std::endl << gddClass->className().transcode() << "() ";
+    DaDiConstructor* gddConstructor = gddClass->popDaDiConstructor();
+    
+    if (gddConstructor->desc() != NULL)
+    {
+      xmlOut << "/// " << gddConstructor->desc().transcode() << std::endl;
+    }
+    xmlOut << gddClass->className().transcode() << "(";
+
+    if (gddConstructor->sizeDaDiMethArgument() == 0) { constWithZeroArgs = true; }
+    for(int j=0; j<gddConstructor->sizeDaDiMethArgument(); ++j)
+    {
+      DaDiMethArgument* gddMethArgument = gddConstructor->popDaDiMethArgument();
+
+      if(j!=0)
+      {
+        xmlOut << ", ";
+      }
+      if (gddMethArgument->const_().equals("TRUE"))
+      {
+        xmlOut << "const ";
+      }
+      xmlOut << gddMethArgument->type().transcode();
+      if (gddMethArgument->name() != NULL)
+      {
+        xmlOut << " " << gddMethArgument->name().transcode();
+      }
+      else 
+      {
+        xmlOut << " value" << j;
+      }
+    }
+    xmlOut << ")";
+    if (gddConstructor->code() != NULL)
+    {
+      xmlOut << std::endl << "{" << std::endl << gddConstructor->code().transcode() << std::endl
+        << "}" << std::endl << std::endl;
+    }
+    else
+    {
+      xmlOut << ";" << std::endl << std::endl;
+    }
+  }
+
+//
+// Default Constructor
+//
+  if (!constWithZeroArgs)
+  {
+    xmlOut << "/// Default Constructor " << std::endl << gddClass->className().transcode() << "() ";
 
     bool firstLine = true;
     for (int i=0; i<gddClass->sizeDaDiAttribute(); ++i)
@@ -596,56 +654,9 @@ void DDBEcpp::printCppHeader(DaDiPackage* gddPackage, char* envXmlDB, char* envO
         xmlOut << "m_" << gddAttribute->name().transcode() << "(" << initValue << ")";
       }
     }
-    xmlOut << "   {}" << std::endl << std::endl;
+    xmlOut << " {}" << std::endl << std::endl;
   }
-  else
-  {
-  //
-  // NonStandard Constructors
-  //
-    for(int h=0; h<gddClass->sizeDaDiConstructor(); ++h)
-    {
-      DaDiConstructor* gddConstructor = gddClass->popDaDiConstructor();
-    
-      if (gddConstructor->desc() != NULL)
-      {
-        xmlOut << "/// " << gddConstructor->desc().transcode() << std::endl;
-      }
-      xmlOut << gddClass->className().transcode() << "(";
-      for(int j=0; j<gddConstructor->sizeDaDiMethArgument(); ++j)
-      {
-        DaDiMethArgument* gddMethArgument = gddConstructor->popDaDiMethArgument();
 
-        if(j!=0)
-        {
-          xmlOut << ", ";
-        }
-        if (strcmp(gddMethArgument->const_().transcode(), "TRUE") == 0)
-        {
-          xmlOut << "const ";
-        }
-        xmlOut << gddMethArgument->type().transcode();
-        if (gddMethArgument->name() != NULL)
-        {
-          xmlOut << " " << gddMethArgument->name().transcode();
-        }
-        else 
-        {
-          xmlOut << " value" << j;
-        }
-      }
-      xmlOut << ")";
-      if (gddConstructor->code() != NULL)
-      {
-        xmlOut << std::endl << "{" << std::endl << gddConstructor->code().transcode() << std::endl
-          << "}" << std::endl << std::endl;
-      }
-      else
-      {
-        xmlOut << ";" << std::endl << std::endl;
-      }
-    }
-  }
   
 
   if (gddClass->sizeDaDiDestructor() == 0)
@@ -675,7 +686,7 @@ void DDBEcpp::printCppHeader(DaDiPackage* gddPackage, char* envXmlDB, char* envO
         {
           xmlOut << ", ";
         }
-        if (strcmp(gddMethArgument->const_().transcode(), "TRUE") == 0)
+        if (gddMethArgument->const_().equals("TRUE"))
         {
           xmlOut << "const ";
         }
@@ -713,10 +724,6 @@ void DDBEcpp::printCppHeader(DaDiPackage* gddPackage, char* envXmlDB, char* envO
     xmlOut << "static const CLID& classID(); " << std::endl << std::endl;
   }
 
-
-
-
-
 // 
 // Declaration of selfdefined methods
 //
@@ -725,15 +732,15 @@ void DDBEcpp::printCppHeader(DaDiPackage* gddPackage, char* envXmlDB, char* envO
     DaDiMethod* gddMethod = gddClass->popDaDiMethod();
       
     xmlOut << "/// " << gddMethod->desc().transcode() << std::endl;
-    if (strcmp(gddMethod->virtual_().transcode(), "TRUE") == 0)
+    if (gddMethod->virtual_().equals("TRUE"))
     {
       xmlOut << "virtual ";
     }
-    if (strcmp(gddMethod->static_().transcode(), "TRUE") == 0)
+    if (gddMethod->static_().equals("TRUE"))
     {
       xmlOut << "static ";
     }
-    if (strcmp(gddMethod->daDiMethReturn()->const_().transcode(), "TRUE")==0)
+    if (gddMethod->daDiMethReturn()->const_().equals("TRUE"))
     {
       xmlOut << "const ";
     }
@@ -747,11 +754,22 @@ void DDBEcpp::printCppHeader(DaDiPackage* gddPackage, char* envXmlDB, char* envO
       {
         xmlOut << ", ";
       }
-      if (strcmp(gddMethArgument->const_().transcode(), "TRUE") == 0)
+      if ( gddMethArgument->const_().equals("TRUE") ||
+          !isSimple(gddMethArgument->type().transcode()) )
       {
         xmlOut << "const ";
       }
       xmlOut << gddMethArgument->type().transcode();
+      if (gddMethArgument->isPointer()) 
+      {
+        xmlOut << "*";
+      }
+      if ( gddMethArgument->inout().equals("BOTH") ||
+          !isSimple(gddMethArgument->type().transcode()) )
+      {
+        xmlOut << "&";
+      }
+
       if (gddMethArgument->name() != NULL)
       {
         xmlOut << " " << gddMethArgument->name().transcode();
@@ -774,10 +792,14 @@ void DDBEcpp::printCppHeader(DaDiPackage* gddPackage, char* envXmlDB, char* envO
   {
     DaDiAttribute* gddAttribute = gddClass->popDaDiAttribute();
       
-    if(strcmp(gddAttribute->getMeth().transcode(), "TRUE") == 0)
+    if(gddAttribute->getMeth().equals("TRUE"))
     {
-      xmlOut << "/// Retrieve " << gddAttribute->desc().transcode() << std::endl
-        << "const " << gddAttribute->type().transcode();
+      xmlOut << "/// Retrieve " << gddAttribute->desc().transcode() << std::endl;
+      if (!isSimple(gddAttribute->type().transcode()))
+      {
+        xmlOut << "const ";
+      }
+      xmlOut << gddAttribute->type().transcode();
       if (!isSimple(gddAttribute->type().transcode()))
       {
         xmlOut << "&";
@@ -785,11 +807,16 @@ void DDBEcpp::printCppHeader(DaDiPackage* gddPackage, char* envXmlDB, char* envO
       xmlOut << " " << gddAttribute->name().transcode() << "() const; " << std::endl;
     }
       
-    if(strcmp(gddAttribute->setMeth().transcode(), "TRUE") == 0)
+    if(gddAttribute->setMeth().equals("TRUE"))
     {
       xmlOut << "/// Update " << gddAttribute->desc().transcode() << std::endl 
         << "void set" << firstUp(gddAttribute->name()).transcode() 
-        << "(const " << gddAttribute->type().transcode();
+        << "(";
+      if (!isSimple(gddAttribute->type().transcode()))
+      {
+        xmlOut << "const ";
+      }
+      xmlOut << gddAttribute->type().transcode();
       if (!isSimple(gddAttribute->type().transcode()))
       {
         xmlOut << "&";
@@ -807,13 +834,13 @@ void DDBEcpp::printCppHeader(DaDiPackage* gddPackage, char* envXmlDB, char* envO
     char *get_ret, *set_arg, *add_arg;      
     DaDiRelation* gddRelation = gddClass->popDaDiRelation();
       
-    if (strcmp(gddRelation->ratio().transcode(), "1-1") == 0)
+    if (gddRelation->ratio().equals("1-1"))
         {
       get_ret = "SmartRef<";
       set_arg = "SmartRef<";
       add_arg = "";
         }
-    else if (strcmp(gddRelation->ratio().transcode(), "1-M") == 0)
+    else if (gddRelation->ratio().equals("1-M"))
         {
       get_ret = "SmartRefVector<";
       set_arg = "SmartRefVector<";
@@ -826,13 +853,13 @@ void DDBEcpp::printCppHeader(DaDiPackage* gddPackage, char* envXmlDB, char* envO
       add_arg = "";
         }
 
-    if (strcmp(gddRelation->getMeth().transcode(), "TRUE") == 0)
+    if (gddRelation->getMeth().equals("TRUE"))
         {
       xmlOut << "/// Retrieve " << gddRelation->desc().transcode() << std::endl
         << "const " << get_ret << gddRelation->type().transcode() << ">& " 
                 << gddRelation->name().transcode() << "() const;" << std::endl;
         }
-      if (strcmp(gddRelation->setMeth().transcode(), "TRUE") == 0)
+      if (gddRelation->setMeth().equals("TRUE"))
         {
         xmlOut << "/// Update " << gddRelation->desc().transcode() << std::endl
         /* << "void " << "set" << firstUp(gddRelation->name()).transcode()
@@ -844,7 +871,7 @@ void DDBEcpp::printCppHeader(DaDiPackage* gddPackage, char* envXmlDB, char* envO
         }
       if (strcmp("", add_arg) != 0)
         {
-        if (strcmp(gddRelation->addMeth().transcode(), "TRUE") == 0)
+        if (gddRelation->addMeth().equals("TRUE"))
             {
           xmlOut << "/// Add " << gddRelation->desc().transcode() << std::endl
           << "void " << "addTo" 
@@ -853,9 +880,9 @@ void DDBEcpp::printCppHeader(DaDiPackage* gddPackage, char* envXmlDB, char* envO
                     << std::endl << "void " << "addTo" 
                     << firstUp(gddRelation->name()).transcode()
                     << "(" << add_arg << gddRelation->type().transcode() 
-                    << "> value); " << std::endl;    
+                    << ">& value); " << std::endl;    
             }
-      if (strcmp(gddRelation->remMeth().transcode(), "TRUE") == 0)
+      if (gddRelation->remMeth().equals("TRUE"))
             {
         xmlOut << "/// Remove " << gddRelation->desc().transcode() << std::endl
           << "void " << "removeFrom" 
@@ -866,7 +893,7 @@ void DDBEcpp::printCppHeader(DaDiPackage* gddPackage, char* envXmlDB, char* envO
                     << "(SmartRef<" << gddRelation->type().transcode() << ">& value); "  
                     << std::endl;
             }
-      if (strcmp(gddRelation->clrMeth().transcode(), "TRUE") == 0)
+      if (gddRelation->clrMeth().equals("TRUE"))
       {
         xmlOut << "/// Clear " << gddRelation->desc().transcode() << std::endl
         << "void " << "clear" 
@@ -874,7 +901,7 @@ void DDBEcpp::printCppHeader(DaDiPackage* gddPackage, char* envXmlDB, char* envO
               << std::endl;
       }
     }      
-      xmlOut << std::endl;
+    xmlOut << std::endl;
   }
 
 
@@ -914,7 +941,7 @@ void DDBEcpp::printCppHeader(DaDiPackage* gddPackage, char* envXmlDB, char* envO
       DaDiAttribute* gddAttribute = gddClass->popDaDiAttribute();
 
       bool attBool=false;
-      if (strcmp(gddAttribute->type().transcode(), "bool") == 0)
+      if (gddAttribute->type().equals("bool"))
       {
         if (j==0 || j==2)           // writing
         {
@@ -954,9 +981,13 @@ void DDBEcpp::printCppHeader(DaDiPackage* gddPackage, char* envXmlDB, char* envO
       {
         xmlOut << std::endl << "    ";
       }
-      if (strcmp(gddAttribute->type().transcode(), "bool") == 0)
+      if (gddAttribute->type().equals("bool"))
       {
         xmlOut << op << " l_";
+      }
+      else if (gddAttribute->type().equals("double"))
+      {
+        xmlOut << op << " (float)obj.m_";
       }
       else
       {
@@ -986,7 +1017,7 @@ void DDBEcpp::printCppHeader(DaDiPackage* gddPackage, char* envXmlDB, char* envO
       for(i=0; i<gddClass->sizeDaDiAttribute(); ++i)
       {
         DaDiAttribute* gddAttribute = gddClass->popDaDiAttribute();
-        if (strcmp(gddAttribute->type().transcode(), "bool") == 0)
+        if (gddAttribute->type().equals("bool"))
         {
           xmlOut << "   obj.m_" << gddAttribute->name().transcode()
             << " = (l_" << gddAttribute->name().transcode()
@@ -1025,7 +1056,7 @@ void DDBEcpp::printCppHeader(DaDiPackage* gddPackage, char* envXmlDB, char* envO
     int lengthType = 0;
     DaDiRelation* gddRelation = gddClass->popDaDiRelation();
 
-    if (strcmp(gddRelation->ratio().transcode(), "1-1") == 0)
+    if (gddRelation->ratio().equals("1-1"))
     { 
       lengthType = 10 + strlen(gddRelation->type().transcode()); 
     }
@@ -1070,12 +1101,12 @@ void DDBEcpp::printCppHeader(DaDiPackage* gddPackage, char* envXmlDB, char* envO
     std::string rel_type;
     DaDiRelation* gddRelation = gddClass->popDaDiRelation();
 
-    if (strcmp(gddRelation->ratio().transcode(), "1-1") == 0)
+    if (gddRelation->ratio().equals("1-1"))
         {
       rel_type = "SmartRef";
         }
-      else if ((strcmp(gddRelation->ratio().transcode(), "1-M") == 0) ||
-      (strcmp(gddRelation->ratio().transcode(), "M-N") == 0))
+      else if ((gddRelation->ratio().equals("1-M")) ||
+      (gddRelation->ratio().equals("M-N")))
         {
           rel_type = "SmartRefVector";
         }
@@ -1166,18 +1197,18 @@ void DDBEcpp::printCppHeader(DaDiPackage* gddPackage, char* envXmlDB, char* envO
   for(i=0; i<gddClass->sizeDaDiMethod(); i++)
   {
     DaDiMethod* gddMethod = gddClass->popDaDiMethod();
-    if (strcmp(gddMethod->inline_().transcode(), "TRUE") == 0)
+    if (gddMethod->code() != NULL)
     {
       xmlOut << "inline ";
-      if(strcmp(gddMethod->virtual_().transcode(), "TRUE") == 0)
+      if(gddMethod->virtual_().equals("TRUE"))
       {
         xmlOut << "virtual ";
       }
-      if (strcmp(gddMethod->static_().transcode(), "TRUE") == 0)
+      if (gddMethod->static_().equals("TRUE"))
       {
         xmlOut << "static ";
       }
-      if (strcmp(gddMethod->daDiMethReturn()->const_().transcode(), "TRUE")==0)
+      if (gddMethod->daDiMethReturn()->const_().equals("TRUE"))
       {
         xmlOut << "const ";
       }
@@ -1186,12 +1217,26 @@ void DDBEcpp::printCppHeader(DaDiPackage* gddPackage, char* envXmlDB, char* envO
       for(j=0; j<gddMethod->sizeDaDiMethArgument(); j++)
       {
         DaDiMethArgument* gddMethArgument = gddMethod->popDaDiMethArgument();
-
-        if(strcmp(gddMethArgument->const_().transcode(), "TRUE") == 0)
+        if (j>0)
+        {
+          xmlOut << ", ";
+        }
+        if (gddMethArgument->const_().equals("TRUE") ||
+            !isSimple(gddMethArgument->type().transcode()) )
         {
           xmlOut << "const ";
         }
         xmlOut << gddMethArgument->type().transcode();
+        if (gddMethArgument->isPointer()) 
+        {
+          xmlOut << "*";
+        }
+        if ( gddMethArgument->inout().equals("BOTH") ||
+            !isSimple(gddMethArgument->type().transcode()) )
+        {
+          xmlOut << "&";
+        }
+
         if(gddMethArgument->name() != NULL)
         {
           xmlOut << " " << gddMethArgument->name().transcode();
@@ -1217,9 +1262,14 @@ void DDBEcpp::printCppHeader(DaDiPackage* gddPackage, char* envXmlDB, char* envO
   {
     DaDiAttribute* gddAttribute = gddClass->popDaDiAttribute();
       
-    if(strcmp(gddAttribute->getMeth().transcode(), "TRUE") == 0)
+    if(gddAttribute->getMeth().equals("TRUE"))
     {
-      xmlOut << "inline const " <<  gddAttribute->type().transcode();
+      xmlOut << "inline ";
+      if (!isSimple(gddAttribute->type().transcode()))
+      {
+        xmlOut << "const ";
+      }      
+      xmlOut << gddAttribute->type().transcode();
       if (!isSimple(gddAttribute->type().transcode()))
       {
         xmlOut << "&";
@@ -1230,11 +1280,15 @@ void DDBEcpp::printCppHeader(DaDiPackage* gddPackage, char* envXmlDB, char* envO
         << ";" << std::endl << "}" << std::endl << std::endl ;
     }
       
-    if(strcmp(gddAttribute->setMeth().transcode(), "TRUE") == 0)
+    if(gddAttribute->setMeth().equals("TRUE"))
     {
       xmlOut << "inline void " << gddClass->className().transcode() << "::set" 
-        << firstUp(gddAttribute->name()).transcode() << "(const " 
-        << gddAttribute->type().transcode();
+        << firstUp(gddAttribute->name()).transcode() << "(";
+      if (!isSimple(gddAttribute->type().transcode()))
+      {
+        xmlOut << "const ";
+      }      
+      xmlOut << gddAttribute->type().transcode();
       if (!isSimple(gddAttribute->type().transcode()))
       {
         xmlOut << "&";
@@ -1254,13 +1308,13 @@ void DDBEcpp::printCppHeader(DaDiPackage* gddPackage, char* envXmlDB, char* envO
     char *get_ret, *set_arg, *add_arg;
     DaDiRelation* gddRelation = gddClass->popDaDiRelation();
       
-    if (strcmp(gddRelation->ratio().transcode(), "1-1") == 0)
+    if (gddRelation->ratio().equals("1-1"))
     {
       get_ret = "SmartRef<";
       set_arg = "SmartRef<";
       add_arg = "";
     }
-    else if (strcmp(gddRelation->ratio().transcode(), "1-M") == 0)
+    else if (gddRelation->ratio().equals("1-M"))
     {
       get_ret = "SmartRefVector<";
       set_arg = "SmartRefVector<";
@@ -1273,7 +1327,7 @@ void DDBEcpp::printCppHeader(DaDiPackage* gddPackage, char* envXmlDB, char* envO
       add_arg = "";
     }
 
-    if (strcmp(gddRelation->getMeth().transcode(), "TRUE") == 0)
+    if (gddRelation->getMeth().equals("TRUE"))
     {
       xmlOut << "inline const " << get_ret << gddRelation->type().transcode() << ">& "
              << gddClass->className().transcode() << "::" << gddRelation->name().transcode() 
@@ -1281,7 +1335,7 @@ void DDBEcpp::printCppHeader(DaDiPackage* gddPackage, char* envXmlDB, char* envO
              << "   return m_" << gddRelation->name().transcode() << ";" << std::endl
              << "}" << std::endl << std::endl;
     }
-    if (strcmp(gddRelation->setMeth().transcode(), "TRUE") == 0)
+    if (gddRelation->setMeth().equals("TRUE"))
     {  
       xmlOut /* << "inline void " << gddClass->className().transcode() << "::" << "set"
              << firstUp(gddRelation->name()).transcode() << "(const " 
@@ -1297,7 +1351,7 @@ void DDBEcpp::printCppHeader(DaDiPackage* gddPackage, char* envXmlDB, char* envO
     }
     if (strcmp("", add_arg) != 0)
     {
-      if (strcmp(gddRelation->addMeth().transcode(), "TRUE") == 0)
+      if (gddRelation->addMeth().equals("TRUE"))
       {
         xmlOut << "inline void " << gddClass->className().transcode() << "::" 
                << "addTo" << firstUp(gddRelation->name()).transcode() 
@@ -1308,12 +1362,12 @@ void DDBEcpp::printCppHeader(DaDiPackage* gddPackage, char* envXmlDB, char* envO
                << "inline void " << gddClass->className().transcode() << "::" 
                << "addTo" << firstUp(gddRelation->name()).transcode() 
                << "(" << add_arg << gddRelation->type().transcode() 
-               << "> value)" << std::endl << "{" << std::endl 
+               << ">& value)" << std::endl << "{" << std::endl 
                << "   m_" << gddRelation->name().transcode() 
                << ".push_back(value);" << std::endl << "}" 
                << std::endl << std::endl;          
       }
-      if (strcmp(gddRelation->remMeth().transcode(), "TRUE") == 0)
+      if (gddRelation->remMeth().equals("TRUE"))
       {
         xmlOut << "inline void " << gddClass->className().transcode() << "::"
                << "removeFrom" << firstUp(gddRelation->name()).transcode()
@@ -1328,7 +1382,7 @@ void DDBEcpp::printCppHeader(DaDiPackage* gddPackage, char* envXmlDB, char* envO
                << ".pop_back();" << std::endl << "}" << std::endl 
                << std::endl;        
       }
-      if (strcmp(gddRelation->clrMeth().transcode(), "TRUE") == 0)
+      if (gddRelation->clrMeth().equals("TRUE"))
       {
         xmlOut << "inline void " << gddClass->className().transcode() << "::"
                << "clear" << firstUp(gddRelation->name()).transcode() << "()"
@@ -1346,14 +1400,14 @@ void DDBEcpp::printCppHeader(DaDiPackage* gddPackage, char* envXmlDB, char* envO
   xmlOut << "// Defintion of all container types of " 
         << gddClass->className().transcode() << std::endl;
   
-  if (strcmp(gddClass->classTemplateVector().transcode(), "TRUE") == 0)
+  if (gddClass->classTemplateVector().equals("TRUE"))
     {
     xmlOut << "template <class TYPE> class ObjectVector;" << std::endl
             << "typedef ObjectVector<" << gddClass->className().transcode() << "> "
             << gddClass->className().transcode() << "Vector;" << std::endl;
     }
   
-  if (strcmp(gddClass->classTemplateList().transcode(), "TRUE") == 0)
+  if (gddClass->classTemplateList().equals("TRUE"))
     {
     xmlOut << "template <class TYPE> class ObjectList;" << std::endl
             << "typedef ObjectList<" << gddClass->className().transcode() << "> "
