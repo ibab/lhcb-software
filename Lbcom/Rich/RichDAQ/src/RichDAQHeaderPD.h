@@ -4,8 +4,11 @@
  *  Header file for RICH DAQ utility class : RichDAQHeaderPD
  *
  *  CVS Log :-
- *  $Id: RichDAQHeaderPD.h,v 1.10 2005-01-07 12:35:59 jonrob Exp $
+ *  $Id: RichDAQHeaderPD.h,v 1.11 2005-01-13 13:09:12 jonrob Exp $
  *  $Log: not supported by cvs2svn $
+ *  Revision 1.10  2005/01/07 12:35:59  jonrob
+ *  Complete rewrite
+ *
  *  Revision 1.9  2004/10/13 09:16:27  jonrob
  *  Use Data on Demand Service + various speed improvements
  *
@@ -206,8 +209,8 @@ namespace RichDAQHeaderV0 {
 inline MsgStream & operator << ( MsgStream & os,
                                  const RichDAQHeaderV0::RichDAQHeaderPD & header )
 {
-  os << " RichDAQHeaderPD V0 : HPD { " << header.hpdID()
-     << " } ZS = " << header.zeroSuppressed()
+  os << " RichDAQHeaderPD V0 : HPD = " << header.hpdID()
+     << " ZS = " << header.zeroSuppressed()
      << " HitCount = " << header.hitCount();
   return os;
 }
@@ -328,8 +331,8 @@ namespace RichDAQHeaderV1 {
 inline MsgStream & operator << ( MsgStream & os,
                                  const RichDAQHeaderV1::RichDAQHeaderPD & header )
 {
-  os << " RichDAQHeaderPD V1 : HPD { " << header.hpdID()
-     << " } ZS = " << header.zeroSuppressed()
+  os << " RichDAQHeaderPD V1 : HPD = " << header.hpdID()
+     << " ZS = " << header.zeroSuppressed()
      << " HitCount = " << header.hitCount();
   return os;
 }
