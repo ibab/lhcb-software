@@ -4,6 +4,7 @@
 ! Purpose     : Utility tools for RICH reconstruction algorithms
 !------------------------------------------------------------------------------
 
+!===================== RichRecTools v2r11 2004-07-22 ======================
 ! 2004-07-12 - Chris Jones
  - Minor changes to debug printout (now done from base class)
  - Use base class methods for incident service access.
