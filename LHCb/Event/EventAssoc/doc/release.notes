@@ -4,6 +4,12 @@
 ! Purpose     : Define and build the POOL dictionaries for the relations
 !-----------------------------------------------------------------------------
 
+!======================= EventAssoc v1r2 2004-06-11 ==========================
+! 2004-06-11 - Marco Cattaneo
+ - Remove   <assoc from="L1Track2d" to="MCParticle" weight="double"/>
+            <assoc from="L1Track3d" to="MCParticle" weight="double"/>
+   as these L1Event classes are obsolete
+
 !======================= EventAssoc v1r1 2004-05-05 ==========================
 ! 2004-05-05 - P. Koppenburg
  - Add      <assoc from="Particle" to="MCParticle" weight="double"/>

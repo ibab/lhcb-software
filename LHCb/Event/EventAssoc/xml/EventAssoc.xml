@@ -5,7 +5,6 @@
 
 <package name="EventAssoc">
 
-    <import name="Event/L1Track2d"/>
     <assoc from="ITDigit"   to="MCParticle"/>
     <assoc from="ITDigit"   to="MCHit"      weight="double"/>
     <assoc from="ITCluster" to="MCParticle" weight="double"/>
@@ -20,9 +19,6 @@
     <assoc from="TrStoredTrack" to="MCParticle" weight="double"/>
 
     <assoc from="L0CaloCandidate" to="MCParticle" weight="double"/>
-
-    <assoc from="L1Track2d" to="MCParticle" weight="double"/>
-    <assoc from="L1Track3d" to="MCParticle" weight="double"/>
 
     <assoc from="CaloCluster" to="MCParticle"    weight="float"/>
     <assoc from="CaloCluster" to="TrStoredTrack" weight="float" type="2D"/>
