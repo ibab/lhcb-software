@@ -1,4 +1,4 @@
-// $Id: DaDiCppHeader.cpp,v 1.33 2002-01-30 20:48:45 mato Exp $
+// $Id: DaDiCppHeader.cpp,v 1.34 2002-01-31 09:15:43 mato Exp $
 
 #include "GaudiKernel/Kernel.h"
 
@@ -771,6 +771,31 @@ void printClass(std::ofstream& xmlOut,
   }
 
 
+
+//
+// create namespace for locations
+//
+  if ((gddClass->location() != NULL) || gddClass->sizeDaDiLocation())
+  {
+    xmlOut << "// Namespace for locations in TDS" << std::endl
+      << "namespace " << gddClass->className().transcode() << "Location {"
+      << std::endl;
+    if (gddClass->location() != NULL)
+    {
+      xmlOut << "  static const std::string& Default = \"" 
+        << gddClass->location().transcode() << "\";" << std::endl;
+    }
+    for (i = 0; i < gddClass->sizeDaDiLocation(); ++i)
+    {
+      DaDiLocation* gddLocation = gddClass->popDaDiLocation();
+      xmlOut << "  static const std::string& " << gddLocation->name().transcode()
+        << " = \"" << gddLocation->place().transcode() << "\";" << std::endl;
+    }
+    xmlOut << "}" << std::endl << std::endl << std::endl;
+  }
+      
+
+/*
 //
 // create namespace for locations
 //
@@ -792,7 +817,7 @@ void printClass(std::ofstream& xmlOut,
       xmlOut << gddLocation->name().transcode();
     }
     xmlOut << "};" << std::endl << "}" << std::endl << std::endl << std::endl;
-  }
+  }*/
 
   time(&ltime);
 
@@ -1065,6 +1090,7 @@ void printClass(std::ofstream& xmlOut,
   }
 
 
+/*
 //
 // Return locations of class in TDS
 //
@@ -1073,7 +1099,7 @@ void printClass(std::ofstream& xmlOut,
     xmlOut << "  /// Retrieve location of class in TES " << std::endl
       << "  static const std::string location(int loc);" << std::endl
       << std::endl;
-  }
+  }*/
 
   
 // 
@@ -1286,7 +1312,7 @@ void printClass(std::ofstream& xmlOut,
   }
 
 
-  //
+/*  //
   // return location in TES
   //
   if ((gddClass->location() != NULL) || gddClass->sizeDaDiLocation())
@@ -1311,7 +1337,7 @@ void printClass(std::ofstream& xmlOut,
       << "    return \"\";" << std::endl << "  }" << std::endl 
       << "}" << std::endl << std::endl;
   }
-
+*/
 
 
 

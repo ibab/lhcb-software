@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/GaudiObjDesc/src/DaDiFrontEnd.h,v 1.3 2002-01-30 20:29:05 mato Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/GaudiObjDesc/src/DaDiFrontEnd.h,v 1.4 2002-01-31 09:15:43 mato Exp $
 #ifndef DADI_FRONTEND_H 
 #define DADI_FRONTEND_H 1
 
@@ -15,10 +15,6 @@
  *  @author Stefan Roiser
  *  @date   29/06/2001
  */
-
-namespace Test {
-  enum myEnum {A, B, C};
-}
 
 
 class DDFE
