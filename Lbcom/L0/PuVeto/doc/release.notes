@@ -1,7 +1,8 @@
-! $Id: release.notes,v 1.9 2002-07-13 10:44:11 ocallot Exp $
+! $Id: release.notes,v 1.10 2002-07-18 19:42:51 cattanem Exp $
 ! Package     : L0/PuVeto
 ! Responsible : Olivier Callot
 
+!========================= PuVeto v4r0 2002-07-18 =======================
 ! 2002-07-11 - Olivier Callot
  - Modified to use the new VeloDet, where the PuVeto sensors are accessed with 
    a sensor number 100-103.
