@@ -9,3 +9,4 @@ ProducePairPhotons.TrVeloCharge.Normalisation = 1.;
 ProducePairPhotons.TrVeloCharge.Ratio = 0.8;
 //ProducePairPhotons.MinimalProbabilityCut = 1.5;
 ProducePairPhotons.MinimalProbabilityCut = 38.;
+ProducePairPhotons.ChangePID = false;
