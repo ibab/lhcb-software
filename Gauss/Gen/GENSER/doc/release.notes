@@ -5,6 +5,9 @@
 !-----------------------------------------------------------------------------
 
 !========================= GENSER v2r030p0 ================================
+! 2005-02-07 - Florence RANJARD
+ - requirements - do not use debug version
+
 ! 2005-02-01 - Florence RANJARD
  - requirements - set pythia_native_version and _linkopts
                   set photos_native_version and _linkopts
