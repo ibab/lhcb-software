@@ -1,23 +1,19 @@
-! $Id: release.notes,v 1.90 2002-05-21 17:02:58 ibelyaev Exp $ 
+! $Id: release.notes,v 1.91 2002-05-21 17:25:15 cattanem Exp $ 
 ! =============================================================================
 ! CVS tag $Name: not supported by cvs2svn $ 
 ! =============================================================================
 package DetDesc
 package manager : N.N 
 
+>>>>>>>>>>>>>>>>>>>>>>>> DetDesc v10r1 <<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 ! 2002-05-21 - Ivan Belyaev
  - DetDesc/SolidSphrere.h
  - src/Lib/SolidSphere.cpp 
    fix the bug in calculation of intersection ticks. 
    Add the tiny optimization into "intersectionTicks" method  
 
-!=============================================================================
-!20020515 - Vanya Belyaev
- DetDesc/SolidTicks.h                    - fix my stupid bug (thanks to Olivier)
- DetDesc/VolumeIntersectionIntervals.h  - fix my stupid bug (thanks to Olivier)
- src/Lib/LVolume.cpp  - add some "conflict resolving" - TEMPORARY! 
+>>>>>>>>>>>>>>>>>>>>>>>> DetDesc v10r0 <<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
-!=============================================================================
 !20020515 - Vanya Belyaev
  DetDesc/SolidTicks.h                    - fix my stupid bug (thanks to Olivier)
  DetDesc/VolumeInytersectionIntervals.h  - fix my stupid bug (thanks to Olivier)
