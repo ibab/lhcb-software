@@ -25,14 +25,14 @@ use TrgEvent    v2r3    Event
 
 private
 
-# Check completeness of LCG dictionaries. Only for Linux optimized 
+# Check completeness of LCG dictionaries. Only for Linux debug
 
 use GaudiPoolDb v*
-apply_pattern application_path
+apply_pattern ld_library_path
 
-macro doCheck "true" \
-        WIN32 "0==1" \
-        debug "false"
+macro doCheck  "false" \
+  Linux&debug  "true"  \
+        WIN32  "0==1"
 make_fragment dict_check -header=dict_check_header
 document dict_check LCG_dict_check
 
