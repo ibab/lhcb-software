@@ -1,0 +1,48 @@
+// $Id: EcalE.opts,v 1.1 2002-12-01 14:22:56 ibelyaev Exp $
+// ============================================================================
+// CVS tag $Name: not supported by cvs2svn $ 
+// ============================================================================
+// $Log: not supported by cvs2svn $
+// ============================================================================
+
+/** @file 
+ *  Configuration option to run CaloTrack2EstimatorAlg "EcalE"
+ *  
+ *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
+ *  @date 2002-10-31
+ */
+
+/// Configuration of The Associator
+
+ToolSvc.EcalE.Location      = "Rec/Calo/EcalE" ;
+ToolSvc.EcalE.AlgorithmType = "CaloTrack2EstimatorAlg" ;
+ToolSvc.EcalE.AlgorithmName = "EcalE" ;
+
+/// Configuration of The Algorithm
+// default value 
+// EcalE.Input = *TrStoredTrackLocation::Default* 
+EcalE.Output        = "Rec/Calo/EcalE" ;
+EcalE.EvaluatorType = "CaloTrackEval"  ;
+EcalE.EvaluatorName = "EcalEvalE"      ;
+
+// use only unique tracks? 
+EcalE.UseUnique     = false ;
+// use error tracks ? 
+EcalE.UseError      = false ;
+EcalE.UseForward    = true  ;
+EcalE.UseMatched    = true  ; 
+EcalE.UseVelo       = false ;
+EcalE.UseVeloTT     = false ;
+EcalE.UseVeloBack   = false ;
+EcalE.UseSeed       = true  ; 
+EcalE.UseUpstream   = true  ;
+
+/// configuration of the Evaluator itself 
+ToolSvc.EcalEvalE.Input    = "Raw/Ecal/Digits"         ;
+ToolSvc.EcalEvalE.Detector = "/dd/Structure/LHCb/Ecal" ;
+ToolSvc.EcalEvalE.Step     = 5. * cm                   ;
+ToolSvc.EcalEvalE.NumStep  = 5                         ;
+
+// ============================================================================
+// The END
+// ============================================================================

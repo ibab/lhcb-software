@@ -505,8 +505,12 @@ StatusCode CaloSCorrectionFinal::operator() ( CaloHypo* hypo ) const {
   x+=xseed;
   y*=sizeseed;
   y+=yseed;
-
-  // update cluster patameters  
+  
+  // update cluster parameters  
+  { // V.B.
+    if( 0 == hypo->position() ) 
+      { hypo->setPosition( cluster->position().clone() ) ; }
+  }
   CaloPosition::Parameters& parameters = hypo->position()->parameters();
   // keep old energy from ECorr
   parameters( CaloPosition::E ) = energy ;

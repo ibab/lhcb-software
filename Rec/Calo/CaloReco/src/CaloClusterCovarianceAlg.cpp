@@ -1,8 +1,11 @@
-// $Id: CaloClusterCovarianceAlg.cpp,v 1.1.1.1 2002-11-13 20:46:39 ibelyaev Exp $ 
+// $Id: CaloClusterCovarianceAlg.cpp,v 1.2 2002-12-01 14:22:57 ibelyaev Exp $ 
 //  ===========================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ===========================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.1.1.1  2002/11/13 20:46:39  ibelyaev
+// new package 
+//
 // ===========================================================================
 #define CALOALGS_CALOCLUSTERCOVARIANCEALG_CPP 1 
 /// ===========================================================================
@@ -155,9 +158,9 @@ StatusCode CaloClusterCovarianceAlg::finalize()
   MsgStream log( msgSvc(), name() );
   log << MSG::DEBUG << "==> Finalize" << endreq;
   
-  if( 0 != cov    () ) { cov    () -> finalize() ; m_cov    = 0 ; }
-  if( 0 != tagger () ) { tagger () -> finalize() ; m_tagger = 0 ; }
-  if( 0 != spread () ) { spread () -> finalize() ; m_spread = 0 ; }
+  if( 0 != cov    () ) { cov    () -> release () ; m_cov    = 0 ; }
+  if( 0 != tagger () ) { tagger () -> release () ; m_tagger = 0 ; }
+  if( 0 != spread () ) { spread () -> release () ; m_spread = 0 ; }
   
   // finalize the base class 
   return CaloAlgorithm::finalize();

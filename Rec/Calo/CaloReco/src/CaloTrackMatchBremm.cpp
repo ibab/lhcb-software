@@ -1,8 +1,11 @@
-// $Id: CaloTrackMatchBremm.cpp,v 1.1.1.1 2002-11-13 20:46:43 ibelyaev Exp $
+// $Id: CaloTrackMatchBremm.cpp,v 1.2 2002-12-01 14:22:58 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.1.1.1  2002/11/13 20:46:43  ibelyaev
+// new package 
+//
 // ============================================================================
 // Include files
 #include "CLHEP/Matrix/Matrix.h"
@@ -52,15 +55,19 @@ CaloTrackMatchBremm::CaloTrackMatchBremm
   const std::string &name,
   const IInterface  *parent )
   : CaloTrackMatchBase( type, name , parent )
-  , m_bremZ ( 2.165 * meter )
+  , m_bremZ  ( 2.165 * meter )
+  , m_counts ( 0  )
+  , m_prints ( 20 )
 {
-  declareProperty( "BremZ"   , m_bremZ );
+  declareProperty( "BremZ"       , m_bremZ  ) ;
+  declareProperty( "MaxPrints"   , m_prints ) ;
   
   setProperty( "Extrapolator" ,  "TrLinearExtrapolator" ) ;
   setProperty( "ZMin"         ,  "500"                  ) ; //  0.5 * meter
   setProperty( "ZMax"         ,  "4500"                 ) ; //  4.5 * meter
   setProperty( "PID"          ,  "22"                   ) ; // photon 
   setProperty( "Tolerance"    ,  "50.0"                 ) ; // 50 * mm  
+
 };
 // ============================================================================
 
@@ -104,7 +111,35 @@ StatusCode CaloTrackMatchBremm::match
                           prepareTrack  ( m_state ) );
     }
   catch( const GaudiException &exc )
-    { return Error( exc.message(), exc.code() ); }
+    { 
+      if( m_counts++ <= m_prints ) 
+        {    
+          MsgStream log( msgSvc() , name() );
+          log << MSG::ERROR << " Matrix Problems: " ;
+          CaloPrint print;
+          std::string msg( "bits: ") ;
+          msg +=  "E:" + print( (int) trObj -> errorFlag () ) ;
+          msg += "/U:" + print( (int) trObj -> unique    () ) ;
+          msg += "/H:" + print( (int) trObj -> history   () ) ;
+          msg += "/f:" + print( (int) trObj -> forward   () ) ;
+          msg += "/m:" + print( (int) trObj -> match     () ) ;
+          msg += "/v:" + print( (int) trObj -> velo      () ) ;
+          msg += "/t:" + print( (int) trObj -> veloTT    () ) ;
+          msg += "/b:" + print( (int) trObj -> veloBack  () ) ;
+          msg += "/s:" + print( (int) trObj -> seed      () ) ;
+          msg += "/u:" + print( (int) trObj -> upstream  () ) ;
+          log << msg 
+              << "/k:" << (int) trObj -> key () 
+              << endreq ;
+          MatchType mt1( prepareCluster ( caloObj ) );
+          MatchType mt2( prepareTrack   ( m_state ) );
+          log << " Matrix1 " << mt1.cov    << endreq ;
+          log << " Vector1 " << mt1.params << endreq ;
+          log << " Matrix2 " << mt2.cov    << endreq ;
+          log << " Vector2 " << mt2.params << endreq ;
+        } 
+      return Error( exc.message() ,  exc.code() ); 
+    }
   
   return StatusCode::SUCCESS;
 };

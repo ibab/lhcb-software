@@ -1,8 +1,25 @@
-! $Id: release.notes,v 1.10 2002-11-20 10:55:26 beneyton Exp $
+! $Id: release.notes,v 1.11 2002-12-01 14:22:56 ibelyaev Exp $
 ! Package     : Calo/CaloReco
 ! Responsible : Ivan Belyaev
 ! Purpose     : Main Package for Calorimeter Reconstruction Software 
 !-----------------------------------------------------------------------------
+
+! 2002-11-29 - Ivan Belyaev
+ - cmt/requirements               version update 
+ - src/CaloTrackEval.h,.cpp       new generic tool for Spd/Prs/Ecal/HCal 
+                                  energy evaluation for given track by V.Romanovsky
+                                  default parameters configured for Hcal 
+ - src/CaloTrackMatchBremm.h,.cpp improved error printout 
+ - src/CaloSCorrectionFinal.cpp   check the position before using it 
+  CONFIGURATION
+ - options/PhotonRec.opts         switch OFF S-corrections by R.Beneyton 
+                                  a) no covarioance matrix yet 
+                                  b) no border treatment
+                                  use 2TANH correction from K.Beloous
+ - options/SShape2Tanh.opts       new (tuned) parametrisations from S-corrections
+
+ - options/ElectronRec.opts       switch OFF S-corrections by R.Beneyton 
+                                  use 2TANH correction from K.Beloous
 
 ! 2002-11-20 - Richard Beneyton
  - Add parabolic modilisation in CaloLCorrectionSimple

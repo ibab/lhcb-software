@@ -1,8 +1,11 @@
-// $Id: CaloReco_load.cpp,v 1.4 2002-11-18 15:35:48 cattanem Exp $
+// $Id: CaloReco_load.cpp,v 1.5 2002-12-01 14:22:57 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.4  2002/11/18 15:35:48  cattanem
+// another missing factory
+//
 // Revision 1.3  2002/11/18 15:19:05  cattanem
 // add missing factory
 //
@@ -76,6 +79,7 @@ DECLARE_FACTORY_ENTRIES(CaloReco)
   DECLARE_TOOL        ( CaloTrackPrsEval                    ) ;
   DECLARE_TOOL        ( CaloTrackHcalEval                   ) ;
   DECLARE_TOOL        ( CaloTrackEcalEval                   ) ;
+  DECLARE_TOOL        ( CaloTrackEval                       ) ;
 
   // from CaloTools package 
   DECLARE_TOOL        ( CaloClusterResetFractions           ) ;

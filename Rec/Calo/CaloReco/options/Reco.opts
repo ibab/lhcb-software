@@ -1,11 +1,8 @@
-// $Id: Reco.opts,v 1.2 2002-11-17 17:09:26 ibelyaev Exp $
+// $Id: Reco.opts,v 1.3 2002-12-01 14:22:56 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
-// Revision 1.1.1.1  2002/11/13 20:46:44  ibelyaev
-// new package 
-//
 // ============================================================================
 
 /** @file 
@@ -30,6 +27,7 @@
 // estimators and ID's algorithms 
 #include "$CALORECOOPTS/HcalE.opts"
 #include "$CALORECOOPTS/PrsE.opts"
+#include "$CALORECOOPTS/EcalE.opts"
 #include "$CALORECOOPTS/PrsPIDe.opts"
 #include "$CALORECOOPTS/EcalPIDe.opts"
 #include "$CALORECOOPTS/HcalPIDe.opts"

@@ -1,23 +1,8 @@
-// $Id: CaloExtraDigits.cpp,v 1.1.1.1 2002-11-13 20:46:41 ibelyaev Exp $
+// $Id: CaloExtraDigits.cpp,v 1.2 2002-12-01 14:22:57 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
-// Revision 1.5  2002/10/03 10:29:44  cattanem
-// fix buggy usage of abs()
-//
-// Revision 1.4  2002/07/09 10:55:36  ibelyaev
-//  few changes to make Bill Gates happy
-//
-// Revision 1.3  2002/06/13 12:32:38  ibelyaev
-//  version update
-//
-// Revision 1.2  2002/04/23 10:49:03  ibelyaev
-//  fix compiler problems on Win2K
-//
-// Revision 1.1  2002/04/07 18:15:00  ibelyaev
-//  preliminary version ('omega'-release)
-// 
 // ============================================================================
 // Include files
 // STL 
@@ -146,14 +131,12 @@ StatusCode CaloExtraDigits::initialize ()
   sc = serviceLocator() -> service ( "IncidentSvc" , m_incSvc , true );
   if( sc.isFailure() ) { return Error("Could not locate IIncidentSvc!", sc );}
   if( 0 == m_incSvc  ) { return Error("Could not locate IIncidentSvc!"     );}
-  m_incSvc->addRef() ;
   m_incSvc->addListener( this , "EndEvent"   , 10 );
   m_incSvc->addListener( this , "BeginEvent" , 10 );
   // locat evenet service 
   sc = serviceLocator() -> service ( "EventDataSvc" , m_evtSvc );
   if( sc.isFailure() ) { return Error("Could not locate EventDataSvc!", sc );}
   if( 0 == m_evtSvc  ) { return Error("Could not locate EventDataSvc!"     );}
-  m_evtSvc->addRef() ;
   return StatusCode::SUCCESS ;
 };
 // ============================================================================

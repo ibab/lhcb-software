@@ -1,8 +1,11 @@
-// $Id: PrsE.opts,v 1.1 2002-11-17 17:09:26 ibelyaev Exp $
+// $Id: PrsE.opts,v 1.2 2002-12-01 14:22:56 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.1  2002/11/17 17:09:26  ibelyaev
+//  new set of options and tools
+//
 // ============================================================================
 
 /** @file 
@@ -19,7 +22,6 @@ ToolSvc.PrsE.AlgorithmType = "CaloTrack2EstimatorAlg" ;
 ToolSvc.PrsE.AlgorithmName = "PrsE" ;
 
 /// Configuration of The Algorithm
-
 // The defualt value 
 // PrsE.Input = *TrStoredTrackLocation::Default* 
 PrsE.Output        = "Rec/Calo/PrsE"    ;
@@ -27,7 +29,7 @@ PrsE.EvaluatorType = "CaloTrackPrsEval" ;
 PrsE.EvaluatorName = "PrsEvalE"         ;
 
 // use only unique tracks? 
-PrsE.UseUnique     = true  ;
+PrsE.UseUnique     = false ;
 // use error tracks ? 
 PrsE.UseError      = false ;
 PrsE.UseForward    = true  ;
@@ -35,20 +37,11 @@ PrsE.UseMatched    = true  ;
 PrsE.UseVelo       = false ;
 PrsE.UseVeloTT     = false ;
 PrsE.UseVeloBack   = false ;
-PrsE.UseSeed       = false ; 
-PrsE.UseUpstream   = false ;
+PrsE.UseSeed       = true  ; 
+PrsE.UseUpstream   = true  ;
 
 /// configuration of the Evaluator itself 
-
-// The defualt value 
-// ToolSvc.PrsEvalE.Detector = *DecalorimeterLocation::Prs* ;
-// The defualt value 
-// ToolSvc.PrsEvalE.BadValue = -100* GeV                     ;
-// The defualt value 
-// ToolSvc.PrsEvalE.AssociatorType = 
-//  "AssociatorWeighted<CaloHypo,TrStoredTrack,float>" ;
-// The defualt value 
-// ToolSvc.PrsEvalE.AssociatorName = "ElectronMatch"   ;
+/// default 
 
 // ============================================================================
 // The END

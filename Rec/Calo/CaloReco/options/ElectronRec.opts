@@ -1,4 +1,4 @@
-// $Id: ElectronRec.opts,v 1.1.1.1 2002-11-13 20:46:44 ibelyaev Exp $
+// $Id: ElectronRec.opts,v 1.2 2002-12-01 14:22:56 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
@@ -20,8 +20,8 @@
 
 ElectronRec.SelectionTools   =  { "CaloSelectorNOT/ElectronSelect"     } ;
 
-// temporary !!!!
-ElectronRec.CorrectionTools  = { "CaloSCorrectionSequence/CaloSPhoton" } ;
+///ElectronRec.CorrectionTools  = { "CaloSCorrectionSequence/CaloSPhoton" } ;
+ElectronRec.CorrectionTools  = { "CaloSShape/SShape2Tanh"                  } ;
 ElectronRec.CorrectionTools += { "CaloLCorrectionSimple/CaloLPhoton"   } ;
 // Prs correction 
 ElectronRec.CorrectionTools += { "CaloPrsCorrection/PrsCorrE"          } ;

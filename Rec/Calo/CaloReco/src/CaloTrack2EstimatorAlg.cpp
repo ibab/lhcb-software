@@ -1,8 +1,11 @@
-// $Id: CaloTrack2EstimatorAlg.cpp,v 1.1 2002-11-17 17:09:26 ibelyaev Exp $
+// $Id: CaloTrack2EstimatorAlg.cpp,v 1.2 2002-12-01 14:22:57 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
-// $Log: not supported by cvs2svn $ 
+// $Log: not supported by cvs2svn $
+// Revision 1.1  2002/11/17 17:09:26  ibelyaev
+//  new set of options and tools
+// 
 // ============================================================================
 // Include files
 // from LHcbKernel
@@ -59,7 +62,7 @@ CaloTrack2EstimatorAlg::CaloTrack2EstimatorAlg
   ///
   , m_forward     ( true   ) // Use forward tracks 
   , m_matched     ( true   ) // Use matched tracks 
-  , m_seed        ( false  ) // DO NOT use seed  tracks 
+  , m_seed        ( true   ) // Use seed  tracks 
   , m_velo        ( false  ) // DO NOT use forward tracks 
   , m_veloTT      ( false  ) // DO NOT use forward tracks 
   , m_veloBack    ( false  ) // DO NOT use veloback tracks 
