@@ -6,6 +6,7 @@ branches doc cmt
 #=======================================================
 # packages included in the DAVINCI tree
 #=======================================================
+use  DaVinci            v11r4   Phys   
 
 #    Enable neutral ProtoParticles production and CaloPIDs
 use  CaloPIDs           v2r1     Calo 
