@@ -1,0 +1,7 @@
+//------------------------------------------------------------------------
+// Job options for filtering on L0 yes
+//------------------------------------------------------------------------
+ApplicationMgr.DLLs    += { "TrgTools" };
+TriggerL0Seq.Members   += { "TrgL0Filter" };
+DigiWriter.RequireAlgs += { "TrgL0Filter" };
+RawWriter.RequireAlgs  += { "TrgL0Filter" };

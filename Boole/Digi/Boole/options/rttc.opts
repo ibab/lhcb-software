@@ -1,0 +1,16 @@
+///////////////////////////////////////////////////////////////////////////////
+//          Top level job options for Boole, for RTTC production             //
+///////////////////////////////////////////////////////////////////////////////
+
+// Select the geometry
+#include "$BOOLEOPTS/v200412.opts"
+
+// Filter on L0YES
+#include "$BOOLEOPTS/L0Filter.opts"
+
+// Add Raw data output stream, and add L1Buffer to it
+#include "$BOOLEOPTS/RawWriter.opts"
+RawWriter.ItemList += 
+{
+  "/Event/DAQ/L1Buffer#1"
+};

@@ -13,6 +13,7 @@ ApplicationMgr.OutStream += { "DigiWriter" };  // Comment to switch off output
 #include "$STDAQROOT/options/stDAQ-v2.opts"
 #pragma print on
 DetectorDataSvc.DetDbLocation = "$XMLDDDBROOT/DDDB/lhcb-200412.xml";
+// Boole.PreloadGeometry = true;
 
 //---------------------------------------------------------------------------
 // Add here any job specific options, to over-ride previously defined options

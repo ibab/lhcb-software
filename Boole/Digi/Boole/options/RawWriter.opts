@@ -1,0 +1,11 @@
+// Set up an output stream for Raw data only
+// -----------------------------------------
+RawWriter.Preload     = false;
+RawWriter.ItemList = 
+{
+  "/Event#1"
+, "/Event/DAQ#1"
+, "/Event/DAQ/RawBuffer#1"
+};
+ApplicationMgr.OutStream += { "RawWriter" };
+RawWriter.Output = "DATAFILE='PFN:Boole-0412.raw' TYP='POOL_ROOTTREE' OPT='REC'";

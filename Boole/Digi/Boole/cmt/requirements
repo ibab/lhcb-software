@@ -1,5 +1,5 @@
 package Boole
-version v8r1
+version v8r2
 
 branches doc cmt job options
 
@@ -24,18 +24,18 @@ use GaudiObjDesc 	v7r3
 use RootHistCnv         v9r4
 
 #-- Databases
-use XmlDDDB	v23r2	Det
+use XmlDDDB	v23r3	Det
 use ParamFiles	v3r11	-no_auto_imports
 use FieldMap	v4r5
 use BooleDQ	v1r0	DQ
 
-#-- LHCb libraries (from LHCB_v18r1)
-use LHCb	v18r1
+#-- LHCb libraries (from LHCB_v18r2)
+use LHCb	v18r2
 
-#-- Lbcom packages (from LBCOM_v1r1)
-use LbcomSys    v1r1
+#-- Lbcom packages (from LBCOM_v1r2)
+use LbcomSys    v1r2
 
-#-- BooleSys v8r1 packages
+#-- BooleSys v8r2 packages
 
 use DigiAlg		v3r0	Digi
 
@@ -60,6 +60,9 @@ use MuonBackground	v1r9	Muon
 # Rich
 use RichDigiQC	        v2r1  	Rich
 use RichReadout		v1r12	Rich
+
+# Trigger
+use TrgTools		v7r2	Trg
 
 #
 #===== build Boole =========================

@@ -3,6 +3,14 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
+</PRE><H1><A NAME=v8r2>2005-03-21 Boole v8r2</A></H1><PRE>
+- Adapt requirements to Lbcom v1r2 and LHCb v18r2
+- Update XmlDDDB version to v23r3
+- Add TrgTools and options for L0 trigger filtering (L0Filter.opts)
+- Add options for writing the RawBuffer only (RawWriter.opts)
+- Add options for RTTC production (rttc.opts)
+- Remove options for v200402 geometry
+
 </PRE><H1><A NAME=v8r1>2005-03-08 Boole v8r1</A></H1><PRE>
 - Adapt requirements to Gaudi v16r2, Lbcom v1r1 and LHCb v18r1
 - Update ParamFiles version to v3r11 (for consistency with Gauss)
