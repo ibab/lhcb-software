@@ -4,6 +4,9 @@
 ! Purpose     : Package for the tracking event model classes
 !-----------------------------------------------------------------------------
 
+! 2005-02-23 - Jose Hernando, Eduardo Rodrigues
+ - position-momentum covariance matrix implemented in State.cpp
+
 ! 2005-02-11 - Jose Hernando, Eduardo Rodrigues
  - adding flags IPSelected and MUSelected in Track
 

@@ -1,7 +1,9 @@
-// $Id: State.cpp,v 1.1.1.1 2005-02-10 17:23:12 erodrigu Exp $
+// $Id: State.cpp,v 1.2 2005-02-23 18:13:23 erodrigu Exp $
 
 // local
 #include "Event/State.h"
+
+#include "CLHEP/Matrix/Matrix.h"
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : State
@@ -54,10 +56,84 @@ double State::pt() const
 //=============================================================================
 HepSymMatrix State::posMomCovariance() const
 {
-  HepSymMatrix cov = covariance();
-  // to be written ...
+  // Transformation done in 2 steps:
+  // 1) "convert" first from (x,y,tx,ty,Q/p) to (x,y,z,tx,ty,Q/p)
+  const HepSymMatrix cov5D = covariance();
+  HepSymMatrix cov6Dtmp    = HepSymMatrix(6,0);
 
-  return cov;  
+  std::vector<int> index;
+  index.push_back( 1 );
+  index.push_back( 3 );
+  index.push_back( 4 );
+  index.push_back( 5 );
+
+  for ( int j=0 ; j<5 ; j++ ) {
+    for ( int i=j ; i<5 ; i++ ) {
+      cov6Dtmp.fast(index[i]+1,index[j]+1) = cov5D.fast(i+1,j+1);
+    }
+  }
+  cov6Dtmp.fast(3,1) = 0.;
+  cov6Dtmp.fast(3,2) = 0.;
+  cov6Dtmp.fast(3,3) = 0.;
+  cov6Dtmp.fast(4,3) = 0.;
+  cov6Dtmp.fast(5,3) = 0.;
+  cov6Dtmp.fast(6,3) = 0.;
+
+  // 2) transformation from (x,y,z,tx,ty,Q/p) to (x,y,z,px,py,pz)
+  // jacobian J = I 0
+  //              0 j
+  //  -> covariance matrix C = C_A  C_B.T()
+  //                           C_B  C_D
+  //     becomes C' = C_A   (j.C_B).T()  after similarity transformation
+  //                  j.C_B j.C_D.(j.T())
+  double Tx     = tx();
+  double Ty     = ty();
+  double QOverP = qOverP();
+  double Q   = ( QOverP != 0. ? (fabs(QOverP)/QOverP) : 0. );
+  double Tx2 = Tx * Tx;
+  double Ty2 = Ty * Ty;
+  double Qp  = Q * p();
+  double N   = 1. / sqrt( 1 + Tx2 + Ty2 );
+  double N2  = N*N;
+
+  HepSymMatrix cov6D = HepSymMatrix(6,0);
+  HepSymMatrix C_A = cov6Dtmp.sub(1,3);
+  HepSymMatrix C_D = cov6Dtmp.sub(4,6);
+  HepMatrix    C_B = HepMatrix(3,3,0);
+  HepMatrix    j   = HepMatrix(3,3,0);
+
+  j[0][0] = ( 1 + Ty2 ) * N2;
+  j[0][1] = - Tx * Ty * N2;
+  j[0][2] = - Qp * Tx;
+  j[1][0] = - Tx * Ty * N2;
+  j[1][1] = ( 1 + Tx2 ) * N2;
+  j[1][2] = - Qp * Ty;
+  j[2][0] = - Tx * N2;
+  j[2][1] = - Ty * N2;
+  j[2][2] = - Qp;
+
+  C_B(1,1) = cov6Dtmp.fast(4,1);
+  C_B(2,1) = cov6Dtmp.fast(5,1);
+  C_B(2,2) = cov6Dtmp.fast(5,2);
+  C_B(3,1) = cov6Dtmp.fast(6,1);
+  C_B(3,2) = cov6Dtmp.fast(6,2);
+  C_B(3,3) = cov6Dtmp.fast(6,3);
+
+  C_B = j * C_B;
+
+  cov6D.sub(1,C_A);
+  cov6D.sub(4,C_D.similarity(j));
+  cov6D.fast(4,1) = C_B(1,1);
+  cov6D.fast(5,1) = C_B(2,1);
+  cov6D.fast(6,1) = C_B(3,1);
+  cov6D.fast(4,2) = C_B(1,2);
+  cov6D.fast(5,2) = C_B(2,2);
+  cov6D.fast(6,2) = C_B(3,2);
+  cov6D.fast(4,3) = C_B(1,3);
+  cov6D.fast(5,3) = C_B(2,3);
+  cov6D.fast(6,3) = C_B(3,3);
+
+  return cov6D;
 };
 
 //=============================================================================
