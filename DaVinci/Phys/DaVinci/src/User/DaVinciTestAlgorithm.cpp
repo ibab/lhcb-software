@@ -1,4 +1,4 @@
-// $Id: DaVinciTestAlgorithm.cpp,v 1.1 2002-02-08 19:08:10 gcorti Exp $
+// $Id: DaVinciTestAlgorithm.cpp,v 1.2 2002-02-12 09:32:48 gcorti Exp $
 #define DAVINCITESTALGORITHM_CPP 
 
 // Include files
@@ -258,22 +258,15 @@ StatusCode DaVinciTestAlgorithm::execute() {
       }
       
       // Retrieve full history of a particle
-      bool fromB = false;
-      std::vector<long> ancestors;      
-      StatusCode scode = m_pUtilTool->history(*ipart,ancestors);
+      std::vector<long> parents;      
+      StatusCode scode = m_pUtilTool->history(*ipart,parents);
       if ( scode.isSuccess() ) {
-        for ( unsigned long i=0; i<2; i++ ) {
-          int gid = ancestors[i];
-          if( (gid >= m_bIDLower) && (gid<= m_bIDUpper) ) {
-            fromB = true;
-          }
-        } 
+        int gid = parents[0];
+        if( (gid >= m_bIDLower) && (gid <= m_bIDUpper) ) {
+          log << MSG::INFO << "This particle has b as parent" << endreq;
+          m_pUtilTool->printHistory(*ipart);
+        }
       }
-      if( fromB ) {
-        //log << MSG::INFO << "This particle has b as ancestor" << endreq;
-        m_pUtilTool->printHistory(*ipart);
-      }
-      
     }
   }
     
@@ -370,14 +363,14 @@ StatusCode DaVinciTestAlgorithm::execute() {
   }
 
   // Example of how to access L0 Decision Unit info
-  /*  SmartDataPtr<L0DUReport> L0Report( eventSvc(), "/Event/FE/L0/L0Decis" );
+  SmartDataPtr<L0DUReport> L0Report( eventSvc(), "/Event/FE/L0/L0Decis" );
   
   if ( 0 != L0Report ) {
     if ( (*L0Report).decision() ) {
       log << MSG::DEBUG << "The event passed the L0 Decision Unit" << endreq;
       m_nL0Trigger++;
     }
-    }*/
+  }
 
   // End of execution for each event
   return StatusCode::SUCCESS;
