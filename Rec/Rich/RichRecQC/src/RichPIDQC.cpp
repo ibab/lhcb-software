@@ -4,8 +4,11 @@
  *  Implementation file for RICH reconstruction monitoring algorithm : RichPIDQC
  *
  *  CVS Log :-
- *  $Id: RichPIDQC.cpp,v 1.36 2004-12-14 15:11:12 jonrob Exp $
+ *  $Id: RichPIDQC.cpp,v 1.37 2004-12-16 15:08:05 jonrob Exp $
  *  $Log: not supported by cvs2svn $
+ *  Revision 1.36  2004/12/14 15:11:12  jonrob
+ *  Set ExtraHistos job option back to false
+ *
  *  Revision 1.35  2004/12/14 14:58:15  jonrob
  *  change cut value back to default
  *
@@ -82,7 +85,7 @@ RichPIDQC::RichPIDQC( const std::string& name,
   declareProperty( "HistoBins",     m_bins = 50 );
   declareProperty( "FinalPrintout", m_finalPrintOut = true );
   declareProperty( "ExtraHistos",   m_extraHistos = false );
-  declareProperty( "IgnoreThresholds", m_ignoreThres = true );
+  declareProperty( "IgnoreThresholds", m_ignoreThres = false );
   declareProperty( "KaonDLLCut", m_dllKaonCut = -9999999 );
   declareProperty( "PionDLLCut", m_dllPionCut = -9999999 );
 
@@ -501,15 +504,17 @@ StatusCode RichPIDQC::finalize()
     unsigned int tkCount = 0;
     for ( TkCount::const_iterator iTk = m_trackCount.begin();
           iTk != m_trackCount.end(); ++iTk, ++tkCount ) {
-      if ( tkCount == 4 ) { tkCount = 0; info() << endreq << "             |"; }
+      if ( tkCount == 3 ) { tkCount = 0; info() << endreq << "             |"; }
       info() << " " << (*iTk).first << "=" << (*iTk).second.first
              << "(" << (*iTk).second.second << ")";
     }
     tkCount = 0;
-    info() << endreq << " #PIDs(+MC)  |";
+    info() << endreq
+           << " Using PIDs  | " << m_pidTDS << endreq
+           << " #PIDs(+MC)  |";
     for ( PIDsByType::const_iterator iPC = m_pidPerTypeCount.begin();
           iPC != m_pidPerTypeCount.end(); ++iPC, ++tkCount ) {
-      if ( tkCount == 4 ) { tkCount = 0; info() << endreq << "             |"; }
+      if ( tkCount == 3 ) { tkCount = 0; info() << endreq << "             |"; }
       info() << " " << (*iPC).first << "=" << (*iPC).second.first
              << "(" << (*iPC).second.second << ")";
     }
