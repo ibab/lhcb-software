@@ -18,11 +18,16 @@
 //
 //------------------------------------------------------------------------
 
-#include "EvtGen/EvtDecayBase.hh"
-#include "EvtGen/EvtDecayIncoherent.hh"
-#include "EvtGen/EvtParticle.hh"
-#include "EvtGen/EvtPHOTOS.hh"
-#include "EvtGen/EvtReport.hh"
+#ifdef WIN32 
+  #pragma warning( disable : 4786 ) 
+  // Disable anoying warning about symbol size 
+#endif 
+#include "EvtGenBase/EvtDecayBase.hh"
+#include "EvtGenBase/EvtDecayIncoherent.hh"
+#include "EvtGenBase/EvtParticle.hh"
+#include "EvtGenBase/EvtRadCorr.hh"
+#include "EvtGenBase/EvtReport.hh"
+#include "EvtGenBase/EvtPDL.hh"
 
 
 void EvtDecayIncoherent::makeDecay(EvtParticle* p){
@@ -40,14 +45,16 @@ void EvtDecayIncoherent::makeDecay(EvtParticle* p){
 
   p->setSpinDensityBackward(rho);
 
-  if (getPHOTOS()) EvtPHOTOS::PHOTOS(p);
+  if (getPHOTOS() || EvtRadCorr::alwaysRadCorr()) {
+    EvtRadCorr::doRadCorr(p);
+  }
 
   //Now decay the daughters.
   for(i=0;i<p->getNDaug();i++){
     //Need to set the spin density of the daughters to be
     //diagonal.
     rho.SetDiag(p->getDaug(i)->getSpinStates());
-    if (p->getDaug(i)->getNDaug()==0){
+    //if (p->getDaug(i)->getNDaug()==0){
       //only do this if the user has not already set the 
       //spin density matrix herself.
      //Lange June 26, 2000
@@ -55,13 +62,13 @@ void EvtDecayIncoherent::makeDecay(EvtParticle* p){
 	p->getDaug(i)->setSpinDensityForward(rho);
       }
       else{
-	//cout << "spinDensitymatrix already set!!!\n";
+	//report(INFO,"EvtGen") << "spinDensitymatrix already set!!!\n";
 	EvtSpinDensity temp=p->getDaug(i)->getSpinDensityForward();
-	//	cout <<temp<<endl;
+	//	report(INFO,"EvtGen") <<temp<<std::endl;
       }
       //Now decay the daughter.  Really!
       p->getDaug(i)->decay();
-    }
+      //}
   } 
 			    
 }

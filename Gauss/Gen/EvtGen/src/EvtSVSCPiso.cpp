@@ -21,22 +21,26 @@
 //
 //------------------------------------------------------------------------
 // 
+#ifdef WIN32 
+  #pragma warning( disable : 4786 ) 
+  // Disable anoying warning about symbol size 
+#endif 
 #include <stdlib.h>
-#include "EvtGen/EvtParticle.hh"
-#include "EvtGen/EvtRandom.hh"
-#include "EvtGen/EvtGenKine.hh"
-#include "EvtGen/EvtCPUtil.hh"
-#include "EvtGen/EvtPDL.hh"
-#include "EvtGen/EvtReport.hh"
-#include "EvtGen/EvtVector4C.hh"
-#include "EvtGen/EvtSVSCPiso.hh"
-#include "EvtGen/EvtId.hh"
-#include "EvtGen/EvtString.hh"
-#include "EvtGen/EvtConst.hh"
+#include "EvtGenBase/EvtParticle.hh"
+#include "EvtGenBase/EvtRandom.hh"
+#include "EvtGenBase/EvtGenKine.hh"
+#include "EvtGenBase/EvtCPUtil.hh"
+#include "EvtGenBase/EvtPDL.hh"
+#include "EvtGenBase/EvtReport.hh"
+#include "EvtGenBase/EvtVector4C.hh"
+#include "EvtGenModels/EvtSVSCPiso.hh"
+#include "EvtGenBase/EvtId.hh"
+#include <string>
+#include "EvtGenBase/EvtConst.hh"
 
 EvtSVSCPiso::~EvtSVSCPiso() {}
 
-void EvtSVSCPiso::getName(EvtString& model_name){
+void EvtSVSCPiso::getName(std::string& model_name){
 
   model_name="SVS_CP_ISO";     
 
@@ -96,9 +100,12 @@ if ((EvtPDL::chg3(getDaug(0)) < 0) && (EvtPDL::chg3(getDaug(1)) > 0)) {
 }
 
 if ((EvtPDL::chg3(getDaug(0)) == 0) && (EvtPDL::chg3(getDaug(1)) == 0)) {
-   setProbMax(2.0*(getArg(7)*getArg(7) + getArg(3)*getArg(3) + getArg(11)*getArg(11) + 
-                  getArg(15)*getArg(15) + 4.0*getArg(19)*getArg(19) + getArg(9)*getArg(9)+
-                   getArg(5)*getArg(5) + getArg(13)*getArg(13) + getArg(17)*getArg(17) + 
+   setProbMax(2.0*(getArg(7)*getArg(7) + getArg(3)*getArg(3) 
+                   + getArg(11)*getArg(11) + 
+                  getArg(15)*getArg(15) + 4.0*getArg(19)*getArg(19) 
+                   + getArg(9)*getArg(9)+
+                   getArg(5)*getArg(5) + getArg(13)*getArg(13) 
+                   + getArg(17)*getArg(17) + 
                    4.0*getArg(21)*getArg(21)));
 }
 
@@ -113,11 +120,11 @@ void EvtSVSCPiso::decay( EvtParticle *p){
 
   double t;
   EvtId other_b;
-  int charged = 0;
+  int charged(10);
 
   int first_time=0;
   int flip=0;
-  EvtId d1,d2;
+  EvtId ds[2];
 
 
 //randomly generate the tag (B0 or B0B) 
@@ -144,36 +151,19 @@ void EvtSVSCPiso::decay( EvtParticle *p){
   }
 
   if (!flip) {
-    d1=getDaug(0);
-    d2=getDaug(1);
+    ds[0]=getDaug(0);
+    ds[1]=getDaug(1);
   }
   else{
-    d1=EvtPDL::chargeConj(getDaug(0));
-    d2=EvtPDL::chargeConj(getDaug(1));
+    ds[0]=EvtPDL::chargeConj(getDaug(0));
+    ds[1]=EvtPDL::chargeConj(getDaug(1));
   }
 
-  EvtParticle *v,*s;
+  p->initializePhaseSpace(getNDaug(),ds);
 
-  p->makeDaughters(getNDaug(),getDaugs());
+  EvtParticle *v,*s;
   v=p->getDaug(0);
   s=p->getDaug(1);
-
-  double m_parent,mass[2];
-
-  EvtVector4R p4[2];
-
-  m_parent = p->mass();
-
-  findMasses(p,getNDaug(),getDaugs(),mass);
-
-//  Need phase space random numbers
-
-  EvtGenKine::PhaseSpace( getNDaug(), mass, p4, m_parent );
-
-//  Put phase space results into the daughters.
-
-   v->init( d1, p4[0] );
-   s->init( d2, p4[1] );
 
    EvtComplex amp;
 
@@ -314,9 +304,9 @@ else amp = A_f;
 
   EvtVector4R p4_parent;
 
-  p4_parent=p4[0]+p4[1];
+  p4_parent=v->getP4()+s->getP4();
 
-  double norm=1.0/p4[0].d3mag();
+  double norm=1.0/v->getP4().d3mag();
 
    vertex(0,amp*norm*p4_parent*(v->epsParent(0)));
    vertex(1,amp*norm*p4_parent*(v->epsParent(1)));

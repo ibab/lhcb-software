@@ -20,7 +20,11 @@
 //
 //------------------------------------------------------------------------
 
-#include "EvtGen/EvtItgPtrFunction.hh"
+#ifdef WIN32 
+  #pragma warning( disable : 4786 ) 
+  // Disable anoying warning about symbol size 
+#endif 
+#include "EvtGenModels/EvtItgPtrFunction.hh"
 
 //-------------
 // C Headers --

@@ -238,7 +238,7 @@ c       ---               Imag_B0bar   : ... imaginary .........................
 c****************************************************************************
 c-----------------------------------------------------------------      
       Implicit none
-#include "EvtGen/EvtBTo3pi.inc"
+#include "EvtGenModels/EvtBTo3pi.inc"
       Real*8  alpha_input, beta_input
       Integer iset
       Real*8  p_K_plus(4),p_pi_minus(4)
@@ -383,7 +383,7 @@ c	----------------------------------------------------------
 c	----------------------------------------------------------      	
 c 	--- commons      	
 c	----------------------------------------------------------	
-#include "EvtGen/EvtBTo3pi.inc"
+#include "EvtGenModels/EvtBTo3pi.inc"
 c	----------------------------------------------------------
 c 	--- Used Functions 
 c	----------------------------------------------------------
@@ -544,7 +544,7 @@ c======================================================================
      +           Real_B0,Imag_B0,Real_B0bar,Imag_B0Bar,iset,ierr)                 
 c-----------------------------------------------------------------------
       	IMPLICIT None  
-#include "EvtGen/EvtBTo3pi.inc"
+#include "EvtGenModels/EvtBTo3pi.inc"
 
                                                                                                  
       	Real*8 m12, m13, m23, W12, W13, W23, Wtot
@@ -628,7 +628,7 @@ c======================================================================
       Function BrightWagner(p1,p2,p3,Mass,Width,ierr)
 c----------------------------------------------------------------------                                                  
       	IMPLICIT None   
-#include "EvtGen/EvtBTo3pi.inc"
+#include "EvtGenModels/EvtBTo3pi.inc"
       	Complex *16 BrightWagner,EvtRBW
         Integer ierr
         Logical RelatBW

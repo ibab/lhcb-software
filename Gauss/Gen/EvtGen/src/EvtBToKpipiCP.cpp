@@ -27,21 +27,25 @@
 //
 //------------------------------------------------------------------------
 //
+#ifdef WIN32 
+  #pragma warning( disable : 4786 ) 
+  // Disable anoying warning about symbol size 
+#endif 
 #include <stdlib.h>
-#include "EvtGen/EvtParticle.hh"
-#include "EvtGen/EvtGenKine.hh"
-#include "EvtGen/EvtCPUtil.hh"
-#include "EvtGen/EvtPDL.hh"
-#include "EvtGen/EvtReport.hh"
-#include "EvtGen/EvtBToKpipiCP.hh"
-#include "EvtGen/EvtId.hh"
-#include "EvtGen/EvtString.hh"
+#include "EvtGenBase/EvtParticle.hh"
+#include "EvtGenBase/EvtGenKine.hh"
+#include "EvtGenBase/EvtCPUtil.hh"
+#include "EvtGenBase/EvtPDL.hh"
+#include "EvtGenBase/EvtReport.hh"
+#include "EvtGenModels/EvtBToKpipiCP.hh"
+#include "EvtGenBase/EvtId.hh"
+#include <string>
 
 #ifdef WIN32
 extern "C" {
   extern void __stdcall EVTKPIPI(double *, double *, int *,double *,
 			 double *,double *,double *,double *,
-			 double *,double *,double *);
+                                 double *,double *,double *);
 }
 #else
 extern "C" {
@@ -54,7 +58,7 @@ extern "C" {
 EvtBToKpipiCP::~EvtBToKpipiCP() {}
 
 
-void EvtBToKpipiCP::getName(EvtString& model_name){
+void EvtBToKpipiCP::getName(std::string& model_name){
 
   model_name="BTOKPIPI_CP";     
 

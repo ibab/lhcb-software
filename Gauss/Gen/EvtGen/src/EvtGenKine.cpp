@@ -19,12 +19,16 @@
 //
 //------------------------------------------------------------------------
 //
+#ifdef WIN32 
+  #pragma warning( disable : 4786 ) 
+  // Disable anoying warning about symbol size 
+#endif 
 #include <iostream>
-#include "EvtGen/EvtGenKine.hh"
-#include "EvtGen/EvtRandom.hh"
-#include "EvtGen/EvtVector4R.hh"
-#include "EvtGen/EvtReport.hh"
-#include "EvtGen/EvtConst.hh"
+#include "EvtGenBase/EvtGenKine.hh"
+#include "EvtGenBase/EvtRandom.hh"
+#include "EvtGenBase/EvtVector4R.hh"
+#include "EvtGenBase/EvtReport.hh"
+#include "EvtGenBase/EvtConst.hh"
 #include <math.h>
 
 
@@ -35,7 +39,7 @@ double EvtPawt(double a,double b,double c)
   if (temp<=0) {
 
     //report(ERROR,"EvtGen")<<"Sqrt of negative number in EvtPhaseSpace\n"<<
-    //   "This seems to happen on AIX but I do not know why yet!"<<endl;
+    //   "This seems to happen on AIX but I do not know why yet!"<<std::endl;
 
      return 0.0;
 
@@ -45,7 +49,7 @@ double EvtPawt(double a,double b,double c)
 }
 
 
-double EvtGenKine::PhaseSpace( int ndaug, double mass[10], EvtVector4R p4[10], 
+double EvtGenKine::PhaseSpace( int ndaug, double mass[30], EvtVector4R p4[30], 
 			       double mp )
 
 //  N body phase space routine.  Send parent with
@@ -90,11 +94,9 @@ double EvtGenKine::PhaseSpace( int ndaug, double mass[10], EvtVector4R p4[10],
 
   if ( ndaug != 2 ) {
 
-     double pm[5][30],to[4],pmin,pmax,psum,rnd[30];
-     double wtmax = 0.0;
+     double pm[5][30],to[4],pmin,pmax,psum,wtmax(0.),rnd[30];
      double ran,wt,pa,costh,sinth,phi,p[4][30],be[4],bep,temp;
-     int i,il,ilr,i1,il1u,il1,il2r,ilu;
-     int il2 = 0;
+     int i,il,ilr,i1,il1u,il1,il2(0),il2r,ilu;
 
      for(i=0;i<ndaug;i++){
        pm[4][i]=0.0;
@@ -142,8 +144,33 @@ double EvtGenKine::PhaseSpace( int ndaug, double mass[10], EvtVector4R p4[10],
      case 7:
        wtmax=1.0/15.0;
        break;
+     case 8:
+       wtmax=1.0/15.0;
+       break;
+     case 9:
+       wtmax=1.0/15.0;
+       break;
+     case 10:
+       wtmax=1.0/15.0;
+       break;
+     case 11:
+       wtmax=1.0/15.0;
+       break;
+     case 12:
+       wtmax=1.0/15.0;
+       break;
+     case 13:
+       wtmax=1.0/15.0;
+       break;
+     case 14:
+       wtmax=1.0/15.0;
+       break;
+     case 15:
+       wtmax=1.0/15.0;
+       break;
      default:
-       report(ERROR,"EvtGen") << "too many daughters for phase space...\n";
+       report(ERROR,"EvtGen") << "too many daughters for phase space..." 
+                              << ndaug << " "<< mp <<std::endl;;
        break;
      }
 
@@ -158,7 +185,7 @@ double EvtGenKine::PhaseSpace( int ndaug, double mass[10], EvtVector4R p4[10],
        wtmax=wtmax*EvtPawt(pmax,pmin,mass[il-1]);
      }
 
-     //report(INFO,"EvtGen") << "wtmax:"<<wtmax<<endl;
+     //report(INFO,"EvtGen") << "wtmax:"<<wtmax<<std::endl;
 
      do{
 

@@ -19,19 +19,24 @@
 //
 //------------------------------------------------------------------------
 //
+#ifdef WIN32 
+  #pragma warning( disable : 4786 ) 
+  // Disable anoying warning about symbol size 
+#endif 
 #include <stdlib.h>
 #include <iostream>
-#include "EvtGen/EvtString.hh"
-#include "EvtGen/EvtParticle.hh"
-#include "EvtGen/EvtPDL.hh"
-#include "EvtGen/EvtGenKine.hh"
-#include "EvtGen/EvtTauVectornu.hh"
-#include "EvtGen/EvtDiracSpinor.hh"
-#include "EvtGen/EvtReport.hh"
+#include <string>
+#include "EvtGenBase/EvtParticle.hh"
+#include "EvtGenBase/EvtPDL.hh"
+#include "EvtGenBase/EvtGenKine.hh"
+#include "EvtGenModels/EvtTauVectornu.hh"
+#include "EvtGenBase/EvtDiracSpinor.hh"
+#include "EvtGenBase/EvtReport.hh"
+#include "EvtGenBase/EvtVector4C.hh"
 
 EvtTauVectornu::~EvtTauVectornu() {}
 
-void EvtTauVectornu::getName(EvtString& model_name){
+void EvtTauVectornu::getName(std::string& model_name){
 
   model_name="TAUVECTORNU";     
 

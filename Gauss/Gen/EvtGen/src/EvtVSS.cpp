@@ -18,19 +18,23 @@
 //
 //------------------------------------------------------------------------
 // 
+#ifdef WIN32 
+  #pragma warning( disable : 4786 ) 
+  // Disable anoying warning about symbol size 
+#endif 
 #include <stdlib.h>
-#include "EvtGen/EvtParticle.hh"
-#include "EvtGen/EvtGenKine.hh"
-#include "EvtGen/EvtPDL.hh"
-#include "EvtGen/EvtVector4C.hh"
-#include "EvtGen/EvtVector4R.hh"
-#include "EvtGen/EvtReport.hh"
-#include "EvtGen/EvtVSS.hh"
-#include "EvtGen/EvtString.hh"
+#include "EvtGenBase/EvtParticle.hh"
+#include "EvtGenBase/EvtGenKine.hh"
+#include "EvtGenBase/EvtPDL.hh"
+#include "EvtGenBase/EvtVector4C.hh"
+#include "EvtGenBase/EvtVector4R.hh"
+#include "EvtGenBase/EvtReport.hh"
+#include "EvtGenModels/EvtVSS.hh"
+#include <string>
 
 EvtVSS::~EvtVSS() {}
 
-void EvtVSS::getName(EvtString& model_name){
+void EvtVSS::getName(std::string& model_name){
 
   model_name="VSS"; 
     

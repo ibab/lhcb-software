@@ -19,22 +19,31 @@
 //
 //------------------------------------------------------------------------
 //
+#ifdef WIN32 
+  #pragma warning( disable : 4786 ) 
+  // Disable anoying warning about symbol size 
+#endif 
 #include <stdlib.h>
 #include <iostream>
-#include "EvtGen/EvtString.hh"
-#include "EvtGen/EvtParticle.hh"
-#include "EvtGen/EvtPDL.hh"
-#include "EvtGen/EvtGenKine.hh"
-#include "EvtGen/EvtLNuGamma.hh"
-#include "EvtGen/EvtDiracSpinor.hh"
-#include "EvtGen/EvtReport.hh"
-#include "EvtGen/EvtComplex.hh"
-#include "EvtGen/EvtVector4C.hh"
-#include "EvtGen/EvtVector4R.hh"
+#include <string>
+#include "EvtGenBase/EvtParticle.hh"
+#include "EvtGenBase/EvtPDL.hh"
+#include "EvtGenBase/EvtGenKine.hh"
+#include "EvtGenModels/EvtLNuGamma.hh"
+#include "EvtGenBase/EvtDiracSpinor.hh"
+#include "EvtGenBase/EvtReport.hh"
+#include "EvtGenBase/EvtComplex.hh"
+#include "EvtGenBase/EvtVector4C.hh"
+#include "EvtGenBase/EvtVector4R.hh"
+#include "EvtGenBase/EvtTensor4C.hh"
+
+EvtLNuGamma::EvtLNuGamma(){
+  _fafvzero = false;
+}
 
 EvtLNuGamma::~EvtLNuGamma() {}
 
-void EvtLNuGamma::getName(EvtString& model_name){
+void EvtLNuGamma::getName(std::string& model_name){
 
   model_name="LNUGAMMA";     
 
@@ -49,9 +58,23 @@ EvtDecayBase* EvtLNuGamma::clone(){
 
 void EvtLNuGamma::init(){
 
-  // check that there are 0 arguments
-  checkNArg(3);
+  // check that there are 3 or 4 arguments
+  checkNArg(3,4);
   checkNDaug(3);
+
+  if (getNArg() == 4){
+    //      Argv[3] is a flag set to 0 if abs(f_a/f_v) is 1 
+    //       and not set to 0 if f_a/f_v is set to 0.
+    if (getArg(3) > 0){      
+      _fafvzero = true;
+    }
+    else{
+      _fafvzero = false;
+    }
+  }
+  else{
+    _fafvzero = false;
+  }
 
   checkSpinParent(EvtSpinType::SCALAR);
 
@@ -102,7 +125,15 @@ void EvtLNuGamma::decay(EvtParticle *p){
   double fv,fa;
 
   fv = getFormFactor(photE);
-  fa = fv;
+  if (_fafvzero){
+    fa = 0.0;
+  }
+  else if (p->getId()==BM) {
+    fa = - fv;
+  }
+  else{
+    fa = fv;
+  }
 
   EvtVector4C temp1a = dual(directProd(parVelocity,photp)).cont2(photone1);
   EvtVector4C temp2a = dual(directProd(parVelocity,photp)).cont2(photone2);

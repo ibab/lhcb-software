@@ -18,17 +18,21 @@
 //
 //------------------------------------------------------------------------
 //
+#ifdef WIN32 
+  #pragma warning( disable : 4786 ) 
+  // Disable anoying warning about symbol size 
+#endif 
 #include <stdlib.h>
-#include "EvtGen/EvtParticle.hh"
-#include "EvtGen/EvtGenKine.hh"
-#include "EvtGen/EvtPDL.hh"
-#include "EvtGen/EvtReport.hh"
-#include "EvtGen/EvtPhsp.hh"
-#include "EvtGen/EvtString.hh"
+#include "EvtGenBase/EvtParticle.hh"
+#include "EvtGenBase/EvtGenKine.hh"
+#include "EvtGenBase/EvtPDL.hh"
+#include "EvtGenBase/EvtReport.hh"
+#include "EvtGenModels/EvtPhsp.hh"
+#include <string>
 
 EvtPhsp::~EvtPhsp() {}
 
-void EvtPhsp::getName(EvtString& model_name){
+void EvtPhsp::getName(std::string& model_name){
 
   model_name="PHSP";     
 
@@ -56,12 +60,13 @@ void EvtPhsp::initProbMax(){
 
 void EvtPhsp::decay( EvtParticle *p ){
 
-  if ( p->getNDaug() != 0 ) {
+  //unneeded - lange - may13-02
+  //if ( p->getNDaug() != 0 ) {
     //Will end up here because maxrate multiplies by 1.2
-    report(DEBUG,"EvtGen") << "In EvtPhsp: has "
-			   <<" daugthers should not be here!"<<std::endl;
-    return;
-  }
+  //  report(DEBUG,"EvtGen") << "In EvtPhsp: has "
+  //			   <<" daugthers should not be here!"<<std::endl;
+  //  return;
+  //}
 
   p->initializePhaseSpace(getNDaug(),getDaugs());
 

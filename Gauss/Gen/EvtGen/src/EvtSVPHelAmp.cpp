@@ -19,21 +19,25 @@
 //
 //------------------------------------------------------------------------
 // 
+#ifdef WIN32 
+  #pragma warning( disable : 4786 ) 
+  // Disable anoying warning about symbol size 
+#endif 
 #include <stdlib.h>
-#include "EvtGen/EvtParticle.hh"
-#include "EvtGen/EvtGenKine.hh"
-#include "EvtGen/EvtPDL.hh"
-#include "EvtGen/EvtVector4R.hh"
-#include "EvtGen/EvtVector4C.hh"
-#include "EvtGen/EvtTensor4C.hh"
-#include "EvtGen/EvtReport.hh"
-#include "EvtGen/EvtComplex.hh"
-#include "EvtGen/EvtSVPHelAmp.hh"
-#include "EvtGen/EvtString.hh"
+#include "EvtGenBase/EvtParticle.hh"
+#include "EvtGenBase/EvtGenKine.hh"
+#include "EvtGenBase/EvtPDL.hh"
+#include "EvtGenBase/EvtVector4R.hh"
+#include "EvtGenBase/EvtVector4C.hh"
+#include "EvtGenBase/EvtTensor4C.hh"
+#include "EvtGenBase/EvtReport.hh"
+#include "EvtGenBase/EvtComplex.hh"
+#include "EvtGenModels/EvtSVPHelAmp.hh"
+#include <string>
 
 EvtSVPHelAmp::~EvtSVPHelAmp() {}
 
-void EvtSVPHelAmp::getName(EvtString& model_name){
+void EvtSVPHelAmp::getName(std::string& model_name){
 
   model_name="SVP_HELAMP";     
 

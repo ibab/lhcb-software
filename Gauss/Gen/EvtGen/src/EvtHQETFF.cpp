@@ -18,28 +18,63 @@
 //
 //------------------------------------------------------------------------
 // 
-#include "EvtGen/EvtReport.hh"
-#include "EvtGen/EvtHQETFF.hh"
-#include "EvtGen/EvtId.hh"
-#include "EvtGen/EvtString.hh"
+#ifdef WIN32 
+  #pragma warning( disable : 4786 ) 
+  // Disable anoying warning about symbol size 
+#endif 
+#include "EvtGenBase/EvtPatches.hh"
+#include "EvtGenBase/EvtReport.hh"
+#include "EvtGenModels/EvtHQETFF.hh"
+#include "EvtGenBase/EvtId.hh"
+#include <string>
+#include "EvtGenBase/EvtPDL.hh"
 #include <math.h>
 
 
 
-EvtHQETFF::EvtHQETFF(double hqetrho2, double hqetr1, double hqetr2) {
+EvtHQETFF::EvtHQETFF(double hqetrho2, double hqetr1, double hqetr2, double quadTerm) {
 
   rho2 = hqetrho2;
   r1 = hqetr1;
   r2 = hqetr2;
+  c = quadTerm;
+
   return;
 }
 
+EvtHQETFF::EvtHQETFF(double hqetrho2, double quadTerm) {
+
+  rho2 = hqetrho2;
+  c = quadTerm;
+
+  return;
+}
+
+
+void EvtHQETFF::getscalarff(EvtId parent,EvtId /*daught*/,
+			    double t, double mass, double *f0p, double *f0m) {
+
+
+  double mb=EvtPDL::getMeanMass(parent);
+  double w = ((mb*mb)+(mass*mass)-t)/(2.0*mb*mass);
+
+// Form factors have a general form, with parameters passed in
+// from the arguements.
+
+  double ha1 = 1-rho2*(w-1)+c*(w-1)*(w-1);
+
+  *f0p=ha1;
+  *f0m = 0.0;
+
+  return;
+ }
+
 void EvtHQETFF::getvectorff(EvtId parent,EvtId /*daught*/,
-                            double t, double mass, double *a1f,
-                            double *a2f, double *vf, double *a0f ){
+			    double t, double mass, double *a1f,
+			    double *a2f, double *vf, double *a0f ){
 
 
-  double mb=EvtPDL::getNominalMass(parent);
+  double mb=EvtPDL::getMeanMass(parent);
   double w = ((mb*mb)+(mass*mass)-t)/(2.0*mb*mass);
 
 // Form factors have a general form, with parameters passed in

@@ -18,20 +18,26 @@
 //
 //------------------------------------------------------------------------
 //
+#ifdef WIN32 
+  #pragma warning( disable : 4786 ) 
+  // Disable anoying warning about symbol size 
+#endif 
 #include <stdlib.h>
-#include "EvtGen/EvtParticle.hh"
-#include "EvtGen/EvtISGW2FF.hh"
-#include "EvtGen/EvtGenKine.hh"
-#include "EvtGen/EvtPDL.hh"
-#include "EvtGen/EvtISGW2FF.hh"
-#include "EvtGen/EvtTensor4C.hh"
-#include "EvtGen/EvtBHadronic.hh"
-#include "EvtGen/EvtReport.hh"
-#include "EvtGen/EvtString.hh"
+#include "EvtGenBase/EvtParticle.hh"
+#include "EvtGenModels/EvtISGW2FF.hh"
+#include "EvtGenBase/EvtGenKine.hh"
+#include "EvtGenBase/EvtPDL.hh"
+#include "EvtGenModels/EvtISGW2FF.hh"
+#include "EvtGenBase/EvtTensor4C.hh"
+#include "EvtGenBase/EvtVector4C.hh"
+#include "EvtGenBase/EvtVector4R.hh"
+#include "EvtGenModels/EvtBHadronic.hh"
+#include "EvtGenBase/EvtReport.hh"
+#include <string>
 
 EvtBHadronic::~EvtBHadronic() {}
 
-void EvtBHadronic::getName(EvtString& model_name){
+void EvtBHadronic::getName(std::string& model_name){
 
   model_name="BHADRONIC";    
 
@@ -66,41 +72,25 @@ void EvtBHadronic::decay( EvtParticle *p){
 
   static EvtISGW2FF ffmodel;
 
+  p->initializePhaseSpace(getNDaug(),getDaugs());
+
+
   EvtParticle *pdaug[MAX_DAUG];
   
   EvtVector4R p4[MAX_DAUG];
-  double mass[MAX_DAUG],m;
-
-  // Prepare for phase space routine. 
- 
-  findMasses(p,getNDaug(),getDaugs(),mass);
-
-  //  Need phase space random numbers
+  double m;
 
   m = p->mass();
 
-  EvtGenKine::PhaseSpace( getNDaug(), mass, p4, m );
 
   int i,j;
 
-  if (p->getNDaug()==0){
-    p->makeDaughters(getNDaug(),getDaugs());
-  }
-
-  for(i=0;i<getNDaug();i++){
-
-     pdaug[i]=p->getDaug(i);
-
-   }
-
-  
-
-  for(i=0;i<getNDaug();i++){
-    pdaug[i]->init( getDaugs()[i], p4[i] );
+  for ( i=0; i<getNDaug(); i++) {
+    p4[i]=p->getDaug(i)->getP4();
   }
 
   int bcurrent,wcurrent;
-  int nbcurrent = 0,nwcurrent = 0;
+  int nbcurrent(0) ,nwcurrent(0);
 
   bcurrent=(int)getArg(0);
   wcurrent=(int)getArg(1);
@@ -128,8 +118,8 @@ void EvtBHadronic::decay( EvtParticle *p){
     q=p4b-p4[0];
     q2=q*q;
     nbcurrent=1;
-    ffmodel.getscalarff(B0,D0,EvtPDL::getNominalMass(D0),
-			EvtPDL::getNominalMass(getDaugs()[1]),&fp,&fm);
+    ffmodel.getscalarff(B0,D0,EvtPDL::getMeanMass(D0),
+			EvtPDL::getMeanMass(getDaugs()[1]),&fp,&fm);
     jb[0]=EvtVector4C(fp*(p4b+p4[0])-fm*q);
     break;
     // D*
@@ -137,7 +127,7 @@ void EvtBHadronic::decay( EvtParticle *p){
     q=p4b-p4[0];
     q2=q*q;
     nbcurrent=3;
-    ffmodel.getvectorff(B0,DST0,EvtPDL::getNominalMass(DST0),q2,&f,&gf,&ap,&am);
+    ffmodel.getvectorff(B0,DST0,EvtPDL::getMeanMass(DST0),q2,&f,&gf,&ap,&am);
 
     g.setdiag(1.0,-1.0,-1.0,-1.0);
     tds = -f*g 
@@ -153,7 +143,7 @@ void EvtBHadronic::decay( EvtParticle *p){
     q=p4b-p4[0];
     q2=q*q;
     nbcurrent=3;
-    ffmodel.getvectorff(B0,D3P10,EvtPDL::getNominalMass(D3P10),q2,&f,&gf,&ap,&am);
+    ffmodel.getvectorff(B0,D3P10,EvtPDL::getMeanMass(D3P10),q2,&f,&gf,&ap,&am);
 
     g.setdiag(1.0,-1.0,-1.0,-1.0);
     tds = -f*g 
@@ -170,7 +160,7 @@ void EvtBHadronic::decay( EvtParticle *p){
     q=p4b-p4[0];
     q2=q*q;
     nbcurrent=5;
-    ffmodel.gettensorff(B0,D3P20,EvtPDL::getNominalMass(D3P20),q2,&hf,&kf,&bp,&bm);
+    ffmodel.gettensorff(B0,D3P20,EvtPDL::getMeanMass(D3P20),q2,&hf,&kf,&bp,&bm);
     g.setdiag(1.0,-1.0,-1.0,-1.0);
     
     ep_meson_b[0] = ((p->getDaug(0)->epsTensorParent(0)).cont2(p4b)).conj();
@@ -214,7 +204,7 @@ void EvtBHadronic::decay( EvtParticle *p){
     q2=q*q;
     double f,gf,ap,am;
     nbcurrent=3;
-    ffmodel.getvectorff(B0,D1P10,EvtPDL::getNominalMass(D1P10),q2,&f,&gf,&ap,&am);
+    ffmodel.getvectorff(B0,D1P10,EvtPDL::getMeanMass(D1P10),q2,&f,&gf,&ap,&am);
     g.setdiag(1.0,-1.0,-1.0,-1.0);
     tds = -f*g 
       -ap*(directProd(p4b,p4b)+directProd(p4b,p4[0]))
@@ -229,11 +219,12 @@ void EvtBHadronic::decay( EvtParticle *p){
     q=p4b-p4[0];
     q2=q*q;
     nbcurrent=1;
-    ffmodel.getscalarff(B0,D3P00,EvtPDL::getNominalMass(D3P00),q2,&fp,&fm);
+    ffmodel.getscalarff(B0,D3P00,EvtPDL::getMeanMass(D3P00),q2,&fp,&fm);
     jb[0]=fp*(p4b+p4[0])+fm*q;
     break;
   default:
-    report(ERROR,"EvtGen")<<"In EvtBHadronic, unknown hadronic current."<<std::endl;
+    report(ERROR,"EvtGen")<<"In EvtBHadronic, unknown hadronic current."
+                          <<std::endl;
     
   }  
 

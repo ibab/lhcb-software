@@ -18,12 +18,16 @@
 //
 //------------------------------------------------------------------------
 // 
+#ifdef WIN32 
+  #pragma warning( disable : 4786 ) 
+  // Disable anoying warning about symbol size 
+#endif 
 #include <iostream>
 #include <math.h>
 #include <assert.h>
-#include "EvtGen/EvtComplex.hh"
-#include "EvtGen/EvtVector4C.hh"
-#include "EvtGen/EvtTensor4C.hh"
+#include "EvtGenBase/EvtComplex.hh"
+#include "EvtGenBase/EvtVector4C.hh"
+#include "EvtGenBase/EvtTensor4C.hh"
 
 
 

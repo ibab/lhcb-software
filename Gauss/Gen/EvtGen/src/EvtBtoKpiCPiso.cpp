@@ -18,17 +18,21 @@
 //
 //------------------------------------------------------------------------
 // 
+#ifdef WIN32 
+  #pragma warning( disable : 4786 ) 
+  // Disable anoying warning about symbol size 
+#endif 
 #include <stdlib.h>
-#include "EvtGen/EvtParticle.hh"
-#include "EvtGen/EvtGenKine.hh"
-#include "EvtGen/EvtPDL.hh"
-#include "EvtGen/EvtReport.hh"
-#include "EvtGen/EvtBtoKpiCPiso.hh"
-#include "EvtGen/EvtString.hh"
+#include "EvtGenBase/EvtParticle.hh"
+#include "EvtGenBase/EvtGenKine.hh"
+#include "EvtGenBase/EvtPDL.hh"
+#include "EvtGenBase/EvtReport.hh"
+#include "EvtGenModels/EvtBtoKpiCPiso.hh"
+#include <string>
 
 EvtBtoKpiCPiso::~EvtBtoKpiCPiso() {}
 
-void EvtBtoKpiCPiso::getName(EvtString& model_name){
+void EvtBtoKpiCPiso::getName(std::string& model_name){
 
   model_name="BTOKPI_CP_ISO";     
 
@@ -103,6 +107,8 @@ if (((getDaug(0)==PIP) && (getDaug(1)==KM)) || ((getDaug(0)==KM) && (getDaug(1)=
 
 void EvtBtoKpiCPiso::decay( EvtParticle *p ){
 
+
+  p->initializePhaseSpace(getNDaug(),getDaugs());
   //added by Lange Jan4,2000
   static EvtId PI0=EvtPDL::getId("pi0");
   static EvtId PIP=EvtPDL::getId("pi+");
@@ -112,27 +118,6 @@ void EvtBtoKpiCPiso::decay( EvtParticle *p ){
   static EvtId KP=EvtPDL::getId("K+");
   static EvtId KM=EvtPDL::getId("K-");
 
-  EvtParticle *s1,*s2;
-
-  p->makeDaughters(getNDaug(),getDaugs());
-  s1=p->getDaug(0);
-  s2=p->getDaug(1);
-  
-  double m_parent,mass[2];
-  EvtVector4R p4[2];
-
-  m_parent = p->mass();
-
-  findMasses(p,getNDaug(),getDaugs(),mass);
-
-//  Need phase space random numbers
-
-  EvtGenKine::PhaseSpace( getNDaug(), mass, p4, m_parent );
-
-//  Put phase space results into the daughters.
-
-   s1->init( getDaug(0), p4[0] );
-   s2->init( getDaug(1), p4[1] );
 
    EvtComplex A;
    EvtComplex U, Ubar, V, Vbar, W, Wbar;

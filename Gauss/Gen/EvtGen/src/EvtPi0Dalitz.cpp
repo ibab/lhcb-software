@@ -18,20 +18,27 @@
 //
 //------------------------------------------------------------------------
 //
+#ifdef WIN32 
+  #pragma warning( disable : 4786 ) 
+  // Disable anoying warning about symbol size 
+#endif 
 #include <stdlib.h>
+#include <fstream>
 #include <stdio.h>
-#include "EvtGen/EvtString.hh"
-#include "EvtGen/EvtGenKine.hh"
-#include "EvtGen/EvtParticle.hh"
-#include "EvtGen/EvtPDL.hh"
-#include "EvtGen/EvtReport.hh"
-#include "EvtGen/EvtPi0Dalitz.hh"
-#include "EvtGen/EvtVector4C.hh"
-#include "EvtGen/EvtDiracSpinor.hh"
+#include <string>
+#include "EvtGenBase/EvtGenKine.hh"
+#include "EvtGenBase/EvtParticle.hh"
+#include "EvtGenBase/EvtPDL.hh"
+#include "EvtGenBase/EvtReport.hh"
+#include "EvtGenModels/EvtPi0Dalitz.hh"
+#include "EvtGenBase/EvtVector4C.hh"
+#include "EvtGenBase/EvtDiracSpinor.hh"
+#include "EvtGenBase/EvtVector4C.hh"
+#include "EvtGenBase/EvtTensor4C.hh"
 
 EvtPi0Dalitz::~EvtPi0Dalitz() {}
 
-void EvtPi0Dalitz::getName(EvtString& model_name){
+void EvtPi0Dalitz::getName(std::string& model_name){
 
     model_name="PI0_DALITZ";
 
@@ -70,21 +77,11 @@ void EvtPi0Dalitz::init(){
 void EvtPi0Dalitz::decay( EvtParticle *p){
 
   EvtParticle *ep, *em, *gamma;
-  
-  p->makeDaughters(getNDaug(),getDaugs());
+  setWeight(p->initializePhaseSpace(getNDaug(),getDaugs(),0.00000002,0,1));
+
   ep=p->getDaug(0);
   em=p->getDaug(1);
   gamma=p->getDaug(2);
-
- 
-
-  double mass[3];
-   
-  double m = p->mass();
- 
-  findMasses( p, getNDaug(), getDaugs(), mass );
-
-  EvtVector4R p4[3];
 
   // the next four lines generates events with a weight such that
   // the efficiency for selecting them is good. The parameter below of
@@ -92,26 +89,20 @@ void EvtPi0Dalitz::decay( EvtParticle *p){
   // The value of 0.1 is appropriate for muons. 
   // when you use this remember to remove the cut on q^2!
    
-    setWeight(EvtGenKine::PhaseSpacePole
-  	    (m,mass[0],mass[1],mass[2],0.00000002,p4));
-
-  ep->init( getDaug(0), p4[0] );
-  em->init( getDaug(1), p4[1]);
-  gamma->init( getDaug(2), p4[2]);
 
   //ep em invariant mass^2
-  double m2=(p4[0]+p4[1]).mass2();
-  EvtVector4R q=p4[0]+p4[1];
+  double m2=(ep->getP4()+em->getP4()).mass2();
+  EvtVector4R q=ep->getP4()+em->getP4();
   //Just use the prob summed over spins...
 
   EvtTensor4C w,v;
 
-  v=2.0*(p4[2]*q)*directProd(q,p4[2]) 
-    - (p4[2]*q)*(p4[2]*q)*EvtTensor4C::g()
-    -m2*directProd(p4[2],p4[2]);
+  v=2.0*(gamma->getP4()*q)*directProd(q,gamma->getP4()) 
+    - (gamma->getP4()*q)*(gamma->getP4()*q)*EvtTensor4C::g()
+    -m2*directProd(gamma->getP4(),gamma->getP4());
  
-  w=4.0*( directProd(p4[0],p4[1]) + directProd(p4[1],p4[0])
-	   -EvtTensor4C::g()*(p4[0]*p4[1]-p4[0].mass2()));
+  w=4.0*( directProd(ep->getP4(),em->getP4()) + directProd(em->getP4(),ep->getP4())
+	   -EvtTensor4C::g()*(ep->getP4()*em->getP4()-ep->getP4().mass2()));
 
   double prob=(real(cont(v,w)))/(m2*m2);
   prob *=(1.0/( (0.768*0.768-m2)*(0.768*0.768-m2)

@@ -23,21 +23,25 @@
 //------------------------------------------------------------------------
 //
 #ifdef WIN32
-extern "C" double __stdcall DDILOG(const double & sh);
+extern "C" double __stdcall DDILOG(const double & sh ) ;
 #else
 extern "C" double ddilog_(const double & sh);
 #endif
 //
+#ifdef WIN32 
+  #pragma warning( disable : 4786 ) 
+  // Disable anoying warning about symbol size 
+#endif 
 #include <stdlib.h>
-#include "EvtGen/EvtRandom.hh"
-#include "EvtGen/EvtParticle.hh"
-#include "EvtGen/EvtGenKine.hh"
-#include "EvtGen/EvtPDL.hh"
-#include "EvtGen/EvtReport.hh"
-#include "EvtGen/EvtBtoXsllUtil.hh"
-#include "EvtGen/EvtString.hh"
-#include "EvtGen/EvtComplex.hh"
-#include "EvtGen/EvtConst.hh"
+#include "EvtGenBase/EvtRandom.hh"
+#include "EvtGenBase/EvtParticle.hh"
+#include "EvtGenBase/EvtGenKine.hh"
+#include "EvtGenBase/EvtPDL.hh"
+#include "EvtGenBase/EvtReport.hh"
+#include "EvtGenModels/EvtBtoXsllUtil.hh"
+#include <string>
+#include "EvtGenBase/EvtComplex.hh"
+#include "EvtGenBase/EvtConst.hh"
 
 EvtComplex EvtBtoXsllUtil::coeff9(double mb, double sh)
 {
@@ -68,14 +72,19 @@ EvtComplex EvtBtoXsllUtil::coeff9(double mb, double sh)
   double zh = mc/mb;
 #ifdef WIN32
   double omesh = - 2.0/9.0*EvtConst::pi*EvtConst::pi - 4.0/3.0*DDILOG(sh)
-#else
-  double omesh = - 2.0/9.0*EvtConst::pi*EvtConst::pi - 4.0/3.0*ddilog_(sh)
-#endif
                  - 2.0/3.0*log(sh)*log(1.0-sh)
                  - (5.0+4.0*sh)/(3.0*(1.0+2.0*sh)) * log(1.0-sh)
                  - 2.0*sh*(1.0+sh)*(1.0-2.0*sh)
                  /(3.0*pow(1.0-sh,2)*(1.0+2.0*sh)) * log(sh)
                  + (5.0+9.0*sh-6.0*sh*sh)/(6.0*(1.0-sh)*(1.0+2.0*sh));
+#else
+  double omesh = - 2.0/9.0*EvtConst::pi*EvtConst::pi - 4.0/3.0*ddilog_(sh)
+                 - 2.0/3.0*log(sh)*log(1.0-sh)
+                 - (5.0+4.0*sh)/(3.0*(1.0+2.0*sh)) * log(1.0-sh)
+                 - 2.0*sh*(1.0+sh)*(1.0-2.0*sh)
+                 /(3.0*pow(1.0-sh,2)*(1.0+2.0*sh)) * log(sh)
+                 + (5.0+9.0*sh-6.0*sh*sh)/(6.0*(1.0-sh)*(1.0+2.0*sh));
+#endif
   double etash = 1.0 + alpha_s_mu*omesh/EvtConst::pi;
 
   double y = 4.*zh*zh/sh;
@@ -175,8 +184,9 @@ double EvtBtoXsllUtil::dGdsdupProb(double mb, double ms, double ml,
   double c7eff = -0.311;
   double c10   = -4.546;
 
-  double prob;
+  double prob/*, prob_max*/;
   double f1sp, f2sp, f3sp;
+  //  double u_ext;
 
   double sh = s / (mb*mb);
   EvtComplex c9eff = coeff9(mb, sh);

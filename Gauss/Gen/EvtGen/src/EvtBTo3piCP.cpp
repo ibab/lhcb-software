@@ -19,21 +19,25 @@
 //
 //------------------------------------------------------------------------
 //
+#ifdef WIN32 
+  #pragma warning( disable : 4786 ) 
+  // Disable anoying warning about symbol size 
+#endif 
 #include <stdlib.h>
-#include "EvtGen/EvtParticle.hh"
-#include "EvtGen/EvtCPUtil.hh"
-#include "EvtGen/EvtPDL.hh"
-#include "EvtGen/EvtReport.hh"
-#include "EvtGen/EvtBTo3piCP.hh"
-#include "EvtGen/EvtId.hh"
-#include "EvtGen/EvtString.hh"
-#include "EvtGen/EvtConst.hh"
+#include "EvtGenBase/EvtParticle.hh"
+#include "EvtGenBase/EvtCPUtil.hh"
+#include "EvtGenBase/EvtPDL.hh"
+#include "EvtGenBase/EvtReport.hh"
+#include "EvtGenModels/EvtBTo3piCP.hh"
+#include "EvtGenBase/EvtId.hh"
+#include <string>
+#include "EvtGenBase/EvtConst.hh"
 
 #ifdef WIN32
 extern "C" {
   extern void __stdcall EVT3PIONS(double *,int *,double *,
 			 double *,double *,double *,double *,
-			 double *,double *,double *);
+                                  double *,double *,double *);
 }
 #else
 extern "C" {
@@ -43,11 +47,10 @@ extern "C" {
 }
 #endif
 
-
 EvtBTo3piCP::~EvtBTo3piCP() {}
 
 
-void EvtBTo3piCP::getName(EvtString& model_name){
+void EvtBTo3piCP::getName(std::string& model_name){
 
   model_name="BTO3PI_CP";     
 
@@ -95,6 +98,7 @@ void EvtBTo3piCP::decay( EvtParticle *p){
   EvtParticle *pip,*pim,*pi0;
 
   p->makeDaughters(getNDaug(),getDaugs());
+
   //  p->init_daug(SCALAR,&pip,SCALAR,&pim,SCALAR,&pi0);
   pip=p->getDaug(0);
   pim=p->getDaug(1);
@@ -133,20 +137,29 @@ void EvtBTo3piCP::decay( EvtParticle *p){
   p4[2].set(p4gamm1[3]+p4gamm2[3],p4gamm1[0]+p4gamm2[0],
 	    p4gamm1[1]+p4gamm2[1],p4gamm1[2]+p4gamm2[2]);
 
-   pip->init( getDaug(0), p4[0] );
-   pim->init( getDaug(1), p4[1] );
-   pi0->init( getDaug(2), p4[2] );
+  if (pip->getId()==EvtPDL::getId("pi+")) {
+    pip->init( getDaug(0), p4[0] );
+    pim->init( getDaug(1), p4[1] );
+  }
+  else {
+    pip->init( getDaug(0), p4[1] );
+    pim->init( getDaug(1), p4[0] );  
+  }
 
+   pi0->init( getDaug(2), p4[2] );
+   
    EvtComplex amp;
 
    EvtComplex A(realA,imgA);
    EvtComplex Abar(realbarA,imgbarA);
 
    if (other_b==B0B){
-     amp=A*cos(dm*t/(2*EvtConst::c))+Abar*sin(dm*t/(2*EvtConst::c));
+     amp=A*cos(dm*t/(2*EvtConst::c))+
+       EvtComplex(0.,1.)*Abar*sin(dm*t/(2*EvtConst::c));
    }
    if (other_b==B0){
-     amp=A*cos(dm*t/(2*EvtConst::c))-Abar*sin(dm*t/(2*EvtConst::c));
+     amp=Abar*cos(dm*t/(2*EvtConst::c))+
+       EvtComplex(0.,1.)*A*sin(dm*t/(2*EvtConst::c));
    }
 
    vertex(amp);

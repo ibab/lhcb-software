@@ -19,14 +19,19 @@
 //------------------------------------------------------------------------
 
 
-#include "EvtGen/EvtDecayBase.hh"
-#include "EvtGen/EvtDecayAmp.hh"
-#include "EvtGen/EvtParticle.hh"
-#include "EvtGen/EvtPDL.hh"
-#include "EvtGen/EvtRandom.hh"
-#include "EvtGen/EvtPHOTOS.hh"
-#include "EvtGen/EvtAmp.hh"
-#include "EvtGen/EvtReport.hh"
+
+#ifdef WIN32 
+  #pragma warning( disable : 4786 ) 
+  // Disable anoying warning about symbol size 
+#endif 
+#include "EvtGenBase/EvtDecayBase.hh"
+#include "EvtGenBase/EvtDecayAmp.hh"
+#include "EvtGenBase/EvtParticle.hh"
+#include "EvtGenBase/EvtPDL.hh"
+#include "EvtGenBase/EvtRandom.hh"
+#include "EvtGenBase/EvtRadCorr.hh"
+#include "EvtGenBase/EvtAmp.hh"
+#include "EvtGenBase/EvtReport.hh"
 
 
 void EvtDecayAmp::makeDecay(EvtParticle* p){
@@ -39,7 +44,7 @@ void EvtDecayAmp::makeDecay(EvtParticle* p){
   double prob,prob_max;
 
   _amp2.init(p->getId(),getNDaug(),getDaugs());
-
+  //report(INFO,"EvtGen") << "Decaying " << EvtPDL::name(p->getId()) << std::endl;
   do{
     _weight = 1.0;
     decay(p);
@@ -68,13 +73,13 @@ void EvtDecayAmp::makeDecay(EvtParticle* p){
       report(DEBUG,"EvtGen") << "prob:"<<prob<<std::endl;
       
       report(DEBUG,"EvtGen") << "Particle:"
-			     <<EvtPDL::name(p->getId())<<std::endl;
+			     <<EvtPDL::name(p->getId()).c_str()<<std::endl;
       report(DEBUG,"EvtGen") << "channel        :"<<p->getChannel()<<std::endl;
-
+      report(DEBUG,"EvtGen") << "Momentum:" << p->getP4() << " " << p->mass() << std::endl;
       if( p->getParent()!=0){
 	report(DEBUG,"EvtGen") << "parent:"
 			       <<EvtPDL::name(
-				p->getParent()->getId())<<std::endl;
+				p->getParent()->getId()).c_str()<<std::endl;
 	report(DEBUG,"EvtGen") << "parent channel        :"
 			       <<p->getParent()->getChannel()<<std::endl;
 
@@ -82,10 +87,24 @@ void EvtDecayAmp::makeDecay(EvtParticle* p){
 	report(DEBUG,"EvtGen") << "parent daughters  :";
         for (i=0;i<p->getParent()->getNDaug();i++){
 	  report(DEBUG,"") << EvtPDL::name(
-			    p->getParent()->getDaug(i)->getId())
+			    p->getParent()->getDaug(i)->getId()).c_str()
 				 << " ";
         }
 	report(DEBUG,"") << std::endl;
+
+	report(DEBUG,"EvtGen") << "daughters  :";
+        for (i=0;i<p->getNDaug();i++){
+	  report(DEBUG,"") << EvtPDL::name(
+			    p->getDaug(i)->getId()).c_str()
+				 << " ";
+        }
+	report(DEBUG,"") << std::endl;
+
+	report(DEBUG,"EvtGen") << "daughter momenta  :" << std::endl;;
+        for (i=0;i<p->getNDaug();i++){
+	  report(DEBUG,"") << p->getDaug(i)->getP4() << " " << p->getDaug(i)->mass();
+	  report(DEBUG,"") << std::endl;
+        }
 
       }
     }
@@ -96,7 +115,7 @@ void EvtDecayAmp::makeDecay(EvtParticle* p){
 
     prob_max = getProbMax(prob);
 
-    //cout << "Prob,prob_max,weight:"<<prob<<" "<<prob_max<<" "<<_weight<<std::endl;
+    //report(INFO,"EvtGen") << "Prob,prob_max,weight:"<<prob<<" "<<prob_max<<" "<<_weight<<std::endl;
 
     more=prob<EvtRandom::Flat(prob_max);
 
@@ -104,6 +123,7 @@ void EvtDecayAmp::makeDecay(EvtParticle* p){
 
   }while(ntimes&&more);
 
+  //report(INFO,"EvtGen") << "Done\n";
 
   if (ntimes==0){
     report(DEBUG,"EvtGen") << "Tried accept/reject:10000"
@@ -111,13 +131,13 @@ void EvtDecayAmp::makeDecay(EvtParticle* p){
     report(DEBUG,"")<<p->getSpinDensityForward()<<std::endl;
     report(DEBUG,"EvtGen") << "Is therefore accepting the last event!"<<std::endl;
     report(DEBUG,"EvtGen") << "Decay of particle:"<<
-      EvtPDL::name(p->getId())<<"(channel:"<<
+      EvtPDL::name(p->getId()).c_str()<<"(channel:"<<
       p->getChannel()<<") with mass "<<p->mass()<<std::endl;
     
     int ii;
     for(ii=0;ii<p->getNDaug();ii++){
       report(DEBUG,"EvtGen") <<"Daughter "<<ii<<":"<<
-	EvtPDL::name(p->getDaug(ii)->getId())<<" with mass "<<
+	EvtPDL::name(p->getDaug(ii)->getId()).c_str()<<" with mass "<<
 	p->getDaug(ii)->mass()<<std::endl;
     }				   
   }
@@ -136,6 +156,7 @@ void EvtDecayAmp::makeDecay(EvtParticle* p){
     ampcont=_amp2;
   }
 
+  //report(INFO,"EvtGen") << "Found " << p->getNDaug() << " daughters\n";
   for(i=0;i<p->getNDaug();i++){
 
     rho.SetDim(_amp2.dstates[i]);
@@ -150,9 +171,13 @@ void EvtDecayAmp::makeDecay(EvtParticle* p){
     if (!rho.Check()) {
       
       report(ERROR,"EvtGen") << "-------start error-------"<<std::endl;
-      report(ERROR,"EvtGen")<<"forward rho failed Check"<<
-	p->getId().getId()<<" "<<p->getChannel()<<" "<<i<<std::endl;
-      
+      report(ERROR,"EvtGen")<<"forward rho failed Check:"<<
+	EvtPDL::name(p->getId()).c_str()<<" "<<p->getChannel()<<" "<<i<<std::endl;
+
+      report(ERROR,"EvtGen")<<"Parent:"<<EvtPDL::name(p->getParent()->getId()).c_str()<<std::endl;
+      report(ERROR,"EvtGen")<<"GrandParent:"<<EvtPDL::name(p->getParent()->getParent()->getId()).c_str()<<std::endl;
+      report(ERROR,"EvtGen")<<"GrandGrandParent:"<<EvtPDL::name(p->getParent()->getParent()->getParent()->getId()).c_str()<<std::endl;
+
       report(ERROR,"EvtGen") << rho;
       int ii; 
       _amp2.dump();
@@ -186,8 +211,9 @@ void EvtDecayAmp::makeDecay(EvtParticle* p){
 
   }
 
-  if (getPHOTOS()) EvtPHOTOS::PHOTOS(p);
-
+  if (getPHOTOS() || EvtRadCorr::alwaysRadCorr()) {
+    EvtRadCorr::doRadCorr(p);
+  }
 
 }
 

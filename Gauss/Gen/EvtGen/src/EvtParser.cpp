@@ -18,16 +18,16 @@
 //
 //------------------------------------------------------------------------
 // 
+#ifdef WIN32 
+  #pragma warning( disable : 4786 ) 
+  // Disable anoying warning about symbol size 
+#endif 
+#include "EvtGenBase/EvtPatches.hh"
 #include <fstream>
-#ifdef WIN32
-#include <strstrea.h>
-#else
-#include <strstream.h>
-#endif
-#include <string.h>
-#include "EvtGen/EvtParser.hh"
-#include "EvtGen/EvtReport.hh"
-#include "EvtGen/EvtString.hh"
+#include <strstream>
+#include <cstring>
+#include "EvtGenBase/EvtParser.hh"
+#include "EvtGenBase/EvtReport.hh"
 
 #define MAXBUF 1024
 
@@ -52,7 +52,7 @@ int EvtParser::getNToken(){
 
 }
 
-const EvtString& EvtParser::getToken(int i){
+const std::string& EvtParser::getToken(int i){
 
   return _tokenlist[i];
 
@@ -64,12 +64,14 @@ int EvtParser::getLineofToken(int i){
 
 }
 
-void EvtParser::Read(const EvtString filename){
+int EvtParser::Read(const std::string filename){
   std::ifstream fin;
   
-  fin.open(filename.value());
+  fin.open(filename.c_str());
   if (!fin) {
-    report(ERROR,"EvtGen") << "Could not open "<<filename<<std::endl;
+    report(ERROR,"EvtGen") << "Could not open file '"<<filename.c_str()
+                           <<"'"<<std::endl;
+    return -1;
   }
 
   char buf[MAXBUF];
@@ -103,7 +105,8 @@ void EvtParser::Read(const EvtString filename){
     }while(buf[i-1]!=0);
 
     //read each token
-    istrstream ist(buf,strlen(buf));
+    std::istrstream ist(buf,strlen(buf));
+
     while(ist>>buf2){
       i=0;
       int semicolon=0;
@@ -121,11 +124,14 @@ void EvtParser::Read(const EvtString filename){
   }
 
   fin.close();
+
+  return 0;
+  
 }
 
 
 
-void EvtParser::addToken(int line,const EvtString& string){
+void EvtParser::addToken(int line,const std::string& string){
 
   //report(INFO,"EvtGen") <<_ntoken<<" "<<line<<" "<<string<<std::endl;  
 
@@ -136,7 +142,7 @@ void EvtParser::addToken(int line,const EvtString& string){
 
     
     int*     newlinelist= new int[new_length];
-    EvtString* newtokenlist= new EvtString[new_length];
+    std::string* newtokenlist= new std::string[new_length];
   
     int i;
 
@@ -162,7 +168,8 @@ void EvtParser::addToken(int line,const EvtString& string){
  
   _ntoken++;  
 
-  //report(INFO,"EvtGen") << "First:"<<_tokenlist[0]<<" last:"<<_tokenlist[_ntoken-1]<<std::endl;
+  //report(INFO,"EvtGen") << "First:"<<_tokenlist[0]<<" last:"
+  //<<_tokenlist[_ntoken-1]<<std::endl;
 
 }
    

@@ -18,16 +18,64 @@
 //
 //------------------------------------------------------------------------
 //
+#ifdef WIN32 
+  #pragma warning( disable : 4786 ) 
+  // Disable anoying warning about symbol size 
+#endif 
+#include "EvtGenBase/EvtPatches.hh"
 #include <iostream>
+#include <fstream>
 #include <stdlib.h>
 #include <ctype.h>
-#include "EvtGen/EvtParticleDecayList.hh"
-#include "EvtGen/EvtParticle.hh"
-#include "EvtGen/EvtString.hh"
-#include "EvtGen/EvtRandom.hh"
-#include "EvtGen/EvtReport.hh"
-#include "EvtGen/EvtPDL.hh"
-#include "EvtGen/EvtGen.hh"
+#include "EvtGenBase/EvtParticleDecayList.hh"
+#include "EvtGenBase/EvtParticle.hh"
+#include "EvtGenBase/EvtRandom.hh"
+#include "EvtGenBase/EvtReport.hh"
+#include "EvtGenBase/EvtPDL.hh"
+#include "EvtGenBase/EvtStatus.hh"
+
+EvtParticleDecayList::EvtParticleDecayList(const EvtParticleDecayList &o) {
+  _nmode=o._nmode;
+  _rawbrfrsum=o._rawbrfrsum;
+  _decaylist=new EvtParticleDecayPtr[_nmode];
+
+  int i;
+  for(i=0;i<_nmode;i++){
+    _decaylist[i]=new EvtParticleDecay;  
+
+    EvtDecayBase *tModel=o._decaylist[i]->getDecayModel();
+    
+    EvtDecayBase *tModelNew=tModel->clone();
+    if (tModel->getPHOTOS()){
+      tModelNew->setPHOTOS();
+    }
+    if (tModel->verbose()){
+      tModelNew->setVerbose();
+    }
+    if (tModel->summary()){
+      tModelNew->setSummary();
+    }
+    std::vector<std::string> args;
+    int j;
+    for(j=0;j<tModel->getNArg();j++){
+      args.push_back(tModel->getArgStr(j));
+    }
+    tModelNew->saveDecayInfo(tModel->getParentId(),tModel->getNDaug(),
+			     tModel->getDaugs(),
+			     tModel->getNArg(),
+			     args,
+			     tModel->getModelName(),
+			     tModel->getBranchingFraction());
+    _decaylist[i]->setDecayModel(tModelNew);
+    
+    //_decaylist[i]->setDecayModel(tModel);
+    _decaylist[i]->setBrfrSum(o._decaylist[i]->getBrfrSum());
+    _decaylist[i]->setMassMin(o._decaylist[i]->getMassMin());
+  }
+
+
+}
+
 
 EvtParticleDecayList::~EvtParticleDecayList(){
 
@@ -98,24 +146,31 @@ EvtDecayBase* EvtParticleDecayList::getDecayModel(EvtParticle *p){
     double u=EvtRandom::Flat();
 
     int i;
-
+    bool breakL=false;
     for (i=0;i<getNMode();i++) {
-      
-      if (u<getDecay(i).getBrfrSum()) {
 
+      if ( breakL ) continue;
+      if (u<getDecay(i).getBrfrSum()) {
+	breakL=true;
 	//special case for decay of on particel to another
 	// e.g. K0->K0S
 
 	if (getDecay(i).getDecayModel()->getNDaug()==1 ) {
 	  p->setChannel(i);
-	  
 	  return getDecay(i).getDecayModel(); 
 	} 
 
-	if (getDecay(i).getMassMin() < p->mass() ) {
-	  p->setChannel(i);
-	
-	  return getDecay(i).getDecayModel(); 
+	if ( p->hasValidP4() ) {
+	  //report(INFO,"EvtGen") << "amazing " << EvtPDL::name(p->getId()) << " " << getDecay(i).getMassMin() << " "<<p->mass() << " " << i << std::endl;
+	  if (getDecay(i).getMassMin() < p->mass() ) {
+	    p->setChannel(i);
+	    return getDecay(i).getDecayModel(); 
+	  }
+	}
+	else{
+	//Lange apr29-2002 - dont know the mass yet
+	    p->setChannel(i);
+	    return getDecay(i).getDecayModel(); 
 	}
       }
     }
@@ -135,14 +190,14 @@ EvtDecayBase* EvtParticleDecayList::getDecayModel(EvtParticle *p){
   }
 
   report(ERROR,"EvtGen") << "Could not decay:"
-			 <<EvtPDL::name(p->getId())
+			 <<EvtPDL::name(p->getId()).c_str()
 			 <<" with mass:"<<p->mass()
 			 <<" will throw event away! "<<std::endl;
   
   //  report(ERROR,"EvtGen") << "Will terminate execution."<<std::endl;
 
   //  ::abort();  
-  EvtGen::setRejectFlag();
+  EvtStatus::setRejectFlag();
   return 0;
 
 }
@@ -151,6 +206,7 @@ EvtDecayBase* EvtParticleDecayList::getDecayModel(EvtParticle *p){
 void EvtParticleDecayList::setNMode(int nmode){
 
   EvtParticleDecayPtr* _decaylist_new= new EvtParticleDecayPtr[nmode];
+  //  int i;
   if (_nmode!=0){
     report(ERROR,"EvtGen") << "Error _nmode not equal to zero!!!"<<std::endl;
     ::abort();
@@ -167,6 +223,7 @@ EvtParticleDecay& EvtParticleDecayList::getDecay(int nchannel) {
     report(ERROR,"EvtGen") <<"Error getting channel:"
 			   <<nchannel<<" with only "<<_nmode
 			   <<" stored!"<<std::endl;
+    ::abort();
   }
   return *(_decaylist[nchannel]);
 }
@@ -225,8 +282,8 @@ void EvtParticleDecayList::finalize(){
     }
     if (fabs(_rawbrfrsum-1.0)>0.0001) {
       report(INFO,"EvtGen") <<"Warning, sum of branching fractions for "
-			    <<EvtPDL::name(_decaylist[0]->getDecayModel()->getParentId())
-			    <<" is "<<_rawbrfrsum<<std::endl;
+      			    <<EvtPDL::name(_decaylist[0]->getDecayModel()->getParentId()).c_str()
+      			    <<" is "<<_rawbrfrsum<<std::endl;
       report(INFO,"EvtGen") << "rescaled to one! "<<std::endl;
       
     }
@@ -242,14 +299,18 @@ void EvtParticleDecayList::finalize(){
 
 }
 
-bool EvtParticleDecayList::isJetSet(){
-  int i;
-  EvtDecayBase *decayer;
-
-  for (i=0;i<getNMode();i++) {
-      decayer = getDecay(i).getDecayModel();
-      if(decayer->getModelName()=="JETSET") return true;
+bool EvtParticleDecayList::isJetSet() 
+{
+  int i ;
+  EvtDecayBase * decayer ;
+  
+  for ( i = 0 ;
+        i < getNMode() ;
+        i++ ) {
+    decayer = getDecay( i ).getDecayModel ( ) ;
+    if ( decayer -> getModelName() == "PYTHIA" ) return true ;
   }
-
-  return false;
+  
+  return false ;
 }
+

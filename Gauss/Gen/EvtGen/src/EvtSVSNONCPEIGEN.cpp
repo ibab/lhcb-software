@@ -19,21 +19,25 @@
 //
 //------------------------------------------------------------------------
 // 
+#ifdef WIN32 
+  #pragma warning( disable : 4786 ) 
+  // Disable anoying warning about symbol size 
+#endif 
 #include <stdlib.h>
-#include "EvtGen/EvtParticle.hh"
-#include "EvtGen/EvtRandom.hh"
-#include "EvtGen/EvtGenKine.hh"
-#include "EvtGen/EvtCPUtil.hh"
-#include "EvtGen/EvtPDL.hh"
-#include "EvtGen/EvtReport.hh"
-#include "EvtGen/EvtVector4C.hh"
-#include "EvtGen/EvtSVSNONCPEIGEN.hh"
-#include "EvtGen/EvtString.hh"
-#include "EvtGen/EvtConst.hh"
+#include "EvtGenBase/EvtParticle.hh"
+#include "EvtGenBase/EvtRandom.hh"
+#include "EvtGenBase/EvtGenKine.hh"
+#include "EvtGenBase/EvtCPUtil.hh"
+#include "EvtGenBase/EvtPDL.hh"
+#include "EvtGenBase/EvtReport.hh"
+#include "EvtGenBase/EvtVector4C.hh"
+#include "EvtGenModels/EvtSVSNONCPEIGEN.hh"
+#include <string>
+#include "EvtGenBase/EvtConst.hh"
 
 EvtSVSNONCPEIGEN::~EvtSVSNONCPEIGEN() {}
 
-void EvtSVSNONCPEIGEN::getName(EvtString& model_name){
+void EvtSVSNONCPEIGEN::getName(std::string& model_name){
 
   model_name="SVS_NONCPEIGEN";     
 
@@ -54,7 +58,7 @@ void EvtSVSNONCPEIGEN::init(){
 
   if ( getParentId() != EvtPDL::getId("B0") ) {
     report(ERROR, "EvtGen") << "EvtSVSNONCPEIGEN cannot decay "
-			    << EvtPDL::name(getParentId()) 
+			    << EvtPDL::name(getParentId()).c_str() 
 			    << ". Must be specified to decay"
 			    << " only B0 or a B0 alias." << std::endl;
     report(ERROR,"EvtGen") << "Will terminate execution!"<<std::endl;

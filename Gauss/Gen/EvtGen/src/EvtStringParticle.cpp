@@ -18,11 +18,15 @@
 //
 //------------------------------------------------------------------------
 // 
+#ifdef WIN32 
+  #pragma warning( disable : 4786 ) 
+  // Disable anoying warning about symbol size 
+#endif 
 #include <iostream>
 #include <math.h>
 #include <stdlib.h>
-#include "EvtGen/EvtStringParticle.hh"
-#include "EvtGen/EvtVector4R.hh"
+#include "EvtGenBase/EvtStringParticle.hh"
+#include "EvtGenBase/EvtVector4R.hh"
 
 
 EvtStringParticle::~EvtStringParticle(){
@@ -49,6 +53,7 @@ EvtStringParticle::EvtStringParticle(){
 
 void EvtStringParticle::init(EvtId id, const EvtVector4R& p4){
 
+  _validP4=true;
   setp(p4);
   setpart_num(id);
 
@@ -106,7 +111,8 @@ EvtSpinDensity EvtStringParticle::rotateToHelicityBasis() const{
 
 EvtSpinDensity EvtStringParticle::rotateToHelicityBasis(double /*alpha*/,
                                                         double /*beta*/,
-                                                        double /*gamma*/) const{
+                                                        double /*gamma*/) 
+  const{
 
   report(ERROR,"EvtGen") << "rotateToHelicityBasis(alpha,beta,gamma) not implemented for string particle."; 
   report(ERROR,"EvtGen") << "Will terminate execution."; 

@@ -216,7 +216,7 @@ c
 c****************************************************************************
 c-----------------------------------------------------------------      
       Implicit none
-#include "EvtGen/EvtBTo3pi.inc"
+#include "EvtGenModels/EvtBTo3pi.inc"
       Real*8  alpha_input
       Integer iset
       Real*8  p_pi_minus(4),p_pi_plus_1(4),p_pi_plus_2(4)
@@ -358,7 +358,7 @@ c	----------------------------------------------------------
 c	----------------------------------------------------------      	
 c 	--- commons      	
 c	----------------------------------------------------------	
-#include "EvtGen/EvtBTo3pi.inc"
+#include "EvtGenModels/EvtBTo3pi.inc"
 c	----------------------------------------------------------
 c 	--- Used Functions 
 c	----------------------------------------------------------
@@ -506,7 +506,7 @@ c======================================================================
      +           Real_Bp,Imag_Bp,Real_Bm,Imag_Bm,iset,ierr)                 
 c-----------------------------------------------------------------------
       	IMPLICIT None  
-#include "EvtGen/EvtBTo3pi.inc"
+#include "EvtGenModels/EvtBTo3pi.inc"
 
                                                                                                  
       	Real*8 m12, m13, W12, W13, Wtot

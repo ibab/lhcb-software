@@ -19,7 +19,11 @@
 //-----------------------
 // This Class's Header --
 //-----------------------
-#include "EvtGen/EvtPFermi.hh"
+#ifdef WIN32 
+  #pragma warning( disable : 4786 ) 
+  // Disable anoying warning about symbol size 
+#endif 
+#include "EvtGenModels/EvtPFermi.hh"
 
 //---------------
 // C Headers --

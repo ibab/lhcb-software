@@ -18,11 +18,16 @@
 //
 //------------------------------------------------------------------------
 //
+#ifdef WIN32 
+  #pragma warning( disable : 4786 ) 
+  // Disable anoying warning about symbol size 
+#endif 
+#include "EvtGenBase/EvtPatches.hh"
 #include <iostream>
-#include "EvtGen/EvtParticle.hh"
-#include "EvtGen/EvtPDL.hh"
-#include "EvtGen/EvtSecondary.hh"
-#include "EvtGen/EvtReport.hh"
+#include "EvtGenBase/EvtParticle.hh"
+#include "EvtGenBase/EvtPDL.hh"
+#include "EvtGenBase/EvtSecondary.hh"
+#include "EvtGenBase/EvtReport.hh"
 
 
 void EvtSecondary::init(){

@@ -19,19 +19,24 @@
 //
 //------------------------------------------------------------------------
 //
-#include "EvtGen/EvtParticle.hh"
-#include "EvtGen/EvtGenKine.hh"
-#include "EvtGen/EvtPDL.hh"
-#include "EvtGen/EvtReport.hh"
-#include "EvtGen/EvtVector4C.hh"
-#include "EvtGen/EvtTensor4C.hh"
-#include "EvtGen/EvtDiracSpinor.hh"
-#include "EvtGen/EvtSemiLeptonicScalarAmp.hh"
-#include "EvtGen/EvtId.hh"
-#include "EvtGen/EvtAmp.hh"
-#include "EvtGen/EvtScalarParticle.hh"
-#include "EvtGen/EvtVectorParticle.hh"
-#include "EvtGen/EvtTensorParticle.hh"
+#ifdef WIN32 
+  #pragma warning( disable : 4786 ) 
+  // Disable anoying warning about symbol size 
+#endif 
+#include "EvtGenBase/EvtPatches.hh"
+#include "EvtGenBase/EvtParticle.hh"
+#include "EvtGenBase/EvtGenKine.hh"
+#include "EvtGenBase/EvtPDL.hh"
+#include "EvtGenBase/EvtReport.hh"
+#include "EvtGenBase/EvtVector4C.hh"
+#include "EvtGenBase/EvtTensor4C.hh"
+#include "EvtGenBase/EvtDiracSpinor.hh"
+#include "EvtGenBase/EvtSemiLeptonicScalarAmp.hh"
+#include "EvtGenBase/EvtId.hh"
+#include "EvtGenBase/EvtAmp.hh"
+#include "EvtGenBase/EvtScalarParticle.hh"
+#include "EvtGenBase/EvtVectorParticle.hh"
+#include "EvtGenBase/EvtTensorParticle.hh"
 
 double EvtSemiLeptonicAmp::CalcMaxProb( EvtId parent, EvtId meson, 
 					EvtId lepton, EvtId nudaug,
@@ -108,14 +113,15 @@ double EvtSemiLeptonicAmp::CalcMaxProb( EvtId parent, EvtId meson,
 
   for (massiter=0;massiter<3;massiter++){
 
-    mass[0] = EvtPDL::getNominalMass(meson);
-    mass[1] = EvtPDL::getNominalMass(lepton);
-    mass[2] = EvtPDL::getNominalMass(nudaug);
+    mass[0] = EvtPDL::getMeanMass(meson);
+    mass[1] = EvtPDL::getMeanMass(lepton);
+    mass[2] = EvtPDL::getMeanMass(nudaug);
     if ( massiter==1 ) {
       mass[0] = EvtPDL::getMinMass(meson);
     }
     if ( massiter==2 ) {
       mass[0] = EvtPDL::getMaxMass(meson);
+      if ( (mass[0]+mass[1]+mass[2])>m) mass[0]=m-mass[1]-mass[2]-0.00001; 
     }
 
     q2max = (m-mass[0])*(m-mass[0]);

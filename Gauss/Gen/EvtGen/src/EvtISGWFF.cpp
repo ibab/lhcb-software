@@ -19,11 +19,16 @@
 //
 //------------------------------------------------------------------------
 // 
-#include "EvtGen/EvtReport.hh"
-#include "EvtGen/EvtISGWFF.hh"
-#include "EvtGen/EvtPDL.hh"
-#include "EvtGen/EvtId.hh"
-#include "EvtGen/EvtString.hh"
+#ifdef WIN32 
+  #pragma warning( disable : 4786 ) 
+  // Disable anoying warning about symbol size 
+#endif 
+#include "EvtGenBase/EvtPatches.hh"
+#include "EvtGenBase/EvtReport.hh"
+#include "EvtGenModels/EvtISGWFF.hh"
+#include "EvtGenBase/EvtPDL.hh"
+#include "EvtGenBase/EvtId.hh"
+#include <string>
 #include <math.h>
 
 void EvtISGWFF::getscalarff(EvtId parent,EvtId daught,
@@ -184,7 +189,7 @@ void EvtISGWFF::getscalarff(EvtId parent,EvtId daught,
   static EvtId BSB=EvtPDL::getId("anti-B_s0");
   static EvtId BS0=EvtPDL::getId("B_s0");
   double fmf;
-  double mb=EvtPDL::getNominalMass(parent);
+  double mb=EvtPDL::getMeanMass(parent);
 
   if (daught==PI0||daught==PIP||daught==PIM||daught==ETA||
       daught==ETAPR||daught==D0||daught==D0B||daught==DP||
@@ -565,7 +570,7 @@ void EvtISGWFF::getscalarff(EvtId parent,EvtId daught,
    // Need to stuff in some factors to make these the ffs that
    // is used elsewhere...
 
-   double mb=EvtPDL::getNominalMass(parent);
+   double mb=EvtPDL::getMeanMass(parent);
   
 
    *vf = (gf)*(mb+mass);
@@ -742,10 +747,10 @@ void EvtISGWFF::EvtISGW1FF3P2 (EvtId parent,EvtId daugt,
   static EvtId BS0=EvtPDL::getId("B_s0");
 
   double mtb;
-  double msd = 0.0, mx,mb = 0.0;
-  double msq = 0.0, bx2 = 0.0, mtx, f5 = 0.0;
-  double mum, mup, tm, bb2 = 0.0, bbx2 = 0.0;
-  double msb = 0.0, kap = 0.0;
+  double msd(0.), mx,mb; 
+  double msq(0.),bx2(0.),mtx,f5;
+  double mum,mup,tm,bb2(0.),bbx2;
+  double msb(0.), kap;
 
   if (parent==BM||parent==BP||parent==B0||parent==B0B) { 
     msb=5.2;
@@ -772,7 +777,7 @@ void EvtISGWFF::EvtISGW1FF3P2 (EvtId parent,EvtId daugt,
   mtb = msb + msd;
   mtx = msq + msd;
 
-  mb = EvtPDL::getNominalMass( parent );
+  mb = EvtPDL::getMeanMass( parent );
   mx = mass;
 
   mup=1.0/(1.0/msq+1.0/msb);
@@ -956,10 +961,10 @@ void EvtISGWFF::EvtISGW1FF1S0 ( EvtId parent, EvtId daugt,
   static EvtId BS0=EvtPDL::getId("B_s0");
 
   double mtb;
-  double msd = 0.0, mx, mb; 
-  double msq = 0.0, bx2 = 0.0, mtx;
+  double msd(0.), mx,mb; 
+  double msq(0.),bx2(0.),mtx;
   double f3,kap; 
-  double msb = 0.0, bb2 = 0.0, mup, mum, bbx2, tm;
+  double msb(0.),bb2(0.),mup,mum,bbx2,tm;
 
   if (parent==BM||parent==BP||parent==B0||parent==B0B) {
     msb=5.2;
@@ -986,7 +991,7 @@ void EvtISGWFF::EvtISGW1FF1S0 ( EvtId parent, EvtId daugt,
   
   mtb = msb + msd;
   mtx = msq + msd;
-  mb = EvtPDL::getNominalMass( parent );
+  mb = EvtPDL::getMeanMass( parent );
   mx = mass;
   mup=1.0/(1.0/msq+1.0/msb);
   mum=1.0/(1.0/msq-1.0/msb);
@@ -1162,9 +1167,9 @@ void  EvtISGWFF::EvtISGW1FF3S1(EvtId parent,EvtId daugt,double t,
 
   static EvtId BSB=EvtPDL::getId("anti-B_s0");
   static EvtId BS0=EvtPDL::getId("B_s0");
- 
-  double msd = 0.0, mup, msq = 0.0, bb2 = 0.0, mum, mtx, bbx2;
-  double bx2 = 0.0, msb = 0.0, tm;
+
+  double msd(0.),mup,msq(0.),bb2(0.),mum,mtx,bbx2;
+  double bx2(0.),msb(0.),tm;
   double mb,mx,f3, kap;
 
   if (parent==BM||parent==BP||parent==B0||parent==B0B) { 
@@ -1197,7 +1202,7 @@ void  EvtISGWFF::EvtISGW1FF3S1(EvtId parent,EvtId daugt,double t,
   mup=1.0/(1.0/msq+1.0/msb);
   mum=1.0/(1.0/msq-1.0/msb);
   bbx2=0.5*(bb2+bx2);
-  mb=EvtPDL::getNominalMass(parent);
+  mb=EvtPDL::getMeanMass(parent);
   mx=mass;
   tm=(mb-mx)*(mb-mx);
   if ( t > tm ) t = 0.99*tm;
@@ -1372,10 +1377,10 @@ void EvtISGWFF::EvtISGW1FF23S1 (EvtId parent,EvtId daugt,
   static EvtId BS0=EvtPDL::getId("B_s0");
 
   double mtb;
-  double msd = 0.0, mx, mb; 
-  double msq = 0.0, bx2 = 0.0, mtx;
+  double msd(0.), mx,mb; 
+  double msq(0.),bx2(0.),mtx;
   double f3,f5,tt;
-  double mum, mup, bb2 = 0.0, bbx2, tm, msb = 0.0;
+  double mum,mup,bb2(0.),bbx2,tm,msb(0.);
     
   if (parent==BM||parent==BP||parent==B0||parent==B0B) {
     msb=5.2;
@@ -1401,7 +1406,7 @@ void EvtISGWFF::EvtISGW1FF23S1 (EvtId parent,EvtId daugt,
   
   mtb = msb + msd;
   mtx = msq + msd;
-  mb = EvtPDL::getNominalMass( parent );
+  mb = EvtPDL::getMeanMass( parent );
   mx = mass;
   mup=1.0/(1.0/msq+1.0/msb);
   mum=1.0/(1.0/msq-1.0/msb);
@@ -1597,9 +1602,9 @@ void EvtISGWFF::EvtISGW1FF3P1 (EvtId parent,EvtId daugt,
   static EvtId BS0=EvtPDL::getId("B_s0");
 
   double mtb;
-  double msd = 0.0, mx, mb; 
-  double msq = 0.0, bx2 = 0.0, mtx, f5;
-  double msb = 0.0, bb2 = 0.0, mup, mum, bbx2, tm;
+  double msd(0.), mx,mb; 
+  double msq(0.),bx2(0.),mtx,f5;
+  double msb(0.),bb2(0.),mup,mum,bbx2,tm;
   double kap;
 
   if (parent==BM||parent==BP||parent==B0||parent==B0B) {  
@@ -1627,7 +1632,7 @@ void EvtISGWFF::EvtISGW1FF3P1 (EvtId parent,EvtId daugt,
   mtb = msb + msd;
   mtx = msq + msd;
   
-  mb = EvtPDL::getNominalMass( parent );
+  mb = EvtPDL::getMeanMass( parent );
   mx = mass;
   
   mup=1.0/(1.0/msq+1.0/msb);
@@ -1810,10 +1815,10 @@ void EvtISGWFF::EvtISGW1FF3P0 (EvtId parent,EvtId daugt,
   static EvtId BS0=EvtPDL::getId("B_s0");
 
   double mtb;
-  double msd = 0.0, mx, mb; 
-  double msq = 0.0, bx2 = 0.0, mtx;
+  double msd(0.), mx,mb; 
+  double msq(0.),bx2(0.),mtx;
   double f5;
-  double mum, mup, bb2 = 0.0, bbx2, msb = 0.0, tm;
+  double mum,mup,bb2(0.),bbx2,msb(0.),tm;
 
   if (parent==BM||parent==BP||parent==B0||parent==B0B) {    
     msb=5.2;
@@ -1840,7 +1845,7 @@ void EvtISGWFF::EvtISGW1FF3P0 (EvtId parent,EvtId daugt,
   mtb = msb + msd;
   mtx = msq + msd;
   
-  mb = EvtPDL::getNominalMass( parent );
+  mb = EvtPDL::getMeanMass( parent );
   mx = mass;
   
   mup=1.0/(1.0/msq+1.0/msb);
@@ -2018,10 +2023,10 @@ void EvtISGWFF::EvtISGW1FF1P1 (EvtId parent,EvtId daugt,
   static EvtId BS0=EvtPDL::getId("B_s0");
 
   double mtb;
-  double msd = 0.0, mx, mb; 
-  double msq = 0.0, bx2 = 0.0, mtx, f5;
+  double msd(0.), mx,mb; 
+  double msq(0.),bx2(0.),mtx,f5;
   double mup,mum,kap;
-  double msb = 0.0, bb2 = 0.0, bbx2, tm;
+  double msb(0.),bb2(0.),bbx2,tm;
 
   if (parent==BM||parent==BP||parent==B0||parent==B0B) {
 
@@ -2049,7 +2054,7 @@ void EvtISGWFF::EvtISGW1FF1P1 (EvtId parent,EvtId daugt,
   mtb = msb + msd;
   mtx = msq + msd;
 
-  mb = EvtPDL::getNominalMass( parent );
+  mb = EvtPDL::getMeanMass( parent );
   mx = mass;
 
   mup=1.0/(1.0/msq+1.0/msb);
@@ -2231,11 +2236,11 @@ void EvtISGWFF::EvtISGW1FF21S0 (EvtId parent,EvtId daugt,
   static EvtId BS0=EvtPDL::getId("B_s0");
 
   double mtb;
-  double msd = 0.0, mx, mb; 
-  double msq = 0.0, bx2 = 0.0, mtx;
+  double msd(0.), mx,mb; 
+  double msq(0.),bx2(0.),mtx;
   double f3;
-  double msb = 0.0;
-  double mum, mup, tm, bb2 = 0.0, bbx2;
+  double msb(0.);
+  double mum,mup,tm,bb2(0.),bbx2;
   
   if (parent==BM||parent==BP||parent==B0||parent==B0B) {
     msb=5.2;
@@ -2262,7 +2267,7 @@ void EvtISGWFF::EvtISGW1FF21S0 (EvtId parent,EvtId daugt,
   mtb = msb + msd;
   mtx = msq + msd;
   
-  mb = EvtPDL::getNominalMass( parent );
+  mb = EvtPDL::getMeanMass( parent );
   mx = mass;
   
   mup=1.0/(1.0/msq+1.0/msb);

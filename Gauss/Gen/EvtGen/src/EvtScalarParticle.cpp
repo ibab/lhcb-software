@@ -18,14 +18,19 @@
 //
 //------------------------------------------------------------------------
 // 
+#ifdef WIN32 
+  #pragma warning( disable : 4786 ) 
+  // Disable anoying warning about symbol size 
+#endif 
 #include <iostream>
 #include <math.h>
-#include "EvtGen/EvtScalarParticle.hh"
-#include "EvtGen/EvtVector4R.hh"
+#include "EvtGenBase/EvtScalarParticle.hh"
+#include "EvtGenBase/EvtVector4R.hh"
 
 
 void EvtScalarParticle::init(EvtId part_n,double e,double px,double py,double pz){
 
+  _validP4=true;
   setp(e,px,py,pz);
   setpart_num(part_n);
 
@@ -38,6 +43,7 @@ EvtScalarParticle::~EvtScalarParticle() {}
 
 void EvtScalarParticle::init(EvtId part_n,const EvtVector4R& p4){
 
+  _validP4=true;
   setp(p4);
   setpart_num(part_n);
 
@@ -59,7 +65,8 @@ EvtSpinDensity EvtScalarParticle::rotateToHelicityBasis() const{
 
 EvtSpinDensity EvtScalarParticle::rotateToHelicityBasis(double /*alpha*/,
                                                         double /*beta*/,
-                                                        double /*gamma*/) const{
+                                                        double /*gamma*/) 
+  const{
 
   EvtSpinDensity R;
   R.SetDim(1);

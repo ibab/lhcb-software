@@ -22,11 +22,16 @@
 //-----------------------
 // This Class's Header --
 //-----------------------
-#include "EvtGen/EvtBtoXsgammaFermiUtil.hh"
-#include "EvtGen/EvtItgTwoCoeffFcn.hh"
-#include "EvtGen/EvtBtoXsgammaRootFinder.hh"
-#include "EvtGen/EvtItgFunction.hh"
-#include "EvtGen/EvtConst.hh"
+#ifdef WIN32 
+  #pragma warning( disable : 4786 ) 
+  // Disable anoying warning about symbol size 
+#endif 
+#include "EvtGenModels/EvtBtoXsgammaFermiUtil.hh"
+#include "EvtGenModels/EvtItgTwoCoeffFcn.hh"
+#include "EvtGenModels/EvtBtoXsgammaRootFinder.hh"
+#include "EvtGenModels/EvtItgFunction.hh"
+#include "EvtGenBase/EvtConst.hh"
+#include "EvtGenBase/EvtReport.hh"
 
 //---------------
 // C++ Headers --
@@ -37,7 +42,7 @@
 double EvtBtoXsgammaFermiUtil::FermiExpFunc(double y, const HepVector &coeffs) {
 
   //coeffs: 1 = lambdabar, 2 = a, 3 = lam1, 4 = norm
-  // std::cout<<coeffs[4]<<endl;
+  // report(INFO,"EvtGen")<<coeffs[4]<<std::endl;
   return (pow(1. - (y/coeffs[1]),coeffs[2])*exp((-3.*pow(coeffs[1],2.)/coeffs[3])*y/coeffs[1]))/coeffs[4];
 
 }
@@ -120,7 +125,7 @@ double EvtBtoXsgammaFermiUtil::BesselK1(double x) {
 
   //Lifted from Numerical Recipies in C : Returns the modified Bessel
   //function K_1(x) for positive real x
-  if (x<0.0) std::cout<<"x is negative !"<<std::endl;
+  if (x<0.0) report(INFO,"EvtGen") <<"x is negative !"<<std::endl;
   
   double y, ans;
 
@@ -166,9 +171,9 @@ double EvtBtoXsgammaFermiUtil::FermiRomanFuncRoot(double lambdabar, double lam1)
 
   double rho = rootFinder->GetRootSingleFunc(lhFunc, rhSide, 0.1, 0.4, 1.0e-6);
   //rho=0.250353;
-  std::cout<<"rho/2 "<<rho/2.<<" bessel "<<BesselK1(rho/2.)<<std::endl;
+  report(INFO,"EvtGen")<<"rho/2 "<<rho/2.<<" bessel "<<BesselK1(rho/2.)<<std::endl;
   double pF = lambdabar*sqrt(EvtConst::pi)/(rho*exp(rho/2.)*BesselK1(rho/2.));
-  std::cout<<"rho "<<rho<<" pf "<<pF<<std::endl;
+  report(INFO,"EvtGen")<<"rho "<<rho<<" pf "<<pF<<std::endl;
   
   delete lhFunc; lhFunc=0;
   delete rootFinder; rootFinder=0;
@@ -186,20 +191,20 @@ double EvtBtoXsgammaFermiUtil::FermiRomanFunc(double y, const HepVector &coeffs)
 
   //coeffs: 1 = mB, 2=mb, 3=rho, 4=lambdabar, 5=norm
   double pF = coeffs[4]*sqrt(EvtConst::pi)/(coeffs[3]*exp(coeffs[3]/2.)*BesselK1(coeffs[3]/2.));
-  //  cout<<" pf "<<y<<" "<<pF<<" "<<coeffs[1]<<" "<<coeffs[2]<<" "<<coeffs[3]<<" "<<coeffs[4]<<" "<<coeffs[5]<<endl;
+  //  report(INFO,"EvtGen")<<" pf "<<y<<" "<<pF<<" "<<coeffs[1]<<" "<<coeffs[2]<<" "<<coeffs[3]<<" "<<coeffs[4]<<" "<<coeffs[5]<<std::endl;
   //double pF=0.382533;
 
-  //cout<<(coeffs[1]-coeffs[2])*(1./(sqrt(EvtConst::pi)*pF))<<endl;
-  //cout<<(1.-y/(coeffs[1]-coeffs[2]))<<endl;
-  //cout<<(coeffs[1]-coeffs[2])<<endl;
-  //cout<<(coeffs[1]-coeffs[2])*(1.-y/(coeffs[1]-coeffs[2]))<<endl;
+  //report(INFO,"EvtGen")<<(coeffs[1]-coeffs[2])*(1./(sqrt(EvtConst::pi)*pF))<<std::endl;
+  //report(INFO,"EvtGen")<<(1.-y/(coeffs[1]-coeffs[2]))<<std::endl;
+  //report(INFO,"EvtGen")<<(coeffs[1]-coeffs[2])<<std::endl;
+  //report(INFO,"EvtGen")<<(coeffs[1]-coeffs[2])*(1.-y/(coeffs[1]-coeffs[2]))<<std::endl;
 
-  //cout<<" "<<pF*coeffs[3]/((coeffs[1]-coeffs[2])*(1.-y/(coeffs[1]-coeffs[2])))<<endl;
-  // cout<<" "<<((coeffs[1]-coeffs[2])/pF)*(1. -y/(coeffs[1]-coeffs[2]))<<endl;
+  //report(INFO,"EvtGen")<<" "<<pF*coeffs[3]/((coeffs[1]-coeffs[2])*(1.-y/(coeffs[1]-coeffs[2])))<<std::endl;
+  // report(INFO,"EvtGen")<<" "<<((coeffs[1]-coeffs[2])/pF)*(1. -y/(coeffs[1]-coeffs[2]))<<std::endl;
 
-  //cout<<"result "<<(coeffs[1]-coeffs[2])*(1./(sqrt(EvtConst::pi)*pF))*exp(-(1./4.)*pow(pF*(coeffs[3]/((coeffs[1]-coeffs[2])*(1.-y/(coeffs[1]-coeffs[2])))) - ((coeffs[1]-coeffs[2])/pF)*(1. -y/(coeffs[1]-coeffs[2])),2.))/coeffs[5];
+  //report(INFO,"EvtGen")<<"result "<<(coeffs[1]-coeffs[2])*(1./(sqrt(EvtConst::pi)*pF))*exp(-(1./4.)*pow(pF*(coeffs[3]/((coeffs[1]-coeffs[2])*(1.-y/(coeffs[1]-coeffs[2])))) - ((coeffs[1]-coeffs[2])/pF)*(1. -y/(coeffs[1]-coeffs[2])),2.))/coeffs[5];
 
-  //cout<<"leaving"<<endl;
+  //report(INFO,"EvtGen")<<"leaving"<<std::endl;
   return (coeffs[1]-coeffs[2])*(1./(sqrt(EvtConst::pi)*pF))*exp(-(1./4.)*pow(pF*(coeffs[3]/((coeffs[1]-coeffs[2])*(1.-y/(coeffs[1]-coeffs[2])))) - ((coeffs[1]-coeffs[2])/pF)*(1. -y/(coeffs[1]-coeffs[2])),2.))/coeffs[5];
  
 

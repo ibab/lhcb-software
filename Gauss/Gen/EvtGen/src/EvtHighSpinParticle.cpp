@@ -18,14 +18,19 @@
 //
 //------------------------------------------------------------------------
 // 
+#ifdef WIN32 
+  #pragma warning( disable : 4786 ) 
+  // Disable anoying warning about symbol size 
+#endif 
+#include "EvtGenBase/EvtPatches.hh"
 #include <iostream>
 #include <math.h>
 #include <assert.h>
-#include "EvtGen/EvtHighSpinParticle.hh"
-#include "EvtGen/EvtVector4R.hh"
-#include "EvtGen/EvtPDL.hh"
-#include "EvtGen/EvtSpinDensity.hh"
-#include "EvtGen/EvtdFunction.hh"
+#include "EvtGenBase/EvtHighSpinParticle.hh"
+#include "EvtGenBase/EvtVector4R.hh"
+#include "EvtGenBase/EvtPDL.hh"
+#include "EvtGenBase/EvtSpinDensity.hh"
+#include "EvtGenBase/EvtdFunction.hh"
 
 
 EvtHighSpinParticle::~EvtHighSpinParticle() {}
@@ -33,6 +38,7 @@ EvtHighSpinParticle::~EvtHighSpinParticle() {}
 
 void EvtHighSpinParticle::init(EvtId id,const EvtVector4R& p4){
 
+  _validP4=true;
   setp(p4);
   setpart_num(id);
 

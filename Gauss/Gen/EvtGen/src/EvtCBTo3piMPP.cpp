@@ -19,14 +19,18 @@
 //
 //------------------------------------------------------------------------
 //
+#ifdef WIN32 
+  #pragma warning( disable : 4786 ) 
+  // Disable anoying warning about symbol size 
+#endif 
 #include <stdlib.h>
-#include "EvtGen/EvtParticle.hh"
-#include "EvtGen/EvtGenKine.hh"
-#include "EvtGen/EvtPDL.hh"
-#include "EvtGen/EvtReport.hh"
-#include "EvtGen/EvtParticleNum.hh"
-#include "EvtGen/EvtCBTo3piMPP.hh"
-#include "EvtGen/EvtString.hh"
+#include "EvtGenBase/EvtParticle.hh"
+#include "EvtGenBase/EvtGenKine.hh"
+#include "EvtGenBase/EvtPDL.hh"
+#include "EvtGenBase/EvtReport.hh"
+#include "EvtGenBase/EvtId.hh"
+#include "EvtGenModels/EvtCBTo3piMPP.hh"
+#include <string>
 
 //Below you will have do modify the declaration to be appropriate
 //for your new routine for the calculation of the amplitude
@@ -41,10 +45,9 @@ extern "C" void evt3pionsmpp_(double *,int *,double *,
 			 double *,double *,double *);
 #endif
 
-
 EvtCBTo3piMPP::~EvtCBTo3piMPP() {}
 
-void EvtCBTo3piMPP::getName(EvtString& model_name){
+void EvtCBTo3piMPP::getName(std::string& model_name){
 
   model_name="CB3PI-MPP";     
 
@@ -116,7 +119,6 @@ void EvtCBTo3piMPP::decay( EvtParticle *p ){
   evt3pionsmpp_(&alpha,&iset,p4pi1,p4pi2,p4pi3,
   	     &realA,&imgA,&realbarA,&imgbarA);
 #endif
-
 
   p4[0].set(p4pi1[3],p4pi1[0],p4pi1[1],p4pi1[2]);
   p4[1].set(p4pi2[3],p4pi2[0],p4pi2[1],p4pi2[2]);

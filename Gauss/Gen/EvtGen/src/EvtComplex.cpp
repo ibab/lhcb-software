@@ -18,9 +18,13 @@
 //
 //------------------------------------------------------------------------
 // 
+#ifdef WIN32 
+  #pragma warning( disable : 4786 ) 
+  // Disable anoying warning about symbol size 
+#endif 
 #include <iostream>
 #include <math.h>
-#include "EvtGen/EvtComplex.hh"
+#include "EvtGenBase/EvtComplex.hh"
 
 
 std::ostream& operator<<(std::ostream& s, const EvtComplex& c){

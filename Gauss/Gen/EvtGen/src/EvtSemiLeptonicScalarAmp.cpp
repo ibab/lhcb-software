@@ -19,16 +19,22 @@
 //
 //------------------------------------------------------------------------
 //
-#include "EvtGen/EvtParticle.hh"
-#include "EvtGen/EvtGenKine.hh"
-#include "EvtGen/EvtPDL.hh"
-#include "EvtGen/EvtReport.hh"
-#include "EvtGen/EvtVector4C.hh"
-#include "EvtGen/EvtTensor4C.hh"
-#include "EvtGen/EvtDiracSpinor.hh"
-#include "EvtGen/EvtSemiLeptonicScalarAmp.hh"
-#include "EvtGen/EvtId.hh"
-#include "EvtGen/EvtAmp.hh"
+#ifdef WIN32 
+  #pragma warning( disable : 4786 ) 
+  // Disable anoying warning about symbol size 
+#endif 
+#include "EvtGenBase/EvtPatches.hh"
+#include "EvtGenBase/EvtParticle.hh"
+#include "EvtGenBase/EvtGenKine.hh"
+#include "EvtGenBase/EvtPDL.hh"
+#include "EvtGenBase/EvtReport.hh"
+#include "EvtGenBase/EvtVector4C.hh"
+#include "EvtGenBase/EvtTensor4C.hh"
+#include "EvtGenBase/EvtDiracSpinor.hh"
+#include "EvtGenBase/EvtSemiLeptonicScalarAmp.hh"
+#include "EvtGenBase/EvtId.hh"
+#include "EvtGenBase/EvtAmp.hh"
+#include "EvtGenBase/EvtSemiLeptonicFF.hh"
 
 void EvtSemiLeptonicScalarAmp::CalcAmp( EvtParticle *parent,
 					EvtAmp& amp,

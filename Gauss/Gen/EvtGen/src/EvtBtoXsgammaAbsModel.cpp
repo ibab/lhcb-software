@@ -19,8 +19,12 @@
 //------------------------------------------------------------------------
 //
 
+#ifdef WIN32 
+  #pragma warning( disable : 4786 ) 
+  // Disable anoying warning about symbol size 
+#endif 
 #include <stdlib.h>
-#include "EvtGen/EvtBtoXsgammaAbsModel.hh"
+#include "EvtGenModels/EvtBtoXsgammaAbsModel.hh"
 
 EvtBtoXsgammaAbsModel::~EvtBtoXsgammaAbsModel() {}
 

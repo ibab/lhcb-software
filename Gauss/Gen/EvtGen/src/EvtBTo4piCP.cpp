@@ -18,16 +18,20 @@
 //
 //------------------------------------------------------------------------
 //
+#ifdef WIN32 
+  #pragma warning( disable : 4786 ) 
+  // Disable anoying warning about symbol size 
+#endif 
 #include <stdlib.h>
-#include "EvtGen/EvtParticle.hh"
-#include "EvtGen/EvtGenKine.hh"
-#include "EvtGen/EvtCPUtil.hh"
-#include "EvtGen/EvtPDL.hh"
-#include "EvtGen/EvtReport.hh"
-#include "EvtGen/EvtBTo4piCP.hh"
-#include "EvtGen/EvtId.hh"
-#include "EvtGen/EvtConst.hh"
-#include "EvtGen/EvtString.hh"
+#include "EvtGenBase/EvtParticle.hh"
+#include "EvtGenBase/EvtGenKine.hh"
+#include "EvtGenBase/EvtCPUtil.hh"
+#include "EvtGenBase/EvtPDL.hh"
+#include "EvtGenBase/EvtReport.hh"
+#include "EvtGenModels/EvtBTo4piCP.hh"
+#include "EvtGenBase/EvtId.hh"
+#include "EvtGenBase/EvtConst.hh"
+#include <string>
 
 EvtBTo4piCP::~EvtBTo4piCP() {}
 
@@ -69,11 +73,11 @@ EvtComplex EvtAmpA2(const EvtVector4R& p4pi1,const EvtVector4R& p4pi2,
   //  EvtComplex amp_a1,amp_a2;
   EvtComplex amp_a2;
  
-  //  double bwm_a1=EvtPDL::getNominalMass(A1M);
+  //  double bwm_a1=EvtPDL::getMeanMass(A1M);
   //  double gamma_a1=EvtPDL::getWidth(A1M);
-  double bwm_a2=EvtPDL::getNominalMass(A2M);
+  double bwm_a2=EvtPDL::getMeanMass(A2M);
   double gamma_a2=EvtPDL::getWidth(A2M);
-  double bwm_rho=EvtPDL::getNominalMass(RHO0);
+  double bwm_rho=EvtPDL::getMeanMass(RHO0);
   double gamma_rho=EvtPDL::getWidth(RHO0);
 
   amp_a2=(sqrt(gamma_a2/EvtConst::twoPi)/
@@ -127,11 +131,11 @@ EvtComplex EvtAmpA1(const EvtVector4R& p4pi1,const EvtVector4R& p4pi2,
 
   EvtComplex amp_a1;
  
-  double bwm_a1=EvtPDL::getNominalMass(A1M);
+  double bwm_a1=EvtPDL::getMeanMass(A1M);
   double gamma_a1=EvtPDL::getWidth(A1M);
-  //  double bwm_a2=EvtPDL::getNominalMass(A2M);
+  //  double bwm_a2=EvtPDL::getMeanMass(A2M);
   //  double gamma_a2=EvtPDL::getWidth(A2M);
-  double bwm_rho=EvtPDL::getNominalMass(RHO0);
+  double bwm_rho=EvtPDL::getMeanMass(RHO0);
   double gamma_rho=EvtPDL::getWidth(RHO0);
 
   amp_a1=(sqrt(gamma_a1/EvtConst::twoPi)/
@@ -145,7 +149,7 @@ EvtComplex EvtAmpA1(const EvtVector4R& p4pi1,const EvtVector4R& p4pi2,
 }
 
 
-void EvtBTo4piCP::getName(EvtString& model_name){
+void EvtBTo4piCP::getName(std::string& model_name){
  
   model_name="BTO4PI_CP";     
 

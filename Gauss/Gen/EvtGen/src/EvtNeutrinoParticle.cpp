@@ -18,14 +18,18 @@
 //
 //------------------------------------------------------------------------
 // 
+#ifdef WIN32 
+  #pragma warning( disable : 4786 ) 
+  // Disable anoying warning about symbol size 
+#endif 
 #include <iostream>
 #include <math.h>
 #include <stdlib.h>
-#include "EvtGen/EvtComplex.hh"
-#include "EvtGen/EvtNeutrinoParticle.hh"
-#include "EvtGen/EvtVector4R.hh"
-#include "EvtGen/EvtPDL.hh"
-#include "EvtGen/EvtReport.hh"
+#include "EvtGenBase/EvtComplex.hh"
+#include "EvtGenBase/EvtNeutrinoParticle.hh"
+#include "EvtGenBase/EvtVector4R.hh"
+#include "EvtGenBase/EvtPDL.hh"
+#include "EvtGenBase/EvtReport.hh"
 
 
 EvtNeutrinoParticle::~EvtNeutrinoParticle(){}
@@ -37,6 +41,7 @@ EvtNeutrinoParticle::EvtNeutrinoParticle(){
 
 void EvtNeutrinoParticle::init(EvtId part_n,const EvtVector4R& p4){
   
+  _validP4=true;
   setp(p4);
   setpart_num(part_n);
    
@@ -133,7 +138,8 @@ EvtSpinDensity EvtNeutrinoParticle::rotateToHelicityBasis() const{
 
 EvtSpinDensity EvtNeutrinoParticle::rotateToHelicityBasis(double /*alpha*/,
                                                           double /*beta*/,
-                                                          double /*gamma*/) const{
+                                                          double /*gamma*/) 
+  const{
 
   report(ERROR,"EvtGen") << "rotateToHelicityBasis(alpha,beta,gamma) not implemented for neutrino."; 
   report(ERROR,"EvtGen") << "Will terminate execution."; 

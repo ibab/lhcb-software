@@ -30,18 +30,23 @@
 // Created:     Nov 24, 1996
 //
 // 
+#ifdef WIN32 
+  #pragma warning( disable : 4786 ) 
+  // Disable anoying warning about symbol size 
+#endif 
 #include <stdlib.h>
-#include "EvtGen/EvtParticle.hh"
-#include "EvtGen/EvtGenKine.hh"
-#include "EvtGen/EvtPDL.hh"
-#include "EvtGen/EvtTensor4C.hh"
-#include "EvtGen/EvtReport.hh"
-#include "EvtGen/EvtTSS.hh"
-#include "EvtGen/EvtString.hh"
+#include "EvtGenBase/EvtVector4C.hh"
+#include "EvtGenBase/EvtParticle.hh"
+#include "EvtGenBase/EvtGenKine.hh"
+#include "EvtGenBase/EvtPDL.hh"
+#include "EvtGenBase/EvtTensor4C.hh"
+#include "EvtGenBase/EvtReport.hh"
+#include "EvtGenModels/EvtTSS.hh"
+#include <string>
 
 EvtTSS::~EvtTSS() {}
 
-void EvtTSS::getName(EvtString& model_name){
+void EvtTSS::getName(std::string& model_name){
 
   model_name="TSS";     
 

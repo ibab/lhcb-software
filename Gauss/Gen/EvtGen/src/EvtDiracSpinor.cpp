@@ -18,13 +18,18 @@
 //
 //------------------------------------------------------------------------
 // 
+#ifdef WIN32 
+  #pragma warning( disable : 4786 ) 
+  // Disable anoying warning about symbol size 
+#endif 
 #include <math.h>
 #include <assert.h>
-#include "EvtGen/EvtDiracSpinor.hh"
-#include "EvtGen/EvtGammaMatrix.hh"
-#include "EvtGen/EvtComplex.hh"
-#include "EvtGen/EvtReport.hh"
-
+#include "EvtGenBase/EvtDiracSpinor.hh"
+#include "EvtGenBase/EvtGammaMatrix.hh"
+#include "EvtGenBase/EvtComplex.hh"
+#include "EvtGenBase/EvtReport.hh"
+#include "EvtGenBase/EvtVector4C.hh"
+#include "EvtGenBase/EvtTensor4C.hh"
 
 
 EvtDiracSpinor::~EvtDiracSpinor(){}

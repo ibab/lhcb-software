@@ -18,13 +18,17 @@
 //
 //------------------------------------------------------------------------
 // 
+#ifdef WIN32 
+  #pragma warning( disable : 4786 ) 
+  // Disable anoying warning about symbol size 
+#endif 
 #include <math.h>
-#include "EvtGen/EvtVector4R.hh"
-#include "EvtGen/EvtKine.hh"
-#include "EvtGen/EvtComplex.hh"
-#include "EvtGen/EvtResonance.hh"
-#include "EvtGen/EvtReport.hh"
-#include "EvtGen/EvtConst.hh"
+#include "EvtGenBase/EvtVector4R.hh"
+#include "EvtGenBase/EvtKine.hh"
+#include "EvtGenBase/EvtComplex.hh"
+#include "EvtGenBase/EvtResonance.hh"
+#include "EvtGenBase/EvtReport.hh"
+#include "EvtGenBase/EvtConst.hh"
 
 EvtResonance::~EvtResonance(){}
 
@@ -147,6 +151,7 @@ else R = 5.0/(0.197);
   
   gam = _gamma*(_bwm/_p4_12.mass())*(p2/p2R)*(p2/p2R)*(p2/p2R)*((1 + R*R*p2R*p2R)/(1 + R*R*p2*p2));
   M = (msq13 - msq23 - (msqParent - msq3)*(msq1 - msq2)/(_bwm*_bwm))*sqrt((1 + R*R*p2R*p2R)/(1 + R*R*p2*p2)); 
+  //M = (msq13 - msq23 - (msqParent - msq3)*(msq1 - msq2)/(_p4_12.mass2()))*sqrt((1 + R*R*p2R*p2R)/(1 + R*R*p2*p2)); 
 
   BW = sqrt(_gamma)*M/((_bwm*_bwm - _p4_12.mass2()) - EvtComplex(0.0,1.0)*gam*_bwm);
 

@@ -17,7 +17,11 @@
 //    Jane Tinslay                March 21, 2001       Module created
 //
 //------------------------------------------------------------------------
-#include "EvtGen/EvtItgFourCoeffFcn.hh"
+#ifdef WIN32 
+  #pragma warning( disable : 4786 ) 
+  // Disable anoying warning about symbol size 
+#endif 
+#include "EvtGenModels/EvtItgFourCoeffFcn.hh"
 
 //-------------
 // C Headers --

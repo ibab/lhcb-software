@@ -19,16 +19,22 @@
 //
 //------------------------------------------------------------------------
 //
-#include "EvtGen/EvtParticle.hh"
-#include "EvtGen/EvtGenKine.hh"
-#include "EvtGen/EvtPDL.hh"
-#include "EvtGen/EvtReport.hh"
-#include "EvtGen/EvtTensor4C.hh"
-#include "EvtGen/EvtVector4C.hh"
-#include "EvtGen/EvtDiracSpinor.hh"
-#include "EvtGen/EvtSemiLeptonicVectorAmp.hh"
-#include "EvtGen/EvtId.hh"
-#include "EvtGen/EvtAmp.hh"
+#ifdef WIN32 
+  #pragma warning( disable : 4786 ) 
+  // Disable anoying warning about symbol size 
+#endif 
+#include "EvtGenBase/EvtPatches.hh"
+#include "EvtGenBase/EvtParticle.hh"
+#include "EvtGenBase/EvtGenKine.hh"
+#include "EvtGenBase/EvtPDL.hh"
+#include "EvtGenBase/EvtReport.hh"
+#include "EvtGenBase/EvtTensor4C.hh"
+#include "EvtGenBase/EvtVector4C.hh"
+#include "EvtGenBase/EvtDiracSpinor.hh"
+#include "EvtGenBase/EvtSemiLeptonicVectorAmp.hh"
+#include "EvtGenBase/EvtId.hh"
+#include "EvtGenBase/EvtAmp.hh"
+#include "EvtGenBase/EvtSemiLeptonicFF.hh"
 
 void EvtSemiLeptonicVectorAmp::CalcAmp( EvtParticle *parent,
 					EvtAmp& amp,
@@ -55,11 +61,12 @@ void EvtSemiLeptonicVectorAmp::CalcAmp( EvtParticle *parent,
   double q2 = (q.mass2());
 
   double a1f,a2f,vf,a0f,a3f;
+  double m_meson = parent->getDaug(0)->mass();
 
   FormFactors->getvectorff(parent->getId(),
                            parent->getDaug(0)->getId(),
                            q2,
-                           parent->getDaug(0)->mass(),
+                           m_meson,
                            &a1f, 
                            &a2f, 
                            &vf, 
@@ -80,12 +87,11 @@ void EvtSemiLeptonicVectorAmp::CalcAmp( EvtParticle *parent,
   p4b.set(parent->mass(),0.0,0.0,0.0);
  
   EvtVector4R p4meson = parent->getDaug(0)->getP4();
- 
+
   EvtVector4C l1,l2;
 
   EvtId l_num = parent->getDaug(1)->getId();
   double m_b = parent->mass();
-  double m_meson = parent->getDaug(0)->mass();
 
   a3f = ((m_b+m_meson)/(2.0*m_meson))*a1f -
         ((m_b-m_meson)/(2.0*m_meson))*a2f;
@@ -125,6 +131,7 @@ void EvtSemiLeptonicVectorAmp::CalcAmp( EvtParticle *parent,
       report(ERROR,"EvtGen") << "Wrong lepton number"<<std::endl;
     }
   }
+
   EvtVector4C et0=tds.cont1( parent->getDaug(0)->epsParent(0).conj() );
   EvtVector4C et1=tds.cont1( parent->getDaug(0)->epsParent(1).conj() );
   EvtVector4C et2=tds.cont1( parent->getDaug(0)->epsParent(2).conj() );

@@ -19,18 +19,23 @@
 //
 //------------------------------------------------------------------------
 // 
+#ifdef WIN32 
+  #pragma warning( disable : 4786 ) 
+  // Disable anoying warning about symbol size 
+#endif 
 #include <stdlib.h>
-#include "EvtGen/EvtParticle.hh"
-#include "EvtGen/EvtGenKine.hh"
-#include "EvtGen/EvtPDL.hh"
-#include "EvtGen/EvtReport.hh"
-#include "EvtGen/EvtMelikhov.hh"
-
-#include "EvtGen/EvtString.hh"
+#include "EvtGenBase/EvtParticle.hh"
+#include "EvtGenBase/EvtGenKine.hh"
+#include "EvtGenBase/EvtPDL.hh"
+#include "EvtGenBase/EvtReport.hh"
+#include "EvtGenModels/EvtMelikhov.hh"
+#include "EvtGenModels/EvtMelikhovFF.hh"
+#include "EvtGenBase/EvtSemiLeptonicVectorAmp.hh"
+#include <string>
 
 EvtMelikhov::~EvtMelikhov() {}
 
-void EvtMelikhov::getName(EvtString& model_name){
+void EvtMelikhov::getName(std::string& model_name){
 
   model_name="MELIKHOV";     
 }

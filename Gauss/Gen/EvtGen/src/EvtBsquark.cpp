@@ -19,21 +19,26 @@
 //
 //------------------------------------------------------------------------
 //
+#ifdef WIN32 
+  #pragma warning( disable : 4786 ) 
+  // Disable anoying warning about symbol size 
+#endif 
+#include "EvtGenBase/EvtPatches.hh"
 #include <iostream>
-#include "EvtGen/EvtString.hh"
-#include "EvtGen/EvtParticle.hh"
-#include "EvtGen/EvtDiracParticle.hh"
-#include "EvtGen/EvtPDL.hh"
-#include "EvtGen/EvtIdSet.hh"
-#include "EvtGen/EvtGenKine.hh"
-#include "EvtGen/EvtBsquark.hh"
-#include "EvtGen/EvtDiracSpinor.hh"
-#include "EvtGen/EvtGammaMatrix.hh"
-#include "EvtGen/EvtReport.hh"
+#include <string>
+#include "EvtGenBase/EvtParticle.hh"
+#include "EvtGenBase/EvtDiracParticle.hh"
+#include "EvtGenBase/EvtPDL.hh"
+#include "EvtGenBase/EvtIdSet.hh"
+#include "EvtGenBase/EvtGenKine.hh"
+#include "EvtGenModels/EvtBsquark.hh"
+#include "EvtGenBase/EvtDiracSpinor.hh"
+#include "EvtGenBase/EvtGammaMatrix.hh"
+#include "EvtGenBase/EvtReport.hh"
 
 EvtBsquark::~EvtBsquark() {}
 
-void EvtBsquark::getName(EvtString& model_name){
+void EvtBsquark::getName(std::string& model_name){
 
   model_name="BSQUARK";     
 
@@ -91,6 +96,8 @@ void EvtBsquark::decay(EvtParticle *p){
     
   EvtVector4R p4c = p->getDaug(0)->getP4();
 
+  EvtVector4R p4l = p->getDaug(1)->getP4();
+
   EvtVector4R p4sn = p->getDaug(2)->getP4();
 
   EvtVector4R p4b(p->mass(),0.0,0.0,0.0);
@@ -141,7 +148,7 @@ void EvtBsquark::decay(EvtParticle *p){
   double stheta=sin(theta);
 
 
-  //double FL=0.5;
+  //  double FL=0.5;
   double vcsb=0.08;
   double mchi1=mchargino;  
   double mchi2=mchargino;
@@ -158,18 +165,18 @@ void EvtBsquark::decay(EvtParticle *p){
   EvtComplex f1=-(g*g*V11*vcsb)/((p4b-p4c).mass2()-mchi1*mchi1);
   EvtComplex f2=-(g*g*V21*vcsb)/((p4b-p4c).mass2()-mchi1*mchi2);
 
-  //cout <<g<<" "<<V11<<" "<<FL<<" "<<vcsb<<" "<<mchi1<<std::endl;
-  //cout << "f1:"<<f1<<" "<<(p4b-p4c).mass2()<<std::endl;
-  //cout << "f2:"<<f2<<" "<<(p4b-p4c).mass2()<<std::endl;
+  //report(INFO,"EvtGen") <<g<<" "<<V11<<" "<<FL<<" "<<vcsb<<" "<<mchi1<<std::endl;
+  //report(INFO,"EvtGen") << "f1:"<<f1<<" "<<(p4b-p4c).mass2()<<std::endl;
+  //report(INFO,"EvtGen") << "f2:"<<f2<<" "<<(p4b-p4c).mass2()<<std::endl;
 
-  //cout << "p4sn:"<<p4sn<<endl;
+  //report(INFO,"EvtGen") << "p4sn:"<<p4sn<<std::endl;
 
   EvtGammaMatrix pslash=p4sn.get(0)*EvtGammaMatrix::g0()
                        -p4sn.get(1)*EvtGammaMatrix::g1()
                        -p4sn.get(2)*EvtGammaMatrix::g2()
                        -p4sn.get(3)*EvtGammaMatrix::g3();
 
-  //cout << "pslash:"<<pslash<<endl;
+  //report(INFO,"EvtGen") << "pslash:"<<pslash<<std::endl;
 
 
 
@@ -188,17 +195,17 @@ void EvtBsquark::decay(EvtParticle *p){
 	b=lepton->spParent(il)*((pslash*PR)*charmquark.spParent(ic));
       }
 
-      //cout <<"pslash*PR:"<<pslash*PR<<endl;
-      //cout <<"sp charm:"<<charmquark.spParent(ic)<<endl;
-      //cout <<"sp lepton:"<<lepton->spParent(il)<<endl;
+      //report(INFO,"EvtGen") <<"pslash*PR:"<<pslash*PR<<std::endl;
+      //report(INFO,"EvtGen") <<"sp charm:"<<charmquark.spParent(ic)<<std::endl;
+      //report(INFO,"EvtGen") <<"sp lepton:"<<lepton->spParent(il)<<std::endl;
 
       M[ic][il]=f1*(a1*a+b1*b)+f2*(a2*a+b2*b);
 
-      //cout << "Contr1:"<<a1<<" "<<a<<" "<<b1<<" "<<b<<endl;
-      //cout << "Contr2:"<<a2<<" "<<a<<" "<<b2<<" "<<b<<endl;
+      //report(INFO,"EvtGen") << "Contr1:"<<a1<<" "<<a<<" "<<b1<<" "<<b<<std::endl;
+      //report(INFO,"EvtGen") << "Contr2:"<<a2<<" "<<a<<" "<<b2<<" "<<b<<std::endl;
 
-      //cout <<"case1:"<<f1<<" "<<a1<<" "<<b1<<" "<<a<<" "<<b<<endl;
-      //cout <<"case2:"<<f2<<" "<<a2<<" "<<b2<<" "<<a<<" "<<b<<endl;
+      //report(INFO,"EvtGen") <<"case1:"<<f1<<" "<<a1<<" "<<b1<<" "<<a<<" "<<b<<std::endl;
+      //report(INFO,"EvtGen") <<"case2:"<<f2<<" "<<a2<<" "<<b2<<" "<<a<<" "<<b<<std::endl;
 
     }
   }
@@ -208,7 +215,7 @@ void EvtBsquark::decay(EvtParticle *p){
 		   M[0][1]*conj(M[0][1])+
 		   M[1][1]*conj(M[1][1]));
 
-  //cout <<"prob:"<<prob<<endl;
+  //report(INFO,"EvtGen") <<"prob:"<<prob<<std::endl;
 
   setProb(prob);
 

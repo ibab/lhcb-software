@@ -19,15 +19,23 @@
 //
 //------------------------------------------------------------------------
 // 
+#ifdef WIN32 
+  #pragma warning( disable : 4786 ) 
+  // Disable anoying warning about symbol size 
+#endif 
 #include <stdlib.h>
-#include "EvtGen/EvtParticle.hh"
-#include "EvtGen/EvtGenKine.hh"
-#include "EvtGen/EvtPDL.hh"
-#include "EvtGen/EvtReport.hh"
-#include "EvtGen/EvtISGW2.hh"
-#include "EvtGen/EvtConst.hh"
-#include "EvtGen/EvtIdSet.hh"
-#include "EvtGen/EvtString.hh"
+#include "EvtGenBase/EvtParticle.hh"
+#include "EvtGenBase/EvtGenKine.hh"
+#include "EvtGenBase/EvtPDL.hh"
+#include "EvtGenBase/EvtReport.hh"
+#include "EvtGenModels/EvtISGW2.hh"
+#include "EvtGenBase/EvtConst.hh"
+#include "EvtGenBase/EvtIdSet.hh"
+#include <string>
+#include "EvtGenModels/EvtISGW2FF.hh"
+#include "EvtGenBase/EvtSemiLeptonicScalarAmp.hh"
+#include "EvtGenBase/EvtSemiLeptonicVectorAmp.hh"
+#include "EvtGenBase/EvtSemiLeptonicTensorAmp.hh"
 
 EvtISGW2::EvtISGW2():
    isgw2ffmodel(0)
@@ -42,7 +50,7 @@ EvtISGW2::~EvtISGW2() {
   calcamp=0;
 }
 
-void EvtISGW2::getName(EvtString& model_name){
+void EvtISGW2::getName(std::string& model_name){
 
   model_name="ISGW2";     
 
@@ -57,15 +65,6 @@ EvtDecayBase* EvtISGW2::clone(){
 }
 
 void EvtISGW2::decay( EvtParticle *p ){
-
-  //This is a kludge to avoid warnings because the K_2* mass becomes to large.
-  static EvtIdSet regenerateMasses("K_2*+","K_2*-","K_2*0","anti-K_2*0",
-				   "K_1+","K_1-","K_10","anti-K_10",
-				   "D'_1+","D'_1-","D'_10","anti-D'_10");
-
-  if (regenerateMasses.contains(getDaug(0))){
-    p->resetFirstOrNot();
-  }
 
   p->initializePhaseSpace(getNDaug(),getDaugs());
 
@@ -211,8 +210,6 @@ void EvtISGW2::initProbMax() {
   static EvtId DSP=EvtPDL::getId("D_s+");
   static EvtId DSM=EvtPDL::getId("D_s-");
 
-  static EvtId BS0=EvtPDL::getId("B_s0");
-  static EvtId BSB=EvtPDL::getId("anti-B_s0");
 
 EvtId parnum,mesnum,lnum;
 
@@ -220,10 +217,6 @@ parnum = getParentId();
 mesnum = getDaug(0);
 lnum = getDaug(1);
 
-if ( parnum==BS0||parnum==BSB ) {
-     setProbMax(7500.);
-     return;
-}
 
 if ( parnum==BP||parnum==BM||parnum==B0||parnum==B0B ) {
 
@@ -268,11 +261,11 @@ if ( parnum==BP||parnum==BM||parnum==B0||parnum==B0B ) {
   if ( mesnum==D3P1P||mesnum==D3P1N||mesnum==D3P10||mesnum==D3P1B) {
 
     if ( lnum==EP||lnum==EM||lnum==MUP||lnum==MUM ) {
-       setProbMax(195.0);
+       setProbMax(450.0);
        return;
     }
     if ( lnum==TAUP||lnum==TAUM ) {
-       setProbMax(78.0);
+      setProbMax(68.0);//???
        return;
     }
   }
@@ -388,7 +381,7 @@ if ( parnum==BP||parnum==BM||parnum==B0||parnum==B0B ) {
   if ( mesnum==B1P||mesnum==B1M||mesnum==B10) {
 
     if ( lnum==EP||lnum==EM||lnum==MUP||lnum==MUM ) {
-       setProbMax(1700.0);
+       setProbMax(2500.0);
        return;
     }
     if ( lnum==TAUP||lnum==TAUM ) {
@@ -412,7 +405,7 @@ if ( parnum==BP||parnum==BM||parnum==B0||parnum==B0B ) {
   if ( mesnum==A1P||mesnum==A1M||mesnum==A10) {
 
     if ( lnum==EP||lnum==EM||lnum==MUP||lnum==MUM ) {
-       setProbMax(3500.0);
+       setProbMax(4500.0);
        return;
     }
     if ( lnum==TAUP||lnum==TAUM ) {
@@ -643,7 +636,7 @@ if ( parnum==D0||parnum==DP||parnum==DM||parnum==D0B ) {
   if ( mesnum==K1P||mesnum==K1M||mesnum==K10||mesnum==K1B) {
 
     if ( lnum==EP||lnum==EM||lnum==MUP||lnum==MUM ) {
-       setProbMax( 22.0);
+       setProbMax( 100.0);
        return;
     }
   }
@@ -651,7 +644,7 @@ if ( parnum==D0||parnum==DP||parnum==DM||parnum==D0B ) {
   if ( mesnum==KSTP||mesnum==KSTM||mesnum==KST0||mesnum==KSTB) {
 
     if ( lnum==EP||lnum==EM||lnum==MUP||lnum==MUM ) {
-       setProbMax( 115.0);
+       setProbMax( 135.0);
        return;
     }
   }
@@ -659,7 +652,10 @@ if ( parnum==D0||parnum==DP||parnum==DM||parnum==D0B ) {
   if ( mesnum==K2STP||mesnum==K2STM||mesnum==K2ST0||mesnum==K2STB) {
 
     if ( lnum==EP||lnum==EM||lnum==MUP||lnum==MUM ) {
-       setProbMax( 0.75);
+      //Lange - Oct 26,2001 - increasing from 0.75 to 
+      //accomodate
+      setProbMax( 9.0);
+      // setProbMax( 0.75);
        return;
     }
   }
@@ -672,7 +668,7 @@ if ( parnum==DSP||parnum==DSM ) {
   if ( mesnum==PHI ) {
 
     if ( lnum==EP||lnum==EM||lnum==MUP||lnum==MUM ) {
-       setProbMax( 80.0 );
+       setProbMax( 90.0 );
        return;
     }
   }

@@ -18,14 +18,19 @@
 //
 //------------------------------------------------------------------------
 // 
+#ifdef WIN32 
+  #pragma warning( disable : 4786 ) 
+  // Disable anoying warning about symbol size 
+#endif 
 #include <stdlib.h>
 #include <iostream>
 #include <math.h>
-#include "EvtGen/EvtComplex.hh"
-#include "EvtGen/EvtVector4R.hh"
-#include "EvtGen/EvtTensor4C.hh"
-#include "EvtGen/EvtTensorParticle.hh"
-#include "EvtGen/EvtReport.hh"
+#include "EvtGenBase/EvtComplex.hh"
+#include "EvtGenBase/EvtVector4R.hh"
+#include "EvtGenBase/EvtTensor4C.hh"
+#include "EvtGenBase/EvtVector4C.hh"
+#include "EvtGenBase/EvtTensorParticle.hh"
+#include "EvtGenBase/EvtReport.hh"
 
 EvtTensorParticle::~EvtTensorParticle(){}
 
@@ -41,6 +46,7 @@ void EvtTensorParticle::init(EvtId part_n,const EvtVector4R& p4){
 
 void EvtTensorParticle::init(EvtId part_n,double e,double px,double py,double pz){
 
+  _validP4=true;
   setp(e,px,py,pz);
   setpart_num(part_n);
   
@@ -94,6 +100,7 @@ void EvtTensorParticle::init(EvtId part_n,double e,double px,double py,double pz
 EvtTensor4C EvtTensorParticle::epsTensorParent(int i) const {
 
   EvtTensor4C temp;
+  //  EvtVector4R p4_temp;
 
   switch (i){
   case 0:
@@ -173,6 +180,12 @@ EvtSpinDensity EvtTensorParticle::rotateToHelicityBasis() const{
     +(1/sqrt(2.0))*directProd(ezero,eminus);
   emm=directProd(eminus,eminus);
       
+  epp=conj(epp);
+  ep=conj(ep);
+  ez=conj(ez);
+  em=conj(em);
+  emm=conj(emm);
+
   EvtTensor4C e1=epsTensor(0);
   EvtTensor4C e2=epsTensor(1);
   EvtTensor4C e3=epsTensor(2);
@@ -181,36 +194,36 @@ EvtSpinDensity EvtTensorParticle::rotateToHelicityBasis() const{
 
   EvtSpinDensity R;
   R.SetDim(5);
-  
-  R.Set(0,0,-cont(e1,epp));      
-  R.Set(0,1,-cont(e1,ep));      
-  R.Set(0,2,-cont(e1,ez));      
-  R.Set(0,3,-cont(e1,em));      
-  R.Set(0,4,-cont(e1,emm));      
 
-  R.Set(1,0,-cont(e2,epp));      
-  R.Set(1,1,-cont(e2,ep));      
-  R.Set(1,2,-cont(e2,ez));      
-  R.Set(1,3,-cont(e2,em));      
-  R.Set(1,4,-cont(e2,emm));      
+  R.Set(0,0,cont(epp,e1));      
+  R.Set(0,1,cont(epp,e2));      
+  R.Set(0,2,cont(epp,e3));      
+  R.Set(0,3,cont(epp,e4));      
+  R.Set(0,4,cont(epp,e5));      
 
-  R.Set(2,0,-cont(e3,epp));      
-  R.Set(2,1,-cont(e3,ep));      
-  R.Set(2,2,-cont(e3,ez));      
-  R.Set(2,3,-cont(e3,em));      
-  R.Set(2,4,-cont(e3,emm));      
+  R.Set(1,0,cont(ep,e1));      
+  R.Set(1,1,cont(ep,e2));      
+  R.Set(1,2,cont(ep,e3));      
+  R.Set(1,3,cont(ep,e4));      
+  R.Set(1,4,cont(ep,e5));      
 
-  R.Set(3,0,-cont(e4,epp));      
-  R.Set(3,1,-cont(e4,ep));      
-  R.Set(3,2,-cont(e4,ez));      
-  R.Set(3,3,-cont(e4,em));      
-  R.Set(3,4,-cont(e4,emm));      
+  R.Set(2,0,cont(ez,e1));      
+  R.Set(2,1,cont(ez,e2));      
+  R.Set(2,2,cont(ez,e3));      
+  R.Set(2,3,cont(ez,e4));      
+  R.Set(2,4,cont(ez,e5));      
 
-  R.Set(4,0,-cont(e5,epp));      
-  R.Set(4,1,-cont(e5,ep));      
-  R.Set(4,2,-cont(e5,ez));      
-  R.Set(4,3,-cont(e5,em));      
-  R.Set(4,4,-cont(e5,emm));      
+  R.Set(3,0,cont(em,e1));      
+  R.Set(3,1,cont(em,e2));      
+  R.Set(3,2,cont(em,e3));      
+  R.Set(3,3,cont(em,e4));      
+  R.Set(3,4,cont(em,e5));      
+
+  R.Set(4,0,cont(emm,e1));      
+  R.Set(4,1,cont(emm,e2));      
+  R.Set(4,2,cont(emm,e3));      
+  R.Set(4,3,cont(emm,e4));      
+  R.Set(4,4,cont(emm,e5));      
 
   return R;
 
@@ -226,6 +239,11 @@ EvtSpinDensity EvtTensorParticle::rotateToHelicityBasis(double alpha,
   EvtVector4C eplus(0.0,-1.0/sqrt(2.0),EvtComplex(0.0,-1.0/sqrt(2.0)),0.0);
   EvtVector4C ezero(0.0,0.0,0.0,1.0);
   EvtVector4C eminus(0.0,1.0/sqrt(2.0),EvtComplex(0.0,-1.0/sqrt(2.0)),0.0);
+
+  eplus.applyRotateEuler(alpha,beta,gamma);
+  ezero.applyRotateEuler(alpha,beta,gamma);
+  eminus.applyRotateEuler(alpha,beta,gamma);
+
       
   epp.zero();
   ep.zero();
@@ -245,12 +263,18 @@ EvtSpinDensity EvtTensorParticle::rotateToHelicityBasis(double alpha,
 
 
       
-  epp.applyRotateEuler(alpha,beta,gamma);
-  ep.applyRotateEuler(alpha,beta,gamma);
-  ez.applyRotateEuler(alpha,beta,gamma);
-  em.applyRotateEuler(alpha,beta,gamma);
-  emm.applyRotateEuler(alpha,beta,gamma);
+  //epp.applyRotateEuler(alpha,beta,gamma);
+  //ep.applyRotateEuler(alpha,beta,gamma);
+  //ez.applyRotateEuler(alpha,beta,gamma);
+  //em.applyRotateEuler(alpha,beta,gamma);
+  //emm.applyRotateEuler(alpha,beta,gamma);
       
+  epp=conj(epp);
+  ep=conj(ep);
+  ez=conj(ez);
+  em=conj(em);
+  emm=conj(emm);
+
   EvtTensor4C e1=epsTensor(0);
   EvtTensor4C e2=epsTensor(1);
   EvtTensor4C e3=epsTensor(2);
@@ -259,36 +283,36 @@ EvtSpinDensity EvtTensorParticle::rotateToHelicityBasis(double alpha,
 
   EvtSpinDensity R;
   R.SetDim(5);
-  
-  R.Set(0,0,-cont(e1,epp));      
-  R.Set(0,1,-cont(e1,ep));      
-  R.Set(0,2,-cont(e1,ez));      
-  R.Set(0,3,-cont(e1,em));      
-  R.Set(0,4,-cont(e1,emm));      
 
-  R.Set(1,0,-cont(e2,epp));      
-  R.Set(1,1,-cont(e2,ep));      
-  R.Set(1,2,-cont(e2,ez));      
-  R.Set(1,3,-cont(e2,em));      
-  R.Set(1,4,-cont(e2,emm));      
+  R.Set(0,0,cont(epp,e1));      
+  R.Set(0,1,cont(epp,e2));      
+  R.Set(0,2,cont(epp,e3));      
+  R.Set(0,3,cont(epp,e4));      
+  R.Set(0,4,cont(epp,e5));      
 
-  R.Set(2,0,-cont(e3,epp));      
-  R.Set(2,1,-cont(e3,ep));      
-  R.Set(2,2,-cont(e3,ez));      
-  R.Set(2,3,-cont(e3,em));      
-  R.Set(2,4,-cont(e3,emm));      
+  R.Set(1,0,cont(ep,e1));      
+  R.Set(1,1,cont(ep,e2));      
+  R.Set(1,2,cont(ep,e3));      
+  R.Set(1,3,cont(ep,e4));      
+  R.Set(1,4,cont(ep,e5));      
 
-  R.Set(3,0,-cont(e4,epp));      
-  R.Set(3,1,-cont(e4,ep));      
-  R.Set(3,2,-cont(e4,ez));      
-  R.Set(3,3,-cont(e4,em));      
-  R.Set(3,4,-cont(e4,emm));      
+  R.Set(2,0,cont(ez,e1));      
+  R.Set(2,1,cont(ez,e2));      
+  R.Set(2,2,cont(ez,e3));      
+  R.Set(2,3,cont(ez,e4));      
+  R.Set(2,4,cont(ez,e5));      
 
-  R.Set(4,0,-cont(e5,epp));      
-  R.Set(4,1,-cont(e5,ep));      
-  R.Set(4,2,-cont(e5,ez));      
-  R.Set(4,3,-cont(e5,em));      
-  R.Set(4,4,-cont(e5,emm));      
+  R.Set(3,0,cont(em,e1));      
+  R.Set(3,1,cont(em,e2));      
+  R.Set(3,2,cont(em,e3));      
+  R.Set(3,3,cont(em,e4));      
+  R.Set(3,4,cont(em,e5));      
+
+  R.Set(4,0,cont(emm,e1));      
+  R.Set(4,1,cont(emm,e2));      
+  R.Set(4,2,cont(emm,e3));      
+  R.Set(4,3,cont(emm,e4));      
+  R.Set(4,4,cont(emm,e5));      
 
   return R;
 

@@ -18,16 +18,20 @@
 //
 //------------------------------------------------------------------------
 // 
+#ifdef WIN32 
+  #pragma warning( disable : 4786 ) 
+  // Disable anoying warning about symbol size 
+#endif 
 #include <stdlib.h>
 #include <iostream>
 #include <math.h>
-#include "EvtGen/EvtComplex.hh"
-#include "EvtGen/EvtDiracParticle.hh"
-#include "EvtGen/EvtVector4R.hh"
-#include "EvtGen/EvtPDL.hh"
-#include "EvtGen/EvtReport.hh"
-#include "EvtGen/EvtSpinDensity.hh"
-#include "EvtGen/EvtGammaMatrix.hh"
+#include "EvtGenBase/EvtComplex.hh"
+#include "EvtGenBase/EvtDiracParticle.hh"
+#include "EvtGenBase/EvtVector4R.hh"
+#include "EvtGenBase/EvtPDL.hh"
+#include "EvtGenBase/EvtReport.hh"
+#include "EvtGenBase/EvtSpinDensity.hh"
+#include "EvtGenBase/EvtGammaMatrix.hh"
 
 EvtDiracParticle::~EvtDiracParticle(){}
 
@@ -40,6 +44,7 @@ EvtDiracParticle::EvtDiracParticle(){
 
 void EvtDiracParticle::init(EvtId part_n,const EvtVector4R& p4){
 
+  _validP4=true; 
   setp(p4);
   setpart_num(part_n);
 

@@ -18,13 +18,20 @@
 //
 //------------------------------------------------------------------------
 //
+#ifdef WIN32 
+  #pragma warning( disable : 4786 ) 
+  // Disable anoying warning about symbol size 
+#endif 
 #include <iostream>
+#include <fstream>
 #include <stdlib.h>
 #include <ctype.h>
-#include "EvtGen/EvtPartProp.hh"
-#include "EvtGen/EvtAbsLineShape.hh"
-#include "EvtGen/EvtRelBreitWignerBarrierFact.hh"
-
+#include "EvtGenBase/EvtPartProp.hh"
+#include "EvtGenBase/EvtAbsLineShape.hh"
+#include "EvtGenBase/EvtFlatLineShape.hh"
+#include "EvtGenBase/EvtManyDeltaFuncLineShape.hh"
+#include "EvtGenBase/EvtRelBreitWignerBarrierFact.hh"
+#include <string>
 
 EvtPartProp::EvtPartProp():
   _id(-1,-1)
@@ -41,7 +48,12 @@ EvtPartProp::EvtPartProp():
 
 EvtPartProp::EvtPartProp(const EvtPartProp& x){
 
-  _lineShape=x._lineShape->clone();
+  if (0!=x._lineShape){
+    _lineShape=x._lineShape->clone();
+  }
+  else{
+    _lineShape=0;
+  }
   _ctau=x._ctau;
   _name=x._name;
   _spintype=x._spintype;
@@ -59,7 +71,7 @@ EvtPartProp::~EvtPartProp() {
 }
 
 
-void EvtPartProp::setName(EvtString pname) {
+void EvtPartProp::setName(std::string pname) {
 
   _name=pname;
 
@@ -79,15 +91,37 @@ EvtPartProp& EvtPartProp::operator=(const EvtPartProp& x){
 
 void EvtPartProp::initLineShape(double mass, double width, double maxRange){
 
-  _lineShape=new EvtAbsLineShape(mass,width,maxRange);
+  //  _lineShape=new EvtAbsLineShape(mass,width,maxRange);
+  _lineShape=new EvtRelBreitWignerBarrierFact(mass,width,maxRange,_spintype);
 
 }
 
-void EvtPartProp::initLineShape(double mass, double width, double maxRange,
-				double mDaug1, double mDaug2, int l){
-  _lineShape=new EvtRelBreitWignerBarrierFact(mass,width,maxRange,mDaug1,mDaug2,l);
+void EvtPartProp::newLineShape(std::string type){
 
+  double m=_lineShape->getMass();
+  double w=_lineShape->getWidth();
+  double mR=_lineShape->getMaxRange();
+  EvtSpinType::spintype  st=_lineShape->getSpinType();
+  delete _lineShape;
+  if ( type == "RELBW" ) {
+    _lineShape=new EvtRelBreitWignerBarrierFact(m,w,mR,st);
+  }
+  if ( type == "NONRELBW" ) {
+    _lineShape = new EvtAbsLineShape(m,w,mR,st);
+  }
+  if ( type == "FLAT" ) {
+    _lineShape = new EvtFlatLineShape(m,w,mR,st);
+  }
+  if ( type == "MANYDELTAFUNC" ) {
+    _lineShape = new EvtManyDeltaFuncLineShape(m,w,mR,st);
+  }
 }
+
+//void EvtPartProp::initLineShape(double mass, double width, double maxRange,
+//				double mDaug1, double mDaug2, int l){
+//
+//  _lineShape=new EvtRelBreitWignerBarrierFact(mass,width,maxRange,mDaug1,mDaug2,l);
+//}
 
 void EvtPartProp::reSetMass(double mass) {
   if (!_lineShape) ::abort();
@@ -99,6 +133,26 @@ void EvtPartProp::reSetWidth(double width){
 }
 
 
+void EvtPartProp::reSetMassMin(double mass){
+  if (!_lineShape) ::abort();
+  _lineShape->reSetMassMin(mass);
+}
+void EvtPartProp::reSetMassMax(double mass){
+  if (!_lineShape) ::abort();
+  _lineShape->reSetMassMax(mass);
+}
+void EvtPartProp::reSetBlatt(double blatt){
+  if (!_lineShape) ::abort();
+  _lineShape->reSetBlatt(blatt);
+}
+void EvtPartProp::includeBirthFactor(bool yesno){
+  if (!_lineShape) ::abort();
+  _lineShape->includeBirthFactor(yesno);
+}
+void EvtPartProp::includeDecayFactor(bool yesno){
+  if (!_lineShape) ::abort();
+  _lineShape->includeDecayFactor(yesno);
+}
 
 
 

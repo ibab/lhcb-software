@@ -20,41 +20,45 @@
 //
 //------------------------------------------------------------------------
 // 
-#include "EvtGen/EvtParticle.hh"
-#include "EvtGen/EvtPhotonParticle.hh"
-#include "EvtGen/EvtPDL.hh"
-#include "EvtGen/EvtPHOTOS.hh"
+#ifdef WIN32 
+  #pragma warning( disable : 4786 ) 
+  // Disable anoying warning about symbol size 
+#endif 
+#include "EvtGenBase/EvtPatches.hh"
+#include "EvtGenBase/EvtParticle.hh"
+#include "EvtGenBase/EvtPhotonParticle.hh"
+#include "EvtGenBase/EvtPDL.hh"
+#include "EvtGenModels/EvtPHOTOS.hh"
 
 #ifdef WIN32
 extern "C" {
-extern void __stdcall BEGEVTGENSTOREX(int *,int *,int *,int *,
+  void __stdcall BEGEVTGENSTOREX(int *,int *,int *,int *,
                                 int *,int *,int *,int *,
                                 double *,double *,double *, 
                                 double *,double *,double *, 
                                 double *,double *,double *);
-
-extern void __stdcall BEGEVTGENGETX(int *,int *,int *,int *,
-                                int *,int *,int *,int *,
-                                double *,double *,double *, 
-                                double *,double *,double *, 
-                                double *,double *,double *);
-
-extern void __stdcall HEPLST(int *);
-
-extern void __stdcall PHOTOS(int *);
-
-extern void __stdcall PHOINI();}
+  void __stdcall BEGEVTGENGETX(int *,int *,int *,int *,
+			      int *,int *,int *,int *,
+			      double *,double *,double *, 
+			      double *,double *,double *, 
+			      double *,double *,double *);
+  void __stdcall HEPLST(int *);
+  void __stdcall PHOTOS(int *);
+  void __stdcall PHOINI( ) ;
+}
 #else
 extern "C" void begevtgenstorex_(int *,int *,int *,int *,
                                 int *,int *,int *,int *,
                                 double *,double *,double *, 
                                 double *,double *,double *, 
                                 double *,double *,double *);
+
 extern "C" void begevtgengetx_(int *,int *,int *,int *,
-                                int *,int *,int *,int *,
-                                double *,double *,double *, 
-                                double *,double *,double *, 
-                                double *,double *,double *);
+			      int *,int *,int *,int *,
+			      double *,double *,double *, 
+			      double *,double *,double *, 
+			      double *,double *,double *);
+
 extern "C" void heplst_(int *);
 
 extern "C" void photos_(int *);
@@ -62,10 +66,7 @@ extern "C" void photos_(int *);
 extern "C" void phoini_();
 #endif
 
-
-
-
-void EvtPHOTOS::PHOTOS( EvtParticle *p){
+void EvtPHOTOS::doRadCorr( EvtParticle *p){
 
   static int first=1;
 
@@ -76,11 +77,10 @@ void EvtPHOTOS::PHOTOS( EvtParticle *p){
 
     first=0;
 #ifdef WIN32
-    PHOINI();
+    PHOINI() ;
 #else
     phoini_();
 #endif
-
   }
 
   int entry,eventnum,numparticle,istat,partnum,mother;
@@ -150,8 +150,7 @@ void EvtPHOTOS::PHOTOS( EvtParticle *p){
     begevtgenstorex_(&entry,&eventnum,&numparticle,&istat,&partnum,
 		    &mother,&daugfirst,&dauglast,
 		    &px,&py,&pz,&e,&m,&x,&y,&z,&t);
-#endif
-    
+#endif    
 
   }
 
@@ -165,19 +164,22 @@ void EvtPHOTOS::PHOTOS( EvtParticle *p){
 
   entry=1;
 
-
+  //  report(INFO,"EvtGen") << "Doing photos " << EvtPDL::name(p->getId()) << std::endl;
 #ifdef WIN32
-  ::PHOTOS(&entry);
+  PHOTOS(&entry);
+#else
+  photos_(&entry);
+#endif
+  //  report(INFO,"EvtGen") << "done\n";
+#ifdef WIN32
   BEGEVTGENGETX(&entry,&eventnum,&numparticlephotos,&istat,&partnum,
 		    &mother,&daugfirst,&dauglast,
 		    &px,&py,&pz,&e,&m,&x,&y,&z,&t);
 #else
-  photos_(&entry);
   begevtgengetx_(&entry,&eventnum,&numparticlephotos,&istat,&partnum,
 		    &mother,&daugfirst,&dauglast,
 		    &px,&py,&pz,&e,&m,&x,&y,&z,&t);
-#endif
-    
+#endif    
 
   //report(INFO,"EvtGen") << "numparticlephotos:"<<numparticlephotos<<std::endl;
   
@@ -231,7 +233,7 @@ void EvtPHOTOS::PHOTOS( EvtParticle *p){
     EvtPhotonParticle* gamma;
     gamma=new EvtPhotonParticle;
     gamma->init(GAMM,new4mom);
-
+    //    report(INFO,"EvtGen") << gamma << " " << p << " "<< px << " " << py << " " << pz << " " << p->getNDaug() << " " << EvtPDL::name(p->getId())<<" " << entry << " " <<numparticlephotos<<std::endl;
     gamma->addDaug(p);
 
 //    p->getDaug(i)->set_type(EvtSpinType::PHOTON);

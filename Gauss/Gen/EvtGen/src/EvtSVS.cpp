@@ -18,18 +18,22 @@
 //
 //------------------------------------------------------------------------
 // 
+#ifdef WIN32 
+  #pragma warning( disable : 4786 ) 
+  // Disable anoying warning about symbol size 
+#endif 
 #include <stdlib.h>
-#include "EvtGen/EvtParticle.hh"
-#include "EvtGen/EvtGenKine.hh"
-#include "EvtGen/EvtReport.hh"
-#include "EvtGen/EvtPDL.hh"
-#include "EvtGen/EvtVector4C.hh"
-#include "EvtGen/EvtSVS.hh"
-#include "EvtGen/EvtString.hh"
+#include "EvtGenBase/EvtParticle.hh"
+#include "EvtGenBase/EvtGenKine.hh"
+#include "EvtGenBase/EvtReport.hh"
+#include "EvtGenBase/EvtPDL.hh"
+#include "EvtGenBase/EvtVector4C.hh"
+#include "EvtGenModels/EvtSVS.hh"
+#include <string>
 
 EvtSVS::~EvtSVS() {}
 
-void EvtSVS::getName(EvtString& model_name){
+void EvtSVS::getName(std::string& model_name){
 
   model_name="SVS";     
 
@@ -67,7 +71,9 @@ void EvtSVS::initProbMax(){
 void EvtSVS::decay( EvtParticle *p){
 
   p->initializePhaseSpace(getNDaug(),getDaugs());
-
+  //report(INFO,"EvtGen") << "par " << p->getP4() << " " << p->getDaug(0)->getP4() << " " << 
+  //  p->getDaug(1)->getP4() << " " << p->mass() << " " <<
+  //  p->getDaug(0)->mass() << " " << p->getDaug(1)->mass() <<std::endl;
   EvtParticle *v;
   v = p->getDaug(0);
   double massv = v->mass();

@@ -312,7 +312,7 @@ c                                    the B0bar ->- 3 pions decay
 c****************************************************************************
 c-----------------------------------------------------------------      
       Implicit none
-#include "EvtGen/EvtBTo3pi.inc"
+#include "EvtGenModels/EvtBTo3pi.inc"
       Real*8  alpha_input
       Real*8  beta_input
       Integer iset
@@ -469,7 +469,7 @@ c	----------------------------------------------------------
 c	----------------------------------------------------------      	
 c 	--- commons      	
 c	----------------------------------------------------------	
-#include "EvtGen/EvtBTo3pi.inc"
+#include "EvtGenModels/EvtBTo3pi.inc"
 c	----------------------------------------------------------
 c 	--- Used Functions 
 c	----------------------------------------------------------
@@ -628,7 +628,7 @@ c======================================================================
      +           Real_B0,Imag_B0,Real_B0bar,Imag_B0bar,iset,ierr)                 
 c-----------------------------------------------------------------------
       	IMPLICIT None  
-#include "EvtGen/EvtBTo3pi.inc"
+#include "EvtGenModels/EvtBTo3pi.inc"
 
                                                                                                  
       	Real*8 m12, m13, m23, W12, W13, W23, Wtot
@@ -708,7 +708,7 @@ c======================================================================
       Function BreitWigner(p1,p2,p3,ierr)
 c----------------------------------------------------------------------                                                  
       	IMPLICIT None   
-#include "EvtGen/EvtBTo3pi.inc"
+#include "EvtGenModels/EvtBTo3pi.inc"
       	Complex *16 BreitWigner,EvtCRhoF_W 
       	Logical Aleph     
         Integer ierr
@@ -811,7 +811,7 @@ c======================================================================
       Subroutine EvtSet_Constants(balpha, bbeta)   
 c----------------------------------------------------------------------                                                     
       IMPLICIT None         
-#include "EvtGen/EvtBTo3pi.inc"
+#include "EvtGenModels/EvtBTo3pi.inc"
 
 c	-------------------------------------------------------------	                                                                
 c 	---	Basic matrix elements 
@@ -820,7 +820,7 @@ c	-------------------------------------------------------------
       	Complex *16   Mat_Tp0,Mat_Tm0,Mat_T0p,Mat_T0m,Mat_Tpm,Mat_Tmp             
      >             ,Mat_P1,Mat_P0                                               
      >             ,Nat_Tp0,Nat_Tm0,Nat_T0p,Nat_T0m,Nat_Tpm,Nat_Tmp             
-     >             ,Nat_P1,Nat_P0                                            
+     >             ,Nat_P1,Nat_P0, Mat_Ppm, Mat_Pmp                                            
      >		   ,StrongExp                                                                                                                                  
       Real*8 	    balpha, bbeta
       Real*8        calpha,salpha                                               
@@ -835,13 +835,13 @@ c	-------------------------------------------------------------
       betaCP   = bbeta                                               
       cbeta    = Dcos(betaCP)                                             
       sbeta    = Dsin(betaCP)                                         
-      M_B      = 5.279 D+00                                           
-      M_pip    = 0.139                                                         
+      M_B      = 5.2794D+00                                           
+      M_pip    = 0.13957D0                                                   
       M_pim    = M_pip                                                          
-      M_pi0    = 0.135                                                          
+      M_pi0    = 0.134976D0                                                  
       M_Kp     = 0.49368
-      Mass_rho = 0.770                                                          
-      Gam_rho  = 0.150
+      Mass_rho = 0.770D0                                                          
+      Gam_rho  = 0.150D0
       Mass_Kstarp = 0.8916 
       Gam_Kstarp  = 0.0498
       Mass_Kstar0 = 0.8961 
@@ -865,24 +865,26 @@ c	endif
       c_factor=
      >Sqrt((rho_gen**2+eta_gen**2)/((1.-rho_gen)**2+eta_gen**2))
 
-      Mat_Tp0 = Dcmplx(calpha, -salpha) *1.19D+00 *c_factor                
+      Mat_Tp0 = Dcmplx(calpha, -salpha) *1.09D+00        
+      Mat_Tm0 = Dcmplx(calpha, -salpha) *1.09D+00                    
+      Mat_T0p = Dcmplx(calpha, -salpha) *0.66D+00                    
+      Mat_T0m = Dcmplx(calpha, -salpha) *0.66D+00                 
+      Mat_Tpm = Dcmplx(calpha, -salpha) *1.00D+00                  
+      Mat_Tmp = Dcmplx(calpha, -salpha) *0.47D+00
 
-      Mat_Tm0 = Dcmplx(calpha, -salpha) *1.19D+00*c_factor                                         
-      Mat_T0p = Dcmplx(calpha, -salpha) *0.8D+00*c_factor                                          
-      Mat_T0m = Dcmplx(calpha, -salpha) *0.8D+00*c_factor                                         
-      Mat_Tpm = Dcmplx(calpha, -salpha) *0.59D+00*c_factor                                         
-      Mat_Tmp = Dcmplx(calpha, -salpha) *1.08D+00*c_factor  
+      Mat_Ppm = -Dcmplx(Dcos(-0.5D0),Dsin(-0.5D0))*0.2D0
+      Mat_Pmp =  Dcmplx(Dcos(2.D0),Dsin(2.D0))*0.15D0
 
-      Mat_P1  = Dcmplx(-0.02D+00, 0.D+00)                                       
-      Mat_P0  = Dcmplx(0.03D+00, 0.D+00)                                    
-      Nat_Tp0 = Conjg( Mat_Tp0)                                         
-      Nat_Tm0 = Conjg( Mat_Tm0)                                          
-      Nat_T0p = Conjg( Mat_T0p)                                          
-      Nat_T0m = Conjg( Mat_T0m)                                         
-      Nat_Tpm = Conjg( Mat_Tpm)                                         
-      Nat_Tmp = Conjg( Mat_Tmp)                                      
-      Nat_P1  = Conjg( Mat_P1)                                          
-      Nat_P0  = Conjg( Mat_P0)
+      Mat_P1  = 0.5D0*(Mat_Ppm-Mat_Pmp)
+      Mat_P0  = 0.5D0*(Mat_Ppm+Mat_Pmp)                                    
+      Nat_Tp0 = Dcmplx(calpha, salpha) *1.09D+00                      
+      Nat_Tm0 = Dcmplx(calpha, salpha) *1.09D+00                       
+      Nat_T0p = Dcmplx(calpha, salpha) *0.66D+00                              
+      Nat_T0m = Dcmplx(calpha, salpha) *0.66D+00                     
+      Nat_Tpm = Dcmplx(calpha, salpha) *1.00D+00                       
+      Nat_Tmp = Dcmplx(calpha, salpha) *0.47D+00                            
+      Nat_P1  = Mat_P1                                       
+      Nat_P0  = Mat_P0
       
       Mat_Tpm = StrongExp * Mat_Tpm
       Nat_Tpm = StrongExp * Nat_Tpm
@@ -949,7 +951,7 @@ c	--------------------------------------------------------------
 	implicit none
 c --- commons
 
-#include "EvtGen/EvtBTo3pi.inc"
+#include "EvtGenModels/EvtBTo3pi.inc"
 	
 c --- Used Functions 
 
@@ -1059,7 +1061,7 @@ C===================================================================
       	Subroutine EvtRotation(p,new)      
 c------------------------------------------------------------------
       	Implicit None
-#include "EvtGen/EvtBTo3pi.inc"
+#include "EvtGenModels/EvtBTo3pi.inc"
 
       	Real*8 p(5),pstor(3)
       	Real*8 phi2,phi3

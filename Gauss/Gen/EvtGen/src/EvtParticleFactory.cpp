@@ -18,26 +18,37 @@
 //
 //------------------------------------------------------------------------
 // 
+#ifdef WIN32 
+  #pragma warning( disable : 4786 ) 
+  // Disable anoying warning about symbol size 
+#endif 
 #include <iostream>
+#include <fstream>
 #include <stdio.h>
 #include <stdlib.h>
 #include <sys/stat.h>
-#include "EvtGen/EvtParticle.hh"
-#include "EvtGen/EvtParticleNum.hh"
-#include "EvtGen/EvtPDL.hh"
-#include "EvtGen/EvtDiracParticle.hh"
-#include "EvtGen/EvtScalarParticle.hh"
-#include "EvtGen/EvtVectorParticle.hh"
-#include "EvtGen/EvtTensorParticle.hh"
-#include "EvtGen/EvtPhotonParticle.hh"
-#include "EvtGen/EvtNeutrinoParticle.hh"
-#include "EvtGen/EvtStringParticle.hh"
-#include "EvtGen/EvtRaritaSchwingerParticle.hh"
-#include "EvtGen/EvtHighSpinParticle.hh"
-#include "EvtGen/EvtReport.hh"
-#include "EvtGen/EvtParticleFactory.hh"
+#if defined (__GNUC__) && ( __GNUC__ <= 2 )
+#include <strstream>
+#else
+#include <sstream>
+#endif
+#include "EvtGenBase/EvtParticle.hh"
+#include "EvtGenBase/EvtId.hh"
+#include "EvtGenBase/EvtPDL.hh"
+#include "EvtGenBase/EvtDiracParticle.hh"
+#include "EvtGenBase/EvtScalarParticle.hh"
+#include "EvtGenBase/EvtVectorParticle.hh"
+#include "EvtGenBase/EvtTensorParticle.hh"
+#include "EvtGenBase/EvtPhotonParticle.hh"
+#include "EvtGenBase/EvtNeutrinoParticle.hh"
+#include "EvtGenBase/EvtStringParticle.hh"
+#include "EvtGenBase/EvtRaritaSchwingerParticle.hh"
+#include "EvtGenBase/EvtHighSpinParticle.hh"
+#include "EvtGenBase/EvtReport.hh"
+#include "EvtGenBase/EvtParticleFactory.hh"
 
-EvtParticle* EvtParticleFactory::particleFactory(EvtSpinType::spintype spinType){
+EvtParticle* EvtParticleFactory::particleFactory(EvtSpinType::spintype 
+                                                 spinType){
 
   if ( spinType == EvtSpinType::SCALAR ) {
     return new EvtScalarParticle;
@@ -77,10 +88,12 @@ EvtParticle* EvtParticleFactory::particleFactory(EvtSpinType::spintype spinType)
     return new EvtHighSpinParticle;
   }
 
-  report(ERROR,"EvtGen")<<"Error in EvtParticleFactory::particleFactory"<<std::endl;
+  report(ERROR,"EvtGen")<<"Error in EvtParticleFactory::particleFactory"
+                        <<std::endl;
   report(ERROR,"EvtGen")<<"Tried to create non-existing particle"
 			<<" with spin type:"<<spinType<<std::endl;
   report(ERROR,"EvtGen")<<"Will terminate execution"<<std::endl;
+
 
   ::abort();
 
@@ -182,10 +195,11 @@ EvtParticle* EvtParticleFactory::particleFactory(EvtId id,
     return myPart;
   }
 
-  report(ERROR,"EvtGen")<<"Error in EvtParticleFactory::particleFactory"<<std::endl;
+  report(ERROR,"EvtGen")<<"Error in EvtParticleFactory::particleFactory"
+                        <<std::endl;
   report(ERROR,"EvtGen")<<"Tried to create non-existing particle"
 			<<" with spin type:"<<thisSpin
-			<<"  and name:"<<EvtPDL::name(id)<<std::endl;
+			<<"  and name:"<<EvtPDL::name(id).c_str()<<std::endl;
   report(ERROR,"EvtGen")<<"Will terminate execution"<<std::endl;
 
 

@@ -19,7 +19,11 @@
 //                                                     EvtGen
 //
 //------------------------------------------------------------------------
-#include "EvtGen/EvtItgAbsIntegrator.hh"
+#ifdef WIN32 
+  #pragma warning( disable : 4786 ) 
+  // Disable anoying warning about symbol size 
+#endif 
+#include "EvtGenModels/EvtItgAbsIntegrator.hh"
 
 //-------------
 // C Headers --
@@ -30,8 +34,8 @@ extern "C" {
 #include <math.h>
 #include <iostream>
 
-#include "EvtGen/EvtReport.hh"
-#include "EvtGen/EvtItgAbsFunction.hh"
+#include "EvtGenBase/EvtReport.hh"
+#include "EvtGenModels/EvtItgAbsFunction.hh"
 
 
 EvtItgAbsIntegrator::EvtItgAbsIntegrator(const EvtItgAbsFunction &theFunction):

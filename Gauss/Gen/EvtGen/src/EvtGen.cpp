@@ -18,27 +18,35 @@
 //
 //------------------------------------------------------------------------
 // 
+#ifdef WIN32 
+  #pragma warning( disable : 4786 ) 
+  // Disable anoying warning about symbol size 
+#endif 
 #include <stdio.h>
 #include <fstream>
 #include <math.h>
-#include "EvtGen/EvtComplex.hh"
+#include "EvtGenBase/EvtComplex.hh"
 #include <stdlib.h>
 #include "EvtGen/EvtGen.hh"
-#include "EvtGen/EvtVector4R.hh"
-#include "EvtGen/EvtVectorParticle.hh"
-#include "EvtGen/EvtParticle.hh"
-#include "EvtGen/EvtScalarParticle.hh"
-#include "EvtGen/EvtDecayTable.hh"
-#include "EvtGen/EvtPDL.hh"
-#include "EvtGen/EvtStdHep.hh"
-#include "EvtGen/EvtSecondary.hh"
-#include "EvtGen/EvtReport.hh"
-#include "EvtGen/EvtId.hh"
-#include "EvtGen/EvtRandom.hh"
-#include "EvtGen/EvtRandomEngine.hh"
-#include "EvtGen/EvtParticleFactory.hh"
+#include "EvtGenBase/EvtVector4R.hh"
+#include "EvtGenBase/EvtVectorParticle.hh"
+#include "EvtGenBase/EvtParticle.hh"
+#include "EvtGenBase/EvtScalarParticle.hh"
+#include "EvtGenBase/EvtDecayTable.hh"
+#include "EvtGenBase/EvtPDL.hh"
+#include "EvtGenBase/EvtStdHep.hh"
+#include "EvtGenBase/EvtSecondary.hh"
+#include "EvtGenBase/EvtReport.hh"
+#include "EvtGenBase/EvtId.hh"
+#include "EvtGenBase/EvtRandom.hh"
+#include "EvtGenBase/EvtRandomEngine.hh"
+#include "EvtGenBase/EvtParticleFactory.hh"
 #include "CLHEP/Vector/LorentzVector.h"
-
+#include "EvtGenModels/EvtModelReg.hh"
+#include "EvtGenBase/EvtStatus.hh"
+#include "EvtGenBase/EvtAbsRadCorr.hh"
+#include "EvtGenBase/EvtRadCorr.hh"
+#include "EvtGenModels/EvtPHOTOS.hh"
 
 #ifdef WIN32
 extern "C" void __stdcall BEGEVTGENSTORE(int *,int *,int *,int *,
@@ -74,15 +82,30 @@ EvtGen::~EvtGen(){
 
 EvtGen::EvtGen(const char* const decayName,
 	       const char* const pdtTableName,
-	       EvtRandomEngine* randomEngine){
+	       EvtRandomEngine* randomEngine,
+	       EvtAbsRadCorr* isrEngine){
 
 
-  report(INFO,"EvtGen") << "Initializiting EvtGen"<<std::endl;
+  report(INFO,"EvtGen") << "Initializing EvtGen"<<std::endl;
+
+  report(INFO,"EvtGen") << "Storing known decay models"<<std::endl;
+  // Dummy initialisation to register models
+  EvtModelReg dummy;
 
   report(INFO,"EvtGen") << "Main decay file name  :"<<decayName<<std::endl;
   report(INFO,"EvtGen") << "PDT table file name   :"<<pdtTableName<<std::endl;
   
-
+  report(INFO,"EvtGen") << "Initializing RadCorr=PHOTOS"<<std::endl;
+  if (isrEngine==0){
+    static EvtPHOTOS defaultRadCorrEngine;
+    EvtRadCorr::setRadCorrEngine(&defaultRadCorrEngine);
+    report(INFO,"EvtGen") <<"No RadCorr engine given in "
+			  <<"EvtGen::EvtGen constructor, "
+			  <<"will use default EvtPHOTOS."<<std::endl;
+  }
+  else{
+    EvtRadCorr::setRadCorrEngine(isrEngine);    
+  }
 
   _pdl.readPDT(pdtTableName);
 
@@ -150,6 +173,8 @@ void EvtGen::generateDecay(int stdhepid,
 					  P,*spinDensity);
   }
 
+  int times=0;
+
   generateDecay(p);
   //  p->Decay();
 
@@ -169,11 +194,11 @@ void EvtGen::generateDecay(EvtParticle *p){
   int times=0;
   do{
     times+=1;
-    initRejectFlag();
+    EvtStatus::initRejectFlag();
 
     p->decay();
     //ok then finish.
-    if ( getRejectFlag()==0 ) { 
+    if ( EvtStatus::getRejectFlag()==0 ) { 
       times=0;
     }
     else{   
@@ -255,7 +280,6 @@ void EvtGen::generateEvent(EvtParticle *root_part,HepLorentzVector D){
 
   evtstdhep.init();
   evtsecondary.init();
-
   root_part->makeStdHep(evtstdhep,evtsecondary,list_of_stable);
 
   //report(INFO,"EvtGen") << evtstdhep;

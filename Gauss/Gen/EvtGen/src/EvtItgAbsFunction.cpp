@@ -21,7 +21,11 @@
 //
 //------------------------------------------------------------------------
 
-#include "EvtGen/EvtItgAbsFunction.hh"
+#ifdef WIN32 
+  #pragma warning( disable : 4786 ) 
+  // Disable anoying warning about symbol size 
+#endif 
+#include "EvtGenModels/EvtItgAbsFunction.hh"
 
 //-------------
 // C Headers --
@@ -29,7 +33,7 @@
 extern "C" {
 }
 #include "assert.h"
-#include "EvtGen/EvtReport.hh"
+#include "EvtGenBase/EvtReport.hh"
 
 EvtItgAbsFunction::EvtItgAbsFunction(double lowerRange, double upperRange):
   _upperRange(upperRange),

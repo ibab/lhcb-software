@@ -18,20 +18,24 @@
 //
 //------------------------------------------------------------------------
 // 
+#ifdef WIN32 
+  #pragma warning( disable : 4786 ) 
+  // Disable anoying warning about symbol size 
+#endif 
 #include <stdlib.h>
-#include "EvtGen/EvtParticle.hh"
-#include "EvtGen/EvtGenKine.hh"
-#include "EvtGen/EvtPDL.hh"
-#include "EvtGen/EvtReport.hh"
-#include "EvtGen/EvtResonance.hh"
-#include "EvtGen/EvtResonance2.hh"
-#include "EvtGen/EvtDDalitz.hh"
-#include "EvtGen/EvtString.hh"
-#include "EvtGen/EvtConst.hh"
+#include "EvtGenBase/EvtParticle.hh"
+#include "EvtGenBase/EvtGenKine.hh"
+#include "EvtGenBase/EvtPDL.hh"
+#include "EvtGenBase/EvtReport.hh"
+#include "EvtGenBase/EvtResonance.hh"
+#include "EvtGenBase/EvtResonance2.hh"
+#include "EvtGenModels/EvtDDalitz.hh"
+#include <string>
+#include "EvtGenBase/EvtConst.hh"
 
 EvtDDalitz::~EvtDDalitz() {}
 
-void EvtDDalitz::getName(EvtString& model_name){
+void EvtDDalitz::getName(std::string& model_name){
   
   model_name="D_DALITZ";     
 
@@ -56,6 +60,8 @@ void EvtDDalitz::init(){
   static EvtId KP=EvtPDL::getId("K+");
   static EvtId K0=EvtPDL::getId("K0");
   static EvtId KB=EvtPDL::getId("anti-K0");
+  static EvtId KL=EvtPDL::getId("K_L0");
+  static EvtId KS=EvtPDL::getId("K_S0");
   static EvtId PIM=EvtPDL::getId("pi-");
   static EvtId PIP=EvtPDL::getId("pi+");
   static EvtId PI0=EvtPDL::getId("pi0");
@@ -73,7 +79,7 @@ void EvtDDalitz::init(){
   EvtId d1=getDaug(0);
   EvtId d2=getDaug(1);
   EvtId d3=getDaug(2);
-
+  _flag=0;
   if ( parnum == D0 ) {
     //look for either a K- pi+ pi0 or K0bar pi+ pi-
     if ( d1==KM && d2==PIP && d3==PI0 ) { _flag=4; _d1=0; _d2=1; _d3=2;}
@@ -89,6 +95,20 @@ void EvtDDalitz::init(){
     if ( d2==KB && d3==PIP && d1==PIM ) { _flag=3; _d1=1; _d2=2; _d3=0;}
     if ( d3==KB && d1==PIP && d2==PIM ) { _flag=3; _d1=2; _d2=0; _d3=1;}
     if ( d3==KB && d2==PIP && d1==PIM ) { _flag=3; _d1=2; _d2=1; _d3=0;}
+
+    if ( d1==KL && d2==PIP && d3==PIM )  { _flag=3; _d1=0; _d2=1; _d3=2;}
+    if ( d1==KL && d3==PIP && d2==PIM ) { _flag=3; _d1=0; _d2=2; _d3=1;}
+    if ( d2==KL && d1==PIP && d3==PIM ) { _flag=3; _d1=1; _d2=0; _d3=2;}
+    if ( d2==KL && d3==PIP && d1==PIM ) { _flag=3; _d1=1; _d2=2; _d3=0;}
+    if ( d3==KL && d1==PIP && d2==PIM ) { _flag=3; _d1=2; _d2=0; _d3=1;}
+    if ( d3==KL && d2==PIP && d1==PIM ) { _flag=3; _d1=2; _d2=1; _d3=0;}
+
+    if ( d1==KS && d2==PIP && d3==PIM )  { _flag=3; _d1=0; _d2=1; _d3=2;}
+    if ( d1==KS && d3==PIP && d2==PIM ) { _flag=3; _d1=0; _d2=2; _d3=1;}
+    if ( d2==KS && d1==PIP && d3==PIM ) { _flag=3; _d1=1; _d2=0; _d3=2;}
+    if ( d2==KS && d3==PIP && d1==PIM ) { _flag=3; _d1=1; _d2=2; _d3=0;}
+    if ( d3==KS && d1==PIP && d2==PIM ) { _flag=3; _d1=2; _d2=0; _d3=1;}
+    if ( d3==KS && d2==PIP && d1==PIM ) { _flag=3; _d1=2; _d2=1; _d3=0;}
   }
   if ( parnum == D0B ) {
     //look for either a K+ pi- pi0 or K0 pi+ pi-
@@ -105,6 +125,20 @@ void EvtDDalitz::init(){
     if ( d2==K0 && d3==PIP && d1==PIM ) { _flag=3; _d1=1; _d2=2; _d3=0;}
     if ( d3==K0 && d1==PIP && d2==PIM ) { _flag=3; _d1=2; _d2=0; _d3=1;}
     if ( d3==K0 && d2==PIP && d1==PIM ) { _flag=3; _d1=2; _d2=1; _d3=0;}
+
+    if ( d1==KL && d2==PIP && d3==PIM )  { _flag=3; _d1=0; _d2=1; _d3=2;}
+    if ( d1==KL && d3==PIP && d2==PIM ) { _flag=3; _d1=0; _d2=2; _d3=1;}
+    if ( d2==KL && d1==PIP && d3==PIM ) { _flag=3; _d1=1; _d2=0; _d3=2;}
+    if ( d2==KL && d3==PIP && d1==PIM ) { _flag=3; _d1=1; _d2=2; _d3=0;}
+    if ( d3==KL && d1==PIP && d2==PIM ) { _flag=3; _d1=2; _d2=0; _d3=1;}
+    if ( d3==KL && d2==PIP && d1==PIM ) { _flag=3; _d1=2; _d2=1; _d3=0;}
+
+    if ( d1==KS && d2==PIP && d3==PIM )  { _flag=3; _d1=0; _d2=1; _d3=2;}
+    if ( d1==KS && d3==PIP && d2==PIM ) { _flag=3; _d1=0; _d2=2; _d3=1;}
+    if ( d2==KS && d1==PIP && d3==PIM ) { _flag=3; _d1=1; _d2=0; _d3=2;}
+    if ( d2==KS && d3==PIP && d1==PIM ) { _flag=3; _d1=1; _d2=2; _d3=0;}
+    if ( d3==KS && d1==PIP && d2==PIM ) { _flag=3; _d1=2; _d2=0; _d3=1;}
+    if ( d3==KS && d2==PIP && d1==PIM ) { _flag=3; _d1=2; _d2=1; _d3=0;}
   }
 
   if ( parnum == DP ) {
@@ -115,6 +149,20 @@ void EvtDDalitz::init(){
     if ( d2==KB && d3==PIP && d1==PI0 ) { _flag=2; _d1=1; _d2=2; _d3=0;}
     if ( d3==KB && d1==PIP && d2==PI0 ) { _flag=2; _d1=2; _d2=0; _d3=1;}
     if ( d3==KB && d2==PIP && d1==PI0 ) { _flag=2; _d1=2; _d2=1; _d3=0;}
+
+    if ( d1==KL && d2==PIP && d3==PI0 )  { _flag=2; _d1=0; _d2=1; _d3=2;}
+    if ( d1==KL && d3==PIP && d2==PI0 ) { _flag=2; _d1=0; _d2=2; _d3=1;}
+    if ( d2==KL && d1==PIP && d3==PI0 ) { _flag=2; _d1=1; _d2=0; _d3=2;}
+    if ( d2==KL && d3==PIP && d1==PI0 ) { _flag=2; _d1=1; _d2=2; _d3=0;}
+    if ( d3==KL && d1==PIP && d2==PI0 ) { _flag=2; _d1=2; _d2=0; _d3=1;}
+    if ( d3==KL && d2==PIP && d1==PI0 ) { _flag=2; _d1=2; _d2=1; _d3=0;}
+
+    if ( d1==KS && d2==PIP && d3==PI0 )  { _flag=2; _d1=0; _d2=1; _d3=2;}
+    if ( d1==KS && d3==PIP && d2==PI0 ) { _flag=2; _d1=0; _d2=2; _d3=1;}
+    if ( d2==KS && d1==PIP && d3==PI0 ) { _flag=2; _d1=1; _d2=0; _d3=2;}
+    if ( d2==KS && d3==PIP && d1==PI0 ) { _flag=2; _d1=1; _d2=2; _d3=0;}
+    if ( d3==KS && d1==PIP && d2==PI0 ) { _flag=2; _d1=2; _d2=0; _d3=1;}
+    if ( d3==KS && d2==PIP && d1==PI0 ) { _flag=2; _d1=2; _d2=1; _d3=0;}
 
     if ( d1==KM && d2==PIP && d3==PIP )  { _flag=1; _d1=0; _d2=1; _d3=2;}
     if ( d2==KM && d1==PIP && d3==PIP ) { _flag=1; _d1=1; _d2=0; _d3=2;}
@@ -129,6 +177,20 @@ void EvtDDalitz::init(){
     if ( d2==K0 && d3==PIM && d1==PI0 ) { _flag=2; _d1=1; _d2=2; _d3=0;}
     if ( d3==K0 && d1==PIM && d2==PI0 ) { _flag=2; _d1=2; _d2=0; _d3=1;}
     if ( d3==K0 && d2==PIM && d1==PI0 ) { _flag=2; _d1=2; _d2=1; _d3=0;}
+
+    if ( d1==KL && d2==PIM && d3==PI0 )  { _flag=2; _d1=0; _d2=1; _d3=2;}
+    if ( d1==KL && d3==PIM && d2==PI0 ) { _flag=2; _d1=0; _d2=2; _d3=1;}
+    if ( d2==KL && d1==PIM && d3==PI0 ) { _flag=2; _d1=1; _d2=0; _d3=2;}
+    if ( d2==KL && d3==PIM && d1==PI0 ) { _flag=2; _d1=1; _d2=2; _d3=0;}
+    if ( d3==KL && d1==PIM && d2==PI0 ) { _flag=2; _d1=2; _d2=0; _d3=1;}
+    if ( d3==KL && d2==PIM && d1==PI0 ) { _flag=2; _d1=2; _d2=1; _d3=0;}
+
+    if ( d1==KS && d2==PIM && d3==PI0 )  { _flag=2; _d1=0; _d2=1; _d3=2;}
+    if ( d1==KS && d3==PIM && d2==PI0 ) { _flag=2; _d1=0; _d2=2; _d3=1;}
+    if ( d2==KS && d1==PIM && d3==PI0 ) { _flag=2; _d1=1; _d2=0; _d3=2;}
+    if ( d2==KS && d3==PIM && d1==PI0 ) { _flag=2; _d1=1; _d2=2; _d3=0;}
+    if ( d3==KS && d1==PIM && d2==PI0 ) { _flag=2; _d1=2; _d2=0; _d3=1;}
+    if ( d3==KS && d2==PIM && d1==PI0 ) { _flag=2; _d1=2; _d2=1; _d3=0;}
 
     if ( d1==KP && d2==PIM && d3==PIM )  { _flag=1; _d1=0; _d2=1; _d3=2;}
     if ( d2==KP && d1==PIM && d3==PIM ) { _flag=1; _d1=1; _d2=0; _d3=2;}

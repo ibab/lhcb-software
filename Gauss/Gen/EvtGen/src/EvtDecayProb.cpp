@@ -18,13 +18,17 @@
 //
 //------------------------------------------------------------------------
 
-#include "EvtGen/EvtDecayBase.hh"
-#include "EvtGen/EvtDecayProb.hh"
-#include "EvtGen/EvtParticle.hh"
-#include "EvtGen/EvtPHOTOS.hh"
-#include "EvtGen/EvtRandom.hh"
-#include "EvtGen/EvtPDL.hh"
-#include "EvtGen/EvtReport.hh"
+#ifdef WIN32 
+  #pragma warning( disable : 4786 ) 
+  // Disable anoying warning about symbol size 
+#endif 
+#include "EvtGenBase/EvtDecayBase.hh"
+#include "EvtGenBase/EvtDecayProb.hh"
+#include "EvtGenBase/EvtParticle.hh"
+#include "EvtGenBase/EvtRadCorr.hh"
+#include "EvtGenBase/EvtRandom.hh"
+#include "EvtGenBase/EvtPDL.hh"
+#include "EvtGenBase/EvtReport.hh"
 
 void EvtDecayProb::makeDecay(EvtParticle* p){
 
@@ -36,28 +40,28 @@ void EvtDecayProb::makeDecay(EvtParticle* p){
     _weight=1.0;
 
     decay(p);
-    //report(INFO,"EvtGen") << _weight << endl;
+    //report(INFO,"EvtGen") << _weight << std::endl;
     ntimes--;
     
     _prob = _prob/_weight;
     
     dummy=getProbMax(_prob)*EvtRandom::Flat();
 
-    //  report(INFO,"EvtGen") << _prob <<" "<<dummy<<" "<<ntimes<<endl;
+    //  report(INFO,"EvtGen") << _prob <<" "<<dummy<<" "<<ntimes<<std::endl;
   }while(ntimes&&(_prob<dummy));
-  //report(INFO,"EvtGen") << ntimes <<endl;
+  //report(INFO,"EvtGen") << ntimes <<std::endl;
   if (ntimes==0){
     report(DEBUG,"EvtGen") << "Tried accept/reject:10000"
 			   <<" times, and rejected all the times!"<<std::endl;
     report(DEBUG,"EvtGen") << "Is therefore accepting the last event!"<<std::endl;
     report(DEBUG,"EvtGen") << "Decay of particle:"<<
-      EvtPDL::name(p->getId())<<"(channel:"<<
+      EvtPDL::name(p->getId()).c_str()<<"(channel:"<<
       p->getChannel()<<") with mass "<<p->mass()<<std::endl;
     
     int ii;
     for(ii=0;ii<p->getNDaug();ii++){
       report(DEBUG,"EvtGen") <<"Daughter "<<ii<<":"<<
-	EvtPDL::name(p->getDaug(ii)->getId())<<" with mass "<<
+	EvtPDL::name(p->getDaug(ii)->getId()).c_str()<<" with mass "<<
 	p->getDaug(ii)->mass()<<std::endl;
     }				   
   }
@@ -66,7 +70,10 @@ void EvtDecayProb::makeDecay(EvtParticle* p){
   EvtSpinDensity rho;
   rho.SetDiag(p->getSpinStates());
   p->setSpinDensityBackward(rho);
-  if (getPHOTOS()) EvtPHOTOS::PHOTOS(p);
+  if (getPHOTOS() || EvtRadCorr::alwaysRadCorr()) {
+    EvtRadCorr::doRadCorr(p);
+  }
+
 
   //Now decay the daughters.
   int i;

@@ -31,15 +31,19 @@
 //------------------------------------------------------------------------
 //
 
+#ifdef WIN32 
+  #pragma warning( disable : 4786 ) 
+  // Disable anoying warning about symbol size 
+#endif 
 #include <stdlib.h>
-#include "EvtGen/EvtRandom.hh"
-#include "EvtGen/EvtBtoXsgammaAliGreub.hh"
-#include "EvtGen/EvtString.hh"
-#include "EvtGen/EvtConst.hh"
-#include "EvtGen/EvtParticle.hh"
-#include "EvtGen/EvtGenKine.hh"
-#include "EvtGen/EvtPDL.hh"
-#include "EvtGen/EvtReport.hh"
+#include "EvtGenBase/EvtRandom.hh"
+#include "EvtGenModels/EvtBtoXsgammaAliGreub.hh"
+#include <string>
+#include "EvtGenBase/EvtConst.hh"
+#include "EvtGenBase/EvtParticle.hh"
+#include "EvtGenBase/EvtGenKine.hh"
+#include "EvtGenBase/EvtPDL.hh"
+#include "EvtGenBase/EvtReport.hh"
 
 
 EvtBtoXsgammaAliGreub::~EvtBtoXsgammaAliGreub(){}
@@ -50,7 +54,7 @@ void EvtBtoXsgammaAliGreub::init(int nArg, double* /*args*/){
     
     report(ERROR,"EvtGen") << "EvtBtoXsgamma generator model "
 			   << "EvtBtoXsgammaAliGreub expected " 
-         << "zero arguments but found: "<<nArg-1<<std::endl;
+			   << "zero arguments but found: "<<nArg-1<<std::endl;
     report(ERROR,"EvtGen") << "Will terminate execution!"<<std::endl;
     ::abort();
   

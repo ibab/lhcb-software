@@ -18,12 +18,17 @@
 //
 //------------------------------------------------------------------------
 // 
-#include "EvtGen/EvtReport.hh"
-#include "EvtGen/EvtMelikhovFF.hh"
-#include "EvtGen/EvtId.hh"
-#include "EvtGen/EvtString.hh"
+#ifdef WIN32 
+  #pragma warning( disable : 4786 ) 
+  // Disable anoying warning about symbol size 
+#endif 
+#include "EvtGenBase/EvtPatches.hh"
+#include "EvtGenBase/EvtReport.hh"
+#include "EvtGenModels/EvtMelikhovFF.hh"
+#include "EvtGenBase/EvtId.hh"
+#include <string>
 #include <math.h>
-
+#include "EvtGenBase/EvtPDL.hh"
 
 
 EvtMelikhovFF::EvtMelikhovFF(double arg1) {
@@ -33,12 +38,12 @@ EvtMelikhovFF::EvtMelikhovFF(double arg1) {
 }
 
 void EvtMelikhovFF::getvectorff(EvtId parent,EvtId /*daught*/,
-                                double t, double mass, double *a1f,
-                                double *a2f, double *vf, double *a0f ){
+                       double t, double mass, double *a1f,
+			     double *a2f, double *vf, double *a0f ){
 
-  double ma1 = 0.0, ra1 = 0.0, na1 = 0.0;
-  double ma2 = 0.0, ra2 = 0.0, na2 = 0.0;
-  double mv = 0.0, rv = 0.0, nv = 0.0;
+  double ma1(0.),ra1(0.),na1(0.);
+  double ma2(0.),ra2(0.),na2(0.);
+  double mv(0.),rv(0.),nv(0.);
 
   if ( whichfit==1) {
      ma1 = 7.07;
@@ -85,7 +90,7 @@ void EvtMelikhovFF::getvectorff(EvtId parent,EvtId /*daught*/,
      nv = 1.73;
   }
 
-  double mb=EvtPDL::getNominalMass(parent);
+  double mb=EvtPDL::getMeanMass(parent);
   //double w = ((mb*mb)+(mass*mass)-t)/(2.0*mb*mass);
 
   double melr = mass/mb;

@@ -20,21 +20,25 @@
 //
 //------------------------------------------------------------------------
 //
+#ifdef WIN32 
+  #pragma warning( disable : 4786 ) 
+  // Disable anoying warning about symbol size 
+#endif 
 #include <stdlib.h>
-#include "EvtGen/EvtParticle.hh"
-#include "EvtGen/EvtGenKine.hh"
-#include "EvtGen/EvtCPUtil.hh"
-#include "EvtGen/EvtPDL.hh"
-#include "EvtGen/EvtReport.hh"
-#include "EvtGen/EvtSVSCPLH.hh"
-#include "EvtGen/EvtId.hh"
-#include "EvtGen/EvtString.hh"
-#include "EvtGen/EvtConst.hh"
-#include "EvtGen/EvtVector4C.hh"
+#include "EvtGenBase/EvtParticle.hh"
+#include "EvtGenBase/EvtGenKine.hh"
+#include "EvtGenBase/EvtCPUtil.hh"
+#include "EvtGenBase/EvtPDL.hh"
+#include "EvtGenBase/EvtReport.hh"
+#include "EvtGenModels/EvtSVSCPLH.hh"
+#include "EvtGenBase/EvtId.hh"
+#include <string>
+#include "EvtGenBase/EvtConst.hh"
+#include "EvtGenBase/EvtVector4C.hh"
 
 EvtSVSCPLH::~EvtSVSCPLH() {}
 
-void EvtSVSCPLH::getName(EvtString& model_name){
+void EvtSVSCPLH::getName(std::string& model_name){
 
   model_name="SVS_CPLH";     
 

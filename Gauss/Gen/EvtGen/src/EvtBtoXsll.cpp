@@ -21,21 +21,25 @@
 //------------------------------------------------------------------------
 //
 
+#ifdef WIN32 
+  #pragma warning( disable : 4786 ) 
+  // Disable anoying warning about symbol size 
+#endif 
 #include <stdlib.h>
-#include "EvtGen/EvtRandom.hh"
-#include "EvtGen/EvtParticle.hh"
-#include "EvtGen/EvtGenKine.hh"
-#include "EvtGen/EvtPDL.hh"
-#include "EvtGen/EvtReport.hh"
-#include "EvtGen/EvtBtoXsll.hh"
-#include "EvtGen/EvtBtoXsllUtil.hh"
-#include "EvtGen/EvtString.hh"
-#include "EvtGen/EvtConst.hh"
-#include "EvtGen/EvtId.hh"
+#include "EvtGenBase/EvtRandom.hh"
+#include "EvtGenBase/EvtParticle.hh"
+#include "EvtGenBase/EvtGenKine.hh"
+#include "EvtGenBase/EvtPDL.hh"
+#include "EvtGenBase/EvtReport.hh"
+#include "EvtGenModels/EvtBtoXsll.hh"
+#include "EvtGenModels/EvtBtoXsllUtil.hh"
+#include <string>
+#include "EvtGenBase/EvtConst.hh"
+#include "EvtGenBase/EvtId.hh"
 
 EvtBtoXsll::~EvtBtoXsll() {}
 
-void EvtBtoXsll::getName(EvtString& model_name){
+void EvtBtoXsll::getName(std::string& model_name){
 
   model_name="BTOXSLL";     
 
@@ -57,6 +61,7 @@ void EvtBtoXsll::init(){
 
   // Check that the two leptons are the same type
 
+  EvtId mesontype   = getDaug(0);
   EvtId lepton1type = getDaug(1);
   EvtId lepton2type = getDaug(2);
 
@@ -104,7 +109,7 @@ void EvtBtoXsll::init(){
 
   double mb = 4.8;
   double ms = 0.2;
-  double ml = EvtPDL::getNominalMass(getDaug(1));
+  double ml = EvtPDL::getMeanMass(getDaug(1));
 
   // determine the maximum probability density from dGdsProb
 
@@ -179,6 +184,8 @@ void EvtBtoXsll::decay( EvtParticle *p ){
   EvtParticle* leptonp = p->getDaug(1);
   EvtParticle* leptonn = p->getDaug(2);
 
+  EvtVector4R p4[3];
+
   double mass[3];
  
   findMasses( p, getNDaug(), getDaugs(), mass );
@@ -224,7 +231,7 @@ void EvtBtoXsll::decay( EvtParticle *p ){
     }
     mb = sqrt(mb);
   
-    //    cout << "b-quark momentum = " << pb << " mass = " <<  mb << endl;
+    //    report(INFO,"EvtGen") << "b-quark momentum = " << pb << " mass = " <<  mb << std::endl;
 
     // generate a dilepton invariant mass
 
@@ -239,8 +246,8 @@ void EvtBtoXsll::decay( EvtParticle *p ){
       if (ybox < _calcprob->dGdsProb(mb, ms, ml, xbox)) { s = xbox;}
     }
 
-    //    cout << "dGdsProb(s) = " << _calcprob->dGdsProb(mb, ms, ml, s)
-    //         << " for s = " << s << endl;
+    //    report(INFO,"EvtGen") << "dGdsProb(s) = " << _calcprob->dGdsProb(mb, ms, ml, s)
+    //         << " for s = " << s << std::endl;
 
     // two-body decay of b quark at rest into s quark and dilepton pair:
     // b -> s (ll)
@@ -294,8 +301,8 @@ void EvtBtoXsll::decay( EvtParticle *p ){
       if (ybox < prob)
       {
         tmp = 1.0;
-	//        cout << "dGdsdupProb(s) = " << prob
-	//             << " for u = " << u << endl;
+	//        report(INFO,"EvtGen") << "dGdsdupProb(s) = " << prob
+	//             << " for u = " << u << std::endl;
       }
     }
 
@@ -320,7 +327,7 @@ void EvtBtoXsll::decay( EvtParticle *p ){
     //
     //    p4B = boostTo(p4B, p4b);
     //
-    //    cout << " B meson mass in b-quark rest frame = " << p4B.mass() << endl;
+    //    report(INFO,"EvtGen") << " B meson mass in b-quark rest frame = " << p4B.mass() << std::endl;
 
     // boost s, l+ and l- to B meson rest frame
 
@@ -341,7 +348,7 @@ void EvtBtoXsll::decay( EvtParticle *p ){
     p4xhadron = p4s + p4q;
     xhadronMass = p4xhadron.mass();
 
-    //    cout << "Xs mass = " << xhadronMass << " trial " << im << endl;
+    //    report(INFO,"EvtGen") << "Xs mass = " << xhadronMass << " trial " << im << std::endl;
   }
 
   // initialize the decay products

@@ -19,23 +19,27 @@
 //
 //------------------------------------------------------------------------
 // 
+#ifdef WIN32 
+  #pragma warning( disable : 4786 ) 
+  // Disable anoying warning about symbol size 
+#endif 
 #include <stdlib.h>
-#include "EvtGen/EvtParticle.hh"
-#include "EvtGen/EvtGenKine.hh"
-#include "EvtGen/EvtPDL.hh"
-#include "EvtGen/EvtVector4C.hh"
-#include "EvtGen/EvtTensor4C.hh"
-#include "EvtGen/EvtVector3C.hh"
-#include "EvtGen/EvtVector3R.hh"
-#include "EvtGen/EvtTensor3C.hh"
-#include "EvtGen/EvtReport.hh"
-#include "EvtGen/EvtSVVHelAmp.hh"
-#include "EvtGen/EvtId.hh"
-#include "EvtGen/EvtString.hh"
+#include "EvtGenBase/EvtParticle.hh"
+#include "EvtGenBase/EvtGenKine.hh"
+#include "EvtGenBase/EvtPDL.hh"
+#include "EvtGenBase/EvtVector4C.hh"
+#include "EvtGenBase/EvtTensor4C.hh"
+#include "EvtGenBase/EvtVector3C.hh"
+#include "EvtGenBase/EvtVector3R.hh"
+#include "EvtGenBase/EvtTensor3C.hh"
+#include "EvtGenBase/EvtReport.hh"
+#include "EvtGenModels/EvtSVVHelAmp.hh"
+#include "EvtGenBase/EvtId.hh"
+#include <string>
 
 EvtSVVHelAmp::~EvtSVVHelAmp() {}
 
-void EvtSVVHelAmp::getName(EvtString& model_name){
+void EvtSVVHelAmp::getName(std::string& model_name){
 
   model_name="SVV_HELAMP";     
 
@@ -64,7 +68,7 @@ void EvtSVVHelAmp::init(){
 
 void EvtSVVHelAmp::initProbMax(){
 
-  setProbMax(3.0);
+  setProbMax(getArg(0)*getArg(0)+getArg(2)*getArg(2)+getArg(4)*getArg(4));
 
 }
 
@@ -101,6 +105,7 @@ void EvtSVVHelAmp::SVVHel(EvtParticle *parent,EvtAmp& amp,EvtId n_v1,EvtId n_v2,
   v2 = parent->getDaug(1);
 
   EvtVector4R momv1 = v1->getP4();
+  EvtVector4R momv2 = v2->getP4();
 
   EvtVector3R v1dir(momv1.get(1),momv1.get(2),momv1.get(3));
   v1dir=v1dir/v1dir.d3mag();

@@ -20,13 +20,17 @@
 //------------------------------------------------------------------------
 //
 
+#ifdef WIN32 
+  #pragma warning( disable : 4786 ) 
+  // Disable anoying warning about symbol size 
+#endif 
 #include <stdlib.h>
 #include <stdio.h>
 #include <math.h>
 #include <iostream>
-#include "EvtGen/EvtRandomEngine.hh"
-#include "EvtGen/EvtRandom.hh"
-#include "EvtGen/EvtReport.hh"
+#include "EvtGenBase/EvtRandomEngine.hh"
+#include "EvtGenBase/EvtRandom.hh"
+#include "EvtGenBase/EvtReport.hh"
 
 
 EvtRandomEngine* EvtRandom::_randomEngine=0;
@@ -54,7 +58,7 @@ double EvtRandom::random(){
 double EvtRandom::Flat( double min, double max){
 
   if ( min > max ) {
-    report(ERROR,"EvtGen") << "min>max in EvtRandomm:;Flat(min,max)"<<std::endl;
+    report(ERROR,"EvtGen") << "min>max in EvtRandom::Flat(" << min << "," << max << ")" <<std::endl;
     ::abort();
   }
 

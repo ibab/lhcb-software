@@ -18,18 +18,22 @@
 //
 //------------------------------------------------------------------------
 //
+#ifdef WIN32 
+  #pragma warning( disable : 4786 ) 
+  // Disable anoying warning about symbol size 
+#endif 
 #include <stdlib.h>
-#include "EvtGen/EvtParticle.hh"
-#include "EvtGen/EvtRandom.hh"
-#include "EvtGen/EvtPDL.hh"
-#include "EvtGen/EvtSingleParticle.hh"
-#include "EvtGen/EvtReport.hh"
-#include "EvtGen/EvtString.hh"
-#include "EvtGen/EvtConst.hh"
+#include "EvtGenBase/EvtParticle.hh"
+#include "EvtGenBase/EvtRandom.hh"
+#include "EvtGenBase/EvtPDL.hh"
+#include "EvtGenModels/EvtSingleParticle.hh"
+#include "EvtGenBase/EvtReport.hh"
+#include <string>
+#include "EvtGenBase/EvtConst.hh"
 
 EvtSingleParticle::~EvtSingleParticle() {}
 
-void EvtSingleParticle::getName(EvtString& model_name){
+void EvtSingleParticle::getName(std::string& model_name){
 
   model_name="SINGLE";     
 

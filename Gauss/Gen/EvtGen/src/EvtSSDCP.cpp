@@ -14,26 +14,30 @@
 //
 // Modification history:
 //
-//    RYD       August 12, 2001       Module created
-//
+//    RYD       August 12, 2001        Module created
+//    F. Sandrelli, Fernando M-V  March 1, 2002     Debugged and added z parameter (CPT violation)
 //------------------------------------------------------------------------
 // 
+#ifdef WIN32 
+  #pragma warning( disable : 4786 ) 
+  // Disable anoying warning about symbol size 
+#endif 
 #include <stdlib.h>
-#include "EvtGen/EvtParticle.hh"
-#include "EvtGen/EvtRandom.hh"
-#include "EvtGen/EvtGenKine.hh"
-#include "EvtGen/EvtCPUtil.hh"
-#include "EvtGen/EvtPDL.hh"
-#include "EvtGen/EvtReport.hh"
-#include "EvtGen/EvtVector4C.hh"
-#include "EvtGen/EvtTensor4C.hh"
-#include "EvtGen/EvtSSDCP.hh"
-#include "EvtGen/EvtString.hh"
-#include "EvtGen/EvtConst.hh"
+#include "EvtGenBase/EvtParticle.hh"
+#include "EvtGenBase/EvtRandom.hh"
+#include "EvtGenBase/EvtGenKine.hh"
+#include "EvtGenBase/EvtCPUtil.hh"
+#include "EvtGenBase/EvtPDL.hh"
+#include "EvtGenBase/EvtReport.hh"
+#include "EvtGenBase/EvtVector4C.hh"
+#include "EvtGenBase/EvtTensor4C.hh"
+#include "EvtGenModels/EvtSSDCP.hh"
+#include <string>
+#include "EvtGenBase/EvtConst.hh"
 
 EvtSSDCP::~EvtSSDCP() {}
 
-void EvtSSDCP::getName(EvtString& model_name){
+void EvtSSDCP::getName(std::string& model_name){
 
   model_name="SSD_CP";     
 
@@ -48,53 +52,100 @@ EvtDecayBase* EvtSSDCP::clone(){
 
 void EvtSSDCP::init(){
 
-  // check that there are 7 or 11 arguments
+  // check that there are 8 or 12 or 14 arguments
 
-  checkNArg(11,7);
+  checkNArg(14,12,8);
   checkNDaug(2);
 
   EvtSpinType::spintype d1type=EvtPDL::getSpinType(getDaug(0));
   EvtSpinType::spintype d2type=EvtPDL::getSpinType(getDaug(1));
 
-  if ( !((getParentId() == EvtPDL::getId("B0"))||(getParentId() == EvtPDL::getId("B0B"))) ) {
-    report(ERROR, "EvtGen") << "EvtSSDCP cannot decay "
-			    << EvtPDL::name(getParentId()) 
-			    << ". Must be specified to decay"
-			    << " only B0 or a B0B ." << std::endl;
-    report(ERROR,"EvtGen") << "Will terminate execution!"<<std::endl;
-    ::abort();
-  }
-  if ( d1type != EvtSpinType::SCALAR ) {
+  // FS commented this check to include alias of B0
+  //  if ( !((getParentId() == EvtPDL::getId("B0"))||(getParentId() == EvtPDL::getId("B0B"))) ) {
+  //    report(ERROR, "EvtGen") << "EvtSSDCP cannot decay "
+  //		    << EvtPDL::name(getParentId()) 
+  //		    << ". Must be specified to decay"
+  //		    << " only B0 or a B0B ." << std::endl;
+  //  report(ERROR,"EvtGen") << "Will terminate execution!"<<std::endl;
+  //  ::abort();
+  //}
+
+  if ( (!(d1type == EvtSpinType::SCALAR || d2type == EvtSpinType::SCALAR))||
+       (!((d2type==EvtSpinType::SCALAR)||(d2type==EvtSpinType::VECTOR)||(d2type==EvtSpinType::TENSOR)))||
+       (!((d1type==EvtSpinType::SCALAR)||(d1type==EvtSpinType::VECTOR)||(d1type==EvtSpinType::TENSOR)))
+       ) {
     report(ERROR,"EvtGen") << "EvtSSDCP generator expected "
-                           << " a SCALAR 1st daughter, found:"<<
-                           EvtPDL::name(getDaug(0))<<std::endl;
-    report(ERROR,"EvtGen") << "Will terminate execution!"<<std::endl;
-    ::abort();
-  }
-  if ( (d2type != EvtSpinType::SCALAR)&&(d2type != EvtSpinType::VECTOR)&&(d2type != EvtSpinType::TENSOR) ) {
-    report(ERROR,"EvtGen") << "EvtSSDCP generator expected "
-                           << " a SCALAR, VECTOR, or TENSOR as 2nd daughter, found:"<<
-                           EvtPDL::name(getDaug(1))<<std::endl;
+                           << "one of the daugters to be a scalar, the other either scalar, vector, or tensor, found:"
+			   << EvtPDL::name(getDaug(0)).c_str()<<" and "<<EvtPDL::name(getDaug(1)).c_str()<<std::endl;
     report(ERROR,"EvtGen") << "Will terminate execution!"<<std::endl;
     ::abort();
   }
 
+  _dm=getArg(0)/EvtConst::c; //units of 1/mm
 
-  _phimixing=getArg(0);
-  _dm=getArg(1);
+  _dgog=getArg(1);
 
-  _cp=(int)getArg(2);
-
-  _A_f=EvtComplex(getArg(3)*cos(getArg(4)),getArg(3)*sin(getArg(4)));
-  _Abar_f=EvtComplex(getArg(5)*cos(getArg(6)),getArg(5)*sin(getArg(6)));
   
-  _A_fbar=_Abar_f;
-  _Abar_fbar=_A_f;
+  _qoverp=getArg(2)*EvtComplex(cos(getArg(3)),sin(getArg(3)));
+  _poverq=1.0/_qoverp;
 
-  if (getNArg()==11){
-    _A_fbar=EvtComplex(getArg(7)*cos(getArg(8)),getArg(7)*sin(getArg(8)));
-    _Abar_fbar=EvtComplex(getArg(9)*cos(getArg(10)),getArg(9)*sin(getArg(10)));
+  _A_f=getArg(4)*EvtComplex(cos(getArg(5)),sin(getArg(5)));
+
+  _Abar_f=getArg(6)*EvtComplex(cos(getArg(7)),sin(getArg(7)));
+  
+  if (getNArg()>=12){
+    _A_fbar=getArg(8)*EvtComplex(cos(getArg(9)),sin(getArg(9)));
+    _Abar_fbar=getArg(10)*EvtComplex(cos(getArg(11)),sin(getArg(11)));
   }
+  else{
+    //I'm somewhat confused about this. For a CP eigenstate set the
+    //amplitudes to the same. For a non CP eigenstate CPT invariance
+    //is enforced. (ryd)
+    if (
+	(getDaug(0)==EvtPDL::chargeConj(getDaug(0))&&
+	 getDaug(1)==EvtPDL::chargeConj(getDaug(1)))||
+	(getDaug(0)==EvtPDL::chargeConj(getDaug(1))&&
+	 getDaug(1)==EvtPDL::chargeConj(getDaug(0)))){
+      _eigenstate=true;
+    }else{
+      _eigenstate=false;
+      _A_fbar=conj(_Abar_f);
+      _Abar_fbar=conj(_A_f);
+    }
+  }
+
+  //FS: new check for z 
+  if (getNArg()==14){ //FS Set _z parameter if provided else set it 0
+    _z=EvtComplex(getArg(12),getArg(13));
+  }
+  else{
+    _z=EvtComplex(0.0,0.0);
+  }
+
+  // FS substituted next 2 lines...
+  //
+  //  _gamma=EvtPDL::getctau(EvtPDL::getId("B0"));  //units of 1/mm
+  //_dgamma=_gamma*0.5*_dgog;
+  //
+  // ...with:
+
+  _gamma=1/EvtPDL::getctau(EvtPDL::getId("B0")); //gamma/c (1/mm)
+  _dgamma=_gamma*_dgog;  //dgamma/c (1/mm) 
+
+  if (verbose()){
+    report(INFO,"EvtGen") << "SSD_CP will generate CP/CPT violation:"
+			  << std::endl << std::endl
+			  << "    " << EvtPDL::name(getParentId()).c_str() << " --> "
+			  << EvtPDL::name(getDaug(0)).c_str() << " + "
+			  << EvtPDL::name(getDaug(1)).c_str() << std::endl << std::endl
+			  << "using parameters:" << std::endl << std::endl
+			  << "  delta(m)  = " << _dm << " hbar/ps" << std::endl
+			  << "dGamma      = "  << _dgamma <<" ps-1" <<std::endl
+			  << "       q/p  = " << _qoverp << std::endl  
+			  << "        z  = " << _z << std::endl  
+			  << "       tau  = " << 1./_gamma << " ps" << std::endl;
+  }
+
 }
 
 void EvtSSDCP::initProbMax() {
@@ -103,7 +154,13 @@ void EvtSSDCP::initProbMax() {
     abs(_Abar_f) * abs(_Abar_f) +
     abs(_A_fbar) * abs(_A_fbar) +
     abs(_Abar_fbar) * abs(_Abar_fbar);
-  
+
+  if (_eigenstate) theProbMax*=2;
+
+  EvtSpinType::spintype d2type=EvtPDL::getSpinType(getDaug(1));
+  EvtSpinType::spintype d1type=EvtPDL::getSpinType(getDaug(0));
+  if (d1type==EvtSpinType::TENSOR||d2type==EvtSpinType::TENSOR) theProbMax*=10;
+
   setProbMax(theProbMax);
 }
 
@@ -117,7 +174,9 @@ void EvtSSDCP::decay( EvtParticle *p){
   EvtId daugs[2];
 
   int flip=0;
-  if (EvtRandom::Flat(0.0,1.0)<getArg(2)) flip=1;
+  if (!_eigenstate){
+    if (EvtRandom::Flat(0.0,1.0)<0.5) flip=1;
+  }
 
   if (!flip) {
     daugs[0]=getDaug(0);
@@ -130,35 +189,73 @@ void EvtSSDCP::decay( EvtParticle *p){
 
   EvtParticle *d;
   p->initializePhaseSpace(2, daugs);
-  d= p->getDaug(1);
-  EvtVector4R momv = d->getP4();
-  
+
   EvtComplex amp;
 
 
-  EvtCPUtil::OtherB(p,t,other_b,0.5);
+  EvtCPUtil::OtherB(p,t,other_b,0.5); // t is c*Dt (mm)
 
 
-  if (other_b==B0B){
+  //FS We assume DGamma=GammaLow-GammaHeavy and Dm=mHeavy-mLow
+  EvtComplex expL=exp(-EvtComplex(-0.25*_dgamma*t,0.5*_dm*t));
+  EvtComplex expH=exp(EvtComplex(-0.25*_dgamma*t,0.5*_dm*t));
+  //FS Definition of gp and gm
+  EvtComplex gp=0.5*(expL+expH);
+  EvtComplex gm=0.5*(expL-expH);
+  //FS Calculation os sqrt(1-z^2) 
+  EvtComplex sqz=sqrt(abs(1-_z*_z))*exp(EvtComplex(0,arg(1-_z*_z)/2));
+  
+  //  EvtComplex BB=0.5*(expL+expH);                  // <B0|B0(t)>
+  //  EvtComplex barBB=_qoverp*0.5*(expL-expH);       // <B0bar|B0(t)>
+  //  EvtComplex BbarB=_poverq*0.5*(expL-expH);       // <B0|B0bar(t)>
+  //  EvtComplex barBbarB=BB;                         // <B0bar|B0bar(t)>
+  //  FS redefinition of these guys... (See BAD #188 eq.35 for ref.)
+  //  q/p is taken as in the BaBar Phys. Book (opposite sign wrt ref.)
+  EvtComplex BB=gp+_z*gm;                 // <B0|B0(t)>
+  EvtComplex barBB=-sqz*_qoverp*gm;       // <B0bar|B0(t)>
+  EvtComplex BbarB=-sqz*_poverq*gm;       // <B0|B0bar(t)>
+  EvtComplex barBbarB=gp-_z*gm;           // <B0bar|B0bar(t)>
 
-    amp=_A_f*cos(_dm*t/(2*EvtConst::c))+
-      EvtComplex(cos(-2.0*_phimixing),sin(-2.0*_phimixing))*
-      EvtComplex(0.0,1.0)*_Abar_f*sin(_dm*t/(2*EvtConst::c));
+  if (!flip){
+    if (other_b==B0B){
+      //at t=0 we have a B0
+      //report(INFO,"EvtGen") << "B0B"<<std::endl;
+      amp=BB*_A_f+barBB*_Abar_f;
+    }
+    if (other_b==B0){
+      //report(INFO,"EvtGen") << "B0"<<std::endl;
+      amp=BbarB*_A_f+barBbarB*_Abar_f;
+    }
+  }else{
+    if (other_b==B0){
+      amp=BB*_A_fbar+barBB*_Abar_fbar;
+    }
+    if (other_b==B0B){
+      amp=BbarB*_A_fbar+barBbarB*_Abar_fbar;
+    }
   }
-  if (other_b==B0){
-    
-    amp=_A_f*EvtComplex(cos(2.0*_phimixing),sin(2.0*_phimixing))*
-	 EvtComplex(0.0,1.0)*sin(_dm*t/(2*EvtConst::c))+       
-      _Abar_f*cos(_dm*t/(2*EvtConst::c));
-
-  }
-
 
 
   EvtVector4R p4_parent=p->getP4Restframe();
   double m_parent=p4_parent.mass();
 
   EvtSpinType::spintype d2type=EvtPDL::getSpinType(getDaug(1));
+
+  EvtVector4R momv;
+  EvtVector4R moms;
+
+  if (d2type==EvtSpinType::SCALAR){
+    d2type=EvtPDL::getSpinType(getDaug(0));
+    d= p->getDaug(0);
+    momv = d->getP4();
+    moms = p->getDaug(1)->getP4();
+  }
+  else{
+    d= p->getDaug(1);
+    momv = d->getP4();
+    moms = p->getDaug(0)->getP4();
+  }
+
 
 
   if (d2type==EvtSpinType::SCALAR) {

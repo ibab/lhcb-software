@@ -18,18 +18,23 @@
 //
 //------------------------------------------------------------------------
 // 
+#ifdef WIN32 
+  #pragma warning( disable : 4786 ) 
+  // Disable anoying warning about symbol size 
+#endif 
 #include <stdlib.h>
-#include "EvtGen/EvtParticle.hh"
-#include "EvtGen/EvtGenKine.hh"
-#include "EvtGen/EvtTensor4C.hh"
-#include "EvtGen/EvtPDL.hh"
-#include "EvtGen/EvtVSPPwave.hh"
-#include "EvtGen/EvtReport.hh"
-#include "EvtGen/EvtString.hh"
+#include "EvtGenBase/EvtParticle.hh"
+#include "EvtGenBase/EvtGenKine.hh"
+#include "EvtGenBase/EvtTensor4C.hh"
+#include "EvtGenBase/EvtPDL.hh"
+#include "EvtGenModels/EvtVSPPwave.hh"
+#include "EvtGenBase/EvtReport.hh"
+#include <string>
+#include "EvtGenBase/EvtVector4C.hh"
 
 EvtVSPPwave::~EvtVSPPwave() {}
 
-void EvtVSPPwave::getName(EvtString& model_name){
+void EvtVSPPwave::getName(std::string& model_name){
 
   model_name="VSP_PWAVE";     
 

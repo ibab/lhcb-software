@@ -18,10 +18,16 @@
 //
 //------------------------------------------------------------------------
 // 
+#ifdef WIN32 
+  #pragma warning( disable : 4786 ) 
+  // Disable anoying warning about symbol size 
+#endif 
 #include <math.h>
-#include "EvtGen/EvtKine.hh"
-#include "EvtGen/EvtConst.hh"
-#include "EvtGen/EvtVector4R.hh"
+#include "EvtGenBase/EvtKine.hh"
+#include "EvtGenBase/EvtConst.hh"
+#include "EvtGenBase/EvtVector4R.hh"
+#include "EvtGenBase/EvtVector4C.hh"
+#include "EvtGenBase/EvtTensor4C.hh"
 
 
 double EvtDecayAngle(const EvtVector4R& p,const EvtVector4R& q,
@@ -81,6 +87,23 @@ double EvtDecayAngleChi(const EvtVector4R& p4_p,const EvtVector4R& p4_d1,
   
   return chi;
   
+}
+
+
+
+double EvtDecayPlaneNormalAngle(const EvtVector4R& p,const EvtVector4R& q,
+                          const EvtVector4R& d1,const EvtVector4R& d2){
+
+  EvtVector4C lc=dual(directProd(d1,d2)).cont2(q);
+
+  EvtVector4R l(real(lc.get(0)),real(lc.get(1)),
+		real(lc.get(2)),real(lc.get(3)));
+
+  double pq=p*q;
+
+  return q.mass()*(p*l)/sqrt(-(pq*pq-p.mass2()*q.mass2())*l.mass2());
+
+
 }
 
 

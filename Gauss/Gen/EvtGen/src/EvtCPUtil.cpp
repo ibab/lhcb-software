@@ -19,13 +19,17 @@
 //
 //------------------------------------------------------------------------
 // 
-#include "EvtGen/EvtParticle.hh"
-#include "EvtGen/EvtScalarParticle.hh"
-#include "EvtGen/EvtRandom.hh"
-#include "EvtGen/EvtCPUtil.hh"
-#include "EvtGen/EvtPDL.hh"
-#include "EvtGen/EvtReport.hh"
-
+#ifdef WIN32 
+  #pragma warning( disable : 4786 ) 
+  // Disable anoying warning about symbol size 
+#endif 
+#include "EvtGenBase/EvtParticle.hh"
+#include "EvtGenBase/EvtScalarParticle.hh"
+#include "EvtGenBase/EvtRandom.hh"
+#include "EvtGenBase/EvtCPUtil.hh"
+#include "EvtGenBase/EvtPDL.hh"
+#include "EvtGenBase/EvtReport.hh"
+#include <assert.h>
 
 
 //added two functions for finding the fraction of B0 tags for decays into 
@@ -66,7 +70,7 @@ void EvtCPUtil::fractB0nonCP(EvtComplex Af, EvtComplex Abarf,
 //this needs more thought... 
 
   //double gamma_B = EvtPDL::getWidth(B0);
-  //report(INFO,"EvtGen") << "gamma " << gamma_B<< endl;
+  //report(INFO,"EvtGen") << "gamma " << gamma_B<< std::endl;
   //double xd = deltam/gamma_B;
 
   //why is the width of B0 0 in PDL??
@@ -114,6 +118,10 @@ void EvtCPUtil::fractB0nonCP(EvtComplex Af, EvtComplex Abarf,
 
 void EvtCPUtil::OtherB( EvtParticle *p,double &t, EvtId &otherb, double probB0){
 
+  //Can not call this recursively!!!
+  static int entryCount=0;
+  entryCount++;
+
   //added by Lange Jan4,2000
   static EvtId B0B=EvtPDL::getId("anti-B0");
   static EvtId B0=EvtPDL::getId("B0");
@@ -132,11 +140,12 @@ void EvtCPUtil::OtherB( EvtParticle *p,double &t, EvtId &otherb, double probB0){
   
   if (parent==0) {
     //report(ERROR,"EvtGen") << 
-    //  "Warning CP violation with B having no parent!"<<endl;
+    //  "Warning CP violation with B having no parent!"<<std::endl;
     p->setLifetime();
     t=p->getLifetime();
     if (p->getId()==B0) otherb=B0B;
     if (p->getId()==B0B) otherb=B0;
+    entryCount--;
     return;
   }
   else{
@@ -151,31 +160,48 @@ void EvtCPUtil::OtherB( EvtParticle *p,double &t, EvtId &otherb, double probB0){
   }
   
   if (parent != 0 ) {
-    
-    EvtVector4R p_init=other->getP4();
-    int decayed=other->getNDaug()>0;
-    
-    other->deleteTree();
-    
-    EvtScalarParticle* scalar_part;
-    
-    scalar_part=new EvtScalarParticle;
-    if (isB0) {
-      scalar_part->init(B0,p_init);
-    }
-    else{
-      scalar_part->init(B0B,p_init);
-    }
-    other=(EvtParticle *)scalar_part;
-//    other->set_type(EvtSpinType::SCALAR);
-    other->setDiagonalSpinDensity();      
-    
-    parent->insertDaugPtr(idaug,other);
-    
-    if (decayed){
-      other->decay();
-    }
 
+    //if (entryCount>1){
+    //  report(INFO,"EvtGen") << "Double CP decay:"<<entryCount<<std::endl;
+    //}
+
+    //kludge!! Lange Mar21, 2003 	 
+    // if the other B is an alias... don't change the flavor.. 	 
+    if ( other->getId().isAlias() ) { 	 
+      OtherB(p,t,otherb); 	 
+      return; 	 
+      
+    }
+    
+    if (entryCount==1){
+    
+      EvtVector4R p_init=other->getP4();
+      //int decayed=other->getNDaug()>0;
+      bool decayed = other->isDecayed();
+
+      other->deleteTree();
+    
+      EvtScalarParticle* scalar_part;
+      
+      scalar_part=new EvtScalarParticle;
+      if (isB0) {
+	scalar_part->init(B0,p_init);
+      }
+      else{
+	scalar_part->init(B0B,p_init);
+      }
+      other=(EvtParticle *)scalar_part;
+      //    other->set_type(EvtSpinType::SCALAR);
+      other->setDiagonalSpinDensity();      
+    
+      parent->insertDaugPtr(idaug,other);
+    
+      if (decayed){
+	//report(INFO,"EvtGen") << "In CP Util calling decay \n";
+	other->decay();
+      }
+
+    }
 
     otherb=other->getId();
 
@@ -190,6 +216,7 @@ void EvtCPUtil::OtherB( EvtParticle *p,double &t, EvtId &otherb, double probB0){
     otherb = EvtId(-1,-1); 
   }
   
+  entryCount--;
   return ;
 }
 
@@ -234,7 +261,7 @@ void EvtCPUtil::OtherB( EvtParticle *p,double &t, EvtId &otherb){
 
   if (parent==0||parent->getId()!=UPS4) {
     //report(ERROR,"EvtGen") << 
-    //  "Warning CP violation with B having no parent!"<<endl;
+    //  "Warning CP violation with B having no parent!"<<std::endl;
     t=p->getLifetime();
     if (p->getId()==B0) otherb=B0B;
     if (p->getId()==B0B) otherb=B0;

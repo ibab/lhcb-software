@@ -18,15 +18,20 @@
 //
 //------------------------------------------------------------------------
 // 
+#ifdef WIN32 
+  #pragma warning( disable : 4786 ) 
+  // Disable anoying warning about symbol size 
+#endif 
 #include <iostream>
 #include <math.h>
-#include "EvtGen/EvtComplex.hh"
-#include "EvtGen/EvtSpinDensity.hh"
-#include "EvtGen/EvtAmp.hh"
-#include "EvtGen/EvtReport.hh"
-#include "EvtGen/EvtId.hh"
-#include "EvtGen/EvtPDL.hh"
-#include "EvtGen/EvtParticle.hh"
+#include <assert.h>
+#include "EvtGenBase/EvtComplex.hh"
+#include "EvtGenBase/EvtSpinDensity.hh"
+#include "EvtGenBase/EvtAmp.hh"
+#include "EvtGenBase/EvtReport.hh"
+#include "EvtGenBase/EvtId.hh"
+#include "EvtGenBase/EvtPDL.hh"
+#include "EvtGenBase/EvtParticle.hh"
 
 
 
@@ -283,17 +288,21 @@ EvtAmp EvtAmp::contract(int k,const EvtSpinDensity& rho){
   temp._ndaug=_ndaug;
   temp._pstates=_pstates;
   temp._nontrivial=_nontrivial;
-  for(i=0;i<10;i++){
+
+  for(i=0;i<_ndaug;i++){
     temp.dstates[i]=dstates[i];
     temp._dnontrivial[i]=_dnontrivial[i];
-  }
-  for(i=0;i<5;i++){
-    temp._nstate[i]=_nstate[i];
   }
 
   if (_nontrivial==0) {
     report(ERROR,"EvtGen")<<"Should not be here EvtAmp!"<<std::endl;
   }
+
+
+  for(i=0;i<_nontrivial;i++){
+    temp._nstate[i]=_nstate[i];
+  }
+
 
   EvtComplex c;
 
@@ -361,13 +370,9 @@ EvtSpinDensity EvtAmp::contract(int k,const EvtAmp& amp2){
 
     for(j=0;j<_nstate[k];j++){
       if (_nontrivial==0) {
-
 	report(ERROR,"EvtGen")<<"Should not be here1 EvtAmp!"<<std::endl;
-         
         rho.Set(0,0,EvtComplex(1.0,0.0)); 
-
         return rho;
-
       }
 
       for (ii=0;ii<10;ii++) {
@@ -389,23 +394,35 @@ EvtSpinDensity EvtAmp::contract(int k,const EvtAmp& amp2){
 	      if ( index[ii] == (_nstate[ii]-1) ) {
 		index[ii] = 0;
 		index1[ii] = 0;
-	    }
+	      }
 	      else {
 		indflag = 1;
 		index[ii] += 1;
-	      index1[ii] += 1;
+		index1[ii] += 1;
 	      }
 	    }
 	  }
 	}
       }
       rho.Set(i,j,temp);
-
+      
     }
   }
 
   return rho;
 }
+
+
+EvtAmp EvtAmp::contract(int /*i*/, const EvtAmp& /*a1*/,const EvtAmp& a2){
+
+  assert(a2._pstates>1&&a2._nontrivial==1);
+
+  EvtAmp tmp;
+  report(DEBUG,"EvtGen") << "EvtAmp::contract not written yet" << std::endl;
+  return tmp;
+
+}
+
 
 void EvtAmp::dump(){
 
@@ -436,8 +453,14 @@ void EvtAmp::dump(){
   }
 
   int allloop[10];
-  for (i=0;i<_nontrivial;i++) { 
-    allloop[i] *= _nstate[i];
+  allloop[0]=1;
+  for (i=0;i<_nontrivial;i++) {
+    if (i==0){
+      allloop[i] *= _nstate[i];
+    }
+    else{
+      allloop[i] = allloop[i-1]*_nstate[i];
+    }
   }
   int index = 0;
   for (i=0;i<allloop[_nontrivial-1];i++) {

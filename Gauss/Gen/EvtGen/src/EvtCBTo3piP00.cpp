@@ -19,20 +19,24 @@
 //
 //------------------------------------------------------------------------
 //
+#ifdef WIN32 
+  #pragma warning( disable : 4786 ) 
+  // Disable anoying warning about symbol size 
+#endif 
 #include <stdlib.h>
-#include "EvtGen/EvtParticle.hh"
-#include "EvtGen/EvtGenKine.hh"
-#include "EvtGen/EvtPDL.hh"
-#include "EvtGen/EvtReport.hh"
-#include "EvtGen/EvtCBTo3piP00.hh"
-#include "EvtGen/EvtString.hh"
+#include "EvtGenBase/EvtParticle.hh"
+#include "EvtGenBase/EvtGenKine.hh"
+#include "EvtGenBase/EvtPDL.hh"
+#include "EvtGenBase/EvtReport.hh"
+#include "EvtGenModels/EvtCBTo3piP00.hh"
+#include <string>
 
 //Below you will have do modify the declaration to be appropriate
 //for your new routine for the calculation of the amplitude
 
 #ifdef WIN32
 extern "C" {
-  extern void __stdcall EVT3PIONSP00(double *,int *,
+  extern void EVT3PIONSP00(double *,int *,
 			     double *,
 			     double *,double *,
 			     double *,double *,
@@ -50,7 +54,7 @@ extern "C" {
 
 EvtCBTo3piP00::~EvtCBTo3piP00() {}
 
-void EvtCBTo3piP00::getName(EvtString& model_name){
+void EvtCBTo3piP00::getName(std::string& model_name){
 
   model_name="CB3PI-P00";     
 

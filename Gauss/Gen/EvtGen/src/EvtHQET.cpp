@@ -13,20 +13,30 @@
 // Description: Routine to implement semileptonic B->D*lnu decays according
 //              to the model HQET
 //
+//   Lange Nov9/01 adding Dlnu and possible (w-1)^2 term
+//
+//
 // Modification history:
 //
 //    DJL     April 20, 1998        Module created
 //
 //------------------------------------------------------------------------
 // 
+#ifdef WIN32 
+  #pragma warning( disable : 4786 ) 
+  // Disable anoying warning about symbol size 
+#endif 
 #include <stdlib.h>
-#include "EvtGen/EvtParticle.hh"
-#include "EvtGen/EvtGenKine.hh"
-#include "EvtGen/EvtPDL.hh"
-#include "EvtGen/EvtReport.hh"
-#include "EvtGen/EvtHQET.hh"
-
-#include "EvtGen/EvtString.hh"
+#include <assert.h>
+#include "EvtGenBase/EvtParticle.hh"
+#include "EvtGenBase/EvtGenKine.hh"
+#include "EvtGenBase/EvtPDL.hh"
+#include "EvtGenBase/EvtReport.hh"
+#include "EvtGenModels/EvtHQET.hh"
+#include "EvtGenModels/EvtHQETFF.hh"
+#include "EvtGenBase/EvtSemiLeptonicVectorAmp.hh"
+#include "EvtGenBase/EvtSemiLeptonicScalarAmp.hh"
+#include <string>
 
 EvtHQET::EvtHQET():
   hqetffmodel(0)
@@ -40,7 +50,7 @@ EvtHQET::~EvtHQET() {
   calcamp=0;
 }
 
-void EvtHQET::getName(EvtString& model_name){
+void EvtHQET::getName(std::string& model_name){
 
   model_name="HQET";     
 
@@ -57,9 +67,9 @@ EvtDecayBase* EvtHQET::clone(){
 
 void EvtHQET::decay( EvtParticle *p ){
 
-
   p->initializePhaseSpace(getNDaug(),getDaugs());
   calcamp->CalcAmp(p,_amp2,hqetffmodel);
+
 }
 
 void EvtHQET::initProbMax(){
@@ -81,7 +91,6 @@ setProbMax(mymaxprob);
 
 void EvtHQET::init(){
 
-  checkNArg(3);
   checkNDaug(3);
 
   //We expect the parent to be a scalar 
@@ -91,8 +100,24 @@ void EvtHQET::init(){
   checkSpinDaughter(1,EvtSpinType::DIRAC);
   checkSpinDaughter(2,EvtSpinType::NEUTRINO);
 
-  hqetffmodel = new EvtHQETFF(getArg(0),getArg(1),getArg(2));
-  calcamp = new EvtSemiLeptonicVectorAmp; 
+  EvtSpinType::spintype d1type = EvtPDL::getSpinType(getDaug(0));
+  if ( d1type==EvtSpinType::SCALAR) {
+    checkNArg(1,2);
+    if ( getNArg()==1 ) hqetffmodel = new EvtHQETFF(getArg(0));
+    else hqetffmodel = new EvtHQETFF(getArg(0),getArg(1));
+    calcamp = new EvtSemiLeptonicScalarAmp; 
+  }
+  else if ( d1type==EvtSpinType::VECTOR) {
+    checkNArg(3,4);
+    if ( getNArg()==3 ) hqetffmodel = new EvtHQETFF(getArg(0),getArg(1),getArg(2));
+    else hqetffmodel = new EvtHQETFF(getArg(0),getArg(1),getArg(2),getArg(3));
+    calcamp = new EvtSemiLeptonicVectorAmp; 
+  }
+  else{
+    report(ERROR,"EvtGen") << "HQET model handles only scalar and vector meson daughters. Sorry."<<std::endl;
+    ::abort();
+  }
+
   
 }
 

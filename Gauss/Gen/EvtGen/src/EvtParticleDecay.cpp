@@ -18,18 +18,22 @@
 //
 //------------------------------------------------------------------------
 //
+#ifdef WIN32 
+  #pragma warning( disable : 4786 ) 
+  // Disable anoying warning about symbol size 
+#endif 
 #include <iostream>
+#include <fstream>
 #include <stdlib.h>
 #include <ctype.h>
-#include "EvtGen/EvtParticleDecay.hh"
-#include "EvtGen/EvtParticle.hh"
-#include "EvtGen/EvtString.hh"
-#include "EvtGen/EvtRandom.hh"
-#include "EvtGen/EvtReport.hh"
-#include "EvtGen/EvtPDL.hh"
-#include "EvtGen/EvtId.hh"
-#include "EvtGen/EvtVectorT.hh"
-
+#include "EvtGenBase/EvtParticleDecay.hh"
+#include "EvtGenBase/EvtParticle.hh"
+#include "EvtGenBase/EvtRandom.hh"
+#include "EvtGenBase/EvtReport.hh"
+#include "EvtGenBase/EvtPDL.hh"
+#include "EvtGenBase/EvtId.hh"
+#include <string>
+#include <vector>
 void EvtParticleDecay::printSummary(){
 
   if (_decay!=0) _decay->printSummary();
@@ -46,7 +50,7 @@ void EvtParticleDecay::chargeConj(EvtParticleDecay *decay){
   int ndaug=decay->_decay->getNDaug();
   int narg=decay->_decay->getNArg();
   double brfr=decay->_decay->getBranchingFraction();
-  EvtString name;
+  std::string name;
   decay->_decay->getName(name);
   EvtId ipar=EvtPDL::chargeConj(decay->_decay->getParentId());
   int i;
@@ -55,9 +59,9 @@ void EvtParticleDecay::chargeConj(EvtParticleDecay *decay){
     daug[i]=EvtPDL::chargeConj(decay->_decay->getDaug(i));
   }
   //Had to add 1 to make sure the vector is not empty!
-  EvtVectorT<double> args(narg+1);
+  std::vector<std::string> args;
   for(i=0;i<narg;i++){
-    args[i]=decay->_decay->getArg(i);
+    args.push_back(decay->_decay->getArgStr(i));
   }
 
   _decay->saveDecayInfo(ipar,ndaug,daug,narg,args,name,brfr);

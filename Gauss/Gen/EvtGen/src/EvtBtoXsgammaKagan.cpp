@@ -1,8 +1,5 @@
 //--------------------------------------------------------------------------
 //
-//
-// Copyright Information: See EvtGen/COPYRIGHT
-//
 // Environment:
 //      This software is part of the EvtGen package developed jointly
 //      for the BaBar and CLEO collaborations.  If you use all or part
@@ -18,38 +15,50 @@
 //       The input parameters are 1:fermi_model, 2:mB, 3:mb, 4:mu, 5:lam1, 
 //       6:delta, 7:z, 8:nIntervalS, 9:nIntervalmH. Choosing fermi_model=1 
 //       uses an exponential shape function, fermi_model=2 uses a gaussian 
-//       shape function and fermi_model=3 a roman shape function. The complete mass
+//       shape function and fermi_model=3 a roman shape function. 
+//The complete mass
 //       spectrum for a given set of input parameters is calculated from 
-//       scratch in bins of nIntervalmH. The s22, s27 and s28 coefficients are calculated
-//       in bins of nIntervalS. As the program includes lots of integration, the
+//       scratch in bins of nIntervalmH. The s22, s27 and s28 coefficients 
+//are calculated
+//       in bins of nIntervalS. As the program includes lots of integration, 
+//the
 //       theoretical hadronic mass spectra is computed for the first time
-//       the init method is called. Then, all the other times (eg if we want to decay a B0 
-//       as well as an anti-B0) the vector mass info stored the first time is used again.
+//       the init method is called. Then, all the other times (eg if we want 
+//to decay a B0 
+//       as well as an anti-B0) the vector mass info stored the first time 
+//is used again.
 //
 // Modification history:
 //
-//      Jane Tinslay, Francesca Di Lodovico  March 21, 2001       Module created
+//      Jane Tinslay, Francesca Di Lodovico  March 21, 2001       
+// Module created
 //------------------------------------------------------------------------
 //
 
+#ifdef WIN32 
+  #pragma warning( disable : 4786 ) 
+  // Disable anoying warning about symbol size 
+#endif 
 #include <stdlib.h>
-#include "EvtGen/EvtBtoXsgamma.hh"
-#include "EvtGen/EvtRandom.hh"
-#include "EvtGen/EvtBtoXsgammaKagan.hh"
-#include "EvtGen/EvtString.hh"
-#include "EvtGen/EvtConst.hh"
-#include "EvtGen/EvtParticle.hh"
-#include "EvtGen/EvtGenKine.hh"
-#include "EvtGen/EvtPDL.hh"
-#include "EvtGen/EvtReport.hh"
-#include "EvtGen/EvtItgSimpsonIntegrator.hh"
-#include "EvtGen/EvtItgFunction.hh"
-#include "EvtGen/EvtItgPtrFunction.hh"
-#include "EvtGen/EvtItgTwoCoeffFcn.hh"
-#include "EvtGen/EvtItgThreeCoeffFcn.hh"
-#include "EvtGen/EvtItgFourCoeffFcn.hh"
-#include "EvtGen/EvtItgAbsIntegrator.hh"
-#include "EvtGen/EvtBtoXsgammaFermiUtil.hh"
+#include "EvtGenModels/EvtBtoXsgamma.hh"
+#include "EvtGenBase/EvtRandom.hh"
+#include "EvtGenModels/EvtBtoXsgammaKagan.hh"
+#include <string>
+#include "EvtGenBase/EvtConst.hh"
+#include "EvtGenBase/EvtParticle.hh"
+#include "EvtGenBase/EvtGenKine.hh"
+#include "EvtGenBase/EvtPDL.hh"
+#include "EvtGenBase/EvtReport.hh"
+#include "EvtGenModels/EvtItgSimpsonIntegrator.hh"
+#include "EvtGenModels/EvtItgFunction.hh"
+#include "EvtGenModels/EvtItgPtrFunction.hh"
+#include "EvtGenModels/EvtItgTwoCoeffFcn.hh"
+#include "EvtGenModels/EvtItgThreeCoeffFcn.hh"
+#include "EvtGenModels/EvtItgFourCoeffFcn.hh"
+#include "EvtGenModels/EvtItgAbsIntegrator.hh"
+#include "EvtGenModels/EvtBtoXsgammaFermiUtil.hh"
+
+#include <fstream>
 
 bool EvtBtoXsgammaKagan::bbprod = false;
 double EvtBtoXsgammaKagan::intervalMH = 0;
@@ -61,11 +70,14 @@ EvtBtoXsgammaKagan::~EvtBtoXsgammaKagan(){
 
 void EvtBtoXsgammaKagan::init(int nArg, double* args){
 
-  if ((nArg) > 10 || (nArg > 1 && nArg <10)){
+  if ((nArg) > 12 || (nArg > 1 && nArg <10) || nArg == 11){
   
   report(ERROR,"EvtGen") << "EvtBtoXsgamma generator model "
 			 << "EvtBtoXsgammaKagan expected " 
-       << "either 1(default config) or ten arguments but found: "<<nArg<<std::endl;
+			 << "either 1(default config) or " 
+			 << "10 (default mass range) or " 
+			 << "12 (user range) arguments but found: "
+			 <<nArg<<std::endl;
   report(ERROR,"EvtGen") << "Will terminate execution!"<<std::endl;
     ::abort();  
   }
@@ -77,6 +89,36 @@ void EvtBtoXsgammaKagan::init(int nArg, double* args){
     bbprod = false;
     computeHadronicMass(nArg, args);
   }
+
+  double mHminLimit=0.6373;
+  double mHmaxLimit=4.5;
+
+  if (nArg>10){
+    _mHmin = args[10];
+    _mHmax = args[11]; 
+    if (_mHmin > _mHmax){
+      report(ERROR,"EvtGen") << "Minimum hadronic mass exceeds maximum " 
+			     << std::endl;
+      report(ERROR,"EvtGen") << "Will terminate execution!" << std::endl;
+      ::abort();
+    }
+    if (_mHmin < mHminLimit){
+      report(ERROR,"EvtGen") << "Minimum hadronic mass below K pi threshold" 
+			     << std::endl;
+      report(ERROR,"EvtGen") << "Resetting to K pi threshold" << std::endl;
+      _mHmin = mHminLimit;
+    }     
+    if (_mHmax > mHmaxLimit){
+      report(ERROR,"EvtGen") << "Maximum hadronic mass above 4.5 GeV/c^2" 
+			     << std::endl;
+      report(ERROR,"EvtGen") << "Resetting to 4.5 GeV/c^2" << std::endl;
+      _mHmax = mHmaxLimit;
+    }     
+  }else{
+    _mHmin=mHminLimit; //  usually just above K pi threshold for Xsd/u
+    _mHmax=mHmaxLimit;    
+  }  
+  
 }
 
 void EvtBtoXsgammaKagan::getDefaultHadronicMass(){
@@ -84,9 +126,41 @@ void EvtBtoXsgammaKagan::getDefaultHadronicMass(){
     massHad = new double[81];
     brHad = new double[81];
   
-    double mass[81] = { 0, 0.0625995, 0.125199, 0.187798, 0.250398, 0.312997, 0.375597, 0.438196, 0.500796, 0.563395, 0.625995, 0.688594, 0.751194, 0.813793, 0.876392, 0.938992, 1.00159, 1.06419, 1.12679, 1.18939, 1.25199, 1.31459, 1.37719, 1.43979, 1.50239, 1.56499, 1.62759, 1.69019, 1.75278, 1.81538, 1.87798, 1.94058, 2.00318, 2.06578, 2.12838, 2.19098, 2.25358, 2.31618, 2.37878, 2.44138, 2.50398, 2.56658, 2.62918, 2.69178, 2.75438, 2.81698, 2.87958, 2.94217, 3.00477, 3.06737, 3.12997, 3.19257, 3.25517, 3.31777, 3.38037, 3.44297, 3.50557, 3.56817, 3.63077, 3.69337, 3.75597, 3.81857, 3.88117, 3.94377, 4.00637, 4.06896, 4.13156, 4.19416, 4.25676, 4.31936, 4.38196, 4.44456, 4.50716, 4.56976, 4.63236, 4.69496, 4.75756, 4.82016, 4.88276, 4.94536, 5.00796};
+    double mass[81] = { 0, 0.0625995, 0.125199, 0.187798, 0.250398, 0.312997, 
+                        0.375597, 0.438196, 0.500796, 0.563395, 0.625995, 
+                        0.688594, 0.751194, 0.813793, 0.876392, 0.938992, 
+                        1.00159, 1.06419, 1.12679, 1.18939, 1.25199, 1.31459, 
+                        1.37719, 1.43979, 1.50239, 1.56499, 1.62759, 1.69019, 
+                        1.75278, 1.81538, 1.87798, 1.94058, 2.00318, 2.06578, 
+                        2.12838, 2.19098, 2.25358, 2.31618, 2.37878, 2.44138, 
+                        2.50398, 2.56658, 2.62918, 2.69178, 2.75438, 2.81698, 
+                        2.87958, 2.94217, 3.00477, 3.06737, 3.12997, 3.19257, 
+                        3.25517, 3.31777, 3.38037, 3.44297, 3.50557, 3.56817, 
+                        3.63077, 3.69337, 3.75597, 3.81857, 3.88117, 3.94377, 
+                        4.00637, 4.06896, 4.13156, 4.19416, 4.25676, 4.31936, 
+                        4.38196, 4.44456, 4.50716, 4.56976, 4.63236, 4.69496, 
+                        4.75756, 4.82016, 4.88276, 4.94536, 5.00796};
 
-    double br[81] = { 0, 1.03244e-09, 3.0239e-08, 1.99815e-07, 7.29392e-07, 1.93129e-06, 4.17806e-06, 7.86021e-06, 1.33421e-05, 2.09196e-05, 3.07815e-05, 4.29854e-05, 5.74406e-05, 7.3906e-05, 9.2003e-05, 0.000111223, 0.000130977, 0.000150618, 0.000169483, 0.000186934, 0.000202392, 0.000215366, 0.000225491, 0.000232496, 0.000236274, 0.000236835, 0.000234313, 0.000228942, 0.000221042, 0.000210994, 0.000199215, 0.000186137, 0.000172194, 0.000157775, 0.000143255, 0.000128952, 0.000115133, 0.000102012, 8.97451e-05, 7.84384e-05, 6.81519e-05, 5.89048e-05, 5.06851e-05, 4.34515e-05, 3.71506e-05, 3.1702e-05, 2.70124e-05, 2.30588e-05, 1.96951e-05, 1.68596e-05, 1.44909e-05, 1.25102e-05, 1.08596e-05, 9.48476e-06, 8.34013e-06, 7.38477e-06, 6.58627e-06, 5.91541e-06, 5.35022e-06, 4.87047e-06, 4.46249e-06, 4.11032e-06, 3.80543e-06, 3.54051e-06, 3.30967e-06, 3.10848e-06, 2.93254e-06, 2.78369e-06, 2.65823e-06, 2.55747e-06, 2.51068e-06, 2.57179e-06, 2.74684e-06, 3.02719e-06, 3.41182e-06, 3.91387e-06, 4.56248e-06, 5.40862e-06, 6.53915e-06, 8.10867e-06, 1.04167e-05 };
+    double br[81] = { 0, 1.03244e-09, 3.0239e-08, 1.99815e-07, 7.29392e-07, 
+                      1.93129e-06, 4.17806e-06, 7.86021e-06, 1.33421e-05, 
+                      2.09196e-05, 3.07815e-05, 4.29854e-05, 5.74406e-05, 
+                      7.3906e-05, 9.2003e-05, 0.000111223, 0.000130977, 
+                      0.000150618, 0.000169483, 0.000186934, 0.000202392, 
+                      0.000215366, 0.000225491, 0.000232496, 0.000236274, 
+                      0.000236835, 0.000234313, 0.000228942, 0.000221042, 
+                      0.000210994, 0.000199215, 0.000186137, 0.000172194, 
+                      0.000157775, 0.000143255, 0.000128952, 0.000115133, 
+                      0.000102012, 8.97451e-05, 7.84384e-05, 6.81519e-05, 
+                      5.89048e-05, 5.06851e-05, 4.34515e-05, 3.71506e-05, 
+                      3.1702e-05, 2.70124e-05, 2.30588e-05, 1.96951e-05, 
+                      1.68596e-05, 1.44909e-05, 1.25102e-05, 1.08596e-05, 
+                      9.48476e-06, 8.34013e-06, 7.38477e-06, 6.58627e-06, 
+                      5.91541e-06, 5.35022e-06, 4.87047e-06, 4.46249e-06, 
+                      4.11032e-06, 3.80543e-06, 3.54051e-06, 3.30967e-06, 
+                      3.10848e-06, 2.93254e-06, 2.78369e-06, 2.65823e-06, 
+                      2.55747e-06, 2.51068e-06, 2.57179e-06, 2.74684e-06, 
+                      3.02719e-06, 3.41182e-06, 3.91387e-06, 4.56248e-06, 
+                      5.40862e-06, 6.53915e-06, 8.10867e-06, 1.04167e-05 };
 
   for(int i=0; i<81; i++){
     massHad[i] = mass[i];
@@ -107,14 +181,15 @@ void EvtBtoXsgammaKagan::computeHadronicMass(int /*nArg*/, double* args){
   _z = args[7];
   _nIntervalS = args[8];
   _nIntervalmH = args[9];
- 
   HepVector mHVect(int(_nIntervalmH+1.0));
   massHad = new double[int(_nIntervalmH+1.0)];
   brHad = new double[int(_nIntervalmH+1.0)];
   intervalMH=_nIntervalmH;
 
   //Going to have to add a new entry into the data file - takes ages...
-  report(WARNING,"EvtGen") << "EvtBtoXsgammaKagan: calculating new hadronic mass spectra. This takes a while..." << std::endl;
+  report(WARNING,"EvtGen") 
+    << "EvtBtoXsgammaKagan: calculating new hadronic mass spectra. "
+    << "This takes a while..." << std::endl;
   
   //Now need to compute the mHVect vector for
   //the current parameters
@@ -172,12 +247,16 @@ void EvtBtoXsgammaKagan::computeHadronicMass(int /*nArg*/, double* args){
   sCoeffs[0] = _z;
   
   //Define s22 and s27 functions
-  EvtItgPtrFunction *mys22Func = new EvtItgPtrFunction(&s22Func, 0., yMax+0.1, sCoeffs);
-  EvtItgPtrFunction *mys27Func = new EvtItgPtrFunction(&s27Func, 0., yMax+0.1, sCoeffs);
+  EvtItgPtrFunction *mys22Func = 
+    new EvtItgPtrFunction(&s22Func, 0., yMax+0.1, sCoeffs);
+  EvtItgPtrFunction *mys27Func = 
+    new EvtItgPtrFunction(&s27Func, 0., yMax+0.1, sCoeffs);
   
   //Use a simpson integrator
-  EvtItgAbsIntegrator *mys22Simp = new EvtItgSimpsonIntegrator(*mys22Func, 1.0e-4, 20);
-  EvtItgAbsIntegrator *mys27Simp = new EvtItgSimpsonIntegrator(*mys27Func, 1.0e-4, 50);
+  EvtItgAbsIntegrator *mys22Simp = 
+    new EvtItgSimpsonIntegrator(*mys22Func, 1.0e-4, 20);
+  EvtItgAbsIntegrator *mys27Simp = 
+    new EvtItgSimpsonIntegrator(*mys27Func, 1.0e-4, 50);
 
   int i;
 
@@ -195,7 +274,8 @@ void EvtBtoXsgammaKagan::computeHadronicMass(int /*nArg*/, double* args){
   delete mys22Simp;
   delete mys27Simp;
   
-  //Define functions and vectors used to calculate mHVect. Each function takes a set
+  //Define functions and vectors used to calculate mHVect. 
+  // Each function takes a set
   //of vectors which are used as the function coefficients
   HepVector FermiCoeffs(6);
   HepVector varCoeffs(3);
@@ -241,23 +321,31 @@ void EvtBtoXsgammaKagan::computeHadronicMass(int /*nArg*/, double* args){
     FermiCoeffs[3]=_lam1;
     FermiCoeffs[4]=1.0;
     
-    EvtItgPtrFunction *myNormFunc = new EvtItgPtrFunction(&EvtBtoXsgammaFermiUtil::FermiExpFunc, -_mb, _mB-_mb, FermiCoeffs);
-    EvtItgAbsIntegrator *myNormSimp = new EvtItgSimpsonIntegrator(*myNormFunc, 1.0e-4, 40);
+    EvtItgPtrFunction *myNormFunc = 
+      new EvtItgPtrFunction(&EvtBtoXsgammaFermiUtil::FermiExpFunc, 
+                            -_mb, _mB-_mb, FermiCoeffs);
+    EvtItgAbsIntegrator *myNormSimp = 
+      new EvtItgSimpsonIntegrator(*myNormFunc, 1.0e-4, 40);
     FermiCoeffs[4]=myNormSimp->normalisation();
     delete myNormFunc; myNormFunc=0;
     delete myNormSimp; myNormSimp=0;
     
   } else if (fermiFunction == 2) {
     
-    double a = EvtBtoXsgammaFermiUtil::FermiGaussFuncRoot(_lambdabar, _lam1, _mb, gammaCoeffs);
+    double a = 
+      EvtBtoXsgammaFermiUtil::FermiGaussFuncRoot(_lambdabar, _lam1, 
+                                                 _mb, gammaCoeffs);
     FermiCoeffs[1]=_lambdabar;
     FermiCoeffs[2]=a;
     FermiCoeffs[3]= EvtBtoXsgammaFermiUtil::Gamma((2.0 + a)/2., gammaCoeffs)/
       EvtBtoXsgammaFermiUtil::Gamma((1.0 + a)/2., gammaCoeffs);
     FermiCoeffs[4]=1.0;
     
-    EvtItgPtrFunction *myNormFunc = new EvtItgPtrFunction(&EvtBtoXsgammaFermiUtil::FermiGaussFunc, -_mb, _mB-_mb, FermiCoeffs);
-    EvtItgAbsIntegrator *myNormSimp = new EvtItgSimpsonIntegrator(*myNormFunc, 1.0e-4, 40);
+    EvtItgPtrFunction *myNormFunc = 
+      new EvtItgPtrFunction(&EvtBtoXsgammaFermiUtil::FermiGaussFunc, 
+                            -_mb, _mB-_mb, FermiCoeffs);
+    EvtItgAbsIntegrator *myNormSimp = 
+      new EvtItgSimpsonIntegrator(*myNormFunc, 1.0e-4, 40);
     FermiCoeffs[4]=myNormSimp->normalisation();
     delete myNormFunc; myNormFunc=0;
     delete myNormSimp; myNormSimp=0;
@@ -272,8 +360,11 @@ void EvtBtoXsgammaKagan::computeHadronicMass(int /*nArg*/, double* args){
     FermiCoeffs[4]=_lambdabar;
     FermiCoeffs[5]=1.0;
     
-    EvtItgPtrFunction *myNormFunc = new EvtItgPtrFunction(&EvtBtoXsgammaFermiUtil::FermiRomanFunc, -_mb, _mB-_mb, FermiCoeffs);
-    EvtItgAbsIntegrator *myNormSimp = new EvtItgSimpsonIntegrator(*myNormFunc, 1.0e-4, 40);
+    EvtItgPtrFunction *myNormFunc = 
+      new EvtItgPtrFunction(&EvtBtoXsgammaFermiUtil::FermiRomanFunc, 
+                            -_mb, _mB-_mb, FermiCoeffs);
+    EvtItgAbsIntegrator *myNormSimp = 
+      new EvtItgSimpsonIntegrator(*myNormFunc, 1.0e-4, 40);
     FermiCoeffs[5]=myNormSimp->normalisation();
     delete myNormFunc; myNormFunc=0;
     delete myNormSimp; myNormSimp=0;
@@ -281,13 +372,27 @@ void EvtBtoXsgammaKagan::computeHadronicMass(int /*nArg*/, double* args){
   }
   
   //Define functions
-  EvtItgThreeCoeffFcn* myDeltaFermiFunc = new EvtItgThreeCoeffFcn(&DeltaFermiFunc, -_mb, _mB-_mb, FermiCoeffs, varCoeffs, DeltaCoeffs);
-  EvtItgThreeCoeffFcn* mys88FermiFunc = new EvtItgThreeCoeffFcn(&s88FermiFunc, -_mb, _mB-_mb, FermiCoeffs, varCoeffs, s88Coeffs);
-  EvtItgTwoCoeffFcn* mys77FermiFunc = new EvtItgTwoCoeffFcn(&s77FermiFunc, -_mb, _mB-_mb, FermiCoeffs, varCoeffs);
-  EvtItgTwoCoeffFcn* mys78FermiFunc = new EvtItgTwoCoeffFcn(&s78FermiFunc, -_mb, _mB-_mb, FermiCoeffs, varCoeffs);
-  EvtItgFourCoeffFcn* mys22FermiFunc = new EvtItgFourCoeffFcn(&sFermiFunc, -_mb, _mB-_mb, FermiCoeffs, varCoeffs, sInitCoeffs, s22Coeffs);
-  EvtItgFourCoeffFcn* mys27FermiFunc = new EvtItgFourCoeffFcn(&sFermiFunc, -_mb, _mB-_mb, FermiCoeffs, varCoeffs, sInitCoeffs, s27Coeffs);
-  EvtItgFourCoeffFcn* mys28FermiFunc = new EvtItgFourCoeffFcn(&sFermiFunc, -_mb, _mB-_mb, FermiCoeffs, varCoeffs, sInitCoeffs, s28Coeffs);
+  EvtItgThreeCoeffFcn* myDeltaFermiFunc = 
+    new EvtItgThreeCoeffFcn(&DeltaFermiFunc, -_mb, _mB-_mb, 
+                            FermiCoeffs, varCoeffs, DeltaCoeffs);
+  EvtItgThreeCoeffFcn* mys88FermiFunc = 
+    new EvtItgThreeCoeffFcn(&s88FermiFunc, -_mb, _mB-_mb, 
+                            FermiCoeffs, varCoeffs, s88Coeffs);
+  EvtItgTwoCoeffFcn* mys77FermiFunc = 
+    new EvtItgTwoCoeffFcn(&s77FermiFunc, -_mb, _mB-_mb, 
+                          FermiCoeffs, varCoeffs);
+  EvtItgTwoCoeffFcn* mys78FermiFunc = 
+    new EvtItgTwoCoeffFcn(&s78FermiFunc, -_mb, _mB-_mb, 
+                          FermiCoeffs, varCoeffs);
+  EvtItgFourCoeffFcn* mys22FermiFunc = 
+    new EvtItgFourCoeffFcn(&sFermiFunc, -_mb, _mB-_mb, 
+                           FermiCoeffs, varCoeffs, sInitCoeffs, s22Coeffs);
+  EvtItgFourCoeffFcn* mys27FermiFunc = 
+    new EvtItgFourCoeffFcn(&sFermiFunc, -_mb, _mB-_mb, 
+                           FermiCoeffs, varCoeffs, sInitCoeffs, s27Coeffs);
+  EvtItgFourCoeffFcn* mys28FermiFunc = 
+    new EvtItgFourCoeffFcn(&sFermiFunc, -_mb, _mB-_mb, 
+                           FermiCoeffs, varCoeffs, sInitCoeffs, s28Coeffs);
   
   //Define integrators
   EvtItgSimpsonIntegrator* myDeltaFermiSimp = 
@@ -334,8 +439,14 @@ void EvtBtoXsgammaKagan::computeHadronicMass(int /*nArg*/, double* args){
     double s78Result = mys78FermiSimp->evaluate((_mB*ymH-_mb),_mB-_mb);
     double s22Result = mys22FermiSimp->evaluate((_mB*ymH-_mb),_mB-_mb);
     double s27Result = mys27FermiSimp->evaluate((_mB*ymH-_mb),_mB-_mb);
+    double s28Result = mys28FermiSimp->evaluate((_mB*ymH-_mb),_mB-_mb);
     
-    double py = (pow(_CKMrat,2.)*(6./_fz)*(_alpha/EvtConst::pi)*(deltaResult*_cDeltatot  + (_alphasmu/EvtConst::pi)*(s77Result*pow(_c70mu,2.) + s27Result*_c2mu*(_c70mu  - _c80mu/3.) + s78Result*_c70mu*_c80mu + s22Result*_c2mu*_c2mu  + s88Result*_c80mu*_c80mu )  ) );
+    double py = 
+      (pow(_CKMrat,2.)*(6./_fz)*(_alpha/EvtConst::pi)
+       *(deltaResult*_cDeltatot  + (_alphasmu/EvtConst::pi)
+         *(s77Result*pow(_c70mu,2.) + s27Result*_c2mu*(_c70mu  - _c80mu/3.) 
+           + s78Result*_c70mu*_c80mu + s22Result*_c2mu*_c2mu  
+           + s88Result*_c80mu*_c80mu )  ) );
     
     mHVect[i] = 2.*(mH/(_mB*_mB))*0.105*Nsl*py;
 
@@ -367,11 +478,14 @@ void EvtBtoXsgammaKagan::computeHadronicMass(int /*nArg*/, double* args){
 
 double EvtBtoXsgammaKagan::GetMass( int /*Xscode*/ ){
  
-//  Get hadronic mass for the event according to the hadronic mass spectra computed in computeHadronicMass
+//  Get hadronic mass for the event according to 
+// the hadronic mass spectra computed in computeHadronicMass
   double mass=0.0;
-  double min=0.6373; //  usually just above K pi threshold for Xsd/u
+  //  double min=0.6373; //  usually just above K pi threshold for Xsd/u
+  double min=_mHmin;
   if(bbprod)min=1.1;
-  double max=4.5;
+  //  double max=4.5;
+  double max=_mHmax;
   double xbox(0), ybox(0);
   double boxheight(0);
   double trueHeight(0);
@@ -402,13 +516,17 @@ double EvtBtoXsgammaKagan::GetMass( int /*Xscode*/ ){
 double EvtBtoXsgammaKagan::CalcAlphaS(double scale) {
 
   double v = 1. -_beta0*(_alphasmZ/(2.*EvtConst::pi))*(log(_mZ/scale));
-  return (_alphasmZ/v)*(1. - ((_beta1/_beta0)*(_alphasmZ/(4.*EvtConst::pi))*(log(v)/v)));
+  return (_alphasmZ/v)*(1. - ((_beta1/_beta0)*
+                              (_alphasmZ/(4.*EvtConst::pi))*(log(v)/v)));
 
 }
 
 void EvtBtoXsgammaKagan::CalcWilsonCoeffs( ){
   
-   double mtatmw=_mt*pow((_alphasmW/_alphasmt),(12./23.))*(1 + (12./23.)*((253./18.) - (116./23.))*((_alphasmW - _alphasmt)/(4.0*EvtConst::pi)) - (4./3.)*(_alphasmt/EvtConst::pi));
+   double mtatmw=_mt*pow((_alphasmW/_alphasmt),(12./23.))
+     *(1 + (12./23.)*((253./18.) - (116./23.))
+       *((_alphasmW - _alphasmt)/(4.0*EvtConst::pi)) 
+       - (4./3.)*(_alphasmt/EvtConst::pi));
   double xt=pow(mtatmw,2.)/pow(_mW,2.);
  
 
@@ -416,7 +534,8 @@ void EvtBtoXsgammaKagan::CalcWilsonCoeffs( ){
   /////LO
   _c2mu = .5*pow(_etamu,(-12./23.)) + .5*pow(_etamu,(6./23.));
   
-  double c7mWsm = ((3.*pow(xt,3.) - 2.*pow(xt,2.))/(4.*pow((xt - 1.),4.)))*log(xt)
+  double c7mWsm = 
+    ((3.*pow(xt,3.) - 2.*pow(xt,2.))/(4.*pow((xt - 1.),4.)))*log(xt)
     + ((-8.*pow(xt,3.) - 5.*pow(xt,2.) + 7.*xt)/(24.*pow((xt - 1.),3.) )) ;
   
   double c8mWsm =  ((-3.*pow(xt,2.))/(4.*pow((xt - 1.),4.)))*log(xt)
@@ -424,49 +543,63 @@ void EvtBtoXsgammaKagan::CalcWilsonCoeffs( ){
   
   double c7constmu = (626126./272277.)*pow(_etamu,(14./23.))
     - (56281./51730.)*pow(_etamu,(16./23.)) - (3./7.)*pow(_etamu,(6./23.)) 
-    - (1./14.)*pow(_etamu,(-12./23.)) - .6494*pow(_etamu,.4086) - .038*pow(_etamu,-.423) 
+    - (1./14.)*pow(_etamu,(-12./23.)) - .6494*pow(_etamu,.4086) 
+    - .038*pow(_etamu,-.423) 
     - .0186*pow(_etamu,-.8994) - .0057*pow(_etamu,.1456);
   
   _c70mu = c7mWsm*pow(_etamu,(16./23.)) + (8./3.)*(pow(_etamu,(14./23.))
     -pow(_etamu,(16./23.)))*c8mWsm + c7constmu;
   
   double c8constmu =  (313063./363036.)*pow(_etamu,(14./23.))
-    -.9135*pow(_etamu,.4086) + .0873*pow(_etamu,-.423) - .0571*pow(_etamu,-.8994)
+    -.9135*pow(_etamu,.4086) + .0873*pow(_etamu,-.423) 
+    - .0571*pow(_etamu,-.8994)
     + .0209*pow(_etamu,.1456);
 
   _c80mu = c8mWsm*pow(_etamu,(14./23.)) + c8constmu;
 
  //Compute the dilogarithm (PolyLog(2,x)) with the Simpson integrator
  //The dilogarithm is defined as: Li_2(x)=Int_0^x(-log(1.-z)/z)
- //however, Mathematica implements it as  Sum[z^k/k^2,{k,1,Infinity}], so, althought the two
- //results are similar and both implemented in the program, we prefer to use the
- //one closer to the Mathematica implementation as identical to what used by the theorists.
+ //however, Mathematica implements it as  Sum[z^k/k^2,{k,1,Infinity}], 
+  //so, althought the two
+ //results are similar and both implemented in the program, we prefer 
+  //to use the
+ //one closer to the Mathematica implementation as identical to what used 
+  //by the theorists.
   
  // EvtItgFunction *myDiLogFunc = new EvtItgFunction(&diLogFunc, 0., 1.-1./xt);
- //EvtItgAbsIntegrator *myDiLogSimp = new EvtItgSimpsonIntegrator(*myDiLogFunc, 1.0e-4, 50);
+ //EvtItgAbsIntegrator *myDiLogSimp = 
+  //new EvtItgSimpsonIntegrator(*myDiLogFunc, 1.0e-4, 50);
  //double li2 = myDiLogSimp->evaluate(1.0e-20,1.-1./xt);
 
  double li2=diLogMathematica(1.-1./xt);
 
-double c7mWsm1 = ( (-16. *pow(xt,4.) -122. *pow(xt,3.) + 80. *pow(xt,2.) -8. *xt)/
-(9. *pow((xt -1.),4.)) * li2 +
-(6. *pow(xt,4.) + 46. *pow(xt,3.) -28. *pow(xt,2.))/(3. *pow((xt-1.),5.)) *pow(log(xt),2.)
-+ (-102. *pow(xt,5.) -588. *pow(xt,4.) -2262. *pow(xt,3.) + 3244. *pow(xt,2.) -1364. *xt
-+ 208.)/(81. *pow((xt-1),5.)) *log(xt)
-+ (1646. *pow(xt,4.) + 12205. *pow(xt,3.) -10740. *pow(xt,2.) + 2509. *xt -436.)/
-(486. *pow((xt-1),4.)) );
+double c7mWsm1 = ( (-16. *pow(xt,4.) -122. *pow(xt,3.) + 80. *pow(xt,2.) 
+                    -8. *xt)/
+                   (9. *pow((xt -1.),4.)) * li2 +
+                   (6. *pow(xt,4.) + 46. *pow(xt,3.) 
+                    -28. *pow(xt,2.))/(3. *pow((xt-1.),5.)) *pow(log(xt),2.)
+                   + (-102. *pow(xt,5.) -588. *pow(xt,4.) 
+                      -2262. *pow(xt,3.) + 3244. *pow(xt,2.) -1364. *xt
+                      + 208.)/(81. *pow((xt-1),5.)) *log(xt)
+                   + (1646. *pow(xt,4.) + 12205. *pow(xt,3.) 
+                      -10740. *pow(xt,2.) + 2509. *xt -436.)/
+                   (486. *pow((xt-1),4.)) );
 
 double c8mWsm1 = ((-4. *pow(xt,4.) + 40. *pow(xt,3.) + 41. *pow(xt,2.) + xt)/
-(6. *pow((xt-1.),4.))  * li2
-+ (-17. *pow(xt,3.) -31. *pow(xt,2.))/(2. *pow((xt-1.),5.) ) *pow(log(xt),2.)
-+ (-210. *pow(xt,5.) + 1086. *pow(xt,4.) + 4893. *pow(xt,3.) + 2857. *pow(xt,2.)
--1994. *xt + 280.)/(216. *pow((xt-1),5.)) *log(xt)
-+ (737. *pow(xt,4.) -14102. *pow(xt,3.) -28209. *pow(xt,2.) + 610. *xt -508.)/
-(1296. *pow((xt-1),4.)) );
+                  (6. *pow((xt-1.),4.))  * li2
+                  + (-17. *pow(xt,3.) -31. *pow(xt,2.))
+                  /(2. *pow((xt-1.),5.) ) *pow(log(xt),2.)
+                  + (-210. *pow(xt,5.) + 1086. *pow(xt,4.) 
+                     + 4893. *pow(xt,3.) + 2857. *pow(xt,2.)
+                     -1994. *xt + 280.)/(216. *pow((xt-1),5.)) *log(xt)
+                  + (737. *pow(xt,4.) -14102. *pow(xt,3.) 
+                     -28209. *pow(xt,2.) + 610. *xt -508.)/
+                  (1296. *pow((xt-1),4.)) );
 
-double E1 = (xt *(18. -11. *xt -pow(xt,2.))/(12.*pow( (1. -xt),3.))
-+ pow(xt,2.)* (15. -16. *xt + 4. *pow(xt,2.))/(6. *pow((1. -xt),4.)) *log(xt)
--2./3. *log(xt) );
+ double E1 = (xt *(18. -11. *xt -pow(xt,2.))/(12.*pow( (1. -xt),3.))
+              + pow(xt,2.)* (15. -16. *xt + 4. *pow(xt,2.))/
+              (6. *pow((1. -xt),4.)) *log(xt)
+              -2./3. *log(xt) );
 
 double e1 = 4661194./816831.;
 double e2 = -8516./2217. ;
@@ -507,22 +640,30 @@ double c71constmu  = ((e1 *_etamu *E1 + f1 + g1 *_etamu) *pow(_etamu,(14./23.))
 
 double c71pmu = ( ((297664./14283. *pow(_etamu,(16./23.))
 -7164416./357075. *pow(_etamu,(14./23.))
-+ 256868./14283. *pow(_etamu,(37./23.)) - 6698884./357075. *pow(_etamu,(39./23.)))
++ 256868./14283. *pow(_etamu,(37./23.)) 
+                    - 6698884./357075. *pow(_etamu,(39./23.)))
 *(c8mWsm))
 + 37208./4761. *(pow(_etamu,(39./23.)) - pow(_etamu,(16./23.))) *(c7mWsm)
 + c71constmu );
 
-_c71mu = (_alphasmW/_alphasmu *(pow(_etamu,(16./23.))* c7mWsm1 + 8./3. *(pow(_etamu,(14./23.))
+_c71mu = (_alphasmW/_alphasmu *(pow(_etamu,(16./23.))* c7mWsm1 
+                                + 8./3. *(pow(_etamu,(14./23.))
 - pow(_etamu,(16./23.)) ) *c8mWsm1 ) + c71pmu);
 
 _c7emmu = ((32./75. *pow(_etamu,(-9./23.)) - 40./69. *pow(_etamu,(-7./23.)) +
-               88./575. *pow(_etamu,(16./23.))) *c7mWsm + (-32./575. *pow(_etamu,(-9./23.)) +
-               32./1449. *pow(_etamu,(-7./23.)) + 640./1449.*pow(_etamu,(14./23.)) -
+               88./575. *pow(_etamu,(16./23.))) *c7mWsm 
+           + (-32./575. *pow(_etamu,(-9./23.)) +
+               32./1449. *pow(_etamu,(-7./23.)) 
+              + 640./1449.*pow(_etamu,(14./23.)) -
                704./1725.*pow(_etamu,(16./23.)) ) *c8mWsm
-         - 190./8073.*pow(_etamu,(-35./23.))  - 359./3105. *pow(_etamu,(-17./23.)) +
-         4276./121095. *pow(_etamu,(-12./23.)) + 350531./1009125.*pow(_etamu,(-9./23.))
-         + 2./4347. *pow(_etamu,(-7./23.)) - 5956./15525. *pow(_etamu,(6./23.)) +
-         38380./169533. *pow(_etamu,(14./23.))   - 748./8625. *pow(_etamu,(16./23.)));
+           - 190./8073.*pow(_etamu,(-35./23.))  
+           - 359./3105. *pow(_etamu,(-17./23.)) +
+           4276./121095. *pow(_etamu,(-12./23.)) 
+           + 350531./1009125.*pow(_etamu,(-9./23.))
+           + 2./4347. *pow(_etamu,(-7./23.)) 
+           - 5956./15525. *pow(_etamu,(6./23.)) +
+         38380./169533. *pow(_etamu,(14./23.))   
+           - 748./8625. *pow(_etamu,(16./23.)));
 
 // Wilson coefficients values as according to Kagan's program
 // _c2mu=1.10566;
@@ -535,13 +676,21 @@ _c7emmu = ((32./75. *pow(_etamu,(-9./23.)) - 40./69. *pow(_etamu,(-7./23.)) +
 
 void EvtBtoXsgammaKagan::CalcDelta() {
 
-  double cDelta77 = (1. + (_alphasmu/(2.*EvtConst::pi)) *(_r7 - (16./3.) + _gam77*log(_mb/_mu)) + ( (pow((1. - _z),4.)/_fz) - 1.)*(6.*_lam2/pow(_mb,2.)) + (_alphasmubar/(2.*EvtConst::pi))*_kappabar )*pow(_c70mu,2.);
+  double cDelta77 = (1. + (_alphasmu/(2.*EvtConst::pi)) *(_r7 - (16./3.)
+       + _gam77*log(_mb/_mu)) 
+       + ( (pow((1. - _z),4.)/_fz) - 1.)*(6.*_lam2/pow(_mb,2.)) 
+       + (_alphasmubar/(2.*EvtConst::pi))*_kappabar )*pow(_c70mu,2.);
   
-  double cDelta27 = ((_alphasmu/(2.*EvtConst::pi))*(_rer2 + _gam27*log(_mb/_mu)) - (_lam2/(9.*_z*pow(_mb,2.))))*_c2mu*_c70mu;
+  double cDelta27 = 
+    ((_alphasmu/(2.*EvtConst::pi))*(_rer2 + _gam27*log(_mb/_mu)) 
+     - (_lam2/(9.*_z*pow(_mb,2.))))*_c2mu*_c70mu;
   
-  double cDelta78 = (_alphasmu/(2.*EvtConst::pi))*(_rer8 + _gam87*log(_mb/_mu))*_c70mu*_c80mu;
+  double cDelta78 = 
+    (_alphasmu/(2.*EvtConst::pi))*(_rer8 + _gam87*log(_mb/_mu))*_c70mu*_c80mu;
   
-  _cDeltatot = cDelta77  + cDelta27 + cDelta78 + (_alphasmu/(2.*EvtConst::pi))*_c71mu*_c70mu + (_alpha/_alphasmu)*(2.*_c7emmu*_c70mu - _kSLemmu*pow(_c70mu,2.));
+  _cDeltatot = cDelta77  + cDelta27 + cDelta78 + 
+    (_alphasmu/(2.*EvtConst::pi))*_c71mu*_c70mu 
+    + (_alpha/_alphasmu)*(2.*_c7emmu*_c70mu - _kSLemmu*pow(_c70mu,2.));
   
 }
 
@@ -551,7 +700,8 @@ double EvtBtoXsgammaKagan::Delta(double y, double alphasMu) {
   if (y >= 1.0) y = 0.9999999999;
   
   return ( - 4.*(alphasMu/(3.*EvtConst::pi*(1. - y)))*(log(1. - y) + 7./4.)*
-	   exp(-2.*(alphasMu/(3.*EvtConst::pi))*(pow(log(1. - y),2) + (7./2.)*log(1. - y))));
+	   exp(-2.*(alphasMu/(3.*EvtConst::pi))*(pow(log(1. - y),2) 
+                                           + (7./2.)*log(1. - y))));
   
 }
 
@@ -584,7 +734,8 @@ double EvtBtoXsgammaKagan::ReG(double y) {
   
   if (y < 4.) return -2.*pow(atan(sqrt(y/(4. - y))),2.);
   else {
-    return 2.*(pow(log((sqrt(y) + sqrt(y - 4.))/2.),2.)) - (1./2.)*pow(EvtConst::pi,2.);
+    return 2.*(pow(log((sqrt(y) + sqrt(y - 4.))/2.),2.)) 
+      - (1./2.)*pow(EvtConst::pi,2.);
   }
   
 }
@@ -600,7 +751,8 @@ double EvtBtoXsgammaKagan::ImG(double y) {
 double EvtBtoXsgammaKagan::s22Func(double y, const HepVector &coeffs) {
 
   //coeffs[0]=z
-  return (1. - y)*((pow(coeffs[0],2.)/pow(y,2.))*(pow(ReG(y/coeffs[0]),2.) + pow(ImG(y/coeffs[0]),2.)) + (coeffs[0]/y)*ReG(y/coeffs[0]) + (1./4.));
+  return (1. - y)*((pow(coeffs[0],2.)/pow(y,2.))*(pow(ReG(y/coeffs[0]),2.)
+   + pow(ImG(y/coeffs[0]),2.)) + (coeffs[0]/y)*ReG(y/coeffs[0]) + (1./4.));
   
 }
 
@@ -660,7 +812,8 @@ double EvtBtoXsgammaKagan::sFermiFunc(double y, const HepVector &coeffs1,
   //coeffs2[2]=ymH, coeffs3[0]=nIntervals in s22 or s27 array, coeffs3[1]=yMin,
   //coeffs3[2]=yMax, coeffs4=s22 or s27 array
   return FermiFunc(y,coeffs1)*(coeffs2[0]/(coeffs2[1]+y))*
-    GetArrayVal(coeffs2[0]*coeffs2[2]/(coeffs2[1]+y), coeffs3[0], coeffs3[1], coeffs3[2], coeffs4);
+    GetArrayVal(coeffs2[0]*coeffs2[2]/(coeffs2[1]+y), coeffs3[0], coeffs3[1], 
+                coeffs3[2], coeffs4);
 
 }
 
@@ -669,7 +822,9 @@ double EvtBtoXsgammaKagan::Fz(double z) {
   return (1. -8.*z + 8.*pow(z,3.) - pow(z,4.) - 12.*pow(z,2.)*log(z));
 }
 
-double EvtBtoXsgammaKagan::GetArrayVal(double xp, double nInterval, double xMin, double xMax, HepVector array) {
+double EvtBtoXsgammaKagan::GetArrayVal(double xp, double nInterval, 
+                                       double xMin, double xMax, 
+                                       HepVector array) {
  
   double dx = (xMax - xMin)/nInterval;
   int bin1 = int(((xp-xMin)/(xMax - xMin))*nInterval);
@@ -678,7 +833,7 @@ double EvtBtoXsgammaKagan::GetArrayVal(double xp, double nInterval, double xMin,
 
   if (xp == x1) return array[bin1];
 
-  int bin2 = 0;
+  int bin2(0);
 
   if (xp > x1) {
     bin2 = bin1 + 1;
@@ -714,9 +869,12 @@ double EvtBtoXsgammaKagan::GetArrayVal(double xp, double nInterval, double xMin,
 double EvtBtoXsgammaKagan::FermiFunc(double y, const HepVector &coeffs) {
 
   //Fermi shape functions :1=exponential, 2=gaussian, 3=roman
-  if (int(coeffs[0]) == 1) return EvtBtoXsgammaFermiUtil::FermiExpFunc(y, coeffs);
-  if (int(coeffs[0]) == 2) return EvtBtoXsgammaFermiUtil::FermiGaussFunc(y, coeffs);
-  if (int(coeffs[0]) == 3) return EvtBtoXsgammaFermiUtil::FermiRomanFunc(y, coeffs);
+  if (int(coeffs[0]) == 1) return 
+                             EvtBtoXsgammaFermiUtil::FermiExpFunc(y, coeffs);
+  if (int(coeffs[0]) == 2) return 
+                             EvtBtoXsgammaFermiUtil::FermiGaussFunc(y, coeffs);
+  if (int(coeffs[0]) == 3) return 
+                             EvtBtoXsgammaFermiUtil::FermiRomanFunc(y, coeffs);
   return 1.;
 
 }
@@ -736,3 +894,4 @@ double EvtBtoXsgammaKagan::diLogMathematica(double y) {
   }
   return li2;
 }
+

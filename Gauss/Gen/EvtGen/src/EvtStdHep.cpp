@@ -18,11 +18,16 @@
 //
 //------------------------------------------------------------------------
 
+#ifdef WIN32 
+  #pragma warning( disable : 4786 ) 
+  // Disable anoying warning about symbol size 
+#endif 
 #include <iostream>
 #include <iomanip>
-#include "EvtGen/EvtVector4R.hh"
-#include "EvtGen/EvtStdHep.hh"
+#include "EvtGenBase/EvtVector4R.hh"
+#include "EvtGenBase/EvtStdHep.hh"
 
+//typedef long std::_Ios_Fmtflags;
 
 void EvtStdHep::init(){
   _npart=0;
@@ -75,10 +80,10 @@ std::ostream& operator<<(std::ostream& s, const EvtStdHep& stdhep){
 
   int w=s.width();
   int p=s.precision();
-#if defined (__GNUC__) && ( __GNUC__ <= 2 )
-  long f=s.flags();
-#else  
-  std::_Ios_Fmtflags f=s.flags();
+#if defined (__GNUC__) && ( __GNUC__ < 3 )
+  std::ios::fmtflags f = s.flags() ;
+#else
+  std::ios_base::fmtflags f=s.flags();
 #endif
 
   s <<std::endl;
@@ -130,7 +135,7 @@ std::ostream& operator<<(std::ostream& s, const EvtStdHep& stdhep){
     s<<stdhep._x[i].get(2)<<" ";
     s.width(7);
     s.precision(4);
-    s<< std::setiosflags( std::ios::right|std::ios::fixed );
+    s<<std::setiosflags( std::ios::right|std::ios::fixed );
     s<<stdhep._x[i].get(3)<<std::endl;
     s.width(0);
   }

@@ -18,33 +18,35 @@
 //
 //------------------------------------------------------------------------
 // 
+#ifdef WIN32 
+  #pragma warning( disable : 4786 ) 
+  // Disable anoying warning about symbol size 
+#endif 
 #include <iostream>
 #include <fstream>
 #include <stdlib.h>
 #include <ctype.h>
 #include <string.h>
-#include "EvtGen/EvtPDL.hh"
-#include "EvtGen/EvtPartProp.hh"
-#include "EvtGen/EvtParticleNum.hh"
-#include "EvtGen/EvtParticle.hh"
-#include "EvtGen/EvtReport.hh"
+#include "EvtGenBase/EvtPDL.hh"
+#include "EvtGenBase/EvtPartProp.hh"
+#include "EvtGenBase/EvtId.hh"
+#include "EvtGenBase/EvtParticle.hh"
+#include "EvtGenBase/EvtReport.hh"
 
 static int first=1;
 
-int EvtPDL::_lastAlias;
+unsigned int EvtPDL::_firstAlias;
 int EvtPDL::_nentries;
 
-EvtPartProp *EvtPDL::_partlist;
-EvtStringHash<EvtPartProp>* EvtPDL::_particleNameHash;
+std::vector<EvtPartProp> EvtPDL::_partlist;
+std::map<std::string,int> EvtPDL::_particleNameLookup;
 
 EvtPDL::EvtPDL() {
 
   if (first!=0) { 
     first=0;
     _nentries=0;
-    _lastAlias=MAX_PART;
-    _partlist = new EvtPartProp[MAX_PART];
-    _particleNameHash = new EvtStringHash<EvtPartProp>(1023);
+    _firstAlias=999999;
   }
 
 }
@@ -52,62 +54,19 @@ EvtPDL::EvtPDL() {
 
 EvtPDL::~EvtPDL(){
   
-  //FIXME!!!!
-  //this is an uggly hack as these variables are static!
-
-  delete [] _partlist;
-  _partlist=0;
-  delete _particleNameHash;
-  _particleNameHash=0;
-
 }
 
-double EvtPDL::getNominalMass(EvtId i )
-{ return _partlist[i.getId()].getMass(); }
+void EvtPDL::read(const char* fname)
+{
+  readPDT(fname);
+}
 
-double EvtPDL::getMass(EvtId i )
-{return _partlist[i.getId()].rollMass();}
-
-double EvtPDL::getMaxMass(EvtId i )
-{return _partlist[i.getId()].getMassMax();}
-
-double EvtPDL::getMinMass(EvtId i )
-{return _partlist[i.getId()].getMassMin();}
-
-double EvtPDL::getWidth(EvtId i )
-{return _partlist[i.getId()].getWidth();}
-
-double EvtPDL::getctau(EvtId i )
-{return _partlist[i.getId()].getctau();}
-
-int EvtPDL::getStdHep(EvtId id )
-{return _partlist[id.getId()].getStdHep();}
-
-int EvtPDL::getLundKC(EvtId id )
-{return _partlist[id.getId()].getLundKC();}
-
-int EvtPDL::chg3(EvtId i )
-{return _partlist[i.getId()].getChg3();}
-
-EvtSpinType::spintype EvtPDL::getSpinType(EvtId i )
-{return _partlist[i.getId()].getSpinType();}
-
-EvtString EvtPDL::name(EvtId i)
-{return _partlist[i.getAlias()].getName();}
-
-void EvtPDL::reSetMass(EvtId i, double mass) 
-{ _partlist[i.getId()].reSetMass(mass);}
-
-void EvtPDL::reSetWidth(EvtId i, double width) 
-{ _partlist[i.getId()].reSetWidth(width);}
-
-
-void EvtPDL::readPDT(const EvtString fname){
+void EvtPDL::readPDT(const std::string fname){
 
 
   std::ifstream indec;
   
-  indec.open(fname.value());
+  indec.open(fname.c_str());
 
   char cmnd[100];
   char xxxx[100];
@@ -124,7 +83,8 @@ void EvtPDL::readPDT(const EvtString fname){
   EvtId i;
 
   if (!indec) {
-    report(ERROR,"EvtGen") << "Could not open:"<<fname<<"EvtPDL"<<std::endl;
+    report(ERROR,"EvtGen") << "Could not open:"<<fname.c_str()
+                           <<"EvtPDL"<<std::endl;
     return;
   }
 
@@ -164,71 +124,51 @@ void EvtPDL::readPDT(const EvtString fname){
 
 
         i=EvtId(_nentries,_nentries);
+
+	EvtPartProp tmp;
+
+	tmp.setSpinType(EvtSpinType::SCALAR);
 	
+	
+	if (spin2==0) tmp.setSpinType(EvtSpinType::SCALAR);
+	if (spin2==1) tmp.setSpinType(EvtSpinType::DIRAC);
+	if (spin2==2) tmp.setSpinType(EvtSpinType::VECTOR);
+	if (spin2==3) tmp.setSpinType(EvtSpinType::RARITASCHWINGER);
+	if (spin2==4) tmp.setSpinType(EvtSpinType::TENSOR);
+	if (spin2==5) tmp.setSpinType(EvtSpinType::SPIN5HALF);
+	if (spin2==6) tmp.setSpinType(EvtSpinType::SPIN3);
+	if (spin2==7) tmp.setSpinType(EvtSpinType::SPIN7HALF);
+	if (spin2==8) tmp.setSpinType(EvtSpinType::SPIN4);
+	if (spin2==2 && mass < 0.0001 ) tmp.setSpinType(EvtSpinType::PHOTON);
+	if (spin2==1 && mass < 0.0001 ) tmp.setSpinType(EvtSpinType::NEUTRINO);
+	
+	
+	if (!strcmp(pname,"string")){
+	  tmp.setSpinType(EvtSpinType::STRING);
+	}
+	
+	if (!strcmp(pname,"vpho")){
+	  tmp.setSpinType(EvtSpinType::VECTOR);
+	}
+	
+	
+	tmp.setId(i);
+	tmp.setIdChgConj(EvtId(-1,-1));
+	tmp.setStdHep(stdhepid);
+	tmp.setLundKC(lundkc);
+	tmp.setName(pname);
+        assert(_particleNameLookup.find(std::string(pname))==
+	       _particleNameLookup.end());
+	_particleNameLookup[std::string(pname)]=_nentries;
+	tmp.setctau(ctau);
+	tmp.setChg3(chg3);
+	//report(INFO,"EvtGen") << "particle,chg3:"<<i<<","<<chg3<<std::endl;
+	
+	tmp.initLineShape(mass,pwidth,pmaxwidth);
+
+
+	_partlist.push_back(tmp);
 	_nentries++;
-
-        if (i.getId()<MAX_PART && i.getId()>=0 ) {
-
-
-
-          _partlist[i.getId()].setSpinType(EvtSpinType::SCALAR);
-
-
-          if (spin2==0) _partlist[i.getId()].setSpinType(EvtSpinType::SCALAR);
-          if (spin2==1) _partlist[i.getId()].setSpinType(EvtSpinType::DIRAC);
-          if (spin2==2) _partlist[i.getId()].setSpinType(EvtSpinType::VECTOR);
-          if (spin2==3) _partlist[i.getId()].setSpinType(EvtSpinType::RARITASCHWINGER);
-          if (spin2==4) _partlist[i.getId()].setSpinType(EvtSpinType::TENSOR);
-          if (spin2==5) _partlist[i.getId()].setSpinType(EvtSpinType::SPIN5HALF);
-          if (spin2==6) _partlist[i.getId()].setSpinType(EvtSpinType::SPIN3);
-          if (spin2==7) _partlist[i.getId()].setSpinType(EvtSpinType::SPIN7HALF);
-          if (spin2==8) _partlist[i.getId()].setSpinType(EvtSpinType::SPIN4);
-          if (spin2==2 && mass < 0.0001 ) _partlist[i.getId()].setSpinType(EvtSpinType::PHOTON);
-          if (spin2==1 && mass < 0.0001 ) _partlist[i.getId()].setSpinType(EvtSpinType::NEUTRINO);
-
-
-	  if (!strcmp(pname,"string")){
-	    _partlist[i.getId()].setSpinType(EvtSpinType::STRING);
-	  }
-
-	  if (!strcmp(pname,"vpho")){
-	    _partlist[i.getId()].setSpinType(EvtSpinType::VECTOR);
-	  }
-
-
-	  _partlist[i.getId()].setId(i);
-	  _partlist[i.getId()].setIdChgConj(EvtId(-1,-1));
-	  _partlist[i.getId()].setStdHep(stdhepid);
-	  _partlist[i.getId()].setLundKC(lundkc);
-	  _partlist[i.getId()].setName(pname);
-	  _particleNameHash->add(EvtString(pname),&_partlist[i.getId()]);
-	  _partlist[i.getId()].setctau(ctau);
-	  _partlist[i.getId()].setChg3(chg3);
-	  //report(INFO,"EvtGen") << "particle,chg3:"<<i<<","<<chg3<<endl;
-
-	  //certain lund ids - treat specially...
-	  //double mpi=0.139570;
-	  //double mk=0.49368;
-	  //double mrho=0.770;
-	  switch (stdhepid) {
-	    //back out this change for now..
-	    //case 113: {_partlist[i.getId()].initLineShape(mass,pwidth,pmaxwidth,mpi,mpi,1); break;}
-	    //case 213: {_partlist[i.getId()].initLineShape(mass,pwidth,pmaxwidth,mpi,mpi,1); break;}
-	    //case -213:{_partlist[i.getId()].initLineShape(mass,pwidth,pmaxwidth,mpi,mpi,1); break;}
-	    //case 313: {_partlist[i.getId()].initLineShape(mass,pwidth,pmaxwidth,mpi,mk,1); break;}
-	    //case -313:{_partlist[i.getId()].initLineShape(mass,pwidth,pmaxwidth,mpi,mk,1); break;}
-	    //case 323: {_partlist[i.getId()].initLineShape(mass,pwidth,pmaxwidth,mpi,mk,1); break;}
-	    //case -323:{_partlist[i.getId()].initLineShape(mass,pwidth,pmaxwidth,mpi,mk,1); break;}
-	    //case 20113:{_partlist[i.getId()].initLineShape(mass,pwidth,pmaxwidth,mrho,mpi,1); break;}
-	    //case 20213:{_partlist[i.getId()].initLineShape(mass,pwidth,pmaxwidth,mrho,mpi,1); break;}
-	    //case -20213:{_partlist[i.getId()].initLineShape(mass,pwidth,pmaxwidth,mrho,mpi,1); break;}
-	  default:  {_partlist[i.getId()].initLineShape(mass,pwidth,pmaxwidth); break;}
-	  }
-
-	}
-	else{
-	  report(ERROR,"EvtGen") << pname << " is not stored!!!"<<std::endl;
-	}
 
       }
 
@@ -257,7 +197,8 @@ void EvtPDL::aliasChgConj(EvtId a,EvtId abar){
 		 EvtId(abar.getId(),abar.getId())) {
 
     report(ERROR,"EvtGen")<<"Can't charge conjugate the two aliases:"
-			  <<EvtPDL::name(a)<<" and "<<EvtPDL::name(abar)<<std::endl;
+			  <<EvtPDL::name(a).c_str()<<" and "<<EvtPDL::name(abar).c_str()
+                          <<std::endl;
       
     ::abort();
 
@@ -275,7 +216,8 @@ EvtId EvtPDL::chargeConj(EvtId id){
   if (idchg!=EvtId(-1,-1)) return idchg;
 
   if (id.getId()!=id.getAlias()){
-    if (chargeConj(EvtId(id.getId(),id.getId()))==EvtId(id.getId(),id.getId())){
+    if (chargeConj(EvtId(id.getId(),id.getId()))==
+        EvtId(id.getId(),id.getId())){
     
       _partlist[id.getAlias()].setIdChgConj(id);
       return id;
@@ -285,15 +227,15 @@ EvtId EvtPDL::chargeConj(EvtId id){
   if (id.getAlias()!=id.getId()) {
 
     report(ERROR,"EvtGen")<<"Trying to charge conjugate alias particle:"
-			  <<name(id)<<" without defining the alias!"<<std::endl;
+			  <<name(id).c_str()<<" without defining the alias!"<<std::endl;
       
     ::abort();
 
   }
 
-  int i;
+  unsigned int i;
 
-  for (i=0;i<MAX_PART;i++){
+  for (i=0;i<_partlist.size();i++){
     if (_partlist[i].getStdHep()==-_partlist[id.getId()].getStdHep()){
       _partlist[id.getId()].setIdChgConj(_partlist[i].getId());
       return _partlist[i].getId();
@@ -307,9 +249,9 @@ EvtId EvtPDL::chargeConj(EvtId id){
 
 EvtId EvtPDL::evtIdFromStdHep(int stdhep){
 
-  int i;
+  unsigned int i;
 
-  for (i=0;i<MAX_PART;i++){
+  for (i=0;i<_partlist.size();i++){
     if (_partlist[i].getStdHep()==stdhep)
       return _partlist[i].getId();
   }
@@ -320,50 +262,48 @@ EvtId EvtPDL::evtIdFromStdHep(int stdhep){
 
 
 
-void EvtPDL::alias(EvtId num,const EvtString& newname){
+void EvtPDL::alias(EvtId num,const std::string& newname){
 
-  int i;
+  unsigned int i;
   
-  for(i=MAX_PART-1;i>=_lastAlias;i--){
-    if (newname==_partlist[i].getName()){
-      report(WARNING,"EvtGen")<<"Redefining alias:"<<newname<<" will be ignored!"<<std::endl;
-      return;
+  if ( _firstAlias < _partlist.size() ) {
+    for(i=_firstAlias;i<_partlist.size();i--){
+      if (newname==_partlist[i].getName()){
+	report(WARNING,"EvtGen")<<"Redefining alias:"<<newname.c_str()<<" will be ignored!"<<std::endl;
+        return;
+      }
     }
-   }
-
-
-
-
-  _lastAlias--;
-
-  if (_lastAlias<=_nentries) {
-      report(WARNING,"EvtGen")<<"You have hit the limit for how many"
-			      <<" aliases can be created"<<std::endl
-			      <<"This space is currently not dynamically "
-			      <<" allocated."<<std::endl
-			      <<"Will terminate execution."<<std::endl;
-      ::abort();
+  }
+  else{
+    _firstAlias=_partlist.size();
   }
 
-  _partlist[_lastAlias]=_partlist[num.getId()];
-  _partlist[_lastAlias].setName(newname);
-  _particleNameHash->add(EvtString(newname),&_partlist[_lastAlias]);
-  _partlist[_lastAlias].setId(EvtId(num.getId(),_lastAlias));
+  _partlist.push_back(_partlist[num.getId()]);
+  int entry=_partlist.size()-1;
+  _partlist[entry].setName(newname);
+  assert(_particleNameLookup.find(std::string(newname))==
+	 _particleNameLookup.end());
+  _particleNameLookup[std::string(newname)]=entry;
+  _partlist[entry].setId(EvtId(num.getId(),entry));
 
 }
 
-EvtId EvtPDL::getId(const EvtString& name ){
+EvtId EvtPDL::getId(const std::string& name ){
 
-  EvtPartProp* partprop=_particleNameHash->get(name);
+  //  int i;
 
-  if (partprop==0) return EvtId(-1,-1);
+  std::map<std::string,int>::iterator it=
+    _particleNameLookup.find(std::string(name));
+  if (it==_particleNameLookup.end()) return EvtId(-1,-1);
 
-  return partprop->getId();
+  return _partlist[it->second].getId();
   
 }
 
 void EvtPDL::setUpConstsPdt(){
 
 }
+
+
 
 

@@ -22,7 +22,11 @@
 #if !defined(FILENAME_ONLY) /* relative path includes */
 
 // system include files
-#include "EvtGen/EvtReport.hh"
+#ifdef WIN32 
+  #pragma warning( disable : 4786 ) 
+  // Disable anoying warning about symbol size 
+#endif 
+#include "EvtGenBase/EvtReport.hh"
 
 // user include files
 
@@ -43,7 +47,7 @@ std::ostream& report( Severity severity ,
 
    if ( ( facility == 0 ) &&
         ( printNoFacility ==1) ) {
-      report( WARNING ) << "There is no `facility' implemented in `report'"
+      std::cout << "There is no `facility' implemented in `report'"
                         << std::endl ;
       printNoFacility = 0 ;
    }
@@ -56,7 +60,7 @@ std::ostream& report( Severity severity ,
    if (facility[0]!=0){
      std::cout<<facility<<":";
    }    
-   return std::cout ;
+   return std::cout;
 }
 
 

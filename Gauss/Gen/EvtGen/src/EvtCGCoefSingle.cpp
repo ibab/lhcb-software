@@ -19,12 +19,16 @@
 //
 //------------------------------------------------------------------------
 // 
+#ifdef WIN32 
+  #pragma warning( disable : 4786 ) 
+  // Disable anoying warning about symbol size 
+#endif 
 #include <stdlib.h>
 #include <math.h>
 #include <iostream>
 #include <assert.h>
-#include "EvtGen/EvtCGCoefSingle.hh"
-#include "EvtGen/EvtOrthogVector.hh"
+#include "EvtGenBase/EvtCGCoefSingle.hh"
+#include "EvtGenBase/EvtOrthogVector.hh"
 
 EvtCGCoefSingle::EvtCGCoefSingle(){
 
@@ -73,7 +77,7 @@ void EvtCGCoefSingle::init(int j1,int j2){
       cg(J,J,_j1,_j2)=1.0;
     }else{
       int n=(_Jmax-J)/2+1;
-      EvtVectorT<double>* vectors=new EvtVectorT<double>[n-1];
+      std::vector<double>* vectors=new std::vector<double>[n-1];
       int i,k;
       for(i=0;i<n-1;i++){
 	// i corresponds to J=Jmax-2*i
@@ -84,7 +88,7 @@ void EvtCGCoefSingle::init(int j1,int j2){
 	}
       }
       EvtOrthogVector getOrth(n,vectors);
-      EvtVectorT<double> orth=getOrth.getOrthogVector();
+      std::vector<double> orth=getOrth.getOrthogVector();
       int sign=1;
       if (orth[n-1]<0.0) sign=-1;
       for(k=0;k<n;k++){

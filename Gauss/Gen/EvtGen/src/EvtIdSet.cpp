@@ -19,10 +19,14 @@
 //------------------------------------------------------------------------
 //
 
-#include "EvtGen/EvtIdSet.hh"
-#include "EvtGen/EvtString.hh"
-#include "EvtGen/EvtPDL.hh"
+#ifdef WIN32 
+  #pragma warning( disable : 4786 ) 
+  // Disable anoying warning about symbol size 
+#endif 
+#include "EvtGenBase/EvtIdSet.hh"
+#include "EvtGenBase/EvtPDL.hh"
 #include <iostream>
+#include <string>
 
 EvtIdSet::EvtIdSet(const EvtId name1) {
   _numInList=1;
@@ -31,7 +35,7 @@ EvtIdSet::EvtIdSet(const EvtId name1) {
   _list[0]=name1;
 }
 
-EvtIdSet::EvtIdSet(const EvtString name1){
+EvtIdSet::EvtIdSet(const std::string name1){
   _numInList=1;
   _list=new EvtId[_numInList];
 
@@ -49,8 +53,8 @@ EvtIdSet::EvtIdSet(const EvtId name1,
 }
 
 
-EvtIdSet::EvtIdSet(const EvtString name1,
-		   const EvtString name2){
+EvtIdSet::EvtIdSet(const std::string name1,
+		   const std::string name2){
   _numInList=2;
   _list=new EvtId[_numInList];
 
@@ -72,9 +76,9 @@ EvtIdSet::EvtIdSet(const EvtId name1,
 }
 
 
-EvtIdSet::EvtIdSet(const EvtString name1,
-		   const EvtString name2,
-		   const EvtString name3){
+EvtIdSet::EvtIdSet(const std::string name1,
+		   const std::string name2,
+		   const std::string name3){
   _numInList=3;
   _list=new EvtId[_numInList];
 
@@ -98,10 +102,10 @@ EvtIdSet::EvtIdSet(const EvtId name1,
 }
 
 
-EvtIdSet::EvtIdSet(const EvtString name1,
-		   const EvtString name2,
-		   const EvtString name3,
-		   const EvtString name4){
+EvtIdSet::EvtIdSet(const std::string name1,
+		   const std::string name2,
+		   const std::string name3,
+		   const std::string name4){
   _numInList=4;
   _list=new EvtId[_numInList];
 
@@ -128,11 +132,11 @@ EvtIdSet::EvtIdSet(const EvtId name1,
 }
 
 
-EvtIdSet::EvtIdSet(const EvtString name1,
-		   const EvtString name2,
-		   const EvtString name3,
-		   const EvtString name4,
-		   const EvtString name5){
+EvtIdSet::EvtIdSet(const std::string name1,
+		   const std::string name2,
+		   const std::string name3,
+		   const std::string name4,
+		   const std::string name5){
   _numInList=5;
   _list=new EvtId[_numInList];
 
@@ -162,12 +166,12 @@ EvtIdSet::EvtIdSet(const EvtId name1,
 }
 
 
-EvtIdSet::EvtIdSet(const EvtString name1,
-		   const EvtString name2,
-		   const EvtString name3,
-		   const EvtString name4,
-		   const EvtString name5,
-		   const EvtString name6){
+EvtIdSet::EvtIdSet(const std::string name1,
+		   const std::string name2,
+		   const std::string name3,
+		   const std::string name4,
+		   const std::string name5,
+		   const std::string name6){
   _numInList=6;
   _list=new EvtId[_numInList];
 
@@ -200,13 +204,13 @@ EvtIdSet::EvtIdSet(const EvtId name1,
 }
 
 
-EvtIdSet::EvtIdSet(const EvtString name1,
-		   const EvtString name2,
-		   const EvtString name3,
-		   const EvtString name4,
-		   const EvtString name5,
-		   const EvtString name6,
-		   const EvtString name7){
+EvtIdSet::EvtIdSet(const std::string name1,
+		   const std::string name2,
+		   const std::string name3,
+		   const std::string name4,
+		   const std::string name5,
+		   const std::string name6,
+		   const std::string name7){
   _numInList=7;
   _list=new EvtId[_numInList];
 
@@ -242,14 +246,14 @@ EvtIdSet::EvtIdSet(const EvtId name1,
 }
 
 
-EvtIdSet::EvtIdSet(const EvtString name1,
-		   const EvtString name2,
-		   const EvtString name3,
-		   const EvtString name4,
-		   const EvtString name5,
-		   const EvtString name6,
-		   const EvtString name7,
-		   const EvtString name8){
+EvtIdSet::EvtIdSet(const std::string name1,
+		   const std::string name2,
+		   const std::string name3,
+		   const std::string name4,
+		   const std::string name5,
+		   const std::string name6,
+		   const std::string name7,
+		   const std::string name8){
   _numInList=8;
   _list=new EvtId[_numInList];
 
@@ -288,15 +292,15 @@ EvtIdSet::EvtIdSet(const EvtId name1,
 }
 
 
-EvtIdSet::EvtIdSet(const EvtString name1,
-		   const EvtString name2,
-		   const EvtString name3,
-		   const EvtString name4,
-		   const EvtString name5,
-		   const EvtString name6,
-		   const EvtString name7,
-		   const EvtString name8,
-		   const EvtString name9){
+EvtIdSet::EvtIdSet(const std::string name1,
+		   const std::string name2,
+		   const std::string name3,
+		   const std::string name4,
+		   const std::string name5,
+		   const std::string name6,
+		   const std::string name7,
+		   const std::string name8,
+		   const std::string name9){
   _numInList=9;
   _list=new EvtId[_numInList];
 
@@ -338,16 +342,16 @@ EvtIdSet::EvtIdSet(const EvtId name1,
 }
 
 
-EvtIdSet::EvtIdSet(const EvtString name1,
-		   const EvtString name2,
-		   const EvtString name3,
-		   const EvtString name4,
-		   const EvtString name5,
-		   const EvtString name6,
-		   const EvtString name7,
-		   const EvtString name8,
-		   const EvtString name9,
-		   const EvtString name10){
+EvtIdSet::EvtIdSet(const std::string name1,
+		   const std::string name2,
+		   const std::string name3,
+		   const std::string name4,
+		   const std::string name5,
+		   const std::string name6,
+		   const std::string name7,
+		   const std::string name8,
+		   const std::string name9,
+		   const std::string name10){
   _numInList=10;
   _list=new EvtId[_numInList];
 
@@ -392,17 +396,17 @@ EvtIdSet::EvtIdSet(const EvtId name1,
 }
 
 
-EvtIdSet::EvtIdSet(const EvtString name1,
-		   const EvtString name2,
-		   const EvtString name3,
-		   const EvtString name4,
-		   const EvtString name5,
-		   const EvtString name6,
-		   const EvtString name7,
-		   const EvtString name8,
-		   const EvtString name9,
-		   const EvtString name10,
-		   const EvtString name11){
+EvtIdSet::EvtIdSet(const std::string name1,
+		   const std::string name2,
+		   const std::string name3,
+		   const std::string name4,
+		   const std::string name5,
+		   const std::string name6,
+		   const std::string name7,
+		   const std::string name8,
+		   const std::string name9,
+		   const std::string name10,
+		   const std::string name11){
   _numInList=11;
   _list=new EvtId[_numInList];
 
@@ -450,18 +454,18 @@ EvtIdSet::EvtIdSet(const EvtId name1,
 }
 
 
-EvtIdSet::EvtIdSet(const EvtString name1,
-		   const EvtString name2,
-		   const EvtString name3,
-		   const EvtString name4,
-		   const EvtString name5,
-		   const EvtString name6,
-		   const EvtString name7,
-		   const EvtString name8,
-		   const EvtString name9,
-		   const EvtString name10,
-		   const EvtString name11,
-		   const EvtString name12){
+EvtIdSet::EvtIdSet(const std::string name1,
+		   const std::string name2,
+		   const std::string name3,
+		   const std::string name4,
+		   const std::string name5,
+		   const std::string name6,
+		   const std::string name7,
+		   const std::string name8,
+		   const std::string name9,
+		   const std::string name10,
+		   const std::string name11,
+		   const std::string name12){
   _numInList=12;
   _list=new EvtId[_numInList];
 
@@ -513,7 +517,7 @@ int EvtIdSet::contains(const EvtId id){
   return 0;
 }
 
-int EvtIdSet::contains(const EvtString nm){
+int EvtIdSet::contains(const std::string nm){
 
   int i;
   for (i=0;i<_numInList;i++){

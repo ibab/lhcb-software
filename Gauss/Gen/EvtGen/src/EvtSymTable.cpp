@@ -18,74 +18,51 @@
 //
 //------------------------------------------------------------------------
 //
+#ifdef WIN32 
+  #pragma warning( disable : 4786 ) 
+  // Disable anoying warning about symbol size 
+#endif 
 #include <iostream>
+#include <fstream>
 #include <stdlib.h>
 #include <ctype.h>
-#include "EvtGen/EvtSymTable.hh"
-#include "EvtGen/EvtReport.hh"
+#include "EvtGenBase/EvtSymTable.hh"
+#include "EvtGenBase/EvtReport.hh"
+#include <string>
 
 
 EvtSymTable::~EvtSymTable(){}
 
 EvtSymTable::EvtSymTable() {
 
- nsym=0;
 }
 
-void EvtSymTable::Define(const EvtString& symname,double d) {
+void EvtSymTable::Define(const std::string& symname,std::string d) {
 
-  int i;
+  //  int i;
 
-  for(i=0;i<nsym;i++){
-    if (name[i]==symname){
-      report(INFO,"EvtGen") << "Symbol:"<<symname<<
-	" redefined, old value:"<<value[i]<<" new value:"<<d<<std::endl;
-      name[i]=symname;
-      value[i]=d;
-      return;
-    }
-  }
-
-  if (nsym>=MAXSYM) {
-    report(ERROR,"EvtGen") << "Out of space for symbols; can not store:"
-			   << symname<<std::endl;
+  if ( _symMap.find(symname)!=_symMap.end() ) {
+    report(INFO,"EvtGen") << "Symbol:"<<symname.c_str()<<
+      " redefined, old value:"<<_symMap[symname].c_str()<<" new value:"<<d.c_str()<<std::endl;
+    _symMap[symname]=d;
     return;
   }
 
-  name[nsym]=symname;
-  value[nsym]=d;
-
-  nsym++;
+  _symMap[symname]=d;
   return;
 }
 
-double EvtSymTable::Get(const EvtString& symname,int& ierr) {
+//double EvtSymTable::Get(const std::string& symname,int& ierr) {
+std::string EvtSymTable::Get(const std::string& symname,int& ierr) {
 
-  int i;
+  //  int i;
 
   ierr=0;
 
-  for(i=0;i<nsym;i++){
-    if (symname==name[i]){
-      return value[i];
-    }
-  }
+  if ( _symMap.find(symname)!=_symMap.end() ) return _symMap[symname];
 
-  i=0;
+  // If no matching symbol found just return the string
 
-
-  while(symname.value()[i]!=0){
-    if (isalpha(symname.value()[i])&&symname.value()[i]!='e'){
-      ierr=1;
-      return 0.0;
-    }
-    i++;
-  }
-
-  char** strptr=0;
-
-  return strtod(symname.value(),strptr);
-
-
+  return symname;
 }
 

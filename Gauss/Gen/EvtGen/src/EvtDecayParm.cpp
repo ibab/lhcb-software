@@ -18,14 +18,19 @@
 //
 //------------------------------------------------------------------------
 //
+#ifdef WIN32 
+  #pragma warning( disable : 4786 ) 
+  // Disable anoying warning about symbol size 
+#endif 
 #include <iostream>
+#include <fstream>
 #include <stdlib.h>
 #include <ctype.h>
-#include "EvtGen/EvtDecayParm.hh"
-#include "EvtGen/EvtString.hh"
+#include "EvtGenBase/EvtDecayParm.hh"
+#include <string>
 
 void EvtDecayParm::init(fcnPtr pfcn, int ndaug, int *daugs, int narg,
-	       double *args, EvtString name) {
+	       double *args, std::string name) {
 
   int i;
 

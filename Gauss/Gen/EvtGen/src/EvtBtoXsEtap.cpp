@@ -21,19 +21,23 @@
 //------------------------------------------------------------------------
 //
 
+#ifdef WIN32 
+  #pragma warning( disable : 4786 ) 
+  // Disable anoying warning about symbol size 
+#endif 
 #include <stdlib.h>
-#include "EvtGen/EvtRandom.hh"
-#include "EvtGen/EvtParticle.hh"
-#include "EvtGen/EvtGenKine.hh"
-#include "EvtGen/EvtPDL.hh"
-#include "EvtGen/EvtReport.hh"
-#include "EvtGen/EvtBtoXsEtap.hh"
-#include "EvtGen/EvtString.hh"
-#include "EvtGen/EvtConst.hh"
+#include "EvtGenBase/EvtRandom.hh"
+#include "EvtGenBase/EvtParticle.hh"
+#include "EvtGenBase/EvtGenKine.hh"
+#include "EvtGenBase/EvtPDL.hh"
+#include "EvtGenBase/EvtReport.hh"
+#include "EvtGenModels/EvtBtoXsEtap.hh"
+#include <string>
+#include "EvtGenBase/EvtConst.hh"
 
 EvtBtoXsEtap::~EvtBtoXsEtap() {}
 
-void EvtBtoXsEtap::getName(EvtString& model_name){
+void EvtBtoXsEtap::getName(std::string& model_name){
 
   model_name="BTOXSETAP";     
 
@@ -61,11 +65,12 @@ void EvtBtoXsEtap::initProbMax(){
 
 void EvtBtoXsEtap::decay( EvtParticle *p ){
 
-  if ( p->getNDaug() != 0 ) {
-    //Will end up here because maxrate multiplies by 1.2
-    report(DEBUG,"EvtGen") << "In EvtBtoXsEtap: X_s daughters should not be here!"<<std::endl;
-    return;
-  }
+  // useless
+  //  if ( p->getNDaug() != 0 ) {
+  //  //Will end up here because maxrate multiplies by 1.2
+  //  report(DEBUG,"EvtGen") << "In EvtBtoXsEtap: X_s daughters should not be here!"<<std::endl;
+  //  return;
+  //}
 
   double m_b;
   int i;
@@ -85,12 +90,12 @@ void EvtBtoXsEtap::decay( EvtParticle *p ){
 
   mass[1] = EvtPDL::getMass(getDaug(1));
 
-  double xbox, ybox, min, max,hichfit;
-  // double alifit
+  double xbox, ybox, /*alifit,*/ min, max,hichfit;
   min=0.493;
   max=4.3;
   const double TwoPi = EvtConst::twoPi;
   int Xscode = EvtPDL::getStdHep(getDaug(0));
+  int Etapcode = EvtPDL::getStdHep(getDaug(1));
 
   // A five parameters fit, the shape is taken from Atwood & Soni
 
@@ -155,7 +160,7 @@ void EvtBtoXsEtap::decay( EvtParticle *p ){
     }
   }
 
-  // debug stuff:  cout << "Xscode " << Xscode << " daughter 1 mass " << mass[0] << " daughter 2 mass " << mass[1] << endl;
+  // debug stuff:  report(INFO,"EvtGen") << "Xscode " << Xscode << " daughter 1 mass " << mass[0] << " daughter 2 mass " << mass[1] << std::endl;
 
   EvtGenKine::PhaseSpace( getNDaug(), mass, p4, m_b );
 

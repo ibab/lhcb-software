@@ -18,19 +18,24 @@
 //
 //------------------------------------------------------------------------
 // 
+#ifdef WIN32 
+  #pragma warning( disable : 4786 ) 
+  // Disable anoying warning about symbol size 
+#endif 
 #include <stdlib.h>
-#include "EvtGen/EvtParticle.hh"
-#include "EvtGen/EvtGenKine.hh"
-#include "EvtGen/EvtPDL.hh"
-#include "EvtGen/EvtReport.hh"
-#include "EvtGen/EvtGoityRoberts.hh"
-#include "EvtGen/EvtTensor4C.hh"
-#include "EvtGen/EvtDiracSpinor.hh"
-#include "EvtGen/EvtString.hh"
+#include "EvtGenBase/EvtParticle.hh"
+#include "EvtGenBase/EvtGenKine.hh"
+#include "EvtGenBase/EvtPDL.hh"
+#include "EvtGenBase/EvtReport.hh"
+#include "EvtGenModels/EvtGoityRoberts.hh"
+#include "EvtGenBase/EvtTensor4C.hh"
+#include "EvtGenBase/EvtDiracSpinor.hh"
+#include <string>
+#include "EvtGenBase/EvtVector4C.hh"
 
 EvtGoityRoberts::~EvtGoityRoberts() {}
 
-void EvtGoityRoberts::getName(EvtString& model_name){
+void EvtGoityRoberts::getName(std::string& model_name){
 
   model_name="GOITY_ROBERTS";     
 
@@ -93,8 +98,11 @@ void EvtGoityRoberts::decay( EvtParticle *p){
 }
 
 void EvtGoityRoberts::DecayBDstarpilnuGR(EvtParticle *pb,EvtId ndstar,
-                                        EvtId npion, EvtId nlep, EvtId nnu)
+                                         EvtId /*npion*/, EvtId nlep, 
+                                         EvtId /*nnu*/)
 {
+
+  pb->initializePhaseSpace(getNDaug(),getDaugs());
 
   //added by Lange Jan4,2000
   static EvtId EM=EvtPDL::getId("e-");
@@ -102,58 +110,29 @@ void EvtGoityRoberts::DecayBDstarpilnuGR(EvtParticle *pb,EvtId ndstar,
   static EvtId MUM=EvtPDL::getId("mu-");
   static EvtId MUP=EvtPDL::getId("mu+");
 
-  double m_b;
   EvtParticle *dstar, *pion, *lepton, *neutrino;
   
-  pb->makeDaughters(getNDaug(),getDaugs());
+  // pb->makeDaughters(getNDaug(),getDaugs());
   dstar=pb->getDaug(0);
   pion=pb->getDaug(1);
   lepton=pb->getDaug(2);
   neutrino=pb->getDaug(3);
 
-  int n_daug;
-  EvtVector4R p4[4];
-  double mass[4];
-
-  m_b = pb->mass();
-  n_daug = 4;
-
-  EvtId ldaug[4];
-  ldaug[0] = ndstar;
-  ldaug[1] = npion;
-  ldaug[2] = nlep;
-  ldaug[3] = nnu;
-  
-  EvtDecayBase::findMasses( pb, n_daug, ldaug, mass );
-
   EvtVector4C l1, l2, et0, et1, et2;
   
-  EvtGenKine::PhaseSpace( n_daug, mass, p4, m_b );
-
-  dstar->init( ndstar, p4[0] );
-  pion->init( npion, p4[1] );
-  
-  if ( nlep==EM || nlep==MUM || nlep==EP || nlep==MUP) {
-    lepton->init( nlep, p4[2] );
-    neutrino->init( nnu, p4[3] );
-  }
-  else{
-    report(ERROR,"EvtGen") << "ag8ag7agv lepton flavor not correct in "<<
-      "EvtDecayBDstarpilnuGR\n";
-  }
-
   EvtVector4R v,vp,p4_pi;
   double w;
   
   v.set(1.0,0.0,0.0,0.0);       //4-velocity of B meson
-  vp=(1.0/p4[0].mass())*p4[0];  //4-velocity of D*
-  p4_pi=p4[1];                  //4-momentum of pion
+  vp=(1.0/dstar->getP4().mass())*dstar->getP4();  //4-velocity of D*
+  p4_pi=pion->getP4();
+
   w=v*vp;                       //four velocity transfere.
 
   EvtTensor4C omega;
 
-  double mb=EvtPDL::getNominalMass(pb->getId());     //B mass
-  double md=EvtPDL::getNominalMass(ndstar);   //D* mass
+  double mb=EvtPDL::getMeanMass(pb->getId());     //B mass
+  double md=EvtPDL::getMeanMass(ndstar);   //D* mass
 
   EvtComplex dmb(0.0460,-0.5*0.00001);   // B*-B mass splitting ?
   EvtComplex dmd(0.1421,-0.5*0.00006);
@@ -332,7 +311,8 @@ void EvtGoityRoberts::DecayBDstarpilnuGR(EvtParticle *pb,EvtId ndstar,
 }
 
 void EvtGoityRoberts::DecayBDpilnuGR(EvtParticle *pb,EvtId nd,
-                EvtId npion, EvtId nlep, EvtId nnu)
+                                     EvtId /*npion*/, EvtId nlep, 
+                                     EvtId /*nnu*/)
 
 {
   //added by Lange Jan4,2000
@@ -341,57 +321,27 @@ void EvtGoityRoberts::DecayBDpilnuGR(EvtParticle *pb,EvtId nd,
   static EvtId MUM=EvtPDL::getId("mu-");
   static EvtId MUP=EvtPDL::getId("mu+");
 
-  double m_b;
+  //  double m_b;
   EvtParticle *d, *pion, *lepton, *neutrino;
 
-  pb->makeDaughters(getNDaug(),getDaugs());
+  pb->initializePhaseSpace(getNDaug(),getDaugs());
   d=pb->getDaug(0);
   pion=pb->getDaug(1);
   lepton=pb->getDaug(2);
   neutrino=pb->getDaug(3);
 
-  int n_daug;
-  EvtVector4R p4[4];
-  
-  double mass[4];
-  
-  m_b = pb->mass();
-  n_daug = 4;
-
-  EvtId ldaug[4];
-  ldaug[0] = nd;
-  ldaug[1] = npion;
-  ldaug[2] = nlep;
-  ldaug[3] = nnu;
-  
-  EvtDecayBase::findMasses( pb, n_daug, ldaug, mass );
-
   EvtVector4C l1, l2, et0, et1, et2;
-
-  EvtGenKine::PhaseSpace( n_daug, mass, p4, m_b );
-
-  d->init( nd, p4[0] );
-  pion->init( npion, p4[1] );
-  
-  if  (nlep==EM||nlep==MUM||nlep==EP||nlep==MUP) {
-    lepton->init( nlep, p4[2] );
-    neutrino->init( nnu, p4[3] );
-  }
-  else{
-    report(ERROR,"EvtGen") << "ag8ag7agv lepton flavor not correct in "<<
-      "EvtDecayBDstarpilnuGR\n";
-  }
-  
+ 
   EvtVector4R v,vp,p4_pi;
   double w;
   
   v.set(1.0,0.0,0.0,0.0);       //4-velocity of B meson
-  vp=(1.0/p4[0].mass())*p4[0];  //4-velocity of D
-  p4_pi=p4[1];                  //4-momentum of pion
+  vp=(1.0/d->getP4().mass())*d->getP4();  //4-velocity of D
+  p4_pi=pion->getP4();                  //4-momentum of pion
   w=v*vp;                       //four velocity transfer.
   
-  double mb=EvtPDL::getNominalMass(pb->getId());     //B mass
-  double md=EvtPDL::getNominalMass(nd);   //D* mass
+  double mb=EvtPDL::getMeanMass(pb->getId());     //B mass
+  double md=EvtPDL::getMeanMass(nd);   //D* mass
   EvtComplex dmb(0.0460,-0.5*0.00001);   //B mass splitting ?
                       //The last two numbers should be
                       //correctly calculated from the

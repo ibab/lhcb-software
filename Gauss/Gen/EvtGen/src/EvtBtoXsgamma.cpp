@@ -1,8 +1,5 @@
 //--------------------------------------------------------------------------
 //
-//
-// Copyright Information: See EvtGen/COPYRIGHT
-//
 // Environment:
 //      This software is part of the EvtGen package developed jointly
 //      for the BaBar and CLEO collaborations.  If you use all or part
@@ -32,16 +29,22 @@
 //------------------------------------------------------------------------
 //
 
+#ifdef WIN32 
+  #pragma warning( disable : 4786 ) 
+  // Disable anoying warning about symbol size 
+#endif 
 #include <stdlib.h>
-#include "EvtGen/EvtParticle.hh"
-#include "EvtGen/EvtGenKine.hh"
-#include "EvtGen/EvtPDL.hh"
-#include "EvtGen/EvtReport.hh"
-#include "EvtGen/EvtBtoXsgamma.hh"
-#include "EvtGen/EvtString.hh"
-#include "EvtGen/EvtConst.hh"
-#include "EvtGen/EvtBtoXsgammaAliGreub.hh"
-#include "EvtGen/EvtBtoXsgammaKagan.hh"
+#include "EvtGenBase/EvtParticle.hh"
+#include "EvtGenBase/EvtGenKine.hh"
+#include "EvtGenBase/EvtPDL.hh"
+#include "EvtGenBase/EvtReport.hh"
+#include "EvtGenModels/EvtBtoXsgamma.hh"
+#include <string>
+#include "EvtGenBase/EvtConst.hh"
+#include "EvtGenModels/EvtBtoXsgammaAliGreub.hh"
+#include "EvtGenModels/EvtBtoXsgammaKagan.hh"
+#include "EvtGenModels/EvtBtoXsgammaFixedMass.hh"
+#include "EvtGenModels/EvtBtoXsgammaFlatEnergy.hh"
 
 EvtBtoXsgamma::~EvtBtoXsgamma() {
 
@@ -49,7 +52,7 @@ EvtBtoXsgamma::~EvtBtoXsgamma() {
 
 }
 
-void EvtBtoXsgamma::getName(EvtString& model_name){
+void EvtBtoXsgamma::getName(std::string& model_name){
 
   model_name="BTOXSGAMMA";     
 
@@ -64,17 +67,16 @@ EvtDecayBase* EvtBtoXsgamma::clone(){
 void EvtBtoXsgamma::init(){
   //Arguments:
   // 0: Ali-Greub model = 1, Kagan model = 2
-  //No more arguments for Ali-Greub model
+ //No more arguments for Ali-Greub model
   // 1:
   // 2:
   // 3:
 
   // check that at least one b->sg model has been selected
-
   if (getNArg() == 0) {
     
     report(ERROR,"EvtGen") << "EvtBtoXsgamma generator expected "
-      << " at least 1 argument but found: "<<getNArg()<<std::endl;
+                           << " at least 1 argument but found: "<<getNArg()<<std::endl;
     report(ERROR,"EvtGen") << "Will terminate execution!"<<std::endl;
     ::abort();
     
@@ -82,14 +84,16 @@ void EvtBtoXsgamma::init(){
   
   if (getArg(0) == 1) _model = new EvtBtoXsgammaAliGreub();
   else if (getArg(0) == 2) _model = new EvtBtoXsgammaKagan();
-  else {
+  else if (getArg(0) == 3) _model = new EvtBtoXsgammaFixedMass();
+  else if (getArg(0) == 4) _model = new EvtBtoXsgammaFlatEnergy();
+  else{
     report(ERROR,"EvtGen") << "No valid EvtBtoXsgamma generator model selected "
                            << "Set arg(0) to 1 for Ali-Greub model or 2 for "
-                           <<" Kagan model"<<std::endl;
+			   <<" Kagan model or 3 for a fixed mass"<<std::endl;
     report(ERROR,"EvtGen") << "Will terminate execution!"<<std::endl;
     ::abort();
 
-  }
+   }
   _model->init(getNArg(),getArgs());
 }
 
@@ -101,11 +105,11 @@ void EvtBtoXsgamma::initProbMax(){
 
 void EvtBtoXsgamma::decay( EvtParticle *p ){
 
-  if ( p->getNDaug() != 0 ) {
+  //  if ( p->getNDaug() != 0 ) {
     //Will end up here because maxrate multiplies by 1.2
-    report(DEBUG,"EvtGen") << "In EvtBtoXsgamma: X_s daughters should not be here!"<< std::endl;
-    return;
-  }
+  //  report(DEBUG,"EvtGen") << "In EvtBtoXsgamma: X_s daughters should not be here!"<<std::endl;
+  //  return;
+  //}
 
   double m_b;
   int i;

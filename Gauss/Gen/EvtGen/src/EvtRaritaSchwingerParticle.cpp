@@ -18,15 +18,19 @@
 //
 //------------------------------------------------------------------------
 // 
+#ifdef WIN32 
+  #pragma warning( disable : 4786 ) 
+  // Disable anoying warning about symbol size 
+#endif 
 #include <stdlib.h>
 #include <iostream>
 #include <math.h>
-#include "EvtGen/EvtComplex.hh"
-#include "EvtGen/EvtRaritaSchwingerParticle.hh"
-#include "EvtGen/EvtDiracSpinor.hh"
-#include "EvtGen/EvtVector4R.hh"
-#include "EvtGen/EvtPDL.hh"
-#include "EvtGen/EvtReport.hh"
+#include "EvtGenBase/EvtComplex.hh"
+#include "EvtGenBase/EvtRaritaSchwingerParticle.hh"
+#include "EvtGenBase/EvtDiracSpinor.hh"
+#include "EvtGenBase/EvtVector4R.hh"
+#include "EvtGenBase/EvtPDL.hh"
+#include "EvtGenBase/EvtReport.hh"
 
 EvtRaritaSchwingerParticle::~EvtRaritaSchwingerParticle(){}
 
@@ -39,6 +43,7 @@ EvtRaritaSchwingerParticle::EvtRaritaSchwingerParticle(){
 
 void EvtRaritaSchwingerParticle::init(EvtId id,const EvtVector4R& p4){
 
+  _validP4=true;
   setp(p4);
   setpart_num(id);
 

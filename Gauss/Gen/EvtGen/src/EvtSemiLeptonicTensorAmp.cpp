@@ -19,16 +19,22 @@
 //
 //------------------------------------------------------------------------
 //
-#include "EvtGen/EvtParticle.hh"
-#include "EvtGen/EvtGenKine.hh"
-#include "EvtGen/EvtPDL.hh"
-#include "EvtGen/EvtReport.hh"
-#include "EvtGen/EvtTensor4C.hh"
-#include "EvtGen/EvtVector4C.hh"
-#include "EvtGen/EvtDiracSpinor.hh"
-#include "EvtGen/EvtSemiLeptonicTensorAmp.hh"
-#include "EvtGen/EvtId.hh"
-#include "EvtGen/EvtAmp.hh"
+#ifdef WIN32 
+  #pragma warning( disable : 4786 ) 
+  // Disable anoying warning about symbol size 
+#endif 
+#include "EvtGenBase/EvtPatches.hh"
+#include "EvtGenBase/EvtParticle.hh"
+#include "EvtGenBase/EvtGenKine.hh"
+#include "EvtGenBase/EvtPDL.hh"
+#include "EvtGenBase/EvtReport.hh"
+#include "EvtGenBase/EvtTensor4C.hh"
+#include "EvtGenBase/EvtVector4C.hh"
+#include "EvtGenBase/EvtDiracSpinor.hh"
+#include "EvtGenBase/EvtSemiLeptonicTensorAmp.hh"
+#include "EvtGenBase/EvtId.hh"
+#include "EvtGenBase/EvtAmp.hh"
+#include "EvtGenBase/EvtSemiLeptonicFF.hh"
 
 void EvtSemiLeptonicTensorAmp::CalcAmp( EvtParticle *parent,
 					EvtAmp& amp,
@@ -58,7 +64,7 @@ void EvtSemiLeptonicTensorAmp::CalcAmp( EvtParticle *parent,
   FormFactors->gettensorff(parent->getId(),
                            parent->getDaug(0)->getId(),
                            q2,
-                           parent->getDaug(0)->mass(),
+			   parent->getDaug(0)->mass(),
                            &hf, 
                            &kf, 
                            &bpf, 
@@ -98,6 +104,10 @@ void EvtSemiLeptonicTensorAmp::CalcAmp( EvtParticle *parent,
   pp=p4b+p4meson;
   pm=p4b-p4meson;
 
+  //lange - October 31,2002 - try to lessen the mass dependence of probmax
+  double q2max = p4b.mass2() + p4meson.mass2() - 2.0*p4b.mass()*p4meson.mass();
+  double q2maxin=1.0/q2max;
+
   EvtComplex ep_meson_bb[5];
 
   ep_meson_bb[0]=ep_meson_b[0]*(p4b);
@@ -115,22 +125,27 @@ void EvtSemiLeptonicTensorAmp::CalcAmp( EvtParticle *parent,
     tds0=tdual.cont2(ep_meson_b[0])
       -kf*ep_meson_b[0]
       -bpf*ep_meson_bb[0]*pp-bmf*ep_meson_bb[0]*pm;
+    tds0*=q2maxin;
 
     tds1=tdual.cont2(ep_meson_b[1])
       -kf*ep_meson_b[1]
       -bpf*ep_meson_bb[1]*pp-bmf*ep_meson_bb[1]*pm;
+    tds1*=q2maxin;
 
     tds2=tdual.cont2(ep_meson_b[2])
       -kf*ep_meson_b[2]
       -bpf*ep_meson_bb[2]*pp-bmf*ep_meson_bb[2]*pm;
+    tds2*=q2maxin;
 
     tds3=tdual.cont2(ep_meson_b[3])
       -kf*ep_meson_b[3]
       -bpf*ep_meson_bb[3]*pp-bmf*ep_meson_bb[3]*pm;
+    tds3*=q2maxin;
 
     tds4=tdual.cont2(ep_meson_b[4])
       -kf*ep_meson_b[4]
       -bpf*ep_meson_bb[4]*pp-bmf*ep_meson_bb[4]*pm;
+    tds4*=q2maxin;
 
 
     l1=EvtLeptonVACurrent(parent->getDaug(1)->spParent(0),
@@ -144,22 +159,27 @@ void EvtSemiLeptonicTensorAmp::CalcAmp( EvtParticle *parent,
       tds0=tdual.cont2(ep_meson_b[0])
         -kf*ep_meson_b[0]
         -bpf*ep_meson_bb[0]*pp-bmf*ep_meson_bb[0]*pm;
+      tds0*=q2maxin;
 
       tds1=tdual.cont2(ep_meson_b[1])
         -kf*ep_meson_b[1]
         -bpf*ep_meson_bb[1]*pp-bmf*ep_meson_bb[1]*pm;
+      tds1*=q2maxin;
 
       tds2=tdual.cont2(ep_meson_b[2])
         -kf*ep_meson_b[2]
         -bpf*ep_meson_bb[2]*pp-bmf*ep_meson_bb[2]*pm;
+      tds2*=q2maxin;
 
       tds3=tdual.cont2(ep_meson_b[3])
         -kf*ep_meson_b[3]
         -bpf*ep_meson_bb[3]*pp-bmf*ep_meson_bb[3]*pm;
+      tds3*=q2maxin;
 
       tds4=tdual.cont2(ep_meson_b[4])
         -kf*ep_meson_b[4]
         -bpf*ep_meson_bb[4]*pp-bmf*ep_meson_bb[4]*pm;
+      tds4*=q2maxin;
 
       l1=EvtLeptonVACurrent(parent->getDaug(2)->spParentNeutrino(),
 			    parent->getDaug(1)->spParent(0));

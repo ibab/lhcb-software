@@ -21,10 +21,14 @@
 //
 //------------------------------------------------------------------------
 //
+#ifdef WIN32 
+  #pragma warning( disable : 4786 ) 
+  // Disable anoying warning about symbol size 
+#endif 
 #include "CLHEP/Random/RandomEngine.h"
-#include "EvtGen/EvtRandomEngine.hh"
-#include "EvtGen/EvtRandom.hh"
-#include "EvtGen/EvtHepRandomEngine.hh"
+#include "EvtGenBase/EvtRandomEngine.hh"
+#include "EvtGenBase/EvtRandom.hh"
+#include "EvtGenModels/EvtHepRandomEngine.hh"
 
 EvtHepRandomEngine::EvtHepRandomEngine() {}
 
@@ -41,12 +45,10 @@ HepDouble EvtHepRandomEngine::flat()
 }
 
 void EvtHepRandomEngine::showStatus() const {}
-void EvtHepRandomEngine::restoreStatus(const char /*a*/[]) {}
-void EvtHepRandomEngine::saveStatus(const char /*a*/[]) const {}
-// void EvtHepRandomEngine::restoreStatus(const char *a) {}
-// void EvtHepRandomEngine::saveStatus(const char *a) const {}
-void EvtHepRandomEngine::setSeeds(const long* /*a*/, HepInt /*b*/) {}
-void EvtHepRandomEngine::setSeed(long /*a*/, HepInt /*b*/) {}
+void EvtHepRandomEngine::restoreStatus(const char /*filename*/[]) {}
+void EvtHepRandomEngine::saveStatus(const char /*filename*/[]) const {}
+void EvtHepRandomEngine::setSeeds(const long* /*a*/, int /*b*/) {}
+void EvtHepRandomEngine::setSeed(long /*a*/, int /*b*/) {}
 void EvtHepRandomEngine::flatArray(const HepInt s, HepDouble* vect) 
 {
   for (int i=0;i<s;i++)

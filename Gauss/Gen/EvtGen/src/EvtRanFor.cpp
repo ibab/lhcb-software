@@ -1,6 +1,6 @@
 //--------------------------------------------------------------------------
 // File and Version Information:
-//      $Id: EvtRanFor.cpp,v 1.2 2002-05-27 12:52:28 witoldp Exp $
+//      $Id: EvtRanFor.cpp,v 1.3 2003-10-02 17:39:01 robbep Exp $
 //
 // Description:
 //	subroutine emcranfor_.
@@ -18,11 +18,24 @@
 // Copyright Information: See EvtGen/COPYRIGHT
 //
 //------------------------------------------------------------------------
+#ifdef WIN32 
+  #pragma warning( disable : 4786 ) 
+  // Disable anoying warning about symbol size 
+#endif 
 #include <stdlib.h>
 #include <stdio.h>
 #include <math.h>
 #include <iostream>
-#include "EvtGen/EvtRandom.hh"
+#include "EvtGenBase/EvtRandom.hh"
+#ifdef WIN32
+extern "C" {
+  void EVTRANFOR(float *rvec, int *len) 
+  {
+    for (int i=0;i<*len;i++)
+      rvec[i] = EvtRandom::Flat();
+  }
+}
+#else
 extern "C" {
   void evtranfor_(float *rvec, int *len) 
   {
@@ -30,4 +43,4 @@ extern "C" {
       rvec[i] = EvtRandom::Flat();
   }
 }
-
+#endif

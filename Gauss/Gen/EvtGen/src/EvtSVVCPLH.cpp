@@ -20,21 +20,25 @@
 //
 //------------------------------------------------------------------------
 //
+#ifdef WIN32 
+  #pragma warning( disable : 4786 ) 
+  // Disable anoying warning about symbol size 
+#endif 
 #include <stdlib.h>
-#include "EvtGen/EvtParticle.hh"
-#include "EvtGen/EvtGenKine.hh"
-#include "EvtGen/EvtCPUtil.hh"
-#include "EvtGen/EvtPDL.hh"
-#include "EvtGen/EvtSVVHelAmp.hh"
-#include "EvtGen/EvtReport.hh"
-#include "EvtGen/EvtSVVCPLH.hh"
-#include "EvtGen/EvtId.hh"
-#include "EvtGen/EvtString.hh"
-#include "EvtGen/EvtConst.hh"
+#include "EvtGenBase/EvtParticle.hh"
+#include "EvtGenBase/EvtGenKine.hh"
+#include "EvtGenBase/EvtCPUtil.hh"
+#include "EvtGenBase/EvtPDL.hh"
+#include "EvtGenModels/EvtSVVHelAmp.hh"
+#include "EvtGenBase/EvtReport.hh"
+#include "EvtGenModels/EvtSVVCPLH.hh"
+#include "EvtGenBase/EvtId.hh"
+#include <string>
+#include "EvtGenBase/EvtConst.hh"
 
 EvtSVVCPLH::~EvtSVVCPLH() {}
 
-void EvtSVVCPLH::getName(EvtString& model_name){
+void EvtSVVCPLH::getName(std::string& model_name){
 
   model_name="SVV_CPLH";     
 
@@ -95,8 +99,10 @@ void EvtSVVCPLH::decay( EvtParticle *p){
 
   static double ctauL=EvtPDL::getctau(EvtPDL::getId("B_s0L"));
   static double ctauH=EvtPDL::getctau(EvtPDL::getId("B_s0H"));
+  static double ctau=ctauL<ctauH?ctauH:ctauL;
 
-  //I'm not sure if the fabs() is right when t can be
+
+  //I'm not sure if the std::fabs() is right when t can be
   //negative as in the case of Bs produced coherently.
   double pt=1;
   double mt=exp(-fabs(t*(ctauL-ctauH)/(ctauL*ctauH)));

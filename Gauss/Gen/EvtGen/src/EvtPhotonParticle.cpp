@@ -18,13 +18,17 @@
 //
 //------------------------------------------------------------------------
 // 
+#ifdef WIN32 
+  #pragma warning( disable : 4786 ) 
+  // Disable anoying warning about symbol size 
+#endif 
 #include <stdlib.h>
 #include <iostream>
 #include <math.h>
-#include "EvtGen/EvtComplex.hh"
-#include "EvtGen/EvtPhotonParticle.hh"
-#include "EvtGen/EvtVector4C.hh"
-#include "EvtGen/EvtReport.hh"
+#include "EvtGenBase/EvtComplex.hh"
+#include "EvtGenBase/EvtPhotonParticle.hh"
+#include "EvtGenBase/EvtVector4C.hh"
+#include "EvtGenBase/EvtReport.hh"
 
 EvtPhotonParticle::~EvtPhotonParticle(){}
 
@@ -36,6 +40,7 @@ void EvtPhotonParticle::init(EvtId part_n,const EvtVector4R& p4){
 
 void EvtPhotonParticle::init(EvtId part_n,double e,double px,double py,double pz){
 
+  _validP4=true;
   setp(e,px,py,pz);
   setpart_num(part_n);
 
@@ -97,6 +102,7 @@ EvtVector4C EvtPhotonParticle::epsParentPhoton(int i){
 }
 
 EvtVector4C EvtPhotonParticle::epsPhoton(int /*i*/){
+
   report(ERROR,"EvtGen") << "EvtPhotonParticle.cc: Can not get "
 			 << "state in photons restframe."<<std::endl;;
   ::abort();

@@ -18,18 +18,24 @@
 //
 //------------------------------------------------------------------------
 // 
+#ifdef WIN32 
+  #pragma warning( disable : 4786 ) 
+  // Disable anoying warning about symbol size 
+#endif 
 #include <stdlib.h>
-#include "EvtGen/EvtParticle.hh"
-#include "EvtGen/EvtGenKine.hh"
-#include "EvtGen/EvtTensor4C.hh"
-#include "EvtGen/EvtPDL.hh"
-#include "EvtGen/EvtOmegaDalitz.hh"
-#include "EvtGen/EvtReport.hh"
-#include "EvtGen/EvtString.hh"
+#include "EvtGenBase/EvtParticle.hh"
+#include "EvtGenBase/EvtGenKine.hh"
+#include "EvtGenBase/EvtTensor4C.hh"
+#include "EvtGenBase/EvtVector4C.hh"
+#include "EvtGenBase/EvtVector3R.hh"
+#include "EvtGenBase/EvtPDL.hh"
+#include "EvtGenModels/EvtOmegaDalitz.hh"
+#include "EvtGenBase/EvtReport.hh"
+#include <string>
 
 EvtOmegaDalitz::~EvtOmegaDalitz() {}
 
-void EvtOmegaDalitz::getName(EvtString& model_name){
+void EvtOmegaDalitz::getName(std::string& model_name){
 
   model_name="OMEGA_DALITZ";     
 

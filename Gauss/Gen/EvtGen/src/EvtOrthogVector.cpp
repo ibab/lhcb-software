@@ -18,24 +18,29 @@
 //
 //------------------------------------------------------------------------
 
+#ifdef WIN32 
+  #pragma warning( disable : 4786 ) 
+  // Disable anoying warning about symbol size 
+#endif 
 #include <iostream>
+#include <fstream>
 #include <stdlib.h>
 #include <ctype.h>
 #include <string.h>
-#include "EvtGen/EvtOrthogVector.hh"
+#include "EvtGenBase/EvtOrthogVector.hh"
 
-EvtOrthogVector::EvtOrthogVector(int n, EvtVectorT<double> *vectors){
+EvtOrthogVector::EvtOrthogVector(int n, std::vector<double> *vectors){
 
   _dimen=n;
   _holder.resize(n);
-  _orthogVector.resize(n);
-  _orthogVector.init(0.0);
 
-
-  EvtVectorT<int> temp(n);
+  std::vector<int> temp;
   
   int i;
-  for (i=0;i<n;i++) {temp[i]=i;}
+  for (i=0;i<n;i++) {
+    _orthogVector.push_back(0.);
+    temp.push_back(i);
+  }
 
   findOrthog(_dimen,temp, vectors);
 
@@ -44,8 +49,8 @@ EvtOrthogVector::EvtOrthogVector(int n, EvtVectorT<double> *vectors){
 EvtOrthogVector::~EvtOrthogVector(){
 }
 
-void EvtOrthogVector::findOrthog(int dim, EvtVectorT<int> invect, 
-			    EvtVectorT<double> *vectors) {
+void EvtOrthogVector::findOrthog(int dim, std::vector<int> invect, 
+			    std::vector<double> *vectors) {
 
 
   if ( dim==2 ) {
@@ -78,7 +83,7 @@ void EvtOrthogVector::findOrthog(int dim, EvtVectorT<int> invect,
     return;
   }
   else{
-    EvtVectorT<int> temp((2*dim));
+    std::vector<int> temp((2*dim));
 
     int i;
     for (i=0; i<dim; i++) temp[i]=invect[i];
@@ -86,7 +91,7 @@ void EvtOrthogVector::findOrthog(int dim, EvtVectorT<int> invect,
 
     for (i=0; i<dim; i++) {
       _holder[dim-1]=temp[dim-1+i];
-      EvtVectorT<int> tempDim((dim-1));
+      std::vector<int> tempDim((dim-1));
 
       int j;
       for (j=0; j<(dim-1); j++) tempDim[j]=temp[j+i];
@@ -99,7 +104,7 @@ void EvtOrthogVector::findOrthog(int dim, EvtVectorT<int> invect,
 
 int EvtOrthogVector::findEvenOddSwaps() {
 
-  EvtVectorT<int> temp(_dimen);
+  std::vector<int> temp(_dimen);
 
   int i,j,nSwap;
   for (i=0; i<_dimen; i++) temp[i]=_holder[i];

@@ -22,7 +22,11 @@
 //
 //------------------------------------------------------------------------
 
-#include "EvtGen/EvtItgSimpsonIntegrator.hh"
+#ifdef WIN32 
+  #pragma warning( disable : 4786 ) 
+  // Disable anoying warning about symbol size 
+#endif 
+#include "EvtGenModels/EvtItgSimpsonIntegrator.hh"
 
 //-------------
 // C Headers --
@@ -40,8 +44,8 @@ extern "C" {
 // Collaborating Class Headers --
 //-------------------------------
 
-#include "EvtGen/EvtItgAbsFunction.hh"
-#include "EvtGen/EvtReport.hh"
+#include "EvtGenModels/EvtItgAbsFunction.hh"
+#include "EvtGenBase/EvtReport.hh"
 
 
 EvtItgSimpsonIntegrator::EvtItgSimpsonIntegrator(const EvtItgAbsFunction &theFunction, double precision, int maxLoop):
@@ -61,7 +65,7 @@ EvtItgSimpsonIntegrator::~EvtItgSimpsonIntegrator()
 double
 EvtItgSimpsonIntegrator::evaluateIt(double lower, double higher) const{
   
-  // cout<<"in evaluate"<<endl;
+  // report(INFO,"EvtGen")<<"in evaluate"<<std::endl;
   int j;
   double result(0.0);
   double s, st, ost(0.0);

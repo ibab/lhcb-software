@@ -19,9 +19,15 @@
 //
 //------------------------------------------------------------------------
 // 
-#include "EvtGen/EvtReport.hh"
-#include "EvtGen/EvtSLPoleFF.hh"
-#include "EvtGen/EvtString.hh"
+#ifdef WIN32 
+  #pragma warning( disable : 4786 ) 
+  // Disable anoying warning about symbol size 
+#endif 
+#include "EvtGenBase/EvtPatches.hh"
+#include "EvtGenBase/EvtReport.hh"
+#include "EvtGenModels/EvtSLPoleFF.hh"
+#include <string>
+#include "EvtGenBase/EvtPDL.hh"
 #include <math.h>
 
 EvtSLPoleFF::EvtSLPoleFF(int numarg, double *arglist) {
@@ -33,7 +39,7 @@ EvtSLPoleFF::EvtSLPoleFF(int numarg, double *arglist) {
 }
 
 
-void EvtSLPoleFF::getscalarff(EvtId parent, EvtId /*daught*/,
+void EvtSLPoleFF::getscalarff(EvtId parent,EvtId /*daught*/,
                               double t, double /*mass*/, double *fpf,
                               double *f0f ) {
 
@@ -45,7 +51,7 @@ void EvtSLPoleFF::getscalarff(EvtId parent, EvtId /*daught*/,
      report(ERROR,"EvtGen") << "wrong number of arguements!!!\n";
    }
 
-  double mb=EvtPDL::getNominalMass(parent);
+  double mb=EvtPDL::getMeanMass(parent);
   double mb2 = mb*mb;
 
   double f0,af,bf,powf;
@@ -66,7 +72,7 @@ void EvtSLPoleFF::getscalarff(EvtId parent, EvtId /*daught*/,
   return;
 }
 
-void EvtSLPoleFF::getvectorff(EvtId parent, EvtId /*daught*/,
+void EvtSLPoleFF::getvectorff(EvtId parent,EvtId /*daught*/,
                               double t, double /*mass*/, double *a1f,
                               double *a2f, double *vf, double *a0f ){
 
@@ -76,7 +82,7 @@ void EvtSLPoleFF::getvectorff(EvtId parent, EvtId /*daught*/,
      report(ERROR,"EvtGen") << numSLPoleargs<<"\n";
   }
 
-  double mb=EvtPDL::getNominalMass(parent);
+  double mb=EvtPDL::getMeanMass(parent);
   double mb2 = mb*mb;
 
   double f0,af,bf,powf;
@@ -112,7 +118,7 @@ void EvtSLPoleFF::getvectorff(EvtId parent, EvtId /*daught*/,
 
 
 
-void EvtSLPoleFF::gettensorff(EvtId parent, EvtId /*daught*/,
+void EvtSLPoleFF::gettensorff(EvtId parent,EvtId /*daught*/,
                               double t, double /*mass*/, double *hf,
                               double *kf, double *bpf, double *bmf ){
 
@@ -121,7 +127,7 @@ void EvtSLPoleFF::gettensorff(EvtId parent, EvtId /*daught*/,
      report(ERROR,"EvtGen") << "wrong number of arguements!!!\n";
   }
 
-  double mb=EvtPDL::getNominalMass(parent);
+  double mb=EvtPDL::getMeanMass(parent);
   double mb2 = mb*mb;
 
   double f0,af,bf,powf;

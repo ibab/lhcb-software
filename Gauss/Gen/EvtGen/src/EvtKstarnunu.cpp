@@ -29,20 +29,25 @@
 // Created:     Sept. 29 1997
 //
 //
+#ifdef WIN32 
+  #pragma warning( disable : 4786 ) 
+  // Disable anoying warning about symbol size 
+#endif 
 #include <stdlib.h>
 #include <iostream>
-#include "EvtGen/EvtString.hh"
-#include "EvtGen/EvtParticle.hh"
-#include "EvtGen/EvtPDL.hh"
-#include "EvtGen/EvtGenKine.hh"
-#include "EvtGen/EvtDiracSpinor.hh"
-#include "EvtGen/EvtTensor4C.hh"
-#include "EvtGen/EvtKstarnunu.hh"
-#include "EvtGen/EvtReport.hh"
+#include <string>
+#include "EvtGenBase/EvtParticle.hh"
+#include "EvtGenBase/EvtPDL.hh"
+#include "EvtGenBase/EvtGenKine.hh"
+#include "EvtGenBase/EvtDiracSpinor.hh"
+#include "EvtGenBase/EvtTensor4C.hh"
+#include "EvtGenModels/EvtKstarnunu.hh"
+#include "EvtGenBase/EvtReport.hh"
+#include "EvtGenBase/EvtVector4C.hh"
 
 EvtKstarnunu::~EvtKstarnunu() {}
 
-void EvtKstarnunu::getName(EvtString& model_name){
+void EvtKstarnunu::getName(std::string& model_name){
 
   model_name="KSTARNUNU";     
 
