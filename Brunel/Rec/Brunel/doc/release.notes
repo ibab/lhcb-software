@@ -3,6 +3,17 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
+! Preparation for Brunel v14r0
+
+ - New tuning:
+   . Improvements to Forward tracking (LongTrack v1r0, Brunel.opts)
+   . Improvements to Velo tracking fot K0s (VeloTrack v4r1)
+   . Only skip tracking if more than 1000 Velo tracks (was 200) (Brunel.opts)
+
+ - New features:
+   . Add support for Muon with MWPC, with/without M1
+     (XmlDDDB v13r0, MuonDet v4r0)
+
 </PRE><H1><A NAME=v13r2>2002-10-08 Brunel v13r2</A></H1><PRE>
 Bug fix release for reprocessing of summer production
 Supported geometry: dbase v248r4 (can process data produced with dbase v248r*)

@@ -24,10 +24,4 @@ ApplicationMgr.OutputLevel = 4;
 RootEventCnvSvc.OutputLevel = 4;
 MCParticleFilter.OutputLevel = 4;
 
-ToolSvc.TrFirstCleverExtrapolator.OutputLevel = 5;
-ToolSvc.TrHerabExtrapolator.OutputLevel = 5;
-fitSeed.OutputLevel = 5;
-fitSeed.Fitter.OutputLevel = 5;
-reFit.Fitter.OutputLevel = 5;
-
 FwtAnalyse.PrintEveryEvent = false;

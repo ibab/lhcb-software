@@ -104,13 +104,17 @@ BrunelDigiVELOSeq.Members += { "VeloFEToL1" };
 // Velo Tracking
 ApplicationMgr.DLLs += { "VeloTrack" };
 BrunelRecoVELOSeq.Members  = { "VeloTrackAlg" };
+VeloTrackAlg.AbortNumTrack = 1000;
 
 // Forward tracking
-ApplicationMgr.DLLs += { "FwTrack", "TrFitter", "TrExtrapolator" };
+ApplicationMgr.DLLs += { "LongTrack", "TrFitter", "TrExtrapolator" };
 ApplicationMgr.ExtSvc += { "TransportSvc" };
-BrunelRecoTrSeq.Members += { "FwtFind" };
+BrunelRecoTrSeq.Members += { "FindLongTrack" };
 BrunelRecoTrSeq.Members += { "TrEventTracksFitter/FitFw" };
 FitFw.TrackContainer = "Rec/FitTrack/Forward";
+#pragma print off
+#include "$LONGTRACKROOT/options/Brunel.opts"
+#pragma print on
 
 // Seeding
 ApplicationMgr.DLLs += { "Seeding" }; 

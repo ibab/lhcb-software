@@ -1,5 +1,5 @@
 package Brunel
-version v13r2
+version v14r0
 
 branches doc cmt job options
 
@@ -45,11 +45,11 @@ use Futio        v12r0  SICB
 
 # Detector description
 use DetDesc      v10r4  Det
-use XmlDDDB      v12r5  Det
+use XmlDDDB      v13r0  Det
 use CaloDet       v5r1  Det
 use CaloDetXmlCnv v2r0  Det
 use ITDet         v1r1  Det
-use MuonDet       v3r2  Det
+use MuonDet       v4r0  Det
 use OTDet         v2r2  Det
 use VeloDet       v7r0  Det
 use Magnet        v1r1  Det
@@ -106,9 +106,10 @@ use OTAssociators  	v2r1  	OT
 # Tracking
 use TrKernel            v11r0   Tr
 use TrFitEvent          v3r0    Tr
-use VeloTrack           v4r0p1  Velo
+use VeloTrack           v4r1    Velo
 use TrAssociators       v3r1    Tr
 use FwTrack             v4r2    Tr
+use LongTrack           v1r0    Tr
 use TrFitter            v3r0    Tr
 use TrExtrapolator      v2r1    Tr
 use TrTools             v2r0    Tr
@@ -149,7 +150,7 @@ macro_append Brunel_linkopts " "\
                 Linuxdbx     " -g -Wl,--start-group "
 
 #== Set the Brunel version = v*10000 + r*100 + p  ==
-macro_append fflags " -DBrunelVersion=130200 " \
-           VisualC  " /DBrunelVersion=130200 "
+macro_append fflags " -DBrunelVersion=140000 " \
+           VisualC  " /DBrunelVersion=140000 "
 
 apply_pattern application_path

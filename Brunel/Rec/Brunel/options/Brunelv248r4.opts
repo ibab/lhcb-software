@@ -26,9 +26,6 @@ BrunelDstWriter.Output = "DATAFILE='dst_v248r4.root' TYP='ROOT' OPT='NEW'";
 // Database specific options
 //--------------------------------------------------------------
 DetectorDataSvc.DetDbLocation = "$XMLDDDBROOT/DDDB/v248r0.xml";
-#pragma print off
-#include "$FWTRACKROOT/options/Brunelv246r0.opts" // Forward tracking
-#pragma print on
 MagneticFieldSvc.FieldMapFile = "$LHCBDBASE/cdf/field044.cdf";
 
 //--------------------------------------------------------------
