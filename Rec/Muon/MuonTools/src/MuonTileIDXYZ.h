@@ -1,4 +1,4 @@
-// $Id: MuonTileIDXYZ.h,v 1.8 2003-07-02 14:36:21 ocallot Exp $
+// $Id: MuonTileIDXYZ.h,v 1.9 2004-03-11 01:38:35 dhcroft Exp $
 #ifndef MUONTILEIDXYZ_H 
 #define MUONTILEIDXYZ_H 1
 
@@ -94,13 +94,19 @@ private:
   /// get position of chamber or gas gap with caching of results and pointers
   /// NOTE: station, region and gapNum are indexed from 0 (C style)
   /// chamberNum is the real chamber number (from 0)
-  StatusCode getXYZAndCache(const int& station,
-                            const int& region,
-                            const int& chamberNum,
-                            const int& gapNum,
-                            double& x, double& deltax,
-                            double& y, double& deltay,
-                            double& z, double& deltaz);
+  StatusCode getXYZ(const int& station,
+		    const int& region,
+		    const int& chamberNum,
+		    const int& gapNum,
+		    double& x, double& deltax,
+		    double& y, double& deltay,
+		    double& z, double& deltaz);
+
+  /// Get the chamber and gap sizes in real space and cache
+  StatusCode fillChamberCache( DeMuonChamber* muChamber,
+			       const int & station,
+			       const int & region,
+			       const int & chamber);
 
   /// fill the array with the position and size of the stations
   StatusCode fillStationExtent();

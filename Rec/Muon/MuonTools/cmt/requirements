@@ -1,7 +1,7 @@
-# $Id: requirements,v 1.13 2003-07-03 07:45:54 cattanem Exp $
+# $Id: requirements,v 1.14 2004-03-11 01:38:27 dhcroft Exp $
 # ==========================================================================
 package            MuonTools
-version            v3r6
+version            v3r7
 
 # ================ structure =================================================
 branches           cmt doc src options MuonTools
