@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/component/XmlLVolumeCnv.cpp,v 1.10 2001-06-14 13:27:03 sponce Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/component/XmlLVolumeCnv.cpp,v 1.11 2001-06-15 08:40:40 sponce Exp $
 
 // Include files
 #include "GaudiKernel/CnvFactory.h"
@@ -12,6 +12,7 @@
 #include "GaudiKernel/IDataDirectory.h"
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/RegistryEntry.h"
+#include "GaudiKernel/xtoa.h"
 
 #include "DetDesc/XmlCnvAttrList.h"
 #include "DetDesc/XmlAddress.h"
@@ -25,7 +26,6 @@
 
 #include <cstdlib>
 #include <map>
-#include <sstream> 
 
 #include "XmlLVolumeCnv.h"
 
@@ -138,8 +138,9 @@ std::string XmlLVolumeCnv::locateElement (DOM_Element element) {
     }
   }
   // if one was found, builds the result from it
-  std::ostringstream result("");
+  std::string result("");
   if (hasName) {
+    char buffer[32];
     parentNode = element;
     DOM_Node grandParent = element.getParentNode();
     while (parentNode != parentElement) {
@@ -150,24 +151,29 @@ std::string XmlLVolumeCnv::locateElement (DOM_Element element) {
           break;
         }
       }
-      result << "child number " << i+1 << " ("
-             << dom2Std (parentNode.getNodeName()) << ") of ";
+
+      result = "child number ";
+      result += _itoa(i+1, buffer, 10);
+      result += " (";
+      result += dom2Std (parentNode.getNodeName());
+      result += ") of ";
       parentNode = grandParent;
       grandParent = parentNode.getParentNode();
     }
-    result << dom2Std (parentElement.getNodeName())
-           << " "
-           << parentName;
+    result += dom2Std (parentElement.getNodeName());
+    result += " ";
+    result += parentName;
   } else {
     // else just give the name of the parent
     parentNode = element.getParentNode();
     if (parentNode != 0) {
-      result << "tag " << dom2Std (parentNode.getNodeName());
+      result += "tag ";
+      result += dom2Std (parentNode.getNodeName());
     } else {
-      result << "top node";
+      result += "top node";
     }
   }
-  return result.str();
+  return result;
 } // end locateElement
 
 
