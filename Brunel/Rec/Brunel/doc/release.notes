@@ -25,7 +25,13 @@ Purupose: LHCb reconstruction program
    use Futil v10r3
 >   ubdropobj - new routine to drop the LAST object in a given partition
 
-   use simmubg v5r1
+   use simmubg v5r2
+
+>  murmsingle.F  - all 4 routines now add the atmc references to the last
+>  murmmulti.F   - atmc partition.
+>  murmscomp.F   -   
+>  murmmcomp.F   -
+>
 >  The routine murmbg.F now uses a new Futil (v10r3) routine, mudropobj.F to
 >  correctly remove background ATMC objects.
 >
