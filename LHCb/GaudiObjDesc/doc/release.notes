@@ -2,6 +2,10 @@ Package: GaudiObjDesc
 Desccription: This package contains a set of tools used to generate code from the XML description of the data object classes.
 Package manager : Stefan Roiser
 
+!20050111 - Stefan
+- generating of typedefs in classes unified. All typedefs are handled by a single function (std::vector,KeyedContainer,ContainedObject) 
+  class attributes 'stdVectorTypeDef, keyedContTypeDef, templateVector, templateList' will be depricated and replaced by new ones
+
 !20050103 - Stefan
 - fix: generate unique include line in case of stl includes (generated from forward declarations)
  

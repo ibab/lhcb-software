@@ -10,6 +10,7 @@ class genClasses(genSrcUtils.genSrcUtils):
     self.plurialExceptions = {'Vertex':'Vertices'}
     self.bitfieldEnums = {'public':'', 'protected':'', 'private':''}
     self.gKeyedContainerTypedef = 0
+    self.gContainedObjectTypedef = 0
     self.genOStream = 0
     self.genFillStream = 0
     self.isEventClass = 0
@@ -23,6 +24,7 @@ class genClasses(genSrcUtils.genSrcUtils):
     self.forwardIncl = list(package.forwardIncl)
     self.bitfieldEnums = {'public':'', 'protected':'', 'private':''}
     self.gKeyedContainerTypedef = 0
+    self.gContainedObjectTypedef = 0
     if godClass['attrs']['serializers'] == 'TRUE' :
       self.genOStream = 1
       self.genFillStream = 1
@@ -86,6 +88,7 @@ class genClasses(genSrcUtils.genSrcUtils):
       for base in godClass['base']:
         baseAtt = base['attrs']
         if baseAtt['name'][:12] == 'KeyedObject<' : self.gKeyedContainerTypedef = 1
+        if baseAtt['name'] == 'ContainedObject' : self.gContainedObjectTypedef = 1
         self.addInclude(baseAtt['name'])
         if baseAtt['virtual'] == 'TRUE': s += 'virtual '
         s += '%s %s' % ( baseAtt['access'].lower(), baseAtt['name'] )
@@ -422,25 +425,26 @@ class genClasses(genSrcUtils.genSrcUtils):
         s += '  return CLID_%s;\n}\n' % scopeName
     return s                                                                    
 #--------------------------------------------------------------------------------
-  def genKeyedContainerTypedef(self,godClass):
+  def genClassTypedefs(self, godClass):
     s = ''
-    #if godClass['attrs']['keyedContTypeDef'] == 'FALSE': return s
-    if godClass['attrs'].has_key('id') or self.gKeyedContainerTypedef:
-      classname =  godClass['attrs']['name']
+    classname =  godClass['attrs']['name']
+    if self.gKeyedContainerTypedef:
       self.addInclude('KeyedContainer')
       s += '// Definition of Keyed Container for %s\n' % classname
-      s += 'typedef KeyedContainer<%s, Containers::HashMap> %s;' \
+      s += 'typedef KeyedContainer<%s, Containers::HashMap> %s;\n\n' \
            % (classname, self.genClassnamePlurial(classname))
-    return s
-#--------------------------------------------------------------------------------
-  def genTemplateContainerTypedefs(self, godClass):
-    s = ''
-    godAtt = godClass['attrs']
-    if godAtt['stdVectorTypeDef'] == 'TRUE':
-      className = godClass['attrs']['name']
+    if self.gContainedObjectTypedef:
+      self.addInclude('ContainedObject')
+      s += '// Definition of vector container type for %s\n' % classname
+      s += 'template <class TYPE> class ObjectVector;'
+      s += 'typedef ObjectVector<%s> %sVector;\n\n' % (classname, classname)
+      s += '// Definition of list container type for %s\n' % classname
+      s += 'template <class TYPE> class ObjectList;\n'
+      s += 'typedef ObjectList<%s> %sList' % (classname, classname)
+    if godCass['attrs']['stdVectorTypeDef'] == 'TRUE' and not self.gContainedObjectTypedef:
       self.addInclude('std::vector')
       s += '// typedef for std::vector of %s\n' % className
-      s += 'typedef std::vector<%s*> %sVector;\n' % ( className, className )
+      s += 'typedef std::vector<%s*> %sVector;\n\n' % ( className, className )
     return s
 #--------------------------------------------------------------------------------
   def genStreamer(self, godClass, className=''):
@@ -534,8 +538,7 @@ class genClasses(genSrcUtils.genSrcUtils):
       classDict['author']                       = godClass['attrs']['author']
       classDict['today']                        = time.ctime()
       classDict['inheritance']                  = self.genInheritance(godClass)
-      classDict['keyedContainerTypedef']        = self.genKeyedContainerTypedef(godClass)
-      classDict['templateContainerTypedefs']    = self.genTemplateContainerTypedefs(godClass)
+      classDict['classTypedefs']                = self.genClassTypedefs(godClass)
       classDict['constructorDecls']             = self.genConstructors(godClass)
       classDict['destructorDecl']               = self.genDestructors(godClass)
       classDict['classIDDecl']                  = self.genClassIDFun(godClass)

@@ -79,7 +79,6 @@ private:
 @@@publicMethodDefs@@@
 @@@protectedMethodDefs@@@
 @@@privateMethodDefs@@@
-@@@keyedContainerTypedef@@@
-@@@templateContainerTypedefs@@@
+@@@classTypedefs@@@
 
 #endif ///@@@packagename@@@_@@@classname@@@_H
