@@ -1,6 +1,10 @@
-! $Id: release.notes,v 1.22 2002-07-09 18:20:21 cattanem Exp $
+! $Id: release.notes,v 1.23 2002-07-09 20:45:28 parkesb Exp $
 package VeloDet
 package manager : Velo Group
+! 2002-07-09 - Chris Parkes
+ - re-define integer strip method  rOfStrip, so that it gives same result as 
+   double version.
+ - bug in ChannelID method - fractional part was not in range -0.5 to +0.5
 
 !========================= VeloDet v6r0 2002-07-09 =========================
 ! 2002-06-24 - Olivier Callot
