@@ -2,7 +2,7 @@ Package: GaudiObjDesc
 Desccription: This package contains a set of tools used to generate code from the XML description of the data object classes.
 Package manager : Stefan Roiser
 
-===============================GaudiObjDesc v8r0============================
+===============================GaudiObjDesc v7r3============================
 
 !20050206 - Stefan
 - lowering getter names of bitfields (as for all other getters) 
