@@ -1,4 +1,4 @@
-// $Id: MuonTileID.h,v 1.2 2002-03-04 16:51:04 atsareg Exp $
+// $Id: MuonTileID.h,v 1.3 2002-03-25 13:31:18 atsareg Exp $
 //
 #ifndef      MUONKERNEL_MUONTILEID_H
 #define      MUONKERNEL_MUONTILEID_H 1  
@@ -93,9 +93,18 @@ public:
                const IMuonLayout& layout,
 	       const unsigned int x,
 	       const unsigned int y) ;
+	      
+  /// constructor taking a long needed for the keyed container 
+  MuonTileID(const long int& muonid){
+    m_muonid = static_cast<unsigned int>(muonid);
+  }
   /// destructor
   ~MuonTileID() {} 
-
+  
+  /// convert the MuonTileID to an int for use as a key
+  operator long int() const {
+    return static_cast<long int>(m_muonid);
+  }
   /// Function to extract station
   inline const unsigned int station() const { 
     return  ( m_muonid & MuonBase::MaskStation ) >> MuonBase::ShiftStation ; 
