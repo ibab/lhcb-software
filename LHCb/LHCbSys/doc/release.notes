@@ -5,8 +5,9 @@
 ! Purpose     : LHCb OO kernel packages
 !-----------------------------------------------------------------------------
 
-!======================= LHCbSys v16r0 2004-06-11 =======================
-! 2004-06-11 - Marco Cattaneo
+!======================= LHCbSys v16r0 2004-06-14 =======================
+! 2004-06-14 - Marco Cattaneo
+ - New      packages: LHCbTools v1r1 (moved here from BooleSys, BrunelSys)
  - Removed  packages: L1Event. Obsolete, completely superseded by TrgEvent
 
  - Modified packages: KernelSys v3r7, LHCbKernel v4r7, 
