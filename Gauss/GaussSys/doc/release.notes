@@ -4,6 +4,11 @@
 ! Purpose     : Gauss system
 !-----------------------------------------------------------------------------
 
+!========================== GaussSys v12r4 2003-09-25 =================
+! 2003-09-25 - Florence RANJARD
+ - Gauss v12r4 uses the GEANT4 v52r1 project, nomore interface packages.
+ - remove use of <Det> Algorithms packages
+
 !========================== GaussSys v12r3 2003-09-03 ===============
 ! 2003-09-04 - Witek Pokorski
  - use GiGaCnv v13r1 which fixes a part of the geometrical problem 
