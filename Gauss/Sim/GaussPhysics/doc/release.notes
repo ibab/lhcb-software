@@ -4,7 +4,9 @@
 ! Purpose          : collection of physics constructors for Gauss
 !-----------------------------------------------------------------------------
 	
-
+!=========================== GaussPhysics v2r0 2002-12-17 ========================
+! 2002-12-17 - Witek Pokorski
+ - use new GaussTools (new G4) 
 
 !=========================== GaussPhysics v1r0 2002-12-11 ========================
 ! 2002-12-11 - Witek Pokorski
