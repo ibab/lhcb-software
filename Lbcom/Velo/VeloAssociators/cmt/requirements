@@ -18,8 +18,8 @@ include_dirs $(VELOASSOCIATORSROOT)
 # Used packages. Specify the version, * at the end specifies 'any revision'
 #    Put as many lines as needed, with all packages, without the '#'
 #============================================================================
-use  VeloEvent  v10r*   Event
-use  VeloDet    v5r*    Det
+use  VeloEvent  v11r*   Event
+use  VeloDet    v6r*    Det
 use  VeloKernel v1r*    Velo
 
 # Component library building rule

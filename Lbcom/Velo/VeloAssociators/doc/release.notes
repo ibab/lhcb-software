@@ -1,7 +1,9 @@
 ! Package     : VeloAssociator
 ! Responsible : Chris Parkes
 
-! >>>>>>>>>>>>>>>>>>>>>> VeloAssociators v1r0 <<<<<<<<<<<<<<<<<<<<<<<<
+! 2002-06-19 - Marco Cattaneo
+ - Use VeloEvent v11r* and VeloDet v6r*
+
 ! 2002-05-24 - Marco Cattaneo
  - Add relation factories to VeloAssociators_load.cpp
  - Standardise TDS path for relations
