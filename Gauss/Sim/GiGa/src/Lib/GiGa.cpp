@@ -1,8 +1,11 @@
-/// ===========================================================================
-/// CVS tag $Name: not supported by cvs2svn $ 
-/// ===========================================================================
-/// $Log: not supported by cvs2svn $ 
-/// ===========================================================================
+// ===========================================================================
+// CVS tag $Name: not supported by cvs2svn $ 
+// ===========================================================================
+// $Log: not supported by cvs2svn $
+// Revision 1.1  2001/08/01 09:42:23  ibelyaev
+// redesign and reimplementation of GiGaRunManager class
+// 
+// x===========================================================================
 /// GaudiKernel
 #include "GaudiKernel/Bootstrap.h"
 #include "GaudiKernel/System.h"
@@ -43,21 +46,22 @@
 #include "G4UIcsh.hh"             
 #endif ///< G4UI_USE
 
-/// ===========================================================================
-/** Implementation of methods from namespace GiGa
+// ============================================================================
+/** @file GiGa.cpp
+ * Implementation of methods from namespace GiGa
  * 
  *  @author Vanya Belyaev
  *  @date  31/07/2001 
  */
-/// ===========================================================================
+// ============================================================================
 
-/// ===========================================================================
+// ============================================================================
 /** create GiGa Run Manager
  *  @param   Name name of run manager 
  *  @param   Loc  pointer to service Locator  
  *  @return  pointer to giga run manager abstract interface 
  */     
-/// ===========================================================================
+// ============================================================================
 IGiGaRunManager* GiGa::createRunManager( const std::string& Name , 
                                          ISvcLocator*       Loc  )
 {
@@ -75,11 +79,11 @@ IGiGaRunManager* GiGa::createRunManager( const std::string& Name ,
   return s_runMgr ;
 };
 
-/// ===========================================================================
+// ============================================================================
 /** create (and initialize) GiGa Vis manager
  *  return pointer to Visualization Manager 
  */
-/// ===========================================================================
+// ============================================================================
 G4VVisManager* GiGa::createVisManager()
 {
   /// static variable 
@@ -97,12 +101,12 @@ G4VVisManager* GiGa::createVisManager()
   return s_visMgr ;
 };
 
-/// ===========================================================================
+// ============================================================================
 /** create  User Interface session
  *  @param  session session type 
  *  @return pointer to user interafce session 
  */
-/// ===========================================================================
+// ============================================================================
 G4UIsession* GiGa::createUIsession( const std::string& session )
 {
   /// static variable 
@@ -157,4 +161,4 @@ G4UIsession* GiGa::createUIsession( const std::string& session )
   ///
 };
 
-/// ===========================================================================
+// ============================================================================

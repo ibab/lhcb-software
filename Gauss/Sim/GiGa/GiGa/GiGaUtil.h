@@ -1,23 +1,26 @@
-/// ===========================================================================
+// ============================================================================
 /// CVS tag $Name: not supported by cvs2svn $ 
-/// ===========================================================================
-/// $Log: not supported by cvs2svn $
-/// Revision 1.4  2001/07/25 17:18:08  ibelyaev
-/// move all conversions from GiGa to GiGaCnv
-///
-/// Revision 1.3  2001/07/24 09:05:36  ibelyaev
-/// bug fix
-///
-/// Revision 1.2  2001/07/24 07:11:04  ibelyaev
-/// new methods for object deletion in GiGaUtil namespace
-///
-/// Revision 1.1  2001/07/23 20:53:45  ibelyaev
-/// reorganization of GiGaUtil namespace
-/// 
-/// ===========================================================================
+// ============================================================================
+// $Log: not supported by cvs2svn $
+// Revision 1.5  2001/07/26 16:09:21  ibelyaev
+// GiGaRunActions budiness
+//
+// Revision 1.4  2001/07/25 17:18:08  ibelyaev
+// move all conversions from GiGa to GiGaCnv
+//
+// Revision 1.3  2001/07/24 09:05:36  ibelyaev
+// bug fix
+//
+// Revision 1.2  2001/07/24 07:11:04  ibelyaev
+// new methods for object deletion in GiGaUtil namespace
+//
+// Revision 1.1  2001/07/23 20:53:45  ibelyaev
+// reorganization of GiGaUtil namespace
+// 
+// ============================================================================
 #ifndef GIGA_GIGAUTIL_H 
 #define GIGA_GIGAUTIL_H 1
-/// ===========================================================================
+// ============================================================================
 /// STD & STL 
 #include <string>
 #include <functional>
@@ -37,8 +40,9 @@ class IGiGaTrackAction;
 class IGiGaSensDet;
 class IGiGaMagField;
 
-/** @namespace  GiGaUtil GiGaUtil.h GiGa/GiGaUtil
- *  
+/** @namespace  GiGaUtil GiGaUtil.h "GiGa/GiGaUtil.h"
+ *  @brief  helper utilities for GiGa 
+ *
  *  collection of simple helper utilities for GiGa package 
  * 
  *  @author Ivan Belyaev
@@ -51,9 +55,9 @@ namespace GiGaUtil
   /** split a "Type/Name" string into "Type" and "Name"
    *  
    *  rules:
-   * -  "Type/Name"  =  "Type" , "Name"
-   * -  "Type"       =  "Type" , "Type"
-   * -  "Type/"      =  "Type" , "Type"
+   * -  "Type/Name"  =  "Type" + "Name"
+   * -  "Type"       =  "Type" + "Type"
+   * -  "Type/"      =  "Type" + "Type"
    * 
    *  error conditions 
    *
@@ -61,16 +65,16 @@ namespace GiGaUtil
    *  -  more than 1 separator ('/') 
    *  -  empty type ("/Name")
    *
-   *  @param TypeAndName   string to be splitted 
-   *  @param Type  returned "Type" 
-   *  @param Name  returned "Name" 
+   *  @param TypeAndName   the string to be splitted 
+   *  @param Type          returned "Type" 
+   *  @param Name          returned "Name" 
    *  @return status code
    */  
   StatusCode SplitTypeAndName ( const std::string& TypeAndName ,
                                 std::string      & Type        , 
                                 std::string      & Name        );
   
-  /** useful utility to extract the object type name 
+  /** useful utility(function) to extract the object type name 
    *  @param obj pointer to object of type "TYPE"
    *  @return type name of the object
    */ 
@@ -80,12 +84,12 @@ namespace GiGaUtil
     return 
       obj ? 
       std::string( System::typeinfoName( typeid(*obj) ) ) : 
-      std::string( "'UNKNOWN_type'" ) ;
+      std::string( "'UNKNOWN_type'" );
   };
   
   /** @class Delete 
    * 
-   *  useful utility to delete the object 
+   *  useful utility(templated class) to delete the object 
    *
    *  @author Vanya Belyaev
    *  @date 23/07/2001
@@ -93,7 +97,8 @@ namespace GiGaUtil
   class Delete
   { 
   public:
-    /* delete the object 
+    
+    /** delete the object 
      *  @param obj pointer to object to be deleted 
      *  @return NULL pointer 
      */
@@ -107,7 +112,7 @@ namespace GiGaUtil
   
   /** @class Eraser
    * 
-   *  useful utility to delete the object 
+   *  useful utility(functor) to delete the object 
    *
    *  @author Vanya Belyaev
    *  @date 23/07/2001
@@ -116,7 +121,8 @@ namespace GiGaUtil
   class Eraser: public std::unary_function<TYPE*,TYPE*>
   { 
   public:
-    /* delete the object 
+    
+    /** delete the object 
      *  @param obj pointer to object to be deleted 
      *  @return NULL pointer 
      */
@@ -127,7 +133,8 @@ namespace GiGaUtil
     };
   };
   
-  /** useful utility to delete the object through the pointer  
+  /** useful utility(templated function)  
+   *  to delete the object through the pointer  
    *
    *  @author Vanya Belyaev
    *  @date 23/07/2001
@@ -168,7 +175,7 @@ namespace GiGaUtil
     
     /// destructor 
     virtual ~Creator();
-    ///
+
   protected:
     
     /** accessor to Object Manager object 
@@ -193,17 +200,15 @@ namespace GiGaUtil
     const IFactory*  Factory( const std::string& type ) const;
     
   private:
-    
     /// no default constructor
     Creator();
     /// no assignment 
-    Creator& operator=( const Creator& ) ;
-    
+    Creator& operator=( const Creator& ) ;    
   private:
-    ///
+
     IObjManager* m_objMgr; ///< pointer to Object Manager 
     ISvcLocator* m_svcLoc; ///< pointer to ServiceLocator 
-    ///
+
   };
   
   /** @class PhysListCreator 
@@ -235,7 +240,6 @@ namespace GiGaUtil
      */
     IGiGaPhysList* operator() ( const std::string& type ,
                                 const std::string& name ) const;
-    ///
   };
 
   /** @class RunActionCreator 
@@ -267,7 +271,6 @@ namespace GiGaUtil
      */
     IGiGaRunAction* operator() ( const std::string& type ,
                                  const std::string& name ) const;
-    ///
   };
   
   /** @class EventActionCreator 
@@ -299,7 +302,6 @@ namespace GiGaUtil
      */
     IGiGaEventAction* operator() ( const std::string& type ,
                                    const std::string& name ) const;
-    ///
   };
   
   /** @class StepActionCreator 
@@ -331,7 +333,6 @@ namespace GiGaUtil
      */
     IGiGaStepAction* operator() ( const std::string& type ,
                                   const std::string& name ) const;
-    ///
   };
   
   /** @class StackActionCreator 
@@ -363,7 +364,6 @@ namespace GiGaUtil
      */
     IGiGaStackAction* operator() ( const std::string& type ,
                                    const std::string& name ) const;
-    ///
   };
 
   /** @class TrackActionCreator 
@@ -395,7 +395,6 @@ namespace GiGaUtil
      */
     IGiGaTrackAction* operator() ( const std::string& type ,
                                    const std::string& name ) const;
-    ///
   };
 
   /** @class SensDetCreator 
@@ -427,7 +426,6 @@ namespace GiGaUtil
      */
     IGiGaSensDet* operator() ( const std::string& type ,
                                const std::string& name ) const;
-    ///
   };
   
   /** @class MagFieldCreator 
@@ -459,12 +457,10 @@ namespace GiGaUtil
      */
     IGiGaMagField* operator() ( const std::string& type ,
                                 const std::string& name ) const;
-    ///
   };
-  
 
 }; ///< end of namespace 
 
-/// ===========================================================================
+// ============================================================================
 #endif ///< GIGA_GIGAUTIL_H
-/// ===========================================================================
+// ============================================================================

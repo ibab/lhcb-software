@@ -1,14 +1,17 @@
-/// ===========================================================================
-/// CVS tag $Name: not supported by cvs2svn $ 
-/// ===========================================================================
-/// $Log: not supported by cvs2svn $
-/// Revision 1.1  2001/07/23 13:11:45  ibelyaev
-/// the package restructurisation(II)
-/// 
-/// ===========================================================================
+// ============================================================================
+// CVS tag $Name: not supported by cvs2svn $ 
+// ============================================================================
+// $Log: not supported by cvs2svn $
+// Revision 1.1  2001/07/25 17:18:08  ibelyaev
+// move all conversions from GiGa to GiGaCnv
+//
+// Revision 1.1  2001/07/23 13:11:45  ibelyaev
+// the package restructurisation(II)
+// 
+// ============================================================================
 #ifndef GIGA_IGIGAGEOSRC_H 
 #define GIGA_IGIGAGEOSRC_H 1
-/// ===========================================================================
+// ============================================================================
 /// GaudiKernel
 #include "GaudiKernel/IInterface.h"
 /// GiGa 
@@ -17,9 +20,9 @@
 class G4VPhysicalVolume;
 
 
-/** @class IGiGaGeo IGiGaGeo.h GiGa/IGiGa.h
+/** @interface IGiGaGeo IGiGaGeo.h "GiGa/IGiGaGeoSrc.h"
  *  
- *  definition of "minimal" geometry source interface 
+ *  definition of "minimal" geometry source interface for GiGa
  *
  *  @author Ivan Belyaev
  *  @date   21/07/2001
@@ -44,6 +47,6 @@ public:
 
 };
 
-/// ===========================================================================
+// ============================================================================
 #endif // GIGA_IGIGAGEOSRC_H
-/// ===========================================================================
+// ============================================================================
