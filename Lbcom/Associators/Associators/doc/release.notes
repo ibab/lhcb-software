@@ -1,6 +1,7 @@
 ! Package     : Associators
 ! Responsible : Rutger Hierck
 
+!======================= Associators v2r1 2003-06-17 =======================
 ! 2003-06-16 - Sebastien Ponce
  - fixes for gcc 3.2/3.3
 
