@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.32 2002-04-22 08:09:03 cattanem Exp $ 
+# $Id: requirements,v 1.33 2002-04-22 16:48:36 cattanem Exp $ 
 # =============================================================================
 package DetDesc
 version v10r0
@@ -26,6 +26,5 @@ apply_pattern linker_path
 private
 apply_pattern package_Lshlibflags
 apply_pattern package_Cshlibflags
-macro_append  DetDescLib_shlibflags "$(GaudiKernel_linkopts) " 
-macro_append  DetDescLib_shlibflags "$(CLHEP_linkopts) " 
-macro_append  DetDescLib_shlibflags "$(XERCES_linkopts) " 
+macro_remove  use_linkopts "$(DetDesc_linkopts)"
+macro_append  DetDescLib_shlibflags " $(use_linkopts)" 
