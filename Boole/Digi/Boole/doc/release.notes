@@ -3,6 +3,11 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
+</PRE><H1><A NAME=v3r0p1>2003-11-10 Boole v3r0p1</A></H1><PRE>
+
+- Bug fix
+   - Correctly serialize HltBuffer and L1Buffer (DAQEvent v2r1)
+
 </PRE><H1><A NAME=v3r0>2003-11-04 Boole v3r0</A></H1><PRE>
 
 - New features

@@ -1,5 +1,5 @@
 package BooleSys
-version v3r0
+version v3r0p1
 
 branches cmt doc
  
@@ -8,8 +8,8 @@ branches cmt doc
 #=======================================================
 
 # Boole application
-use Boole		v3r0	Digi
-use DigiAlg		v2r1	Digi
+use Boole		v3r0p1	Digi
+use DigiAlg		v2r1p1	Digi
 use LHCbTools		v1r0	Kernel
 
 # L0 trigger

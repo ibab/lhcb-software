@@ -1,5 +1,5 @@
 package Boole
-version v3r0
+version v3r0p1
 
 branches doc cmt job options
 
@@ -40,14 +40,14 @@ use ParamFiles	v2r1	$(LHCb_release_area)/PARAM -no_auto_imports
 use FieldMap	v4r3
 
 #-- LHCb libraries (from LHCB_v13r3)
-use LHCb	v13r3
+use LHCb	v13r3p1
 
 #-> SICB libraries included to avoid dependency on SICBOO package
 use RiSicbGeom	v3r5	SICB
 
 #-- BooleSys v3r0 packages
 
-use DigiAlg		v2r1	Digi
+use DigiAlg		v2r1p1	Digi
 use LHCbTools		v1r0	Kernel
 
 # L0 trigger

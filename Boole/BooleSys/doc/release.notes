@@ -4,11 +4,15 @@
 ! Purpose     : List of packages in Boole project
 !-----------------------------------------------------------------------------
 
+!======================= BooleSys v3r0p1 2003-11-10 =======================
+! 2003-11-10 - Marco Cattaneo
+ - Packages modified: DigiAlg v2r1p1, Boole v3r0p1
+
 !======================== BooleSys v3r0 2003-11-04 ========================
 ! 2003-11-04 - Marco Cattaneo
  - New packages: Kernel/LHCbTools v1r0
  - Packages modified: RichUtils v3r4, RiSicbGeom v3r5, RichDetTools v3r1,
-      RichReadout v1r1, RichDigiQC v1r2, DigiAlgs v2r1, L1VeloTrack v5r3
+      RichReadout v1r1, RichDigiQC v1r2, DigiAlg v2r1, L1VeloTrack v5r3
 
 !======================== BooleSys v2r1 2003-10-16 ========================
 ! 2003-10-15 - Marco Cattaneo
