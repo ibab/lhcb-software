@@ -1,4 +1,4 @@
-// $Id: DaDiCppHeader.cpp,v 1.27 2002-01-29 09:01:11 mato Exp $
+// $Id: DaDiCppHeader.cpp,v 1.28 2002-01-29 09:27:52 mato Exp $
 
 #include "GaudiKernel/Kernel.h"
 
@@ -28,7 +28,7 @@
 // 12/06/2001 : 
 //----------------------------------------------------------------------------
 
-
+std::vector<std::string> ContainedObjectClasses, KeyedObjectClasses;
 
 //-----------------------------------------------------------------------------
 DOMString firstUp(const DOMString s)
@@ -716,12 +716,8 @@ void printClass(std::ofstream& xmlOut,
   int i,j;
   bool isEventClass = false, classTemplate = false, classTemplateVector = false,
     classTemplateList = false;
-  std::vector<std::string> ContainedObjectClasses, KeyedObjectClasses;
   std::vector<std::string>::iterator coIter, koIter;
 
-  ContainedObjectClasses.push_back("ContainedObject");
-
-  KeyedObjectClasses.push_back("KeyedObject");
 
   ///
   /// check if Class is an 'Eventclass'
@@ -798,14 +794,14 @@ void printClass(std::ofstream& xmlOut,
       koIter = std::find(KeyedObjectClasses.begin(), KeyedObjectClasses.end(), baseClName);
       if (koIter != KeyedObjectClasses.end())
       {
-        KeyedObjectClasses.push_back(baseClName);
+        KeyedObjectClasses.push_back(gddClass->className().transcode());
         classTemplate = true;
       }
       //////////////////////  tbd
       coIter = std::find(ContainedObjectClasses.begin(), ContainedObjectClasses.end(), baseClName);
       if (coIter != ContainedObjectClasses.end())
       {
-        ContainedObjectClasses.push_back(baseClName);
+        ContainedObjectClasses.push_back(gddClass->className().transcode());
         if (gddClass->classTemplateVector())
         {
           classTemplateVector = true;
@@ -1632,6 +1628,8 @@ void printCppHeader(DaDiPackage* gddPackage,
 {
   int i=0, j=0, k=0;
   std::map<std::string,std::string> dbExportClass;
+  ContainedObjectClasses.push_back("ContainedObject");
+  KeyedObjectClasses.push_back("KeyedObject");
 
 //
 // Parser initialization
