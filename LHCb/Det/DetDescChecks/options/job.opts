@@ -3,8 +3,8 @@
 ApplicationMgr.DLLs   += { "DetDescChecks" };
 ApplicationMgr.DLLs   += { "HbookCnv"};
 
-ApplicationMgr.TopAlg += { "MaterialBudgetAlg"} ;
-//ApplicationMgr.TopAlg += { "VolumeCheckAlg"} ;
+//ApplicationMgr.TopAlg += { "MaterialBudgetAlg"} ;
+ApplicationMgr.TopAlg += { "VolumeCheckAlg"} ;
 
 ApplicationMgr.HistogramPersistency = "HBOOK";
 
@@ -30,7 +30,7 @@ VolumeCheckAlg.ShootsZX    =200;
 //VolumeCheckAlg.Volume = "/dd/Geometry/Rich2/lvRich2Master";
 //VolumeCheckAlg.Volume = "/dd/Geometry/Tracker/lvTrackerVolume";
 
-VolumeCheckAlg.Volume = "/dd/Geometry/Velo/lvVelo";
+//VolumeCheckAlg.Volume = "/dd/Geometry/Velo/lvVelo";
 
 //VolumeCheckAlg.Volume = "/dd/Geometry/Velo/lvPuStation";
 //VolumeCheckAlg.Volume = "/dd/Geometry/Velo/lvVeloDStation";
@@ -48,7 +48,7 @@ VolumeCheckAlg.Volume = "/dd/Geometry/Velo/lvVelo";
 //VolumeCheckAlg.Volume = "/dd/Geometry/Velo/lvRFBox";
 
 //VolumeCheckAlg.Volume = "/dd/Geometry/Rich1/lvRich1Master";
-//VolumeCheckAlg.Volume = "/dd/Geometry/Muon/lvMuon";
+VolumeCheckAlg.Volume = "/dd/Geometry/Muon/lvMuon";
 //VolumeCheckAlg.Volume = "/dd/Geometry/Ecal/Installation/Ecal";
 //VolumeCheckAlg.Volume = "/dd/Geometry/Hcal/Installation/lvHcal";
 
