@@ -1,4 +1,4 @@
-// $Id: RichGlobalPIDAlg.cpp,v 1.17 2004-03-16 13:43:33 jonesc Exp $
+// $Id: RichGlobalPIDAlg.cpp,v 1.18 2004-04-19 23:03:59 jonesc Exp $
 // Include files
 
 
@@ -75,13 +75,6 @@ StatusCode RichGlobalPIDAlg::initialize()
   // Initialise parameters
   m_logMinSig = log(m_minSig);
 
-  debug() << "Initialize" << endreq
-          << " Max Track Iterations         = " << m_maxTrackIterations << endreq
-          << " Forced change parameters     = " << m_cP << endreq
-          << " Track Freeze parameters      = " << m_fP << endreq
-          << " Min deltaLL for update       = " << m_epsilon << endreq
-          << " DeltaLL signal speed params  = " << m_apxSig << " " << m_minSig << endreq;
-
   return StatusCode::SUCCESS;
 }
 
@@ -134,8 +127,7 @@ StatusCode RichGlobalPIDAlg::execute() {
   bool tryAgain = true;
   while ( tryAgain || 0 == m_trackIteration || !minTracks.empty() ) {
     if ( m_trackIteration > m_maxTrackIterations ) {
-      warning() << "Taken more than " << m_maxTrackIterations
-                << " iterations, quitting." << endreq;
+      Warning("Taken more than max number of iterations -> quitting");
       break;
     }
 
@@ -439,8 +431,6 @@ double RichGlobalPIDAlg::deltaLogLikelihood( RichRecTrack * track,
 }
 
 double RichGlobalPIDAlg::logLikelihood() {
-
-  MsgStream msg( msgSvc(), name() );
 
   // Loop over tracks to form total expected hits part of LL
   double trackLL = 0.0;

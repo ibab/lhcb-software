@@ -1,4 +1,4 @@
-// $Id: RichGlobalPIDFinalize.cpp,v 1.8 2004-03-16 13:43:34 jonesc Exp $
+// $Id: RichGlobalPIDFinalize.cpp,v 1.9 2004-04-19 23:04:00 jonesc Exp $
 // Include files
 
 // local
@@ -28,13 +28,11 @@ RichGlobalPIDFinalize::RichGlobalPIDFinalize( const std::string& name,
 RichGlobalPIDFinalize::~RichGlobalPIDFinalize() {}
 
 // Initialize
-StatusCode RichGlobalPIDFinalize::initialize() {
-
+StatusCode RichGlobalPIDFinalize::initialize() 
+{
   // Sets up various tools and services
   StatusCode sc = RichRecAlgBase::initialize();
   if ( sc.isFailure() ) { return sc; }
-
-  debug() << "Initialize" << endreq;
 
   return StatusCode::SUCCESS;
 }

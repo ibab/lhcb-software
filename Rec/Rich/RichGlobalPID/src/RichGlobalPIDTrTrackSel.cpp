@@ -1,4 +1,4 @@
-// $Id: RichGlobalPIDTrTrackSel.cpp,v 1.13 2004-03-16 13:43:35 jonesc Exp $
+// $Id: RichGlobalPIDTrTrackSel.cpp,v 1.14 2004-04-19 23:04:00 jonesc Exp $
 // Include files
 
 // local
@@ -54,13 +54,6 @@ StatusCode RichGlobalPIDTrTrackSel::initialize() {
   // Configure track selector
   if ( !m_trSelector.configureTrackTypes() ) return StatusCode::FAILURE;
 
-  debug() << "Initialize" << endreq
-          << " Track types selected         = " << m_trSelector.selectedTrackTypes() << endreq
-          << " Max RICH selected Tracks     = " << m_maxUsedTracks << endreq
-          << " Min Physics Momentum         = " << m_minPhysPtot << " MeV/c" << endreq
-          << " Min LogL Momentum            = " << m_minLLPtot << " MeV/c" << endreq;
-  if ( m_resetToPion ) debug() << " Resetting track hypotheses to Pion" << endreq;
-
   return StatusCode::SUCCESS;
 }
 
@@ -81,14 +74,14 @@ StatusCode RichGlobalPIDTrTrackSel::execute() {
     procStat->addAlgorithmStatus( m_richGPIDName, Rich::Rec::ProcStatAbort );
     richStatus()->setEventOK( false );  // set event status false
     deleteEvent();
-    return Print("Processing aborted -> RICH Global PID aborted");
+    return Warning("Processing aborted -> Abort",StatusCode::SUCCESS);
   }
 
   // Check the number of input raw tracks
   if ( trackCreator()->nInputTracks() > m_maxInputTracks ) {
     procStat->addAlgorithmStatus( m_richGPIDName, Rich::Rec::ReachedTrTrackLimit );
     deleteEvent();
-    return Print("Max. number of input tracks exceeded -> RICH Global PID aborted");
+    return Warning("Max. number of input tracks exceeded -> Abort",StatusCode::SUCCESS);
   }
 
   // Make sure RichRecTracks are available
@@ -96,11 +89,11 @@ StatusCode RichGlobalPIDTrTrackSel::execute() {
   if ( richTracks()->empty() ) {
     procStat->addAlgorithmStatus( m_richGPIDName, Rich::Rec::NoRichTracks );
     deleteEvent();
-    return Print("No tracks selected -> RICH Global PID aborted");
+    return Warning("No tracks selected -> Abort",StatusCode::SUCCESS);
   } else if ( richTracks()->size() > m_maxUsedTracks ) {
     procStat->addAlgorithmStatus( m_richGPIDName, Rich::Rec::ReachedRichTrackLimit );
     deleteEvent();
-    return Print("Max. number of usable tracks exceeded -> RICH Global PID aborted");
+    return Warning("Max. number of RICH tracks exceeded -> Abort",StatusCode::SUCCESS);
   }
 
   // Iterate over all RichRecTracks and choose those to use
@@ -149,7 +142,7 @@ StatusCode RichGlobalPIDTrTrackSel::execute() {
   if ( m_GPIDtracks->empty() ) {
     procStat->addAlgorithmStatus( m_richGPIDName, Rich::Rec::NoRichTracks );
     deleteEvent();
-    return Print("No tracks selected -> RICH Global PID aborted");
+    return Warning("No tracks selected -> Abort",StatusCode::SUCCESS);
   }
 
   return StatusCode::SUCCESS;

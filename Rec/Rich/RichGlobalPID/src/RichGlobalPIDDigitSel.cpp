@@ -1,4 +1,4 @@
-// $Id: RichGlobalPIDDigitSel.cpp,v 1.9 2004-03-16 13:43:34 jonesc Exp $
+// $Id: RichGlobalPIDDigitSel.cpp,v 1.10 2004-04-19 23:03:59 jonesc Exp $
 // Include files
 
 // local
@@ -30,14 +30,12 @@ RichGlobalPIDDigitSel::RichGlobalPIDDigitSel( const std::string& name,
 RichGlobalPIDDigitSel::~RichGlobalPIDDigitSel() {}
 
 //  Initialize
-StatusCode RichGlobalPIDDigitSel::initialize() {
+StatusCode RichGlobalPIDDigitSel::initialize() 
+{
 
   // Sets up various tools and services
   StatusCode sc = RichRecAlgBase::initialize();
   if ( sc.isFailure() ) { return sc; }
-
-  debug() << "Initialize" << endreq
-          << " Max Pixels                   = " << m_maxUsedPixels << endreq;
 
   return StatusCode::SUCCESS;
 }
@@ -55,7 +53,7 @@ StatusCode RichGlobalPIDDigitSel::execute() {
   if ( procStat->aborted() ) {
     procStat->addAlgorithmStatus( m_richGPIDName, Rich::Rec::ProcStatAbort );
     richStatus()->setEventOK( false );
-    return Print("Processing aborted -> RICH Global PID aborted");
+    return Warning("Processing aborted -> Abort",StatusCode::SUCCESS);
   }
 
   // Create all RichRecPixels
@@ -66,7 +64,7 @@ StatusCode RichGlobalPIDDigitSel::execute() {
   if ( m_maxUsedPixels < richPixels()->size() ) {
     procStat->addAlgorithmStatus(m_richGPIDName,Rich::Rec::ReachedPixelLimit);
     richStatus()->setEventOK( false );
-    return Print("Max. number of pixels exceeded -> RICH Global PID aborted");
+    return Warning("Max. number of pixels exceeded -> Abort",StatusCode::SUCCESS);
   }
 
   return StatusCode::SUCCESS;
