@@ -4,7 +4,7 @@
 ! Purpose     : Common particles
 !-----------------------------------------------------------------------------
 
-!==================== CommonParticle v1r3 2004-05-05 ========================
+!==================== CommonParticle v1r4 2004-05-05 ========================
 ! 2004-04-28 - R.Beneyton
  - ProducePairPhoton (h/src/opts): update to new DVAlg 
     . getInput, loadtools in code with flag off
