@@ -1,4 +1,4 @@
-// $Id: DaDiTools.cpp,v 1.2 2001-10-09 17:11:05 mato Exp $
+// $Id: DaDiTools.cpp,v 1.3 2001-10-29 11:16:18 mato Exp $
 
 
 // Include files
@@ -18,7 +18,11 @@
 // Global streaming operator for DOMString is defined in DOMPrint.cpp
 //extern std::ostream& operator<<(std::ostream& target, const DOMString& s);
 
+
+
+//-----------------------------------------------------------------------------
 char* DaDiTools::chooseAccess(const DOMString& s)
+//-----------------------------------------------------------------------------
 {
   std::string str = s.transcode();
   if (str == "PUBLIC") {return "public";}
@@ -28,14 +32,21 @@ char* DaDiTools::chooseAccess(const DOMString& s)
 }
 
 
+
+//-----------------------------------------------------------------------------
 void DaDiTools::warning(const SAXParseException&)
+//-----------------------------------------------------------------------------
 {
   //
   // Ignore all warnings.
   //
 }
 
+
+
+//-----------------------------------------------------------------------------
 void DaDiTools::error(const SAXParseException& toCatch)
+//-----------------------------------------------------------------------------
 {
   std::cerr << "Error at file \"" << DOMString(toCatch.getSystemId()).transcode()
    << "\", line " << toCatch.getLineNumber()
@@ -47,7 +58,11 @@ void DaDiTools::error(const SAXParseException& toCatch)
                      // that gets destroyed before the catch.
 }
 
+
+
+//-----------------------------------------------------------------------------
 void DaDiTools::fatalError(const SAXParseException& toCatch)
+//-----------------------------------------------------------------------------
 {
   std::cerr << "Fatal Error at file \"" << DOMString(toCatch.getSystemId()).transcode()
    << "\", line " << toCatch.getLineNumber()
@@ -56,14 +71,11 @@ void DaDiTools::fatalError(const SAXParseException& toCatch)
   throw SAXParseException(toCatch);
 }
 
+
+
+//-----------------------------------------------------------------------------
 void DaDiTools::resetErrors()
+//-----------------------------------------------------------------------------
 {
   // No-op in this case
 }
-
-
-
-
-// Standard creator
-//DadiTools::DadiTools( ) {
-//}
