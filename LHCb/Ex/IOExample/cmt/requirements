@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.6 2003-12-16 15:13:53 frankb Exp $
+# $Id: requirements,v 1.7 2003-12-16 15:20:44 frankb Exp $
 package IOExample
 version v1r0
 
@@ -30,10 +30,10 @@ library IOExample        KeyedObjects/*.cpp \
                          Common/*.cpp
 
 #==> IO example
-library IOMin        DataSvc/StoreExplorer.cpp            \
-                     DataSvc/EvtNumberPrintout.cpp            \
-                         Common/TestAlgorithm.cpp             \
-                         Common/GaudiMain.cpp
+library IOMin        DataSvc/StoreExplorer.cpp    \
+                     Common/EvtNumberPrintout.cpp \
+                     Common/TestAlgorithm.cpp     \
+                     Common/GaudiMain.cpp
                          
 # ========================= set macros ============================
 apply_pattern  package_Clinkopts
