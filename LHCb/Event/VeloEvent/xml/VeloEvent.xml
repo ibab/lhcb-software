@@ -29,6 +29,7 @@ stored for a single silicon/output channel. Constructed from MCVeloHits
       <location name="PuVeto" place="MC/Velo/PuFE" />
       <base name="KeyedObject&lt;VeloChannelID&gt;"/>
       <import name="Kernel/VeloChannelID"/>
+      <import name="Kernel/SerializeStl"/>
       <constructor desc="Constructor with key" 
 	initList="KeyedObject&lt;VeloChannelID&gt;(key),
 	m_addedSignal(0.0),
@@ -51,8 +52,37 @@ stored for a single silicon/output channel. Constructed from MCVeloHits
            <attribute name="addedPedestal" type="double" desc="pedestal added in Si/FE chip simulation in units of electrons"/>
            <attribute name="addedNoise" type="double" desc="noise added in Si/FE chip simulation in units of electrons"/>
            <attribute name="addedCMNoise" type="double" desc="common mode noise added in Si/FE chip simulation in units of electrons"/>
- 
+
            <relation name="MCVeloHits" type="MCVeloHit" desc="References to Monte Carlo hits contributing to this channel" multiplicity="m"/>
+
+           <attribute name="MCVeloHitsCharge" type="std::vector&lt;double&gt;" desc="Charge of Monte Carlo hit contributed to this channel" />
+ 
+           <method name="addToMCVeloHits" type="void" argList="SmartRef&lt;MCVeloHit&gt; hit, double chg" desc="add MC hit and its deposited charge">
+                 <code>m_MCVeloHits.push_back(hit);
+                       m_MCVeloHitsCharge.push_back(chg);
+                       return;
+                 </code>
+           </method>
+           
+          <method name="mcVeloHit" type="SmartRef&lt;MCVeloHit&gt;" argList="long num" desc="retrieve MCVeloHit reference" const="TRUE">
+           <code>return m_MCVeloHits[num];</code>
+           </method>
+
+          <method name="mcVeloHitCharge" type="double" argList="long num" desc="retrieve deposited charge of MCVeloHit" const="TRUE">
+           <code>return m_MCVeloHitsCharge[num];</code>
+           </method>
+
+          <method name="setMCVeloHitCharge" type="void" argList="long num, double chg" desc="set deposited charge of MCVeloHit" >
+           <code>m_MCVeloHitsCharge[num]=chg;
+                 return;
+           </code>
+           </method>
+
+           <method name="NumberOfMCVeloHits" type="long" desc="number of strips in cluster" const="TRUE">
+                 <code>return mcVeloHits().size();</code>
+           </method>
+
+
 
            <method name="charge" type="double"  desc="Access total charge - in electrons" const="TRUE">
 	           <code>return addedSignal()+addedNoise()+addedPedestal()+addedCMNoise();</code>
