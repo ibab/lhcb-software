@@ -1,0 +1,26 @@
+//-- GAUDI data cards generated on Aug 4, 2004 7:35:13 PM
+//-- For Event Type = 13104010 / Data type = DST 1
+//--     Configuration = DC04 - v1
+//--     DST 1 datasets produced by Brunel - v23r7
+//--     From DIGI 1 datasets produced by Boole - v5r9
+//--     From SIM 1 datasets produced by ANY
+//--     Database version = v22r2
+//--     Cards content = logical
+//--     
+//-- Datasets replicated at CERN_Castor-local_RFIO
+//-- 60 dataset(s) - NbEvents = 30000
+//-- 
+EventSelector.Input   = {
+  // 5 
+  "DATAFILE='LFN:/lhcb/production/DC04/v1/DST/00000623_00000056_5.dst' TYP='POOL_ROOTTREE' OPT='READ'",
+  "DATAFILE='LFN:/lhcb/production/DC04/v1/DST/00000623_00000057_5.dst' TYP='POOL_ROOTTREE' OPT='READ'",
+  "DATAFILE='LFN:/lhcb/production/DC04/v1/DST/00000623_00000060_5.dst' TYP='POOL_ROOTTREE' OPT='READ'",
+  "DATAFILE='LFN:/lhcb/production/DC04/v1/DST/00000623_00000061_5.dst' TYP='POOL_ROOTTREE' OPT='READ'",
+  "DATAFILE='LFN:/lhcb/production/DC04/v1/DST/00000623_00000062_5.dst' TYP='POOL_ROOTTREE' OPT='READ'",
+  "DATAFILE='LFN:/lhcb/production/DC04/v1/DST/00000623_00000068_5.dst' TYP='POOL_ROOTTREE' OPT='READ'",
+  "DATAFILE='LFN:/lhcb/production/DC04/v1/DST/00000623_00000071_5.dst' TYP='POOL_ROOTTREE' OPT='READ'",
+  "DATAFILE='LFN:/lhcb/production/DC04/v1/DST/00000623_00000073_5.dst' TYP='POOL_ROOTTREE' OPT='READ'",
+  "DATAFILE='LFN:/lhcb/production/DC04/v1/DST/00000623_00000076_5.dst' TYP='POOL_ROOTTREE' OPT='READ'",
+  "DATAFILE='LFN:/lhcb/production/DC04/v1/DST/00000623_00000077_5.dst' TYP='POOL_ROOTTREE' OPT='READ'",
+};
+//-- End of Data cards 
