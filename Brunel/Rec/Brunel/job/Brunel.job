@@ -34,7 +34,7 @@ else
 endif
 #
 # == set the root directory of your job
-setenv MYJOBROOT $HOME/newmycmt/Rec/Brunel/v3r3
+setenv MYJOBROOT $HOME/newmycmt/Rec/Brunel/v4
 # == reset the dynamic library search path
 unsetenv LD_LIBRARY_PATH
 # == set the program environment

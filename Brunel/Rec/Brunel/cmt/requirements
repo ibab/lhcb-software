@@ -1,5 +1,5 @@
 package Brunel
-version v3
+version v4
 
 branches doc cmt src job options Brunel
 
@@ -35,11 +35,17 @@ use CaloDet      v1     Det
 
 # Event Model
 use LHCbEvent    v10    Event
-use VeloEvent    v4     Event
+use L0Event      v2     Event
 use ITEvent      v4     Event
 use OTEvent      v4     Event
 use TrEvent      v4r1   Event
 use CaloEvent    v5     Event
+use VeloEvent    v4     Event
+
+# L0 trigger
+use L0Calo       v1     L0
+use L0Muon       v2     L0
+use L0DU         v1     L0
 
 # Calorimeter digitisation
 use CaloGen      v1     Calo
@@ -54,6 +60,8 @@ use TrAlgorithms v4r1	Tr
 # SicB event data persistency
 use SicbCnv      v12    SICB
 use CaloSicbCnv  v3     SICB
+use L0SicbCnv    v2     SICB
+use MuonSicbCnv  v2     SICB
 use TrSicbCnv    v1     SICB
 use VSicbCnv     v4	SICB
 

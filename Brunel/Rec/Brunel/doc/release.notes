@@ -3,6 +3,26 @@ Package Coordinator: Marco Cattaneo
 
 Purupose: LHCb reconstruction program
 
+! 20010629 Brunel v4 (MC)
+   Add C++ L0 trigger simulation
+   Remove old L0_2x2 simulation
+
+   In cmt/requirements
+   -------------------
+   add  use of L0Calo (v1), L0Muon (v2), L0DU (v1), L0Event (v2)
+               L0SicbCnv (v2), MuonSicbCnv (v2)
+
+   In options/
+   -----------
+   Brunel.opts     - include Brunel.opts from L0CALO, L0MUON, L0DU
+                     Add DLLs L0SicbCnv, MuonSicbCnv 
+   BrunelMoni.opts - Add CALO and TRIGGER to BrunelMoni.DetectorList 
+   
+   In src/BrunelSicb/
+   ------------------
+   trigger.F - remove call to L0_2X2
+
+===============================================================================
 ! 20010625 Brunel v3r3 (MC)
    Add possibility to add muon background (switched on by default)
 

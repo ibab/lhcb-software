@@ -14,6 +14,7 @@
 *   Author: Peter Schleper,   27/03/97   15.07.44
 *   modified by: Ian Tomalin  12/1/98    Call L2 routines
 *   modified by: M.Cattaneo   2001-05-08 Remove call to T1SEED, T1TRACK
+*   modified by: M.Cattaneo   2001-06-29 Remove call to L0_2x2
 *****************************************************************
       IMPLICIT NONE
 #include "inc/cbunit.inc"
@@ -93,10 +94,10 @@
          CALL T0PILEUP
          CALL PTIME('T0PILEUP',2,1)
 *** 2x2 Calorimeters
-         CALL PTIME('T2X2    ',1,1)
-         IF(IPRNT.ge.3) WRITE(*,1000) 'T2X2'
-         CALL L0_2x2
-         CALL PTIME('T2X2    ',2,1)
+C         CALL PTIME('T2X2    ',1,1)
+C         IF(IPRNT.ge.3) WRITE(*,1000) 'T2X2'
+C         CALL L0_2x2
+C         CALL PTIME('T2X2    ',2,1)
  
 *** LEVEL 1 ************************************************
  

@@ -13,7 +13,7 @@ HistogramPersistencySvc.OutputFile = "Histos.hbook";
 //--------------------------------------------------------------
 // Detectors to monitor
 //--------------------------------------------------------------
-BrunelMoni.DetectorList = { "IT", "OT", "Tr" };
+BrunelMoni.DetectorList = { "IT", "OT", "Tr", "CALO", "TRIGGER" };
 
 //--------------------------------------------------------------
 // Monitoring algorithms

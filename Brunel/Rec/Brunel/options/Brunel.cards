@@ -1,13 +1,13 @@
 LIST
 DEBU  1 1000 1
+C
 IOPA
 C SAVX is event output file 
-C 'SAVX' 'XO' '$LHCBHOME/scratch/Brunel/v3r1/brunel_52310.dst!'
-C T1VE are SICBDST L1 trigger  monitoring histograms
-C    'T1VE' 'HO' '$LHCBHOME/scratch/Brunel/T1VE_brunel.hbook!'
+C 'SAVX' 'XO' '$LHCBHOME/scratch/Brunel/v4/brunel_52310.dst!'
+C Below are some examples of SICBDST monitoring histograms
+C    'T1VE' 'HO' 'TrigL1.hbook!'
+C    'RHIS' 'HO' 'Rich.hbook!'
 C End of IOPA card
-C DEBG 'WDRF' 2
-C PRNT 'MUCH' 2
 C
 C Do RICH extended tracking on all events (including L0 rejects)
 DIGI 'RICH' 2
