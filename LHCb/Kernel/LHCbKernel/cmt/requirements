@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.9 2002-04-03 15:35:19 ibelyaev Exp $
+# $Id: requirements,v 1.10 2002-04-03 16:02:56 cattanem Exp $
 # =============================================================================
 # CVS tag $Name: not supported by cvs2svn $
 # =============================================================================
@@ -18,12 +18,11 @@ use CLHEP              v17r*
 #============================================================================
 macro LHCbKernelObj2Doth_GODflags " -o ../Kernel/ " \
       WIN32                       " -o ..\Kernel\ "
-document obj2doth LHCbKernelObj2Doth ../xml/*.xml
+document obj2doth LHCbKernelObj2Doth ../xml/LHCbKernel.xml
 
-# Dictionary not yet working on ITChannelID, looking for include file in /Event
 macro LHCbKernelObj2Dict_GODflags " -l Kernel/ " \
       WIN32                       " -l Kernel\ "
-document obj2dict LHCbKernelObj2Dict ../xml/*.xml
+document obj2dict LHCbKernelObj2Dict ../xml/LHCbKernel.xml
 
 library LHCbKernel *.cpp \
                    ../dict/*.cpp

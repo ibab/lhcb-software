@@ -1,0 +1,43 @@
+    <class name='OTChannelID' author='Jeroen van Tilburg' desc='OTChannelID is a class that describes a single straw of the LHCb Outer Tracker'>
+      <constructor argList='int iStation, int iLayer, int iModule, int iStraw' desc='constructor with station, layer, module, straw'>
+        <code>    
+          m_channelID = (iStation &lt;&lt; stationBits)+(iLayer &lt;&lt; layerBits)+(iModule &lt;&lt; moduleBits)+(iStraw &lt;&lt; strawBits);
+        </code>
+      </constructor>
+      <constructor argList='const OTChannelID aChannelID' desc='copy constructor'>
+        <code>
+          m_channelID = aChannelID.m_channelID;
+        </code>
+      </constructor>
+      <constructor argList='int id' initList = 'm_channelID(id)' desc='constructor with channelID'>
+        <code></code>
+      </constructor>
+      <method type='int' name='station' const='TRUE' desc='get station number'>
+        <code>return ((m_channelID &amp; stationMask) &gt;&gt; stationBits);</code>
+      </method>
+      <method type='int' name='layer' const='TRUE' desc='get layer number'>
+        <code>return ((m_channelID &amp; layerMask) &gt;&gt; layerBits);</code>
+      </method>
+      <method type='int' name='module' const='TRUE' desc='get module number'>
+        <code>return ((m_channelID &amp; moduleMask) &gt;&gt; moduleBits);</code>
+      </method>
+      <method type='int' name='straw' const='TRUE' desc='get straw number'>
+        <code>return ((m_channelID &amp; strawMask) &gt;&gt; strawBits);</code>
+      </method>
+      <method type='bool' name='operator==' argList='const OTChannelID aChannel' const='TRUE' desc='comparison equality'>
+        <code> return (this->channelID() == aChannel.channelID()); </code>
+      </method>
+      <method type='bool' name='operator&gt;' argList='const OTChannelID aChannel' const='TRUE' desc='comparison &lt;'> 
+        <code> return (this->channelID() &lt; aChannel.channelID()); </code>
+      </method>
+      <method type='bool' name='operator&lt;' argList='const OTChannelID aChannel' const='TRUE' desc='comparison &gt;'> 
+        <code> return (this->channelID() &gt; aChannel.channelID()); </code>
+      </method>
+      <enum access="PRIVATE" desc="Enumeration to store the bit packing offsets" name="bits" 
+      value=' strawBits = 0, moduleBits=8,  layerBits=16, stationBits=24'/>
+      <enum access="PRIVATE" desc="Enumeration to store the bit packing masks" name="masks" 
+      value=' stationMask = 0xFF000000, layerMask = 0x00FF0000, moduleMask = 0x0000FF00, strawMask = 0x000000FF'/>
+      <attribute type='int' name='channelID' desc='OT Channel ID'/>
+    </class>
+
+

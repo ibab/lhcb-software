@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE gdd SYSTEM "gdd.dtd"[
+
+<!ENTITY ITChannelID.xml   SYSTEM "ITChannelID.xml" >
+<!ENTITY OTChannelID.xml   SYSTEM "OTChannelID.xml" >
+]>
+
+<gdd>
+  <package name='LHCbKernel'>
+    <!-- next line needed until GOD knows not to look in LHCbEvent /-->
+    <import name='Kernel/CLHEPStreams'/>
+
+    &ITChannelID.xml;
+    &OTChannelID.xml;
+
+  </package>
+</gdd>

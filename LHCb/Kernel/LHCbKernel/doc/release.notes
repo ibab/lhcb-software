@@ -3,10 +3,12 @@ Package manager: M.Cattaneo
 Purpose: LHCb specific Kernel classes 
 
 >>>>>>>>>>>>>>> LHCbKernel v1r0 <<<<<<<<<<<<<<<<<<<<<
-! 20020403 Vanya Belyaev )
-  - new version of "Relations" stuff 
+! 20020403 M.Cattaneo
+  - OTChannelID.xml added
 
->>>>>>>>>>>>>>> LHCbKernel v1r0 <<<<<<<<<<<<<<<<<<<<<
+! 20020403 Vanya Belyaev
+  - new version of "Relations" stuff
+
 ! 20020327 (M.Cattaneo)
   - add LHCbStreams.h to include all other needed streams header files
 

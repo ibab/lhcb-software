@@ -1,8 +1,3 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE gdd SYSTEM "gdd.dtd">
-<gdd>
-  <package name='LHCbKernel'>
-    <import name='Kernel/CLHEPStreams'/>
     <class name='ITChannelID' author='Matthew Needham' desc='ITChannelID is a class that describes a single channel of LHCb Inner tracker.'>
       <desc> *  Now, only the station, layer, wafer and strip number can be retrieved.
  *  All numbers start from 1.</desc>
@@ -43,5 +38,3 @@
       <enum access="PUBLIC" desc="general storage enum" name="general" 
       value='nullStrip = 0xFFFF'/>
     </class>
-  </package>
-</gdd>
