@@ -1,4 +1,4 @@
-// $Id: DeRich1.cpp,v 1.4 2003-11-21 17:23:25 papanest Exp $
+// $Id: DeRich1.cpp,v 1.5 2003-11-21 22:46:10 jonesc Exp $
 #define DERICH1_CPP
 
 // Include files
@@ -97,5 +97,5 @@ HepNormal3D DeRich1::nominalNormal(Rich::Side side) const
 
 HepPlane3D DeRich1::nominalPlane(Rich::Side side) const
 {
-  return ( Rich::top == side ? m_nominalPlaneTop : m_nominalPlaneBottom );
+  return ( Rich::top == side ? m_nominalPlaneTop :  m_nominalPlaneBottom );
 }

@@ -1,4 +1,4 @@
-// $Id: DeRich2.h,v 1.4 2003-11-21 17:23:24 papanest Exp $
+// $Id: DeRich2.h,v 1.5 2003-11-21 22:46:10 jonesc Exp $
 #ifndef DERICH2_H
 #define DERICH2_H 1
 
@@ -55,13 +55,14 @@ public:
 
   virtual HepPlane3D nominalPlane(Rich::Side side) const;
 
-  inline virtual Rich::Side side(HepPoint3D point) const {
+  inline virtual Rich::Side side(HepPoint3D point) const
+  {
     if( point.x() >= 0.0 )
       return Rich::left;
     else
       return Rich::right;
   }
-  
+
 
 private:
 

@@ -1,4 +1,4 @@
-// $Id: DeRichRadiator.cpp,v 1.3 2003-10-22 10:48:28 papanest Exp $
+// $Id: DeRichRadiator.cpp,v 1.4 2003-11-21 22:46:10 jonesc Exp $
 #define DERICHRADIATOR_CPP
 
 // Include files
@@ -78,9 +78,8 @@ StatusCode DeRichRadiator::nextIntersectionPoint( const HepPoint3D&  pGlobal,
                                                   HepPoint3D&  returnPoint ) {
 
   HepPoint3D pLocal = geometry()->toLocal(pGlobal);
-  const HepTransform3D vTrans = geometry()->matrix();
   HepVector3D vLocal = vGlobal;
-  vLocal.transform(vTrans);
+  vLocal.transform( geometry()->matrix() );
 
   ISolid::Ticks ticks;
   unsigned int noTicks = m_solid->intersectionTicks(pLocal, vLocal, ticks);
@@ -103,9 +102,8 @@ unsigned int DeRichRadiator::intersectionPoints( const HepPoint3D& pGlobal,
                                                  points) {
 
   HepPoint3D pLocal = geometry()->toLocal(pGlobal);
-  const HepTransform3D vTrans = geometry()->matrix();
   HepVector3D vLocal = vGlobal;
-  vLocal.transform(vTrans);
+  vLocal.transform( geometry()->matrix() );
 
   ISolid::Ticks ticks;
   unsigned int noTicks = m_solid->intersectionTicks(pLocal, vLocal, ticks);

@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/RichDet/src/Lib/DeRichSphMirror.cpp,v 1.5 2003-11-21 17:23:26 papanest Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/RichDet/src/Lib/DeRichSphMirror.cpp,v 1.6 2003-11-21 22:46:11 jonesc Exp $
 #define DERICHSPHMIRROR_CPP
 
 // Include files
@@ -178,9 +178,8 @@ StatusCode DeRichSphMirror:: intersects(const HepPoint3D& globalP,
                                         HepPoint3D& intersectionPoint)
 {
   HepPoint3D pLocal = geometry()->toLocal(globalP);
-  const HepTransform3D vTrans = geometry()->matrix();
   HepVector3D vLocal = globalV;
-  vLocal.transform(vTrans);
+  vLocal.transform( geometry()->matrix() );
 
   ISolid::Ticks ticks;
   unsigned int noTicks = m_solid->intersectionTicks(pLocal, vLocal, ticks);
@@ -202,9 +201,8 @@ StatusCode DeRichSphMirror:: intersects(const HepPoint3D& globalP,
                                         const HepVector3D& globalV)
 {
   HepPoint3D pLocal = geometry()->toLocal(globalP);
-  const HepTransform3D vTrans = geometry()->matrix();
   HepVector3D vLocal = globalV;
-  vLocal.transform(vTrans);
+  vLocal.transform( geometry()->matrix() );
 
   ISolid::Ticks ticks;
   unsigned int noTicks = m_solid->intersectionTicks(pLocal, vLocal, ticks);
