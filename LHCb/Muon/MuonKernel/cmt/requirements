@@ -1,6 +1,6 @@
 package MuonKernel
 
-version v2r6
+version v2r7
 
 branches cmt src MuonKernel doc 
 
@@ -12,8 +12,8 @@ use LHCbKernel		v5r*	Kernel
 #============================================================================
 macro MuonKernelObj2Doth_GODflags " -s ../MuonKernel/ " \
       WIN32                       " -s ..\MuonKernel\ "
-document obj2doth MuonKernelObj2Doth ../xml/MuonKernel.xml
-document obj2dict MuonKernelObj2Dict ../xml/MuonKernel.xml
+document obj2doth MuonKernelObj2Doth ../xml/*.xml
+document obj2dict MuonKernelObj2Dict ../xml/*.xml
 
 #----------------------------------------------
 library MuonKernelLib  ../src/*.cpp
@@ -25,4 +25,3 @@ apply_pattern linker_library    library=MuonKernelLib
 
 private
 use GaudiObjDesc v*
-

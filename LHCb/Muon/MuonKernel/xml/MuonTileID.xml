@@ -1,5 +1,9 @@
-  <import name="MuonKernel/MuonBase"/>
-  <import name="MuonKernel/MuonLayout"/>
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE gdd SYSTEM "gdd.dtd">
+<gdd>
+  <package name='MuonKernel'>
+    <import name="MuonKernel/MuonBase"/>
+    <import name="MuonKernel/MuonLayout"/>
     <class 
       author="Andrei Tsaregorodtsev" 
       desc="Universal identifier for the Muon System entities" 
@@ -289,3 +293,5 @@ given IMuonLayout"
       <attribute desc="muon tile id" name="muonid" type="unsigned int" 
        setMeth="FALSE" getMeth="FALSE"/>
     </class>
+  </package>
+</gdd>

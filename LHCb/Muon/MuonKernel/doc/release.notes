@@ -1,7 +1,11 @@
 Package MuonKernel
 Package manager: A.Tsaregorodtsev
 
-!======================= MuonKernel v2r6 2005-04-04 =======================
+!======================= MuonKernel v2r7 2005-04-05 =======================
+! 2005-04-05 - Marco Cattaneo
+ - MuonTileID.xml is now standalone, removed unneccessary MuonKernel.xml
+ - Removed obsolete GaudiObjDesc flags from requirements. 
+
 ! 2004-04-04 - Andrei Tsaregorodtsev
  - Added toString() method and constructor taking a string to MuonTileID
    class ( MuonTileID.xml ) 
