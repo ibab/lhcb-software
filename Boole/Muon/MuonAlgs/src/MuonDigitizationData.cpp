@@ -12,9 +12,10 @@ template<class T>
 MuonDigitizationData<T>::MuonDigitizationData(const std::string &path, 
                                               MsgStream* mlog, 
                                               IDataProviderSvc*
-																							eveSvc,const std::string &specpath)
+																							eveSvc,const std::string 
+                                              &specpath)
 {
-//  MsgStream log(msgSvc(), name());
+  //  MsgStream log(msgSvc(), name());
   s_basePathInTES = path ;
   m_registered = 0 ;
   log = (mlog);
@@ -30,22 +31,21 @@ template<class T> MuonDigitizationData<T>::~MuonDigitizationData(){
          << " => deleting objects "<<endreq;
     KeyedContainer<T>::iterator it;
     for(int i=0;i<MuonDigitizationData_m_partitionNumber;i++){
-       for(it=muonDataPartition[i].begin();it<muonDataPartition[i].end();it++)
-          delete  (*it);
+      for(it=muonDataPartition[i].begin();it<muonDataPartition[i].end();it++)
+        delete  (*it);
     }
   }
   else if(m_registered>0){
-  *log << MSG::INFO 
-       <<" the contatiners have been registed in the TES " <<endreq;
+    *log << MSG::INFO 
+         <<" the contatiners have been registed in the TES " <<endreq;
   }
   else if(m_registered<0){
-  *log << MSG::INFO
-       << " the contatiners have not been registed in the TES"
-       << " for some error."
-       << endreq;
-
-  } ;
-
+    *log << MSG::INFO
+         << " the contatiners have not been registed in the TES"
+         << " for some error."
+         << endreq;
+    
+  } ;  
 }
 
 template<class T> StatusCode MuonDigitizationData<T>::registerPartitions(){
@@ -71,18 +71,20 @@ MuonDigitizationData<T>::eraseMuonObject(int i, T* p0){
 }
 
 template<class T> bool MuonDigitizationData<T>::isObjectIn(int i,T* p0, T*&
-pFound, bool (*comp)(T* p1, T* p2)){
-
-KeyedContainer<T>::iterator iter ;
-iter=muonDataPartition[i].begin();
-bool found=false;
-if(iter<muonDataPartition[i].end()){
-
-   do{
-     found=(*comp)(p0,(*iter));
-     if(found) pFound=*iter ;
-     ++iter ;
-     }while(iter<muonDataPartition[i].end()&&!found);
+                                                           pFound, 
+                                                           bool (*comp)
+                                                           (T* p1,T* p2))
+{  
+  KeyedContainer<T>::iterator iter ;
+  iter=muonDataPartition[i].begin();
+  bool found=false;
+  if(iter<muonDataPartition[i].end()){
+    
+    do{
+      found=(*comp)(p0,(*iter));
+      if(found) pFound=*iter ;
+      ++iter ;
+    }while(iter<muonDataPartition[i].end()&&!found);
   }
 	return found;
 }	
@@ -106,5 +108,6 @@ template   MuonDigitizationData<MCMuonHit>;
 template   MuonDigitizationData<MuonPhyChannelInput>;
 template   MuonDigitizationData<MuonPhysicalChannel>;
 template   MuonDigitizationData<MuonPhysicalChannelOutput>;
-
 #endif
+
+

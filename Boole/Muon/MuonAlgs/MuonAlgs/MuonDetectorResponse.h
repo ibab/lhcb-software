@@ -66,11 +66,14 @@ private:
 MuonDigitizationParameters::Parameters usefull;
 MuonPhysicalChannelResponse* responseVector[2][20];
 MuonChamberResponse* responseChamber[20];
+  int m_stationNumber;
+  int m_regionNumber;
+  int m_partition;  
  };
 
 
 inline MuonChamberResponse* MuonDetectorResponse::getChamberResponse(int
                             partition){
-       return    responseChamber[partition];                 														
+       return    responseChamber[partition];					
 }
 #endif

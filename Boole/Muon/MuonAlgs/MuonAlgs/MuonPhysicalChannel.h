@@ -16,8 +16,9 @@
 
 class MuonPhysicalChannel: public KeyedObject<int>{
 public:
-MuonPhysicalChannel():response(0){};
-MuonPhysicalChannel(unsigned int FETile):m_ID(FETile),response(0){};
+MuonPhysicalChannel(double time, double bx):response(0){m_timeGate=time; m_timeBX=bx;};
+//MuonPhysicalChannel(unsigned int FETile):m_ID(FETile),response(0),m_timeGate(time){};
+MuonPhysicalChannel(unsigned int FETile, double time, double bx):m_ID(FETile),response(0){m_timeGate=time;m_timeBX=bx;};
 ~MuonPhysicalChannel(){};
 
 
@@ -48,6 +49,8 @@ private:
  MuonPhChID m_ID;
  std::vector<MuonHitTraceBack> m_Hits;
  MuonPhysicalChannelResponse* response; 
+ static double m_timeGate;
+ static double m_timeBX;
 };	
 
  

@@ -51,7 +51,7 @@ public:
   StatusCode execute();
   StatusCode finalize();
   StatusCode locateMuonTileFromXYZ(double x,double y,double z,int&
-	numberTileOutput, MuonTileID phChTileID[2]);
+	numberTileOutput, MuonTileID phChTileID[2],bool debug=false);
   private:
   IMuonTileXYZTool* m_pMuonTileXYZ ;
 
@@ -86,8 +86,10 @@ public:
    NTuple::Array<long>            m_mcmuondigitregion;	
    NTuple::Item<long>          	  m_mcmuonhit;
    NTuple::Array<long>            m_mcmuonhitnature;
+   NTuple::Array<long>            m_mcmuonhitpartition;
    NTuple::Array<long>            m_mcmuonhitalive;
    NTuple::Array<long>            m_mcmuonhitefficiency;
+   NTuple::Array<float>           m_mcmuonhittime;
 	 	 
 	 };
 #endif

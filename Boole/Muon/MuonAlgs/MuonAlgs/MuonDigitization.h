@@ -46,6 +46,8 @@
 #include "Event/MuonOriginFlag.h"
 #include "GaudiKernel/INTupleSvc.h" 
 #include "GaudiKernel/NTuple.h"
+#include "MuonDet/MuonBasicGeometry.h"
+
 
  
 class MuonDigitization : public Algorithm {
@@ -58,59 +60,89 @@ public:
   StatusCode initialize();
   StatusCode execute();
   StatusCode finalize();
-	StatusCode createInput(MuonDigitizationData<MuonPhyChannelInput> & PhyChaInput);
-  StatusCode elaborateMuonPhyChannelInputs(MuonDigitizationData<MuonPhyChannelInput> & PhyChaInput,
-	           MuonDigitizationData<MuonPhysicalChannel>& PhysicalChannel); 
-  StatusCode applyPhysicalEffects(MuonDigitizationData<MuonPhysicalChannel>& PhysicalChannel);
-  StatusCode  fillPhysicalChannel(MuonDigitizationData<MuonPhysicalChannel>& PhysicalChannel,MuonDigitizationData<MuonPhysicalChannelOutput>&
-	PhysicalChannelOutput);
- StatusCode createLogicalChannel(MuonDigitizationData<MuonPhysicalChannelOutput>& PhyChaOutput,MCMuonDigits & mcDigitContainer);
- StatusCode createRAWFormat(MCMuonDigits & mcDigitContainer, MuonDigits & digitContainer);
- StatusCode addChamberNoise();
- StatusCode addElectronicNoise(MuonDigitizationData<MuonPhysicalChannel>& PhysicalChannel);
- 
+	StatusCode createInput(MuonDigitizationData<MuonPhyChannelInput> &
+                         PhyChaInput);
+  StatusCode 
+  elaborateMuonPhyChannelInputs(MuonDigitizationData<MuonPhyChannelInput> & 
+                                PhyChaInput,
+                                MuonDigitizationData<MuonPhysicalChannel>& 
+                                PhysicalChannel); 
+  StatusCode applyPhysicalEffects(MuonDigitizationData<MuonPhysicalChannel>& 
+                                  PhysicalChannel);
+  StatusCode  fillPhysicalChannel(MuonDigitizationData<MuonPhysicalChannel>& 
+                                  PhysicalChannel,
+                                  MuonDigitizationData
+                                  <MuonPhysicalChannelOutput>&
+                                  PhysicalChannelOutput);
+  StatusCode createLogicalChannel(MuonDigitizationData
+                                  <MuonPhysicalChannelOutput>& PhyChaOutput,
+                                  MCMuonDigits & mcDigitContainer);
+  StatusCode createRAWFormat(MCMuonDigits & mcDigitContainer, MuonDigits & 
+                             digitContainer);
+  StatusCode addChamberNoise();
+  StatusCode addElectronicNoise(MuonDigitizationData<MuonPhysicalChannel>& 
+                                PhysicalChannel);
+  
 private:
-   int m_numberOfSpilloverEvents;
-   int m_numberOfEvents;
-   int m_numberOfEventsNeed;
-	 double m_BXTime;
-	 bool m_verboseDebug;
-	 MuonDetectorResponse detectorResponse;
-	 
-	 static const std::string spill[5];
-	 static const std::string numreg[4];
-	 static const std::string numsta[5];
-	 static const std::string TESPathOfHitsContainer[4];
-   static const int OriginOfHitsContainer[4];
-	 
-   Rndm::Numbers m_flatDist;
-	 
-//// move them to monitoring
+  int m_numberOfSpilloverEvents;
+  int m_numberOfEvents;
+  int m_numberOfEventsNeed;
+  double m_BXTime;
+  double m_gate;
+  bool m_applyTimeJitter;
+  bool m_applyChamberNoise;	 
+  bool m_applyElectronicNoise;	 
+  bool m_applyXTalk;	 
+  bool m_applyEfficiency;	 
+  bool m_applyDeadtime;	 
+  bool m_applyTimeAdjustment;	 
+  
+  bool m_verboseDebug;
+  int m_stationNumber;
+  int m_regionNumber;
+  int m_partition;
+  
+  
+  
+  MuonDetectorResponse detectorResponse;
+  
+  static std::string spill[5];
+  static std::string numreg[4];
+  static std::string numsta[5];
+  static std::string TESPathOfHitsContainer[4];
+  const static int OriginOfHitsContainer[4];
+  
+  Rndm::Numbers m_flatDist;
+  
+  //// move them to monitoring
   IMuonTileXYZTool* m_pMuonTileXYZ ;
-/*   IHistogram1D* m_histoTiming ;     
-   IHistogram1D* m_histoTimingOne ;     
- 
-   NTuple::Tuple*                  m_ntuple;
-  /// N-tuple items to be written away: Number of tracks
-   NTuple::Item<long>              m_hit1;
-   NTuple::Item<long>              m_hit2;
-   NTuple::Item<long>              m_hit3;
-   NTuple::Item<long>              m_hit4;
-   NTuple::Item<long>              m_hit5;
-	 NTuple::Array<float>            m_x1; 
-	 NTuple::Array<float>            m_y1; 
-	 NTuple::Array<float>            m_z1; 
-	 NTuple::Array<float>            m_x2; 
-	 NTuple::Array<float>            m_y2; 
-	 NTuple::Array<float>            m_z2; 
-	 NTuple::Array<float>            m_x3; 
-	 NTuple::Array<float>            m_y3; 
-	 NTuple::Array<float>            m_z3; 
-	 NTuple::Array<float>            m_x4; 
-	 NTuple::Array<float>            m_y4; 
-	 NTuple::Array<float>            m_z4; 
-	 NTuple::Array<float>            m_x5; 
-	 NTuple::Array<float>            m_y5; 
-	 NTuple::Array<float>            m_z5; */
- };
+  IHistogram1D* m_histoTiming14 ;     
+  IHistogram1D* m_histoTiming15 ;     
+  IHistogram1D* m_histoTiming18 ;     
+  IHistogram1D* m_histoTiming19 ;     
+  /*   IHistogram1D* m_histoTimingOne ;     
+       
+       NTuple::Tuple*                  m_ntuple;
+       /// N-tuple items to be written away: Number of tracks
+       NTuple::Item<long>              m_hit1;
+       NTuple::Item<long>              m_hit2;
+       NTuple::Item<long>              m_hit3;
+       NTuple::Item<long>              m_hit4;
+       NTuple::Item<long>              m_hit5;
+       NTuple::Array<float>            m_x1; 
+       NTuple::Array<float>            m_y1; 
+       NTuple::Array<float>            m_z1; 
+       NTuple::Array<float>            m_x2; 
+       NTuple::Array<float>            m_y2; 
+       NTuple::Array<float>            m_z2; 
+       NTuple::Array<float>            m_x3; 
+       NTuple::Array<float>            m_y3; 
+       NTuple::Array<float>            m_z3; 
+       NTuple::Array<float>            m_x4; 
+       NTuple::Array<float>            m_y4; 
+       NTuple::Array<float>            m_z4; 
+       NTuple::Array<float>            m_x5; 
+       NTuple::Array<float>            m_y5; 
+       NTuple::Array<float>            m_z5; */
+};
 #endif

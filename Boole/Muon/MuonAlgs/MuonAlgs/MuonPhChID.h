@@ -12,6 +12,7 @@
 #include "GaudiKernel/SmartRef.h"
 #include "GaudiKernel/SmartRefVector.h"
 #include "MuonAlgs/MuonPhChIDPack.h"
+#include "GaudiKernel/MsgStream.h" 
 
 using namespace MuonPhChIDPack ;
 class MuonPhChID{
@@ -31,16 +32,22 @@ void setReadout(unsigned int value);
 void setGap(unsigned int value);
 
 unsigned int getID() const;
-unsigned int getStation();
-unsigned int getRegion();
-unsigned int getQuadrant();
-unsigned int getChamber();
-unsigned int getPhChIDX();
-unsigned int getPhChIDY();
-unsigned int getFrontEnd();
-unsigned int getReadout();
-unsigned int getGap();
-unsigned int getFETile();
+unsigned int getStation() const;
+unsigned int getRegion() const;
+unsigned int getQuadrant() const;
+unsigned int getChamber() const;
+unsigned int getPhChIDX() const;
+unsigned int getPhChIDY() const;
+unsigned int getFrontEnd() const;
+unsigned int getReadout() const;
+unsigned int getGap() const;
+unsigned int getFETile() const;
+/// printout to std::ostream 
+inline std::ostream& printOut ( std::ostream& ) const ;
+/// printout to MsgStream
+inline MsgStream&    printOut ( MsgStream&    ) const ;
+  
+
 
 private:
 unsigned int m_channelID;
@@ -52,32 +59,32 @@ return m_channelID;
 }
 
 
-inline unsigned int MuonPhChID::getStation(){
+inline unsigned int MuonPhChID::getStation() const{
 return getBit(m_channelID,shiftStation,maskStation);
 }
 
-inline unsigned int MuonPhChID::getRegion(){
+inline unsigned int MuonPhChID::getRegion() const{
 return getBit(m_channelID,shiftRegion,maskRegion);
 }
-inline unsigned int MuonPhChID::getQuadrant(){
+inline unsigned int MuonPhChID::getQuadrant() const{
 return getBit(m_channelID,shiftQuadrant,maskQuadrant);
 }
-inline unsigned int MuonPhChID::getChamber(){
+inline unsigned int MuonPhChID::getChamber() const{
 return getBit(m_channelID,MuonPhChIDPack::shiftChamber,maskChamber);
 }
-inline unsigned int MuonPhChID::getPhChIDX(){
+inline unsigned int MuonPhChID::getPhChIDX() const{
 return getBit(m_channelID,shiftPhChIDX,maskPhChIDX);
 }
-inline unsigned int MuonPhChID::getPhChIDY(){
+inline unsigned int MuonPhChID::getPhChIDY() const{
 return getBit(m_channelID,shiftPhChIDY,maskPhChIDY);
 }
-inline unsigned int MuonPhChID::getFrontEnd(){
+inline unsigned int MuonPhChID::getFrontEnd() const{
 return getBit(m_channelID,shiftFrontEnd,maskFrontEnd);
 }
-inline unsigned int MuonPhChID::getReadout(){
+inline unsigned int MuonPhChID::getReadout() const{
 return getBit(m_channelID,shiftReadout,maskReadout);
 }
-inline unsigned int MuonPhChID::getGap(){
+inline unsigned int MuonPhChID::getGap() const{
 return getBit(m_channelID,shiftGap,maskGap);
 }
 
@@ -117,9 +124,48 @@ inline void MuonPhChID::setGap(unsigned int value){
 setBit(m_channelID,shiftGap,maskGap,value);
 }
 
-inline unsigned int MuonPhChID::getFETile(){
+inline unsigned int MuonPhChID::getFETile() const{
 //return 1;
 return m_channelID-getBit(m_channelID,shiftGap,maskGap);
 }
+
+// output to std::ostream 
+inline std::ostream& operator<< ( std::ostream& os , const MuonPhChID& id ) {
+  return id.printOut( os );  
+}
+
+inline MsgStream& operator<<( MsgStream&    os , const MuonPhChID& id ) {
+  return id.printOut( os ); 
+}
+
+inline MsgStream& MuonPhChID::printOut( MsgStream& os ) const { 
+  os << "[" ;
+  return 
+    os <<  getStation() << ","
+        << getRegion() << "," 
+       <<  getQuadrant() << "," 
+       <<  getChamber() << "," 
+       <<  getPhChIDX() << "," 
+       <<  getPhChIDY() << "," 
+       <<  getFrontEnd() << "," 
+       <<  getReadout() << "," 
+       <<  getGap() << "]" ;   
+}
+
+inline std::ostream& MuonPhChID::printOut( std::ostream& os ) const { 
+  os << "[" ;
+  return 
+    os <<  getStation() << ","
+        << getRegion() << "," 
+       <<  getQuadrant() << "," 
+       <<  getChamber() << "," 
+       <<  getPhChIDX() << "," 
+       <<  getPhChIDY() << "," 
+       <<  getFrontEnd() << "," 
+       <<  getReadout() << "," 
+       <<  getGap()  << "]" ;   
+ }
+
+
 
 #endif

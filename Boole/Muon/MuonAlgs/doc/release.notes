@@ -4,6 +4,16 @@
 ! Purpose     : Muon digitisation algorithms
 !-----------------------------------------------------------------------------
 
+!========================= MuonAlgs v3r0 2002-11-06 =======================
+! 2002-11-06 - Alessia Satta
+ - Add the possibility to run on data produced with different number of muon 
+   station setups. E.g. M1/noM1 setups 
+!========================= MuonAlgs v2r3 2002-08-24 =======================
+! 2002-08-24 - Alessia Satta
+ - Add possibility to switch on-off all the physics effects during the digitization
+   E.G. all the effects switched off means the perfect detector
+   Bug fix in the treatment of the combined readout chamber 
+                                                                             
 !========================= MuonAlgs v2r2 2002-07-29 =======================
 ! 2002-07-28 - Alessia Satta
  - Bug Fix in XTalk and add time stamp in MuonDigit
