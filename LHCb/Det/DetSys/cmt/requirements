@@ -1,5 +1,5 @@
 package DetSys
-version v3r2
+version v3r3
 
 branches cmt doc
 
@@ -7,7 +7,7 @@ use DetDesc	   	v13r0p1	Det
 use DetDescCnv		v2r1p1	Det
 use XmlTools		v2r0p1	Tools
 use VeloDet        	v8r6 	Det     
-use ITDet          	v1r6	Det     
+use ITDet          	v1r7	Det
 use OTDet          	v4r1	Det
 use CaloDet	   	v6r6p1	Det
 use CaloDetXmlCnv  	v2r3p1	Det
