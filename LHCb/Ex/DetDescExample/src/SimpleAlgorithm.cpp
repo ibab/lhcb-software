@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Ex/DetDescExample/src/SimpleAlgorithm.cpp,v 1.1.1.1 2001-03-13 15:11:14 cattaneb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Ex/DetDescExample/src/SimpleAlgorithm.cpp,v 1.2 2001-03-16 16:35:34 cattaneb Exp $
 #define DDEXAMPLE_SIMPLEALGORITHM_CPP
 
 /// Include files
@@ -9,8 +9,6 @@
 #include "GaudiKernel/IDataManagerSvc.h"
 #include "GaudiKernel/IConversionSvc.h"
 #include "GaudiKernel/IConverter.h"
-#include "GaudiKernel/ILVolume.h"
-#include "GaudiKernel/IGeometryInfo.h"
 
 /// Utility classes
 #include "GaudiKernel/MsgStream.h"
@@ -18,6 +16,8 @@
 #include "GaudiKernel/AlgFactory.h"
 
 /// Detector description classes
+#include "DetDesc/IGeometryInfo.h"
+#include "DetDesc/ILVolume.h"
 #include "DetDesc/Material.h"
 #include "DetDesc/DetectorElement.h"
 
