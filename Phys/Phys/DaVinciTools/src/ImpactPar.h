@@ -1,4 +1,4 @@
-// $Id: ImpactPar.h,v 1.1 2002-02-08 18:25:42 gcorti Exp $
+// $Id: ImpactPar.h,v 1.2 2002-02-28 14:35:36 gcorti Exp $
 #ifndef IMPACTPARTOOL_H
 #define IMPACTPARTOOL_H 1
 
@@ -34,7 +34,7 @@ public:
   virtual ~ImpactPar() { } ///< Destructor
 
   /// Actual operator function
-  double calculate( AxPartCandidate* candidate, VtxCandidate* vertex ); 
+  double calculate( AxPartCandidate* candidate, Vertex* vertex ); 
 
 };
 

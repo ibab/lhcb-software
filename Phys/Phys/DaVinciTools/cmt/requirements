@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.5 2002-02-13 12:26:22 cattanem Exp $
+# $Id: requirements,v 1.6 2002-02-28 14:34:57 gcorti Exp $
 # Created    : 05/02/2002
 # Maintainer : Gloria Corti
 #
@@ -6,7 +6,7 @@
 # http://cern.ch/lhcb-comp/Support/html/new_structure.pdf
 
 package           DaVinciTools
-version           v2r0
+version           v3r0
 
 # Structure, i.e. directories to process. 
 #============================================================================
@@ -19,7 +19,7 @@ include_dirs     $(DAVINCITOOLSROOT)
 # Used packages. Specify the version, * at the end specifies 'any revision'
 #    Put as many lines as needed, with all packages, without the '#'
 #============================================================================
-use  PhysEvent     v2r*   Event
+use  PhysEvent     v3r*   Event
 use  GaudiTools    v5r*
 
 # Component library building rule

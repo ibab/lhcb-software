@@ -1,4 +1,4 @@
-// $Id: IImpactPar.h,v 1.1 2002-02-08 18:05:37 gcorti Exp $
+// $Id: IImpactPar.h,v 1.2 2002-02-28 14:34:42 gcorti Exp $
 #ifndef DAVINCITOOLS_IIMPACTPAR_H 
 #define DAVINCITOOLS_IIMPACTPAR_H 1
 
@@ -8,7 +8,7 @@
 
 // Forward declarations
 class AxPartCandidate;
-class VtxCandidate;
+class Vertex;
 
 static const InterfaceID IID_IImpactPar("IImpactPar", 1 , 0); 
 
@@ -26,6 +26,6 @@ class IImpactPar : virtual public IAlgTool {
   /// Retrieve interface ID
   static const InterfaceID& interfaceID() { return IID_IImpactPar; }
   /// Calulate Impact parameter
-  virtual double calculate( AxPartCandidate*, VtxCandidate* ) = 0;
+  virtual double calculate( AxPartCandidate*, Vertex* ) = 0;
 };
 #endif // DAVINCITOOLS_IIMPACTPAR_H

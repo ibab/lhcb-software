@@ -1,6 +1,9 @@
-! $Id: release.notes,v 1.6 2002-02-11 10:40:00 gcorti Exp $
+! $Id: release.notes,v 1.7 2002-02-28 14:35:24 gcorti Exp $
 ! Package     : DaVinciTools
 ! Responsible : Gloria Corti
+
+! 28022002 - DaVinciTools v3r0 (GCorti)
+  - adapt to new PhysEvent structure
 
 ! ====================================================================
 

@@ -1,4 +1,4 @@
-// $Id: ImpactPar.cpp,v 1.1 2002-02-08 18:25:42 gcorti Exp $
+// $Id: ImpactPar.cpp,v 1.2 2002-02-28 14:35:33 gcorti Exp $
 
 // Include files
 // from Gaudi
@@ -7,7 +7,7 @@
 
 // from Event
 #include "LHCbEvent/AxPartCandidate.h"
-#include "PhysEvent/VtxCandidate.h"
+#include "Event/Vertex.h"
 
 // local
 #include "ImpactPar.h"
@@ -37,7 +37,7 @@ ImpactPar::ImpactPar(const std::string& type, const std::string& name,
 //==================================================================
 // Calculate Impact parameter between a particle and a vertex
 //==================================================================
-double ImpactPar::calculate(AxPartCandidate* candidate, VtxCandidate* vertex) {
+double ImpactPar::calculate(AxPartCandidate* candidate, Vertex* vertex) {
 
   MsgStream log(msgSvc(), name());
 
