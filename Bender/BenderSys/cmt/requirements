@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.31 2004-10-06 18:44:01 ibelyaev Exp $ 
+# $Id: requirements,v 1.32 2004-10-08 09:29:54 ibelyaev Exp $ 
 # =============================================================================
 # CVS tag $Name: not supported by cvs2svn $
 # =============================================================================
@@ -20,7 +20,7 @@ use           BenderDet      v4r0   Det
 use           BenderDict     v4r1   Tools 
 # =========== Bender & LoKi documentation =====================================
 use           BenderDoc      v4r0   Doc 
-use           LoKiDoc        v3r3   Doc 
+use           LoKiDoc        v3r5   Doc 
 # =========== Test suit for Bender ============================================
 use           BenderTest     v4r0   Tests 
 use           LoKiTest       v3r3   Tests 
@@ -35,18 +35,11 @@ use           LoKiUser       v1r0   Phys
 # =========== needed for visualization ========================================
 # use         HIPPODRAW      v1r133 
 # =========== temporary : to make easier Hlt studies ==========================
-use           LoKiHlt        v1r1   Tools 
 use           LoKiHybrid     v1r0p1 Tools 
 # =============================================================================
 
 # =============================================================================
 # $Log: not supported by cvs2svn $
-# Revision 1.30  2004/10/06 18:41:25  ibelyaev
-# *** empty log message ***
-#
-# Revision 1.29  2004/10/06 17:26:24  ibelyaev
-#  v4r1
-#
 # =============================================================================
 # The END 
 # =============================================================================
