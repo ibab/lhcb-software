@@ -1,4 +1,4 @@
-// $Id: PhysDesktop.cpp,v 1.7 2002-10-21 17:54:10 gcorti Exp $
+// $Id: PhysDesktop.cpp,v 1.8 2003-06-10 08:05:00 gcorti Exp $
 // Include files 
 
 // from Gaudi
@@ -654,7 +654,7 @@ StatusCode PhysDesktop::getInput(){
       log << MSG::INFO << "Unable to retrieve vertices from " 
           << location << endreq;
     }
-    else if( 0 == parts->size() ) {
+    else if( 0 == verts->size() ) {
       log << MSG::INFO << "No vertices retrieved from " 
           << location << endreq;
     }      

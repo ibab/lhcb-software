@@ -1,6 +1,10 @@
-! $Id: release.notes,v 1.57 2003-06-03 16:59:51 gcorti Exp $
+! $Id: release.notes,v 1.58 2003-06-10 08:05:00 gcorti Exp $
 ! Package     : DaVinciTools
 ! Responsible : Gloria Corti, Sandra Amato
+
+! 2003-06-06 - Gloria CORTI
+ - Fix debugging bug that was checking size of particles container instead
+   of that of vertices to print message when vertex container is empty
 
 !========================== DaVinciTools v8r1 2003-06-03 ====================
 ! 2003-06-03 - Gloria CORTI
