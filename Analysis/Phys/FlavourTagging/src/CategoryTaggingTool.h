@@ -1,4 +1,4 @@
-// $Id: CategoryTaggingTool.h,v 1.1 2003-06-13 08:34:34 odie Exp $
+// $Id: CategoryTaggingTool.h,v 1.2 2003-06-16 07:11:56 odie Exp $
 #ifndef CATEGORYTAGGINGTOOL_H 
 #define CATEGORYTAGGINGTOOL_H 1
 
@@ -26,8 +26,8 @@ class CategoryTaggingTool : public AlgTool,
 public:
   /// Standard constructor
   CategoryTaggingTool( const std::string& type, 
-                      const std::string& name,
-                      const IInterface* parent);
+                       const std::string& name,
+                       const IInterface* parent);
 
   virtual ~CategoryTaggingTool( ); ///< Destructor
 
@@ -63,7 +63,7 @@ private:
 		 						const FlavourTag &e_tag,
 								const FlavourTag &kos_tag,
 								const FlavourTag &kss_tag,
-								//const	FlavourTag &vtx_tag,
+								const	FlavourTag &vtx_tag,
 								FlavourTag &theTag );
 	void fillCategory(std::string categ, const FlavourTag &theTag);
 	

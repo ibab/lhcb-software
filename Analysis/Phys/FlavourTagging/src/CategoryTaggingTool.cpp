@@ -1,4 +1,4 @@
-// $Id: CategoryTaggingTool.cpp,v 1.1 2003-06-13 08:34:34 odie Exp $
+// $Id: CategoryTaggingTool.cpp,v 1.2 2003-06-16 07:11:56 odie Exp $
 // Include files 
 
 // from Gaudi
@@ -86,7 +86,7 @@ StatusCode CategoryTaggingTool::initialize()
   m_electronTT  = getTT(m_electronTTN);
   m_kaonOSTT    = getTT(m_kaonOSTTN);
   m_kaonSSTT    = getTT(m_kaonSSTTN);
-  //m_vtxChargeTT = getTT(m_vtxChargeTTN);
+  m_vtxChargeTT = getTT(m_vtxChargeTTN);
 
   if( m_muonTT && m_electronTT && m_kaonOSTT && m_kaonSSTT )
     return StatusCode::SUCCESS;
@@ -109,9 +109,9 @@ void CategoryTaggingTool::tagThisB( const Particle &theB,
   m_electronTT ->tagThisB( theB, theEvent, thePrimVtx, e_tag );
   m_kaonOSTT   ->tagThisB( theB, theEvent, thePrimVtx, kos_tag );
   m_kaonSSTT   ->tagThisB( theB, theEvent, thePrimVtx, kss_tag );
-  //m_vtxChargeTT->tagThisB( theB, theEvent, thePrimVtx, vtx_tag );
+  m_vtxChargeTT->tagThisB( theB, theEvent, thePrimVtx, vtx_tag );
 
-  combine(mu_tag, e_tag, kos_tag, kss_tag, theTag);
+  combine(mu_tag, e_tag, kos_tag, kss_tag, vtx_tag, theTag);
 }
 
 void CategoryTaggingTool::tagThisB( const Particle &theB,
@@ -124,9 +124,9 @@ void CategoryTaggingTool::tagThisB( const Particle &theB,
   m_electronTT ->tagThisB( theB, theEvent, thePrimVtx, e_tag );
   m_kaonOSTT   ->tagThisB( theB, theEvent, thePrimVtx, kos_tag );
   m_kaonSSTT   ->tagThisB( theB, theEvent, thePrimVtx, kss_tag );
-  //m_vtxChargeTT->tagThisB( theB, theEvent, thePrimVtx, vtx_tag );
+  m_vtxChargeTT->tagThisB( theB, theEvent, thePrimVtx, vtx_tag );
 
-  combine(mu_tag, e_tag, kos_tag, kss_tag, theTag);
+  combine(mu_tag, e_tag, kos_tag, kss_tag, vtx_tag, theTag);
 }
 
 void CategoryTaggingTool::tagFromList( const Particle &theB,
@@ -139,9 +139,9 @@ void CategoryTaggingTool::tagFromList( const Particle &theB,
   m_electronTT ->tagFromList( theB, theCandidates, thePrimVtx, e_tag );
   m_kaonOSTT   ->tagFromList( theB, theCandidates, thePrimVtx, kos_tag );
   m_kaonSSTT   ->tagFromList( theB, theCandidates, thePrimVtx, kss_tag );
-  //m_vtxChargeTT->tagFromList( theB, theCandidates, thePrimVtx, vtx_tag );
+  m_vtxChargeTT->tagFromList( theB, theCandidates, thePrimVtx, vtx_tag );
 
-  combine(mu_tag, e_tag, kos_tag, kss_tag, theTag);
+  combine(mu_tag, e_tag, kos_tag, kss_tag, vtx_tag, theTag);
 }
 
 void CategoryTaggingTool::tagExcludingFromList(const Particle &theB,
@@ -159,9 +159,10 @@ void CategoryTaggingTool::tagExcludingFromList(const Particle &theB,
                                        kos_tag );
   m_kaonSSTT   ->tagExcludingFromList( theB, theEvent, theExcluded, thePrimVtx,
                                        kss_tag );
-  //m_vtxChargeTT->tagExcludingFromList( theB, theEvent, theExcluded, thePrimVtx, vtx_tag );
+  m_vtxChargeTT->tagExcludingFromList( theB, theEvent, theExcluded, thePrimVtx,
+                                       vtx_tag);
 
-  combine(mu_tag, e_tag, kos_tag, kss_tag, theTag);
+  combine(mu_tag, e_tag, kos_tag, kss_tag, vtx_tag, theTag);
 }
 
 void CategoryTaggingTool::tagExcludingFromList(const Particle &theB,
@@ -179,19 +180,24 @@ void CategoryTaggingTool::tagExcludingFromList(const Particle &theB,
                                        kos_tag );
   m_kaonSSTT   ->tagExcludingFromList( theB, theEvent, theExcluded, thePrimVtx,
                                        kss_tag );
-  //m_vtxChargeTT->tagExcludingFromList( theB, theEvent, theExcluded, thePrimVtx, vtx_tag );
+  m_vtxChargeTT->tagExcludingFromList( theB, theEvent, theExcluded, thePrimVtx,
+                                       vtx_tag );
 
-  combine(mu_tag, e_tag, kos_tag, kss_tag, theTag);
+  combine(mu_tag, e_tag, kos_tag, kss_tag, vtx_tag, theTag);
 }
 
 void CategoryTaggingTool::combine( const FlavourTag &muon_tag,
                                    const FlavourTag &electron_tag,
                                    const FlavourTag &kaonOS_tag,
                                    const FlavourTag &kaonSS_tag,
-                                   //const FlavourTag &vtxCharge_tag,
+                                   const FlavourTag &vtxCharge_tag,
 																	 FlavourTag &theTag )
 {
 	MsgStream msg(msgSvc(), name());
+
+  msg << MSG::DEBUG
+      << "Entering active region of the CategoryTaggingTool"
+      << endreq;
 	
   SmartDataPtr<EventHeader> evtHead(m_eventSvc, EventHeaderLocation::Default );
   SmartDataPtr<L0DUReport> l0(m_eventSvc, L0DUReportLocation::Default);
@@ -200,7 +206,7 @@ void CategoryTaggingTool::combine( const FlavourTag &muon_tag,
 	
 	msg << MSG::INFO << "TAGGING SUMMARY "
 		  << evtHead->runNum() << ' '
-			<< evtHead->evtNum() << ' ';
+			<< setw(3) << evtHead->evtNum() << ' ';
 	if( l0 )
 		msg << (l0->decision() ? '1' : '0');
 	else
@@ -216,10 +222,11 @@ void CategoryTaggingTool::combine( const FlavourTag &muon_tag,
 	else
 		msg << '-';
 	msg << " : ";
-	msg << int(muon_tag.decision()) << ' '
-			<< int(electron_tag.decision()) << ' '
-			<< int(kaonOS_tag.decision()) << ' '
-			<< int(kaonSS_tag.decision()) << " : ";
+	msg << setw(2) << int(muon_tag.decision()) << ' '
+			<< setw(2) << int(electron_tag.decision()) << ' '
+			<< setw(2) << int(kaonOS_tag.decision()) << ' '
+			<< setw(2) << int(kaonSS_tag.decision()) << ' '
+			<< setw(2) << int(vtxCharge_tag.decision()) << " : ";
 
 	struct TagSet {
 		bool mu;
@@ -255,20 +262,13 @@ void CategoryTaggingTool::combine( const FlavourTag &muon_tag,
   }
 	int comb = 0;
 	unsigned int key = (ts.mu?1:0)|(ts.e?2:0)|(ts.kos?10:0)|(ts.kss?100:0);
-  msg << key << " : ";
 	switch( key ) {
     case 0: // no tag use vtx as a last resort
-      /*
       theTag.setDecision(vtxCharge_tag.decision());
       theTag.setTagger(vtxCharge_tag.tagger());
       theTag.setType(vtxCharge_tag.type());
       theTag.setTaggedB(vtxCharge_tag.taggedB());
       fillCategory( "vtx charge", theTag );
-      */
-      theTag.setDecision(FlavourTag::none);
-      theTag.setTagger((Particle*)NULL);
-      theTag.setType(FlavourTag::singleParticle);
-      theTag.setTaggedB(muon_tag.taggedB());
       break;
 		case 1: // mu only
 			theTag.setDecision(muon_tag.decision());
@@ -416,7 +416,7 @@ void CategoryTaggingTool::combine( const FlavourTag &muon_tag,
       theTag.setTaggedB(muon_tag.taggedB());
 			break;
 	}
-	msg << int(theTag.decision()) << endreq;
+	msg << setw(2) << int(theTag.decision()) << endreq;
 }
 
 void CategoryTaggingTool::fillCategory( std::string categ,
@@ -454,7 +454,7 @@ StatusCode CategoryTaggingTool::finalize()
       ci->first.c_str(), e, se, w, sw, eff, seff, ci->second.count(FlavourTag::b),
       ci->second.count(FlavourTag::bbar), ci->second.count(FlavourTag::none));
     msg << buffer;
-    if( e != 0.0 ) {
+    if( e != 0.0 && eff != 0.0 ) {
   		teff += eff;
 	  	tseff += seff*seff;
     }
@@ -476,7 +476,7 @@ StatusCode CategoryTaggingTool::finalize()
       ci->first.c_str(), e, se, w, sw, eff, seff, ci->second.count(FlavourTag::b),
       ci->second.count(FlavourTag::bbar), ci->second.count(FlavourTag::none));
     msg << buffer;
-    if( e != 0.0 ) {
+    if( e != 0.0 && eff != 0.0 ) {
       teff += eff;
       tseff += seff*seff;
     }
@@ -498,7 +498,7 @@ StatusCode CategoryTaggingTool::finalize()
       ci->first.c_str(), e, se, w, sw, eff, seff, ci->second.count(FlavourTag::b),
       ci->second.count(FlavourTag::bbar), ci->second.count(FlavourTag::none));
     msg << buffer;
-    if( e != 0.0 ) {
+    if( e != 0.0 && eff != 0.0 ) {
       teff += eff;
       tseff += seff*seff;
     }
