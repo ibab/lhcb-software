@@ -3,11 +3,12 @@
            desc='OTChannelID is a class that describes a single straw'>
       <desc> *  of the LHCb Outer Tracker</desc>
 
-      <constructor argList='int iStation, int iLayer, int iModule, int iStraw' 
-                   desc='constructor with station, layer, module, straw'>
+      <constructor argList='int iStation, int iLayer, int iQuarter, int iModule, int iStraw' 
+                   desc='constructor with station, layer, quarter, module, straw'>
         <code>    
           m_channelID = (iStation &lt;&lt; stationBits) + 
                         (iLayer &lt;&lt; layerBits) + 
+                        (iQuarter &lt;&lt; quarterBits) + 
                         (iModule &lt;&lt; moduleBits) + 
                         (iStraw &lt;&lt; strawBits);
         </code>
@@ -47,12 +48,15 @@
 
       <attribute type='bitfield' name='channelID' desc='OT Channel ID'>
         <bitfield name='straw' length='8' desc='Straw' setMeth='FALSE'/>
-        <bitfield name='module' length='8' desc='Module' setMeth='FALSE'/>
-        <bitfield name='layer' length='8' desc='Layer' setMeth='FALSE'/>
-        <bitfield name='station' length='8' desc='Station' setMeth='FALSE'/>
+        <bitfield name='module' length='4' desc='Module' setMeth='FALSE'/>
+        <bitfield name='quarter' length='2' desc='Quarter' setMeth='FALSE'/>
+        <bitfield name='layer' length='2' desc='Layer' setMeth='FALSE'/>
+        <bitfield name='station' length='2' desc='Station' setMeth='FALSE'/>
         <bitfield name='uniqueLayer' length='layer, station' 
                   desc='Unique layer' setMeth='FALSE'/>
-        <bitfield name='uniqueModule' length='module, layer, station' 
+        <bitfield name='uniqueQuarter' length='quarter, layer, station' 
+                  desc='Unique quarter' setMeth='FALSE'/>
+        <bitfield name='uniqueModule' length='module, quarter, layer, station' 
                   desc='Unique layer' setMeth='FALSE'/>
       </attribute>
     </class>
