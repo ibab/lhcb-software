@@ -1,6 +1,11 @@
-! $Id: release.notes,v 1.34 2004-09-16 12:53:34 pkoppenb Exp $
+! $Id: release.notes,v 1.35 2004-09-26 17:07:58 lfernan Exp $
 ! Package     : DaVinciMCTools
 ! Responsible : P. Koppenburg
+
+! 2004-09-26 - Luis Fernandez
+ - src/TrueMCFilterCriterion.cpp
+   .  Temporary fix to filter only the head (e.g the B) decay final states. 
+ 	    Final states to consider must flagged in the decay string.
 
 !========================== DaVinciMCTools v5r5 2004-09-16 ===================
 ! 2004-09-14 - P. Koppenburg

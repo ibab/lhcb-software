@@ -1,4 +1,4 @@
-// $Id: TrueMCFilterCriterion.cpp,v 1.1 2004-09-13 18:14:49 pkoppenb Exp $
+// $Id: TrueMCFilterCriterion.cpp,v 1.2 2004-09-26 17:07:58 lfernan Exp $
 // Include files 
 
 // from Gaudi
@@ -107,13 +107,17 @@ bool TrueMCFilterCriterion::isSatisfied( const Particle* const & part ) {
 bool TrueMCFilterCriterion::findMCParticle( const MCParticle* MC ) {
 
   // MC list
-  std::vector<const MCParticle*> mclist;
+  // std::vector<const MCParticle*> mclist;
+  std::vector<MCParticle*> mclist; // LF
   SmartDataPtr<MCParticles> kmcparts(m_EDS, MCParticleLocation::Default );
   if( !kmcparts ){
     fatal() << "Unable to find MC particles at '" << MCParticleLocation::Default << "'" << endreq;
     return false;
   }
   // fill MC particles
+
+  // LF: doing like this we get *all* the MC Particles in the decay; we want only the final states to check reconstruction
+  /*
   const MCParticle* imc = 0;
   while( m_pMCDecFinder->findDecay (kmcparts, imc) ) {
     std::vector<MCParticle *> result ;
@@ -121,12 +125,29 @@ bool TrueMCFilterCriterion::findMCParticle( const MCParticle* MC ) {
     std::vector<MCParticle *>::const_iterator r ;
     for ( r = result.begin() ; r !=result.end() ; ++r ){  mclist.push_back(*r) ; }
   }
+  */
+
+  std::vector<MCParticle*> MCHead;
+  const MCParticle* imc = NULL;
+  while ( m_pMCDecFinder->findDecay(kmcparts, imc ) ){
+    MCParticle* jmc = const_cast<MCParticle*>(imc);
+    MCHead.push_back(jmc);
+  }
+   
+  std::vector<MCParticle*>::const_iterator ihead;
+  for( ihead = MCHead.begin(); ihead != MCHead.end(); ++ihead){
+    const MCParticle* mc = *ihead;
+    // final states must be flagged
+    m_pMCDecFinder->decayMembers(mc, mclist);
+     
+  }
   
   debug() << "Found " << mclist.size() << " MC particles from true decay" << endreq ;
   if (mclist.empty()) return false ;
 
   verbose() << "Looking for " << MC->particleID().pid() << " " << MC->momentum() << endreq ;  
-  std::vector<const MCParticle*>::const_iterator mcp ;
+  // std::vector<const MCParticle*>::const_iterator mcp ;
+  std::vector<MCParticle*>::iterator mcp ; // LF
   for ( mcp = mclist.begin() ; mcp != mclist.end() ; ++mcp ){
     verbose() << "Looping on  " << (*mcp)->particleID().pid() << " " << (*mcp)->momentum() << endreq ;  
     if ( (*mcp) == MC ) {
