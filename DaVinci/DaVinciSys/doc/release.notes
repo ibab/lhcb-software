@@ -4,6 +4,10 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+!====================  DaVinciSys v9r0 2003-08-07 =============================
+! 2003-08-07 - Gloria CORTI
+ - adapt packages to Gaudi v12 and gcc 3.2, almost all packages are modified
+
 !====================  DaVinciSys v8r3p4 2003-07-23 ===========================
 ! 2003-07-23 - Gloria CORTI
  - use Bs2MuMu             v1r3
