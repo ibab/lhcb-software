@@ -1,4 +1,4 @@
-// $Id: MCRichDigitsToHLTBuffAlg.cpp,v 1.1.1.1 2003-11-08 14:26:19 jonesc Exp $
+// $Id: MCRichDigitsToHLTBuffAlg.cpp,v 1.2 2003-11-08 15:20:51 jonrob Exp $
 // Include files
 
 // from Gaudi

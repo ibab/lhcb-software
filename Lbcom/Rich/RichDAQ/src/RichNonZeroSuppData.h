@@ -1,4 +1,4 @@
-// $Id: RichNonZeroSuppData.h,v 1.1.1.1 2003-11-08 14:26:20 jonesc Exp $
+// $Id: RichNonZeroSuppData.h,v 1.2 2003-11-08 15:20:51 jonrob Exp $
 #ifndef RICHDAQ_RICHNONZEROSUPPDATA_H 
 #define RICHDAQ_RICHNONZEROSUPPDATA_H 1
 
@@ -8,6 +8,10 @@
 // Include files
 #include "Event/MCRichDigit.h"
 #include "RichKernel/RichSmartID.h"
+
+// Event
+#include "Event/DAQTypes.h"
+#include "Event/HltEvent.h"
 
 /** @class RichNonZeroSuppData RichNonZeroSuppData.h
  *  
@@ -31,7 +35,7 @@ public:
   /// Constructor from a vector of RichSmartIDs
   RichNonZeroSuppData( const std::vector<RichSmartID> & digits ) 
   { 
-    initData(); // zero all hits first
+    initData(); 
     for ( std::vector<RichSmartID>::const_iterator iDig = digits.begin();
           iDig != digits.end(); ++ iDig ) {
       setPixelActive( (*iDig).pixelRow(), (*iDig).pixelCol() );
@@ -41,10 +45,20 @@ public:
   /// Constructor from a vector of MCRichDigits
   RichNonZeroSuppData( const MCRichDigitVector & digits ) 
   { 
-    initData(); // zero all hits first
+    initData();
     for ( MCRichDigitVector::const_iterator iDig = digits.begin();
           iDig != digits.end(); ++ iDig ) {
       setPixelActive( (*iDig)->key().pixelRow(), (*iDig)->key().pixelCol() );
+    }
+  }
+
+  /// Constructor from an HltBank
+  RichNonZeroSuppData( const HltBank & bank )
+  {
+    initData();
+    // Loop over data entries and set data.
+    for ( unsigned int iData = 0; iData < dataSize(); ++iData ) {
+      m_data[iData] = bank.data()[iData+1];// NB> Skip 0th row since this is the header...
     }
   }
 
@@ -63,7 +77,7 @@ public:
     return isBitOn( m_data[row], col ); 
   }
 
-  /// return data size
+  /// Return data size
   inline ShortType dataSize() const
   {
     return MaxBits;
@@ -87,16 +101,19 @@ private: // definitions
 
 private: // methods
 
+  /// Reset all data to zero
   inline void initData()
   {
     for ( unsigned int i = 0; i<MaxBits; ++i ) { m_data[i] = 0; }
   }
   
+  /// Test if a given bit in a word is set on
   inline bool isBitOn( const LongType data, const ShortType pos ) const
   {
     return 0 != ( data & (1<<pos) );
   }
   
+  /// Set a given bit in a data word on
   inline void setBit( LongType & data, ShortType pos ) 
   {
     data |= 1<<pos;
