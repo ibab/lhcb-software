@@ -6,7 +6,7 @@
 !-----------------------------------------------------------------------------
 
 ! 2003-04-04 - Marco Cattaneo
- - Brunel.opts: Take histograms from standard place ($LHCBHOME/Sim)
+ - Brunel.opts: Take histograms from standard place ($LHCBHOME/sim/data)
 
 ! 2003-03-24 - Alessia Satta
   - First release of the package
