@@ -1,4 +1,4 @@
-// $Id: MuonTileIDXYZ.cpp,v 1.9 2002-04-19 12:15:59 dhcroft Exp $
+// $Id: MuonTileIDXYZ.cpp,v 1.10 2002-04-25 12:07:40 dhcroft Exp $
 // Include files 
 #include <cstdio>
 #include <cmath>
@@ -477,9 +477,9 @@ StatusCode MuonTileIDXYZ::getXYZAndCache(const int& station,
       // get ILVolume pointer
       const ILVolume *logVol = muGap->geometry()->lvolume();
       // Get the solid
-      const ISolid *soild = logVol->solid();
+      const ISolid *solid = logVol->solid();
       // check these really are boxes (they ought to be!)
-      const SolidBox *box = dynamic_cast<const SolidBox *>(soild);
+      const SolidBox *box = dynamic_cast<const SolidBox *>(solid);
       if( !box ){
         log << MSG::ERROR << "Could not cast gas gap solid to box" 
             << endreq;

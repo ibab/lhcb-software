@@ -1,10 +1,13 @@
-! $Id: release.notes,v 1.12 2002-04-22 08:18:35 cattanem Exp $
+! $Id: release.notes,v 1.13 2002-04-25 12:07:37 dhcroft Exp $
 ! =============================================================================
 ! CVS tag $Name: not supported by cvs2svn $ 
 ! =============================================================================
 ! Package     : MuonTools
 ! Responsible : David Hutchcroft David.Hutchcroft@cern.ch
 ! =============================================================================
+
+! 20020425 David Hutchcroft
+  - fixed misspelling of variable name
 
 ! >>>>>>>>>>>>>>>>>>>>>>> MuonTools v2r0 <<<<<<<<<<<<<<<<<<<<<<<<<<
 ! 20020422 (M.Cattaneo)
