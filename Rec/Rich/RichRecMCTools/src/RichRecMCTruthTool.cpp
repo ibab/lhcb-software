@@ -4,8 +4,12 @@
  *  Implementation file for RICH reconstruction tool : RichRecMCTruthTool
  *
  *  CVS Log :-
- *  $Id: RichRecMCTruthTool.cpp,v 1.10 2004-10-13 09:37:27 jonrob Exp $
+ *  $Id: RichRecMCTruthTool.cpp,v 1.11 2004-11-03 12:53:53 jonrob Exp $
  *  $Log: not supported by cvs2svn $
+ *  Revision 1.10  2004/10/13 09:37:27  jonrob
+ *  Add new pixel creator tool.
+ *  Add ability to make pixels for particular radiators.
+ *
  *  Revision 1.9  2004/08/20 14:48:52  jonrob
  *  Add more protection against bad data pointers
  *
@@ -111,15 +115,30 @@ RichRecMCTruthTool::mcRichDigit( const RichRecPixel * richPixel ) const
     return NULL;
   }
 
-  // try to get parent RichDigit
-  const RichDigit * digit = dynamic_cast<const RichDigit*>( richPixel->parentPixel() );
-  if ( !digit ) {
-    Warning ( "RichRecPixel has no associated RichDigit" );
-    return NULL;
+  const MCRichDigit * mcDigit = 0;
+  if ( Rich::PixelParent::RawBuffer == richPixel->parentType() ) {
+
+    // use RichSmartID to locate MC information
+    mcDigit = m_truth->mcRichDigit( richPixel->smartID() );
+
+  } else if ( Rich::PixelParent::Digit == richPixel->parentType() ) {
+
+    // try to get parent RichDigit
+    const RichDigit * digit = dynamic_cast<const RichDigit*>( richPixel->parentPixel() );
+    if ( !digit ) { Warning ( "RichRecPixel has no associated RichDigit" ); }
+
+    // All OK, so find and return MCParticle for this RichDigit
+    mcDigit = m_truth->mcRichDigit( digit );
+
+  } else {
+
+    // unknown Pixel type
+    Warning( "Unknown RichRecPixel parent type "+Rich::text(richPixel->parentType()) );
+
   }
 
-  // All OK, so find and return MCParticle for this RichDigit
-  return m_truth->mcRichDigit( digit );
+  if ( !mcDigit ) Warning( "Failed to find MCRichDigit for RichRecPixel" );
+  return mcDigit;
 }
 
 bool RichRecMCTruthTool::mcParticle( const RichRecPixel * richPixel,
