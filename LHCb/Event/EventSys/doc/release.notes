@@ -3,8 +3,14 @@ package manager: Marco Cattaneo
 
 !======================== EventSys v19r0 2004-10-26 ========================
 ! 2004-10-26 - Marco Cattaneo
- - Use OTEvent v14r0, TrEvent v14r0, EventAssoc v1r4, DAQEvent v4r5,
-       RichEvent v7r4p1, CaloEvent v13r5p1, MuonEvent v3r1p1
+ - Use OTEvent v14r0, TrEvent v14r0, EventAssoc v1r4, RichEvent v7r4p1,
+       MuonEvent v3r1p1
+
+!======================== EventSys v18r3 2004-10-26 ========================
+Built on v18r2b2 branch
+
+! 2004-10-26 - Marco Cattaneo
+ - Use CaloEvent v13r6, DAQEvent v4r5
 
 !======================== EventSys v18r2 2004-09-10 ========================
 ! 2004-09-10 - Marco Cattaneo

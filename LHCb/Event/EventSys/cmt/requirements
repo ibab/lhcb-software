@@ -11,7 +11,7 @@ use ITEvent     v13r2   Event
 use OTEvent     v14r0   Event
 use TrEvent     v14r0   Event
 use RichEvent   v7r4p1  Event
-use CaloEvent   v13r5p1 Event
+use CaloEvent   v13r6   Event
 use MuonEvent   v3r1p1  Event
 use L0Event     v14r1p1 Event
 use PhysEvent   v8r4    Event
