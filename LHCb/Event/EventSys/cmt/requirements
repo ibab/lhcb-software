@@ -15,10 +15,10 @@ use CaloEvent	v13r0	Event
 use MuonEvent	v3r1	Event
 use L0Event	v14r1	Event
 use L1Event	v12r0	Event
-use PhysEvent	v8r0	Event
+use PhysEvent	v8r1	Event
 use HltEvent	v5r0	Event
 use DAQEvent	v4r0	Event
 use GenEvent	v3r0	Event
 use EventAssoc	v1r0	Event
 use LinkerEvent v1r2    Event
-use TrgEvent    v2r0    Event
+use TrgEvent    v2r1    Event
