@@ -4,11 +4,12 @@
 ! Purpose     : LHCb OO kernel packages
 !-----------------------------------------------------------------------------
 
-!======================= LHCbSys v15r0 2003-12-19 =======================
-! 2003-12-15 - Marco Cattaneo
+!======================= LHCbSys v15r0 2004-01-05 =======================
+! 2004-01-05 - Marco Cattaneo
 
  - New packages:      Ex/IOExample v1r0 - to demonstrate reading and writing
                                           data with POOL
+                      Event/EventAssoc v1r0 - to generate relations dictionaries
 
  - Modified packages: XmlTools v3r1, GaudiConf v7r5, DumpEventExample v7r2,
                       KernelSys v3r0, LHCbKernel v4r0, TrKernel v1r3,
@@ -32,7 +33,7 @@
 
  - In all Event packages
    . Modifications to xml to generate dictionaries for POOL
-   . Xml parsed by GaudiConf v6r*, to produce POOL dictionaries
+   . Xml parsed by GaudiObjDesc v6r*, to produce POOL dictionaries
 
  - In EventSys v17r0
    . Added GenEvent v3r0 (previously not included)
