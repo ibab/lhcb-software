@@ -9,6 +9,7 @@ Package manager : Vanya Belyaev
 ! 20010219 - Marco Cattaneo
   requirements - use GEANT4 v3r0* (add * to allow use of DEV area)
                  replace {} with () to please nmake
+                 remove GiGa_linkopts defn. to allow building of library on NT
 
 ===========================================================================
 ! 20010215 - Gonzalo Gracia Abril & Vanya Belyaev
