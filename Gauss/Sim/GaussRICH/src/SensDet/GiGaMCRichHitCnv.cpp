@@ -219,9 +219,8 @@ StatusCode GiGaMCRichHitCnv::updateObj ( IOpaqueAddress*  address ,
           // Make new persistent hit object
           MCRichHit * mchit = new MCRichHit();
 
-          // add to container, then increment key
+          // add to container
           hits->insert( mchit, globalKey );
-          ++globalKey;
 
           // Set data
           mchit->setEntry( g4hit->GetGlobalPos() );
@@ -257,6 +256,9 @@ StatusCode GiGaMCRichHitCnv::updateObj ( IOpaqueAddress*  address ,
                 << " has no parent MCParticle !, RichG4HitCollection " << iii 
                 << " TrackID " << traid << endreq;
           }
+
+          // finally increment key
+          ++globalKey;
 
         }
       }

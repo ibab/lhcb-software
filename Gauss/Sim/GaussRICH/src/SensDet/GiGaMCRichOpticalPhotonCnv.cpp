@@ -206,6 +206,9 @@ StatusCode GiGaMCRichOpticalPhotonCnv::updateObj ( IOpaqueAddress*  address ,
           // New optical photon object
           MCRichOpticalPhoton * mcPhoton = new MCRichOpticalPhoton();
 
+          // insert in container
+          photons->insert( mcPhoton, globalKey );
+
           // Copy required info from RichG4Hit to RichMCOpticalPhoton
           // More info may be copied in the future.
           //
@@ -227,11 +230,10 @@ StatusCode GiGaMCRichOpticalPhotonCnv::updateObj ( IOpaqueAddress*  address ,
           mcPhoton->setCherenkovPhi( g4hit->PhiCkvAtProd() );
           mcPhoton->setMcRichHit( mcHits->object(globalKey) );
 
-          photons->insert( mcPhoton, globalKey );
-
+          // finally, increment key
           ++globalKey;
-        } // loop over g4 hits
 
+        } // loop over g4 hits
 
       }
 
