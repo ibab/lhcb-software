@@ -1,4 +1,4 @@
-// $Id: RichMarkovRingFinderMoni.cpp,v 1.13 2004-10-29 18:14:35 abuckley Exp $
+// $Id: RichMarkovRingFinderMoni.cpp,v 1.14 2004-11-01 18:05:27 abuckley Exp $
 // Include files
 
 // from Gaudi
@@ -84,7 +84,6 @@ RichMarkovRingFinderMoni::finalize()
   StatusCode sc = RichRecAlgBase::finalize();
 
   // Fractional agreement between MC and rec-matching
-  /*
   map<Rich::DetectorType, float> fractionAgreed;
 
   // Agreement in Rich1
@@ -102,7 +101,6 @@ RichMarkovRingFinderMoni::finalize()
            << m_numMcVsRecMatchAgreements[Rich::Rich2][true]   << " / "
            << m_numMcVsRecMatchAgreements[Rich::Rich2][false]  << " ("
            << 100 * fractionAgreed[Rich::Rich1] << "% agreed)" << endreq;
-  */
 
   return sc;
 }
@@ -304,11 +302,13 @@ RichMarkovRingFinderMoni::execute()
 
 
         // Do the rec segment and the MC particle correspond to each other? (when neither is null)
-        if ( segMCPart && mcpart != segMCPart ) {
-          info() << "Non-null geometry-matched (" << segMCPart 
-                 << ") and pixel-matched (" << mcpart 
-                 << ") MCParticles disagree for Markov ring " << *iRing << endreq;
-          m_numMcVsRecMatchAgreements[whichRich][true]++;
+        if ( segMCPart ) {
+          if ( mcpart != segMCPart ) {
+            info() << "Non-null geometry-matched (" << segMCPart 
+                   << ") and pixel-matched (" << mcpart 
+                   << ") MCParticles disagree for Markov ring " << *iRing << endreq;
+          } 
+          m_numMcVsRecMatchAgreements[whichRich][mcpart!=segMCPart]++;
         }
 
 
