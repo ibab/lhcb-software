@@ -17,7 +17,7 @@
 // Standard Gaudi configuration and additional DLLs
 //--------------------------------------------------------------
 #include "$STDOPTIONS"
-//#include "$STDOPTS/DetDesc.opts"
+#include "$STDOPTS/DetDesc.opts"
 ApplicationMgr.DLLs += { "BrunelKernel", "GaudiAlg" };
 EventDataSvc.ForceLeaves = true;
 
@@ -40,7 +40,7 @@ ApplicationMgr.TopAlg += { "BrunelSicbInit",
 //--------------------------------------------------------------
 BrunelDigi.DetectorList = { "VELO" , "IT", "OT" , "RICH" , "CALO", "MUON" };
 BrunelTrigger.DetectorList = { "TRIGGER" };
-BrunelReco.DetectorList = { "VELO", "OT","IT","Tr", "TRACK", "RICH" , "CALO" };
+BrunelReco.DetectorList = {"VELO","OT","IT","Tr","TRACK","RICH","CALO","MUON"};
 BrunelFinalFit.DetectorList = { "TRAC" };
 
 //--------------------------------------------------------------
@@ -88,6 +88,10 @@ BrunelDigiMUONSeq.Members = { "BrunelDigiMUON" };
 //#include "$TRSICBCNVROOT/options/Brunel.opts"
 
 // Velo digitisation and tracking
-//ApplicationMgr.DLLs += { "VeloDet", "VeloDigit", "VeloTrack" };
-//BrunelDigiVELOSeq.Members += { "VeloDigitAlg", "PuVetoDigitAlg" };
-//BrunelRecoVELOSeq.Members  = { "VeloTrackAlg" };
+ApplicationMgr.DLLs += { "VSicbCnv", "VeloDet", "VeloTrack" };
+#include "$VELODIGITROOT/options/Brunel.opts"
+BrunelRecoVELOSeq.Members  = { "VeloTrackAlg" };
+
+// Muon reconstruction
+ApplicationMgr.DLLs += { "MuonSicbCnv", "MuonDet", "MuonRec" };
+BrunelRecoMUONSeq.Members  = { "MuonRec" };

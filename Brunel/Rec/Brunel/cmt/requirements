@@ -53,10 +53,13 @@ use RichKernel   v1r0   Rich
 use TrKernel     v10r0  Tr
 
 # Detector description
-#use DetDesc      v9r2   Det
-#use XmlDDDB      v8r1   Det
+use DetDesc      v10r0  Det
+use XmlDDDB      v11r0  Det
 #use CaloDet      v3r0   Det
-#use VeloDet      v3r1   Det
+use MuonDet      v3r0   Det
+use VeloDet      v5r0   Det
+
+use MuonTools    v2r0   Muon
 
 # Event Model
 use EventSys     v10r0  Event
@@ -64,10 +67,11 @@ use EventSys     v10r0  Event
 # SicB event data persistency
 use SicbCnv      v16r0  SICB
 use ITSicbGeom   v1r0   SICB
+use OTSicbGeom   v1r0   SICB
 #use CaloSicbCnv  v5r1   SICB
-#use MuonSicbCnv  v4r0   SICB
+use MuonSicbCnv  v5r0   SICB
 #use TrSicbCnv    v4r0   SICB
-#use VSicbCnv     v6r1   SICB
+use VSicbCnv     v7r0   SICB
 
 # Brunel utilities
 use BrunelKernel v4r0   Rec
@@ -86,15 +90,24 @@ use BrunelSicb   v3r0   Rec
 #use CaloAlgs       v4r3 Calo
 #use CaloCA         v3r1 Calo
 
-# Tracking
-use ITAlgorithms   v10r0 IT
+# Velo
+use VeloDigit     v2r0   Velo
+
+# Inner Tracker
+use ITAlgorithms  v10r0  IT
+
+# Outer Tracker
 #use OTAlgorithms v7r0	OT
+
+# Tracking
+use TrFitEvent    v1r0   Tr
 #use TrAlgorithms v7r1   Tr
 
-# Forward Tracking
-#use VeloDigit    v1r0   Velo
-#use VeloTrack    v1r1   Velo
+use VeloTrack     v2r0   Velo
 #use FwTrack      v1r1   Tr
+
+# Muon
+use MuonRec       v1r0   Muon
 
 # SICBDST packages
 use Futil        v10r3  SICB
