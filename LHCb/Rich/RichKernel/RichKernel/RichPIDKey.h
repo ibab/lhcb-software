@@ -55,7 +55,6 @@ public:
   std::ostream& fillStream(std::ostream& s) const;
 
   /// long operator
-  // operator long() const { return m_pidKey|0xFF000000; }
   operator long() const { return m_pidKey; }
 
 protected:
