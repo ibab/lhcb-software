@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.26 2001-12-14 14:35:22 ranjard Exp $ 
+# $Id: requirements,v 1.27 2002-01-10 09:48:43 ranjard Exp $ 
 # =============================================================================
 package DetDesc
 version v9r0
@@ -9,21 +9,7 @@ include_dirs $(DETDESCROOT)
 
 use GaudiKernel v11r*
 use CLHEP v17r*
-use XERCES v1*
-
-# avoid displaying of warning messages coming from xerces
-set XmlBaseDetElemCnv_cpp_cppflags "-w"
-set XmlGenericCnv_cpp_cppflags "-w"
-set XmlTabulatedPropertyCnv_cpp_cppflags "-w"
-set XmlSurfaceCnv_cpp_cppflags "-w"
-set XmlMixtureCnv_cpp_cppflags "-w"
-set XmlLVolumeCnv_cpp_cppflags "-w"
-set XmlCatalogCnv_cpp_cppflags "-w"
-set XmlDetectorElementCnv_cpp_cppflags "-w"
-set XmlElementCnv_cpp_cppflags "-w"
-set XmlIsotopeCnv_cpp_cppflags "-w"
-set XmlCnvSvc_cpp_cppflags "-w"
-set XmlParserSvc_cpp_cppflags "-w"
+use XERCES v15r*
 
 # build a Linker library
 library DetDescLib   Lib/*.cpp
@@ -43,7 +29,19 @@ apply_pattern package_Cshlibflags
 macro_append  DetDescLib_shlibflags "$(GaudiKernel_linkopts) " 
 macro_append  DetDescLib_shlibflags "$(CLHEP_linkopts) " 
 macro_append  DetDescLib_shlibflags "$(XERCES_linkopts) " 
-macro_append  DetDescLib_shlibflags "$(ExternalLibs_linkopts) "
-# remove warnings form unused variables in XML-xerces headers 
-macro_append  DetDesc_cppflags " "  \ 
-          Linux "-Wno-unused "     
+
+# remove warnings due to XERCES headers 
+macro XmlBaseDetElemCnv_pp_cppflags "$(XERCES_warnings)"
+macro XmlBaseConditionCnv_pp_cppflags "$(XERCES_warnings)"
+macro XmlGenericCnv_pp_cppflags "$(XERCES_warnings)"
+macro XmlTabulatedPropertyCnv_pp_cppflags "$(XERCES_warnings)"
+macro XmlSurfaceCnv_pp_cppflags "$(XERCES_warnings)"
+macro XmlMixtureCnv_pp_cppflags "$(XERCES_warnings)"
+macro XmlLVolumeCnv_pp_cppflags "$(XERCES_warnings)"
+macro XmlCatalogCnv_pp_cppflags "$(XERCES_warnings)"
+macro XmlDetectorElementCnv_pp_cppflags "$(XERCES_warnings)"
+macro XmlElementCnv_pp_cppflags "$(XERCES_warnings)"
+macro XmlIsotopeCnv_pp_cppflags "$(XERCES_warnings)"
+macro XmlCnvSvc_pp_cppflags "$(XERCES_warnings)"
+macro XmlParserSvc_pp_cppflags "$(XERCES_warnings)"
+macro XmlConditionCnv_pp_cppflags "$(XERCES_warnings)"
