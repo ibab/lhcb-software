@@ -1,4 +1,4 @@
-// $Id: GaudiMain.cpp,v 1.3 2001-07-04 07:03:21 mato Exp $
+// $Id: GaudiMain.cpp,v 1.4 2001-11-29 07:49:16 mato Exp $
 //------------------------------------------------------------------------------
 //
 //  Package    : GaudiConf
@@ -31,8 +31,9 @@ int main ( int argc, char** argv ) {
 
   propMgr->setProperty( "JobOptionsPath", opts );
   if( opts.substr( opts.length() - 3, 3 ) == ".py" ) {
+    propMgr->setProperty( "EvtSel",         "NONE" );
     propMgr->setProperty( "JobOptionsType", "NONE" );
-    propMgr->setProperty( "DLLs",           "['SIPython']" );
+    propMgr->setProperty( "DLLs",           "['GaudiPython']" );
     propMgr->setProperty( "Runable",        "PythonScriptingSvc" );
   }
 

@@ -1,6 +1,10 @@
 package GaudiConf
 package manager: F.Ranjard
 
+! 20011128 - Pere Mato
+  Changed GaudiMain.cpp to use the new GaudiPython service.
+  Added some Python scripts
+
 ! 20011120 - Sebastien Ponce
   Changed the default value for MaxDocNbInCache to 10.
 
