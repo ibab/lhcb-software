@@ -4,6 +4,7 @@
 ! Purpose     : Holds final reconstruction code
 !-----------------------------------------------------------------------------
 
+!====================== GlobalReco v1r0 2002-07-29 ===========================
 ! 2002-07-26 - Gloria Corti
  - dd detectorID information for electrons when making ProtoParticles 
    in ChargedProtoPAlg, this implies introducing options files
