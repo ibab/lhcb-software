@@ -3,10 +3,12 @@ Author: Jose' Helder Lopes
 Purpose: Define the L1Buffer,  L1Event, L1Bank, RawBuffer, RawEvent and 
          RawBank classes.
 
-!=============== DAQEvent v4r4 2004-06-28 =============================
+!=============== DAQEvent v5r0 2004-06-28 =============================
 ! 2004-06-28 - Marco Cattaneo
  - Add a component library with trivial algorithms to create empty
    L1Buffer, RawBuffer, and L1Event, RawEvent from corresponding Buffer
+ - Due to above change, DAQEvent is now a DLL. Needs to be loaded with
+   ApplicationMgr.DLLs += { "DAQEvent" };
  - Add "Header" to RawBuffer BankType enum, for event header.
 
 !=============== DAQEvent v4r3 2004-06-10 =============================
