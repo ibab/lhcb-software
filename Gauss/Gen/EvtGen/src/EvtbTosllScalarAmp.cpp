@@ -50,7 +50,7 @@ void EvtbTosllScalarAmp::CalcAmp( EvtParticle *parent,
                     + parent->getDaug(2)->getP4();
   double q2 = (q.mass2());
 
-  double fp,f0,ft;
+  double fp(0.),f0(0.),ft(0.);
   double mesonmass = parent->getDaug(0)->mass();
   double parentmass = parent->mass();
 

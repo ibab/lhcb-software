@@ -38,7 +38,10 @@
 #include "EvtGenBase/EvtConst.hh"
 #include "EvtGenBase/EvtId.hh"
 
-EvtBtoXsll::~EvtBtoXsll() {}
+EvtBtoXsll::~EvtBtoXsll() 
+{
+  delete _calcprob ;
+}
 
 void EvtBtoXsll::getName(std::string& model_name){
 
