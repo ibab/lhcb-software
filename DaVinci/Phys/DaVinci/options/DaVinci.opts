@@ -34,15 +34,16 @@ NTupleSvc.Output={"FILE1 DATAFILE='DVNtuples.hbook' TYP='HBOOK' OPT='NEW'"};
 //NTupleSvc.Output={"FILE1 DATAFILE='DVNtuples.root' TYP='ROOT' OPT='NEW'"};
 
 //--------------------------------------------------------------
-// DaVinci Algorithms
+// Optional DaVinci Algorithms
+// VERY IMPORTANT:
+// ChargedProtoPAlg and PrimVtxFinder are executed in
+// DaVinciCommon and MUST not be executed again
+//Ya
 //--------------------------------------------------------------
 // Rerun L0 trigger decision (tuning as in Winter 2003 data)
 //#include "$DAVINCIROOT/options/L0.opts"
 // Rerun L1 trigger decisions (tuning as in Winter 2003 data)
 //#include "$DAVINCIROOT/options/L1Decision.opts"
-
-// Charged ProtoParticles
-ApplicationMgr.TopAlg += { "ChargedProtoPAlg" };
 
 // Recalibration for gammas (only for Brunel v13r1 data)
 //#include "$DAVINCIROOT/options/CaloReCalibration.opts"
@@ -54,8 +55,6 @@ ApplicationMgr.TopAlg += { "ChargedProtoPAlg" };
 // (when reading data produced with Brunel v16r4 or v17r4)
 //ApplicationMgr.TopAlg += { "NeutralPPsFromCPsAlg" };
 
-// Primary Vertices
-ApplicationMgr.TopAlg += { "PrimVtxFinder" };
 
 //--------------------------------------------------------------
 // Other additional algorithms to be executed, from public 
