@@ -14,7 +14,9 @@
  *
  *  @author Chris Jones     (christopher.rob.jones@cern.ch)
  *
- *  @date 2003-10-31
+ *  @date 2003-10-31#
+ *
+ *  @todo Once SICB retires return to full functionality
  */
 
 class RichSmartID {
@@ -96,13 +98,17 @@ public:
   /// Test if the RICH detector field is set.
   bool richIsSet() const
   {
-    return (key() & RichSmartCode::MaskRichOK) >> RichSmartCode::ShiftRichOK;
+    // Disable until SICB retires due to lack of bits
+    // return (key() & RichSmartCode::MaskRichOK) >> RichSmartCode::ShiftRichOK;
+    return true;
   }
 
   /// Test if the RICH panel field is set.
   bool panelIsSet() const
   {
-    return (key() & RichSmartCode::MaskPanelOK) >> RichSmartCode::ShiftPanelOK;
+    // Disable until SICB retires due to lack of bits
+    // return (key() & RichSmartCode::MaskPanelOK) >> RichSmartCode::ShiftPanelOK;
+    return true;
   }
 
   /// Test if the RICH photon detector row field is set.
@@ -257,7 +263,7 @@ public:
   /// Decoding function to return Pixel RichSmartID only
   const RichSmartID pixelID() const
   {
-    return ( key() & (~RichSmartCode::MaskSubPixel + ~RichSmartCode::MaskSubPixelOK) );
+    return ( key() & ~(RichSmartCode::MaskSubPixel+RichSmartCode::MaskSubPixelOK) );
   }
 
   /// Decoding function to return PD RichSmartID only
@@ -332,7 +338,7 @@ private: // methods
 
   // tests whether a given value is in range for a given data field
   bool dataInRange( const RichSmartCode::ShortType value,
-                    const RichSmartCode::ShortType max )
+                    const RichSmartCode::ShortType max ) const
   {
     return ( value <= max );
   }
@@ -356,8 +362,9 @@ inline std::ostream & RichSmartID::printDataFields( std::ostream & s ) const
 
 inline std::ostream & RichSmartID::printAllFields( std::ostream & s ) const
 {
-  s << rich() << " " << panel() << " " << PDRow() << " " << PDCol() 
-    << " " << pixelRow() << " " << pixelCol() << " " << subPixel() << " "
+  s << "data " << rich() << " " << panel() << " " << PDRow() << " " << PDCol() 
+    << " " << pixelRow() << " " << pixelCol() << " " << subPixel() 
+    << " valid "
     << richIsSet() << " " << panelIsSet() << " " << pdRowIsSet() << " " 
     << pdColIsSet() << " " << pixelRowIsSet() << " " << pixelColIsSet() << " " 
     << subPixelIsSet();
