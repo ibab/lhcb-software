@@ -1,9 +1,9 @@
- package KernelSys
-version v1r1
+package KernelSys
+version v1r2
 
 branches doc cmt
 
-use LHCbKernel  v2r6    Kernel
+use LHCbKernel  v2r7    Kernel
 use CaloKernel  v2r2    Calo
 use MuonKernel  v2r2    Muon
 use TrKernel    v11r2   Tr

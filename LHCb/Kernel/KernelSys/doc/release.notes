@@ -4,6 +4,9 @@
 ! Purpose     : collect Kernel packages
 !-----------------------------------------------------------------------------
 
+! 2003-05-14 - Marco Cattaneo
+ - Use LHCbKernel v2r7
+
 !======================== KernelSys v1r1 2003-04-15 ========================
 ! 2003-04-03 - Marco Cattaneo
  - Use RichKernel v3r0
