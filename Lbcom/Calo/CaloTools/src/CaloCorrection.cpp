@@ -1,9 +1,12 @@
-// $Id: CaloCorrection.cpp,v 1.1 2002-04-07 18:15:00 ibelyaev Exp $
+// $Id: CaloCorrection.cpp,v 1.2 2002-06-13 12:32:38 ibelyaev Exp $
 // Include files 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
-// $Log: not supported by cvs2svn $ 
+// $Log: not supported by cvs2svn $
+// Revision 1.1  2002/04/07 18:15:00  ibelyaev
+//  preliminary version ('omega'-release)
+// 
 // ============================================================================
 // CLHEP
 #include "CLHEP/Geometry/Point3D.h"
@@ -172,8 +175,8 @@ StatusCode     CaloCorrection::process
   if( m_updateZ ) { corrected->setZ( m_z ); }
   
   // derivatives:
-  const double fxdx = (*m_fxp )( position.x() , seed.x() , m_cell , m_xpars );  
-  const double fydy = (*m_fyp )( position.y() , seed.y() , m_cell , m_ypars );
+  double fxdx = (*m_fxp )( position.x() , seed.x() , m_cell , m_xpars );  
+  double fydy = (*m_fyp )( position.y() , seed.y() , m_cell , m_ypars );
   // other derivatives are ZEROes, except fede = 1  
   
   // covariance 
@@ -189,6 +192,7 @@ StatusCode     CaloCorrection::process
   return StatusCode::SUCCESS ;
 
 };
+// ============================================================================
 
 
 // ============================================================================

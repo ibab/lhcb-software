@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.7 2002-06-10 15:56:31 cattanem Exp $
+# $Id: requirements,v 1.8 2002-06-13 12:32:38 ibelyaev Exp $
 # =============================================================================
 # Created    : 29/10/2001
 # Maintainer : Vanya Belyaev Ivan.Belyaev@itep.ru
@@ -8,7 +8,7 @@
 # =============================================================================
 
 package            CaloTools
-version            v3r0
+version            v3r1
 
 # ================ structure =================================================
 branches           cmt doc src options 
@@ -23,12 +23,7 @@ use CaloUtils      v3r*   Calo
 # ================ component library =========================================
 library            CaloTools    *.cpp
 
-apply_pattern      package_Clinkopts 
-apply_pattern      packageShr
-
-# ================ private stuff (btw, WHY it is private?)  ==================
-private
-apply_pattern      package_Cshlibflags
+apply_pattern      component_library library=CaloTools
 
 # ============================================================================
 # The End 

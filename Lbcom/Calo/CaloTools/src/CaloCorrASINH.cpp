@@ -1,8 +1,11 @@
-// $Id: CaloCorrASINH.cpp,v 1.3 2002-04-30 20:37:56 ibelyaev Exp $
+// $Id: CaloCorrASINH.cpp,v 1.4 2002-06-13 12:32:38 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.3  2002/04/30 20:37:56  ibelyaev
+//  new option files and bettwer doxygen documentation
+//
 // Revision 1.2  2002/04/23 10:49:03  ibelyaev
 //  fix compiler problems on Win2K
 //
@@ -43,8 +46,8 @@ namespace Hollebeek
 	 *   @author Vanya Belyaev Ivan.Belyaev@itep.ru
 	 *   @date 32 Apr 2002
 	 */
-	double
-  Asinh( double x )
+	long double
+  Asinh( long double x )
 	{
 #ifndef WIN32
     return asinh( x );
@@ -97,12 +100,12 @@ namespace Hollebeek
     const CaloCorrection::Parameters& parameters ) 
   {
     // redefine parameters
-    const double Xo = cluster - seed ;
-    const double D  = 0.5 * size     ;
-    const double b  = parameters[0]  ;
+    const long double Xo = cluster - seed       ;
+    const long double D  = 0.5 * size           ;
+    const long double b  = parameters[0] * size ;
     // use formula! 
-    const double Xc = b * Asinh( Xo / D * sinh( D/b ) ) ;
-    // adjast teh center again 
+    const long double Xc = b * Asinh( Xo / D * sinh( D/b ) ) ;
+    // adjust the center again 
     return seed + Xc ;
   };
   
@@ -132,13 +135,13 @@ namespace Hollebeek
     const CaloCorrection::Parameters& parameters ) 
   {
     // redefine parameters
-    const double Xo = cluster - seed ;
-    const double D  = 0.5 * size     ;
-    const double b  = parameters[0]  ;
+    const long double Xo = cluster - seed        ;
+    const long double D  = 0.5 * size            ;
+    const long double b  = parameters[0]  * size ;
     //
-    const double arg   = Xo / D * sinh( D / b ) ;
-    const double arg2  = sqrt( arg * arg + 1. ) ;
-    const double prime = b / D * sinh( D / b ) 
+    const long double arg   = Xo / D * sinh( D / b ) ;
+    const long double arg2  = sqrt( arg * arg + 1. ) ;
+    const long double prime = b / D * sinh( D / b ) 
       * ( 1.0 + arg / arg2 ) / ( arg + arg2 ) ;
     /// 
     return prime ;

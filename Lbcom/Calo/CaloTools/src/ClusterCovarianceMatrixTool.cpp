@@ -1,20 +1,8 @@
-// $Id: ClusterCovarianceMatrixTool.cpp,v 1.5 2002-04-07 18:15:01 ibelyaev Exp $
+// $Id: ClusterCovarianceMatrixTool.cpp,v 1.6 2002-06-13 12:32:39 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
-// Revision 1.4  2001/12/09 14:33:09  ibelyaev
-//  update for newer version of Gaudi
-//
-// Revision 1.3  2001/11/25 15:50:40  ibelyaev
-//  update for newer CaloKernel package
-//
-// Revision 1.2  2001/11/08 10:58:34  ibelyaev
-//  new tools are added for selection of subclusters within the cluster
-//
-// Revision 1.1  2001/11/04 15:30:40  ibelyaev
-// add concrete tool
-// 
 // ============================================================================
 // Include files
 // GaudiKernel
@@ -34,9 +22,9 @@
 #include "ClusterCovarianceMatrixTool.h"
 
 // ============================================================================
-/** @file ClusterCovarianceMatrixTool.cpp
+/** @file
  *
- *  Implementation file for class : ClusterCovarianceMatrixTool
+ *  Implementation file for class ClusterCovarianceMatrixTool
  *
  *  @date 02/11/2001 
  *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
@@ -44,7 +32,8 @@
 // ============================================================================
 
 // ============================================================================
-/** factory business
+/** @var ClusterCovarianceMatrixToolFactory
+ *  static factory 
  */
 // ============================================================================
 static const ToolFactory<ClusterCovarianceMatrixTool>         s_Factory ;
@@ -159,6 +148,7 @@ StatusCode ClusterCovarianceMatrixTool::initialize ()
   ///
   return StatusCode::SUCCESS ;
 };
+// ============================================================================
 
 // ============================================================================
 /** standard finalization method 
@@ -172,6 +162,7 @@ StatusCode ClusterCovarianceMatrixTool::finalize   ()
   /// finalize the  the base class
   return CaloTool::finalize ();
 };
+// ============================================================================
 
 // ============================================================================
 /** The main processing method (functor interface) 
@@ -190,6 +181,7 @@ ClusterCovarianceMatrixTool::operator() ( CaloCluster* cluster ) const
   /// apply the estimator 
   return m_estimator( cluster );
 };
+// ============================================================================
 
 // ============================================================================
 /** The main processing method 
@@ -200,6 +192,7 @@ ClusterCovarianceMatrixTool::operator() ( CaloCluster* cluster ) const
 StatusCode 
 ClusterCovarianceMatrixTool::process ( CaloCluster* cluster ) const 
 { return (*this)( cluster ); };
+// ============================================================================
 
 // ============================================================================
 // The End 

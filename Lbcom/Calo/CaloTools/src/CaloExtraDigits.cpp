@@ -1,8 +1,11 @@
-// $Id: CaloExtraDigits.cpp,v 1.2 2002-04-23 10:49:03 ibelyaev Exp $
+// $Id: CaloExtraDigits.cpp,v 1.3 2002-06-13 12:32:38 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2002/04/23 10:49:03  ibelyaev
+//  fix compiler problems on Win2K
+//
 // Revision 1.1  2002/04/07 18:15:00  ibelyaev
 //  preliminary version ('omega'-release)
 // 
@@ -17,6 +20,8 @@
 #include "GaudiKernel/ToolFactory.h"
 #include "GaudiKernel/MsgStream.h" 
 #include "GaudiKernel/IIncidentSvc.h" 
+#include "GaudiKernel/Stat.h" 
+#include "GaudiKernel/IChronoStatSvc.h" 
 // DetDesc 
 #include "DetDesc/IGeometryInfo.h" 
 // CaloDet 
@@ -60,20 +65,26 @@ const        IToolFactory&CaloExtraDigitsFactory = s_factory ;
 CaloExtraDigits::CaloExtraDigits( const std::string& type,
                                   const std::string& name,
                                   const IInterface* parent )
-  : CaloTool    ( type, name , parent ) 
-  , m_incSvc    ( 0        )
-  , m_evtSvc    ( 0        ) 
-  , m_inputData ( ""       )
-  , m_digits    ( 0        )
-  , m_z         ( -10 * km ) 
-  , m_xTol      ( 0        ) 
-  , m_yTol      ( 0        )
-  , m_vertex    (          )
-  , m_addSeed   ( true     )
-  , m_selector  ( "Ecal"   )
+  : CaloTool            ( type, name , parent ) 
+  , m_incSvc            ( 0        )
+  , m_evtSvc            ( 0        ) 
+  , m_inputData         ( ""       )
+  , m_digits            ( 0        )
+  , m_z                 ( -10 * km ) 
+  , m_xTol              ( 0        ) 
+  , m_yTol              ( 0        )
+  , m_vertex            (          )
+  , m_addSeed           ( true     )
+  , m_addSeedNeighbours ( true     ) 
+  , m_selector          ( "Ecal"   )
 {
   declareInterface<ICaloHypoTool>     (this);
   declareInterface<IIncidentListener> (this);  
+  declareProperty ( "Input"         , m_inputData         ) ;
+  declareProperty ( "AddSeed"       , m_addSeed           ) ;
+  declareProperty ( "AddNeighbours" , m_addSeedNeighbours ) ;
+  declareProperty ( "xTol"          , m_xTol              ) ;
+  declareProperty ( "yTol"          , m_yTol              ) ;
 };
 // ============================================================================
 
@@ -102,12 +113,12 @@ StatusCode CaloExtraDigits::initialize ()
   if( 0 == detector ) { return Error("DeCalorimeter* points to NULL!");}
   setDet( detector );
   const IGeometryInfo* geoinf = det()->geometry() ;
-  if( 0 == geoinf ) { return Error("IGeotryInfo is not available!"); }
+  if( 0 == geoinf ) { return Error("IGeometryInfo is not available!"); }
   // center of the detector in mother reference frame 
   HepPoint3D center = geoinf->toGlobal( HepPoint3D() );
   m_z = center.z() + det()->zShowerMax ();
   // locate incident service 
-  sc = serviceLocator() -> service ( "IIncidentSvc" , m_incSvc );
+  sc = serviceLocator() -> service ( "IncidentSvc" , m_incSvc , true );
   if( sc.isFailure() ) { return Error("Could not locate IIncidentSvc!", sc );}
   if( 0 == m_incSvc  ) { return Error("Could not locate IIncidentSvc!"     );}
   m_incSvc->addRef() ;
@@ -218,9 +229,27 @@ StatusCode CaloExtraDigits::operator() ( CaloHypo* hypo  ) const
       if( 0 == seedD ) {   return Error("'Seed' points to NULL!"    , 205 ) ; }
       CaloDigit* digit = m_digits->object( seedD->cellID() );
       if( 0 != digit ) { hypo->addToDigits( digit ); }
+      // add neighbours of the seed 
+      if( m_addSeedNeighbours )
+        {
+          const CaloNeighbors& neighbors = 
+            det()->neighborCells( seedD->cellID() );
+          for( CaloNeighbors::const_iterator nei = neighbors.begin() ; 
+               neighbors.end() != nei ; ++nei )
+            {
+              const double      cellHalf   
+                = 0.5 * det() -> cellSize   ( *nei ) ;
+              if( 0 >= cellHalf ) { continue ; }               // CONTINUE ! 
+              const HepPoint3D& cellCenter 
+                =       det() -> cellCenter ( *nei ) ;
+              {
+                CaloDigit* digit = m_digits->object( *nei );
+                if( 0 != digit ) { hypo->addToDigits( digit ); }
+              }    
+            }     
+        }    
     }
-  
-  
+
   // line along the photon flight 
   const  HepPoint3D pos( position->x() ,
                          position->y() ,
@@ -261,12 +290,15 @@ StatusCode CaloExtraDigits::operator() ( CaloHypo* hypo  ) const
   {
     // remove duplicates (if any)
     CaloHypo::Digits& digits = hypo->digits() ;
-    std::sort( digits.begin() , digits.end() , std::less<const CaloDigit*>() );
+    std::sort( digits.begin() , digits.end() , 
+               std::less<const SmartRef<CaloDigit> >() );
     CaloHypo::Digits::iterator i = 
       std::unique( digits.begin() , digits.end() );
     if( digits.end() != i ) { digits.erase( i , digits.end() ) ; }
   }
-  
+
+
+  Stat st( chronoSvc() , "numext" , hypo->digits().size() );
   
   return StatusCode::SUCCESS ;
   

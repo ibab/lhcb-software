@@ -1,8 +1,11 @@
-// $Id: CaloExtraDigits.h,v 1.1 2002-04-07 18:15:00 ibelyaev Exp $
+// $Id: CaloExtraDigits.h,v 1.2 2002-06-13 12:32:39 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.1  2002/04/07 18:15:00  ibelyaev
+//  preliminary version ('omega'-release)
+//
 // ============================================================================
 #ifndef CALOTOOLS_CALOEXTRADIGITS_H 
 #define CALOTOOLS_CALOEXTRADIGITS_H 1
@@ -103,22 +106,24 @@ private:
   
 private:
   
-  IIncidentSvc*                    m_incSvc    ;
-  IDataProviderSvc*                m_evtSvc    ;
+  IIncidentSvc*                    m_incSvc            ;
+  IDataProviderSvc*                m_evtSvc            ;
   
-  std::string                      m_inputData ;
-  mutable CaloDigits*              m_digits    ;
+  std::string                      m_inputData         ;
+  mutable CaloDigits*              m_digits            ;
   
-  double                           m_z         ;
+  double                           m_z                 ;
   
-  double                           m_xTol      ;
-  double                           m_yTol      ;
-  HepPoint3D                       m_vertex    ;
+  double                           m_xTol              ;
+  double                           m_yTol              ;
+  HepPoint3D                       m_vertex            ;
   
-  bool                             m_addSeed   ;
-  
+  bool                             m_addSeed           ;
+
+  bool                             m_addSeedNeighbours ;
+
   // 'Ecal' cluster selector 
-  ClusterFunctors::ClusterFromCalo m_selector  ;
+  ClusterFunctors::ClusterFromCalo m_selector          ;
 
   
 };
