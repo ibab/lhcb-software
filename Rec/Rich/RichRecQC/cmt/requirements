@@ -8,6 +8,7 @@ version           v1r7
 # Structure, i.e. directories to process. 
 #============================================================================
 branches          cmt doc src options
+include_path none
 
 #================ environment ==============================================
 set RICHRECQCOPTS $(RICHRECQCROOT)/options

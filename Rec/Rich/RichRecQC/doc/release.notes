@@ -4,11 +4,12 @@
 ! Purpose     : Quality Control monitoring algorithms for RICH reconstruction
 !-----------------------------------------------------------------------------
 
+!======================== RichRecQC v1r7 2004-04-20 ========================
 ! 2004-04-20 - Chris Jones
  - Disable RichRecoQC algorithm due to problems with POOL and missing MC
 
 ! 2004-04-18 - Chris Jones
- - Improvments to job options for DaVinci running
+ - Improvements to job options for DaVinci running
 
 !======================== RichRecQC v1r6 2004-03-18 ========================
 ! 2004-02-20 - Chris Jones
