@@ -1,4 +1,4 @@
-// $Id: L0CaloCandidatesFromRaw.cpp,v 1.1 2003-12-15 14:42:33 ocallot Exp $
+// $Id: L0CaloCandidatesFromRaw.cpp,v 1.2 2004-03-22 12:38:51 ocallot Exp $
 // Include files 
 
 // from Gaudi
@@ -86,6 +86,16 @@ StatusCode L0CaloCandidatesFromRaw::execute() {
         << "Status is " << sc << endreq;
     return sc ;
   }
+  L0CaloCandidates* out = new L0CaloCandidates();
+  sc = eventSvc()->registerObject( L0CaloCandidateLocation::Default + 
+                                   m_extension, out );
+  if( sc.isFailure() ) {
+    if( 0 != out ) { delete out; }
+    msg << MSG::ERROR << "Unable to register the output container="
+        <<  L0CaloCandidateLocation::Default + m_extension << endreq
+        << "Status is " << sc << endreq;
+    return sc ;
+  }
  
 
   SmartDataPtr<RawBuffer> buf ( eventSvc(), RawBufferLocation::Default );
@@ -97,6 +107,7 @@ StatusCode L0CaloCandidatesFromRaw::execute() {
   HepPoint3D dummy( 0., 0., 0.);  
   HepPoint3D center( 0., 0., 0.);  
   L0CaloCandidate* myL0Cand;
+  std::vector<L0CaloCandidate*> bestCand;
   double tol;
   DeCalorimeter* det;
 
@@ -106,6 +117,7 @@ StatusCode L0CaloCandidatesFromRaw::execute() {
     while ( 0 < bankSize-- ){
       int cand = (*ptData++);
       int type = cand>>24 & 0xFF;
+      while ( bestCand.size() <= (unsigned int)type ) bestCand.push_back( 0 );
 
       msg << MSG::DEBUG << format( "Data %8x Type %1d", cand, type ) << endreq;
 
@@ -114,12 +126,14 @@ StatusCode L0CaloCandidatesFromRaw::execute() {
         myL0Cand = new L0CaloCandidate ( L0Calo::SumEt, CaloCellID(), 
                                          sumEt, sumEt * m_etScale, dummy, 0. );
         outFull->add( myL0Cand );
+        bestCand[type] = myL0Cand;
 
      } else if ( L0Calo::SpdMult == type ) {
         int mult = cand & 0xFFFFFF;
         myL0Cand = new L0CaloCandidate ( L0Calo::SpdMult, CaloCellID(),
                                          mult, 0., dummy, 0. );
         outFull->add( myL0Cand );
+        bestCand[type] = myL0Cand;
 
      } else {
        short rawId =  ( cand >>8 ) & 0xFFFF;
@@ -145,9 +159,30 @@ StatusCode L0CaloCandidatesFromRaw::execute() {
        myL0Cand = new L0CaloCandidate ( type, id, et, et * m_etScale, 
                                         center, tol );
        outFull->add( myL0Cand );
+       if ( 0 == bestCand[type] ) {
+         bestCand[type] = myL0Cand;
+       } else if ( et > bestCand[type]->et() ) {
+         bestCand[type] = myL0Cand;
+       }
      }
     }
   }
+
+  //=== Produce the selected candidate's table
+
+  for ( unsigned int type = 0 ; bestCand.size() > type ; type++ ) {
+    if ( 0 != bestCand[type] ) {
+      L0CaloCandidate* cand = bestCand[type];
+      myL0Cand = new L0CaloCandidate ( cand->type(),
+                                       cand->id(),
+                                       cand->etCode(),
+                                       cand->et(),
+                                       cand->position(),
+                                       cand->posTol() );
+      out->add( myL0Cand );
+    }
+  }
+
   
   if ( "" != m_extension ) {
     //== Compare 
