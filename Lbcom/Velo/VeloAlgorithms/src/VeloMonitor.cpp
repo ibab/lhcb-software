@@ -60,7 +60,7 @@ VeloMonitor::VeloMonitor(const std::string& name, ISvcLocator* pSvcLocator)
     m_testMCVeloFE      ( true  ),
     m_testVeloFullDigit ( true  ),
     m_testVeloCluster   ( true  ),
-    m_resolution        ( true ),
+    m_resolution        ( false ),
     m_detElement        ( false )
 
 {
@@ -140,8 +140,12 @@ StatusCode VeloMonitor::execute() {
       if (m_testMCVeloFE) testMCVeloFE();
       if (m_testVeloFullDigit) testVeloFullDigit();
       if (m_testVeloCluster) {
-	testVeloCluster();
-	if (m_resolution)  resolution(); // determine cluster resolution
+        testVeloCluster();
+        if (m_resolution)  resolution(); // determine cluster resolution
+      }
+      if(m_detElement) {
+        testDetElement();
+        m_detElement = false;
       }
     }
   } else {
@@ -522,6 +526,24 @@ StatusCode VeloMonitor::bookHistograms() {
            100, -20., +20., 10, -0.0, +0.25);
 
   }
+  if(m_detElement){
+    // check geometry
+    m_detRRigh = histoSvc()->book("velo/501","RRigh",101,-50.,50.,101,-50.,50.);
+    m_detRLeft = histoSvc()->book("velo/502","RLeft",101,-50.,50.,101,-50.,50.);
+    m_detPhiUL = histoSvc()->book("velo/503","PhiUL",101,-50.,50.,101,-50.,50.);
+    m_detPhiDL = histoSvc()->book("velo/504","PhiDL",101,-50.,50.,101,-50.,50.);
+    m_detPhiUR = histoSvc()->book("velo/505","PhiUR",101,-50.,50.,101,-50.,50.);
+    m_detPhiDR = histoSvc()->book("velo/506","PhiDR",101,-50.,50.,101,-50.,50.);
+    // check residual
+    m_resRRigh = histoSvc()->book("velo/511","res RRigh",51,-0.05,0.05);
+    m_resRLeft = histoSvc()->book("velo/512","res RLeft",51,-0.05,0.05);
+    m_resPhiUL = histoSvc()->book("velo/513","res PhiUL",51,-0.05,0.05);
+    m_resPhiDL = histoSvc()->book("velo/514","res PhiDL",51,-0.05,0.05);
+    m_resPhiUR = histoSvc()->book("velo/515","res PhiUR",51,-0.05,0.05);
+    m_resPhiDR = histoSvc()->book("velo/516","res PhiDR",51,-0.05,0.05);
+    // check strips radii
+    m_rOfStrips = histoSvc()->book("velo/521","R of strips",2048,0.,2047.);
+  }
   return StatusCode::SUCCESS;
 }
 StatusCode VeloMonitor::testMCVeloHit() {
@@ -821,7 +843,138 @@ StatusCode VeloMonitor::testVeloCluster() {
   return StatusCode::SUCCESS;
 
 }
-
+//==============================================================================
+// Test the first 4 sensors
+//=======================================================================
+StatusCode VeloMonitor::testDetElement()
+{
+  MsgStream msg(msgSvc(), name());
+  bool verbose = (MSG::VERBOSE == msg.level());
+  if(verbose){
+    msg << MSG::DEBUG << "Testing detector element" << endmsg;
+    for(int ix=-50; ix<50; ix++){
+      double x=ix;
+      for(int iy=-50; iy<50; iy++){
+        double y=iy;
+        bool testRRigh=true, testRLeft=true; 
+        bool testPhiDR=true, testPhiUR=true, testPhiDL=true, testPhiUL=true;
+        for (unsigned int index=0;
+             index < m_velo->numberSensors(); index++){
+          unsigned int Sensor=m_velo->sensorNumber(index);
+          if(testRRigh || testRLeft || testPhiDR || testPhiUR 
+             || testPhiDL || testPhiUL){
+            std::string type=m_velo->type(Sensor);
+            HepPoint3D testPoint(x,y,m_velo->zSensor(Sensor));
+            VeloChannelID channel;
+            double localOffset,pitch;
+            StatusCode Point = m_velo->pointToChannel(testPoint,Sensor,channel,
+                                                      localOffset,pitch);
+            double residual,chi2;
+            StatusCode Residual;
+            if(Point) {
+              Residual = m_velo->residual(testPoint,channel,residual,
+                                                     chi2);
+            }
+            if(testRRigh && "RRigh" == type){
+              if(Point){
+                m_detRRigh->fill(testPoint.x(),testPoint.y());
+                if(Residual) m_resRRigh->fill(residual,1.0);
+              }
+              testRRigh = false;
+            } else if(testRLeft && "RLeft" == type){
+              if(Point) {
+                m_detRLeft->fill(testPoint.x(),testPoint.y());
+                if(Residual) m_resRLeft->fill(residual,1.0);
+              }
+              testRLeft = false;
+            } else if(testPhiDR && "PhiDR" == type){
+              if(Point){
+                m_detPhiDR->fill(testPoint.x(),testPoint.y()); 
+                if(Residual) m_resPhiDR->fill(residual,1.0);
+              }
+              testPhiDR = false; 
+            } else if(testPhiUR && "PhiUR" == type){
+              if(Point){
+                m_detPhiUR->fill(testPoint.x(),testPoint.y());
+                if(Residual) m_resPhiUR->fill(residual,1.0);
+              }
+              testPhiUR = false;
+            } else if(testPhiUL && "PhiUL" == type){
+              if(Point){
+                m_detPhiUL->fill(testPoint.x(),testPoint.y());
+                if(Residual) m_resPhiUL->fill(residual,1.0);
+              }
+              testPhiUL = false;
+            } else if(testPhiDL && "PhiDL" == type){
+              if(Point){
+                m_detPhiDL->fill(testPoint.x(),testPoint.y());
+                if(Residual) m_resPhiDL->fill(residual,1.0);
+              }
+              testPhiDL = false;
+            }
+          }
+        }
+      }
+    }
+    // Loop over strips for R Sensor
+    for(unsigned int strip=0;strip<m_velo->numberStrips(4);strip++){
+      double radius;
+      VeloChannelID channel(4,strip,VeloChannelID::RType);
+      StatusCode testR=m_velo->rOfStrip(channel,radius);
+      msg << MSG::VERBOSE <<"testR; strip " << strip << " radius " << radius
+          << " sc " <<  testR << std::endl;
+      if(testR) m_rOfStrips->fill(strip,radius);
+    }
+    // Loop over all sensors and write out coordinates of strips
+    for(unsigned int index=0;index<m_velo->numberSensors();index++){
+      unsigned int sensor=m_velo->sensorNumber(index);
+      std::vector<unsigned int> assocSensor;
+      StatusCode sc = m_velo->sensorAssociated(sensor,assocSensor);
+      if(sc) {
+        msg << MSG::VERBOSE << "Sensor " << sensor << ":";
+        for(unsigned int iassoc=0;iassoc<assocSensor.size();iassoc++){
+          msg << " iassoc " << iassoc << " " << assocSensor[iassoc];
+        }
+        msg << endreq;
+      } else {
+        msg << MSG::VERBOSE << "No associated sensors for " << sensor << endreq;
+      }
+      for(unsigned int strip=0;strip<m_velo->numberStrips(sensor);strip++){
+        if(m_velo->isRSensor(sensor)){
+          double z,radius,phiMin,phiMax;
+          StatusCode sc=m_velo->stripLimitsR(sensor,strip,z,radius,phiMin,
+                                             phiMax);
+          if(sc.isSuccess()){
+            if(0 > phiMax || 0 > phiMin) {
+              phiMax += 2*pi;
+              phiMin += 2*pi;
+            }
+            if(phiMin > phiMax) {
+              double temp = phiMax;
+              phiMax = phiMin;
+              phiMin = temp;
+            }
+            msg << MSG::VERBOSE << "RSensor, number " << sensor 
+                << " Strip " << strip << " Limits " << radius 
+                << " " << phiMin/degree << " " << phiMax/degree << endreq;
+          }
+        } else if(m_velo->isPhiSensor(sensor)){
+          HepPoint3D start;
+          HepPoint3D end;
+          StatusCode sc=m_velo->stripLimitsPhi(sensor,strip,start,end);
+          if(sc.isSuccess()){
+            msg << MSG::VERBOSE << "PhiSensor, number " << sensor 
+                << " Strip " << strip << " Limits; x1 "
+                << start.x() << " y1 " << start.y() << " z1 " << start.z() 
+                << " x2 " <<  end.x() << " y2 " << end.y() 
+                << " z2 " << end.z() << endreq;
+          }
+        }
+      }
+    }
+  }
+  return StatusCode::SUCCESS;
+}
 VeloChannelID VeloMonitor::weightedMean(VeloCluster* cluster, double& fraction){
   // calculated the weighted mean "position" of the cluster, 
   // in units of strip. 
@@ -830,9 +983,10 @@ VeloChannelID VeloMonitor::weightedMean(VeloCluster* cluster, double& fraction){
   int iDiff;
   double centre=0.;
   double total=0.;
-  bool valid;
+  StatusCode sc;
   for(int i=0; i<Nstrips; i++){
-    iDiff=m_velo->neighbour(cluster->channelID(0),cluster->channelID(i),valid);
+    sc=m_velo->channelDistance(cluster->channelID(0),cluster->channelID(i),
+                               iDiff);
     centre+=float(iDiff+100)*cluster->adcValue(i);
     total+=cluster->adcValue(i);
   }
@@ -840,7 +994,13 @@ VeloChannelID VeloMonitor::weightedMean(VeloCluster* cluster, double& fraction){
   centre -= 100;
   iDiff=int(VeloRound::round(centre));
   fraction=centre-iDiff;
-  return m_velo->neighbour(cluster->channelID(0),iDiff,valid);
+  VeloChannelID iDiffID;
+  sc= m_velo->neighbour(cluster->channelID(0),iDiff,iDiffID);
+  if (sc) {
+    return iDiffID;
+  } else {
+    return VeloChannelID(0);
+  }
 }
 
 StatusCode VeloMonitor::basicMonitor() {
@@ -856,7 +1016,7 @@ StatusCode VeloMonitor::basicMonitor() {
           << endmsg;
       return StatusCode::FAILURE;
     } else {
-      log << MSG::DEBUG << "Retrieved MCVeloHits in standatd monitor()"<<endmsg;
+      log << MSG::DEBUG << "Retrieved MCVeloHits in standard monitor()"<<endmsg;
     }
     size=m_mchits->size(); m_nMCVH+= size; m_nMCVH2+= size*size;
     m_MCVHNHits->fill(size,1.0);
@@ -868,7 +1028,7 @@ StatusCode VeloMonitor::basicMonitor() {
           << endmsg;
       return StatusCode::FAILURE;
     } else {
-      log << MSG::DEBUG << "Retrieved PileUp MCVeloHits in standatd monitor()"
+      log << MSG::DEBUG << "Retrieved PileUp MCVeloHits in standard monitor()"
           << endmsg;
     }
     size=m_pumchits->size(); m_nMCPH+= size; m_nMCPH2+= size*size; 
@@ -881,7 +1041,7 @@ StatusCode VeloMonitor::basicMonitor() {
           << endmsg;
       return StatusCode::FAILURE;
     } else {
-      log << MSG::DEBUG << "Retrieved MCVeloFEs in standatd monitor()" <<endmsg;
+      log << MSG::DEBUG << "Retrieved MCVeloFEs in standard monitor()" <<endmsg;
     }
     size=m_mcfes->size(); m_nMCFE+= size; m_nMCFE2+= size*size; 
     // split FEs into sub-categories
@@ -906,7 +1066,7 @@ StatusCode VeloMonitor::basicMonitor() {
           << endmsg;
       return StatusCode::FAILURE;
     } else {
-      log << MSG::DEBUG << "Retrieved VeloFullDigits in standatd monitor()"
+      log << MSG::DEBUG << "Retrieved VeloFullDigits in standard monitor()"
           << endmsg;
     }
     size=m_digits->size(); m_nFD+= size; m_nFD2+= size*size; 
@@ -918,7 +1078,7 @@ StatusCode VeloMonitor::basicMonitor() {
           << endmsg;
       return StatusCode::FAILURE;
     } else {
-      log << MSG::DEBUG << "Retrieved VeloClusters in standatd monitor()"
+      log << MSG::DEBUG << "Retrieved VeloClusters in standard monitor()"
           << endmsg;
     }
     size=m_clusters->size(); m_nVC+= size; m_nVC2+= size*size; 
@@ -934,21 +1094,22 @@ StatusCode VeloMonitor::basicMonitor() {
       // calculate weighted centre of cluster
       double  fractionCentW;
       VeloChannelID IntCentW = weightedMean((*itcv), fractionCentW);
-      int izone=0;
-      double stripFractionCentW=0.;
-      stripFractionCentW=fractionCentW+(double)IntCentW.strip();
       double sensorZ=m_velo->zSensor((*itcv)->sensor())/cm;
+      StatusCode sc;
       if (m_velo->isRSensor((*itcv)->sensor())) {
-	double testRadius=m_velo->rOfStrip(stripFractionCentW, izone);
-	log << MSG::DEBUG << "sensorZ " << sensorZ << " testRadius " << testRadius 
-	    << " testRadius/cm " << testRadius/cm << endmsg;
+        double testRadius;
+        sc=m_velo->rOfStrip(IntCentW,fractionCentW,testRadius);
+        log << MSG::DEBUG << "sensorZ " << sensorZ 
+            << " testRadius " << testRadius 
+            << " testRadius/cm " << testRadius/cm << endmsg;
   // 	m_VCZR->fill(sensorZ, testRadius/cm,1.0);
-      } else {
-	double testRadius=20./mm;
-	double testPhi=m_velo->phiOfStrip( stripFractionCentW, testRadius,
-                                     (*itcv)->sensor());
-	log << MSG::DEBUG << "sensorZ " << sensorZ << " testPhi " << testPhi <<endmsg;
-  //	m_VCZPhi->fill(sensorZ, testPhi/degree,1.0);
+      } else if(m_velo->isPhiSensor((*itcv)->sensor())) {
+        double testRadius=20./mm;
+        double testPhi;
+        sc=m_velo->phiOfStrip(IntCentW,fractionCentW,testRadius,testPhi);
+        log << MSG::DEBUG << "sensorZ " << sensorZ << " testPhi " 
+            << testPhi <<endmsg;
+        //	m_VCZPhi->fill(sensorZ, testPhi/degree,1.0);
       }
     }
   }
@@ -1005,9 +1166,10 @@ StatusCode VeloMonitor::detElement(){
   m_velo = velo;
   if (m_detElement) {
     log << MSG::INFO << "===========================================" << endmsg;
-    for (int Sensor=0; Sensor < m_velo->nbSensor(); Sensor++){
-      log << MSG::INFO << "Sensor " << Sensor << "  Z position " 
-          << m_velo->zSensor(Sensor)/mm << endmsg;
+    for (unsigned int iSensor=0; iSensor < m_velo->nbSensor(); iSensor++){
+      unsigned int sensor=m_velo->sensorNumber(iSensor);
+      log << MSG::INFO << "Sensor " << sensor << "  Z position " 
+          << m_velo->zSensor(sensor)/mm << endmsg;
     }
     log << MSG::INFO << "===========================================" << endmsg;
   }
@@ -1054,11 +1216,14 @@ StatusCode VeloMonitor::resolution() {
       // calculate distance between point and cluster
       HepPoint3D point=hit->entry()+hit->exit();
       point/=2.;
-      bool valid;
+      bool valid=false;
       double pitch=0.,fraction=0.;
       //calculate point on path
-      VeloChannelID entryChan=m_velo->channelID(point,fraction,pitch,valid);
-      int IntChanDist=m_velo->neighbour(entryChan,IntCentW,valid);
+      VeloChannelID entryChan;
+      StatusCode sc=m_velo->pointToChannel(point,entryChan,fraction,pitch);
+      int IntChanDist;
+      sc=m_velo->channelDistance(entryChan,IntCentW,IntChanDist);
+      if(sc) valid=true;
       double distance=IntChanDist+(fractionCentW-fraction);
       log << MSG::DEBUG << valid << " distance in strips " << distance 
           << " in microns " << distance*pitch/micron << endmsg;

@@ -108,7 +108,7 @@ StatusCode VeloClusterMaker::finalize() {
 float VeloClusterMaker::signalToNoiseCut(int detID) const
 {
   // get Signal to Noise cut of this detector
-  int detIndex=m_velo->sensorArrayIndex(detID);
+  int detIndex=m_velo->sensorIndex(detID);
   return detIndex>=0 ? m_signalToNoiseCut[detIndex] : -999;
 }
 
@@ -122,7 +122,7 @@ float VeloClusterMaker::signalToNoiseCut(int detID) const
 float VeloClusterMaker::clusterSignalToNoiseCut(int detID) const
 {
   // set Signal to Noise cut of this detector
-  int detIndex=m_velo->sensorArrayIndex(detID);
+  int detIndex=m_velo->sensorIndex(detID);
   return detIndex>=0 ? m_clusterSignalToNoiseCut[detIndex] : -999;
 }
 
@@ -157,7 +157,7 @@ void VeloClusterMaker::makeClusters(){
     m_sensor=m_velo->sensorNumber(detIndex);
     m_channelUsed.clear();
     m_channelUsed.insert( m_channelUsed.begin(), 
-                          m_velo->nbStrips(), false); 
+                          m_velo->numberStrips(m_sensor), false); 
     // retrieve hits of detector 
     std::pair<VeloFullDigits::iterator,VeloFullDigits::iterator> 
       range=getVeloFullDigitsOfSensor(m_sensor);
@@ -262,7 +262,7 @@ VeloCluster* VeloClusterMaker::makeClusterFromDigit(
         << (OK ? " added ":" rejected") << endreq;
 	}
 	
-  currentCluster->setSensor(m_sensor);
+  currentCluster->setSensorID(VeloChannelID(m_sensor,0));
   log << MSG::VERBOSE << " cluster: sensor " <<  currentCluster->sensor() 
       << " first strip " << currentCluster->strip(0) 
       << " ADC " <<  currentCluster->adcValue(0) << endmsg;
@@ -280,7 +280,7 @@ bool VeloClusterMaker::TryToAddCentralChannel(VeloCluster * currentCluster,
   MsgStream  log( msgSvc(), name() );
 
  int stripId = currentDigit->strip();
- int stripIndex = m_velo->stripArrayIndex(m_sensor, stripId);
+ int stripIndex = stripId;//m_velo->stripArrayIndex(m_sensor, stripId);
 
  if ( m_channelUsed[stripIndex] ) return false;   // Channel already used
 
@@ -315,12 +315,12 @@ bool VeloClusterMaker::TryToAddChannel(VeloCluster * currentCluster,
   // If successful, it updates the cluster
   MsgStream  log( msgSvc(), name() );
 
-  bool valid;
-  VeloChannelID nearbyStripId = m_velo->neighbour(currentDigit->key(), 
-                                                  offset, valid);
-  if (!valid) return false; // no available neighbour
-  int nearbyStripIndex = m_velo->stripArrayIndex( m_sensor, 
-                                                  nearbyStripId.strip());
+  VeloChannelID nearbyStripId;
+  StatusCode sc = m_velo->neighbour(currentDigit->key(), offset, nearbyStripId);
+  if (!sc) return false; // no available neighbour
+  /*  int nearbyStripIndex = m_velo->stripArrayIndex( m_sensor, 
+      nearbyStripId.strip());*/
+  int nearbyStripIndex = nearbyStripId.strip();
   if ( m_channelUsed[nearbyStripIndex] ) return false;  // Channel already used
   VeloFullDigit *nearbyDigit =m_digits->object(nearbyStripId);
   if ( NULL==nearbyDigit) return false; // no hit on nearby strip
@@ -366,17 +366,16 @@ bool VeloClusterMaker::TryToAddChannel(VeloCluster * currentCluster,
     // Strip is outside the central three - make an extra cut:
     signed int inner_offset; // One strip closer to the centre than (offset)
     inner_offset = (offset<0) ? offset + 1 : offset - 1;
-    bool valid; 
     // One strip closer to centre than nearbyChan
-    int innerStripId = m_velo->neighbour(currentDigit->key(), 
-                                         inner_offset, 
-                                         valid); 
-    if ( ! valid ) {
+    VeloChannelID innerStripId;
+    StatusCode sc = m_velo->neighbour(currentDigit->key(),inner_offset,
+                                      innerStripId);
+    if ( ! sc ) {
       // Invalid channel somehow, though this shouldn't happen.
       return false;
     }
     // Hit object corresponding to that strip
-    VeloFullDigit* innerDigit = m_digits->object(innerStripId); 
+    VeloFullDigit* innerDigit = m_digits->object(innerStripId.strip()); 
     if ( NULL==innerDigit ) {
       // Invalid channel somehow, though this shouldn't happen.
       return false;
@@ -523,7 +522,7 @@ std::pair<VeloFullDigits::iterator,VeloFullDigits::iterator>
   // sorted so that they are adjacent
 
    int idum=0; //dummy strip number
-   VeloFullDigit selObj(VeloChannelID(sensorId,idum));
+   VeloFullDigit selObj(VeloChannelID(sensorId,idum,VeloChannelID::Null));
    // ensure sorted   
    std::stable_sort(m_digits->begin(),m_digits->end(),
             VeloEventFunctor::Less_by_sensor<const VeloFullDigit*>());

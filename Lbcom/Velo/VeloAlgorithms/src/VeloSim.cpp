@@ -1,4 +1,4 @@
-// $Id: VeloSim.cpp,v 1.27 2003-10-08 15:48:18 cattanem Exp $
+// $Id: VeloSim.cpp,v 1.28 2004-01-29 00:22:50 mtobin Exp $
 // Include files
 // STL
 #include <string>
@@ -128,6 +128,8 @@ StatusCode VeloSim::initialize() {
   if ( 0 == velo ) {
     log << MSG::ERROR << "Unable to retrieve Velo detector element." << endmsg;
     return StatusCode::FAILURE;
+  } else {
+    log << MSG::INFO << "Velo detector element succesfully retrieved" << endmsg;
   }
 
   m_velo = velo;
@@ -380,15 +382,12 @@ void VeloSim::testSim(MCVeloHit* hit,bool spillOver){
   // test routine - simplest possible simulation.
   double EntryFraction;
   double pitch;
-  bool EntryValid;
-  VeloChannelID entryChan;
+  StatusCode sc;VeloChannelID entryChan;
   if (m_uniformDist()>0.5){
-    entryChan=m_velo->channelID(hit->entry(),EntryFraction,
-                                pitch,EntryValid);
+    sc=m_velo->pointToChannel(hit->entry(), entryChan, EntryFraction, pitch);
   }
   else{
-    entryChan=m_velo->channelID(hit->exit(),EntryFraction,
-                                pitch,EntryValid);
+    sc=m_velo->pointToChannel(hit->exit(), entryChan, EntryFraction, pitch);
   }
   double charge=(hit->energy()/eV)/VeloSimParams::eVPerElectron;
   if (spillOver) charge*=VeloSimParams::spillOverChargeFraction;
@@ -407,12 +406,12 @@ long VeloSim::simPoints(MCVeloHit* hit){
 
   double EntryFraction=0.,ExitFraction=0.;
   double pitch=0.;
-  bool EntryValid=true, ExitValid=true;
-  VeloChannelID entryChan=m_velo->channelID(hit->entry(),EntryFraction,
-                                            pitch,EntryValid);
-  VeloChannelID exitChan=m_velo->channelID(hit->exit(),ExitFraction,
-                                           pitch,ExitValid);
-
+  StatusCode EntryValid, ExitValid;
+  VeloChannelID entryChan, exitChan;
+  EntryValid = m_velo->pointToChannel(hit->entry(),entryChan,EntryFraction,
+                                      pitch);
+  ExitValid=m_velo->pointToChannel(hit->exit(),exitChan,ExitFraction,
+                                   pitch);
   if( verbose ) {
     log << MSG::VERBOSE << "calculate number of points to simulate in Si"
         << endmsg;
@@ -430,9 +429,9 @@ long VeloSim::simPoints(MCVeloHit* hit){
   if (EntryValid&&ExitValid){
     // both entry and exit are at valid strip numbers,
     // calculate how many full strips apart
-    bool valid;
-    int INeighb=m_velo->neighbour(entryChan,exitChan,valid);
-    if (valid) NPoints = fabs(float(INeighb)-(EntryFraction-ExitFraction));
+    int INeighb;
+    StatusCode sc=m_velo->channelDistance(entryChan,exitChan,INeighb);
+    if (sc) NPoints = fabs(float(INeighb)-(EntryFraction-ExitFraction));
     if( verbose ) {
       log << MSG::VERBOSE << "Integer number of strips apart " << INeighb
           << " floating number " << NPoints << endmsg;
@@ -579,12 +578,12 @@ void VeloSim::diffusion(MCVeloHit* hit,int Npoints,
 
   for (int ipt=0; ipt<Npoints; ipt++){ //loop over points on path
     double fraction,pitch;
-    bool valid;
     if( verbose ) {
       log << MSG::VERBOSE << " ipt " << ipt << " point " << point << endmsg;
     }
     //calculate point on path
-    VeloChannelID entryChan=m_velo->channelID(point,fraction,pitch,valid);
+    VeloChannelID entryChan;
+    StatusCode valid=m_velo->pointToChannel(point,entryChan,fraction,pitch);
     if( verbose ) {
       log << MSG::VERBOSE << "chan " << entryChan.strip() << " fraction "
           << fraction << " pitch " << pitch << " valid " << valid << endmsg;
@@ -632,7 +631,8 @@ void VeloSim::diffusion(MCVeloHit* hit,int Npoints,
       if (charge>VeloSimParams::threshold*0.1){
         // ignore if below 10% of threshold
         // calculate index of this strip
-        VeloChannelID stripKey = m_velo->neighbour(entryChan,iNg,valid);
+        VeloChannelID stripKey;
+        valid = m_velo->neighbour(entryChan,iNg,stripKey);
         // log << MSG::DEBUG << " neighbour " << entryChan.strip() << " "
         //     << stripKey.strip() << " iNg " << iNg << endmsg;
         // update charge and MCHit list
@@ -800,8 +800,7 @@ MCVeloFE* VeloSim::findOrInsertPrevStrip(MCVeloFEs::iterator FEIt,
                                          bool& valid, bool& create){
   MsgStream  log( msgSvc(), name() );
   bool verbose = ( log.level() <= MSG::VERBOSE );
-
-  bool exists;
+  valid=true;
   // try previous entry in container
   MCVeloFE* prevStrip=(*FEIt);
   if (FEIt!=m_FEs->begin()){
@@ -810,8 +809,10 @@ MCVeloFE* VeloSim::findOrInsertPrevStrip(MCVeloFEs::iterator FEIt,
     FEIt++;
   }
   // check this
-  exists = (m_velo->neighbour((*FEIt)->key(),prevStrip->key(),valid)==-1);
-  if (exists&&valid) return prevStrip;
+  int checkDistance;
+  StatusCode exists=m_velo->channelDistance((*FEIt)->key(),prevStrip->key(),
+                                            checkDistance);
+  if(exists.isSuccess()) return prevStrip;
 
   // check if just added this strip in other container
   if (m_FEs_coupling->size()!=0){
@@ -819,13 +820,15 @@ MCVeloFE* VeloSim::findOrInsertPrevStrip(MCVeloFEs::iterator FEIt,
     prevStrip=(*last);
   }
   // check this
-  exists = (m_velo->neighbour((*FEIt)->key(),prevStrip->key(),valid)==-1);
-  if (exists&&valid) return prevStrip;
+  exists=m_velo->channelDistance((*FEIt)->key(),prevStrip->key(),
+                                 checkDistance);
+  if(exists.isSuccess()) return prevStrip;
 
   // doesn't exist so insert a new strip (iff create is true)
   if (create){
-    VeloChannelID stripKey = m_velo->neighbour((*FEIt)->key(),-1,valid);
-    if(valid){
+    VeloChannelID stripKey;
+    exists = m_velo->neighbour((*FEIt)->key(),-1,stripKey);
+    if(exists.isSuccess()){
       //== Protect if key already exists ==
       prevStrip = m_FEs_coupling->object(stripKey);
       if ( 0 != prevStrip ) return prevStrip;
@@ -858,7 +861,7 @@ MCVeloFE* VeloSim::findOrInsertNextStrip(MCVeloFEs::iterator FEIt,
   MsgStream  log( msgSvc(), name() );
   bool verbose = ( log.level() <= MSG::VERBOSE );
 
-  bool exists;
+  valid=true;
   // try next entry in container
   MCVeloFE* nextStrip=*FEIt;
   MCVeloFEs::iterator last = m_FEs->end(); last--;
@@ -869,13 +872,17 @@ MCVeloFE* VeloSim::findOrInsertNextStrip(MCVeloFEs::iterator FEIt,
   }
 
   // check this
-  exists = (m_velo->neighbour((*FEIt)->key(),nextStrip->key(),valid)==+1);
-  if (exists&&valid) return nextStrip;
+  // check this
+  int checkDistance;
+  StatusCode exists=m_velo->channelDistance((*FEIt)->key(),nextStrip->key(),
+                                            checkDistance);
+  if(exists.isSuccess()) return nextStrip;
 
   // doesn't exist so insert a new strip (iff create is true)
   if (create){
-    VeloChannelID stripKey = m_velo->neighbour((*FEIt)->key(),+1,valid);
-    if(valid){
+    VeloChannelID stripKey;
+    exists=m_velo->neighbour((*FEIt)->key(),+1,stripKey);
+    if(exists.isSuccess()){
       //== Protect if key already exists ==
       nextStrip = m_FEs_coupling->object(stripKey);
       if ( 0 != nextStrip ) return nextStrip;
@@ -948,21 +955,23 @@ StatusCode VeloSim::noiseSim(){
   // allocate noise (above threshold) to channels that don't currently
   // have signal
   int maxSensor=0;
+  int minSensor=0;
   if (m_simMode=="velo") maxSensor=m_velo->nbSensor();
-  if (m_simMode=="pileUp") maxSensor=m_velo->nbPuSensor();
-
-  for (int iSensorArrayIndex=0; iSensorArrayIndex< maxSensor;
+  if (m_simMode=="pileUp") {
+    minSensor=m_velo->nbSensor();
+    maxSensor=m_velo->numberSensors();
+  }
+  
+  for (int iSensorArrayIndex=minSensor; iSensorArrayIndex< maxSensor;
        iSensorArrayIndex++){
     unsigned int sensor=m_velo->sensorNumber(iSensorArrayIndex);
-
-    if (m_simMode=="pileUp") sensor += 100;    //=== OC == 
 
     double noiseSig=noiseSigma(stripCapacitance);
     // use average capacitance of sensor, should be adequate if variation in
     // cap. not too large.
     // number of hits to add noise to (i.e. fraction above threshold)
     // add both large +ve and -ve noise.
-    int maxStrips= m_velo->nbStrips();
+    int maxStrips= m_velo->numberStrips(sensor);
     int hitNoiseTotal= 
       int(VeloRound::round(2.*gsl_sf_erf_Q(VeloSimParams::threshold/noiseSig)
                            *float(maxStrips)));
@@ -985,8 +994,7 @@ StatusCode VeloSim::noiseSim(){
       // choose random hit to add noise to
       // get strip number
       int stripArrayIndex=int(VeloRound::round(m_uniformDist()*(maxStrips-1)));
-      VeloChannelID stripKey(sensor,
-                             m_velo->stripNumber(sensor,stripArrayIndex));
+      VeloChannelID stripKey(sensor,stripArrayIndex);
       // find strip in list.
       MCVeloFE* myFE = findOrInsertFE(stripKey);
       if (myFE->addedNoise()==0){

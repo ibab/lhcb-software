@@ -46,12 +46,14 @@ class VeloMonitor : public Algorithm {
   StatusCode testMCVeloFE();
   StatusCode testVeloFullDigit();
   StatusCode testVeloCluster();
+  StatusCode testDetElement();
 
   StatusCode resolution();
 
   StatusCode basicMonitor();
 
-  StatusCode clusterType(VeloCluster* aCluster,bool& signal, bool& noise, bool& other);
+  StatusCode clusterType(VeloCluster* aCluster,bool& signal, bool& noise, 
+                         bool& other);
   StatusCode FEType(MCVeloFE* FE,bool& signal, bool& noise, bool& other);
 
   VeloChannelID weightedMean(VeloCluster*, double &);
@@ -157,6 +159,24 @@ class VeloMonitor : public Algorithm {
   IHistogram2D*         m_PhivsStrip;
   IHistogram2D*         m_RvsStrip;
   IHistogram2D*         m_PhiPlot;
+
+  // test detector element
+  // draw sensor
+  IHistogram2D* m_detRRigh;
+  IHistogram2D* m_detRLeft;
+  IHistogram2D* m_detPhiUL;
+  IHistogram2D* m_detPhiDL;
+  IHistogram2D* m_detPhiUR;
+  IHistogram2D* m_detPhiDR;
+  // plot residuals
+  IHistogram1D* m_resRRigh;
+  IHistogram1D* m_resRLeft;
+  IHistogram1D* m_resPhiUL;
+  IHistogram1D* m_resPhiDL;
+  IHistogram1D* m_resPhiUR;
+  IHistogram1D* m_resPhiDR;
+  // Radius of strip
+  IHistogram1D* m_rOfStrips;
 
   Rndm::Numbers m_uniformDist;
 
