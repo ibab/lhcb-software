@@ -1,51 +1,54 @@
 //
-//=================== Brunel Rich Offline Reconstruction =====================
+//=================== Rich Offline Reconstruction =====================
 //
 
+// Main sequencer for reconstruction
+ApplicationMgr.TopAlg += { "Sequencer/RichRecoSeq" };
+
 // Run the Local PID first
-ApplicationMgr.TopAlg += { "RichLocalPIDAlg/RichLocPID" };
+RichRecoSeq.Members += { "RichLocalPIDAlg/RichLocPID" };
 
 // Initialise GlobalPID each event
-ApplicationMgr.TopAlg += { "RichGlobalPIDInitialize/RichGloPIDInit" };
-ApplicationMgr.TopAlg += { "RichGlobalPIDDigitSel/RichGloPIDDigSel" };
-ApplicationMgr.TopAlg += { "RichGlobalPIDTrTrackSel/RichGloPIDTrSel" };
+RichRecoSeq.Members += { "RichGlobalPIDInitialize/RichGloPIDInit" };
+RichRecoSeq.Members += { "RichGlobalPIDDigitSel/RichGloPIDDigSel" };
+RichRecoSeq.Members += { "RichGlobalPIDTrTrackSel/RichGloPIDTrSel" };
 
 // Backgroud alg - Uses local PID results as working particle hypotheses
-ApplicationMgr.TopAlg += { "RichRecBackgroundEsti/RichBckEst1" };
+RichRecoSeq.Members += { "RichRecBackgroundEsti/RichBckEst1" };
 
 // First iteration of Global PID
-ApplicationMgr.TopAlg += { "RichGlobalPIDAlg/RichGloPIDIt1" };
+RichRecoSeq.Members += { "RichGlobalPIDAlg/RichGloPIDIt1" };
 
 // Backgroud alg - Uses global 1st iter results as working particle hypotheses
-ApplicationMgr.TopAlg += { "RichRecBackgroundEsti/RichBckEst2" };
+RichRecoSeq.Members += { "RichRecBackgroundEsti/RichBckEst2" };
 
 // Second iteration of Global PID
-ApplicationMgr.TopAlg += { "RichGlobalPIDAlg/RichGloPIDIt2" };
+RichRecoSeq.Members += { "RichGlobalPIDAlg/RichGloPIDIt2" };
 
 // Ring refit - uses working PIDs to identify good photons and refit angles
 // Results as yet not used in formation of final PID
-ApplicationMgr.TopAlg += { "RichRingRefitAlg/RichRingRefit" };
+RichRecoSeq.Members += { "RichRingRefitAlg/RichRingRefit" };
 
 // Finalise Global PID algorithm each event
-ApplicationMgr.TopAlg += { "RichGlobalPIDFinalize/RichGloPIDFin" };
+RichRecoSeq.Members += { "RichGlobalPIDFinalize/RichGloPIDFin" };
 
 // Make final output PID results
 // Current uses for each track Global PID if it exists, 
 // otherwise local if that exists
-ApplicationMgr.TopAlg += { "RichPIDSimpleMerge/MergeRichPIDs" };
+RichRecoSeq.Members += { "RichPIDSimpleMerge/MergeRichPIDs" };
 
 // Under development
 //====================================================
 // Markov chain ring finder : RICH1
 /*
-ApplicationMgr.TopAlg += {
+RichRecoSeq.Members += {
   "Rich1MarkovRingFinderAlg/Rich1P0RingFinder",
   "Rich1MarkovRingFinderAlg/Rich1P1RingFinder"
 };
 */
 /*
 // Markov chain ring finder : RICH2
-ApplicationMgr.TopAlg += {
+RichRecoSeq.Members += {
   "Rich2LMarkovRingFinderAlg/Rich2P0RingFinder",
   "Rich2RMarkovRingFinderAlg/Rich2P1RingFinder"
 };
