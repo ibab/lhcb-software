@@ -1,7 +1,7 @@
-# $Id: requirements,v 1.8 2002-11-20 10:48:07 ranjard Exp $
+# $Id: requirements,v 1.9 2002-12-03 15:05:53 witoldp Exp $
 # =============================================================================
 package GaussTools
-version v3r2
+version v3r3
 
 # ============== package structure ============================================
 branches         cmt src doc
