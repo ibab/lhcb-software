@@ -309,20 +309,13 @@ void GaussPostTrackAction::PostUserTrackingAction ( const G4Track* track )
                ( GiGaPrimaryParticleInformation *)
                track->GetDynamicParticle()->GetPrimaryParticle()
                ->GetUserInformation() ;
-             if ( uInf -> hasOscillated() ) 
-               {
-                 GaussTrajectory* traj=
-                   (GaussTrajectory*)(trackMgr()->GimmeTrajectory());
-                 traj->setHasOscillated( true ); 
-               }        
-             if ( uInf -> isSignal() )
-               {
-                 GaussTrajectory* traj=
-                   (GaussTrajectory*)(trackMgr()->GimmeTrajectory());
-                 traj->setIsSignal( true ) ;
-                 traj->setSignalBarcode( uInf -> signalBarcode() ) ;
-                 traj->setHepMCEvent( uInf -> pHepMCEvent() ) ;
-               }
+             GaussTrajectory* traj=
+               (GaussTrajectory*)(trackMgr()->GimmeTrajectory());
+             
+             if ( uInf -> hasOscillated() ) traj->setHasOscillated( true ) ;
+             if ( uInf -> isSignal() ) traj->setIsSignal( true ) ;
+             traj->setSignalBarcode( uInf -> signalBarcode() ) ;
+             traj->setHepMCEvent( uInf -> pHepMCEvent() ) ;
            }  
          }
        }       
@@ -379,20 +372,13 @@ void GaussPostTrackAction::PostUserTrackingAction ( const G4Track* track )
                   ( GiGaPrimaryParticleInformation *)
                   track->GetDynamicParticle()->GetPrimaryParticle()
                   ->GetUserInformation() ;
-                if ( uInf -> hasOscillated() ) 
-                  {
-                    GaussTrajectory* traj=
-                      (GaussTrajectory*)(trackMgr()->GimmeTrajectory());
-                    traj->setHasOscillated( true ); 
-                  }        
-                if ( uInf -> isSignal() )
-                  {
-                    GaussTrajectory* traj=
-                      (GaussTrajectory*)(trackMgr()->GimmeTrajectory());
-                    traj->setIsSignal( true ) ;
-                    traj->setSignalBarcode( uInf -> signalBarcode() ) ;
-                    traj->setHepMCEvent( uInf -> pHepMCEvent() ) ;
-                  }
+                GaussTrajectory* traj=
+                  (GaussTrajectory*)(trackMgr()->GimmeTrajectory());
+                
+                if ( uInf -> hasOscillated() ) traj->setHasOscillated( true );
+                if ( uInf -> isSignal() )  traj->setIsSignal( true ) ;
+                traj->setSignalBarcode( uInf -> signalBarcode() ) ;
+                traj->setHepMCEvent( uInf -> pHepMCEvent() ) ;
               }  
             }
           }  
@@ -420,20 +406,12 @@ void GaussPostTrackAction::PostUserTrackingAction ( const G4Track* track )
               ( GiGaPrimaryParticleInformation *)
               track->GetDynamicParticle()->GetPrimaryParticle()
               ->GetUserInformation() ;
-            if ( uInf -> hasOscillated() ) 
-              {
-                GaussTrajectory* traj=
-                  (GaussTrajectory*)(trackMgr()->GimmeTrajectory());
-                traj->setHasOscillated( true ); 
-              }        
-            if ( uInf -> isSignal() )
-              {
-                GaussTrajectory* traj=
-                  (GaussTrajectory*)(trackMgr()->GimmeTrajectory());
-                traj->setIsSignal( true ) ;
-                traj->setSignalBarcode( uInf -> signalBarcode() ) ;
-                traj->setHepMCEvent( uInf -> pHepMCEvent() ) ;
-              }
+            GaussTrajectory* traj=
+              (GaussTrajectory*)(trackMgr()->GimmeTrajectory());
+            if ( uInf -> hasOscillated() ) traj->setHasOscillated( true ); 
+            if ( uInf -> isSignal() ) traj->setIsSignal( true ) ;
+            traj->setSignalBarcode( uInf -> signalBarcode() ) ;
+            traj->setHepMCEvent( uInf -> pHepMCEvent() ) ;
           }  
         }
       }  
@@ -460,20 +438,13 @@ void GaussPostTrackAction::PostUserTrackingAction ( const G4Track* track )
               ( GiGaPrimaryParticleInformation *)
               track->GetDynamicParticle()->GetPrimaryParticle()
               ->GetUserInformation() ;
-            if ( uInf -> hasOscillated() ) 
-              {
-                GaussTrajectory* traj=
-                  (GaussTrajectory*)(trackMgr()->GimmeTrajectory());
-                traj->setHasOscillated( true ); 
-              }        
-            if ( uInf -> isSignal() )
-              {
-                GaussTrajectory* traj=
-                  (GaussTrajectory*)(trackMgr()->GimmeTrajectory());
-                traj->setIsSignal( true ) ;
-                traj->setSignalBarcode( uInf -> signalBarcode() ) ;
-                traj->setHepMCEvent( uInf -> pHepMCEvent() ) ;
-              }
+            GaussTrajectory* traj=
+              (GaussTrajectory*)(trackMgr()->GimmeTrajectory());
+               
+            if ( uInf -> hasOscillated() ) traj->setHasOscillated( true );
+            if ( uInf -> isSignal() ) traj->setIsSignal( true ) ;
+            traj->setSignalBarcode( uInf -> signalBarcode() ) ;
+            traj->setHepMCEvent( uInf -> pHepMCEvent() ) ;
           }  
         }
       }  
@@ -502,20 +473,13 @@ void GaussPostTrackAction::PostUserTrackingAction ( const G4Track* track )
               ( GiGaPrimaryParticleInformation *)
               track->GetDynamicParticle()->GetPrimaryParticle()
               ->GetUserInformation() ;
-            if ( uInf -> hasOscillated() ) 
-              {
-                GaussTrajectory* traj=
-                  (GaussTrajectory*)(trackMgr()->GimmeTrajectory());
-                traj->setHasOscillated( true ); 
-              }        
-            if ( uInf -> isSignal() )
-              {
-                GaussTrajectory* traj=
-                  (GaussTrajectory*)(trackMgr()->GimmeTrajectory());
-                traj->setIsSignal( true ) ;
-                traj->setSignalBarcode( uInf -> signalBarcode() ) ;
-                traj->setHepMCEvent( uInf -> pHepMCEvent() ) ;
-              }
+            GaussTrajectory* traj=
+              (GaussTrajectory*)(trackMgr()->GimmeTrajectory());
+            
+            if ( uInf -> hasOscillated() ) traj->setHasOscillated( true );
+            if ( uInf -> isSignal() ) traj->setIsSignal( true ) ;
+            traj->setSignalBarcode( uInf -> signalBarcode() ) ;
+            traj->setHepMCEvent( uInf -> pHepMCEvent() ) ;
           }  
         }
       }  
@@ -553,20 +517,13 @@ void GaussPostTrackAction::PostUserTrackingAction ( const G4Track* track )
               ( GiGaPrimaryParticleInformation *)
               track->GetDynamicParticle()->GetPrimaryParticle()
               ->GetUserInformation() ;
-            if ( uInf -> hasOscillated() ) 
-              {
-                GaussTrajectory* traj=
-                  (GaussTrajectory*)(trackMgr()->GimmeTrajectory());
-                traj->setHasOscillated( true ); 
-              }        
-            if ( uInf -> isSignal() )
-              {
-                GaussTrajectory* traj=
-                  (GaussTrajectory*)(trackMgr()->GimmeTrajectory());
-                traj->setIsSignal( true ) ;
-                traj->setSignalBarcode( uInf -> signalBarcode() ) ;
-                traj->setHepMCEvent( uInf -> pHepMCEvent() ) ;
-              }
+            GaussTrajectory* traj=
+              (GaussTrajectory*)(trackMgr()->GimmeTrajectory());
+            
+            if ( uInf -> hasOscillated() ) traj->setHasOscillated( true );
+            if ( uInf -> isSignal() ) traj->setIsSignal( true ) ;
+            traj->setSignalBarcode( uInf -> signalBarcode() ) ;
+            traj->setHepMCEvent( uInf -> pHepMCEvent() ) ;
           }  
         }
       }  
@@ -595,20 +552,15 @@ void GaussPostTrackAction::PostUserTrackingAction ( const G4Track* track )
                       ( GiGaPrimaryParticleInformation *)
                       track->GetDynamicParticle()->GetPrimaryParticle()
                       ->GetUserInformation() ;
+
+                    GaussTrajectory* traj=
+                      (GaussTrajectory*)(trackMgr()->GimmeTrajectory());
+                    
                     if ( uInf -> hasOscillated() ) 
-                      {
-                        GaussTrajectory* traj=
-                          (GaussTrajectory*)(trackMgr()->GimmeTrajectory());
-                        traj->setHasOscillated( true ); 
-                      }        
-                    if ( uInf -> isSignal() )
-                      {
-                        GaussTrajectory* traj=
-                          (GaussTrajectory*)(trackMgr()->GimmeTrajectory());
-                        traj->setIsSignal( true ) ;
-                        traj->setSignalBarcode( uInf -> signalBarcode() ) ;
-                        traj->setHepMCEvent( uInf -> pHepMCEvent() ) ;
-                      }
+                      traj->setHasOscillated( true ); 
+                    if ( uInf -> isSignal() ) traj->setIsSignal( true ) ;
+                    traj->setSignalBarcode( uInf -> signalBarcode() ) ;
+                    traj->setHepMCEvent( uInf -> pHepMCEvent() ) ;
                   }  
                 }
               }  
@@ -647,20 +599,14 @@ void GaussPostTrackAction::PostUserTrackingAction ( const G4Track* track )
                       ( GiGaPrimaryParticleInformation *)
                       track->GetDynamicParticle()->GetPrimaryParticle()
                       ->GetUserInformation() ;
+                    GaussTrajectory* traj=
+                      (GaussTrajectory*)(trackMgr()->GimmeTrajectory());
+                    
                     if ( uInf -> hasOscillated() ) 
-                      {
-                        GaussTrajectory* traj=
-                          (GaussTrajectory*)(trackMgr()->GimmeTrajectory());
-                        traj->setHasOscillated( true ); 
-                      }        
-                    if ( uInf -> isSignal() )
-                      {
-                        GaussTrajectory* traj=
-                          (GaussTrajectory*)(trackMgr()->GimmeTrajectory());
-                        traj->setIsSignal( true ) ;
-                        traj->setSignalBarcode( uInf -> signalBarcode() ) ;
-                        traj->setHepMCEvent( uInf -> pHepMCEvent() ) ;
-                      }
+                      traj->setHasOscillated( true );        
+                    if ( uInf -> isSignal() ) traj->setIsSignal( true ) ;
+                    traj->setSignalBarcode( uInf -> signalBarcode() ) ;
+                    traj->setHepMCEvent( uInf -> pHepMCEvent() ) ;
                   }  
                 }
               }  
@@ -693,20 +639,13 @@ void GaussPostTrackAction::PostUserTrackingAction ( const G4Track* track )
                   ( GiGaPrimaryParticleInformation *)
                   track->GetDynamicParticle()->GetPrimaryParticle()
                   ->GetUserInformation() ;
-                if ( uInf -> hasOscillated() ) 
-                  {
-                    GaussTrajectory* traj=
-                      (GaussTrajectory*)(trackMgr()->GimmeTrajectory());
-                    traj->setHasOscillated( true ); 
-                  }        
-                if ( uInf -> isSignal() )
-                  {
-                    GaussTrajectory* traj=
-                      (GaussTrajectory*)(trackMgr()->GimmeTrajectory());
-                    traj->setIsSignal( true ) ;
-                    traj->setSignalBarcode( uInf -> signalBarcode() ) ;
-                    traj->setHepMCEvent( uInf -> pHepMCEvent() ) ;
-                  }
+                GaussTrajectory* traj=
+                  (GaussTrajectory*)(trackMgr()->GimmeTrajectory());
+                
+                if ( uInf -> hasOscillated() ) traj->setHasOscillated( true ); 
+                if ( uInf -> isSignal() ) traj->setIsSignal( true ) ;
+                traj->setSignalBarcode( uInf -> signalBarcode() ) ;
+                traj->setHepMCEvent( uInf -> pHepMCEvent() ) ;
               }  
             }
           }  
@@ -739,20 +678,12 @@ void GaussPostTrackAction::PostUserTrackingAction ( const G4Track* track )
                   ( GiGaPrimaryParticleInformation *)
                   track->GetDynamicParticle()->GetPrimaryParticle()
                   ->GetUserInformation() ;
-                if ( uInf -> hasOscillated() ) 
-                  {
-                    GaussTrajectory* traj=
-                      (GaussTrajectory*)(trackMgr()->GimmeTrajectory());
-                    traj->setHasOscillated( true ); 
-                  }        
-                if ( uInf -> isSignal() )
-                  {
-                    GaussTrajectory* traj=
-                      (GaussTrajectory*)(trackMgr()->GimmeTrajectory());
-                    traj->setIsSignal( true ) ;
-                    traj->setSignalBarcode( uInf -> signalBarcode() ) ;
-                    traj->setHepMCEvent( uInf -> pHepMCEvent() ) ;
-                  }
+                GaussTrajectory* traj=
+                  (GaussTrajectory*)(trackMgr()->GimmeTrajectory());
+                if ( uInf -> hasOscillated() ) traj->setHasOscillated( true ); 
+                if ( uInf -> isSignal() ) traj->setIsSignal( true ) ;
+                traj->setSignalBarcode( uInf -> signalBarcode() ) ;
+                traj->setHepMCEvent( uInf -> pHepMCEvent() ) ;
               }  
             }
           }  
