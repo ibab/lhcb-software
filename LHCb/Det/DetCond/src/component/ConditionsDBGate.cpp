@@ -1,4 +1,4 @@
-//$Id: ConditionsDBGate.cpp,v 1.10 2002-04-17 15:55:14 andreav Exp $
+//$Id: ConditionsDBGate.cpp,v 1.11 2002-07-23 17:10:17 andreav Exp $
 #include <string>
 
 #ifdef __CondDBObjy__
@@ -33,14 +33,15 @@
 ConditionsDBGate::ConditionsDBGate( const std::string& name, 
 				    ISvcLocator* svc)
   : Service(name, svc)
-  , m_condDBmgr          ( 0     )
-  , m_condDBDataAccess   ( 0     )
-  , m_condDBFolderMgr    ( 0     )
+  , m_condDBmgr          ( 0 )
+  , m_condDBDataAccess   ( 0 )
+  , m_condDBFolderMgr    ( 0 )
 {
-  declareProperty( "condDBUser", m_condDBUser = "" );
-  declareProperty( "condDBPswd", m_condDBPswd = "" );
-  declareProperty( "condDBHost", m_condDBHost = "" );
-  declareProperty( "condDBName", m_condDBName = "" );
+  declareProperty( "condDBUser",     m_condDBUser = "" );
+  declareProperty( "condDBPswd",     m_condDBPswd = "" );
+  declareProperty( "condDBHost",     m_condDBHost = "" );
+  declareProperty( "condDBName",     m_condDBName = "" );
+  declareProperty( "showCondDBPswd", m_showCondDBPswd = false );
 }
 
 //----------------------------------------------------------------------------
@@ -71,13 +72,19 @@ StatusCode ConditionsDBGate::initialize()
     return status;
   }
   log << MSG::DEBUG << "Properties were read from jobOptions" << endreq;
-  log << MSG::DEBUG << "CondDB user:     " << endreq;
+  log << MSG::DEBUG << "CondDB user:" << endreq;
   log << MSG::DEBUG << m_condDBUser << endreq;
-  log << MSG::DEBUG << "CondDB password: " << endreq;
-  log << MSG::DEBUG << "********" << endreq;
-  log << MSG::DEBUG << "CondDB host:     " << endreq;
+  log << MSG::DEBUG << "Show CondDB password?" << endreq;
+  log << MSG::DEBUG << m_showCondDBPswd << endreq;
+  log << MSG::DEBUG << "CondDB password:" << endreq;
+  if ( m_showCondDBPswd ) {
+    log << MSG::DEBUG << m_condDBPswd << endreq;
+  } else {
+    log << MSG::DEBUG << "********" << endreq;
+  }
+  log << MSG::DEBUG << "CondDB host:" << endreq;
   log << MSG::DEBUG << m_condDBHost << endreq;
-  log << MSG::DEBUG << "CondDB name:     " << endreq;
+  log << MSG::DEBUG << "CondDB name:" << endreq;
   log << MSG::DEBUG << m_condDBName << endreq;
 
   // Now initialize CERN-IT CondDB
@@ -374,33 +381,33 @@ ConditionsDBGate::i_buildCondDBInfo( std::string& condDBInfo )
   /// Build the init string to access the Objy database
 
   MsgStream log(msgSvc(), "ConditionsDBGate" );
-  log << MSG::DEBUG 
+  log << MSG::VERBOSE 
       << "Building the full Objy path to the ConditionsDB boot file" << endreq;
 
   // Try to retrieve the host for the boot file from the jobOptions
   // Assume it is on current host if no host is specified:
   // retrieve it via gethostname (MAXHOSTNAMELEN is defined in sys/param.h)
   if ( m_condDBHost != "" ) {
-    log << MSG::DEBUG
+    log << MSG::VERBOSE
 	<< "Using condDBHost from jobOptions:" << endreq; 
-    log << MSG::DEBUG << m_condDBHost << endreq;    
+    log << MSG::VERBOSE << m_condDBHost << endreq;    
   } else {
-    log << MSG::DEBUG << "Using current host as condDBHost:" << endreq; 
+    log << MSG::VERBOSE << "Using current host as condDBHost:" << endreq; 
     char* hostname = new char[MAXHOSTNAMELEN];
     if ( gethostname(hostname, MAXHOSTNAMELEN) != 0 ) {
       log << MSG::ERROR << "System method gethostname failed" << endreq;
       return StatusCode::FAILURE;
     }
     m_condDBHost = hostname;
-    log << MSG::DEBUG << m_condDBHost << endreq;    
+    log << MSG::VERBOSE << m_condDBHost << endreq;    
     delete[] hostname;
   }
   
   // Try to retrieve the boot file name from the jobOptions
   if ( m_condDBName != "" ) {
-    log << MSG::DEBUG 
+    log << MSG::VERBOSE 
 	<< "Using condDBName from jobOptions:" << endreq; 
-    log << MSG::DEBUG << m_condDBName << endreq;    
+    log << MSG::VERBOSE << m_condDBName << endreq;    
   } else {
     log << MSG::ERROR 
 	<< "Property condDBName not set in jobOptions" << endreq; 
@@ -409,6 +416,7 @@ ConditionsDBGate::i_buildCondDBInfo( std::string& condDBInfo )
 
   // Create the full path to the boot file
   condDBInfo = m_condDBHost + "::" + m_condDBName;
+  log << MSG::INFO << "CondDB Objy full path is " << condDBInfo << endreq;
 
   return StatusCode::SUCCESS;
 
@@ -418,14 +426,14 @@ ConditionsDBGate::i_buildCondDBInfo( std::string& condDBInfo )
   /// Build the init string to access the Oracle CondDB
 
   MsgStream log(msgSvc(), "ConditionsDBGate" );
-  log << MSG::DEBUG 
+  log << MSG::VERBOSE 
       << "Building the Oracle init string for the ConditionsDB" << endreq;
 
   // Try to retrieve the user for the Oracle database from the jobOptions
   if ( m_condDBUser != "" ) {
-    log << MSG::DEBUG
+    log << MSG::VERBOSE
 	<< "Using condDBUser from jobOptions:" << endreq; 
-    log << MSG::DEBUG << m_condDBUser << endreq;    
+    log << MSG::VERBOSE << m_condDBUser << endreq;    
   } else {
     log << MSG::ERROR 
 	<< "Property condDBUser not set in jobOptions" << endreq; 
@@ -434,9 +442,13 @@ ConditionsDBGate::i_buildCondDBInfo( std::string& condDBInfo )
   
   // Try to retrieve the password for the Oracle database from the jobOptions
   if ( m_condDBPswd != "" ) {
-    log << MSG::DEBUG
+    log << MSG::VERBOSE
 	<< "Using condDBPswd from jobOptions:" << endreq; 
-    log << MSG::DEBUG << "********" << endreq;    
+    if ( !m_showCondDBPswd ) {
+      log << MSG::VERBOSE << "********" << endreq;    
+    } else {
+      log << MSG::VERBOSE << m_condDBPswd << endreq;    
+    }
   } else {
     log << MSG::ERROR 
 	<< "Property condDBPswd not set in jobOptions" << endreq; 
@@ -445,9 +457,9 @@ ConditionsDBGate::i_buildCondDBInfo( std::string& condDBInfo )
   
   // Try to retrieve the host for the Oracle database from the jobOptions
   if ( m_condDBHost != "" ) {
-    log << MSG::DEBUG
+    log << MSG::VERBOSE
 	<< "Using condDBHost from jobOptions:" << endreq; 
-    log << MSG::DEBUG << m_condDBHost << endreq;    
+    log << MSG::VERBOSE << m_condDBHost << endreq;    
   } else {
     log << MSG::ERROR 
 	<< "Property condDBHost not set in jobOptions" << endreq; 
@@ -456,27 +468,34 @@ ConditionsDBGate::i_buildCondDBInfo( std::string& condDBInfo )
   
   // Try to retrieve the ConditionsDB name from the jobOptions
   if ( m_condDBName != "" ) {
-    log << MSG::DEBUG 
+    log << MSG::VERBOSE 
 	<< "Using condDBName from jobOptions:" << endreq; 
-    log << MSG::DEBUG << m_condDBName << endreq;    
+    log << MSG::VERBOSE << m_condDBName << endreq;    
   } else {
     log << MSG::ERROR 
 	<< "Property condDBName not set in jobOptions" << endreq; 
     return StatusCode::FAILURE;
   }
 
-  // Create the full dummy path to the boot file
-  condDBInfo  = "user="     + m_condDBUser; // Oracle user
-  condDBInfo += ",passwd=********";         // Oracle password
-  condDBInfo += ",db="      + m_condDBHost; // Oracle DB (look in tnsnames.ora)
-  condDBInfo += ",cond_db=" + m_condDBName; // User-defined CondDB name
-  log << MSG::INFO << "CondDB Oracle path is " << condDBInfo << endreq;
+  if ( !m_showCondDBPswd ) {
+    // Create the full dummy path to the boot file
+    condDBInfo  = "user="     + m_condDBUser; // Oracle user
+    condDBInfo += ",passwd=********";         // Oracle password
+    condDBInfo += ",db="      + m_condDBHost; // Oracle DB (tnsnames.ora)
+    condDBInfo += ",cond_db=" + m_condDBName; // User-defined CondDB name
+    log << MSG::INFO << "CondDB Oracle init string is " 
+	<< condDBInfo << endreq;
+  }
 
   // Create the full path to the boot file
   condDBInfo  = "user="     + m_condDBUser; // Oracle user
   condDBInfo += ",passwd="  + m_condDBPswd; // Oracle password
-  condDBInfo += ",db="      + m_condDBHost; // Oracle DB (look in tnsnames.ora)
+  condDBInfo += ",db="      + m_condDBHost; // Oracle DB (tnsnames.ora)
   condDBInfo += ",cond_db=" + m_condDBName; // User-defined CondDB name
+  if ( m_showCondDBPswd ) {
+    log << MSG::INFO << "CondDB Oracle init string is " 
+	<< condDBInfo << endreq;
+  }
 
   return StatusCode::SUCCESS;
 

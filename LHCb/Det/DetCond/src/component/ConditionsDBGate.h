@@ -1,4 +1,4 @@
-//$Id: ConditionsDBGate.h,v 1.3 2002-03-01 11:27:15 andreav Exp $
+//$Id: ConditionsDBGate.h,v 1.4 2002-07-23 17:10:17 andreav Exp $
 #ifndef DETCOND_CONDITIONSDBGATE_H
 #define DETCOND_CONDITIONSDBGATE_H 1
 
@@ -123,6 +123,9 @@ class ConditionsDBGate : public Service,
 
   /// Database ConditionsDB name
   std::string        m_condDBName;
+
+  /// Show database user password?
+  bool               m_showCondDBPswd;
 
 };
 
