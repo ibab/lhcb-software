@@ -1,6 +1,11 @@
 ! Package     : VeloAlgoithms
 ! Responsible : Chris Parkes
 
+! 2003-01-16 - Marco Cattaneo
+ - Protect against possibility of zero energy in MCHit
+ - Test verbose message level before building MSG::VERBOSE message stream
+ - Use endmsg instead of endreq
+
 !===================== VeloAlgorithms v2r5 2002-12-06 =====================
 ! 2002-12-06 - Juan Palacios
  - Add VeloMonitor algorithm
