@@ -1,4 +1,4 @@
-// $Id: RichDetectorType.h,v 1.6 2003-11-03 08:36:39 cattanem Exp $
+// $Id: RichDetectorType.h,v 1.7 2003-11-03 10:19:12 cattanem Exp $
 #ifndef RICHKERNEL_RICHDETECTORTYPE_H
 #define RICHKERNEL_RICHDETECTORTYPE_H 1
 
@@ -11,7 +11,7 @@
 #include "GaudiKernel/StreamBuffer.h"
 #include "GaudiKernel/MsgStream.h"
 
-/// namespace for RICH detector specifics
+// namespace for RICH detector specifics
 namespace Rich {
 
   /// Number of RICH detectors

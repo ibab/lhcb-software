@@ -1,4 +1,4 @@
-// $Id: RichSide.h,v 1.8 2003-11-03 08:36:39 cattanem Exp $
+// $Id: RichSide.h,v 1.9 2003-11-03 10:19:12 cattanem Exp $
 #ifndef RICHKERNEL_RICHSIDE_H
 #define RICHKERNEL_RICHSIDE_H 1
 
@@ -10,7 +10,7 @@
 // from gaudi
 #include "GaudiKernel/MsgStream.h"
 
-/// namespace for RICH detector specifics
+// namespace for RICH detector specifics
 namespace Rich {
 
   /** @enum Rich::Side
