@@ -1,4 +1,4 @@
-// $Id: DeRichHPDPanel.cpp,v 1.12 2004-03-16 13:35:30 jonesc Exp $
+// $Id: DeRichHPDPanel.cpp,v 1.13 2004-03-18 16:13:01 jonesc Exp $
 #define DERICHHPDPANEL_CPP
 
 // Include files
@@ -31,7 +31,6 @@ DeRichHPDPanel::~DeRichHPDPanel() {}
 //=========================================================================
 StatusCode DeRichHPDPanel::initialize() {
 
-  StatusCode fail = StatusCode::FAILURE;
   MsgStream log(msgSvc(), "DeRichHPDPanel" );
 
   // store the name of the panel, without the /dd/Structure part
@@ -114,7 +113,7 @@ StatusCode DeRichHPDPanel::initialize() {
                       windowTicks);
   if (windowTicksSize != 2) {
     log << MSG::FATAL << "Problem getting window radius" << endreq;
-    return fail;
+    return StatusCode::FAILURE;
   }
   m_winR = windowTicks[0];
   m_winRsq = m_winR*m_winR;
@@ -202,9 +201,8 @@ StatusCode DeRichHPDPanel::smartID (const HepPoint3D& globalPoint,
   if ( (fabs(inSilicon.x()) > m_siliconHalfLengthX) ||
        (fabs(inSilicon.y()) > m_siliconHalfLengthY)    ) {
     MsgStream log(msgSvc(), m_name );
-    log << MSG::ERROR << "The point is outside the silicon box "
-        << pvHPDMaster->name() <<  endreq;
-    std::cout << inSilicon << std::endl;
+    log << MSG::ERROR << "Point " << inSilicon << " is outside the silicon box "
+        << pvHPDMaster->name() << endreq;
     return StatusCode::FAILURE;
   }
 
@@ -212,8 +210,6 @@ StatusCode DeRichHPDPanel::smartID (const HepPoint3D& globalPoint,
     ((m_siliconHalfLengthX + inSilicon.x()) / m_pixelSize);
   unsigned int pixelRow    = static_cast<unsigned int>
     ((m_siliconHalfLengthY + inSilicon.y()) / m_pixelSize);
-
-  //std::cout << pixelColumn << "  " <<pixelRow << std::endl;
 
   id.setPixelRow(pixelRow);
   id.setPixelCol(pixelColumn);
@@ -223,10 +219,7 @@ StatusCode DeRichHPDPanel::smartID (const HepPoint3D& globalPoint,
      m_subPixelSize);
   id.setSubPixel( subPixel );
 
-  //  std::cout << subPixel << std::endl;
-
   return StatusCode::SUCCESS;
-
 }
 
 
@@ -255,7 +248,6 @@ StatusCode DeRichHPDPanel::detectionPoint (const RichSmartID& smartID,
   double inWindowY = -inSiliconY / m_deMagFactor[0];
   double inWindowZ = sqrt(m_winRsq-inWindowX*inWindowX-inWindowY*inWindowY);
   HepPoint3D windowHit(inWindowX, inWindowY, inWindowZ);
-  //  std::cout << windowHit << std::endl;
 
   windowHitGlobal =
     geometry()->toGlobal(pvHPDMaster->
