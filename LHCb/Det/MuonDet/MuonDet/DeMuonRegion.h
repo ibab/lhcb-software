@@ -1,8 +1,11 @@
-// $Id: DeMuonRegion.h,v 1.3 2002-03-20 16:43:28 dhcroft Exp $
+// $Id: DeMuonRegion.h,v 1.4 2002-04-03 16:14:59 dhcroft Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.3  2002/03/20 16:43:28  dhcroft
+// Added the size of the Front end channels to the XML and the mapping from FE to logical channels
+//
 // Revision 1.2  2002/01/31 10:00:09  dhcroft
 // Moved CLIDs to seperate files for Visual C linker
 //
@@ -53,7 +56,7 @@ public:
   }
 
   /// Return the number of chambers in the region
-  inline int chamberNum(){
+  inline int chamberNum() const {
     return m_chamberNum;
   }
 
@@ -63,7 +66,7 @@ public:
   }
 
   /// Return the number of FE Anode readout channels cover a chamber in x
-  inline int FEAnodeX(){
+  inline int FEAnodeX() const {
     return m_FEAnodeX;
   }
     
@@ -73,7 +76,7 @@ public:
   }
 
   /// Return the number of FE Anode readout channels cover a chamber
-  inline int FEAnodeY(){
+  inline int FEAnodeY() const {
     return m_FEAnodeY;
   }
 
@@ -83,7 +86,7 @@ public:
   }
 
   /// Return the number of FE Cathode readout channels cover a chamber in x
-  inline int FECathodeX(){
+  inline int FECathodeX() const {
     return m_FECathodeX;
   }
     
@@ -93,7 +96,7 @@ public:
   }
 
   /// Return the number of FE Cathode readout channels cover a chamber
-  inline int FECathodeY(){
+  inline int FECathodeY() const {
     return m_FECathodeY;
   }
 
@@ -108,7 +111,7 @@ public:
   }
 
   /// Get the number of logical maps stored
-  inline unsigned int numberLogicalMap(){
+  inline unsigned int numberLogicalMap() const {
     return m_logMap.size();
   }
 
@@ -116,7 +119,7 @@ public:
   /// logical channels (or pads if not crossed)
   StatusCode logicalMap(const unsigned int& mapNum,
                         MuonParameters::ReadoutType &rType,
-                        int &xMap, int &yMap);
+                        int &xMap, int &yMap) const;
 
 private:
 

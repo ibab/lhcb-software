@@ -1,8 +1,11 @@
-// $Id: DeMuonRegion.cpp,v 1.3 2002-03-20 16:43:40 dhcroft Exp $
+// $Id: DeMuonRegion.cpp,v 1.4 2002-04-03 16:15:10 dhcroft Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.3  2002/03/20 16:43:40  dhcroft
+// Added the size of the Front end channels to the XML and the mapping from FE to logical channels
+//
 // Revision 1.2  2002/01/31 10:00:10  dhcroft
 // Moved CLIDs to seperate files for Visual C linker
 //
@@ -44,7 +47,7 @@ void DeMuonRegion::addLogicalMap( const MuonParameters::ReadoutType &type,
 /// logical channels (or pads if not crossed)
 StatusCode DeMuonRegion::logicalMap(const unsigned int& mapNum,
                                     MuonParameters::ReadoutType &rType,
-                                    int &xMap, int &yMap){
+                                    int &xMap, int &yMap) const {
   if(mapNum >= m_logMap.size()){
     return StatusCode::FAILURE;
   }
