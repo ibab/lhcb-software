@@ -1,8 +1,24 @@
-// $Id: GeometryInfo.cpp,v 1.8 2001-11-20 15:22:23 sponce Exp $ 
+// $Id: GeometryInfo.cpp,v 1.9 2002-01-17 17:02:19 sponce Exp $ 
 // ===========================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ===========================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.8  2001/11/20 15:22:23  sponce
+// Lots of changes here :
+//    - make use of the new version of GaudiKernel and GaudiSvc. One consequence
+//    is the removal of the class XmlAddress
+//    - centralization of address creations in conversion services, as suggested
+//    by the new architecture
+//    - add a parseString method on the XMLParserSvc. This allows to parse XML
+//    directly from a string
+//    - use of the new Assembly objects in the XML converters
+//    - update of the converters to handle the definition of detelem inside
+//    detelems, without using detelemrefs
+//    - take care of a possible indexing of detelems and parametrized detelems.
+//    The numbering is given by adding :<digits> to the name of the element.
+//    - add support for polycones in the converters
+//    - add code convention compliance to many files
+//
 // Revision 1.7  2001/11/18 15:32:44  ibelyaev
 //  update for Logical Assemblies
 //
@@ -208,7 +224,7 @@ GeometryInfo::~GeometryInfo()
   release();
 };
 //
-StatusCode  GeometryInfo::reset( const int Level )
+StatusCode  GeometryInfo::reset( const int /*Level*/ )
 {
   //
   m_gi_lvolume = 0 ; 
@@ -230,43 +246,51 @@ StatusCode  GeometryInfo::reset( const int Level )
 //
 std::ostream& GeometryInfo::printOut( std::ostream& os ) const
 {
-  os << "GeometryInfo::name=" <<  detElem()->name() << ";" ; 
-  if( !hasLVolume() ) { os << " no LVolume associated ('ghost');"; }
-  else 
-    { 
-      os << " LVolume=" << lvolumeName() << ";";
-      if( !hasSupport() ) { os << "('orphan');"; } 
-      else
-        {
-          os << " supported by " << m_gi_supportName << " with ReplicaPath=("; 
-          std::copy( m_gi_supportPath.begin() , 
-                     m_gi_supportPath.end() , 
-                     std::ostream_iterator<ILVolume::ReplicaType>(os,",") );
-          os << ") ";
-          os << "(" << m_gi_supportNamePath << ");";
-        }
-    }
+  try {
+    os << "GeometryInfo::name=" <<  detElem()->name() << ";" ; 
+    if( !hasLVolume() ) { os << " no LVolume associated ('ghost');"; }
+    else 
+      { 
+        os << " LVolume=" << lvolumeName() << ";";
+        if( !hasSupport() ) { os << "('orphan');"; } 
+        else
+          {
+            os << " supported by " << m_gi_supportName << " with ReplicaPath=("; 
+            std::copy( m_gi_supportPath.begin() , 
+                       m_gi_supportPath.end() , 
+                       std::ostream_iterator<ILVolume::ReplicaType>(os,",") );
+            os << ") ";
+            os << "(" << m_gi_supportNamePath << ");";
+          }
+      }
+  } catch (...) {
+    os << " !!! Unable to print GeometryInfo out !!!";
+  }
   //
   return os << std::endl;
 };
 //
 MsgStream& GeometryInfo::printOut( MsgStream& os ) const
 {
-  os << "GeometryInfo::name=" << detElem()->name() << ";" ; 
-  if( !hasLVolume() ) { os << " no LVolume associated ('ghost');"; }
-  else 
-    { 
-      os << " LVolume=" << lvolumeName() << ";";
-      if( !hasSupport() ) { os << "('orphan');"; } 
-      else
-        {
-          os << " supported by " << m_gi_supportName << " with ReplicaPath=("; 
-          ILVolume::ReplicaPath::iterator ci = supportPath().begin(); 
-          while( supportPath().end() != ci ) { os << *ci++ << "," ; }
-          os << ") ";
-          os << "(" << m_gi_supportNamePath << ");";
-        }
-    }
+  try {
+    os << "GeometryInfo::name=" << detElem()->name() << ";" ; 
+    if( !hasLVolume() ) { os << " no LVolume associated ('ghost');"; }
+    else 
+      { 
+        os << " LVolume=" << lvolumeName() << ";";
+        if( !hasSupport() ) { os << "('orphan');"; } 
+        else
+          {
+            os << " supported by " << m_gi_supportName << " with ReplicaPath=("; 
+            ILVolume::ReplicaPath::iterator ci = supportPath().begin(); 
+            while( supportPath().end() != ci ) { os << *ci++ << "," ; }
+            os << ") ";
+            os << "(" << m_gi_supportNamePath << ");";
+          }
+      }
+  } catch (...) {
+    os << " !!! Unable to print GeometryInfo out !!!";
+  }
   //
   return os << endreq ;
 };
