@@ -5,6 +5,16 @@
 !-----------------------------------------------------------------------------
 
 ! 2004-10-04 - P. Koppenburg
+  - options/L0Calo.opts
+  - options/L0.opts
+  - options/L0Muon.opts
+    . Put Calo L0 in new L0Calo.opts and now call L0Muon.opts from L0.opts    
+  - options/DVCheckTrigger.opts
+  - options/DVTriggerFilter.opts
+  - options/DaVinci.opts
+    . Changed accordingly
+    
+! 2004-10-04 - P. Koppenburg
   - options/L0Muon.opts
     . Removed temporary patch to overwrite change in Pt kick from 
       1.12 to 1.39 GeV, since now L0DU is fixed.
