@@ -1,4 +1,4 @@
-// $Id: RichPIDQC.cpp,v 1.5 2003-07-01 19:06:34 jonrob Exp $
+// $Id: RichPIDQC.cpp,v 1.6 2003-07-01 19:10:20 jonrob Exp $
 // Include files
 
 // local
@@ -490,8 +490,8 @@ StatusCode RichPIDQC::finalize() {
 
     msg << "Tracks     | " << m_pMinCut << "-" << m_pMaxCut << " GeV/c : " 
         << m_trNames << endreq
-        << "PID rate   | events " << evPIDRate[0] << "+-" << evPIDRate[1]
-        << "%,  tracks " << trPIDRate[0] << "+-" << trPIDRate[1] << "%" << endreq
+        << "PID rate   | events " << evPIDRate[0] << " +- " << evPIDRate[1]
+        << "%,  tracks " << trPIDRate[0] << " +- " << trPIDRate[1] << "%" << endreq
         << "-----------+-----------------------------------------------+-----------"
         << endreq
         << "  %total   | Electron Muon   Pion   Kaon  Proton   X  (MC) |  %Purity"
