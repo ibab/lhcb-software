@@ -1,5 +1,5 @@
 package           MuonAssociators
-version           v1r1
+version           v1r2
         
 # =============== structure =================================================== 
 branches          MuonAssociators src cmt doc 
@@ -7,25 +7,12 @@ branches          MuonAssociators src cmt doc
 include_dirs $(MUONASSOCIATORSROOT)
 
 # =============== used packages ===============================================
-use MuonEvent     v2r*  Event 
+use MuonEvent     v3r*  Event 
 
 # =============== component library ===========================================
 library           MuonAssociators  ../src/*.cpp
 
-# =============== patterns ====================================================
-
-apply_pattern     package_Clinkopts 
-apply_pattern     package_Cstamps
-apply_pattern     packageShr 
-
-# =============== private stuff ===============================================
-private
-
-apply_pattern     package_Cshlibflags
-macro MuonAssociatorslinkopts  " $(LHCbKernel_linkopts) "
-# =============================================================================
-# The end 
-# =============================================================================
+apply_pattern component_library library=MuonAssociators
 
 
 
