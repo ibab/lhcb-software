@@ -1,12 +1,12 @@
-# $Id: requirements,v 1.3 2002-07-17 08:21:26 ranjard Exp $
+# $Id: requirements,v 1.4 2002-12-04 18:37:15 ranjard Exp $
 #============================================================================
 package           Magnet
-version           v2r0
+version           v2r1
 
 branches          cmt doc src 
 
-use GaudiKernel   v12r*
-use CLHEP         v2r1800p*
+use GaudiKernel   v13r*
+use CLHEP         v*
 
 library          Magnet    ../src/*.cpp
 
@@ -15,3 +15,4 @@ apply_pattern    packageShr
 #============================================================================
 private
 apply_pattern    package_Cshlibflags
+

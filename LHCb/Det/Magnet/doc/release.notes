@@ -4,6 +4,10 @@
 ! Purpose     : Provides magnetic field map
 !-----------------------------------------------------------------------------
 
+!====================== Magnet v2r1 2002-12-04 ===========================
+! 2002-09-26 - Florence Ranjard
+ - -requirements - use GaudiKernel v13r*
+
 !======================= Magnet v2r0 2002-07-16 =============================
 ! 2002-07-16 - Florence Ranjard
  - requirements - use CLHEP 1.8.0.0
