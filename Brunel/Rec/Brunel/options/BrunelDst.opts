@@ -27,11 +27,12 @@ BrunelDstWriter.ItemList =
 , "/Event/Trig/L0/Muon#1"
 , "/Event/Trig/L0/PuVeto#1"
 , "/Event/Trig/L0/Decision#1"
+  // L1 stuff?
 , "/Event/Raw#1"
 , "/Event/Raw/Velo#1"
 , "/Event/Raw/Velo/Clusters#1"
 , "/Event/Raw/Rich#1"
-  //, "/Event/Raw/Rich/Digits#1"
+  //, "/Event/Raw/Rich/Digits#1" // Need to be explicitly loaded
 , "/Event/Rec#1"
 , "/Event/Rec/IT#1"
 , "/Event/Rec/IT/Summary#1"
@@ -39,11 +40,21 @@ BrunelDstWriter.ItemList =
 , "/Event/Rec/OT#1"
 , "/Event/Rec/OT/Clusters#1"  // To be filtered
 , "/Event/Rec/Tr#1"
-  //, "/Event/Rec/Tr/StoredTracks#1"
+, "/Event/Rec/Tr/StoredTracks#1"
+, "/Event/Rec/Tr/ITClusters#1"
+, "/Event/Rec/Tr/OTClusters#1"
+, "/Event/Rec/Tr/VeloClusters#1"
+  //, "/Event/Rec/Tr/StatesP#1"  // Not yet filled
   // Rich PID?
 , "/Event/Rec/Calo#1"
 , "/Event/Rec/Calo/EcalCelAutoClusters#1"
-, "/Event/Rec/Calo/EcalLocMaxClusters#1" 
+, "/Event/Rec/Calo/EcalLocMaxClusters#1"
+  // CaloHypos, CaloParticles?
+, "/Event/Rec/Muon#2"
+, "/Event/Rec/Muon/M1/Coords#1" // To be filtered
+, "/Event/Rec/Muon/M2/Coords#1" // To be filtered
+, "/Event/Rec/Muon/M3/Coords#1" // To be filtered
+, "/Event/Rec/Muon/M4/Coords#1" // To be filtered
+, "/Event/Rec/Muon/M5/Coords#1" // To be filtered
   // Muons PID?
 };
-
