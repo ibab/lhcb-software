@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.50 2005-02-08 11:30:47 ibelyaev Exp $ 
+# $Id: requirements,v 1.51 2005-02-16 11:20:38 ibelyaev Exp $ 
 # =============================================================================
 # CVS tag $Name: not supported by cvs2svn $
 # =============================================================================
@@ -29,10 +29,10 @@ use           LoKiDoc        v3r7   Doc
 use           BenderTutor    v4r5   Tutorial
 # =========== Test suit for Bender ============================================
 use           BenderTest     v4r6   Tests 
-use           LoKiTest       v3r8   Tests 
+use           LoKiTest       v3r9   Tests 
 # =========== examples of usage of Bender "in practice" =======================
 use           BenderExample  v4r6   Ex  
-use           LoKiExample    v3r8   Ex 
+use           LoKiExample    v3r9   Ex 
 # =========== Test suit for Bender ============================================
 use           BenderVis      v4r5   Vis 
 # =========== empty 'user' package ============================================
@@ -44,6 +44,9 @@ use           LoKiHybrid     v4r5   Tools
 
 # =============================================================================
 # $Log: not supported by cvs2svn $
+# Revision 1.50  2005/02/08 11:30:47  ibelyaev
+#  v4r6
+#
 # =============================================================================
 # The END 
 # =============================================================================
