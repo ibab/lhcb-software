@@ -1,4 +1,4 @@
-// $Id: MuonID_load.cpp,v 1.1.1.1 2002-05-10 12:06:58 dhcroft Exp $
+// $Id: MuonID_load.cpp,v 1.2 2002-07-19 16:33:34 cattanem Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
@@ -10,6 +10,7 @@
 DECLARE_FACTORY_ENTRIES(MuonID) {
   
   DECLARE_ALGORITHM( MuonIDFOI );
+  DECLARE_ALGORITHM( MuonDSTPrepare );
 };
 
 

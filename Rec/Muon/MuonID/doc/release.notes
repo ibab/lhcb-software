@@ -1,6 +1,9 @@
-! $Id: release.notes,v 1.8 2002-07-09 19:10:01 cattanem Exp $
+! $Id: release.notes,v 1.9 2002-07-19 16:33:34 cattanem Exp $
 ! Package     : MuonID
 ! Responsible : David Hutchcroft
+
+! 2002-07-19 - Marco Cattaneo
+ - Add MuonDSTPrepare factory to MuonID_load.cpp
 
 !========================= MuonID v2r0 2002-07-09 =========================
 ! 2002-07-05 - David Hutchcroft
