@@ -4,6 +4,12 @@
 ! Purpose     : interface to the xml description
 !-----------------------------------------------------------------------------
 
+!========================= RichDet v6r0 2003-08-29 =========================
+! 2003-08-29 - Antonis Papanestis
+ - added DeRichMaPMTPanel with classID = 12015. This will allow the use
+   of MaPMTs as well as HPDs.
+ - use of new names for user parameters in the xml.
+
 !========================= RichDet v5r0 2003-06-20 =========================
 ! 2003-06-20 - Antonis Papanestis
  - added DeRichPDPanel to allow for the introduction of MaPMTs.  All Panels

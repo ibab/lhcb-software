@@ -1,4 +1,4 @@
-// $Id: DeRich2HPDPanel.cpp,v 1.4 2003-06-20 14:34:33 papanest Exp $
+// $Id: DeRich2HPDPanel.cpp,v 1.5 2003-08-29 08:29:42 papanest Exp $
 #define DERICH2HPDPANEL_CPP
 
 // Include files
@@ -40,7 +40,7 @@ const CLID& DeRich2HPDPanel::classID() {
 
 StatusCode DeRich2HPDPanel::initialize() {
 
-  StatusCode sc = StatusCode::SUCCESS;
+  StatusCode sc = StatusCode::FAILURE;
 
   MsgStream log(msgSvc(), "DeRich2HPDPanel" );
   log << MSG::VERBOSE <<"Starting initialisation of DeRich2HPDPanel" << endreq;
@@ -51,8 +51,8 @@ StatusCode DeRich2HPDPanel::initialize() {
   m_winRsq = m_winR*m_winR;
   
   HepPoint3D zero(0.0, 0.0, 0.0);
-  m_HPDRows = userParameterAsInt("HPDRows");
-  m_HPDColumns = userParameterAsInt("HPDColumns");
+  m_HPDRows = userParameterAsInt("PDRows");
+  m_HPDColumns = userParameterAsInt("PDColumns");
   m_PDMax = m_HPDColumns * m_HPDRows;
 
   // get the first HPD and follow down to the silicon block
@@ -108,12 +108,18 @@ StatusCode DeRich2HPDPanel::initialize() {
   // get the pv and the solid for the HPD quartz window
   const IPVolume* pvWindow0 = pvHPDSMaster0->lvolume()->pvolume(2);
   const ISolid* windowSolid0 = pvWindow0->lvolume()->solid();
-  const SolidSphere* windowSphere0 = dynamic_cast<const SolidSphere*>
-    (windowSolid0);
-  double windowRadius = windowSphere0->outerRadius();
+  // get the outside radius of the window
+  ISolid::Ticks windowTicks;
+  unsigned int windowTicksSize = windowSolid0->
+    intersectionTicks(HepPoint3D(0.0, 0.0, 0.0),HepVector3D(0.0, 0.0, 1.0),
+                      windowTicks);
+  if (windowTicksSize != 2) {
+    log << MSG::ERROR << "Problem getting window radius" << endreq;
+    return sc;
+  }
 
   // get the coordinate of the centre of the HPD quarz window
-  HepPoint3D HPDTop1(0.0, 0.0, windowRadius);
+  HepPoint3D HPDTop1(0.0, 0.0, windowTicks[1]);
   // convert this to HPDS master  coordinates
   HepPoint3D HPDTop2 = pvWindow0->toMother(HPDTop1);
   // and to silicon
@@ -154,7 +160,7 @@ StatusCode DeRich2HPDPanel::initialize() {
 
   log << MSG::DEBUG <<"Finished initialisation for DeRich2HPDPanel"<< endreq;
 
-  return sc;
+  return StatusCode::SUCCESS;
 }
 
 // ===========================================================================
@@ -207,7 +213,7 @@ StatusCode DeRich2HPDPanel::smartID (const HepPoint3D& globalPoint,
   const IPVolume* pvHPDMaster = geometry()->lvolume()->pvolume(HPDNumber);
   const IPVolume* pvHPDSMaster = pvHPDMaster->lvolume()->pvolume(0);
   const IPVolume* pvSilicon = pvHPDSMaster->lvolume()->pvolume(4);
-  const ISolid* siliconSolid = pvSilicon->lvolume()->solid();
+  //  const ISolid* siliconSolid = pvSilicon->lvolume()->solid();
 
   HepPoint3D inHPDMaster = pvHPDMaster->toLocal(inPanel);
   HepPoint3D inHPDSMaster = pvHPDSMaster->toLocal(inHPDMaster);
@@ -215,9 +221,19 @@ StatusCode DeRich2HPDPanel::smartID (const HepPoint3D& globalPoint,
 
   //std::cout << inSilicon << std::endl;
 
-  if (!siliconSolid->isInside(inSilicon)) {
+  //  if (!siliconSolid->isInside(inSilicon)) {
+  //    log << MSG::ERROR << "The point is outside the silicon box "
+  //        << pvHPDMaster->name() <<  endreq;
+  //    id = RichSmartID(0);
+  //    return StatusCode::FAILURE;
+  //  }
+
+  if ( (fabs(inSilicon.x()) > m_siliconHalfLengthX) ||
+       (fabs(inSilicon.y()) > m_siliconHalfLengthY)    ) {  
     log << MSG::ERROR << "The point is outside the silicon box "
         << pvHPDMaster->name() <<  endreq;
+    std::cout << inSilicon << std::endl;
+    
     id = RichSmartID(0);
     return StatusCode::FAILURE;
   }
@@ -286,9 +302,6 @@ StatusCode DeRich2HPDPanel::PDWindowPoint( const HepVector3D& vGlobal,
   // transform point and vector to the HPDPanel coordsystem.
   HepPoint3D pLocal = geometry()->toLocal(pGlobal);
   HepVector3D vLocal = vGlobal;
-  // CRJ
-  //const HepTransform3D vectorTransf = geometry()->matrix();
-  //vLocal.transform(vectorTransf);
   vLocal.transform(m_vectorTransf);
 
   //const ISolid* HPDPanelSolid = geometry()->lvolume()->solid();
@@ -305,7 +318,7 @@ StatusCode DeRich2HPDPanel::PDWindowPoint( const HepVector3D& vGlobal,
   const IPVolume* pvWindow = 0;
   const ISolid* windowSolid;
 
-  HepPoint3D pInHPDMaster, pInHPDSMaster, pInWindow;
+  HepPoint3D pInWindow;
   HepVector3D vInHPDMaster;
 
   ISolid::Ticks HPDWindowTicks;
@@ -347,10 +360,11 @@ StatusCode DeRich2HPDPanel::PDWindowPoint( const HepVector3D& vGlobal,
     windowSolid = pvWindow->lvolume()->solid();
 
     // convert point to local coordinate systems
-    pInHPDMaster = pvHPDMaster->toLocal(pLocal);
-    pInHPDSMaster = pvHPDSMaster->toLocal(pInHPDMaster);
-    pInWindow = pvWindow->toLocal(pInHPDSMaster);
-
+    //    pInHPDMaster = pvHPDMaster->toLocal(pLocal);
+    //    pInHPDSMaster = pvHPDSMaster->toLocal(pInHPDMaster);
+    //    pInWindow = pvWindow->toLocal(pInHPDSMaster);
+    pInWindow = pvWindow->toLocal(pvHPDSMaster->toLocal(pvHPDMaster->
+                                                        toLocal(pLocal)));
     // convert local vector assuming that only the HPD can be rotated
     const HepTransform3D vectorTransfHPD = pvHPDMaster->matrix();
     vInHPDMaster = vLocal;
@@ -368,9 +382,13 @@ StatusCode DeRich2HPDPanel::PDWindowPoint( const HepVector3D& vGlobal,
     for ( int HPD = 0; HPD < m_PDMax; ++HPD ) {
 
       // convert point to local coordinate systems
-      pInHPDMaster = m_pvHPDMasters[HPD]->toLocal(pLocal);
-      pInHPDSMaster = m_pvHPDSMasters[HPD]->toLocal(pInHPDMaster);
-      pInWindow = m_pvWindows[HPD]->toLocal(pInHPDSMaster);
+      //      pInHPDMaster = m_pvHPDMasters[HPD]->toLocal(pLocal);
+      //      pInHPDSMaster = m_pvHPDSMasters[HPD]->toLocal(pInHPDMaster);
+      //      pInWindow = m_pvWindows[HPD]->toLocal(pInHPDSMaster);
+      // CRJ - change call
+      pInWindow = m_pvWindows[HPD]->toLocal(m_pvHPDSMasters[HPD]->
+                                            toLocal(m_pvHPDMasters[HPD]->
+                                                    toLocal(pLocal)));
 
       // convert local vector assuming that only the HPD can be rotated
       vInHPDMaster = vLocal;

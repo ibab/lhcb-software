@@ -1,4 +1,4 @@
-// $Id: DeRichHPDPanel.cpp,v 1.5 2003-06-20 14:34:33 papanest Exp $
+// $Id: DeRichHPDPanel.cpp,v 1.6 2003-08-29 08:29:42 papanest Exp $
 #define DERICHHPDPANEL_CPP
 
 // Include files
@@ -29,8 +29,8 @@ StatusCode DeRichHPDPanel::readoutChannelList(std::vector<RichSmartID>&
   double pixelSize = 0.5*mm;
   int pixColMax = 32;
   int pixRowMax= 32;
-  double activeRadius = 7.5*mm;
-  double radius = 8.7*mm;
+  double radius = 8*mm;
+  double activeRadius = 0.98 * radius;
   unsigned int my_PDMax;
   my_PDMax = static_cast<unsigned int>(m_PDMax);  
 
@@ -73,6 +73,7 @@ StatusCode DeRichHPDPanel::readoutChannelList(std::vector<RichSmartID>&
     }
         
   }
+
 
   return StatusCode::SUCCESS;
 }

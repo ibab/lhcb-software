@@ -1,4 +1,4 @@
-// $Id: DeRich1HPDPanel.cpp,v 1.4 2003-06-20 14:34:33 papanest Exp $
+// $Id: DeRich1HPDPanel.cpp,v 1.5 2003-08-29 08:29:42 papanest Exp $
 #define DERICH1HPDPANEL_CPP
 
 // Include files
@@ -52,8 +52,8 @@ StatusCode DeRich1HPDPanel::initialize() {
   m_winRsq = m_winR*m_winR;
 
   HepPoint3D zero(0.0, 0.0, 0.0);
-  HPDRows = userParameterAsInt("HPDRows");
-  HPDColumns = userParameterAsInt("HPDColumns");
+  HPDRows = userParameterAsInt("PDRows");
+  HPDColumns = userParameterAsInt("PDColumns");
   m_PDMax = HPDColumns * HPDRows;
 
 
