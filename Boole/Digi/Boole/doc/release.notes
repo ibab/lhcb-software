@@ -16,6 +16,8 @@ Requires data produced by Gauss v14r3 or greater
 
 - Bug fixes
   . All tools correctly released at end of job (GaudiSvc v11r6)
+  . Fix the physical pad size in M1R2 and M1R3     (XmlDDDB v22r1)
+  . Fix the Xtalk edge sigma in M1 (from cm -> mm) (XmlDDDB v22r1)
 
 </PRE><H1><A NAME=v5r4>2004-04-01 Boole v5r4</A></H1><PRE>
 

@@ -32,6 +32,7 @@ use POOL		v1r162p0	-no_auto_imports
 use GaudiKernel		v15r2
 use GaudiSvc 		v11r6
 use GaudiAlg 		v7r2
+use GaudiTools		v8r1
 use GaudiAud 		v6r4
 use GaudiDb 		v9r2
 use GaudiRootDb 	v9r4
@@ -39,15 +40,12 @@ use GaudiPoolDb		v1r5
 use GaudiObjDesc 	v6r2p1
 use HbookCnv 		v14r1
 
-# Temporarily from LHCb v15r5, bug fixes needed by Rich
-use GaudiTools		v8r1
-
 #-- Databases
-use XmlDDDB	v22r0	Det
+use XmlDDDB	v22r1	Det
 use ParamFiles	v3r4	-no_auto_imports
 use FieldMap	v4r5
 
-#-- LHCb libraries (from LHCB_v15r5)
+#-- LHCb libraries (from LHCB_v15r6)
 use LHCb	v15r5
 
 #-- BooleSys v5r4 packages
