@@ -1,0 +1,11 @@
+!-----------------------------------------------------------------------------
+! Package     : Sim/Gauss
+! Responsible : Florence RANJARD
+! Purpose     : LHCb Simulation Application with Geant4
+!-----------------------------------------------------------------------------
+
+!========================== Gauss v19r0 ==================================
+! 2005-01-25 - Florence RANJARD
+ - release_notes.html and doxygen documentation are within GaussSys
+
+!===========================================================================
