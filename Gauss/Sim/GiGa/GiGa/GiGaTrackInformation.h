@@ -23,15 +23,15 @@ class GiGaTrackInformation : public G4VUserTrackInformation
   ///
 public:
   ///
-  inline          GiGaTrackInformation() ;
-  virtual inline ~GiGaTrackInformation() ; 
+  GiGaTrackInformation() ;
+  virtual ~GiGaTrackInformation() ; 
   ///
   inline void* operator new    ( size_t );
   inline void  operator delete ( void*  );
   ///
   virtual void Print() const;   /// from base class
   ///
-  /// track is forced to eb saved into trajectory 
+  /// track is forced to be saved into trajectory 
   inline GiGaTrackInformation&  setToBeStored               ( const bool ) ;
   inline const bool             toBeStored                  () const ;  
   ///

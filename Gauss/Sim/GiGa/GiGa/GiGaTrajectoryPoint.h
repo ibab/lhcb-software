@@ -22,10 +22,10 @@ class GiGaTrajectoryPoint: public G4TrajectoryPoint
   ///
 public:
   ///
-  inline GiGaTrajectoryPoint ();
-  inline GiGaTrajectoryPoint ( const Hep3Vector&  Pos  , const double& Time );
-  inline GiGaTrajectoryPoint ( const HepLorentzVector&    right );
-  inline GiGaTrajectoryPoint ( const GiGaTrajectoryPoint& right ); 
+  GiGaTrajectoryPoint ();
+  GiGaTrajectoryPoint ( const Hep3Vector&  Pos  , const double& Time );
+  GiGaTrajectoryPoint ( const HepLorentzVector&    right );
+  GiGaTrajectoryPoint ( const GiGaTrajectoryPoint& right ); 
   ///
   virtual ~GiGaTrajectoryPoint();
   ///
