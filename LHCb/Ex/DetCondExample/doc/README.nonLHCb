@@ -1,4 +1,4 @@
-# $Id: README.nonLHCb,v 1.8 2002-12-04 14:50:22 andreav Exp $
+# $Id: README.nonLHCb,v 1.9 2002-12-04 15:03:48 andreav Exp $
 
 ------------------------------------------------------------------------------
 How to install the code from a non-LHCb account
@@ -31,11 +31,13 @@ area (eg a scratch area for lack of quota...) change the first line!
    cd ${CDBCMT}
    tar -xvzf /afs/cern.ch/user/a/andreav/public/DetCondExample_v4r2.tar.gz
    cd Ex/DetCondExample/v4r2/cmt
-   cmt broadcast -select=Cond cmt config
+   cmt broadcast -select=$CDBCMT cmt config
+   cmt config
 
    # Build the code in debug mode
    cd ${CDBCMT}
-   cmt broadcast -select=Cond gmake tag=$CMTDEB
+   cmt broadcast -select=$CDBCMT gmake tag=$CMTDEB
+   gmake tag=$CMTDEB
 
    # Setup the example environment
    # Enter your preferred connection parameters
