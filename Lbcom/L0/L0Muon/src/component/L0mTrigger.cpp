@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/L0/L0Muon/src/component/L0mTrigger.cpp,v 1.6 2002-06-28 09:13:19 atsareg Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/L0/L0Muon/src/component/L0mTrigger.cpp,v 1.7 2002-08-02 10:46:42 atsareg Exp $
 
 /// Include files
 /// Gaudi interfaces
@@ -16,10 +16,12 @@
 #include "MuonTools/IMuonTileXYZTool.h"   
 
 /// Private classes to the example
-#include "Event/MuonDigit.h"
-#include "Event/L0MuonCandidate.h"
 #include "L0Muon/L0mTrigger.h"
 #include "L0Muon/L0mTower.h"
+#include "Event/MuonDigit.h"
+#include "Event/MuonCoord.h"
+#include "Event/L0MuonCandidate.h"
+
 
 //------------------------------------------------------------------------------
 //
@@ -49,8 +51,13 @@ L0mTrigger::L0mTrigger(const std::string& name, ISvcLocator* pSvcLocator)
    m_mode = "Standard";
    declareProperty("Mode", m_mode);
    declareProperty("LimitedY", m_limitedY = true );
+   declareProperty("IgnoreM1", m_ignoreM1 = false );
+   declareProperty("SeedClustering", m_seedClustering = false );
+   declareProperty("InputFromMuonCoords", m_inputFromMuonCoords = false );
    declareProperty("PtPrecision", m_precision=40.);
    declareProperty("PtMaxBins", m_bins=128);
+   
+   m_OKcandidates = 0;
 }
 
 StatusCode L0mTrigger::initialize()   { 
@@ -114,13 +121,35 @@ StatusCode L0mTrigger::initialize()   {
       log << *ii << " ";
     }
     log << endreq;
-    log << MSG::DEBUG << "Extrapolation to M1: " ;
-    for (ii = m_extraM1.begin(); ii != m_extraM1.end(); ii++) {
-      log << *ii << " ";
-    }
-    log << endreq;
+    
+    if(!m_ignoreM1) {
+      log << MSG::DEBUG << "Extrapolation to M1: " ;
+      for (ii = m_extraM1.begin(); ii != m_extraM1.end(); ii++) {
+	log << *ii << " ";
+      }
+      log << endreq;
+    }  
     log << MSG::DEBUG << "Pt precision: " << m_precision << endreq;
     log << MSG::DEBUG << "bins for Pt encoding: " << m_bins << endreq;
+    
+    if (m_limitedY) {
+      log << MSG::DEBUG << "Limited Y mode" << endreq;
+    } else {
+      log << MSG::DEBUG << "Non-limited Y mode" << endreq;
+    }
+    if (m_ignoreM1) {
+      log << MSG::DEBUG << "Ignore M1 mode" << endreq;
+    } else {
+      log << MSG::DEBUG << "Non-ignore M1 mode" << endreq;
+    }
+    if (m_inputFromMuonCoords) {
+      log << MSG::DEBUG << "Input from MuonCoord's" << endreq;
+    } else {
+      log << MSG::DEBUG << "Input from MuonDigit's" << endreq;
+    }
+    if (m_seedClustering) {
+      log << MSG::DEBUG << "Seed clusters removal requested" << endreq;
+    } 
     return StatusCode::SUCCESS;
 }
 
@@ -129,69 +158,20 @@ StatusCode L0mTrigger::execute() {
   MsgStream log(msgSvc(), name());
   
   log << MSG::DEBUG << "execute" << endreq;
-    
-  //===============================
-  // get Muon digitisations
-  //===============================
-  log << MSG::DEBUG << "Retrieving MuonDigits...  ";  
-  SmartDataPtr<MuonDigits> digits(eventSvc(),MuonDigitLocation::MuonDigit);
-  if(!digits){
-    log << MSG::ERROR 
-        << "Could not retrieve " << MuonDigitLocation::MuonDigit
-        << " from TDS" << endreq;
-    return StatusCode::FAILURE;
-  }    
-  log << MSG::DEBUG << "Done, total digits " << digits->size() << endreq;
   
   //==========================================
   // construct muon pads for trigger needs
-  //==========================================
-  
-  log << MSG::DEBUG << "Crossing the strips ...  ";
-  
-  m_pads.clear();
-  MuonDigits::const_iterator id;
-  std::vector<MuonTileID> hstrips;
-  std::vector<MuonTileID> vstrips;
-  
-  for( id = digits->begin() ; id != digits->end() ; id++ ){
-    MuonTileID mkey = (*id)->key();
-    mkey.setReadout(0);
-    mkey.setLayer(0);
-    int sta = mkey.station();
-    int reg = mkey.region();
-    if( m_lulayout.regionLayout(sta,reg).isDefined() ) {
-    
-      // This is a strip, sort it in vertical and horizontal ones
-      if(mkey.layout().xGrid() > mkey.layout().yGrid()) {
-        vstrips.push_back(mkey);
-      } else {
-        hstrips.push_back(mkey);
-      }
-      // This is a pad, let it go as it is
-    } else {
-      m_pads.push_back(L0mPad(mkey));
-      // cout << "mpad: " << mkey << endl;
-    }
+  //==========================================  
+  StatusCode sc;  
+  if(m_inputFromMuonCoords) {
+    sc = makePadsFromCoords(); 
+  } else {
+    sc = makePadsFromDigits();
+  }  
+  if(sc.isFailure()) {
+    log << MSG::ERROR << "failed to build pads" << endreq;
+    return sc;
   }
-  //==============================
-  //  Cross the strips now
-  //==============================
-  
-  //cout << "crossing strips ... " << endl;
-  
-  std::vector<MuonTileID>::const_iterator ih;
-  std::vector<MuonTileID>::const_iterator iv; 
-  for ( ih = hstrips.begin(); ih != hstrips.end(); ih ++ ) {
-    for ( iv = vstrips.begin(); iv != vstrips.end(); iv ++ ) {
-      MuonTileID cross = ih->intercept(*iv);
-      if ( cross.isValid() ) {
-        m_pads.push_back(L0mPad(cross));
-	// cout << "cross: " << cross << endl;
-      }
-    }
-  }
-  
   
   log << MSG::DEBUG << "Done, # of L0mPads " << m_pads.size() << endreq;  
   
@@ -200,7 +180,6 @@ StatusCode L0mTrigger::execute() {
   //=========================================
   // create the collection of L0mTowers
   //=========================================
-  StatusCode sc;
   
   log << MSG::DEBUG << "Creating towers...  "; 
   
@@ -210,6 +189,7 @@ StatusCode L0mTrigger::execute() {
     if((*ip).padId().station() == 2) {        
       lt = createTower(ip, m_pads);
       lt->setMuonTool(m_iTileXYZTool);
+      lt->setFlagIgnoreM1(m_ignoreM1);
       m_towers.push_back(lt);
       if (lt->isFull()) lt->draw(log);
     }     
@@ -281,11 +261,15 @@ StatusCode L0mTrigger::execute() {
   m_towers.clear();
   m_pads.clear();
   
+  log << MSG::DEBUG << "=======> This event L0Muon trigger summary: " << endreq;
   log << MSG::DEBUG << "Total number of the candidates: " << cand->size()
       << endreq;  
   L0MuonCandidates::iterator im;
+  int icount = 0;
   for(im = cand->begin(); im != cand->end(); im++ ) {
     if ( (*im)->status() == L0Muon::OK ) {
+      log << MSG::DEBUG << "Parameters of the candidate # " << icount
+          << endreq; 
       log << MSG::DEBUG << "Pt of the candidate = " << (*im)->pt() 
           << endreq;   
       log << MSG::DEBUG << "Theta of the candidate = " << (*im)->theta() 
@@ -294,6 +278,8 @@ StatusCode L0mTrigger::execute() {
           << endreq;  
       log << MSG::DEBUG << "Status of the candidate = " << (*im)->status()
 	  << endreq;   
+      m_OKcandidates++;	  
+      icount++;
     }			 
   }
   
@@ -306,6 +292,10 @@ StatusCode L0mTrigger::finalize()  {
   for( ip=m_crates.begin(); ip != m_crates.end(); ip++) {
     delete *ip;
   }
+  MsgStream log(msgSvc(), name());
+  log << MSG::DEBUG << "=====> Final summary of the L0Muon trigger: " << endreq;
+  log << MSG::DEBUG << "Total of OK candidates in this job: " <<
+                       m_OKcandidates << endreq;
 
   return StatusCode::SUCCESS;
 }
@@ -391,5 +381,110 @@ L0mTower* L0mTrigger::createTower(L0mPad* pad, const std::vector<L0mPad>& pads){
   return lt;
 }    
 
+StatusCode L0mTrigger::makePadsFromDigits(){
 
+  MsgStream log(msgSvc(), name());
+  m_pads.clear();
+  
+  //===============================
+  // get Muon digitisations
+  //===============================
+  log << MSG::DEBUG << "Retrieving MuonDigits...  ";  
+  SmartDataPtr<MuonDigits> digits(eventSvc(),MuonDigitLocation::MuonDigit);
+  if(!digits){
+    log << MSG::ERROR 
+        << "Could not retrieve " << MuonDigitLocation::MuonDigit
+        << " from TES" << endreq;
+    return StatusCode::FAILURE;
+  }
+  log << MSG::DEBUG << "Done, # of MuonDigits " << digits->size() << endreq;    
+  
+  MuonDigits::const_iterator id;
+  std::vector<MuonTileID> hstrips;
+  std::vector<MuonTileID> vstrips;
+  
+  for( id = digits->begin() ; id != digits->end() ; id++ ){
+    MuonTileID mkey = (*id)->key();
+    mkey.setReadout(0);
+    mkey.setLayer(0);
+    int sta = mkey.station();
+    int reg = mkey.region();
+    if( m_lulayout.regionLayout(sta,reg).isDefined() ) {
+    
+      // This is a strip, sort it in vertical and horizontal ones
+      if(mkey.layout().xGrid() > mkey.layout().yGrid()) {
+        vstrips.push_back(mkey);
+      } else {
+        hstrips.push_back(mkey);
+      }
+      // This is a pad, let it go as it is
+    } else {
+      m_pads.push_back(L0mPad(mkey));
+      // cout << "mpad: " << mkey << endl;
+    }
+  }
+  //==============================
+  //  Cross the strips now
+  //==============================
+  
+  //cout << "crossing strips ... " << endl;
+  
+  std::vector<MuonTileID>::const_iterator ih;
+  std::vector<MuonTileID>::const_iterator iv; 
+  for ( ih = hstrips.begin(); ih != hstrips.end(); ih ++ ) {
+    for ( iv = vstrips.begin(); iv != vstrips.end(); iv ++ ) {
+      MuonTileID cross = ih->intercept(*iv);
+      if ( cross.isValid() ) {
+        m_pads.push_back(L0mPad(cross));
+	// cout << "cross: " << cross << endl;
+      }
+    }
+  }
+  return StatusCode::SUCCESS;
+}
 
+StatusCode L0mTrigger::makePadsFromCoords(){
+
+  MsgStream log(msgSvc(), name());
+  int ista;
+  std::string stationPattern = MuonCoordLocation::MuonCoords;
+  m_pads.clear();
+
+  for (ista = 0; ista < 5; ista++) {
+  
+    //===============================
+    // get Muon Coordinates
+    //===============================  
+    char stationPath[100];
+    sprintf(stationPath,stationPattern.c_str(),ista+1);
+    std::string pathInTES = stationPath;    
+
+    log << MSG::DEBUG << "Retrieving MuonCoords for station " << ista 
+                      << "...  ";  
+    SmartDataPtr<MuonCoords> coords(eventSvc(),pathInTES);
+    if(!coords){
+      log << MSG::ERROR 
+          << "Could not retrieve " << pathInTES
+          << " from TDS" << endreq;
+      return StatusCode::FAILURE;
+    }    
+    log << MSG::DEBUG << "Done, total coordinates " << coords->size() << endreq;
+    
+    MuonCoords::const_iterator id;
+    std::vector<MuonTileID> hstrips;
+    std::vector<MuonTileID> vstrips;
+
+    for( id = coords->begin() ; id != coords->end() ; id++ ){
+      MuonTileID mkey = (*id)->key();
+      mkey.setReadout(0);
+      mkey.setLayer(0);
+      int sta = mkey.station();
+      int reg = mkey.region();
+      if( m_layout.regionLayout(sta,reg).isValidID(mkey) ) {
+	m_pads.push_back(L0mPad(mkey));
+	// cout << "mpad: " << mkey << endl;
+      }
+    }
+  }
+  return StatusCode::SUCCESS;  
+}
