@@ -4,8 +4,11 @@
  *  Header file for detector description class : DeRich1
  *
  *  CVS Log :-
- *  $Id: DeRich1.h,v 1.9 2004-07-27 08:55:22 jonrob Exp $
+ *  $Id: DeRich1.h,v 1.10 2004-10-18 09:21:48 jonrob Exp $
  *  $Log: not supported by cvs2svn $
+ *  Revision 1.9  2004/07/27 08:55:22  jonrob
+ *  Add doxygen file documentation and CVS information
+ *
  *
  *  @author Antonis Papanestis   a.papanestis@rl.ac.uk
  *  @date   2004-06-18
@@ -69,7 +72,7 @@ public:
    * @param side Which side: top or bottom
    * @return The nominal centre of curvature
    */
-  virtual inline const HepPoint3D & nominalCentreOfCurvature(Rich::Side side) const
+  virtual inline const HepPoint3D & nominalCentreOfCurvature(const Rich::Side side) const
   {
     return ( Rich::bottom == side ? m_nominalCentreOfCurvatureBottom :
              m_nominalCentreOfCurvature );
@@ -81,7 +84,7 @@ public:
    * @param side Which side: top or bottom
    * @return The nominal normal vector
    */
-  virtual inline const HepNormal3D & nominalNormal(Rich::Side side) const
+  virtual inline const HepNormal3D & nominalNormal(const Rich::Side side) const
   {
     return ( Rich::bottom == side ? m_nominalNormalBottom : m_nominalNormal );
   }
@@ -92,7 +95,7 @@ public:
    * @param side Which side: top or bottom
    * @return The nominal flat mirror plane
    */
-  virtual inline const HepPlane3D & nominalPlane(Rich::Side side) const
+  virtual inline const HepPlane3D & nominalPlane(const Rich::Side side) const
   {
     return ( Rich::top == side ? m_nominalPlaneTop : m_nominalPlaneBottom );
   }

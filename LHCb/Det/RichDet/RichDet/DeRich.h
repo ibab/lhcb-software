@@ -4,8 +4,11 @@
  *  Header file for detector description class : DeRich
  *
  *  CVS Log :-
- *  $Id: DeRich.h,v 1.7 2004-09-01 15:20:19 papanest Exp $
+ *  $Id: DeRich.h,v 1.8 2004-10-18 09:21:48 jonrob Exp $
  *  $Log: not supported by cvs2svn $
+ *  Revision 1.7  2004/09/01 15:20:19  papanest
+ *  added functions for TabProps
+ *
  *  Revision 1.6  2004/07/27 08:55:22  jonrob
  *  Add doxygen file documentation and CVS information
  *
@@ -84,7 +87,7 @@ public:
    * @param side Which side: top, bottom (Rich1), left, right (Rich2)
    * @return The nominal centre of curvature
    */
-  virtual const HepPoint3D& nominalCentreOfCurvature(Rich::Side side) const =0;
+  virtual const HepPoint3D& nominalCentreOfCurvature(const Rich::Side side) const = 0;
 
   /**
    * Returns the nominal normal vector of the flat mirror plane for this Rich
@@ -92,7 +95,7 @@ public:
    * @param side Which side: top, bottom (Rich1), left, right (Rich2)
    * @return The nominal normal vector
    */
-  virtual const HepNormal3D& nominalNormal(Rich::Side side) const = 0;
+  virtual const HepNormal3D& nominalNormal(const Rich::Side side) const = 0;
 
   /**
    * Returns the nominal flat mirror plane for this Rich
@@ -100,7 +103,7 @@ public:
    * @param side Which side: top, bottom (Rich1), left, right (Rich2)
    * @return The nominal flat mirror plane
    */
-  virtual const HepPlane3D& nominalPlane(Rich::Side side) const = 0;
+  virtual const HepPlane3D& nominalPlane(const Rich::Side side) const = 0;
 
   /**
    * Check on which side of this Rich lies this point
@@ -108,7 +111,7 @@ public:
    * @param point A point in the global coordinate system
    * @return The side for this point
    */
-  virtual Rich::Side side( const HepPoint3D& point ) const = 0;
+  virtual Rich::Side side( const HepPoint3D & point ) const = 0;
 
 
   /**
@@ -116,7 +119,8 @@ public:
    *
    * @return The nominal spherical mirror radius
    */
-  inline virtual double sphMirrorRadius() const {
+  inline virtual double sphMirrorRadius() const 
+  {
     return m_sphMirrorRadius;
   }
 
@@ -126,7 +130,8 @@ public:
    *
    * @return Pointer to gas window refIndex
    */
-  inline virtual const TabulatedProperty* gasWinRefIndex() {
+  inline virtual const TabulatedProperty* gasWinRefIndex() const 
+  {
     return m_gasWinRefIndex;
   }
 
@@ -136,7 +141,8 @@ public:
    *
    * @return Pointer gas window absorption length
    */
-  inline virtual const TabulatedProperty* gasWinAbsLength() {
+  inline virtual const TabulatedProperty* gasWinAbsLength() const 
+  {
     return m_gasWinAbsLength;
   }
 
@@ -146,7 +152,8 @@ public:
    *
    * @return Pointer to quantum efficiency (can be null)
    */
-  inline virtual const TabulatedProperty* nominalHPDQuantumEff() {
+  inline virtual const TabulatedProperty* nominalHPDQuantumEff() const 
+  {
     return m_HPDQuantumEff;
   }
 
@@ -155,7 +162,7 @@ public:
    * be used to test if the mirror segment is at the edge or not
    * @return Position (row/column) for this spherical mirror segment
    */
-  virtual RichMirrorSegPosition sphMirrorSegPos( int mirrorNumber );
+  virtual RichMirrorSegPosition sphMirrorSegPos( const int mirrorNumber );
 
   /**
    * Method to find the row/column of a flat mirror segment. It can be used to 
@@ -163,7 +170,7 @@ public:
    *
    * @return Position (row/column) for this flat mirror segment
    */
-  virtual RichMirrorSegPosition flatMirrorSegPos( int mirrorNumber );
+  virtual RichMirrorSegPosition flatMirrorSegPos( const int mirrorNumber );
 
   /**
    * Method to test if the user parameter vector is in the xml description
@@ -172,7 +179,7 @@ public:
    * @retval true  The vector exists as a user parameter in the xml
    * @retval false The vector is not in the xml description
    */
-  bool hasParamVector( std::string vectorName );
+  bool hasParamVector( const std::string & vectorName );
 
   /**
    * Method to test if the user parameter is in the xml description
@@ -181,7 +188,7 @@ public:
    * @retval true  The parameter exists as a user parameter in the xml
    * @retval false The parameter is not in the xml description
    */
-  bool hasParam( std::string paramName );
+  bool hasParam( const std::string & paramName );
 
 protected:
 

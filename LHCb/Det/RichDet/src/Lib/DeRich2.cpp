@@ -4,8 +4,11 @@
  *  Implementation file for detector description class : DeRich2
  *
  *  CVS Log :-
- *  $Id: DeRich2.cpp,v 1.10 2004-09-01 15:20:19 papanest Exp $
+ *  $Id: DeRich2.cpp,v 1.11 2004-10-18 09:21:49 jonrob Exp $
  *  $Log: not supported by cvs2svn $
+ *  Revision 1.10  2004/09/01 15:20:19  papanest
+ *  added functions for TabProps
+ *
  *  Revision 1.9  2004/07/27 08:55:23  jonrob
  *  Add doxygen file documentation and CVS information
  *
@@ -45,7 +48,8 @@ const CLID& DeRich2::classID() {
 
 //===========================================================================
 
-StatusCode DeRich2::initialize() {
+StatusCode DeRich2::initialize() 
+{
 
   MsgStream log(msgSvc(), "DeRich2" );
   log << MSG::DEBUG <<"Starting initialisation for DeRich2"<< endreq;  

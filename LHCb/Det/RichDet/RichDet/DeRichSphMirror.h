@@ -4,8 +4,11 @@
  *  Header file for detector description class : DeRichSphMirror
  *
  *  CVS Log :-
- *  $Id: DeRichSphMirror.h,v 1.6 2004-07-27 08:55:22 jonrob Exp $
+ *  $Id: DeRichSphMirror.h,v 1.7 2004-10-18 09:21:49 jonrob Exp $
  *  $Log: not supported by cvs2svn $
+ *  Revision 1.6  2004/07/27 08:55:22  jonrob
+ *  Add doxygen file documentation and CVS information
+ *
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2004-06-18
@@ -33,6 +36,7 @@ extern const CLID& CLID_DeRichSphMirror;
 class DeRichSphMirror: public DetectorElement {
 
 public:
+
   /**
    * Constructor for this class
    */
@@ -47,7 +51,8 @@ public:
    * Retrieves reference to class identifier
    * @return the class identifier for this class
    */
-  const CLID& clID() const {
+  const CLID& clID() const
+  {
     return classID();
   }
 
@@ -69,7 +74,8 @@ public:
    * Retrieves the centre of curvarute of this mirror
    * @return The centre of curvature of this mirror as a HepPoint3D
    */
-  inline HepPoint3D centreOfCurvature(){
+  inline const HepPoint3D & centreOfCurvature() const
+  {
     return m_centreOfCurvature;
   }
 
@@ -77,7 +83,8 @@ public:
    * Retrieves the centre this mirror on the reflective surface.
    * @return The mirror centre as HepPoint3D
    */
-  inline HepPoint3D mirrorCentre(){
+  inline const HepPoint3D & mirrorCentre() const
+  {
     return m_mirrorCentre;
   }
 
@@ -85,7 +92,8 @@ public:
    * Retrieves the segment number of this spherical mirror
    * @return The number of this mirror
    */
-  inline int mirrorNumber(){
+  inline int mirrorNumber() const
+  {
     return m_mirrorNumber;
   }
 
@@ -93,7 +101,8 @@ public:
    * Retrieves the radius of this spherical mirror
    * @return The radius of this spherical mirror
    */
-  inline double radius(){
+  inline double radius() const
+  {
     return m_radius;
   }
 
@@ -109,9 +118,9 @@ public:
    * intersction point
    * @return Intersection point
    */
-  StatusCode intersects(const HepPoint3D& globalP,
-                        const HepVector3D& globalV,
-                        HepPoint3D& intersectionPoint);
+  StatusCode intersects ( const HepPoint3D& globalP,
+                          const HepVector3D& globalV,
+                          HepPoint3D& intersectionPoint );
 
 private:
 

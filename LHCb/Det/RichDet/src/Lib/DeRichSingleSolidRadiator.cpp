@@ -4,8 +4,11 @@
  *  Implementation file for detector description class : DeRichSingleSolidRadiator
  *
  *  CVS Log :-
- *  $Id: DeRichSingleSolidRadiator.cpp,v 1.4 2004-09-01 15:20:19 papanest Exp $
+ *  $Id: DeRichSingleSolidRadiator.cpp,v 1.5 2004-10-18 09:21:49 jonrob Exp $
  *  $Log: not supported by cvs2svn $
+ *  Revision 1.4  2004/09/01 15:20:19  papanest
+ *  added functions for TabProps
+ *
  *  Revision 1.3  2004/07/27 08:55:23  jonrob
  *  Add doxygen file documentation and CVS information
  *
@@ -49,21 +52,19 @@ const CLID& DeRichSingleSolidRadiator::classID() {
 StatusCode DeRichSingleSolidRadiator::initialize() {
 
   MsgStream log(msgSvc(), "DeRichSingleSolidRadiator" );
-  log << MSG::DEBUG <<"Starting initialisation for DeRichSingleSolidRadiator "
+  log << MSG::DEBUG << "Starting initialisation for DeRichSingleSolidRadiator "
       << name() << endreq;
 
   StatusCode sc = StatusCode::SUCCESS;
-  StatusCode fail = StatusCode::FAILURE;
 
-  if ( DeRichRadiator::initialize().isFailure() ) return fail;
+  if ( DeRichRadiator::initialize().isFailure() ) return StatusCode::FAILURE;
   
   m_solid = geometry()->lvolume()->solid();
 
-  const Material::Tables& myTabProp = geometry()->lvolume()->material()->
-    tabulatedProperties();
+  const Material::Tables& myTabProp = geometry()->lvolume()->material()->tabulatedProperties();
   Material::Tables::const_iterator matIter;
-  for (matIter=myTabProp.begin(); matIter!=myTabProp.end(); ++matIter) {
-    if( (*matIter) ){
+  for ( matIter = myTabProp.begin(); matIter!=myTabProp.end(); ++matIter ) {
+    if ( (*matIter) ) {
       if ( (*matIter)->type() == "RINDEX" ) {
         m_refIndex = (*matIter);
       }
@@ -76,7 +77,7 @@ StatusCode DeRichSingleSolidRadiator::initialize() {
   if (!m_refIndex) {
     log << MSG::ERROR << "Radiator " << name() << " without refractive index"
         << endmsg;
-    return fail;
+    return StatusCode::FAILURE;
   }
 
   HepPoint3D zero(0.0, 0.0, 0.0);

@@ -7,8 +7,11 @@
  *  one less HPD than even columns
  *
  *  CVS Log :-
- *  $Id: DeRich1CdfHPDPanel.cpp,v 1.16 2004-07-27 08:55:23 jonrob Exp $
+ *  $Id: DeRich1CdfHPDPanel.cpp,v 1.17 2004-10-18 09:21:49 jonrob Exp $
  *  $Log: not supported by cvs2svn $
+ *  Revision 1.16  2004/07/27 08:55:23  jonrob
+ *  Add doxygen file documentation and CVS information
+ *
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2004-06-18
@@ -139,7 +142,7 @@ bool DeRich1CdfHPDPanel::findHPDRowCol ( const HepPoint3D& inPanel,
 //  convert a point from the panel to the global coodinate system
 //=========================================================================
 HepPoint3D DeRich1CdfHPDPanel::globalPosition( const HepPoint3D& localPoint,
-                                               Rich::Side side) {
+                                               const Rich::Side side) {
 
   int sign(1);
   if (side == Rich::top) sign = -1;

@@ -4,8 +4,11 @@
  *  Header file for detector description class : DeRichMultiSolidRadiator
  *
  *  CVS Log :-
- *  $Id: DeRichMultiSolidRadiator.h,v 1.4 2004-09-01 15:20:19 papanest Exp $
+ *  $Id: DeRichMultiSolidRadiator.h,v 1.5 2004-10-18 09:21:49 jonrob Exp $
  *  $Log: not supported by cvs2svn $
+ *  Revision 1.4  2004/09/01 15:20:19  papanest
+ *  added functions for TabProps
+ *
  *  Revision 1.3  2004/07/27 08:55:22  jonrob
  *  Add doxygen file documentation and CVS information
  *
@@ -51,7 +54,8 @@ public:
    * Retrieves reference to class identifier
    * @return the class identifier for this class
    */
-  const CLID& clID() const {
+  const CLID& clID() const 
+  {
     return classID();
   }
 

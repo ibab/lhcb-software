@@ -4,8 +4,11 @@
  *  Implementation file for detector description class : DeRich
  *
  *  CVS Log :-
- *  $Id: DeRich.cpp,v 1.3 2004-09-01 15:20:19 papanest Exp $
+ *  $Id: DeRich.cpp,v 1.4 2004-10-18 09:21:49 jonrob Exp $
  *  $Log: not supported by cvs2svn $
+ *  Revision 1.3  2004/09/01 15:20:19  papanest
+ *  added functions for TabProps
+ *
  *  Revision 1.2  2004/07/27 08:55:23  jonrob
  *  Add doxygen file documentation and CVS information
  *
@@ -64,7 +67,6 @@ StatusCode DeRich::initialize ( ) {
     
     m_positionInfo = true;
   }  
-
   
   log << MSG::DEBUG << "Finished initialisation for DeRich" << endmsg;
   return StatusCode::SUCCESS;
@@ -74,34 +76,24 @@ StatusCode DeRich::initialize ( ) {
 //=========================================================================
 //  find a parameter vector
 //=========================================================================
-bool DeRich::hasParamVector (std::string vectorName ) {
-
-  for (strings::const_iterator it = m_vectorNames.begin();
-       it != m_vectorNames.end(); ++it) {
-    if ( (*it) == vectorName ) return true;
-  }
-  
-  return false;
+bool DeRich::hasParamVector ( const std::string & vectorName ) 
+{
+  return ( m_vectorNames.end() != std::find(m_vectorNames.begin(),m_vectorNames.end(),vectorName) );
 }
 
 //=========================================================================
 //  find a parameter
 //=========================================================================
-bool DeRich::hasParam (std::string paramName ) {
-
-  for (strings::const_iterator it = m_paramNames.begin();
-       it != m_paramNames.end(); ++it) {
-    if ( (*it) == paramName ) return true;
-  }
-  
-  return false;
+bool DeRich::hasParam ( const std::string & paramName ) 
+{
+  return ( m_paramNames.end() != std::find(m_paramNames.begin(),m_paramNames.end(),paramName) );
 }
 
 
 //=========================================================================
 //  
 //=========================================================================
-RichMirrorSegPosition DeRich::sphMirrorSegPos( int mirrorNumber ) {
+RichMirrorSegPosition DeRich::sphMirrorSegPos( const int mirrorNumber ) {
 
   RichMirrorSegPosition mirrorPos;
 
@@ -124,7 +116,8 @@ RichMirrorSegPosition DeRich::sphMirrorSegPos( int mirrorNumber ) {
 //=========================================================================
 //  
 //=========================================================================
-RichMirrorSegPosition DeRich::flatMirrorSegPos( int mirrorNumber ) {
+RichMirrorSegPosition DeRich::flatMirrorSegPos( const int mirrorNumber ) 
+{
 
   RichMirrorSegPosition mirrorPos;
 

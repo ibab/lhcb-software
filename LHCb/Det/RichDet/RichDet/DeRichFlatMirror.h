@@ -4,8 +4,11 @@
  *  Header file for detector description class : DeRichFlatMirror
  *
  *  CVS Log :-
- *  $Id: DeRichFlatMirror.h,v 1.4 2004-07-27 08:55:22 jonrob Exp $
+ *  $Id: DeRichFlatMirror.h,v 1.5 2004-10-18 09:21:49 jonrob Exp $
  *  $Log: not supported by cvs2svn $
+ *  Revision 1.4  2004/07/27 08:55:22  jonrob
+ *  Add doxygen file documentation and CVS information
+ *
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2004-06-18
@@ -35,6 +38,7 @@ extern const CLID& CLID_DeRichFlatMirror;
 class DeRichFlatMirror: public DetectorElement {
 
 public:
+
   /**
    * Default constructor for this class
    */
@@ -49,7 +53,8 @@ public:
    * Retrieves reference to class identifier
    * @return the class identifier for this class
    */
-  const CLID& clID() const {
+  const CLID& clID() const 
+  {
     return classID();
   }
 
@@ -71,7 +76,8 @@ public:
    * Retrieves the normal vector of this flat mirror
    * @return The normal vector of this mirror as a HepNormal3D
    */
-  inline HepNormal3D normalVector(){
+  inline const HepNormal3D & normalVector() const
+  {
     return m_normalVector;
   }
 
@@ -79,7 +85,8 @@ public:
    * Retrieves the centre of this flat mirror
    * @return The centre of this flat mirror on the reflective surface
    */
-  inline HepPoint3D mirrorCentre(){
+  inline const HepPoint3D & mirrorCentre() const 
+  {
     return m_mirrorCentre;
   }
 
@@ -87,7 +94,8 @@ public:
    * Retrieves the plane of this flat mirror
    * @return The plane of this flat mirror as a HepPlane3D
    */
-  inline HepPlane3D mirrorPlane(){
+  inline const HepPlane3D & mirrorPlane() const
+  {
     return m_mirrorPlane;
   }
 
@@ -95,7 +103,8 @@ public:
    * Retrieves the number of this mirror (segment)
    * @return the number of this mirror
    */
-  inline int mirrorNumber(){
+  inline int mirrorNumber() const 
+  {
     return m_mirrorNumber;
   }
 
@@ -104,13 +113,13 @@ public:
    * @return Status of intersection
    * @retval StatusCode::FAILURE No intersection
    */
-  StatusCode intersects(const HepPoint3D& globalP, const HepVector3D& globalV);
+  StatusCode intersects ( const HepPoint3D& globalP, const HepVector3D& globalV );
 
 private:
 
   const ISolid* m_solid;       ///< The mirror solid
 
-  HepVector3D m_normalVector;  ///< The normal vector of the flat mirror
+  HepNormal3D m_normalVector;  ///< The normal vector of the flat mirror
   HepPoint3D  m_mirrorCentre;  ///< The mirror centre on the reflective surface
   HepPlane3D  m_mirrorPlane;   ///< The flat mirror plane
 

@@ -4,8 +4,11 @@
  *  Header file for detector description class : DeRichRadiator
  *
  *  CVS Log :-
- *  $Id: DeRichRadiator.h,v 1.10 2004-09-01 15:20:19 papanest Exp $
+ *  $Id: DeRichRadiator.h,v 1.11 2004-10-18 09:21:49 jonrob Exp $
  *  $Log: not supported by cvs2svn $
+ *  Revision 1.10  2004/09/01 15:20:19  papanest
+ *  added functions for TabProps
+ *
  *  Revision 1.9  2004/07/27 08:55:22  jonrob
  *  Add doxygen file documentation and CVS information
  *
@@ -78,7 +81,8 @@ public:
    * Retrieves the id of this radiator
    * @return The id of this radiator (Aerogel, C4F10, CF4)
    */
-  inline virtual Rich::RadiatorType radiatorID() {
+  inline virtual Rich::RadiatorType radiatorID() const
+  {
     return m_radiatorID;
   }
 
@@ -86,7 +90,8 @@ public:
    * Retrieves the rich detector of this radiator
    * @return the rich detector of this radiator (Rich1/2)
    */
-  inline virtual Rich::DetectorType rich() {
+  inline virtual Rich::DetectorType rich() const
+  {
     return m_rich;
   }
 
@@ -94,7 +99,8 @@ public:
    * Retrieves the refractive index of the radiator
    * @return A pointer to the refractive index of the radiator
    */
-  inline virtual const TabulatedProperty* refIndex() {
+  inline virtual const TabulatedProperty* refIndex() const
+  {
     return m_refIndex;
   }
 
@@ -103,7 +109,8 @@ public:
    * @return A pointer to the Rayleigh tab property
    * @retval NULL No Rayleigh tab property
    */
-  inline virtual const TabulatedProperty* rayleigh() {
+  inline virtual const TabulatedProperty* rayleigh() const
+  {
     return m_rayleigh;
   }
 
@@ -112,19 +119,19 @@ public:
    * @return Status of intersection
    * @retval StatusCode::FAILURE No intersection
    */
-  virtual StatusCode nextIntersectionPoint(const HepPoint3D& pGlobal,
-                                           const HepVector3D& vGlobal,
-                                           HepPoint3D& returnPoint) = 0;
+  virtual StatusCode nextIntersectionPoint( const HepPoint3D& pGlobal,
+                                            const HepVector3D& vGlobal,
+                                            HepPoint3D& returnPoint ) = 0;
   /**
    * Finds the entry and exit points of the radiator. For boolean solids
    * this is the first and last intersection point.
    * @return Status of intersection
    * @retval StatusCode::FAILURE if there is no intersection
    */
-  virtual StatusCode intersectionPoints(const HepPoint3D& pGlobal,
-                                        const HepVector3D& vGlobal,
-                                        HepPoint3D& entryPoint,
-                                        HepPoint3D& exitPoint ) = 0;
+  virtual StatusCode intersectionPoints( const HepPoint3D& pGlobal,
+                                         const HepVector3D& vGlobal,
+                                         HepPoint3D& entryPoint,
+                                         HepPoint3D& exitPoint ) = 0;
 
   /**
    * Finds the intersection points with radiator. For boolean solids there
@@ -133,20 +140,21 @@ public:
    * @return The number of intersection points.
    * @retval Zero if there is no intersction.
    */
-  virtual unsigned int intersectionPoints(const HepPoint3D& pGlobal,
-                                          const HepVector3D& vGlobal,
-                                          std::vector<HepPoint3D>& points) = 0;
+  virtual unsigned int intersectionPoints( const HepPoint3D& pGlobal,
+                                           const HepVector3D& vGlobal,
+                                           std::vector<HepPoint3D>& points ) = 0;
 
 
 protected:
-  
+
   Rich::RadiatorType m_radiatorID;  ///< The radiator id (Aerogel, CF4, C4F10)
   Rich::DetectorType m_rich;        ///< The Rich detector of this radiator
 
   /// pointer to the refractive index of the material
-  const TabulatedProperty* m_refIndex;  
+  const TabulatedProperty* m_refIndex;
+
   /// pointer to the Rayleigh scattering properties
-  const TabulatedProperty* m_rayleigh;  
+  const TabulatedProperty* m_rayleigh;
 };
 
 #endif    // RICHDET_DERICHRADIATOR_H

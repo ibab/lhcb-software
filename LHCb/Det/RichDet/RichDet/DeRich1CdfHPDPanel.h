@@ -4,8 +4,11 @@
  *  Header file for detector description class : DeRich1CdfHPDPanel
  *
  *  CVS Log :-
- *  $Id: DeRich1CdfHPDPanel.h,v 1.12 2004-07-27 08:55:22 jonrob Exp $
+ *  $Id: DeRich1CdfHPDPanel.h,v 1.13 2004-10-18 09:21:48 jonrob Exp $
  *  $Log: not supported by cvs2svn $
+ *  Revision 1.12  2004/07/27 08:55:22  jonrob
+ *  Add doxygen file documentation and CVS information
+ *
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2004-06-18
@@ -84,7 +87,8 @@ public:
    * INSIDE surface of the window).
    * @return The detection plane
    */
-  inline virtual const HepPlane3D & detectionPlane() const {
+  inline virtual const HepPlane3D & detectionPlane() const 
+  {
     return m_detectionPlane;
   }
 
@@ -93,7 +97,8 @@ public:
    * each detector appear side-by-side using the globalToPanel method.
    * @return The offset for the globalToPanel method
    */
-  virtual const double localOffset() const {
+  virtual const double localOffset() const 
+  {
     return m_detPlaneVertEdge;
   }
 
@@ -111,40 +116,34 @@ protected:
   /**
    * Returns the number of HPDs in the panel
    */
-  inline virtual unsigned int PDMax() {
+  inline virtual unsigned int PDMax() const 
+  {
     return static_cast<int>(0.5*m_HPDColumns)*m_HPDsIn2Cols + m_HPDsInBigCol;
   }
 
   /**
    * Returns the HPD row in the panel, given the HPD number
    */
-  inline unsigned int PDRow(unsigned int PD) {
-    unsigned int HPDsLeft = PD%m_HPDsIn2Cols;
-    if (HPDsLeft >= m_HPDsInBigCol){
-      return (HPDsLeft - m_HPDsInBigCol);
-    } else {
-      return HPDsLeft;
-    }
+  inline unsigned int PDRow(const unsigned int PD) const
+  {
+    const unsigned int HPDsLeft = PD%m_HPDsIn2Cols;
+    return ( HPDsLeft >= m_HPDsInBigCol ? HPDsLeft - m_HPDsInBigCol : HPDsLeft );
   }
 
   /**
    * Returns the HPD column in the panel, given the HPD number
    */
-  inline unsigned int PDCol(unsigned int PD) {
-    unsigned int HPDsLeft = PD%m_HPDsIn2Cols;
-    if (HPDsLeft >= m_HPDsInBigCol) {
-      return 2*(PD/m_HPDsIn2Cols)+1;
-    } else {
-      return 2*(PD/m_HPDsIn2Cols);
-    }
-
-
+  inline unsigned int PDCol(unsigned int PD) const 
+  {
+    const unsigned int HPDsLeft = PD%m_HPDsIn2Cols;
+    return ( HPDsLeft >= m_HPDsInBigCol ? 2*(PD/m_HPDsIn2Cols)+1 : 2*(PD/m_HPDsIn2Cols) );
   }
 
   /**
    * Returns the HPD at the next row/column depending on panel configurartion
    */
-  inline virtual unsigned int HPDForNS() {
+  inline virtual unsigned int HPDForNS() const
+  {
     return static_cast<int>(ceil(m_HPDRows/2.0));
   }
 
@@ -152,7 +151,8 @@ protected:
    * Returns an HPD number that can be used as the second point for the
    * detection plane.
    */
-  inline virtual unsigned int HPDForB() {
+  inline virtual unsigned int HPDForB() const
+  {
     return static_cast<int>(ceil(m_HPDRows/2.0)) -1;
   }
 
@@ -160,7 +160,8 @@ protected:
    * Returns an HPD number that can be used as the third point for the
    * detection plane.
    */
-  inline virtual unsigned int HPDForC() {
+  inline virtual unsigned int HPDForC() const
+  {
     return static_cast<int>(0.5*m_HPDColumns)*m_HPDRows;
   }
 
@@ -168,8 +169,9 @@ protected:
    * Converts an HPD row and column to a number corresponding
    * to the position of this physical volume in the physical volumes vector
    */
-  inline virtual unsigned int HPDRowColToNum(unsigned int HPDRow,
-                                             unsigned int HPDCol ) {
+  inline virtual unsigned int HPDRowColToNum(const unsigned int HPDRow,
+                                             const unsigned int HPDCol ) const
+  {
     unsigned int HPDNumber;
     unsigned int HPDColDiv2 = HPDCol/2;
     if (0 == HPDCol%2) {

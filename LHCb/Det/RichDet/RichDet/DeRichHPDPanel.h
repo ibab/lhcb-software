@@ -4,8 +4,11 @@
  *  Header file for detector description class : DeRichHPDPanel
  *
  *  CVS Log :-
- *  $Id: DeRichHPDPanel.h,v 1.16 2004-07-28 13:41:16 jonrob Exp $
+ *  $Id: DeRichHPDPanel.h,v 1.17 2004-10-18 09:21:49 jonrob Exp $
  *  $Log: not supported by cvs2svn $
+ *  Revision 1.16  2004/07/28 13:41:16  jonrob
+ *  Add doxygen file documentation and CVS information
+ *
  *  Revision 1.15  2004/07/27 08:55:22  jonrob
  *  Add doxygen file documentation and CVS information
  *
@@ -141,7 +144,7 @@ public:
                                     const HepPoint3D& pGlobal,
                                     HepPoint3D& windowPointGlobal, // return
                                     RichSmartID& smartID,          // return
-                                    RichTraceMode mode );
+                                    const RichTraceMode mode );
 
   /**
    * Returns the intersection point with the detector plane given a vector
@@ -154,7 +157,7 @@ public:
   virtual bool detPlanePoint( const HepPoint3D& pGlobal,
                               const HepVector3D& vGlobal,
                               HepPoint3D& hitPosition,
-                              RichTraceMode mode );
+                              const RichTraceMode mode );
 
   /**
    * Converts a global position to the coordinate system of the
@@ -173,7 +176,7 @@ public:
    * @return Global point.
    */
   virtual HepPoint3D globalPosition( const HepPoint3D& localPoint,
-                                     Rich::Side side) = 0;
+                                     const Rich::Side side) = 0;
 
 
   /**
@@ -191,41 +194,41 @@ protected:
   /**
    * Returns the number of HPDs in the panel
    */
-  virtual unsigned int PDMax() = 0;
+  virtual unsigned int PDMax() const = 0;
 
   /**
    * Returns the HPD row in the panel, given the HPD number
    */
-  virtual unsigned int PDRow(unsigned int PD) = 0;
+  virtual unsigned int PDRow(const unsigned int PD) const = 0;
 
   /**
    * Returns the HPD column in the panel, given the HPD number
    */
-  virtual unsigned int PDCol(unsigned int PD) = 0;
+  virtual unsigned int PDCol(const unsigned int PD) const = 0;
 
   /**
    * Returns the HPD at the next row/column depending on panel configurartion
    */
-  virtual unsigned int HPDForNS() = 0;
+  virtual unsigned int HPDForNS() const = 0;
 
   /**
    * Returns an HPD number that can be used as the second point for the
    * detection plane.
    */
-  virtual unsigned int HPDForB() = 0;
+  virtual unsigned int HPDForB() const = 0;
 
   /**
    * Returns an HPD number that can be used as the third point for the
    * detection plane.
    */
-  virtual unsigned int HPDForC() = 0;
+  virtual unsigned int HPDForC() const = 0;
 
   /**
    * Converts an HPD row and column to a number corresponding
    * to the position of this physical volume in the physical volumes vector
    */
-  virtual unsigned int HPDRowColToNum(unsigned int HPDRow,
-                                      unsigned int HPDCol ) = 0;
+  virtual unsigned int HPDRowColToNum(const unsigned int HPDRow,
+                                      const unsigned int HPDCol ) const = 0;
 
   /**
    * Finds the HPD row and column that corresponds to the x,y coordinates

@@ -4,8 +4,11 @@
  *  Header file for detector description class : DeRich2HPDPanel
  *
  *  CVS Log :-
- *  $Id: DeRich2HPDPanel.h,v 1.11 2004-07-27 08:55:22 jonrob Exp $
+ *  $Id: DeRich2HPDPanel.h,v 1.12 2004-10-18 09:21:49 jonrob Exp $
  *  $Log: not supported by cvs2svn $
+ *  Revision 1.11  2004/07/27 08:55:22  jonrob
+ *  Add doxygen file documentation and CVS information
+ *
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2004-06-18
@@ -54,7 +57,10 @@ public:
    * Retrieves reference to class identifier
    * @return the class identifier for this class
    */
-  const CLID& clID() const { return classID(); }
+  const CLID& clID() const 
+  { 
+    return classID(); 
+  }
 
   /**
    * Retrieves reference to class identifier
@@ -76,7 +82,8 @@ public:
    * INSIDE surface of the window).
    * @return The detection plane
    */
-  inline virtual const HepPlane3D & detectionPlane() const {
+  inline virtual const HepPlane3D & detectionPlane() const 
+  {
     return m_detectionPlane;
   }
 
@@ -85,7 +92,8 @@ public:
    * each detector appear side-by-side using the globalToPanel method.
    * @return The offset for the globalToPanel method
    */
-  virtual const double localOffset() const {
+  virtual const double localOffset() const 
+  {
     return m_detPlaneHorizEdge;
   }
 
@@ -96,36 +104,39 @@ public:
    * @return Global point.
    */
   virtual HepPoint3D globalPosition( const HepPoint3D& localPoint,
-                                     Rich::Side side);
+                                     const Rich::Side side);
 
 protected:
 
   /**
    * Returns the number of HPDs in the panel
    */
-  inline virtual unsigned int PDMax() {
+  inline virtual unsigned int PDMax() const 
+  {
     return m_HPDColumns * m_HPDRows;
   }
-
 
   /**
    * Returns the HPD row in the panel, given the HPD number
    */
-  inline unsigned int PDRow(unsigned int PD) {
+  inline unsigned int PDRow(const unsigned int PD) const 
+  {
     return PD%m_HPDRows;
   }
 
   /**
    * Returns the HPD column in the panel, given the HPD number
    */
-  inline unsigned int PDCol(unsigned int PD) {
+  inline unsigned int PDCol(const unsigned int PD) const 
+  {
     return PD/m_HPDRows;
   }
 
   /**
    * Returns the HPD at the next row/column depending on panel configurartion
    */
-  inline virtual unsigned int HPDForNS() {
+  inline virtual unsigned int HPDForNS() const 
+  {
     return m_HPDRows;
   }
 
@@ -133,7 +144,8 @@ protected:
    * Returns an HPD number that can be used as the second point for the
    * detection plane.
    */
-  inline virtual unsigned int HPDForB() {
+  inline virtual unsigned int HPDForB() const 
+  {
     return m_HPDRows -1;
   }
 
@@ -141,7 +153,8 @@ protected:
    * Returns an HPD number that can be used as the third point for the
    * detection plane.
    */
-  inline virtual unsigned int HPDForC() {
+  inline virtual unsigned int HPDForC() const 
+  {
     return m_HPDRows*m_HPDColumns -
       static_cast<unsigned int>(0.5*m_HPDColumns);
   }
@@ -150,11 +163,11 @@ protected:
    * Converts an HPD row and column to a number corresponding
    * to the position of this physical volume in the physical volumes vector
    */
-  inline virtual unsigned int HPDRowColToNum(unsigned int HPDRow,
-                                             unsigned int HPDCol ) {
+  inline virtual unsigned int HPDRowColToNum(const unsigned int HPDRow,
+                                             const unsigned int HPDCol ) const 
+  {
     return HPDCol * m_HPDRows + HPDRow;
   }
-
 
   /**
    * Finds the HPD row and column that corresponds to the x,y coordinates
@@ -170,14 +183,16 @@ private:
 
   /// The horizontal Edge of the HPD grid coverage
   double m_panelHorizEdge;
+
   /// Absolute value of the horizontal Edge of the HPD grid coverage
   double m_fabs_panelHorizEdge;
 
-
   /// The vertical Edge of the HPD grid for even columns
   double m_panelVerticalEdgeEven;
+
   /// The vertical Edge of the HPD grid for odd columns
   double m_panelVerticalEdgeOdd;
+
   /// The smaller (absolute value) of even and odd columns, to ensure coverage
   double m_panelVerticalEdge;
 
