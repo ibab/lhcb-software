@@ -2,13 +2,21 @@
 ! Package     : Rich/RichMarkovRingFinder
 ! Responsible : Chris Jones
 ! Responsible : Andy Buckley (buckley@hep.phy.cam.ac.uk)
-! Purpose     : Uses a Markov Chain sampler to do ring finding without track
+! Purpose     : Uses a Markov Chain sampler to do ring finding without tracks
 !-----------------------------------------------------------------------------
+
+! 2004-08-24 - Andy Buckley
+ - src/{finder,component}/*
+   . Changed the Lester namespace to RichMarkov
+   . Began generalising the priors etc. to be used in Rich1 as well as Rich2 by
+     making pairs of parameters in finder/Constants.h and accessing them via a
+     template "mode" paramter, which is a static instantiation of a
+     Rich{1,2}Configuration object.
 
 ! 2004-06-29 - Chris Jones
  - Updates for new package structure
 
-! 2004-06-29 - Andrew Buckley
+! 2004-06-29 - Andy Buckley
  - src/component/*
    . Implemented geometric limits for RICH1 (priors still incorrect for RICH1)
    . Moved Markov-ring to track segment matching into the *Alg from the *Moni code.

@@ -35,16 +35,21 @@ namespace RichMarkov {
 
     const double viewRangeParameterRich1( 6 * characteristicCircleRadiusRich1 ); // lets aim to see a width and height of about 6 circles ...
     const double viewRangeParameterRich2( 6 * characteristicCircleRadiusRich2 ); // lets aim to see a width and height of about 6 circles ...
-    //const bool   useOldNewPointMethod( false );
     const bool   useNewThreePointMethod( true );
 
-    const double backgroundRadius( 0.030 * 3.0 );
-    const double backgroundMeanParameter( 34.0 /* number of hits in a saturated circle*/ * 1.5 /*number of "rubbish circle equivalents" we expect to have to endure */ ); // was 10;
-    const int    meanNumberOfRings( 21 ); // was 10;
-    const double circleHitsParameter( 37500 ); // number of hits per circle is approximately given by 37500*r*r (r is measured in radians, of course!) 
+    const double backgroundRadiusRich1( 0.030 * 3.0 );
+    const double backgroundRadiusRich2( 0.030 * 3.0 );
+    const double backgroundMeanParameterRich1( 34.0 /* number of hits in a saturated circle*/ * 1.5 /*number of "rubbish circle equivalents" we expect to have to endure */ ); // was 10;
+    const double backgroundMeanParameterRich2( 34.0 /* number of hits in a saturated circle*/ * 1.5 /*number of "rubbish circle equivalents" we expect to have to endure */ ); // was 10;
+    const int    meanNumberOfRingsRich1( 21 ); // was 10;
+    const int    meanNumberOfRingsRich2( 21 ); // was 10;
+    const double circleHitsParameterRich1( 37500 ); // number of hits per circle is approximately given by 37500*r*r (r is measured in radians, of course!) 
+    const double circleHitsParameterRich2( 37500 ); // number of hits per circle is approximately given by 37500*r*r (r is measured in radians, of course!) 
     //const double circleHitsPerUnitLengthParameter = 30./*approx*/ / (pi*2.*0.030); // 3.; // was 1
-    const double circleMeanRadiusParameter( 0.030 ); // was 1.0;
-    const double circleRadiusSigmaAboutMean( 0.1 * circleMeanRadiusParameter ); // approx guess!
+    const double circleMeanRadiusParameterRich1( 0.030 ); // was 1.0;
+    const double circleMeanRadiusParameterRich2( 0.030 ); // was 1.0;
+    const double circleRadiusSigmaAboutMeanRich1( 0.1 * circleMeanRadiusParameterRich1 ); // approx guess!
+    const double circleRadiusSigmaAboutMeanRich2( 0.1 * circleMeanRadiusParameterRich2 ); // approx guess!
 
     // The following legacy parts are soon to be deleted!
     const double geometricXYAcceptanceLeftBoundLEGACYRich1   ( -350 );
@@ -95,7 +100,6 @@ namespace RichMarkov {
     //const unsigned int numberOfIterationsPerFrame( 500 ); // was 500
     //const unsigned int numberOfFrames( 3 );
     const unsigned int DefaultNumberOfIterations( 1500 );
-
     const double circleDeletionProb( 0.4 );
   }
 

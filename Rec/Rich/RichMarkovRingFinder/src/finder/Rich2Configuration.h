@@ -22,7 +22,7 @@ namespace RichMarkov {
     inline const double characteristicCircleRadius() const { return Constants::characteristicCircleRadiusRich2; }
     inline const double viewRangeParameter()         const { return Constants::viewRangeParameterRich2; }
     inline const double realXYScaleFactor()          const { return Constants::realXYDataInputScaleFactorRich2; }
-    inline double realXYDataInputScaleFactor() const { return realXYScaleFactor(); }
+    inline double realXYDataInputScaleFactor()       const { return realXYScaleFactor(); }
     inline const double saturatedCircleRadiusInXYExternalData() const { return Constants::saturatedCircleRadiusInXYExternalDataRich2; }
 
     inline const double circleCenXMean()             const { return Constants::circleCenXMean; }
@@ -30,8 +30,15 @@ namespace RichMarkov {
     inline const double circleCenXSig()              const { return Constants::circleCenXSigRich2; }
     inline const double circleCenYSig()              const { return Constants::circleCenYSigRich2; }
 
-    inline const double areaScaleForSignal()         const { return Constants::areaScaleForSignalRich1; }
-    inline const double areaScaleForEverything()     const { return Constants::areaScaleForEverythingRich1; }
+    inline const double areaScaleForSignal()         const { return Constants::areaScaleForSignalRich2; }
+    inline const double areaScaleForEverything()     const { return Constants::areaScaleForEverythingRich2; }
+
+    inline const double backgroundMeanParameter()    const { return Constants::backgroundMeanParameterRich2; }
+    inline const double backgroundRadius()           const { return Constants::backgroundRadiusRich2; }
+    inline const double meanNumberOfRings()          const { return Constants::meanNumberOfRingsRich2; }
+    inline const double circleHitsParameter()        const { return Constants::circleHitsParameterRich2; }
+    inline const double circleMeanRadiusParameter()  const { return Constants::circleMeanRadiusParameterRich2; }
+    inline const double circleRadiusSigmaAboutMean() const { return Constants::circleRadiusSigmaAboutMeanRich2; }
 
   private:
     const Pane m_pane;

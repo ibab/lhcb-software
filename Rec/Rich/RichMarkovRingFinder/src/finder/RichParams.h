@@ -80,7 +80,7 @@ namespace RichMarkov {
       const double two = 2;
       const double strangeFactor = (two * MathsConstants::sqrtPi);
       const double oneOnCharacteristicAreaForCentresWandering( strangeFactor * strangeFactor * mode.circleCenXSig() * mode.circleCenYSig() );
-      const double oneOnCharacteristicLengthForRadiiWandering( strangeFactor * Constants::circleRadiusSigmaAboutMean );
+      const double oneOnCharacteristicLengthForRadiiWandering( strangeFactor * mode.circleRadiusSigmaAboutMean() );
       const double characteristicThingForOneCircle( oneOnCharacteristicAreaForCentresWandering * oneOnCharacteristicLengthForRadiiWandering );
       const double characteristicThingForAllCircles( pow(characteristicThingForOneCircle, static_cast<double>(circs.size())) );
 
@@ -93,7 +93,7 @@ namespace RichMarkov {
       return ( circs==other.circs && meanBackground == other.meanBackground );
     }
 
-    RichParams() : meanBackground(Constants::backgroundMeanParameter) {
+    RichParams() : meanBackground( mode.backgroundMeanParameter() ) {
       // Beware! Variables are randomized!
       //jokeSetRandom();
     }

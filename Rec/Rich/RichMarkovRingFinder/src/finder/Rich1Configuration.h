@@ -25,7 +25,7 @@ namespace RichMarkov {
     inline const double characteristicCircleRadius() const { return Constants::characteristicCircleRadiusRich1; }
     inline const double viewRangeParameter()         const { return Constants::viewRangeParameterRich1; }
     inline const double realXYScaleFactor()          const { return Constants::realXYDataInputScaleFactorRich1; }
-    inline double realXYDataInputScaleFactor() const { return realXYScaleFactor(); }
+    inline double realXYDataInputScaleFactor()       const { return realXYScaleFactor(); }
     inline const double saturatedCircleRadiusInXYExternalData() const { return Constants::saturatedCircleRadiusInXYExternalDataRich1; }
 
     inline const double circleCenXMean()             const { return Constants::circleCenXMean; }
@@ -35,6 +35,13 @@ namespace RichMarkov {
 
     inline const double areaScaleForSignal()         const { return Constants::areaScaleForSignalRich1; }
     inline const double areaScaleForEverything()     const { return Constants::areaScaleForEverythingRich1; }
+
+    inline const double backgroundMeanParameter()    const { return Constants::backgroundMeanParameterRich1; }
+    inline const double backgroundRadius()           const { return Constants::backgroundRadiusRich1; }
+    inline const double meanNumberOfRings()          const { return Constants::meanNumberOfRingsRich1; }
+    inline const double circleHitsParameter()        const { return Constants::circleHitsParameterRich1; }
+    inline const double circleMeanRadiusParameter()  const { return Constants::circleMeanRadiusParameterRich1; }
+    inline const double circleRadiusSigmaAboutMean() const { return Constants::circleRadiusSigmaAboutMeanRich1; }
 
   private:
     const Pane m_pane;

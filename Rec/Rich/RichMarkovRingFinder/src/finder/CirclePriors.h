@@ -33,7 +33,7 @@ namespace RichMarkov {
     
     static inline double sampleFromCircleRadiusDistribution() {
       if (Constants::scenario == Constants::simpleModel) {
-        return RandExponential::shoot(Constants::circleMeanRadiusParameter);
+        return RandExponential::shoot( mode.circleMeanRadiusParameter() );
       } else if (Constants::scenario == Constants::rich2A) {
         //std::cerr<<"about to ... " << std::flush;
         const double ans = mode.thetaSampler().sampleAnIndex();
@@ -46,7 +46,7 @@ namespace RichMarkov {
 
     static inline double priorProbabilityOfRadius(const double r) {
       if (Constants::scenario == Constants::simpleModel) {
-        return exponentialProb(r, Constants::circleMeanRadiusParameter);
+        return exponentialProb(r, mode.circleMeanRadiusParameter() );
       } else if (Constants::scenario == Constants::rich2A) {
         return mode.thetaDistribution(r);
       } else {
@@ -56,7 +56,7 @@ namespace RichMarkov {
 
     static inline double sampleFromCircleRadiusDistributionAbove(const double r) {
       if (Constants::scenario == Constants::simpleModel) {
-        return r + RandExponential::shoot(Constants::circleMeanRadiusParameter);
+        return r + RandExponential::shoot( mode.circleMeanRadiusParameter() );
       } else if (Constants::scenario == Constants::rich2A) {
         try {
           const double ans = mode.thetaSampler().sampleAnIndexAbove(r);
@@ -71,7 +71,7 @@ namespace RichMarkov {
 
     static inline double priorProbabilityOfRadiusAbove(const double r) {
       if (Constants::scenario == Constants::simpleModel) {
-        return exponentialProbAbove(r,Constants::circleMeanRadiusParameter);
+        return exponentialProbAbove(r, mode.circleMeanRadiusParameter() );
       } else if (Constants::scenario == Constants::rich2A) {
         // was return 1 in "not-so-bad" version of program!
         return mode.probabilityThetaAbove(r);
@@ -266,12 +266,12 @@ namespace RichMarkov {
       const double one = 1;
       //const double averageHitsFromACircle = Constants::pi * Constants::circleMeanRadiusParameter * Constants::circleHitsPerUnitLengthParameter;
       const double averageHitsFromACircle = CircleParamsT::calculateMeanNumberOfHitsBasedOnRadius(r);
-      const double averageHitsFromCircles = averageHitsFromACircle * Constants::meanNumberOfRings;
-      const double averageHitsFromBg = Constants::backgroundMeanParameter;
+      const double averageHitsFromCircles = averageHitsFromACircle * mode.meanNumberOfRings();
+      const double averageHitsFromBg = mode.backgroundMeanParameter();
       const double averageHitsTotal = averageHitsFromCircles+averageHitsFromBg;
       const double signalPurity = averageHitsFromCircles/(averageHitsTotal);
       const double signalPurityCubed = signalPurity*signalPurity*signalPurity;
-      const double nC = Constants::meanNumberOfRings;
+      const double nC = mode.meanNumberOfRings();
       const double nCSq = nC*nC;
       const double PS = signalPurityCubed/nCSq;
       //const double mu // mean number of hits per unit length on circles
@@ -327,7 +327,7 @@ namespace RichMarkov {
       //const double mu // mean number of hits per unit length on circles
       //  = Constants::circleHitsPerUnitLengthParameter;
       static const double mu // mean number of hits per unit length on circles
-        = CircleParamsT::calculateMeanNumberOfHitsPerUnitLengthBasedOnRadius(Constants::circleMeanRadiusParameter); // bopinse
+        = CircleParamsT::calculateMeanNumberOfHitsPerUnitLengthBasedOnRadius( mode.circleMeanRadiusParameter() ); // bopinse
       static bool otherFirst = true;
       if (otherFirst) {
         std::cerr << "Damn! Since the model for hits per unit length changed from constant to linearly depending on the radius, I haven't got round to updating the CirclePriors::PROPTO_priorProbabilityOfTwoPointsBeingOnACircle method ... so for the moment it has to use the mean circle radius in a place where it should really have done an integral.  Fix ASAP.  This comment is relevant in two separated places marked bopinse and bgvnrht in comments in the code!" << std::endl;
@@ -347,13 +347,13 @@ namespace RichMarkov {
       const double one = 1;
       //const double two = 2;
       //const double averageHitsFromACircle = Constants::pi * Constants::circleMeanRadiusParameter * Constants::circleHitsPerUnitLengthParameter;
-      static const double averageHitsFromACircle = CircleParamsT::calculateMeanNumberOfHitsBasedOnRadius(Constants::circleMeanRadiusParameter); // bgvnrht
-      const double averageHitsFromCircles = averageHitsFromACircle * Constants::meanNumberOfRings;
-      const double averageHitsFromBg = Constants::backgroundMeanParameter;
+      static const double averageHitsFromACircle = CircleParamsT::calculateMeanNumberOfHitsBasedOnRadius( mode.circleMeanRadiusParameter() ); // bgvnrht
+      const double averageHitsFromCircles = averageHitsFromACircle * mode.meanNumberOfRings();
+      const double averageHitsFromBg = mode.backgroundMeanParameter();
       const double averageHitsTotal=averageHitsFromCircles+averageHitsFromBg;
       const double signalPurity = averageHitsFromCircles/(averageHitsTotal);
       const double signalPuritySq = signalPurity*signalPurity;
-      const double PS = signalPuritySq/Constants::meanNumberOfRings;
+      const double PS = signalPuritySq/mode.meanNumberOfRings();
 
       const double extraTerm = averageHitsTotal*(averageHitsTotal-one);
 

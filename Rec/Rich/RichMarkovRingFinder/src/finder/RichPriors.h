@@ -25,11 +25,11 @@ namespace RichMarkov {
   public:
 
     static inline int sampleFromNumberOfCirclesDistribution() {
-      return RandPoisson::shoot(Constants::meanNumberOfRings);
+      return RandPoisson::shoot( mode.meanNumberOfRings() );
     };
 
     static inline double priorProbabilityOfNumberOfCircles(const int n) {
-      return poissonProb(n, Constants::meanNumberOfRings);
+      return poissonProb(n, mode.meanNumberOfRings() );
     };
 
     static inline int sampleFromNumberOfHitsDueToCircle(const CircleParamsT & cp) {
@@ -38,37 +38,37 @@ namespace RichMarkov {
     // probability counterpart not yet implemented
 
     static inline int sampleFromNumberOfHitsDueToBackground() {
-      return RandPoisson::shoot(Constants::backgroundMeanParameter);
+      return RandPoisson::shoot( mode.backgroundMeanParameter() );
     };
     // probability counterpart not yet implemented
 
     static inline Hit sampleHitDueToBackground() {
-      const double x = RandGauss::shoot(0,Constants::backgroundRadius);
-      const double y = RandGauss::shoot(0,Constants::backgroundRadius);
+      const double x = RandGauss::shoot(0, mode.backgroundRadius() );
+      const double y = RandGauss::shoot(0, mode.backgroundRadius() );
       const Hit h(x,y);
       return h;
     };
 
     static inline double priorProbabilityOfHitDueToBackground(const Hep2Vector & p) {
-      const double sigSq = Constants::backgroundRadius*Constants::backgroundRadius;
+      const double sigSq = mode.backgroundRadius() * mode.backgroundRadius();
       const double rSqOnSigSq = p.mag2()/sigSq;
       const double half = 0.5;
       const double one = 1;
-      const double ans = (one/(MathsConstants::twopi*sigSq))*exp(-half*rSqOnSigSq);
+      const double ans = (one / (MathsConstants::twopi*sigSq)) * exp(-half*rSqOnSigSq);
       return ans;
     };
 
     static inline Hit sampleHitDueToCircle(const CircleParamsT & c)
     {
-      const double theta    = RandFlat::shoot(0.,MathsConstants::twopi);
+      const double theta    = RandFlat::shoot(0.0 ,MathsConstants::twopi);
       const double r0       = c.radius();
       const double epsilon  = Constants::circleProbabilityDistributionEpsilonParameter;
-      // the maths of the next bit depends on alpha being 2 (seelab book 5) so:
-      assert (Constants::circleProbabilityDistributionAlphaParameter==2);
+      // the maths of the next bit depends on alpha being 2 (see Lester lab book 5) so:
+      assert (Constants::circleProbabilityDistributionAlphaParameter == 2);
       const double t        = RandGauss::shoot(log(r0),epsilon);
       const double rWobbled = exp(t);
-      const double x        = rWobbled*cos(theta)+c.centre().x();
-      const double y        = rWobbled*sin(theta)+c.centre().y();
+      const double x        = rWobbled * cos(theta) + c.centre().x();
+      const double y        = rWobbled * sin(theta) + c.centre().y();
       return Hit(x,y);
     };
 
@@ -98,7 +98,7 @@ namespace RichMarkov {
           const double logsq   = logg*logg;
           const double two     = 2;
           const double substituteForPow = ( alpha == 2 ? 1 : pow(rOnR0Sq,0.5*(alpha-two)) );
-          return ( 1.0/(MathsConstants::twopi)/sqrt(MathsConstants::twopi*epsSq)*
+          return ( 1.0/(MathsConstants::twopi) / sqrt(MathsConstants::twopi*epsSq)*
                    substituteForPow*exp(-0.5*(logsq/epsSq + alphaSq*epsSq )) / (rSq) );
         };
 

@@ -32,7 +32,7 @@ namespace RichMarkov {
       // calculate"mean number of hits per unit length" for a circle of radius r.
       // (nothing to do with per unit length!)
       const double twopi = MathsConstants::twopi;
-      const double ans = Constants::circleHitsParameter*r/twopi;
+      const double ans = mode.circleHitsParameter() * r /twopi;
       return ans;
     };
 
@@ -41,7 +41,7 @@ namespace RichMarkov {
     {
       // calculate poisson mu "mean number of hits" for a circle of radius r.
       // (nothing to do with per unit length!)
-      const double ans = Constants::circleHitsParameter*r*r;
+      const double ans = mode.circleHitsParameter() * r * r;
       return ans;
     };
 
