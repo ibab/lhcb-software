@@ -4,6 +4,10 @@
 ! Purpose     : Holds generic digitization algorithms
 !-----------------------------------------------------------------------------
 
+!========================= DigiAlg v2r1p1 2003-11-10 ========================
+! 2003-11-10 - Marco Cattaneo
+ - Patch to force recompilation with DAQEvent v2r1
+
 !========================== DigiAlg v2r1 2003-11-04 =========================
 ! 2003-11-04 - Marco Cattaneo
  - BooleInit:    adapt to new naming in DAQEvent v2r0
