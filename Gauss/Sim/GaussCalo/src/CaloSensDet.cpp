@@ -1,8 +1,11 @@
-// $Id: CaloSensDet.cpp,v 1.11 2003-07-08 19:54:48 ibelyaev Exp $ 
+// $Id: CaloSensDet.cpp,v 1.12 2003-10-10 14:53:00 robbep Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.11  2003/07/08 19:54:48  ibelyaev
+//  minor fix for format printout
+//
 // Revision 1.10  2003/07/08 19:40:57  ibelyaev
 //  Sensitive Plane Detector + improved printout
 //
@@ -147,7 +150,7 @@ CaloSensDet::CaloSensDet
  */
 // ============================================================================
 StatusCode CaloSensDet::initialize   ()
-{
+{  
   // initialze the base class 
   StatusCode sc = GiGaSensDetBase::initialize();
   if( sc.isFailure() )
@@ -183,6 +186,7 @@ StatusCode CaloSensDet::initialize   ()
       { Warning ( "Empty vector of input time-histograms" ) ; }
   }
   ///
+    
   return StatusCode::SUCCESS ;
 };
 // ============================================================================
@@ -197,7 +201,7 @@ StatusCode CaloSensDet::initialize   ()
  */
 // ============================================================================
 StatusCode CaloSensDet::finalize    ()
-{
+{  
   if( m_stat ) 
     { /// statistical printout 
       MsgStream log( msgSvc() , name() ) ;
@@ -369,6 +373,7 @@ void CaloSensDet::EndOfEvent( G4HCofThisEvent* HCE )
     format 
     ( " #CaloHits=%4d #CaloSubHits=%4d #TimeSlots=%4d Energy[GeV]=%.3g ",
       nhits , nshits , nthits , energy/GeV ) << endreq ;
+
 };
 // ============================================================================
 
@@ -381,7 +386,7 @@ void CaloSensDet::EndOfEvent( G4HCofThisEvent* HCE )
 bool CaloSensDet::ProcessHits( G4Step* step                      , 
                                G4TouchableHistory* /* history */ ) 
 {
-  
+
   if( 0 == step ) { return false ; } 
   ///
   const double                      deposit  = step-> GetTotalEnergyDeposit () ;
@@ -400,44 +405,47 @@ bool CaloSensDet::ProcessHits( G4Step* step                      ,
   const G4MaterialCutsCouple* const material = preStep -> 
     GetMaterialCutsCouple () ;
   
-  G4TouchableHistory* tHist  = (G4TouchableHistory*)
-    ( step->GetPreStepPoint()->GetTouchable() ) ;
+  //  G4TouchableHistory* tHist  = (G4TouchableHistory*)
+  //    ( step->GetPreStepPoint()->GetTouchable() ) ;
   
-  CaloSim::Path path ;
-  path.reserve( 16 ) ;
+  //  CaloSim::Path path ;
+  //  path.reserve( 16 ) ;
   
-  for( int level = 0 ; level < tHist->GetHistoryDepth() ; ++level ) 
-    {
-      const G4VPhysicalVolume* pv = tHist -> GetVolume( level ) ;
-      if( 0 == pv ) { continue ; }                          // CONTINUE 
-      const G4LogicalVolume*   lv = pv    -> GetLogicalVolume();
-      if( 0 == lv ) { continue ; }                          // CONTINUE 
+  //  for( int level = 0 ; level < tHist->GetHistoryDepth() ; ++level ) 
+  //    {
+  //      const G4VPhysicalVolume* pv = tHist -> GetVolume( level ) ;
+  //      if( 0 == pv ) { continue ; }                          // CONTINUE 
+  //      const G4LogicalVolume*   lv = pv    -> GetLogicalVolume();
+  //      if( 0 == lv ) { continue ; }                          // CONTINUE
       
       //  start volume ? 
-      if      (  m_end == lv  )    { break ; } // BREAK    
+  //      if      (  m_end == lv  )    { break ; } // BREAK    
       // "useful" volume 
-      else if ( !path.empty() ) 
-        { path.push_back( tHist->GetReplicaNumber( level ) ); }
-      else if ( m_start .end() != std::find( m_start .begin () , 
-                                             m_start .end   () , lv ) )
-        { path.push_back( tHist->GetReplicaNumber( level ) ); }
+  //      else if ( !path.empty() ) 
+  //        { path.push_back( tHist->GetReplicaNumber( level ) ); 
+  //      else if ( m_start .end() != std::find( m_start .begin () , 
+  //                                             m_start .end   () , lv ) )
+  //        { path.push_back( tHist->GetReplicaNumber( level ) ); 
       // end volume ?
-    }
-  
-  if( path.empty() ) 
-    { Error("Replica Path is invalid!")      ; return false ; } // RETURN 
+  //    }
+
+  //  if( path.empty() ) 
+  //    { Error("Replica Path is invalid!")      ; return false ; } // RETURN 
   
   // find the cellID 
-  CaloCellID  cellID( m_table( path ) ) ;
-  if( CaloCellID() == cellID ) 
-    {
-      cellID          = calo() -> Cell ( prePoint );
+  //  CaloCellID  cellID( m_table( path ) ) ;
+
+  CaloCellID cellID = calo() -> Cell ( prePoint ) ;
+  
+  //  if( CaloCellID() == cellID ) 
+  //    {
+  //      cellID          = calo() -> Cell ( prePoint );
       // skip the invalid cells 
       if ( !( calo() -> valid( cellID ) ) ) { return false ; }  // RETURN 
-      m_table( path ) = cellID ;
-    }
-  if( CaloCellID() == cellID ) 
-    { Error ("Invalid cell is found") ;       return false ; }  // RETURN 
+      //      m_table( path ) = cellID ;
+      //    }
+      //  if( CaloCellID() == cellID ) 
+      //    { Error ("Invalid cell is found") ;       return false ; }  // RETURN 
   
   // get the existing hit 
   CaloHit*&    hit = m_hitmap( cellID );                        // ATTENTION 
