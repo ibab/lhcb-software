@@ -1,12 +1,12 @@
 package LHCbSys
-version v13r4
+version v13r5
 
 branches doc cmt
  
 #===============================================================
 # LHCb packages used by all applications
 #===============================================================
-use LHCb		v13r4
+use LHCb		v13r5
 
 use GaudiConf		v7r3
 
@@ -25,12 +25,12 @@ use RichKernel  	v4r1	Rich
 use VeloKernel  	v1r3    Velo
 
 # Detector description
-use DetSys		v3r2	Det
+use DetSys		v3r3	Det
 use VeloDet        	v8r6	Det
 use DetDesc        	v13r0p1	Det
 use DetDescCnv        	v2r1p1	Det
 use XmlTools        	v2r0p1	Tools
-use ITDet          	v1r6	Det
+use ITDet          	v1r7	Det
 use OTDet          	v4r1	Det
 use CaloDet        	v6r6p1	Det
 use CaloDetXmlCnv	v2r3p1	Det
@@ -40,9 +40,9 @@ use MuonTools      	v3r6	Muon
 use RichDet		v6r2	Det
 
 # Event data model
-use EventSys		v15r2	Event
+use EventSys		v15r3	Event
 use EventKernel  	v3r0	Event
-use Event        	v3r5	Event
+use Event        	v3r6	Event
 use VeloEvent    	v12r1   Event
 use ITEvent      	v12r1   Event
 use OTEvent      	v12r1   Event

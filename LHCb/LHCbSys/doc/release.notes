@@ -4,6 +4,21 @@
 ! Purpose     : LHCb OO kernel packages
 !-----------------------------------------------------------------------------
 
+!======================= LHCbSys v13r5 2003-12-02 =======================
+! 2003-12-02 - Marco Cattaneo
+ - Modified packages: EventSys v15r3, Event v3r6,
+                      DetSys v3r3, ITDet v1r7
+
+ - In Event v3r6:
+   . MCParticle: add methods beta(), gamma(), pseudoRapidity()
+   . MCHit     : add methods pathLength(), dxdz(), dydz()
+
+ - In ITDet v1r7 ** Requires XmlDDDB v19r1 or greater **
+   . Add methods to return type of ladder (LR,TB ,TT, )
+   . Changes for new XML structure - no tracker catalogue !
+   . Changes to allow tiling with both even and odd numbers of rows in the TT
+
+!======================= LHCbSys v13r4 2003-11-27 =======================
 ! 2003-11-25 - Marco Cattaneo
  - Modified packages: GaudiConf v7r3,
      KernelSys v1r8, LHCbKernel v2r9, RichKernel v4r1,
