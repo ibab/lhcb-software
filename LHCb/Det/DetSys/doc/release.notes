@@ -4,6 +4,9 @@
 ! Purpose     : collect Det packages
 !-----------------------------------------------------------------------------
 
+! 2002-12-20 - Marco Cattaneo
+ - requirements - use CaloDet v6r3
+
 !========================== DetSys v1r1 2002-12-13 ========================
 ! 2002-12-13 - Florence Ranjard
  - requirements - use bug fix DetDesc v11r8
