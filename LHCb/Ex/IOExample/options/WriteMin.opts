@@ -27,6 +27,6 @@ EventDataSvc.ForceLeaves = 1;
 
 PoolDbCacheSvc.OutputLevel = 3;
 
-//#include "$IOEXAMPLEROOT/options/PoolDst.opts"  // Copy a OODST
+#include "$IOEXAMPLEROOT/options/PoolDst.opts"  // Copy a OODST
 //#include "$IOEXAMPLEROOT/options/PoolDigi.opts"  // Copy a OODIGI
-#include "$IOEXAMPLEROOT/options/PoolSim.opts"  // Copy a OOSIM
+//#include "$IOEXAMPLEROOT/options/PoolSim.opts"  // Copy a OOSIM

@@ -2,14 +2,11 @@
 #include "$ASSOCIATORSSYSROOT/options/DLLs.opts"
 
 EventSelector.Input   = {
-  "DATAFILE='rfio:/castor/cern.ch/user/c/cattanem/Brunel/v22r0/412400.dst' TYP='ROOT' OPT='READ'"
-  //  "DATAFILE='GaudiDbDst.root' TYP='ROOT' OPT='READ'"
+  "DATAFILE='rfio:/castor/cern.ch/user/c/cattanem/Brunel/v23r2/411300.oodst' TYP='ROOT' OPT='READ'"
 };
 
 // Define the DST content to copy
-//#include "$GAUDICONFROOT/options/DstContent.opts"
 #include "../options/DstContent.opts"
 
 DstWriter.Output = "DATAFILE='PFN:PoolDst.root' TYP='POOL_ROOTTREE' OPT='REC'";
-//DstWriter.Output = "DATAFILE='GaudiDbDst.root' TYP='ROOT' OPT='NEW'";
 ApplicationMgr.OutStream += {"DstWriter"};

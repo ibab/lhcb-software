@@ -1,12 +1,12 @@
 package LHCbSys
-version v15r2
+version v15r3
 
 branches doc cmt
  
 #===============================================================
 # LHCb packages used by all applications
 #===============================================================
-use LHCb		v15r2
+use LHCb		v15r3
 
 use GaudiConf		v7r5
 
@@ -15,8 +15,8 @@ use PYTHIA	v2r6205p3	Gen
 use HepMC	v3r121p2	Sim
 
 # Kernel packages
-use KernelSys   	v3r2	Kernel
-use LHCbKernel  	v4r2	Kernel
+use KernelSys   	v3r3	Kernel
+use LHCbKernel  	v4r3	Kernel
 use CaloKernel  	v2r5	Calo
 use MuonKernel  	v2r5	Muon
 use TrKernel    	v11r3	Tr
@@ -24,8 +24,8 @@ use RichKernel  	v4r4	Rich
 use VeloKernel  	v1r3    Velo
 
 # Detector description
-use DetSys		v5r0	Det
-use VeloDet        	v8r8	Det
+use DetSys		v6r0	Det
+use VeloDet        	v9r0	Det
 use DetDesc        	v14r1	Det
 use DetDescCnv        	v2r3	Det
 use XmlTools        	v3r2	Tools
@@ -39,12 +39,12 @@ use RichDet		v6r5	Det
 use STDet          	v1r0	Det
 
 # Event data model
-use EventSys		v17r2	Event
+use EventSys		v18r0	Event
 use Event        	v4r1	Event
-use VeloEvent    	v13r0	Event
-use ITEvent      	v13r1	Event
+use VeloEvent    	v14r0	Event
+use ITEvent      	v13r2	Event
 use OTEvent      	v13r0	Event
-use TrEvent      	v13r0	Event
+use TrEvent      	v13r1	Event
 use RichEvent    	v7r1	Event
 use CaloEvent    	v13r0	Event
 use MuonEvent    	v3r1	Event
@@ -59,22 +59,20 @@ use LinkerEvent         v1r2    Event
 use TrgEvent            v2r1    Event
 
 # Associators
-use AssociatorsSys	v1r10	Associators
-use Associators		v2r2	Associators
+use AssociatorsSys	v1r11	Associators
+use Associators		v2r3	Associators
 use ITAssociators      	v2r6	IT
 use OTAssociators      	v2r7	OT
-use VeloAssociators    	v1r7	Velo
+use VeloAssociators    	v1r8	Velo
 use CaloAssociators    	v3r5	Calo
 use MuonAssociators    	v1r2	Muon
-use TrAssociators      	v3r8p1	Tr
-use TrFitEvent         	v4r3	Tr
 
 # Other stuff
-use MCTools		v1r3	Phys
+use MCTools		v1r4	Phys
 use CaloInterfaces	v3r1	Calo
 use CaloUtils		v4r6	Calo
 
 # LHCb  Examples
 use DetDescExample      v6r2	Ex
 use DumpEventExample    v7r2	Ex
-use IOExample    	v1r0	Ex
+use IOExample    	v1r1	Ex

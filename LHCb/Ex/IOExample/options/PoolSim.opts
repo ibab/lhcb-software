@@ -1,7 +1,7 @@
 // Options to read an OOSIM file written with Root/IO and copy it to POOL
 
 EventSelector.Input   = {
-"DATAFILE='rfio:/castor/cern.ch/user/l/lhcbprod/test/00005247_00000001_3.oosim' TYP='ROOT' OPT='READ'"
+"DATAFILE='rfio:/castor/cern.ch/lhcb/prod/00000422_00000004_1.oosim' TYP='ROOT' OPT='READ'"
 };
 
 #include "$IOEXAMPLEROOT/options/GaussTape.opts"

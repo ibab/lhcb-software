@@ -4,6 +4,40 @@
 ! Purpose     : LHCb OO kernel packages
 !-----------------------------------------------------------------------------
 
+!======================= LHCbSys v15r3 2004-02-12 =======================
+! 2004-02-12 - Marco Cattaneo
+
+ - Modified packages: KernelSys v3r3, LHCbKernel v4r3,
+                   DetSys v6r0, VeloDet v9r0,
+                   EventSys v18r0, VeloEvent v14r0, ITEvent v13r2, TrEvent v13r1,
+                   AssociatorsSys v1r11, VeloAssociators v1r8, Associators v2r3,
+                   MCTools v1r4, IOExample v1r1
+
+ - Removed packages: TrAssociators, TrFitEvent (to be moved to BRUNEL, DAVINCI)
+
+ - In LHCbKernel v4r3:
+   . Change in bit assignment of VeloChannelID
+
+ - In VeloDet v9r0:
+   . Total redesign of DeVelo interface, including backwards incompatible
+     change to sensor numbering. Requires XmlDDDB v22r0 or greater
+
+ - In VeloEvent v14r0:
+   . Data content is backwards incompatible due to change in sensor numbering
+
+ - In ITEvent v13r2:
+   . Add STL1Cluster class
+
+ - In TrEvent v13r1, VeloAssociators v1r9, Associators v2r3, MCTools v1r4
+   . Change dependency to VeloEvent v14r* and/or VeloDet v9r*
+
+ - In MCTools v1r4
+   . Add TrReconstructible (moved here from TrAssociators), remove dependency
+     on TrAssociators
+
+ - In IOExample v1r1
+   . Update output file defintions to latest versions of Boole/Brunel
+
 !======================= LHCbSys v15r2 2004-02-04 =======================
 ! 2004-02-04 - Marco Cattaneo
 
