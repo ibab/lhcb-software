@@ -35,7 +35,7 @@ PassedL1.OutputLevel = 2;
 #include "$DAVINCIROOT/options/DstContent.opts"
 DstWriter.RequireAlgs  = { "L0L1Seq" } ;
 DstWriter.Preload  = false ;
-DstWriter.Output = "DATAFILE='MBL0L1accepted.oodst' TYP='POOL_ROOTTREE' OPT='CREATE'" ;
+DstWriter.Output = "DATAFILE='L0L1Accepted.dst' TYP='POOL_ROOTTREE' OPT='CREATE'" ;
 //DstWriter.OutputLevel = 1 ;
 ApplicationMgr.OutStream += { "DstWriter" } ;
 //--------------------------------------------------------------
@@ -48,8 +48,6 @@ ChargedProtoPAlg.OutputLevel            = 3;
 // Modify Message Format to print algorithm name with 40 characters
 MessageSvc.Format = "% F%40W%S%7W%R%T %0W%M";
 
-#include "$DAVINCIROOT/options/DaVinciTestData.opts"
-
 ApplicationMgr.EvtMax    = -1 ;
 EventSelector.FirstEvent = 1;
 EventSelector.PrintFreq  = 1;
@@ -60,3 +58,4 @@ EventSelector.PrintFreq  = 1;
 //ApplicationMgr.Runable = "PythonScriptingSvc";
 //***************************************************************
 
+#include "$DAVINCIROOT/options/DaVinciTestData.opts"
