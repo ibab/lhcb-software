@@ -1,8 +1,11 @@
-// $Id: Gauss.opts,v 1.6 2002-05-07 12:28:30 ibelyaev Exp $ 
+// $Id: Gauss.opts,v 1.7 2002-05-07 13:25:25 witoldp Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.6  2002/05/07 12:28:30  ibelyaev
+//  change ALL joboptions for newer GiGa
+//
 // ============================================================================
 /** @file 
  *  The main job-options file to run Gauss application in 3 steps 
@@ -45,7 +48,7 @@ ApplicationMgr.DLLs += { "GaudiAlg"         } ;
 // ApplicationMgr.ExtSvc +=  
 // { "SicbEventCnvSvc" , 
 //   "MagneticFieldSvc"  };  
-ParticlePropertySvc.ParticlePropertiesFile = "../options/particle.cdf" ;
+ParticlePropertySvc.ParticlePropertiesFile = "$GAUSSDATA/particle.cdf" ;
 
 // ============================================================================
 // List of top algorithms : 3 separated phases:
@@ -88,7 +91,7 @@ ROOT.OutputLevel          = 1 ;
 
 
 ApplicationMgr.EvtSel     = "NONE" ;
-ApplicationMgr.EvtMax     = 3 ;
+ApplicationMgr.EvtMax     = 1 ;
 
 // ============================================================================
 // The end of main Gauss's job-options file 
