@@ -1,5 +1,5 @@
 package DAQSys
-version v1r1p2
+version v1r2
 
 branches doc cmt options
 
@@ -11,3 +11,4 @@ use OTDAQ       v3r2p1  OT
 use STDAQ       v1r4p1  IT
 use VeloDAQ     v2r3p1  Velo
 use CaloDAQ     v1r0p2  Calo
+use L0MuonDAQ	v1r0	L0

@@ -4,8 +4,9 @@
 ! Purpose     : Hat package for packages encoding and decoding DAQ buffers
 !-----------------------------------------------------------------------------
 
-!========================= DAQSys v1r1p2 2005-04-01 ==========================
-! 2005-04-01 - Marco Cattaneo
+!========================== DAQSys v1r2 2005-04-05 ===========================
+! 2005-04-05 - Marco Cattaneo
+ - New package:      L0MuonDAQ v1r0
  - Modified package: MuonDAQ v1r2p2
 
 !========================= DAQSys v1r1p1 2005-03-07 ==========================
