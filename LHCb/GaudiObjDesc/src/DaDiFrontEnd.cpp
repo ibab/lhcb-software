@@ -1,4 +1,4 @@
-// $Id: DaDiFrontEnd.cpp,v 1.27 2002-02-14 09:00:35 mato Exp $
+// $Id: DaDiFrontEnd.cpp,v 1.28 2002-02-19 13:10:16 mato Exp $
 
 #include "GaudiKernel/Kernel.h"
 
@@ -171,14 +171,18 @@ void parseBaseClass(DOM_Node node,
 
 
 //-----------------------------------------------------------------------------
-void parseEnum(DOM_Node node,
-               DaDiEnum* gddEnum)
+template<class T> void parseEnum(DOM_Node node,
+                                 DaDiEnum* gddEnum,
+                                 T* gdd)
 //-----------------------------------------------------------------------------
 {
+  DOMString gddName;
 
-  gddEnum->setName(node.getAttributes().
-    getNamedItem(DOMString::transcode("name")).getNodeValue().
-    transcode());
+  gddName = node.getAttributes().
+    getNamedItem(DOMString::transcode("name")).getNodeValue();
+
+  gddEnum->setName(gddName);
+  gdd->pushNoImports(gddName.transcode());
 
   gddEnum->setDesc(node.getAttributes().
     getNamedItem(DOMString::transcode("desc")).getNodeValue().
@@ -979,7 +983,7 @@ void parseClass(DOM_Node node,
         {
           DaDiEnum* gddEnum = new DaDiEnum();
           gddClass->pushDaDiEnum(gddEnum);
-          parseEnum(node, gddEnum);
+          parseEnum(node, gddEnum, gddClass);
         }
 
 //
@@ -1153,7 +1157,7 @@ void parseNamespace(DOM_Node node,
         {
           DaDiEnum* gddEnum = new DaDiEnum();
           gddNamespace->pushDaDiEnum(gddEnum);
-          parseEnum(node, gddEnum);
+          parseEnum(node, gddEnum, gddNamespace);
         }
 
 //
