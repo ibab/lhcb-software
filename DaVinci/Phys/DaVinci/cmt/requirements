@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.78 2003-12-12 19:20:55 gcorti Exp $
+# $Id: requirements,v 1.79 2004-01-14 20:48:41 gcorti Exp $
 # Created    : 07/02/2002
 # Maintainer : Gloria Corti
 #
@@ -6,11 +6,16 @@
 # Allows reading of OO-DST data
 #============================================================================
 package           DaVinci
-version           v9r2
+version           v9r3
 
 # Structure, i.e. directories to process. 
 #============================================================================
 branches          cmt doc src job options
+
+# Set the version environment variable
+#============================================================================
+pattern DaVinciVersion path_append DAVINCIVERS <version>
+apply_pattern DaVinciVersion
 
 # Used packages. 
 #============================================================================
@@ -89,7 +94,7 @@ use  CaloPIDs           v1r1     Calo
 use  MuonID             v3r6     Muon
 
 #    Final Reconstruction
-use  GlobalReco         v4r1     Rec
+use  GlobalReco         v4r2     Rec
 use  PrimVtx            v2r1     Rec
 
 #    Utility tools
@@ -102,17 +107,17 @@ use  MCTools            v1r1p1   Phys
 use  RecoTools          v1r1     Rec
 
 #    Physics packages
-use  DaVinciTools       v8r3     Phys
-use  DaVinciAssociators v4r2p1   Phys
-use  DaVinciMCTools     v5r0p1   Phys
+use  DaVinciTools       v8r4     Phys
+use  DaVinciAssociators v4r3     Phys
+use  DaVinciMCTools     v5r1     Phys
 use  DaVinciTest        v4r1p2   Phys
 use  Ks2PiPiSel         v1r0     Phys
 use  CommonParticles    v1r0     Phys
-use  PhysSelections	v6r0p2   Phys
-use  FlavourTagging     v4r6p1   Phys
+use  PhysSelections	v6r1     Phys
+use  FlavourTagging     v4r7     Phys
 use  DaVinciEff         v2r8p1   Phys
 use  DaVinciUser        v4r2     Phys
-use  PhysSelSys		v6r0     PhysSel
+use  PhysSelSys		v6r1     PhysSel
 
 #    Generic utilities
 use  Utilities          v1r2     Tools
@@ -129,7 +134,3 @@ apply_pattern application_path
 
 macro DaVinci_linkopts    "${application_linkopts}"
 
-# set the DaVinci version = v * 100000 + r * 100 + p
-#============================================================================
-macro_append cppflags " -DDaVinciVersion=900200 " \
-             VisualC  " /DDaVinciVersion=900200 "

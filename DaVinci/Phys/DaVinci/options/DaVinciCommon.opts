@@ -53,10 +53,12 @@ ApplicationMgr.DLLs += { "MuonID", "MuonTools" };
 #pragma print on
 
 // Physics packages and dependent packages
-ApplicationMgr.DLLs += { "DaVinciTools", "TrExtrapolator" };
+ApplicationMgr.DLLs += { "DaVinciTools" };
+ApplicationMgr.DLLs += { "TrExtrapolator" };
 //    ... for physics check on MC data
 ApplicationMgr.DLLs += { "MCTools" };
-ApplicationMgr.DLLs += { "DaVinciMCTools", "DaVinciEff" };
+ApplicationMgr.DLLs += { "DaVinciMCTools" };
+ApplicationMgr.DLLs += { "DaVinciEff" };
 ApplicationMgr.DLLs += { "DaVinciTest" };
 ApplicationMgr.DLLs += { "DaVinciUser" };
 //    ... generic algorithms for selection of decays
