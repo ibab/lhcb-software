@@ -1,6 +1,7 @@
 Package :EvtGen 
-Package manager : Patrick Robbe and Witek Pokorski
+Package manager : Patrick Robbe
 
+!=================== EvtGen v8r3 ===============================
 ! 2005-02-21 - Patrick Robbe
  - src/Pythia.F : suppress some printout
 
