@@ -4,8 +4,11 @@
  *  Implementation file for tool : RichPixelCreatorFromRawBuffer
  *
  *  CVS Log :-
- *  $Id: RichPixelCreatorFromRawBuffer.cpp,v 1.1 2004-10-30 19:38:44 jonrob Exp $
+ *  $Id: RichPixelCreatorFromRawBuffer.cpp,v 1.2 2004-11-03 09:34:04 jonrob Exp $
  *  $Log: not supported by cvs2svn $
+ *  Revision 1.1  2004/10/30 19:38:44  jonrob
+ *  Add RichRecPixel creator that uses the RawBuffer directly
+ *
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   30/10/2004
@@ -134,11 +137,11 @@ StatusCode RichPixelCreatorFromRawBuffer::newPixels() const
     m_allDone = true;
 
     // Obtain RichSmartIDs
-    const RichSmartID::Vector & smartIDs = m_decoder->allRichSmartIDs();
+    const RichSmartID::Collection & smartIDs = m_decoder->allRichSmartIDs();
 
     // Loop over RichDigits and create working pixels
     richPixels()->reserve( smartIDs.size() );
-    for ( RichSmartID::Vector::const_iterator iID = smartIDs.begin();
+    for ( RichSmartID::Collection::const_iterator iID = smartIDs.begin();
           iID != smartIDs.end(); ++iID ) { buildPixel(*iID); }
 
     if ( msgLevel(MSG::DEBUG) ) {
