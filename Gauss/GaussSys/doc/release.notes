@@ -4,11 +4,10 @@
 ! Purpose     : Gauss system
 !-----------------------------------------------------------------------------
 
-! 2004-12-17 - Gloria Corti
- - use CaloRICH v4r10
-
-! 2004-12-14 - Gloria CORTI
- - requirements - use GaussTools v10r7, GaussCalo v7r2, CaloMoniSim v1r0
+!===================== GaussSys v19r0 2005-01-11 ===========================
+! 2005-01-11 - Florence Ranjard
+ - requirements - use Geant4 v70r0, Pythia 6_226.2, photos 209.2, LHCb v17r2,
+                  XmlDDDB v23r1
 
 !===================== GaussSys v18r3 2004-11-29 ==========================
 ! 2004-11-29 - Florence Ranjard
