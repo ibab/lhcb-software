@@ -1,4 +1,4 @@
-// $Id: L0mProcUnit.cpp,v 1.9 2002-08-02 10:46:30 atsareg Exp $
+// $Id: L0mProcUnit.cpp,v 1.10 2002-09-25 16:02:36 cattanem Exp $
 
 #ifdef WIN32
 // Disable warning C4786 identifier truncated to 255 characters in debug info.
@@ -6,6 +6,7 @@
 #endif // WIN32
 
 #include <algorithm>
+#include <math.h>
 
 #include "GaudiKernel/MsgStream.h"
 
