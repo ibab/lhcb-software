@@ -4,6 +4,7 @@
 ! Purpose     : Package simulating the RICH DAQ system and data format
 !-----------------------------------------------------------------------------
 
+!========================== RichDAQ v1r4 2004-04-20 =========================
 ! 2004-04-04 - Chris Jones
  - Change MC linking building from per digit to container (potential bug fix,
    thanks to M. Needham )

@@ -11,13 +11,13 @@ version           v1r4
 # Structure, i.e. directories to process. 
 #============================================================================
 branches          cmt doc src
+include_path none
 
 #============================================================================
 # Used packages. Specify the version, * at the end specifies 'any revision'
 #    Put as many lines as needed, with all packages, without the '#'
 #============================================================================
 use   RichUtils      v3r*    Rich
-use   RichEvent      v7r*    Event
 use   DAQEvent       v4r*    Event
 
 #============================================================================
