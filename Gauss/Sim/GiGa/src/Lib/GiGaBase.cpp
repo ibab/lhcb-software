@@ -1,8 +1,11 @@
-// $Id: GiGaBase.cpp,v 1.18 2003-07-14 15:45:33 ibelyaev Exp $
+// $Id: GiGaBase.cpp,v 1.19 2003-08-15 09:25:17 witoldp Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.18  2003/07/14 15:45:33  ibelyaev
+//  add the counter for initialize/finalize methods
+//
 // Revision 1.17  2003/07/07 16:48:09  ranjard
 // v14r2 - fix for gcc 3.2
 //
@@ -61,15 +64,16 @@ namespace GiGaBaseLocal
     // destructor
     ~FinalizeCounter() 
     {
-      for( Map::iterator imap = m_map.begin() ; 
-           m_map.end() != imap ; ++imap )
-        {
-          if( 0 == imap->second ) { continue ; }
+//       for( Map::iterator imap = m_map.begin() ; 
+//            m_map.end() != imap ; ++imap )
+//         {
+//           if( 0 == imap->second ) { continue ; }
           
-          std::cout 
-            << "GiGaBase     WARNING (Non)Finalized object Type/Name ='" 
-            << imap->first  << "'  (#" 
-            << imap->second << ")"      <<std::endl; 
+//           std::cout 
+//             << "GiGaBase     WARNING (Non)Finalized object Type/Name ='" 
+//             << imap->first  << "'  (#" 
+//             << imap->second << ")"      <<std::endl;
+          
         };
       m_map.clear() ;
     };

@@ -1,8 +1,13 @@
-! $Id: release.notes,v 1.79 2003-07-14 15:45:28 ibelyaev Exp $
+! $Id: release.notes,v 1.80 2003-08-15 09:25:16 witoldp Exp $
 ! =============================================================================
 Package:          GiGa
 Package manager : Vanya Belyaev
 
+!============================ GiGa v14r3 2003-08-15 ========================
+! 2003-08-15 - Witek Pokorski
+ - src/Lib/GiGaBase.cpp - removed printing out of the unfinalized tools
+
+!============================ GiGa v14r2p1 2003-07-07 ========================
 ! 2003-07-14 - Vanya BELYAEV
  - src/Lib/GiGaBase.cpp 
    add the counter to search for unfinalized tools 
