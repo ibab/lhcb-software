@@ -1,8 +1,33 @@
 !-----------------------------------------------------------------------------
-! Package     : DAVINCI_v8r3/DaVinciSys
+! Package     : DaVinciSys
 ! Responsible : Gloria CORTI
 ! Purpose     : 
 !-----------------------------------------------------------------------------
+
+!====================  DaVinciSys v9r2 2003-12-15 =============================
+! 2003-12-15 - Gloria CORTI
+ - use all DaVinci packages, respect to DaVinciSys v9r1 and p1-5 patches
+   the modified packages are:
+   . DaVinciTools        v8r3   
+   . DaVinciMCTools      v5r0p1 
+   . CommonParticles     v1r0
+   . DaVinciUser         v4r2
+   . RecoTools           v1r1
+   . PhysSelSys          v6r0  with almost all of the included packages
+     (see those release notes)
+   . LoKi                v1r8
+   . HltEvent            v4r0
+   . HltTools            v4r0
+   . HltVelo             v4r0
+   . HltVeloTT		       v4r0
+   . HltLongTrack        v4r0
+   . HltMuonID           v2r0
+   . HltChecker          v4r0
+   . HltPrimaryVertex    v2r0
+   . Utilities           v1r2
+   . DaVinci             v9r2
+   . TriggerFilter       v2r1
+   . DecayPresel         v2r2
 
 !====================  DaVinciSys v9r1p5 2003-12-05 ===========================
 ! 2003-12-05 - Gloria CORTI
