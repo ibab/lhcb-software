@@ -13,6 +13,7 @@ Purpose: LHCb reconstruction program
      (TrEvent v11r3, TrFitEvent v3r1, LongTrack v1r1)
    . Tune initial covariance matrix parameters for Kalman filter
      (LongTrack v1r1, TrMatching v2r1)
+   . New cuts on estimated track errors, to recover efficiency (TrMatching v2r1)
    . Do not extrapolate tracks outside LHCb volume (TrExtrapolator v2r2)
    . Do not add state closest to beam line if new Z is downstream of first 
      measured point or more than 200mm from Z=0. (TrFitter v3r2)
