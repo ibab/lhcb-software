@@ -3,6 +3,9 @@ Desccription: This package contains a set of tools used to generate code from th
 Package manager : Stefan Roiser
 
 
+! 20020328 Pere Mato
+  - Added ${CONSTITUENT}_GODflags in fragments
+
 ! 20020327 Pere Mato
   - Changes needed for Solaris (by Wim.Lavrijsen). Details:
     +++ GaudiObjDesc/src/DaDiCppHeader.cpp
