@@ -2,6 +2,12 @@ Package:          GiGa
 Package manager : N.N. 
 
 !===========================================================================
+! 20010322 - Vanya Belyaev
+       remove claches with allocated InterfaceID
+      GiGa/IIDIGIGaMagField.h 
+      GiGa/IIDIGIGaMagFieldFactory.h 
+      GiGa/IIDIGiGaHitsCnvSvc.h 
+!===========================================================================
 ! 20010317 - Vanya Belyaev
     new features:
     (1) possibility to define "Event Action" with 2 methods: 
