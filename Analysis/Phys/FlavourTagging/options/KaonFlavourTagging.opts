@@ -1,5 +1,5 @@
-//ApplicationMgr.TopAlg += { "FlavourTaggingAlgorithm/KaonTagging" };
-TopSequence.Members += { "FlavourTaggingAlgorithm/KaonTagging" };
+ApplicationMgr.TopAlg += { "FlavourTaggingAlgorithm/KaonTagging" };
+//TopSequence.Members += { "FlavourTaggingAlgorithm/KaonTagging" };
 //
 KaonTagging.TagLocation = "/Event/Phys/User/Tags/Kaon";
 //KaonTagging.HypothesisLocations = { "/Event/Phys/B0" };

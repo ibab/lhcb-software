@@ -1,5 +1,5 @@
-//ApplicationMgr.TopAlg += { "FlavourTaggingAlgorithm/MuonTagging" };
-TopSequence.Members += { "FlavourTaggingAlgorithm/MuonTagging" };
+ApplicationMgr.TopAlg += { "FlavourTaggingAlgorithm/MuonTagging" };
+//TopSequence.Members += { "FlavourTaggingAlgorithm/MuonTagging" };
 //
 MuonTagging.TagLocation = "/Event/Phys/User/Tags/Muon";
 //MuonTagging.HypothesisLocations = { "/Event/Phys/B0" };

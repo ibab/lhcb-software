@@ -1,5 +1,5 @@
-//ApplicationMgr.TopAlg += { "FlavourTaggingAlgorithm/ElectronTagging" };
-TopSequence.Members += { "FlavourTaggingAlgorithm/ElectronTagging" };
+ApplicationMgr.TopAlg += { "FlavourTaggingAlgorithm/ElectronTagging" };
+//TopSequence.Members += { "FlavourTaggingAlgorithm/ElectronTagging" };
 //
 ElectronTagging.TagLocation = "/Event/Phys/User/Tags/Electron";
 //ElectronTagging.HypothesisLocations = { "/Event/Phys/B0" };
