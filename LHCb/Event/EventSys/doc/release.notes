@@ -3,7 +3,7 @@ package manager: Marco Cattaneo
 
 !======================== EventSys v18r0 2004-06-28 ========================
 ! 2004-06-28 - Marco Cattaneo
- - Use EventAssoc v1r2, RichEvent v7r4, DAQEvent v5r0
+ - Use EventAssoc v1r2, RichEvent v7r4, DAQEvent v4r4
  - Remove L1Event, completely superseded by TrgEvent
 
 !======================= EventSys v17r11 2004-06-18 ========================
