@@ -1,10 +1,9 @@
-// $Id: OTCluster2MCDepositAlg.cpp,v 1.4 2002-10-17 08:38:23 jvantilb Exp $
+// $Id: OTCluster2MCDepositAlg.cpp,v 1.5 2003-06-10 09:04:15 jvantilb Exp $
 
 // Event
 #include "Event/OTCluster.h"
 #include "Event/OTDigit.h"
 #include "Event/MCOTDigit.h"
-#include "Event/MCOTDeposit.h"
 #include "Event/MCOTDeposit.h"
 #include "Event/MCTruth.h"
 
@@ -48,8 +47,8 @@ OTCluster2MCDepositAlg::~OTCluster2MCDepositAlg() {
 
 StatusCode OTCluster2MCDepositAlg::initialize() {
 
-  MsgStream log(msgSvc(), name());
-  log << MSG::DEBUG << "==> Initialise" << endreq;
+  MsgStream msg(msgSvc(), name());
+  msg << MSG::DEBUG << "==> Initialise" << endmsg;
  
   return StatusCode::SUCCESS;
 }
@@ -62,8 +61,8 @@ StatusCode OTCluster2MCDepositAlg::execute()
   // get OTClusters
   SmartDataPtr<OTClusters> clusterCont(eventSvc(),OTClusterLocation::Default);
   if (0 == clusterCont){ 
-    MsgStream log(msgSvc(), name());
-    log << MSG::WARNING << "Failed to find OTClusters" << endreq;
+    MsgStream msg(msgSvc(), name());
+    msg << MSG::WARNING << "Failed to find OTClusters" << endmsg;
     return StatusCode::FAILURE;
   }
 
@@ -72,8 +71,8 @@ StatusCode OTCluster2MCDepositAlg::execute()
     SmartDataPtr<MCOTDeposits> deposits(eventSvc(), 
                                         MCOTDepositLocation::Default);
     if (0 == deposits){ 
-      MsgStream log(msgSvc(), name());
-      log << MSG::WARNING << "Failed to find MCOTDeposits" << endreq;
+      MsgStream msg(msgSvc(), name());
+      msg << MSG::WARNING << "Failed to find MCOTDeposits" << endmsg;
       return StatusCode::FAILURE;
     }
     m_deposits = deposits;
@@ -98,9 +97,9 @@ StatusCode OTCluster2MCDepositAlg::execute()
   // register table in store
   StatusCode sc = eventSvc()->registerObject(outputData(), aTable);
   if( sc.isFailure() ) {
-    MsgStream log(msgSvc(), name());
-    log << MSG::FATAL << "     *** Could not register " << outputData()
-        << endreq;
+    MsgStream msg(msgSvc(), name());
+    msg << MSG::FATAL << "     *** Could not register " << outputData()
+        << endmsg;
     delete aTable;
     return StatusCode::FAILURE;
   }
@@ -110,8 +109,8 @@ StatusCode OTCluster2MCDepositAlg::execute()
 
 StatusCode OTCluster2MCDepositAlg::finalize() {
 
-  MsgStream log(msgSvc(), name());
-  log << MSG::DEBUG << "==> Finalize" << endreq;
+  MsgStream msg(msgSvc(), name());
+  msg << MSG::DEBUG << "==> Finalize" << endmsg;
 
   return StatusCode::SUCCESS;
 }
@@ -124,8 +123,8 @@ StatusCode OTCluster2MCDepositAlg::associateToTruth(const OTCluster* aCluster,
   const OTDigit* aDigit = aCluster->digit();
 
   if (0 == aDigit) {
-    MsgStream log(msgSvc(), name());
-    log << MSG::WARNING << "No digit associated with cluster!" << endmsg;
+    MsgStream msg(msgSvc(), name());
+    msg << MSG::WARNING << "No digit associated with cluster!" << endmsg;
     return StatusCode::FAILURE;
   }
 

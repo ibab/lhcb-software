@@ -1,7 +1,6 @@
-// $Id: OTCluster2MCHitAlg.cpp,v 1.9 2003-06-10 09:04:16 jvantilb Exp $
+// $Id: OTDigit2MCHitAlg.cpp,v 1.1 2003-06-10 09:04:16 jvantilb Exp $
 
 // Event
-#include "Event/OTCluster.h"
 #include "Event/OTDigit.h"
 #include "Event/MCOTDigit.h"
 #include "Event/MCOTDeposit.h"
@@ -15,37 +14,37 @@
 #include "GaudiKernel/SmartDataPtr.h"
 
 // local
-#include "OTCluster2MCHitAlg.h"
-#include "OTAssociators/OTCluster2MCHitAsct.h"
+#include "OTDigit2MCHitAlg.h"
+#include "OTAssociators/OTDigit2MCHitAsct.h"
 
-/** @file OTCluster2MCHitAlg.cpp 
+/** @file OTDigit2MCHitAlg.cpp 
  *
- *  Implementation of the OTCluster2MCHitAlg class
+ *  Implementation of the OTDigit2MCHitAlg class
  *  
  *  @author J. van Tilburg
- *  @date   14/05/2002
+ *  @date   05/06/2003
  */
 
 // Declaration of the Algorithm Factory
-static const  AlgFactory<OTCluster2MCHitAlg>          s_factory ;
-const        IAlgFactory& OTCluster2MCHitAlgFactory = s_factory ; 
+static const  AlgFactory<OTDigit2MCHitAlg>          s_factory ;
+const        IAlgFactory& OTDigit2MCHitAlgFactory = s_factory ; 
 
-OTCluster2MCHitAlg::OTCluster2MCHitAlg( const std::string& name,
+OTDigit2MCHitAlg::OTDigit2MCHitAlg( const std::string& name,
                                         ISvcLocator* pSvcLocator)
   : Algorithm (name,pSvcLocator) 
 {
   // constructor
-  declareProperty( "OutputData", m_outputData  = OTCluster2MCHitLocation );
+  declareProperty( "OutputData", m_outputData  = OTDigit2MCHitLocation );
   declareProperty( "SpillOver", m_spillOver  = false );
-  declareProperty( "associatorName", m_nameAsct = "OTCluster2MCDepositAsct" );
+  declareProperty( "associatorName", m_nameAsct = "OTDigit2MCDepositAsct" );
 }
 
-OTCluster2MCHitAlg::~OTCluster2MCHitAlg() 
+OTDigit2MCHitAlg::~OTDigit2MCHitAlg() 
 {
   // destructor
 }
 
-StatusCode OTCluster2MCHitAlg::initialize() 
+StatusCode OTDigit2MCHitAlg::initialize() 
 {
   MsgStream msg(msgSvc(), name());
   msg << MSG::DEBUG << "==> Initialize" << endmsg;
@@ -60,16 +59,15 @@ StatusCode OTCluster2MCHitAlg::initialize()
 }
 
 
-StatusCode OTCluster2MCHitAlg::execute() 
+StatusCode OTDigit2MCHitAlg::execute() 
 {
+  typedef Relation1D<OTDigit, MCHit> Table;
 
-  typedef Relation1D<OTCluster, MCHit>    Table;
-
-  // get OTClusters
-  SmartDataPtr<OTClusters> clusterCont(eventSvc(),OTClusterLocation::Default);
-  if (0 == clusterCont){ 
+  // get OTDigits
+  SmartDataPtr<OTDigits> digitCont(eventSvc(), OTDigitLocation::Default);
+  if (0 == digitCont){ 
     MsgStream msg(msgSvc(), name());
-    msg << MSG::WARNING << "Failed to find OTClusters" << endmsg;
+    msg << MSG::WARNING << "Failed to find OTDigits" << endmsg;
     return StatusCode::FAILURE;
   }
   
@@ -87,18 +85,18 @@ StatusCode OTCluster2MCHitAlg::execute()
   // create an association table 
   Table* aTable = new Table();
 
-  // loop and link OTClusters to MC truth
-  OTClusters::const_iterator iterClus;
-  for(iterClus = clusterCont->begin(); 
-      iterClus != clusterCont->end(); ++iterClus){
+  // loop and link OTDigits to MC truth
+  OTDigits::const_iterator iterDigit;
+  for(iterDigit = digitCont->begin(); 
+      iterDigit != digitCont->end(); ++iterDigit){
     std::vector<MCHit*> hitVector;
-    associateToTruth(*iterClus, hitVector);
+    associateToTruth(*iterDigit, hitVector);
     std::vector<MCHit*>::iterator iHit = hitVector.begin();
     while (iHit != hitVector.end()) {
-      aTable->relate(*iterClus, *iHit);
+      aTable->relate(*iterDigit, *iHit);
       ++iHit;
     }
-  } // loop iterClus
+  } // loop iterDigit
 
   // register table in store
   StatusCode sc = eventSvc()->registerObject(outputData(), aTable);
@@ -113,7 +111,7 @@ StatusCode OTCluster2MCHitAlg::execute()
   return StatusCode::SUCCESS;
 }
 
-StatusCode OTCluster2MCHitAlg::finalize() 
+StatusCode OTDigit2MCHitAlg::finalize() 
 {
   MsgStream msg(msgSvc(), name());
   msg << MSG::DEBUG << "==> Finalize" << endmsg;
@@ -125,22 +123,22 @@ StatusCode OTCluster2MCHitAlg::finalize()
 }
 
 
-StatusCode OTCluster2MCHitAlg::associateToTruth(const OTCluster* aCluster,
-                                                std::vector<MCHit*>& hitVector) 
+StatusCode OTDigit2MCHitAlg::associateToTruth(const OTDigit* aDigit,
+                                              std::vector<MCHit*>& hitVector) 
 {
-  // make link to truth  to MCHit
+  // make link to truth to MCHit
   // retrieve table
-  OTCluster2MCDepositAsct::DirectType* aTable = m_hAsct->direct();
+  OTDigit2MCDepositAsct::DirectType* aTable = m_hAsct->direct();
   if (0 == aTable){
     MsgStream msg(msgSvc(), name());
     msg << MSG::WARNING << "Failed to find table" << endmsg;
     return StatusCode::FAILURE;
   }
  
-  OTCluster2MCDepositAsct::MCDeposits range = aTable->relations(aCluster);
+  OTDigit2MCDepositAsct::MCDeposits range = aTable->relations(aDigit);
   if ( !range.empty() ) {
-    OTCluster2MCDepositAsct::MCDepositsIterator iterDep;
-    for (iterDep = range.begin(); iterDep != range.end(); iterDep++) {      
+    OTDigit2MCDepositAsct::MCDepositsIterator iterDep;
+    for (iterDep = range.begin(); iterDep != range.end(); ++iterDep) {      
       MCOTDeposit* aDeposit = iterDep->to();
       if (0 != aDeposit) {
         MCHit* aHit = aDeposit->mcHit();
