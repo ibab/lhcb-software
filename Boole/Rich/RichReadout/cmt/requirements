@@ -1,0 +1,27 @@
+package RichReadout
+version v1r0
+
+# ================ structure =================================================
+branches RichReadout cmt doc src
+
+# ================ environment ===============================================
+include_dirs $(RICHREADOUTROOT)
+
+set RICHREADOUTOPTS $(RICHREADOUTROOT)/options
+
+# ================ dependencies ==============================================
+
+use AIDA	 v*	-no_auto_imports
+use RichEvent    v4r*   Event
+use RiSicbGeom	 v3r*	SICB
+use RichDetTools v2r*	Rich
+
+# ================ component library =========================================
+library RichReadout ../src/*.cpp -import=AIDA
+
+apply_pattern package_Clinkopts
+apply_pattern packageShr
+
+private
+apply_pattern package_Cshlibflags
+

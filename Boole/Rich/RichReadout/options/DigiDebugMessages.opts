@@ -1,0 +1,8 @@
+// debug printout levels for digi algs
+RichFrontEndResponse.OutputLevel = 2;
+RichSignal.OutputLevel = 2;
+RichReadout.OutputLevel = 2;
+RichDigitCreator.OutputLevel = 2;
+
+// check up on SICB digits for comparison
+RichMCDigitToDigitAlg.OutputLevel = 2;
