@@ -31,7 +31,7 @@
 #include "HepMC/GenVertex.h"
 #include "HepMC/GenParticle.h"
 /// GenEvent
-#include "GenEvent/HepMCEvent.h"
+#include "Event/HepMCEvent.h"
 /// Geant4 includes
 #include "G4PrimaryParticle.hh"
 #include "G4PrimaryVertex.hh"
@@ -64,7 +64,7 @@ GiGaHepMCCnv::~GiGaHepMCCnv(){};
 
 const CLID&         GiGaHepMCCnv::classID     () 
 {
-  return HepMCEventVector::classID(); 
+  return HepMCEvents::classID(); 
 }
 
 // ============================================================================
@@ -109,10 +109,10 @@ StatusCode GiGaHepMCCnv::createRep
   ///
   if( 0 ==  object   ) { return Error(" DataObject* points to NULL"  ); }
 
-  HepMCEventVector* hepVect=dynamic_cast<HepMCEventVector*>( object );
+  HepMCEvents* hepVect=dynamic_cast<HepMCEvents*>( object );
   if( 0 ==  hepVect ) { return Error(" DataObject*(of type '"       +
                                         GiGaUtil::ObjTypeName( object) +
-                                    "*') is not 'HepMCEventVector*'!") ; }
+                                    "*') is not 'HepMCEvents*'!") ; }
   /// create IOpaqueAddress
   if( 0 == addressCreator() ) 
     { return Error("CreateRep::AddressCreator is not available"); } 
@@ -147,13 +147,13 @@ StatusCode GiGaHepMCCnv::updateRep
   if( 0 ==  object   ) { return Error(" DataObject*     points to NULL" ) ; } 
   ///
 
-  HepMCEventVector* hepVect = dynamic_cast<HepMCEventVector*>( object ) ;
+  HepMCEvents* hepVect = dynamic_cast<HepMCEvents*>( object ) ;
   if( 0 ==  hepVect ) { return Error("DataObject*(of type '"           + 
                                       GiGaUtil::ObjTypeName( object )   + 
-                                      "*') is not 'HepMCEventVector*'!") ; }
+                                      "*') is not 'HepMCEvents*'!") ; }
 
   /// loop over all events 
-  HepMCEventVector::iterator it;
+  HepMCEvents::iterator it;
 
   for(it=hepVect->begin(); it!=hepVect->end(); it++) {
 
