@@ -4,6 +4,10 @@
 ! Purpose     : Holds final reconstruction code
 !-----------------------------------------------------------------------------
 
+!====================== GlobalReco v2r1 2002-11-13 ===========================
+! 2002-11-13 - Gloria Corti
+ - Increase version number to v2r1
+
 ! 2002-11-11 - Gloria Corti
  - Use state at first measured point for forward tracks in 
    PrimaryVertexFinderAlg as well as average Pt=400MeV for velo tracks.
