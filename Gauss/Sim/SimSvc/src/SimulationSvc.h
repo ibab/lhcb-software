@@ -13,6 +13,7 @@
 // Forward and external declarations
 template <class TYPE> class SvcFactory;
 
+
 /** @class SimulationSvc SimulationSvc.h SimDesc/SimulationSvc.h
  *
  *  this interface defines a Simulation service that is able to answer
@@ -27,7 +28,7 @@ class SimulationSvc : public Service,
   
   /// Friend needed
   friend class SvcFactory<SimulationSvc>;
-  
+
 public:
 
   /**
@@ -40,7 +41,7 @@ public:
   /**
    * default destructor
    */
-  virtual ~SimulationSvc() {};
+  virtual ~SimulationSvc();
 
   /**
    * Initializes the service
@@ -67,7 +68,7 @@ public:
    * @return the simulation attribute that should be used to simulate
    * this logical volume
    */
-  virtual const SimAttribute simAttribute (const ILVolume* vol) const;
+  virtual const Particles* simAttribute (const ILVolume* vol) const;
 
   /**
    * This method returns the simulation attribute associated to a given
@@ -76,7 +77,7 @@ public:
    * @return the simulation attribute that should be used to simulate
    * this logical volume
    */
-  virtual const SimAttribute simAttribute (const std::string volname) const;
+  virtual const Particles* simAttribute (const std::string volname) const;
 
   /**
    * This method tells whether a simulation attribute is associated to a given
@@ -108,12 +109,13 @@ private:
   /**
    * This defines a set of attributes. Each one is associated to a name
    */
-  typedef std::map<std::string, SimAttribute> AttributeSet;
+  typedef std::map<std::string, const SimAttribute*> AttributeSet;
 
   /**
    * This defines a dictionnary
    */
-  typedef std::map<std::string, std::string> Dictionnary;
+
+  typedef std::map<std::string, Particles*> Dictionnary;
 
   /// a map of attributes to be used
   AttributeSet m_attributeSet;

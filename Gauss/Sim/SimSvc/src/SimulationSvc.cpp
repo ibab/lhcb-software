@@ -42,6 +42,17 @@ SimulationSvc::SimulationSvc (const std::string& name, ISvcLocator* svc) :
   declareProperty ("SimulationDbLocation", m_simDbLocation="empty" );
 }
 
+SimulationSvc::~SimulationSvc() 
+{
+  for (AttributeSet::iterator it=m_attributeSet.begin();
+       it!= m_attributeSet.end();it++)  delete (*it).second;
+  m_attributeSet.clear();
+
+  for (Dictionnary::iterator itt=m_logvol2Sim.begin();
+       itt!= m_logvol2Sim.end();itt++)  delete (*itt).second;
+  m_logvol2Sim.clear();
+}
+
 // -----------------------------------------------------------------------
 // Initialize the service.
 // -----------------------------------------------------------------------
@@ -139,7 +150,8 @@ void SimulationSvc::reload () {
     
     // creates the attribute and register it
     m_attributeSet[name] =
-      SimAttribute(maxAllowedStep, maxTrackLength, maxTime, minEkine, minRange);
+      new SimAttribute
+      (maxAllowedStep, maxTrackLength, maxTime, minEkine, minRange);
   }
 
   // go through the tree of elements and fill in the logvol2Sim map
@@ -154,13 +166,24 @@ void SimulationSvc::reload () {
       DOM_Node logvolNode = domLogvolList.item(i);
       DOM_Element logvol = (DOM_Element&) logvolNode;
       std::string name = dom2Std (logvol.getAttribute ("name"));
-      std::string attr = dom2Std (logvol.getAttribute ("attr"));
 
-      // register the association
-      m_logvol2Sim[name] = attr;
+      Particles* particles = new Particles();
+      m_logvol2Sim[name]=particles;
+
+      DOM_NodeList domLogvolNode = logvol.getElementsByTagName("Cut");
+      unsigned int j;
+      for (j = 0; j < domLogvolNode.getLength(); j++) {
+        DOM_Node cutNode = domLogvolNode.item(j);
+        DOM_Element cut = (DOM_Element&) cutNode;
+        
+        int particle = (int) xmlSvc->eval
+          (dom2Std (cut.getAttribute ("particle")), false);
+        std::string attr = dom2Std (cut.getAttribute ("attr"));
+        // register the association
+        particles->operator[](particle) = m_attributeSet[attr];
+      }
     }
   }
-
 }
 
 // -----------------------------------------------------------------------
@@ -194,48 +217,48 @@ const bool SimulationSvc::hasSimAttribute (const std::string volname) const {
 // -----------------------------------------------------------------------
 //  simAttribute (ILVolume*)
 // -----------------------------------------------------------------------
-const SimAttribute
+const SimulationSvc::Particles*
 SimulationSvc::simAttribute (const ILVolume* vol) const {
-  SimAttribute attr;
-
+  Particles* part;
+  
   if (0 != vol) {
     // try first to find an attribute associated directly to the logical volume
     std::string bnn = vol->name();
     Dictionnary::const_iterator it = m_logvol2Sim.find (bnn);
-    if (it != m_logvol2Sim.end()) {
-      AttributeSet::const_iterator it2 = m_attributeSet.find (it->second);
-      if (it2 != m_attributeSet.end()) {
-        attr = it2->second;
-      } else {
+    if (it != m_logvol2Sim.end()) 
+      {
+        part=it->second;
+      } 
+    else 
+      {
         MsgStream log(msgSvc(), name());
-        log << MSG::WARNING << "SimAttribute " << it->second << " unknown but"
-            << " used for logical volume " << vol->name() << "." << endreq;
-      }
-    }    
+  log << MSG::WARNING << "No SimAttribute for " 
+      << vol->name() << endreq;
+      } 
   }
-  return attr;
+  return part;
 }
 
 // -----------------------------------------------------------------------
 //  simAttribute (std::string)
 // -----------------------------------------------------------------------
-const SimAttribute
+const SimulationSvc::Particles*
 SimulationSvc::simAttribute (std::string volname) const {
-  SimAttribute attr;
+  Particles* part;
   
   // try first to find an attribute associated directly to the logical volume
   Dictionnary::const_iterator it = m_logvol2Sim.find (volname);
-  if (it != m_logvol2Sim.end()) {
-    AttributeSet::const_iterator it2 = m_attributeSet.find (it->second);
-    if (it2 != m_attributeSet.end()) {
-      attr = it2->second;
-    } else {
+  if (it != m_logvol2Sim.end()) 
+    {
+      part=it->second;
+    } 
+  else 
+    {
       MsgStream log(msgSvc(), name());
-        log << MSG::WARNING << "SimAttribute " << it->second << " unknown but"
-            << " used for logical volume " << volname << "." << endreq;
+      log << MSG::WARNING << "No SimAttribute for " 
+          << volname << endreq;
     }
-  }
-  return attr;
+  return part;
 }
 
 // -----------------------------------------------------------------------

@@ -5,6 +5,13 @@
 !               volumes
 !-----------------------------------------------------------------------------
 
+!========================== SimSvc v2r0 =============================
+
+! 2003-05-05 - Witek Pokorski
+ - major change in the code, the cuts can be now specified per volume
+   and per particle; the default cuts (applicable to "all other" particles)
+   should be specified with pdg=0
+
 !========================== SimSvc v1r1 =============================
 
 ! 2003-04-16 - Sebastien Ponce

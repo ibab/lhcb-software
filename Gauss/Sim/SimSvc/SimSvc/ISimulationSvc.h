@@ -7,6 +7,7 @@
 #include "GaudiKernel/IInterface.h"
 
 #include "SimSvc/SimAttribute.h"
+#include <map>
 
 // Forward and external declarations
 class ILVolume;
@@ -27,8 +28,12 @@ static const InterfaceID IID_ISimulationSvc(948, 1 , 0);
 
 class ISimulationSvc : virtual public IInterface {
 
- public:
+protected:
 
+  typedef std::map<int, const SimAttribute*> Particles;
+  
+public:
+  
   /// Retrieve interface ID
   static const InterfaceID& interfaceID() { return IID_ISimulationSvc; }
 
@@ -39,7 +44,7 @@ class ISimulationSvc : virtual public IInterface {
    * @return the simulation attribute that should be used to simulate
    * this logical volume
    */
-  virtual const SimAttribute simAttribute (const ILVolume* vol) const = 0;
+  virtual const Particles* simAttribute (const ILVolume* vol) const = 0;
 
   /**
    * This method returns the simulation attribute associated to a given
@@ -48,7 +53,7 @@ class ISimulationSvc : virtual public IInterface {
    * @return the simulation attribute that should be used to simulate
    * this logical volume
    */
-  virtual const SimAttribute simAttribute (const std::string volname) const = 0;
+  virtual const Particles* simAttribute (const std::string volname) const = 0;
 
   /**
    * This method tells whether a simulation attribute is associated to a given
