@@ -4,12 +4,15 @@
 ! Purpose     : Explicit list of all DaVinci packages
 !-----------------------------------------------------------------------------
 
+!===================  DaVinciSys v11r10 2004-07-05 ============================
+Bug fix version. Updated LoKi, new GaudiAlg.
+Other Minor modifications.
+
 !====================  DaVinciSys v11r9 2004-06-28 ============================
 - Physics: Most packages updated. Version ready for DC'04
 - Stripping: New package controlling stripping
 - PhysSel: Most packages adapted to 1/1000 requirement
 - Trigger: Everything updated
-
 
 !====================  DaVinciSys v11r8 2004-06-02 ============================
 Most packages updated

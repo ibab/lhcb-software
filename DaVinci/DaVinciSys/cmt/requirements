@@ -1,12 +1,12 @@
 package DaVinciSys
-version v11r9
+version v11r10
 
 branches doc cmt
 
 #=======================================================
 # Don't forget DaVinci itself
 #=======================================================
-use  DaVinci            v11r9 Phys   
+use  DaVinci            v11r10 Phys   
 
 #=======================================================
 # packages included in the DAVINCI tree
@@ -48,37 +48,34 @@ use  TrExtrapolator     v2r12    Tr
 use  RecoTools          v1r1     Rec
 use  Utilities          v1r5     Tools
 
-use  LoKi               v2r6     Tools  
+use  LoKi               v2r7     Tools  
 use  DaVinciAssociators v5r0     Phys
 
 # Physics packages
 use  CommonParticles    v1r5     Phys
-use  DaVinciTools       v9r6     Phys
+use  DaVinciTools       v9r7     Phys
 use  DaVinciUser        v5r1     Phys
 use  FlavourTagging     v5r0     Phys
 use  Ks2PiPiSel         v1r4     Phys
-use  PhysSelections	v6r7     Phys
+use  PhysSelections	v6r8     Phys
 
 # Physics MC packages
-use  DaVinciChecks      v2r3p2   Phys
+use  DaVinciChecks      v2r4     Phys
 use  DaVinciAssociators v5r0     Phys
 use  DaVinciEff         v3r0     Phys
 use  DaVinciMCTools     v5r4     Phys
 use  DaVinciTest        v4r5     Phys
 
 # Physics selections
-use  PhysSelSys		v7r3     PhysSel
+use  PhysSelSys		v7r4     PhysSel
 
 # Stripping
-use  Stripping          v1r0     Tools
-
-# Physics selections
-use  PhysSelSys		v7r3     PhysSel
+use  Stripping          v1r1     Tools
 
 use  B2DstarX2D02hh  v2r1    PhysSel
 use  B2HH            v2r3    PhysSel
 use  B2RhoRho        v1r5    PhysSel
-use  B2XGamma        v2r3    PhysSel
+use  B2XGamma        v2r3p1  PhysSel
 use  Bd2D0Kstar      v4r2    PhysSel
 use  Bd2DstarPi      v2r3    PhysSel
 use  Bd2JpsiKs       v2r3    PhysSel
@@ -87,7 +84,7 @@ use  Bd2MuMuKstar    v2r2    PhysSel
 use  Bd2PhiKs        v4r1    PhysSel
 use  Bd2PiPiPi0      v2r2    PhysSel
 use  Bd2a1Dstar      v2r2    PhysSel
-use  Bs2DsH          v3r2    PhysSel
+use  Bs2DsH          v3r2p1  PhysSel
 use  Bs2JpsiEta      v3r2    PhysSel
 use  Bs2JpsiPhi      v2r1    PhysSel
 use  Bs2KsKs         v2r2    PhysSel
@@ -96,11 +93,11 @@ use  Bs2MuMu         v2r2    PhysSel
 use  Bs2PhiEtac      v2r2    PhysSel
 use  Bs2PhiPhi       v2r1    PhysSel 
 use  Bu2KsPi         v2r3    PhysSel
-use  Bu2LLK          v1r0    PhysSel
+use  Bu2LLK          v1r1    PhysSel
 use  D02MuMu         v1r4    PhysSel 
-use  Gamma2ee        v1r1    PhysSel
+use  Gamma2ee        v1r2    PhysSel
 use  Jpsi            v1r1    PhysSel
 
-#--- TriggerFilter
-use  TriggerFilter       v4r9   Tools
+#--- TriggerFilter -> obsolete
+#use  TriggerFilter       v4r9   Tools
 
