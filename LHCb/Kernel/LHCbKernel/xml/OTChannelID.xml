@@ -1,16 +1,16 @@
     <class name='OTChannelID' 
-           author='Jeroen van Tilburg'
-           desc='OTChannelID is a class that describes a single straw'>
-      <desc> *  of the LHCb Outer Tracker</desc>
+           author='Jeroen van Tilburg and Jacopo Nardulli'
+           desc='OTChannelID is a class that describes a single straw and containes the TDC-Time'>
       &StlVector;
-      <constructor argList='int iStation, int iLayer, int iQuarter, int iModule, int iStraw' 
-                   desc='constructor with station, layer, quarter, module, straw'>
+      <constructor argList='int iStation, int iLayer, int iQuarter, int iModule, int iStraw, int iTdcTime=0' 
+                   desc='constructor with station, layer, quarter, module, straw and tdcTime'>
         <code>    
           m_channelID = (iStation &lt;&lt; stationBits) + 
                         (iLayer &lt;&lt; layerBits) + 
                         (iQuarter &lt;&lt; quarterBits) + 
                         (iModule &lt;&lt; moduleBits) + 
-                        (iStraw &lt;&lt; strawBits);
+                        (iStraw &lt;&lt; strawBits) +
+                        (iTdcTime &lt;&lt; tdcTimeBits);
         </code>
       </constructor>
       <constructor argList='const OTChannelID aChannelID' 
@@ -45,8 +45,13 @@
               desc='operator overload, for use of channel ID as the key'> 
         <code> return m_channelID; </code>
       </method>
+      <method type='unsigned' name='geometry' const='TRUE'
+              desc='returns the geometrical part of the channelID'>
+        <code> return (m_channelID &amp; uniqueModuleMask); </code>
+      </method> 
 
       <attribute type='bitfield' name='channelID' desc='OT Channel ID'>
+        <bitfield name='tdcTime' length='8' desc='TDC-time'/>
         <bitfield name='straw' length='8' desc='Straw' setMeth='FALSE'/>
         <bitfield name='module' length='4' desc='Module' setMeth='FALSE'/>
         <bitfield name='quarter' length='2' desc='Quarter' setMeth='FALSE'/>

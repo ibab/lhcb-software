@@ -2,6 +2,15 @@ Package LHCbKernel
 Package manager: M.Cattaneo
 Purpose: LHCb specific Kernel classes
 
+!====================== LHCbKernel v5r3 2004-10-18 ========================
+! 2004-10-18 - Marco Cattaneo
+ - Add first implementation of LHCbID
+
+! 2004-08-30 - Jacopo Nardulli
+ - Backward incompatible modifications in OTChannelID.xml: 
+   Introduction of the Tdc-Time (8 bits). If not filled, the TDC-Time is 0.
+   New method called geometry returns the geometrical part of the OTChannelID.
+
 !====================== LHCbKernel v5r2 2004-09-02 ========================
 ! 2004-08-26 - Vanya Belyaev
  - Kernel/InstanceCounter.h
