@@ -1,8 +1,11 @@
-// $Id: CaloMap.h,v 1.4 2002-04-22 16:50:33 ibelyaev Exp $
+// $Id: CaloMap.h,v 1.5 2003-06-26 09:24:34 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.4  2002/04/22 16:50:33  ibelyaev
+//  move several files to Kernel/LHCbKernel package
+//
 // Revision 1.3  2002/04/07 15:32:00  ibelyaev
 //  improve printout and bug fix
 //
@@ -19,7 +22,7 @@
 // LHCbKernel
 #include "Kernel/CaloMap.h"
 
-/** @file CaloMap.h
+/** @file CaloKernel/CaloMap.h
  *  
  *  An auxillary class to hide underlying 
  *  std::map implementation for Microsoft Visual-C++ (Win32)  

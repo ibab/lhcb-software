@@ -1,8 +1,11 @@
-// $Id: CaloHashMap.h,v 1.5 2002-04-22 16:56:04 ibelyaev Exp $
+// $Id: CaloHashMap.h,v 1.6 2003-06-26 09:24:34 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.5  2002/04/22 16:56:04  ibelyaev
+//  move several files to Kernel/LHCbKernel package
+//
 // ============================================================================
 #ifndef CALOKERNEL_CALOHASHMAP_H 
 #define CALOKERNEL_CALOHASHMAP_H 1
@@ -10,7 +13,7 @@
 // LHCbKernel
 #include "Kernel/CaloHashMap.h"
 
-/** @file CaloHashMap.h 
+/** @file CaloKernel/CaloHashMap.h 
  *
  *  @brief trick to hide std::hash_map on Win32
  *
