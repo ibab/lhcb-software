@@ -43,14 +43,20 @@ StatusCode GaussInitialisation::initialize() {
   
   // Get the random number engine
   m_engine = randSvc()->engine();
-  if( 0 == m_engine ) {
-    MsgStream log( msgSvc(), name() );
-    log << MSG::ERROR << "Random number engine not found!" << endmsg;
-    return StatusCode::FAILURE;
-  } 
-  else {
-    return StatusCode::SUCCESS;
-  }
+  if( 0 == m_engine ) 
+    {
+      MsgStream log( msgSvc(), name() );
+      log << MSG::ERROR << "Random number engine not found!" << endmsg;
+      return StatusCode::FAILURE;
+    } 
+  else 
+    {
+      std::vector<long> seeds;
+      seeds.push_back( 12345678 );
+      m_engine->setSeeds( seeds );
+      
+      return StatusCode::SUCCESS;
+    }
 }
 
 //-----------------------------------------------------------------------------
