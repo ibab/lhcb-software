@@ -1,8 +1,11 @@
-// $Id: GiGaDataStoreAlgorithm.h,v 1.1 2002-01-22 18:24:43 ibelyaev Exp $
+// $Id: GiGaDataStoreAlgorithm.h,v 1.2 2002-12-07 14:36:26 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
-// $Log: not supported by cvs2svn $ 
+// $Log: not supported by cvs2svn $
+// Revision 1.1  2002/01/22 18:24:43  ibelyaev
+//  Vanya: update for newer versions of Geant4 and Gaudi
+// 
 // ============================================================================
 #ifndef GIGACNV_GiGaDataStoreALGORITHM_H 
 #define GIGACNV_GiGaDataStoreALGORITHM_H 1
@@ -45,8 +48,7 @@ protected:
   GiGaDataStoreAlgorithm( const std::string& Name   , 
                         ISvcLocator*       SvcLoc );
   
-  /** destructor
-   */
+  /// destructor
   virtual ~GiGaDataStoreAlgorithm();
   
 public:

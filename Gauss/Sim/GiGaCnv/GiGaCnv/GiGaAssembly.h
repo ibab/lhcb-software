@@ -1,8 +1,11 @@
-// $Id: GiGaAssembly.h,v 1.1 2002-01-22 18:24:41 ibelyaev Exp $
+// $Id: GiGaAssembly.h,v 1.2 2002-12-07 14:36:25 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.1  2002/01/22 18:24:41  ibelyaev
+//  Vanya: update for newer versions of Geant4 and Gaudi
+//
 // ============================================================================
 #ifndef GIGACNV_GIGAASSEMBLY_H 
 #define GIGACNV_GIGAASSEMBLY_H 1
@@ -41,8 +44,14 @@ public:
    *  @param assembly name
    */
   GiGaAssembly  ( const std::string& Name = "" );
+
+  /** copy constructor 
+   *  @param right object to be copied 
+   */
+  GiGaAssembly  ( const GiGaAssembly& right    );
   
-  ~GiGaAssembly (); ///< Destructor
+  /// destructor 
+  virtual ~GiGaAssembly (); 
   
   /** accessor to internal structure - volumes
    *  @return volumes 
@@ -66,7 +75,7 @@ public:
    */
   StatusCode  addVolume( const GiGaVolumePair& value      , 
                          const std::string&    name  = "" ) ;
-  
+
 private:
   
   std::string m_name    ;

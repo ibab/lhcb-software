@@ -1,8 +1,11 @@
-// $Id: GiGaDataStoreAlgorithm.cpp,v 1.1 2002-01-22 18:24:43 ibelyaev Exp $
+// $Id: GiGaDataStoreAlgorithm.cpp,v 1.2 2002-12-07 14:36:26 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
-// $Log: not supported by cvs2svn $ 
+// $Log: not supported by cvs2svn $
+// Revision 1.1  2002/01/22 18:24:43  ibelyaev
+//  Vanya: update for newer versions of Geant4 and Gaudi
+// 
 // ============================================================================
 // Include files
 // STD & STL 
@@ -14,6 +17,7 @@
 #include "GaudiKernel/MsgStream.h"
 // GiGaCnv 
 #include "GiGaCnv/IGiGaCnvSvc.h"
+#include "GiGaCnv/IGiGaCnvSvcLocation.h"
 // local
 #include "GiGaDataStoreAlgorithm.h"
 
@@ -48,20 +52,21 @@ GiGaDataStoreAlgorithm::GiGaDataStoreAlgorithm
   , m_names    () 
   , m_services () 
 {
-  m_names.push_back( "GiGaKineCnvSvc" );
-  m_names.push_back( "GiGaHitsCnvSvc" );
+  m_names.push_back( IGiGaCnvSvcLocation::Kine );
+  m_names.push_back( IGiGaCnvSvcLocation::Hits );
   declareProperty( "ConversionServices" , m_names );
 };
+// ============================================================================
 
 // ============================================================================
-/** destructor
- */
+/// destructor
 // ============================================================================
 GiGaDataStoreAlgorithm::~GiGaDataStoreAlgorithm() 
 {
   m_names    .clear () ;
   m_services .clear () ;
 };
+// ============================================================================
 
 // ============================================================================
 /** standard finalization method 
@@ -81,7 +86,13 @@ StatusCode GiGaDataStoreAlgorithm::finalize()
   m_services.clear() ;
   return StatusCode::SUCCESS;
 };
+// ============================================================================
 
+// ============================================================================
+/** standard inititialization method 
+ *  @return status code 
+ */
+// ============================================================================
 StatusCode GiGaDataStoreAlgorithm::initialize() 
 {
   
@@ -102,10 +113,9 @@ StatusCode GiGaDataStoreAlgorithm::initialize()
                          m_services.end   () , 
                          std::mem_fun(&IGiGaCnvSvc::release) ) ;
           /// clear the container 
-          m_services.clear() ;
+          m_services.clear () ;
           return StatusCode::FAILURE ;
         }
-      svc->addRef();
       m_services.push_back( svc );
       log << MSG::DEBUG << "==> add the service '" + *item + "'" << endreq;
     };
@@ -127,16 +137,20 @@ StatusCode GiGaDataStoreAlgorithm::execute()
   for( Services::iterator svc = m_services.begin() ;
        m_services.end() != svc ; ++svc )
     {
+      if( 0 == (*svc) ) { continue ; }
+      log << MSG::VERBOSE 
+          << " Register GiGa leaves for '" + 
+        (*svc)->name() + "' service " << endreq;
       StatusCode sc = (*svc)->registerGiGaLeaves();
       if( sc.isFailure() ) 
         {
-          log << MSG::ERROR 
-              << " Could not register GiGa leaves!" << endreq ;
+          log << MSG::ERROR << " Could not register GiGa leaves!" << endreq ;
           return sc ;
         }
     };
   return StatusCode::SUCCESS;
 };
+// ============================================================================
 
 
 

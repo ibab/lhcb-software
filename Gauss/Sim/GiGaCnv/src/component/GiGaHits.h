@@ -1,19 +1,11 @@
+// $Id: GiGaHits.h,v 1.1 2002-12-07 14:36:26 ibelyaev Exp $ 
 // ============================================================================
-/// CVS tag $Name: not supported by cvs2svn $ 
+// CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
-/// $Log: not supported by cvs2svn $
-/// Revision 1.4  2001/07/25 17:19:32  ibelyaev
-/// all conversions now are moved from GiGa to GiGaCnv
-///
-/// Revision 1.3  2001/07/24 11:13:55  ibelyaev
-/// package restructurization(III) and update for newer GiGa
-///
-/// Revision 1.2  2001/07/15 20:45:10  ibelyaev
-/// the package restructurisation
-/// 
+// $Log: not supported by cvs2svn $
 // ============================================================================
-#ifndef      GIGA_GIGAHITSCNVSVC_H 
-#define      GIGA_GIGAHITSCNVSVC_H  1 
+#ifndef      GIGA_GiGaHits_H 
+#define      GIGA_GiGaHits_H  1 
 // ============================================================================
 /// STL 
 #include <string> 
@@ -29,7 +21,7 @@ class    IParticlePropertySvc;
 class    IDataSelector; 
 class    IGiGaKineCnvSvc;
 
-/** @class GiGaHitsCnvSvc GiGaHitsCnvSvc.h
+/** @class GiGaHits GiGaHits.h
  *    
  *  Convertersion service for convertiong Geant4 hits info Gaudi hits 
  *  
@@ -37,11 +29,12 @@ class    IGiGaKineCnvSvc;
  *  @date    23/02/2001
  */
 
-class GiGaHitsCnvSvc:  public          GiGaCnvSvcBase   ,
-                       virtual public IGiGaHitsCnvSvc 
+class GiGaHits:  
+  virtual public IGiGaHitsCnvSvc  ,
+  public          GiGaCnvSvcBase   
 {
   ///
-  friend class SvcFactory<GiGaHitsCnvSvc>;
+  friend class SvcFactory<GiGaHits>;
   ///
 public: 
 
@@ -75,10 +68,10 @@ protected:
    *  @param ServiceName     name of the service
    *  @param ServiceLocator  pointer to service locator
    */
-  GiGaHitsCnvSvc( const std::string&  ServiceName          , 
+  GiGaHits( const std::string&  ServiceName          , 
                   ISvcLocator*        ServiceLocator       );
   /// destructor 
-  virtual ~GiGaHitsCnvSvc();
+  virtual ~GiGaHits();
   ///
   
   /** accessor to kine conversion service 
@@ -89,11 +82,11 @@ protected:
 private:
   
   /// no copy constructor 
-  GiGaHitsCnvSvc();
+  GiGaHits();
   /// no copy constructor
-  GiGaHitsCnvSvc( const GiGaHitsCnvSvc& );
+  GiGaHits( const GiGaHits& );
   /// no assignment
-  GiGaHitsCnvSvc& operator=( const GiGaHitsCnvSvc& );
+  GiGaHits& operator=( const GiGaHits& );
   
 private:
   
@@ -104,7 +97,7 @@ private:
 
 
 // ============================================================================
-#endif  ///<   GIGACNV_GIGAHITSCNVSVC_H 
+#endif  ///<   GIGACNV_GiGaHits_H 
 // ============================================================================
 
 

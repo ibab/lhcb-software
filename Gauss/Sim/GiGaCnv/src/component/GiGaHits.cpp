@@ -2,18 +2,6 @@
 /// CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 /// $Log: not supported by cvs2svn $
-/// Revision 1.6  2001/08/12 17:24:52  ibelyaev
-/// improvements with Doxygen comments
-///
-/// Revision 1.5  2001/07/27 18:50:35  ibelyaev
-///  bug fix
-///
-/// Revision 1.4  2001/07/25 17:19:31  ibelyaev
-/// all conversions now are moved from GiGa to GiGaCnv
-///
-/// Revision 1.3  2001/07/24 11:13:55  ibelyaev
-/// package restructurization(III) and update for newer GiGa
-/// 
 // ============================================================================
 /// Gaudi 
 #include "GaudiKernel/SvcFactory.h" 
@@ -26,13 +14,14 @@
 /// GiGaCnv 
 #include "GiGaCnv/IGiGaKineCnvSvc.h"
 #include "GiGaCnv/IGiGaGeomCnvSvc.h"
+#include "GiGaCnv/IGiGaCnvSvcLocation.h"
 /// local
-#include "GiGaHitsCnvSvc.h" 
+#include "GiGaHits.h" 
 
 // ============================================================================
 // ============================================================================
-static const  SvcFactory<GiGaHitsCnvSvc>                         s_Factory ; 
-const        ISvcFactory&                GiGaHitsCnvSvcFactory = s_Factory ; 
+static const  SvcFactory<GiGaHits>         s_Factory ; 
+const        ISvcFactory&GiGaHitsFactory = s_Factory ; 
 
 // ============================================================================
 /** standard constructor 
@@ -40,12 +29,13 @@ const        ISvcFactory&                GiGaHitsCnvSvcFactory = s_Factory ;
  *  @param ServiceLocator  pointer to service locator
  */
 // ============================================================================
-GiGaHitsCnvSvc::GiGaHitsCnvSvc( const std::string&   ServiceName          , 
+GiGaHits::GiGaHits( const std::string&   ServiceName          , 
                                 ISvcLocator*         ServiceLocator       ) 
   : GiGaCnvSvcBase(                                  ServiceName          , 
                                                      ServiceLocator       , 
                                                      GiGaHits_StorageType )
-  , m_kineSvcName ("GiGaKineCnvSvc" ) ///< default name for KineCnv Service 
+  // default name for KineCnv Service 
+  , m_kineSvcName ( IGiGaCnvSvcLocation::Kine )
   , m_kineSvc     ( 0 )
 {
   ///
@@ -57,14 +47,14 @@ GiGaHitsCnvSvc::GiGaHitsCnvSvc( const std::string&   ServiceName          ,
 // ============================================================================
 /// destructor 
 // ============================================================================
-GiGaHitsCnvSvc::~GiGaHitsCnvSvc(){};
+GiGaHits::~GiGaHits(){};
 
 // ============================================================================
 /** initialize the service
  *  @return status code
  */
 // ============================================================================
-StatusCode GiGaHitsCnvSvc::initialize() 
+StatusCode GiGaHits::initialize() 
 { 
   StatusCode sc = GiGaCnvSvcBase::initialize();
   if( sc.isFailure() ) 
@@ -78,7 +68,6 @@ StatusCode GiGaHitsCnvSvc::initialize()
                        m_kineSvcName + "'", sc ) ; }
       if( 0 == kineSvc() ) 
         { return Error("IGiGaKineCnvSvc* points to NULL!" ) ; }
-      kineSvc()->addRef();
     }
   else 
     { return Error("Empty name for Kine Conversion Service!!"); }
@@ -92,7 +81,7 @@ StatusCode GiGaHitsCnvSvc::initialize()
  *  @return status code
  */ 
 // ============================================================================
-StatusCode GiGaHitsCnvSvc::finalize()   
+StatusCode GiGaHits::finalize()   
 { 
   /// release kine service
   if( 0 != kineSvc() ) { kineSvc()->release() ;  m_kineSvc =  0 ; }
@@ -107,10 +96,10 @@ StatusCode GiGaHitsCnvSvc::finalize()
  *  @return the reference to relation table  
  */
 // ============================================================================
-GiGaKineRefTable& GiGaHitsCnvSvc::table()
+GiGaKineRefTable& GiGaHits::table()
 {
   if( 0 == kineSvc() ) 
-    { Exception ( "GiGaHitsCnvSvc::table(): IGiGaCnvSvc* points to NULL!" );}
+    { Exception ( "GiGaHits::table(): IGiGaCnvSvc* points to NULL!" );}
   ///
   return kineSvc()->table();
 };
@@ -123,7 +112,7 @@ GiGaKineRefTable& GiGaHitsCnvSvc::table()
  *  @return status code 
  */
 // ============================================================================
-StatusCode GiGaHitsCnvSvc::queryInterface( const InterfaceID& ID , 
+StatusCode GiGaHits::queryInterface( const InterfaceID& ID , 
                                            void**             II ) 
 {
   if( 0 == II ) { return StatusCode::FAILURE; }

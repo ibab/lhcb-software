@@ -1,17 +1,8 @@
-// $Id: IGiGaCnvSvc.h,v 1.3 2002-01-22 18:24:42 ibelyaev Exp $ 
+// $Id: IGiGaCnvSvc.h,v 1.4 2002-12-07 14:36:25 ibelyaev Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
-// Revision 1.2  2001/08/12 17:24:50  ibelyaev
-// improvements with Doxygen comments
-//
-// Revision 1.1  2001/07/25 17:19:30  ibelyaev
-// all conversions now are moved from GiGa to GiGaCnv
-//
-// Revision 1.10  2001/07/23 13:11:44  ibelyaev
-// the package restructurisation(II)
-// 
 // ============================================================================
 #ifndef           GIGACNV_IGIGACNVSVC_H 
 #define           GIGACNV_IGIGACNVSVC_H  1 
@@ -29,7 +20,6 @@ class IGiGaSetUpSvc          ;
 class IParticlePropertySvc   ;
 class GiGaLeaf               ;
 //
-
 /** @class IGiGaCnvSvc IGiGaCnvSvc.h GiGa/IGiGaCnvSvc.h
  *
  *  definition of abstract interface to Geant 4 conversion service 

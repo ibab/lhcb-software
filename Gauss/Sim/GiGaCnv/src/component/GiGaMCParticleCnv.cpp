@@ -1,8 +1,11 @@
-// $Id: GiGaMCParticleCnv.cpp,v 1.17 2002-07-17 08:29:49 ranjard Exp $ 
+// $Id: GiGaMCParticleCnv.cpp,v 1.18 2002-12-07 14:36:27 ibelyaev Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.17  2002/07/17 08:29:49  ranjard
+// v7r0 - adapted to Geant4 4.1
+//
 // Revision 1.16  2002/07/02 15:15:44  ibelyaev
 //  fix the bugs
 //
@@ -73,8 +76,8 @@ GiGaMCParticleCnv::GiGaMCParticleCnv( ISvcLocator* Locator )
   : GiGaCnvBase( storageType() , classID() , Locator ) 
 {
   ///
-  setNameOfGiGaConversionService( "GiGaKineCnvSvc" ); 
-  setConverterName              ( "GiGaMCPCnv"     );
+  setNameOfGiGaConversionService( IGiGaCnvSvcLocation::Kine ) ; 
+  setConverterName              ( "GiGaMCPCnv"              ) ;
   ///
   declareObject( GiGaLeaf( MCParticleLocation::Default , objType() ) );
   ///

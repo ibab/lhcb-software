@@ -1,14 +1,11 @@
-// $Id: GiGaGeomCnvSvc.h,v 1.8 2002-09-26 15:12:33 ibelyaev Exp $ 
+// $Id: GiGaGeo.h,v 1.1 2002-12-07 14:36:26 ibelyaev Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
-// Revision 1.7  2002/05/07 12:24:50  ibelyaev
-//  see $GIGACNVROOT/doc/release.notes 7 May 2002
-//
 // ============================================================================
-#ifndef  GIGACNV_GIGAGEOMCNVSVC_H 
-#define  GIGACNV_GIGAGEOMCNVSVC_H 1 
+#ifndef  GIGACNV_GiGaGeo_H 
+#define  GIGACNV_GiGaGeo_H 1 
 // ============================================================================
 /// STL 
 #include <string> 
@@ -31,22 +28,23 @@ class IGiGaMagField;
 template <class SERVICE> 
 class SvcFactory;
 
-/** @class GiGaGeomCnvSvc GiGaGeomCnvSvc.h
+/** @class GiGaGeo GiGaGeo.h
  *  
- *  Convertersion service for convertiong Gaugi detector 
+ *  Convertersion service for convertiong Gaudi detector 
  *  and geometry description into Geant4 geometry and 
  *  detector description 
  *  
- *  @author  Vanya Belyaev Ivan.Belyaev@itep.ru
+ *  @author  Vanya Belyaev  Ivan.Belyaev@itep.ru
+ *  @author  Gonzalo Gracia Gonzalo.Gracia@cern.ch
  *  @date    07/08/2000
  */
 
-class GiGaGeomCnvSvc:  
+class GiGaGeo:  
   public virtual  IGiGaGeomCnvSvc , 
   public           GiGaCnvSvcBase    
 { 
   ///
-  friend class SvcFactory<GiGaGeomCnvSvc>;
+  friend class SvcFactory<GiGaGeo>;
   ///  
 public:
   ///
@@ -59,10 +57,10 @@ protected:
    *  @param name  name of the service 
    *  @param loc   pointer to service locator 
    */
-  GiGaGeomCnvSvc( const std::string& name , 
+  GiGaGeo( const std::string& name , 
                   ISvcLocator* loc );
   /// virtual destructor
-  virtual ~GiGaGeomCnvSvc(){};
+  virtual ~GiGaGeo(){};
   
 public: 
   
@@ -151,7 +149,7 @@ public:
     void**             ) ;
   
   /** Retrieve the pointer to top-level "world" volume,
-   *  @see IGiGaGeomCnvSvc 
+   *  @see IGiGaGeo 
    *  needed for Geant4 - root for the whole Geant4 geometry tree 
    *  @see class IGiGaGeoSrc 
    *  @return pointer to constructed(converted) geometry tree 
@@ -159,7 +157,7 @@ public:
   virtual G4VPhysicalVolume*  world    () ;
   
   /** Retrieve the pointer for G4 materials from G4MaterialTable, 
-   *  @see IGiGaGeomCnvSvc 
+   *  @see IGiGaGeo 
    *  (could trigger the conversion of the (DetDesc) Material)
    *  @param  name    name/address/location of Material object 
    *  @return pointer to converted G4Material object 
@@ -168,7 +166,7 @@ public:
   ( const std::string& name      )  ;
   
   /** Retrive the pointer to converter volumes/assemblies 
-   *  @see IGiGaGeomCnvSvc 
+   *  @see IGiGaGeo 
    *  (could trigger the conversion of the (DetDesc) LVolume/LAssembly)    
    *  @param  name    name/address/location of Volume/Assembly object 
    *  @return pointer to converted GiGaVolume  object 
@@ -177,7 +175,7 @@ public:
   ( const std::string& name      )  ;
   
   /** convert (DetDesc) Solid object into (Geant4) G4VSolid object 
-   *  @see IGiGaGeomCnvSvc 
+   *  @see IGiGaGeo 
    *  @param  Solid pointer to Solid object 
    *  @return pointer to converter G4VSolid object 
    */
@@ -185,7 +183,7 @@ public:
   ( const ISolid*      Solid     )  ;
   
   /** Instantiate the Sensitive Detector Object 
-   *  @see IGiGaGeomCnvSvc 
+   *  @see IGiGaGeo 
    *  @param name  Type/Name of the Sensitive Detector Object
    *  @param det   reference to Densitive Detector Object 
    *  @return  status code 
@@ -195,7 +193,7 @@ public:
     IGiGaSensDet*&     det       )  ;
   
   /** Instantiate the Magnetic Field Object 
-   *  @see IGiGaGeomCnvSvc 
+   *  @see IGiGaGeo 
    *  @param name  Type/Name of the Magnetic Field Object
    *  @param mag   reference to Magnetic Field Object 
    *  @return  status code 
@@ -207,7 +205,7 @@ public:
   /** Create new G4LogicalVolume. All arguments must be valid!
    *  One should not invoke the 
    *  "new" operator for Logical Volumes directly
-   *  @see IGiGaGeomCnvSvc 
+   *  @see IGiGaGeo 
    *  @param solid    pointer to valid solid    object
    *  @param material pointer to valid material object
    *  @param name     name of logical volume 
@@ -278,9 +276,9 @@ protected:
   ///
 private:
   ///
-  GiGaGeomCnvSvc()                                  ;
-  GiGaGeomCnvSvc           ( const GiGaGeomCnvSvc& );
-  GiGaGeomCnvSvc& operator=( const GiGaGeomCnvSvc& );
+  GiGaGeo()                                  ;
+  GiGaGeo           ( const GiGaGeo& );
+  GiGaGeo& operator=( const GiGaGeo& );
   ///
 private:
   
@@ -309,7 +307,7 @@ private:
 // ============================================================================
 // end 
 // ============================================================================
-#endif  //   GIGACNV_GIGAGEOMCNVSVC_H__ 
+#endif  //   GIGACNV_GiGaGeo_H__ 
 // ============================================================================
 
 

@@ -1,8 +1,11 @@
-// $Id: GiGaCnvSvcBase.cpp,v 1.10 2002-12-04 16:25:18 ibelyaev Exp $ 
+// $Id: GiGaCnvSvcBase.cpp,v 1.11 2002-12-07 14:36:25 ibelyaev Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.10  2002/12/04 16:25:18  ibelyaev
+//  remove extra calls for 'addRef'
+//
 // Revision 1.9  2002/08/23 08:19:41  witoldp
 // Hits converters removed, bug fix
 //
@@ -20,7 +23,6 @@
 #include "GaudiKernel/ISvcLocator.h" 
 #include "GaudiKernel/IIncidentListener.h" 
 #include "GaudiKernel/IDataProviderSvc.h"
-#include "GaudiKernel/IObjManager.h"
 #include "GaudiKernel/IChronoStatSvc.h"
 #include "GaudiKernel/IToolSvc.h"
 #include "GaudiKernel/IIncidentSvc.h"
@@ -57,6 +59,15 @@
  */
 // ============================================================================
 
+namespace GiGaCnvSvcBaseLocal
+{
+#ifdef GIGA_DEBUG
+  /** @var   s_Counter
+   *  static instance counter 
+   */
+  static GiGaUtil::InstanceCounter<GiGaCnvSvcBase> s_Counter ;
+#endif   
+};
 
 // ============================================================================
 /** standard constructor
@@ -79,10 +90,10 @@ GiGaCnvSvcBase::GiGaCnvSvcBase( const std::string&   ServiceName       ,
   , m_detName     ( "DetectorDataSvc"     )
   , m_detSvc      (     0                 )
   //
-  , m_gigaName    ( "GiGaSvc"             ) 
+  , m_gigaName    ( "GiGa"                ) 
   , m_gigaSvc     (     0                 ) 
   //
-  , m_setupName   ( "GiGaSvc"             ) 
+  , m_setupName   ( "GiGa"                ) 
   , m_setupSvc    (     0                 ) 
   //
   , m_chronoName  ( "ChronoStatSvc"       )  
@@ -90,9 +101,6 @@ GiGaCnvSvcBase::GiGaCnvSvcBase( const std::string&   ServiceName       ,
   //
   , m_toolName    ( "ToolSvc"             )  
   , m_toolSvc     (     0                 ) 
-  //
-  , m_omName      ( "ApplicationMgr"      )  
-  , m_objMgr      (     0                 ) 
   //
   , m_inName      ( "IncidentSvc"         )  
   , m_incSvc      (     0                 ) 
@@ -107,8 +115,11 @@ GiGaCnvSvcBase::GiGaCnvSvcBase( const std::string&   ServiceName       ,
   declareProperty   ( "GiGaSetUpService"                , m_setupName   ); 
   declareProperty   ( "ChronoStatService"               , m_chronoName  );
   declareProperty   ( "ToolService"                     , m_toolName    );
-  declareProperty   ( "ObjectManager"                   , m_omName      );
   declareProperty   ( "IncidentService"                 , m_inName      );
+  
+#ifdef GIGA_DEBUG
+  GiGaCnvSvcBaseLocal::s_Counter.increment () ;
+#endif
 };
 
 // ============================================================================
@@ -117,6 +128,9 @@ GiGaCnvSvcBase::GiGaCnvSvcBase( const std::string&   ServiceName       ,
 GiGaCnvSvcBase::~GiGaCnvSvcBase()
 {
   m_leaves.clear() ;
+#ifdef GIGA_DEBUG
+  GiGaCnvSvcBaseLocal::s_Counter.decrement () ;
+#endif  
 };
 
 // ============================================================================
@@ -159,7 +173,7 @@ StatusCode GiGaCnvSvcBase::initialize()
   if( !m_dpName.empty() ) 
     {
       StatusCode status = 
-        serviceLocator()->service( m_dpName , m_dpSvc );
+        serviceLocator()->service( m_dpName ,  m_dpSvc  , true );
       if( status.isFailure() ) 
         { return Error("Initialize::Could not locate IDataProvider=" + 
                        m_dpName, status );}      
@@ -167,6 +181,7 @@ StatusCode GiGaCnvSvcBase::initialize()
         { return Error("Initialize::Could not locate IDataProvider=" + 
                        m_dpName         );}
       setDataProvider( dpSvc() ); 
+      dpSvc() -> addRef () ;
       Print( " Located DataProvider="+m_dpName, MSG::VERBOSE ); 
     } 
   else { return Error(" IDataProvider is not requested to be located!") ;} 
@@ -174,7 +189,7 @@ StatusCode GiGaCnvSvcBase::initialize()
   if( !m_gigaName.empty() ) 
     {
       StatusCode status = 
-        serviceLocator()->service( m_gigaName , m_gigaSvc ) ;
+        serviceLocator()->service( m_gigaName , m_gigaSvc , true ) ;
       if( status.isFailure() ) 
         { return Error("Initialize::Could not locate IGiGaSvc=" + 
                        m_gigaName, status );}      
@@ -188,7 +203,7 @@ StatusCode GiGaCnvSvcBase::initialize()
   if( !m_setupName.empty() ) 
     {
       StatusCode status = 
-        serviceLocator()->service( m_setupName , m_setupSvc ) ;
+        serviceLocator()->service( m_setupName , m_setupSvc , true ) ;
       if( status.isFailure() ) 
         { return Error("Initialize::Could not locate IGiGaSetUpSvc=" + 
                        m_setupName, status );}      
@@ -202,7 +217,7 @@ StatusCode GiGaCnvSvcBase::initialize()
   if( !m_evtName.empty() ) 
     {
       StatusCode status = 
-        serviceLocator()->service( m_evtName , m_evtSvc ) ; 
+        serviceLocator()->service( m_evtName , m_evtSvc  , true  ) ; 
       if( status.isFailure() ) 
         { return Error("Initialize::Could not locate IDataProvider=" + 
                        m_evtName, status );}      
@@ -216,7 +231,7 @@ StatusCode GiGaCnvSvcBase::initialize()
   if( !m_detName.empty() ) 
     {
       StatusCode status = 
-        serviceLocator()->service( m_detName , m_detSvc ) ; 
+        serviceLocator()->service( m_detName , m_detSvc  , true ) ; 
       if( status.isFailure() ) 
         { return Error("Initialize::Could not locate IDataProvider=" + 
                        m_detName, status );}      
@@ -230,7 +245,7 @@ StatusCode GiGaCnvSvcBase::initialize()
   if( !m_chronoName.empty() ) 
     {
       StatusCode status = 
-        serviceLocator()->service( m_chronoName , m_chronoSvc  ) ; 
+        serviceLocator()->service( m_chronoName , m_chronoSvc  , true ) ; 
       if( status.isFailure() ) 
         { return Error("Initialize::Could not locate IChronoStatSvc=" + 
                        m_chronoName, status );}      
@@ -243,7 +258,7 @@ StatusCode GiGaCnvSvcBase::initialize()
   ///
   {
     StatusCode status = 
-      serviceLocator()->service( m_toolName , m_toolSvc  ) ; 
+      serviceLocator()->service( m_toolName , m_toolSvc  , true ) ; 
     if( status.isFailure() ) 
       { return Error("Initialize::Could not locate IToolSvc=" + 
                      m_toolName, status );}      
@@ -253,28 +268,14 @@ StatusCode GiGaCnvSvcBase::initialize()
     Print( " Located Tool  Service=" + m_toolName, MSG::VERBOSE ); 
   } 
   ///
-  if( !m_omName.empty() ) 
-    {
-      StatusCode status = 
-        serviceLocator()->service( m_omName , m_objMgr  ) ; 
-      if( status.isFailure() ) 
-        { return Error("Initialize::Could not locate IObjManager=" + 
-                       m_omName, status );}      
-      if( 0 == objMgr()      )
-        { return Error("Initialize::Could not locate IObjManager=" + 
-                       m_omName         );}
-      Print( " Located ObjectManager "+m_omName, MSG::VERBOSE ); 
-    } 
-  else { Warning(" Object Manager is not requested to be located!") ;} 
-  ///
   if( !m_inName.empty() ) 
     {
       StatusCode status = 
-        serviceLocator()->service( m_inName , m_incSvc  ) ; 
+        serviceLocator()->service( m_inName , m_incSvc  , true ) ; 
       if( status.isFailure() ) 
         { return Error("Initialize::Could not locate IIncidentSvc=" + 
                        m_inName, status );}      
-      if( 0 == objMgr()      ) 
+      if( 0 == incSvc ()      ) 
         { return Error("Initialize::Could not locate IIncidentSvc=" + 
                        m_inName         );}
       Print( " Located Incident Service  "+m_inName, MSG::VERBOSE ); 
@@ -307,6 +308,8 @@ StatusCode GiGaCnvSvcBase::locateOwnCnvs()
       if( st.isFailure() )
         { return Error("locateOwnCnvs():Could not add converter=" + 
                        (*it)->typeName() , st ) ; }
+      Print(" The converter for '" + (*it)->typeName() + 
+            "' is found and added " , MSG::DEBUG , StatusCode::SUCCESS ); 
     } 
   ///
   return StatusCode::SUCCESS;
@@ -326,7 +329,6 @@ StatusCode GiGaCnvSvcBase::finalize()
   if ( 0 != gigaSvc   () ) { gigaSvc   () -> release() ; m_gigaSvc   = 0 ; } 
   if ( 0 != setupSvc  () ) { setupSvc  () -> release() ; m_setupSvc  = 0 ; } 
   if ( 0 != chronoSvc () ) { chronoSvc () -> release() ; m_chronoSvc = 0 ; } 
-  if ( 0 != objMgr    () ) { objMgr    () -> release() ; m_objMgr    = 0 ; } 
   ///
   m_leaves.clear();
   ///  
@@ -552,7 +554,7 @@ StatusCode GiGaCnvSvcBase::registerGiGaLeaves()
 {
   ///
   SmartIF<IDataManagerSvc> dataMgr( dataProvider() );
-  if( !dataMgr )
+  if( 0 == dataMgr )
     { return Error("Could not obtain IDataManagerSvc interface!");}
   ///
   StatusCode sc = StatusCode::SUCCESS ;
@@ -575,6 +577,9 @@ StatusCode GiGaCnvSvcBase::registerGiGaLeaves()
       if( sc.isFailure() ) 
         { return Error( "Could not register the address for the leaf '" 
                         + leaf->path() + "'"); }
+      Print( " The leaf '" + leaf->path()     + 
+             "' is registered successfully "  , 
+             MSG::DEBUG , StatusCode::SUCCESS ) ;
     };
   ///
   return StatusCode::SUCCESS;

@@ -2,6 +2,9 @@
 /// CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 /// $Log: not supported by cvs2svn $
+/// Revision 1.2  2001/08/12 17:24:50  ibelyaev
+/// improvements with Doxygen comments
+///
 /// Revision 1.1  2001/07/24 11:13:54  ibelyaev
 /// package restructurization(III) and update for newer GiGa
 /// 
@@ -31,7 +34,7 @@ public:
   
   /** constructor 
    *  @param particle pointer to MCParticle object
-   *  @param index    its  position in ObjectVector<MCParticle>
+   *  @param index    its  position in container of MCParticle
    */ 
   GiGaKineRefTableEntry( MCParticle* particle =  0 ,
                          const int   index    = -1 )

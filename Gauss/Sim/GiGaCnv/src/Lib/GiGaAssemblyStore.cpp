@@ -1,8 +1,11 @@
-// $Id: GiGaAssemblyStore.cpp,v 1.1 2002-01-22 18:24:42 ibelyaev Exp $
+// $Id: GiGaAssemblyStore.cpp,v 1.2 2002-12-07 14:36:25 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
-// $Log: not supported by cvs2svn $ 
+// $Log: not supported by cvs2svn $
+// Revision 1.1  2002/01/22 18:24:42  ibelyaev
+//  Vanya: update for newer versions of Geant4 and Gaudi
+// 
 // ============================================================================
 // Include files
 // STD & STL 
@@ -44,7 +47,7 @@ GiGaAssemblyStore::GiGaAssemblyStore()
 /** destructor
  */
 // ============================================================================
-GiGaAssemblyStore::~GiGaAssemblyStore() { m_assemblies.clear() ; };
+GiGaAssemblyStore::~GiGaAssemblyStore() { clear() ; };
 
 //=============================================================================
 /** get the assembly by name 
@@ -103,9 +106,9 @@ StatusCode GiGaAssemblyStore::clear()
   while( !m_assemblies.empty() )
     {
       Assemblies::iterator it = m_assemblies.begin() ;      
-      GiGaAssembly* a    = *it ;
-      m_assemblies.erase( it );
-      if( 0 != a ) { delete a ; }
+      GiGaAssembly*        a  = *it                  ;
+      m_assemblies.erase( it ) ;      
+      if( 0 != a ) { delete a  ; }
     }
   return StatusCode::SUCCESS ;
 };

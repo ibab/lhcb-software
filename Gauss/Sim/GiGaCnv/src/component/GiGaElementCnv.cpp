@@ -1,8 +1,11 @@
-// $Id: GiGaElementCnv.cpp,v 1.5 2002-01-22 18:24:43 ibelyaev Exp $ 
+// $Id: GiGaElementCnv.cpp,v 1.6 2002-12-07 14:36:26 ibelyaev Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.5  2002/01/22 18:24:43  ibelyaev
+//  Vanya: update for newer versions of Geant4 and Gaudi
+//
 // Revision 1.4  2001/08/12 17:24:52  ibelyaev
 // improvements with Doxygen comments
 //
@@ -33,32 +36,44 @@
 #include "GiGaElementCnv.h" 
 
 
-static const  CnvFactory<GiGaElementCnv>
-s_GiGaElementCnvFactory ;
-const        ICnvFactory& GiGaElementCnvFactory = 
-s_GiGaElementCnvFactory ;
+// ============================================================================
+static const  CnvFactory<GiGaElementCnv>         s_GiGaElementCnvFactory ;
+const        ICnvFactory&GiGaElementCnvFactory = s_GiGaElementCnvFactory ;
+// ============================================================================
 
+// ============================================================================
 /// constructor 
+// ============================================================================
 GiGaElementCnv::GiGaElementCnv( ISvcLocator* Locator ) 
   : GiGaCnvBase( storageType() , classID() , Locator ) 
   , m_leaf     ( "" , classID() )
 {
-  setNameOfGiGaConversionService( "GiGaGeomCnvSvc" ); 
-  setConverterName              ( "GiGaElementCnv" );
+  setNameOfGiGaConversionService( IGiGaCnvSvcLocation::Geo ) ; 
+  setConverterName              ( "GiGaElementCnv"         ) ;
 };
+// ============================================================================
 
+// ============================================================================
 /// destructor 
+// ============================================================================
 GiGaElementCnv::~GiGaElementCnv(){}; 
 
+// ============================================================================
 /// Class ID
-const CLID&  GiGaElementCnv::classID () 
-{ return Element::classID() ; }
+// ============================================================================
+const CLID&  GiGaElementCnv::classID () { return Element::classID() ; }
+// ============================================================================
 
+// ============================================================================
 /// StorageType 
-const unsigned char GiGaElementCnv::storageType () 
+// ============================================================================
+const unsigned char GiGaElementCnv::storageType ()
 { return GiGaGeom_StorageType; } 
+// ============================================================================
 
+// ============================================================================
 /// Create representation 
+// ============================================================================
 StatusCode GiGaElementCnv::createRep
 ( DataObject*      Object  , 
   IOpaqueAddress*& Address ) 
@@ -91,8 +106,11 @@ StatusCode GiGaElementCnv::createRep
   return updateRep( Object , Address ) ; 
   /// 
 }; 
+// ============================================================================
 
+// ============================================================================
 ///
+// ============================================================================
 StatusCode GiGaElementCnv::updateRep
 ( DataObject*      Object       , 
   IOpaqueAddress* /* Address */) 

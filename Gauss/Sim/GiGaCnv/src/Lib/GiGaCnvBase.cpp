@@ -1,8 +1,11 @@
-// $Id: GiGaCnvBase.cpp,v 1.9 2002-12-04 16:25:18 ibelyaev Exp $ 
+// $Id: GiGaCnvBase.cpp,v 1.10 2002-12-07 14:36:25 ibelyaev Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.9  2002/12/04 16:25:18  ibelyaev
+//  remove extra calls for 'addRef'
+//
 // Revision 1.8  2002/05/07 12:24:50  ibelyaev
 //  see $GIGACNVROOT/doc/release.notes 7 May 2002
 //
@@ -25,6 +28,7 @@
 #include "GiGa/IGiGaSvc.h" 
 #include "GiGa/IGiGaSetUpSvc.h"
 #include "GiGa/GiGaException.h"
+#include "GiGa/GiGaUtil.h"
 // GiGaCnv 
 #include "GiGaCnv/IGiGaCnvSvc.h" 
 #include "GiGaCnv/IGiGaGeomCnvSvc.h" 
@@ -41,6 +45,16 @@
  *  @date    21/02/2001
  */
 // ============================================================================
+
+namespace GiGaCnvBaseLocal
+{
+#ifdef GIGA_DEBUG
+  /** @var   s_Counter
+   *  static instance counter 
+   */
+  static GiGaUtil::InstanceCounter<GiGaCnvBase> s_Counter ;
+#endif   
+};
 
 // ============================================================================
 /// constructor 
@@ -68,12 +82,21 @@ GiGaCnvBase::GiGaCnvBase
   , m_warnings   ()
   , m_exceptions ()
   ///
-{};
+{
+#ifdef GIGA_DEBUG
+  GiGaCnvBaseLocal::s_Counter.increment () ;
+#endif 
+};
 
 // ============================================================================
 /// destructor 
 // ============================================================================
-GiGaCnvBase::~GiGaCnvBase(){};
+GiGaCnvBase::~GiGaCnvBase()
+{
+#ifdef GIGA_DEBUG
+  GiGaCnvBaseLocal::s_Counter.decrement () ;
+#endif
+};
 
 // ============================================================================
 /** (re)-throw exception and print error message 
@@ -208,7 +231,7 @@ StatusCode GiGaCnvBase::initialize ()
   ///
   {
     StatusCode sc = 
-      serviceLocator()->
+      serviceLocator() ->
       service( m_NameOfGiGaConversionService , m_GiGaCnvSvc , true ) ;
     if ( st.isFailure() ) 
       { return Error("Initialize::unable to locate IGiGaCnvSvs=" + 
@@ -218,13 +241,16 @@ StatusCode GiGaCnvBase::initialize ()
                      m_NameOfGiGaConversionService     );} 
   }
   ///
-  m_GiGaGeomCnvSvc = dynamic_cast<IGiGaGeomCnvSvc*> ( m_GiGaCnvSvc ); 
+  m_GiGaGeomCnvSvc = dynamic_cast<IGiGaGeomCnvSvc*> ( m_GiGaCnvSvc );  
   m_GiGaKineCnvSvc = dynamic_cast<IGiGaKineCnvSvc*> ( m_GiGaCnvSvc ); 
   m_GiGaHitsCnvSvc = dynamic_cast<IGiGaHitsCnvSvc*> ( m_GiGaCnvSvc ); 
   ///
-
   if( 0 == geoSvc() && 0 == kineSvc() && 0 == hitsSvc() )
     { return Error("Initialize::neither Geom,Hits or Kine CnvSvc located!");} 
+  ///
+  if( 0 !=  geoSvc () ) {  geoSvc  () -> addRef () ; }
+  if( 0 != kineSvc () ) { kineSvc  () -> addRef () ; }
+  if( 0 != hitsSvc () ) { hitsSvc  () -> addRef () ; }
   ///
   {
     const std::string evtName("EventDataSvc");
@@ -296,6 +322,13 @@ StatusCode GiGaCnvBase::finalize ()
   if( 0 != detSvc    () ) { detSvc    ()->release() ; m_detSvc         = 0 ; } 
   if( 0 != evtSvc    () ) { evtSvc    ()->release() ; m_evtSvc         = 0 ; } 
   if( 0 != cnvSvc    () ) { cnvSvc    ()->release() ; m_GiGaCnvSvc     = 0 ; } 
+  ///
+  if( 0 !=  geoSvc   () ) 
+    {  geoSvc   () -> release () ; m_GiGaGeomCnvSvc = 0 ; }
+  if( 0 != kineSvc   () ) 
+    { kineSvc   () -> release () ; m_GiGaKineCnvSvc = 0 ; }
+  if( 0 != hitsSvc   () ) 
+    { hitsSvc   () -> release () ; m_GiGaHitsCnvSvc = 0 ; }
   ///
   m_leaves.clear();
   ///

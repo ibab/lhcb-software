@@ -1,8 +1,11 @@
-// $Id: GiGaMixtureCnv.cpp,v 1.5 2002-01-22 18:24:44 ibelyaev Exp $
+// $Id: GiGaMixtureCnv.cpp,v 1.6 2002-12-07 14:36:27 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.5  2002/01/22 18:24:44  ibelyaev
+//  Vanya: update for newer versions of Geant4 and Gaudi
+//
 // Revision 1.4  2001/08/12 17:24:54  ibelyaev
 // improvements with Doxygen comments
 //
@@ -39,8 +42,8 @@ GiGaMixtureCnv::GiGaMixtureCnv( ISvcLocator* Locator )
   : GiGaCnvBase( storageType() , classID() , Locator ) 
   , m_leaf ( "" , classID() )
 {
-  setNameOfGiGaConversionService( "GiGaGeomCnvSvc" ); 
-  setConverterName              ( "GiGaMixtureCnv" );
+  setNameOfGiGaConversionService( IGiGaCnvSvcLocation::Geo ) ; 
+  setConverterName              ( "GiGaMixtureCnv"         ) ;
 };
 
 /// destructor 

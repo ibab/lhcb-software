@@ -1,8 +1,11 @@
-// $Id: GiGaCatalogCnv.cpp,v 1.2 2002-01-22 18:24:43 ibelyaev Exp $
+// $Id: GiGaCatalogCnv.cpp,v 1.3 2002-12-07 14:36:25 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2002/01/22 18:24:43  ibelyaev
+//  Vanya: update for newer versions of Geant4 and Gaudi
+//
 // Revision 1.1  2001/11/19 18:27:00  ibelyaev
 //  bux fix and the new converter for catalogs
 // 
@@ -23,6 +26,7 @@
 // GiGaCnv
 #include "GiGaCnv/IGiGaCnvSvc.h"
 #include "GiGaCnv/GiGaCnvUtils.h"
+#include "GiGaCnv/IGiGaCnvSvcLocation.h"
 // local
 #include "GiGaCatalogCnv.h"
 
@@ -52,8 +56,8 @@ const        ICnvFactory&GiGaCatalogCnvFactory = s_Factory ;
 GiGaCatalogCnv::GiGaCatalogCnv( ISvcLocator* Locator ) 
   : GiGaCnvBase( storageType() , classID() , Locator ) 
 {
-  setNameOfGiGaConversionService( "GiGaGeomCnvSvc" ); 
-  setConverterName              ( "GiGaCatalogCnv" );
+  setNameOfGiGaConversionService( IGiGaCnvSvcLocation::Geo ) ; 
+  setConverterName              ( "GiGaDirCnv"             ) ;
 }; 
 
 // ============================================================================
@@ -132,12 +136,12 @@ StatusCode GiGaCatalogCnv::updateRep
   IOpaqueAddress*  /* Address */ ) 
 {
   ///
-  if( 0 == Object   ) { return Error("DataObject*      points to NULL!") ; }
+  if( 0 == Object    ) { return Error("DataObject*      points to NULL!") ; }
   ///
   IRegistry* registry = Object->registry() ;
   if( 0 == registry  ) { return Error("IRegistry*       points to NULL!") ; }
   SmartIF<IDataManagerSvc> dataMgr( registry->dataSvc() );
-  if( !dataMgr       ) { return Error("IDataManagersvc* points to NULL!") ; }
+  if( 0 == dataMgr   ) { return Error("IDataManagersvc* points to NULL!") ; }
   typedef std::vector<IRegistry*> Leaves;
   IDataSelector dataSelector;
   Leaves leaves ;

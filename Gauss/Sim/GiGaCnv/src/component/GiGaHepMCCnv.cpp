@@ -1,8 +1,9 @@
-//  Converter from HepMC to G4
-//
-//  W. Pokorski 15.02.2002 
-// 
-//  ===========================================================================
+// $Id: GiGaHepMCCnv.cpp,v 1.8 2002-12-07 14:36:26 ibelyaev Exp $
+// ============================================================================
+// CVS tag $Name: not supported by cvs2svn $
+// ============================================================================
+// $Log: not supported by cvs2svn $ 
+// ============================================================================
 #define GIGACNV_GIGAHEPMCCNV_CPP 1 
 // ============================================================================
 /// STL 
@@ -38,6 +39,12 @@
 /// Local
 #include "GiGaHepMCCnv.h" 
 
+/** @file 
+ *  Converter from HepMC to G4
+ *  @author W. Pokorski 
+ *  @date 15.02.2002
+ */
+
 // ============================================================================
 
 static const  CnvFactory<GiGaHepMCCnv>         s_Factory ;
@@ -49,10 +56,9 @@ GiGaHepMCCnv::GiGaHepMCCnv( ISvcLocator* Locator )
   : GiGaCnvBase( storageType() , classID() , Locator ) 
   , m_leaf( "" , classID() )
 {
-
   ///
-  setNameOfGiGaConversionService( "GiGaKineCnvSvc"  ); 
-  setConverterName              ( "GiGaHepMCCnv"      );
+  setNameOfGiGaConversionService( IGiGaCnvSvcLocation::Kine ) ; 
+  setConverterName              ( "GiGaHepMCCnv"            ) ;
   ///
 }; 
 

@@ -1,8 +1,11 @@
-// $Id: GiGaIsotopeCnv.cpp,v 1.5 2002-01-22 18:24:43 ibelyaev Exp $ 
+// $Id: GiGaIsotopeCnv.cpp,v 1.6 2002-12-07 14:36:26 ibelyaev Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.5  2002/01/22 18:24:43  ibelyaev
+//  Vanya: update for newer versions of Geant4 and Gaudi
+//
 // Revision 1.4  2001/08/12 17:24:52  ibelyaev
 // improvements with Doxygen comments
 //
@@ -29,27 +32,47 @@
 #include "AddTabulatedProperties.h"
 #include "GiGaIsotopeCnv.h"
 
+// ============================================================================
 ///
+// ============================================================================
 static const CnvFactory<GiGaIsotopeCnv> s_GiGaIsotopeCnvFactory ;
 const ICnvFactory& GiGaIsotopeCnvFactory = s_GiGaIsotopeCnvFactory ;
+// ============================================================================
 
+// ============================================================================
 /// constructor
+// ============================================================================
 GiGaIsotopeCnv::GiGaIsotopeCnv( ISvcLocator* Locator )
   : GiGaCnvBase( storageType() , classID() , Locator )
   , m_leaf     ( "" , classID() )
 {
-  setNameOfGiGaConversionService( "GiGaGeomCnvSvc" );
-  setConverterName              ( "GiGaIsotopeCnv" );
+  setNameOfGiGaConversionService( IGiGaCnvSvcLocation::Geo ) ; 
+  setConverterName              ( "GiGaIsotopeCnv"         ) ;
 };
+// ============================================================================
+
+// ============================================================================
 /// destructor
+// ============================================================================
 GiGaIsotopeCnv::~GiGaIsotopeCnv(){};
+// ============================================================================
+
+// ============================================================================
 /// Class ID
-const CLID&  GiGaIsotopeCnv::classID            () 
-{ return Isotope::classID() ; }
+// ============================================================================
+const CLID&  GiGaIsotopeCnv::classID() { return Isotope::classID() ; }
+// ============================================================================
+
+// ============================================================================
 /// StorageType
+// ============================================================================
 const unsigned char GiGaIsotopeCnv::storageType () 
 { return GiGaGeom_StorageType; }
+// ============================================================================
+
+// ============================================================================
 /// Create representation
+// ============================================================================
 StatusCode GiGaIsotopeCnv::createRep( DataObject*     Object  , 
                                       IOpaqueAddress*& Address )
 {
@@ -85,7 +108,11 @@ StatusCode GiGaIsotopeCnv::createRep( DataObject*     Object  ,
   return updateRep( Object , Address ) ;
   ///
 };
+// ============================================================================
+
+// ============================================================================
 ///
+// ============================================================================
 StatusCode GiGaIsotopeCnv::updateRep
 ( DataObject*         Object    , 
   IOpaqueAddress* /* Address */ )
@@ -145,6 +172,10 @@ StatusCode GiGaIsotopeCnv::updateRep
   return StatusCode::SUCCESS;
   ///
 };
+
+// ============================================================================
+// The END 
+// ============================================================================
 
 
 

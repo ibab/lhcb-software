@@ -1,19 +1,11 @@
+// $Id: GiGaKine.h,v 1.1 2002-12-07 14:36:26 ibelyaev Exp $
 // ============================================================================
-/// CVS tag $Name: not supported by cvs2svn $ 
+// CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
-/// $Log: not supported by cvs2svn $
-/// Revision 1.4  2001/07/25 17:19:32  ibelyaev
-/// all conversions now are moved from GiGa to GiGaCnv
-///
-/// Revision 1.3  2001/07/24 11:13:55  ibelyaev
-/// package restructurization(III) and update for newer GiGa
-///
-/// Revision 1.2  2001/07/15 20:45:11  ibelyaev
-/// the package restructurisation
-/// 
+// $Log: not supported by cvs2svn $
 // ============================================================================
-#ifndef      GIGACNV_GIGAKINECNVSVC_H 
-#define      GIGACNV_GIGAKINECNVSVC_H  1 
+#ifndef      GIGACNV_GiGaKine_H 
+#define      GIGACNV_GiGaKine_H  1 
 // ============================================================================
 /// from STL 
 #include <string> 
@@ -29,7 +21,7 @@ class    IGiGaSvc;
 class    IParticlePropertySvc; 
 class    IDataSelector;
 
-/** @class GiGaKineCnvSvc GiGaKineCnvSvc.h 
+/** @class GiGaKine GiGaKine.h 
  *    
  *  conversion service  for converting of Gaudi 
  *  MCParticle/MCVertex structure into 
@@ -40,11 +32,12 @@ class    IDataSelector;
  *  @date    07/08/2000
  */
 
-class GiGaKineCnvSvc: public          GiGaCnvSvcBase ,
-                      virtual public IGiGaKineCnvSvc  
+class GiGaKine: 
+  virtual public IGiGaKineCnvSvc ,  
+  public          GiGaCnvSvcBase 
 {
   ///
-  friend class SvcFactory<GiGaKineCnvSvc>;
+  friend class SvcFactory<GiGaKine>;
   ///
 protected: 
 
@@ -52,10 +45,10 @@ protected:
    *  @param name  name of the service 
    *  @param loc   pointer to service locator 
    */
-  GiGaKineCnvSvc( const std::string& name , 
+  GiGaKine( const std::string& name , 
                   ISvcLocator* loc );
   /// virtual destructor
-  virtual ~GiGaKineCnvSvc();
+  virtual ~GiGaKine();
   /// 
 public: 
   
@@ -100,7 +93,7 @@ private:
 };
 
 // ============================================================================
-#endif  ///<  GIGACNV_GIGAKINECNVSVC_H
+#endif  ///<  GIGACNV_GiGaKine_H
 // ============================================================================
 
 

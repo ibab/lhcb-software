@@ -1,17 +1,8 @@
-// $Id: GiGaKineCnvSvc.cpp,v 1.6 2002-01-22 18:24:43 ibelyaev Exp $
+// $Id: GiGaKine.cpp,v 1.1 2002-12-07 14:36:26 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
-// Revision 1.5  2001/08/12 17:24:53  ibelyaev
-// improvements with Doxygen comments
-//
-// Revision 1.4  2001/07/25 17:19:32  ibelyaev
-// all conversions now are moved from GiGa to GiGaCnv
-//
-// Revision 1.3  2001/07/24 11:13:55  ibelyaev
-// package restructurization(III) and update for newer GiGa
-// 
 // ============================================================================
 
 /// from Gaudi 
@@ -22,13 +13,13 @@
 /// from GiGa 
 #include "GiGaCnv/GiGaCnvSvcBase.h" 
 // local
-#include "GiGaKineCnvSvc.h" 
+#include "GiGaKine.h" 
 
 // ============================================================================
 /// service factory 
 // ============================================================================
-static const  SvcFactory<GiGaKineCnvSvc> s_Factory ; 
-const        ISvcFactory&GiGaKineCnvSvcFactory = s_Factory ;
+static const  SvcFactory<GiGaKine> s_Factory ; 
+const        ISvcFactory&GiGaKineFactory = s_Factory ;
 
 // ============================================================================
 /** standard constructor
@@ -36,7 +27,7 @@ const        ISvcFactory&GiGaKineCnvSvcFactory = s_Factory ;
  *  @param loc   pointer to service locator 
  */
 // ============================================================================
-GiGaKineCnvSvc::GiGaKineCnvSvc( const std::string&   ServiceName          , 
+GiGaKine::GiGaKine( const std::string&   ServiceName          , 
                                 ISvcLocator*         ServiceLocator       ) 
   : GiGaCnvSvcBase(                                  ServiceName          , 
                                                      ServiceLocator       , 
@@ -55,7 +46,7 @@ GiGaKineCnvSvc::GiGaKineCnvSvc( const std::string&   ServiceName          ,
 // ============================================================================
 /// virtual destructor
 // ============================================================================
-GiGaKineCnvSvc::~GiGaKineCnvSvc()
+GiGaKine::~GiGaKine()
 { 
   /// clear the reference table 
   m_table.clear(); 
@@ -66,7 +57,7 @@ GiGaKineCnvSvc::~GiGaKineCnvSvc()
  *  @return status code 
  */
 // ============================================================================
-StatusCode GiGaKineCnvSvc::initialize() 
+StatusCode GiGaKine::initialize() 
 { 
   StatusCode sc = GiGaCnvSvcBase::initialize(); 
   if( sc.isFailure() ) 
@@ -86,7 +77,7 @@ StatusCode GiGaKineCnvSvc::initialize()
  *  @return status code 
  */
 // ============================================================================
-StatusCode GiGaKineCnvSvc::finalize()   
+StatusCode GiGaKine::finalize()   
 { 
   /// clear the reference table 
   m_table.clear();
@@ -103,7 +94,7 @@ StatusCode GiGaKineCnvSvc::finalize()
  *  @return status code 
  */
 // ============================================================================
-StatusCode GiGaKineCnvSvc::queryInterface( const InterfaceID& ID , 
+StatusCode GiGaKine::queryInterface( const InterfaceID& ID , 
                                            void**             II ) 
 {
   if( 0 == II ) { return StatusCode::FAILURE; }

@@ -1,11 +1,44 @@
-! $Id: release.notes,v 1.31 2002-12-04 16:25:18 ibelyaev Exp $
+! $Id: release.notes,v 1.32 2002-12-07 14:36:25 ibelyaev Exp $
 ! =============================================================================
 Package         : GiGaCnv
 Package Manager : Vanya Belyaev Ivan.Belyaev@itep.ru
 
+! 2002-12-07 - Ivan Belyaev
+ - GiGaCnv/IGiGaCnvSvcLocation.h    new file with the default names of GiGa 
+                                    conversion services  
+
+ - GiGaCnv/GiGaAssembly.h           instrumented with reference counter
+ - GiGaCnv/GiGaCnvBase.h            remove IObjManager 
+                                    remove extra calls for "addRef"
+                                    introduce proper calls for "release" 
+ - GiGaCnvBase.h                    remove IObjManager 
+                                    remove extra calls for "addRef"
+                                    introduce proper calls for "release" 
+ - GiGaCnv/GiGaKineRefTable.h       add few "const" version of accessors 
+ - GiGaCnv/GiGaKineRefTableEntry.h  add few "const" version of accessors 
+
+ - src/Lib/GiGaAssembly.cpp         induced modifications	 
+ - src/Lib/GiGaAssemblyStore.cpp    induced modifications 	
+ - src/Lib/GiGaCnvBase.cpp          induced modifications 	
+ - src/Lib/GiGaCnvSvcBase.cpp       induced modifications	
+	
+ - src/component/                   
+       all converters are modified to remove extra calls of "addRef"
+ - src/component/GiGaGeomCnvSvc   is renamed to GiGaGeo 
+ - src/component/GiGaHitsCnvSvc   is renamed to GiGaHits 
+ - src/component/GiGaKineCnvSvc   is renamed to GiGaKine
+
+! 2002-12-05 - Ivan Belyaev
+
+ - GiGaCnv/GiGaAssembly.h
+ - GiGaCnv/GiGaAssemblyStore.h
+ - src/Lib/GiGaAssembly.cpp
+ - src/Lib/GiGaAssemblyStore.cpp    fir very seriouse bug with Assemblies 
+
+
 ! 2002-12-04 - Ivan Belyaev
  -                    remove extra calls of "addRef"
- - cmt/requirements   version update 
+ - cmt/requirements   version update
 
 !========================= GiGaCnv v9r0 ================================
 ! 2002-11-08 - Witek Pokorski
@@ -15,8 +48,8 @@ Package Manager : Vanya Belyaev Ivan.Belyaev@itep.ru
  - insignificant bug fix (delete => delete[]) to please valgrind
 
 ! 2002-09-26 - Ivan Belyaev
- - src/component/GiGaGeomCnvSvc.h,.cpp - 
-   reimplement few methods from IConverter/IConversioinSvc to handge 
+ - src/component/GiGaGeomCnvSvc.h,.cpp -
+   reimplement few methods from IConverter/IConversioinSvc to handge
    different types of DetectroElements
 
 ! 2002-08-23 - Witek Pokorski
@@ -29,16 +62,16 @@ Package Manager : Vanya Belyaev Ivan.Belyaev@itep.ru
   GiGaMCParticleCnv.cpp, GiGaMCVertexCnv.cpp - adapted to geant4 4.1
 
 ! 2002-07-09 - Ivan Belyaev
-  Move namespace GiGaVolumeUtils into public area of the package 
- - GiGaCnv/GiGaVolumeUtils.h                - add  
- - src/Lib/GiGaVolumeUtils.cpp              - add  
- - src/component/GiGaVolumeUtils.h          - remove 
- - src/component/GiGaVolumeUtils.cpp        - remove 
- - src/component/GiGaDetectorElementCnv.cpp - modified 
- - src/component/GiGaGeomCnvSvc.cpp         - modified 
- - src/component/GiGaLAssemblyCnv.cpp       - modified 
- - src/component/GiGaLVolumeCnv.cpp         - modified 
- - src/component/GiGaSurfaceCnv.cpp         - modified 
+  Move namespace GiGaVolumeUtils into public area of the package
+ - GiGaCnv/GiGaVolumeUtils.h                - add
+ - src/Lib/GiGaVolumeUtils.cpp              - add
+ - src/component/GiGaVolumeUtils.h          - remove
+ - src/component/GiGaVolumeUtils.cpp        - remove
+ - src/component/GiGaDetectorElementCnv.cpp - modified
+ - src/component/GiGaGeomCnvSvc.cpp         - modified
+ - src/component/GiGaLAssemblyCnv.cpp       - modified
+ - src/component/GiGaLVolumeCnv.cpp         - modified
+ - src/component/GiGaSurfaceCnv.cpp         - modified
 
 !========================= GiGaCnv v6r0 =================================
 
@@ -47,15 +80,15 @@ Package Manager : Vanya Belyaev Ivan.Belyaev@itep.ru
 
 ! 2002-07-03 - W.Pokorski
   GiGaMiscGetEvent - commented lines for retrieving hits
- 
+
 ! 2002-07-02 - W.Pokorski
   requirements - use Event v2r*
 
 ! 2002-07-02 - Ivan Belyaev
- - src/component/GiGaMCParticleCnv.cpp, 
+ - src/component/GiGaMCParticleCnv.cpp,
    src/component/GiGaMCVertexCnv.cpp    - remove 2 stupid bugs
-                                          (infinite loop and wrong 
-                                           index for keyed container) 
+                                          (infinite loop and wrong
+                                           index for keyed container)
 
 !========================= GiGaCnv v5r1 =================================
 ! 2002-06-18 - W.Pokorski
@@ -69,83 +102,83 @@ Package Manager : Vanya Belyaev Ivan.Belyaev@itep.ru
 ! 20020507 - v5r0 Vanya  Belyaev
  Update for changes in GiGa interfaces (see $GIGAROOT/doc/release.notes)
  All sensitive detectors and magnetic field objects now are "Tools" owned
- by GiGaGeomCnvSvc  
+ by GiGaGeomCnvSvc
 
 ! 20020504 - v5r0 Vanya  Belyaev
  - GiGaCnv/GiGaKineRefTable.h
-   make usage of GiGa/GiGaHashMap.h instead of "home-made" implementation of 
+   make usage of GiGa/GiGaHashMap.h instead of "home-made" implementation of
    map-like interface
  - GiGaCnv/IGiGaGeomCnvSvc.h
-   add  new method createG4LV to the interface. This method shoudl be 
+   add  new method createG4LV to the interface. This method shoudl be
    used instead of ordinary creation of G4LogicalVolume using  "new" operator.
-   For volumes, created manually, the automatized evaluation of material 
-   budget is not possible. 
+   For volumes, created manually, the automatized evaluation of material
+   budget is not possible.
  - src/component/GiGaGeomCnv.h,.cpp
-   add new property "MaterialBudget". This property,being defined with 
-   "Type/Name" of sensitive detector implies the special run, when ALL 
+   add new property "MaterialBudget". This property,being defined with
+   "Type/Name" of sensitive detector implies the special run, when ALL
    Logical volumes get the conection to this special sensitive detector.
    It is primary oriented for special material budget evaluation runs.
  - src/component/GiGaLVolumeCnv.cpp
-   substitute manual call for "new G4LogicalVolume" by 
+   substitute manual call for "new G4LogicalVolume" by
    call to "IGiGaGeomCnvSvc::createG4LV" method.
 
 ! 20020503 - v5r0 Vanya Belyaev
- GiGaLVolumeCnv.cpp and GiGaLAssemblyCnv.cpp 
+ GiGaLVolumeCnv.cpp and GiGaLAssemblyCnv.cpp
  - reintroduce the creation of sensitive detectors
-   (somehow these lines disappeared from mainstream development) 
+   (somehow these lines disappeared from mainstream development)
 
 ! 20020501 -  v5r0 Vanya Belyaev
-1) GiGaMCParticleCnv and GiGaMCVertexCnv seems to beOK now 
+1) GiGaMCParticleCnv and GiGaMCVertexCnv seems to beOK now
 2) import errors/warnings/exception counting technique from LHCb Calo software
 
 ! 20020423 - v5r0 Vanya Belyaev
-  update for newer Gaudi and Geant4 versions 
+  update for newer Gaudi and Geant4 versions
 
 ! 20020313 - v5r0 Vanya Belyaev
- change the version number 
- remove several warnings 
+ change the version number
+ remove several warnings
 
 ! 20020312 - v5r0  Vanya Belyaev
- remove hash_map and map from public usage on WIN32 platform, 
+ remove hash_map and map from public usage on WIN32 platform,
  replace std::hash_map with GaudiKernel/HashTable.h
 
 ! ===================== GiGaCnv v4r0 ========================================
 
-! 20020304 - GiGaCnv v4r0 - Witek Pokorski 
- added new converter from HepMC to G4 
-
-! 22/01/2002  Vanya Belyaev 
-! update for newer Gaudi and   Geant4 versions 
-! bug fix for Surface converter 
+! 20020304 - GiGaCnv v4r0 - Witek Pokorski
+ added new converter from HepMC to G4
 
 ! 22/01/2002  Vanya Belyaev
-! update for newer Gaudi and Geant4 
+! update for newer Gaudi and   Geant4 versions
+! bug fix for Surface converter
+
+! 22/01/2002  Vanya Belyaev
+! update for newer Gaudi and Geant4
 
 !======================= GiGaCnv v3r0 ======================================
 
 ! 20011119  Vanya Belyaev
 	AddTabulatedProperties.h - bug fix (thanks to Sajan!)
-	GiGaCatalogCnv.h/.cpp    - new converetr to converet the whole 
-                             contents of catalog to Geant4   
+	GiGaCatalogCnv.h/.cpp    - new converetr to converet the whole
+                             contents of catalog to Geant4
 
-! 20010730  Vanya Belyaev 
-    GiGaMCVertexCnv.cpp  -  bug fix 
-    GiGaCnvFunctors.h     - rewrite comparison functors to make them easier 
+! 20010730  Vanya Belyaev
+    GiGaMCVertexCnv.cpp  -  bug fix
+    GiGaCnvFunctors.h     - rewrite comparison functors to make them easier
 
-! 20010724  Vanya Belyaev 
-    restructurisation and the update due to changes in GiGa 
+! 20010724  Vanya Belyaev
+    restructurisation and the update due to changes in GiGa
 
 ! ===================== GiGaCnv v2 ========================================
 
-! 20010717 v2  Vanya Belyaev 
-    use newer version of GiGa 
-    move several interfaces 
-    make more the weaker dependencies between the packages 
+! 20010717 v2  Vanya Belyaev
+    use newer version of GiGa
+    move several interfaces
+    make more the weaker dependencies between the packages
 
 ! 20010717 Flr
   requirements - add component library linkopts
 
-! 20010715  Vanya Belyaev package restructurization 
+! 20010715  Vanya Belyaev package restructurization
 
 ! ========================= GiGaCnv v1 ==================================
 

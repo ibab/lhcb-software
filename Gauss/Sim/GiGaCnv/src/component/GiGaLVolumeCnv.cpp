@@ -1,8 +1,11 @@
-// $Id: GiGaLVolumeCnv.cpp,v 1.12 2002-07-09 20:33:54 ibelyaev Exp $ 
+// $Id: GiGaLVolumeCnv.cpp,v 1.13 2002-12-07 14:36:27 ibelyaev Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.12  2002/07/09 20:33:54  ibelyaev
+//  move GiGaVolumeUtils into public location
+//
 // ============================================================================
 #define GIGACNV_GIGALVOLUMECNV_CPP 1 
 // ============================================================================
@@ -57,8 +60,8 @@ GiGaLVolumeCnv::GiGaLVolumeCnv( ISvcLocator* Locator )
   : GiGaCnvBase( storageType() , classID() , Locator ) 
   , m_leaf ( "" , classID() )
 {
-  setNameOfGiGaConversionService( "GiGaGeomCnvSvc" ); 
-  setConverterName              ( "GiGaLVCnv"      ); 
+  setNameOfGiGaConversionService( IGiGaCnvSvcLocation::Geo ) ; 
+  setConverterName              ( "GiGaLVCnv"              ) ; 
 }; 
 
 // ============================================================================

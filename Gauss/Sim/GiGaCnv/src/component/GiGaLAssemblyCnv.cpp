@@ -1,8 +1,11 @@
-// $Id: GiGaLAssemblyCnv.cpp,v 1.3 2002-07-09 20:33:54 ibelyaev Exp $
+// $Id: GiGaLAssemblyCnv.cpp,v 1.4 2002-12-07 14:36:27 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.3  2002/07/09 20:33:54  ibelyaev
+//  move GiGaVolumeUtils into public location
+//
 // Revision 1.2  2002/05/03 19:33:39  ibelyaev
 //  re-introduce the creation of Sensitive Detectors
 //
@@ -55,8 +58,8 @@ GiGaLAssemblyCnv::GiGaLAssemblyCnv( ISvcLocator* Locator )
   : GiGaCnvBase( storageType() , classID() , Locator ) 
   , m_leaf ( "" , classID() )
 {
-  setNameOfGiGaConversionService( "GiGaGeomCnvSvc" ); 
-  setConverterName              ( "GiGaLACnv"      ); 
+  setNameOfGiGaConversionService( IGiGaCnvSvcLocation::Geo ) ; 
+  setConverterName              ( "GiGaLACnv"              ) ; 
 }; 
 
 // ============================================================================

@@ -1,6 +1,9 @@
-// $Id: GiGaSurfaceCnv.cpp,v 1.8 2002-07-09 20:33:54 ibelyaev Exp $
+// $Id: GiGaSurfaceCnv.cpp,v 1.9 2002-12-07 14:36:27 ibelyaev Exp $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.8  2002/07/09 20:33:54  ibelyaev
+//  move GiGaVolumeUtils into public location
+//
 // ============================================================================
 #define GIGACNV_GIGASURFACECNV_CPP 1 
 // ============================================================================
@@ -53,8 +56,8 @@ GiGaSurfaceCnv::GiGaSurfaceCnv( ISvcLocator* Locator )
   , m_surfaces()
   , m_leaf ( "" , classID() ) 
 {
-  setNameOfGiGaConversionService( "GiGaGeomCnvSvc" ); 
-  setConverterName              ( "GiGaSurfaceCnv" ); 
+  setNameOfGiGaConversionService( IGiGaCnvSvcLocation::Geo ) ; 
+  setConverterName              ( "GiGaSurfaceCnv"         ) ; 
 }; 
 
 // ============================================================================
