@@ -6,7 +6,7 @@
 %}
 
 %union {
-  char *text;
+  std::string *text;
   double dval;
   Quarks quarkval;
   Quantums quantumval;
@@ -166,8 +166,8 @@ particle_cc: LBRACK   particle    CCONJ  { $$ = $2; $$->setConjugate(); }
 	     | particle                  { $$ = $1; }
 ;
 
-particle: NAME		{ $$ = new ParticleMatcher($1, m_ppSvc); }
-	  | EXCLAM NAME { $$ = new ParticleMatcher($2, m_ppSvc); $$->setInverse(); }
+particle: NAME		{ $$ = new ParticleMatcher($1, m_ppSvc); delete $1; }
+	  | EXCLAM NAME { $$ = new ParticleMatcher($2, m_ppSvc); delete $2; $$->setInverse(); }
 	  | QMARK       { $$ = new ParticleMatcher(m_ppSvc); $$->setQmark(); }
 ;
 

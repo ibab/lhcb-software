@@ -4,7 +4,6 @@
 /* %option outfile="lexer.icc" prefix="Descriptor::lexer" */
 
 %{
-#include <string.h>
 #include <stdlib.h>
 %}
 
@@ -71,7 +70,7 @@ PARTICLE	{P_NAME}{Q_STATE}{P_MASS}{P_CHARGE}
 "..."		return ELIPSIS;
 "pp"		return PP;
 "?"		return QMARK;
-{PARTICLE}	{ yylval.text = strncpy((char*)malloc(strlen(yytext)+1),yytext,yyleng); yylval.text[yyleng] = '\0'; return NAME; }
+{PARTICLE}	{ yylval.text = new string(yytext,yyleng); return NAME; }
 [[:blank:]\n]	/* eat the blanks! */
 .		throw YYCLASSDescriptorError(std::string("Unexpected char '")+(yytext[0])+"'");
 

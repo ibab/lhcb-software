@@ -1,4 +1,4 @@
-// $Id: MCDecayFinder.cpp,v 1.1.1.1 2002-05-21 07:32:02 gcorti Exp $
+// $Id: MCDecayFinder.cpp,v 1.2 2002-06-26 14:04:36 odie Exp $
 // Include files 
 #include <list>
 #include <functional>
@@ -51,7 +51,7 @@ MCDecayFinder::MCDecayFinder( const std::string& type,
   declareInterface<IMCDecayFinder>(this);
 
   declareProperty( "Decay", m_source );
-  declareProperty( "ResonnanceThreshold", m_resThreshold = 1e-15*second );
+  declareProperty( "ResonanceThreshold", m_resThreshold = 1e-15*second );
 }
 
 //=============================================================================
@@ -372,16 +372,16 @@ MCDecayFinder::ParticleMatcher::ParticleMatcher( ParticleMatcher &copy )
   }
 }
 
-MCDecayFinder::ParticleMatcher::ParticleMatcher( char *name,
+MCDecayFinder::ParticleMatcher::ParticleMatcher( std::string *name,
                                                  IParticlePropertySvc *ppSvc )
   : type(id), qmark(false), conjugate(false), oscilate(false),
     inverse(false), stable(false), m_ppSvc(ppSvc)
 {
-  ParticleProperty *pp = m_ppSvc->find(name);
+  ParticleProperty *pp = m_ppSvc->find(*name);
   if( pp )
     parms.stdHepID = pp->jetsetID();
   else
-    throw DescriptorError(std::string("Unknown particle '")+name+"'");
+    throw DescriptorError(std::string("Unknown particle '")+*name+"'");
 }
 
 MCDecayFinder::ParticleMatcher::ParticleMatcher(Quarks q1, Quarks q2, Quarks q3,

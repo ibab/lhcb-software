@@ -34,7 +34,7 @@ static char yysccsid[] = "@(#)yaccpar	1.9 (Berkeley) 02/21/93";
 #define YYPREFIX "MCDecayFinder::y"
 #define YYSTYPE MCDecayFinder::YYSTYPE
 #if 0
-  char *text;
+  std::string *text;
   double dval;
   Quarks quarkval;
   Quantums quantumval;
@@ -643,10 +643,10 @@ case 19:
 { yyval.match = yyvsp[0].match; }
 break;
 case 20:
-{ yyval.match = new ParticleMatcher(yyvsp[0].text, m_ppSvc); }
+{ yyval.match = new ParticleMatcher(yyvsp[0].text, m_ppSvc); delete yyvsp[0].text; }
 break;
 case 21:
-{ yyval.match = new ParticleMatcher(yyvsp[0].text, m_ppSvc); yyval.match->setInverse(); }
+{ yyval.match = new ParticleMatcher(yyvsp[0].text, m_ppSvc); delete yyvsp[0].text; yyval.match->setInverse(); }
 break;
 case 22:
 { yyval.match = new ParticleMatcher(m_ppSvc); yyval.match->setQmark(); }
