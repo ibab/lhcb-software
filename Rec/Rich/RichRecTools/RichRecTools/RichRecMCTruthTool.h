@@ -1,4 +1,4 @@
-// $Id: RichRecMCTruthTool.h,v 1.3 2002-12-02 09:42:21 jonrob Exp $
+// $Id: RichRecMCTruthTool.h,v 1.4 2002-12-20 09:33:08 cattanem Exp $
 #ifndef RICHRECTOOLS_RICHRECMCTRUTHTOOL_H
 #define RICHRECTOOLS_RICHRECMCTRUTHTOOL_H 1
 
@@ -59,8 +59,9 @@ public:
                       const std::string& name,
                       const IInterface* parent );
 
-  /// Initialize method
+  /// Initialize and finalize methods
   StatusCode initialize();
+  StatusCode finalize();
 
   /// Implement the handle method for the Incident service.
   /// This is used to inform the tool of software incidents.

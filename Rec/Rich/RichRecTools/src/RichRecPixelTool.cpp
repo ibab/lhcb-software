@@ -1,4 +1,4 @@
-// $Id: RichRecPixelTool.cpp,v 1.1 2002-11-14 13:54:24 jonrob Exp $
+// $Id: RichRecPixelTool.cpp,v 1.2 2002-12-20 09:33:08 cattanem Exp $
 
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h"
@@ -81,6 +81,15 @@ StatusCode RichRecPixelTool::initialize() {
 
   return sc;
 }
+
+StatusCode RichRecPixelTool::finalize() {
+
+  //Release the tools
+  if( m_pixelFinder ) toolSvc()->releaseTool( m_pixelFinder );
+  
+  return StatusCode::SUCCESS;
+}
+
 
 // Method that handles various Gaudi "software events"
 void RichRecPixelTool::handle ( const Incident& incident ) {

@@ -1,4 +1,4 @@
-// $Id: RichRecPixelTool.h,v 1.2 2002-11-20 09:04:08 jonrob Exp $
+// $Id: RichRecPixelTool.h,v 1.3 2002-12-20 09:33:08 cattanem Exp $
 #ifndef RICHRECTOOLS_RICHRECPIXELTOOL_H
 #define RICHRECTOOLS_RICHRECPIXELTOOL_H 1
 
@@ -43,8 +43,9 @@ public:
   /// Destructor
   virtual ~RichRecPixelTool(){}
 
-  /// Initialize method
+  /// Initialize and finalize methods
   StatusCode initialize();
+  StatusCode finalize();
 
   /// Implement the handle method for the Incident service.
   /// This is used to inform the tool of software incidents.

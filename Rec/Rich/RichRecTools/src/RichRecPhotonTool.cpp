@@ -1,4 +1,4 @@
-// $Id: RichRecPhotonTool.cpp,v 1.4 2002-12-02 09:42:21 jonrob Exp $
+// $Id: RichRecPhotonTool.cpp,v 1.5 2002-12-20 09:33:08 cattanem Exp $
 #include <cmath>
 
 // from Gaudi
@@ -161,6 +161,17 @@ StatusCode RichRecPhotonTool::initialize() {
 
   return sc;
 }
+
+StatusCode RichRecPhotonTool::finalize() {
+  // Release all tools
+  if( m_richRecTrackTool )   toolSvc()->releaseTool( m_richRecTrackTool );
+  if( m_richRecSegmentTool ) toolSvc()->releaseTool( m_richRecSegmentTool );
+  if( m_richRecPixelTool )   toolSvc()->releaseTool( m_richRecPixelTool );
+  if( m_richDetInterface )   toolSvc()->releaseTool( m_richDetInterface );
+
+  return StatusCode::SUCCESS;
+}
+
 
 // Method that handles various Gaudi "software events"
 void RichRecPhotonTool::handle ( const Incident& incident ) {

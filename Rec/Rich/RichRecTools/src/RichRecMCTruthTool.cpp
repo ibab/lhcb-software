@@ -1,4 +1,4 @@
-// $Id: RichRecMCTruthTool.cpp,v 1.3 2002-12-02 09:42:21 jonrob Exp $
+// $Id: RichRecMCTruthTool.cpp,v 1.4 2002-12-20 09:33:08 cattanem Exp $
 
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h"
@@ -102,6 +102,17 @@ StatusCode RichRecMCTruthTool::initialize() {
   }
 
   return sc;
+}
+
+StatusCode RichRecMCTruthTool::finalize() {
+
+  // Release all tools
+  if( m_trackToMCP )         toolSvc()->releaseTool( m_trackToMCP );
+  if( m_richRecTrackTool )   toolSvc()->releaseTool( m_richRecTrackTool );
+  if( m_richRecSegmentTool ) toolSvc()->releaseTool( m_richRecSegmentTool );
+  if( m_richRecPixelTool )   toolSvc()->releaseTool( m_richRecPixelTool );
+  
+  return StatusCode::SUCCESS;
 }
 
 // Method that handles various Gaudi "software events"

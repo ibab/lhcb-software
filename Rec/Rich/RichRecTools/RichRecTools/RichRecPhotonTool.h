@@ -1,4 +1,4 @@
-// $Id: RichRecPhotonTool.h,v 1.4 2002-12-02 09:42:21 jonrob Exp $
+// $Id: RichRecPhotonTool.h,v 1.5 2002-12-20 09:33:08 cattanem Exp $
 #ifndef RICHRECTOOLS_RICHRECPHOTONTOOL_H
 #define RICHRECTOOLS_RICHRECPHOTONTOOL_H 1
 
@@ -41,8 +41,9 @@ public:
   /// Destructor
   virtual ~RichRecPhotonTool(){}
 
-  /// Initialize method
+  /// Initialize and finalize methods
   StatusCode initialize();
+  StatusCode finalize();
 
   /// Implement the handle method for the Incident service.
   /// This is used to inform the tool of software incidents.
