@@ -1,8 +1,8 @@
 Package Event/GenEvent
 package coordinator: W.Pokorski
 
-!================= GenEvent v2r3 2003-12-15 ===========================
-! 2003-12-15 - Marco Cattaneo
+!================= GenEvent v3r0 2004-01-07 ===========================
+! 2004-01-07 - Marco Cattaneo
  - Changes for POOL persistency (Gaudi v14)
 
 !================ GenEvent v2r4p1 2003-12-09 ==========================
