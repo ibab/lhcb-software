@@ -1,15 +1,15 @@
-//$Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/Gaucho/src/DimH1D.cpp,v 1.3 2004-05-26 18:39:42 vanphil Exp $
+//$Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/Gaucho/src/DimH1D.cpp,v 1.4 2005-03-22 16:39:17 evh Exp $
 
 #include "AIDA/IAxis.h"
 #include "AIDA/IHistogram1D.h"
 #include "Gaucho/DimH1D.h"
-
+#include <iostream>
 using namespace AIDA;
 
 //constructor
 DimH1D::DimH1D(std::string h1dname, IHistogram1D* InfoVar) 
-//  : DimCommand(("H1D"+h1dname).c_str(),"I"){
-: DimRpc(("H1D"+h1dname).c_str(),"I:1","F") {
+  //  : DimCommand(("H1D"+h1dname).c_str(),"I"){
+  : DimRpc(("H1D"+h1dname).c_str(),"I:1","F") {
   m_name = h1dname;
   m_h1d = InfoVar;
   m_nbins = (m_h1d->axis()).bins();
@@ -30,16 +30,18 @@ DimH1D::~DimH1D() {
 
 // Overloaded method commandHandler gets called whenever commands arrive, 
 void DimH1D::rpcHandler() {
-//commandHandler() {
+  //commandHandler() {
   int command=getInt();
   switch (command) {
 	case 1: 
-// request for histo parameters transfer
+    // request for histo parameters transfer
+    std::cout << "DIMH1D received command 1" << std::endl;
 		setData(m_pars,3*sizeof(float));
-        break;
+    break;
 	case 2:
-//request for histo bin contents transfer
+    //request for histo bin contents transfer
 		int binnr,total;
+		 std::cout << "DIMH1D received command 2" << std::endl;
 		for (binnr=0;binnr<m_nbins;binnr++) {
 			m_data[binnr] = m_h1d->binHeight(binnr);
 		}
@@ -48,6 +50,6 @@ void DimH1D::rpcHandler() {
 			m_data[m_nbins+binnr] = m_h1d->binError(binnr);
 		}
 		setData(m_data,total*sizeof(float));
-//		setData(m_data,m_nbins*sizeof(float));
+    //		setData(m_data,m_nbins*sizeof(float));
 	} // end switch
 } // end commandhandler

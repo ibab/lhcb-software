@@ -1,6 +1,19 @@
-! $Id: release.notes,v 1.2 2004-09-21 16:35:03 mato Exp $
+! $Id: release.notes,v 1.3 2005-03-22 16:39:17 evh Exp $
 ! Package     : Online/Gaucho	
-! Responsible : Philippe.Vannerem@cern.ch
+! Responsible : Eric.van.Herwijnen@cern.ch
+
+! 20050322 - Gaucho v3r0 - Eric van Herwijnen
+  - MonitorSvc tested with PVSS (fwGaucho v2r0)
+  - DimPropServer.cpp allows listing and setting of algorithm properties
+  (algorithm's initialise method called after resetting, may not always work)
+  - Can list histograms on transient store
+  - DimCmdServer.cpp for publishing 1D histograms from the transient store
+
+! 20050127 - Gaucho v3 - Jose Helder Lopes
+  - IMonitorSvc.h redesigned and moved to GaudiKernel
+  - Reimplementation of MonitorSvc.h and MonitorSvc.cpp according to new design
+  - Changes in DimEngine.h and DimEngine.cpp to conform to the new MonitorSvc
+  - Changes in DimH1D.h and DimH1D.cpp to conform to the new MonitorSvc
 
 ! 20040921 - Pere Mato
   - Changed requirements file and include file path to use new DIM

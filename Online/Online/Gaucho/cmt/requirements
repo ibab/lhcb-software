@@ -1,10 +1,10 @@
 package Gaucho
-version v2r0
+version v3r0
 
 branches src cmt doc
 
 # add "use" statements
-use GaudiKernel v*
+use GaudiKernel v18r0
 use AIDA v* LCG_Interfaces
 use DIM v*  Online
 

@@ -1,4 +1,4 @@
-//$Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/Gaucho/Gaucho/DimEngine.h,v 1.3 2004-09-21 16:35:03 mato Exp $
+//$Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/Gaucho/Gaucho/DimEngine.h,v 1.4 2005-03-22 16:39:17 evh Exp $
 #ifndef GAUCHO_DIMENGINE_H
 #define GAUCHO_DIMENGINE_H 1
 
@@ -6,14 +6,17 @@
 #include <map>
 #include "dis.hxx"
 
+
 /** @class DimEngine DimEngine.h Gaucho/DimEngine.h
+    
+This class publishes Gaudi variables as Dim services.
 
-    This class publishes Gaudi variables as Dim services.
-
-    @author Philippe Vannerem
+@author Philippe Vannerem
 */
 
-namespace AIDA {class IHistogram1D;}
+namespace AIDA {class IHistogram;
+class IHistogram1D;
+}
 class DimH1D;
 class IMessageSvc;
 
@@ -21,14 +24,18 @@ class DimEngine {
 public:
   DimEngine(char* nodename, ISvcLocator* svclocator);
   virtual ~DimEngine();
-  void declSvc(std::string InfoName, int& InfoVar);
-  void declSvc(std::string InfoName, float& InfoVar);
-  void declSvc(std::string InfoName, char* InfoVar);
-  void declSvc(std::string InfoName, AIDA::IHistogram1D* InfoVar);
+  void declSvc(std::string InfoName, const bool& InfoVar);
+  void declSvc(std::string InfoName, const int& InfoVar);
+  void declSvc(std::string InfoName, const long& InfoVar);
+  void declSvc(std::string InfoName, const float& InfoVar);
+  void declSvc(std::string InfoName, const double& InfoVar);
+  void declSvc(std::string InfoName, const char* InfoVar);
+  void declSvc(std::string InfoName, const std::string& InfoVar);
+//  void declSvc(std::string InfoName, const std::pair<double,double>& InfoVar);
+  void declSvc(std::string InfoName, const AIDA::IHistogram* InfoVar);
   void undeclSvc(std::string InfoName);
-//! problem in undeclSvc if e.g. float and H1D with same name exist
 private:
-  char* m_nodename;
+  std::string m_nodename;
   IMessageSvc* m_msgsvc;
   typedef std::map<std::string, DimService*, std::less<std::string> > DimServiceMap;
   typedef DimServiceMap::iterator DimServiceMapIt;
