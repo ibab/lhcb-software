@@ -4,6 +4,7 @@
 ! Purpose     : interface to the xml description
 !-----------------------------------------------------------------------------
 
+!========================= RichDet v8r1 2004-08-27 =========================
 ! 2004-10-27 - Chris Jones
  - Some additions minor changes to functions
 
@@ -14,7 +15,6 @@
  - Minor updates. Mainly addition of const here and there plus a few
    changes to functions.
 
-!========================= RichDet v8r1 2004-08-27 =========================
 ! 2004-08-27 - Antonis Papanestis
  - added access to tabulated properties to DeRich and DeRichRadiator
 
