@@ -1,8 +1,11 @@
-// $Id: CaloClusterResetFractions.h,v 1.2 2001-11-25 15:50:40 ibelyaev Exp $
+// $Id: CaloClusterResetFractions.h,v 1.3 2001-12-09 14:33:08 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2001/11/25 15:50:40  ibelyaev
+//  update for newer CaloKernel package
+//
 // Revision 1.1  2001/11/08 20:07:04  ibelyaev
 //  new tools are added into  the package
 // 
@@ -44,6 +47,15 @@ public:
    */
   virtual StatusCode    finalize   ();
   
+  /** query interafce method  
+   *  @param  iiD  unique interface identifier 
+   *  @param  pI   placeholder for interface 
+   *  @return status code 
+   */
+  virtual StatusCode queryInterface 
+  ( const InterfaceID& iiD ,
+    void**             pI  );
+
   /** The main processing method 
    *  @param cluster pointer to CaloCluster object to be processed
    *  @return status code 

@@ -1,9 +1,12 @@
-// $Id: SubClusterSelectorBase.cpp,v 1.3 2001-11-12 19:04:28 ibelyaev Exp $
+// $Id: SubClusterSelectorBase.cpp,v 1.4 2001-12-09 14:33:09 ibelyaev Exp $
 // Include files 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.3  2001/11/12 19:04:28  ibelyaev
+//  update
+//
 // Revision 1.2  2001/11/08 20:07:05  ibelyaev
 //  new tools are added into  the package
 //
@@ -47,8 +50,10 @@ SubClusterSelectorBase::SubClusterSelectorBase( const std::string& type,
                                                 const std::string& name,
                                                 const IInterface* parent )
   : CaloTool ( type, name , parent ) 
-{};
-
+{
+  /// declare the available interfaces
+  declareInterface<ICaloClusterTool>(this);
+};
 
 // ============================================================================
 /** destructor
@@ -97,22 +102,25 @@ StatusCode SubClusterSelectorBase::initialize ()
 // ============================================================================
 /** Methods for IInterface interface implementation,
  *  Query interface.
- *  @param id   ID of Interface to be retrieved
- *  @param ppI  Pointer to Location for interface pointer
+ *  @param iiD   ID of Interface to be retrieved
+ *  @param pI    Pointer to Location for interface pointer
  *  @return status code 
  */
 // ============================================================================
-StatusCode 
-SubClusterSelectorBase::queryInterface( const  InterfaceID& id , 
-                                        void** ppI             )
+StatusCode SubClusterSelectorBase::queryInterface
+( const  InterfaceID& iiD , 
+  void** pI               )
 {
+  /// check the validity of the placeholder 
+  if( 0 == pI ) {       return StatusCode::FAILURE   ; }
   ///
-  if( 0 == *ppI ) { return StatusCode::FAILURE; }
-  /// check for interfaces
-  if( id == ICaloClusterTool::interfaceID() ) 
-    { *ppI = static_cast<ICaloClusterTool*> (this); }
-  else 
-    { return CaloTool::queryInterface( id , ppI ) ; }
+  if      ( iiD == ICaloClusterTool:: interfaceID   () ) 
+    { *pI = static_cast<ICaloClusterTool*> (this)    ; }
+  else if ( iiD == IAlgTool::         interfaceID   () ) 
+    { *pI = static_cast<IAlgTool*>         (this)    ; }
+  else if ( iiD == IInterface::       interfaceID   () )
+    { *pI = static_cast<IInterface*>       (this)    ; }
+  else { return CaloTool::queryInterface( iiD , pI ) ; }
   ///
   addRef();
   ///

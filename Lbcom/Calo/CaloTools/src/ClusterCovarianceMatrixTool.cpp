@@ -1,8 +1,11 @@
-// $Id: ClusterCovarianceMatrixTool.cpp,v 1.3 2001-11-25 15:50:40 ibelyaev Exp $
+// $Id: ClusterCovarianceMatrixTool.cpp,v 1.4 2001-12-09 14:33:09 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.3  2001/11/25 15:50:40  ibelyaev
+//  update for newer CaloKernel package
+//
 // Revision 1.2  2001/11/08 10:58:34  ibelyaev
 //  new tools are added for selection of subclusters within the cluster
 //
@@ -163,6 +166,34 @@ StatusCode ClusterCovarianceMatrixTool::finalize   ()
   setDet( (const DeCalorimeter*) 0 );
   /// finalize the  the base class
   return CaloTool::finalize ();
+};
+
+// ============================================================================
+/** query interface method  
+ *  @param  iiD  unique interface identifier 
+ *  @param  pI   placeholder for interface 
+ *  @return status code 
+ */
+// ============================================================================
+StatusCode ClusterCovarianceMatrixTool::queryInterface 
+( const InterfaceID& iiD ,
+  void**             pI  )
+{
+  /// check the validity of the placeholder 
+  if( 0 == pI ) {       return StatusCode::FAILURE   ; }
+  ///
+  if      ( iiD == ICaloClusterTool:: interfaceID   () ) 
+    { *pI = static_cast<ICaloClusterTool*> (this)    ; }
+  else if ( iiD == IAlgTool::         interfaceID   () ) 
+    { *pI = static_cast<IAlgTool*>         (this)    ; }
+  else if ( iiD == IInterface::       interfaceID   () )
+    { *pI = static_cast<IInterface*>       (this)    ; }
+  else { return CaloTool::queryInterface( iiD , pI ) ; }
+  ///
+  addRef();
+  ///
+  return StatusCode::SUCCESS ;
+  ///
 };
 
 // ============================================================================

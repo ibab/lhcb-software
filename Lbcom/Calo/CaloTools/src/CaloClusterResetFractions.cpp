@@ -1,8 +1,11 @@
-// $Id: CaloClusterResetFractions.cpp,v 1.1 2001-11-08 20:07:04 ibelyaev Exp $
+// $Id: CaloClusterResetFractions.cpp,v 1.2 2001-12-09 14:33:08 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
-// $Log: not supported by cvs2svn $ 
+// $Log: not supported by cvs2svn $
+// Revision 1.1  2001/11/08 20:07:04  ibelyaev
+//  new tools are added into  the package
+// 
 // ============================================================================
 // include files
 // from Gaudi
@@ -43,7 +46,10 @@ CaloClusterResetFractions ( const std::string& type   ,
                             const std::string& name   ,
                             const IInterface*  parent )
   : CaloTool( type , name , parent )
-{};
+{
+  /// declare the available interfaces
+  declareInterface<ICaloClusterTool>(this);
+};
 
 // ============================================================================
 /** destructor, protected and virtual
@@ -69,15 +75,41 @@ StatusCode CaloClusterResetFractions::finalize   ()
 { return CaloTool::initialize() ; }
 
 // ============================================================================
+/** query interface method  
+ *  @param  iiD  unique interface identifier 
+ *  @param  pI   placeholder for interface 
+ *  @return status code 
+ */
+// ============================================================================
+StatusCode CaloClusterResetFractions::queryInterface 
+( const InterfaceID& iiD ,
+  void**             pI  )
+{
+  /// check the validity of the placeholder 
+  if( 0 == pI ) {       return StatusCode::FAILURE   ; }
+  ///
+  if      ( iiD == ICaloClusterTool:: interfaceID   () ) 
+    { *pI = static_cast<ICaloClusterTool*> (this)    ; }
+  else if ( iiD == IAlgTool::         interfaceID   () ) 
+    { *pI = static_cast<IAlgTool*>         (this)    ; }
+  else if ( iiD == IInterface::       interfaceID   () )
+    { *pI = static_cast<IInterface*>       (this)    ; }
+  else { return CaloTool::queryInterface( iiD , pI ) ; }
+  ///
+  addRef();
+  ///
+  return StatusCode::SUCCESS ;
+  ///
+};
+
+// ============================================================================
 /** The main processing method 
  *  @param cluster pointer to CaloCluster object to be processed
  *  @return status code 
  */  
 // ============================================================================
 StatusCode CaloClusterResetFractions::process ( CaloCluster* cluster ) const
-{
-  return (*this) (cluster) ;
-};
+{ return (*this) (cluster) ; };
 
 // ============================================================================
 /** The main processing method with hypothesis 

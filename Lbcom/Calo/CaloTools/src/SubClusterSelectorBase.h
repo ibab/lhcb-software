@@ -1,8 +1,11 @@
-// $Id: SubClusterSelectorBase.h,v 1.4 2001-11-25 15:50:41 ibelyaev Exp $
+// $Id: SubClusterSelectorBase.h,v 1.5 2001-12-09 14:33:09 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.4  2001/11/25 15:50:41  ibelyaev
+//  update for newer CaloKernel package
+//
 // Revision 1.3  2001/11/12 19:04:28  ibelyaev
 //  update
 //
@@ -50,6 +53,15 @@ public:
    */
   virtual StatusCode finalize   ();
   
+  /** query interface method  
+   *  @param  iiD  unique interface identifier 
+   *  @param  pI   placeholder for interface 
+   *  @return status code 
+   */
+  virtual StatusCode queryInterface 
+  ( const InterfaceID& iiD ,
+    void**             pI  );
+  
   /** The main processing method 
    *  @param cluster pointer to CaloCluster object to be processed
    *  @return status code 
@@ -64,15 +76,6 @@ public:
   virtual StatusCode process    
   ( CaloCluster* cluster                   , 
     const CaloHypotheses::Hypothesis& hypo ) const ;
-  
-  /** Query interface.
-   *  Method for IInterface interface implementation,
-   *  @param id   ID of Interface to be retrieved
-   *  @param ppI  Pointer to Location for interface pointer
-   *  @return status code 
-   */
-  virtual StatusCode queryInterface( const  InterfaceID& id , 
-                                     void** ppI             );
 
 protected: 
   
