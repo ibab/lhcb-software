@@ -15,7 +15,7 @@ RichGloPIDDigSel.MaxUsedPixels            = 8000;
 
 // Global PID track selection
 RichGloPIDTrSel.TrackSelection = { "unique","seed","match","forward","upstream","veloTT" };
-RichGloPIDTrSel.MaxUsedTracks             = 200;
+RichGloPIDTrSel.MaxUsedTracks             = 180;
 RichGloPIDTrSel.MaxInputTracks            = 650;
 RichGloPIDTrSel.MinimumPhysicsMomentum    = 0.0*GeV;
 RichGloPIDTrSel.MinimumLikelihoodMomentum = 0.0*GeV;
