@@ -1,8 +1,11 @@
-# $Id: requirements,v 1.8 2002-04-02 11:08:13 ibelyaev Exp $
+# $Id: requirements,v 1.9 2002-04-22 08:17:15 cattanem Exp $
 # =============================================================================
 # CVS tag $Name: not supported by cvs2svn $ 
 # =============================================================================
 # $Log: not supported by cvs2svn $
+# Revision 1.8  2002/04/02 11:08:13  ibelyaev
+#  new interfaces
+#
 # Revision 1.7  2002/03/19 17:31:27  ibelyaev
 #  add new abstract interface for Cluster Splitting Tools
 #
@@ -42,7 +45,7 @@ branches          cmt doc src CaloInterfaces
 include_dirs      $(CALOINTERFACESROOT)
 
 # =============== dependencies ================================================
-use GaudiKernel   v11r* 
+use GaudiKernel   v12r* 
 
 # =============== no constituents! ============================================
 
