@@ -167,7 +167,7 @@ void SimulationSvc::reload () {
       DOM_Element logvol = (DOM_Element&) logvolNode;
       std::string name = dom2Std (logvol.getAttribute ("name"));
 
-      Particles* particles = new Particles();
+      PartAttr* particles = new PartAttr();
       m_logvol2Sim[name]=particles;
 
       DOM_NodeList domLogvolNode = logvol.getElementsByTagName("Cut");
@@ -217,9 +217,9 @@ const bool SimulationSvc::hasSimAttribute (const std::string volname) const {
 // -----------------------------------------------------------------------
 //  simAttribute (ILVolume*)
 // -----------------------------------------------------------------------
-const SimulationSvc::Particles*
+const SimulationSvc::PartAttr*
 SimulationSvc::simAttribute (const ILVolume* vol) const {
-  Particles* part;
+  PartAttr* part;
   
   if (0 != vol) {
     // try first to find an attribute associated directly to the logical volume
@@ -242,9 +242,9 @@ SimulationSvc::simAttribute (const ILVolume* vol) const {
 // -----------------------------------------------------------------------
 //  simAttribute (std::string)
 // -----------------------------------------------------------------------
-const SimulationSvc::Particles*
+const SimulationSvc::PartAttr*
 SimulationSvc::simAttribute (std::string volname) const {
-  Particles* part;
+  PartAttr* part;
   
   // try first to find an attribute associated directly to the logical volume
   Dictionnary::const_iterator it = m_logvol2Sim.find (volname);

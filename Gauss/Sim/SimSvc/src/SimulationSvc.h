@@ -68,7 +68,7 @@ public:
    * @return the simulation attribute that should be used to simulate
    * this logical volume
    */
-  virtual const Particles* simAttribute (const ILVolume* vol) const;
+  virtual const PartAttr* simAttribute (const ILVolume* vol) const;
 
   /**
    * This method returns the simulation attribute associated to a given
@@ -77,7 +77,7 @@ public:
    * @return the simulation attribute that should be used to simulate
    * this logical volume
    */
-  virtual const Particles* simAttribute (const std::string volname) const;
+  virtual const PartAttr* simAttribute (const std::string volname) const;
 
   /**
    * This method tells whether a simulation attribute is associated to a given
@@ -115,7 +115,7 @@ private:
    * This defines a dictionnary
    */
 
-  typedef std::map<std::string, Particles*> Dictionnary;
+  typedef std::map<std::string, PartAttr*> Dictionnary;
 
   /// a map of attributes to be used
   AttributeSet m_attributeSet;

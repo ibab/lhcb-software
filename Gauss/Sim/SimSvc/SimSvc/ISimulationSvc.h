@@ -30,7 +30,7 @@ class ISimulationSvc : virtual public IInterface {
 
 protected:
 
-  typedef std::map<int, const SimAttribute*> Particles;
+  typedef std::map<int, const SimAttribute*> PartAttr;
   
 public:
   
@@ -44,7 +44,7 @@ public:
    * @return the simulation attribute that should be used to simulate
    * this logical volume
    */
-  virtual const Particles* simAttribute (const ILVolume* vol) const = 0;
+  virtual const PartAttr* simAttribute (const ILVolume* vol) const = 0;
 
   /**
    * This method returns the simulation attribute associated to a given
@@ -53,7 +53,7 @@ public:
    * @return the simulation attribute that should be used to simulate
    * this logical volume
    */
-  virtual const Particles* simAttribute (const std::string volname) const = 0;
+  virtual const PartAttr* simAttribute (const std::string volname) const = 0;
 
   /**
    * This method tells whether a simulation attribute is associated to a given

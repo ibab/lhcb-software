@@ -5,6 +5,9 @@
 !               volumes
 !-----------------------------------------------------------------------------
 
+! 2003-06-02 - Witek Pokorski
+ - typedef Particles changed to a more suitable name
+
 !========================== SimSvc v2r0 =============================
 
 ! 2003-05-05 - Witek Pokorski
