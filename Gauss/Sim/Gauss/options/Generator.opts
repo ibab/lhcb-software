@@ -1,4 +1,4 @@
-// $Id: Generator.opts,v 1.26 2003-10-10 16:38:34 witoldp Exp $ 
+// $Id: Generator.opts,v 1.27 2003-10-10 17:01:19 witoldp Exp $ 
 
 ApplicationMgr.DLLs += { "GeneratorModules" } ;
 
@@ -31,11 +31,6 @@ ParticleGun.Mode=0;
 // in case you don't want to use the default decay file, uncomment the line below
 // and specify the alternative file name (not to be confused with the user decay file)
 //EvtDecayAlg.DecayFile = "$GAUSSROOT/data/decay.dec";
-
-PythiaAlg.MDCYFile = "$GAUSSROOT/data/PythiaStablePart.config";
-SetDecayAlg.EvtPartList = "$GAUSSROOT/data/EvtDecayParticles.config";
-EvtDecayAlg.EvtPdlFile = "$GAUSSROOT/data/evt.pdl";
-
 
 // in order to generate specific decays put below the following line:
 // #include "$DECFILESROOT/options/event_type.opts" with event_type replaced by the
