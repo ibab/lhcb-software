@@ -1,6 +1,15 @@
 Package :EvtGen 
 Package manager : Witek Pokorski
 
+!==================== EvtGen v3r2 ==========================================
+! 2003-02-26 - Florence Ranjard
+   following corrections are mandatory on Win32
+ - remove EvtJetSet.cpp~
+ - EvtJetSet.hh - include <iostream> and <fstream>
+ - EvtJetSet.cpp - include <fstream> and <iomanip> instead of <fstream.h> and
+                   <iomanip.h>
+                   prefix setw, setiosflags and resetiosflags with std::
+
 !===================== EvtGen v3r1 ========================================
 ! 2002-08-05 - Florence Ranjard
  - requirements - use PYTHIA v2r6205p*

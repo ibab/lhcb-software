@@ -23,7 +23,8 @@
 
 #include "EvtGen/EvtDecayIncoherent.hh"
 #include "EvtGen/EvtParticle.hh"
-
+#include <iostream>
+#include <fstream>
 typedef EvtDecayBase* EvtDecayBasePtr;
 
 class EvtJetSet:public  EvtDecayIncoherent  {
@@ -54,8 +55,8 @@ private:
   void store(EvtDecayBase* jsdecay);
   void fixPolarizations(EvtParticle* p);
   static void MakeJetSetFile(char* fname);
-  static void WriteJetSetParticle(ofstream &outdec,EvtId ipar,EvtId iparname,int &first);
-  static void WriteJetSetEntryHeader(ofstream &outdec, int lundkc,
+  static void WriteJetSetParticle(std::ofstream &outdec,EvtId ipar,EvtId iparname,int &first);
+  static void WriteJetSetEntryHeader(std::ofstream &outdec, int lundkc,
 			       EvtId evtnum,EvtString name,
 			       int chg, int cchg, int spin2,double mass,
 			       double width, double maxwidth,double ctau,
