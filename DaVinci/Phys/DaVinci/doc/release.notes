@@ -3,6 +3,27 @@ Package     : Phys/DaVinci
 Package Coordinator : Patrick Koppenburg
 Purpose     : LHCb analysis program 
 
+</PRE><H1><A NAME=v11r12>2004-08-03 DaVinci v11r12 - DC'04 tests version</A></H1><PRE>
+
+ - Intermediate steps towards v12r0. New syntaxes required by the new CVS/Gaudi
+   are used whenever already possible.
+   
+ - Event/L1Event is obsolete and removed. Corrected all instances
+   under Phys/ and commented them out under PhysSel/.
+   
+ - TEMPORARY PATCH:
+      Because of a bug in MinimalEventLoopMgr.cpp,
+      an algorithm contained in two sequencers
+      is executed twice. This is the case of 
+      CaloDigitsFromRaw when both the Electrons 
+      and Neutrals sequences are called.
+      To avoid the problem, execute the algorithm
+      in DaVinciCommon.opts, hence in *all* events.  
+   
+ - based on LHCB v15r14
+ 
+ - LoKi v2r8p1 branch
+ 
 </PRE><H1><A NAME=v11r11>2004-07-23 DaVinci v11r11 - DC'04 tests version</A></H1><PRE>
  Many modifications
 

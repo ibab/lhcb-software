@@ -4,6 +4,7 @@
 ! Purpose     : Analaysis program for LHCb
 !-----------------------------------------------------------------------------
 
+!========================== DaVinci v11r12 2004-08-03 ===================
 ! 2004-08-02 - P. Koppenburg
   - options/DVTriggerFilter.opts
   - options/L0.opts
