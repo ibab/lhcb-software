@@ -4,7 +4,7 @@
 ! Purpose     : Package describing contents of Lbcom project.
 !-----------------------------------------------------------------------------
 
-! 2005-02-03 - Marco Cattaneo
+! 2005-02-08 - Marco Cattaneo
  - First version. This project contains component libraries that are shared by
    several LHCb applications. It should not contain any exported header
    files or link libraries.
@@ -14,8 +14,11 @@
      OT:   OTMonitor v1r1
      Tr:   TrExtrapolator v2r14
      Calo: CaloReco v2r7, CaloPIDs v2r4
-     Rich: RichTools v1r3, RichMCTools v2r4, RichRecTools v2r13, 
-           RichRecCommon v1r10, RichRecQC v1r10
+     Rich: RichTools v1r4, RichMCTools v2r4, RichRecTools v2r13, 
+           RichRecCommon v1r11, RichRecQC v1r10
 
  - Backwards compatible fixes for CLHEP 1.9
   . Add a missing STL include (L0DU v6r7p3)
+
+ - Backwards incompatible fixes for GaudiObjDesc v7r*
+  . Adapt to new names of RichSmartID bitfield accessors (RichRecCommon v1r11)
