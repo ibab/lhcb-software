@@ -1,0 +1,8 @@
+!-----------------------------------------------------------------------------
+! Package     : Event/HltEvent
+! Responsible : Olivier Callot
+! Purpose     : Event model for HLT tracks
+!-----------------------------------------------------------------------------
+
+! 2003-04-10 - Olivier Callot
+ - Initial creation. Simple HltTrack with list of clusters and a single 'state'

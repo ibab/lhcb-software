@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE gdd SYSTEM "gdd.dtd">
+<gdd>
+  <package name="HltEvent">
+
+    <import name="Kernel/LHCbStreams"/>
+   
+    <class author="Olivier Callot" desc="Hlt Track" id="12345" name="HltTrack" templateList="FALSE" templateVector="TRUE">
+      <location name="Velo2d" place="Rec/Hlt/TrVelo2d"/>
+      <location name="Velo3d" place="Rec/Hlt/TrVelo3d"/>
+      <location name="Forward" place="Rec/Hlt/TrForward"/>
+      <location name="Hough" place="Rec/Hlt/TrHough"/>
+      <base name="KeyedObject&lt;int&gt;"/>
+
+      <import name="Event/VeloCluster"/>
+      <import name="Event/ITCluster"/>
+      <import name="Event/OTCluster"/>
+      <import name='CLHEP/Geometry/Point3D'/>
+      <import name='CLHEP/Matrix/SymMatrix'/>
+
+     <constructor desc="constructor with values">
+	<arg type="HepPoint3D"    name="position" />
+	<arg type="double"        name="slopeX" />
+	<arg type="double"        name="slopeY" />
+<code> 
+m_position = position;
+m_slopeX   = slopeX;
+m_slopeY   = slopeY;
+m_veloCluster.reserve( 30 );
+</code>
+      </constructor>
+
+     <attribute
+        type      = "HepPoint3D"
+        name      = "position"
+        desc      = "Point on the track" />
+      <attribute
+        type      = "double"
+        name      = "slopeX"
+        desc      = "X Tangent on the track" />
+      <attribute
+        type      = "double"
+        name      = "slopeY"
+        desc      = "Y Tangent on the track" />
+      
+      <attribute
+        type      = "HepSymMatrix"
+        name      = "covariance"
+        desc      = "Covariance matrix the track (x,y,tx,ty,q/p)" />
+
+      <attribute
+        type      = "double"
+        name      = "momentum"
+        desc      = "momentum of the track" />
+      
+      <attribute
+        type      = "int"
+        name      = "velo"
+        desc      = "Is this track a Velo track" />
+      
+      <attribute
+        type      = "int"
+        name      = "unique"
+        desc      = "Is this track unique" />
+      
+      <relation 
+        type      = "VeloCluster" 
+        name      = "veloCluster" 
+        desc      = "Reference to the Velo Clusters" 
+        multiplicity="N"/>
+     
+      <relation 
+        type      = "ITCluster" 
+        name      = "ITCluster" 
+        desc      = "Reference to the IT Clusters" 
+        multiplicity="N"/>
+     
+      <relation 
+        type      = "OTCluster" 
+        name      = "OTCluster" 
+        desc      = "Reference to the OT Clusters" 
+        multiplicity="N"/>
+
+      <method 
+	type      = "double"
+	name      = "errX2" 
+	desc      = "Error on X, squared">
+	<code> return m_covariance.fast(1,1); </code>
+      </method>
+
+      <method 
+	type      = "double"
+	name      = "errY2" 
+	desc      = "Error on Y, squared">
+	<code> return m_covariance.fast(2,2); </code>
+      </method>
+
+      <method 
+	type      = "double"
+	name      = "errTx2" 
+	desc      = "Error on the X slope, squared">
+	<code> return m_covariance.fast(3,3); </code>
+      </method>
+
+      <method 
+	type      = "double"
+	name      = "errTy2" 
+	desc      = "Error on the Y slope , squared">
+	<code> return m_covariance.fast(4,4); </code>
+      </method>
+
+      <method 
+	type      = "double"
+	name      = "errQdivP2" 
+	desc      = "Error on momentum, squared">
+	<code> return m_covariance.fast(5,5); </code>
+      </method>
+
+     
+    </class>
+  </package>
+</gdd>
