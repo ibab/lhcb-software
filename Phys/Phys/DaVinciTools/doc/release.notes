@@ -1,6 +1,10 @@
-! $Id: release.notes,v 1.26 2002-10-15 18:13:32 gcorti Exp $
+! $Id: release.notes,v 1.27 2002-10-20 18:27:35 gcorti Exp $
 ! Package     : DaVinciTools
 ! Responsible : Gloria Corti, Sandra Amato
+
+! 2002-10-20 - Gloria Corti
+ - Fix bug in FilterParticle where filterNegative was not passing any particle
+   (bug introduced in changes of 2002-10-14) (O.Dormond) 
 
 ! 2002-10-15 - Gloria Corti
  - Modify ParticleStuffer to by default setResonance in a new particle

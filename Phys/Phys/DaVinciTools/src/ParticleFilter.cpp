@@ -1,4 +1,4 @@
-// $Id: ParticleFilter.cpp,v 1.4 2002-10-15 17:50:43 gcorti Exp $
+// $Id: ParticleFilter.cpp,v 1.5 2002-10-20 18:27:24 gcorti Exp $
 // Include files 
 
 // from Gaudi
@@ -72,8 +72,6 @@ StatusCode ParticleFilter::initialize() {
     }
     
   }
-
-
   
   log << MSG::DEBUG << ">>> Setting FilterCriterion... " << endreq;
   IFilterCriterion* icrit;
@@ -86,6 +84,8 @@ StatusCode ParticleFilter::initialize() {
         << endreq;
   }
   
+  log << MSG::DEBUG << ">>> Criteria size " << m_criteria.size() << endreq;
+
   if( m_produceHistogram )   {
     log << MSG::DEBUG << "    histograms will be produced" << endreq;
 
@@ -120,8 +120,7 @@ StatusCode ParticleFilter::filter( const ParticleVector& input,
                                    ParticleVector& output ){
 
   MsgStream          log( msgSvc(), name() );
-  log << MSG::DEBUG << ">>> Criteria size " << m_criteria.size() << endreq;
-  log << MSG::DEBUG << "input size " << input.size()   << endreq;
+  log << MSG::DEBUG << "Filter input size " << input.size()   << endreq;
 
   m_independentCounter.clear();
   m_cumulativeCounter.clear();
@@ -179,8 +178,7 @@ StatusCode ParticleFilter::filterPositive( const ParticleVector& input,
                                            ParticleVector& output ){
 
   MsgStream          log( msgSvc(), name() );
-  log << MSG::DEBUG << ">>> Criteria size " << m_criteria.size() << endreq;
-  log << MSG::DEBUG << "input size " << input.size()   << endreq;
+  log << MSG::DEBUG << "Filter input size " << input.size()   << endreq;
 
   m_independentCounter.clear();
   m_cumulativeCounter.clear();
@@ -239,8 +237,7 @@ StatusCode ParticleFilter::filterNegative( const ParticleVector& input,
                                    ParticleVector& output ){
 
   MsgStream          log( msgSvc(), name() );
-  log << MSG::DEBUG << ">>> Criteria size " <<m_criteria.size()    << endreq;
-  log << MSG::DEBUG << "input size " << input.size()   << endreq;
+  log << MSG::DEBUG << "Filter input size " << input.size()   << endreq;
 
   m_independentCounter.clear();
   m_cumulativeCounter.clear();
@@ -282,7 +279,7 @@ StatusCode ParticleFilter::filterNegative( const ParticleVector& input,
     }
     index_part++;
     
-    if ( (*ip)->charge() < 0. ) passed = false;    
+    if ( (*ip)->charge() > 0. ) passed = false;    
     if ( passed ) output.push_back( *ip );
   }
 
