@@ -5,8 +5,11 @@
  *  Implementation file for class : RichRawDataFormatTool
  *
  *  CVS Log :-
- *  $Id: RichRawDataFormatTool.cpp,v 1.2 2005-01-13 13:11:57 jonrob Exp $
+ *  $Id: RichRawDataFormatTool.cpp,v 1.3 2005-01-14 16:57:43 jonrob Exp $
  *  $Log: not supported by cvs2svn $
+ *  Revision 1.2  2005/01/13 13:11:57  jonrob
+ *  Add version 2 of data format
+ *
  *  Revision 1.1  2005/01/07 12:35:59  jonrob
  *  Complete rewrite
  *
@@ -415,7 +418,8 @@ void RichRawDataFormatTool::decodeToSmartIDs( const RawBank & bank,
       if ( header.startPD() )
       {
 
-        verbose() << " Found HPD header at line " << lineC << " of " << bank.dataSize() << endreq;
+        if ( msgLevel(MSG::VERBOSE) )
+          verbose() << " Found HPD header at line " << lineC << " of " << bank.dataSize() << endreq;
 
         // Store start line for header
         const long lineHeader = lineC;
@@ -439,7 +443,8 @@ void RichRawDataFormatTool::decodeToSmartIDs( const RawBank & bank,
             }
           }
 
-          verbose() << "  -> Bank is zero surpressed : ends at " << lineLast << endreq;
+          if ( msgLevel(MSG::VERBOSE) )
+            verbose() << "  -> Bank is zero surpressed : ends at " << lineLast << endreq;
 
         } else {
           // non-ZS blocks have fixed length, so skip straight to the end
@@ -447,7 +452,8 @@ void RichRawDataFormatTool::decodeToSmartIDs( const RawBank & bank,
           lineC   += 1+RichDAQ::MaxDataSize; // data block + header
           lineLast = lineC-1;
 
-          verbose() << "  -> Bank is non zero surpressed : ends at " << lineLast << endreq;
+          if ( msgLevel(MSG::VERBOSE) )
+            verbose() << "  -> Bank is non zero surpressed : ends at " << lineLast << endreq;
 
         }
 
@@ -485,7 +491,8 @@ void RichRawDataFormatTool::decodeToSmartIDs( const RawBank & bank,
   }
 
   // Print out decoded smartIDs
-  if ( msgLevel(MSG::VERBOSE) ) {
+  if ( msgLevel(MSG::VERBOSE) ) 
+  {
     verbose() << " Decoded RichSmartIDs :-" << endreq;
     for ( RichSmartID::Collection::const_iterator iID = smartIDs.begin();
           iID != smartIDs.end(); ++iID )
@@ -493,7 +500,7 @@ void RichRawDataFormatTool::decodeToSmartIDs( const RawBank & bank,
       verbose() << "   " << *iID << endreq;
     }
   }
-
+  
 }
 
 void
