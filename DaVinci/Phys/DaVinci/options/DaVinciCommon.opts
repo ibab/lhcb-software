@@ -37,6 +37,10 @@ ApplicationMgr.DLLs += { "PhysSelections" };
 //ApplicationMgr.DLLs += {  "FlavourTagging" };
 ApplicationMgr.DLLs += { "DaVinciUser" };
 
+// Options for ProtoParticles creation
+#include "$GLOBALRECOROOT/options/GlobalReco.opts"
+#include "$DAVINCIMCTOOLSROOT/options/MCPIDProtoPAlg.opts"
+
 // No Histogram persistency chosen at this point
 ApplicationMgr.HistogramPersistency = "NONE";
 //**************************************************************
