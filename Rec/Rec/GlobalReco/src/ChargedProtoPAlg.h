@@ -1,4 +1,4 @@
-// $Id: ChargedProtoPAlg.h,v 1.1.1.1 2002-07-10 16:53:06 gcorti Exp $
+// $Id: ChargedProtoPAlg.h,v 1.2 2002-07-11 16:23:38 gcorti Exp $
 #ifndef CHARGEDPROTOPALG_H 
 #define CHARGEDPROTOPALG_H 1
 
@@ -29,6 +29,10 @@ public:
   virtual StatusCode finalize  ();    ///< Algorithm finalization
 
 protected:
+
+  /// Check if track satisfy criterias to make a ProtoParticle.
+  /// Forward, Match and Upstream tracks with no error flag and
+  /// Chi2 < Max value are taken
   bool keepTrack( const TrStoredTrack* track );
 
 private:
