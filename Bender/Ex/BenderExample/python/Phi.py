@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: Phi.py,v 1.6 2004-03-16 09:42:23 ibelyaev Exp $
+# $Id: Phi.py,v 1.7 2004-03-17 10:18:18 ibelyaev Exp $
 # =============================================================================
 # CVS tag $Name: not supported by cvs2svn $
 # =============================================================================
@@ -12,14 +12,9 @@
 # =============================================================================
 
 # import the Bender itself  
-from   bendermodule import *
-import benderconfig as bender 
-
-
-g.JobOptionsType = 'NONE'
-g.OutputLevel = 3
-g.config()
-
+from   bendermodule  import *
+import benderconfig  as bender 
+import benderPreLoad as preload
 
 global h1 
 # =============================================================================
@@ -70,21 +65,8 @@ g.HistogramPersistency = "HBOOK" ;
 # =============================================================================
 
 # preload algorithm(s)
-g.topAlg += [ "LoKiPreLoad/Charged"]
-
-# configure the preload algorithm(s) 
-preload  = g.property('Charged')
-preload.OutputLevel = 4
-
-desktop                   = g.property('Charged.PhysDesktop')
-desktop.ParticleMakerType = "CombinedParticleMaker"
-desktop.OutputLocation    = "/Event/Phys/Charged"
-
-maker                    = g.property('Charged.PhysDesktop.CombinedParticleMaker')
-maker.ExclusiveSelection = 0
-maker.Particles          = [ "kaon" , "pion" ]
-maker.KaonSelection      = [ "det='RICH' k-pi='-5.0'   k-p='-5.0' "]
-maker.PionSelection      = [ "det='RICH' pi-k='-5.0' "]
+g.topAlg += ['LoKiPreLoad/Hadrons']
+preload.Hadrons( Particles = [ 'kaon' , 'pion'] )
 
 # create analysis algorithm and add it to the list of
 phi = Phi('Phi')
@@ -95,8 +77,7 @@ phi = gaudi.iProperty('Phi')
 phi.OutputLevel = 5
 
 desktop                 = g.property('Phi.PhysDesktop')
-desktop.InputLocations  = [ "/Event/Phys/Charged"]
-desktop.OutputLocation  =   "/Event/Phys/Phi"
+desktop.InputLocations  = [ "/Event/Phys/Hadrons"]
 
 # output histogram file 
 hsvc = g.property( 'HistogramPersistencySvc' )
@@ -107,10 +88,7 @@ hsvc.OutputFile = 'phi.hbook'
 # job execution 
 # =============================================================================
 
-g.initialize()
-
-## g.run(100)  ## crash !!
-g._evtpro.executeRun(100)
+g.run(500) 
 
 g.exit()
 
@@ -118,10 +96,4 @@ g.exit()
 # The END 
 # =============================================================================
 # $Log: not supported by cvs2svn $
-# Revision 1.5  2004/02/13 08:50:16  ibelyaev
-#  add few 'plotters'
-#
-# Revision 1.4  2004/02/10 12:37:35  ibelyaev
-#  update
-#
 # =============================================================================

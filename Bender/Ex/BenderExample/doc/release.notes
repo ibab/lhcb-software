@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.1 2003-12-07 16:14:29 ibelyaev Exp $
+! $Id: release.notes,v 1.2 2004-03-17 10:18:18 ibelyaev Exp $
 ! -----------------------------------------------------------------------------
 ! CVS tag $Name: not supported by cvs2svn $
 ! -----------------------------------------------------------------------------
@@ -7,6 +7,15 @@
 ! Purpose     : collection of exampel to run Bender - 
 !             :                    -Python based physic sanalysis 
 ! -----------------------------------------------------------------------------
+
+! 2004-03-17 - Vanya BELYAEV
+ - python/Dstar.py
+ - python/Phi.py 
+   add the usage of "preloading" facilities (thanks to Pere) 
+	
+! 2004-03-16 - Vanya BELYAEV
+ - remove unnesesary configuration lines (make use of new AppMgr constructor) 
+
 
 ! 2003-12-07 - Vanya BELYAEV
  -  The package contains 2 examples 
@@ -21,3 +30,7 @@ To run examples one need to issue commands
   bender $BENDEREXAMPLEPYTHON/<XXXX>.py $BENDEREXAMPLEOPTS/<XXXX>.opts
 
 where <XXXX> = Phi , Dstar or B2PhiK0S for selected examples  
+
+! -----------------------------------------------------------------------------
+! The END
+! -----------------------------------------------------------------------------

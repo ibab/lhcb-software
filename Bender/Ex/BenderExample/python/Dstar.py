@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-# $Id: Dstar.py,v 1.8 2004-03-16 09:42:23 ibelyaev Exp $
+# $Id: Dstar.py,v 1.9 2004-03-17 10:18:18 ibelyaev Exp $
 # =============================================================================
 # CVS tag $Name: not supported by cvs2svn $ 
 # =============================================================================
@@ -12,11 +12,8 @@
 
 # import the Bender itself  
 from   bendermodule import *
-import benderconfig as bender 
-
-g.JobOptionsType = 'NONE'
-g.OutputLevel = 3
-g.config()
+import benderconfig  as bender 
+import benderPreLoad as preload
 
 global h1 
 # =============================================================================
@@ -124,33 +121,19 @@ g.HistogramPersistency = "HBOOK" ;
 # =============================================================================
 
 # preload algorithm(s)
-g.topAlg += [ "LoKiPreLoad/Charged"]
-
-# configure the preload algorithm(s) 
-preload  = g.property('Charged')
-preload.OutputLevel = 4
-
-desktop                   = g.property('Charged.PhysDesktop')
-desktop.ParticleMakerType = "CombinedParticleMaker"
-
-maker                    = g.property('Charged.PhysDesktop.CombinedParticleMaker')
-maker.ExclusiveSelection = FALSE
-maker.Particles          = [ "kaon" , "pion" ]
-maker.KaonSelection      = [ "det='RICH' k-pi='-5.0'   k-p='-5.0' "]
-maker.PionSelection      = [ "det='RICH' pi-k='-5.0' "]
+g.topAlg += ['LoKiPreLoad/Hadrons']
+preload.Hadrons( Particles = [ 'kaon' , 'pion'] )
 
 # create analysis algorithm and add it to the list of
 alg = Dstar('Dstar')
-
 g.topAlg += [ 'Dstar' ]
-
 alg = gaudi.iProperty('Dstar')
 alg.OutputLevel = 5
 alg.NTupleLUN    = 'DSTAR'
 alg.OutputLocation = '/Event/Phys/Dstar2HH'
 
 desktop                 = g.property('Dstar.PhysDesktop')
-desktop.InputLocations  = [ "/Event/Phys/Charged"]
+desktop.InputLocations  = [ "/Event/Phys/Hadrons"]
 
 # output histogram file 
 hsvc = g.property( 'HistogramPersistencySvc' )
@@ -163,12 +146,7 @@ nsvc.Output =[ "DSTAR DATAFILE='dstar_tup.hbook' TYP='HBOOK' OPT='NEW'" ]
 # job execution 
 # =============================================================================
 
-
-g.initialize()
-
-
-## g.run(100)  ## crash !!
-g._evtpro.executeRun(500)
+g.run(500) 
 
 g.exit()
 
@@ -176,10 +154,4 @@ g.exit()
 # The END 
 # =============================================================================
 # $Log: not supported by cvs2svn $
-# Revision 1.7  2004/03/15 16:43:30  ibelyaev
-#  add options/Dstar.opts
-#
-# Revision 1.6  2004/02/13 08:50:16  ibelyaev
-#  add few 'plotters'
-#
 # =============================================================================
