@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.4 2002-06-13 12:28:47 ibelyaev Exp $
+! $Id: release.notes,v 1.5 2002-06-14 18:01:27 ibelyaev Exp $
 ! =============================================================================
 ! CVS tag $Name: not supported by cvs2svn $
 ! =============================================================================
@@ -6,6 +6,10 @@
 ! =============================================================================
 ! Responsible : Ivan Belyaev
 ! =============================================================================
+
+! 2002-06-14 - Ivan Belyaev
+ - change the options (remove the misprint)
+ - cmt/requiremewnts   update the version (v1r2) 
 
 ! 2002-06-13 - v1r1 Ivan Belyaev
  - add new algorithm to make more flexible relations to MC particles
