@@ -1,3 +1,4 @@
+// $Id: MaterialException.cpp,v 1.6 2003-04-25 08:52:24 sponce Exp $
 ///
 /// GaudiKernbel
 #include "GaudiKernel/MsgStream.h"

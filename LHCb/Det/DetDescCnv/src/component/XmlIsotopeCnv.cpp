@@ -1,4 +1,4 @@
-// $Id: XmlIsotopeCnv.cpp,v 1.2 2003-04-24 09:15:34 sponce Exp $
+// $Id: XmlIsotopeCnv.cpp,v 1.3 2003-04-25 08:53:08 sponce Exp $
 // include files
 #include "GaudiKernel/CnvFactory.h"
 #include "GaudiKernel/GenericAddress.h"
@@ -80,18 +80,18 @@ XmlIsotopeCnv::XmlIsotopeCnv (ISvcLocator* svc) :
 // Desctructor
 // ------------------------------------------------------------------------
 XmlIsotopeCnv::~XmlIsotopeCnv () {
-  delete nameString;
-  delete temperatureString;
-  delete pressureString;
-  delete stateString;
-  delete AString;
-  delete ZString;
-  delete NString;
-  delete densityString;
-  delete radlenString;
-  delete lambdaString;
-  delete tabpropsString;
-  delete addressString;  
+  xercesc::XMLString::release(&(XMLCh*)nameString);
+  xercesc::XMLString::release(&(XMLCh*)temperatureString);
+  xercesc::XMLString::release(&(XMLCh*)pressureString);
+  xercesc::XMLString::release(&(XMLCh*)stateString);
+  xercesc::XMLString::release(&(XMLCh*)AString);
+  xercesc::XMLString::release(&(XMLCh*)ZString);
+  xercesc::XMLString::release(&(XMLCh*)NString);
+  xercesc::XMLString::release(&(XMLCh*)densityString);
+  xercesc::XMLString::release(&(XMLCh*)radlenString);
+  xercesc::XMLString::release(&(XMLCh*)lambdaString);
+  xercesc::XMLString::release(&(XMLCh*)tabpropsString);
+  xercesc::XMLString::release(&(XMLCh*)addressString);  
 }
 
 
@@ -174,8 +174,10 @@ StatusCode XmlIsotopeCnv::i_fillObj (xercesc::DOMElement* childElement,
     dataObj->tabulatedProperties().push_back(ref); 
   } else {
     // Something goes wrong, does it?
+    char* tagNameString = xercesc::XMLString::transcode(tagName);
     log << MSG::WARNING << "This tag makes no sense to isotope: "
-        << xercesc::XMLString::transcode(tagName) << endreq;
+        << tagNameString << endreq;
+    xercesc::XMLString::release(&tagNameString);
   }
 
   // returns

@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/Lib/Surface.cpp,v 1.6 2002-01-21 14:46:46 sponce Exp $
+// $Id: Surface.cpp,v 1.7 2003-04-25 08:52:24 sponce Exp $
 
 // GaudiKernel
 #include "GaudiKernel/System.h"

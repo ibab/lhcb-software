@@ -1,4 +1,4 @@
-///  $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDescCnv/DetDescCnv/XmlBaseConditionCnv.h,v 1.2 2003-04-24 09:15:33 sponce Exp $
+///  $Id: XmlBaseConditionCnv.h,v 1.3 2003-04-25 08:53:08 sponce Exp $
 
 #ifndef DETDESCCNV_XMLCONDITIONCNV_H
 #define DETDESCCNV_XMLCONDITIONCNV_H

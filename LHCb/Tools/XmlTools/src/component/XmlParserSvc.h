@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Tools/XmlTools/src/component/XmlParserSvc.h,v 1.2 2003-04-24 09:12:12 sponce Exp $
+// $Id: XmlParserSvc.h,v 1.3 2003-04-25 08:53:57 sponce Exp $
 #ifndef DETDESCCNV_XMLPARSERSVC_H
 #define DETDESCCNV_XMLPARSERSVC_H
 

@@ -1,4 +1,4 @@
-// $Id: XmlElementCnv.cpp,v 1.2 2003-04-24 09:15:34 sponce Exp $ 
+// $Id: XmlElementCnv.cpp,v 1.3 2003-04-25 08:53:08 sponce Exp $ 
 #include "GaudiKernel/CnvFactory.h"
 #include "GaudiKernel/DataObject.h"
 #include "GaudiKernel/ICnvManager.h"
@@ -78,22 +78,22 @@ XmlElementCnv::XmlElementCnv (ISvcLocator* svc) :
 // Destructor
 // -----------------------------------------------------------------------
 XmlElementCnv::~XmlElementCnv () {
-  delete nameString;
-  delete temperatureString;
-  delete pressureString;
-  delete stateString;
-  delete densityString;
-  delete radlenString;
-  delete lambdaString;
-  delete symbolString;
-  delete AString;
-  delete ZeffString;
-  delete hrefString;
-  delete fractionmassString;
-  delete tabpropsString;
-  delete addressString;
-  delete isotoperefString;
-  delete atomString;
+  xercesc::XMLString::release(&(XMLCh*)nameString);
+  xercesc::XMLString::release(&(XMLCh*)temperatureString);
+  xercesc::XMLString::release(&(XMLCh*)pressureString);
+  xercesc::XMLString::release(&(XMLCh*)stateString);
+  xercesc::XMLString::release(&(XMLCh*)densityString);
+  xercesc::XMLString::release(&(XMLCh*)radlenString);
+  xercesc::XMLString::release(&(XMLCh*)lambdaString);
+  xercesc::XMLString::release(&(XMLCh*)symbolString);
+  xercesc::XMLString::release(&(XMLCh*)AString);
+  xercesc::XMLString::release(&(XMLCh*)ZeffString);
+  xercesc::XMLString::release(&(XMLCh*)hrefString);
+  xercesc::XMLString::release(&(XMLCh*)fractionmassString);
+  xercesc::XMLString::release(&(XMLCh*)tabpropsString);
+  xercesc::XMLString::release(&(XMLCh*)addressString);
+  xercesc::XMLString::release(&(XMLCh*)isotoperefString);
+  xercesc::XMLString::release(&(XMLCh*)atomString);
 }
 
 
@@ -239,8 +239,10 @@ StatusCode XmlElementCnv::i_fillObj (xercesc::DOMElement*        childElement ,
     }
   } else {
     // Something goes wrong, does it?
+    char* tagNameString = xercesc::XMLString::transcode(tagName);
     log << MSG::WARNING << "This tag makes no sense to element : "
-        << xercesc::XMLString::transcode(tagName) << endreq;
+        << tagNameString << endreq;
+    xercesc::XMLString::release(&tagNameString);
   }
 
   // returns

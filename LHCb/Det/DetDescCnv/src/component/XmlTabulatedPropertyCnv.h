@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDescCnv/src/component/XmlTabulatedPropertyCnv.h,v 1.2 2003-04-24 09:15:35 sponce Exp $
+// $Id: XmlTabulatedPropertyCnv.h,v 1.3 2003-04-25 08:53:09 sponce Exp $
 
 #ifndef     DETDESCCNV_XMLTABULATEDPROPERTYCNV_H
 #define     DETDESCCNV_XMLTABULATEDPROPERTYCNV_H 1 

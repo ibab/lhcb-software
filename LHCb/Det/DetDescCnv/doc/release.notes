@@ -4,6 +4,10 @@
 ! Purpose     : standard converters for the LHCb Detector Description
 !-----------------------------------------------------------------------------
 
+! 2003-04-25 - Sebastien Ponce
+ - fixes after valgrind tests
+ - application of code conventions
+
 ! 2003-04-24 - Sebastien PONCE
  - port to xerces 2.2.0
 

@@ -1,3 +1,4 @@
+// $Id: Isotope.cpp,v 1.5 2003-04-25 08:52:24 sponce Exp $
 /// DetDesc 
 #include "DetDesc/Isotope.h"
 ///

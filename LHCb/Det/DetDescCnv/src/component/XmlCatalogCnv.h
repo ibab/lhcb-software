@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDescCnv/src/component/XmlCatalogCnv.h,v 1.2 2003-04-24 09:15:34 sponce Exp $
+// $Id: XmlCatalogCnv.h,v 1.3 2003-04-25 08:53:08 sponce Exp $
 
 #ifndef DETDESCCNV_XMLCATALOGCNV_H
 #define DETDESCCNV_XMLCATALOGCNV_H

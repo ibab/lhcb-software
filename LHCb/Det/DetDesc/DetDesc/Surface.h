@@ -1,3 +1,4 @@
+// $Id: Surface.h,v 1.2 2003-04-25 08:52:23 sponce Exp $
 #ifndef     DETDESC_SURFACE_H 
 #define     DETDESC_SURFACE_H  1
 /// STL

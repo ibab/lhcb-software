@@ -1,3 +1,4 @@
+// $Id: Element.cpp,v 1.6 2003-04-25 08:52:24 sponce Exp $
 /// STL and STD 
 #include <math.h>
 /// GaudiKernel

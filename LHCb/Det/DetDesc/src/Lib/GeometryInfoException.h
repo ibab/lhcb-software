@@ -1,3 +1,4 @@
+// $Id: GeometryInfoException.h,v 1.5 2003-04-25 08:52:24 sponce Exp $
 #ifndef     DETDESC_GEOMETRYINFOEXCEPTION_H
 #define     DETDESC_GEOMETRYINFOEXCEPTION_H 1 
 /// GaudiKernel

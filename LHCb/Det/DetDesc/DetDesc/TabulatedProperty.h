@@ -1,3 +1,4 @@
+// $Id: TabulatedProperty.h,v 1.2 2003-04-25 08:52:24 sponce Exp $
 #ifndef     DETDESC_TABULATEDPROPERTY_H
 #define     DETDESC_TABULATEDPROPERTY_H 1 
 /// STL

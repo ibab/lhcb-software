@@ -1,4 +1,4 @@
-// $Id: XmlMixtureCnv.cpp,v 1.2 2003-04-24 09:15:34 sponce Exp $
+// $Id: XmlMixtureCnv.cpp,v 1.3 2003-04-25 08:53:08 sponce Exp $
 // Include files
 #include "GaudiKernel/CnvFactory.h"
 #include "GaudiKernel/IOpaqueAddress.h"
@@ -78,20 +78,20 @@ XmlMixtureCnv::XmlMixtureCnv (ISvcLocator* svc) :
 // Destructor
 // -----------------------------------------------------------------------
 XmlMixtureCnv::~XmlMixtureCnv () {
-  delete temperatureString;
-  delete pressureString;
-  delete stateString;
-  delete AeffString;
-  delete ZeffString;
-  delete densityString;
-  delete radlenString;
-  delete lambdaString;
-  delete tabpropsString;
-  delete addressString;
-  delete componentString;
-  delete nameString;
-  delete natomsString;
-  delete fractionmassString;
+  xercesc::XMLString::release(&(XMLCh*)temperatureString);
+  xercesc::XMLString::release(&(XMLCh*)pressureString);
+  xercesc::XMLString::release(&(XMLCh*)stateString);
+  xercesc::XMLString::release(&(XMLCh*)AeffString);
+  xercesc::XMLString::release(&(XMLCh*)ZeffString);
+  xercesc::XMLString::release(&(XMLCh*)densityString);
+  xercesc::XMLString::release(&(XMLCh*)radlenString);
+  xercesc::XMLString::release(&(XMLCh*)lambdaString);
+  xercesc::XMLString::release(&(XMLCh*)tabpropsString);
+  xercesc::XMLString::release(&(XMLCh*)addressString);
+  xercesc::XMLString::release(&(XMLCh*)componentString);
+  xercesc::XMLString::release(&(XMLCh*)nameString);
+  xercesc::XMLString::release(&(XMLCh*)natomsString);
+  xercesc::XMLString::release(&(XMLCh*)fractionmassString);
 }
 
 
@@ -269,8 +269,10 @@ StatusCode XmlMixtureCnv::i_fillObj (xercesc::DOMElement* childElement,
     }
   } else {
     // Something goes wrong, does it?
+    char* tagNameString = xercesc::XMLString::transcode(tagName);
     log << MSG::WARNING << "This tag makes no sense to mixture : "
-        << xercesc::XMLString::transcode(tagName) << endreq;
+        << tagNameString << endreq;
+    xercesc::XMLString::release(&tagNameString);
   }
   // returns
   return StatusCode::SUCCESS;

@@ -1,4 +1,4 @@
-// $Id: XmlBaseDetElemCnv.cpp,v 1.2 2003-04-24 09:15:33 sponce Exp $
+// $Id: XmlBaseDetElemCnv.cpp,v 1.3 2003-04-25 08:53:08 sponce Exp $
 
 // include files
 
@@ -85,31 +85,31 @@ XmlBaseDetElemCnv::XmlBaseDetElemCnv (ISvcLocator* svc,
 // Destructor
 // ------------------------------------------------------------------------
 XmlBaseDetElemCnv::~XmlBaseDetElemCnv () {
-  delete specificString;
-  delete detelemString;
-  delete detelemrefString;
-  delete versionString;
-  delete authorString;
-  delete geometryinfoString;
-  delete alignmentinfoString;
-  delete calibrationinfoString;
-  delete readoutinfoString;
-  delete slowcontrolinfoString;
-  delete fastcontrolinfoString;
-  delete paramString;
-  delete paramVectorString;
-  delete userParameterString;
-  delete userParameterVectorString;
+  xercesc::XMLString::release(&(XMLCh*)specificString);
+  xercesc::XMLString::release(&(XMLCh*)detelemString);
+  xercesc::XMLString::release(&(XMLCh*)detelemrefString);
+  xercesc::XMLString::release(&(XMLCh*)versionString);
+  xercesc::XMLString::release(&(XMLCh*)authorString);
+  xercesc::XMLString::release(&(XMLCh*)geometryinfoString);
+  xercesc::XMLString::release(&(XMLCh*)alignmentinfoString);
+  xercesc::XMLString::release(&(XMLCh*)calibrationinfoString);
+  xercesc::XMLString::release(&(XMLCh*)readoutinfoString);
+  xercesc::XMLString::release(&(XMLCh*)slowcontrolinfoString);
+  xercesc::XMLString::release(&(XMLCh*)fastcontrolinfoString);
+  xercesc::XMLString::release(&(XMLCh*)paramString);
+  xercesc::XMLString::release(&(XMLCh*)paramVectorString);
+  xercesc::XMLString::release(&(XMLCh*)userParameterString);
+  xercesc::XMLString::release(&(XMLCh*)userParameterVectorString);
 
-  delete typeString;
-  delete nameString;
-  delete commentString;
-  delete hrefString;
-  delete lvnameString;
-  delete supportString;
-  delete rpathString;
-  delete npathString;
-  delete conditionString;
+  xercesc::XMLString::release(&(XMLCh*)typeString);
+  xercesc::XMLString::release(&(XMLCh*)nameString);
+  xercesc::XMLString::release(&(XMLCh*)commentString);
+  xercesc::XMLString::release(&(XMLCh*)hrefString);
+  xercesc::XMLString::release(&(XMLCh*)lvnameString);
+  xercesc::XMLString::release(&(XMLCh*)supportString);
+  xercesc::XMLString::release(&(XMLCh*)rpathString);
+  xercesc::XMLString::release(&(XMLCh*)npathString);
+  xercesc::XMLString::release(&(XMLCh*)conditionString);
 }
 
 
@@ -271,12 +271,14 @@ StatusCode XmlBaseDetElemCnv::i_fillObj (xercesc::DOMElement* childElement,
       } while (*rp != 0);
       dataObj->createGeometryInfo (logVolName,support,repPath);
     } else {
+      char* tagNameString = xercesc::XMLString::transcode(tagName);
       log << MSG::ERROR << "File " << address->par()[0] << ": "
-          << xercesc::XMLString::transcode(tagName)
+          << tagNameString
           << " Missing \"rpath\" or \"npath\" element, "
           << "please correct XML data\n"
           << " Either remove support element or provide proper rpath or npath"
           << endreq;
+      xercesc::XMLString::release(&tagNameString);
       StatusCode st( CORRUPTED_DATA );
       throw XmlCnvException( " Corrupted XML data", st );            
     }
@@ -470,8 +472,10 @@ StatusCode XmlBaseDetElemCnv::i_fillObj (xercesc::DOMElement* childElement,
     
   } else {
     // Something goes wrong, does it?
+    char* tagNameString = xercesc::XMLString::transcode(tagName);
     log << MSG::WARNING << "This tag makes no sense to element : "
-        << xercesc::XMLString::transcode(tagName) << endreq;
+        << tagNameString << endreq;
+    xercesc::XMLString::release(&tagNameString);
   }
 
   // returns

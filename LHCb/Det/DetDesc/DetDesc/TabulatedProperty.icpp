@@ -1,3 +1,4 @@
+// $Id: TabulatedProperty.icpp,v 1.2 2003-04-25 08:52:24 sponce Exp $
 #ifndef     DETDESC_TABLEOFPROPERTIES_ICPP
 #define     DETDESC_TABLEOFPROPERTIES_ICPP 1 
 /// STL

@@ -1,3 +1,4 @@
+// $Id: IDetectorElement.h,v 1.13 2003-04-25 08:52:23 sponce Exp $
 // $ID:  $
 #ifndef  DETDESC_IDETECTORELEMENT_H 
 #define  DETDESC_IDETECTORELEMENT_H 1

@@ -1,4 +1,4 @@
-// $Id: XmlMuonRegionCnv.cpp,v 1.5 2003-04-24 09:19:34 sponce Exp $
+// $Id: XmlMuonRegionCnv.cpp,v 1.6 2003-04-25 08:54:52 sponce Exp $
 
 // Include files
 
@@ -92,15 +92,15 @@ XmlMuonRegionCnv::XmlMuonRegionCnv(ISvcLocator* svc) :
 // Destructor
 // ------------------------------------------------------------------------
 XmlMuonRegionCnv::~XmlMuonRegionCnv() {
-  delete ChambersString;
-  delete GasGapString;
-  delete NumberString;
-  delete ReadoutMapString;
-  delete ReadoutTypeString;
-  delete NFEChamberXString;
-  delete NFEChamberYString;
-  delete AnodeString;
-  delete CathodeString;
+  xercesc::XMLString::release(&(XMLCh*)ChambersString);
+  xercesc::XMLString::release(&(XMLCh*)GasGapString);
+  xercesc::XMLString::release(&(XMLCh*)NumberString);
+  xercesc::XMLString::release(&(XMLCh*)ReadoutMapString);
+  xercesc::XMLString::release(&(XMLCh*)ReadoutTypeString);
+  xercesc::XMLString::release(&(XMLCh*)NFEChamberXString);
+  xercesc::XMLString::release(&(XMLCh*)NFEChamberYString);
+  xercesc::XMLString::release(&(XMLCh*)AnodeString);
+  xercesc::XMLString::release(&(XMLCh*)CathodeString);
 }
 
 
@@ -128,8 +128,9 @@ XmlMuonRegionCnv::i_fillSpecificObj (xercesc::DOMElement* childElement,
   // gets the element's name
   const XMLCh* tagName = childElement->getNodeName();
 
-  log << MSG::DEBUG << "Processing element "
-      << xercesc::XMLString::transcode(tagName) << endmsg;
+  char* tagNameString = xercesc::XMLString::transcode(tagName);
+  log << MSG::DEBUG << "Processing element " << tagNameString << endmsg;
+  xercesc::XMLString::release(&tagNameString);
   
   /*
     <!-- Number of Chambers in region -->
@@ -194,10 +195,10 @@ XmlMuonRegionCnv::i_fillSpecificObj (xercesc::DOMElement* childElement,
         xercesc::DOMNamedNodeMap* attributes =
           nodeChildren->item(i)->getAttributes();
         xercesc::DOMNode* ggNumberNode = attributes->getNamedItem(NumberString);
-        const XMLCh* gasGapNumberStr = ggNumberNode->getNodeValue();
-        gasGapNumber =
-          (int) xmlSvc()->eval(xercesc::XMLString::transcode(gasGapNumberStr),
-                               false);
+        char* gasGapNumberStr =
+          xercesc::XMLString::transcode(ggNumberNode->getNodeValue());
+        gasGapNumber = (int) xmlSvc()->eval(gasGapNumberStr, false);
+        xercesc::XMLString::release(&gasGapNumberStr);
       }
     }
 
@@ -205,14 +206,15 @@ XmlMuonRegionCnv::i_fillSpecificObj (xercesc::DOMElement* childElement,
     dataObj->setGapsPerFE(gasGapNumber / 2);
 
     // get a value of the 'Number' attribute
-    const XMLCh* Number = childElement->getAttribute (NumberString);
-    if (0 == Number) {
+    const XMLCh* number = childElement->getAttribute (NumberString);
+    if (0 == number) {
       log <<MSG::WARNING << "Chamber object did not have number attribute" 
           << endmsg;
       return StatusCode::FAILURE;
     }
-    dataObj->setchamberNum
-      ((int) xmlSvc()->eval(xercesc::XMLString::transcode(Number), false));
+    char* numberString = xercesc::XMLString::transcode(number);
+    dataObj->setchamberNum ((int) xmlSvc()->eval(numberString, false));
+    xercesc::XMLString::release(&numberString);
 
   } else if(0 == xercesc::XMLString::compareString(ReadoutMapString, tagName)){
 
@@ -226,21 +228,21 @@ XmlMuonRegionCnv::i_fillSpecificObj (xercesc::DOMElement* childElement,
           << ReadoutType << endmsg;
       return StatusCode::FAILURE;
     }
+    char* NFEChamberXString = xercesc::XMLString::transcode(NFEChamberX);
+    char* NFEChamberYString = xercesc::XMLString::transcode(NFEChamberY);
     if (0 == xercesc::XMLString::compareString(AnodeString, ReadoutType)) {
       dataObj->setFEAnodeX
-        ((int) xmlSvc()->eval(xercesc::XMLString::transcode(NFEChamberX),
-                              false));
+        ((int) xmlSvc()->eval(NFEChamberXString, false));
       dataObj->setFEAnodeY
-        ((int) xmlSvc()->eval(xercesc::XMLString::transcode(NFEChamberY),
-                              false));
-    }else{
+        ((int) xmlSvc()->eval(NFEChamberYString, false));
+    } else {
       dataObj->setFECathodeX
-        ((int) xmlSvc()->eval(xercesc::XMLString::transcode(NFEChamberX),
-                              false));
+        ((int) xmlSvc()->eval(NFEChamberXString, false));
       dataObj->setFECathodeY
-        ((int) xmlSvc()->eval(xercesc::XMLString::transcode(NFEChamberY),
-                              false));
-    }      
+        ((int) xmlSvc()->eval(NFEChamberYString, false));
+    }
+    xercesc::XMLString::release (&NFEChamberXString);
+    xercesc::XMLString::release (&NFEChamberYString);    
 
   }else {
     // Unknown tag, a warning message could be issued here

@@ -1,3 +1,4 @@
+// $Id: SolidException.h,v 1.5 2003-04-25 08:52:23 sponce Exp $
 #ifndef        __DETDESC_SOLID_SOLIDEXCEPTION_H__
 #define        __DETDESC_SOLID_SOLIDEXCEPTION_H__
 /// GaudiKernle

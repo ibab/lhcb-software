@@ -1,3 +1,4 @@
+// $Id: TransportSvcException.h,v 1.3 2003-04-25 08:52:24 sponce Exp $
 #ifndef     __DETDESC_TRANSPORTSVC_TRANSPORTSVCEXCEPTION_H__ 
 #define     __DETDESC_TRANSPORTSVC_TRANSPORTSVCEXCEPTION_H__ 1
 

@@ -1,9 +1,13 @@
 ! =============================================================================
-! $Id: release.notes,v 1.140 2003-04-23 14:07:45 sponce Exp $ 
+! $Id: release.notes,v 1.141 2003-04-25 08:52:24 sponce Exp $ 
 ! =============================================================================
 ! package DetDesc
 ! package manager : N.N 
 ! =============================================================================
+
+! 2003-04-25 - Sebastien Ponce
+ - fixes after valgrind tests
+ - application of code conventions
 
 ! 2003-04-23 - Sebastien Ponce
  - yet a new restructuration : DetDesc was split into three parts : Det/DetDesc

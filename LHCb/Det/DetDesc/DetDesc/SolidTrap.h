@@ -1,7 +1,11 @@
+// $Id: SolidTrap.h,v 1.9 2003-04-25 08:52:23 sponce Exp $
 /// ===========================================================================
 /// CVS tag $Name: not supported by cvs2svn $ 
 /// ===========================================================================
 /// $Log: not supported by cvs2svn $
+/// Revision 1.8  2002/05/11 18:25:46  ibelyaev
+///  see $DETDESCROOT/doc/release.notes 11 May 2002
+///
 /// Revision 1.7  2001/08/09 16:47:59  ibelyaev
 /// update in interfaces and redesign of solids
 /// 

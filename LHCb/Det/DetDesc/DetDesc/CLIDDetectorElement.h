@@ -1,3 +1,4 @@
+// $Id: CLIDDetectorElement.h,v 1.2 2003-04-25 08:52:22 sponce Exp $
 #ifndef     DETDESC_CLIDDETECTORELEMENT_H
 #define     DETDESC_CLIDDETECTORELEMENT_H 1 
 

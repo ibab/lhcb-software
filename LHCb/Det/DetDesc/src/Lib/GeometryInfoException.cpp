@@ -1,3 +1,4 @@
+// $Id: GeometryInfoException.cpp,v 1.4 2003-04-25 08:52:24 sponce Exp $
 /// GaudiKernel
 #include "GaudiKernel/MsgStream.h"
 /// local 

@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Tools/XmlTools/src/component/XmlCnvSvc.cpp,v 1.2 2003-04-24 09:12:11 sponce Exp $
+// $Id: XmlCnvSvc.cpp,v 1.3 2003-04-25 08:53:57 sponce Exp $
 
 // Include Files
 #include <xercesc/util/PlatformUtils.hpp>
@@ -71,7 +71,7 @@ StatusCode XmlCnvSvc::initialize() {
     log << MSG::FATAL << "Error during initialization! :\n"
         << message << endreq;
     status = StatusCode::FAILURE;
-    delete [] message;
+    xercesc::XMLString::release(&message);
   } 
   
   // creation of a parser service

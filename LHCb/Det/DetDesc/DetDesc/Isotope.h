@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/DetDesc/Isotope.h,v 1.7 2001-03-07 13:06:11 ibelyaev Exp $
+// $Id: Isotope.h,v 1.8 2003-04-25 08:52:23 sponce Exp $
 #ifndef DETDESC_ISOTOPE_H
 #define DETDESC_ISOTOPE_H
 

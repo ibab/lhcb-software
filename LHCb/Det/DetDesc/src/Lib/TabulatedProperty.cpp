@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/Lib/TabulatedProperty.cpp,v 1.5 2002-01-21 14:46:47 sponce Exp $
+// $Id: TabulatedProperty.cpp,v 1.6 2003-04-25 08:52:24 sponce Exp $
 
 // DetDesc 
 #include "DetDesc/TabulatedProperty.h"

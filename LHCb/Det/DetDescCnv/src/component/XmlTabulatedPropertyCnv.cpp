@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDescCnv/src/component/XmlTabulatedPropertyCnv.cpp,v 1.2 2003-04-24 09:15:35 sponce Exp $
+// $Id: XmlTabulatedPropertyCnv.cpp,v 1.3 2003-04-25 08:53:09 sponce Exp $
 
 // Include files
 #include "GaudiKernel/CnvFactory.h"
@@ -60,15 +60,15 @@ XmlTabulatedPropertyCnv::XmlTabulatedPropertyCnv (ISvcLocator* svcs) :
 // Destructor
 // ------------------------------------------------------------------------
 XmlTabulatedPropertyCnv::~XmlTabulatedPropertyCnv () {
-  delete nameString;
-  delete typeString;
-  delete xaxisString;
-  delete yaxisString;
-  delete xunitString;
-  delete yunitString;
-  delete entryString;
-  delete xString;
-  delete yString;
+  xercesc::XMLString::release(&(XMLCh*)nameString);
+  xercesc::XMLString::release(&(XMLCh*)typeString);
+  xercesc::XMLString::release(&(XMLCh*)xaxisString);
+  xercesc::XMLString::release(&(XMLCh*)yaxisString);
+  xercesc::XMLString::release(&(XMLCh*)xunitString);
+  xercesc::XMLString::release(&(XMLCh*)yunitString);
+  xercesc::XMLString::release(&(XMLCh*)entryString);
+  xercesc::XMLString::release(&(XMLCh*)xString);
+  xercesc::XMLString::release(&(XMLCh*)yString);
 }
 
 
@@ -143,8 +143,10 @@ XmlTabulatedPropertyCnv::i_fillObj (xercesc::DOMElement* childElement,
     dataObj->table().push_back(TabulatedProperty::Entry(vx, vy));
   } else {
     // Something goes wrong, does it?
+    char* tagNameString = xercesc::XMLString::transcode(tagName);
     log << MSG::WARNING << "This tag makes no sense to tabulated property : "
-        << xercesc::XMLString::transcode(tagName) << endreq;
+        << tagNameString << endreq;
+    xercesc::XMLString::release(&tagNameString);
   }
   // returns
   return StatusCode::SUCCESS;
@@ -184,6 +186,7 @@ XmlTabulatedPropertyCnv::i_fillObj (xercesc::DOMText* childText,
     x.erase();
     y.erase();
   }
+  xercesc::XMLString::release(&textValue);
   if (!x.empty() || !y.empty()) {
     throw XmlCnvException
       ("XmlTabulatedPropertyCnv: Currupted Data #x does not match #y! ");

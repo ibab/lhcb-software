@@ -1,7 +1,11 @@
+// $Id: SolidIntersection.h,v 1.7 2003-04-25 08:52:23 sponce Exp $
 /// ==========================================================================
 /// CVS tag $Name: not supported by cvs2svn $ 
 /// ==========================================================================
-/// $Log: not supported by cvs2svn $ 
+/// $Log: not supported by cvs2svn $
+/// Revision 1.6  2001/08/09 16:47:59  ibelyaev
+/// update in interfaces and redesign of solids
+/// 
 /// ==========================================================================
 #ifndef      DETDESC_SOLISINTERSECTION_H
 #define      DETDESC_SOLIDINTERSECTION_H 1 

@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/Lib/SolidException.cpp,v 1.5 2003-01-17 14:03:38 sponce Exp $
+// $Id: SolidException.cpp,v 1.6 2003-04-25 08:52:24 sponce Exp $
 
 // GaudiKernel
 #include "DetDesc/ISolid.h"

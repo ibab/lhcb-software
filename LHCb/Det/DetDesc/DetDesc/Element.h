@@ -1,4 +1,5 @@
-/// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/DetDesc/Element.h,v 1.8 2001-03-13 11:58:06 mato Exp $
+// $Id: Element.h,v 1.9 2003-04-25 08:52:23 sponce Exp $
+/// $Id: Element.h,v 1.9 2003-04-25 08:52:23 sponce Exp $
 #ifndef DETDESC_ELEMENT_H
 #define DETDESC_ELEMENT_H 1 
 /// STL

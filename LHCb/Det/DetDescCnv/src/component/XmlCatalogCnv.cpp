@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDescCnv/src/component/XmlCatalogCnv.cpp,v 1.2 2003-04-24 09:15:33 sponce Exp $
+// $Id: XmlCatalogCnv.cpp,v 1.3 2003-04-25 08:53:08 sponce Exp $
 
 // include files
 #include <stdlib.h>
@@ -84,29 +84,29 @@ XmlCatalogCnv::XmlCatalogCnv (ISvcLocator* svc) :
 // Constructor
 // ------------------------------------------------------------------------
 XmlCatalogCnv::~XmlCatalogCnv () {
-  delete isotopeString;
-  delete materialString;
-  delete catalogString;
-  delete tabpropertyString;
-  delete surfaceString;
-  delete logvolString;
-  delete detelemString;
-  delete elementString;
-  delete conditionString;
+  xercesc::XMLString::release(&(XMLCh*)isotopeString);
+  xercesc::XMLString::release(&(XMLCh*)materialString);
+  xercesc::XMLString::release(&(XMLCh*)catalogString);
+  xercesc::XMLString::release(&(XMLCh*)tabpropertyString);
+  xercesc::XMLString::release(&(XMLCh*)surfaceString);
+  xercesc::XMLString::release(&(XMLCh*)logvolString);
+  xercesc::XMLString::release(&(XMLCh*)detelemString);
+  xercesc::XMLString::release(&(XMLCh*)elementString);
+  xercesc::XMLString::release(&(XMLCh*)conditionString);
 
-  delete isotoperefString;
-  delete materialrefString;
-  delete catalogrefString;
-  delete tabpropertyrefString;
-  delete surfacerefString;
-  delete logvolrefString;
-  delete detelemrefString;
-  delete elementrefString;
-  delete conditionrefString;
+  xercesc::XMLString::release(&(XMLCh*)isotoperefString);
+  xercesc::XMLString::release(&(XMLCh*)materialrefString);
+  xercesc::XMLString::release(&(XMLCh*)catalogrefString);
+  xercesc::XMLString::release(&(XMLCh*)tabpropertyrefString);
+  xercesc::XMLString::release(&(XMLCh*)surfacerefString);
+  xercesc::XMLString::release(&(XMLCh*)logvolrefString);
+  xercesc::XMLString::release(&(XMLCh*)detelemrefString);
+  xercesc::XMLString::release(&(XMLCh*)elementrefString);
+  xercesc::XMLString::release(&(XMLCh*)conditionrefString);
 
-  delete refString;
-  delete hrefString;
-  delete nameString;
+  xercesc::XMLString::release(&(XMLCh*)refString);
+  xercesc::XMLString::release(&(XMLCh*)hrefString);
+  xercesc::XMLString::release(&(XMLCh*)nameString);
 }
 
 
@@ -194,17 +194,19 @@ StatusCode XmlCatalogCnv::i_fillObj (xercesc::DOMElement* childElement,
   const XMLCh* tagName = childElement->getNodeName();
   // first get the CLID and checks a converter exists for this type
   CLID clsID = getCLID (childElement);
+  char* tagNameString = xercesc::XMLString::transcode(tagName);
   if (CLID (-1) == clsID) {
     // bad CLID
     MsgStream log (msgSvc(), "XmlCatalogCnv");
-    log << MSG::ERROR << xercesc::XMLString::transcode(tagName)
+    log << MSG::ERROR << tagNameString
         << " : unable to find a CLID for this tag."
         << " This tag may be forbiden as child of catalog."
         << endreq;
     return StatusCode::FAILURE;
   }
-  log << MSG::VERBOSE << "tag is " << xercesc::XMLString::transcode(tagName)
+  log << MSG::VERBOSE << "tag is " << tagNameString
       << ", clsID is " << clsID << endreq;
+  xercesc::XMLString::release(&tagNameString);
   checkConverterExistence(clsID);
   StatusCode sc;
   std::string entryName;
@@ -230,7 +232,7 @@ StatusCode XmlCatalogCnv::i_fillObj (xercesc::DOMElement* childElement,
     // Then builds an XmlAdress
     xmlAddr = createXmlAddress (address->par()[0], entryName, clsID);
   }
-  delete tagNameEnd;
+  delete[] tagNameEnd;
   if (sc.isSuccess()) {
     // Now we have a new entry name and a corresponding xml address,
     // just add the new entry to the current registry entry

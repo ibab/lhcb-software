@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Tools/XmlTools/src/component/XmlParserSvc.cpp,v 1.2 2003-04-24 09:12:12 sponce Exp $
+// $Id: XmlParserSvc.cpp,v 1.3 2003-04-25 08:53:57 sponce Exp $
 
 // Include Files
 #include <limits.h>
@@ -38,7 +38,7 @@ XmlParserSvc::XmlParserSvc (const std::string& name, ISvcLocator* svc) :
     log << "Error during Xerces-c Initialization.\n"
         << "  Exception message:"
         << message << endreq;
-    delete [] message;
+    xercesc::XMLString::release(&message);
   }
 
   // creates a new XercesDOMParser
@@ -166,8 +166,8 @@ void XmlParserSvc::warning (const xercesc::SAXParseException& exception){
                       << ", line "        << aLine
                       << ", column "      << aColumn
                       << ": "             << aMsg << endreq;
-  delete [] aSysId;
-  delete [] aMsg;
+  xercesc::XMLString::release(&aSysId);
+  xercesc::XMLString::release(&aMsg);
 
 }
 
@@ -187,8 +187,8 @@ void XmlParserSvc::error (const xercesc::SAXParseException& exception){
                       << ", line "        << aLine
                       << ", column "      << aColumn
                       << ": "             << aMsg << endreq;
-  delete [] aSysId;
-  delete [] aMsg;
+  xercesc::XMLString::release(&aSysId);
+  xercesc::XMLString::release(&aMsg);
 
 }
 
@@ -209,8 +209,8 @@ void XmlParserSvc::fatalError (const xercesc::SAXParseException& exception){
                       << ", column "      << aColumn
                       << ": "             << aMsg << endreq;
 
-  delete [] aSysId;
-  delete [] aMsg;
+  xercesc::XMLString::release(&aSysId);
+  xercesc::XMLString::release(&aMsg);
 
 }
 

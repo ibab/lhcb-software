@@ -1,3 +1,4 @@
+// $Id: Material.icpp,v 1.4 2003-04-25 08:52:23 sponce Exp $
 #ifndef     DETDESC_MATERIAL_ICPP 
 #define     DETDESC_MATERIAL_ICPP  1 
 /// GaudiKernel

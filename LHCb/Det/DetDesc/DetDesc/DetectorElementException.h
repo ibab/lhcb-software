@@ -1,3 +1,4 @@
+// $Id: DetectorElementException.h,v 1.5 2003-04-25 08:52:23 sponce Exp $
 #ifndef       DETDESC_DetectorElementEXCEPTION_H
 #define       DETDESC_DetectorElementEXCEPTION_H 1 
 /// GaudiKernel 

@@ -1,7 +1,11 @@
+// $Id: GeoInfo.h,v 1.2 2003-04-25 08:52:24 sponce Exp $
 /// ===========================================================================
 /// CVS tag $Name: not supported by cvs2svn $
 /// ===========================================================================
-/// $Log: not supported by cvs2svn $ 
+/// $Log: not supported by cvs2svn $
+/// Revision 1.1  2001/08/10 14:59:02  ibelyaev
+/// modifications in IGeometryInfo and related classes
+/// 
 /// ===========================================================================
 #ifndef DETDESC_GEOINFO_H 
 #define DETDESC_GEOINFO_H 1

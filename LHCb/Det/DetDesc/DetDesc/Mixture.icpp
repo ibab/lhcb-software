@@ -1,3 +1,4 @@
+// $Id: Mixture.icpp,v 1.2 2003-04-25 08:52:23 sponce Exp $
 #ifndef    DETDESC_MIXTURE_ICPP 
 #define    DETDESC_MIXTURE_ICPP 1 
 /// GaudiKernel

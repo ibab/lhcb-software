@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDescCnv/DetDescCnv/XmlGenericCnv.h,v 1.2 2003-04-24 09:15:33 sponce Exp $
+// $Id: XmlGenericCnv.h,v 1.3 2003-04-25 08:53:08 sponce Exp $
 
 #ifndef DETDESCCNV_XMLGENERICCNV_H
 #define DETDESCCNV_XMLGENERICCNV_H
@@ -109,7 +109,7 @@ protected:
   /**
    * Default destructor
    */
-  ~XmlGenericCnv() { }
+  ~XmlGenericCnv();
   
   /** This creates the transient representation of an object from the
    *  DOMElement representing it, then fills it and process it.

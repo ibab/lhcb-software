@@ -1,4 +1,5 @@
-/// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/DetDesc/Material.h,v 1.4 2001-03-07 13:06:11 ibelyaev Exp $
+// $Id: Material.h,v 1.5 2003-04-25 08:52:23 sponce Exp $
+/// $Id: Material.h,v 1.5 2003-04-25 08:52:23 sponce Exp $
 #ifndef DETDESC_MATERIAL_H
 #define DETDESC_MATERIAL_H
 /// STL

@@ -1,4 +1,4 @@
-// $Id: XmlBaseConditionCnv.cpp,v 1.2 2003-04-24 09:15:33 sponce Exp $
+// $Id: XmlBaseConditionCnv.cpp,v 1.3 2003-04-25 08:53:08 sponce Exp $
 
 // include files
 #include "GaudiKernel/CnvFactory.h"
@@ -55,12 +55,12 @@ XmlBaseConditionCnv::XmlBaseConditionCnv (ISvcLocator* svc,
 // Destructor
 // ------------------------------------------------------------------------
 XmlBaseConditionCnv::~XmlBaseConditionCnv () {
-  delete specificString;
-  delete paramString;
-  delete paramVectorString;
-  delete typeString;
-  delete nameString;
-  delete commentString;
+  xercesc::XMLString::release(&(XMLCh*)specificString);
+  xercesc::XMLString::release(&(XMLCh*)paramString);
+  xercesc::XMLString::release(&(XMLCh*)paramVectorString);
+  xercesc::XMLString::release(&(XMLCh*)typeString);
+  xercesc::XMLString::release(&(XMLCh*)nameString);
+  xercesc::XMLString::release(&(XMLCh*)commentString);
 }
 
 
@@ -146,9 +146,10 @@ StatusCode XmlBaseConditionCnv::i_fillObj (xercesc::DOMElement* childElement,
         if (sc.isFailure()) {
           const XMLCh* childNodeName =
             ((xercesc::DOMElement*) childNode)->getNodeName();
+          char* nameString = xercesc::XMLString::transcode(childNodeName);
           log << MSG::WARNING << "parsing of specific child "
-              << xercesc::XMLString::transcode(childNodeName)
-              << " raised errors." << endreq;
+              << nameString << " raised errors." << endreq;
+          xercesc::XMLString::release(&nameString);
         }
       }
     }
@@ -260,8 +261,10 @@ StatusCode XmlBaseConditionCnv::i_fillObj (xercesc::DOMElement* childElement,
     
   } else {
     // Something goes wrong, does it?
+    char* tagNameString = xercesc::XMLString::transcode(tagName);
     log << MSG::WARNING << "This tag makes no sense to element : "
-        << xercesc::XMLString::transcode(tagName) << endreq;
+        << tagNameString << endreq;
+    xercesc::XMLString::release(&tagNameString);
   }
   // returns
   return StatusCode::SUCCESS;

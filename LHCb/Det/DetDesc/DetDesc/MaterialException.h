@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/DetDesc/MaterialException.h,v 1.4 2003-01-17 14:03:38 sponce Exp $
+// $Id: MaterialException.h,v 1.5 2003-04-25 08:52:23 sponce Exp $
 #ifndef    DETDESC_MATERIALEXCEPTION_H
 #define    DETDESC_MATERIALEXCEPTION_H
 /// GaudiKernel

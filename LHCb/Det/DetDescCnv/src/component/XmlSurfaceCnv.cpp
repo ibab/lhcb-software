@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDescCnv/src/component/XmlSurfaceCnv.cpp,v 1.2 2003-04-24 09:15:34 sponce Exp $
+// $Id: XmlSurfaceCnv.cpp,v 1.3 2003-04-25 08:53:09 sponce Exp $
 
 // Include files
 #include <cstdlib>
@@ -53,15 +53,15 @@ XmlSurfaceCnv::XmlSurfaceCnv (ISvcLocator* svc) :
 // Destructor
 // ------------------------------------------------------------------------
 XmlSurfaceCnv::~XmlSurfaceCnv () {
-  delete nameString;
-  delete modelString;
-  delete finishString;
-  delete typeString;
-  delete valueString;
-  delete volfirstString;
-  delete volsecondString;
-  delete tabpropsString;
-  delete addressString;
+  xercesc::XMLString::release(&(XMLCh*)nameString);
+  xercesc::XMLString::release(&(XMLCh*)modelString);
+  xercesc::XMLString::release(&(XMLCh*)finishString);
+  xercesc::XMLString::release(&(XMLCh*)typeString);
+  xercesc::XMLString::release(&(XMLCh*)valueString);
+  xercesc::XMLString::release(&(XMLCh*)volfirstString);
+  xercesc::XMLString::release(&(XMLCh*)volsecondString);
+  xercesc::XMLString::release(&(XMLCh*)tabpropsString);
+  xercesc::XMLString::release(&(XMLCh*)addressString);
 }
 
 
@@ -164,8 +164,10 @@ StatusCode XmlSurfaceCnv::i_fillObj (xercesc::DOMElement* childElement,
     dataObj->tabulatedProperties().push_back(ref); 
   } else {
     // Something goes wrong, does it?
+    char* tagNameString = xercesc::XMLString::transcode(tagName);
     log << MSG::WARNING << "This tag makes no sense to surface : "
-        << xercesc::XMLString::transcode(tagName) << endreq;
+        << tagNameString << endreq;
+    xercesc::XMLString::release(&tagNameString);
   }
   return StatusCode::SUCCESS;
 } // end i_fillObj

@@ -1,8 +1,12 @@
-$Id: release.notes,v 1.18 2003-04-24 09:19:34 sponce Exp $
+$Id: release.notes,v 1.19 2003-04-25 08:54:52 sponce Exp $
 Package: DetDescExample
 Package Manager: I.Belyaev
 Purpose: Demonstrate how to access detector elements, their geometry 
          parameters and materials from detector description XML database.
+
+! 2003-04-25 - Sebastien Ponce
+ - fixes after valgrind tests
+ - application of code conventions
 
 ! 2003-04-24 - Sebastien PONCE
  - Port to xerces 2.2.0

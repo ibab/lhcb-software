@@ -1,4 +1,4 @@
-// $Id: XmlLVolumeCnv.cpp,v 1.2 2003-04-24 09:15:34 sponce Exp $ 
+// $Id: XmlLVolumeCnv.cpp,v 1.3 2003-04-25 08:53:08 sponce Exp $ 
 // Include files
 #include "GaudiKernel/CnvFactory.h"
 #include "GaudiKernel/GenericAddress.h"
@@ -124,68 +124,68 @@ XmlLVolumeCnv::XmlLVolumeCnv (ISvcLocator* svc) :
 // Destructor
 // ------------------------------------------------------------------------
 XmlLVolumeCnv::~XmlLVolumeCnv () {
-  delete unionString;
-  delete subtractionString;
-  delete intersectionString;
-  delete boxString;
-  delete trdString;
-  delete trapString;
-  delete consString;
-  delete polyconeString;
-  delete tubsString;
-  delete sphereString;
-  delete transformationString;
-  delete posXYZString;
-  delete posRPhiZString;
-  delete posRThPhiString;
-  delete rotXYZString;
-  delete rotAxisString;
-  delete paramphysvolString;
-  delete paramphysvol2DString;
-  delete paramphysvol3DString;
-  delete materialString;
-  delete magfieldString;
-  delete sensdetString;
-  delete nameString;
-  delete physvolString;
-  delete surfString;
-  delete logvolString;
-  delete numberString;
-  delete addressString;
-  delete outerRadiusMZString;
-  delete outerRadiusPZString;
-  delete innerRadiusMZString;
-  delete innerRadiusPZString;
-  delete outerRadiusString;
-  delete innerRadiusString;
-  delete sizeXString;
-  delete sizeX1String;
-  delete sizeX2String;
-  delete sizeX3String;
-  delete sizeX4String;
-  delete sizeYString;
-  delete sizeY1String;
-  delete sizeY2String;
-  delete sizeZString;
-  delete thetaString;
-  delete phiString;
-  delete alp1String;
-  delete alp2String;
-  delete xString;
-  delete yString;
-  delete zString;
-  delete rString;
-  delete axThetaString;
-  delete axPhiString;
-  delete angleString;
-  delete zplaneString;
-  delete startThetaAngleString;
-  delete deltaThetaAngleString;
-  delete startPhiAngleString;
-  delete deltaPhiAngleString;
-  delete rotXString;
-  delete rotYString;
-  delete rotZString;
+  xercesc::XMLString::release(&(XMLCh*)unionString);
+  xercesc::XMLString::release(&(XMLCh*)subtractionString);
+  xercesc::XMLString::release(&(XMLCh*)intersectionString);
+  xercesc::XMLString::release(&(XMLCh*)boxString);
+  xercesc::XMLString::release(&(XMLCh*)trdString);
+  xercesc::XMLString::release(&(XMLCh*)trapString);
+  xercesc::XMLString::release(&(XMLCh*)consString);
+  xercesc::XMLString::release(&(XMLCh*)polyconeString);
+  xercesc::XMLString::release(&(XMLCh*)tubsString);
+  xercesc::XMLString::release(&(XMLCh*)sphereString);
+  xercesc::XMLString::release(&(XMLCh*)transformationString);
+  xercesc::XMLString::release(&(XMLCh*)posXYZString);
+  xercesc::XMLString::release(&(XMLCh*)posRPhiZString);
+  xercesc::XMLString::release(&(XMLCh*)posRThPhiString);
+  xercesc::XMLString::release(&(XMLCh*)rotXYZString);
+  xercesc::XMLString::release(&(XMLCh*)rotAxisString);
+  xercesc::XMLString::release(&(XMLCh*)paramphysvolString);
+  xercesc::XMLString::release(&(XMLCh*)paramphysvol2DString);
+  xercesc::XMLString::release(&(XMLCh*)paramphysvol3DString);
+  xercesc::XMLString::release(&(XMLCh*)materialString);
+  xercesc::XMLString::release(&(XMLCh*)magfieldString);
+  xercesc::XMLString::release(&(XMLCh*)sensdetString);
+  xercesc::XMLString::release(&(XMLCh*)nameString);
+  xercesc::XMLString::release(&(XMLCh*)physvolString);
+  xercesc::XMLString::release(&(XMLCh*)surfString);
+  xercesc::XMLString::release(&(XMLCh*)logvolString);
+  xercesc::XMLString::release(&(XMLCh*)numberString);
+  xercesc::XMLString::release(&(XMLCh*)addressString);
+  xercesc::XMLString::release(&(XMLCh*)outerRadiusMZString);
+  xercesc::XMLString::release(&(XMLCh*)outerRadiusPZString);
+  xercesc::XMLString::release(&(XMLCh*)innerRadiusMZString);
+  xercesc::XMLString::release(&(XMLCh*)innerRadiusPZString);
+  xercesc::XMLString::release(&(XMLCh*)outerRadiusString);
+  xercesc::XMLString::release(&(XMLCh*)innerRadiusString);
+  xercesc::XMLString::release(&(XMLCh*)sizeXString);
+  xercesc::XMLString::release(&(XMLCh*)sizeX1String);
+  xercesc::XMLString::release(&(XMLCh*)sizeX2String);
+  xercesc::XMLString::release(&(XMLCh*)sizeX3String);
+  xercesc::XMLString::release(&(XMLCh*)sizeX4String);
+  xercesc::XMLString::release(&(XMLCh*)sizeYString);
+  xercesc::XMLString::release(&(XMLCh*)sizeY1String);
+  xercesc::XMLString::release(&(XMLCh*)sizeY2String);
+  xercesc::XMLString::release(&(XMLCh*)sizeZString);
+  xercesc::XMLString::release(&(XMLCh*)thetaString);
+  xercesc::XMLString::release(&(XMLCh*)phiString);
+  xercesc::XMLString::release(&(XMLCh*)alp1String);
+  xercesc::XMLString::release(&(XMLCh*)alp2String);
+  xercesc::XMLString::release(&(XMLCh*)xString);
+  xercesc::XMLString::release(&(XMLCh*)yString);
+  xercesc::XMLString::release(&(XMLCh*)zString);
+  xercesc::XMLString::release(&(XMLCh*)rString);
+  xercesc::XMLString::release(&(XMLCh*)axThetaString);
+  xercesc::XMLString::release(&(XMLCh*)axPhiString);
+  xercesc::XMLString::release(&(XMLCh*)angleString);
+  xercesc::XMLString::release(&(XMLCh*)zplaneString);
+  xercesc::XMLString::release(&(XMLCh*)startThetaAngleString);
+  xercesc::XMLString::release(&(XMLCh*)deltaThetaAngleString);
+  xercesc::XMLString::release(&(XMLCh*)startPhiAngleString);
+  xercesc::XMLString::release(&(XMLCh*)deltaPhiAngleString);
+  xercesc::XMLString::release(&(XMLCh*)rotXString);
+  xercesc::XMLString::release(&(XMLCh*)rotYString);
+  xercesc::XMLString::release(&(XMLCh*)rotZString);
 }
 
 
@@ -411,12 +411,14 @@ StatusCode XmlLVolumeCnv::internalCreateObj (xercesc::DOMElement* element,
         // modifies the solid in consequence
         // TO BE IMPLEMENTED --- TODO
         MsgStream log(msgSvc(), "XmlLVolumeCnv" );
+        char* tagNameString = xercesc::XMLString::transcode(tagName);
         log << MSG::WARNING
             << "In logvol " << volName << ", a transformation ("
             << childTagName << ") is applied to the first solid ("
-            << xercesc::XMLString::transcode(tagName)
+            << tagNameString
             << "). This functionnality is not implemented yet. The "
             << " transformation will be ignored." << endreq;
+        xercesc::XMLString::release(&tagNameString);
         // frees the memory
         delete (transformation);
         transformation = 0;
@@ -522,10 +524,12 @@ StatusCode XmlLVolumeCnv::internalCreateObj (xercesc::DOMElement* element,
     } else {
       // Something goes wrong, does it?
       MsgStream log(msgSvc(), "XmlLVolumeCnv" );
+      char* tagNameString = xercesc::XMLString::transcode(tagName);
       log << MSG::WARNING
           << "This tag makes no sense to LVolume " << volName
-          << " : " << xercesc::XMLString::transcode(tagName)
+          << " : " << tagNameString
           << ". It will be ignored" << endreq;
+      xercesc::XMLString::release(&tagNameString);
       return StatusCode::FAILURE;
     }
 
@@ -631,10 +635,12 @@ XmlLVolumeCnv::dealWithParamphysvol (xercesc::DOMElement* element) {
   } else {
     // unknown tag
     MsgStream log(msgSvc(), "XmlLVolumeCnv" );
+    char* tagNameString = xercesc::XMLString::transcode(tagName);
     log << MSG::WARNING << "In " << locateElement (element)
-        << " : the tag " << xercesc::XMLString::transcode(tagName)
+        << " : the tag " << tagNameString
         << " does no denote a parametrized physical volume. "
         << "It will be ignored" << endreq;
+    xercesc::XMLString::release(&tagNameString);
   }
   return 0;
 } // end dealWithParamphysvol
@@ -681,6 +687,7 @@ XmlLVolumeCnv::dealWithParamphysvol (xercesc::DOMElement* element,
       delete [] resstr;
 #endif
       numberAttributes[i] = dom2Std (element->getAttribute (attrName));
+      xercesc::XMLString::release(&(XMLCh*)attrName);
     }
   }
 
@@ -738,9 +745,11 @@ XmlLVolumeCnv::dealWithParamphysvol (xercesc::DOMElement* element,
     } else {
       // unknown tag -> display an error, return 0
       MsgStream log(msgSvc(), "XmlLVolumeCnv" );
+      char* tagNameString = xercesc::XMLString::transcode(tagName);
       log << MSG::WARNING << "In " << locateElement (element)
-          << " : the tag " << xercesc::XMLString::transcode(tagName)
+          << " : the tag " << tagNameString
           << " is not a valid tag as first child of <paramphysvol";
+      xercesc::XMLString::release(&tagNameString);
       if (0 != nD) {
         log << nD << "D";
       }
@@ -944,10 +953,11 @@ ISolid* XmlLVolumeCnv::dealWithSolid (xercesc::DOMElement* element) {
   } else {
     // unknown tag
     MsgStream log(msgSvc(), "XmlLVolumeCnv" );
+    char* tagNameString = xercesc::XMLString::transcode(tagName);
     log << MSG::WARNING << "In " << locateElement (element)
         << " : this should be a Solid but is a : "
-        << xercesc::XMLString::transcode(tagName)
-        << ". It will be ignored" << endreq;
+        << tagName << ". It will be ignored" << endreq;
+    xercesc::XMLString::release(&tagNameString);
   }
   return 0;
 } // end dealWithSolid
@@ -965,10 +975,11 @@ SolidBoolean* XmlLVolumeCnv::dealWithBoolean (xercesc::DOMElement* element) {
   if (!isBooleanSolid (tagName)) {
     // unknow tag
     MsgStream log(msgSvc(), "XmlLVolumeCnv" );
+    char* tagNameString = xercesc::XMLString::transcode(tagName);
     log << MSG::WARNING << "In " << locateElement (element)
         << " : this sould be a boolean solid but is a : "
-        << xercesc::XMLString::transcode(tagName)
-        << ". It will be ignored" << endreq;
+        << tagNameString << ". It will be ignored" << endreq;
+    xercesc::XMLString::release(&tagNameString);
     return 0;
   }
   
@@ -1138,10 +1149,11 @@ XmlLVolumeCnv::dealWithBooleanChildren (xercesc::DOMElement* element) {
       } else {
         // we should have a solid here
         MsgStream log(msgSvc(), "XmlLVolumeCnv" );
+        char* tagNameString = xercesc::XMLString::transcode(tagName);
         log << MSG::WARNING << "In " << locateElement (childElement)
-            << " : this " << xercesc::XMLString::transcode(tagName)
-            << " makes no sense to a boolean solid. "
+            << " : this " << tagName << " makes no sense to a boolean solid. "
             << "A solid is needed here. It will be ignored" << endreq;
+        xercesc::XMLString::release(&tagNameString);
         i += 1;
       }
     } else {
@@ -1178,10 +1190,11 @@ ISolid* XmlLVolumeCnv::dealWithSimpleSolid (xercesc::DOMElement* element) {
   } else {
     // unknow tag
     MsgStream log(msgSvc(), "XmlLVolumeCnv" );
+    char* tagNameString = xercesc::XMLString::transcode(tagName);
     log << MSG::WARNING << "In " << locateElement (element)
         << " : this should be a SimpleSolid but is a : "
-        << xercesc::XMLString::transcode(tagName)
-        << ". It will be ignored" << endreq;
+        << tagNameString << ". It will be ignored" << endreq;
+    xercesc::XMLString::release(&tagNameString);
   }
   return 0;
 } // end dealWithSimpleSolid
@@ -1703,10 +1716,11 @@ XmlLVolumeCnv::dealWithTransformation(xercesc::DOMElement* element,
     return dealWithTransformation (childElement);
   } else {
     MsgStream log(msgSvc(), "XmlLVolumeCnv" );
+    char* tagNameString = xercesc::XMLString::transcode(tagName);
     log << MSG::WARNING << "In " << locateElement (childElement)
         << " : this should be a rotation or a translation but is a : "
-        << xercesc::XMLString::transcode(tagName)
-        << ". It will be ignored." << endreq;
+        << tagNameString << ". It will be ignored." << endreq;
+    xercesc::XMLString::release(&tagNameString);
     return new HepTransform3D();
   }
 

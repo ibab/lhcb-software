@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDescCnv/src/Lib/XmlGenericCnv.cpp,v 1.2 2003-04-24 09:15:33 sponce Exp $
+// $Id: XmlGenericCnv.cpp,v 1.3 2003-04-25 08:53:08 sponce Exp $
 
 // Include files
 #include "DetDescCnv/XmlGenericCnv.h"
@@ -35,6 +35,24 @@ XmlGenericCnv::XmlGenericCnv( ISvcLocator* svc, const CLID& clid) :
   detelemString = xercesc::XMLString::transcode("detelem");
   conditionString = xercesc::XMLString::transcode("condition");
   classIDString = xercesc::XMLString::transcode("classID");
+}
+
+
+// -----------------------------------------------------------------------
+// Destructor
+// ------------------------------------------------------------------------
+XmlGenericCnv::~XmlGenericCnv() {
+  xercesc::XMLString::release(&(XMLCh*)DDDBString);
+  xercesc::XMLString::release(&(XMLCh*)materialsString);
+  xercesc::XMLString::release(&(XMLCh*)versionString);
+  xercesc::XMLString::release(&(XMLCh*)DTD_VersionString);
+  xercesc::XMLString::release(&(XMLCh*)macroString);
+  xercesc::XMLString::release(&(XMLCh*)nameString);
+  xercesc::XMLString::release(&(XMLCh*)valueString);
+  xercesc::XMLString::release(&(XMLCh*)parameterString);
+  xercesc::XMLString::release(&(XMLCh*)detelemString);
+  xercesc::XMLString::release(&(XMLCh*)conditionString);
+  xercesc::XMLString::release(&(XMLCh*)classIDString);
 }
 
 
@@ -214,9 +232,9 @@ StatusCode XmlGenericCnv::createObj (IOpaqueAddress* addr,
    }
   
    // finds the corresponding node in the DOM tree
-   xercesc::DOMElement* element =
-     document->getElementById
-     (xercesc::XMLString::transcode(objectName.c_str()));
+   XMLCh* nameString = xercesc::XMLString::transcode(objectName.c_str());
+   xercesc::DOMElement* element = document->getElementById (nameString);
+   xercesc::XMLString::release(&nameString);
    if (0 == element){
      log << MSG::FATAL
          << objectName << " : "
@@ -508,7 +526,7 @@ const std::string XmlGenericCnv::dom2Std (const XMLCh* domString) {
   std::string stdString;
   if (cString) {
     stdString = cString;
-    delete [] (cString);
+    xercesc::XMLString::release(&cString);
   }
   return stdString;
 }
