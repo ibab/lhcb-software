@@ -11,7 +11,7 @@
 #units "$STDOPTS/units.opts"
 
 // Framework
-ApplicationMgr.DLLs += { "BrunelAlgs", "GaudiAlg", "LHCbTools", "LHCbAlgs" };
+ApplicationMgr.DLLs += { "GaudiAlg", "LHCbTools", "LHCbAlgs" };
 
 // POOL Persistency
 #include "$GAUDIPOOLDBROOT/options/GaudiPoolDbRoot.opts"
@@ -30,7 +30,7 @@ EventDataSvc.RootCLID    =    1;
 //--------------------------------------------------------------
 // Brunel Phases to be executed
 //--------------------------------------------------------------
-ApplicationMgr.TopAlg += { "BrunelInitialisation",
+ApplicationMgr.TopAlg += { "ProcessPhase/Init",
                            "ProcessPhase/BrunelReco",
                            "ProcessPhase/Relations" };
 ApplicationMgr.TopAlg += { "ProcessPhase/BrunelMoni" }; 
@@ -38,7 +38,8 @@ ApplicationMgr.TopAlg += { "ProcessPhase/BrunelMoni" };
 //--------------------------------------------------------------
 // Detectors to be processed in each phase
 //--------------------------------------------------------------
-BrunelReco.DetectorList  = {"VELO","OT","IT","Tr","RICH","CALO","MUON" };
+Init.DetectorList        = { "Brunel" };
+BrunelReco.DetectorList  = { "VELO","OT","IT","Tr","RICH","CALO","MUON" };
 Relations.DetectorList   = { "Tr", "Calo", "Links" };
 
 //--------------------------------------------------------------
@@ -56,6 +57,12 @@ ApplicationMgr.DLLs += { "Magnet" };
 ApplicationMgr.ExtSvc += { "MagneticFieldSvc" };
 ApplicationMgr.ExtSvc += { "ParticlePropertySvc" };
 
+//--------------------------------------------------------------
+// Initialisation phase
+//--------------------------------------------------------------
+ApplicationMgr.DLLs += { "DAQEvent" };
+InitBrunelSeq.Members += { "LbAppInit/Brunel" };
+InitBrunelSeq.Members += { "CreateRawEvent" };
 //--------------------------------------------------------------
 // Subdetector algorithms
 //--------------------------------------------------------------

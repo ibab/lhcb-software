@@ -4,7 +4,7 @@ version v24r0
 branches doc cmt job options
 
 #== Set the Brunel version environment variable, read by BrunelInit ==
-pattern BrunelVersion path_append BRUNELVERS <version>
+pattern BrunelVersion path APPVERSION <version>
 apply_pattern BrunelVersion
 
 #-- CMT and GaudiPolicy
@@ -47,9 +47,6 @@ use LHCb	v16r0
 
 # Tools
 use AsctToLinker        v1r2    Rec
-
-# Brunel utilities
-use BrunelAlgs          v3r5	Rec
 
 # Calorimeter
 use CaloMonitor         v2r2  	Calo

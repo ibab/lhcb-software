@@ -3,7 +3,7 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
-</PRE><H1><A NAME=v24r0>2004-06-23 Brunel v24r0</A></H1><PRE>
+</PRE><H1><A NAME=v24r0>2004-06-28 Brunel v24r0</A></H1><PRE>
 Development version
 
 - Modified functionality
@@ -30,6 +30,8 @@ Development version
     (TrFitEvent v4r6, TrFitter v4r0, TrCheck v2r5, TrCleanEx v2r10, VeloTT v1r10)
   . Removed dependency on GaudiAud package
   . Removed dependency on CERNLIB (Seeding v2r9, HepMC v4r121p0)
+  . Remove BrunelAlgs package. BrunelInitialisation algorithm replaced by
+    common LbAppInit and CreateRawEvent (LHCbAlgs v1r0, DAQEvent v4r4) 
 
 - Bug fixes
   . Fix an unprotected pointer in Richdetailed monitoring (RichRecCommon v1r7)
