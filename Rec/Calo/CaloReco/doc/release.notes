@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.39 2004-03-17 16:32:19 ibelyaev Exp $
+! $Id: release.notes,v 1.40 2004-03-18 13:33:56 cattanem Exp $
 ! -----------------------------------------------------------------------------
 ! CVS tag $Name: not supported by cvs2svn $
 ! -----------------------------------------------------------------------------
@@ -7,8 +7,8 @@
 ! Purpose     : Main Package for Calorimeter Reconstruction Software 
 ! -----------------------------------------------------------------------------
 
+!======================== CaloReco v2r1 2004-03-18 =======================
 ! 2004-03-17 - Vanya BELYAEV
-
   - add new (04) Correction s from Olivier Deschamps
   - remove some obsoltee stuff from 'options' directory
   - few minor fixes 

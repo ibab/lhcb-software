@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.6 2004-03-17 16:11:39 ibelyaev Exp $ 
+# $Id: requirements,v 1.7 2004-03-18 13:38:40 cattanem Exp $ 
 # =============================================================================
 # CVS tag $Name: not supported by cvs2svn $ 
 # =============================================================================
@@ -11,13 +11,12 @@ branches           cmt doc src options
 # ================ dependencies ===============================================
 use CaloInterfaces v4r*  Calo 
 use CaloUtils      v4r*  Calo 
-use AIDA           v*     
  
 # ================ environment ================================================
 set CALOPIDSOPTS   $(CALOPIDSROOT)/options
 
 # ================ constituents ===============================================
-library            CaloPIDs    *.cpp
+library            CaloPIDs    *.cpp -import=AIDA
 
 # ================ standard patterns ==========================================
 apply_pattern      component_library library=CaloPIDs
@@ -25,6 +24,9 @@ apply_pattern      component_library library=CaloPIDs
 # =============================================================================
 # The END 
 # =============================================================================
-# $Log: not supported by cvs2svn $ 
+# $Log: not supported by cvs2svn $
+# Revision 1.6  2004/03/17 16:11:39  ibelyaev
+#  add Frederic's Photon(P)ID tool
+# 
 # =============================================================================
 
