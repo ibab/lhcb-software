@@ -1,4 +1,4 @@
-# $Id: README,v 1.14 2002-03-01 16:24:18 andreav Exp $
+# $Id: README,v 1.15 2002-03-01 16:36:28 andreav Exp $
 
 Two examples are distributed in this package: a test of condition data 
 stored in flat XML files, and a test of condition data stored in the CondDB.
@@ -123,9 +123,9 @@ cd Ex/DetCondExample/v2r1/options
 ../$CMTDEB/DetCondExample.exe testXml.opts
 
 # Run the application and compare the output to the standard one
-/bin/rm -f log.testXml.Objy.Linux
-../$CMTDEB/DetCondExample.exe testXml.opts > log.testXml.Objy.Linux
-diff log.testXml.Objy.Linux ../job
+/bin/rm -f log.testXml.Linux
+../$CMTDEB/DetCondExample.exe testXml.opts > log.testXml.Linux
+diff log.testXml.Linux ../job
 
 ================
 (2a) fillCondDB
@@ -278,7 +278,7 @@ cd Ex\DetCondExample\v2r1\options
 run DetCondExample testXml.opts
 
 # Run the application and create an output comparable to the standard one
-run DetCondExample testXml.opts > log.testXml.Orac.Win32
+run DetCondExample testXml.opts > log.testXml.Win32
 
 ================
 (2a) fillCondDB
