@@ -1,7 +1,6 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/component/XmlLVolumeCnv.cpp,v 1.6 2001-04-30 09:09:36 gracia Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/component/XmlLVolumeCnv.cpp,v 1.7 2001-05-14 15:13:42 sponce Exp $
 
 // Include files
-
 #include "GaudiKernel/CnvFactory.h"
 #include "GaudiKernel/GenericAddress.h"
 #include "GaudiKernel/GenericLink.h"
@@ -30,122 +29,29 @@
 #include <vector>
 #include <map>
 
-//local
 #include "XmlLVolumeCnv.h"
 
 
+// -----------------------------------------------------------------------
 // Instantiation of a static factory class used by clients to create
 // instances of this service
+// -----------------------------------------------------------------------
 static CnvFactory<XmlLVolumeCnv> s_factoryLVolume;
 const ICnvFactory& XmlLVolumeCnvFactory = s_factoryLVolume;
 
 
-// Create the transient representation of an object.
-StatusCode XmlLVolumeCnv::createObj( IOpaqueAddress* pAddress,
-                                     DataObject*& refpObject)              {
+XmlLVolumeCnv::SolidItem sFound;
 
-  MsgStream log(msgSvc(), "XmlLVolumeCnv" );
-  
-  StatusCode sc = StatusCode::SUCCESS;
 
-  GenericAddress* addr;
-  
-  // Test and store hint
-  if( 0 != pAddress )                                                      {
-    try                                                                    {
-      addr = dynamic_cast< XmlAddress* >( pAddress );
-    }
-    catch( ... )                                                           {
-      return StatusCode::FAILURE;
-    }
-  }
-  
-  m_tagRead             = false;
-  m_transContext        = "";
-  m_insideBoolean       = false;
-  m_insideParameterized = false;
-  m_materialName        = "";
-  m_magFieldName        = "";
-  m_sensDetName         = "";
-  m_volName             = "";
-  m_solid               = 0;
-  m_bsName              = "";
-
-  m_pvstore.clear();
-  m_ppvstore.clear();
-  m_bstore.clear();
-
-  m_objRcpt = addr;
-  
-  sc = initParser();
-  if( sc.isFailure() )                                                     {
-    log << MSG::FATAL         << "XML Parser init failed, can't convert "
-        << addr->objectName() << "!" << endreq;
-    finiParser();
-    return sc;
-  }
-  
-  sc = parse( addr->dbName().c_str() );
-  
-  if( sc.isFailure() )                                                     {
-    finiParser();
-    return StatusCode::FAILURE;
-  }
-  
-  sc = finiParser();
-  if( sc.isFailure() )                                                     {
-    log << MSG::FATAL         << "XML Parser init failed, can't convert "
-        << addr->objectName() << "!" << endreq;
-    return sc;
-  }
-
-  refpObject = m_dataObj;
-  
-  return sc;
-}
-
-// Update the transient object from the other representation.
-StatusCode XmlLVolumeCnv::updateObj(
-                                     IOpaqueAddress* //pAddress
-                                    ,DataObject*     //pObject
-                                    )                  
-{
-  return StatusCode::SUCCESS;
-}
-
-// Convert the transient object to the requested representation
-StatusCode XmlLVolumeCnv::createRep(
-                                     DataObject*      //pObject
-                                    ,IOpaqueAddress*& //refpAddress
-                                   )         
-{
-  return StatusCode::SUCCESS;
-}
-
-// Update the converted representation of a transient object.
-StatusCode XmlLVolumeCnv::updateRep(
-                                     IOpaqueAddress* //pAddress
-                                    ,DataObject*     //pObject
-                                   )                  
-{
-  return StatusCode::SUCCESS;
-}
-
+// -----------------------------------------------------------------------
 // Constructor
-XmlLVolumeCnv::XmlLVolumeCnv( ISvcLocator* svc )
-  : XmlGenericCnv( svc, CLID_LVolume )
-  , m_tagRead(false)
-  , m_insideBoolean(false)
-  , m_insideParameterized(false)
-  , m_surfaces()  
-{
-  // Register myself as the recevier of ASCII XML SAX events
-  set8BitDocHandler( *this );
+// ------------------------------------------------------------------------
+XmlLVolumeCnv::XmlLVolumeCnv (ISvcLocator* svc) :
+  XmlGenericCnv (svc, CLID_LVolume),
+  m_insideBoolean (false),
+  m_insideParameterized (false),
+  m_surfaces() {
   m_transContext = "";
-  m_materialName = "";
-  m_sensDetName = "";
-  m_magFieldName = "";
-  m_volName = "";
   m_solid = 0;
   m_bsName = "";
   m_pvstore.clear();
@@ -153,975 +59,994 @@ XmlLVolumeCnv::XmlLVolumeCnv( ISvcLocator* svc )
   m_bstore.clear();
 }
 
-XmlLVolumeCnv::SolidItem sFound;
 
-void XmlLVolumeCnv::startElement( const char* const name,
-                                 XmlCnvAttributeList& attributes)          {
+// -----------------------------------------------------------------------
+// Create an object corresponding to a DOM element
+// -----------------------------------------------------------------------
+StatusCode XmlLVolumeCnv::i_createObj (DOM_Element element,
+                                      DataObject*& refpObject) {
+  // some initializations
+  m_transContext        = "";
+  m_insideBoolean       = false;
+  m_insideParameterized = false;
+  std::string materialName = dom2Std (element.getAttribute ("material"));
+  if (materialName.empty() || materialName[0] != '/') {
+    materialName.insert(0,"/dd/Materials/");
+  }
+  std::string magFieldName = dom2Std (element.getAttribute ("magfield"));
+  std::string sensDetName = dom2Std (element.getAttribute ("sensdet"));
+  std::string volName = dom2Std (element.getAttribute ("name"));
+  m_solid = 0;
+  m_bsName = "";
 
+  m_pvstore.clear();
+  m_ppvstore.clear();
+  m_bstore.clear();
+  m_surfaces.clear() ; 
+
+  // creates the LVolume
+  refpObject = new LVolume(volName, 
+                           m_solid, 
+                           materialName,
+                           sensDetName,
+                           magFieldName);
+  
+  // returns
+  return StatusCode::SUCCESS;
+} // end i_createObj
+
+
+// -----------------------------------------------------------------------
+// Fill an object with a new child element
+// -----------------------------------------------------------------------
+StatusCode XmlLVolumeCnv::i_fillObj (DOM_Element childElement,
+                                     DataObject* refpObject) {
   MsgStream log(msgSvc(), "XmlLVolumeCnv" );
 
-  // Make an instance of the numerical expression parser
-  std::string tagName( name );
-  
-  /// Solid textified dimensions got from the solids' tag attributes
-  std::string sizeX,      sizeY,  sizeZ;
-  std::string sizeX1,     sizeX2, sizeY1, sizeY2;
-  std::string oRadPz,     oRadMz, iRadPz, iRadMz, startPhi, deltaPhi;
-  std::string oRad,       iRad;
-  std::string startTheta, deltaTheta;
-  
-  /// Transformation type attribute value
-  std::string tType;
-  
-  log << MSG::VERBOSE << "<" << tagName << " ";
-  
-  for( unsigned int i = 0; i < attributes.getLength(); i++ )               {
-    log << MSG::VERBOSE
-        << attributes.getName(i)  << "=" 
-        << attributes.getValue(i) << " "
-        << attributes.getType(i)  << " ";
-  }
-  log << ">" << endreq;
-  
-  PVitem    pv;
-  ParamPV   parampv;
-  
-  if( "logvol" == tagName )                                                {
-    
-    // Basename of the transient object ID
-    unsigned int sPos = m_objRcpt->objectName().find_last_of('/');
-    std::string baseName = m_objRcpt->objectName().substr( sPos + 1 );
-    
-    if( baseName == attributes.getValue( "name" ) )                        {
-      
-      // We're converter for this concrete XML tag
-      // We need to create our transient representation
-      // according the required class ID
-      
-      m_tagRead = true;
-      
-      // We have to decode class ID of the referred object
-      const CLID clsID = (CLID) atol( attributes.getValue( "classID" ).c_str() );
-      
-      // Remember material name
-      m_materialName  = attributes.getValue( "material" );
-      if( m_materialName.empty() || m_materialName[0] != '/' )
-        { m_materialName.insert(0,"/dd/Materials/"); }
-      
-      m_volName = baseName;
-      m_surfaces.clear() ;
-      
-      /// sensitive detector information 
-      {
-        std::string tmp = attributes.getValue("sensdet");
-        m_sensDetName = tmp; 
-      }
-      /// magnetic field information 
-      {
-        std::string tmp = attributes.getValue("magfield");
-        m_magFieldName = tmp; 
-      }
-      
-      // Create the corresponding transient version of the logical volume
-      if( CLID_LVolume == clsID )                                    {
-        /// We move this to endElement() callback because we need to
-        /// collect XML data for LVolume() constructor
-        ///m_dataObj = new LVolume();
-      }
-      else                                                                 {
-        log << MSG::ERROR       << "Found invalid class ID " << clsID
-            << " for material " << m_objRcpt->objectName()   << endreq;
-        // May be en exception should be thrown now
-      }      
-    }
-    else                                                                   {
-      // This should never happen!
-      log << MSG::WARNING                  << "Got unexpected tag: "
-          << attributes.getValue( "name" ) << endreq;
-    }
-  }
-  else if( "physvol" == tagName )                                          {
-
-    if( m_insideParameterized ) {
-      ParamPV& ppv = m_ppvstore.back();
-      // We need to record the starting physical volume
-      ppv.m_initialPos.m_pvName  = attributes.getValue( "name" );
-      ppv.m_initialPos.m_lvName  = attributes.getValue( "logvol" );
-    }
-    else                        {
-      // Ordinary physical volume
-      //
-      // The following code does not work if we allow to place logical volumes
-      // somewhere else than into the /dd/Geometry catalog
-      //pv.m_lvName  = "/dd/Geometry/";
-      // 
-      // Remember name
-      pv.m_pvName  = attributes.getValue( "name" );
-      pv.m_lvName  = attributes.getValue( "logvol" );
-      m_pvstore.push_back( pv );
-    }
-    setTransContext( tagName );
-  }
-  else if( "surf" == tagName )                                     
-    { m_surfaces.push_back( attributes.getValue("address") ); }
-  else if( "paramphysvol" == tagName )                                     {
-    // Remember the number of copies
-    ///
-    int nn = (int) xmlSvc()->eval( attributes.getValue("number"), false );
-    if( nn <= 0 ) 
-      {
-      ///
-      /// error situation 
-      ///
-      StatusCode stcod;
-      stcod.setCode( CORRUPTED_DATA );
-      throw XmlCnvException( " paramphysvolume:: number of copies must be integer positive ! ", stcod );
-      }
-    ///
-    parampv.m_number = nn; 
-    m_ppvstore.push_back( parampv );
-    
-    // Indicate to the others that paramphysvol tag is the current context
-    m_insideParameterized = true;
-    
-    setTransContext( tagName );
-
-  }
-  // Solids
-  else if( "box" == tagName )                                              {
-    sizeX = attributes.getValue( "sizeX" );
-    sizeY = attributes.getValue( "sizeY" );
-    sizeZ = attributes.getValue( "sizeZ" );
-    
-    if( sizeX.empty() ) { sizeX = "0.0"; }
-    if( sizeY.empty() ) { sizeY = "0.0"; }
-    if( sizeZ.empty() ) { sizeZ = "0.0"; }
-    
-    m_solid = new SolidBox( attributes.getValue( "name" ),
-                            xmlSvc()->eval( sizeX.c_str() )/2.,
-                            xmlSvc()->eval( sizeY.c_str() )/2.,
-                            xmlSvc()->eval( sizeZ.c_str() )/2.
-                          );
-
-    //doBoolean( sFound, attributes );
-    setTransContext( tagName );
-  }
-  else if( "trd" == tagName )                                              {
-    sizeX1 = attributes.getValue( "sizeX1" );
-    sizeX2 = attributes.getValue( "sizeX2" );
-    sizeY1 = attributes.getValue( "sizeY1" );
-    sizeY2 = attributes.getValue( "sizeY2" );
-    sizeZ  = attributes.getValue( "sizeZ"  );
-
-    if( sizeX1.empty() ) { sizeX1 = "0.0"; }
-    if( sizeX2.empty() ) { sizeX2 = "0.0"; }
-    if( sizeY1.empty() ) { sizeY1 = "0.0"; }
-    if( sizeY2.empty() ) { sizeY2 = "0.0"; }
-    if( sizeZ.empty()  ) { sizeZ  = "0.0"; }
-
-    m_solid = new SolidTrd( attributes.getValue( "name" ),
-                            xmlSvc()->eval( sizeZ.c_str()  )/2.,
-                            xmlSvc()->eval( sizeX1.c_str() )/2.,
-                            xmlSvc()->eval( sizeY1.c_str() )/2.,
-                            xmlSvc()->eval( sizeX2.c_str() )/2.,
-                            xmlSvc()->eval( sizeY2.c_str() )/2.
-                          );
-    //doBoolean( sFound, attributes );
-    setTransContext( tagName );
-  }
-  else if( "cons" == tagName )                                             {
-    sizeZ    = attributes.getValue( "sizeZ"         );
-    oRadPz   = attributes.getValue( "outerRadiusPZ" );
-    oRadMz   = attributes.getValue( "outerRadiusMZ" );
-    iRadPz   = attributes.getValue( "innerRadiusPZ" );
-    iRadMz   = attributes.getValue( "innerRadiusMZ" );
-    startPhi = attributes.getValue( "startPhiAngle" );
-    deltaPhi = attributes.getValue( "deltaPhiAngle" );
-
-    if( oRadPz.empty()   ) { oRadPz   = "0.0"; }
-    if( oRadMz.empty()   ) { oRadMz   = "0.0"; }
-    if( sizeZ.empty()    ) { sizeZ    = "0.0"; }
-
-    ///
-    /// both angles could be omitted simultaneously ! 
-    /// 
-    if( startPhi.empty() != deltaPhi.empty() ) 
-      { 
-      ///
-      /// error ! exception ? 
-      ///
-      StatusCode stcod;
-      stcod.setCode( CORRUPTED_DATA );
-      if( !startPhi.empty() ) {
-        throw XmlCnvException( " cons :: only startPhi is provided! ", stcod );
-      } 
-      if( !deltaPhi.empty() ) {
-        throw XmlCnvException( " cons :: only deltaPhi is provided! ", stcod );
-      } 
-      } 
-    
-    m_solid = new SolidCons( attributes.getValue( "name" ),
-                             xmlSvc()->eval( sizeZ.c_str()    )/2.,
-                             xmlSvc()->eval( oRadMz.c_str()   ),
-                             xmlSvc()->eval( oRadPz.c_str()   ),
-                             iRadMz.empty()   ?   0.0          : xmlSvc()->eval( iRadMz   ),   
-                             iRadPz.empty()   ?   0.0          : xmlSvc()->eval( iRadPz   ),   
-                             startPhi.empty() ?   0.0          : xmlSvc()->eval( startPhi ),
-                             deltaPhi.empty() ? 360.0 * degree : xmlSvc()->eval( deltaPhi )  
-                             );
-    //doBoolean( sFound, attributes );
-    setTransContext( tagName );
-  }
-  else if( "tubs" == tagName )                                             {
-    sizeZ    = attributes.getValue( "sizeZ"         );
-    oRad     = attributes.getValue( "outerRadius"   );
-    iRad     = attributes.getValue( "innerRadius"   );
-    startPhi = attributes.getValue( "startPhiAngle" );
-    deltaPhi = attributes.getValue( "deltaPhiAngle" );
-
-    // log << MSG::INFO << "startPhi " << xmlSvc()->eval(startPhi)/degree << endreq;
-    // log << MSG::INFO << "deltaPhi " << xmlSvc()->eval(deltaPhi)/degree << endreq;
-    
-    if( oRad.empty()     ) { oRad     = "0.0"; }
-    if( sizeZ.empty()    ) { sizeZ    = "0.0"; }
-
-    ///
-    /// both angles could be omitted simultaneously ! 
-    /// 
-    if( startPhi.empty() != deltaPhi.empty() ) { 
-      ///
-      /// error ! exception ? 
-      ///
-      StatusCode stcod;
-      stcod.setCode( CORRUPTED_DATA );
-      if( !startPhi.empty() ) {
-        throw XmlCnvException( " tubs :: only startPhi is provided! ", stcod );
-      } 
-      if( !deltaPhi.empty() ) {
-        throw XmlCnvException( " tubs :: only deltaPhi is provided! ", stcod );
-      } 
-    } 
-
-    m_solid = new SolidTubs( attributes.getValue( "name" ),
-                             xmlSvc()->eval( sizeZ.c_str()    )/2.,
-                             xmlSvc()->eval( oRad.c_str()     ),
-                             iRad.empty()     ?   0.0          : xmlSvc()->eval( iRad     ),
-                             startPhi.empty() ?   0.0          : xmlSvc()->eval( startPhi ),
-                             deltaPhi.empty() ? 360.0 * degree : xmlSvc()->eval( deltaPhi )  
-                             );
-    //doBoolean( sFound, attributes );
-    setTransContext( tagName );
-  }
-  else if( "sphere" == tagName )                                           {
-    oRad       = attributes.getValue( "outerRadius"     );
-    iRad       = attributes.getValue( "innerRadius"     );
-    startPhi   = attributes.getValue( "startPhiAngle"   );
-    deltaPhi   = attributes.getValue( "deltaPhiAngle"   );
-    startTheta = attributes.getValue( "startThetaAngle" );
-    deltaTheta = attributes.getValue( "deltaThetaAngle" );
-
-    if( oRad.empty()       ) { oRad       = "0.0"; }
-    ///
-    ///
-    /// 
-    ///
-    /// both angles could be omitted simultaneously ! 
-    /// 
-    if( startPhi.empty() != deltaPhi.empty() ) { 
-      ///
-      /// error ! exception ? 
-      ///
-      StatusCode stcod;
-      stcod.setCode( CORRUPTED_DATA );
-      if( !startPhi.empty() ) {
-        throw XmlCnvException( " sphere :: only startPhi is provided! ", stcod );
-      } 
-      if( !deltaPhi.empty() ) {
-        throw XmlCnvException( " sphere :: only deltaPhi is provided! ", stcod );
-      } 
-    } 
-
-    if( startTheta.empty() != deltaTheta.empty() ) { 
-      ///
-      /// error ! exception ? 
-      ///
-      StatusCode stcod;
-      stcod.setCode( CORRUPTED_DATA );
-      if( !startTheta.empty() ) {
-        throw XmlCnvException( " sphere :: only startTheta is provided! ", stcod );
-      } 
-      if( !deltaTheta.empty() ) {
-        throw XmlCnvException( " sphere :: only deltaTheta is provided! ", stcod );
-      } 
-    } 
-
-    m_solid = new SolidSphere( attributes.getValue( "name" ),
-                               xmlSvc()->eval( oRad.c_str()       ),
-                               iRad.empty()       ?   0.0          : xmlSvc()->eval( iRad       ),
-                               startPhi.empty()   ?   0.0          : xmlSvc()->eval( startPhi   ),
-                               deltaPhi.empty()   ? 360.0 * degree : xmlSvc()->eval( deltaPhi   ),  
-                               startTheta.empty() ?   0.0          : xmlSvc()->eval( startTheta ),
-                               deltaTheta.empty() ? 180.0 * degree : xmlSvc()->eval( deltaTheta )  
-                               );
-    //doBoolean( sFound, attributes );
-    setTransContext( tagName );
-  }
-  else if( "union" == tagName || "subtraction" == tagName || "intersection" == tagName ){
-    m_insideBoolean = true;
-    m_bsName = attributes.getValue( "name" );
-  }
-  // End of Solids
-  else if( tagName == "posXYZ" )                                           {
-    if( transContext().empty() )                                          {
-      StatusCode stcod;
-      stcod.setCode( CORRUPTED_DATA );  
-      throw XmlCnvException( " posXYZ in an empty transformation context", stcod );
-    }
-    else                                                                   {
-      log << MSG::DEBUG << "posXYZ tag in the context of "
-                        << transContext() << endreq;
-  
-      if( m_insideParameterized )                                    {
-        // Parameterized physical volume initial position
-        // or step for transformation
-        ParamPV& ppv = m_ppvstore.back();
-
-        if( transContext() == "physvol" )                       {
-          // Initial position
-          ppv.m_initialPos.m_translation = doTranslation(
-                                                     attributes.getValue( "x" ),
-                                                     attributes.getValue( "y" ),
-                                                     attributes.getValue( "z" )
-                                                    );
-        }
-        else                                                    {
-          // Step for transformation
-          ppv.m_stepTranslation          = doTranslation(
-                                                     attributes.getValue( "x" ),
-                                                     attributes.getValue( "y" ),
-                                                     attributes.getValue( "z" )
-                                                    );
-        }
-      }
-      else if( transContext() == "physvol" )                         {
-        // Position of a ordinary physical volume
-        PVitem &pv = m_pvstore.back();
-        pv.m_translation = doTranslation( attributes.getValue( "x" ),
-                                          attributes.getValue( "y" ),
-                                          attributes.getValue( "z" )
-                                        );
-      }
-      else                                                           {
-        // Position of a solid ( Hope... )
-        if( m_insideBoolean == true )              {
-          doBoolTranslation( sFound, attributes );
-        }
-        else {
-          log << MSG::WARNING
-              << "posXYZ for a solid makes sense only inside boolean solid"
-              << endreq;
-        }
-      }
-    }
-  }
-  else if( tagName == "posRPhiZ" )                                           {
-    if( transContext().empty() )                                          {
-      StatusCode stcod;
-      stcod.setCode( CORRUPTED_DATA );  
-      throw XmlCnvException( " posRPhiZ in an empty transformation context", stcod );
-    }
-    else                                                                   {
-      log << MSG::DEBUG << "posRPhiZ tag in the context of "
-                       << transContext() << endreq;
-
-      if( m_insideParameterized )                                    {
-        // Parameterized physical volume initial position
-        // or step for transformation
-
-        ParamPV& ppv = m_ppvstore.back();
-
-        if( transContext() == "physvol" )                       {
-          // Initial position
-          ppv.m_initialPos.m_translation = doRPhiZTranslation(
-                                                     attributes.getValue( "r" ),
-                                                     attributes.getValue( "phi" ),
-                                                     attributes.getValue( "z" )
-                                                    );
-        }
-        else                                                    {
-          // Step for transformation
-          ppv.m_stepTranslation = doRPhiZTranslation(
-                                                     attributes.getValue( "r" ),
-                                                     attributes.getValue( "phi" ),
-                                                     attributes.getValue( "z" )
-                                                    );
-        }
-      }
-      else if( transContext() == "physvol" )                              {
-        // Posistion of a physical volume
-        PVitem &pv = m_pvstore.back();
-        pv.m_translation = doRPhiZTranslation( attributes.getValue( "r" ),
-                                               attributes.getValue( "phi" ),
-                                               attributes.getValue( "z" )
-                                             );
-      }
-      else                                              {
-        // Position of a solid ( Hope... )
-        if( m_insideBoolean == true )              {
-          doBoolRPhiZTranslation( sFound, attributes );
-        }
-        else {
-          log << MSG::WARNING
-              << "posRPhiZ for a solid makes sense only inside boolean solid"
-              << endreq;
-        }
-      }
-    }
-  }
-  else if( tagName == "posRThPhi" )                                        {
-    if( transContext().empty() )                                          {
-      StatusCode stcod;
-      stcod.setCode( CORRUPTED_DATA );  
-      throw XmlCnvException( " posRThPhi in an empty transformation context", stcod );
-    }
-    else                                                                   {
-      log << MSG::DEBUG << "posRThPhi tag in the context of "
-                       << transContext() << endreq;
-
-      if( m_insideParameterized )                                    {
-        // Parameterized physical volume initial position
-        // or step for transformation
-
-        ParamPV& ppv = m_ppvstore.back();
-
-        if( transContext() == "physvol" )                       {
-          // Initial position
-          ppv.m_initialPos.m_translation = doRThPhiTranslation(
-                                                     attributes.getValue( "r" ),
-                                                     attributes.getValue( "theta" ),
-                                                     attributes.getValue( "phi" )
-                                                    );
-        }
-        else                                                    {
-          // Step for transformation
-          ppv.m_stepTranslation = doRThPhiTranslation(
-                                                     attributes.getValue( "r" ),
-                                                     attributes.getValue( "theta" ),
-                                                     attributes.getValue( "phi" )
-                                                    );
-        }
-      }
-      else if( transContext() == "physvol" )                              {
-        // Posistion of a physical volume
-        PVitem &pv = m_pvstore.back();
-        pv.m_translation = doRThPhiTranslation( attributes.getValue( "r" ),
-                                                attributes.getValue( "theta" ),
-                                                attributes.getValue( "phi" )
-                                              );
-      }
-      else                                              {
-        // Position of a solid ( Hope... )
-        if( m_insideBoolean == true )              {
-          doBoolRThPhiTranslation( sFound, attributes );
-        }
-        else {
-          log << MSG::WARNING
-              << "posRThPhi for a solid makes sense only inside boolean solid"
-              << endreq;
-        }
-      }
-    }
-  }
-  else if( tagName == "rotXYZ" )                                           {
-    if( transContext().empty() )       {
-      StatusCode stcod;
-      stcod.setCode( CORRUPTED_DATA );  
-      throw XmlCnvException( " rotXYZ in an empty transformation context", stcod );
-    }
-    else                                                                   {
-      log << MSG::DEBUG << "rotXYZ tag in the context of "
-                       << transContext() << endreq;
-
-      if( m_insideParameterized )                                    {
-        // Parameterized physical volume initial position
-        // or step for transformation
-        
-        ParamPV& ppv = m_ppvstore.back();
-
-        if( transContext() == "physvol" )                       {
-          // Initial position
-          ppv.m_initialPos.m_rotation    = doRotation(
-                                                       attributes.getValue( "rotX" ),
-                                                       attributes.getValue( "rotY" ),
-                                                       attributes.getValue( "rotZ" )
-                                                      );
-        }
-        else                                                    {
-          // Step for transformation
-          ppv.m_stepRotation    = doRotation( attributes.getValue( "rotX" ),
-                                                     attributes.getValue( "rotY" ),
-                                                     attributes.getValue( "rotZ" )
-                                                   );
-        }
-      }
-      else if( transContext() == "physvol" )                               {
-        // Rotation of a physical volume
-        PVitem &pv = m_pvstore.back();
-        pv.m_rotation    = doRotation( attributes.getValue( "rotX" ),
-                                       attributes.getValue( "rotY" ),
-                                       attributes.getValue( "rotZ" )
-                                     );
-      }
-      else                                          {
-        // Rotation of a solid ( Hope... )
-        if( m_insideBoolean == true )           {
-          doBoolRotation( sFound, attributes );
-        }
-        else {
-          log << MSG::WARNING
-              << "rotXYZ for a solid makes sense only inside boolean solid"
-              << endreq;
-        }
-      }
-    }
-  }
-  else if( tagName == "rotAxis" )                                          {
-    if( transContext().empty() )       {
-      StatusCode stcod;
-      stcod.setCode( CORRUPTED_DATA );  
-      throw XmlCnvException( " rotAxis in an empty transformation context", stcod );
-    }
-    else                                                                   {
-      log << MSG::DEBUG << "rotAxis tag in the context of "
-                       << transContext() << endreq;
-
-      if( m_insideParameterized )                                    {
-        // Parameterized physical volume initial position
-        // or step for transformation
-
-        ParamPV& ppv = m_ppvstore.back();
-        
-        if( transContext() == "physvol" )                       {
-          // Initial position
-          ppv.m_initialPos.m_rotation = doAxisRotation(
-                                                       attributes.getValue( "axTheta" ),
-                                                       attributes.getValue( "axPhi" ),
-                                                       attributes.getValue( "angle" )
-                                                      );
-        }
-        else                                                    {
-          // Step for transformation
-          ppv.m_stepRotation = doAxisRotation(
-                                                       attributes.getValue( "axTheta" ),
-                                                       attributes.getValue( "axPhi" ),
-                                                       attributes.getValue( "angle" )
-                                                      );
-        }
-      }
-      else if( transContext() == "physvol" )                               {
-        // Rotation of a physical volume
-        PVitem &pv = m_pvstore.back();
-        pv.m_rotation    = doAxisRotation( attributes.getValue( "axTheta" ),
-                                           attributes.getValue( "axPhi" ),
-                                           attributes.getValue( "angle" )
-                                         );
-      }
-      else                                          {
-        // Rotation of a solid ( Hope... )
-        if( m_insideBoolean == true )           {
-          doBoolAxisRotation( sFound, attributes );
-        }
-        else {
-          log << MSG::WARNING
-              << "rotAxis for a solid makes sense only inside boolean solid"
-              << endreq;
-        }
-      }
-    }
-  }
-  else                                                                     {
+  // result
+  StatusCode sc;
+  // gets the element's name
+  std::string tagName = dom2Std (childElement.getNodeName());
+  log << MSG::VERBOSE << "i_fillObj : tagName is " << tagName << endreq;
+  // dispatches, based on the name
+  if ("physvol" == tagName) {
+    sc = dealWithPhysvol(childElement);
+  } else if ("surf" == tagName) {
+    m_surfaces.push_back(dom2Std (childElement.getAttribute ("address")));
+    sc = StatusCode::SUCCESS;
+  } else if ("paramphysvol" == tagName) {
+    sc = dealWithParamphysvol(childElement);
+  } else if ("box" == tagName) {
+    sc = dealWithBox(childElement);
+  } else if ("trd" == tagName) {
+    sc = dealWithTrd(childElement);
+  } else if ("cons" == tagName) {
+    sc = dealWithCons(childElement);
+  } else if ("tubs" == tagName) {
+    sc = dealWithTubs(childElement);
+  } else if ("sphere" == tagName) {
+    sc = dealWithSphere(childElement);
+  } else if ("union" == tagName ||
+             "subtraction" == tagName ||
+             "intersection" == tagName) {
+    sc = dealWithBoolean(childElement);
+  } else if (tagName == "posXYZ") {
+    sc = dealWithPosXYZ(childElement);
+  } else if (tagName == "posRPhiZ") {
+    sc = dealWithPosRPhiZ(childElement);
+  } else if (tagName == "posRThPhi") {
+    sc = dealWithPosRThPhi(childElement);
+  } else if (tagName == "rotXYZ") {
+    sc = dealWithRotXYZ(childElement);
+  } else if (tagName == "rotAxis") {
+    sc = dealWithRotAxis(childElement);
+  } else {
     // Something goes wrong, does it?
     log << MSG::WARNING
         << "This tag makes no sense to LVolume: " << tagName << endreq;
+    sc = StatusCode::FAILURE;
   }
-}
+  return sc;
+} // end i_fillObj
 
-void XmlLVolumeCnv::characters(
-                                const char* const  //chars
-                               ,const unsigned int //length
-                              )                
-{
-}
 
-void XmlLVolumeCnv::endElement( const char* const name )                   {
+// -----------------------------------------------------------------------
+// Process an object
+// -----------------------------------------------------------------------
+StatusCode XmlLVolumeCnv::i_processObj (DataObject* refpObject) {
+  // gets the object
+  LVolume* dataObj = dynamic_cast<LVolume*> (refpObject);
+  /// sets the solid
+  dataObj->setSolid(m_solid);
   
+  ///  Add all of the physical volumes
+  std::vector<PVitem>::iterator pvit;
+  for (pvit = m_pvstore.begin(); pvit != m_pvstore.end(); pvit++) {
+    dataObj->createPVolume((*pvit).m_pvName,
+                             (*pvit).m_lvName,
+                             (*pvit).m_translation,
+                             (*pvit).m_rotation );
+  }
+  /// Add all of the parametric physical volumes
+  std::vector<ParamPV>::iterator ppvit;
+  for (ppvit = m_ppvstore.begin(); ppvit != m_ppvstore.end(); ppvit++) {
+    dataObj->createMultiPVolume((*ppvit).m_initialPos.m_pvName,
+                                  (*ppvit).m_initialPos.m_lvName,
+                                  (*ppvit).m_number,
+                                  (*ppvit).m_initialPos.m_translation,
+                                  (*ppvit).m_initialPos.m_rotation,
+                                  (*ppvit).m_stepTranslation,
+                                  (*ppvit).m_stepRotation);
+  }
+  /// add all surfaces 
+  for (std::vector<std::string>::const_iterator it = m_surfaces.begin();
+       m_surfaces.end() != it;
+       ++it) {
+    const std::string address = *it;
+    long linkID = dataObj->addLink(address , 0);
+    SmartRef<Surface> ref(dataObj, linkID);
+    dataObj->surfaces().push_back(ref); 
+  }
+  m_surfaces.clear(); 
+  m_pvstore.clear();
+  m_ppvstore.clear();
+  // returns
+  return StatusCode::SUCCESS;
+} // end i_processObj
+
+
+// -----------------------------------------------------------------------
+// Deal with Physical volume
+// -----------------------------------------------------------------------
+StatusCode XmlLVolumeCnv::dealWithPhysvol (DOM_Element childElement) {
+  std::string nameAttribute = dom2Std (childElement.getAttribute ("name"));
+  std::string logvolAttribute =
+    dom2Std (childElement.getAttribute ("logvol"));
+  if (m_insideParameterized) {
+    ParamPV& ppv = m_ppvstore.back();
+    // We need to record the starting physical volume
+    ppv.m_initialPos.m_pvName = nameAttribute;
+    ppv.m_initialPos.m_lvName = logvolAttribute;
+  } else {
+    // Ordinary physical volume
+    //
+    // The following code does not work if we allow to place logical volumes
+    // somewhere else than into the /dd/Geometry catalog
+    // pv.m_lvName  = "/dd/Geometry/";
+    // 
+    // Remember name
+    PVitem    pv;
+    pv.m_pvName = nameAttribute;
+    pv.m_lvName = logvolAttribute;
+    m_pvstore.push_back(pv);
+  }
+  setTransContext("physvol");
+  dealWithPosRotChildren(childElement);
+  if (!m_insideParameterized) {
+    setTransContext("");
+  } else {
+    setTransContext("paramphysvol");
+  } 
+  // returns
+  return StatusCode::SUCCESS;
+} // end dealWithPhysVol
+
+
+// -----------------------------------------------------------------------
+// Deal with parametrized physical volume
+// -----------------------------------------------------------------------
+StatusCode XmlLVolumeCnv::dealWithParamphysvol (DOM_Element childElement) {
+  // Remember the number of copies
+  int nn = (int) xmlSvc()->eval
+    (dom2Std (childElement.getAttribute ("number")), false);
+  if (nn <= 0) {
+    /// This is an error
+    StatusCode stcod;
+    stcod.setCode( CORRUPTED_DATA );
+    throw XmlCnvException
+      ("paramphysvolume : number of copies must be integer positive ! ",
+       stcod );
+  }
+  // stores it
+  ParamPV   parampv;
+  parampv.m_number = nn; 
+  m_ppvstore.push_back( parampv );
+  // Indicate to the others that paramphysvol tag is the current context
+  m_insideParameterized = true;
+  setTransContext("paramphysvol");
+  dealWithPosRotChildren(childElement);
+  m_insideParameterized = false;
+  setTransContext("");
+  // returns
+  return StatusCode::SUCCESS;
+} // end dealWithParamphysvol
+
+
+// -----------------------------------------------------------------------
+// Deal with box
+// -----------------------------------------------------------------------
+StatusCode XmlLVolumeCnv::dealWithBox (DOM_Element childElement) {
+  std::string sizeXAttribute = dom2Std (childElement.getAttribute ("sizeX"));
+  std::string sizeYAttribute = dom2Std (childElement.getAttribute ("sizeY"));
+  std::string sizeZAttribute = dom2Std (childElement.getAttribute ("sizeZ"));
+  if (sizeXAttribute.empty()) { sizeXAttribute = "0.0"; }
+  if (sizeYAttribute.empty()) { sizeYAttribute = "0.0"; }
+  if (sizeZAttribute.empty()) { sizeZAttribute = "0.0"; }
+  std::string solidName = dom2Std (childElement.getAttribute ("name"));
+  m_solid = new SolidBox
+    (solidName,
+     xmlSvc()->eval(sizeXAttribute) / 2.0,
+     xmlSvc()->eval(sizeYAttribute) / 2.0,
+     xmlSvc()->eval(sizeZAttribute) / 2.0);
+  setTransContext(solidName);
+  dealWithPosRotChildren(childElement);
+  if (m_insideBoolean == true) {
+    sFound.m_solid = m_solid;
+    m_bstore.push_back (sFound);
+  }
+  setTransContext("");
+  // returns
+  return StatusCode::SUCCESS;
+} // end dealWithBox
+
+
+// -----------------------------------------------------------------------
+// Deal with trd
+// -----------------------------------------------------------------------
+StatusCode XmlLVolumeCnv::dealWithTrd (DOM_Element childElement) {
+  std::string sizeX1Attribute = 
+    dom2Std (childElement.getAttribute ("sizeX1"));
+  std::string sizeX2Attribute =
+    dom2Std (childElement.getAttribute ("sizeX2"));
+  std::string sizeY1Attribute =
+    dom2Std (childElement.getAttribute ("sizeY1"));
+  std::string sizeY2Attribute =
+    dom2Std (childElement.getAttribute ("sizeY2"));
+  std::string sizeZAttribute =
+    dom2Std (childElement.getAttribute ("sizeZ"));
+  if (sizeX1Attribute.empty()) { sizeX1Attribute = "0.0"; }
+  if (sizeX2Attribute.empty()) { sizeX2Attribute = "0.0"; }
+  if (sizeY1Attribute.empty()) { sizeY1Attribute = "0.0"; }
+  if (sizeY2Attribute.empty()) { sizeY2Attribute = "0.0"; }
+  if (sizeZAttribute.empty()) { sizeZAttribute = "0.0"; }
+  std::string trdName = dom2Std (childElement.getAttribute ("name"));
+  m_solid = new SolidTrd
+    (trdName,
+     xmlSvc()->eval(sizeX1Attribute) / 2.0,
+     xmlSvc()->eval(sizeX2Attribute) / 2.0,
+     xmlSvc()->eval(sizeY1Attribute) / 2.0,
+     xmlSvc()->eval(sizeY2Attribute) / 2.0,
+     xmlSvc()->eval(sizeZAttribute) / 2.0);
+  setTransContext(trdName);
+  dealWithPosRotChildren(childElement);
+  if (m_insideBoolean == true) {
+    sFound.m_solid = m_solid;
+    m_bstore.push_back (sFound);
+  }
+  setTransContext("");
+  // returns
+  return StatusCode::SUCCESS;
+} // end dealWithTrd
+
+
+// -----------------------------------------------------------------------
+// Deal with cons
+// -----------------------------------------------------------------------
+StatusCode XmlLVolumeCnv::dealWithCons (DOM_Element childElement) {
+  std::string sizeZAttribute =
+    dom2Std (childElement.getAttribute ("sizeZ"));
+  std::string outerRadiusPZAttribute =
+    dom2Std (childElement.getAttribute ("outerRadiusPZ"));
+  std::string outerRadiusMZAttribute =
+    dom2Std (childElement.getAttribute ("outerRadiusMZ"));
+  std::string innerRadiusPZAttribute =
+    dom2Std (childElement.getAttribute ("innerRadiusPZ"));
+  std::string innerRadiusMZAttribute =
+    dom2Std (childElement.getAttribute ("innerRadiusMZ"));
+  std::string startPhiAngleAttribute =
+    dom2Std (childElement.getAttribute ("startPhiAngle"));
+  std::string deltaPhiAngleAttribute =
+    dom2Std (childElement.getAttribute ("deltaPhiAngle"));
+  if (sizeZAttribute.empty()) { sizeZAttribute = "0.0"; }
+  if (outerRadiusPZAttribute.empty()) { outerRadiusPZAttribute = "0.0"; }
+  if (outerRadiusMZAttribute.empty()) { outerRadiusMZAttribute = "0.0"; }
+  if (innerRadiusPZAttribute.empty()) { innerRadiusPZAttribute = "0.0"; }
+  if (innerRadiusMZAttribute.empty()) { innerRadiusMZAttribute = "0.0"; }
+  /// both angles could be omitted simultaneously ! 
+  if ((startPhiAngleAttribute.empty()) != (deltaPhiAngleAttribute.empty())) {
+    StatusCode stcod;
+    stcod.setCode( CORRUPTED_DATA );
+    if (startPhiAngleAttribute.empty()) {
+      throw XmlCnvException (" cons :: only deltaPhiAngle is provided! ",
+                             stcod );
+    } 
+    if (deltaPhiAngleAttribute.empty()) {
+      throw XmlCnvException( " cons :: only startPhiAngle is provided! ",
+                             stcod );
+    } 
+  }
+  if (startPhiAngleAttribute.empty()) { startPhiAngleAttribute = "0.0"; }
+  double deltaPhiAngleValue;
+  if (deltaPhiAngleAttribute.empty()) {
+    deltaPhiAngleValue = 360.0 * degree;
+  } else {
+    deltaPhiAngleValue = xmlSvc()->eval(deltaPhiAngleAttribute);
+  }
+  std::string consName = dom2Std (childElement.getAttribute ("name"));
+  m_solid = new SolidCons
+    (consName,
+     xmlSvc()->eval(sizeZAttribute) / 2.0,
+     xmlSvc()->eval(outerRadiusMZAttribute),
+     xmlSvc()->eval(outerRadiusPZAttribute),
+     xmlSvc()->eval(innerRadiusMZAttribute),
+     xmlSvc()->eval(innerRadiusPZAttribute),
+     xmlSvc()->eval(startPhiAngleAttribute),
+     deltaPhiAngleValue);
+  setTransContext(consName);
+  dealWithPosRotChildren(childElement);
+  if (m_insideBoolean == true) {
+    sFound.m_solid = m_solid;
+    m_bstore.push_back (sFound);
+  }
+  setTransContext("");
+  // returns
+  return StatusCode::SUCCESS;
+} // end dealWithCons
+
+
+// -----------------------------------------------------------------------
+// Deal with tub
+// -----------------------------------------------------------------------
+StatusCode XmlLVolumeCnv::dealWithTubs (DOM_Element childElement) {
+  std::string sizeZAttribute =
+    dom2Std (childElement.getAttribute ("sizeZ"));
+  std::string outerRadiusAttribute =
+    dom2Std (childElement.getAttribute ("outerRadius"));
+  std::string innerRadiusAttribute =
+    dom2Std (childElement.getAttribute ("innerRadius"));
+  std::string startPhiAngleAttribute =
+    dom2Std (childElement.getAttribute ("startPhiAngle"));
+  std::string deltaPhiAngleAttribute =
+    dom2Std (childElement.getAttribute ("deltaPhiAngle"));
+  if (sizeZAttribute.empty()) { sizeZAttribute = "0.0"; }
+  if (outerRadiusAttribute.empty()) { outerRadiusAttribute = "0.0"; }
+  if (innerRadiusAttribute.empty()) { innerRadiusAttribute = "0.0"; }
+  /// both angles could be omitted simultaneously ! 
+  if ((startPhiAngleAttribute.empty()) != (deltaPhiAngleAttribute.empty())) {
+    StatusCode stcod;
+    stcod.setCode( CORRUPTED_DATA );
+    if (startPhiAngleAttribute.empty()) {
+      throw XmlCnvException (" cons :: only deltaPhiAngle is provided! ",
+                             stcod );
+    } 
+    if (deltaPhiAngleAttribute.empty()) {
+      throw XmlCnvException( " cons :: only startPhiAngle is provided! ",
+                             stcod );
+    } 
+  }
+  if (startPhiAngleAttribute.empty()) { startPhiAngleAttribute = "0.0"; }
+  double deltaPhiAngleValue;
+  if (deltaPhiAngleAttribute.empty()) {
+    deltaPhiAngleValue = 360.0 * degree;
+  } else {
+    deltaPhiAngleValue = xmlSvc()->eval(deltaPhiAngleAttribute);
+  }
+  std::string tubsName = dom2Std (childElement.getAttribute ("name"));
+  m_solid = new SolidTubs
+    (tubsName,
+     xmlSvc()->eval(sizeZAttribute) / 2.0,
+     xmlSvc()->eval(outerRadiusAttribute),
+     xmlSvc()->eval(innerRadiusAttribute),
+     xmlSvc()->eval(startPhiAngleAttribute),
+     deltaPhiAngleValue);
+  setTransContext("tubs");
+  dealWithPosRotChildren(childElement);
+  if (m_insideBoolean == true) {
+    sFound.m_solid = m_solid;
+    m_bstore.push_back (sFound);
+  }
+  setTransContext("");
+  // returns
+  return StatusCode::SUCCESS;
+} // end dealWithTubs
+
+
+// -----------------------------------------------------------------------
+// Deal with sphere
+// -----------------------------------------------------------------------
+StatusCode XmlLVolumeCnv::dealWithSphere (DOM_Element childElement) {
+  std::string outerRadiusAttribute =
+    dom2Std (childElement.getAttribute ("outerRadius"));
+  std::string innerRadiusAttribute =
+    dom2Std (childElement.getAttribute ("innerRadius"));
+  std::string startPhiAngleAttribute =
+    dom2Std (childElement.getAttribute ("startPhiAngle"));
+  std::string deltaPhiAngleAttribute =
+    dom2Std (childElement.getAttribute ("deltaPhiAngle"));
+  std::string startThetaAngleAttribute =
+    dom2Std (childElement.getAttribute ("startThetaAngle"));
+  std::string deltaThetaAngleAttribute =
+    dom2Std (childElement.getAttribute ("deltaThetaAngle"));
+  if (outerRadiusAttribute.empty()) { outerRadiusAttribute = "0.0"; }
+  if (innerRadiusAttribute.empty()) { innerRadiusAttribute = "0.0"; }
+  /// both angles could be omitted simultaneously ! 
+  if ((startPhiAngleAttribute.empty()) != (deltaPhiAngleAttribute.empty())) {
+    StatusCode stcod;
+    stcod.setCode( CORRUPTED_DATA );
+    if (startPhiAngleAttribute.empty()) {
+      throw XmlCnvException (" cons :: only deltaPhiAngle is provided! ",
+                             stcod );
+    } 
+    if (deltaPhiAngleAttribute.empty()) {
+      throw XmlCnvException( " cons :: only startPhiAngle is provided! ",
+                             stcod );
+    } 
+  }
+  if (startPhiAngleAttribute.empty()) { startPhiAngleAttribute = "0.0"; }
+  double deltaPhiAngleValue;
+  if (deltaPhiAngleAttribute.empty()) {
+    deltaPhiAngleValue = 360.0 * degree;
+  } else {
+    deltaPhiAngleValue = xmlSvc()->eval(deltaPhiAngleAttribute);
+  }
+  /// both angles could be omitted simultaneously ! 
+  if (startThetaAngleAttribute.empty() != deltaThetaAngleAttribute.empty()) {
+    StatusCode stcod;
+    stcod.setCode( CORRUPTED_DATA );
+    if (startThetaAngleAttribute.empty()) {
+      throw XmlCnvException (" cons :: only deltaThetaAngle is provided! ",
+                             stcod );
+    } 
+    if (deltaThetaAngleAttribute.empty()) {
+      throw XmlCnvException( " cons :: only startThetaAngle is provided! ",
+                             stcod );
+    } 
+  }
+  if (startThetaAngleAttribute.empty()) { startThetaAngleAttribute = "0.0"; }
+  double deltaThetaAngleValue;
+  if (deltaThetaAngleAttribute.empty()) {
+    deltaThetaAngleValue = 180.0 * degree;
+  } else {
+    deltaThetaAngleValue = xmlSvc()->eval(deltaThetaAngleAttribute);
+  }
+  std::string consName = dom2Std (childElement.getAttribute ("name"));
+  m_solid = new SolidSphere
+    (consName,
+     xmlSvc()->eval(outerRadiusAttribute),
+     xmlSvc()->eval(innerRadiusAttribute),
+     xmlSvc()->eval(startPhiAngleAttribute),
+     deltaPhiAngleValue,
+     xmlSvc()->eval(startThetaAngleAttribute),
+     deltaThetaAngleValue);
+  setTransContext("sphere");
+  dealWithPosRotChildren(childElement);
+  if (m_insideBoolean == true) {
+    sFound.m_solid = m_solid;
+    m_bstore.push_back (sFound);
+  }
+  setTransContext("");
+  // returns
+  return StatusCode::SUCCESS;
+} // end dealWithSphere
+
+
+// -----------------------------------------------------------------------
+// Deal with boolean
+// -----------------------------------------------------------------------
+StatusCode XmlLVolumeCnv::dealWithBoolean (DOM_Element childElement) {
+  m_insideBoolean = true;
+  std::string nameAttribute = dom2Std (childElement.getAttribute ("name"));
+  m_bsName = nameAttribute;
+  dealWithSimpleSolidChildren(childElement);
+  // creates the object
+  std::string tagName = dom2Std (childElement.getNodeName());
+  if ("union" == tagName) {
+    SolidUnion* sol = new SolidUnion(m_bsName, m_bstore[0].m_solid);  
+    for (unsigned int i = 1; i < m_bstore.size(); i++) {
+      sol->unite(m_bstore[i].m_solid, 
+                 m_bstore[i].m_translation, 
+                 m_bstore[i].m_rotation);
+    }
+    m_solid = sol;
+  } else if ("subtraction" == tagName) {
+    SolidSubtraction* sol = 
+      new SolidSubtraction(m_bsName, m_bstore[0].m_solid);
+    for (unsigned int i = 1; i < m_bstore.size(); i++) {
+      sol->subtract( m_bstore[i].m_solid, 
+                     m_bstore[i].m_translation,  
+                     m_bstore[i].m_rotation);
+    }
+    m_solid = sol;
+  } else if ("intersection" == tagName) {
+    SolidIntersection* sol =
+      new SolidIntersection(m_bsName, m_bstore[0].m_solid);
+    for (unsigned int i = 1; i < m_bstore.size(); i++) {
+      sol->intersect(m_bstore[i].m_solid,
+                     m_bstore[i].m_translation,
+                     m_bstore[i].m_rotation);
+    }
+    m_solid = sol;
+  }
+  m_insideBoolean = false;
+  m_bstore.clear();
+  return StatusCode::SUCCESS;
+} // end dealWithBoolean
+
+
+// -----------------------------------------------------------------------
+// Deal with posXYZ
+// -----------------------------------------------------------------------
+StatusCode XmlLVolumeCnv::dealWithPosXYZ (DOM_Element childElement) {
   MsgStream log(msgSvc(), "XmlLVolumeCnv" );
-  
-  log << MSG::DEBUG << "</" << name << ">" << endreq;
-
-  std::string tagName = name;
-
-  if( true == m_tagRead && "logvol" == tagName )                           {
-    m_tagRead = false;
-    LVolume* vol = new LVolume(  m_volName      , 
-                                 m_solid        , 
-                                 m_materialName ,
-                                 m_sensDetName  ,
-                                 m_magFieldName );
-     
-    ///  Add all of the physical volumes
-    std::vector<PVitem>::iterator pvit;
-    for( pvit = m_pvstore.begin(); pvit != m_pvstore.end(); pvit++ )        {
-        vol->createPVolume( (*pvit).m_pvName,
-                            (*pvit).m_lvName,
-                            (*pvit).m_translation,
-                            (*pvit).m_rotation );
+  log << MSG::DEBUG << "Entering dealWithPosXYZ" << endreq;
+  if (transContext().empty()) {
+    StatusCode stcod;
+    stcod.setCode(CORRUPTED_DATA);
+    throw XmlCnvException
+      (" posXYZ in an empty transformation context", stcod);
+  } else {
+    log << MSG::VERBOSE << "posXYZ tag in the context of "
+        << transContext() << endreq;
+    std::string xAttribute = dom2Std (childElement.getAttribute ("x"));
+    std::string yAttribute = dom2Std (childElement.getAttribute ("y"));
+    std::string zAttribute = dom2Std (childElement.getAttribute ("z"));
+    HepPoint3D point = doTranslation(xAttribute,
+                                     yAttribute,
+                                     zAttribute);
+    if (m_insideParameterized) {
+      // Parameterized physical volume initial position
+      // or step for transformation
+      ParamPV& ppv = m_ppvstore.back();
+      if (transContext() == "physvol") {
+        // Initial position  
+        ppv.m_initialPos.m_translation = point;
+      } else {
+        // Step for transformation
+        ppv.m_stepTranslation = point;
+      }
+    } else if (transContext() == "physvol") {
+      // Position of a ordinary physical volume
+      PVitem &pv = m_pvstore.back();
+      pv.m_translation = point;
+    } else {
+      // Position of a solid (Hope...)
+      if (m_insideBoolean) {
+        sFound.m_translation = point;
+      } else {
+        log << MSG::WARNING
+            << "posXYZ for a solid makes sense only inside boolean solid"
+            << endreq;
+      }
     }
+  }
+  // returns
+  return StatusCode::SUCCESS;
+} // end dealWithPosXYZ
 
-    /// Add all of the parametric physical volumes
-    std::vector<ParamPV>::iterator ppvit;
-    for( ppvit = m_ppvstore.begin(); ppvit != m_ppvstore.end(); ppvit++ )  {
-      vol->createMultiPVolume( (*ppvit).m_initialPos.m_pvName,
-                               (*ppvit).m_initialPos.m_lvName,
-                               (*ppvit).m_number,
-                               (*ppvit).m_initialPos.m_translation,
-                               (*ppvit).m_initialPos.m_rotation,
-                               (*ppvit).m_stepTranslation,
-                               (*ppvit).m_stepRotation
-                               );
-    }
-    /// add all surfaces 
-    {
-      for( std::vector<std::string>::const_iterator it = m_surfaces.begin() ; m_surfaces.end() != it ; ++it )
-        {
-          const std::string address = *it;
-          long linkID = vol->addLink( address , 0 ) ;
-          SmartRef<Surface> ref( vol, linkID );
-          vol->surfaces().push_back(ref); 
-        }
-      m_surfaces.clear(); 
-    }
-    ///
-    
-    m_dataObj = vol;
 
-    m_pvstore.clear();
-    m_ppvstore.clear();
-  }
-  else if( "union" == tagName ) {
-    SolidUnion* sol = new SolidUnion( m_bsName, m_bstore[0].m_solid );
-    
-    for( unsigned int i = 1; i < m_bstore.size(); i++ ) {
-      sol->unite( m_bstore[i].m_solid       , 
-                  m_bstore[i].m_translation , 
-                  m_bstore[i].m_rotation    );
+// -----------------------------------------------------------------------
+// Deal with posRPhiZ
+// -----------------------------------------------------------------------
+StatusCode XmlLVolumeCnv::dealWithPosRPhiZ (DOM_Element childElement) {
+  MsgStream log(msgSvc(), "XmlLVolumeCnv" );
+  if (transContext().empty()) {
+    StatusCode stcod;
+    stcod.setCode(CORRUPTED_DATA);  
+    throw XmlCnvException
+      (" posRPhiZ in an empty transformation context", stcod);
+  } else {
+    log << MSG::VERBOSE << "posRPhiZ tag in the context of "
+        << transContext() << endreq;
+    std::string rAttribute = dom2Std (childElement.getAttribute ("r"));
+    std::string phiAttribute = dom2Std (childElement.getAttribute ("phi"));
+    std::string zAttribute = dom2Std (childElement.getAttribute ("z"));
+    HepPoint3D point = doRPhiZTranslation(rAttribute,
+                                          phiAttribute,
+                                          zAttribute);
+    if (m_insideParameterized) {
+      // Parameterized physical volume initial position
+      // or step for transformation
+      ParamPV& ppv = m_ppvstore.back();
+      if (transContext() == "physvol") {
+        // Initial position
+        ppv.m_initialPos.m_translation = point;
+      } else {
+        // Step for transformation
+        ppv.m_stepTranslation = point;
+      }
+    } else if (transContext() == "physvol") {
+      // Posistion of a physical volume
+      PVitem &pv = m_pvstore.back();
+      pv.m_translation = point;
+    } else {
+      // Position of a solid (Hope...)
+      if (m_insideBoolean) {
+        sFound.m_translation = point;
+      } else {
+        log << MSG::WARNING
+            << "posRPhiZ for a solid makes sense only inside boolean solid"
+            << endreq;
+      }
     }
-    
-    m_solid = sol;
-    m_insideBoolean = false;
-    m_bstore.clear();
   }
-  else if( "subtraction" == tagName ) {
-    SolidSubtraction* sol = new SolidSubtraction( m_bsName, m_bstore[0].m_solid );
-    
-    for( unsigned int i = 1; i < m_bstore.size(); i++ ) {
-      sol->subtract( m_bstore[i].m_solid       , 
-                     m_bstore[i].m_translation ,  
-                     m_bstore[i].m_rotation    );
-    }
+  // returns
+  return StatusCode::SUCCESS;
+} // end dealWithPosRPhiZ
 
-    m_solid = sol;
-    m_insideBoolean = false;
-    m_bstore.clear();
-  }
-  else if( "intersection" == tagName ) {
-    SolidIntersection* sol = new SolidIntersection( m_bsName, m_bstore[0].m_solid );
-    
-    for( unsigned int i = 1; i < m_bstore.size(); i++ ) {
-      sol->intersect( m_bstore[i].m_solid       ,
-                      m_bstore[i].m_translation , 
-                      m_bstore[i].m_rotation    );
-    }
-    
-    m_solid = sol;
-    m_insideBoolean = false;
-    m_bstore.clear();
-  }
-  else if( tagName == "physvol" ) {
-    if( !m_insideParameterized ) { setTransContext( ""             ); } 
-    else                         { setTransContext( "paramphysvol" ); } 
-  }
-  else if( tagName == "paramphysvol" ) {
-    m_insideParameterized = false;
-    setTransContext("");
-  }
-  else if( tagName == "box" || tagName == "tubs" || tagName == "cons" ||
-           tagName == "trd" || tagName == "sphere" )                       {
 
-    if( m_insideBoolean == true ) {
-      sFound.m_solid = m_solid;
-      m_bstore.push_back( sFound );
+// -----------------------------------------------------------------------
+// Deal with posRThPhi
+// -----------------------------------------------------------------------
+StatusCode XmlLVolumeCnv::dealWithPosRThPhi (DOM_Element childElement) {
+  MsgStream log(msgSvc(), "XmlLVolumeCnv" );
+  if (transContext().empty()) {
+    StatusCode stcod;
+    stcod.setCode(CORRUPTED_DATA);  
+    throw XmlCnvException
+      (" posRThPhi in an empty transformation context", stcod);
+  } else {
+    log << MSG::VERBOSE << "posRThPhi tag in the context of "
+        << transContext() << endreq;
+    std::string rAttribute =
+      dom2Std (childElement.getAttribute ("r"));
+    std::string thetaAttribute =
+      dom2Std (childElement.getAttribute ("theta"));
+    std::string phiAttribute =
+      dom2Std (childElement.getAttribute ("phi"));
+    HepPoint3D point = doRThPhiTranslation(rAttribute,
+                                           thetaAttribute,
+                                           phiAttribute);
+    if (m_insideParameterized) {
+      // Parameterized physical volume initial position
+      // or step for transformation
+      ParamPV& ppv = m_ppvstore.back();        
+      if(transContext() == "physvol") {
+        // Initial position
+        ppv.m_initialPos.m_translation = point;
+      } else {
+        // Step for transformation
+        ppv.m_stepTranslation = point;
+      }
+    } else if (transContext() == "physvol") {
+      // Posistion of a physical volume
+      PVitem &pv = m_pvstore.back();
+      pv.m_translation = point;
+    } else {
+      // Position of a solid ( Hope... )
+      if (m_insideBoolean == true) {
+        sFound.m_translation = point;
+      } else {
+        log << MSG::WARNING
+            << "posRThPhi for a solid makes sense only inside boolean solid"
+            << endreq;
+      }
     }
-
-    setTransContext("");
   }
-  else {
-    // This end of tag we ignore
+  // returns
+  return StatusCode::SUCCESS;
+} // end dealWithPosRThPhi
+
+
+// -----------------------------------------------------------------------
+// Deal with rotXYZ
+// -----------------------------------------------------------------------
+StatusCode XmlLVolumeCnv::dealWithRotXYZ (DOM_Element childElement) {
+  MsgStream log(msgSvc(), "XmlLVolumeCnv" );
+  if (transContext().empty()) {
+    StatusCode stcod;
+    stcod.setCode(CORRUPTED_DATA);  
+    throw XmlCnvException
+      (" rotXYZ in an empty transformation context", stcod);
+  } else {
+    log << MSG::VERBOSE << "rotXYZ tag in the context of "
+        << transContext() << endreq;
+    std::string rotXAttribute = dom2Std (childElement.getAttribute ("rotX"));
+    std::string rotYAttribute = dom2Std (childElement.getAttribute ("rotY"));
+    std::string rotZAttribute = dom2Std (childElement.getAttribute ("rotZ"));
+    HepRotation rotation = doRotation(rotXAttribute,
+                                      rotYAttribute,
+                                      rotZAttribute);
+    if (m_insideParameterized) {
+      // Parameterized physical volume initial position
+      // or step for transformation
+        
+      ParamPV& ppv = m_ppvstore.back();
+      if (transContext() == "physvol") {
+        // Initial position
+        ppv.m_initialPos.m_rotation = rotation;
+      } else {
+        // Step for transformation
+        ppv.m_stepRotation = rotation;
+      }
+    } else if (transContext() == "physvol") {
+      // Rotation of a physical volume
+      PVitem &pv = m_pvstore.back();
+      pv.m_rotation = rotation;
+    } else {
+      // Rotation of a solid (Hope...)
+      if (m_insideBoolean) {
+        sFound.m_rotation = rotation;
+      }
+      else {
+        log << MSG::WARNING
+            << "rotXYZ for a solid makes sense only inside boolean solid"
+            << endreq;
+      }
+    }
+  }
+  // returns
+  return StatusCode::SUCCESS;
+} // end dealWithRotXYZ
+
+
+// -----------------------------------------------------------------------
+// Deal with rotAxis
+// -----------------------------------------------------------------------
+StatusCode XmlLVolumeCnv::dealWithRotAxis (DOM_Element childElement) {
+  MsgStream log(msgSvc(), "XmlLVolumeCnv" );
+  if (transContext().empty()) {
+    StatusCode stcod;
+    stcod.setCode(CORRUPTED_DATA);  
+    throw XmlCnvException
+      (" rotAxis in an empty transformation context", stcod);
+  } else {
+    log << MSG::VERBOSE << "rotAxis tag in the context of "
+        << transContext() << endreq;
+    std::string axThetaAttribute =
+      dom2Std (childElement.getAttribute ("axTheta"));
+    std::string axPhiAttribute =
+      dom2Std (childElement.getAttribute ("axPhi"));
+    std::string angleAttribute =
+      dom2Std (childElement.getAttribute ("angle"));
+    HepRotation rotation = doAxisRotation(axThetaAttribute,
+                                          axPhiAttribute,
+                                          angleAttribute);
+    if (m_insideParameterized) {
+      // Parameterized physical volume initial position
+      // or step for transformation
+      ParamPV& ppv = m_ppvstore.back();
+      if (transContext() == "physvol") {
+        // Initial position
+        ppv.m_initialPos.m_rotation = rotation;
+      } else {
+        // Step for transformation
+        ppv.m_stepRotation = rotation;
+      }
+    } else if (transContext() == "physvol") {
+      // Rotation of a physical volume
+      PVitem &pv = m_pvstore.back();
+      pv.m_rotation = rotation;
+    } else {
+      // Rotation of a solid (Hope...)
+      if (m_insideBoolean == true) {
+        sFound.m_rotation = rotation;
+      } else {
+        log << MSG::WARNING
+            << "rotAxis for a solid makes sense only inside boolean solid"
+            << endreq;
+      }
+    }
+  }
+  // returns
+  return StatusCode::SUCCESS;
+} // end dealWithRotAxis
+
+
+// -----------------------------------------------------------------------
+// Deal with translations and rotations
+// -----------------------------------------------------------------------
+void XmlLVolumeCnv::dealWithPosRotChildren (DOM_Element element) {
+  MsgStream log(msgSvc(), "XmlLVolumeCnv" );
+  // gets the children
+  DOM_NodeList childList = element.getChildNodes();
+  // scans them
+  unsigned int i;
+  for (i = 0; i < childList.getLength(); i++) {
+    if (childList.item(i).getNodeType() == DOM_Node::ELEMENT_NODE) {
+      // gets the current child
+      DOM_Node childNode = childList.item(i);
+      DOM_Element childElement = (DOM_Element &) childNode;
+      std::string tagName = dom2Std (childElement.getNodeName());
+      if ("posXYZ" == tagName) {
+        dealWithPosXYZ(childElement);
+      } else if ("posRPhiZ" == tagName) {
+        dealWithPosRPhiZ(childElement);
+      } else if ("posRThPhi" == tagName) {
+        dealWithPosRThPhi(childElement);
+      } else if ("rotXYZ" == tagName) {
+        dealWithRotXYZ(childElement);
+      } else if ("rotAxis" == tagName) {
+        dealWithRotAxis(childElement);
+      } else {
+        log << MSG::WARNING
+            << "This tag makes no sense : " << tagName << endreq;
+      }
+    }
   }
 }
 
-// Implementation of the obligatory method to provide a hint to generic XML
-// converter about the XML tag we want to be notified about
-const char* XmlLVolumeCnv::tag() const                                      {
-  return "logvol";
+
+// -----------------------------------------------------------------------
+// Deal with simple solid
+// -----------------------------------------------------------------------
+void XmlLVolumeCnv::dealWithSimpleSolidChildren (DOM_Element element) {
+  MsgStream log(msgSvc(), "XmlLVolumeCnv" );
+  DOM_NodeList childList = element.getChildNodes();
+  // scans them
+  unsigned int i;
+  for (i = 0; i < childList.getLength(); i++) {
+    if (childList.item(i).getNodeType() == DOM_Node::ELEMENT_NODE) {
+      // gets the current child
+      DOM_Node childNode = childList.item(i);
+      DOM_Element childElement = (DOM_Element &) childNode;
+      std::string tagName = dom2Std (childElement.getNodeName());
+      if ("box" == tagName) {
+        dealWithBox(childElement);
+      } else if ("cons" == tagName) {
+        dealWithCons(childElement);
+      } else if ("sphere" == tagName) {
+        dealWithSphere(childElement);
+      } else if ("tubs" == tagName) {
+        dealWithTubs(childElement);
+      } else if ("trd" == tagName) {
+        dealWithTrd(childElement);
+      } else {
+        log << MSG::WARNING
+            << "This tag makes no sense : " << tagName << endreq;
+      }
+    }
+  }
 }
 
-HepPoint3D XmlLVolumeCnv::doRPhiZTranslation( std::string r,
+
+// -----------------------------------------------------------------------
+// Create 3D translation
+// -----------------------------------------------------------------------
+HepPoint3D XmlLVolumeCnv::doRPhiZTranslation (std::string r,
                                               std::string phi,
-                                              std::string z )               {
-  
+                                              std::string z) {
   MsgStream log(msgSvc(), "XmlLVolumeCnv::doRPhiZTranslation" );
 
   HepPoint3D ret;
   
-  if( !r.empty() && !phi.empty() && !z.empty() )                            {
+  if (!r.empty() && !phi.empty() && !z.empty()) {
 
     // We must construct a unit vector here!!!!!!
     HepPoint3D tmp(1,1,1);
     ret = tmp;
 
-    if( 0 <= xmlSvc()->eval( r ) )                         {
-      ret.setPerp( xmlSvc()->eval( r ) );
-    }
-    else                                               {
+    if (0 <= xmlSvc()->eval(r)) {
+      ret.setPerp (xmlSvc()->eval (r));
+    } else {
       StatusCode stcod;
-      stcod.setCode( CORRUPTED_DATA );
-      throw XmlCnvException( " doRPhiZTranslation: r must be non-negative value!", stcod );
+      stcod.setCode (CORRUPTED_DATA);
+      throw XmlCnvException
+        ("doRPhiZTranslation: r must be non-negative value!", stcod);
     }
     
-    ret.setPhi(  xmlSvc()->eval( phi ) );
-    ret.setZ( xmlSvc()->eval( z ) );
-
+    ret.setPhi (xmlSvc()->eval(phi));
+    ret.setZ (xmlSvc()->eval(z));
   }
 
   return ret;
 }
 
-HepPoint3D XmlLVolumeCnv::doRThPhiTranslation( std::string r,
-                                                std::string theta,
-                                                std::string phi )          {
-  
+
+// -----------------------------------------------------------------------
+// Create 3D translation
+// -----------------------------------------------------------------------
+HepPoint3D XmlLVolumeCnv::doRThPhiTranslation (std::string r,
+                                               std::string theta,
+                                               std::string phi) {
   MsgStream log(msgSvc(), "XmlLVolumeCnv::doRThPhiTranslation" );
   HepPoint3D ret;
 
-  if( !r.empty() && !theta.empty() && !phi.empty() )                       {
+  if (!r.empty() && !theta.empty() && !phi.empty()) {
 
     // We must construct a unit vector here!!!!!!
     HepPoint3D tmp(1,1,1);
     ret = tmp;
 
-    if( 0 <= xmlSvc()->eval( r ) )                         {
-      ret.setMag( xmlSvc()->eval( r ) );
-    }
-    else                                               {
+    if (0 <= xmlSvc()->eval(r)) {
+      ret.setMag (xmlSvc()->eval(r));
+    } else {
       StatusCode stcod;
-      stcod.setCode( CORRUPTED_DATA );
-      throw XmlCnvException( " doRThPhiTranslation: r must be non-negative value!", stcod );
+      stcod.setCode (CORRUPTED_DATA);
+      throw XmlCnvException
+        ("doRThPhiTranslation: r must be non-negative value!", stcod);
     }
 
-    ret.setTheta(  xmlSvc()->eval( theta ) );
-    ret.setPhi(    xmlSvc()->eval( phi ) );
-
+    ret.setTheta (xmlSvc()->eval(theta));
+    ret.setPhi (xmlSvc()->eval(phi));
   }
-
-  // Debug printout of translation vector
-  //std::cout << "doTranslation: " << ret << std::endl;
-
+  
   return ret;
 }
 
-HepPoint3D XmlLVolumeCnv::doTranslation( std::string x,
+
+// -----------------------------------------------------------------------
+// Create 3D translation
+// -----------------------------------------------------------------------
+HepPoint3D XmlLVolumeCnv::doTranslation (std::string x,
                                          std::string y,
-                                         std::string z )                    {
-  
-  MsgStream log(msgSvc(), "XmlLVolumeCnv::doTranslation" );
+                                         std::string z) {
+  MsgStream log (msgSvc(), "XmlLVolumeCnv::doTranslation");
 
   HepPoint3D ret;
   
-  if( !x.empty() && !y.empty() && !z.empty() )                              {
-
+  if (!x.empty() && !y.empty() && !z.empty()) {
     double l_x = xmlSvc()->eval( x ); 
     double l_y = xmlSvc()->eval( y ); 
     double l_z = xmlSvc()->eval( z ); 
-
+    
     ret.setX( l_x );
     ret.setY( l_y );
     ret.setZ( l_z );
-
-    /* This suddenly doesn't work, different calling convention???
-    ret.setX( xmlSvc()->eval( x ) );
-    ret.setY( xmlSvc()->eval( y ) );
-    ret.setZ( xmlSvc()->eval( z ) );
-    */
   }
-
-  // Debug printout of translation vector
-  //std::cout << "doTranslation: " << ret << std::endl;
 
   return ret;
 }
 
-HepRotation XmlLVolumeCnv::doRotation( std::string rx,
-                                       std::string ry,
-                                       std::string rz )                    {
 
-  MsgStream log(msgSvc(), "XmlLVolumeCnv::doRotation" );
+// -----------------------------------------------------------------------
+// Create 3D rotation
+// -----------------------------------------------------------------------
+HepRotation XmlLVolumeCnv::doRotation (std::string rx,
+                                       std::string ry,
+                                       std::string rz) {
+  MsgStream log (msgSvc(), "XmlLVolumeCnv::doRotation");
 
   HepRotation rot;
 
-  if( !rx.empty() && !ry.empty() && !rz.empty() )                          {
-    rot =       HepRotateX3D( xmlSvc()->eval( rx ) ).getRotation();
-    rot = rot * HepRotateY3D( xmlSvc()->eval( ry ) ).getRotation();
-    rot = rot * HepRotateZ3D( xmlSvc()->eval( rz ) ).getRotation();
+  if (!rx.empty() && !ry.empty() && !rz.empty()) {
+    rot =       HepRotateX3D (xmlSvc()->eval(rx)).getRotation();
+    rot = rot * HepRotateY3D (xmlSvc()->eval(ry)).getRotation();
+    rot = rot * HepRotateZ3D (xmlSvc()->eval(rz)).getRotation();
     rot = rot.inverse();
   }
 
   return rot;
 }
 
-HepRotation XmlLVolumeCnv::doAxisRotation( std::string axtheta,
+
+// -----------------------------------------------------------------------
+// Create 3D rotation
+// -----------------------------------------------------------------------
+HepRotation XmlLVolumeCnv::doAxisRotation (std::string axtheta,
                                            std::string axphi,
-                                           std::string angle )            {
-  
-  MsgStream log(msgSvc(), "XmlLVolumeCnv::doAxisRotation" );
+                                           std::string angle) {
+  MsgStream log (msgSvc(), "XmlLVolumeCnv::doAxisRotation");
   
   HepRotation rot;
   
-  if( !axtheta.empty() && !axphi.empty() && !angle.empty() )               {
-    double axt  = xmlSvc()->eval( axtheta );
-    double axp  = xmlSvc()->eval( axphi   );
-    double angl = xmlSvc()->eval( angle   );
+  if (!axtheta.empty() && !axphi.empty() && !angle.empty()) {
+    double axt  = xmlSvc()->eval (axtheta);
+    double axp  = xmlSvc()->eval (axphi);
+    double angl = xmlSvc()->eval (angle);
     
-    if( axt < 0 || axt > 180 * degree ) 
-      { 
-        StatusCode stcod;
-        stcod.setCode( CORRUPTED_DATA );
-        throw XmlCnvException( " doAxisRotation: axTheta must be inside 0*&degree; and 180*&degree; ! ", stcod );
-      }
+    if (axt < 0 || axt > 180 * degree) { 
+      StatusCode stcod;
+      stcod.setCode (CORRUPTED_DATA);
+      throw XmlCnvException
+        (" doAxisRotation: axTheta must be inside 0*degree"
+         " and 180*degree ! ", stcod);
+    }
     
-    if( axp < 0 || axp > 360 * degree ) 
-      { 
-        StatusCode stcod;
-        stcod.setCode( CORRUPTED_DATA );
-        throw XmlCnvException( " doAxisRotation: axPhi   must be inside 0*&degree; and 360*&degree; ! ", stcod );
-      }
+    if (axp < 0 || axp > 360 * degree) { 
+      StatusCode stcod;
+      stcod.setCode (CORRUPTED_DATA);
+      throw XmlCnvException 
+        (" doAxisRotation: axPhi   must be inside 0*degree"
+         " and 360*degree ! ", stcod);
+    }
 
     // Construction of vector with input of theta and phi
-    // v = Hep3Vector( sin(theta)*cos(phi) , sin(theta)*sin(phi) , cos(theta) ) 
-    rot = HepRotate3D( angl,
-                       Hep3Vector( sin(axt)*cos(axp),
+    rot = HepRotate3D (angl,
+                       Hep3Vector (sin(axt)*cos(axp),
                                    sin(axt)*sin(axp),
-                                   cos(axt) )
-                     ).getRotation();
-
+                                   cos(axt))).getRotation();
     rot = rot.inverse();
   }
-    
+  
   return rot;
-}
-    
-
-HepTransform3D* XmlLVolumeCnv::doTransformation( std::string x,
-                                                std::string y,
-                                                std::string z,
-                                                std::string rx,
-                                                std::string ry,
-                                                std::string rz
-                                                )                          {
-  return new HepTransform3D( doRotation( rx, ry, rz ), doTranslation( x, y, z ) );
-}
-
-void XmlLVolumeCnv::doBoolean( SolidItem&  siRef,
-                               XmlCnvAttributeList& attributes )           {
-  
-  std::string tType = attributes.getValue( "type" );
-  
-  if( true == m_insideBoolean )                                            {
-    if( tType.empty() || "0" == tType )                                    {
-      // We can't ignore transformation attributes
-      //      siRef.m_transform = doTransformation( attributes.getValue( "x" ),
-      //                                     attributes.getValue( "y" ),
-      //                                    attributes.getValue( "z" ),
-      //                                    attributes.getValue( "rotX" ),
-      //                                    attributes.getValue( "rotY" ),
-      //                                    attributes.getValue( "rotZ" )
-      //                                  );
-      siRef.m_translation = doTranslation( attributes.getValue( "x"    ),
-                                                                         attributes.getValue( "y"    ),
-                                                                         attributes.getValue( "z"    ) );
-      
-      siRef.m_rotation    = doRotation( attributes.getValue( "rotX" ),
-                                                                      attributes.getValue( "rotY" ),
-                                                                attributes.getValue( "rotZ" ) );
-      siRef.m_solid = m_solid;
-      m_bstore.push_back( siRef );
-    }
-  }  
-}
-
-void XmlLVolumeCnv::doBoolTranslation( SolidItem&  siRef,
-                                       XmlCnvAttributeList& attributes )   {
-  if( true == m_insideBoolean )                                            {
-    siRef.m_translation = doTranslation( attributes.getValue( "x" ),
-                                         attributes.getValue( "y" ),
-                                         attributes.getValue( "z" ) );
-    
-    //siRef.m_solid = m_solid;
-    //m_bstore.push_back( siRef );
-  }  
-}
-
-void XmlLVolumeCnv::doBoolRPhiZTranslation( SolidItem&  siRef,
-                                       XmlCnvAttributeList& attributes )   {
-  if( true == m_insideBoolean )                                            {
-    siRef.m_translation = doRPhiZTranslation( attributes.getValue( "r" ),
-                                              attributes.getValue( "phi" ),
-                                              attributes.getValue( "z" ) );
-    
-    //siRef.m_solid = m_solid;
-    //m_bstore.push_back( siRef );
-  }  
-}
-
-void XmlLVolumeCnv::doBoolRThPhiTranslation( SolidItem&  siRef,
-                                       XmlCnvAttributeList& attributes )   {
-  if( true == m_insideBoolean )                                            {
-    siRef.m_translation = doRThPhiTranslation( attributes.getValue( "r" ),
-                                               attributes.getValue( "theta" ),
-                                               attributes.getValue( "phi" ) );
-    
-    //siRef.m_solid = m_solid;
-    //m_bstore.push_back( siRef );
-  }  
-}
-
-void XmlLVolumeCnv::doBoolRotation( SolidItem&  siRef,
-                                    XmlCnvAttributeList& attributes )     {
-  if( true == m_insideBoolean )                                           {
-    siRef.m_rotation    = doRotation( attributes.getValue( "rotX" ) ,
-                                      attributes.getValue( "rotY" ) ,
-                                      attributes.getValue( "rotZ" ) )  ;
-    //siRef.m_solid = m_solid;
-    //m_bstore.push_back( siRef );
-  }  
-}
-
-void XmlLVolumeCnv::doBoolAxisRotation( SolidItem&  siRef,
-                                    XmlCnvAttributeList& attributes )     {
-  if( true == m_insideBoolean )                                           {
-    siRef.m_rotation    = doAxisRotation( attributes.getValue( "axTheta" ),
-                                          attributes.getValue( "axPhi" ),
-                                          attributes.getValue( "angle" )
-                                        );
-  }  
 }

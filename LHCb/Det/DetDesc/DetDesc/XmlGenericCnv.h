@@ -1,124 +1,169 @@
-/// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/DetDesc/XmlGenericCnv.h,v 1.3 2001-01-25 12:12:29 mato Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/DetDesc/XmlGenericCnv.h,v 1.4 2001-05-14 15:13:37 sponce Exp $
+
 #ifndef DETDESC_XMLGENERICCNV_H
 #define DETDESC_XMLGENERICCNV_H
 
-/// Include files
-#include <sax/HandlerBase.hpp>
+// Include files
+#include <string>
+
+#include <dom/DOM_Element.hpp>
+#include <dom/DOM_Text.hpp>
 
 #include "GaudiKernel/Converter.h"
-#include "DetDesc/IXmlCnv.h"
 
-/// Forward and external declarations
+// Forward and external declarations
 class ISvcLocator;
-class ISax8BitDocHandler;
 class IXmlSvc;
 class GenericAddress;
-class SAXParser;
 class XmlCnvAttrList;
-class XmlAddress;
 template <class TYPE> class CnvFactory;
 
+
 /** @class XmlGenericCnv XmlGenericCnv.h DetDesc/XmlGenericCnv.h
+ *
+ *  Base class for the XML converters. It encapsulates the generic functionality
+ *  required by any converter of this type. The actual converters are children
+ *  of this one
+ *
+ *  @author Sebastien Ponce
+ *  @author Radovan Chytracek
+ *  @author Pere Mato
+ */
+class XmlGenericCnv : public Converter {
 
-    Base class for the XML converters. It encapsulates the generic functionality
-    required by any converter of this type. Implements the SAX interface and the
-    IXmlSvc.
+ public:
 
-    @author Radovan Chytracek
-    @author Pere Mato
-*/
-class XmlGenericCnv : public Converter, virtual public IXmlCnv, public HandlerBase {
-public:
-  /// Initialize the converter
+  /**
+   * Initializes the converter
+   *  @return status depending on the completion of the call
+   */
   virtual StatusCode initialize();
   
-  /// Initialize the converter
+  /**
+   * Finalizes the converter
+   *  @return status depending on the completion of the call
+   */
   virtual StatusCode finalize();
   
-  /// Create the transient representation of an object.
-  virtual StatusCode createObj(IOpaqueAddress* pAddress, DataObject*& refpObject);
+  /**
+   * Creates the transient representation of an object.
+   * @param pAddress the address of the object representation
+   * @param refpObject the object created
+   *  @return status depending on the completion of the call
+   */
+  virtual StatusCode createObj (IOpaqueAddress* pAddress,
+                                DataObject*& refpObject);
   
-  /// Update the transient object from the other representation.
-  virtual StatusCode updateObj(IOpaqueAddress* pAddress, DataObject* refpObject);
+  /**
+   * Updates the transient object from the other representation.
+   * @param pAddress the address of the object representation
+   * @param refpObject the object updated
+   *  @return status depending on the completion of the call
+   */
+  virtual StatusCode updateObj (IOpaqueAddress* pAddress,
+                                DataObject* refpObject);
   
-  /// Convert the transient object to the requested representation.
-  virtual StatusCode createRep(DataObject* pObject, IOpaqueAddress*& refpAddress);
+  /**
+   * Converts the transient object to the requested representation.
+   * @param pAddress the address of the object representation
+   * @param refpObject the object to convert
+   *  @return status depending on the completion of the call
+   */
+  virtual StatusCode createRep (DataObject* pObject,
+                                IOpaqueAddress*& refpAddress);
   
-  /// Update the converted representation of a transient object.
-  virtual StatusCode updateRep(IOpaqueAddress* pAddress, DataObject* pObject);
+  /**
+   * Updates the converted representation of a transient object.
+   * @param pAddress the address of the object representation
+   * @param refpObject the object whose representation has to be updated
+   *  @return status depending on the completion of the call
+   */
+  virtual StatusCode updateRep (IOpaqueAddress* pAddress,
+                                DataObject* pObject);
 
- 
-  // -----------------------------------------------------------------------
-  //  Implementations of the SAX DocumentHandler interface
-  // -----------------------------------------------------------------------
-  void startDocument();
-  void endDocument();  
-  void characters( const XMLCh* const chars, const unsigned int length );  
-  void ignorableWhitespace( const XMLCh* const chars, const unsigned int length );  
-  void processingInstruction( const XMLCh* const target, const XMLCh* const data );  
-  void startElement( const XMLCh* const name, AttributeList& attributes );  
-  void endElement( const XMLCh* const name );
+  /**
+   * Accessor to the IXmlSvc interface of the XmlCnvSvc service
+   * @return the IXmlSvc interface of this object
+   *  @return status depending on the completion of the call
+   */
+  IXmlSvc* xmlSvc() {
+    return m_xmlSvc;
+  }
 
-  // -----------------------------------------------------------------------
-  //  Implementations of the SAX ErrorHandler interface
-  // -----------------------------------------------------------------------
-  void warning( const SAXParseException& exception );
-  void error( const SAXParseException& exception );
-  void fatalError( const SAXParseException& exception );
-  
-  // -----------------------------------------------------------------------
-  //  Implementation of the SAX DTDHandler interface
-  // -----------------------------------------------------------------------
-  void notationDecl ( const XMLCh* const name, 
-                      const XMLCh* const publicId, 
-                      const XMLCh* const systemId );
-  
-  void unparsedEntityDecl ( const XMLCh* const name, 
-                            const XMLCh* const publicId, 
-                            const XMLCh* const systemId, 
-                            const XMLCh* const notationName );
-  
-  // -----------------------------------------------------------------------
-  //  Implementation of the IXmlCnv interface
-  // -----------------------------------------------------------------------
-  /// We need for each run a new SAX so...
-  virtual StatusCode initParser();
-  virtual StatusCode finiParser();
+  /**
+   * Accessor to the StorageType value
+   * @return the storage type for this object
+   */
+  static const unsigned char& storageType() {
+    return XML_StorageType;
+  }
 
-  /// Calling this method uses inside try{...}catch(...){...} block
-  virtual StatusCode parse( const char* fileName );
-
-  // -----------------------------------------------------------------------
-  //  Some Accessors
-  //------------------------------------------------------------------------
-  /// Access to the IXmlSvc interface of the XmlCnvSvc service
-  IXmlSvc* xmlSvc() { return m_xmlSvc; }
-  /// Access to the StorageType value 
-  static const unsigned char& storageType() { return XML_StorageType; }
 
 protected:
-  /// Constructor
-  XmlGenericCnv( ISvcLocator* svc,const CLID& clid );
-  /// Destructor
-  ~XmlGenericCnv() { }
 
-  GenericAddress*  m_objRcpt;   ///< The receipt for us that we need to store for the object
-  DataObject*      m_dataObj;   ///< Target DataObject 
-  unsigned int     m_level;     ///< Level of nesting
-  bool             m_doFound;   ///< Set to true if the given data object has been located in the data file
-  SAXParser*       m_xmlParser; ///< Dirty Xml worker and SAX event provider
-  bool             m_send;      ///< Indicator whether the XML tag data should be sent to ASCII client or not
-  std::string      m_tag;       ///< Name of the tag which is start and the end of controlled tag sequence
-  IXmlSvc*         m_xmlSvc;    ///< IXmlSvc reference
+  /**
+   * Constructor for this converter
+   * @param svc a ISvcLocator interface to find services
+   * @param clid the type of object the converter is able to convert
+   */
+  XmlGenericCnv (ISvcLocator* svc,const CLID& clid);
+
+  /**
+   * Default destructor
+   */
+  ~XmlGenericCnv() { }
+  
+  /** This creates the transient representation of an object from the
+   *  DOM_Element representing it. This actually does the "new" operation
+   *  and deals with the attributes of the node. This should not deal with
+   *  children of the node.
+   *  @param element the DOM_Element to be used to builds the object
+   *  @param refpObject the object to be built
+   *  @param SUCCESS or FAILURE depending on the completion of the
+   *  object creation
+   *  @return status depending on the completion of the call
+   */
+  virtual StatusCode i_createObj (DOM_Element element,
+                                  DataObject*& refpObject) = 0;
+
+  /** This fills the current object for its child element childElement.
+   *  This will be called for each element child of the current object
+   *  @param element the child processed here
+   *  @param refpObject the object to be filled
+   *  @return status depending on the completion of the call
+   */
+  virtual StatusCode i_fillObj (DOM_Element childElement,
+                                DataObject* refpObject);
+
+  /** This fills the current object for its child text node childText.
+   *  This will be called for each text child of the current object
+   *  @param childText the child processed here
+   *  @param refpObject the object to be filled
+   *  @return status depending on the completion of the call
+   */
+  virtual StatusCode i_fillObj (DOM_Text childText,
+                                DataObject* refpObject);
+
+  /** This is called after the current object was filled. This is were
+   *  some computation based on the object content could be done
+   *  @param refpObject the object to be processed
+   *  @return status depending on the completion of the call
+   */
+  virtual StatusCode i_processObj (DataObject* refpObject);
+
+  /**
+   * builds a standard string from a DOMString
+   * @param domString the DOMString
+   * @return a standard string with the same characters
+   */
+  static const std::string dom2Std (DOMString domString);
+
+  /// The receipt for us that we need to store for the object
+  GenericAddress*  m_objRcpt;
+
+  /// the IXmlSvc interface of this object
+  IXmlSvc* m_xmlSvc;
+
 };
 
 #endif // DETDESC_XMLGENERICCNV_H
-
-
-
-
-
-
-
-
-

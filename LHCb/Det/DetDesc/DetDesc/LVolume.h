@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/DetDesc/LVolume.h,v 1.11 2001-03-13 21:57:30 mato Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/DetDesc/LVolume.h,v 1.12 2001-05-14 15:13:36 sponce Exp $
 #ifndef     DETDESC_VOLUMES_LVOLUME_H
 #define     DETDESC_VOLUMES_LVOLUME_H
 /// GaudiKernel 
@@ -91,6 +91,8 @@ public:
   inline const   std::string&  name        () const { return DataObject::fullpath() ; } 
   /// return the C++ pointer to solid 
   inline const   ISolid*       solid       () const ;
+  /// sets the C++ pointer to solid 
+  inline void    setSolid      (ISolid* solid) ;
   /// return the material (C++ pointer)
   inline  const  Material*     material    () const ;
   /// return the material (name)

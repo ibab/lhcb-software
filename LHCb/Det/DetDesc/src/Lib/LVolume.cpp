@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/Lib/LVolume.cpp,v 1.9 2001-03-13 21:57:32 mato Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/Lib/LVolume.cpp,v 1.10 2001-05-14 15:13:41 sponce Exp $
 
 #include "GaudiKernel/StatusCode.h"
 #include "GaudiKernel/DataObject.h"
@@ -114,7 +114,7 @@ LVolume::LVolume( const std::string& name        ,
   , m_lv_msgSvc       (    0     ) 
   , m_lv_svcLoc       (    0     )
 {
-  if( 0 == Solid ) { throw LVolumeException("LVolume::LVolume(1), ISolid* points to NULL ") ; }
+  //if( 0 == Solid ) { throw LVolumeException("LVolume::LVolume(1), ISolid* points to NULL ") ; }
   ///
   {
     m_lv_validSince = new TimePoint( validSince ) ;
@@ -163,7 +163,7 @@ LVolume::LVolume( const std::string& name        ,
   , m_lv_msgSvc       (    0     ) 
   , m_lv_svcLoc       (    0     )
 {
-  if( 0 == Solid ) { throw LVolumeException("LVolume::LVolume(2), ISolid* points to NULL ") ; }
+  //if( 0 == Solid ) { throw LVolumeException("LVolume::LVolume(2), ISolid* points to NULL ") ; }
   ///
   {
     m_lv_validSince = new TimePoint( time_absolutepast    ) ;

@@ -22,6 +22,7 @@ inline bool LVolume::isValid ()                 { return validSince() <         
 inline bool LVolume::isValid ( const ITime& t ) { return validSince() < t &&  t < validTill() ;};
 ///
 inline const  ISolid*      LVolume::solid       () const { return m_lv_solid        ;};
+inline void   LVolume::setSolid     (ISolid* solid)  { m_lv_solid = solid; };
 inline const  std::string& LVolume::materialName() const { return m_lv_materialName ;}; 
 inline const  Material*    LVolume::material    () const
 {       

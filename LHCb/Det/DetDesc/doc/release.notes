@@ -2,6 +2,12 @@ package DetDesc
 package manager : N.N 
 
 !===========================================================================
+! 20010510 - Sebastien Ponce
+ - This is a complete reimplementation of the xml converters. The underlying
+ technology is now DOM while it was SAX. THIS HAS INFLUENCE ON THE USER
+ CODE that will need to be updated. THIS IS NON BACKWARD COMPATIBLE.
+
+!===========================================================================
 ! 20010430 - Gonzalo Gracia
     Bug fixed in XmlLVolumeCnv.cpp (optical surfaces were not working properly).
     Fix compilation warning on XmlMixtureCnv.cpp
@@ -24,8 +30,9 @@ package manager : N.N
 !===========================================================================
 ! 20010320 - Vanya Belyaev 
  -  src/component/XmlMixtureCnv.cpp - bug fix 
+
 !===========================================================================
-! 20010320 - Sebasties Ponce
+! 20010320 - Sebastien Ponce
  -  ISolid.h: Corrected mistype #ifdef logic to avoid using std::deque for gcc-2.91
 
 !===========================================================================

@@ -1,112 +1,83 @@
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/component/XmlCatalogCnv.h,v 1.3 2001-05-14 15:13:42 sponce Exp $
+
 #ifndef DETDESC_XMLCATALOGCNV_H
 #define DETDESC_XMLCATALOGCNV_H
-/// Include files
+
+// Include files
 #include "GaudiKernel/ClassID.h"
-///
+
+#include <dom/DOM_Node.hpp>
+#include <dom/DOMString.hpp>
+
 #include "DetDesc/XmlGenericCnv.h"
-#include "DetDesc/ISax8BitDocHandler.h"
-/// Forward and external declarations
+
+// Forward and external declarations
 class RegistryEntry;
 template <class TYPE> class CnvFactory;
 
 
-class XmlCatalogCnv : public XmlGenericCnv, public ISax8BitDocHandler
-{
-  /// Friend: HbookPersSvc needed for instantiation
+/** @class XmlCatalogCnv
+ *
+ * XML converter for Catalogs
+ *
+ * @author Sebastien Ponce
+ * @author Radovan Chytracek
+ * @author Pere Mato
+ */
+class XmlCatalogCnv : public XmlGenericCnv {
+
+  /// Friend needed for instantiation
   friend class CnvFactory<XmlCatalogCnv>;
   
 public:
-  
-  /// -----------------------------------------------------------------------
-  ///  Implementations of the Converter interface
-  /// -----------------------------------------------------------------------
-  /// Create the transient representation of an object.
-  virtual StatusCode createObj(IOpaqueAddress* pAddress, DataObject*& refpObject);
-  
-  /// Update the transient object from the other representation.
-  virtual StatusCode updateObj(IOpaqueAddress* pAddress, DataObject* refpObject);
-  
-  /// Convert the transient object to the requested representation.
-  virtual StatusCode createRep(DataObject* pObject, IOpaqueAddress*& refpAddress);
-  
-  /// Update the converted representation of a transient object.
-  virtual StatusCode updateRep(IOpaqueAddress* pAddress, DataObject* pObject);
-  
-  static const unsigned char& storageType() { return XML_StorageType; }
-  
+ 
+  /**
+   * accessor to the type of elements that this converter converts
+   * @return the classID for this type
+   */
   static const CLID& classID();
   
-  /// -----------------------------------------------------------------------
-  ///  Implementations of the SAX 8 bit DocumentHandler interface
-  /// -----------------------------------------------------------------------
-  virtual void startDocument( const char* info );
-
-  virtual void endDocument( const char* info );
-  
-  virtual void characters( const char* const chars, const unsigned int length );
-  
-  virtual void ignorableWhitespace( const char* const chars, const unsigned int length );
-  
-  virtual void processingInstruction( const char* const target, const char* const data );
-  
-  virtual void startElement( const char* const name, XmlCnvAttributeList& attributes);
-  
-  virtual void endElement( const char* const name );
-  
-  // Implementation of the obligatory method to provide a hint to generic XML
-  // converter about the XML tag we want to be notfied about
-  virtual const char* tag() const;
   
 protected:
   
-  /// Standard Constructor
+  /**
+   * Constructor for this converter
+   * @param svcs a ISvcLocator interface to find services
+   */
   XmlCatalogCnv(ISvcLocator* svcs);
   
-  /// Standard Destructor
+  /**
+   * Default destructor
+   */
   virtual ~XmlCatalogCnv() {}
-  
+
+  /** Creates the transient representation of an object from a DOM_Element.
+   * Overrides the default method in XmlGenericCnv
+   * @param element the DOM_Element to be used to builds the object
+   * @param refpObject the object to be built
+   * @return status depending on the completion of the call
+   */
+  virtual StatusCode i_createObj (DOM_Element element,
+                                  DataObject*& refpObject);
+
+  /** Fills the current object for its child element childElement.
+   * Overrides the default method in XmlGenericCnv
+   * @param element the child processed here
+   * @param refpObject the object to be filled
+   * @return status depending on the completion of the call
+   */
+  virtual StatusCode i_fillObj (DOM_Element childElement,
+                                DataObject* refpObject);
+
+  /**
+   * This method checks that a converter exists for a given clID.
+   * If the converter exists, nothing is done. If not, an exception
+   * is raised.
+   * @param clsID the clID to check
+   */
   void checkConverterExistence(const CLID& clsID);
-private:
-  
-  /// Remember the current level of nesting for catalogs and their children elements
-  RegistryEntry* m_nestedDir;
-  bool           m_ignore;
-  
+
 };
-
-inline void XmlCatalogCnv::startDocument(
-                                          const char* //info
-                                        )
-{
-}
-
-inline void XmlCatalogCnv::endDocument(
-                                        const char* //info
-                                      )
-{
-}
-  
-inline void XmlCatalogCnv::characters(
-                                       const char* const  //chars
-                                      ,const unsigned int //length
-                                     )
-{
-}
-  
-inline void XmlCatalogCnv::ignorableWhitespace(
-                                                const char* const  //chars
-                                               ,const unsigned int //length
-                                              )
-{
-}
-  
-inline void XmlCatalogCnv::processingInstruction(
-                                                  const char* const //target
-                                                 ,const char* const //data
-                                                )
-{
-}
-
 
 #endif // DETDESC_XMLCNVSVC_XMLCATALOGCNV_H
 
