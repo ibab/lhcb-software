@@ -1,4 +1,4 @@
-// $Id: L0Monitor.h,v 1.1 2002-06-23 13:37:39 ocallot Exp $
+// $Id: L0Monitor.h,v 1.2 2002-09-12 11:53:29 ocallot Exp $
 #ifndef L0MONITOR_H 
 #define L0MONITOR_H 1
 
@@ -42,9 +42,20 @@ private:
   double m_trigElec;
   double m_trigPhot;
   double m_trigHadr;
-  double m_trigPi0;
+  double m_trigPi0L;
+  double m_trigPi0G;
+  double m_trigPi0 ;
   double m_trigMuon;
   double m_trigSumMu;
+
+  double m_exclElec;
+  double m_exclPhot;
+  double m_exclHadr;
+  double m_exclPi0L;
+  double m_exclPi0G;
+  double m_exclPi0 ;
+  double m_exclMuon;
+  double m_exclSumMu;
 
   bool         m_fillNtuple;
   std::string  m_tupleName;

@@ -1,4 +1,4 @@
-// $Id: L0Monitor.cpp,v 1.1 2002-06-23 13:37:38 ocallot Exp $
+// $Id: L0Monitor.cpp,v 1.2 2002-09-12 11:53:29 ocallot Exp $
 // Include files
 #include "stdio.h"
 // from Gaudi
@@ -13,6 +13,7 @@
 #include "Event/L0CaloCandidate.h"
 #include "Event/L0MuonCandidate.h"
 #include "Event/L0PuVeto.h"
+#include "Event/L0Muon.h"
 #include "Event/L0DUReport.h"
 #include "Event/MCParticle.h"
 
@@ -94,9 +95,20 @@ StatusCode L0Monitor::initialize() {
   m_trigElec  = 0.;
   m_trigPhot  = 0.;
   m_trigHadr  = 0.;
+  m_trigPi0L  = 0.;
+  m_trigPi0G  = 0.;
   m_trigPi0   = 0.;
   m_trigMuon  = 0.;
   m_trigSumMu = 0.;
+
+  m_exclElec  = 0.;
+  m_exclPhot  = 0.;
+  m_exclHadr  = 0.;
+  m_exclPi0L  = 0.;
+  m_exclPi0G  = 0.;
+  m_exclPi0   = 0.;
+  m_exclMuon  = 0.;
+  m_exclSumMu = 0.;
 
   return StatusCode::SUCCESS;
 };
@@ -135,15 +147,38 @@ StatusCode L0Monitor::execute() {
 
   int decis = decision->typeL0Trig();
   m_totEvt  += 1.;
+  
   if ( 0 != decis ) {
+    int pattern = 0;
     m_goodL0 += 1.;
-    if ( decision->isTrig( L0Trig::Electron  ) ) m_trigElec  += 1.;
-    if ( decision->isTrig( L0Trig::Photon    ) ) m_trigPhot  += 1.;
-    if ( decision->isTrig( L0Trig::Hadron    ) ) m_trigHadr  += 1.;
-    if ( decision->isTrig( L0Trig::Pi0Local  ) ||
-         decision->isTrig( L0Trig::Pi0Global ) ) m_trigPi0   += 1.;
-    if ( decision->isTrig( L0Trig::Mu1       ) ) m_trigMuon  += 1.;
-    if ( decision->isTrig( L0Trig::SumMu     ) ) m_trigSumMu += 1.;
+    if ( decision->isTrig( L0Trig::Electron  ) ) pattern += 1;
+    if ( decision->isTrig( L0Trig::Photon    ) ) pattern += 2;
+    if ( decision->isTrig( L0Trig::Hadron    ) ) pattern += 4;
+    if ( decision->isTrig( L0Trig::Pi0Local  ) ) pattern += 8;
+    if ( decision->isTrig( L0Trig::Pi0Global ) ) pattern += 16;
+    if ( decision->isTrig( L0Trig::Mu1       ) ) pattern += 32;
+    if ( decision->isTrig( L0Trig::SumMu     ) ) pattern += 64;
+
+    if ( pattern & 1  ) m_trigElec  += 1.;
+    if ( pattern & 2  ) m_trigPhot  += 1.;
+    if ( pattern & 4  ) m_trigHadr  += 1.;
+    if ( pattern & 8  ) m_trigPi0L  += 1.;
+    if ( pattern & 16 ) m_trigPi0G  += 1.;
+    if ( pattern & 24 ) m_trigPi0   += 1.;
+    if ( pattern & 32 ) m_trigMuon  += 1.;
+    if ( pattern & 64 ) m_trigSumMu += 1.;
+
+    if ( pattern == 1  ) m_exclElec  += 1.;
+    if ( pattern == 2  ) m_exclPhot  += 1.;
+    if ( pattern == 4  ) m_exclHadr  += 1.;
+    if ( pattern == 8  ) m_exclPi0L  += 1.;
+    if ( pattern == 16 ) m_exclPi0G  += 1.;
+    if ( (pattern == 8 ) || 
+         (pattern == 16) || 
+         (pattern == 24)   ) m_exclPi0   += 1.;
+    if ( pattern == 32 ) m_exclMuon  += 1.;
+    if ( pattern == 64 ) m_exclSumMu += 1.;
+    
   }
 
   containerName = L0CaloCandidateLocation::Default;
@@ -198,26 +233,28 @@ StatusCode L0Monitor::execute() {
   if ( 0 != candMuon ) {
     L0MuonCandidates::const_iterator itMuon ;
     for ( itMuon = candMuon->begin() ; candMuon->end() != itMuon ; ++itMuon ) {
-      double eMuon = fabs( (*itMuon)->pt() / GeV );
-      if ( ( 1 == (*itMuon)->status()) && (0 < eMuon) ) {
-        if ( eMuon > emu1 ) {
-          emu3 = emu2;
-          emu2 = emu1;
-          emu1 = eMuon;
-          log << MSG::VERBOSE << "Added in 1 " << eMuon << endreq;
-        } else if ( eMuon > emu2 ) {
-          emu3 = emu2;
-          emu2 = eMuon;
-          log << MSG::VERBOSE << "Added in 2 " << eMuon << endreq;
-        } else if ( eMuon > emu3 ) {
-          emu3 = eMuon;
-          log << MSG::VERBOSE << "Added in 3 " << eMuon << endreq;
+      if ( L0Muon::OK == (*itMuon)->status() ) {
+        double eMuon = fabs( (*itMuon)->pt() / GeV );
+        if ( 0 < eMuon ) {
+          if ( eMuon > emu1 ) {
+            emu3 = emu2;
+            emu2 = emu1;
+            emu1 = eMuon;
+            log << MSG::VERBOSE << "Added in 1 " << eMuon << endreq;
+          } else if ( eMuon > emu2 ) {
+            emu3 = emu2;
+            emu2 = eMuon;
+            log << MSG::VERBOSE << "Added in 2 " << eMuon << endreq;
+          } else if ( eMuon > emu3 ) {
+            emu3 = eMuon;
+            log << MSG::VERBOSE << "Added in 3 " << eMuon << endreq;
+          }
+          sumu += eMuon;
+          
+          log << MSG::VERBOSE << "eMuon " << eMuon << " emu1 " << emu1
+              << " emu2 " << emu2 << " emu3 " << emu3
+              << " sumu " << sumu << endreq;
         }
-        sumu += eMuon;
-
-        log << MSG::VERBOSE << "eMuon " << eMuon << " emu1 " << emu1
-            << " emu2 " << emu2 << " emu3 " << emu3
-            << " sumu " << sumu << endreq;
       }
     }
     log << MSG::DEBUG << "Muon 1/2/3 Sum E = " << emu1 << " "
@@ -239,51 +276,50 @@ StatusCode L0Monitor::execute() {
   }
   log << MSG::DEBUG << "pileup = " << pile << endreq;
 
-
-  /**
-   * Scans the truth, to get the highest object of each kind.
-   */
-  SmartDataPtr< MCParticles> partCtnr( eventDataService(),
+  if ( m_fillNtuple ) {
+    /**
+     * Scans the truth, to get the highest object of each kind.
+     */
+    SmartDataPtr< MCParticles> partCtnr( eventDataService(),
                                        MCParticleLocation::Default );
-  if ( 0 == partCtnr ) {
-    log << MSG::INFO << "No MCParticle container !" << endreq;
-    return StatusCode::SUCCESS;
-  }
-  float angle;
-  float Et;
-  int   pID;
+    if ( 0 == partCtnr ) {
+      log << MSG::INFO << "No MCParticle container !" << endreq;
+      return StatusCode::SUCCESS;
+    }
+    float angle;
+    float Et;
+    int   pID;
 
-  double tElec = 0.;
-  double tPhot = 0.;
-  double tPi0  = 0.;
-  double tHadr = 0.;
-  double tMuon = 0.;
-
-  MCParticles::const_iterator pItr ;
-  for ( pItr = partCtnr->begin(); partCtnr->end() != pItr; pItr++ ){
-    angle = (*pItr)->momentum().theta();
-    if ( ( 0.030 < angle ) && ( 0.250 > angle )  ) {
-      Et = (*pItr)->momentum().e() * sin( angle ) / GeV;
-      pID = abs( (*pItr)->particleID().pid() );
-
-      if ( 22 == pID  ) {
-        if ( tPhot < Et ) tPhot = Et;
-      } else if ( 11 == pID) {
-        if ( tElec < Et ) tElec = Et;
-      } else if ( 13 == pID ) {
-        if ( tMuon < Et ) tMuon = Et;
-      } else if ( 111 == pID ){
-        if ( tPi0 < Et ) tPi0 = Et;
-      } else if ( (211 == pID) || ( 321 == pID) || (2212 == pID ) ) {
-        if ( tHadr < Et ) tHadr = Et;
+    double tElec = 0.;
+    double tPhot = 0.;
+    double tPi0  = 0.;
+    double tHadr = 0.;
+    double tMuon = 0.;
+    
+    MCParticles::const_iterator pItr ;
+    for ( pItr = partCtnr->begin(); partCtnr->end() != pItr; pItr++ ){
+      angle = (*pItr)->momentum().theta();
+      if ( ( 0.030 < angle ) && ( 0.250 > angle )  ) {
+        Et = (*pItr)->momentum().e() * sin( angle ) / GeV;
+        pID = abs( (*pItr)->particleID().pid() );
+        
+        if ( 22 == pID  ) {
+          if ( tPhot < Et ) tPhot = Et;
+        } else if ( 11 == pID) {
+          if ( tElec < Et ) tElec = Et;
+        } else if ( 13 == pID ) {
+          if ( tMuon < Et ) tMuon = Et;
+        } else if ( 111 == pID ){
+          if ( tPi0 < Et ) tPi0 = Et;
+        } else if ( (211 == pID) || ( 321 == pID) || (2212 == pID ) ) {
+          if ( tHadr < Et ) tHadr = Et;
+        }
       }
     }
-  }
-
-  /**
-   * Fill the ntuple
-   */
-  if ( m_fillNtuple ) {
+    
+    /**
+     * Fill the ntuple
+     */
     m_decis = decis;
     m_elec  = elec;
     m_phot  = phot;
@@ -327,29 +363,53 @@ StatusCode L0Monitor::finalize() {
   MsgStream log(messageService(), name());
   log << MSG::DEBUG << "==> Finalize" << endreq;
   
-  char line[132];
-
   log << MSG::INFO << "== L0 Performance on " << m_totEvt << " events." 
       << endreq;
-  if ( 1. > m_totEvt ) m_totEvt = 1.;
-  sprintf( line, " %8.0f  %6.2f %%", m_puVeto, 100. * m_puVeto/m_totEvt );
-  log << "PileUp Veto  : " << line << endreq;
-  sprintf( line, " %8.0f  %6.2f %%", m_goodL0, 100. * m_goodL0/m_totEvt );
-  log << "Accepted L0  : " << line << endreq;
-  sprintf( line, " %8.0f  %6.2f %%", m_trigElec, 100. * m_trigElec/m_totEvt );
-  log << "  Electron   : " << line << endreq;
-  sprintf( line, " %8.0f  %6.2f %%", m_trigPhot, 100. * m_trigPhot/m_totEvt );
-  log << "  Photon     : " << line << endreq;
-  sprintf( line, " %8.0f  %6.2f %%", m_trigHadr, 100. * m_trigHadr/m_totEvt );
-  log << "  Hadron     : " << line << endreq;
-  sprintf( line, " %8.0f  %6.2f %%", m_trigPi0 , 100. * m_trigPi0 /m_totEvt );
-  log << "  Pi0        : " << line << endreq;
-  sprintf( line, " %8.0f  %6.2f %%", m_trigMuon, 100. * m_trigMuon/m_totEvt );
-  log << "  Muon       : " << line << endreq;
-  sprintf( line, " %8.0f  %6.2f %%", m_trigSumMu,100. * m_trigSumMu/m_totEvt );
-  log << "  Sum Muon   : " << line << endreq;
+  double fact;
+  if ( 1. > m_totEvt ) {
+    fact = 0.;
+  } else {
+    fact = 100. / m_totEvt;
+  }
   
+  log << "PileUp Veto  : " 
+      << format( " %8.0f  %6.2f %%", m_puVeto, fact * m_puVeto ) << endreq;
+  log << "Accepted L0  : " 
+      << format( " %8.0f  %6.2f %%", m_goodL0, fact * m_goodL0 )<< endreq;
 
+  log << "  Electron   : " 
+      << format( " %8.0f  %6.2f %%  excl %8.0f  %6.2f %%", 
+                 m_trigElec, fact*m_trigElec, m_exclElec, fact*m_exclElec )
+      << endreq;
+
+  log << "    Photon   : " 
+      << format( " %8.0f  %6.2f %%  excl %8.0f  %6.2f %%", 
+                 m_trigPhot, fact*m_trigPhot, m_exclPhot, fact*m_exclPhot )
+      << endreq;
+  log << "    Hadron   : " 
+      << format( " %8.0f  %6.2f %%  excl %8.0f  %6.2f %%", 
+                 m_trigHadr, fact*m_trigHadr, m_exclHadr, fact*m_exclHadr )
+      << endreq;
+  log << " Pi0 Local   : " 
+      << format( " %8.0f  %6.2f %%  excl %8.0f  %6.2f %%", 
+                 m_trigPi0L, fact*m_trigPi0L, m_exclPi0L, fact*m_exclPi0L )
+      << endreq;
+  log << "Pi0 Global   : " 
+      << format( " %8.0f  %6.2f %%  excl %8.0f  %6.2f %%", 
+                 m_trigPi0G, fact*m_trigPi0G, m_exclPi0G, fact*m_exclPi0G )
+      << endreq;
+  log << "   any Pi0   : " 
+      << format( " %8.0f  %6.2f %%  excl %8.0f  %6.2f %%", 
+                 m_trigPi0, fact*m_trigPi0, m_exclPi0, fact*m_exclPi0 )
+      << endreq;
+  log << "      Muon   : " 
+      << format( " %8.0f  %6.2f %%  excl %8.0f  %6.2f %%", 
+                 m_trigMuon, fact*m_trigMuon, m_exclMuon, fact*m_exclMuon )
+      << endreq;
+  log << "  Sum Muon   : " 
+      << format( " %8.0f  %6.2f %%  excl %8.0f  %6.2f %%", 
+                 m_trigSumMu, fact*m_trigSumMu, m_exclSumMu, fact*m_exclSumMu )
+      << endreq;
 
   return StatusCode::SUCCESS;
 }

@@ -1,6 +1,19 @@
-$Id: release.notes,v 1.14 2002-07-09 19:05:42 cattanem Exp $
+$Id: release.notes,v 1.15 2002-09-12 11:53:29 ocallot Exp $
 Package		: L0/L0DU
 Package Manager : Pascal Perret
+
+! 2002-09-12 - Olivier Callot
+ - L0Monitor prints now also the exclusive. 'any Pi0' means the OR of the two
+   Pi0 triggers, and exclusive in this case means only one or both of the pi0
+   are fired.
+
+! 2002-08-26 - Olivier Callot
+ - Check if the DUReport is already in memory, overwrite it if so. This is 
+   for DaVinci usage.
+ - Update thresholds for the Summer 2002 production, tuning from Eduardo
+   Rodriges. e=2.40, gam = 4.99, had = 3.18, mu = .46, sumMu = 4.01, pi0
+   unchanged 4.10 (L) and 4.60 (G)
+ - Print the thresholds at initialization.
 
 !========================= L0DU v6r0 2002-07-09 =========================
 ! 2002-06-23 - Olivier Callot

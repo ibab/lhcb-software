@@ -1,4 +1,4 @@
-// $Id: DecisionUnit.cpp,v 1.10 2002-06-20 18:40:54 ocallot Exp $
+// $Id: DecisionUnit.cpp,v 1.11 2002-09-12 11:53:29 ocallot Exp $
 //#define L0DU_DECISIONUNIT_CPP
 
 #include <math.h>
@@ -54,16 +54,16 @@ DecisionUnit::DecisionUnit( const std::string& name,
   declareProperty( "PuVetoData"          , m_nameOfInputPileUpVeto      );
   declareProperty( "AcceptedData"        , m_nameOfOutputDecisionUnit   );
 
-  declareProperty( "EElCut1"             , m_eElCut1    = 2.65 * GeV );
-  declareProperty( "EElCut2"             , m_eElCut2    = 2.65 * GeV );
+  declareProperty( "EElCut1"             , m_eElCut1    = 2.40 * GeV );
+  declareProperty( "EElCut2"             , m_eElCut2    = 2.40 * GeV );
   declareProperty( "ScalEl"              , m_scalEl     = 0 );
 
-  declareProperty( "EPhCut1"             , m_ePhCut1    = 3.82 * GeV);
-  declareProperty( "EPhCut2"             , m_ePhCut2    = 3.82 * GeV);
+  declareProperty( "EPhCut1"             , m_ePhCut1    = 4.99 * GeV);
+  declareProperty( "EPhCut2"             , m_ePhCut2    = 4.99 * GeV);
   declareProperty( "ScalPh"              , m_scalPh     = 0 );
 
-  declareProperty( "EHaCut1"             , m_eHaCut1    = 3.95 * GeV );
-  declareProperty( "EHaCut2"             , m_eHaCut2    = 3.95 * GeV );
+  declareProperty( "EHaCut1"             , m_eHaCut1    = 3.18 * GeV );
+  declareProperty( "EHaCut2"             , m_eHaCut2    = 3.18 * GeV );
   declareProperty( "ScalHa"              , m_scalHa     = 0 );
 
   declareProperty( "ESumEtCut1"          , m_eSumEtCut1 = 5.00 * GeV );
@@ -78,12 +78,12 @@ DecisionUnit::DecisionUnit( const std::string& name,
   declareProperty( "EPi0GCut2"           , m_ePi0GCut2  = 4.60 * GeV);
   declareProperty( "ScalPi0G"            , m_scalPi0G   = 0 );
 
-  declareProperty( "EMu1Cut1"            , m_eMu1Cut1   = 0.61 * GeV );
-  declareProperty( "EMu1Cut2"            , m_eMu1Cut2   = 0.61 * GeV );
+  declareProperty( "EMu1Cut1"            , m_eMu1Cut1   = 0.46 * GeV );
+  declareProperty( "EMu1Cut2"            , m_eMu1Cut2   = 0.46 * GeV );
   declareProperty( "ScalMu1"             , m_scalMu1    = 0 );
 
-  declareProperty( "ESumMuCut1"          , m_eSumMuCut1 = 1.83 * GeV );
-  declareProperty( "ESumMuCut2"          , m_eSumMuCut2 = 1.83 * GeV );
+  declareProperty( "ESumMuCut1"          , m_eSumMuCut1 = 4.01 * GeV );
+  declareProperty( "ESumMuCut2"          , m_eSumMuCut2 = 4.01 * GeV );
   declareProperty( "ScalSumMu"           , m_scalSumMu  = 0 );
   declareProperty( "NMuSumMu"            , m_nMuSumMu   = 8 );
   
@@ -97,10 +97,6 @@ DecisionUnit::DecisionUnit( const std::string& name,
 StatusCode DecisionUnit::initialize() {
   
   MsgStream log(msgSvc(),name());
-
-  log << MSG::INFO 
-      << "Initialization" 
-      << endreq;
 
 // ** check for the valid names of the input/output data containers
 
@@ -132,9 +128,17 @@ StatusCode DecisionUnit::initialize() {
   }
 
 
-  log << MSG::INFO
-      << "Initalization completed successfully"
-      << endreq;
+  log << MSG::INFO << "============ L0 Thresholds ==" << endreq;
+  log << format( "Electron    : %5.2f GeV", m_eElCut1/GeV ) << endreq;
+  log << format( "Photon      : %5.2f GeV", m_ePhCut1/GeV ) << endreq;
+  log << format( "Hadron      : %5.2f GeV", m_eHaCut1/GeV ) << endreq;
+  log << format( "SumEtHadron : %5.2f GeV", m_eSumEtCut1/GeV ) << endreq;
+  log << format( "Pi0Local    : %5.2f GeV", m_ePi0LCut1/GeV ) << endreq;
+  log << format( "Pi0Global   : %5.2f GeV", m_ePi0GCut1/GeV ) << endreq;
+  log << format( "Muon        : %5.2f GeV", m_eMu1Cut1/GeV ) << endreq;
+  log << format( "SumMuon     : %5.2f GeV", m_eSumMuCut1/GeV ) << endreq;
+  log << "=============================" << endreq;
+  
   return StatusCode::SUCCESS;
 
 }
@@ -406,20 +410,28 @@ StatusCode DecisionUnit::execute() {
   }
 
     
-  // Save result for others uses 
+  // Save result for others uses.
+  // First find if some decision exist, if yes just overwrite its content.
 
-  L0DUReport* decisUnit = new L0DUReport( m_typeL0Trig );
-  // Registering of DecisUnit container object into the event data store
+  L0DUReport* decisUnit;
+  SmartDataPtr<L0DUReport> oldDu( eventSvc(), m_nameOfOutputDecisionUnit );
+  if ( 0 == oldDu ) {
+    decisUnit = new L0DUReport( m_typeL0Trig );
+    // Registering of DecisUnit container object into the event data store
  
-  StatusCode sc = eventSvc()->registerObject( m_nameOfOutputDecisionUnit, 
-                                              decisUnit );
-  if ( sc.isFailure() ) {
-    delete decisUnit;
-    log << MSG::ERROR
-        << "Unable to register output L0TrigDecis "
-        << "into the transient event data store" 
-        << endreq;
-    return StatusCode::FAILURE;
+    StatusCode sc = eventSvc()->registerObject( m_nameOfOutputDecisionUnit, 
+                                                decisUnit );
+    if ( sc.isFailure() ) {
+      delete decisUnit;
+      log << MSG::ERROR
+          << "Unable to register output L0TrigDecis "
+          << "into the transient event data store" 
+          << endreq;
+      return StatusCode::FAILURE;
+    }
+  } else {
+    decisUnit = oldDu;
+    decisUnit->setTypeL0Trig( m_typeL0Trig );
   }
 
   log << MSG::DEBUG
