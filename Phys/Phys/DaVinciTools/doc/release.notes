@@ -1,8 +1,13 @@
-! $Id: release.notes,v 1.65 2004-01-14 19:00:06 gcorti Exp $
+! $Id: release.notes,v 1.66 2004-01-29 17:29:30 gcorti Exp $
 ! Package     : DaVinciTools
 ! Responsible : Gloria Corti, Sandra Amato
 
-!========================== DaVinciTools v8r4 2004-01-14 ==================
+!========================== DaVinciTools v8r4 2004-01-29 ==================
+! 2004-01-29 - Gloria CORTI for Vincenzo VAGNONI
+ - src/ParabolicTransporter.cpp
+   . bug fix of two swapped indeces in the error matrix causing 
+     the Chi2 to become ill defined when using TTT tracks.   
+
 ! 2004-01-14 - Gloria CORTI
  - cmt/requirements
    . use v* to allow compilation against fifferent versions of LHCb

@@ -1,4 +1,4 @@
-// $Id: ParabolicTransporter.cpp,v 1.5 2004-01-14 19:00:06 gcorti Exp $
+// $Id: ParabolicTransporter.cpp,v 1.6 2004-01-29 17:29:30 gcorti Exp $
 // Include files 
 
 // Utility Classes
@@ -302,6 +302,10 @@ StatusCode ParabolicTransporter::magfTransport(Particle *& workParticle,
   TM(3,4) = dfAxdSy*qDivP*eplus*c_light*dz;
   TM(3,5) = -fAx*q*eplus*c_light*dz/(p*p);
 
+  TM(4,3) = dfAydSx*qDivP*eplus*c_light*dz;
+  TM(4,4) = 1.0 + dfAydSy*qDivP*eplus*c_light*dz;
+  TM(4,5) = -fAy*q*eplus*c_light*dz/(p*p);
+
   VX0(1,1) = oldPOTErr(1,1);
   VX0(2,1) = oldPOTErr(2,1);
   VX0(2,2) = oldPOTErr(2,2);
@@ -328,8 +332,8 @@ StatusCode ParabolicTransporter::magfTransport(Particle *& workParticle,
 
   newPosSlopesCorr(1,1) = VX0(3,1);
   newPosSlopesCorr(1,2) = VX0(3,2);
-  newPosSlopesCorr(2,2) = VX0(4,1);
-  newPosSlopesCorr(2,1) = VX0(4,2);
+  newPosSlopesCorr(2,1) = VX0(4,1);
+  newPosSlopesCorr(2,2) = VX0(4,2);
   newPosSlopesCorr(3,1) = VX0(5,1);
   newPosSlopesCorr(3,2) = VX0(5,2);
 
