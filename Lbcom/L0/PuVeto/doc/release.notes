@@ -1,11 +1,11 @@
-! $Id: release.notes,v 1.28 2004-12-07 19:56:55 dhcroft Exp $
+! $Id: release.notes,v 1.29 2004-12-08 07:50:43 cattanem Exp $
 ! Package     : L0/PuVeto
 ! Responsible : Olivier Callot
 
+!========================= PuVeto v6r0 2004-12-07 =========================
 ! 2004-12-07 - David Hutchcroft
  - Due to the second change in DeVelo's interface the PuVeto needed a tweek
 
-!========================= PuVeto v6r0 2004-12-03 =========================
 ! 2004-12-03 - David Hutchcroft
  - Another modifcation for the new (new) DeVelo interface
 
