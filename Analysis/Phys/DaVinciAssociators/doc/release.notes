@@ -1,7 +1,10 @@
-! $Id: release.notes,v 1.57 2004-11-16 16:11:51 pkoppenb Exp $
+! $Id: release.notes,v 1.58 2004-11-23 10:30:50 pkoppenb Exp $
 ! Package     : DaVinciAssociators
 ! Responsible : Philippe Charpentier
 
+! 2004-11-23 - P. Koppenburg
+ - options/TestAssociators.opts
+   . Renamed as DVTestAssociators.opts
 ! 2004-11-16 - P. Koppenburg
  - src/Particle2MCLink.cpp
    . Small hack to suppress the annoying message 
