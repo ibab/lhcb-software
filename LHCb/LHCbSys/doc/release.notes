@@ -4,6 +4,7 @@
 ! Purpose     : LHCb OO kernel packages
 !-----------------------------------------------------------------------------
 
+!====================== LHCbSys v11r11 2003-04-15 ============================
 ! 2003-04-15 - Marco Cattaneo
  - requirements :
 	 use GaudiConf v6r6, KernelSys v1r1, DetSys v1r5, EventSys v13r5, 
