@@ -1,4 +1,4 @@
-//$Id: ParamSet.cpp,v 1.2 2003-07-02 16:00:59 sponce Exp $
+//$Id: ParamSet.cpp,v 1.3 2003-10-22 08:47:10 papanest Exp $
 
 #include "DetDesc/ParamSet.h"
 #include "DetDesc/ParamException.h"
@@ -459,8 +459,8 @@ ParamSet::paramVectorAsDouble( std::string name )
     throw ParamException("No paramVector with this name : \""
 				 + name + "\" !");
   }
-  if (m_paramMap[name].kind != IParamSet::DOUBLE &&
-      m_paramMap[name].kind != IParamSet::INT ) {
+  if (m_paramVectorMap[name].kind != IParamSet::DOUBLE &&
+      m_paramVectorMap[name].kind != IParamSet::INT ) {
     throw ParamException("paramVector " + name +
 				 " does not have numerical values.");
   }
