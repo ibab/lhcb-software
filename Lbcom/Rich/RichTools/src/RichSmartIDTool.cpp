@@ -5,7 +5,7 @@
  * Implementation file for class : RichSmartIDTool
  *
  * CVS Log :-
- * $Id: RichSmartIDTool.cpp,v 1.11 2005-02-22 18:11:58 jonrob Exp $
+ * $Id: RichSmartIDTool.cpp,v 1.12 2005-03-02 14:57:26 jonrob Exp $
  *
  * @author Antonis Papanestis
  * @date 2003-10-28
@@ -50,9 +50,10 @@ StatusCode RichSmartIDTool::initialize()
                                           { DeRichHPDPanelLocation::Rich2Panel0,
                                             DeRichHPDPanelLocation::Rich2Panel1 } };
   //loop over riches and photo detector panels
-  unsigned int rich, panel;
-  for( rich=0; rich<m_photoDetPanels.size(); ++rich ) {
-    for( panel=0; panel<m_photoDetPanels[rich].size(); ++panel ) {
+  for ( unsigned int rich = 0; rich < m_photoDetPanels.size(); ++rich ) 
+  {
+    for ( unsigned int panel = 0; panel < m_photoDetPanels[rich].size(); ++panel ) 
+    {
       m_photoDetPanels[rich][panel] = getDet<DeRichHPDPanel>( pdPanelName[rich][panel] );
       debug() << "Stored photodetector panel "
               << m_photoDetPanels[rich][panel]->name() << endreq;
@@ -63,11 +64,11 @@ StatusCode RichSmartIDTool::initialize()
   // Initialise channel list
   m_readoutChannels.clear();
 
-  return StatusCode::SUCCESS;
+  return sc;
 }
 
 //=============================================================================
-StatusCode RichSmartIDTool::finalize  ()
+StatusCode RichSmartIDTool::finalize()
 {
   return RichToolBase::finalize();
 }
@@ -110,7 +111,7 @@ HepPoint3D RichSmartIDTool::hpdPosition ( const RichSmartID hpdid ) const
 // Returns the SmartID for a given global position
 //=============================================================================
 StatusCode RichSmartIDTool::smartID ( const HepPoint3D& globalPoint,
-                                      RichSmartID& smartid) const
+                                      RichSmartID& smartid ) const
 {
 
   try {
