@@ -1,0 +1,30 @@
+package GaussSys
+version v5r0
+
+branches cmt doc
+
+#=====================================================================
+# fix versions
+#=====================================================================
+macro GAUSSVERS "v5r0"
+
+use GaussEnv	"$(GAUSSVERS)"
+
+#==================================================================
+# Gauss packages
+#==================================================================
+# GEANT4 libraries
+use GEANT4		v2r4101p0 Sim
+
+# Generator stuff ...
+use EvtGen              v3r1    Gen
+use GeneratorModules    v4r0    Gen
+
+# GiGa stuff...
+use GiGa        	v10r0  Sim        
+use GiGaCnv     	v8r0    Sim
+
+# OPACS stuff
+use OPACSLIB		v3	Vis
+
+	
