@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.15 2002-12-03 17:20:53 andreav Exp $
+# $Id: requirements,v 1.16 2002-12-03 17:34:21 andreav Exp $
 package DetCondExample
 version v4r2
 
@@ -29,9 +29,6 @@ set DETCONDEXAMPLE_DAQRECORDSIZE 100000
 
 # Setup for the test CondDB used in the example
 setup_script setupDB
-
-# Remove the test CondDB used in the example
-cleanup_script cleanupDB
 
 # Path to some useful scripts using sql
 path_append PATH ${DETCONDEXAMPLEROOT}/sql
