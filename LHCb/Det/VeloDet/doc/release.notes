@@ -1,6 +1,11 @@
-! $Id: release.notes,v 1.14 2002-04-24 09:51:20 ocallot Exp $
+! $Id: release.notes,v 1.15 2002-04-25 15:34:28 ocallot Exp $
 package VeloDet
 package manager : Velo Group
+
+!=============================================================================
+! 25/04/2002 - Olivier Callot
+  - Fix the string type for the sensor, as a bug has been fixed in Det/DetDesc
+  - Test that the type is known, log and fail if not.
 
 !=============================================================================
 ! 24/04/2002 - Olivier Callot  ** v5r0 **

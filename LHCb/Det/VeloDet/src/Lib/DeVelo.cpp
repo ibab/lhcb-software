@@ -1,4 +1,4 @@
-// $Id: DeVelo.cpp,v 1.12 2002-04-24 09:51:24 ocallot Exp $
+// $Id: DeVelo.cpp,v 1.13 2002-04-25 15:34:28 ocallot Exp $
 //
 // ============================================================================
 #define  VELODET_DEVELO_CPP 1
@@ -200,29 +200,37 @@ StatusCode DeVelo::initialize() {
         it = std::find( pars.begin() , pars.end () , std::string("Type") );
         if( pars.end() != it ) {
           typeStr = (*sens)->userParameterAsString( *it ) ;
-          if ( typeStr == " VetoL" ) {
+          if ( typeStr == "VetoL" ) {
             type = 0;
-          } else if ( typeStr == " VetoR" ) {
+          } else if ( typeStr == "VetoR" ) {
             type = 1;
           } else {
             if ( inVeto ) {
               inVeto = false;
               index  = 0;
             }
-            if ( typeStr == " RLeft" ) {
+            if ( typeStr == "RLeft" ) {
               type = 0;
-            } else if ( typeStr == " RRigh" ) {
+            } else if ( typeStr == "RRigh" ) {
               type = 1;
-            } else if ( typeStr == " Phi1L" ) {
+            } else if ( typeStr == "Phi1L" ) {
               type = 2;
-            } else if ( typeStr == " Phi1R" ) {
+            } else if ( typeStr == "Phi1R" ) {
               type = 3;
-            } else if ( typeStr == " Phi2L" ) {
+            } else if ( typeStr == "Phi2L" ) {
               type = 4;
-            } else if ( typeStr == " Phi2R" ) {
+            } else if ( typeStr == "Phi2R" ) {
               type = 5;
             }
           }
+        }
+
+        if ( 0 > type ) {
+          loging << MSG::ERROR << "Unknown type " << typeStr
+                 << " for sensor " << index
+                 << " at z = " << z
+                 << endreq;
+          sc = StatusCode::FAILURE;
         }
 
         VeloSensor* sensor = new VeloSensor();
