@@ -11,6 +11,7 @@ branches cmt doc
 use Boole		v5r0	Digi
 use DigiAlg		v2r3	Digi
 use LHCbTools		v1r0	Kernel
+use MCTools             v1r2    Phys
 
 # L0 trigger
 use L0Calo              v7r2	L0
@@ -21,6 +22,13 @@ use L0DU                v6r6	L0
 # L1 trigger
 use L1VeloTrack         v5r6	L1
 use L1Decision		v2r4	L1
+
+# New L1+Hlt trigger
+use TrgTools            v2r0    Trg
+use TrgChecker          v2r0    Trg
+use TrgVelo             v2r0    Trg
+use TrgVeloTT           v1r0    Trg
+use L1Reco              v2r0    Trg
 
 # Calorimeter
 use CaloInterfaces      v3r1	Calo
