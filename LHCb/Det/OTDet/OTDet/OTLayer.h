@@ -1,4 +1,4 @@
-// $Id: OTLayer.h,v 1.4 2002-08-07 15:38:26 jvantilb Exp $
+// $Id: OTLayer.h,v 1.5 2002-10-14 15:44:07 jvantilb Exp $
 #ifndef OTDET_OTLAYER_H
 #define OTDET_OTLAYER_H 1
 
@@ -22,7 +22,7 @@
  *
  *  @author M. Witek
  *  @author Adapted to the Event Model by J. van Tilburg 
- *          jtilburg@nbikhef.nl (06-06-2002)
+ *          jtilburg@nikhef.nl (06-06-2002)
  *  @date   11-11-2000  
  */
 
@@ -41,11 +41,16 @@ public:
   /// destructor
   virtual ~OTLayer();
 
-  // basic routine to calculate hits for MC hit
+  /// basic routine to calculate hits for MC hit
   bool calculateHits( HepPoint3D entryPoint,
                       HepPoint3D exitPoint,
                       std::vector<OTChannelID>& channels,
                       std::vector<double>& driftDistances);
+
+  /// calculate the distance to the wire (assuming straight lines)
+  double distanceToWire(const OTChannelID aChannel, 
+                        const HepPoint3D& aPoint, 
+                        const double tx, const double ty) const;
 
   /// returns (x,y,z) of the center of straw
   HepPoint3D centerOfStraw(const int iStraw, const int iModule) const;
@@ -84,8 +89,14 @@ public:
   /// returns u of straw iStraw in module iModule of this layer
   double uOfStraw(const int iStraw, const int iModule) const;
 
+  /// returns u of OTChannelID
+  double uOfStraw(const OTChannelID aChannel) const;
+
   /// returns z of the straw
   double zOfStraw(const int iStraw, const int iModule) const;  
+
+  /// returns z of OTChannelID
+  double zOfStraw(const OTChannelID aChannel) const;
 
   /// number of straw in that module
   int nStrawsInModule(const int iModule) const;
@@ -145,6 +156,19 @@ private:
   double  m_cosAngle;        ///< cos of the stereo angle
 
 };
+
+// -----------------------------------------------------------------------------
+//   end of class
+// -----------------------------------------------------------------------------
+
+inline int OTLayer::nStrawsInModule(const int iModule) const {
+ 
+  int nStraw = 0;
+  if (iModule<(2*m_halfNumModule+1)){
+    nStraw = 2*m_halfNumStraw[iModule];
+  }
+  return nStraw;
+}
 
 #endif // OTDET_OTLAYER_H
 

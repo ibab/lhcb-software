@@ -1,4 +1,4 @@
-// $Id: DeOTDetector.h,v 1.8 2002-08-07 15:38:25 jvantilb Exp $
+// $Id: DeOTDetector.h,v 1.9 2002-10-14 15:44:04 jvantilb Exp $
 #ifndef OTDET_DEOTDETECTOR_H
 #define OTDET_DEOTDETECTOR_H 1
 
@@ -60,6 +60,37 @@ public:
   /// return the channel left from a given channel
   OTChannelID nextChannelLeft(OTChannelID aChannel) const;
 
+  /// get the straw resolution
+  double resolution() const {return m_resolution;}
+  
+  /// get the resolution with magn. field correction
+  double resolution(const double by) const;
+
+  /// returns the propagation delay (ns/mm)
+  double propagationDelay() const {return m_propagationDelay;} ;
+
+  /// Calculate the propagation delay along the wire
+  double propagationTime(const OTChannelID aChannel, 
+                         const double x, const double y ) const;
+
+  /// Calculate max drift as function of By
+  double maxDriftTimeFunc(const double by) const;
+  
+  /// r-t relation without correction for the magnetic field
+  double driftTime(const double driftDist) const;
+  
+  /// r-t relation with correction for the magnetic field
+  double driftTime(const double driftDist, const double by) const;
+
+  /// returns the drift delay without magnetic field correction (ns/mm)
+  double driftDelay() const {return m_maxDriftTime/m_cellRadius;}
+
+  /// inverse r-t relation without correction for the magnetic field
+  double driftDistance( const double driftTime) const;
+
+  /// inverse r-t relation with correction for the magnetic field
+  double driftDistance( const double driftTime, const double by ) const;
+
   /// get the number of tracker stations
   unsigned int numStations()  { return m_numStations; }
 
@@ -71,9 +102,38 @@ public:
 
 private:
 
+  double m_resolution;            ///< straw resolution
+  double m_resolutionCor;         ///< magn. field correction on resolution
+  double m_propagationDelay;      ///< speed of propagation along wire
+  double m_maxDriftTime;          ///< maximum drift time
+  double m_maxDriftTimeCor;       ///< magn. correction on maximum drift time
+  double m_cellRadius;            ///< cell size
+
   unsigned int m_numStations;     ///< number of stations
   unsigned int m_firstOTStation;  ///< first OT station
   std::vector<OTLayer*> m_layers; ///< vector of layers containing geometry
 };
+
+// -----------------------------------------------------------------------------
+//   end of class
+// -----------------------------------------------------------------------------
+
+inline double DeOTDetector::driftTime(const double driftDist) const
+{
+  // r-t relation without correction for the magnetic field
+  // convert r to t - hack as drift dist can > rCell
+  if ( fabs(driftDist) < m_cellRadius ) {
+    return ( fabs(driftDist) / m_cellRadius) * m_maxDriftTime;
+  } else {
+    return m_maxDriftTime;
+  }
+}
+
+inline double DeOTDetector::driftDistance( const double driftTime) const
+{
+  // inverse r-t relation without correction for the magnetic field
+  return driftTime * m_cellRadius / m_maxDriftTime;
+}
+
 
 #endif  // OTDET_DEOTDETECTOR_H

@@ -1,6 +1,18 @@
-! $Id: release.notes,v 1.10 2002-10-04 11:37:43 cattanem Exp $
+! $Id: release.notes,v 1.11 2002-10-14 15:44:07 jvantilb Exp $
 ! Package     : OTDet
 ! Responsible : J. van Tilburg
+
+! 2002-10-14 - Jeroen van Tilburg
+ - Add member functions to DeOTDetector (a.o.):
+     o double resolution()
+     o double propagationTime(OTChannelID, x, y)  
+     o double driftTime(driftDist) = r-t relation
+     o double driftDistance(driftTime) = inverse r-t relation
+   These functions will allow that hard-coded parameters are not needed 
+   anymore.
+ - Add function to OTLayer:
+     o double distanceToWire(OTChannelID, HepPoint3D, double tx, double ty)
+   This calculates the distance to a wire given a point in space plus slopes.
 
 !========================== OTDet v2r2 2002-10-04 ==========================
 ! 2002-08-07 Jeroen van Tilburg

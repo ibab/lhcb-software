@@ -1,4 +1,4 @@
-// $Id: OTLayer.cpp,v 1.4 2002-08-07 15:38:26 jvantilb Exp $
+// $Id: OTLayer.cpp,v 1.5 2002-10-14 15:44:08 jvantilb Exp $
 
 // CLHEP
 #include "CLHEP/Units/SystemOfUnits.h"
@@ -219,16 +219,6 @@ OTLayer::~OTLayer()
   delete[] m_yModuleCenter;
   delete[] m_xModuleSize;
   delete[] m_yModuleSize;
-}
-
-
-int OTLayer::nStrawsInModule(const int iModule) const {
- 
-  int nStraw = 0;
-  if (iModule<(2*m_halfNumModule+1)){
-    nStraw = 2*m_halfNumStraw[iModule];
-  }
-  return nStraw;
 }
 
 
@@ -551,6 +541,20 @@ bool OTLayer::calculateHits( HepPoint3D entryPoint,
 
 }
 
+double OTLayer::distanceToWire(const OTChannelID aChannel, 
+                               const HepPoint3D& aPoint, 
+                               const double tx, const double ty) const
+{
+  // calculate the distance to the wire (assuming straight lines)
+  double z = zOfStraw(aChannel);
+  double x = aPoint.x() + tx*(z - aPoint.z())  ;
+  double y = aPoint.y() + ty*(z - aPoint.z())  ;
+  double tu   = tx * m_cosAngle + ty * m_sinAngle;
+  double cosU = 1./sqrt( 1. + pow( tu, 2 ));
+  double dist = ( x*m_cosAngle + y*m_sinAngle - uOfStraw(aChannel) ) * cosU;
+
+  return dist;
+}
 
 void OTLayer::xy2uv(const double x, const double y, 
                     double& u, double& v) const
@@ -630,6 +634,11 @@ double OTLayer::uOfStraw(const int iStraw, const int iModule) const{
 
 }
 
+double OTLayer::uOfStraw(const OTChannelID aChannel) const
+{
+  return uOfStraw(aChannel.straw(), aChannel.module());
+}
+
 double OTLayer::zOfStraw(const int iStraw, const int iModule) const {
 
   if (( iStraw < 1 ) || ( iStraw > 2*m_halfNumStraw[iModule] )) {
@@ -644,6 +653,12 @@ double OTLayer::zOfStraw(const int iStraw, const int iModule) const {
   }
 
 }
+
+double OTLayer::zOfStraw(const OTChannelID aChannel) const
+{
+  return zOfStraw(aChannel.straw(), aChannel.module());
+}
+
 
 HepPoint3D OTLayer::centerOfStraw( const int iStraw, 
                                    const int iModule) const{

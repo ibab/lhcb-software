@@ -1,4 +1,4 @@
-// $Id: DeOTDetector.cpp,v 1.6 2002-08-07 15:38:26 jvantilb Exp $
+// $Id: DeOTDetector.cpp,v 1.7 2002-10-14 15:44:07 jvantilb Exp $
 
 // CLHEP
 #include "CLHEP/Geometry/Point3D.h"
@@ -51,6 +51,17 @@ StatusCode DeOTDetector::initialize()
     return sc ; 
   }
 
+  // get resolution parameters
+  m_resolution = this->userParameterAsDouble("resolution");
+  m_resolutionCor = this->userParameterAsDouble("resolutionCor");
+
+  // get the rt relation parameters
+  m_propagationDelay = this->userParameterAsDouble("propagationDelay");
+  m_maxDriftTime = this->userParameterAsDouble("maxDriftTime");
+  m_maxDriftTimeCor = this->userParameterAsDouble("maxDriftTimeCor");
+  m_cellRadius = this->userParameterAsDouble("cellRadius");
+
+  // get station number parameters
   m_numStations = this->userParameterAsInt("numStations");
   m_firstOTStation =  this->userParameterAsInt("firstOTStation");
 
@@ -192,6 +203,16 @@ double DeOTDetector::distanceAlongWire(OTChannelID channelID,
 }
 
 
+double DeOTDetector::propagationTime(const OTChannelID aChannel, 
+                                     const double x, const double y ) const
+{
+  // Calculate the propagation delay along the wire
+  double distAlongWire = distanceAlongWire(aChannel, x, y);
+
+  return distAlongWire * propagationDelay();
+}
+
+
 OTChannelID DeOTDetector::nextChannelRight(OTChannelID aChannel) const
 {
   const int iModule  = aChannel.module();
@@ -240,4 +261,58 @@ OTChannelID DeOTDetector::nextChannelLeft(OTChannelID aChannel) const
     OTChannelID nextLeft = OTChannelID(0,0,0,0);
     return nextLeft;
   }
-} 
+}
+
+
+double DeOTDetector::resolution(const double by) const
+{  
+  // Calculate resolution
+  // The form is p1+p2*B^2 (empirical fit to the testbeam results)
+  // p1, p2 vary for different gas mixes
+  // The parameterization is only valid for Bx<1.4T (or there abouts)
+
+  return ( m_resolution-(m_resolutionCor*pow(by,2.0)) );
+}
+
+
+double DeOTDetector::maxDriftTimeFunc(const double by) const
+{
+  // Calculate max drift as function of B 
+  // The form is p1+p2*B^2 (empirical fit to the testbeam results)
+  // p1, p2 vary for different gas mixes
+  // The parameterization is only valid for Bx<1.4T (or there abouts)
+
+  return (m_maxDriftTime + (m_maxDriftTimeCor * pow(by,2.0)) );
+}
+
+
+double DeOTDetector::driftTime(const double driftDist,const double by) const
+{
+  // r-t relation with correction for the magnetic field
+
+  // get max drift time 
+  double maxDriftTime = maxDriftTimeFunc( by );
+
+  // convert r to t - hack as drift dist can > rCell
+  double driftTime;
+  if ( fabs(driftDist) < m_cellRadius ) {
+    driftTime = (fabs(driftDist) / m_cellRadius) * maxDriftTime;
+  } else {
+    driftTime = maxDriftTime;
+  }
+
+  return driftTime;
+}
+
+
+double DeOTDetector::driftDistance( const double driftTime, 
+                                    const double by ) const
+{
+  // inverse r-t relation with correction for the magnetic field
+
+  // get max drift time with correction for magnetic field
+  double maxDriftTime = maxDriftTimeFunc(by);
+
+  // inverse r-t relation
+  return driftTime * m_cellRadius / maxDriftTime;  
+}
