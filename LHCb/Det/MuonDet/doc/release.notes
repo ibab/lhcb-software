@@ -1,14 +1,14 @@
-! $Id: release.notes,v 1.35 2004-04-23 12:08:00 cattanem Exp $
+! $Id: release.notes,v 1.36 2004-04-23 12:09:05 cattanem Exp $
 !
 ! Package     : MuonDet
 ! Responsible : Alessia Satta
 
-!========================= MuonDet v5r1 2004-04-23 =========================
+!========================= MuonDet v4r6 2004-04-23 =========================
 ! 2004-04-23 - Marco Cattaneo
  - Fix a memory leak (Savannah bug 3129) (just commented out some debug code!)
  - Fix some doxygen warnings
 
-!========================= MuonDet v5r0 2004-02-04 =========================
+!========================= MuonDet v4r5 2004-02-04 =========================
 ! 2004-02-04 - Alessia Satta
  - Add components to decode the Muon cabling:
    4 new classes MuonStationCabling,MuonL1Board,MuonODEBoard,MuonTSMap
