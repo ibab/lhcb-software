@@ -1,4 +1,4 @@
-// $Id: MuonBackground.cpp,v 1.19 2004-04-14 13:49:50 cattanem Exp $
+// $Id: MuonBackground.cpp,v 1.20 2004-04-26 10:37:25 asatta Exp $
 // Include files 
 
 // from Gaudi
@@ -814,7 +814,7 @@ StatusCode MuonBackground::createHit(KeyedContainer<MCMuonHit>**
   float xpos = 0.F;
   float ypos = 0.F;
   float zpos = 0.F;
-  msg<<MSG::DEBUG<<"new track"<<endreq;
+  msg<<MSG::DEBUG<<"new track"<<index<<endreq;
   
   while(!hitInsideCha&&tryR<maxTryR){
     
@@ -869,18 +869,17 @@ StatusCode MuonBackground::createHit(KeyedContainer<MCMuonHit>**
   
   if(!hitInsideCha){
     msg<<MSG::DEBUG<<" could not find a r.phi combination "<<endreq;
-  }else{
-    //define the chamber index in the total reference...
+  }  else{    //define the chamber index in the total reference...
     int partition=station*m_regionNumber+regionIndex-1;    
     int chamberGlobal=
       m_pGetInfo->getGlobalChamberNumber(chamberIndex,partition)-1;    
-
+	
     //extract the hit gaps
     int allgap=(int)(m_hitgap[index])->giveRND();
     int max=8;    
     std::vector<int> gapHitTmp;
     msg<<MSG::DEBUG<<" gap extracted "<<allgap<<" multiplicity "<<multi<<
-      endreq;
+      " "<<index<<endreq;
     
     for(int i=0;i<m_gaps;i++){      
       int gap=allgap/max;      
@@ -891,6 +890,11 @@ StatusCode MuonBackground::createHit(KeyedContainer<MCMuonHit>**
         msg<<MSG::DEBUG<<"allgap "<<gap<<" "<<gapHitTmp.back()<<" "<<
           max<<endreq;
       max=max/2;      
+    }
+    if(gapHitTmp.size()!=multi+1) {
+      msg<<MSG::WARNING<<"problem in extraction the gaps exit "<<endreq;
+      return StatusCode::SUCCESS;
+      
     }
     std::vector<int> gapHit;
     std::vector<int>::reverse_iterator it;
@@ -986,6 +990,7 @@ StatusCode MuonBackground::createHit(KeyedContainer<MCMuonHit>**
       if(allHitsInsideCha)hitsToAdd=true;
       
     }
+    
 
     
 
@@ -1209,6 +1214,10 @@ StatusCode MuonBackground::createHit(KeyedContainer<MCMuonHit>**
 
     
   }
+  
+  
+  
+  
   
   return StatusCode::SUCCESS;
 }
