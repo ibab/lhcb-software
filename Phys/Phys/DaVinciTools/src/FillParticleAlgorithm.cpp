@@ -1,4 +1,4 @@
-// $Id: FillParticleAlgorithm.cpp,v 1.1 2002-03-27 20:34:59 gcorti Exp $
+// $Id: FillParticleAlgorithm.cpp,v 1.2 2002-04-03 16:19:30 gcorti Exp $
 // Include files 
 
 // from Gaudi
@@ -223,7 +223,12 @@ StatusCode FillParticleAlgorithm::execute() {
 //    log << MSG::DEBUG << "    Particle ID   = "
 //        << particle->particleID().id() << endreq;
       
-    particles->insert(particle);
+      if( ((*icand)->charge() != 0) && ((*icand)->trkQuality() == 1) ) {
+        particles->insert(particle);
+      }
+      else if( (*icand)->charge() == 0 ) {
+        particles->insert(particle);
+      }
     }
   }
 
