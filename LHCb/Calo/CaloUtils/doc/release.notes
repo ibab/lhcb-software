@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.31 2004-10-27 11:58:09 ibelyaev Exp $
+! $Id: release.notes,v 1.32 2004-10-27 12:47:08 cattanem Exp $
 ! Package     : CaloUtils
 ! Responsible : Vanya Belyaev Ivan.Belyaev@itep.ru
 ! =============================================================================
@@ -18,9 +18,10 @@
  - cmt/requirements
     increment the version to v4r8 
 
-
 ! ============================ CaloUtils v4r7p1 2004-10-26 ====================
 ! 2004-10-26 - Marco Cattaneo
+ - Files histoHBookName.h and dirHbookName.h are obsolete, they are now empty
+   and redirect to the corresponding GaudiAlg file
  - Fix some doxygen comments...
 
 ! 2004-10-22 - Vanya BELYAEV
