@@ -1,7 +1,8 @@
-! $Id: release.notes,v 1.21 2002-07-28 17:29:27 gcorti Exp $
+! $Id: release.notes,v 1.22 2002-07-29 09:15:44 cattanem Exp $
 ! Package     : DaVinciTools
 ! Responsible : Gloria Corti, Sandra Amato
 
+!=========================== DaVinciTools v5r0 2002-07-29 ===================
 ! 2002-07-28 - Gloria Corti
  - replace macro "and" with && for compilation on windows in 
    ParticleFilter
