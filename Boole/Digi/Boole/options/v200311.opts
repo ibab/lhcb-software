@@ -7,12 +7,12 @@ InitDataSeq.Members += { "MergeEventAlg/SpilloverAlg" }; // Adds Spillover
 InitDataSeq.Members += { "MergeEventAlg/LHCbkgAlg" };    // Adds LHC background
 #include "$BOOLEOPTS/Boole.opts"          // Generic options for all jobs
 #include "$BOOLEOPTS/BooleMoniProd.opts"  // Default monitoring for production
-#include "$BOOLEOPTS/BooleOutput.opts"    // Comment to switch off output
+ApplicationMgr.OutStream += { "DigiWriter" };  // Comment to switch off output
 //---------------------------------------------------------------------------
 // Database specific options
 //---------------------------------------------------------------------------
-DetectorDataSvc.DetDbLocation = "$XMLDDDBROOT/DDDB/lhcb-200311.xml";
 #pragma print on
+DetectorDataSvc.DetDbLocation = "$XMLDDDBROOT/DDDB/lhcb-200311.xml";
 
 //---------------------------------------------------------------------------
 // Add here any job specific options, to over-ride previously defined options
@@ -21,6 +21,14 @@ DetectorDataSvc.DetDbLocation = "$XMLDDDBROOT/DDDB/lhcb-200311.xml";
 //---------------------------------------------------------------------------
 // Finally, define input and output files, first event, number of events
 //---------------------------------------------------------------------------
+HistogramPersistencySvc.OutputFile = "412400.hbook";  // Monitoring histos
+ApplicationMgr.EvtMax = 500;
+
+// Uncomment next three options for POOL i/o
+// #include "$GAUDIPOOLDBROOT/options/GaudiPoolDbRoot.opts"
+// #include "$EVENTSYSROOT/options/PoolDicts.opts"
+// PoolDbCacheSvc.CatalogConnect = "xmlcatalog_file:test_catalog.xml";
+
 EventSelector.Input = {
   "DATAFILE='rfio:/castor/cern.ch/user/j/jonrob/data/oosim/Gauss-412400-500evts_1.oosim' TYP='ROOT' OPT='READ'"
 }; // Gauss v12r7, XmlDDDB v19r0, evtype 412400
@@ -33,15 +41,13 @@ SpilloverSelector.Input = {
 LHCBkgSelector.Input = { 
   "DATAFILE='rfio:/castor/cern.ch/user/l/lhcbprod/test/00000357_00000008_5.oosim' TYP='ROOT' OPT='READ'" }; // "Maximal" LHC background. SicbToOORawh v3r1 
 //LHCBkgSelector.FirstEvent = 7; // Skip corresponding background events 
-HistogramPersistencySvc.OutputFile = "412400.hbook";  // Monitoring histos
-ApplicationMgr.EvtMax = 500;
 
-// For the output file, choose either GaudiDb or POOL formats 
-// GaudiDb format 
+// GaudiDb output
 DigiWriter.Output = "DATAFILE='412400.oodigi' TYP='ROOT' OPT='NEW'";
-// POOL format
-//#include "$GAUDIPOOLDBROOT/options/GaudiPoolDbRoot.opts"
-//#include "$EVENTSYSROOT/options/PoolDicts.opts"
-//PoolDbCacheSvc.CatalogConnect = "xmlcatalog_file:test_catalog.xml";
-//DigiWriter.Output = "DATAFILE='PFN:Pool412400.digi' TYP='POOL_ROOTTREE' OPT='REC'";
+
+// Example for POOL output.
+// In current version, following items must be removed from DigiContent.opts:
+  //, "/Event/Rec/Relations/VeloClusters2MCParticles#1"
+//DigiWriter.Output = "DATAFILE='PFN:412400.digi' TYP='POOL_ROOTTREE' OPT='REC'";
+
 //////////////////////////////////////////////////////////////////////////////

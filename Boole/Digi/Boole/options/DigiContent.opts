@@ -1,0 +1,85 @@
+// Define Digi content for output of digitization
+// ----------------------------------------------
+DigiWriter.OptItemList =
+{
+  "/Event/Prev#*"
+, "/Event/PrevPrev#*"
+, "/Event/Next#*"
+, "/Event/LHCBackground#*"
+, "/Event/Gen/HepMCEvents#1"
+}; 
+DigiWriter.ItemList = 
+{
+  "/Event#1"
+, "/Event/Header#1"
+, "/Event/DAQ#1"
+, "/Event/DAQ/L1Buffer#1"
+, "/Event/DAQ/RawBuffer#1"
+, "/Event/Gen#1"
+, "/Event/Gen/Header#1"
+, "/Event/Gen/Collisions#1"
+, "/Event/MC#1"
+, "/Event/MC/Particles#1"  // To be Filtered
+, "/Event/MC/Vertices#1"   // To be Filtered
+, "/Event/MC/Velo#1"
+, "/Event/MC/Velo/Hits#1"
+, "/Event/MC/Velo/PuHits#1"
+, "/Event/MC/IT#1"
+, "/Event/MC/IT/Hits#1"
+, "/Event/MC/OT#1"
+, "/Event/MC/OT/Hits#1"
+, "/Event/MC/Rich#1"
+, "/Event/MC/Rich/Hits#1"
+, "/Event/MC/Prs#1"
+, "/Event/MC/Prs/Hits#1"
+, "/Event/MC/Spd#1"
+, "/Event/MC/Spd/Hits#1"
+, "/Event/MC/Ecal#1"
+, "/Event/MC/Ecal/Hits#1"
+, "/Event/MC/Hcal#1"
+, "/Event/MC/Hcal/Hits#1"
+, "/Event/MC/Muon#1"
+, "/Event/MC/Muon/M1#3"
+, "/Event/MC/Muon/M2#3"
+, "/Event/MC/Muon/M3#3"
+, "/Event/MC/Muon/M4#3"
+, "/Event/MC/Muon/M5#3"
+, "/Event/Trig#1"
+, "/Event/Trig/L0#1"
+, "/Event/Trig/L0/Muon#1"
+, "/Event/Trig/L0/PuVeto#1"
+, "/Event/Trig/L0/Decision#1" 
+, "/Event/Trig/L1#1"
+, "/Event/Trig/L1/Tracks2d#1"
+, "/Event/Trig/L1/Tracks3d#1"
+, "/Event/Trig/L1/Vertices2d#1"
+, "/Event/Trig/L1/Clusters#1"
+, "/Event/Trig/L1/ITClusters#1"
+, "/Event/Trig/L1/TTClusters#1"
+, "/Event/Trig/L1/Summary#1"
+, "/Event/Trig/L1/Decision#1" 
+, "/Event/Raw#1"
+, "/Event/Raw/Velo#1"
+, "/Event/Raw/Velo/Clusters#1"
+, "/Event/Raw/IT#1"
+, "/Event/Raw/IT/Digits#1"
+, "/Event/Raw/OT#1"
+, "/Event/Raw/OT/Digits#1"
+, "/Event/Raw/Muon#1"
+, "/Event/Raw/Muon/Digits#1"
+, "/Event/Rec#1"
+, "/Event/Rec/Relations#1"
+, "/Event/Rec/Relations/ITDigits2MCHits#1"
+, "/Event/Rec/Relations/OTDigits2MCHits#1"
+, "/Event/Rec/Relations/VeloClusters2MCHits#1" // Comment out if using POOL
+, "/Event/MC/Rich/Digits#1" // Single hop to MCHit, instead of relations
+, "/Event/MC/Prs/Digits#1"  // Single hop to MCHit, instead of relations
+, "/Event/MC/Spd/Digits#1"  // Single hop to MCHit, instead of relations
+, "/Event/MC/Ecal/Digits#1" // Single hop to MCHit, instead of relations
+, "/Event/MC/Hcal/Digits#1" // Single hop to MCHit, instead of relations
+, "/Event/MC/Muon/Digits#1" // Single hop to MCHit, instead of relations
+, "/Event/Rec/Relations/L0CaloCandidates#1"
+, "/Event/Rec/Relations/L0CaloFullCandidates#1"
+, "/Event/Rec/Relations/L1Track2d2MCP#1"
+, "/Event/Rec/Relations/L1Track3d2MCP#1"
+};

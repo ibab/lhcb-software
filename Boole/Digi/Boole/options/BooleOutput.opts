@@ -1,6 +1,0 @@
-// This file sets up the Boole output tape content
-// -----------------------------------------------
-
-// Define the output data content
-ApplicationMgr.OutStream += { "DigiWriter" };
-#include "$STDOPTS/DigiContent.opts"
