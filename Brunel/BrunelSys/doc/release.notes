@@ -7,7 +7,8 @@ Purpose: LHCb reconstruction program
 This version uses Gaudi v16r2, LHCb v18r2 (also CLHEP 1.9, ROOT 4.0)
 Requires input data from Boole v8r2 or greater. Incompatible with DC04 versions
 
-- Packages modified: TrgTools v7r2, VeloTT v1r12, TrgVelo v7r3, MuonID v3r7p2
+- Packages modified: TrgTools v7r2, VeloTT v1r12, TrgVelo v7r3, MuonID v3r7p2,
+                     MuonRec v2r4p1
                      Revert to TrgBrunel v1r1
 
 - New tuning:
