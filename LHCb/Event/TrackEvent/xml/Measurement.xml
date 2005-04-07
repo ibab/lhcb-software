@@ -39,27 +39,29 @@
          desc      = 'measurement type' />
       </attribute>
 
-      <method
+      <attribute
         type    = 'double'
         name    = 'z'
-        const   = 'TRUE'
         desc    = 'the z-position of the measurement'
-        virtual = 'TRUE'/>
+        access  = 'PROTECTED' />
 
       <attribute
         type    = 'double'
         name    = 'measure'
-        desc    = 'the measurement value' />
+        desc    = 'the measurement value'
+        access  = 'PROTECTED' />
 
       <attribute
         type    = 'double'
         name    = 'errMeasure'
-        desc    = 'the measurement error' />
+        desc    = 'the measurement error'
+        access  = 'PROTECTED' />
 
       <attribute
         type    = 'LHCbID'
         name    = 'lhcbID'
-        desc    = 'the corresponding LHCbID' />
+        desc    = 'the corresponding LHCbID'
+        access  = 'PROTECTED' />
 
       <method
         type    = 'Measurement*'

@@ -4,6 +4,10 @@
 ! Purpose     : Package for the tracking event model classes
 !-----------------------------------------------------------------------------
 
+! 2005-04-07 - Eduardo Rodrigues
+ - Track::nMeasurements method added
+ - z-related methods added to Measurement
+
 ! 2005-04-04 - Eduardo Rodrigues
  - no id attribute for Measurement and Node classes
 

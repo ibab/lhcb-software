@@ -197,6 +197,17 @@
 
       <method
         type    = 'unsigned int'
+        name    = 'nMeasurements'
+        const   = 'TRUE'
+        virtual = 'TRUE'
+        desc    = 'number of measurements on track'>
+        <code>
+  return m_lhcbIDs.size();
+        </code>
+      </method>
+
+      <method
+        type    = 'unsigned int'
         name    = 'nStates'
         const   = 'TRUE'
         desc    = 'number of states on track'>
