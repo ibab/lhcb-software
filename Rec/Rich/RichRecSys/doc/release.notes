@@ -4,6 +4,9 @@
 ! Purpose     : Co-ordinates the RICH reconstruction packages
 !-----------------------------------------------------------------------------
 
+! 2005-04-07 - Marco Cattaneo
+ - Use RichLocalPID v1r10p1
+
 !====================== RichRecSys v1r16 2005-03-08 ======================
 ! 2005-03-08 - Marco Cattaneo
  - Various undocumented updates to job options...
