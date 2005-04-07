@@ -4,7 +4,7 @@
 <package name="RichRecBase">
 
 <!-- **************************************************************************
-  * $Id: RichRecTrack.xml,v 1.4 2005-03-04 16:52:56 cattanem Exp $
+  * $Id: RichRecTrack.xml,v 1.5 2005-04-07 16:43:47 cattanem Exp $
   *****************************************************************************
   * XML-description of RichrecTrack class                                     *
   * author: Chris Jones   Christopher.Rob.Jones@cern.ch                       *
@@ -23,8 +23,6 @@
     	<base name="KeyedObject&lt;int&gt;"/>
         &KeyedObject;
 
-        <import name="Kernel/CLHEPStreams"/>
-        <import name="Kernel/SerializeStl"/>
 	<import name="RichKernel/RichParticleIDType"/>
 	<import name="RichKernel/RichHypoData"/>
 	<import name="RichRecBase/RichTrackID"/>
