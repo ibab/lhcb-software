@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////////
-///   Job options for Brunel for data produced with Boole v8r0 or greater   ///
+///   Job options for Brunel for data produced with Boole v8r2 or greater   ///
 //  geometry lhcb-200412 (Rich1 EDR, Rotated Rich2, TT KLM layout, new Velo) //
 ///////////////////////////////////////////////////////////////////////////////
 #pragma print off
@@ -25,12 +25,13 @@ ApplicationMgr.EvtMax = -1;
 //EventSelector.FirstEvent = 7;  // To skip some events 
 
 //---------------------------------------------------------------------------
-// Input and output files.
+// Histogram output
 //---------------------------------------------------------------------------
+HistogramPersistencySvc.OutputFile = "0412-11144100.root";  // Monitoring histos
 
-HistogramPersistencySvc.OutputFile = "brunel-0412.root";  // Monitoring histos
-
+//---------------------------------------------------------------------------
 // POOL file catalogs. First one is read-write, others are read only
+//---------------------------------------------------------------------------
 PoolDbCacheSvc.Catalog = {
   "xmlcatalog_file:NewCatalog.xml"
  ,"xmlcatalog_http://cattanem.home.cern.ch/cattanem/POOL/MyCatalog.xml"
@@ -40,11 +41,11 @@ PoolDbCacheSvc.Catalog = {
 // Event input
 //---------------------------------------------------------------------------
 EventSelector.Input = {
-  "DATAFILE='PFN:castor:/castor/cern.ch/user/c/cattanem/Boole/v8r1/Boole-0412.digi' TYP='POOL_ROOT' OPT='READ'"
-};  // 500 events B->J/Psi(mumu)Ks with Gauss v19r2, Boole v8r1
+  "DATAFILE='PFN:castor:/castor/cern.ch/user/c/cattanem/Boole/v8r2/0412-11144100.500ev.digi' TYP='POOL_ROOT' OPT='READ'"
+};  // 500 events B->J/Psi(mumu)Ks with Gauss v19r3, Boole v8r2
+
 //---------------------------------------------------------------------------
 // Event output
 //---------------------------------------------------------------------------
-DstWriter.Output = "DATAFILE='PFN:Brunel-0412.dst' TYP='POOL_ROOTTREE' OPT='REC'";
-
+DstWriter.Output = "DATAFILE='PFN:0412-11144100.500ev.dst' TYP='POOL_ROOTTREE' OPT='REC'";
 //////////////////////////////////////////////////////////////////////////////

@@ -1,5 +1,5 @@
 package Brunel
-version v26r1
+version v26r2
 
 branches doc cmt job options
 
@@ -22,18 +22,18 @@ use GaudiObjDesc 	v7r3
 use RootHistCnv         v9r4
 
 #-- Database
-use XmlDDDB		v23r2	Det
+use XmlDDDB		v24r0	Det
 use FieldMap		v4r5
 use ParamFiles          v3r11   -no_auto_imports
 use BrunelDQ		v1r0	DQ
 
-#-- LHCb libraries (from LHCB_v18r1)
-use LHCb	v18r1
+#-- LHCb libraries (from LHCB_v18r2)
+use LHCb	v18r2
 
-#-- Lbcom packages (from LBCOM_v1r1)
-use LbcomSys    v1r1
+#-- Lbcom packages (from LBCOM_v1r2)
+use LbcomSys    v1r2
 
-#-- BrunelSys v26r0 packages
+#-- BrunelSys v26r2 packages
 
 # Calorimeter
 use CaloMoniDst         v1r0	Calo
@@ -52,13 +52,13 @@ use TrTools             v2r6 	Tr
 use Seeding             v2r10	Tr 
 use TrMatching          v2r10p1	Tr
 use TrCleanEx           v2r11	Tr
-use VeloTT              v1r11	Tr
+use VeloTT              v1r12	Tr
 use TrKShort		v1r5	Tr
 
 # Trg tracking in Velo
-use TrgTools            v7r1    Trg
-use TrgVelo             v7r1    Trg
-use TrgBrunel           v1r2    Trg
+use TrgTools            v7r2    Trg
+use TrgVelo             v7r3    Trg
+use TrgBrunel           v1r1    Trg
 
 # Muon
 use MuonUtils		v1r0	Muon

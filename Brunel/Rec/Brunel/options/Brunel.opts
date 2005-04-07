@@ -87,7 +87,7 @@ BrunelRecoVELOSeq.Members = { "DecodeRawVelo"
                              ,"VeloSpaceTracking"
                              ,"ConvertToTrFitTrack"
 };
-VeloSpaceTracking.Offline = true;
+#include "$TRGVELOROOT/options/Brunel.opts"
 
 // Forward tracking
 ApplicationMgr.DLLs += { "LongTrack", "TrFitter", "TrExtrapolator" };
