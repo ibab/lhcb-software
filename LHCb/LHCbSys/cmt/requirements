@@ -16,7 +16,7 @@ use HepMC	v4r121p0	Sim
 
 # Kernel packages
 use KernelSys   	v4r9	Kernel
-use LHCbKernel  	v5r8	Kernel
+use LHCbKernel  	v5r9	Kernel
 use Relations		v2r4	Kernel
 use CaloKernel  	v3r2	Calo
 use MuonKernel  	v2r7	Muon
@@ -40,14 +40,14 @@ use MuonDet        	v4r6	Det
 use Magnet         	v2r8	Det
 use MuonTools      	v3r8	Muon
 use RichDet		v8r3	Det
-use STDet          	v1r2p1	Det
+use STDet          	v1r3	Det
 
 # Event data model
 use EventSys		v20r2	Event
 use Event        	v4r7	Event
 use VeloEvent    	v13r2	Event
 use ITEvent      	v13r2p1	Event
-use OTEvent      	v14r0	Event
+use OTEvent      	v14r0p1 Event
 use TrEvent      	v14r2	Event
 use RichEvent    	v8r3	Event
 use CaloEvent    	v13r9	Event
@@ -74,7 +74,7 @@ use AsctToLinker	v1r4	Rec
 # L1/Raw buffer encoding and decoding
 use DAQSys		v1r2	DAQ
 use MuonDAQ		v1r2p2	Muon
-use STDAQ		v1r4p1	IT
+use STDAQ		v1r5    IT
 use OTDAQ		v3r2p1	OT
 use VeloDAQ		v2r3p1	Velo
 use RichDAQ		v2r1p1	Rich

@@ -10,15 +10,15 @@
  - Packages added:    ProcessorKernel v1r0 - Base classes for generic L0 Muon 
                                              processor simulation
                       L0MuonDAQ v1r0       - L0 Muon DAQ utilities
- - Packages modified: MCTools v1r13, LHCbAlgs v1r4,
-     KernelSys v4r9, Relations v2r4, MuonKernel v2r7, L0MuonKernel v3r0,
+ - Packages modified: MCTools v1r13, LHCbAlgs v1r4, KernelSys v4r9, 
+       Relations v2r4, MuonKernel v2r7, L0MuonKernel v3r0, LHCbKernel v5r9,
      EventSys v20r2, PhysEvent v8r9, Event v4r7, ITEvent v13r2p1, RichEvent v8r3,
-       LinkerEvent v1r7, MuonEvent v4r0, L0Event v14r3,
-     DetSys v6r4, XmlTools v3r4, DetDesc v14r4, VeloDet v9r4, STDet v1r2p1, 
+       LinkerEvent v1r7, MuonEvent v4r0, L0Event v14r3, OTEvent v14r0p1,
+     DetSys v6r4, XmlTools v3r4, DetDesc v14r4, VeloDet v9r4, STDet v1r3, 
        DetDescCnv v2r3p1,
      AssociatorsSys v2r4, ITAssociators v2r11, MuonAssociators v1r5p1,
        OTAssociators v3r2, VeloAssociators v1r14, TrAssociators v5r1p1,
-     DAQSys v1r1p2, MuonDAQ v1r2p2
+     DAQSys v1r1p2, MuonDAQ v1r2p2, STDAQ v1r5
  
  - In Relations v2r4
    . Optimisation of constructors
@@ -29,6 +29,10 @@
 
  - In MuonKernel v2r7
    . Add toString method and constructor taking a string to MuonTileID class
+
+ - In LHCbKernel v5r9
+   . Fix OTChannelID encoding in LHCbID
+   . Remove obsolete files Kernel/LHCbStreams.h and Kernel/CLHEPStreams.h
 
  - In MCTools v1r13
    . Fix bug in encoding of OT information in BuildMCTrackInfo. Removes
@@ -73,6 +77,13 @@
  - In VeloDet v9r4
    . Enable DeVelo to cope with an arbitrary number of detector element
      hierarchies between Velo and individual sensors.
+
+ - In STDet v1r3
+   . Fix bug in TTLayer.cpp (not backwards compatble for data)
+
+ - In STDAQ v1r5
+   . Implement header word for ST data, increment bank version. Version number
+     used to distinguish between old and new data
 
  - In AssociatorsSys v2r4
    . IT, OT, Velo associators to MCHit also create and use Linker tables,
