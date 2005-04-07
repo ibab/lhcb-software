@@ -5,12 +5,12 @@
 ! Purpose     : LHCb OO kernel packages
 !-----------------------------------------------------------------------------
 
-!======================= LHCbSys v18r2 2005-04-05 =======================
-! 2005-04-05 - Marco Cattaneo
+!======================= LHCbSys v18r2 2005-04-07 =======================
+! 2005-04-07 - Marco Cattaneo
  - Packages added:    ProcessorKernel v1r0 - Base classes for generic L0 Muon 
                                              processor simulation
                       L0MuonDAQ v1r0       - L0 Muon DAQ utilities
- - Packages modified: MCTools v1r12p1, LHCbAlgs v1r4,
+ - Packages modified: MCTools v1r13, LHCbAlgs v1r4,
      KernelSys v4r9, Relations v2r4, MuonKernel v2r7, L0MuonKernel v3r0,
      EventSys v20r2, PhysEvent v8r9, Event v4r7, ITEvent v13r2p1, RichEvent v8r3,
        LinkerEvent v1r7, MuonEvent v4r0, L0Event v14r3,
@@ -29,6 +29,10 @@
 
  - In MuonKernel v2r7
    . Add toString method and constructor taking a string to MuonTileID class
+
+ - In MCTools v1r13
+   . Fix bug in encoding of OT information in BuildMCTrackInfo. Removes
+     compatibility with DC04 data
 
  - In LHCbAlgs v1r4
    . Add "PreloadGeometry" option to LbAppInit. Default is false
