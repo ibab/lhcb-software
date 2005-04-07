@@ -19,7 +19,7 @@
        DetDescCnv v2r3p1,
      AssociatorsSys v2r4, ITAssociators v2r11, MuonAssociators v1r5p1,
        OTAssociators v3r2, VeloAssociators v1r14, TrAssociators v5r1p1,
-     DAQSys v1r1p2, MuonDAQ v1r2p2, STDAQ v1r5
+     DAQSys v1r1p2, MuonDAQ v1r2p2, STDAQ v1r5, RichRecBase v1r15p1
  
  - In Relations v2r4
    . Optimisation of constructors
