@@ -14,6 +14,7 @@
        Relations v2r4, MuonKernel v2r7, L0MuonKernel v3r0, LHCbKernel v5r9,
      EventSys v20r2, PhysEvent v8r9, Event v4r7, ITEvent v13r2p1, RichEvent v8r3,
        LinkerEvent v1r7, MuonEvent v4r0, L0Event v14r3, OTEvent v14r0p1,
+       VeloEvent v13r2p1,
      DetSys v6r4, XmlTools v3r4, DetDesc v14r4, VeloDet v9r4, STDet v1r3, 
        DetDescCnv v2r3p1,
      AssociatorsSys v2r4, ITAssociators v2r11, MuonAssociators v1r5p1,
