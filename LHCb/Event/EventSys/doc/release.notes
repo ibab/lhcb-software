@@ -4,7 +4,8 @@ package manager: Marco Cattaneo
 !======================== EventSys v20r2 2005-04-07 ========================
 ! 2005-04-07 - Marco Cattaneo
  - Use PhysEvent v8r9, Event v4r7, ITEvent v13r2p1, LinkerEvent v1r7,
-       RichEvent v8r3, MuonEvent v4r0, L0Event v14r3, OTEvent v14r0p1
+       RichEvent v8r3, MuonEvent v4r0, L0Event v14r3, OTEvent v14r0p1,
+       veloEvent v13r2p1
 
 !======================== EventSys v20r1 2005-03-07 ========================
 ! 2005-03-07 - Marco Cattaneo
