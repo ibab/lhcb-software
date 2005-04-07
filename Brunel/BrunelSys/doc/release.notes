@@ -3,9 +3,42 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
+</PRE><H1><A NAME=v26r2>2005-04-03 Brunel v26r2</A></H1><PRE>
+This version uses Gaudi v16r2, LHCb v18r2 (also CLHEP 1.9, ROOT 4.0)
+Requires input data from Boole v8r2 or greater. Cannot process DC04 Boole output.
+Output data incompatible with DC04 versions
+
+- Packages modified: TrgTools v7r2, VeloTT v1r12, TrgVelo v7r3
+                     Revert to TrgBrunel v1r1
+
+- New tuning:
+  . New tuning for offline Velo tracks (TrgVelo v7r3, Brunel.opts)
+
+- Geometry changes (XmlDDDB v24r0)
+  . Update Rich2 centre tube description and add centre tube supports
+  . Change Velo sensor thickness to 300um
+  . Fix overlaps in Velo RF foil
+>>>  . Remove options for v200402 geometry
+  . Give detector element to Velo half stations (with VeloDet v9r4)
+
+- Persistency changes
+>>> . remove Relations
+
+- Bug fixes:
+  . Fix memory leak in XmlDDDB parser tool (XmlTools v3r4)
+  . Add charge to VTT tracks (VeloTT v1r12)
+  . Fixes in TrgTools, not relevant for Brunel
+  . Restore lost flags in TrgVelo, undo corresponding fix in TrgBrunel
+
+- New features:
+>>>  . New Boole.PreloadGeometry option to preload geometry tree at initialize
+    (default false) (LHCbAlgs v1r4, DetDesc v6r4)
+>>>  . Add options for RTTC production (v200412 geometry, no MC truth)(rttc.opts)
+
+
 </PRE><H1><A NAME=v26r1>2005-03-08 Brunel v26r1</A></H1><PRE>
 This version uses Gaudi v16r2, LHCb v18r1 (also CLHEP 1.9, ROOT 4.0)
-Requires input data from Boole v8r1 or greater. Cannot process DC04 Boole output.
+Requires input data from Boole v8r1. Cannot process DC04 Boole output.
 Output data incompatible with DC04 versions
 
 - Packages modified: RichRecSys v1r16, RichLocalPID v1r10, RichGlobalPID v1r9
