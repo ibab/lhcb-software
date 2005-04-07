@@ -1,6 +1,10 @@
-! $Id: release.notes,v 1.26 2004-03-08 16:05:20 cattanem Exp $
+! $Id: release.notes,v 1.27 2005-04-07 07:19:40 cattanem Exp $
 ! Package     : MuonID
 ! Responsible : David Hutchcroft
+
+!======================== MuonID v3r7p2 2005-04-07 ========================
+! 2005-04-07 - Marco Cattaneo
+ - Use v* in requirements, instead of explicit versions
 
 !======================== MuonID v3r7p1 2004-03-08 ========================
 ! 2004-03-08 - Marco Cattaneo

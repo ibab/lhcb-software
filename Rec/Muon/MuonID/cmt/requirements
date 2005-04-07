@@ -1,5 +1,5 @@
 package MuonID
-version v3r7p1
+version v3r7p2
 
 branches src cmt doc options
 
@@ -7,8 +7,8 @@ branches src cmt doc options
 include_dirs $(MUONIDROOT)
 
 # add "use" statements
-use MuonEvent          v3r*  Event
-use MuonTools          v3r*  Muon
+use MuonEvent          v*  Event
+use MuonTools          v*  Muon
 
 # build a MuonID library
 library MuonID ../src/*.cpp
