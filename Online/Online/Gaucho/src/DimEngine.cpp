@@ -1,16 +1,18 @@
-//$Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/Gaucho/src/DimEngine.cpp,v 1.4 2005-03-22 16:39:17 evh Exp $
+//$Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/Gaucho/src/DimEngine.cpp,v 1.5 2005-04-07 14:42:00 evh Exp $
 
 #include "GaudiKernel/StatusCode.h"
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/ISvcLocator.h"
 #include "Gaucho/DimH1D.h"
+#include "Gaucho/DimH2D.h"
 #include "Gaucho/DimEngine.h"
 #include "AIDA/IHistogram1D.h"
+#include "AIDA/IHistogram2D.h"
 
 
 
 DimEngine::DimEngine(char* nodename, ISvcLocator* svclocator) : m_nodename(nodename),
-                                                                m_dimInfos() , m_dimInfosIt(), m_dimHistos(), m_dimHistosIt() {
+                                                                m_dimInfos() , m_dimInfosIt(), m_dim1DHistos(), m_dim1DHistosIt(), m_dim2DHistos(), m_dim2DHistosIt() {
   // get msg logging
   StatusCode sc;
   sc = svclocator->service("MessageSvc", m_msgsvc);
@@ -133,38 +135,52 @@ void DimEngine::declSvc(std::string InfoName, const std::pair<double,double>& In
 void DimEngine::declSvc(std::string InfoName, const AIDA::IHistogram* InfoVar){
   MsgStream msg(m_msgsvc,"DimEngine");
   std::string diminfoname=m_nodename+"/"+InfoName;
+  int dimension = InfoVar->dimension();
+     msg << MSG::INFO << "Dimensao: " << dimension << endreq;
   std::pair<DimServiceMapIt,bool> p;
   m_dimInfosIt = m_dimInfos.end();
   p = m_dimInfos.insert(DimServiceMap::value_type(InfoName,0));
   if (p.second) {
+    if( 1 == dimension ) {
    // AIDA::IHistogram1D* new_h = dynamic_cast<AIDA::IHistogram1D*> (InfoVar);
-    m_dimHistos[InfoName]=new DimH1D(diminfoname.c_str(),
-    const_cast<AIDA::IHistogram1D*>(dynamic_cast<const  AIDA::IHistogram1D*> (InfoVar)));
-    msg << MSG::INFO << "New DimH1D: " << diminfoname << endreq;
+     m_dim1DHistos[InfoName]=new DimH1D(diminfoname.c_str(),
+     const_cast<AIDA::IHistogram1D*>(dynamic_cast<const  AIDA::IHistogram1D*> (InfoVar)));
+     msg << MSG::INFO << "New DimH1D: " << diminfoname << endreq;
+   }
+   else {
+     m_dim2DHistos[InfoName]=new DimH2D(diminfoname.c_str(),
+     const_cast<AIDA::IHistogram2D*>(dynamic_cast<const  AIDA::IHistogram2D*> (InfoVar)));
+     msg << MSG::INFO << "New DimH2D: " << diminfoname << endreq;
+   }
   }
   else {
-    msg << MSG::ERROR << "already existing DimH1D:" << (*(p.first)).first
+    msg << MSG::ERROR << "already existing DimH" << dimension << "D:" << (*(p.first)).first
         << " -> " << (*(p.first)).second << endreq;
   }
 }
 void DimEngine::undeclSvc(std::string InfoName){
   MsgStream msg(m_msgsvc,"DimEngine");
-  m_dimInfosIt = m_dimInfos.find(InfoName);
+  m_dimInfosIt = m_dimInfos.find("/"+InfoName);
   if(m_dimInfosIt != m_dimInfos.end()) {
     delete (*m_dimInfosIt).second;
     m_dimInfos.erase(m_dimInfosIt);
     msg << MSG::INFO << "Service " << InfoName << " undeclared" << endreq;
+    return;
   }
-  else {
-    m_dimHistosIt = m_dimHistos.find(InfoName);
-    if(m_dimHistosIt != m_dimHistos.end()) {
-      delete (*m_dimHistosIt).second;
-      m_dimHistos.erase(m_dimHistosIt);
+  m_dim1DHistosIt = m_dim1DHistos.find(InfoName);
+  if(m_dim1DHistosIt != m_dim1DHistos.end()) {
+    delete (*m_dim1DHistosIt).second;
+    m_dim1DHistos.erase(m_dim1DHistosIt);
     msg << MSG::INFO << "Service (H1D) " << InfoName << " undeclared" << endreq;
-    }
-    else {
-      msg << MSG::WARNING << "undeclare: no DimSvc or DimH1D found with the name:" 
-          << InfoName << endreq;
-    }
+    return;
   }
+  m_dim2DHistosIt = m_dim2DHistos.find(InfoName);
+  if(m_dim2DHistosIt != m_dim2DHistos.end()) {
+    delete (*m_dim2DHistosIt).second;
+    m_dim2DHistos.erase(m_dim2DHistosIt);
+    msg << MSG::INFO << "Service (H2D) " << InfoName << " undeclared" << endreq;
+    return;
+  }
+  msg << MSG::WARNING << "undeclare: no DimSvc,DimH1D or DimH2D found with the name:" 
+      << InfoName << endreq;
 }

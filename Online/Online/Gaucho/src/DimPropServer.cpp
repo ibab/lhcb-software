@@ -1,4 +1,4 @@
-//$Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/Gaucho/src/DimPropServer.cpp,v 1.3 2005-03-22 16:39:17 evh Exp $
+//$Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/Gaucho/src/DimPropServer.cpp,v 1.4 2005-04-07 14:42:00 evh Exp $
 
 #include "GaudiKernel/StatusCode.h"
 #include "GaudiKernel/MsgStream.h"
@@ -208,7 +208,8 @@ void DimPropServer::rpcHandler() {
 	       
 	       //add histogram title	
 	       myhisto=0;
-	       sc=EDS->retrieveObject(id,myhisto);
+	       sc=EDS->retrieveObject(id,mydataobject);
+	       myhisto=dynamic_cast<AIDA::IHistogram*>(mydataobject);
 	       log << MSG::INFO << " Histogram found with title: "<< myhisto->title()<<endreq;  
 	       strcpy(ptr,myhisto->title().c_str());
 	       char tmp1[100];

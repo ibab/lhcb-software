@@ -1,4 +1,4 @@
-//$Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/Gaucho/Gaucho/DimPropServer.h,v 1.4 2005-03-22 16:39:17 evh Exp $
+//$Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/Gaucho/Gaucho/DimPropServer.h,v 1.5 2005-04-07 14:42:00 evh Exp $
 #ifndef GAUCHO_DIMPROPSERVER_H
 #define GAUCHO_DIMPROPSERVER_H 1
 
@@ -20,7 +20,8 @@ class ISvcLocator;
 class IAlgManager;
 class IProperty;
 class IMessageSvc;
-class IHistogram1D;
+//class IHistogram1D;
+class IHistogram;
 
 class DimPropServer : public DimRpc {
 public:
@@ -34,7 +35,8 @@ private:
   ISvcLocator* m_svcloc;
   IProperty* m_appmgr;
   IMessageSvc* m_msgsvc;
-  IHistogram1D* myhisto;
+  IHistogram* myhisto;
+  DataObject* mydataobject;
 };
 
 #endif //GAUCHO_DIMPROPSERVER_H

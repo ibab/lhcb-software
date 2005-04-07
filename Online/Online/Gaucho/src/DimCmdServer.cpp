@@ -1,4 +1,4 @@
-//$Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/Gaucho/src/DimCmdServer.cpp,v 1.1 2005-03-22 16:39:17 evh Exp $
+//$Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/Gaucho/src/DimCmdServer.cpp,v 1.2 2005-04-07 14:42:00 evh Exp $
 
 #include "GaudiKernel/StatusCode.h"
 #include "GaudiKernel/MsgStream.h"
@@ -115,7 +115,9 @@ void DimCmdServer::commandHandler() {
      SmartIF<IDataManagerSvc> mgr(HDS);
      if ( mgr )    {
 	 myhisto=0;
-	 sc=HDS->retrieveObject(nextcommand,myhisto);
+	 
+	 sc=HDS->retrieveObject(nextcommand,mydataobject);
+	 myhisto=dynamic_cast<AIDA::IHistogram*>(mydataobject);
 	 if ( sc.isSuccess() ) {
             log << MSG::INFO << "Histogram retrieved id: "  <<nextcommand << endreq;
             // now subscribe to it	                  

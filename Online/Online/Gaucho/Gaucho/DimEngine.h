@@ -1,4 +1,4 @@
-//$Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/Gaucho/Gaucho/DimEngine.h,v 1.4 2005-03-22 16:39:17 evh Exp $
+//$Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/Gaucho/Gaucho/DimEngine.h,v 1.5 2005-04-07 14:42:00 evh Exp $
 #ifndef GAUCHO_DIMENGINE_H
 #define GAUCHO_DIMENGINE_H 1
 
@@ -16,8 +16,10 @@ This class publishes Gaudi variables as Dim services.
 
 namespace AIDA {class IHistogram;
 class IHistogram1D;
+class IHistogram2D;
 }
 class DimH1D;
+class DimH2D;
 class IMessageSvc;
 
 class DimEngine {
@@ -43,8 +45,14 @@ private:
   DimServiceMapIt m_dimInfosIt;
   typedef std::map<std::string, DimH1D*, std::less<std::string> > DimH1DMap;
   typedef DimH1DMap::iterator DimH1DMapIt;
-  DimH1DMap m_dimHistos;
-  DimH1DMapIt m_dimHistosIt;
+  DimH1DMap m_dim1DHistos;
+  DimH1DMapIt m_dim1DHistosIt;
+
+  typedef std::map<std::string, DimH2D*, std::less<std::string> > DimH2DMap;
+  typedef DimH2DMap::iterator DimH2DMapIt;
+  DimH2DMap m_dim2DHistos;
+  DimH2DMapIt m_dim2DHistosIt;
+
 }; 
 
 #endif // GAUCHO_DIMENGINE_H
