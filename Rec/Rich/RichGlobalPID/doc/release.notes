@@ -4,6 +4,10 @@
 ! Purpose     : The Rich Global PID algorithm
 !-----------------------------------------------------------------------------
 
+!====================== RichGlobalPID v1r9p1 2005-04-07 ======================
+! 2005-04-07 - Marco Cattaneo
+ - Add use GaudiObjDesc, no longer inherited via Event model
+
 ! 2005-04-06 - Chris Jones
  - Add hack to force loading of pixel and track creators during initialisation.
    Avoids biased timing numbers.
