@@ -3,7 +3,7 @@ version v4r9
 
 branches doc cmt
 
-use LHCbKernel       v5r8   Kernel
+use LHCbKernel       v5r9   Kernel
 use Relations        v2r4   Kernel
 use CaloKernel       v3r2   Calo
 use MuonKernel       v2r7   Muon
