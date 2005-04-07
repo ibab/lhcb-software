@@ -1,0 +1,57 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE gdd SYSTEM 'gdd.dtd'>
+<gdd>
+  <package name='TrackFitEvent'>
+
+<!-- ================ OTMeasurement class definition ================ -->
+
+    <class
+      name        = 'OTMeasurement'
+      author      = 'Jose Hernando, Eduardo Rodrigues'
+      desc        = 'OTMeasurement is a measurement made from a OTTime.'
+      serializers = 'FALSE'>
+
+      <base name='Measurement' />
+
+      <import name='Event/Measurement' />
+      <import name='Event/OTTime' />
+
+      <import name='OTDet/DeOTDetector'/>
+
+      <constructor
+        desc    = 'Constructor from an OTTime'>
+       <arg type='OTTime' name='otTime'/>
+       <arg type='DeOTDetector' name='det'/>
+       <arg type='int' name='ambiguity'/>
+       <arg type='double' name='tu = 999.0'/>
+      </constructor>
+
+      <attribute
+        type = 'int'
+        name = 'ambiguity'
+        desc = 'the ambiguity (+1/-1) of the measurement'/>
+
+      <attribute
+        type = 'double'
+        name = 'tu'
+        desc = 'the slope in u of the measurement'/>
+
+      <attribute
+        type = 'OTTime*'
+        name = 'time'
+        desc = 'Pointer to the OTTime'/>
+
+      <method
+        type    = 'OTMeasurement*'
+        name    = 'clone'
+        desc    = 'Clone the OTMeasurement'
+        const   = 'TRUE'>
+        <code>
+  OTMeasurement* me = new OTMeasurement(); *me = *this; return me;
+        </code>
+      </method>
+
+    </class>
+
+  </package>
+</gdd>

@@ -1,0 +1,48 @@
+#============================================================================
+# Created    : 2005-03-07
+# Maintainer : Jose Hernando, Eduardo Rodrigues
+#
+# Documentation on the requirement file can be found at
+# http://cern.ch/lhcb-comp/Support/html/new_structure.pdf
+#============================================================================
+package           TrackFitEvent
+version           v1r0
+
+#============================================================================
+# This template is an example for a standard Algorithm package
+#
+# Structure, i.e. directories to process. 
+#============================================================================
+branches          cmt doc dict Event xml
+include_dirs      $(TRACKFITEVENTROOT)
+#============================================================================
+# Used packages. Specify the version, * at the end specifies 'any revision'
+#    Put as many lines as needed, with all packages, without the '#'
+#============================================================================
+use   TrackEvent      v1r*    Event
+use   OTEvent         v*      Event
+use   ITEvent         v*      Event
+use   VeloEvent       v*      Event
+
+use   OTDet           v*      Det
+use   STDet           v*      Det
+use   VeloDet         v*      Det
+#============================================================================
+#---- Produce Header-Files from XML description
+private
+document obj2doth TrackFitEventObj2Doth ../xml/*.xml
+document obj2dict TrackFitEventObj2Dict ../xml/*.xml
+
+public
+library          TrackFitEvent         ../src/*.cpp
+library          TrackFitEventDict     ../dict/*.cpp
+
+#============================================================================
+# define library link options
+#============================================================================
+apply_pattern component_library library=TrackFitEventDict
+apply_pattern linker_library	library=TrackFitEvent
+macro_append TrackFitEvent_linkopts  "" WIN32 "/include:_TrackFitEvent_loadRef" 
+
+private
+use GaudiObjDesc v7*

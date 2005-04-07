@@ -1,0 +1,51 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE gdd SYSTEM 'gdd.dtd'>
+<gdd>
+  <package name='TrackFitEvent'>
+
+<!-- =============== VeloRMeasurement class definition =============== -->
+
+    <class
+      name        = 'VeloRMeasurement'
+      author      = 'Jose Hernando, Eduardo Rodrigues'
+      desc        = 'VeloRMeasurement is a measurement made from a VeloRCluster.'
+      serializers = 'FALSE'>
+
+      <base name='Measurement' />
+
+      <import name='Event/Measurement' />
+      <import name='Event/VeloCluster' />
+
+      <import name='VeloDet/DeVelo'/>
+
+      <constructor
+        desc = 'Constructor from an VeloRCluster'>
+        <arg type = 'VeloCluster' name = 'cluster'/>
+        <arg type = 'DeVelo' name = 'det'/>
+        <arg type = 'double' name = 'phi = 999.0'/>
+      </constructor>
+
+      <attribute
+        type = 'double'
+        name = 'phi'
+        desc = 'the phi of the Velo R measurement'/>
+
+      <attribute
+        type = 'VeloCluster*'
+        name = 'cluster'
+        desc = 'Pointer to the VeloRCluster'/>
+
+      <method
+        type    = 'VeloRMeasurement*'
+        name    = 'clone'
+        desc    = 'Clone the VeloRMeasurement'
+        const   = 'TRUE'>
+        <code>
+  VeloRMeasurement* me = new VeloRMeasurement(); *me = *this; return me;
+        </code>
+      </method>
+
+    </class>
+
+  </package>
+</gdd>

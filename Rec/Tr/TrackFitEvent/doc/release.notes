@@ -1,0 +1,16 @@
+!-----------------------------------------------------------------------------
+! Package     : Tr/TrackFitEvent
+! Responsible : Jose Hernando, Eduardo Rodrigues
+! Purpose     : Package for the tracking fitting-related classes
+!-----------------------------------------------------------------------------
+
+! 2005-04-07 - Jose Hernando, Eduardo Rodrigues
+ - classes ITMeasurement, OTMeasurement, VeloRMeasurement, VeloPhiMeasurement added
+ - functionality added to FitTrack
+
+! 2005-04-05 - Eduardo Rodrigues
+ - MeasurementFunctor added
+
+! 2005-03-29 - Jose Hernando, Eduardo Rodrigues
+ - creation of the package. It contains for the moment the class
+   FitTrack inheriting from Track

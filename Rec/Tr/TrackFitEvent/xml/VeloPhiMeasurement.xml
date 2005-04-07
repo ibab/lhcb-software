@@ -1,0 +1,45 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE gdd SYSTEM 'gdd.dtd'>
+<gdd>
+  <package name='TrackFitEvent'>
+
+<!-- ============== VeloPhiMeasurement class definition ============== -->
+
+    <class
+      name        = 'VeloPhiMeasurement'
+      author      = 'Jose Hernando, Eduardo Rodrigues'
+      desc        = 'VeloPhiMeasurement is a measurement made from a VeloPhiCluster.'
+      serializers = 'FALSE'>
+
+      <base name='Measurement' />
+
+      <import name='Event/Measurement' />
+      <import name='Event/VeloCluster' />
+
+      <import name='VeloDet/DeVelo'/>
+
+      <constructor
+        desc = 'Constructor from an VeloPhiCluster'>
+        <arg type = 'VeloCluster' name = 'cluster'/>
+        <arg type = 'DeVelo' name = 'det'/>
+      </constructor>
+
+      <attribute
+        type = 'VeloCluster*'
+        name = 'cluster'
+        desc = 'Pointer to the VeloPhiCluster'/>
+
+      <method
+        type    = 'VeloPhiMeasurement*'
+        name    = 'clone'
+        desc    = 'Clone the VeloPhiMeasurement'
+        const   = 'TRUE'>
+        <code>
+  VeloPhiMeasurement* me = new VeloPhiMeasurement(); *me = *this; return me;
+        </code>
+      </method>
+
+    </class>
+
+  </package>
+</gdd>
