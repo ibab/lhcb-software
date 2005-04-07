@@ -66,7 +66,7 @@ use MuonRec             v2r4p1	Muon
 use MuonID              v3r7p2	Muon
 
 # Rich
-use RichRecSys		v1r16	Rich
+use RichRecSys		v1r16p1	Rich
 
 #
 #===== build Brunel =========================

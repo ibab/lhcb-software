@@ -41,8 +41,8 @@ use MuonRec             v2r4p1	Muon
 use MuonID              v3r7p2	Muon
 
 # Rich
-use RichRecSys		v1r16	Rich
+use RichRecSys		v1r16p1	Rich
 use RichRingRefit	v1r9	Rich
-use RichLocalPID	v1r10	Rich
+use RichLocalPID	v1r10p1	Rich
 use RichGlobalPID	v1r9	Rich
 use RichPIDMerge	v1r5	Rich
