@@ -6,6 +6,7 @@
 
 ! 2005-04-07 - Marco Cattaneo
  - Remove from xml import of obsolete includes
+ - Add private use GaudiObjDesc v*, no longer inherited from Event model
 
 ! 2005-04-06 - Chris Jones
  - Only load the creator tools "on-demand" for the algorithm base classes
