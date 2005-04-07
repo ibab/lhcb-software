@@ -42,7 +42,7 @@ use MuonID              v3r7p2	Muon
 
 # Rich
 use RichRecSys		v1r16p1	Rich
-use RichRingRefit	v1r9	Rich
+use RichRingRefit	v1r9p1	Rich
 use RichLocalPID	v1r10p1	Rich
-use RichGlobalPID	v1r9	Rich
+use RichGlobalPID	v1r9p1	Rich
 use RichPIDMerge	v1r5	Rich
