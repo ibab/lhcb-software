@@ -38,7 +38,7 @@ use TrgBrunel           v1r1    Trg
 # Muon
 use MuonUtils		v1r0	Muon
 use MuonRec             v2r4	Muon
-use MuonID              v3r7p1	Muon
+use MuonID              v3r7p2	Muon
 
 # Rich
 use RichRecSys		v1r16	Rich

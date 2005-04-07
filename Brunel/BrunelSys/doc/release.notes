@@ -3,12 +3,11 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
-</PRE><H1><A NAME=v26r2>2005-04-03 Brunel v26r2</A></H1><PRE>
+</PRE><H1><A NAME=v26r2>2005-04-07 Brunel v26r2</A></H1><PRE>
 This version uses Gaudi v16r2, LHCb v18r2 (also CLHEP 1.9, ROOT 4.0)
-Requires input data from Boole v8r2 or greater. Cannot process DC04 Boole output.
-Output data incompatible with DC04 versions
+Requires input data from Boole v8r2 or greater. Incompatible with DC04 versions
 
-- Packages modified: TrgTools v7r2, VeloTT v1r12, TrgVelo v7r3
+- Packages modified: TrgTools v7r2, VeloTT v1r12, TrgVelo v7r3, MuonID v3r7p2
                      Revert to TrgBrunel v1r1
 
 - New tuning:
