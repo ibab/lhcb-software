@@ -2,7 +2,6 @@
 <!DOCTYPE gdd SYSTEM "gdd.dtd">
 <gdd>
   <package name="VeloEvent">
-    <import name="Kernel/CLHEPStreams"/>
     <class name="MCVeloHit" 
            author="Chris Parkes" 
            desc="Raw GEANT hit information for VELO silicon sensors. 
