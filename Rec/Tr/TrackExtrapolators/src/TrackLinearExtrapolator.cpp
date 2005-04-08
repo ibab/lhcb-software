@@ -1,4 +1,4 @@
-// $Id: TrackLinearExtrapolator.cpp,v 1.2 2005-03-16 14:10:05 hernando Exp $
+// $Id: TrackLinearExtrapolator.cpp,v 1.3 2005-04-08 11:53:09 hernando Exp $
 // Include files
 
 // from Gaudi
@@ -43,8 +43,8 @@ void TrackLinearExtrapolator::extrapolate( State* state ) const
 // Propagate a State to a given z-position
 //=============================================================================
 StatusCode TrackLinearExtrapolator::propagate( State& state,
-                                            double zNew,
-                                            ParticleID pid )
+                                               double zNew,
+                                               ParticleID pid )
 {
   // create transport matrix
   unsigned int ndim = state.nParameters();
@@ -53,16 +53,19 @@ StatusCode TrackLinearExtrapolator::propagate( State& state,
 
   // check current z-position
   double dz = zNew - state.z();
-  if ( fabs(dz) > TrackParameters::hiTolerance ) {
-    m_F[0][2] = dz; // tx*dz
-    m_F[1][3] = dz; // ty*dz
-    // extrapolate
-    //extrapolate(state);
-    //state -> setZ( zNew );
-    updateState( state, zNew );
-  }
+  // if ( fabs(dz) < TrackParameters::hiTolerance ) dz = 0.;
+  m_F[0][2] = dz; // tx*dz
+  m_F[1][3] = dz; // ty*dz
+  info() << " F " << m_F << endreq;
+  
+  // extrapolate
+  //extrapolate(state);
+  //state -> setZ( zNew );
+  updateState( state, zNew );
 
-  debug() << " z propagation " << zNew 
+  debug() << " z propagation " << zNew
+          << " propagated state " << state.state()
+          << " propagated cov   " << state.covariance()
           << " of particle pid " << pid.pid() << endreq;
 
   return StatusCode::SUCCESS;
@@ -111,12 +114,8 @@ TrackLinearExtrapolator::TrackLinearExtrapolator(const std::string& type,
                                                  const std::string& name,
                                                  const IInterface* parent )
   : TrackExtrapolator ( type, name, parent )
-  , m_F()
 {
   //declareInterface<ITrackExtrapolator>( this );
-
-  // create transport matrix
-  m_F = HepMatrix(5, 5, 1);
 }
 
 //=============================================================================

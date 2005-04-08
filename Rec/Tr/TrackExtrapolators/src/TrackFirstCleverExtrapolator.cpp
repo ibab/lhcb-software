@@ -1,4 +1,4 @@
-// $Id: TrackFirstCleverExtrapolator.cpp,v 1.1 2005-03-16 14:10:05 hernando Exp $
+// $Id: TrackFirstCleverExtrapolator.cpp,v 1.2 2005-04-08 11:53:09 hernando Exp $
 
 // GSL : for macros
 #include "gsl/gsl_math.h"
@@ -51,11 +51,11 @@ TrackFirstCleverExtrapolator::TrackFirstCleverExtrapolator
   declareProperty("fieldStop"     , m_zFieldStop= 21000.*mm );
   declareProperty("shortDist"     , m_shortDist = 100.*mm);
   declareProperty("freeFieldExtrapolatorName",
-                  m_freeFieldExtrapolatorName = "TrLinearExtrapolator");
+                  m_freeFieldExtrapolatorName = "TrackLinearExtrapolator");
   declareProperty("shortFieldExtrapolatorName",
-                  m_shortFieldExtrapolatorName ="TrParabolicExtrapolator");
+                  m_shortFieldExtrapolatorName ="TrackParabolicExtrapolator");
   declareProperty("longFieldExtrapolatorName",
-                  m_longFieldExtrapolatorName = "TrHerabExtrapolator");
+                  m_longFieldExtrapolatorName = "TrackHerabExtrapolator");
   declareProperty("applyMultScattCorr"  , m_applyMultScattCorr  = true);
   declareProperty("fms2"                , m_fms2                = 1.0);
   declareProperty("thickWall"           , m_thickWall           = 0.*mm);

@@ -1,4 +1,4 @@
-// $Id: TrackExtrapolator.cpp,v 1.1 2005-03-10 14:41:03 hernando Exp $
+// $Id: TrackExtrapolator.cpp,v 1.2 2005-04-08 11:53:09 hernando Exp $
 // Include files
 
 // from Gaudi
@@ -43,9 +43,9 @@ StatusCode TrackExtrapolator::propagate( const Track& track,
 // Propagate a track to the intersection point with a given plane
 //=============================================================================
 StatusCode TrackExtrapolator::propagate( const Track& track,
-                                      const HepPlane3D& plane,
-                                      State& state,
-                                      ParticleID pid )
+                                         const HepPlane3D& plane,
+                                         State& state,
+                                         ParticleID pid )
 {
   // get state closest to the plane
   const State& closest = track.closestState( plane );
@@ -504,8 +504,16 @@ void TrackExtrapolator::updateState( State& state, double z ) const
 
   // calculate new state
   state.setZ( z );
+  info() << " initial state vector " << tX << endreq;
   tX = m_F * tX; // X*F  (can this be done more efficiently?)
+
   tC = tC.similarity(m_F); // F*C*F.T()
+
+  info() << " F " << m_F << endreq;
+  info() << " updated state vector " << tX << endreq;
+  info() << " updated cov matrix " << tC << endreq;
+
+
 }
 
 //=============================================================================

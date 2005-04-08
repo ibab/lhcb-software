@@ -25,7 +25,7 @@ include_path      none
 #============================================================================
 
 use	LHCbInterfaces	v1r1   Kernel
-use 	TrackEvent	v1r1   Event
+use 	TrackEvent	v1r2   Event
 use	GaudiAlg	v8r2
 use	GSL	v*	LCG_Interfaces 
 use     DetDesc         v*     Det

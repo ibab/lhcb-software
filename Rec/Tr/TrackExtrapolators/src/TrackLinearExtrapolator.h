@@ -1,4 +1,4 @@
-// $Id: TrackLinearExtrapolator.h,v 1.1 2005-03-10 14:41:03 hernando Exp $
+// $Id: TrackLinearExtrapolator.h,v 1.2 2005-04-08 11:53:09 hernando Exp $
 #ifndef TRACKEXTRAPOLATORS_TRLINEAREXTRAPOLATOR_H 
 #define TRACKEXTRAPOLATORS_TRLINEAREXTRAPOLATOR_H 1
 
@@ -44,11 +44,6 @@ public:
   StatusCode propagate( State& state,
                         HepPlane3D& plane,
                         ParticleID pid = ParticleID(211) );
-
-private:
-
-  /// transport matrix
-  HepMatrix m_F;
 };
 
 #endif // TRACKEXTRAPOLATORS_TRLINEAREXTRAPOLATOR_H

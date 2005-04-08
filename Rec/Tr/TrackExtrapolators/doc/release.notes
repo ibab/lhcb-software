@@ -4,6 +4,10 @@
 ! Purpose     : Package for tracking extrapolators
 !-----------------------------------------------------------------------------
 
+! 2005-04-08 - Jose A. Hernando
+	- small bugs in TrackLinearExtrapolator and TrackFirstCleverExtrapolator
+  - name for TrackFirstCleverExtrapolator to be changed
+
 ! 2005-03-15 - Jose A. Hernando
 	- Incorporating the Parabolic,FastParabolic,Herab,FirstClever 
 	TrackExtrapolators
