@@ -24,13 +24,13 @@
 
       <enum
         name = 'SpecificMask'
-        value = 'veloMask= 0x1FFFFFL,otMask=0x3FFFFFFL'
+        value = 'veloMask= 0x1FFFFFL,stMask=0x3FFFFFFL,otMask=0x3FFFFFFL'
         desc = 'enumeration of the specific mask'
         access = 'PROTECTED' />
 
       <enum
         name = 'SpecificBits'
-        value = 'veloBits=21,otBits=26'
+        value = 'veloBits=21,stBits=26,otBits=26'
         desc = 'enumeration of the specific bits'
         access = 'PROTECTED' />
 
@@ -38,7 +38,7 @@
           desc = "the internal representation" name="lhcbID"
           type = "bitfield"
           setMeth = "FALSE" >
-            <bitfield desc='the detector channelID bits' length='28' name='channelID' setMeth='TRUE' getMeth='FALSE' />
+            <bitfield desc='the ID bits (to recreate the channelID)' length='28' name='ID' setMeth='TRUE' getMeth='FALSE' />
             <bitfield desc='the LHCb detector type bits' length='4' name='detectorType' />
        </attribute>
 
@@ -59,7 +59,7 @@
           <arg const="TRUE" name="chanID" type="VeloChannelID" />
           <code>
   setDetectorType( veloType );
-  setChannelID( chanID );
+  setID( chanID );
           </code>
        </constructor>
 
@@ -89,7 +89,7 @@
           <arg const="TRUE" name="chanID" type="ITChannelID" />
           <code>
   setDetectorType( stType );
-  setChannelID( ((chanID.uniqueWafer()-1)&gt;&gt;4) + (chanID.strip()-1) );
+  setID( ((chanID.uniqueWafer()-1)&gt;&gt;4) + (chanID.strip()-1) );
           </code>
        </constructor>
 
@@ -109,7 +109,7 @@
          const = 'TRUE'
          desc  = "return the ITChannelID">
 	 <code>
-  return isST() ? ( ((channelID()&amp;0xFFFF000)&lt;&lt;4)+(channelID()&amp;0xFFF) ) : 0xF0000000;
+  return isST() ? channelID(): 0xF0000000;
          </code>
        </method>
 
@@ -119,7 +119,7 @@
         <arg const="TRUE" name="chanID" type="OTChannelID" />
         <code>
   setDetectorType( otType );
-  setChannelID( chanID );
+  setID( chanID );
         </code>
        </constructor>
 
@@ -151,7 +151,7 @@
   unsigned int richData = chanID.dataBitsOnly();
   if( chanID.pixelDataAreValid() ) richData += 0x8000000;
   setDetectorType( richType );
-  setChannelID( richData );
+  setID( richData );
          </code>
        </constructor>
 
@@ -171,12 +171,7 @@
          const = 'TRUE'
          desc  = "return the richSmartID">
 	 <code>
-  unsigned int rID = 0;
-  if( isRich() ) {
-    rID = channelID() &amp; 0x7000000;
-    if( channelID() &amp;&amp; 0x8000000 ) rID += 0x7E000000;
-  }
-  return rID;
+ return isRich()? channelID():0x0;
          </code>
        </method>
 
@@ -186,7 +181,7 @@
           <arg const="TRUE" name="chanID" type="CaloCellID" />
          <code>
   setDetectorType( caloType );
-  setChannelID( chanID.ccid() );
+  setID( chanID.ccid() );
          </code>
        </constructor>
 
@@ -214,29 +209,37 @@
         type  = "unsigned int"
         name  = "channelID"
         const = 'TRUE'
-        desc  = "return the internal channel ID">
+        desc  = "return the specific detector channelID (the key value)">
         <code>
-  unsigned mask = channelIDMask;
-  unsigned bits  = channelIDBits;
+  unsigned mask = IDMask;
+  unsigned bits  = IDBits;
   if (isVelo()) mask = veloMask;
   if (isOT()) mask = otMask;
+  if (isST()) mask = stMask;
   unsigned int id = (m_lhcbID &amp; mask) &gt;&gt; bits;
+  if (isST()) id = (((id &amp; 0xFFFF000) &lt;&lt; 4)+(id &amp; 0xFFF));
+  if (isRich())  {  
+    id = id &amp; 0x7000000;
+    if( id &amp;&amp; 0x8000000 ) id = id + 0x7E000000;
+  }
   return id;
         </code>
       </method>
-
 
       <method
         name    = 'setSpareBits'
         argList = 'unsigned int value'
         desc    = 'set the spare bits'>
         <code>
-  if ( !( isVelo() || isOT() ) ) return;
-  unsigned int mask = channelIDMask;
-  unsigned int bits = channelIDBits;
+  if ( !( isVelo() || isOT() || isST() ) ) return;
+  unsigned int mask = IDMask;
+  unsigned int bits = IDBits;
   if (isVelo()) {
     mask &amp;= (~veloMask);
     bits = veloBits;
+  } else if (isST()) {
+    mask &amp;= (~stMask);
+    bits = stBits;
   } else if (isOT()) {
     mask &amp;= (~otMask);
     bits = otBits;
@@ -252,12 +255,15 @@
         const = 'TRUE'
         desc  = 'retrieve the spare bits'>
         <code>
-  if ( !( isVelo() || isOT() ) ) return 0;
-  unsigned int mask = channelIDMask;
-  unsigned int bits = channelIDBits;
+  if ( !( isVelo() || isOT() || isST()) ) return 0;
+  unsigned int mask = IDMask;
+  unsigned int bits = IDBits;
   if (isVelo()) {
      mask &amp;= (~veloMask);	  
      bits = veloBits;
+  } else if (isST()) {
+    mask &amp;= (~stMask);
+    bits = stBits;
   } else if (isOT()) {
      mask &amp;= (~otMask);	  
      bits = otBits;

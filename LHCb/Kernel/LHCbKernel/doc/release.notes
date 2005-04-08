@@ -2,13 +2,17 @@ Package LHCbKernel
 Package manager: M.Cattaneo
 Purpose: LHCb specific Kernel classes
 
+! 2005-04-08 - Jose Hernando
+ - LHCbID class revisited:
+		. using 26 bits for ST, 2 bits used for size 
+
 !====================== LHCbKernel v5r9 2005-04-07 ========================
 ! 2005-04-07 - Marco Cattaneo
  - Remove obsolete files Kernel/LHCbStreams.h and Kernel/CLHEPStreams.h
 
 ! 2005-04-02 - Jose Hernando
  - LHCbID class revisited:
-   . using 28 bits for OT and 21 Velo for channelID
+   . using 26 bits for OT and 21 Velo for channelID
    . leaving space for spare bits for Velo (size of cluster) 
      and OT (left/right ambiguity)
 
