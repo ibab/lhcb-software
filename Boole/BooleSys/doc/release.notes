@@ -3,13 +3,13 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
-</PRE><H1><A NAME=v8r2>2005-04-01 Boole v8r2</A></H1><PRE>
+</PRE><H1><A NAME=v8r2>2005-04-08 Boole v8r2</A></H1><PRE>
 This version uses Gaudi v16r2, LHCb v18r2, Lbcom v1r2 (also CLHEP 1.9, ROOT 4.0) 
-Requires input from Gauss v19r3 or greater. Cannot process DC04 Gauss output.
-Output data incompatible with DC04 versions, needs Brunel v26r2 or greater
+Requires input from Gauss v19r3 or greater. Output needs Brunel v26r2 or greater
+Incompatible with DC04 data and programs.
 
 - Packages added:    TrgTools v7r2
-- Packages modified: MuonAlgs v5r7
+- Packages modified: MuonAlgs v5r7, MuonBackground v1r10
 
 - New features:
   . New Boole.PreloadGeometry option to preload geometry tree at initialize
@@ -21,6 +21,7 @@ Output data incompatible with DC04 versions, needs Brunel v26r2 or greater
 
 - New tuning:
   . L0 bandwidth division thresholds updated for DC04 data (L0DU v6r9)
+  . L0 Muon repackaging and performance optimization (L0MuonTrigger v3r0)
 
 - Geometry changes (XmlDDDB v24r0)
   . Update Rich2 centre tube description and add centre tube supports
@@ -38,10 +39,15 @@ Output data incompatible with DC04 versions, needs Brunel v26r2 or greater
     (Event v4r7)
   . Removed from MCRichHit unneccessary inheritance from MCHit (RichEvent v8r3)
   . Added to MCMuonHit inheritance from MCHit, for consistency (MuonEvent v4r0)
-    (and adapted MuonAlgs v5r7, MuonBackground v1r10 accordingly) 
+    (and adapted MuonAlgs v5r7, MuonBackground v1r10 accordingly)
+  . Added L0Muon bank to L1Buffer (L0MuonTrigger v3r0)
+  . Added header word ST RawBuffer banks (STDAQ v1r5)
 
 - Bug fixes:
   . Fix memory leak in XmlDDDB parser tool (XmlTools v3r4)
+  . Fix memory leak in L0Muon (L0MuonTrigger v3r0)
+  . Fix bug in MCTrackInfo truth information for OT (MCTools v1r13)
+  . Backward incompatible (for data) fix to TTLayer.cpp (STDet v1r3)
 
 </PRE><H1><A NAME=v8r1>2005-03-08 Boole v8r1</A></H1><PRE>
 This version uses Gaudi v16r2, LHCb v18r1 (also CLHEP 1.9, ROOT 4.0) 

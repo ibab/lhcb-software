@@ -8,4 +8,3 @@ RawWriter.ItemList =
 , "/Event/DAQ/RawBuffer#1"
 };
 ApplicationMgr.OutStream += { "RawWriter" };
-RawWriter.Output = "DATAFILE='PFN:Boole-0412.raw' TYP='POOL_ROOTTREE' OPT='REC'";

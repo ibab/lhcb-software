@@ -14,3 +14,8 @@ RawWriter.ItemList +=
 {
   "/Event/DAQ/L1Buffer#1"
 };
+
+// Output file for raw data stream
+RawWriter.Output = "DATAFILE='PFN:0412-11144100.500ev-L0Yes.raw' TYP='POOL_ROOTTREE' OPT='REC'";
+// Over-ride name of digi output file, for consistency
+DigiWriter.Output = "DATAFILE='PFN:0412-11144100.500ev-L0Yes.digi' TYP='POOL_ROOTTREE' OPT='REC'";
