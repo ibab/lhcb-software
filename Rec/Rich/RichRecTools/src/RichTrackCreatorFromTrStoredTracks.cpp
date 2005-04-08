@@ -5,7 +5,7 @@
  *  Implementation file for tool : RichTrackCreatorFromTrStoredTracks
  *
  *  CVS Log :-
- *  $Id: RichTrackCreatorFromTrStoredTracks.cpp,v 1.25 2005-04-06 20:23:17 jonrob Exp $
+ *  $Id: RichTrackCreatorFromTrStoredTracks.cpp,v 1.26 2005-04-08 13:08:15 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -101,8 +101,9 @@ StatusCode RichTrackCreatorFromTrStoredTracks::finalize()
   RichStatDivFunctor occ("%8.2f +-%5.2f");
 
   // Print out final track stats
-  info() << "-------------------------------------------------------------------------------" << endreq
-         << " Track Selection Summary : " << m_Nevts << " events :-" << endreq;
+  info() << "===============================================================================" << endreq
+         << "                    Track Selection Summary : " << m_Nevts << " events" << endreq
+         << "-------------------------------------------------------------------------------" << endreq;
   for ( TrackTypeCount::iterator i = m_nTracksAll.begin();
         i != m_nTracksAll.end(); ++i )
   {
@@ -122,7 +123,7 @@ StatusCode RichTrackCreatorFromTrStoredTracks::finalize()
       info() << "                    :"
              << occ((*i).second.cf4Segs,m_Nevts)   << " CF4      segments/event" << endreq;
   }
-  info() << "-------------------------------------------------------------------------------" << endreq;
+  info() << "===============================================================================" << endreq;
 
   // Execute base class method
   return RichRecToolBase::finalize();
@@ -132,9 +133,9 @@ StatusCode RichTrackCreatorFromTrStoredTracks::finalize()
 void RichTrackCreatorFromTrStoredTracks::handle ( const Incident & incident )
 {
   // Update prior to start of event. Used to re-initialise data containers
-  if      ( IncidentType::BeginEvent == incident.type() ) 
-  { 
-    InitEvent(); 
+  if      ( IncidentType::BeginEvent == incident.type() )
+  {
+    InitEvent();
   }
   // End of event
   else if ( IncidentType::EndEvent == incident.type() )
