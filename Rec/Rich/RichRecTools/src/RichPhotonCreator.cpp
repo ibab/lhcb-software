@@ -5,7 +5,7 @@
  *  Implementation file for tool : RichPhotonCreator
  *
  *  CVS Log :-
- *  $Id: RichPhotonCreator.cpp,v 1.23 2005-04-06 20:23:17 jonrob Exp $
+ *  $Id: RichPhotonCreator.cpp,v 1.24 2005-04-08 13:07:49 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -88,11 +88,12 @@ StatusCode RichPhotonCreator::finalize()
   RichStatDivFunctor occ("%10.2f +-%8.2f");
 
   // Print out final stats
-  info() << "-------------------------------------------------------------------------------" << endreq
-         << " Created on average " << occ(m_photCount[Rich::Aerogel],m_Nevts) << "  Aerogel photons/event" << endreq
-         << " Created on average " << occ(m_photCount[Rich::C4F10],m_Nevts)   << "  C4F10   photons/event" << endreq
-         << " Created on average " << occ(m_photCount[Rich::CF4],m_Nevts)     << "  CF4     photons/event" << endreq
-         << "-------------------------------------------------------------------------------" << endreq;
+  info() << "------------------------------------------------------" << endreq
+         << " Photon Candidate Summary : " << m_Nevts << " events :-" << endreq
+         << "   Aerogel   " << occ(m_photCount[Rich::Aerogel],m_Nevts) << "  photons/event" << endreq
+         << "   C4F10     " << occ(m_photCount[Rich::C4F10],m_Nevts)   << "  photons/event" << endreq
+         << "   CF4       " << occ(m_photCount[Rich::CF4],m_Nevts)     << "  photons/event" << endreq
+         << "------------------------------------------------------" << endreq;
 
   // Execute base class method
   return RichRecToolBase::finalize();
