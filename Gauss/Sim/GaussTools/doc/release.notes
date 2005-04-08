@@ -4,6 +4,10 @@
 ! Purpose       : G4 actions and some miscellaneous algs for Gauss
 !-----------------------------------------------------------------------------
 
+! 2005-04-08 - Gloria Corti
+ - src/Components/CommandTrackAction.cpp
+   . change to be able to set list of commands in option instead of a single
+     one (PreCommand and PostCommand are vectors now)
 
 !=========================== GaussTools v10r9 =============================
 ! 2005-03-01 - Gloria Corti

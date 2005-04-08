@@ -87,8 +87,8 @@ private:
 
   bool m_test;
   int m_trackid;
-  std::string m_precommand;
-  std::string m_postcommand;
+  std::vector<std::string> m_precommand;
+  std::vector<std::string> m_postcommand;
 };
 
 // ============================================================================
