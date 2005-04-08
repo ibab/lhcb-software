@@ -1,15 +1,16 @@
 
+//--------------------------------------------------------------------------
 /** @file RichGlobalPIDDigitSel.h
  *
  *  Header file for RICH Global PID algorithm class : RichGlobalPIDDigitSel
  *
  *  CVS Log :-
- *  $Id: RichGlobalPIDDigitSel.h,v 1.4 2004-07-27 10:56:36 jonrob Exp $
- *  $Log: not supported by cvs2svn $
+ *  $Id: RichGlobalPIDDigitSel.h,v 1.5 2005-04-08 13:16:45 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   12/12/2002
  */
+//--------------------------------------------------------------------------
 
 #ifndef RICHGLOBALPID_RICHGLOBALPIDDIGITSEL_H
 #define RICHGLOBALPID_RICHGLOBALPIDDIGITSEL_H 1
@@ -25,6 +26,7 @@
 #include "Event/ProcStatus.h"
 #include "Event/RichRecStatus.h"
 
+//--------------------------------------------------------------------------
 /** @class RichGlobalPIDDigitSel RichGlobalPIDDigitSel.h
  *
  *  RichDigit selection algorithm for Rich Global PID
@@ -32,6 +34,7 @@
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   12/12/2002
  */
+//--------------------------------------------------------------------------
 
 class RichGlobalPIDDigitSel : public RichGlobalPIDAlgBase {
 

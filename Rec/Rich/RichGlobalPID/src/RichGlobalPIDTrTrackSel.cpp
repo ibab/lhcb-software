@@ -1,23 +1,16 @@
 
+//--------------------------------------------------------------------------
 /** @file RichGlobalPIDTrTrackSel.cpp
  *
  *  Implementation file for RICH Global PID algorithm class : RichGlobalPIDTrTrackSel
  *
  *  CVS Log :-
- *  $Id: RichGlobalPIDTrTrackSel.cpp,v 1.19 2005-03-02 14:35:55 jonrob Exp $
- *  $Log: not supported by cvs2svn $
- *  Revision 1.18  2004/10/27 14:21:17  jonrob
- *  Update version number
- *
- *  Revision 1.17  2004/10/13 09:17:15  jonrob
- *  Update for new RichPID object
- *
- *  Revision 1.16  2004/07/27 10:56:37  jonrob
- *  Add doxygen file documentation and CVS information
+ *  $Id: RichGlobalPIDTrTrackSel.cpp,v 1.20 2005-04-08 13:16:45 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   17/04/2002
  */
+//--------------------------------------------------------------------------
 
 // local
 #include "RichGlobalPIDTrTrackSel.h"
@@ -65,11 +58,16 @@ StatusCode RichGlobalPIDTrTrackSel::initialize()
   // Acquire tools
   acquireTool( "RichExpectedTrackSignal", m_tkSignal );
 
+  // trick to force pre-loading of various tools. Avoids loading
+  // during first processed event and thus biased any timing numbers
+  trackCreator();  // pre-load the track creator
+  pixelCreator();  // pre-load the pixel creator
+
   // Configure track selector
   if ( !m_trSelector.configureTrackTypes() ) return StatusCode::FAILURE;
   info() << "Selecting '" << m_trSelector.selectedTracksAsString() << "' tracks" << endreq;
 
-  return StatusCode::SUCCESS;
+  return sc;
 }
 
 // Select tracks for analysis

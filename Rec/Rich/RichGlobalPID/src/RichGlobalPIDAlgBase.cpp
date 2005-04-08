@@ -1,15 +1,16 @@
 
+//-----------------------------------------------------------------------------
 /** @file RichGlobalPIDAlgBase.cpp
  *
  *  Implementation file for RICH Global PID algorithm base class : RichGlobalPIDAlgBase
  *
  *  CVS Log :-
- *  $Id: RichGlobalPIDAlgBase.cpp,v 1.5 2004-07-27 10:56:36 jonrob Exp $
- *  $Log: not supported by cvs2svn $
+ *  $Id: RichGlobalPIDAlgBase.cpp,v 1.6 2005-04-08 13:16:45 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2003-05-10
  */
+//-----------------------------------------------------------------------------
 
 // local
 #include "RichGlobalPIDAlgBase.h"

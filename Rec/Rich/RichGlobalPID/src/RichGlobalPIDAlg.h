@@ -1,18 +1,16 @@
 
+//--------------------------------------------------------------------------
 /** @file RichGlobalPIDAlg.h
  *
  *  Header file for RICH Global PID algorithm class : RichGlobalPIDAlg
  *
  *  CVS Log :-
- *  $Id: RichGlobalPIDAlg.h,v 1.8 2005-01-13 13:15:21 jonrob Exp $
- *  $Log: not supported by cvs2svn $
- *  Revision 1.7  2004/07/27 10:56:36  jonrob
- *  Add doxygen file documentation and CVS information
- *
+ *  $Id: RichGlobalPIDAlg.h,v 1.9 2005-04-08 13:16:45 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   12/12/2002
  */
+//--------------------------------------------------------------------------
 
 #ifndef RICHRECALGS_RICHGLOBALPIDALG_H
 #define RICHRECALGS_RICHGLOBALPIDALG_H 1
@@ -34,6 +32,7 @@
 #include "RichRecBase/IRichPhotonSignal.h"
 #include "RichRecBase/IRichExpectedTrackSignal.h"
 
+//--------------------------------------------------------------------------
 /** @class RichGlobalPIDAlg RichGlobalPIDAlg.h
  *
  *  Performs a single iteration of the global PID overall event 
@@ -42,6 +41,7 @@
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   12/12/2002
  */
+//--------------------------------------------------------------------------
 
 class RichGlobalPIDAlg : public RichGlobalPIDAlgBase {
 

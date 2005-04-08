@@ -1,15 +1,16 @@
 
+//--------------------------------------------------------------------------
 /** @file RichGlobalPIDAlgBase.h
  *
  *  Header file for RICH global PID algorithm base class : RichGlobalPIDAlgBase
  *
  *  CVS Log :-
- *  $Id: RichGlobalPIDAlgBase.h,v 1.4 2004-07-27 10:56:36 jonrob Exp $
- *  $Log: not supported by cvs2svn $
+ *  $Id: RichGlobalPIDAlgBase.h,v 1.5 2005-04-08 13:16:45 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2002-11-30
  */
+//--------------------------------------------------------------------------
 
 #ifndef RICHRECALGS_RICHGLOBALPIDALGBASE_H
 #define RICHRECALGS_RICHGLOBALPIDALGBASE_H 1
@@ -29,6 +30,7 @@
 #include "RichGlobalPID/RichGlobalPIDTkQuality.h"
 #include "RichRecBase/RichTrackID.h"
 
+//--------------------------------------------------------------------------
 /** @class RichGlobalPIDAlgBase RichGlobalPIDAlgBase.h
  *
  *  Abstract base class for GlobalPID algorithms
@@ -36,6 +38,7 @@
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   2002-11-30
  */
+//--------------------------------------------------------------------------
 
 class RichGlobalPIDAlgBase : public RichRecAlgBase {
 

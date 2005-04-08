@@ -1,21 +1,16 @@
 
+//--------------------------------------------------------------------------
 /** @file RichGlobalPIDDigitSel.cpp
  *
  *  Implementation file for RICH Global PID algorithm class : RichGlobalPIDDigitSel
  *
  *  CVS Log :-
- *  $Id: RichGlobalPIDDigitSel.cpp,v 1.14 2004-12-13 17:23:41 jonrob Exp $
- *  $Log: not supported by cvs2svn $
- *  Revision 1.13  2004/11/20 12:23:01  jonrob
- *  Add better support for events with no pixels
- *
- *  Revision 1.12  2004/07/27 10:56:36  jonrob
- *  Add doxygen file documentation and CVS information
- *
+ *  $Id: RichGlobalPIDDigitSel.cpp,v 1.15 2005-04-08 13:16:45 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   17/04/2002
  */
+//--------------------------------------------------------------------------
 
 // local
 #include "RichGlobalPIDDigitSel.h"

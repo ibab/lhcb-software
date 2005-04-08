@@ -1,17 +1,16 @@
 
+//--------------------------------------------------------------------------
 /** @file RichGlobalPIDAlg.cpp
  *
  *  Implementation file for RICH Global PID algorithm class : RichGlobalPIDAlg
  *
  *  CVS Log :-
- *  $Id: RichGlobalPIDAlg.cpp,v 1.21 2004-11-20 12:23:01 jonrob Exp $
- *  $Log: not supported by cvs2svn $
- *  Revision 1.20  2004/07/27 10:56:36  jonrob
- *  Add doxygen file documentation and CVS information
+ *  $Id: RichGlobalPIDAlg.cpp,v 1.22 2005-04-08 13:16:45 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   17/04/2002
  */
+//--------------------------------------------------------------------------
 
 // local
 #include "RichGlobalPIDAlg.h"
@@ -78,10 +77,14 @@ StatusCode RichGlobalPIDAlg::initialize()
   acquireTool( "RichPhotonSignal",        m_photonSig );
   acquireTool( "RichExpectedTrackSignal", m_tkSignal  );
 
+  // trick to force pre-loading of various tools. Avoids loading
+  // during first processed event and thus biased any timing numbers
+  photonCreator(); // pre-load the photon creator tool
+
   // Initialise parameters
   m_logMinSig = log(m_minSig);
 
-  return StatusCode::SUCCESS;
+  return sc;
 }
 
 //  Finalize
