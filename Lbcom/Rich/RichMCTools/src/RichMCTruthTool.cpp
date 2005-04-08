@@ -5,7 +5,7 @@
  * Implementation file for class : RichMCTruthTool
  *
  * CVS Log :-
- * $Id: RichMCTruthTool.cpp,v 1.17 2005-03-03 15:46:41 jonrob Exp $
+ * $Id: RichMCTruthTool.cpp,v 1.18 2005-04-08 13:18:15 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 14/01/2002
@@ -148,7 +148,7 @@ const MCParticle *
 RichMCTruthTool::mcParticle( const TrgTrack * track ) const
 {
   if ( track ) {
-    return trgTrackToMCPLinks()->first(track);
+    return trgTrackToMCPLinks()->first(track->key());
   } else {
     Warning ( "::mcParticle : NULL TrgTrack pointer" );
     return NULL;
@@ -272,7 +272,7 @@ RichMCTruthTool::TrgTrackToMCP * RichMCTruthTool::trgTrackToMCPLinks() const
     m_trgTrToMCPLinks =
       new TrgTrackToMCP( evtSvc(), msgSvc(), TrgTrackLocation::Long );
     if ( m_trgTrToMCPLinks->notFound() ) {
-      Warning( "Linker for TrgTracks to MCParticles not found for " +
+      Warning( "Linker for TrgTracks to MCParticles not found for '" +
                TrgTrackLocation::Long + "'" );
     }
   }

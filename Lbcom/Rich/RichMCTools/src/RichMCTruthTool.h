@@ -5,7 +5,7 @@
  *  Header file for tool : RichMCTruthTool
  *
  *  CVS Log :-
- *  $Id: RichMCTruthTool.h,v 1.16 2005-03-03 15:46:41 jonrob Exp $
+ *  $Id: RichMCTruthTool.h,v 1.17 2005-04-08 13:18:15 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -62,6 +62,9 @@
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
+ *
+ *  @todo Keep an eye on the method RichMCTruthTool::mcParticle( const TrgTrack * track )
+ *        it is using the access by int method
  */
 //-----------------------------------------------------------------------------
 
