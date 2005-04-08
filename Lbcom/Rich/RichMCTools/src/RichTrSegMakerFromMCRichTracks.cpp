@@ -5,17 +5,7 @@
  * Implementation file for class : RichTrSegMakerFromMCRichTracks
  *
  * CVS Log :-
- * $Id: RichTrSegMakerFromMCRichTracks.cpp,v 1.7 2004-10-21 09:05:22 jonrob Exp $
- * $Log: not supported by cvs2svn $
- * Revision 1.6  2004/10/13 09:23:36  jonrob
- * New MCTruth methods
- *
- * Revision 1.5  2004/07/27 16:54:57  jonesc
- * Add option to turn off individual radiators in RichTrackSegment maker tool
- *
- * Revision 1.4  2004/07/26 17:56:09  jonrob
- * Various improvements to the doxygen comments
- *
+ * $Id: RichTrSegMakerFromMCRichTracks.cpp,v 1.8 2005-04-08 13:18:33 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 14/01/2002
@@ -67,7 +57,7 @@ StatusCode RichTrSegMakerFromMCRichTracks::initialize()
   m_radiators[Rich::C4F10]   = getDet<DeRichRadiator>( DeRichRadiatorLocation::C4F10   );
   m_radiators[Rich::CF4]     = getDet<DeRichRadiator>( DeRichRadiatorLocation::CF4     );
 
-  return StatusCode::SUCCESS;
+  return sc;
 };
 
 //=============================================================================
@@ -78,7 +68,6 @@ StatusCode RichTrSegMakerFromMCRichTracks::finalize()
   // Execute base class method
   return RichToolBase::finalize();
 }
-
 
 //=============================================================================
 // Constructs the track segments for a given input object
@@ -125,7 +114,8 @@ RichTrSegMakerFromMCRichTracks::constructSegments( const ContainedObject * obj,
                                             rad, (*radiator)->rich() ) );
 
       // printout
-      if ( msgLevel(MSG::VERBOSE) ) {
+      if ( msgLevel(MSG::VERBOSE) ) 
+      {
         verbose() << "Found MCRichSegment for " << rad << endreq
                   << " Entry Point : " << entryPoint << endreq
                   << " Entry Mom.  : " << entryStateMomentum << endreq
@@ -148,7 +138,8 @@ RichTrSegMakerFromMCRichTracks::constructSegments( const ContainedObject * obj,
                                             rad, (*radiator)->rich() ) );
 
       // printout
-      if ( msgLevel(MSG::VERBOSE) ) {
+      if ( msgLevel(MSG::VERBOSE) ) 
+      {
         verbose() << "Found MCRichSegment for " << rad << endreq
                   << " Entry Point : " << entryPoint << endreq
                   << " Entry Mom.  : " << entryStateMomentum << endreq
@@ -172,15 +163,18 @@ RichTrSegMakerFromMCRichTracks::mcRichTrack( const ContainedObject * obj ) const
 {
   // Work out what we have been given
   const MCRichTrack * track = dynamic_cast<const MCRichTrack *>(obj);
-  if ( track ) {
+  if ( track ) 
+  {
     verbose() << "Input data is of type MCRichTrack" << endreq;
-  } else {
+  } else 
+  {
     const TrStoredTrack * trTrack = dynamic_cast<const TrStoredTrack *>(obj);
-    if ( trTrack ) {
+    if ( trTrack ) 
+    {
       verbose() << "Input data is of type TrStoredTrack" << endreq;
       track = m_truth->mcRichTrack( trTrack );
     }
-  } 
+  }
 
   if ( !track ) verbose() << "MCRichTrack not available for input data object" << endreq;
 

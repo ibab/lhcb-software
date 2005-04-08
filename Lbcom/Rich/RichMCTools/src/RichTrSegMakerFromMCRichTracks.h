@@ -1,21 +1,16 @@
 
+//-----------------------------------------------------------------------------
 /** @file RichTrSegMakerFromMCRichTracks.h
  *
  *  Header file for tool : RichTrSegMakerFromMCRichTracks
  *
  *  CVS Log :-
- *  $Id: RichTrSegMakerFromMCRichTracks.h,v 1.6 2005-01-17 13:05:55 cattanem Exp $
- *  $Log: not supported by cvs2svn $
- *  Revision 1.5  2004/07/27 16:54:57  jonesc
- *  Add option to turn off individual radiators in RichTrackSegment maker tool
- *
- *  Revision 1.4  2004/07/26 17:56:09  jonrob
- *  Various improvements to the doxygen comments
- *
+ *  $Id: RichTrSegMakerFromMCRichTracks.h,v 1.7 2005-04-08 13:18:33 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   14/01/2002
  */
+//-----------------------------------------------------------------------------
 
 #ifndef RICHMCTOOLS_RICHTRSEGMAKERFROMMCRICHTRACKS_H
 #define RICHMCTOOLS_RICHTRSEGMAKERFROMMCRICHTRACKS_H 1
