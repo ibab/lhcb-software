@@ -5,7 +5,7 @@
  *  Header file for tool : RichGeomEffPhotonTracing
  *
  *  CVS Log :-
- *  $Id: RichGeomEffPhotonTracing.h,v 1.7 2005-02-02 10:06:55 jonrob Exp $
+ *  $Id: RichGeomEffPhotonTracing.h,v 1.8 2005-04-08 13:07:17 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -14,6 +14,8 @@
 
 #ifndef RICHRECTOOLS_RICHGEOMEFFPHOTONTRACING_H
 #define RICHRECTOOLS_RICHGEOMEFFPHOTONTRACING_H 1
+
+#include <list>
 
 // from Gaudi
 #include "GaudiKernel/RndmGenerators.h"
@@ -46,7 +48,7 @@
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
  *
- *  @todo  Remove the use of randomn numbers
+ *  @todo  Remove the use of random numbers if at all possible
  */
 //-----------------------------------------------------------------------------
 
@@ -95,14 +97,14 @@ private: // Private data
   /// Increment parameter for PD efficiencies
   double m_pdInc;
 
-  /// Cherenkov phi incrementation
-  double m_incPhi;
-
   /// Flat Randomn distribution between 0 and 1
   mutable Rndm::Numbers m_uniDist;
 
   /// Ray-tracing configuration object
   RichTraceMode m_traceMode;
+
+  /// Vector of sampling phi values around the Cherekov ring
+  std::vector<double> m_phiValues;
 
 };
 

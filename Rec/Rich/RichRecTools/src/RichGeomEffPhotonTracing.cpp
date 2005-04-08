@@ -5,7 +5,7 @@
  *  Implementation file for tool : RichGeomEffPhotonTracing
  *
  *  CVS Log :-
- *  $Id: RichGeomEffPhotonTracing.cpp,v 1.8 2005-02-02 10:06:55 jonrob Exp $
+ *  $Id: RichGeomEffPhotonTracing.cpp,v 1.9 2005-04-08 13:07:17 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -25,10 +25,15 @@ const        IToolFactory& RichGeomEffPhotonTracingFactory = s_factory ;
 RichGeomEffPhotonTracing::RichGeomEffPhotonTracing ( const std::string& type,
                                                      const std::string& name,
                                                      const IInterface* parent )
-  : RichRecToolBase( type, name, parent ),
-    m_rayTrace ( 0 ),
-    m_ckAngle  ( 0 ) {
+  : RichRecToolBase   ( type, name, parent ),
+    m_rayTrace        ( 0 ),
+    m_ckAngle         ( 0 ),
+    m_nGeomEff        ( 0 ),
+    m_nGeomEffBailout ( 0 ),
+    m_pdInc           ( 0 )
+{
 
+  // define interface
   declareInterface<IRichGeomEff>(this);
 
   // Define job option parameters
@@ -40,7 +45,7 @@ RichGeomEffPhotonTracing::RichGeomEffPhotonTracing ( const std::string& type,
 
 }
 
-StatusCode RichGeomEffPhotonTracing::initialize() 
+StatusCode RichGeomEffPhotonTracing::initialize()
 {
 
   // Sets up various tools and services
@@ -53,14 +58,25 @@ StatusCode RichGeomEffPhotonTracing::initialize()
 
   // randomn number service
   IRndmGenSvc * randSvc = svc<IRndmGenSvc>( "RndmGenSvc", true );
-  if ( !m_uniDist.initialize( randSvc, Rndm::Flat(0,1) ) ) 
+  if ( !m_uniDist.initialize( randSvc, Rndm::Flat(0,1) ) )
   {
-    return Error( "Unable to initialise randomn numbers" );
+    return Error( "Unable to initialise random numbers" );
   }
 
   // Set up cached parameters for geometrical efficiency calculation
-  m_pdInc = 1.0 / ( static_cast<double>(m_nGeomEff) );
-  m_incPhi = M_PI/2.0 + M_2PI/( static_cast<double>(m_nGeomEff) );
+  m_pdInc  = 1.0/( static_cast<double>(m_nGeomEff) );
+  const double incPhi = M_PI/2.0 + M_PI/( static_cast<double>(m_nGeomEff) );
+  double ckPhi = 0;
+  m_phiValues.clear();
+  m_phiValues.reserve(m_nGeomEff);
+  std::map<double,bool> testMap;
+  for ( int iPhot = 0; iPhot < m_nGeomEff; ++iPhot, ckPhi+=incPhi )
+  {
+    if ( ckPhi > M_2PI ) ckPhi -= M_2PI;
+    if ( testMap[ckPhi] ) { return Warning( "Error creating sampling angle values" ); }
+    testMap[ckPhi] = true;
+    m_phiValues.push_back(ckPhi);
+  }
 
   // Configure the ray-tracing mode
   m_traceMode.setDetPrecision      ( RichTraceMode::circle );
@@ -72,7 +88,7 @@ StatusCode RichGeomEffPhotonTracing::initialize()
   return sc;
 }
 
-StatusCode RichGeomEffPhotonTracing::finalize() 
+StatusCode RichGeomEffPhotonTracing::finalize()
 {
   // Release things
   m_uniDist.finalize();
@@ -83,19 +99,23 @@ StatusCode RichGeomEffPhotonTracing::finalize()
 
 double
 RichGeomEffPhotonTracing::geomEfficiency ( RichRecSegment * segment,
-                                           const Rich::ParticleIDType id ) const 
+                                           const Rich::ParticleIDType id ) const
 {
 
-  if ( !segment->geomEfficiency().dataIsValid(id) ) {
+  if ( !segment->geomEfficiency().dataIsValid(id) )
+  {
     double eff = 0;
 
     // Cherenkov theta for this segment/hypothesis combination
     const double ckTheta = m_ckAngle->avgCherenkovTheta( segment, id );
-    if ( ckTheta > 0 ) {
+    if ( ckTheta > 0 )
+    {
 
-      int nDetect = 0;
-      double ckPhi = 0.0;
-      for ( int iPhot = 0; iPhot < m_nGeomEff; ++iPhot, ckPhi+=m_incPhi ) {
+      int nDetect  = 0;
+      int iPhot = 0;
+      for ( std::vector<double>::const_iterator ckPhi = m_phiValues.begin(); 
+            ckPhi != m_phiValues.end(); ++iPhot, ++ckPhi )
+      {
 
         // Photon emission point is random between segment start and end points
         //const HepPoint3D emissionPt = trackSeg.bestPoint( m_uniDist() );
@@ -103,7 +123,7 @@ RichGeomEffPhotonTracing::geomEfficiency ( RichRecSegment * segment,
         const HepPoint3D & emissionPt = segment->trackSegment().bestPoint();
 
         // Photon direction around loop
-        const HepVector3D photDir = segment->trackSegment().vectorAtThetaPhi( ckTheta, ckPhi );
+        const HepVector3D photDir = segment->trackSegment().vectorAtThetaPhi( ckTheta, *ckPhi );
 
         // Ray trace through detector, using fast circle modelling of HPDs
         RichGeomPhoton photon;
@@ -111,20 +131,32 @@ RichGeomEffPhotonTracing::geomEfficiency ( RichRecSegment * segment,
                                                emissionPt,
                                                photDir,
                                                photon,
-                                               m_traceMode ) ) {
+                                               m_traceMode ) )
+        {
 
+          // count detected photons
           ++nDetect;
+
+          // update efficiency per HPD tally
           segment->addToGeomEfficiencyPerPD( id,
                                              photon.smartID().pdID(),
                                              m_pdInc );
-          if ( photon.detectionPoint().x() > 0 ) {
+
+          // flag regions where we expect hits for this segment
+          if ( photon.detectionPoint().x() > 0 )
+          {
             segment->setPhotonsInXPlus(true);
-          } else {
+          }
+          else
+          {
             segment->setPhotonsInXMinus(true);
           }
-          if ( photon.detectionPoint().y() > 0 ) {
+          if ( photon.detectionPoint().y() > 0 )
+          {
             segment->setPhotonsInYPlus(true);
-          } else {
+          }
+          else
+          {
             segment->setPhotonsInYMinus(true);
           }
 
@@ -135,28 +167,33 @@ RichGeomEffPhotonTracing::geomEfficiency ( RichRecSegment * segment,
 
       } // fake photon loop
 
+      // compute the final eff
       eff = static_cast<double>(nDetect)/static_cast<double>(m_nGeomEff);
 
     } // CK theta IF
 
+    // store result
     segment->setGeomEfficiency( id, eff );
 
   }
 
+  // return result
   return segment->geomEfficiency( id );
 }
 
 double
 RichGeomEffPhotonTracing::geomEfficiencyScat ( RichRecSegment * segment,
-                                               const Rich::ParticleIDType id ) const 
+                                               const Rich::ParticleIDType id ) const
 {
 
-  if ( !segment->geomEfficiencyScat().dataIsValid(id) ) {
+  if ( !segment->geomEfficiencyScat().dataIsValid(id) )
+  {
     double eff = 0;
 
     // only for aerogel
     const double ckTheta = m_ckAngle->avgCherenkovTheta( segment, id );
-    if ( ckTheta > 0 && segment->trackSegment().radiator() == Rich::Aerogel ) {
+    if ( ckTheta > 0 && segment->trackSegment().radiator() == Rich::Aerogel )
+    {
 
       // Photon emission point is end of aerogel
       const HepPoint3D emissionPt = segment->trackSegment().exitPoint();
@@ -166,17 +203,21 @@ RichGeomEffPhotonTracing::geomEfficiencyScat ( RichRecSegment * segment,
 
       int nDetect = 0;
       RichGeomPhoton photon;
-      double ckPhi = 0.0;
-      for ( int iPhot = 0; iPhot < m_nGeomEff; ++iPhot, ckPhi+=m_incPhi ) {
+      int iPhot = 0;
+      for ( std::vector<double>::const_iterator ckPhi = m_phiValues.begin(); 
+            ckPhi != m_phiValues.end(); ++iPhot, ++ckPhi )
+      {
 
         // generate randomn cos(theta)**2 distribution for thetaCk
-        double ckTheta;
-        do {
+        double ckTheta(0);
+        do
+        {
           ckTheta = m_uniDist()*M_PI_2;
-        } while ( m_uniDist() > gsl_pow_2(cosCkTheta) );
+        }
+        while ( m_uniDist() > gsl_pow_2(cosCkTheta) );
 
         // Photon direction around loop
-        const HepVector3D photDir = segment->trackSegment().vectorAtThetaPhi( ckTheta, ckPhi );
+        const HepVector3D photDir = segment->trackSegment().vectorAtThetaPhi( ckTheta, *ckPhi );
 
         // Ray trace through detector
         if ( 0 != m_rayTrace->traceToDetector( segment->trackSegment().rich(),
@@ -190,6 +231,7 @@ RichGeomEffPhotonTracing::geomEfficiencyScat ( RichRecSegment * segment,
 
       } // fake photon loop
 
+      // compute eff
       eff = static_cast<double>(nDetect)/static_cast<double>(m_nGeomEff);
 
     } // radiator
@@ -203,5 +245,6 @@ RichGeomEffPhotonTracing::geomEfficiencyScat ( RichRecSegment * segment,
 
   }
 
+  // return result fo this id type
   return segment->geomEfficiencyScat( id );
 }
