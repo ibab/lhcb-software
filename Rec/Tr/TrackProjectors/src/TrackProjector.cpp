@@ -1,4 +1,4 @@
-// $Id: TrackProjector.cpp,v 1.1.1.1 2005-03-31 14:50:18 erodrigu Exp $
+// $Id: TrackProjector.cpp,v 1.2 2005-04-08 15:45:46 erodrigu Exp $
 // Include files 
 
 // from Gaudi
@@ -22,11 +22,11 @@ static const  ToolFactory<TrackProjector>          s_factory ;
 const        IToolFactory& TrackProjectorFactory = s_factory ;
 
 //=============================================================================
-// Retrieve a node with the results of the (last) projection
+// Retrieve the projection matrix H of the (last) projection
 //=============================================================================
-Node& TrackProjector::node() const
+const HepVector& TrackProjector::projectionMatrix() const
 {
-  return *m_node;
+  return m_H;
 }
 
 //=============================================================================
@@ -34,7 +34,7 @@ Node& TrackProjector::node() const
 //=============================================================================
 double TrackProjector::chi2() const
 {
-  return m_node -> chi2();
+  return m_errResidual != 0 ? (m_residual/m_errResidual)*(m_residual/m_errResidual) : 0.;
 }
 
 //=============================================================================
@@ -42,7 +42,7 @@ double TrackProjector::chi2() const
 //=============================================================================
 double TrackProjector::residual() const
 {
-  return m_node -> residual();
+  return m_residual;
 }
 
 //=============================================================================
@@ -50,7 +50,7 @@ double TrackProjector::residual() const
 //=============================================================================
 double TrackProjector::errResidual() const
 {
-  return m_node -> errResidual();
+  return m_errResidual;
 }
 
 //=============================================================================
@@ -60,9 +60,12 @@ TrackProjector::TrackProjector( const std::string& type,
                                 const std::string& name,
                                 const IInterface* parent )
   : GaudiTool ( type, name , parent )
-  , m_node()
+  , m_H()
 {
   declareInterface<ITrackProjector>( this );
+  m_residual = 0.;
+  m_errResidual = 0.;
+  m_H = HepVector(5,0);
 }
 
 //=============================================================================
@@ -71,3 +74,24 @@ TrackProjector::TrackProjector( const std::string& type,
 TrackProjector::~TrackProjector() {}; 
 
 //=============================================================================
+
+//=============================================================================
+// Compute the residual
+//=============================================================================
+void TrackProjector::computeResidual(const State& state,
+                                     const Measurement& meas) 
+{
+  m_residual = meas.measure() - dot( m_H, state.state() );
+}
+
+//=============================================================================
+// Compute the error on the residual
+//=============================================================================
+void TrackProjector::computeErrorResidual(const State& state,
+                                          const Measurement& meas) 
+{
+  double error = meas.errMeasure();
+  const HepSymMatrix& C = state.covariance();
+  double resError  = pow(error, 2.0) + C.similarity( m_H );
+  m_errResidual = sqrt(resError);
+}

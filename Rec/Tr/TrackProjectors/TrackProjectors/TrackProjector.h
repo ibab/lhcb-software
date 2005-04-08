@@ -1,4 +1,4 @@
-// $Id: TrackProjector.h,v 1.1.1.1 2005-03-31 14:50:18 erodrigu Exp $
+// $Id: TrackProjector.h,v 1.2 2005-04-08 15:45:46 erodrigu Exp $
 #ifndef TRACKPROJECTORS_TRACKPROJECTOR_H 
 #define TRACKPROJECTORS_TRACKPROJECTOR_H 1
 
@@ -8,13 +8,10 @@
 
 #include "Tools/ITrackProjector.h"            // Interface
 
-#include "Event/Node.h"
-class State;
-class Measurement;
-
+#include "Event/State.h"
+#include "Event/Measurement.h"
 
 /** @class TrackProjector TrackProjector.h TrackProjectors/TrackProjector.h
- *  
  *
  *  A TrackProjector is a base class implementing methods
  *  from the ITrackProjector interface.
@@ -29,10 +26,11 @@ public:
   /// Project a state onto a measurement.
   /// It returns the chi squared of the projection
   virtual double project( const State& state,
-                          const Measurement& meas ) const;
+                          Measurement& meas );
+  
 
-  /// Retrieve a node with the results of the (last) projection
-  Node& node() const;
+  /// Retrieve the projection matrix H of the (last) projection
+  virtual const HepVector& projectionMatrix() const;
 
   /// Retrieve the chi squared of the (last) projection
   double chi2() const;
@@ -51,7 +49,14 @@ public:
   virtual ~TrackProjector( ); ///< Destructor
 
 protected:
-  Node* m_node;
+
+  void computeResidual(const State& state, const Measurement& meas);
+  void computeErrorResidual(const State& state, const Measurement& meas);
+
+protected:
+  double    m_residual;
+  double    m_errResidual;
+  HepVector m_H;
 
 private:
 

@@ -25,7 +25,10 @@ include_path      none
 use   GaudiAlg       v*
 use   LHCbInterfaces v1r*   Kernel
 use   TrackEvent     v1r*   Event
+use   TrackFitEvent  v1r*   Tr
 
+use   OTDet          v5*    Det
+use   STDet          v1r*   Det
 #============================================================================
 # Component library building rule
 #============================================================================

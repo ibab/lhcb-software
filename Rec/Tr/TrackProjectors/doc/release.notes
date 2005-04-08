@@ -4,6 +4,11 @@
 ! Purpose     : Package for tracking projectors
 !-----------------------------------------------------------------------------
 
+! 2005-04-08 - Jose Hernando, Eduardo Rodrigues
+ - additions to base class TrackProjector
+ - concrete classes ITTrackProjector and OTTrackProjector introduced
+   and implemented
+
 ! 2005-03-31 - Eduardo Rodrigues
  - implementation of TrackProjector.cpp
 
