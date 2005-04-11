@@ -4,6 +4,10 @@
 ! Purpose       : G4 actions and some miscellaneous algs for Gauss
 !-----------------------------------------------------------------------------
 
+! 2005-04-11 - Gloria Corti
+ - src/Components/CommandTrackAction.cpp
+   . printout track number
+
 ! 2005-04-08 - Gloria Corti
  - src/Components/CommandTrackAction.cpp
    . change to be able to set list of commands in option instead of a single

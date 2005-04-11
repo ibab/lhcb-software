@@ -112,6 +112,8 @@ void CommandTrackAction::PreUserTrackingAction ( const G4Track* track )
 
   if (track->GetTrackID()==m_trackid) {
     m_test = true;
+    info() << "Setting command for G4Track TrackID " << m_trackid 
+           << endmsg;
     for( std::vector<std::string>::const_iterator iCmd = m_precommand.begin();
          m_precommand.end() != iCmd; ++iCmd ) {
       ui->ApplyCommand(*iCmd);
