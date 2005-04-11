@@ -3,7 +3,7 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
-</PRE><H1><A NAME=v26r2>2005-04-07 Brunel v26r2</A></H1><PRE>
+</PRE><H1><A NAME=v26r2>2005-04-11 Brunel v26r2</A></H1><PRE>
 This version uses Gaudi v16r2, LHCb v18r2 (also CLHEP 1.9, ROOT 4.0)
 Requires input data from Boole v8r2 or greater. Incompatible with DC04 versions
 
@@ -19,12 +19,11 @@ Requires input data from Boole v8r2 or greater. Incompatible with DC04 versions
   . Update Rich2 centre tube description and add centre tube supports
   . Change Velo sensor thickness to 300um
   . Fix overlaps in Velo RF foil
->>>  . Remove options for v200402 geometry
+  . Remove options for v200402 geometry
   . Give detector element to Velo half stations (with VeloDet v9r4)
 
 - Persistency changes
-  . Add header work ST RawBuffer banks (STDAQ v1r5)
->>> . remove Relations
+  . Add header word to ST RawBuffer banks (STDAQ v1r5)
 
 - Bug fixes:
   . Fix memory leak in XmlDDDB parser tool (XmlTools v3r4)
@@ -32,11 +31,6 @@ Requires input data from Boole v8r2 or greater. Incompatible with DC04 versions
   . Fixes in TrgTools, not relevant for Brunel
   . Restore lost flags in TrgVelo, undo corresponding fix in TrgBrunel
   . Backward incompatible (for data) fix to TTLayer.cpp (STDet v1r3)
-
-- New features:
->>>  . New Boole.PreloadGeometry option to preload geometry tree at initialize
-    (default false) (LHCbAlgs v1r4, DetDesc v6r4)
->>>  . Add options for RTTC production (v200412 geometry, no MC truth)(rttc.opts)
 
 
 </PRE><H1><A NAME=v26r1>2005-03-08 Brunel v26r1</A></H1><PRE>
