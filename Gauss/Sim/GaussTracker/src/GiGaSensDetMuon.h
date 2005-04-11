@@ -50,6 +50,7 @@ private:
   ///
   MuonHitsCollection* muonCol;
   int m_chamLimit;
+  int m_chamLimitR1, m_chamLimitR2, m_chamLimitR3, m_chamLimitR4;
 };
 
 // ============================================================================

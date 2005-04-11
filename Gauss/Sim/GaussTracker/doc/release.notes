@@ -5,6 +5,10 @@
 !                    tracker like detectors (Velo, OT, IT, Muon)
 !-----------------------------------------------------------------------------
 
+! 2005-04-11 - Gloria Corti
+ - src/GiGaSensDetMuon.{h,cpp}
+   . set boundaries of chambers in regions as options not hard coded
+
 ! 2005-04-01 - Gloria Corti
  - src/GiGaMuonHitCnv.cpp
    . adapt to changes in MCMuonHit (see Event/MuonEvent v4r0)

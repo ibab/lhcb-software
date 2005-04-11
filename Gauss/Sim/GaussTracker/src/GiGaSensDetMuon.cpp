@@ -35,6 +35,11 @@ GiGaSensDetMuon::GiGaSensDetMuon
   HCname.erase(0,posdot+1);
 
   collectionName.insert(HCname);
+  declareProperty( "ChamberLimitR1", m_chamLimitR1 = 12 );
+  declareProperty( "ChamberLimitR2", m_chamLimitR2 = 24 );
+  declareProperty( "ChamberLimitR3", m_chamLimitR3 = 48 );
+  declareProperty( "ChamberLimitR4", m_chamLimitR4 = 192 );
+  
 };
 
 // ============================================================================
@@ -57,17 +62,17 @@ void GiGaSensDetMuon::Initialize(G4HCofThisEvent*HCE)
 
   std::string tempName = muonCol->GetName();
   if( tempName.find("R1") != std::string::npos ) {
-    m_chamLimit = 12;
+    m_chamLimit = m_chamLimitR1;
   }
   if( tempName.find("R2") != std::string::npos ) {
-    m_chamLimit = 24;
+    m_chamLimit = m_chamLimitR2;
   }
   if( tempName.find("R3") != std::string::npos ) {
-    m_chamLimit = 48;
+    m_chamLimit = m_chamLimitR3;
   }
   if( tempName.find("R4") != std::string::npos ) {
-    m_chamLimit = 192;
-  }  
+    m_chamLimit = m_chamLimitR4;
+  }
 }
 
 
@@ -98,19 +103,18 @@ bool GiGaSensDetMuon::ProcessHits( G4Step* step ,
           int depth = TT->GetHistoryDepth();
           // Check if the depth is allowed or not
           if( depth <= 3 ) {
-            MsgStream msg( msgSvc() , name() );
             Error( "Non correct depth in sensitive volume ");
-            msg << MSG::WARNING << pvName 
-                << ": incorrect Depth = " << depth << std::endl
-                << " Entry - " << prepos << std::endl
-                << " Exit - " << postpos << std::endl
-                << " dE/dx = " << edep
-                << " Tof = " << timeof  
-                << " TrackID = " << trid 
-                << " particleID = " 
-                << track->GetDefinition()->GetParticleName()
-                << " ParentID = " << track->GetParentID()
-                << endmsg;
+            warning() << pvName 
+                      << ": incorrect Depth = " << depth << std::endl
+                      << " Entry - " << prepos << std::endl
+                      << " Exit - " << postpos << std::endl
+                      << " dE/dx = " << edep
+                      << " Tof = " << timeof  
+                      << " TrackID = " << trid 
+                      << " particleID = " 
+                      << track->GetDefinition()->GetParticleName()
+                      << " ParentID = " << track->GetParentID()
+                      << endmsg;
           } else {
             TT -> MoveUpHistory(1);
             G4int CurrentGapNumber = TT -> GetVolume() -> GetCopyNo() ;
