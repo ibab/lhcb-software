@@ -1,8 +1,11 @@
-// $Id: GiGaMCVertexCnv.cpp,v 1.35 2004-07-05 11:17:28 gcorti Exp $ 
+// $Id: GiGaMCVertexCnv.cpp,v 1.36 2005-04-11 17:37:54 gcorti Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.35  2004/07/05 11:17:28  gcorti
+// add vertex types
+//
 // Revision 1.34  2004/06/17 10:19:12  gcorti
 // problem in production: appropriate vertex not found
 //
@@ -546,7 +549,7 @@ StatusCode GiGaMCVertexCnv::updateObjRefs
                   { vertex->setType ( MCVertex::Pair    ) ; }
                   else if ( "compt" == pname                      ) 
                   { vertex->setType ( MCVertex::Compton ) ; }
-                  else if ( "eBrem" == pname || "MuBrems" == pname )    
+                  else if ( "eBrem" == pname || "muBrems" == pname )    
                   { vertex->setType ( MCVertex::Brem    ) ; }
                   else if ( "annihil" == pname )
                   { vertex->setType ( MCVertex::Annihil ) ; }

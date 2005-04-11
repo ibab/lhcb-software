@@ -1,15 +1,16 @@
-! $Id: release.notes,v 1.94 2005-04-01 11:41:04 gcorti Exp $ 
+! $Id: release.notes,v 1.95 2005-04-11 17:37:53 gcorti Exp $ 
 ! =============================================================================
 ! CVS tag $Name: not supported by cvs2svn $ 
 ! =============================================================================
 Package         : GiGaCnv
 Package Manager : Vanya Belyaev Ivan.Belyaev@itep.ru
 
+! 2005-04-11 - Gloria Corti
+ - src/component/GiGaMCVertexCnv.cpp
+   . rename process as done in Geant 7.0 (MuBrems -> muBrems)
+
 ! 2005-03-31 - Gloria Corti
- - cmt/requirements
-   . remove explict use of Event and HepMC implicitely used by GenEvent
-   . increase version number
- - src/componenet/GiGaMCParticleCnv.cpp
+ - src/component/GiGaMCParticleCnv.cpp
    . remove setting to Collision in MCParticle (data member removed from
      class see Event/Event v4r7) 
 

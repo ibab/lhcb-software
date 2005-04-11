@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.65 2005-04-01 11:41:04 gcorti Exp $ 
+# $Id: requirements,v 1.66 2005-04-11 17:37:53 gcorti Exp $ 
 # =============================================================================
 package          GiGaCnv 
 version          v15r11
@@ -10,6 +10,8 @@ branches         cmt src doc GiGaCnv
 use              GaudiAlg     v*  
 
 use              GenEvent     v*     Event
+use              Event        v*     Event
+use              HepMC        v*     Sim
 use              DetDesc      v*     Det        
    
 use              GiGa         v*     Sim 
