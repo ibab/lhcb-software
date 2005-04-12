@@ -5,6 +5,7 @@
 !                    tracker like detectors (Velo, OT, IT, Muon)
 !-----------------------------------------------------------------------------
 
+!=========================== GaussTracker v4r0 ================================
 ! 2005-04-11 - Gloria Corti
  - src/GiGaSensDetMuon.{h,cpp}
    . set boundaries of chambers in regions as options not hard coded

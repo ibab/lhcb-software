@@ -1,10 +1,11 @@
-! $Id: release.notes,v 1.95 2005-04-11 17:37:53 gcorti Exp $ 
+! $Id: release.notes,v 1.96 2005-04-12 13:08:58 gcorti Exp $ 
 ! =============================================================================
 ! CVS tag $Name: not supported by cvs2svn $ 
 ! =============================================================================
 Package         : GiGaCnv
 Package Manager : Vanya Belyaev Ivan.Belyaev@itep.ru
 
+!=========================== GiGaCnv v15r11 =================================
 ! 2005-04-11 - Gloria Corti
  - src/component/GiGaMCVertexCnv.cpp
    . rename process as done in Geant 7.0 (MuBrems -> muBrems)
