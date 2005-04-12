@@ -1,6 +1,7 @@
 Package :EvtGen 
 Package manager : Patrick Robbe
 
+!============================== EvtGen v8r4 ===============================
 ! 2005-04-05 - Patrick Robbe for Federica Legger
  - src/EvtDiracParticle : fix bug in Dirac spinor
 
