@@ -1,4 +1,4 @@
-// $Id: MakeResonances.cpp,v 1.1 2005-03-11 12:19:13 pkoppenb Exp $
+// $Id: MakeResonances.cpp,v 1.2 2005-04-12 07:32:16 pkoppenb Exp $
 // Include files 
 
 #include <algorithm>
@@ -14,7 +14,7 @@
 
 // local
 #include "MakeResonances.h"
-//#define PKDEBUG
+// #define PKDEBUG
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : MakeResonances
@@ -144,18 +144,31 @@ StatusCode MakeResonances::createDecays(){
     debug() << "Getting strings for " << dsds->getDescriptor() << endmsg;
     sc = dsds->getStrings(mother, daughters);
     if (sc.isFailure()) return sc;  
-    std::sort(daughters.begin(),daughters.end()); // helps a lot
+    std::sort(daughters.begin(),daughters.end()); // helps a lot, and used to avoid duplication of mothers in cc
     debug() << "Sorted daughters to " << daughters << endmsg ;
     sc = createDecay(mother, daughters);
     if (sc.isFailure()) return sc;
     
     // once again for cc if needed
     if ( dsds->is_cc() ){
+      // LF : avoid duplication of mothers when using []cc
+      strings daughtersBeforecc = daughters; // daughters have been sorted
+      debug() << "Sorted before cc daughters to " << daughtersBeforecc << endmsg;
+      
       debug() << "Setting up cc for " << dsds->getDescriptor() << endmsg;
       sc = dsds->getStrings_cc(mother, daughters);
       if (sc.isFailure()) return sc;
-      sc = createDecay(mother, daughters);
-      if (sc.isFailure()) return sc;
+      std::sort(daughters.begin(),daughters.end()); // needed to compare daughters for original and cc
+      debug() << "Sorted cc daughters to " << daughters << endmsg ;
+
+      if(daughtersBeforecc == daughters){
+        info() << "Ignoring cc since decay products identical to original decay products" << endmsg;
+      }
+      else{
+        sc = createDecay(mother, daughters);
+        if (sc.isFailure()) return sc;
+      }
+      
     } else verbose() << dsds->getDescriptor() << " is not a cc mode" << endmsg ;
   }
   
@@ -384,6 +397,7 @@ StatusCode MakeResonances::Decay::initialize(const int& pid,
     for ( std::vector<PidParticles>::const_iterator p2 = m_pidParticles.begin() ; 
           p2 != m_pidParticles.end() ; ++p2){
       if ( (*p)==(*p2).getPid() ){
+      // if ( (*p)== abs((*p2).getPid()) ){ // LF
 #ifdef PKDEBUG
         std::cout << "   initialize Found identical PIDs " << (*p) << " and " << (*p2).getPid() 
                   << " -> check for ordering" << std::endl ;

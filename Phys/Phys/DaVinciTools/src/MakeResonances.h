@@ -1,4 +1,4 @@
-// $Id: MakeResonances.h,v 1.1 2005-03-11 12:19:13 pkoppenb Exp $
+// $Id: MakeResonances.h,v 1.2 2005-04-12 07:32:16 pkoppenb Exp $
 #ifndef MAKERESONANCES_H 
 #define MAKERESONANCES_H 1
 
@@ -31,7 +31,6 @@ public:
 
 protected:
 
-private:
   typedef std::vector<std::string> strings;
   StatusCode createDecays();
   StatusCode createDecay(const std::string&,const strings&);
@@ -40,6 +39,7 @@ private:
   StatusCode makeMother(Particle*&,const ParticleVector&,const ParticleID&) const;
   StatusCode makePlots(const ParticleVector&,IPlotTool*); ///< make plots
 
+private:
   // globals
 
   std::string m_daughterFilterName ;   ///< Name for the daughter filter

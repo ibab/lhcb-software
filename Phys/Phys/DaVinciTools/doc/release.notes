@@ -1,6 +1,11 @@
-! $Id: release.notes,v 1.156 2005-03-22 17:44:12 pkoppenb Exp $
+! $Id: release.notes,v 1.157 2005-04-12 07:32:16 pkoppenb Exp $
 ! Package     : DaVinciTools
 ! Responsible : P. Koppenburg
+
+! 2005-04-12 - P. Koppenburg for Luis Fernandez
+  - src/MakeResonances.cpp
+    . Small bug fix to avoid duiplication of mothers if the user does:
+      PhiForSimpleBs2PhiGamma.DecayDescriptor = "[phi(1020) -> K+ K-]cc";
 
 !========================== DaVinciTools v11r7 2005-03-22 ===================
 ! 2005-03-11 - P. Koppenburg
