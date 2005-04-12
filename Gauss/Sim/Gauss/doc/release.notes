@@ -4,10 +4,33 @@
 ! Purpose     : LHCb Simulation Application with Geant4
 !-----------------------------------------------------------------------------
 
+!========================== Gauss v19r3 ==================================
+! 2005-04-12 - Gloria Corti
+ - Use new versions of GeneratorModules (v15r0), GaussTools (v10r10), 
+   GaussRICH (v4r13), GaussTracker (v4r0), GiGaCnv (v15r11), 
+   GaussMonitor (v2r0), DecFiles (v6r6)
+ - Move all sequences explicitely (including initialization) at top of
+   Gauss.opts, introduce use of GaudiSequencer with normalized time
+   printout, load dll for generic GaussMonitor to all Gauss application 
+   . Gauss.opts, Common.opts, 
+ - Adapt options to modification in property of CommandTrackAction
+   . DebugG4Track.opts
+ - Structure options to have first generic/production monitor and then
+   detailed monitor, turn on generator histogram with a second algorithm
+   instance, adapt to new property of GenMonitorAlg
+   . Monitor.opts
+ - Put in GenStandAlone.opts only parts specific to running Gauss only 
+   with the generator phase 
+ - Introduce the include of GenStandAlone (commented) and comments on
+   how to modify the generator phase
+ - Modify PythiaSettings.opts to reproduce LHCb DC04 setting with Pythia
+   6.226 where defaults have changed (V.Vagnoni)
+
 !========================== Gauss v19r2 ==================================
 ! 2005-03-09 - Gloria Corti
  - introduce summary printout in log file with new #printOptions available
    in Gaudi v16r2
+ - Use new versions of GaussTools (v10r9), GaussRICH (v4r12) 
 
 !========================== Gauss v19r1 ==================================
 ! 2005-02-28 - Gloria Corti
