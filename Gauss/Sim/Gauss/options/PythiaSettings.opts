@@ -1,4 +1,3 @@
-
 //that is the LHCb Pythia setting, should not be changed by the user
 PythiaAlg.BasePythiaCommand = { 
   "pysubs msel 0" ,     // Custom processes, switch them on 1-by-1
@@ -18,20 +17,22 @@ PythiaAlg.BasePythiaCommand = {
   "pysubs msub 88 1" ,  // g + g -> chi_1c + g
   "pysubs msub 89 1" ,  // g + g -> chi_2c + g
   "pysubs msub 106 1" , // g + g -> J/Psi + gamma
-  "pysubs msub 107 1" , // g + gamma -> J/Psi + g
-  "pysubs msub 108 1" , // gamma + gamma -> J/Psi + gamma
-  "pypars mstp 2 2" ,   // 
-  "pypars mstp 33 3" ,
-  "pypars mstp 128 2" ,
-  "pypars mstp 82 3" ,
-  "pypars mstp 52 2" ,
-  "pypars mstp 51 4032" ,
-  "pypars parp 82 3.47" ,
-  "pypars parp 89 14000" ,
-  "pypars parp 90 0.174" ,
-  "pydat1 parj 13 0.750" ,
-  "pydat1 parj 14 0.162" ,
-  "pydat1 parj 15 0.018" ,
-  "pydat1 parj 16 0.054" ,
-  "pydat1 parj 17 0.090" 
+  "pypars mstp 2 2" ,   // second order running alpha_s
+  "pypars mstp 33 3" ,  // K factor by a shift in the alpha_s Q2 argument
+  "pypars mstp 128 2" , // products are not stored in documentation section
+  "pypars mstp 82 3" ,  // single gaussian matter distribution in proton for multiple parton-parton scattering
+  "pypars mstp 52 2" ,  // use PDFLIB for structure functions
+  "pypars mstp 51 4032" , // use CTEQ4L from PDFLIB
+  "pypars parp 67 1.0" , // for compatibility with default Pythia 6.224, maximum parton virtuality for space-like showers
+  "pypars parp 82 3.41" , // pTmin at 14 TeV for multiple parton-parton scattering
+  "pypars parp 89 14000" , // energy reference for pTmin
+  "pypars parp 90 0.162" , // pTmin(Ecm)=PARP(82)*(Ecm/PARP(89))**PARP(90)
+  "pypars parp 85 0.33" , // for compatibility with default Pythia 6.224, probability that an additional interaction in the multiple scattering gives 2 gluons, with colour connection to nearest neighbours in momentum space
+  "pypars parp 86 0.66" , // for compatibility with default Pythia 6.224, probability that an additional interaction in the multiple scattering gives 2 gluons, either with colour connection to nearest neighbours in momentum space or as a closed gluon loop
+  "pypars parp 91 1.0" , // for compatibility with default Pythia 6.224, width of Gaussian primordial kT inside hadron
+  "pydat1 parj 13 0.750" , // probability that a c or b meson has S=1
+  "pydat1 parj 14 0.162" , // probability that a meson with S=0 is produced with L=1, J=1
+  "pydat1 parj 15 0.018" , // probability that a meson with S=1 is produced with L=1, J=0
+  "pydat1 parj 16 0.054" , // probability that a meson with S=1 is produced with L=1, J=1
+  "pydat1 parj 17 0.090" // probability that a meson with S=1 is produced with L=1, J=2
 } ;
