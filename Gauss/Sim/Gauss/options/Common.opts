@@ -1,11 +1,11 @@
-// $Id: Common.opts,v 1.7 2005-02-21 19:22:35 gcorti Exp $ 
+// $Id: Common.opts,v 1.8 2005-04-12 17:58:53 gcorti Exp $ 
 #pragma print off
 
 /** @file 
  * 
- *  File containing options to all Gauss jobs (setting of DLLs and
- *  initialization of application).
- *  It must be included in Gauss.opts as first one
+ *  File containing options to all Gauss jobs (setting of DLLs and options
+ *  for persistency.
+ *  It must be included in Gauss.opts
  *
  *  @author F.Ranjard
  *  @author G.Corti
@@ -14,16 +14,14 @@
 
 #units "$STDOPTS/units.opts"
 
-AuditorSvc.Auditors = { "ChronoAuditor" };
+//AuditorSvc.Auditors = { "ChronoAuditor" };
 
 // External services that will be always used
-ApplicationMgr.ExtSvc = { 
-  "ToolSvc" ,
-  "ParticlePropertySvc" ,
-  "EventSelector" 
-};
+ApplicationMgr.ExtSvc = { "ToolSvc" ,
+                          "ParticlePropertySvc" ,
+                          "EventSelector" };
 
-// Configuration of various services that are used
+// Configuration of various services that are used: 
 RndmGenSvc.Engine.SetSingleton   = true;
 ParticlePropertySvc.ParticlePropertiesFile = "$PARAMFILESROOT/data/ParticleTable.txt" ;
 
@@ -34,22 +32,21 @@ ApplicationMgr.DLLs += { "LHCbAlgs" } ;
 ApplicationMgr.DLLs += { "GaussTools"} ;
 ApplicationMgr.DLLs += { "GaussAlgs"  } ;
 ApplicationMgr.DLLs += { "GeneratorModules" } ;
+ApplicationMgr.DLLs += { "MCTools", "GaussMonitor" };
 
-#pragma print on
-// Initialization of Gauss applications
-ApplicationMgr.TopAlg  = {
-  "LbAppInit/Gauss"
-};
 
 // No events are read as input
 ApplicationMgr.EvtSel  = "NONE" ;
 
-#pragma print off
 // Generators settings, necessary for various generators configurations
 #include "$GAUSSOPTS/PythiaSettings.opts"
+
 // To prevent writing too much in production
+MessageSvc.OutputLevel         = 3;
 ToolSvc.EvtGenTool.OutputLevel = 4;
 SetDecayAlg.OutputLevel        = 4;
+MessageSvc.setWarning += { "XmlGenericCnv" };
+MessageSvc.Format = "% F%24W%S%7W%R%T %0W%M";  // Longer "algorithm" identifier in printout
 
 // Geometry setup always necessary
 #include "$STDOPTS/DetDesc.opts"
@@ -57,16 +54,15 @@ SetDecayAlg.OutputLevel        = 4;
 //DetectorDataSvc.DetDbLocation = "$XMLDDDBROOT/DDDB/lhcb-200402.xml";
 DetectorDataSvc.DetDbLocation = "$XMLDDDBROOT/DDDB/lhcb-200412.xml";
 
-MessageSvc.setWarning += { "XmlGenericCnv" };
-
 // Transient store setup
 EventDataSvc.ForceLeaves         = true ;
 
-// Objects to be written to output file
-#include "$GAUSSOPTS/GaussTape.opts"        
 // POOL persistency 
 EventPersistencySvc.CnvServices  = {};  
 #include "$GAUSSOPTS/GaussPoolIO.opts"
+
+// Objects to be written to output file
+#include "$GAUSSOPTS/GaussTape.opts"        
 
 // Other outputs
 ApplicationMgr.HistogramPersistency = "NONE";
