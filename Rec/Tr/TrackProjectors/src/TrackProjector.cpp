@@ -1,4 +1,4 @@
-// $Id: TrackProjector.cpp,v 1.2 2005-04-08 15:45:46 erodrigu Exp $
+// $Id: TrackProjector.cpp,v 1.3 2005-04-13 16:54:13 erodrigu Exp $
 // Include files 
 
 // from Gaudi
@@ -87,11 +87,11 @@ void TrackProjector::computeResidual(const State& state,
 //=============================================================================
 // Compute the error on the residual
 //=============================================================================
-void TrackProjector::computeErrorResidual(const State& state,
-                                          const Measurement& meas) 
+void TrackProjector::computeErrorResidual( const State& state,
+                                           const Measurement& meas )
 {
   double error = meas.errMeasure();
   const HepSymMatrix& C = state.covariance();
-  double resError  = pow(error, 2.0) + C.similarity( m_H );
-  m_errResidual = sqrt(resError);
+  double resError  = error * error + C.similarity( m_H );
+  m_errResidual = sqrt( resError );
 }

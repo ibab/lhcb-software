@@ -4,55 +4,69 @@
 #include "GaudiKernel/ToolFactory.h" 
 
 // local
-#include "TrackProjectors/TrackITProjector.h"
+#include "TrackProjectors/TrackVeloRProjector.h"
+#include "Event/VeloRMeasurement.h"
 
 //-----------------------------------------------------------------------------
-// Implementation file for class : TrackITProjector
+// Implementation file for class : TrackVeloRProjector
 //
-// 2005-04-08 : Jose Hernando, Eduardo Rodrigues
+// 2005-04-13 : Jose Hernando, Eduardo Rodrigues
 //-----------------------------------------------------------------------------
 
 // Declaration of the Tool Factory
-static const  ToolFactory<TrackITProjector>          s_factory ;
-const        IToolFactory& TrackITProjectorFactory = s_factory ; 
+static const  ToolFactory<TrackVeloRProjector>          s_factory ;
+const        IToolFactory& TrackVeloRProjectorFactory = s_factory ; 
 
 //=============================================================================
 //  Project a state onto a measurement.
 // It returns the chi squared of the projection
 //=============================================================================
-double TrackITProjector::project( const State& state,
-                                  Measurement& meas )
+double TrackVeloRProjector::project( const State& state,
+                                     Measurement& meas )
 {
-  ITChannelID ITChan = meas.lhcbID().stID();
-  const STDetectionLayer* ITLay = m_det -> layer( ITChan );
-  double stereoAngle  = ITLay->stereoAngle();
+  double h = 0;
+
+  double x  = state.x();
+  double y  = state.y();
+
+  VeloRMeasurement& veloRMeas = *( dynamic_cast<VeloRMeasurement*>(&meas) );
+
+  double phi = veloRMeas.phi();
 
   unsigned int n = state.nParameters();
   m_H = HepVector(n,0);
-  m_H[0] = cos( stereoAngle );
-  m_H[1] = sin( stereoAngle );
+  
+  // calculate h (predicted R)
+  if ( phi > 990.0 ) {
+    h      = sqrt( x*x + y*y );
+    m_H[0] = x / h;
+    m_H[1] = y / h;
+  }
+  else {
+    h = x * cos( phi ) + y * sin( phi );
+    m_H[0] = cos( phi );
+    m_H[1] = sin( phi );
+  }
+  m_H[2] = 0.;
+  m_H[3] = 0.;
 
-  // equivalent to computeResidual(state,meas);
-  m_residual = meas.measure()
-               - state.x() * cos( stereoAngle )
-               - state.y() * sin( stereoAngle );
+  m_residual = meas.measure() - h;
 
   computeErrorResidual( state, meas );
-  
-  return chi2();
 
+  return chi2() ; 
 }
 
 //=============================================================================
 // Initialize
 //=============================================================================
-StatusCode TrackITProjector::initialize()
+StatusCode TrackVeloRProjector::initialize()
 {
   StatusCode sc = GaudiTool::initialize();
   if ( sc.isFailure() )
     return Error( "Failed to initialize!", sc );
 
-  m_det = getDet<DeSTDetector>( m_itTrackerPath );
+  m_det = getDet<DeVelo>( m_veloPath );
 
   return StatusCode::SUCCESS;
 }
@@ -60,20 +74,19 @@ StatusCode TrackITProjector::initialize()
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
-TrackITProjector::TrackITProjector( const std::string& type,
-                                    const std::string& name,
-                                    const IInterface* parent )
+TrackVeloRProjector::TrackVeloRProjector( const std::string& type,
+                                          const std::string& name,
+                                          const IInterface* parent )
   : TrackProjector ( type, name , parent )
 {
   declareInterface<ITrackProjector>(this);
 
-  declareProperty( "ITGeometryPath",
-                   m_itTrackerPath = DeSTDetectorLocation::Default );
+  declareProperty( "VeloGeometryPath",
+                   m_veloPath = "/dd/Structure/LHCb/Velo" );
 }
-
 //=============================================================================
 // Destructor
 //=============================================================================
-TrackITProjector::~TrackITProjector() {}; 
+TrackVeloRProjector::~TrackVeloRProjector() {}; 
 
 //=============================================================================

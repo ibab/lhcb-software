@@ -4,6 +4,10 @@
 ! Purpose     : Package for tracking projectors
 !-----------------------------------------------------------------------------
 
+! 2005-04-13 - Jose Hernando, Eduardo Rodrigues
+ - concrete classes TrackVeloRProjector and TrackVeloPhiProjector
+   introduced and implemented
+
 ! 2005-04-12 - Jose Hernando, Eduardo Rodrigues
  - creation of the TrackMasterProjector
  - ITTrackProjector and OTTrackProjector renamed to
