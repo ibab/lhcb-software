@@ -1,23 +1,23 @@
-// $Id: OTTrackProjector.h,v 1.1 2005-04-08 15:45:46 erodrigu Exp $
-#ifndef TRACKPROJECTORS_OTTRACKPROJECTOR_H 
-#define TRACKPROJECTORS_OTTRACKPROJECTOR_H 1
+#ifndef TRACKPROJECTORS_TRACKITPROJECTOR_H 
+#define TRACKPROJECTORS_TRACKITPROJECTOR_H 1
 
 // Include files
 // from Gaudi
 #include "GaudiAlg/GaudiTool.h"
 #include "TrackProjector.h"            // Interface
 
-// from OTDet
-#include"OTDet/DeOTDetector.h"
+// from STDet
+#include"STDet/DeSTDetector.h"
+#include"STDet/STDetectionLayer.h"
 
-/** @class OTTrackProjector OTTrackProjector.h TrackProjectors/OTTrackProjector.h
+/** @class TrackITProjector TrackITProjector.h TrackProjectors/TrackITProjector.h
  *  
  *  @author Jose Hernando
  *  @author Eduardo Rodrigues
  *  @date   2005-04-08
  */
-class OTTrackProjector : public TrackProjector {
-public:
+class TrackITProjector : public TrackProjector {
+public: 
   /// Project a state onto a measurement.
   /// It returns the chi squared of the projection
   virtual double project( const State& state,
@@ -27,16 +27,17 @@ public:
   virtual StatusCode initialize();
 
   /// Standard constructor
-  OTTrackProjector( const std::string& type, 
+  TrackITProjector( const std::string& type, 
                     const std::string& name,
                     const IInterface* parent);
 
-  virtual ~OTTrackProjector( ); ///< Destructor
+  virtual ~TrackITProjector( ); ///< Destructor
 
 protected:
 
 private:
-  DeOTDetector* m_det;
+  DeSTDetector* m_det;
 
+  std::string m_itTrackerPath;   ///< Name of the IT XML geom path
 };
-#endif // TRACKPROJECTORS_OTTRACKPROJECTOR_H
+#endif // TRACKPROJECTORS_TRACKITPROJECTOR_H

@@ -4,6 +4,11 @@
 ! Purpose     : Package for tracking projectors
 !-----------------------------------------------------------------------------
 
+! 2005-04-12 - Jose Hernando, Eduardo Rodrigues
+ - creation of the TrackMasterProjector
+ - ITTrackProjector and OTTrackProjector renamed to
+   TrackITProjector and TrackOTProjector, respectively
+
 ! 2005-04-08 - Jose Hernando, Eduardo Rodrigues
  - additions to base class TrackProjector
  - concrete classes ITTrackProjector and OTTrackProjector introduced
