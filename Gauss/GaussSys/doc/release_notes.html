@@ -304,7 +304,24 @@ Package manager : Gloria Corti
  - cmt/requirements
    increment the version to v7r2
 
+!===========================================================================
+<H1><A NAME="v18r4">2005-01-24 - Gauss v18r4</A></H1><PRE>
+    is built with LHCb v17r2, Geant4 v62r0p2, GENSER_0_3_0
+    to check new geometry in Boole with Geant4 v62r0p2
 
+! 2005-01-27 - Florence Ranjard
+ - options/Common.opts - use new geometry "lhcb-200412.xml"
+
+!=========================== GaussTracker v3r2 ================================
+! 2005-01-27 - Gloria Corti
+ - cmt/requirements
+   . increase version number
+ - src/GiGaSensDetMuon.{h,cpp}
+   . introduce protection for illegal chamber number in the different regions
+     (R1: 1-12, R2: 1-24, R3: 1-48, R4: 1-192). If a hit has numbers greater
+     than allowed value do not store it in collection
+
+!============================================================================
 <H1><A NAME="v18r3">2004-11-29 - Gauss v18r3</A></H1><PRE>
     is built with LHCb v17r1, Geant4 v62r5, GENSER_0_3_0, Pythia 6.226.2
     it uses XmlDDDB v23r0
@@ -553,6 +570,42 @@ It uses geant4 6.2.p01
 !==========================================================================
 <H1><A NAME="v16r0">2004-06-28 - Gauss v16r0</A></H1><PRE>
 this version is the same as v15r11 but it uses Geant4 6.2
+
+!=========================================================================
+<H1><A NAME="v15r17">2005-03-10 - Gauss v15r17</A></H1><PRE>
+!================== GeneratorModules v11r10 2005-03-10 ===============
+! 2005-03-10 - Patrick Robbe ( for Federica Legger )
+ - modification in EvtGenTools.cpp, .h to allow lambda_b generation
+ - requirements - uses DecFiles v7r0
+
+!=======================================================================
+<H1><A NAME="v15r15">2005-02-08 - Gauss v15r15</A></H1><PRE>
+!================== GeneratorModules v11r9 2005-02-08 ===============
+! 2005-02-08 - Patrick Robbe
+ - add src/Algorithms/TTbarPythiaAlg.*
+ - modify Generator_entries.cxx
+
+!=========================================================================
+<H1><A NAME="v15r14">2005-01-04 - Gauss v15r14</A></H1><PRE>
+                   is built on v15r12 branch
+!================== GeneratorModules v11r8 2005-01-04=======================
+                    is built on v11r7b branch
+! 2005-01-04 - Patrick Robbe
+ - add src/Algorithms/HiggsPythiaAlg.*
+ - modify Generator_entries.cxx and PythiaAlg.h
+
+!============================================================================
+<H1><A NAME="v15r13">2004-11-16 - Gauss v15r13</A></H1><PRE>
+                   is built on v15r12 branch
+!===================== GaussAlgs v1r2 2004-11-16 =============================
+! 2004-11-16 - Gloria CORTI
+ - src/GaussInitialization.{h,cpp}
+   . introduce code provided by Marco Cattaneo to set three seeds in random
+     number generator to be able to use more then 24 bits
+     It is also possible to throw a certain number of random numbers before
+     beginning the generation (control by option SkipFactor, default=0).
+     It is possible to use previous behaviour by setting only one seed (i.e.
+     using 24 bits) via options (SingleSeed, default=false)
 
 !=========================================================================
 <H1><A NAME="v15r12">2004-10-11 - Gauss v15r12</A></H1><PRE>
