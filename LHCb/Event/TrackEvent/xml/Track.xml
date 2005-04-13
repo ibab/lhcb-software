@@ -30,24 +30,6 @@
       <import name='Kernel/LHCbID' />
       <import name='CLHEP/Geometry/Plane3D' />
 
-      <enum
-        name    = 'TrackType'
-        value   = 'Unknown,Velo,VeloR,Backward,Long,Upstream,Downstream,Ttrack'
-        desc    = 'enumeration for the track type'
-        access  = 'PUBLIC' />
-
-      <enum
-        name    = 'HistoryFlag'
-        value   = 'LongTrack,Seeding,TrKshort,TrMatching,VeloTrack,VeloTT,TrgForward,TrgVelo,TrgVeloTT'
-        desc    = 'enumeration for the track history'
-        access  = 'PUBLIC' />
-
-      <enum
-        name    = 'Flag'
-        value   = 'Valid=1,Unique=2,IPSelected=4,MuSelected=8'
-        desc    = 'enumeration for the track flags'
-        access  = 'PUBLIC' />
-
       <constructor 
 	desc     = "Constructor with assigned key" 
 	argList  = "int key " 
@@ -84,29 +66,46 @@
        access  = 'PROTECTED'>
        <bitfield
          name      = 'type'
-         length    = '7'
-         type      = 'TrackType'
+         length    = '5'
          desc      = 'track type'
-         setMeth   = 'TRUE'
-         getMeth   = 'FALSE'
-         checkMeth = 'TRUE' />
-       <bitfield
-         name      = 'history'
-         length    = '9'
-         type      = 'HistoryFlag'
-         desc      = 'track history (specifies which algorithm produced the track)'
          setMeth   = 'FALSE'
          getMeth   = 'FALSE'
          checkMeth = 'FALSE' />
        <bitfield
-         name      = 'flag'
-         length    = '4'
-         type      = 'Flag'
-         desc      = 'track flags'
-         exclusive = 'FALSE'
-         setMeth   = 'TRUE'
+         name      = 'history'
+         length    = '5'
+         desc      = 'specifies the pattern recogn algorithm that created the track'
+         setMeth   = 'FALSE'
          getMeth   = 'FALSE'
-         checkMeth = 'TRUE' />
+         checkMeth = 'FALSE' />
+       <bitfield
+         name      = 'historyFit'
+         length    = '5'
+         desc      = 'specifies the fitting algorithm the fitted the track)'
+         setMeth   = 'FALSE'
+         getMeth   = 'FALSE'
+         checkMeth = 'FALSE' />
+       <bitfield
+         name      = 'status'
+         length    = '3'
+         desc      = 'status of the track'
+	 setMeth   = 'FALSE'
+         getMeth   = 'FALSE'
+         checkMeth = 'FALSE' />
+       <bitfield
+         name      = 'flag'
+         length    = '10'
+         desc      = 'track flags'
+         setMeth   = 'FALSE'
+         getMeth   = 'FALSE'
+         checkMeth = 'FALSE' />
+       <bitfield
+         name      = 'specific'
+         length    = '4'
+         desc      = 'track specific bits'
+         setMeth   = 'TRUE'
+         getMeth   = 'TRUE'
+         checkMeth = 'FALSE' />
       </attribute>
 
       <attribute
@@ -364,20 +363,9 @@
       </method>
 
       <method
-        type    = 'bool'
-        name    = 'producedByAlgo'
-        argList = 'HistoryFlag value'
-        desc    = 'Check whether the track was produced by a given algorithm'
-        const   = 'TRUE' />
-
-      <method
-        name    = 'setProducedByAlgo'
-        argList = 'HistoryFlag value'
-        desc    = 'Update the name of the algorithm that produced the track' />
-
-      <method
         type    = 'void'
         name    = 'reset'
+	virtual = 'TRUE'
         desc    = 'Clear the track before re-use'>
         <code>
   m_chi2PerDoF   = 0;
@@ -396,7 +384,70 @@
         type    = 'Track*'
         name    = 'clone'
         desc    = 'Clone the track'
+	virtual = 'TRUE'
         const   = 'TRUE' />
+
+      <method
+        name    = 'setType'
+        argList = 'std::string value'
+        desc    = 'set type of the track (values in Keys::Track::Types)'
+        />
+
+      <method
+        type    = 'const std::string &amp;'
+        name    = 'type'
+        desc    = 'return the type of the track'
+        const   = 'TRUE'/> 
+
+      <method
+        name    = 'setHistory'
+        argList = 'std::string value'
+        desc    = 'set the name of the algorithm (ParRec) thar made the track (see in Keys::Track::History)'
+        />
+
+      <method
+        type    = 'const std::string &amp;'
+        name    = 'history'
+        desc    = 'return the algorithm that created the track '
+        const   = 'TRUE'/> 
+
+      <method
+        name    = 'setHistoryFit'
+        argList = 'std::string value'
+        desc    = 'set the algorithm that fitted the track (Keys::Track::HistoryFit)'
+        />
+
+      <method
+        type    = 'const std::string &amp;'
+        name    = 'historyFit'
+        desc    = 'return the fitting algorithm '
+        const   = 'TRUE'/> 
+      
+      <method
+        name    = 'setStatus'
+        argList = 'std::string value'
+        desc    = 'set the status of the track (see Keys::Track::Status)'
+        />
+
+      <method
+        type    = 'const std::string &amp;'
+        name    = 'status'
+        desc    = 'return the status of the track '
+        const   = 'TRUE'/> 
+
+      <method
+        name    = 'setFlag'
+        argList = 'std::string flag, bool value'
+        desc    = 'Update the flag (see Keys::Track::Flags)'
+        />
+
+      <method
+        type    = 'bool'
+        name    = 'checkFlag'
+        argList = 'std::string flag '
+        desc    = 'return the status of the flag '
+        const   = 'TRUE'/> 
+
 
     </class>
 

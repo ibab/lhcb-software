@@ -1,4 +1,5 @@
 #include "Event/TrackStreamer.h"
+#include "Event/TrackKeys.h"
 
 std::ostream& str::track(const Track& track, std::ostream& os) {
 
@@ -13,9 +14,8 @@ std::ostream& str::trackHeader(const Track& track, std::ostream& os) {
 
   os << " chi2  \t" << track.chi2() << std::endl;
   os << " ndof  \t" << track.nDoF() << std::endl;
-  os << " physics state \t" 
-     << str::state(track.physicsState(),os)
-     << std::endl;
+  os << " physics state \t"; str::state(track.physicsState(),os);
+  os << std::endl;
   os << " flags \t " << track.flags() << std::endl;
   os << " nstates \t " << track.states().size() << std::endl;
   os << " nIDs \t " << track.lhcbIDs().size();
@@ -28,17 +28,17 @@ std::ostream& str::states(const std::vector<State*>& states,
   for (std::vector<State*>::const_iterator it = states.begin(); 
        it != states.end(); it++) {
     const State& state = *(*it);
-    os << str::state(state,os) << std::endl;
+    str::state(state,os); os << std::endl;
   }
   return os;
 }
 
 
 std::ostream& str::state(const State& state, std::ostream& os) {
-  os << " flags " << state.flags() << std::endl;
-  os << str::stateFields(state,os) << std::endl;
-  os << " z " << state.z() << std::endl;
-  os << " state " << state.state();
+  os << " flags \t" << state.flags() << std::endl;
+  str::stateFields(state,os); os << std::endl;
+  os << " z \t" << state.z() << std::endl;
+  os << " state \t" << state.state();
   //  os << " cov " << state.covariance() << std::endl;
   return os;
 }
@@ -46,43 +46,33 @@ std::ostream& str::state(const State& state, std::ostream& os) {
 std::ostream& str::lhcbIDs(const std::vector<LHCbID>& ids, std::ostream& os) {
   for (std::vector<LHCbID>::const_iterator it = ids.begin();
        it != ids.end(); it++) 
-    os << str::lhcbID(*it,os) << std::endl;
+    str::lhcbID(*it,os); os << std::endl;
   return os;
 }
 
 std::ostream& str::lhcbID(const LHCbID& id, std::ostream& os) {
   os << " ID detector " << id.detectorType() 
      << " channel " << id.channelID()
-     << " size " << id.spareBits();
+     << " size " << (int) id.spareBits();
+  os << std::endl;
   return os;
 }
 
 
 std::ostream& str::trackFields(const Track& track, std::ostream& os) {
   
-  if (track.checkType(Track::Velo)) os << "T:Velo, ";
-  if (track.checkType(Track::VeloR)) os  << "T:VeloR, ";
-  if (track.checkType(Track::Backward)) os << "T:Backward, ";
-  if (track.checkType(Track::Long)) os << "T:Long, ";
-  if (track.checkType(Track::Upstream)) os << "T:Upstream, ";
-  if (track.checkType(Track::Downstream)) os <<"T:Downstream, ";
-  if (track.checkType(Track::Ttrack)) os << "T:Ttrack, ";
-  
-  if (track.producedByAlgo(Track::LongTrack)) os << "H:LongTrack, ";
-  if (track.producedByAlgo(Track::Seeding)) os <<"H:Seeding , ";
-  if (track.producedByAlgo(Track::TrKshort)) os <<"H::TrKshort, ";
-  if (track.producedByAlgo(Track::TrMatching)) os <<"H::TrMatching, ";
-  if (track.producedByAlgo(Track::VeloTrack))  os <<"H:VeloTrack, ";
-  if (track.producedByAlgo(Track::VeloTT)) os <<"H:VeloTT, ";
-  if (track.producedByAlgo(Track::TrgForward)) os <<"H:TrgForward, ";
-  if (track.producedByAlgo(Track::TrgVelo)) os <<"H:TrgVelo, ";
-  if (track.producedByAlgo(Track::TrgVeloTT)) os <<"H:TrgVeloTT, ";
-  
-  if (track.checkFlag(Track::Valid)) os <<"F:Valid, ";
-  if (track.checkFlag(Track::Unique)) os <<"F:Unique, ";
-  if (track.checkFlag(Track::IPSelected)) os <<"F:IPSelected, ";
-  if (track.checkFlag(Track::MuSelected)) os <<"F:MuSelected, ";
-  
+  os << " type : \t" << track.type() << std::endl;
+  os << " status: \t" <<track.status() << std::endl;
+  os << " history: \t" << track.history() << std::endl;
+  os << " history Fit: \t" << track.historyFit() << std::endl;
+  os << " flags: \t";
+  for (std::vector<std::string>::const_iterator 
+         it = Keys::Track::Flags.begin(); 
+       it != Keys::Track::Flags.end(); it++) {
+    if (track.checkFlag(*it))
+      os << *it  << " ";  
+  }
+  os << std::endl;
   return os;
 }
 

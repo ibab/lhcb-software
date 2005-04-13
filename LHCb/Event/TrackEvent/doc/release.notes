@@ -4,6 +4,13 @@
 ! Purpose     : Package for the tracking event model classes
 !-----------------------------------------------------------------------------
 
+! 2005-04-13 - Jose A. Hernando
+ - incorporating 'keys' for Tracks (Event/TrackKeys.h and src/TrackKeys.cpp)	
+ - keys are static vectors of strings that substitutes the enums in Track.h
+ 		. user can add their own key = string to the vector and can be use and set into the bitfield without changing the header file of Trach.h 
+    . kyes in Track are: History (Pattern recognition algorithm), HistoryFit (fit algorithm), Types (types of tracks), Status (status of track i.e 'PatRec' or 'fitted'), and Flags.
+ - TODO: all the destructor need to be 'virtual'!!
+
 ! 2005-04-13 - Eduardo Rodrigues
  - extra functionality in FitTrack was imported to Track
  - Track now contains measurements and nodes
