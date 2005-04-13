@@ -1,4 +1,4 @@
-// $Id: Particle2MCLink.cpp,v 1.3 2004-08-03 15:32:59 phicharp Exp $
+// $Id: Particle2MCLink.cpp,v 1.4 2005-04-13 08:50:11 phicharp Exp $
 // Include files 
 
 
@@ -137,7 +137,10 @@ Object2MCLink::setAlgInputData( IAlgorithm*& alg,
       propString = "[";
       for( std::vector<std::string>::const_iterator inp = inputData.begin();
            inputData.end() != inp; inp++ ) {
-        propString = propString + sep + *inp ;
+        std::string inpStr = *inp;
+        if( std::string::npos == inpStr.find( "/Particles"))
+            inpStr += "/Particles";
+        propString = propString + sep + inpStr ;
         sep = "\",\"";
       }
       propString = propString + "\"]";

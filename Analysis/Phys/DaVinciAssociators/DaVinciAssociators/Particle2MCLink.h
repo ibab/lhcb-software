@@ -1,4 +1,4 @@
-// $Id: Particle2MCLink.h,v 1.3 2004-06-17 08:58:08 phicharp Exp $
+// $Id: Particle2MCLink.h,v 1.4 2005-04-13 08:50:11 phicharp Exp $
 #ifndef DAVINCIASSOCIATORS_PARTICLE2MCLINK_H 
 #define DAVINCIASSOCIATORS_PARTICLE2MCLINK_H 1
 
@@ -316,7 +316,7 @@ private:
         *contIt + m_extension;
       From test(  m_myAlg->eventSvc(), NULL, name);
       if( test.notFound() ) {
-        createLinks( name );
+        createLinks( *contIt );
         test = From(  m_myAlg->eventSvc(), NULL, name);
       }
       m_linkFromList.push_back( test );
