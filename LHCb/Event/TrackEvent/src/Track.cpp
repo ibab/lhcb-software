@@ -1,4 +1,4 @@
-// $Id: Track.cpp,v 1.2 2005-02-10 19:33:50 erodrigu Exp $ // Include files
+// $Id: Track.cpp,v 1.3 2005-04-13 14:17:38 erodrigu Exp $ // Include files
 
 // local
 #include "Event/Track.h"
@@ -19,6 +19,17 @@ StatusCode Track::positionAndMomentum( HepPoint3D &pos,
                                        HepSymMatrix &cov6D ) const
 {
   m_physicsState.positionAndMomentum( pos, mom, cov6D );
+
+  return StatusCode::SUCCESS;
+};
+
+//=============================================================================
+// Retrieve the position and momentum vectors at the physics state
+//=============================================================================
+StatusCode Track::positionAndMomentum( HepPoint3D &pos,
+                                       HepVector3D &mom ) const
+{
+  m_physicsState.positionAndMomentum( pos, mom );
 
   return StatusCode::SUCCESS;
 };
@@ -199,16 +210,6 @@ const State* Track::stateAt( const State::Location& value ) const
 };
 
 //=============================================================================
-// Clone the track
-//=============================================================================
-Track* Track::clone() const
-{
-  Track* tk = new Track();
-  *tk = *this;
-  return tk;
-};
-
-//=============================================================================
 // Check whether the track was produced by a given algorithm
 //=============================================================================
 bool Track::producedByAlgo( const HistoryFlag& value ) const
@@ -225,6 +226,16 @@ void Track::setProducedByAlgo( const HistoryFlag& value )
   unsigned int val = (unsigned int)value;
   m_flags &= ~historyMask;
   m_flags |= ((((unsigned int)val) << historyBits) & historyMask);
+};
+
+//=============================================================================
+// Clone the track
+//=============================================================================
+Track* Track::clone() const
+{
+  Track* tk = new Track();
+  *tk = *this;
+  return tk;
 };
 
 //=============================================================================

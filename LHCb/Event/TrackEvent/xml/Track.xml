@@ -25,18 +25,20 @@
       &KeyedObject;
 
       <import name='Event/State' />
+      <import name='Event/Measurement' />
+      <import name='Event/Node' />
       <import name='Kernel/LHCbID' />
       <import name='CLHEP/Geometry/Plane3D' />
 
       <enum
         name    = 'TrackType'
-        value   = 'Velo=1,VeloR=2,Backward=4,Long=8,Upstream=16,Downstream=32,Ttrack=64'
+        value   = 'Unknown,Velo,VeloR,Backward,Long,Upstream,Downstream,Ttrack'
         desc    = 'enumeration for the track type'
         access  = 'PUBLIC' />
 
       <enum
         name    = 'HistoryFlag'
-        value   = 'LongTrack=1,Seeding=2,TrKshort=4,TrMatching=8,VeloTrack=16,VeloTT=32,TrgForward=64,TrgVelo=128,TrgVeloTT=256'
+        value   = 'LongTrack,Seeding,TrKshort,TrMatching,VeloTrack,VeloTT,TrgForward,TrgVelo,TrgVeloTT'
         desc    = 'enumeration for the track history'
         access  = 'PUBLIC' />
 
@@ -51,6 +53,15 @@
 	argList  = "int key " 
 	initList = "KeyedObject&lt;int&gt;( key ), m_chi2PerDoF(0.0), m_nDoF(0), m_flags(0), m_lhcbIDs(), m_physicsState(), m_states()">
       </constructor>
+
+      <destructor
+        desc = 'Track destructor'>
+        <code>
+  for (std::vector&lt;State*&gt;::iterator iter = m_states.begin();
+  iter != m_states.end(); iter++)
+  delete *iter;
+        </code>
+      </destructor>
 
       <attribute
         type   = 'double'
@@ -118,14 +129,27 @@
         access    = 'PROTECTED'
         serialize = 'FALSE' />
 
-      <destructor
-        desc = 'Track destructor'>
-        <code>
-  for (std::vector&lt;State*&gt;::iterator iter = m_states.begin();
-  iter != m_states.end(); iter++)
-  delete *iter;
-        </code>
-      </destructor>
+      <attribute
+        type      = 'std::vector&lt;Measurement*&gt;'
+        name      = 'measurements'
+        desc      = 'container of Measurements'
+        access    = 'PROTECTED'
+        serialize = 'FALSE' />
+
+      <attribute
+        type      = 'std::vector&lt;Node*&gt;'
+        name      = 'nodes'
+        desc      = 'container of Nodes'
+        access    = 'PROTECTED'
+        serialize = 'FALSE' />
+
+      <attribute
+        type      = 'std::vector&lt;Track*&gt;'
+        name      = 'ancestors'
+        desc      = 'container of ancestors of the track'
+        access    = 'PROTECTED'
+        setMeth   = 'FALSE'
+        serialize = 'FALSE' />
 
       <method
         type    = 'StatusCode'
@@ -135,6 +159,15 @@
         <arg type = 'HepPoint3D' name='pos' />
         <arg type = 'HepVector3D' name='mom' />
         <arg type = 'HepSymMatrix' name='cov6D' />
+      </method>
+
+      <method
+        type    = 'StatusCode'
+        name    = 'positionAndMomentum'
+        desc    = 'Retrieve the position and momentum vectors at the physics state'
+        const   = 'TRUE'>
+        <arg type = 'HepPoint3D' name='pos' />
+        <arg type = 'HepVector3D' name='mom' />
       </method>
 
       <method
@@ -196,13 +229,12 @@
       </method>
 
       <method
-        type    = 'unsigned int'
-        name    = 'nMeasurements'
+        type    = 'double'
+        name    = 'chi2'
         const   = 'TRUE'
-        virtual = 'TRUE'
-        desc    = 'number of measurements on track'>
+        desc    = 'Retrieve the Chi^2 of the track'>
         <code>
-  return m_lhcbIDs.size();
+  return ( m_chi2PerDoF * double(m_nDoF) );
         </code>
       </method>
 
@@ -240,23 +272,20 @@
         type    = 'State &amp;'
         name    = 'closestState'
         argList = 'double z'
-        desc    = 'Retrieve the reference to the state closest to the given z-position'
-        virtual = 'TRUE' />
+        desc    = 'Retrieve the reference to the state closest to the given z-position' />
 
       <method
         type    = 'const State &amp;'
         name    = 'closestState'
         argList = 'double z'
         desc    = 'Retrieve the reference to the state closest to the given z-position'
-        const   = 'TRUE'
-        virtual = 'TRUE' />
+        const   = 'TRUE' />
 
       <method
         type    = 'State &amp;'
         name    = 'closestState'
         argList = 'const HepPlane3D plane'
-        desc    = 'Retrieve the reference to the state closest to the given plane'
-        virtual = 'TRUE'>
+        desc    = 'Retrieve the reference to the state closest to the given plane'>
       </method>
 
       <method
@@ -264,8 +293,7 @@
         name    = 'closestState'
         argList = 'const HepPlane3D plane'
         desc    = 'Retrieve the reference to the state closest to the given plane'
-        const   = 'TRUE'
-        virtual = 'TRUE'>
+        const   = 'TRUE'>
       </method>
 
       <method
@@ -273,55 +301,38 @@
         name    = 'hasStateAt'
         argList = 'const State::Location value'
         desc    = 'check the existence of a state at a certain predefined location. See State class.'
-        const   = 'TRUE'
-        virtual = 'FALSE' />
+        const   = 'TRUE' />
 
       <method
         type    = 'State*'
         name    = 'stateAt'
         argList = 'const State::Location value'
-        desc    = 'Retrieve the pointer to the state at a certain predefined location. See State class.'
-        virtual = 'TRUE' />
+        desc    = 'Retrieve the pointer to the state at a certain predefined location. See State class.' />
 
       <method
         type    = 'const State*'
         name    = 'stateAt'
         argList = 'const State::Location value'
         desc    = 'Retrieve the pointer to the state at a certain predefined location. See State class.'
-        const   = 'TRUE'
-        virtual = 'TRUE' />
-
-      <method
-        type    = 'double'
-        name    = 'chi2'
-        const   = 'TRUE'
-        desc    = 'Retrieve the Chi^2 of the track'>
-        <code>
-  return ( m_chi2PerDoF * double(m_nDoF) );
-        </code>
-      </method>
-
-      <method
-        type    = 'void'
-        name    = 'reset'
-        desc    = 'Clear the track before re-use'
-        virtual = 'TRUE'>
-        <code>
-  m_chi2PerDoF   = 0;
-  m_nDoF         = 0;
-  m_flags        = 0;
-  m_physicsState.reset();
-  m_states.clear();
-  m_lhcbIDs.clear();
-        </code>
-      </method>
-
-      <method
-        type    = 'Track*'
-        name    = 'clone'
-        desc    = 'Clone the track'
-        virtual = 'TRUE'
         const   = 'TRUE' />
+
+      <method
+        type    = 'unsigned int'
+        name    = 'nMeasurements'
+        desc    = 'number of measurements on track'
+        const   = 'TRUE'>
+        <code>
+  return m_lhcbIDs.size();
+        </code>
+      </method>
+      <method
+        name    = 'addToMeasurements'
+        argList = 'Measurement* meas'
+        desc    = 'add a measurement to the list associated to the track'>
+        <code>
+  m_measurements.push_back( meas );
+        </code>
+      </method>
 
      <method
         name    = 'addToLhcbIDs'
@@ -344,18 +355,48 @@
       </method>
 
       <method
+        name    = 'addToAncestors'
+        argList = 'Track* ancestor'
+        desc    = 'add a track to the list of ancestors of this track'>
+        <code>
+  m_ancestors.push_back( ancestor );
+        </code>
+      </method>
+
+      <method
         type    = 'bool'
         name    = 'producedByAlgo'
         argList = 'HistoryFlag value'
         desc    = 'Check whether the track was produced by a given algorithm'
-        const   = 'TRUE'
-        virtual = 'TRUE' />
+        const   = 'TRUE' />
 
       <method
         name    = 'setProducedByAlgo'
         argList = 'HistoryFlag value'
-        desc    = 'Update the name of the algorithm that produced the track'
-        virtual = 'TRUE' />
+        desc    = 'Update the name of the algorithm that produced the track' />
+
+      <method
+        type    = 'void'
+        name    = 'reset'
+        desc    = 'Clear the track before re-use'>
+        <code>
+  m_chi2PerDoF   = 0;
+  m_nDoF         = 0;
+  m_flags        = 0;
+  m_physicsState.reset();
+  m_states.clear();
+  m_lhcbIDs.clear();
+  m_measurements.clear();
+  m_nodes.clear();
+  m_ancestors.clear();
+        </code>
+      </method>
+
+      <method
+        type    = 'Track*'
+        name    = 'clone'
+        desc    = 'Clone the track'
+        const   = 'TRUE' />
 
     </class>
 

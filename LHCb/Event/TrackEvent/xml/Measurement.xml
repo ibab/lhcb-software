@@ -17,7 +17,7 @@
 
       <enum
         name    = 'Type'
-        value   = 'Muon,OT,ST,TT,VeloR,VeloPhi'
+        value   = 'Unknown,Muon,OT,ST,TT,VeloR,VeloPhi'
         desc    = 'enumerator for the type of Measurement'
         access  = 'PUBLIC' />
 
@@ -25,7 +25,6 @@
        type    = 'bitfield'
        name    = 'mtype'
        desc    = 'the variety of measurement types'
-       init    = '0'
        getMeth = 'FALSE'
        setMeth = 'FALSE'
        access  = 'PROTECTED'>
@@ -62,6 +61,16 @@
         name    = 'lhcbID'
         desc    = 'the corresponding LHCbID'
         access  = 'PROTECTED' />
+
+      <method
+        type    = 'Type'
+        name    = 'type'
+        desc    = 'Retrieve measurement type'
+        const   = 'TRUE'>
+        <code>
+  return (Measurement::Type)((m_mtype &amp; typeMask) &gt;&gt; typeBits);
+        </code>
+      </method>
 
       <method
         type    = 'Measurement*'

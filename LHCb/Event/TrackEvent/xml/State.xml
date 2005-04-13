@@ -26,7 +26,7 @@
 
       <enum
         name    = 'Location'
-        value   = 'Unknown=1,ClosestToBeam=2,FirstMeasurement=4,EndVelo=8,AtTT=16,AtT=32,BegRich1=64,EndRich1=128,BegRich2=256,EndRich2=512,Calo=1024,Muon=2048'
+        value   = 'Unknown,ClosestToBeam,FirstMeasurement,EndVelo,AtTT,AtT,BegRich1,EndRich1,BegRich2,EndRich2,Calo,Muon'
         desc    = 'enumeration for the location of the state'
         access  = 'PUBLIC' />
 
@@ -101,6 +101,18 @@
   pos   = position();
   mom   = momentum();
   cov6D = posMomCovariance();
+        </code>
+      </method>
+
+      <method
+        name    = 'positionAndMomentum'
+        desc    = 'Retrieve the position and momentum vectors of the state'
+        const   = 'TRUE'>
+        <arg type = 'HepPoint3D' name='pos' />
+        <arg type = 'HepVector3D' name='mom' />
+        <code>
+  pos   = position();
+  mom   = momentum();
         </code>
       </method>
 
