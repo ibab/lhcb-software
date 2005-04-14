@@ -1,8 +1,11 @@
-! $Id: release.notes,v 1.25 2005-03-03 15:04:43 pkoppenb Exp $
+! $Id: release.notes,v 1.26 2005-04-14 11:19:01 pkoppenb Exp $
 ! Package     : VertexFit
 ! Responsible : Yuehong Xie, P. Koppenburg, H. Ruiz
 
-
+! 2005-04-14 - P. Koppenburg
+  - src/LagrangeGeomVertexFitter.cpp
+  - src/LagrangeMassVertexFitter.cpp
+    . Removed unused and obsolete #include "Kernel/CLHEPStreams.h"
 !========================== VertexFit v1r5 2005-03-03 ===================
 ! 2005-02-28 - Hugo Ruiz
   - src/TrgDispCalculator.cpp

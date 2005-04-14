@@ -18,8 +18,6 @@
 //
 #include "GaudiKernel/Algorithm.h"
 
-#include "Kernel/CLHEPStreams.h"
-
 // Include files from Event
 #include "Event/Particle.h"
 #include "Event/Vertex.h"
