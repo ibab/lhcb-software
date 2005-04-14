@@ -1,4 +1,4 @@
-//$Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/Gaucho/src/DimCmdServer.cpp,v 1.2 2005-04-07 14:42:00 evh Exp $
+//$Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/Gaucho/src/DimCmdServer.cpp,v 1.3 2005-04-14 14:31:42 evh Exp $
 
 #include "GaudiKernel/StatusCode.h"
 #include "GaudiKernel/MsgStream.h"
@@ -23,9 +23,13 @@
 #include "GaudiKernel/SmartDataPtr.h"
 #include "GaudiKernel/IRegistry.h"
 
-
-
-
+#ifdef WIN32
+namespace wins {
+#include <winsock.h>
+}
+#else
+#include <unistd.h>
+#endif
 
 //HDS =HistogramDataService but used as generic name for anything on store
 IHistogramSvc* HDS=0; 
@@ -58,7 +62,7 @@ DimCmdServer::DimCmdServer(char* thisnodename, ISvcLocator* svclocator) :
     log << MSG::INFO << "Found the HistogramDataService" << endreq;
   }
   else {    
-    log << MSG::ERROR << "Unable to locate the HistogramDataService" << endreq;
+    log << MSG::WARNING << "Unable to locate the HistogramDataService" << endreq;
   }   
   
  //to traverse the transient store  
@@ -67,7 +71,7 @@ DimCmdServer::DimCmdServer(char* thisnodename, ISvcLocator* svclocator) :
     log << MSG::INFO << "Found the IPublish interface" << endreq;
   }
     else {    
-    log << MSG::ERROR << "Unable to locate the IPublish interface." << endreq;
+    log << MSG::WARNING << "Unable to locate the IPublish interface." << endreq;
   }  
   
 }
@@ -92,7 +96,12 @@ void DimCmdServer::commandHandler() {
 
   nextcommand=getString();  
 
-  gethostname(m_nodename,50);
+#ifdef WIN32
+  int errcode;
+  errcode=wins::gethostname(m_nodename,60);
+#else
+  gethostname(m_nodename,60);
+#endif
   //get hostname only (slc)
   char * pch;
   pch = strtok(m_nodename,".");

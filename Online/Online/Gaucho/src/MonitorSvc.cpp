@@ -10,11 +10,15 @@
 #include "Gaucho/DimCmdServer.h"
 #ifdef WIN32
 namespace wins {
-#include <Winsock.h>
+#include <windows.h>
+#include <winsock.h>
+#include <process.h>
 }
+#else
+#include <unistd.h>
 #endif
 #include <sys/types.h>
-#include <unistd.h>
+
 
 namespace AIDA { class IHistogram; }
 
@@ -67,7 +71,11 @@ StatusCode MonitorSvc::initialize() {
   char * pch;
   pch = strtok(m_nodename,".");
   m_pid=new char[10];
+#ifdef WIN32
+  sprintf(m_pid,"%d",wins::_getpid());
+#else
   sprintf(m_pid,"%d",getpid() );
+#endif
   
   msg << MSG::INFO << "initialize: Setting up DIM for Nodename: " << m_nodename << " Process ID: " << m_pid << endreq;
   

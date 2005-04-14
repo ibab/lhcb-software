@@ -1,4 +1,4 @@
-//$Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/Gaucho/src/DimPropServer.cpp,v 1.4 2005-04-07 14:42:00 evh Exp $
+//$Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/Gaucho/src/DimPropServer.cpp,v 1.5 2005-04-14 14:31:42 evh Exp $
 
 #include "GaudiKernel/StatusCode.h"
 #include "GaudiKernel/MsgStream.h"
@@ -27,6 +27,14 @@
 #include "GaudiKernel/IMonitorSvc.h"
 #include "AIDA/IAxis.h"
 
+#ifdef WIN32
+namespace wins {
+#include <winsock.h>
+}
+#else
+#include <unistd.h>
+#endif
+
 
 //EDS =EventDataService but used as generic name for anything on store
 IHistogramSvc* EDS=0; 
@@ -45,9 +53,15 @@ DimPropServer::DimPropServer(char* thisnodename, ISvcLocator* svclocator) :
   m_svcloc = svclocator;    
   
 // get msg logging
-  sc = m_svcloc->service("MessageSvc", m_msgsvc);
+  sc = svclocator->service("MessageSvc", m_msgsvc);
   MsgStream log(m_msgsvc, "DimPropServer");  
- 
+  if ( sc.isFailure() ) { 
+     log << MSG::FATAL << "Error locating MessageSvc." << endreq;
+  }
+   else {
+     log << MSG::DEBUG << "MessageSvc located." << endreq;
+  }
+
 
 // to walk the transient store  
 
@@ -57,7 +71,7 @@ DimPropServer::DimPropServer(char* thisnodename, ISvcLocator* svclocator) :
     log << MSG::INFO << "Found the HistogramDataService" << endreq;
   }
   else {    
-    log << MSG::ERROR << "Unable to locate the HistogramDataService" << endreq;
+	log << MSG::FATAL << "Unable to locate the HistogramDataService" << endreq;
   }   
   
  //to traverse the transient store  
@@ -66,7 +80,7 @@ DimPropServer::DimPropServer(char* thisnodename, ISvcLocator* svclocator) :
     log << MSG::INFO << "Found the IPublish interface" << endreq;
   }
     else {    
-    log << MSG::ERROR << "Unable to locate the IPublish interface." << endreq;
+    log << MSG::FATAL << "Unable to locate the IPublish interface." << endreq;
   }  
 
 // get pointer to ApplicationMgr
@@ -78,7 +92,7 @@ DimPropServer::DimPropServer(char* thisnodename, ISvcLocator* svclocator) :
     log << MSG::INFO << "Found ApplicationMgr"<< endreq;
   }
   else
-	log << MSG::ERROR << "Unable to locate the ApplicationMgr" << endreq;
+	log << MSG::FATAL << "Unable to locate the ApplicationMgr" << endreq;
 
 // get pointer to AlgorithmFactory
   SmartIF<IAlgManager> algman ( IID_IAlgManager, appmgr );
@@ -87,7 +101,7 @@ DimPropServer::DimPropServer(char* thisnodename, ISvcLocator* svclocator) :
 	log << MSG::INFO << "Found the AlgoritmFactory" << endreq;
   }
   else {
-	log << MSG::ERROR << "Unable to locate the AlgorithmFactory" << endreq;
+	log << MSG::FATAL << "Unable to locate the AlgorithmFactory" << endreq;
   }
 
   
@@ -116,9 +130,14 @@ void DimPropServer::rpcHandler() {
   
   nextRPCcommand=getString();
   ptr=nextdata;
-  
-  m_nodename=new char[50];
-  gethostname(m_nodename,50);
+
+    m_nodename=new char[60];
+#ifdef WIN32
+  int errcode;
+  errcode=wins::gethostname(m_nodename,60);
+#else
+  gethostname(m_nodename,60);
+#endif
   //get hostname only (slc)
   char * pch;
   pch = strtok(m_nodename,".");
@@ -267,7 +286,7 @@ void DimPropServer::rpcHandler() {
 	       log << MSG::INFO << "successfully set iprop for nextalg "  << nextalg << endreq;
 	   }
            else
-               log << MSG::ERROR << "failed to get the Algorithm" << endreq;
+               log << MSG::WARNING << "failed to get the Algorithm" << endreq;
            }
     
            if (iprop != 0) {
@@ -280,7 +299,7 @@ void DimPropServer::rpcHandler() {
                     log << MSG::INFO << "set property data to value: " << nextval << endreq;
 	         }
 	         else {
-                    log << MSG::ERROR << "failed to set property to new value:" << nextval << endreq;
+                    log << MSG::WARNING << "failed to set property to new value:" << nextval << endreq;
 	         }
                }
                else {
@@ -298,14 +317,14 @@ void DimPropServer::rpcHandler() {
                     log << MSG::INFO << "sent property data " << nextdata << endreq;
 	         }
                  else {
-                    log << MSG::ERROR << "failed to get property for "<< nextprop << endreq;
+                    log << MSG::WARNING << "failed to get property for "<< nextprop << endreq;
 	         }
 	       }
              }
              else {
 	       if (nextval != NULL) {
 //               set all properties, not possible
-                 log << MSG::ERROR << "wrong command, cannot set all properties"<< endreq;
+                 log << MSG::WARNING << "wrong command, cannot set all properties"<< endreq;
 	       }
 	       else {
 //               request all properties
@@ -344,7 +363,7 @@ void DimPropServer::rpcHandler() {
                    log << MSG::INFO << "sent property data. length" << propsize	 << endreq;
                  }
 	         else {
-                   log << MSG::ERROR << "failed to get properties for "<< nextalg << endreq;
+                   log << MSG::WARNING << "failed to get properties for "<< nextalg << endreq;
 	         }
 	  
 	       } //endif request all props	

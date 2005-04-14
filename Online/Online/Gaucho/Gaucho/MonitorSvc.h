@@ -69,8 +69,8 @@ public:
   /** Get the names for all declared monitoring informations for a given
       owner. If the owner is NULL, then it returns for all owners
   */
-  std::set<std::string> * getInfos(const IInterface* owner = 0) ;
-  
+  std::set<std::string> * getInfos(const IInterface* owner = 0);
+
 private:
   char* m_nodename;
   char* tmp;

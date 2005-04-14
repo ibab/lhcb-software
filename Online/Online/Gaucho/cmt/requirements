@@ -4,7 +4,7 @@ version v3r0
 branches src cmt doc
 
 # add "use" statements
-use GaudiKernel v18r0
+use GaudiKernel v19r0
 use AIDA v* LCG_Interfaces
 use DIM v* Online
 
