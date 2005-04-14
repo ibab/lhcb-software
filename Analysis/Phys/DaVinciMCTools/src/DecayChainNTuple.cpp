@@ -1143,7 +1143,8 @@ StatusCode DecayChainNTuple::WriteNTuple(std::vector<Particle*>& mothervec) {
       debug() << "L0 decision: " << L0Decision << endreq;
       L1Decision = trg->L1();
       debug() << "L1 decision: " << L1Decision << endreq;
-      HLTDecision = trg->HLT();
+      //      HLTDecision = trg->HLT();
+      HLTDecision = 1 ;
       debug() << "HLT decision: " << HLTDecision << endreq;
     }
     
@@ -1858,8 +1859,10 @@ void DecayChainNTuple::HandleNTuple::FillMCNTuple(MCParticle& mcpart, HepPoint3D
 
   // True lifetime (relevant for composite particles) in picoseconds
   // ctau = m * L dot p / p2
-  m_mctau[m_mcn] = (1/(picosecond*c_light)) * (mcpart.momentum().m())* (mcpart.momentum().vect())*
-    ((*ivert)->position() - mcpart.originVertex()->position())/ mcpart.momentum().vect().mag2();
+  HepPoint3D TMP = (*ivert)->position() - mcpart.originVertex()->position();
+  Hep3Vector TMP2(TMP.x(),TMP.y(),TMP.z());
+  m_mctau[m_mcn] = (1/(picosecond*c_light)) * (mcpart.momentum().m())* 
+    (mcpart.momentum().vect())*TMP2/ mcpart.momentum().vect().mag2();
 
   m_mcn++;
 

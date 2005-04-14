@@ -1,7 +1,11 @@
-! $Id: release.notes,v 1.51 2005-04-04 11:24:12 lfernan Exp $
+! $Id: release.notes,v 1.52 2005-04-14 12:26:50 pkoppenb Exp $
 ! Package     : DaVinciMCTools
 ! Responsible : P. Koppenburg
 !=============================================================================
+
+! 2005-04-14 - P. Koppenburg
+ - src/DecayChainNTuple.{h,pp}
+   . Minor fixes for DV v13
 
 ! 2005-04-04 - Luis Fernandez
  - src/DecayChainNTuple.{h,pp}
