@@ -4,6 +4,9 @@
 ! Purpose     : Package for the tracking fitting-related classes
 !-----------------------------------------------------------------------------
 
+! 2005-04-13 - Jose A Hernando
+ - MeasurementProvider.h/cpp working in a tool that create Measurements from LHCbID (tentative)
+
 ! 2005-04-13 - Eduardo Rodrigues
  - FitTrack removed from the package. Extra functionality with respect to
   "old" Track was moved to it
