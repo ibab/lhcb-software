@@ -248,11 +248,11 @@
       </method>
 
      <method
-        name    = 'addToStates'
-        argList = 'State* value'
-        desc    = 'Add a State to the list of states associated to the track'>
+       name    = 'addToStates'
+       desc    = 'Add a State to the list of states associated to the track'>
+        <arg type = 'State ' name=' state' />
         <code>
-  m_states.push_back( value );
+  m_states.push_back( &amp; state );
         </code>
       </method>
 
@@ -326,10 +326,10 @@
       </method>
       <method
         name    = 'addToMeasurements'
-        argList = 'Measurement* meas'
         desc    = 'add a measurement to the list associated to the track'>
+        <arg type = 'Measurement ' name='meas' />
         <code>
-  m_measurements.push_back( meas );
+  m_measurements.push_back( &amp;meas );
         </code>
       </method>
 
@@ -355,10 +355,10 @@
 
       <method
         name    = 'addToAncestors'
-        argList = 'Track* ancestor'
         desc    = 'add a track to the list of ancestors of this track'>
+        <arg type = 'Track ' name='ancestor' />
         <code>
-  m_ancestors.push_back( ancestor );
+  m_ancestors.push_back( &amp;ancestor );
         </code>
       </method>
 
