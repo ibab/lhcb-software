@@ -322,7 +322,8 @@ L0Muon::L0mProcUnit::L0mProcUnit(L0MPuNodeBase & puNode) {
 std::vector<L0MTile> L0Muon::L0mProcUnit::l0bufferTileList(L0MPuNodeBase & puNode){
 
   // Prepare the vector of tiles to be put in the L0Buffer
-  std::vector<L0MTile> l0mtilelist(80);
+  MuonTileID empty_tile = MuonTileID();
+  std::vector<L0MTile> l0mtilelist(80,empty_tile);
   std::vector<L0MTile>::iterator itl0mtilelist;
   //- Optical links  
   // Loop over stations
@@ -332,7 +333,7 @@ std::vector<L0MTile> L0Muon::L0mProcUnit::l0bufferTileList(L0MPuNodeBase & puNod
     for (std::vector<L0MTile>::iterator  il = ols.begin(); il != ols.end(); il++ ) {
       std::vector<L0MTile> ltiles = il->tiles();
       l0mtilelist.insert(l0mtilelist.end(), ltiles.begin(), ltiles.end());
-      std::vector<L0MTile> emptyList(32-ltiles.size());
+      std::vector<L0MTile> emptyList(32-ltiles.size(),empty_tile);
       l0mtilelist.insert(l0mtilelist.end(), emptyList.begin(), emptyList.end());
     } // optical links of this station
   } // stations
