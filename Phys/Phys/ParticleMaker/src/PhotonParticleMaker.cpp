@@ -1,8 +1,11 @@
-// $Id: PhotonParticleMaker.cpp,v 1.3 2005-02-09 18:01:34 pkoppenb Exp $
+// $Id: PhotonParticleMaker.cpp,v 1.4 2005-04-14 11:23:45 pkoppenb Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.3  2005/02/09 18:01:34  pkoppenb
+// CLHEP
+//
 // Revision 1.2  2005/01/06 10:46:54  pkoppenb
 // Moved interfaces
 //
@@ -27,8 +30,7 @@
 #include "GaudiKernel/ToolFactory.h"
 #include "GaudiKernel/MsgStream.h" 
 #include "GaudiKernel/IDataProviderSvc.h" 
-// LHCbKErnel 
-#include "Kernel/CLHEPStreams.h"
+
 // Event 
 #include "Event/Particle.h" 
 #include "Event/ProtoParticle.h" 
