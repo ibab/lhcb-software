@@ -5,6 +5,10 @@
 !-----------------------------------------------------------------------------
 
 !========================== L0MuonKernel v3r0 2005-04-05 ===================
+! 2005-04-14 A. Tsaregorodtsev
+ - Fix in the L0mProcuUnit::l0bufferTileList(...) to always define all the elements
+   in the returned list of L0MTile's.
+
 ! 2005-04-05 - Marco Cattaneo
  - Fix some compiler and doxygen warnings
 
