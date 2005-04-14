@@ -1,48 +1,31 @@
-// $Id: MuonBackground.h,v 1.6 2005-02-07 14:55:19 cattanem Exp $
+// $Id: MuonBackground.h,v 1.7 2005-04-14 13:10:41 cattanem Exp $
 #ifndef MUONBACKGROUND_H 
 #define MUONBACKGROUND_H 1
 
 // Include files
 // from STL
 #include <string>
+#include <cmath> 
 
 // from Gaudi
-#include "GaudiKernel/Algorithm.h"
-#include "GaudiKernel/IAlgManager.h"
-#include "GaudiKernel/IProperty.h"                                             
-#include "GaudiKernel/IAlgorithm.h"
-#include "GaudiKernel/PropertyMgr.h"
- 
-#include "ParticleInfo.h"
+#include "GaudiKernel/Algorithm.h" 
+#include "GaudiKernel/RndmGenerators.h"
+#include "MuBgDistribution.h"
+
+// forward declarations
+class IHistogram1D;
+class IHistogram2D;
+class IMuonTileXYZTool;
+class IMuonGetInfoTool;
+
+typedef std::vector<std::string> VectorName;   
+
 /** @class MuonBackground MuonBackground.h
  *  
  *
  *  @author Alessia Satta
  *  @date   2003-02-18
  */
-
-#include <cmath> 
-// Include files
-
-
-#include "GaudiKernel/MsgStream.h"
-#include "GaudiKernel/AlgFactory.h"
-#include "GaudiKernel/IHistogramSvc.h"
-#include "GaudiKernel/SmartDataPtr.h"
-#include "GaudiKernel/DataObject.h"
-#include "GaudiKernel/RndmGenerators.h"
-#include "AIDA/IAxis.h"
-#include "AIDA/IHistogram1D.h"
-#include "AIDA/IHistogram2D.h"
-#include "AIDA/IHistogram3D.h"
-#include "AIDA/IHistogramFactory.h"      
-#include "MuBgDistribution.h"
-#include "MuonTools/IMuonTileXYZTool.h"   
-#include "MuonTools/IMuonGetInfoTool.h"
-#include "MuonKernel/MuonTile.h"
-
-
-typedef std::vector<std::string> VectorName;   
 
 class MuonBackground : public Algorithm {
 public:

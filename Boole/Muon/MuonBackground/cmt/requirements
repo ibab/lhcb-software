@@ -1,14 +1,14 @@
 package MuonBackground 
-version v1r10
+version v1r10p1
 
 # ================ structure ===========================================
 branches src cmt options doc
 include_path none
 
 # ================ used packages ========================================= 
-use AIDA        v*	LCG_Interfaces -no_auto_imports
-use MuonTools	v3r*	Muon
-use MuonEvent	v4r*	Event
+use AIDA      v* LCG_Interfaces -no_auto_imports
+use MuonTools v* Muon
+use MuonEvent v* Event
 
 # build a component library
 library MuonBackground  *.cpp -import=AIDA

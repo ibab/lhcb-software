@@ -5,6 +5,11 @@
 !               low energy components, flatspillover
 !-----------------------------------------------------------------------------
 
+!====================== MuonBackground v1r10p1 2005-04-14 =====================
+! 2005-04-14 - Marco Cattaneo
+ - Fix a memory leak
+ - Clean up includes
+
 !======================= MuonBackground v1r10 2005-04-01 ======================
 ! 2005-04-01 - Marco Cattaneo
  - Adapt to MuonEvent v4r0 (backward incompatible change to MCMuonHit)

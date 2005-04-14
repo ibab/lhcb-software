@@ -1,7 +1,10 @@
-// $Id: ParticleInfo.cpp,v 1.3 2003-04-16 13:49:38 cattanem Exp $
+// $Id: ParticleInfo.cpp,v 1.4 2005-04-14 13:10:41 cattanem Exp $
 // Include files 
 
 #include <iostream> 
+
+// Event model
+#include "Event/MCParticle.h"
 
 // local
 #include "ParticleInfo.h"

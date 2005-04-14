@@ -1,31 +1,31 @@
-// $Id: MuonBackground.cpp,v 1.22 2005-04-01 16:44:34 cattanem Exp $
+// $Id: MuonBackground.cpp,v 1.23 2005-04-14 13:10:41 cattanem Exp $
 // Include files 
 
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h"
 #include "GaudiKernel/MsgStream.h" 
+#include "GaudiKernel/IAlgManager.h"
+#include "GaudiKernel/IAlgorithm.h"
+#include "GaudiKernel/IProperty.h"
+#include "GaudiKernel/SmartDataPtr.h"
+#include "AIDA/IAxis.h"
+#include "AIDA/IHistogram1D.h"
+#include "AIDA/IHistogram2D.h"
+#include "AIDA/IHistogramFactory.h"
 
-//from detector description
-
-#include "DetDesc/ILVolume.h"
-#include "DetDesc/IPVolume.h"
-#include "DetDesc/Material.h"
-#include "DetDesc/IDetectorElement.h"
-#include "DetDesc/IGeometryInfo.h"
-#include "DetDesc/DetectorElementException.h"
-#include "DetDesc/IGeometryInfo.h"
-#include "DetDesc/ISolid.h"
-#include "DetDesc/SolidBox.h"
-#include "DetDesc/IReadOut.h"
-#include "MuonDet/DeMuonRegion.h"
-#include "MuonDet/DeMuonChamber.h"
-#include "MuonDet/MuonParameters.h"
+// from detector description
 #include "MuonDet/DeMuonGasGap.h"
-#include "MuonDet/MuonReadoutCond.h"
 #include "MuonDet/MuonBasicGeometry.h"
+#include "MuonTools/IMuonGetInfoTool.h"
+#include "MuonTools/IMuonTileXYZTool.h"   
+#include "MuonKernel/MuonTileID.h"
+
+// Event model
 #include "Event/MCMuonHit.h"
+
 // local
 #include "MuonBackground.h"
+#include "ParticleInfo.h"
 
 #define DIMENSIONMAX 20
 
@@ -282,7 +282,15 @@ StatusCode MuonBackground::execute() {
         }        
       }      
     }else if(m_type==FlatSpillover){
-      if(ispill>0)break;
+      if(ispill>0) {
+        delete m_resultPointer;
+        for(int station=0;station<m_stationNumber;station++){
+          for(int region=0;region<m_regionNumber;region++){          
+            delete hitsContainer[station*m_regionNumber+region];
+          }
+        }
+        break;
+      }
       
       for(int station=0;station<m_stationNumber;station++){        
         for (int multi=0;multi<m_gaps;multi++){

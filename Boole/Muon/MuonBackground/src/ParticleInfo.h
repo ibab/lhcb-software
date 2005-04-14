@@ -1,10 +1,9 @@
-// $Id: ParticleInfo.h,v 1.1.1.1 2003-04-04 09:10:14 asatta Exp $
+// $Id: ParticleInfo.h,v 1.2 2005-04-14 13:10:41 cattanem Exp $
 #ifndef PARTICLEINFO_H 
 #define PARTICLEINFO_H 1
 
-// Include files
-#include "Event/Collision.h" 
-#include "Event/MCParticle.h" 
+// Forward declarations
+class MCParticle;
 
 /** @class ParticleInfo ParticleInfo.h
  *  
@@ -30,7 +29,6 @@ private:
   static int m_stationNumber;
   static int m_gapsNumber;
   static  int maxDimension;  
-  // const int pippo=10;
   
   std::vector<std::vector<int> >* m_storagePointer;
   std::vector<int>* m_resultPointer;
