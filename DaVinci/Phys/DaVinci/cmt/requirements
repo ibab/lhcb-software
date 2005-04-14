@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.248 2005-03-23 12:40:27 pkoppenb Exp $
+# $Id: requirements,v 1.249 2005-04-14 08:13:03 pkoppenb Exp $
 # Created    : 07/02/2002
 # Maintainer : P. Koppenburg
 #
@@ -6,7 +6,7 @@
 # Allows reading of OO-DST data
 #============================================================================
 package           DaVinci
-version           v12r9
+version           v12r10
 
 # Structure, i.e. directories to process. 
 #============================================================================
@@ -36,14 +36,11 @@ use XmlDDDB             v22r3   Det
 use FieldMap            v4r5
 use ParamFiles          v3r8    -no_auto_imports
 
-#-- LHCb libraries 
-use LHCb                v16r4
-
 # TMP:
 use RichTools           v1r2p2 Rich
 
 #=======================================================
-# DaVinciSys v12r9
+# DaVinciSys v12r10
 #=======================================================
 
 # L0 Trigger packages
@@ -80,17 +77,18 @@ use  RecoTools          	v1r1     Rec
 # Utility tools
 use  TrExtrapolator     	v2r14    Tr
 
-use  LoKi               	v3r10    Tools  
+use  LoKi               	v3r11    Tools  
 use  LoKiHlt             	v2r1     Tools  
+use  LoKiGen             	v1r0     Tools  
 
 # Reconstruction tools 
 use  Utilities          	v1r14    Tools
 
 # Physics packages
 use  CommonParticles    	v1r5p3   Phys
-use  DaVinciFilter      	v1r6     Phys
+use  DaVinciFilter      	v1r7     Phys
 use  DaVinciKernel      	v3r2     Phys
-use  DaVinciTools       	v11r7    Phys
+use  DaVinciTools       	v11r8    Phys
 use  FlavourTagging     	v5r5     Phys
 use  Ks2PiPiSel         	v1r4p1   Phys
 use  ParticleMaker      	v1r4     Phys
@@ -100,17 +98,17 @@ use  VertexFit			v1r5     Phys
 use  Tampering                  v1r0     Phys
 
 # Physics MC packages
-use  DaVinciAssociators 	v5r3     Phys
-use  DaVinciEff         	v3r2p2   Phys
-use  DaVinciMCTools     	v5r9     Phys
+use  DaVinciAssociators 	v5r3p1   Phys
+use  DaVinciEff         	v3r3     Phys
+use  DaVinciMCTools     	v5r10    Phys
 use  DaVinciTest        	v5r6     Phys
 use  DaVinciUser        	v5r2     Phys
 
 # Stripping
-use  Stripping          	v2r0     Tools
+use  Stripping          	v2r1     Tools
 
 # Physics selections
-use  PhysSelSys			v8r0     PhysSel
+use  PhysSelSys			v8r1     PhysSel
 
 use GaudiPython v*
 
