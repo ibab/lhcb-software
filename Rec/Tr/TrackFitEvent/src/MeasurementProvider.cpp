@@ -1,4 +1,4 @@
-// $Id: MeasurementProvider.cpp,v 1.1 2005-04-14 17:27:31 hernando Exp $
+// $Id: MeasurementProvider.cpp,v 1.2 2005-04-14 17:50:24 hernando Exp $
 // Include files 
 
 // from Gaudi
@@ -71,7 +71,7 @@ StatusCode MeasurementProvider::load() {
   return sc;
 } 
 
-const Measurement& MeasurementProvider::measurement
+Measurement& MeasurementProvider::measurement
 (const LHCbID& id, double par0, double par1) {
 
   // TODO first look if it is in the list already :)
@@ -81,7 +81,7 @@ const Measurement& MeasurementProvider::measurement
     VeloCluster* clus = m_veloClusters->object(vid);
     if (clus != NULL) {    
       if (vid.isRType()) {
-        meas = new VeloRMeasurement(*clus,*m_veloDet);
+        meas = new VeloRMeasurement(*clus,*m_veloDet, par0);
       } else {
         meas = new VeloPhiMeasurement(*clus,*m_veloDet);
       }
@@ -94,8 +94,11 @@ const Measurement& MeasurementProvider::measurement
   } else if (id.isOT()) {
     OTChannelID oid = id.otID();
     OTTime* clus = m_otTimes->object(oid);
-    if (clus != NULL)
-      meas = new OTMeasurement(*clus,*m_otDet, (int) par0,par1);
+    if (clus != NULL) {
+      if (par0 == 999.) par0 = 0.;
+      meas = new OTMeasurement(*clus,*m_otDet, (int) par0, par1);
+    }
+    
   }
 
   if (meas != NULL) {
@@ -118,8 +121,8 @@ StatusCode MeasurementProvider::load(Track& track)
   for (std::vector<LHCbID>::const_iterator it = ids.begin();
        it != ids.end(); it++) {
     const LHCbID& id = *it;
-    const Measurement& meas = measurement(id);
-    track.addToMeasurements( (Measurement*) &meas);
+    Measurement& meas = measurement(id);
+    track.addToMeasurements(meas);
   }
   return StatusCode::SUCCESS;
 }

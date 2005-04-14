@@ -1,4 +1,4 @@
-// $Id: MeasurementProvider.h,v 1.1 2005-04-14 17:27:31 hernando Exp $
+// $Id: MeasurementProvider.h,v 1.2 2005-04-14 17:50:24 hernando Exp $
 #ifndef MEASUREMENTPROVIDER_H 
 #define MEASUREMENTPROVIDER_H 1
 
@@ -40,8 +40,8 @@ public:
 
   StatusCode load();
 
-  const Measurement& measurement(const LHCbID&, 
-                                 double par = 0, double par = 0.);
+  Measurement& measurement(const LHCbID&, 
+                           double par = 999., double par = 999.);
 
   StatusCode load(Track& track);  
 
