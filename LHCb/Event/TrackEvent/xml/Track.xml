@@ -390,7 +390,7 @@
       <method
         name    = 'setType'
         argList = 'std::string value'
-        desc    = 'set type of the track (values in Keys::Track::Types)'
+        desc    = 'set type of the track (values in TrackKeys::Types)'
         />
 
       <method
@@ -402,7 +402,7 @@
       <method
         name    = 'setHistory'
         argList = 'std::string value'
-        desc    = 'set the name of the algorithm (ParRec) thar made the track (see in Keys::Track::History)'
+        desc    = 'set the name of the algorithm (ParRec) thar made the track (see in TrackKeys::History)'
         />
 
       <method
@@ -414,7 +414,7 @@
       <method
         name    = 'setHistoryFit'
         argList = 'std::string value'
-        desc    = 'set the algorithm that fitted the track (Keys::Track::HistoryFit)'
+        desc    = 'set the algorithm that fitted the track (TrackKeys::HistoryFit)'
         />
 
       <method
@@ -426,7 +426,7 @@
       <method
         name    = 'setStatus'
         argList = 'std::string value'
-        desc    = 'set the status of the track (see Keys::Track::Status)'
+        desc    = 'set the status of the track (see TrackKeys::Status)'
         />
 
       <method
@@ -438,7 +438,7 @@
       <method
         name    = 'setFlag'
         argList = 'std::string flag, bool value'
-        desc    = 'Update the flag (see Keys::Track::Flags)'
+        desc    = 'Update the flag (see TrackKeys::Flags)'
         />
 
       <method

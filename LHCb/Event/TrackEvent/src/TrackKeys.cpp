@@ -1,14 +1,14 @@
 #include "Event/TrackKeys.h"
 
-std::vector<std::string> Keys::Track::History = std::vector<std::string>();
-std::vector<std::string> Keys::Track::HistoryFit = std::vector<std::string>();
-std::vector<std::string> Keys::Track::Types = std::vector<std::string>();
-std::vector<std::string> Keys::Track::Status = std::vector<std::string>();
-std::vector<std::string> Keys::Track::Flags = std::vector<std::string>();
+std::vector<std::string> TrackKeys::History = std::vector<std::string>();
+std::vector<std::string> TrackKeys::HistoryFit = std::vector<std::string>();
+std::vector<std::string> TrackKeys::Types = std::vector<std::string>();
+std::vector<std::string> TrackKeys::Status = std::vector<std::string>();
+std::vector<std::string> TrackKeys::Flags = std::vector<std::string>();
 
-Keys::Track Keys::Track::s_track;
+TrackKeys TrackKeys::s_trackKeys;
 
-Keys::Track::Track() 
+TrackKeys::TrackKeys() 
 {
   History.push_back("unknown");
   History.push_back("long");
