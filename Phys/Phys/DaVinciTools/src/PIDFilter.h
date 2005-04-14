@@ -1,10 +1,10 @@
-// $Id: PIDFilter.h,v 1.1 2005-02-15 07:31:50 pkoppenb Exp $
+// $Id: PIDFilter.h,v 1.2 2005-04-14 16:27:58 pkoppenb Exp $
 #ifndef PIDFILTER_H 
 #define PIDFILTER_H 1
 
 // Include files
 // from DaVinci, this is a specialized GaudiAlgorithm
-#include "DaVinciTools/DVAlgorithm.h"
+#include "Kernel/DVAlgorithm.h"
 
 
 /** @class PIDFilter PIDFilter.h
