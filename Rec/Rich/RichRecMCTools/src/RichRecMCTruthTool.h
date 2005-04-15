@@ -1,23 +1,21 @@
 
+//-----------------------------------------------------------------------------
 /** @file RichRecMCTruthTool.h
  *
  *  Header file for RICH reconstruction tool : RichRecMCTruthTool
  *
  *  CVS Log :-
- *  $Id: RichRecMCTruthTool.h,v 1.8 2004-10-13 09:37:27 jonrob Exp $
- *  $Log: not supported by cvs2svn $
- *  Revision 1.7  2004/07/27 16:14:11  jonrob
- *  Add doxygen file documentation and CVS information
- *
+ *  $Id: RichRecMCTruthTool.h,v 1.9 2005-04-15 16:32:30 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   08/07/2004
  */
+//-----------------------------------------------------------------------------
 
-#ifndef RICHRECTOOLS_RICHRECMCTRUTHTOOL_H
-#define RICHRECTOOLS_RICHRECMCTRUTHTOOL_H 1
+#ifndef RICHRECMCTOOLS_RICHRECMCTRUTHTOOL_H
+#define RICHRECMCTOOLS_RICHRECMCTRUTHTOOL_H 1
 
-// includes
+// STL
 #include <sstream>
 
 // from Gaudi
@@ -54,6 +52,7 @@
 // CLHEP
 #include "CLHEP/Units/PhysicalConstants.h"
 
+//-----------------------------------------------------------------------------
 /** @class RichRecMCTruthTool RichRecMCTruthTool.h
  *
  *  Tool performing MC truth associations for RICH reconstruction
@@ -62,6 +61,7 @@
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
  */
+//-----------------------------------------------------------------------------
 
 class RichRecMCTruthTool : public RichRecToolBase,
                            virtual public IRichRecMCTruthTool {
@@ -169,4 +169,4 @@ private: // private data
 
 };
 
-#endif // RICHRECTOOLS_RICHRECMCTRUTHTOOL_H
+#endif // RICHRECMCTOOLS_RICHRECMCTRUTHTOOL_H

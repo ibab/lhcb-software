@@ -1,38 +1,20 @@
 
+//-----------------------------------------------------------------------------
 /** @file RichPixelCreatorFromRichDigitsWithBg.cpp
  *
  *  Implementation file for RICH reconstruction tool : RichPixelCreatorFromRichDigitsWithBg
  *
  *  CVS Log :-
- *  $Id: RichPixelCreatorFromRichDigitsWithBg.cpp,v 1.8 2005-03-21 14:15:31 jonrob Exp $
- *  $Log: not supported by cvs2svn $
- *  Revision 1.6  2004/11/20 12:34:16  jonrob
- *  Update parent information for background pixels
- *
- *  Revision 1.5  2004/10/30 19:27:02  jonrob
- *  Update method access types + comments
- *
- *  Revision 1.4  2004/10/27 14:35:55  jonrob
- *  Update for new RichSmartID Tool
- *
- *  Revision 1.3  2004/10/21 09:10:48  jonrob
- *  minor update
- *
- *  Revision 1.2  2004/10/13 10:32:49  jonrob
- *  Bug fix
- *
- *  Revision 1.1  2004/10/13 09:37:27  jonrob
- *  Add new pixel creator tool.
- *  Add ability to make pixels for particular radiators.
+ *  $Id: RichPixelCreatorFromRichDigitsWithBg.cpp,v 1.9 2005-04-15 16:32:30 jonrob Exp $
  *
  *  @author Andy Buckley  buckley@hep.phy.cam.ac.uk
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   05/10/2004
  */
+//-----------------------------------------------------------------------------
 
 // local
 #include "RichPixelCreatorFromRichDigitsWithBg.h"
-using namespace std;
 
 //-----------------------------------------------------------------------------
 
@@ -78,10 +60,11 @@ StatusCode RichPixelCreatorFromRichDigitsWithBg::initialize()
   incSvc()->addListener( this, IncidentType::BeginEvent );
   if (msgLevel(MSG::DEBUG)) incSvc()->addListener( this, IncidentType::EndEvent );
 
-  // Make sure we are ready for a new event
-  InitNewEvent();
+  // warn that this background adding creator is being used
+  warning() << "Using background adding pixel creator : Will add " << m_numBgTracksToAdd[Rich::Rich1]
+            << "/" << m_numBgTracksToAdd[Rich::Rich2] << " traversing particles to RICH(1/2)" << endreq;
 
-  return StatusCode::SUCCESS;
+  return sc;
 }
 
 StatusCode RichPixelCreatorFromRichDigitsWithBg::finalize()
@@ -110,10 +93,10 @@ RichPixelCreatorFromRichDigitsWithBg::fillBgTrackStack() const
 {
   // Obtain smart data pointer to RichDigits
   RichDigits * digits = get<RichDigits>( m_recoDigitsLocation );
-  map<Rich::DetectorType, unsigned int> originalNumTracksInStack;
+  RichMap<Rich::DetectorType, unsigned int> originalNumTracksInStack;
   originalNumTracksInStack[Rich::Rich1] = m_digitsForTrackBg[Rich::Rich1].size();
   originalNumTracksInStack[Rich::Rich2] = m_digitsForTrackBg[Rich::Rich2].size();
-  map<Rich::DetectorType, unsigned int> numDigitsAddedToStack;
+  RichMap<Rich::DetectorType, unsigned int> numDigitsAddedToStack;
 
   // Loop over RichDigits and create working pixels
   for ( RichDigits::const_iterator digit = digits->begin(); digit != digits->end(); ++digit ) {
@@ -145,28 +128,32 @@ RichPixelCreatorFromRichDigitsWithBg::fillBgTrackStack() const
   // Empty the current event's digit collection
   digits->clear();
 
-  // Work out how many tracks were added to the stack and tell the (debug) world about it
-  map<Rich::DetectorType, unsigned int> numTracksAddedToStack;
-  numTracksAddedToStack[Rich::Rich1] = m_digitsForTrackBg[Rich::Rich1].size() - originalNumTracksInStack[Rich::Rich1];
-  numTracksAddedToStack[Rich::Rich2] = m_digitsForTrackBg[Rich::Rich2].size() - originalNumTracksInStack[Rich::Rich2];
-  if (m_numBgTracksToAdd[Rich::Rich1] > 0) {
-    debug() << "Added "
-            << numTracksAddedToStack[Rich::Rich1]  << " rings ("
-            << numDigitsAddedToStack[Rich::Rich1] << " digits) to the Rich1 bg ring stack ("
-            << originalNumTracksInStack[Rich::Rich1] << "->" << m_digitsForTrackBg[Rich::Rich1].size() << " rings)"
-            << endreq;
-  }
-  if (m_numBgTracksToAdd[Rich::Rich2] > 0) {
-    debug() << "Added "
-            << numTracksAddedToStack[Rich::Rich2]  << " rings ("
-            << numDigitsAddedToStack[Rich::Rich2] << " digits) to the Rich2 bg ring stack ("
-            << originalNumTracksInStack[Rich::Rich2] << "->" << m_digitsForTrackBg[Rich::Rich2].size() << " rings)"
-            << endreq;
+  // Work out how many tracks were added to the stack and tell the world about it
+  if ( msgLevel(MSG::INFO) )
+  {
+    RichMap<Rich::DetectorType, unsigned int> numTracksAddedToStack;
+    numTracksAddedToStack[Rich::Rich1] =
+      m_digitsForTrackBg[Rich::Rich1].size() - originalNumTracksInStack[Rich::Rich1];
+    numTracksAddedToStack[Rich::Rich2] =
+      m_digitsForTrackBg[Rich::Rich2].size() - originalNumTracksInStack[Rich::Rich2];
+    if (m_numBgTracksToAdd[Rich::Rich1] > 0) {
+      info() << "Added "
+             << numTracksAddedToStack[Rich::Rich1]  << " particles ("
+             << numDigitsAddedToStack[Rich::Rich1] << " digits) to the RICH1 stack ("
+             << originalNumTracksInStack[Rich::Rich1] << "->" << m_digitsForTrackBg[Rich::Rich1].size() << ")"
+             << endreq;
+    }
+    if (m_numBgTracksToAdd[Rich::Rich2] > 0) {
+      info() << "Added "
+             << numTracksAddedToStack[Rich::Rich2]  << " particles ("
+             << numDigitsAddedToStack[Rich::Rich2] << " digits) to the RICH2 stack ("
+             << originalNumTracksInStack[Rich::Rich2] << "->" << m_digitsForTrackBg[Rich::Rich2].size() << ")"
+             << endreq;
+    }
   }
 
   return StatusCode::SUCCESS;
 }
-
 
 // Forms a new RichRecPixel object from a RichDigit
 RichRecPixel *
@@ -183,7 +170,8 @@ RichPixelCreatorFromRichDigitsWithBg::newPixel( const ContainedObject * obj ) co
   RichRecPixel * newPixel( newPixel( digit->key() ) );
 
   // Set parent information
-  if ( newPixel ) {
+  if ( newPixel )
+  {
     newPixel->setParentPixel( digit );
     newPixel->setParentType( Rich::PixelParent::Digit );
   }
@@ -238,14 +226,17 @@ StatusCode RichPixelCreatorFromRichDigitsWithBg::newPixels() const
   if ( m_allDone ) return StatusCode::SUCCESS;
   m_allDone = true;
 
+  // Do we need to fill the background stacks ?
   if ( m_numBgTracksToAdd[Rich::Rich1] > m_digitsForTrackBg[Rich::Rich1].size() ||
-       m_numBgTracksToAdd[Rich::Rich2] > m_digitsForTrackBg[Rich::Rich2].size() ) {
-
-    debug() << "Not enough background tracks in the stack ("
+       m_numBgTracksToAdd[Rich::Rich2] > m_digitsForTrackBg[Rich::Rich2].size() )
+  {
+    debug() << "Not enough background tracks in the stack ( R1="
             << m_digitsForTrackBg[Rich::Rich1].size() + m_digitsForTrackBg[Rich::Rich2].size()
-            << "/" << m_numBgTracksToAdd[Rich::Rich1] + m_numBgTracksToAdd[Rich::Rich2] << "). "
-            << "'Refilling' from this event" << endreq;
+            << " R2=" << m_numBgTracksToAdd[Rich::Rich1] + m_numBgTracksToAdd[Rich::Rich2] << " ). "
+            << "Refilling from this event" << endreq;
+
     fillBgTrackStack();
+
     return StatusCode::SUCCESS; // no digits to run on
   }
 
@@ -258,41 +249,54 @@ StatusCode RichPixelCreatorFromRichDigitsWithBg::newPixels() const
         digit != digits->end(); ++digit ) { newPixel( *digit ); }
 
   // Do the same thing for the bg track digits
-  map<Rich::DetectorType, size_t> numBgTracksAdded;
+  RichMap<Rich::DetectorType, size_t> numBgTracksAdded;
   size_t numBgPixelsAdded(0);
-  assert( m_numBgTracksToAdd[Rich::Rich1] <= m_digitsForTrackBg[Rich::Rich1].size() &&
-          m_numBgTracksToAdd[Rich::Rich2] <= m_digitsForTrackBg[Rich::Rich2].size() );
-  
-  // Can this be optimised?
-  while ( numBgTracksAdded[Rich::Rich1] < m_numBgTracksToAdd[Rich::Rich1] ) {
-    vector<RichSmartID> & bgdigits = m_digitsForTrackBg[Rich::Rich1].begin()->second;
-    for ( std::vector<RichSmartID>::const_iterator digit = bgdigits.begin(); digit != bgdigits.end(); ++digit ) {
+  // RICH1
+  while ( numBgTracksAdded[Rich::Rich1] < m_numBgTracksToAdd[Rich::Rich1] )
+  {
+
+    // Add hits for this particle
+    std::vector<RichSmartID> & bgdigits = m_digitsForTrackBg[Rich::Rich1].begin()->second;
+    for ( std::vector<RichSmartID>::const_iterator digit = bgdigits.begin();
+          digit != bgdigits.end(); ++digit )
+    {
       newPixel( *digit );
       ++numBgPixelsAdded;
     }
+
+    // count number of added particles
     ++numBgTracksAdded[Rich::Rich1];
-    
+
     // Remove this particle's digits from the stack
     m_digitsForTrackBg[Rich::Rich1].erase(m_digitsForTrackBg[Rich::Rich1].begin());
   }
-  while ( numBgTracksAdded[Rich::Rich2] < m_numBgTracksToAdd[Rich::Rich2] ) {
-    vector<RichSmartID> & bgdigits = m_digitsForTrackBg[Rich::Rich2].begin()->second;
-    for ( std::vector<RichSmartID>::const_iterator digit = bgdigits.begin(); digit != bgdigits.end(); ++digit ) {
+  // RICH2
+  while ( numBgTracksAdded[Rich::Rich2] < m_numBgTracksToAdd[Rich::Rich2] )
+  {
+
+    // Add hits for this particle
+    std::vector<RichSmartID> & bgdigits = m_digitsForTrackBg[Rich::Rich2].begin()->second;
+    for ( std::vector<RichSmartID>::const_iterator digit = bgdigits.begin();
+          digit != bgdigits.end(); ++digit )
+    {
       newPixel( *digit );
       ++numBgPixelsAdded;
     }
+
+    // count number of added particles
     ++numBgTracksAdded[Rich::Rich2];
-    
+
     // Remove this particle's digits from the stack
     m_digitsForTrackBg[Rich::Rich2].erase(m_digitsForTrackBg[Rich::Rich2].begin());
+
   }
 
-
   // Report
-  if ( msgLevel(MSG::DEBUG) ) {
+  if ( msgLevel(MSG::DEBUG) )
+  {
     debug() << "Located " << digits->size() << " RichDigits at "
             << m_recoDigitsLocation << endreq
-            << "Added " << numBgTracksAdded << " additional background tracks with " 
+            << "Added " << numBgTracksAdded << " additional background tracks with "
             << numBgPixelsAdded << " pixels" << endreq
             << "Created " << richPixels()->size() << " RichRecPixels at "
             << m_richRecPixelLocation << endreq;

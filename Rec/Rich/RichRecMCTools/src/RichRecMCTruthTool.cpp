@@ -5,7 +5,7 @@
  *  Implementation file for RICH reconstruction tool : RichRecMCTruthTool
  *
  *  CVS Log :-
- *  $Id: RichRecMCTruthTool.cpp,v 1.13 2005-03-02 14:47:34 jonrob Exp $
+ *  $Id: RichRecMCTruthTool.cpp,v 1.14 2005-04-15 16:32:30 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   08/07/2004
@@ -41,7 +41,10 @@ StatusCode RichRecMCTruthTool::initialize()
   // Acquire instances of tools
   acquireTool( "RichMCTruthTool", m_truth );
 
-  return StatusCode::SUCCESS;
+  // initialise
+  m_emptyContainer.clear();
+
+  return sc;
 }
 
 StatusCode RichRecMCTruthTool::finalize()

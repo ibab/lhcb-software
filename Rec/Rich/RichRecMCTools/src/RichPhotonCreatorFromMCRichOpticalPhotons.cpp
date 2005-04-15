@@ -1,18 +1,16 @@
 
+//-----------------------------------------------------------------------------------------------
 /** @file RichPhotonCreatorFromMCRichOpticalPhotons.cpp
  *
  *  Implementation file for RICH reconstruction tool : RichPhotonCreatorFromMCRichOpticalPhotons
  *
  *  CVS Log :-
- *  $Id: RichPhotonCreatorFromMCRichOpticalPhotons.cpp,v 1.5 2005-01-13 14:39:00 jonrob Exp $
- *  $Log: not supported by cvs2svn $
- *  Revision 1.4  2004/07/27 16:14:11  jonrob
- *  Add doxygen file documentation and CVS information
- *
+ *  $Id: RichPhotonCreatorFromMCRichOpticalPhotons.cpp,v 1.6 2005-04-15 16:32:30 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   08/07/2004
  */
+//-----------------------------------------------------------------------------------------------
 
 // local
 #include "RichPhotonCreatorFromMCRichOpticalPhotons.h"
@@ -28,13 +26,19 @@ RichPhotonCreatorFromMCRichOpticalPhotons::
 RichPhotonCreatorFromMCRichOpticalPhotons( const std::string& type,
                                            const std::string& name,
                                            const IInterface* parent )
-  : RichRecToolBase( type, name, parent ),
+  : RichRecToolBase   ( type, name, parent ),
     m_photonSignal    ( 0 ),
     m_mcRecTool       ( 0 ),
-    m_photons         ( 0 )
+    m_photons         ( 0 ),
+    m_bookKeep        ( false ),
+    m_photCount       ( Rich::NRadiatorTypes, 0 ),
+    m_photCountLast   ( Rich::NRadiatorTypes, 0 ),
+    m_Nevts           ( 0                       )
 {
 
   declareInterface<IRichPhotonCreator>(this);
+
+  declareProperty( "DoBookKeeping", m_bookKeep );
 
   declareProperty( "RichRecPhotonLocation",
                    m_richRecPhotonLocation = RichRecPhotonLocation::Default );
@@ -56,28 +60,36 @@ RichPhotonCreatorFromMCRichOpticalPhotons( const std::string& type,
 
 }
 
-StatusCode RichPhotonCreatorFromMCRichOpticalPhotons::initialize() 
+StatusCode RichPhotonCreatorFromMCRichOpticalPhotons::initialize()
 {
   // Sets up various tools and services
   const StatusCode sc = RichRecToolBase::initialize();
   if ( sc.isFailure() ) { return sc; }
 
   // Acquire instances of tools
-  acquireTool( "RichPhotonSignal",      m_photonSignal    );
-  acquireTool( "RichRecMCTruthTool",    m_mcRecTool       );
+  acquireTool( "RichPhotonSignal",   m_photonSignal );
+  acquireTool( "RichRecMCTruthTool", m_mcRecTool    );
 
   // Setup incident services
   incSvc()->addListener( this, IncidentType::BeginEvent );
   if (msgLevel(MSG::DEBUG)) incSvc()->addListener( this, IncidentType::EndEvent );
 
-  // Make sure we are ready for a new event
-  InitNewEvent();
-
-  return StatusCode::SUCCESS;
+  return sc;
 }
 
 StatusCode RichPhotonCreatorFromMCRichOpticalPhotons::finalize()
 {
+
+  // statistical tool
+  RichStatDivFunctor occ("%10.2f +-%8.2f");
+
+  // Print out final stats
+  info() << "-------------------------------------------------------------------------------" << endreq
+         << " Created on average " << occ(m_photCount[Rich::Aerogel],m_Nevts) << "  Aerogel photons/event" << endreq
+         << " Created on average " << occ(m_photCount[Rich::C4F10],m_Nevts)   << "  C4F10   photons/event" << endreq
+         << " Created on average " << occ(m_photCount[Rich::CF4],m_Nevts)     << "  CF4     photons/event" << endreq
+         << "-------------------------------------------------------------------------------" << endreq;
+
   // Execute base class method
   return RichRecToolBase::finalize();
 }
@@ -90,7 +102,10 @@ void RichPhotonCreatorFromMCRichOpticalPhotons::handle ( const Incident& inciden
   // Debug printout at the end of each event
   else if ( msgLevel(MSG::DEBUG) && IncidentType::EndEvent == incident.type() )
   {
-    debug() << "Created " << richPhotons()->size() << " RichRecPhotons" << endreq;
+    debug() << "Created " << richPhotons()->size() << " RichRecPhotons : Aerogel="
+            << m_photCount[Rich::Aerogel]-m_photCountLast[Rich::Aerogel]
+            << " C4F10=" << m_photCount[Rich::C4F10]-m_photCountLast[Rich::C4F10]
+            << " CF4=" << m_photCount[Rich::CF4]-m_photCountLast[Rich::CF4] << endreq;
   }
 }
 
@@ -102,7 +117,7 @@ RichPhotonCreatorFromMCRichOpticalPhotons::reconstructPhoton( RichRecSegment * s
   const RichRecPhotonKey photonKey(pixel->key(),segment->key());
 
   // See if this photon already exists
-  if ( m_photonDone[photonKey] ) {
+  if ( m_bookKeep && m_photonDone[photonKey] ) {
     return static_cast<RichRecPhoton*>(richPhotons()->object(photonKey));
   } else {
     return buildPhoton( segment, pixel, photonKey );
@@ -120,26 +135,30 @@ RichPhotonCreatorFromMCRichOpticalPhotons::buildPhoton( RichRecSegment * segment
 
   // See if there is a true cherenkov photon for this segment/pixel pair
   const MCRichOpticalPhoton * mcPhoton = m_mcRecTool->trueOpticalPhoton(segment,pixel);
-  if ( mcPhoton ) {
+  if ( mcPhoton )
+  {
 
+    // Which radiator ?
     const Rich::RadiatorType rad = segment->trackSegment().radiator();
+
     if ( ( mcPhoton->cherenkovTheta() > 0. ||
            mcPhoton->cherenkovPhi() > 0. ) &&
          mcPhoton->cherenkovTheta() < m_maxCKtheta[rad] &&
-         mcPhoton->cherenkovTheta() > m_minCKtheta[rad] ) {
+         mcPhoton->cherenkovTheta() > m_minCKtheta[rad] )
+    {
 
-      // construct a photon from the MC information
-      RichGeomPhoton geomPhoton( mcPhoton->cherenkovTheta(),
-                                 mcPhoton->cherenkovPhi(),
-                                 mcPhoton->emissionPoint(),
-                                 mcPhoton->pdIncidencePoint(),
-                                 mcPhoton->sphericalMirrorReflectPoint(),
-                                 mcPhoton->flatMirrorReflectPoint(),
-                                 pixel->smartID(),
-                                 1 );
+      // make a photon object from MC info
+      RichGeomPhoton geomPhot( mcPhoton->cherenkovTheta(),
+                               mcPhoton->cherenkovPhi(),
+                               mcPhoton->emissionPoint(),
+                               mcPhoton->pdIncidencePoint(),
+                               mcPhoton->sphericalMirrorReflectPoint(),
+                               mcPhoton->flatMirrorReflectPoint(),
+                               pixel->smartID(),
+                               1 );
 
-      // make new RichRecPhoton
-      newPhoton = new RichRecPhoton( geomPhoton,
+      // make new RichRecPhoton from the MC information
+      newPhoton = new RichRecPhoton( geomPhot,
                                      segment,
                                      segment->richRecTrack(),
                                      pixel );
@@ -153,14 +172,19 @@ RichPhotonCreatorFromMCRichOpticalPhotons::buildPhoton( RichRecSegment * segment
              > m_minPhotonProb[rad] ) { keepPhoton = true; break; }
       }
 
-      if ( keepPhoton ) {
+      if ( keepPhoton )
+      {
 
-        if ( msgLevel(MSG::VERBOSE) ) {
+        if ( msgLevel(MSG::VERBOSE) )
+        {
           verbose() << "Reconstructed a photon candidate for segment " << segment->key()
                     << " and pixel " << pixel->key() << endreq;
         }
 
         richPhotons()->insert( newPhoton, key );
+
+        // count
+        ++m_photCount[rad];
 
         // Build cross-references between objects
         segment->addToRichRecPixels( pixel );
@@ -188,7 +212,7 @@ RichPhotonCreatorFromMCRichOpticalPhotons::buildPhoton( RichRecSegment * segment
   }
 
   // Add to reference map
-  m_photonDone[key] = true;
+  if ( m_bookKeep ) m_photonDone[key] = true;
 
   // Return pointer to this photon
   return newPhoton;
@@ -345,10 +369,13 @@ RichRecPhotons * RichPhotonCreatorFromMCRichOpticalPhotons::richPhotons() const
       m_photons = tdsPhotons;
 
       // Remake local photon reference map
-      for ( RichRecPhotons::const_iterator iPhoton = tdsPhotons->begin();
-            iPhoton != tdsPhotons->end();
-            ++iPhoton ) {
-        m_photonDone[(*iPhoton)->key()] = true;
+      if ( m_bookKeep ) 
+      {
+        for ( RichRecPhotons::const_iterator iPhoton = tdsPhotons->begin();
+              iPhoton != tdsPhotons->end();
+              ++iPhoton ) {
+          m_photonDone[(*iPhoton)->key()] = true;
+        }
       }
 
     }

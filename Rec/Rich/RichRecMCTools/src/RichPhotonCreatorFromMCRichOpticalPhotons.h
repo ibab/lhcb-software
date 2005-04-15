@@ -1,17 +1,16 @@
 
+//-----------------------------------------------------------------------------------------------
 /** @file RichPhotonCreatorFromMCRichOpticalPhotons.h
  *
  *  Header file for RICH reconstruction tool : RichPhotonCreatorFromMCRichOpticalPhotons
  *
  *  CVS Log :-
- *  $Id: RichPhotonCreatorFromMCRichOpticalPhotons.h,v 1.3 2005-01-13 14:39:00 jonrob Exp $
- *  $Log: not supported by cvs2svn $
- *  Revision 1.2  2004/07/27 16:14:11  jonrob
- *  Add doxygen file documentation and CVS information
+ *  $Id: RichPhotonCreatorFromMCRichOpticalPhotons.h,v 1.4 2005-04-15 16:32:30 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   08/07/2004
  */
+//-----------------------------------------------------------------------------------------------
 
 #ifndef RICHRECMCTOOLS_RICHPHOTONCREATORFROMMCRICHOPTICALPHOTONS_H
 #define RICHRECMCTOOLS_RICHPHOTONCREATORFROMMCRICHOPTICALPHOTONS_H 1
@@ -32,20 +31,24 @@
 
 // RichKernel
 #include "RichKernel/RichMap.h"
+#include "RichKernel/RichStatDivFunctor.h"
 
 // Event model
 #include "Event/MCRichOpticalPhoton.h"
 
+//-----------------------------------------------------------------------------------------------
 /** @class RichPhotonCreatorFromMCRichOpticalPhotons RichPhotonCreatorFromMCRichOpticalPhotons.h
  *
  *  Tool which performs the association between RichRecTracks and
  *  RichRecPixels to form RichRecPhotons. MC cheating is performed
  *  by only creating true cherenkov photons using MCRichOpticalPhoton
- *  information and also by using the MC geometrical information
+ *  information and also by using the MC geometrical information instead of
+ *  the reconstructed values (angles etc.).
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   08/07/2004
  */
+//-----------------------------------------------------------------------------------------------
 
 class RichPhotonCreatorFromMCRichOpticalPhotons : public RichRecToolBase,
                                                   virtual public IRichPhotonCreator,
@@ -129,13 +132,24 @@ private: // private data
   /// minimum cut value for photon probability
   std::vector<double> m_minPhotonProb;
 
+  /// Flag to turn on or off the book keeping features to save cpu time.
+  bool m_bookKeep;
+
+  // debug photon counting
+  mutable std::vector<unsigned long int> m_photCount;
+  mutable std::vector<unsigned long int> m_photCountLast;
+
+  /// Number of events processed tally
+  unsigned int m_Nevts;
+
 };
 
 inline void RichPhotonCreatorFromMCRichOpticalPhotons::InitNewEvent()
 {
-  // Initialise navigation data
-  m_photonDone.clear();
+  if ( m_bookKeep ) m_photonDone.clear();
   m_photons = 0;
+  m_photCountLast = m_photCount;
+  ++m_Nevts;
 }
 
 

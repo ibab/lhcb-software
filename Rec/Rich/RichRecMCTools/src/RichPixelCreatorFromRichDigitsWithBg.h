@@ -1,31 +1,20 @@
 
+//-----------------------------------------------------------------------------
 /** @file RichPixelCreatorFromRichDigitsWithBg.h
  *
  *  Header file for RICH reconstruction tool : RichPixelCreatorFromRichDigitsWithBg
  *
  *  CVS Log :-
- *  $Id: RichPixelCreatorFromRichDigitsWithBg.h,v 1.6 2005-03-21 14:15:31 jonrob Exp $
- *  $Log: not supported by cvs2svn $
- *  Revision 1.4  2004/11/20 12:34:16  jonrob
- *  Update parent information for background pixels
- *
- *  Revision 1.3  2004/10/30 19:27:02  jonrob
- *  Update method access types + comments
- *
- *  Revision 1.2  2004/10/13 10:32:49  jonrob
- *  Bug fix
- *
- *  Revision 1.1  2004/10/13 09:37:27  jonrob
- *  Add new pixel creator tool.
- *  Add ability to make pixels for particular radiators.
+ *  $Id: RichPixelCreatorFromRichDigitsWithBg.h,v 1.7 2005-04-15 16:32:30 jonrob Exp $
  *
  *  @author Andy Buckley   buckley@hep.phy.cam.ac.uk
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   05/10/2004
  */
+//-----------------------------------------------------------------------------
 
-#ifndef RICHRECTOOLS_RICHPIXELCREATORFROMRICHDIGITS_H
-#define RICHRECTOOLS_RICHPIXELCREATORFROMRICHDIGITS_H 1
+#ifndef RICHRECMCTOOLS_RICHPIXELCREATORFROMRICHDIGITSWITHBG_H
+#define RICHRECMCTOOLS_RICHPIXELCREATORFROMRICHDIGITSWITHBG_H 1
 
 // from Gaudi
 #include "GaudiKernel/IIncidentListener.h"
@@ -41,13 +30,19 @@
 #include "RichKernel/IRichSmartIDTool.h"
 #include "RichKernel/IRichMCTruthTool.h"
 
+// RichKernel
+#include "RichKernel/RichMap.h"
+#include "RichKernel/RichHashMap.h"
+
 // Event
 #include "Event/RichDigit.h"
 #include "Event/MCRichDigit.h"
 
+//------------------------------------------------------------------------------------
 /** @class RichPixelCreatorFromRichDigitsWithBg RichPixelCreatorFromRichDigitsWithBg.h
  *
  *  Tool for the creation and book-keeping of RichRecPixel objects.
+ *
  *  Uses RichDigits from the digitisation as the parent objects.
  *  Additionally maintains a cache of RichDigits to be used as trackless ring
  *  background for testing reconstruction robustness to untracked tracks.
@@ -58,6 +53,7 @@
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   05/10/2004
  */
+//------------------------------------------------------------------------------------
 
 class RichPixelCreatorFromRichDigitsWithBg : public RichRecToolBase,
                                              virtual public IRichPixelCreator,
@@ -127,13 +123,15 @@ private: // data
   /// Flag to signify all pixels have been formed
   mutable bool m_allDone;
 
-  /// Pointer to pixel map
-  mutable std::map< RichSmartID::KeyType, RichRecPixel* > m_pixelExists;
-  mutable std::map< RichSmartID::KeyType, bool > m_pixelDone;
+  /// Map of existing pixels
+  mutable RichMap< RichSmartID::KeyType, RichRecPixel* > m_pixelExists;
+
+  /// map to indicate pixels that have been considered
+  mutable RichMap< RichSmartID::KeyType, bool > m_pixelDone;
 
   /// Stack of RichSmartIDS for a single MCParticle for use as track background
-  typedef std::map<const MCParticle*, std::vector<RichSmartID> > BgTrackStack;
-  mutable std::map<Rich::DetectorType, BgTrackStack> m_digitsForTrackBg;
+  typedef RichMap<const MCParticle*, std::vector<RichSmartID> > BgTrackStack;
+  mutable RichMap<Rich::DetectorType, BgTrackStack> m_digitsForTrackBg;
 
   /// Number of background tracks to add to each event
   std::vector<size_t> m_numBgTracksToAdd;
@@ -145,11 +143,10 @@ private: // data
 
 inline void RichPixelCreatorFromRichDigitsWithBg::InitNewEvent()
 {
-  // Initialise navigation data
   m_allDone = false;
   m_pixelExists.clear();
   m_pixelDone.clear();
   m_pixels = 0;
 }
 
-#endif // RICHRECTOOLS_RICHPIXELCREATORFROMRICHDIGITS_H
+#endif // RICHRECMCTOOLS_RICHPIXELCREATORFROMRICHDIGITSWITHBG_H
