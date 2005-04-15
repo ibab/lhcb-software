@@ -1,14 +1,16 @@
 
+//-----------------------------------------------------------------------------
 /** @file RichPIDQC.h
  *
  *  Header file for RICH reconstruction monitoring algorithm : RichPIDQC
  *
  *  CVS Log :-
- *  $Id: RichPIDQC.h,v 1.19 2005-01-26 10:14:10 jonrob Exp $
+ *  $Id: RichPIDQC.h,v 1.20 2005-04-15 16:33:32 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   2002-06-13
  */
+//-----------------------------------------------------------------------------
 
 #ifndef RICHRECQC_RICHPIDQC_H
 #define RICHRECQC_RICHPIDQC_H 1
@@ -17,6 +19,7 @@
 #include "RichKernel/RichAlgBase.h"
 
 // from Gaudi
+#include "GaudiKernel/AlgFactory.h"
 #include "GaudiKernel/SmartDataPtr.h"
 #include "GaudiKernel/IParticlePropertySvc.h"
 #include "GaudiKernel/ParticleProperty.h"
@@ -52,6 +55,7 @@
 // Boost
 #include "boost/lexical_cast.hpp"
 
+//-----------------------------------------------------------------------------
 /** @class RichPIDQC RichPIDQC.h
  *
  *  Quality control monitor for RichPIDs
@@ -61,6 +65,7 @@
  *
  *  @todo Review and perhaps rewrite this monitor... Its getting a little messy.
  */
+//-----------------------------------------------------------------------------
 
 class RichPIDQC : public RichAlgBase {
 
@@ -99,18 +104,25 @@ private: // methods
                                  const double zPos = -999999  ///< z position at which to get the state
                                  ) const;
 
-  void countTrStoredTracks();
+  /// Count all TrStoredTracks in given location passing the selection criteria
+  void countTrStoredTracks( const std::string & location );
 
-  void countTrgTracks();
+  /// Count all TrgTracks in given location passing the selection criteria
+  void countTrgTracks( const std::string & location );
 
+  /// Does this RichPID object pass the selection criteria
   bool pidIsSelected( const RichPID * pid ) const;
 
+  /// Get the momentum for the track associated to the PID object
   double momentum( const RichPID * pid ) const;
 
+  /// Get the track type associated to the PID object
   Rich::Track::Type trackType( const RichPID * pid ) const;
 
+  /// Get the MC type for the track associated to the PID object
   Rich::ParticleIDType trueMCType( const RichPID * pid ) const;
 
+  /// Get the associated track key
   int tkNumber( const RichPID * pid ) const;
 
 private: // data
@@ -122,7 +134,6 @@ private: // data
   std::string m_mcHstPth;        ///< Output MC truth histogram path
   std::string m_hstPth;          ///< Output histogram path
   std::string m_pidTDS;          ///< Location of target RichPIDs in TDS
-  std::string m_trackTDS;        ///< location of tracks in TDS
   double m_pMinCut;              ///< minimum momentum cut
   double m_pMaxCut;              ///< maximum momentum cut
   int m_minMultCut;              ///< Minimum track multiplicity
