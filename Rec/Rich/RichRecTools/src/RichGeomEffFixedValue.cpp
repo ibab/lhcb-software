@@ -5,7 +5,7 @@
  *  Implementation file for tool : RichGeomEffFixedValue
  *
  *  CVS Log :-
- *  $Id: RichGeomEffFixedValue.cpp,v 1.8 2005-02-02 10:06:31 jonrob Exp $
+ *  $Id: RichGeomEffFixedValue.cpp,v 1.9 2005-04-15 16:36:33 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -28,15 +28,17 @@ const        IToolFactory& RichGeomEffFixedValueFactory = s_factory ;
 RichGeomEffFixedValue::RichGeomEffFixedValue ( const std::string& type,
                                                const std::string& name,
                                                const IInterface* parent )
-  : RichRecToolBase ( type, name, parent ),
-    m_ckAngle       ( 0 )
+  : RichRecToolBase  ( type, name, parent ),
+    m_ckAngle        ( 0 ),
+    m_geomTool       ( 0 ),
+    m_fixedValue     ( Rich::NRadiatorTypes, 0.7 ),
+    m_fixedScatValue ( 0.7 )
 {
 
+  // interface
   declareInterface<IRichGeomEff>(this);
 
-  m_fixedValue.push_back( 0.73 ); // aerogel
-  m_fixedValue.push_back( 0.73 ); // c4f10
-  m_fixedValue.push_back( 0.73 ); // cf4
+  // job options
   declareProperty( "FixedSignalEfficiency",  m_fixedValue            );
   declareProperty( "FixedScatterEfficiency", m_fixedScatValue = 0.73 );
 

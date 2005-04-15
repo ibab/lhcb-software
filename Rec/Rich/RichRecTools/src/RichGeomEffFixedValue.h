@@ -5,7 +5,7 @@
  *  Header file for tool : RichGeomEffFixedValue
  *
  *  CVS Log :-
- *  $Id: RichGeomEffFixedValue.h,v 1.5 2005-02-02 10:06:31 jonrob Exp $
+ *  $Id: RichGeomEffFixedValue.h,v 1.6 2005-04-15 16:36:33 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -76,7 +76,7 @@ private: // Private data
   IRichRecGeomTool * m_geomTool;     ///< Pointer to the Geometry tool
 
   std::vector<double> m_fixedValue;  ///< vector of fixed radiator geometrical efficiencies
-  double m_fixedScatValue;           ///< Scatter efficiency
+  double m_fixedScatValue;           ///< vector of fixed radiator geometrical scatter efficiency
 
 };
 
