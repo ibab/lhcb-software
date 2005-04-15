@@ -1,18 +1,16 @@
 
+//-----------------------------------------------------------------------------
 /** @file RichMassHypothesisRingCreator.cpp
  *
  *  Implementation file for tool : RichMassHypothesisRingCreator
  *
  *  CVS Log :-
- *  $Id: RichMassHypothesisRingCreator.cpp,v 1.7 2004-10-13 09:52:41 jonrob Exp $
- *  $Log: not supported by cvs2svn $
- *  Revision 1.6  2004/07/27 20:15:30  jonrob
- *  Add doxygen file documentation and CVS information
- *
+ *  $Id: RichMassHypothesisRingCreator.cpp,v 1.8 2005-04-15 16:37:27 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
  */
+//-----------------------------------------------------------------------------
 
 // local
 #include "RichMassHypothesisRingCreator.h"
@@ -55,7 +53,7 @@ StatusCode RichMassHypothesisRingCreator::initialize()
   // Make sure we are ready for a new event
   InitNewEvent();
 
-  return StatusCode::SUCCESS;
+  return sc;
 }
 
 StatusCode RichMassHypothesisRingCreator::finalize()
