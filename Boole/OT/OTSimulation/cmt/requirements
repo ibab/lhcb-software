@@ -1,13 +1,13 @@
-# $Id: requirements,v 1.6 2005-01-14 13:51:31 cattanem Exp $
+# $Id: requirements,v 1.7 2005-04-15 06:37:33 cattanem Exp $
 package OTSimulation
 
-version v1r3
+version v1r4
 
 branches OTSimulation cmt doc src options
 
 include_dirs $(OTSIMULATIONROOT)
 
-use OTDAQ         v3r*  OT
+use OTDAQ v*  OT
 
 # ================= component library ====================
 library OTSimulation ../src/*.cpp

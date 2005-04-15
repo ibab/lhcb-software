@@ -1,6 +1,10 @@
-! $Id: release.notes,v 1.9 2005-01-18 12:36:34 cattanem Exp $
+! $Id: release.notes,v 1.10 2005-04-15 06:37:33 cattanem Exp $
 Package         : OTSimulation
 Package manager : Jacopo Nardulli
+
+!==================== OTSimulation v1r4 2005-04-15 ======================
+! 2005-04-15 - Marco Cattaneo
+ - OTSimulation: fix memory leak and do big code cleanup
 
 !==================== OTSimulation v1r3 2005-01-14 ======================
 ! 2005-01-18 - Marco Cattaneo
