@@ -371,7 +371,7 @@ std::vector<L0MTile> L0Muon::L0mProcUnit::l0bufferTileList(L0MPuNodeBase & puNod
   } // End of Loop over functions
     // Complete the L0Buffer vector of tiles
   if (l0mtilelist.size()<512) {
-    std::vector<L0MTile> emptyList(512-l0mtilelist.size());
+    std::vector<L0MTile> emptyList(512-l0mtilelist.size(),empty_tile);
     l0mtilelist.insert(l0mtilelist.end(), emptyList.begin(), emptyList.end());
   }
   return l0mtilelist;
