@@ -37,13 +37,6 @@ namespace L0Muon {
     /** Constructor
 
     @param pProNet   :  processor network from the configuration files
-    @param ptpara    :  geometrical parameters for calculating pT
-    @param ignoreM1  :  flag for searching candidates without M1
-    @param foix      :  field of interest in the x direction 
-    @param foiy      :  field of interest in the y direction 
-    @param precision :  precision for calculating pT
-    @param bits      :  number of bits for codifying pT
-    @param writeL0Buffer         :  flag for writing L0Buffers on files
     @param config_pus         :  vector of PU's to be used
     */
     CrateUnit(PL0MProNet & pProNet, 
@@ -97,9 +90,12 @@ namespace L0Muon {
     /// Give a static type name to the unit
     std::string type() {
       return "CrateUnit";
-    }         
+    }
 
-    /// Set the FOIs
+    /* Set the FOIs
+     * @param foix      :  field of interest in the x direction 
+     * @param foiy      :  field of interest in the y direction 
+     */
     void setFois(std::vector<int> & foix, std::vector<int> & foiy){m_xfoi= foix;m_yfoi= foiy;}
 
     /// Return x foi in station sta
@@ -109,11 +105,18 @@ namespace L0Muon {
     int yFoi(int sta);
     
     /// Return the flag for searching candidates without M1 
-    bool ignoreM1(){ return m_ignoreM1;}
+    bool ignoreM1(){ return m_ignoreM1;} 
+    /* Set the flag for searching candidates without M1 
+     * @param ignoreM1  :  flag for searching candidates without M1
+     */
     void setIgnoreM1(bool & ignoreM1){m_ignoreM1=ignoreM1;}
  
-   /// Return parameters for calculating pT
+    /// Return parameters for calculating pT
     std::vector<double> ptParameters(){ return m_ptparameters;}
+
+    /* Set parameters for calculating pT
+     * @param ptpara    :  geometrical parameters for calculating pT
+     */
     void setPtParameters(std::vector<double> & ptpara){m_ptparameters=ptpara;}
 
     
@@ -137,10 +140,9 @@ namespace L0Muon {
   class ComparePt {
   public:
 
-    /** @class 
-	Class to  compaire two pts and to choice 
-	the candidates with the highest one
-    */
+    /** @class L0Muon::ComparePt CrateUnit.h L0MuonKernel/CrateUnit.h
+     * Class to compare two pts and to choose the candidates with the highest one
+     */
 
     int operator() (PCandidate lmc1,PCandidate lmc2) {
       return fabs(lmc1->pt()) > fabs(lmc2->pt());

@@ -1,7 +1,7 @@
 #ifndef L0MUONKERNEL_BUILDL0BUFFERUNIT_H
 #define L0MUONKERNEL_BUILDL0BUFFERUNIT_H 
 
-/** @class L0Buffer L0Buffer.h  L0MuonKernel/BuildL0Buffer.h
+/** @class BuildL0BufferUnit BuildL0BufferUnit.h  L0MuonKernel/BuildL0BufferUnit.h
  
   class for constructing the L0Buffer 
   It is a register containing the field: 

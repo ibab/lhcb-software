@@ -1,4 +1,4 @@
-// $Id: Tower.h,v 1.10 2005-04-04 07:58:43 atsareg Exp $
+// $Id: Tower.h,v 1.11 2005-04-15 16:14:31 cattanem Exp $
 
 #ifndef PROCESSORKERNEL_TOWER_H
 #define PROCESSORKERNEL_TOWER_H     1
@@ -48,7 +48,6 @@ namespace L0Muon {
         @param sta : station 
         @param row : row in the tower 
         @param col : column in the tower
-        @param log : MSG::DEBUG
     */
     void setBit(int sta, int row, int col);  
  
@@ -93,10 +92,11 @@ namespace L0Muon {
     */
     int maxYFoi(int sta){ return m_maxYFoI[sta] ; }
 
-    /** Set foi (x direction) for searching candidates
+    /** Set foi for searching candidates
  
         @param sta  : station 
-        @param xfoi : foi value
+        @param xfoi : foi x value
+        @param yfoi : foi y value
     */ 
     void setFoi(int sta, int xfoi, int yfoi) {
       m_xfoi[sta] = xfoi ;
@@ -121,7 +121,6 @@ namespace L0Muon {
     /** Search candidates
         
         @param puID  : MuonTileID of the PU 
-        @param log   : MSG::DEBUG  
      */
     void processTower(MuonTileID & puID);
 

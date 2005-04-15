@@ -1,4 +1,4 @@
-// $Id: L0mProcUnit.h,v 1.8 2005-04-04 07:58:43 atsareg Exp $
+// $Id: L0mProcUnit.h,v 1.9 2005-04-15 16:14:31 cattanem Exp $
 
 #ifndef L0MUONKERNEL_L0MPROCUNIT_H
 #define L0MUONKERNEL_L0MPROCUNIT_H     1
@@ -32,7 +32,7 @@ namespace L0Muon {
 
     /** Constructor
 
-    @param pProNet   :  data flow from L0mConf
+    @param puNode   :  data flow from L0mConf
     */
     L0mProcUnit(L0MPuNodeBase& puNode);
 

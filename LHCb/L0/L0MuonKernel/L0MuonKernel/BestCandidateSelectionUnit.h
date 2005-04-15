@@ -1,7 +1,7 @@
 #ifndef L0MUONKERNEL_BESTCANDIDATESELECTIONUNIT_H
 #define L0MUONKERNEL_BESTCANDIDATESELECTIONUNIT_H     1
 
-/* class BestCandidateSelectionUnit L0MuonKernel/BestCandidateSelectionUnit
+/** @class BestCandidateSelectionUnit BestCandidateSelectionUnit.h L0MuonKernel/BestCandidateSelectionUnit.h
  
    Class representing a BCSU of the hardware processor.
    It receive two candidates from each PU in the board 
@@ -24,11 +24,7 @@ namespace L0Muon {
 
   public:
 
-    /** Constructor 
-        
-        @param writeL0Buffer : flag for writing L0Buffer on file
-
-    */
+    /// Constructor 
     BestCandidateSelectionUnit(MuonTileID puid);
 
     /// Destructor

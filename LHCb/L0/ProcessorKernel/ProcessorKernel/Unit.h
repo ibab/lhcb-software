@@ -1,4 +1,4 @@
-// $Id: Unit.h,v 1.2 2005-03-31 16:04:56 jucogan Exp $
+// $Id: Unit.h,v 1.3 2005-04-15 16:15:07 cattanem Exp $
 
 #ifndef PROCESSORKERNEL_UNIT_H
 #define PROCESSORKERNEL_UNIT_H     1
@@ -54,6 +54,7 @@ public:
 
   /** Add input register
 
+      @param in      : pointer to the input register
       @param rname   : name of the input register
   */
   virtual void addInputRegister(L0Muon::Register* in, std::string rname);
@@ -63,6 +64,7 @@ public:
 
   /** Add output register
 
+      @param out     : pointer to the output register
       @param rname   : name of the output register
   */
   virtual void addOutputRegister(L0Muon::Register* out, std::string rname);
@@ -72,6 +74,7 @@ public:
 
   /** Add sununit
 
+      @param unit    : pointer to the subuni
       @param uname   : name of the subunit
   */
   void addUnit(L0Muon::Unit* unit, std::string uname);
