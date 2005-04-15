@@ -45,29 +45,34 @@
         name    = 'measurement'
         setMeth = 'FALSE'
         getMeth = 'FALSE'
-        desc    = 'pointer to the measurement' />
+        desc    = 'pointer to the measurement'
+        access  = 'PROTECTED' />
 
       <attribute
         type    = 'State*'
         name    = 'state'
         setMeth = 'FALSE'
         getMeth = 'FALSE'
-        desc    = 'pointer to the state' />
+        desc    = 'pointer to the state'
+        access  = 'PROTECTED' />
 
       <attribute
         type    = 'double'
         name    = 'residual'
-        desc    = 'the residual value' />
+        desc    = 'the residual value'
+        access  = 'PROTECTED' />
 
       <attribute
         type    = 'double'
         name    = 'errResidual'
-        desc    = 'the residual error' />
+        desc    = 'the residual error'
+        access  = 'PROTECTED' />
 
       <attribute
         type    = 'HepMatrix'
         name    = 'projectionMatrix'
-        desc    = 'the projection matrix' />
+        desc    = 'the projection matrix'
+        access  = 'PROTECTED' />
 
       <destructor
         desc    = 'specific destructor'>

@@ -4,6 +4,9 @@
 ! Purpose     : Package for the tracking event model classes
 !-----------------------------------------------------------------------------
 
+! 2005-04-15 - Eduardo Rodrigues
+ - attributes in Node made protected (for inheritance)
+
 ! 2005-04-13 - Jose A. Hernando
  - incorporating 'keys' for Tracks (Event/TrackKeys.h and src/TrackKeys.cpp)	
  - keys are static vectors of strings that substitutes the enums in Track.h
