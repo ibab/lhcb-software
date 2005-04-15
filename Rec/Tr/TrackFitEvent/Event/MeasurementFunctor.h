@@ -5,7 +5,7 @@
 // -------------
 #include <functional>
 #include "Event/Measurement.h"
-#include "Event/FitTrack.h"
+#include "Event/Track.h"
 
 /** @namespace MeasurementFunctor
  *
@@ -111,12 +111,12 @@ namespace MeasurementFunctor
 //=============================================================================
 // Predicate returning if Measurement is on a Track
 //=============================================================================
-//  // Temp direct use of concrete class FitTrack because of time shortage
+//  // Temp direct use of concrete class Track because of time shortage
 //  class hasOnTrack: public std::unary_function<Measurement*, bool> {
 //    private:
-//      const FitTrack* m_track;
+//      const Track* m_track;
 //    public:
-//      explicit hasOnTrack( const FitTrack* track ):m_track(track) {}
+//      explicit hasOnTrack( const Track* track ):m_track(track) {}
 
 //      bool operator()( const Measurement* meas ) const {
 //        return m_track -> hasOn( meas );
@@ -126,13 +126,13 @@ namespace MeasurementFunctor
 //=============================================================================
 // Predicate returning if Measurement is on a Track
 //=============================================================================
-//  // Temp direct use of concrete class FitTrack because of time shortage
+//  // Temp direct use of concrete class Track because of time shortage
 //  class hasOnTrackOfType: public std::unary_function<Measurement*, bool> {
 //    private:
-//      const FitTrack* m_track;
+//      const Track* m_track;
 //      Measurement::Type m_measType;
 //    public:
-//      explicit hasOnTrackOfType( const FitTrack* track,
+//      explicit hasOnTrackOfType( const Track* track,
 //                                 Measurement::Type measType ):
 //        m_track(track),
 //        m_measType(measType) {}

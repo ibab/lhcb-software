@@ -6,6 +6,7 @@
 
 ! 2005-04-15 - Eduardo Rodrigues
  - FitNode class added (adaptation of TrNode in TrFitter)
+ - MeasurementFunctor adapted to use Track and not FitTrack
 
 ! 2005-04-13 - Jose A Hernando
  - MeasurementProvider.h/cpp working in a tool that create Measurements from LHCbID (tentative)
