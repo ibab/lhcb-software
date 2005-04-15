@@ -3,7 +3,7 @@
 <gdd>
 
 <!-- **************************************************************************
-  * $Id: RichSmartID.xml,v 1.17 2005-02-22 13:48:04 jonrob Exp $
+  * $Id: RichSmartID.xml,v 1.18 2005-04-15 13:57:51 jonrob Exp $
   *****************************************************************************
   * XML-description of RichSmartID class                                      *
   * author: Chris Jones   Christopher.Rob.Jones@cern.ch                       *
@@ -131,7 +131,7 @@
             name   = "setData"
             access = "PRIVATE" 
             desc   = "Set the given data into the given field"  
-            type   = "bool" >
+            type   = "void" >
             <arg 
                 const = "TRUE" 
                 name  = "value"
@@ -150,7 +150,6 @@
                 type  = "long" />
             <code>
               setKey( ((value &lt;&lt; shift) &amp; mask) | (m_key &amp; ~mask) | okMask );
-              return true;
             </code>
         </method>
 
@@ -159,7 +158,7 @@
             access = "PRIVATE" 
             const  = "TRUE" 
             desc   = "Checks if a data value is within range for a given field" 
-            type   = "bool" >
+            type   = "void" >
             <arg 
                 const = "TRUE" 
                 name  = "value" 
@@ -176,7 +175,6 @@
             <code>
               const bool ok = ( value &lt; (1&lt;&lt;shift) );
               if (!ok) rangeError( value, (1&lt;&lt;shift)-1, message );
-              return ok;
             </code>
         </method>
 
@@ -226,98 +224,112 @@
         <method 
             name = "setRich" 
             desc = "Set the RICH detector identifier" 
-            type = "bool" >
+            type = "void" >
             <arg 
                 const = "TRUE" 
                 name  = "rich" 
                 type  = "int"  />
             <code>
-              return ( checkRange(rich,subPixelIsSetBits-richBits,"RICH") ?
-                       setData( rich, richBits, richMask, richIsSetMask ) : false );
+#ifdef RICHDEBUG
+              checkRange(rich,subPixelIsSetBits-richBits,"RICH");
+#endif
+              setData( rich, richBits, richMask, richIsSetMask );
             </code>
         </method>
 
         <method 
             name = "setPanel"
             desc = "Set the RICH detector panel identifier"  
-            type = "bool">
+            type = "void">
             <arg 
                 const = "TRUE" 
                 name  = "panel" 
                 type  = "int"  />
             <code>
-              return ( checkRange(panel,richBits-panelBits,"Panel") ?
-                       setData( panel, panelBits, panelMask, panelIsSetMask ) : false );
+#ifdef RICHDEBUG
+              checkRange(panel,richBits-panelBits,"Panel");
+#endif
+              setData( panel, panelBits, panelMask, panelIsSetMask );
             </code>
         </method>
 
         <method 
             name = "setPDCol" 
             desc = "Set the RICH photon detector column identifier" 
-            type = "bool">
+            type = "void">
             <arg 
                 const = "TRUE" 
                 name  = "col" 
                 type  = "int"  />
             <code>
-               return ( checkRange(col,panelBits-PDColBits,"PDColumn") ?
-                        setData( col, PDColBits, PDColMask, PDColIsSetMask ) : false );
+#ifdef RICHDEBUG
+               checkRange(col,panelBits-PDColBits,"PDColumn");
+#endif
+               setData( col, PDColBits, PDColMask, PDColIsSetMask );
             </code>
         </method>
 
         <method 
             name = "setPDRow" 
             desc = "Set the RICH photon detector row identifier" 
-            type = "bool">
+            type = "void">
             <arg 
                 const = "TRUE" 
                 name  = "row" 
                 type  = "int"  />
             <code>
-               return ( checkRange(row,PDColBits-PDRowBits,"PDRow") ?
-                        setData( row, PDRowBits, PDRowMask, PDRowIsSetMask ) : false );
+#ifdef RICHDEBUG
+               checkRange(row,PDColBits-PDRowBits,"PDRow");
+#endif
+               setData( row, PDRowBits, PDRowMask, PDRowIsSetMask );
             </code>
         </method>
 
         <method 
             name = "setPixelCol"
             desc = "Set the RICH photon detector pixel column identifier"  
-            type = "bool">
+            type = "void">
             <arg 
                 const = "TRUE" 
                 name  = "col" 
                 type  = "int"  />
             <code>
-               return ( checkRange(col,PDRowBits-pixelColBits,"PixelColumn") ?
-                        setData( col, pixelColBits, pixelColMask, pixelColIsSetMask ) : false );
+#ifdef RICHDEBUG
+               checkRange(col,PDRowBits-pixelColBits,"PixelColumn");
+#endif
+               setData( col, pixelColBits, pixelColMask, pixelColIsSetMask );
             </code>
         </method>
 
         <method 
             name = "setPixelRow"
             desc = "Set the RICH photon detector pixel row identifier"  
-            type = "bool">
+            type = "void">
             <arg 
                 const = "TRUE" 
                 name  = "row" 
                 type  = "int"  />
             <code>
-               return ( checkRange(row,pixelColBits-pixelRowBits,"PixelRow") ?
-                        setData( row, pixelRowBits, pixelRowMask, pixelRowIsSetMask ) : false );
+#ifdef RICHDEBUG
+               checkRange(row,pixelColBits-pixelRowBits,"PixelRow");
+#endif
+               setData( row, pixelRowBits, pixelRowMask, pixelRowIsSetMask );
             </code>
         </method>
 
         <method 
             name = "setSubPixel"
             desc = "Set the RICH photon detector sub-pixel identifier"  
-            type = "bool">
+            type = "void">
             <arg 
                 const = "TRUE" 
                 name  = "subpixel" 
                 type  = "int"  />
             <code>
-               return ( checkRange(subpixel,pixelRowBits-subPixelBits,"SubPixel") ?
-                        setData( subpixel, subPixelBits, subPixelMask, subPixelIsSetMask ) : false );
+#ifdef RICHDEBUG
+               checkRange(subpixel,pixelRowBits-subPixelBits,"SubPixel");
+#endif
+               setData( subpixel, subPixelBits, subPixelMask, subPixelIsSetMask );
             </code>
         </method>
 

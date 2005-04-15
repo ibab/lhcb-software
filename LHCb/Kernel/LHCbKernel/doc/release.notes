@@ -2,6 +2,11 @@ Package LHCbKernel
 Package manager: M.Cattaneo
 Purpose: LHCb specific Kernel classes
 
+! 2005-04-15 - Chris Jones
+ - Add preprocessor directives so that valdity checks in RichSmartID
+   are only applied to CMTDEB libraries. Speeds things up particulary for
+   the RICH HLT processing.
+
 ! 2005-04-08 - Jose Hernando
  - LHCbID class revisited:
 		. using 26 bits for ST, 2 bits used for size 

@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.71 2005-04-07 14:56:45 cattanem Exp $
+# $Id: requirements,v 1.72 2005-04-15 13:57:50 jonrob Exp $
 # =============================================================================
 package LHCbKernel
 author  M.Frank    CERN/LHCb
@@ -29,6 +29,10 @@ macro_append LHCbKernel_lcgdict_options \
 #============================================================================
 library LHCbKernel     *.cpp
 library LHCbKernelDict ../dict/*.cpp ../$(tag)/dict/LHCbKernel/*.cpp
+
+# Debug flag for RichSmartID
+macro_append LHCbKernel_cppflags "" \
+                   Linux&debug " -DRICHDEBUG "
         
 # Standard patterns (order is essential)
 #============================================================================
