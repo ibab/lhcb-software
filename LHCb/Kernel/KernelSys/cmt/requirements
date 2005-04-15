@@ -12,4 +12,4 @@ use RichKernel       v5r4   Rich
 use VeloKernel	     v1r5p1 Velo   -no_auto_imports
 use L0mConf          v2r2p4 L0
 use L0MuonKernel     v3r0p1 L0
-use ProcessorKernel  v1r0   L0
+use ProcessorKernel  v1r0p1 L0
