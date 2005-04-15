@@ -50,9 +50,14 @@
 // photons using MC information
 //#include "$RICHRECSYSOPTS/tools/RichPhotonsFromCheatedReco.opts"
 
+// Photon reconstruction using MC information for true cherenkov photons and reconstructed 
+// information for fake associations
+//#include "$RICHRECSYSOPTS/tools/RichPhotonsWithSignalMC.opts"
+
 // Photon reconstruction that uses only true Cherenkov information from the MCRichOpticalPhotons
 // I.e cheat the emission, detection and mirror reflection points, and the cherenkov angles
 //#include "$RICHRECSYSOPTS/tools/RichPhotonsFromMCRichOpticalPhotons.opts"
+
 
 // =================================== Miscellaneous ===========================================
 
