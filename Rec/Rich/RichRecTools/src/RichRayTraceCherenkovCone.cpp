@@ -5,7 +5,7 @@
  *  Implementation file for tool : RichRayTraceCherenkovCone
  *
  *  CVS Log :-
- *  $Id: RichRayTraceCherenkovCone.cpp,v 1.8 2005-02-02 10:08:59 jonrob Exp $
+ *  $Id: RichRayTraceCherenkovCone.cpp,v 1.9 2005-04-15 16:38:28 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -137,9 +137,7 @@ RichRayTraceCherenkovCone::rayTrace ( const Rich::DetectorType rich,
 
     // Define rotation matrix
     const HepVector3D z = direction.unit();
-    HepVector3D y = ( fabs( z * HepVector3D(1.,0.,0.) ) < 1. ?
-                      z.cross( HepVector3D(0.,1.,0.) ) :
-                      z.cross( HepVector3D(1.,0.,0.) ) );
+    HepVector3D y = z.cross( HepVector3D(0.,1.,0.) );
     y.setMag(1);
     const HepVector3D x = y.cross(z);
     HepRotation rotation = HepRotation();

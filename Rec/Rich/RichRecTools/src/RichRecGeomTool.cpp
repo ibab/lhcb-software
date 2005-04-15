@@ -5,7 +5,7 @@
  *  Implementation file for tool : RichRecGeomTool
  *
  *  CVS Log :-
- *  $Id: RichRecGeomTool.cpp,v 1.3 2005-02-02 10:09:29 jonrob Exp $
+ *  $Id: RichRecGeomTool.cpp,v 1.4 2005-04-15 16:39:40 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -91,30 +91,36 @@ double RichRecGeomTool::trackPixelHitSep2Local( const RichRecSegment * segment,
                                                 const RichRecPixel * pixel ) const
 {
 
-  //return segment->pdPanelHitPointLocal().distance2( pixel->localPosition() );
+  if ( Rich::Rich1 == segment->trackSegment().rich() ) 
+  {
 
-  if ( Rich::Rich1 == segment->trackSegment().rich() ) {
-
-    if ( pixel->localPosition().y() * segment->pdPanelHitPointLocal().y() > 0 ) {
+    if ( pixel->localPosition().y() * segment->pdPanelHitPointLocal().y() > 0 ) 
+    {
       return pixel->localPosition().distance2( segment->pdPanelHitPointLocal() );
-    } else if ( ( pixel->localPosition().y() > 0 && segment->photonsInYPlus() ) ||
-                ( pixel->localPosition().y() < 0 && segment->photonsInYMinus() ) ) {
+    } 
+    else if ( ( pixel->localPosition().y() > 0 && segment->photonsInYPlus() ) ||
+              ( pixel->localPosition().y() < 0 && segment->photonsInYMinus() ) ) 
+    {
       return segment->pdPanelHitPointLocal().distance2( HepPoint3D( pixel->localPosition().x(),
                                                                     -pixel->localPosition().y(),
                                                                     pixel->localPosition().z() ) );
     }
 
-  } else if ( Rich::Rich2 == segment->trackSegment().rich() ) {
+  } 
+  else // RICH 2
+  {
 
-    if ( pixel->localPosition().x() * segment->pdPanelHitPointLocal().x() > 0 ) {
+    if ( pixel->localPosition().x() * segment->pdPanelHitPointLocal().x() > 0 ) 
+    {
       return pixel->localPosition().distance2( segment->pdPanelHitPointLocal() );
-    } else if ( ( pixel->localPosition().x() > 0 && segment->photonsInXPlus()  ) ||
-                ( pixel->localPosition().x() < 0 && segment->photonsInXMinus() ) ) {
+    } 
+    else if ( ( pixel->localPosition().x() > 0 && segment->photonsInXPlus()  ) ||
+              ( pixel->localPosition().x() < 0 && segment->photonsInXMinus() ) ) 
+    {
       return segment->pdPanelHitPointLocal().distance2( HepPoint3D( -pixel->localPosition().x(),
                                                                     pixel->localPosition().y(),
                                                                     pixel->localPosition().z() ) );
     }
-
   }
 
   return 99999999.9;
@@ -134,47 +140,57 @@ double RichRecGeomTool::hpdPanelAcceptance( RichRecSegment * segment,
   // Cherenkov angle for this mass hypothsis
   const double ckTheta = m_ckAngle->avgCherenkovTheta(segment,id);
 
-  if ( ckTheta > 0 ) {  // only for tracks above threshold
+  if ( ckTheta > 0 )   // only for tracks above threshold
+  {
+    acc = 1;
 
     // radius of ring for given hypothesis
     const double rSig = m_ckAngle->avCKRingRadiusLocal(segment,id);
 
-    // which radiator
-    const Rich::RadiatorType iRad = segment->trackSegment().radiator();
-
     // Track impact point on HPD panel
     const HepPoint3D & tkPoint = segment->pdPanelHitPointLocal();
 
-    acc = 1;
-
-    // Simple (too simple?) acceptance calculation
-    if ( iRad == Rich::C4F10 )  // RICH-1 gas
+    // Simple acceptance calculation
+    if ( Rich::C4F10 == segment->trackSegment().radiator() )
     {
       // Account for rings that are close to the edges of the detector plane
-      if ( fabs(tkPoint.y()) < yMin1-rSig ) {
+      if ( fabs(tkPoint.y()) < yMin1-rSig ) 
+      {
         acc = 0.;
-      } else {
+      } 
+      else 
+      {
         if ( fabs(tkPoint.y()-yMin1) < rSig ) acc *= acos( -(tkPoint.y()-yMin1)/rSig )/M_PI;
         if ( fabs(tkPoint.y()+yMin1) < rSig ) acc *= acos( (tkPoint.y()+yMin1)/rSig  )/M_PI;
       }
-    } else if ( iRad == Rich::CF4 ) // RICH-2 gas
+    } 
+    else if ( Rich::CF4 == segment->trackSegment().radiator() )
     {
       if ( fabs(tkPoint.x()) > xMin2+rSig ||
-           fabs(tkPoint.y()) > yMin2+rSig ) {
+           fabs(tkPoint.y()) > yMin2+rSig ) 
+      {
         acc = 0.;
-      } else {
+      } 
+      else 
+      {
         if ( fabs(tkPoint.x())       < rSig ) acc *= acos(  -fabs(tkPoint.x())/rSig  )/M_PI;
         if ( fabs(tkPoint.x()-xMin2) < rSig ) acc *= acos(  (tkPoint.x()-xMin2)/rSig )/M_PI;
         if ( fabs(tkPoint.x()+xMin2) < rSig ) acc *= acos( -(tkPoint.x()+xMin2)/rSig )/M_PI;
         if ( fabs(tkPoint.y()-yMin2) < rSig ) acc *= acos(  (tkPoint.y()-yMin2)/rSig )/M_PI;
         if ( fabs(tkPoint.y()+yMin2) < rSig ) acc *= acos( -(tkPoint.y()+yMin2)/rSig )/M_PI;
       }
-    } else if ( iRad == Rich::Aerogel ) // Aerogel
+    }
+    else if ( Rich::Aerogel == segment->trackSegment().radiator() )
     {
-      // nothing here yet....
+
+
     }
 
-    //info() << "Segment " << segment->key() << " " << iRad << " " << id << " " << acc << endreq;
+    if ( msgLevel(MSG::DEBUG) )
+    {
+      debug() << "Segment " << segment->key() << " " << segment->trackSegment().radiator() 
+              << " " << id << " " << acc << endreq;
+    }
 
   }
 
