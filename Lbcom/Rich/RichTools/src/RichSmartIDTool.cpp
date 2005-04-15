@@ -5,7 +5,7 @@
  * Implementation file for class : RichSmartIDTool
  *
  * CVS Log :-
- * $Id: RichSmartIDTool.cpp,v 1.12 2005-03-02 14:57:26 jonrob Exp $
+ * $Id: RichSmartIDTool.cpp,v 1.13 2005-04-15 16:41:27 jonrob Exp $
  *
  * @author Antonis Papanestis
  * @date 2003-10-28
@@ -244,6 +244,7 @@ const RichSmartID::Collection & RichSmartIDTool::readoutChannelList( ) const
     info() << "Created active HPD channel list : # channels RICH(1/2) = "
            << nRich1 << " / " << nRich2 << endreq;
 
+    /*
     if ( msgLevel(MSG::VERBOSE) )
     {
       for ( RichSmartID::Collection::const_iterator iID = m_readoutChannels.begin();
@@ -255,6 +256,7 @@ const RichSmartID::Collection & RichSmartIDTool::readoutChannelList( ) const
                   << "     -> local Position  : " << globalToPDPanel(gPos) << endreq;
       }
     }
+    */
 
   } // end fill smartID vector
 
