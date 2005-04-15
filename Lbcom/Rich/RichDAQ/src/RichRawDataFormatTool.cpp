@@ -5,7 +5,7 @@
  *  Implementation file for class : RichRawDataFormatTool
  *
  *  CVS Log :-
- *  $Id: RichRawDataFormatTool.cpp,v 1.12 2005-04-15 16:22:46 jonrob Exp $
+ *  $Id: RichRawDataFormatTool.cpp,v 1.13 2005-04-15 22:06:06 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date 2004-12-18
@@ -149,6 +149,10 @@ RichRawDataFormatTool::createDataBank( const RichSmartID::Collection & smartIDs,
                                        const RichDAQ::BankVersion version ) const
 {
 
+  // flag the tool as having been used this event
+  m_hasBeenCalled = true;
+
+  // pointer to HPD data block
   RichHPDDataBank * dataBank = 0;
 
   // Check bank is not empty
@@ -438,6 +442,9 @@ void RichRawDataFormatTool::decodeToSmartIDs( const RawBank & bank,
     Exception( "RICH Bank size is less than 2 !" );
   }
 
+  // flag the tool as having been used this event
+  m_hasBeenCalled = true;
+
   // Get bank version and ID
   const RichDAQ::Level1ID L1ID       = static_cast< RichDAQ::Level1ID >    ( bank.bankSourceID() );
   const RichDAQ::BankVersion version = static_cast< RichDAQ::BankVersion > ( bank.version()      );
@@ -571,9 +578,6 @@ void RichRawDataFormatTool::decodeToSmartIDs( const RawBank & bank,
 void
 RichRawDataFormatTool::decodeToSmartIDs( RichSmartID::Collection & smartIDs ) const
 {
-
-  // flag the tool as having been used this event
-  m_hasBeenCalled = true;
 
   // Get the banks for the Rich
   const RichDAQ::RAWBanks & richBanks = rawEvent()->banks( RawBuffer::Rich );
