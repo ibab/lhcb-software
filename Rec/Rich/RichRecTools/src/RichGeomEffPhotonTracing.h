@@ -5,7 +5,7 @@
  *  Header file for tool : RichGeomEffPhotonTracing
  *
  *  CVS Log :-
- *  $Id: RichGeomEffPhotonTracing.h,v 1.8 2005-04-08 13:07:17 jonrob Exp $
+ *  $Id: RichGeomEffPhotonTracing.h,v 1.9 2005-04-15 16:36:08 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -15,7 +15,7 @@
 #ifndef RICHRECTOOLS_RICHGEOMEFFPHOTONTRACING_H
 #define RICHRECTOOLS_RICHGEOMEFFPHOTONTRACING_H 1
 
-#include <list>
+#include <algorithm>
 
 // from Gaudi
 #include "GaudiKernel/RndmGenerators.h"

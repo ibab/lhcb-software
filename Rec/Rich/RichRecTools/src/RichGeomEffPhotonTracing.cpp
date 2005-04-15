@@ -5,7 +5,7 @@
  *  Implementation file for tool : RichGeomEffPhotonTracing
  *
  *  CVS Log :-
- *  $Id: RichGeomEffPhotonTracing.cpp,v 1.9 2005-04-08 13:07:17 jonrob Exp $
+ *  $Id: RichGeomEffPhotonTracing.cpp,v 1.10 2005-04-15 16:36:08 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -64,19 +64,16 @@ StatusCode RichGeomEffPhotonTracing::initialize()
   }
 
   // Set up cached parameters for geometrical efficiency calculation
-  m_pdInc  = 1.0/( static_cast<double>(m_nGeomEff) );
-  const double incPhi = M_PI/2.0 + M_PI/( static_cast<double>(m_nGeomEff) );
+  m_pdInc             = 1.0   / static_cast<double>(m_nGeomEff);
+  const double incPhi = M_2PI / static_cast<double>(m_nGeomEff);
   double ckPhi = 0;
   m_phiValues.clear();
   m_phiValues.reserve(m_nGeomEff);
-  std::map<double,bool> testMap;
   for ( int iPhot = 0; iPhot < m_nGeomEff; ++iPhot, ckPhi+=incPhi )
   {
-    if ( ckPhi > M_2PI ) ckPhi -= M_2PI;
-    if ( testMap[ckPhi] ) { return Warning( "Error creating sampling angle values" ); }
-    testMap[ckPhi] = true;
     m_phiValues.push_back(ckPhi);
   }
+  std::random_shuffle( m_phiValues.begin(), m_phiValues.end() );
 
   // Configure the ray-tracing mode
   m_traceMode.setDetPrecision      ( RichTraceMode::circle );
@@ -113,7 +110,7 @@ RichGeomEffPhotonTracing::geomEfficiency ( RichRecSegment * segment,
 
       int nDetect  = 0;
       int iPhot = 0;
-      for ( std::vector<double>::const_iterator ckPhi = m_phiValues.begin(); 
+      for ( std::vector<double>::const_iterator ckPhi = m_phiValues.begin();
             ckPhi != m_phiValues.end(); ++iPhot, ++ckPhi )
       {
 
@@ -204,7 +201,7 @@ RichGeomEffPhotonTracing::geomEfficiencyScat ( RichRecSegment * segment,
       int nDetect = 0;
       RichGeomPhoton photon;
       int iPhot = 0;
-      for ( std::vector<double>::const_iterator ckPhi = m_phiValues.begin(); 
+      for ( std::vector<double>::const_iterator ckPhi = m_phiValues.begin();
             ckPhi != m_phiValues.end(); ++iPhot, ++ckPhi )
       {
 
