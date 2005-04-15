@@ -15,55 +15,13 @@
 #     (optionally: caller3 name) - according to doc. But valgrind dies...
 # }
 
-# Problem with gcc 3.2.3, seen with Gaudi v15r0 - v15r2
-{
-  gcc/16bytes
-  Memcheck:Leak
-  fun:malloc
-  fun:realloc
-  fun:__argz_append
-}
-
-# Known DNS system library problems (Linux rh6.1 - rh7.3)
+# Known DNS system library problems (SLC3, already present in libnss_dns-2.2.5)
 {
   dns/getanswer_r
   Memcheck:Cond
   fun:getanswer_r
-  obj:/lib/libnss_dns-2.2.5.so
-  obj:/lib/libnss_dns-2.2.5.so
-}
-
-{
-  dns2
-  Memcheck:Value4
-  obj:/lib/i686/libc-2.2.5.so
-  fun:gethostbyaddr
-  fun:rfio_open_ext
-}
-
-{
-  strcmp/libc-2.2.5.so
-  Memcheck:Value4
-  fun:strcmp
-  obj:/lib/i686/libc-2.2.5.so
-  obj:/lib/i686/libc-2.2.5.so
-}
-
-{
-  strlen/libc-2.2.5.so
-  Memcheck:Value4
-  fun:strlen
-  obj:/lib/i686/libc-2.2.5.so
-  obj:/lib/i686/libc-2.2.5.so
-}
-
-# GaudiKernel v14r2 - v16r2 (Savannah bug 2066)
-{
-  Gaudi/2066
-  Memcheck:Cond
-  fun:strlen
-  fun:_IO_str_init_static_internal
-  fun:_IO_vsscanf
+  obj:/lib/libnss_dns-2.3.2.so
+  obj:/lib/libnss_dns-2.3.2.so
 }
 
 # HbookCnv v14r0 - v14r2p1 (Reported to Grigori/Pere)
@@ -75,16 +33,57 @@
   fun:hstati_
 }
 
-# Four rfio problems - libshift.so.1.5.1.3 - 1.7.1.5 (Reported to Sebastien) 
+# C run time library, gcc 3.2.2, seen in GaudiKernel v9r0
 {
-  rfio_open_ext/rfio_filbuf/rfio_fstat/rfio_close_v2
-  Memcheck:Param
-  socketcall.send(msg)
-  obj:/lib/i686/libc-2.2.5.so
-  fun:netwrite_timeout
+  from System::virtualMemory()
+  Memcheck:Cond
+  fun:rawmemchr
+  fun:_IO_vsscanf
+  fun:_IO_sscanf
 }
 
-# Memory leaks due to linked Root 3.10.02 libraries
+# Gaudi v16r2, reported to Hubert
+{
+  m_algManager and m_svcManager
+  Memcheck:Leak
+  fun:_Znwj
+  fun:_ZN14ApplicationMgrC1EP10IInterface
+  fun:_ZNK13ObjectFactoryI14ApplicationMgrE11instantiateEP10IInterface
+}
+
+{
+  Service manager
+  Memcheck:Leak
+  fun:_Znwj
+  fun:_ZNK10SvcFactoryI17EvtPersistencySvcE11instantiateERKSsP11ISvcLocator
+  fun:_ZN14ServiceManager13createServiceERKSsS1_RP8IService
+}
+
+{
+  GaudiAlgorithm::msgStream
+  Memcheck:Leak
+  fun:_Znwj
+  fun:_ZNK14GaudiAlgorithm9msgStreamEN3MSG5LevelE
+  fun:_ZNK14GaudiAlgorithm5debugEv
+}
+
+{
+  GaudiTool::msgStream
+  Memcheck:Leak
+  fun:_Znwj
+  fun:_ZNK9GaudiTool9msgStreamEN3MSG5LevelE
+  fun:_ZNK9GaudiTool5debugEv
+}
+ 
+{
+  GaudiTool::msgStream
+  Memcheck:Leak
+  fun:_Znwj
+  fun:_ZNK9GaudiTool9msgStreamEN3MSG5LevelE
+  fun:_ZNK9GaudiTool4infoEv
+}
+
+# Memory leaks due to linked Root 3.10.02 - 4.03.02 libraries
 {
   libMatrix
   Memcheck:Leak
@@ -109,18 +108,17 @@
   fun:G__memfunc_setup
 }
 
-# Root 3.10.02 with POOL_1_6_3 - POOL_1_7_0
 {
-  Root/POOL
+  libCore - root 4.03.02
   Memcheck:Leak
-  fun:__builtin_vec_new
-  fun:_Znaj
-  fun:_ZN10TStringRef6GetRepEii
+  fun:malloc
+  fun:G__store_dictposition
+  fun:G__loadfile_tmpfile
 }
 
-# Root 3.10.02 with POOL_1_6_3 - POOL_1_7_0
+# Root 3.10.02 - 4.03.02 with POOL_1_6_3 - POOL_2_0_0
 {
-  POOL_1_6_3/RootTreeContainer
+  POOL_1_6_3/RootTreeContainer - POOL bug 3047
   Memcheck:Leak
   fun:malloc
   fun:R__huft_build
@@ -128,50 +126,201 @@
   fun:R__Inflate_block
 }
 
-# SEAL_1_3_4 - SEAL_1_4_0 - Will not fix (see comments to bug report)
+# SEAL_1_3_4 - SEAL_1_6_0 - Will not fix (see comments to bug report)
 {
   SEAL bug 3050
   Memcheck:Leak
-  fun:__builtin_new
   fun:_Znwj
   fun:_ZNSt24__default_alloc_templateILb1ELi0EE14_S_chunk_allocEjRi
+  fun:_ZNSt24__default_alloc_templateILb1ELi0EE9_S_refillEj
 }
 
-# POOL_1_7_0
+# POOL_1_7_0 - POOL_2_0_0 - first seen with LHCb v17r2
 {
-  POOL bug 4215
-  Memcheck:Free
-  fun:__builtin_delete
-  fun:_ZdlPv
-  fun:_ZN4CINT4TypeD0Ev
-}
-
-# POOL_1_7_0
-{
-  POOL bug 4206
+  POOL bug reported to MF 20041217 - Savannah bug 7900
   Memcheck:Leak
-  fun:__builtin_vec_new
-  fun:_Znaj
-  fun:_ZN11xercesc_2_318IconvLCPTranscoder9transcodeEPKt
-}
-
-# Known problem with dictionary unloading, causes core dump on exit if fixed...
-# First seen in LHCB_v16r1
-{ 
-  SEAL_1_4_0/LHCbKernelDict
-  Memcheck:Leak
-  fun:__builtin_new
-  fun:_Znwj
-  fun:_ZN4seal7reflect12ClassBuilder8addFieldEPKcS3_S3_ii
-  fun:_ZN30SmartRef_ContainedObject__dictC1Ev
-}
-
-# POOL_1_7_0 - first seen with LHCb v17r2
-{
-  POOL bug reported to MF 20041217
-  Memcheck:Leak
-  fun:__builtin_new
   fun:_Znwj
   fun:_ZN4pool18PoolXMLFileCatalog19StartXMLFileCatalogEv
   fun:_ZNK4pool14XMLFileCatalog5startEv
+}
+
+# Root 4.03.02
+{
+  Root bug 2826, fixed in head revision
+  Memcheck:Cond
+  fun:_ZN4ROOT17TGenericClassInfo15GetImplFileLineEv
+  fun:_ZN4ROOT17TGenericClassInfo8GetClassEv
+  fun:_ZN4CINT4Type11createClassEv
+}
+
+{
+  Same as Root bug 2826?
+  Memcheck:Cond
+  fun:_ZN4ROOT17TGenericClassInfo15GetImplFileNameEv
+  fun:_ZN4ROOT17TGenericClassInfo8GetClassEv
+  fun:_ZN4CINT4Type11createClassEv
+}
+
+{
+  Seen in Boole v8r2, Reported to Rene 2005-04-13
+  Memcheck:Cond
+  fun:_ZN6TClass4InitEPKcsPKSt9type_infoPFPS_PKvEPFvPvR16TMemberInspectorPcES1_S1_ii
+  fun:_ZN6TClassC1EPKcsRKSt9type_infoPFPS_PKvEPFvPvR16TMemberInspectorPcES1_S1_ii
+  fun:_ZN4ROOT11CreateClassEPKcsRKSt9type_infoPFP6TClassPKvEPFvPvR16TMemberInspectorPcES1_S1_ii
+}
+
+{
+  Seen in Boole v8r2, Reported to Rene 2005-04-13
+  Memcheck:Cond
+  fun:_ZNK6TClass8IsLoadedEv
+  fun:_ZNK5TROOT8GetClassEPKcb
+  fun:_ZN24TEmulatedCollectionProxy12InitializeExEv
+}
+
+{
+  Seen in Boole v8r2, Reported to Rene 2005-04-13
+  Memcheck:Cond
+  fun:_ZNK6TClass8IsLoadedEv
+  fun:_ZNK5TROOT8GetClassERKSt9type_infob
+  fun:_ZN19TGenCollectionProxy12InitializeExEv
+}
+
+{
+  Seen in Boole v8r2, Reported to Rene 2005-04-13
+  Memcheck:Leak
+  fun:_Znwj
+  fun:_ZN16TCollectionProxy16genExplicitProxyERKSt9type_infojjiPFPvS3_ES5_S5_S5_S5_S5_S5_S5_S5_
+  fun:_ZN4CINT4Type11createClassEv
+}
+
+{
+  Seen in Boole v8r2, Reported to Rene 2005-04-13
+  Memcheck:Leak
+  fun:_Znwj
+  fun:_ZN8TStorage11ObjectAllocEj
+  fun:_ZN9THostAuth16CreateSecContextEPKcS1_iiS1_S1_7TDatimePvi
+}
+
+{
+  Seen in Boole v8r2, Reported to Rene 2005-04-13
+  Memcheck:Leak
+  fun:_Znwj
+  fun:_ZN8TStorage11ObjectAllocEj
+  fun:_ZN7TObjectnwEj
+}
+
+{
+  Seen in Boole v8r2, Reported to Rene 2005-04-13
+  Memcheck:Leak
+  fun:_Znaj
+  fun:_ZN13TStreamerInfo7CompileEv
+  fun:_ZN13TStreamerInfo8BuildOldEv
+}
+
+{
+  Seen in Boole v8r2, Reported to Rene 2005-04-13
+  Memcheck:Leak
+  fun:_Znaj
+  fun:_ZN13TStreamerInfo7CompileEv
+  fun:_ZN13TStreamerInfo5BuildEv
+}
+
+{
+  Seen in Boole v8r2, Reported to Rene 2005-04-13
+  Memcheck:Leak
+  fun:_Znaj
+  fun:_ZN10TStringRef6GetRepEii
+  fun:_ZN7TStringC1EPKc
+}
+
+# CLHEP 1.9.1.0
+{
+  From XmlCnvSvc, Savannah report 7880
+  Memcheck:Leak
+  fun:_Znaj
+  fun:_ZN7HepTool9Evaluator8evaluateEPKc
+  fun:_ZN9XmlCnvSvc4evalEPKcb
+}
+
+# Several POOL 2_0_0 leaks (Savannah report 7882)
+{
+  From FileCatalog 
+  Memcheck:Leak
+  fun:_Znwj
+  fun:_ZN11xercesc_2_317MemoryManagerImpl8allocateEj
+  fun:_ZN11xercesc_2_322UnixHTTPURLInputStreamC1ERKNS_6XMLURLE
+}
+
+{
+  From PersistencySvc
+  Memcheck:Leak
+  fun:_Znwj
+  fun:_ZN4pool12DbSessionObjC1Ev
+  fun:_ZN4pool9DbSession4openEv
+}
+
+{
+  From PersistencySvc/2
+  Memcheck:Leak
+  fun:_Znwj
+  fun:_ZN4pool8RootOODb12createDomainEv
+  fun:_ZN4pool11DbDomainObjC1ERKNS_9DbSessionERKNS_6DbTypeEl
+}
+
+{
+  From DbStorageExplorer
+  Memcheck:Leak
+  fun:_Znwj
+  fun:_ZN4pool8RootOODb15createContainerERKNS_6DbTypeE
+  fun:_ZN4pool14DbContainerObjC1ERKNS_10DbDatabaseERKSsRKNS_6DbTypeEl
+}
+
+{
+  From DbStorageExplorer/2
+  Memcheck:Leak
+  fun:_Znwj
+  fun:_ZN4pool13DbDatabaseObjC1ERKNS_8DbDomainERKSsS5_l
+  fun:_ZNK4pool10DbDatabase4openERKNS_8DbDomainERKSsS5_l
+}
+
+{
+  From FileCatalog/2
+  Memcheck:Leak
+  fun:_Znwj
+  fun:_ZN11xercesc_2_317MemoryManagerImpl8allocateEj
+  fun:_ZN11xercesc_2_37XMemorynwEj
+}
+
+# Identical to above, in LHCb XmlGenericCnv
+{
+  XmlGenericCnv
+  Memcheck:Leak
+  fun:_Znwj
+  fun:_ZN11xercesc_2_317MemoryManagerImpl8allocateEj
+  fun:_ZN11xercesc_2_37XMemorynwEjPNS_13MemoryManagerE
+}
+
+# Several SEAL 1_6_0 leaks (Savannah report 7881)
+{
+  From POOL/cint
+  Memcheck:Leak
+  fun:_Znwj
+  fun:_ZN4seal22PluginFactoryImplTypesIFPN4pool13ICINTStreamerEPKNS_7reflect5ClassEEE11AutoFactoryI20PoolDbCustomStreamerI8L1BufferEE6createES7_
+  fun:_ZN4seal22PluginFactoryImplTypesIFPN4pool13ICINTStreamerEPKNS_7reflect5ClassEEE4Info6createES7_
+}
+
+{
+  From POOL/cint
+  Memcheck:Leak
+  fun:_Znwj
+  fun:_ZN4seal22PluginFactoryImplTypesIFPN4pool13ICINTStreamerEPKNS_7reflect5ClassEEE11AutoFactoryI20PoolDbCustomStreamerI9RawBufferEE6createES7_
+  fun:_ZN4seal22PluginFactoryImplTypesIFPN4pool13ICINTStreamerEPKNS_7reflect5ClassEEE4Info6createES7_
+}
+
+{
+  From MCMuonDigit_dict
+  Memcheck:Leak
+  fun:_Znwj
+  fun:_ZNSt24__default_alloc_templateILb1ELi0EE8allocateEj
+  fun:_ZNSs4_Rep9_S_createEjRKSaIcE
 }
