@@ -4,6 +4,11 @@
 ! Purpose     : Package for tracking tools
 !-----------------------------------------------------------------------------
 
+! 2005-04-11 - Eduardo Rodrigues
+ - ITrackReconstructible pure virtual interface taken from Tr/TrAssociators
+   and derived tool TrackAcceptance taken from Tr/TrCheck.
+   Both adapted to latest Gaudies
+
 ! 2005-04-06 - Eduardo Rodrigues
  - TrueStateCreator tool added
 

@@ -56,7 +56,7 @@ TrueStateCreator::TrueStateCreator( const std::string& type,
   declareProperty( "MCP2OTMCHitAscName",
                    m_p2OTHitAsctName = "MCP2OTMCHitAsc" );
   declareProperty( "extrapolatorName", 
-                   m_extrapolatorName = "TrFirstCleverExtrapolator" );
+                   m_extrapolatorName = "TrackHerabExtrapolator" );
   declareProperty( "eX2",  m_eX2 );
   declareProperty( "eY2",  m_eY2 );
   declareProperty( "eTx2", m_eTx2 );
@@ -74,8 +74,9 @@ TrueStateCreator::~TrueStateCreator() {};
 //=============================================================================
 StatusCode TrueStateCreator::initialize()
 {
-  /// TrueStateCreator initialise
   StatusCode sc;
+
+  debug() << "==> Initialize" << endreq;
 
   std::string ascType     = "Associator<MCParticle,MCHit>";
   std::string ascVeloType = "Associator<MCParticle,MCVeloHit>";

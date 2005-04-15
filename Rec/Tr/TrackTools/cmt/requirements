@@ -22,15 +22,18 @@ include_path      none
 # Used packages. Specify the version, * at the end specifies 'any revision'
 #    Put as many lines as needed, with all packages, without the '#'
 #============================================================================
-use   EventSys        v*    Event
-use   TrackEvent      v*    Event
-use   OTEvent         v*    Event
-use   ITEvent         v*    Event
-use   VeloEvent       v*    Event
+use   GaudiAlg        v8r*
+use   Relations       v2r*     Kernel
+use   TrackEvent      v*       Event
+use   OTEvent         v14r*    Event
+use   ITEvent         v13r*    Event
+use   VeloEvent       v13r*    Event
 
 use   LHCbInterfaces  v*    Kernel
 
-use   VeloDet         v*    Det
+use   STDet           v1r*    Det
+use   OTDet           v5r*    Det
+use   VeloDet         v9r*    Det
 #============================================================================
 # Component library building rule
 #============================================================================
