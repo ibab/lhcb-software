@@ -19,7 +19,7 @@ else
   shift
 endif
 #   
-set Bversion = "v8r2"
+set Bversion = "v8r3"
 echo "Excuting Boole $Bversion using options file $Dver.opts"
 #
 
@@ -61,7 +61,7 @@ else
 endif
 
 # == run the excutable ================================
-valgrind --demangle=no --error-limit=no --leak-check=yes --num-callers=20 --suppressions=$STDOPTS/Gaudi.supp --suppressions=$SuppFile tmpjob_$Dver.exe $BOOLEOPTS/$Dver.opts >& mem_errors.log
+valgrind --tool=memcheck --demangle=no --error-limit=no --leak-check=yes --num-callers=20 --suppressions=$STDOPTS/Gaudi.supp --suppressions=$SuppFile tmpjob_$Dver.exe $BOOLEOPTS/$Dver.opts >& mem_errors.log
 
 # == job is finished: remove temporary files ==========
 rm tmpjob_$Dver.exe

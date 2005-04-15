@@ -24,8 +24,8 @@ DetectorDataSvc.DetDbLocation = "$XMLDDDBROOT/DDDB/lhcb-200412.xml";
 //---------------------------------------------------------------------------
 ApplicationMgr.EvtMax = -1;
 
-//EventSelector.FirstEvent = 7;      // Skip some events in main input file
-//SpillOverSelector.FirstEvent = 10; // Skip corresponding spillover events
+//EventSelector.FirstEvent = 330;      // Skip some events in main input file
+//SpillOverSelector.FirstEvent = 497; // Skip corresponding spillover events
 
 //---------------------------------------------------------------------------
 // Input and output files. 

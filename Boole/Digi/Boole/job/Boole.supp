@@ -1,6 +1,6 @@
 ##----------------------------------------------------------------------##
 
-# valgrind error suppression file for Boole v6r2, gcc 3.2.3, valgrind 2.0.0
+# valgrind error suppression file for Boole v8r2, gcc 3.2.3, valgrind 2.0.0
 # See also suppressions in $STDOPTS/Gaudi.supp
 
 # Format of this file is:
@@ -15,82 +15,3 @@
 #     (optionally: caller2 name)
 #     (optionally: caller3 name) - according to doc. But valgrind dies...
 # }
-
-# Errors from PoolDbCacheSvc::finalize(), not seen in default Brunel v24r1 setup
-# GaudiPoolDb v1r5-v1r9, POOL 1_5_0-POOL_1_7_0, Root 3.10.02
-{
-  Root/longest_match
-  Memcheck:Cond
-  fun:R__longest_match
-  fun:R__Deflate_fast
-  fun:R__Deflate
-}
-
-{
-  Root/Deflate_fast
-  Memcheck:Value4
-  fun:R__Deflate_fast
-  fun:R__Deflate
-  fun:R__zip
-}
-
-{
-  Root/ct_tally
-  Memcheck:Value4
-  fun:R__ct_tally
-  fun:R__Deflate_fast
-  fun:R__Deflate
-}
-
-{
-  Root/compress_block
-  Memcheck:Value4
-  fun:R__compress_block
-  fun:R__flush_block
-  fun:R__Deflate_fast
-}
-
-# New symptom of old problem with Root zip mechanism, reported to Root team
-# First seen in Boole v6r2
-{
-  POOL_1_7_0/StorageSvc
-  Memcheck:Leak
-  fun:malloc
-  fun:R__huft_build
-  fun:R__Inflate_fixed
-  fun:R__Inflate_block
-}
-
-# Muon background and digitization. Reported to Alessia 20040923
-# First seen in Boole v6r2
-{
-  MuonBackground/start
-  Memcheck:Value4
-  fun:_ZN15MuonGetInfoTool12getStartGapZEii
-  fun:_ZN14MuonBackground9createHitEPP14KeyedContainerI9MCMuonHitN10Containers18KeyedObjectManagerINS2_7hashmapEEEEiii
-  fun:_ZN14MuonBackground7executeEv
-}
-
-{
-  MuonBackground/stop
-  Memcheck:Value4
-  fun:_ZN15MuonGetInfoTool11getStopGapZEii
-  fun:_ZN14MuonBackground9createHitEPP14KeyedContainerI9MCMuonHitN10Containers18KeyedObjectManagerINS2_7hashmapEEEEiii
-  fun:_ZN14MuonBackground7executeEv
-}
-
-{
-  MuonDigitization/stop
-  Memcheck:Value4
-  fun:_ZN15MuonGetInfoTool11getStopGapZEii
-  fun:_ZN16MuonDigitization11createInputER20MuonDigitizationDataI19MuonPhyChannelInputE
-  fun:_ZN16MuonDigitization7executeEv
-}
-
-{
-  MuonDigitization/start
-  Memcheck:Value4
-  fun:_ZN15MuonGetInfoTool12getStartGapZEii
-  fun:_ZN16MuonDigitization11createInputER20MuonDigitizationDataI19MuonPhyChannelInputE
-  fun:_ZN16MuonDigitization7executeEv
-}
