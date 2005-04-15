@@ -1,8 +1,16 @@
-// $Id: OTFillRawBuffer.cpp,v 1.6 2005-01-12 08:31:06 jnardull Exp $
+// $Id: OTFillRawBuffer.cpp,v 1.7 2005-04-15 06:37:33 cattanem Exp $
 // Include files
+
+// From Gaudi
+#include "GaudiKernel/AlgFactory.h"
+
+// From event model
+#include "Event/RawBuffer.h"
 
 // local
 #include "OTFillRawBuffer.h"
+#include "Event/GolHeader.h"
+#include "Event/DataWord.h"
 #include "Event/OTBankVersion.h"
 
 //-----------------------------------------------------------------------------
@@ -23,13 +31,12 @@ OTFillRawBuffer::OTFillRawBuffer( const std::string& name,
                                     ISvcLocator* pSvcLocator)
   : GaudiAlgorithm ( name , pSvcLocator )
 {
-  this->declareProperty( "NumberOfBanks", numberOfBanks );
+  this->declareProperty( "NumberOfBanks", m_numberOfBanks = 24 );
+  this->declareProperty( "NumberOfGols",  m_numberOfGols  = 18 );
   this->declareProperty( "RawBufferLocation",   
                          m_RawBuffLoc = RawBufferLocation::Default );
   this->declareProperty( "MCOTTimeLocation", 
                          m_MCOTTimeLoc = MCOTTimeLocation::Default );
-  this->declareProperty( "OTGeometryName", 
-                         m_otTrackerPath = "/dd/Structure/LHCb/OT"); 
 }
 
 //=============================================================================
@@ -45,22 +52,21 @@ StatusCode OTFillRawBuffer::initialize() {
   StatusCode sc = GaudiAlgorithm::initialize();
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
 
-  DeOTDetector* Otracker = getDet<DeOTDetector>(DeOTDetectorLocation::Default); 
-  m_otTracker = Otracker;
+  // create the map of OT vectors, m_numberOfGols entries
+  for( int k = 1; k <= m_numberOfGols; k++){
+    vmcOTime* currentMCTime = new vmcOTime();
+    mGol::value_type numGol(k, currentMCTime);
+    m_goldatacontainer.insert( m_goldatacontainer.end(), numGol );
+  }
 
-  //Fixed Numbers of Banks and of Gols
-  numberOfBanks = 24;
-  numberOfGols = 18;
-  emptyBank = 0;
+  // create the map of OTMcTime vectors, m_numberOfBanks entries
+  for( int i = 1; i <= m_numberOfBanks; i++){
+    vmcOTime* currentMCOTTime = new vmcOTime();
+    mBank::value_type numBank(i, currentMCOTTime);
+    m_dataContainer.insert( m_dataContainer.end(), numBank );
+  }
 
-  // create a container for the vectors of MCOTimes
-  dataContainer = new mBank(); // bank type
-  goldatacontainer = new mGol();
-
-  // init pointer to global container
-  finalBuf = new dataBuffer();
-  
-   return StatusCode::SUCCESS;
+  return StatusCode::SUCCESS;
 }
 //=============================================================================
 // Main execution
@@ -69,37 +75,26 @@ StatusCode OTFillRawBuffer::execute()
 {
   // Retrieve the RawBuffer
   RawBuffer* rawBuffer = get<RawBuffer>( RawBufferLocation::Default );
-  m_rawBuffer = rawBuffer;
-
-  // Retrieve MCOTTime
-  MCOTTimes* mcTime = get<MCOTTimes>( MCOTTimeLocation::Default ); 
-  m_mcTime = mcTime;
 
   // Sorting MCTimes into Banks
   this->sortMcTimesIntoBanks();
 
   // Loop the map bank structure
-  for(mBank::iterator iBank = dataContainer->begin();
-      iBank != dataContainer->end();
+  for(mBank::iterator iBank = m_dataContainer.begin();
+      iBank != m_dataContainer.end();
       iBank++){
 
-    dataBank* aBank = new dataBank();
+    dataBank aBank;
     vmcOTime* amcTime = (*iBank).second;
 
-    // Empty Bank -- Still sending all the Headers
     if(amcTime->size() == 0){
-      this->convertToRAWEmptyBank(aBank);
-      emptyBank = 1;
+      // Empty Bank -- Still sending all the Headers
+      this->convertToRAWEmptyBank(&aBank);
     }
-    
-    // feed vMCOTime vectors to converter routine
-    if (emptyBank == 0){
-      this->convertToRAWDataBank(amcTime, aBank);
+    else {
+      // feed vMCOTime vectors to converter routine
+      this->convertToRAWDataBank(amcTime, &aBank);
     }
-    emptyBank = 0;
-    
-    // put converted vMCOTime into final buffer container
-    finalBuf->push_back(aBank);
 
     /* 
      *  Generate bank ID and push bank into raw buffer
@@ -108,15 +103,18 @@ StatusCode OTFillRawBuffer::execute()
      */
 
     int bankID = (*iBank).first;
-    dataBank& bBank = (*aBank);
-    m_rawBuffer->addBank( bankID , RawBuffer::OT, bBank, OTBankVersion::v1 );  
-    aBank->erase( aBank->begin(),aBank->end() );
+    dataBank& bBank = aBank;
+    rawBuffer->addBank( bankID , RawBuffer::OT, bBank, OTBankVersion::v1 );  
+    aBank.erase( aBank.begin(),aBank.end() );
   }
-  
-  // clear all containers used in the process:
-  dataContainer->erase( dataContainer->begin(), dataContainer->end() );
-  goldatacontainer->erase( goldatacontainer->begin(), goldatacontainer->end() );
-  finalBuf->erase( finalBuf->begin(), finalBuf->end() );
+
+  // Finally, clear the data container and the vectors it contains 
+  for(mBank::iterator iBank = m_dataContainer.begin();
+      iBank != m_dataContainer.end();
+      iBank++){
+    vmcOTime* amcTime = (*iBank).second;
+    amcTime->erase( amcTime->begin(), amcTime->end() );
+  }
   
   return StatusCode::SUCCESS;
 }
@@ -126,51 +124,43 @@ StatusCode OTFillRawBuffer::execute()
 //=============================================================================
 StatusCode OTFillRawBuffer::finalize() 
 {      
-  delete(dataContainer);
-  delete(goldatacontainer);
-  delete(finalBuf);
+  // clear all containers used in the process and delete all new objects:
+  for(mBank::iterator iBank = m_dataContainer.begin();
+      iBank != m_dataContainer.end();
+      iBank++){
+    delete (*iBank).second;
+  }
+  m_dataContainer.erase( m_dataContainer.begin(), m_dataContainer.end() );
+
+  for(mBank::iterator iBank = m_goldatacontainer.begin();
+      iBank != m_goldatacontainer.end();
+      iBank++){
+    delete (*iBank).second;
+  }
+  m_goldatacontainer.erase(m_goldatacontainer.begin(),m_goldatacontainer.end());
+
   return GaudiAlgorithm::finalize();  // must be called after all other actions 
 }
 //-----------------------------------------------------------------------------
 StatusCode OTFillRawBuffer::sortMcTimesIntoBanks()
 {
-  // create the map of OTMcTime vectors, numberOfBanks entries
-  for( int i = 1; i <= numberOfBanks; i++){
-    vmcOTime* currentMCOTTime = new vmcOTime();
-    mBank::value_type numBank(i, currentMCOTTime);
-    dataContainer->insert( dataContainer->end(), numBank );
-  }
+  // Retrieve MCOTTime and sort them into banks
+  MCOTTimes* mcTime = get<MCOTTimes>( MCOTTimeLocation::Default ); 
 
-  // Now the bank-containers are created. Sort the MCOTTimes into these banks
-  mBank::iterator iBank = dataContainer->begin();
-  vmcOTime* currentMCOTTime;
-    
-  for(vmcOTime::iterator iTime = m_mcTime->begin();
-      iTime != m_mcTime->end();
-      iTime++){
+  for(vmcOTime::iterator iTime  = mcTime->begin(); 
+                         iTime != mcTime->end(); iTime++ ){
 
     int nBankID = chID2int( (*iTime)->channel() );
-    iBank = dataContainer->find(nBankID);
-    currentMCOTTime = (*iBank).second;
+    mBank::iterator iBank = m_dataContainer.find(nBankID);
+    
+    vmcOTime* currentMCOTTime = (*iBank).second;
     currentMCOTTime->push_back( (*iTime) );
   }
   return StatusCode::SUCCESS;
 }
 //-------------------------------------------------------------------------
-StatusCode OTFillRawBuffer::sortMcTimesIntoGol(vmcOTime* BankmcOTime, 
-                                              dataBank* /* aBank */)
-
+StatusCode OTFillRawBuffer::sortMcTimesIntoGol( vmcOTime* BankmcOTime )
 {
-  // create the map of OT vectors, numberOfGols entries
-  for( int k = 1; k <= numberOfGols; k++){
-    vmcOTime* currentMCTime = new vmcOTime();
-    mGol::value_type numGol(k, currentMCTime);
-    goldatacontainer->insert( goldatacontainer->end(), numGol );
-  }
-
-  // Now the gol-containers are created. Sort the mcottimes into these Gols
-  mGol::iterator iGol = goldatacontainer->begin();
-  vmcOTime* currentMCTime;
   // There are 18 Gol per Bank, each one containing the data of a short module 
   for(vmcOTime::iterator iTime = BankmcOTime->begin();
       iTime != BankmcOTime->end();
@@ -184,10 +174,12 @@ StatusCode OTFillRawBuffer::sortMcTimesIntoGol(vmcOTime* BankmcOTime,
     if((nQuarter == 1) || (nQuarter == 3)){GOL = nModule + 9;} 
     else if((nQuarter == 0 ) || (nQuarter == 2)){GOL = nModule;}
     int nGolID = GOL;
-    iGol = goldatacontainer->find(nGolID);
-    currentMCTime = (*iGol).second;
+    mGol::iterator iGol = m_goldatacontainer.find(nGolID);
+    
+    vmcOTime* currentMCTime = (*iGol).second;
     currentMCTime->push_back( (*iTime) );
   }
+  
   return StatusCode::SUCCESS;
 }  
 //-----------------------------------------------------------------
@@ -226,7 +218,7 @@ StatusCode OTFillRawBuffer::convertToRAWDataBank(vmcOTime* vToConvert,
   int quar = 0;
 
   // For each Bank Data we sort the MCOTTimes into Gol
-  this->sortMcTimesIntoGol(vToConvert, aBank);
+  this->sortMcTimesIntoGol(vToConvert);
   vmcOTime::iterator IBank = vToConvert->begin();
   nQuarto = ((*IBank)->channel()).quarter();
   //Per each Gol we have 2 quarters data  - We need a useful Buffer to specify.
@@ -234,8 +226,8 @@ StatusCode OTFillRawBuffer::convertToRAWDataBank(vmcOTime* vToConvert,
   else if((nQuarto == 2) || (nQuarto == 3)){ quar = 2;}
 
   // loop the map GOL structure, retrieve the vmcOTime vectors 
-  for(mGol::iterator iGol = goldatacontainer->begin();
-      iGol != goldatacontainer->end();
+  for(mGol::iterator iGol = m_goldatacontainer.begin();
+      iGol != m_goldatacontainer.end();
       iGol++){
 
     //The New Gol McTime Vector : 
@@ -347,10 +339,10 @@ StatusCode OTFillRawBuffer::convertToRAWDataBank(vmcOTime* vToConvert,
                          0, nextOtisID, nextStrawID, nextTdcTime);
       aBank->push_back(dataWord);
 
-      if(iTimeNext != iHitGolEnd) iTimeCurrent++;     
+      if(iTimeNext != iHitGolEnd) iTimeCurrent++;
+      
     } //while loop over MCOTTimes
     
-    // Erase Gol Vector of McTime
     aGolMCTime->erase( aGolMCTime->begin(),aGolMCTime->end() );
 
   } // GOL Loop

@@ -1,4 +1,4 @@
-// $Id: OTFillRawBuffer.h,v 1.3 2005-01-12 08:31:06 jnardull Exp $
+// $Id: OTFillRawBuffer.h,v 1.4 2005-04-15 06:37:33 cattanem Exp $
 #ifndef OTSIMULATION_OTFILLRAWBUFFER_H 
 #define OTSIMULATION_OTFILLRAWBUFFER_H 1
 
@@ -8,24 +8,12 @@
 #include <vector>
 #include <map>
 
-// from Detector
-#include "OTDet/DeOTDetector.h"
-
-//local
-#include "Event/GolHeader.h"
-#include "Event/DataWord.h"
-
 // from Gaudi
 #include "GaudiAlg/GaudiAlgorithm.h"
-#include "GaudiKernel/AlgFactory.h"
 
 // Event
 #include "Kernel/OTChannelID.h"
-#include "Event/OTBankVersion.h"
 #include "Event/MCOTTime.h"
-#include "Event/RawBuffer.h"
-#include "Event/RawBank.h"
-#include "Event/RawEvent.h"
 #include "Event/DAQTypes.h"
 
 /** @class OTFillRawBuffer OTFillRawBuffer.h OTSimulation/OTFillRawBuffer.h
@@ -55,30 +43,22 @@ protected:
 
 private:  
   
-  std::string m_RawBuffLoc;
-  std::string m_MCOTTimeLoc;
-  std::string m_otTrackerPath;
-
   typedef std::vector<MCOTTime*> vmcOTime;
   typedef std::map<int,vmcOTime*> mBank;// contains the bank vectors*
   typedef std::map<int,vmcOTime*> mGol;// contains the Gol vectors*
   typedef std::vector<raw_int> dataBank;
   typedef std::vector<dataBank*> dataBuffer;
 
-  // detector geometry
-  DeOTDetector* m_otTracker;
-  RawBuffer* m_rawBuffer;
-  
-  // global pointer to vectors container
-  MCOTTimes* m_mcTime;
-  mBank* dataContainer;
-  mGol* goldatacontainer;
-  dataBuffer* finalBuf;
-  dataBank* aBank;
+  // global vectors containers
+  mBank m_dataContainer;
+  mGol  m_goldatacontainer;
 
-  int numberOfBanks;
-  int numberOfGols;
-  int emptyBank;
+  // Properties
+  std::string m_RawBuffLoc;
+  std::string m_MCOTTimeLoc;
+  std::string m_otTrackerPath;
+  int m_numberOfBanks;
+  int m_numberOfGols;
   
   // converts channel ID number into bank number for sorting
   int chID2int(OTChannelID otChannel); // int is bank ID
@@ -87,7 +67,7 @@ private:
   // sort MCOTTimes into banks
   StatusCode sortMcTimesIntoBanks();
   // sort MCOTTimes into GOL
-  StatusCode sortMcTimesIntoGol(vmcOTime* BankmcOTime, dataBank* aBank);
+  StatusCode sortMcTimesIntoGol(vmcOTime* BankmcOTime);
   //Converting in raw_int format
   StatusCode convertToRAWDataBank(vmcOTime* vToConvert, dataBank* aBank);
   StatusCode convertToRAWEmptyBank(dataBank* aBank);
