@@ -22,6 +22,10 @@
 #include "$RICHRECQCOPTS/pid/BrunelMoni_AllNegativeTracks.opts"
 #include "$RICHRECQCOPTS/pid/AllNegativeTracks_Para.opts"
 
+// Event track multiplicities
+#include "$RICHRECQCOPTS/pid/BrunelMoni_EventMult.opts"
+#include "$RICHRECQCOPTS/pid/EventMult_Para.opts"
+
 // Suppress errors from Linker
 MessageSvc.setFatal += { "LinkedTo::MC/Rich/MCPartsToMCRichTracks",
                          "LinkedTo::MC/Rich/MCRichHitsToOpPhotons" };
