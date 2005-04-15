@@ -1,5 +1,5 @@
 package BooleSys
-version v8r2
+version v8r3
 
 branches cmt doc
  
@@ -8,7 +8,7 @@ branches cmt doc
 #=======================================================
 
 # Boole application
-use Boole		v8r2	Digi
+use Boole		v8r3	Digi
 use DigiAlg		v3r0	Digi
 
 # Calorimeter
@@ -19,15 +19,15 @@ use CaloDigit           v1r8	Calo
 use VeloAlgorithms      v3r3	Velo
 
 # Inner Tracker
-use ITAlgorithms        v14r4	IT
+use ITAlgorithms        v14r4p1	IT
 use ITCheckers          v2r4p1	IT
 
 # Outer Tracker
-use OTSimulation	v1r3	OT
+use OTSimulation	v1r4	OT
 
 # Muon
 use MuonAlgs            v5r7	Muon
-use MuonBackground	v1r10	Muon
+use MuonBackground	v1r10p1	Muon
 
 # Rich
 use RichDigiQC		v2r1	Rich
