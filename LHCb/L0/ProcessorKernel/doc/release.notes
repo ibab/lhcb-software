@@ -4,6 +4,10 @@
 ! Purpose     : Base classes for a generic processor simulation
 !-----------------------------------------------------------------------------
 
+!======================== ProcessorKernel v1r0p1 2005-04-15 ==================
+! 2005-04-15 - Marco Cattaneo
+ - Use L0mConf v2r2p*
+
 !========================= ProcessorKernel v1r0 2005-04-05 ===================
 ! 2005-04-05 - Marco Cattaneo
  - Add a missing STL include for compilation on windows

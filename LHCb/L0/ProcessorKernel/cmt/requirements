@@ -1,11 +1,11 @@
 package ProcessorKernel
 
-version v1r0
+version v1r0p1
 
 branches cmt doc src ProcessorKernel
 
 use Boost v* LCG_Interfaces
-use L0mConf v2r2p3 L0
+use L0mConf v2r2p* L0
 
 include_dirs $(PROCESSORKERNELROOT)
 
