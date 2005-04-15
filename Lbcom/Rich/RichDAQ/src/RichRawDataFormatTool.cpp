@@ -5,7 +5,7 @@
  *  Implementation file for class : RichRawDataFormatTool
  *
  *  CVS Log :-
- *  $Id: RichRawDataFormatTool.cpp,v 1.11 2005-04-06 20:23:32 jonrob Exp $
+ *  $Id: RichRawDataFormatTool.cpp,v 1.12 2005-04-15 16:22:46 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date 2004-12-18
@@ -83,7 +83,7 @@ StatusCode RichRawDataFormatTool::finalize()
 {
 
   // Print out L1 information
-  if ( m_summary ) 
+  if ( m_summary )
   {
     printL1Stats( m_l1decodeSummary, "RICH Level 1 : Decoding Summary" );
     printL1Stats( m_l1encodeSummary, "RICH Level 1 : Encoding Summary" );
@@ -99,7 +99,8 @@ RichRawDataFormatTool::printL1Stats( const L1TypeCount & count,
 {
 
   // See if any summary info has been collected
-  if ( !count.empty() ) {
+  if ( !count.empty() )
+  {
 
     // Statistical calculators
     const RichStatDivFunctor occ1("%7.2f +-%5.2f"), occ2("%8.2f +-%5.2f");
@@ -172,12 +173,14 @@ RichRawDataFormatTool::createDataBank( const RichSmartID::Collection & smartIDs,
     {
       delete zsData;
       dataBank = (RichHPDDataBank*) new RichNonZeroSuppDataV1::RichNonZeroSuppData( hID, smartIDs );
-    } else
+    }
+    else
     {
       dataBank = (RichHPDDataBank*)zsData;
     }
 
-  } else if ( RichDAQ::LHCb1 == version )
+  } 
+  else if ( RichDAQ::LHCb1 == version )
   {
     // Second iteration of bank format
 
@@ -185,9 +188,12 @@ RichRawDataFormatTool::createDataBank( const RichSmartID::Collection & smartIDs,
     const RichDAQ::HPDHardwareID hID = m_hpdID->hardwareID( smartIDs.front().pdID() );
 
     // Decide to zero suppress or not depending on number of hits
-    if ( smartIDs.size() < m_zeroSuppresCut ) {
+    if ( smartIDs.size() < m_zeroSuppresCut )
+    {
       dataBank = (RichHPDDataBank*) new RichZeroSuppDataV1::RichZeroSuppData( hID, smartIDs );
-    } else {
+    }
+    else
+    {
       dataBank = (RichHPDDataBank*) new RichNonZeroSuppDataV1::RichNonZeroSuppData( hID, smartIDs );
     }
 
@@ -199,13 +205,17 @@ RichRawDataFormatTool::createDataBank( const RichSmartID::Collection & smartIDs,
     const RichSmartID pdID = smartIDs.front().pdID();
 
     // Decide to zero suppress or not depending on number of hits
-    if ( smartIDs.size() < m_zeroSuppresCut ) {
+    if ( smartIDs.size() < m_zeroSuppresCut )
+    {
       dataBank = (RichHPDDataBank*) new RichZeroSuppDataV0::RichZeroSuppData( pdID, smartIDs );
-    } else {
+    }
+    else
+    {
       dataBank = (RichHPDDataBank*) new RichNonZeroSuppDataV0::RichNonZeroSuppData( pdID, smartIDs );
     }
 
-  } else
+  } 
+  else
   {
     Warning ( "Unknown RICH Raw Buffer version " +
               boost::lexical_cast<std::string>(version) + " -> No data bank" );
@@ -244,16 +254,20 @@ RichRawDataFormatTool::createDataBank( const RichDAQ::LongType * dataStart,
     Exception( "Invalid HPD data block size : " + boost::lexical_cast<std::string>(dataSize) );
   }
 
-  if ( RichDAQ::LHCb2 == version ) {
+  if ( RichDAQ::LHCb2 == version )
+  {
     // Third iteration of bank format
 
     // Header word
     const RichDAQHeaderPDBase header( *dataStart );
 
     // Decide to zero suppress or not depending on number of hits
-    if ( header.zeroSuppressed() ) {
+    if ( header.zeroSuppressed() )
+    {
       dataBank = (RichHPDDataBank*) new RichZeroSuppDataV2::RichZeroSuppData( dataStart, dataSize );
-    } else {
+    }
+    else
+    {
       dataBank = (RichHPDDataBank*) new RichNonZeroSuppDataV1::RichNonZeroSuppData( dataStart );
     }
 
@@ -265,9 +279,12 @@ RichRawDataFormatTool::createDataBank( const RichDAQ::LongType * dataStart,
     const RichDAQHeaderPDBase header( *dataStart );
 
     // Decide to zero suppress or not depending on number of hits
-    if ( header.zeroSuppressed() ) {
+    if ( header.zeroSuppressed() )
+    {
       dataBank = (RichHPDDataBank*) new RichZeroSuppDataV1::RichZeroSuppData( dataStart, dataSize );
-    } else {
+    }
+    else
+    {
       dataBank = (RichHPDDataBank*) new RichNonZeroSuppDataV1::RichNonZeroSuppData( dataStart );
     }
 
@@ -279,17 +296,20 @@ RichRawDataFormatTool::createDataBank( const RichDAQ::LongType * dataStart,
     const RichDAQHeaderV0::RichDAQHeaderPD header( *dataStart );
 
     // Decide to zero suppress or not depending on number of hits
-    if ( header.zeroSuppressed() ) {
+    if ( header.zeroSuppressed() )
+    {
       dataBank = (RichHPDDataBank*) new RichZeroSuppDataV0::RichZeroSuppData( dataStart, dataSize );
-    } else {
+    }
+    else
+    {
       dataBank = (RichHPDDataBank*) new RichNonZeroSuppDataV0::RichNonZeroSuppData( dataStart );
     }
 
-  } else {
-
+  }
+  else
+  {
     Exception ( "Unknown RICH Raw Buffer version " +
                 boost::lexical_cast<std::string>(version) + " -> No data bank" );
-
   }
 
   // Printout this bank
@@ -306,10 +326,11 @@ void RichRawDataFormatTool::createDataBank( const RichDAQ::L1Map & L1Data,
   RawBuffer * rawBuffer = get<RawBuffer>( m_rawBuffLoc );
 
   // DC04 bug fix hack
-  if ( RichDAQ::LHCb0 == version ) {
+  if ( RichDAQ::LHCb0 == version )
+  {
     // Special handling for this format, due to bug in header word....
     // Also, each HPD is in its own bank...
-    // To be removed.....
+    // To be removed once DC04 format no loner in use...
 
     // Loop over all HPDs
     for ( RichDAQ::L1Map::const_iterator iL1 = L1Data.begin(); iL1 != L1Data.end(); ++iL1 )
@@ -340,7 +361,10 @@ void RichRawDataFormatTool::createDataBank( const RichDAQ::L1Map & L1Data,
       }
 
       // Count number of HPD banks
-      if ( m_summary ) { m_l1encodeSummary[L1IDandV(version,(*iL1).first)].first += (*iL1).second.size(); }
+      if ( m_summary )
+      {
+        m_l1encodeSummary[L1IDandV(version,(*iL1).first)].first += (*iL1).second.size();
+      }
 
     }
 
@@ -349,7 +373,8 @@ void RichRawDataFormatTool::createDataBank( const RichDAQ::L1Map & L1Data,
     // Proper handling...
 
     // Loop over Level1 board and make a RAWBank for each
-    for ( RichDAQ::L1Map::const_iterator iL1 = L1Data.begin(); iL1 != L1Data.end(); ++iL1 ) {
+    for ( RichDAQ::L1Map::const_iterator iL1 = L1Data.begin(); iL1 != L1Data.end(); ++iL1 )
+    {
 
       // Make a new data bank
       RichDAQ::RAWBank dataBank;
@@ -357,7 +382,8 @@ void RichRawDataFormatTool::createDataBank( const RichDAQ::L1Map & L1Data,
       // Loop over each active HPD for this Level1 board and fill RAWBank
       unsigned nHits(0);
       for ( RichDAQ::PDMap::const_iterator iHPD = (*iL1).second.begin();
-            iHPD != (*iL1).second.end(); ++iHPD ) {
+            iHPD != (*iL1).second.end(); ++iHPD )
+      {
 
         // Get raw data bank for this HPD, and fill into RAWBank
         const RichHPDDataBank * hpdData = createDataBank( (*iHPD).second, version );
@@ -432,7 +458,8 @@ void RichRawDataFormatTool::decodeToSmartIDs( const RawBank & bank,
     delete hpdBank;
     ++nHPDbanks;
 
-  } else
+  }
+  else
   {
     // Proper handling...
 
@@ -477,7 +504,9 @@ void RichRawDataFormatTool::decodeToSmartIDs( const RawBank & bank,
           if ( msgLevel(MSG::VERBOSE) )
             verbose() << "  -> Bank is zero surpressed : ends at " << lineLast << endreq;
 
-        } else {
+        }
+        else
+        {
           // non-ZS blocks have fixed length, so skip straight to the end
 
           lineC   += 1+RichDAQ::MaxDataSize; // data block + header
@@ -496,7 +525,8 @@ void RichRawDataFormatTool::decodeToSmartIDs( const RawBank & bank,
         ++nHPDbanks;
         delete hpdBank;
 
-      } else
+      }
+      else
       {
         ++lineC;
       }
@@ -564,7 +594,8 @@ RichRawDataFormatTool::decodeToSmartIDs( RichSmartID::Collection & smartIDs ) co
 
   } // end loop over data banks
 
-  if ( msgLevel(MSG::DEBUG) ) {
+  if ( msgLevel(MSG::DEBUG) )
+  {
     debug() << "Decoded " << smartIDs.size()
             << " RichSmartIDs from " << richBanks.size() << " RICH L1 bank(s)" << endreq;
   }
@@ -577,8 +608,12 @@ RawEvent * RichRawDataFormatTool::rawEvent() const
 
     // Try and load from TES. If it exists return, overwise try to create one
     SmartDataPtr<RawEvent> rawEventTES( evtSvc(), m_rawEventLoc );
-    if ( rawEventTES ) { m_rawEvent = rawEventTES; }
-    else {
+    if ( rawEventTES )
+    {
+      m_rawEvent = rawEventTES;
+    }
+    else
+    {
       debug() << "Creating RawEvent from RawBuffer" << endreq;
 
       // Retrieve the RawBuffer
