@@ -1,0 +1,88 @@
+
+// 1-10 tracks / event
+RiPIDMonAllEvMult1To10.MinPCut = 2;
+RiPIDMonAllEvMult1To10.MaxPCut = 100;
+RiPIDMonAllEvMult1To10.MCHistoPath = "RICH/PIDQC/All/MULT1TO10/MC/";
+RiPIDMonAllEvMult1To10.HistoPath   = "RICH/PIDQC/All/MULT1TO10/";
+RiPIDMonAllEvMult1To10.MinimumTrackMultiplicity = 1;
+RiPIDMonAllEvMult1To10.MaximumTrackMultiplicity = 10;
+
+// 11-20 tracks / event
+RiPIDMonAllEvMult11To20.MinPCut = 2;
+RiPIDMonAllEvMult11To20.MaxPCut = 100;
+RiPIDMonAllEvMult11To20.MCHistoPath = "RICH/PIDQC/All/MULT11TO20/MC/";
+RiPIDMonAllEvMult11To20.HistoPath   = "RICH/PIDQC/All/MULT11TO20/";
+RiPIDMonAllEvMult11To20.MinimumTrackMultiplicity = 11;
+RiPIDMonAllEvMult11To20.MaximumTrackMultiplicity = 20;
+
+// 21-30 tracks / event
+RiPIDMonAllEvMult21To30.MinPCut = 2;
+RiPIDMonAllEvMult21To30.MaxPCut = 100;
+RiPIDMonAllEvMult21To30.MCHistoPath = "RICH/PIDQC/All/MULT21TO30/MC/";
+RiPIDMonAllEvMult21To30.HistoPath   = "RICH/PIDQC/All/MULT21TO30/";
+RiPIDMonAllEvMult21To30.MinimumTrackMultiplicity = 21;
+RiPIDMonAllEvMult21To30.MaximumTrackMultiplicity = 30;
+
+// 31-40 tracks / event
+RiPIDMonAllEvMult31To40.MinPCut = 2;
+RiPIDMonAllEvMult31To40.MaxPCut = 100;
+RiPIDMonAllEvMult31To40.MCHistoPath = "RICH/PIDQC/All/MULT31TO40/MC/";
+RiPIDMonAllEvMult31To40.HistoPath   = "RICH/PIDQC/All/MULT31TO40/";
+RiPIDMonAllEvMult31To40.MinimumTrackMultiplicity = 31;
+RiPIDMonAllEvMult31To40.MaximumTrackMultiplicity = 40;
+
+// 41-50 tracks / event
+RiPIDMonAllEvMult41To50.MinPCut = 2;
+RiPIDMonAllEvMult41To50.MaxPCut = 100;
+RiPIDMonAllEvMult41To50.MCHistoPath = "RICH/PIDQC/All/MULT41TO50/MC/";
+RiPIDMonAllEvMult41To50.HistoPath   = "RICH/PIDQC/All/MULT41TO50/";
+RiPIDMonAllEvMult41To50.MinimumTrackMultiplicity = 41;
+RiPIDMonAllEvMult41To50.MaximumTrackMultiplicity = 50;
+
+// 51-60 tracks / event
+RiPIDMonAllEvMult51To60.MinPCut = 2;
+RiPIDMonAllEvMult51To60.MaxPCut = 100;
+RiPIDMonAllEvMult51To60.MCHistoPath = "RICH/PIDQC/All/MULT51TO60/MC/";
+RiPIDMonAllEvMult51To60.HistoPath   = "RICH/PIDQC/All/MULT51TO60/";
+RiPIDMonAllEvMult51To60.MinimumTrackMultiplicity = 51;
+RiPIDMonAllEvMult51To60.MaximumTrackMultiplicity = 60;
+
+// 61-70 tracks / event
+RiPIDMonAllEvMult61To70.MinPCut = 2;
+RiPIDMonAllEvMult61To70.MaxPCut = 100;
+RiPIDMonAllEvMult61To70.MCHistoPath = "RICH/PIDQC/All/MULT61TO70/MC/";
+RiPIDMonAllEvMult61To70.HistoPath   = "RICH/PIDQC/All/MULT61TO70/";
+RiPIDMonAllEvMult61To70.MinimumTrackMultiplicity = 61;
+RiPIDMonAllEvMult61To70.MaximumTrackMultiplicity = 70;
+
+// 71-80 tracks / event
+RiPIDMonAllEvMult71To80.MinPCut = 2;
+RiPIDMonAllEvMult71To80.MaxPCut = 100;
+RiPIDMonAllEvMult71To80.MCHistoPath = "RICH/PIDQC/All/MULT71TO80/MC/";
+RiPIDMonAllEvMult71To80.HistoPath   = "RICH/PIDQC/All/MULT71TO80/";
+RiPIDMonAllEvMult71To80.MinimumTrackMultiplicity = 71;
+RiPIDMonAllEvMult71To80.MaximumTrackMultiplicity = 80;
+
+// 81-90 tracks / event
+RiPIDMonAllEvMult81To90.MinPCut = 2;
+RiPIDMonAllEvMult81To90.MaxPCut = 100;
+RiPIDMonAllEvMult81To90.MCHistoPath = "RICH/PIDQC/All/MULT81TO90/MC/";
+RiPIDMonAllEvMult81To90.HistoPath   = "RICH/PIDQC/All/MULT81TO90/";
+RiPIDMonAllEvMult81To90.MinimumTrackMultiplicity = 81;
+RiPIDMonAllEvMult81To90.MaximumTrackMultiplicity = 90;
+
+// 91-100 tracks / event
+RiPIDMonAllEvMult91To100.MinPCut = 2;
+RiPIDMonAllEvMult91To100.MaxPCut = 100;
+RiPIDMonAllEvMult91To100.MCHistoPath = "RICH/PIDQC/All/MULT91TO100/MC/";
+RiPIDMonAllEvMult91To100.HistoPath   = "RICH/PIDQC/All/MULT91TO100/";
+RiPIDMonAllEvMult91To100.MinimumTrackMultiplicity = 91;
+RiPIDMonAllEvMult91To100.MaximumTrackMultiplicity = 100;
+
+// 100+ tracks / event
+RiPIDMonAllEvMult101Plus.MinPCut = 2;
+RiPIDMonAllEvMult101Plus.MaxPCut = 100;
+RiPIDMonAllEvMult101Plus.MCHistoPath = "RICH/PIDQC/All/MULT100PLUS/MC/";
+RiPIDMonAllEvMult101Plus.HistoPath   = "RICH/PIDQC/All/MULT100PLUS/";
+RiPIDMonAllEvMult101Plus.MinimumTrackMultiplicity = 101;
+RiPIDMonAllEvMult101Plus.MaximumTrackMultiplicity = 999999;
