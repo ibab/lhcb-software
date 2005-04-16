@@ -2,7 +2,7 @@
 # Created    : 2003-11-06
 # Maintainer : Christopher Rob Jones
 #============================================================================
-# $Id: requirements,v 1.33 2005-03-03 10:46:12 jonrob Exp $
+# $Id: requirements,v 1.34 2005-04-16 13:10:39 jonrob Exp $
 #============================================================================
 
 package RichKernel
@@ -23,3 +23,7 @@ use GSL         v*	LCG_Interfaces
 # ================ linker library ============================================
 library RichKernel ../src/*.cpp
 apply_pattern linker_library library=RichKernel
+
+# Debug flag
+macro_append cppflags "" \
+          Linux&debug " -DRICHDEBUG "

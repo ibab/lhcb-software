@@ -1,7 +1,10 @@
-! $Id: release.notes,v 1.68 2005-03-08 10:55:25 cattanem Exp $
+! $Id: release.notes,v 1.69 2005-04-16 13:11:52 jonrob Exp $
 ! Package     : Rich/RichKernel
 ! Responsible : Chris Jones
 ! Purpose     : General purpose RICH classes
+
+! 2005-04-16 - Chris Jones
+ - Add debug proprocessor flag.
 
 !======================= RichKernel v5r4 2005-03-08 =======================
 ! 2005-02-20 - Chris Jones
