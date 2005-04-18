@@ -1,0 +1,11 @@
+!----------------------------------------------------------------------------
+! Package     : Tr/TrackFitter
+! Responsible : Eduardo Rodrigues, Jose A. Hernando
+!----------------------------------------------------------------------------
+
+
+! 2005-04-18 - Jose A. Hernando, Eduardo Rodrigues
+ - Translating the Tr/TrFitter packages for the new track event model
+ - original code from: -credits here-
+
+   
