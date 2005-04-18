@@ -16,30 +16,6 @@
 
       &StlPtrVector;
 
-      <enum
-        name    = 'Type'
-        value   = 'Muon,OT,ST,TT,VeloR,VeloPhi'
-        desc    = 'enumerator for the type of Node (XxxNode)'
-        access  = 'PUBLIC' />
-
-     <attribute
-       type    = 'bitfield'
-       name    = 'flags'
-       desc    = 'the variety of node types'
-       init    = '0'
-       getMeth   = 'FALSE'
-       setMeth = 'FALSE'
-       access  = 'PROTECTED'>
-       <bitfield
-         name      = 'type'
-         length    = '6'
-         type      = 'Type'
-         getMeth   = 'FALSE'
-         setMeth   = 'TRUE'
-         checkMeth = 'TRUE'
-         desc      = 'node type' />
-      </attribute>
-
       <attribute
         type    = 'Measurement*'
         name    = 'measurement'
@@ -77,8 +53,7 @@
       <destructor
         desc    = 'specific destructor'>
         <code>
-  delete m_measurement;
-  delete m_state;
+  if (m_state != NULL) delete m_state;
         </code>
       </destructor>
 
@@ -137,7 +112,12 @@
         const   = 'TRUE'
         virtual = 'TRUE'>
         <code>
-  Node* me = new Node(); *me = *this; return me;
+  Node* me = new Node(); 
+  me->setMeasurement(measurement());
+  me->setState(state());
+  me->setResidual(residual());
+  me->setErrResidual(errResidual());
+  return me;
         </code>
       </method>
 
@@ -146,7 +126,7 @@
         argList = 'Measurement meas'
         desc    = 'Update the measurement'>
         <code>
-  m_measurement = meas.clone();
+  m_measurement = (Measurement*) &amp;meas;
         </code>
       </method>
 
@@ -155,7 +135,18 @@
         argList = 'State state'
         desc    = 'Update the state'>
         <code>
+  if (m_state != NULL) delete m_state;
   m_state = state.clone();
+        </code>
+      </method>
+
+      <method
+	type = 'double'
+        name    = 'errResidual2'
+	const   = 'TRUE'
+        desc    = 'return the error squared of the residuals'>
+        <code>
+  return m_errResidual*m_errResidual;
         </code>
       </method>
 

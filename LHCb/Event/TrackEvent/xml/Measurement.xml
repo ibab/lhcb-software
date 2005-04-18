@@ -66,6 +66,16 @@
         access  = 'PROTECTED' />
 
       <method
+        type    = 'double'
+        name    = 'errMeasure2'
+        desc    = 'return the error squared'
+        const   = 'TRUE'>
+        <code>
+  return m_errMeasure*m_errMeasure;
+        </code>
+      </method>
+
+      <method
         type    = 'Type'
         name    = 'type'
         desc    = 'Retrieve measurement type'

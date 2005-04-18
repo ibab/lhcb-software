@@ -39,9 +39,7 @@
       <destructor
         desc = 'Track destructor'>
         <code>
-  for (std::vector&lt;State*&gt;::iterator iter = m_states.begin();
-  iter != m_states.end(); iter++)
-  delete *iter;
+  reset();
         </code>
       </destructor>
 
@@ -62,7 +60,7 @@
        name    = 'flags'
        desc    = 'the variety of track flags'
        init    = '0'
-       setMeth = 'FALSE'
+       setMeth = 'TRUE'
        access  = 'PROTECTED'>
        <bitfield
          name      = 'type'
@@ -126,6 +124,7 @@
         name      = 'states'
         desc      = 'container with pointers to all the states'
         access    = 'PROTECTED'
+        setMeth   = 'FALSE'
         serialize = 'FALSE' />
 
       <attribute
@@ -133,6 +132,7 @@
         name      = 'measurements'
         desc      = 'container of Measurements'
         access    = 'PROTECTED'
+        setMeth   = 'FALSE'
         serialize = 'FALSE' />
 
       <attribute
@@ -140,6 +140,7 @@
         name      = 'nodes'
         desc      = 'container of Nodes'
         access    = 'PROTECTED'
+        setMeth   = 'FALSE'
         serialize = 'FALSE' />
 
       <attribute
@@ -252,7 +253,7 @@
        desc    = 'Add a State to the list of states associated to the track'>
         <arg type = 'State ' name=' state' />
         <code>
-  m_states.push_back( &amp; state );
+  m_states.push_back( state.clone() );
         </code>
       </method>
 
@@ -263,6 +264,7 @@
         <code>
   std::vector&lt;State*&gt;::iterator iter =
     std::remove( m_states.begin(), m_states.end(), value );
+  delete *iter;
   m_states.erase( iter, m_states.end() );
         </code>
       </method>
@@ -321,15 +323,27 @@
         desc    = 'number of measurements on track'
         const   = 'TRUE'>
         <code>
-  return m_lhcbIDs.size();
+  unsigned int n = m_measurements.size();
+  if (n == 0) n = m_lhcbIDs.size();
+  return n;
         </code>
       </method>
+
       <method
         name    = 'addToMeasurements'
         desc    = 'add a measurement to the list associated to the track'>
         <arg type = 'Measurement ' name='meas' />
         <code>
-  m_measurements.push_back( &amp;meas );
+  m_measurements.push_back( meas.clone() );
+        </code>
+      </method>
+
+      <method
+        name    = 'addToNodes'
+        desc    = 'add a Node to the list of nodes (nodes are own by Track)'>
+        <arg type = 'Node*' name='node' />
+        <code>
+  m_nodes.push_back( node );
         </code>
       </method>
 
@@ -358,7 +372,7 @@
         desc    = 'add a track to the list of ancestors of this track'>
         <arg type = 'Track ' name='ancestor' />
         <code>
-  m_ancestors.push_back( &amp;ancestor );
+  m_ancestors.push_back( (Track*) &amp;ancestor );
         </code>
       </method>
 
@@ -367,17 +381,6 @@
         name    = 'reset'
 	virtual = 'TRUE'
         desc    = 'Clear the track before re-use'>
-        <code>
-  m_chi2PerDoF   = 0;
-  m_nDoF         = 0;
-  m_flags        = 0;
-  m_physicsState.reset();
-  m_states.clear();
-  m_lhcbIDs.clear();
-  m_measurements.clear();
-  m_nodes.clear();
-  m_ancestors.clear();
-        </code>
       </method>
 
       <method

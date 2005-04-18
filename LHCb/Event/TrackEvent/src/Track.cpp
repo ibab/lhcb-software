@@ -1,4 +1,4 @@
-// $Id: Track.cpp,v 1.5 2005-04-14 17:33:17 hernando Exp $ // Include files
+// $Id: Track.cpp,v 1.6 2005-04-18 10:22:30 hernando Exp $ // Include files
 
 // local
 #include "Event/Track.h"
@@ -211,14 +211,50 @@ const State* Track::stateAt( const State::Location& value ) const
 };
 
 //=============================================================================
+// reset the track
+//=============================================================================
+void Track::reset() 
+{
+
+  m_chi2PerDoF = 0;
+  m_nDoF       = 0;
+  m_flags      = 0;
+  m_physicsState.reset();
+  m_lhcbIDs.clear();
+  for (std::vector<State*>::iterator it = m_states.begin();
+       it != m_states.end(); it++) delete *it;
+  for (std::vector<Measurement*>::iterator it2 = m_measurements.begin();
+       it2 != m_measurements.end(); it2++) delete *it2;
+  for (std::vector<Node*>::iterator it3 = m_nodes.begin();
+       it3 != m_nodes.end(); it3++) delete *it3;
+  m_states.clear();
+  m_measurements.clear();
+  m_nodes.clear();
+  m_ancestors.clear();
+};
+
+//=============================================================================
 // Clone the track
 //=============================================================================
 Track* Track::clone() const
 {
-  Track* tk = new Track();
-  *tk = *this;
-  return tk;
+  Track* tr = new Track();
+  tr->setChi2PerDoF(chi2PerDoF());
+  tr->setNDoF(nDoF());
+  tr->setFlags(flags());
+  tr->setPhysicsState(physicsState());
+  tr->setLhcbIDs(lhcbIDs());
+  for (std::vector<State*>::const_iterator it = m_states.begin();
+       it != m_states.end(); it++) tr->addToStates(*(*it));
+  for (std::vector<Measurement*>::const_iterator it2 = m_measurements.begin();
+       it2 != m_measurements.end(); it2++) tr->addToMeasurements(*(*it2));
+  for (std::vector<Node*>::const_iterator it3 = m_nodes.begin();
+       it3 != m_nodes.end(); it3++) tr->addToNodes( (*it3)->clone());
+  for (std::vector<Track*>::const_iterator it4 = m_ancestors.begin();
+       it4 != m_ancestors.end();  it4++) tr->addToAncestors( *(*it4) );
+  return tr;
 };
+
 
 //=============================================================================
 

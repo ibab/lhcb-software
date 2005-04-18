@@ -4,6 +4,16 @@
 ! Purpose     : Package for the tracking event model classes
 !-----------------------------------------------------------------------------
 
+! 2005-04-15 - Jose A. Hernando
+ - Track: destructor, reset and clone revisited, to handle properly the memory
+		      set of vector of States, Measurements and Nodes not allow to handle the memory
+          setting the flag at ones allowed.
+ 
+ - Measurement: set the errMeasure2()	method
+ - Node: destructor and set State revisited to handle the memory
+         remove type as it can use the Measurement one
+         return errResidual2() 
+
 ! 2005-04-15 - Eduardo Rodrigues
  - attributes in Node made protected (for inheritance)
 
