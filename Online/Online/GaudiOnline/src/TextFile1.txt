@@ -1,0 +1,117 @@
+import DIM
+
+class MyCommandHandler(DIM.CommandHandler):
+  def __init__(self):
+    DIM.CommandHandler.__init__(self)
+    self.command = DIM.Command('pclhcb102::Hello_0/CMND','C',self)
+    self.service = DIM.Service('TEST/STRVAL','empty')
+  def commandHandler(self):
+    cmd = self.command.getString()
+    src = DIM.Server.getClientName()
+    print 'Command received:', cmd, 'from', src
+
+h = MyCommandHandler()
+DIM.Server.start('TEST')
+
+import time
+while(1):
+  s = 'empty  '+str(time.time())
+  time.sleep(1)
+  h.service.updateService(s)
+  print s
+  
+#---------------------------------------------------
+import DIM, time
+DIM.Client.sendCommand('Hello_0/OPTIONS',"""self.appMgr.readOptions('../options/Recv.opts')""")
+DIM.Client.sendCommand('Hello_0/OPTIONS',"""self.appMgr.evtSel().Input=["DATA='file://rawBuffer.dat' SVC='GaudiOnline::EvtSelect' LENGTH='44555635'"]""")
+DIM.Client.sendCommand('Hello_0/FSM','Config')
+DIM.Client.sendCommand('Hello_0/FSM','Active')
+DIM.Client.sendCommand('Hello_0/FSM','Running')
+time.sleep(0.5)
+DIM.Client.sendCommand('Hello_0/FSM','Active')
+time.sleep(1.5)
+DIM.Client.sendCommand('Hello_0/FSM','Running')
+time.sleep(0.5)
+DIM.Client.sendCommand('Hello_0/FSM','Active')
+time.sleep(1.5)
+for i in xrange(200):
+  print '###', i, DIM.Client.sendCommand('Hello_0/FSM','Running'), DIM.Client.sendCommand('Hello_0/FSM','Active')
+
+DIM.Client.sendCommand('Hello_0/EXIT',1)
+
+self.appMgr.readOptions('../options/Recv.opts')
+self.appMgr.evtSel().Input=["DATA='file://rawBuffer.dat' SVC='GaudiOnline::EvtSelector' LENGTH='44555635'"]
+
+
+self.appMgr.ExtSvc=["EventSelector"]
+//--------------------------------------------------------------
+// Private Application Configuration options
+//--------------------------------------------------------------
+// Set output level threshold (2=DEBUG, 3=INFO, 4=WARNING, 5=ERROR, 6=FATAL )
+MessageSvc.OutputLevel     =  1;
+//--------------------------------------------------------------
+// Event related parameters
+//--------------------------------------------------------------
+//ApplicationMgr.EvtSel   = "NONE"; // do not use any event input
+self.appMgr.HistogramPersistency = "NONE";
+self.appMgr.Dlls       += { "GaudiOnline" };
+self.appMgr.EvtMax      = 10;
+PoolDbCacheSvc.OutputLevel = 3;
+self.appMgr.evtSel().Input = {"DATA='sfc://pclhcb102.cern.ch:8888' SVC='GaudiOnline::EvtSelector' LENGTH='55555'"};
+self.appMgr.evtSel().Input = {"DATA='file://rawBuffer.dat' SVC='GaudiOnline::EvtSelector' LENGTH='55555'"};
+self.appMgr.evtSel().Input = {"DATA='ip://pclhcb102.cern.ch:8888' SVC='GaudiOnline::EvtSelector' LENGTH='55555'"};
+ApplicationMgr.DLLs += { "DAQEvent" };
+EventDataSvc.RootCLID = 1;
+// Configure the DataOnDemand Service to get the event header from RawBuffer
+ApplicationMgr.ExtSvc += { "DataOnDemandSvc" };
+EventDataSvc.EnableFaultHandler  = true ;
+DataOnDemandSvc.Algorithms += { "DATA='/Event/DAQ/RawBuffer' TYPE='GaudiOnline::RawBufferCreator'",
+                                "DATA='/Event/Header'        TYPE='EventHeaderFromRaw'" };
+EventPersistencySvc.CnvServices += { "OnlineCnvSvc" };
+ApplicationMgr.TopAlg         = { "ReadAlg" };
+ApplicationMgr.TopAlg        += { "StoreExplorerAlg" };
+StoreExplorerAlg.Load         = 1;
+StoreExplorerAlg.PrintFreq    = 1.0;
+ApplicationMgr.EvtMax         = 1000;
+
+self.appMgr.evtsel().Input=["DATA='file://rawBuffer.dat' SVC='GaudiOnline::EvtSelector' LENGTH='55555'"]
+
+#----PyAlgorithm------------------------------------------------------------------
+PyAlgorithm = gbl.GaudiPython.PyAlgorithmWrap
+PyAlgorithm_init_orig = PyAlgorithm.__init__
+def PyAlgorithm_init(self,name=None) :
+  if not name : name = self.__class__.__name__
+  PyAlgorithm_init_orig(self, self, name)
+  self._svcloc = gbl.Gaudi.svcLocator()
+  algmgr = Interface(gbl.IAlgManager).cast(self._svcloc)
+  sc = algmgr.addAlgorithm(self)
+  if sc.isFailure() : raise RuntimeError, 'Unable to add Algorithm'
+def PyAlgorithm_execute(self) : return 1
+def PyAlgorithm_initialize(self) : return 1
+def PyAlgorithm_finalize(self) : return 1
+PyAlgorithm.__init__   = PyAlgorithm_init
+PyAlgorithm.initialize = PyAlgorithm_initialize
+PyAlgorithm.finalize   = PyAlgorithm_finalize
+PyAlgorithm.execute    = PyAlgorithm_execute
+
+
+
+def PyDimCommandHandler_handler(self):
+  print 'hello'
+
+PyDimCommandHandler.__init__ = PyDimCommandHandler_init
+
+PyDimCommandHandler.commandHandler = PyDimCommandHandler_handler
+
+class MyCommandHandler(PyDimCommandHandler):
+  def __init__(self):
+    PyDimCommandHandler.__init__(self)
+    return
+  def commandHandler(self):
+    print 'Hello command!'
+
+h.commandHandler()
+h.test()
+
+m = g.Example.MyClass()
+dir(m)
