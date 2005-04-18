@@ -144,6 +144,14 @@
   fun:_ZNK4pool14XMLFileCatalog5startEv
 }
 
+{
+  From FileCatalog - bug 3171 (reported also as part of 7882)
+  Memcheck:Leak
+  fun:_Znwj
+  fun:_ZN11xercesc_2_317MemoryManagerImpl8allocateEj
+  fun:_ZN11xercesc_2_322UnixHTTPURLInputStreamC1ERKNS_6XMLURLE
+}
+
 # Root 4.03.02
 {
   Root bug 2826, fixed in head revision
@@ -243,14 +251,6 @@
 }
 
 # Several POOL 2_0_0 leaks (Savannah report 7882)
-{
-  From FileCatalog 
-  Memcheck:Leak
-  fun:_Znwj
-  fun:_ZN11xercesc_2_317MemoryManagerImpl8allocateEj
-  fun:_ZN11xercesc_2_322UnixHTTPURLInputStreamC1ERKNS_6XMLURLE
-}
-
 {
   From PersistencySvc
   Memcheck:Leak
