@@ -5,7 +5,7 @@
  * Implementation file for class : RichTrSegMakerFromTrStoredTracks
  *
  * CVS Log :-
- * $Id: RichTrSegMakerFromTrStoredTracks.cpp,v 1.12 2005-02-24 12:26:02 jonrob Exp $
+ * $Id: RichTrSegMakerFromTrStoredTracks.cpp,v 1.13 2005-04-18 16:15:42 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 14/01/2002
@@ -98,7 +98,7 @@ StatusCode RichTrSegMakerFromTrStoredTracks::initialize()
 
   // Get the ray tracing tool
   acquireTool( "RichRayTracing", m_rayTracing );
-  
+
   // get Detector elements for RICH1 and RICH2
   m_rich[Rich::Rich1] = getDet<DeRich>( DeRichLocation::Rich1 );
   m_rich[Rich::Rich2] = getDet<DeRich>( DeRichLocation::Rich2 );
@@ -116,21 +116,21 @@ StatusCode RichTrSegMakerFromTrStoredTracks::initialize()
   m_nomSphMirrorRadius[Rich::Rich2] = m_rich[Rich::Rich2]->sphMirrorRadius();
 
   // get the radiators
-  if ( !m_usedRads[Rich::Aerogel] ) 
-  { 
-    Warning("Track segments for Aerogel are disabled",StatusCode::SUCCESS); 
+  if ( !m_usedRads[Rich::Aerogel] )
+  {
+    Warning("Track segments for Aerogel are disabled",StatusCode::SUCCESS);
   } else
   {
     m_radiators.push_back( getDet<DeRichRadiator>( DeRichRadiatorLocation::Aerogel ) );
   }
-  if ( !m_usedRads[Rich::C4F10] ) 
+  if ( !m_usedRads[Rich::C4F10] )
   {
     Warning("Track segments for C4F10 are disabled",StatusCode::SUCCESS);
   } else
   {
     m_radiators.push_back( getDet<DeRichRadiator>( DeRichRadiatorLocation::C4F10 ) );
-  } 
-  if ( !m_usedRads[Rich::CF4] ) 
+  }
+  if ( !m_usedRads[Rich::CF4] )
   {
     Warning("Track segments for CF4 are disabled",StatusCode::SUCCESS);
   } else
@@ -159,12 +159,12 @@ int RichTrSegMakerFromTrStoredTracks::constructSegments( const ContainedObject *
 
   // Try to cast input data to required type for this implementation
   const TrStoredTrack * track = dynamic_cast<const TrStoredTrack *>(obj);
-  if ( !track ) 
+  if ( !track )
   {
     Warning("::constructSegments : Input data object is not of type TrStoredTrack");
     return 0;
   }
-  if ( msgLevel(MSG::VERBOSE) ) 
+  if ( msgLevel(MSG::VERBOSE) )
   {
     verbose() << "Analysing TrStoredTrack key=" << track->key();
     if      ( track->unique()  ) verbose() << " unique";
@@ -175,10 +175,10 @@ int RichTrSegMakerFromTrStoredTracks::constructSegments( const ContainedObject *
     else if ( track->ksTrack() ) verbose() << " KsTrack";
     else if ( track->velo()    ) verbose() << " velo";
     else                         verbose() << " UNKNOWN";
-    verbose() << " (history " << track->history() 
+    verbose() << " (history " << track->history()
               << ") : " << track->states().size() << " TrStates at z =";
     for ( SmartRefVector<TrState>::const_iterator iS = track->states().begin();
-          iS != track->states().end(); ++iS ) 
+          iS != track->states().end(); ++iS )
     {
       if (*iS) verbose() << " " << (*iS)->z();
     }
@@ -191,11 +191,11 @@ int RichTrSegMakerFromTrStoredTracks::constructSegments( const ContainedObject *
   // Loop over all radiators
   for ( Radiators::const_iterator radiator = m_radiators.begin();
         radiator != m_radiators.end();
-        ++radiator ) {    
+        ++radiator ) {
 
     // which radiator
     const Rich::RadiatorType rad = (*radiator)->radiatorID();
-    if ( msgLevel(MSG::VERBOSE) ) 
+    if ( msgLevel(MSG::VERBOSE) )
     {
       verbose() << " Considering radiator " << rad << endreq;
     }
@@ -217,9 +217,10 @@ int RichTrSegMakerFromTrStoredTracks::constructSegments( const ContainedObject *
     // Clone exit state (for aero use entrance point)
     TrStateP * exitPState = dynamic_cast<TrStateP*>( Rich::Aerogel == rad ?
                                                      entryPStateRaw->clone() : exitPStateRaw->clone() );
-    if ( !exitPState ) { Warning("Failed to clone TrStateP"); continue; }
+    if ( !exitPState ) { Warning("Failed to clone TrStateP"); delete entryPState; continue; }
 
-    if ( msgLevel(MSG::VERBOSE) ) {
+    if ( msgLevel(MSG::VERBOSE) )
+    {
       verbose() << "  Found appropriate initial start/end TrStates" << endreq
                 << "   EntryPos : " << HepPoint3D(entryPState->x(),entryPState->y(),entryPState->z()) << endreq
                 << "   EntryDir : " << HepVector3D(entryPState->tx(),entryPState->ty(),1) << endreq
@@ -235,7 +236,7 @@ int RichTrSegMakerFromTrStoredTracks::constructSegments( const ContainedObject *
     if ( (*radiator)->nextIntersectionPoint( firstPoint,
                                              firstDir,
                                              entryPoint1 ) ) {
-      
+
       // extrapolate state to the correct z
       if ( moveState( entryPState, entryPoint1.z(), entryPStateRaw ) ) {
         // find radiator entry and exit points
@@ -244,11 +245,11 @@ int RichTrSegMakerFromTrStoredTracks::constructSegments( const ContainedObject *
           if ( (*radiator)->intersectionPoints( HepPoint3D(entryPState->x(),entryPState->y(),entryPState->z()),
                                                 HepVector3D(entryPState->tx(),entryPState->ty(),1),
                                                 entryPoint1,
-                                                exitPoint1) ) { 
+                                                exitPoint1) ) {
             entryStateOK = true;
-            if ( msgLevel(MSG::VERBOSE) ) 
+            if ( msgLevel(MSG::VERBOSE) )
               verbose() << "      Entry state rad intersection points " << entryPoint1 << " " << exitPoint1 << endreq;
-          }          
+          }
         }
       }
     } else if ( msgLevel(MSG::VERBOSE) ) {
@@ -272,9 +273,9 @@ int RichTrSegMakerFromTrStoredTracks::constructSegments( const ContainedObject *
             if ( (*radiator)->intersectionPoints(HepPoint3D(exitPState->x(),exitPState->y(),exitPState->z()),
                                                  HepVector3D(exitPState->tx(),exitPState->ty(),1),
                                                  entryPoint2,
-                                                 exitPoint2) ) { 
-              exitStateOK = true; 
-              if ( msgLevel(MSG::VERBOSE) ) 
+                                                 exitPoint2) ) {
+              exitStateOK = true;
+              if ( msgLevel(MSG::VERBOSE) )
                 verbose() << "      Exit state rad intersection points " << entryPoint2 << " " << exitPoint2 << endreq;
             }
           }
@@ -305,7 +306,7 @@ int RichTrSegMakerFromTrStoredTracks::constructSegments( const ContainedObject *
         // delete current exit state and replace with clone of raw entrance state
         delete exitPState;
         exitPState = dynamic_cast<TrStateP*>( entryPStateRaw->clone() );
-        if ( !exitPState ) { Warning("Failed to clone TrStateP"); continue; }
+        if ( !exitPState ) { Warning("Failed to clone TrStateP"); delete entryPState; continue; }
       }
 
       // make sure at current z positions
@@ -316,14 +317,14 @@ int RichTrSegMakerFromTrStoredTracks::constructSegments( const ContainedObject *
       sc = sc1 && sc2;
 
     } else if ( exitStateOK ) {
-      if (msgLevel(MSG::VERBOSE)) 
+      if (msgLevel(MSG::VERBOSE))
         verbose() << "  Exit state OK  : Zentry=" << entryPoint2.z()
                   << " Zexit=" << exitPoint2.z() << endreq;
 
       // delete current exit state and replace with clone of raw entrance state
       delete entryPState;
       entryPState = dynamic_cast<TrStateP*>( exitPStateRaw->clone() );
-      if ( !entryPState ) { Warning("Failed to clone TrStateP"); continue; }
+      if ( !entryPState ) { Warning("Failed to clone TrStateP"); delete exitPState; continue; }
 
       // make sure at current z positions
       if (msgLevel(MSG::VERBOSE)) verbose() << "  Checking entry point is at final z= " << entryPoint2.z() << endreq;
@@ -332,11 +333,18 @@ int RichTrSegMakerFromTrStoredTracks::constructSegments( const ContainedObject *
       const StatusCode sc2 = moveState( exitPState,  exitPoint2.z(), exitPStateRaw );
       sc = sc1 && sc2;
 
-    } else {
+    }
+    else
+    {
+      delete entryPState;
+      delete exitPState;
       if (msgLevel(MSG::VERBOSE)) verbose() << "  Both states failed" << endreq;
       continue;
     }
-    if ( sc.isFailure() ) {
+    if ( sc.isFailure() )
+    {
+      delete entryPState;
+      delete exitPState;
       if (msgLevel(MSG::VERBOSE)) verbose() << "    --> Failed to use state information. Quitting." << endreq;
       continue;
     }
@@ -350,12 +358,18 @@ int RichTrSegMakerFromTrStoredTracks::constructSegments( const ContainedObject *
     if ( rad != Rich::Aerogel ) correctRadExitMirror( *radiator, exitPState, exitPStateRaw );
 
     // Final check that info is reaonable
-    if ( (entryPState->z() > exitPState->z()) ) {
+    if ( (entryPState->z() > exitPState->z()) )
+    {
+      delete entryPState;
+      delete exitPState;
       Warning( "Entry state after exit state for " + Rich::text(rad) + " -> rejecting segment",
                StatusCode::SUCCESS, 5 );
       continue;
     }
-    if ( (exitPState->z()-entryPState->z()) < m_minStateDiff[rad] ) {
+    if ( (exitPState->z()-entryPState->z()) < m_minStateDiff[rad] )
+    {
+      delete entryPState;
+      delete exitPState;
       Warning( "Track states for " + Rich::text(rad) + " too close in z -> rejecting segment",
                StatusCode::SUCCESS, 5 );
       continue;
@@ -387,7 +401,7 @@ int RichTrSegMakerFromTrStoredTracks::constructSegments( const ContainedObject *
       // For gas radiators transport entry state to mid point to create middle point
       // information for three point RichTrackSegment constructor
       if ( rad != Rich::Aerogel && moveState( entryPState,
-                                              (entryPoint.z()+exitPoint.z())/2, 
+                                              (entryPoint.z()+exitPoint.z())/2,
                                               entryPStateRaw ) ) {
 
         // middle point information
@@ -425,7 +439,7 @@ int RichTrSegMakerFromTrStoredTracks::constructSegments( const ContainedObject *
     catch ( const std::exception & excpt ) {
       Warning( "Exception whilst creating RichTrackSegment '"+std::string(excpt.what())+"'" );
     }
-    
+
     // Clean up cloned states
     delete entryPState;
     delete exitPState;
@@ -444,10 +458,10 @@ void RichTrSegMakerFromTrStoredTracks::fixC4F10EntryPoint( TrStateP *& state,
 
   HepPoint3D dummyPoint, aerogelExitPoint;
   if ( m_radiators[Rich::Aerogel]->intersectionPoints(HepPoint3D(state->x(),state->y(),state->z()),
-                                                     HepVector3D(state->tx(),state->ty(),1),
-                                                     dummyPoint,
-                                                     aerogelExitPoint) ) {
-    if ( aerogelExitPoint.z() > state->z() ) 
+                                                      HepVector3D(state->tx(),state->ty(),1),
+                                                      dummyPoint,
+                                                      aerogelExitPoint) ) {
+    if ( aerogelExitPoint.z() > state->z() )
     {
       if (msgLevel(MSG::VERBOSE)) verbose() << "   Correcting C4F10 entry point" << endreq;
       moveState( state, aerogelExitPoint.z(), refState );
@@ -476,10 +490,10 @@ void RichTrSegMakerFromTrStoredTracks::correctRadExitMirror( DeRichRadiator* rad
   if ( m_rayTracing->reflectSpherical(intersection,
                                       tempDir,
                                       m_nominalCoC[rich][m_rich[rich]->side(intersection)],
-                                      m_nomSphMirrorRadius[rich]) ) 
-  {    
+                                      m_nomSphMirrorRadius[rich]) )
+  {
     if ( radiator->geometry()->isInside(intersection) ) { correct = true; }
-  }                   
+  }
 
   // finally, update state
   if ( correct ) {
@@ -501,9 +515,9 @@ StatusCode RichTrSegMakerFromTrStoredTracks::moveState( TrStateP *& stateToMove,
   if ( fabs(stateToMove->z() - z) > 1*mm ) {
 
     // debug printout
-    if ( msgLevel(MSG::VERBOSE) ) 
+    if ( msgLevel(MSG::VERBOSE) )
     {
-      verbose() << "    --> Extrapolating state from " 
+      verbose() << "    --> Extrapolating state from "
                 << HepPoint3D(stateToMove->x(),stateToMove->y(),stateToMove->z()) << endreq;
     }
 
@@ -512,7 +526,7 @@ StatusCode RichTrSegMakerFromTrStoredTracks::moveState( TrStateP *& stateToMove,
       // Delete current working state and start fresh from reference state
       delete stateToMove;
       stateToMove = dynamic_cast<TrStateP*>( refState->clone() );
-      if ( msgLevel(MSG::VERBOSE) ) 
+      if ( msgLevel(MSG::VERBOSE) )
       {
         verbose() << "      --> Using reference state  "
                   << HepPoint3D(stateToMove->x(),stateToMove->y(),stateToMove->z()) << endreq;
@@ -520,13 +534,13 @@ StatusCode RichTrSegMakerFromTrStoredTracks::moveState( TrStateP *& stateToMove,
     }
 
     // try first with the primary extrapolator
-    if ( !m_trExt1->propagate(stateToMove,z) ) 
+    if ( !m_trExt1->propagate(stateToMove,z) )
     {
       // if that fails, try the backup one
-      if ( m_trExt2->propagate(stateToMove,z) ) 
+      if ( m_trExt2->propagate(stateToMove,z) )
       {
         Warning(m_Ext1+" failed -> reverted to "+m_Ext2,StatusCode::SUCCESS);
-      } else 
+      } else
       {
         // Both failed ...
         Warning("Failed to transport state using "+m_Ext1+" or "+m_Ext2);
@@ -535,9 +549,9 @@ StatusCode RichTrSegMakerFromTrStoredTracks::moveState( TrStateP *& stateToMove,
     }
 
     // debug printout
-    if ( msgLevel(MSG::VERBOSE) ) 
+    if ( msgLevel(MSG::VERBOSE) )
     {
-      verbose() << "                            to   " 
+      verbose() << "                            to   "
                 << HepPoint3D(stateToMove->x(),stateToMove->y(),stateToMove->z()) << endreq;
     }
 

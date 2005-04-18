@@ -4,6 +4,10 @@
 ! Purpose     : General purpose Rich Tools
 !-----------------------------------------------------------------------------
 
+! 2005-04-18 - Chris Jones
+ - Fix memory leaks in RichTrSegMakerFromTrStoredTracks when track segments
+   are rejected.
+
 !=========================== RichTools v1r5 2005-03-07 =======================
 ! 2005-02-22 - Chris Jones
  - Add protection in RichSmartIDTool against exceptions during the creation
