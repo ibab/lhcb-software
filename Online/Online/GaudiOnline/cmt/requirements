@@ -7,15 +7,6 @@ version           v1r0
 branches          cmt doc src GaudiOnline 
 include_dirs      $(GAUDIONLINEROOT)
 use EventSys      v* Event
-use DIM           v* Online
-use GaudiSvc      v*
-use GaudiPoolDb   v*
-use GaudiPython   v*
-# ==================== dictionary libraries ==================================
-apply_pattern lcg_dictionary headerfiles="$(GAUDIONLINEROOT)/DIM/dim_dict.h" \
-                             selectionfile="$(GAUDIONLINEROOT)/DIM/dim_dict.xml" \
-                             dictionary=DIM
-macro_append DIM_lcgdict_options ' --split $(includes) '
 # ==================== component libraries ==================================
 library GaudiOnline  *.cpp
 apply_pattern component_library library=GaudiOnline 
