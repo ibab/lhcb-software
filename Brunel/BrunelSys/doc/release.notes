@@ -3,6 +3,12 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
+</PRE><H1><A NAME=v26r3>2005-04-18 Brunel v26r3</A></H1><PRE>
+This version uses Gaudi v16r2, LHCb v18r3 (also CLHEP 1.9, ROOT 4.0)
+Requires input data from Boole v8r2 or greater. Incompatible with DC04 versions
+
+- Packages modified: ITAlgorithms v14r4p1
+
 </PRE><H1><A NAME=v26r2>2005-04-11 Brunel v26r2</A></H1><PRE>
 This version uses Gaudi v16r2, LHCb v18r2 (also CLHEP 1.9, ROOT 4.0)
 Requires input data from Boole v8r2 or greater. Incompatible with DC04 versions

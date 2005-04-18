@@ -1,5 +1,5 @@
 package BrunelSys
-version v26r2
+version v26r3
 
 branches cmt doc
  
@@ -8,13 +8,13 @@ branches cmt doc
 #=======================================================
 
 # Brunel application
-use Brunel              v26r2	Rec
+use Brunel              v26r3	Rec
 
 # Calorimeter
 use CaloMoniDst         v1r0	Calo
 
 # Inner Tracker
-use ITAlgorithms        v14r4	IT
+use ITAlgorithms        v14r4p1	IT
 use ITCheckers          v2r4p1	IT
 
 # Tracking
