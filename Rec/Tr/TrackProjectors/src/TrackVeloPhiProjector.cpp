@@ -21,8 +21,8 @@ const        IToolFactory& TrackVeloPhiProjectorFactory = s_factory ;
 //  Project a state onto a measurement.
 // It returns the chi squared of the projection
 //=============================================================================
-double TrackVeloPhiProjector::project( const State& state,
-                                       Measurement& meas )
+StatusCode TrackVeloPhiProjector::project( const State& state,
+                                           Measurement& meas )
 {
   double x  = state.x();
   double y  = state.y();
@@ -68,7 +68,7 @@ double TrackVeloPhiProjector::project( const State& state,
 
   computeErrorResidual( state, meas );
 
-  return chi2() ; 
+  return StatusCode::SUCCESS ; 
 }
 
 //=============================================================================

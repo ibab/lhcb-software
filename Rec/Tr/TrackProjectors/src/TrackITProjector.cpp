@@ -20,8 +20,8 @@ const        IToolFactory& TrackITProjectorFactory = s_factory ;
 //  Project a state onto a measurement.
 // It returns the chi squared of the projection
 //=============================================================================
-double TrackITProjector::project( const State& state,
-                                  Measurement& meas )
+StatusCode TrackITProjector::project( const State& state,
+                                      Measurement& meas )
 {
   ITChannelID ITChan = meas.lhcbID().stID();
   const STDetectionLayer* ITLay = m_det -> layer( ITChan );
@@ -39,7 +39,7 @@ double TrackITProjector::project( const State& state,
 
   computeErrorResidual( state, meas );
   
-  return chi2();
+  return StatusCode::SUCCESS; 
 
 }
 

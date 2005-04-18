@@ -21,8 +21,8 @@ const        IToolFactory& TrackVeloRProjectorFactory = s_factory ;
 //  Project a state onto a measurement.
 // It returns the chi squared of the projection
 //=============================================================================
-double TrackVeloRProjector::project( const State& state,
-                                     Measurement& meas )
+StatusCode TrackVeloRProjector::project( const State& state,
+                                         Measurement& meas )
 {
   double h = 0;
 
@@ -54,7 +54,7 @@ double TrackVeloRProjector::project( const State& state,
 
   computeErrorResidual( state, meas );
 
-  return chi2() ; 
+  return StatusCode::SUCCESS; 
 }
 
 //=============================================================================

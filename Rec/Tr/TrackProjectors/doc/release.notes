@@ -4,6 +4,9 @@
 ! Purpose     : Package for tracking projectors
 !-----------------------------------------------------------------------------
 
+! 2005-04-18 - Jose Hernando, Eduardo Rodrigues
+	- the main method of the projectors return a StatusCode
+
 ! 2005-04-13 - Jose Hernando, Eduardo Rodrigues
  - concrete classes TrackVeloRProjector and TrackVeloPhiProjector
    introduced and implemented

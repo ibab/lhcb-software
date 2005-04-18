@@ -24,8 +24,8 @@ class TrackMasterProjector : public GaudiTool,
 public:
   /// Project a state onto a measurement.
   /// It returns the chi squared of the projection
-  double project( const State& state,
-                  Measurement& meas );
+  StatusCode project( const State& state,
+                      Measurement& meas );
   
   /// Retrieve the projection matrix H of the (last) projection
   const HepVector& projectionMatrix() const;

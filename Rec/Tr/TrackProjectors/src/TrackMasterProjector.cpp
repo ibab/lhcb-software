@@ -24,10 +24,15 @@ const        IToolFactory& TrackMasterProjectorFactory = s_factory ;
 //  Project a state onto a measurement.
 // It returns the chi squared of the projection
 //=============================================================================
-double TrackMasterProjector::project( const State& state, Measurement& meas ) {
+StatusCode TrackMasterProjector::project( const State& state, 
+                                          Measurement& meas ) {
   // TODO: change the measurement to get the type, 
   // selectProjector(meas.type());
-  if ( Measurement::OT != m_selectedMeasType) selectProjector( Measurement::OT );
+  StatusCode sc = StatusCode::SUCCESS;
+  if ( Measurement::OT != m_selectedMeasType) 
+    sc = selectProjector( Measurement::OT );
+  if (sc.isFailure()) return Warning(" Not able to select projector");
+
   return m_selectedProjector -> project( state, meas );  
 }
 

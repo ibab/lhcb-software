@@ -1,4 +1,4 @@
-// $Id: TrackProjector.h,v 1.2 2005-04-08 15:45:46 erodrigu Exp $
+// $Id: TrackProjector.h,v 1.3 2005-04-18 09:12:05 hernando Exp $
 #ifndef TRACKPROJECTORS_TRACKPROJECTOR_H 
 #define TRACKPROJECTORS_TRACKPROJECTOR_H 1
 
@@ -23,10 +23,11 @@
 class TrackProjector : public GaudiTool,
                        virtual public ITrackProjector {
 public:
+
   /// Project a state onto a measurement.
   /// It returns the chi squared of the projection
-  virtual double project( const State& state,
-                          Measurement& meas );
+  virtual StatusCode project( const State& state,
+                              Measurement& meas );
   
 
   /// Retrieve the projection matrix H of the (last) projection

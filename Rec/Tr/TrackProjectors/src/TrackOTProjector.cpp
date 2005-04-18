@@ -21,7 +21,7 @@ const        IToolFactory& TrackOTProjectorFactory = s_factory ;
 //  Project a state onto a measurement.
 // It returns the chi squared of the projection
 //=============================================================================
-double TrackOTProjector::project( const State& state,
+StatusCode TrackOTProjector::project( const State& state,
                                   Measurement& meas )
 {
   double x  = state.x();
@@ -72,7 +72,7 @@ double TrackOTProjector::project( const State& state,
 
   computeErrorResidual( state, meas );  
 
-  return chi2() ; 
+  return StatusCode::SUCCESS; 
 }
 
 //=============================================================================

@@ -19,8 +19,8 @@ class TrackOTProjector : public TrackProjector {
 public:
   /// Project a state onto a measurement.
   /// It returns the chi squared of the projection
-  virtual double project( const State& state,
-                          Measurement& meas );
+  virtual StatusCode project( const State& state,
+                              Measurement& meas );
 
   /// initialize
   virtual StatusCode initialize();
