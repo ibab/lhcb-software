@@ -50,8 +50,7 @@ public:
 
 protected:
 
-  void selectProjector( const Measurement::Type& type );
-  
+  StatusCode selectProjector( const Measurement::Type& type );
 
 private:
 

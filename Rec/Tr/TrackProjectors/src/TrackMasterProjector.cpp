@@ -33,19 +33,20 @@ StatusCode TrackMasterProjector::project( const State& state,
     sc = selectProjector( Measurement::OT );
   if (sc.isFailure()) return Warning(" Not able to select projector");
 
-  return m_selectedProjector -> project( state, meas );  
+  return m_selectedProjector->project( state, meas );  
 }
 
 //=============================================================================
 // select the projector
 //=============================================================================
-void TrackMasterProjector::selectProjector( const Measurement::Type& type ) 
+StatusCode TrackMasterProjector::selectProjector
+( const Measurement::Type& type ) 
 {
   if ( m_projectors.find(type) == m_projectors.end() )
-    error() << " No ITrackProjector in TrackMasterProjector for measurement type "
-            << type << endreq;
+    return Warning(" No ITrackProjector in TrackMasterProjector for measurement type ");
   m_selectedProjector = m_projectors[type];
   m_selectedMeasType  = type;    
+  return StatusCode::SUCCESS;
 }
 
 //=============================================================================
