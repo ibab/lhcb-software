@@ -16,6 +16,14 @@
 
       &StlPtrVector;
 
+
+      <destructor
+        desc = 'Track destructor'>
+        <code>
+  reset();
+        </code>
+      </destructor>
+
       <attribute
         type    = 'Measurement*'
         name    = 'measurement'
@@ -50,12 +58,19 @@
         desc    = 'the projection matrix'
         access  = 'PROTECTED' />
 
-      <destructor
-        desc    = 'specific destructor'>
+      <method
+        type    = 'void'
+        name    = 'reset'
+	virtual = 'TRUE'
+        desc    = 'Clear the track before re-use'>
         <code>
   if (m_state != NULL) delete m_state;
+  m_measurement = NULL;
+  m_state = NULL;
+  m_residual = 0.;
+  m_errResidual = 0.;
         </code>
-      </destructor>
+      </method>
 
       <method
         type    = 'double'

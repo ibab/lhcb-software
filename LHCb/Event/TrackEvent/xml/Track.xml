@@ -392,62 +392,62 @@
 
       <method
         name    = 'setType'
-        argList = 'std::string value'
+        argList = 'unsigned int value'
         desc    = 'set type of the track (values in TrackKeys::Types)'
         />
 
       <method
-        type    = 'const std::string &amp;'
+        type    = 'unsigned int'
         name    = 'type'
         desc    = 'return the type of the track'
         const   = 'TRUE'/> 
 
       <method
         name    = 'setHistory'
-        argList = 'std::string value'
+        argList = 'unsigned int value'
         desc    = 'set the name of the algorithm (ParRec) thar made the track (see in TrackKeys::History)'
         />
 
       <method
-        type    = 'const std::string &amp;'
+        type    = 'unsigned int'
         name    = 'history'
         desc    = 'return the algorithm that created the track '
         const   = 'TRUE'/> 
 
       <method
         name    = 'setHistoryFit'
-        argList = 'std::string value'
+        argList = 'unsigned int'
         desc    = 'set the algorithm that fitted the track (TrackKeys::HistoryFit)'
         />
 
       <method
-        type    = 'const std::string &amp;'
+        type    = 'unsigned int'
         name    = 'historyFit'
         desc    = 'return the fitting algorithm '
         const   = 'TRUE'/> 
       
       <method
         name    = 'setStatus'
-        argList = 'std::string value'
+        argList = 'unsigned int'
         desc    = 'set the status of the track (see TrackKeys::Status)'
         />
 
       <method
-        type    = 'const std::string &amp;'
+        type    = 'unsigned int'
         name    = 'status'
         desc    = 'return the status of the track '
         const   = 'TRUE'/> 
 
       <method
         name    = 'setFlag'
-        argList = 'std::string flag, bool value'
+        argList = 'unsigned int, bool value'
         desc    = 'Update the flag (see TrackKeys::Flags)'
         />
 
       <method
         type    = 'bool'
         name    = 'checkFlag'
-        argList = 'std::string flag '
+        argList = 'unsigned int flag '
         desc    = 'return the status of the flag '
         const   = 'TRUE'/> 
 

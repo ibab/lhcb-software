@@ -5,6 +5,10 @@
 !-----------------------------------------------------------------------------
 
 ! 2005-04-15 - Jose A. Hernando
+ - Track: flags,history,etc.. are not set by an unsigned int
+          the list of enums with the possible unsigned int values are now in TrackKeys.h
+
+! 2005-04-15 - Jose A. Hernando
  - Track: destructor, reset and clone revisited, to handle properly the memory
 		      set of vector of States, Measurements and Nodes not allow to handle the memory
           setting the flag at ones allowed.

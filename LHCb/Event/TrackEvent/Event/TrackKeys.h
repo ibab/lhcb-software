@@ -1,44 +1,47 @@
 #ifndef TrackKeys_H
 #define TrackKeys_H 1
 
-#include "Event/Track.h"
-#include <map>
-
 //! @author J.A. Hernando
 //! @date 13/04/2005
   
 
-class TrackKeys {
+namespace TrackKeys 
+{
+  enum History {HistoryUnknown=0,
+                TrLong,
+                TrSeeding,
+                TrKshort,
+                TrMatching,
+                TrVelo,
+                TrVeloTT,
+                TrgVelo,
+                TrgVeloTT,
+                TrgForward};
+    
+
+  enum HistoryFit {FitUnknown=0,
+                   Kalman};
+
+
   
-public:
-  
-  TrackKeys();
-  
-  static TrackKeys s_trackKeys;  
-  
-public:
-  
-  static std::vector<std::string> History;
-  
-  static std::vector<std::string> HistoryFit;
-  
-  static std::vector<std::string> Types;
-  
-  static std::vector<std::string> Status;
-  
-  static std::vector<std::string> Flags;
+  enum Types {TypeUnknown=0,
+              Velo,
+              VeloR,
+              Long,
+              Upstream,
+              Downstream,
+              Ttrack};
+
+  enum Status {StatusUnknown=0,
+               PatRec,
+               Ready,
+               Fitted,
+               Failed};
+
+  enum Flags {Backward=1,
+              Valid=2,
+              Unique=4,
+              IPSelected=8,
+              PIDSelected=16};
 };
-
-namespace Keys {
-
-  unsigned int index(const std::vector<std::string>& keys, 
-                     const std::string& key);
-  
-  unsigned int bitIndex(const std::vector<std::string>& keys, 
-                        const std::string& key);
-  
-  const std::string& key(const std::vector<std::string>& keys, 
-                        unsigned int index);
-}
-
 #endif

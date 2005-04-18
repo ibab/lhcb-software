@@ -1,8 +1,7 @@
-// $Id: Track.cpp,v 1.6 2005-04-18 10:22:30 hernando Exp $ // Include files
+// $Id: Track.cpp,v 1.7 2005-04-18 16:25:22 hernando Exp $ // Include files
 
 // local
 #include "Event/Track.h"
-#include "Event/TrackKeys.h"
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : Track
@@ -258,70 +257,64 @@ Track* Track::clone() const
 
 //=============================================================================
 
-void Track::setHistory(const std::string& key )
+void Track::setHistory(unsigned int key )
 {
-  unsigned int val = Keys::index(TrackKeys::History,key);
   m_flags &= ~historyMask;
-  m_flags |= ((((unsigned int)val) << historyBits) & historyMask);
+  m_flags |= ((((unsigned int) key ) << historyBits) & historyMask);
 };
 
-const std::string& Track::history() const
+unsigned int Track::history() const
 {
   unsigned int val = ( m_flags & historyMask) >> historyBits;
-  return Keys::key(TrackKeys::History,val);
+  return val;
 };
 
-void Track::setHistoryFit( const std::string& key )
+void Track::setHistoryFit(unsigned int key )
 {
-  unsigned int val = Keys::index(TrackKeys::HistoryFit,key);
   m_flags &= ~historyFitMask;
-  m_flags |= ((((unsigned int)val) << historyFitBits) & historyFitMask);
+  m_flags |= ((((unsigned int) key) << historyFitBits) & historyFitMask);
 };
 
-const std::string& Track::historyFit() const
+unsigned int Track::historyFit() const
 {
   unsigned int val = ( m_flags & historyFitMask) >> historyFitBits;
-  return Keys::key(TrackKeys::HistoryFit,val);
+  return val;
 };
 
-void Track::setType( const std::string& key)
+void Track::setType(unsigned int key)
 {
-  unsigned int val = Keys::index(TrackKeys::Types,key);
   m_flags &= ~typeMask;
-  m_flags |= ((((unsigned int)val) << typeBits) & typeMask);
+  m_flags |= ((((unsigned int) key) << typeBits) & typeMask);
 };
 
-const std::string& Track::type() const
+unsigned int Track::type() const
 {
   unsigned int val = ( m_flags & typeMask) >> typeBits;
-  return Keys::key(TrackKeys::Types,val);
+  return val;
 }
 
-void Track::setStatus( const std::string& key)
+void Track::setStatus(unsigned int key)
 {
-  unsigned int val = Keys::index(TrackKeys::Status,key);
   m_flags &= ~statusMask;
-  m_flags |= ((((unsigned int)val) << statusBits) & statusMask);
+  m_flags |= ((((unsigned int) key) << statusBits) & statusMask);
 };
 
-const std::string& Track::status() const
+unsigned int Track::status() const
 {
   unsigned int val = ( m_flags & statusMask) >> statusBits;
-  return Keys::key(TrackKeys::Status,val);
+  return val;
 }
 
-void Track::setFlag(const std::string& flag, bool ok)
+void Track::setFlag(unsigned int flag, bool ok)
 {
-  unsigned int value = Keys::bitIndex(TrackKeys::Flags,flag);
-  unsigned int val = (((unsigned int) value) << flagBits) & flagMask;
+  unsigned int val = (((unsigned int) flag) << flagBits) & flagMask;
   if (ok) m_flags |= val;
   else m_flags &= ~val;
 }
 
-bool Track::checkFlag(const std::string& flag) const
+bool Track::checkFlag(unsigned int flag) const
 {
-  unsigned int value = Keys::bitIndex(TrackKeys::Flags,flag);
-  unsigned int val = ((unsigned int)value << flagBits);  
+  unsigned int val = ((unsigned int) flag << flagBits);  
   bool ok = (0 != ( m_flags & flagMask & val ));
   return ok;
 }

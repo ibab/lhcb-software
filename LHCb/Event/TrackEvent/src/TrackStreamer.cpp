@@ -65,13 +65,7 @@ std::ostream& str::trackFields(const Track& track, std::ostream& os) {
   os << " status: \t" <<track.status() << std::endl;
   os << " history: \t" << track.history() << std::endl;
   os << " history Fit: \t" << track.historyFit() << std::endl;
-  os << " flags: \t";
-  for (std::vector<std::string>::const_iterator 
-         it = TrackKeys::Flags.begin(); 
-       it != TrackKeys::Flags.end(); it++) {
-    if (track.checkFlag(*it))
-      os << *it  << " ";  
-  }
+  // os << " flags: \t";
   os << std::endl;
   return os;
 }
