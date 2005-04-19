@@ -1,4 +1,4 @@
-// $Id: State.cpp,v 1.2 2005-02-23 18:13:23 erodrigu Exp $
+// $Id: State.cpp,v 1.3 2005-04-19 06:42:29 cattanem Exp $
 
 // local
 #include "Event/State.h"
@@ -67,9 +67,9 @@ HepSymMatrix State::posMomCovariance() const
   index.push_back( 4 );
   index.push_back( 5 );
 
-  for ( int j=0 ; j<5 ; j++ ) {
-    for ( int i=j ; i<5 ; i++ ) {
-      cov6Dtmp.fast(index[i]+1,index[j]+1) = cov5D.fast(i+1,j+1);
+  for ( int jj=0 ; jj<5 ; jj++ ) {
+    for ( int i=jj ; i<5 ; i++ ) {
+      cov6Dtmp.fast(index[i]+1,index[jj]+1) = cov5D.fast(i+1,jj+1);
     }
   }
   cov6Dtmp.fast(3,1) = 0.;

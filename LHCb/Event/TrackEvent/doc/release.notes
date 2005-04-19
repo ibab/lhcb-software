@@ -4,6 +4,10 @@
 ! Purpose     : Package for the tracking event model classes
 !-----------------------------------------------------------------------------
 
+!========================= TrackEvent v0r1 2005-04-19 ========================
+! 2005-04-19 - Marco Cattaneo
+ - Fix a Windows compilation warning
+
 ! 2005-04-15 - Jose A. Hernando
  - Track: flags,history,etc.. are not set by an unsigned int
           the list of enums with the possible unsigned int values are now in TrackKeys.h
