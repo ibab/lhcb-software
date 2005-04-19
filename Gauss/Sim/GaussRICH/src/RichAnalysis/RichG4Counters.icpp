@@ -90,6 +90,11 @@ inline int NumHitTotRich2Gas() const
   return   m_NumHitTotRich2Gas;
 
 }
+inline int NumHitTotNoRadiator() const
+{
+  return     m_NumHitTotNoRadiator;
+
+}
 
 inline const std::vector<int> & NumHitPerTrackRich1Gas() const
 {
@@ -245,6 +250,11 @@ inline void bumpNumHitTotRich2Gas()
 {
   ++m_NumHitTotRich2Gas;
 }
+inline void bumpNumHitTotNoRadiator()
+{
+  ++m_NumHitTotNoRadiator;
+}
+
 
 inline void bumpNumHitPerTrackRich1Gas(int ait)
 {

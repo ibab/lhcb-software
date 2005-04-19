@@ -1,4 +1,4 @@
-// $Id: RichG4EventHitCount.cpp,v 1.5 2005-04-06 12:03:12 seaso Exp $
+// $Id: RichG4EventHitCount.cpp,v 1.6 2005-04-19 16:12:51 seaso Exp $
 // Include files
 
 
@@ -1514,9 +1514,11 @@ void RichG4EventHitCount::RichG4CountAndClassifyHits( const G4Event* anEvent,  i
 
 
 
+            } else {
+
+	      aRichCounter->bumpNumHitTotNoRadiator();
+             
             }
-
-
           }
 
 

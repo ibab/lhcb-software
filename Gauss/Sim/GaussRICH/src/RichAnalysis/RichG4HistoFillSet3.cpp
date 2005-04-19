@@ -1,4 +1,4 @@
-// $Id: RichG4HistoFillSet3.cpp,v 1.3 2005-04-06 12:03:12 seaso Exp $
+// $Id: RichG4HistoFillSet3.cpp,v 1.4 2005-04-19 16:12:51 seaso Exp $
 // Include files
 
 
@@ -145,24 +145,24 @@ void RichG4HistoFillSet3:: FillRichG4HistoSet3( const G4Event* anEvent,
     (aRichCounter->NumPhotAgelRich1SiDet())*1.0;
 
 
-      std::cout<<" NumPhot at Prod in C4F10  ="<< aNumPhotProdRich1Gas 
-               <<std::endl;
+  //   std::cout<<" NumPhot at Prod in C4F10  ="<< aNumPhotProdRich1Gas 
+  //             <<std::endl;
 
-      std::cout<<"from C4f10 NumPhot at Prod Mirror1 Mirror2 GasQW HpdQW "
-      <<"  BefQE AftQE elnSiDet "
-      <<aNumPhotProdRich1Gas<<"   " <<aNumPhotGasOnRich1Mirror1
-      <<"   "<<aNumPhotGasOnRich1Mirror2<<"   "
-      <<aNumPhotGasOnGasQW<<"    "<< aNumPhotGasOnHpdQW<<"   "
-      <<aNumPhotGasBeforeQE <<"   "<< aNumPhotGasAfterQE
-      <<"  "<< aNumPeGasSiDet <<std::endl;
-
-    std::cout<<"from Aerogel NumPhot at Prod Mirror1 Mirror2 "
-    <<"  GasQW HpdQW BefQE AftQE elnSiDet "
-      <<aNumPhotProdRich1Agel<<"   " <<aNumPhotAgelOnRich1Mirror1
-      <<"   "<<aNumPhotAgelOnRich1Mirror2<<"   "
-      <<aNumPhotAgelOnGasQW<<"    "<< aNumPhotAgelOnHpdQW<<"   "
-      <<aNumPhotAgelBeforeQE <<"   "<< aNumPhotAgelAfterQE
-      <<"  "<< aNumPeAgelSiDet <<std::endl;
+  //    std::cout<<"from C4f10 NumPhot at Prod Mirror1 Mirror2 GasQW HpdQW "
+  //    <<"  BefQE AftQE elnSiDet "
+  //    <<aNumPhotProdRich1Gas<<"   " <<aNumPhotGasOnRich1Mirror1
+  //    <<"   "<<aNumPhotGasOnRich1Mirror2<<"   "
+  //     <<aNumPhotGasOnGasQW<<"    "<< aNumPhotGasOnHpdQW<<"   "
+  //    <<aNumPhotGasBeforeQE <<"   "<< aNumPhotGasAfterQE
+  //    <<"  "<< aNumPeGasSiDet <<std::endl;
+  //
+  //  std::cout<<"from Aerogel NumPhot at Prod Mirror1 Mirror2 "
+  //  <<"  GasQW HpdQW BefQE AftQE elnSiDet "
+  //    <<aNumPhotProdRich1Agel<<"   " <<aNumPhotAgelOnRich1Mirror1
+  //    <<"   "<<aNumPhotAgelOnRich1Mirror2<<"   "
+  //    <<aNumPhotAgelOnGasQW<<"    "<< aNumPhotAgelOnHpdQW<<"   "
+  //    <<aNumPhotAgelBeforeQE <<"   "<< aNumPhotAgelAfterQE
+  //    <<"  "<< aNumPeAgelSiDet <<std::endl;
 
 
 

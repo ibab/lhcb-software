@@ -39,6 +39,9 @@ private:
   IHistogram1D*         m_hNumHitC4F10Prim;
   IHistogram1D*         m_hNumHitC4F10Sat;
   IHistogram1D*         m_hNumTotHitCF4Rich2;
+  IHistogram1D*         m_hNumTotHitNoRadiatorRich1;
+  IHistogram1D*         m_hNumTotHitNoRadiatorRich2;
+  IHistogram1D*         m_hNumTotHitNoRadiator;
   IHistogram1D*          m_hNumHitCF4Prim;
   IHistogram1D*          m_hNumHitCF4Sat;
   IHistogram1D*         m_hNumTotHitRich1Large;

@@ -368,7 +368,7 @@ void RichG4EventAction::PrintRichG4HitCounters()
   int NumHitGasRich1 = aRichG4Counter-> NumHitTotRich1Gas();
   int NumHitAgelRich1= aRichG4Counter->  NumHitTotRich1Agel();
   int NumTotHitRich2 = aRichG4Counter-> NumHitTotRich2All();
-
+  int NumTotHitNoRadiator = aRichG4Counter->NumHitTotNoRadiator();
 
   const std::vector<int> & NumHitSatGasRich1 =aRichG4Counter->
     NumHitSaturatedPerTrackRich1Gas();
@@ -391,7 +391,9 @@ void RichG4EventAction::PrintRichG4HitCounters()
   msg << MSG::DEBUG <<" Rich1 Hits : Total Overall FromRich1Gas FromAgel    "
       <<  NumTotHitRich1<<"   "<<  NumHitGasRich1
       << "    "<<  NumHitAgelRich1
-      <<"   TotalNumRich2Hits =  "<<NumTotHitRich2 << endreq;
+      <<"   TotalNumRich2Hits =  "<<NumTotHitRich2 
+      << "  TotalNumHitsNoRadiator  =   "<<NumTotHitNoRadiator
+      << endreq;
 
   for(int ihgas=0; ihgas < (int) NumHitSatGasRich1.size() ; ++ihgas ) {
     if(  NumHitSatGasRich1[ihgas]> 0 )

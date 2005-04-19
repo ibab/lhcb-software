@@ -1,4 +1,4 @@
-// $Id: RichG4HistoFillSet2.cpp,v 1.5 2005-04-06 12:03:12 seaso Exp $
+// $Id: RichG4HistoFillSet2.cpp,v 1.6 2005-04-19 16:12:51 seaso Exp $
 // Include files
 
 // local
@@ -94,6 +94,12 @@ void RichG4HistoFillSet2:: FillRichG4HistoSet2( const G4Event* anEvent,
   SmartDataPtr<IHistogram2D>hCkvProdCF4Rich2(CurrentHistoSvc,
                                              "RICHG4HISTOSET2/620");
   
+  SmartDataPtr<IHistogram1D>hNumTotHitNoRadiatorRich1(CurrentHistoSvc,
+                                               "RICHG4HISTOSET2/193");
+  SmartDataPtr<IHistogram1D>hNumTotHitNoRadiatorRich2(CurrentHistoSvc,
+                                               "RICHG4HISTOSET2/195");
+  SmartDataPtr<IHistogram1D>hNumTotHitNoRadiator(CurrentHistoSvc,
+                                               "RICHG4HISTOSET2/197");
 
 
   G4HCofThisEvent * HCE;
@@ -101,6 +107,9 @@ void RichG4HistoFillSet2:: FillRichG4HistoSet2( const G4Event* anEvent,
   G4int NumtotAgel=0;
   G4int Numtotc4f10= 0;
   G4int Numtotcf4=0;
+  G4int NumtotnoradiatorRich1=0;
+  G4int NumtotnoradiatorRich2=0;
+  G4int Numtotnoradiator=0;
 
   G4int NumAgelPrim  = 0;
   G4int  NumC4F10Prim = 0;
@@ -192,8 +201,16 @@ void RichG4HistoFillSet2:: FillRichG4HistoSet2( const G4Event* anEvent,
 
           }else {
 
-            G4cout<<"Richg4HistoFillSet2: Unknown radiator number for Hit  "
-                  <<iha <<"   in Rich Hitcoll   "<<ihcol<<G4endl;
+	    Numtotnoradiator++;
+             if( aRichDetNum == 0 ) {
+  	        NumtotnoradiatorRich1++;
+             
+            }else if ( aRichDetNum == 1 ) {
+	        NumtotnoradiatorRich2++;
+
+            }
+	     //              G4cout<<"Richg4HistoFillSet2: Unknown radiator number for Hit  "
+             //     <<iha <<"   in Rich Hitcoll   "<<ihcol<<G4endl;
 
           }
 
@@ -216,6 +233,8 @@ void RichG4HistoFillSet2:: FillRichG4HistoSet2( const G4Event* anEvent,
   //  G4cout<<"Number of Rich2 Hits "<<  Numtotcf4<<G4endl;
   // G4cout<<"SinglePartGun Rich2 Numhits from primaryPart "<<NumCf4Prim
   //        <<G4endl;
+
+  // G4cout <<" Number of hits with no radiator "<< Numtotnoradiator<<G4endl;
 
   if(NumtotRich1 >0 ) {
     if(hNumTotHitRich1Large)
@@ -265,7 +284,18 @@ void RichG4HistoFillSet2:: FillRichG4HistoSet2( const G4Event* anEvent,
                               fill( NumCf4Prim*1.0,1.0);
 
   }
-
+  if( NumtotnoradiatorRich1 > 0 ) {
+     if(  hNumTotHitNoRadiatorRich1) hNumTotHitNoRadiatorRich1->
+				    fill(NumtotnoradiatorRich1*1.0,1.0);
+  }
+  if(NumtotnoradiatorRich2 > 0 ) {
+     if(  hNumTotHitNoRadiatorRich2) hNumTotHitNoRadiatorRich2->
+				    fill(NumtotnoradiatorRich2*1.0,1.0);
+  }
+  if( Numtotnoradiator > 0 ) {
+     if(  hNumTotHitNoRadiator) hNumTotHitNoRadiator->
+				    fill(Numtotnoradiator*1.0,1.0);
+  }
   // Now loop through the trajectory container.
 
 

@@ -189,6 +189,36 @@ void RichG4HistoDefineSet2::bookRichG4HistogramsSet2() {
 
   }
 
+  title="Total number of non radiator hits in RICH1 per event ";
+
+
+  m_hNumTotHitNoRadiatorRich1 = CurHistoSvc->book(m_RichG4HistoPathSet2+"193",
+                     title, 20,0.0,20.0);
+  if(! m_hNumTotHitNoRadiatorRich1 ) {
+  RichG4Histolog << MSG::ERROR<<"Failed to book histo   "<<title<<endreq;
+
+  }
+
+  title="Total number of non radiator hits in RICH2 per event ";
+
+
+  m_hNumTotHitNoRadiatorRich2 = CurHistoSvc->book(m_RichG4HistoPathSet2+"195",
+                     title, 20,0.0,20.0);
+  if(! m_hNumTotHitNoRadiatorRich2 ) {
+  RichG4Histolog << MSG::ERROR<<"Failed to book histo   "<<title<<endreq;
+
+  }
+  title="Total number of non radiator hits per event ";
+
+
+  m_hNumTotHitNoRadiator = CurHistoSvc->book(m_RichG4HistoPathSet2+"197",
+                     title, 20,0.0,20.0);
+  if(! m_hNumTotHitNoRadiator ) {
+  RichG4Histolog << MSG::ERROR<<"Failed to book histo   "<<title<<endreq;
+
+  }
+
+
  title="Cherenkov Theta Angle at Photon Production in Aerogel vs Track Momentum";
 
 
