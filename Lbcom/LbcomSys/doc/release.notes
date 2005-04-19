@@ -5,9 +5,14 @@
 ! Purpose     : Package describing contents of Lbcom project.
 !-----------------------------------------------------------------------------
 
-!========================== Lbcom v1r3 2005-04-15 ============================
-! 2005-04-15 - Marco Cattaneo
+!========================== Lbcom v1r3 2005-04-19 ============================
+! 2005-04-19 - Marco Cattaneo
  - Move to LHCb v18r3
+ - Packages modified: RichTools v1r6
+
+ - In RichTools v1r6
+   . Fix memory leaks in RichTrSegMakerFromTrStoredTracks when track segments
+     are rejected
 
 !========================== Lbcom v1r2 2005-04-05 ============================
 ! 2005-04-05 - Marco Cattaneo

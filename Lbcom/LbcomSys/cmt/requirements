@@ -20,7 +20,7 @@ use OTMonitor       v1r1    OT
 use TrExtrapolator  v2r14   Tr
 
 # Rich
-use RichTools	    v1r5    Rich
+use RichTools	    v1r6    Rich
 use RichMCTools	    v2r5    Rich
 use RichRecTools    v2r14   Rich
 use RichRecMCTools  v1r8    Rich
