@@ -34,4 +34,4 @@ use RichDigiQC		v2r1	Rich
 use RichReadout		v1r12	Rich
 
 # Trigger
-use TrgTools		v7r2	Trg
+use TrgTools		v7r3	Trg

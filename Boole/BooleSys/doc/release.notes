@@ -3,17 +3,18 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
-</PRE><H1><A NAME=v8r3>2005-04-15 Boole v8r3</A></H1><PRE>
+</PRE><H1><A NAME=v8r3>2005-04-19 Boole v8r3</A></H1><PRE>
 This version uses Gaudi v16r3, LHCb v18r3, Lbcom v1r3 (also CLHEP 1.9, ROOT 4.0) 
 Requires input from Gauss v19r3 or greater. Output needs Brunel v26r2 or greater
 Incompatible with DC04 data and programs.
 
 - Packages modified: ITAlgorithms v14r4p1, MuonBackground v1r10p1,
-                     OTSimulation v1r4
+                     OTSimulation v1r4, TrgTools v7r3
 
 - Bug fixes:
+  . Fix bug in Velo sensor thickness, affects S/N (XmlDDDB v24r1)
   . Fix various small memory leaks (OTSimulation v1r4, ITAlgorithms v14r4p1,
-    MuonBackground v1r10p1, L0mConf v2r4p4
+    MuonBackground v1r10p1, L0mConf v2r4p4)
   . Fix an uninitialized variable (L0MuonKernel v3r0p1)
 
 </PRE><H1><A NAME=v8r2>2005-04-08 Boole v8r2</A></H1><PRE>
