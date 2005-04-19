@@ -5,9 +5,10 @@
 ! Purpose     : LHCb OO kernel packages
 !-----------------------------------------------------------------------------
 
-!======================= LHCbSys v18r3 2005-04-15 =======================
-! 2005-04-15 - Marco Cattaneo
+!======================= LHCbSys v18r3 2005-04-19 =======================
+! 2005-04-19 - Marco Cattaneo
  - Packages modified: GaudiConf v9r1, KernelSys v4r10, LHCbKernel v5r10,
+     EventSys v20r3, TrackEvent v0r1,
      L0mConf v2r2p4, L0MuonKernel v3r0p1, ProcessorKernel v1r0p1
 
  - In GaudiConf v9r1
@@ -21,6 +22,9 @@
 
  - In L0MuonKernel v3r0p1
    . Fix an uninitialized variable
+
+ - In TrackEvent v0r1
+   . Pre-release of new track event model
 
 !======================= LHCbSys v18r2 2005-04-07 =======================
 ! 2005-04-07 - Marco Cattaneo
