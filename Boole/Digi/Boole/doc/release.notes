@@ -8,6 +8,7 @@ Purpose: LHCb Digitization program
 - Adapt requirements to Lbcom v1r3, LHCb v18r3, Gaudi v16r3
 - Adapt Boole.supp to Boole v8r3 and valgrind 2.2.0
 - Update XmlDDDB version to v24r1
+- Remove APPVERSION from requirements, version now set in GaudiMain
 
 </PRE><H1><A NAME=v8r2>2005-03-24 Boole v8r2</A></H1><PRE>
 - Adapt requirements to Lbcom v1r2 and LHCb v18r2

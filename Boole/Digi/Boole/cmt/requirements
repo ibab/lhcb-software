@@ -6,10 +6,6 @@ branches doc cmt job options
 # Set the default path for Boole options.
 set BOOLEOPTS  $(BOOLEROOT)/options
 
-#== Set the Boole version environment variable, read by BooleInit ==
-pattern BooleVersion path_append APPVERSION <version>
-apply_pattern BooleVersion
-
 #-- CMT and GaudiPolicy
 use GaudiPolicy v5r20
 
@@ -64,7 +60,6 @@ use RichReadout		v1r12	Rich
 # Trigger
 use TrgTools		v7r3	Trg
 
-#
 #===== build Boole =========================
 application Boole $(GAUDICONFROOT)/src/GaudiMain.cpp
 # ========================= set macros ============================
