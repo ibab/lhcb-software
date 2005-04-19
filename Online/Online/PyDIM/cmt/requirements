@@ -1,0 +1,28 @@
+#============================================================================
+# Maintainer : Markus Frank
+#============================================================================
+package           PyDIM 
+version           v1r0
+#============================================================================
+branches          cmt doc src
+include_dirs      $(PYDIMROOT)
+use DIM           v* Online
+use GaudiPython   v*
+
+# temporary, until SEAL does it properly
+pattern py_lcg_dictionary \
+  document lcg_dictionary_generator <dictionary>Gen <headerfiles> dictionary=<dictionary> ; \
+  library <dictionary>Dict "-s=../$(tag)/dict/<dictionary>" "*.cpp"  <cppfiles> ; \
+  macro lcgdict_selection_file " <selectionfile> " ; \ 
+  macro <dictionary>_lcgdict_options " <options> --select=<selectionfile>  -c capabilities.cpp" ; \
+  macro <dictionary>Dict_shlibflags "$(libraryshr_linkopts) $(<package>_linkopts) $(use_linkopts) " ;\
+  document lcg_module_register <dictionary>Module SEAL_MODULE_NAME=<dictionary>Dict
+
+# ==================== dictionary libraries ==================================
+apply_pattern py_lcg_dictionary headerfiles="$(PYDIMROOT)/src/dim_dict.h" \
+                             selectionfile="$(PYDIMROOT)/src/dim_dict.xml" \
+                             options="  --split $(includes) -DGCCXML " \
+                             cppfiles=" -s=../src *.cpp " \
+                             dictionary=PyDIM
+apply_pattern component_library library=GaudiOnline
+path_append PYTHONPATH $(PYDIMROOT)/python
