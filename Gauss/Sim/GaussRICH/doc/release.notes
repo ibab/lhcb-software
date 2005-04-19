@@ -6,6 +6,10 @@
 !-----------------------------------------------------------------------------
 
 !======================== GaussRICH v4r13 ==================================
+!2005-04-19  - Sajan Easo
+  - Added three montoring histograms for set2 to plot the 
+    number of  nonraditor hits.
+  - Added counters to keep track of the number of nonradiator hits.
 ! 2005-04-12 - Gloria Corti
  - options/RichAnalysis.opts 
    . switch off set 3 of histograms
