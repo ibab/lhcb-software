@@ -3,9 +3,10 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
-</PRE><H1><A NAME=v26r3>2005-04-18 Brunel v26r3</A></H1><PRE>
+</PRE><H1><A NAME=v26r3>2005-04-19 Brunel v26r3</A></H1><PRE>
 - Adapt requirements to BrunelSys v26r3, Lbcom v1r3 and LHCb v18r3
 - Adapt Brunel.supp to valgrind 2.2.0
+- Use XmlDDDB v24r1
 
 </PRE><H1><A NAME=v26r2>2005-04-03 Brunel v26r2</A></H1><PRE>
 - Adapt requirements to BrunelSys v26r2, Lbcom v1r2 and LHCb v18r2

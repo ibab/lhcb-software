@@ -22,7 +22,7 @@ use GaudiObjDesc 	v7r3
 use RootHistCnv         v9r4
 
 #-- Database
-use XmlDDDB		v24r0	Det
+use XmlDDDB		v24r1	Det
 use FieldMap		v4r5
 use ParamFiles          v3r11   -no_auto_imports
 use BrunelDQ		v1r0	DQ
@@ -56,7 +56,7 @@ use VeloTT              v1r12	Tr
 use TrKShort		v1r5	Tr
 
 # Trg tracking in Velo
-use TrgTools            v7r2    Trg
+use TrgTools            v7r3    Trg
 use TrgVelo             v7r3    Trg
 use TrgBrunel           v1r1    Trg
 

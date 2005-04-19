@@ -31,7 +31,7 @@ use VeloTT              v1r12	Tr
 use TrKShort		v1r5	Tr
 
 # Trg tracking in Velo
-use TrgTools            v7r2    Trg
+use TrgTools            v7r3    Trg
 use TrgVelo             v7r3    Trg
 use TrgBrunel           v1r1    Trg
 
