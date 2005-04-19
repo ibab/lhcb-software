@@ -1,4 +1,4 @@
-// $Id: OnlineAddress.cpp,v 1.1.1.1 2005-04-18 15:31:41 frankb Exp $
+// $Id: OnlineAddress.cpp,v 1.2 2005-04-19 16:59:59 frankb Exp $
 //====================================================================
 //	OnlineEvtSelector.cpp
 //--------------------------------------------------------------------
@@ -11,6 +11,7 @@
 // Include files
 #include "GaudiOnline/OnlineAddress.h"
 #include "GaudiOnline/StreamDescriptor.h"
+#include <stdexcept>
 
 // Standard Constructor
 GaudiOnline::Address::Address(long type, const CLID& clid, const StreamDescriptor* comm_data)

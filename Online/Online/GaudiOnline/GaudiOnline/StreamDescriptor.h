@@ -1,17 +1,20 @@
-// $Id: StreamDescriptor.h,v 1.2 2005-04-19 15:27:26 frankb Exp $
+// $Id: StreamDescriptor.h,v 1.3 2005-04-19 16:59:59 frankb Exp $
 //====================================================================
 //	StreamDescriptor.h
 //--------------------------------------------------------------------
 //
 //	Author     : M.Frank
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/GaudiOnline/StreamDescriptor.h,v 1.2 2005-04-19 15:27:26 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/GaudiOnline/StreamDescriptor.h,v 1.3 2005-04-19 16:59:59 frankb Exp $
 #ifndef GAUDIONLINE_STREAMDESCRIPTOR_H
 #define GAUDIONLINE_STREAMDESCRIPTOR_H 1
 
 // C++ include files
 #include <string>
 
+namespace Networking {
+  struct in_addr;
+}
 /*
  *  GaudiOnline namespace declaration
  */
@@ -52,7 +55,7 @@ namespace GaudiOnline {
       /// fast functions: send trigger decision
       bool (*m_send_decision)(const Access& con);
     public:
-      Access() : ioDesc(-1), m_read(0), m_write(0), m_read_len(0),
+      Access() : ioDesc(-1), m_read(0), m_read_len(0), m_write(0),
                  m_set_decision(0), m_send_decision(0) 
       {
       }      
@@ -98,7 +101,7 @@ namespace GaudiOnline {
 
     /// Access to datatype (by string)
     static int dataType(const std::string& typ);
-    static void getInetConnection(const std::string& con, std::string& host, unsigned long& ip, unsigned short& port);
+    static void getInetConnection(const std::string& con, std::string& host, Networking::in_addr* ip, unsigned short& port);
     static void getFileConnection(const std::string& con, std::string& file);
     static Access connect(const std::string& specs);
     static Access bind(const std::string& specs);

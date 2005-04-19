@@ -1,7 +1,14 @@
 #include <iostream>
 #include "DimPython.h"
 namespace win {
+#ifdef _WIN32
   #include <windows.h>
+#else
+  typedef int CRITICAL_SECTION;
+  void InitializeCriticalSection(CRITICAL_SECTION* ) {}
+  void EnterCriticalSection(CRITICAL_SECTION*) {}
+  void LeaveCriticalSection(CRITICAL_SECTION*) {}
+#endif
 }
 
 namespace DIM  {

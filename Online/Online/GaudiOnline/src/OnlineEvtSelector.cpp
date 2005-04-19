@@ -1,4 +1,4 @@
-// $Id: OnlineEvtSelector.cpp,v 1.2 2005-04-19 15:27:26 frankb Exp $
+// $Id: OnlineEvtSelector.cpp,v 1.3 2005-04-19 16:59:59 frankb Exp $
 //====================================================================
 //	OnlineEvtSelector.cpp
 //--------------------------------------------------------------------
@@ -132,6 +132,8 @@ StatusCode GaudiOnline::OnlineContext::connect()  {
     case STREAM_SFC:
       m_accessDsc = StreamDescriptor::connect(m_conSpec);
       return m_accessDsc.ioDesc > 0 ? StatusCode::SUCCESS : StatusCode::FAILURE;
+    default:
+      break;
   }
   return StatusCode::FAILURE;
 }

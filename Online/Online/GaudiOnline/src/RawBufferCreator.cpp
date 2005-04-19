@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/RawBufferCreator.cpp,v 1.1.1.1 2005-04-18 15:31:41 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/RawBufferCreator.cpp,v 1.2 2005-04-19 16:59:59 frankb Exp $
 //	====================================================================
 //  RawBufferCreator.cpp
 //	--------------------------------------------------------------------
@@ -39,14 +39,13 @@ public:
   virtual long repSvcType() const      { return storageType();          }
   static const CLID& classID()         { return DataObject::classID();  }
   static long storageType()            { return TEST_StorageType;       }
-  virtual StatusCode createObj(IOpaqueAddress* pAddr, DataObject*& refpObj)  {
+  virtual StatusCode createObj(IOpaqueAddress* /* pAddr */, DataObject*& refpObj)  {
     refpObj = new DataObject();
     return StatusCode::SUCCESS;
   }
-  virtual StatusCode fillObjRefs(IOpaqueAddress* pAddr, DataObject* pObj)  {
-    SmartDataPtr<DataObject> evt(dataProvider(),"/Event");
-    if ( evt )  {
-      IRegistry* reg = evt->registry();
+  virtual StatusCode fillObjRefs(IOpaqueAddress* pAddr, DataObject* /* pObj */ )  {
+    if ( pAddr )  {
+      IRegistry* reg = pAddr->registry();
       if ( reg )   {
         GaudiOnline::Address* addr = dynamic_cast<GaudiOnline::Address*>(reg->address());
         const GaudiOnline::StreamDescriptor* dsc = addr->descriptor();

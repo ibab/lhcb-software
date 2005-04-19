@@ -6,11 +6,10 @@
 //
 //	Author     : M.Frank
 //====================================================================
-// $Id: StreamDescriptor.cpp,v 1.2 2005-04-19 15:27:26 frankb Exp $
+// $Id: StreamDescriptor.cpp,v 1.3 2005-04-19 16:59:59 frankb Exp $
 
 // Include files
 #include "GaudiOnline/StreamDescriptor.h"
-#include <io.h>
 #include <fcntl.h>
 #include <cstdio>
 #include <cstdlib>
@@ -18,12 +17,16 @@
 namespace SFC {
   #include "SFCClient/SFCClient.h"
 }
-namespace FileIO {
-  using ::close;
-  using ::open;
-  using ::read;
-  using ::write;
-}
+#ifdef _WIN32
+  #include <io.h>
+#else
+  #include <ctype.h>
+  #include <unistd.h>
+static const int _O_BINARY = 0;
+static const int _O_RDONLY = O_RDONLY;
+static const int _O_WRONLY = O_WRONLY;
+static const int _O_CREAT  = O_CREAT;
+#endif
 
 namespace Networking {
 #ifdef _WIN32
@@ -43,8 +46,19 @@ namespace Networking {
   };
   static __init__ g_init;
 #else
+  #include <netinet/in.h>
+  #include <arpa/inet.h>
+  #include <netdb.h>
+  int (*closesocket)(int) = ::close;
 #endif
 }
+namespace FileIO {
+  using ::close;
+  using ::open;
+  using ::read;
+  using ::write;
+}
+
 
 namespace {
   typedef GaudiOnline::StreamDescriptor::Access Access;
@@ -110,29 +124,29 @@ namespace {
   bool ip_send_decision(const Access& )  {
     return true;
   }
-  bool sfc_recv(const Access& con, void* data, int len)  {
+  bool sfc_recv(const Access& /* con */, void* data, int len)  {
     SFC::sfcc_read_buffer rd_buff;
     rd_buff.buffer = (char*)data;
     rd_buff.buffer_len = rd_buff.max_len = len;
     return SFC::sfcc_read(&rd_buff) == 0;
   }
-  bool sfc_recv_len(const Access& con, int& len)  {
+  bool sfc_recv_len(const Access& /* con */, int& len)  {
     return SFC::sfcc_read_length(&len) == 0;
   }
-  bool sfc_send(const Access& con, const void* data, int len)  {
+  bool sfc_send(const Access& /* con */, const void* data, int len)  {
     SFC::sfcc_send_buffer snd_buff;
     snd_buff.buffer = (char*)data;
     snd_buff.buffer_len = len;
     return SFC::sfcc_send(&snd_buff) == 0;
   }
   /// Fast functions: set trigger decision
-  bool sfc_set_decision(const Access& con, int value )   {
+  bool sfc_set_decision(const Access& /* con */, int value )   {
     SFC::sfcc_decision dec_buff;
     dec_buff.accept_or_reject = value;
     return SFC::sfcc_set_decision(&dec_buff) == 0;
   }
   /// fast functions: send trigger decision
-  bool sfc_send_decision(const Access& con)  {
+  bool sfc_send_decision(const Access& /* con */)  {
     return SFC::sfcc_send_decision() == 0;
   }
 }
@@ -176,27 +190,27 @@ void GaudiOnline::StreamDescriptor::getFileConnection(const std::string& con, st
 
 void GaudiOnline::StreamDescriptor::getInetConnection(const std::string& con, 
                                                       std::string& host,
-                                                      unsigned long& ip,
+                                                      Networking::in_addr* ip,
                                                       unsigned short& port)
 {
   getFileConnection(con, host);
   size_t idx = host.find(":");
-  ip = port = 0;
+  ip->s_addr = port = 0;
   if ( idx != std::string::npos )  {
     std::string prt = host.substr(idx+1);
-    ::sscanf(prt.c_str(),"%d",&port);
+    ::sscanf(prt.c_str(),"%hd",&port);
     host = host.substr(0,idx);
   }
   if ( ::isalpha(host[0]) )  {
     Networking::hostent* h = Networking::gethostbyname(host.c_str());
     if ( h )  {
       if ( h->h_addr_list[0] )  {
-        ip = *(unsigned long*)h->h_addr_list[0];
+        ip->s_addr = *(unsigned long*)h->h_addr_list[0];
       }
     }
   }
   else {
-    ip = Networking::inet_addr(host.c_str());
+    ip->s_addr = Networking::inet_addr(host.c_str());
   }
 }
 
@@ -233,8 +247,8 @@ GaudiOnline::StreamDescriptor::connect(const std::string& specs)  {
         char    sin_zero[8];
         };
       */
-      StreamDescriptor::getInetConnection(specs, file, sin.sin_addr.s_addr, sin.sin_port);
-      result.ioDesc = Networking::socket(AF_INET, SOCK_STREAM, IPPROTO_IP);
+      getInetConnection(specs, file, &sin.sin_addr, sin.sin_port);
+      result.ioDesc = Networking::socket(AF_INET, Networking::SOCK_STREAM, Networking::IPPROTO_IP);
       if ( result.ioDesc > 0 )   {        
         sin.sin_family      = AF_INET;
         ::memset(sin.sin_zero,0,sizeof(sin.sin_zero));
@@ -253,7 +267,7 @@ GaudiOnline::StreamDescriptor::connect(const std::string& specs)  {
       }
       break;
     case 'S':          //  DATA='sfc://137.138.142.82:8000'
-      StreamDescriptor::getInetConnection(specs, file, sin.sin_addr.s_addr, sin.sin_port);
+      StreamDescriptor::getInetConnection(specs, file, &sin.sin_addr, sin.sin_port);
       if ( 0 == SFC::sfcc_register(file.c_str(), sin.sin_port) )  {
         result.ioDesc   = 1;
         result.m_write    = sfc_send;
@@ -279,7 +293,11 @@ GaudiOnline::StreamDescriptor::bind(const std::string& specs)  {
   switch(result.type) {
     case 'F':          //  DATA='file://C:/Data/myfile.dat'
       StreamDescriptor::getFileConnection(specs, file);
+#ifdef _WIN32
       result.ioDesc     = FileIO::open(file.c_str(), _O_WRONLY|_O_BINARY|_O_CREAT );
+#else
+      result.ioDesc     = FileIO::open(file.c_str(), _O_WRONLY|_O_BINARY|_O_CREAT, S_IRWXU );
+#endif
       result.m_write    = file_write;
       result.m_read     = file_read;
       result.m_read_len = file_read_len;
@@ -287,9 +305,9 @@ GaudiOnline::StreamDescriptor::bind(const std::string& specs)  {
       result.m_send_decision = file_send_decision;
       break;
     case 'I':          //  DATA='ip://137.138.142.82:8000'
-      result.ioDesc = Networking::socket(AF_INET,SOCK_STREAM,IPPROTO_IP);
+      result.ioDesc = Networking::socket(AF_INET,Networking::SOCK_STREAM,Networking::IPPROTO_IP);
       if ( result.ioDesc > 0 )   {
-        StreamDescriptor::getInetConnection(specs, file, sin.sin_addr.s_addr, sin.sin_port);
+        StreamDescriptor::getInetConnection(specs, file, &sin.sin_addr, sin.sin_port);
         sin.sin_family = AF_INET;
         if ( Networking::bind(result.ioDesc, (Networking::sockaddr*)&sin, sizeof(sin)) == 0) {
           if ( Networking::listen(result.ioDesc, SOMAXCONN) == 0 )  {
@@ -306,7 +324,7 @@ GaudiOnline::StreamDescriptor::bind(const std::string& specs)  {
       }
       break;
     case 'S':          //  DATA='sfc://137.138.142.82:8000'
-      StreamDescriptor::getInetConnection(specs, file, sin.sin_addr.s_addr, sin.sin_port);
+      StreamDescriptor::getInetConnection(specs, file, &sin.sin_addr, sin.sin_port);
       if ( 0 == SFC::sfcc_register(file.c_str(), sin.sin_port) )  {
         result.ioDesc     = 1;
         result.m_write    = sfc_send;
@@ -347,7 +365,7 @@ GaudiOnline::StreamDescriptor::accept(const Access& specs)  {
       break;
     case 'I':
       if ( specs.ioDesc > 0 )  {
-        int len;
+        size_t len;
         Networking::sockaddr sin;
         ::memset(&sin,0,sizeof(sin));
         result.ioDesc = Networking::accept(specs.ioDesc, &sin, &len);
