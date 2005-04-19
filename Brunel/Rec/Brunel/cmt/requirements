@@ -3,19 +3,15 @@ version v26r3
 
 branches doc cmt job options
 
-#== Set the Brunel version environment variable, read by BrunelInit ==
-pattern BrunelVersion path APPVERSION <version>
-apply_pattern BrunelVersion
-
 #-- CMT and GaudiPolicy
 use GaudiPolicy v5r20
 
 #-- External libraries now taken from LCG, version defined by GaudiEnv
 
-#-- Gaudi libraries (from GAUDI_v16r2)
-use GaudiKernel		v19r0
-use GaudiSvc 		v13r2
-use GaudiAlg 		v8r6
+#-- Gaudi libraries (from GAUDI_v16r3)
+use GaudiKernel		v19r1
+use GaudiSvc 		v13r3
+use GaudiAlg 		v8r7
 use GaudiGSL		v6r2
 use GaudiPoolDb		v1r12
 use GaudiObjDesc 	v7r3
