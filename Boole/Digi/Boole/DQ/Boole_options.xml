@@ -1,5 +1,5 @@
 <options>	     
-  <option application="Boole" version="v7r1"/>
+  <option application="Boole"/>
   <option cpunorm="CPU time normalisation" pos='4'/>
   <option eventsprocessed="events processed" pos='0'/> 
   <option timeperevent="ChronoStatSvc        INFO Time User   : Tot=" pos='6'/>	    	       
