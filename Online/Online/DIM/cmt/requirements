@@ -11,7 +11,7 @@ macro DIM_native_version "v15r11"
 macro DIM_home       ${LHCBHOME}/online/control/DIM/$(DIM_native_version)/$(LCG_system)
 
 include_path none
-include_dirs $(DIM_home)/include
+include_dirs $(DIM_home)/dim
 
 macro DIM_linkopts "-L$(DIM_home)/bin -ldim -lpthread" \
       WIN32        "/LIBPATH:$(DIM_home)\bin dim.lib "
@@ -20,4 +20,3 @@ path_remove  LD_LIBRARY_PATH "/DIM/"   WIN32 ""
 path_prepend LD_LIBRARY_PATH "$(DIM_home)/bin" WIN32 ""
 path_remove  PATH "/DIM/" WIN32 "\DIM\"
 path_prepend PATH "$(DIM_home)\bin"
-
