@@ -3,10 +3,11 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
-</PRE><H1><A NAME=v8r3>2005-04-15 Boole v8r3</A></H1><PRE>
-! 2005-04-15 - Marco Cattaneo
+</PRE><H1><A NAME=v8r3>2005-04-19 Boole v8r3</A></H1><PRE>
+! 2005-04-19 - Marco Cattaneo
 - Adapt requirements to Lbcom v1r3 and LHCb v18r3
 - Adapt Boole.supp to Boole v8r3 and valgrind 2.2.0
+- Update XmlDDDB version to v24r1
 
 </PRE><H1><A NAME=v8r2>2005-03-24 Boole v8r2</A></H1><PRE>
 - Adapt requirements to Lbcom v1r2 and LHCb v18r2

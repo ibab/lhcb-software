@@ -1,5 +1,5 @@
 package Boole
-version v8r2
+version v8r3
 
 branches doc cmt job options
 
@@ -24,7 +24,7 @@ use GaudiObjDesc 	v7r3
 use RootHistCnv         v9r4
 
 #-- Databases
-use XmlDDDB	v24r0	Det
+use XmlDDDB	v24r1	Det
 use ParamFiles	v3r11	-no_auto_imports
 use FieldMap	v4r5
 use BooleDQ	v1r0	DQ
@@ -62,7 +62,7 @@ use RichDigiQC	        v2r1  	Rich
 use RichReadout		v1r12	Rich
 
 # Trigger
-use TrgTools		v7r2	Trg
+use TrgTools		v7r3	Trg
 
 #
 #===== build Boole =========================
