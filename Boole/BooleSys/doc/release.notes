@@ -14,8 +14,9 @@ Incompatible with DC04 data and programs.
 - Bug fixes:
   . Fix bug in Velo sensor thickness, affects S/N (XmlDDDB v24r1)
   . Fix various small memory leaks (OTSimulation v1r4, ITAlgorithms v14r4p1,
-    MuonBackground v1r10p1, L0mConf v2r4p4)
+    MuonBackground v1r10p1, L0mConf v2r4p4, GaudiAlg v8r7)
   . Fix an uninitialized variable (L0MuonKernel v3r0p1)
+  . Remove TBronch warning, fix castor file access on Windows (ROOT 4.03.04a)
 
 </PRE><H1><A NAME=v8r2>2005-04-08 Boole v8r2</A></H1><PRE>
 This version uses Gaudi v16r2, LHCb v18r2, Lbcom v1r2 (also CLHEP 1.9, ROOT 4.0) 

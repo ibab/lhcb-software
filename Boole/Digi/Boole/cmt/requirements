@@ -15,10 +15,10 @@ use GaudiPolicy v5r20
 
 #-- External libraries now taken from LCG, version defined by GaudiEnv
 
-#-- Gaudi libraries (from GAUDI_v16r2)
-use GaudiKernel		v19r0
-use GaudiSvc 		v13r2
-use GaudiAlg 		v8r6
+#-- Gaudi libraries (from GAUDI_v16r3)
+use GaudiKernel		v19r1
+use GaudiSvc 		v13r3
+use GaudiAlg 		v8r7
 use GaudiPoolDb		v1r12
 use GaudiObjDesc 	v7r3
 use RootHistCnv         v9r4
