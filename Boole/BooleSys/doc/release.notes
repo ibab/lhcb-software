@@ -11,6 +11,11 @@ Incompatible with DC04 data and programs.
 - Packages modified: ITAlgorithms v14r4p1, MuonBackground v1r10p1,
                      OTSimulation v1r4, TrgTools v7r3
 
+- Modified packaging
+  . Program name and version now set via preprocessor directives in GaudiMain
+    and printed by ApplicationMgr. APPVERSION env. variable no longer needed
+    (GaudiSvc v13r3, GaudiConf v9r1, GaudiAlgs v1r5)
+
 - Bug fixes:
   . Fix bug in Velo sensor thickness, affects S/N (XmlDDDB v24r1)
   . Fix various small memory leaks (OTSimulation v1r4, ITAlgorithms v14r4p1,
