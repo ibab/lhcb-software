@@ -9,11 +9,17 @@
 ! 2005-04-19 - Marco Cattaneo
  - Move to Gaudi v16r3
  - Packages modified: GaudiConf v9r1, KernelSys v4r10, LHCbKernel v5r10,
-     EventSys v20r3, TrackEvent v0r1,
+     LHCbAlgs v1r5, EventSys v20r3, TrackEvent v0r1,
      L0mConf v2r2p4, L0MuonKernel v3r0p1, ProcessorKernel v1r0p1
 
  - In GaudiConf v9r1
    . update Gaudi.supp suppression file for valgrind 2.2.0 and Gaudi v16r2
+   . use preprocessor directives to set application name and version via
+     GaudiMain, printed out by ApplicationMgr
+
+ - In LHCbAlgs v1r5
+   . Remove from LbAppinit printout of application name and version, now done
+     by GaudiMain. APPVERSION environment variable no longer required.
 
  - In LHCbKernel v5r10
    . Fix to LHCbID, 26 bits for ITChannelID

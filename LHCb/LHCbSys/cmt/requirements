@@ -84,7 +84,7 @@ use L0MuonDAQ		v1r0	L0
 
 # Other stuff
 use LHCbInterfaces	v1r1	Kernel
-use LHCbAlgs		v1r4	Kernel
+use LHCbAlgs		v1r5	Kernel
 use MCTools		v1r13	Phys
 use CaloInterfaces	v4r3	Calo
 use CaloUtils		v4r8	Calo
