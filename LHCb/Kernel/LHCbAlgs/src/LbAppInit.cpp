@@ -1,4 +1,4 @@
-// $Id: LbAppInit.cpp,v 1.9 2005-03-18 16:23:45 cattanem Exp $
+// $Id: LbAppInit.cpp,v 1.10 2005-04-19 15:26:33 cattanem Exp $
 
 // Include files
 #include "LbAppInit.h"
@@ -48,32 +48,6 @@ StatusCode LbAppInit::initialize() {
 
   StatusCode sc = GaudiAlgorithm::initialize();
   if( sc.isFailure() ) return Error( "Failed to initialize base class", sc );
-  
-  const char* pver = getenv("APPVERSION");
-  if( NULL == pver ) {
-    return Error( "APPVERSION environment variable not defined" );
-  }
-
-  // Get the current time
-  time_t t;
-  std::time( &t );
-  tm* localt = std::localtime( &t );
-  
-  always() 
-    << std::endl
-    << "=================================================================="
-    << "=================================================================="
-    << std::endl
-    << "                                "
-    << "                   Welcome to " << name() << " version " << pver
-    << std::endl
-    << "                                "
-    << "          running on " << System::hostName()
-    << " on " << std::asctime( localt )
-    << std::endl
-    << "=================================================================="
-    << "=================================================================="
-    << endmsg;
   
   // Get the random number engine
   m_engine = randSvc()->engine();
