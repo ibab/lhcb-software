@@ -6,7 +6,7 @@
 //
 //	Author     : M.Frank
 //====================================================================
-// $Id: StreamDescriptor.cpp,v 1.3 2005-04-19 16:59:59 frankb Exp $
+// $Id: StreamDescriptor.cpp,v 1.4 2005-04-19 18:07:15 frankb Exp $
 
 // Include files
 #include "GaudiOnline/StreamDescriptor.h"
@@ -51,6 +51,8 @@ namespace Networking {
   #include <netdb.h>
   int (*closesocket)(int) = ::close;
 #endif
+  static const int _SOCK_STREAM = SOCK_STREAM;
+  static const int _IPPROTO_IP  = _IPPROTO_IP;
 }
 namespace FileIO {
   using ::close;
@@ -248,7 +250,7 @@ GaudiOnline::StreamDescriptor::connect(const std::string& specs)  {
         };
       */
       getInetConnection(specs, file, &sin.sin_addr, sin.sin_port);
-      result.ioDesc = Networking::socket(AF_INET, Networking::SOCK_STREAM, Networking::IPPROTO_IP);
+      result.ioDesc = Networking::socket(AF_INET, Networking::_SOCK_STREAM, Networking::_IPPROTO_IP);
       if ( result.ioDesc > 0 )   {        
         sin.sin_family      = AF_INET;
         ::memset(sin.sin_zero,0,sizeof(sin.sin_zero));
@@ -305,7 +307,7 @@ GaudiOnline::StreamDescriptor::bind(const std::string& specs)  {
       result.m_send_decision = file_send_decision;
       break;
     case 'I':          //  DATA='ip://137.138.142.82:8000'
-      result.ioDesc = Networking::socket(AF_INET,Networking::SOCK_STREAM,Networking::IPPROTO_IP);
+      result.ioDesc = Networking::socket(AF_INET,Networking::_SOCK_STREAM,Networking::_IPPROTO_IP);
       if ( result.ioDesc > 0 )   {
         StreamDescriptor::getInetConnection(specs, file, &sin.sin_addr, sin.sin_port);
         sin.sin_family = AF_INET;
@@ -365,7 +367,11 @@ GaudiOnline::StreamDescriptor::accept(const Access& specs)  {
       break;
     case 'I':
       if ( specs.ioDesc > 0 )  {
+#ifdef _WIN32
+        int len;
+#else
         size_t len;
+#endif
         Networking::sockaddr sin;
         ::memset(&sin,0,sizeof(sin));
         result.ioDesc = Networking::accept(specs.ioDesc, &sin, &len);
