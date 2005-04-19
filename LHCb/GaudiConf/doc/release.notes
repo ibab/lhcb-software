@@ -1,7 +1,11 @@
 package GaudiConf
 package manager: M.Cattaneo
 
-!======================== GaudiConf v9r1 2005-04-15 ========================
+!======================== GaudiConf v9r1 2005-04-19 ========================
+! 2005-04-19 - Marco Cattaneo
+ - Modify GaudiMain.cpp and requirements to set program name and version
+   using compilation flags. Needs ApplicationMgr mods from Gaudi v16r3
+
 ! 2005-04-15 - Marco Cattaneo
  - Gaudi.supp updated for Gaudi v16r3
 

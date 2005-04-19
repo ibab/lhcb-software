@@ -7,3 +7,5 @@ include_path none
 ignore_pattern package_stamps
 
 set STDOPTS    ${GAUDICONFROOT}/options
+macro_append cppflags ' -DAPPNAME=\"${package}\" -DAPPVERS=\"${version}\" ' \
+                win32 ' /DAPPNAME=\"${package}\" -DAPPVERS=\"${version}\" '
