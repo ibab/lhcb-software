@@ -7,17 +7,17 @@ version v1r0
 
 use LCG_Settings v*
 
-macro DIM_native_version "v15r0"
+macro DIM_native_version "v15r11"
 macro DIM_home       ${LHCBHOME}/online/control/DIM/$(DIM_native_version)/$(LCG_system)
 
 include_path none
 include_dirs $(DIM_home)/include
 
-macro DIM_linkopts "-L$(DIM_home)/lib -ldim -lpthread" \
-      WIN32        "/LIBPATH:$(DIM_home)\lib dim.lib "
+macro DIM_linkopts "-L$(DIM_home)/bin -ldim -lpthread" \
+      WIN32        "/LIBPATH:$(DIM_home)\bin dim.lib "
       
 path_remove  LD_LIBRARY_PATH "/DIM/"   WIN32 ""
-path_prepend LD_LIBRARY_PATH "$(DIM_home)/lib" WIN32 ""
-path_remove  PATH "" WIN32 "\DIM\"
-path_prepend PATH "" WIN32 "$(DIM_home)\lib"
+path_prepend LD_LIBRARY_PATH "$(DIM_home)/bin" WIN32 ""
+path_remove  PATH "/DIM/" WIN32 "\DIM\"
+path_prepend PATH "$(DIM_home)\bin"
 

@@ -4,5 +4,8 @@
 ! Purpose     : CMT Interface to DIM 
 !-----------------------------------------------------------------------------
 
+! 2005-04-20 - Markus Frank
+  Use latest version released by Clara with common file structure (v15r11)
+
 ! 2004-09-20 - Pere Mato Vila
  -New package 
