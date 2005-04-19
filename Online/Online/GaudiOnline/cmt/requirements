@@ -6,7 +6,14 @@ version           v1r0
 #============================================================================
 branches          cmt doc src GaudiOnline 
 include_dirs      $(GAUDIONLINEROOT)
+use SFCClient     v* Online
 use EventSys      v* Event
+use GaudiSvc      v*
 # ==================== component libraries ==================================
 library GaudiOnline  *.cpp
 apply_pattern component_library library=GaudiOnline 
+
+private
+
+# needed to write raw data file....
+use GaudiPoolDb   v*

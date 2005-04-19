@@ -2,4 +2,12 @@ Package: GaudiOnline
 Author:  Markus Frank
 
 !=============== GaudiOnline v1r0 22-02-2005 =============================
+ There are a few examples coming along with this package.
+ 1) options/RawBufferWriter: Write binary raw buffer file from POOL dst
+ 2) options/RawBufferSender: Send RawBuffer object using IP connection
+    to analysis process
+ 3) options/RawBufferReader: Reads RawBuffer objects from process
+    RawBufferSender (which must be started before). Skeleton analysis process.
+    Note: Examples need environment SFCCONNECTION to be set properly.
+
   New Package.

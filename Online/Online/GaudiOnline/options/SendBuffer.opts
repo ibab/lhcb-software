@@ -1,0 +1,3 @@
+ApplicationMgr.Dlls       += { "GaudiOnline" };
+ApplicationMgr.TopAlg      = { "RawBufferWriter" };
+RawBufferWriter.AcceptParams = "ip://000.000.000.000:8888";

@@ -1,4 +1,4 @@
-// $Id: OnlineEvtSelector.cpp,v 1.1.1.1 2005-04-18 15:31:41 frankb Exp $
+// $Id: OnlineEvtSelector.cpp,v 1.2 2005-04-19 15:27:26 frankb Exp $
 //====================================================================
 //	OnlineEvtSelector.cpp
 //--------------------------------------------------------------------
@@ -48,6 +48,7 @@ namespace GaudiOnline  {
     mutable ListDsc::iterator       m_recvDesc;
     mutable ListDsc::const_iterator m_readDesc;
     StreamType                      m_type;
+    int                             m_dataType;
     std::string                     m_conSpec;
     StreamDescriptor::Access        m_accessDsc;
   public:
@@ -82,7 +83,7 @@ namespace GaudiOnline  {
 }
 
 GaudiOnline::OnlineContext::OnlineContext(size_t len, const EvtSelector* pSelector)
-  : m_pSelector(pSelector), m_type(STREAM_NONE)
+: m_pSelector(pSelector), m_type(STREAM_NONE), m_dataType(StreamDescriptor::NONE)
 {
   m_com.resize(len);
   for (ListDsc::iterator i=m_com.begin(); i != m_com.end(); ++i)  {
@@ -108,12 +109,14 @@ StatusCode GaudiOnline::OnlineContext::receiveEvent(StreamDescriptor* dsc)  {
   dsc->setLength(0);
   if ( m_accessDsc.ioDesc > 0 )  {
     int len = 0;
+    dsc->setCurrentAccess(0);
     if ( StreamDescriptor::readLength(m_accessDsc,len) )  {
       if ( len > dsc->max_length() )  {
         dsc->allocate(len+4);
       }
       if ( StreamDescriptor::read(m_accessDsc,dsc->data(),len) )  {
         dsc->setLength(len);
+        dsc->setCurrentAccess(&m_accessDsc);
         return StatusCode::SUCCESS;
       }
     }
@@ -147,18 +150,16 @@ void GaudiOnline::OnlineContext::setCriteria(const std::string& crit) {
   tok.analyse(crit," ","","","=","'","'");
   for(Tokenizer::Items::iterator i=tok.items().begin(); i!=tok.items().end();i++) {
     std::string tmp = (*i).tag().substr(0,3);
+    std::string val = (*i).value();
     switch(::toupper(tmp[0])) {
       case 'T': // TYPE='DAQ'
-        if ( (*i).value() == 'DAQ' || (*i).value() == 'L2' || (*i).value()=='L3' )
-          m_dataType = StreamDescriptor::DAQ_BUFFER;
-        else if ( (*i).value() == 'L1' )
-          m_dataType = StreamDescriptor::L1_BUFFER;
+        m_dataType = StreamDescriptor::dataType(val);
         break;
       case 'L': // LENGTH='1024'
         ::sscanf((*i).value().c_str(), "%d", &buff_len);
         break;
       case 'D': // DATA='...'
-        m_conSpec = (*i).value();
+        m_conSpec = val;
         switch(::toupper(m_conSpec[0])) {
           case 'F':          //  DATA='file://C:/Data/myfile.dat'
             m_type = STREAM_FILE;
@@ -183,7 +184,7 @@ void GaudiOnline::OnlineContext::setCriteria(const std::string& crit) {
 }
 
 GaudiOnline::EvtSelector::EvtSelector(const std::string& nam, ISvcLocator* svcloc)
-: Service( nam, svcloc), m_rootCLID(CLID_NULL), m_dataType(StreamBuffer::NONE)
+: Service( nam, svcloc), m_rootCLID(CLID_NULL), m_dataType(StreamDescriptor::NONE)
 {
   declareProperty("CnvService",  m_cnvSvcName);
   declareProperty("NumBuffers",  m_numBuffers   = 2);
@@ -233,10 +234,7 @@ StatusCode GaudiOnline::EvtSelector::initialize()    {
   }
   m_rootCLID = eds->rootCLID();
   eds->release();
-  if ( m_dataTypeName == 'DAQ' || m_dataTypeName == 'L2' || m_dataTypeName=='L3' )
-    m_dataType = StreamDescriptor::DAQ_BUFFER;
-  else if ( m_dataTypeName == 'L1' )
-    m_dataType = StreamDescriptor::L1_BUFFER;
+  m_dataType = StreamDescriptor::dataType(m_dataTypeName);
   log << MSG::DEBUG << "Selection CLID:" << m_rootCLID 
     << "  Data type:" << m_dataTypeName << "(" << m_dataType << ")" << endreq;
   return status;

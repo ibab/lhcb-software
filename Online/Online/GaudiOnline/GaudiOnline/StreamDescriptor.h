@@ -1,11 +1,11 @@
-// $Id: StreamDescriptor.h,v 1.1.1.1 2005-04-18 15:31:41 frankb Exp $
+// $Id: StreamDescriptor.h,v 1.2 2005-04-19 15:27:26 frankb Exp $
 //====================================================================
 //	StreamDescriptor.h
 //--------------------------------------------------------------------
 //
 //	Author     : M.Frank
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/GaudiOnline/StreamDescriptor.h,v 1.1.1.1 2005-04-18 15:31:41 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/GaudiOnline/StreamDescriptor.h,v 1.2 2005-04-19 15:27:26 frankb Exp $
 #ifndef GAUDIONLINE_STREAMDESCRIPTOR_H
 #define GAUDIONLINE_STREAMDESCRIPTOR_H 1
 
@@ -42,13 +42,20 @@ namespace GaudiOnline {
       char type;
     private:
       /// Fast functions: read buffer into memory
-      bool (*m_read)     (Access& con, void* buffer, int max_len);
+      bool (*m_read)     (const Access& con, void* buffer, int max_len);
       /// Fast functions: read buffer length into memory
-      bool (*m_read_len) (Access& con, int& len);
+      bool (*m_read_len) (const Access& con, int& len);
       /// Fast functions: write buffer from memory
-      bool (*m_write)    (Access& con, const void* buffer, int max_len);
+      bool (*m_write)    (const Access& con, const void* buffer, int max_len);
+      /// Fast functions: set trigger decision
+      bool (*m_set_decision)(const Access& con, int value);
+      /// fast functions: send trigger decision
+      bool (*m_send_decision)(const Access& con);
     public:
-      Access() : ioDesc(-1), m_read(0), m_write(0), m_read_len(0) {}      
+      Access() : ioDesc(-1), m_read(0), m_write(0), m_read_len(0),
+                 m_set_decision(0), m_send_decision(0) 
+      {
+      }      
     };
   protected:
     /// Maximal length of data block
@@ -61,6 +68,8 @@ namespace GaudiOnline {
     int       m_decision;
     /// Data type (L1/DAQ)
     int       m_type;
+    /// Pointer to current communication structure
+    Access*   m_currentAccess;
   public:
     /// Default constructor
     StreamDescriptor();
@@ -76,20 +85,35 @@ namespace GaudiOnline {
     int max_length()  const   {    return m_allocated; }
     /// Access to data block
     char* data() const        {    return m_data;      }
+    /// Set data type (L1/DAQ)
+    void setType(int typ)     {    m_type = typ;       }
     /// Allocate data block
     char* allocate(int len);
-    static void getInetConnection(const std::string& con, std::string& host, unsigned int& ip, unsigned short& port);
+    /// Change currenbt access descriptor
+    void setCurrentAccess(Access* acc)  { m_currentAccess = acc; }
+    /// Send decision
+    int sendDecision() const;
+    /// Set decision to be sent
+    int setDecision(int val) const;
+
+    /// Access to datatype (by string)
+    static int dataType(const std::string& typ);
+    static void getInetConnection(const std::string& con, std::string& host, unsigned long& ip, unsigned short& port);
     static void getFileConnection(const std::string& con, std::string& file);
     static Access connect(const std::string& specs);
     static Access bind(const std::string& specs);
-    static Access accept(Access& specs);
+    static Access accept(const Access& specs);
     static int close(Access& specs);
-    static bool write(Access& con, const void* data, int len)
+    static bool write(const Access& con, const void* data, int len)
     {   return (*con.m_write)(con, data, len);         }
-    static bool read(Access& con, void* data, int len)
+    static bool read(const Access& con, void* data, int len)
     {   return (*con.m_read)(con, data, len);          }
-    static bool readLength(Access& con, int& len)
+    static bool readLength(const Access& con, int& len)
     {   return (*con.m_read_len)(con, len);            }
+    static bool setDecision(const Access& con, int value)
+    {   return (*con.m_set_decision)(con, value);      }
+    static bool sendDecision(const Access& con)
+    {   return (*con.m_send_decision)(con);            }
   };
 }
 #endif // GAUDIONLINE_STREAMDESCRIPTOR_H

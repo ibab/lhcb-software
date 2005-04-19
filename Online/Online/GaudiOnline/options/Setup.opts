@@ -1,0 +1,10 @@
+//
+//   Online setup to process events
+//
+ApplicationMgr.Dlls  += { "GaudiOnline" };
+// requires environment variable:
+// SFCCONNECTION=ip://pclhcb102.cern.ch:8888
+// SFCCONNECTION=file://rawbuffer.dat
+// SFCCONNECTION=sfc://mysfcnode.cern.ch:8765
+EventSelector.Input   = {"DATA='${SFCCONNECTION}' SVC='GaudiOnline::EvtSelector'"};
+EventPersistencySvc.CnvServices += { "OnlineCnvSvc" };

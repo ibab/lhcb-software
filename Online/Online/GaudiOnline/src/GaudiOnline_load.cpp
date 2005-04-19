@@ -1,4 +1,4 @@
-// $Id: GaudiOnline_load.cpp,v 1.1.1.1 2005-04-18 15:31:41 frankb Exp $
+// $Id: GaudiOnline_load.cpp,v 1.2 2005-04-19 15:27:26 frankb Exp $
 //====================================================================
 //  GaudiOnline_load.cpp
 //--------------------------------------------------------------------
@@ -16,6 +16,8 @@ DECLARE_FACTORY_ENTRIES(GaudiOnline)  {
 
   DECLARE_OBJECT( OnlineEvtSelector  );
   DECLARE_OBJECT( RawBufferWriter  );
+  DECLARE_OBJECT( DecisionSendAlg  );
+  DECLARE_OBJECT( DecisionSetterAlg  );
   DECLARE_OBJECT( OnlineCnvSvc  );
   DECLARE_OBJECT( OnlineCnv  );
 

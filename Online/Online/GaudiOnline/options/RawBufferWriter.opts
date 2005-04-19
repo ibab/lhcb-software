@@ -1,0 +1,15 @@
+ApplicationMgr.ExtSvc = { "EventSelector" };
+ApplicationMgr.Dlls       += { "GaudiOnline" };
+ApplicationMgr.TopAlg      = { "RawBufferWriter" };
+ApplicationMgr.HistogramPersistency = "NONE";
+ApplicationMgr.EvtMax      = 1000;
+PoolDbCacheSvc.OutputLevel = 3;
+
+RawBufferWriter.AcceptParams = "file://rawBuffer.dat";
+EventDataSvc.RootCLID = 1;
+// DLLs that contain the necessary dictionaries and factories
+ApplicationMgr.DLLs += { "CaloEvent", "DAQEvent" };
+#include "$GAUDIPOOLDBROOT/options/GaudiPoolDbRoot.opts"
+#include "$EVENTSYSROOT/options/PoolDicts.opts"
+PoolDbCacheSvc.Dlls        += {"SealSTLDict" };
+EventSelector.Input  = {"DATAFILE='rfio:/castor/cern.ch/user/c/cattanem/Brunel/v26r0/Brunel-0412.dst' TYP='POOL_ROOT' OPT='READ'"};
