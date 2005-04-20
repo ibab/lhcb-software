@@ -2,8 +2,11 @@
 # Created    : 2002-12-12
 # Maintainer : Sajan Easo
 #============================================================================
-# $Id: requirements,v 1.27 2005-04-12 13:03:53 gcorti Exp $
+# $Id: requirements,v 1.28 2005-04-20 12:49:55 gcorti Exp $
 # $Log: not supported by cvs2svn $
+# Revision 1.27  2005/04/12 13:03:53  gcorti
+# switch off set3 histograms
+#
 # Revision 1.26  2005/03/09 16:37:03  gcorti
 # v4r12
 #
@@ -32,7 +35,7 @@
 
 # =============================================================================
 package GaussRICH
-version v4r13
+version v4r14
 
 # =============== package structure ===========================================
 branches          cmt src doc
