@@ -5,19 +5,7 @@
  *  Implementation ile for RichRecPixel enumerations
  *
  *  CVS Log :-
- *  $Id: RichRecPixelParentType.cpp,v 1.6 2004-11-20 12:30:24 jonrob Exp $
- *  $Log: not supported by cvs2svn $
- *  Revision 1.5  2004/10/30 19:24:36  jonrob
- *  Add enmeration type for RawBuffer parentage
- *
- *  Revision 1.4  2004/08/19 14:07:41  jonrob
- *  Remove dependency on RichDet + doxygen updates
- *
- *  Revision 1.3  2004/08/17 11:30:48  jonrob
- *  Update printout messages for enumerations
- *
- *  Revision 1.2  2004/07/26 18:00:58  jonrob
- *  Various improvements to the doxygen comments
+ *  $Id: RichRecPixelParentType.cpp,v 1.7 2005-04-20 16:21:20 jonrob Exp $
  *
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   2003-05-10

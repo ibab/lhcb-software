@@ -5,8 +5,7 @@
  *  Implementation file for RICH reconstruction tool base class : RichRecToolBase
  *
  *  CVS Log :-
- *  $Id: RichRecToolBase.cpp,v 1.10 2004-07-26 18:00:58 jonrob Exp $
- *  $Log: not supported by cvs2svn $
+ *  $Id: RichRecToolBase.cpp,v 1.11 2005-04-20 16:21:20 jonrob Exp $
  *
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   2002-07-26
