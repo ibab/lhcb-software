@@ -1,8 +1,9 @@
-! $Id: release.notes,v 1.52 2005-04-14 12:26:50 pkoppenb Exp $
+! $Id: release.notes,v 1.53 2005-04-20 14:26:23 pkoppenb Exp $
 ! Package     : DaVinciMCTools
 ! Responsible : P. Koppenburg
 !=============================================================================
 
+!========================== DaVinciMCTools v5r10 2005-04-20 ===================
 ! 2005-04-14 - P. Koppenburg
  - src/DecayChainNTuple.{h,pp}
    . Minor fixes for DV v13
