@@ -1,8 +1,11 @@
-// $Id: GaussAlgs_load.cpp,v 1.1.1.1 2004-02-20 19:43:29 ibelyaev Exp $
+// $Id: GaussAlgs_load.cpp,v 1.2 2005-04-20 15:02:51 gcorti Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
-// $Log: not supported by cvs2svn $ 
+// $Log: not supported by cvs2svn $
+// Revision 1.1.1.1  2004/02/20 19:43:29  ibelyaev
+// New package 
+// 
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -19,6 +22,7 @@ DECLARE_FACTORY_ENTRIES(GaussAlgs) {
   DECLARE_ALGORITHM ( GiGaGetEventAlg     ) ;
   DECLARE_ALGORITHM ( PrintEventAlg       ) ;
   DECLARE_ALGORITHM ( GaussInitialisation ) ;
+  DECLARE_ALGORITHM ( GiGaCheckEventStatus ) ;
   
 };
 
