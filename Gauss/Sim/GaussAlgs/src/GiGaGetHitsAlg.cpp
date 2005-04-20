@@ -1,4 +1,4 @@
-// $Id: GiGaGetHitsAlg.cpp,v 1.4 2005-03-09 16:33:56 gcorti Exp $
+// $Id: GiGaGetHitsAlg.cpp,v 1.5 2005-04-20 12:55:40 gcorti Exp $
 // Include files
 
 // from Gaudi
@@ -122,6 +122,7 @@ StatusCode GiGaGetHitsAlg::execute() {
   unsigned int idet = 0;
   for(Addresses::const_iterator address = m_caloHits.begin() ;
       m_caloHits.end() != address ; ++address ) {
+    if( (*address).empty() ) continue;
     MCCaloHits* hits = get<MCCaloHits>( *address );
     info() << "Number of extracted MCCaloHits  '" << *address << "' \t"
            << hits->size() << endmsg ;

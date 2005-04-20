@@ -3,6 +3,14 @@
 ! Purpose     : 
 ! -----------------------------------------------------------------------------
 
+! 2005-04-20 - Gloria Corti
+ - src/src/GiGaCheckEventStatus.{h,cpp}
+   . new algorithm that check if G4Event has been aborted and setFilterPassed
+     to false if that is the case. Allows to skip aborted events in successive
+     filtering stages 
+ - src/GiGaGetHitsAlg.cpp
+   . add protection to skip access to data if address in list is "".
+
 !============================ GaussAlgs v1r5 ==============================
 ! 2005-03-07 - Gloria Corti
  - src/GiGaGetHitsAlg.cpp
