@@ -1,5 +1,5 @@
 package Gauss
-version v19r3
+version v19r4
 
 # =============================================================================
 # structure 
@@ -13,7 +13,7 @@ set APPVERSION $(GAUSSVERS)
 set AlwaysKillLeadingHadron 1
 
 #=========================================================================
-#get information from DBASE and PARAM 
+# get information from DBASE and PARAM 
 use XmlDDDB             v24r0   Det   -no_auto_imports
 use FieldMap            v4r5          -no_auto_imports
 use DecFiles            v6r6    Gen   -no_auto_imports
@@ -21,29 +21,27 @@ use ParamFiles          v3r11         -no_auto_imports
 use Geant4Files		v52r0	      -no_auto_imports
 
 #========================================================================
-#generator
+# Generator
 use GeneratorModules    v15r0   Gen
 
-#GiGa staff...
+# Simulation
 use GiGaCnv             v15r11  Sim
-
 use GaussTools          v10r10 	Sim
 use GaussTracker        v4r0    Sim
-use GaussRICH           v4r13   Sim
+use GaussRICH           v4r14   Sim
 use GaussCalo           v7r2    Sim
 use GaussPhysics        v3r1    Sim
+use GaussAlgs		v1r6    Sim
 
-use GaussAlgs		v1r5    Sim
-
-#optional visualisation and UI
+# Optional visualisation and UI
 #use GiGaVisUI           v3r0    Sim
 
-#Monitoring
+# Monitoring
 use GaussMonitor        v2r0    Sim
 use CaloMoniSim         v1r0    Calo
 use VeloAlgorithms      v3r3    Velo
 #======================================================================
-# Main program and standard job options
+# Standard job options
 use GaudiConf           v*     
 
 # GAUDI framework

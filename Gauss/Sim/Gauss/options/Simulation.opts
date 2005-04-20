@@ -1,4 +1,4 @@
-// $Id: Simulation.opts,v 1.60 2005-02-28 16:34:42 gcorti Exp $ 
+// $Id: Simulation.opts,v 1.61 2005-04-20 13:04:51 gcorti Exp $ 
 #pragma print off
 
 /** @file 
@@ -48,6 +48,8 @@ Simulation.Members += { "GiGaFlushAlgorithm" };
 Simulation.Members += { "GiGaGetEventAlg" };
 // Populate sensitive hits in the TES
 Simulation.Members += { "GiGaGetHitsAlg" };
+// Check the G4Event processing status
+Simulation.Members += { "GiGaCheckEventStatus" };
 
 // Simulation configuration: Geant4 control
 // Physics list and the production cuts  

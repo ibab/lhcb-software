@@ -4,6 +4,12 @@
 ! Purpose     : LHCb Simulation Application with Geant4
 !-----------------------------------------------------------------------------
 
+! 2005-04-20 - Gloria Corti
+ - Use new version of GaussRICH (v4r14) and GaussAlgs (v1r6)
+ - Write only events that were succefully processed by the simulation
+   skipping events for which the G4Event was aborted
+   . GaussTape.opts, Simulation.opts
+
 !========================== Gauss v19r3 ==================================
 ! 2005-04-12 - Gloria Corti
  - Use new versions of GeneratorModules (v15r0), GaussTools (v10r10), 
