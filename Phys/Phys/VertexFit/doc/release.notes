@@ -1,7 +1,8 @@
-! $Id: release.notes,v 1.26 2005-04-14 11:19:01 pkoppenb Exp $
+! $Id: release.notes,v 1.27 2005-04-20 14:40:15 pkoppenb Exp $
 ! Package     : VertexFit
 ! Responsible : Yuehong Xie, P. Koppenburg, H. Ruiz
 
+!========================== VertexFit v1r5p1 2005-04-20 ===================
 ! 2005-04-14 - P. Koppenburg
   - src/LagrangeGeomVertexFitter.cpp
   - src/LagrangeMassVertexFitter.cpp
