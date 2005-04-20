@@ -1,6 +1,15 @@
-! $Id: release.notes,v 1.157 2005-04-12 07:32:16 pkoppenb Exp $
+! $Id: release.notes,v 1.158 2005-04-20 14:08:39 pkoppenb Exp $
 ! Package     : DaVinciTools
 ! Responsible : P. Koppenburg
+
+! 2005-04-20 - P. Koppenburg
+  - src/DecodeSimpleDecayString.{cpp,h}
+    . Remove finalize() method to get rid of warnings at end of job
+  - src/Algorithm2ID.{cpp,h}
+    . Small tool that alows to assign an ID to an algorithm by options.
+      ToolSvc.AlgorithmNames = { "DVAlg1", "DVAlg2" };
+      Since this tool is declared to DVAlgorithm, DVAlg1 will know
+      it is number 1, and DVAlg2 is 2. Essentially designed for HLT.
 
 ! 2005-04-12 - P. Koppenburg for Luis Fernandez
   - src/MakeResonances.cpp

@@ -1,4 +1,4 @@
-// $Id: DecodeSimpleDecayString.cpp,v 1.4 2005-01-12 15:43:26 pkoppenb Exp $
+// $Id: DecodeSimpleDecayString.cpp,v 1.5 2005-04-20 14:08:39 pkoppenb Exp $
 // Include files 
 
 // from ANSI C++
@@ -65,12 +65,18 @@ DecodeSimpleDecayString::~DecodeSimpleDecayString() {};
 //=============================================================================
 StatusCode DecodeSimpleDecayString::initialize(){
 
-  StatusCode sc = service( "ParticlePropertySvc", m_ppSvc );
-  if( sc.isFailure ()) {
+  StatusCode sc = GaudiTool::initialize();
+  if (!sc) return sc;
+  
+  m_ppSvc = svc<IParticlePropertySvc>( "ParticlePropertySvc");
+  if(!m_ppSvc ) {
     fatal() << "ParticlePropertySvc Not Found" << endreq;
     return StatusCode::FAILURE;
   }
-  return reset();
+  sc = reset();
+  verbose() << "Returning " << sc << endmsg ;
+  return sc ;
+  
 };
 
 //=============================================================================
@@ -104,6 +110,7 @@ StatusCode DecodeSimpleDecayString::reset(){
   m_daughters.clear();
   m_daughters_cc.clear();
   m_iscc = false ;
+  verbose() << "Reset of DecodeSimpleDecayString done" << endmsg ;
   return StatusCode::SUCCESS;
 }
 //=============================================================================

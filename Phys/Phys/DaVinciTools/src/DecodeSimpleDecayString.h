@@ -1,4 +1,4 @@
-// $Id: DecodeSimpleDecayString.h,v 1.5 2005-01-12 15:43:26 pkoppenb Exp $
+// $Id: DecodeSimpleDecayString.h,v 1.6 2005-04-20 14:08:39 pkoppenb Exp $
 #ifndef DECODESIMPLEDECAYSTRING_H 
 #define DECODESIMPLEDECAYSTRING_H 1
 
@@ -26,11 +26,7 @@ public:
 
   virtual ~DecodeSimpleDecayString( ); ///< Destructor
   /// Initialize method 
-  StatusCode initialize();
-  
-  /// Finalize method 
-  StatusCode finalize(){return StatusCode::SUCCESS;};
-  
+  StatusCode initialize();  
   StatusCode setDescriptor(const std::string&);
   std::string getDescriptor(void) const {return m_descriptor;} ;
   StatusCode getStrings(std::string&, strings&) const;

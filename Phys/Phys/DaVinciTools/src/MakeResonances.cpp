@@ -1,4 +1,4 @@
-// $Id: MakeResonances.cpp,v 1.2 2005-04-12 07:32:16 pkoppenb Exp $
+// $Id: MakeResonances.cpp,v 1.3 2005-04-20 14:08:39 pkoppenb Exp $
 // Include files 
 
 #include <algorithm>
@@ -113,6 +113,8 @@ StatusCode MakeResonances::initialize() {
     }    
   }
   
+  verbose() << "Going to createDecays" << endmsg ;
+  std::cout << "Hallo" << std::endl ;
   StatusCode sc = createDecays();
   if ( sc.isFailure()) return sc ;  
 
@@ -123,12 +125,16 @@ StatusCode MakeResonances::initialize() {
 //=============================================================================
 StatusCode MakeResonances::createDecays(){
   // get string decoder
+  verbose() << "In createDecays" << endmsg ;
   IDecodeSimpleDecayString* dsds = tool<IDecodeSimpleDecayString>("DecodeSimpleDecayString",this);
+  verbose() << "DecodeSimpleDecayString" << endmsg ;
   if ( !dsds ) return StatusCode::FAILURE ;  
   
+  verbose() << "Setting up decay descriptors..." << endmsg ;
   if ( m_decayDescriptors.empty() ){
     m_decayDescriptors.push_back(getDecayDescriptor());
   }
+  verbose() << "...:" << endmsg ;
 
   for ( std::vector<std::string>::const_iterator dd = m_decayDescriptors.begin() ;
         dd != m_decayDescriptors.end() ; ++dd ){
