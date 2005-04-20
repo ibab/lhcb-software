@@ -1,9 +1,10 @@
-! $Id: release.notes,v 1.64 2005-04-13 08:50:11 phicharp Exp $
+! $Id: release.notes,v 1.65 2005-04-20 14:18:35 pkoppenb Exp $
 !===================================================================================
 ! Package     : DaVinciAssociators
 ! Responsible : Philippe Charpentier
 !===================================================================================
 
+!========================== DaVinciAssociators v5r3p1 2005-04-20 ===================
 ! 2005-04-12 - Ph.Charpentier
  - DaVinciAssociators/Particle2MCLink.h 
     Fix a bug when calling createLinks for reverse associators
