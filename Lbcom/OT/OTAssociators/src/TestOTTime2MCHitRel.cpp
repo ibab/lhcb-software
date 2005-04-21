@@ -1,6 +1,6 @@
-// $Id: TestOTTime2MCHitRel.cpp,v 1.1 2005-04-21 09:47:03 cattanem Exp $
+// $Id: TestOTTime2MCHitRel.cpp,v 1.2 2005-04-21 09:55:09 cattanem Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.1 $ 
+// CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.2 $ 
 // ============================================================================
 // Include files
 // ============================================================================
@@ -60,7 +60,7 @@ protected:
    *  @param pSvc service locator 
    */
   TestOTTime2MCHitRel ( const std::string& name , 
-               ISvcLocator*       pSvc ) 
+                        ISvcLocator*       pSvc ) 
     : GaudiHistoAlg( name , pSvc ) 
       , m_table ( "Rec/Relations/OTTimes2MCHits" )
   {
