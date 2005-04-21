@@ -1,6 +1,10 @@
-! $Id: release.notes,v 1.27 2005-03-22 10:49:29 cattanem Exp $
+! $Id: release.notes,v 1.28 2005-04-21 09:47:03 cattanem Exp $
 ! Package     : OTAssociators
 ! Responsible : J. van Tilburg & Jacopo Nardulli
+
+!==================== ITAssociators v2r11p1 2005-04-21 =====================
+! 2005-04-21 - Marco Cattaneo
+ - Add TestOTTime2MCHitRel algorithm from Vanya, to test relation table
 
 !====================== OTAssociators v3r2 2005-03-22 ======================   
 ! 2005-03-22 - Marco Cattaneo

@@ -1,4 +1,4 @@
-// $Id: OTAssociators_load.cpp,v 1.7 2005-03-22 10:49:29 cattanem Exp $
+// $Id: OTAssociators_load.cpp,v 1.8 2005-04-21 09:47:03 cattanem Exp $
 // Include files 
 
 #include "GaudiKernel/DeclareFactoryEntries.h"
@@ -40,5 +40,6 @@ DECLARE_FACTORY_ENTRIES( OTAssociators )
   DECLARE_ALGORITHM( OTTime2MCParticleAlg );
   DECLARE_ALGORITHM( OTTime2MCDepositAlg );
   DECLARE_ALGORITHM( OTTime2MCHitLinker );
+  DECLARE_ALGORITHM( TestOTTime2MCHitRel );
 
 }
