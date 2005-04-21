@@ -3,18 +3,20 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
-</PRE><H1><A NAME=v8r3>2005-04-19 Boole v8r3</A></H1><PRE>
+</PRE><H1><A NAME=v8r3>2005-04-21 Boole v8r3</A></H1><PRE>
 This version uses Gaudi v16r3, LHCb v18r3, Lbcom v1r3 (also CLHEP 1.9, ROOT 4.0) 
 Requires input from Gauss v19r3 or greater. Output needs Brunel v26r2 or greater
 Incompatible with DC04 data and programs.
 
+- Packages removed:  TrgTools
 - Packages modified: ITAlgorithms v14r4p1, MuonBackground v1r10p1,
-                     OTSimulation v1r4, TrgTools v7r3
+                     OTSimulation v1r4
 
 - Modified packaging
   . Program name and version now set via preprocessor directives in GaudiMain
     and printed by ApplicationMgr. APPVERSION env. variable no longer needed
     (GaudiSvc v13r3, GaudiConf v9r1, GaudiAlgs v1r5)
+  . TrgL0Filter now in EventUtils v1r0, removes dependency on TrgTools
 
 - Bug fixes:
   . Fix bug in Velo sensor thickness, affects S/N (XmlDDDB v24r1)

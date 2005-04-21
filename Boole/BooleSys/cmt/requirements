@@ -32,6 +32,3 @@ use MuonBackground	v1r10p1	Muon
 # Rich
 use RichDigiQC		v2r1	Rich
 use RichReadout		v1r12	Rich
-
-# Trigger
-use TrgTools		v7r3	Trg
