@@ -1,4 +1,4 @@
-// $Id: TrTransporter.cpp,v 1.3 2005-02-25 13:28:58 pkoppenb Exp $
+// $Id: TrTransporter.cpp,v 1.4 2005-04-21 16:54:22 xieyu Exp $
 // Include files 
 #include "CLHEP/Matrix/SymMatrix.h"  // here because of CLHEP bug
 #include "CLHEP/Matrix/Vector.h"
@@ -247,7 +247,7 @@ StatusCode TrTransporter::trTransport(const Particle *workParticle,
     ParticleID pID( workParticle->particleID() );
     StatusCode sc = workTrStateP->extrapolate(m_extrapolator, znew, pID);  
     if ( sc.isFailure() ) {
-      err()  << " Unable to extrapolate TrStateP " << endreq;
+      debug()  << " Unable to extrapolate TrStateP " << endreq;
     }
     
     newPOT[0] = workTrStateP->x();
@@ -300,7 +300,7 @@ StatusCode TrTransporter::trTransport(const Particle *workParticle,
 						  znew,
 						  transParticle);
     if ( sc.isFailure() ) {
-      err()  << " Unable to extrapolate Neutral Particle" << endreq;
+      debug()  << " Unable to extrapolate Neutral Particle" << endreq;
     }
   }
   return StatusCode::SUCCESS;  

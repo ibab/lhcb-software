@@ -1,7 +1,12 @@
-! $Id: release.notes,v 1.44 2005-04-14 15:54:54 pkoppenb Exp $
+! $Id: release.notes,v 1.45 2005-04-21 16:55:29 xieyu Exp $
 ! Package     : DaVinciKernel
 ! Responsible : P. Koppenburg
 
+! 2005-04-21 - Y. Xie
+  - Kernel/INewDirectionFitter.h
+    . add this new interface 
+    . similar to ILifetimeFitter.h, used to fit for both lifetime and mass 
+ 
 ! 2005-04-14 - P. Koppenburg
   - DaVinciTools/IParticleTransporter.h
     . removed

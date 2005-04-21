@@ -1,6 +1,10 @@
-! $Id: release.notes,v 1.13 2005-03-03 14:58:27 pkoppenb Exp $
+! $Id: release.notes,v 1.14 2005-04-21 16:54:21 xieyu Exp $
 ! Package     : DaVinciTransporter
 ! Responsible : P. Koppenburg, Yuehong Xie
+
+! 2005-04-21 - Yuehong Xie
+  -src/TrTransporter.cpp
+   . change the message level from err() to debug() when extrapolation of a state fails
 
 !========================== DaVinciTransporter v2r0p1 2005-03-03 ===================
 ! 2005-02-25 - P. Koppenburg
