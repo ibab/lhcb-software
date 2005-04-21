@@ -19,5 +19,5 @@ DECLARE_FACTORY_ENTRIES( VertexFit ) {
   DECLARE_TOOL( TrgDispCalculator );
 
   DECLARE_TOOL( LifetimeFitter );
-
+  DECLARE_TOOL( NewDirectionFitter );
 }

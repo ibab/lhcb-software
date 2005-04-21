@@ -54,7 +54,7 @@ public:
   StatusCode fitDecay( Particle&, ParticleVector&);                 
                                                                 
   /// Method to apply mass constraint to a Particle
-  StatusCode massConstrain( Particle&, double &) ;
+  StatusCode massConstrain( Particle&) ;
 
   /// transformation matrix from energy parameters to mass parameters
   HepMatrix MatrixE2M(Particle&);
@@ -80,15 +80,18 @@ public:
 
   /// Method to fit two a non-resonance Particles
   StatusCode fitWithTwoTrajectories(Particle&, Particle&,
-                                    HepVector&, HepSymMatrix& );
+                                    HepVector&, HepSymMatrix&, 
+                                    double&);
                                                                                 
   /// Method to merge vertices of two resonance Particles
   StatusCode mergeTwoVertices(Particle&, Particle&,
-                              HepVector&, HepSymMatrix& );
+                              HepVector&, HepSymMatrix&, 
+                              double& );
                                                                                 
   /// Method to add a non-photon Particle to a decay vertex
   StatusCode addParticle(Particle&, Particle&,
-                         HepVector&, HepSymMatrix& );
+                         HepVector&, HepSymMatrix&,
+                         double& );
                                                                                 
   /// Method to add a photon to a decay vertex
   StatusCode addPhoton(Particle&, Particle&,
@@ -136,6 +139,7 @@ private:
   double     m_maxDeltaChiSq;    
   double     m_widthCut;
   bool       m_PhotonPairMassConstraint;
+  bool       m_setStateAtFirstM;
 
   IParticlePropertySvc* m_ppSvc;        
   IParticleTransporter* m_pTransporter;

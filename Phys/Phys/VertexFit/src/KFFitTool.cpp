@@ -74,9 +74,8 @@ KFFitTool::KFFitTool(const std::string& type,
   declareProperty( "MaxDeltaChiSq", m_maxDeltaChiSq = 0.001);
   declareProperty( "Transporter", m_transporterType);
   declareProperty( "WidthCut", m_widthCut = 2.0*MeV);
-  declareProperty( "PhotonPairMassConstraint", m_PhotonPairMassConstraint = true 
-);
-
+  declareProperty( "PhotonPairMassConstraint", m_PhotonPairMassConstraint = true );
+  declareProperty( "setStateAtFirstM", m_setStateAtFirstM =true);
 }
 
 //==================================================================
@@ -114,7 +113,8 @@ StatusCode KFFitTool::reFit( Particle& part ) {
   if(!isComposite(part)) {
     StatusCode sc=StatusCode::SUCCESS;
     if(part.charge()!=0) {
-      if(abs(part.particleID().pid())!=11) sc=setStateAtFirstM(part);
+      if(m_setStateAtFirstM)
+        if(abs(part.particleID().pid())!=11) sc=setStateAtFirstM(part);
       sc=resetTrackParameters(part);
       HepVector para(7,0);
       HepSymMatrix cov(7,0);
@@ -146,9 +146,8 @@ StatusCode KFFitTool::reFit( Particle& part ) {
      bool isDauComp= isComposite(*daughter);
      bool photonsOnly = isPurePhotonDecay(*daughter);
 
-     double chi2Mass=-9999.;
      if(isDauComp && dauWidth<m_widthCut && !photonsOnly) {
-       StatusCode okMass=massConstrain(*daughter, chi2Mass);
+       StatusCode okMass=massConstrain(*daughter);
         if(okMass.isFailure()) {
           debug() << "massConstrain fails!"<<endreq;
           return okMass;        
@@ -172,6 +171,10 @@ StatusCode KFFitTool::reFit( Particle& part ) {
 StatusCode KFFitTool::fitDecay( Particle& mother, 
                                 ParticleVector& daughters) {
   debug() <<"Now entering fitDecay!"<<endreq;
+
+  double totalChi2=0.;
+  double stepChi2=0.;
+  int totalNDoF=0;
 
   //  Vertex* endVertex = mother.endVertex();           
   ParticleVector::iterator iDau;
@@ -202,11 +205,13 @@ StatusCode KFFitTool::fitDecay( Particle& mother,
       sc=getEParameter(*dau, Ve, Ce);
       if(sc.isFailure ()) return sc;
     } else {
-      sc=mergeTwoVertices(mother, *dau, Ve, Ce);      
+      sc=mergeTwoVertices(mother, *dau, Ve, Ce, stepChi2);      
       if(sc.isFailure ()) return sc;
+      totalChi2+=stepChi2;
+      totalNDoF+=3;
     }
-      sc=setEParameter(mother,Ve,Ce);
-      if(sc.isFailure ()) return sc;
+    sc=setEParameter(mother,Ve,Ce);
+    if(sc.isFailure ()) return sc;
   }
   if(iRes>0) hasVertex=true;
 
@@ -217,18 +222,22 @@ StatusCode KFFitTool::fitDecay( Particle& mother,
     iNonRes++;
     Particle* dau = *iDau;
     if(hasVertex) {
-      sc=addParticle(mother, *dau, Ve, Ce);
+      sc=addParticle(mother, *dau, Ve, Ce, stepChi2);
       if(sc.isFailure ()) return sc;
       sc=setEParameter(mother,Ve,Ce);
       if(sc.isFailure ()) return sc; 
+      totalChi2+=stepChi2;
+      totalNDoF+=2;
     } else {
       if(iNonRes==1) dauFirst=dau;
       if(iNonRes==2) {
-        sc=fitWithTwoTrajectories(*dauFirst,*dau,Ve,Ce);
+        sc=fitWithTwoTrajectories(*dauFirst,*dau,Ve,Ce,stepChi2);
         if(sc.isFailure ()) return sc;
         sc=setEParameter(mother,Ve,Ce);
         if(sc.isFailure ()) return sc;
         hasVertex=true; 
+        totalChi2=stepChi2;
+        totalNDoF=1;
       }
     }
   }
@@ -254,6 +263,12 @@ StatusCode KFFitTool::fitDecay( Particle& mother,
     if(sc.isFailure ()) return sc;
   }
 
+  Vertex* endV= mother.endVertex();
+  if(endV!=0) {
+    endV->setChi2(totalChi2);
+    endV->setNDoF(totalNDoF);
+  }
+
   return StatusCode::SUCCESS;
 }
 
@@ -261,7 +276,7 @@ StatusCode KFFitTool::fitDecay( Particle& mother,
 //  apply mass constraint to a Particle
 //==================================================================
                                                                                 
-StatusCode KFFitTool::massConstrain( Particle& part, double& chi2) {
+StatusCode KFFitTool::massConstrain( Particle& part) {
   debug() << " Starting massConstrain "<< endmsg;
 
   ParticleID pid=part.particleID();
@@ -302,7 +317,6 @@ StatusCode KFFitTool::massConstrain( Particle& part, double& chi2) {
     HepSymMatrix delatCm2=delatCm1.similarity(Cm);
                                                   
     Cm-= delatCm2;
-    chi2=alpha/olderrm2;
   }
   for(int i=1;i<=7;i++) Cm(7,i)=0.0;
 
@@ -368,6 +382,8 @@ StatusCode KFFitTool::setEParameter(Particle& part,
   HepMatrix covCopy=cov;
   HepMatrix newPosMomCorr=covCopy.sub(4,7,1,3);
 
+  part.setMomentum(newMom);
+
   double mass=newMom.mag();
   HepMatrix Te2m=MatrixE2M(part);
   HepSymMatrix covm=cov.similarity(Te2m);  
@@ -375,7 +391,7 @@ StatusCode KFFitTool::setEParameter(Particle& part,
 
   part.setPointOnTrack(newPOT);
   part.setPointOnTrackErr(newPOTErr);
-  part.setMomentum(newMom);
+//  part.setMomentum(newMom);
   part.setMomentumErr(newMomErr);
   part.setPosMomCorr(newPosMomCorr);
   part.setMass(mass);
@@ -429,6 +445,8 @@ StatusCode KFFitTool::setMParameter(Particle& part,
   newMom(3)=sqrt(vpara[6]*vpara[6]+
                  vpara[3]*vpara[3]+vpara[4]*vpara[4]+vpara[5]*vpara[5]);
 
+  part.setMomentum(newMom);
+
   HepMatrix Tm2e=MatrixM2E(part);
   HepSymMatrix cove=cov.similarity(Tm2e);
 
@@ -443,7 +461,7 @@ StatusCode KFFitTool::setMParameter(Particle& part,
 
   part.setPointOnTrack(newPOT);
   part.setPointOnTrackErr(newPOTErr);
-  part.setMomentum(newMom);
+//  part.setMomentum(newMom);
   part.setMomentumErr(newMomErr);
   part.setPosMomCorr(newPosMomCorr);
   part.setMass(mass);
@@ -464,7 +482,8 @@ StatusCode KFFitTool::setMParameter(Particle& part,
 StatusCode KFFitTool::fitWithTwoTrajectories(Particle& part1, 
                                              Particle& part2,
                                              HepVector& Ve, 
-                                             HepSymMatrix& Ce ) {
+                                             HepSymMatrix& Ce,
+                                             double& chi2 ) {
   debug() << "fitWithTwoTrajectories!!! " << endmsg;
 
   HepVector para1(7,0);
@@ -511,7 +530,7 @@ StatusCode KFFitTool::fitWithTwoTrajectories(Particle& part1,
      Particle transParticle1;
      sc = m_pTransporter->transport(part1, zestimate, transParticle1);
      if( sc.isFailure ()) {
-       err() << "transport of part1 failed in fitWithTwoTrajectories!" << endreq;
+       debug() << "transport of part1 failed in fitWithTwoTrajectories!" << endreq;
        return sc;
      }
 
@@ -520,7 +539,7 @@ StatusCode KFFitTool::fitWithTwoTrajectories(Particle& part1,
      Particle transParticle2;
      sc = m_pTransporter->transport(part2, zestimate, transParticle2);
      if( sc.isFailure ()) {
-       err() << "transport of part1 failed in fitWithTwoTrajectories!" << endreq;
+       debug() << "transport of part1 failed in fitWithTwoTrajectories!" << endreq;
        return sc;
      }
      sc=resetTrackParameters(transParticle2);
@@ -608,7 +627,7 @@ StatusCode KFFitTool::fitWithTwoTrajectories(Particle& part1,
      verbose() << "initial constraint values   " << f << endreq;
 
      double chi2Previous=9999.;
-     double chi2=999.;
+     chi2=999.;
 
      bool converged=false;
      unsigned iter=0;
@@ -768,7 +787,8 @@ StatusCode KFFitTool::fitWithTwoTrajectories(Particle& part1,
 //==================================================================
                                                                                 
 StatusCode KFFitTool::mergeTwoVertices(Particle& part1, Particle& part2,
-                            HepVector& Ve, HepSymMatrix& Ce) {
+                            HepVector& Ve, HepSymMatrix& Ce,
+                            double& chi2 ) {
   debug() << "mergeTwoVertices!!! " << endmsg;
 
   HepVector para1(7,0);
@@ -825,6 +845,9 @@ StatusCode KFFitTool::mergeTwoVertices(Particle& part1, Particle& part2,
   HepSymMatrix delataC2=delataC1.similarity(Cx);
   HepSymMatrix cfit=Cx -delataC2; 
 
+  HepSymMatrix Q=VD.similarityT(D*X);
+  chi2=Q(1,1);
+
   verbose() <<"vfit= "<< vfit<<endreq;
   
 
@@ -862,7 +885,8 @@ StatusCode KFFitTool::mergeTwoVertices(Particle& part1, Particle& part2,
 //  add a non-photon Particle to a decay vertex
 //==================================================================
 StatusCode KFFitTool::addParticle(Particle& part1, Particle& part2,
-                       HepVector& Ve, HepSymMatrix& Ce) {
+                       HepVector& Ve, HepSymMatrix& Ce,
+                       double& chi2) {
 
   debug() <<"Now addParticle " << part2.particleID().pid()<< endreq;
 
@@ -897,7 +921,7 @@ StatusCode KFFitTool::addParticle(Particle& part1, Particle& part2,
   Particle transParticle;
   StatusCode sctrans = m_pTransporter->transport(part2, z1, transParticle);
   if( sctrans.isFailure ()) {
-    err() << "transport failed in addParticle!" << endreq;
+    debug() << "transport failed in addParticle!" << endreq;
     return StatusCode::FAILURE;
   }
   sc=resetTrackParameters(transParticle);
@@ -970,7 +994,7 @@ StatusCode KFFitTool::addParticle(Particle& part1, Particle& part2,
   verbose() << "initial constraint values   " << f << endreq;
 
   double chi2Previous=9999.;
-  double chi2=999.;
+  chi2=999.;
 
   bool converged=false;
   unsigned iter=0;

@@ -1,6 +1,14 @@
-! $Id: release.notes,v 1.27 2005-04-20 14:40:15 pkoppenb Exp $
+! $Id: release.notes,v 1.28 2005-04-21 17:04:02 xieyu Exp $
 ! Package     : VertexFit
 ! Responsible : Yuehong Xie, P. Koppenburg, H. Ruiz
+
+! 2005-04-21 - Yuehong Xie
+  - introduce new tool src/NewDirectionFitter.cpp(.h)
+    .a upgraded version of LifetimeFitter. The difference is this tool fits
+     for both time and mass at the same time. Correlation between time and
+     mass is obtained. Based on this a mass constraint can then be applied 
+  - src/KFFitTool.cpp
+    . update vertex chi2 and NDoF when reFitting a Particle
 
 !========================== VertexFit v1r5p1 2005-04-20 ===================
 ! 2005-04-14 - P. Koppenburg
