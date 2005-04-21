@@ -1,7 +1,12 @@
-! $Id: release.notes,v 1.53 2005-04-20 14:26:23 pkoppenb Exp $
+! $Id: release.notes,v 1.54 2005-04-21 16:54:56 xieyu Exp $
 ! Package     : DaVinciMCTools
 ! Responsible : P. Koppenburg
 !=============================================================================
+
+! 2005-04-21 - Yuehong Xie
+ - DaVinciMCTools/ICheatedLifetimeFitter.h
+ - src/CheatedLifetimeFitter.cpp(.h)
+   . new tool for direction fit with cheated primary vertex, B momentum or B vertex
 
 !========================== DaVinciMCTools v5r10 2005-04-20 ===================
 ! 2005-04-14 - P. Koppenburg
