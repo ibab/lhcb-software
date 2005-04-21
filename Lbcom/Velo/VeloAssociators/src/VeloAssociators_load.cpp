@@ -38,6 +38,7 @@ DECLARE_FACTORY_ENTRIES( VeloAssociators ) {
   DECLARE_ALGORITHM( VeloCluster2MCParticleAlg );
   DECLARE_ALGORITHM( VeloCluster2MCHitAlg );
   DECLARE_ALGORITHM( VeloCluster2MCHitLinker );
+  DECLARE_ALGORITHM( TestVeloCluster2MCHitRel );
 
 }
 

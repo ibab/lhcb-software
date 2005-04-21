@@ -1,6 +1,10 @@
 ! Package     : VeloAssociator
 ! Responsible : Chris Parkes
 
+!==================== VeloAssociators v1r14p1 2005-04-21 ===================
+! 2005-04-21 - Marco Cattaneo
+ - Add TestVeloCluster2MCHitRel algorithm from Vanya, to test relation table
+
 !==================== VeloAssociators v1r14 2005-03-22 =====================
 ! 2005-03-22 - Marco Cattaneo
  - Add VeloCluster2MCHitLinker algorithm to create "Linker" association 
