@@ -27,6 +27,7 @@ use BooleDQ	v1r0	DQ
 
 #-- LHCb libraries (from LHCB_v18r3)
 use LHCb	v18r3
+use EventUtils	v1r0	Event
 
 #-- Lbcom packages (from LBCOM_v1r3)
 use LbcomSys    v1r3
@@ -56,9 +57,6 @@ use MuonBackground	v1r10p1	Muon
 # Rich
 use RichDigiQC	        v2r1  	Rich
 use RichReadout		v1r12	Rich
-
-# Trigger
-use TrgTools		v7r3	Trg
 
 #===== build Boole =========================
 application Boole $(GAUDICONFROOT)/src/GaudiMain.cpp
