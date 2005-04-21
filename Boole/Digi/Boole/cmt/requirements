@@ -27,7 +27,6 @@ use BooleDQ	v1r0	DQ
 
 #-- LHCb libraries (from LHCB_v18r3)
 use LHCb	v18r3
-use EventUtils	v1r0	Event
 
 #-- Lbcom packages (from LBCOM_v1r3)
 use LbcomSys    v1r3
