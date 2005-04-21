@@ -5,12 +5,14 @@
 ! Purpose     : LHCb OO kernel packages
 !-----------------------------------------------------------------------------
 
-!======================= LHCbSys v18r3 2005-04-19 =======================
-! 2005-04-19 - Marco Cattaneo
+!======================= LHCbSys v18r3 2005-04-21 =======================
+! 2005-04-21 - Marco Cattaneo
  - Move to Gaudi v16r3
+ - Packages added:    TrackEvent v0r1: Pre-release of new track event model
+                      EventUtils v1r0: Components to manipulate objects in TES
  - Packages modified: GaudiConf v9r1, KernelSys v4r10, LHCbKernel v5r10,
-     LHCbAlgs v1r5, EventSys v20r3, TrackEvent v0r1,
-     L0mConf v2r2p4, L0MuonKernel v3r0p1, ProcessorKernel v1r0p1
+     L0mConf v2r2p4, L0MuonKernel v3r0p1, ProcessorKernel v1r0p1,
+     LHCbAlgs v1r5, EventSys v20r3
 
  - In GaudiConf v9r1
    . update Gaudi.supp suppression file for valgrind 2.2.0 and Gaudi v16r2
@@ -20,6 +22,7 @@
  - In LHCbAlgs v1r5
    . Remove from LbAppinit printout of application name and version, now done
      by GaudiMain. APPVERSION environment variable no longer required.
+   . Remove TESFilter, moved to EventUtils
 
  - In LHCbKernel v5r10
    . Fix to LHCbID, 26 bits for ITChannelID
@@ -29,9 +32,6 @@
 
  - In L0MuonKernel v3r0p1
    . Fix an uninitialized variable
-
- - In TrackEvent v0r1
-   . Pre-release of new track event model
 
 !======================= LHCbSys v18r2 2005-04-07 =======================
 ! 2005-04-07 - Marco Cattaneo
