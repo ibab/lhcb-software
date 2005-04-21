@@ -3,9 +3,9 @@
 // Load associators DLLs as they contain the relations factories
 #include "$ASSOCIATORSSYSROOT/options/DLLs.opts"
 
-EventSelector.Input   = {
-  "DATAFILE='PFN:rfio:/castor/cern.ch/user/c/cattanem/Boole/v8r0/Boole-0412.digi' TYP='POOL_ROOTTREE' OPT='READ'"
-}; // XmlDDDB v23r1 (lhcb-200412), Gauss v19r0
+EventSelector.Input = {
+  "DATAFILE='PFN:castor:/castor/cern.ch/user/c/cattanem/Boole/v8r3/0412-11144100.500ev.digi' TYP='POOL_ROOT' OPT='READ'"
+};  // 500 events B->J/Psi(mumu)Ks with Gauss v19r3, Boole v8r3
 
 // Define the DIGI content to copy
 #include "$IOEXAMPLEROOT/options/DigiContent.opts"

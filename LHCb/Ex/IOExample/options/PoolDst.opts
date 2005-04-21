@@ -4,8 +4,8 @@
 #include "$ASSOCIATORSSYSROOT/options/DLLs.opts"
 
 EventSelector.Input   = {
-  "DATAFILE='PFN:rfio:/castor/cern.ch/user/c/cattanem/Brunel/v26r0/Brunel-0412.dst' TYP='POOL_ROOTTREE' OPT='READ'"
-}; // XmlDDDB v23r1 (lhcb-200412), Gauss v19r0
+  "DATAFILE='PFN:rfio:/castor/cern.ch/user/c/cattanem/Brunel/v26r2/0412-11144100.500ev.dst' TYP='POOL_ROOTTREE' OPT='READ'"
+}; // XmlDDDB v24r0 (lhcb-200412), Gauss v19r2
 
 // Define the DST content to copy
 #include "../options/DstContent.opts"

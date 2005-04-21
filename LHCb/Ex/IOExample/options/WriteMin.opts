@@ -1,7 +1,6 @@
 //---------------------------------------------------------------------------
 // Job options to read a POOL file and copy its contents to another POOL file
 //---------------------------------------------------------------------------
-ApplicationMgr.ExtSvc += { "EventSelector" };
 ApplicationMgr.HistogramPersistency = "NONE";
 ApplicationMgr.EvtMax   = 100;
 EventSelector.PrintFreq = 1;
@@ -21,8 +20,6 @@ PoolDbCacheSvc.Catalog = {"xmlcatalog_file:MyCatalog.xml"};
 //--------------------------------------------------------------
 EventDataSvc.RootCLID = 1;
 EventDataSvc.ForceLeaves = 1;
-
-PoolDbCacheSvc.OutputLevel = 3;
 
 #include "$IOEXAMPLEROOT/options/PoolDst.opts"  // Copy a OODST
 //#include "$IOEXAMPLEROOT/options/PoolDigi.opts"  // Copy a OODIGI
