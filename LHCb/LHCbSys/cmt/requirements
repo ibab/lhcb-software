@@ -63,11 +63,11 @@ use TrackEvent          v0r1    Event
 use EventUtils		v1r0	Event
 
 # Associators
-use AssociatorsSys	v2r4	Associators
+use AssociatorsSys	v2r4p1	Associators
 use Associators		v2r4p1	Associators
-use ITAssociators      	v2r11	IT
-use OTAssociators      	v3r2	OT
-use VeloAssociators    	v1r14	Velo
+use ITAssociators      	v2r11p1	IT
+use OTAssociators      	v3r2p1	OT
+use VeloAssociators    	v1r14p1	Velo
 use TrAssociators      	v5r1p1	Tr
 use CaloAssociators    	v4r4	Calo
 use MuonAssociators    	v1r5p1	Muon
@@ -94,4 +94,4 @@ use RichRecBase		v1r15p1 Rich
 # LHCb  Examples
 use DetDescChecks	v2r2	Det
 use DetDescExample      v6r2p1	Ex
-use IOExample    	v1r4p1	Ex
+use IOExample    	v1r4p2	Ex

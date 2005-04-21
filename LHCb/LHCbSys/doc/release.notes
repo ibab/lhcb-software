@@ -12,7 +12,8 @@
                       EventUtils v1r0: Components to manipulate objects in TES
  - Packages modified: GaudiConf v9r1, KernelSys v4r10, LHCbKernel v5r10,
      L0mConf v2r2p4, L0MuonKernel v3r0p1, ProcessorKernel v1r0p1,
-     LHCbAlgs v1r5, EventSys v20r3
+     LHCbAlgs v1r5, EventSys v20r3, AssociatorsSys v2r4p1, ITAssociators v2r11p1,
+     OTAssociators v3r2p1, VeloAssociators v1r14p1, IOExample v1r4p2
 
  - In GaudiConf v9r1
    . update Gaudi.supp suppression file for valgrind 2.2.0 and Gaudi v16r2
@@ -32,6 +33,12 @@
 
  - In L0MuonKernel v3r0p1
    . Fix an uninitialized variable
+
+ - In ITAssociators v2r11p1, OTAssociators v3r2p1, VeloAssociators v1r14p1
+   . Add algorithm to test built Relations
+
+ - In IOExample v1r4p2
+   . Update input files for EventSys v20r3 event model
 
 !======================= LHCbSys v18r2 2005-04-07 =======================
 ! 2005-04-07 - Marco Cattaneo
