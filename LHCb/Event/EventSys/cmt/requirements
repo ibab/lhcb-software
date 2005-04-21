@@ -21,6 +21,7 @@ use EventAssoc  v1r4    Event
 use LinkerEvent v1r7    Event
 use TrgEvent    v5r4    Event
 use TrackEvent  v0r1    Event
+use EventUtils  v1r0    Event
 
 private
 
