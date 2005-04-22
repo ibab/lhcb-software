@@ -1,26 +1,17 @@
-//$Id: ConditionsDBCnvSvc.cpp,v 1.15 2005-02-09 08:49:29 marcocle Exp $
+//$Id: ConditionsDBCnvSvc.cpp,v 1.16 2005-04-22 14:09:31 marcocle Exp $
 #include <string>
-#include <stdio.h>
 
 #include "ConditionsDBCnvSvc.h"
 #include "DetCond/ICondDBAccessSvc.h"
 
-#include "DetDesc/Condition.h"
-
-#include "GaudiKernel/DataObject.h"
 #include "GaudiKernel/GenericAddress.h"
-#include "GaudiKernel/IConverter.h"
 #include "GaudiKernel/IDetDataSvc.h"
 #include "GaudiKernel/IDataProviderSvc.h"
-#include "GaudiKernel/IOpaqueAddress.h"
-#include "GaudiKernel/ISvcLocator.h"
-//#include "GaudiKernel/IValidity.h"
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/SvcFactory.h"
-#include "GaudiKernel/CnvFactory.h"
+#include "GaudiKernel/ICnvFactory.h"
 
 #include "GaudiKernel/TimePoint.h"
-#include "CoolKernel/IValidityKey.h"
 
 /// Instantiation of a static factory to create instances of this service
 static SvcFactory<ConditionsDBCnvSvc>          ConditionsDBCnvSvc_factory;
@@ -32,17 +23,13 @@ const ISvcFactory& ConditionsDBCnvSvcFactory = ConditionsDBCnvSvc_factory;
 ConditionsDBCnvSvc::ConditionsDBCnvSvc( const std::string& name, 
 				        ISvcLocator* svc)
   : ConversionSvc ( name, svc, CONDDB_StorageType )
-{
-  // The default global tag (unless set in the JobOptions) is "HEAD"
-  declareProperty( "condDBGlobalTag",  m_globalTag = "HEAD" );
-}
+{}
 
 //----------------------------------------------------------------------------
 
 /// Destructor
 ConditionsDBCnvSvc::~ConditionsDBCnvSvc()
-{
-}
+{}
 
 //----------------------------------------------------------------------------
 
@@ -82,73 +69,38 @@ StatusCode ConditionsDBCnvSvc::initialize()
   }
 
   // Query the IDetDataSvc interface of the detector data service
-  sc = pDDS->queryInterface(IID_IDetDataSvc, 
-			    (void**) &m_detDataSvc);
+  sc = pDDS->queryInterface(IID_IDetDataSvc, (void**) &m_detDataSvc);
   if ( !sc.isSuccess() ) {
-    log << MSG::ERROR 
-	<< "Cannot query IDetDataSvc interface of DetectorDataSvc" 
-	<< endreq;
+    log << MSG::ERROR << "Cannot query IDetDataSvc interface of DetectorDataSvc" << endreq;
     return sc;
   } else {
-    log << MSG::DEBUG 
-	<< "Retrieved IDetDataSvc interface of DetectorDataSvc" 
-	<< endreq;
+    log << MSG::DEBUG << "Retrieved IDetDataSvc interface of DetectorDataSvc" << endreq;
   }
 
   // Locate IConversionSvc interface of the DetectorPersistencySvc
   sc = serviceLocator()->service 
     ("DetectorPersistencySvc", m_detPersSvc, true);
   if ( !sc.isSuccess() ) {
-    log << MSG::ERROR 
-	<< "Cannot locate IConversionSvc interface of DetectorPersistencySvc"
-	<< endreq;
+    log << MSG::ERROR << "Cannot locate IConversionSvc interface of DetectorPersistencySvc" << endreq;
     return sc;
   } else {
-    log << MSG::DEBUG 
-	<< "Retrieved IConversionSvc interface of DetectorPersistencySvc"
-	<< endreq;
+    log << MSG::DEBUG << "Retrieved IConversionSvc interface of DetectorPersistencySvc"	<< endreq;
   }
   
   // Query the IAddressCreator interface of the detector persistency service
   IAddressCreator* iAddrCreator;
-  sc = m_detPersSvc->queryInterface(IID_IAddressCreator, 
-				    (void**) &iAddrCreator);
+  sc = m_detPersSvc->queryInterface(IID_IAddressCreator, (void**) &iAddrCreator);
   if ( !sc.isSuccess() ) {
-    log << MSG::ERROR 
-	<< "Cannot query IAddressCreator interface of DetectorPersistencySvc" 
-	<< endreq;
+    log << MSG::ERROR << "Cannot query IAddressCreator interface of DetectorPersistencySvc" << endreq;
     return sc;
   } else {
-    log << MSG::DEBUG 
-	<< "Retrieved IAddressCreator interface of DetectorPersistencySvc" 
-	<< endreq;
+    log << MSG::DEBUG << "Retrieved IAddressCreator interface of DetectorPersistencySvc" << endreq;
   }
-  log << MSG::DEBUG 
-      << "Set it as the address creator of the ConditionsDBCnvSvc"
-      << endreq;
+  log << MSG::DEBUG << "Set it as the address creator of the ConditionsDBCnvSvc" << endreq;
   sc = setAddressCreator( iAddrCreator );
   if ( !sc.isSuccess() ) {
-    log << MSG::ERROR 
-	<< "Cannot set the address creator" 
-	<< endreq;
+    log << MSG::ERROR << "Cannot set the address creator" << endreq;
     return sc;
-  }
-
-  // Get properties from the JobOptionsSvc
-  /*
-  sc = setProperties();
-  if ( !sc.isSuccess() ) {
-    log << MSG::ERROR << "Could not set jobOptions properties" << endreq;
-    return sc;
-  }
-  log << MSG::DEBUG << "Properties were read from jobOptions" << endreq;
-  */
-  log << MSG::INFO
-      << "Global tag name: " << m_globalTag << endreq;
-  if ( m_globalTag == "DEFAULT" ) {
-    log << MSG::ERROR 
-	<< "Invalid global tag DEFAULT: this is a reserved word" << endreq;
-    return StatusCode::FAILURE;
   }
 
   log << MSG::INFO << "Specific initialization completed" << endreq;
@@ -166,23 +118,6 @@ StatusCode ConditionsDBCnvSvc::finalize()
   m_detPersSvc->release();
   m_detDataSvc->release();
   return ConversionSvc::finalize();
-}
-
-//----------------------------------------------------------------------------
-
-/// Query interface
-StatusCode ConditionsDBCnvSvc::queryInterface(const InterfaceID& riid, 
-					      void** ppvInterface)
-{
-  if ( IID_IConditionsDBCnvSvc == riid )  {
-    // With the highest priority return the specific interface of this service
-    *ppvInterface = (IConditionsDBCnvSvc*)this;
-    } else  {
-    // Interface is not directly available: try out a base class
-    return ConversionSvc::queryInterface(riid, ppvInterface);
-  }
-  addRef();
-  return StatusCode::SUCCESS;
 }
 
 //----------------------------------------------------------------------------
@@ -225,13 +160,6 @@ StatusCode ConditionsDBCnvSvc::createAddress( long svc_type,
 }
 
 //----------------------------------------------------------------------------
-
-/// Get the global tag  
-const std::string& ConditionsDBCnvSvc::globalTag ( ) { 
-  return m_globalTag; 
-}
-
-//----------------------------------------------------------------------------
 extern ICnvFactory &RelyConverterFactory;
 
 StatusCode ConditionsDBCnvSvc::addConverter(const CLID& clid){
@@ -261,7 +189,7 @@ StatusCode ConditionsDBCnvSvc::addConverter(const CLID& clid){
 }
 
 /// Retrieve converter from list
-IConverter* ConditionsDBCnvSvc::converter(const CLID& clid)     {
+IConverter* ConditionsDBCnvSvc::converter(const CLID& clid) {
   IConverter* cnv = 0;
   Workers::iterator i = std::find_if(m_workers->begin(),m_workers->end(),CnvTest(clid));
   if ( i != m_workers->end() )      {
@@ -277,15 +205,5 @@ IConverter* ConditionsDBCnvSvc::converter(const CLID& clid)     {
     }
   }
   return cnv;
-}
-
-//----------------------------------------------------------------------------
-cool::IValidityKey ConditionsDBCnvSvc::timeToValKey(const TimePoint &time) {
-  return time.absoluteTime();
-}
-
-TimePoint ConditionsDBCnvSvc::valKeyToTime(const cool::IValidityKey &key) {
-  TimePoint t(key);
-  return t;
 }
 

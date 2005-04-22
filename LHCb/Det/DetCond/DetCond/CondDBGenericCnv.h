@@ -1,18 +1,19 @@
-// $Id: CondDBGenericCnv.h,v 1.1 2005-02-09 08:49:29 marcocle Exp $
+// $Id: CondDBGenericCnv.h,v 1.2 2005-04-22 14:09:31 marcocle Exp $
 #ifndef DETCOND_CONDDBGENERICCNV_H 
 #define DETCOND_CONDDBGENERICCNV_H 1
 
 // Include files
-#include "GaudiKernel/Converter.h"
-#include "GaudiKernel/ClassID.h"
-#include "GaudiKernel/TimePoint.h"
 #include <string>
 #include <functional>
 
+#include "GaudiKernel/Converter.h"
+#include "GaudiKernel/ClassID.h"
+#include "GaudiKernel/TimePoint.h"
+
+#include "DetCond/ICondDBAccessSvc.h"
+
 // Forward and external declarations
 class ISvcLocator;
-class IConditionsDBCnvSvc;
-class ICondDBAccessSvc;
 class IDetDataSvc;
 class DataObject;
 
@@ -75,30 +76,15 @@ protected:
    * @return StatusCode::SUCCECC if the event time was defined.
    */
   StatusCode eventTime(TimePoint &time) const;
-
-  //  const std::string &globalTag() const;
-  /**
-   * Ask the global tag string to the ConditionsDBCnvSvc.
-   * The tag string has to be used to get the objects from the database.
-   * @return the tag string
-   */
-  const std::string &globalTag();
+  
+  /// Shortcut to the current tag used.
+  inline const std::string &tag() const {return m_dbAccSvc->tag();}
 
   /**
    * Set the validity of the DataObject if it inherits from IValidity.
    */
-  void setObjValidity(TimePoint &since,
-                      TimePoint &till,
-                      DataObject *pObject);
-  enum Object_Updatability_t { UPTODATE, NONVALID, FAILURE };
-    
-  /**
-   * Check if the conditions to update an object are satisfied (event time and validity).
-   */
-  Object_Updatability_t checkUpdatability(DataObject* pObject);
+  void setObjValidity(TimePoint &since, TimePoint &till, DataObject *pObject);
 
-  /// Pointer to the ConditionsDBCnvSvc.
-  IConditionsDBCnvSvc *m_condDBCnvSvc;
   /// Pointer to the DetectorDataService.
   IDetDataSvc         *m_detDataSvc;
   /// Pointer to the CondDBAccessSvc;

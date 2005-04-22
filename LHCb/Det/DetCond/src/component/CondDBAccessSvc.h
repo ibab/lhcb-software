@@ -1,18 +1,19 @@
-// $Id: CondDBAccessSvc.h,v 1.2 2005-02-09 08:49:29 marcocle Exp $
+// $Id: CondDBAccessSvc.h,v 1.3 2005-04-22 14:09:31 marcocle Exp $
 #ifndef COMPONENT_CONDDBACCESSSVC_H 
 #define COMPONENT_CONDDBACCESSSVC_H 1
 
 // Include files
-#include <GaudiKernel/Service.h>
+#include "GaudiKernel/Service.h"
 #include "DetCond/ICondDBAccessSvc.h"
-
-//#include "CoolKernel/IDatabase.h"
 
 // Forward declarations
 template <class TYPE> class SvcFactory;
+namespace pool { class AttributeListSpecification; }
 
-/** @class CondDBAccessSvc CondDBAccessSvc.h component/CondDBAccessSvc.h
+/** @class CondDBAccessSvc CondDBAccessSvc.h
  *  
+ *  Class used as interface to LCG COOL library API. It should expose as less as
+ *  possible COOL internal details.
  *
  *  @author Marco CLEMENCIC
  *  @date   2005-01-11
@@ -34,13 +35,33 @@ public:
   virtual StatusCode finalize();
 
   // Utilities:
+  /// Used to obtain direct access to the database.
   virtual cool::IDatabasePtr& database() { return m_db; }
   
-  /*
-  virtual cool::IObjectPtr getCondDBObject(const std::string &path,
-                                           const cool::IValidityKey &timePoint,
-                                           const cool::IChannelId &channelId=0);
-  */
+  /// Create a CondDB node in the hierarchy (Folder or FolderSet)
+  virtual StatusCode createFolder(const std::string &path,
+                                  const std::string &descr,
+                                  StorageType storage = XML,
+                                  VersionMode vers = MULTI) const;
+  
+  /// Utility function that simplifies the storage of an XML string.
+  virtual StatusCode storeXMLString(const std::string &path, const std::string &data, const ITime &since, const ITime &till) const;
+  
+  /// Convert from TimePoint class to cool::ValidityKey.
+  virtual cool::IValidityKey timeToValKey(const TimePoint &time) const;
+   
+  /// Convert from cool::ValidityKey to TimePoint class.
+  virtual TimePoint valKeyToTime(const cool::IValidityKey &key) const;
+ 
+  /// Return the currently set TAG to use.
+  virtual const std::string &tag() const;
+  
+  /// Set the TAG to use.
+  virtual StatusCode setTag(const std::string &_tag);
+
+  /// Tag the given folder with the given tag-name. If the requested folder is
+  /// a folderset, the tag is applied to all the folders below it. (waiting for HVS)
+  virtual StatusCode tagFolder(const std::string &path, const std::string &tagName, const std::string &description);
 
 protected:
   /// Standard constructor
@@ -92,8 +113,20 @@ private:
   /// Connect to the COOL database. It sets 'm_db'.
   StatusCode i_openConnention();
 
-  // Allow SvcFactory to instantiate the service.
+  /// Check if the TAG set exists in the DB.
+  inline StatusCode i_checkTag() const { return i_checkTag(tag()); }
+
+  /// Check if the given TAG exists in the DB.
+  StatusCode i_checkTag(const std::string &tag) const;
+
+  /// Allow SvcFactory to instantiate the service.
   friend class SvcFactory<CondDBAccessSvc>;
 
+  /// AttributeListSpecification used to sore XML strings
+  static pool::AttributeListSpecification *s_XMLstorageAttListSpec;
+
+  /// Counter used to know how many instances of CondDBAccessSvc are around
+  /// (and needing the AttributeListSpecification pointers).
+  static unsigned long long s_instances;
 };
 #endif // COMPONENT_CONDDBACCESSSVC_H

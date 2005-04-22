@@ -1,21 +1,25 @@
-// $Id: CondDBAccessSvc.cpp,v 1.2 2005-02-09 08:49:29 marcocle Exp $
+// $Id: CondDBAccessSvc.cpp,v 1.3 2005-04-22 14:09:31 marcocle Exp $
 // Include files 
-#include "CondDBAccessSvc.h"
+#include <sstream>
+#include <unistd.h>
+
 #include "GaudiKernel/SvcFactory.h"
 #include "GaudiKernel/MsgStream.h"
-
-#include <sstream>
+#include "GaudiKernel/ClassID.h"
+#include "GaudiKernel/TimePoint.h"
 
 #include "CoolKernel/DatabaseId.h"
 #include "CoolKernel/IDatabaseSvc.h"
 #include "CoolKernel/IFolder.h"
 #include "CoolKernel/IObject.h"
-#include "CoolKernel/IValidityKey.h"
+
 #include "RelationalCool/RalDatabaseSvcFactory.h"
 #include "RelationalCool/RelationalException.h"
 
-#include <unistd.h>
+#include "AttributeList/AttributeList.h"
+
 // local
+#include "CondDBAccessSvc.h"
 
 // Factory implementation
 static SvcFactory<CondDBAccessSvc> s_factory;
@@ -26,6 +30,10 @@ const ISvcFactory &CondDBAccessSvcFactory = s_factory;
 //
 // 2005-01-11 : Marco CLEMENCIC
 //-----------------------------------------------------------------------------
+
+// ==== Static data members
+pool::AttributeListSpecification *CondDBAccessSvc::s_XMLstorageAttListSpec = NULL;
+unsigned long long CondDBAccessSvc::s_instances = 0;
 
 //=============================================================================
 // Standard constructor, initializes variables
@@ -40,7 +48,7 @@ CondDBAccessSvc::CondDBAccessSvc(const std::string& name, ISvcLocator* svcloc):
   declareProperty("HidePassword", m_hidePasswd);
   declareProperty("Database",     m_dbName);
   declareProperty("Schema",       m_dbSchema);
-  declareProperty("DefaultTAG",   m_dbTAG);
+  declareProperty("TAG",          m_dbTAG);
   declareProperty("BackEnd",      m_dbBackEnd);
   declareProperty("RecreateDB",   m_recreateDB);
   declareProperty("RunTest",      m_test);
@@ -50,12 +58,26 @@ CondDBAccessSvc::CondDBAccessSvc(const std::string& name, ISvcLocator* svcloc):
   m_dbBackEnd  = "mysql";
   m_recreateDB = false;
   m_test       = false;
+  m_dbTAG      = "";
   
+  if (s_XMLstorageAttListSpec == NULL){
+    // attribute list spec template
+    s_XMLstorageAttListSpec = new pool::AttributeListSpecification();
+    s_XMLstorageAttListSpec->push_back<std::string>("data");
+  }
+  ++s_instances;
 }
 //=============================================================================
 // Destructor
 //=============================================================================
-CondDBAccessSvc::~CondDBAccessSvc() {}; 
+CondDBAccessSvc::~CondDBAccessSvc() {
+  // check how many instances are still around.
+  // if it is the last one, delete the attribute list (if still there).
+  if (--s_instances == 0 && s_XMLstorageAttListSpec != NULL) {
+    delete s_XMLstorageAttListSpec;
+    s_XMLstorageAttListSpec = NULL;
+  }
+}
 
 //=============================================================================
 // queryInterface
@@ -77,7 +99,7 @@ StatusCode CondDBAccessSvc::initialize(){
   StatusCode sc = Service::initialize();
   if (sc.isFailure()) return sc;
 
-  MsgStream log(msgSvc(), "CondDBAccessSvc" );
+  MsgStream log(msgSvc(), name() );
 
   log << MSG::DEBUG << "Initialize" << endmsg;
   
@@ -103,38 +125,16 @@ StatusCode CondDBAccessSvc::initialize(){
   }
   log << "\"" << endmsg;
 
-  /*
-  log << MSG::DEBUG << "Get DatabaseSvc" << endmsg;
-  cool::IDatabaseSvc &dbSvc = cool::RalDatabaseSvcFactory::getDatabaseService();
-  if ( ! &dbSvc ) {
-    log << MSG::ERROR << "unable to get the Database Service" << endmsg;
-    return StatusCode::FAILURE;
-  }
-  log << MSG::DEBUG << "got service" << endmsg;
-
-  if (m_recreateDB) {
-    log << MSG::INFO << "Recreating Database" << endmsg;
-
-    log << MSG::DEBUG << "drop the database " << uri << endmsg;
-    dbSvc.dropDatabase(uri,false);
-    log << MSG::DEBUG << "done" << endmsg;
-
-    log << MSG::DEBUG << "create empty the database " << endmsg;
-    cool::IDatabasePtr tmpPtr = dbSvc.createDatabase(uri);
-    tmpPtr.reset(); // close the database (resetting the shared pointer)
-
-    if (m_dbBackEnd == "oracle"){
-      // ORA-01466: work-around
-      log << MSG::INFO << "ORA-01466: work-around" << endmsg;
-      sleep(1);
-    }
-    
-  }
-  */
-  
   sc = i_openConnention();
   if (sc.isFailure()) return sc;
 
+/* TODO: this piece of code must be reintroduced when HVS is functional
+  sc = i_checkTag();
+  if (sc.isFailure()){
+    log << MSG::ERROR << "Bad TAG given: \"" << tag() << "\" not in the database" << endmsg;
+    return sc;
+  }
+*/
   if ( !m_test ) {
     return sc;
   } else { // do the test
@@ -162,9 +162,6 @@ StatusCode CondDBAccessSvc::initialize(){
     
     
       folder->storeObject(cool::IValidityKeyMin,cool::IValidityKeyMax,data);
-      //folder->storeObject(cool::IValidityKeyMin,1000,data);
-      //dispose of the used folder
-      //folder.reset();
     }
     
     {
@@ -219,11 +216,8 @@ StatusCode CondDBAccessSvc::initialize(){
     
 
     try {
-      cool::IFolderPtr folder =
-        m_db->getFolder(m_test_path);
-      //pool::AttributeList retieved_data(folder->getPayloadSpecification());
-      cool::IObjectPtr object =
-        folder->findObject(2000);
+      cool::IFolderPtr folder = m_db->getFolder(m_test_path);
+      cool::IObjectPtr object = folder->findObject(2000);
       object->payload().print(std::cout);
     } catch (cool::RelationalFolderNotFound &e) {
       log << MSG::ERROR << "Folder \"" << m_test_path << "\" not found!" << endmsg;
@@ -243,11 +237,9 @@ StatusCode CondDBAccessSvc::initialize(){
 // finalize
 //=============================================================================
 StatusCode CondDBAccessSvc::finalize(){
-  MsgStream log(msgSvc(), "CondDBAccessSvc" );
+  MsgStream log(msgSvc(), name() );
   log << MSG::DEBUG << "Finalize" << endmsg;
   // release the database
-  //cool::IDatabasePtr nullPtr;
-  //m_db = nullPtr;
   m_db.reset();
   return Service::finalize();
 }
@@ -271,7 +263,7 @@ std::string CondDBAccessSvc::i_connection_uri() const {
 // Connect to the database
 //=============================================================================
 StatusCode CondDBAccessSvc::i_openConnention(){
-  MsgStream log(msgSvc(), "CondDBAccessSvc" );
+  MsgStream log(msgSvc(), name() );
 
   try {
     if (! m_db) { // The database is not yet opened
@@ -318,25 +310,151 @@ StatusCode CondDBAccessSvc::i_openConnention(){
 }
 
 //=============================================================================
-// returns a shared pointer to a CondDBObject
+// TAG handling
 //=============================================================================
-/*
-cool::IObjectPtr CondDBAccessSvc::getCondDBObject(const std::string &path,
-                                                  const cool::IValidityKey &timePoint,
-                                                  const cool::IChannelId &channelId){
-  try {
-    cool::IFolderPtr folder = database()->getFolder(path);
-    cool::IObjectPtr obj(folder->findObject(timePoint,channelId));
-    return obj;
+const std::string &CondDBAccessSvc::tag() const{ return m_dbTAG; }
+StatusCode CondDBAccessSvc::setTag(const std::string &_tag){
+  StatusCode sc = i_checkTag(_tag);
+  if ( sc.isSuccess() ) {
+    m_dbTAG = _tag;
+  } else {
+    MsgStream log(msgSvc(), name() );
+    log << MSG::WARNING << "Unable to set TAG \"" << _tag
+        << "\": not in the DB. (Still using \"" << tag() << "\")" << endmsg;
   }
-  catch (cool::RelationalFolderNotFound) {
-    MsgStream log(msgSvc(), "CondDBAccessSvc" );
-    log << MSG::ERROR << "Folder \"" << path << "\" not found!" << endmsg;
-    cool::IObjectPtr obj;
-    return obj;
-  }
+  return sc;
 }
-*/
+StatusCode CondDBAccessSvc::i_checkTag(const std::string &tag) const {
+  if (m_db) {
+    if ( (tag == "") || (tag == "HEAD") || m_db->existsTag(tag) ) return StatusCode::SUCCESS;
+  }
+  return StatusCode::FAILURE;
+}
 
 
 //=============================================================================
+// Utilities
+//=============================================================================
+
+StatusCode CondDBAccessSvc::createFolder(const std::string &path,
+                                         const std::string &descr,
+                                         StorageType storage,
+                                         VersionMode vers) const {
+  if ( !m_db ) {
+    MsgStream log(msgSvc(), name() );
+    log << MSG::ERROR << "Unable to create the folder \"" << path
+        << "\": the database is not opened!" << endmsg;
+    return StatusCode::FAILURE;
+  }
+  
+  try {
+    switch (storage) {
+    case FOLDERSET:
+      m_db->createFolderSet(path,descr,true);
+      break;
+    case XML:
+      {
+        // append to the description the storage type
+        std::ostringstream _descr;
+        _descr << descr << " <storage_type=" << std::dec << XML_StorageType << ">";
+        m_db->createFolder(path,
+                           *s_XMLstorageAttListSpec,
+                           _descr.str(),
+                           (vers == SINGLE)
+                           ?cool::FolderVersioning::ONLINE
+                           :cool::FolderVersioning::OFFLINE,
+                           true);
+      }
+      break;
+    default:
+      MsgStream log(msgSvc(), name() );
+      log << MSG::ERROR << "Unable to create the folder \"" << path
+          << "\": unknown StorageType" << endmsg;
+      return StatusCode::FAILURE;
+    }
+  } catch(cool::RelationalFolderExists){
+    MsgStream log(msgSvc(), name() );
+    log << MSG::ERROR << "Unable to create the folder \"" << path
+          << "\": folder already exists" << endmsg;
+    return StatusCode::FAILURE;
+  } catch(cool::Exception &e){
+    MsgStream log(msgSvc(), name() );
+    log << MSG::ERROR << "Unable to create the folder \"" << path
+        << "\" (cool::Exception): " << e << endmsg;
+    return StatusCode::FAILURE;
+  }
+  return StatusCode::SUCCESS;
+}
+
+StatusCode CondDBAccessSvc::storeXMLString(const std::string &path, const std::string &data, const ITime &since, const ITime &till) const {
+  try {
+    // retrieve folder pointer
+    cool::IFolderPtr folder = m_db->getFolder(path);
+    if (!folder->isLeaf()) {
+      MsgStream log(msgSvc(), name() );
+      log << MSG::ERROR << "Trying to store data into the non-leaf folder \"" <<
+        path << '\"' << endmsg;
+      return StatusCode::FAILURE;
+    }
+    pool::AttributeList payload(*s_XMLstorageAttListSpec);
+    payload["data"].setValue<std::string>(data);
+    folder->storeObject(timeToValKey(since),timeToValKey(till),payload);
+  } catch (cool::Exception &e){
+    MsgStream log(msgSvc(), name() );
+    log << MSG::ERROR << "Unable to store the XML string into \"" << path
+        << "\" (cool::Exception): " << e << endmsg;
+    return StatusCode::FAILURE;
+  }
+  return StatusCode::SUCCESS;
+}
+
+cool::IValidityKey CondDBAccessSvc::timeToValKey(const TimePoint &time) const {
+  // TODO: remove the workaround for missing I64 fields
+  if (time.absoluteTime() > LONG_MAX) return LONG_MAX;
+  if (time.absoluteTime() < LONG_MIN) return LONG_MIN;
+  return time.absoluteTime();
+}
+
+TimePoint CondDBAccessSvc::valKeyToTime(const cool::IValidityKey &key) const {
+  TimePoint t(key);
+  return t;
+}
+
+StatusCode CondDBAccessSvc::tagFolder(const std::string &path, const std::string &tagName, const std::string &description){
+  try {
+    MsgStream log(msgSvc(),name());
+    log << MSG::DEBUG << "entering tagFolder: \"" << path << '"' << endmsg;
+    // retrieve folder pointer
+    StatusCode sc;
+    cool::IFolderPtr folder = m_db->getFolder(path);
+    if (!folder->isLeaf()) { // FolderSet
+      log << MSG::DEBUG << "it is a folderset" << endmsg;
+      std::string sub_path(path);
+      if ( sub_path != "/" ) { // root folderset does not need an extra "/"
+      	sub_path += "/";
+      }
+      // discover child folders
+      std::vector<std::string> fldr_names = m_db->listFolders();
+      std::vector<std::string>::iterator i;
+      for ( i = fldr_names.begin(); i != fldr_names.end(); ++i ){
+        if ( *i != sub_path // avoid infinite recursion on folderset "/". TODO: refine
+          && i->find(sub_path) == 0 // (*i) starts with path
+          && i->find('/',sub_path.size()+1) == i->npos) // and does not contain any other '/'
+          sc = tagFolder(*i,tagName,description); // recursion!
+      }
+    } else {
+      if (folder->getVersioningMode() == cool::FolderVersioning::ONLINE){
+        log << MSG::WARNING << "not tagging folder \"" << path << "\": single-version" << endmsg;
+      } else {
+        log << MSG::DEBUG << "tagging folder \"" << path << "\": " << tagName << endmsg;
+        folder->tag(folder->fullPath() + "-" + tagName,description);
+      }
+    }
+  } catch (cool::RelationalFolderNotFound &e) {
+    MsgStream log(msgSvc(),name());
+    log << MSG::ERROR << "Folder \"" << path << "\" not found!" << endmsg;
+    log << e << endmsg;
+    return StatusCode::FAILURE;
+  }
+  return StatusCode::SUCCESS;
+}

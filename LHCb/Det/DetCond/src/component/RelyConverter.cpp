@@ -1,20 +1,18 @@
-// $Id: RelyConverter.cpp,v 1.1 2005-02-09 08:49:29 marcocle Exp $
+// $Id: RelyConverter.cpp,v 1.2 2005-04-22 14:09:31 marcocle Exp $
 // Include files 
 #include "DetCond/RelyConverter.h"
 
-#include "DetDesc/ValidDataObject.h"
 #include "GaudiKernel/IConversionSvc.h"
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/IOpaqueAddress.h"
 #include "GaudiKernel/IRegistry.h"
 #include "GaudiKernel/ISvcLocator.h"
 #include "GaudiKernel/DataObject.h"
-
-#include "DetCond/IConditionsDBCnvSvc.h"
-#include "DetCond/ICondDBAccessSvc.h"
-
 #include "GaudiKernel/TimePoint.h"
-//#include "CoolKernel/IValidityKey.h"
+
+#include "DetDesc/ValidDataObject.h"
+
+#include "DetCond/ICondDBAccessSvc.h"
 
 #include "CoolKernel/IFolder.h"
 #include "CoolKernel/IObject.h"
@@ -46,9 +44,7 @@ const CLID RelyConverter::s_CLID_any = 0;
 //=============================================================================
 RelyConverter::RelyConverter(ISvcLocator* svc):
   CondDBGenericCnv(svc,0)
-{
-
-}
+{}
 //=============================================================================
 // Destructor
 //=============================================================================
@@ -61,19 +57,14 @@ StatusCode RelyConverter::initialize() {
   // Initializes the grand father
   StatusCode sc = CondDBGenericCnv::initialize();
 
-  sc = serviceLocator()->service 
-    ("DetectorPersistencySvc", m_detPersSvc, true);
+  sc = serviceLocator()->service("DetectorPersistencySvc", m_detPersSvc, true);
   if ( !sc.isSuccess() ) {
     MsgStream log(msgSvc(),"RelyConverter");
-    log << MSG::ERROR 
-        << "Cannot locate IConversionSvc interface of DetectorPersistencySvc"
-        << endreq;
+    log << MSG::ERROR << "Cannot locate IConversionSvc interface of DetectorPersistencySvc" << endreq;
     return sc;
   } else {
     MsgStream log(msgSvc(),"RelyConverter");
-    log << MSG::DEBUG 
-        << "Retrieved IConversionSvc interface of DetectorPersistencySvc"
-        << endreq;
+    log << MSG::DEBUG << "Retrieved IConversionSvc interface of DetectorPersistencySvc" << endreq;
   }
   return sc;
 }
@@ -89,44 +80,30 @@ StatusCode RelyConverter::finalize() {
 //=========================================================================
 // Create the transient representation
 //=========================================================================
-StatusCode RelyConverter::createObj (IOpaqueAddress* pAddress,
-                                  DataObject *&pObject)
+StatusCode RelyConverter::createObj (IOpaqueAddress* pAddress, DataObject *&pObject)
 {
   MsgStream log(msgSvc(),"RelyConverter");
   log << MSG::DEBUG << "entering createObj" << endmsg;
 
-  TimePoint since;
-  TimePoint till;
-  StatusCode sc = i_delegatedCreation(pAddress,pObject,since,till);
+  StatusCode sc = i_delegatedCreation(pAddress,pObject);
   if (sc.isFailure()){
     log << MSG::ERROR << "Cannot create the object" << endmsg;
     return sc;
   }
 
-  log << MSG::DEBUG << "Setting object validity" << endreq;
-  setObjValidity(since,till,pObject);
- 
   return StatusCode::SUCCESS;
 }
 
 //=========================================================================
 // Update transient representation from persistent one
 //=========================================================================
-StatusCode RelyConverter::updateObj (IOpaqueAddress* pAddress,
-                                  DataObject* pObject)
+StatusCode RelyConverter::updateObj (IOpaqueAddress* pAddress, DataObject* pObject)
 {
   MsgStream log(msgSvc(),"RelyConverter");
   log << MSG::DEBUG << "Method updateObj starting" << endreq;
-  switch(checkUpdatability(pObject)){
-  case FAILURE : return StatusCode::FAILURE;
-  case UPTODATE: return StatusCode::SUCCESS;
-  case NONVALID: // update the object
-    { // start a new scope to correctly handle new object destruction 
       
       DataObject* pNewObject; // create a new object and copy it to the old version
-      TimePoint since;
-      TimePoint till;
-      StatusCode sc = i_delegatedCreation(pAddress,pNewObject,since,till);
+  StatusCode sc = i_delegatedCreation(pAddress,pNewObject);
       if (sc.isFailure()){
         log << MSG::ERROR << "Cannot create the new object" << endmsg;
         return sc;
@@ -149,15 +126,11 @@ StatusCode RelyConverter::updateObj (IOpaqueAddress* pAddress,
         return StatusCode::FAILURE;
       }
       // Deep copy the new Condition into the old DataObject
-      log << MSG::INFO << "Be careful, because ValidDataObject::update() is not really implemented" << endmsg;
       pVDO->update( *pNewVDO );  
+  
       // Delete the useless Condition
       delete pNewVDO;
 
-      setObjValidity(since,till,pObject);
-    }
-  }
-  
   log << MSG::DEBUG << "Object successfully updated" << endreq;
   return StatusCode::SUCCESS;
 }
@@ -165,8 +138,7 @@ StatusCode RelyConverter::updateObj (IOpaqueAddress* pAddress,
 //=========================================================================
 // Create the persistent representation
 //=========================================================================
-StatusCode RelyConverter::createRep (DataObject* pObject,
-                                  IOpaqueAddress*& pAddress)
+StatusCode RelyConverter::createRep (DataObject* /*pObject*/, IOpaqueAddress*& /*pAddress*/)
 {
   MsgStream log(msgSvc(),"RelyConverter");
   log << MSG::WARNING << "createRep() not implemented" << endmsg;
@@ -176,8 +148,7 @@ StatusCode RelyConverter::createRep (DataObject* pObject,
 //=========================================================================
 // Update the persistent representation
 //=========================================================================
-StatusCode RelyConverter::updateRep (IOpaqueAddress* pAddress,
-                                  DataObject* pObject)
+StatusCode RelyConverter::updateRep (IOpaqueAddress* /*pAddress*/, DataObject* /*pObject*/)
 {
   MsgStream log(msgSvc(),"RelyConverter");
   log << MSG::WARNING << "updateRep() not implemented" << endmsg;
@@ -187,8 +158,7 @@ StatusCode RelyConverter::updateRep (IOpaqueAddress* pAddress,
 //=========================================================================
 // Create an object by delegation
 //=========================================================================
-StatusCode RelyConverter::i_delegatedCreation(IOpaqueAddress* pAddress,
-                                           DataObject *&pObject,TimePoint &since,TimePoint &till){
+StatusCode RelyConverter::i_delegatedCreation(IOpaqueAddress* pAddress, DataObject *&pObject){
   StatusCode sc;
 
   MsgStream log(msgSvc(),"RelyConverter");
@@ -196,37 +166,41 @@ StatusCode RelyConverter::i_delegatedCreation(IOpaqueAddress* pAddress,
   TimePoint now;
   sc = eventTime(now);
   if (sc.isFailure()) {
-    log << MSG::ERROR
-        << "Cannot create DataObject: event time undefined"
-        << endmsg;
+    log << MSG::ERROR << "Cannot create DataObject: event time undefined" << endmsg;
     return sc;
   }
 
+  TimePoint since,till;
   try {
 
     cool::IFolderPtr folder = m_dbAccSvc->database()->getFolder(pAddress->par()[0]);    
-    cool::IObjectPtr object = folder->findObject(m_condDBCnvSvc->timeToValKey(now));
+//    cool::IObjectPtr object = folder->findObject(m_condDBCnvSvc->timeToValKey(now),0,m_dbAccSvc->tag());
+	cool::IObjectPtr object;
+    if (m_dbAccSvc->tag() == "HEAD" || m_dbAccSvc->tag() == ""){
+      object = folder->findObject(m_dbAccSvc->timeToValKey(now));
+    } else {
+      object = folder->findObject(m_dbAccSvc->timeToValKey(now),
+                                  0,folder->fullPath()+"-"+m_dbAccSvc->tag());
+    }
 
-    //    long storage_type = object->payloadValue<long>("storage_type");
     long storage_type = getStorageType(folder->description());
     if (storage_type <= 0) {
       log << MSG::ERROR <<
         "Folder description does not contain a valid storage type: " << endmsg;
-      log << MSG::ERROR <<
-        "desc = \"" << folder->description() << "\"" << endmsg;
+      log << MSG::ERROR << "desc = \"" << folder->description() << "\"" << endmsg;
       return StatusCode::FAILURE;
     }
 
-    since = m_condDBCnvSvc->valKeyToTime(object->since());
-    till  = m_condDBCnvSvc->valKeyToTime(object->till());
+    since = m_dbAccSvc->valKeyToTime(object->since());
+    till  = m_dbAccSvc->valKeyToTime(object->till());
 
     log << MSG::DEBUG << "delegate to DetectorPersistencySvc" << endmsg;
 
     // Create temporary address for the relevant type and classID 
     IOpaqueAddress *tmpAddress;
     const std::string par[2] = { object->payloadValue<std::string>("data"), 
-                                 pAddress->par()[1]};
-    sc = dynamic_cast<IConversionSvc*>(m_condDBCnvSvc)->addressCreator()
+                                 pAddress->par()[1] };
+    sc = conversionSvc()->addressCreator()
       ->createAddress( storage_type,pAddress->clID() , par, 0, tmpAddress );
     if (sc.isFailure()){
       log << MSG::ERROR 
@@ -262,31 +236,19 @@ StatusCode RelyConverter::i_delegatedCreation(IOpaqueAddress* pAddress,
     log << MSG::ERROR << e << endmsg;
     return StatusCode::FAILURE;
   } catch (cool::RelationalObjectNotFound &e) {
-    log << MSG::ERROR << e << endmsg;
+    log << MSG::ERROR << "Object not found in \"" << pAddress->par()[0] <<
+    	 "\" for tag \"" << m_dbAccSvc->tag() << "\" ("<< now << ')' << endmsg;
+    log << MSG::DEBUG << e << endmsg;
     return StatusCode::FAILURE;
   }
 
   
+  log << MSG::DEBUG << "Setting object validity" << endreq;
+  setObjValidity(since,till,pObject);
+
   log << MSG::DEBUG << "New object successfully created" << endreq;
+
   return StatusCode::SUCCESS;
-}
-
-//=============================================================================
-
-
-pool::AttributeListSpecification RelyConverter::m_attlist;
-
-const pool::AttributeListSpecification & RelyConverter::attrListSpec() {
-  static bool first = true;
-  if (first) {
-    //    MsgStream log(msgSvc(),"RelyConverter");
-    //    log << MSG::DEBUG << "Preparing the AttributeListSpecification" << endmsg;
-    std::cout << "Preparing the AttributeListSpecification" << std::endl;
-    m_attlist.push_back<long>("storage_type");
-    m_attlist.push_back<std::string>("data");
-    first = false;
-  }
-  return m_attlist;
 }
 
 //=============================================================================

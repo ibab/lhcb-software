@@ -1,15 +1,15 @@
-//$Id: ConditionsDBCnvSvc.h,v 1.11 2005-02-09 08:49:29 marcocle Exp $
+//$Id: ConditionsDBCnvSvc.h,v 1.12 2005-04-22 14:09:31 marcocle Exp $
 #ifndef DETCOND_CONDITIONSDBCNVSVC_H
 #define DETCOND_CONDITIONSDBCNVSVC_H 1
 
 /// Include files
-#include "DetCond/IConditionsDBCnvSvc.h"
 #include "GaudiKernel/ConversionSvc.h"
 
 /// Forward and external declarations
 template <class TYPE> class SvcFactory;
 class IDetDataSvc;
 class IOpaqueAddress;
+class ICondDBAccessSvc;
 
 ///---------------------------------------------------------------------------
 /** @class ConditionsDBCnvSvc ConditionsDBCnvSvc.h Det/DetCond/ConditionsDBCnvSvc.h
@@ -22,9 +22,7 @@ class IOpaqueAddress;
     @date November 2004
 *///--------------------------------------------------------------------------
 
-class ConditionsDBCnvSvc : public ConversionSvc, 
-                           virtual public IConditionsDBCnvSvc
-{
+class ConditionsDBCnvSvc : public ConversionSvc {
   
   /// Only factories can access protected constructors
   friend class SvcFactory<ConditionsDBCnvSvc>;
@@ -36,15 +34,6 @@ class ConditionsDBCnvSvc : public ConversionSvc,
   
   /// Destructor
   virtual ~ConditionsDBCnvSvc();
-
-
- public:
-  
-  // Reimplemented from IInterface
-
-  /// Query the interface of the service
-  virtual StatusCode queryInterface( const InterfaceID& riid, 
-				     void** ppvInterface );  
 
  public:
 
@@ -81,23 +70,10 @@ class ConditionsDBCnvSvc : public ConversionSvc,
 
  public:
 
-  /// Get the global tag name
-  /// The global tag can only be set from the job options
-  virtual const std::string& globalTag ( );
-
-  /// Convert from TimePoint class to cool::ValidityKey.
-  virtual cool::IValidityKey timeToValKey(const TimePoint &time);
-   
-  /// Convert from cool::ValidityKey to TimePoint class.
-  virtual TimePoint valKeyToTime(const cool::IValidityKey &key);
-
   /// Retrieve converter from list
   virtual IConverter* converter(const CLID& clid);
 
  private:
-
-  /// Global tag name (can be set using the JobOptionsSvc)
-  std::string          m_globalTag;
 
   /// Handle to the databas Access service
   ICondDBAccessSvc*    m_dbAccSvc;

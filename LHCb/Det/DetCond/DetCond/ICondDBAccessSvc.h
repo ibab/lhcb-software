@@ -1,4 +1,4 @@
-// $Id: ICondDBAccessSvc.h,v 1.2 2005-02-09 08:49:29 marcocle Exp $
+// $Id: ICondDBAccessSvc.h,v 1.3 2005-04-22 14:09:31 marcocle Exp $
 #ifndef DETCOND_ICONDDBACCESSSVC_H 
 #define DETCOND_ICONDDBACCESSSVC_H 1
 
@@ -13,10 +13,16 @@
 #include "CoolKernel/types.h"
 #include "CoolKernel/IValidityKey.h"
 
+// Forward declarations
+class ITime;
+class TimePoint;
+
 static const InterfaceID IID_ICondDBAccessSvc ( "ICondDBAccessSvc", 1, 0 );
 
 /** @class ICondDBAccessSvc ICondDBAccessSvc.h DetCond/ICondDBAccessSvc.h
  *  
+ *  Class used as interface to LCG COOL library API. It should expose as less as
+ *  possible COOL internal details.
  *
  *  @author Marco CLEMENCIC
  *  @date   2005-01-11
@@ -32,14 +38,35 @@ public:
   /// Used to obtain direct access to the database.
   virtual cool::IDatabasePtr& database() = 0;
 
-  /*
-  /// Retrieve a CondDBObject from the database. Returns NULL if not found.
-  virtual cool::IObjectPtr getCondDBObject(const std::string &path,
-                                           const cool::IValidityKey &timePoint,
-                                           const cool::IChannelId &channelId=0) = 0;
-  */
+  /// Possible recognized node types.
+  enum StorageType { FOLDERSET, XML, Native };
+  /// Known types of leaf nodes (aka Folders).
+  enum VersionMode { SINGLE, MULTI };
+  
+  /// Create a CondDB node in the hierarchy (Folder or FolderSet)
+  virtual StatusCode createFolder(const std::string &path,
+                                  const std::string &descr,
+                                  StorageType storage = XML,
+                                  VersionMode vers = MULTI) const = 0;
+ 
+  /// Utility function that simplifies the storage of an XML string.
+  virtual StatusCode storeXMLString(const std::string &path, const std::string &data, const ITime &since, const ITime &till) const = 0;
 
-  //  createFolder
+  /// Convert from TimePoint class to cool::ValidityKey.
+  virtual cool::IValidityKey timeToValKey(const TimePoint &time) const = 0;
+   
+  /// Convert from cool::ValidityKey to TimePoint class.
+  virtual TimePoint valKeyToTime(const cool::IValidityKey &key) const = 0;
+  
+  /// Return the currently set TAG to use.
+  virtual const std::string &tag() const = 0;
+  
+  /// Set the TAG to use.
+  virtual StatusCode setTag(const std::string &_tag) = 0;
+
+  /// Tag the given folder with the given tag-name. If the requested folder is
+  /// a folderset, the tag is applied to all the folders below it. (waiting for HVS)
+  virtual StatusCode tagFolder(const std::string &path, const std::string &tagName, const std::string &description = "") = 0;
 
 protected:
 

@@ -1,14 +1,10 @@
-// $Id: RelyConverter.h,v 1.1 2005-02-09 08:49:29 marcocle Exp $
+// $Id: RelyConverter.h,v 1.2 2005-04-22 14:09:31 marcocle Exp $
 #ifndef COMPONENT_RELYCONVERTER_H 
 #define COMPONENT_RELYCONVERTER_H 1
 
 // Include files
 #include "DetCond/CondDBGenericCnv.h"
 #include "GaudiKernel/CnvFactory.h"
-//#include <string>
-
-// from POOL
-#include "AttributeList/AttributeListSpecification.h"
 
 // Forward and external declarations
 class ISvcLocator;
@@ -81,11 +77,7 @@ public:
    * Accessor to the type of elements that this converter converts.
    * @return the classID for this type
    */  
-  static const CLID& classID () { return s_CLID_any; }  
-  
-  /** Routine used to easily obtain the AttributeListSpecification
-      for this kind of objects. */
-  static const pool::AttributeListSpecification& attrListSpec();
+  static const CLID& classID () { return s_CLID_any; }
 
 protected:
   /// Standard constructor
@@ -97,14 +89,11 @@ private:
   /// needed to implement classID()
   static const CLID s_CLID_any;
 
-  /// Storage space for the default AttributeListSpecification.
-  static pool::AttributeListSpecification m_attlist;
-
   /**
    * Do the needed steps to perform a creation by delegation.
    */
   StatusCode i_delegatedCreation(IOpaqueAddress* pAddress,
-                                 DataObject *&pObject,TimePoint &since,TimePoint &till);
+                                 DataObject *&pObject);
 
 public:
   /**

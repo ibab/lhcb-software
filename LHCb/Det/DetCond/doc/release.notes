@@ -1,7 +1,15 @@
-# $Id: release.notes,v 1.29 2005-02-09 08:49:29 marcocle Exp $
+# $Id: release.notes,v 1.30 2005-04-22 14:09:31 marcocle Exp $
 Package Det/DetCond
 Package manager : Marco Clemencic
 
+! 2005-04-22 - Marco CLEMENCIC
+ - Upgrade to COOL_0_1_0-pre2
+ - Support for tagging
+ - almost all the technicalities (POOL/COOL) moved to CondDBAccessSvc
+ - some clean up
+ - commit before the first production release
+
+==============================================================================
 ! 2005-02-09 - Marco CLEMENCIC
  - Upgrade to first public preliminary version of COOL (COOL_0_0_3-pre1)
  - Renamed XMLRelyCnv to RelyConverter (it can use, in principle, any
