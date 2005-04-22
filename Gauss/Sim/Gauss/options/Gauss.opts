@@ -1,5 +1,5 @@
 #printOptions 
-// $Id: Gauss.opts,v 1.61 2005-04-12 17:58:53 gcorti Exp $ 
+// $Id: Gauss.opts,v 1.62 2005-04-22 15:00:03 gcorti Exp $ 
 
 /** @file 
  * 
@@ -40,6 +40,7 @@ Simulation.MeasureTime = true;
 
 //---------------------------------------------------------------------------
 // Monitor phase: two separate phase for Generator and Simulation
+//                can be commented separately
 //---------------------------------------------------------------------------
 Monitor.Members       += { "GaudiSequencer/GenMonitor" };
 Monitor.Members       += { "GaudiSequencer/SimMonitor" };     

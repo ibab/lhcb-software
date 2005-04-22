@@ -24,13 +24,14 @@ else
   shift
 endif
 #
-echo "Excuting Gauss $Gversion using options file Gauss.opts (mode $MODE)"
+echo "----> Executing Gauss $Gversion using as options Gauss.opts (mode $MODE)"
 #
 
 if ($?LS_SUBCWD) then 
 # in BATCH, WORKDIR is set by the system
 # in BATCH, location of executable has to be given explicitly - e.g.:
-  setenv MYJOBROOT ~/cmtuser/Sim/Gauss/$Gversion
+#  setenv MYJOBROOT ~/cmtuser/Sim/Gauss/$Gversion
+    setenv MYJOBROOT $LHCBDEV/GAUSS/GAUSS_v19r4/Sim/Gauss/$Gversion
 else
 # in interactive set WORKDIR to submission directory
   set WORKDIR = $PWD
@@ -46,10 +47,15 @@ if ($?Gauss_release_area) then
 else
   source $LHCBRELEASES/GaussEnv/$Gversion/cmt/setup.csh
 endif
+echo "----> MYJOBROOT is set to:"
+echo $MYJOBROOT
+echo "----> CMTPATH is set to:"
+echo $CMTPATH
 source $MYJOBROOT/cmt/setup.csh -tag=$MODE
 
 # Go to working directory
 cd $WORKDIR
+echo "----> Working in $PWD"
 
 if ($?LS_SUBCWD) then
 # == in batch copy the executable and options files to $WORKDIR
@@ -84,7 +90,7 @@ endif
 rm -f tmpjob.exe
 if ($?LS_SUBCWD) then
 # if in batch copy Gauss.sim file to permanent storage (example for CERN)
-#  rfcp Gauss.sim $CASTOR_HOME/Gauss/$Gversion/13296200.500ev.sim
+#  rfcp Gauss.sim $CASTOR_HOME/Gauss/$Gversion/30000000.500ev.3.sim
 #  rm -f Gauss.sim
 # if in batch copy output files to user directories
   ls *.* >! RETURN

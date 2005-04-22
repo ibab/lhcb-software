@@ -1,19 +1,12 @@
 package Gauss
 version v19r4
 
-# =============================================================================
-# structure 
-# =============================================================================
+#=========================================================================
+#-- Structure
 branches src doc options cmt job
 
-#== Set the Gauss version environment variable, read by GaussInit ==
-set APPVERSION $(GAUSSVERS)
-
-#set behaviour of inelastic scattering
-set AlwaysKillLeadingHadron 1
-
 #=========================================================================
-# get information from DBASE and PARAM 
+#-- Databases
 use XmlDDDB             v24r0   Det   -no_auto_imports
 use FieldMap            v4r5          -no_auto_imports
 use DecFiles            v6r6    Gen   -no_auto_imports
@@ -21,10 +14,10 @@ use ParamFiles          v3r11         -no_auto_imports
 use Geant4Files		v52r0	      -no_auto_imports
 
 #========================================================================
-# Generator
-use GeneratorModules    v15r0   Gen
+#-- Generator
+use GeneratorModules    v15r1   Gen
 
-# Simulation
+#-- Simulation
 use GiGaCnv             v15r11  Sim
 use GaussTools          v10r10 	Sim
 use GaussTracker        v4r0    Sim
@@ -33,38 +26,40 @@ use GaussCalo           v7r2    Sim
 use GaussPhysics        v3r1    Sim
 use GaussAlgs		v1r6    Sim
 
-# Optional visualisation and UI
+#-- Optional visualisation and UI
 #use GiGaVisUI           v3r0    Sim
 
-# Monitoring
+#-- Monitoring
 use GaussMonitor        v2r0    Sim
 use CaloMoniSim         v1r0    Calo
 use VeloAlgorithms      v3r3    Velo
-#======================================================================
-# Standard job options
-use GaudiConf           v*     
 
-# GAUDI framework
+#=========================================================================
+#-- GAUDI framework
 use GaudiAlg            v*
 use GaudiAud            v*
 use GaudiSvc            v*
 
-# Event persistency
+#-- Event persistency
 use GaudiPoolDb         v*
 
-# Histogram persistency 
+#-- Histogram persistency 
 use HbookCnv            v*
 
-# Access LHCb
+#-- LHCb
+use GaudiConf           v*     
 use LHCbAlgs            v*    Kernel
 use Magnet              v*    Det
 
-# =============================================================================
-# Essential environment variables 
-# =============================================================================
+#========================================================================
+#== Necessary enviroment variables
+#-- Set the default path for Gauss options
 set  GAUSSOPTS "${GAUSSROOT}/options"
 
-# =============== visualization  ==============================================
+#-- Set behaviour of inelastic scattering
+set AlwaysKillLeadingHadron 1
+
+#-- Set visualization environment
 set  G4DAWNFILE_DEST_DIR       "../job/"
 set  G4DAWNFILE_PS_VIEWER      "gv"
 set  G4DAWN_MULTI_WINDOW       "1"
@@ -74,22 +69,24 @@ set  G4VRMLFILE_VIEWER         vrweb \
                 WIN32          netscape
 set  G4VRML_PV_PICKABLE        "1"
 
-
-# == Main Program =============================================================
+#========================================================================
+#-- Build Main Program 
 application Gauss GaussMain.cpp 
 
-# ========================= set macros ========================================
+#========================================================================
+#-- Set macros
 apply_pattern application_path 
 macro Gauss_linkopts  "$(application_linkopts)"
 macro_append Gauss_linkopts " -Wl,-Map,Linux.map " WIN32 ""
 
-# =============== just make executable "visible" ==============================
+#-- Make just executable "visible" 
 path_remove    PATH  "/Gauss/"
 path_append    PATH  "${GAUSSROOT}/${BINDIR}"
 
-# == for visualization make appropriate engine visible (DAWN)
+#-- For visualization make appropriate engine visible (DAWN)
 #path_append    PATH  "${OSC_release_area}/DAWN/bin/Linux"
 
-# =============== alias =======================================================
+#========================================================================
+#-- Set usefull alias
 alias gauss " ${GAUSSROOT}/${BINDIR}/Gauss.exe ${GAUSSOPTS}/Gauss.opts "
 alias gaussvis " ${GAUSSROOT}/${BINDIR}/Gauss.exe ${GAUSSOPTS}/GaussVis.opts "

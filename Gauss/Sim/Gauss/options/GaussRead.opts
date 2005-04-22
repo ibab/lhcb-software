@@ -1,44 +1,71 @@
-// $Id: GaussRead.opts,v 1.2 2005-02-02 15:12:17 gcorti Exp $ 
+#printOptions 
+// $Id: GaussRead.opts,v 1.3 2005-04-22 15:00:03 gcorti Exp $ 
 
-#include "$GAUSSOPTS/Common.opts"
+/** @file 
+ * 
+ *  Example options to read sim file produced by Gauss.
+ *  This file defines, sequences and configures the algorithms to be executed
+ *
+ */
 
-// =============== specific to this job =====================================
-// to run full monitors
-ApplicationMgr.TopAlg += { "Sequencer/Monitor" };
-//Monitor.Members       += { "DumpMCEventAlg" };
-Monitor.Members       += { "GiGaGetHitsAlg" };
+#include "$GAUSSOPTS/Common.opts"   // Necessary for any Gauss executable
+
+//---------------------------------------------------------------------------
+// Phases to be executed: initialization + monitor
+//---------------------------------------------------------------------------
+ApplicationMgr.TopAlg  = { "LbAppInit/Gauss",
+                           "GaudiSequencer/Monitor"        
+                         }; 
+
+//---------------------------------------------------------------------------
+// Monitor phase: as in production + user monitor
+//                two separate phase for Generator and Simulation
+//                can be commented separately
+//---------------------------------------------------------------------------
+Monitor.Members       += { "GaudiSequencer/GenMonitor" };
+Monitor.Members       += { "GaudiSequencer/SimMonitor" };     
+Monitor.Members       += { "GaudiSequencer/UserMonitor" };
+#include "$GAUSSOPTS/Monitor.opts"
+Monitor.MeasureTime = true;
+
+// Algorithm in User monitor
+UserMonitor.Members       += { "GiGaGetEventAlg",
+                               "GiGaGetHitsAlg"
+                             };
+// The following are set explicitely since not in standard sim file
 GiGaGetHitsAlg.RichOpticalPhotons = "";
 GiGaGetHitsAlg.RichSegments = "";
 GiGaGetHitsAlg.RichTracks = "";
-#include "$GAUSSOPTS/Monitor.opts"
-MCTruthFullMonitor.OutputLevel   = 2;
-GeneratorFullMonitor.OutputLevel = 2;
-// Generic Utility package: remove for release
-//ApplicationMgr.DLLs      += { "Utilities" };
-// Associators: remove for release
-//#include "$ASSOCIATORSSYSROOT/options/DLLs.opts"
 
+//---------------------------------------------------------------------------
 // Must read events (overwrite property of no events input set for 
 // "normal" Gauss jobs)
+//---------------------------------------------------------------------------
 ApplicationMgr.EvtSel = "";
 EventDataSvc.RootCLID = 1;
 
-// Set the number of events to read
+//---------------------------------------------------------------------------
+// Add here any job specific options, to over-ride previously defined options
+//---------------------------------------------------------------------------
+//MessageSvc.OutputLevel    = 3;
+MCTruthFullMonitor.OutputLevel   = 2;
+GeneratorFullMonitor.OutputLevel = 2;
+
+//---------------------------------------------------------------------------
+// Number of events to read
 ApplicationMgr.EvtMax      = 10;
 
-// Overall output level
-MessageSvc.OutputLevel     = 3;
-GiGaGetHitsAlg.OutputLevel = 3;
 
-// Lenght of message to have longer Algorihtm/Tool identifier in printout
-//MessageSvc.Format = "% F%40W%S%7W%R%T %0W%M";
-
-//---------------------------------------------------------------
+//---------------------------------------------------------------------------
 // Input file 
-//#include "$GAUSSOPTS/11102000.opts"
+//---------------------------------------------------------------------------
 EventSelector.Input   = {
-  //  "DATAFILE='PFN:/afs/cern.ch/user/r/ranjard/w1/data/Gauss_0412.sim' TYP='POOL_ROOTTREE' OPT='READ'"
   "DATAFILE='PFN:Gauss.sim' TYP='POOL_ROOTTREE' OPT='READ'"
 };
+
+//---------------------------------------------------------------------------
+// Output file. 
+//---------------------------------------------------------------------------
+HistogramPersistencySvc.OutputFile = "GaussReadHistos.hbook";
 
 

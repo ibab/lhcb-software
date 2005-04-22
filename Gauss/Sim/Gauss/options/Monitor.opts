@@ -1,4 +1,4 @@
-// $Id: Monitor.opts,v 1.7 2005-04-12 17:58:54 gcorti Exp $ 
+// $Id: Monitor.opts,v 1.8 2005-04-22 15:00:03 gcorti Exp $ 
 
 /** @file 
  * 
@@ -44,7 +44,7 @@ SimMonitor.Members  += { "MCHitMonitor/OTHitMonitor" };
 OTHitMonitor.mcPathString = "/Event/MC/OT/Hits";
 OTHitMonitor.zStations    = { 7938.0, 8625.0, 9315.0 };
 
-// RICH info, because of the way it is setup it can only be executed
+// RICH info, because of the way it is setup it will only be executed
 // when running the simulation with Geant4 not when reading files!
 #include "$GAUSSRICHROOT/options/RichAnalysis.opts"
 

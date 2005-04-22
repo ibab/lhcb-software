@@ -1,4 +1,4 @@
-// $Id: GaussMain.cpp,v 1.1 2004-04-20 04:28:21 ibelyaev Exp $
+// $Id: GaussMain.cpp,v 1.2 2005-04-22 15:00:03 gcorti Exp $
 //------------------------------------------------------------------------------
 //
 //  Package    : GaudiConf
@@ -32,6 +32,15 @@ int main ( int argc, char** argv ) {
   std:: string opts = (argc>1) ? argv[1] :  "";
 
   propMgr->setProperty( "JobOptionsPath", opts );
+
+  // Set the program name and version using macros defined in compilation flags
+#if defined APPNAME
+  propMgr->setProperty( "AppName",    APPNAME );
+#endif
+#if defined APPVERS
+  propMgr->setProperty( "AppVersion", APPVERS );
+#endif
+
   if( opts != "" && opts.substr( opts.length() - 3, 3 ) == ".py" ) {
     propMgr->setProperty( "EvtSel",         "NONE" );
     propMgr->setProperty( "JobOptionsType", "NONE" );
