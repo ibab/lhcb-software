@@ -1,4 +1,4 @@
-//$Id: CondDBTestAlgorithm.cpp,v 1.4 2005-04-22 15:17:54 marcocle Exp $
+//$Id: CondDBTestAlgorithm.cpp,v 1.5 2005-04-22 15:50:05 marcocle Exp $
 
 #include "CondDBTestAlgorithm.h"
 #include "DetDesc/Condition.h"
@@ -37,6 +37,10 @@ StatusCode CondDBTestAlgorithm::execute() {
   StatusCode sc;
   MsgStream log(msgSvc(), name());
   log << MSG::INFO << "*************** execute(): process new event ***************" << endreq;
+  
+  static int count = 0;
+  
+  ++count;
 
   // Retrieve the LHCb detector element
   log << MSG::INFO << "Retrieve the LHCb detector /dd/Structure/LHCb" << endreq;
@@ -53,6 +57,10 @@ StatusCode CondDBTestAlgorithm::execute() {
   // Retrieve slowControl for the LHCb detector
   log << MSG::INFO << "Retrieve the slowControl Condition for the LHCb detector" << endreq;
   Condition* scLHCb = lhcb->slowControl()->condition();
+  if (count == 4){
+    log << MSG::INFO << "(Force update!)" << endreq;
+    scLHCb->forceUpdateMode();
+  }
   sc = i_analyse( scLHCb );
   if( !sc.isSuccess() ) return StatusCode::FAILURE;
 

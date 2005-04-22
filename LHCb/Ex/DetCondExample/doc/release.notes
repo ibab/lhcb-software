@@ -1,7 +1,12 @@
-#$Id: release.notes,v 1.30 2005-04-22 15:17:49 marcocle Exp $
+#$Id: release.notes,v 1.31 2005-04-22 15:50:05 marcocle Exp $
 Package Ex/DetCondExample
 Package manager : Marco Clemencic
 
+!=========== Ex/DetCondExample v6r2 ==========================================
+! 2005-04-22 - Marco Clemencic
+ - Use the ValidDataObject "forceUpdate" feature introduced in Det/DetDesc v15r0
+
+==============================================================================
 ! 2005-04-22 - Marco Clemencic
  - Update to DetCond v6r1 + improvements
 

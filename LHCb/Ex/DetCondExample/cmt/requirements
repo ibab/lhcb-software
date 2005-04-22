@@ -1,6 +1,6 @@
-# $Id: requirements,v 1.22 2005-04-22 15:17:49 marcocle Exp $
+# $Id: requirements,v 1.23 2005-04-22 15:50:05 marcocle Exp $
 package DetCondExample
-version v6r1
+version v6r2
 
 branches doc src job options cmt XMLDDDB sql
 ignore_pattern package_stamps 
@@ -14,7 +14,7 @@ use GaudiSvc v*
 use GaudiAlg v*
 
 # Detector Description
-use DetDesc v* Det
+use DetDesc v15r* Det
 use DetDescCnv v* Det
 use XmlDDDB v* Det
 
