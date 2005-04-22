@@ -3,6 +3,59 @@ Package : GaussSys
 Package manager : Gloria Corti
 </PRE>
 
+<H1><A NAME="v19r4">2005-04-22 - GaussSys v19r4</A></H1><PRE>
+    use Geant4 v70r0p1, Pythia 6_226.2, photos 209.2, LHCb v18r3, XmlDDDB v24r0
+
+!========================== Gauss v19r4 ==================================
+! 2005-04-22 - Gloria Corti
+ - Use new versions of GeneratorModules (v15r1) and GENSER (v2r100p0)
+ - Print outs in Gauss.job
+ - Adapt to changes in ApplicationMgr properties and LbAppInit to set
+   name and version of the application
+   . GaussMain.cpp, requirements
+ - Adapt reading example to GaudiSequencer and modification in used 
+   options
+   . GaussRead.opts
+
+! 2005-04-20 - Gloria Corti
+ - Use new version of GaussRICH (v4r14) and GaussAlgs (v1r6)
+ - Write only events that were succefully processed by the simulation
+   skipping events for which the G4Event was aborted
+   . GaussTape.opts, Simulation.opts
+
+!======================== GaussRICH v4r14 ==================================
+!2005-04-19  - Sajan Easo
+  - Added three montoring histograms for set2 to plot the 
+    number of  nonraditor hits.
+  - Added counters to keep track of the number of nonradiator hits.
+
+!============================ GaussAlgs v1r6 ==============================
+! 2005-04-22 - Gloria Corti
+ - src/GaussInitialisation.{h,cpp}
+   src/GaussAlgs_load.cpp
+   . remove obsolete file from library, replaced by LbAppInit in LHCbKernel
+
+! 2005-04-20 - Gloria Corti
+ - src/GiGaCheckEventStatus.{h,cpp}
+   . new algorithm that check if G4Event has been aborted and setFilterPassed
+     to false if that is the case. Allows to skip aborted events in successive
+     filtering stages 
+ - src/GiGaGetHitsAlg.cpp
+   . add protection to skip access to data if address in list is "".
+
+!========================= GeneratorModules v15r1 =======================
+! 2005-04-22 - Patrick Robbe
+ - requirements: move to version v15r1, comment dependency on AcerMC and
+   do not compile AcerMC algorithms and FORTRAN files.
+ - src/Algorithms/GeneratorModules_entries.cpp : comment AcerMCAlgorithm
+ - requirements: use now static Pythia, GeneratorModules is now a 
+   component library.
+
+!========================= GENSER v2r100p0 ================================
+! 2005-04-22 - Florence RANJARD
+ - requirements - use Pythia static library
+
+!=============================================================================
 <H1><A NAME="v19r3">2005-04-13 - GaussSys v19r3</A></H1><PRE>
     use Geant4 v70r0p1, Pythia 6_226.2, photos 209.2, LHCb v18r2, XmlDDDB v24r0
 
