@@ -1,4 +1,4 @@
-// $Id: XmlGenericCnv.cpp,v 1.4 2003-06-16 13:44:13 sponce Exp $
+// $Id: XmlGenericCnv.cpp,v 1.5 2005-04-22 13:33:31 marcocle Exp $
 
 // Include files
 #include "DetDescCnv/XmlGenericCnv.h"
@@ -104,9 +104,10 @@ StatusCode XmlGenericCnv::createObj (IOpaqueAddress* addr,
 
    // parses the xml file or the xml string and retrieves a DOM document
    xercesc::DOMDocument* document = 0;
+   bool isAString = 1 == addr->ipar()[0];
    if ( 0 == addr->ipar()[0] ) {
      document = xmlSvc()->parse(addr->par()[0].c_str());
-   } else if ( 1 == addr->ipar()[0] ) {
+   } else if ( isAString ) {
      document = xmlSvc()->parseString(addr->par()[0].c_str());
    } else {
      log << MSG::FATAL
@@ -148,6 +149,8 @@ StatusCode XmlGenericCnv::createObj (IOpaqueAddress* addr,
      log << MSG::FATAL << addr->par()[1]
          << " has no DDDB element at the beginning of the file."
          << endreq;
+     // if we parsed a string we have to release the memory (no cache handling possible)
+     if ( isAString ) document->release();
      return StatusCode::FAILURE;
    } else {
      // checks the version attribute
@@ -184,6 +187,8 @@ StatusCode XmlGenericCnv::createObj (IOpaqueAddress* addr,
            << "If you are using the XmlDDDB package, please "
            << "get a new version of it."
            << endreq;
+       // if we parsed a string we have to release the memory (no cache handling possible)
+       if ( isAString ) document->release();
        return StatusCode::FAILURE;
      } else if (minorVersion != defaultMinorVersion) {
        log << MSG::WARNING << "DDDB DTD Version " << defaultMajorVersion
@@ -240,16 +245,22 @@ StatusCode XmlGenericCnv::createObj (IOpaqueAddress* addr,
          << objectName << " : "
          << "No such object in file " << addr->par()[0]
          << endreq;
+     // if we parsed a string we have to release the memory (no cache handling possible)
+     if ( isAString ) document->release();
      return StatusCode::FAILURE;
    }
    
    try {
      // deal with the node found itself
-     return internalCreateObj (element, refpObject, addr);
+     StatusCode sc = internalCreateObj (element, refpObject, addr);
+     if ( isAString ) document->release();
+     return sc;
    } catch (GaudiException e) {
      log << MSG::FATAL << "An exception went out of the conversion process : ";
      e.printOut (log);
      log << endreq;
+     // if we parsed a string we have to release the memory (no cache handling possible)
+     if ( isAString ) document->release();
      return StatusCode::FAILURE;
    }
    

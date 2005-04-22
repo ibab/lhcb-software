@@ -4,6 +4,12 @@
 ! Purpose     : standard converters for the LHCb Detector Description
 !-----------------------------------------------------------------------------
 
+!================ DetDescCnv v2r4 2005-04-22 ===========================
+! 2005-04-22 - Marco Clemencic
+ - XmlGenericCnv deletes the DOMDocument returned by XmlParserSvc::parseString().
+   To avoid segmentation faults, this version should be used with
+	 XmlTools >= v3r5
+
 !================ DetDescCnv v2r3p1 2005-03-24 =========================
 ! 2005-03-24 - Marco Cattaneo
  - Remove an unneccessary (and harmless) test in XmlCatalogCnv.cpp
