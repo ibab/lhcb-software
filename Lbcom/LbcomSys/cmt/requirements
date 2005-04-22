@@ -1,10 +1,10 @@
 package LbcomSys
-version v1r3
+version v2r0
 
 branches doc cmt
 
 #===============================================================
-# LHCb packages shared by several applications
+# LHCb packages shared by Boole and other applications
 #===============================================================
 
 # L0 trigger simulation
@@ -16,17 +16,11 @@ use PuVeto          v6r0p1  L0
 # Outer tracker
 use OTMonitor       v1r1    OT
 
-# Tracking
-use TrExtrapolator  v2r14   Tr
-
 # Rich
 use RichTools	    v1r6    Rich
 use RichMCTools	    v2r5    Rich
-use RichRecTools    v2r14   Rich
-use RichRecMCTools  v1r8    Rich
-use RichRecCommon   v1r12   Rich
-use RichRecQC	    v1r10   Rich
 
-# Calo
-use CaloReco        v2r7p1  Calo
-use CaloPIDs	    v2r4p1  Calo
+# Inner Tracker
+use ITAlgorithms    v14r4p1 IT
+use ITCheckers      v2r4p1  IT
+
