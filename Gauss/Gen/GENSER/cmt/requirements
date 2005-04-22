@@ -1,5 +1,5 @@
 package GENSER
-version v2r030p1
+version v2r100p0
 
 branches doc cmt
 
@@ -7,7 +7,7 @@ use LCG_Settings v*
 
 include_path none
 
-macro GENSER_native_version "GENSER_0_3_0"
+macro GENSER_native_version "GENSER_1_0_0"
 macro GENSER_home "$(LCG_releases)/GENSER/$(GENSER_native_version)/$(LCG_system)"
 
 path_remove LD_LIBRARY_PATH "/GENSER/"
@@ -16,13 +16,13 @@ path_append LD_LIBRARY_PATH "$(GENSER_home)/lib"
 macro pythia_native_version "6_226.2"
 include_dirs $(LCG_releases)/GENSER/$(GENSER_native_version)/src/pythia/$(pythia_native_version)/include
 
-macro pythia_linkopts "-L$(GENSER_home)/lib -lpythia$(pythia_native_version) -ldummy_pythia$(pythia_native_version)"\
+macro pythia_linkopts "$(GENSER_home)/lib/libpythia$(pythia_native_version).a ${GENSER_home}/lib/libdummy_pythia$(pythia_native_version).a"\
         WIN32         "/libpath:$(GENSER_home)\lib pythia$(PYTHIA_native_version).lib dummy_pythia$(pythia_native_version)"
 
 macro photos_native_version "209.2"
 include_dirs $(LCG_releases)/GENSER/$(GENSER_native_version)/src/photos/$(photos_native_version)/include
-macro photos_linkopts " -L$(GENSER_home)/lib -lphotos$(photos_native_version)" \
-             WIN32            " /libpath:$(GENSER_home)/lib photos$(photos_native_version).lib"
+macro photos_linkopts " $(GENSER_home)/lib/libphotos$(photos_native_version).a" \
+             WIN32    " /libpath:$(GENSER_home)/lib photos$(photos_native_version).lib"
 
 use cernlib v* LCG_Interfaces
 

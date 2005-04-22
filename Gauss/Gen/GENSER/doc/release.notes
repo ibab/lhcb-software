@@ -4,6 +4,9 @@
 ! Purpose     : interface package to GENSER
 !-----------------------------------------------------------------------------
 
+! 2005-04-22 - Florence RANJARD
+ - requirements - use Pythia static library
+
 !========================= GENSER v2r030p1 ================================
 ! 2005-02-25 - Patrick Robbe
  - requirements - add photos include
