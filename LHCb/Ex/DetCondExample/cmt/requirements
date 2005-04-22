@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.21 2005-02-10 10:24:29 marcocle Exp $
+# $Id: requirements,v 1.22 2005-04-22 15:17:49 marcocle Exp $
 package DetCondExample
 version v6r1
 
@@ -33,11 +33,12 @@ set ODBCINST $(unixodbc_home)
 #### sqlite is not working
 
 # library path needed for oracle backend
+macro Oracle_version "10.1.0.3-1"
+macro Oracle_base "/afs/cern.ch/project/oracle/instantclient"
 path_remove LD_LIBRARY_PATH "/oracle/"
-path_append LD_LIBRARY_PATH "/afs/cern.ch/project/oracle/instantclient/10.1.0.2/$(CMTCONFIG)/lib" WIN32 "" \
-            slc3_ia32_gcc323 "/afs/cern.ch/project/oracle/instantclient/10.1.0.2/cel3-i386_gcc323/lib" \
-	    rh73_gcc323_dbg "/afs/cern.ch/project/oracle/instantclient/10.1.0.2/rh73_gcc323/lib" \
-            slc3_ia32_gcc323_dbg "/afs/cern.ch/project/oracle/instantclient/10.1.0.2/cel3-i386_gcc323/lib"
+path_append LD_LIBRARY_PATH "$(Oracle_base)/$(Oracle_version)/$(CMTCONFIG)/lib" WIN32 "" \
+	    rh73_gcc323_dbg "$(Oracle_base)/$(Oracle_version)/rh73_gcc323/lib" \
+            slc3_ia32_gcc323_dbg "$(Oracle_base)/$(Oracle_version)/slc3_ia32_gcc323/lib"
 set TNS_ADMIN "/afs/cern.ch/project/oracle/admin"
 
 
@@ -51,11 +52,8 @@ set DETCONDEXAMPLE_XMLDDDB ${DETCONDEXAMPLEROOT}/XMLDDDB
 set DETCONDEXAMPLE_DAQEVTMAX 10
 set DETCONDEXAMPLE_DAQFOLDERNAME DAQ
 #set DETCONDEXAMPLE_DAQRECORDSIZE 100000
-# currently COOL can store only strings <~ 4000 chars
-set DETCONDEXAMPLE_DAQRECORDSIZE 4000
-
-# Setup for the test CondDB used in the example
-#setup_script setupDB
+# currently COOL can store only strings <= 4000 chars
+set DETCONDEXAMPLE_DAQRECORDSIZE 3999
 
 # Path to some useful scripts using sql
 path_append PATH ${DETCONDEXAMPLEROOT}/sql
@@ -70,12 +68,5 @@ private
 #==> Detector Conditions example
 application DetCondExample *.cpp $(GAUDICONFROOT)/src/GaudiMain.cpp
 macro DetCondExample_linkopts "$(application_linkopts) -L$(DETCONDROOT)/$(CMTCONFIG) -lDetCond "
-
-# macro_append DetCondExample_linkopts "" \
-#         slc3_ia32_gcc323_dbg " -L$DETDESCROOT/slc3_ia32_gcc323 -L$DETDESCCNVROOT/slc3_ia32_gcc323"
-# path_append LD_LIBRARY_PATH "" \
-#         slc3_ia32_gcc323_dbg "$DETDESCROOT/slc3_ia32_gcc323"
-# path_append LD_LIBRARY_PATH "" \
-#         slc3_ia32_gcc323_dbg "$DETDESCCNVROOT/slc3_ia32_gcc323"
 
 path JOBOPTSEARCHPATH ../options

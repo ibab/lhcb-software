@@ -1,4 +1,4 @@
- // $Id: CondDBTestAlgorithm.h,v 1.1 2001-12-17 20:13:25 andreav Exp $
+ // $Id: CondDBTestAlgorithm.h,v 1.2 2005-04-22 15:17:54 marcocle Exp $
 #ifndef DETCONDEXAMPLE_CONDDBTESTALGORITHM_H
 #define DETCONDEXAMPLE_CONDDBTESTALGORITHM_H 1
 
@@ -7,6 +7,7 @@
 
 // Forward declarations
 class DataObject;
+class Condition;
 
 ///---------------------------------------------------------------------------
 /** @class CondDBTestAlgorithm CondDBTestAlgorithm.h Ex/DetCondExample/CondDBTestAlgorithm.h

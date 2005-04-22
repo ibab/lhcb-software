@@ -1,8 +1,7 @@
-//$Id: DAQCondDBAlgorithm.cpp,v 1.4 2005-02-10 08:06:21 marcocle Exp $
+//$Id: DAQCondDBAlgorithm.cpp,v 1.5 2005-04-22 15:17:54 marcocle Exp $
 
 #include "DAQCondDBAlgorithm.h"
 
-#include "DetCond/IConditionsDBCnvSvc.h"
 #include "DetCond/ICondDBAccessSvc.h"
 
 #include "GaudiKernel/AlgFactory.h"
@@ -64,18 +63,8 @@ StatusCode DAQCondDBAlgorithm::initialize() {
   MsgStream log(msgSvc(), name());
   log << MSG::INFO << "Initialize()" << endreq;
 
-  // Locate the ConditionsDBCnvSvc
-  // Get a handle to the ConditionsDBGate
-  // Get a handle to the CondDBMgr
-  StatusCode sc = serviceLocator()->service 
-    ( "ConditionsDBCnvSvc", m_condDBCnvSvc );
-  if( !sc.isSuccess() ) {
-    log << MSG::ERROR << "Can't locate ConditionsDBCnvSvc" << endreq;
-    return sc;
-  } else {
-    log << MSG::DEBUG << "Succesfully located ConditionDBCnvSvc" << endreq;
-  }
-  sc = serviceLocator()->getService("CondDBAccessSvc",
+  // Locate the CondDBAccessSvc
+  StatusCode sc = serviceLocator()->getService("CondDBAccessSvc",
                                     ICondDBAccessSvc::interfaceID(),(IInterface*&)m_dbAccSvc);
   if (  !sc.isSuccess() ) {
     log << MSG::ERROR << "Could not locate CondDBAccessSvc" << endreq;

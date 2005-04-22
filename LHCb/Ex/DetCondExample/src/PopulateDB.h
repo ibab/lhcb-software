@@ -1,14 +1,14 @@
-//$Id: PopulateDB.h,v 1.5 2005-02-10 08:06:21 marcocle Exp $
+//$Id: PopulateDB.h,v 1.6 2005-04-22 15:17:54 marcocle Exp $
 #ifndef DETCONDEXAMPLE_POPULATEDB_H
 #define DETCONDEXAMPLE_POPULATEDB_H 1
 
 // Base class
-#include "GaudiKernel/Algorithm.h"
+#include "GaudiAlg/GaudiAlgorithm.h"
 
 // Forward declarations
-class IConditionsDBCnvSvc;
 class ICondDBAccessSvc;
 class ICondDBObject;
+class Condition;
 
 //#include "ConditionsDB/CondDBException.h"
 //#include "ConditionsDB/CondDBKey.h"
@@ -18,13 +18,11 @@ class ICondDBObject;
 
     Simple algorithm to populate the ConditionsDB.
 
-    @author Andrea Valassi 
-    @date August 2001
     @author Marco Clemencic
     @date January 2005
 *///--------------------------------------------------------------------------
 
-class PopulateDB : public Algorithm {
+class PopulateDB : public GaudiAlgorithm {
 
  public:
 
@@ -44,6 +42,9 @@ class PopulateDB : public Algorithm {
   /// Dump sample data
   StatusCode i_condDBDumpSampleData();
 
+  /// Encode generic condition to XML
+  std::string i_conditionToXml( const std::string &name, Condition &cond ) const;
+
   /// Encode XML temperature data
   void i_encodeXmlTemperature( const double temperature,
 			       const std::string& objName,
@@ -59,25 +60,14 @@ class PopulateDB : public Algorithm {
   StatusCode i_dumpFolder( const std::string& folderName,
 			   const std::string& tagName );
 
- private:
+  /// Tag the full tree.
+  StatusCode i_tagDB(const std::string& tagName);
 
-  /// Handle to the ConditionsDBCnvSvc (encode data to be written)
-  IConditionsDBCnvSvc* m_conditionsDBCnvSvc;
+ private:
 
   /// Handle to the ConditionsDBGate (write the data in the CondDB)
   ICondDBAccessSvc* m_dbAccSvc;
 
-  /*
-  ICondDBObject* createCondDBObject(const CondDBKey& since,
-                                    const CondDBKey& till,
-                                    const std::string& data,
-                                    const std::string& description)
-                                    throw(CondDBException);
-  */
-  /*
-    void destroyCondDBObject(ICondDBObject* CondObj)
-    throw(CondDBException);
-  */
 };
 
 #endif    // DETCONDEXAMPLE_POPULATEDB_H

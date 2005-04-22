@@ -1,4 +1,4 @@
-//$Id: testCondDB.opts,v 1.5 2005-02-09 13:37:43 marcocle Exp $
+//$Id: testCondDB.opts,v 1.6 2005-04-22 15:17:53 marcocle Exp $
 //==============================================================
 // Job options for DetCondExample test of CondDB
 //==============================================================
@@ -34,19 +34,6 @@ ApplicationMgr.EvtMax = 6;
 // Event clock attributes
 EvtClock.startTime = 4;
 EvtClock.delayTime = 8;
-
-//--------------------------------------------------------------
-// Default global tag for the ConditionsDB
-//--------------------------------------------------------------
-
-// Production set of temperatures: Hcal is hot, LHCb is cold
-ConditionsDBCnvSvc.condDBGlobalTag = "PRODUCTION";
-
-// Cold set of temperatures
-//ConditionsDBCnvSvc.condDBGlobalTag = "COLD";
-
-// Hot set of temperatures
-//ConditionsDBCnvSvc.condDBGlobalTag = "HOT";
 
 //--------------------------------------------------------------
 // Message service options

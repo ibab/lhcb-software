@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE DDDB SYSTEM "../DTD/structure.dtd">
-<!-- $Id: structure.xml,v 1.2 2001-12-17 19:47:40 andreav Exp $ -->
+<!-- $Id: structure.xml,v 1.3 2005-04-22 15:17:48 marcocle Exp $ -->
 <DDDB>
 
   <detelem name="LHCb" type="passive">
@@ -15,6 +15,13 @@
     <detelemref href = "../Ecal/structure.xml#Ecal"/>
     <detelemref href = "../Hcal/structure.xml#Hcal"/>
 
+    <param name="test" type="other">Test string</param>
+
+    <detelem classID="9999" name="Dummy">
+      <param name="comment" type="string"> Dummy detector element used to test the update </param>
+      <readoutinfo condition="/dd/Conditions/ReadOut/DummyDE"/>
+      <slowcontrolinfo condition="/dd/Conditions/SlowControl/DummyDE"/>
+    </detelem>
   </detelem>
 
 </DDDB>

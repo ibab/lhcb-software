@@ -1,4 +1,4 @@
-# $Id: README,v 1.35 2004-12-08 18:33:51 marcocle Exp $
+# $Id: README,v 1.36 2005-04-22 15:17:49 marcocle Exp $
 
 Three examples are distributed in this package: a test of condition data 
 stored in flat XML files, a test of condition data stored in the CondDB,
@@ -8,20 +8,7 @@ The XML example does not require DetCond and works in the same way
 under Windows and under Linux (RedHat7.3 or SLC3).
 
 The CondDB examples require package DetCond.
-Under Windows and Linux, DetCond uses CondDBOracle or CondDBMySQL.  The Oracle
-implementation is based on Oracle 10i using the OCCI library.
-
-If both implementations are compiled and linked, it is possible to chose at
-runtime which implementation is used.  For the time being, CONDDB_0_2_0 does not
-allow to link both of them.  The patch
-	${DETCONDROOT}/doc/CONDDB_0_2_0_CondDBOracle.patch
-can be use to build a fixed private version of CONDDB library (ses the end of
-the file for instructions). With both implementations linked, the environment
-variable CONDDB_implementation controls the implementation used.
-The default (linked and used) is CondDBMySQL, because of a bug in Oracle
-implementation that make one of the tests fail.  When both are linked,
-CondDBOracle is the default one. (To see how to change the link option, see the
-README in ${CONDDBROOT}/doc)
+Under Windows and Linux, DetCond uses COOL.
 
 Four main job options exist in the options directory:
  1) testXml.opts    -> test of condition data stored in XML files (NO DB)
@@ -40,7 +27,7 @@ The detector elements used in the tests are the following:
 > LHCb is used to test geometry data in the CondDB
 
 ------------------------------------------------------------------------------
-Packages needed to run DetCondExample v5r0
+Packages needed to run DetCondExample v6r1
 ------------------------------------------------------------------------------
 
 For general information on configuring the Gaudi environment, 
@@ -53,25 +40,23 @@ The Windows environment is presented in a shorter way at the end of this file.
 Version v1r16p20040901 of CMT is assumed as the default on all platforms.
 
 It is assumed that CMTPATH contains the release directory in ${HOME}/cmtuser
-(i.e. ~/cmtuser), as well as Gaudi v15r3 and LHCb v17r1. 
+(i.e. ~/cmtuser), as well as Gaudi v16r2 and LHCb v18r3. 
 Put the following line in .cshrc to achieve this:
     setenv CMTPATH ${HOME}/cmtuser
-    setenv CMTPATH ${CMTPATH}:${GAUDISOFT}/GAUDI_v15r3
-    setenv CMTPATH ${CMTPATH}:${LHCBSOFT}/project/LHCB/LHCB_v17r1
+    setenv CMTPATH ${CMTPATH}:${GAUDISOFT}/GAUDI_v16r2
+    setenv CMTPATH ${CMTPATH}:${LHCBSOFT}/project/LHCB/LHCB_v18r3
+    setenv CMTPATH ${CMTPATH}:/afs/cern.ch/user/m/marcocle/public/CondDB
 Check the result with
     printenv CMTPATH
 
-To run the detector condition example, you need the following packages,
-as well as the standard Gaudi packages from the release area of Gaudi v15.
-    cd ~/cmtuser
-    getpack Det/DetCond        v5r0     head
-    getpack Ex/DetCondExample  v5r0     head
-Under Linux (RedHat7.3, SLC3)
-    getpack CONDDB             v4r0  head
+The last added entry is needed to have access to the COOL LCG meta-package for
+the pre-production release COOL_0_1_0-pre2 (not public).
 
-It may be that the CONDDB you get is not the latest version yet. Check by
-    more CONDDB/v4r0/cmt/requirements | grep 'version v'
-whether the requirements file indicates v4r0.
+To run the detector condition example, you need the following packages,
+as well as the standard Gaudi packages from the release area of Gaudi v16.
+    cd ~/cmtuser
+    getpack Det/DetCond        v6r1
+    getpack Ex/DetCondExample  v6r1
 
 ------------------------------------------------------------------------------
 How to setup the environment and link DetCondExample on lxplus/lxplus7
@@ -88,54 +73,18 @@ How to setup the environment and link DetCondExample on lxplus/lxplus7
 cd ~/cmtuser
 
 # Go to the cmt directory
-cd Ex/DetCondExample/v5r0/cmt
-
-# Setup Oracle or MySQL specific environment
-# -- for Oracle
-source /afs/cern.ch/project/oracle/script/setoraenv.csh -s 10102gcc323
-source $ORACLE_CERN/script/cdevdb9
-# -- for MySQL (with [t]csh)
-set path = ($path /afs/cern.ch/sw/lcg/external/mysql/4.0.13/$CMTCONFIG/bin)
+cd Ex/DetCondExample/v6r1/cmt
 
 # Setup the environment
 # This will setup Gaudi and also execute some implementation-dependent actions
-source ../cmt/setup.csh -tag=$CMTDEB
+source setup.csh -tag=$CMTDEB
 
-# Setup prompts you to check your DB host, user, password and db name. For
-# instance, this is what I use... except the password :-) Since both
-# CondDBOracle and CondDBMySQL are used, you have to do this twice!
-# Default variables ar automatically set for test accounts.
-#-----------
-# On Oracle:
-#-----------
-# - The host (here devdb9) must correspond to an entry in the tnsnames.ora file
-#   Environment variable TNS_ADMIN defines the search path for tnsnames.ora
-# - The user and password are your Oracle account user and password
-# - The name of the DB can be anything: a DB with that name is created and used
-#   I suggest you stick to MYCONDDB_LINUX and MYCONDDB_WIN32 on Linux/Win
-setenv CONDDBORACLE_DBHOST DEVDB9 
-setenv CONDDBORACLE_DBUSER AVALASSI
-setenv CONDDBORACLE_DBPSWD PASSWORD
-setenv CONDDBORACLE_DBNAME MYCONDDB_LINUX
-#-----------
-# On MySQL:
-#-----------
-# - The host is a TCP/IP hostname running a MySQL server.
-# - The user and password are your MySQL account user and password
-# - The name of the DB is a MySQL 'database' on the server (as seen in the
-#   'show databases' or 'use <database>' commands). I suggest you stick 
-#   to test_conddb_linux and test_conddb_win32.
-setenv CONDDBMYSQL_DBHOST lxshare070d
-setenv CONDDBMYSQL_DBUSER avalassi
-setenv CONDDBMYSQL_DBPSWD password
-setenv CONDDBMYSQL_DBNAME test_conddb_linux
-
-# Remove old makefiles and dependencies
-cmt broadcast -select=mycmt '/bin/rm -f *make*'
+# Prepare the cmt dirs
+cmt broadcast cmt config tag=$CMTDEB
 
 # Compile and link
 # This compiles and links both implementations (Oracle and MySQL)
-cmt broadcast -select=mycmt gmake tag=$CMTDEB
+cmt broadcast gmake tag=$CMTDEB
 
 
 ------------------------------------------------------------------------------
@@ -146,7 +95,7 @@ How to run DetCondExample on lxplus/lxplus7 (without debugger)
 cd ~/cmtuser
 
 # Go to the working directory
-cd Ex/DetCondExample/v5r0/options
+cd Ex/DetCondExample/v6r1/options
 
 ============
 (1) testXml
@@ -159,25 +108,13 @@ cd Ex/DetCondExample/v5r0/options
 (2a) fillCondDB
 ================
 
-# To switch from one of the two CondDB implementations to the other, you must:
-setenv CONDDB_implementation <implementation>
+# To switch from one of the two CondDB implementations to the other, you must
+# link the right version of cool.opts 
+ln -s cool.opts.oracle ../options/cool.opts
+# or
+#ln -s cool.opts.mysql ../options/cool.opts
+
 source ../cmt/setup.csh -tag=$CMTDEB
-
-# You may set the debug level for the CONDDB libraries. 
-# Possible debug levels are:
-#    none: no message is printed (default)
-#    prof: only print messages which do not disturb profiling measurements
-#    user: only print messages of "general" interest
-#    devl: also print messages of interest only for the package developer
-#    more: more paranoid messages are printed 
-#    all:  any debug message will be printed
-# MySQL debug level (default is none)
-setenv COND_DB_DEBUG none
-# Oracle debug level (default is none)
-setenv CONDDBORACLE_DEBUG none
-
-# Remove the database (if any) to avoid problems.
-tcsh -f ../cmt/dropDB.csh
 
 # Run the application
 ../$CMTDEB/DetCondExample.exe fillCondDB.opts
@@ -198,6 +135,12 @@ tcsh -f ../cmt/dropDB.csh
 # You can run this as many times as you like and observe how speed changes
 ../$CMTDEB/DetCondExample.exe daqCondDB.opts
 
+####
+#### WARNING:
+####
+####     The following lines are not up to date!
+####
+
 ------------------------------------------------------------------------------
 How to run DetCondExample on lxplus/lxplus7 with the debugger
 ------------------------------------------------------------------------------
@@ -206,7 +149,7 @@ How to run DetCondExample on lxplus/lxplus7 with the debugger
 cd ~/cmtuser
 
 # Go to the working directory
-cd Ex/DetCondExample/v5r0/options
+cd Ex/DetCondExample/v6r1/options
 
 # To use the debugger, link one of the three option files to job.opts
 /bin/rm -f job.opts
@@ -236,7 +179,7 @@ How to cleanup the environment on lxplus/lxplus7
 cd ~/cmtuser
 
 # Go to the cmt directory
-cd Ex/DetCondExample/v5r0/cmt
+cd Ex/DetCondExample/v6r1/cmt
 
 # Remove old makefiles and dependencies
 cmt broadcast -select=mycmt '/bin/rm -f *make*'
@@ -258,7 +201,7 @@ How to browse the Oracle DB using SQL commands on lxplus7 (RedHat7.3)
 cd ~/cmtuser
 
 # Go to the cmt directory
-cd Ex/DetCondExample/v5r0/cmt
+cd Ex/DetCondExample/v6r1/cmt
 
 # Setup the environment
 # Remember to also set the four environment variables to access the DB
@@ -305,7 +248,7 @@ How to setup the environment and link DetCondExample under Windows
 cd I:\cmtuser
 
 # Go to the cmt directory
-cd Ex\DetCondExample\v5r0\cmt
+cd Ex\DetCondExample\v6r1\cmt
 
 # Setup the environment
 setup
@@ -349,7 +292,7 @@ How to run DetCondExample under Windows
 cd I:\cmtuser
 
 # Go to the working directory
-cd Ex\DetCondExample\v5r0\options
+cd Ex\DetCondExample\v6r1\options
 
 ============
 (1) testXml
@@ -410,7 +353,7 @@ How to browse the Oracle database using SQL commands on Windows
 cd I:\cmtuser
 
 # Go to the cmt directory
-cd Ex\DetCondExample\v5r0\cmt
+cd Ex\DetCondExample\v6r1\cmt
 
 # Setup the environment
 # This sets the path to the DB if you modified the relevant scripts as above
@@ -452,7 +395,7 @@ setenv DETCONDEXAMPLE_DBNAME MYCONDDB_WIN32
 # You can run the testCondDB example again on Windows after setting
 set DETCONDEXAMPLE_DBNAME=MYCONDDB_LINUX
 # You can compare the output to that in the ..\job directory
-run DetCondExample testCondDB.opts | sed "s|I:\\\\cmtuser11\\\\Ex\\\\DetCondExample\\\\v5r0\\\\|DETCONDEXAMPLEROOT/|" > log.testCondDB.%CMTCONFIG%.%DETCONDEXAMPLE_DBNAME%
+run DetCondExample testCondDB.opts | sed "s|I:\\\\cmtuser11\\\\Ex\\\\DetCondExample\\\\v6r1\\\\|DETCONDEXAMPLEROOT/|" > log.testCondDB.%CMTCONFIG%.%DETCONDEXAMPLE_DBNAME%
 
 # The result of this test is that there are no significant differences
 # between log.testCondDB.Win32Debug.MYCONDDB_LINUX and [...].Win32Debug, or
@@ -462,20 +405,3 @@ run DetCondExample testCondDB.opts | sed "s|I:\\\\cmtuser11\\\\Ex\\\\DetCondExam
 # - on Linux:   1.50000000e+01
 
 ==============================================================================
-
-------------------------------------------------------------------------------
-How to compile a private (fixed) version of CONDDB_0_2_0
-------------------------------------------------------------------------------
-To obtain a fresh source of CONDDB, follow the instructions on the web page
-
-   http://lcgapp.cern.ch/project/CondDB/snapshot/gettingStartedSCRAM.html
-
-Just before issuing the command "scram b", you need to apply the patch:
-
-# enter the directory ~/myLCG/CONDDB_0_2_0/src/CondDBOracle
-cd ~/myLCG/CONDDB_0_2_0/src/CondDBOracle
-
-# apply the patch
-patch -p0 < ${DETCONDROOT}/doc/CONDDB_0_2_0_CondDBOracle.patch
-
-Now you can compile the library.

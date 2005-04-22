@@ -1,0 +1,8 @@
+//$Id: testCondDB-COLD.opts,v 1.1 2005-04-22 15:17:53 marcocle Exp $
+//==============================================================
+// Job options for DetCondExample test of CondDB with tag=COLD
+//==============================================================
+
+#include "../options/testCondDB.opts"
+
+CondDBAccessSvc.TAG = "COLD";

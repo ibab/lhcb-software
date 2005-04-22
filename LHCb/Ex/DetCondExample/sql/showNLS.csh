@@ -1,4 +1,0 @@
-#!/usr/local/bin/tcsh -f
-# $Id: showNLS.csh,v 1.1 2002-07-25 15:52:10 andreav Exp $
-${ORACLE9_DIR}/bin/sqlplus ${DETCONDEXAMPLE_DBUSER}/${DETCONDEXAMPLE_DBPSWD}@${DETCONDEXAMPLE_DBHOST} @${DETCONDEXAMPLEROOT}/sql/showNLS
-
