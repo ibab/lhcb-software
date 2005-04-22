@@ -4,7 +4,7 @@
 ! Purpose     : Interface to XML Xerces Parser plus some extra services
 !-----------------------------------------------------------------------------
 
-!================= XmlTools v3r5 2005-03-22 ==========================
+!================= XmlTools v3r5 2005-04-22 ==========================
 ! 2005-04-22 - Marco Clemencic
  - Change the behaviour of XmlParserSvc::parseString(): now the returned
    pointer has to be released by hand (needed to improve the memory management)
