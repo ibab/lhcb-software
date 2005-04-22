@@ -1,4 +1,4 @@
-//$Id: PopulateDB.cpp,v 1.12 2005-04-22 15:17:54 marcocle Exp $
+//$Id: PopulateDB.cpp,v 1.13 2005-04-22 15:39:23 marcocle Exp $
 #include <iostream>
 #include <fstream>
 #include <string>
@@ -463,7 +463,12 @@ std::string PopulateDB::i_conditionToXml( const std::string &name, Condition &co
     case IParamSet::INT    : xml << "int"; break;
     default                : xml << "other";
     }
-    xml << "\">" << cond.paramAsString(*i) << "</paramVector>";
+    xml << "\">";
+    std::vector<std::string> p_val = cond.paramVectorAsString(*i);
+    for ( std::vector<std::string>::const_iterator s = p_val.begin(); s != p_val.end() ; ++s ){
+      xml << " " << *s;
+    }
+    xml << "</paramVector>";
   }
 
   // condition close
