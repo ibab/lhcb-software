@@ -1,8 +1,11 @@
-// $Id: SimpleValidity.h,v 1.1 2001-11-18 15:32:45 ibelyaev Exp $
+// $Id: SimpleValidity.h,v 1.2 2005-04-22 13:10:41 marcocle Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
-// $Log: not supported by cvs2svn $ 
+// $Log: not supported by cvs2svn $
+// Revision 1.1  2001/11/18 15:32:45  ibelyaev
+//  update for Logical Assemblies
+// 
 // ============================================================================
 #ifndef DETDESC_SIMPLEVALIDITY_H 
 #define DETDESC_SIMPLEVALIDITY_H 1
@@ -63,26 +66,26 @@ public:
    *  @return true if object valid 
    */
   virtual bool 
-  isValid    (); 
+  isValid    () const; 
   
   /** is the Object valid for a given time?
    *  @param  time  tiemto be checked 
    *  @return true if objetc is valid for given time 
    */
   virtual bool 
-  isValid    ( const ITime&  time ); 
+  isValid    ( const ITime&  time ) const; 
   
   /** since what time the Objest is valid?
    *  @return time "since"
    */
   inline virtual const ITime& 
-  validSince () { return *m_since; }
+  validSince () const { return *m_since; }
   
   /** till  what time the Object is Valid?
    *  @return time "till"
    */
   inline virtual const ITime&
-  validTill  () { return *m_till ; }
+  validTill  () const { return *m_till ; }
   
   /// set the validity range of the Object
   virtual void 
@@ -95,11 +98,6 @@ public:
   /// set the validity time of the Object 
   virtual void 
   setValidityTill   ( const ITime& till  ) ;
-  
-  /** update the validity range of the object 
-   *  (foreseen for "tree-like" structures)
-   */
-  virtual StatusCode updateValidity    () ;
   
 private:
   

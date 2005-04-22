@@ -1,8 +1,11 @@
-// $Id: SimpleValidity.cpp,v 1.3 2003-06-16 13:42:36 sponce Exp $
+// $Id: SimpleValidity.cpp,v 1.4 2005-04-22 13:10:41 marcocle Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.3  2003/06/16 13:42:36  sponce
+// fixes for gcc 3.2 and 3.3
+//
 // Revision 1.2  2002/01/21 14:46:46  sponce
 // Remove all warnings + some bug fixes
 //
@@ -134,7 +137,7 @@ SimpleValidity::~SimpleValidity()
  *  @return true if object valid 
  */
 // ============================================================================
-bool SimpleValidity::isValid    ()
+bool SimpleValidity::isValid    () const
 { return (*m_since) <= (*m_till) ;}
 
 // ============================================================================
@@ -144,7 +147,7 @@ bool SimpleValidity::isValid    ()
  */
 // ============================================================================
 bool SimpleValidity::isValid    
-( const ITime&  time )
+( const ITime&  time ) const
 { return ( (*m_since) <= time ) && ( time <= (*m_till) ) ; }
 
 // ============================================================================
@@ -185,14 +188,6 @@ void SimpleValidity::setValidityTill
   /// deep copy the contents 
   m_till  = new TimePoint( till   );  
 };
-
-// ============================================================================
-/** update the validity range of the object 
- *  (foreseen for "tree-like" structures)
- */
-// ============================================================================
-StatusCode SimpleValidity::updateValidity    () 
-{ return StatusCode::SUCCESS ; }
 
 // ============================================================================
 // The End 

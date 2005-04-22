@@ -1,4 +1,4 @@
-//$Id: ValidDataObject.h,v 1.3 2001-12-14 17:54:41 andreav Exp $
+//$Id: ValidDataObject.h,v 1.4 2005-04-22 13:10:41 marcocle Exp $
 #ifndef DETDESC_VALIDDATAOBJECT_H
 #define DETDESC_VALIDDATAOBJECT_H 1
 
@@ -7,12 +7,12 @@
 // Base classes
 #include "GaudiKernel/DataObject.h"
 #include "GaudiKernel/IValidity.h"
+#include "GaudiKernel/TimePoint.h"
 
 // Unique ID of the class
 #include "DetDesc/CLIDValidDataObject.h"
 
 // Forward declarations
-class ITime;
 class StatusCode;
 
 ///---------------------------------------------------------------------------
@@ -22,6 +22,8 @@ class StatusCode;
 
     @author Andrea Valassi 
     @date February 2001
+    @author Marco Clemencic 
+    @date February 2005
 *///--------------------------------------------------------------------------
 
 class ValidDataObject : public DataObject, 
@@ -67,16 +69,16 @@ class ValidDataObject : public DataObject,
   // Implementation of IValidity
 
   /// Check if the data object has a well defined validity range
-  virtual bool isValid();
+  virtual bool isValid() const ;
 
   /// Check if the data object is valid at the specified time
-  virtual bool isValid( const ITime& t );
+  virtual bool isValid( const ITime& t ) const;
 
   /// Get start of validity
-  virtual const ITime& validSince();
+  virtual const ITime& validSince() const;
 
   /// Get end of validity
-  virtual const ITime& validTill();
+  virtual const ITime& validTill() const;
 
   /// Set validity range
   virtual void setValidity( const ITime& since, const ITime& till );  
@@ -87,18 +89,48 @@ class ValidDataObject : public DataObject,
   /// Set end of validity
   virtual void setValidityTill( const ITime& till );   
   
-  /// Update the validity range (foreseen for tree-like structures)
-  virtual StatusCode updateValidity();
+// ================================================
+// ValidDataObject methods
+// ================================================
+
+  /// Update the current object and all the useds one (children, 
+  /// references, etc) only if needed, of course.
+  /// This method must be reimplemented for more complex objects.
+  virtual StatusCode update();
+
+  /// Possible stata of the update flag
+  enum UpdateModeFlag {
+    DEFAULT,
+    ALWAYS_VALID,
+    FORCE_UPDATE
+  };
+
+  // setters and getters for update mode
+
+  /// Return the update mode:
+  /// ValidDataObject::DEFAULT -> use the actual validity <br>
+  /// ValidDataObject::ALWAYS_VALID -> never update
+  /// ValidDataObject::FORCE_UPDATE -> force an update even if still valid
+  ///                                  (then back to DEFAULT behaviour)
+  virtual const UpdateModeFlag &updateMode() const;
+
+  /// Set the mode for update
+  virtual void setUpdateMode(UpdateModeFlag mode);
+
+  virtual void defaultUpdateMode();
+  virtual void forceUpdateMode();
+  virtual void neverUpdateMode();
  
  private:
 
   // IValidity data
-
   /// Start of validity
-  ITime* m_validSince;
-
+  TimePoint m_validSince;
   /// End of validity
-  ITime* m_validTill;
+  TimePoint m_validUntil;
+  
+  /// Flag to force/inhibit the update regardless of the validity
+  UpdateModeFlag   m_updateMode;
   
 };
 

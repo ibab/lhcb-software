@@ -1,22 +1,22 @@
-//$Id: ValidDataObject.cpp,v 1.5 2003-06-16 13:42:36 sponce Exp $
+//$Id: ValidDataObject.cpp,v 1.6 2005-04-22 13:10:41 marcocle Exp $
 #include <string> 
 
 #include "DetDesc/ValidDataObject.h"
 
 #include "GaudiKernel/TimePoint.h" 
 #include "GaudiKernel/StatusCode.h"
+#include "GaudiKernel/IDataProviderSvc.h"
+#include "GaudiKernel/IRegistry.h"
 
 //---------------------------------------------------------------------------
 
 /// Default constructor 
 ValidDataObject::ValidDataObject()
   : IValidity(), DataObject()
-  , m_validSince ( 0 ) 
-  , m_validTill  ( 0 ) 
-{
-  m_validSince = new TimePoint( time_absolutepast   ) ;
-  m_validTill  = new TimePoint( time_absolutefuture ) ;
-}; 
+  , m_validSince (time_absolutepast)
+  , m_validUntil (time_absolutefuture)
+  , m_updateMode (DEFAULT)
+{}
 
 //---------------------------------------------------------------------------
 
@@ -24,38 +24,20 @@ ValidDataObject::ValidDataObject()
 ValidDataObject::ValidDataObject( const ITime& since, 
 				  const ITime& till  )
   : IValidity(), DataObject()
-  , m_validSince ( 0 ) 
-  , m_validTill  ( 0 ) 
-{
-  m_validSince = new TimePoint( since ) ;
-  m_validTill  = new TimePoint( till  ) ;
-}; 
+  , m_validSince (since)
+  , m_validUntil (till)
+  , m_updateMode (DEFAULT)
+{}
 
 //---------------------------------------------------------------------------
 
 /// Copy constructor
 ValidDataObject::ValidDataObject( ValidDataObject& obj )
-  : IValidity(), DataObject( (DataObject&)obj )
-  , m_validSince ( 0 ) 
-  , m_validTill  ( 0 ) 
-{
-  m_validSince = new TimePoint( obj.validSince() ) ;
-  m_validTill  = new TimePoint( obj.validTill()  ) ;
-}; 
-
-//---------------------------------------------------------------------------
-
-/*
-/// Copy operator (virtual!).
-/// Overloaded from DataObject to point to new TimePoint objects.
-ValidDataObject& ValidDataObject::operator= ( ValidDataObject& obj )
-{
-  DataObject::operator= ( obj );
-  // Call virtual method update to deep copy all contents
-  update( obj );
-  return *this;
-}; 
-*/
+  : DataObject( (DataObject&)obj ), IValidity()
+  , m_validSince (obj.validSince()) 
+  , m_validUntil (obj.validTill())
+  , m_updateMode (obj.updateMode())
+{}
 
 //---------------------------------------------------------------------------
 
@@ -63,49 +45,63 @@ ValidDataObject& ValidDataObject::operator= ( ValidDataObject& obj )
 /// contents, except for the properties of a generic DataObject
 void ValidDataObject::update ( ValidDataObject& obj )
 {
-  delete m_validSince;
-  delete m_validTill;
-  m_validSince = new TimePoint( obj.validSince() ) ;
-  m_validTill  = new TimePoint( obj.validTill()  ) ;
-}; 
+  // copy the validity interval
+  m_validSince = obj.validSince();
+  m_validUntil = obj.validTill();
+
+  // reset the update mode if needed
+  if ( updateMode() == FORCE_UPDATE){
+    setUpdateMode(DEFAULT);
+  }
+
+}
 
 //---------------------------------------------------------------------------
 
 /// Destructor
 ValidDataObject::~ValidDataObject() 
 {
-  delete m_validSince;
-  m_validSince = 0;
-  delete m_validTill;
-  m_validTill = 0;
-};
+}
 
 //---------------------------------------------------------------------------
 
 /// Check if the data object has a well defined validity range
-bool ValidDataObject::isValid ( ) {
+bool ValidDataObject::isValid ( ) const {
   return  validSince() <= validTill();
 };
 
 //---------------------------------------------------------------------------
 
 /// Check if the data object is valid at the specified time
-bool ValidDataObject::isValid ( const ITime& t ) {
-  return validSince() <= t &&  t <= validTill();
+bool ValidDataObject::isValid ( const ITime& t ) const {
+  switch(m_updateMode){
+  case DEFAULT: 
+    return validSince() <= t &&  t < validTill();
+  case ALWAYS_VALID:
+    return true;
+  case FORCE_UPDATE:
+    return false;
+  }
+  // just to make the compiler happy
+  return true;
 };
 
 //---------------------------------------------------------------------------
 
 /// Get start of validity
-const ITime& ValidDataObject::validSince() { 
-  return *m_validSince; 
+const ITime& ValidDataObject::validSince() const {
+  if (m_updateMode == ALWAYS_VALID)
+    return time_absolutepast;
+  return m_validSince; 
 };
 
 //---------------------------------------------------------------------------
 
 /// Get end of validity
-const ITime& ValidDataObject::validTill() { 
-  return *m_validTill;  
+const ITime& ValidDataObject::validTill() const {
+  if (m_updateMode == ALWAYS_VALID)
+    return time_absolutefuture;
+  return m_validUntil;
 };
 
 //---------------------------------------------------------------------------
@@ -122,8 +118,7 @@ void ValidDataObject::setValidity( const ITime& since, const ITime& till )
 /// Set start of validity
 void ValidDataObject::setValiditySince( const ITime& since ) 
 {
-  delete m_validSince;
-  m_validSince = new TimePoint( since );
+  m_validSince = since;
 };
 
 //---------------------------------------------------------------------------
@@ -131,18 +126,38 @@ void ValidDataObject::setValiditySince( const ITime& since )
 /// Set end of validity
 void ValidDataObject::setValidityTill( const ITime& till ) 
 {
-  delete m_validTill;
-  m_validTill = new TimePoint( till );
+  m_validUntil = till;
 };
 
 //---------------------------------------------------------------------------
 
-/// Update the validity range (foreseen for tree-like structures)
-StatusCode ValidDataObject::updateValidity() 
-{
-  return StatusCode::SUCCESS;
-};
+/// Update the object using the data provider
+StatusCode ValidDataObject::update() {
+  IRegistry *pReg = registry();
+  if (pReg) {
+    IDataProviderSvc *pDataProv = pReg->dataSvc();
+    if (pDataProv) {
+      return pDataProv->updateObject(this);
+    }
+  }
+  return StatusCode::FAILURE;
+}
 
 //---------------------------------------------------------------------------
 
-
+// Methods for the update mode
+const ValidDataObject::UpdateModeFlag & ValidDataObject::updateMode() const {
+  return m_updateMode;
+}
+void ValidDataObject::setUpdateMode(UpdateModeFlag mode){
+  m_updateMode = mode;
+}
+void ValidDataObject::defaultUpdateMode(){
+  m_updateMode = DEFAULT;
+}
+void ValidDataObject::forceUpdateMode(){
+  m_updateMode = FORCE_UPDATE;
+}
+void ValidDataObject::neverUpdateMode(){
+  m_updateMode = ALWAYS_VALID;
+}

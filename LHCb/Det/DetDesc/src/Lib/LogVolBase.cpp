@@ -1,4 +1,4 @@
-// $Id: LogVolBase.cpp,v 1.12 2003-10-09 13:43:07 cattanem Exp $
+// $Id: LogVolBase.cpp,v 1.13 2005-04-22 13:10:41 marcocle Exp $
 
 // GaudiKernel
 #include "GaudiKernel/System.h"
@@ -12,7 +12,6 @@
 #include "DetDesc/VolumeIntersectionIntervals.h"
 // local 
 #include "PVolume.h"
-#include "SimpleValidity.h"
 
 // ============================================================================
 /** @file LogVolBase.cpp
@@ -21,6 +20,7 @@
  *
  *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
  *  @author Sebastien Ponce
+ *  @author Marco Clemencic
  */
 // ============================================================================
 
@@ -41,16 +41,13 @@ unsigned long LogVolBase::s_volumeCounter = 0 ;
 LogVolBase::LogVolBase( const std::string& /*name*/    , 
                         const std::string& sensitivity ,
                         const std::string& magnetic    )
-  : DataObject   (             )
+  : ValidDataObject (             )
   , m_pvolumes   (             )
   , m_surfaces   (             ) 
   , m_sdName     ( sensitivity ) 
   , m_mfName     ( magnetic    )
-  , m_validity   ( 0           )
   , m_services   ( 0           )
 {
-  /// create validity object 
-  m_validity = new SimpleValidity();
   // get services
   m_services = DetDesc::services();
   /// add volume counter 
@@ -72,16 +69,13 @@ LogVolBase::LogVolBase( const std::string& /*name*/    ,
                         const ITime&       validTill   , 
                         const std::string& sensitivity ,
                         const std::string& magnetic    )
-  : DataObject (             )
+  : ValidDataObject ( validSince, validTill )
   , m_pvolumes (             )
   , m_surfaces (             ) 
   , m_sdName   ( sensitivity ) 
   , m_mfName   ( magnetic    )
-  , m_validity ( 0           )
   , m_services ( 0           )
 {
-  /// create validity object 
-  m_validity = new SimpleValidity( validSince , validTill );
   // get services
   m_services = DetDesc::services();
   /// add volume counter 
@@ -101,19 +95,13 @@ LogVolBase::LogVolBase( const std::string& /*name*/    ,
                         const IValidity  & validity    ,
                         const std::string& sensitivity ,
                         const std::string& magnetic    )
-  : DataObject (             )
+  : ValidDataObject ( validity.validSince(), validity.validTill() )
   , m_pvolumes (             )
   , m_surfaces (             ) 
   , m_sdName   ( sensitivity ) 
   , m_mfName   ( magnetic    )
-  , m_validity ( 0           )
   , m_services ( 0           )
 {
-  /// create validity object
-  /// huh! ugly lines??? I think so .. 
-  IValidity& val = const_cast<IValidity&> (validity) ;
-  m_validity     = new SimpleValidity( val.validSince() , 
-                                       val.validTill() );
   // get services
   m_services = DetDesc::services();
   /// add volume counter 
@@ -128,8 +116,6 @@ LogVolBase::~LogVolBase()
 { 
   /// decrease  volume counter 
   --s_volumeCounter ;
-  // release validity
-  if( 0 != m_validity ) { delete m_validity ; m_validity = 0 ; }
   // release physical volumes
   for (PVolumes::const_iterator ipv = m_pvolumes.begin();
        ipv != m_pvolumes.end() ; ++ipv ) 

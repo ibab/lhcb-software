@@ -1,11 +1,10 @@
-// $Id: LogVolBase.h,v 1.11 2005-01-25 14:09:19 cattanem Exp $ 
+// $Id: LogVolBase.h,v 1.12 2005-04-22 13:10:41 marcocle Exp $ 
 #ifndef     DETDESC_LOGVOLBASE_H
 #define     DETDESC_LOGVOLBASE_H
 /// STD and STL includes
 #include <functional>
 #include <algorithm> 
 /// GaudiKernel includes 
-#include "GaudiKernel/DataObject.h"
 #include "GaudiKernel/IValidity.h"
 #include "GaudiKernel/SmartRefVector.h" 
 #include "GaudiKernel/IRegistry.h"
@@ -16,6 +15,7 @@
 #include "DetDesc/IPVolume_predicates.h" 
 #include "DetDesc/LogVolumeException.h"
 #include "DetDesc/Surface.h"
+#include "DetDesc/ValidDataObject.h"
 /// CLHEP includes 
 #include "CLHEP/Geometry/Transform3D.h"
 #include "CLHEP/Vector/Rotation.h"
@@ -32,12 +32,12 @@ class IMessageSvc;
  * 
  *  @author  Vanya Belyaev Ivan.Belyaev 
  *  @author  Sebastien Ponce
+ *  @author  Marco Clemencic
  */
 
 class LogVolBase: 
   public virtual ILVolume   , 
-  public virtual IValidity  ,
-  public         DataObject 
+  public         ValidDataObject 
 {
   
 protected:
@@ -338,37 +338,6 @@ public:
     const std::string&    LVnameForPV               ,
     const HepTransform3D& Transform                 );
   
-  
-  /** IValidity interface implementation
-   */
-  virtual bool         isValid          ()
-  { return m_validity->isValid()         ; }
-  
-  virtual bool         isValid          
-  ( const ITime& time )  
-  { return m_validity->isValid( time )   ; }
-  
-  virtual const ITime& validSince       ()
-  { return m_validity->validSince()      ; }
-  
-  virtual const ITime& validTill        ()
-  { return m_validity->validTill ()      ; }
-  
-  virtual void         setValidity      
-  ( const ITime& t1 , const ITime& t2 )  
-  { m_validity->setValidity( t1 , t2 )   ; }
-  
-  virtual void         setValiditySince 
-  ( const ITime& time )  
-  { m_validity->setValiditySince( time ) ; }
-  
-  virtual void         setValidityTill  
-  ( const ITime& time )  
-  { m_validity->setValidityTill ( time ) ; }
-  
-  virtual StatusCode   updateValidity   ()
-  { return m_validity->updateValidity()  ; }
-  
 protected: 
   
   /** create EMPTY daughter physical volume 
@@ -500,8 +469,6 @@ private:
   std::string           m_sdName        ;
   /// name of magnetic field source 
   std::string           m_mfName        ;
-  /// validity 
-  IValidity*            m_validity      ;
   /// static  volume counter 
   static  unsigned long s_volumeCounter ;
   /// reference to services
