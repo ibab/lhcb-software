@@ -4,9 +4,14 @@ Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction packages.
          This project groups together all the reconstruction packages needed
          by one or more LHCb applications. 
-         It supersedes BrunelSys and large parts of LbcomSys. 
+         It supersedes BrunelSys and large parts of LbcomSys and DaVinciSys. 
 
 </PRE><H1><A NAME=v1r0>2005-04-22 RecSys v1r0</A></H1><PRE>
 This version uses Gaudi v16r3, LHCb v18r3 (also CLHEP 1.9, ROOT 4.0). 
-It contains the same packages as BrunelSys v26r3 and LbComSys v1r3
+It contains the same package versions as in BrunelSys v26r3, LbComSys v1r3 
+and DaVinciSys v13r1, except for:
+
+. TrgVelo v7r3: contains offline tuning for Brunel v26r3
+. TrgSys  v2r3: updated to use TrgVelo v7r3
+
 </PRE>

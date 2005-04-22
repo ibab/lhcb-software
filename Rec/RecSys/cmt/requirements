@@ -26,7 +26,7 @@ use TrCleanEx           v2r11	Tr
 #use TrKShort		v1r5	Tr
 
 # Trg reconstruction
-use TrgSys		v2r2	Trg
+use TrgSys		v2r3	Trg
 use TrgBrunel           v1r1    Trg
 use TrgCalo		v1r0p2	Trg
 use TrgChecker		v7r1	Trg
