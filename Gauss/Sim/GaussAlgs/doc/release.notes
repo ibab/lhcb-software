@@ -1,10 +1,17 @@
 ! -----------------------------------------------------------------------------
 ! Package     : Sim/GaussAlgs
-! Purpose     : 
+! Purpose     : General Gauss algorithms
+! Responsible : G.Corti
 ! -----------------------------------------------------------------------------
 
+!============================ GaussAlgs v1r6 ==============================
+! 2005-04-22 - Gloria Corti
+ - src/GaussInitialisation.{h,cpp}
+   src/GaussAlgs_load.cpp
+   . remove obsolete file from library, replaced by LbAppInit in LHCbKernel
+
 ! 2005-04-20 - Gloria Corti
- - src/src/GiGaCheckEventStatus.{h,cpp}
+ - src/GiGaCheckEventStatus.{h,cpp}
    . new algorithm that check if G4Event has been aborted and setFilterPassed
      to false if that is the case. Allows to skip aborted events in successive
      filtering stages 
