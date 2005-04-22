@@ -5,6 +5,19 @@
 ! Purpose     : LHCb OO kernel packages
 !-----------------------------------------------------------------------------
 
+!======================= LHCbSys v18r4 2005-04-22 =======================
+! 2005-04-22 - Marco Cattaneo
+ - Packages added:    STTools v1r1
+ - Packages modified: DetSys v6r5, DetDescCnv v2r4, XmlTools v3r5
+
+ - In STTools v1r1:
+   . New package, to break coupling between Rec packages and ITAlgorithms
+   . Initially contains STSignalToNoiseTool, renamed from ITSignalToNoiseTool
+
+ - In DetDescCnv v2r4, XmlTools v3r5
+   . Pointer returned by XmlParserSvc::parseString() must now be released by
+     caller. XmlGenericCnv deletes the DOMDocument returned in this way.
+
 !======================= LHCbSys v18r3 2005-04-21 =======================
 ! 2005-04-21 - Marco Cattaneo
  - Move to Gaudi v16r3

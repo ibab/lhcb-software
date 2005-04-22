@@ -1,5 +1,5 @@
 package LHCbSys
-version v18r3
+version v18r4
 
 branches doc cmt
 
@@ -28,11 +28,11 @@ use L0MuonKernel	v3r0p1	L0
 use ProcessorKernel	v1r0p1  L0
 
 # Detector description
-use DetSys		v6r4	Det
+use DetSys		v6r5	Det
 use VeloDet        	v9r4	Det
 use DetDesc        	v14r4	Det
-use DetDescCnv        	v2r3p1	Det
-use XmlTools        	v3r4	Tools
+use DetDescCnv        	v2r4	Det
+use XmlTools        	v3r5	Tools
 use OTDet          	v5r4p1	Det
 use CaloDet        	v6r8	Det
 use CaloDetXmlCnv	v2r3p1	Det
@@ -90,6 +90,7 @@ use MCTools		v1r13	Phys
 use CaloInterfaces	v4r3	Calo
 use CaloUtils		v4r8	Calo
 use RichRecBase		v1r15p1 Rich
+use STTools		v1r1	IT
 
 # LHCb  Examples
 use DetDescChecks	v2r2	Det
