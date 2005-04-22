@@ -4,6 +4,12 @@
 ! Purpose     : Interface to XML Xerces Parser plus some extra services
 !-----------------------------------------------------------------------------
 
+!================= XmlTools v3r5 2005-03-22 ==========================
+! 2005-04-22 - Marco Clemencic
+ - Change the behaviour of XmlParserSvc::parseString(): now the returned
+   pointer has to be released by hand (needed to improve the memory management)
+   To avoid a memory leak, this version should be used with DetDescCnv >= v2r4.
+
 !================= XmlTools v3r4 2005-03-18 ==========================
 ! 2005-03-18 - Marco Cattaneo
  - Fix some doxygen warnings

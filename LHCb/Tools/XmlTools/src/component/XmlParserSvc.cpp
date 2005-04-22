@@ -1,4 +1,4 @@
-// $Id: XmlParserSvc.cpp,v 1.6 2005-03-18 14:52:34 cattanem Exp $
+// $Id: XmlParserSvc.cpp,v 1.7 2005-04-22 13:31:18 marcocle Exp $
 
 // Include Files
 #include <limits.h>
@@ -138,9 +138,9 @@ xercesc::DOMDocument* XmlParserSvc::parseString (std::string source) {
     MsgStream log (msgSvc(), "XmlParserSvc");
     log << MSG::DEBUG << "parsing xml string..." << endreq;
     // returns the parsed document
-    return m_parser->getDocument();
+    return m_parser->adoptDocument();
   }
-  // no way to parse the file, returns an empty document
+  // no way to parse the string, returns an empty document
   return 0;
 }
 

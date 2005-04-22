@@ -1,4 +1,4 @@
-// $Id: XmlParserSvc.h,v 1.4 2004-07-21 08:01:50 cattanem Exp $
+// $Id: XmlParserSvc.h,v 1.5 2005-04-22 13:31:18 marcocle Exp $
 #ifndef DETDESCCNV_XMLPARSERSVC_H
 #define DETDESCCNV_XMLPARSERSVC_H
 
@@ -22,6 +22,7 @@ template <class TYPE> class SvcFactory;
  * some caching.
  *
  * @author Sebastien Ponce
+ * @author Marco Clemencic
  */
 class XmlParserSvc : public Service,
                      virtual public IXmlParserSvc,
@@ -70,6 +71,7 @@ public:
    * document.
    * @param source the string to parse
    * @return the document issued from the parsing
+   * @warning The returned document should be freed by the user (with xercesc::DOMDocument::release()).
    */
   virtual xercesc::DOMDocument* parseString (std::string source);
 

@@ -1,4 +1,4 @@
-// $Id: IXmlParserSvc.h,v 1.3 2003-04-25 08:53:56 sponce Exp $
+// $Id: IXmlParserSvc.h,v 1.4 2005-04-22 13:31:18 marcocle Exp $
 
 #ifndef DETDESCCNV_IXMLPARSERSVC_H
 #define DETDESCCNV_IXMLPARSERSVC_H
@@ -17,6 +17,7 @@ static const InterfaceID IID_IXmlParserSvc(131, 1 , 0);
  *  this interface defines a DOM XmlParser service
  *
  *  @author Sebastien Ponce
+ *  @author Marco Clemencic
  */
 
 class IXmlParserSvc : virtual public IInterface {
@@ -39,6 +40,7 @@ class IXmlParserSvc : virtual public IInterface {
    * document.
    * @param source the string to parse
    * @return the document issued from the parsing
+   * @warning The returned document should be freed by the user (with xercesc::DOMDocument::release()).
    */
   virtual xercesc::DOMDocument* parseString (std::string source) = 0;
 
