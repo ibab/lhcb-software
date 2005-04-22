@@ -7,7 +7,7 @@ branches doc cmt
 # LHCb packages used by all applications
 #===============================================================
 
-use LHCb		v18r3
+use LHCb		v18r4
 
 use GaudiConf		v9r1
 
