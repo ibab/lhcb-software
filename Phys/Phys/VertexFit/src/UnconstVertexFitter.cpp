@@ -1,4 +1,4 @@
-// $Id: UnconstVertexFitter.cpp,v 1.6 2005-02-21 09:58:22 pkoppenb Exp $
+// $Id: UnconstVertexFitter.cpp,v 1.7 2005-04-25 13:52:54 pkoppenb Exp $
 // Include files
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h"
@@ -32,8 +32,8 @@
 //  Author     : S. Amato  
 //
 //
-// Modified by: Luis Fernandez, 07/12/2004 
-// - fit with neutral(s) with origin
+// Modified by: Luis Fernandez, 07/12/2004, reviewed 20/04/2005
+//              special treatment for gammas
 //
 //--------------------------------------------------------------------
 
@@ -51,18 +51,17 @@ UnconstVertexFitter::UnconstVertexFitter(const std::string& type,
                                          const std::string& name, 
                                          const IInterface* parent) 
   : GaudiTool( type, name, parent )
-    , m_pTransporter(0)
-    , m_pPhotonParams(0) 
-    , m_gammaID(22){
-
+  , m_pTransporter(0)
+  , m_pPhotonParams(0) 
+  , m_gammaID(22){
+  
   declareInterface<IVertexFitter>(this);
-
+  
   declareProperty("Transporter", m_transporterType = "CombinedTransporter");
-
   declareProperty("PhotonParamsType", m_PhotonParamsType = "PhotonParameters");
-  declareProperty ("ScaleFactor", m_scale = 2.0); // for cov matrix of neutrals with origin
+  declareProperty("ScaleFactor", m_scale = 2.0); 
+  declareProperty("UseDaughters", m_useDaughters = true);
 }
-
 
 
 //==================================================================
@@ -127,209 +126,388 @@ StatusCode UnconstVertexFitter::fitVertex( const ParticleVector& pList,
 
   debug() << "Hello From Vertex Fitter With Daughters" << endmsg;
 
-  if (pList.size() < 2) {
-    info() << "Particle Vector size is less than 2" << endmsg;   
+  int npList = pList.size();
+  if(npList < 2) {
+    info() << "Original Particle Vector size is less than 2" << endmsg;   
     return StatusCode::FAILURE;
   }
-  
-  // Split vector in two lists:
-  // charged tracks, or composite particles with an endVertex (including neutrals, gammas from e+e-)
-  ParticleVector fromChargedOrResoList;
-  // neutrals with origin and no endVertex: gammas
-  ParticleVector fromNeutralWithOriList;
-  // Count number of resonances not to refit when one only needs to add gammas
-  int nResonances = splitIntoNeutralsAndCharged(pList,fromChargedOrResoList,fromNeutralWithOriList);
-  if (nResonances<0) return StatusCode::FAILURE;
-  
-  // The vertex without neutrals at the beginning
-  Vertex fromChargedOrResoVtx ;
-
-  // Do not refit if only *one* composite particle and neutrals with origin 
-  // (e.g. B_s0 -> (phi(1020) -> K+ K-) gamma)
-  // special case of only one resonance and neutrals with origin
-  bool special = false ;  
-  if ((nResonances == 1) && (!fromNeutralWithOriList.empty())){
-    Vertex* vp = singleResonanceVertex(pList); 
-    if (vp){
-      special = true;
-      fromChargedOrResoVtx = *vp;
-    }
-  } // special case of only one resonance and neutrals with origin
-
-  // If not the special case of only one resonance and neutrals with origin
-  // Fit the charged tracks and resonances first
-  // Vertex from charged tracks and resonances
-  if(!special){
-    debug() << "Will fit the charged tracks and resonances" << endmsg;
-    StatusCode sc = doFitVertex(fromChargedOrResoList,fromChargedOrResoVtx);
-    if (!sc) return StatusCode::FAILURE;
+  else{
+    debug() << "Original Particle Vector size is " << npList << endmsg;   
   }
   
-  // If no neutrals
-  if (fromNeutralWithOriList.empty()){
-    debug() << "No neutrals" << endmsg;    
+  // All the gammas with an origin, including gammas from resonances
+  // such as gammas from pi0
+  ParticleVector gammasToAdd;
+  // Particles to use in the fit: final states from resonances or stable composites
+  ParticleVector partsToFit;
+  
+  // Count how many composites not of the type X -> nGammas:
+  // ->  if only one and gamma(s), do not refit, but just add the gamma(s)
+  int nCompositesNotToNGammas = 0;
 
-    // Add products to vertex, from original particle list not to destroy already existing resonances
-    for (ParticleVector::const_iterator iterP = pList.begin(); iterP != pList.end(); iterP++) {
-      fromChargedOrResoVtx.addToProducts(*iterP);
-    }
-
-    // Assignment operator: the original product particles are kept
-    myVertex = fromChargedOrResoVtx;
-
-  // Now add neutrals
-  } else{
-    StatusCode sc = addNeutrals(fromNeutralWithOriList,fromChargedOrResoList,fromChargedOrResoVtx);
-
-    // Refit with the neutrals
-    info() << "Refit vertex with neutrals" << endmsg;
-    sc = doFitVertex(fromChargedOrResoList,myVertex);
-    if (!sc ) return StatusCode::FAILURE;
+  // Loop of input particles
+  for(ParticleVector::const_iterator iPart = pList.begin(); iPart != pList.end(); ++iPart){  
     
+    // The pointer should exist, no protection
+    Particle* part = *iPart;
+    
+    int partID = part->particleID().pid();
+    debug() << "Considering input particle ID " << partID << endmsg;
+    
+    // Gammas with origin
+    if(part->origin() && m_gammaID == partID){
+      debug() << " input is a gamma with origin" << endmsg;
+      // Add it to gammas list
+      gammasToAdd.push_back(part);
+    }
+    // Resonances with an endVertex
+    else if(m_useDaughters && part->isResonance() && part->endVertex()){
+      debug() << " input is a resonance, will find all its final states or long-lived composites descendants" << endmsg; 
+
+      // Get the final states (particles with an origin) and the long-lived daughters of this resonance
+      ParticleVector productsForFit;
+      StatusCode scFS = getProductsForFit(part, productsForFit);
+      if (!scFS){
+        fatal() << "Failed in getProductsForFit" << endmsg;
+        return StatusCode::FAILURE;
+      }
+      debug() << "  this resonance has " << productsForFit.size() 
+              << " final states or long-lived composites in its decay tree" << endmsg;
+      
+      int ng = 0; // number of final states that are gammas
+      int ne = 0; // number of final state or long-lived composites that are not gammas
+      
+      // Now separate gammas and the rest
+      for(ParticleVector::iterator iProd = productsForFit.begin(); iProd != productsForFit.end(); ++iProd){  
+        
+        // All the final states have an origin or the long-lived composites
+        Particle* state = *iProd;
+        
+        verbose() << "    resonance's descendant final state or long-lived composite ID " <<state->particleID().pid() << endmsg;  
+
+        // Gammas with origin from the resonance
+        if(m_gammaID == state->particleID().pid()){
+          ng++;
+          // Add it to gammas list
+          gammasToAdd.push_back(state);
+        }
+        // Else with origin but not gammas, or long-lived composites from the resonance
+        else{
+          ne++;
+          // Add it to the particles to use for fit
+          partsToFit.push_back(state);
+        }
+      } // iProd
+
+      if(ng>0 && ne == 0) debug() << "  this resonance only decays to " << ng << " gamma(s) with origin" << endmsg;
+      else if(ng>0 && ne !=0) debug() << "  this resonance has " << ng << " gamma(s) with origin and " 
+                                      << ne << " particles with origin or long-lived composites that are not gammas"
+                                      << endmsg;
+      else debug() << "  this resonance has " << ne 
+                   << " particles with origin or long-lived composites that are not gammas" << endmsg;
+
+      // Increment counter
+      if( !(ng>0 && ne == 0) ){
+        nCompositesNotToNGammas++;
+      }
+    }
+    // Long-lived composites with an endVertex
+    else if(m_useDaughters && !(part->isResonance()) && part->endVertex()){
+      debug() << " input is a long-lived composite" << endmsg;
+      // Add it to the particles to use for fit
+      partsToFit.push_back(part);
+      // Increment counter
+      nCompositesNotToNGammas++;
+    }
+    // All the other cases: charged particles with origin, ...
+    else{
+      
+      if(m_useDaughters){
+        debug() << " input is not a gamma and has an origin" << endmsg; 
+      }
+      else{
+        debug() << " input is not a gamma, and not using daughters" << endmsg; 
+      }
+      
+     // Add it to the particles to use for fit
+     partsToFit.push_back(part);
+    }
+  } // iParts
+  
+  // Number of particles to be used for the vertex
+  int nPartsToFit = partsToFit.size();
+   
+  // Number of gammas to be added to the vertex
+  int nGammasToAdd = gammasToAdd.size();
+  
+  // Check whether we have enough particles for the fit or to add gammas. Cases:
+  // a) - one composite and gammas: just add them to the existing vertex
+  //    - only one composite that does not decay to nGamma: just add them to the existing vertex
+  // b) - not enough particles
+  // c) - at least two particle to consider for the fit, and maybe gammas to add
+
+  // In some cases we don't want to refit the vertex to save time
+  bool noRefit = false;
+  
+  // Check this one first!
+  if(nCompositesNotToNGammas == 1 && nGammasToAdd > 0){
+    debug() << "Special case: won't refit vertex but re-evaluate " 
+            << nGammasToAdd << " gamma(s) to the existing vertex" << endmsg;
+    // Do not refit the vertex
+    noRefit = true;
+  }
+  else if ((nPartsToFit == 0) || (nPartsToFit == 1)){
+
+    // fatal() << "Not enough particles to fit!" << endmsg;
+    // return StatusCode::FAILURE;
+
+    // *TEMPORARY*
+    // We should not try to fit only gammas ...
+    Warning("Not enough particles to fit! Trying to fit only gammas!");
+    // Dirty fix for some channels trying to fit e.g. pi0 -> gamma gamma
+    debug() << "Will consider " << nGammasToAdd 
+            << " gammas for fit assuming they have already been moved to some vertex" << endmsg;
+    StatusCode sc = doFitVertex(gammasToAdd, myVertex);
+    if(!sc) return StatusCode::FAILURE;        
+
     // Add products to vertex, from original particle list not to destroy already existing resonances
-    for(ParticleVector::const_iterator iterP = pList.begin(); iterP != pList.end(); iterP++) {
+    for(ParticleVector::const_iterator iterP = pList.begin(); iterP != pList.end(); ++iterP){
+      debug() << " adding to vertex products particle from original list with ID " << (*iterP)->particleID().pid() << endmsg;
+      // Add the product from the original list
       myVertex.addToProducts(*iterP);
     }
-  } // else neutrals
 
-
-  //------------------------------------------------------------------------------------  
-  debug() << "Returning vertex " << myVertex.position() << " with error " 
-          <<  myVertex.positionErr() << " size: " << myVertex.products().size() << endmsg ;  
-
-  return StatusCode::SUCCESS;
-
-}
-
-//==================================================================
-// Add neutrals
-//==================================================================
-StatusCode UnconstVertexFitter::addNeutrals( const ParticleVector& fromNeutralWithOriList, 
-                                             ParticleVector& fromChargedOrResoList, 
-                                             Vertex& fromChargedOrResoVtx){
-  info() << "Will add " << fromNeutralWithOriList.size() << " neutral(s)" << endmsg;
-  
-  // Re-evaluate the photon(s) parameters at the vertex from charged tracks or resonance
-  
-  for (ParticleVector::const_iterator iNeutral = fromNeutralWithOriList.begin(); 
-       iNeutral != fromNeutralWithOriList.end(); 
-       iNeutral++) {
+    debug() << "Returning vertex size: " << myVertex.products().size() << " with chi2: "
+            << myVertex.chi2() << endmsg;
+    debug() << "Returned vertex position: " << myVertex.position() << endmsg;
+    debug() << "Returned vertex error: " <<  myVertex.positionErr() << endmsg;
     
-  // If offline photon with origin
-    
-    const ProtoParticle* proto = dynamic_cast<const ProtoParticle*>((*iNeutral)->origin());
-    
-    if (proto){
-      
-      info() << "Offline neutral ID " << (*iNeutral)->particleID().pid() 
-             << " and momentum before re-evaluation " << (*iNeutral)->momentum() << endmsg;
-      
-      StatusCode sc = m_pPhotonParams->process((*iNeutral), &fromChargedOrResoVtx);
-      if (!sc ) return StatusCode::FAILURE;      
-    
-      debug() << "Offline neutral ID " << (*iNeutral)->particleID().pid() 
-             << " and momentum after re-evaluation " << (*iNeutral)->momentum() << endmsg;
-    } else{ // online *TEMPORARY*
-      
-      Warning("Using temporary hack - waiting for PhotonParams tool");
-      debug() << "Online neutral ID " << (*iNeutral)->particleID().pid() 
-             << " and momentum " << (*iNeutral)->momentum() << endmsg;
-      
-      // Vertex determined with charged tracks:
-      const HepPoint3D& Vtx = fromChargedOrResoVtx.position();      
-      // Covariance matrix, determined with charged tracks:
-      const HepSymMatrix& VtxCov = fromChargedOrResoVtx.positionErr();      
-      // modify the photon parameters
-      // Update Point at which the momentum is given in LHCb reference frame
-      (*iNeutral)->setPointOnTrack(Vtx);
-      // Update Covariance matrix relative to point at which the momentum is given (3x3)
-      (*iNeutral)->setPointOnTrackErr(m_scale * VtxCov);
-      
-    }
-    
-    // Add this neutral to all the particles
-    fromChargedOrResoList.push_back(*iNeutral);      
+    return StatusCode::SUCCESS;
+    // End *TEMPORARY*
   }
+  else{
+    debug() << "Number of non-gammas descendants that will be in the vertex: " << nPartsToFit << endmsg;    
+    debug() << "Number of gammas descendants that will be re-evaluated at the vertex: " << nGammasToAdd << endmsg;    
+  }
+
+  // Now we can fit and/or/not add gammas
   
-  debug() << "After adding neutrals total number of particles " << fromChargedOrResoList.size() << endmsg;
+  // The vertex: either obtained from the fit or already existing for the special case
+  Vertex vtx;
+  
+  // Get the existing vertex in case of no refit, excluding X->n gammas
+  if(noRefit){
+    Vertex* vtemp = singleCompositeVertex(pList); 
+    if(vtemp) vtx = *vtemp;
+    else{
+      fatal() << "No existing vertex found!" << endmsg;
+      return StatusCode::FAILURE;
+    }
+  }
+  // Else not using existing vertex
+  // Fit the particles to consider
+  else{
+    debug() << "Will consider " << nPartsToFit << " particles for fit" << endmsg;
+    StatusCode sc = doFitVertex(partsToFit, vtx);
+    if(!sc) return StatusCode::FAILURE;    
+  }
+
+  // If no gammas to add
+  if(nGammasToAdd == 0){
+    debug() << "No gammas to add, will add original particles to vertex" << endmsg;  
+
+    // Add products to vertex, from original particle list not to destroy already existing resonances
+    for(ParticleVector::const_iterator iterP = pList.begin(); iterP != pList.end(); ++iterP){
+      debug() << " adding to vertex products particle from original list with ID " << (*iterP)->particleID().pid() << endmsg;
+      // Add the product from the original list
+      vtx.addToProducts(*iterP);
+    }
+    // Assignment operator: the original product particles are kept
+    myVertex = vtx;
+
+  } // if no gammas to add
+  // Now add gammas
+  else{
+
+    // Just add gammas:
+    StatusCode sc = moveGammas(gammasToAdd, vtx);
+    if(!sc) return StatusCode::FAILURE;
+
+    // Here the vertex vtx already has some products since no refit
+    // -> set the different parameters by hand, products added later
+    myVertex.setPosition(vtx.position());
+    myVertex.setChi2(vtx.chi2());
+    myVertex.setPositionErr(vtx.positionErr());
+    myVertex.setNDoF(vtx.nDoF());
+    myVertex.setType(Vertex::Decay);
+
+    // Warning: in case if one of the resonances to make the vertex is X -> ngammas, 
+    // its momentum is *not* recomputed with the transported photons
+    // X -> ngammas are not moved to the mother vertex
+    debug() << "After moving gammas, will add original particles to vertex" << endmsg;  
+
+    // Add products to vertex, from original particle list not to destroy already existing resonances
+    for(ParticleVector::const_iterator iterP = pList.begin(); iterP != pList.end(); ++iterP){
+      debug() << " adding to vertex products particle from original list with ID " << (*iterP)->particleID().pid() << endmsg;
+      // Add the product from the original list
+      myVertex.addToProducts(*iterP);
+    } // for iterP
+  } // else neutrals
+  
+  debug() << "Returning vertex size: " << myVertex.products().size() << " with chi2: "
+          << myVertex.chi2() << endmsg;
+  debug() << "Returned vertex position: " << myVertex.position() << endmsg;
+  debug() << "Returned vertex error: " <<  myVertex.positionErr() << endmsg;
+
   return StatusCode::SUCCESS;
+
 }
 
-    
 //==================================================================
-// Do not refit if only *one* composite particle and neutrals with origin (e.g. B_s0 -> (phi(1020) -> K+ K-) gamma)
-// special case of only one resonance and neutrals with origin
+// Get recursively all the final states (with origin) or long-lived 
+// daughters from the resonances in the original list
 //==================================================================
-Vertex* UnconstVertexFitter::singleResonanceVertex(const ParticleVector& pList){
-  debug() << "Only one resonance and neutral(s), won't refit the resonance" << endmsg;
-  // Get the resonance vertex
+StatusCode UnconstVertexFitter::getProductsForFit(Particle*& composite, ParticleVector& productsForFit){
+
+  // This should never be the case:
+  if(!composite->endVertex()){
+    return StatusCode::FAILURE;
+  }
+
+  ParticleVector source;
+  ParticleVector target;
+ 
+  source.push_back(composite);
+ 
+  // The first iteration is for the composite particle, which has an endVertex
+  do {
+    target.clear();
+    for(Particles::iterator isource = source.begin(); isource != source.end(); ++isource){
+      
+      // A composite which is a resonance
+      if((*isource)->endVertex() && (*isource)->isResonance()){
+ 
+        ParticleVector tmp;
+        SmartRefVector<Particle>::iterator it;
+        for(it = (*isource)->endVertex()->products().begin();
+            it != (*isource)->endVertex()->products().end();
+            ++it){
+          tmp.push_back(*it);
+        }
+        
+        Particles::iterator itmp;
+        for(itmp = tmp.begin(); itmp!=tmp.end(); ++itmp){
+          target.push_back(*itmp);
+ 
+          // Add the final states with origin
+          if((*itmp)->origin()) productsForFit.push_back(*itmp);
+       }
+      } // if endVertex
+      // else a stable composite: use it without going down (e.g. the D0 for D*(D0 pi) pi)
+      else if((*isource)->endVertex() && !(*isource)->isResonance()){
+        // Add the long-lived composite
+        productsForFit.push_back(*isource);
+      }
+   } // isource
+    source = target;
+  } while(target.size() > 0);
+
+  return StatusCode::SUCCESS;  
+}
+
+
+//==================================================================
+// Get the reference vertex for the case of one composite and gammas
+//==================================================================
+Vertex* UnconstVertexFitter::singleCompositeVertex(const ParticleVector& pList){
+
+  // Get the composite vertex
   for(ParticleVector::const_iterator iPart = pList.begin(); iPart != pList.end(); iPart++) {    
-    int partID = (*iPart)->particleID().pid();    
-    if(!((*iPart)->origin() && m_gammaID == partID)){// not neutrals with origin       
-      if ((*iPart)->isResonance()){
-        Vertex* fromChargedOrResoVtx = (*iPart)->endVertex();
-        if (fromChargedOrResoVtx){
-          debug() << "Resonance decay vertex position " << fromChargedOrResoVtx->position() 
-                  << " , and chi2 " << fromChargedOrResoVtx->chi2() << endmsg;
-          return fromChargedOrResoVtx;
-        } // if resonanceVtx
-      } // if resonance
-    } // if not neutrals with origin
+
+    Particle* composite = *iPart;
+
+    // Redundant checks
+    // Should be a composite
+    if(!composite->endVertex()) continue;
+    // Should not have an origin
+    if(composite->origin()) continue;
+
+    Vertex* V = composite->endVertex();
+
+    //Should not only decay to gammas    
+    unsigned int ngammas = 0;
+    SmartRefVector<Particle>::iterator iProducts;
+    for(iProducts = V->products().begin(); iProducts != V->products().end(); ++iProducts){
+      if((*iProducts)->origin() && m_gammaID == (*iProducts)->particleID().pid()) ngammas++;
+    } // iProducts
+    
+    // Do not use if only decays to gammas, e.g. J/Psi eta(2g)
+    if(ngammas == V->products().size()) continue;
+    
+    // We have our vertex
+    debug() << " composite ID " << composite->particleID().pid() 
+            << " will be used to add gammas" << endmsg;
+    
+    debug() << " composite decay vertex position: " << V->position() 
+            << " , and chi2 " << V->chi2() << endmsg;
+
+    return V;
+    
   } // for ipart  
+
   return NULL;
 }
- 
-  
-//==================================================================
-// Perform a fit between a vector of particles 
-// Split vector in two lists:
-// - charged tracks, or composite particles with an endVertex (including neutrals, gammas from e+e-)
-// - neutrals with origin and no endVertex: gammas
-//==================================================================
-int UnconstVertexFitter::splitIntoNeutralsAndCharged(const ParticleVector& pList, 
-                                                     ParticleVector& fromChargedOrResoList, 
-                                                     ParticleVector& fromNeutralWithOriList){
 
-  int nResonances = 0 ;
-  for(ParticleVector::const_iterator iPart = pList.begin(); iPart != pList.end(); iPart++) {
-    
-    int partID = (*iPart)->particleID().pid();
-    
-    if((*iPart)->origin() && m_gammaID == partID){// neutrals with origin
-      verbose() << "Particle in list: " << partID << endmsg;
-      fromNeutralWithOriList.push_back(*iPart);
+//==================================================================
+// Moves gammas to existing vertex
+//==================================================================
+StatusCode UnconstVertexFitter::moveGammas(const ParticleVector& gammasToAdd, 
+                                           Vertex& vtx){
+
+  debug() << "Will add " << gammasToAdd.size() << " gammas(s)" << endmsg;
+  
+  // Re-evaluate the gammas(s) parameters at the vertex from charged tracks or resonance
+  
+  ParticleVector::const_iterator iGammas;
+  for(iGammas = gammasToAdd.begin(); iGammas != gammasToAdd.end(); ++iGammas){
+
+    // If offline gamma with origin
+    const ProtoParticle* proto = dynamic_cast<const ProtoParticle*>((*iGammas)->origin());
+    if(proto){
+      
+      verbose() << " offline gamma ID " << (*iGammas)->particleID().pid() 
+                << " and momentum before re-evaluation " << (*iGammas)->momentum() << endmsg;
+      
+      StatusCode sc = m_pPhotonParams->process((*iGammas), &vtx);
+      if (!sc) return StatusCode::FAILURE;      
+      
+      verbose() << " offline gamma ID " << (*iGammas)->particleID().pid() 
+                << " and momentum after re-evaluation " << (*iGammas)->momentum() << endmsg;
+    } // offline 
+    // online *TEMPORARY*
+    else{ 
+      Warning("Using temporary hack - waiting for online PhotonParams tool");
+      verbose() << " online gamma ID " << (*iGammas)->particleID().pid() 
+                << " and momentum " << (*iGammas)->momentum() << endmsg;
+
+      // Only the pointOnTrack and pointOnTrackErr are modified
+      // and not the momentum, momentumErr, posMomCorr
+      
+      // Vertex determined with charged tracks:
+      const HepPoint3D& Vtx = vtx.position();      
+      // Covariance matrix, determined with charged tracks:
+      const HepSymMatrix& VtxCov = vtx.positionErr();      
+      // modify the photon parameters
+      // Update Point at which the momentum is given in LHCb reference frame
+      (*iGammas)->setPointOnTrack(Vtx);
+      // Update Covariance matrix relative to point at which the momentum is given (3x3)
+      (*iGammas)->setPointOnTrackErr(m_scale * VtxCov);
+
     }
-    else{ // charged or resonance
-      verbose() << "Particle in list: " << partID << endmsg; 
-      if ((*iPart)->isResonance()){
-        nResonances++;
-        for ( SmartRefVector<Particle>::iterator iResoProducts = (*iPart)->endVertex()->products().begin();
-              iResoProducts != (*iPart)->endVertex()->products().end(); 
-              iResoProducts++ ){
-          fromChargedOrResoList.push_back(*iResoProducts);
-        }
-      } // if resonance
-      else{
-        fromChargedOrResoList.push_back(*iPart);     
-      } // else charged and not a resonance
-    } // else if charged or resonance
-  } // for iPart
+  } // else online
   
-  debug() << "Particle Vector size is " << pList.size() << endmsg;
-  debug() << "-> Number of charged tracks or resonances products is " 
-          << fromChargedOrResoList.size() << endmsg;
-
-  if (!fromNeutralWithOriList.empty()) debug() 
-    << "-> Number of neutrals with origin is " << fromNeutralWithOriList.size() << endmsg;
-
-  if((fromChargedOrResoList.size()<2) && (!fromNeutralWithOriList.empty())){
-    err() << "Needs at least two charged tracks when using neutrals with origin" << endmsg;
-    return -1;
-  }
-
-  return nResonances;
+  return StatusCode::SUCCESS;
 }
-
 
 //==================================================================
 // Perform a fit between a vector of particles 
@@ -556,8 +734,3 @@ double UnconstVertexFitter::getZEstimate( const ParticleVector& particleList) {
   }
 // **** End Estimate the Vertex Position *****
 }
-
-
-
-
-

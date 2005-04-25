@@ -1,4 +1,4 @@
-// $Id: UnconstVertexFitter.h,v 1.4 2005-02-04 10:12:53 pkoppenb Exp $
+// $Id: UnconstVertexFitter.h,v 1.5 2005-04-25 13:52:54 pkoppenb Exp $
 #ifndef UNCONSTVERTEXFITTER_H
 #define UNCONSTVERTEXFITTER_H 1
 
@@ -25,8 +25,14 @@ class IPhotonParams;
  * @author S. Amato
  * @date 16/12/2001 
  *
- * Modified by: Luis Fernandez, 07/12/2004 
- * - fit with neutral(s) with origin
+ * Modified by: Luis Fernandez, 07/12/2004, reviewed 20/04/2005
+ * - looks recursively for all final states (with origin) or long-lived daughters 
+ *   in the resonances' decay trees
+ * - all gammas(s) found in the descendants are re-evaluated at the vertex
+ * - does not refit vertex if only one composite and gamma(s)
+ * - for composites in the original list only decaying to gammas: 
+ *   Point on track, decay vertex, momentum are *not* changed
+ * - TEMPORARY fix: allow to fit only gammas, e.g. pi0 -> gamma gamma. This should not be allowed
  * 
 */
 
@@ -64,24 +70,22 @@ public:
 
 private:
 
-  /// find "charged" and "neutrals"
-  int splitIntoNeutralsAndCharged(const ParticleVector&, ParticleVector&, ParticleVector&);
-  /// special case where there is only a resonance in the list
-  Vertex* singleResonanceVertex(const ParticleVector& );
+  /// Get recursively all the final states (with origin) or long-lived 
+  /// daughters from the resonances in the original list
+  StatusCode getProductsForFit(Particle*&, ParticleVector&);
+  /// Get the reference vertex for the case of one composite and gammas
+  Vertex* singleCompositeVertex(const ParticleVector& );
   /// Fit the vertex given a vector of Particles as input. 
   StatusCode doFitVertex( const ParticleVector&, Vertex&);  
-  /// Add neutrals to vertex
-  StatusCode addNeutrals( const ParticleVector&, ParticleVector&, Vertex&);  
+  /// Moves gammas to existing vertex
+  StatusCode moveGammas( const ParticleVector&, Vertex&);  
   /// do the matrix math
   virtual StatusCode matrixMath( HepSymMatrix&, HepVector&, double&, Particle&);  
   /// get the vertex
-  virtual StatusCode makeVertex( Vertex&, double, int, 
-                                 HepSymMatrix& , HepVector&, double);  
+  virtual StatusCode makeVertex( Vertex&, double, int, HepSymMatrix& , HepVector&, double);
 
   /// get the first estimate for the z position  
   double getZEstimate (const ParticleVector& particleList);
-
-  
 
   IParticleTransporter* m_pTransporter; ///< Reference to ParticleTransporter
   std::string m_transporterType;        ///< Type of transporter to use      
@@ -90,7 +94,9 @@ private:
   std::string m_PhotonParamsType; ///< Type
 
   int m_gammaID; ///< gamma particle ID
-  double m_scale; // for cov matrix of neutrals with origin
+  double m_scale; // for cov matrix of online neutrals with origin
+  bool m_useDaughters; ////< use daughers' tracks if composite is found, true by default
+
 };
 
 #endif // UNCONSTVERTEXFITTER_H
