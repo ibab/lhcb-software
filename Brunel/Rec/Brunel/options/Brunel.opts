@@ -89,9 +89,12 @@ BrunelRecoVELOSeq.Members = { "DecodeRawVelo"
 };
 #include "$TRGVELOROOT/options/Brunel.opts"
 
-// Forward tracking
-ApplicationMgr.DLLs += { "LongTrack", "TrFitter", "TrExtrapolator" };
+// Tracking tools
+ApplicationMgr.DLLs += { "TrFitter", "TrExtrapolator", "STTools" };
 ApplicationMgr.ExtSvc += { "TransportSvc" };
+
+// Forward tracking
+ApplicationMgr.DLLs += { "LongTrack" };
 BrunelRecoTrSeq.Members += { "FindLongTrack" };
 BrunelRecoTrSeq.Members += { "TrEventTracksFitter/FitFw" };
 FitFw.TrackContainer = "Rec/FitTrack/Forward";

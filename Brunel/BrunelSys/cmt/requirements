@@ -1,48 +1,11 @@
 package BrunelSys
-version v26r3
+version v27r0
 
 branches cmt doc
  
 #=======================================================
-# packages included in the BRUNEL tree
+# packages included in the BRUNEL project
 #=======================================================
 
 # Brunel application
-use Brunel              v26r3	Rec
-
-# Calorimeter
-use CaloMoniDst         v1r0	Calo
-
-# Inner Tracker
-use ITAlgorithms        v14r4p1	IT
-use ITCheckers          v2r4p1	IT
-
-# Tracking
-use TrFitEvent		v4r9	Tr
-use TrFitAssociators	v1r3	Tr
-use TrCheck             v2r8	Tr
-use LongTrack           v1r14	Tr
-use TrFitter            v4r0	Tr
-use TrTools             v2r6	Tr
-use Seeding             v2r10	Tr 
-use TrMatching          v2r10p2	Tr
-use TrCleanEx           v2r11	Tr
-use VeloTT              v1r12	Tr
-use TrKShort		v1r5	Tr
-
-# Trg tracking in Velo
-use TrgTools            v7r3    Trg
-use TrgVelo             v7r3    Trg
-use TrgBrunel           v1r1    Trg
-
-# Muon
-use MuonUtils		v1r0	Muon
-use MuonRec             v2r4p1	Muon
-use MuonID              v3r7p2	Muon
-
-# Rich
-use RichRecSys		v1r16p1	Rich
-use RichRingRefit	v1r9p1	Rich
-use RichLocalPID	v1r10p1	Rich
-use RichGlobalPID	v1r9p1	Rich
-use RichPIDMerge	v1r5	Rich
+use Brunel              v27r0	Rec

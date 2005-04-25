@@ -3,6 +3,10 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
+</PRE><H1><A NAME=v27r0>2005-04-25 Brunel v27r0</A></H1><PRE>
+- Adapt requirements to use RecSys v1r0, Lbcom v2r0, LHCb v18r4
+- Add STTools to loaded DLLs
+
 </PRE><H1><A NAME=v26r3>2005-04-19 Brunel v26r3</A></H1><PRE>
 - Adapt requirements to BrunelSys v26r3, Lbcom v1r3, LHCb v18r3, Gaudi v16r3
 - Adapt Brunel.supp to valgrind 2.2.0
