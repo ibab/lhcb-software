@@ -6,12 +6,14 @@ Purpose: LHCb reconstruction packages.
          by one or more LHCb applications. 
          It supersedes BrunelSys and large parts of LbcomSys and DaVinciSys. 
 
-</PRE><H1><A NAME=v1r0>2005-04-22 RecSys v1r0</A></H1><PRE>
-This version uses Gaudi v16r3, LHCb v18r3 (also CLHEP 1.9, ROOT 4.0). 
+</PRE><H1><A NAME=v1r0>2005-04-25 RecSys v1r0</A></H1><PRE>
+This version uses Gaudi v16r3, LHCb v18r4 (also CLHEP 1.9, ROOT 4.0). 
 It contains the same package versions as in BrunelSys v26r3, LbComSys v1r3 
 and DaVinciSys v13r1, except for:
 
 . TrgVelo v7r3: contains offline tuning for Brunel v26r3
 . TrgSys  v2r3: updated to use TrgVelo v7r3
+. LongTrack v1r15, TrKShort v1r6, VeloTT v1r13: updated to use STTools instead
+                                                of ITAlgorithms
 
 </PRE>

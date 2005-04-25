@@ -7,9 +7,9 @@
  * state of the software for this version of the RecSys packages.
  *
  * \sa
- * \li <a href="../release.notes"><b>Brunel release notes</b></a>
+ * \li <a href="../release.notes"><b>release notes</b></a>
  * \li <a href="requirements-source.html"><b>List of RecSys packages</b></a>
- * \li <a href="http://cern.ch/lhcb-comp/Reconstruction/"><b>Brunel project Web pages</b></a><p>
+ * \li <a href="http://cern.ch/lhcb-comp/Reconstruction/"><b>Reconstruction applications Web pages</b></a><p>
  * \li \ref lhcbdoxygenmain  "LHCbSys documentation (LHCb core classes)"
  * \li \ref gaudidoxygenmain "Gaudi documentation"
  * \li \ref externaldocs     "Related external libraries"
