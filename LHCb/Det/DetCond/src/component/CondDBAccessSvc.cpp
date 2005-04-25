@@ -1,4 +1,4 @@
-// $Id: CondDBAccessSvc.cpp,v 1.4 2005-04-25 10:38:35 marcocle Exp $
+// $Id: CondDBAccessSvc.cpp,v 1.5 2005-04-25 13:56:14 marcocle Exp $
 // Include files 
 #include <sstream>
 #include <unistd.h>
@@ -108,6 +108,8 @@ StatusCode CondDBAccessSvc::initialize(){
        m_dbName == "" ||
        m_dbSchema == "" ||
        m_dbBackEnd == "" ){
+    log << MSG::ERROR << "An information needed to connect to the CondDB is missing." << endmsg;
+    log << MSG::ERROR << "Check that options 'HostName', 'User', 'Database', 'Schema' and 'BackEnd' are set." << endmsg;
     return StatusCode::FAILURE;
   }
 
