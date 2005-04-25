@@ -21,6 +21,6 @@ use RichTools	    v1r6    Rich
 use RichMCTools	    v2r5    Rich
 
 # Inner Tracker
-use ITAlgorithms    v14r4p1 IT
-use ITCheckers      v2r4p1  IT
+use ITAlgorithms    v15r0   IT
+use ITCheckers      v2r5    IT
 

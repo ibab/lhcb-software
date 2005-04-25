@@ -14,6 +14,13 @@
                              RichRecQC, TrExtrapolator, CaloReco, CaloPIDs
  - Packages added: ITAlgorithms, ITCheckers
 
+ - In ITAlgorithms v15r0:
+   . Remove ITSignalToNoiseTool. Modify algorithms to use ISTSignalToNoiseTool.h
+     instead (from STTools package).
+
+ - In ITCheckers v2r5:
+   . use ISTSignalToNoiseTool instead of IITSignalToNoiseTool
+
 </PRE><H1><A NAME=v1r3>2005-04-19 LbcomSys v1r3</A></H1><PRE>
 !===============================================================================
 ! 2005-04-19 - Marco Cattaneo
