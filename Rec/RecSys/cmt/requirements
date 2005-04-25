@@ -9,6 +9,7 @@ branches cmt doc
 
 # Calorimeter
 use CaloMoniDst         v1r0	Calo
+use CaloPIDs		v2r4p1	Calo
 use CaloReco            v2r7p1  Calo
 
 # Tracking
