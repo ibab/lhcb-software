@@ -7,7 +7,7 @@ version v1r0
 
 use LCG_Settings v*
 
-macro DIM_native_version "v15r11"
+macro DIM_native_version "v15r13"
 macro DIM_home       ${LHCBHOME}/online/control/DIM/$(DIM_native_version)/$(LCG_system)
 
 include_path none
