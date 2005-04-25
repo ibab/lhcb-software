@@ -3,6 +3,10 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
+</PRE><H1><A NAME=v9r0>2005-04-19 Boole v9r0</A></H1><PRE>
+! 2005-04-25 - Marco Cattaneo
+- Adapt requirements to Lbcom v2r0, LHCb v18r4, Gaudi v16r3
+
 </PRE><H1><A NAME=v8r3>2005-04-19 Boole v8r3</A></H1><PRE>
 ! 2005-04-19 - Marco Cattaneo
 - Adapt requirements to Lbcom v1r3, LHCb v18r3, Gaudi v16r3

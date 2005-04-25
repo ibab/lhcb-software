@@ -1,5 +1,5 @@
 package Boole
-version v8r3
+version v9r0
 
 branches doc cmt job options
 
@@ -25,13 +25,13 @@ use ParamFiles	v3r11	-no_auto_imports
 use FieldMap	v4r5
 use BooleDQ	v1r0	DQ
 
-#-- LHCb libraries (from LHCB_v18r3)
-use LHCb	v18r3
+#-- LHCb libraries (from LHCB_v18r4)
+use LHCb	v18r4
 
-#-- Lbcom packages (from LBCOM_v1r3)
-use LbcomSys    v1r3
+#-- Lbcom packages (from LBCOM_v2r0)
+use LbcomSys    v2r0
 
-#-- BooleSys v8r3 packages
+#-- BooleSys v9r0 packages
 
 use DigiAlg		v3r0	Digi
 
@@ -41,10 +41,6 @@ use CaloDigit           v1r8	Calo
 
 # Velo
 use VeloAlgorithms      v3r3	Velo
-
-# Inner Tracker
-use ITAlgorithms        v14r4p1	IT
-use ITCheckers          v2r4p1	IT
 
 # Outer Tracker
 use OTSimulation	v1r4	OT
