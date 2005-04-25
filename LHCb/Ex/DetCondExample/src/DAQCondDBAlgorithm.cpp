@@ -1,4 +1,4 @@
-//$Id: DAQCondDBAlgorithm.cpp,v 1.5 2005-04-22 15:17:54 marcocle Exp $
+//$Id: DAQCondDBAlgorithm.cpp,v 1.6 2005-04-25 11:54:09 marcocle Exp $
 
 #include "DAQCondDBAlgorithm.h"
 
@@ -14,7 +14,7 @@
 #include "CoolKernel/IObject.h"
 #include "CoolKernel/IObjectIterator.h"
 #include "CoolKernel/types.h"
-#include "CoolKernel/IValidityKey.h"
+#include "CoolKernel/ValidityKey.h"
 
 // from POOL
 #include "AttributeList/AttributeListSpecification.h"
@@ -155,7 +155,7 @@ StatusCode DAQCondDBAlgorithm::initialize() {
     try {
       db->createFolder( daqFolderFullName, *m_payloadSpec,
                         "DAQ folder for the ConditionsDB",
-                        cool::FolderVersioning::ONLINE, true );
+                        cool::FolderVersioning::SINGLE_VERSION, true );
     } catch (cool::Exception &e) {
       log << MSG::ERROR
           << e << endreq;
@@ -178,7 +178,7 @@ StatusCode DAQCondDBAlgorithm::initialize() {
 
 StatusCode DAQCondDBAlgorithm::execute( ) {
 
-  static cool::IValidityKey val_since_fake = 0;
+  static cool::ValidityKey val_since_fake = 0;
 
   MsgStream log(msgSvc(), name());
   log << MSG::DEBUG << "Execute()" << endreq;
@@ -199,10 +199,10 @@ StatusCode DAQCondDBAlgorithm::execute( ) {
     longlong startIO = System::currentTime(System::nanoSec);
     //    db->getFolder(daqFolderFullName)
     //      ->storeObject(System::currentTime(System::nanoSec)-m_nsInitialized,
-    //                    cool::IValidityKeyMax, payload);
+    //                    cool::ValidityKeyMax, payload);
     db->getFolder(daqFolderFullName)
       ->storeObject(val_since_fake++,
-                    cool::IValidityKeyMax, payload);
+                    cool::ValidityKeyMax, payload);
     longlong endIO = System::currentTime(System::nanoSec);
     if ( m_daqShowProgress > 0 ) {
       if ( m_daqEventNumber == 

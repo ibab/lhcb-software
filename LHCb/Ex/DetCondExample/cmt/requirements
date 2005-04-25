@@ -1,6 +1,6 @@
-# $Id: requirements,v 1.23 2005-04-22 15:50:05 marcocle Exp $
+# $Id: requirements,v 1.24 2005-04-25 11:54:09 marcocle Exp $
 package DetCondExample
-version v6r2
+version v7r0
 
 branches doc src job options cmt XMLDDDB sql
 ignore_pattern package_stamps 
@@ -19,7 +19,7 @@ use DetDescCnv v* Det
 use XmlDDDB v* Det
 
 # Detector Conditions
-use DetCond v6* Det
+use DetCond v7* Det
 
 # library path needed for mysql backend
 use myodbc   v* LCG_Interfaces

@@ -1,6 +1,10 @@
-#$Id: release.notes,v 1.31 2005-04-22 15:50:05 marcocle Exp $
+#$Id: release.notes,v 1.32 2005-04-25 11:54:09 marcocle Exp $
 Package Ex/DetCondExample
 Package manager : Marco Clemencic
+
+!=========== Ex/DetCondExample v7r0 ==========================================
+! 2005-04-25 - Marco Clemencic
+ - Upgrade to DetCond v7r0 (COOL_1_0_0)
 
 !=========== Ex/DetCondExample v6r2 ==========================================
 ! 2005-04-22 - Marco Clemencic

@@ -1,4 +1,4 @@
-//$Id: PopulateDB.cpp,v 1.13 2005-04-22 15:39:23 marcocle Exp $
+//$Id: PopulateDB.cpp,v 1.14 2005-04-25 11:54:09 marcocle Exp $
 #include <iostream>
 #include <fstream>
 #include <string>
@@ -275,9 +275,9 @@ StatusCode PopulateDB::i_condDBStoreSampleData ( ) {
       verbose() << "XML data is:" << std::endl << xmlString << endreq;
       verbose() << "Store it in the database with [-inf,+inf] validity range" << endreq;
       verbose() << "Folder name: /Geometry/LHCb" << endreq;
-      verbose() << "Create object with validity range: [" << cool::IValidityKeyMin
-                << "(0x" << std::hex << cool::IValidityKeyMin << std::dec << ")" 
-                << "," << cool::IValidityKeyMax << "(0x" << std::hex << cool::IValidityKeyMax << std::dec << ")]" << endreq;
+      verbose() << "Create object with validity range: [" << cool::ValidityKeyMin
+                << "(0x" << std::hex << cool::ValidityKeyMin << std::dec << ")" 
+                << "," << cool::ValidityKeyMax << "(0x" << std::hex << cool::ValidityKeyMax << std::dec << ")]" << endreq;
 
       m_dbAccSvc->storeXMLString("/Geometry/LHCb",xmlString,time_absolutepast,time_absolutefuture);
     }
@@ -506,7 +506,7 @@ StatusCode PopulateDB::i_dumpFolder( const std::string& folderName,
 
   if ( tagName != "" && tagName != "HEAD" ) {
     // with ON-LINE folders only HEAD tag makes sense
-    if ( folder->getVersioningMode() == cool::FolderVersioning::ONLINE )
+    if ( folder->versioningMode() == cool::FolderVersioning::SINGLE_VERSION )
       return StatusCode::SUCCESS;
     info() << "    | using tag =\"" << tagName << "\"" << endmsg;
   } else {
@@ -517,15 +517,15 @@ StatusCode PopulateDB::i_dumpFolder( const std::string& folderName,
   //  std::vector<cool::IObjectPtr> objs = folder->browseObjectsInTag(tagName);
   //  cool::IObjectIteratorPtr objs = folder->browseObjectsInTag(tagName);
   cool::IObjectIteratorPtr objs;
-  if ( folder->getVersioningMode() != cool::FolderVersioning::ONLINE ) {
+  if ( folder->versioningMode() != cool::FolderVersioning::SINGLE_VERSION ) {
     if ( tagName != "" && tagName != "HEAD" ) {
-      objs = folder->browseObjects(cool::IValidityKeyMin,cool::IValidityKeyMax,
+      objs = folder->browseObjects(cool::ValidityKeyMin,cool::ValidityKeyMax,
                                    0,folder->fullPath()+"-"+tagName);
     } else {
-      objs = folder->browseObjects(cool::IValidityKeyMin,cool::IValidityKeyMax,0,tagName);
+      objs = folder->browseObjects(cool::ValidityKeyMin,cool::ValidityKeyMax,0,tagName);
     }
   } else
-    objs = folder->browseObjects(cool::IValidityKeyMin,cool::IValidityKeyMax,0);
+    objs = folder->browseObjects(cool::ValidityKeyMin,cool::ValidityKeyMax,0);
   if ( objs->isEmpty() ) {
     info() << "    | no objects in folder" << endmsg;
     return StatusCode::SUCCESS;
@@ -539,7 +539,7 @@ StatusCode PopulateDB::i_dumpFolder( const std::string& folderName,
   while (objs->hasNext()){
     cool::IObjectPtr objp = objs->next();
     
-    info() << "    | " << objp->since() << " -> " << objp->till() << endmsg;
+    info() << "    | " << objp->since() << " -> " << objp->until() << endmsg;
     info() << "      size = " << objp->payload().size() << endmsg;
     
     for (pool::AttributeList::const_iterator it = objp->payload().begin();
