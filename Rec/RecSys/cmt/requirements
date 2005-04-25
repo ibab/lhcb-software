@@ -59,6 +59,9 @@ use RichRecTools        v2r14   Rich
 use RichRecMCTools      v1r8    Rich
 use RichRecCommon       v1r12   Rich
 use RichRecQC           v1r10   Rich
+use RichHLTSys		v1r0p2  Rich
+use RichTrgGlobalPID	v1r0p1  Rich
+use RichTrgTools	v1r0    Rich
 
 # Global reco
 use PrimVtx             v2r1p1  Rec
