@@ -1,0 +1,15 @@
+package OnlineSys
+version v1r0
+
+branches cmt doc
+ 
+#=======================================================
+# LHCb Online packages
+#=======================================================
+
+use DIM		  v1r0   Online
+use Gaucho        v3r0   Online
+use GauchoJob     v2r0   Online
+use GaudiOnline   v1r0   Online
+use SFCClient     v1r0   Online
+use PyDIM         v1r0   Online
