@@ -1,4 +1,4 @@
-// $Id: RelyConverter.cpp,v 1.2 2005-04-22 14:09:31 marcocle Exp $
+// $Id: RelyConverter.cpp,v 1.3 2005-04-25 10:38:35 marcocle Exp $
 // Include files 
 #include "DetCond/RelyConverter.h"
 
@@ -102,34 +102,34 @@ StatusCode RelyConverter::updateObj (IOpaqueAddress* pAddress, DataObject* pObje
   MsgStream log(msgSvc(),"RelyConverter");
   log << MSG::DEBUG << "Method updateObj starting" << endreq;
       
-      DataObject* pNewObject; // create a new object and copy it to the old version
+  DataObject* pNewObject; // create a new object and copy it to the old version
   StatusCode sc = i_delegatedCreation(pAddress,pNewObject);
-      if (sc.isFailure()){
-        log << MSG::ERROR << "Cannot create the new object" << endmsg;
-        return sc;
-      }
+  if (sc.isFailure()){
+    log << MSG::ERROR << "Cannot create the new object" << endmsg;
+    return sc;
+  }
 
-      // do the real update
-      //
-      //   Since DataObject::operator= operator is not virtual, dynamic cast first!
-      //   Overloaded virtual method Condition::update() must be properly defined!
-      //   The memory pointed to by the old pointer must contain the new object
-      //                                            Andrea Valassi
+  // do the real update
+  //
+  //   Since DataObject::operator= operator is not virtual, dynamic cast first!
+  //   Overloaded virtual method Condition::update() must be properly defined!
+  //   The memory pointed to by the old pointer must contain the new object
+  //                                            Andrea Valassi
 
-      ValidDataObject* pVDO = dynamic_cast<ValidDataObject*>(pObject);
-      ValidDataObject* pNewVDO = dynamic_cast<ValidDataObject*>(pNewObject);
-      if ( 0 == pVDO || 0 == pNewVDO ) {
-        log << MSG::ERROR
-            << "Cannot update objects other than ValidDataObject: " 
-            << "update() must be defined!"
-            << endreq;
-        return StatusCode::FAILURE;
-      }
-      // Deep copy the new Condition into the old DataObject
-      pVDO->update( *pNewVDO );  
+  ValidDataObject* pVDO = dynamic_cast<ValidDataObject*>(pObject);
+  ValidDataObject* pNewVDO = dynamic_cast<ValidDataObject*>(pNewObject);
+  if ( 0 == pVDO || 0 == pNewVDO ) {
+    log << MSG::ERROR
+        << "Cannot update objects other than ValidDataObject: " 
+        << "update() must be defined!"
+        << endreq;
+    return StatusCode::FAILURE;
+  }
+  // Deep copy the new Condition into the old DataObject
+  pVDO->update( *pNewVDO );  
   
-      // Delete the useless Condition
-      delete pNewVDO;
+  // Delete the useless Condition
+  delete pNewVDO;
 
   log << MSG::DEBUG << "Object successfully updated" << endreq;
   return StatusCode::SUCCESS;
@@ -170,12 +170,12 @@ StatusCode RelyConverter::i_delegatedCreation(IOpaqueAddress* pAddress, DataObje
     return sc;
   }
 
-  TimePoint since,till;
+  TimePoint since,until;
   try {
 
     cool::IFolderPtr folder = m_dbAccSvc->database()->getFolder(pAddress->par()[0]);    
-//    cool::IObjectPtr object = folder->findObject(m_condDBCnvSvc->timeToValKey(now),0,m_dbAccSvc->tag());
-	cool::IObjectPtr object;
+    //    cool::IObjectPtr object = folder->findObject(m_condDBCnvSvc->timeToValKey(now),0,m_dbAccSvc->tag());
+    cool::IObjectPtr object;
     if (m_dbAccSvc->tag() == "HEAD" || m_dbAccSvc->tag() == ""){
       object = folder->findObject(m_dbAccSvc->timeToValKey(now));
     } else {
@@ -192,7 +192,7 @@ StatusCode RelyConverter::i_delegatedCreation(IOpaqueAddress* pAddress, DataObje
     }
 
     since = m_dbAccSvc->valKeyToTime(object->since());
-    till  = m_dbAccSvc->valKeyToTime(object->till());
+    until  = m_dbAccSvc->valKeyToTime(object->until());
 
     log << MSG::DEBUG << "delegate to DetectorPersistencySvc" << endmsg;
 
@@ -237,14 +237,14 @@ StatusCode RelyConverter::i_delegatedCreation(IOpaqueAddress* pAddress, DataObje
     return StatusCode::FAILURE;
   } catch (cool::RelationalObjectNotFound &e) {
     log << MSG::ERROR << "Object not found in \"" << pAddress->par()[0] <<
-    	 "\" for tag \"" << m_dbAccSvc->tag() << "\" ("<< now << ')' << endmsg;
+      "\" for tag \"" << m_dbAccSvc->tag() << "\" ("<< now << ')' << endmsg;
     log << MSG::DEBUG << e << endmsg;
     return StatusCode::FAILURE;
   }
 
   
   log << MSG::DEBUG << "Setting object validity" << endreq;
-  setObjValidity(since,till,pObject);
+  setObjValidity(since,until,pObject);
 
   log << MSG::DEBUG << "New object successfully created" << endreq;
 

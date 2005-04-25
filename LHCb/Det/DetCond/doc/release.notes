@@ -1,7 +1,13 @@
-# $Id: release.notes,v 1.30 2005-04-22 14:09:31 marcocle Exp $
+# $Id: release.notes,v 1.31 2005-04-25 10:38:35 marcocle Exp $
 Package Det/DetCond
 Package manager : Marco Clemencic
 
+================= Det/DetCond v7r0 ===========================================
+! 2005-04-25 - Marco CLEMENCIC
+ - Upgrade to COOL_1_0_0 (first production release)
+ - Works with LHCb v18r3
+
+================= Det/DetCond v6r1 ===========================================
 ! 2005-04-22 - Marco CLEMENCIC
  - Upgrade to COOL_0_1_0-pre2
  - Support for tagging

@@ -1,4 +1,4 @@
-// $Id: CondDBAccessSvc.h,v 1.3 2005-04-22 14:09:31 marcocle Exp $
+// $Id: CondDBAccessSvc.h,v 1.4 2005-04-25 10:38:35 marcocle Exp $
 #ifndef COMPONENT_CONDDBACCESSSVC_H 
 #define COMPONENT_CONDDBACCESSSVC_H 1
 
@@ -45,13 +45,14 @@ public:
                                   VersionMode vers = MULTI) const;
   
   /// Utility function that simplifies the storage of an XML string.
-  virtual StatusCode storeXMLString(const std::string &path, const std::string &data, const ITime &since, const ITime &till) const;
+  virtual StatusCode storeXMLString(const std::string &path, const std::string &data,
+                                    const ITime &since, const ITime &till) const;
   
   /// Convert from TimePoint class to cool::ValidityKey.
-  virtual cool::IValidityKey timeToValKey(const TimePoint &time) const;
+  virtual cool::ValidityKey timeToValKey(const TimePoint &time) const;
    
   /// Convert from cool::ValidityKey to TimePoint class.
-  virtual TimePoint valKeyToTime(const cool::IValidityKey &key) const;
+  virtual TimePoint valKeyToTime(const cool::ValidityKey &key) const;
  
   /// Return the currently set TAG to use.
   virtual const std::string &tag() const;
@@ -61,7 +62,8 @@ public:
 
   /// Tag the given folder with the given tag-name. If the requested folder is
   /// a folderset, the tag is applied to all the folders below it. (waiting for HVS)
-  virtual StatusCode tagFolder(const std::string &path, const std::string &tagName, const std::string &description);
+  virtual StatusCode tagFolder(const std::string &path, const std::string &tagName,
+                               const std::string &description);
 
 protected:
   /// Standard constructor

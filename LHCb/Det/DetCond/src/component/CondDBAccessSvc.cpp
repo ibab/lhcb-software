@@ -1,4 +1,4 @@
-// $Id: CondDBAccessSvc.cpp,v 1.3 2005-04-22 14:09:31 marcocle Exp $
+// $Id: CondDBAccessSvc.cpp,v 1.4 2005-04-25 10:38:35 marcocle Exp $
 // Include files 
 #include <sstream>
 #include <unistd.h>
@@ -128,13 +128,13 @@ StatusCode CondDBAccessSvc::initialize(){
   sc = i_openConnention();
   if (sc.isFailure()) return sc;
 
-/* TODO: this piece of code must be reintroduced when HVS is functional
-  sc = i_checkTag();
-  if (sc.isFailure()){
-    log << MSG::ERROR << "Bad TAG given: \"" << tag() << "\" not in the database" << endmsg;
-    return sc;
-  }
-*/
+  /* TODO: this piece of code must be reintroduced when HVS is functional
+     sc = i_checkTag();
+     if (sc.isFailure()){
+     log << MSG::ERROR << "Bad TAG given: \"" << tag() << "\" not in the database" << endmsg;
+     return sc;
+     }
+  */
   if ( !m_test ) {
     return sc;
   } else { // do the test
@@ -151,7 +151,7 @@ StatusCode CondDBAccessSvc::initialize(){
       cool::IFolderPtr folder =
         m_db->createFolder(m_test_path,BasicStringALSpec,
                            "this is a test folder",
-                           cool::FolderVersioning::ONLINE,
+                           cool::FolderVersioning::SINGLE_VERSION,
                            true);
       pool::AttributeList data(BasicStringALSpec);
       data["type"].setValue<int>(1);
@@ -161,7 +161,7 @@ StatusCode CondDBAccessSvc::initialize(){
       std::cout << std::endl;
     
     
-      folder->storeObject(cool::IValidityKeyMin,cool::IValidityKeyMax,data);
+      folder->storeObject(cool::ValidityKeyMin,cool::ValidityKeyMax,data);
     }
     
     {
@@ -190,28 +190,28 @@ StatusCode CondDBAccessSvc::initialize(){
       
       m_db->createFolder( rootName+"/pippo", attListSpec,
                           "this is a test folder",
-                          cool::FolderVersioning::ONLINE, true );
+                          cool::FolderVersioning::SINGLE_VERSION, true );
       m_db->createFolder( rootName+"/scLHCb", attListSpec,
                           "this is a test folder",
-                          cool::FolderVersioning::ONLINE, true );
+                          cool::FolderVersioning::SINGLE_VERSION, true );
       m_db->createFolder( rootName+"/SlowControl/LHCb/scLHCb", attListSpec,
                           "this is a test folder",
-                          cool::FolderVersioning::ONLINE, true );
+                          cool::FolderVersioning::SINGLE_VERSION, true );
       m_db->createFolder( rootName+"/SlowControl/Hcal/scHcal", attListSpec,
                           "this is a test folder",
-                          cool::FolderVersioning::ONLINE, true );
+                          cool::FolderVersioning::SINGLE_VERSION, true );
       m_db->createFolder( rootName+"/Geometry/LHCb", attListSpec,
                           "this is a test folder",
-                          cool::FolderVersioning::ONLINE, true );
+                          cool::FolderVersioning::SINGLE_VERSION, true );
       m_db->createFolder( rootName+"/Geometry2/LHCb", attListSpec,
                           "this is a test folder",
-                          cool::FolderVersioning::ONLINE, true );
+                          cool::FolderVersioning::SINGLE_VERSION, true );
       m_db->createFolder( rootName+"/Geometry2/lvLHCb", attListSpec,
                           "this is a test folder",
-                          cool::FolderVersioning::ONLINE, true );
+                          cool::FolderVersioning::SINGLE_VERSION, true );
       m_db->createFolder( rootName+"/Alignment/Ecal/alEcal", attListSpec,
                           "this is a test folder",
-                          cool::FolderVersioning::ONLINE, true );
+                          cool::FolderVersioning::SINGLE_VERSION, true );
     }
     
 
@@ -268,7 +268,7 @@ StatusCode CondDBAccessSvc::i_openConnention(){
   try {
     if (! m_db) { // The database is not yet opened
       log << MSG::DEBUG << "Get DatabaseSvc" << endmsg;
-      cool::IDatabaseSvc &dbSvc = cool::RalDatabaseSvcFactory::getDatabaseService();
+      cool::IDatabaseSvc &dbSvc = cool::RalDatabaseSvcFactory::databaseService();
       if ( ! &dbSvc ) {
         log << MSG::ERROR << "unable to get the Database Service" << endmsg;
         return StatusCode::FAILURE;
@@ -361,8 +361,8 @@ StatusCode CondDBAccessSvc::createFolder(const std::string &path,
                            *s_XMLstorageAttListSpec,
                            _descr.str(),
                            (vers == SINGLE)
-                           ?cool::FolderVersioning::ONLINE
-                           :cool::FolderVersioning::OFFLINE,
+                           ?cool::FolderVersioning::SINGLE_VERSION
+                           :cool::FolderVersioning::MULTI_VERSION,
                            true);
       }
       break;
@@ -372,10 +372,10 @@ StatusCode CondDBAccessSvc::createFolder(const std::string &path,
           << "\": unknown StorageType" << endmsg;
       return StatusCode::FAILURE;
     }
-  } catch(cool::RelationalFolderExists){
+  } catch(cool::RelationalNodeExists){
     MsgStream log(msgSvc(), name() );
     log << MSG::ERROR << "Unable to create the folder \"" << path
-          << "\": folder already exists" << endmsg;
+        << "\": the node already exists" << endmsg;
     return StatusCode::FAILURE;
   } catch(cool::Exception &e){
     MsgStream log(msgSvc(), name() );
@@ -386,7 +386,8 @@ StatusCode CondDBAccessSvc::createFolder(const std::string &path,
   return StatusCode::SUCCESS;
 }
 
-StatusCode CondDBAccessSvc::storeXMLString(const std::string &path, const std::string &data, const ITime &since, const ITime &till) const {
+StatusCode CondDBAccessSvc::storeXMLString(const std::string &path, const std::string &data,
+                                           const ITime &since, const ITime &till) const {
   try {
     // retrieve folder pointer
     cool::IFolderPtr folder = m_db->getFolder(path);
@@ -408,19 +409,23 @@ StatusCode CondDBAccessSvc::storeXMLString(const std::string &path, const std::s
   return StatusCode::SUCCESS;
 }
 
-cool::IValidityKey CondDBAccessSvc::timeToValKey(const TimePoint &time) const {
-  // TODO: remove the workaround for missing I64 fields
-  if (time.absoluteTime() > LONG_MAX) return LONG_MAX;
-  if (time.absoluteTime() < LONG_MIN) return LONG_MIN;
+cool::ValidityKey CondDBAccessSvc::timeToValKey(const TimePoint &time) const {
+  // TODO: ValidityKey is an uInt64 of which only 63 bits used (0 -> 9223372036854775807)
+
+  // ValidityKey is uInt64 while time.absoluteTime() is a signed Int64!
+  // I cannot compare them directly (
+  if (time.absoluteTime() < 0) return cool::ValidityKeyMin;
+  if (time.absoluteTime() == time_absolutefuture.absoluteTime()) return cool::ValidityKeyMax; 
   return time.absoluteTime();
 }
 
-TimePoint CondDBAccessSvc::valKeyToTime(const cool::IValidityKey &key) const {
+TimePoint CondDBAccessSvc::valKeyToTime(const cool::ValidityKey &key) const {
   TimePoint t(key);
   return t;
 }
 
-StatusCode CondDBAccessSvc::tagFolder(const std::string &path, const std::string &tagName, const std::string &description){
+StatusCode CondDBAccessSvc::tagFolder(const std::string &path, const std::string &tagName,
+                                      const std::string &description){
   try {
     MsgStream log(msgSvc(),name());
     log << MSG::DEBUG << "entering tagFolder: \"" << path << '"' << endmsg;
@@ -438,12 +443,12 @@ StatusCode CondDBAccessSvc::tagFolder(const std::string &path, const std::string
       std::vector<std::string>::iterator i;
       for ( i = fldr_names.begin(); i != fldr_names.end(); ++i ){
         if ( *i != sub_path // avoid infinite recursion on folderset "/". TODO: refine
-          && i->find(sub_path) == 0 // (*i) starts with path
-          && i->find('/',sub_path.size()+1) == i->npos) // and does not contain any other '/'
+             && i->find(sub_path) == 0 // (*i) starts with path
+             && i->find('/',sub_path.size()+1) == i->npos) // and does not contain any other '/'
           sc = tagFolder(*i,tagName,description); // recursion!
       }
     } else {
-      if (folder->getVersioningMode() == cool::FolderVersioning::ONLINE){
+      if (folder->versioningMode() == cool::FolderVersioning::SINGLE_VERSION){
         log << MSG::WARNING << "not tagging folder \"" << path << "\": single-version" << endmsg;
       } else {
         log << MSG::DEBUG << "tagging folder \"" << path << "\": " << tagName << endmsg;

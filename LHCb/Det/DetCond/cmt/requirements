@@ -1,7 +1,7 @@
-# $Id: requirements,v 1.28 2005-04-22 14:09:31 marcocle Exp $
+# $Id: requirements,v 1.29 2005-04-25 10:38:35 marcocle Exp $
 # Modified by Marco Clemencic and Nicolas Gilardi (Gen. 2005)
 package DetCond
-version v6r1
+version v7r0
 
 branches DetCond cmt src doc
 
@@ -12,7 +12,7 @@ use GaudiSvc    v*
 use COOL v* LCG_Interfaces
 
 # Detector Description
-# This is only needed because updateObj assumes a Condition (TEMPORARY?)
+# This is only needed because updateObj assumes a ValidDataObject (TEMPORARY?)
 use DetDesc v* Det
 
 include_dirs $(DETCONDROOT)

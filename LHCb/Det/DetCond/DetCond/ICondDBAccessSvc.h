@@ -1,4 +1,4 @@
-// $Id: ICondDBAccessSvc.h,v 1.3 2005-04-22 14:09:31 marcocle Exp $
+// $Id: ICondDBAccessSvc.h,v 1.4 2005-04-25 10:38:35 marcocle Exp $
 #ifndef DETCOND_ICONDDBACCESSSVC_H 
 #define DETCOND_ICONDDBACCESSSVC_H 1
 
@@ -11,7 +11,7 @@
 
 // from COOL
 #include "CoolKernel/types.h"
-#include "CoolKernel/IValidityKey.h"
+#include "CoolKernel/ValidityKey.h"
 
 // Forward declarations
 class ITime;
@@ -50,13 +50,14 @@ public:
                                   VersionMode vers = MULTI) const = 0;
  
   /// Utility function that simplifies the storage of an XML string.
-  virtual StatusCode storeXMLString(const std::string &path, const std::string &data, const ITime &since, const ITime &till) const = 0;
+  virtual StatusCode storeXMLString(const std::string &path, const std::string &data,
+                                    const ITime &since, const ITime &till) const = 0;
 
   /// Convert from TimePoint class to cool::ValidityKey.
-  virtual cool::IValidityKey timeToValKey(const TimePoint &time) const = 0;
+  virtual cool::ValidityKey timeToValKey(const TimePoint &time) const = 0;
    
   /// Convert from cool::ValidityKey to TimePoint class.
-  virtual TimePoint valKeyToTime(const cool::IValidityKey &key) const = 0;
+  virtual TimePoint valKeyToTime(const cool::ValidityKey &key) const = 0;
   
   /// Return the currently set TAG to use.
   virtual const std::string &tag() const = 0;
@@ -66,7 +67,8 @@ public:
 
   /// Tag the given folder with the given tag-name. If the requested folder is
   /// a folderset, the tag is applied to all the folders below it. (waiting for HVS)
-  virtual StatusCode tagFolder(const std::string &path, const std::string &tagName, const std::string &description = "") = 0;
+  virtual StatusCode tagFolder(const std::string &path, const std::string &tagName,
+                               const std::string &description = "") = 0;
 
 protected:
 
