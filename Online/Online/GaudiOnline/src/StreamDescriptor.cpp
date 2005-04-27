@@ -6,12 +6,13 @@
 //
 //	Author     : M.Frank
 //====================================================================
-// $Id: StreamDescriptor.cpp,v 1.5 2005-04-27 08:00:50 frankb Exp $
+// $Id: StreamDescriptor.cpp,v 1.6 2005-04-27 12:37:13 frankb Exp $
 
 // Include files
 #include "GaudiOnline/StreamDescriptor.h"
 #include <fcntl.h>
 #include <cstdio>
+#include <iostream>
 #include <cstdlib>
 #include <exception>
 namespace SFC {
@@ -203,6 +204,7 @@ void GaudiOnline::StreamDescriptor::getInetConnection(const std::string& con,
   if ( idx != std::string::npos )  {
     std::string prt = host.substr(idx+1);
     ::sscanf(prt.c_str(),"%hd",&port);
+    port = Networking::ntohs(port);
     host = host.substr(0,idx);
   }
   if ( ::isalpha(host[0]) )  {

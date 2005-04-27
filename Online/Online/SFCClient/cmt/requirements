@@ -11,4 +11,4 @@ include_dirs      $(SFCCLIENTROOT)
 # ==================== component libraries ==================================
 library SFCClient  ../src/*.c
 apply_pattern library_Llinkopts library=SFCClient
-
+apply_pattern ld_library_path

@@ -3,9 +3,9 @@ ApplicationMgr.ExtSvc = { "EventSelector" };
 // Event related parameters
 //--------------------------------------------------------------
 ApplicationMgr.HistogramPersistency = "NONE";
-ApplicationMgr.EvtMax      = 10000;
 PoolDbCacheSvc.OutputLevel = 3;
 EventDataSvc.RootCLID = 1;
+ApplicationMgr.EvtMax = 1000;
 
 // DLLs that contain the necessary dictionaries and factories
 ApplicationMgr.DLLs += { "CaloEvent", "DAQEvent" };
@@ -13,6 +13,5 @@ ApplicationMgr.DLLs += { "CaloEvent", "DAQEvent" };
 #include "$EVENTSYSROOT/options/PoolDicts.opts"
 PoolDbCacheSvc.Dlls        += {"SealSTLDict" };
 EventSelector.Input  = {"DATAFILE='rfio:/castor/cern.ch/user/c/cattanem/Brunel/v26r0/Brunel-0412.dst' TYP='POOL_ROOT' OPT='READ'"};
-ApplicationMgr.EvtMax         = 1000;
-
+EventSelector.Input   = {"DATA='${SFCCONNECTION}' SVC='GaudiOnline::EvtSelector'"};
 #include "$GAUDIONLINEROOT/options/SendBuffer.opts"

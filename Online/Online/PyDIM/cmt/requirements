@@ -24,5 +24,7 @@ apply_pattern py_lcg_dictionary headerfiles="$(PYDIMROOT)/src/dim_dict.h" \
                              options="  --split $(includes) -DGCCXML " \
                              cppfiles=" -s=../src *.cpp " \
                              dictionary=PyDIM
-apply_pattern component_library library=GaudiOnline
+
 path_append PYTHONPATH $(PYDIMROOT)/python
+apply_pattern ld_library_path
+

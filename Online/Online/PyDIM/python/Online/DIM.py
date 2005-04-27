@@ -1,5 +1,5 @@
 import PyLCGDict
-PyLCGDict.loadDict('DIMDict')
+PyLCGDict.loadDict('PyDIMDict')
 DIM = PyLCGDict.makeNamespace('DIM')
 gbl = PyLCGDict.makeNamespace('')
 
