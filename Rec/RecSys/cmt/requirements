@@ -27,18 +27,18 @@ use VeloTT              v1r13	Tr
 use TrKShort		v1r6	Tr
 
 # Trg reconstruction
-use TrgSys		v2r3	Trg
+use TrgSys		v2r4	Trg
 use TrgBrunel           v1r1    Trg
 use TrgCalo		v1r0p2	Trg
 use TrgChecker		v7r1	Trg
 use TrgForward		v5r1p1	Trg
 use TrgMonitor		v4r0	Trg
 use TrgMuon		v1r2p1	Trg
-use TrgMuonID		v3r0	Trg
+# use TrgMuonID		v3r0	Trg
 use TrgPrimVertex	v4r0p1	Trg
 use TrgTools            v7r3    Trg
 use TrgVelo             v7r3    Trg
-use TrgVeloTT		v6r0	Trg
+use TrgVeloTT		v6r1	Trg
 
 # L1 reconstruction and decision
 use L1Reco		v7r0	Trg
