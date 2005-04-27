@@ -11,6 +11,7 @@ ApplicationMgr.EvtMax = 1000;
 ApplicationMgr.DLLs += { "CaloEvent", "DAQEvent" };
 #include "$GAUDIPOOLDBROOT/options/GaudiPoolDbRoot.opts"
 #include "$EVENTSYSROOT/options/PoolDicts.opts"
+EventPersistencySvc.CnvServices += { "OnlineCnvSvc" };
 PoolDbCacheSvc.Dlls        += {"SealSTLDict" };
 EventSelector.Input  = {"DATAFILE='rfio:/castor/cern.ch/user/c/cattanem/Brunel/v26r0/Brunel-0412.dst' TYP='POOL_ROOT' OPT='READ'"};
 EventSelector.Input   = {"DATA='${SFCCONNECTION}' SVC='GaudiOnline::EvtSelector'"};
