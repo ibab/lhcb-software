@@ -6,7 +6,7 @@
 //
 //	Author     : M.Frank
 //====================================================================
-// $Id: StreamDescriptor.cpp,v 1.4 2005-04-19 18:07:15 frankb Exp $
+// $Id: StreamDescriptor.cpp,v 1.5 2005-04-27 08:00:50 frankb Exp $
 
 // Include files
 #include "GaudiOnline/StreamDescriptor.h"
@@ -127,29 +127,31 @@ namespace {
     return true;
   }
   bool sfc_recv(const Access& /* con */, void* data, int len)  {
-    SFC::sfcc_read_buffer rd_buff;
+    SFC::sfcc_event_buffer rd_buff;
     rd_buff.buffer = (char*)data;
     rd_buff.buffer_len = rd_buff.max_len = len;
-    return SFC::sfcc_read(&rd_buff) == 0;
+    return SFC::sfcc_read_event(&rd_buff) == 0;
   }
   bool sfc_recv_len(const Access& /* con */, int& len)  {
     return SFC::sfcc_read_length(&len) == 0;
   }
-  bool sfc_send(const Access& /* con */, const void* data, int len)  {
-    SFC::sfcc_send_buffer snd_buff;
-    snd_buff.buffer = (char*)data;
-    snd_buff.buffer_len = len;
-    return SFC::sfcc_send(&snd_buff) == 0;
+  bool sfc_send(const Access& /* con */, const void* /* data */, int /* len */)  {
+    //SFC::sfcc_send_buffer snd_buff;
+    //snd_buff.buffer = (char*)data;
+    //snd_buff.buffer_len = len;
+    return false; //return SFC::sfcc_send(&snd_buff) == 0;
   }
   /// Fast functions: set trigger decision
   bool sfc_set_decision(const Access& /* con */, int value )   {
+    static int dec = value;
     SFC::sfcc_decision dec_buff;
-    dec_buff.accept_or_reject = value;
+    dec_buff.buffer_len = sizeof(int);
+    dec_buff.buffer = (SFC::SFCC_C_CHAR*)&dec;
     return SFC::sfcc_set_decision(&dec_buff) == 0;
   }
   /// fast functions: send trigger decision
   bool sfc_send_decision(const Access& /* con */)  {
-    return SFC::sfcc_send_decision() == 0;
+    return SFC::sfcc_push_decision() == 0;
   }
 }
 
