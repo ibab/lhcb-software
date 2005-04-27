@@ -1,0 +1,53 @@
+package PhysSys
+version v1r0
+
+branches doc cmt
+
+#=======================================================
+# packages included in the DAVINCI tree
+#=======================================================
+#-- HLT trigger
+# use HltGeneric                  v2r3     Hlt
+use HltSelections               v3r0     Hlt
+use HltSelChecker               v3r0p1   Hlt 
+
+# LoKi
+use  LoKi               	v3r11p1  Tools  
+use  LoKiHlt             	v2r1     Tools 
+use  LoKiGen             	v1r0     Tools 
+
+# Reconstruction tools 
+use  Utilities          	v1r14    Tools 
+
+# Physics packages
+# use  CommonParticles    	v1r5p3   Phys 	# needs RecoTools
+use  DaVinciFilter      	v1r7     Phys 	
+use  DaVinciKernel      	v3r2p1   Phys 	
+use  DaVinciTools       	v11r7p1  Phys 	
+# use  FlavourTagging     	v5r5p1   Phys 	# needs RecoTools 	
+use  Ks2PiPiSel         	v1r4p1   Phys 	
+use  ParticleMaker      	v1r4p1   Phys 	
+use  PhysSelections		v6r12    Phys 	  
+use  DaVinciTransporter 	v2r0p1   Phys 	
+use  VertexFit			v1r5p1   Phys 	
+# use  Tampering		v1r0p2   Phys  	# needs RecoTools	
+
+# Physics MC packages
+use  DaVinciAssociators 	v5r3p1   Phys 	
+use  DaVinciEff         	v3r3     Phys 	
+use  DaVinciMCTools     	v5r10    Phys 	
+use  DaVinciTest        	v5r6     Phys 	
+use  DaVinciUser        	v5r2     Phys 	
+
+# Stripping
+use  Stripping          	v2r0p1   Tools 	
+
+# Physics selections
+use  PhysSelSys			v8r0p2   PhysSel
+
+#============================================================================
+# PhysSel
+#============================================================================
+
+# PASTE PHYSSELSYS
+
