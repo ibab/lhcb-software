@@ -8,8 +8,8 @@ branches doc cmt
 #=======================================================
 #-- HLT trigger
 # use HltGeneric                  v2r3     Hlt
-use HltSelections               v3r0     Hlt
-use HltSelChecker               v3r0p1   Hlt 
+use HltSelections               v3r0p1     Hlt
+use HltSelChecker               v3r0       Hlt 
 
 # LoKi
 use  LoKi               	v3r11p1  Tools  
