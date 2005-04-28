@@ -39,6 +39,9 @@ use  DaVinciMCTools     	v5r10    Phys
 use  DaVinciTest        	v5r6     Phys 	
 use  DaVinciUser        	v5r2     Phys 	
 
+# Stripping
+use  Stripping        		v2r1     Tools 	
+
 # Physics selections
 use  PhysSelSys			v8r0p2   PhysSel
 
