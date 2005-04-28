@@ -1,4 +1,4 @@
-// $Id: OnlineEvtSelector.cpp,v 1.3 2005-04-19 16:59:59 frankb Exp $
+// $Id: OnlineEvtSelector.cpp,v 1.4 2005-04-28 11:53:19 bgaidioz Exp $
 //====================================================================
 //	OnlineEvtSelector.cpp
 //--------------------------------------------------------------------
@@ -272,7 +272,12 @@ GaudiOnline::EvtSelector::next(Context& ctxt) const
   OnlineContext* pCtxt = dynamic_cast<OnlineContext*>(&ctxt);
   if ( pCtxt != 0 )   {
     StreamDescriptor* dsc = pCtxt->nextReceiveDescriptor();
-    return pCtxt->receiveEvent(dsc);
+    StatusCode sc = pCtxt->receiveEvent(dsc);
+    if ( !sc.isSuccess() ) {
+      MsgStream log(msgSvc(),name());
+      log << MSG::ERROR << "Failed to receieve the next event." << endmsg;
+    }
+    return sc;
   }
   return StatusCode::FAILURE;
 }
