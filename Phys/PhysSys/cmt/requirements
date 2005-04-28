@@ -40,7 +40,7 @@ use  DaVinciTest        	v5r6     Phys
 use  DaVinciUser        	v5r2     Phys 	
 
 # Stripping
-use  Stripping          	v2r0p1   Tools 	
+use  Stripping          	v2r0p2   Tools 	
 
 # Physics selections
 use  PhysSelSys			v8r0p2   PhysSel
