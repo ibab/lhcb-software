@@ -108,9 +108,10 @@ int sfcc_register(const char *hostname, int level)
         printf("sfcc_lib:connecting to host %s for %s...\n",hostname,level_name[level]);
 #endif
 	sfc_string = hostname;
+	sfc_string = "00:07:E9:10:93:D1";
 	type = 0x00f3;
 	port = 0;
-	dev_string = "eth2";
+	dev_string = "eth1";
 	cpu = 0;
 	
 	sock = socket(PF_PACKET,SOCK_DGRAM,type);
@@ -158,13 +159,13 @@ int sfcc_register(const char *hostname, int level)
 	send_msg->id = id;
 	send_msg->key = recv_msg->key;
 	
-	info("send a conack");
+	info("send a conack\n");
 	send_msg->type = p_conn_ack_ack;
 	send_len = sendto(sock,send_packet,sizeof(struct msg_header),0,(struct sockaddr*)&who,sizeof(who));
 	if(send_len==-1) fatal("sendto");
 	if(send_len!=sizeof(struct msg_header)) {bug("send");abort();}
 	
-	info("prepare decision");
+	info("prepare decision\n");
 	send_msg->content.decision.decision = 0xab;
 	send_msg->content.decision.number = number;
 	send_msg->type = p_decision;
@@ -218,7 +219,7 @@ int sfcc_read_event(struct sfcc_event_buffer *rbuf)
 		}
 	}
 	
-	info("send a ack");
+	info("send a ack\n");
 	send_msg->type = p_ack;
 	send_len = sendto(sock,send_packet,sizeof(struct msg_header),0,(struct sockaddr*)&who,sizeof(who));
 	if(send_len==-1) fatal("sendto");
@@ -260,9 +261,10 @@ int sfcc_unregister() { return 0;}
 
 int sfcc_read_length(int *data_length)
 {
+	info("read length\n");
 	if(decision_has_been_sent==0) {
 		
-		info("send decision");
+		info("send decision\n");
 		send_len = sendto(sock,send_packet,sizeof(struct msg_header),0,(struct sockaddr*)&who,sizeof(who));
 		if(send_len==-1) fatal("sendto");
 		if(send_len!=sizeof(struct msg_header)) {bug("send");abort();}
