@@ -101,7 +101,7 @@ int sfcc_perror(char *prefix)
 	return fprintf(stderr,"%s: %s\n",prefix,sfcc_strerror(sfcc_errno));
 }
 
-int sfcc_register(char *hostname, int level)
+int sfcc_register(const char *hostname, int level)
 {
         if(level!=SFCC_L1 && level!=SFCC_HLT) return -SFCC_ERR_PARAM;
 #ifdef SFCC_DEBUG

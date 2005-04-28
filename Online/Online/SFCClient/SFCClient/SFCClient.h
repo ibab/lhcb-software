@@ -31,7 +31,7 @@ struct sfcc_decision {
         int buffer_len;
 };
 
-int sfcc_register(char *hostname, int level); /* and other parameters */
+int sfcc_register(const char *hostname, int level); /* and other parameters */
 int sfcc_unregister();
 int sfcc_read_length(int *data_length);
 int sfcc_read_event(struct sfcc_event_buffer *rbuf);
