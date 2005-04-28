@@ -2,6 +2,7 @@
 //   Online setup to process events
 //
 ApplicationMgr.Dlls  += { "GaudiOnline" };
+MessageSvc.OutputLevel=1;
 // requires environment variable:
 // SFCCONNECTION=ip://pclhcb102.cern.ch:8888
 // SFCCONNECTION=file://rawbuffer.dat
