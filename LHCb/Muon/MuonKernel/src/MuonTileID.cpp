@@ -1,4 +1,4 @@
-// $Id: MuonTileID.cpp,v 1.7 2005-03-06 13:54:01 atsareg Exp $
+// $Id: MuonTileID.cpp,v 1.8 2005-04-28 09:39:15 jucogan Exp $
 // Include files
 
 #include "MuonKernel/MuonTileID.h"
@@ -59,7 +59,6 @@ MuonTileID MuonTileID::intercept(const MuonTileID& otherID) const {
   // check first that the two strips are really intercepting
   
   if ( station() != otherID.station() ||
-       region()  != otherID.region() ||
        quarter() != otherID.quarter()     )  return MuonTileID();
        
   int thisGridX = layout().xGrid();
@@ -67,7 +66,16 @@ MuonTileID MuonTileID::intercept(const MuonTileID& otherID) const {
   
   int otherGridX = otherID.layout().xGrid();
   int otherGridY = otherID.layout().yGrid();
-  
+  if (otherID.region()>region()) {
+    int rfactor    = (1<<otherID.region())/(1<<region());
+    otherGridX = otherID.layout().xGrid()/rfactor;
+    otherGridY = otherID.layout().yGrid()/rfactor;
+  } else if (otherID.region()<region()) {
+    int rfactor    = (1<<region())/(1<<otherID.region());
+    otherGridX = otherID.layout().xGrid()*rfactor;
+    otherGridY = otherID.layout().yGrid()*rfactor;
+  } 
+
   if ( thisGridX > otherGridX ) {
     unsigned int calcX = nX()*otherGridX/thisGridX;
     if (calcX != otherID.nX() ) return MuonTileID();

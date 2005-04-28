@@ -1,4 +1,4 @@
-// $Id: MuonLayout.cpp,v 1.9 2003-12-09 13:55:01 cattanem Exp $
+// $Id: MuonLayout.cpp,v 1.10 2005-04-28 09:39:15 jucogan Exp $
 // Include files
 #include <iostream>
 #include <algorithm>
@@ -239,7 +239,7 @@ std::vector<MuonTileID> MuonLayout::tilesInRegion(const MuonTileID& pad,
 	int factor = rfactor(pregion)/rfactor(nr);
 	int newX = ivmt->nX()/factor;
 	int newY = ivmt->nY()/factor;
-	MuonTileID tile(sta,0,0,*this,nq,pregion,newX,newY);
+	MuonTileID tile(sta,0,0,*this,pregion,nq,newX,newY);
 	nvmt.push_back(tile);
       } else {
         int factor = rfactor(nr)/rfactor(pregion);
@@ -247,7 +247,7 @@ std::vector<MuonTileID> MuonLayout::tilesInRegion(const MuonTileID& pad,
 	int minY = ivmt->nY()*factor;
         for(int ix=0; ix<factor; ix++) {
 	  for(int iy=0; iy<factor; iy++) {
-	    MuonTileID tile(sta,0,0,*this,nq,pregion,minX+ix,minY+iy);
+	    MuonTileID tile(sta,0,0,*this,pregion,nq,minX+ix,minY+iy);
 	    nvmt.push_back(tile);
 	  }
 	}
@@ -389,7 +389,8 @@ std::vector<MuonTileID> MuonLayout::neighboursInArea(const MuonTileID& pad,
   if ( ! isDefined() ) return vmt;
 
   int quarter = pad.quarter();
-  int nreg = pad.region();
+  int nreg    = pad.region();
+  int sta     = pad.station();
 
   // the finest grid of the two layouts
   int mxgrid = std::max(m_xgrid, playout.xGrid() );
@@ -460,7 +461,7 @@ std::vector<MuonTileID> MuonLayout::neighboursInArea(const MuonTileID& pad,
 	unsigned int newy = iy/rfactor(nr)/yratio;
 	// New tile should not come out of its region
 	if(newy < 2*yGrid() && newx < 2*xGrid()) {
-	  MuonTileID newtile(0,0,0,*this,nr,quarter,newx,newy);
+	  MuonTileID newtile(sta,0,0,*this,nr,quarter,newx,newy);
 	  if (newtile.isValid()) {
 	    vmt.push_back(newtile);
 	  }
