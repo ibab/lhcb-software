@@ -1,4 +1,4 @@
-// $Id: PhysDesktop.cpp,v 1.15 2005-03-03 14:22:50 pkoppenb Exp $
+// $Id: PhysDesktop.cpp,v 1.16 2005-05-02 15:08:31 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
@@ -269,8 +269,7 @@ Particle* PhysDesktop::createParticle( Particle* partToSave ){
     verbose() << "Input particle momentum = " 
               << partToSave->momentum().px() << " ," 
               << partToSave->momentum().py() << " ," 
-              << partToSave->momentum().pz() << " parent " << partToSave->parent() << endmsg;
-    verbose() << "Particle address " << partToSave << endmsg;
+              << partToSave->momentum().pz() << endmsg;
     return partToSave;
   }
   
@@ -279,7 +278,7 @@ Particle* PhysDesktop::createParticle( Particle* partToSave ){
   verbose() << "New particle momentum = " 
             << saveP->momentum().px() << " ," 
             << saveP->momentum().py() << " ," 
-            << saveP->momentum().pz() << " parent " << partToSave->parent() << endmsg;
+            << saveP->momentum().pz() << endmsg;
   
   // Input Particle from stack is given as input to fill newly created particle
   if( ( 0 != partToSave) && ( 0 == partToSave->desktop() ) ) {
@@ -305,9 +304,7 @@ Particle* PhysDesktop::createParticle( Particle* partToSave ){
   verbose() << "Momentum of new particle in desktop = "
             << saveP->momentum().px() << " ," 
             << saveP->momentum().py() << " ," 
-            << saveP->momentum().pz() << " parent " << partToSave->parent() << endmsg;
-  verbose() << "Address of new particle in desktop = "
-            << saveP << endmsg;
+            << saveP->momentum().pz() << endmsg;
   m_parts.push_back(saveP);     
   return saveP;
   
@@ -325,7 +322,6 @@ Vertex* PhysDesktop::createVertex( Vertex* vtxToSave ){
               << vtxToSave->position().x() << " ," 
               << vtxToSave->position().y() << " ," 
               << vtxToSave->position().z() << endmsg;
-    verbose() << "Vertex address " << vtxToSave << endmsg;
     return vtxToSave;
   }
   
@@ -361,8 +357,6 @@ Vertex* PhysDesktop::createVertex( Vertex* vtxToSave ){
             << saveV->position().x() << " ," 
             << saveV->position().y() << " ," 
             << saveV->position().z() << endmsg;
-  verbose() << "Address of new vertex in desktop = "
-            << saveV << endmsg;
   m_secVerts.push_back(saveV);
   return saveV;
   
@@ -403,7 +397,7 @@ StatusCode PhysDesktop::saveDesktop( ParticleVector& pToSave,
     } else {
       verbose() << "Skipping " << (*icand)->particleID().pid() 
                 << " with P= " << (*icand)->momentum() << " m=" 
-                << (*icand)->mass() << " with parent " << (*icand)->parent() << endmsg ;
+                << (*icand)->mass() << endmsg ;
     }
   }
 

@@ -16,9 +16,12 @@ DVAlgorithm::DVAlgorithm( const std::string& name, ISvcLocator* pSvcLocator )
   , m_pFilter(0)
   , m_ppSvc(0)
   , m_checkOverlap(0)
+  , m_algorithm2IDTool()
   , m_setFilterCalled(false)
   , m_countFilterWrite(0)
   , m_countFilterPassed(0)
+  , m_loadToolsWarned(false)
+  , m_algorithmID(-1)
 {  
     
   declareProperty("VertexFitter", m_typeVertexFit);
@@ -144,6 +147,14 @@ StatusCode DVAlgorithm::loadTools() {
     return StatusCode::FAILURE;
   }
 
+  msg << MSG::DEBUG << ">>> Retrieving Algorithm2ID Tool" << endreq;
+  m_algorithm2IDTool = tool<IAlgorithm2ID>("Algorithm2ID");
+  if ( !m_algorithm2IDTool ) {
+    msg << MSG::ERROR << ">>> DVAlgorithm[Algorithm2ID] not found" 
+        << endreq;
+    return StatusCode::FAILURE;
+  }
+
   return StatusCode::SUCCESS;
 }
 
@@ -197,6 +208,9 @@ IParticlePropertySvc* DVAlgorithm::ppSvc() const {return m_ppSvc;}
 
 //=============================================================================
 ICheckOverlap* DVAlgorithm::checkOverlap() const {return m_checkOverlap;}
+
+//=============================================================================
+IAlgorithm2ID* DVAlgorithm::algorithmID() const {return m_algorithm2IDTool;}
 
 //=============================================================================
 StatusCode DVAlgorithm::setFilterPassed  (  bool    state  ) {
@@ -303,3 +317,11 @@ void DVAlgorithm::imposeOutputLocation(std::string outputLocationString)
   
 }
 // ============================================================================
+// Algorithm ID
+//=============================================================================
+int DVAlgorithm::getAlgorithmID(){
+  if ( m_algorithmID < 0 ) {
+    m_algorithmID = m_algorithm2IDTool->idFromName(name());
+  }
+  return  m_algorithmID ;
+}

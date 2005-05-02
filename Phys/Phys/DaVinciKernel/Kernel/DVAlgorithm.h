@@ -19,6 +19,7 @@
 #include "Kernel/IParticleStuffer.h"
 #include "Kernel/IParticleFilter.h"
 #include "Kernel/ICheckOverlap.h"
+#include "Kernel/IAlgorithm2ID.h"
 
 /** @class DVAlgorithm DVAlgorithm.h Kernel/DVAlgorithm.h
  *  Base Class for DaVinci Selection Algorithms:
@@ -82,12 +83,12 @@ public:
   /// Should be avoided!
   void imposeOutputLocation (std::string outputLocationString);  
 
-  /// Variable needed to ensure that calling getTools by user 
-  /// (which is now not needed anymore) will give only one
-  /// message warning, not one per event. To be removed
-  /// from code when calling by user not tolerated anymore
-  bool m_loadToolsWarned;
+  /// get algorithm ID
+  int getAlgorithmID();
  
+  /// Accessor for Algorithm2ID Tool
+  IAlgorithm2ID* algorithmID() const;
+
 protected:
 
 private:
@@ -127,6 +128,9 @@ private:
   mutable IParticlePropertySvc* m_ppSvc;
   /// Reference to CheckOverlap
   mutable ICheckOverlap* m_checkOverlap;
+  /// Reference to Algorithm2ID
+  mutable IAlgorithm2ID* m_algorithm2IDTool;
+
   /// Has setFilterPassed() already been called in current event?
   bool m_setFilterCalled;
   /// Count number of times selection filter is used 
@@ -135,7 +139,15 @@ private:
   /// Number of passing events
   int m_countFilterPassed ;
   
-  
+  /// Variable needed to ensure that calling getTools by user 
+  /// (which is now not needed anymore) will give only one
+  /// message warning, not one per event. To be removed
+  /// from code when calling by user not tolerated anymore
+  bool m_loadToolsWarned;
+
+  /// - For GaudiAlgorithm -
+  /// Algorithm ID
+  int m_algorithmID ;
 };
 // ---------------------------------------------------------------------------
 //   end of class
