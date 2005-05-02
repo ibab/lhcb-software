@@ -1,6 +1,11 @@
-! $Id: release.notes,v 1.158 2005-04-20 14:08:39 pkoppenb Exp $
+! $Id: release.notes,v 1.159 2005-05-02 11:57:26 pkoppenb Exp $
 ! Package     : DaVinciTools
 ! Responsible : P. Koppenburg
+
+! 2005-05-02 - P. Koppenburg
+  - src/MakeResonances.cpp
+    . Remove MakePlots option. Now use HistoProduce option inherited from
+      GaudiHistoAlg
 
 ! 2005-04-20 - P. Koppenburg
   - src/DecodeSimpleDecayString.{cpp,h}

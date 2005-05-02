@@ -1,4 +1,4 @@
-// $Id: MakeResonances.h,v 1.2 2005-04-12 07:32:16 pkoppenb Exp $
+// $Id: MakeResonances.h,v 1.3 2005-05-02 11:57:26 pkoppenb Exp $
 #ifndef MAKERESONANCES_H 
 #define MAKERESONANCES_H 1
 
@@ -12,6 +12,11 @@
  *
  *  @author Patrick KOPPENBURG
  *  @date   2004-11-29
+ * 
+ *  Modified by: Luis Fernandez, 16/04/2005
+ *  Possibility to make X -> ngammas added through property MotherToNGammas
+ *  -> X is created at 0, leaving gammas' origin unchanged
+ * 
  */
 class IFilterCriterion ;
 class IPlotTool;
@@ -68,7 +73,8 @@ private:
   double     m_minPt;               ///< Minimum Pt of combination
   double     m_minMomentum;         ///< Minimum P of combination
   bool       m_killOverlap ;        ///< Kill candidates based on twice the same track
-  bool       m_makePlots;           ///< Produce Histos. Overrides GaudiHistoAlg variable 
+  //  bool       m_makePlots;           ///< Produce Histos. Overrides GaudiHistoAlg variable 
+  bool       m_motherToNGammas;     ///< make mother to n gammas
 
   typedef std::vector<Decay> Decays;
   Decays m_decays;

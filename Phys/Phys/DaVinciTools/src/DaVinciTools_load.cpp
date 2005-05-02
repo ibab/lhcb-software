@@ -1,4 +1,4 @@
-// $Id: DaVinciTools_load.cpp,v 1.49 2005-04-20 14:08:39 pkoppenb Exp $
+// $Id: DaVinciTools_load.cpp,v 1.50 2005-05-02 11:57:26 pkoppenb Exp $
 // Include files 
 
 #include "GaudiKernel/DeclareFactoryEntries.h"
@@ -22,7 +22,7 @@ DECLARE_FACTORY_ENTRIES( DaVinciTools ) {
   DECLARE_TOOL( RecursivePlotTool ) ;
   DECLARE_TOOL( SimplePlotTool ) ;
 
-  DECLARE_TOOL( SetAlgorithmID ) ;
+  DECLARE_TOOL( Algorithm2ID ) ;
 
   // Algorithms
   DECLARE_ALGORITHM( CheckPV );  

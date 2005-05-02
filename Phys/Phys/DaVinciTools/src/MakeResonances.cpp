@@ -1,4 +1,4 @@
-// $Id: MakeResonances.cpp,v 1.3 2005-04-20 14:08:39 pkoppenb Exp $
+// $Id: MakeResonances.cpp,v 1.4 2005-05-02 11:57:26 pkoppenb Exp $
 // Include files 
 
 #include <algorithm>
@@ -51,7 +51,8 @@ MakeResonances::MakeResonances( const std::string& name,
   declareProperty( "DaughterPlotsPath", m_daughterPlotsPath = "" );  
   declareProperty( "MotherPlotsPath", m_motherPlotsPath = "" );  
   declareProperty( "DecayDescriptors", m_decayDescriptors );  
-  declareProperty( "MakePlots" , m_makePlots = false) ;
+  //  declareProperty( "MakePlots" , m_makePlots = false) ;
+  declareProperty( "MotherToNGammas" , m_motherToNGammas = false) ;
 }
 //=============================================================================
 // Destructor
@@ -88,7 +89,7 @@ StatusCode MakeResonances::initialize() {
     }
   }
   // histogramming 
-  GaudiHistoAlg::setProduceHistos( m_makePlots );
+  //  GaudiHistoAlg::setProduceHistos( m_makePlots );
 
   if ( produceHistos() ){
     if ( m_daughterPlotTool != "none" ){
@@ -112,9 +113,11 @@ StatusCode MakeResonances::initialize() {
       info() << "Mother plots will be in " << m_motherPlotsPath << endmsg ;
     }    
   }
-  
-  verbose() << "Going to createDecays" << endmsg ;
-  std::cout << "Hallo" << std::endl ;
+
+  if(m_motherToNGammas){
+    info() << "Will make mother to n gammas" << endmsg;
+  }
+
   StatusCode sc = createDecays();
   if ( sc.isFailure()) return sc ;  
 
@@ -125,16 +128,12 @@ StatusCode MakeResonances::initialize() {
 //=============================================================================
 StatusCode MakeResonances::createDecays(){
   // get string decoder
-  verbose() << "In createDecays" << endmsg ;
   IDecodeSimpleDecayString* dsds = tool<IDecodeSimpleDecayString>("DecodeSimpleDecayString",this);
-  verbose() << "DecodeSimpleDecayString" << endmsg ;
   if ( !dsds ) return StatusCode::FAILURE ;  
   
-  verbose() << "Setting up decay descriptors..." << endmsg ;
   if ( m_decayDescriptors.empty() ){
     m_decayDescriptors.push_back(getDecayDescriptor());
   }
-  verbose() << "...:" << endmsg ;
 
   for ( std::vector<std::string>::const_iterator dd = m_decayDescriptors.begin() ;
         dd != m_decayDescriptors.end() ; ++dd ){
@@ -318,15 +317,19 @@ StatusCode MakeResonances::applyDecay(Decay& d, ParticleVector& Resonances){
     verbose() << " -> momentum " << sum4 << " m=" << sum4.m() << endmsg ;
     if (d.goodFourMomentum(sum4)) {
       verbose() << "Found a candidate with mass " << sum4.m() << endmsg ;
-      // vertex fit!    
+      // LF
+      // vertex fit or make mother to n gammas!
       Particle* Mother;
       StatusCode sc = makeMother(Mother,DaughterVector,d.getMotherPid());
-      if (!sc) Warning("Something failed in vertex fitting");
+      if (!sc){
+        if(m_motherToNGammas) Warning("Something failed making mother to n gammas");
+        else Warning("Something failed in vertex fitting");
+      }
       else {
-        verbose() << "Getting mother " << Mother->particleID().pid() 
+        verbose() << "Getting mother " << Mother->particleID().pid()
                   << " " << Mother->momentum() << endmsg ;
         Resonances.push_back(Mother);
-      } // fit
+      }
     } // mass cut
     inloop = d.getNextCandidates(DaughterVector);
   }
@@ -341,17 +344,35 @@ StatusCode MakeResonances::applyDecay(Decay& d, ParticleVector& Resonances){
 StatusCode MakeResonances::makeMother(Particle*& Mother,const ParticleVector& Daughters,
                                      const ParticleID& motherPid) const{
   verbose() << "Will make particle with PID " << motherPid.pid() << endmsg ;
-  Vertex MontherVertex ;
-  StatusCode sc = vertexFitter()->fitVertex(Daughters,MontherVertex); // waht about photons ?
-  if (!sc){
-    Warning("Failed to fit vertex");
-    return sc ;
+
+  StatusCode sc = StatusCode::SUCCESS;
+  Vertex MotherVertex;
+
+  // LF
+  if(m_motherToNGammas){
+    // The mother made with gammas is created at the origin
+    HepPoint3D zero(0.,0.,0.);
+    MotherVertex.setPosition(zero);
+    MotherVertex.setType(Vertex::Decay);
+   
+    // Add products to vertex
+    for(ParticleVector::const_iterator iterP = Daughters.begin(); iterP != Daughters.end(); iterP++) {
+      MotherVertex.addToProducts(*iterP);
+    }
   }
-  debug() << "Fit vertex at " << MontherVertex.position()/cm 
-          << " with chi^2 " << MontherVertex.chi2() << endmsg;
-  // may add a chi^2 cut here
+  else{
+    sc = vertexFitter()->fitVertex(Daughters,MotherVertex);
+    if (!sc){
+      Warning("Failed to fit vertex");
+      return sc ;
+    }
+    debug() << "Fit vertex at " << MotherVertex.position()/cm 
+            << " with chi^2 " << MotherVertex.chi2() << endmsg;
+    // may add a chi^2 cut here
+  } 
+  
   Particle Candidate;
-  sc = particleStuffer()->fillParticle(MontherVertex,Candidate,motherPid);
+  sc = particleStuffer()->fillParticle(MotherVertex,Candidate,motherPid);
   if (!sc) {
     err() << "Failed to make particle with pid " << motherPid.pid() << endmsg ;
     return sc;
@@ -403,7 +424,6 @@ StatusCode MakeResonances::Decay::initialize(const int& pid,
     for ( std::vector<PidParticles>::const_iterator p2 = m_pidParticles.begin() ; 
           p2 != m_pidParticles.end() ; ++p2){
       if ( (*p)==(*p2).getPid() ){
-      // if ( (*p)== abs((*p2).getPid()) ){ // LF
 #ifdef PKDEBUG
         std::cout << "   initialize Found identical PIDs " << (*p) << " and " << (*p2).getPid() 
                   << " -> check for ordering" << std::endl ;
