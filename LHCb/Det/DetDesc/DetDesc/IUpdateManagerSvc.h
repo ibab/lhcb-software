@@ -1,4 +1,4 @@
-// $Id: IUpdateManagerSvc.h,v 1.1 2005-05-03 12:40:08 marcocle Exp $
+// $Id: IUpdateManagerSvc.h,v 1.2 2005-05-03 15:22:33 marcocle Exp $
 #ifndef DETCOND_IUPDATEMANAGERSVC_H 
 #define DETCOND_IUPDATEMANAGERSVC_H 1
 
@@ -20,71 +20,102 @@ class ITime;
 
 static const InterfaceID IID_IUpdateManagerSvc ( "IUpdateManagerSvc", 1, 0 );
 
+/** @class BaseObjectMemberFunction
+ *
+ * Base class of @class ObjectMemberFunction. It is used to allow to use containers of
+ * different types of object member functions. \see ObjectMemberFunction for details.
+ *
+ * @author Marco Clemencic
+ */
 class BaseObjectMemberFunction {
 public:
-	virtual StatusCode operator() () const = 0;
+  virtual StatusCode operator() () const = 0;
 	
-	virtual BaseObjectMemberFunction *makeCopy() const = 0;
+  virtual BaseObjectMemberFunction *makeCopy() const = 0;
+
+  virtual const std::type_info &type() const = 0;
 	
-	virtual const std::type_info &type() const = 0;
+  virtual bool match(BaseObjectMemberFunction *) const = 0;
 	
-	virtual bool match(BaseObjectMemberFunction *) const = 0;
-	
-	virtual DataObject* castToDataObject() const = 0;
-	virtual ValidDataObject* castToValidDataObject() const = 0;
-	virtual void* castToVoid() const = 0;
+  virtual DataObject* castToDataObject() const = 0;
+  virtual ValidDataObject* castToValidDataObject() const = 0;
+  virtual void* castToVoid() const = 0;
 };
 
+/** @class ObjectMemberFunction
+ *
+ * This class is used by IUpdateManagerSvc to keep pairs made of a member function and a pointer
+ * to the object for which that member function has to be called.
+ *
+ * @author Marco Clemencic
+ */
 template <class CallerClass>
 class ObjectMemberFunction: public BaseObjectMemberFunction {
 public:
-	typedef	StatusCode (CallerClass::*MemberFunctionType)();
-	virtual StatusCode operator() () const {
-	  return (m_memberFunction != NULL)?
+  /// MemberFunctionType is the type for a pointer to a member function of \class CallerClass.
+  typedef	StatusCode (CallerClass::*MemberFunctionType)();
+
+  /// Calls the member function of the object and returns the StatusCode.
+  /// If the pointer to the member function is NULL, do nothing and return success.
+  virtual StatusCode operator() () const {
+    return (m_memberFunction != NULL)?
       (m_instance->*m_memberFunction)() :
       StatusCode::SUCCESS;
-	}
-	
+  }
+
+  /// Clone method to be able to copy an ObjectMemberFunction from the BaseObjectMemberFunction
+  /// interface.
   virtual BaseObjectMemberFunction *makeCopy() const {
     return new ObjectMemberFunction<CallerClass>(m_instance,m_memberFunction);
   }
   
+  /// Returns the type_info of the CallerClass
   virtual const std::type_info &type() const { return typeid(CallerClass); }
-    
-	virtual bool match(BaseObjectMemberFunction *bmf) const {
-		if ( bmf == (BaseObjectMemberFunction *)this ) return true;
-		if (type() == bmf->type()) {
-			ObjectMemberFunction * mf = dynamic_cast<ObjectMemberFunction *>(bmf);
-			return m_instance == mf->m_instance &&
-				m_memberFunction == mf->m_memberFunction;
-		}
-		return false;
-	}
 
-	
+  /// Comparison between two BaseObjectMemberFunction instances.
+  virtual bool match(BaseObjectMemberFunction *bmf) const {
+    if ( bmf == (BaseObjectMemberFunction *)this ) return true;
+    if (type() == bmf->type()) {
+      ObjectMemberFunction * mf = dynamic_cast<ObjectMemberFunction *>(bmf);
+      return m_instance == mf->m_instance &&
+        m_memberFunction == mf->m_memberFunction;
+    }
+    return false;
+  }
+
+  /// Cast the object to DataObject.
   virtual DataObject* castToDataObject() const {
     return dynamic_cast<DataObject*>(m_instance);
   }
-	virtual ValidDataObject* castToValidDataObject() const {
+
+  /// Cast the object to ValidDataObject.
+  virtual ValidDataObject* castToValidDataObject() const {
     return dynamic_cast<ValidDataObject*>(m_instance);
   }
-	virtual void* castToVoid() const {
-		return dynamic_cast<void*>(m_instance);
-	}
-    
+
+  /// Cast the object to void with dynamic_cast.
+  virtual void* castToVoid() const {
+    return dynamic_cast<void*>(m_instance);
+  }
+
 protected:
+
+  /// Standard constructor. Protected so that can be called only by itself or IUpdateManagerSvc.
+  ObjectMemberFunction(CallerClass *instance, const MemberFunctionType &mf):
+    m_instance(instance),m_memberFunction(mf){}
+
+  /// Pointer to the object.
+  CallerClass *m_instance;
+
+  /// Pointer to the member function.
+  MemberFunctionType m_memberFunction;
 	
-	ObjectMemberFunction(CallerClass *instance, const MemberFunctionType &mf):
-		m_instance(instance),m_memberFunction(mf){}
-	
-	CallerClass *m_instance;
-	MemberFunctionType m_memberFunction;
-	
-	friend class IUpdateManagerSvc;
+  friend class IUpdateManagerSvc;
 };
 
 /** @class IUpdateManagerSvc IUpdateManagerSvc.h DetCond/IUpdateManagerSvc.h
- *  
+ *
+ *  Interface class to the Update Manager service. Users should only use this interface.
  *
  *  @author Marco CLEMENCIC
  *  @date   2005-03-30
@@ -155,9 +186,6 @@ public:
   inline StatusCode update(CallerClass *instance){
     return update(dynamic_cast<void*>(instance));
   }
-
-  // TODO: remove this method, which is there just for testing
-  //virtual StatusCode runAll() const = 0;
   
   /// Debug method: it dumps the dependency network through the message service (not very readable, for experts only).
   virtual void dump() = 0;
