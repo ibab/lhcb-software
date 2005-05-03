@@ -7,6 +7,13 @@ Purpose: LHCb Digitization program
 ! 2005-04-25 - Marco Cattaneo
 - Adapt requirements to Lbcom v2r0, LHCb v18r4, Gaudi v16r3
 
+</PRE><H1><A NAME=v8r4>2005-05-03 Boole v8r4</A></H1><PRE>
+Merged from branch v8r3b
+! 2005-05-03 - Marco Cattaneo
+ - Fix RawWriter.opts to write also directory nodes needed for reconstruction
+ - Fix Copy.opts to copy also required directory nodes
+ - Add CopyRaw.opts to merge files produced by RawWriter
+
 </PRE><H1><A NAME=v8r3>2005-04-19 Boole v8r3</A></H1><PRE>
 ! 2005-04-19 - Marco Cattaneo
 - Adapt requirements to Lbcom v1r3, LHCb v18r3, Gaudi v16r3

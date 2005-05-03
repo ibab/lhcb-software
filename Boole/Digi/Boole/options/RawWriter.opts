@@ -1,6 +1,15 @@
 // Set up an output stream for Raw data only
 // -----------------------------------------
 RawWriter.Preload     = false;
+RawWriter.OptItemList =
+{
+  "/Event/DAQ/L1Buffer#1"
+  // Save also existing directory nodes, to allow reconstruction later
+, "/Event/Trig#1"
+, "/Event/Trig/L0#1"
+, "/Event/Raw#2"
+, "/Event/Rec#1"
+}; 
 RawWriter.ItemList = 
 {
   "/Event#1"

@@ -10,9 +10,22 @@ Identical to v8r3, adapted to new project structure
 
 - Packages removed: ITAlgorithms, ITCheckers (moved to Lbcom)
 
+</PRE><H1><A NAME=v8r4>2005-05-03 Boole v8r4</A></H1><PRE>
+Merged from branch v8r3b
+This version uses Gaudi v16r3, LHCb v18r3, Lbcom v1r3 (also CLHEP 1.9, ROOT 4.0)
+Requires input from Gauss v19r3 or greater. Output needs Brunel v26r3 or greater
+Incompatible with DC04 data and programs.
+
+- New functionality:
+  . Add CopyRaw.opts to merge files produced by RawWriter
+
+- Bug fixes:
+  . Fix RawWriter.opts to write also directory nodes needed for reconstruction
+  . Fix Copy.opts to copy also required directory nodes
+
 </PRE><H1><A NAME=v8r3>2005-04-21 Boole v8r3</A></H1><PRE>
 This version uses Gaudi v16r3, LHCb v18r3, Lbcom v1r3 (also CLHEP 1.9, ROOT 4.0) 
-Requires input from Gauss v19r3 or greater. Output needs Brunel v26r2 or greater
+Requires input from Gauss v19r3 or greater. Output needs Brunel v26r3 or greater
 Incompatible with DC04 data and programs.
 
 - Packages removed:  TrgTools

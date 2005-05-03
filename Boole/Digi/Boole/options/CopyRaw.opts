@@ -6,7 +6,6 @@
 //-------------------------------------------------------------------------
 ApplicationMgr.ExtSvc = { "EventSelector" };
 ApplicationMgr.HistogramPersistency = "NONE";
-ApplicationMgr.OutStream = {"DigiWriter"};
 
 EventDataSvc.RootCLID = 1;
 EventSelector.PrintFreq = 1;
@@ -21,17 +20,17 @@ ApplicationMgr.DLLs += { "CaloEvent" };
 
 // Output content definition (i.e. objects to be copied)
 // Modify this file to produce a reduced (or extended...) dataset
-#include "$BOOLEROOT/options/DigiContent.opts"
+#include "$BOOLEROOT/options/RawWriter.opts"
 // Ensure directories and optional items are also copied...
-DigiWriter.Preload         = true;
-DigiWriter.PreloadOptItems = true;
+RawWriter.Preload         = true;
+RawWriter.PreloadOptItems = true;
 
 // Provide one or more input files. All objects defined in DigiContent.opts must
 // exist on the input files, or be accessible from it via file references 
 EventSelector.Input = { 
-  "DATAFILE='PFN:0412-11144100.500ev-L0Yes.digi' TYP='POOL_ROOTTREE' OPT='READ'"
+  "DATAFILE='PFN:0412-11144100.500ev-L0Yes.raw' TYP='POOL_ROOTTREE' OPT='READ'"
 };
 
 // Define the output file
-DigiWriter.Output = "DATAFILE='PFN:DigiCopy.digi' TYP='POOL_ROOTTREE' OPT='REC'";
+RawWriter.Output = "DATAFILE='PFN:RawCopy.raw' TYP='POOL_ROOTTREE' OPT='REC'";
 
