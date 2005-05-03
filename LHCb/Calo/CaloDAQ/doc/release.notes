@@ -4,6 +4,10 @@
 ! Purpose     : Convert Calo Digit and Trigger information to RawBuffer banks.
 !-----------------------------------------------------------------------------
 
+!========================== CaloDAQ v1r1 2005-05-03 ==========================
+! 2005-05-03 - Marco Cattaneo
+ - Add missing factory for CaloEnergyFromRaw tool
+
 !========================= CaloDAQ v1r0p2 2005-03-07 =========================
 ! 2005-03-07 - Marco Cattaneo
  - Fix requirements to use DAQEvent v*
