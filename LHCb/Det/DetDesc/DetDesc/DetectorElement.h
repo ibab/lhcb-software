@@ -1,4 +1,4 @@
-// $Id: DetectorElement.h,v 1.22 2003-06-16 13:42:35 sponce Exp $ 
+// $Id: DetectorElement.h,v 1.23 2005-05-03 12:40:08 marcocle Exp $ 
 #ifndef  DETDESC_DETECTORELEMENT_H
 #define  DETDESC_DETECTORELEMENT_H 1
 
@@ -34,7 +34,7 @@
 class IDataProviderSvc;
 class IMessageSvc;
 template <class T> class DataObjectFactory;
-
+class IUpdateManagerSvc;
 
 /** @class DetectorElement DetectorElement.h DetDesc/DetectorElement.h
  *
@@ -43,6 +43,7 @@ template <class T> class DataObjectFactory;
  *  @author Sebastien Ponce
  *  @author Rado Chytracek
  *  @author Ivan Belyaev
+ *  @author Marco Clemencic
 */
 class DetectorElement: public ParamValidDataObject,
                        virtual public IDetectorElement {
@@ -281,6 +282,7 @@ protected:
   
   IDataProviderSvc*  dataSvc () const;
   IMessageSvc*       msgSvc  () const;
+  IUpdateManagerSvc* updMgrSvc() const;
   
 private:
 
@@ -306,6 +308,10 @@ private:
 
   /// reference to services
   DetDesc::Services* m_services;
+
+  /// reference to update manager service
+  mutable IUpdateManagerSvc *m_updMgrSvc;
+
 };
 
 // implementation of the inlines functions

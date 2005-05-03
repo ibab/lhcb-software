@@ -1,4 +1,4 @@
-// $Id: DetectorElement.cpp,v 1.22 2003-04-23 10:06:49 sponce Exp $ 
+// $Id: DetectorElement.cpp,v 1.23 2005-05-03 12:40:08 marcocle Exp $ 
 #include "GaudiKernel/Kernel.h"
 #include "GaudiKernel/ISvcLocator.h"
 #include "GaudiKernel/IDataManagerSvc.h"
@@ -12,6 +12,8 @@
 #include "DetDesc/IGeometryInfo.h"
 #include "DetDesc/DetectorElement.h"
 #include "DetDesc/DetDesc.h"
+#include "DetDesc/IUpdateManagerSvc.h"
+
 /// local !!!
 #include "GeoInfo.h"
 #include "AlignmentInfo.h"
@@ -26,6 +28,7 @@
  *
  * @author Vanya Belyaev Ivan.Belyaev@itep.ru
  * @author Sebastien Ponce
+ * @author Marco Clemencic <marco.clemencic@cern.ch>
  */
 DetectorElement::DetectorElement( const std::string&   /*name*/    ,
                                   const ITime&         validSince  ,   
@@ -40,6 +43,7 @@ DetectorElement::DetectorElement( const std::string&   /*name*/    ,
   , m_de_childrensLoaded (  false  )
   , m_de_childrens       (         ) 
   , m_services           (    0    )
+  , m_updMgrSvc(NULL)
 {
   m_services = DetDesc::services();
 };
@@ -55,6 +59,7 @@ DetectorElement::DetectorElement( const std::string&   /* name */ )
   , m_de_childrensLoaded (  false  )
   , m_de_childrens       (         )
   , m_services           (    0    )
+  , m_updMgrSvc(NULL)
 {
   m_services = DetDesc::services();
 };
@@ -79,8 +84,11 @@ DetectorElement::~DetectorElement()
   // release fastcontrol
   if ( 0 != m_de_iFastControl ) 
     { delete m_de_iFastControl; m_de_iFastControl = 0; }
+
   // release services
   m_services->release();
+  
+  if ( m_updMgrSvc != NULL ) m_updMgrSvc->release();
 };
 
 IDataProviderSvc* DetectorElement::dataSvc() const {
@@ -90,6 +98,14 @@ IDataProviderSvc* DetectorElement::dataSvc() const {
 IMessageSvc* DetectorElement::msgSvc() const {
   return m_services->msgSvc();
 } 
+
+IUpdateManagerSvc* DetectorElement::updMgrSvc() const {
+  if ( m_updMgrSvc == NULL ) {
+    StatusCode sc = m_services->svcLocator()->service("UpdateManagerSvc",m_updMgrSvc,true);
+    Assert(sc.isSuccess(),"Cannot get a pointer to UpdateManagerSvc");
+  }
+  return m_updMgrSvc;
+}
 
 IDetectorElement*  DetectorElement::parentIDetectorElement() const {
   IDataManagerSvc* mgr = 0;

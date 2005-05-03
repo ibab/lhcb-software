@@ -1,11 +1,15 @@
 ! =============================================================================
-! $Id: release.notes,v 1.171 2005-04-22 13:10:41 marcocle Exp $ 
+! $Id: release.notes,v 1.172 2005-05-03 12:40:08 marcocle Exp $ 
 ! =============================================================================
 ! package DetDesc
 ! package manager : N.N 
 ! =============================================================================
 
 !======================== DetDesc v15r0 2005-04-22 ========================
+! 2005-05-03 - Marco Clemencic
+ - Added the UpdateManagerSvc and the method DetectorElement::updMgrSvc()
+   for an easy access to it
+
 ! 2005-03-18 - Marco Clemencic
  - Change in ValidDataObject and SimpleValidity following the change in
    GaudiKernel/IValidity (needs GaudiKernel >= v20)
