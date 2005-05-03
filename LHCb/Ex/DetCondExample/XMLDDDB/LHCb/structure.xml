@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE DDDB SYSTEM "../DTD/structure.dtd">
-<!-- $Id: structure.xml,v 1.3 2005-04-22 15:17:48 marcocle Exp $ -->
+<!-- $Id: structure.xml,v 1.4 2005-05-03 15:50:30 marcocle Exp $ -->
 <DDDB>
 
   <detelem name="LHCb" type="passive">
@@ -19,8 +19,8 @@
 
     <detelem classID="9999" name="Dummy">
       <param name="comment" type="string"> Dummy detector element used to test the update </param>
-      <readoutinfo condition="/dd/Conditions/ReadOut/DummyDE"/>
-      <slowcontrolinfo condition="/dd/Conditions/SlowControl/DummyDE"/>
+      <conditioninfo name="ReadOut" condition="/dd/Conditions/ReadOut/DummyDE"/>
+      <conditioninfo name="SlowControl" condition="/dd/Conditions/SlowControl/DummyDE"/>
     </detelem>
   </detelem>
 

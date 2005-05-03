@@ -1,4 +1,4 @@
-// $Id: DummyDetectorElement.cpp,v 1.2 2005-05-03 12:46:19 marcocle Exp $
+// $Id: DummyDetectorElement.cpp,v 1.3 2005-05-03 15:50:30 marcocle Exp $
 // Include files 
 
 #include <string>
@@ -51,9 +51,9 @@ StatusCode DummyDetectorElement::initialize(){
   
   try {
     log << MSG::DEBUG << "Registering conditions" << endmsg;
-    updMgrSvc()->registerCondition(this,slowControl()->conditionName(),&DummyDetectorElement::i_updateTemperatures);
-    updMgrSvc()->registerCondition(this,readOut()->conditionName(),&DummyDetectorElement::i_updateTemperatures);
-    updMgrSvc()->registerCondition(this,readOut()->conditionName(),&DummyDetectorElement::i_updateChannels);
+    updMgrSvc()->registerCondition(this,condition("SlowControl").path(),&DummyDetectorElement::i_updateTemperatures);
+    updMgrSvc()->registerCondition(this,condition("ReadOut").path(),&DummyDetectorElement::i_updateTemperatures);
+    updMgrSvc()->registerCondition(this,condition("ReadOut").path(),&DummyDetectorElement::i_updateChannels);
     log << MSG::DEBUG << "Start first update" << endmsg;
     sc = updMgrSvc()->update(this);
     if ( !sc.isSuccess() ) {
@@ -72,8 +72,8 @@ StatusCode DummyDetectorElement::i_updateTemperatures(){
   MsgStream log(msgSvc(),name());
   log << MSG::DEBUG << "Entering i_updateTemperatures()" << endmsg;
   try {
-    m_slowTemp   = slowControl()->condition()->paramAsDouble("Temperature");
-    m_cratesTemp = readOut()->condition()->paramVectorAsDouble("CrateTemps");
+    m_slowTemp   = condition("SlowControl")->paramAsDouble("Temperature");
+    m_cratesTemp = condition("ReadOut")->paramVectorAsDouble("CrateTemps");
   } catch (...) {
     log << MSG::ERROR << "i_updateTemperatures: couldn't access condition" << endmsg;
     return StatusCode::FAILURE;
@@ -87,8 +87,8 @@ StatusCode DummyDetectorElement::i_updateChannels(){
   MsgStream log(msgSvc(),name());
   log << MSG::DEBUG << "Entering i_updateChannels()" << endmsg;
   try {
-    m_maxChannels = readOut()->condition()->paramAsInt("NChannels");
-    m_activeChannels = readOut()->condition()->paramVectorAsInt("Channels");
+    m_maxChannels = condition("ReadOut")->paramAsInt("NChannels");
+    m_activeChannels = condition("ReadOut")->paramVectorAsInt("Channels");
   } catch (...) {
     log << MSG::ERROR << "i_updateChannels: couldn't access condition" << endmsg;
     return StatusCode::FAILURE;

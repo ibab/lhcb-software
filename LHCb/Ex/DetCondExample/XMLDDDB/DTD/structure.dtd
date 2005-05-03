@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- $Id: structure.dtd,v 1.1 2001-12-17 15:46:14 andreav Exp $ -->
+<!-- $Id: structure.dtd,v 1.2 2005-05-03 15:50:30 marcocle Exp $ -->
 
 <!-- DDDB: XML root element, Gaudi transient root as well -->
 <!ELEMENT DDDB (macro|parameter|catalog|catalogref|detelem|condition)+>
@@ -68,7 +68,7 @@
              may have references to its subdetectors
              may have optional user defined custom data, its specific information
 -->
-<!ELEMENT detelem ((author | version | geometryinfo | calibrationinfo |
+<!ELEMENT detelem ((author | version | geometryinfo | conditioninfo | calibrationinfo |
                     slowcontrolinfo | fastcontrolinfo | alignmentinfo |
                     readoutinfo | detelemref | detelem | param | paramVector |
                     userParameter | userParameterVector | specific)*)>
@@ -130,6 +130,15 @@
   support CDATA #IMPLIED
   npath   CDATA #IMPLIED
   rpath   CDATA #IMPLIED>
+
+<!-- conditioninfo: (it should have a better name) information needed to link the Detector
+                    element to a condition. This information consists of:
+                    - name      : string used inside the detector element to access the condition
+                    - condition : path to the condition inside the detector data store -->
+<!ELEMENT conditioninfo EMPTY>
+<!ATTLIST conditioninfo
+  name       CDATA #REQUIRED
+  condition  CDATA #REQUIRED>
 
 <!-- calibrationinfo: The needed information for connecting the detector structure information
                   to the calibration information. This information consists of:

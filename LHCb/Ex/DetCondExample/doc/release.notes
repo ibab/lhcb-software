@@ -1,6 +1,11 @@
-#$Id: release.notes,v 1.33 2005-05-03 12:46:19 marcocle Exp $
+#$Id: release.notes,v 1.34 2005-05-03 15:50:30 marcocle Exp $
 Package Ex/DetCondExample
 Package manager : Marco Clemencic
+
+!=========== Ex/DetCondExample v7r2 ==========================================
+! 2005-05-03 - Marco Clemencic
+ - Use SmartRef to conditions instead of ???Info pointers.
+   It needs upgraded version of Det/DetDescCnv
 
 !=========== Ex/DetCondExample v7r1 ==========================================
 ! 2005-05-03 - Marco Clemencic
