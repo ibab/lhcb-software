@@ -16,28 +16,27 @@ MessageSvc.OutputLevel = 3;
 
 // Choice of two algorithms:
 
-ApplicationMgr.TopAlg += { "MaterialBudgetAlg"} ;
-//ApplicationMgr.TopAlg += { "VolumeCheckAlg"} ;
+//ApplicationMgr.TopAlg += { "MaterialBudgetAlg"} ;
+ApplicationMgr.TopAlg += { "VolumeCheckAlg"} ;
 
 
 //////////////////////////////////////////////////////////////////
 // VolumeCheckAlg options:
 //////////////////////////////////////////////////////////////////
 
-VolumeCheckAlg.Shoots3D    =1000;
-VolumeCheckAlg.ShootsXY    =1000;
-VolumeCheckAlg.ShootsYZ    =1000;
-VolumeCheckAlg.ShootsZX    =1000;
+VolumeCheckAlg.Shots3D    =100000;
+VolumeCheckAlg.ShotsXY    = 10000;
+VolumeCheckAlg.ShotsYZ    = 10000;
+VolumeCheckAlg.ShotsZX    = 10000;
 
-VolumeCheckAlg.OutputLevel = 1;
 
 // Choose a master volume to scan.
 // N.B. Some volumes are very slow (Ecal, Hcal, Muon, Prs in this order)
-VolumeCheckAlg.Volume = "/dd/Geometry/Pipe/BeamPipe";
+//VolumeCheckAlg.Volume = "/dd/Geometry/Pipe/BeamPipe";
 //VolumeCheckAlg.Volume = "/dd/Geometry/Velo/lvVelo";
 //VolumeCheckAlg.Volume = "/dd/Geometry/Velo2Rich1/lvVelo2Rich1";
 //VolumeCheckAlg.Volume = "/dd/Geometry/Rich1/lvRich1Master";
-//VolumeCheckAlg.Volume = "/dd/Geometry/Magnet/Magnet";
+VolumeCheckAlg.Volume = "/dd/Geometry/Magnet/Magnet";
 //VolumeCheckAlg.Volume = "/dd/Geometry/IT/lvITVolume";
 //VolumeCheckAlg.Volume = "/dd/Geometry/OT/lvOT";
 //VolumeCheckAlg.Volume = "/dd/Geometry/Rich2/lvRich2Master";
@@ -58,7 +57,7 @@ VolumeCheckAlg.Volume = "/dd/Geometry/Pipe/BeamPipe";
 
 MaterialBudgetAlg.ZPlane   = 970.0;
 
-//MaterialBudgetAlg.Shots   = 40000;
+MaterialBudgetAlg.Shots   = 100 ;
 
 //MaterialBudgetAlg.xMax     = 600.0;
 //MaterialBudgetAlg.yMax     = 600.0;

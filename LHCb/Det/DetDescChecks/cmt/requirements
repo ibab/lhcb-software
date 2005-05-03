@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.13 2005-01-20 17:03:15 cattanem Exp $
+# $Id: requirements,v 1.14 2005-05-03 10:12:38 ibelyaev Exp $
 # =============================================================================
 # CVS tag $Name: not supported by cvs2svn $ 
 # =============================================================================
@@ -6,14 +6,15 @@
 # Maintainer : Vanya Belyaev Ivan.Belyaev@itep.ru
 # =============================================================================
 package           DetDescChecks
-version           v2r2
+version           v2r3
 
 # =============== structure ===================================================
 branches          cmt doc src options 
 
 # =============== dependencies ================================================
-use               DetDesc   v*  Det
+use               DetDesc   v* Det
 use               GaudiAlg  v*   	
+use               Boost     v* LCG_Interfaces 
 	
 # =============== constituents ================================================
 library           DetDescChecks   *.cpp -import=AIDA
@@ -24,16 +25,16 @@ apply_pattern     component_library library=DetDescChecks
 # =============================================================================
 # Build an application
 # =============================================================================
-application DetDescCheck $(GAUDICONFROOT)/src/GaudiMain.cpp
+application       DetDescCheck $(GAUDICONFROOT)/src/GaudiMain.cpp
 
 private
-use XmlDDDB v* Det
-use RootHistCnv v*
-use GaudiConf v*
-use GaudiSvc v*
-use DetDescCnv v* Det
+use               XmlDDDB     v* Det
+use               RootHistCnv v*
+use               GaudiConf   v*
+use               GaudiSvc    v*
+use               DetDescCnv  v* Det
 macro DetDescCheck_linkopts "$(application_linkopts)"
-apply_pattern application_path
+apply_pattern     application_path
 
 # =============================================================================
 # The END 

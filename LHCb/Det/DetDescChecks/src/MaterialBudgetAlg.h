@@ -1,4 +1,4 @@
-// $Id: MaterialBudgetAlg.h,v 1.7 2005-01-25 14:41:07 cattanem Exp $
+// $Id: MaterialBudgetAlg.h,v 1.8 2005-05-03 10:12:38 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
@@ -103,6 +103,15 @@ protected:
   
   /// destructor (virtual and protected)
   virtual ~MaterialBudgetAlg() ;
+
+private:
+  
+  /// make  random shoots 
+  StatusCode makeRandomShots () ;
+  /// make  grid shots 
+  StatusCode makeGridShots   () ;
+  /// make  psrap shots 
+  StatusCode makePsrapShots  () ;
   
 private:
   
@@ -120,9 +129,6 @@ private:
   // transport service 
   std::string         m_trSvcName     ;
   ITransportSvc*      m_trSvc         ;
-  // random numbers 
-  std::string         m_rndmSvcName   ;  
-  IRndmGenSvc*        m_rndmSvc       ;  
   // point of shooting 
   std::vector<double> m_vrtx          ;
   HepPoint3D          m_vertex        ;
@@ -151,16 +157,6 @@ private:
   double              m_xbinref       ;
   double              m_ybinref       ;
   double              m_zref          ;
-  // material budget histogram itself 
-  AIDA::IHistogram2D*       m_budget2D      ;
-  AIDA::IHistogram2D*       m_dist2DXY      ;
-  AIDA::IHistogram1D*       m_budget1DX     ;
-  AIDA::IHistogram1D*       m_budget1DY     ;
-  AIDA::IHistogram1D*       m_budget3       ;
-  AIDA::IHistogram1D*       m_budget4       ;
-
-  // Normalization histogram  
-  AIDA::IHistogram2D*       m_normalization ;
   
 };
 // ============================================================================

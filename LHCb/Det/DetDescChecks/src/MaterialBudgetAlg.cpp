@@ -1,31 +1,50 @@
-// $Id: MaterialBudgetAlg.cpp,v 1.7 2004-03-01 15:03:44 ibelyaev Exp $
+// $Id: MaterialBudgetAlg.cpp,v 1.8 2005-05-03 10:12:38 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.7  2004/03/01 15:03:44  ibelyaev
+//  update of the package
 // ============================================================================
 // Include files
+// ============================================================================
 // STL & STD 
+// ============================================================================
 #include <functional>
 #include <algorithm>
+// ============================================================================
 // CLHEP
+// ============================================================================
 #include "CLHEP/Units/SystemOfUnits.h"
 #include "CLHEP/Geometry/Vector3D.h"
 #include "CLHEP/Units/PhysicalConstants.h"
+// ============================================================================
 // AIDA 
+// ============================================================================
 #include "AIDA/IHistogram1D.h"
 #include "AIDA/IHistogram2D.h"
+// ============================================================================
 // from Gaudi
+// ============================================================================
 #include "GaudiKernel/AlgFactory.h"
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/IRndmGenSvc.h"
 #include "GaudiKernel/IHistogramSvc.h"
 #include "GaudiKernel/RndmGenerators.h"
+// ============================================================================
 // DetDesc 
+// ============================================================================
 #include "DetDesc/ITransportSvc.h"
+// ============================================================================
 // local
+// ============================================================================
 #include "MaterialBudgetAlg.h"
 #include "DirHbookName.h"
+// ============================================================================
+// Boost 
+// ============================================================================
+#include "boost/progress.hpp"
+// ============================================================================
 
 // ============================================================================
 /** @file MaterialBudgetAlg.cpp
@@ -58,8 +77,6 @@ MaterialBudgetAlg::MaterialBudgetAlg
   : GaudiHistoAlg   ( name , svc     ) 
   , m_trSvcName     ( "TransportSvc" )
   , m_trSvc         ( 0              )  
-  , m_rndmSvcName   ( "RndmGenSvc"   )
-  , m_rndmSvc       ( 0              )
   , m_vrtx          ( 3 , 0.0        )
   , m_vertex        (                )
   , m_shots         ( 1000           )
@@ -79,16 +96,8 @@ MaterialBudgetAlg::MaterialBudgetAlg
   , m_xbinref       ( 20.0           )
   , m_ybinref       ( 20.0           )
   , m_zref          ( 10000.0        )
-  , m_budget2D      (  0             )
-  , m_dist2DXY      (  0             )
-  , m_budget1DX     (  0             )
-  , m_budget1DY     (  0             )
-  , m_budget3       (  0             )
-  , m_budget4       (  0             )
-  , m_normalization (  0             )
 {  
   declareProperty( "TransportService" , m_trSvcName   ) ;
-  declareProperty( "RndmService"      , m_rndmSvcName ) ;
   declareProperty( "ShootingPoint"    , m_vrtx        ) ;
   declareProperty( "Shots"            , m_shots       ) ;
   declareProperty( "zPlane"           , m_z           ) ;
@@ -126,14 +135,14 @@ MaterialBudgetAlg::~MaterialBudgetAlg() {};
 StatusCode MaterialBudgetAlg::initialize() 
 {
   StatusCode sc = GaudiHistoAlg::initialize() ;
-  if( sc.isFailure() ) { return sc ; }
+  if ( sc.isFailure() ) { return sc ; }
   
   m_trSvc   = svc<ITransportSvc> ( m_trSvcName   , true ) ;
-  m_rndmSvc = svc<IRndmGenSvc>   ( m_rndmSvcName , true ) ;
   
+  Assert ( 0 != randSvc() , "IRndmGenSvc* poitns to NULL!" );
   
   // activate the vertex
-  if( m_vrtx.size() <= 3 )
+  if ( m_vrtx.size() <= 3 )
   { while( 3 != m_vrtx.size() ) { m_vrtx.push_back( 0.0 ); } }
   else 
   { warning() << " Ignore extra fields in 'ShootingPoint' "<< endreq ; }
@@ -142,19 +151,19 @@ StatusCode MaterialBudgetAlg::initialize()
   m_vertex.setZ( m_vrtx[2] ) ;
   
   // transform parameters 
-  if( m_xMin >  m_xMax ) {  std::swap( m_xMin , m_xMax )  ; }
-  if( m_yMin >  m_yMax ) {  std::swap( m_yMin , m_yMax )  ; }
+  if ( m_xMin >  m_xMax ) {  std::swap( m_xMin , m_xMax )  ; }
+  if ( m_yMin >  m_yMax ) {  std::swap( m_yMin , m_yMax )  ; }
   // adjust number of bins 
-  if( 0      >= m_nbx  ) {  m_nbx = 50                    ; }
-  if( 0      >= m_nby  ) {  m_nby = 50                    ; }
+  if ( 0      >= m_nbx  ) {  m_nbx = 50                    ; }
+  if ( 0      >= m_nby  ) {  m_nby = 50                    ; }
   
-  if( m_grid != 0 && m_psrap != 0 ) 
+  if ( m_grid != 0 && m_psrap != 0 ) 
   {
     return Error(" Asked for X-Y and Eta-Phi scans ");
   }
   
   // for grid we calculate x/yMin/Max from the size and number of bins 
-  if(m_grid)
+  if ( m_grid )
   {
     m_xMin=-(m_xbinref*m_nbx*m_z)/(2.0*m_zref);
     m_yMin=-(m_ybinref*m_nby*m_z)/(2.0*m_zref);
@@ -162,61 +171,12 @@ StatusCode MaterialBudgetAlg::initialize()
     m_yMax=-m_yMin;
   }
   
-  if (m_psrap){
+  if ( m_psrap)
+  {
     m_xMin=m_etaMin;
     m_yMin=m_phiMin;
     m_xMax=m_etaMax;
     m_yMax=m_phiMax;
-  }
-
-  
-  m_budget2D = 
-    histoSvc()->book( histoPath()                         ,   // directory 
-                      1                                   ,   // ID 
-                      "Material Budget"                   ,   // title 
-                      m_nbx  ,  m_xMin  ,  m_xMax         ,   // x-bins 
-                      m_nby  ,  m_yMin  ,  m_yMax         ) ; // y-bins
-  if ( m_psrap ) {
-    m_dist2DXY = 
-      histoSvc()->book( histoPath()                      ,   // directory 
-                        2                                ,   // ID 
-                        "Material Budget check"          ,   // title 
-                        m_nbx  ,  -600.  ,  600.         ,   // x-bins 
-                        m_nby  ,  -600   ,  600.         ) ; // y-bins
-  }
-  m_budget1DX =
-    book ( 3  , "Material Budget Eta" ,   // ID, title 
-           m_yMin  ,  m_yMax , m_nby  ) ; // x-bins 
-  
-  m_budget1DY = 
-    book ( 4 , "Material Budget Phi"  ,   // ID , title 
-           m_xMin  ,  m_xMax , m_nbx ) ; // x-bins 
-  
-  if( 0 == m_budget2D ) 
-  { return Error(" Could not book 2D Material Budget Histogram " ); }
-  
-  if ( m_psrap ) {
-    if( 0 == m_dist2DXY ) 
-    { return Error(" Could not book 2D shot Histogram ") ;}
-  }
-  if( 0 == m_budget1DX ) 
-  { return Error(" Could not book 1D Material Budget X Histogram "); }
-  if( 0 == m_budget1DY ) 
-  { return Error(" Could not book 1D Material Budget Y Histogram "); }
-
-  if(!m_grid && !m_psrap) 
-    // we do not need normalization histogram for grid
-    // because we have exactly one shot per bin  
-  {
-    // book the histogram
-    m_normalization = 
-      histoSvc()->book( histoPath()                         ,   // directory 
-                        2                                   ,   // ID 
-                        "Normalization for Material Budget" ,   // title 
-                        m_nbx  ,  m_xMin  ,  m_xMax         ,   // x-bins 
-                        m_nby  ,  m_yMin  ,  m_yMax         ) ; // y-bins
-    if( 0 == m_normalization ) 
-    { return Error (" Could not book the Material Budget Normalization"); }
   }
   
   return StatusCode::SUCCESS;
@@ -233,123 +193,156 @@ StatusCode MaterialBudgetAlg::initialize()
 StatusCode MaterialBudgetAlg::execute() 
 {
   
-  // shooting a on grid:
-  if(m_grid || m_psrap)
-  { 
-    double aveDist=0.;
-    double dxgrid=0.;
-    double dygrid=0.;
-    // put in a transformation to go from XY to Eta-Phi.
-    if ( ! m_psrap ) {
-      dxgrid=m_xbinref*m_z/m_zref;
-      dygrid=m_ybinref*m_z/m_zref;
-    }
-    else {
-      dxgrid=(m_xMax-m_xMin)/m_nbx;
-      dygrid=(m_yMax-m_yMin)/m_nby;
-    }
-    // xx and yy refer to the two non-Z dimensions, be them cartesian or 
-    // whatever. x and y are cartesian.
-    double xx=m_xMin+dxgrid/2;
-    double yy=m_yMin+dygrid/2;
-    double x = 0;
-    double y = 0;
-    int shot = 0;
-    
-    double* storeEtaValues;
-    storeEtaValues = (double*) malloc(m_nbx*sizeof(double));
-    
-    for ( int ii = 0 ; ii < m_nbx ; ii++ ) {
-      storeEtaValues[ii]=0.;
-    }
-    while(yy<=m_yMax)
-    {
-      double addPhiSlice=0.;
-      int phiShot=0;
-      while(xx<=m_xMax)
-	    {
-	      if ( m_psrap ) {
-          double theta = 2.0*atan(exp(-1.0*xx));
-          double phi = yy*degree;
-          // make sure theta in not 90 or 270!!!!
-          x = sin(theta)*cos(phi)*m_z/cos(theta);
-          y = sin(theta)*sin(phi)*m_z/cos(theta);
-	      }
-	      else if ( m_grid ) {
-          x = xx;
-          y = yy;
-	      }
-	      shot++;
-	      if( 0 == shot%int(m_shots/10) )
-	      { info() << " Grid shot # " 
-                 << shot          << "/" << m_nbx*m_nby << endreq ; }
-        // "shooting" point at the reference plane
-        const HepPoint3D point( x, y, m_z);       
-        
-        // evaluate the distance 
-        const double dist = 
-          m_trSvc -> distanceInRadUnits( m_vertex , point );
-        
-        // fill material budget histogram
-	      if ( m_grid ) {
-          m_budget2D        -> fill( point.x() , point.y() , dist ) ;
-	      }
-	      else if ( m_psrap ) {
-          m_budget2D        -> fill( xx , yy , dist ) ;
-          m_dist2DXY        -> fill( x , y , 1. ) ;
-	      }
-	      aveDist = aveDist + dist;
-	      addPhiSlice=addPhiSlice+dist;
-	      storeEtaValues[phiShot]=storeEtaValues[phiShot]+dist;
-	      phiShot++;
-        //move to the next point on the grid
-        xx=xx+dxgrid;
-        
-      }
-      m_budget1DX        -> fill( yy , addPhiSlice ) ;
-      xx=m_xMin+dxgrid/2;
-      yy=yy+dygrid;
-    }
-    aveDist = aveDist/shot;
-    xx=m_xMin+dxgrid/2;
-    for ( int iii = 0 ; iii < m_nbx ; iii++ ) {
-      m_budget1DY        -> fill( xx , storeEtaValues[iii] ) ;
-      xx=xx+dxgrid;
-    }
-    info()  << " total shots " << shot << endreq
-            << " Average radiation length = "
-            << aveDist*100 << "%" << endreq;
-    delete[] storeEtaValues;
-  }
-  else // random shooting:
+  if      ( m_grid  ) { return makeGridShots  () ; }
+  else if ( m_psrap ) { return makePsrapShots () ; }
+  
+  return makeRandomShots() ;
+};
+// ============================================================================
+
+// ============================================================================
+/// make a random shoots
+// ============================================================================
+StatusCode MaterialBudgetAlg::makeRandomShots() 
+{
+  
+  // get random number generator 
+  Rndm::Numbers x ( randSvc() , Rndm::Flat( m_xMin , m_xMax ) );
+  Rndm::Numbers y ( randSvc() , Rndm::Flat( m_yMin , m_yMax ) );
+  
+  // make 'shots'
+  boost::progress_display progress ( m_shots ) ;
+  for ( int shot = 0 ; shot < m_shots ; ++shot , ++progress ) 
   {
-    // get random number generator 
-    Rndm::Numbers flat( m_rndmSvc , Rndm::Flat( 0. , 1. ) );
+    // point at reference plane  
+    const HepPoint3D point( x() , y() , m_z );      
+    // evaluate the distance 
+    const double dist = 
+      m_trSvc -> distanceInRadUnits ( m_vertex , point );
     
-    const double dx = m_xMax - m_xMin ;
-    const double dy = m_yMax - m_yMin ;
+    // fill material budget histogram 
+    plot2D ( point.x()   , point.y()              , 
+             1           , "Material Budget"      , 
+             m_xMin      , m_xMax                 , 
+             m_yMin      , m_yMax                 , 
+             m_nbx       , m_nby                  , 
+             dist                                 ) ; // weight 
+    // fill the normalization histogram  
+    plot2D ( point.x()   , point.y()              , 
+             2           , "Budget Normalization" , 
+             m_xMin      , m_xMax                 , 
+             m_yMin      , m_yMax                 , 
+             m_nbx       , m_nby                  ) ;
     
-    // make 'shots'
-    for( int shot = 0 ; shot < m_shots ; ++shot ) 
+  }
+  
+  return StatusCode::SUCCESS ;
+};
+// ============================================================================
+
+// ============================================================================
+/// make grid shoots
+// ============================================================================
+StatusCode MaterialBudgetAlg::makeGridShots() 
+{
+  if ( !m_grid ) { return StatusCode::FAILURE ; }
+  
+  // put in a transformation to go from XY to Eta-Phi.
+  const double dxgrid = m_xbinref * m_z / m_zref;
+  const double dygrid = m_ybinref * m_z / m_zref;
+  
+  // xx and yy refer to the two non-Z dimensions, be them cartesian or 
+  // whatever. x and y are cartesian.
+  
+  /// make a progress bar 
+  boost::progress_display progress( m_nbx * m_nby ) ;
+  
+  for ( double y = m_yMin + dygrid/2 ; y <= m_yMax ; y += dygrid ) 
+  {
+    for ( double x = m_yMin + dxgrid/2 ; x <= m_xMax ; x += dxgrid )
     {
-      // point at reference plane  
-      const HepPoint3D point( m_xMin + dx * flat.shoot() ,
-                              m_yMin + dy * flat.shoot() ,
-                              m_z                        );      
+      // "shooting" point at the reference plane
+      const HepPoint3D point ( x, y, m_z);       
+      
+      // evaluate the distance 
+      const double dist = 
+        m_trSvc -> distanceInRadUnits ( m_vertex , point );
+      
+      // fill material budget histogram 
+      plot2D ( point.x()   , point.y()              , 
+               1           , "Material Budget"      , 
+               m_xMin      , m_xMax                 , 
+               m_yMin      , m_yMax                 , 
+               m_nbx       , m_nby                  , 
+               dist                                 ) ; // weight 
+      // fill the "normalization" histogram  (must be flat)
+      plot2D ( point.x()   , point.y()              , 
+               2           , "Budget Normalization" , 
+               m_xMin      , m_xMax                 , 
+               m_yMin      , m_yMax                 , 
+               m_nbx       , m_nby                  ) ;
+      
+      // show the progress 
+      ++progress ;
+    }
+  }
+  
+  return StatusCode::SUCCESS ;
+} ;
+// ============================================================================
+
+
+// ============================================================================
+/// make grid shoots
+// ============================================================================
+StatusCode MaterialBudgetAlg::makePsrapShots()
+{
+  if ( !m_psrap ) { return StatusCode::FAILURE ; }
+  
+  // put in a transformation to go from XY to Eta-Phi.
+  const double dxgrid = (m_xMax-m_xMin)/m_nbx;
+  const double dygrid = (m_yMax-m_yMin)/m_nby;
+  
+  /// make a pregress bar 
+  boost::progress_display progress ( m_nbx * m_nby ) ;  
+  for ( double yy = m_yMin + dygrid/2 ; yy <= m_yMax ; yy += dygrid ) 
+  {
+    for ( double xx = m_yMin + dxgrid/2 ; xx <= m_xMax ; xx += dxgrid )
+    {
+      const double theta = 2.0*atan(exp(-1.0*xx));
+      const double phi = yy*degree;
+      // make sure theta in not 90 or 270!!!!
+      const double x = sin(theta)*cos(phi)*m_z/cos(theta);
+      const double y = sin(theta)*sin(phi)*m_z/cos(theta);
+      
+      // "shooting" point at the reference plane
+      const HepPoint3D point( x, y, m_z);       
+      
       // evaluate the distance 
       const double dist = 
         m_trSvc -> distanceInRadUnits( m_vertex , point );
       
       // fill material budget histogram 
-      m_budget2D        -> fill( point.x() , point.y() , dist ) ;
-      // fill the normalization histogram  
-      m_normalization -> fill( point.x() , point.y()        ) ; 
+      plot2D ( xx          , yy                      , 
+               1           , "Material Budget"       , 
+               m_xMin      , m_xMax                  , 
+               m_yMin      , m_yMax                  , 
+               m_nbx       , m_nby                   , 
+               dist                                  ) ; // weight 
+      // fill the "helper" histogram 
+      plot2D ( x           , y                       , 
+               2           , "Material Budget Check" , 
+               -600        , 600                     , 
+               -600        , 600                     , 
+               m_nbx       , m_nby                   ) ;
+      
+      // show the progress 
+      ++progress ;
     }
   }
-  // 
-  return StatusCode::SUCCESS;
-};
-// ============================================================================
+  
+  return StatusCode::SUCCESS ;
+} ;
 
 // ============================================================================
 // The End 

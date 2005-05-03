@@ -1,21 +1,29 @@
-// $Id: VolumeCheckAlg.h,v 1.2 2004-03-01 15:03:44 ibelyaev Exp $
+// $Id: VolumeCheckAlg.h,v 1.3 2005-05-03 10:12:38 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
-// Revision 1.1.1.1  2002/05/26 12:47:06  ibelyaev
-// New package: collection of components for checks of Detector Description
-// 
 // ============================================================================
 #ifndef DETDESCCHECKS_VOLUMECHECKALG_H 
 #define DETDESCCHECKS_VOLUMECHECKALG_H 1
+// ============================================================================
 // Include files
+// ============================================================================
 // from STL
+// ============================================================================
 #include <string>
+// ============================================================================
+// CLHEP
+// ============================================================================
+#include "CLHEP/Geometry/Vector3D.h"
+// ============================================================================
 // from GaudiAlg
+// ============================================================================
 #include "GaudiAlg/GaudiHistoAlg.h"
+// ============================================================================
 class ILVolume     ;  // DETDESC 
 class IRndmGenSvc  ;  // GaudiKernel 
+// ============================================================================
 
 /** @class VolumeCheckAlg VolumeCheckAlg.h
  *  
@@ -33,13 +41,13 @@ class IRndmGenSvc  ;  // GaudiKernel
  *  PAW > hi/li
  *
  *  ===> Directory : 
- *          1 (2)    3D-Material Budget for /dd/Geometry/Pipe/BeamPipe  
+ *          1 (2)    3D-Material Budget     for /dd/Geometry/Pipe/BeamPipe  
  *          2 (2)    3D-Material Budget (N) for /dd/Geometry/Pipe/BeamPipe  
- *          3 (2)    XY-Material Budget for /dd/Geometry/Pipe/BeamPipe  
+ *          3 (2)    XY-Material Budget     for /dd/Geometry/Pipe/BeamPipe  
  *          4 (2)    XY-Material Budget (N) for /dd/Geometry/Pipe/BeamPipe  
- *          5 (2)    YZ-Material Budget for /dd/Geometry/Pipe/BeamPipe  
+ *          5 (2)    YZ-Material Budget     for /dd/Geometry/Pipe/BeamPipe  
  *          6 (2)    YZ-Material Budget (N) for /dd/Geometry/Pipe/BeamPipe  
- *          7 (2)    ZX-Material Budget for /dd/Geometry/Pipe/BeamPipe  
+ *          7 (2)    ZX-Material Budget     for /dd/Geometry/Pipe/BeamPipe  
  *          8 (2)    ZX-Material Budget (N) for /dd/Geometry/Pipe/BeamPipe  
  *  PAW > hi/oper/div 1 2 10 
  *  PAW > hi/oper/div 3 4 30
@@ -69,13 +77,13 @@ class IRndmGenSvc  ;  // GaudiKernel
  *  <ul>                   
  *  <li> @p Volume    The name (full path)  of logical volume to be tested 
  *                                                           (@b mandatory )   
- *  <li> @p Shoots3D  Number of random shoots per event for 3D-profile 
+ *  <li> @p Shots3D   Number of random shots per event for 3D-profile 
  *                                                 (default value @p 10000 ) 
- *  <li> @p ShootsXY  Number of random shoots per event for XY-profile 
+ *  <li> @p ShotsXY   Number of random shots per event for XY-profile 
  *                                                 (default value @p 10000 ) 
- *  <li> @p ShootsYZ  Number of random shoots per event for YX-profile 
+ *  <li> @p ShotsYZ   Number of random shots per event for YX-profile 
  *                                                 (default value @p 10000 ) 
- *  <li> @p ShootsZX  Number of random shoots per event for ZX-profile 
+ *  <li> @p ShotsZX   Number of random shots per event for ZX-profile 
  *                                                 (default value @p 10000 ) 
  *  <li> @p Null      Position of the "null vertex" for 3D-profile
  *                                (default value <tt>{ 0. , 0. , 0. }</tt>)
@@ -97,8 +105,6 @@ class IRndmGenSvc  ;  // GaudiKernel
  *  <li> @p MaxZ      Maximal value of @p Z for 2D-projection profiles. 
  *                    It is used only for logical assemblies
  *                                             (default value is @p  10000 ) 
- *  <li> @p RandomNumberService The name of the Gaudi Random Number Service 
- *                                       (default value is @p "RndmGenSvc" )
  *  </ul> 
  *
  *  @see ILVolume 
@@ -131,15 +137,16 @@ public:
    *  @return status code 
    */
   virtual StatusCode execute    () ;
-  
+
 protected:
 
   /** Standard constructor
    *  @param name name of the algorithm
    *  @param svcloc pointer to Service Locator 
    */
-  VolumeCheckAlg( const std::string& name   , 
-                  ISvcLocator*       svcloc ) ;
+  VolumeCheckAlg
+  ( const std::string& name   , 
+    ISvcLocator*       svcloc ) ;
   
   /// destructor (protected and virtual)
   virtual ~VolumeCheckAlg(); 
@@ -170,35 +177,15 @@ private:
   double              m_minz           ;
   double              m_maxz           ;
   
-  // number of shoots  
-  int                 m_shootsSphere   ; 
-  int                 m_shootsXY       ;
-  int                 m_shootsYZ       ;
-  int                 m_shootsZX       ;
+  // number of shots  
+  int                 m_shotsSphere    ; 
+  int                 m_shotsXY        ;
+  int                 m_shotsYZ        ;
+  int                 m_shotsZX        ;
 
-  // random numbers 
-  std::string         m_rndmSvcName    ;  
-  IRndmGenSvc*        m_rndmSvc        ;
-  
   // point of shooting for sphere 
   std::vector<double> m_vrtx           ;
   HepPoint3D          m_vertex         ;
-  
-  // budget histogram for sphere shooting and its normailzation
-  AIDA::IHistogram2D*       m_sphere         ;
-  AIDA::IHistogram2D*       m_sphereNorm     ;
-
-  // budget histogram for xy-shooting  and its normailzation
-  AIDA::IHistogram2D*       m_planeXY        ;
-  AIDA::IHistogram2D*       m_planeXYNorm    ;
-
-  // budget histogram for yz-shooting  and its normailzation
-  AIDA::IHistogram2D*       m_planeYZ        ;
-  AIDA::IHistogram2D*       m_planeYZNorm    ;
-  
-  // budget histogram for zx-shooting  and its normailzation
-  AIDA::IHistogram2D*       m_planeZX        ;
-  AIDA::IHistogram2D*       m_planeZXNorm    ;
   
 };
 // ============================================================================

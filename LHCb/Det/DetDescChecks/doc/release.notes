@@ -1,5 +1,5 @@
 ! ------------------------------------------------------------------------------
-! $Id: release.notes,v 1.9 2005-01-25 14:08:08 cattanem Exp $ 
+! $Id: release.notes,v 1.10 2005-05-03 10:12:38 ibelyaev Exp $ 
 ! ------------------------------------------------------------------------------
 ! CVS tag $Name: not supported by cvs2svn $
 ! ------------------------------------------------------------------------------
@@ -8,6 +8,42 @@
 ! Purpose     : Collection of useful components for checking of 
 !               Detector Description, Material Budget etc 
 ! ------------------------------------------------------------------------------
+
+! 2005-05-03 - Vanya BELYAEV
+ - small polishing of algorithms
+   - use nice new methods "plot2D" (kindly provided by Chris) to 
+     book and fill 2D histograms.
+   - cleanup the code (initialization, etc...)
+   - fix multuple "shoots" --> "shots"
+   - add the "progress bar" :
+     e.g. for VolumeCheckAlg (similar for MaterialBudgetAlg) 
+
+VolumeCheckAlg       INFO  Start 3D shots #100000
+0%   10   20   30   40   50   60   70   80   90   100%
+|----|----|----|----|----|----|----|----|----|----|
+***************************************************
+
+VolumeCheckAlg       INFO  Start XY shots #10000
+0%   10   20   30   40   50   60   70   80   90   100%
+|----|----|----|----|----|----|----|----|----|----|
+***************************************************
+
+VolumeCheckAlg       INFO  Start YZ shots #10000
+0%   10   20   30   40   50   60   70   80   90   100%
+|----|----|----|----|----|----|----|----|----|----|
+***************************************************
+
+VolumeCheckAlg       INFO  Start ZX shots #10000
+
+0%   10   20   30   40   50   60   70   80   90   100%
+|----|----|----|----|----|----|----|----|----|----|
+***************************************************
+
+  options/DetDesckChecks.opts 
+   - rename "Shoots<XX>" -> "Shots<XX>" 
+  cmt/requirements
+   - add usage of Boost library
+   - version increment to v2r3 
 
 !======================= DetDescChecks v2r2 2005-01-25 =========================
 ! 2005-01-25 - Marco Cattaneo
