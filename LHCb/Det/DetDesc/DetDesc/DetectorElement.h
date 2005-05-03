@@ -1,4 +1,4 @@
-// $Id: DetectorElement.h,v 1.23 2005-05-03 12:40:08 marcocle Exp $ 
+// $Id: DetectorElement.h,v 1.24 2005-05-03 15:44:49 marcocle Exp $ 
 #ifndef  DETDESC_DETECTORELEMENT_H
 #define  DETDESC_DETECTORELEMENT_H 1
 
@@ -82,6 +82,9 @@ public:
     IRegistry* pReg = registry();
     return (0!=pReg) ? pReg->identifier() : s_empty;;
   } 
+
+  /// Return the SmartRef for the condition called 'name'.
+  virtual SmartRef<Condition> condition(const std::string &name) const;
 
   /// delegation for geometry 
   inline        IGeometryInfo* geometry(); 
@@ -240,6 +243,9 @@ public:
   /// serialization for writing 
   virtual StreamBuffer& serialize( StreamBuffer& ) const ; 
 
+  /// Used to create a link with a given name to the condition at 'path' in the detector data store.
+  void createCondition(std::string &name, std::string &path);
+
   ///
   /// specific   
   // create "ghost" 
@@ -299,6 +305,10 @@ private:
   IReadOut*              m_de_iReadOut      ;
   ISlowControl*          m_de_iSlowControl  ;
   IFastControl*          m_de_iFastControl  ;
+
+  typedef std::map<std::string,SmartRef<Condition> > ConditionMap;
+  /// Container of the SmartRefs for the conditions.
+  ConditionMap m_de_conditions;
 
   mutable bool                              m_de_childrensLoaded;
   mutable IDetectorElement::IDEContainer    m_de_childrens; 

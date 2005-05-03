@@ -1,4 +1,4 @@
-// $Id: DetectorElement.cpp,v 1.23 2005-05-03 12:40:08 marcocle Exp $ 
+// $Id: DetectorElement.cpp,v 1.24 2005-05-03 15:44:49 marcocle Exp $ 
 #include "GaudiKernel/Kernel.h"
 #include "GaudiKernel/ISvcLocator.h"
 #include "GaudiKernel/IDataManagerSvc.h"
@@ -8,11 +8,15 @@
 #include "GaudiKernel/ObjectFactory.h"
 #include "GaudiKernel/StreamBuffer.h"
 #include "GaudiKernel/Bootstrap.h"
+#include "GaudiKernel/LinkManager.h"
+
 ///
 #include "DetDesc/IGeometryInfo.h"
 #include "DetDesc/DetectorElement.h"
 #include "DetDesc/DetDesc.h"
 #include "DetDesc/IUpdateManagerSvc.h"
+
+#include "DetDesc/Condition.h"
 
 /// local !!!
 #include "GeoInfo.h"
@@ -206,6 +210,27 @@ IDetectorElement* DetectorElement::reset()
   m_de_childrens.clear()       ; 
   return this;  
 };
+
+// ----------------------------------------------------------------------
+SmartRef<Condition> DetectorElement::condition(const std::string &name) const {
+  ConditionMap::const_iterator cond = m_de_conditions.find(name);
+  if ( cond != m_de_conditions.end() ) {
+    return cond->second;
+  }
+  return SmartRef<Condition>();
+}
+
+void DetectorElement::createCondition(std::string &name, std::string &path) {
+  ConditionMap::const_iterator cond = m_de_conditions.find(name);
+  Assert(cond == m_de_conditions.end(),
+         "Could not add condition: " + name + " already present!" );
+  long hint = linkMgr()->addLink(path,0);
+  m_de_conditions.insert(ConditionMap::value_type(name,SmartRef<Condition>(this,hint)));
+}
+
+
+// ----------------------------------------------------------------------
+
 /////
 const IGeometryInfo* 
 DetectorElement::createGeometryInfo()

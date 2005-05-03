@@ -1,5 +1,5 @@
 ! =============================================================================
-! $Id: release.notes,v 1.172 2005-05-03 12:40:08 marcocle Exp $ 
+! $Id: release.notes,v 1.173 2005-05-03 15:44:49 marcocle Exp $ 
 ! =============================================================================
 ! package DetDesc
 ! package manager : N.N 
@@ -9,6 +9,8 @@
 ! 2005-05-03 - Marco Clemencic
  - Added the UpdateManagerSvc and the method DetectorElement::updMgrSvc()
    for an easy access to it
+ - Added the possibility of associating an arbitrary number of conditions to
+   a DetectorElement and access them by name.
 
 ! 2005-03-18 - Marco Clemencic
  - Change in ValidDataObject and SimpleValidity following the change in

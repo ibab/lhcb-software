@@ -1,4 +1,4 @@
-// $Id: IDetectorElement.h,v 1.14 2003-09-20 13:25:39 ibelyaev Exp $
+// $Id: IDetectorElement.h,v 1.15 2005-05-03 15:44:49 marcocle Exp $
 // $ID:  $
 #ifndef  DETDESC_IDETECTORELEMENT_H 
 #define  DETDESC_IDETECTORELEMENT_H 1
@@ -10,6 +10,7 @@
 // Framework include files
 #include "GaudiKernel/IInterface.h"
 #include "GaudiKernel/ISerialize.h"
+#include "GaudiKernel/SmartRef.h"
 #include "DetDesc/IParamSet.h"
 
 // Forward declarations
@@ -19,6 +20,8 @@ class ICalibration;
 class IReadOut;
 class ISlowControl;
 class IFastControl; 
+
+class Condition;
 
 /** the unique interface identifier 
  * ( unique interface identifier , major & minor versions)
@@ -53,6 +56,10 @@ class IDetectorElement : virtual public IInterface,
   
   /// "accessor":  name/identifier of the Detector Element
   virtual          const std::string&   name       ()   const = 0;
+
+  /// Return the SmartRef for the condition called 'name'.
+  virtual SmartRef<Condition> condition(const std::string &name) const = 0;
+  
   ///
   /// delegations:
   ///
