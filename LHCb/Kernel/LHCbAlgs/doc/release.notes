@@ -4,6 +4,10 @@
 ! Purpose     : General purpose algorithms and tools for LHCb
 !-----------------------------------------------------------------------------
 
+!======================== LHCbAlgs v1r6 2005-05-03 =======================
+! 2005-05-03 - Marco Cattaneo
+ - Remove TESFilter algorithm, moved to EventUtils
+
 !======================== LHCbAlgs v1r5 2005-04-19 =======================
 ! 2005-04-19 - Marco Cattaneo
  - Remove printout of program name and version, now done in ApplicationMgr
