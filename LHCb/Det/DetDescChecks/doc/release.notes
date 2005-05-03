@@ -1,5 +1,5 @@
 ! ------------------------------------------------------------------------------
-! $Id: release.notes,v 1.10 2005-05-03 10:12:38 ibelyaev Exp $ 
+! $Id: release.notes,v 1.11 2005-05-03 14:52:53 cattanem Exp $ 
 ! ------------------------------------------------------------------------------
 ! CVS tag $Name: not supported by cvs2svn $
 ! ------------------------------------------------------------------------------
@@ -9,6 +9,7 @@
 !               Detector Description, Material Budget etc 
 ! ------------------------------------------------------------------------------
 
+!======================= DetDescChecks v2r3 2005-05-03 =========================
 ! 2005-05-03 - Vanya BELYAEV
  - small polishing of algorithms
    - use nice new methods "plot2D" (kindly provided by Chris) to 
