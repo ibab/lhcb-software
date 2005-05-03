@@ -1,6 +1,10 @@
-#$Id: release.notes,v 1.32 2005-04-25 11:54:09 marcocle Exp $
+#$Id: release.notes,v 1.33 2005-05-03 12:46:19 marcocle Exp $
 Package Ex/DetCondExample
 Package manager : Marco Clemencic
+
+!=========== Ex/DetCondExample v7r1 ==========================================
+! 2005-05-03 - Marco Clemencic
+ - Added tests for the UpdateManagerSvc
 
 !=========== Ex/DetCondExample v7r0 ==========================================
 ! 2005-04-25 - Marco Clemencic

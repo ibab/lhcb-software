@@ -1,4 +1,4 @@
-//$Id: CondDBTestAlgorithm.cpp,v 1.5 2005-04-22 15:50:05 marcocle Exp $
+//$Id: CondDBTestAlgorithm.cpp,v 1.6 2005-05-03 12:46:19 marcocle Exp $
 
 #include "CondDBTestAlgorithm.h"
 #include "DetDesc/Condition.h"
@@ -10,6 +10,8 @@
 #include "GaudiKernel/AlgFactory.h"
 #include "GaudiKernel/SmartDataPtr.h"
 
+#include "DetDesc/IUpdateManagerSvc.h"
+
 /// Instantiation of a static factory to create instances of this algorithm
 static const AlgFactory<CondDBTestAlgorithm> Factory;
 const IAlgFactory& CondDBTestAlgorithmFactory = Factory;
@@ -18,7 +20,12 @@ const IAlgFactory& CondDBTestAlgorithmFactory = Factory;
 
 /// Constructor
 CondDBTestAlgorithm::CondDBTestAlgorithm ( const std::string& name, ISvcLocator* pSvcLocator )
-  : Algorithm( name, pSvcLocator )
+  : Algorithm( name, pSvcLocator ),
+  m_LHCb_cond(NULL),
+  m_Hcal_cond(NULL),
+  m_LHCb_temp(-1e20),
+  m_Hcal_temp(-1e20),
+  m_avg_temp(-1e20)
 {
 }
 
@@ -26,6 +33,28 @@ CondDBTestAlgorithm::CondDBTestAlgorithm ( const std::string& name, ISvcLocator*
 
 /// Initialize the algorithm. 
 StatusCode CondDBTestAlgorithm::initialize() {
+  StatusCode sc;
+  MsgStream log(msgSvc(), name());
+
+  log << MSG::INFO << "*************** initialize() ***************" << endreq;
+  log << MSG::INFO << "Retrieve the LHCb detector /dd/Structure/LHCb" << endreq;
+  SmartDataPtr<DetectorElement> lhcb( detSvc(), "/dd/Structure/LHCb" );
+
+  log << MSG::INFO << "*** register conditions ***" << endreq;
+  IUpdateManagerSvc *ums;
+  sc = serviceLocator()->service("UpdateManagerSvc",ums,true);
+  if (!sc.isSuccess()) {
+    log << MSG::ERROR << "Unable to find UpdateManagerSvc" <<endmsg;
+    return sc;
+  }
+  ums->registerCondition(this,"/dd/SlowControl/LHCb/scLHCb",&CondDBTestAlgorithm::updateCacheLHCb);
+  ums->registerCondition(this,"/dd/SlowControl/LHCb/scLHCb",&CondDBTestAlgorithm::updateCache);
+  ums->registerCondition(this,"/dd/SlowControl/Hcal/scHcal",&CondDBTestAlgorithm::updateCacheHcal);
+  ums->registerCondition(this,"/dd/SlowControl/Hcal/scHcal",&CondDBTestAlgorithm::updateCache);
+  ums->registerCondition(this,"/dd/SlowControl/LHCb/scLHCb",NULL);
+  ums->update(this);
+  ums->release();
+ 
   return StatusCode::SUCCESS;
 }
 
@@ -37,6 +66,12 @@ StatusCode CondDBTestAlgorithm::execute() {
   StatusCode sc;
   MsgStream log(msgSvc(), name());
   log << MSG::INFO << "*************** execute(): process new event ***************" << endreq;
+
+  log << MSG::INFO << "-------------------------------------" << endmsg;
+  log << MSG::INFO << "Temperature check: LHCb = " << m_LHCb_temp << endmsg;
+  log << MSG::INFO << "                   Hcal = " << m_Hcal_temp << endmsg;
+  log << MSG::INFO << "                   avg  = " << m_avg_temp << endmsg;
+  log << MSG::INFO << "-------------------------------------" << endmsg;
   
   static int count = 0;
   
@@ -165,4 +200,58 @@ StatusCode CondDBTestAlgorithm::i_analyse( DataObject* pObj ) {
 }
 
 //----------------------------------------------------------------------------
+StatusCode CondDBTestAlgorithm::updateCacheLHCb(){
+  MsgStream log(msgSvc(), name());
+  log << MSG::INFO << "updateCacheLHCb() called!" << endmsg;
+  if (m_LHCb_cond == NULL){
+    DataObject *pObj;
+    detSvc()->retrieveObject("/dd/SlowControl/LHCb/scLHCb",pObj);
+    m_LHCb_cond = dynamic_cast<Condition *>(pObj);
+    if (m_LHCb_cond == NULL) {
+      log << MSG::ERROR << "Failed to retrieve /dd/SlowControl/LHCb/scLHCb" << endmsg;
+      return StatusCode::FAILURE;
+    }
+  }
+  m_LHCb_temp = m_LHCb_cond->paramAsDouble("Temperature");
+  return StatusCode::SUCCESS;
+}
+StatusCode CondDBTestAlgorithm::updateCacheHcal(){
+  MsgStream log(msgSvc(), name());
+  log << MSG::INFO << "updateCacheHcal() called!" << endmsg;
+  if (m_Hcal_cond == NULL){
+    DataObject *pObj;
+    detSvc()->retrieveObject("/dd/SlowControl/Hcal/scHcal",pObj);
+    m_Hcal_cond = dynamic_cast<Condition *>(pObj);
+    if (m_Hcal_cond == NULL) {
+      log << MSG::ERROR << "Failed to retrieve /dd/SlowControl/Hcal/scHcal" << endmsg;
+      return StatusCode::FAILURE;
+    }
+  }
+  m_Hcal_temp = m_Hcal_cond->paramAsDouble("Temperature");
+  return StatusCode::SUCCESS;
+}
+StatusCode CondDBTestAlgorithm::updateCache(){
+  MsgStream log(msgSvc(), name());
+  log << MSG::INFO << "updateCache() called!" << endmsg;
+  if (m_LHCb_cond == NULL){
+    DataObject *pObj;
+    detSvc()->retrieveObject("/dd/SlowControl/LHCb/scLHCb",pObj);
+    m_LHCb_cond = dynamic_cast<Condition *>(pObj);
+    if (m_LHCb_cond == NULL) {
+      log << MSG::ERROR << "Failed to retrieve /dd/SlowControl/LHCb/scLHCb" << endmsg;
+      return StatusCode::FAILURE;
+    }
+  }
+  if (m_Hcal_cond == NULL){
+    DataObject *pObj;
+    detSvc()->retrieveObject("/dd/SlowControl/Hcal/scHcal",pObj);
+    m_Hcal_cond = dynamic_cast<Condition *>(pObj);
+    if (m_Hcal_cond == NULL) {
+      log << MSG::ERROR << "Failed to retrieve /dd/SlowControl/Hcal/scHcal" << endmsg;
+      return StatusCode::FAILURE;
+    }
+  }
+  m_avg_temp = (m_LHCb_cond->paramAsDouble("Temperature")+m_Hcal_cond->paramAsDouble("Temperature"))/2.;
+  return StatusCode::SUCCESS;
+}
 

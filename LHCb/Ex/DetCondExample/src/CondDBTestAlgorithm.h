@@ -1,4 +1,4 @@
- // $Id: CondDBTestAlgorithm.h,v 1.2 2005-04-22 15:17:54 marcocle Exp $
+ // $Id: CondDBTestAlgorithm.h,v 1.3 2005-05-03 12:46:19 marcocle Exp $
 #ifndef DETCONDEXAMPLE_CONDDBTESTALGORITHM_H
 #define DETCONDEXAMPLE_CONDDBTESTALGORITHM_H 1
 
@@ -38,6 +38,17 @@ class CondDBTestAlgorithm : public Algorithm {
   /// Dump interesting information about a DataObject
   StatusCode i_analyse( DataObject* pObj );
 
+  StatusCode updateCacheLHCb();
+  StatusCode updateCacheHcal();
+  StatusCode updateCache();
+  
+  Condition *m_LHCb_cond;
+  Condition *m_Hcal_cond;
+  
+  double m_LHCb_temp;
+  double m_Hcal_temp;
+  double m_avg_temp;
+  
 };
 
 #endif    // DETCONDEXAMPLE_CONDDBTESTALGORITHM_H

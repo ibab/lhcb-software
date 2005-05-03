@@ -1,4 +1,4 @@
-//$Id: testCondDB.opts,v 1.7 2005-05-03 12:46:19 marcocle Exp $
+//$Id: testUpdateMgr.opts,v 1.1 2005-05-03 12:46:19 marcocle Exp $
 //==============================================================
 // Job options for DetCondExample test of CondDB
 //==============================================================
@@ -19,7 +19,8 @@ ApplicationMgr.TopAlg  = { "Sequencer" };
 Sequencer.Members   = { };
 Sequencer.Members  += { "EvtClock" };
 Sequencer.Members  += { "FireUpdateManager" };
-Sequencer.Members  += { "CondDBTestAlgorithm" };
+Sequencer.Members  += { "TestUpdateMgr" };
+Sequencer.Members  += { "TestUpdateMgr/TestUpdateMgr2" };
 Sequencer.Members  += { "DumpDetectorStore" };
 
 //--------------------------------------------------------------
