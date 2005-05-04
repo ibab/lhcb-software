@@ -12,6 +12,6 @@ ApplicationMgr.DLLs += { "CaloEvent", "DAQEvent" };
 EventPersistencySvc.CnvServices += { "OnlineCnvSvc" };
 PoolDbCacheSvc.Dlls             += {"SealSTLDict" };
 //EventSelector.Input = {"DATAFILE='rfio:/castor/cern.ch/user/c/cattanem/Brunel/v26r0/Brunel-0412.dst' TYP='POOL_ROOT' OPT='READ'"};
-EventSelector.Input              = {"DATA='${SFCCONNECTION}' SVC='GaudiOnline::EvtSelector'"};
+EventSelector.Input              = {"DATA='${SFCCONNECTION}' SVC='GaudiOnline::EvtSelector' TYPE='DAQ'"};
 #include "$GAUDIONLINEROOT/options/SendBuffer.opts"
 RawBufferWriter.OutputLevel      = 1;

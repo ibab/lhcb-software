@@ -1,11 +1,11 @@
-// $Id: StreamDescriptor.h,v 1.3 2005-04-19 16:59:59 frankb Exp $
+// $Id: StreamDescriptor.h,v 1.4 2005-05-04 17:10:22 frankb Exp $
 //====================================================================
 //	StreamDescriptor.h
 //--------------------------------------------------------------------
 //
 //	Author     : M.Frank
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/GaudiOnline/StreamDescriptor.h,v 1.3 2005-04-19 16:59:59 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/GaudiOnline/StreamDescriptor.h,v 1.4 2005-05-04 17:10:22 frankb Exp $
 #ifndef GAUDIONLINE_STREAMDESCRIPTOR_H
 #define GAUDIONLINE_STREAMDESCRIPTOR_H 1
 
@@ -51,7 +51,7 @@ namespace GaudiOnline {
       /// Fast functions: write buffer from memory
       bool (*m_write)    (const Access& con, const void* buffer, int max_len);
       /// Fast functions: set trigger decision
-      bool (*m_set_decision)(const Access& con, int value);
+      bool (*m_set_decision)(const Access& con, const void* buffer, int len);
       /// fast functions: send trigger decision
       bool (*m_send_decision)(const Access& con);
     public:
@@ -90,6 +90,8 @@ namespace GaudiOnline {
     char* data() const        {    return m_data;      }
     /// Set data type (L1/DAQ)
     void setType(int typ)     {    m_type = typ;       }
+    /// Access to data type
+    int  type() const         {    return m_type;      }
     /// Allocate data block
     char* allocate(int len);
     /// Change currenbt access descriptor
@@ -97,7 +99,7 @@ namespace GaudiOnline {
     /// Send decision
     int sendDecision() const;
     /// Set decision to be sent
-    int setDecision(int val) const;
+    int setDecision(const void* data, int len) const;
 
     /// Access to datatype (by string)
     static int dataType(const std::string& typ);
@@ -113,8 +115,8 @@ namespace GaudiOnline {
     {   return (*con.m_read)(con, data, len);          }
     static bool readLength(const Access& con, int& len)
     {   return (*con.m_read_len)(con, len);            }
-    static bool setDecision(const Access& con, int value)
-    {   return (*con.m_set_decision)(con, value);      }
+    static bool setDecision(const Access& con, const void* data, int len)
+    {   return (*con.m_set_decision)(con, data, len);  }
     static bool sendDecision(const Access& con)
     {   return (*con.m_send_decision)(con);            }
   };

@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/DecisionSetterAlg.cpp,v 1.1 2005-04-19 15:27:26 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/DecisionSetterAlg.cpp,v 1.2 2005-05-04 17:10:22 frankb Exp $
 //	====================================================================
 //  DecisionSetterAlg.cpp
 //	--------------------------------------------------------------------
@@ -17,6 +17,7 @@
 
 using GaudiOnline::StreamDescriptor;
 
+
 /**@class DecisionSetterAlg 
   *
   *
@@ -27,9 +28,9 @@ class DecisionSetterAlg : public Algorithm   {
 public:
   /// Standard algorithm constructor
   DecisionSetterAlg(const std::string& name, ISvcLocator* pSvcLocator)
-  :	Algorithm(name, pSvcLocator)    {                                 }
+  :	Algorithm(name, pSvcLocator) {                                }
   /// Standard Destructor
-  virtual ~DecisionSetterAlg()        {                                 }
+  virtual ~DecisionSetterAlg()      {                                 }
   /// Initialize
   virtual StatusCode initialize()   {    return StatusCode::SUCCESS;  }
   /// Finalize
@@ -42,8 +43,18 @@ public:
       if ( reg )   {
         GaudiOnline::Address* addr = dynamic_cast<GaudiOnline::Address*>(reg->address());
         const GaudiOnline::StreamDescriptor* dsc = addr->descriptor();
+        int data[8];     // 8 words of L1 decision data see: LHCb 2003-80
+        memset(data,0,sizeof(data));
         if ( dsc )  {
-          return dsc->setDecision(1);
+          switch( dsc->type() ) {
+	  case GaudiOnline::StreamDescriptor::L1_BUFFER:
+            data[0] = 1;
+            break;
+          case GaudiOnline::StreamDescriptor::DAQ_BUFFER:
+            data[0] = 1;
+            break;
+	  }
+          return dsc->setDecision(&data[0], sizeof(data));
         }
       }
     }

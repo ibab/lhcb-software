@@ -6,7 +6,7 @@
 //
 //	Author     : M.Frank
 //====================================================================
-// $Id: StreamDescriptor.cpp,v 1.7 2005-04-28 11:53:19 bgaidioz Exp $
+// $Id: StreamDescriptor.cpp,v 1.8 2005-05-04 17:10:23 frankb Exp $
 
 // Include files
 #include "GaudiOnline/StreamDescriptor.h"
@@ -89,7 +89,7 @@ namespace {
     return true;
   }
   /// Fast functions: set trigger decision
-  bool file_set_decision(const Access& /* con */, int /* value */ )   {
+  bool file_set_decision(const Access& /* con */, const void* /* data */, int /* len */ )   {
     return true;
   }
   /// fast functions: send trigger decision
@@ -120,7 +120,7 @@ namespace {
     return true;
   }
   /// Fast functions: set trigger decision
-  bool ip_set_decision(const Access& /* con */, int /* value */ )   {
+  bool ip_set_decision(const Access& /* con */, const void* /* data */, int /* len */ )   {
     return true;
   }
   /// fast functions: send trigger decision
@@ -143,11 +143,10 @@ namespace {
     return false; //return SFC::sfcc_send(&snd_buff) == 0;
   }
   /// Fast functions: set trigger decision
-  bool sfc_set_decision(const Access& /* con */, int value )   {
-    static int dec = value;
+  bool sfc_set_decision(const Access& /* con */, const void* data, int len )   {
     SFC::sfcc_decision dec_buff;
-    dec_buff.buffer_len = sizeof(int);
-    dec_buff.buffer = (SFC::SFCC_C_CHAR*)&dec;
+    dec_buff.buffer_len = len;
+    dec_buff.buffer = (SFC::SFCC_C_CHAR*)data;
     return SFC::sfcc_set_decision(&dec_buff) == 0;
   }
   /// fast functions: send trigger decision
@@ -225,7 +224,7 @@ void GaudiOnline::StreamDescriptor::getInetConnection(const std::string& con,
 }
 
 int GaudiOnline::StreamDescriptor::dataType(const std::string& val)  {
-  if ( val == "DAQ" || val == "L2" || val == "L3" )
+  if ( val == "DAQ" || val == "L2" || val == "L3" || val == "HLT" )
     return DAQ_BUFFER;
   else if ( val == "L1" )
     return L1_BUFFER;
@@ -404,9 +403,9 @@ int GaudiOnline::StreamDescriptor::sendDecision()  const {
 }
 
 /// Send decision
-int GaudiOnline::StreamDescriptor::setDecision(int val)  const {
+int GaudiOnline::StreamDescriptor::setDecision(const void* data, int len)  const {
   if ( m_currentAccess )  {
-    return setDecision(*m_currentAccess,val) ? 1 : 0;
+    return setDecision(*m_currentAccess,data, len) ? 1 : 0;
   }
   return 0;
 }

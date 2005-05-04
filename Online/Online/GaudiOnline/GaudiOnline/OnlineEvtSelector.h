@@ -1,4 +1,4 @@
-// $Id: OnlineEvtSelector.h,v 1.1.1.1 2005-04-18 15:31:41 frankb Exp $
+// $Id: OnlineEvtSelector.h,v 1.2 2005-05-04 17:10:22 frankb Exp $
 //====================================================================
 //	OnlineEvtSelector.h
 //--------------------------------------------------------------------
@@ -13,7 +13,7 @@
 //  Created    : 4/01/99
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/GaudiOnline/OnlineEvtSelector.h,v 1.1.1.1 2005-04-18 15:31:41 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/GaudiOnline/OnlineEvtSelector.h,v 1.2 2005-05-04 17:10:22 frankb Exp $
 
 #ifndef GAUDIONLINE_EVTSELECTOR_H
 #define GAUDIONLINE_EVTSELECTOR_H 1
@@ -111,7 +111,7 @@ namespace GaudiOnline  {
         the state of the context in a way to point to the new list.
         
         @param cr The new criteria string.
-        @param c Reference pointer to the Context object.
+        @param c  Reference pointer to the Context object.
     */
     virtual StatusCode resetCriteria(const std::string& cr,Context& c)const;
 
@@ -123,8 +123,8 @@ namespace GaudiOnline  {
 
   protected:
     // Data Members
-    std::string                   m_cnvSvcName;
     CLID                          m_rootCLID;
+    std::string                   m_cnvSvcName;
     std::string                   m_rootName;
     std::string                   m_buffLen;
     std::string                   m_dataTypeName;

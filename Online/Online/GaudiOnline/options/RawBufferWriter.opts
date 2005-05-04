@@ -5,7 +5,11 @@ ApplicationMgr.HistogramPersistency = "NONE";
 ApplicationMgr.EvtMax      = 1000;
 PoolDbCacheSvc.OutputLevel = 3;
 
+RawBufferWriter.Type         = "DAQ";
 RawBufferWriter.AcceptParams = "file://rawBuffer.dat";
+RawBufferWriter.Type         = "L1";
+RawBufferWriter.AcceptParams = "file://l1Buffer.dat";
+
 EventDataSvc.RootCLID = 1;
 // DLLs that contain the necessary dictionaries and factories
 ApplicationMgr.DLLs += { "CaloEvent", "DAQEvent" };

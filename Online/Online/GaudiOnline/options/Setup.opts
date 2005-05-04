@@ -7,5 +7,5 @@ MessageSvc.OutputLevel=1;
 // SFCCONNECTION=ip://pclhcb102.cern.ch:8888
 // SFCCONNECTION=file://rawbuffer.dat
 // SFCCONNECTION=sfc://mysfcnode.cern.ch:8765
-EventSelector.Input   = {"DATA='${SFCCONNECTION}' SVC='GaudiOnline::EvtSelector'"};
+EventSelector.Input   = {"DATA='${SFCCONNECTION}' SVC='GaudiOnline::EvtSelector' TYPE='DAQ'"};
 EventPersistencySvc.CnvServices += { "OnlineCnvSvc" };

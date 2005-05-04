@@ -1,3 +1,4 @@
 ApplicationMgr.Dlls       += { "GaudiOnline" };
 ApplicationMgr.TopAlg      = { "RawBufferWriter" };
+RawBufferWriter.Type       = "DAQ";
 RawBufferWriter.AcceptParams = "ip://000.000.000.000:8888";
