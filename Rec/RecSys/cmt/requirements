@@ -34,9 +34,7 @@ use TrgChecker		v7r1	Trg
 use TrgForward		v5r1p1	Trg
 use TrgMonitor		v4r0	Trg
 use TrgMuon		v1r2p1	Trg
-# use TrgMuonID		v3r0	Trg
 use TrgPrimVertex	v4r0p1	Trg
-use TrgTools            v7r3    Trg
 use TrgVelo             v7r3    Trg
 use TrgVeloTT		v6r1	Trg
 
