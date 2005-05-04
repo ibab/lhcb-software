@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/DecisionSetterAlg.cpp,v 1.2 2005-05-04 17:10:22 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/DecisionSetterAlg.cpp,v 1.3 2005-05-04 17:14:09 frankb Exp $
 //	====================================================================
 //  DecisionSetterAlg.cpp
 //	--------------------------------------------------------------------
@@ -47,13 +47,13 @@ public:
         memset(data,0,sizeof(data));
         if ( dsc )  {
           switch( dsc->type() ) {
-	  case GaudiOnline::StreamDescriptor::L1_BUFFER:
+          case GaudiOnline::StreamDescriptor::L1_BUFFER:
             data[0] = 1;
             break;
           case GaudiOnline::StreamDescriptor::DAQ_BUFFER:
             data[0] = 1;
             break;
-	  }
+          }
           return dsc->setDecision(&data[0], sizeof(data));
         }
       }

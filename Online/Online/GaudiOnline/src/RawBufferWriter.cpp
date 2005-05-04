@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/RawBufferWriter.cpp,v 1.3 2005-05-04 17:10:23 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/RawBufferWriter.cpp,v 1.4 2005-05-04 17:14:09 frankb Exp $
 //	====================================================================
 //  RawBufferWriter.cpp
 //	--------------------------------------------------------------------
@@ -79,22 +79,22 @@ public:
     case StreamDescriptor::DAQ_BUFFER: {
       SmartDataPtr<RawBuffer> raw(eventSvc(),RawBufferLocation::Default);
       if ( raw )  {
-	int len = raw->currentSize()*sizeof(raw_int);
-	if ( StreamDescriptor::write(m_client, &len, sizeof(len)) )  {
-	  return StreamDescriptor::write(m_client, raw->buffer(), len) 
-	    ? StatusCode::SUCCESS : StatusCode::FAILURE;
-	}
+        int len = raw->currentSize()*sizeof(raw_int);
+        if ( StreamDescriptor::write(m_client, &len, sizeof(len)) )  {
+          return StreamDescriptor::write(m_client, raw->buffer(), len) 
+                 ? StatusCode::SUCCESS : StatusCode::FAILURE;
+        }
       }
     }
     break;
     case StreamDescriptor::L1_BUFFER:  {
       SmartDataPtr<L1Buffer> l1(eventSvc(),L1BufferLocation::Default);
       if ( l1 )  {
-	int len = l1->currentSize()*sizeof(l1_int);
-	if ( StreamDescriptor::write(m_client, &len, sizeof(len)) )  {
-	  return StreamDescriptor::write(m_client, l1->buffer(), len) 
-	    ? StatusCode::SUCCESS : StatusCode::FAILURE;
-	}
+        int len = l1->currentSize()*sizeof(l1_int);
+        if ( StreamDescriptor::write(m_client, &len, sizeof(len)) )  {
+          return StreamDescriptor::write(m_client, l1->buffer(), len) 
+                  ? StatusCode::SUCCESS : StatusCode::FAILURE;
+        }
       }
     }
     break;
