@@ -24,16 +24,13 @@ ApplicationMgr.DLLs += { "CaloEvent" };
 // Output content definition (i.e. objects to be copied)
 // Modify this file to produce a reduced (or extended...) DST
 #include "$BRUNELROOT/options/DstContent.opts"
+DstWriter.Preload         = true;
 DstWriter.PreloadOptItems = true;
-
-// Provide the input catalog describing the input files
-PoolDbCacheSvc.InputCatalog = "xmlcatalog_http://cattanem.home.cern.ch/cattanem/POOL/MyCatalog.xml";
 
 // Provide one or more input files. All objects defined in DstContent.opts must
 // exist on the input files, or be accessible from it via file references 
 EventSelector.Input = { 
-  "DATAFILE='rfio:/castor/cern.ch/user/c/cattanem/Brunel/v23r4/Pool411300.dst' TYP='POOL_ROOTTREE' OPT='READ'" 
-, "DATAFILE='rfio:/castor/cern.ch/user/c/cattanem/Brunel/v23r3/Pool411300.dst' TYP='POOL_ROOTTREE' OPT='READ'" 
+  "DATAFILE='rfio:/castor/cern.ch/user/c/cattanem/Brunel/v26r3/0412-11144100.500ev.dst' TYP='POOL_ROOTTREE' OPT='READ'" 
 };
 
 // Define the output file
