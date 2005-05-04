@@ -4,6 +4,7 @@
 ! Purpose     : Implementation of the Linker package, to associate objects
 !-----------------------------------------------------------------------------
 
+!====================== LinkerEvent v1r8 2005-05-04 ==========================
 ! 2005-05-04 - Vanya BELYAEV
 
  - Linker/LinkedFrom.h,
@@ -37,7 +38,6 @@
 
    The fix is completely backward compatible   
 
- 
 !====================== LinkerEvent v1r7 2005-03-29 ==========================
 ! 2005-03-29 - Olivier Callot
  - Fixed a major bug in LinkedFrom, as the containers are not loaded by default.
