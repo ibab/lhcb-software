@@ -1,4 +1,4 @@
-// $Id: LinkedFrom.h,v 1.8 2005-03-29 14:56:02 ocallot Exp $
+// $Id: LinkedFrom.h,v 1.9 2005-05-04 13:55:09 ibelyaev Exp $
 #ifndef LINKER_LINKEDFROM_H 
 #define LINKER_LINKEDFROM_H 1
 
@@ -18,6 +18,9 @@ template <class SOURCE,
           class TARGET=KeyedObject<int> ,
           class SOURCECONTAINER=KeyedContainer<SOURCE> > 
 class LinkedFrom {
+protected:
+  typedef typename TARGET::key_type             _tKEY ;
+  typedef typename Containers::key_traits<_tKEY> TKEY ;
 public: 
   //== Typedefs to please Matt
   typedef typename std::vector<SOURCE*>                  LRange;
@@ -52,7 +55,7 @@ public:
   SOURCE* first( const TARGET* target ) {
     if ( NULL == m_links ) return NULL;
     m_curReference.setLinkID( -1 );
-    m_wantedKey = target->key();
+    m_wantedKey = TKEY::identifier( target->key() ) ;
     //== check that the target's container is known.
     const DataObject* container = target->parent();
     LinkManager::Link* link = m_links->linkMgr()->link( container );
@@ -63,7 +66,7 @@ public:
     if ( 0 == link ) return NULL;
     //== Define the target's linkID and key
     m_curReference.setLinkID( link->ID() );
-    m_curReference.setObjectKey( target->key() );
+    m_curReference.setObjectKey( TKEY::identifier( target->key() ) );
     int key = m_links->firstSource( m_curReference, m_srcIterator );
     if ( m_wantedKey != m_curReference.objectKey() ) return NULL;
     return currentSource( key );
@@ -95,7 +98,7 @@ public:
     m_int.clear();
     if ( NULL == m_links ) return m_int;
     m_curReference.setLinkID( -1 );
-    m_wantedKey = target->key();
+    m_wantedKey = TKEY::identifier( target->key() ) ;
     //== check that the target's container is known.
     const DataObject* container = target->parent();
     LinkManager::Link* link = m_links->linkMgr()->link( container );

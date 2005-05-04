@@ -1,4 +1,4 @@
-// $Id: LinkedTo.h,v 1.5 2005-01-27 10:53:59 ocallot Exp $
+// $Id: LinkedTo.h,v 1.6 2005-05-04 13:55:09 ibelyaev Exp $
 #ifndef LINKER_LINKEDTO_H 
 #define LINKER_LINKEDTO_H 1
 
@@ -20,6 +20,9 @@ template < class TARGET,
            class SOURCE=KeyedObject<int>,
            class TARGETCONTAINER=KeyedContainer<TARGET> > 
 class LinkedTo {
+protected:
+  typedef typename SOURCE::key_type             _sKEY ;
+  typedef typename Containers::key_traits<_sKEY> SKEY ;  
 public: 
   //== Typedefs to please Matt
   typedef typename std::vector<TARGET*>                  LRange;
@@ -55,9 +58,10 @@ public:
    */
   TARGET* first( const SOURCE* source ) {
     if ( NULL == m_links ) return NULL;
-    bool status = m_links->firstReference( source->key(), 
-                                           source->parent(),
-                                           m_curReference   );
+    bool status = m_links->firstReference
+    ( SKEY::identifier( source->key() ) , 
+      source->parent(),
+      m_curReference   );
     if ( !status ) {
       m_curReference.setNextIndex( -1 );
       return NULL;

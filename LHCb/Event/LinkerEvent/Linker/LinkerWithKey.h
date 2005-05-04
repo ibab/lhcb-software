@@ -1,4 +1,4 @@
-// $Id: LinkerWithKey.h,v 1.5 2004-11-24 15:52:52 ocallot Exp $
+// $Id: LinkerWithKey.h,v 1.6 2005-05-04 13:55:09 ibelyaev Exp $
 #ifndef LINKER_LINKERWITHKEY_H 
 #define LINKER_LINKERWITHKEY_H 1
 
@@ -15,6 +15,11 @@
  */
 template <class TARGET, class SOURCE=KeyedObject<int> > 
 class LinkerWithKey {
+protected:
+  typedef typename SOURCE::key_type             _sKEY ;
+  typedef typename Containers::key_traits<_sKEY> SKEY ;  
+  typedef typename TARGET::key_type             _tKEY ;
+  typedef typename Containers::key_traits<_tKEY> TKEY ;
 public: 
   /// Standard constructor
   LinkerWithKey(IDataProviderSvc* eventSvc,
@@ -51,19 +56,20 @@ public:
              double weight = 1. ) {
     if ( NULL == source ) return;
     if ( NULL == dest   ) return;
-    int srcKey     = source->key();
+    
+    int srcKey     = SKEY::identifier ( source -> key () ) ;
     int srcLinkID  = m_links->linkID( source->parent() );
-    int destKey    = dest->key();
+    int destKey    = TKEY::identifier ( dest   -> key () ) ;
     int destLinkID = m_links->linkID( dest->parent() );
     
     m_links->addReference( srcKey, srcLinkID, destKey, destLinkID, weight );
   }
-
-  void link( int key,
-             const TARGET* dest, 
+  
+  void link( int key ,
+             const TARGET* dest , 
              double weight = 1. ) {
     if ( NULL == dest   ) return;
-    int destKey    = dest->key();
+    int destKey    = TKEY::identifier ( dest -> key () ) ;
     int destLinkID = m_links->linkID( dest->parent() );
     m_links->addReference( key, -1, destKey, destLinkID, weight );
   }

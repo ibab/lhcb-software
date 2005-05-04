@@ -4,6 +4,40 @@
 ! Purpose     : Implementation of the Linker package, to associate objects
 !-----------------------------------------------------------------------------
 
+! 2005-05-04 - Vanya BELYAEV
+
+ - Linker/LinkedFrom.h,
+   Linker/LinkedTo.h,
+   Linker/LinkerWithKey.h
+   
+   Fix a problem with usage of keys, which are not implicitely 
+   convertible into "int" (e.g. CaloCellID *by porpose* has no 
+   conversion operator to "int"). Instead of implict conversion a
+   call to Containers::key_traits<key_type>::identifier( key ) is 
+   performed. (The same technique for conversion of "key" into 
+   "long" is used by class KeyedContainer. In addition the 
+   uniformity and coherence is achieved). 
+   This fix allow to buitl linker table for classes, "keyed" by 
+   not trivial keys, e.g. CaloDigit (the key is CaloCellID).
+   I gues sit will be even more important for future, when 
+   LHCbID will be used for indexing (LHCbID also have no implicit 
+   conversion to "int"). The problem is solved in a trivial way 
+   by specialization for        
+     Containers::key_traits<key_type>::identifier( key ) 
+   E.g. for CaloCellID it is done using the mehtod CaloCellID::all() : 
+
+       /// Full unhashed key identifier
+       static long identifier ( const key_type& k ) 
+       { return k.all   () ; }
+ 
+   ( see $CALOEVENTROOT/Event/CaloCellIDKeyTraits.h) 
+ 
+   I guess the similar specialization for LHCbID to be used as key
+    will use something like LHCbID::key() 
+
+   The fix is completely backward compatible   
+
+ 
 !====================== LinkerEvent v1r7 2005-03-29 ==========================
 ! 2005-03-29 - Olivier Callot
  - Fixed a major bug in LinkedFrom, as the containers are not loaded by default.
