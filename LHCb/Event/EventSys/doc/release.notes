@@ -1,6 +1,10 @@
 package EventSys
 package manager: Marco Cattaneo
 
+!======================== EventSys v20r4 2005-05-04 ========================
+! 2005-05-04 - Marco Cattaneo
+ - Use LinkerEvent v1r8
+
 !======================== EventSys v20r3 2005-04-21 ========================
 ! 2005-04-21 - Marco Cattaneo
  - Add TrackEvent v0r1, EventUtils v1r0

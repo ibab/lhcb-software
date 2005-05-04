@@ -1,5 +1,5 @@
 package EventSys
-version v20r3
+version v20r4
 
 branches doc cmt
 
@@ -18,7 +18,7 @@ use PhysEvent   v8r9    Event
 use DAQEvent    v5r0    Event
 use GenEvent    v3r3p1  Event
 use EventAssoc  v1r4    Event
-use LinkerEvent v1r7    Event
+use LinkerEvent v1r8    Event
 use TrgEvent    v5r4    Event
 use TrackEvent  v0r1    Event
 use EventUtils  v1r0    Event
