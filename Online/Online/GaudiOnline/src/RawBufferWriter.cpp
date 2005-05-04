@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/RawBufferWriter.cpp,v 1.1.1.1 2005-04-18 15:31:41 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/RawBufferWriter.cpp,v 1.2 2005-05-04 10:09:19 frankb Exp $
 //	====================================================================
 //  RawBufferWriter.cpp
 //	--------------------------------------------------------------------
@@ -44,7 +44,15 @@ public:
   virtual StatusCode initialize()   {
     m_connection = StreamDescriptor::bind(m_acceptParams);
     if ( m_connection.ioDesc > 0 )  {
+      MsgStream log(msgSvc(), name());
+      log << MSG::INFO << "Waiting for connection from:" << m_acceptParams << endmsg;
       m_client = StreamDescriptor::accept(m_connection);
+      if ( m_client.ioDesc ) {
+        log << MSG::INFO << "Received event request connection." << std::endl;
+      }
+      else {
+        log << MSG::INFO << "FAILED receiving event request connection." << endmsg;        
+      }
       return (m_client.ioDesc > 0) ? StatusCode::SUCCESS : StatusCode::FAILURE;
     }
     return StatusCode::FAILURE;

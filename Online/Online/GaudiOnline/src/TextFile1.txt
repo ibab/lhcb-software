@@ -37,7 +37,7 @@ time.sleep(1.5)
 for i in xrange(200):
   print '###', i, DIM.Client.sendCommand('Hello_0/FSM','Running'), DIM.Client.sendCommand('Hello_0/FSM','Active')
 
-DIM.Client.sendCommand('Hello_0/EXIT',1)
+Online.DIM.Client.sendCommand('Hello_0/EXIT',1)
 
 self.appMgr.readOptions('../options/Recv.opts')
 self.appMgr.evtSel().Input=["DATA='file://rawBuffer.dat' SVC='GaudiOnline::EvtSelector' LENGTH='44555635'"]

@@ -1,24 +1,12 @@
-////////////////////////////////////////////////////////////////
-// Example options file.
-////////////////////////////////////////////////////////////////
-ApplicationMgr.ExtSvc = { "EventSelector" };
-//--------------------------------------------------------------
-// Private Application Configuration options
-//--------------------------------------------------------------
-// Set output level threshold (2=DEBUG, 3=INFO, 4=WARNING, 5=ERROR, 6=FATAL )
-MessageSvc.OutputLevel     =  1;
-//--------------------------------------------------------------
-// Event related parameters
-//--------------------------------------------------------------
-//ApplicationMgr.EvtSel   = "NONE"; // do not use any event input
-ApplicationMgr.HistogramPersistency = "NONE";
-ApplicationMgr.EvtMax      = 10;
-PoolDbCacheSvc.OutputLevel = 3;
-ApplicationMgr.DLLs += { "DAQEvent" };
-EventDataSvc.RootCLID = 1;
-EventDataSvc.EnableFaultHandler  = true ;
-//ApplicationMgr.TopAlg         = { "StoreExplorerAlg" };
-StoreExplorerAlg.Load         = 1;
-StoreExplorerAlg.PrintFreq    = 1.0;
-ApplicationMgr.EvtMax         = 1000;
+ApplicationMgr.ExtSvc                = { "EventSelector" };
+MessageSvc.OutputLevel               = 3;
+PoolDbCacheSvc.OutputLevel           = 3;
+ApplicationMgr.HistogramPersistency  = "NONE";
+ApplicationMgr.DLLs                 += { "DAQEvent" };
+EventDataSvc.RootCLID                = 1;
+EventDataSvc.EnableFaultHandler      = true ;
+ApplicationMgr.TopAlg                = { "StoreExplorerAlg" };
+StoreExplorerAlg.Load                = 1;
+StoreExplorerAlg.PrintFreq           = 1.0;
+ApplicationMgr.EvtMax                = 1000;
 #include "$GAUDIONLINEROOT/options/Setup.opts"

@@ -22,3 +22,6 @@ use PyDIM         v* Online
 
 application Gaudi "$(GAUDICONFROOT)/src/GaudiMain.cpp"
 apply_pattern application_path
+
+path_remove PYTHONPATH "/GaudiOnline/" "WIN32" "\GaudiOnline\"
+path_append PYTHONPATH "$(GAUDIONLINEROOT)/python"
