@@ -5,18 +5,31 @@
 ! Purpose     : LHCb OO kernel packages
 !-----------------------------------------------------------------------------
 
-!======================= LHCbSys v18r4 2005-04-22 =======================
-! 2005-04-22 - Marco Cattaneo
- - Packages added:    STTools v1r1
- - Packages modified: DetSys v6r5, DetDescCnv v2r4, XmlTools v3r5
+!======================= LHCbSys v18r4 2005-05-04 =======================
+! 2005-05-04 - Marco Cattaneo
+ - Packages added:    STTools v1r1, TrgTools v7r3
+ - Packages modified: DetSys v6r5, DetDescCnv v2r4, XmlTools v3r5, LHCbAlgs v1r6,
+                      DetDescChecks v2r3, DAQSys v1r3, CaloDAQ v1r1
 
  - In STTools v1r1:
    . New package, to break coupling between Rec packages and ITAlgorithms
    . Initially contains STSignalToNoiseTool, renamed from ITSignalToNoiseTool
 
- - In DetDescCnv v2r4, XmlTools v3r5
+ - In LHCbAlgs v1r6:
+   . Remove TESFilter, moved to EventUtils
+
+ - In DAQSys v1r3:
+   . Enable creation of /Event/Header by DataOnDemandSvc (in RawBuffer.opts)
+
+ - In CaloDAQ v1r1:
+   . Add a missing factory
+
+ - In DetDescCnv v2r4, XmlTools v3r5:
    . Pointer returned by XmlParserSvc::parseString() must now be released by
      caller. XmlGenericCnv deletes the DOMDocument returned in this way.
+
+ - In DetDescChecks v2r3:
+   . Cleanup code, add progress bar to output
 
 !======================= LHCbSys v18r3 2005-04-21 =======================
 ! 2005-04-21 - Marco Cattaneo
@@ -36,7 +49,6 @@
  - In LHCbAlgs v1r5
    . Remove from LbAppinit printout of application name and version, now done
      by GaudiMain. APPVERSION environment variable no longer required.
-   . Remove TESFilter, moved to EventUtils
 
  - In LHCbKernel v5r10
    . Fix to LHCbID, 26 bits for ITChannelID
