@@ -1,4 +1,4 @@
-///  $Id: XmlBaseDetElemCnv.h,v 1.4 2005-03-24 16:21:17 cattanem Exp $
+///  $Id: XmlBaseDetElemCnv.h,v 1.5 2005-05-04 11:37:31 marcocle Exp $
 
 #ifndef DETDESCCNV_XMLDETELEMCNV_H
 #define DETDESCCNV_XMLDETELEMCNV_H
@@ -125,6 +125,7 @@ private:
   const XMLCh* paramVectorString;
   const XMLCh* userParameterString;
   const XMLCh* userParameterVectorString;
+  const XMLCh* conditioninfoString;
 
   // Constant Strings for parameter names
   const XMLCh* typeString;

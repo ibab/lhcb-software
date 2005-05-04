@@ -1,4 +1,4 @@
-// $Id: XmlBaseDetElemCnv.cpp,v 1.4 2003-06-16 13:44:12 sponce Exp $
+// $Id: XmlBaseDetElemCnv.cpp,v 1.5 2005-05-04 11:37:31 marcocle Exp $
 
 // include files
 
@@ -57,6 +57,7 @@ void XmlBaseDetElemCnv::initStrings() {
   userParameterString = xercesc::XMLString::transcode("userParameter");
   userParameterVectorString =
     xercesc::XMLString::transcode("userParameterVector");
+  conditioninfoString = xercesc::XMLString::transcode("conditioninfo");
 
   typeString = xercesc::XMLString::transcode("type");
   nameString = xercesc::XMLString::transcode("name");
@@ -100,6 +101,7 @@ XmlBaseDetElemCnv::~XmlBaseDetElemCnv () {
   xercesc::XMLString::release((XMLCh**)&paramVectorString);
   xercesc::XMLString::release((XMLCh**)&userParameterString);
   xercesc::XMLString::release((XMLCh**)&userParameterVectorString);
+  xercesc::XMLString::release((XMLCh**)&conditioninfoString);
 
   xercesc::XMLString::release((XMLCh**)&typeString);
   xercesc::XMLString::release((XMLCh**)&nameString);
@@ -469,7 +471,14 @@ StatusCode XmlBaseDetElemCnv::i_fillObj (xercesc::DOMElement* childElement,
         dataObj->addUserParameterVector (name, type, comment, vect);
       }
     }
-    
+
+  } else if (0 == xercesc::XMLString::compareString(conditioninfoString, tagName)) {
+
+    std::string name = dom2Std(childElement->getAttribute(nameString));
+    std::string path = dom2Std(childElement->getAttribute(conditionString));
+    log << MSG::DEBUG << "Create SmartRef<Condition> : \"" << name << "\" -> " << path  << endreq;
+    dataObj->createCondition(name,path);
+
   } else {
     // Something goes wrong, does it?
     char* tagNameString = xercesc::XMLString::transcode(tagName);

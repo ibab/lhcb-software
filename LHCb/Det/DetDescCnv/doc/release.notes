@@ -4,6 +4,12 @@
 ! Purpose     : standard converters for the LHCb Detector Description
 !-----------------------------------------------------------------------------
 
+!================ DetDescCnv v3r0 2005-05-04 ===========================
+! 2005-05-04 - Marco Clemencic
+ - Added support for XML tag "conditioninfo".
+   Depend on Det/DetDesc >= v15 and Det/XmlDDDB > v24r1
+ - Removed explicit dependency on DetDesc v14r*
+
 !================ DetDescCnv v2r4 2005-04-22 ===========================
 ! 2005-04-22 - Marco Clemencic
  - XmlGenericCnv deletes the DOMDocument returned by XmlParserSvc::parseString().

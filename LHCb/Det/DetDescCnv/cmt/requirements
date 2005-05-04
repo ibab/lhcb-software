@@ -1,7 +1,7 @@
-# $Id: requirements,v 1.9 2005-04-22 13:33:31 marcocle Exp $ 
+# $Id: requirements,v 1.10 2005-05-04 11:37:31 marcocle Exp $ 
 # =============================================================================
 package       DetDescCnv
-version       v2r4
+version       v3r0
 
 # =========== structure =======================================================
 branches      DetDescCnv doc cmt src
@@ -10,7 +10,7 @@ branches      DetDescCnv doc cmt src
 include_dirs  $(DETDESCCNVROOT)
 
 # =========== dependencies ====================================================
-use	DetDesc		v14r*	Det
+use	DetDesc		v*	Det
 use	XmlTools	v3r*	Tools
 
 # =========== constituents =====================================================
