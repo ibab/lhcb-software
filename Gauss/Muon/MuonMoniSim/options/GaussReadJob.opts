@@ -1,0 +1,75 @@
+#printOptions 
+// $Id: GaussReadJob.opts,v 1.1.1.1 2005-05-05 09:42:13 asarti Exp $ 
+
+/** @file 
+ * 
+ *  Example options to read sim file produced by Gauss.
+ *  This file defines, sequences and configures the algorithms to be executed
+ *
+ */
+
+#include "$GAUSSOPTS/Common.opts"   // Necessary for any Gauss executable
+
+//---------------------------------------------------------------------------
+// Phases to be executed: initialization + monitor
+//---------------------------------------------------------------------------
+ApplicationMgr.TopAlg  = { "LbAppInit/Gauss",
+                           "GaudiSequencer/Monitor"        
+                         }; 
+
+//---------------------------------------------------------------------------
+// Monitor phase: as in production + user monitor
+//                two separate phase for Generator and Simulation
+//                can be commented separately
+//---------------------------------------------------------------------------
+Monitor.Members       += { "GaudiSequencer/GenMonitor" };
+Monitor.Members       += { "GaudiSequencer/SimMonitor" };     
+Monitor.Members       += { "GaudiSequencer/UserMonitor" };
+#include "$MUONCHECKERSROOT/options/GaussReadMonitor.opts"
+Monitor.MeasureTime = true;
+
+// Algorithm in User monitor
+UserMonitor.Members       += { "GiGaGetEventAlg",
+                               "GiGaGetHitsAlg"
+                             };
+// The following are set explicitely since not in standard sim file
+GiGaGetHitsAlg.RichOpticalPhotons = "";
+GiGaGetHitsAlg.RichSegments = "";
+GiGaGetHitsAlg.RichTracks = "";
+
+//---------------------------------------------------------------------------
+// Must read events (overwrite property of no events input set for 
+// "normal" Gauss jobs)
+//---------------------------------------------------------------------------
+ApplicationMgr.EvtSel = "";
+EventDataSvc.RootCLID = 1;
+
+//---------------------------------------------------------------------------
+// Add here any job specific options, to over-ride previously defined options
+//---------------------------------------------------------------------------
+//MessageSvc.OutputLevel    = 3;
+MCTruthFullMonitor.OutputLevel   = 2;
+GeneratorFullMonitor.OutputLevel = 2;
+
+//---------------------------------------------------------------------------
+// Number of events to read
+ApplicationMgr.EvtMax      = 20;
+
+
+//---------------------------------------------------------------------------
+// Input file 
+//---------------------------------------------------------------------------
+EventSelector.Input   = {
+  "DATAFILE='PFN:castor:/castor/cern.ch/user/a/asarti/Gauss.sim' TYP='POOL_ROOTTREE' OPT='READ'"
+};
+
+//---------------------------------------------------------------------------
+// Output file. 
+//---------------------------------------------------------------------------
+HistogramPersistencySvc.OutputFile = "/afs/cern.ch/user/a/asarti/scratch0/GaussReadHistos.hbook";
+ApplicationMgr.ExtSvc += { "NTupleSvc" };
+NTupleSvc.Output      += { "FILE1 DATAFILE='/afs/cern.ch/user/a/asarti/scratch0/GaussHitReadMoni.root' TYP='ROOT' OPT='NEW'" } ;
+
+MuHitMoni.DetailedMonitor = true;
+MuHitMoni.fullDetail = true;
+

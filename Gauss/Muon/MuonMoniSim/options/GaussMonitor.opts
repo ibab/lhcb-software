@@ -1,0 +1,95 @@
+// $Id: GaussMonitor.opts,v 1.1.1.1 2005-05-05 09:42:12 asarti Exp $ 
+
+/** @file 
+ * 
+ *  File containing options to monitor/study details of production.
+ *
+ *  @author G.Corti
+ *  @date 2005-02-21
+ */
+
+// Load the DLLs for histogram persistency
+ApplicationMgr.DLLs += { "HbookCnv" };
+ApplicationMgr.HistogramPersistency = "HBOOK";
+
+//---------------------------------------------------------------------
+// Generator Monitor Histograms: set of histograms from HepMC
+//---------------------------------------------------------------------
+// Note that if you are running GenStandAlone you will also need to 
+// switch on the algorithm:
+GenMonitor.Members       += {"GenMonitorAlg/GenHistos"};
+GenHistos.OutputLevel     = 4;
+GenHistos.FillHistos      = true;
+
+//---------------------------------------------------------------------
+// Simulation Monitor Histograms: from MCParticles and MCHits
+//---------------------------------------------------------------------
+// VELO 
+ApplicationMgr.DLLs += { "VeloAlgorithms", "VeloDet" };
+SimMonitor.Members  += { "VeloMonitor" };
+// Switch off histogram not relevant for Gauss, see full list in
+//#include "$VELOALGORITHMSROOT/options/VeloMonitor.opts"
+VeloMonitor.DetailedMonitor     = true;  // default false
+VeloMonitor.TestMCVeloFE        = false; // default true
+VeloMonitor.TestVeloFullDigit   = false; // default true
+VeloMonitor.TestVeloCluster     = false; // default true
+
+// Silicon tracker
+SimMonitor.Members  += { "MCHitMonitor/STHitMonitor" };
+STHitMonitor.mcPathString = "/Event/MC/IT/Hits";
+STHitMonitor.zStations    = { 2350.0, 2620.0, 7780.0, 8460.0, 9115.0 };
+ 
+// Outer tracker
+SimMonitor.Members  += { "MCHitMonitor/OTHitMonitor" };
+OTHitMonitor.mcPathString = "/Event/MC/OT/Hits";
+OTHitMonitor.zStations    = { 7938.0, 8625.0, 9315.0 };
+
+// RICH info, because of the way it is setup it will only be executed
+// when running the simulation with Geant4 not when reading files!
+#include "$GAUSSRICHROOT/options/RichAnalysis.opts"
+
+// Calorimeters
+SimMonitor.Members  += { "MCCaloMonitor/SpdMonitor"  ,
+                         "MCCaloMonitor/PrsMonitor"  , 
+                         "MCCaloMonitor/EcalMonitor" ,
+                         "MCCaloMonitor/HcalMonitor" } ;
+#include "$CALOMONISIMOPTS/MoniSim.opts"
+SpdMonitor.OutputLevel = 4;
+PrsMonitor.OutputLevel = 4;
+EcalMonitor.OutputLevel = 4;
+HcalMonitor.OutputLevel = 4;
+
+//Muon Monitoring
+ApplicationMgr.DLLs += { "MuonMoniSim" };
+SimMonitor.Members += { "MuonHitChecker/MuHitMoni" };
+
+//------------------------------------------------------------------------
+// Check events
+//------------------------------------------------------------------------
+// Check MCSignal info (only for complete production)
+// SimMonitor.Members    += { "MCDecayCounter" };
+MCDecayCounter.DetailedPrintOut          = true;
+MCDecayCounter.OutputLevel               = 2;
+MCDecayCounter.MCDecayFinder.OutputLevel = 3;
+//MCDecayCounter.EvtCodeFromData = true;
+//MCDecayCounter.EvtCode = 0;
+
+//------------------------------------------------------------------------
+// Dump of event at various phases in text form
+//------------------------------------------------------------------------
+// Dump on screen content of generator full info
+//GenMonitor.Members += {"DumpMC"};
+
+//------------------------------------------------------------------------
+// Detailed Monitor
+//------------------------------------------------------------------------
+//ApplicationMgr.ExtSvc += { "NTupleSvc" }; 
+//NTupleSvc.Output={"FILE1 DATAFILE='/afs/cern.ch/user/a/asarti/scratch0/GaussMonitor.hbook' TYP='HBOOK' OPT='NEW'"};
+
+// Algorithm filling detailed info in an ntuple from HepMC
+//GenMonitor.Members       += { "GeneratorFullMonitor" };
+
+// Algorithm filling detailed info in an ntuple from MCParticle
+//SimMonitor.Members       += { "MCTruthFullMonitor" };
+
+

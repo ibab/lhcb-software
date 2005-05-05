@@ -1,0 +1,33 @@
+*** Begin of history file: Tue Nov  4 16:15:32 2003
+h/file 1 $SCWEEK/lucapass/geant4.hbook
+n/print 100
+n/plot 100.run
+n/plot 100.event
+n/plot 100.nhits
+n/plot 100.is
+n/plot 100.ir
+n/plot 100.ic
+n/plot 100.x
+opt stat
+n/plot 100.x
+set stat 111111
+n/plot 100.x
+n/plot 100.y
+n/plot 100.z
+n/print 100
+n/plot 100.t
+opt logy
+n/plot 100.t
+n/plot 100.id
+n/plot 100.px
+n/plot 100.py
+n/plot 100.pz
+n/plot 100.E
+n/plot 100.xv
+n/plot 100.yv
+n/plot 100.zv
+n/plot 100.id
+n/plot 100.idm
+n/plot 100.id
+exit
+*** End   of history file: Tue Nov  4 16:23:10 2003

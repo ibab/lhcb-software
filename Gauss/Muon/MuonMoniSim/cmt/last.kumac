@@ -1,0 +1,7 @@
+*** Begin of history file: Mon Jul 28 12:54:35 2003
+exec test
+n/plot 100.nhits
+n/print 100
+exec test
+exit
+*** End   of history file: Mon Jul 28 12:55:12 2003
