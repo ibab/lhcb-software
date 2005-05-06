@@ -1,12 +1,12 @@
-# $Id: requirements,v 1.22 2004-10-27 11:58:09 ibelyaev Exp $
+# $Id: requirements,v 1.23 2005-05-06 17:48:33 ibelyaev Exp $
 # =============================================================================
-# CVS tag $Name: not supported by cvs2svn $ 
+# CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.23 $
 # =============================================================================
 # Created    : 02/11/2001
 # Maintainer : Vanya BELYAEV belyaev@lapp.in2p3.fr 
 # =============================================================================
 package             CaloUtils
-version             v4r8
+version             v4r9
 
 # ================= structure =================================================
 branches            cmt doc src CaloUtils
@@ -25,6 +25,8 @@ library             CaloUtils    *.cpp
 # ================= patterns ==================================================
 apply_pattern       linker_library library=CaloUtils 
 
+# =============================================================================
+# $Log: not supported by cvs2svn $ 
 # =============================================================================
 # The END 
 # =============================================================================
