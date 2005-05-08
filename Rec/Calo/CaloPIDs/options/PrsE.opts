@@ -1,17 +1,8 @@
-// $Id: PrsE.opts,v 1.4 2004-03-08 14:03:23 cattanem Exp $
+// $Id: PrsE.opts,v 1.5 2005-05-08 09:34:06 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ 
+// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.5 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
-// Revision 1.3  2003/07/17 14:45:35  ibelyaev
-//  fix for HcalE estimator and new options
-//
-// Revision 1.2  2003/07/17 12:45:16  ibelyaev
-//  minor fix to speed-up the execution
-//
-// Revision 1.1.1.1  2003/03/13 18:52:04  ibelyaev
-// The first import of new package 
-//
 // ============================================================================
 
 /** @file 
@@ -21,12 +12,7 @@
  *  @date 2002-10-31
  */
 
-/// Configuration of The Associator
-ToolSvc.PrsE.Location      = "Rec/Calo/PrsE" ;
-ToolSvc.PrsE.AlgorithmType = "CaloTrack2EstimatorAlg" ;
-ToolSvc.PrsE.AlgorithmName = "PrsE" ;
-
-/// Configuration of The Algorithm
+// Configuration of The Algorithm
 // The default value 
 // PrsE.Input = *TrStoredTrackLocation::Default* 
 PrsE.Output        = "Rec/Calo/PrsE"    ;
@@ -34,20 +20,26 @@ PrsE.EvaluatorType = "CaloTrackPrsEval" ;
 PrsE.EvaluatorName = "PrsEvalE"         ;
 
 // use only unique tracks? 
-PrsE.UseUnique     = false ;
+PrsE.UseUniqueOnly = false  ;
 // use error tracks ? 
-PrsE.UseError      = false ;
-PrsE.UseForward    = true  ;
-PrsE.UseMatched    = true  ; 
-PrsE.UseVelo       = false ;
-PrsE.UseVeloTT     = false ;
-PrsE.UseVeloBack   = false ;
-PrsE.UseSeed       = true  ; 
-PrsE.UseDownstream = true  ;
-// PrsE.LowLimit      = -10. * GeV ;
+PrsE.UseErrorAlso  = false  ;
+// use tracks by Categories 
+PrsE.isLong        = true   ;
+PrsE.isUpstream    = true   ;
+PrsE.isDownstream  = true   ;
+PrsE.isVelotrack   = false  ;
+PrsE.isBackward    = false  ;
+PrsE.isTtrack      = true   ;
+// use tracks by algorithms 
+PrsE.velo          = false  ; 
+PrsE.seed          = true   ; 
+PrsE.match         = true   ; 
+PrsE.forward       = true   ; 
+PrsE.follow        = true   ; 
+PrsE.veloTT        = true   ; 
+PrsE.veloBack      = false  ; 
+PrsE.ksTrack       = true   ; 
 
-/// configuration of the Evaluator itself 
-/// default 
 
 // ============================================================================
 // The END

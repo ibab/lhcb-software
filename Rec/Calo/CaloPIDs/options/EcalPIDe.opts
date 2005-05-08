@@ -1,12 +1,8 @@
-// $Id: EcalPIDe.opts,v 1.4 2004-03-08 14:03:23 cattanem Exp $
+// $Id: EcalPIDe.opts,v 1.5 2005-05-08 09:34:06 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
-// Revision 1.3  2004/02/17 12:06:08  ibelyaev
-//  update for rrading of histograms from the file
-//
-// ============================================================================
 
 /** @file 
  *  Configuration option for CaloTrack2IdAlg "EcalPIDe" algorithm
@@ -14,29 +10,32 @@
  *  @date 2002-10-31
  */
 
-/// Configuration of the Associator
+// Configuration of the Algorithm 
 
-ToolSvc.EcalPIDe.Location      = "Rec/Calo/EcalPIDe" ;
-ToolSvc.EcalPIDe.AlgorithmType = "CaloTrack2IdAlg"  ;
-ToolSvc.EcalPIDe.AlgorithmName = "EcalPIDe"          ;
+// input/output properties 
+EcalPIDe.Input    = "Rec/Calo/EcalChi2" ;
+EcalPIDe.Output   = "Rec/Calo/EcalPIDe" ;
 
-/// Configuration of the Algorithm 
-
-// The default value 
-// EcalPIDe.AssociatorType = "Associator<TrStoredTrack,float>";
-EcalPIDe.AssociatorName = "EcalChi2";
-EcalPIDe.Output         = "Rec/Calo/EcalPIDe" ;
 // use only unique tracks? 
-EcalPIDe.UseUnique      = false ;
+EcalPIDe.UseUniqueOnly = false  ;
 // use error tracks ? 
-EcalPIDe.UseError       = false ;
-EcalPIDe.UseForward     = true  ;
-EcalPIDe.UseMatched     = true  ; 
-EcalPIDe.UseVelo        = false ;
-EcalPIDe.UseVeloTT      = false ;
-EcalPIDe.UseVeloBack    = false ;
-EcalPIDe.UseSeed        = true  ; 
-EcalPIDe.UseDownstream  = true  ;
+EcalPIDe.UseErrorAlso  = false  ;
+// use tracks by Categories 
+EcalPIDe.isLong        = true   ;
+EcalPIDe.isUpstream    = true   ;
+EcalPIDe.isDownstream  = true   ;
+EcalPIDe.isVelotrack   = false  ;
+EcalPIDe.isBackward    = false  ;
+EcalPIDe.isTtrack      = true   ;
+// use tracks by algorithms 
+EcalPIDe.velo          = false  ; 
+EcalPIDe.seed          = true   ; 
+EcalPIDe.match         = true   ; 
+EcalPIDe.forward       = true   ; 
+EcalDIDe.follow        = true   ; 
+EcalPIDe.veloTT        = true   ; 
+EcalPIDe.veloBack      = false  ; 
+EcalPIDe.ksTrack       = true   ; 
 
 EcalPIDe.ValueNorm      =  100       ; // "cut" for tanh 
 EcalPIDe.MomentumNorm   =  50. * GeV ; // "cut" for tanh 

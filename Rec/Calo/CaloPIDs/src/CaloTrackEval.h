@@ -1,23 +1,8 @@
-// $Id: CaloTrackEval.h,v 1.5 2005-03-08 15:46:27 cattanem Exp $
+// $Id: CaloTrackEval.h,v 1.6 2005-05-08 09:34:06 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $
+// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.6 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
-// Revision 1.4  2004/09/02 18:55:36  ibelyaev
-//  prepare for HLT/Trigger development
-//
-// Revision 1.3  2004/04/19 15:57:27  cattanem
-// v2r2
-//
-// Revision 1.2  2004/02/17 12:06:15  ibelyaev
-//  update for rrading of histograms from the file
-//
-// Revision 1.1.1.1  2003/03/13 18:52:02  ibelyaev
-// The first import of new package 
-//
-// Revision 1.1  2002/12/01 14:22:57  ibelyaev
-//  Hcal stuff and updated S-coprrections
-//
 // ============================================================================
 #ifndef CaloTrackEval_H 
 #define CaloTrackEval_H 1

@@ -1,6 +1,8 @@
-// $Id: HcalPIDmu.opts,v 1.4 2005-03-08 15:46:27 cattanem Exp $
+// $Id: HcalPIDmu.opts,v 1.5 2005-05-08 09:34:06 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ 
+// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.5 $
+// ============================================================================
+// $Log: not supported by cvs2svn $
 // ============================================================================
 
 /** @file 
@@ -10,28 +12,31 @@
  */
 
 /// Configuration of the Associator
-
-ToolSvc.HcalPIDmu.Location      = "Rec/Calo/HcalPIDmu" ;
-ToolSvc.HcalPIDmu.AlgorithmType = "CaloTrack2IdAlg"  ;
-ToolSvc.HcalPIDmu.AlgorithmName = "HcalPIDmu"          ;
+HcalPIDmu.Input         = "Rec/Calo/HcalE"     ;
+HcalPIDmu.Output        = "Rec/Calo/HcalPIDmu" ;
 
 /// Configuration of the Algorithm 
-
-// The default value 
-// HcalPIDmu.AssociatorType = "Associator<TrStoredTrack,float>";
-HcalPIDmu.AssociatorName = "HcalE";
-HcalPIDmu.Output         = "Rec/Calo/HcalPIDmu" ;
 // use only unique tracks? 
-HcalPIDmu.UseUnique      = false ;
+HcalPIDmu.UseUniqueOnly = false  ;
 // use error tracks ? 
-HcalPIDmu.UseError       = false ;
-HcalPIDmu.UseForward     = true  ;
-HcalPIDmu.UseMatched     = true  ; 
-HcalPIDmu.UseVelo        = false ;
-HcalPIDmu.UseVeloTT      = false ;
-HcalPIDmu.UseVeloBack    = false ;
-HcalPIDmu.UseSeed        = true  ; 
-HcalPIDmu.UseDownstream  = true  ;
+HcalPIDmu.UseErrorAlso  = false  ;
+// use tracks by Categories 
+HcalPIDmu.isLong        = true   ;
+HcalPIDmu.isUpstream    = true   ;
+HcalPIDmu.isDownstream  = true   ;
+HcalPIDmu.isVelotrack   = false  ;
+HcalPIDmu.isBackward    = false  ;
+HcalPIDmu.isTtrack      = true   ;
+// use tracks by algorithms 
+HcalPIDmu.velo          = false  ; 
+HcalPIDmu.seed          = true   ; 
+HcalPIDmu.match         = true   ; 
+HcalPIDmu.forward       = true   ; 
+HcalPIDmu.follow        = true   ; 
+HcalPIDmu.veloTT        = true   ; 
+HcalPIDmu.veloBack      = false  ; 
+HcalPIDmu.ksTrack       = true   ; 
+
 
 HcalPIDmu.ValueNorm      =  10. * GeV ; // "cut" for tanh 
 HcalPIDmu.MomentumNorm   =  25. * GeV ; // "cut" for tanh 

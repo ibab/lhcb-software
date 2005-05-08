@@ -1,29 +1,93 @@
-// $Id: CaloTrack2EstimatorAlg.cpp,v 1.4 2004-03-08 14:03:23 cattanem Exp $
+// $Id: CaloTrack2EstimatorAlg.cpp,v 1.5 2005-05-08 09:34:06 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $
+// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.5 $
+// ============================================================================
+// $Log: not supported by cvs2svn $ 
 // ============================================================================
 // Include files
-// from LHcbKernel
-#include "Relations/Relation1D.h"
-// from Gaudi
-#include "GaudiKernel/AlgFactory.h"
-#include "GaudiKernel/MsgStream.h"
-// CaloInterfaces 
-#include "CaloInterfaces/ICaloTrackIdEval.h"
-// Event 
-#include "Event/TrStoredTrack.h"
-// local
-#include "CaloTrack2EstimatorAlg.h"
-
 // ============================================================================
-/** @file 
+// Relations
+// ============================================================================
+#include "Relations/Relation1D.h"
+// ============================================================================
+// GaudiKernel
+// ============================================================================
+#include "GaudiKernel/AlgFactory.h"
+// ============================================================================
+// CaloInterfaces 
+// ============================================================================
+#include "CaloInterfaces/ICaloTrackIdEval.h"
+// ============================================================================
+// CaloUtils
+// ============================================================================
+#include "CaloUtils/CaloTrackAlg.h"
+// ============================================================================
+// Event 
+// ============================================================================
+#include "Event/TrStoredTrack.h"
+// ============================================================================
+
+/** @class CaloTrack2EstimatorAlg CaloTrack2EstimatorAlg.cpp
  *  
- *  Implementation file for class CaloTrack2EstimatorAlg
+ *  The generic algorithm to associate Tracks to some Calo estimators
  * 
+ *  The obvious concrete implementation:
+ *   - Prs  energy (used for e+/e- ID)
+ *   - Hcal energy (used for e+/e- and mu+/mu- ID)
+ *
  *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
  *  @date   2002-11-14
  */
-// ============================================================================
+class CaloTrack2EstimatorAlg : public CaloTrackAlg
+{
+  // friend factory for instantiation
+  friend class AlgFactory<CaloTrack2EstimatorAlg>;
+public:
+  /** standard algorithm initialization 
+   *  @see CaloAlgorithm
+   *  @see     Algorithm
+   *  @see    IAlgorithm
+   *  @return status code 
+   */
+  virtual StatusCode initialize();
+  /** standard algorithm execution 
+   *  @see CaloAlgorithm
+   *  @see     Algorithm
+   *  @see    IAlgorithm
+   *  @return status code 
+   */
+  virtual StatusCode execute   ();
+  /** standard algorithm finalization 
+   *  @see CaloAlgorithm
+   *  @see     Algorithm
+   *  @see    IAlgorithm
+   *  @return status code 
+   */
+  virtual StatusCode finalize  ();
+protected:
+  /** Standard constructor
+   *  @param name algorithm name 
+   *  @param pSvc service locator 
+   */
+  CaloTrack2EstimatorAlg
+  ( const std::string& name , 
+    ISvcLocator*       pSvc );
+  // destructor 
+  virtual ~CaloTrack2EstimatorAlg() ;
+private:
+  // actual type of evaluator to be used 
+  std::string         m_evalType ;
+  // actual name of evaluator to be used
+  std::string         m_evalName ;
+  // evaluator itself 
+  ICaloTrackIdEval*   m_eval     ;
+  // low  limit 
+  double              m_low      ;
+  // high limit 
+  double              m_high     ;
+  // number of skips 
+  unsigned long       m_skip     ;
+};
 
 // ============================================================================
 /** @var CaloTrack2EstimatorAlgFactory
@@ -43,7 +107,7 @@ const        IAlgFactory&CaloTrack2EstimatorAlgFactory = s_factory ;
 CaloTrack2EstimatorAlg::CaloTrack2EstimatorAlg
 ( const std::string& name ,
   ISvcLocator*       pSvc )
-  : CaloAlgorithm ( name , pSvc ) 
+  : CaloTrackAlg ( name , pSvc ) 
   , m_evalType    (          )
   , m_evalName    (          )
   , m_eval        (  0       )
@@ -51,31 +115,10 @@ CaloTrack2EstimatorAlg::CaloTrack2EstimatorAlg
   , m_high        (  1.0e+20 ) // no default high limit 
   , m_skip        (  0       ) 
   ///
-  , m_unique      ( false ) // Use ALL tracks
-  ///
-  , m_error       ( false ) // Do not use Error tracks
-  ///
-  , m_forward     ( true   ) // Use forward tracks 
-  , m_matched     ( true   ) // Use matched tracks 
-  , m_seed        ( true   ) // Use seed  tracks 
-  , m_velo        ( false  ) // DO NOT use forward tracks 
-  , m_veloTT      ( false  ) // DO NOT use forward tracks 
-  , m_veloBack    ( false  ) // DO NOT use veloback tracks 
-  , m_downstream  ( true   ) // Use dowstream tracks (new naming convention!)
 {
   declareProperty ( "EvaluatorType" , m_evalType    ) ;
   declareProperty ( "EvaluatorName" , m_evalName    ) ;
   // track flags 
-  declareProperty ( "UseUnique"     , m_unique      ) ;
-  declareProperty ( "UseError"      , m_error       ) ;
-  declareProperty ( "UseForward"    , m_forward     ) ;
-  declareProperty ( "UseMatched"    , m_matched     ) ;
-  declareProperty ( "UseVelo"       , m_velo        ) ;
-  declareProperty ( "UseVeloTT"     , m_veloTT      ) ;
-  declareProperty ( "UseVeloBack"   , m_veloBack    ) ;
-  declareProperty ( "UseSeed"       , m_seed        ) ;
-  declareProperty ( "UseDownstream" , m_downstream  ) ;
-  //
   declareProperty ( "LowLimit"      , m_low         ) ;
   declareProperty ( "HighLimit"     , m_high        ) ;
   // define the default appropriate input data
@@ -99,15 +142,11 @@ CaloTrack2EstimatorAlg::~CaloTrack2EstimatorAlg() {};
 // ============================================================================
 StatusCode CaloTrack2EstimatorAlg::initialize() 
 {
-  MsgStream msg(msgSvc(), name());
-  msg << MSG::DEBUG << "==> Initialise" << endreq;
+  StatusCode sc = CaloTrackAlg::initialize() ;
+  if( sc.isFailure() ) { return sc ; }
   
-  StatusCode sc = CaloAlgorithm::initialize() ;
-  if( sc.isFailure() ) 
-    { return Error("Base class could not be initialized",sc);}
-  
-  m_eval = tool<ICaloTrackIdEval>( m_evalType , m_evalName );
-  if( 0 == m_eval ) { return Error("Evaluator is not located");}
+  m_eval = tool<ICaloTrackIdEval> ( m_evalType , m_evalName ) ;
+  if ( 0 == m_eval ) { return Error ( "Evaluator is not located" ) ;}
   
   return StatusCode::SUCCESS;
 };
@@ -123,9 +162,8 @@ StatusCode CaloTrack2EstimatorAlg::initialize()
 // ============================================================================
 StatusCode CaloTrack2EstimatorAlg::finalize() 
 {  
-  if( 0 != m_skip ) 
-  { always () << " Number of 'skips' is " << m_skip << endreq ; } 
-  
+  if ( 0 != m_skip ) 
+  { always () << " Number of 'skips' is " << m_skip << endreq ; }  
   return CaloAlgorithm::finalize() ;
 };
 // ============================================================================
@@ -140,7 +178,6 @@ StatusCode CaloTrack2EstimatorAlg::finalize()
 // ============================================================================
 StatusCode CaloTrack2EstimatorAlg::execute() 
 {
-
   // avoid long names 
   typedef const TrStoredTrack              Track   ;
   typedef const TrStoredTracks             Tracks  ;
@@ -151,60 +188,37 @@ StatusCode CaloTrack2EstimatorAlg::execute()
   if( 0 == tracks      ) { return StatusCode::FAILURE ; }           // RETURN
   
   // create and register new relation object 
-  Table*     table = new Table( tracks->size() );
+  Table*     table = new Table ( tracks->size() );
   StatusCode sc    = put( table , outputData() );
-  if( sc.isFailure()   ) { return StatusCode::FAILURE ; }            // RETURN
+  if ( sc.isFailure()   ) { return StatusCode::FAILURE ; }            // RETURN
   
   // loop over all tracks 
-  for( Tracks::const_iterator itrack = tracks->begin() ; 
-       tracks->end() != itrack ; ++itrack ) 
+  for ( Tracks::const_iterator itrack = tracks->begin() ; 
+        tracks->end() != itrack ; ++itrack ) 
   {
     const Track* track = *itrack ;
-    
     // skip NULLs 
-    if( 0 == track                              ) { continue ; }
-    
-    // use only unique  tracks ? 
-    if(  m_unique   && 1 != track->unique    () ) { continue ; }
-    
-    // use 'error'   tracks ?
-    if( !m_error    && 0 != track->errorFlag () ) { continue ; }
-    
-    // use 'forward'   tracks ?
-    if( !m_forward  && 1 == track->forward   () ) { continue ; }
-    
-    // use 'match'     tracks ?
-    if( !m_matched  && 1 == track->match     () ) { continue ; }
-    
-    // use 'seed'      tracks ?
-    if( !m_seed     && 1 == track->seed      () ) { continue ; }
-    
-    // use 'velo'      tracks ?
-    if( !m_velo     && 1 == track->velo      () ) { continue ; }      
-    
-    // use 'veloTT'    tracks ?
-    if( !m_veloTT   && 1 == track->veloTT    () ) { continue ; }      
-    
-    // use 'veloBack'    tracks ?
-    if( !m_veloBack && 1 == track->veloBack  () ) { continue ; }      
-    
-    // use 'downstream'  tracks ? (New naming convention!)
-    if( !m_downstream && 1 == track->isDownstream  () ) { continue ; }
-    
+    if ( 0 ==   track   ) { continue ; }
+    // should we use this track ? 
+    if ( !use ( track ) ) { continue ; }
     // perform the actual evaluation 
     const double value = (*m_eval)( track );
-    
     // skip 
-    if( value < m_low || value > m_high ) { ++m_skip ; continue ; }
-    
+    if ( value < m_low || value > m_high ) { ++m_skip ; continue ; }
     // fill the relation table 
-    table->relate( track , value );
-    
+    table -> i_push ( track , value ) ;   // NB!!!  use "i_push"
   };
   
-  debug() << " The total number of booked relations " 
-          << table->relations().size() << endreq;
-  
+  // use "i_sort" ( mandatory after "i_push" ) ;
+  table ->  i_sort() ;                    // NB !!! use "i_sort"
+
+  if ( msgLevel ( MSG::DEBUG ) ) 
+  {
+    debug() 
+      << " The total number of booked relations " 
+      << table->relations().size() << endreq;
+  }
+
   return StatusCode::SUCCESS;
 };
 // ============================================================================

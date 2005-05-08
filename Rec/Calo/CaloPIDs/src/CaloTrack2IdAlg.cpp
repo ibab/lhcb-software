@@ -1,34 +1,180 @@
-// $Id: CaloTrack2IdAlg.cpp,v 1.5 2004-03-08 14:03:23 cattanem Exp $
+// $Id: CaloTrack2IdAlg.cpp,v 1.6 2005-05-08 09:34:06 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $
+// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.6 $
+// ============================================================================
+// $Log: not supported by cvs2svn $ 
 // ============================================================================
 // Include files
-// from LHcbKernel
+// ============================================================================
+// Relations
+// ============================================================================
 #include "Relations/Relation1D.h"
-#include "Relations/IAssociator.h"
+// ============================================================================
 // AIDA
+// ============================================================================
 #include "AIDA/IHistogram2D.h"
 #include "AIDA/IAxis.h"
+// ============================================================================
 // from Gaudi
+// ============================================================================
 #include "GaudiKernel/AlgFactory.h"
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/IHistogramSvc.h"
-// CaloUtils 
-#include  "CaloUtils/dirHbookName.h"
-/// Event 
-#include "Event/TrStoredTrack.h"
-// local
-#include "CaloTrack2IdAlg.h"
-
 // ============================================================================
-/** @file 
+/// Event 
+// ============================================================================
+#include "Event/TrStoredTrack.h"
+// ============================================================================
+// CaloUtils 
+// ============================================================================
+#include  "CaloUtils/CaloHistoTrackAlg.h"
+// ============================================================================
+
+/** @class CaloTrack2IdAlg CaloTrack2IdAlg.cpp
  *  
- *  Implementation file for class CaloTrack2IdAlg
+ *  The generic algorithm to convert the relation table 
+ *  from between tracks and caloestimators to 
+ *  the relation table between tracks and difference 
+ *  in loglikelihoods.
  * 
+ *  Each concrete instance requires the 
+ *   2 histograms (for signal and background)
+ * 
+ *  For current implementation the histograms will be 
+ *  created from options, in future better solution 
+ *  need to be found 
+ *  
+ *  The obvious concrete implementation:
+ *   - Prs  ID for e+/e-
+ *   - Hcal ID for e+/e- 
+ *   - Hcal ID for mu+/mu-
+ *
+ *  The major properties of teh algorithm
+ * 
+ *    - "Input"
+ *    The location in TES the relation table TrStoredTrack -> CaloEstimator
+ *
+ *    - "Output"
+ *    The location in TES the relation table TrStoredTrack -> DLL 
+ *
+ *    - "ValueNorm"
+ *    The normalization for "estimator"
+ *
+ *    - "MomnetumNorm"
+ *    The normalization for "momentum"
+ *
+ *    - "HistoForSignal"
+ *    Location in THS the historgam for "signal"
+ *
+ *    - "HistoForBackground"
+ *    Location in THS the historgam for "background"
+ *
+ *    - "HistoForSignalNorm"
+ *    Location in THS the historgam for "signal" (normalized)
+ *
+ *    - "HistoForBackgroundNorm"
+ *    Location in THS the historgam for "background" (normalized)
+ * 
+ *    - "HistoForDLL"
+ *    Location in THS the hisgorgam for "DLL"
+ *
+ *    - the properties for track selection are from CaloHistoTrackAlg base 
+ *
  *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
  *  @date   2002-11-14
  */
-// ============================================================================
+class CaloTrack2IdAlg : public CaloHistoTrackAlg 
+{
+  // friend factory for instantiation
+  friend class AlgFactory<CaloTrack2IdAlg>;
+public:
+  /// standard algorithm initialization 
+  virtual StatusCode initialize();
+  /// standard algorithm execution 
+  virtual StatusCode execute   ();  
+protected:
+  /** Standard constructor
+   *  @param name algorithm name 
+   *  @param pSvc service locator 
+   */
+  CaloTrack2IdAlg
+  ( const std::string& name , 
+    ISvcLocator*       pSvc );
+  // destructor 
+  virtual ~CaloTrack2IdAlg(){} ;
+protected:
+  /// transformation function for momentum 
+  inline double pFunc( const double value ) const 
+  { return tanh( value / m_pNorm ); };
+  /// transformation function for estimator 
+  inline double vFunc( const double value ) const 
+  { return tanh( value / m_vNorm ); };
+protected:
+  /** prepare DeltaLL histogram (load or calculate)
+   *  @return pointer to DeltaLL histogram 
+   */
+  AIDA::IHistogram2D* makeDeltaLL () const ;
+  /** prepare SignalN histogram (load or calculate)
+   *  @return pointer to SignalN histogram 
+   */
+  AIDA::IHistogram2D* makeSignalN () const ;
+  /** prepare BackgrN histogram (load or calculate)
+   *  @return pointer to BackgrN histogram 
+   */
+  AIDA::IHistogram2D* makeBackgrN () const ;
+  /** load the histogram 
+   *  @param address address in the file/store 
+   *  @return pointer to the histogram 
+   */
+  AIDA::IHistogram2D* loadHisto   ( const std::string& address ) const ;
+  /** perform the apropriate normalization of the histogram 
+   *  @param histo histogram to be normalized
+   *  @param ID1   ID to be used for new histogram 
+   *  @param ID2   ID to be used for new histogram 
+   *  @return pointer to new (normalized histogram) 
+   */
+  AIDA::IHistogram2D* normalize   
+  ( const AIDA::IHistogram2D* histo , 
+    const int                 ID1   , 
+    const int                 ID2   ) const ;
+  /** compare the specifications of 2 histograms 
+   *  @param h1 pointer to the histogram  
+   *  @param h2 pointer to the histogram  
+   *  @return true if histogram hame the sam especifications 
+   */
+  bool   compare 
+  ( const AIDA::IHistogram2D* h1  , 
+    const AIDA::IHistogram2D* h2  ) const ;
+  /** get the x-coordinate of the bin 
+   *  @param histo histogram 
+   *  @param bin bin number 
+   *  @return coordinate of the bin center 
+   */
+  double xCoord  
+  ( const AIDA::IHistogram2D* histo , 
+    const int                 bin   ) const ;
+  /** get the y-coordinate of the bin 
+   *  @param histo histogram 
+   *  @param bin bin number 
+   *  @return coordinate of the bin center 
+   */
+  double yCoord  
+  ( const AIDA::IHistogram2D* histo , 
+    const int                 bin   ) const ;
+private:
+  //
+  double              m_vNorm          ;
+  double              m_pNorm          ;
+  //
+  std::string         m_signalHisto    ;
+  std::string         m_backgrHisto    ;
+  std::string         m_signalNhisto   ;
+  std::string         m_backgrNhisto   ;
+  std::string         m_deltaLLhisto   ;
+  
+  AIDA::IHistogram2D*  m_deltaLL       ; // delta Log Likelihood
+  
+};
 
 // ============================================================================
 /** @var CaloTrack2IdAlgFactory
@@ -48,24 +194,8 @@ const        IAlgFactory&CaloTrack2IdAlgFactory = s_factory ;
 CaloTrack2IdAlg::CaloTrack2IdAlg
 ( const std::string& name ,
   ISvcLocator*       pSvc )
-  : CaloAlgorithm ( name , pSvc ) 
-  , m_associatorType ("Associator<TrStoredTrack,float>" )
-  , m_associatorName ()
-  // 
-  , m_associator  (  0    )
+  : CaloHistoTrackAlg ( name , pSvc ) 
   ///
-  , m_unique      ( false ) // Use ALL tracks
-  ///
-  , m_error       ( false ) // Do not use Error tracks
-  ///
-  , m_forward     ( true   ) // Use forward tracks 
-  , m_matched     ( true   ) // Use matched tracks 
-  , m_seed        ( false  ) // DO NOT use seed  tracks 
-  , m_velo        ( false  ) // DO NOT use forward tracks 
-  , m_veloTT      ( false  ) // DO NOT use forward tracks 
-  , m_veloBack    ( false  ) // DO NOT use veloback tracks 
-  , m_downstream  ( true   ) // Use downstream tracks (new naming convention!) 
-  /// 
   , m_vNorm       ( 0 ) 
   , m_pNorm       ( 0 )
   ///
@@ -77,35 +207,17 @@ CaloTrack2IdAlg::CaloTrack2IdAlg
   ///
   , m_deltaLL     ( 0 ) 
 {
-  declareProperty ( "AssociatorType"  , m_associatorType ) ;
-  declareProperty ( "AssociatorName"  , m_associatorName ) ;
-  // track flags 
-  declareProperty ( "UseUnique"       , m_unique         ) ;
-  declareProperty ( "UseError"        , m_error          ) ;
-  declareProperty ( "UseForward"      , m_forward        ) ;
-  declareProperty ( "UseMatched"      , m_matched        ) ;
-  declareProperty ( "UseVelo"         , m_velo           ) ;
-  declareProperty ( "UseVeloTT"       , m_veloTT         ) ;
-  declareProperty ( "UseVeloBack"     , m_veloBack       ) ;
-  declareProperty ( "UseSeed"         , m_seed           ) ;
-  declareProperty ( "UseDownstream"   , m_downstream     ) ;
   //
-  declareProperty ( "ValueNorm"       , m_vNorm          ) ;
-  declareProperty ( "MomentumNorm"    , m_pNorm          ) ;
-  
-  declareProperty ( "HistoForSignal"         , m_signalHisto  ) ;
-  declareProperty ( "HistoForBackground"     , m_backgrHisto  ) ;
-  declareProperty ( "HistoForSignalNorm"     , m_signalNhisto ) ;
-  declareProperty ( "HistoForBackgroundNorm" , m_backgrNhisto ) ;
-  declareProperty ( "HistoForDeltaLL"        , m_deltaLLhisto ) ;
-
+  declareProperty ( "ValueNorm"              , m_vNorm          ) ;
+  declareProperty ( "MomentumNorm"           , m_pNorm          ) ;
+  //
+  declareProperty ( "HistoForSignal"         , m_signalHisto    ) ;
+  declareProperty ( "HistoForBackground"     , m_backgrHisto    ) ;
+  declareProperty ( "HistoForSignalNorm"     , m_signalNhisto   ) ;
+  declareProperty ( "HistoForBackgroundNorm" , m_backgrNhisto   ) ;
+  declareProperty ( "HistoForDeltaLL"        , m_deltaLLhisto   ) ;
+  //
 };
-// ============================================================================
-
-// ============================================================================
-/// Destructor
-// ============================================================================
-CaloTrack2IdAlg::~CaloTrack2IdAlg() {}; 
 // ============================================================================
 
 // ============================================================================
@@ -119,15 +231,11 @@ CaloTrack2IdAlg::~CaloTrack2IdAlg() {};
 StatusCode CaloTrack2IdAlg::initialize() 
 {
   
-  StatusCode sc = CaloAlgorithm::initialize() ;
-  if( sc.isFailure() ) 
-    { return Error("Base class could not be initialized",sc);}
+  StatusCode sc = CaloHistoTrackAlg::initialize() ;
+  if ( sc.isFailure() ) { return sc ; } 
   
-  m_associator = tool<IAsct>( m_associatorType , m_associatorName );
-  if( 0 == m_associator ) { return Error("Associator is not located");}
-  
-  if( 0 >= m_vNorm ) { return Error("Invalid 'ValueNorm'    property" ) ; }
-  if( 0 >= m_pNorm ) { return Error("Invalid 'MomentumNorm' property" ) ; }
+  if ( 0 >= m_vNorm ) { return Error("Invalid 'ValueNorm'    property" ) ; }
+  if ( 0 >= m_pNorm ) { return Error("Invalid 'MomentumNorm' property" ) ; }
   
   if      (   !m_deltaLLhisto.empty() ) { } // final histo isprovided 
   else if ( ( !m_signalNhisto.empty() || !m_signalHisto.empty() ) && 
@@ -138,7 +246,7 @@ StatusCode CaloTrack2IdAlg::initialize()
   if( 0 == histoSvc() ) { return Error("histoSvc() points to NULL ");}
   
   m_deltaLL = makeDeltaLL() ;
-  if( 0 == m_deltaLL )
+  if ( 0 == m_deltaLL )
   { return Error("Unable to retrieve/create/prepare 'DeltaLL' histogram"); }
   
   return StatusCode::SUCCESS;
@@ -157,65 +265,40 @@ StatusCode CaloTrack2IdAlg::execute()
 {
   
   /// avoid long names 
-  typedef const TrStoredTrack             Track ;
-  typedef IAsct::DirectType               Table ;
-  typedef Table::Range                    Range ;
-  typedef Relation1D<TrStoredTrack,float> Output ;
+  typedef const TrStoredTrack                  Track  ;
+  typedef const IRelation<TrStoredTrack,float> Table  ;
+  typedef Table::Range                         Range  ;
+  typedef Relation1D<TrStoredTrack,float>      Output ;
   
-  // get the table from Associator 
-  const Table* input = m_associator->direct() ;
-  if( 0 == input     )             { return StatusCode::FAILURE ; } // RETURN 
+  // get the table from TES
+  const Table* input = get<Table> ( inputData() ) ;
+  if ( 0 == input ) { return StatusCode::FAILURE ; } // RETURN 
   
   // "convert" "input" to "output"
   Range range = input->relations();
   
   /// create and register in the store the output tables 
   Output* output     = new Output ( range.size() ) ;
-  StatusCode sc      = put( output , outputData() ) ;
-  if( sc.isFailure() )             { return StatusCode::FAILURE ; } // RETURN
+  StatusCode sc      = put ( output , outputData() ) ;
+  if ( sc.isFailure() ) { return StatusCode::FAILURE ; } // RETURN
   
   /// convert the old table into the new table 
-  for( Range::const_iterator rel = range.begin() ; 
-       range.end() != rel ; ++rel ) 
+  for ( Range::const_iterator rel = range.begin() ; 
+        range.end() != rel ; ++rel ) 
   {
     const Track* track = rel->from() ; 
     // skip the invalid tracks 
-    if( 0 == track ) { continue ; }
+    if (  0   == track   ) { continue ; }
     //
-    // use only unique  tracks ? 
-    if(  m_unique   && 1 != track->unique    () ) { continue ; }
-    
-    // use 'error'   tracks ?
-    if( !m_error    && 0 != track->errorFlag () ) { continue ; }
-    
-    // use 'forward'   tracks ?
-    if( !m_forward  && 1 == track->forward   () ) { continue ; }
-    
-    // use 'match'     tracks ?
-    if( !m_matched  && 1 == track->match     () ) { continue ; }
-    
-    // use 'seed'      tracks ?
-    if( !m_seed     && 1 == track->seed      () ) { continue ; }
-    
-    // use 'velo'      tracks ?
-    if( !m_velo     && 1 == track->velo      () ) { continue ; }      
-    
-    // use 'veloTT'    tracks ?
-    if( !m_veloTT   && 1 == track->veloTT    () ) { continue ; }      
-    
-    // use 'veloBack'    tracks ?
-    if( !m_veloBack && 1 == track->veloBack  () ) { continue ; }      
-    
-    // use 'downstream'  tracks ? (new naming convention!)
-    if( !m_downstream && 1 == track->isDownstream  () ) { continue ; }
+    if ( !use  ( track ) ) { continue ; }
     
     // get the momentum from the state nearest to 0,0,0
     const TrState* state   = track->closestState( 0.0 ) ;
-    if( 0 == state ) 
+    if ( 0 == state ) 
     { Warning("Track has no state closest to z=0"    ); continue ; } 
     
     const TrStateP* stateP = dynamic_cast<const TrStateP*>( state );
-    if( 0 == stateP ) 
+    if ( 0 == stateP ) 
     { Warning("Momentum information is not available"); continue ; } 
     
     // get the momentum and transform it 
@@ -226,12 +309,16 @@ StatusCode CaloTrack2IdAlg::execute()
     const double deltaLL = 
       m_deltaLL -> binHeight( m_deltaLL -> coordToIndexX ( p ) ,
                               m_deltaLL -> coordToIndexY ( v ) );
-    output      -> relate( track , deltaLL ) ;
     
+    // fill relation table 
+    output      -> relate( track , deltaLL ) ; 
   }
   
-  debug () << " The total number of booked relations " 
-           << output     -> relations().size()  << endreq ;
+  if ( msgLevel ( MSG::DEBUG ) ) 
+  {
+    debug () << " The total number of booked relations " 
+             << output     -> relations().size()  << endreq ;
+  }
   
   return StatusCode::SUCCESS;
 };
@@ -248,12 +335,6 @@ AIDA::IHistogram2D* CaloTrack2IdAlg::loadHisto
 { 
   // do not waste of time for trivial case  
   if ( address.empty () ) { return 0 ; }
-  // check for IHistogramSvc service 
-  if ( 0 == histoSvc() )   
-  {
-    Error(" loadHisto: IHistogramSvc* points to NULL!");
-    return 0 ;
-  };
   
   // locate the histogram 
   SmartDataPtr<AIDA::IHistogram2D> histo( histoSvc() , address );
@@ -280,13 +361,13 @@ AIDA::IHistogram2D* CaloTrack2IdAlg::makeSignalN () const
   histo = loadHisto( m_signalHisto ) ;
   if( 0 == histo ) 
   {
-    Error("Neither 'SingalN' nor 'Signal' histohrams available!");
+    Error ("Neither 'SignalN' nor 'Signal' histohrams available!" ) ;
     return 0 ;
   }
   // normalize 
   histo  = normalize ( histo , 103 , 203 );
   if( 0 == histo ) 
-  { Error("Unable to perform proper normalization for 'Signal'"); };
+  { Error ( "Unable to perform proper normalization for 'Signal'" ) ; };
   return histo ;
 };
 // ============================================================================
@@ -330,14 +411,8 @@ AIDA::IHistogram2D* CaloTrack2IdAlg::normalize
 {
   // trivial case
   if( 0 == histo ) { return 0 ; }
-  if( 0 == histoSvc() ) 
-  {
-    Error(" normalize(): IHistogramSvc* points to NULL");
-    return 0 ;
-  }
   
-  std::string dir    ( dirHbookName ( "Calo/" + name () )  );
-  
+  std::string dir    ( dirHbookName ( "Calo/" + name () )  );  
   //
   std::string title1 ( "(Adjusted): " + histo -> title() );
   AIDA::IHistogram2D* norm1 = 
@@ -387,7 +462,7 @@ AIDA::IHistogram2D* CaloTrack2IdAlg::normalize
            + norm1 -> title() + "' and '" + norm2 -> title() + "'");
     return 0 ;
   }
-
+  
   const int xBins = norm1 -> xAxis() . bins() ;
   const int  yBins = norm1 -> yAxis() . bins() ;
   
@@ -594,8 +669,9 @@ bool CaloTrack2IdAlg::compare
  *  @return coordinate of the bin center 
  */
 // ============================================================================
-double CaloTrack2IdAlg::xCoord  ( const AIDA::IHistogram2D* histo , 
-                                  const int                 bin   ) const 
+double CaloTrack2IdAlg::xCoord 
+( const AIDA::IHistogram2D* histo , 
+  const int                 bin   ) const 
 {
   if( 0 == histo ) 
   {
@@ -615,8 +691,9 @@ double CaloTrack2IdAlg::xCoord  ( const AIDA::IHistogram2D* histo ,
  *  @return coordinate of the bin center 
  */
 // ============================================================================
-double CaloTrack2IdAlg::yCoord  ( const AIDA::IHistogram2D* histo , 
-                                  const int                 bin   ) const 
+double CaloTrack2IdAlg::yCoord  
+( const AIDA::IHistogram2D* histo , 
+  const int                 bin   ) const 
 {
   if( 0 == histo ) 
   {

@@ -1,16 +1,21 @@
-// $Id: CaloTrackEcalEval.cpp,v 1.3 2004-09-02 18:55:36 ibelyaev Exp $
+// $Id: CaloTrackEcalEval.cpp,v 1.4 2005-05-08 09:34:06 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.4 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
 // ============================================================================
 // Include files
+// ============================================================================
 // from Gaudi
+// ============================================================================
 #include "GaudiKernel/ToolFactory.h"
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/IIncidentSvc.h"
+// ============================================================================
 // local
+// ============================================================================
 #include "CaloTrackEcalEval.h"
+// ============================================================================
 
 // ============================================================================
 /** @file 
@@ -31,7 +36,6 @@ static const  ToolFactory<CaloTrackEcalEval>         s_Factory ;
 const        IToolFactory&CaloTrackEcalEvalFactory = s_Factory ;
 // ============================================================================
 
-
 // ============================================================================
 /** Standard constructor
  *  @see   CaloTool
@@ -46,22 +50,24 @@ CaloTrackEcalEval::CaloTrackEcalEval
   const std::string& name   ,
   const IInterface*  parent )
   : CaloTool ( type, name , parent )
-  , m_bad    ( -1000        ) 
-  , m_associatorType ( "AssociatorWeighted<CaloHypo,TrStoredTrack,float>" )
-  , m_associatorName ( "ElectronMatch"                                    )
-  , m_associator     ( 0 )
-  , m_table          ( 0 )
+  , m_bad    ( -1000 ) 
+  , m_table  ( 0     )
 {
   // declare interfaces 
   declareInterface<ICaloTrackIdEval>  ( this ) ;
   // declare interfaces 
   declareInterface<IIncidentListener> ( this ) ;
   // declare properties 
-  declareProperty ( "BadValue"       , m_bad            ) ;
-  declareProperty ( "AssociatorType" , m_associatorType ) ;
-  declareProperty ( "AssociatorName" , m_associatorName ) ;
+  declareProperty ( "BadValue"  , m_bad    ) ;
+  declareProperty ( "Table"     , m_itable ) ;
 };
 // ============================================================================
+
+// ============================================================================
+// destructor
+// ============================================================================
+CaloTrackEcalEval::~CaloTrackEcalEval()
+{ if ( 0 != m_table ) { m_table = 0 ; } } ;
 
 // ============================================================================
 /** standard initialization method 
@@ -74,18 +80,25 @@ CaloTrackEcalEval::CaloTrackEcalEval
 StatusCode    CaloTrackEcalEval::initialize ()
 {
   StatusCode sc = CaloTool::initialize();
-  if( sc.isFailure() ) 
-    { return Error("Coudl not initialize the base class CaloTool",sc); }
-  
-  incSvc() -> addListener( this , "EndEvent"   , 10 );
-  
-  // locate the associator 
-  m_associator = tool<IAsct>( m_associatorType , m_associatorName );
-  if( 0 == m_associator ) { return StatusCode::FAILURE ; }
-  
-  m_table = 0 ;
-  
+  if ( sc.isFailure() ) { return sc ; }
+  incSvc() -> addListener ( this , IncidentType::EndEvent , 10 );  
+  if ( 0 != m_table ) { m_table = 0 ; } 
   return StatusCode::SUCCESS ;
+};
+// ============================================================================
+
+// ============================================================================
+/** standard finalization method 
+ *  @see CaloTool 
+ *  @see  AlgTool 
+ *  @see IAlgTool
+ *  @return status code 
+ */
+// ============================================================================
+StatusCode    CaloTrackEcalEval::finalize ()
+{
+  if ( 0 != m_table ) { m_table = 0 ;  } 
+  return CaloTool::finalize () ;
 };
 // ============================================================================
 
@@ -97,7 +110,9 @@ StatusCode    CaloTrackEcalEval::initialize ()
  *  @param inc incident to be handled 
  */
 // ============================================================================
-void CaloTrackEcalEval::handle( const Incident& /* inc */  ) { m_table = 0 ; };
+void CaloTrackEcalEval::handle 
+( const Incident& /* inc */  ) 
+{ if ( 0 != m_table ) { m_table = 0 ; } } ;
 // ============================================================================
 
 // ============================================================================
@@ -113,8 +128,8 @@ double CaloTrackEcalEval::operator()
 {
   double value  = m_bad ;
   StatusCode sc = process( track , value );
-  if( sc.isFailure() ) 
-  { Error(" operator(): error from process()",sc) ; return m_bad ; }
+  if ( sc.isFailure() ) 
+  { Error ( " operator(): error from process()" , sc ) ; return m_bad ; }
   // 
   return value ;
 };
@@ -133,14 +148,19 @@ StatusCode CaloTrackEcalEval::process
 ( const TrStoredTrack* track , 
   double&              value ) const 
 {
-  if( 0 == track   ) 
+  if ( 0 == track   ) 
   { return Error("Track points to NULL!"); }
   
-  if( 0 == m_table ) { m_table = m_associator->inverse() ; }
-  Assert( 0 != m_table , "The Associatioh table points to NULL!");
+  if ( 0 == m_table ) 
+  {
+    const ITable* itable = get<ITable>( m_itable ) ;
+    Assert ( 0 != itable , "Relation Table points to NULL!"        ) ;
+    m_table = itable->inverse() ;
+    Assert ( 0 != m_table , "Unable to extract the inverse table!" ) ;
+  }
   
   // get range of related hypos with chi2 weights  
-  const Range range = m_table -> relations( track );
+  const Range range = m_table -> relations ( track ) ;
   
   if( !range.empty() ) { value = range.front().weight() ; }
   else                 { value = m_bad                  ; }
