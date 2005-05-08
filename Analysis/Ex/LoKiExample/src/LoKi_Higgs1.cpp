@@ -1,8 +1,11 @@
-// $Id: LoKi_Higgs1.cpp,v 1.6 2005-03-28 12:46:50 ibelyaev Exp $
+// $Id: LoKi_Higgs1.cpp,v 1.7 2005-05-08 18:17:32 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.6 $
+// CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.7 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.6  2005/03/28 12:46:50  ibelyaev
+//  v3r11: update Higgs example
+//
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -212,14 +215,14 @@ LOKI_ALGORITHM( LoKi_Higgs1 )
     if ( 0 == jet ) { continue ; }
     
     // find "closest" b/anti-b quark 
-    GenParticles::const_iterator ij = 
+    GenParticles::const_iterator ib = 
       LoKi::select_min( bquarks.begin () , 
                         bquarks.end   () , 
                         GMOMDIST ( jet->momentum() / GeV ) ) ;
     
-    if ( bquarks.end() == ij ) { continue ; }
+    if ( bquarks.end() == ib ) { continue ; }
     
-    const HepMC::GenParticle* b = *ij ;
+    const HepMC::GenParticle* b = *ib ;
     
     // transverse momentum of the reconstructed jet 
     tup4->column ( "pt"   , PT( jet )           / GeV ) ;

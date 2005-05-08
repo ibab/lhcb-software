@@ -1,11 +1,21 @@
-! $Id: release.notes,v 1.14 2005-03-29 16:47:37 ibelyaev Exp $ 
+! $Id: release.notes,v 1.15 2005-05-08 18:17:31 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
-! CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.14 $
+! CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.15 $
 ! -----------------------------------------------------------------------------
 ! Package     :  LoKiExamples
 ! Responsible :  Vanya BELYAEV  belyaev@lapp.in2p3.fr 
 ! Purpose     :  Collection of examples for LoKi package 
 ! -----------------------------------------------------------------------------
+
+! 2005-05-08 - Vanya BELYAEV
+
+  - src/LoKi_VeloCLusterMC.cpp,
+    src/LoKi_Higgs1.cpp 
+
+     fix compilation errors for Windows platform 
+
+  - cmt/requirements
+     version increment to v3r12 (to be synchronized with Tools/LoKi) 
 
 ! 2005-03-29 - Vanya BELYAEV
 

@@ -1,8 +1,11 @@
-// $Id: LoKi_VeloClusterMC.cpp,v 1.2 2005-02-08 20:29:46 ibelyaev Exp $
+// $Id: LoKi_VeloClusterMC.cpp,v 1.3 2005-05-08 18:17:32 ibelyaev Exp $
 // ===========================================================================
-// CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.2 $
+// CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.3 $
 // ===========================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2005/02/08 20:29:46  ibelyaev
+//  improve VeloClusterMC example
+//
 // ===========================================================================
 // STD & STL 
 // ===========================================================================
@@ -41,7 +44,7 @@ LOKI_ALGORITHM( LoKi_VeloClusterMC )
   const VeloClusters* clusters = 
     get<VeloClusters>( VeloClusterLocation::Default );
   
-  plot( tanh( clusters->size() / 1000  ) ,
+  plot( tanh( clusters->size() / 1000.0  ) ,
         " tanh( #clusters / 1000 ) "    , 0 , 1.02 , 51 ) ;
   
   typedef IRelationWeighted<VeloCluster,MCParticle,double>  Table1 ;

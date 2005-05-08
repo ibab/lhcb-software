@@ -1,9 +1,9 @@
-# $Id: requirements,v 1.25 2005-03-28 12:46:50 ibelyaev Exp $ 
+# $Id: requirements,v 1.26 2005-05-08 18:17:31 ibelyaev Exp $ 
 # =============================================================================
 # CVS tag $Name: not supported by cvs2svn $ 
 # =============================================================================
 package         LoKiExample
-version         v3r11
+version         v3r12
 
 # ============= structure =====================================================
 branches        cmt doc src jobs options 
