@@ -1,4 +1,8 @@
-// $Id: CaloAssociators_load.cpp,v 1.10 2004-07-29 16:51:52 ibelyaev Exp $
+// $Id: CaloAssociators_load.cpp,v 1.11 2005-05-08 09:19:06 ibelyaev Exp $
+// ============================================================================
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.11 $ 
+// ============================================================================
+// $Log: not supported by cvs2svn $ 
 // ============================================================================
 // Include files
 // ============================================================================
@@ -7,20 +11,19 @@
 #include "GaudiKernel/DeclareFactoryEntries.h"
 // ============================================================================
 
-/** @file CaloAssociators_load.cpp 
+/** @file
  * 
- *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
+ *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
  *  @date   08 Apr 2002 
  */
 
 DECLARE_FACTORY_ENTRIES(CaloAssociators) 
 {
   
-  DECLARE_ALGORITHM   ( CaloClustersMCTruthAlg             ) ;
-  DECLARE_ALGORITHM   ( CaloClustersMCTruth2Alg            ) ;
-  DECLARE_ALGORITHM   ( CaloClustersMCTruth3Alg            ) ;
-  DECLARE_ALGORITHM   ( CaloClustersMCTruth4Alg            ) ;
-  DECLARE_ALGORITHM   ( CaloClustersMCTruth5Alg            ) ;
+  DECLARE_ALGORITHM   ( CaloDigitMCTruth         ) ;
+  DECLARE_ALGORITHM   ( CaloClusterMCTruth       ) ;
+  DECLARE_ALGORITHM   ( CaloTrgClusterMCTruth    ) ;
+  DECLARE_ALGORITHM   ( CaloDigit2MCLinks2Table  ) ;
   
 };
 

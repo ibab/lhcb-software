@@ -1,6 +1,6 @@
-// $Id: CaloAssociators.opts,v 1.5 2003-04-02 14:46:53 ibelyaev Exp $ 
+// $Id: CaloAssociators.opts,v 1.6 2005-05-08 09:19:06 ibelyaev Exp $ 
 // ============================================================================
-// CVS tag $Nam:$
+// CVS tag $Nam:$ , version $Revision: 1.6 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
 // ============================================================================
@@ -18,8 +18,28 @@
 ApplicationMgr.DLLs += { "CaloAssociators" };
 
 /// load options 
-
-#include "$CALOASSOCIATORSOPTS/CCs2MCPs.opts"
+DataOnDemandSvc.Algorithms +=
+  { 
+    // Linker object for CaloDigit -> MCParticle relations 
+    //  (created with LinkerWithKey<MCParticle,CaloDigit>) 
+    "DATA='/Event/Link/Raw/Ecal/Digits' 
+     TYPE='CaloDigitMCTruth'"            
+    // relation table for CaloDigit -> MCParticle relations
+    //  ( actual   type RelationWeighted1D<CaloDigit,MCParticle,float>, 
+    //   "visible" type IRelationWeighted<CaloDigit,MCParticle,float>)
+    ,"DATA='/Event/Rec/Relations/CaloDigits2MCParticles' 
+      TYPE='CaloDigit2MCLinks2Table'"    
+    // relation table for CaloCluster -> MCParticle relations 
+    //  (actual type RelationWeighted1D<CaloCluster,MCParticle,float>)
+    //   "visible" type IRelationWeighted<CaloCluster,MCParticle,float>)
+    ,"DATA='/Event/Rec/Relations/CaloClusters2MCParticles' 
+      TYPE='CaloClusterMCTruth'"         
+    // relation table for TrgCaloCluster -> MCParticle relations 
+    //  (actual type RelationWeighted1D<TrgCaloCluster,MCParticle,float>)
+    //   "visible" type IRelationWeighted<TrgCaloCluster,MCParticle,float>)
+    ,"DATA='/Event/Rec/Relations/TrgCaloClusters2MCParticles' 
+      TYPE='CaloTrgClusterMCTruth'"      
+  }; 
 
 // ============================================================================
 // The END of file $CALOASSOCIATORSOPTS/CaloAssociators.opts

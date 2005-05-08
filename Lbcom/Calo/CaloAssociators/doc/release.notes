@@ -1,10 +1,268 @@
-! $Id: release.notes,v 1.34 2004-11-23 14:13:21 cattanem Exp $
+! $Id: release.notes,v 1.35 2005-05-08 09:19:06 ibelyaev Exp $
 ! =============================================================================
 ! Package     : CaloAssociators
 ! =============================================================================
 ! Responsible : Vanya BELYAEV Ivan.Belyaev@itep.ru
 ! =============================================================================
 
+! 2005-05-05 - Vanya BELYAEV
+
+ - Complete redesign of MC Relations.
+   Many thanks to Marco CATTANEO for useful 
+   discussions, thanks to Olivier DESCHAMPS 
+   for kind feedback and Cristina CARLOGANU 
+   for problem discovery. 
+  
+   From now the basic low level MC-relation is CaloDigit->MC 
+
+    A) "Linker" object for CaloDigit->MCParticle relations  
+       ("LinkerWithKey<MCParticle,CaloDigit>") is created by 
+       the algorithm CaloDigitMCTruth 
+    
+     This algorithm can be run in Boole or Brunel 
+     (depending on policy and preferences of application manager)
+      - in Boole in can be run directly
+      - in Brunel the algorithm "CaloReCreateMCLinks"
+        must be run *BEFORE* 
+   
+     The MC history for given digit is extracted using generic 
+     and extremly effecient functions from 
+     $CALOEVENTROOT/Event/CaloMCTools.h file, which exploit 
+     the internal structure of Calorimete Event Model in the most 
+     efficient way 
+
+    B) Relation Table  for CaloDigit -> MCParticle relations 
+      ("RelationWeighted1D<CaloDigit,MCParticle,float>")
+      is created *ON-DEMAND* from object (A)  by algorithm 
+      CaloDigit2MCLinks2Table
+
+    C) Relation Table for CaloCluster->MCParticle relations 
+      ("RelationWeighted1D<CaloCluster,MCParticle,float>")
+      is created *ON-DEMAND* from the object (B) by algorithm 
+      CaloClusterMCTruth
+
+    D) Relation Table for TrgCaloCluster->MCParticle relations 
+      ("RelationWeighted1D<TrgCaloCluster,MCParticle,float>")
+      is created *ON-DEMAND* from the object (B) by algorithm 
+      CaloTrgClusterMCTruth
+
+  Please note that objects (B),(C) and (D) are supposed to be 
+  *TRANSIENT* only, they will be created *AUTOMATICALLY* 
+  *ON-DEMAND* (however, it is not a crime to write them on tape!).
+  In particulat it means that *ALL* existing code, which 
+  relies on the existence of object  (C) are not affected.
+  In this sence new scheme is absolutely transparent and 
+  backward compatible on the level of code 
+  However, it is not backward compatible at the level of DST
+  content ("data-level") - one can use thies e scema only with "new" 
+  DST tapes with persistent object (A) 
+
+  IMPORTANT NOTES:
+  ================
+  I) Let me remind you that in the previouse scheme the object C 
+  is the persistent object. The replacement of object (C) by 
+  object (A) in (MC)DST tape results in 10k/event increase of 
+  tape size   
+  II) Previously the object of type  (C) has been created by 
+  using the functions from $CALOEVENT/CaloMCTools.h file with 
+  direct navigation till MCCaloHits. 
+  New way of building of object (C) result is a bit smaller 
+  number of Monte Carlo links (of about ~5% smaller), due to 
+  cuts used in the construction ob object (A). Hopefully it 
+  causes no problems in real High-Pt physics.  
+  
+  Here I'd like to summarize the "typical" usage of MC relations 
+  in "high-level" application, like HTL or DaVinci:
+
+  It is assumed that the code fragments are placed inside 
+  some algorithm, derived from one of "smart bases": 
+     GaudiAlgorithm, GaudiHistoAlg, GaudiTupleAlg, 
+     CaloAlgorith, CaloHistoAlg(aka CaloMoniAlg), 
+     CaloTupleAlg, DVAlgorithm, LoKi::Algo, ... 
+ 
+   =================================================================
+   *           ALL MC links from a given cluster:                  *
+   =================================================================
+   
+   typedef const IRelationWeighted<CaloCluster,MCParticle,float> Table ;
+   typedef Table::Range                                          Range ;
+ 
+   const Table* table = 
+             get<Table>("/Event/Rec/Relations/CaloClusters2MCParticles");
+   if ( 0 == table ) { return StatusCode::FAILURE ; }
+
+   const CaloCluster* cluster = ... ; 
+ 
+   /// get *ALL* MC links for the cluster: 
+   Range links = table->relations ( cluster ) ;
+   
+   /// make some printout  
+   info() << " Found #relations for the cluster " << links.size() ;
+  
+   /// make a loop over all relations for given cluster :
+   for ( Range::iterator link = links.begin() ; links.end() != link ; ++link )
+   {
+     /// Monte Carlo particle 
+     const MCParticle* particle = link -> to     () ;
+     /// its accumulated energy deposition into this cluster
+     const double      energy   = link -> weight () ;
+     /// make some printout 
+     info() << " MC particle accumulated deposition " << energy << endreq ; 
+   }
+  
+   =================================================================
+   *           ALL MC links from a given Trg cluster:              *
+   =================================================================
+  
+   typedef const IRelationWeighted<TrgCaloCluster,MCParticle,float> Table ;
+   typedef Table::Range                                             Range ;
+ 
+   const Table* table = 
+             get<Table>("/Event/Rec/Relations/TrgCaloClusters2MCParticles");
+   if ( 0 == table ) { return StatusCode::FAILURE ; }
+
+   const TrgCaloCluster* cluster = ... ; 
+ 
+   /// get *ALL* MC links for the Trg cluster: 
+   Range links = table->relations ( cluster ) ;
+   
+   /// make some printout  
+   info() << " Found #relations for the Trg cluster " << links.size() ;
+  
+   /// make a loop over all relations for given Trg cluster :
+   for ( Range::iterator link = links.begin() ; links.end() != link ; ++link )
+   {
+     /// Monte Carlo particle 
+     const MCParticle* particle = link -> to     () ;
+     /// its accumulated energy deposition into this cluster
+     const double      energy   = link -> weight () ;
+     /// make some printout 
+     info() << " MC particle accumulated deposition " << energy << endreq ; 
+   }
+   
+   =================================================================
+   *           ALL MC links from a given Ecal digit("cell")        *
+   =================================================================
+  
+   typedef const IRelationWeighted<CaloDigit,MCParticle,float> Table ;
+   typedef Table::Range                                        Range ;
+ 
+   const Table* table = 
+             get<Table>("/Event/Rec/Relations/EcalDigits2MCParticles");
+   if ( 0 == table ) { return StatusCode::FAILURE ; }
+
+   const CaloDigit* digit = ... ; 
+ 
+   /// get *ALL* MC links for the calorimeter digit : 
+   Range links = table->relations ( digit ) ;
+   
+   /// make some printout  
+   info() << " Found #relations for the digit  " << links.size() ;
+  
+   /// make a loop over all relations for given digit  :
+   for ( Range::iterator link = links.begin() ; links.end() != link ; ++link )
+   {
+     /// Monte Carlo particle 
+     const MCParticle* particle = link -> to     () ;
+     /// its accumulated energy deposition into this cluster
+     const double      energy   = link -> weight () ;
+     /// make some printout 
+     info() << " MC particle accumulated deposition " << energy << endreq ; 
+   }
+
+   
+  The major configurable properties for new algorithms and their default values 
+  =============================================================================
+   
+                     CaloDigitMCTruth 
+                     ================
+   - "Input" 
+      The default value is            CaloDigitLocation::Ecal  
+      The location of input container of CaloDigits.
+   - "Detector"
+      The default value is            DeCalorimeterLocation::Ecal 
+      The name of corresponding detector element, it is used to 
+      extract the notorious eActive/eTotal ratio and evaluation of 
+      transverse energy of calorimeter energy depositions
+   - "MinDigitET"
+      The default value is            1 MeV          
+      Calorimeter digits with the transverse energy over this threshold
+      will be used for building of Linker object
+   - "MinDigitE"
+      The default value is            50 MeV          
+      Calorimeter digits with the energy over this threshold
+      will be used for building of Linker object
+   - "MinParticleETdeposit"
+      The default value is            1 MeV        
+      The particle with accumulated ET deposit over this 
+      threshold will be will be used for construction of 
+      Linker object
+   - "MinParticleEdeposit"
+      The default value is            50 MeV        
+      The particle with accumulated E deposit over this 
+      threshold will be will be used for construction of Linker object
+   - "MinParticleFraction"
+      The default value is            1%        
+      The particle with relative accumulated E deposit over this 
+      threshold will be will be used for construction of Linker object
+   - "MinParticleEnergy"
+      The default value is            50 MeV 
+      Only particles with their energy ove the threshold 
+      will be used for construction of Linker object
+   
+                        CaloDigit2MCLinks2Table
+                        =======================
+
+    - "Inputs", 
+      The default value is            CaloDigitLocation::Ecal  
+      The location of Calorimeter digits (the location of Linker 
+      object is derived automatically from this value) 
+
+    - "Output"
+      The default value is            "Rec/Relations/CaloDigits2MCParticles"
+      The location of relation table 
+
+      In general *FEW* Linkers object could be merges into one relation table
+      (E.g. for HCal digits (in needed at all), one MUST to get a separate 
+      Linker, but the same Relation Table could be used) 
+
+                        CaloClusterMCTruth
+                        ==================
+     
+     - "Input"
+      The default value is        "Rec/Relations/CaloDigits2MCParticles"
+      The location of relation table for CaloDigit -> MCParticles relations 
+
+     - "Inputs"
+      The default value is         CaloClusterLocation::Ecal + EcalSplit 
+      The addresses of Calorimeter Clusters 
+ 
+     - "Output"
+      The default value is         "Rec/Relations/CaloClusters2MCParticles"           
+      The location of Relation Table for CaloCluster -> MCParticle relations
+
+                        CaloTrgClusterMCTruth
+                        =====================
+
+     - "Input"
+      The default value is          "Rec/Relations/CaloDigits2MCParticles"
+      The location of relation table for CaloDigit -> MCParticles relations 
+
+     - "Inputs"
+      The default value is           TrgCaloClusterLocation::Ecal
+      The addresses of Calorimeter Trigger Clusters 
+
+     - "Digits"
+      The defualt value is           CaloDigitLocation::Ecal 
+      The location of Calorimeter Digits, the container used 
+      as a function for CaloCellID -> CaloDigit mapping 
+
+     - "Output"
+      The default value is          "Rec/Relations/TrgCaloClusters2MCParticles"           
+      The location of Relation Table for TrgCaloCluster -> MCParticle relations
+
+
+   
 !===================== CaloAssociators v4r4 2004-11-22 =====================
 ! 2004-11-22 - Marco Cattaneo
  - Remove direct use of MsgStream from algorithms
