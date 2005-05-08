@@ -1,11 +1,30 @@
-! $Id: release.notes,v 1.66 2005-03-07 15:37:14 cattanem Exp $
+! $Id: release.notes,v 1.67 2005-05-08 09:45:56 ibelyaev Exp $
 ! -----------------------------------------------------------------------------
-! CVS tag $Name: not supported by cvs2svn $
+! CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.67 $
 ! -----------------------------------------------------------------------------
 ! Package     : Calo/CaloReco
 ! Responsible : Vanya BELYAEV  belyaev@lapp.in2p3.fr 
 ! Purpose     : Main Package for Calorimeter Reconstruction Software 
 ! -----------------------------------------------------------------------------
+
+! 2005-05-06 - Vanya BELYAEV
+
+ - src/CaloTrackAlg.h src/CaloTrackAlg.cpp,
+     files are moved into Calo/CaloUtils package 
+ 
+ - src/CaloCluster2TrackAlg.h, 
+     remove this file
+
+ - src/CaloHypo2TrackAlg.h, 
+   src/CaloCluster2TrackAlg.cpp 
+     files are updated for new location of CaloTrackAlg.h
+     and removal of src/CaloCluster2TrackAlg.h
+
+ - options/CaloRecoOnDemand.opts
+     the prototype (INVALID NOW) for future "Calo-Reco-On-Demand"
+
+ - cmt/requirements
+     version incremement to v2r8 
 
 !========================= CaloReco v2r7p1 2005-03-07 ==================
 ! 2005-03-07 - Marco Cattaneo

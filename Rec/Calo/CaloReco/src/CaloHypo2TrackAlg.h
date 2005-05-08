@@ -1,8 +1,11 @@
-// $Id: CaloHypo2TrackAlg.h,v 1.5 2004-10-26 20:35:58 ibelyaev Exp $
+// $Id: CaloHypo2TrackAlg.h,v 1.6 2005-05-08 09:45:56 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
-// $Log: not supported by cvs2svn $ 
+// $Log: not supported by cvs2svn $
+// Revision 1.5  2004/10/26 20:35:58  ibelyaev
+//  improve properties of all Track-related algorithms
+// 
 // ============================================================================
 #ifndef CALOREC_CALOHypo2TrackAlg_H 
 #define CALOREC_CALOHypo2TrackAlg_H 1
@@ -13,9 +16,9 @@
 // ============================================================================
 #include <string>
 // ============================================================================
-// local
+// CaloUtils 
 // ============================================================================
-#include "CaloTrackAlg.h"
+#include "CaloUtils/CaloTrackAlg.h"
 // ============================================================================
 // forward declarations 
 // ============================================================================

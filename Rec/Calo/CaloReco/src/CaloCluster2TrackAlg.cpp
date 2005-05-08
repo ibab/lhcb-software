@@ -1,6 +1,6 @@
-// $Id: CaloCluster2TrackAlg.cpp,v 1.5 2004-10-26 20:35:58 ibelyaev Exp $
+// $Id: CaloCluster2TrackAlg.cpp,v 1.6 2005-05-08 09:45:56 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.6 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
 // ============================================================================
@@ -22,20 +22,108 @@
 // ============================================================================
 #include "CaloInterfaces/ICaloTrackMatch.h"
 // ============================================================================
-// local
+// CaloUtils
 // ============================================================================
-#include "CaloCluster2TrackAlg.h"
+#include "CaloUtils/CaloTrackAlg.h"
 // ============================================================================
 
-// ============================================================================
-/** @file 
- * 
- *  Implementation file for class CaloCluster2TrackAlg
- *  @see CaloCluster2TrackAlg
- * 
+/** @class CaloCluster2TrackAlg CaloCluster2TrackAlg.cpp
+ *  
+ *  Algoriothm which performs the matching of 
+ *  CaloCluster objects with reconstructed tracks.
+ *  Algorithm produces the relation table between 
+ *  clusters and tracks with weight = chi2 of matching.
+ *  
+ *  The actual matching is performed by matching tool
+ *
+ *  The major properties are: 
+ *
+ *  - "Input" 
+ *   The default value is    CaloClusterLocation::Ecal 
+ *   Location of input containers of clusters 
+ *
+ *  - "Output"
+ *   The default value is    "Rec/Calo/PhotonMatch"     
+ *   Location of output relation table CaloCluster -> TrStoredTrack
+ *   relation table of type RelationWeighted2D<CaloCluster,TrStoredTrack,float>
+ *   
+ *  @see CaloAlgorithm
+ *  @see     Algorithm
+ *  @see    IAlgorithm
+ *  @see ICaloTrackMatch 
+ *  @see Associator
+ *  @see AssociatorWeighed
+ *
  *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
- *  @date 02/11/2001
+ *  @date   02/11/2001
  */
+
+class CaloCluster2TrackAlg : public CaloTrackAlg 
+{
+  /// friend factory for instantiation
+  friend class AlgFactory<CaloCluster2TrackAlg>;  
+public:
+  /// standard algorithm initialization 
+  virtual StatusCode initialize();
+  /// standard algorithm execution 
+  virtual StatusCode execute   ();
+protected:
+  /** Standard constructor
+   *  @param   name   algorithm name 
+   *  @param   svcloc pointer to service locator 
+   */
+  CaloCluster2TrackAlg
+  ( const std::string& name   , 
+    ISvcLocator*       svcloc )
+    : CaloTrackAlg  ( name , svcloc ) 
+    , m_tracks      ( TrStoredTrackLocation::Default )
+    , m_cut         ( 100        )
+    //
+    , m_matchType   ( "CaloTrackMatchPhoton" ) 
+    , m_matchName   ( ""         ) 
+    , m_match       ( 0          ) 
+  {
+    declareProperty ( "Tracks"         , m_tracks    ) ;
+    declareProperty ( "MatchType"      , m_matchType ) ;
+    declareProperty ( "MatchName"      , m_matchName ) ;
+    declareProperty ( "Cut"            , m_cut       ) ;
+    // 
+    setProperty     ( "UseUniqueOnly"  , "true"      ) ;
+    setProperty     ( "UseErrorAlso"   , "false"     ) ;
+    //
+    setProperty     ( "isLong"         , "true"      ) ;
+    setProperty     ( "isUpstream"     , "false"     ) ;
+    setProperty     ( "isDownstream"   , "true"      ) ;
+    setProperty     ( "isVelotrack"    , "false"     ) ;
+    setProperty     ( "isBackward"     , "false"     ) ;
+    setProperty     ( "isTtrack"       , "true"      ) ;
+    // set the approproate default value for input  data 
+    setInputData    ( CaloClusterLocation::  Ecal      ) ;
+    // set the approproate default value for output data 
+    setOutputData   ( "Rec/Calo/PhotonMatch"      ) ;
+  };
+  /// destructor (virtual and protected)
+  virtual ~CaloCluster2TrackAlg(){};
+private:
+  /// default  construstor  is  private 
+  CaloCluster2TrackAlg(); 
+  /// copy     construstor  is  private 
+  CaloCluster2TrackAlg
+  ( const CaloCluster2TrackAlg& );
+  /// assignement operator  is  private 
+  CaloCluster2TrackAlg& operator=
+  ( const CaloCluster2TrackAlg& );
+private:
+  /// address of Tracks 
+  std::string        m_tracks    ;
+  /// cut value 
+  double             m_cut       ;
+  // matching tool 
+  std::string        m_matchType ;
+  std::string        m_matchName ;
+  ICaloTrackMatch*   m_match     ;
+
+};
 // ============================================================================
 
 // ============================================================================
@@ -45,51 +133,6 @@
 // ============================================================================
 static const  AlgFactory<CaloCluster2TrackAlg>         s_Factory ;
 const        IAlgFactory&CaloCluster2TrackAlgFactory = s_Factory ;
-
-// ============================================================================
-/** Standard constructor
- *  @param   name   algorithm name 
- *  @param   svcloc pointer to service locator 
- */
-// ============================================================================
-CaloCluster2TrackAlg::CaloCluster2TrackAlg
-( const std::string& name   ,
-  ISvcLocator*       svcloc )
-  : CaloTrackAlg  ( name , svcloc ) 
-  , m_tracks      ( TrStoredTrackLocation::Default )
-  , m_cut         ( 100        )
-  //
-  , m_matchType   ( "CaloTrackMatchPhoton" ) 
-  , m_matchName   ( ""         ) 
-  , m_match       ( 0          ) 
-{
-  declareProperty ( "Tracks"         , m_tracks    ) ;
-  declareProperty ( "MatchType"      , m_matchType ) ;
-  declareProperty ( "MatchName"      , m_matchName ) ;
-  declareProperty ( "Cut"            , m_cut       ) ;
-  // 
-  setProperty     ( "UseUniqueOnly"  , "true"      ) ;
-  setProperty     ( "UseErrorAlso"   , "false"     ) ;
-  //
-  setProperty     ( "isLong"         , "true"      ) ;
-  setProperty     ( "isUpstream"     , "false"     ) ;
-  setProperty     ( "isDownstream"   , "true"      ) ;
-  setProperty     ( "isVelotrack"    , "false"     ) ;
-  setProperty     ( "isBackward"     , "false"     ) ;
-  setProperty     ( "isTtrack"       , "true"      ) ;
-  //
-  // set the approproate default value for input  data 
-  setInputData    ( CaloClusterLocation::  Ecal ) ;
-  // set the approproate default value for output data 
-  setOutputData   ( "Rec/Calo/PhotonMatch"      ) ;
-};
-// ============================================================================
-
-// ============================================================================
-/// destructor
-// ============================================================================
-CaloCluster2TrackAlg::~CaloCluster2TrackAlg() {};
-// ============================================================================
 
 // ============================================================================
 /** standard algorithm initialization 
@@ -126,30 +169,29 @@ StatusCode CaloCluster2TrackAlg::execute()
   // avoid long names 
   typedef const TrStoredTracks                                 Tracks   ;
   typedef const TrStoredTrack                                  Track    ; 
-  typedef const CaloClusters                                   Clusters ;
   typedef const CaloCluster                                    Cluster  ;
+  typedef const CaloClusters                                   Clusters ;
   typedef RelationWeighted2D<CaloCluster,TrStoredTrack,float>  Table    ;
+
+  const StatusCode OK = StatusCode::SUCCESS ;
   
   // get clusters from Transient Store  
-  Clusters* clusters = get<Clusters> ( inputData() ) ;
+  const Clusters* clusters = get<Clusters> ( inputData() ) ;
   if ( 0 ==  clusters           )     { return StatusCode::FAILURE ; }
   
   // get tracks   from Transient Store  
-  Tracks*   tracks   = get<Tracks>   (  m_tracks   ) ;
+  const Tracks*   tracks   = get<Tracks>   (  m_tracks   ) ;
   if ( 0 ==  tracks             )     { return StatusCode::FAILURE ; }
   
   // create relation table and register it in the store
-  Table*    table    = new Table();
+  Table*    table    = new Table( clusters->size() * 10 ) ;
   StatusCode sc      = put( table , outputData() );
   if ( sc.isFailure()           )     { return StatusCode::FAILURE ; }
   
   if ( 0 == tracks   -> size () )
-  { Warning ( "Empty container of Tracks   " , StatusCode::SUCCESS ) ; }
+  { return Warning ( "Empty container of Tracks   " , OK ) ; }
   if ( 0 == clusters -> size () )
-  { Warning ( "Empty container of Clusters " , StatusCode::SUCCESS ) ; }
-  
-  if ( 0 == tracks   -> size () || 
-       0 == clusters -> size () )     { return StatusCode::SUCCESS ; }
+  { return Warning ( "Empty container of Clusters " , OK ) ; }
   
   // loop over all tracks 
   for ( Tracks::const_iterator track = tracks->begin() ; 
@@ -165,7 +207,7 @@ StatusCode CaloCluster2TrackAlg::execute()
     for ( Clusters::const_iterator cluster = clusters->begin() ; 
           clusters->end() != cluster ; ++cluster )
     {
-      // skip NUULs 
+      // skip NULLs 
       if ( 0 == *cluster  ) { continue ; }               // CONTINUE 
       
       // perform matching
@@ -179,10 +221,13 @@ StatusCode CaloCluster2TrackAlg::execute()
         continue ;                                       /// CONTINUIE 
       }
       else if ( 0 <= chi2 && chi2 <=  m_cut ) 
-      { table->relate( *cluster , *track , chi2 ); }
+      { table -> i_push ( *cluster , *track , chi2 ) ; } // NB: "i_push"
       
     }; // end of loop over all clusters 
   }; // end of loop over all  tracks
+
+  // NB: call for "i_sort" is mandatory after "i_push"
+  table -> i_sort() ;                                  // NB: "i_sort"
   
   if ( msgLevel( MSG::DEBUG ) ) 
   { debug() << "Entries in the table " << table->relations().size() << endreq ; }

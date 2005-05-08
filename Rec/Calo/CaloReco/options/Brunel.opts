@@ -1,14 +1,8 @@
-// $Id: Brunel.opts,v 1.7 2004-03-17 16:32:19 ibelyaev Exp $ 
+// $Id: Brunel.opts,v 1.8 2005-05-08 09:45:56 ibelyaev Exp $ 
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ 
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.8 $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
-// Revision 1.6  2003/03/13 18:47:49  ibelyaev
-//  see ../doc/release.notes file
-//
-// Revision 1.5  2003/02/04 14:24:39  ibelyaev
-//  new Ecal/Prs calibration constants and improved PhotonID tool
-//
 // ============================================================================
 
 /** @file
@@ -20,9 +14,14 @@
 /// The first pass of CALOrimeter reconstruction - track independent 
 BrunelRecoCALOSeq.Members += 
   { 
+    // Cellular Automaton clusterisation 
     "CellularAutomaton/EcalClust"        , /// Cellular Automaton clusterisation 
+    // Shared energy redistribution 
     "CaloSharedCellAlg/EcalShare"        , /// Shared energy redistribution 
-    "CaloClusterCovarianceAlg/EcalCovar"   /// Evaluation of covariances 
+    // Evaluation of covariances 
+    "CaloClusterCovarianceAlg/EcalCovar" , /// Evaluation of covariances 
+    // Reconstruction of merged pi0s
+    "CaloMergedPi0Alg/Pi0Rec"              /// Reconstruction of merged pi0s
   };
 
 /// The second pass of CALOrimeter reconstruction: track dependent 
@@ -30,7 +29,6 @@ BrunelRecoCALOSeq.Members +=
   {
     "CaloCluster2TrackAlg/PhotonMatch"   , /// Cluster/Track matching 
     //
-    "CaloMergedPi0Alg/Pi0Rec"            , /// Reconstruction of merged pi0s
     "CaloHypoAlg/PhotonFromMergedCalibration" ,/// E/S/L-corrections  
     //
     "CaloSinglePhotonAlg/PhotonRec"      , /// Reconstruction of single photons  

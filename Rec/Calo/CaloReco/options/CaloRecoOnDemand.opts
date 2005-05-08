@@ -1,0 +1,65 @@
+// $Id: CaloRecoOnDemand.opts,v 1.1 2005-05-08 09:45:56 ibelyaev Exp $ 
+// ============================================================================
+// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.1 $
+// ============================================================================
+
+// ============================================================================
+/** @file
+ *  Configuration file for "Calorimeter Reconstruction *ON-DEMAND*"
+ *  
+ *  @attention It is not yet ready!!! The "feature" with bas interference 
+ *             of Data-On-Demand service and sequences must be resolved
+ * 
+ *  @author Vanya BELYAEV Ivan.Belyaevlapp.in2p3.fr
+ *  @date 2005-05-06
+ */
+// ============================================================================
+
+DataOnDemandSvc.Algorithms +=
+  {
+    // Calorimetr clusterisation  and evaluation of barycenter 
+    //                                                 MUST BE A SEQUENCE 
+    // It produces a sequence of CaloCluster objects 
+    "DATA='/Event/Rec/Calo/EcalClusters' 
+     TYPE='CellularAutomaton/EcalClust'"       ,     
+    // Reconstruction of merged pi0s   
+    //                                                 MUST BE A SEUQENCE 
+    //   It produces two container of CaloHypo object 
+    //   and one constainer of CaloCluster object
+    "DATA='/Event/Rec/Calo/MergedPi0s' 
+     TYPE='CaloMergedPi0Alg/Pi0Rec'"           , 
+    "DATA='/Event/Rec/Calo/EcalSplitClusters' 
+     TYPE='CaloMergedPi0Alg/Pi0Rec'"           , 
+    "DATA='/Event/Rec/Calo/SplitPhotons' 
+     TYPE='CaloMergedPi0Alg/Pi0Rec'"           , 
+    // Cluster/Track match     
+    //   It produces the relation table CaloCluster->TrStoredTrack 
+    //   (the actual type is RelationWeighted2D<CaloCluster,TrStoredTrack,float>)
+    "DATA='/Event/Rec/Calo/PhotonMatch' 
+     TYPE='CaloCluster2TrackAlg/PhotonMatch'"  , 
+    // Reconstruction of single photons 
+    //   It produces one container of CaloHypo objects 
+    "DATA='/Event/Rec/Calo/Photons' 
+     TYPE='CaloSinglePhotonAlg/PhotonRec'"     , 
+    // Reconstruction of single photons  (MUST BE A SEQUENCE!!!)
+    //   It produces one container of CaloHypo objects 
+    "DATA='/Event/Rec/Calo/Photons' 
+     TYPE='CaloSinglePhotonAlg/PhotonRec'"      , 
+    // 3D track-hypo match (e+/e- ID)  
+    //   It produces the relation table CaloHypo->TrStoredTrack 
+    //   (the actual type is RelationWeighted2D<CaloHypo,TrStoredTrack,float>)
+    "DATA='/Event/Rec/Calo/ElectroMatch' 
+     TYPE='CaloHypo2TrackAlg/ElectronMatch'"     , 
+    // Bremstrahlung track-hypo match (e+/e- ID)
+    //   It produces the relation table CaloHypo->TrStoredTrack 
+    //   (the actual type is RelationWeighted2D<CaloHypo,TrStoredTrack,float>)
+    "DATA='/Event/Rec/Calo/BremMatch' 
+     TYPE='CaloHypo2TrackAlg/BremMatch'"         , 
+    // Merge CaloHypos into CaloParticles ( do we need it yet ?)
+    "DATA='/Event/Rec/Calo/Particles' 
+     TYPE='CaloHyposMerge/CaloMerge'"         
+  };
+
+// ============================================================================
+// The END 
+// ============================================================================
