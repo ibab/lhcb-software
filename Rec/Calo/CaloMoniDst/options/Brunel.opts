@@ -1,6 +1,6 @@
-// $Id: Brunel.opts,v 1.1.1.1 2004-10-25 09:00:25 ibelyaev Exp $
+// $Id: Brunel.opts,v 1.2 2005-05-08 09:58:24 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ 
+// CVS tag $Name: not supported by cvs2svn $ , version $Revison:$
 // ============================================================================
 // $Log: not supported by cvs2svn $
 // ============================================================================
@@ -17,22 +17,30 @@ ApplicationMgr.DLLs += { "CaloMoniDst"} ;
 BrunelMoniCALOSeq.Members +=
   {
     // clusters 
-    "CaloClusterMonitor/ClusterMoni"             , 
-    "CaloClusterMonitor/SplitClusterMoni"        , 
+    "CaloClusterMonitor/ClusterMoni"              
+    ,"CaloClusterMonitor/SplitClusterMoni"        
     // hypos
-    "CaloHypoMonitor/ElectronMoni"               ,
-    "CaloHypoMonitor/PhotonMoni"                 ,
-    "CaloHypoMonitor/SplitPhotonMoni"            ,
-    "CaloHypoMonitor/MergedPi0Moni"              ,
+    ,"CaloHypoMonitor/ElectronMoni"               
+    ,"CaloHypoMonitor/PhotonMoni"                 
+    ,"CaloHypoMonitor/SplitPhotonMoni"            
+    ,"CaloHypoMonitor/MergedPi0Moni"              
     // matching 
-    "CaloClusterMatchMonitor/PhotonMatchMoni"    ,
-    "CaloHypoMatchMonitor/ElectronMatchMoni"     ,
-    "CaloHypoMatchMonitor/BremMatchMoni"         ,
+    ,"CaloClusterMatchMonitor/PhotonMatchMoni"    
+    ,"CaloHypoMatchMonitor/ElectronMatchMoni"     
+    ,"CaloHypoMatchMonitor/BremMatchMoni"         
     // pi0  
-    "CaloPi0Monitor/Pi0Moni"                     ,
-    "CaloMCPi0Monitor/MCPi0Moni"                 ,
+    ,"CaloPi0Monitor/Pi0Moni"                     
+    ,"CaloMCPi0Monitor/MCEtaMoni"                 
+    ,"CaloMCPi0Monitor/MCPi0Moni"                 
     // MC truth
-    "CaloClusterMCTruthMonitor/CaloMCTruthMoni" 
+    ,"CaloClusterMCTruthMonitor/CaloMCTruthMoni" 
+    // PIDs monitoring 
+    ,"CaloPIDsMonitor/PIDeEcalMoni"
+    ,"CaloPIDsMonitor/PIDePrsMoni" 
+    ,"CaloPIDsMonitor/PIDeHcalMoni"
+    ,"CaloPIDsMonitor/PIDeBremMoni" 
+    ,"CaloPIDsMonitor/PIDmEcalMoni" 
+    ,"CaloPIDsMonitor/PIDmHcalMoni" 
   };
 
 #include "$CALOMONIDSTOPTS/MoniDst.opts"

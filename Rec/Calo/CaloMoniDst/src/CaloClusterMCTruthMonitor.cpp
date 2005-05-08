@@ -1,14 +1,18 @@
-// $Id: CaloClusterMCTruthMonitor.cpp,v 1.2 2004-10-27 11:28:43 ibelyaev Exp $
+// $Id: CaloClusterMCTruthMonitor.cpp,v 1.3 2005-05-08 09:58:24 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.3 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
 // ============================================================================
 // Include files
 // ============================================================================
+// STD & STL 
+// ============================================================================
+#include <math.h>
+// ============================================================================
 // Relations 
 // ============================================================================
-#include   "Relations/IAssociatorWeighted.h"
+#include   "Relations/IRelationWeighted.h"
 // ============================================================================
 // from Gaudi
 // ============================================================================
@@ -35,96 +39,97 @@
 // ============================================================================
 // local
 // ============================================================================
-#include   "CaloClusterMCTruthMonitor.h"
+#include   "CaloMoniAlg.h"
 // ============================================================================
 
-// ============================================================================
-/** @file CaloClusterMCTruthMonitor.cpp
- * 
- *  Template implementation file for class : CaloClusterMCTruthMonitor
- *  @see CaloClusterMCTruthMonitor
- * 
- *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
- *  @date 02/11/2001
- */
-// ============================================================================
-
-// ============================================================================
-/** @var CaloClusterMCTruthMonitorFactory
- *  Declaration of the Algorithm Factory
- */
-// ============================================================================
-static const  AlgFactory<CaloClusterMCTruthMonitor>         s_Factory ;
-const        IAlgFactory&CaloClusterMCTruthMonitorFactory = s_Factory ;
-
-// ============================================================================
-/** Standard constructor
- *  @param   name   algorithm name 
- *  @param   svcloc pointer to service locator 
- */
-// ============================================================================
-CaloClusterMCTruthMonitor::CaloClusterMCTruthMonitor
-( const std::string& name   ,
-  ISvcLocator*       svcloc )
-  : CaloMoniAlg      ( name , svcloc ) 
-  , m_associatorType ("AssociatorWeighted<CaloCluster,MCParticle,float>")
-  , m_associatorName ("Unknown")
-  , m_associator     ( 0 ) 
-  , m_links          ( 0 )
-  , m_rels           ( 0 ) 
-  , m_min            ( 0 ) 
-  , m_max            ( 0 ) 
-  , m_weights        ( 0 ) 
-{
-  declareProperty("AssociatorType" , m_associatorType );
-  declareProperty("AssociatorName" , m_associatorName );
-};
-// ============================================================================
-
-// ============================================================================
-/** destructor
- */
-// ============================================================================
-CaloClusterMCTruthMonitor::~CaloClusterMCTruthMonitor() {};
-// ============================================================================
-
-// ============================================================================
-/** standard algorithm initialization 
+/** @class CaloClusterMCTruthMonitor CaloClusterMCTruthMonitor.cpp
+ *  
+ *  The algorithm for trivial monitoring of MCTruthing of 
+ *  "CaloClusters" with TrStored Tracks.
+ *  It produces 5 histograms:
+ *
+ *  <ol> 
+ *  <li> Total Link              distribution               </li>
+ *  <li> Link multiplicity       distribution               </li>
+ *  <li> Minimal Weight          distribution               </li>
+ *  <li> Maximal Weight          distribution               </li>
+ *  <li>         Weight          distribution               </li>
+ *  </ol>
+ *
+ *  Histograms reside in the directory @p /stat/"Name" , where 
+ *  @ "Name" is the name of the algorithm
+ *
  *  @see CaloAlgorithm
  *  @see     Algorithm
  *  @see    IAlgorithm
- *  @return status code 
+ *
+ *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
+ *  @date   02/11/2001
  */
-// ============================================================================
-StatusCode CaloClusterMCTruthMonitor::initialize() 
-{  
-  StatusCode sc = CaloMoniAlg::initialize();
-  if ( sc.isFailure() ) { return sc ; }
-  
-  // locate the associator 
-  m_associator = tool<Asct>( m_associatorType , m_associatorName ) ;
-  if ( 0 == m_associator ) { return StatusCode::FAILURE ; }
-  
-  // book the histograms
-  m_links   = book ( 1 , "Total Links      : " + inputData() + " " + name() , 
-                     0 , 1000. , 500 ) ;
-  
-  // number of relations per hypo 
-  m_rels    = book ( 2 , "Rels per Cluster : " + inputData() + " " + name() , 
-                     0 ,   50. ,  50 ) ;
-  // minimal weight 
-  m_min     = book ( 3 , "Min weight       : " + inputData() + " " + name() , 
-                     0 ,    2. , 100 ) ;
-  
-  // maximal weight 
-  m_max     = book ( 4 , "Max weight       : " + inputData() + " " + name() , 
-                     0 ,    2. , 100 ) ;
-  // weights 
-  m_weights = book ( 5 , "Weights          : " + inputData() + " " + name() , 
-                     0 ,    2. , 100 ) ;
-  
-  return StatusCode::SUCCESS;
+
+class CaloClusterMCTruthMonitor : public CaloMoniAlg 
+{
+  /// friend factory for instantiation
+  friend class AlgFactory<CaloClusterMCTruthMonitor>;
+public:
+  /// standard algorithm initialization 
+  virtual StatusCode initialize ()
+  {
+    StatusCode sc = CaloMoniAlg::initialize() ;
+    if ( sc.isFailure() ) { return sc ;}
+    book ( 1 , "log10(#Links+1)       '" + inputData() + "'" , 
+           0 ,   5  , 100 ) ;
+    book ( 2 , "Rels/Cluster          '" + inputData() + "'" , 
+           0 ,   50       ) ;
+    book ( 3 , "Minimal Weight/e      '" + inputData() + "'" , 
+           0 ,   2.0      ) ;
+    book ( 4 , "Maximal Weight/e      '" + inputData() + "'" , 
+           0 ,   2.0      ) ;
+    book ( 5 , "        Weight/e      '" + inputData() + "'" , 
+           0 ,   2.0      ) ;
+    return StatusCode::SUCCESS ;  
+  };
+  /// standard algorithm execution 
+  virtual StatusCode execute    ();  
+protected:
+  /** Standard constructor
+   *  @param   name   algorithm name 
+   *  @param   svcloc pointer to service locator 
+   */
+  CaloClusterMCTruthMonitor
+  ( const std::string& name   , 
+    ISvcLocator*       svcloc )
+    : CaloMoniAlg      ( name , svcloc ) 
+  {
+    setInputData ( "Rec/Relations/CaloClusters2MCParticles" ) ;
+    addToInputs  ( CaloClusterLocation :: Ecal              ) ;
+    addToInputs  ( CaloClusterLocation :: EcalSplit         ) ;
+  };  
+  /// destructor (virtual and protected)
+  virtual ~CaloClusterMCTruthMonitor(){} ;
+private:
+  /// default  construstor  is  private 
+  CaloClusterMCTruthMonitor(); 
+  /// copy     construstor  is  private 
+  CaloClusterMCTruthMonitor
+  ( const CaloClusterMCTruthMonitor& );
+  /// assignement operator  is  private 
+  CaloClusterMCTruthMonitor& operator=
+  ( const CaloClusterMCTruthMonitor& );
 };
+// ============================================================================
+
+// ============================================================================
+namespace 
+{  
+  // ==========================================================================
+  /** @var CaloClusterMCTruthMonitorFactory
+   *  Declaration of the Algorithm Factory
+   */
+  // ==========================================================================
+  const AlgFactory<CaloClusterMCTruthMonitor>         s_Factory ;
+}
+const  IAlgFactory&CaloClusterMCTruthMonitorFactory = s_Factory ;
 // ============================================================================
 
 // ============================================================================
@@ -138,45 +143,57 @@ StatusCode CaloClusterMCTruthMonitor::initialize()
 StatusCode CaloClusterMCTruthMonitor::execute() 
 {
   // avoid long names 
-  typedef const   CaloClusters      Clusters ;
+  typedef const   CaloClusters                                  Clusters ;
+  typedef const IRelationWeighted<CaloCluster,MCParticle,float> Table    ;
+  typedef Table::Range                                          Range    ;
+  typedef Table::iterator                                       iterator ;
   
-  typedef const Asct::DirectType    Table    ;
-  typedef Table::Range              Range    ;
-  typedef Table::iterator           iterator ;
+  // produce histos ?
+  if ( !produceHistos() ) { return StatusCode::SUCCESS ; }
   
-  // get input data 
-  Clusters* clusters = get<Clusters>( inputData() );
-  if( 0 == clusters ) { return StatusCode::FAILURE ; }
-  
-  // check relations 
-  const Table* table = m_associator->direct() ;
-  if( 0 == table ) { return Error("'Direct Relation Table' points to NULL!"); }
+  // get the relation table 
+  const Table* table = get<Table> ( inputData() ) ;
+  if (    0 == table  ) { return StatusCode::FAILURE ; }
+
+  AIDA::IHistogram1D* h1 = histo ( 1 ) ;
+  AIDA::IHistogram1D* h2 = histo ( 2 ) ;
+  AIDA::IHistogram1D* h3 = histo ( 3 ) ;
+  AIDA::IHistogram1D* h4 = histo ( 4 ) ;
+  AIDA::IHistogram1D* h5 = histo ( 5 ) ;
   
   // total number of links 
-  m_links ->fill( table->relations().size() );
-  
-  for( Clusters::const_iterator cluster = clusters -> begin() ; 
-       clusters -> end() != cluster ; ++cluster ) 
+  hFill ( h1 , log10( table->relations().size() + 1 ) ) ;
+  if ( inputs().empty() ) 
+  { return Error ( "Containers of Clusters are not specified " ) ; }
+  // make a loop over containers of clusters 
+  for ( Inputs::const_iterator input = inputs().begin() ; 
+        inputs().end() != input ; ++input ) 
   {
-    const Range range = table->relations( *cluster );
-    // number of related tracks 
-    m_rels -> fill( range.size() ) ;
-    if( range.empty() ) { continue ; }
-    
-    // cluster energy 
-    const double e = (*cluster) -> e() ;
-    
-    // minimal weight 
-    m_min -> fill (  range. front().weight() / e ) ;
-    // maximal weight 
-    m_max -> fill (  range.  back().weight() / e ) ;
-    // all weights  
-    for( iterator relation = range.begin() ; 
-         range.end() != relation ; ++relation )
+    // get clusters 
+    Clusters* clusters = get<Clusters>( *input );
+    if ( 0 == clusters ) { return StatusCode::FAILURE ; }
+    // loop over clusters 
+    for ( Clusters::const_iterator cluster = clusters -> begin() ; 
+          clusters -> end() != cluster ; ++cluster ) 
     {
-      m_weights -> fill( relation->weight() /  e ) ;
-    }    
-  }
+      // get all MC relation for the cluster 
+      const Range range = table->relations( *cluster );      
+      // number of relations per cluster
+      hFill ( h2 , range.size() ) ;
+      if ( range.empty() ) { continue ; }
+      // cluster energy 
+      const double e = (*cluster) -> e() ;
+      // minimal weight 
+      hFill ( h3 , range.front().weight() / e  ) ;
+      // maximal weight 
+      hFill ( h4 , range.back ().weight() / e  ) ;      
+      // all weights  
+      for ( iterator relation = range.begin() ; 
+            range.end() != relation ; ++relation )
+      { hFill ( h5 , relation->weight() / e ) ; } 
+      
+    } // end of loop over clusters 
+  } // end of loop over containers 
   
   return StatusCode::SUCCESS ;
 };

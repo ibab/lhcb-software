@@ -1,8 +1,8 @@
-// $Id: MoniDst.opts,v 1.1.1.1 2004-10-25 09:00:25 ibelyaev Exp $ 
+// $Id: MoniDst.opts,v 1.2 2005-05-08 09:58:24 ibelyaev Exp $ 
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $
+// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.2 $
 // ============================================================================
-// $Log: not supported by cvs2svn $ 
+// $Log: not supported by cvs2svn $
 // ============================================================================
 
 /** @file 
@@ -11,93 +11,92 @@
  *  @date 2004-10-25
  */
 
-
 // Monitoring of clusters  
-ClusterMoni.Input              = "Rec/Calo/EcalClusters" ;
-SplitClusterMoni.Input         = "Rec/Calo/EcalSplitClusters"  ;
+ClusterMoni      .Input  = "Rec/Calo/EcalClusters" ;
+SplitClusterMoni .Input  = "Rec/Calo/EcalSplitClusters"  ;
 
 // Monitoring of different Hypotehses 
-PhotonMoni.Input               = "Rec/Calo/Photons"             ;
-ElectronMoni.Input             = "Rec/Calo/Electrons"           ;
-MergedPi0Moni.Input            = "Rec/Calo/MergedPi0s"          ;
-SplitPhotonMoni.Input          = "Rec/Calo/SplitPhotons"        ;
+PhotonMoni       .Input  = "Rec/Calo/Photons"             ;
+ElectronMoni     .Input  = "Rec/Calo/Electrons"           ;
+MergedPi0Moni    .Input  = "Rec/Calo/MergedPi0s"          ;
+SplitPhotonMoni  .Input  = "Rec/Calo/SplitPhotons"        ;
 
 // Pi0 Monitoring
-// The default value 
-// Pi0Moni.Input                  = "Rec/Calo/Photons"             ;
-Pi0Moni.PhotonPt               = 200. * MeV                     ;  
-Pi0Moni.Pi0Pt                  = 400. * MeV                     ;
 
 // Pi0 Monitoring with MC 
-// The default value 
-// MCPi0Moni.Detector             = "/dd/Structure/LHCb/Ecal"      ;
-// The default value 
-// MCPi0Moni.Input                = "Rec/Calo/Photons"             ;
-MCPi0Moni.Cut                  = 0.0                            ;
+MCPi0Moni.Ancestor = "pi0" ;
+MCEtaMoni.Ancestor = "eta" ;
 
 // Monitoring of matching relation tables
-PhotonMatchMoni.Input            = "Rec/Calo/EcalClusters" ;
-PhotonMatchMoni.AssociatorName   = "PhotonMatch"           ;
+PhotonMatchMoni.Input    =   "Rec/Calo/PhotonMatch"     ;
+PhotonMatchMoni.Inputs   = { "Rec/Calo/EcalClusters" }  ;
 
-ElectronMatchMoni.Input          = "Rec/Calo/Electrons"    ;
-ElectronMatchMoni.AssociatorName = "ElectronMatch"         ;
+ElectronMatchMoni.Input  =   "Rec/Calo/ElectronMatch"   ;
+ElectronMatchMoni.Inputs = { "Rec/Calo/Electrons"     } ;
 
-BremMatchMoni.Input              = "Rec/Calo/Photons"      ;
-BremMatchMoni.AssociatorName     = "BremMatch"             ;
-
-CaloMCTruthMoni.Input            = "Rec/Calo/EcalClusters" ;
-CaloMCTruthMoni.AssociatorName   = "CCs2MCPs"              ;
+BremMatchMoni.Input      = "Rec/Calo/BremMatch"         ;
+BremMatchMoni.Inputs     = { "Rec/Calo/Photons"       } ;
 
 
-PIDeEcalMoni.  Particle      =  11 ;
-PIDeEcalMoni.  Tr2CaloPID    = "Associator<TrStoredTrack,float>/EcalPIDe"  ;
-PIDeEcalMoni.  Normalization =  50.0 * GeV ;
+PIDeEcalMoni.  Particle      =  11                  ;
+PIDeEcalMoni.  Input         = "Rec/Calo/EcalPIDe"  ;
+PIDeEcalMoni.  Normalization =  50.0 * GeV          ;
+PIDeEcalMoni.  Cut           =  0.5                 ;
 
-PIDmEcalMoni.  Particle = 13 ;
-PIDmEcalMoni.  Tr2CaloPID = "Associator<TrStoredTrack,float>/EcalPIDmu" ;
-PIDmEcalMoni.  Normalization =  25.0 * GeV ;
+PIDePrsMoni.   Particle      = 11 ;
+PIDePrsMoni.   Input         = "Rec/Calo/PrsPIDe"   ;
+PIDePrsMoni.   Normalization =  50.0 * GeV ;
+PIDePrsMoni.   Cut           =  0.5                 ;
 
-PIDeHcalMoni.  Particle = 11 ;
-PIDeHcalMoni.  Tr2CaloPID = "Associator<TrStoredTrack,float>/HcalPIDe"  ;
-PIDeHcalMoni.  Normalization =  50.0 * GeV ;
-
-PIDmHcalMoni.  Particle = 13 ;
-PIDmHcalMoni.  Tr2CaloPID = "Associator<TrStoredTrack,float>/HcalPIDmu" ;
-PIDmHcalMoni.  Normalization =  25.0 * GeV ;
-
-PIDeBremMoni.  Particle = 11 ;
-PIDeBremMoni.  Tr2CaloPID = "Associator<TrStoredTrack,float>/BremPIDe"  ;
+PIDeBremMoni.  Particle      = 11 ;
+PIDeBremMoni.  Input         = "Rec/Calo/BremPIDe"  ;
 PIDeBremMoni.  Normalization =  50.0 * GeV ;
+PIDeBremMoni.  Cut           =  0.1                 ;
 
-PIDePrseMoni.  Particle = 11 ;
-PIDePrseMoni.  Tr2CaloPID = "Associator<TrStoredTrack,float>/PrsPIDe"   ;
-PIDePrseMoni.  Normalization =  50.0 * GeV ;
+PIDeHcalMoni.  Particle      = 11 ;
+PIDeHcalMoni.  Input         = "Rec/Calo/HcalPIDe"  ;
+PIDeHcalMoni.  Normalization =  50.0 * GeV ;
+PIDeHcalMoni.  Cut           =  0.1                 ;
 
-PhotonMonitor.OutputLevel = 3 ;
-PhotonMonitor.HypoToolType= "CaloPhotonEstimatorTool";
-PhotonMonitor.HypoToolName= "PhotonPID";
-PhotonMonitor.Pdf         = true;
+PIDmEcalMoni.  Particle      = 13 ;
+PIDmEcalMoni.  Input         = "Rec/Calo/EcalPIDmu" ;
+PIDmEcalMoni.  Normalization =  25.0 * GeV ;
+PIDmEcalMoni.  Cut           =  0.1                 ;
+
+PIDmHcalMoni.  Particle      = 13                   ;
+PIDmHcalMoni.  Input         = "Rec/Calo/HcalPIDmu" ;
+PIDmHcalMoni.  Normalization =  25.0 * GeV          ;
+PIDmHcalMoni.  Cut           =  0.1                 ;
+
+PhotonMonitor.HypoToolType   = "CaloPhotonEstimatorTool"  ;
+PhotonMonitor.HypoToolName   = "PhotonPID"                ;
+PhotonMonitor.Pdf            = true                       ;
+
 
 // Ebin Edges :
-PhotonMonitor.EBin = {
-  1000.0 ,   2000.0 ,   4000.0 ,   6000.0 ,
- 10000.0 ,  20000.0 ,  40000.0 ,  70000.0 ,
-100000.0
-};
+PhotonMonitor.EBin = 
+  {
+    1000.0 ,   2000.0 ,   4000.0 ,   6000.0 ,
+    10000.0 ,  20000.0 ,  40000.0 ,  70000.0 ,
+    100000.0
+  };
 
 // Histogram Binning :
-PhotonMonitor.EPrsBin={
- // Nbin ,   Xmin,   Xmax
-      50.,     0.,   200. // EPrs
-};
-PhotonMonitor.Chi2Bin={
- // Nbin ,   Xmin,   Xmax
-      26.,     0.,   104. // Chi2(Tr)
-};
-PhotonMonitor.ShapBin={
- // Nbin ,   Xmin,   Xmax
-      50.,     0., 30000.  // Shower Shape
-};
+PhotonMonitor.EPrsBin=
+  {
+    // Nbin ,   Xmin,   Xmax
+    50.,     0.,   200. // EPrs
+  };
+PhotonMonitor.Chi2Bin=
+  {
+    // Nbin ,   Xmin,   Xmax
+    26.,     0.,   104. // Chi2(Tr)
+  };
+PhotonMonitor.ShapBin=
+  {
+    // Nbin ,   Xmin,   Xmax
+    50.,     0., 30000.  // Shower Shape
+  };
 
 
 // ============================================================================

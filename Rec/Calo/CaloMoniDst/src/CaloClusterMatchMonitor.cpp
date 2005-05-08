@@ -1,4 +1,4 @@
-// $Id: CaloClusterMatchMonitor.cpp,v 1.2 2004-10-27 11:28:43 ibelyaev Exp $
+// $Id: CaloClusterMatchMonitor.cpp,v 1.3 2005-05-08 09:58:25 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
@@ -6,9 +6,13 @@
 // ============================================================================
 // Include files
 // ============================================================================
+// STD & STL 
+// ============================================================================
+#include <math.h>
+// ============================================================================
 // Relations 
 // ============================================================================
-#include   "Relations/IAssociatorWeighted.h"
+#include   "Relations/IRelationWeighted.h"
 // ============================================================================
 // from Gaudi
 // ============================================================================
@@ -28,24 +32,81 @@
 #include   "Event/CaloHypo.h"
 #include   "Event/TrStoredTrack.h"
 // ============================================================================
-// CaloUtils 
-// ============================================================================
-#include   "CaloUtils/dirHbookName.h"
-// ============================================================================
 // local
 // ============================================================================
-#include   "CaloClusterMatchMonitor.h"
+#include   "CaloMoniAlg.h"
 // ============================================================================
 
-// ============================================================================
-/** @file CaloClusterMatchMonitor.cpp
- * 
- *  Template implementation file for class : CaloClusterMatchMonitor
- *  @see CaloClusterMatchMonitor
- * 
+/** @class CaloClusterMatchMonitor CaloClusterMatchMonitor.cpp
+ *  
+ *  The algorithm for trivial monitoring of matching of 
+ *  "CaloClusters" with TrStored Tracks.
+ *  It produces 5 histograms:
+ *
+ *  <ol> 
+ *  <li> Total Link              distribution               </li>
+ *  <li> Link multiplicity       distribution               </li>
+ *  <li> Minimal Weight          distribution               </li>
+ *  <li> Maximal Weight          distribution               </li>
+ *  <li>         Weight          distribution               </li>
+ *  </ol>
+ *
+ *  Histograms reside in the directory @p /stat/"Name" , where 
+ *  @ "Name" is the name of the algorithm
+ *
+ *  @see CaloAlgorithm
+ *  @see     Algorithm
+ *  @see    IAlgorithm
+ *
  *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
- *  @date 02/11/2001
+ *  @date   02/11/2001
  */
+
+class CaloClusterMatchMonitor : public CaloMoniAlg 
+{
+  /// friend factory for instantiation
+  friend class AlgFactory<CaloClusterMatchMonitor>;
+public:
+  /// standard algorithm initialization 
+  virtual StatusCode initialize() 
+  {
+    StatusCode sc = CaloMoniAlg::initialize() ;
+    if ( sc.isFailure() ) { return sc ; }
+    book ( 1 , "log10(#Links+1)     '" + inputData() + "'" , 0 , 4    , 100 ) ;
+    book ( 2 , "#Tracks per cluster '" + inputData() + "'" , 0 , 25   ,  50 ) ;
+    book ( 3 , "Minimal weight      '" + inputData() + "'" , 0 , 100  , 200 ) ;
+    book ( 4 , "Maximal weight      '" + inputData() + "'" , 0 , 1000 , 200 ) ;
+    book ( 5 , "Weights             '" + inputData() + "'" , 0 , 1000 , 500 ) ;  
+    return StatusCode::SUCCESS ;
+  };
+  /// standard algorithm execution
+  virtual StatusCode execute   () ;
+protected:
+  /** Standard constructor
+   *  @param   name   algorithm name 
+   *  @param   svcloc pointer to service locator 
+   */
+  CaloClusterMatchMonitor
+  ( const std::string& name   , 
+    ISvcLocator*       svcloc )
+    : CaloMoniAlg     ( name , svcloc ) 
+  {
+    setInputData    ( "Rec/Calo/PhotonMatch"          ) ;
+    addToInputs     ( CaloClusterLocation:: Ecal      ) ;
+    addToInputs     ( CaloClusterLocation:: EcalSplit ) ;
+  };
+  /// destructor (virtual and protected)
+  virtual ~CaloClusterMatchMonitor(){} ;
+private:
+  /// default  construstor  is  private 
+  CaloClusterMatchMonitor(); 
+  /// copy     construstor  is  private 
+  CaloClusterMatchMonitor
+  ( const CaloClusterMatchMonitor& );
+  /// assignement operator  is  private 
+  CaloClusterMatchMonitor& operator=
+  ( const CaloClusterMatchMonitor& );
+};
 // ============================================================================
 
 // ============================================================================
@@ -55,83 +116,6 @@
 // ============================================================================
 static const  AlgFactory<CaloClusterMatchMonitor>         s_Factory ;
 const        IAlgFactory&CaloClusterMatchMonitorFactory = s_Factory ;
-
-// ============================================================================
-/** Standard constructor
- *  @param   name   algorithm name 
- *  @param   svcloc pointer to service locator 
- */
-// ============================================================================
-CaloClusterMatchMonitor::CaloClusterMatchMonitor
-( const std::string& name   ,
-  ISvcLocator*       svcloc )
-  : CaloHistoAlg     ( name , svcloc ) 
-  , m_associatorType ("AssociatorWeighted<CaloCluster,TrStoredTrack,float>")
-  , m_associatorName ("Unknown")
-  , m_associator     ( 0 ) 
-  , m_links          ( 0 ) 
-  , m_rels           ( 0 ) 
-  , m_min            ( 0 ) 
-  , m_max            ( 0 ) 
-  , m_weights        ( 0 ) 
-{
-  declareProperty ( "AssociatorType" , m_associatorType ) ;
-  declareProperty ( "AssociatorName" , m_associatorName ) ;
-};
-// ============================================================================
-
-// ============================================================================
-/// destructor
-// ============================================================================
-CaloClusterMatchMonitor::~CaloClusterMatchMonitor() {};
-// ============================================================================
-
-// ============================================================================
-/** standard algorithm initialization 
- *  @see CaloAlgorithm
- *  @see     Algorithm
- *  @see    IAlgorithm
- *  @return status code 
- */
-// ============================================================================
-StatusCode CaloClusterMatchMonitor::initialize() 
-{  
-  StatusCode sc = CaloHistoAlg::initialize();
-  if ( sc.isFailure() ) { return  sc ; } 
-  
-  // locate the associator 
-  m_associator = tool<Asct>( m_associatorType , m_associatorName ) ;
-  if ( 0 == m_associator ) { return StatusCode::FAILURE ; }
-  
-  // book the histograms
-  // link multiplicity
-  m_links = book ( 1 , "Total Links '" + inputData() + "'" , 0 , 500 , 500  ) ;
-  if ( 0 == m_links )
-  { return Error ( "Could not book 'Link Multiplicity' histogram" ) ; }
-  
-  // number of relations per hypo 
-  m_rels = book    ( 2 , " #Rels per hypo '" + inputData() + "'" , 0 , 20 , 40 ) ;
-  if ( 0 == m_rels       )
-  { return Error   ( "Could not book 'Rels/Hypo' histogram"       ) ; }
-  
-  // minimal weight 
-  m_min = book     ( 3 , " Minimal weight '" + inputData() + "'" , 0 , 100 , 200 ) ;
-  if ( 0 == m_min           )
-  { return Error   ( "Could not book 'Min Weight'     histogram"       ) ; }
-  
-  // maximal weight 
-  m_max  = book    ( 4 , " Maximal weight '" + inputData() + "'" , 0 , 1000, 200 ) ;
-  if( 0 == m_max           )
-  { return Error   ( "Could not book 'Max Weight'     histogram"       ) ; }
-  
-  // weights 
-  m_weights = book ( 5 , " Weights '"+ inputData() + "'" , 0 , 1000 , 500 ) ;
-  if ( 0 == m_weights           )
-  { return Error   ( "Could not book 'Weights'     histogram"       ) ; }
-  
-  return StatusCode::SUCCESS;
-};
-// ============================================================================
 
 // ============================================================================
 /** standard algorithm execution 
@@ -144,42 +128,55 @@ StatusCode CaloClusterMatchMonitor::initialize()
 StatusCode CaloClusterMatchMonitor::execute() 
 {
   // avoid long names 
-  typedef const   CaloClusters      Clusters ;
+  typedef const   CaloClusters                                     Clusters ;
+  typedef const IRelationWeighted<CaloCluster,TrStoredTrack,float> Table    ;
+  typedef Table::Range                                             Range    ;
+  typedef Table::iterator                                          iterator ;
   
-  typedef const Asct::DirectType    Table    ;
-  typedef Table::Range              Range    ;
-  typedef Table::iterator           iterator ;
-  
-  // get input data 
-  Clusters* clusters = get<Clusters>( inputData() );
-  if ( 0 == clusters ) { return StatusCode::FAILURE ; }
+  // produce histos ?
+  if ( !produceHistos() ) { return StatusCode::SUCCESS ; }
   
   // check relations 
-  const Table* table = m_associator->direct() ;
-  if ( 0 == table ) { return Error("'Direct Relation Table' points to NULL!"); }
+  const Table* table = get<Table>( inputData() ) ;
+  if ( 0 == table ) { return StatusCode::FAILURE ; }
+  
+  AIDA::IHistogram1D* h1 = histo ( 1 ) ;
+  AIDA::IHistogram1D* h2 = histo ( 2 ) ;
+  AIDA::IHistogram1D* h3 = histo ( 3 ) ;
+  AIDA::IHistogram1D* h4 = histo ( 4 ) ;
+  AIDA::IHistogram1D* h5 = histo ( 5 ) ;
   
   // total number of links 
-  m_links -> fill ( table->relations().size() );
+  hFill ( h1 , log10( table->relations().size() + 1 ) ) ;
   
-  for ( Clusters::const_iterator cluster = clusters -> begin() ; 
-        clusters -> end() != cluster ; ++cluster ) 
+  if ( inputs().empty() ) 
+  { return Error ( "No input data are specified" ) ; }
+  
+  /// loop over all input constainers 
+  for ( Inputs::const_iterator input = inputs().begin() ; 
+        inputs().end() != input ; ++input ) 
   {
-    const Range range = table->relations( *cluster );
-    // number of related tracks 
-    m_rels -> fill ( range.size() ) ;
-    if ( range.empty() ) { continue ; }
-    
-    // minimal weight 
-    m_min -> fill (  range.begin()->weight()                 ) ;
-    // maximal weight 
-    m_max -> fill ( (range.begin()+range.size()-1)->weight() );
-    // all weights  
-    for ( iterator relation = range.begin() ; 
-          range.end() != relation ; ++relation )
+    // get input data 
+    Clusters* clusters = get<Clusters>( *input );
+    if ( 0 == clusters ) { return StatusCode::FAILURE ; }
+    // loop over all clusters 
+    for ( Clusters::const_iterator cluster = clusters -> begin() ; 
+          clusters -> end() != cluster ; ++cluster ) 
     {
-      m_weights -> fill ( relation->weight() );
-    }    
-  }
+      const Range range = table->relations( *cluster );
+      // number of related tracks 
+      hFill ( h2 , range.size() ) ;
+      if ( range.empty() ) { continue ; }
+      // minimal weight 
+      hFill ( h3 ,  range.front().weight() ) ;
+      // maximal weight 
+      hFill ( h4 ,  range.back ().weight() ) ;
+      // all weights  
+      for ( iterator relation = range.begin() ; 
+            range.end() != relation ; ++relation )
+      { hFill ( h5 , relation->weight() ); }
+    }; // end of loop over clusters
+  }; // end of loop over conainers
   
   return StatusCode::SUCCESS ;
 };
