@@ -1,4 +1,4 @@
-// $Id: RichG4CkvRecon.cpp,v 1.3 2004-08-30 14:41:10 seaso Exp $
+// $Id: RichG4CkvRecon.cpp,v 1.4 2005-05-09 12:25:36 seaso Exp $
 // Include files
 #include "GaudiKernel/Kernel.h"
 #include "GaudiKernel/ISvcLocator.h"
@@ -22,17 +22,19 @@
 #include "RichG4ReconTransformHpd.h"
 #include "RichG4ReconFlatMirr.h"
 #include "RichG4AnalysisConstGauss.h"
+#include "RichSolveQuarticEqn.h"
 
 // modification made on 30-8-2004 to make windows compatible.
 
-extern "C" {
-#ifdef WIN32
-  void __stdcall DRTEQ4(double*,double*,double*,double*,double*,double*,int*);
-#else
-  void drteq4_(double*,double*,double*,double*,double*,double*,int*);
-#define DRTEQ4 drteq4_
-#endif
-}
+//extern "C" {
+//#ifdef WIN32
+//  void __stdcall DRTEQ4(double*,double*,double*,double*,double*,double*,int*);
+//#else
+//  void drteq4_(double*,double*,double*,double*,double*,double*,int*);
+//#define DRTEQ4 drteq4_
+//#endif
+//}
+// replaced by GSL compatible  SE 10-5-2005.
 
 //extern "C" void drteq4_(double*,double*,double*,double*,double*,double*,int*);
 //-----------------------------------------------------------------------------
@@ -385,31 +387,50 @@ HepPoint3D RichG4CkvRecon::ReconReflectionPointOnSPhMirrorStdInput()
            2 * e * dy * (e-dx) * r,
            ( e2 - r2 ) * dy * dy
         };
-      std::vector<std::complex<double> >
-        qsol(4, std::complex<double> (0.0,100000.0));
+      gsl_complex qsol[4];
+
+      //     std::vector<std::complex<double> >
+      //   qsol(4, std::complex<double> (0.0,100000.0));
       SolveQuartic (qsol, denom, a);
       int nrealsolnum=-1;
       HepVector3D nvec = evec.cross(dvec); // normal vector to reflection plane
       HepVector3D delta[2] = { HepVector3D(0.0,0.0,0.0),
                                HepVector3D(0.0,0.0,0.0) };
 
-      if(qsol.size() <= 4 ) {
-        for (int isol=0 ; isol< (int) qsol.size(); isol++ ) {
+      //      if(qsol.size() <= 4 ) {
+      //  for (int isol=0 ; isol< (int) qsol.size(); isol++ ) {
           // now require real and physical solutions.
-          if(std::imag (qsol[isol] ) == 0.0 && std::real(qsol[isol]) <= 1.0  ) {
+      //    if(std::imag (qsol[isol] ) == 0.0 && std::real(qsol[isol]) <= 1.0  ) {
+      //      nrealsolnum++;
+      //      if(nrealsolnum < 2) {
+      //        double beta = asin(std::real(qsol[isol]));
+      //        delta[ nrealsolnum] = evec;
+      //        delta[ nrealsolnum].setMag(r);
+      //        delta[ nrealsolnum].rotate(beta,nvec);
+      //
+      //      }
+      //
+      //
+      //    }
+      //  }
+
+        for (int isol=0 ; isol< 4; isol++ ) {
+          // now require real and physical solutions.
+          if(GSL_IMAG (qsol[isol] ) == 0.0 && GSL_REAL(qsol[isol]) <= 1.0  ) {
             nrealsolnum++;
             if(nrealsolnum < 2) {
-              double beta = asin(std::real(qsol[isol]));
+              double beta = asin(GSL_REAL(qsol[isol]));
               delta[ nrealsolnum] = evec;
               delta[ nrealsolnum].setMag(r);
               delta[ nrealsolnum].rotate(beta,nvec);
 
             }
 
-
+            
           }
+          
         }
-
+  
         if( nrealsolnum >= 0 ) {
 
           const HepVector3D deltaF =
@@ -438,26 +459,24 @@ HepPoint3D RichG4CkvRecon::ReconReflectionPointOnSPhMirrorStdInput()
 
         }
 
-      }
-
     }
 
   }
-
-
   return ReflPt;
 
 }
 
 
-void RichG4CkvRecon::SolveQuartic( std::vector<std::complex<double> > & z,
+
+
+void RichG4CkvRecon::SolveQuartic(  gsl_complex z[4],
                                    double denom,double a[4])
 {
-
   double b[4] =    {0.0,0.0,0.0,0.0  };
-  double c[8] =  {0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0};
-  int ierr=0;
-  double resolv=0.0;
+  //  double c[8] =  {0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0};
+  //  int ierr=0;
+  // double resolv=0.0;
+  int asol=0;
 
 
   if( denom != 0.0 ) {
@@ -465,20 +484,22 @@ void RichG4CkvRecon::SolveQuartic( std::vector<std::complex<double> > & z,
     for (int i=0; i<4 ; i++ ) {
       b[i]= a[i]/denom; }
 
-    // modificatin made to make it Windows compatible.
-    // SE Aug30-2004.
     //    drteq4_(&b[0],&b[1],&b[2],&b[3],c,&resolv,&ierr);
-     DRTEQ4(&b[0],&b[1],&b[2],&b[3],c,&resolv,&ierr);
 
-    int j=0;
-    for(int ii=0; ii< 4 ; ++ii) {
-      z[ii]= std::complex<double> (c[j],c[j+1]);
-      j +=2;
-    }
+    asol = gsl_poly_complex_solve_quartic_eqn( b[0], b[1], b[2], b[3],
+					       &z[0], &z[1], &z[2], &z[3]);
 
+    //    int j=0;
+    //  for(int ii=0; ii< 4 ; ++ii) {
+    //  z[ii]= std::complex<double> (c[j],c[j+1]);
+    //  j +=2;
+    // }
+    
   }
+  
 
 }
+
 
 
 double  RichG4CkvRecon::CherenkovThetaFromReflPt(const HepPoint3D & aReflPoint ,

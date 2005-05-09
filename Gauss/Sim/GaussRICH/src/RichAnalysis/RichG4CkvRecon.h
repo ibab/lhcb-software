@@ -1,4 +1,4 @@
-// $Id: RichG4CkvRecon.h,v 1.2 2004-02-10 14:24:08 jonesc Exp $
+// $Id: RichG4CkvRecon.h,v 1.3 2005-05-09 12:25:36 seaso Exp $
 #ifndef RICHANALYSIS_RICHG4CKVRECON_H
 #define RICHANALYSIS_RICHG4CKVRECON_H 1
 
@@ -34,6 +34,7 @@
 #include "RichG4ReconHpd.h"
 #include "RichG4Hit.h"
 #include <complex>
+#include "RichSolveQuarticEqn.h"
 
 class RichG4CkvRecon {
 public:
@@ -97,7 +98,11 @@ public:
                                              const HepPoint3D & aEmissionPoint );
 
   HepPoint3D ReconReflectionPointOnSPhMirrorStdInput();
-  void SolveQuartic ( std::vector<std::complex<double> > & z,
+  //  void SolveQuartic ( std::vector<std::complex<double> > & z,
+  //                    double denom,
+  //                    double a[4] );
+
+  void SolveQuartic ( gsl_complex  z[4],
                       double denom,
                       double a[4] );
 
