@@ -4,6 +4,7 @@
 ! Purpose     : Define and build the POOL dictionaries for the relations
 !-----------------------------------------------------------------------------
 
+!======================= EventAssoc v1r5 2005-05-09 ==========================
 ! 2005-05-09 - Vanya BELYAEV
 
  - xml/EventAssoc.xml:
