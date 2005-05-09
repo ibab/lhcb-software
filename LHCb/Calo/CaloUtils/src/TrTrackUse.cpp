@@ -1,4 +1,4 @@
-// $Id: TrTrackUse.cpp,v 1.1 2004-10-27 11:58:09 ibelyaev Exp $
+// $Id: TrTrackUse.cpp,v 1.2 2005-05-09 13:48:47 cattanem Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
@@ -217,8 +217,7 @@ bool TrTrackUse::use  ( const TrStoredTrack* track ) const
 // ============================================================================
 namespace 
 {
-  /** @fn prnt 
-   *  local function to make a simple TYPE->std::string conversion
+  /** Local function to make a simple TYPE->std::string conversion
    *  @param object 
    *  @return string representation
    */

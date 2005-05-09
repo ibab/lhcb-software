@@ -1,8 +1,11 @@
-// $Id: CellNeighbour.h,v 1.2 2001-11-25 15:26:20 ibelyaev Exp $
+// $Id: CellNeighbour.h,v 1.3 2005-05-09 13:48:47 cattanem Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2001/11/25 15:26:20  ibelyaev
+//  update for newer CaloKernel package
+//
 // Revision 1.1  2001/11/22 16:02:33  ibelyaev
 //  new utilities
 // 
@@ -35,7 +38,7 @@ public:
   
   /** the major method. It returns "true" if the cell 
    *  is a neighbor for seed cell  
-   *  @exeption CaloException if detector information is not available
+   *  @exception CaloException if detector information is not available
    *  @param seed  the seed   cell
    *  @param cell  the cell to be tested
    *  @return fraction of area of the second cell which fits inside 

@@ -1,8 +1,11 @@
-// $Id: CellMatrix3x3.h,v 1.4 2004-05-27 13:40:03 cattanem Exp $
+// $Id: CellMatrix3x3.h,v 1.5 2005-05-09 13:48:46 cattanem Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.4  2004/05/27 13:40:03  cattanem
+// v4r7
+//
 // Revision 1.3  2001/11/22 16:02:33  ibelyaev
 //  new utilities
 //
@@ -72,9 +75,9 @@ public:
   
 protected:
   
-  /** if cells belong to diffeent areas
+  /** if cells belong to different areas
    *  one need to treat them in a different way
-   *  @exeption CaloException if detector information is not available
+   *  @exception CaloException if detector information is not available
    *  @param  seed  the seed cell
    *  @param  cell  the cell to be tested
    *  @return fraction of area of the second cell which fits inside 
