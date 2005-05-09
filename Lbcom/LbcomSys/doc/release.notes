@@ -12,7 +12,7 @@
  - Repackaging to create RecSys project
  - Packages moved to RecSys: RichRecTools, RichRecMCTools, RichRecCommon,
                              RichRecQC, TrExtrapolator, CaloReco, CaloPIDs
- - Packages added: ITAlgorithms, ITCheckers
+ - Packages added: ITAlgorithms, ITCheckers, L0Checker
 
  - In ITAlgorithms v15r0:
    . Remove ITSignalToNoiseTool. Modify algorithms to use ISTSignalToNoiseTool.h

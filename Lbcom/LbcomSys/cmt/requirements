@@ -12,6 +12,7 @@ use L0Calo          v8r1    L0
 use L0DU            v6r9    L0
 use L0MuonTrigger   v3r0    L0
 use PuVeto          v6r0p1  L0
+use L0Checker       v3r0p1  L0
 
 # Outer tracker
 use OTMonitor       v1r1    OT
