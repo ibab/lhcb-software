@@ -203,9 +203,9 @@ StatusCode TrackSelector::setTrackType( MCParticle* mcPart,
   }
   else {
     tracktype = trackType( mcPart );
-    track -> setType ( tracktype );
   }
 
+  track -> setType ( tracktype );
   if ( TrackKeys::TypeUnknown == tracktype ) return StatusCode::FAILURE;
   else                                       return StatusCode::SUCCESS;
 }
