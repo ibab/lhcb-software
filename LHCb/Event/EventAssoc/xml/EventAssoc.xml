@@ -20,6 +20,7 @@
 
     <assoc from="L0CaloCandidate" to="MCParticle" weight="double"/>
 
+    <assoc from="CaloDigit"   to="MCParticle"    weight="float"/>
     <assoc from="CaloCluster" to="MCParticle"    weight="float"/>
     <assoc from="CaloCluster" to="TrStoredTrack" weight="float" type="2D"/>
     <assoc from="CaloHypo"    to="TrStoredTrack" weight="float" type="2D"/>

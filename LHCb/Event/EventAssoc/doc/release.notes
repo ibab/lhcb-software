@@ -4,6 +4,15 @@
 ! Purpose     : Define and build the POOL dictionaries for the relations
 !-----------------------------------------------------------------------------
 
+! 2005-05-09 - Vanya BELYAEV
+
+ - xml/EventAssoc.xml:
+   Add the new line to allow the new MC relation tabel to be persistent
+   e.g. for some test, private DSTs, etc... (For standard data flow 
+   the table is assumed to be transient only)
+  
+    <assoc from="CaloDigit" to="MCParticle" weight="float"/>
+
 !======================= EventAssoc v1r4 2004-10-18 ==========================
 ! 2004-08-30 - Jacopo Nardulli
  - Modifications in EventAssoc.xml for new OT event model:
