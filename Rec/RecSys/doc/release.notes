@@ -17,5 +17,6 @@ and DaVinciSys v13r1, except for:
 . TrgSys  v2r3: use TrgVelo v7r3, TrgVeloTT v6r1 and remove TrgMuonID
 . LongTrack v1r15, TrKShort v1r6, VeloTT v1r13: updated to use STTools instead
                                                 of ITAlgorithms
-
+. CaloReco v2r8, CaloPIDs v2r5, CaloMoniDst v1r1: updated for new base classes 
+                                     in CaloUtils, and removed all associators
 </PRE>

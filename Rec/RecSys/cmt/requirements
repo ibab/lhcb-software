@@ -8,9 +8,9 @@ branches cmt doc
 #=======================================================
 
 # Calorimeter
-use CaloMoniDst         v1r0	Calo
-use CaloPIDs		v2r4p1	Calo
-use CaloReco            v2r7p1  Calo
+use CaloMoniDst         v1r1	Calo
+use CaloPIDs		v2r5	Calo
+use CaloReco            v2r8    Calo
 
 # Tracking
 use TrExtrapolator      v2r14   Tr
@@ -63,5 +63,4 @@ use RichTrgTools	v1r0    Rich
 
 # Global reco
 use PrimVtx             v2r1p1  Rec
-use RecoTools		v1r1	Rec
 use GlobalReco		v4r8p1  Rec
