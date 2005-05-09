@@ -3,6 +3,12 @@ Author: Jose' Helder Lopes
 Purpose: Define the L1Buffer,  L1Event, L1Bank, RawBuffer, RawEvent and 
          RawBank classes.
 
+!================ DAQEvent v5r1 2005-05-09 ============================
+! 2005-05-09 - Marco Cattaneo
+ - Add constructors from buffer pointer and length to RawEvent and L1Event,
+   for online use
+ - Add enum to RawBuffer containing "MagicPattern" value
+
 !================ DAQEvent v5r0 2005-03-08 ============================
 ! 2005-03-08 - Marco Cattaneo
  - Backwards incompatible changes to RawBank header, to reflect EDMS 565851

@@ -19,6 +19,12 @@
         value="L0Calo=0, L0DU, PrsE, EcalE, HcalE, PrsTrig, EcalTrig, HcalTrig, Velo, Rich, TT, IT, OT, Muon, L0PU, DAQ, ODIN"
         access="PUBLIC"
        />
+       <enum
+        desc="Magic pattern for Raw bank headers"
+        name="RawPattern"
+        value="MagicPattern=0xCBCB"
+        access="PUBLIC"
+       />
        <base name="DataObject"/>
        &DataObject;
        <import name="Event/DAQTypes" soft="FALSE"/>
@@ -64,13 +70,13 @@
         desc="Magic pattern to check integrity of data buffer"
         name="magic"
         type="raw_int"
-	init="0xCBCB"
+	init="MagicPattern::Raw"
         dictalias="int"
         setMeth="FALSE"
        />
        <constructor
         desc="Constructor: Allocate inital amount of memory"
-	initList="m_initialSize(100),m_currentSize(0),m_magic(0xCBCB)"
+	initList="m_initialSize(100),m_currentSize(0),m_magic(RawBuffer::MagicPattern)"
 	>
          <code> m_buffer = new raw_int[m_initialSize];
 	        m_allocatedSize = m_initialSize;
@@ -78,7 +84,7 @@
        </constructor>
        <constructor argList="long siz, raw_int* buff"
         desc="Constructor: Initialize with predefined storage"
-	initList="m_initialSize(siz),m_allocatedSize(siz),m_currentSize(siz),m_buffer(buff),m_magic(0xCBCB)"
+	initList="m_initialSize(siz),m_allocatedSize(siz),m_currentSize(siz),m_buffer(buff),m_magic(RawBuffer::MagicPattern)"
        >
        </constructor>
        <destructor

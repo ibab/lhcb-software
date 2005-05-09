@@ -1,13 +1,8 @@
-// $Id: L1Event.cpp,v 1.4 2004-04-23 12:20:33 cattanem Exp $
+// $Id: L1Event.cpp,v 1.5 2005-05-09 11:50:45 cattanem Exp $
 // Include files 
-#include "GaudiKernel/Kernel.h"
-#include <stdio.h>
-
-// from Gaudi
 
 // local
 #include "Event/L1Event.h"
-#include "GaudiKernel/MsgStream.h"
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : L1Event
@@ -25,7 +20,23 @@ L1Event::L1Event( L1Buffer& l1Buffer ) {
   long i=0;
   while( i < l1Size ){
     int bankSize = int(buffer[i]&127);
-    //int sourceID =int(((buffer[i]>>7)&63));
+    int bankType = int( (buffer[i]>>13) &7 );
+    // Add this bank address to Event Map
+    (m_eventMap[bankType]).push_back(L1Bank(buffer+i));
+    // Go to the next bank
+    i+=bankSize;
+  }
+
+}
+
+//=============================================================================
+// Constructor from buffer pointer, for use online
+//=============================================================================
+L1Event::L1Event( l1_int* buffer, unsigned int length ) {
+
+  unsigned int i=0;
+  while( i < length ){
+    int bankSize = int(buffer[i]&127);
     int bankType = int( (buffer[i]>>13) &7 );
     // Add this bank address to Event Map
     (m_eventMap[bankType]).push_back(L1Bank(buffer+i));

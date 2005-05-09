@@ -33,6 +33,10 @@
        <constructor desc="Constructor from RawBuffer">
          <arg name="rawBuffer" type="RawBuffer"/>
        </constructor>
+       <constructor desc="Constructor from buffer pointer and length (in raw_int words), for use online">
+         <arg name="buffer" type="raw_int*"/>
+         <arg name="length" type="unsigned int"/>
+       </constructor>
 
        <method
         desc="accessor method to the vector of Raw banks for a given bank type"
