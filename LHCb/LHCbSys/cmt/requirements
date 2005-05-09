@@ -43,7 +43,7 @@ use RichDet		v8r3	Det
 use STDet          	v1r3	Det
 
 # Event data model
-use EventSys		v20r3	Event
+use EventSys		v20r4	Event
 use Event        	v4r7	Event
 use VeloEvent    	v13r2p1 Event
 use ITEvent      	v13r2p1	Event
@@ -54,22 +54,22 @@ use CaloEvent    	v13r9	Event
 use MuonEvent    	v4r0	Event
 use L0Event      	v14r3	Event
 use PhysEvent    	v8r9	Event
-use DAQEvent		v5r0	Event
+use DAQEvent		v5r1	Event
 use GenEvent    	v3r3p1	Event
-use EventAssoc          v1r4    Event
-use LinkerEvent         v1r7    Event
+use EventAssoc          v1r5    Event
+use LinkerEvent         v1r8    Event
 use TrgEvent            v5r4    Event
 use TrackEvent          v0r1    Event
 use EventUtils		v1r0	Event
 
 # Associators
-use AssociatorsSys	v2r4p1	Associators
+use AssociatorsSys	v3r0	Associators
 use Associators		v2r4p1	Associators
 use ITAssociators      	v2r11p1	IT
 use OTAssociators      	v3r2p1	OT
 use VeloAssociators    	v1r14p1	Velo
 use TrAssociators      	v5r1p1	Tr
-use CaloAssociators    	v4r4	Calo
+use CaloAssociators    	v5r0	Calo
 use MuonAssociators    	v1r5p1	Muon
 use AsctToLinker	v1r4	Rec
 
@@ -88,7 +88,7 @@ use LHCbInterfaces	v1r1	Kernel
 use LHCbAlgs		v1r6	Kernel
 use MCTools		v1r13	Phys
 use CaloInterfaces	v4r3	Calo
-use CaloUtils		v4r8	Calo
+use CaloUtils		v4r9	Calo
 use RichRecBase		v1r15p1 Rich
 use STTools		v1r1	IT
 
