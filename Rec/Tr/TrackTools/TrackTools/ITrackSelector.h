@@ -26,14 +26,11 @@ public:
   virtual bool select( Track* track ) const = 0;
   virtual bool select( MCParticle* mcParticle ) = 0;
 
-  virtual bool selectTrackType( Track* track ) const = 0;
-  virtual bool selectTrackType( MCParticle* mcParticle ) = 0;
+  virtual bool selectByTrackType( Track* track ) const = 0;
+  virtual bool selectByTrackType( MCParticle* mcParticle ) = 0;
 
-  virtual int  getTrackType( Track* track ) const = 0;
-  virtual int  getTrackType( MCParticle* mcPart ) = 0;
+  virtual unsigned int trackType( MCParticle* mcPart ) = 0;
 
-  virtual StatusCode setTrackType( const int tracktype, 
-                                   Track*& track ) const = 0;
   virtual StatusCode setTrackType( MCParticle* mcPart,
                                    Track*& track ) = 0;
 

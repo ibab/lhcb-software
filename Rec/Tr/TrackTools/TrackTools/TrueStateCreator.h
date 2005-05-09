@@ -25,7 +25,7 @@
 
 class State;
 
-/** @class TrueStateCreator TrueStateCreator.h "TrCheck/TrueStateCreator.h"
+/** @class TrueStateCreator TrueStateCreator.h "TrackTools/TrueStateCreator.h"
  * 
  *  A TrueStateCreator is a IStateCreator tool that creates a
  *  State. There are two methods: one creates a state at a certain 
