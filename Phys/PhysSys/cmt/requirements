@@ -16,8 +16,9 @@ use  LoKi               	v3r11p1  Tools
 use  LoKiHlt             	v2r1     Tools 
 use  LoKiGen             	v1r0     Tools 
 
-# Reconstruction tools 
+# Generic Tools
 use  Utilities          	v1r14    Tools 
+use  RecoTools                  v1r1     Rec
 
 # Physics packages
 use  CommonParticles    	v1r5p3   Phys
