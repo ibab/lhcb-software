@@ -1,9 +1,12 @@
-! $Id: release.notes,v 1.66 2005-05-09 11:20:47 ibelyaev Exp $
+! $Id: release.notes,v 1.67 2005-05-09 11:37:26 pkoppenb Exp $
 !===================================================================================
 ! Package     : DaVinciAssociators
 ! Responsible : Philippe Charpentier
 !===================================================================================
 
+! 2005-05-09 - P. KOppenburg
+ - src/NeutralPP2MC.cpp
+   . Fix compilation warning
 ! 2005-05-09 - Vanya BELYAEV
  - src/NeutralPP2MC.cpp
    1) remove associator-related properties and 

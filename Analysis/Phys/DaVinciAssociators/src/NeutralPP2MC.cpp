@@ -1,8 +1,11 @@
-// $Id: NeutralPP2MC.cpp,v 1.7 2005-05-09 11:20:47 ibelyaev Exp $
+// $Id: NeutralPP2MC.cpp,v 1.8 2005-05-09 11:37:26 pkoppenb Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.7 $
+// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.8 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.7  2005/05/09 11:20:47  ibelyaev
+//  modification for NeutralMMC2MC
+//
 // ============================================================================
 // Include files
 // ============================================================================
@@ -190,7 +193,7 @@ StatusCode NeutralPP2MC::execute()
       // skip nulls
       if ( 0 == pp ) { continue ; }
       
-      bool matched = false;
+      //      bool matched = false;
       // get all calo hypos 
       const Hypos& hypos = pp->calo() ;
       // loop over all hypotheses for givel protoparticle
