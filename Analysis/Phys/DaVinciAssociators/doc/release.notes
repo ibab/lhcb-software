@@ -1,9 +1,32 @@
-! $Id: release.notes,v 1.65 2005-04-20 14:18:35 pkoppenb Exp $
+! $Id: release.notes,v 1.66 2005-05-09 11:20:47 ibelyaev Exp $
 !===================================================================================
 ! Package     : DaVinciAssociators
 ! Responsible : Philippe Charpentier
 !===================================================================================
 
+! 2005-05-09 - Vanya BELYAEV
+ - src/NeutralPP2MC.cpp
+   1) remove associator-related properties and 
+      introduce the direct manupulations with relation table.
+   2) New property "MCCaloTable" is introduced,
+      the default value is "Rec/Relations/EcalClusters2MCParticles"
+      It is compatible with "old" (including RTTC) data 
+      For "new" data (DaVinci v14r*?)
+      (with new treatment of Calo->MC relations, 
+      the value of properties need to be set to 
+      "Rec/Relations/CaloClusters2MCParticles"
+   3) remove the bulk of debug/verbose printout 
+   4) few "cosmetic" changes 
+   5) Modify the treatment of invalid input: 
+       for missing container of protoparticles, the defualt policy of 
+       method GaudiAlgorithm::get is used (exception)
+   6) improve comments for Doxygen 
+  
+ - src/NeutralPP2MC.h - remove the file 
+ - cmt/requirements
+    version increment to v5r4 
+ 
+  
 !========================== DaVinciAssociators v5r3p1 2005-04-20 ===================
 ! 2005-04-12 - Ph.Charpentier
  - DaVinciAssociators/Particle2MCLink.h 

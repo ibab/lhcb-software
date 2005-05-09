@@ -1,137 +1,132 @@
-// $Id: NeutralPP2MC.cpp,v 1.6 2004-07-27 16:50:11 pkoppenb Exp $
+// $Id: NeutralPP2MC.cpp,v 1.7 2005-05-09 11:20:47 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $
+// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.7 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
-// Revision 1.5  2004/06/11 15:26:17  phicharp
-// v5r0 - Using Linker tables, see release notes
-//
-// Revision 1.4  2004/03/11 10:30:26  pkoppenb
-// upstream -> downstream
-//
-// Revision 1.3  2003/04/17 09:58:26  phicharp
-// Allow Links associator to use Particles not in the TES
-//
-// Revision 1.2  2002/10/02 07:06:28  phicharp
-// New associators, include multiple associations etc..
-//
-// Revision 1.1  2002/09/12 12:16:12  gcorti
-// Neutral PP2MC algorithm
-//
-// Revision 1.3  2002/09/07 11:01:49  ibelyaev
-//  fix the bugs, kindly found by Gloria and Galina
-//
 // ============================================================================
 // Include files
-// LHCbKernel 
-#include "Relations/IAssociatorWeighted.h"
-//#include "Relations/RelationWeighted2D.h"
-//#include "Relations/RelationWeighted1D.h"
-// from Gaudi
+// ============================================================================
+// Relations
+// ============================================================================
+#include "Relations/IRelationWeighted.h"
+// ============================================================================
+// GaudiKernel
+// ============================================================================
 #include "GaudiKernel/AlgFactory.h"
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/SmartRef.h"
 #include "GaudiKernel/SmartRefVector.h"
 #include "GaudiKernel/StreamBuffer.h"
-// CaloDet
-#include "CaloDet/DeCalorimeter.h"
+// ============================================================================
 // CaloEvent/Event
+// ============================================================================
 #include "Event/CaloCluster.h"
 #include "Event/CaloHypo.h"
-#include "Event/CaloMCTools.h"
-// local
-//#include "CaloMCTools.h"
-#include "NeutralPP2MC.h"
-
 // ============================================================================
-/** @file
- * 
- *  Implementation file for class : NeutralPP2MC
+// DaVinci associators 
+// ============================================================================
+#include "DaVinciAssociators/ProtoParticle2MCAsct.h"
+#include "DaVinciAssociators/Particle2MCLink.h"
+// ============================================================================
+// local 
+// ============================================================================
+#include "AsctAlgorithm.h"
+// ============================================================================
+
+/** @class NeutralPP2MC NeutralPP2MC.cpp
+ *  
+ *  The algorithm for building the relation table for 
+ *  MC truth information for neutrals protoparticles.
  *
+ *  The major properties of the algorithm :
+ *  
+ *   - "InputData"
+ *      The defualt value is ProtoParticleLocation::Neutrals
+ *      The list of (input) location of ProtoParticles 
+ *
+ *   - "OutputTable" 
+ *      The defualt valeu is  NeutralPP2MCAsctLocation
+ *      The locatioin of (output) relation table for
+ *      ProtoParticle -> MCRelation 
+ *   
+ *   - "MCCaloTable"
+ *      The default value is "Rec/Relations/EcalClusters2MCParticles"
+ *      The locatiin in TES the major source of MC information : 
+ *      the relation table for CaloCluster -> MCParticle relations 
+ * 
  *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
- *  @date 08/04/2002 
+ *  @date   08/04/2002
  */
-// ============================================================================
-
-// ============================================================================
-// Declaration of the Algorithm Factory
-// ============================================================================
-static const  AlgFactory<NeutralPP2MC>         s_factory ;
-const        IAlgFactory&NeutralPP2MCFactory = s_factory ; 
-
-#define ifMsg(sev) msg << sev; if( msg.level() <= (sev) ) msg
-
-// ============================================================================
-
-// ============================================================================
-/** Standard constructor
- *  @param name name of the algorithm
- *  @param svc  service locator
- */
-// ============================================================================
-NeutralPP2MC::NeutralPP2MC
-( const std::string& name ,
-  ISvcLocator*       svc  )
-  : AsctAlgorithm ( name , svc )
-  , m_asctType ( "AssociatorWeighted<CaloCluster,MCParticle,float>" )
-  , m_asctName ( "CCs2MCPs" )
-  , m_asct     ( 0 ) 
-{ 
-  m_inputData.push_back( ProtoParticleLocation::Neutrals );
-
-  m_outputTable = NeutralPP2MCAsctLocation;
-  declareProperty( "MCAssociatorType" , m_asctType  ) ;
-  declareProperty( "MCAssociatorName" , m_asctName  ) ;
-};
-// ============================================================================
-
-// ============================================================================
-/// Destructor
-// ============================================================================
-NeutralPP2MC::~NeutralPP2MC() {}; 
-// ============================================================================
-
-// ============================================================================
-/** standard initialization of the algorithm
- *  @see CaloAlgorithm 
- *  @see     Algorithm 
- *  @see    IAlgorithm 
- *  @return StatusCode
- */
-// ============================================================================
-StatusCode NeutralPP2MC::initialize()
-{  
-  MsgStream msg(msgSvc(), name());
-  msg << MSG::DEBUG << "==> Initialise" << endreq;
-  StatusCode sc = GaudiAlgorithm::initialize();
-  if( !sc.isSuccess() ) return sc;
-  
-  /// locate the associator 
-  m_asct = tool<MCAsct>( m_asctType , m_asctName );
-  
-  return StatusCode::SUCCESS;
-};
-// ============================================================================
-
-// ============================================================================
-/** standard finalization of the algorithm
- *  @see CaloAlgorithm 
- *  @see     Algorithm 
- *  @see    IAlgorithm 
- *  @return StatusCode
- */
-// ============================================================================
-StatusCode NeutralPP2MC::finalize() 
+class NeutralPP2MC
+  : public AsctAlgorithm
 {
-  MsgStream msg(msgSvc(), name());
-  msg << MSG::DEBUG << "==> Finalize" << endreq;
-
-  return GaudiAlgorithm::finalize() ;
+  // friend factory for instantiation 
+  friend class AlgFactory<NeutralPP2MC>;
+public:
+  /** standard execution of the algorithm
+   *  @return StatusCode
+   */
+  virtual StatusCode execute    () ;
+protected:  
+  /** Standard constructor
+   *  @param name name of the algorithm
+   *  @param svc  service locator
+   */
+  NeutralPP2MC
+  ( const std::string& name , 
+    ISvcLocator*       svc  )
+    : AsctAlgorithm ( name , svc )
+    //
+    , m_mcTable ( "Rec/Relations/EcalClusters2MCParticles" ) 
+  { 
+    // define proper default for input data (location of Protoparticles )
+    m_inputData.push_back( ProtoParticleLocation::Neutrals );
+    // define proper default for output data (location of relation table )
+    m_outputTable = NeutralPP2MCAsctLocation;
+    // define proper default for CaloCLuster->MCPArticle data 
+    declareProperty ( "MCCaloTable" , m_mcTable ) ;
+  };
+  /// destructor (virtual and protected)
+  virtual ~NeutralPP2MC(){};
+private:
+  /// default  constructor is private
+  NeutralPP2MC();
+  /// copy     constructor is private
+  NeutralPP2MC
+  ( const NeutralPP2MC& );
+  /// assignement operator is private
+  NeutralPP2MC& operator=
+  ( const NeutralPP2MC& );
+private:
+  /// the location oif Calo Cluster -> MCParticle table 
+  std::string m_mcTable ;
 };
+
+// ============================================================================
+// Algorithm Factory
+// ============================================================================
+namespace 
+{
+  // ==========================================================================
+  /** @var s_Factory
+   *  local concrete factory for algorithm instantiation
+   *  @see NeutralPP2MC
+   */
+  // ==========================================================================
+  const  AlgFactory<NeutralPP2MC>         s_Factory ;
+  // ==========================================================================
+};
+// ============================================================================
+/** @var NeutralPP2MCFactory
+ *  abstract (importable) factory for algorithm instantiation
+ *  @see NeutralPP2MC
+ */
+// ============================================================================
+const   IAlgFactory&NeutralPP2MCFactory = s_Factory ;
+// ============================================================================
 
 // ============================================================================
 /** standard execution of the algorithm
- *  @see CaloAlgorithm 
  *  @see     Algorithm 
  *  @see    IAlgorithm 
  *  @return StatusCode
@@ -139,123 +134,108 @@ StatusCode NeutralPP2MC::finalize()
 // ============================================================================
 StatusCode NeutralPP2MC::execute() 
 {
-  /// avoid the long name and always use "const" qualifier  
+  // avoid the long name and always use "const" qualifier
+  typedef const SmartRefVector<CaloHypo>                        Hypos    ;
+  typedef const SmartRefVector<CaloCluster>                     Clusters ;
   
-  typedef const SmartRefVector<CaloHypo>                     Hypos    ;
-  typedef const SmartRefVector<CaloCluster>                  Clusters ;
+  // ProtoParticle -> MCParticle relations   (MC output) 
+  typedef ProtoParticle2MCAsct::Table                           Table    ;
   
-  typedef const MCAsct::DirectType                           MCTable  ;
-  typedef const MCTable::Range                               Range    ;
-  typedef       MCTable::iterator                            relation ;
+  // CaloCluster -> MCParticle relations     (MC input)
+  typedef const IRelationWeighted<CaloCluster,MCParticle,float> MCTable  ;
+  typedef const MCTable::Range                                  Range    ;
+  typedef       MCTable::iterator                               relation ;
+
+  // input locations 
+  typedef std::vector<std::string>                              Inputs   ;
   
-  
-  MsgStream  msg( msgSvc(), name() );
-  msg << MSG::DEBUG << "==> Execute" << endreq;
+  // get the CaloCluster->MCParticle table from TES 
+  const MCTable* mcTable = get<MCTable> ( m_mcTable ) ;
+  if ( 0 == mcTable ) { return StatusCode::FAILURE ; }       // RETURN 
   
   // create relation table  
-  ProtoParticle2MCAsct::Table* table = 
-    "" == outputTable() ? NULL : new ProtoParticle2MCAsct::Table();
-
-  ///////////////////////////////////////
-  // Loop on ProtoParticles containers //
-  ///////////////////////////////////////
-
-  for( std::vector<std::string>::const_iterator inp = m_inputData.begin(); 
-       m_inputData.end()!= inp; inp++) {
-    // get MC association table for CaloHypos
-    const MCTable* mctable = m_asct->direct();  
-    if( 0 == mctable ) { 
-      msg << MSG::INFO << "Unable to retrieve the CaloHypo2MC association table"
-          <<endreq;
-      continue;
-    }
-    // Get ProtoParticles
-    SmartDataPtr<ProtoParticles> protos ( eventSvc(), *inp ) ;
-    if( 0 == protos ) continue;
+  Table* table = 0 ;
+  if ( !outputTable().empty() ) 
+  {
+    // create new table 
+    table = new Table() ;
+    // register it in TES 
+    StatusCode sc = put( table, outputTable() );
+    if ( sc.isFailure() ) { return sc ; }                     // RETURN 
+  };
+  
+  // Loop on all input containers of ProtoParticles
+  for ( Inputs::const_iterator inp = m_inputData.begin(); 
+        m_inputData.end()!= inp; inp++) 
+  {
+    // get the protoparticles form TES 
+    const ProtoParticles* protos = get<ProtoParticles> ( *inp ) ;
+    if ( 0 == protos ) { return StatusCode::FAILURE ; }       // RETURN 
+    
     // Create a linker table
     const std::string linkContainer = 
-      *inp + Particle2MCMethod::extension[Particle2MCMethod::NeutralPP];
+      (*inp) + Particle2MCMethod::extension[Particle2MCMethod::NeutralPP];
+    
     // Just a fake helper class
     Object2MCLink p2MCLink(this);
     Object2MCLink::Linker*
       linkerTable = p2MCLink.linkerTable( linkContainer );
-    if( NULL != linkerTable ) {
-      ifMsg(MSG::VERBOSE) << "    Created Linker table for container "
-                          << linkContainer << endreq;
-    } else {
-      ifMsg(MSG::VERBOSE) << "    Linker table for container "
-                          << linkContainer << " already exists"
-                          << endreq;
-    }
-    if( NULL == table && NULL == linkerTable ) continue;
-
-    int npp = protos->size();
-    ifMsg(MSG::VERBOSE) << "    " << npp
-        << " ProtoParticles retrieved from " 
-        << *inp << endreq;
-  
-    int nrel = 0;
-    int nass = 0;
-    for( ProtoParticles::const_iterator pp = protos->begin() ; 
-         protos->end() != pp ; ++pp ) {
-      // skip nulls 
-      if( 0 == *pp ) { continue ; }
-      ifMsg(MSG::VERBOSE) << "    ProtoParticle " << (*pp)->key() ;
+    //
+    if ( NULL == table && NULL == linkerTable ) { continue; } // CONTINUE
+    
+    for ( ProtoParticles::const_iterator ipp = protos->begin() ; 
+          protos->end() != ipp ; ++ipp ) 
+    {
+      const ProtoParticle* pp = *ipp ;
+      // skip nulls
+      if ( 0 == pp ) { continue ; }
+      
       bool matched = false;
       // get all calo hypos 
-      const Hypos& hypos = (*pp)->calo() ;
-      // loop over all hypotheses 
-      for( Hypos::const_iterator hypo = hypos.begin() ; 
-           hypos.end() != hypo ; ++hypo) {
+      const Hypos& hypos = pp->calo() ;
+      // loop over all hypotheses for givel protoparticle
+      for ( Hypos::const_iterator ihypo = hypos.begin() ; 
+            hypos.end() != ihypo ; ++ihypo) 
+      {
+        const CaloHypo* hypo = *ihypo ;
         // skip nulls
-        if( *hypo == 0 ) { continue ; }                         // CONTINUE 
-        // get all clusters
-        const Clusters& clusters = (*hypo)->clusters();
-        // loop over all clusters
-        for( Clusters::const_iterator cluster = clusters.begin() ; 
-             clusters.end() != cluster ; ++cluster ) {
+        if ( 0 == hypo  ) { continue ; }                         // CONTINUE 
+        // get all clusters from the hypo 
+        const Clusters& clusters = hypo->clusters();
+        // loop over all clusters for given hypo 
+        for ( Clusters::const_iterator icluster = clusters.begin() ; 
+              clusters.end() != icluster ; ++icluster ) 
+        {
+          const CaloCluster* cluster = *icluster ;
           // skip nulls 
-          if( *cluster == 0 ) { continue ; }                  // CONTINUE 
-          const Range range = mctable->relations( *cluster );
-          if( !range.empty() ) {
-            if( !matched) {
-              ifMsg(MSG::VERBOSE) << " associated to MCParts";
-              matched = true;
-              nass++;
-            }
-            for( relation rel = range.begin() ; range.end() != rel ; ++rel ) {
-              const MCParticle* mcPart = rel->to();
-              // skip nulls 
-              if( NULL == mcPart ) { continue ; }              // CONTINUE 
-              // propagate the relation to protoparticle 
-              ifMsg(MSG::VERBOSE) << " - " << mcPart->key();
-              double weight = rel->weight() / (*cluster)->e() ;
-              if( NULL != table )
-                table->relate( *pp, mcPart, weight ); 
-              if( NULL != linkerTable ) 
-                linkerTable->link( *pp, mcPart, weight);
-              nrel++;
-            }
-          }
-        }
-      }
-      if( !matched) {
-        ifMsg(MSG::VERBOSE) << " not associated to an MCPart";
-      }
-      ifMsg(MSG::VERBOSE) << endreq;
-    }
-    ifMsg( MSG::DEBUG )
-      << "Out of " << npp << " Neutral ProtoParts in " << *inp << ", "
-      << nass << " are associated, "
-      << nrel << " relations found" << endreq;
+          if ( 0 == cluster ) { continue ; }                  // CONTINUE 
+          // get all relations form the cluster 
+          Range range = mcTable -> relations ( cluster ) ;
+          
+          for ( relation rel = range.begin() ; range.end() != rel ; ++rel ) 
+          {
+            const MCParticle* mcPart = rel->to();
+            // skip nulls 
+            if ( 0 == mcPart ) { continue ; }              // CONTINUE 
+            // propagate the relation to protoparticle 
+            const double weight = rel->weight() / cluster->e() ;
+            if ( NULL != table )
+            { table       -> relate (  pp , mcPart , weight ) ; }
+            if ( NULL != linkerTable ) 
+            { linkerTable -> link   (  pp , mcPart , weight ) ; }
+            
+          } // end of loop over MC relations
+        } // end of loop over clusters 
+      } // end of loop over hypothesis
+    } // end of loop over protoparticles  
+  } // end of loop over input containters 
+  
+  if ( msgLevel( MSG::DEBUG ) && 0 != table )  
+  {
+    debug() << "Number of MC links are " 
+            << table->relations().size() << endreq ;
   }
   
-  // Register the table on the TES
-  if( NULL != table ) {
-    put( table, outputTable() );
-    ifMsg( MSG::DEBUG )
-      << "     Registered table " << outputTable() << endreq;
-  }
   return StatusCode::SUCCESS;
 };
 // ============================================================================
