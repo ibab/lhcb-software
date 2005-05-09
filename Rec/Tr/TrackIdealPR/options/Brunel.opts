@@ -4,26 +4,43 @@
 //  Author: Eduardo Rodrigues
 //============================================================
 
-ApplicationMgr.DLLs    += { "TrackIdealPR" };
-ApplicationMgr.TopAlg  += { "TracksCreator" };
+ApplicationMgr.TopAlg     += { "ProcessPhase/BrunelCheck" };
 
-//TracksCreator.AddOTTimes      = true;
-//TracksCreator.AddITClusters   = true;
-//TracksCreator.AddVeloClusters = true;
+ApplicationMgr.DLLs += { "TrackIdealPR" };
 
-//TracksCreator.MinNHits = 6;
-//TracksCreator.HistogramFlag = false;
-//TracksCreator.TracksTESPath = "Rec/FitTrack/Ideal";
+BrunelCheck.DetectorList    = { "Tr" };
+BrunelCheckTrSeq.Members   += { "TrueTracksCreator" };
 
-//TracksCreator.OTGeometryPath   = "/dd/Structure/LHCb/Tracker/OT";
-//TracksCreator.ITGeometryPath"  = "/dd/Structure/LHCb/Tracker/IT";
-//TracksCreator.VeloGeometryPath = "/dd/Structure/LHCb/Velo";
+//TrueTracksCreator.AddOTTimes      = true;
+//TrueTracksCreator.AddITClusters   = true;
+//TrueTracksCreator.AddVeloClusters = true;
 
-TracksCreator.OutputLevel   = 3;
+//TrueTracksCreator.InitState   = true;
+//TrueTracksCreator.FitTracks   = true;
+//TrueTracksCreator.FitUpstream = true;
+//TrueTracksCreator.TrueStatesAtMeasZPos = false;
 
-//ToolSvc.TrAcceptance.minNTTHits = 1;
-//ToolSvc.TrAcceptance.minNT1Hits = 1;
-//ToolSvc.TrAcceptance.minNT2Hits = 1;
-//ToolSvc.TrAcceptance.minNT3Hits = 1;
-//ToolSvc.TrAcceptance.minNVeloRHits   = 3;
-//ToolSvc.TrAcceptance.minNVeloPhiHits = 3;
+//TrueTracksCreator.TracksTESPath = "Rec/Track/Ideal";
+
+//TrueTracksCreator.RelationTable = "Rec/Relations/IdealTr2MCP";
+
+//TrueTracksCreator.OTGeometryPath   = DeOTDetectorLocation::Default ;
+//TrueTracksCreator.ITGeometryPath"  = DeSTDetectorLocation::Default ;
+//TrueTracksCreator.VeloGeometryPath = "/dd/Structure/LHCb/Velo";
+
+//TrueTracksCreator.MinNHits = 6;
+//TrueTracksCreator.ErrorX2  = 4.0;
+//TrueTracksCreator.ErrorY2  = 400.0;
+//TrueTracksCreator.ErrorTx2 = 6.e-5;
+//TrueTracksCreator.ErrorTy2 = 1.e-4;
+//TrueTracksCreator.ErrorP   = 0.15;
+
+TrueTracksCreator.OutputLevel   = 3;
+
+//ToolSvc.TrackSelector.TrAcceptance.minNVeloRHits   = 3;
+//ToolSvc.TrackSelector.TrAcceptance.minNVeloPhiHits = 3;
+//ToolSvc.TrackSelector.TrAcceptance.minNTTHits = 1;
+//ToolSvc.TrackSelector.TrAcceptance.minNT1Hits = 1;
+//ToolSvc.TrackSelector.TrAcceptance.minNT2Hits = 1;
+//ToolSvc.TrackSelector.TrAcceptance.minNT3Hits = 1;
+

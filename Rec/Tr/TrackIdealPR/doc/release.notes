@@ -4,6 +4,23 @@
 ! Purpose     : Perfect pattern recognition
 !-----------------------------------------------------------------------------
 
+! 2005-05-09 - Eduardo Rodrigues
+ - major re-writing of the algorithm, adaptations from TrueTracksCreator
+   in Tr/TrCheck
+
+! 2005-04-15 - Eduardo Rodrigues
+ - using Tracks instead of FitTracks (FitTracks were removed)
+
+! 2005-04-12 - Eduardo Rodrigues
+ - TrCheck/TrAcceptance.h tool was moved to TrackTools so that the package
+   does not depend anymore on packages from the "old" track event model
+
+! 2005-04-07 - Eduardo Rodrigues
+ - algorithm now outputs FitTracks of new track event model (TrackFitEvent)
+ - now using the TrackTools/IStateCreator.h adapted
+   from TrCheck/ITrStateCreator.h to the new track event model
+
+!===================== TrackIdealPR v0r1 2005-04-07 =======================
 ! 2005-03-03 - Eduardo Rodrigues
  - code clean-up
 
