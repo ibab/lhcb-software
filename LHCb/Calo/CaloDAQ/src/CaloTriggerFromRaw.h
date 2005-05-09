@@ -1,4 +1,4 @@
-// $Id: CaloTriggerFromRaw.h,v 1.1.1.1 2005-01-11 07:51:47 ocallot Exp $
+// $Id: CaloTriggerFromRaw.h,v 1.2 2005-05-09 06:38:53 ocallot Exp $
 #ifndef CALOTRIGGERFROMRAW_H 
 #define CALOTRIGGERFROMRAW_H 1
 
@@ -30,7 +30,7 @@ public:
 protected:
 
 private:
-  std::vector<RawBank> m_banks;
+  const std::vector<RawBank>* m_banks;
   std::vector<RawBank>::const_iterator m_itB;
   int m_dataSize;
   int m_lastData;

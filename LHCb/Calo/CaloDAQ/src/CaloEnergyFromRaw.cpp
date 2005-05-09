@@ -1,4 +1,4 @@
-// $Id: CaloEnergyFromRaw.cpp,v 1.1.1.1 2005-01-11 07:51:47 ocallot Exp $
+// $Id: CaloEnergyFromRaw.cpp,v 1.2 2005-05-09 06:38:53 ocallot Exp $
 // Include files 
 
 // from Gaudi
@@ -27,7 +27,6 @@ CaloEnergyFromRaw::CaloEnergyFromRaw( const std::string& type,
   : GaudiTool ( type, name , parent )
 {
   declareInterface<ICaloEnergyFromRaw>(this);
-  m_itB      = m_banks.end();
   m_dataSize = 0;
   m_lastData = 0;
   m_lastID   = 0;
@@ -40,6 +39,21 @@ CaloEnergyFromRaw::~CaloEnergyFromRaw() {};
 
 
 //=========================================================================
+//  
+//=========================================================================
+StatusCode CaloEnergyFromRaw::initialize ( ) {
+  std::string det = name().substr( 8, 4 );
+  if ( "Ecal" == det ) {
+    m_calo = getDet<DeCalorimeter>( "/dd/Structure/LHCb/Ecal" );
+  } else if ( "Hcal" == det ) {
+    m_calo = getDet<DeCalorimeter>( "/dd/Structure/LHCb/Hcal" );
+  } else {
+    m_calo = getDet<DeCalorimeter>( "/dd/Structure/LHCb/Prs" );
+  }
+  debug() << "Got detector element for " << det << endreq;
+  return StatusCode::SUCCESS;
+}
+//=========================================================================
 //  Store the scale for decoding, version 0.
 //=========================================================================
 void CaloEnergyFromRaw::setScaleAndShift ( double scale, double shift ) {
@@ -50,31 +64,23 @@ void CaloEnergyFromRaw::setScaleAndShift ( double scale, double shift ) {
 //  Prepare the decoding of one event
 //=========================================================================
 void CaloEnergyFromRaw::prepare ( int type ) {
-  RawBuffer* rawBuf = get<RawBuffer>( RawBufferLocation::Default );
-  RawEvent rawEvt( *rawBuf );
-  m_banks    = rawEvt.banks( type );
-  m_itB      = m_banks.begin();
+  RawEvent* rawEvt = get<RawEvent> ( RawEventLocation::Default );
+  m_banks    = &rawEvt->banks( type );
+  m_itB      = m_banks->begin();
   m_dataSize = 0;
   m_lastData = 0;
   m_version  = 0;
-  std::string det = name().substr( 8, 4 );
-  if ( "Ecal" == det ) {
-    m_calo = getDet<DeCalorimeter>( "/dd/Structure/LHCb/Ecal" );
-  } else if ( "Hcal" == det ) {
-    m_calo = getDet<DeCalorimeter>( "/dd/Structure/LHCb/Hcal" );
-  } else {
-    m_calo = getDet<DeCalorimeter>( "/dd/Structure/LHCb/Prs" );
-  }
 }
 
 //=========================================================================
 //   Get the next entry, protect if no more entries
 //=========================================================================
 StatusCode CaloEnergyFromRaw::nextCell ( CaloCellID& id, double& energy ) {
+  if ( 0 == m_banks ) return StatusCode::FAILURE;
 
   //== Ended last bank ? Try to get a new, non empty one.
   while ( 0 == m_dataSize ) {
-    if ( m_banks.end() != m_itB ) {
+    if ( m_banks->end() != m_itB ) {
       m_data     = (*m_itB).data();
       m_dataSize = (*m_itB).dataSize();
       m_version  = (*m_itB).version();

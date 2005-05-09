@@ -1,4 +1,4 @@
-// $Id: CaloSpdBitFromRaw.cpp,v 1.1.1.1 2005-01-11 07:51:47 ocallot Exp $
+// $Id: CaloSpdBitFromRaw.cpp,v 1.2 2005-05-09 06:38:53 ocallot Exp $
 // Include files 
 
 // from Gaudi
@@ -27,7 +27,6 @@ CaloSpdBitFromRaw::CaloSpdBitFromRaw( const std::string& type,
   : GaudiTool ( type, name , parent )
 {
   declareInterface<ICaloTriggerFromRaw>(this);
-  m_itB      = m_banks.end();
   m_dataSize = 0;
   m_lastData = 0;
   m_lastID   = 0;
@@ -41,10 +40,9 @@ CaloSpdBitFromRaw::~CaloSpdBitFromRaw() {};
 //  Prepare for a new event
 //=========================================================================
 void CaloSpdBitFromRaw::prepare ( int type ) {
-  RawBuffer* rawBuf = get<RawBuffer>( RawBufferLocation::Default );
-  RawEvent rawEvt( *rawBuf );
-  m_banks    = rawEvt.banks( type );
-  m_itB      = m_banks.begin() - 1;
+  RawEvent* rawEvt = get<RawEvent>( RawEventLocation::Default );
+  m_banks    = &rawEvt->banks( type );
+  m_itB      = m_banks->begin() - 1;
   m_dataSize = 0;
   m_lastData = 0;
 }
@@ -53,9 +51,11 @@ void CaloSpdBitFromRaw::prepare ( int type ) {
 //  Decode the Prs word (lower 8 bits)
 //=========================================================================
 StatusCode CaloSpdBitFromRaw::nextCell ( CaloCellID& id, int& adc ) {
+  if ( 0 == m_banks ) return StatusCode::FAILURE;
+
   //== Ended last bank ? Try to get a new, non empty one.
   while ( 0 == m_lastData && 0 == m_dataSize ) {
-    if ( m_banks.end() > ++m_itB ) {
+    if ( m_banks->end() > ++m_itB ) {
       m_data     = (*m_itB).data();
       m_dataSize = (*m_itB).dataSize();
       m_lastData = 0;

@@ -1,4 +1,4 @@
-// $Id: CaloEnergyFromRaw.h,v 1.1.1.1 2005-01-11 07:51:47 ocallot Exp $
+// $Id: CaloEnergyFromRaw.h,v 1.2 2005-05-09 06:38:53 ocallot Exp $
 #ifndef CALOENERGYFROMRAW_H 
 #define CALOENERGYFROMRAW_H 1
 
@@ -24,6 +24,8 @@ public:
 
   virtual ~CaloEnergyFromRaw( ); ///< Destructor
 
+  virtual StatusCode initialize();
+
   virtual void setScaleAndShift( double scale, double shift );
   
   virtual void prepare( int type );
@@ -33,7 +35,7 @@ public:
 protected:
 
 private:
-  std::vector<RawBank> m_banks;
+  const std::vector<RawBank>* m_banks;
   std::vector<RawBank>::const_iterator m_itB;
   int m_dataSize;
   int m_lastData;
