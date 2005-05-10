@@ -63,7 +63,7 @@ InitBooleSeq.Members += { "CreateRawBuffer" };
 //--------------------------------------------------------------
 // L0 trigger
 ApplicationMgr.DLLs += { "L0Calo", "L0MuonTrigger", "PuVeto", "L0DU" };
-TriggerL0Seq.Members += { "L0CaloAlg/L0Calo" };
+TriggerL0Seq.Members += { "CreateRawEvent", "L0CaloAlg/L0Calo" };
 #include "$L0MUONTRIGGERROOT/options/Boole.opts"
 TriggerL0Seq.Members += { "L0mTriggerAlgorithm/L0MuonTrigger" };
 TriggerL0Seq.Members += { "PuVetoAlg" };
