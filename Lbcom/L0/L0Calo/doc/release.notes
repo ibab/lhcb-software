@@ -1,6 +1,9 @@
 Package		: L0/L0Calo
 Package Manager : Olivier Callot
 
+! 2005-05-10 - Olivier Callot
+ - Re-create RawEvent after chanes in RawBuffer in L0CaloAlg.
+
 !========================= L0Calo v8r1 2005-03-07 =========================
 ! 2005-03-07 - Marco Cattaneo
  - Adapt to new L1Buffer bank types in DAQEvent v5r0 (backwards incompatible)
