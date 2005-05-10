@@ -6,13 +6,14 @@
 !             : Contains packages shared by Boole and other applications   
 !-----------------------------------------------------------------------------
 
-</PRE><H1><A NAME=v2r0>2005-04-22 LbcomSys v2r0</A></H1><PRE>
+</PRE><H1><A NAME=v2r0>2005-05-10 LbcomSys v2r0</A></H1><PRE>
 !===============================================================================
-! 2005-04-22 - Marco Cattaneo
+! 2005-05-10 - Marco Cattaneo
  - Repackaging to create RecSys project
  - Packages moved to RecSys: RichRecTools, RichRecMCTools, RichRecCommon,
                              RichRecQC, TrExtrapolator, CaloReco, CaloPIDs
- - Packages added: ITAlgorithms, ITCheckers, L0Checker
+ - Packages added:    ITAlgorithms, ITCheckers, L0Checker
+ - Packages modified: L0Calo v8r2
 
  - In ITAlgorithms v15r0:
    . Remove ITSignalToNoiseTool. Modify algorithms to use ISTSignalToNoiseTool.h
@@ -20,6 +21,9 @@
 
  - In ITCheckers v2r5:
    . use ISTSignalToNoiseTool instead of IITSignalToNoiseTool
+
+ - In L0Calo v8r2:
+   . Delete RawEvent invalidated by changes to RawBuffer in L0CaloAlg
 
 </PRE><H1><A NAME=v1r3>2005-04-19 LbcomSys v1r3</A></H1><PRE>
 !===============================================================================
