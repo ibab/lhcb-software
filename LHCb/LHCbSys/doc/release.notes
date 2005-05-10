@@ -25,6 +25,7 @@
 
  - In CaloDAQ v1r1:
    . Add a missing factory
+   . Access RawEvent directly and avoid copying banks when decoding
 
  - In CaloUtils v4r9:
    . Add CaloTrackAlg and CaloHistoTrackAlg base classes previously in CaloReco
@@ -36,7 +37,11 @@
    . Add dictionary for CaloDigit to MCParticle relation
 
  - In DAQEvent v5r1:
-   . Add RawEvent and L1Event constructors from buffer pointer and length
+   . Add constructor from buffer pointer and length to RawEvent and L1Event,
+     for online use, and remove constructor from map
+   . Store buffer pointer and length in RawEvent, L1Event and add get accessors
+   . Add enum to RawBuffer containing "MagicPattern" value
+   . Disable copy and assignment operators in L1Buffer and RawBuffer
 
  - In LinkerEvent v1r8:
    . Allow for keys that cannot be implicitly converted to int
