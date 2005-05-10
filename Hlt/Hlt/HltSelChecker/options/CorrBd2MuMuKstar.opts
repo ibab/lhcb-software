@@ -9,7 +9,7 @@ HLTCorrelations.Members += { "SelResultCorrelations/CorrBd2MuMuKstar" };
 CorrBd2MuMuKstar.Algorithms = { "CheckHLTGeneric"	
                         ,"AllBd2MuMuKstarTracks", 
                         "HLTSharedKstar",
-                        "HLTDimuons",
+//                        "HLTDimuons",
                         "HLTFilterBd2MuMuKstar", 
                         "TDRselBd2MuMuKstar",
                         "Bd2MuMuKstarAndTDR" } ;

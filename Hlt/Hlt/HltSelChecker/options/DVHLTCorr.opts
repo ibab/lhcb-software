@@ -31,8 +31,12 @@ ApplicationMgr.DLLs += {"HltSelChecker"};
 #include "$HLTSELCHECKERROOT/options/MeasureTimes.opts"
 
 //==============================================================================
+// test
+//==============================================================================
+#include "$HLTSELCHECKERROOT/options/TestHltScore.opts"
+//==============================================================================
 // PK's stripping of MB passing L0 and L1:
-//#include "$HLTSELECTIONSROOT/options/L0L1-MB.opts"
+#include "$HLTSELECTIONSROOT/options/L0L1-MB.opts"
 //==============================================================================
 // PK's stripping of signal passing L0, L1 and TDR:
 // #include "$HLTSELECTIONSROOT/options/L0L1TDR-AllSignals.opts"
@@ -41,16 +45,17 @@ ApplicationMgr.DLLs += {"HltSelChecker"};
 // Warning: Files are added up to EventSelector
 // in these options
 // Hence: re-initalize event selector
-EventSelector.Input   = {};
-#include "$HLTSELECTIONSROOT/options/L0L1TDR-Bs2JpsiPhi.opts"
+// EventSelector.Input   = {};
+// #include "$HLTSELECTIONSROOT/options/L0L1TDR-Bs2JpsiPhi.opts"
 
 ApplicationMgr.EvtMax    = 500 ;
 EventSelector.FirstEvent = 1 ;
+
 MessageSvc.Format = "% F%50W%S%7W%R%T %0W%M";
 ChronoStatSvc.ChronoPrintLevel = 4 ; // forces printout even with 4
 
 ApplicationMgr.HistogramPersistency = "HBOOK";
-HistogramPersistencySvc.OutputFile = "JpsiPhi.hbook"; 
+HistogramPersistencySvc.OutputFile = "test.hbook"; 
 
 MessageSvc.OutputLevel = 4 ;
 ToolSvc.OutputLevel    = 4;
@@ -86,3 +91,5 @@ HLTExclusiveSelectionsFlag.OutputLevel = 4 ;
 HLTDstarFlag.OutputLevel = 4 ;
 HLTJpsi2MuMuFlag.OutputLevel = 4 ;
 HLTHotMuonFlag.OutputLevel = 4 ;
+
+HltDecision.OutputLevel = 3 ;

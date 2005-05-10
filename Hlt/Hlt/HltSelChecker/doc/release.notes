@@ -4,6 +4,25 @@
 ! Purpose     : High-Level Trigger Exclusive Selections - Checking 
 !-----------------------------------------------------------------------------
 
+! 2005-05-10 - P. Koppenburg
+  - src/TestHltScore.{cpp,h}
+    . New algorithm that checks the HltScore class
+  - src/HltSelChecker_load.cpp
+    . Add algorithm
+  - options/TestHltScore.opts
+    . Use this algorithm
+  - options/CorrB2JpsiX.opts
+  - options/CorrB2MuMu.opts
+  - options/CorrBd2JpsiKs.opts
+  - options/CorrBd2MuMuKstar.opts
+  - options/CorrBs2JpsiPhi.opts
+  - options/CorrDiMuons.opts
+  - options/CorrHLTsels.opts
+  - options/Correlations.opts
+  - options/DVHLTCorr.opts
+  - options/TruthInput.opts
+    . More changes reflecting the fact that the muons are now done in HltGeneric
+
 ! 2005-04-04 - Luis Fernandez
  - options/NT*.opts
    . Adapt to DecayChainNTuple modifications

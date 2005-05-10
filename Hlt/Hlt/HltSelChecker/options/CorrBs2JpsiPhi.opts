@@ -9,7 +9,7 @@ HLTCorrelations.Members += { "SelResultCorrelations/CorrBs2JpsiPhi" };
 CorrBs2JpsiPhi.Algorithms = { "CheckHLTGeneric"	
                               ,"AllBs2JpsiPhiTracks", 
                                "HLTSharedPhi", 
-                               "HLTDimuons",
+//                               "HLTDimuons",
                                "HLTFilterB2JpsiX",
 //                               "HLTFilterBs2JpsiPhi", 
                                "TDRselBs2Jpsi2MuMu_Phi2KK",
