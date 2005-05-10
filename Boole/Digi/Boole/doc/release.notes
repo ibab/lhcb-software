@@ -3,9 +3,10 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
-</PRE><H1><A NAME=v9r0>2005-04-19 Boole v9r0</A></H1><PRE>
-! 2005-04-25 - Marco Cattaneo
+</PRE><H1><A NAME=v9r0>2005-05-09 Boole v9r0</A></H1><PRE>
+! 2005-05-09 - Marco Cattaneo
 - Adapt requirements to Lbcom v2r0, LHCb v18r4, Gaudi v16r3
+- Remove MCCaloDigits from DigiContent, add Link/Raw/Ecal/Digits instead
 
 </PRE><H1><A NAME=v8r4>2005-05-03 Boole v8r4</A></H1><PRE>
 Merged from branch v8r3b

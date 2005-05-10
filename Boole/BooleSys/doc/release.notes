@@ -6,9 +6,13 @@ Purpose: LHCb Digitization program
 </PRE><H1><A NAME=v9r0>2005-04-25 Boole v9r0</A></H1><PRE>
 This version uses Gaudi v16r3, LHCb v18r4, Lbcom v2r0 (also CLHEP 1.9, ROOT 4.0) 
 Requires input from Gauss v19r3 or greater. Output needs Brunel v26r2 or greater
-Identical to v8r3, adapted to new project structure
+Based on v8r3, adapted to new project structure
 
 - Packages removed: ITAlgorithms, ITCheckers (moved to Lbcom)
+
+- Persistency changes:
+  . Add Link/Raw/Calo/Digits (created by CaloAssociators via DataOnDemandSvc)
+  . Remove MC/Ecal/Digits, MC/Hcal/Digits, MC/Prs/Digits, MC/Spd/Digits
 
 </PRE><H1><A NAME=v8r4>2005-05-03 Boole v8r4</A></H1><PRE>
 Merged from branch v8r3b

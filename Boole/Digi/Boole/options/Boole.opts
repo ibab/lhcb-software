@@ -151,6 +151,7 @@ DataOnDemandSvc.Nodes += { "DATA='/Event/Rec'           TYPE='DataObject'",
 #include "$ITASSOCIATORSROOT/options/ITAssociators.opts"
 #include "$OTASSOCIATORSROOT/options/OTAssociators.opts"
 #include "$VELOASSOCIATORSROOT/options/VeloAssociators.opts"
+#include "$CALOASSOCIATORSROOT/options/CaloAssociators.opts"
 
 RelationsOTSeq.Members += { "OTTimeCreator" };
 
