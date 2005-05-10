@@ -27,9 +27,9 @@ use VeloTT              v1r13	Tr
 use TrKShort		v1r6	Tr
 
 # Trg reconstruction
-use TrgSys		v2r4	Trg
+use TrgSys		v2r5	Trg
 use TrgBrunel           v1r1    Trg
-use TrgCalo		v1r0p2	Trg
+use TrgCalo		v2r0	Trg
 use TrgChecker		v7r1	Trg
 use TrgForward		v5r1p1	Trg
 use TrgMonitor		v4r0	Trg

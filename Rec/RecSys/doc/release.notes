@@ -6,7 +6,7 @@ Purpose: LHCb reconstruction packages.
          by one or more LHCb applications. 
          It supersedes BrunelSys and large parts of LbcomSys and DaVinciSys. 
 
-</PRE><H1><A NAME=v1r0>2005-05-05 RecSys v1r0</A></H1><PRE>
+</PRE><H1><A NAME=v1r0>2005-05-10 RecSys v1r0</A></H1><PRE>
 This version uses Gaudi v16r3, LHCb v18r4 (also CLHEP 1.9, ROOT 4.0). 
 It contains the same package versions as in BrunelSys v26r3, LbComSys v1r3 
 and DaVinciSys v13r1, except for:
@@ -14,7 +14,9 @@ and DaVinciSys v13r1, except for:
 . TrgTools is moved to LHCb
 . TrgVelo v7r3: contains offline tuning for Brunel v26r3
 . TrgVeloTT v6r1: fix decoding of RawBuffer for v1 of ST banks
-. TrgSys  v2r3: use TrgVelo v7r3, TrgVeloTT v6r1 and remove TrgMuonID
+. TrgCalo v2r0: Adapt decoding for RTTC data
+. TrgSys  v2r4: use TrgVelo v7r3, TrgVeloTT v6r1, TrgCalo v2r0, remove TrgMuonID
+                restore TrgCalo in HLT sequence
 . LongTrack v1r15, TrKShort v1r6, VeloTT v1r13: updated to use STTools instead
                                                 of ITAlgorithms
 . CaloReco v2r8, CaloPIDs v2r5, CaloMoniDst v1r1: updated for new base classes 
