@@ -1,4 +1,4 @@
-// $Id: CaloEnergyFromRaw.cpp,v 1.2 2005-05-09 06:38:53 ocallot Exp $
+// $Id: CaloEnergyFromRaw.cpp,v 1.3 2005-05-10 11:49:07 ocallot Exp $
 // Include files 
 
 // from Gaudi
@@ -42,6 +42,11 @@ CaloEnergyFromRaw::~CaloEnergyFromRaw() {};
 //  
 //=========================================================================
 StatusCode CaloEnergyFromRaw::initialize ( ) {
+  StatusCode sc = GaudiTool::initialize(); // must be executed first
+  if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
+
+  debug() << "==> Initialize" << endmsg;
+
   std::string det = name().substr( 8, 4 );
   if ( "Ecal" == det ) {
     m_calo = getDet<DeCalorimeter>( "/dd/Structure/LHCb/Ecal" );
