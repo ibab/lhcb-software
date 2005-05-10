@@ -230,6 +230,20 @@
         desc="special serializer to ASCII stream">
         <arg name = "s" type = "std::ostream" inout = "BOTH" /> 
        </method>
+       <method
+        name="&amp;operator="
+        type="RawBuffer"
+        desc="disable assignment"
+        access="PRIVATE">
+        <arg name = "buf" type = "RawBuffer"/>
+       </method>
+       <method
+        name="RawBuffer"
+        type=""
+        desc="disable copy"
+        access="PRIVATE">
+        <arg name = "buf" type = "RawBuffer"/>
+       </method>
      </class>
   </package>
 </gdd>

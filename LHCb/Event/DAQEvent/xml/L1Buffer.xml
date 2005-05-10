@@ -188,6 +188,20 @@
         desc="special serializer to ASCII stream">
         <arg name = "s" type = "std::ostream" inout = "BOTH" /> 
        </method>
+       <method
+        name="&amp;operator="
+        type="L1Buffer"
+        desc="disable assignment"
+        access="PRIVATE">
+        <arg name = "buf" type = "L1Buffer"/>
+       </method>
+       <method
+        name="L1Buffer"
+        type=""
+        desc="disable copy"
+        access="PRIVATE">
+        <arg name = "buf" type = "L1Buffer"/>
+       </method>
      </class>
   </package>
 </gdd>

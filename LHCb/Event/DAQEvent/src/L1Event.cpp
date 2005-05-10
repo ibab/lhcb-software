@@ -1,4 +1,4 @@
-// $Id: L1Event.cpp,v 1.5 2005-05-09 11:50:45 cattanem Exp $
+// $Id: L1Event.cpp,v 1.6 2005-05-10 08:08:37 cattanem Exp $
 // Include files 
 
 // local
@@ -15,18 +15,9 @@
 //=============================================================================
 L1Event::L1Event( L1Buffer& l1Buffer ) {
 
-  long l1Size = l1Buffer.currentSize();
-  l1_int * buffer = l1Buffer.buffer();
-  long i=0;
-  while( i < l1Size ){
-    int bankSize = int(buffer[i]&127);
-    int bankType = int( (buffer[i]>>13) &7 );
-    // Add this bank address to Event Map
-    (m_eventMap[bankType]).push_back(L1Bank(buffer+i));
-    // Go to the next bank
-    i+=bankSize;
-  }
-
+  m_bufLen = l1Buffer.currentSize();
+  m_buffer = l1Buffer.buffer();
+  this->decode();
 }
 
 //=============================================================================
@@ -34,12 +25,22 @@ L1Event::L1Event( L1Buffer& l1Buffer ) {
 //=============================================================================
 L1Event::L1Event( l1_int* buffer, unsigned int length ) {
 
+  m_bufLen = length;
+  m_buffer = buffer;
+  this->decode();
+}
+
+//=============================================================================
+// Method to decode buffer
+//=============================================================================
+void L1Event::decode() 
+{
   unsigned int i=0;
-  while( i < length ){
-    int bankSize = int(buffer[i]&127);
-    int bankType = int( (buffer[i]>>13) &7 );
+  while( i < m_bufLen ){
+    int bankSize = int(m_buffer[i]&127);
+    int bankType = int( (m_buffer[i]>>13) &7 );
     // Add this bank address to Event Map
-    (m_eventMap[bankType]).push_back(L1Bank(buffer+i));
+    (m_eventMap[bankType]).push_back(L1Bank(m_buffer+i));
     // Go to the next bank
     i+=bankSize;
   }

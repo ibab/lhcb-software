@@ -1,4 +1,4 @@
-// $Id: RawEvent.cpp,v 1.4 2005-05-09 11:50:45 cattanem Exp $
+// $Id: RawEvent.cpp,v 1.5 2005-05-10 08:08:37 cattanem Exp $
 // Include files 
 
 // from Gaudi
@@ -18,26 +18,9 @@
 //=============================================================================
 RawEvent::RawEvent( RawBuffer& rawBuffer ) {
 
-  // Loop over RawBuffer and get info for RawEvent:
-  long rawSize = rawBuffer.currentSize();
-  raw_int * buffer = rawBuffer.buffer();
-  raw_int magic = rawBuffer.magic();
-  long i=0;
-  while( i < rawSize ){
-    short bankSize = (buffer[i]>>16)&0xFFFF;
-    // Check integrity
-    if ( (buffer[i]&0xFFFF) != magic ){
-      throw GaudiException( "Bad magic number", "RawBufferException",
-                            StatusCode::FAILURE );
-    }
-    // Determine bank type
-    int bankType  = buffer[i+1]&0xFF;
-
-    // Add this bank address to Event Map
-    (m_eventMap[bankType]).push_back(RawBank(buffer+i));
-    // Go to the next bank
-    i+=bankSize;
-  }
+  m_bufLen = rawBuffer.currentSize();
+  m_buffer = rawBuffer.buffer();
+  this->decode();
 }
 
 //=============================================================================
@@ -45,20 +28,29 @@ RawEvent::RawEvent( RawBuffer& rawBuffer ) {
 //=============================================================================
 RawEvent::RawEvent( raw_int* buffer, unsigned int length ) {
 
-  // Loop over buffer and get info for RawEvent:
+  m_buffer = buffer;
+  m_bufLen = length;
+  this->decode();
+}
+
+//=============================================================================
+// Method to decode buffer
+//=============================================================================
+void RawEvent::decode() 
+{
   unsigned int i=0;
-  while( i < length ){
-    short bankSize = (buffer[i]>>16)&0xFFFF;
+  while( i < m_bufLen ){
+    short bankSize = (m_buffer[i]>>16)&0xFFFF;
     // Check integrity
-    if ( (buffer[i]&0xFFFF) != RawBuffer::MagicPattern ){
+    if ( (m_buffer[i]&0xFFFF) != RawBuffer::MagicPattern ){
       throw GaudiException( "Bad magic number", "RawBufferException",
                             StatusCode::FAILURE );
     }
     // Determine bank type
-    int bankType  = buffer[i+1]&0xFF;
+    int bankType  = m_buffer[i+1]&0xFF;
 
     // Add this bank address to Event Map
-    (m_eventMap[bankType]).push_back(RawBank(buffer+i));
+    (m_eventMap[bankType]).push_back(RawBank(m_buffer+i));
     // Go to the next bank
     i+=bankSize;
   }

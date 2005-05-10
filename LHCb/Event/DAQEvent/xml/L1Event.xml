@@ -23,13 +23,19 @@
         type="std::map&lt;int,std::vector&lt;L1Bank&gt; &gt;"
         getMeth="FALSE"
         setMeth="FALSE"
-     />
-       <constructor
-        desc="Constructor from a map"
-       >
-         <arg name="eventMap" type="std::map&lt;int,std::vector&lt;L1Bank&gt; &gt;"/>
-         <code>    m_eventMap=eventMap; </code>
-       </constructor>
+       />
+       <attribute
+        desc="Pointer to beginning of event buffer"
+        name="buffer"
+        type="l1_int*"
+        setMeth="FALSE"
+       />
+       <attribute
+        desc="Length of event buffer in raw_int words"
+        name="bufLen"
+        type="unsigned int"
+        setMeth="FALSE"
+       />
        <constructor desc="Constructor from L1Buffer">
          <arg name="l1Buffer" type="L1Buffer"/>
        </constructor>
@@ -46,6 +52,13 @@
        >
          <code> return (m_eventMap[bankType]); </code>
        </method>
+
+       <method
+        desc="method to decode buffer into banks, called from constructor"
+        name="decode"
+        type="void"
+        access="PRIVATE"
+       />
       </class>
   </package>
 </gdd>
