@@ -1,11 +1,8 @@
-// $Id: CaloPIDsData.cpp,v 1.2 2004-04-27 03:13:26 ibelyaev Exp $
+// $Id: CaloPIDsData.cpp,v 1.3 2005-05-10 11:29:21 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ 
+// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.3 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
-// Revision 1.1  2004/03/17 16:11:39  ibelyaev
-//  add Frederic's Photon(P)ID tool
-// 
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -21,133 +18,106 @@
 // Event 
 // ============================================================================
 #include "Event/TrStoredTrack.h"
+#include "Event/CaloCluster.h"
 #include "Event/MCParticle.h"
+// ============================================================================
+// CaloKernel
+// ============================================================================
+#include "CaloKernel/CaloTupleAlg.h"
 // ============================================================================
 // LHCbKernel/Relations
 // ============================================================================
-#include "Relations/IAssociator.h"
-#include "Relations/IAssociatorWeighted.h"
-// ============================================================================
-// local
-// ============================================================================
-#include "CaloPIDsData.h"
+#include "Relations/IRelation.h"
+#include "Relations/IRelationWeighted.h"
+#include "Relations/IRelationWeighted2D.h"
 // ============================================================================
 
-// ============================================================================
-/** @file 
- * 
- *  Implementation file for class CaloPIDsData
+
+/** @class CaloPIDsData CaloPIDsData.cpp
+ *
+ *  Simple algorithm to fill NTuple with information, 
+ *  needed to obtain the reference histograms 
+ *  for CaloPIDs package 
  *
  *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
- *  @date 2004-03-17 
+ *  @date   2004-03-17
  */
-// ============================================================================
+class CaloPIDsData : public CaloTupleAlg 
+{
+  friend class AlgFactory<CaloPIDsData> ;
+public:
+  /// execution     of the algorithm
+  virtual StatusCode execute    () ;  
+protected:  
+  /** Standard constructor
+   *  @param name algorithm instance name 
+   *  @param isvc pointer to Service Locator 
+   */
+  CaloPIDsData 
+  ( const std::string&  name  , 
+    ISvcLocator*        isvc  ) 
+    : CaloTupleAlg       ( name  , isvc ) 
+    //
+    , m_name_Tr2MC       ( "Rec/Relations/Tr2MCP" )
+    //
+    , m_name_PhotonMatch ( "Rec/Calo/PhotonMatch" )
+    , m_name_PrsE        ( "Rec/Calo/PrsE"        )
+    , m_name_EcalChi2    ( "Rec/Calo/EcalChi2"    )
+    , m_name_BremChi2    ( "Rec/Calo/BremChi2"    ) 
+    , m_name_EcalE       ( "Rec/Calo/EcalE"       )
+    , m_name_HcalE       ( "Rec/Calo/HcalE"       )
+    //
+  {
+    // MC-truth info for Tracks
+    declareProperty ( "Tr2MCP"    , m_name_Tr2MC       ) ;
+    // Calo PID-estimators 
+    declareProperty ( "PhMatch"   , m_name_PhotonMatch ) ;
+    declareProperty ( "PrsE"      , m_name_PrsE     ) ;
+    declareProperty ( "EcalChi2"  , m_name_EcalChi2 ) ;
+    declareProperty ( "BremChi2"  , m_name_BremChi2 ) ;
+    declareProperty ( "EcalE"     , m_name_EcalE    ) ;
+    declareProperty ( "HcalE"     , m_name_HcalE    ) ;
+    // define the appropriate default for input data  
+    setInputData    ( TrStoredTrackLocation::Default ) ;  
+  };
+  /// virtual destructor 
+  virtual ~CaloPIDsData( ){};
+protected:
+  /// get the momentum of the track
+  double momentum ( const TrStoredTrack* track ) const ;
+private:
+  // default constructor is disabled 
+  CaloPIDsData();
+  // copy constructor is disabled 
+  CaloPIDsData( const CaloPIDsData& ) ;
+  // assignement operator is disabled 
+  CaloPIDsData& operator= ( const CaloPIDsData& );
+private:
+  std::string m_name_Tr2MC       ;
+  std::string m_name_PhotonMatch ;
+  std::string m_name_PrsE        ;
+  std::string m_name_EcalChi2    ;
+  std::string m_name_BremChi2    ;
+  std::string m_name_EcalE       ;
+  std::string m_name_HcalE       ;  
+};
 
 // ============================================================================
-/** @var s_Factory
- *  Algorithm Factory
- */
-// ============================================================================
-static const  AlgFactory<CaloPIDsData>         s_Factory ;
+namespace 
+{
+  // ==========================================================================
+  /** @var s_Factory
+   *  Algorithm Factory
+   */
+  // ==========================================================================
+  const  AlgFactory<CaloPIDsData>         s_Factory ;
+};
 // ============================================================================
 /** @var CaloPIDsDataFactory
  *  Abstract Algorithm Factory
  */
 // ============================================================================
-const        IAlgFactory&CaloPIDsDataFactory = s_Factory ; 
-// ============================================================================
-
-// ============================================================================
-/** Standard constructor
- *  @see  CaloTupleAlg
- *  @see GaudiTupleAlg
- *  @see GaudiHistoAlg
- *  @see GaudiAlgorithm 
- *  @see      Algorithm 
- *  @see      AlgFactory 
- *  @see     IAlgFactory
- *  @param name algorithm instance name 
- *  @param iscv pointer to Service Locator 
- */
-// ============================================================================
-CaloPIDsData::CaloPIDsData 
-( const std::string& name  , 
-  ISvcLocator*       isvc  ) 
-  : CaloTupleAlg( name , isvc ) 
-  //
-  , m_name_Tr2MC 
-("AssociatorWeighted<TrStoredTrack,MCParticle,double>/TrackToMCP")
-  //
-  , m_name_PrsE     ( "Associator<TrStoredTrack,float>/PrsE"     )
-  , m_name_EcalChi2 ( "Associator<TrStoredTrack,float>/EcalChi2" )
-  , m_name_BremChi2 ( "Associator<TrStoredTrack,float>/BremChi2" )
-  , m_name_EcalE    ( "Associator<TrStoredTrack,float>/EcalE"    )
-  , m_name_HcalE    ( "Associator<TrStoredTrack,float>/HcalE"    )
-  //
-  , m_Tr2MC     ( 0 )
-  //
-  , m_PrsE      ( 0 ) 
-  , m_EcalChi2  ( 0 ) 
-  , m_BremChi2  ( 0 ) 
-  , m_EcalE     ( 0 ) 
-  , m_HcalE     ( 0 ) 
-{
-  // MC for Tracks
-  declareProperty ( "Tr2MCP"    , m_name_Tr2MC    ) ;
-  // estimators 
-  declareProperty ( "PrsE"      , m_name_PrsE     ) ;
-  declareProperty ( "EcalChi2"  , m_name_EcalChi2 ) ;
-  declareProperty ( "BremChi2"  , m_name_BremChi2 ) ;
-  declareProperty ( "EcalE"     , m_name_EcalE    ) ;
-  declareProperty ( "HcalE"     , m_name_HcalE    ) ;
-  
-  setProperty     ( "Input" , TrStoredTrackLocation::Default ) ;  
-};
-// ============================================================================
-
-// ============================================================================
-/// virtual destructor 
-// ============================================================================
-CaloPIDsData::~CaloPIDsData() {}; 
-// ============================================================================
-
-// ============================================================================
-/** initialzation of the algorithm
- *  @see  CaloTupleAlg
- *  @see GaudiTupleAlg
- *  @see GaudiHistoAlg
- *  @see GaudiAlgorithm
- *  @see      Algorithm
- *  @see     IAlgorithm
- *  @return status code 
- */
-// ============================================================================
-StatusCode CaloPIDsData::initialize() 
-{
-  // initialiae teh base class 
-  StatusCode sc = CaloTupleAlg::initialize() ;
-  if ( sc.isFailure() ) { return sc ; }
-
-  // locate all tools/associators
-  
-  m_Tr2MC    = tool<ITrAsct> ( m_name_Tr2MC    ) ;
-  
-  m_PrsE     = tool<IAsct>   ( m_name_PrsE     ) ;
-  m_EcalChi2 = tool<IAsct>   ( m_name_EcalChi2 ) ;
-  m_BremChi2 = tool<IAsct>   ( m_name_BremChi2 ) ;
-  m_EcalE    = tool<IAsct>   ( m_name_EcalE    ) ;
-  m_HcalE    = tool<IAsct>   ( m_name_HcalE    ) ;
-
-  if ( 0 == m_Tr2MC     ) { return StatusCode::FAILURE ; }
-  if ( 0 == m_PrsE      ) { return StatusCode::FAILURE ; }
-  if ( 0 == m_EcalChi2  ) { return StatusCode::FAILURE ; }
-  if ( 0 == m_BremChi2  ) { return StatusCode::FAILURE ; }
-  if ( 0 == m_EcalE     ) { return StatusCode::FAILURE ; }
-  if ( 0 == m_HcalE     ) { return StatusCode::FAILURE ; }
-  
-  return StatusCode::SUCCESS ;
-
-};
+const   IAlgFactory&CaloPIDsDataFactory = s_Factory ; 
 // ============================================================================
 
 // ============================================================================
@@ -156,7 +126,8 @@ StatusCode CaloPIDsData::initialize()
  *  @return the momentum of the track 
  */
 // ============================================================================
-double CaloPIDsData::momentum( const TrStoredTrack* track ) const 
+double CaloPIDsData::momentum
+( const TrStoredTrack* track ) const 
 {
   if( 0 == track ) 
   { 
@@ -193,29 +164,46 @@ StatusCode CaloPIDsData::execute()
   typedef TrStoredTrack  Track  ;
   typedef TrStoredTracks Tracks ;
   
+  /// the actual type of Track -> Eval relation table 
+  typedef const IRelation<TrStoredTrack,float>                      Table    ;
+  /// the actual type of Track -> Eval range  
+  typedef Table::Range                                              Range    ;
+  
+  /// the actual type for TrStoredTrack -> MCParticle  relation table
+  typedef const IRelationWeighted<TrStoredTrack,MCParticle,double>  TrTable  ;
+  typedef TrTable::Range                                            TrRange  ;
+  
+  // "Photon match table"
+  typedef const IRelationWeighted2D<CaloCluster,TrStoredTrack,float> CTable  ;
+  typedef const IRelationWeighted<TrStoredTrack,CaloCluster,float>   CITable ;
+  typedef CITable::Range                                             CIRange ;
+  
   // locate input data 
   const Tracks* tracks = get<Tracks>( inputData() ) ;
   if ( 0 == tracks ) { return StatusCode::FAILURE ; }
   
-  const TrTable* tr2MC    = m_Tr2MC    -> direct() ;
-  
+  const TrTable* tr2MC    = get<TrTable>( m_name_Tr2MC    ) ;
   if ( 0 == tr2MC     ) { return Error ( " Tr2MC    table points to NULL" ) ; }
   
-  const Table*   prsE     = m_PrsE     -> direct() ;
+  const CTable* _ctable   = get<CTable> ( m_name_PhotonMatch ) ;
+  if ( 0 == _ctable  ) { return Error ( " PhMatch    table points to NULL" ) ; }
+  const CITable* citable  = _ctable->inverse() ;
+  if ( 0 == citable  ) { return Error ( " PhMatch(I) table points to NULL" ) ; }
+  
+  const Table*   prsE     = get<Table>  ( m_name_PrsE     ) ;
   if ( 0 == prsE      ) { return Error ( " PrsE     table points to NULL" ) ; }
   
-  const Table*   ecalChi2 = m_EcalChi2 -> direct() ;
+  const Table*   ecalChi2 = get<Table>  ( m_name_EcalChi2 ) ;
   if ( 0 == ecalChi2  ) { return Error ( " EcalChi2 table points to NULL" ) ; }
   
-  const Table*   bremChi2 = m_BremChi2 -> direct() ;
+  const Table*   bremChi2 = get<Table>  ( m_name_BremChi2 ) ;
   if ( 0 == bremChi2  ) { return Error ( " BremChi2 table points to NULL" ) ; }
   
-  const Table*   ecalE    = m_EcalE    -> direct() ;
+  const Table*   ecalE    = get<Table>  ( m_name_EcalE    ) ;
   if ( 0 == ecalE     ) { return Error ( " EcalE    table points to NULL" ) ; }
   
-  const Table*   hcalE    = m_HcalE    -> direct() ;
+  const Table*   hcalE    = get<Table>  ( m_name_HcalE    ) ;
   if ( 0 == hcalE     ) { return Error ( " HcalE    table points to NULL" ) ; }
-  
   
   Tuple tuple = nTuple( 415 , " CaloPIDs moni/test Alg=" + name() ) ;
   
@@ -237,6 +225,10 @@ StatusCode CaloPIDsData::execute()
     
     long pid = 0 ;
     if ( 0 != mcp ) { pid = mcp->particleID().pid() ; }
+    
+    double v0 = -1000 ;
+    CIRange ir = citable->relations ( track ) ;
+    if ( !ir.empty() ) { v0 = ir.front().weight() ; }
     
     double v1 = -1 * TeV ;
     Range r   = prsE->relations ( track ) ;
@@ -260,6 +252,7 @@ StatusCode CaloPIDsData::execute()
     
     tuple -> column ( "p"  , mom ) ;
     
+    tuple -> column ( "PhMat"    , v0 ) ;
     tuple -> column ( "PrsE"     , v1 ) ;
     tuple -> column ( "EcalChi2" , v2 ) ;
     tuple -> column ( "BremChi2" , v3 ) ;
@@ -278,7 +271,7 @@ StatusCode CaloPIDsData::execute()
     tuple -> column ( "unique"   , track -> unique     () ) ;
     tuple -> column ( "velo"     , track -> velo       () ) ;
     tuple -> column ( "seed"     , track -> seed       () ) ;
-    tuple -> column ( "match"    , track -> match      () ) ;
+    tuple -> column ( "mat"      , track -> match      () ) ;
     tuple -> column ( "forward"  , track -> forward    () ) ;
     tuple -> column ( "follow"   , track -> follow     () ) ;
     tuple -> column ( "veloTT"   , track -> veloTT     () ) ;

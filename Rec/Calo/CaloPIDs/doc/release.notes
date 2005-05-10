@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.20 2005-05-09 16:00:45 cattanem Exp $ 
+! $Id: release.notes,v 1.21 2005-05-10 11:29:21 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
 ! CVS tag   $Name: not supported by cvs2svn $
 ! -----------------------------------------------------------------------------
@@ -7,6 +7,17 @@
 ! Purpose     : Calorimeter PIDs 
 ! -----------------------------------------------------------------------------
 
+! 2005-05-10 - Vanya BELYAEV
+
+ - src/CaloPIDsData.cpp
+   1) rename "match" -> "mat" as N-Tuple item name to please PAW 
+                                     (thanks to Kirill VORONCHEV) 
+   2) add photon match estimator  
+   3) cosmetic modifications 
+
+ - src/CaloPIDsData.h 
+    remove the file 
+ 
 !========================= CaloPIDs v2r5 2005-05-09 ===========================
 ! 2005-05-08 - Vanya BELYAEV
     Eliminate all *associators*  
