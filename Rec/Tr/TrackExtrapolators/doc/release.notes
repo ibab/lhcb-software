@@ -4,17 +4,20 @@
 ! Purpose     : Package for tracking extrapolators
 !-----------------------------------------------------------------------------
 
+! 2005-05-10 - Eduardo Rodrigues
+ - minor change to requirements file
+
 ! 2005-04-08 - Jose A. Hernando
-	- small bugs in TrackLinearExtrapolator and TrackFirstCleverExtrapolator
-  - name for TrackFirstCleverExtrapolator to be changed
+ - small bugs in TrackLinearExtrapolator and TrackFirstCleverExtrapolator
+ - name for TrackFirstCleverExtrapolator to be changed
 
 ! 2005-03-15 - Jose A. Hernando
-	- Incorporating the Parabolic,FastParabolic,Herab,FirstClever 
-	TrackExtrapolators
+ - Incorporating the Parabolic,FastParabolic,Herab,FirstClever 
+   TrackExtrapolators
 
 ! 2005-03-10 - Jose A. Hernando
-	- rename of the classes. 
-		The extrapolator using Track are named XXXTrackExtrapolator
+ - rename of the classes. 
+   The extrapolator using Track are named XXXTrackExtrapolator
 
 ! 2005-02-09 - Eduardo Rodrigues
  - creation of the package. It will contain the extrapolators now in the
