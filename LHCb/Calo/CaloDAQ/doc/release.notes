@@ -4,11 +4,11 @@
 ! Purpose     : Convert Calo Digit and Trigger information to RawBuffer banks.
 !-----------------------------------------------------------------------------
 
+!========================== CaloDAQ v1r1 2005-05-10 ==========================
 ! 2005-05-04 - Olivier Callot
  - Accesses the RawEvent and not explicitely the RawBuffer while decoding.
  - Avoid a copy of the list of banks when decoding the RawEvent.
 
-!========================== CaloDAQ v1r1 2005-05-03 ==========================
 ! 2005-05-03 - Marco Cattaneo
  - Add missing factory for CaloEnergyFromRaw tool
 
