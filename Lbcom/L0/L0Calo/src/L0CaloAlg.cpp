@@ -1,4 +1,4 @@
-// $Id: L0CaloAlg.cpp,v 1.26 2005-05-10 11:38:47 ocallot Exp $
+// $Id: L0CaloAlg.cpp,v 1.27 2005-05-10 14:02:51 cattanem Exp $
 
 /// Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -601,14 +601,11 @@ StatusCode L0CaloAlg::execute() {
     l1Buf->addBank( L1Buffer::L0CaloID, L1Buffer::L0, m_l1Output );
     RawBuffer* rawBuf = get<RawBuffer>( RawBufferLocation::Default );
     rawBuf->addBank( 0, RawBuffer::L0Calo, m_rawOutput );
-    //== Invalidate and replace RawEvent if it exist.
-    //== Note : A method to update it would be better !
+    //== Invalidate RawEvent if it exists. Needed in Boole
     if ( exist<RawEvent>( RawEventLocation::Default ) ) {
       RawEvent* evt = get<RawEvent>( RawEventLocation::Default );
       evtSvc()->unregisterObject(  RawEventLocation::Default );
-      delete evt;  //== I guess this is needed.
-      RawEvent* evtNew = new RawEvent( *rawBuf );
-      put( evtNew, RawEventLocation::Default );
+      delete evt;
     }   
   }
 
