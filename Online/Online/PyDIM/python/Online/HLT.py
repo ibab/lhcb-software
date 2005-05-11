@@ -57,13 +57,13 @@ class Task:
         Gaudi task object object
         @author M.Frank
   """
-  def __init__(self, name):
+  def __init__(self, name, options=''):
     """
          Constructor
     """
     self.name = name
     self.enable = 0
-    self.appMgr = gaudimodule.AppMgr()
+    self.appMgr = gaudimodule.AppMgr(outputlevel=3,joboptions=options)
     self.transitions = []
     self.fsm = FSM.Machine('Inactive')
     self.fsm.addTransition('Inactive', 'Active',   action=Call(self.appMgr.initialize).invoke)  
@@ -99,7 +99,7 @@ class Task:
   def loop(self):
     while(self.enable == 1):      
       result = self.appMgr._evtpro.executeRun(1)
-      if ( result.getCode() == gaudimodule.SUCCESS.getCode() ):
+      if ( result.getCode() != gaudimodule.SUCCESS.getCode() ):
         return
 
   def changeState(self, target_state):
@@ -138,14 +138,16 @@ class Task:
 
   def reset_task(self, action_type, transition):
     log_transition(action_type, transition)
+    self.appMgr.finalize()
     return 1
 
   def stop_task(self, action_type, transition):
     log_transition(action_type, transition)
+    self.appMgr.finalize()
     return 1
 
-def run(name='Hello_0'):
-  t=Task(name)
+def run(name='Hello_0', options=''):
+  t=Task(name,options)
   t.start()
 
 if __name__=='__main__':
